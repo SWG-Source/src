@@ -1,3 +1,6 @@
 
+add_subdirectory(sharedDebug)
 add_subdirectory(sharedFoundation)
+add_subdirectory(sharedFoundationTypes)
+add_subdirectory(sharedMemoryManager)
 add_subdirectory(sharedNetworkMessages)
