@@ -706,7 +706,7 @@ endif()
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/shared)
 
-add_library(sharedNetworkMessages
+add_library(sharedNetworkMessages STATIC
 	${SHARED_SOURCES}
 	${PLATFORM_SOURCES}
 )
