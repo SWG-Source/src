@@ -7,6 +7,7 @@
 #pragma warning ( disable : 4514 ) // inlined function has been removed
 #endif
 
+#include <exception>
 #include <vector>
 
 //---------------------------------------------------------------------
