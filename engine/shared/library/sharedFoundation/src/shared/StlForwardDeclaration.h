@@ -31,7 +31,7 @@
 // ======================================================================
 
 // grab stlport configuration
-#include "stl/_config.h"
+#include "stl/config/features.h"
 
 namespace std
 {
