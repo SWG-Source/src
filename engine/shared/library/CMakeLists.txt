@@ -1,0 +1,3 @@
+
+add_subdirectory(sharedFoundation)
+add_subdirectory(sharedNetworkMessages)
