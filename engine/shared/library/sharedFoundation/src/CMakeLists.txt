@@ -1,0 +1,151 @@
+
+set(SHARED_SOURCES
+	shared/ApplicationVersion.cpp
+	shared/ApplicationVersion.h
+	shared/ArrayList.h
+	shared/AutoDeltaNetworkIdPackedMap.cpp
+	shared/AutoDeltaNetworkIdPackedMap.h
+	shared/Binary.h
+	shared/BitArray.cpp
+	shared/BitArray.h
+	shared/Branch.cpp
+	shared/Branch.h
+	shared/CalendarTime.cpp
+	shared/CalendarTime.h
+	shared/CallbackEntryBase.h
+	shared/Clock.cpp
+	shared/Clock.h
+	shared/CommandLine.cpp
+	shared/CommandLine.h
+	shared/ConfigFile.cpp
+	shared/ConfigFile.h
+	shared/ConstCharCrcLowerString.cpp
+	shared/ConstCharCrcLowerString.h
+	shared/ConstCharCrcString.cpp
+	shared/ConstCharCrcString.h
+	shared/CrashReportInformation.cpp
+	shared/CrashReportInformation.h
+	shared/Crc.cpp
+	shared/Crc.h
+	shared/CrcLowerString.cpp
+	shared/CrcLowerString.h
+	shared/CrcString.cpp
+	shared/CrcString.h
+	shared/CrcStringTable.cpp
+	shared/CrcStringTable.h
+	shared/DataResource.cpp
+	shared/DataResource.h
+	shared/DataResourceList.h
+	shared/DebugInfoManager.cpp
+	shared/DebugInfoManager.h
+	shared/ExitChain.cpp
+	shared/ExitChain.h
+	shared/Fatal.cpp
+	shared/Fatal.h
+	shared/FirstSharedFoundation.h
+	shared/FloatMath.h
+	shared/FormattedString.h
+	shared/GameControllerMessage.h
+	shared/LabelHash.cpp
+	shared/LabelHash.h
+	shared/LessPointerComparator.h
+	shared/MacroFoundation.h
+	shared/Md5.cpp
+	shared/Md5.h
+	shared/MemoryBlockManager.cpp
+	shared/MemoryBlockManager.h
+	shared/MemoryBlockManagerMacros.h
+	shared/MessageQueue.cpp
+	shared/MessageQueueDataTemplate.cpp
+	shared/MessageQueueDataTemplate.h
+	shared/MessageQueue.h
+	shared/Misc.h
+	shared/NetworkIdArchive.cpp
+	shared/NetworkIdArchive.h
+	shared/NetworkId.cpp
+	shared/NetworkId.h
+	shared/PersistentCrcString.cpp
+	shared/PersistentCrcString.h
+	shared/PointerDeleter.h
+	shared/Production.h
+	shared/SafeCast.h
+	shared/Scheduler.cpp
+	shared/Scheduler.h
+	shared/StaticCallbackEntry.cpp
+	shared/StaticCallbackEntry.h
+	shared/StationId.h
+	shared/StlForwardDeclaration.h
+	shared/StringCompare.h
+	shared/Tag.h
+	shared/TemporaryCrcString.cpp
+	shared/TemporaryCrcString.h
+	shared/Timer.cpp
+	shared/Timer.h
+	shared/VoidBindSecond.h
+	shared/VoidMemberFunction.h
+	shared/Watcher.cpp
+	shared/Watcher.h
+
+	shared/dynamicVariable/DynamicVariable.cpp
+	shared/dynamicVariable/DynamicVariable.h
+	shared/dynamicVariable/DynamicVariableList.cpp
+	shared/dynamicVariable/DynamicVariableList.h
+	shared/dynamicVariable/DynamicVariableListNestedList.cpp
+	shared/dynamicVariable/DynamicVariableListNestedList.h
+	shared/dynamicVariable/DynamicVariableLocationData.h
+)
+
+if(WIN32)
+	set(PLATFORM_SOURCES
+		win32/ByteOrder.cpp
+		win32/ByteOrder.h
+		win32/ConfigSharedFoundation.cpp
+		win32/ConfigSharedFoundation.h
+		win32/FirstPlatform.h
+		win32/FloatingPointUnit.cpp
+		win32/FloatingPointUnit.h
+		win32/Os.cpp
+		win32/Os.h
+		win32/PerThreadData.cpp
+		win32/PerThreadData.h
+		win32/PlatformGlue.cpp
+		win32/PlatformGlue.h
+		win32/ProcessSpawner.cpp
+		win32/ProcessSpawner.h
+		win32/RegistryKey.cpp
+		win32/RegistryKey.h
+		win32/SetupSharedFoundation.cpp
+		win32/SetupSharedFoundation.h
+		win32/WindowsWrapper.h
+	)
+
+	include_directories(${CMAKE_CURRENT_SOURCE_DIR}/win32)
+else()
+	set(PLATFORM_SOURCES 
+		linux/ByteOrder.h
+		linux/ConfigSharedFoundation.cpp
+		linux/ConfigSharedFoundation.h
+		linux/FirstPlatform.h
+		linux/FloatingPointUnit.cpp
+		linux/FloatingPointUnit.h
+		linux/Os.cpp
+		linux/Os.h
+		linux/PerThreadData.cpp
+		linux/PerThreadData.h
+		linux/PlatformGlue.cpp
+		linux/PlatformGlue.h
+		linux/SetupSharedFoundation.cpp
+		linux/SetupSharedFoundation.h
+		linux/vsnprintf.cpp
+		linux/vsnprintf.h
+	)
+
+	include_directories(${CMAKE_CURRENT_SOURCE_DIR}/linux)
+endif()
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/shared)
+
+add_library(sharedFoundation
+	${SHARED_SOURCES}
+	${PLATFORM_SOURCES}
+)

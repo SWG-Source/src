@@ -1,0 +1,1041 @@
+//
+// GameControllerMessage.def
+// asommers 2-24-99
+//
+// copyright 1999, bootprint entertainment
+//
+// data files should be including GameControllerMessage.def
+// code files should be including GameControllerMessage.h
+//
+// don't put anything in here that would disturb miff (like pragmas, const, and other things)
+// DO NOT REORDER ANY OF THE VALUES, only append values to the BOTTOM of the list
+// AND PLEASE GROUP IN GROUPS OF FIVE FOR DEBUGGING EASE
+
+#ifndef GAMECONTROLLERMESSAGE_DEF
+#define GAMECONTROLLERMESSAGE_DEF
+
+#ifndef GAMECONTROLLERMESSAGE_H
+#error include GameControllerMessage.h instead of GameControllerMessage.def
+#endif
+
+enum GameControllerMessage
+{
+	CM_nothing,
+
+	CM_cameraYaw,
+	CM_cameraPitch,
+	CM_movePlayer,
+	CM_toggleLight,
+
+	//-----------------------------------------------------------------
+	//-- ui commands
+
+	CM_uiChatCollapse, //5
+	CM_uiChatIconify,
+	CM_uiChatMaximize,
+	CM_uiChatTabEdit,
+	CM_uiChatTabKill,
+
+	CM_uiChatTabNew, //10
+	CM_uiChatTabNext,
+	CM_uiChatTabPrev,
+	CM_uiCombatAim,
+	CM_uiCombatAttack,
+
+	CM_uiCombatTarget,
+	CM_uiPosture0,
+	CM_uiPosture1,
+	CM_uiPosture2,
+	CM_uiAttitude0,
+	CM_uiAttitude1, //20
+
+	CM_uiAttitude2,
+	CM_uiAttitude3,
+	CM_uiAttitude4,
+	CM_uiConversationResponse0,
+	CM_uiConversationResponse1,
+
+	CM_uiConversationResponse2,
+	CM_uiConversationResponse3,
+	CM_uiConversationResponse4,
+	CM_uiConversationResponse5,
+	CM_uiConversationStart,  //30
+
+	CM_uiConversationStop,
+	CM_uiDebugPrint,
+	CM_uiGameMenuActivate,
+	CM_uiInventoryClose,
+	CM_uiInventoryIconify,
+
+	CM_uiInventoryMaximize,
+	CM_uiMfdIconify,
+	CM_uiMfdMaximize,
+	CM_uiMfdNext,
+	CM_uiMfdPrev, //40
+
+	CM_uiMissionBrowser,
+	CM_uiMissionCreation,
+	CM_uiPointerToggleDown,
+	CM_uiPointerToggleUp,
+	CM_uiRadarIconify,
+
+	CM_uiRadarMaximize,
+	CM_uiRadarRangeDecrease,
+	CM_uiRadarRangeIncrease,
+	CM_uiRadarUpdate,
+	CM_uiSkills, //50
+
+	CM_uiDataStorage,
+	CM_uiStartChat,
+	CM_uiTargetsClearAll,
+	CM_uiTargetsClearSelected,
+	CM_uiTargetsIconify,
+
+	CM_uiTargetsNext,
+	CM_uiTargetsPeaceAttackToggle,
+	CM_uiTargetsPrev,
+	CM_uiToggleChatBubblesMinimized,
+	CM_uiToggleHud, //60
+
+	CM_uiToolbarPaneNext,
+	CM_uiToolbarPanePrev,
+	CM_uiToolbarSlot0,
+	CM_uiToolbarSlot1,
+	CM_uiToolbarSlot2,
+
+	CM_uiToolbarSlot3,
+	CM_uiToolbarSlot4,
+	CM_uiToolbarSlot5,
+	CM_uiToolbarSlot6,
+	CM_uiToolbarSlot7, //70
+
+	CM_uiToolbarSlot8,
+	CM_uiToolbarSlot9,
+	CM_uiToolbarSlot10,
+	CM_uiToolbarSlot11,
+	CM_uiPersistentMessageBrowser,
+
+	CM_uiChatRoomBrowser,
+	CM_uiWorkspaceFrameClose,
+	CM_uiWorkspaceFrameIconify,
+	CM_uiWorkspaceFrameMaximize,
+	CM_uiWorkspaceFrameNext, //80
+
+	CM_uiWorkspaceFramePrev,
+	CM_left,
+	CM_right,
+	CM_up,
+	CM_down, //85
+
+	CM_buttonDeprecated,          // 86
+	CM_yaw,
+	CM_pitch,
+	CM_roll,
+	CM_cameraYawMouse, //90
+
+	CM_cameraPitchMouse,   
+	CM_cameraZoom,
+	CM_cameraLock,
+	CM_cameraReset,
+	CM_exit,
+
+	CM_cockpitCamera,	
+	CM_chaseCamera,
+	CM_objectCamera,
+	CM_spinCamera,
+	CM_flybyCamera, //100
+
+	CM_trackCamera,
+	CM_increase,
+	CM_decrease,
+	CM_fullSpeed,
+	CM_fullStop, //105
+
+	CM_alt,
+	CM_shift,
+	CM_fireGun,
+	CM_toggleGun,
+	CM_cameraResetCursor, //110
+
+	CM_cycleTargets,	
+	CM_netSpawn,
+	CM_netUpdateTransform,
+	CM_netFrag,
+	CM_netDeath,
+
+	CM_netShoot,		
+	CM_netMove,
+	CM_netChat,
+	CM_netDisconnect,
+	CM_headCamera,   //120
+
+	CM_toggleShipState,	
+	CM_SetTransform,
+	CM_idle,
+	CM_walk,
+	CM_freeCamera,
+
+	CM_wear,
+	CM_setTransform,
+	CM_run,
+	CM_animationStateIdle,
+	CM_animationStateWalk, //130
+
+	CM_animationStateRun,
+	CM_setMemberData,				// Message to set member data.  Requires a submessage to describe what member data.
+	CM_applyDelta,					// Message to modify member data.  Requires a submessage to describe what member data.
+	CM_swoopCamera,
+	CM_setYaw,
+
+	CM_turn,
+	CM_environmentPause,  
+	CM_terrainShowLodBorderChunks,
+	CM_terrainFreeze,
+	CM_toggleEnvironment,  //140
+
+	CM_toggleOcclusion,
+	CM_umbraExportFalse,
+	CM_umbraExportTrue,
+	CM_terrainToggleHeightBias,
+	CM_terrainShowLod,
+
+	CM_terrainMultithreaded,
+	CM_fillMode,
+	CM_buildingIncreaseDesiredLevel,
+	CM_buildingDecreaseDesiredLevel,
+	CM_pause,                            //150
+
+	CM_panorama,
+	CM_screenShot360,
+	CM_toggleRunOn,
+	CM_toggleRunOff,
+	CM_moveLongitudinal,
+
+	CM_moveLateral,
+	CM_toggleStrafe,
+	CM_cameraPivotYaw,
+	CM_cameraPivotPitch,
+	CM_cameraPivotTranslateX,        //160
+
+	CM_cameraPivotTranslateY,
+	CM_cameraPivotZoom,
+	CM_cameraTranslateX,
+	CM_cameraTranslateY,
+	CM_cameraTranslateZ,
+
+	CM_freeChaseCamera,
+	CM_mouseWheel,
+	CM_cameraSmarts,
+	CM_cameraSmartsAbove4Meters,
+	CM_cameraSwoopIn,                  //170
+
+	CM_cameraDoorway,
+	CM_emote1,
+	CM_emote2,
+	CM_emote3,
+	CM_emote4,
+
+	CM_emote5,
+	CM_emote6,
+	CM_emote7,
+	CM_emote8,
+	CM_emote9,            //180
+
+	CM_emote10,
+	CM_cycleRunAnimation,
+	CM_cycleRunAnimationBackward,
+	CM_cycleWalkAnimation,
+	CM_cycleWalkAnimationBackward,
+
+	CM_animationStateRun2,
+	CM_animationStateRun3,
+	CM_animationStateRun4,
+	CM_animationStateRun5,
+	CM_animationStateRun6,       //190
+
+	CM_animationStateRun7,
+	CM_animationStateRun8,
+	CM_animationStateRun9,
+	CM_animationStateRun10,
+	CM_animationStateWalk2,
+
+	CM_animationStateWalk3,
+	CM_animationStateWalk4,
+	CM_animationStateWalk5,
+	CM_animationStateWalk6,
+	CM_animationStateWalk7,    //200
+
+	CM_animationStateWalk8,
+	CM_animationStateWalk9,
+	CM_animationStateWalk10,
+	CM_combatAction,
+	CM_combatDamage,
+
+	CM_combatDamageList,
+	CM_warpPlayerToFreeCamera,
+	CM_resourceAdd,
+	CM_activateInstallation,
+	CM_resourcePoolAddHarvester, //210
+
+	CM_resourceSetInstalledEfficiency,
+	CM_installationHarvest,
+	CM_resourcePoolCollectResource,
+	CM_resourceFinishHarvest,
+	CM_deactivateInstallation,
+
+	CM_resourcePoolRemoveHarvester,
+	CM_resourcePoolDepleted,
+	CM_resourceTypeDepleted,
+	CM_resourceSpawnPool,
+	CM_resourceEmptyHopper, //220
+
+	CM_npcConversationStart,
+	CM_npcConversationStop,
+	CM_npcConversationMessage,
+	CM_npcConversationResponses,
+	CM_npcConversationSelect,
+
+	CM_transferItem,
+	CM_opponentInfo,
+	CM_debugPortalCamera,
+	CM_clientResourceHarvesterActivate,
+	CM_clientResourceHarvesterDeactivate, //230
+
+	CM_clientResourceHarvesterListen,
+	CM_clientResourceHarvesterStopListening,
+	CM_clientResourceHarvesterGetResourceData,
+	CM_clientResourceHarvesterResourceData,
+	CM_clientResourceHarvesterResourceSelect,
+
+	CM_clientResourceHarvesterSurvey,
+	CM_clientResourceHarvesterEmptyHopper,
+	CM_clientResourceHarvesterEmptyHopperResponse,
+	CM_clientObjectMenuRequest,
+	CM_clientObjectMenuSelect, //240
+
+	CM_netUpdateTransformWithParent,
+	CM_animationAction,
+	CM_spatialChatSend,
+	CM_spatialChatReceive,
+	CM_missionListRequest,
+
+	CM_missionListResponse,
+	CM_missionDetailsRequest,
+	CM_missionDetailsResponse,
+	CM_missionAcceptRequest,
+	CM_missionAcceptResponse,  //250
+
+	CM_missionRemoveRequest,
+	CM_missionRemoveResponse,
+	CM_missionPostRequest,
+	CM_missionPostResponse,
+	CM_missionCreateRequest,
+
+	CM_missionCreateResponse,
+	CM_serverMissionAssign,
+	CM_draftSchematicsMessage,
+	CM_draftSlotsMessage,
+	CM_schematicAttribsMessage,  //260
+
+	CM_ingredientsHopperMessage,
+	CM_experimentMessage,
+	CM_fillSchematicSlotMessage,
+	CM_emptySchematicSlotMessage,
+	CM_nextCraftingStage,
+
+	CM_createPrototype,
+	CM_createManfSchematic,
+	CM_craftingResult,
+	CM_nextStageReady,
+	CM_selectDraftSchematic,  //270
+
+	CM_requestCraftingSession,
+	CM_cancelCraftingSession,
+	CM_restartCraftingSession,
+	CM_schematicCustomizationsMessage,
+	CM_experimentResult,
+
+	CM_getTokenForObject,
+	CM_secureTrade,
+	CM_commandQueueEnqueue,
+	CM_commandQueueRemove,
+	CM_commandQueueEnqueueFwd,  //280
+
+	CM_commandQueueAlterWaitTimerFwd,
+	CM_commandQueueForceExecuteCommandFwd,
+	CM_pvpMessage,
+	CM_getWaypointForObject,
+	CM_uiPersistentMessageComposer,
+
+	CM_uiChatRooms,
+	CM_uiSkillCommands,
+	CM_uiCharacterSheet,
+	CM_cameraPathNormal,
+	CM_cameraPathAddWaypoint, //290
+
+	CM_cameraPathPlayback,
+	CM_cameraPathDeleteLastWaypoint,
+	CM_scriptTrigger,
+	CM_clientLookAtTarget,
+	CM_combatAimToClient,  //295
+
+	CM_vtuneResume,
+	CM_vtunePause,
+	CM_vtuneCounter,
+	CM_synchronizeScriptVars,
+	CM_clientMoodChange,	//300
+
+	CM_transferObjectToCell,
+	CM_socialReceive,
+	CM_socialSend,
+	CM_uiChatTab,
+	CM_setPosture,
+
+	CM_uiClientSocial,
+	CM_uiClientMood,
+	CM_combatSpam,
+	CM_uiCycleTargetInward,
+	CM_uiCycleTargetOutward,	//310
+
+	CM_uiCycleTargetNext,
+	CM_uiCycleTargetPrev,
+	CM_attachScript,
+	CM_detachScript,
+	CM_sitOnObject,
+
+	CM_uiCombatQueueCollapse,
+	CM_uiCombatQueueExpand,
+	CM_teleport,
+	CM_teleportAck,
+	CM_weaponRangesMessage,	//320
+
+	CM_uiMissionDetails,
+	CM_missionAbort,
+	CM_setBuildingCityId,
+	CM_clientCommandParser,
+	CM_debugKeyContext1,
+
+	CM_objectMenuRequest,
+	CM_objectMenuResponse,
+	CM_setState,
+	CM_setAttribute,
+	CM_setMaxAttribute,	//330
+
+	CM_setMentalState,
+	CM_setMentalStateToward,
+	CM_setCover,
+	CM_setMentalStateTowardClampBehavior,
+	CM_setMaxMentalState,
+
+	CM_setMentalStateDecay,
+	CM_setLocomotion,
+	CM_setAutoAttack,
+	CM_setOwnerId,
+	CM_setMaxHitPoints,	//340
+
+	CM_setVisible,
+	CM_setInvulnerable,
+	CM_setCombatAttitude,
+	CM_addPlayerToSpawnQueue,
+	CM_removePlayerFromSpawnQueue,
+
+	CM_setCustomizationData,
+	CM_groupSetName,
+	CM_groupAddMember,
+	CM_groupRemoveMember,
+	CM_groupDisband,	//350
+
+	CM_setGroupInviter,
+	CM_setPerformanceType,
+	CM_setPerformanceListenTarget,
+	CM_setPerformanceWatchTarget,
+	CM_uiSurvey,
+
+	CM_setPerformanceStartTime,
+	CM_forwardNpcConversationMessage,
+	CM_musicFlourish,
+	CM_commandQueueAdd,
+	CM_addNpcConversationResponse,	//360
+
+	CM_removeNpcConversationResponse,
+	CM_sendNpcConversationResponses,
+	CM_playerResponseToNpcConversation,
+	CM_scriptTransferMoney,
+	CM_groupMakeLeader,
+
+	CM_persistObject,
+	CM_setCacheVersion,
+	CM_setObjectName,
+	CM_setObjectNameStringId,
+	CM_teleportObject,		//370
+
+	CM_updatePositionOnPlanetServer,
+	CM_setPlayerControlled,
+	CM_customize,
+	CM_permanentlyDestroy,
+	CM_transferAuthority,
+
+	CM_addLocationTarget,
+	CM_removeLocationTarget,
+	CM_addLocationExitTarget,
+	CM_removeLocationExitTarget,
+	CM_setBuildingIsPublic,	//380
+
+	CM_setInCombat,
+	CM_addAim,
+	CM_clearAims,
+	CM_alterHitPoints,
+	CM_addResource,
+
+	CM_setCombatTarget,
+	CM_removeCombatTarget,
+	CM_setCraftedId,
+	CM_startCraftingSession,
+	CM_stopCraftingSession,	//390
+
+	CM_addIngredientToHopper,
+	CM_removeIngredientFromHopper,
+	CM_addObjectToOutputSlot,
+	CM_setCraftingManufactureSchematic,
+	CM_clearCraftingManufactureSchematic,
+
+	CM_setCraftingPrototype,
+	CM_clearCraftingPrototype,
+	CM_setVisibleComponents,
+	CM_setIsShield,
+	CM_resourcePoolDeductResource,	//400
+
+	CM_debugKeyContext2,
+	CM_setAmmo,
+	CM_addAllowed,
+	CM_removeAllowed,
+	CM_addBanned,
+
+	CM_removeBanned,
+	CM_setDefaultWeapon,
+	CM_setModValue,
+	CM_grantCommand,
+	CM_grantExperiencePoints,	//410
+
+	CM_grantSkill,
+	CM_revokeCommand,
+	CM_revokeSkill,
+	CM_alterAttribute,
+	CM_addAttributeModifier,
+
+	CM_removeAttributeModifiers,
+	CM_removeAllAttributeModifiers,
+	CM_applyDamageToArmor,
+	CM_setCombatTargets,
+	CM_setCurrentWeapon,	//420
+
+	CM_setGroup,
+	CM_setMood,
+	CM_setIncapacitated,
+	CM_setSayMode,
+	CM_setAnimationMood,
+
+	CM_setScaleFactor,
+	CM_setShockWounds,
+	CM_setLookAtTarget,
+	CM_setMovementStationary,
+	CM_setMovementWalk,	//430
+
+	CM_setMovementRun,
+	CM_setSlopeModAngle,
+	CM_setSlopeModPercent,
+	CM_setWaterModPercent,
+	CM_setMovementPercent,
+
+	CM_setTurnPercent,
+	CM_setAccelPercent,
+	CM_planetAddTravelPoint,
+	CM_planetRemoveTravelPoint,
+	CM_planetTravelPointNamesRequest,	//440
+
+	CM_planetTravelPointNamesResponse,
+	CM_factoryAddObject,
+	CM_addSchematic,
+	CM_manufactureInstallationCreateObject,
+	CM_showFlyText,
+
+	CM_nextCraftingStageResult,
+	CM_draftSlotsQueryResponse,
+	CM_setBattlefieldParticipant,
+	CM_clearBattlefieldParticipants,
+	CM_craftingSessionEnded,	//450
+
+	CM_setIntDynamicVariable,
+	CM_setIntArrayDynamicVariable,
+	CM_setFloatDynamicVariable,
+	CM_setFloatArrayDynamicVariable,
+	CM_setStringDynamicVariable,
+
+	CM_setStringArrayDynamicVariable,
+	CM_setObjIdDynamicVariable,
+	CM_setObjIdArrayDynamicVariable,
+	CM_setLocationDynamicVariable,
+	CM_setStringIdDynamicVariable,	//460
+
+	CM_setStringIdArrayDynamicVariable,
+	CM_copyDynamicVariable,
+	CM_copyDynamicVariableToSubList,
+	CM_addNestedObjVarList,
+	CM_removeObjVarItem,
+
+	CM_eraseObjVarListEntries,
+	CM_setObjVarItemVar,
+	CM_guildCreate,
+	CM_guildRemoveMember,
+	CM_guildSetMemberProfessionInfo,	//470
+
+	CM_guildRemoveEnemy,
+	CM_guildSetEnemy,
+	CM_guildDisband,
+	CM_guildSetLeader,
+	CM_biographyRetrieved,
+
+	CM_setLocationArrayDynamicVariable,
+	CM_guildSetName,
+	CM_guildSetAbbrev,
+	CM_replaceMe1,
+	CM_replaceMe2,	//480
+
+	CM_replaceMe3,
+	CM_replaceMe4,
+	CM_replaceMe5,
+	CM_replaceMe6,
+	CM_replaceMe7,
+
+	CM_replaceMe8,
+	CM_characterMatchRetrieved,
+	CM_initDecay,
+	CM_setDecay,
+	CM_setVolume,	//490
+
+	CM_setMasterId,
+	CM_setCreatorId,
+	CM_setCreatorName,
+	CM_setCreatorXp,
+	CM_setCreatorXpType,
+
+	CM_setCraftedType,
+	CM_radarZoom,
+	CM_autoRun,
+	CM_radarMap,
+	CM_setForcePower,	//500
+
+	CM_setMaxForcePower,
+	CM_setWeather,
+	CM_addJedi,
+	CM_removeJedi,
+	CM_updateJedi,
+
+	CM_requestJediBounty,
+	CM_removeJediBounty,
+	CM_startingLocations,
+	CM_startingLocationSelectionResult,
+	CM_synchronizeScriptVarDeltas,	//510
+
+	CM_mouseWalkStart,
+	CM_mouseWalk,
+	CM_cancelAutoRun,
+	CM_directDamage,
+	CM_setMovementScale,
+
+	CM_setAccelScale,
+	CM_disconnect,
+	CM_teleportNextFrame,
+	CM_resourceWeights,
+	CM_serverAddPlanetMapLocation,	//520
+
+	CM_serverRemovePlanetMapLocation,
+	CM_setCondition,
+	CM_clearCondition,
+	CM_setHouse,
+	CM_setGroupMemberDifficulty,
+
+	CM_setDifficulty,
+	CM_grantOfflineXp,
+	CM_cityCreate,
+	CM_citySetName,
+	CM_cityRemove,	// 530
+	
+	CM_citySetCitizen,
+	CM_cityRemoveCitizen,
+	CM_citySetStructure,
+	CM_cityRemoveStructure,
+	CM_setForceRegenRate,
+
+	CM_updateJediLocation,
+	CM_setJediOffline,
+	CM_creatureSetBaseWalkSpeed,
+	CM_creatureSetBaseRunSpeed,
+	CM_emergencyDismountForRider,   // 540
+
+	CM_detachRiderForMount,
+	CM_setDecayTime,
+	CM_clearDecayTime,
+	CM_citySetCityHall,
+	CM_citySetLocation,
+	
+	CM_citySetRadius,
+	CM_citySetLeader,
+	CM_citySetIncomeTax,
+	CM_citySetPropertyTax,
+	CM_citySetSalesTax, // 550
+
+	CM_citySetTravelInfo,
+	CM_citySetCloneInfo,
+	CM_modData,
+	CM_cancelMod,
+	CM_objectMenuDirty,
+
+	CM_attributesDirty,
+	CM_setTransformDynamicVariable,
+	CM_setTransformArrayDynamicVariable,
+	CM_setVectorDynamicVariable,
+	CM_setVectorArrayDynamicVariable, // 560
+
+	CM_aiSetMovement,
+	CM_aiSetMovementWalk,
+	CM_updateJediBounties,
+	CM_setAppearanceFromObjectTemplate,
+	CM_aiSetMovementRun,
+
+	CM_applyWound,
+	CM_setWound,
+	CM_imageDesignerChange,
+	CM_imageDesignerCancel,
+	CM_imageDesignerStart, // 570
+
+	CM_setJediState,
+	CM_updateJediState,
+	CM_makeDead,
+	CM_updateJediSpentJediSkillPoints,
+	CM_updateJediScriptData,
+
+	CM_removeJediScriptData,
+	CM_removeAllJediBounties,
+	CM_updateJediFaction,
+	CM_setCurrentQuest,
+	CM_setRegenRate, // 580
+
+	CM_updateObserversCount,
+	CM_hideFromClient,
+	CM_setHibernationDelay,
+	CM_setAttackableOverride,
+	CM_modifyCurrentGcwPoints,
+	
+	CM_modifyCurrentGcwRating,
+	CM_modifyCurrentPvpKills,
+	CM_modifyLifetimeGcwPoints,
+	CM_modifyMaxGcwImperialRating,
+	CM_modifyMaxGcwRebelRating, // 590
+	
+	CM_modifyLifetimePvpKills,
+	CM_modifyNextGcwRatingCalcTime,
+	CM_cancelMessageTo,
+	CM_clearSessionActivity,
+	CM_addSessionActivity,
+	
+	CM_addPassiveReveal,
+	CM_removePassiveReveal,
+	CM_removeAllPassiveReveal,
+	CM_modifyHologramType,
+	CM_modifyVisibleOnMapAndRadar, // 600
+	
+	CM_setCoverVisibility,
+	CM_buffBuilderChange,
+	CM_buffBuilderCancel,
+	CM_buffBuilderStart,
+	CM_incubatorStart,
+
+	CM_incubatorCommit,
+	CM_incubatorCancel,
+	CM_modifyCollectionSlotValue,
+	CM_removeCollection,
+	CM_adjustLotCount, // 610
+
+	CM_squelch,
+	CM_unsquelch,
+	CM_setPriviledgedTitle,
+	CM_collectionRequestServerFirst,
+	CM_collectionRevokeServerFirst,
+	
+	CM_addHateOverTime,
+	CM_setConnectedCharacterLfgData,
+	CM_removeConnectedCharacterData,
+	CM_setConnectedCharacterGroupData,
+	CM_setConnectedCharacterPlanetData, // 620
+	
+	CM_setConnectedCharacterBiographyData,
+	CM_removeConnectedCharacterBiographyData,
+	CM_setGroupMemberProfession,
+	CM_setConnectedCharacterLevelData,
+	CM_setConnectedCharacterProfessionData,
+	
+	CM_setConnectedCharacterAnonymousData,
+	CM_setConnectedCharacterInterestsData,
+	CM_setConnectedCharacterRegionData,
+	CM_setGroupPickupTimer,
+	CM_setGroupPickupLocation, // 630
+
+	CM_setConnectedCharacterDisplayLocationInSearchResultsData,
+	CM_setConnectedCharacterPlayerCityData,
+	CM_addUniverseEvent,
+	CM_removeUniverseEvent,
+	CM_setConnectedCharacterSearchableByCtsSourceGalaxyData,
+	
+	CM_forceHateTarget,
+	CM_addUserToAccessList,
+	CM_removeUserFromAccessList,
+	CM_clearUserAccessList,
+	CM_guildUpdateGuildWarKillTrackingData, // 640
+
+	CM_guildSetGuildElectionEndTime,
+	CM_guildAddMemberRank,
+	CM_guildRemoveMemberRank,
+	CM_guildAddCreatorMember,
+	CM_guildAddSponsorMember,
+
+	CM_guildSetMemberPermission,
+	CM_guildSetMemberTitle,
+	CM_guildSetMemberAllegiance,
+	CM_guildSetMemberPermissionAndAllegiance,
+	CM_guildSetMemberNameAndPermission, // 650
+
+	CM_citySetCreationTime,
+	CM_adjustGcwImperialScore,
+	CM_adjustGcwRebelScore,
+	CM_citySetCitizenProfessionInfo,
+	CM_citySetCitizenAddRank,
+
+	CM_citySetCitizenRemoveRank,
+	CM_citySetCitizenTitle,
+	CM_adjustPgcRating,
+	CM_adjustPgcRatingData,
+	CM_setPgcRatingData, // 660
+
+	CM_fixPgcChroniclerName,
+	CM_citySetFaction,
+	CM_guildSetGuildFaction,
+	CM_guildSetGuildGcwDefenderRegion,
+	CM_citySetGcwDefenderRegion,
+
+//-- Space controller messages
+	CM_formDataForEdit = 1000,
+	CM_shipDynamicsYaw,
+	CM_shipDynamicsPitch,
+	CM_shipDynamicsRoll,
+	CM_shipFireWeaponAll,
+
+	CM_shipFireWeapon0,  //1005
+	CM_shipFireWeapon1,
+	CM_shipFireWeapon2,
+	CM_shipFireWeapon3,
+	CM_shipFireWeapon4,
+
+	CM_shipFireWeapon5, //1010
+	CM_shipFireWeapon6,
+	CM_shipFireWeapon7,
+	CM_shipDamageMessage,
+	CM_serverAsteroidDebugData,
+
+	CM_commPlayer, //1015
+	CM_lightningHitShip,
+	CM_environmentHitShip,
+	CM_clientLookAtTargetComponent,
+	CM_uiCycleComponentTargetForward,
+
+	CM_uiCycleComponentTargetBackward, //1020
+	CM_updateShipOnCollision,
+	CM_aboutToHyperspace,
+	CM_playerTransitioningOut,
+	CM_playerTransitioningIn,
+
+	CM_uiPlayEffect, //1025
+	CM_shipThrottleChangeStart,
+	CM_shipThrottleChange,
+	CM_shipThrottleSetSlider,
+	CM_yawButton,
+
+	CM_pitchButton, //1030
+	CM_rollButton,
+	CM_shipThrottleSetAxis,
+	CM_spaceTargetClosestShip,
+	CM_spaceTargetClosestCapShip,
+
+	CM_spaceTargetUnderReticle, //1035
+	CM_spaceTargetNextFriendly,
+	CM_spaceTargetPreviousFriendly,
+	CM_spaceTargetNextEnemy,
+	CM_spaceTargetPreviousEnemy,
+
+	CM_setGroupShipForMember, // 1040
+	CM_setGroupShipFormationSlotForMember,
+	CM_addIgnoreIntersect,
+	CM_removeIgnoreIntersect,
+	CM_spaceTargetNextOnScreenUnderVariableReticle,
+
+	CM_spaceTargetPreviousOnScreenUnderVariableReticle, // 1045
+	CM_spaceTargetClosestPlayerShip,
+	CM_spaceTargetClosestNPCShip,
+	CM_joystickPovDirection,
+	CM_joystickPovCenter,
+	
+	CM_addGroupPOBShipAndOwner, //1050
+	CM_removeGroupPOBShip,
+	CM_spaceTerminalRequest,
+	CM_spaceTerminalResponse,
+	CM_setThrottlePosition,
+
+	CM_spaceTargetLastEnemyThatShotPlayer, //1055
+	CM_spaceTargetClosestEnemy,
+	CM_spaceTargetClosestEnemyPlayer,
+	CM_spaceTargetClosestFriend,
+	CM_spaceTargetClosestFriendPlayer,
+
+	CM_spaceTargetNextFriendlyPlayer, //1060
+	CM_spaceTargetPreviousFriendlyPlayer,
+	CM_spaceTargetNextEnemyPlayer,
+	CM_spaceTargetPreviousEnemyPlayer,
+	CM_spaceTargetGroupLeader,
+
+	CM_spaceTargetNextGroupMember, //1065
+	CM_spaceTargetPreviousGroupMember,
+	CM_swapRollYawAxes,
+	CM_rearView,
+	CM_hyperspaceOrientShipToPointAndLockPlayerInput,
+
+	CM_lockPlayerShipInputOnClient, // 1070
+	CM_unlockPlayerShipInputOnClient,
+	CM_spaceTargetNext,
+	CM_spaceTargetPrevious,
+	CM_setSpecialAbility,
+
+	CM_spaceShipHit, //1075
+	CM_shipThrottleDeltaAxis,
+	CM_shipThrottleDeltaSlider,
+	CM_droidCommandProgramming,
+	CM_inviteOtherGroupMembersToLaunchIntoSpace,
+
+	CM_askGroupMemberToLaunchIntoSpace, //1080
+	CM_groupMemberInvitationToLaunchIntoSpaceResponse,
+	CM_relayGroupMemberInvitationToLaunchAnswer,
+//-- End space controller messages
+
+	CM_groupMakeLootMaster,
+	CM_groupSetLootRule,
+
+	CM_groupOpenLotteryWindowOnClient, //1085
+	CM_groupCloseLotteryWindowOnClient,
+	CM_groupLotteryWindowHeartbeat,
+	CM_groupLotteryWindowCloseResults,
+	CM_questTaskCounterData,
+
+	CM_pushCreature, // 1090
+	CM_setBioLink,
+	CM_questTaskTimerData,
+	CM_slowDownEffect,
+	CM_removeSlowDownEffect,
+
+	CM_removeSlowDownEffectProxy, // 1095
+	CM_commandTimer,
+	CM_addHate,
+	CM_setHate,
+	CM_removeHateTarget,
+
+	CM_clearHateList, // 1100
+	CM_changeRoleIconChoice,
+	CM_aiSetCreatureName,
+	CM_aiCreatureState,
+	CM_aiSetHomeLocation,
+
+	CM_setLevel, // 1105
+	CM_recalculateLevel,
+	CM_aiSetFrozen,
+	CM_aiSetRetreating,
+	CM_aiSetLogging,
+
+	CM_aiEquipPrimaryWeapon, // 1110
+	CM_aiEquipSecondaryWeapon,
+	CM_aiUnEquipWeapons,
+	CM_aiMarkCombatStartLocation,
+	CM_showCombatText,
+
+	CM_setCurrentWorkingSkill, // 1115
+	CM_setProfessionTemplate,
+	CM_resetHateTimer,
+	CM_autoExpireHateListTargetEnabled,
+
+//-- ep3 controller messages
+	CM_shipStopFiring = 1200, // use for ep3
+	CM_cyberneticsOpen,
+	CM_cyberneticsChangeRequest,
+	CM_cyberneticsChangeRequestToNPC,
+	CM_spaceMiningSaleOpen,
+
+	CM_detachAllRidersForMount, // 1205
+	CM_spaceMiningSaleSellResource,
+	CM_requestActivateQuest,
+	CM_requestCompleteQuest,
+	CM_removeAllAllowed,
+	
+	CM_removeAllBanned, // 1210
+//-- End ep3 controller messages
+
+	CM_staticLootItemData,
+	CM_showLootBox,
+	CM_questTaskLocationData,
+	CM_forceActivateQuest,
+
+	CM_jump, // 1215
+	CM_primaryAttack,
+	CM_secondaryAttack,
+	CM_primaryAction,
+	CM_primaryActionAndAttack,
+    
+	CM_setIntendedTarget, // 1220
+	CM_clientIntendedTarget,
+	CM_toggleAutoAim,
+	CM_toggleRepeatPrimaryAttack,
+	CM_setIntendedAndSummonRadialMenu,
+	
+	CM_customizeFinished, // 1225
+	CM_openCustomizationWindow,
+	CM_incrementKillMeter,
+	CM_untargetOnly,
+	CM_petToolbarSlot0,
+
+	CM_petToolbarSlot1, // 1230
+	CM_petToolbarSlot2,
+	CM_petToolbarSlot3,
+	CM_petToolbarSlot4,
+	CM_petToolbarSlot5,
+
+	CM_petToolbarSlot6, // 1235
+	CM_petToolbarSlot7,
+	CM_petToolbarSlot8,
+	CM_removeAllAttributeAndSkillmodModifiers,
+	CM_addBuff,
+	
+	CM_removeBuff, // 1240
+	CM_clientMinigameOpen,
+	CM_clientMinigameClose,
+	CM_clientMinigameResult,
+	CM_createSaga,
+	
+	CM_openRatingWindow, // 1245
+	CM_ratingFinished,
+	CM_abandonPlayerQuest,
+	CM_openRecipe, 
+	CM_addObjectEffect,
+	
+	CM_removeObjectEffect, // 1250
+	CM_removeAllObjectEffect, 
+
+	CM_COUNT
+};
+
+#endif
