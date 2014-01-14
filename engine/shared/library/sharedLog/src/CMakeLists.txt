@@ -48,6 +48,8 @@ include_directories(
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedSynchronization/include/public
 	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/archive/include
 	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/fileInterface/include/public
+	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/Unicode/include
+	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/UnicodeArchive/include/public
 )
 
 add_library(sharedLog STATIC
