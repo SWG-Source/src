@@ -1055,7 +1055,7 @@ bool TreeFile::SearchCache::exists(char const * const fileName, bool & deleted) 
 	deleted = false;
 
 	TemporaryCrcString const crcString(fileName, true);
-	return m_cachedFileMap->find(&crcString) != m_cachedFileMap->end();
+	return m_cachedFileMap->find((const CrcString*)&crcString) != m_cachedFileMap->end();
 }
 
 // ----------------------------------------------------------------------
@@ -1065,7 +1065,7 @@ int TreeFile::SearchCache::getFileSize(char const * const fileName, bool & delet
 	deleted = false;
 
 	TemporaryCrcString const crcString(fileName, true);
-	CachedFileMap::iterator iter = m_cachedFileMap->find(&crcString);
+	CachedFileMap::iterator iter = m_cachedFileMap->find((const CrcString*)&crcString);
 	if (iter != m_cachedFileMap->end())
 		return iter->second->getUncompressedLength();
 
@@ -1101,7 +1101,7 @@ AbstractFile * TreeFile::SearchCache::open(char const * const fileName, Abstract
 	deleted = false;
 
 	TemporaryCrcString const crcString(fileName, true);
-	CachedFileMap::iterator iter = m_cachedFileMap->find(&crcString);
+	CachedFileMap::iterator iter = m_cachedFileMap->find((const CrcString*)&crcString);
 	if (iter != m_cachedFileMap->end())
 		return iter->second->createAbstractFile();
 
