@@ -1,0 +1,156 @@
+
+set(SHARED_SOURCES
+	shared/core/BarrierObject.cpp
+	shared/core/BarrierObject.h
+	shared/core/BaseClass.h
+	shared/core/BoxTree.cpp
+	shared/core/BoxTree.h
+	shared/core/Bresenham.cpp
+	shared/core/Bresenham.h
+	shared/core/CollideParameters.cpp
+	shared/core/CollideParameters.h
+	shared/core/Collision2d.cpp
+	shared/core/Collision2d.h
+	shared/core/CollisionBuckets.cpp
+	shared/core/CollisionBuckets.h
+	shared/core/CollisionEnums.cpp
+	shared/core/CollisionEnums.h
+	shared/core/CollisionInfo.h
+	shared/core/CollisionMesh.cpp
+	shared/core/CollisionMesh.h
+	shared/core/CollisionNotification.cpp
+	shared/core/CollisionNotification.h
+	shared/core/CollisionProperty.cpp
+	shared/core/CollisionProperty.h
+	shared/core/CollisionResolve.cpp
+	shared/core/CollisionResolve.h
+	shared/core/CollisionSurface.cpp
+	shared/core/CollisionSurface.h
+	shared/core/CollisionUtils.cpp
+	shared/core/CollisionUtils.h
+	shared/core/CollisionVolume.cpp
+	shared/core/CollisionVolume.h
+	shared/core/CollisionWorld.cpp
+	shared/core/CollisionWorld.h
+	shared/core/ConfigSharedCollision.cpp
+	shared/core/ConfigSharedCollision.h
+	shared/core/Contact3d.cpp
+	shared/core/Contact3d.h
+	shared/core/ContactPoint.cpp
+	shared/core/ContactPoint.h
+	shared/core/Containment1d.cpp
+	shared/core/Containment1d.h
+	shared/core/Containment2d.cpp
+	shared/core/Containment2d.h
+	shared/core/Containment3d.cpp
+	shared/core/Containment3d.h
+	shared/core/Distance2d.cpp
+	shared/core/Distance2d.h
+	shared/core/Distance3d.cpp
+	shared/core/Distance3d.h
+	shared/core/DoorHelper.cpp
+	shared/core/DoorHelper.h
+	shared/core/DoorInfo.h
+	shared/core/DoorObject.cpp
+	shared/core/DoorObject.h
+	shared/core/FirstSharedCollision.h
+	shared/core/FloorContactShape.cpp
+	shared/core/FloorContactShape.h
+	shared/core/Floor.cpp
+	shared/core/Floor.h
+	shared/core/FloorLocator.cpp
+	shared/core/FloorLocator.h
+	shared/core/FloorManager.cpp
+	shared/core/FloorManager.h
+	shared/core/FloorMesh.cpp
+	shared/core/FloorMesh.h
+	shared/core/FloorTri.cpp
+	shared/core/FloorTri.h
+	shared/core/Footprint.cpp
+	shared/core/Footprint.h
+	shared/core/FootprintForceReattachManager.cpp
+	shared/core/FootprintForceReattachManager.h
+	shared/core/Intersect1d.cpp
+	shared/core/Intersect1d.h
+	shared/core/Intersect2d.cpp
+	shared/core/Intersect2d.h
+	shared/core/Intersect3d.cpp
+	shared/core/Intersect3d.h
+	shared/core/MultiList.cpp
+	shared/core/MultiList.h
+	shared/core/NeighborObject.cpp
+	shared/core/NeighborObject.h
+	shared/core/Overlap2d.cpp
+	shared/core/Overlap2d.h
+	shared/core/Overlap3d.cpp
+	shared/core/Overlap3d.h
+	shared/core/Resolve3d.cpp
+	shared/core/Resolve3d.h
+	shared/core/SetupSharedCollision.cpp
+	shared/core/SetupSharedCollision.h
+	shared/core/SimpleCollisionMesh.cpp
+	shared/core/SimpleCollisionMesh.h
+	shared/core/SpaceAvoidanceManager.cpp
+	shared/core/SpaceAvoidanceManager.h
+	shared/core/SpatialDatabase.cpp
+	shared/core/SpatialDatabase.h
+
+	shared/extent/BaseExtent.cpp
+	shared/extent/BaseExtent.h
+	shared/extent/BoxExtent.cpp
+	shared/extent/BoxExtent.h
+	shared/extent/CollisionDetect.cpp
+	shared/extent/CollisionDetect.h
+	shared/extent/ComponentExtent.cpp
+	shared/extent/ComponentExtent.h
+	shared/extent/CompositeExtent.cpp
+	shared/extent/CompositeExtent.h
+	shared/extent/CylinderExtent.cpp
+	shared/extent/CylinderExtent.h
+	shared/extent/DetailExtent.cpp
+	shared/extent/DetailExtent.h
+	shared/extent/Extent.cpp
+	shared/extent/Extent.h
+	shared/extent/ExtentList.cpp
+	shared/extent/ExtentList.h
+	shared/extent/MeshExtent.cpp
+	shared/extent/MeshExtent.h
+	shared/extent/OrientedCylinderExtent.cpp
+	shared/extent/OrientedCylinderExtent.h
+	shared/extent/SimpleExtent.cpp
+	shared/extent/SimpleExtent.h
+)
+
+if(WIN32)
+	set(PLATFORM_SOURCES
+		win32/FirstSharedCollision.cpp
+	)
+
+	include_directories(${CMAKE_CURRENT_SOURCE_DIR}/win32)
+else()
+	set(PLATFORM_SOURCES "")
+endif()
+
+include_directories(
+	${CMAKE_CURRENT_SOURCE_DIR}/shared
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedDebug/include/public	
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFile/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFoundation/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFoundationTypes/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedGame/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedLog/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMath/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMemoryManager/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedObject/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedRandom/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedTerrain/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedUtility/include/public
+	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/archive/include
+	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/localization/include
+	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicode/include
+)
+
+add_library(sharedCollision STATIC
+	${SHARED_SOURCES}
+	${PLATFORM_SOURCES}
+)
