@@ -1,0 +1,118 @@
+//
+// TerrainGeneratorType.def
+// asommers 9-11-2000
+//
+// copyright 2000, verant interactive
+//
+
+//-------------------------------------------------------------------
+
+#ifndef TERRAINGENERATORTYPE_DEF
+#define TERRAINGENERATORTYPE_DEF
+
+//-------------------------------------------------------------------
+
+enum TerrainGeneratorMap
+{
+	TGM_height                      = (1<< 0),
+	TGM_color                       = (1<< 1),
+	TGM_shader                      = (1<< 2),
+	TGM_floraStaticCollidable       = (1<< 3),
+	TGM_floraStaticNonCollidable    = (1<< 4),
+	TGM_floraDynamicNear            = (1<< 5),
+	TGM_floraDynamicFar             = (1<< 6),
+	TGM_environment                 = (1<< 7),
+	TGM_vertexPosition              = (1<< 8),
+	TGM_vertexNormal                = (1<< 9),
+	TGM_exclude                     = (1<<10),
+	TGM_passable                    = (1<<11),
+
+	TGM_ALL                         = 0xffffffff
+};
+
+//-------------------------------------------------------------------
+
+enum TerrainGeneratorBoundaryType
+{
+	TGBT_circle,
+	TGBT_rectangle,
+	TGBT_polygon,
+	TGBT_polyline
+};
+
+//-------------------------------------------------------------------
+
+enum TerrainGeneratorFilterType
+{
+	TGFT_height,
+	TGFT_fractal,
+	TGFT_slope,
+	TGFT_direction,
+	TGFT_shader,
+	TGFT_bitmap
+};
+
+//-------------------------------------------------------------------
+
+enum TerrainGeneratorAffectorType
+{
+	TGAT_heightTerrace, 
+	TGAT_heightConstant,
+	TGAT_heightFractal,
+	TGAT_colorConstant,
+	TGAT_colorRampHeight,
+	TGAT_colorRampFractal,
+	TGAT_shaderConstant,
+	TGAT_shaderReplace,
+	TGAT_floraStaticCollidableConstant,
+	TGAT_floraStaticNonCollidableConstant,
+	TGAT_floraDynamicNearConstant,
+	TGAT_floraDynamicFarConstant,
+	TGAT_exclude,
+	TGAT_passable,
+	TGAT_road,
+	TGAT_river,
+	TGAT_environment,
+	TGAT_ribbon,
+
+	TGAT_COUNT
+};
+
+//-------------------------------------------------------------------
+
+enum TerrainGeneratorOperation
+{
+	TGO_replace,
+	TGO_add,
+	TGO_subtract,
+	TGO_multiply,
+
+	TGO_COUNT
+};
+
+//-------------------------------------------------------------------
+
+enum TerrainGeneratorFeatherFunction
+{
+	TGFF_linear,
+	TGFF_easeIn,
+	TGFF_easeOut,
+	TGFF_easeInOut,
+
+	TGFF_COUNT
+};
+
+//-------------------------------------------------------------------
+
+enum TerrainGeneratorWaterType
+{
+	TGWT_invalid = -1,
+	TGWT_water,
+	TGWT_lava,
+
+	TGWT_COUNT
+};
+
+//-------------------------------------------------------------------
+
+#endif

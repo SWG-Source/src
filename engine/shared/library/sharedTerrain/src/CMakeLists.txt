@@ -1,0 +1,140 @@
+
+set(SHARED_SOURCES
+	shared/appearance/ProceduralTerrainAppearance.cpp
+	shared/appearance/ProceduralTerrainAppearance.h
+	shared/appearance/ProceduralTerrainAppearanceTemplate.cpp
+	shared/appearance/ProceduralTerrainAppearanceTemplate.h
+	shared/appearance/SamplerProceduralTerrainAppearance.cpp
+	shared/appearance/SamplerProceduralTerrainAppearance.h
+	shared/appearance/SamplerProceduralTerrainAppearance_Cache.cpp
+	shared/appearance/SamplerProceduralTerrainAppearance_Cache.h
+	shared/appearance/SamplerProceduralTerrainAppearanceTemplate.cpp
+	shared/appearance/SamplerProceduralTerrainAppearanceTemplate.h
+	shared/appearance/ServerProceduralTerrainAppearance_Cache.cpp
+	shared/appearance/ServerProceduralTerrainAppearance_Cache.h
+	shared/appearance/ServerProceduralTerrainAppearance.cpp
+	shared/appearance/ServerProceduralTerrainAppearance.h
+	shared/appearance/ServerProceduralTerrainAppearanceTemplate.cpp
+	shared/appearance/ServerProceduralTerrainAppearanceTemplate.h
+	shared/appearance/ServerSpaceTerrainAppearance.cpp
+	shared/appearance/ServerSpaceTerrainAppearance.h
+	shared/appearance/ServerSpaceTerrainAppearanceTemplate.cpp
+	shared/appearance/ServerSpaceTerrainAppearanceTemplate.h
+	shared/appearance/SpaceTerrainAppearance.cpp
+	shared/appearance/SpaceTerrainAppearance.h
+	shared/appearance/SpaceTerrainAppearanceTemplate.cpp
+	shared/appearance/SpaceTerrainAppearanceTemplate.h
+	shared/appearance/TerrainAppearance.cpp
+	shared/appearance/TerrainAppearance.h
+	shared/appearance/TerrainQuadTree.cpp
+	shared/appearance/TerrainQuadTree.h
+
+	shared/core/ConfigSharedTerrain.cpp
+	shared/core/ConfigSharedTerrain.h
+	shared/core/FirstSharedTerrain.h
+	shared/core/SetupSharedTerrain.cpp
+	shared/core/SetupSharedTerrain.h
+	shared/core/WaterTypeManager.cpp
+	shared/core/WaterTypeManager.h
+
+	shared/flora/FloraManager.cpp
+	shared/flora/FloraManager.h
+	shared/flora/ServerFloraManager.cpp
+	shared/flora/ServerFloraManager.h
+
+	shared/generator/AffectorColor.cpp
+	shared/generator/AffectorColor.h
+	shared/generator/Affector.cpp
+	shared/generator/AffectorEnvironment.cpp
+	shared/generator/AffectorEnvironment.h
+	shared/generator/AffectorExclude.cpp
+	shared/generator/AffectorExclude.h
+	shared/generator/AffectorFloraDynamic.cpp
+	shared/generator/AffectorFloraDynamic.h
+	shared/generator/AffectorFloraStatic.cpp
+	shared/generator/AffectorFloraStatic.h
+	shared/generator/Affector.h
+	shared/generator/AffectorHeight.cpp
+	shared/generator/AffectorHeight.h
+	shared/generator/AffectorPassable.cpp
+	shared/generator/AffectorPassable.h
+	shared/generator/AffectorRibbon.cpp
+	shared/generator/AffectorRibbon.h
+	shared/generator/AffectorRiver.cpp
+	shared/generator/AffectorRiver.h
+	shared/generator/AffectorRoad.cpp
+	shared/generator/AffectorRoad.h
+	shared/generator/AffectorShader.cpp
+	shared/generator/AffectorShader.h
+	shared/generator/Array2d.h
+	shared/generator/BitmapGroup.cpp
+	shared/generator/BitmapGroup.h
+	shared/generator/Boundary.cpp
+	shared/generator/Boundary.h
+	shared/generator/ColorRamp256.cpp
+	shared/generator/ColorRamp256.h
+	shared/generator/CoordinateHash.cpp
+	shared/generator/CoordinateHash.h
+	shared/generator/EnvironmentGroup.cpp
+	shared/generator/EnvironmentGroup.h
+	shared/generator/FastKeyList.h
+	shared/generator/FastList.h
+	shared/generator/Feather.h
+	shared/generator/Filter.cpp
+	shared/generator/Filter.h
+	shared/generator/FloraGroup.cpp
+	shared/generator/FloraGroup.h
+	shared/generator/FractalGroup.cpp
+	shared/generator/FractalGroup.h
+	shared/generator/HeightData.cpp
+	shared/generator/HeightData.h
+	shared/generator/RadialGroup.cpp
+	shared/generator/RadialGroup.h
+	shared/generator/ShaderGroup.cpp
+	shared/generator/ShaderGroup.h
+	shared/generator/TerrainGenerator.cpp
+	shared/generator/TerrainGenerator.h
+	shared/generator/TerrainGeneratorLoader.cpp
+	shared/generator/TerrainGeneratorLoader.h
+	shared/generator/TerrainGeneratorType.def
+	shared/generator/TerrainGeneratorType.h
+	shared/generator/TerrainModificationHelper.cpp
+	shared/generator/TerrainModificationHelper.h
+
+	shared/object/TerrainObject.cpp
+	shared/object/TerrainObject.h
+	shared/object/TerrainReferenceObjectNotification.cpp
+	shared/object/TerrainReferenceObjectNotification.h
+)
+
+if(WIN32)
+	set(PLATFORM_SOURCES
+		win32/FirstSharedTerrain.cpp
+	)
+
+	include_directories(${CMAKE_CURRENT_SOURCE_DIR}/win32)
+else()
+	set(PLATFORM_SOURCES "")
+endif()
+
+include_directories(
+	${CMAKE_CURRENT_SOURCE_DIR}/shared
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedCollision/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedDebug/include/public	
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFile/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFoundation/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFoundationTypes/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFractal/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedImage/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMath/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMemoryManager/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedObject/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedRandom/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedUtility/include/public
+	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/fileInterface/include/public
+)
+
+add_library(sharedTerrain STATIC
+	${SHARED_SOURCES}
+	${PLATFORM_SOURCES}
+)
