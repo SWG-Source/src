@@ -323,6 +323,7 @@ include_directories(
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedSkillSystem/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedTerrain/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedUtility/include/public
+	${SWG_GAME_SOURCE_DIR}/shared/library/swgSharedUtility/include/public
 	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/archive/include
 	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/fileInterface/include/public
 	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/localization/include

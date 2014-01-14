@@ -205,7 +205,7 @@ void CachedFileManager::preloadSomeAssets ()
 				if (possibleExtension)
 				{
 					ConstCharCrcString const extension (possibleExtension + 1);
-					ExtensionMap::iterator iter = ms_extensionMap.find (&extension);
+					ExtensionMap::iterator iter = ms_extensionMap.find ((const CrcString*)&extension);
 					if (iter == ms_extensionMap.end ())
 					{
 						CachedFileInfo * const info = new CachedFileInfo (extension.getString ());

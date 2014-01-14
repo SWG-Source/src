@@ -716,9 +716,11 @@ include_directories(
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMemoryManager/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMessageDispatch/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedUtility/include/public
+	${SWG_GAME_SOURCE_DIR}/shared/library/swgSharedUtility/include/public
 	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/archive/include
 	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/localization/include
 	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/localizationArchive/include/public
+	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/singleton/include
 	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicode/include
 	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicodeArchive/include/public
 )

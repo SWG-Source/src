@@ -281,7 +281,7 @@ void InteriorLayoutReaderWriter::addObject(char const * const cellName, char con
 {
 	Node * node = 0;
 	TemporaryCrcString const cellNameCrcString(cellName, true);
-	NodeMap::iterator iter = m_nodeMap->find(&cellNameCrcString);
+	NodeMap::iterator iter = m_nodeMap->find((const CrcString*)&cellNameCrcString);
 	if (iter != m_nodeMap->end())
 		node = iter->second;
 	else
