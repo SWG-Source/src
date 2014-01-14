@@ -10,6 +10,7 @@ set(SWG_ENGINE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/engine)
 set(SWG_EXTERNALS_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/external)
 
 find_package(STLPort REQUIRED)
+find_package(ZLib REQUIRED)
 
 include_directories(${STLPORT_INCLUDE_DIR})
 
