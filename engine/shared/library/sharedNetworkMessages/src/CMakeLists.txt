@@ -704,7 +704,17 @@ else()
 	set(PLATFORM_SOURCES "")
 endif()
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/shared)
+include_directories(
+	${CMAKE_CURRENT_SOURCE_DIR}/shared
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedDebug/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFoundation/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFoundationTypes/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMemoryManager/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMessageDispatch/include/public
+	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/archive/include
+	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/localization/include
+	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicode/include
+)
 
 add_library(sharedNetworkMessages STATIC
 	${SHARED_SOURCES}
