@@ -365,7 +365,7 @@ inline T * DataResourceList<T>::reload(Iff &source)
 	NOT_NULL(ms_loaded);
 
 	const TemporaryCrcString sourceCrcString (source.getFileName(), true);
-	typename LoadedDataResourceMap::iterator iter = ms_loaded->find(&sourceCrcString);
+	typename LoadedDataResourceMap::iterator iter = ms_loaded->find((const CrcString*)&sourceCrcString);
 	if (iter == ms_loaded->end())
 	{
 		DEBUG_WARNING(true, ("DataResourceList::reload: trying to reload unloaded resource %s!", source.getFileName()));
@@ -388,7 +388,7 @@ inline const bool DataResourceList<T>::isLoaded(const std::string & source)
 {
 	NOT_NULL(ms_loaded);
 	const TemporaryCrcString sourceCrcString (source.c_str (), true);
-	typename LoadedDataResourceMap::iterator iter = ms_loaded->find(&sourceCrcString);
+	typename LoadedDataResourceMap::iterator iter = ms_loaded->find((const CrcString*)&sourceCrcString);
 	return (iter != ms_loaded->end());
 }
 

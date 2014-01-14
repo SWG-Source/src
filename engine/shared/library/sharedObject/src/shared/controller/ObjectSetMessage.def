@@ -1,0 +1,83 @@
+//========================================================================
+//
+// ObjectSetMessage.def - sub-message ids for controller message CM_setMemberData
+//
+// copyright 2001 Sony Online Entertainment
+//
+// data files should be including ObjectSetMessage.def
+// code files should be including ObjectSetMessage.h
+//
+//========================================================================
+
+#ifndef _INCLUDED_ObjectSetMessage_DEF
+#define _INCLUDED_ObjectSetMessage_DEF
+
+#ifndef _INCLUDED_ObjectSetMessage_H
+#error include ObjectSetMessage.h instead of ObjectSetMessage.def
+#endif
+
+enum ObjectSetMessage
+{
+	OSM_nothing,
+
+	// ids for StarwarsObject and below
+	OSM_game_FIRST,
+	OSM_game_objectName,
+	OSM_game_sceneId,
+	OSM_game_LAST,
+
+	// ids for TangibleObject
+	OSM_tangible_FIRST,                     // all Tangible properties are > OSM_tangible_FIRST
+	OSM_tangible_armorEffectiveness,
+	OSM_tangible_decayTime,
+	OSM_tangible_hitPoints,
+	OSM_tangible_isFrozen,
+	OSM_tangible_isSquelched,
+	OSM_tangible_maxHitPoints,
+	OSM_tangible_ownerId,
+	OSM_tangible_popupHelpId,
+	OSM_tangible_qualityRating,
+	OSM_tangible_visible,
+	OSM_tangible_weight,
+	OSM_tangible_LAST,                      // all Tangible properties are < OSM_tangible_LAST
+
+	// ids for CreatureObject
+	OSM_creature_FIRST,
+	OSM_creature_attributes,		// takes an index and value
+	OSM_creature_maxAttributes,		// takes an index and value
+	OSM_creature_gender,
+	OSM_creature_LAST,
+
+	// ids for VehicleObject
+	OSM_vehicle_FIRST,
+	OSM_vehicle_bogus,
+	OSM_vehicle_LAST,
+
+	// ids for BuildingObject
+	OSM_building_FIRST,
+	OSM_building_LAST,
+
+	// ids for VenueObject
+	OSM_venue_FIRST,
+	OSM_venue_LAST,
+
+	// ids for InstallationObject
+	OSM_installation_FIRST,
+	OSM_installation_LAST,
+
+	// ids for ProducerObject
+	OSM_producer_FIRST,
+	OSM_producer_LAST,
+
+	// ids for CountingObject
+	OSM_counting_FIRST,
+	OSM_counting_LAST,
+
+	// ids for WeaponObject
+	OSM_weapon_FIRST,
+	OSM_weapon_LAST,
+
+	OSM_last
+};
+
+#endif	// _INCLUDED_ObjectSetMessage_DEF
