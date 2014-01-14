@@ -65,7 +65,7 @@ include_directories(
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFoundation/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFoundationTypes/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMemoryManager/include/public
-	${SWG_ROOT_SOURCE_DIR}/external/3rd/library/vtune
+	${SWG_EXTERNALS_SOURCE_DIR}/3rd/library/vtune
 )
 
 add_library(sharedDebug STATIC

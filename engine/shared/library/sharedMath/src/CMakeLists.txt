@@ -1,0 +1,133 @@
+
+set(SHARED_SOURCES
+	shared/CatmullRomSpline.cpp
+	shared/CatmullRomSpline.h
+	shared/CompressedQuaternion.cpp
+	shared/CompressedQuaternion.h
+	shared/ConfigSharedMath.cpp
+	shared/ConfigSharedMath.h
+	shared/FirstSharedMath.h
+	shared/IndexedTriangleList.cpp
+	shared/IndexedTriangleList.h
+	shared/Line2d.h
+	shared/MxCifQuadTree.cpp
+	shared/MxCifQuadTree.h
+	shared/MxCifQuadTreeBounds.cpp
+	shared/MxCifQuadTreeBounds.h
+	shared/PackedArgb.cpp
+	shared/PackedArgb.h
+	shared/PackedRgb.cpp
+	shared/PackedRgb.h
+	shared/PaletteArgb.cpp
+	shared/PaletteArgb.h
+	shared/PaletteArgbList.cpp
+	shared/PaletteArgbList.h
+	shared/Plane.cpp
+	shared/Plane.h
+	shared/PolySolver.cpp
+	shared/PolySolver.h
+	shared/Quaternion.cpp
+	shared/Quaternion.h
+	shared/Rectangle2d.cpp
+	shared/Rectangle2d.h
+	shared/SetupSharedMath.cpp
+	shared/SetupSharedMath.h
+	shared/SpatialSubdivision.cpp
+	shared/SpatialSubdivision.h
+	shared/Sphere.cpp
+	shared/Sphere.h
+	shared/SphereTree.h
+	shared/SphereTreeNode.h
+	shared/Transform.cpp
+	shared/Transform.h
+	shared/Transform2d.cpp
+	shared/Transform2d.h
+	shared/Vector.cpp
+	shared/Vector.h
+	shared/Vector2d.h
+	shared/VectorArgb.cpp
+	shared/VectorArgb.h
+	shared/Volume.cpp
+	shared/Volume.h
+	shared/WaveForm.cpp
+	shared/WaveForm.h
+	shared/WaveForm3D.cpp
+	shared/WaveForm3D.h
+
+	shared/core/AxialBox.cpp
+	shared/core/AxialBox.h
+	shared/core/Capsule.cpp
+	shared/core/Capsule.h
+	shared/core/Circle.cpp
+	shared/core/Circle.h
+	shared/core/Cylinder.cpp
+	shared/core/Cylinder.h
+	shared/core/Line3d.cpp
+	shared/core/Line3d.h
+	shared/core/MultiShape.cpp
+	shared/core/MultiShape.h
+	shared/core/OrientedBox.cpp
+	shared/core/OrientedBox.h
+	shared/core/OrientedCircle.cpp
+	shared/core/OrientedCircle.h
+	shared/core/OrientedCylinder.cpp
+	shared/core/OrientedCylinder.h
+	shared/core/Plane3d.cpp
+	shared/core/Plane3d.h
+	shared/core/Quadratic.cpp
+	shared/core/Quadratic.h
+	shared/core/Range.cpp
+	shared/core/Range.h
+	shared/core/RangeLoop.cpp
+	shared/core/RangeLoop.h
+	shared/core/Ray3d.cpp
+	shared/core/Ray3d.h
+	shared/core/Ribbon3d.cpp
+	shared/core/Ribbon3d.h
+	shared/core/Ring.cpp
+	shared/core/Ring.h
+	shared/core/Segment3d.cpp
+	shared/core/Segment3d.h
+	shared/core/ShapeUtils.cpp
+	shared/core/ShapeUtils.h
+	shared/core/Torus.cpp
+	shared/core/Torus.h
+	shared/core/Triangle2d.cpp
+	shared/core/Triangle2d.h
+	shared/core/Triangle3d.cpp
+	shared/core/Triangle3d.h
+	shared/core/YawedBox.cpp
+	shared/core/YawedBox.h
+
+	shared/debug/DebugShapeRenderer.cpp
+	shared/debug/DebugShapeRenderer.h
+)
+
+if(WIN32)
+	set(PLATFORM_SOURCES
+		win32/FirstSharedMath.cpp
+		win32/SseMath.cpp
+		win32/SseMath.h
+	)
+
+	include_directories(${CMAKE_CURRENT_SOURCE_DIR}/win32)
+else()
+	set(PLATFORM_SOURCES "")
+endif()
+
+include_directories(
+	${CMAKE_CURRENT_SOURCE_DIR}/shared
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedDebug/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFile/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFoundation/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFoundationTypes/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMemoryManager/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedRandom/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedSynchronization/include/public
+	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/fileInterface/include/public
+)
+
+add_library(sharedMath STATIC
+	${SHARED_SOURCES}
+	${PLATFORM_SOURCES}
+)
