@@ -1,0 +1,31 @@
+// ======================================================================
+//
+// Behaviors.def
+// copyright (c) 2001 Sony Online Entertainment
+//
+// ======================================================================
+
+#ifndef INCLUDED_Behaviors_DEF
+#define INCLUDED_Behaviors_DEF
+
+// ======================================================================
+
+namespace Behaviors
+{
+	const int Invalid = -1;
+	const int Calm = 0;
+	const int Alert = 1;
+	const int Threaten = 2;
+	const int Retreat = 3;
+	const int Flee = 4;
+
+	const int Attack = 5;
+	const int Frenzy = 6;
+	const int NumberOfBehaviors = 7;
+
+	typedef int Enumerator;   // Identifies which behavior
+}
+
+// ======================================================================
+
+#endif

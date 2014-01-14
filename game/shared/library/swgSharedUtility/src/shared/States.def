@@ -1,0 +1,96 @@
+// ======================================================================
+//
+// States.def
+// Copyright 2002 Sony Online Entertainment
+//
+// ======================================================================
+
+#ifndef INCLUDED_States_DEF
+#define INCLUDED_States_DEF
+
+// ======================================================================
+
+/*
+ * Defines the numeric values for states used by the game.
+ *
+ * When adding a state you must follow this checklist of related changes:
+ *
+ *     1. States.cpp has a map of state values to names.  
+ *
+ *     2. shared/.../datatables/includes/state.tab mirrors this as well.
+ *
+ *     3. shared/.../datatables/command/command_table.tab references these states
+ *          via state.tab and will need to be rebuilt if the numbering changes.
+ *
+ *     4. base_class.java needs to be changed as well.
+ *
+ *     5. .../data/sku.0/sys.shared/built/game/string/en/state_{n,d}.stf string files
+ *         need to get the appropriate entries
+ *
+ *     6. the Ui artist needs to be notified so an icon can be made & assigned
+ * 
+ * Changing the order or number of these without updating other areas will 
+ * cause game breakage.  If you do this expect me to be wearing my docs
+ * the following day, so I can personally kick your ass, causing you
+ * great pain and embarassment.
+ *
+ * Important! There must never be more than 64 states, or the way in
+ * which they are stored and persisted must be changed.
+ *
+ * This is a checklist. Use it.
+ */
+
+namespace States
+{
+	typedef int8 Enumerator;   // Identifies which state
+
+	const Enumerator Invalid                  = -1;
+
+	const Enumerator Cover                    = 0;
+	const Enumerator Combat                   = 1;
+	const Enumerator Peace                    = 2;
+	const Enumerator Aiming                   = 3;
+	const Enumerator Meditate                 = 4;
+	const Enumerator Berserk                  = 5;
+	const Enumerator FeignDeath               = 6;
+	const Enumerator CombatAttitudeEvasive    = 7;
+	const Enumerator CombatAttitudeNormal     = 8;
+	const Enumerator CombatAttitudeAggressive = 9;
+	const Enumerator Tumbling                 = 10;
+	const Enumerator Rallied                  = 11;
+	const Enumerator Stunned                  = 12;
+	const Enumerator Blinded                  = 13;
+	const Enumerator Dizzy                    = 14;
+	const Enumerator Intimidated              = 15;
+	const Enumerator Immobilized              = 16;
+	const Enumerator Frozen                   = 17;
+	const Enumerator Swimming                 = 18;
+	const Enumerator SittingOnChair           = 19;
+	const Enumerator Crafting                 = 20;
+	const Enumerator GlowingJedi              = 21;		// Jedi master who has died. Can only walk around, chat, and train skills
+	const Enumerator MaskScent                = 22;
+	const Enumerator Poisoned                 = 23;
+	const Enumerator Bleeding                 = 24;
+	const Enumerator Diseased                 = 25;
+	const Enumerator OnFire                   = 26;
+	const Enumerator RidingMount              = 27;
+	const Enumerator MountedCreature          = 28;
+	const Enumerator PilotingShip             = 29;
+	const Enumerator ShipOperations           = 30;
+	const Enumerator ShipGunner               = 31;
+	const Enumerator ShipInterior             = 32;
+	const Enumerator PilotingPobShip          = 33;
+	const Enumerator PerformingDeathBlow      = 34;
+	const Enumerator Disguised                = 35;
+	const Enumerator ElectricBurned           = 36;
+	const Enumerator ColdBurned               = 37;
+	const Enumerator AcidBurned               = 38;
+	const Enumerator EnergyBurned             = 39;
+	const Enumerator KineticBurned            = 40;
+	const Enumerator NumberOfStates           = 41;
+}
+
+// ======================================================================
+
+#endif	// INCLUDED_States_DEF
+

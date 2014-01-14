@@ -250,7 +250,7 @@ void MountValidScaleRangeTableNamespace::loadTableData(char const *filename)
 		//-- Find or create new MountableCreature instance for this creature name.
 		MountableCreature *mountableCreature = NULL;
 
-		MountableCreatureTable::iterator lowerBoundIt = s_mountableCreatureTable.lower_bound(&mountableCreatureAppearanceNameCrc);
+		MountableCreatureTable::iterator lowerBoundIt = s_mountableCreatureTable.lower_bound((const CrcString*)&mountableCreatureAppearanceNameCrc);
 		bool const mountableCreatureEntryExists = ((lowerBoundIt != s_mountableCreatureTable.end()) && !s_mountableCreatureTable.key_comp()(static_cast<CrcString const*>(&mountableCreatureAppearanceNameCrc), lowerBoundIt->first));
 		
 		if (mountableCreatureEntryExists)

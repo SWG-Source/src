@@ -1,0 +1,42 @@
+// ======================================================================
+//
+// Attributes.def
+// copyright (c) 2001 Sony Online Entertainment
+//
+// ======================================================================
+
+#ifndef INCLUDED_Attributes_DEF
+#define INCLUDED_Attributes_DEF
+
+// ======================================================================
+
+namespace Attributes
+{			
+	const int Health = 0;
+	const int Constitution = 1;
+	const int Action = 2;
+	const int Stamina = 3;
+	const int Mind = 4;
+	const int Willpower = 5;
+	const int NumberOfAttributes = 6;  ///< NumberOfAttributes should always be the last entry in this structure.
+
+	typedef int Enumerator;   // Identifies which attribute
+	typedef int Value;        // Identifies the value of an attribute
+
+	//----------------------------------------------------------------------
+
+	const int POOLS[] = {
+		Attributes::Health, Attributes::Action, Attributes::Mind
+	};
+	
+	//----------------------------------------------------------------------
+
+	inline bool isAttribPool(Attributes::Enumerator attrib)
+	{
+		return attrib == POOLS[0] || attrib == POOLS[1] || attrib == POOLS[2];
+	}
+}
+
+// ======================================================================
+
+#endif

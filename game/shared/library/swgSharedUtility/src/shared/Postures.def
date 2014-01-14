@@ -1,0 +1,74 @@
+// ======================================================================
+//
+// Postures.def
+// copyright (c) 2001 Sony Online Entertainment
+//
+// ======================================================================
+
+#ifndef INCLUDED_Postures_DEF
+#define INCLUDED_Postures_DEF
+
+// ======================================================================
+/**
+ * Defines the numeric values for Postures used by the game.
+ *
+ * Postures.cpp has a map of posture values to names.  
+ *
+ * The client has a table mapping these game postures to animation state 
+ *   hierarchy posture names.  (where is this?)
+ *
+ * shared/.../datatables/includes/posture.tab mirrors this as well.
+ *
+ * shared/.../datatables/movement/movement_* references these postures
+ *   via locomotion.tab and will need to be rebuilt if the numbering changes.
+ *
+ * base_class.java needs to be changed as well.
+ *
+ * Run make_generated_postures.btm in swg/current/dsrc/include.  Then
+ *   check out dsrc and data and run makedata.btm on these files:
+ *     swg/current/dsrc/sku.0/sys.client/compiled/game/animation/posture_map.mif
+ *     swg/current/dsrc/sku.0/sys.client/compiled/game/combat/combat_manager.mif
+ *
+ *   It is likely that removal or addition of a posture will require adding
+ *   new data to posture_map.mif if the new posture requires different animation visuals.
+ * 
+ * Do not add a posture unless it reuses existing locomotions or you add
+ *   the new locomotions to Locomotions.def and elsewhere.
+ *
+ * Changing the order or number of these without updating other areas will 
+ * cause game breakage.  If you do this expect me to be wearing my docs
+ * the following day, so I can personally kick your ass, causing you
+ * great pain and embarassment.
+ *
+ * This is a checklist. Use it.
+*/
+
+//====================================================================
+
+namespace Postures
+{
+	typedef int8 Enumerator;   // Identifies which posture
+
+	const Enumerator Invalid              = -1;
+
+	const Enumerator Upright              = 0;
+	const Enumerator Crouched             = 1;
+	const Enumerator Prone                = 2;
+	const Enumerator Sneaking             = 3;
+	const Enumerator Blocking             = 4;
+	const Enumerator Climbing             = 5;
+	const Enumerator Flying               = 6;
+	const Enumerator LyingDown            = 7;
+	const Enumerator Sitting              = 8;
+	const Enumerator SkillAnimating       = 9;
+	const Enumerator DrivingVehicle       = 10;
+	const Enumerator RidingCreature       = 11;
+	const Enumerator KnockedDown          = 12;
+	const Enumerator Incapacitated        = 13;
+	const Enumerator Dead                 = 14;
+	const Enumerator NumberOfPostures     = 15;
+}
+
+// ======================================================================
+
+#endif	// INCLUDED_Postures_DEF

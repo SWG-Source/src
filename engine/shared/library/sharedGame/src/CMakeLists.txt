@@ -312,6 +312,7 @@ include_directories(
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFile/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFoundation/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFoundationTypes/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedLog/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMath/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMathArchive/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMemoryManager/include/public

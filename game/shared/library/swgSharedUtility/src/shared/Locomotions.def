@@ -1,0 +1,83 @@
+// ======================================================================
+//
+// Locomotions.def
+// copyright (c) 2001 Sony Online Entertainment
+//
+// ======================================================================
+
+#ifndef INCLUDED_Locomotions_DEF
+#define INCLUDED_Locomotions_DEF
+
+// ======================================================================
+
+/*
+ * Defines the numeric values for Locomotoins used by the game.
+ *
+ * Locomotions.cpp has a map of posture values to names.  
+ *
+ * shared/.../datatables/includes/locomotion.tab mirrors this as well.
+ *
+ * shared/.../datatables/movement/movement_* references these locomotions
+ *   via locomotion.tab and will need to be rebuilt if the numbering changes.
+ *
+ * shared/.../datatables/command/command_table.tab references these locomotions
+ *   via locomotion.tab and will need to be rebuilt if the numbering changes.
+ *
+ * base_class.java needs to be changed as well.
+ * 
+ * Changing the order or number of these without updating other areas will 
+ * cause game breakage.  If you do this expect me to be wearing my docs
+ * the following day, so I can personally kick your ass, causing you
+ * great pain and embarassment.
+ *
+ * This is a checklist. Use it.
+*/
+
+//====================================================================
+
+namespace Locomotions
+{
+	typedef int8 Enumerator;   // Identifies which posture
+
+	const Enumerator Invalid                 = -1;
+
+	const Enumerator Standing                = 0;
+	const Enumerator Sneaking                = 1;
+	const Enumerator Walking                 = 2;
+	const Enumerator Running                 = 3;
+
+	const Enumerator Kneeling                = 4;
+	const Enumerator CrouchSneaking          = 5;
+	const Enumerator CrouchWalking           = 6;
+
+	const Enumerator Prone                   = 7;
+	const Enumerator Crawling                = 8;
+
+	const Enumerator ClimbingStationary      = 9;
+	const Enumerator Climbing                = 10;
+
+	const Enumerator Hovering                = 11;
+	const Enumerator Flying                  = 12;
+
+	const Enumerator LyingDown               = 13;
+
+	const Enumerator Sitting                 = 14;
+
+	const Enumerator SkillAnimating          = 15;
+
+	const Enumerator DrivingVehicle          = 16;
+
+	const Enumerator RidingCreature          = 17;
+
+	const Enumerator KnockedDown             = 18;
+	const Enumerator Incapacitated           = 19;
+	const Enumerator Dead                    = 20;
+
+	const Enumerator Blocking                = 21;
+
+	const Enumerator NumberOfLocomotions     = 22;
+}
+
+// ======================================================================
+
+#endif	// INCLUDED_Locomotions_DEF

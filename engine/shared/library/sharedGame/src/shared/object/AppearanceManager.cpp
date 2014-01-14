@@ -89,7 +89,7 @@ void AppearanceManager::install()
 			//-- Look up the source name
 			CrcStringVector * crcStringVector = 0;
 			{
-				ObjectTemplateAppearanceTemplateMap::iterator iter = ms_objectTemplateAppearanceTemplateMap.find(&crcSourceName);
+				ObjectTemplateAppearanceTemplateMap::iterator iter = ms_objectTemplateAppearanceTemplateMap.find((const CrcString*)&crcSourceName);
 				if (iter != ms_objectTemplateAppearanceTemplateMap.end())
 				{
 					DEBUG_WARNING(true, ("AppearanceManager::install(%s): duplicate entry found for %s", appearanceTableFileName, crcSourceName.getString()));
@@ -161,7 +161,7 @@ void AppearanceManagerNamespace::remove()
 bool AppearanceManager::isAppearanceManaged(std::string const &fileName)
 {
 	TemporaryCrcString const crcFileName(fileName.c_str(), true);
-	return ms_objectTemplateAppearanceTemplateMap.find(&crcFileName) != ms_objectTemplateAppearanceTemplateMap.end();
+	return ms_objectTemplateAppearanceTemplateMap.find((const CrcString*)&crcFileName) != ms_objectTemplateAppearanceTemplateMap.end();
 }
 
 // ----------------------------------------------------------------------
@@ -172,7 +172,7 @@ bool AppearanceManager::getAppearanceName(std::string &targetName, std::string c
 	TemporaryCrcString const crcSourceName(sourceName.c_str(), true);
 
 	//-- Look up the source name
-	ObjectTemplateAppearanceTemplateMap::iterator iter = ms_objectTemplateAppearanceTemplateMap.find(&crcSourceName);
+	ObjectTemplateAppearanceTemplateMap::iterator iter = ms_objectTemplateAppearanceTemplateMap.find((const CrcString*)&crcSourceName);
 	if (iter == ms_objectTemplateAppearanceTemplateMap.end())
 		return false;
 

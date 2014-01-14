@@ -150,6 +150,7 @@ include_directories(
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFoundationTypes/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedLog/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMath/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMathArchive/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMemoryManager/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedSynchronization/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedThread/include/public
@@ -157,6 +158,7 @@ include_directories(
 	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/fileInterface/include/public
 	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/localization/include
 	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicode/include
+	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicodeArchive/include/public
 )
 
 add_library(sharedFoundation STATIC

@@ -1,0 +1,35 @@
+// ======================================================================
+//
+// MentalStates.def
+// copyright (c) 2001 Sony Online Entertainment
+//
+// ======================================================================
+
+#ifndef INCLUDED_MentalStates_DEF
+#define INCLUDED_MentalStates_DEF
+
+// ======================================================================
+
+namespace MentalStates
+{			
+	const int Fear = 0;
+	const int Anger = 1;
+  const int Interest = 2;
+  const int Distress = 3;
+	const int NumberOfMentalStates = 4;  ///< NumberOfAttributes should always be the last entry in this structure.
+  /*
+  const int Contempt = 4;
+  const int Disgust = 5;
+  const int Joy = 6;
+  const int Shame = 7;
+  const int Suprise = 8;
+  const int NumberOfMentalStates = 9;
+  */
+
+	typedef int Enumerator;   // Identifies which attribute
+	typedef float Value;      // Identifies the value of an attribute
+}
+
+// ======================================================================
+
+#endif
