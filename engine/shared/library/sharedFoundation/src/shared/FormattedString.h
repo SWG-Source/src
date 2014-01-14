@@ -8,6 +8,8 @@
 #ifndef INCLUDED_FormattedString_H
 #define INCLUDED_FormattedString_H
 
+#include <cstdio>
+
 // ----------------------------------------------------------------------
 template <int bufferSize>
 class FormattedString
