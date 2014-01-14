@@ -712,9 +712,10 @@ include_directories(
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedGame/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMath/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMathArchive/include/public
-	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedNetwork/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMemoryManager/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMessageDispatch/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedNetwork/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedObject/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedUtility/include/public
 	${SWG_GAME_SOURCE_DIR}/shared/library/swgSharedUtility/include/public
 	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/archive/include
@@ -723,6 +724,7 @@ include_directories(
 	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/singleton/include
 	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicode/include
 	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicodeArchive/include/public
+	${Boost_INCLUDE_DIR}
 )
 
 add_library(sharedNetworkMessages STATIC
