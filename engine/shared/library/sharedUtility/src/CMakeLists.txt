@@ -1,0 +1,122 @@
+
+set(SHARED_SOURCES
+	shared/BakedTerrain.cpp
+	shared/BakedTerrain.h
+	shared/BakedTerrainReader.cpp
+	shared/BakedTerrainReader.h
+	shared/CachedFileManager.cpp
+	shared/CachedFileManager.h
+	shared/Callback.cpp
+	shared/Callback.h
+	shared/CallbackReceiver.h
+	shared/ConfigSharedUtility.cpp
+	shared/ConfigSharedUtility.h
+	shared/CurrentUserOptionManager.cpp
+	shared/CurrentUserOptionManager.h
+	shared/DataTable.cpp
+	shared/DataTable.h
+	shared/DataTableCell.cpp
+	shared/DataTableCell.h
+	shared/DataTableColumnType.cpp
+	shared/DataTableColumnType.h
+	shared/DataTableManager.cpp
+	shared/DataTableManager.h
+	shared/DataTableWriter.cpp
+	shared/DataTableWriter.h
+	shared/FileName.cpp
+	shared/FileName.h
+	shared/FirstSharedUtility.h
+	shared/HttpGetEncoder.cpp
+	shared/HttpGetEncoder.h
+	shared/IndexedCache.cpp
+	shared/IndexedCache.h
+	shared/InstallationResourceData.h
+	shared/InstallationResourceDataArchive.h
+	shared/InteriorLayoutReaderWriter.cpp
+	shared/InteriorLayoutReaderWriter.h
+	shared/Location.cpp
+	shared/Location.h
+	shared/LocationArchive.cpp
+	shared/LocationArchive.h
+	shared/LocalMachineOptionManager.cpp
+	shared/LocalMachineOptionManager.h
+	shared/LocationManager.cpp
+	shared/LocationManager.h
+	shared/NameGenerator.cpp
+	shared/NameGenerator.h
+	shared/NetworkIdAutoDeltaPackedMap.cpp
+	shared/NetworkIdAutoDeltaPackedMap.h
+	shared/OptionManager.cpp
+	shared/OptionManager.h
+	shared/PackedIntegerMap.cpp
+	shared/PackedIntegerMap.h
+	shared/PackedFixedPointMap.cpp
+	shared/PackedFixedPointMap.h
+	shared/PackedPosition.h
+	shared/PackedQuaternion.h
+	shared/PackedRotationRate.h
+	shared/PackedTransform.h
+	shared/PackedUnitVector.h
+	shared/PackedVelocity.h
+	shared/PooledString.cpp
+	shared/PooledString.h
+	shared/RotaryCache.cpp
+	shared/RotaryCache.h
+	shared/SetupSharedUtility.cpp
+	shared/SetupSharedUtility.h
+	shared/StartingLocationData.cpp
+	shared/StartingLocationData.h
+	shared/StartingLocationDataArchive.cpp
+	shared/StartingLocationDataArchive.h
+	shared/StartingLocationManager.cpp
+	shared/StartingLocationManager.h
+	shared/SynchronizedWeatherGenerator.cpp
+	shared/SynchronizedWeatherGenerator.h
+	shared/TemplateParameter.cpp
+	shared/TemplateParameter.h
+	shared/UniqueNameList.cpp
+	shared/UniqueNameList.h
+	shared/ValueDictionary.cpp
+	shared/ValueDictionary.h
+	shared/ValueDictionaryArchive.cpp
+	shared/ValueDictionaryArchive.h
+	shared/ValueTypeBase.cpp
+	shared/ValueTypeBase.h
+	shared/ValueTypeBool.cpp
+	shared/ValueTypeBool.h
+	shared/ValueTypeFloat.cpp
+	shared/ValueTypeFloat.h
+	shared/ValueTypeObjId.cpp
+	shared/ValueTypeObjId.h
+	shared/ValueTypeSignedInt.cpp
+	shared/ValueTypeSignedInt.h
+	shared/ValueTypeString.cpp
+	shared/ValueTypeString.h
+	shared/WeatherData.cpp
+	shared/WeatherData.h
+	shared/WorldSnapshotReaderWriter.cpp
+	shared/WorldSnapshotReaderWriter.h
+)
+
+if(WIN32)
+	set(PLATFORM_SOURCES
+		win32/FirstSharedUtility.cpp
+	)
+
+	include_directories(${CMAKE_CURRENT_SOURCE_DIR}/win32)
+else()
+	set(PLATFORM_SOURCES "")
+endif()
+
+include_directories(
+	${CMAKE_CURRENT_SOURCE_DIR}/shared
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedDebug/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFoundation/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFoundationTypes/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMemoryManager/include/public
+)
+
+add_library(sharedUtility STATIC
+	${SHARED_SOURCES}
+	${PLATFORM_SOURCES}
+)

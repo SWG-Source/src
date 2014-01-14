@@ -1,0 +1,27 @@
+//======================================================================
+//
+// CommandCppFunc.h
+// copyright (c) 2002 Sony Online Entertainment
+//
+//======================================================================
+
+#ifndef INCLUDED_CommandCppFunc_H
+#define INCLUDED_CommandCppFunc_H
+
+//======================================================================
+
+class NetworkId;
+class Command;
+
+//----------------------------------------------------------------------
+
+namespace CommandCppFunc
+{
+	typedef void (*Type)(Command const &, NetworkId const &, NetworkId const &, Unicode::String const &);
+}
+
+//----------------------------------------------------------------------
+
+//======================================================================
+
+#endif
