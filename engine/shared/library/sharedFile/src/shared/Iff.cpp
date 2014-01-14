@@ -21,6 +21,7 @@
 #include "sharedMath/Vector.h"
 #include "sharedMath/VectorArgb.h"
 
+#include <cstdio>
 #include <string>
 
 // ======================================================================
