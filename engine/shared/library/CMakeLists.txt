@@ -1,5 +1,6 @@
 
 add_subdirectory(sharedCollision)
+add_subdirectory(sharedCommandParser)
 add_subdirectory(sharedCompression)
 add_subdirectory(sharedDebug)
 add_subdirectory(sharedFile)
