@@ -25,11 +25,12 @@ include_directories(
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFoundation/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFoundationTypes/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMemoryManager/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMessageDispatch/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedNetwork/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedNetworkMessages/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedUtility/include/public
-	${SWG_ENGINE_SOURCE_DIR}/shared/library/serverNetworkMessages/include/public
-	${SWG_ENGINE_SOURCE_DIR}/shared/library/serverUtility/include/public
+	${SWG_ENGINE_SOURCE_DIR}/server/library/serverNetworkMessages/include/public
+	${SWG_ENGINE_SOURCE_DIR}/server/library/serverUtility/include/public
 	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/archive/include
 	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/singleton/include
 )

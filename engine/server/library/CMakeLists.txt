@@ -1,4 +1,5 @@
 
 add_subdirectory(serverKeyShare)
 add_subdirectory(serverMetrics)
+add_subdirectory(serverNetworkMessages)
 add_subdirectory(serverUtility)
