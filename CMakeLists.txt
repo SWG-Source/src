@@ -14,6 +14,7 @@ find_package(Boost REQUIRED)
 find_package(Iconv REQUIRED)
 find_package(LibXml2 REQUIRED)
 find_package(Oracle REQUIRED)
+find_package(Perl REQUIRED)
 find_package(STLPort REQUIRED)
 find_package(ZLib REQUIRED)
 

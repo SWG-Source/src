@@ -1,0 +1,52 @@
+// ======================================================================
+//
+// Packager.cpp
+// copyright (c) 2002 Sony Online Entertainment
+//
+// Edit Packager_cpp.template.  Do not edit Packager.cpp
+//
+// To change the contents of the addMemebersToPackage functions,
+// edit package_data.txt.
+//
+// ======================================================================
+
+#include "serverGame/FirstServerGame.h"
+#include "serverGame/TangibleObject.h"
+
+#include "serverGame/BattlefieldMarkerObject.h"
+#include "serverGame/BuildingObject.h"
+#include "serverGame/CellObject.h"
+#include "serverGame/CityObject.h"
+#include "serverGame/CommandQueue.h"
+#include "serverGame/CreatureObject.h"
+#include "serverGame/DraftSchematicObject.h"
+#include "serverGame/FactoryObject.h"
+#include "serverGame/GroupObject.h"
+#include "serverGame/GuildObject.h"
+#include "serverGame/HarvesterInstallationObject.h"
+#include "serverGame/InstallationObject.h"
+#include "serverGame/IntangibleObject.h"
+#include "serverGame/ManufactureSchematicObject.h"
+#include "serverGame/ManufactureInstallationObject.h"
+#include "serverGame/MissionObject.h"
+#include "serverGame/PlanetObject.h"
+#include "serverGame/PlayerQuestObject.h"
+#include "serverGame/PlayerObject.h"
+#include "serverGame/ResourceContainerObject.h"
+#include "serverGame/ResourcePoolObject.h"
+#include "serverGame/ResourceTypeObject.h"
+#include "serverGame/ServerObject.h"
+#include "serverGame/ShipObject.h"
+#include "serverGame/StaticObject.h"
+#include "serverGame/TangibleObject.h"
+#include "serverGame/UniverseObject.h"
+#include "serverGame/VehicleObject.h"
+#include "serverGame/WeaponObject.h"
+#include "serverScript/GameScriptObject.h"
+#include "sharedFoundation/DynamicVariableList.h"
+#include "sharedObject/ContainedByProperty.h"
+#include "sharedObject/SlottedContainmentProperty.h"
+
+
+//!!!BEGIN GENERATED PACKAGEADD
+//!!!END GENERATED PACKAGEADD
