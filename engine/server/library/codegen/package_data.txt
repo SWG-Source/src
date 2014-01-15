@@ -1,0 +1,614 @@
+#TODO:  get rid of "Cached" because it makes no sense for DBProcess
+#A class with '-' denotes the class does not have any persisted variables.
+
+#class           parent
+ServerObject
+BuildingObject                TangibleObject
+CellObject                    ServerObject
+CreatureObject                TangibleObject
+FactoryObject                 TangibleObject
+HarvesterInstallationObject   InstallationObject
+InstallationObject            TangibleObject
+IntangibleObject              ServerObject
+ManufactureInstallationObject InstallationObject
+ManufactureSchematicObject    IntangibleObject
+MissionObject                 IntangibleObject
+PlanetObject                  UniverseObject
+PlayerObject                  IntangibleObject
+ResourceContainerObject       TangibleObject
+ShipObject                    TangibleObject
+StaticObject                  ServerObject
+TangibleObject                ServerObject
+UniverseObject                ServerObject
+VehicleObject                 TangibleObject
+WeaponObject                  TangibleObject
+-GroupObject                  UniverseObject
+GuildObject                   UniverseObject
+BattlefieldMarkerObject       TangibleObject
+CityObject                    UniverseObject
+PlayerQuestObject	      TangibleObject
+end
+
+#Note:  The datatype in the following table is the datatype to use in SwgDatabaseServer.  Therefore, use NetworkId instead of CachedNetworkId, etc.
+#Note:  The parser for this file uses spaces as separators.  Be careful not to put extra spaces in commands.
+
+#class                      member name              package              datatype     add-to-package command     persist function  load function
+
+BuildingObject              m_allowed                server               std::string - encodePropertyList(objectId,PropertyListBuffer::LI_Allowed,data); decodePropertyList(objectId,PropertyListBuffer::LI_Allowed,data,isBaseline);
+BuildingObject              m_banned                 server               std::string - encodePropertyList(objectId,PropertyListBuffer::LI_Banned,data); decodePropertyList(objectId,PropertyListBuffer::LI_Banned,data,isBaseline);
+BuildingObject              m_isPublic               server               bool
+BuildingObject              m_maintenanceCost        server               int
+BuildingObject              m_timeLastChecked        server               real
+BuildingObject              m_cityId                 server               int
+BuildingObject              m_contentsLoaded         server_np            bool
+
+CellObject                  m_allowed                server               std::string - encodePropertyList(objectId,PropertyListBuffer::LI_Allowed,data); decodePropertyList(objectId,PropertyListBuffer::LI_Allowed,data,isBaseline);
+CellObject                  m_banned                 server               std::string - encodePropertyList(objectId,PropertyListBuffer::LI_Banned,data); decodePropertyList(objectId,PropertyListBuffer::LI_Banned,data,isBaseline);
+CellObject                  m_isPublic               shared               bool
+CellObject                  m_cellNumber             shared               int
+CellObject                  m_cellLabel              shared_np            Unicode::String
+CellObject                  m_labelLocationOffset    shared_np            Vector
+
+CreatureObject              m_maxAttributes          authClientServer     Attributes::Value - encodeAttributes(objectId,data,9); decodeAttributes(objectId,data,isBaseline,9);
+CreatureObject              m_skills                 authClientServer     SkillObject* - encodePropertyList(objectId,PropertyListBuffer::LI_Skills,data); decodePropertyList(objectId,PropertyListBuffer::LI_Skills,data,isBaseline);
+
+CreatureObject              m_accelPercent           authClientServer_np  float
+CreatureObject              m_accelScale             authClientServer_np  float
+CreatureObject              m_attribBonus            authClientServer_np  std::vector<int>
+CreatureObject              m_modMap                 authClientServer_np  map
+CreatureObject              m_movementPercent        authClientServer_np  float
+CreatureObject              m_movementScale          authClientServer_np  float
+CreatureObject              m_performanceListenTarget authClientServer_np NetworkId
+CreatureObject              m_runSpeed               authClientServer_np  float
+CreatureObject              m_slopeModAngle          authClientServer_np  float
+CreatureObject              m_slopeModPercent        authClientServer_np  float
+CreatureObject              m_turnScale              authClientServer_np  float
+CreatureObject              m_walkSpeed              authClientServer_np  float
+CreatureObject              m_waterModPercent        authClientServer_np  float
+CreatureObject              m_notifyRegions          server_np set
+CreatureObject              m_missionCriticalObjectSet server_np set
+CreatureObject              m_groupMissionCriticalObjectSet authClientServer_np set
+CreatureObject              m_commands               authClientServer_np std::map<std::string,int>
+
+CreatureObject              m_attributes             server               Attributes::Value - encodeAttributes(objectId,data,0); decodeAttributes(objectId,data,isBaseline,0);
+CreatureObject              m_baseRunSpeed           server               float
+CreatureObject              m_baseWalkSpeed          server               float
+CreatureObject              m_persistedBuffs         server               packed_map<uint32,Buff::PackedBuff> - encodePersistedBuffs(data,row->persisted_buffs); decodePersistedBuffs(data,row->persisted_buffs);
+
+CreatureObject              m_attributeModList       server_np            std::vector<AttribMod>
+CreatureObject              m_baseSlopeModPercent    server_np            float
+CreatureObject              m_cachedCurrentAttributeModValues	server_np std::vector<Attributes::Value>
+CreatureObject              m_cachedMaxAttributeModValues       server_np std::vector<Attributes::Value>
+CreatureObject              m_commandQueue           server_np            commandqueue  getCommandQueue()->addToPackage(m_serverPackage_np);
+CreatureObject              m_cover                  server_np            int
+CreatureObject              m_currentAttitude        server_np            Attitude
+CreatureObject              m_isStatic               server_np            bool
+CreatureObject              m_lastBehavior           server_np            int
+CreatureObject              m_lastMonitorReportPosition server_np         Vector
+CreatureObject              m_locomotion             server_np            Locomotions::Enumerator
+CreatureObject              m_maxMentalStates        server_np            MentalStates::Value
+CreatureObject              m_mentalStateDecays      server_np            float
+CreatureObject              m_mentalStatesToward     server_np            map
+CreatureObject              m_monitoredCreatureMovements server_np        map
+CreatureObject              m_performanceWatchTarget server_np            NetworkId
+CreatureObject              m_stopWalkRun            server_np            int
+CreatureObject              m_timeToUpdateGuildWarPvpStatus server_np     uint32
+CreatureObject              m_guildWarEnabled        server_np            bool
+CreatureObject              m_militiaOfCityId        server_np            int
+CreatureObject              m_locatedInCityId        server_np            int
+CreatureObject              m_invulnerabilityTimer   server_np            float
+CreatureObject              m_allowSARegen           server_np            bool
+CreatureObject              m_totalLevelXp           authClientServer_np  int
+
+CreatureObject              m_posture                shared               Postures::Enumerator
+CreatureObject              m_rank                   shared               uint8
+CreatureObject              m_masterId               shared               NetworkId
+CreatureObject              m_scaleFactor            shared               float
+CreatureObject              m_shockWounds            shared               int
+CreatureObject              m_states                 shared               uint64
+CreatureObject              m_level                  shared_np            int16
+CreatureObject              m_levelHealthGranted     shared_np            int
+CreatureObject              m_animatingSkillData     shared_np            std::string
+CreatureObject              m_animationMood          shared_np            std::string
+CreatureObject              m_currentWeapon          shared_np            NetworkId
+CreatureObject              m_group                  shared_np            NetworkId
+CreatureObject              m_groupInviter           shared_np            NetworkId
+CreatureObject              m_inviterForPendingGroup server_np            NetworkId
+CreatureObject              m_guildId                shared_np            int
+CreatureObject              m_lookAtTarget           shared_np            NetworkId
+CreatureObject              m_intendedTarget         shared_np            NetworkId
+CreatureObject              m_mood                   shared_np            char
+CreatureObject              m_performanceStartTime   shared_np            int
+CreatureObject              m_performanceType        shared_np            int
+CreatureObject              m_totalAttributes        shared_np            Attributes::Value - encodeAttributes(objectId,data,0); decodeAttributes(objectId,data,isBaseline,0);
+CreatureObject              m_totalMaxAttributes     shared_np            Attributes::Value - encodeAttributes(objectId,data,9); decodeAttributes(objectId,data,isBaseline,9);
+CreatureObject              m_wearableData           shared_np            vector
+CreatureObject              m_alternateAppearanceSharedObjectTemplateName  shared_np  std::string
+CreatureObject              m_timedMod               server_np            std::vector<uint32>
+CreatureObject              m_timedModDuration       server_np            std::vector<float>
+CreatureObject              m_timedModUpdateTime     server_np            std::vector<uint32>
+CreatureObject              m_coverVisibility        shared_np            bool
+CreatureObject              m_buffs                  shared_np            map
+
+CreatureObject              m_loiterRange            none                 float
+CreatureObject              m_animState              none                 char
+CreatureObject              m_sayMode                none                 char
+
+CreatureObject              m_clientUsesAnimationLocomotion shared_np            bool
+CreatureObject              m_difficulty             shared_np            char
+CreatureObject              m_hologramType           shared_np            int32
+CreatureObject              m_visibleOnMapAndRadar   shared_np            bool
+CreatureObject	            m_wsX                    server               float
+CreatureObject	            m_wsY                    server               float
+CreatureObject	            m_wsZ                    server               float
+
+CreatureObject	            m_isBeast                shared_np            bool
+CreatureObject              m_forceShowHam           shared_np            bool
+CreatureObject              m_wearableAppearanceData shared_np            vector
+CreatureObject		    m_decoyOrigin            shared_np            NetworkId
+
+FactoryObject               m_craftingCount          server_np            int
+FactoryObject               m_craftingSchematic      server_np            NetworkId
+FactoryObject               m_attributes             server_np            std::map<StringId,float>
+
+HarvesterInstallationObject m_installedEfficiency    server               float
+HarvesterInstallationObject m_resourceType           server               NetworkId
+HarvesterInstallationObject m_maxExtractionRate      server               int
+HarvesterInstallationObject m_currentExtractionRate  server               float
+HarvesterInstallationObject m_maxHopperAmount        server               int
+HarvesterInstallationObject m_hopperResource         server               NetworkId
+HarvesterInstallationObject m_hopperAmount           server               float
+
+InstallationObject          m_installationType       server               int32
+InstallationObject          m_tickCount              server               float
+InstallationObject          m_activateStartTime      server               float
+InstallationObject          m_activated              shared               bool
+InstallationObject          m_power                  shared               float
+InstallationObject          m_powerRate              shared               float
+
+IntangibleObject            m_crcs                   server_np            std::vector<int32>
+IntangibleObject            m_positions              server_np            std::vector<Vector>
+IntangibleObject            m_headings               server_np            std::vector<float>
+IntangibleObject            m_scripts                server_np            std::vector<std::string>
+IntangibleObject            m_player                 server_np            NetworkId
+IntangibleObject            m_objects                server_np            std::vector<NetworkId>
+IntangibleObject            m_center                 server_np            Vector
+IntangibleObject            m_radius                 server_np            float
+IntangibleObject            m_creator                server_np            NetworkId
+IntangibleObject            m_theaterName            server_np            std::string
+IntangibleObject            m_count                  shared               int
+
+ManufactureSchematicObject  m_draftSchematic         server               int
+ManufactureSchematicObject  m_creatorId              server               NetworkId
+ManufactureSchematicObject  m_creatorName            server               Unicode::String
+ManufactureSchematicObject  m_factories              server_np            std::vector<NetworkId>
+ManufactureSchematicObject  m_resourceMaxAttributes  server_np            std::map<StringId,int>
+
+ManufactureSchematicObject  m_attributes             shared               std::map<StringId,float> - encodeManufactureSchematicAttributes(objectId,data); decodeManufactureSchematicAttributes(objectId,data,isBaseline);
+ManufactureSchematicObject  m_itemsPerContainer      shared               int
+ManufactureSchematicObject  m_manufactureTime        shared               float
+ManufactureSchematicObject  m_appearanceData         shared_np            std::string
+ManufactureSchematicObject  m_customAppearance       shared_np            std::string
+ManufactureSchematicObject  m_draftSchematicSharedTemplate shared_np      std::string
+ManufactureSchematicObject  m_isCrafting             shared_np            bool
+ManufactureSchematicObject  m_schematicChangedSignal shared_np            char
+
+MissionObject               m_difficulty               shared             int
+MissionObject               m_endLocation              shared             Location - encodeLocation(data,row->end_x,row->end_y,row->end_z,row->end_cell,row->end_scene); decodeLocation(data,row->end_x,row->end_y,row->end_z,row->end_cell,row->end_scene);
+MissionObject               m_missionCreator           shared             Unicode::String
+MissionObject               m_reward                   shared             int
+MissionObject               m_rootScriptName           server             std::string
+MissionObject               m_startLocation            shared             Location - encodeLocation(data,row->start_x,row->start_y,row->start_z,row->start_cell,row->start_scene); decodeLocation(data,row->start_x,row->start_y,row->start_z,row->start_cell,row->start_scene);
+MissionObject               m_targetAppearance         shared             uint32
+MissionObject               m_description              shared             StringId - encodeStringId(data,row->description_table,row->description_text); decodeStringId(data,row->description_table,row->description_text);
+MissionObject               m_title                    shared             StringId - encodeStringId(data,row->title_table,row->title_text); decodeStringId(data,row->title_table,row->title_text);
+MissionObject               m_missionHolderId          server             NetworkId
+MissionObject               m_status                   shared             int
+MissionObject               m_missionType              shared             uint32
+MissionObject               m_targetName               shared             std::string
+MissionObject               m_waypoint                 shared             map - encodeSingleWaypoint(objectId,data); decodeSingleWaypoint(objectId,data,isBaseline);
+
+PlanetObject                m_planetName                server               std::string
+PlanetObject                m_travelPointList           server_np            TravelPoint*
+PlanetObject                m_weatherIndex              server_np            int
+PlanetObject                m_windVelocityX             server_np            float
+PlanetObject                m_windVelocityY             server_np            float
+PlanetObject                m_windVelocityZ             server_np            float
+PlanetObject                m_mapLocationMapStatic      server_np            map
+PlanetObject                m_mapLocationMapDynamic     server_np            map
+PlanetObject                m_mapLocationMapPersist     server_np            map
+PlanetObject                m_mapLocationVersionStatic  server_np            int
+PlanetObject                m_mapLocationVersionDynamic server_np            int
+PlanetObject                m_mapLocationVersionPersist server_np            int
+PlanetObject                m_collectionServerFirst     server_np            set
+PlanetObject                m_collectionServerFirstUpdateNumber server_np    int
+PlanetObject                m_connectedCharacterLfgData server_np            map
+PlanetObject                m_connectedCharacterLfgDataFactionalPresence server_np map
+PlanetObject                m_connectedCharacterLfgDataFactionalPresenceGrid server_np map
+PlanetObject                m_connectedCharacterBiographyData server_np      map
+PlanetObject                m_currentEvents             server_np            std::string
+PlanetObject                m_gcwImperialScore          server_np            map
+PlanetObject                m_gcwRebelScore             server_np            map
+
+PlayerObject                m_craftingLevel                 firstParentAuthClientServer_np  int
+PlayerObject                m_craftingStage                 firstParentAuthClientServer_np  int
+PlayerObject                m_craftingStation               firstParentAuthClientServer_np  NetworkId
+PlayerObject                m_draftSchematics               firstParentAuthClientServer_np  std::map<std::pair<int,int>,int>
+PlayerObject                m_craftingComponentBioLink      firstParentAuthClientServer_np  NetworkId
+PlayerObject                m_experimentPoints              firstParentAuthClientServer_np  int
+PlayerObject                m_expModified                   firstParentAuthClientServer_np  int
+PlayerObject                m_friendList                    firstParentAuthClientServer_np  std::vector<std::string>
+PlayerObject                m_ignoreList                    firstParentAuthClientServer_np  std::vector<std::string>
+PlayerObject                m_spokenLanguage                firstParentAuthClientServer_np  int
+PlayerObject                m_food                          firstParentAuthClientServer_np  int
+PlayerObject                m_maxFood                       firstParentAuthClientServer_np  int
+PlayerObject                m_drink                         firstParentAuthClientServer_np  int
+PlayerObject                m_maxDrink                      firstParentAuthClientServer_np  int
+PlayerObject                m_meds                          firstParentAuthClientServer_np  int
+PlayerObject                m_maxMeds                       firstParentAuthClientServer_np  int
+PlayerObject                m_groupWaypoints                firstParentAuthClientServer_np  map - encodeWaypoints(objectId,data); decodeWaypoints(objectId,data,isBaseline);
+PlayerObject                m_playerHateList                firstParentAuthClientServer_np  set
+PlayerObject                m_killMeter                     firstParentAuthClientServer_np  int32
+PlayerObject                m_experiencePoints              parentClient     map - encodeExperience(objectId,data); decodeExperience(objectId,data,isBaseline);
+PlayerObject                m_waypoints                     parentClient     map - encodeWaypoints(objectId,data); decodeWaypoints(objectId,data,isBaseline);
+PlayerObject                m_forcePower                    parentClient     int
+PlayerObject                m_maxForcePower                 parentClient     int
+PlayerObject                m_completedQuests               parentClient   BitArray
+PlayerObject                m_activeQuests                  parentClient   BitArray
+PlayerObject                m_currentQuest                  parentClient   uint32
+PlayerObject                m_quests                        parentClient   packed_map<uint32,PlayerQuestData>	-	encodeQuests(data,row->quests,row->quests2,row->quests3,row->quests4); decodeQuests(objectId,data,row->quests,row->quests2,row->quests3,row->quests4);
+PlayerObject                m_stationId                     server         StationId
+PlayerObject                m_houseId                       server         NetworkId
+PlayerObject                m_accountNumLots                server         int
+PlayerObject                m_accountNumLotsOverLimitSpam   firstParentAuthClientServer_np  int
+PlayerObject                m_accountMaxLotsAdjustment      server         int
+PlayerObject                m_accountIsOutcast              server         bool
+PlayerObject                m_accountCheaterLevel           server         float
+PlayerObject                m_forceRegenRate                server         float
+PlayerObject                m_craftingTool                  server_np      NetworkId
+PlayerObject                m_forceRegenValue               server_np      float
+PlayerObject                m_theaterDatatable	            server_np      std::string
+PlayerObject                m_theaterPosition               server_np      Vector
+PlayerObject                m_theaterScene                  server_np      std::string
+PlayerObject                m_theaterScript                 server_np      std::string
+PlayerObject                m_theaterNumObjects	            server_np      int
+PlayerObject                m_theaterRadius                 server_np      float
+PlayerObject                m_theaterCreator                server_np      NetworkId
+PlayerObject                m_theaterName                   server_np      std::string
+PlayerObject                m_theaterId                     server_np      NetworkId
+PlayerObject                m_theaterLocationType           server_np      int
+PlayerObject                m_matchMakingCharacterProfileId shared        MatchMakingId - encodeMatchMakingId(data,row->character_profile_id); decodeMatchMakingId(data,row->character_profile_id);
+PlayerObject                m_matchMakingPersonalProfileId  shared        MatchMakingId - encodeMatchMakingId(data,row->personal_profile_id); decodeMatchMakingId(data,row->personal_profile_id);
+PlayerObject                m_skillTitle                    shared         NullEncodedStandardString
+PlayerObject                m_bornDate                      shared        int
+PlayerObject                m_playedTime                    shared        int
+PlayerObject                m_sessionStartPlayTime          server_np      int32
+PlayerObject                m_sessionLastActiveTime         server_np      int32
+PlayerObject                m_sessionActivePlayTimeDuration server_np      uint32
+PlayerObject                m_privledgedTitle               shared_np      int8
+PlayerObject                m_roleIconChoice                shared         int
+PlayerObject                m_aggroImmuneStartTime          server_np      uint32
+PlayerObject                m_aggroImmuneDuration           server_np      uint32
+PlayerObject                m_skillTemplate                 shared         std::string
+PlayerObject                m_workingSkill                  parentClient   std::string
+PlayerObject                m_isFromLogin                   server_np	   bool
+PlayerObject                m_currentGcwPoints              shared         int32
+PlayerObject                m_currentGcwRating              server         int32
+PlayerObject                m_currentPvpKills               shared         int32
+PlayerObject                m_lifetimeGcwPoints             shared         int64
+PlayerObject                m_maxGcwImperialRating          server         int32
+PlayerObject                m_maxGcwRebelRating             server         int32
+PlayerObject                m_lifetimePvpKills              shared         int32
+PlayerObject                m_nextGcwRatingCalcTime         server         int32
+PlayerObject                m_currentGcwRank                shared_np      int
+PlayerObject                m_currentGcwRankProgress        shared_np      float
+PlayerObject                m_maxGcwImperialRank            shared_np      int
+PlayerObject                m_maxGcwRebelRank               shared_np      int
+PlayerObject                m_gcwRatingActualCalcTime       shared_np      int32
+PlayerObject                m_sessionActivity               server_np	   uint32
+PlayerObject                m_petId                         firstParentAuthClientServer_np  NetworkId
+PlayerObject                m_petCommandList                firstParentAuthClientServer_np  std::vector<std::string>
+PlayerObject                m_petToggledCommands            firstParentAuthClientServer_np  std::vector<std::string>
+PlayerObject                m_collections                   shared         BitArray
+PlayerObject                m_collections2                  shared         BitArray
+PlayerObject                m_chatSpamSpatialNumCharacters  server_np      int
+PlayerObject                m_chatSpamNonSpatialNumCharacters server_np    int
+PlayerObject                m_chatSpamTimeEndInterval       server_np      int
+PlayerObject                m_chatSpamNextTimeToSyncWithChatServer server_np int
+PlayerObject                m_citizenshipCity               shared_np      std::string
+PlayerObject                m_citizenshipType               shared_np      int8
+PlayerObject                m_currentGcwRegion              server_np      std::string
+PlayerObject                m_cityGcwDefenderRegion         shared_np      std::pair<std::string,std::pair<bool,bool>>
+PlayerObject                m_guildGcwDefenderRegion        shared_np      std::pair<std::string,std::pair<bool,bool>>
+PlayerObject                m_squelchedById                 shared_np      NetworkId
+PlayerObject                m_squelchedByName               shared_np      std::string
+PlayerObject                m_squelchExpireTime             shared_np      int32
+PlayerObject		    m_showBackpack	            shared         bool
+PlayerObject		    m_showHelmet		    shared         bool
+PlayerObject                m_environmentFlags              shared_np      int32
+PlayerObject                m_defaultAttackOverride         shared_np      std::string
+PlayerObject                m_guildRank                     firstParentAuthClientServer_np  BitArray
+PlayerObject                m_citizenRank                   firstParentAuthClientServer_np  BitArray
+PlayerObject                m_galacticReserveDeposit        firstParentAuthClientServer_np  int8
+PlayerObject                m_pgcRatingCount                firstParentAuthClientServer_np  int64
+PlayerObject                m_pgcRatingTotal                firstParentAuthClientServer_np  int64
+PlayerObject                m_pgcLastRatingTime             firstParentAuthClientServer_np  int
+
+ResourceContainerObject     m_quantity               shared               int
+ResourceContainerObject     m_resourceType           shared               NetworkId
+ResourceContainerObject     m_source                 server               NetworkId
+ResourceContainerObject     m_maxQuantity            shared_np            int
+ResourceContainerObject     m_parentName             shared_np            std::string
+ResourceContainerObject     m_resourceName           shared_np            Unicode::String
+ResourceContainerObject     m_resourceNameId         shared_np            StringId
+
+ServerObject                m_bankBalance            authClientServer     int
+ServerObject                m_cashBalance            authClientServer     int
+ServerObject                m_cacheVersion           server               int
+ServerObject                m_loadContents           server               bool
+ServerObject                m_objVarFreeFlags        server               int ; encodeObjVarFreeFlags(objectId,data); decodeObjVarFreeFlags(objectId,data,isBaseline);
+ServerObject                m_objVars                server               objvarlist m_objVars.addToPackage(m_serverPackage,m_serverPackage_np); encodeObjVars(objectId,data); decodeObjVars(objectId,data,isBaseline);
+ServerObject                m_persisted              server               bool - Archive::put(data,true); ignorePersistedFlag(objectId,data);
+ServerObject                m_playerControlled       server               bool
+ServerObject                m_sceneId                server               std::string
+ServerObject                m_scriptList             server               std::string m_scriptObject->addToPackage(m_serverPackage); encodeScriptObject(objectId,data);  decodeScriptObject(objectId,data,isBaseline);
+ServerObject                m_attributesAttained     server_np            BitArray
+ServerObject                m_attributesInterested   server_np            BitArray
+ServerObject                m_proxyServerProcessIds  server_np            std::vector<uint32>
+ServerObject                m_transformSequence      server_np            uint32
+ServerObject                m_triggerVolumeInfo      server_np            std::vector<TriggerVolumeInfo>
+ServerObject                m_contentsLoaded         server_np            bool
+ServerObject                m_contentsRequested      server_np            bool
+ServerObject                m_messageTos             server_np            map
+ServerObject                m_defaultAlterTime       server_np            float
+ServerObject                m_observersCount         server_np            int
+ServerObject                m_complexity             shared               float
+ServerObject                m_nameStringId           shared               StringId - encodeStringId(data,row->name_string_table,row->name_string_text); decodeStringId(data,row->name_string_table,row->name_string_text);
+ServerObject                m_objectName             shared               NullEncodedUnicodeString
+ServerObject                m_volume                 shared               int
+ServerObject                m_authServerProcessId    shared_np            uint32
+ServerObject                m_descriptionStringId    shared_np            StringId
+ServerObject                m_refCount               none                 int
+ServerObject                m_includeInBuildout      server_np            bool
+ServerObject                m_conversionId           server               int
+ServerObject                m_staticItemName         server               std::string
+ServerObject                m_staticItemVersion      server               int
+ServerObject                m_broadcastListeners     server_np            set
+ServerObject                m_broadcastBroadcasters  server_np            set
+
+ShipObject                  m_slideDampener                           shared    float
+ShipObject                  m_currentChassisHitPoints                 shared    float
+ShipObject                  m_maximumChassisHitPoints                 shared    float
+ShipObject                  m_chassisType                             shared    uint32
+ShipObject                  m_componentArmorHitpointsMaximum          shared    packed_map<int,float>
+ShipObject                  m_componentArmorHitpointsCurrent          shared    packed_map<int,float>
+ShipObject                  m_componentHitpointsCurrent               shared    packed_map<int,float>
+ShipObject                  m_componentHitpointsMaximum               shared    packed_map<int,float>
+ShipObject                  m_componentFlags                          shared    packed_map<int,int>
+ShipObject                  m_shieldHitpointsFrontMaximum             shared    float
+ShipObject                  m_shieldHitpointsBackMaximum              shared    float
+
+ShipObject                  m_componentCrc                            server    packed_map<int,uint32>
+
+ShipObject                  m_shipId                                  shared_np    uint16
+ShipObject                  m_shipActualAccelerationRate              shared_np    float
+ShipObject                  m_shipActualDecelerationRate              shared_np    float
+ShipObject                  m_shipActualPitchAccelerationRate         shared_np    float
+ShipObject                  m_shipActualYawAccelerationRate           shared_np    float
+ShipObject                  m_shipActualRollAccelerationRate          shared_np    float
+ShipObject                  m_shipActualPitchRateMaximum              shared_np    float
+ShipObject                  m_shipActualYawRateMaximum                shared_np    float
+ShipObject                  m_shipActualRollRateMaximum               shared_np    float
+ShipObject                  m_shipActualSpeedMaximum                  shared_np    float
+ShipObject                  m_pilotLookAtTarget                       shared_np    NetworkId
+ShipObject                  m_pilotLookAtTargetSlot                   shared_np    int
+ShipObject                  m_targetableSlotBitfield                  shared_np    BitArray
+ShipObject                  m_componentCrcForClient                   shared_np    map<int,uint32>
+ShipObject                  m_wingName                                shared_np    std::string
+ShipObject                  m_typeName                                shared_np    std::string
+ShipObject                  m_difficulty                              shared_np    std::string
+ShipObject                  m_faction                                 shared_np    std::string
+ShipObject                  m_shieldHitpointsFrontCurrent             shared_np    float
+ShipObject                  m_shieldHitpointsBackCurrent              shared_np    float
+ShipObject                  m_guildId                                 shared_np    int
+
+ShipObject                  m_componentEfficiencyGeneral              authClientServer    packed_map<int,float>
+ShipObject                  m_componentEfficiencyEnergy               authClientServer    packed_map<int,float>
+ShipObject                  m_componentEnergyMaintenanceRequirement   authClientServer    packed_map<int,float>
+ShipObject                  m_componentMass                           authClientServer    packed_map<int,float>
+ShipObject                  m_componentNames                          authClientServer    packed_map<int,Unicode::String>
+ShipObject                  m_componentCreators                       authClientServer    packed_map<int,NetworkId>
+ShipObject                  m_weaponDamageMaximum                     authClientServer    packed_map<int,float>
+ShipObject                  m_weaponDamageMinimum                     authClientServer    packed_map<int,float>
+ShipObject                  m_weaponEffectivenessShields              authClientServer    packed_map<int,float>
+ShipObject                  m_weaponEffectivenessArmor                authClientServer    packed_map<int,float>
+ShipObject                  m_weaponEnergyPerShot                     authClientServer    packed_map<int,float>
+ShipObject                  m_weaponRefireRate                        authClientServer    packed_map<int,float>
+ShipObject                  m_weaponAmmoCurrent                       authClientServer    packed_map<int,int>
+ShipObject                  m_weaponAmmoMaximum                       authClientServer    packed_map<int,int>
+ShipObject                  m_weaponAmmoType                          authClientServer    packed_map<int,uint32>
+
+ShipObject                  m_chassisComponentMassMaximum             authClientServer       float
+ShipObject                  m_chassisComponentMassCurrent             authClientServer_np    float
+ShipObject                  m_chassisSpeedMaximumModifier             authClientServer_np    float
+ShipObject                  m_shieldRechargeRate                      authClientServer    float
+ShipObject                  m_capacitorEnergyCurrent                  authClientServer_np    float
+ShipObject                  m_capacitorEnergyMaximum                  authClientServer    float
+ShipObject                  m_capacitorEnergyRechargeRate             authClientServer    float
+ShipObject                  m_engineAccelerationRate                  authClientServer    float
+ShipObject                  m_engineDecelerationRate                  authClientServer    float
+ShipObject                  m_enginePitchAccelerationRate             authClientServer    float
+ShipObject                  m_engineYawAccelerationRate               authClientServer    float
+ShipObject                  m_engineRollAccelerationRate              authClientServer    float
+ShipObject                  m_enginePitchRateMaximum                  authClientServer    float
+ShipObject                  m_engineYawRateMaximum                    authClientServer    float
+ShipObject                  m_engineRollRateMaximum                   authClientServer    float
+ShipObject                  m_engineSpeedMaximum                      authClientServer    float
+ShipObject                  m_reactorEnergyGenerationRate             authClientServer    float
+ShipObject                  m_boosterEnergyCurrent                    authClientServer_np    float
+ShipObject                  m_weaponEfficiencyRefireRate              authClientServer_np    packed_map<int,float>
+ShipObject                  m_boosterEnergyMaximum                    authClientServer    float
+ShipObject                  m_boosterEnergyRechargeRate               authClientServer    float
+ShipObject                  m_boosterEnergyConsumptionRate            authClientServer    float
+ShipObject                  m_boosterAcceleration                     authClientServer    float
+ShipObject                  m_boosterSpeedMaximum                     authClientServer    float
+ShipObject                  m_droidInterfaceCommandSpeed              authClientServer    float
+ShipObject                  m_installedDroidControlDevice             authClientServer    NetworkId
+ShipObject                  m_cargoHoldContentsMaximum                authClientServer    int
+ShipObject                  m_cargoHoldContentsCurrent                authClientServer    int
+ShipObject                  m_cargoHoldContents                       authClientServer    packed_map<NetworkId,int>
+ShipObject                  m_cargoHoldContentsResourceTypeInfo       authClientServer_np    map
+
+ShipObject                  m_engineSpeedRotationFactorMaximum               server_np float
+ShipObject                  m_engineSpeedRotationFactorMinimum               server_np float
+ShipObject                  m_engineSpeedRotationFactorOptimal               server_np float
+
+TangibleObject              m_customAppearance       server               std::string
+TangibleObject              m_locationTargets        server               LocationData - encodeLocationDataList(objectId,1,data); decodeLocationDataList(objectId,1,data,isBaseline);
+TangibleObject              m_ownerId                server               NetworkId
+TangibleObject              m_pvpEnemies             server_np            std::vector<PvpEnemy>
+TangibleObject              m_pvpFaction             shared               uint32
+TangibleObject              m_pvpMercenaryFaction    server_np            uint32
+TangibleObject              m_pvpType                shared               int
+TangibleObject              m_pvpMercenaryType       server_np            int
+TangibleObject              m_pvpFutureType          server_np            int
+TangibleObject              m_creatorId              server               NetworkId
+TangibleObject              m_sourceDraftSchematic   server               uint32
+TangibleObject              m_hateOverTime           server_np            map
+TangibleObject              m_pvpRegionCrc           server_np            uint32
+TangibleObject              m_appearanceData         shared               std::string
+TangibleObject              m_components             shared               std::set<int> - encodeComponents(objectId,data); decodeComponents(objectId,data,isBaseline);
+TangibleObject              m_condition              shared               int
+TangibleObject              m_count                  shared               int
+TangibleObject              m_damageTaken            shared               int
+TangibleObject              m_maxHitPoints           shared               int
+TangibleObject              m_visible                shared               bool
+TangibleObject              m_conversations          server_np            NetworkId
+TangibleObject              m_hideFromClient         server_np            bool
+TangibleObject              m_inCombat               shared_np            bool
+TangibleObject              m_combatStartTime        server_np            time_t
+TangibleObject              m_attackableOverride     server_np            bool
+TangibleObject              m_passiveReveal          server_np            map
+TangibleObject              m_passiveRevealPlayerCharacter shared_np      set
+TangibleObject              m_mapColorOverride       shared_np            uint32
+TangibleObject		    m_accessList             shared_np            set
+TangibleObject 		    m_guildAccessList        shared_np            set
+TangibleObject              m_effectsMap             shared_np            map
+
+VehicleObject               m_bogus                  server               int
+
+WeaponObject                m_minDamage              server               int
+WeaponObject                m_maxDamage              server               int
+WeaponObject                m_attackSpeed            shared               float
+WeaponObject                m_woundChance            server               float
+WeaponObject                m_attackCost             server               int
+WeaponObject                m_damageRadius           server               float
+WeaponObject                m_isDefaultWeapon        server_np            bool
+WeaponObject                m_accuracy               shared               int
+WeaponObject                m_minRange               shared               float
+WeaponObject                m_maxRange               shared               float
+WeaponObject                m_damageType             shared               int
+WeaponObject                m_elementalType          shared               int
+WeaponObject                m_elementalValue         shared               int
+WeaponObject                m_weaponType             shared_np            int
+
+GroupObject                 m_groupMembers           shared_np            std::vector<GroupMember>
+GroupObject                 m_groupShipFormationMembers shared_np         std::vector<GroupShipFormationMember>
+GroupObject                 m_groupPOBShipAndOwners  server_np            std::vector<GroupPOBShipAndOwner>
+GroupObject                 m_groupName              shared_np            std::string
+GroupObject                 m_groupLevel             shared_np            int16
+GroupObject                 m_groupMemberLevels      server_np           std::vector<int16>
+GroupObject                 m_groupMemberProfessions server_np           std::vector<uint8>
+GroupObject                 m_formationNameCrc       shared_np            uint32
+GroupObject                 m_allMembers             server_np            set
+GroupObject                 m_nonPCMembers           server_np            set
+GroupObject                 m_lootMaster             shared_np            NetworkId
+GroupObject                 m_lootRule               shared_np            uint32
+GroupObject                 m_groupPickupTimer       shared_np            std::pair<int32,int32>
+GroupObject                 m_groupPickupLocation    shared_np            std::pair<std::string,Vector>
+
+GuildObject                 m_names                  server               std::string - encodePropertyList(objectId,PropertyListBuffer::LI_GuildNames,data); decodePropertyList(objectId,PropertyListBuffer::LI_GuildNames,data,isBaseline);
+GuildObject                 m_leaders                server               std::string - encodePropertyList(objectId,PropertyListBuffer::LI_GuildLeaders,data); decodePropertyList(objectId,PropertyListBuffer::LI_GuildLeaders,data,isBaseline);
+GuildObject                 m_members                server               std::string - encodePropertyList(objectId,PropertyListBuffer::LI_GuildMembers,data); decodePropertyList(objectId,PropertyListBuffer::LI_GuildMembers,data,isBaseline);
+GuildObject                 m_enemies                server               std::string - encodePropertyList(objectId,PropertyListBuffer::LI_GuildEnemies,data); decodePropertyList(objectId,PropertyListBuffer::LI_GuildEnemies,data,isBaseline);
+GuildObject                 m_abbrevs                shared               std::string - encodePropertyList(objectId,PropertyListBuffer::LI_GuildAbbrevs,data); decodePropertyList(objectId,PropertyListBuffer::LI_GuildAbbrevs,data,isBaseline);
+GuildObject                 m_guildsInfo             server_np            map
+GuildObject                 m_membersInfo            server_np            map
+GuildObject                 m_fullMembers            server_np            map
+GuildObject                 m_sponsoredMembers       server_np            map
+GuildObject                 m_guildLeaders           server_np            map
+GuildObject                 m_gcwImperialScorePercentileThisGalaxy         shared_np map
+GuildObject                 m_gcwRegionDefenderBonus                       server_np map
+GuildObject                 m_gcwGroupImperialScorePercentileThisGalaxy    shared_np map
+GuildObject                 m_gcwImperialScorePercentileHistoryThisGalaxy  shared_np map
+GuildObject                 m_gcwGroupImperialScorePercentileHistoryThisGalaxy shared_np map
+GuildObject                 m_gcwImperialScorePercentileHistoryCountThisGalaxy server_np map
+GuildObject                 m_gcwGroupImperialScorePercentileHistoryCountThisGalaxy server_np map
+GuildObject                 m_gcwImperialScorePercentileOtherGalaxies      shared_np map
+GuildObject                 m_gcwGroupImperialScorePercentileOtherGalaxies shared_np map
+GuildObject                 m_gcwGroupCategoryImperialScoreRawThisGalaxy   server_np map
+GuildObject                 m_gcwGroupImperialScoreRawThisGalaxy           server_np map
+GuildObject                 m_gcwImperialScoreOtherGalaxies                server_np map
+GuildObject                 m_gcwRebelScoreOtherGalaxies                   server_np map
+GuildObject                 m_gcwRegionDefenderGuilds                      server_np map
+GuildObject                 m_gcwRegionDefenderGuildsCount                 server_np map
+GuildObject                 m_gcwRegionDefenderGuildsVersion               server_np int
+
+BattlefieldMarkerObject     m_regionName             server               std::string
+BattlefieldMarkerObject     m_battlefieldParticipants server              map - encodeBattlefieldParticipants(objectId,data); decodeBattlefieldParticipants(objectId,data,isBaseline);
+
+CityObject                  m_cities                 server               std::string - encodePropertyList(objectId,PropertyListBuffer::LI_Cities,data); decodePropertyList(objectId,PropertyListBuffer::LI_Cities,data,isBaseline);
+CityObject                  m_citizens               server               std::string - encodePropertyList(objectId,PropertyListBuffer::LI_Citizens,data); decodePropertyList(objectId,PropertyListBuffer::LI_Citizens,data,isBaseline);
+CityObject                  m_structures             server               std::string - encodePropertyList(objectId,PropertyListBuffer::LI_CityStructures,data); decodePropertyList(objectId,PropertyListBuffer::LI_CityStructures,data,isBaseline);
+CityObject                  m_citiesInfo             server_np            map
+CityObject                  m_citizensInfo           server_np            map
+CityObject                  m_structuresInfo         server_np            map
+CityObject                  m_citizenToCityId        server_np            map
+CityObject                  m_pgcRatingInfo          server_np            map
+CityObject                  m_pgcRatingChroniclerId  server_np            set
+CityObject                  m_gcwRegionDefenderCities server_np           map
+CityObject                  m_gcwRegionDefenderCitiesCount server_np      map
+CityObject                  m_gcwRegionDefenderCitiesVersion server_np    int
+
+PlayerQuestObject	    m_tasks		     shared_np    std::vector<Unicode::String>
+PlayerQuestObject	    m_taskCounters	     shared_np    std::vector<std::pair<int32,int32>>
+PlayerQuestObject	    m_taskStatus	     shared_np    std::vector<int>
+PlayerQuestObject	    m_waypoints		     shared_np    std::vector<std::string>
+PlayerQuestObject	    m_rewards                shared_np    std::string
+PlayerQuestObject	    m_creatorName	     shared_np    std::string
+PlayerQuestObject	    m_completed		     shared_np    bool
+PlayerQuestObject           m_recipe                 shared_np    bool
+PlayerQuestObject	    m_title	     	     shared	  std::string
+PlayerQuestObject	    m_description      	     shared	  std::string
+PlayerQuestObject	    m_creator		     shared	  NetworkId
+PlayerQuestObject	    m_totalTasks	     shared       int
+PlayerQuestObject	    m_difficulty	     shared       int
+PlayerQuestObject	    m_taskTitle1	     shared	  std::string
+PlayerQuestObject           m_taskDescription1       shared	  std::string
+PlayerQuestObject	    m_taskTitle2	     shared	  std::string
+PlayerQuestObject           m_taskDescription2       shared	  std::string
+PlayerQuestObject	    m_taskTitle3	     shared	  std::string
+PlayerQuestObject           m_taskDescription3       shared	  std::string
+PlayerQuestObject	    m_taskTitle4	     shared	  std::string
+PlayerQuestObject           m_taskDescription4       shared	  std::string
+PlayerQuestObject	    m_taskTitle5	     shared	  std::string
+PlayerQuestObject           m_taskDescription5       shared	  std::string
+PlayerQuestObject	    m_taskTitle6	     shared	  std::string
+PlayerQuestObject           m_taskDescription6       shared	  std::string
+PlayerQuestObject	    m_taskTitle7	     shared	  std::string
+PlayerQuestObject           m_taskDescription7       shared	  std::string
+PlayerQuestObject	    m_taskTitle8	     shared	  std::string
+PlayerQuestObject           m_taskDescription8       shared	  std::string
+PlayerQuestObject	    m_taskTitle9	     shared	  std::string
+PlayerQuestObject           m_taskDescription9       shared	  std::string
+PlayerQuestObject	    m_taskTitle10	     shared	  std::string
+PlayerQuestObject           m_taskDescription10      shared	  std::string
+PlayerQuestObject	    m_taskTitle11	     shared	  std::string
+PlayerQuestObject           m_taskDescription11      shared	  std::string
+PlayerQuestObject	    m_taskTitle12	     shared	  std::string
+PlayerQuestObject           m_taskDescription12      shared	  std::string
+
+
+
+
+# not persistable yet
