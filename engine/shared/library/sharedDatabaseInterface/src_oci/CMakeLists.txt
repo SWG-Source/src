@@ -18,6 +18,7 @@ include_directories(
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMemoryManager/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedSynchronization/include/public
 	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicode/include
+	${ORACLE_INCLUDE_DIR}
 )
 
 add_library(sharedDatabaseInterface_oci STATIC

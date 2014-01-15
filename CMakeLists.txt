@@ -13,6 +13,7 @@ set(SWG_GAME_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/game)
 find_package(Boost REQUIRED)
 find_package(Iconv REQUIRED)
 find_package(LibXml2 REQUIRED)
+find_package(Oracle REQUIRED)
 find_package(STLPort REQUIRED)
 find_package(ZLib REQUIRED)
 
