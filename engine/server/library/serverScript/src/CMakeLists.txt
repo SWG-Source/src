@@ -1,0 +1,145 @@
+
+set(SHARED_SOURCES
+	shared/ConfigServerScript.cpp
+	shared/ConfigServerScript.h
+	shared/FirstServerScript.h
+	shared/GameScriptObject.cpp
+	shared/GameScriptObject.h
+	shared/JavaLibrary.cpp
+	shared/JavaLibrary.h
+	shared/JNIWrappers.cpp
+	shared/JNIWrappers.h
+	shared/ScriptDictionary.h
+	shared/ScriptFunctionTable.cpp
+	shared/ScriptFunctionTable.h
+	shared/ScriptListEntry.cpp
+	shared/ScriptMessage.cpp
+	shared/ScriptMessage.h
+	shared/ScriptMethodsActionStates.cpp
+	shared/ScriptMethodsAi.cpp
+	shared/ScriptMethodsAnimation.cpp
+	shared/ScriptMethodsAttributes.cpp
+	shared/ScriptMethodsAuction.cpp
+	shared/ScriptMethodsBank.cpp
+	shared/ScriptMethodsBeastMaster.cpp
+	shared/ScriptMethodsBroadcasting.cpp
+	shared/ScriptMethodsBuff.cpp
+	shared/ScriptMethodsBuffBuilder.cpp
+	shared/ScriptMethodsChat.cpp
+	shared/ScriptMethodsCity.cpp
+	shared/ScriptMethodsClientEffect.cpp
+	shared/ScriptMethodsClusterWideData.cpp
+	shared/ScriptMethodsCollection.cpp
+	shared/ScriptMethodsCombat.cpp
+	shared/ScriptMethodsCommandQueue.cpp
+	shared/ScriptMethodsConsole.cpp
+	shared/ScriptMethodsContainers.cpp
+	shared/ScriptMethodsCrafting.cpp
+	shared/ScriptMethodsDataTable.cpp
+	shared/ScriptMethodsDebug.cpp
+	shared/ScriptMethodsDynamicVariable.cpp
+	shared/ScriptMethodsForm.cpp
+	shared/ScriptMethodsGlobalQuery.cpp
+	shared/ScriptMethodsGuild.cpp
+	shared/ScriptMethodsHateList.cpp
+	shared/ScriptMethodsHolocube.cpp
+	shared/ScriptMethodsHyperspace.cpp
+	shared/ScriptMethodsImageDesign.cpp
+	shared/ScriptMethodsInstallation.cpp
+	shared/ScriptMethodsInterest.cpp
+	shared/ScriptMethodsInteriors.cpp
+	shared/ScriptMethodsJedi.cpp
+	shared/ScriptMethodsMap.cpp
+	shared/ScriptMethodsMentalStates.cpp
+	shared/ScriptMethodsMenu.cpp
+	shared/ScriptMethodsMission.cpp
+	shared/ScriptMethodsMoney.cpp
+	shared/ScriptMethodsMount.cpp
+	shared/ScriptMethodsNewbieTutorial.cpp
+	shared/ScriptMethodsNotification.cpp
+	shared/ScriptMethodsNpc.cpp
+	shared/ScriptMethodsObjectCreate.cpp
+	shared/ScriptMethodsObjectInfo.cpp
+	shared/ScriptMethodsObjectMove.cpp
+	shared/ScriptMethodsPermissions.cpp
+	shared/ScriptMethodsPilot.cpp
+	shared/ScriptMethodsPlanet.cpp
+	shared/ScriptMethodsPlayerAccount.cpp
+	shared/ScriptMethodsPlayerQuest.cpp
+	shared/ScriptMethodsPvp.cpp
+	shared/ScriptMethodsQuest.cpp
+	shared/ScriptMethodsRegion.cpp
+	shared/ScriptMethodsRegion3d.cpp
+	shared/ScriptMethodsRemoteDebug.cpp
+	shared/ScriptMethodsResource.cpp
+	shared/ScriptMethodsScript.cpp
+	shared/ScriptMethodsServerUI.cpp
+	shared/ScriptMethodsShip.cpp
+	shared/ScriptMethodsSkill.cpp
+	shared/ScriptMethodsSpawner.cpp
+	shared/ScriptMethodsString.cpp
+	shared/ScriptMethodsSystem.cpp
+	shared/ScriptMethodsTerrain.cpp
+	shared/ScriptMethodsTriggerVolume.cpp
+	shared/ScriptMethodsVeteran.cpp
+	shared/ScriptMethodsWaypoint.cpp
+	shared/ScriptMethodsWorldInfo.cpp
+	shared/ScriptParamArchive.cpp
+	shared/ScriptParamArchive.h
+	shared/ScriptParameters.cpp
+	shared/ScriptParameters.h
+	shared/SetupScript.cpp
+	shared/SetupScript.h
+)
+
+if(WIN32)
+	set(PLATFORM_SOURCES
+		win32/FirstServerScript.cpp
+	)
+else()
+	set(PLATFORM_SOURCES "")
+endif()
+
+include_directories(
+	${CMAKE_CURRENT_SOURCE_DIR}/shared
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedCollision/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedCommandParser/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedDebug/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFile/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFoundation/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFoundationTypes/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedGame/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedLog/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMath/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMathArchive/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMemoryManager/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMessageDispatch/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedNetwork/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedNetworkMessages/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedObject/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedPathfinding/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedRandom/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedSkillSystem/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedSynchronization/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedTerrain/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedThread/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedUtility/include/public
+	${SWG_ENGINE_SOURCE_DIR}/server/library/serverGame/include/public
+	${SWG_ENGINE_SOURCE_DIR}/server/library/serverNetworkMessages/include/public
+	${SWG_ENGINE_SOURCE_DIR}/server/library/serverUtility/include/public
+	${SWG_GAME_SOURCE_DIR}/shared/library/swgSharedUtility/include/public
+	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/archive/include
+	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/fileInterface/include/public
+	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/localization/include
+	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/localizationArchive/include/public
+	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/singleton/include
+	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicode/include
+	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicodeArchive/include/public
+	${Boost_INCLUDE_DIR}
+	${JNI_INCLUDE_DIRS}
+)
+
+add_library(serverScript STATIC
+	${SHARED_SOURCES}
+	${PLATFORM_SOURCES}
+)
