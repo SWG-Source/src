@@ -1,0 +1,25 @@
+// ======================================================================
+//
+// DBProtocol.def
+// copyright (c) 2001 Sony Online Entertainment
+//
+// ======================================================================
+
+#ifndef INCLUDED_DBProtocol_DEF
+#define INCLUDED_DBProtocol_DEF
+
+// ======================================================================
+
+namespace DB
+{
+	const int PROTOCOL_DEFAULT=0;	
+	const int PROTOCOL_ODBC=1;	
+	const int PROTOCOL_OCI=2;
+
+	typedef int Protocol;
+
+}
+
+// ======================================================================
+
+#endif
