@@ -19,7 +19,7 @@ find_package(Perl REQUIRED)
 find_package(STLPort REQUIRED)
 find_package(ZLib REQUIRED)
 
-#include_directories(${STLPORT_INCLUDE_DIR})
+include_directories(${STLPORT_INCLUDE_DIR})
 
 add_subdirectory(external)
 add_subdirectory(engine)
