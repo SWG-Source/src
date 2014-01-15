@@ -1,9 +1,97 @@
 
-
-add_subdirectory(shared)
+set(SHARED_SOURCES
+    shared/CentralServerConnection.cpp
+    shared/CentralServerConnection.h
+    shared/ClientConnection.cpp
+    shared/ClientConnection.h
+    shared/ConfigLoginServer.cpp
+    shared/ConfigLoginServer.h
+    shared/ConsoleCommandParser.cpp
+    shared/ConsoleCommandParser.h
+    shared/ConsoleCommandParserLoginServer.cpp
+    shared/ConsoleCommandParserLoginServer.h
+    shared/ConsoleManager.cpp
+    shared/ConsoleManager.h
+    shared/CSToolConnection.cpp
+    shared/CSToolConnection.h
+    shared/DatabaseConnection.cpp
+    shared/DatabaseConnection.h
+    shared/FirstLoginServer.h
+    shared/LoginServer.cpp
+    shared/LoginServer.h
+    shared/LoginServerRemoteDebugConnection.cpp
+    shared/LoginServerRemoteDebugConnection.h
+    shared/LoginServerRemoteDebugSetup.cpp
+    shared/LoginServerRemoteDebugSetup.h
+    shared/PingConnection.cpp
+    shared/PingConnection.h
+    shared/PurgeManager.cpp
+    shared/PurgeManager.h
+    shared/SessionApiClient.cpp
+    shared/SessionApiClient.h
+    shared/TaskChangeStationId.cpp
+    shared/TaskChangeStationId.h
+    shared/TaskClaimRewards.cpp
+    shared/TaskClaimRewards.h
+    shared/TaskCreateCharacter.cpp
+    shared/TaskCreateCharacter.h
+    shared/TaskDeleteCharacter.cpp
+    shared/TaskDeleteCharacter.h
+    shared/TaskEnableCharacter.cpp
+    shared/TaskEnableCharacter.h
+    shared/TaskGetAccountForPurge.cpp
+    shared/TaskGetAccountForPurge.h
+    shared/TaskGetAvatarList.cpp
+    shared/TaskGetAvatarList.h
+    shared/TaskGetCharactersForDelete.cpp
+    shared/TaskGetCharactersForDelete.h
+    shared/TaskGetClusterList.cpp
+    shared/TaskGetClusterList.h
+    shared/TaskGetValidationData.cpp
+    shared/TaskGetValidationData.h
+    shared/TaskRegisterNewCluster.cpp
+    shared/TaskRegisterNewCluster.h
+    shared/TaskRenameCharacter.cpp
+    shared/TaskRenameCharacter.h
+    shared/TaskRestoreCharacter.cpp
+    shared/TaskRestoreCharacter.h
+    shared/TaskSetPurgeStatus.cpp
+    shared/TaskSetPurgeStatus.h
+    shared/TaskToggleCharacterDisable.cpp
+    shared/TaskToggleCharacterDisable.h
+    shared/TaskToggleCompletedTutorial.cpp
+    shared/TaskToggleCompletedTutorial.h
+    shared/TaskUpdatePurgeAccountList.cpp
+    shared/TaskUpdatePurgeAccountList.h
+    shared/TaskUpgradeAccount.cpp
+    shared/TaskUpgradeAccount.h
+)
 
 if(WIN32)
-	add_subdirectory(win32)
+	set(PLATFORM_SOURCES
+		win32/FirstLoginServer.cpp
+		win32/WinMain.cpp
+	)
+
+	include_directories(${CMAKE_CURRENT_SOURCE_DIR}/win32)
 else()
-	add_subdirectory(linux)
+	set(PLATFORM_SOURCES 
+		linux/main.cpp
+	)
+
+	include_directories(${CMAKE_CURRENT_SOURCE_DIR}/linux)
 endif()
+
+include_directories(
+	${CMAKE_CURRENT_SOURCE_DIR}/shared
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedDebug/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFoundation/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFoundationTypes/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMemoryManager/include/public
+	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/archive/include
+)
+
+add_executable(LoginServer
+	${SHARED_SOURCES}
+	${PLATFORM_SOURCES}
+)
