@@ -183,7 +183,14 @@ inline typename AutoDeltaSet<ValueType, ObjectType>::const_iterator AutoDeltaSet
 		c.value = *i;
 		m_commands.push_back(c);
 		++m_baselineCommandCount;
+#ifdef WIN32
+        typename SetType::iterator tmp(m_set.begin());
+        std::advance(tmp, std::distance<const_iterator>(tmp, i));
+        i++;
+        m_set.erase(tmp);
+#else
 		m_set.erase(i++);
+#endif
 		touch();
 		onErase(c.value);
 		onChanged();

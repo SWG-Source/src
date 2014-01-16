@@ -31,8 +31,8 @@
 // ======================================================================
 
 // grab stlport configuration
-//#include "stl/config/features.h" // uncomment for newer stlport versions
-#include "stl/_config.h"
+#include "stl/config/features.h" // uncomment for newer stlport versions
+//#include "stl/_config.h"
 
 namespace std
 {
