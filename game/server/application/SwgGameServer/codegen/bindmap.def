@@ -1,0 +1,3 @@
+integer	BindableLong
+float	BindableDouble
+char(1)	BindableBool

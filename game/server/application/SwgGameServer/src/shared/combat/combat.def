@@ -1,0 +1,32 @@
+// ======================================================================
+//
+// combat.def
+// copyright (c) 2001 Sony Online Entertainment
+//
+// ***IMPORTTANT: This file is mirrored in dsrc/include
+//
+// ======================================================================
+
+#ifndef INCLUDED_combat_DEF
+#define INCLUDED_combat_DEF
+
+// id's for combat skeleton "bones" so when we know where a creature got hit we know what 
+// item was protecting that area
+//
+// IMPORTANT: the skeleton location names in the combat.cfg file should map to these
+//
+enum CombatSkeletonBone
+{
+	CSB_body = 0x0001,
+	CSB_head = 0x0002,
+	CSB_rightArm = 0x0004,
+	CSB_leftArm = 0x0008,
+	CSB_rightLeg = 0x0010,
+	CSB_leftLeg = 0x0020
+};
+
+
+#endif
+
+
+

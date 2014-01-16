@@ -1,0 +1,110 @@
+
+set(SHARED_SOURCES
+    shared/combat/combat.def
+    shared/combat/CombatEngine.cpp
+    shared/combat/CombatEngine.h
+    shared/combat/ConfigCombatEngine.cpp
+    shared/combat/ConfigCombatEngine.h
+
+    shared/console/ConsoleCommandParserCombatEngine.cpp
+    shared/console/ConsoleCommandParserCombatEngine.h
+    shared/console/ConsoleCommandParserCombatEngineQueue.cpp
+    shared/console/ConsoleCommandParserCombatEngineQueue.h
+
+    shared/controller/JediManagerController.cpp
+    shared/controller/JediManagerController.h
+    shared/controller/SwgPlayerCreatureController.cpp
+    shared/controller/SwgPlayerCreatureController.h
+
+    shared/core/CSHandler.cpp
+    shared/core/CSHandler.h
+    shared/core/SwgGameServer.cpp
+    shared/core/SwgGameServer.h
+    shared/core/SwgServerUniverse.cpp
+    shared/core/SwgServerUniverse.h
+
+    shared/lint/ServerObjectLint.cpp
+    shared/lint/ServerObjectLint.h
+
+    shared/object/JediManagerObject.cpp
+    shared/object/JediManagerObject.h
+    shared/object/SwgCreatureObject.cpp
+    shared/object/SwgCreatureObject.h
+    shared/object/SwgPlayerObject.cpp
+    shared/object/SwgPlayerObject.h
+
+    shared/objectTemplate/ServerJediManagerObjectTemplate.cpp
+    shared/objectTemplate/ServerJediManagerObjectTemplate.h
+    shared/objectTemplate/SwgServerCreatureObjectTemplate.cpp
+    shared/objectTemplate/SwgServerCreatureObjectTemplate.h
+    shared/objectTemplate/SwgServerPlayerObjectTemplate.cpp
+    shared/objectTemplate/SwgServerPlayerObjectTemplate.h
+
+    shared/snapshot/WorldSnapshotParser.cpp
+    shared/snapshot/WorldSnapshotParser.h
+)
+
+if(WIN32)
+	set(PLATFORM_SOURCES
+		win32/FirstSwgGameServer.cpp
+		win32/WinMain.cpp
+	)
+
+	include_directories(${CMAKE_CURRENT_SOURCE_DIR}/win32)
+else()
+	set(PLATFORM_SOURCES 
+		linux/main.cpp
+	)
+
+	include_directories(${CMAKE_CURRENT_SOURCE_DIR}/linux)
+endif()
+
+include_directories(
+    ${CMAKE_CURRENT_SOURCE_DIR}/shared/combat
+	${CMAKE_CURRENT_SOURCE_DIR}/shared/core
+    ${CMAKE_CURRENT_SOURCE_DIR}/shared/lint
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedCollision/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedCommandParser/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedDebug/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFile/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFoundation/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFoundationTypes/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedGame/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedImage/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedLog/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMath/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMathArchive/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMemoryManager/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMessageDispatch/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedNetwork/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedNetworkMessages/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedObject/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedPathfinding/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedRandom/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedRegex/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedSkillSystem/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedTerrain/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedUtility/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/server/library/serverGame/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/server/library/serverNetworkMessages/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/server/library/serverPathfinding/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/server/library/serverScript/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/server/library/serverUtility/include/public
+    ${SWG_GAME_SOURCE_DIR}/shared/library/swgSharedNetworkMessages/include/public
+    ${SWG_GAME_SOURCE_DIR}/shared/library/swgSharedUtility/include/public
+    ${SWG_GAME_SOURCE_DIR}/server/library/swgServerNetworkMessages/include/public
+	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/archive/include
+    ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/fileInterface/include/public
+    ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/localization/include
+    ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/localizationArchive/include/public
+    ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/singleton/include
+    ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicode/include
+    ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicodeArchive/include/public
+    ${Boost_INCLUDE_DIR}
+    ${JNI_INCLUDE_DIRS}
+)
+
+add_executable(SwgGameServer
+	${SHARED_SOURCES}
+	${PLATFORM_SOURCES}
+)

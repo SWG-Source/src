@@ -1,0 +1,8 @@
+int	integer
+bool	char(1)
+NetworkId	integer
+Gender	integer	cast
+ArmorEffectiveness	integer
+real	float	cast
+StringId	integer
+InstallationType	integer	cast

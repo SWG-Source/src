@@ -1,0 +1,9 @@
+#!/bin/bash
+
+./maketable.pl ../src/shared/object/*.h
+
+p4 open  ../src/shared/database/Schema.h ../src/shared/database/ObjectQueries.cpp ../src/shared/database/ObjectQueries.h ../src/shared/database/MakeDBPackage.cpp ../src/shared/database/DatabasePackage.h ../src/shared/database/DatabasePackage.cpp ../../database/schema/create.ddl
+
+./putauto.pl ../src/shared/database/Schema.h ../src/shared/database/ObjectQueries.cpp ../src/shared/database/ObjectQueries.h ../src/shared/database/MakeDBPackage.cpp ../src/shared/database/DatabasePackage.h ../src/shared/database/DatabasePackage.cpp ../../database/schema/create.ddl
+
+p4 revert -a  ../src/shared/database/Schema.h ../src/shared/database/ObjectQueries.cpp ../src/shared/database/ObjectQueries.h ../src/shared/database/MakeDBPackage.cpp ../src/shared/database/DatabasePackage.h ../src/shared/database/DatabasePackage.cpp ../../database/schema/create.ddl
