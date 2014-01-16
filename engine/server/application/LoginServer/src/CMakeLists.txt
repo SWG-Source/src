@@ -101,14 +101,19 @@ include_directories(
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedRandom/include/public
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedSynchronization/include/public
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedThread/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedUtility/include/public
     ${SWG_ENGINE_SOURCE_DIR}/server/library/serverKeyShare/include/public
     ${SWG_ENGINE_SOURCE_DIR}/server/library/serverNetworkMessages/include/public
     ${SWG_ENGINE_SOURCE_DIR}/server/library/serverUtility/include/public
 	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/archive/include
+    ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/localization/include
+    ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/localizationArchive/include/public
     ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/singleton/include
     ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicode/include
+    ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicodeArchive/include/public
     ${SWG_EXTERNALS_SOURCE_DIR}/3rd/library/platform/projects
     ${SWG_EXTERNALS_SOURCE_DIR}/3rd/library/platform/utils
+    ${SWG_EXTERNALS_SOURCE_DIR}/3rd/library/udplibrary
 )
 
 add_executable(LoginServer
