@@ -8,6 +8,7 @@
 //-----------------------------------------------------------------------
 #include "serverNetworkMessages/AvatarList.h"
 #include "serverNetworkMessages/AvatarListArchive.h"
+#include "sharedFoundation/NetworkIdArchive.h"
 #include "sharedNetworkMessages/GameNetworkMessage.h"
 #include <string>
 
