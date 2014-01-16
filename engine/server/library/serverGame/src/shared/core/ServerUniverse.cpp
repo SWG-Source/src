@@ -726,7 +726,7 @@ void ServerUniverse::update(float frameTime)
 	if (!m_pendingUniverseLoadedAckList.empty())
 	{
 		time_t const nowTime = ::time(NULL);
-		int const secondsSinceUniverseDataSent = nowTime - m_timeUniverseDataSent;
+		int const secondsSinceUniverseDataSent = (int)(nowTime - m_timeUniverseDataSent);
 
 		// don't wait forever for ack from another game server
 		// that it has received the universe data

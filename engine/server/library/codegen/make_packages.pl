@@ -154,7 +154,7 @@ sub editFile
     close (OUTFILE);
     if ($opt_windows == 1)
     {
-	system ("copy ${filename}.make_encoder_temporary_file $filename");
+	system ("copy ${filename}.make_encoder_temporary_file $filename /y");
 	system ("del ${filename}.make_encoder_temporary_file");
     }
     else

@@ -122,9 +122,9 @@ Location AiCreatureControllerNamespace::getLocation(ServerObject const & serverO
 //-----------------------------------------------------------------------
 AICreatureController::AICreatureController(CreatureObject * newOwner)
  : CreatureController(newOwner)
- , m_movement(NULL)
- , m_pendingMovement(NULL)
- , m_suspendedMovement(NULL)
+ , m_movement()
+ , m_pendingMovement()
+ , m_suspendedMovement()
  , m_lastStartPosition(newOwner->getPosition_p())
  , m_lastEndPosition(newOwner->getPosition_p())
  , m_sleepTimer(0.0f)

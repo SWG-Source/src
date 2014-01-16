@@ -1415,7 +1415,7 @@ unsigned int GroupObject::getSecondsLeftOnGroupPickup() const
 	{
 		time_t const timeNow = ::time(NULL);
 		if (groupPickupTimer.second > timeNow)
-			return (groupPickupTimer.second - timeNow);
+			return (groupPickupTimer.second - (int)timeNow);
 	}
 
 	return 0;

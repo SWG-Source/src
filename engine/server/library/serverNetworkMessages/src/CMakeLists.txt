@@ -502,6 +502,7 @@ include_directories(
 	${SWG_ENGINE_SOURCE_DIR}/server/library/serverGame/include/public
 	${SWG_ENGINE_SOURCE_DIR}/server/library/serverKeyShare/include/public
 	${SWG_ENGINE_SOURCE_DIR}/server/library/serverUtility/include/public
+	${SWG_GAME_SOURCE_DIR}/shared/library/swgSharedUtility/include/public
 	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/archive/include
 	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/localization/include
 	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/localizationArchive/include/public

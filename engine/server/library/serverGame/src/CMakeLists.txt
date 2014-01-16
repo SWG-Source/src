@@ -751,16 +751,23 @@ include_directories(
 	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/singleton/include
 	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicode/include
 	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicodeArchive/include/public
+	${SWG_EXTERNALS_SOURCE_DIR}/3rd/library/platform/projects
 	${Boost_INCLUDE_DIR}
 	${JNI_INCLUDE_DIRS}
 	${PCRE_INCLUDE_DIR}
 )
 
+
+file(TO_NATIVE_PATH ${SWG_ENGINE_SOURCE_DIR}/server/library/codegen/make_packages.pl MAKE_PACKAGES_NATIVE_PATH)
+file(TO_NATIVE_PATH ${SWG_ENGINE_SOURCE_DIR}/server/library/codegen/package_data.txt PACKAGE_DATA_NATIVE_PATH)
+file(TO_NATIVE_PATH ${CMAKE_CURRENT_BINARY_DIR}/shared/generated/Packager.cpp SOURCE_OUTPUT_NATIVE_PATH)
+file(TO_NATIVE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/shared/generated/Packager_cpp.template SOURCE_TEMPLATE_NATIVE_PATH)
+
 add_custom_command(
-	OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/shared/generated/Packager.cpp
-	COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/shared/generated/Packager_cpp.template ${CMAKE_CURRENT_BINARY_DIR}/shared/generated/Packager.cpp
-	COMMAND ${PERL_EXECUTABLE} ${SWG_ENGINE_SOURCE_DIR}/server/library/codegen/make_packages.pl --datafile ${SWG_ENGINE_SOURCE_DIR}/server/library/codegen/package_data.txt --source ${CMAKE_CURRENT_BINARY_DIR}/shared/generated/Packager.cpp
-	DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/shared/generated/Packager_cpp.template ${SWG_ENGINE_SOURCE_DIR}/server/library/codegen/make_packages.pl ${SWG_ENGINE_SOURCE_DIR}/server/library/codegen/package_data.txt
+	OUTPUT ${SOURCE_OUTPUT_NATIVE_PATH}
+	COMMAND ${CMAKE_COMMAND} -E copy ${SOURCE_TEMPLATE_NATIVE_PATH} ${SOURCE_OUTPUT_NATIVE_PATH}
+	COMMAND ${PERL_EXECUTABLE} "${MAKE_PACKAGES_NATIVE_PATH}" --datafile "${PACKAGE_DATA_NATIVE_PATH}" --source "${SOURCE_OUTPUT_NATIVE_PATH}" --windows
+	DEPENDS ${SOURCE_TEMPLATE_NATIVE_PATH} ${MAKE_PACKAGES_NATIVE_PATH} ${PACKAGE_DATA_NATIVE_PATH}
 )
 
 add_library(serverGame STATIC

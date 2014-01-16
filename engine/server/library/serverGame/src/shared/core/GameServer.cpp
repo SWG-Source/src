@@ -4936,7 +4936,7 @@ bool GameServer::addPendingLoadRequest(NetworkId const & id)
 	if (s_pendingLoadRequests.find(id) != s_pendingLoadRequests.end())
 		return false;
 
-	s_pendingLoadRequests[id] = ::time(NULL);
+	s_pendingLoadRequests[id] = (unsigned int)::time(NULL);
 
 	return true;
 }

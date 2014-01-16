@@ -138,7 +138,7 @@ protected:
 // define shared pointer template for AiMovementBase
 typedef boost::shared_ptr<AiMovementBase> AiMovementBasePtr;
 
-#define AiMovementBaseNullPtr AiMovementBasePtr(NULL)
+#define AiMovementBaseNullPtr AiMovementBasePtr()
 
 
 // ======================================================================

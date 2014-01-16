@@ -673,7 +673,7 @@ void GuildObject::disbandGuild(int guildId)
 			{
 				std::pair<int, time_t> const & killInfo = GuildInterface::getGuildEnemyKillInfo(guildId, *i);
 				std::string enemySpec;
-				GuildStringParser::buildEnemySpec(guildId, *i, killInfo.first, killInfo.second, enemySpec);
+				GuildStringParser::buildEnemySpec(guildId, *i, killInfo.first, (int)killInfo.second, enemySpec);
 				m_enemies.erase(enemySpec);
 
 				// remove any pending kill count updates for the 2 guilds
@@ -693,7 +693,7 @@ void GuildObject::disbandGuild(int guildId)
 			{
 				std::pair<int, time_t> const & killInfo = GuildInterface::getGuildEnemyKillInfo(*i, guildId);
 				std::string enemySpec;
-				GuildStringParser::buildEnemySpec(*i, guildId, killInfo.first, killInfo.second, enemySpec);
+				GuildStringParser::buildEnemySpec(*i, guildId, killInfo.first, (int)killInfo.second, enemySpec);
 				m_enemies.erase(enemySpec);
 
 				// remove any pending kill count updates for the 2 guilds
@@ -1426,7 +1426,7 @@ void GuildObject::removeGuildEnemy(int guildId, int enemyId)
 		{
 			std::pair<int, time_t> const & killInfo = GuildInterface::getGuildEnemyKillInfo(guildId, enemyId);
 			std::string enemySpec;
-			GuildStringParser::buildEnemySpec(guildId, enemyId, killInfo.first, killInfo.second, enemySpec);
+			GuildStringParser::buildEnemySpec(guildId, enemyId, killInfo.first, (int)killInfo.second, enemySpec);
 			m_enemies.erase(enemySpec);
 
 			// if the other build B has declared war on us, clear the
@@ -1436,7 +1436,7 @@ void GuildObject::removeGuildEnemy(int guildId, int enemyId)
 			{
 				if (killInfoBtoA->first > 0)
 				{
-					GuildStringParser::buildEnemySpec(enemyId, guildId, killInfoBtoA->first, killInfoBtoA->second, enemySpec);
+					GuildStringParser::buildEnemySpec(enemyId, guildId, killInfoBtoA->first, (int)killInfoBtoA->second, enemySpec);
 					m_enemies.erase(enemySpec);
 
 					GuildStringParser::buildEnemySpec(enemyId, guildId, 0, 0, enemySpec);
@@ -1519,10 +1519,10 @@ void GuildObject::updateGuildWarKillTrackingData()
 				&& GuildInterface::hasDeclaredWarAgainst(iter->first.second, iter->first.first))
 			{
 				std::pair<int, time_t> const & killInfo = GuildInterface::getGuildEnemyKillInfo(iter->first.first, iter->first.second);
-				GuildStringParser::buildEnemySpec(iter->first.first, iter->first.second, killInfo.first, killInfo.second, enemySpec);
+				GuildStringParser::buildEnemySpec(iter->first.first, iter->first.second, killInfo.first, (int)killInfo.second, enemySpec);
 				m_enemies.erase(enemySpec);
 
-				GuildStringParser::buildEnemySpec(iter->first.first, iter->first.second, killInfo.first + iter->second.first, std::max(killInfo.second, static_cast<time_t>(iter->second.second)), enemySpec);
+				GuildStringParser::buildEnemySpec(iter->first.first, iter->first.second, killInfo.first + iter->second.first, (int)std::max(killInfo.second, static_cast<time_t>(iter->second.second)), enemySpec);
 				m_enemies.insert(enemySpec);
 			}
 		}

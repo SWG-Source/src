@@ -116,14 +116,15 @@ add_executable(SwgGameServer
 target_link_libraries(SwgGameServer
     sharedCollision
     sharedCommandParser
+    sharedCompression
     sharedDebug
     sharedFile
+    sharedFractal
     sharedFoundation
     sharedGame
     sharedImage
     sharedLog
     sharedMath
-    sharedMathArchive
     sharedMemoryManager
     sharedMessageDispatch
     sharedNetwork
@@ -134,10 +135,13 @@ target_link_libraries(SwgGameServer
     sharedRegex
     sharedRemoteDebugServer
     sharedSkillSystem
+    sharedSynchronization
     sharedTerrain
     sharedThread
     sharedUtility
+    sharedXml
     serverGame
+    serverMetrics
     serverNetworkMessages
     serverPathfinding
     serverScript
@@ -149,7 +153,16 @@ target_link_libraries(SwgGameServer
     fileInterface
     localization
     localizationArchive
-    singleton
     unicode
     unicodeArchive
+    Base
+    udplibrary
+    ${PCRE_LIBRARY}
+    ${LIBXML2_LIBRARY}
+    ${ZLIB_LIBRARY}
 )
+
+if(WIN32)
+    set_target_properties (SwgGameServer PROPERTIES LINK_FLAGS "/NODEFAULTLIB:\"libcmt\"")
+    target_link_libraries(SwgGameServer mswsock ws2_32)
+endif()
