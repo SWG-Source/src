@@ -88,6 +88,8 @@ include_directories(
 	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicodeArchive/include/public
 )
 
+add_definitions(-DDBLIBRARY_OCI)
+
 add_library(sharedDatabaseInterface STATIC
 	${SHARED_SOURCES}
 	${PLATFORM_SOURCES}
