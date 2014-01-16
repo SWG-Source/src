@@ -116,7 +116,52 @@ include_directories(
     ${SWG_EXTERNALS_SOURCE_DIR}/3rd/library/udplibrary
 )
 
+link_directories(${STLPORT_LIBDIR})
+
 add_executable(LoginServer
 	${SHARED_SOURCES}
 	${PLATFORM_SOURCES}
 )
+
+target_link_libraries(LoginServer
+    sharedCommandParser
+    sharedCompression
+    sharedDatabaseInterface
+    sharedDatabaseInterface_oci
+    sharedDebug
+    sharedFile
+    sharedFoundation
+    sharedGame
+    sharedLog
+    sharedMath
+    sharedMemoryManager
+    sharedMessageDispatch
+    sharedNetwork
+    sharedNetworkMessages
+    sharedRandom
+    sharedSynchronization
+    sharedThread
+    sharedUtility
+    serverKeyShare
+    serverNetworkMessages
+    serverUtility
+    archive
+    crypto
+    fileInterface
+    localization
+    localizationArchive
+    unicode
+    unicodeArchive
+    Base
+    CommonAPI
+    LoginAPI
+    MonAPI2
+    udplibrary
+    ${ZLIB_LIBRARY}
+    ${ORACLE_LIBRARY}
+)
+
+if(WIN32)
+    set_target_properties (LoginServer PROPERTIES LINK_FLAGS "/NODEFAULTLIB:\"libcmt\"")
+    target_link_libraries(LoginServer mswsock ws2_32)
+endif()
