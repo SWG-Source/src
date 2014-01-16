@@ -11,7 +11,7 @@
 #include "StringId.h"
 #include "Unicode.h"
 #include "UnicodeUtils.h"
-#include "pcre/pcre.h"
+#include "pcre.h"
 #include "sharedFoundation/PointerDeleter.h"
 #include "sharedRegex/RegexServices.h"
 #include "sharedUtility/DataTable.h"

@@ -20,6 +20,10 @@ find_package(Perl REQUIRED)
 find_package(STLPort REQUIRED)
 find_package(ZLib REQUIRED)
 
+if(WIN32)
+	add_definitions(/D_CRT_SECURE_NO_WARNINGS)
+endif()
+
 include_directories(${STLPORT_INCLUDE_DIR})
 
 add_subdirectory(external)

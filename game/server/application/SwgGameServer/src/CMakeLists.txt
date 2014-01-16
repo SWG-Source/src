@@ -82,8 +82,10 @@ include_directories(
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedPathfinding/include/public
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedRandom/include/public
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedRegex/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedRemoteDebugServer/include/public
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedSkillSystem/include/public
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedTerrain/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedThread/include/public
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedUtility/include/public
     ${SWG_ENGINE_SOURCE_DIR}/server/library/serverGame/include/public
     ${SWG_ENGINE_SOURCE_DIR}/server/library/serverNetworkMessages/include/public
@@ -104,7 +106,50 @@ include_directories(
     ${JNI_INCLUDE_DIRS}
 )
 
+link_directories(${STLPORT_LIBDIR})
+
 add_executable(SwgGameServer
 	${SHARED_SOURCES}
 	${PLATFORM_SOURCES}
+)
+
+target_link_libraries(SwgGameServer
+    sharedCollision
+    sharedCommandParser
+    sharedDebug
+    sharedFile
+    sharedFoundation
+    sharedGame
+    sharedImage
+    sharedLog
+    sharedMath
+    sharedMathArchive
+    sharedMemoryManager
+    sharedMessageDispatch
+    sharedNetwork
+    sharedNetworkMessages
+    sharedObject
+    sharedPathfinding
+    sharedRandom
+    sharedRegex
+    sharedRemoteDebugServer
+    sharedSkillSystem
+    sharedTerrain
+    sharedThread
+    sharedUtility
+    serverGame
+    serverNetworkMessages
+    serverPathfinding
+    serverScript
+    serverUtility
+    swgSharedNetworkMessages
+    swgSharedUtility
+    swgServerNetworkMessages
+    archive
+    fileInterface
+    localization
+    localizationArchive
+    singleton
+    unicode
+    unicodeArchive
 )

@@ -128,6 +128,8 @@ include_directories(
 	${SWG_ENGINE_SOURCE_DIR}/server/library/serverNetworkMessages/include/public
 	${SWG_ENGINE_SOURCE_DIR}/server/library/serverPathfinding/include/public
 	${SWG_ENGINE_SOURCE_DIR}/server/library/serverUtility/include/public
+	${SWG_GAME_SOURCE_DIR}/server/application/SwgGameServer/include/public
+	${SWG_GAME_SOURCE_DIR}/shared/library/swgSharedNetworkMessages/include/public
 	${SWG_GAME_SOURCE_DIR}/shared/library/swgSharedUtility/include/public
 	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/archive/include
 	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/fileInterface/include/public
