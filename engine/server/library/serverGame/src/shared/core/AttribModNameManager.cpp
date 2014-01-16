@@ -230,7 +230,7 @@ void AttribModNameManager::sendAllNamesToServer(std::vector<uint32> const & serv
 {
 	// get the set of non-base names we know about
 	std::set<std::string, SortDottedNames> unique;
-	for (Names::const_reverse_iterator i = m_names->rbegin(); i != m_names->rend(); ++i)
+	for (Names::reverse_iterator i = m_names->rbegin(); i != m_names->rend(); ++i)
 		unique.insert(*i);
 
 	if (!unique.empty())

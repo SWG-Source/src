@@ -447,7 +447,7 @@ void Node::getAllVisibleObjects(std::vector<ServerObject*> & results) const
 {
 	results.reserve(results.size() + m_visibleObjects.size());
 	
-	for (ObjectSet::iterator i=m_visibleObjects.begin(); i!=m_visibleObjects.end(); ++i)
+	for (ObjectSet::const_iterator i=m_visibleObjects.begin(); i!=m_visibleObjects.end(); ++i)
 	{
 		NOT_NULL(*i);
 		results.push_back(&((*i)->getServerObject()));

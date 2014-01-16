@@ -1348,7 +1348,7 @@ CS_CMD( get_pc_info )
 
 		const CreatureObject::SkillList & skills = creatureActor->getSkillList();
 		int temp_int = 0;
-		for( CreatureObject::SkillList::iterator slit = skills.begin();
+		for( CreatureObject::SkillList::const_iterator slit = skills.begin();
 			slit != skills.end();
 			++slit )
 		{

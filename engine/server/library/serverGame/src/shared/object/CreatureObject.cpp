@@ -13368,7 +13368,7 @@ void CreatureObject::removeMissionCriticalObject(NetworkId const & networkId)
 {
 	if (isAuthoritative())
 	{
-		MissionCriticalObjectSet::iterator iter = m_missionCriticalObjectSet.find(networkId);
+		MissionCriticalObjectSet::const_iterator iter = m_missionCriticalObjectSet.find(networkId);
 		if (iter != m_missionCriticalObjectSet.end())
 		{
 			m_missionCriticalObjectSet.erase(iter);
@@ -13421,7 +13421,7 @@ void CreatureObject::setGroupMissionCriticalObjects(GroupMissionCriticalObjectSe
 
 		//-- Anything that is not in the original set, we need to remove
 		{
-			for (GroupMissionCriticalObjectSet::iterator iter = m_groupMissionCriticalObjectSet.begin(); iter != m_groupMissionCriticalObjectSet.end(); ++iter)
+			for (GroupMissionCriticalObjectSet::const_iterator iter(m_groupMissionCriticalObjectSet.begin()); iter != m_groupMissionCriticalObjectSet.end(); ++iter)
 				if (groupMissionCriticalObjectSet.find(*iter) == groupMissionCriticalObjectSet.end())
 					m_groupMissionCriticalObjectSet.erase(*iter);
 		}
@@ -14622,7 +14622,7 @@ bool CreatureObject::clearAllExpertises()
 		//@TODO:  guard this however design wants
 		const SkillList &skills = getSkillList();
 		std::vector<const SkillObject *> skillsToRevoke;
-		for(std::set<const SkillObject *>::iterator i = skills.begin(); i != skills.end(); ++i)
+		for(std::set<const SkillObject *>::const_iterator i(skills.begin()); i != skills.end(); ++i)
 		{
 			const SkillObject *skill = *i;
 			if(skill && ExpertiseManager::isExpertise(skill))

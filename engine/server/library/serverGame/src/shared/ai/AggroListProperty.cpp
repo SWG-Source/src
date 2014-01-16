@@ -202,7 +202,7 @@ void AggroListProperty::alter()
 	// Once verified for the hate list, we need to give a warning to the target that the
 	// aggro is about to occur
 
-	TargetList::iterator iterTargetList = m_targetList.begin();
+	TargetList::const_iterator iterTargetList = m_targetList.begin();
 
 	for (; iterTargetList != m_targetList.end(); ++iterTargetList)
 	{

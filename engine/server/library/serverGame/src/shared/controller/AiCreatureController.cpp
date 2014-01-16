@@ -2164,7 +2164,7 @@ void AICreatureController::sendDebugAiToClients(AiDebugString & aiDebugString)
 		{
 			m_aiDebugStringCrc = crc;
 
-			ObserverList::iterator iterObserverList = observerList.begin();
+			ObserverList::const_iterator iterObserverList = observerList.begin();
 
 			for (; iterObserverList != observerList.end(); ++iterObserverList)
 			{

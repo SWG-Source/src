@@ -17,6 +17,7 @@
 #include "sharedLog/Log.h"
 #include "sharedNetworkMessages/GenericValueTypeMessage.h"
 #include <queue>
+#include <cstdio>
 
 // ======================================================================
 

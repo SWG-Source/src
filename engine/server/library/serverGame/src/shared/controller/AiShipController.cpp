@@ -1499,7 +1499,7 @@ void AiShipController::onAttackTargetListEmpty()
 	if (   !guardedByList.empty()
 	    && getSquad().isAttackTargetListEmpty())
 	{
-		SpaceSquad::SpaceSquadList::iterator iterGuardedByList = guardedByList.begin();
+		SpaceSquad::SpaceSquadList::const_iterator iterGuardedByList = guardedByList.begin();
 
 		for (; iterGuardedByList != guardedByList.end(); ++iterGuardedByList)
 		{
@@ -1677,7 +1677,7 @@ void AiShipController::sendDebugAiToClients(AiDebugString & aiDebugString)
 		{
 			m_aiDebugStringCrc = crc;
 
-			ObserverList::iterator iterObserverList = observerList.begin();
+			ObserverList::const_iterator iterObserverList = observerList.begin();
 
 			for (; iterObserverList != observerList.end(); ++iterObserverList)
 			{

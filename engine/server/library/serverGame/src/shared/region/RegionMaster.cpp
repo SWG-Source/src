@@ -1141,8 +1141,7 @@ EnvironmentInfo RegionMasterNamspace::convertFromStringToEnvironmentInfo(std::st
 	// Now we just search our map for the strings we just read in. If we find it, we add that flag to our output value.
 	for(std::vector<std::string>::size_type i = 0; i < parsedStringVector.size(); ++i)
 	{
-		std::map<std::string, EnvironmentInfo>::iterator searchIter = NULL;
-		searchIter = s_conversionMap.find(parsedStringVector[i]);
+		std::map<std::string, EnvironmentInfo>::iterator searchIter = s_conversionMap.find(parsedStringVector[i]);
 
 		if( searchIter != s_conversionMap.end())
 		{

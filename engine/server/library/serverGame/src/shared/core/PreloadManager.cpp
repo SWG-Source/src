@@ -11,6 +11,7 @@
 #include "sharedObject/ObjectTemplateList.h"
 #include "sharedUtility/DataTableManager.h"
 
+#include <cstdio>
 #include <vector>
 
 //------------------------------------------------------------------------------------------
