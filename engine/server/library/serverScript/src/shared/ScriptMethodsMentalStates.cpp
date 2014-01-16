@@ -876,7 +876,7 @@ jboolean JNICALL ScriptMethodsMentalStatesNamespace::setMentalStateTowardArray(J
 	if (!ScriptConversion::convert(target, targetIds))
 		return JNI_FALSE;
 
-	std::vector<const NetworkId>::iterator i;
+	std::vector<NetworkId>::iterator i;
 	for (i=targetIds.begin(); i!=targetIds.end(); ++i)
 	{
 		creature->setMentalStateToward(*i, static_cast<MentalStates::Enumerator>(mentalState),
@@ -911,7 +911,7 @@ jboolean JNICALL ScriptMethodsMentalStatesNamespace::addToMentalStateTowardArray
 	if (!ScriptConversion::convert(target, targetIds))
 		return JNI_FALSE;
 
-	std::vector<const NetworkId>::iterator i;
+	std::vector<NetworkId>::iterator i;
 	for (i=targetIds.begin(); i!=targetIds.end(); ++i)
 	{
 		MentalStates::Value current = creature->getMentalStateToward(*i, static_cast<MentalStates::Enumerator>(mentalState));
