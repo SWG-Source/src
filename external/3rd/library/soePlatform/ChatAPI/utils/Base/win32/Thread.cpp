@@ -1,0 +1,315 @@
+////////////////////////////////////////
+//  Thread.cpp
+//
+//  Purpose:
+// 	    1. Implementation of the CThread class.
+//
+//  Revisions:
+// 	    07/10/2001  Created                                    
+//
+
+
+#pragma warning ( disable: 4786 )
+ 
+
+#if !defined(_MT)
+#   pragma message( "Excluding Base::CThread - requires multi-threaded compile. (_MT)" ) 
+#else
+
+#include <process.h>
+#include <time.h>
+#include "Thread.h"
+
+using namespace std;
+
+
+#ifdef EXTERNAL_DISTRO
+namespace NAMESPACE 
+{
+
+#endif
+namespace Base 
+{
+
+    void threadProc(void *threadPtr)
+	{
+        CThread &thread = *((CThread*)threadPtr);
+	    thread.mThreadActive = true;
+        thread.ThreadProc();
+        thread.mThreadActive = false;
+	}
+
+    CThread::CThread()
+    {
+        mThreadID = 0;
+        mThreadActive = false;
+        mThreadContinue = false;
+    }
+
+    CThread::~CThread()
+    {
+        StopThread();
+    }
+
+    void CThread::StartThread()
+	{
+	    mThreadContinue = true;
+        mThreadID = _beginthread(threadProc,0,this);
+        while (!IsThreadActive())
+            Base::sleep(1);
+	}
+
+    int32 CThread::StopThread(int32 timeout)
+	{
+        timeout += time(0);
+    
+        mThreadContinue = false;
+        while (mThreadActive && time(0)<timeout)
+            sleep(1);
+        if (mThreadActive)
+        {
+            mThreadActive = false;
+            return eSTOP_TIMEOUT;
+        }
+        return eSTOP_SUCCESS;
+	}
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+
+    CThreadPool::CMember::CMember(CThreadPool * parent) : 
+        mParent(parent),
+        mFunction(NULL),
+        mArgument(NULL),
+        mSemaphore()
+    {
+        StartThread();
+    }
+
+    CThreadPool::CMember::~CMember()
+    {
+    }
+
+    void CThreadPool::CMember::Destroy()
+    {
+        mThreadContinue = false;
+        mSemaphore.Signal();
+    }
+
+    bool CThreadPool::CMember::Execute(void( __cdecl *function )( void * ), void * arg)
+    {
+        if (mFunction)
+            return false;
+
+        mArgument = arg;
+        mFunction = function;
+        mSemaphore.Signal();
+        
+        return true;
+    }
+
+    void CThreadPool::CMember::ThreadProc()
+    {
+        mParent->OnStartup(this);
+        while (mThreadContinue)
+        {
+            mParent->OnIdle(this);
+            mSemaphore.Wait(mParent->GetTimeOut()*1000);
+            
+            if (mFunction)
+            {
+                mFunction(mArgument);
+                mArgument = NULL;
+                mFunction = NULL;
+            }
+            else if (mParent->OnDestory(this))
+                mThreadContinue = false;
+        }
+    }
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+    
+    CThreadPool::CThreadPool(uint32 maxThreads, uint32 minThreads, uint32 timeout) :
+        mMutex(),
+        mIdleMember(),
+        mBusyMember(),
+        mNullMember(),
+        mThreadCount(0),
+        mMaxThreads(maxThreads),
+        mMinThreads(minThreads),
+        mTimeOut(timeout)
+    {
+        if (mMaxThreads == 0) mMaxThreads = 1;
+        if (mMinThreads == 0) mMinThreads = 1;
+        if (mMinThreads > mMaxThreads) mMinThreads = mMaxThreads;
+
+        for (uint32 i=0; i<mMinThreads; i++)
+            new CMember(this);
+    }
+
+	CThreadPool::~CThreadPool()
+    {
+        set<CMember *>::iterator setIterator;
+
+        ////////////////////////////////////////
+        //  (1) Destory all busy member threads
+        mMutex.Lock();
+        setIterator = mBusyMember.begin();
+        while (setIterator != mBusyMember.end())
+            (*setIterator++)->Destroy();
+        mMutex.Unlock();
+
+        ////////////////////////////////////////
+        //  (2) Destory all idle member threads
+        while (mThreadCount)
+        {
+            mMutex.Lock();
+            setIterator = mIdleMember.begin();
+            while (setIterator != mIdleMember.end())
+                (*setIterator++)->Destroy();
+            mMutex.Unlock();
+
+            sleep(1);
+        }
+
+        ////////////////////////////////////////
+        //  (3) Delete the null member threads
+        mMutex.Lock();
+        while (!mNullMember.empty())
+        {
+            delete mNullMember.front();
+            mNullMember.pop_front();
+        }
+        mMutex.Unlock();
+    }
+
+    bool CThreadPool::Execute(void( __cdecl *function )( void * ), void * arg, uint32 poolGrowthSize )
+    {
+        mMutex.Lock();
+
+        ////////////////////////////////////////
+        //  (1) If no idle members, return false to indicate that no threads 
+        //      were available.  If the thread count is below the max, create
+        //      a new thread.
+        if (mIdleMember.empty())
+        {
+            if (mThreadCount < mMaxThreads)
+			{
+				if (!poolGrowthSize) 
+					poolGrowthSize = mMinThreads;
+
+				if ((mThreadCount + poolGrowthSize) > mMaxThreads)
+					poolGrowthSize = mMaxThreads - mThreadCount;
+
+				for (uint32 i(0); i < poolGrowthSize; i++)
+					new CMember(this);
+				mMutex.Unlock();
+				time_t idleTimeout = time(0) + 5;
+				while(mIdleMember.empty())
+				{
+					if (time(0) >= idleTimeout) 
+					{
+						return false;
+					}
+					Base::sleep(10);
+				}
+				mMutex.Lock();
+
+			}
+			else
+			{
+				mMutex.Unlock();
+				return false;
+			}
+        }
+        
+        ////////////////////////////////////////
+        //  (2) Delete any null member threads.
+        while (!mNullMember.empty())
+        {
+            delete mNullMember.front();
+            mNullMember.pop_front();
+        }
+
+        ////////////////////////////////////////
+        //  (3) Move the first idle thread to the busy set and signal the 
+        //      thread to execute the specified function.
+        CMember * member = *(mIdleMember.begin());
+        mIdleMember.erase(member);
+        mBusyMember.insert(member);
+        member->Execute(function,arg);
+        
+        mMutex.Unlock();
+        return true;
+    }
+            
+    uint32 CThreadPool::GetTimeOut()
+    {
+        return mTimeOut;
+    }
+
+    void CThreadPool::OnStartup(CMember * member)
+    {
+        mMutex.Lock();
+        
+        mThreadCount++;
+        mIdleMember.insert(member);
+
+        mMutex.Unlock();
+    }
+
+    void CThreadPool::OnIdle(CMember * member)
+    {
+        mMutex.Lock();
+        
+        mBusyMember.erase(member);
+        mIdleMember.insert(member);
+
+        mMutex.Unlock();
+    }
+
+    bool CThreadPool::OnDestory(CMember * member)
+    {
+        set<CMember *>::iterator setIterator;
+
+        mMutex.Lock();
+        
+        bool result = (setIterator = mIdleMember.find(member)) != mIdleMember.end();
+        if (result)
+        {
+            mNullMember.push_back(member);
+            mIdleMember.erase(setIterator);
+            mThreadCount--;
+        }
+
+        mMutex.Unlock();
+
+        return result;
+    }
+
+	SwitchableScopeLock::SwitchableScopeLock(CMutex & mutex, bool isOn) :
+	mMutex(mutex),
+	mIsOn(isOn)
+	{
+		if(mIsOn) { mMutex.Lock(); }
+	}
+
+	SwitchableScopeLock::~SwitchableScopeLock()
+	{
+		if(mIsOn) { mMutex.Unlock(); }
+	}
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+};
+#ifdef EXTERNAL_DISTRO
+};
+#endif
+
+
+#endif  //  #if defined(_MT)
+
