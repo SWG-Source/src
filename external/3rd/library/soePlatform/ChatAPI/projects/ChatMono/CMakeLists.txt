@@ -151,8 +151,6 @@ else()
 	include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../utils/Base/linux)
 endif()
 
-include_directories()
-
 add_library(ChatMono
 	${SHARED_SOURCES}
 	${PLATFORM_SOURCES}

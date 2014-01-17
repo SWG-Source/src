@@ -1,0 +1,100 @@
+
+add_definitions(-DAPI_NAMESPACE=VChatSystem)
+
+include_directories(
+	${CMAKE_CURRENT_SOURCE_DIR}/../../../utils2.0/utils
+	${CMAKE_CURRENT_SOURCE_DIR}/../../../utils2.0/utils/Api
+)
+
+add_library(VChatAPI
+	clientSerialize.h
+	common.cpp
+	common.h
+	messages.cpp
+	messages.h
+	strings.h
+	VChatAPI.cpp	
+	VChatAPI.h
+	VChatAPICore.cpp
+	VChatAPICore.h
+	VChatAPITypes.h
+
+	../../../utils2.0/utils/Api/api.cpp
+	../../../utils2.0/utils/Api/api.h
+	../../../utils2.0/utils/Api/apiMacros.h
+	../../../utils2.0/utils/Api/apiMessages.cpp
+	../../../utils2.0/utils/Api/apiMessages.h
+	../../../utils2.0/utils/Api/apiPinned.cpp
+	../../../utils2.0/utils/Api/apiPinned.h
+	../../../utils2.0/utils/Api/apiTypeNameValuePair.h
+	../../../utils2.0/utils/Api/apiTypePlatUnicodeString.h
+	../../../utils2.0/utils/Api/protocol.h
+
+	../../../utils2.0/utils/Base/Base32.cpp
+	../../../utils2.0/utils/Base/Base32.h
+	../../../utils2.0/utils/Base/Base64.cpp
+	../../../utils2.0/utils/Base/Base64.h
+	../../../utils2.0/utils/Base/basicConfig.cpp
+	../../../utils2.0/utils/Base/basicConfig.h
+	../../../utils2.0/utils/Base/cmdLine.cpp
+	../../../utils2.0/utils/Base/cmdLine.h
+	../../../utils2.0/utils/Base/date.cpp
+	../../../utils2.0/utils/Base/date.h
+	../../../utils2.0/utils/Base/dateUtils.h
+	../../../utils2.0/utils/Base/expirationQueue.h
+	../../../utils2.0/utils/Base/genericRateLimitingMechanism.h
+	../../../utils2.0/utils/Base/hash.h
+	../../../utils2.0/utils/Base/hashtable.hpp
+	../../../utils2.0/utils/Base/log.cpp
+	../../../utils2.0/utils/Base/log.h
+	../../../utils2.0/utils/Base/MD5.cpp
+	../../../utils2.0/utils/Base/MD5.h
+	../../../utils2.0/utils/Base/monitorAPI.cpp
+	../../../utils2.0/utils/Base/monitorAPI.h
+	../../../utils2.0/utils/Base/monitorData.cpp
+	../../../utils2.0/utils/Base/monitorData.h
+	../../../utils2.0/utils/Base/pid.cpp
+	../../../utils2.0/utils/Base/pid.h
+	../../../utils2.0/utils/Base/priority.hpp
+	../../../utils2.0/utils/Base/profile.cpp
+	../../../utils2.0/utils/Base/profile.h
+	../../../utils2.0/utils/Base/refptr.h
+	../../../utils2.0/utils/Base/serialize.h
+	../../../utils2.0/utils/Base/serializeClasses.h
+	../../../utils2.0/utils/Base/serializeStringVector.cpp
+	../../../utils2.0/utils/Base/serializeStringVector.h
+	../../../utils2.0/utils/Base/serializeTemplates.h
+	../../../utils2.0/utils/Base/stringutils.cpp
+	../../../utils2.0/utils/Base/stringutils.h
+	../../../utils2.0/utils/Base/substringSearchTree.h
+	../../../utils2.0/utils/Base/systemLog.cpp
+	../../../utils2.0/utils/Base/systemLog.h
+	../../../utils2.0/utils/Base/thread.cpp
+	../../../utils2.0/utils/Base/thread.h
+	../../../utils2.0/utils/Base/timer.h
+	../../../utils2.0/utils/Base/trackMessageFailures.cpp
+	../../../utils2.0/utils/Base/trackMessageFailures.h
+	../../../utils2.0/utils/Base/types.h
+	../../../utils2.0/utils/Base/utf8.cpp
+	../../../utils2.0/utils/Base/utf8.h
+
+	../../../utils2.0/utils/TcpLibrary/Clock.cpp
+	../../../utils2.0/utils/TcpLibrary/Clock.h
+	../../../utils2.0/utils/TcpLibrary/IPAddress.cpp
+	../../../utils2.0/utils/TcpLibrary/IPAddress.h
+	../../../utils2.0/utils/TcpLibrary/TcpBlockAllocator.cpp
+	../../../utils2.0/utils/TcpLibrary/TcpBlockAllocator.h
+	../../../utils2.0/utils/TcpLibrary/TcpConnection.cpp
+	../../../utils2.0/utils/TcpLibrary/TcpConnection.h
+	../../../utils2.0/utils/TcpLibrary/TcpHandlers.h
+	../../../utils2.0/utils/TcpLibrary/TcpListener.cpp
+	../../../utils2.0/utils/TcpLibrary/TcpListener.h
+	../../../utils2.0/utils/TcpLibrary/TcpManager.cpp
+	../../../utils2.0/utils/TcpLibrary/TcpManager.h
+
+	../../../utils2.0/utils/UdpLibrary/UdpHandler.hpp
+	../../../utils2.0/utils/UdpLibrary/UdpLibrary.cpp
+	../../../utils2.0/utils/UdpLibrary/UdpLibrary.hpp
+	../../../utils2.0/utils/UdpLibrary/UdpListener.cpp
+	../../../utils2.0/utils/UdpLibrary/UdpListener.h
+)

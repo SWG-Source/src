@@ -1,3 +1,2 @@
 
-add_subdirectory(ChatAPI)
 add_subdirectory(VChatAPI)
