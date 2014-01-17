@@ -1,0 +1,58 @@
+CREATE OR REPLACE  PACKAGE "PURGE_METHODS"  is
+
+  -- Author  : AVALDES
+  -- Created : 19-Jun-03 4:59:49 PM
+
+  -- Modified: 07/23/2003, DDM - changed to use bulk deleting and variable chunk size
+  
+  -- Notes: 07/29/2003 testing completed against a copy of SDKSWG04 on sdk-devdb
+  --        Tested running purge_objects from SYSDATE back on ~675k parent objects
+  --          -test run 1: ~40 min to delete all child and parent obj in batches of 10K
+  --          -test run 2: ~2.5 hours to do the same with rman running
+  --        Tested run purge_consumables from SYSDATE back on ~300k parent objects
+  --          -test run 1: ~50 min to delete all child and parent obj in batches of 10K
+  --          -test run 2: crashed with snap to old error - restarted and it finished the rest
+  --
+  -- Progress can be gauged by looking in the Logger table. There is a logging system being 
+  -- used to track deletion progress. It can be disabled pro commentting out references to
+  -- the 'LOGGING' package. This package is not necessary for the purge program to run but is
+  -- nice to be able to monitor progress. If used, the logger table should be cleared periodically.
+  
+
+  -- number of records to delete in a bulk chunk
+  chunk_size  CONSTANT PLS_INTEGER := 10000; 
+  
+  -- collections for bulk deleting, # elements must be the same as chunk_size
+  TYPE Obj_list_t IS VARRAY(10000) of objects.object_id%type; -- for child table with object ids
+  TYPE Obj_rowid_list_t IS VARRAY(10000) of ROWID; -- for parent table (rowid lookups are faster) 
+    
+  FUNCTION Purge_objects
+    (date_in       in objects.deleted_date%type)
+  RETURN PLS_INTEGER;  
+  
+  PROCEDURE Purge_objects_work
+    (Obj_list IN Obj_list_t);
+  --
+  --
+  --
+  FUNCTION time_purge
+    (date_in          IN VARCHAR2)
+  RETURN PLS_INTEGER;
+
+  FUNCTION Purge_consumables
+    (start_date_in       in objects.deleted_date%type,
+     end_date_in         in objects.deleted_date%type)
+  RETURN PLS_INTEGER;     
+  
+  PROCEDURE Purge_consumables_work
+    (Obj_list IN Obj_list_t);
+  --
+  --
+  --
+  FUNCTION time_purge_consumables
+    (start_date_in       in objects.deleted_date%type,
+     end_date_in         in objects.deleted_date%type)
+  RETURN PLS_INTEGER;
+
+
+end purge_methods;

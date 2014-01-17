@@ -1,0 +1,8 @@
+create table battlefield_participants
+(
+	region_object_id number, -- BIND_AS(DB::BindableNetworkId)
+	character_object_id number, -- BIND_AS(DB::BindableNetworkId)
+	faction_id number,
+	constraint pk_battlefield_participants primary key (region_object_id, character_object_id) 
+);
+grant select on battlefield_participants to public;

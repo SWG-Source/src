@@ -1,0 +1,4 @@
+create or replace view objects_view as
+select o.*, t.name object_template
+from objects o, object_templates t
+where o.object_template_id = t.id;

@@ -1,0 +1,7 @@
+create table clock
+(
+	last_save_time int,
+	last_save_timestamp date, -- NO_BIND
+	constraint pk_clock primary key (last_save_time) 
+);
+grant select on clock to public;

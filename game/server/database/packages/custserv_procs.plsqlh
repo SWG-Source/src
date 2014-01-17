@@ -1,0 +1,49 @@
+create or replace package custserv_procs
+as
+	type cursortype is ref cursor;
+	function get_characters_for_account
+(
+	station_id_in IN players.station_id%TYPE
+)
+ return cursortype;
+
+	function get_deleted_items
+	(
+		character_id_in IN objects.load_with%TYPE,
+		start_page_in IN number
+	)
+	return cursortype;
+
+	function get_structures
+	(
+		character_id_in IN objects.object_id%TYPE
+	)
+	return cursortype;	
+
+	function get_player_id
+	(
+		character_name_in IN players.uc_character_name%TYPE
+	)
+	return cursortype;
+
+	procedure move_player
+	(
+		character_id_in IN objects.object_id%TYPE,
+		x_in IN objects.x%TYPE,
+		y_in IN objects.y%TYPE,
+		z_in IN objects.z%TYPE,
+		scene_in IN objects.scene_id%TYPE
+	);
+
+	procedure undelete_item
+	(
+		character_id_in IN objects.object_id%TYPE,
+		object_in IN objects.object_id%TYPE,
+		move_in IN number
+	);
+
+end custserv_procs;
+
+/
+grant execute on custserv_procs to public;
+

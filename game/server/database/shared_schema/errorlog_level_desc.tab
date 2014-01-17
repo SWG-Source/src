@@ -1,0 +1,9 @@
+
+CREATE TABLE errorlog_level_desc(
+levelid	NUMBER   (10) DEFAULT 0 NOT NULL,
+descrip	VARCHAR2 (50) NOT NULL
+);
+
+grant select on errorlog_level_desc to public; 
+
+

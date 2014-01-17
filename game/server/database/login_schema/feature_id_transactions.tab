@@ -1,0 +1,12 @@
+create table feature_id_transactions --NO_IMPORT
+(
+	station_id number,
+	cluster_id number,
+	character_id number,
+	item_id varchar2(255),
+	date_updated date,
+	count number,
+	constraint pk_feature_id_transactions PRIMARY KEY (station_id, cluster_id, character_id, item_id)
+);
+
+grant select on feature_id_transactions to public;

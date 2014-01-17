@@ -1,0 +1,11 @@
+create table purge_accounts -- NO_IMPORT
+(
+	station_id number,
+	purge_phase number,
+	purge_start_date date,
+	purge_phase_date date,
+	purge_lock date,
+	constraint purge_accounts_pk primary key (station_id)
+);
+
+grant select on purge_accounts to public;

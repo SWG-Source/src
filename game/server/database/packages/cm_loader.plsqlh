@@ -1,0 +1,21 @@
+CREATE OR REPLACE PACKAGE cm_loader is
+
+  TYPE swg_cur IS REF CURSOR;
+
+  FUNCTION get_location_list return swg_cur;
+  --
+  --
+  --
+  FUNCTION get_bid_list return swg_cur;
+  --
+  --
+  --
+  FUNCTION get_auction_list return swg_cur;
+  --
+  --
+  --
+  FUNCTION get_auction_attributes RETURN swg_cur;
+
+end cm_loader;
+/
+grant execute on cm_loader to public;

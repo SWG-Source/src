@@ -1,0 +1,38 @@
+create table player_objects  -- NO_IMPORT
+(
+	object_id number(20),  -- BIND_AS(DB::BindableNetworkId)
+	station_id int,
+	personal_profile_id varchar2(200),
+	character_profile_id varchar2(200),
+	skill_title varchar2(200),
+	born_date int,
+	played_time int,
+	force_regen_rate float,
+	force_power int,
+	max_force_power int,
+	num_lots int,
+	active_quests varchar2(512),  -- BIND_AS(DB::BindableBitArray<2047>)
+	completed_quests varchar2(512),  -- BIND_AS(DB::BindableBitArray<2047>)
+	current_quest int,
+	quests varchar2(4000),
+	role_icon_choice int,
+	quests2 varchar2(4000),
+	quests3 varchar2(4000),
+	quests4 varchar2(4000),
+	skill_template varchar2(200),
+	working_skill varchar2(200),
+	current_gcw_points int,
+	current_gcw_rating int,
+	current_pvp_kills int,
+	lifetime_gcw_points int, -- BIND_AS(DB::BindableInt64)
+	max_gcw_imperial_rating int,
+	max_gcw_rebel_rating int,
+	lifetime_pvp_kills int,
+	next_gcw_rating_calc_time int,
+	collections varchar2(4000),  -- BIND_AS(DB::BindableBitArray<16000>)
+	show_backpack char(1),
+	show_helmet char(1),
+	collections2 varchar2(4000),  -- BIND_AS(DB::BindableBitArray<16000>)
+	constraint pk_player_objects primary key (object_id) 
+);
+grant select on player_objects to public;

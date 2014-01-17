@@ -1,0 +1,12 @@
+create or replace package db_error_logger
+as
+
+  procedure dblogerror( p_ora_errno number, p_notes varchar2 default NULL);
+  procedure dblogerror_values( p_owner varchar2, p_name varchar2, p_type varchar2, p_value varchar2);
+  procedure stack_search ( i_search in  integer, o_schema out varchar2, o_module out varchar2 );
+  function getloglevel RETURN INTEGER;
+  function reraisecheck ( p_package varchar2 default NULL, p_procedure varchar2 default NULL) return INTEGER;  
+  
+end;
+/
+grant execute on db_error_logger to public;

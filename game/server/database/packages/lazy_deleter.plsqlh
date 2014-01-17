@@ -1,0 +1,6 @@
+create or replace package lazy_deleter as
+	procedure purge_one_object(object_in in number);
+	procedure purge_objects_bulk(p_object_id VAOFSTRING, p_chunk_size number, p_enable_db_logging number);
+end lazy_deleter;
+/
+grant execute on lazy_deleter to public;

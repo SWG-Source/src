@@ -1,0 +1,141 @@
+Template ID	Template	Buff Name	Effectiveness Objvar	Effectiveness	Duration Objvar	Duration	RemoveObjVar	RemoveScript	AddScript
+-980521968	object/tangible/food/crafted/dessert_air_cake.iff	dessert_air_cake	duration.eff	20	duration.dur	1200	"duration.type,consumable.mods,food_type"	item.comestible.crafted	item.food
+-306844601	object/tangible/food/crafted/dessert_almond_kwevvu_crisp_munchies.iff	dessert_almond_kwevvu_crisp_munchies	skill_mod.amount	10	skill_mod.dur	1200	"skill_mod.name,consumable.mods,food_type"	item.comestible.crafted	item.food
+-2039935369	object/tangible/food/crafted/dessert_blob_candy.iff	dessert_blob_candy		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+-23647699	object/tangible/food/crafted/dessert_bofa_treat.iff	dessert_bofa_treat		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+-1933405050	object/tangible/food/crafted/dessert_cavaellin_creams.iff	dessert_cavaellin_creams	delayed.eff	60		0.9	"delayed.type,consumable.mods,food_type"	item.comestible.crafted	item.food
+-1329737896	object/tangible/food/crafted/dessert_chandad.iff	dessert_chandad	skill_mod.amount	10	skill_mod.dur	1200	"skill_mod.name,consumable.mods,food_type"	item.comestible.crafted	item.food
+144581616	object/tangible/food/crafted/dessert_citros_snow_cake.iff	dessert_citros_snow_cake	duration.eff	20	duration.dur	1600	"duration.type,consumable.mods,food_type"	item.comestible.crafted	item.food
+-1122191702	object/tangible/food/crafted/dessert_deneelian_fizz_pudding.iff	dessert_deneelian_fizz_pudding	duration.eff	40	duration.dur	120	"duration.type,consumable.mods,food_type"	item.comestible.crafted	item.food
+22306368	object/tangible/food/crafted/dessert_dweezel.iff	dessert_dweezel	skill_mod.amount	10	skill_mod.dur	1200	"skill_mod.name,consumable.mods,food_type"	item.comestible.crafted	item.food
+281064494	object/tangible/food/crafted/dessert_gorrnar.iff	dessert_gorrnar	delayed.eff	15		0.9	"delayed.type,consumable.mods,food_type"	item.comestible.crafted	item.food
+-1320167407	object/tangible/food/crafted/dessert_kiwik_clusjo_swirl.iff	dessert_kiwik_clusjo_swirl		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+1061303036	object/tangible/food/crafted/dessert_parwan_nutricake.iff	dessert_parwan_nutricake	instant.v1	65	instant.v2	65	"instant.type,consumable.mods,food_type"	item.comestible.crafted	item.food
+507210122	object/tangible/food/crafted/dessert_pikatta_pie.iff	dessert_pikatta_pie	duration.eff	25	duration.dur	1600	"duration.type,consumable.mods,food_type"	item.comestible.crafted	item.food
+-88500234	object/tangible/food/crafted/dessert_pkneb.iff	dessert_pkneb	skill_mod.amount	10	skill_mod.dur	1200	"skill_mod.name,consumable.mods,food_type"	item.comestible.crafted	item.food
+1472463975	object/tangible/food/crafted/dessert_pyollian_cake.iff	dessert_pyollian_cake	delayed.eff	7		0.9	"delayed.type,consumable.mods,food_type"	item.comestible.crafted	item.food
+2080884324	object/tangible/food/crafted/dessert_smugglers_delight.iff	dessert_smugglers_delight	delayed.eff	40		0.9	"delayed.type,consumable.mods,food_type"	item.comestible.crafted	item.food
+-2052487231	object/tangible/food/crafted/dessert_vagnerian_canape.iff	dessert_vagnerian_canape		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+-528877582	object/tangible/food/crafted/dessert_won_won.iff	dessert_won_won		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+-135648971	object/tangible/food/crafted/dish_ahrisa.iff	dish_ahrisa		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+230572551	object/tangible/food/crafted/dish_bivoli_tempari.iff	dish_bivoli_tempari	skill_mod.amount	10	skill_mod.dur	1200	"skill_mod.name,consumable.mods,food_type"	item.comestible.crafted	item.food
+1057167832	object/tangible/food/crafted/dish_blood_chowder.iff	dish_blood_chowder	duration.eff	15	duration.dur	2000	"duration.type,consumable.mods,food_type"	item.comestible.crafted	item.food
+536694865	object/tangible/food/crafted/dish_cho_nor_hoola.iff	dish_cho_nor_hoola	duration.eff	15	duration.dur	2000	"duration.type,consumable.mods,food_type"	item.comestible.crafted	item.food
+437634302	object/tangible/food/crafted/dish_crispic.iff	dish_crispic	duration.eff	15	duration.dur	900	"duration.type,consumable.mods,food_type"	item.comestible.crafted	item.food
+2054517358	object/tangible/food/crafted/dish_dustcrepe.iff	dish_dustcrepe	instant.v1	15		0.9	"instant.type,consumable.mods,food_type"	item.comestible.crafted	item.food
+-1337924041	object/tangible/food/crafted/dish_exo_protein_wafers.iff	dish_exo_protein_wafers	delayed.eff	15	delayed.dur	20	"delayed.type,consumable.mods,food_type"	item.comestible.crafted	item.food
+1353161551	object/tangible/food/crafted/dish_gruuvan_shaal.iff	dish_gruuvan_shaal		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+-2137759113	object/tangible/food/crafted/dish_havla.iff	dish_havla	delayed.eff	50	delayed.dur	30	"delayed.type,consumable.mods,food_type"	item.comestible.crafted	item.food
+179201581	object/tangible/food/crafted/dish_kanali_wafers.iff	dish_kanali_wafers		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+-322799884	object/tangible/food/crafted/dish_karkan_ribenes.iff	dish_karkan_ribenes	instant.v1	75		0.9	"instant.type,consumable.mods,food_type"	item.comestible.crafted	item.food
+1599302627	object/tangible/food/crafted/dish_ormachek.iff	dish_ormachek	delayed.eff	5	delayed.dur	20	"delayed.type,consumable.mods,food_type"	item.comestible.crafted	item.food
+-1655466225	object/tangible/food/crafted/dish_rakririan_burnout_sauce.iff	dish_rakririan_burnout_sauce	skill_mod.amount	10	skill_mod.dur	1200	"skill_mod.name,consumable.mods,food_type"	item.comestible.crafted	item.food
+993643963	object/tangible/food/crafted/dish_rations.iff	dish_rations	instant.v1	25	instant.v3	25	"instant.type,consumable.mods,food_type"	item.comestible.crafted	item.food
+428493251	object/tangible/food/crafted/dish_scrimpi.iff	dish_scrimpi		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+1834531933	object/tangible/food/crafted/dish_synthsteak.iff	dish_synthsteak	delayed.eff	25	delayed.dur	40	"delayed.type,consumable.mods,food_type"	item.comestible.crafted	item.food
+1664157751	object/tangible/food/crafted/dish_teltier_noodles.iff	dish_teltier_noodles		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+-1989431522	object/tangible/food/crafted/dish_terratta.iff	dish_terratta	skill_mod.amount	10	skill_mod.dur	1200	"skill_mod.name,consumable.mods,food_type"	item.comestible.crafted	item.food
+-237557333	object/tangible/food/crafted/dish_thakitillo.iff	dish_thakitillo	skill_mod.amount	40	skill_mod.dur	900	"skill_mod.name,consumable.mods,food_type"	item.comestible.crafted	item.food
+-400228634	object/tangible/food/crafted/dish_travel_biscuits.iff	dish_travel_biscuits	skill_mod.amount	10	skill_mod.dur	1200	"skill_mod.name,consumable.mods,food_type"	item.comestible.crafted	item.food
+1550199637	object/tangible/food/crafted/dish_trimpian.iff	dish_trimpian	duration.eff	20	duration.dur	2000	"duration.type,consumable.mods,food_type"	item.comestible.crafted	item.food
+-1129312673	object/tangible/food/crafted/dish_vegeparsine.iff	dish_vegeparsine	skill_mod.amount	10	skill_mod.dur	1200	"skill_mod.name,consumable.mods,food_type"	item.comestible.crafted	item.food
+1602372839	object/tangible/food/crafted/dish_veghash.iff	dish_veghash	skill_mod.amount	15	skill_mod.dur	900	"skill_mod.name,consumable.mods,food_type"	item.comestible.crafted	item.food
+2036727535	object/tangible/food/crafted/dish_vercupti_of_agazza_boleruuee.iff	dish_vercupti_of_agazza_boleruuee		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+-2066158902	object/tangible/food/crafted/drink_accarragm.iff	drink_accarragm		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+1706352715	object/tangible/food/crafted/drink_aitha.iff	drink_aitha	mind_heal	150		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+-821627577	object/tangible/food/crafted/drink_bespin_port.iff	drink_bespin_port	delayed.eff	5		0.9	"delayed.type,consumable.mods,food_type"	item.comestible.crafted	item.food
+1731904862	object/tangible/food/crafted/drink_blue_milk.iff	drink_blue_milk	mind_heal	400		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+1492257317	object/tangible/food/crafted/drink_breath_of_heaven.iff	drink_breath_of_heaven		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+1543376981	object/tangible/food/crafted/drink_caf.iff	drink_caf		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+-453063519	object/tangible/food/crafted/drink_corellian_ale.iff	drink_corellian_ale	skill_mod.amount	10	skill_mod.dur	1200	"skill_mod.name,consumable.mods,food_type"	item.comestible.crafted	item.food
+-1135348098	object/tangible/food/crafted/drink_corellian_brandy.iff	drink_corellian_brandy	skill_mod.amount	10	skill_mod.dur	1200	"skill_mod.name,consumable.mods,food_type"	item.comestible.crafted	item.food
+-180524642	object/tangible/food/crafted/drink_deuterium_pyro.iff	drink_deuterium_pyro	skill_mod.amount	10	skill_mod.dur	1200	"skill_mod.name,consumable.mods,food_type"	item.comestible.crafted	item.food
+-1234286053	object/tangible/food/crafted/drink_durindfire.iff	drink_durindfire	skill_mod.amount	10	skill_mod.dur	1200	"skill_mod.name,consumable.mods,food_type"	item.comestible.crafted	item.food
+-966588406	object/tangible/food/crafted/drink_elshandruu_pica_thundercloud.iff	drink_elshandruu_pica_thundercloud	skill_mod.amount	10	skill_mod.dur	1200	"skill_mod.name,consumable.mods,food_type"	item.comestible.crafted	item.food
+391653777	object/tangible/food/crafted/drink_flameout.iff	drink_flameout	delayed.eff	90	delayed.dur	5	"delayed.type,consumable.mods,food_type"	item.comestible.crafted	item.food
+1833668435	object/tangible/food/crafted/drink_garrmorl.iff	drink_garrmorl		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+-1632342596	object/tangible/food/crafted/drink_gralinyn_juice.iff	drink_gralinyn_juice	skill_mod.amount	10	skill_mod.dur	1200	"skill_mod.name,consumable.mods,food_type"	item.comestible.crafted	item.food
+1468700561	object/tangible/food/crafted/drink_ithorian_mist.iff	drink_ithorian_mist	skill_mod.amount	10	skill_mod.dur	1200	"skill_mod.name,consumable.mods,food_type"	item.comestible.crafted	item.food
+1186404816	object/tangible/food/crafted/drink_jaar.iff	drink_jaar	instant.v1	25		0.9	"instant.type,consumable.mods,food_type"	item.comestible.crafted	item.food
+-1236344303	object/tangible/food/crafted/drink_jawa_beer.iff	drink_jawa_beer	skill_mod.amount	10	skill_mod.dur	1200	"skill_mod.name,consumable.mods,food_type"	item.comestible.crafted	item.food
+870515892	object/tangible/food/crafted/drink_mandalorian_wine.iff	drink_mandalorian_wine		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+-609603936	object/tangible/food/crafted/drink_ruby_bliel.iff	drink_ruby_bliel	delayed.eff	30	delayed.dur	20	"delayed.type,consumable.mods,food_type"	item.comestible.crafted	item.food
+-108612773	object/tangible/food/crafted/drink_spiced_tea.iff	drink_spiced_tea		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+-723081254	object/tangible/food/crafted/drink_starshine_surprise.iff	drink_starshine_surprise	delayed.eff	30		0.9	"delayed.type,consumable.mods,food_type"	item.comestible.crafted	item.food
+-1482529718	object/tangible/food/crafted/drink_tilla_tiil.iff	drink_tilla_tiil	instant.v1	15		0.9	"instant.type,consumable.mods,food_type"	item.comestible.crafted	item.food
+-702596630	object/tangible/food/crafted/drink_tssolok.iff	drink_tssolok	duration.eff	20	duration.dur	600	"duration.type,consumable.mods,food_type"	item.comestible.crafted	item.food
+-191532605	object/tangible/food/crafted/drink_vasarian_brandy.iff	drink_vasarian_brandy		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+1368313349	object/tangible/food/crafted/drink_vayerbok.iff	drink_vayerbok	skill_mod.amount	10	skill_mod.dur	1200	"skill_mod.name,consumable.mods,food_type"	item.comestible.crafted	item.food
+-1149904183	object/tangible/food/crafted/drink_veronian_berry_wine.iff	drink_veronian_berry_wine	skill_mod.amount	10	skill_mod.dur	1200	"skill_mod.name,consumable.mods,food_type"	item.comestible.crafted	item.food
+-104858180	object/tangible/food/bread_loaf_full_s1.iff	newbie_bread		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+-785327274	object/tangible/food/crafted/additive/additive_heavy.iff								
+275310472	object/tangible/food/crafted/additive/additive_light.iff								
+1269715552	object/tangible/food/crafted/additive/additive_medium.iff								
+-1288350953	object/tangible/food/crafted/dessert_bantha_butter.iff								
+1901385280	object/tangible/food/crafted/dessert_blap_biscuit.iff	dessert_blap_biscuit		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+-519120500	object/tangible/food/crafted/dessert_corellian_fried_icecream.iff	dessert_vagnerian_canape		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+-1030442907	object/tangible/food/crafted/dessert_felbar.iff	dessert_felbar		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+-272947641	object/tangible/food/crafted/dessert_glazed_glucose_pate.iff	dessert_cavaellin_creams		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+1239922273	object/tangible/food/crafted/dessert_nanana_twist.iff	dessert_parwan_nutricake		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+920119228	object/tangible/food/crafted/dessert_pastebread.iff	dessert_pastebread		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+1460469297	object/tangible/food/crafted/dessert_puffcake.iff	dessert_won_won		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+1098635748	object/tangible/food/crafted/dessert_ryshcate.iff	dessert_kiwik_clusjo_swirl		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+1461830070	object/tangible/food/crafted/dessert_sweesonberry_rolls.iff	dessert_sweesonberry_rolls		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+1684725977	object/tangible/food/crafted/dessert_sweet_cake_mix.iff								
+-1864503130	object/tangible/food/crafted/dessert_wedding_cake.iff	dessert_pikatta_pie		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+1801195805	object/tangible/food/crafted/dish_braised_canron.iff	dish_rakririan_burnout_sauce		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+-410420377	object/tangible/food/crafted/dish_fire_stew.iff	dish_trimpian		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+877344239	object/tangible/food/crafted/dish_fried_endwa.iff	dish_blood_chowder		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+1434285776	object/tangible/food/crafted/dish_meatlump.iff	dish_ahrisa		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+558263029	object/tangible/food/crafted/dish_patot_panak.iff	dish_gruuvan_shaal		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+-986522134	object/tangible/food/crafted/dish_protato.iff								
+22531863	object/tangible/food/crafted/dish_puk.iff	dish_karkan_ribenes		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+1828317055	object/tangible/food/crafted/dish_ramorrean_capanata.iff	dish_scrimpi		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+13953380	object/tangible/food/crafted/dish_soypro.iff								
+-1670164093	object/tangible/food/crafted/dish_stewed_gwouch.iff	dish_cho_nor_hoola		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+284923026	object/tangible/food/crafted/dish_wastril_bread.iff	dish_synthsteak		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+-250957874	object/tangible/food/crafted/dish_xermaauc.iff	dish_vegeparsine		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+181145794	object/tangible/food/crafted/drink_alcohol.iff								
+1454424858	object/tangible/food/crafted/drink_aludium_pu36.iff	drink_flameout		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+51214754	object/tangible/food/crafted/drink_angerian_fishak_surprise.iff	dish_vercupti_of_agazza_boleruuee		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+540146307	object/tangible/food/crafted/drink_antakarian_fire_dancer.iff	drink_garrmorl		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+-635575777	object/tangible/food/crafted/drink_bantha_blaster.iff	drink_corellian_ale		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+1166887647	object/tangible/food/crafted/drink_charde.iff	drink_deuterium_pyro		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+-23601230	object/tangible/food/crafted/drink_cortyg.iff	drink_veronian_berry_wine		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+-1365202497	object/tangible/food/crafted/drink_double_dip_outer_rim_rumdrop.iff	drink_elshandruu_pica_thundercloud		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+1714967517	object/tangible/food/crafted/drink_ice_blaster.iff	drink_vasarian_brandy		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+99972710	object/tangible/food/crafted/drink_kylessian_fruit_distillate.iff	drink_breath_of_heaven		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+-1722035741	object/tangible/food/crafted/drink_skannbult_likker.iff	drink_tilla_tiil		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+-1746165408	object/tangible/food/crafted/drink_sullustan_gin.iff	drink_mandalorian_wine		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+329225748	object/tangible/food/crafted/drink_tatooine_sunburn.iff	drink_ithorian_mist		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+1301924307	object/tangible/food/foraged/edible_jar_berries.iff	foraged_berries		0.98		0.9	"consumable.mods,food_type"	item.comestible.foraged	item.food
+-846740906	object/tangible/food/foraged/edible_jar_bugs.iff	foraged_bugs		0.98		0.9	"consumable.mods,food_type"	item.comestible.foraged	item.food
+471067493	object/tangible/food/foraged/edible_jar_fungus.iff	foraged_fungus		0.98		0.9	"consumable.mods,food_type"	item.comestible.foraged	item.food
+-1483553925	object/tangible/food/foraged/edible_jar_funk.iff	foraged_funk		0.98		0.9	"consumable.mods,food_type"	item.comestible.foraged	item.food
+-1938284398	object/tangible/food/foraged/foraged_fruit_s1.iff	foraged_fruit_1		0.98		0.9	"consumable.mods,food_type"	item.comestible.foraged	item.food
+1466927109	object/tangible/food/foraged/foraged_fruit_s2.iff	foraged_fruit_2		0.98		0.9	"consumable.mods,food_type"	item.comestible.foraged	item.food
+509800328	object/tangible/food/foraged/foraged_fruit_s3.iff	foraged_fruit_3		0.98		0.9	"consumable.mods,food_type"	item.comestible.foraged	item.food
+-444480356	object/tangible/food/foraged/foraged_fruit_s4.iff	foraged_fruit_4		0.98		0.9	"consumable.mods,food_type"	item.comestible.foraged	item.food
+-1400069359	object/tangible/food/foraged/foraged_fruit_s5.iff	foraged_fruit_5		0.98		0.9	"consumable.mods,food_type"	item.comestible.foraged	item.food
+-589619825	object/tangible/food/foraged/foraged_vegetable_s2.iff	foraged_vegetable_2		0.98		0.9	"consumable.mods,food_type"	item.comestible.foraged	item.food
+-1781106174	object/tangible/food/foraged/foraged_vegetable_s3.iff	foraged_vegetable_3		0.98		0.9	"consumable.mods,food_type"	item.comestible.foraged	item.food
+1848987926	object/tangible/food/foraged/foraged_vegetable_s4.iff	foraged_vegetable_4		0.98		0.9	"consumable.mods,food_type"	item.comestible.foraged	item.food
+657995419	object/tangible/food/foraged/foraged_vegetable_s5.iff	foraged_vegetable_5		0.98		0.9	"consumable.mods,food_type"	item.comestible.foraged	item.food
+1931602976	object/tangible/food/fruit_melon.iff	newbie_melon		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+-679440489	object/tangible/food/meat_kabob.iff	newbie_meat		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+2059421636	object/tangible/food/nectar.iff	newbie_nectar		0.98		0.9	"consumable.mods,food_type"	item.comestible.crafted	item.food
+
+	RULES:								
+	"AddObjVar(buff_name, value)"
+	If value in Effectiveness Objvar
+	  ModifyObjvar(old value/Effectiveness value and rename to effectiveness): Cap Value at 2.0: Set to 0.98 if missing
+	Else
+	"  AddObjVar(effectiveness, value)"
+	If value in Duration Objvar
+	  ModifyObjvar(old value/Duration value and rename to duration): Cap Value at 2.0: set to 0.9 if missing
+	Else
+	"  AddObjVar(duration, value)"
+	Remove all ObjVars in RemoveObjVar
+	Remove all Scripts in RemoveScript
+	Add script in AddScript
+	Rename ObjVar consumable.stomachValues to filling

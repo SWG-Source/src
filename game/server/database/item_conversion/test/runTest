@@ -1,0 +1,11 @@
+#!/usr/local/bin/bash
+
+date
+sqlplus $1 < cleanup.sql
+sqlplus $1 < setup.sql
+perl make_test_data.pl ../*.txt >/tmp/temp.sql
+sqlplus $1 < /tmp/temp.sql
+echo "exec conversion_test.testAll;" > /tmp/temp.sql
+echo "exit;" >> /tmp/temp.sql
+sqlplus $1 < /tmp/temp.sql
+date

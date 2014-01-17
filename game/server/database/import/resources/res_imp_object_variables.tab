@@ -1,0 +1,9 @@
+create table res_imp_object_variables
+(
+	id number(20),
+	name varchar(500),
+	type int,
+	value varchar(1000),
+	constraint pk_res_imp_object_variables primary key (id,name)
+);
+

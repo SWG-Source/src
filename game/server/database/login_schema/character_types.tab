@@ -1,0 +1,7 @@
+create table character_types -- NO_IMPORT
+(
+	id           number not null,
+	description  varchar2(1000) not null,
+	constraint pk_character_types primary key (id) 
+);
+grant select on character_types to public;

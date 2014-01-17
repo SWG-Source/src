@@ -1,0 +1,77 @@
+Database Migration of Japan Login-Server to US-Login-Server
+
+Steps to migrate the Japan Login Server DB over to the US Login Server DB.
+
+The most prominent concern is cluster id collision, these steps are necessary
+to prevent this collision by making sure that we have unique and correctly
+assigned new cluster ids to Japans clusters before moving the data over.
+
+Should shutdown all the clusters in Japan before performing these tasks. Probably
+a good practice to run a backup before continuing.
+
+Have the resulting data imported into the US login sever before turning anything back on
+and even then you should not turn the Japan Login server back on, it should stay off
+and the Japanese based client should then be using the US Login Server to get into the game.
+
+1) There are two clusters defined in the Japan Login-Server, choose two
+   new cluster id's that are not currently being used in the Login-Server.
+   
+   At the moment 40 and 41 are not used.
+   
+   
+2) Update the cluster_list table in the Japan Login-Server DB to the following
+ 
+   update cluster_list set id = 40 where id = 10;  --Japan-Katana (jpeswg-01-01-int)
+   update cluster_list set id = 41 where id = 11;  --Japan-Harla (jpeswg-02-01-int)
+   
+3) Next update all the tables that reference the old cluster ids and delete
+   all vet rewards and items that were claimed as Japanese customers will
+   be allowed to reclaim any items that they have not claimed in the US.
+
+   truncate table account_reward_events;
+   truncate table account_reward_items;
+
+   update extra_character_slots set cluster_id = 40 where cluster_id = 10;
+   update extra_character_slots set cluster_id = 41 where cluster_id = 11;
+   delete from extra_character_slots where cluster_id not in (40,41); --currently there are some extra slots for a cluster
+                                                                      --that no longer exists and that never went live
+                                                                      
+   
+   update swg_characters set cluster_id = 40 where cluster_id = 10;
+   update swg_characters set cluster_id = 41 where cluster_id = 11;
+   delete from swg_characters where cluster_id not in (40,41); --removes old dead characters that were tied to a nonexistent
+                                                               --cluster that never went live
+                                                               
+4) Take the resulting table from these populated tables
+	account_info
+	cluster_list
+	extra_character_slots
+	swg_characters
+	
+    and import them into the US login server DB.
+	
+Station Id's appear to be globally unique so there shouldnt not be any odd collisions of those id's.  Besides the fact
+that its ok to have duplicate station ids as long as the Station ID + cluster id + character name is unique.
+
+Possible concern, someone has created the full number of characters allowed on a japanese cluster, and the full number 
+allowed in a us cluster using the same station id and when they are combined they have way too many characters then they
+should (globally across the game).  As it doesnt appear character limits where across the entire game, they were
+tied to region (US and Japan for example).  Although the data shows most players only made 1 to 4 characters in Japan
+so its not a big concern as many of the others above that number are CSR reps. Maybe a concern for customer service
+though as they would need to possibly deal with this problem should it arise.
+
+5) Preventing more characters from being created on the cluster.  Currently settings are global for all clusters,
+   there are no settings for individual clusters.  One possible method to prevent more accounts from being created
+   for a given cluster would be to update the cluster_list table and put the accounts on the cluster value well
+   above the limit.  Currently the limit is 200k accounts per cluster.  We could set the accounts on these
+   two clusters to something like 300k and the system would work just as it.  Later on we can, if we want to let
+   them create accounts again, recalculate the actual character numbers and put it back to where it should be.
+   
+   the statements would be something like this
+   
+   update cluster_list set num_characters = 300000 where id in (40, 41);
+   
+   if you wish to open it up later, we would do a select count on the swg_characters table for those cluster ids
+   and reset the number back to what it should be.
+   
+   

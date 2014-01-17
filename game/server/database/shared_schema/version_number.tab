@@ -1,0 +1,9 @@
+create table version_number
+(
+	version_number int,
+	min_version_number int,
+	golddata varchar2(100),
+	branch_name varchar2(30),
+	primary key (version_number)
+);
+grant select on version_number to public;

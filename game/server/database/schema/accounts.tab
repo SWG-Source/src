@@ -1,0 +1,12 @@
+create table accounts  -- NO_IMPORT
+(
+	station_id int,
+	num_lots int,
+	is_outcast char(1),
+	cheater_level int,
+	max_lots_adjustment int,
+	house_id number(20),
+	constraint pk_accounts primary key (station_id) 
+);
+
+grant select on accounts to public;

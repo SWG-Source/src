@@ -1,0 +1,6 @@
+create table default_char_limits -- NO_IMPORT
+(
+	account_limit  number not null,
+	cluster_limit  number not null
+);
+grant select on default_char_limits to public;

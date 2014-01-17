@@ -1,0 +1,10 @@
+CREATE OR REPLACE PACKAGE  "BLOB_DATA_CONVERSION" as
+	function  blob_encodeoob   (v_blob blob)       return varchar2;
+	function  blob_hexdump     (v_blob blob)       return varchar2;
+	function  blob_encodeoob_old (v_blob blob)     return varchar2;
+	function  blob_to_string   (v_blob blob)       return varchar2;
+	function  string_hexdump   (v_string varchar2) return varchar2;
+	procedure convert_blob_data(v_item_id number);
+end;
+/
+grant execute on blob_data_conversion to public;

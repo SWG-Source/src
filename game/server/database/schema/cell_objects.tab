@@ -1,0 +1,9 @@
+create table cell_objects
+(
+	object_id number(20),  -- BIND_AS(DB::BindableNetworkId)
+	cell_number int,
+	is_public char(1),
+	primary key (object_id)
+);
+
+grant select on cell_objects to public;

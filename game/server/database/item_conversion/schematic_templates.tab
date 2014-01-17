@@ -1,0 +1,7 @@
+create table schematic_templates
+(
+	schematic_id number(20) NOT NULL,  -- BIND_AS(DB::BindableNetworkId)
+	object_template_id number NOT NULL, -- BIND_AS(DB::BindableNetworkId)
+	constraint pk_schematic_templates primary key (schematic_id) 
+);
+grant select on schematic_templates to public;

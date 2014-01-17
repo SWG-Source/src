@@ -1,0 +1,6 @@
+alter table market_auctions add constraint market_auctions_location_id_fk
+  foreign key(location_id) references auction_locations(location_id) on delete cascade;
+alter table market_auction_bids add constraint market_auction_bids_item_id_fk 
+  foreign key(item_id) references market_auctions on delete cascade;
+alter table market_auction_attributes add constraint market_attributes_item_id_fk 
+  foreign key(item_id) references market_auctions on delete cascade;

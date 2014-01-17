@@ -1,0 +1,10 @@
+create table resource_container_objects
+(
+	object_id number(20),  -- BIND_AS(DB::BindableNetworkId)
+	resource_type number(20),  -- BIND_AS(DB::BindableNetworkId)
+	quantity int,
+	source number(20),  -- BIND_AS(DB::BindableNetworkId)
+	primary key (object_id)
+);
+
+grant select on resource_container_objects to public;

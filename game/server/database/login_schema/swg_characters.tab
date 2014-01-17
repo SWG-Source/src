@@ -1,0 +1,15 @@
+create table swg_characters -- NO_IMPORT
+(
+	STATION_ID      NUMBER NOT NULL,
+	CLUSTER_ID      NUMBER NOT NULL,
+	CHARACTER_NAME  VARCHAR2(127) NOT NULL,
+	OBJECT_ID       NUMBER,
+	CHARACTER_TYPE  NUMBER,
+	TEMPLATE_ID     NUMBER,
+	ENABLED         CHAR(1) DEFAULT 'Y' NOT NULL
+);
+
+alter table SWG_CHARACTERS
+add constraint pk_swg_character PRIMARY KEY (station_id, cluster_id, character_name)
+;
+grant select on swg_characters to public;

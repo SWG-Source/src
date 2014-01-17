@@ -1,0 +1,20 @@
+CREATE OR REPLACE package data_cleanup
+as
+   type cursortype is ref cursor;
+   subtype objectid is number;
+
+   procedure run_fix_bad_cells;
+   procedure run_fix_houses_w_bad_cells;
+   function getObjectsWithExpMessages return cursortype;
+   function getExperienceGrants(p_object_id objectid) return cursortype;
+   procedure delete_experience(p_object_id objectid);
+   procedure grant_experience(p_object_id objectid, p_experience_data varchar2);
+   function object_variable_name_cleanup return number;
+   function orphaned_object_cleanup return number;
+   function market_attributes_cleanup return number;
+   function messages_cleanup return number;
+   function vendor_object_cleanup return number;
+   function broken_object_cleanup return number;
+end;
+/
+grant execute on data_cleanup to public;

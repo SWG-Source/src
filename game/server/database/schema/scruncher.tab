@@ -1,0 +1,7 @@
+create table scruncher -- NO_IMPORT
+(
+	new_object_id number(20),
+	old_object_id number(20),
+	constraint pk_scruncher primary key (old_object_id) 
+);
+grant select on scruncher to public;

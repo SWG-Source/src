@@ -1,0 +1,18 @@
+Template ID	Template	Spice Name
+1672986063	object/tangible/food/spice/spice_booster_blue.iff	booster_blue
+-201478902	object/tangible/food/spice/spice_crash_n_burn.iff	crash_n_burn
+-320858653	object/tangible/food/spice/spice_droid_lube.iff	droid_lube
+-428819171	object/tangible/food/spice/spice_giggledust.iff	giggledust
+649015964	object/tangible/food/spice/spice_grey_gabaki.iff	grey_gabaki
+-1588852672	object/tangible/food/spice/spice_gunjack.iff	gunjack
+1589268411	object/tangible/food/spice/spice_kliknik_boost.iff	kliknik_boost
+-2063383877	object/tangible/food/spice/spice_kwi_boost.iff	kwi_boost
+-184506838	object/tangible/food/spice/spice_muon_gold.iff	muon_gold
+205254138	object/tangible/food/spice/spice_neutron_pixey.iff	neutron_pixey
+1936734520	object/tangible/food/spice/spice_pyrepenol.iff	pyrepenol
+1577598037	object/tangible/food/spice/spice_scramjet.iff	scramjet
+83272939	object/tangible/food/spice/spice_sedative_h4b.iff	sedative_h4b
+-383871740	object/tangible/food/spice/spice_shadowpaw.iff	shadowpaw
+-1338608150	object/tangible/food/spice/spice_sweetblossom.iff	sweetblossom
+-132717072	object/tangible/food/spice/spice_thruster_head.iff	thruster_head
+375006515	object/tangible/food/spice/spice_yarrock.iff	yarrock

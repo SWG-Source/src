@@ -1,0 +1,15 @@
+create or replace package util
+as
+	type refcursor is ref cursor;
+	subtype networkid is number(20);
+
+	function unix_time_2_oracle_date_PDT(p_unix_time in number) return date;
+	function unix_time_2_oracle_date_PST(p_unix_time in number) return date;
+	function unix_time_2_oracle_date_CDT(p_unix_time in number) return date;
+	function unix_time_2_oracle_date_CST(p_unix_time in number) return date;
+	function unix_time_2_oracle_date(p_unix_time in number, p_timezone_offset in number) return date;
+	function unix_to_oracle_date(p_unix_time in number, p_timezone_offset in number) return date;
+
+end;
+/
+grant execute on util to public;

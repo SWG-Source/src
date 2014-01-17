@@ -1,0 +1,8 @@
+create table delete_reasons -- NO_IMPORT
+(
+	reason_code number,
+	tag varchar2(100),
+	description varchar2(1000),
+	constraint pk_delete_reasons primary key (reason_code) 
+);
+grant select on delete_reasons to public;

@@ -1,0 +1,21 @@
+create table market_auctions --NO_IMPORT
+(
+	item_id          number(20), -- BIND_AS(DB::BindableNetworkId)
+	location_id		 number(20), -- BIND_AS(DB::BindableNetworkId)
+	creator_id       number(20), -- BIND_AS(DB::BindableNetworkId)
+	owner_id         number(20), -- BIND_AS(DB::BindableNetworkId)
+	min_bid          number(20), -- BIND_AS(DB::BindableNetworkId)
+	buy_now_price    number(20), -- BIND_AS(DB::BindableNetworkId)
+	auction_timer    number(20), -- BIND_AS(DB::BindableNetworkId)
+	user_description varchar2(4000),
+	item_name        varchar2(4000),
+	oob              varchar2(4000),
+	category         number(20), -- BIND_AS(DB::BindableNetworkId)
+	item_timer       number(20), -- BIND_AS(DB::BindableNetworkId)
+	active           number(20), -- BIND_AS(DB::BindableNetworkId)
+	item_size        number(20) default 1 not null,
+	object_template_id int,
+	constraint pk_market_auctions primary key (item_id) 
+);
+create index market_auction_location_idx on market_auctions (location_id) ;
+grant select on market_auctions to public;

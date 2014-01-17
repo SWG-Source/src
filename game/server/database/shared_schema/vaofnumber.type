@@ -1,0 +1,3 @@
+create or replace type vaofnumber is varray(10000) of number;
+/
+grant execute on vaofnumber to public;

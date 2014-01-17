@@ -1,0 +1,18 @@
+create table auction_locations -- NO_IMPORT
+(
+    location_id   number(20), -- BIND_AS(DB::BindableNetworkId)
+    owner_id      number(20), -- BIND_AS(DB::BindableNetworkId)
+    location_name varchar2(256),
+    sales_tax number(20) DEFAULT 0,
+    sales_tax_bank_id number(20) DEFAULT 0,
+    empty_date number(20) not null,
+    last_access_date number(20) not null,
+    inactive_date number(20) not null,
+    status number(20) DEFAULT 0 not null,
+    search_enabled char(1) default 'Y',
+    entrance_charge number default 0 not null,
+	constraint pk_auction_locations primary key (location_id) 
+);
+create index auction_location_name_idx on auction_locations (location_name) ;
+grant select on auction_locations to public;
+

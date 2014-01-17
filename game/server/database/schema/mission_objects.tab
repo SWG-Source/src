@@ -1,0 +1,29 @@
+create table mission_objects
+(
+	object_id number(20),  -- BIND_AS(DB::BindableNetworkId)
+	difficulty int,
+	end_x float,
+	end_y float,
+	end_z float,
+	end_cell number(20), -- BIND_AS(DB::BindableNetworkId)
+	end_scene int,
+	mission_creator varchar2(127),
+	reward int,
+	root_script_name varchar2(100),
+	start_x float,
+	start_y float,
+	start_z float,
+	start_cell number(20), -- BIND_AS(DB::BindableNetworkId)
+	start_scene int,
+	description_table varchar2(100),
+	description_text varchar2(100),
+	title_table varchar2(100),
+	title_text varchar2(100),
+	mission_holder_id number(20), -- BIND_AS(DB::BindableNetworkId)
+	status int,
+	mission_type int,
+	target_appearance int,
+	target_name varchar2(127),
+	constraint pk_mission_objects primary key (object_id) 
+);
+grant select on mission_objects to public;

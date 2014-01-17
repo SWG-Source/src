@@ -1,0 +1,9 @@
+create table object_templates  -- NO_IMPORT
+(
+	id number,
+	name varchar2(255),
+	constraint pk_object_templates primary key (id) 
+);
+
+create index object_templates_name_idx on object_templates (name) ;
+grant select on object_templates to public;

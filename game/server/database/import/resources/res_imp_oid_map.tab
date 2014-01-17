@@ -1,0 +1,8 @@
+create table res_imp_oid_map
+(
+	object_id number ,
+	reference_id number,
+	new number,
+	constraint pk_res_imp_oid_map primary key (object_id)
+);
+

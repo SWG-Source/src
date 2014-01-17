@@ -1,0 +1,9 @@
+create table cnvtest_objvars
+(
+	name varchar2(500),
+	id number,
+	deprecated number,
+	min_value float,
+	max_value float,
+	constraint pk_cnvtest_objvars primary key (id)
+);

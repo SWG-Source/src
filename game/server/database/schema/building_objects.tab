@@ -1,0 +1,11 @@
+create table building_objects
+(
+	object_id number(20), -- BIND_AS(DB::BindableNetworkId)
+	maintenance_cost int,
+	time_last_checked float,
+	is_public char(1),
+	city_id int,
+	primary key (object_id)
+);
+
+grant select on building_objects to public;

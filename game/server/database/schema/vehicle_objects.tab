@@ -1,0 +1,8 @@
+create table vehicle_objects
+(
+	object_id number(20),  -- BIND_AS(DB::BindableNetworkId)
+	bogus int,
+	primary key (object_id)
+);
+
+grant select on vehicle_objects to public;

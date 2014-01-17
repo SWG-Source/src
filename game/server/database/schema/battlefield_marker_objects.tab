@@ -1,0 +1,9 @@
+create table battlefield_marker_objects
+(
+	object_id number(20),  -- BIND_AS(DB::BindableNetworkId)
+	region_name varchar2(500),
+	primary key (object_id)
+);
+create index region_name_idx on battlefield_marker_objects (region_name) ;
+
+grant select on battlefield_marker_objects to public;

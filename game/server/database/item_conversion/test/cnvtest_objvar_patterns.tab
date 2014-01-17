@@ -1,0 +1,8 @@
+create table cnvtest_objvar_patterns
+(
+	name_pattern varchar2(500),
+	deprecated number,
+	min_value float,
+	max_value float,
+	constraint pk_cnvtest_objvar_patterns primary key (name_pattern)
+);

@@ -1,0 +1,10 @@
+create or replace package biography
+as
+	type refcursor is ref cursor;
+	subtype objectid is number;
+
+	procedure set_biography (p_owner objectid, p_biography varchar2);
+	function get_biography (p_owner objectid) return refcursor;
+end;
+/
+grant execute on biography to public;

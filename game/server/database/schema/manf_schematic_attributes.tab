@@ -1,0 +1,8 @@
+create table manf_schematic_attributes -- NO_IMPORT
+(
+	object_id number(20),  -- BIND_AS(DB::BindableNetworkId)
+	attribute_type varchar2(500),
+	value float,
+	constraint pk_manf_schematic_attributes primary key (object_id, attribute_type) 
+);
+grant select on manf_schematic_attributes to public;

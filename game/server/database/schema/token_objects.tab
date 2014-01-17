@@ -1,0 +1,10 @@
+create table token_objects
+(
+	object_id number(20),  -- BIND_AS(DB::BindableNetworkId)
+	reference number(20),  -- BIND_AS(DB::BindableNetworkId)
+	target_server_template_name varchar2(500),
+	target_shared_template_name varchar2(500),
+	waypoint number(20),  -- BIND_AS(DB::BindableNetworkId)
+	primary key (object_id)
+);
+grant select on token_objects to public;

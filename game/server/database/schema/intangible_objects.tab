@@ -1,0 +1,7 @@
+create table intangible_objects
+(
+	object_id number(20),  -- BIND_AS(DB::BindableNetworkId)
+	count int,
+	constraint pk_intangible_objects primary key (object_id) 
+);
+grant select on intangible_objects to public;

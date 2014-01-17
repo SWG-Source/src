@@ -1,0 +1,954 @@
+create or replace package body loader as
+
+	procedure get_version_number(current_version in out number, min_version in out number)
+	as
+	begin
+		select version_number, min_version_number
+		into current_version, min_version
+		from version_number;
+	end;
+
+	function locate_player (p_object_id number) return number
+	as
+	begin
+		insert into object_list (object_id, container_level)
+		select object_id, 100
+		from objects
+		where load_with = p_object_id;
+
+		return sql%rowcount;
+	end;
+
+	procedure locate_universe
+	as
+	begin
+		insert into object_list (object_id)
+		select o.object_id
+		from objects o, universe_objects u
+		where o.object_id = u.object_id
+		and o.deleted=0;
+	end;
+
+	procedure locate_contained_object (p_container_id number, p_object_id number)
+	as
+	begin
+		insert into object_list (object_id, container_level)
+		select object_id, 100
+		from objects o
+		where 
+			o.object_id = p_object_id
+			and o.contained_by = p_container_id
+			and o.deleted = 0;
+	end;
+
+	procedure locate_contents (p_container_id number)
+	as
+	begin
+		insert into object_list (object_id, container_level)
+		select object_id, 100
+		from objects o
+		where
+			o.load_with = p_container_id;
+	end;
+
+	function get_characters (p_station_id number) return cursortype
+	as
+		result_cursor cursortype;
+	begin
+		open result_cursor for
+		select
+			character_object,
+			object_template_id,
+			scene_id,
+			object_name,
+			container,
+			x,
+			y,
+			z
+		from character_view
+		where station_id = p_station_id;
+
+		return result_cursor;
+	end;
+
+	function load_chunk_object_list (p_scene_id varchar, p_node_x float, p_node_z float) return number
+	as
+		num number;
+	begin
+		select count(*)
+		into num
+		from objects
+		where node_x = p_node_x
+			and node_z = p_node_z
+			and scene_id = p_scene_id
+			and deleted = 0;
+
+		if (num > 0) then		
+			insert into object_list (object_id, container_level)
+			select object_id, level
+			from objects
+			start with
+				node_x = p_node_x
+				and node_z = p_node_z
+				and scene_id = p_scene_id
+				and deleted = 0
+				and contained_by = 0
+				and player_controlled = 'N'
+			connect by 
+				prior object_id = contained_by
+				and deleted = 0
+				and player_controlled='N'
+				and prior load_contents='Y';
+
+			return sql%rowcount;
+		else
+			return 0;
+		end if;
+	end;
+
+	function load_attributes return cursortype
+	as
+		result_cursor cursortype;
+	begin
+		open result_cursor for
+			select /*+ ORDERED USE_NL(T) */
+				t.object_id, t.type, t.value
+			from
+				object_list l,
+				attributes t
+			where t.object_id = l.object_id;
+
+		return result_cursor;
+	end;
+
+	function load_manf_schematic_attributes return cursortype
+	as
+		result_cursor cursortype;
+	begin
+	open result_cursor for
+		select t.object_id, t.attribute_type, t.value /*+ ORDERED USE_NL(T) */
+		from	
+			object_list l,
+			manf_schematic_attributes t
+		where t.object_id = l.object_id;
+
+		return result_cursor;
+	end;
+
+	function load_armor return cursortype
+	as
+		result_cursor cursortype;
+	begin
+		open result_cursor for
+			select /*+ ORDERED USE_NL(T) */
+				t.object_id,
+				t.layer,
+				t.object_template,
+				t.effectiveness, 
+				t.integrity,
+				t.special_protections,
+				t.encumberance_0,
+				t.encumberance_1,
+				t.encumberance_2,
+				t.encumberance_3,
+				t.encumberance_4,
+				t.encumberance_5,
+				t.encumberance_6,
+				t.encumberance_7,
+				t.encumberance_8
+			from
+				object_list l,
+				armor t
+			where t.object_id = l.object_id;
+
+		return result_cursor;
+	end;
+
+	function load_scripts return cursortype
+	as
+		result_cursor cursortype;
+	begin
+		open result_cursor for
+			select /*+ ORDERED USE_NL(T)*/
+				t.object_id, t.script, t.sequence_no
+			from
+				object_list l,
+				scripts t
+			where t.object_id = l.object_id;
+
+		return result_cursor;
+	end;
+
+	function load_object_variables return cursortype
+	as
+		result_cursor cursortype;
+	begin
+		open result_cursor for
+			select /*+ ORDERED USE_NL(T) USE_NL(N)*/
+				t.object_id, n.name, t.type, t.value
+			from
+				object_list l,
+				object_variables t,
+				object_variable_names n
+			where l.object_id = t.object_id
+			and t.name_id = n.id
+			and nvl(t.detached,0) = 0;
+
+		return result_cursor;
+	end;
+
+	function load_property_lists return cursortype
+	as
+		result_cursor cursortype;
+	begin
+		open result_cursor for
+			select /*+ ORDERED USE_NL(T) */
+				t.object_id, t.list_id, t.value
+			from object_list l, property_lists t
+			where t.object_id = l.object_id;
+
+		return result_cursor;
+	end;
+
+	function load_experience return cursortype
+	as
+		result_cursor cursortype;
+	begin
+		open result_cursor for
+			select /*+ ORDERED USE_NL(T) */
+				t.object_id, t.experience_type, t.points
+			from object_list l, experience_points t
+			where t.object_id = l.object_id;
+
+		return result_cursor;
+	end;
+
+	function load_battlefield_participants return cursortype
+	as
+		result_cursor cursortype;
+	begin
+		open result_cursor for
+			select t.region_object_id, t.character_object_id, t.faction_id  /*+ ORDERED USE_NL(T) */
+			from object_list l, battlefield_participants t
+			where t.region_object_id = l.object_id; -- order does not matter
+
+		return result_cursor;
+	end;
+
+	function load_player_object return cursortype
+	as
+		result_cursor cursortype;
+	begin
+		open result_cursor for
+			select /*+ ORDERED USE_NL(T) USE_NL(A)*/
+				t.object_id, t.station_id, house_id, num_lots account_num_lots, is_outcast account_is_outcast, cheater_level account_cheater_level, max_lots_adjustment account_max_lots_adjustment, personal_profile_id, character_profile_id, skill_title, born_date, played_time
+			from object_list l, player_objects t, accounts a
+			where t.station_id = a.station_id
+			and t.object_id = l.object_id;
+
+		return result_cursor;
+	end;
+
+
+	function load_messages return cursortype
+	as
+		result_cursor cursortype;
+	begin
+		open result_cursor for
+			select /*+ ORDERED USE_NL(MESSAGES) */
+				target, message_id, method, data, call_time, guaranteed, delivery_type
+			from  object_list, messages
+			where target =object_list.object_id;
+
+		return result_cursor;
+	end;
+
+	function load_location return cursortype
+	as
+		result_cursor cursortype;
+	begin
+		open result_cursor for
+			select  /*+ ORDERED USE_NL(T) */
+				t.object_id,
+				t.list_id,
+				t.sequence_number,
+				t.name,
+				t.scene,
+				t.x,
+				t.y,
+				t.z,
+				t.radius
+			from
+				object_list l,
+				location_lists t
+			where t.object_id = l.object_id;
+
+		return result_cursor;
+	end;
+
+	function load_object
+	return cursortype
+	as
+		result_cursor cursortype;
+	begin
+		open result_cursor for
+			select /*+ ORDERED USE_NL(T) */
+				t.object_id,
+				x,
+				y,
+				z,
+				quaternion_w,
+				quaternion_x,
+				quaternion_y,
+				quaternion_z,
+				node_x,
+				node_y,
+				node_z,
+				object_template_id,
+				type_id,
+				scene_id,
+				controller_type,
+				deleted,
+				object_name,
+				volume,
+				contained_by,
+				slot_arrangement,
+				player_controlled,
+				cache_version,
+				load_contents,
+				cash_balance,
+				bank_balance,
+				complexity,
+				name_string_table,
+				name_string_text,
+				load_with,
+				l.container_level
+			from
+				object_list l,
+				objects t
+			where
+				t.object_id=l.object_id;
+
+		return result_cursor;
+	end;
+
+	procedure verify_character (p_station_id in number, p_character_id in number, p_approved out varchar2, p_character_name out varchar2, p_scene_id out varchar2, p_container_id out number, p_x out number, p_y out number, p_z out number)
+	as
+	begin
+		select object_name, scene_id, contained_by, x, y, z
+		into p_character_name, p_scene_id, p_container_id, p_x, p_y, p_z
+		from players p, objects o
+		where p.station_id = p_station_id
+		and p.character_object = p_character_id
+		and o.object_id = p.character_object
+		and o.deleted = 0;
+
+		if (p_container_id = 0) then
+			begin
+				p_container_id := p_character_id;
+				p_approved := 'Y';
+			end;
+		else
+			begin
+				select scene_id, object_id, x,y,z,'Y'
+				into p_scene_id, p_container_id, p_x, p_y, p_z, p_approved
+				from objects
+				where contained_by=0
+				start with object_id = p_character_id
+				connect by prior contained_by=object_id;
+
+			exception
+				when no_data_found then
+					select scene_id, object_id, x,y,z,'Y'
+					into p_scene_id, p_container_id, p_x, p_y, p_z, p_approved
+					from objects
+					where object_id = p_character_id;
+			end;
+		end if;
+
+	exception
+		when no_data_found then
+			select 'N'
+			into p_approved
+			from dual;
+		when too_many_rows then
+			select 'N'
+			into p_approved
+			from dual;
+	end;
+
+
+	function load_waypoint
+	return cursortype
+	as
+		result_cursor cursortype;
+	begin
+		open result_cursor for
+			select /*+ ORDERED USE_NL(T) */
+				t.object_id,
+				t.waypoint_id,
+				t.appearance_name_crc,
+				t.location_x,
+				t.location_y,
+				t.location_z,
+				t.location_cell,
+				t.location_scene,
+				t.name,
+				t.color,
+				t.active
+			from
+				object_list l,
+				waypoints t
+			where
+				t.object_id=l.object_id;
+
+		return result_cursor;
+	end;
+
+-- GENERATED FUNCTIONS FOLLOW:
+
+
+	function load_battlefield_marker_object
+	return cursortype
+	as
+		result_cursor cursortype;
+	begin
+		open result_cursor for
+			select  /*+ ORDERED USE_NL(T) */
+				t.object_id,
+				t.region_name
+			from
+				object_list l,
+				battlefield_marker_objects t
+			where
+				t.object_id=l.object_id;
+
+		return result_cursor;
+	end;
+
+	function load_building_object
+	return cursortype
+	as
+		result_cursor cursortype;
+	begin
+		open result_cursor for
+			select  /*+ ORDERED USE_NL(T) */
+				t.object_id,
+				t.maintenance_cost,
+				t.time_last_checked,
+				t.is_public,
+				t.city_id
+			from
+				object_list l,
+				building_objects t
+			where
+				t.object_id=l.object_id;
+
+		return result_cursor;
+	end;
+
+	function load_cell_object
+	return cursortype
+	as
+		result_cursor cursortype;
+	begin
+		open result_cursor for
+			select  /*+ ORDERED USE_NL(T) */
+				t.object_id,
+				t.cell_number,
+				t.is_public
+			from
+				object_list l,
+				cell_objects t
+			where
+				t.object_id=l.object_id;
+
+		return result_cursor;
+	end;
+
+	function load_creature_object
+	return cursortype
+	as
+		result_cursor cursortype;
+	begin
+		open result_cursor for
+			select /*+ ORDERED USE_NL(T) */
+				t.object_id,
+				t.scale_factor,
+				t.states,
+				t.posture,
+				t.shock_wounds,
+				t.master_id,
+				t.max_force_power,
+				t.force_power,
+				t.rank,
+				t.base_walk_speed,
+				t.base_run_speed
+			from
+				object_list l,
+				creature_objects t
+			where
+				t.object_id=l.object_id;
+
+		return result_cursor;
+	end;
+
+	function load_guild_object
+	return cursortype
+	as
+		result_cursor cursortype;
+	begin
+		open result_cursor for
+			select
+				t.object_id
+			from
+				guild_objects t,
+				object_list l
+			where
+				t.object_id=l.object_id;
+
+		return result_cursor;
+	end;
+
+	function load_harvester_inst_object
+	return cursortype
+	as
+		result_cursor cursortype;
+	begin
+		open result_cursor for
+			select  /*+ ORDERED USE_NL(T) */
+				t.object_id,
+				t.installed_efficiency,
+				t.resource_pool,
+				t.max_extraction_rate,
+				t.current_extraction_rate,
+				t.max_hopper_amount
+			from
+				object_list l,
+				harvester_installation_objects t
+			where
+				t.object_id=l.object_id;
+
+		return result_cursor;
+	end;
+
+	function load_installation_object
+	return cursortype
+	as
+		result_cursor cursortype;
+	begin
+		open result_cursor for
+			select  /*+ ORDERED USE_NL(T) */
+				t.object_id,
+				t.installation_type,
+				t.activated,
+				t.tick_count,
+				t.activate_start_time,
+				t.power,
+				t.power_rate
+			from
+				object_list l,
+				installation_objects t
+			where
+				t.object_id=l.object_id;
+
+		return result_cursor;
+	end;
+
+	function load_intangible_object
+	return cursortype
+	as
+		result_cursor cursortype;
+	begin
+		open result_cursor for
+			select  /*+ ORDERED USE_NL(T) */
+				t.object_id,
+				t.count
+			from
+				object_list l,
+				intangible_objects t
+			where
+				t.object_id=l.object_id;
+
+		return result_cursor;
+	end;
+
+	function load_manufacture_inst_object
+	return cursortype
+	as
+		result_cursor cursortype;
+	begin
+		open result_cursor for
+			select  /*+ ORDERED USE_NL(T) */
+				t.object_id
+			from
+				object_list l,
+				manufacture_inst_objects t
+			where
+				t.object_id=l.object_id;
+
+		return result_cursor;
+	end;
+
+	function load_manf_schematic_object
+	return cursortype
+	as
+		result_cursor cursortype;
+	begin
+		open result_cursor for
+			select  /*+ ORDERED USE_NL(T) */
+				t.object_id,
+				t.creator_id,
+				t.creator_name,
+				t.items_per_container,
+				t.manufacture_time,
+				t.draft_schematic
+			from
+				object_list l,
+				manf_schematic_objects t
+			where
+				t.object_id=l.object_id;
+
+		return result_cursor;
+	end;
+
+	function load_mission_object
+	return cursortype
+	as
+		result_cursor cursortype;
+	begin
+		open result_cursor for
+			select /*+ ORDERED USE_NL(T) */
+				t.object_id,
+				t.difficulty,
+				t.end_x,
+				t.end_y,
+				t.end_z,
+				t.end_cell,
+				t.end_scene,
+				t.mission_creator,
+				t.reward,
+				t.root_script_name,
+				t.start_x,
+				t.start_y,
+				t.start_z,
+				t.start_cell,
+				t.start_scene,
+				t.description_table,
+				t.description_text,
+				t.title_table,
+				t.title_text,
+				t.mission_holder_id,
+				t.status,
+				t.mission_type,
+				t.target_appearance,
+				t.target_name
+			from
+				object_list l,
+				mission_objects t
+			where
+				t.object_id=l.object_id;
+
+		return result_cursor;
+	end;
+
+	function load_planet_object
+	return cursortype
+	as
+		result_cursor cursortype;
+	begin
+		open result_cursor for
+			select  /*+ ORDERED USE_NL(T) */
+				t.object_id,
+				t.planet_name
+			from
+				object_list l,
+				planet_objects t
+			where
+				t.object_id=l.object_id;
+
+		return result_cursor;
+	end;
+
+	function load_resource_container_object
+	return cursortype
+	as
+		result_cursor cursortype;
+	begin
+		open result_cursor for
+			select /*+ ORDERED USE_NL(T) */
+				t.object_id,
+				t.resource_type,
+				t.quantity,
+				t.source
+			from
+				object_list l,
+				resource_container_objects t
+			where
+				t.object_id=l.object_id;
+
+		return result_cursor;
+	end;
+
+	function load_resource_pool_object
+	return cursortype
+	as
+		result_cursor cursortype;
+	begin
+		open result_cursor for
+			select  /*+ ORDERED USE_NL(T) */
+				t.object_id,
+				t.map_seed,
+				t.depleted_timestamp,
+				t.resource_type,
+				t.planet
+			from
+				object_list l,
+				resource_pool_objects t
+			where
+				t.object_id=l.object_id;
+
+		return result_cursor;
+	end;
+
+	function load_resource_type_object
+	return cursortype
+	as
+		result_cursor cursortype;
+	begin
+		open result_cursor for
+			select /*+ ORDERED USE_NL(T) */
+				t.object_id,
+				t.resource_name,
+				t.resource_class,
+				t.min_pools
+			from
+				object_list l,
+				resource_type_objects t
+			where
+				t.object_id=l.object_id;
+
+		return result_cursor;
+	end;
+
+	function load_ship_object
+	return cursortype
+	as
+		result_cursor cursortype;
+	begin
+		open result_cursor for
+			select /*+ ORDERED USE_NL(T) */
+				t.object_id
+			from
+				object_list l,
+				ship_objects t
+			where
+				t.object_id=l.object_id;
+
+		return result_cursor;
+	end;
+
+	function load_static_object
+	return cursortype
+	as
+		result_cursor cursortype;
+	begin
+		open result_cursor for
+			select /*+ ORDERED USE_NL(T) */
+				t.object_id
+			from
+				object_list l,
+				static_objects t
+			where
+				t.object_id=l.object_id;
+
+		return result_cursor;
+	end;
+
+	function load_tangible_object
+	return cursortype
+	as
+		result_cursor cursortype;
+	begin
+		open result_cursor for
+			select /*+ ORDERED USE_NL(T) */
+				t.object_id,
+				t.armor_effectiveness,
+				t.decay_time,
+				t.hit_points,
+				t.is_frozen,
+				t.is_squelched,
+				t.max_hit_points,
+				t.owner_id,
+				t.popup_help_id,
+				t.quality_rating,
+				t.visible,
+				t.weight,
+				t.appearance_data,
+				t.pvp_type,
+				t.pvp_faction,
+				t.damage_taken,
+				t.custom_appearance,
+				t.count,
+				t.condition
+			from
+				object_list l,
+				tangible_objects t
+			where
+				t.object_id=l.object_id;
+
+		return result_cursor;
+	end;
+
+	function load_token_object
+	return cursortype
+	as
+		result_cursor cursortype;
+	begin
+		open result_cursor for
+			select  /*+ ORDERED USE_NL(T) */
+				t.object_id,
+				t.reference,
+				t.target_server_template_name,
+				t.target_shared_template_name,
+				t.waypoint
+			from
+				object_list l,
+				token_objects t
+			where
+				t.object_id=l.object_id;
+
+		return result_cursor;
+	end;
+
+	function load_universe_object
+	return cursortype
+	as
+		result_cursor cursortype;
+	begin
+		open result_cursor for
+			select /*+ ORDERED USE_NL(T) */
+				t.object_id
+			from
+				object_list l,
+				universe_objects t
+			where
+				t.object_id=l.object_id;
+
+		return result_cursor;
+	end;
+
+	function load_vehicle_object
+	return cursortype
+	as
+		result_cursor cursortype;
+	begin
+		open result_cursor for
+			select
+				t.object_id,
+				t.bogus
+			from
+				vehicle_objects t,
+				object_list l
+			where
+				t.object_id=l.object_id;
+
+		return result_cursor;
+	end;
+
+	function load_weapon_object
+	return cursortype
+	as
+		result_cursor cursortype;
+	begin
+		open result_cursor for
+			select /*+ ORDERED USE_NL(T) */
+				t.object_id,
+				t.attack_mode,      
+				t.min_damage,
+				t.max_damage,
+				t.attack_speed,
+				t.wound_chance,
+				t.zero_range_mod,
+				t.max_range_mod,
+				t.mid_range_mod,
+				t.mid_range,
+				t.attack_health_cost,
+				t.attack_action_cost,
+				t.attack_mind_cost,
+				t.damage_radius
+			from
+				object_list l,
+				weapon_objects t
+			where
+				t.object_id=l.object_id;
+
+		return result_cursor;
+	end;
+
+	function load_factory_object  
+	return cursortype
+	as
+		result_cursor cursortype;
+	begin
+		open result_cursor for
+			select /*+ ORDERED USE_NL(T) */
+				t.object_id
+			from
+				object_list l,
+				factory_objects t
+			where
+				t.object_id=l.object_id;
+
+		return result_cursor;
+	end;
+	
+
+	function load_player_quest_object	return cursortype
+	as
+		result_cursor cursortype;
+	begin
+		open result_cursor for
+			select /*+ ORDERED USE_NL(T) */
+				t.object_id,
+				t.title,
+				t.description,
+				t.creator,
+				t.total_tasks,
+				t.difficulty,
+				t.task_title1,
+				t.task_description1,
+				t.task_title2,
+				t.task_description2,
+				t.task_title3,
+				t.task_description3,
+				t.task_title4,
+				t.task_description4,
+				t.task_title5,
+				t.task_description5,
+				t.task_title6,
+				t.task_description6,
+				t.task_title7,
+				t.task_description7,
+				t.task_title8,
+				t.task_description8,
+				t.task_title9,
+				t.task_description9,
+				t.task_title10,
+				t.task_description10,
+				t.task_title11,
+				t.task_description11,
+				t.task_title12,
+				t.task_description12
+			from
+				object_list l,
+				player_quest_objects t
+			where
+				t.object_id=l.object_id;
+
+		return result_cursor;
+	end;
+
+
+end;
+/

@@ -1,0 +1,32 @@
+create or replace package login
+as
+	type refcursor is ref cursor;
+	subtype objectid is number;
+
+	procedure register_new_cluster(p_cluster_name in varchar2, p_address in varchar2, p_cluster_id out number);
+	function get_cluster_list(p_group in number) return refcursor;
+	function get_avatar_list (p_station_id number, p_cluster_group number) return refcursor;
+	function get_open_character_slots(p_station_id number, p_cluster_id number) return refcursor;
+	function get_only_open_character_slots(p_station_id number, p_cluster_id number) return refcursor;
+	function is_cluster_at_limit(p_cluster_id number) return number;
+	function is_account_at_limit(p_station_id number) return number;
+	procedure delete_character(p_cluster_id number, p_character_id number, p_station_id number);
+	procedure rename_character(p_cluster_id number, p_character_id number, p_new_name varchar2);
+	procedure create_character(p_cluster_id number, p_station_id number, p_character_name varchar2, p_character_id number, p_template_id number, p_character_type number);
+	function restore_character(p_cluster_id number, p_station_id number, p_character_name varchar2, p_character_id number, p_template_id number, p_character_type number) return number;
+	procedure set_character_slots(p_cluster_id number, p_station_id number, p_slot_type number, p_num_slots number);
+	procedure set_character_type(p_cluster_id number, p_station_id number, p_character_id number, p_slot_type number);
+	function has_extra_character_slot(p_station_id number, p_character_type number) return number;
+	procedure toggle_disable_character(p_cluster_id number, p_character_id number, p_station_id number, p_enabled varchar2);
+	function enable_disable_character(p_station_id number, p_character_id number, p_enabled varchar2) return number;
+	function get_completed_tutorial(p_station_id number) return refcursor;
+	procedure toggle_completed_tutorial(p_station_id number, p_completed varchar2);
+	function get_consumed_reward_events(p_station_id number) return refcursor;
+	function get_claimed_reward_items(p_station_id number) return refcursor;
+	function consume_reward_event(p_station_id number, p_character_id number, p_cluster_id number, p_event_id varchar2) return number;
+	function claim_reward_item(p_station_id number, p_character_id number, p_cluster_id number, p_item_id varchar2) return number;
+	function get_feature_id_transactions(p_station_id in number, p_cluster_id in number, p_character_id in number) return refcursor;
+	function update_feature_id_transaction(p_station_id in number, p_cluster_id in number, p_character_id in number, p_item_id in varchar2, p_count_adjustment in number) return number;
+end;
+/
+grant execute on login to public;

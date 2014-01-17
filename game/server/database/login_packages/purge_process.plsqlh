@@ -1,0 +1,11 @@
+create or replace package purge_process
+as
+	type refcursor is ref cursor;
+	subtype objectid is number;
+
+	procedure update_account_list (source_table varchar2);
+	function get_account_for_purge(p_purge_phase number, p_min_age number) return number;
+	procedure set_purge_status(p_station_id number, p_new_phase number);
+end;
+/
+grant execute on purge_process to public;

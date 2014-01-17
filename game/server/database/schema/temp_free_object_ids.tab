@@ -1,0 +1,6 @@
+create global temporary table temp_free_object_ids
+(
+	start_id int,
+	end_id int
+);
+grant select on temp_free_object_ids to public;

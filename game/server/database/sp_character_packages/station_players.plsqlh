@@ -1,0 +1,9 @@
+create or replace package station_players
+as
+	type refcursor is ref cursor;
+	subtype networkid is number(20);
+
+	procedure update_character(p_clusterName in varchar2 ,p_characterId in networkid, p_characterName in varchar2, p_objectName in varchar2, p_x in number, p_y in number, p_z in number, p_sceneId in varchar2, p_cash_balance in number, p_bank_balance in number, p_objectTemplateName in varchar2, p_stationId in networkid, p_containedBy in networkid, p_createTime in number, p_playedTime in number , p_numLots in number);
+end;
+/
+grant execute on station_players to public;

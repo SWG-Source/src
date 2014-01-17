@@ -1,0 +1,8 @@
+create table experience_points
+(
+	object_id number, -- BIND_AS(DB::BindableNetworkId)
+	experience_type varchar2(500),
+	points number,
+	constraint pk_experience_points primary key (object_id, experience_type) 
+);
+grant select on experience_points to public;

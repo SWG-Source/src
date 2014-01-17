@@ -1,0 +1,14 @@
+create table account_extract -- NO_IMPORT
+(
+	user_id number,
+	subscription_id number,
+	plan_id number,
+	plan_desc varchar(255),
+	status number,
+	status_desc varchar2(60),
+	close_date date,
+	total_entitled_time number,
+	constraint account_extract_pk primary key (user_id)
+);
+
+grant select on account_extract to public;

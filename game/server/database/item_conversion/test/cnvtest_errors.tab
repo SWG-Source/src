@@ -1,0 +1,7 @@
+create table cnvtest_errors
+(
+	object_id number,
+	template_name varchar2(255),
+	error_description varchar2(500),
+	constraint pk_cnvtest_errors primary key (object_id)
+);

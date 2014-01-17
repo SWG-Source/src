@@ -1,0 +1,7 @@
+create table default_character_slots -- NO_IMPORT
+(
+	character_type_id  number not null,
+	num_slots          number not null,
+	constraint pk_default_character_slots primary key (character_type_id) 
+);
+grant select on default_character_slots to public;

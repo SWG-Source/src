@@ -1,0 +1,9 @@
+create table object_variable_names  -- NO_IMPORT
+(
+	id number(20),
+	name varchar(500),
+	constraint pk_object_variable_names primary key (id) 
+);
+create index object_variable_name_index on object_variable_names(name);
+grant select on object_variable_names to public;
+

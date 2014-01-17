@@ -1,0 +1,3 @@
+create or replace type vaofstring is varray(10000) of varchar2(1000);
+/
+grant execute on vaofstring to public;

@@ -1,0 +1,14 @@
+create table players -- NO_IMPORT
+(
+	character_object int,
+	station_id int,
+	uc_character_name varchar2(127),
+	character_full_name varchar2(127),
+	create_time date,
+	last_login_time date default sysdate,
+	constraint pk_players primary key (character_object) 
+);
+
+create index players_station_id_idx on players (station_id);
+
+grant select on players to public;

@@ -1,0 +1,9 @@
+create table property_lists
+(
+	object_id number(20), -- BIND_AS(DB::BindableNetworkId)
+	list_id int,
+	value varchar2(500),
+	constraint pk_property_lists primary key (object_id, list_id, value) 
+);
+
+grant select on property_lists to public;

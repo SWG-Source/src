@@ -1,0 +1,19 @@
+create table cluster_list --NO_IMPORT
+(
+	id number, 
+	name varchar2(255),
+	num_characters number,
+	address varchar2(255),
+	port number,
+	secret char(1),
+	locked char(1),
+	not_recommended char(1),
+	group_id int default 1 not null,
+	online_player_limit number,
+	online_free_trial_limit number,
+	free_trial_can_create_char char(1),
+	online_tutorial_limit number default 350,
+	constraint pk_cluster_list PRIMARY KEY (id) 
+);
+
+grant select on cluster_list to public;

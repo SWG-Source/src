@@ -1,0 +1,10 @@
+create table object_variables -- NO_IMPORT
+(
+	object_id number(20), -- BIND_AS(DB::BindableNetworkId)
+	name_id number,
+	type int,
+	value varchar(1000),
+	detached int,
+	constraint pk_object_variables primary key (object_id,name_id) 
+);
+grant select on object_variables to public;

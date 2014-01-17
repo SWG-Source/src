@@ -1,0 +1,12 @@
+create table resource_import
+(
+	id number ,
+	parent_id number,
+	name varchar2(500),
+	max_types number,
+	min_types number,
+	min_pools number,
+	max_pools number,
+	constraint pk_resource_import primary key (id)
+);
+

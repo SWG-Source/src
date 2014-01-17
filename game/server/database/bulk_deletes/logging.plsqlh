@@ -1,0 +1,5 @@
+CREATE OR REPLACE  PACKAGE "LOGGING"  as
+  procedure LOGGER(v_log_type_id IN varchar2, v_should_commit IN INTEGER, v_msg_id IN NUMBER, v_msg_text IN varchar2);
+  procedure LOG_STATUS(v_msg_id IN NUMBER, v_msg_text IN varchar2);
+  procedure LOG_ERROR(v_msg_id IN NUMBER, v_msg_text IN varchar2);
+end logging;

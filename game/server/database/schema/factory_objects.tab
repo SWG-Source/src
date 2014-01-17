@@ -1,0 +1,7 @@
+create table factory_objects
+(
+	object_id number(20),  -- BIND_AS(DB::BindableNetworkId)
+	constraint pk_factory_objects primary key (object_id) 
+);
+
+grant select on factory_objects to public;

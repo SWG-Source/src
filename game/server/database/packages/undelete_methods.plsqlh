@@ -1,0 +1,13 @@
+create or replace package undelete_methods is
+
+  -- Author  : AVALDES
+  -- Created : 17-Jun-03 3:35:25 PM
+  
+  FUNCTION restore_object
+    (object_id_in     IN objects.object_id%TYPE)
+  RETURN NUMBER;
+
+
+end undelete_methods;
+/
+grant execute on undelete_methods to public;

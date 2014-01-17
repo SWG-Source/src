@@ -1,0 +1,12 @@
+create table resource_types
+(
+	resource_id number(20), -- BIND_AS(DB::BindableNetworkId)
+	resource_name varchar2(100),
+	resource_class varchar2(100),
+	attributes varchar2(1024),
+	fractal_seeds varchar2(1024),
+	depleted_timestamp int,
+	constraint pk_resource_types primary key (resource_id) 
+);
+
+grant select on resource_types to public;

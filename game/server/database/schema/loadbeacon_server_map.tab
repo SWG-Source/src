@@ -1,0 +1,9 @@
+create table loadbeacon_server_map
+(
+	object_template varchar2(255),
+	server_id int,
+	secondary_server_id int,
+	constraint pk_loadbeacon_server_map primary key (object_template) 	
+);
+
+grant select on loadbeacon_server_map to public;

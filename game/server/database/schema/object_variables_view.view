@@ -1,0 +1,86 @@
+create or replace view object_variables_view as
+select v.object_id, n.name, v.type, v.value, -1 packed
+from object_variables v, object_variable_names n
+where v.name_id = n.id
+and v.detached = 0
+union all
+select o.object_id, o.objvar_0_name, o.objvar_0_type, o.objvar_0_value, 0
+from objects o
+where o.objvar_0_type >= 0
+union all
+select o.object_id, o.objvar_1_name, o.objvar_1_type, o.objvar_1_value, 1
+from objects o
+where o.objvar_1_type >= 0
+union all
+select o.object_id, o.objvar_2_name, o.objvar_2_type, o.objvar_2_value, 2
+from objects o
+where o.objvar_2_type >= 0
+union all
+select o.object_id, o.objvar_3_name, o.objvar_3_type, o.objvar_3_value, 3
+from objects o
+where o.objvar_3_type >= 0
+union all
+select o.object_id, o.objvar_4_name, o.objvar_4_type, o.objvar_4_value, 4
+from objects o
+where o.objvar_4_type >= 0
+union all
+select o.object_id, o.objvar_5_name, o.objvar_5_type, o.objvar_5_value, 5
+from objects o
+where o.objvar_5_type >= 0
+union all
+select o.object_id, o.objvar_6_name, o.objvar_6_type, o.objvar_6_value, 6
+from objects o
+where o.objvar_6_type >= 0
+union all
+select o.object_id, o.objvar_7_name, o.objvar_7_type, o.objvar_7_value, 7
+from objects o
+where o.objvar_7_type >= 0
+union all
+select o.object_id, o.objvar_8_name, o.objvar_8_type, o.objvar_8_value, 8
+from objects o
+where o.objvar_8_type >= 0
+union all
+select o.object_id, o.objvar_9_name, o.objvar_9_type, o.objvar_9_value, 9
+from objects o
+where o.objvar_9_type >= 0
+union all
+select o.object_id, o.objvar_10_name, o.objvar_10_type, o.objvar_10_value, 10
+from objects o
+where o.objvar_10_type >= 0
+union all
+select o.object_id, o.objvar_11_name, o.objvar_11_type, o.objvar_11_value, 11
+from objects o
+where o.objvar_11_type >= 0
+union all
+select o.object_id, o.objvar_12_name, o.objvar_12_type, o.objvar_12_value, 12
+from objects o
+where o.objvar_12_type >= 0
+union all
+select o.object_id, o.objvar_13_name, o.objvar_13_type, o.objvar_13_value, 13
+from objects o
+where o.objvar_13_type >= 0
+union all
+select o.object_id, o.objvar_14_name, o.objvar_14_type, o.objvar_14_value, 14
+from objects o
+where o.objvar_14_type >= 0
+union all
+select o.object_id, o.objvar_15_name, o.objvar_15_type, o.objvar_15_value, 15
+from objects o
+where o.objvar_15_type >= 0
+union all
+select o.object_id, o.objvar_16_name, o.objvar_16_type, o.objvar_16_value, 16
+from objects o
+where o.objvar_16_type >= 0
+union all
+select o.object_id, o.objvar_17_name, o.objvar_17_type, o.objvar_17_value, 17
+from objects o
+where o.objvar_17_type >= 0
+union all
+select o.object_id, o.objvar_18_name, o.objvar_18_type, o.objvar_18_value, 18
+from objects o
+where o.objvar_18_type >= 0
+union all
+select o.object_id, o.objvar_19_name, o.objvar_19_type, o.objvar_19_value, 19
+from objects o
+where o.objvar_19_type >= 0;
+

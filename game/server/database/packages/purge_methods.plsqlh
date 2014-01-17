@@ -1,0 +1,20 @@
+CREATE OR REPLACE PACKAGE purge_methods is
+
+  -- Author  : AVALDES
+  -- Created : 19-Jun-03 4:59:49 PM
+
+
+  FUNCTION Purge_objects
+    (date_in       in objects.deleted_date%type)
+  RETURN NUMBER;
+  --
+  --
+  --
+  FUNCTION time_purge
+    (date_in          IN VARCHAR2)
+  RETURN INTEGER;
+
+
+end purge_methods;
+/
+grant execute on purge_methods to public;

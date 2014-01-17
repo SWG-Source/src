@@ -1,0 +1,27 @@
+create or replace package admin
+as
+	type refcursor is ref cursor;
+	subtype objectid is number;
+
+	procedure move_to_player (p_object_id objectid, p_target_player objectid);
+	procedure move_to_player_bank (p_object_id objectid, p_target_player objectid);
+	procedure move_to_player_datapad (p_object_id objectid, p_target_player objectid, p_max_depth number);
+	procedure move_to_container (p_object_id objectid, p_target_container objectid, p_target_load_with objectid);
+	procedure move_to_container_depth (p_object_id objectid, p_target_container objectid, p_target_load_with objectid, p_max_depth number);
+	function get_inventory_for_player (p_player_id objectid) return objectid;
+	function get_bank_for_player (p_player_id objectid) return objectid;
+	function get_datapad_for_player (p_player_id objectid) return objectid;
+	function get_player_for_player (p_player_id objectid) return objectid;
+	function get_container_for_object(p_object_id objectid) return objectid;
+	function get_object_template_id (p_object_id objectid) return number;
+	function restore_house (p_house_id objectid) return number;
+
+	function restore_character (p_player_id objectid, p_name out varchar2, p_account out number, p_template_id out number) return number;
+	function undelete_item (p_item_id objectid) return number;
+	function move_item_to_player (p_object_id objectid, p_target_player objectid) return number;
+
+	procedure fix_load_with (p_topmost_object objectid, p_starting_loadwith objectid);
+	procedure fix_load_with_depth (p_topmost_object objectid, p_starting_loadwith objectid, p_max_depth number);
+end;
+/
+grant execute on admin to public;

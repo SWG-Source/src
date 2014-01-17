@@ -1,0 +1,9 @@
+create or replace package conversion_test
+as
+	procedure testAll;
+
+	procedure testObjects;
+	procedure testObjvars;
+	procedure testScripts;
+end;
+/

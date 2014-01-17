@@ -1,0 +1,6 @@
+create table manufacture_inst_objects
+(
+	object_id number(20),  -- BIND_AS(DB::BindableNetworkId)
+	constraint pk_manufacture_inst_objects primary key (object_id) 
+);
+grant select on manufacture_inst_objects to public;

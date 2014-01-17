@@ -1,0 +1,10 @@
+create table statuses -- NO_IMPORT
+(
+	id number,
+	description varchar2(200),
+	do_purge char(1),
+	reviewed char(1),
+	constraint statuses_pk primary key (id)
+);
+
+grant select on statuses to public;

@@ -1,0 +1,6 @@
+create or replace package serverclock
+as
+	function get_last_save_time return number;
+end;
+/
+grant execute on serverclock to public;

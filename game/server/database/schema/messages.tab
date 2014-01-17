@@ -1,0 +1,14 @@
+create table messages
+(
+	message_id int, -- BIND_AS(DB::BindableNetworkId)
+	target int, -- BIND_AS(DB::BindableNetworkId)
+	method varchar2(50),
+	data varchar2(4000),
+	call_time int,
+	guaranteed char(1),
+	delivery_type int,
+	primary key (message_id)
+);
+
+create index object_idx on messages (target);
+grant select on messages to public;

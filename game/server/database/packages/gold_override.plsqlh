@@ -1,0 +1,8 @@
+create or replace package gold_override
+as
+	type cursortype is ref cursor;
+
+	function load_objvar_overrides(p_schema varchar2) return cursortype;
+end;
+/
+grant execute on gold_override to public;

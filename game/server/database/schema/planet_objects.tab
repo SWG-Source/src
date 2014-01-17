@@ -1,0 +1,8 @@
+create table planet_objects
+(
+	object_id number(20),  -- BIND_AS(DB::BindableNetworkId)
+	planet_name varchar(100),
+	primary key (object_id)
+);
+
+grant select on planet_objects to public;

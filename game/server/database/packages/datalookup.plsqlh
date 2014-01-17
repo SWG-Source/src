@@ -1,0 +1,11 @@
+create or replace package datalookup
+as
+	type refcursor is ref cursor;
+
+	function check_character_name(p_name varchar2) return number;
+	function get_structures_for_purge(p_station_id number) return refcursor;
+	function get_vendors_for_purge(p_station_id number) return refcursor;
+
+end;
+/
+grant execute on datalookup to public;

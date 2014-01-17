@@ -1,0 +1,21 @@
+create table tangible_objects
+(
+	object_id number(20), -- BIND_AS(DB::BindableNetworkId)
+	max_hit_points int,
+	owner_id int, -- BIND_AS(DB::BindableNetworkId)
+	visible char(1),
+	appearance_data varchar(2000),
+	interest_radius int,
+	pvp_type int,
+	pvp_faction int,
+	damage_taken int,
+	custom_appearance varchar2(2000),
+	count int,
+	condition int,
+	creator_id number(20), -- BIND_AS(DB::BindableNetworkId)
+	source_draft_schematic int,
+	constraint pk_tangible_objects primary key (object_id) 
+);
+create index owner_id_idx on tangible_objects(owner_id) ;
+
+grant select on tangible_objects to public;

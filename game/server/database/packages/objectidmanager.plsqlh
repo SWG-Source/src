@@ -1,0 +1,12 @@
+create or replace package objectidmanager
+as
+	type cursortype is ref cursor;
+
+	procedure get_ids(how_many in out number, block_start_id out number, block_end_id out number);
+	function get_contiguous_ids(min_count number) return number;	
+	function get_single_id return number;
+
+	procedure rebuild_freelist;
+end;
+/
+grant execute on objectidmanager to public;

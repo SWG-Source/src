@@ -1,0 +1,10 @@
+create table scripts
+(
+	object_id number(20),  -- BIND_AS(DB::BindableNetworkId)
+	sequence_no int,
+	script varchar(100),
+	detached int,
+	primary key (object_id, sequence_no)
+);
+
+grant select on scripts to public;

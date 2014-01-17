@@ -1,0 +1,8 @@
+create table purge_phases -- NO_IMPORT
+(
+	id number,
+	description varchar2(200),
+	constraint purge_phases_pk primary key (id)
+);
+
+grant select on purge_phases to public;

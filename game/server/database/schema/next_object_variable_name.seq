@@ -1,0 +1,1 @@
+create sequence next_object_variable_name start with 1;

@@ -1,0 +1,13 @@
+name pattern	min value	max value
+powerup.usesLeft	1	100
+powerup.effect	1	100
+powerup.efficiency	1	100
+powerup.damage	-0.3	0.3
+powerup.speed	-0.3	0.3
+powerup.accuracy	-30	30
+powerup.actionCost	-0.3	0.3
+powerup.wound	0	0.3
+powerup.elementalDamage	0	0.3
+effectiveness	0	2
+duration	0	2
+healing.power	50	1000

@@ -1,0 +1,12 @@
+create table installation_objects
+(
+	object_id number(20),  -- BIND_AS(DB::BindableNetworkId)
+	installation_type int,
+	activated char(1),
+	tick_count float,
+	activate_start_time float,
+	power float,
+	power_rate float,
+	primary key (object_id)
+);
+grant select on installation_objects to public;

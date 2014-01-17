@@ -1,0 +1,65 @@
+CREATE OR REPLACE package cm_persister
+as
+	type refcursor is ref cursor;
+	subtype objectid is number;
+
+	procedure update_auction_locations (p_location_id VAOFSTRING, 
+					 p_location_name VAOFSTRING, 
+					 p_owner_id VAOFSTRING, 
+					 p_sales_tax VAOFNUMBER, 
+					 p_sales_tax_bank_id VAOFSTRING, 
+					 p_empty_date VAOFNUMBER, 
+					 p_last_access_date VAOFNUMBER, 
+					 p_inactive_date VAOFNUMBER,
+					 p_status VAOFNUMBER, 
+					 p_search_enabled VAOFSTRING, 
+					 p_entrance_charge VAOFNUMBER, 
+					 p_chunk_size number);
+	procedure insert_auction_locations (p_location_id VAOFSTRING, 
+					 p_location_name VAOFSTRING, 
+					 p_owner_id VAOFSTRING, 
+					 p_sales_tax VAOFNUMBER, 
+					 p_sales_tax_bank_id VAOFSTRING, 
+					 p_empty_date VAOFNUMBER, 
+					 p_last_access_date VAOFNUMBER, 
+					 p_inactive_date VAOFNUMBER, 
+					 p_status VAOFNUMBER, 
+					 p_search_enabled VAOFSTRING, 
+					 p_entrance_charge VAOFNUMBER, 
+					 p_chunk_size number);
+	procedure delete_auction_locations (p_location_id VAOFSTRING, p_chunk_size number);
+
+	procedure insert_market_auction_bids (p_item_id VAOFSTRING, 
+					 p_bidder_id VAOFSTRING, 
+					 p_bid VAOFNUMBER, 
+					 p_max_proxy_bid VAOFNUMBER, 
+					 p_chunk_size number);
+
+	procedure update_market_auctions (p_item_id VAOFSTRING, 
+					 p_owner_id VAOFSTRING, 
+					 p_active VAOFNUMBER, 
+					 p_chunk_size number);
+	procedure insert_market_auctions (p_item_id VAOFSTRING, 
+					 p_owner_id VAOFSTRING, 
+					 p_creator_id VAOFSTRING,
+					 p_location_id VAOFSTRING, 
+					 p_min_bid VAOFNUMBER, 
+					 p_buy_now_price VAOFNUMBER,
+					 p_auction_timer VAOFNUMBER, 
+					 p_oob VAOFLONGSTRING, 
+					 p_user_description VAOFLONGSTRING,
+					 p_category VAOFNUMBER, 
+					 p_item_name VAOFLONGSTRING, 
+					 p_item_timer VAOFNUMBER,
+					 p_active VAOFNUMBER,
+					 p_item_size VAOFNUMBER, 
+					 p_object_template_id VAOFNUMBER, 
+					 p_chunk_size number);
+	procedure delete_market_auctions (p_item_id VAOFSTRING, p_chunk_size number);
+
+	procedure insert_auction_attributes (p_item_id VAOFSTRING, p_attribute_name VAOFSTRING, p_attribute_value VAOFSTRING, p_chunk_size number);
+	
+end;
+/
+
+grant execute on cm_persister to public;

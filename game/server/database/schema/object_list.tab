@@ -1,0 +1,6 @@
+create global temporary table object_list -- NO_IMPORT
+(
+	object_id number(20),
+	container_level number
+);
+grant select on mission_objects to public;

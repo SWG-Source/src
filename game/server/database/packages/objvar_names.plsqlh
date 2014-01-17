@@ -1,0 +1,9 @@
+create or replace package objvar_names
+as
+	type cursortype is ref cursor;
+
+	procedure add_name (p_id number, p_name varchar2);
+	function get_name_list return cursortype;
+end;
+/
+grant execute on objvar_names to public;

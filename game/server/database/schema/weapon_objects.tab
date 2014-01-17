@@ -1,0 +1,19 @@
+create table weapon_objects
+(
+	object_id number(20),  -- BIND_AS(DB::BindableNetworkId)
+	min_damage int,
+	max_damage int,
+	damage_type int,
+	elemental_type int,
+	elemental_value int,
+	attack_speed float,
+	wound_chance float,
+	accuracy int,
+	attack_cost int,
+	damage_radius float,
+	min_range float,
+	max_range float,
+	constraint pk_weapon_objects primary key (object_id) 
+);
+
+grant select on weapon_objects to public;

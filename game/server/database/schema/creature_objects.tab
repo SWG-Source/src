@@ -1,0 +1,46 @@
+create table creature_objects
+(
+	object_id number(20),  -- BIND_AS(DB::BindableNetworkId)
+	scale_factor float,
+	states int,  -- BIND_AS(DB::BindableInt64)
+	posture int,
+	shock_wounds int,
+	master_id number(20),  -- BIND_AS(DB::BindableNetworkId)
+	rank int,
+	base_walk_speed float,
+	base_run_speed float,
+	attribute_0 int,
+	attribute_1 int,
+	attribute_2 int,
+	attribute_3 int,
+	attribute_4 int,
+	attribute_5 int,
+	attribute_6 int,
+	attribute_7 int,
+	attribute_8 int,
+	attribute_9 int,
+	attribute_10 int,
+	attribute_11 int,
+	attribute_12 int,
+	attribute_13 int,
+	attribute_14 int,
+	attribute_15 int,
+	attribute_16 int,
+	attribute_17 int,
+	attribute_18 int,
+	attribute_19 int,
+	attribute_20 int,
+	attribute_21 int,
+	attribute_22 int,
+	attribute_23 int,
+	attribute_24 int,
+	attribute_25 int,
+	attribute_26 int,
+	persisted_buffs varchar2(1000),
+	ws_x float,
+	ws_y float,
+	ws_z float,
+	primary key (object_id)
+);
+
+grant select on creature_objects to public;

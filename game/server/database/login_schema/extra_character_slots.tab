@@ -1,0 +1,9 @@
+create table extra_character_slots -- NO_IMPORT
+(
+	station_id	   number not null,
+	cluster_id	   number not null,
+	character_type_id  number not null,
+	num_extra_slots    number not null,
+	constraint pk_extra_character_slots primary key (station_id,cluster_id,character_type_id) 
+);
+grant select on extra_character_slots to public;

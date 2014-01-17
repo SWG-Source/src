@@ -1,0 +1,10 @@
+create table temp_characters -- NO_IMPORT
+(
+TRANSACTION_TYPE                                            NUMBER,
+STATION_ID                                                  NUMBER,
+CLUSTER_NAME                                                VARCHAR2(120),
+CHARACTER_NAME                                              VARCHAR2(30),
+OBJECT_ID                                                   NUMBER,
+TEMPLATE_NAME                                               VARCHAR2(120)
+);
+grant select on temp_characters to public;

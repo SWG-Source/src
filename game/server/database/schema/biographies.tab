@@ -1,0 +1,7 @@
+create table biographies -- NO_IMPORT
+(
+	object_id number(20),
+	biography varchar2(1024),
+	constraint pk_biographies primary key (object_id)
+);
+grant select on biographies to public;

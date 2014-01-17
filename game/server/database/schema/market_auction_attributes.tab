@@ -1,0 +1,8 @@
+create table market_auction_attributes --NO_IMPORT
+(
+	item_id number(20), -- BIND_AS(DB::BindableNetworkId)
+	attribute_name varchar2(1000),
+	attribute_value varchar2(1000),
+	constraint pk_market_auction_attributes primary key (item_id, attribute_name) 
+);
+grant select on market_auction_attributes to public;

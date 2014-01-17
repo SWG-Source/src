@@ -1,0 +1,11 @@
+create table manf_schematic_objects
+(
+	object_id number(20),  -- BIND_AS(DB::BindableNetworkId)
+	creator_id number, -- BIND_AS(DB::BindableNetworkId)
+	creator_name varchar2(127),
+	items_per_container int,
+	manufacture_time float,
+	draft_schematic int,
+	constraint pk_manf_schematic_objects primary key (object_id) 
+);
+grant select on manf_schematic_objects to public;
