@@ -1,0 +1,2 @@
+src/shared/generated/*.h
+src/shared/generated/*.cpp
