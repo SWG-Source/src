@@ -1,0 +1,258 @@
+// ======================================================================
+//
+// Schema.h
+// copyright (c) 2001 Sony Online Entertainment
+//
+// Edit the file Schema_h.template.  Do not edit Schema.h.
+//
+// ======================================================================
+
+#ifndef INCLUDED_Schema_H
+#define INCLUDED_Schema_H
+
+#include "sharedDatabaseInterface/Bindable.h"
+#include "sharedDatabaseInterface/BindableNetworkId.h"
+#include "sharedDatabaseInterface/BufferString.h"
+#include "sharedDatabaseInterface/DbRow.h"
+
+namespace DBSchema
+{
+
+struct PlayerObjectRow : public DB::Row
+{
+	enum {QUEST_DATA_SIZE=4000};
+
+	DB::BindableNetworkId object_id;
+	DB::BindableLong station_id;
+	DB::BindableNetworkId house_id;
+	DB::BindableLong account_num_lots;
+	DB::BindableBool account_is_outcast;
+	DB::BindableDouble account_cheater_level;
+	DB::BindableLong account_max_lots_adjustment;
+	DB::BindableString<200> personal_profile_id;
+	DB::BindableString<200> character_profile_id;
+	DB::BindableString<200> skill_title;
+	DB::BindableLong born_date;
+	DB::BindableLong played_time;
+	DB::BindableDouble force_regen_rate;	
+	DB::BindableLong force_power;
+	DB::BindableLong max_force_power;
+	DB::BindableBitArray<2047> active_quests;
+	DB::BindableBitArray<2047> completed_quests;
+	DB::BindableLong current_quest;
+	DB::BindableString<QUEST_DATA_SIZE> quests;
+	DB::BindableLong role_icon_choice;
+	DB::BindableString<QUEST_DATA_SIZE> quests2;
+	DB::BindableString<QUEST_DATA_SIZE> quests3;
+	DB::BindableString<QUEST_DATA_SIZE> quests4;
+	DB::BindableString<200> skill_template;
+	DB::BindableString<200> working_skill;
+	DB::BindableLong current_gcw_points;
+	DB::BindableLong current_gcw_rating;
+	DB::BindableLong current_pvp_kills;
+	DB::BindableInt64 lifetime_gcw_points;
+	DB::BindableLong max_gcw_imperial_rating;
+	DB::BindableLong max_gcw_rebel_rating;
+	DB::BindableLong lifetime_pvp_kills;
+	DB::BindableLong next_gcw_rating_calc_time;
+	DB::BindableBitArray<16000> collections;
+	DB::BindableBool show_backpack;
+	DB::BindableBool show_helmet;
+	DB::BindableBitArray<16000> collections2;
+
+	virtual void copy(const DB::Row &rhs)
+	{
+		*this = dynamic_cast<const PlayerObjectRow&>(rhs);
+	}
+
+	void setPrimaryKey(const NetworkId &keyValue)
+	{
+		object_id.setValue(keyValue);
+	}
+
+	NetworkId getPrimaryKey() const
+	{
+		return object_id.getValue();
+	}
+
+};
+
+struct PlayerObjectBufferRow : public DB::Row
+{
+	DB::BindableNetworkId object_id;
+	DB::BindableLong station_id;
+	DB::BindableNetworkId house_id;
+	DB::BindableLong account_num_lots;
+	DB::BindableBool account_is_outcast;
+	DB::BindableDouble account_cheater_level;
+	DB::BindableLong account_max_lots_adjustment;
+	DB::BufferString personal_profile_id;
+	DB::BufferString character_profile_id;
+	DB::BufferString skill_title;
+	DB::BindableLong born_date;
+	DB::BindableLong played_time;
+	DB::BindableDouble force_regen_rate;	
+	DB::BindableLong force_power;	
+	DB::BindableLong max_force_power;
+	DB::BindableBitArray<2047> active_quests;
+	DB::BindableBitArray<2047> completed_quests;
+	DB::BindableLong current_quest;
+	DB::BufferString quests;
+	DB::BindableLong role_icon_choice;
+	DB::BufferString quests2;
+	DB::BufferString quests3;
+	DB::BufferString quests4;
+	DB::BufferString skill_template;
+	DB::BufferString working_skill;
+	DB::BindableLong current_gcw_points;
+	DB::BindableLong current_gcw_rating;
+	DB::BindableLong current_pvp_kills;
+	DB::BindableInt64 lifetime_gcw_points;
+	DB::BindableLong max_gcw_imperial_rating;
+	DB::BindableLong max_gcw_rebel_rating;
+	DB::BindableLong lifetime_pvp_kills;
+	DB::BindableLong next_gcw_rating_calc_time;
+	DB::BindableBitArray<16000> collections;
+	DB::BindableBool show_backpack;
+	DB::BindableBool show_helmet;
+	DB::BindableBitArray<16000> collections2;
+
+	virtual void copy(const DB::Row &rhs)
+	{
+		*this = dynamic_cast<const PlayerObjectBufferRow&>(rhs);
+	}
+
+	void setPrimaryKey(const NetworkId &keyValue)
+	{
+		object_id.setValue(keyValue);
+	}
+
+	NetworkId getPrimaryKey() const
+	{
+		return object_id.getValue();
+	}
+
+	PlayerObjectBufferRow (const PlayerObjectRow & rhs) :
+			object_id (rhs.object_id),
+			station_id (rhs.station_id),
+			house_id (rhs.house_id),
+			account_num_lots (rhs.account_num_lots),
+			account_is_outcast (rhs.account_is_outcast),
+			account_cheater_level (rhs.account_cheater_level),
+			account_max_lots_adjustment (rhs.account_max_lots_adjustment),
+			personal_profile_id (rhs.personal_profile_id),
+			character_profile_id (rhs.character_profile_id),
+			skill_title (rhs.skill_title),
+			born_date (rhs.born_date),
+			played_time (rhs.played_time),
+			force_regen_rate (rhs.force_regen_rate),
+			force_power (rhs.force_power),
+			max_force_power (rhs.max_force_power),
+			active_quests (rhs.active_quests),
+			completed_quests (rhs.completed_quests),
+			current_quest (rhs.current_quest),
+			quests (rhs.quests),
+			role_icon_choice (rhs.role_icon_choice),
+			quests2 (rhs.quests2),
+			quests3 (rhs.quests3),
+			quests4 (rhs.quests4),
+			skill_template (rhs.skill_template),
+			working_skill (rhs.working_skill),
+			current_gcw_points (rhs.current_gcw_points),
+			current_gcw_rating (rhs.current_gcw_rating),
+			current_pvp_kills (rhs.current_pvp_kills),
+			lifetime_gcw_points (rhs.lifetime_gcw_points),
+			max_gcw_imperial_rating (rhs.max_gcw_imperial_rating),
+			max_gcw_rebel_rating (rhs.max_gcw_rebel_rating),
+			lifetime_pvp_kills (rhs.lifetime_pvp_kills),
+			next_gcw_rating_calc_time (rhs.next_gcw_rating_calc_time),
+			collections (rhs.collections),
+			show_backpack(rhs.show_backpack),
+			show_helmet(rhs.show_helmet),
+			collections2 (rhs.collections2)
+	{
+	}
+
+	PlayerObjectBufferRow() :
+			object_id(),
+			station_id(),
+			house_id(),
+			account_num_lots(),
+			account_is_outcast(),
+			account_cheater_level(),
+			account_max_lots_adjustment(),
+			personal_profile_id(200),
+			character_profile_id(200),
+			skill_title(200),
+			born_date(),
+			played_time(),
+			force_regen_rate(),	
+			force_power(),	
+			max_force_power(),
+			active_quests(),
+			completed_quests(),
+			current_quest(),
+			quests(PlayerObjectRow::QUEST_DATA_SIZE),
+			role_icon_choice(),
+			quests2(PlayerObjectRow::QUEST_DATA_SIZE),
+			quests3(PlayerObjectRow::QUEST_DATA_SIZE),
+			quests4(PlayerObjectRow::QUEST_DATA_SIZE),
+			skill_template(200),
+			working_skill(200),
+			current_gcw_points(),
+			current_gcw_rating(),
+			current_pvp_kills(),
+			lifetime_gcw_points(),
+			max_gcw_imperial_rating(),
+			max_gcw_rebel_rating(),
+			lifetime_pvp_kills(),
+			next_gcw_rating_calc_time(),
+			collections(),
+			show_backpack(),
+			show_helmet(),
+			collections2()
+	{
+	}
+	
+};
+
+struct ObjectVariableRow : public DB::Row
+{
+	DB::BindableNetworkId object_id;
+	DB::BindableLong name_id;
+	DB::BindableLong type;
+	DB::BindableString<1000> value;
+	DB::BindableLong detached;
+
+	virtual void copy(const DB::Row &rhs)
+	{
+		*this = dynamic_cast<const ObjectVariableRow&>(rhs);
+	}
+};
+
+struct WaypointRow : public DB::Row
+{
+	DB::BindableNetworkId object_id;
+	DB::BindableNetworkId waypoint_id;
+	DB::BindableLong appearance_name_crc;
+	DB::BindableDouble location_x;
+	DB::BindableDouble location_y;
+	DB::BindableDouble location_z;
+	DB::BindableNetworkId location_cell;
+	DB::BindableLong location_scene;
+	DB::BindableUnicode<512> name;
+	DB::BindableLong color;
+	DB::BindableBool active;
+	DB::BindableBool detached;
+
+	virtual void copy(const DB::Row &rhs)
+	{
+		*this = dynamic_cast<const WaypointRow&>(rhs);
+	}
+};
+
+//!!!BEGIN GENERATED DECLARATIONS
+//!!!END GENERATED DECLARATIONS
+
+}
+#endif

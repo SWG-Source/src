@@ -1,0 +1,265 @@
+
+set(SHARED_SOURCES
+    shared/buffers/AuctionLocationsBuffer.cpp
+    shared/buffers/AuctionLocationsBuffer.h
+    shared/buffers/BattlefieldParticipantBuffer.cpp
+    shared/buffers/BattlefieldParticipantBuffer.h
+    shared/buffers/BountyHunterTargetBuffer.cpp
+    shared/buffers/BountyHunterTargetBuffer.h
+    shared/buffers/CreatureObjectBuffer.cpp
+    shared/buffers/CreatureObjectBuffer.h
+    shared/buffers/ExperienceBuffer.cpp
+    shared/buffers/ExperienceBuffer.h
+    shared/buffers/IndexedNetworkTableBuffer.cpp
+    shared/buffers/IndexedNetworkTableBuffer.h
+    shared/buffers/IndexedTableBuffer.h
+    shared/buffers/LocationBuffer.cpp
+    shared/buffers/LocationBuffer.h
+    shared/buffers/ManufactureSchematicAttributeBuffer.cpp
+    shared/buffers/ManufactureSchematicAttributeBuffer.h
+    shared/buffers/MarketAuctionBidsBuffer.cpp
+    shared/buffers/MarketAuctionBidsBuffer.h
+    shared/buffers/MarketAuctionsBuffer.cpp
+    shared/buffers/MarketAuctionsBuffer.h
+    shared/buffers/MessageBuffer.cpp
+    shared/buffers/MessageBuffer.h
+    shared/buffers/ObjectTableBuffer.cpp
+    shared/buffers/ObjectTableBuffer.h
+    shared/buffers/ObjvarBuffer.cpp
+    shared/buffers/ObjvarBuffer.h
+    shared/buffers/PropertyListBuffer.cpp
+    shared/buffers/PropertyListBuffer.h
+    shared/buffers/ResourceTypeBuffer.cpp
+    shared/buffers/ResourceTypeBuffer.h
+    shared/buffers/ScriptBuffer.cpp
+    shared/buffers/ScriptBuffer.h
+    shared/buffers/WaypointBuffer.cpp
+    shared/buffers/WaypointBuffer.h
+
+    shared/cleanup/DataCleanupManager.cpp
+    shared/cleanup/DataCleanupManager.h
+    shared/cleanup/TaskConsolidateExperience.cpp
+    shared/cleanup/TaskConsolidateExperience.h
+    shared/cleanup/TaskDailyCleanup.cpp
+    shared/cleanup/TaskDailyCleanup.h
+    shared/cleanup/TaskAnySQL.cpp
+    shared/cleanup/TaskAnySQL.h
+    shared/cleanup/TaskObjvarNameCleanup.cpp
+    shared/cleanup/TaskObjvarNameCleanup.h
+    shared/cleanup/TaskOrphanedObjectCleanup.cpp
+    shared/cleanup/TaskOrphanedObjectCleanup.h
+    shared/cleanup/TaskMarketAttributesCleanup.cpp
+    shared/cleanup/TaskMarketAttributesCleanup.h
+    shared/cleanup/TaskMessagesCleanup.cpp
+    shared/cleanup/TaskMessagesCleanup.h
+    shared/cleanup/TaskBrokenObjectCleanup.cpp
+    shared/cleanup/TaskBrokenObjectCleanup.h
+    shared/cleanup/TaskVendorObjectCleanup.cpp
+    shared/cleanup/TaskVendorObjectCleanup.h
+    shared/cleanup/TaskFixBadCells.cpp
+    shared/cleanup/TaskFixBadCells.h
+    shared/cleanup/TaskObjectTemplateListUpdater.cpp
+    shared/cleanup/TaskObjectTemplateListUpdater.h
+
+    shared/core/CMLoader.cpp
+    shared/core/CMLoader.h
+    shared/core/FirstSwgDatabaseServer.h
+    shared/core/MiscPack.cpp
+    shared/core/ObjvarNameManager.cpp
+    shared/core/ObjvarNameManager.h
+    shared/core/CommoditiesSnapshot.cpp
+    shared/core/CommoditiesSnapshot.h
+    shared/core/SwgDatabaseServer.cpp
+    shared/core/SwgDatabaseServer.h
+    shared/core/SwgLoader.cpp
+    shared/core/SwgLoader.h
+    shared/core/SwgLoaderSnapshotGroup.cpp
+    shared/core/SwgLoaderSnapshotGroup.h
+    shared/core/SwgPersister.cpp
+    shared/core/SwgPersister.h
+    shared/core/SwgSnapshot.cpp
+    shared/core/SwgSnapshot.h
+
+    shared/persistable/PersistableWaypoint.cpp
+    shared/persistable/PersistableWaypoint.h
+
+    shared/queries/BattlefieldParticipantQuery.cpp
+    shared/queries/BattlefieldParticipantQuery.h
+    shared/queries/BountyHunterTargetQuery.cpp
+    shared/queries/BountyHunterTargetQuery.h
+    shared/queries/CommoditiesQuery.cpp
+    shared/queries/CommoditiesQuery.h
+    shared/queries/DeleteDemandLoadedContainerQuery.cpp
+    shared/queries/DeleteDemandLoadedContainerQuery.h
+    shared/queries/ExperienceQuery.cpp
+    shared/queries/ExperienceQuery.h
+    shared/queries/LocationQuery.cpp
+    shared/queries/LocationQuery.h
+    shared/queries/ManufactureSchematicAttributeQuery.cpp
+    shared/queries/ManufactureSchematicAttributeQuery.h
+    shared/queries/MessageQuery.cpp
+    shared/queries/MessageQuery.h
+    shared/queries/ObjectVariableQueries.cpp
+    shared/queries/ObjectVariableQueries.h
+    shared/queries/ObjectsTableQuery.cpp
+    shared/queries/ObjectsTableQuery.h
+    shared/queries/OfflineMoneyCustomPersistStep.cpp
+    shared/queries/OfflineMoneyCustomPersistStep.h
+    shared/queries/PropertyListQuery.cpp
+    shared/queries/PropertyListQuery.h
+    shared/queries/ResourceTypeQuery.cpp
+    shared/queries/ResourceTypeQuery.h
+    shared/queries/SkillQuery.cpp
+    shared/queries/SkillQuery.h
+    shared/queries/WaypointQuery.cpp
+    shared/queries/WaypointQuery.h
+
+    shared/tasks/TaskGetAuctionAttributeList.cpp
+    shared/tasks/TaskGetAuctionAttributeList.h
+    shared/tasks/TaskGetAuctionList.cpp
+    shared/tasks/TaskGetAuctionList.h
+    shared/tasks/TaskGetBidList.cpp
+    shared/tasks/TaskGetBidList.h
+    shared/tasks/TaskGetCharacters.cpp
+    shared/tasks/TaskGetCharacters.h
+    shared/tasks/TaskGetLocationList.cpp
+    shared/tasks/TaskGetLocationList.h
+    shared/tasks/TaskLoadObjvarNames.cpp
+    shared/tasks/TaskLoadObjvarNames.h
+    shared/tasks/TaskLocateStructure.cpp
+    shared/tasks/TaskLocateStructure.h
+    shared/tasks/TaskMoveToPlayer.cpp
+    shared/tasks/TaskMoveToPlayer.h
+    shared/tasks/TaskRestoreCharacter.cpp
+    shared/tasks/TaskRestoreCharacter.h
+    shared/tasks/TaskRestoreHouse.cpp
+    shared/tasks/TaskRestoreHouse.h
+    shared/tasks/TaskSaveObjvarNames.cpp
+    shared/tasks/TaskSaveObjvarNames.h
+    shared/tasks/TaskUndeleteItem.cpp
+    shared/tasks/TaskUndeleteItem.h
+    shared/tasks/TaskVerifyCharacter.cpp
+    shared/tasks/TaskVerifyCharacter.h
+)
+
+if(WIN32)
+	set(PLATFORM_SOURCES
+		win32/FirstSwgDatabaseServer.cpp
+		win32/WinMain.cpp
+	)
+
+	include_directories(${CMAKE_CURRENT_SOURCE_DIR}/win32)
+else()
+	set(PLATFORM_SOURCES 
+		linux/main.cpp
+	)
+
+	include_directories(${CMAKE_CURRENT_SOURCE_DIR}/linux)
+endif()
+
+include_directories(
+    #${CMAKE_CURRENT_SOURCE_DIR}/shared/combat
+    #${CMAKE_CURRENT_SOURCE_DIR}/shared/core
+    #${CMAKE_CURRENT_SOURCE_DIR}/shared/lint
+    #${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedCollision/include/public
+    #${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedCommandParser/include/public
+    #${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedDebug/include/public
+    #${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFile/include/public
+    #${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFoundation/include/public
+    #${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFoundationTypes/include/public
+    #${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedGame/include/public
+    #${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedImage/include/public
+    #${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedLog/include/public
+    #${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMath/include/public
+    #${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMathArchive/include/public
+    #${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMemoryManager/include/public
+    #${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMessageDispatch/include/public
+    #${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedNetwork/include/public
+    #${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedNetworkMessages/include/public
+    #${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedObject/include/public
+    #${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedPathfinding/include/public
+    #${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedRandom/include/public
+    #${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedRegex/include/public
+    #${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedRemoteDebugServer/include/public
+    #${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedSkillSystem/include/public
+    #${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedTerrain/include/public
+    #${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedThread/include/public
+    #${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedUtility/include/public
+    #${SWG_ENGINE_SOURCE_DIR}/server/library/serverGame/include/public
+    #${SWG_ENGINE_SOURCE_DIR}/server/library/serverNetworkMessages/include/public
+    #${SWG_ENGINE_SOURCE_DIR}/server/library/serverPathfinding/include/public
+    #${SWG_ENGINE_SOURCE_DIR}/server/library/serverScript/include/public
+    #${SWG_ENGINE_SOURCE_DIR}/server/library/serverUtility/include/public
+    #${SWG_GAME_SOURCE_DIR}/shared/library/swgSharedNetworkMessages/include/public
+    #${SWG_GAME_SOURCE_DIR}/shared/library/swgSharedUtility/include/public
+    #${SWG_GAME_SOURCE_DIR}/server/library/swgServerNetworkMessages/include/public
+    #${SWG_EXTERNALS_SOURCE_DIR}/ours/library/archive/include
+    #${SWG_EXTERNALS_SOURCE_DIR}/ours/library/fileInterface/include/public
+    #${SWG_EXTERNALS_SOURCE_DIR}/ours/library/localization/include
+    #${SWG_EXTERNALS_SOURCE_DIR}/ours/library/localizationArchive/include/public
+    #${SWG_EXTERNALS_SOURCE_DIR}/ours/library/singleton/include
+    #${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicode/include
+    #${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicodeArchive/include/public
+    #${Boost_INCLUDE_DIR}
+    #${JNI_INCLUDE_DIRS}
+)
+
+link_directories(${STLPORT_LIBDIR})
+
+add_executable(SwgDatabaseServer
+	${SHARED_SOURCES}
+	${PLATFORM_SOURCES}
+)
+
+target_link_libraries(SwgDatabaseServer
+    #sharedCollision
+    #sharedCommandParser
+    #sharedCompression
+    #sharedDebug
+    #sharedFile
+    #sharedFractal
+    #sharedFoundation
+    #sharedGame
+    #sharedImage
+    #sharedLog
+    #sharedMath
+    #sharedMemoryManager
+    #sharedMessageDispatch
+    #sharedNetwork
+    #sharedNetworkMessages
+    #sharedObject
+    #sharedPathfinding
+    #sharedRandom
+    #sharedRegex
+    #sharedRemoteDebugServer
+    #sharedSkillSystem
+    #sharedSynchronization
+    #sharedTerrain
+    #sharedThread
+    #sharedUtility
+    #sharedXml
+    #serverGame
+    #serverMetrics
+    #serverNetworkMessages
+    #serverPathfinding
+    #serverScript
+    #serverUtility
+    #swgSharedNetworkMessages
+    #swgSharedUtility
+    #swgServerNetworkMessages
+    #archive
+    #fileInterface
+    #localization
+    #localizationArchive
+    #unicode
+    #unicodeArchive
+    #Base
+    #udplibrary
+    #${PCRE_LIBRARY}
+    #${LIBXML2_LIBRARY}
+    #${ZLIB_LIBRARY}
+)
+
+if(WIN32)
+    target_link_libraries(SwgDatabaseServer mswsock ws2_32)
+endif()

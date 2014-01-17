@@ -1,0 +1,23 @@
+#include "SwgDatabaseServer/FirstSwgDatabaseServer.h"
+#include "ObjectQueries.h"
+#include "SwgDatabaseServer/Schema.h"
+#include "serverDatabase/DatabaseProcess.h"
+
+using namespace DBQuery;
+using namespace DBSchema;
+
+// ======================================================================
+
+namespace ObjectQueriesNamespace
+{
+	const int ms_fetchBatchSize = 1000;
+}
+using namespace ObjectQueriesNamespace;
+
+// ======================================================================
+
+//!!!BEGIN GENERATED QUERYDEFINITIONS
+
+//!!!END GENERATED QUERYDEFINITIONS
+
+// ======================================================================

@@ -1,0 +1,31 @@
+#include "SwgDatabaseServer/FirstSwgDatabaseServer.h"
+#include "SwgDatabaseServer/SwgSnapshot.h"
+
+#include "serverGame/ServerBattlefieldMarkerObjectTemplate.h"
+#include "serverGame/ServerBuildingObjectTemplate.h"
+#include "serverGame/ServerCellObjectTemplate.h"
+#include "serverGame/ServerCityObjectTemplate.h"
+#include "serverGame/ServerConstructionContractObjectTemplate.h"
+#include "serverGame/ServerCreatureObjectTemplate.h"
+#include "serverGame/ServerDraftSchematicObjectTemplate.h"
+#include "serverGame/ServerFactoryObjectTemplate.h"
+#include "serverGame/ServerGuildObjectTemplate.h"
+#include "serverGame/ServerHarvesterInstallationObjectTemplate.h"
+#include "serverGame/ServerInstallationObjectTemplate.h"
+#include "serverGame/ServerManufactureInstallationObjectTemplate.h"
+#include "serverGame/ServerManufactureSchematicObjectTemplate.h"
+#include "serverGame/ServerMissionObjectTemplate.h"
+#include "serverGame/ServerObjectTemplate.h"
+#include "serverGame/ServerPlanetObjectTemplate.h"
+#include "serverGame/ServerPlayerQuestObjectTemplate.h"
+#include "serverGame/ServerPlayerObjectTemplate.h"
+#include "serverGame/ServerResourceContainerObjectTemplate.h"
+#include "serverGame/ServerShipObjectTemplate.h"
+#include "serverGame/ServerStaticObjectTemplate.h"
+#include "serverGame/ServerTangibleObjectTemplate.h"
+#include "serverGame/ServerVehicleObjectTemplate.h"
+#include "serverGame/ServerWeaponObjectTemplate.h"
+
+
+//!!!BEGIN GENERATED LOADOBJECT
+//!!!END GENERATED LOADOBJECT
