@@ -1,4 +1,5 @@
 
+add_subdirectory(CentralServer)
 add_subdirectory(ChatServer)
 add_subdirectory(ConnectionServer)
 add_subdirectory(LoginServer)

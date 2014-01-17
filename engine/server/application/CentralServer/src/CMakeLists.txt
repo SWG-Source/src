@@ -1,0 +1,188 @@
+
+set(SHARED_SOURCES
+    shared/AuctionTransferClient.cpp
+    shared/AuctionTransferClient.h
+    shared/CentralCSHandler.cpp
+    shared/CentralCSHandler.h
+    shared/CentralServer.cpp
+    shared/CentralServer.h
+    shared/CentralServerMetricsData.cpp
+    shared/CentralServerMetricsData.h
+    shared/CharacterCreationTracker.cpp
+    shared/CharacterCreationTracker.h
+    shared/ChatServerConnection.cpp
+    shared/ChatServerConnection.h
+    shared/ConfigCentralServer.cpp
+    shared/ConfigCentralServer.h
+    shared/ConnectionServerConnection.cpp
+    shared/ConnectionServerConnection.h
+    shared/ConsoleCommandParser.cpp
+    shared/ConsoleCommandParser.h
+    shared/ConsoleCommandParserDatabase.cpp
+    shared/ConsoleCommandParserDatabase.h
+    shared/ConsoleCommandParserGame.cpp
+    shared/ConsoleCommandParserGame.h
+    shared/ConsoleCommandParserLoginServer.cpp
+    shared/ConsoleCommandParserLoginServer.h
+    shared/ConsoleConnection.cpp
+    shared/ConsoleConnection.h
+    shared/ConsoleManager.cpp
+    shared/ConsoleManager.h
+    shared/CustomerServiceConnection.cpp
+    shared/CustomerServiceConnection.h
+    shared/FirstCentralServer.h
+    shared/GameServerConnection.cpp
+    shared/GameServerConnection.h
+    shared/LoginServerConnection.cpp
+    shared/LoginServerConnection.h
+    shared/PlanetManager.cpp
+    shared/PlanetManager.h
+    shared/PlanetServerConnection.cpp
+    shared/PlanetServerConnection.h
+    shared/StationPlayersCollectorConnection.cpp
+    shared/StationPlayersCollectorConnection.h
+    shared/TaskConnection.cpp
+    shared/TaskConnection.h
+    shared/TransferServerConnection.cpp
+    shared/TransferServerConnection.h
+    shared/UniverseManager.cpp
+    shared/UniverseManager.h
+
+    shared/AuctionTransferGameAPI/AuctionTransferAPI.cpp
+    shared/AuctionTransferGameAPI/AuctionTransferAPI.h
+    shared/AuctionTransferGameAPI/AuctionTransferAPICore.cpp
+    shared/AuctionTransferGameAPI/AuctionTransferAPICore.h
+    shared/AuctionTransferGameAPI/Character.cpp
+    shared/AuctionTransferGameAPI/Character.h
+    shared/AuctionTransferGameAPI/Request.cpp
+    shared/AuctionTransferGameAPI/Request.h
+    shared/AuctionTransferGameAPI/Response.cpp
+    shared/AuctionTransferGameAPI/Response.h
+
+    shared/AuctionTransferGameAPI/ATGenericAPI/GenericApiCore.cpp
+    shared/AuctionTransferGameAPI/ATGenericAPI/GenericApiCore.h
+    shared/AuctionTransferGameAPI/ATGenericAPI/GenericConnection.cpp
+    shared/AuctionTransferGameAPI/ATGenericAPI/GenericConnection.h
+    shared/AuctionTransferGameAPI/ATGenericAPI/GenericMessage.cpp
+    shared/AuctionTransferGameAPI/ATGenericAPI/GenericMessage.h
+
+    shared/AuctionTransferGameAPI/Base/Archive.cpp
+
+    shared/AuctionTransferGameAPI/TcpLibrary/Clock.cpp
+    shared/AuctionTransferGameAPI/TcpLibrary/Clock.h
+    shared/AuctionTransferGameAPI/TcpLibrary/IpAddress.cpp
+    shared/AuctionTransferGameAPI/TcpLibrary/IpAddress.h
+    shared/AuctionTransferGameAPI/TcpLibrary/TcpBlockAllocator.cpp
+    shared/AuctionTransferGameAPI/TcpLibrary/TcpBlockAllocator.h
+    shared/AuctionTransferGameAPI/TcpLibrary/TcpConnection.cpp
+    shared/AuctionTransferGameAPI/TcpLibrary/TcpConnection.h
+    shared/AuctionTransferGameAPI/TcpLibrary/TcpHandlers.h
+    shared/AuctionTransferGameAPI/TcpLibrary/TcpManager.cpp
+    shared/AuctionTransferGameAPI/TcpLibrary/TcpManager.h
+
+    shared/AuctionTransferGameAPI/zip/GZipHelper.h
+    shared/AuctionTransferGameAPI/zip/Zip/deflate.h
+    shared/AuctionTransferGameAPI/zip/Zip/infblock.h
+    shared/AuctionTransferGameAPI/zip/Zip/infcodes.h
+    shared/AuctionTransferGameAPI/zip/Zip/inffast.h
+    shared/AuctionTransferGameAPI/zip/Zip/inffixed.h
+    shared/AuctionTransferGameAPI/zip/Zip/inftrees.h
+    shared/AuctionTransferGameAPI/zip/Zip/infutil.h
+    shared/AuctionTransferGameAPI/zip/Zip/trees.h
+    shared/AuctionTransferGameAPI/zip/Zip/zconf.h
+    shared/AuctionTransferGameAPI/zip/Zip/zlib.h
+    shared/AuctionTransferGameAPI/zip/Zip/zutil.h
+)
+
+if(WIN32)
+	set(PLATFORM_SOURCES
+        win32/FirstCentralServer.cpp
+		win32/WinMain.cpp
+        shared/AuctionTransferGameAPI/Base/win32/Archive.h
+        shared/AuctionTransferGameAPI/Base/win32/Platform.cpp
+        shared/AuctionTransferGameAPI/Base/win32/Platform.h
+        shared/AuctionTransferGameAPI/Base/win32/Types.h
+	)
+else()
+	set(PLATFORM_SOURCES 
+		linux/main.cpp
+	)
+endif()
+
+include_directories(
+	${CMAKE_CURRENT_SOURCE_DIR}/shared
+    ${CMAKE_CURRENT_SOURCE_DIR}/shared/AuctionTransferGameAPI
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedCommandParser/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedCompression/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedDebug/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFile/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFoundation/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFoundationTypes/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedGame/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedLog/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMath/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMathArchive/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMemoryManager/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMessageDispatch/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedNetwork/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedNetworkMessages/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedObject/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedRandom/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedThread/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedUtility/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/server/library/serverKeyShare/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/server/library/serverMetrics/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/server/library/serverNetworkMessages/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/server/library/serverUtility/include/public
+    ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/archive/include
+    ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/fileInterface/include/public
+    ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/localization/include
+    ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/localizationArchive/include/public
+    ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/singleton/include
+    ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicode/include
+    ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicodeArchive/include/public
+)
+
+link_directories(${STLPORT_LIBDIR})
+
+add_executable(CentralServer
+	${SHARED_SOURCES}
+	${PLATFORM_SOURCES}
+)
+
+target_link_libraries(CentralServer
+    sharedCommandParser
+    sharedCompression
+    sharedDebug
+    sharedFile
+    sharedFoundation
+    sharedGame
+    sharedLog
+    sharedMath
+    sharedMemoryManager
+    sharedMessageDispatch
+    sharedNetwork
+    sharedNetworkMessages
+    sharedObject
+    sharedRandom
+    sharedSynchronization
+    sharedThread
+    sharedUtility
+    serverKeyShare
+    serverMetrics
+    serverNetworkMessages
+    serverUtility
+    archive
+    crypto
+    fileInterface
+    localization
+    localizationArchive
+    unicode
+    unicodeArchive
+    udplibrary
+    ${ZLIB_LIBRARY}
+)
+
+if(WIN32)
+    target_link_libraries(CentralServer mswsock ws2_32)
+endif()

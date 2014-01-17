@@ -1,0 +1,30 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AuctionTransferGameAPI", "AuctionTransferGameAPI.vcproj", "{CC51D0B0-3994-474D-BD51-5B49919AEBE0}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestApp", "TestApp\TestApp.vcproj", "{7AA05E1D-9952-4432-9975-6C00659BC0ED}"
+	ProjectSection(ProjectDependencies) = postProject
+		{CC51D0B0-3994-474D-BD51-5B49919AEBE0} = {CC51D0B0-3994-474D-BD51-5B49919AEBE0}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{CC51D0B0-3994-474D-BD51-5B49919AEBE0}.Debug.ActiveCfg = Debug|Win32
+		{CC51D0B0-3994-474D-BD51-5B49919AEBE0}.Debug.Build.0 = Debug|Win32
+		{CC51D0B0-3994-474D-BD51-5B49919AEBE0}.Release.ActiveCfg = Release|Win32
+		{CC51D0B0-3994-474D-BD51-5B49919AEBE0}.Release.Build.0 = Release|Win32
+		{7AA05E1D-9952-4432-9975-6C00659BC0ED}.Debug.ActiveCfg = Debug|Win32
+		{7AA05E1D-9952-4432-9975-6C00659BC0ED}.Debug.Build.0 = Debug|Win32
+		{7AA05E1D-9952-4432-9975-6C00659BC0ED}.Release.ActiveCfg = Release|Win32
+		{7AA05E1D-9952-4432-9975-6C00659BC0ED}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal
