@@ -158,51 +158,40 @@ else()
 endif()
 
 include_directories(
+    ${CMAKE_CURRENT_SOURCE_DIR}/shared/buffers
     ${CMAKE_CURRENT_SOURCE_DIR}/shared/core
     ${CMAKE_CURRENT_SOURCE_DIR}/shared/generated
-    #${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedCollision/include/public
-    #${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedCommandParser/include/public
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedDatabaseInterface/include/public
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedDebug/include/public
-    #${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFile/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFile/include/public
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFoundation/include/public
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFoundationTypes/include/public
-    #${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedGame/include/public
-    #${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedImage/include/public
-    #${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedLog/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedGame/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedLog/include/public
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMath/include/public
-    #${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMathArchive/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMathArchive/include/public
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMemoryManager/include/public
-    #${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMessageDispatch/include/public
-    #${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedNetwork/include/public
-    #${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedNetworkMessages/include/public
-    #${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedObject/include/public
-    #${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedPathfinding/include/public
-    #${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedRandom/include/public
-    #${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedRegex/include/public
-    #${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedRemoteDebugServer/include/public
-    #${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedSkillSystem/include/public
-    #${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedTerrain/include/public
-    #${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedThread/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMessageDispatch/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedNetwork/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedNetworkMessages/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedObject/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedRandom/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedSynchronization/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedThread/include/public
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedUtility/include/public
     ${SWG_ENGINE_SOURCE_DIR}/server/library/serverDatabase/include/public
-    #${SWG_ENGINE_SOURCE_DIR}/server/library/serverGame/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/server/library/serverGame/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/server/library/serverMetrics/include/public
     ${SWG_ENGINE_SOURCE_DIR}/server/library/serverNetworkMessages/include/public
-    #${SWG_ENGINE_SOURCE_DIR}/server/library/serverPathfinding/include/public
-    #${SWG_ENGINE_SOURCE_DIR}/server/library/serverScript/include/public
     ${SWG_ENGINE_SOURCE_DIR}/server/library/serverUtility/include/public
-    #${SWG_GAME_SOURCE_DIR}/shared/library/swgSharedNetworkMessages/include/public
-    #${SWG_GAME_SOURCE_DIR}/shared/library/swgSharedUtility/include/public
-    #${SWG_GAME_SOURCE_DIR}/server/library/swgServerNetworkMessages/include/public
+    ${SWG_GAME_SOURCE_DIR}/shared/library/swgSharedUtility/include/public
     ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/archive/include
-    #${SWG_EXTERNALS_SOURCE_DIR}/ours/library/fileInterface/include/public
+    ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/fileInterface/include/public
     ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/localization/include
-    #${SWG_EXTERNALS_SOURCE_DIR}/ours/library/localizationArchive/include/public
-    #${SWG_EXTERNALS_SOURCE_DIR}/ours/library/singleton/include
+    ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/localizationArchive/include/public
+    ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/singleton/include
     ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicode/include
-    #${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicodeArchive/include/public
-    #${Boost_INCLUDE_DIR}
-    #${JNI_INCLUDE_DIRS}
+    ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicodeArchive/include/public
 )
 
 link_directories(${STLPORT_LIBDIR})
@@ -317,52 +306,42 @@ add_executable(SwgDatabaseServer
 )
 
 target_link_libraries(SwgDatabaseServer
-    #sharedCollision
-    #sharedCommandParser
-    #sharedCompression
-    #sharedDebug
-    #sharedFile
-    #sharedFractal
-    #sharedFoundation
-    #sharedGame
-    #sharedImage
-    #sharedLog
-    #sharedMath
-    #sharedMemoryManager
-    #sharedMessageDispatch
-    #sharedNetwork
-    #sharedNetworkMessages
-    #sharedObject
-    #sharedPathfinding
-    #sharedRandom
-    #sharedRegex
-    #sharedRemoteDebugServer
-    #sharedSkillSystem
-    #sharedSynchronization
-    #sharedTerrain
-    #sharedThread
-    #sharedUtility
-    #sharedXml
-    #serverGame
-    #serverMetrics
-    #serverNetworkMessages
-    #serverPathfinding
-    #serverScript
-    #serverUtility
-    #swgSharedNetworkMessages
-    #swgSharedUtility
-    #swgServerNetworkMessages
-    #archive
-    #fileInterface
-    #localization
-    #localizationArchive
-    #unicode
-    #unicodeArchive
-    #Base
-    #udplibrary
-    #${PCRE_LIBRARY}
-    #${LIBXML2_LIBRARY}
-    #${ZLIB_LIBRARY}
+    sharedCollision
+    sharedCommandParser
+    sharedCompression
+    sharedDatabaseInterface
+    sharedDatabaseInterface_oci
+    sharedDebug
+    sharedFile
+    sharedFoundation
+    sharedGame
+    sharedLog
+    sharedMath
+    sharedMemoryManager
+    sharedMessageDispatch
+    sharedNetwork
+    sharedNetworkMessages
+    sharedObject
+    sharedRandom
+    sharedSynchronization
+    sharedTerrain
+    sharedThread
+    sharedUtility
+    serverDatabase
+    serverGame
+    serverMetrics
+    serverNetworkMessages
+    serverUtility
+    swgSharedUtility
+    archive
+    fileInterface
+    localization
+    localizationArchive
+    unicode
+    unicodeArchive
+    udplibrary
+    ${ORACLE_LIBRARY}
+    ${ZLIB_LIBRARY}
 )
 
 if(WIN32)
