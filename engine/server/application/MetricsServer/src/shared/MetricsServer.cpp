@@ -19,7 +19,9 @@
 #ifdef LINUX
 #include <time.h>
 #endif
-
+#ifdef WINDOWS
+#include <windows.h>
+#endif
 //----------------------------------------------------------------
 std::string MetricsServer::m_commandLine;
 int MetricsServer::m_worldCountChannel = 0;
@@ -188,7 +190,11 @@ void MetricsServer::run()
 		if (pDump)
 			m_soeMonitor->dump();
 		Clock::limitFrameRate();
-		usleep(2000);
+#ifdef WIN32
+        Sleep(2);
+#else
+        usleep(2000);
+#endif
 	}
 }
 
