@@ -151,6 +151,8 @@ else()
 	include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../utils/Base/linux)
 endif()
 
+add_definitions(-DEXTERNAL_DISTRO -DNAMESPACE=ChatSystem -D_REENTRANT)
+
 add_library(ChatMono
 	${SHARED_SOURCES}
 	${PLATFORM_SOURCES}

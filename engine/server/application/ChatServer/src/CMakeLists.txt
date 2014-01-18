@@ -38,6 +38,8 @@ else()
 	)
 endif()
 
+add_definitions(-DEXTERNAL_DISTRO -DNAMESPACE=ChatSystem -D_REENTRANT -DAPI_NAMESPACE=VChatSystem)
+
 include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}/shared
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedCompression/include/public

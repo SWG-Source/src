@@ -68,7 +68,7 @@ else()
 	include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Base/linux)
 endif()
 
-add_definitions(-DNAMESPACE=CTService -DUSE_TCP_LIBRARY)
+add_definitions(-DEXTERNAL_DISTRO -DNAMESPACE=CTService -DUSE_TCP_LIBRARY)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 add_library(CTServiceGameAPI

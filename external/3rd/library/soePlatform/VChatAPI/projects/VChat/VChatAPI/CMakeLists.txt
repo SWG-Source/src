@@ -1,5 +1,5 @@
 
-add_definitions(-DAPI_NAMESPACE=VChatSystem)
+add_definitions(-D_REENTRANT -DAPI_NAMESPACE=VChatSystem)
 
 include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}/../../../utils2.0/utils

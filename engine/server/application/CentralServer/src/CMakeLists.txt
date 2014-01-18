@@ -109,6 +109,8 @@ else()
 	)
 endif()
 
+add_definitions(-DEXTERNAL_DISTRO -DNAMESPACE=AuctionTransfer -DUSE_TCP_LIBRARY)
+
 include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}/shared
     ${CMAKE_CURRENT_SOURCE_DIR}/shared/AuctionTransferGameAPI

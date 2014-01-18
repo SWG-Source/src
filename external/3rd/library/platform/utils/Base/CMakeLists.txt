@@ -64,6 +64,8 @@ else()
 	#include_directories(${CMAKE_CURRENT_SOURCE_DIR}/linux)
 endif()
 
+add_definitions(-D_REENTRANT)
+
 add_library(Base STATIC
 	${SHARED_SOURCES}
 	${PLATFORM_SOURCES}

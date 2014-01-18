@@ -4,6 +4,8 @@ include_directories(
 	${ZLIB_INCLUDE_DIR}
 )
 
+add_definitions(-DMonitorAPI=)
+
 add_library(MonAPI2
 	MonitorAPI.cpp
 	MonitorAPI.h
