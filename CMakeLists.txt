@@ -21,7 +21,7 @@ find_package(STLPort REQUIRED)
 find_package(ZLib REQUIRED)
 
 if(WIN32)
-	add_definitions(/D_CRT_SECURE_NO_WARNINGS)
+	add_definitions(/D_CRT_SECURE_NO_WARNINGS /wd4244 /wd4996 /wd4018 /wd4351)
 endif()
 
 include_directories(${STLPORT_INCLUDE_DIR})
