@@ -7,6 +7,7 @@
 #include "sharedFoundation/ConfigFile.h"
 #include "sharedFoundation/SetupSharedFoundation.h"
 #include "sharedNetworkMessages/SetupSharedNetworkMessages.h"
+#include "sharedRandom/SetupSharedRandom.h"
 #include "sharedThread/SetupSharedThread.h"
 #include "TaskManager.h"
 #include "ConfigTaskManager.h"
@@ -28,12 +29,18 @@ int main(int argc, char **argv)
 	SetupSharedFoundation::install (setupFoundationData);
 
 	SetupSharedCompression::install();
+	SetupSharedFile::install(false);
 	SetupSharedNetworkMessages::install();
+	SetupSharedRandom::install(static_cast<uint32>(time(NULL))); //lint !e1924 !e64 // NULL is a C-Style cast?
+
 	ConfigTaskManager::install();
+
+	TaskManager::install();
 
 	//-- run server
 	SetupSharedFoundation::callbackWithExceptionHandling(TaskManager::run);
 
+	TaskManager::remove();
 	SetupSharedFoundation::remove();
 	SetupSharedThread::remove();
 

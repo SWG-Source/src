@@ -69,6 +69,7 @@ include_directories(
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMessageDispatch/include/public
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedNetwork/include/public
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedNetworkMessages/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedRandom/include/public
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedThread/include/public
     ${SWG_ENGINE_SOURCE_DIR}/server/library/serverNetworkMessages/include/public
     ${SWG_ENGINE_SOURCE_DIR}/server/library/serverUtility/include/public
