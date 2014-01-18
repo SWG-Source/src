@@ -56,7 +56,13 @@ hostAddress(newHostAddress)
 			// The first byte is a letter, resolve it
 			if( (h = gethostbyname(hostAddress.c_str())) != 0)
 			{
-				memcpy(&addr4->sin_addr, h->h_addr_list[0], sizeof(addr4->sin_addr));
+                int i = 0;
+                while (h->h_addr_list[i] != 0) {
+                    memcpy(&addr4->sin_addr, h->h_addr_list[i++], sizeof(addr4->sin_addr));
+                    //addr4->sin_addr = *(u_long *) h->h_addr_list[i++];
+                    //printf("\tIP Address #%d: %s\n", i, inet_ntoa(addr));
+                }
+				//memcpy(&addr4->sin_addr, h->h_addr_list[0], sizeof(addr4->sin_addr));
 			}
 			else
 			{

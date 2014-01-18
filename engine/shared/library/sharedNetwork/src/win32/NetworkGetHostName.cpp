@@ -22,6 +22,8 @@ struct HN
 
 HN::HN()
 {
+    WSADATA wsaData;
+    int iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
 	char name[512] = {"\0"};
 	if(gethostname(name, sizeof(name)) == 0)
 	{
