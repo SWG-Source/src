@@ -1,0 +1,89 @@
+
+set(SHARED_SOURCES
+    shared/CentralServerConnection.cpp
+    shared/CentralServerConnection.h
+    shared/ConfigTransferServer.cpp
+    shared/ConfigTransferServer.h
+    shared/ConsoleCommandParser.cpp 
+    shared/ConsoleCommandParser.h
+    shared/ConsoleManager.cpp 
+    shared/ConsoleManager.h 
+    shared/CTSAPIClient.cpp 
+    shared/CTSAPIClient.h
+    shared/FirstTransferServer.h
+    shared/TransferServer.cpp
+    shared/TransferServer.h
+)
+
+if(WIN32)
+	set(PLATFORM_SOURCES
+        win32/WinMain.cpp
+	)
+else()
+	set(PLATFORM_SOURCES
+		linux/main.cpp
+	)
+endif()
+
+include_directories(
+	${CMAKE_CURRENT_SOURCE_DIR}/shared
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedCommandParser/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedCompression/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedDebug/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFile/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFoundation/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFoundationTypes/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedLog/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMath/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMemoryManager/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMessageDispatch/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedNetwork/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedNetworkMessages/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedThread/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedUtility/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/server/library/serverNetworkMessages/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/server/library/serverUtility/include/public
+	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/archive/include
+    ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicode/include
+    ${SWG_EXTERNALS_SOURCE_DIR}/3rd/library/soePlatform/CTServiceGameAPI
+)
+
+link_directories(${STLPORT_LIBDIR})
+
+add_executable(TransferServer
+	${SHARED_SOURCES}
+	${PLATFORM_SOURCES}
+)
+
+target_link_libraries(TransferServer
+    sharedCommandParser
+    sharedCompression
+    sharedDebug
+    sharedFile
+    sharedFoundation
+    sharedLog
+    sharedMath
+    sharedMemoryManager
+    sharedMessageDispatch
+    sharedNetwork
+    sharedNetworkMessages
+    sharedRandom
+    sharedSynchronization
+    sharedThread
+    sharedUtility
+    serverNetworkMessages
+    serverUtility
+    archive
+    fileInterface
+    localization
+    localizationArchive
+    unicode
+    unicodeArchive
+    udplibrary
+    CTServiceGameAPI
+    ${ZLIB_LIBRARY}
+)
+
+if(WIN32)
+    target_link_libraries(TransferServer mswsock ws2_32)
+endif()
