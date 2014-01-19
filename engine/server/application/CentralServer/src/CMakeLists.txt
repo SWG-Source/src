@@ -106,7 +106,15 @@ if(WIN32)
 else()
 	set(PLATFORM_SOURCES 
 		linux/main.cpp
+        shared/AuctionTransferGameAPI/Base/linux/Archive.h
+        shared/AuctionTransferGameAPI/Base/linux/Mutex.cpp
+        shared/AuctionTransferGameAPI/Base/linux/Mutex.h
+        shared/AuctionTransferGameAPI/Base/linux/Platform.cpp
+        shared/AuctionTransferGameAPI/Base/linux/Platform.h
+        shared/AuctionTransferGameAPI/Base/linux/Types.h
 	)
+
+    include_directories(${CMAKE_CURRENT_SOURCE_DIR}/shared/AuctionTransferGameAPI/Base/linux)
 endif()
 
 add_definitions(-DEXTERNAL_DISTRO -DNAMESPACE=AuctionTransfer -DUSE_TCP_LIBRARY)
@@ -143,6 +151,9 @@ include_directories(
     ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/singleton/include
     ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicode/include
     ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicodeArchive/include/public
+    ${SWG_EXTERNALS_SOURCE_DIR}/3rd/library/platform/projects
+    ${SWG_EXTERNALS_SOURCE_DIR}/3rd/library/platform/utils
+    ${SWG_EXTERNALS_SOURCE_DIR}/3rd/library/udplibrary
 )
 
 link_directories(${STLPORT_LIBDIR})
@@ -182,7 +193,10 @@ target_link_libraries(CentralServer
     unicode
     unicodeArchive
     udplibrary
+    ${STLPORT_LIBRARIES}
     ${ZLIB_LIBRARY}
+    ${CMAKE_THREAD_LIBS_INIT}
+    ${CMAKE_DL_LIBS}
 )
 
 if(WIN32)

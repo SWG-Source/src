@@ -1,7 +1,7 @@
 
 cmake_minimum_required(VERSION 2.8)
 
-project(swgnge CXX)
+project(swgnge C CXX)
 
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
@@ -17,6 +17,7 @@ find_package(Oracle REQUIRED)
 find_package(PCRE REQUIRED)
 find_package(Perl REQUIRED)
 find_package(STLPort REQUIRED)
+find_package(Threads)
 find_package(ZLIB REQUIRED)
 
 if(WIN32)
