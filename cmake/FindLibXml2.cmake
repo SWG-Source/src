@@ -24,6 +24,6 @@ find_library(LIBXML2_LIBRARY
 # handle the QUIETLY and REQUIRED arguments and set OPENAL_FOUND to TRUE if
 # all listed variables are TRUE
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(LIBXML2 DEFAULT_MSG LIBXML2_LIBRARY LIBXML2_INCLUDE_DIR)
+find_package_handle_standard_args(LibXml2 DEFAULT_MSG LIBXML2_LIBRARY LIBXML2_INCLUDE_DIR)
 
 mark_as_advanced(LIBXML2_ROOT LIBXML2_INCLUDE_DIR LIBXML2_LIBRARY)
