@@ -90,7 +90,6 @@ inline float abs(float f)
 {
 	return std::abs(f);
 }
-#endif
 
 inline float sqrt(float f)
 {
@@ -131,6 +130,7 @@ inline float pow(float x, float y)
 {
 	return std::pow(x, y);
 }
+#endif
 
 #endif
 
