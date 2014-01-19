@@ -1,0 +1,92 @@
+// ======================================================================
+//
+// IoWin.def
+// jeff grills
+//
+// copyright 1998 Bootprint Entertainment
+//
+// ======================================================================
+
+#ifndef IO_WIN_DEF
+#define IO_WIN_DEF
+
+// ======================================================================
+
+const int IOR_PASS_BIT   = BINARY1(0001);
+const int IOR_BLOCK_BIT  = BINARY1(0010);
+const int IOR_KILL_BIT   = BINARY1(0100);
+
+enum IoResult
+{
+	IOR_Pass        = IOR_PASS_BIT,
+	IOR_PassKillMe  = IOR_PASS_BIT  | IOR_KILL_BIT,
+	IOR_Block       = IOR_BLOCK_BIT,
+	IOR_BlockKillMe = IOR_BLOCK_BIT | IOR_KILL_BIT
+};
+
+enum IoEventType
+{
+	IOET_WindowOpen,                   // the window is being put on the top of the IoWinManager stack; no arguments
+	IOET_WindowClose,                  // the window is being removed from the IoWinManager stack; no arguments
+	IOET_WindowKill,                   // the game is shutting down and all the open windows will be sent this event; no arguments
+
+	IOET_Prepare,                      // sent once per frame, before any other events are sent; no arguments
+	IOET_Update,                       // sent once per frame; arg3 = time elapsed in seconds
+
+	IOET_InputReset,                   // assume all input in default state (assume all buttons up, input focus probably lost); no arguments
+
+	IOET_Character,                    // arg1 = keyboard number,    arg2 = character
+
+	IOET_KeyDown,                      // arg1 = keyboard number,    arg2 = keycode
+	IOET_KeyUp,                        // arg1 = keyboard number,    arg2 = keycode
+
+	IOET_JoystickMove,                 // arg1 = joystick number,    arg2 = movement type,     arg3 = offset amount
+	IOET_JoystickButtonDown,           // arg1 = joystick number,    arg2 = button number
+	IOET_JoystickButtonUp,             // arg1 = joystick number,    arg2 = button number
+	IOET_JoystickPovHat,               // arg1 = joystick number,    arg2 = pov hat number,    arg3 = pov angle (-1 centered, 0 .. 2pi)
+	IOET_JoystickSlider,               // arg1 = joystick number,    arg2 = slider,            arg3 = value
+
+	IOET_MouseMove,                    // arg1 = mouse number,       arg2 = movement type,     arg3 = movement amount
+	IOET_MouseButtonDown,              // arg1 = mouse number,       arg2 = button number
+	IOET_MouseButtonUp,                // arg1 = mouse number,       arg2 = button number
+
+	IOET_SetSystemMouseCursorPosition, // arg1 = cursor X,           arg2 = cursor Y
+
+	IOET_IMEComposition,			   // Changes an IME composition
+	IOET_IMEChangeCandidate,		   // Show the IME candidate selection panel
+	IOET_IMECloseCandidate,			   // Close the IME candidate selection panel
+	IOET_IMEEndComposition,			   // End an IME composition
+
+	IOET_Count                         // ALWAYS KEEP THIS LAST
+};
+
+enum // IoMovementType
+{
+	IOMT_TranslateX,
+	IOMT_TranslateY,
+	IOMT_TranslateZ,
+	IOMT_RotateX,
+	IOMT_RotateY,
+	IOMT_RotateZ
+};
+
+struct IoEvent
+{
+	friend class IoWinManager;
+
+private:
+
+	IoEvent        *next;           // pointer to next event; only valid while in the queue within IoWinManager
+
+public:
+
+	IoEventType     type;           // type of the event
+
+	int             arg1;           // value defined by IoEvent::type
+	int             arg2;           // value defined by IoEvent::type
+	real            arg3;           // value defined by IoEvent::type
+};
+
+// ======================================================================
+
+#endif
