@@ -519,4 +519,9 @@ add_library(serverNetworkMessages STATIC
 
 target_link_libraries(serverNetworkMessages
 	sharedFoundation
+	archive
+	localization
+	localizationArchive
+	unicode
+	unicodeArchive
 )

@@ -94,4 +94,5 @@ add_library(sharedNetwork STATIC
 
 target_link_libraries(sharedNetwork
 	sharedFoundation
+	sharedLog
 )
