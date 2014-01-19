@@ -11,16 +11,16 @@ set(SWG_EXTERNALS_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/external)
 set(SWG_GAME_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/game)
 
 find_package(Boost REQUIRED)
-find_package(Iconv REQUIRED)
 find_package(JNI REQUIRED)
 find_package(LibXml2 REQUIRED)
 find_package(Oracle REQUIRED)
 find_package(PCRE REQUIRED)
 find_package(Perl REQUIRED)
 find_package(STLPort REQUIRED)
-find_package(ZLib REQUIRED)
+find_package(ZLIB REQUIRED)
 
 if(WIN32)
+	find_package(Iconv REQUIRED)
 	add_definitions(/D_CRT_SECURE_NO_WARNINGS /wd4244 /wd4996 /wd4018 /wd4351)
 endif()
 
