@@ -19,6 +19,8 @@ class BaseClass;
 class BaseExtent;
 class Extent;
 class IndexedTriangleList;
+class Portal;
+class Iff;
 
 #include "sharedMath/Plane.h"
 #include "sharedMath/VectorArgb.h"
