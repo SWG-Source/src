@@ -85,10 +85,10 @@ private:
 	only AutoDeltaByteStreams may interpret a delta package at run time.
 
 	AutoDeltaByteStream objects can also deserialize from ByteStream and
-	AutoByteStream objects using the unpack() method. To unpack a 
+	AutoByteStream objects using the unpack() method. To unpack a
 	delta ByteStream, AutoDeltaByteStream provides unpackDeltas().
 
-	AutoDeltaVariable objects, which are contained by a 
+	AutoDeltaVariable objects, which are contained by a
 	AutoDeltaByteStream, can set threshold values to trigger a
 	change (e.g. a value representing heading may need to change
 	by more than 3 degrees before the object is considered "changed").
@@ -131,20 +131,20 @@ private:
 	{
 		MyAutoDeltaByteStream a;
 		MyAutoDeltaByteStream b;
-		
+
 		a.setValue(2.0f);	// change of 2, not enough to trigger a delta
 		b.setValue(1.0f);
 
 		b.unpackDeltas(a.packDeltas());
 		assert(b.getValue() == 1.0f);	// no deltas from (a)
 
-		a.setValue(5.0f);	// large enough change 
+		a.setValue(5.0f);	// large enough change
 		b.unpackDeltas(a.packDeltas());
 		assert(b.getValue() == a.getValue() && b.getValue() == 5.0f);
 	}
 	\endcode
 
-	
+
 */
 class AutoDeltaByteStream : public AutoByteStream
 {
@@ -252,13 +252,13 @@ inline const unsigned short int AutoDeltaVariableBase::getIndex() const
 //-----------------------------------------------------------------------
 /**
 	@brief Get a pointer to this variable's owner ByteStream
-		
+
 	As the AutoDeltaVariableBase is used in a non-const
 	manner, it will insert itself into it's owner AutoDeltaByteStream::dirtyList
-	set. 
+	set.
 
 	When the AutoDeltaByteStream executes AutoDeltaByteStream::packDeltas(),
-	it will iterate through this set to determine which 
+	it will iterate through this set to determine which
 	variables may be dirty, invoke AutoDeltaVariableBase::isDirty() on
 	each variable in the set, and if it is dirty, include the value
 	in the ByteStream buffer.
@@ -305,7 +305,7 @@ inline void AutoDeltaVariableBase::setIndex(const unsigned short int newIndex)
 
 //-----------------------------------------------------------------------
 /**
-	@brief set the AutoDeltaVariableBase::owner member to the address of 
+	@brief set the AutoDeltaVariableBase::owner member to the address of
 	some AutoDeltaByteStream instance.
 
 	A AutoDeltaVariableBase or derived object must put itself on
@@ -346,10 +346,10 @@ inline void AutoDeltaVariableBase::touch()
 		MyAutoDeltaByteStream();
 		~MyAutoDeltaByteStream() {};
 
-		void      setValue(const int value) 
+		void      setValue(const int value)
 			{ i = value; };
 
-		const int getValue() const 
+		const int getValue() const
 			{ return i; };
 
 	private:
@@ -442,8 +442,8 @@ lastValue(ValueType())
 	@brief AutoDeltaVariable copy constructor
 
 	This copy constructor will perform a deep copy of the current
-	value from the source AutoDeltaVariable. It does not copy 
-	AutoDeltaVariableBase members such as the owner. The owner MUST 
+	value from the source AutoDeltaVariable. It does not copy
+	AutoDeltaVariableBase members such as the owner. The owner MUST
 	be set explicitly.
 
 	@author Justin Randall
@@ -473,7 +473,7 @@ lastValue(source.currentValue)
 	MyAutoDeltaByteStream::MyAutoDeltaByteStream()
 	{
 		// set myAutoInt current value to 35
-		myAutoInt(35); 
+		myAutoInt(35);
 		myAutoInt.setOwner(this);
 
 		// copy myAutoInt
@@ -521,7 +521,7 @@ inline AutoDeltaVariable<ValueType>::~AutoDeltaVariable()
 //-----------------------------------------------------------------------
 
 template<typename ValueType>
-inline AutoDeltaVariable<ValueType> & AutoDeltaVariable<ValueType>::operator =(const AutoDeltaVariable<ValueType> & rhs) 
+inline AutoDeltaVariable<ValueType> & AutoDeltaVariable<ValueType>::operator =(const AutoDeltaVariable<ValueType> & rhs)
 {
 	if(&rhs != this)
 		set(rhs.currentValue);
@@ -531,7 +531,7 @@ inline AutoDeltaVariable<ValueType> & AutoDeltaVariable<ValueType>::operator =(c
 //-----------------------------------------------------------------------
 
 template<typename ValueType>
-inline AutoDeltaVariable<ValueType> & AutoDeltaVariable<ValueType>::operator =(const ValueType & rhs) 
+inline AutoDeltaVariable<ValueType> & AutoDeltaVariable<ValueType>::operator =(const ValueType & rhs)
 {
 	if(rhs != currentValue)
 		set(rhs);
@@ -540,7 +540,7 @@ inline AutoDeltaVariable<ValueType> & AutoDeltaVariable<ValueType>::operator =(c
 
 //-----------------------------------------------------------------------
 /**
-	@brief assign the lastValue to the currentValue to avert isDirty() 
+	@brief assign the lastValue to the currentValue to avert isDirty()
 	returning true.
 
 	@author Justin Randall
@@ -578,7 +578,7 @@ inline const ValueType & AutoDeltaVariable<ValueType>::get() const
 
 	When a AutoDeltaVariable is used in a non-const manner, it is placed
 	on the AutoDeltaByteStream::dirtyList until AutoDeltaByteStream::packDeltas()
-	is invoked. All members on the list are checked to see if their value 
+	is invoked. All members on the list are checked to see if their value
 	has changed enough to warrant a new delta ByteStream.
 
 	Any change in values triggers isDirty() to return true.
@@ -629,7 +629,7 @@ inline const bool AutoDeltaVariable<ValueType>::isDirty() const
 template<typename ValueType>
 inline void AutoDeltaVariable<ValueType>::pack(ByteStream & target) const
 {
-	Archive::put(target, currentValue);
+	put(target, currentValue);
 }
 
 //-----------------------------------------------------------------------
@@ -672,7 +672,7 @@ inline void AutoDeltaVariable<ValueType>::set(const ValueType & source)
 	MUST contain the value -- that is, variables must be retrieve in the
 	order they were packed.
 
-	AutoByteStream classes and their derivatives automatically pack and 
+	AutoByteStream classes and their derivatives automatically pack and
 	unpack data in the correct order. This protected method is visible
 	only to ByteStreams.
 
@@ -691,7 +691,8 @@ inline void AutoDeltaVariable<ValueType>::set(const ValueType & source)
 template<typename ValueType>
 inline void AutoDeltaVariable<ValueType>::unpack(ReadIterator & source)
 {
-	Archive::get(source, currentValue);
+	using Archive::get;
+	get(source, currentValue);
 	clearDelta();
 }
 
@@ -700,7 +701,8 @@ inline void AutoDeltaVariable<ValueType>::unpack(ReadIterator & source)
 template<typename ValueType>
 inline void AutoDeltaVariable<ValueType>::unpackDelta(ReadIterator & source)
 {
-	Archive::get(source, currentValue);
+	using Archive::get;
+	get(source, currentValue);
 	touch();
 }
 
