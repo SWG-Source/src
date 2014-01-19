@@ -333,6 +333,171 @@ const unsigned MAX_ARRAY_SIZE = 1024;
 
 ////////////////////////////////////////////////////////////////////////////////
 
+    
+    inline void get(ByteStream::ReadIterator & source, ByteStream & target)
+    {
+        target.put(source.getBuffer(), source.getSize());
+        source.advance(source.getSize());
+    }
+
+    inline void get(ByteStream::ReadIterator & source, double & target)
+    {
+        source.get(&target, 8);
+        target = byteSwap(target);
+    }
+
+    inline void get(ByteStream::ReadIterator & source, float & target)
+    {
+        source.get(&target, 4);
+        target = byteSwap(target);
+    }
+
+    inline void get(ByteStream::ReadIterator & source, uint64 & target)
+    {
+        source.get(&target, 8);
+        target = byteSwap(target);
+    }
+
+    inline void get(ByteStream::ReadIterator & source, int64 & target)
+    {
+        source.get(&target, 8);
+        target = byteSwap(target);
+    }
+
+    inline void get(ByteStream::ReadIterator & source, uint32 & target)
+    {
+        source.get(&target, 4);
+        target = byteSwap(target);
+    }
+
+    inline void get(ByteStream::ReadIterator & source, int32 & target)
+    {
+        source.get(&target, 4);
+        target = byteSwap(target);
+    }
+
+    inline void get(ByteStream::ReadIterator & source, uint16 & target)
+    {
+        source.get(&target, 2);
+        target = byteSwap(target);
+    }
+
+    inline void get(ByteStream::ReadIterator & source, int16 & target)
+    {
+        source.get(&target, 2);
+        target = byteSwap(target);
+    }
+
+    inline void get(ByteStream::ReadIterator & source, uint8 & target)
+    {
+        source.get(&target, 1);
+    }
+
+    inline void get(ByteStream::ReadIterator & source, int8 & target)
+    {
+        source.get(&target, 1);
+    }
+
+    inline unsigned get(ByteStream::ReadIterator & source, unsigned char * const target, const unsigned int targetSize)
+    {
+        return source.get(target, targetSize);
+    }
+
+    inline void get(ByteStream::ReadIterator & source, bool & target)
+    {
+        source.get(&target, 1);
+    }
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+
+    inline void put(ByteStream & target, ByteStream::ReadIterator & source)
+    {
+        target.put(source.getBuffer(), source.getSize());
+        source.advance(source.getSize());
+    }
+
+    inline void put(ByteStream & target, const double value)
+    {
+        double temp = byteSwap(value);
+        target.put(&temp, 8);
+    }
+
+    inline void put(ByteStream & target, const float value)
+    {
+        float temp = byteSwap(value);
+        target.put(&temp, 4);
+    }
+
+    inline void put(ByteStream & target, const uint64 value)
+    {
+        uint64 temp = byteSwap(value);
+        target.put(&temp, 8);
+    }
+
+    inline void put(ByteStream & target, const int64 value)
+    {
+        int64 temp = byteSwap(value);
+        target.put(&temp, 8);
+    }
+
+    inline void put(ByteStream & target, const uint32 value)
+    {
+        uint32 temp = byteSwap(value);
+        target.put(&temp, 4);
+    }
+
+    inline void put(ByteStream & target, const int32 value)
+    {
+        int32 temp = byteSwap(value);
+        target.put(&temp, 4);
+    }
+
+    inline void put(ByteStream & target, const uint16 value)
+    {
+        uint16 temp = byteSwap(value);
+        target.put(&temp, 2);
+    }
+
+    inline void put(ByteStream & target, const int16 value)
+    {
+        int16 temp = byteSwap(value);
+        target.put(&temp, 2);
+    }
+
+    inline void put(ByteStream & target, const uint8 value)
+    {
+        target.put(&value, 1);
+    }
+
+    inline void put(ByteStream & target, const int8 value)
+    {
+        target.put(&value, 1);
+    }
+
+    inline void put(ByteStream & target, const bool & source)
+    {
+        target.put(&source, 1);
+    }
+
+
+    inline void put(ByteStream & target, const unsigned char * const source, const unsigned int sourceSize)
+    {
+        target.put(source, sourceSize);
+    }
+
+    inline void put(ByteStream & target, const ByteStream & source)
+    {
+        target.put(source.begin().getBuffer(), source.begin().getSize());
+    }
+
+    unsigned get(ByteStream::ReadIterator & source, std::string & target);
+    void put(ByteStream & target, const std::string & source);
+
+    
+////////////////////////////////////////////////////////////////////////////////
+
 
     class AutoVariableBase
     {
@@ -412,7 +577,7 @@ const unsigned MAX_ARRAY_SIZE = 1024;
     template<class ValueType>
     void AutoVariable<ValueType>::pack(ByteStream & target) const
     {
-	    Base::put(target, value);
+	    put(target, value);
     }
 
     template<class ValueType>
@@ -424,7 +589,7 @@ const unsigned MAX_ARRAY_SIZE = 1024;
     template<class ValueType>
     void AutoVariable<ValueType>::unpack(ByteStream::ReadIterator & source)
     {
-        Base::get(source, value);
+        get(source, value);
     }
 
 
@@ -480,8 +645,9 @@ const unsigned MAX_ARRAY_SIZE = 1024;
     template<class ValueType>
     inline void AutoArray<ValueType>::pack(ByteStream & target) const
     {
+        using Base::put;
 	    unsigned int arraySize = array.size();
-	    Base::put(target, arraySize);
+	    put(target, arraySize);
 
 	    typename std::vector<ValueType>::const_iterator i;
 	    for(i = array.begin(); i != array.end(); ++i)
@@ -509,171 +675,6 @@ const unsigned MAX_ARRAY_SIZE = 1024;
     }	
 
 
-////////////////////////////////////////////////////////////////////////////////
-
-    
-    inline void get(ByteStream::ReadIterator & source, ByteStream & target)
-    {
-	    target.put(source.getBuffer(), source.getSize());
-	    source.advance(source.getSize());
-    }
-
-    inline void get(ByteStream::ReadIterator & source, double & target)
-    {
-	    source.get(&target, 8);
-        target = byteSwap(target);
-    }
-
-    inline void get(ByteStream::ReadIterator & source, float & target)
-    {
-	    source.get(&target, 4);
-        target = byteSwap(target);
-    }
-
-    inline void get(ByteStream::ReadIterator & source, uint64 & target)
-    {
-	    source.get(&target, 8);
-        target = byteSwap(target);
-    }
-
-    inline void get(ByteStream::ReadIterator & source, int64 & target)
-    {
-	    source.get(&target, 8);
-        target = byteSwap(target);
-    }
-
-    inline void get(ByteStream::ReadIterator & source, uint32 & target)
-    {
-	    source.get(&target, 4);
-        target = byteSwap(target);
-    }
-
-    inline void get(ByteStream::ReadIterator & source, int32 & target)
-    {
-	    source.get(&target, 4);
-        target = byteSwap(target);
-    }
-
-    inline void get(ByteStream::ReadIterator & source, uint16 & target)
-    {
-	    source.get(&target, 2);
-        target = byteSwap(target);
-    }
-
-    inline void get(ByteStream::ReadIterator & source, int16 & target)
-    {
-	    source.get(&target, 2);
-        target = byteSwap(target);
-    }
-
-    inline void get(ByteStream::ReadIterator & source, uint8 & target)
-    {
-	    source.get(&target, 1);
-    }
-
-    inline void get(ByteStream::ReadIterator & source, int8 & target)
-    {
-	    source.get(&target, 1);
-    }
-
-    inline unsigned get(ByteStream::ReadIterator & source, unsigned char * const target, const unsigned int targetSize)
-    {
-	    return source.get(target, targetSize);
-    }
-
-    inline void get(ByteStream::ReadIterator & source, bool & target)
-    {
-	    source.get(&target, 1);
-    }
-
-
-////////////////////////////////////////////////////////////////////////////////
-
-
-    inline void put(ByteStream & target, ByteStream::ReadIterator & source)
-    {
-	    target.put(source.getBuffer(), source.getSize());
-	    source.advance(source.getSize());
-    }
-
-    inline void put(ByteStream & target, const double value)
-    {
-        double temp = byteSwap(value);
-        target.put(&temp, 8);
-    }
-
-    inline void put(ByteStream & target, const float value)
-    {
-        float temp = byteSwap(value);
-        target.put(&temp, 4);
-    }
-
-    inline void put(ByteStream & target, const uint64 value)
-    {
-        uint64 temp = byteSwap(value);
-        target.put(&temp, 8);
-    }
-
-    inline void put(ByteStream & target, const int64 value)
-    {
-        int64 temp = byteSwap(value);
-        target.put(&temp, 8);
-    }
-
-    inline void put(ByteStream & target, const uint32 value)
-    {
-        uint32 temp = byteSwap(value);
-        target.put(&temp, 4);
-    }
-
-    inline void put(ByteStream & target, const int32 value)
-    {
-        int32 temp = byteSwap(value);
-        target.put(&temp, 4);
-    }
-
-    inline void put(ByteStream & target, const uint16 value)
-    {
-        uint16 temp = byteSwap(value);
-        target.put(&temp, 2);
-    }
-
-    inline void put(ByteStream & target, const int16 value)
-    {
-        int16 temp = byteSwap(value);
-        target.put(&temp, 2);
-    }
-
-    inline void put(ByteStream & target, const uint8 value)
-    {
-        target.put(&value, 1);
-    }
-
-    inline void put(ByteStream & target, const int8 value)
-    {
-        target.put(&value, 1);
-    }
-
-    inline void put(ByteStream & target, const bool & source)
-    {
-	    target.put(&source, 1);
-    }
-
-
-    inline void put(ByteStream & target, const unsigned char * const source, const unsigned int sourceSize)
-    {
-	    target.put(source, sourceSize);
-    }
-
-    inline void put(ByteStream & target, const ByteStream & source)
-    {
-	    target.put(source.begin().getBuffer(), source.begin().getSize());
-    }
-
-    unsigned get(ByteStream::ReadIterator & source, std::string & target);
-    void put(ByteStream & target, const std::string & source);
-
-	
 ////////////////////////////////////////////////////////////////////////////////
 
 

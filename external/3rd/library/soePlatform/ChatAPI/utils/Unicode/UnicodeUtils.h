@@ -64,7 +64,31 @@ namespace Plat_Unicode
 
 	String &                   appendStringField (String & dst, const String & src, size_t width, FieldAlignment fa = FA_LEFT, unicode_char_t pad = ' ', bool truncate = false);
 	String &                   appendStringField (String & dst, const NarrowString & src, size_t width, FieldAlignment fa = FA_LEFT, unicode_char_t pad = ' ', bool truncate = false);
+// ======================================================================
 
+	//-----------------------------------------------------------------
+	/**
+	* Hacky code to correctly handle Cyrillic.
+	*/
+
+	inline unicode_char_t trueUpper(unicode_char_t letter)
+	{
+		if ((cyrillic_lower_first <= letter) && (letter <= cyrillic_lower_last)) {
+			return letter + (cyrillic_upper_first - cyrillic_lower_first);
+		} else {
+			return static_cast<unicode_char_t>(toupper(letter));
+		}
+	}
+
+	inline unicode_char_t trueLower(unicode_char_t letter)
+	{
+		if ((cyrillic_upper_first <= letter) && (letter <= cyrillic_upper_last)) {
+			return letter - (cyrillic_upper_first - cyrillic_lower_first);
+		} else {
+			return static_cast<unicode_char_t>(tolower(letter));
+		}
+	}
+	
 	/**
 	*  Compare substrings of str2 and str1, each starting with pos and containing n characters
 	*/
@@ -334,30 +358,6 @@ namespace Plat_Unicode
 	inline String & appendStringField (String & dst, const NarrowString & src, size_t width, FieldAlignment fa, unicode_char_t pad, bool truncate)
 	{
 		return appendStringField (dst, narrowToWide (src), width, fa, pad, truncate);
-	}
-// ======================================================================
-
-	//-----------------------------------------------------------------
-	/**
-	* Hacky code to correctly handle Cyrillic.
-	*/
-
-	inline unicode_char_t trueUpper(unicode_char_t letter)
-	{
-		if ((cyrillic_lower_first <= letter) && (letter <= cyrillic_lower_last)) {
-			return letter + (cyrillic_upper_first - cyrillic_lower_first);
-		} else {
-			return static_cast<unicode_char_t>(toupper(letter));
-		}
-	}
-
-	inline unicode_char_t trueLower(unicode_char_t letter)
-	{
-		if ((cyrillic_upper_first <= letter) && (letter <= cyrillic_upper_last)) {
-			return letter - (cyrillic_upper_first - cyrillic_lower_first);
-		} else {
-			return static_cast<unicode_char_t>(tolower(letter));
-		}
 	}
 
 // ======================================================================

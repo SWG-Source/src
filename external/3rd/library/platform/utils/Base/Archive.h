@@ -569,7 +569,7 @@ const unsigned MAX_ARRAY_SIZE = 1024;
     template<class ValueType>
     void AutoVariable<ValueType>::pack(ByteStream & target) const
     {
-	    Base::put(target, value);
+	    put(target, value);
     }
 
     template<class ValueType>
@@ -581,7 +581,8 @@ const unsigned MAX_ARRAY_SIZE = 1024;
     template<class ValueType>
     void AutoVariable<ValueType>::unpack(ByteStream::ReadIterator & source)
     {
-        Base::get(source, value);
+        using Base::get;
+        get(source, value);
     }
 
 
@@ -644,7 +645,7 @@ const unsigned MAX_ARRAY_SIZE = 1024;
 	    for(i = array.begin(); i != array.end(); ++i)
 	    {
 		    ValueType v = (*i);
-		    Base::put(target, v);
+		    put(target, v);
 	    }
     }
 
@@ -658,9 +659,10 @@ const unsigned MAX_ARRAY_SIZE = 1024;
         if (arraySize > MAX_ARRAY_SIZE)
             arraySize = 0;
 
+        using Base::get;
 	    for(unsigned int i = 0; i < arraySize; ++i)
 	    {
-		    Base::get(source, v);
+		    get(source, v);
 		    array.push_back(v);
 	    }
     }	

@@ -5,7 +5,7 @@
 
 #ifndef API_NAMESPACE
 #pragma message ("apiMessages.h: API_NAMESPACE undefined")
-//#else 
+//#else
 //#pragma message ("apiMessages.h: API_NAMESPACE:")
 //#pragma message API_NAMESPACE
 #endif
@@ -13,6 +13,7 @@
 #include <map>
 #include <vector>
 #include "Base/serializeClasses.h"
+//#include "Base/serialize.h"
 #include "apiMacros.h"
 #include "apiTypeNameValuePair.h"
 
@@ -38,7 +39,7 @@ namespace API_NAMESPACE
 		MESSAGE_GET_CONFIGURATION                   = 0x0ff5,
 
 		MESSAGE_SHUTDOWN_NOTIFY						= 0x0f00,
-        
+
         //  Server Messages
         MESSAGE_CONNECT_REPLY                       = 0x7ff3,
         MESSAGE_GET_STATUS_REPLY                    = 0x7ff4,
@@ -146,6 +147,90 @@ namespace API_NAMESPACE
 #ifdef API_NAMESPACE
 }
 #endif
+
+namespace soe
+{
+    inline unsigned Write(unsigned char * stream, unsigned size, const API_NAMESPACE::Message::Base & data, unsigned version = 0)
+    {
+        unsigned written = 0;
+        unsigned writtenSize = Write(stream, size, written, version);
+
+        if (writtenSize <= 0) { return 0; }
+        written = data.Write(stream + writtenSize, size - writtenSize, version);
+        if (written <= 0) { return 0; }
+        writtenSize = Write(stream, size, written, version);
+
+        return (writtenSize + written);
+    }
+
+    inline unsigned Read(const unsigned char * stream, unsigned size, API_NAMESPACE::Message::Base & data, unsigned, unsigned version = 0)
+    {
+        unsigned messageSize = 0;
+        unsigned readSize = Read(stream, size, messageSize, version);
+        unsigned readIn = 0;
+
+        size -= readSize;
+        stream += readSize;
+        if (messageSize > size) { return 0; }
+        readIn = data.Read(stream, messageSize, version);
+        if (readIn <= 0) {  return 0; }
+
+        return (readSize + messageSize);
+    }
+
+    inline unsigned Write(unsigned char * stream, unsigned size, const API_NAMESPACE::Message::Base::DeepPointer & data, unsigned version = 0)
+    {
+        API_NAMESPACE::Message::Base *msg = (API_NAMESPACE::Message::Base *)data;
+
+        if (msg) {
+            return Write(stream, size, *msg, version);
+        } else {
+            return 0;
+        }
+    }
+
+    inline unsigned Read(const unsigned char * stream, unsigned size, API_NAMESPACE::Message::Base::DeepPointer & data, unsigned, unsigned version = 0)
+    {
+        unsigned msgSize = 0;
+        unsigned msgId = 0;
+        unsigned sizeSize = Read(stream, size, msgSize, version);
+        unsigned idSize = (sizeSize > 0) ? Read(stream + sizeSize, size - sizeSize, msgId, version) : 0;
+
+        if (idSize <= 0) {
+            return 0;
+        }
+
+        data.SetMessageType(msgId);
+
+        API_NAMESPACE::Message::Base *msg = data;
+
+        if (msg) {
+            return Read(stream, size, *msg, 0, version);
+        } else {
+            return 0;
+        }
+    }
+
+#ifdef PRINTABLE_MESSAGES
+    inline int Print(char * stream, unsigned size, const API_NAMESPACE::Message::Base & data, unsigned maxDepth=INT_MAX)
+    {
+        return data.Print(stream, size, maxDepth);
+
+    }
+
+    inline int Print(char * stream, unsigned size, const API_NAMESPACE::Message::Base::DeepPointer & data, unsigned maxDepth=INT_MAX)
+    {
+        API_NAMESPACE::Message::Base *msg = (API_NAMESPACE::Message::Base *)data;
+
+        if (msg) {
+            return Print(stream, size, *msg, maxDepth);
+        } else {
+            return 0;
+        }
+    }
+#endif
+
+}
 
 
 #include "Base/serializeTemplates.h"
@@ -297,7 +382,7 @@ namespace API_NAMESPACE
     DefineMessageBegin(Connect, Basic, MESSAGE_CONNECT)
         DefineMessageMember(Version, std::string)
         DefineMessageMember(Description, std::string)
-        
+
     DefineMessageEnd
 
 
@@ -362,93 +447,30 @@ namespace API_NAMESPACE
 
     DECLSPEC void Read(soe::NameValuePair &dest, const Message::NameValuePair &src);
     DECLSPEC void Write(const soe::NameValuePair &src, Message::NameValuePair &dest);
+
 #ifdef API_NAMESPACE
 }
 #endif
 
-namespace soe
-{
-	inline unsigned Write(unsigned char * stream, unsigned size, const API_NAMESPACE::Message::Base & data, unsigned version = 0)
-	{
-		unsigned written = 0;
-		unsigned writtenSize = Write(stream, size, written, version);
+namespace soe {
 
-		if (writtenSize <= 0) { return 0; }
-		written = data.Write(stream + writtenSize, size - writtenSize, version);
-		if (written <= 0) { return 0; }
-		writtenSize = Write(stream, size, written, version);
+    inline unsigned Read(const unsigned char * stream, unsigned size, API_NAMESPACE::Message::NameValuePair & data, unsigned maxLen, unsigned version = 0)
+    {
+        NameValuePair dest;
+        unsigned returnval = Read(stream, size, dest, maxLen, version);
+        API_NAMESPACE::Write(dest, data);
 
-		return (writtenSize + written);
-	}
+        return returnval;
+    }
 
-	inline unsigned Read(const unsigned char * stream, unsigned size, API_NAMESPACE::Message::Base & data, unsigned, unsigned version = 0)
-	{
-		unsigned messageSize = 0;
-		unsigned readSize = Read(stream, size, messageSize, version);
-		unsigned readIn = 0;
+    inline unsigned Write(unsigned char * stream, unsigned size, const API_NAMESPACE::Message::NameValuePair & data, unsigned version = 0)
+    {
+        NameValuePair dest;
+        API_NAMESPACE::Read(dest, data);
 
-		size -= readSize;
-		stream += readSize;
-		if (messageSize > size) { return 0; }
-		readIn = data.Read(stream, messageSize, version);
-		if (readIn <= 0) {	return 0; }
-
-		return (readSize + messageSize);
-	}
-
-	inline unsigned Write(unsigned char * stream, unsigned size, const API_NAMESPACE::Message::Base::DeepPointer & data, unsigned version = 0)
-	{
-		API_NAMESPACE::Message::Base *msg = (API_NAMESPACE::Message::Base *)data;
-
-		if (msg) {
-			return Write(stream, size, *msg, version);
-		} else {
-			return 0;
-		}
-	}
-
-	inline unsigned Read(const unsigned char * stream, unsigned size, API_NAMESPACE::Message::Base::DeepPointer & data, unsigned, unsigned version = 0)
-	{
-		unsigned msgSize = 0;
-		unsigned msgId = 0;
-		unsigned sizeSize = Read(stream, size, msgSize, version);
-		unsigned idSize = (sizeSize > 0) ? Read(stream + sizeSize, size - sizeSize, msgId, version) : 0;
-
-		if (idSize <= 0) {
-			return 0;
-		}
-
-		data.SetMessageType(msgId);
-
-		API_NAMESPACE::Message::Base *msg = data;
-
-		if (msg) {
-			return Read(stream, size, *msg, 0, version);
-		} else {
-			return 0;
-		}
-	}
-
-#ifdef PRINTABLE_MESSAGES
-	inline int Print(char * stream, unsigned size, const API_NAMESPACE::Message::Base & data, unsigned maxDepth=INT_MAX)
-	{
-		return data.Print(stream, size, maxDepth);
-
-	}
-
-	inline int Print(char * stream, unsigned size, const API_NAMESPACE::Message::Base::DeepPointer & data, unsigned maxDepth=INT_MAX)
-	{
-		API_NAMESPACE::Message::Base *msg = (API_NAMESPACE::Message::Base *)data;
-
-		if (msg) {
-			return Print(stream, size, *msg, maxDepth);
-		} else {
-			return 0;
-		}
-	}
-#endif
+        return Write(stream, size, dest, version);
+    }
 
 }
-
 
 //#endif  //_API_MESSAGES_H

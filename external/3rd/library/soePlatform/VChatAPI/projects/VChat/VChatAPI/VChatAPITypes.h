@@ -40,7 +40,7 @@ namespace VChatSystem
 	typedef unsigned ResultCode;
 
 
-	typedef enum ResultCode_t
+	enum ResultCode_t
 	{
 		RESULT_SUCCESS						= 0,
 		RESULT_TIMEOUT,
@@ -109,7 +109,7 @@ namespace VChatSystem
 		RESULT_END
 	};
 
-	typedef enum CommandType_t
+	enum CommandType_t
 	{
 		COMMAND_MUTE = 0,
 		COMMAND_UNMUTE,
@@ -130,13 +130,13 @@ namespace VChatSystem
 		COMMAND_END
 	};
 		
-	typedef enum ConnectionType
+	enum ConnectionType
 	{
 		CONNECTION_TYPE_UNKNOWN = 0,
 		CONNECTION_TYPE_VHCAT_SYSTEM		
 	};
 
-	typedef enum ChannelType
+	enum ChannelType
 	{
 		CHAN_TYPE_UNKNOWN = 0,
 		CHAN_TYPE_DIR,
@@ -144,7 +144,7 @@ namespace VChatSystem
 		CHAN_TYPE_PROXIMITY
 	};
 
-	typedef enum BanStatus
+	enum BanStatus
 	{
 		BAN = 0,
 		UNBAN
