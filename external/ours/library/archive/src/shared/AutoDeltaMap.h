@@ -356,8 +356,8 @@ inline void AutoDeltaMap<KeyType, ValueType, ObjectType>::pack(ByteStream & targ
 	{
 		cmd = Command::ADD;
 		Archive::put(target, cmd);
-		Archive::put(target, (*i).first);
-		Archive::put(target, (*i).second);
+		put(target, (*i).first);
+		put(target, (*i).second);
 	}
 }
 
@@ -380,8 +380,8 @@ inline void AutoDeltaMap<KeyType, ValueType, ObjectType>::pack(ByteStream & targ
 	{
 		assert(c->cmd == Command::ADD); // only add is valid in packing the whole container
 		Archive::put(target, c->cmd);
-		Archive::put(target, c->key);
-		Archive::put(target, c->value);
+		put(target, c->key);
+		put(target, c->value);
 	}
 }
 
@@ -415,14 +415,14 @@ inline void AutoDeltaMap<KeyType, ValueType, ObjectType>::packDelta(ByteStream &
 			case Command::SET:
 			case Command::ERASE:
 			{
-				Archive::put(target, c.key);
-				Archive::put(target, c.value);
+				put(target, c.key);
+				put(target, c.value);
 			}
 			break;
 			default:
 				assert(false); // unknown command put INTO the archive!!!! THis will
 				// cause a crash when unpacking on a remote system
-				
+
 		}
 	}
 	clearDelta();
@@ -443,13 +443,13 @@ inline const size_t AutoDeltaMap<KeyType, ValueType, ObjectType>::size() const
 //-----------------------------------------------------------------------
 /**
 	@brief set an element in the map
-	
-	If the key does not exist in the map, then an add is queued (which 
+
+	If the key does not exist in the map, then an add is queued (which
 	will trigger a delta), the value is added to the map, and touch() is
 	called place the container on the AutoDeltaByteStream's dirty list.
 
 	If they key exists, and the values differ, and if the key is not in the
-	changes set, the old value is stored in changes, the new value is in 
+	changes set, the old value is stored in changes, the new value is in
 	the current container's map and the container invokes touch() to
 	place itself on the AutoDeltaByteStream's dirty list.
 
@@ -496,7 +496,7 @@ inline void AutoDeltaMap<KeyType, ValueType, ObjectType>::set(const KeyType & ke
 	@brief rebuild the container from a byte stream
 
 	The container first determines the number of changes that will be
-	applied, which is the first element in the ByteStream. 
+	applied, which is the first element in the ByteStream.
 
 	Then, for each element, the command is read (CONTAINER_SET or
 	CONTAINER_ERASE). If it is a CONTAINER_SET, then the key and value
@@ -523,8 +523,8 @@ inline void AutoDeltaMap<KeyType, ValueType, ObjectType>::unpack(ReadIterator & 
 	{
 		Archive::get(source, c.cmd);
 		assert(c.cmd == Command::ADD); // only add is valid in unpack
-		Archive::get(source, c.key);
-		Archive::get(source, c.value);
+		get(source, c.key);
+		get(source, c.value);
 		container[c.key] = c.value;
 		onInsert(c.key, c.value);
 	}
@@ -558,8 +558,8 @@ inline void AutoDeltaMap<KeyType, ValueType, ObjectType>::unpack(ReadIterator & 
 	{
 		Archive::get(source, c.cmd);
 		assert(c.cmd == Command::ADD); // only add is valid in unpack
-		Archive::get(source, c.key);
-		Archive::get(source, c.value);
+		get(source, c.key);
+		get(source, c.value);
 		data.push_back(c);
 	}
 }
@@ -597,8 +597,8 @@ inline void AutoDeltaMap<KeyType, ValueType, ObjectType>::unpackDelta(ReadIterat
 	for (i = 0; i < skipCount; ++i)
 	{
 		Archive::get(source, c.cmd);
-		Archive::get(source, c.key);
-		Archive::get(source, c.value);
+		get(source, c.key);
+		get(source, c.value);
 	}
 	for ( ; i < commandCount; ++i)
 	{
@@ -608,15 +608,15 @@ inline void AutoDeltaMap<KeyType, ValueType, ObjectType>::unpackDelta(ReadIterat
 		case Command::ADD:
 		case Command::SET:
 			{
-				Archive::get(source, c.key);
-				Archive::get(source, c.value);
+				get(source, c.key);
+				get(source, c.value);
 				AutoDeltaMap::set(c.key, c.value);
 			}
 			break;
 		case Command::ERASE:
 			{
-				Archive::get(source, c.key);
-				Archive::get(source, c.value);
+				get(source, c.key);
+				get(source, c.value);
 				AutoDeltaMap::erase(c.key);
 			}
 			break;
@@ -661,8 +661,8 @@ inline void AutoDeltaMap<KeyType, ValueType, ObjectType>::unpackDelta(ReadIterat
 		case Command::SET:
 		case Command::ERASE:
 			{
-				Archive::get(source, c.key);
-				Archive::get(source, c.value);
+				get(source, c.key);
+				get(source, c.value);
 			}
 			break;
 		default:
