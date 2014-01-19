@@ -72,6 +72,7 @@ add_library(serverUtility STATIC
 )
 
 target_link_libraries(serverUtility
+	sharedMessageDispatch
 	sharedNetworkMessages
 	serverNetworkMessages
 	sharedUtility

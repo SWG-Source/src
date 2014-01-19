@@ -516,3 +516,7 @@ add_library(serverNetworkMessages STATIC
 	${SHARED_SOURCES}
 	${PLATFORM_SOURCES}
 )
+
+target_link_libraries(serverNetworkMessages
+	sharedFoundation
+)
