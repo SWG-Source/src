@@ -25,3 +25,7 @@ add_library(sharedDatabaseInterface_oci STATIC
 	${SHARED_SOURCES}
 	${PLATFORM_SOURCES}
 )
+
+target_link_libraries(sharedDatabaseInterface_oci
+	sharedDatabaseInterface
+)
