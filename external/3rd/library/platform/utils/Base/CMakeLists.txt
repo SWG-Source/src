@@ -48,7 +48,7 @@ if(WIN32)
 else()
 	set(PLATFORM_SOURCES
 		linux/Archive.h
-		linux/BlockAllocator.h
+		linux/BlockAllocator.cpp
 		linux/Event.cpp
 		linux/Event.h
 		linux/Logger.cpp

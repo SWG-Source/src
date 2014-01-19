@@ -86,7 +86,7 @@ set(SHARED_SOURCES
 	../../utils/UdpLibrary/UdpMisc.h
 	../../utils/UdpLibrary/UdpPriority.h
 	../../utils/UdpLibrary/UdpReliableChannel.cpp
-	../../utils/UdpLibrary/UdpReliablechannel.h
+	../../utils/UdpLibrary/UdpReliableChannel.h
 	../../utils/UdpLibrary/UdpTypes.h
 
 	../../utils/Unicode/FirstUnicode.cpp
@@ -105,7 +105,7 @@ set(SHARED_SOURCES
 	../../utils/Unicode/utf8.cpp
 	../../utils/Unicode/utf8.h
 
-	../../utils/GenericAPI/GenericApicore.cpp
+	../../utils/GenericAPI/GenericApiCore.cpp
 	../../utils/GenericAPI/GenericApiCore.h
 	../../utils/GenericAPI/GenericConnection.cpp
 	../../utils/GenericAPI/GenericConnection.h

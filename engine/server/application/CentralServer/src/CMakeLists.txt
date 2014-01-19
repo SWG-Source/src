@@ -70,8 +70,8 @@ set(SHARED_SOURCES
 
     shared/AuctionTransferGameAPI/TcpLibrary/Clock.cpp
     shared/AuctionTransferGameAPI/TcpLibrary/Clock.h
-    shared/AuctionTransferGameAPI/TcpLibrary/IpAddress.cpp
-    shared/AuctionTransferGameAPI/TcpLibrary/IpAddress.h
+    shared/AuctionTransferGameAPI/TcpLibrary/IPAddress.cpp
+    shared/AuctionTransferGameAPI/TcpLibrary/IPAddress.h
     shared/AuctionTransferGameAPI/TcpLibrary/TcpBlockAllocator.cpp
     shared/AuctionTransferGameAPI/TcpLibrary/TcpBlockAllocator.h
     shared/AuctionTransferGameAPI/TcpLibrary/TcpConnection.cpp
