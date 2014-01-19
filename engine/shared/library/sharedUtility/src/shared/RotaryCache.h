@@ -43,7 +43,7 @@ protected:
 public:
 
 protected:
-	typedef struct CacheListEntry
+	struct CacheListEntry
 	{
 		CrcLowerString			key;
 		void*					value;
@@ -51,7 +51,7 @@ protected:
 
 	typedef stdlist<CacheListEntry>::fwd	RotaryList;
 
-	typedef struct CacheMapEntry
+	struct CacheMapEntry
 	{
 		RotaryList::iterator				iter;
 	};
