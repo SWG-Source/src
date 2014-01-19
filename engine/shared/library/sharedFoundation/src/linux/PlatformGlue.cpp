@@ -3,10 +3,10 @@
 #include <ctime>
 
 
-real abs(real x)
-{
-  return fabs(x);
-}
+//real abs(real x)
+//{
+//  return fabs(x);
+//}
 
 int _stricmp(const char* string1, const char* string2)
 {
