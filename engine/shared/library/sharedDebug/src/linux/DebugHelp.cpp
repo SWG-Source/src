@@ -36,7 +36,7 @@ public:
 	static char const *uniqueString(char const *s);
 	static void *memPoolAllocate(size_t size);
 
-private:
+//private:
 	static const size_t cms_memPoolMaxBytes = 8*1024*1024;
 	static size_t ms_memPoolUsed;
 	static char ms_memPool[cms_memPoolMaxBytes];
