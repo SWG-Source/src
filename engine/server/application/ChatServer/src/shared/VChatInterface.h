@@ -30,7 +30,7 @@ struct ReturnAddress
 	ReturnAddress() : type(RAT_invalid), clientId(), gameServerId(0) {}
 	ReturnAddress(NetworkId const & id):type(RAT_client), clientId(id), gameServerId(0) {}
 	ReturnAddress(unsigned const id) : type(RAT_gameserver), clientId(), gameServerId(id) {}
-	inline std::string ReturnAddress::debugString() const
+	inline std::string debugString() const
 	{
 		switch(type)
 		{
