@@ -247,7 +247,7 @@ private:
 
 private:
 
-	bool SearchTOC::localExists(const char *fileName, int *index) const;
+	bool localExists(const char *fileName, int *index) const;
 
 private:
 
