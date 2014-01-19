@@ -253,6 +253,7 @@ namespace Archive
 		put(target,source.m_hasReceivedReward);
 	}
 
+	template<>
 	void Archive::AutoDeltaPackedMap<uint32,PlayerQuestData>::unpack(ReadIterator & source, std::string & buffer)
 	{
 		char temp[200];
@@ -307,6 +308,7 @@ namespace Archive
 		}
 	}
 
+	template<>
 	void Archive::AutoDeltaPackedMap<uint32,PlayerQuestData>::pack(ByteStream & target, std::string const & buffer)
 	{
 		char temp[200];
