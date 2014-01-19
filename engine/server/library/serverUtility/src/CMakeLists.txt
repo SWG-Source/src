@@ -70,3 +70,9 @@ add_library(serverUtility STATIC
 	${SHARED_SOURCES}
 	${PLATFORM_SOURCES}
 )
+
+target_link_libraries(serverUtility
+	sharedNetworkMessages
+	serverNetworkMessages
+	sharedUtility
+)

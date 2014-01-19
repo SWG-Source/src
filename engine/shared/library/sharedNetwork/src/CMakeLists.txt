@@ -91,3 +91,7 @@ add_library(sharedNetwork STATIC
 	${SHARED_SOURCES}
 	${PLATFORM_SOURCES}
 )
+
+target_link_libraries(sharedNetwork
+	sharedFoundation
+)
