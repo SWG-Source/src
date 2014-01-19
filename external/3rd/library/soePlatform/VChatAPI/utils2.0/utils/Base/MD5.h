@@ -9,13 +9,13 @@
 #include <vector>
 
 
-namespace soe 
+namespace soe
 {
 
 
-    class MD5  
+    class MD5
     {
-        struct State 
+        struct State
         {
             State();
 
@@ -25,7 +25,7 @@ namespace soe
         };
 
         public:
-            MD5::MD5();
+            MD5();
 	        MD5(const std::string &input);
 
             void Init();

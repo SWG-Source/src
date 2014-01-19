@@ -50,7 +50,7 @@ class GenericAPICore
 public:
 	friend class GenericConnection;
 
-	GenericAPICore::GenericAPICore(const char *host,
+	GenericAPICore(const char *host,
 								   short port,
 								   unsigned reqTimeout,
 								   unsigned reconnectTimeout,

@@ -30,7 +30,7 @@ namespace Base
         };
 
         public:
-            MD5::MD5();
+            MD5();
 	        MD5(const std::string &input);
 
             void Init();

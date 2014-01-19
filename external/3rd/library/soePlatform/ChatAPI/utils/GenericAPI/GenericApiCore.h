@@ -29,7 +29,7 @@ public:
 	friend class GenericConnection;
 	friend class GenericAPI;
 
-	GenericAPICore::GenericAPICore(const char *host,
+	GenericAPICore(const char *host,
 								   short port,
 								   unsigned reqTimeout,
 								   unsigned reconnectTimeout,
