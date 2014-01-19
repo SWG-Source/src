@@ -154,3 +154,8 @@ add_library(sharedCollision STATIC
 	${SHARED_SOURCES}
 	${PLATFORM_SOURCES}
 )
+
+target_link_libraries(sharedCollision
+	sharedMath
+	sharedObject
+)

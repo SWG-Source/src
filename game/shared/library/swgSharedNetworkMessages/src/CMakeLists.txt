@@ -62,3 +62,8 @@ add_library(swgSharedNetworkMessages STATIC
 	${SHARED_SOURCES}
 	${PLATFORM_SOURCES}
 )
+
+target_link_libraries(swgSharedNetworkMessages
+	sharedGame
+	sharedObject
+)

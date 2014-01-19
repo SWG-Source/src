@@ -175,3 +175,8 @@ add_library(serverDatabase STATIC
 	${SHARED_SOURCES}
 	${PLATFORM_SOURCES}
 )
+
+
+target_link_libraries(serverDatabase
+	sharedCommandParser
+)

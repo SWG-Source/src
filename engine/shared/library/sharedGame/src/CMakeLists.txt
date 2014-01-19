@@ -337,3 +337,9 @@ add_library(sharedGame STATIC
 	${SHARED_SOURCES}
 	${PLATFORM_SOURCES}
 )
+
+target_link_libraries(sharedGame
+	sharedFoundation
+	sharedUtility
+	archive
+)

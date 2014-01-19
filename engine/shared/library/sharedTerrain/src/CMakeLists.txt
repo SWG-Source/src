@@ -126,6 +126,7 @@ include_directories(
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFoundationTypes/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFractal/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedImage/include/public
+	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedLog/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMath/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMemoryManager/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedObject/include/public
@@ -138,4 +139,8 @@ include_directories(
 add_library(sharedTerrain STATIC
 	${SHARED_SOURCES}
 	${PLATFORM_SOURCES}
+)
+
+target_link_libraries(sharedTerrain
+	sharedFractal
 )

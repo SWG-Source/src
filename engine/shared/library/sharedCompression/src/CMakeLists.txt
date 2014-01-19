@@ -37,3 +37,7 @@ add_library(sharedCompression STATIC
 	${SHARED_SOURCES}
 	${PLATFORM_SOURCES}
 )
+
+target_link_libraries(sharedCompression
+	${ZLIB_LIBRARY}
+)

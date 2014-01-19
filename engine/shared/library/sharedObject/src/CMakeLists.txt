@@ -196,3 +196,7 @@ add_library(sharedObject STATIC
 	${SHARED_SOURCES}
 	${PLATFORM_SOURCES}
 )
+
+target_link_libraries(sharedObject
+	sharedCollision
+)

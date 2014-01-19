@@ -778,3 +778,10 @@ add_library(serverGame STATIC
 	${PLATFORM_SOURCES}
 	${CMAKE_CURRENT_BINARY_DIR}/shared/generated/Packager.cpp
 )
+
+target_link_libraries(serverGame
+	sharedCommandParser
+	sharedPathfinding
+	sharedSkillSystem
+	sharedTerrain
+)

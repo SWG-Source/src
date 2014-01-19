@@ -63,3 +63,8 @@ add_library(sharedFile STATIC
 	${SHARED_SOURCES}
 	${PLATFORM_SOURCES}
 )
+
+target_link_libraries(sharedFile
+	sharedCompression
+	sharedDebug
+)

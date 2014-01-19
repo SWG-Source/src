@@ -131,3 +131,7 @@ add_library(sharedMath STATIC
 	${SHARED_SOURCES}
 	${PLATFORM_SOURCES}
 )
+
+target_link_libraries(sharedMath
+	sharedFile
+)
