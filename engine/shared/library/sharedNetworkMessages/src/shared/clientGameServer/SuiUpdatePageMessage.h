@@ -25,7 +25,7 @@ public:
 public:
 
 	explicit SuiUpdatePageMessage(SuiPageData const & pageData);
-	explicit SuiUpdatePageMessage::SuiUpdatePageMessage(Archive::ReadIterator & source);
+	explicit SuiUpdatePageMessage(Archive::ReadIterator & source);
 
 	SuiPageData const & getPageData() const;
 

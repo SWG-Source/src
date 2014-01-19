@@ -38,14 +38,14 @@ public:
 			int         maxValue;
 		};
 
-		Ingredient::Ingredient(const Unicode::String & _name, IngredientType _type, int _quantity) :
+		Ingredient(const Unicode::String & _name, IngredientType _type, int _quantity) :
 		name(_name),
 		type(_type),
 		quantity(_quantity)	
 		{
 		}
 
-		Ingredient::Ingredient(const Unicode::String & _name, int _minValue, int _maxValue) :
+		Ingredient(const Unicode::String & _name, int _minValue, int _maxValue) :
 		name(_name),
 		minValue(_minValue),
 		maxValue(_maxValue)

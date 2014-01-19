@@ -24,7 +24,7 @@ public:
 public:
 
 	SuiEventNotification(int pageId, int subscribedEventIndex, int reservePropertyCount);
-	explicit SuiEventNotification::SuiEventNotification(Archive::ReadIterator & source);
+	explicit SuiEventNotification(Archive::ReadIterator & source);
 
 	int getPageId() const;
 	int getSubscribedEventIndex() const;
