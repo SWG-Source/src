@@ -157,7 +157,10 @@ target_link_libraries(LoginServer
     LoginAPI
     MonAPI2
     udplibrary
+    ${STLPORT_LIBRARIES}
     ${ZLIB_LIBRARY}
+    ${CMAKE_THREAD_LIBS_INIT}
+    ${CMAKE_DL_LIBS}
     ${ORACLE_LIBRARY}
 )
 
