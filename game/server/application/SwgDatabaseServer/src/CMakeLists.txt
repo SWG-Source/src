@@ -340,8 +340,11 @@ target_link_libraries(SwgDatabaseServer
     unicode
     unicodeArchive
     udplibrary
-    ${ORACLE_LIBRARY}
+    ${STLPORT_LIBRARIES}
     ${ZLIB_LIBRARY}
+    ${CMAKE_THREAD_LIBS_INIT}
+    ${CMAKE_DL_LIBS}
+    ${ORACLE_LIBRARY}
 )
 
 if(WIN32)

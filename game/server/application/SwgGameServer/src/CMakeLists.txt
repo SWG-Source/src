@@ -157,9 +157,12 @@ target_link_libraries(SwgGameServer
     unicodeArchive
     Base
     udplibrary
+    ${STLPORT_LIBRARIES}
+    ${ZLIB_LIBRARY}
     ${PCRE_LIBRARY}
     ${LIBXML2_LIBRARY}
-    ${ZLIB_LIBRARY}
+    ${CMAKE_THREAD_LIBS_INIT}
+    ${CMAKE_DL_LIBS}
 )
 
 if(WIN32)

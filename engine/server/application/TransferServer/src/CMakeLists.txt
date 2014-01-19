@@ -81,8 +81,10 @@ target_link_libraries(TransferServer
     unicodeArchive
     udplibrary
     CTServiceGameAPI
+    ${STLPORT_LIBRARIES}
     ${ZLIB_LIBRARY}
-)
+    ${CMAKE_THREAD_LIBS_INIT}
+    ${CMAKE_DL_LIBS})
 
 if(WIN32)
     target_link_libraries(TransferServer mswsock ws2_32)

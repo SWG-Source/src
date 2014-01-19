@@ -81,7 +81,10 @@ target_link_libraries(LogServer
     unicode
     unicodeArchive
     udplibrary
+    ${STLPORT_LIBRARIES}
     ${ZLIB_LIBRARY}
+    ${CMAKE_THREAD_LIBS_INIT}
+    ${CMAKE_DL_LIBS}
 )
 
 if(WIN32)
