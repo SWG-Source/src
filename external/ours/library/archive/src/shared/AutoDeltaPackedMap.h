@@ -180,53 +180,63 @@ namespace Archive
 	// ======================================================================
 	// pack-to-string functions for specific types
 
+	template<>
 	inline void AutoDeltaPackedMap<int, float>::pack(ByteStream & target, const std::string & buffer)
 	{
 		internal_pack(target, buffer, "%i %f");
 	}
 
+	template<>
 	inline void AutoDeltaPackedMap<int, float>::unpack(ReadIterator & source, std::string & buffer)
 	{
 		internal_unpack(source, buffer, "%i %.2f:");
 	}
 
+	template<>
 	inline void AutoDeltaPackedMap<int, int>::pack(ByteStream & target, const std::string & buffer)
 	{
 		internal_pack(target, buffer, "%i %i");
 	}
 
+	template<>
 	inline void AutoDeltaPackedMap<int, int>::unpack(ReadIterator & source, std::string & buffer)
 	{
 		internal_unpack(source, buffer, "%i %i:");
 	}
 
+	template<>
 	inline void AutoDeltaPackedMap<int, unsigned long>::pack(ByteStream & target, const std::string & buffer)
 	{
 		internal_pack(target, buffer, "%i %u");
 	}
 
+	template<>
 	inline void AutoDeltaPackedMap<int, unsigned long>::unpack(ReadIterator & source, std::string & buffer)
 	{
 		internal_unpack(source, buffer, "%i %u:");
 	}
 
 #ifdef WIN32
+	template<>
 	inline void AutoDeltaPackedMap<unsigned long, unsigned __int64>::pack(ByteStream & target, const std::string & buffer)
 	{
 		internal_pack(target, buffer, "%lu %I64u");
 	}
 
+	template<>
 	inline void AutoDeltaPackedMap<unsigned long, unsigned __int64>::unpack(ReadIterator & source, std::string & buffer)
 	{
 		internal_unpack(source, buffer, "%lu %I64u:");
 	}
 
 #else
+	template<>
 	inline void AutoDeltaPackedMap<unsigned long, unsigned long long int>::pack(ByteStream & target, const std::string & buffer)
 	{
 		internal_pack(target, buffer, "%lu %llu");
 	}
 
+	template<>
 	inline void AutoDeltaPackedMap<unsigned long, unsigned long long int>::unpack(ReadIterator & source, std::string & buffer)
 	{
 		internal_unpack(source, buffer, "%lu %llu:");

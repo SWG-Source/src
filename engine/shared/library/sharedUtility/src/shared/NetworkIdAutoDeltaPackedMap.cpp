@@ -14,7 +14,7 @@
 
 namespace Archive
 {
-	
+	template<>
 	void AutoDeltaPackedMap<int, NetworkId>::pack(ByteStream & target, const std::string & buffer)
 	{
 		char temp[200];
@@ -46,6 +46,7 @@ namespace Archive
 
 	// ======================================================================
 
+	template<>
 	void AutoDeltaPackedMap<int, NetworkId>::unpack(ReadIterator & source, std::string & buffer)
 	{
 		char temp[200];
