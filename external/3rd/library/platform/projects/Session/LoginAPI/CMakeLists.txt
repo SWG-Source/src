@@ -11,3 +11,8 @@ add_library(LoginAPI
 	Messages.cpp
 	Messages.h
 )
+
+target_link_libraries(LoginAPI
+	Base
+	CommonAPI
+)
