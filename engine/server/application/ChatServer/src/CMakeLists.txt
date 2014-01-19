@@ -44,6 +44,7 @@ include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}/shared
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedCompression/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedDebug/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFile/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFoundation/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFoundationTypes/include/public
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedLog/include/public
@@ -53,6 +54,7 @@ include_directories(
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMessageDispatch/include/public
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedNetwork/include/public
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedNetworkMessages/include/public
+    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedRandom/include/public
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedThread/include/public
     ${SWG_ENGINE_SOURCE_DIR}/server/library/serverMetrics/include/public
     ${SWG_ENGINE_SOURCE_DIR}/server/library/serverNetworkMessages/include/public
@@ -103,7 +105,10 @@ target_link_libraries(ChatServer
     udplibrary
     ChatMono
     VChatAPI
+    ${STLPORT_LIBRARIES}
     ${ZLIB_LIBRARY}
+    ${CMAKE_THREAD_LIBS_INIT}
+    ${CMAKE_DL_LIBS}
 )
 
 if(WIN32)
