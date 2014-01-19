@@ -99,9 +99,9 @@ namespace DB {
 		BitArray temp;
 
 		// indicator is the number of chars read from the database
-		if (indicator > 0)
+		if (this->indicator > 0)
 		{
-			buf[indicator] = 0;
+			buf[this->indicator] = 0;
 			temp.setFromDbTextString(buf);
 		}
 
