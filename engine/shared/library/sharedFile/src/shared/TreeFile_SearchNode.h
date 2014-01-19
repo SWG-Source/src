@@ -247,7 +247,7 @@ private:
 
 private:
 
-	bool TreeFile::SearchTOC::localExists(const char *fileName, int *index) const;
+	bool SearchTOC::localExists(const char *fileName, int *index) const;
 
 private:
 
