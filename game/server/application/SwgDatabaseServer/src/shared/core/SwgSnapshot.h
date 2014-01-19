@@ -448,7 +448,7 @@ protected:
 
 	void ignorePersistedFlag    (const NetworkId &objectId, Archive::ReadIterator &data) const;
 
-	OfflineMoneyCustomPersistStep * SwgSnapshot::getOfflineMoneyCustomPersistStep();
+	OfflineMoneyCustomPersistStep * getOfflineMoneyCustomPersistStep();
 	
   private:
 	SwgSnapshot(const SwgSnapshot&); //disable

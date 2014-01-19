@@ -258,7 +258,7 @@ inline void AutoDeltaQueue<ValueType>::pack(ByteStream &target) const
 	{
 		cmd = ModifyCommand::PUSH;
 		Archive::put(target, cmd);
-		Archive::put(target, (*i));
+		put(target, (*i));
 	}
 }
 
@@ -277,12 +277,12 @@ inline void AutoDeltaQueue<ValueType>::packDelta(ByteStream &target) const
 		{
 		case ModifyCommand::PUSH:
 			{
-				Archive::put(target, c.value);
+				put(target, c.value);
 			}
 			break;
 		case ModifyCommand::ERASE:
 			{
-				Archive::put(target, c.position);
+				put(target, c.position);
 			}
 			break;
 		}
@@ -317,6 +317,8 @@ inline void AutoDeltaQueue<ValueType>::push(ValueType const &value)
 template<typename ValueType>
 inline void AutoDeltaQueue<ValueType>::unpack(ReadIterator &source)
 {
+	using Archive::get;
+
 	// unpacking baseline data
 	container.clear();
 	clearDelta();
@@ -331,7 +333,7 @@ inline void AutoDeltaQueue<ValueType>::unpack(ReadIterator &source)
 	{
 		Archive::get(source, c.cmd);
 		assert(c.cmd == ModifyCommand::PUSH); // only push valid for pack/unpack
-		Archive::get(source, c.value);
+		get(source, c.value);
 		container.push_back(c.value);
 	}
 }
@@ -341,6 +343,7 @@ inline void AutoDeltaQueue<ValueType>::unpack(ReadIterator &source)
 template<typename ValueType>
 inline void AutoDeltaQueue<ValueType>::unpackDelta(ReadIterator &source)
 {
+	using Archive::get;
 	ModifyCommand c;
 	size_t skipCount, commandCount, targetBaselineCommandCount;
 
@@ -364,12 +367,12 @@ inline void AutoDeltaQueue<ValueType>::unpackDelta(ReadIterator &source)
 		{
 		case ModifyCommand::PUSH:
 			{
-				Archive::get(source, c.value);
+				get(source, c.value);
 			}
 			break;
 		case ModifyCommand::ERASE:
 			{
-				Archive::get(source, c.position);
+				get(source, c.position);
 			}
 			break;
 		default:
@@ -384,13 +387,13 @@ inline void AutoDeltaQueue<ValueType>::unpackDelta(ReadIterator &source)
 		{
 		case ModifyCommand::PUSH:
 			{
-				Archive::get(source, c.value);
+				get(source, c.value);
 				AutoDeltaQueue::push(c.value);
 			}
 			break;
 		case ModifyCommand::ERASE:
 			{
-				Archive::get(source, c.position);
+				get(source, c.position);
 				AutoDeltaQueue::erase(c.position);
 			}
 			break;

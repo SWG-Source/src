@@ -65,7 +65,7 @@ namespace DBQuery
 		virtual bool bindParameters();
 		virtual bool bindColumns();
 		virtual void getSQL(std::string &sql);
-		virtual QueryMode GetAllManufactureSchematicAttributes::getExecutionMode() const;
+		virtual QueryMode getExecutionMode() const;
 
 	  private:
 		GetAllManufactureSchematicAttributes(const GetAllManufactureSchematicAttributes&); // disable

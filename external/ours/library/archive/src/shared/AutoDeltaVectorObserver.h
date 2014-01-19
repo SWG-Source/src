@@ -190,3 +190,4 @@ inline void AutoDeltaVectorObserver<ValueType, Callback, SourceObjectType, Objec
 
 #endif
 
+

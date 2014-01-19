@@ -180,7 +180,7 @@ public:
 	static const bool    getEnableGoldDatabase       (void);
 	static const NetworkId &getMaxGoldNetworkId      (void);
 	static const float   getDefaultQueueUpdateTimeLimit(void);
-	static const bool ConfigServerDatabase::getEnableDataCleanup(void);
+	static const bool    getEnableDataCleanup(void);
 	static const int     getDefaultLazyDeleteBulkBindSize (void);
 	static const int     getDefaultLazyDeleteSleepTime (void);
 	static const int     getWriteDelay               (void);

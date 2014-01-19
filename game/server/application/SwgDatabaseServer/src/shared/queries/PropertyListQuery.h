@@ -90,7 +90,7 @@ namespace DBQuery
 		virtual bool bindParameters();
 		virtual bool bindColumns();
 		virtual void getSQL(std::string &sql);
-		virtual QueryMode GetAllPropertyLists::getExecutionMode() const;
+		virtual QueryMode getExecutionMode() const;
 
 	  private:
 		GetAllPropertyLists(const GetAllPropertyLists&); // disable

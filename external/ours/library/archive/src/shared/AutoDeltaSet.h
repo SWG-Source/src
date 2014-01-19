@@ -183,14 +183,13 @@ inline typename AutoDeltaSet<ValueType, ObjectType>::const_iterator AutoDeltaSet
 		c.value = *i;
 		m_commands.push_back(c);
 		++m_baselineCommandCount;
-#ifdef WIN32
-        typename SetType::iterator tmp(m_set.begin());
+		
+		// @note apathy - hack to convert from const_iterator to iterator as requried by STLPort
+		typename SetType::iterator tmp(m_set.begin());
         std::advance(tmp, std::distance<const_iterator>(tmp, i));
         i++;
         m_set.erase(tmp);
-#else
-		m_set.erase(i++);
-#endif
+
 		touch();
 		onErase(c.value);
 		onChanged();
@@ -305,7 +304,7 @@ inline void AutoDeltaSet<ValueType, ObjectType>::pack(ByteStream &target) const
 	Archive::put(target, m_set.size());
 	Archive::put(target, m_baselineCommandCount);
 	for (typename SetType::const_iterator i = m_set.begin(); i != m_set.end(); ++i)
-		Archive::put(target, *i);
+		put(target, *i);
 }
 
 // ----------------------------------------------------------------------
@@ -316,7 +315,7 @@ inline void AutoDeltaSet<ValueType, ObjectType>::pack(ByteStream &target, std::s
 	Archive::put(target, data.size());
 	Archive::put(target, static_cast<size_t>(0)); // baselineCommandCount
 	for (typename std::set<ValueType>::const_iterator i = data.begin(); i != data.end(); ++i)
-		Archive::put(target, *i);
+		put(target, *i);
 }
 
 //-----------------------------------------------------------------------
@@ -334,7 +333,7 @@ inline void AutoDeltaSet<ValueType, ObjectType>::packDelta(ByteStream &target) c
 		{
 		case Command::ERASE:
 		case Command::INSERT:
-			Archive::put(target, c.value);
+			put(target, c.value);
 			break;
 		case Command::CLEAR:
 			break;
@@ -421,10 +420,10 @@ inline void AutoDeltaSet<ValueType, ObjectType>::unpack(ReadIterator &source)
 
 	Archive::get(source, commandCount);
 	Archive::get(source, m_baselineCommandCount);
-
+	using Archive::get;
 	for (size_t i = 0; i < commandCount; ++i)
 	{
-		Archive::get(source, value);
+		get(source, value);
 		m_set.insert(value);
 	}
 
@@ -485,6 +484,7 @@ inline void AutoDeltaSet<ValueType, ObjectType>::unpackDelta(ReadIterator &sourc
 template<typename ValueType, typename ObjectType>
 inline void AutoDeltaSet<ValueType, ObjectType>::unpackDelta(ReadIterator &source)
 {
+	using Archive::get;
 	Command c;
 	size_t skipCount, commandCount, targetBaselineCommandCount;
 
@@ -508,7 +508,7 @@ inline void AutoDeltaSet<ValueType, ObjectType>::unpackDelta(ReadIterator &sourc
 	{
 		Archive::get(source, c.cmd);
 		if (c.cmd != Command::CLEAR)
-			Archive::get(source, c.value);
+			get(source, c.value);
 	}
 	for ( ; i < commandCount; ++i)
 	{
@@ -516,11 +516,11 @@ inline void AutoDeltaSet<ValueType, ObjectType>::unpackDelta(ReadIterator &sourc
 		switch (c.cmd)
 		{
 		case Command::ERASE:
-			Archive::get(source, c.value);
+			get(source, c.value);
 			AutoDeltaSet::erase(c.value);
 			break;
 		case Command::INSERT:
-			Archive::get(source, c.value);
+			get(source, c.value);
 			AutoDeltaSet::insert(c.value);
 			break;
 		case Command::CLEAR:
@@ -541,4 +541,3 @@ inline void AutoDeltaSet<ValueType, ObjectType>::unpackDelta(ReadIterator &sourc
 // ======================================================================
 
 #endif	// _INCLUDED__AutoDeltaSet_H
-

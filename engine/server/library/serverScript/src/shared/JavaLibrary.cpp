@@ -879,7 +879,8 @@ void JavaLibrary::fatalHandler(int signum)
 		else
 		{
 			// destroy Java threads
-			pthread_kill_other_threads_np();
+			// @note apathy - this pthread method is not in later versions of glibc
+			//pthread_kill_other_threads_np();
 			ms_instance = NULL;
 			ms_env = NULL;
 			ms_jvm = NULL;
@@ -5836,7 +5837,7 @@ const bool convert(const std::vector<NetworkId> &source, LocalLongArrayRefPtr & 
 	return rv;
 }
 
-const bool ScriptConversion::convert(const jobject & source, Vector &target, NetworkId & targetCell)
+const bool convert(const jobject & source, Vector &target, NetworkId & targetCell)
 {
 	JNIEnv * env = JavaLibrary::getEnv();
 	if (!env)
@@ -5867,7 +5868,7 @@ const bool ScriptConversion::convert(const jobject & source, Vector &target, Net
 	return false;
 }
 
-const bool ScriptConversion::convertWorld(const jobject & source, Vector &target)
+const bool convertWorld(const jobject & source, Vector &target)
 {
 	JNIEnv * env = JavaLibrary::getEnv();
 	if (!env)
@@ -5900,7 +5901,7 @@ const bool ScriptConversion::convertWorld(const jobject & source, Vector &target
 	return false;
 }
 
-const bool ScriptConversion::convertWorld(const jlong & source, Vector &target)
+const bool convertWorld(const jlong & source, Vector &target)
 {
 	JNIEnv * env = JavaLibrary::getEnv();
 	if (!env)
@@ -5919,17 +5920,17 @@ const bool ScriptConversion::convertWorld(const jlong & source, Vector &target)
 	return false;
 }
 
-const bool ScriptConversion::convertWorld(const LocalRefParam & source, Vector &target)
+const bool convertWorld(const LocalRefParam & source, Vector &target)
 {
 	return convertWorld(source.getValue(), target);
 }
 
-const bool ScriptConversion::convert(const Vector & source, const NetworkId & sourceCell, LocalRefPtr & target)
+const bool convert(const Vector & source, const NetworkId & sourceCell, LocalRefPtr & target)
 {
 	return convert(source, ServerWorld::getSceneId(), sourceCell, target);
 }
 
-const bool ScriptConversion::convert(const jobject & source, Vector & targetLoc, std::string & targetSceneId, NetworkId & targetCell)
+const bool convert(const jobject & source, Vector & targetLoc, std::string & targetSceneId, NetworkId & targetCell)
 {
 	 JNIEnv * env = JavaLibrary::getEnv();
 	 if (!env)
@@ -5973,7 +5974,7 @@ const bool ScriptConversion::convert(const jobject & source, Vector & targetLoc,
 	return false;
 }
 
-const bool ScriptConversion::convertWorld(const jobject & source, Vector & targetLoc, std::string & targetSceneId)
+const bool convertWorld(const jobject & source, Vector & targetLoc, std::string & targetSceneId)
 {
 	 JNIEnv * env = JavaLibrary::getEnv();
 	 if (!env)
@@ -6019,7 +6020,7 @@ const bool ScriptConversion::convertWorld(const jobject & source, Vector & targe
 	return false;
 }
 
-const bool ScriptConversion::convert(const Location & sourceLoc, LocalRefPtr  & target)
+const bool convert(const Location & sourceLoc, LocalRefPtr  & target)
 {
 	JNIEnv * env = JavaLibrary::getEnv();
 	if (!env)
@@ -6042,7 +6043,7 @@ const bool ScriptConversion::convert(const Location & sourceLoc, LocalRefPtr  & 
 	return true;
 }
 
-const bool ScriptConversion::convert(const LocalRefParam & sourceLoc, Location & target)
+const bool convert(const LocalRefParam & sourceLoc, Location & target)
 {
 	JNIEnv * env = JavaLibrary::getEnv();
 	if (!env)
@@ -6069,7 +6070,7 @@ const bool ScriptConversion::convert(const LocalRefParam & sourceLoc, Location &
 	return true;
 }
 
-const bool ScriptConversion::convert(const LocalObjectArrayRefParam & sourceLoc, std::vector<Location> & target)
+const bool convert(const LocalObjectArrayRefParam & sourceLoc, std::vector<Location> & target)
 {
 	JNIEnv * env = JavaLibrary::getEnv();
 	if (!env)
@@ -6089,7 +6090,7 @@ const bool ScriptConversion::convert(const LocalObjectArrayRefParam & sourceLoc,
 	return true;
 }
 
-const bool ScriptConversion::convert(const Vector & sourceLoc, const std::string & sourceSceneId, const NetworkId & sourceCell, LocalRefPtr & target)
+const bool convert(const Vector & sourceLoc, const std::string & sourceSceneId, const NetworkId & sourceCell, LocalRefPtr & target)
 {
 	JNIEnv * env = JavaLibrary::getEnv();
 	if (!env)
@@ -6112,7 +6113,7 @@ const bool ScriptConversion::convert(const Vector & sourceLoc, const std::string
 	return true;
 }
 
-const bool ScriptConversion::convertWorld(const jobjectArray & source, std::vector<Vector> &target)
+const bool convertWorld(const jobjectArray & source, std::vector<Vector> &target)
 {
 	JNIEnv * env = JavaLibrary::getEnv();
 	if (!env)
@@ -6141,7 +6142,7 @@ const bool ScriptConversion::convertWorld(const jobjectArray & source, std::vect
 	return result && !target.empty();
 }
 
-const bool ScriptConversion::convert(const std::vector<const Vector *> & source, LocalObjectArrayRefPtr & target)
+const bool convert(const std::vector<const Vector *> & source, LocalObjectArrayRefPtr & target)
 {
 	JNIEnv * env = JavaLibrary::getEnv();
 	if (!env)
@@ -6175,14 +6176,14 @@ const bool ScriptConversion::convert(const std::vector<const Vector *> & source,
 	return result;
 }
 
-const bool ScriptConversion::convert(const LocalRefParam & source, const Region * & target)
+const bool convert(const LocalRefParam & source, const Region * & target)
 {
 	return convert(source.getValue(), target);
 }
 
 /** This method converts a java script.region class into a C++ Region class
  */
-const bool ScriptConversion::convert(const jobject & source, const Region * &target)
+const bool convert(const jobject & source, const Region * &target)
 {
 	JNIEnv * env = JavaLibrary::getEnv();
 	if (env == NULL || source == NULL)
@@ -6206,7 +6207,7 @@ const bool ScriptConversion::convert(const jobject & source, const Region * &tar
 
 /** This method converts a C++ RegionObject class into a Java script.region class
  */
-const bool ScriptConversion::convert(const Region & source, LocalRefPtr & target)
+const bool convert(const Region & source, LocalRefPtr & target)
 {
 	JNIEnv * env = JavaLibrary::getEnv();
 	if (!env)
@@ -6234,7 +6235,7 @@ const bool ScriptConversion::convert(const Region & source, LocalRefPtr & target
 
 // ----------------------------------------------------------------------
 
-const bool ScriptConversion::convert(Transform const &sourceTransform, LocalRefPtr &target)
+const bool convert(Transform const &sourceTransform, LocalRefPtr &target)
 {
 	JNIEnv * const env = JavaLibrary::getEnv();
 	if (!env)
@@ -6253,7 +6254,7 @@ const bool ScriptConversion::convert(Transform const &sourceTransform, LocalRefP
 
 // ----------------------------------------------------------------------
 
-const bool ScriptConversion::convert(const jobject &sourceTransform, Transform &target)
+const bool convert(const jobject &sourceTransform, Transform &target)
 {
 	JNIEnv * const env = JavaLibrary::getEnv();
 	if (!env || !sourceTransform)
@@ -6285,14 +6286,14 @@ const bool ScriptConversion::convert(const jobject &sourceTransform, Transform &
 
 // ----------------------------------------------------------------------
 
-const bool ScriptConversion::convert(const LocalRefParam &sourceTransform, Transform &target)
+const bool convert(const LocalRefParam &sourceTransform, Transform &target)
 {
 	return convert(sourceTransform.getValue(), target);
 }
 
 // ----------------------------------------------------------------------
 
-const bool ScriptConversion::convert(const jobjectArray & source, std::vector<Transform> &target)
+const bool convert(const jobjectArray & source, std::vector<Transform> &target)
 {
 	JNIEnv * const env = JavaLibrary::getEnv();
 	if (!env)
@@ -6322,7 +6323,7 @@ const bool ScriptConversion::convert(const jobjectArray & source, std::vector<Tr
 
 // ----------------------------------------------------------------------
 
-const bool ScriptConversion::convert(const std::vector<Transform> &source, LocalObjectArrayRefPtr & target)
+const bool convert(const std::vector<Transform> &source, LocalObjectArrayRefPtr & target)
 {
 	JNIEnv * const env = JavaLibrary::getEnv();
 	if (!env)
@@ -6362,7 +6363,7 @@ const bool ScriptConversion::convert(const std::vector<Transform> &source, Local
 
 // ----------------------------------------------------------------------
 
-const bool ScriptConversion::convert(const Vector &sourceVector, LocalRefPtr &target)
+const bool convert(const Vector &sourceVector, LocalRefPtr &target)
 {
 	JNIEnv *env = JavaLibrary::getEnv();
 	if (!env)
@@ -6380,7 +6381,7 @@ const bool ScriptConversion::convert(const Vector &sourceVector, LocalRefPtr &ta
 
 // ----------------------------------------------------------------------
 
-const bool ScriptConversion::convert(const jobject & sourceVector, Vector & target)
+const bool convert(const jobject & sourceVector, Vector & target)
 {
 	JNIEnv *env = JavaLibrary::getEnv();
 	if (!env || !sourceVector)
@@ -6396,7 +6397,7 @@ const bool ScriptConversion::convert(const jobject & sourceVector, Vector & targ
 
 // ----------------------------------------------------------------------
 
-const bool ScriptConversion::convert(const LocalRefParam & sourceVector, Vector & target)
+const bool convert(const LocalRefParam & sourceVector, Vector & target)
 {
 	return convert(sourceVector.getValue(), target);
 }

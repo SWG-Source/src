@@ -34,7 +34,7 @@ namespace DBQuery {
 		GetChunkQuery(const std::string &schema);
 
 	  private:
-		virtual DB::Query::QueryMode GetChunkQuery::getExecutionMode() const;
+		virtual QueryMode getExecutionMode() const;
 		
 	  private:
 		GetChunkQuery(const GetChunkQuery&); // disable

@@ -1,4 +1,3 @@
-
 #ifndef	_INCLUDED_AutoDeltaVector_H
 #define	_INCLUDED_AutoDeltaVector_H
 
@@ -21,7 +20,7 @@ public:
 	typedef typename std::vector<ValueType>::const_iterator const_iterator;
 	typedef typename std::vector<ValueType>::const_reverse_iterator const_reverse_iterator;
 	typedef std::vector<ValueType> VectorType;
-	
+
 public:
 	struct Command
 	{
@@ -37,7 +36,7 @@ public:
 		unsigned short int  index;
 		ValueType     value;
 	};
-	
+
 public:
 	AutoDeltaVector();
 	explicit AutoDeltaVector(size_t initialSize);
@@ -372,7 +371,7 @@ inline void AutoDeltaVector<ValueType, ObjectType>::pack(ByteStream & target) co
 	typename std::vector<ValueType>::const_iterator i;
 	for (i = v.begin(); i != v.end(); ++i)
 	{
-		Archive::put(target, (*i));
+		put(target, (*i));
 	}
 }
 
@@ -386,8 +385,8 @@ inline void AutoDeltaVector<ValueType, ObjectType>::pack(ByteStream & target, co
 	typename std::vector<ValueType>::const_iterator i;
 	for (i = data.begin(); i != data.end(); ++i)
 	{
-		Archive::put(target, *i);
-	}	
+		put(target, *i);
+	}
 }
 
 //-----------------------------------------------------------------------
@@ -410,11 +409,11 @@ inline void AutoDeltaVector<ValueType, ObjectType>::packDelta(ByteStream & targe
 			break;
 		case Command::INSERT:
 			Archive::put(target, c.index);
-			Archive::put(target, c.value);
+			put(target, c.value);
 			break;
 		case Command::SET:
 			Archive::put(target, c.index);
-			Archive::put(target, c.value);
+			put(target, c.value);
 			break;
 		case Command::SETALL:
 			{
@@ -422,7 +421,7 @@ inline void AutoDeltaVector<ValueType, ObjectType>::packDelta(ByteStream & targe
 				for (unsigned int j = 0; j < c.index; ++j)
 				{
 					++i;
-					Archive::put(target, (*i).value);
+					put(target, (*i).value);
 				}
 			}
 			break;
@@ -515,7 +514,7 @@ inline void AutoDeltaVector<ValueType, ObjectType>::set(const unsigned int eleme
 	c.value = newValue;
 	commands.push_back(c);
 	++baselineCommandCount;
-	
+
 	if(element >= v.size())
 		v.resize(element + 1);
 
@@ -616,8 +615,9 @@ inline const size_t AutoDeltaVector<ValueType, ObjectType>::size() const
 //-----------------------------------------------------------------------
 
 template<typename ValueType, typename ObjectType>
-inline void AutoDeltaVector<ValueType, ObjectType>::unpack(ReadIterator & source) 
+inline void AutoDeltaVector<ValueType, ObjectType>::unpack(ReadIterator & source)
 {
+	using Archive::get;
 	// unpacking the whole kazaba
 	v.clear();
 	clearDelta();
@@ -630,7 +630,7 @@ inline void AutoDeltaVector<ValueType, ObjectType>::unpack(ReadIterator & source
 
 	for (size_t i = 0; i < commandCount; ++i)
 	{
-		Archive::get(source, value);
+		get(source, value);
 		v.push_back(value);
 	}
 
@@ -642,6 +642,7 @@ inline void AutoDeltaVector<ValueType, ObjectType>::unpack(ReadIterator & source
 template<typename ValueType, typename ObjectType>
 inline void AutoDeltaVector<ValueType, ObjectType>::unpack(ReadIterator & source, std::vector<Command> & data)
 {
+	using Archive::get;
 	// unpacking the whole kazaba
 	size_t commandCount;
 	size_t bcc;
@@ -652,10 +653,10 @@ inline void AutoDeltaVector<ValueType, ObjectType>::unpack(ReadIterator & source
 
 	for (size_t i = 0; i < commandCount; ++i)
 	{
-		Archive::get(source,c.value);
+		get(source,c.value);
 		c.index = static_cast<unsigned short int>(i);
 		c.cmd = Command::INSERT;
-		
+
 		data.push_back(c);
 	}
 }
@@ -665,6 +666,7 @@ inline void AutoDeltaVector<ValueType, ObjectType>::unpack(ReadIterator & source
 template<typename ValueType, typename ObjectType>
 inline void AutoDeltaVector<ValueType, ObjectType>::unpackDelta(ReadIterator & source, std::vector<Command> & data)
 {
+	using Archive::get;
 	Command c;
 	size_t commandCount, targetBaselineCommandCount;
 
@@ -681,11 +683,11 @@ inline void AutoDeltaVector<ValueType, ObjectType>::unpackDelta(ReadIterator & s
 				break;
 			case Command::INSERT:
 				Archive::get(source, c.index);
-				Archive::get(source, c.value);
+				get(source, c.value);
 				break;
 			case Command::SET:
 				Archive::get(source, c.index);
-				Archive::get(source, c.value);
+				get(source, c.value);
 				break;
 			case Command::SETALL: // SETALL is not supported by the static AutoDeltaVector unpack function, because there's no place to put the value
 				assert(false);
@@ -696,7 +698,7 @@ inline void AutoDeltaVector<ValueType, ObjectType>::unpackDelta(ReadIterator & s
 				break;
 		}
 		data.push_back(c);
-	}	
+	}
 }
 
 //-----------------------------------------------------------------------
@@ -704,6 +706,7 @@ inline void AutoDeltaVector<ValueType, ObjectType>::unpackDelta(ReadIterator & s
 template<typename ValueType, typename ObjectType>
 inline void AutoDeltaVector<ValueType, ObjectType>::unpackDelta(ReadIterator & source)
 {
+	using Archive::get;
 	Command c;
 	size_t skipCount, commandCount, targetBaselineCommandCount;
 
@@ -727,11 +730,11 @@ inline void AutoDeltaVector<ValueType, ObjectType>::unpackDelta(ReadIterator & s
 			for (unsigned int j = 0; j < c.index; ++j)
 			{
 				++i;
-				Archive::get(source, c.value);
+				get(source, c.value);
 			}
 		}
 		else if (c.cmd != Command::ERASE && c.cmd != Command::CLEAR)
-			Archive::get(source, c.value);
+			get(source, c.value);
 	}
 	for ( ; i < commandCount; ++i)
 	{
@@ -740,21 +743,21 @@ inline void AutoDeltaVector<ValueType, ObjectType>::unpackDelta(ReadIterator & s
 		{
 		case Command::ERASE:
 			{
-				Archive::get(source, c.index);
+				get(source, c.index);
 				AutoDeltaVector::erase(c.index);
 			}
 			break;
 		case Command::INSERT:
 			{
 				Archive::get(source, c.index);
-				Archive::get(source, c.value);
+				get(source, c.value);
 				AutoDeltaVector::insert(c.index, c.value);
 			}
 			break;
 		case Command::SET:
 			{
 				Archive::get(source, c.index);
-				Archive::get(source, c.value);
+				get(source, c.value);
 				AutoDeltaVector::set(c.index, c.value);
 			}
 			break;
@@ -767,7 +770,7 @@ inline void AutoDeltaVector<ValueType, ObjectType>::unpackDelta(ReadIterator & s
 				for (unsigned int j = 0; j < c.index; ++j)
 				{
 					++i;
-					Archive::get(source, value);
+					get(source, value);
 					tempVec.push_back(value);
 				}
 				AutoDeltaVector::set(tempVec);
@@ -793,4 +796,5 @@ inline const ValueType & AutoDeltaVector<ValueType, ObjectType>::operator[] (con
 }//namespace Archive
 
 #endif	// _INCLUDED__AutoDeltaVector_H
+
 
