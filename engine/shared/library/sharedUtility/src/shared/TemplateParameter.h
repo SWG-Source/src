@@ -1012,12 +1012,12 @@ inline void StructParam<SP>::loadFromIff(Iff &file)
 				// we need to enter a fake chunk because whoever called this 
 				// function assumes we are still in a chunk
 				file.enterChunk();
-				setValue(structTemplate);
+				this->setValue(structTemplate);
 				this->m_loaded = true;
 			}
 			break;
 		case TemplateBase<SP *, SP *>::WEIGHTED_LIST:
-			setValue(new typename TemplateBase<SP *, SP *>::WeightedList);
+			this->setValue(new typename TemplateBase<SP *, SP *>::WeightedList);
 			this->loadWeightedListFromIff(file);
 			break;
 		case TemplateBase<SP *, SP *>::NONE:
