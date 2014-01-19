@@ -1,0 +1,35 @@
+# SWGNGE
+
+## Ubuntu Environment
+
+	sudo apt-get install build-essential zlib1g-dev libpcre3-dev cmake libboost-dev libxml2-dev
+
+### Oracle Instant Client
+
+Follow this guide to get the oracle client set up. 
+
+https://help.ubuntu.com/community/Oracle%20Instant%20Client
+
+### Oracle Java 7
+
+Follow this guide to get oracle java 7 installed.
+
+https://help.ubuntu.com/community/Java
+
+### STLPort
+
+	wget http://downloads.sourceforge.net/project/stlport/STLport/STLport-5.2.1/STLport-5.2.1.tar.bz2
+	tar -xvjf STLport-5.2.1.tar.bz2
+	cd STLport-5.2.1
+	./configure
+	sudo make install
+
+## Build code
+
+	git clone git@bitbucket.org:apathyboy/swg-src.git -b cmake
+	mkdir swg-src/build
+	cd swg-src/build
+	cmake ..
+	make
+
+
