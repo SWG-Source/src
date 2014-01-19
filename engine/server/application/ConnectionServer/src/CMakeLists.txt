@@ -107,7 +107,10 @@ target_link_libraries(ConnectionServer
     CommonAPI
     LoginAPI
     udplibrary
+    ${STLPORT_LIBRARIES}
     ${ZLIB_LIBRARY}
+    ${CMAKE_THREAD_LIBS_INIT}
+    ${CMAKE_DL_LIBS}
 )
 
 if(WIN32)
