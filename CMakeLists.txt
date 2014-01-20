@@ -5,6 +5,8 @@ project(swgnge C CXX)
 
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
+option(ENABLE_DEBUG "Enable Debug Mode" ON)
+
 set(SWG_ROOT_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 set(SWG_ENGINE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/engine)
 set(SWG_EXTERNALS_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/external)
@@ -20,12 +22,23 @@ find_package(STLPort REQUIRED)
 find_package(Threads)
 find_package(ZLIB REQUIRED)
 
+if(ENABLE_DEBUG)
+	add_definitions(-D_DEBUG)
+endif()
+
 if(WIN32)
 	find_package(Iconv REQUIRED)
+
+	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_RELEASE} -DPRODUCTION=0")
+	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DPRODUCTION=1")
+
 	add_definitions(/D_CRT_SECURE_NO_WARNINGS /wd4244 /wd4996 /wd4018 /wd4351)
 elseif(UNIX)
-	add_definitions(-DLINUX -D_REENTRANT -Dlinux -D_USING_STL -D__STL_NO_BAD_ALLOC -D_GNU_SOURCE)
+	find_package(Curses REQUIRED)
+
 	set(CMAKE_CXX_FLAGS "-Wno-write-strings ${CMAKE_CXX_FLAGS}")
+
+	add_definitions(-DLINUX -D_REENTRANT -Dlinux -D_USING_STL -D__STL_NO_BAD_ALLOC -D_GNU_SOURCE -D_XOPEN_SOURCE=500)
 endif()
 
 include_directories(${STLPORT_INCLUDE_DIR})

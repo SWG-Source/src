@@ -73,3 +73,7 @@ add_library(sharedDebug STATIC
 	${SHARED_SOURCES}
 	${PLATFORM_SOURCES}
 )
+
+target_link_libraries(sharedDebug
+    ${CURSES_LIBRARY}
+)
