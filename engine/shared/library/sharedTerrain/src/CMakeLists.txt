@@ -142,5 +142,6 @@ add_library(sharedTerrain STATIC
 )
 
 target_link_libraries(sharedTerrain
+	sharedCollision
 	sharedFractal
 )

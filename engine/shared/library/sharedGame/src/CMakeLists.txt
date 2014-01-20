@@ -340,6 +340,7 @@ add_library(sharedGame STATIC
 
 target_link_libraries(sharedGame
 	sharedFoundation
+	sharedObject
 	sharedUtility
 	archive
 )

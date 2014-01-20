@@ -133,5 +133,6 @@ add_library(sharedUtility STATIC
 )
 
 target_link_libraries(sharedUtility
+	sharedFoundation
 	sharedMath
 )

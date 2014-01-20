@@ -199,4 +199,9 @@ add_library(sharedObject STATIC
 
 target_link_libraries(sharedObject
 	sharedCollision
+	sharedFoundation
+	sharedGame
+	sharedTerrain
+	sharedUtility
+	swgSharedUtility
 )

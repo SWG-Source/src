@@ -66,4 +66,5 @@ add_library(swgSharedNetworkMessages STATIC
 target_link_libraries(swgSharedNetworkMessages
 	sharedGame
 	sharedObject
+	swgSharedUtility
 )
