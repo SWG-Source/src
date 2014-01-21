@@ -68,5 +68,6 @@ target_link_libraries(sharedFile
 	sharedCompression
 	sharedDebug
 	sharedFoundation
+	sharedMath
 	fileInterface
 )
