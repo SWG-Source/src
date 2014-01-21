@@ -1,0 +1,207 @@
+RELEASE NOTES - CSASSIST GAME API
+-------------   -----------------
+06-22-04 - v2.0.1
+* Changed API_VERSION to 201 from 2.
+* Added UserID parameter to GetKBArticle and SearchArticle.
+* Added HierarchyChangeType to OnIssueHierarchyChange notification.
+
+03-23-04 - V2.00
+* Completely Reworked connection mechanism. Added host failover functionality.
+* Added CSASSIST_RESULT_SERVER_DISCONNECT result code to indicate connection loss to server.
+* Fixed broken character re-registration upon auto-reconnect to backend.
+* Added articleTitle to GetKBArticle() request.
+* The old API constructor should be replaced with the new one in client code.
+
+12-05-03 - RC2
+* Added the throttling from the main line.
+* Added the CSASSIST_APIFLAG_NO_REDIRECT option to connect directly to CSAssist avoiding the RedirectServer.
+* Patched a leak and crash bug due to the connectCSAssistRequest().
+
+11-24-2003 - RC1
+* New API release based on the TCP scalable backend branch.
+* Changed functionality of connectCSAssist: Now the API will try to contact an IP Load Balancing
+server (RedirecServer) to get the IP of a valid CSAssist server to connect to. This is
+all done transparently inside the connectCSAssist() request. The api constructor should now use
+the host and port of the RedirectServer, as all connection requests will expect this one hop
+handshake. Re-connects (after a disconnect) will also first connect to the RedirectServer and connect to an appropriate CSAssist backend.
+* All client/server connections use the Platform utils TCPLibrary.
+* requestNewTicketActivity() will now ignore all "closed" tickets - this became an issue due to
+the new server architecture using db calls to fetch tickets, not loading them into memory.
+
+*** This release does not contain changes made for the throttling. Need to integrate/merge those changes from the main line udp-only code base. 
+
+10-17-2003
+* In 10-15 version, during a reconnect, all the cached "register character" requests were placed in the
+  output buffer en masse, which meant that any new requests coming through the API had to wait until
+  all the registers were sent, which might take a minute or more. This could result in those new
+  requests hitting timeouts.
+
+-----------------
+05-28-2003
+* m_currTrack(0) now initialised as m_currTrack(1). This allows clients to distinguish
+  between the connection reply (now on track 1), and any server-initiated broadcasts (track=0)
+  (Internals, no need to worry about this as a user)
+* requestNewTicketActivity() and requestGetTicketByCharacter() will now ignore all tickets that are "bug" tickets.
+  You no longer need to filter out bug-tickets at the application end. You will never be sent a bug-ticket unless
+  you request it by ID.
+
+
+
+04-04-2003
+* Versioning code: To ensure that old API's do not connect to new servers, or incompatible API's and servers
+  do not talk to each other, a transparent versioning layer has been added. The client will now receive one of
+  two callbacks: OnConnectCSAssist( ) will be received when connection is successful.
+  OnConnectRejectedCSAssist( ) will be received if the connection was NOT successful. In the later case, the
+  result code may give some indication of why the connect was rejected, e.g. code 21 = CSASSIST_RESULT_BAD_VERSION.
+  A result code is still passed back to OnConnectCSAssist( ) for backwards compatibility, although it will always
+  be CSASSIST_RESULT_SUCCESS (0).
+* Primus Knowledge Base searches will now only return results for YOUR game and not all games.
+
+3-17-2003
+* Unicode no longer exposed through header files. This should allow EQOA to link with the library without problems.
+
+3-10-2003
+* Can not create a ticket without setting the game, server, character and details fields,
+  using the appropriate setXXX() calls.
+
+3-7-2003
+* 3-7 Release. Minor efficiency improvements since 1-31 release.
+
+1-31-2003
+* Fixed namespace and include file issue where a Unicode header file was accidently extended through the API
+  to the client
+* Distribution is now monolithic, i.e. all Platform libraries (Base, UdpLibrary, Unicode) are now moved within
+  the CSAssist namespace to prevent clashes with other versions of these libraries.
+
+1-9-2003
+* Fully internationalised. Note that this has caused almost every string parameter to every API call
+  to change from a char * to a unicode char pointer.
+* EstablishConnection NULL bug fixed
+* Ticket object modified to add in Bug Reporting fields for Q/A. Bug reports are treated like tickets.
+  As well as ticket status there is now a bug status field. Set this if the ticket is a bug report.
+  Two more subcategories have been requested, making a total of 4 now instead of 2. The previous
+  category and subcategory have been consolidated into a new array of categories, currently 4.
+  Finally, a location string has been added. Fill this in with the zone/area of the player and his
+  X,Y,Z coordinates.
+  For further details of Bug Reporting, see the API documentation and CSAssistgameapi.h and
+  CSAssistgameobjects.h
+* The monolithic constructor for creating a basic ticket has been replaced with a series of setXX()
+  member functions. See CSAssistgameobjects.h for details. This was done for reasons of clarity
+  (no huge list of parameters), future expandability and so that individual fields can be validated.
+* All dates returned now have full date and time stamps, they were previously just dates (DD-MON-YY).
+
+11-27-2002
+* alternative constructor for CSAssistGameAPITicket for a convenient way for the game application
+  to create a ticket object for use in requestCreateTicket(). Constructor takes only that
+  info required to create a ticket.
+* Application will no longer receive OnConnect() callbacks whenever the API makes an
+  automatic reconnect to the CSAssist server. The application will only receive callbacks
+  in response to its own, application-initiated, connect requests.
+* In the event of a loss of connection to the CSAssist server, upon reconnection, the API
+  will automatically submit register requests for all characters previously registered.
+  This obviates the need for the application/game to issue those register requests.
+* The following calls are now functional:
+	requestGetKBArticle
+	requestSearchKB
+	OnIssueHierarchyChanged
+* new call: getErrorString(result) is a local blocking call that returns a matching error
+  string for a result code passed in. This is for debugging/logging only, not for presenting
+  to the player.
+
+11-13-2002
+* API constructor altered to move the default parameters into the header file.
+  This removes the need for the application to include the default/optional
+  parameters even if they will not be used
+* All parameters in the API constructor made const
+* The following calls are now functional:
+	requestGetDocumentList
+	requestGetDocument
+	requestGetTicketXMLBlock
+* KNOWN BUG: requestGetTicketXMLBlock has a problem with the DB stored procedure.
+  It is likely to time out and not return data. You *will* receive an error code,
+  just note that this call is currently unreliable.
+
+11-08-2002
+* As soon as connection is lost with the server, all requests that are queued
+  at the client API side will be immediately dumped back to the calling
+  application with a code of CSASSIST_RESULT_TIMEOUT.
+  This is default behavior, to change this see the description of
+  CSASSIST_APIFLAG_ASSUME_RECONNECT in CSAssistgameapi.h, and the API docs.
+* If a request is made and the API is in a NON-connected state with the server,
+  the request will be immediately returned with a code of CSASSIST_RESULT_TIMEOUT.
+  It will NOT be queued as happened previously. Thus the application will
+  not have to wait for the timeout (60-90 secs) to know that the server
+  is non-responsive.
+* Extra 2 optional parameters to the constructor of the API class:
+  Timeout, and Flags. See API doc for details.
+  Your new overloaded constructor will look something like:
+
+  apiTest::apiTest(char *host, unsigned port, unsigned timeout = 0, unsigned flags = 0)
+: CSAssistGameAPI(host, port, timeout, flags)
+
+* Default timeout reduced from 90 to 60 seconds.
+* Parameters to constructor of the API class changed from ints to unsigned
+  for consistency.
+* Additional parameter added to requestGetIssueHierarchy():
+  "Version String", which is the identifier for the Hierarchy you require.
+  This is typically a server name but more accurately a server type, e.g.
+  Dev, Test, Live, PvP, Japan, etc.
+
+11-5-2002
+* The following calls are now functional:
+	requestGetIssueHierarchy
+	OnRequestGameLocation
+	replyGameLocation
+
+10-28-2002
+* IPAddress parameter removed from connect call
+* Character Name added to parameter list for requestAppendTicketComment
+
+10-12-2002
+* Note that the directory structure has changed from previous version.
+  This new structure mirrors all future releases by the Server Engineering team.
+* The following calls are now functional:
+	requestGetTicketCommentsCount
+* void *userData added to all calls
+
+10-02-2002
+* Deleted requestGetErrorText function as no longer useful
+* Expanded CSAssistGameAPITicketComment object (see CSAssistGameobjects.h)
+* Parameters changed for requestAppendTicketComment (see CSAssistgameapi.h)
+* The following calls are now functional:
+	requestAppendTicketComment
+	requestGetTicketComments
+	requestMarkTicketRead
+	requestCancelTicket
+
+9-25-2002
+* Parameters changed for OnGetTicketByID()
+* see CSAssistcsrapi.h for list of new parameters
+* The following calls are operational (see notes below):
+	connectCSAssist
+	requestNewTicketActivity
+	requestRegisterCharacter
+	disconnectCSAssist
+	requestUnRegisterCharacter
+	requestCreateTicket
+	requestGetTicketByCharacter
+	requstGetTicketByID
+	OnTicketChange
+	requestGetErrorText
+* The following calls will return dummy data
+	requestGetIssueHierarchy
+	requestAppendTicketComment
+	requestGetTicketComments
+* Note that tickets are only RAM-persistent, not database-persistent.
+  i.e. Tickets will remain alive as long as the test CSAssist server is up
+  You may want to write a small app to go and generate a batch of test
+  tickets if you perceive that the Test CSAssist server has been rebooted.
+
+9-20-2002
+* Parameters changed for connectCSAssist
+* Parameters changed for requestCreateTicket
+* see CSAssistgameapi.h for list of new parameters
+* linuxtest directory replaced by csassisttest
+  This has project files to build under WIN32, and
+  make file to build under linux. (use make -f linux.mak)
+

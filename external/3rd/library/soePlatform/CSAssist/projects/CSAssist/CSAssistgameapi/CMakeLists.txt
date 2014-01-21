@@ -1,0 +1,112 @@
+
+set(SHARED_SOURCES
+	CSAssistgameapi.cpp
+	CSAssistgameapi.h
+	CSAssistgameapicore.cpp
+	CSAssistgameapicore.h
+	CSAssistgameobjects.cpp
+	CSAssistgameobjects.h
+	CSAssistreceiver.cpp
+	CSAssistreceiver.h
+	packdata.cpp
+	packdata.h
+	request.cpp
+	request.h
+	response.cpp
+	response.h
+
+	../../../utils/Base/Archive.cpp
+	../../../utils/Base/Archive.h
+	../../../utils/Base/AutoLog.cpp
+	../../../utils/Base/AutoLog.h
+	../../../utils/Base/Base.cpp
+	../../../utils/Base/Base.h
+	../../../utils/Base/BlockAllocator.h
+	../../../utils/Base/Config.cpp
+	../../../utils/Base/Config.h
+	../../../utils/Base/Event.h
+	../../../utils/Base/Logger.cpp
+	../../../utils/Base/Logger.h
+	../../../utils/Base/MD5.cpp
+	../../../utils/Base/MD5.h
+	../../../utils/Base/Mutex.h
+	../../../utils/Base/Platform.h
+	../../../utils/Base/ScopeLock.cpp
+	../../../utils/Base/ScopeLock.h
+	../../../utils/Base/Statistics.cpp
+	../../../utils/Base/Statistics.h
+	../../../utils/Base/TemplateBlockAllocator.h
+	../../../utils/Base/TemplateObjectAllocator.h
+	../../../utils/Base/Thread.h
+	../../../utils/Base/Types.h
+	../../../utils/Base/WideString.h
+	../../../utils/Base/serialize.h
+
+	../../../utils/TcpLibrary/Clock.cpp
+	../../../utils/TcpLibrary/Clock.h
+	../../../utils/TcpLibrary/IPAddress.cpp
+	../../../utils/TcpLibrary/IPAddress.h
+	../../../utils/TcpLibrary/TcpBlockAllocator.cpp
+	../../../utils/TcpLibrary/TcpBlockAllocator.h
+	../../../utils/TcpLibrary/TcpConnection.cpp
+	../../../utils/TcpLibrary/TcpConnection.h
+	../../../utils/TcpLibrary/TcpHandlers.h
+	../../../utils/TcpLibrary/TcpManager.cpp
+	../../../utils/TcpLibrary/TcpManager.h
+
+	../../../utils/Unicode/FirstUnicode.cpp
+	../../../utils/Unicode/FirstUnicode.h
+	../../../utils/Unicode/Unicode.cpp
+	../../../utils/Unicode/Unicode.h
+	../../../utils/Unicode/UnicodeBlocks.cpp
+	../../../utils/Unicode/UnicodeBlocks.h
+	../../../utils/Unicode/UnicodeCharacterData.cpp
+	../../../utils/Unicode/UnicodeCharacterData.h
+	../../../utils/Unicode/UnicodeCharacterDataMap.cpp
+	../../../utils/Unicode/UnicodeCharacterDataMap.h
+	../../../utils/Unicode/UnicodeUtils.cpp
+	../../../utils/Unicode/UnicodeUtils.h
+	../../../utils/Unicode/utf8.cpp
+	../../../utils/Unicode/utf8.h
+)
+
+if(WIN32)
+	set(PLATFORM_SOURCES
+		../../../utils/Base/win32/Archive.h
+		../../../utils/Base/win32/BlockAllocator.cpp
+		../../../utils/Base/win32/Event.cpp
+		../../../utils/Base/win32/Event.h
+		../../../utils/Base/win32/File.cpp
+		../../../utils/Base/win32/File.h
+		../../../utils/Base/win32/Mutex.cpp
+		../../../utils/Base/win32/Mutex.h
+		../../../utils/Base/win32/Platform.cpp
+		../../../utils/Base/win32/Thread.cpp
+		../../../utils/Base/win32/Thread.h
+		../../../utils/Base/win32/Types.h
+	)
+	include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../../utils/Base/win32)
+else()
+	set(PLATFORM_SOURCES
+		../../../utils/Base/linux/Archive.h
+		../../../utils/Base/linux/BlockAllocator.cpp
+		../../../utils/Base/linux/Event.cpp
+		../../../utils/Base/linux/Event.h
+		../../../utils/Base/linux/Mutex.cpp
+		../../../utils/Base/linux/Mutex.h
+		../../../utils/Base/linux/Platform.cpp
+		../../../utils/Base/linux/Thread.cpp
+		../../../utils/Base/linux/Thread.h
+		../../../utils/Base/linux/Types.h
+	)
+	include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../../utils/Base/linux)
+endif()
+
+add_definitions(-DEXTERNAL_DISTRO -DNAMESPACE=CSAssist)
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+
+add_library(CSAssist
+	${SHARED_SOURCES}
+	${PLATFORM_SOURCES}
+)
