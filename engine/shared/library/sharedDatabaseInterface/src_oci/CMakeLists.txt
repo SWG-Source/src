@@ -28,4 +28,5 @@ add_library(sharedDatabaseInterface_oci STATIC
 
 target_link_libraries(sharedDatabaseInterface_oci
 	sharedDatabaseInterface
+    ${ORACLE_LIBRARY}
 )

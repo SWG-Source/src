@@ -75,7 +75,7 @@ if(WIN32)
 
 	include_directories(${CMAKE_CURRENT_SOURCE_DIR}/win32)
 else()
-	set(PLATFORM_SOURCES 
+	set(PLATFORM_SOURCES
 		linux/main.cpp
 	)
 
@@ -158,10 +158,8 @@ target_link_libraries(LoginServer
     MonAPI2
     udplibrary
     ${STLPORT_LIBRARIES}
-    ${ZLIB_LIBRARY}
     ${CMAKE_THREAD_LIBS_INIT}
     ${CMAKE_DL_LIBS}
-    ${ORACLE_LIBRARY}
 )
 
 if(WIN32)
