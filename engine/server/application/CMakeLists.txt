@@ -1,10 +1,9 @@
 
-link_directories(${STLPORT_LIBDIR})
-
 add_subdirectory(CentralServer)
 add_subdirectory(ChatServer)
 add_subdirectory(CommoditiesServer)
 add_subdirectory(ConnectionServer)
+add_subdirectory(CustomerServiceServer)
 add_subdirectory(LogServer)
 add_subdirectory(LoginPing)
 add_subdirectory(LoginServer)

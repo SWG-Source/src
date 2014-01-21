@@ -42,6 +42,7 @@ elseif(UNIX)
 endif()
 
 include_directories(${STLPORT_INCLUDE_DIR})
+link_directories(${STLPORT_LIBDIR})
 
 add_subdirectory(external)
 add_subdirectory(engine)
