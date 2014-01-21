@@ -734,4 +734,8 @@ add_library(sharedNetworkMessages STATIC
 
 target_link_libraries(sharedNetworkMessages
 	sharedUtility
+	localization
+	localizationArchive
+	unicode
+	unicodeArchive
 )

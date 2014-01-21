@@ -17,7 +17,7 @@ if(WIN32)
 
 	include_directories(${CMAKE_CURRENT_SOURCE_DIR}/win32)
 else()
-	set(PLATFORM_SOURCES 
+	set(PLATFORM_SOURCES
 		linux/Thread.cpp
 		linux/Thread.h
 	)
@@ -37,4 +37,8 @@ include_directories(
 add_library(sharedThread STATIC
 	${SHARED_SOURCES}
 	${PLATFORM_SOURCES}
+)
+
+target_link_libraries(sharedThread
+	sharedSynchronization
 )
