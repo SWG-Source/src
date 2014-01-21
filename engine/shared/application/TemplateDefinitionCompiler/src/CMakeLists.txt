@@ -1,18 +1,18 @@
 
 set(SHARED_SOURCES
-    shared/TemplateCompiler.cpp
+    shared/core/TemplateDefinitionCompiler.cpp
 )
 
 if(WIN32)
 	set(PLATFORM_SOURCES
-        win32/FirstTemplateCompiler.cpp
-        win32/FirstTemplateCompiler.cpp
+        win32/FirstTemplateDefinitionCompiler.cpp
+        win32/FirstTemplateDefinitionCompiler.cpp
 	)
     include_directories(${CMAKE_CURRENT_SOURCE_DIR}/win32)
 else()
 	set(PLATFORM_SOURCES
-        linux/FirstTemplateCompiler.cpp
-        linux/FirstTemplateCompiler.cpp
+        linux/FirstTemplateDefinitionCompiler.cpp
+        linux/FirstTemplateDefinitionCompiler.cpp
 	)
     include_directories(${CMAKE_CURRENT_SOURCE_DIR}/linux)
 endif()
@@ -37,12 +37,12 @@ include_directories(
     ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicode/include
 )
 
-add_executable(TemplateCompiler
+add_executable(TemplateDefinitionCompiler
 	${SHARED_SOURCES}
 	${PLATFORM_SOURCES}
 )
 
-target_link_libraries(TemplateCompiler
+target_link_libraries(TemplateDefinitionCompiler
     sharedCompression
     sharedDebug
     sharedFile

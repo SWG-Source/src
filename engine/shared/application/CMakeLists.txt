@@ -1,2 +1,3 @@
 
 add_subdirectory(TemplateCompiler)
+add_subdirectory(TemplateDefinitionCompiler)
