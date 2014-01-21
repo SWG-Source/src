@@ -1,4 +1,5 @@
 
+add_subdirectory(serverBase)
 add_subdirectory(serverDatabase)
 add_subdirectory(serverGame)
 add_subdirectory(serverKeyShare)
