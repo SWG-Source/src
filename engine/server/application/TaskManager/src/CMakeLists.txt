@@ -43,18 +43,14 @@ if(WIN32)
         win32/TaskManagerSysInfo.cpp
         win32/WinMain.cpp
 	)
-
-	include_directories(${CMAKE_CURRENT_SOURCE_DIR}/win32)
 else()
-	set(PLATFORM_SOURCES 
+	set(PLATFORM_SOURCES
         linux/ConsoleInput.cpp
         linux/EnvironmentVariable.cpp
 		linux/main.cpp
         linux/ProcessSpawner.cpp
         linux/TaskManagerSysInfo.cpp
 	)
-
-	include_directories(${CMAKE_CURRENT_SOURCE_DIR}/linux)
 endif()
 
 include_directories(
@@ -77,8 +73,6 @@ include_directories(
     ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/fileInterface/include/public
     ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/singleton/include
 )
-
-link_directories(${STLPORT_LIBDIR})
 
 add_executable(TaskManager
 	${SHARED_SOURCES}
@@ -108,13 +102,6 @@ target_link_libraries(TaskManager
     localizationArchive
     unicode
     unicodeArchive
-    udplibrary
     ${STLPORT_LIBRARIES}
-    ${ZLIB_LIBRARY}
-    ${CMAKE_THREAD_LIBS_INIT}
     ${CMAKE_DL_LIBS}
 )
-
-if(WIN32)
-    target_link_libraries(TaskManager mswsock ws2_32)
-endif()

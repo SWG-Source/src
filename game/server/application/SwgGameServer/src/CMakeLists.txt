@@ -49,14 +49,10 @@ if(WIN32)
 		win32/FirstSwgGameServer.cpp
 		win32/WinMain.cpp
 	)
-
-	include_directories(${CMAKE_CURRENT_SOURCE_DIR}/win32)
 else()
-	set(PLATFORM_SOURCES 
+	set(PLATFORM_SOURCES
 		linux/main.cpp
 	)
-
-	include_directories(${CMAKE_CURRENT_SOURCE_DIR}/linux)
 endif()
 
 include_directories(
@@ -106,8 +102,6 @@ include_directories(
     ${JNI_INCLUDE_DIRS}
 )
 
-link_directories(${STLPORT_LIBDIR})
-
 add_executable(SwgGameServer
 	${SHARED_SOURCES}
 	${PLATFORM_SOURCES}
@@ -156,16 +150,6 @@ target_link_libraries(SwgGameServer
     unicode
     unicodeArchive
     Base
-    udplibrary
     ${STLPORT_LIBRARIES}
-    ${ZLIB_LIBRARY}
-    ${PCRE_LIBRARY}
-    ${LIBXML2_LIBRARY}
-    ${CMAKE_THREAD_LIBS_INIT}
     ${CMAKE_DL_LIBS}
 )
-
-if(WIN32)
-    set_target_properties (SwgGameServer PROPERTIES LINK_FLAGS "/NODEFAULTLIB:\"libcmt\"")
-    target_link_libraries(SwgGameServer mswsock ws2_32)
-endif()

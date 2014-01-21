@@ -16,14 +16,10 @@ if(WIN32)
 	set(PLATFORM_SOURCES
 		win32/WinMain.cpp
 	)
-
-	include_directories(${CMAKE_CURRENT_SOURCE_DIR}/win32)
 else()
-	set(PLATFORM_SOURCES 
+	set(PLATFORM_SOURCES
 		linux/main.cpp
 	)
-
-	include_directories(${CMAKE_CURRENT_SOURCE_DIR}/linux)
 endif()
 
 include_directories(
@@ -45,8 +41,6 @@ include_directories(
     ${SWG_EXTERNALS_SOURCE_DIR}/3rd/library/platform/projects
     ${SWG_EXTERNALS_SOURCE_DIR}/3rd/library/udplibrary
 )
-
-link_directories(${STLPORT_LIBDIR})
 
 add_executable(MetricsServer
 	${SHARED_SOURCES}
@@ -76,14 +70,7 @@ target_link_libraries(MetricsServer
     localizationArchive
     unicode
     unicodeArchive
-    udplibrary
     MonAPI2
     ${STLPORT_LIBRARIES}
-    ${ZLIB_LIBRARY}
-    ${CMAKE_THREAD_LIBS_INIT}
     ${CMAKE_DL_LIBS}
 )
-
-if(WIN32)
-    target_link_libraries(MetricsServer mswsock ws2_32)
-endif()

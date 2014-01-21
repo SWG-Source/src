@@ -72,14 +72,10 @@ if(WIN32)
 		win32/FirstLoginServer.cpp
 		win32/WinMain.cpp
 	)
-
-	include_directories(${CMAKE_CURRENT_SOURCE_DIR}/win32)
 else()
 	set(PLATFORM_SOURCES
 		linux/main.cpp
 	)
-
-	include_directories(${CMAKE_CURRENT_SOURCE_DIR}/linux)
 endif()
 
 include_directories(
@@ -115,8 +111,6 @@ include_directories(
     ${SWG_EXTERNALS_SOURCE_DIR}/3rd/library/platform/utils
     ${SWG_EXTERNALS_SOURCE_DIR}/3rd/library/udplibrary
 )
-
-link_directories(${STLPORT_LIBDIR})
 
 add_executable(LoginServer
 	${SHARED_SOURCES}
@@ -156,13 +150,6 @@ target_link_libraries(LoginServer
     CommonAPI
     LoginAPI
     MonAPI2
-    udplibrary
     ${STLPORT_LIBRARIES}
-    ${CMAKE_THREAD_LIBS_INIT}
     ${CMAKE_DL_LIBS}
 )
-
-if(WIN32)
-    set_target_properties (LoginServer PROPERTIES LINK_FLAGS "/NODEFAULTLIB:\"libcmt\"")
-    target_link_libraries(LoginServer mswsock ws2_32)
-endif()

@@ -11,21 +11,17 @@ set(SHARED_SOURCES
 )
 
 if(WIN32)
-	set(PLATFORM_SOURCES
-		win32/main.cpp
-	)
-
-	include_directories(${CMAKE_CURRENT_SOURCE_DIR}/win32)
+    set(PLATFORM_SOURCES
+        win32/main.cpp
+    )
 else()
-	set(PLATFORM_SOURCES
-		linux/main.cpp
-	)
-
-	include_directories(${CMAKE_CURRENT_SOURCE_DIR}/linux)
+    set(PLATFORM_SOURCES
+        linux/main.cpp
+    )
 endif()
 
 include_directories(
-	${CMAKE_CURRENT_SOURCE_DIR}/shared
+    ${CMAKE_CURRENT_SOURCE_DIR}/shared
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedCompression/include/public
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedDebug/include/public
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFile/include/public
@@ -39,11 +35,9 @@ include_directories(
     ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/archive/include
 )
 
-link_directories(${STLPORT_LIBDIR})
-
 add_executable(ServerConsole
-	${SHARED_SOURCES}
-	${PLATFORM_SOURCES}
+    ${SHARED_SOURCES}
+    ${PLATFORM_SOURCES}
 )
 
 target_link_libraries(ServerConsole
@@ -57,10 +51,5 @@ target_link_libraries(ServerConsole
     sharedNetworkMessages
     sharedThread
     ${STLPORT_LIBRARIES}
-    ${CMAKE_THREAD_LIBS_INIT}
     ${CMAKE_DL_LIBS}
 )
-
-if(WIN32)
-    target_link_libraries(ServerConsole mswsock ws2_32)
-endif()

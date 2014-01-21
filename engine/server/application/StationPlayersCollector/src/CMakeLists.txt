@@ -45,8 +45,6 @@ include_directories(
     ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicode/include
 )
 
-link_directories(${STLPORT_LIBDIR})
-
 add_executable(StationPlayersCollector
 	${SHARED_SOURCES}
 	${PLATFORM_SOURCES}
@@ -72,6 +70,5 @@ target_link_libraries(StationPlayersCollector
     archive
     unicode
     ${STLPORT_LIBRARIES}
-    ${CMAKE_THREAD_LIBS_INIT}
     ${CMAKE_DL_LIBS}
 )

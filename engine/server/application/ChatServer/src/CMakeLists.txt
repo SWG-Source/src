@@ -1,30 +1,30 @@
 
 set(SHARED_SOURCES
-    shared/CentralServerConnection.cpp 
-    shared/CentralServerConnection.h 
-    shared/ChatInterface.cpp 
-    shared/ChatInterface.h 
-    shared/ChatServerAvatarOwner.cpp 
-    shared/ChatServerAvatarOwner.h 
-    shared/ChatServer.cpp 
-    shared/ChatServer.h 
-    shared/ChatServerRoomOwner.cpp 
-    shared/ChatServerRoomOwner.h 
+    shared/CentralServerConnection.cpp
+    shared/CentralServerConnection.h
+    shared/ChatInterface.cpp
+    shared/ChatInterface.h
+    shared/ChatServerAvatarOwner.cpp
+    shared/ChatServerAvatarOwner.h
+    shared/ChatServer.cpp
+    shared/ChatServer.h
+    shared/ChatServerRoomOwner.cpp
+    shared/ChatServerRoomOwner.h
     shared/ConfigChatServer.cpp
-    shared/ConfigChatServer.h 
-    shared/ConnectionServerConnection.cpp 
-    shared/ConnectionServerConnection.h 
+    shared/ConfigChatServer.h
+    shared/ConnectionServerConnection.cpp
+    shared/ConnectionServerConnection.h
     shared/CustomerServiceServerConnection.cpp
-    shared/CustomerServiceServerConnection.h 
-    shared/FirstChatServer.cpp 
-    shared/FirstChatServer.h 
-    shared/GameServerConnection.cpp 
-    shared/GameServerConnection.h 
-    shared/PlanetServerConnection.h 
-    shared/PlanetServerServerConnection.cpp 
-    shared/ChatServerMetricsData.cpp 
+    shared/CustomerServiceServerConnection.h
+    shared/FirstChatServer.cpp
+    shared/FirstChatServer.h
+    shared/GameServerConnection.cpp
+    shared/GameServerConnection.h
+    shared/PlanetServerConnection.h
+    shared/PlanetServerServerConnection.cpp
+    shared/ChatServerMetricsData.cpp
     shared/ChatServerMetricsData.h
-    shared/VChatInterface.h 
+    shared/VChatInterface.h
     shared/VChatInterface.cpp
 )
 
@@ -33,12 +33,12 @@ if(WIN32)
 		win32/WinMain.cpp
 	)
 else()
-	set(PLATFORM_SOURCES 
+	set(PLATFORM_SOURCES
 		linux/main.cpp
 	)
 endif()
 
-add_definitions(-DEXTERNAL_DISTRO -DNAMESPACE=ChatSystem -D_REENTRANT -DAPI_NAMESPACE=VChatSystem)
+add_definitions(-DEXTERNAL_DISTRO -DNAMESPACE=ChatSystem -DAPI_NAMESPACE=VChatSystem)
 
 include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}/shared
@@ -71,8 +71,6 @@ include_directories(
     ${SWG_EXTERNALS_SOURCE_DIR}/3rd/library/soePlatform/VChatAPI/utils2.0/utils
 )
 
-link_directories(${STLPORT_LIBDIR})
-
 add_executable(ChatServer
 	${SHARED_SOURCES}
 	${PLATFORM_SOURCES}
@@ -102,15 +100,8 @@ target_link_libraries(ChatServer
     localizationArchive
     unicode
     unicodeArchive
-    udplibrary
     ChatMono
     VChatAPI
     ${STLPORT_LIBRARIES}
-    ${ZLIB_LIBRARY}
-    ${CMAKE_THREAD_LIBS_INIT}
     ${CMAKE_DL_LIBS}
 )
-
-if(WIN32)
-    target_link_libraries(ChatServer mswsock ws2_32)
-endif()

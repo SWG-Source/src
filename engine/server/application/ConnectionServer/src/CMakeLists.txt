@@ -21,7 +21,7 @@ set(SHARED_SOURCES
     shared/GameConnection.h
     shared/SessionApiClient.cpp
     shared/SessionApiClient.h
-    shared/PseudoClientConnection.cpp 
+    shared/PseudoClientConnection.cpp
     shared/PseudoClientConnection.h
 )
 
@@ -69,8 +69,6 @@ include_directories(
     ${SWG_EXTERNALS_SOURCE_DIR}/3rd/library/udplibrary
 )
 
-link_directories(${STLPORT_LIBDIR})
-
 add_executable(ConnectionServer
 	${SHARED_SOURCES}
 	${PLATFORM_SOURCES}
@@ -106,13 +104,6 @@ target_link_libraries(ConnectionServer
     Base
     CommonAPI
     LoginAPI
-    udplibrary
     ${STLPORT_LIBRARIES}
-    ${ZLIB_LIBRARY}
-    ${CMAKE_THREAD_LIBS_INIT}
     ${CMAKE_DL_LIBS}
 )
-
-if(WIN32)
-    target_link_libraries(ConnectionServer mswsock ws2_32)
-endif()

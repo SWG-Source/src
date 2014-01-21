@@ -4,11 +4,11 @@ set(SHARED_SOURCES
     shared/CentralServerConnection.h
     shared/ConfigTransferServer.cpp
     shared/ConfigTransferServer.h
-    shared/ConsoleCommandParser.cpp 
+    shared/ConsoleCommandParser.cpp
     shared/ConsoleCommandParser.h
-    shared/ConsoleManager.cpp 
-    shared/ConsoleManager.h 
-    shared/CTSAPIClient.cpp 
+    shared/ConsoleManager.cpp
+    shared/ConsoleManager.h
+    shared/CTSAPIClient.cpp
     shared/CTSAPIClient.h
     shared/FirstTransferServer.h
     shared/TransferServer.cpp
@@ -48,8 +48,6 @@ include_directories(
     ${SWG_EXTERNALS_SOURCE_DIR}/3rd/library/soePlatform/CTServiceGameAPI
 )
 
-link_directories(${STLPORT_LIBDIR})
-
 add_executable(TransferServer
 	${SHARED_SOURCES}
 	${PLATFORM_SOURCES}
@@ -79,13 +77,7 @@ target_link_libraries(TransferServer
     localizationArchive
     unicode
     unicodeArchive
-    udplibrary
     CTServiceGameAPI
     ${STLPORT_LIBRARIES}
-    ${ZLIB_LIBRARY}
-    ${CMAKE_THREAD_LIBS_INIT}
-    ${CMAKE_DL_LIBS})
-
-if(WIN32)
-    target_link_libraries(TransferServer mswsock ws2_32)
-endif()
+    ${CMAKE_DL_LIBS}
+)

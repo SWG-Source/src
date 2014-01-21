@@ -37,3 +37,7 @@ add_library(sharedRegex STATIC
 	${SHARED_SOURCES}
 	${PLATFORM_SOURCES}
 )
+
+target_link_libraries(sharedRegex
+	${PCRE_LIBRARY}
+)

@@ -41,4 +41,5 @@ add_library(sharedThread STATIC
 
 target_link_libraries(sharedThread
 	sharedSynchronization
+    ${CMAKE_THREAD_LIBS_INIT}
 )

@@ -104,7 +104,7 @@ if(WIN32)
         shared/AuctionTransferGameAPI/Base/win32/Types.h
 	)
 else()
-	set(PLATFORM_SOURCES 
+	set(PLATFORM_SOURCES
 		linux/main.cpp
         shared/AuctionTransferGameAPI/Base/linux/Archive.h
         shared/AuctionTransferGameAPI/Base/linux/Mutex.cpp
@@ -156,8 +156,6 @@ include_directories(
     ${SWG_EXTERNALS_SOURCE_DIR}/3rd/library/udplibrary
 )
 
-link_directories(${STLPORT_LIBDIR})
-
 add_executable(CentralServer
 	${SHARED_SOURCES}
 	${PLATFORM_SOURCES}
@@ -192,13 +190,6 @@ target_link_libraries(CentralServer
     localizationArchive
     unicode
     unicodeArchive
-    udplibrary
     ${STLPORT_LIBRARIES}
-    ${ZLIB_LIBRARY}
-    ${CMAKE_THREAD_LIBS_INIT}
     ${CMAKE_DL_LIBS}
 )
-
-if(WIN32)
-    target_link_libraries(CentralServer mswsock ws2_32)
-endif()

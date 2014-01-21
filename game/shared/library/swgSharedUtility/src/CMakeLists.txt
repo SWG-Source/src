@@ -27,8 +27,6 @@ if(WIN32)
 	set(PLATFORM_SOURCES
 		win32/FirstSwgSharedUtility.cpp
 	)
-
-	include_directories(${CMAKE_CURRENT_SOURCE_DIR}/win32)
 else()
 	set(PLATFORM_SOURCES "")
 endif()

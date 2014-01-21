@@ -1,4 +1,6 @@
 
+link_directories(${STLPORT_LIBDIR})
+
 add_subdirectory(CentralServer)
 add_subdirectory(ChatServer)
 add_subdirectory(CommoditiesServer)

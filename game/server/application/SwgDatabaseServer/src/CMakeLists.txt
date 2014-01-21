@@ -147,14 +147,10 @@ if(WIN32)
 		win32/FirstSwgDatabaseServer.cpp
 		win32/WinMain.cpp
 	)
-
-	include_directories(${CMAKE_CURRENT_SOURCE_DIR}/win32)
 else()
-	set(PLATFORM_SOURCES 
+	set(PLATFORM_SOURCES
 		linux/main.cpp
 	)
-
-	include_directories(${CMAKE_CURRENT_SOURCE_DIR}/linux)
 endif()
 
 include_directories(
@@ -195,8 +191,6 @@ include_directories(
     ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicode/include
     ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicodeArchive/include/public
 )
-
-link_directories(${STLPORT_LIBDIR})
 
 set(MAKE_SCHEMA_H ${SWG_ENGINE_SOURCE_DIR}/server/library/codegen/make_schema_h.pl)
 file(TO_NATIVE_PATH ${MAKE_SCHEMA_H} MAKE_SCHEMA_H_NATIVE)
@@ -346,14 +340,6 @@ target_link_libraries(SwgDatabaseServer
     localizationArchive
     unicode
     unicodeArchive
-    udplibrary
     ${STLPORT_LIBRARIES}
-    ${ZLIB_LIBRARY}
-    ${CMAKE_THREAD_LIBS_INIT}
     ${CMAKE_DL_LIBS}
-    ${ORACLE_LIBRARY}
 )
-
-if(WIN32)
-    target_link_libraries(SwgDatabaseServer mswsock ws2_32)
-endif()

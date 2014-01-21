@@ -38,3 +38,7 @@ add_library(sharedXml STATIC
 	${SHARED_SOURCES}
 	${PLATFORM_SOURCES}
 )
+
+target_link_libraries(sharedXml
+	${LIBXML2_LIBRARY}
+)

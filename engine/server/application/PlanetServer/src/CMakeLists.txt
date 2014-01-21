@@ -36,14 +36,10 @@ if(WIN32)
 		win32/FirstPlanetServer.cpp
 		win32/WinMain.cpp
 	)
-
-	include_directories(${CMAKE_CURRENT_SOURCE_DIR}/win32)
 else()
-	set(PLATFORM_SOURCES 
+	set(PLATFORM_SOURCES
 		linux/main.cpp
 	)
-
-	include_directories(${CMAKE_CURRENT_SOURCE_DIR}/linux)
 endif()
 
 include_directories(
@@ -76,8 +72,6 @@ include_directories(
     ${SWG_EXTERNALS_SOURCE_DIR}/3rd/library/udplibrary
 )
 
-link_directories(${STLPORT_LIBDIR})
-
 add_executable(PlanetServer
 	${SHARED_SOURCES}
 	${PLATFORM_SOURCES}
@@ -108,13 +102,6 @@ target_link_libraries(PlanetServer
     localizationArchive
     unicode
     unicodeArchive
-    udplibrary
     ${STLPORT_LIBRARIES}
-    ${ZLIB_LIBRARY}
-    ${CMAKE_THREAD_LIBS_INIT}
     ${CMAKE_DL_LIBS}
 )
-
-if(WIN32)
-    target_link_libraries(PlanetServer mswsock ws2_32)
-endif()

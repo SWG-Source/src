@@ -37,8 +37,6 @@ include_directories(
     ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/archive/include
 )
 
-link_directories(${STLPORT_LIBDIR})
-
 add_executable(LoginPing
 	${SHARED_SOURCES}
 	${PLATFORM_SOURCES}
@@ -49,8 +47,6 @@ target_link_libraries(LoginPing
     sharedDebug
     sharedFile
     sharedFoundation
-    #sharedLog
-    #sharedMath
     sharedMemoryManager
     sharedMessageDispatch
     sharedNetwork
@@ -58,22 +54,8 @@ target_link_libraries(LoginPing
     sharedRandom
     sharedSynchronization
     sharedThread
-    #sharedUtility
     serverNetworkMessages
-    #serverUtility
     archive
-    #fileInterface
-    #localization
-    #localizationArchive
-    #unicode
-    #unicodeArchive
-    #udplibrary
     ${STLPORT_LIBRARIES}
-    ${ZLIB_LIBRARY}
-    ${CMAKE_THREAD_LIBS_INIT}
     ${CMAKE_DL_LIBS}
 )
-
-if(WIN32)
-    target_link_libraries(LoginPing mswsock ws2_32)
-endif()

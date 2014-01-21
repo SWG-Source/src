@@ -40,17 +40,13 @@ include_directories(
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedNetwork/include/public
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedNetworkMessages/include/public
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedThread/include/public
-#    ${SWG_ENGINE_SOURCE_DIR}/server/library/serverNetworkMessages/include/public
     ${SWG_ENGINE_SOURCE_DIR}/server/library/serverUtility/include/public
 	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/archive/include
-#    ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/fileInterface/include/public
     ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/singleton/include
     ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicode/include
     ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicodeArchive/include/public
     ${SWG_EXTERNALS_SOURCE_DIR}/3rd/library/udplibrary
 )
-
-link_directories(${STLPORT_LIBDIR})
 
 add_executable(LogServer
 	${SHARED_SOURCES}
@@ -80,13 +76,6 @@ target_link_libraries(LogServer
     localizationArchive
     unicode
     unicodeArchive
-    udplibrary
     ${STLPORT_LIBRARIES}
-    ${ZLIB_LIBRARY}
-    ${CMAKE_THREAD_LIBS_INIT}
     ${CMAKE_DL_LIBS}
 )
-
-if(WIN32)
-    target_link_libraries(LogServer mswsock ws2_32)
-endif()
