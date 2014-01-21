@@ -170,4 +170,8 @@ add_library(sharedFoundation STATIC
 target_link_libraries(sharedFoundation
 	sharedFile
 	archive
+	localization
+	localizationArchive
+	unicode
+	unicodeArchive
 )
