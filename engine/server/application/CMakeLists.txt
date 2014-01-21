@@ -1,6 +1,7 @@
 
 add_subdirectory(CentralServer)
 add_subdirectory(ChatServer)
+add_subdirectory(CommoditiesServer)
 add_subdirectory(ConnectionServer)
 add_subdirectory(LogServer)
 add_subdirectory(LoginPing)

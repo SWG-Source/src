@@ -1,0 +1,7 @@
+create table auction_characters
+(
+	character_id      number(20), 
+	character_name    varchar2(64),
+	constraint pk_auction_characters primary key (character_id) using index tablespace indexes
+);
+grant select on auction_characters to public;

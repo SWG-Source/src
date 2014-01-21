@@ -1,0 +1,11 @@
+create table market_auction_bids
+(
+	bid_id           number(20),
+	item_id          number(20),
+	bidder_id        number(20),
+	bid              number(20),
+	max_proxy_bid    number(20),
+	constraint pk_market_auction_bids primary key (bid_id) using index tablespace indexes
+);
+grant select on market_auction_bids to public;
+create index market_item_index on market_auction_bids (item_id) tablespace indexes;

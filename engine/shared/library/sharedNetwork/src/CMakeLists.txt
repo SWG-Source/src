@@ -98,3 +98,7 @@ target_link_libraries(sharedNetwork
 	sharedMessageDispatch
 	udplibrary
 )
+
+if(WIN32)
+    target_link_libraries(sharedNetwork mswsock ws2_32)
+endif()

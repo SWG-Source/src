@@ -1,0 +1,18 @@
+create table auctions
+(
+	creator_id       number(20),
+	creator_name     varchar2(64),
+	min_bid          number(20),
+	auction_timer    number(20),
+	buy_now_price    number(20),
+	user_description varchar2(4000),
+	oob              varchar2(4000),
+	location         varchar2(256),
+	item_id          number(20),
+	category         number(20),
+	item_timer       number(20),
+	item_name        varchar2(4000),
+	owner_id         number(20),
+	constraint pk_auctions primary key (item_id) using index tablespace indexes
+);
+grant select on auctions to public;

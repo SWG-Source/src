@@ -1,0 +1,9 @@
+create table auction_locations
+(
+	owner_id      number(20), -- BIND_AS(DB::BindableNetworkId)
+	location_name varchar2(256),
+	constraint pk_auction_locations primary key (location_name) using index tablespace indexes,
+	sales_tax number(20),
+	sales_tax_bank_id number(20)
+);
+grant select on auction_locations to public;
