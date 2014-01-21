@@ -57,7 +57,7 @@ if(WIN32)
 
 	include_directories(${CMAKE_CURRENT_SOURCE_DIR}/win32)
 else()
-	set(PLATFORM_SOURCES 
+	set(PLATFORM_SOURCES
 		linux/Address.cpp
 		linux/NetworkGetHostName.cpp
 		linux/Sock.cpp
@@ -95,4 +95,6 @@ add_library(sharedNetwork STATIC
 target_link_libraries(sharedNetwork
 	sharedFoundation
 	sharedLog
+	sharedMessageDispatch
+	udplibrary
 )

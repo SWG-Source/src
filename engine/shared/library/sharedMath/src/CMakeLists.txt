@@ -134,4 +134,5 @@ add_library(sharedMath STATIC
 
 target_link_libraries(sharedMath
 	sharedFile
+	sharedRandom
 )

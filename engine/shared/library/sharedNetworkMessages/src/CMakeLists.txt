@@ -423,7 +423,7 @@ set(SHARED_SOURCES
 	shared/clientGameServer/MessageQueueSelectCurrentWorkingSkill.h
 	shared/clientGameServer/MessageQueueSelectProfessionTemplate.cpp
 	shared/clientGameServer/MessageQueueSelectProfessionTemplate.h
-	shared/clientGameServer/MessageQueueShipHit.cpp 
+	shared/clientGameServer/MessageQueueShipHit.cpp
 	shared/clientGameServer/MessageQueueShipHit.h
 	shared/clientGameServer/MessageQueueShowCombatText.cpp
 	shared/clientGameServer/MessageQueueShowCombatText.h
@@ -691,7 +691,7 @@ set(SHARED_SOURCES
 	shared/voicechat/VoiceChatMiscMessages.cpp
 	shared/voicechat/VoiceChatMiscMessages.h
 	shared/voicechat/VoiceChatOnGetAccount.cpp
-	shared/voicechat/VoiceChatOnGetAccount.h 
+	shared/voicechat/VoiceChatOnGetAccount.h
 )
 
 if(WIN32)
@@ -730,4 +730,8 @@ include_directories(
 add_library(sharedNetworkMessages STATIC
 	${SHARED_SOURCES}
 	${PLATFORM_SOURCES}
+)
+
+target_link_libraries(sharedNetworkMessages
+	sharedUtility
 )

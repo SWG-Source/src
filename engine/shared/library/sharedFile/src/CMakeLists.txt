@@ -67,4 +67,6 @@ add_library(sharedFile STATIC
 target_link_libraries(sharedFile
 	sharedCompression
 	sharedDebug
+	sharedFoundation
+	fileInterface
 )
