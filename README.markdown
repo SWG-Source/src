@@ -2,7 +2,7 @@
 
 ## Ubuntu Environment Setup
 
-	sudo apt-get install build-essential zlib1g-dev libpcre3-dev cmake libboost-dev libxml2-dev flex bison git-core alien
+	sudo apt-get install build-essential zlib1g-dev libpcre3-dev cmake libboost-dev libxml2-dev libncurses5-dev flex bison git-core alien
 
 ### Oracle Instant Client
 
