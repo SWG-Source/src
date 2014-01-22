@@ -1,8 +1,8 @@
 # SWGNGE
 
-## Ubuntu Environment
+## Ubuntu Environment Setup
 
-	sudo apt-get install build-essential zlib1g-dev libpcre3-dev cmake libboost-dev libxml2-dev
+	sudo apt-get install build-essential zlib1g-dev libpcre3-dev cmake libboost-dev libxml2-dev flex bison git-core alien
 
 ### Oracle Instant Client
 
@@ -12,9 +12,12 @@ https://help.ubuntu.com/community/Oracle%20Instant%20Client
 
 ### Oracle Java 7
 
-Follow this guide to get oracle java 7 installed.
+	sudo add-apt-repository ppa:webupd8team/java
+	sudo apt-get update
+	sudo apt-get install oracle-java7-installer
+	sudo apt-get install oracle-java7-set-default
 
-https://help.ubuntu.com/community/Java
+You must log out and back in (or just reboot) for the $JAVA_HOME and $ORACLE_HOME to be set properly after these tools are installed. This is required in order for cmake to be able to find these tools when configuring the source code for building.
 
 ### STLPort
 
