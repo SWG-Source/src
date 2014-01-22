@@ -667,9 +667,9 @@ void printSyntax(void)
 {
 	printf("Compiler commands:\n");
 	printf("-compile <filename1>[.tdf] [<filename2>[.tdf] ...]\n");
-	printf("Perforce commands:\n");
-	printf("-edit <filename1>[.tdf] [<filename2>[.tdf] ...]\n");
-	printf("-submit <filename1>[.tdf] [<filename2>[.tdf] ...]\n");
+	//printf("Perforce commands:\n");
+	//printf("-edit <filename1>[.tdf] [<filename2>[.tdf] ...]\n");
+	//printf("-submit <filename1>[.tdf] [<filename2>[.tdf] ...]\n");
 }	// printSyntax
 
 /**
