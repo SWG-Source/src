@@ -66,22 +66,6 @@ namespace std
 		template <class _Key, class _Tp, class _Hash, class _Compare, class _Alloc> class unordered_map;
 		template <class _Key, class _Hash, class _Compare, class _Alloc> 			class unordered_set;
 	}
-
-	template <class ForwardIterator>
-  	bool is_sorted (ForwardIterator first, ForwardIterator last)
-	{
-  		if (first==last) return true;
-  		ForwardIterator next = first;
-  		while (++next!=last) {
-    		if (*next<*first)     // or, if (comp(*next,*first)) for version (2)
-      			return false;
-    		
-    		++first;
-  		}
-  
-  		return true;
-	}
-
 }
 
 template <class _Tp, class _Alloc = std::allocator<_Tp> > struct stddeque

@@ -59,35 +59,35 @@ extern "C"
 
 // ======================================================================
 
-void *operator new(size_t size, MemoryManagerNotALeak) throw (std::bad_alloc)
+void *operator new(size_t size, MemoryManagerNotALeak)
 {
 	return MemoryManager::allocate(size, reinterpret_cast<uint32>(__builtin_return_address(0)), false, false);
 }
 
 // ----------------------------------------------------------------------
 
-void *operator new(size_t size) throw (std::bad_alloc)
+void *operator new(std::size_t size)
 {
 	return MemoryManager::allocate(size, reinterpret_cast<uint32>(__builtin_return_address(0)), false, true);
 }
 
 // ----------------------------------------------------------------------
 
-void *operator new[](size_t size) throw (std::bad_alloc)
+void *operator new[](size_t size)
 {
 	return MemoryManager::allocate(size, reinterpret_cast<uint32>(__builtin_return_address(0)), true, true);
 }
 
 // ----------------------------------------------------------------------
 
-void *operator new(size_t size, const char *file, int line) throw (std::bad_alloc)
+void *operator new(size_t size, const char *file, int line)
 {
 	return MemoryManager::allocate(size, reinterpret_cast<uint32>(__builtin_return_address(0)), false, true);
 }
 
 // ----------------------------------------------------------------------
 
-void *operator new[](size_t size, const char *file, int line) throw (std::bad_alloc)
+void *operator new[](size_t size, const char *file, int line)
 {
 	return MemoryManager::allocate(size, reinterpret_cast<uint32>(__builtin_return_address(0)), true, true);
 }

@@ -6190,7 +6190,7 @@ void TangibleObject::addUserToAccessList(const NetworkId user)
 	}
 	else
 	{
-		sendControllerMessageToAuthServer(CM_addUserToAccessList, new MessageQueueGenericValueType< std::pair<int, NetworkId> >(std::make_pair<int, NetworkId>(-1, user) ) );
+		sendControllerMessageToAuthServer(CM_addUserToAccessList, new MessageQueueGenericValueType< std::pair<int, NetworkId> >(std::make_pair(-1, user) ) );
 	}
 }
 
@@ -6210,7 +6210,7 @@ void TangibleObject::addGuildToAccessList(int guildId)
 	}
 	else
 	{
-		sendControllerMessageToAuthServer(CM_addUserToAccessList, new MessageQueueGenericValueType< std::pair<int, NetworkId> >(std::make_pair<int, NetworkId>(guildId, NetworkId::cms_invalid) ) );
+		sendControllerMessageToAuthServer(CM_addUserToAccessList, new MessageQueueGenericValueType< std::pair<int, NetworkId> >(std::make_pair(guildId, NetworkId::cms_invalid) ) );
 	}
 }
 
@@ -6239,7 +6239,7 @@ void TangibleObject::removeUserFromAccessList(const NetworkId user)
 	}
 	else
 	{
-		sendControllerMessageToAuthServer(CM_removeUserFromAccessList, new MessageQueueGenericValueType< std::pair<int, NetworkId> >(std::make_pair<int, NetworkId>(-1, user)));
+		sendControllerMessageToAuthServer(CM_removeUserFromAccessList, new MessageQueueGenericValueType< std::pair<int, NetworkId> >(std::make_pair(-1, user)));
 	}
 }
 
@@ -6267,7 +6267,7 @@ void TangibleObject::removeGuildFromAccessList(int guildId)
 	}
 	else
 	{
-		sendControllerMessageToAuthServer(CM_removeUserFromAccessList, new MessageQueueGenericValueType< std::pair<int, NetworkId> >(std::make_pair<int, NetworkId>(guildId, NetworkId::cms_invalid)));
+		sendControllerMessageToAuthServer(CM_removeUserFromAccessList, new MessageQueueGenericValueType< std::pair<int, NetworkId> >(std::make_pair(guildId, NetworkId::cms_invalid)));
 	}
 }
 
