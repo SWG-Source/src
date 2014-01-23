@@ -11,9 +11,7 @@ set(SHARED_SOURCES
 )
 
 if(WIN32)
-	set(PLATFORM_SOURCES
-        win32/WinMain.cpp
-	)
+	set(PLATFORM_SOURCES "")
 else()
 	set(PLATFORM_SOURCES
 		linux/main.cpp
