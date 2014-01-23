@@ -11,6 +11,7 @@
 #define INCLUDED_Vector_H
 
 // ======================================================================
+#include <cmath>
 
 class Vector
 {
