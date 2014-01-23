@@ -10,7 +10,7 @@
 #include "sharedFoundation/NetworkId.h"
 #include "sharedObject/Object.h"
 
-#include <tr1/unordered_map>
+#include <unordered_map>
 #include <string>
 
 //-----------------------------------------------------------------------

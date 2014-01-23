@@ -10,17 +10,18 @@
 #define INCLUDED_OsNewDel_H
 
 // ======================================================================
+#include <cstddef>
 
 enum MemoryManagerNotALeak
 {
 	MM_notALeak
 };
 
-void *operator new(size_t size, MemoryManagerNotALeak) throw(std::bad_alloc);
-void *operator new(size_t size) throw(std::bad_alloc);
-void *operator new[](size_t size) throw(std::bad_alloc);
-void *operator new(size_t size, char const *file, int line) throw(std::bad_alloc);
-void *operator new[](size_t size, char const *file, int line) throw(std::bad_alloc);
+void *operator new(size_t size, MemoryManagerNotALeak);
+void *operator new(size_t size);
+void *operator new[](std::size_t size);
+void *operator new(size_t size, char const *file, int line);
+void *operator new[](size_t size, char const *file, int line);
 
 void operator delete(void *pointer) throw();
 void operator delete[](void *pointer) throw();

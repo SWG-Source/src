@@ -279,7 +279,7 @@ void PlayerQuestObject::addNewTask(std::string title, std::string description, i
 {
 
 	m_taskStatus.push_back(0);
-	m_taskCounters.push_back(std::make_pair<int,int>(0, counterMax));
+	m_taskCounters.push_back(std::make_pair(0, counterMax));
 
 	m_waypoints.push_back(waypoint);
 
@@ -315,7 +315,7 @@ void PlayerQuestObject::readInObjVarData()
 		std::vector<int> maxValues;
 		if(getObjVars().getItem(s_taskMaxCounterObjVar, maxValues))
 			for(std::vector<int>::size_type i = 0; i < counters.size(); ++i)
-				m_taskCounters.push_back(std::make_pair<int,int>(counters[i], maxValues[i]));
+				m_taskCounters.push_back(std::make_pair(counters[i], maxValues[i]));
 	}
 
 	// Task Status
@@ -463,7 +463,7 @@ std::string const & PlayerQuestObject::getTaskDescription(int index)
 void PlayerQuestObject::setTaskCounter(int index, int value)
 {
 	int maxValue = m_taskCounters.get()[index].second;
-	m_taskCounters.set(static_cast<unsigned int>(index), std::make_pair<int, int>(value, maxValue));
+	m_taskCounters.set(static_cast<unsigned int>(index), std::make_pair(value, maxValue));
 
 	saveDataToObjVars();
 }

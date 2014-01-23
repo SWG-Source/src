@@ -10,8 +10,8 @@
 
 // ======================================================================
 
-#include <tr1/unordered_map>
-#include <tr1/unordered_set>
+#include <unordered_map>
+#include <unordered_set>
 #include <string>
 #include <set>
 
@@ -93,9 +93,9 @@ class Scene : public Singleton2<Scene>, public MessageDispatch::Receiver
 		Coordinates();
 	};
 
-	typedef std::tr1::unordered_map<NetworkId, PlanetProxyObject*, NetworkId::Hash>  ObjectMapType;
-	typedef std::tr1::unordered_set<NetworkId, NetworkId::Hash>                      DeletedSetType;
-	typedef std::tr1::unordered_map<Coordinates, Node*, Coordinates::Hasher>         NodeMapType;
+	typedef std::unordered_map<NetworkId, PlanetProxyObject*, NetworkId::Hash>  ObjectMapType;
+	typedef std::unordered_set<NetworkId, NetworkId::Hash>                      DeletedSetType;
+	typedef std::unordered_map<Coordinates, Node*, Coordinates::Hasher>         NodeMapType;
 	
   private:
 	std::string       m_sceneId;

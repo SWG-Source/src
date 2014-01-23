@@ -10,7 +10,7 @@
 
 // ======================================================================
 
-#include <tr1/unordered_map>
+#include <unordered_map>
 #include <set>
 #include <string>
 #include "sharedFoundation/NetworkIdArchive.h"
@@ -88,7 +88,7 @@ class DatabaseProcess : public MessageDispatch::Receiver
 	CommoditiesServerConnection * commoditiesConnection;
 	DatabaseMetricsData *         m_metricsData;
 	
-	std::tr1::unordered_map<uint32, GameServerConnection *>     gameServerConnections;
+	std::unordered_map<uint32, GameServerConnection *>     gameServerConnections;
 	std::set<std::pair<std::string, unsigned short> > pendingGameServerConnections;
 
 	int m_queryExecCount;

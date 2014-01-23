@@ -9,7 +9,7 @@
 #ifndef _INCLUDED_ScriptFuncTable_H
 #define _INCLUDED_ScriptFuncTable_H
 
-#include <tr1/unordered_map>
+#include <unordered_map>
 
 namespace Scripting
 {
@@ -495,7 +495,7 @@ struct ScriptFuncTable
 	const char *argList;
 };
 
-typedef std::tr1::unordered_map< int, const ScriptFuncTable * > _ScriptFuncHashMap;
+typedef std::unordered_map< int, const ScriptFuncTable * > _ScriptFuncHashMap;
 extern _ScriptFuncHashMap *ScriptFuncHashMap;
 extern void InitScriptFuncHashMap(void);
 extern void RemoveScriptFuncHashMap(void);

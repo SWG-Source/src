@@ -71,7 +71,7 @@ namespace ChatServerNamespace
 	ChatServerMetricsData * s_chatServerMetricsData = 0;
 
 	typedef std::list<std::pair<int, time_t> > MessageList;
-	typedef std::tr1::unordered_map<Unicode::String, MessageList> PlayerMessageList;
+	typedef std::unordered_map<Unicode::String, MessageList> PlayerMessageList;
 	PlayerMessageList s_playerMessageList;
 
 	void cleanChatLog();
@@ -430,7 +430,7 @@ void ChatServer::sendToClient(const NetworkId & id, const GameNetworkMessage & m
 {
 	ChatServer::fileLog(false, "ChatServer", "sendToClient() id(%s) message(%s)", id.getValueString().c_str(), message.getCmdName().c_str());
 
-	std::tr1::unordered_map<NetworkId, ConnectionServerConnection *, NetworkId::Hash>::const_iterator f = instance().clientMap.find(id);
+	std::unordered_map<NetworkId, ConnectionServerConnection *, NetworkId::Hash>::const_iterator f = instance().clientMap.find(id);
 	if(f != instance().clientMap.end())
 	{
 		(*f).second->sendToClient(id, message);
@@ -604,7 +604,7 @@ void ChatServer::removeServices()
 ChatAvatarId ChatServer::getAvatarIdForTrackId(unsigned trackId)
 {
 	ChatServer & server = instance();
-	std::tr1::unordered_map<unsigned, NetworkId>::iterator f = server.pendingRequests.find(trackId);
+	std::unordered_map<unsigned, NetworkId>::iterator f = server.pendingRequests.find(trackId);
 	if(f != server.pendingRequests.end())
 	{
 		const ChatAvatar *avatar = getAvatarByNetworkId((*f).second);
@@ -681,11 +681,11 @@ NetworkId ChatServer::sendResponseForTrackId(unsigned trackId, const GameNetwork
 {
 	NetworkId id;
 	ChatServer & server = instance();
-	std::tr1::unordered_map<unsigned, NetworkId>::iterator f = server.pendingRequests.find(trackId);
+	std::unordered_map<unsigned, NetworkId>::iterator f = server.pendingRequests.find(trackId);
 	if(f != server.pendingRequests.end())
 	{
 		id = (*f).second;
-		std::tr1::unordered_map<NetworkId, ConnectionServerConnection *, NetworkId::Hash>::const_iterator c = server.clientMap.find((*f).second);
+		std::unordered_map<NetworkId, ConnectionServerConnection *, NetworkId::Hash>::const_iterator c = server.clientMap.find((*f).second);
 		if(c != server.clientMap.end())
 		{
 			ConnectionServerConnection * conn = (*c).second;
@@ -701,7 +701,7 @@ NetworkId ChatServer::sendResponseForTrackId(unsigned trackId, const GameNetwork
 GameServerConnection *ChatServer::getGameServerConnection(unsigned int sequence)
 {
 	GameServerConnection * result = 0;
-	std::tr1::unordered_map<unsigned int, GameServerConnection *>::iterator f = instance().gameServerConnectionMap.find(sequence);
+	std::unordered_map<unsigned int, GameServerConnection *>::iterator f = instance().gameServerConnectionMap.find(sequence);
 	if(f != instance().gameServerConnectionMap.end())
 	{
 		result = (*f).second;
@@ -724,7 +724,7 @@ void ChatServer::addGameServerConnection(unsigned int sequence, GameServerConnec
 void ChatServer::clearGameServerConnection(const GameServerConnection *connection)
 {
 	std::vector<unsigned int> removeKeyList;
-	std::tr1::unordered_map<unsigned int, GameServerConnection *>::const_iterator i;
+	std::unordered_map<unsigned int, GameServerConnection *>::const_iterator i;
 	for(i = instance().gameServerConnectionMap.begin(); i != instance().gameServerConnectionMap.end(); ++i)
 	{
 		if ((*i).second == connection)
@@ -746,7 +746,7 @@ void ChatServer::clearGameServerConnection(const GameServerConnection *connectio
 ConnectionServerConnection * ChatServer::getConnectionForCharacter(const NetworkId & characterId)
 {
 	ConnectionServerConnection * result = 0;
-	std::tr1::unordered_map<NetworkId, ConnectionServerConnection *, NetworkId::Hash>::iterator f = instance().clientMap.find(characterId);
+	std::unordered_map<NetworkId, ConnectionServerConnection *, NetworkId::Hash>::iterator f = instance().clientMap.find(characterId);
 	if(f != instance().clientMap.end())
 	{
 		result = (*f).second;
@@ -1039,7 +1039,7 @@ void ChatServer::connectPlayer(ConnectionServerConnection * connection, const un
 {
 	ChatServer::fileLog(false, "ChatServer", "connectPlayer() address(%s) suid(%u) characterName(%s) networkId(%s)", getConnectionAddress(connection).c_str(), suid, characterName.c_str(), networkId.getValueString().c_str());
 
-	std::tr1::unordered_map<NetworkId, ConnectionServerConnection *, NetworkId::Hash>::iterator cf = instance().clientMap.find(networkId);
+	std::unordered_map<NetworkId, ConnectionServerConnection *, NetworkId::Hash>::iterator cf = instance().clientMap.find(networkId);
 	if (cf != instance().clientMap.end())
 	{
 		DEBUG_WARNING(true, ("We received a chat login attempt for a player (%s) that we think is already logged in.  We're going to try to log out the old avatar then log in the new one.", characterName.c_str()));
@@ -1260,7 +1260,7 @@ void ChatServer::destroyRoom(const NetworkId & id, const unsigned int sequence, 
 		ChatAvatarId destroyer(avatar->GetGameCode(), avatar->GetGameServerName(), avatar->GetCharacterName());
 
 		// can this avatar destroy the room?
-		std::tr1::unordered_map<std::string, ChatServerRoomOwner>::const_iterator i;
+		std::unordered_map<std::string, ChatServerRoomOwner>::const_iterator i;
 		for(i = instance().chatInterface->getRoomList().begin(); i != instance().chatInterface->getRoomList().end(); ++i)
 		{
 			if((*i).second.getRoomData().id == roomId)
@@ -1373,7 +1373,7 @@ void ChatServer::disconnectPlayer(const NetworkId & id)
 		instance().chatAvatars.erase(f);
 	}
 
-	std::tr1::unordered_map<NetworkId, ConnectionServerConnection *, NetworkId::Hash>::iterator cf = instance().clientMap.find(id);
+	std::unordered_map<NetworkId, ConnectionServerConnection *, NetworkId::Hash>::iterator cf = instance().clientMap.find(id);
 	if(cf != instance().clientMap.end())
 	{
 		instance().clientMap.erase(cf);
@@ -2268,7 +2268,7 @@ void ChatServer::sendRoomMessage(const ChatAvatarId &id, const std::string & roo
 		}
 		// get room id
 		std::string lowerName = toLower(roomName);
-		std::tr1::unordered_map<std::string, ChatServerRoomOwner>::const_iterator f = instance().chatInterface->getRoomList().find(lowerName);
+		std::unordered_map<std::string, ChatServerRoomOwner>::const_iterator f = instance().chatInterface->getRoomList().find(lowerName);
 		if(f != instance().chatInterface->getRoomList().end())
 		{
 			const ChatAvatar *sender = instance().ownerSystem;
@@ -2386,7 +2386,7 @@ void ChatServer::sendStandardRoomMessage(const ChatAvatarId &senderId, const std
 			return;
 		}
 	
-		std::tr1::unordered_map<std::string, ChatServerRoomOwner>::const_iterator f = instance().chatInterface->getRoomList().find(lowerName);
+		std::unordered_map<std::string, ChatServerRoomOwner>::const_iterator f = instance().chatInterface->getRoomList().find(lowerName);
 		if(f != instance().chatInterface->getRoomList().end())
 		{
 			const ChatAvatar *sender;
@@ -2457,13 +2457,13 @@ void ChatServer::removeConnectionServerConnection(ConnectionServerConnection * t
 {
 	ChatServer::fileLog(false, "ChatServer", "removeConnectionServerConnection() target(%s)", getConnectionAddress(target).c_str());
 
-	std::tr1::unordered_map<NetworkId, ConnectionServerConnection *, NetworkId::Hash> tmpList = instance().clientMap;
-	std::tr1::unordered_map<NetworkId, ConnectionServerConnection *, NetworkId::Hash>::const_iterator i;
+	std::unordered_map<NetworkId, ConnectionServerConnection *, NetworkId::Hash> tmpList = instance().clientMap;
+	std::unordered_map<NetworkId, ConnectionServerConnection *, NetworkId::Hash>::const_iterator i;
 	for(i = tmpList.begin(); i != tmpList.end(); ++i)
 	{
 		if((*i).second == target)
 			disconnectPlayer((*i).first);
-		std::tr1::unordered_map<NetworkId, ConnectionServerConnection *, NetworkId::Hash>::iterator f = instance().clientMap.find((*i).first);
+		std::unordered_map<NetworkId, ConnectionServerConnection *, NetworkId::Hash>::iterator f = instance().clientMap.find((*i).first);
 		if (f != instance().clientMap.end())
 		{
 			instance().clientMap.erase(f);
@@ -2913,7 +2913,7 @@ void ChatServer::sendToGameServerById(unsigned const connectionId, GameNetworkMe
 GameServerConnection *ChatServer::getGameServerConnectionFromId(unsigned int sequence)
 {
 	GameServerConnection * result = NULL;
-	std::tr1::unordered_map<unsigned int, GameServerConnection *>::iterator f = m_gameServerConnectionRegistry.find(sequence);
+	std::unordered_map<unsigned int, GameServerConnection *>::iterator f = m_gameServerConnectionRegistry.find(sequence);
 	if(f != m_gameServerConnectionRegistry.end())
 	{
 		result = (*f).second;

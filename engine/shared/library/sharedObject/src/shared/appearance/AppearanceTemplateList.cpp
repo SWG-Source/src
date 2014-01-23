@@ -630,7 +630,7 @@ void AppearanceTemplateListNamespace::addNamedAppearanceTemplate(AppearanceTempl
 	NOT_NULL(appearanceTemplate);
 
 	//-- add to named list
-	std::pair<NamedTemplates::iterator, bool> result = ms_namedTemplates.insert(std::make_pair(&appearanceTemplate->getCrcName(), appearanceTemplate));
+	std::pair<NamedTemplates::iterator, bool> result = ms_namedTemplates.insert(std::make_pair((const CrcString*)&appearanceTemplate->getCrcName(), appearanceTemplate));
 
 	//-- make sure it's not already there
 	DEBUG_FATAL(!result.second, ("tried to add existing named appearanceTemplate %s", appearanceTemplate->getName()));
@@ -649,7 +649,7 @@ void AppearanceTemplateListNamespace::addNamedTimedAppearanceTemplate(Appearance
 	NOT_NULL(appearanceTemplate);
 
 	//-- add to named list
-	std::pair<NamedTimedTemplates::iterator, bool> result = ms_namedTimedTemplates.insert(std::make_pair(&appearanceTemplate->getCrcName(), std::make_pair(ms_keepTime + Random::randomReal(ms_keepEpsilon), appearanceTemplate)));
+	std::pair<NamedTimedTemplates::iterator, bool> result = ms_namedTimedTemplates.insert(std::make_pair((const CrcString*)&appearanceTemplate->getCrcName(), std::make_pair(ms_keepTime + Random::randomReal(ms_keepEpsilon), appearanceTemplate)));
 
 	//-- make sure it's not already there
 	DEBUG_FATAL(!result.second, ("tried to add existing named timed appearanceTemplate %s", appearanceTemplate->getName()));

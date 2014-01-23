@@ -18,7 +18,7 @@
 #endif
 
 #include <string>
-#include <tr1/unordered_map>
+#include <unordered_map>
 
 //-----------------------------------------------------------------
 
@@ -47,7 +47,6 @@ namespace Unicode
 }
 
 namespace std {
-namespace tr1 {
 
 	template<>
 	struct hash<Unicode::String>
@@ -64,7 +63,7 @@ namespace tr1 {
 		}
 	};
 
-}}
+}
 
 //-----------------------------------------------------------------
 

@@ -10,7 +10,7 @@
 
 #include "sharedCommandParser/CommandParser.h"
 #include <map>
-#include <tr1/unordered_set>
+#include <unordered_set>
 #include "UnicodeUtils.h"
 
 // ======================================================================
@@ -18,7 +18,7 @@ class ConsoleCommandParserDefault : public CommandParser
 {
 public:
 	typedef std::map<String_t, String_t> AliasMap_t;
-	typedef std::tr1::unordered_set<String_t>      AliasGuardSet_t;
+	typedef std::unordered_set<String_t>      AliasGuardSet_t;
 
 
 	explicit               ConsoleCommandParserDefault (void);

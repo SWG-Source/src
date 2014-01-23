@@ -6,7 +6,7 @@
 
 //-----------------------------------------------------------------------
 
-#include <tr1/unordered_map>
+#include <unordered_map>
 #include <set>
 #include <string>
 
@@ -40,9 +40,9 @@ class ConnectionServer : public MessageDispatch::Receiver
 
 	~ConnectionServer ();
 		
-	typedef std::tr1::unordered_map<uint32, GameConnection *>              GameServerMap;
-	typedef std::tr1::unordered_map<NetworkId, Client *,NetworkId::Hash>   ClientMap;
-	typedef std::tr1::unordered_map<uint32, ClientConnection *>            SuidMap;
+	typedef std::unordered_map<uint32, GameConnection *>              GameServerMap;
+	typedef std::unordered_map<NetworkId, Client *,NetworkId::Hash>   ClientMap;
+	typedef std::unordered_map<uint32, ClientConnection *>            SuidMap;
 	typedef std::set<uint32>                                     FreeTrialsSet;
 	
 	static void                   addNewClient(ClientConnection* cconn, const NetworkId &oid, GameConnection* gconn, const std::string &sceneName, bool sendToStarport );

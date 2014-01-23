@@ -180,7 +180,7 @@ void Squad::addUnit(NetworkId const & unit)
 
 		//-- Add the unit to the new squad
 
-		IGNORE_RETURN(m_unitMap->insert(std::make_pair(unit, &PersistentCrcString::empty)));
+		IGNORE_RETURN(m_unitMap->insert(std::make_pair(CachedNetworkId(unit), &PersistentCrcString::empty)));
 
 		if (leader)
 		{
@@ -419,7 +419,7 @@ void Squad::buildFormation()
 		NetworkId const & unit = iterSortedUnitList->second.first;
 		PersistentCrcString const * unitName = iterSortedUnitList->second.second;
 
-		IGNORE_RETURN(m_unitMap->insert(std::make_pair(unit, unitName)));
+		IGNORE_RETURN(m_unitMap->insert(std::make_pair(CachedNetworkId(unit), unitName)));
 	}
 
 	m_formation.build(*this);

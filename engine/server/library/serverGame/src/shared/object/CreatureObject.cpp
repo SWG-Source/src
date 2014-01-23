@@ -183,7 +183,7 @@
 #include <algorithm>
 #include <deque>
 #include <limits>
-#include <tr1/unordered_set>
+#include <unordered_set>
 #include <set>
 
 //----------------------------------------------------------------------

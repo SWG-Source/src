@@ -100,7 +100,7 @@ void AppearanceManager::install()
 					crcStringVector = new CrcStringVector();
 					crcStringVector->reserve(static_cast<size_t>(numberOfColumns));
 
-					ms_objectTemplateAppearanceTemplateMap.insert(std::make_pair(new PersistentCrcString(crcSourceName), crcStringVector));
+					ms_objectTemplateAppearanceTemplateMap.insert(std::make_pair((const CrcString*)new PersistentCrcString(crcSourceName), crcStringVector));
 				}
 			}
 

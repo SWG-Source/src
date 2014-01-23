@@ -60,28 +60,8 @@ namespace std
 
 	typedef basic_string<char, char_traits<char>, allocator<char> >                     string;
 
-	namespace tr1
-	{
-		template <class _T1>                                                        struct hash;
-		template <class _Key, class _Tp, class _Hash, class _Compare, class _Alloc> class unordered_map;
-		template <class _Key, class _Hash, class _Compare, class _Alloc> 			class unordered_set;
-	}
-
-	template <class ForwardIterator>
-  	bool is_sorted (ForwardIterator first, ForwardIterator last)
-	{
-  		if (first==last) return true;
-  		ForwardIterator next = first;
-  		while (++next!=last) {
-    		if (*next<*first)     // or, if (comp(*next,*first)) for version (2)
-      			return false;
-    		
-    		++first;
-  		}
-  
-  		return true;
-	}
-
+	template <class _Key, class _Tp, class _Hash, class _Compare, class _Alloc> 		class unordered_map;
+	template <class _Key, class _Hash, class _Compare, class _Alloc> 					class unordered_set;
 }
 
 template <class _Tp, class _Alloc = std::allocator<_Tp> > struct stddeque
@@ -104,9 +84,9 @@ template <class _Key, class _Tp, class _Compare = std::less<_Key>, class _Alloc 
 //	typedef std::hash_map<_Key, _Tp, _HashFcn, _Compare, _Alloc> fwd;
 //};
 
-template <class _Key, class _Tp, class _HashFcn = std::tr1::hash<_Key>, class _Compare = std::equal_to<_Key>, class _Alloc = std::allocator< std::pair <const _Key, _Tp> > > struct stdunordered_map
+template <class _Key, class _Tp, class _HashFcn = std::hash<_Key>, class _Compare = std::equal_to<_Key>, class _Alloc = std::allocator< std::pair <const _Key, _Tp> > > struct stdunordered_map
 {
-	typedef std::tr1::unordered_map<_Key, _Tp, _HashFcn, _Compare, _Alloc> fwd;
+	typedef std::unordered_map<_Key, _Tp, _HashFcn, _Compare, _Alloc> fwd;
 };
 
 template <class _Key, class _Tp, class _Compare = std::less<_Key>, class _Alloc = std::allocator< std::pair <const _Key, _Tp> > > struct stdmultimap
@@ -124,9 +104,9 @@ template <class _Key, class _Compare = std::less<_Key>, class _Alloc = std::allo
 //	typedef std::hash_set<_Key, _HashFcn, _Compare, _Alloc> fwd;
 //};
 
-template <class _Key, class _HashFcn = std::tr1::hash<_Key>, class _Compare = std::equal_to<_Key>, class _Alloc = std::allocator<_Key> > struct stdunordered_set
+template <class _Key, class _HashFcn = std::hash<_Key>, class _Compare = std::equal_to<_Key>, class _Alloc = std::allocator<_Key> > struct stdunordered_set
 {
-	typedef std::tr1::unordered_set<_Key, _HashFcn, _Compare, _Alloc> fwd;
+	typedef std::unordered_set<_Key, _HashFcn, _Compare, _Alloc> fwd;
 };
 
 template <class _Key, class _Compare = std::less<_Key>, class _Alloc = std::allocator<_Key> > struct stdmultiset

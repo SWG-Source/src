@@ -8393,11 +8393,11 @@ void ServerObject::stopListeningToAllBroadcastMessages()
 	else
 	{
 		// build list of all broadcasters this object is currently listening to
-		std::tr1::unordered_set<NetworkId> broadcasters;
+		std::unordered_set<NetworkId> broadcasters;
 		for (BroadcastMap::const_iterator iter = m_broadcastBroadcasters.begin(); iter != m_broadcastBroadcasters.end(); ++iter)
 			IGNORE_RETURN(broadcasters.insert(iter->second));
 
-		for (std::tr1::unordered_set<NetworkId>::const_iterator iter2 = broadcasters.begin(); iter2 != broadcasters.end(); ++iter2)
+		for (std::unordered_set<NetworkId>::const_iterator iter2 = broadcasters.begin(); iter2 != broadcasters.end(); ++iter2)
 		{
 			// need to send a message to the broadcaster if the broadcaster is not on this game server
 			ServerObject * objBroadcaster = ServerWorld::findObjectByNetworkId(*iter2);

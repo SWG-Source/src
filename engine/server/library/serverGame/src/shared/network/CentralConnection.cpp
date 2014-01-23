@@ -168,12 +168,12 @@ void CentralServerConnection::onReceive(const Archive::ByteStream & message)
 		// return an appropriate response.
 		if( object && object->isAuthoritative() )
 		{
-			GenericValueTypeMessage< std::pair< unsigned int, bool > > rmsg( "CSFindAuthObjectReply", std::make_pair< unsigned int, bool >( msg.getValue().second, true ) );
+			GenericValueTypeMessage< std::pair< unsigned int, bool > > rmsg( "CSFindAuthObjectReply", std::make_pair( msg.getValue().second, true ) );
 			GameServer::getInstance().sendToCentralServer( rmsg );
 		}
 		else
 		{
-			GenericValueTypeMessage< std::pair< unsigned int, bool > > rmsg( "CSFindAuthObjectReply", std::make_pair< unsigned int, bool >( msg.getValue().second, false ) );
+			GenericValueTypeMessage< std::pair< unsigned int, bool > > rmsg( "CSFindAuthObjectReply", std::make_pair( msg.getValue().second, false ) );
 			GameServer::getInstance().sendToCentralServer( rmsg );
 		}
 	}

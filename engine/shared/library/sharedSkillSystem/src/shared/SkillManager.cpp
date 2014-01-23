@@ -15,7 +15,7 @@
 #include "sharedDebug/InstallTimer.h"
 
 #include <algorithm>
-#include <tr1/unordered_map>
+#include <unordered_map>
 #include <string>
 
 SkillManager      *SkillManager::ms_instance = NULL;

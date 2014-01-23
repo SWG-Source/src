@@ -108,20 +108,20 @@ namespace PlanetObjectNamespace
 
 		if(index == std::string::npos)
 		{
-			parsedVector.push_back(std::make_pair<std::string, std::string::size_type>(eventString, 0));
+			parsedVector.push_back(std::make_pair(eventString, 0));
 			return;
 		}
 
 		while(index != std::string::npos)
 		{
 			std::string subString = eventString.substr(offset, (index - offset));
-			parsedVector.push_back(std::make_pair<std::string, std::string::size_type>(subString, index));
+			parsedVector.push_back(std::make_pair(subString, index));
 			offset = index + 1;
 			index = eventString.find(delimiter, offset);
 		}
 
 		std::string subString = eventString.substr(offset, eventString.size());
-		parsedVector.push_back(std::make_pair<std::string, std::string::size_type>(subString, index));
+		parsedVector.push_back(std::make_pair(subString, index));
 	}
 
 	const char * makeCopyOfString(const char * rhs)

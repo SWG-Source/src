@@ -15,7 +15,7 @@
 #include <string>
 #include <algorithm>
 #include <cctype>
-#include <tr1/unordered_map>
+#include <unordered_map>
 
 // ======================================================================
 
@@ -25,7 +25,7 @@ namespace CombatDataTableNamespace
 	std::string const cs_columnActionNameCrc("actionNameCrc");
 	int s_actionNameCrcColumn;
 
-	std::tr1::unordered_map<uint32, int> s_commandsWithMinInvisLevelRequired;
+	std::unordered_map<uint32, int> s_commandsWithMinInvisLevelRequired;
 }
 
 using namespace CombatDataTableNamespace;
@@ -402,7 +402,7 @@ int CombatDataTable::getMinInvisLevelRequired(uint32 commandHash)
 	if(commandHash == 0)
 		return -1;
 
-	std::tr1::unordered_map<uint32, int>::const_iterator it = s_commandsWithMinInvisLevelRequired.find(commandHash);
+	std::unordered_map<uint32, int>::const_iterator it = s_commandsWithMinInvisLevelRequired.find(commandHash);
 	if (it != s_commandsWithMinInvisLevelRequired.end())
 		return it->second;
 

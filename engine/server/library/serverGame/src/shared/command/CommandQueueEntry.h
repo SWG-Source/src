@@ -29,7 +29,7 @@ public:
 		uint32 sequenceId,
 		bool clearable,
 		Command::Priority,
-		bool auto );
+		bool autoAttack );
 		
 	CommandQueueEntry(CommandQueueEntry const &entry);
 	CommandQueueEntry& operator=(CommandQueueEntry const &);

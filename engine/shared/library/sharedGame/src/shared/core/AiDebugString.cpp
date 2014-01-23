@@ -543,8 +543,8 @@ void AiDebugString::addCircleAtObjectOffset(NetworkId const & target, Vector con
 	// Object-space circle relative to the target
 
 	if (radius > 0.0f)
-	{
-		m_circleList->push_back(std::make_pair(target, std::make_pair(Circle(position_o, radius), color)));
+	{	
+		m_circleList->push_back(std::make_pair(CachedNetworkId(target), std::make_pair(Circle(position_o, radius), color)));
 	}
 	else
 	{

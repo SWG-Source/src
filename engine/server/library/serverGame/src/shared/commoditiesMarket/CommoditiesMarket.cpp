@@ -590,8 +590,8 @@ static time_t                                          s_timeMarketConnectionCre
 static std::map<int, std::pair<CachedNetworkId, int> > s_queries;
 static std::map<NetworkId, QueuedQuery *>              s_queryTime;
 static int                                             s_nextRequestId;
-static std::tr1::unordered_map<NetworkId, ItemLoadPair, NetworkId::Hash>                  s_pendingLoads;
-static std::tr1::unordered_map<int, int>                         s_pendingAdds; //sequence to cost map
+static std::unordered_map<NetworkId, ItemLoadPair, NetworkId::Hash>                  s_pendingLoads;
+static std::unordered_map<int, int>                         s_pendingAdds; //sequence to cost map
 
 // all money transactions transfer money out of or to the bank of the player and never to or from the vendor/bazaar location except bazaar sale fees
 static const std::string COMMODITIES_NAMED_ACCOUNT("commodities_named_escrow_account");
@@ -1321,7 +1321,7 @@ void CommoditiesMarket::onAddAuction(int sequence, int32 result, const NetworkId
 				}
 			}
 		}
-		std::tr1::unordered_map<int, int>::iterator f = s_pendingAdds.find(sequence);
+		std::unordered_map<int, int>::iterator f = s_pendingAdds.find(sequence);
 		int auctionFee = 0;
 		if (f != s_pendingAdds.end())
 		{
@@ -2488,7 +2488,7 @@ void CommoditiesMarket::checkPendingLoads(const NetworkId &itemId)
 	if (!ConfigServerGame::getCommoditiesMarketEnabled())
 		return;
 	LOG("AuctionRetrieval", ("CommoditiesMarket::response from DB for loading object %s for retrieval", itemId.getValueString().c_str()));
-	std::tr1::unordered_map<NetworkId, ItemLoadPair, NetworkId::Hash>::iterator f = s_pendingLoads.find(itemId);
+	std::unordered_map<NetworkId, ItemLoadPair, NetworkId::Hash>::iterator f = s_pendingLoads.find(itemId);
 	if (f != s_pendingLoads.end())
 	{
 		CreatureObject *player = dynamic_cast<CreatureObject *>(NetworkIdManager::getObjectById((*f).second.ownerId));

@@ -6543,7 +6543,7 @@ jlongArray JNICALL ScriptMethodsObjectInfoNamespace::getAllWornItems(JNIEnv *env
 				{
 					SlottedContainmentProperty::SlotArrangement const slots = slottedContainment->getSlotArrangement(slottedContainment->getCurrentArrangement()); // Get the old arrangement
 					for(unsigned int j = 0; j < slots.size(); ++j)
-						wornObjects.insert(std::make_pair<SlotId, const ServerObject*>(slots[j], item));
+						wornObjects.insert(std::make_pair(slots[j], item));
 				}
 			}
 		}	
@@ -6586,7 +6586,7 @@ jlongArray JNICALL ScriptMethodsObjectInfoNamespace::getAllWornItems(JNIEnv *env
 				if(!slotOccupied)
 				{
 					for(unsigned int j = 0; j < slots.size(); ++j)
-						wornObjects.insert(std::make_pair<SlotId, const ServerObject*>(slots[j], item));
+						wornObjects.insert(std::make_pair(slots[j], item));
 				}
 			}
 		}

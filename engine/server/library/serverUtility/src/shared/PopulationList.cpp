@@ -61,7 +61,7 @@ int PopulationList::getNearestPopulation(const std::string &scene, int x, int z)
 					}
 				}
 			}
-			m_populationCache.insert(std::make_pair<Location, int>(where,population));
+			m_populationCache.insert(std::make_pair(where,population));
 			return population;
 		}
 	}

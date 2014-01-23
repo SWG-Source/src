@@ -8,7 +8,7 @@
 #include "sharedGame/FirstSharedGame.h"
 #include "sharedGame/ShipComponentType.h"
 
-#include <tr1/unordered_map>
+#include <unordered_map>
 
 //======================================================================
 

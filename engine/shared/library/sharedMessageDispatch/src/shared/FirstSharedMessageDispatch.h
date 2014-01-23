@@ -16,7 +16,7 @@
 #include "sharedMessageDispatch/Message.h"
 #include "sharedMessageDispatch/Receiver.h"
 #include <set>
-#include <tr1/unordered_map>
+#include <unordered_map>
 
 // ======================================================================
 
