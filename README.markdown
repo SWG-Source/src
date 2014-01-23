@@ -2,6 +2,8 @@
 
 ## Ubuntu Environment Setup
 
+Note that the server only supports 32bit linux platforms at this time.
+
 	sudo apt-get install build-essential zlib1g-dev libpcre3-dev cmake libboost-dev libxml2-dev libncurses5-dev flex bison git-core alien
 
 ### Oracle Instant Client
