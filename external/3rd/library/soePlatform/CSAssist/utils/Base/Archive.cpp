@@ -68,25 +68,25 @@ namespace Base
     }
 #endif
 
-    ByteStream::ReadIterator::ReadIterator() :
+    ReadIterator::ReadIterator() :
     readPtr(0),
     stream(0)
     {
     }
 
-    ByteStream::ReadIterator::ReadIterator(const ReadIterator & source) :
+    ReadIterator::ReadIterator(const ReadIterator & source) :
     readPtr(source.readPtr),
     stream(source.stream)
     {
     }
 
-    ByteStream::ReadIterator::ReadIterator(const ByteStream & source) :
+    ReadIterator::ReadIterator(const ByteStream & source) :
     readPtr(0),
     stream(&source)
     {
     }
 
-    ByteStream::ReadIterator::~ReadIterator()
+    ReadIterator::~ReadIterator()
     {
 	    stream = 0;
     }
