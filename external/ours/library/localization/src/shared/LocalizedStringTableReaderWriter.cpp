@@ -11,6 +11,8 @@
 #include "LocalizedString.h"
 #include "fileInterface/AbstractFile.h"
 #include "UnicodeUtils.h"
+
+#include <algorithm>
 #include <cstdio>
 
 #include <cassert>
@@ -424,7 +426,7 @@ LocalizedString *             LocalizedStringTableRW::addString  (LocalizedStrin
 	m_nameMap   [name]      = locstr->getId ();
 	m_idNameMap [id]        = name;
 
-	m_nextUniqueId = std::max (m_nextUniqueId, locstr->getId () + 1);
+	m_nextUniqueId = std::max(m_nextUniqueId, locstr->getId () + 1);
 
 	return locstr;
 }
