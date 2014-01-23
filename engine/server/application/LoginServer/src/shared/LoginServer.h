@@ -12,7 +12,7 @@
 #include "sharedFoundation/StationId.h"
 #include "sharedMessageDispatch/Receiver.h"
 #include "sharedNetwork/Service.h"
-#include <tr1/unordered_map>
+#include <unordered_map>
 #include <map>
 #include <string>
 
@@ -43,7 +43,7 @@ public:
 	ClientConnection*        getUnvalidatedClient (int clientId);
 	void                     removeClient        (int clientId);
 		
-	const std::tr1::unordered_map<std::string, const CentralServerConnection *> & getCentralServerMap_hide() const;
+	const std::unordered_map<std::string, const CentralServerConnection *> & getCentralServerMap_hide() const;
 
 	bool                     deleteCharacter     (uint32 clusterId, NetworkId const & characterId, StationId suid);
 

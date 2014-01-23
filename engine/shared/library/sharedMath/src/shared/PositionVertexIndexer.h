@@ -12,7 +12,7 @@
 
 #include "sharedMath/Vector.h"
 
-#include <tr1/unordered_map>
+#include <unordered_map>
 
 // ======================================================================
 
@@ -42,7 +42,7 @@ private:
 
 private:
 
-	typedef std::tr1::unordered_multimap<uint32 /*crc*/, int /*index*/> VertexIndexMap;
+	typedef std::unordered_multimap<uint32 /*crc*/, int /*index*/> VertexIndexMap;
 
 	VectorVector * m_vertices;
 	VertexIndexMap * m_indexMap;

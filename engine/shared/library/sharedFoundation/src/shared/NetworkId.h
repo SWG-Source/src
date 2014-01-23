@@ -156,8 +156,6 @@ inline size_t NetworkId::getHashValue () const
 // STL standard hash function
 namespace std
 {
-namespace tr1
-{
 
 template <>
 struct hash<NetworkId>  // stl standard hash
@@ -165,6 +163,6 @@ struct hash<NetworkId>  // stl standard hash
   size_t operator()(const NetworkId &x) const { return x.getHashValue(); }
 };
 
-}}
+}
 
 #endif

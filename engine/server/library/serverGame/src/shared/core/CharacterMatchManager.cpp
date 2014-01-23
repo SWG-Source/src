@@ -33,7 +33,7 @@
 #include "sharedObject/NetworkIdManager.h"
 #include "sharedSkillSystem/SkillManager.h"
 #include "sharedSkillSystem/SkillObject.h"
-#include <tr1/unordered_map>
+#include <unordered_map>
 #include <limits>
 #include <map>
 #include <vector>

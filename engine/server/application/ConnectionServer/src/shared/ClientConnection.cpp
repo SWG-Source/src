@@ -395,7 +395,7 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg& msg)
 			m_suid = atoi(m_accountName.c_str());
 			if (m_suid == 0)
 			{
-				std::tr1::hash<std::string> h;
+				std::hash<std::string> h;
 				m_suid = h(m_accountName.c_str());
 			}
 			onValidateClient(m_suid, m_accountName, m_isSecure, NULL, ConfigConnectionServer::getDefaultGameFeatures(), ConfigConnectionServer::getDefaultSubscriptionFeatures(), 0, 0, 0, 0, ConfigConnectionServer::getFakeBuddyPoints());

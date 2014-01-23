@@ -7,7 +7,7 @@
 
 //-----------------------------------------------------------------------
 #pragma warning(disable : 4100)
-#include <tr1/unordered_map>
+#include <unordered_map>
 #include <map>
 #include <string>
 #include <vector>
@@ -61,10 +61,10 @@ public:
 private:
 	typedef std::vector<ConnectionServerConnection *>                 ConnectionServerConnectionList;
 	typedef std::map<NetworkId, CentralObject>                       CentralObjectMap;
-	typedef std::tr1::unordered_multimap<SceneId, GameServerConnection *> SceneGameMap;
+	typedef std::unordered_multimap<SceneId, GameServerConnection *> SceneGameMap;
 
 	typedef std::pair<SceneGameMap::const_iterator, SceneGameMap::const_iterator> ServersList;
-	typedef std::tr1::unordered_map<uint32, ConnectionServerConnection *>                   ConnectionServerSUIDMap;
+	typedef std::unordered_map<uint32, ConnectionServerConnection *>                   ConnectionServerSUIDMap;
 
 	typedef std::map<NetworkId, std::pair<SceneId, time_t> >                      PlayerSceneMapType;
 

@@ -196,7 +196,7 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 
 		if (suid==0)
 		{
-			std::tr1::hash<std::string> h;
+			std::hash<std::string> h;
 			suid = h(id); //lint !e603 // Symbol 'h' not initialized (it's a functor)
 		}
 		

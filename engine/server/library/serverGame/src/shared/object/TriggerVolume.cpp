@@ -18,7 +18,7 @@
 #include "sharedDebug/Profiler.h"
 #include "sharedObject/NetworkIdManager.h"
 #include <algorithm>
-#include <tr1/unordered_map>
+#include <unordered_map>
 
 // ======================================================================
 
@@ -48,8 +48,8 @@ namespace TriggerVolumeNamespace
 		// optimization to track how many time a NetworkId appears
 		// in sources and targets, so that we can avoid unnecessarily
 		// searching the entire sources and targets vectors
-		std::tr1::unordered_map<NetworkId, int> m_sourcesCount;
-		std::tr1::unordered_map<NetworkId, int> m_targetsCount;
+		std::unordered_map<NetworkId, int> m_sourcesCount;
+		std::unordered_map<NetworkId, int> m_targetsCount;
 	};
 
 	// ----------------------------------------------------------------------
@@ -61,7 +61,7 @@ namespace TriggerVolumeNamespace
 		m_sources.push_back(source);
 		m_targets.push_back(target);
 
-		std::tr1::unordered_map<NetworkId, int>::iterator i = m_sourcesCount.find(source);
+		std::unordered_map<NetworkId, int>::iterator i = m_sourcesCount.find(source);
 		if (i == m_sourcesCount.end())
 			m_sourcesCount[source] = 1;
 		else
@@ -80,7 +80,7 @@ namespace TriggerVolumeNamespace
 	{
 		// remove all entries from sources
 		// and targets for the specified id
-		std::tr1::unordered_map<NetworkId, int>::iterator const iterCountSource = m_sourcesCount.find(id);
+		std::unordered_map<NetworkId, int>::iterator const iterCountSource = m_sourcesCount.find(id);
 		if (iterCountSource != m_sourcesCount.end())
 		{
 			int countSource = iterCountSource->second;
@@ -104,7 +104,7 @@ namespace TriggerVolumeNamespace
 					std::vector<NetworkId>::iterator targetsIter = m_targets.begin();
 					std::advance(targetsIter, index);
 
-					std::tr1::unordered_map<NetworkId, int>::iterator const iterCountTarget = m_targetsCount.find(*targetsIter);
+					std::unordered_map<NetworkId, int>::iterator const iterCountTarget = m_targetsCount.find(*targetsIter);
 					if (iterCountTarget != m_targetsCount.end())
 					{
 						if (iterCountTarget->second <= 1)
@@ -128,7 +128,7 @@ namespace TriggerVolumeNamespace
 			m_sourcesCount.erase(iterCountSource);
 		}
 
-		std::tr1::unordered_map<NetworkId, int>::iterator const iterCountTarget = m_targetsCount.find(id);
+		std::unordered_map<NetworkId, int>::iterator const iterCountTarget = m_targetsCount.find(id);
 		if (iterCountTarget != m_targetsCount.end())
 		{
 			int countTarget = iterCountTarget->second;
@@ -152,7 +152,7 @@ namespace TriggerVolumeNamespace
 					std::vector<NetworkId>::iterator sourcesIter = m_sources.begin();
 					std::advance(sourcesIter, index);
 
-					std::tr1::unordered_map<NetworkId, int>::iterator const iterCountSource = m_sourcesCount.find(*sourcesIter);
+					std::unordered_map<NetworkId, int>::iterator const iterCountSource = m_sourcesCount.find(*sourcesIter);
 					if (iterCountSource != m_sourcesCount.end())
 					{
 						if (iterCountSource->second <= 1)

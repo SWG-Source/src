@@ -89,7 +89,7 @@ namespace ChatInterfaceNamespace
 	static int s_maxHeadersToSendToClientPerInterval;
 
 	// to prevent sending duplicate room chat message
-	std::tr1::unordered_map<unsigned, std::pair<unsigned, unsigned> > s_mostRecentRoomChatMessage;
+	std::unordered_map<unsigned, std::pair<unsigned, unsigned> > s_mostRecentRoomChatMessage;
 }
 
 using namespace ChatInterfaceNamespace;
@@ -356,7 +356,7 @@ void ChatInterface::OnGetRoom(unsigned track, unsigned result, const ChatRoom *r
 	}
 	std::string lowerRoomName = toLower(roomName);
 	unsigned sequence = (unsigned)user;
-	std::tr1::unordered_map<std::string, ChatServerRoomOwner>::iterator f = roomList.find(lowerRoomName);
+	std::unordered_map<std::string, ChatServerRoomOwner>::iterator f = roomList.find(lowerRoomName);
 	if (f != roomList.end() && room)
 	{
 		(*f).second.updateRoomData(room);
@@ -443,7 +443,7 @@ const ChatServerRoomOwner * ChatInterface::getRoomByName(const std::string & roo
 
 	std::string lowerRoomName = toLower(roomName);
 	const ChatServerRoomOwner * result = 0;
-	std::tr1::unordered_map<std::string, ChatServerRoomOwner>::const_iterator f = roomList.find(lowerRoomName);
+	std::unordered_map<std::string, ChatServerRoomOwner>::const_iterator f = roomList.find(lowerRoomName);
 	if(f != roomList.end())
 	{
 		result = &(*f).second;
@@ -546,7 +546,7 @@ void ChatInterface::sendMessageToAllAvatars(const GameNetworkMessage & message)
 	}
 
 	//send to all pending avatars
-	std::tr1::unordered_map<std::string, NetworkId>::iterator p = pendingAvatars.begin();
+	std::unordered_map<std::string, NetworkId>::iterator p = pendingAvatars.begin();
 	while (p != pendingAvatars.end())
 	{
 		ConnectionServerConnection * connection = 
@@ -570,7 +570,7 @@ std::string ChatInterface::getChatName(const NetworkId &id)
 {
 	ChatServer::fileLog(false, "ChatInterface", "getChatName() id(%s)", id.getValueString().c_str());
 
-    std::tr1::unordered_map<std::string, NetworkId>::iterator i;
+    std::unordered_map<std::string, NetworkId>::iterator i;
     for (i = pendingAvatars.begin(); i != pendingAvatars.end(); ++i)
     {
         if (id == (*i).second)
@@ -588,7 +588,7 @@ bool ChatInterface::sendMessageToPendingAvatar(const ChatAvatarId &id, const Gam
 {
 	ChatServer::fileLog(false, "ChatInterface", "sendMessageToPendingAvatar() id(%s) message(%s)", id.getFullName().c_str(), message.getCmdName().c_str());
 
-	std::tr1::unordered_map<std::string, NetworkId>::iterator f = pendingAvatars.find(id.name);
+	std::unordered_map<std::string, NetworkId>::iterator f = pendingAvatars.find(id.name);
 	if (f != pendingAvatars.end())
 	{
 		ConnectionServerConnection * connection = 
@@ -609,7 +609,7 @@ bool ChatInterface::sendMessageToPendingAvatar(const ChatAvatarId &id, const Gam
 
 //-----------------------------------------------------------------------
 
-const std::tr1::unordered_map<std::string, ChatServerRoomOwner> & ChatInterface::getRoomList() const
+const std::unordered_map<std::string, ChatServerRoomOwner> & ChatInterface::getRoomList() const
 {
 	return roomList;
 }
@@ -618,7 +618,7 @@ const std::tr1::unordered_map<std::string, ChatServerRoomOwner> & ChatInterface:
 
 void ChatInterface::updateRooms()
 {
-	std::tr1::unordered_map<std::string, ChatServerRoomOwner>::const_iterator i;
+	std::unordered_map<std::string, ChatServerRoomOwner>::const_iterator i;
 	for(i = roomList.begin(); i != roomList.end(); ++i)
 	{
 		ChatServerRoomOwner & roomOwner = const_cast<ChatServerRoomOwner &>((*i).second);
@@ -656,7 +656,7 @@ void ChatInterface::requestRoomList(const NetworkId & id, ConnectionServerConnec
 
 	++roomQueriesThisFrame;
 
-	std::tr1::unordered_map<std::string, ChatServerRoomOwner>::const_iterator i;
+	std::unordered_map<std::string, ChatServerRoomOwner>::const_iterator i;
 	std::vector<ChatRoomData> rooms;
 	const ChatAvatar * target = ChatServer::getAvatarByNetworkId(id);
 	ChatAvatarId requestingAvatar;
@@ -1010,7 +1010,7 @@ void ChatInterface::OnReceiveAddModeratorRoom(const ChatAvatar *srcAvatar, const
 		makeRoomName(destRoom, roomName);
 
 		// Update info about the room
-		std::tr1::unordered_map<std::string, ChatServerRoomOwner>::iterator f = roomList.find(toLower(roomName));
+		std::unordered_map<std::string, ChatServerRoomOwner>::iterator f = roomList.find(toLower(roomName));
 		if(f != roomList.end())
 			(*f).second.updateRoomData(destRoom);
 
@@ -1123,7 +1123,7 @@ void ChatInterface::OnReceiveRemoveModeratorRoom(const ChatAvatar *srcAvatar, co
 		makeRoomName(destRoom, roomName);
 
 		// Update info about the room
-		std::tr1::unordered_map<std::string, ChatServerRoomOwner>::iterator f = roomList.find(toLower(roomName));
+		std::unordered_map<std::string, ChatServerRoomOwner>::iterator f = roomList.find(toLower(roomName));
 		if(f != roomList.end())
 			(*f).second.updateRoomData(destRoom);
 
@@ -1473,7 +1473,7 @@ void ChatInterface::OnLoginAvatar(unsigned track, unsigned result, const ChatAva
 		
 		ChatAvatarId failedAvatarId;
 		makeAvatarId(ChatUnicodeString(info->name.data(), info->name.size()), ChatUnicodeString(info->address.data(), info->address.size()), failedAvatarId); 
-		std::tr1::unordered_map<std::string, NetworkId>::iterator f = pendingAvatars.find(failedAvatarId.name);
+		std::unordered_map<std::string, NetworkId>::iterator f = pendingAvatars.find(failedAvatarId.name);
 		if (f != pendingAvatars.end())
 		{
 			pendingAvatars.erase(f);
@@ -1511,7 +1511,7 @@ void ChatInterface::OnLoginAvatar(unsigned track, unsigned result, const ChatAva
 	else
 	{
 		// look up a connection for this avatar
-		std::tr1::unordered_map<std::string, NetworkId>::iterator f = pendingAvatars.find(id.name);
+		std::unordered_map<std::string, NetworkId>::iterator f = pendingAvatars.find(id.name);
 		if(f != pendingAvatars.end())
 		{
 			GenericValueTypeMessage<NetworkId> const avatarConnectedMessage("ChatAvatarConnected", (*f).second);
@@ -1536,7 +1536,7 @@ void ChatInterface::OnLoginAvatar(unsigned track, unsigned result, const ChatAva
 				ChatServer::chatConnectedAvatar((*f).second, *newAvatar);
 				
 				// flush chat messages pending for this avatar
-				std::tr1::unordered_map<NetworkId, std::vector<Archive::ByteStream>, NetworkId::Hash >::iterator df = deferredChatMessages.find((*f).second);
+				std::unordered_map<NetworkId, std::vector<Archive::ByteStream>, NetworkId::Hash >::iterator df = deferredChatMessages.find((*f).second);
 				if(df != deferredChatMessages.end())
 				{
 					std::vector<Archive::ByteStream> & v = (*df).second;
@@ -1642,7 +1642,7 @@ void ChatInterface::OnGetRoomSummaries(unsigned track, unsigned result, unsigned
 			makeRoomName(&(foundRooms[i]), roomName);
 
 			std::string lowerRoomName = toLower(roomName);
-			std::tr1::unordered_map<std::string, ChatServerRoomOwner>::const_iterator f = roomList.find(lowerRoomName);
+			std::unordered_map<std::string, ChatServerRoomOwner>::const_iterator f = roomList.find(lowerRoomName);
 			if(f == roomList.end())
 			{
 				RequestGetRoom(foundRooms[i].getRoomAddress(), NULL);
@@ -1660,7 +1660,7 @@ void ChatInterface::OnGetRoomSummaries(unsigned track, unsigned result, unsigned
 const ChatServerRoomOwner *ChatInterface::getRoomOwner(const std::string & roomName)
 {
 	std::string lowerName = toLower(roomName);
-	std::tr1::unordered_map<std::string, ChatServerRoomOwner>::const_iterator f = roomList.find(lowerName);
+	std::unordered_map<std::string, ChatServerRoomOwner>::const_iterator f = roomList.find(lowerName);
 	if(f != roomList.end())
 	{
 		return &((*f).second);
@@ -1672,7 +1672,7 @@ const ChatServerRoomOwner *ChatInterface::getRoomOwner(const std::string & roomN
 
 ChatServerRoomOwner *ChatInterface::getRoomOwner(unsigned roomId)
 {
-	std::tr1::unordered_map<std::string, ChatServerRoomOwner>::iterator f = roomList.begin();
+	std::unordered_map<std::string, ChatServerRoomOwner>::iterator f = roomList.begin();
 	while (f != roomList.end())
 	{
 		if ((*f).second.getRoomData().id == roomId)
@@ -1709,7 +1709,7 @@ void ChatInterface::OnReceiveDestroyRoom(const ChatAvatar *srcAvatar, const Chat
 		std::string roomName;
 		makeRoomName(destRoom, roomName);
 		std::string lowerName = toLower(roomName);
-		std::tr1::unordered_map<std::string, ChatServerRoomOwner>::iterator f = roomList.find(lowerName);
+		std::unordered_map<std::string, ChatServerRoomOwner>::iterator f = roomList.find(lowerName);
 		if(f != roomList.end())
 		{
 			roomList.erase(f);
@@ -1753,7 +1753,7 @@ void ChatInterface::OnDestroyRoom(unsigned track, unsigned result, void *user)
 		if (result == CHATRESULT_SUCCESS)
 		{
 			std::string lowerName = toLower(owner->getRoomData().path);
-			std::tr1::unordered_map<std::string, ChatServerRoomOwner>::iterator f = roomList.find(lowerName);
+			std::unordered_map<std::string, ChatServerRoomOwner>::iterator f = roomList.find(lowerName);
 			if(f != roomList.end())
 			{
 				roomList.erase(f);
@@ -1985,7 +1985,7 @@ void ChatInterface::OnReceiveEnterRoom(const ChatAvatar *srcAvatar, const ChatRo
 		makeRoomName(destRoom, roomName);
 
 		// Update info about the room
-		std::tr1::unordered_map<std::string, ChatServerRoomOwner>::iterator f = roomList.find(toLower(roomName));
+		std::unordered_map<std::string, ChatServerRoomOwner>::iterator f = roomList.find(toLower(roomName));
 		if(f != roomList.end())
 			(*f).second.updateRoomData(destRoom);
 
@@ -2182,7 +2182,7 @@ void ChatInterface::OnReceiveAddBanRoom(const ChatAvatar *srcAvatar, const ChatA
 		makeRoomName(destRoom, roomName);
 
 		// Update info about the room
-		std::tr1::unordered_map<std::string, ChatServerRoomOwner>::iterator f = roomList.find(toLower(roomName));
+		std::unordered_map<std::string, ChatServerRoomOwner>::iterator f = roomList.find(toLower(roomName));
 		if(f != roomList.end())
 			(*f).second.updateRoomData(destRoom);
 
@@ -2300,7 +2300,7 @@ void ChatInterface::OnReceiveRemoveBanRoom(const ChatAvatar *srcAvatar, const Ch
 		makeRoomName(destRoom, roomName);
 
 		// Update info about the room
-		std::tr1::unordered_map<std::string, ChatServerRoomOwner>::iterator f = roomList.find(toLower(roomName));
+		std::unordered_map<std::string, ChatServerRoomOwner>::iterator f = roomList.find(toLower(roomName));
 		if(f != roomList.end())
 			(*f).second.updateRoomData(destRoom);
 
@@ -2419,7 +2419,7 @@ void ChatInterface::OnReceiveAddInviteRoom(const ChatAvatar *srcAvatar, const Ch
 		makeRoomName(destRoom, roomName);
 
 		// Update info about the room
-		std::tr1::unordered_map<std::string, ChatServerRoomOwner>::iterator f = roomList.find(toLower(roomName));
+		std::unordered_map<std::string, ChatServerRoomOwner>::iterator f = roomList.find(toLower(roomName));
 		if(f != roomList.end())
 			(*f).second.updateRoomData(destRoom);
 
@@ -2518,7 +2518,7 @@ void ChatInterface::OnReceiveRemoveInviteRoom(const ChatAvatar *srcAvatar, const
 		makeRoomName(destRoom, roomName);
 
 		// Update info about the room
-		std::tr1::unordered_map<std::string, ChatServerRoomOwner>::iterator f = roomList.find(toLower(roomName));
+		std::unordered_map<std::string, ChatServerRoomOwner>::iterator f = roomList.find(toLower(roomName));
 		if(f != roomList.end())
 			(*f).second.updateRoomData(destRoom);
 
@@ -2599,7 +2599,7 @@ void ChatInterface::OnReceiveLeaveRoom(const ChatAvatar *srcAvatar, const ChatRo
 		makeRoomName(destRoom, roomName);
 
 		// Update info about the room
-		std::tr1::unordered_map<std::string, ChatServerRoomOwner>::iterator const f = roomList.find(toLower(roomName));
+		std::unordered_map<std::string, ChatServerRoomOwner>::iterator const f = roomList.find(toLower(roomName));
 		if(f != roomList.end())
 			(*f).second.updateRoomData(destRoom);
 
@@ -2719,7 +2719,7 @@ void ChatInterface::OnReceiveKickRoom(const ChatAvatar *srcAvatar, const ChatAva
 		makeRoomName(destRoom, roomName);
 
 		// Update info about the room
-		std::tr1::unordered_map<std::string, ChatServerRoomOwner>::iterator f = roomList.find(toLower(roomName));
+		std::unordered_map<std::string, ChatServerRoomOwner>::iterator f = roomList.find(toLower(roomName));
 		if(f != roomList.end())
 			(*f).second.updateRoomData(destRoom);
 
@@ -2940,7 +2940,7 @@ void ChatInterface::OnReceiveRoomMessage(const ChatAvatar *srcAvatar, const Chat
 	{
 		unsigned const destAvatarId = destAvatar->getAvatarID();
 		unsigned const destRoomId = destRoom->getRoomID();
-		std::tr1::unordered_map<unsigned, std::pair<unsigned, unsigned> >::iterator const iterFind = s_mostRecentRoomChatMessage.find(destAvatarId);
+		std::unordered_map<unsigned, std::pair<unsigned, unsigned> >::iterator const iterFind = s_mostRecentRoomChatMessage.find(destAvatarId);
 		if (iterFind != s_mostRecentRoomChatMessage.end())
 		{
 			if ((iterFind->second.first == destRoomId) && (iterFind->second.second == messageID))

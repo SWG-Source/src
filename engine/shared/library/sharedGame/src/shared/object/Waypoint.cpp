@@ -19,13 +19,13 @@
 #include "sharedMessageDispatch/Transceiver.h"
 #include "unicodeArchive/UnicodeArchive.h"
 #include "UnicodeUtils.h"
-#include <tr1/unordered_map>
+#include <unordered_map>
 
 // ======================================================================
 
 namespace WaypointNamespace
 {
-	typedef std::tr1::unordered_map<NetworkId, WaypointData *> WaypointMapById;
+	typedef std::unordered_map<NetworkId, WaypointData *> WaypointMapById;
 	WaypointMapById s_waypointMapById;
 	bool s_installed;
 
@@ -106,7 +106,7 @@ namespace Archive
 		if (networkId.isValid())
 		{
 			WaypointData *data = 0;
-			std::tr1::unordered_map<NetworkId, WaypointData *>::iterator f = s_waypointMapById.find(networkId);
+			std::unordered_map<NetworkId, WaypointData *>::iterator f = s_waypointMapById.find(networkId);
 			if (f == s_waypointMapById.end())
 				data = new WaypointData(networkId);
 			else
@@ -331,7 +331,7 @@ std::string const &Waypoint::getColorNameById(uint8 id) // static
 Waypoint const Waypoint::getWaypointById(NetworkId const &id) // static
 {
 	Waypoint result;
-	std::tr1::unordered_map<NetworkId, WaypointData *>::iterator f = s_waypointMapById.find(id);
+	std::unordered_map<NetworkId, WaypointData *>::iterator f = s_waypointMapById.find(id);
 	if (f != s_waypointMapById.end())
 		result.releaseData(f->second);
 	return result;

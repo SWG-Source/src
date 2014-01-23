@@ -18,8 +18,8 @@
 #include "sharedLog/Log.h"
 #include "sharedNetworkMessages/UpdatePvpStatusMessage.h"
 
-#include <tr1/unordered_map>
-#include <tr1/unordered_set>
+#include <unordered_map>
+#include <unordered_set>
 
 // ======================================================================
 
@@ -41,12 +41,12 @@ namespace PvpUpdateObserverNamespace
 		};
 	};
 
-	std::tr1::unordered_set<TangibleObject const *, TangibleObjectPointerHash> s_activeUpdaters;
+	std::unordered_set<TangibleObject const *, TangibleObjectPointerHash> s_activeUpdaters;
 
-	typedef std::tr1::unordered_map<Client const *, std::tr1::unordered_map<NetworkId, std::pair<uint32, uint32> >, ClientObjectPointerHash> PvpUpdateObserverCache;
+	typedef std::unordered_map<Client const *, std::unordered_map<NetworkId, std::pair<uint32, uint32> >, ClientObjectPointerHash> PvpUpdateObserverCache;
 	PvpUpdateObserverCache s_pvpUpdateObserverCache;
 
-	typedef std::tr1::unordered_map<Client const *, std::tr1::unordered_set<NetworkId>, ClientObjectPointerHash> PvpUpdateObserverRequestsThisFrame;
+	typedef std::unordered_map<Client const *, std::unordered_set<NetworkId>, ClientObjectPointerHash> PvpUpdateObserverRequestsThisFrame;
 	PvpUpdateObserverRequestsThisFrame s_pvpUpdateObserverRequestsThisFrame;
 
 	// PvpUpdateObserver can be called multiple times per frame for the same object,
@@ -57,10 +57,10 @@ namespace PvpUpdateObserverNamespace
 	// so as an optimization, we'll only iterate over these 2 lists once per frame,
 	// and then just watch on individual updates to these 2 lists afterwards, and
 	// process the individual updates to these 2 lists when the updates occur
-	std::tr1::unordered_set<NetworkId> s_objectsProcessedThisFrame;
-	std::tr1::unordered_set<Client const *, ClientObjectPointerHash> s_clientsProcessedThisFrame;
+	std::unordered_set<NetworkId> s_objectsProcessedThisFrame;
+	std::unordered_set<Client const *, ClientObjectPointerHash> s_clientsProcessedThisFrame;
 
-	void sendUpdatePvpStatusMessage(Client const & client, std::tr1::unordered_set<NetworkId> const & requestedNetworkId, std::tr1::unordered_map<NetworkId, std::pair<uint32, uint32> > & cachedNetworkId);
+	void sendUpdatePvpStatusMessage(Client const & client, std::unordered_set<NetworkId> const & requestedNetworkId, std::unordered_map<NetworkId, std::pair<uint32, uint32> > & cachedNetworkId);
 }
 
 using namespace PvpUpdateObserverNamespace;
@@ -86,7 +86,7 @@ PvpUpdateObserver::PvpUpdateObserver(TangibleObject const *who, Archive::AutoDel
 		std::set<Client *> const &clients = who->getObservers();
 		for (std::set<Client *>::const_iterator i = clients.begin(); i != clients.end(); ++i)
 		{
-			std::tr1::unordered_map<NetworkId, std::pair<uint32, uint32> > & pvpUpdateObserverCache = s_pvpUpdateObserverCache[*i];
+			std::unordered_map<NetworkId, std::pair<uint32, uint32> > & pvpUpdateObserverCache = s_pvpUpdateObserverCache[*i];
 			if (pvpUpdateObserverCache.count(who->getNetworkId()) == 0)
 			{
 				uint32 flags, factionId;
@@ -104,8 +104,8 @@ PvpUpdateObserver::PvpUpdateObserver(TangibleObject const *who, Archive::AutoDel
 		Client * const client = who->getClient();
 		if (client && (s_clientsProcessedThisFrame.count(client) == 0))
 		{
-			std::tr1::unordered_map<NetworkId, std::pair<uint32, uint32> > & pvpUpdateObserverCache = s_pvpUpdateObserverCache[client];
-			std::tr1::unordered_set<NetworkId> & pvpUpdateObserverRequestsThisFrame = s_pvpUpdateObserverRequestsThisFrame[client];
+			std::unordered_map<NetworkId, std::pair<uint32, uint32> > & pvpUpdateObserverCache = s_pvpUpdateObserverCache[client];
+			std::unordered_set<NetworkId> & pvpUpdateObserverRequestsThisFrame = s_pvpUpdateObserverRequestsThisFrame[client];
 
 			Client::ObservingListPvpSync const &objs = client->getObservingPvpSync();
 			for (Client::ObservingListPvpSync::const_iterator i = objs.begin(); i != objs.end(); ++i)
@@ -218,7 +218,7 @@ void PvpUpdateObserver::startObservingPvpSyncNotification(Client const *client, 
 
 	if ((s_objectsProcessedThisFrame.count(who.getNetworkId()) != 0) || (s_clientsProcessedThisFrame.count(client) != 0))
 	{
-		std::tr1::unordered_map<NetworkId, std::pair<uint32, uint32> > & pvpUpdateObserverCache = s_pvpUpdateObserverCache[client];
+		std::unordered_map<NetworkId, std::pair<uint32, uint32> > & pvpUpdateObserverCache = s_pvpUpdateObserverCache[client];
 		if (pvpUpdateObserverCache.count(who.getNetworkId()) == 0)
 		{
 			uint32 flags, factionId;
@@ -274,14 +274,14 @@ void PvpUpdateObserver::update()
 
 // ----------------------------------------------------------------------
 
-void PvpUpdateObserverNamespace::sendUpdatePvpStatusMessage(Client const & client, std::tr1::unordered_set<NetworkId> const & requestedNetworkId, std::tr1::unordered_map<NetworkId, std::pair<uint32, uint32> > & cachedNetworkId)
+void PvpUpdateObserverNamespace::sendUpdatePvpStatusMessage(Client const & client, std::unordered_set<NetworkId> const & requestedNetworkId, std::unordered_map<NetworkId, std::pair<uint32, uint32> > & cachedNetworkId)
 {
 	uint32 flags, factionId;
 	ServerObject const * serverObject;
 	TangibleObject const * tangibleObject;
-	std::tr1::unordered_map<NetworkId, std::pair<uint32, uint32> >::iterator iterCacheNetworkId;
+	std::unordered_map<NetworkId, std::pair<uint32, uint32> >::iterator iterCacheNetworkId;
 
-	for (std::tr1::unordered_set<NetworkId>::const_iterator iterRequestedNetworkId = requestedNetworkId.begin(); iterRequestedNetworkId != requestedNetworkId.end(); ++iterRequestedNetworkId)
+	for (std::unordered_set<NetworkId>::const_iterator iterRequestedNetworkId = requestedNetworkId.begin(); iterRequestedNetworkId != requestedNetworkId.end(); ++iterRequestedNetworkId)
 	{
 		iterCacheNetworkId = cachedNetworkId.find(*iterRequestedNetworkId);
 		if (iterCacheNetworkId == cachedNetworkId.end())

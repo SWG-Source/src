@@ -24,7 +24,7 @@
 #include <algorithm>
 #include <map>
 #include <vector>
-#include <tr1/unordered_map>
+#include <unordered_map>
 
 //===================================================================
 

@@ -12,7 +12,7 @@
 #include "sharedFoundation/FirstSharedFoundation.h"
 #include "sharedFoundation/NetworkId.h"
 #include "sharedNetwork/Connection.h"
-#include <tr1/unordered_map>
+#include <unordered_map>
 #include <string>
 
 //-----------------------------------------------------------------------

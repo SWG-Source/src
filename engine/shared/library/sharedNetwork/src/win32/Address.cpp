@@ -374,7 +374,7 @@ size_t Address::hashFunction() const
 
 	Example:
 	\code
-	typedef std::tr1::unordered_map<Address, Connection *, Address::HashFunction, Address::EqualFunction> AddressMap;
+	typedef std::unordered_map<Address, Connection *, Address::HashFunction, Address::EqualFunction> AddressMap;
 	\endcode
 
 	@return true if the left hand side and right hand side are equal

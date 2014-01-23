@@ -10,7 +10,7 @@
 
 #include "SwgDatabaseServer/TaskSaveObjvarNames.h"
 #include "sharedFoundation/ExitChain.h"
-#include <tr1/unordered_map>
+#include <unordered_map>
 #include <string>
 #include <vector>
 
