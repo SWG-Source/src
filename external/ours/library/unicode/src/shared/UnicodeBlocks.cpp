@@ -10,6 +10,8 @@
 #include "FirstUnicode.h"
 #include "UnicodeBlocks.h"
 
+#include <cstdlib>
+
 // ======================================================================
 
 using namespace Unicode::Blocks;

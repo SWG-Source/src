@@ -4,6 +4,7 @@
 #ifdef TRACK_READ_WRITE_FAILURES
 #	include "trackMessageFailures.h"
 #endif
+#include <climits>
 #include <map>
 
 namespace soe

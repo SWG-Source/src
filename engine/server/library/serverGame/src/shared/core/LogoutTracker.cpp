@@ -25,14 +25,14 @@
 #include "sharedObject/Container.h"
 #include <queue>
 #include <map>
-#include <hash_map>
+#include <tr1/unordered_map>
 
 // ======================================================================
 
 static bool s_installed;
 static Scheduler *s_logoutTrackerScheduler;
 static std::queue<NetworkId> s_logoutCallbacks;
-static std::hash_map<NetworkId, int, NetworkId::Hash> s_logoutCallbacksCount;
+static std::tr1::unordered_map<NetworkId, int, NetworkId::Hash> s_logoutCallbacksCount;
 
 namespace LogoutTrackerNamespace
 {
@@ -76,7 +76,7 @@ void LogoutTracker::add(NetworkId const &networkId)
 	// when they go off, and only when the last 3 minute timer goes off do we remove him from the
 	// world, which is the desired behavior of leaving a disconnected character in the world for
 	// 3 minutes before removing him from the world
-	std::hash_map<NetworkId, int, NetworkId::Hash>::iterator iter = s_logoutCallbacksCount.find(networkId);
+	std::tr1::unordered_map<NetworkId, int, NetworkId::Hash>::iterator iter = s_logoutCallbacksCount.find(networkId);
 	if (iter == s_logoutCallbacksCount.end())
 	{
 		s_logoutCallbacksCount[networkId] = 1;
@@ -97,7 +97,7 @@ void LogoutTracker::handleLogoutCallback(const void *context)
 	UNREF(context);
 
 	NetworkId const &networkId = s_logoutCallbacks.front();
-	std::hash_map<NetworkId, int, NetworkId::Hash>::iterator iter = s_logoutCallbacksCount.find(networkId);
+	std::tr1::unordered_map<NetworkId, int, NetworkId::Hash>::iterator iter = s_logoutCallbacksCount.find(networkId);
 
 	// only process the *LAST* logout callback that is put into the logout callback
 	// queue for this object as the previous ones are no longer applicable

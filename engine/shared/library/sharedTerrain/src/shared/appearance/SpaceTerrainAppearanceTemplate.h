@@ -95,9 +95,9 @@ private:
 		float m_haloScale;
 		bool m_infiniteDistance;
 
-	private:
+	//private:
 
-		DistantAppearanceData operator=(DistantAppearanceData const & rhs);
+	//	DistantAppearanceData operator=(DistantAppearanceData const & rhs);
 	};
 
 	struct CelestialData
@@ -108,9 +108,9 @@ private:
 		float m_frontSize;
 		Vector m_direction_w;
 
-	private:
+	//private:
 
-		CelestialData operator=(CelestialData const & rhs);
+	//	CelestialData operator=(CelestialData const & rhs);
 	};
 
 private:

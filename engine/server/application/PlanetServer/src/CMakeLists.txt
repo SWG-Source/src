@@ -102,6 +102,5 @@ target_link_libraries(PlanetServer
     localizationArchive
     unicode
     unicodeArchive
-    ${STLPORT_LIBRARIES}
     ${CMAKE_DL_LIBS}
 )

@@ -4172,9 +4172,9 @@ void ServerObject::teleportObject(Vector const &position_w, NetworkId const &tar
 
 	// clamp destination if in space
 	if (   ServerWorld::isSpaceScene()
-	    && (   abs(position_w.x) > 8000.f
-	        || abs(position_w.y) > 8000.f
-	        || abs(position_w.z) > 8000.f))
+	    && (   std::abs(position_w.x) > 8000.f
+	        || std::abs(position_w.y) > 8000.f
+	        || std::abs(position_w.z) > 8000.f))
 	{
 		WARNING(true, ("Tried to warp object %s outside of space zone boundaries (%g,%g,%g)", getDebugInformation().c_str(), position_w.x, position_w.y, position_w.z));
 		destPosition_w.set(
@@ -8393,11 +8393,11 @@ void ServerObject::stopListeningToAllBroadcastMessages()
 	else
 	{
 		// build list of all broadcasters this object is currently listening to
-		std::hash_set<NetworkId> broadcasters;
+		std::tr1::unordered_set<NetworkId> broadcasters;
 		for (BroadcastMap::const_iterator iter = m_broadcastBroadcasters.begin(); iter != m_broadcastBroadcasters.end(); ++iter)
 			IGNORE_RETURN(broadcasters.insert(iter->second));
 
-		for (std::hash_set<NetworkId>::const_iterator iter2 = broadcasters.begin(); iter2 != broadcasters.end(); ++iter2)
+		for (std::tr1::unordered_set<NetworkId>::const_iterator iter2 = broadcasters.begin(); iter2 != broadcasters.end(); ++iter2)
 		{
 			// need to send a message to the broadcaster if the broadcaster is not on this game server
 			ServerObject * objBroadcaster = ServerWorld::findObjectByNetworkId(*iter2);

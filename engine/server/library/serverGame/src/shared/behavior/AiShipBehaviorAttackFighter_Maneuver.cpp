@@ -72,7 +72,7 @@ AiShipBehaviorAttackFighter::Maneuver::~Maneuver()
 	
 	delete m_pathList;
 
-	m_currentPath = NULL;
+	//m_currentPath = NULL;
 }
 
 // ----------------------------------------------------------------------

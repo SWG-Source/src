@@ -24,8 +24,8 @@ public:
 
 	struct ExperimentInfo
 	{
-		const int	attributeIndex;		// which attribute is being experiemnted
-		const int   experimentPoints;	// how many experiment points are allocated
+		int	attributeIndex;		// which attribute is being experiemnted
+		int   experimentPoints;	// how many experiment points are allocated
 
 		ExperimentInfo(int attribute, int points) :
 			attributeIndex(attribute),
@@ -33,8 +33,8 @@ public:
 		{
 		}
 
-		private:
-			ExperimentInfo & operator = (const ExperimentInfo &);
+		//private:
+		//	ExperimentInfo & operator = (const ExperimentInfo &);
 	};
 
 public:

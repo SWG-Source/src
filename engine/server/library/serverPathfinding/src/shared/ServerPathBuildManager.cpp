@@ -12,6 +12,7 @@
 
 #include "sharedDebug/PerformanceTimer.h"
 
+#include <algorithm>
 #include <list>
 
 typedef std::list< ServerPathBuilder * > BuildQueue;

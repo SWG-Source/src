@@ -25,6 +25,7 @@
 #include "sharedTerrain/TerrainObject.h"
 #include "sharedUtility/DataTable.h"
 
+#include <limits>
 #include <list>
 #include <map>
 #include <set>

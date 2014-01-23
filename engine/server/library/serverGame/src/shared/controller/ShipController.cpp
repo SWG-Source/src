@@ -487,7 +487,7 @@ bool ShipController::face(Vector const & goalPosition_w, float elapsedTime)
 			Vector const upPoint_w = shipTransform.getPosition_p() + Vector::unitY;
 			Vector const upPoint_o = shipTransform.rotateTranslate_p2l(upPoint_w);
 			float d2 = sqrt(sqr(upPoint_o.x) + sqr(upPoint_o.y));
-			float phi2 = atan2(d2,abs(upPoint_o.z));
+			float phi2 = atan2(d2,std::abs(upPoint_o.z));
 
 			if(phi2 > convertDegreesToRadians(10.f))
 			{

@@ -13,6 +13,7 @@
 #include "UnicodeBlocks.h"
 #include "UnicodeCharacterData.h"
 
+#include <cstdlib>
 #include <cstdio>
 #include <string>
 #include <cassert>

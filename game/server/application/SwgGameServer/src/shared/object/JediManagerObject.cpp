@@ -31,6 +31,7 @@
 #include "swgServerNetworkMessages/MessageQueueJediLocation.h"
 #include "swgServerNetworkMessages/MessageQueueRequestJediBounty.h"
 
+#include <climits>
 
 static const int IGNORE_JEDI_STAT = INT_MAX;
 

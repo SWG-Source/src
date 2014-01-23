@@ -80,7 +80,7 @@ namespace MessageToQueueNamespace
 	private:
 		CachedNetworkId m_networkId;
 		unsigned long m_deliveryTime;
-		SchedulerItem & operator= (SchedulerItem const &); //disable
+		//SchedulerItem & operator= (SchedulerItem const &); //disable
 	};
 	
 	typedef std::map<NetworkId, uint32> LastKnownLocationsType;

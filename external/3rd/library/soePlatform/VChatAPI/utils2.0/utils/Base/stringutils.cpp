@@ -7,26 +7,26 @@
 #include <cctype>
 #include <algorithm>
 
-using namespace std;
-#define transform std::transform
+//using namespace std;
+//#define transform std::transform
 
 namespace soe
 {
 	void makeupper(std::string& str)
 	{
-		transform(str.begin(), str.end(), str.begin(), toupper);
+		std::transform(str.begin(), str.end(), str.begin(), toupper);
 	}
 
     std::string touppercase(const std::string& str)
     {
         std::string tmp = str;
-        transform(tmp.begin(), tmp.end(), tmp.begin(), toupper);
+        std::transform(tmp.begin(), tmp.end(), tmp.begin(), toupper);
         return tmp;
     }
 
 	void makelower(std::string& str)
 	{
-		transform(str.begin(), str.end(), str.begin(), tolower);
+		std::transform(str.begin(), str.end(), str.begin(), tolower);
 	}
 
 	std::string tolowercase(const std::string& str)

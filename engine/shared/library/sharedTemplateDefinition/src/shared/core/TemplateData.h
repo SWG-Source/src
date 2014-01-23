@@ -12,6 +12,8 @@
 #include "sharedFoundation/Tag.h"
 #include "TemplateGlobals.h"
 
+#include <climits>
+
 class File;
 class TemplateDefinitionFile;
 class TpfTemplate;

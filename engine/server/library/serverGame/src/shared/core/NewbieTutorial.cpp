@@ -78,7 +78,7 @@ Vector NewbieTutorial::getTutorialLocation()
 	{
 		x = s_tutorialSpacing*Random::random(s_sqrtMaxTutorials-1) - s_tutorialMapWidth/2.0f;
 		z = s_tutorialSpacing*Random::random(s_sqrtMaxTutorials-1) - s_tutorialMapWidth/2.0f;
-	} while (abs(x) < 300.0f || abs(z) < 300.0f);
+	} while (std::abs(x) < 300.0f || std::abs(z) < 300.0f);
 	return Vector(x, 0.0f, z);
 }
 

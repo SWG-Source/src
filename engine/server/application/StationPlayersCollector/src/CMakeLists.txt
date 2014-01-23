@@ -69,6 +69,5 @@ target_link_libraries(StationPlayersCollector
     serverUtility
     archive
     unicode
-    ${STLPORT_LIBRARIES}
     ${CMAKE_DL_LIBS}
 )

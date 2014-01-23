@@ -102,6 +102,5 @@ target_link_libraries(ChatServer
     unicodeArchive
     ChatMono
     VChatAPI
-    ${STLPORT_LIBRARIES}
     ${CMAKE_DL_LIBS}
 )

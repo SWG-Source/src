@@ -14,6 +14,8 @@
 #include "sharedDatabaseInterface/NullEncodedUnicodeString.h"
 #include "sharedLog/Log.h"
 
+#include <climits>
+
 using namespace DB;
 
 // ======================================================================

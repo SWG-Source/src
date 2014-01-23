@@ -379,7 +379,7 @@ float InstallationObject::getOutOfPowerTime(void) const
 void InstallationObject::setPowerRate(float rate)
 {
 	// don't do anything if we're not really changing the rate
-	if (abs(rate - m_powerRate.get()) < 0.01f)
+	if (std::abs(rate - m_powerRate.get()) < 0.01f)
 		return;
 	
 	if (isAuthoritative())

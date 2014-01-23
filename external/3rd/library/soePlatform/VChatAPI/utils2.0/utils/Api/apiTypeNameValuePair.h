@@ -1,6 +1,7 @@
 #ifndef API_TYPE_NAME_VALUE_PAIR
 #define API_TYPE_NAME_VALUE_PAIR
 
+#include <climits>
 #include <string>
 #include <vector>
 #include "Base/serializeClasses.h"

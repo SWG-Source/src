@@ -150,6 +150,5 @@ target_link_libraries(LoginServer
     CommonAPI
     LoginAPI
     MonAPI2
-    ${STLPORT_LIBRARIES}
     ${CMAKE_DL_LIBS}
 )

@@ -43,8 +43,8 @@ public:
 		
 		int						  numParameters;
 		std::vector<std::string>  parameters;
-	private:
-		TaskInfo & operator = (const TaskInfo &);
+	//private:
+	//	TaskInfo & operator = (const TaskInfo &);
 	};
 
 public:

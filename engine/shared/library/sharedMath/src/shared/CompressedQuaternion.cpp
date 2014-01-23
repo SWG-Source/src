@@ -260,7 +260,7 @@ void CompressedQuaternionNamespace::findClosestBase(int baseShiftCount, float mi
 	for (int testBaseIndex = 0; testBaseIndex < baseCount; ++testBaseIndex)
 	{
 		const float testBaseValue = -1.0f + (testBaseIndex + 1) * baseSeparation;
-		const float testDistance  = abs(testBaseValue - midpoint);
+		const float testDistance  = std::abs(testBaseValue - midpoint);
 
 		if (testDistance < closestBaseDistance)
 		{
@@ -349,7 +349,7 @@ uint32 CompressedQuaternionNamespace::doCompress(float w, float x, float y, floa
 
 #ifdef _DEBUG
 	// If w is small enough, we won't be able to take the square root.
-	if (abs(w) >= cs_wAcceptableEpsilon)
+	if (std::abs(w) >= cs_wAcceptableEpsilon)
 	{
 		const float calculatedW = sqrt(1.0f - (x*x + y*y + z*z));
 		DEBUG_FATAL(!WithinEpsilonInclusive(calculatedW, w, cs_wAcceptableEpsilon), ("Quaternion (w=%g,x=%g,y=%g,z=%g) does not appear to be a unit quaternion.", w, x, y, z));
@@ -546,10 +546,10 @@ void CompressedQuaternion::compressRotations(const QuaternionVector &sourceRotat
 			sourceRotation.z = -sourceRotation.z;
 		}
 
-		const float deltaW = abs(expandedRotation.w - sourceRotation.w);
-		const float deltaX = abs(expandedRotation.x - sourceRotation.x);
-		const float deltaY = abs(expandedRotation.y - sourceRotation.y);
-		const float deltaZ = abs(expandedRotation.z - sourceRotation.z);
+		const float deltaW = std::abs(expandedRotation.w - sourceRotation.w);
+		const float deltaX = std::abs(expandedRotation.x - sourceRotation.x);
+		const float deltaY = std::abs(expandedRotation.y - sourceRotation.y);
+		const float deltaZ = std::abs(expandedRotation.z - sourceRotation.z);
 
 		if ( (deltaW > cs_wAcceptableEpsilon) || 
 			(deltaX > cs_xAcceptableEpsilon) ||

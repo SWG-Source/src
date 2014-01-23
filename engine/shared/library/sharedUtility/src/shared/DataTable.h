@@ -15,6 +15,7 @@
 
 #include <string>
 #include <vector>
+#include <tr1/unordered_map>
 
 class Iff;
 
@@ -83,7 +84,7 @@ private:
 	void buildColumnIndexMap();
 
 	typedef std::vector<const DataTableColumnType *> DataTableColumnTypeVector;
-	typedef stdhash_map<std::string /*column name*/, int /*column index*/>::fwd ColumnIndexMap;
+	typedef std::tr1::unordered_map<std::string /*column name*/, int /*column index*/> ColumnIndexMap;
 
 	int                           m_numRows;
 	int                           m_numCols;

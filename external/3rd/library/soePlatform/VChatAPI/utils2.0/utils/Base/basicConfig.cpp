@@ -2,7 +2,8 @@
 #pragma warning( disable: 4786 )
 #endif
 
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 #include "basicConfig.h"
 #include "profile.h"
 

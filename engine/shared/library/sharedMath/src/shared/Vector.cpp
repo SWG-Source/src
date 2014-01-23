@@ -12,6 +12,7 @@
 
 #include "sharedRandom/Random.h"
 
+#include <cmath>
 #include <vector>
 
 // ======================================================================
@@ -284,7 +285,7 @@ bool Vector::inPolygon(const std::vector<Vector> &convexPolygonVertices) const
  */
 bool Vector::withinEpsilon(const Vector &rhs, float epsilon) const
 {
-	return (abs(x - rhs.x) < epsilon) && (abs(y - rhs.y) < epsilon) && (abs(z - rhs.z) < epsilon);
+	return (std::abs(x - rhs.x) < epsilon) && (std::abs(y - rhs.y) < epsilon) && (std::abs(z - rhs.z) < epsilon);
 }
 
 
@@ -297,9 +298,9 @@ bool Vector::withinEpsilon(const Vector &rhs, float epsilon) const
 const Vector Vector::perpendicular(Vector const & direction)
 {
 	// Measure the projection of "direction" onto each of the axes
-	float const id = abs(direction.dot(Vector::unitX));
-	float const jd = abs(direction.dot(Vector::unitY));
-	float const kd = abs(direction.dot(Vector::unitZ));
+	float const id = std::abs(direction.dot(Vector::unitX));
+	float const jd = std::abs(direction.dot(Vector::unitY));
+	float const kd = std::abs(direction.dot(Vector::unitZ));
 
 	Vector result;
 

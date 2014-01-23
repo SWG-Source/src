@@ -190,6 +190,5 @@ target_link_libraries(CentralServer
     localizationArchive
     unicode
     unicodeArchive
-    ${STLPORT_LIBRARIES}
     ${CMAKE_DL_LIBS}
 )

@@ -33,6 +33,7 @@
 #include "sharedRandom/RandomGenerator.h"
 #include "sharedRandom/FastRandomGenerator.h"
 
+#include <algorithm>
 #include <map>
 #include <vector>
 

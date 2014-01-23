@@ -11,6 +11,7 @@
 #include "sharedDatabaseInterface/DbServer.h"
 
 #include <string>
+#include <climits>
 
 // ======================================================================
 

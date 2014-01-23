@@ -1,5 +1,5 @@
 //#include "FirstGame.h"
-#include <hash_map> //without this we get an internal compiler error
+//#include <hash_map> //without this we get an internal compiler error
 
 // This resolves a problem with stlport compiling under gcc 2.91 that ships with RedHat 6.2.
 // Basically, the compiler has trouble instantiating an instance of _Stl_prime<bool> without it

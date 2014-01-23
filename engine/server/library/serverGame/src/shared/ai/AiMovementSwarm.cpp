@@ -18,15 +18,15 @@
 #include "sharedLog/Log.h"
 #include "sharedObject/World.h"
 
-#include <hash_map>
+#include <tr1/unordered_map>
 
 
 using namespace Scripting;
 
 namespace AiMovementSwarmNamespace
 {
-	typedef std::hash_map<CachedNetworkId, std::vector<AiMovementSwarm::CreatureWatcher>, CachedNetworkId> targetMap;
-	typedef std::hash_map<CachedNetworkId, Vector, CachedNetworkId> offsetMap;
+	typedef std::tr1::unordered_map<CachedNetworkId, std::vector<AiMovementSwarm::CreatureWatcher>, CachedNetworkId> targetMap;
+	typedef std::tr1::unordered_map<CachedNetworkId, Vector, CachedNetworkId> offsetMap;
 
 	// map of swarm targets to the creatures swarming them
 	targetMap s_swarmMap;

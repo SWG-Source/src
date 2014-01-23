@@ -28,6 +28,7 @@
 #include "serverGame/ServerObject.h"
 
 #include <algorithm>
+#include <climits>
 
 
 #ifdef _WIN32

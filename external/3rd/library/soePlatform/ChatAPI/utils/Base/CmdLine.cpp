@@ -35,7 +35,8 @@
 
 #include "CmdLine.h"
 //#include "crtdbg.h"
-#include <ctype.h>
+#include <cctype>
+#include <cstring>
 
 #ifdef EXTERNAL_DISTRO
 namespace NAMESPACE

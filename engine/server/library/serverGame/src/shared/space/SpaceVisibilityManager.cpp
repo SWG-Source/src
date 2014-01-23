@@ -16,7 +16,7 @@
 #include "sharedObject/NetworkIdManager.h"
 
 #include <algorithm>
-#include <hash_map>
+#include <tr1/unordered_map>
 
 // ======================================================================
 
@@ -37,7 +37,7 @@ namespace SpaceVisibilityManager_namespace
 	typedef std::set<Client*>                            ClientSet;
 	typedef std::set<TrackedObject*>                     ObjectSet;
 	typedef std::map<Client*, TrackedObject*>            ClientToObjectMapType;
-	typedef std::hash_map<NetworkId, TrackedObject*>     TrackedObjectsType;
+	typedef std::tr1::unordered_map<NetworkId, TrackedObject*>     TrackedObjectsType;
 
 	// Classes
 

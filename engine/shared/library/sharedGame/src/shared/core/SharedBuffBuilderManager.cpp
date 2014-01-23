@@ -16,6 +16,7 @@
 
 #include "UnicodeUtils.h"
 
+#include <algorithm>
 #include <map>
 
 // ======================================================================

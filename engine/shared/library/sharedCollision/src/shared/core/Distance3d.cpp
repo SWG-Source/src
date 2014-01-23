@@ -718,9 +718,9 @@ Range ProjectAxis ( Line3d const & L, AxialBox const & B )
 	Vector const & N = L.getNormal();
 	Vector extent = B.getDelta();
 
-    real x = abs( Collision3d::ComponentAlong( Vector::unitX, N ) ) * extent.x;
-    real y = abs( Collision3d::ComponentAlong( Vector::unitY, N ) ) * extent.y;
-    real z = abs( Collision3d::ComponentAlong( Vector::unitZ, N ) ) * extent.z;
+    real x = std::abs( Collision3d::ComponentAlong( Vector::unitX, N ) ) * extent.x;
+    real y = std::abs( Collision3d::ComponentAlong( Vector::unitY, N ) ) * extent.y;
+    real z = std::abs( Collision3d::ComponentAlong( Vector::unitZ, N ) ) * extent.z;
 
 	real d = x + y + z;
 
@@ -735,9 +735,9 @@ Range ProjectAxis ( Line3d const & L, OrientedBox const & B )
 {
 	Vector const & N = L.getNormal();
 
-	real x = abs( Collision3d::ComponentAlong( B.getAxisX(), N ) ) * B.getExtentX();
-	real y = abs( Collision3d::ComponentAlong( B.getAxisY(), N ) ) * B.getExtentY();
-	real z = abs( Collision3d::ComponentAlong( B.getAxisZ(), N ) ) * B.getExtentZ();
+	real x = std::abs( Collision3d::ComponentAlong( B.getAxisX(), N ) ) * B.getExtentX();
+	real y = std::abs( Collision3d::ComponentAlong( B.getAxisY(), N ) ) * B.getExtentY();
+	real z = std::abs( Collision3d::ComponentAlong( B.getAxisZ(), N ) ) * B.getExtentZ();
 
 	real d = x + y + z;
 

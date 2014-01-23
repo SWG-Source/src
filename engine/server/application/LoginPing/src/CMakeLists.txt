@@ -56,6 +56,5 @@ target_link_libraries(LoginPing
     sharedThread
     serverNetworkMessages
     archive
-    ${STLPORT_LIBRARIES}
     ${CMAKE_DL_LIBS}
 )

@@ -85,6 +85,5 @@ target_link_libraries(CommoditiesServer
     serverMetrics
     serverNetworkMessages
     serverUtility
-    ${STLPORT_LIBRARIES}
     ${CMAKE_DL_LIBS}
 )

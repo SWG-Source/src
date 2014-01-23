@@ -60,6 +60,5 @@ target_link_libraries(TemplateDefinitionCompiler
     localizationArchive
     unicode
     unicodeArchive
-    ${STLPORT_LIBRARIES}
     ${CMAKE_DL_LIBS}
 )

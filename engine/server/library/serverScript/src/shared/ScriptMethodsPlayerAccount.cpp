@@ -38,7 +38,7 @@
 #include "serverUtility/FreeCtsDataTable.h"
 #include "UnicodeUtils.h"
 
-#include <hash_set>
+#include <tr1/unordered_set>
 
 using namespace JNIWrappersNamespace;
 
@@ -434,7 +434,7 @@ jboolean JNICALL ScriptMethodsPlayerAccountNamespace::isAccountQualifiedForHouse
 	UNREF(self);
 	NOT_NULL(env);
 
-	static std::hash_set<StationId> accountsQualifiedForHousePackup;
+	static std::tr1::unordered_set<StationId> accountsQualifiedForHousePackup;
 	if (accountsQualifiedForHousePackup.empty())
 	{
 		DataTable * table = DataTableManager::getTable(ConfigServerGame::getHousePackupAccountListDataTableName(), true);

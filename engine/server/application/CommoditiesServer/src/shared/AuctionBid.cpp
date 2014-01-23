@@ -14,7 +14,9 @@
 #include "FirstCommodityServer.h"
 
 #include "AuctionBid.h"
+
 #include <algorithm>
+
 
 // ======================================================================
 
@@ -39,35 +41,35 @@ AuctionBid::~AuctionBid()
 
 const bool AuctionBid::operator > (const AuctionBid & rhs) const
 {
-	return (max(m_bid, m_maxProxyBid) > max(rhs.m_bid, rhs.m_maxProxyBid));
+	return (std::max(m_bid, m_maxProxyBid) > std::max(rhs.m_bid, rhs.m_maxProxyBid));
 }
 
 // ----------------------------------------------------------------------
 
 const bool AuctionBid::operator >= (const AuctionBid & rhs) const
 {
-	return (max(m_bid, m_maxProxyBid) >= max(rhs.m_bid, rhs.m_maxProxyBid));
+	return (std::max(m_bid, m_maxProxyBid) >= std::max(rhs.m_bid, rhs.m_maxProxyBid));
 }
 
 // ----------------------------------------------------------------------
 
 const bool AuctionBid::operator == (const AuctionBid & rhs) const
 {
-	return (max(m_bid, m_maxProxyBid) == max(rhs.m_bid, rhs.m_maxProxyBid));
+	return (std::max(m_bid, m_maxProxyBid) == std::max(rhs.m_bid, rhs.m_maxProxyBid));
 }
 
 // ----------------------------------------------------------------------
 
 const bool AuctionBid::operator < (const AuctionBid & rhs) const
 {
-	return (max(m_bid, m_maxProxyBid) < max(rhs.m_bid, rhs.m_maxProxyBid));
+	return (std::max(m_bid, m_maxProxyBid) < std::max(rhs.m_bid, rhs.m_maxProxyBid));
 }
 
 // ----------------------------------------------------------------------
 
 const bool AuctionBid::operator <= (const AuctionBid & rhs) const
 {
-	return (max(m_bid, m_maxProxyBid) <= max(rhs.m_bid, rhs.m_maxProxyBid));
+	return (std::max(m_bid, m_maxProxyBid) <= std::max(rhs.m_bid, rhs.m_maxProxyBid));
 }
 
 // ======================================================================

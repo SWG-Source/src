@@ -15,6 +15,7 @@
 #include "sharedObject/ContainedByProperty.h"
 #include "sharedObject/Object.h"
 
+#include <algorithm>
 #include <cstdio>
 
 // ======================================================================

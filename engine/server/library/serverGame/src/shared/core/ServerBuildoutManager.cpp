@@ -135,7 +135,7 @@ void ServerBuildoutManager::install()
 
 	for (std::vector<BuildoutArea>::const_iterator i = buildoutAreas.begin(); i != buildoutAreas.end(); ++i)
 	{
-		s_areas.push_back();
+		s_areas.push_back(AreaInfo());
 		AreaInfo &areaInfo = s_areas.back();
 		areaInfo.buildoutArea = *i;
 		areaInfo.loaded = false;
@@ -458,7 +458,7 @@ void ServerBuildoutManagerNamespace::generateBuildoutData(float x1, float z1, fl
 				packedScriptList += (*j).getScriptName();
 			}
 
-			serverRows.push_back();
+			serverRows.push_back(ServerBuildoutAreaRow());
 			ServerBuildoutAreaRow &serverRow = serverRows.back();
 
 			serverRow.id                = static_cast< int >( obj->getNetworkId().getValue() );
@@ -494,7 +494,7 @@ void ServerBuildoutManagerNamespace::generateBuildoutData(float x1, float z1, fl
 
 			if (!serverOnly)
 			{
-				clientRows.push_back();
+				clientRows.push_back(ClientBuildoutAreaRow());
 				ClientBuildoutAreaRow &clientRow = clientRows.back();
 
 				clientRow.id                = serverRow.id;

@@ -84,6 +84,5 @@ target_link_libraries(CustomerServiceServer
     unicode
     unicodeArchive
     CSAssist
-    ${STLPORT_LIBRARIES}
     ${CMAKE_DL_LIBS}
 )

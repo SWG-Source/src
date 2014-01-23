@@ -14,6 +14,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <dlfcn.h>
+#include <cstddef>
 #include <map>
 #include <vector>
 

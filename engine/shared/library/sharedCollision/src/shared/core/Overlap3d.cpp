@@ -461,7 +461,7 @@ bool TestTriTri ( Triangle3d const & A, Triangle3d const & B )
 
 bool TestSpherePlane ( Sphere const & A, Plane3d const & B )
 {
-	float dist = abs(Distance3d::DistancePointPlane(A.getCenter(),B));
+	float dist = std::abs(Distance3d::DistancePointPlane(A.getCenter(),B));
 
 	return dist <= A.getRadius();
 }

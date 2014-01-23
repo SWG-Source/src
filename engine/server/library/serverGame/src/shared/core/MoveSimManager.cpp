@@ -191,7 +191,7 @@ void MoveSimManager::checkApplySimulation (CreatureObject & creature)
 		creature.setController (msc);
 		creature.scheduleForAlter ();
 		
-		if (!std::find (s_moveSimCreatures.begin (), s_moveSimCreatures.end (), id))
+		if (std::find (s_moveSimCreatures.begin (), s_moveSimCreatures.end (), id) != s_moveSimCreatures.end())
 			s_moveSimCreatures.push_back (id);
 
 		REPORT_LOG_PRINT (true, ("MoveSimManager [%ld] applied simulation to [%s]\n", GameServer::getInstance ().getProcessId (), id.getValueString ().c_str ()));

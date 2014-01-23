@@ -11,7 +11,7 @@
 #include "ChatAPI/ChatAPI.h"
 #include "sharedFoundation/NetworkId.h"
 #include "sharedNetworkMessages/ChatAvatarId.h"
-#include <hash_map>
+#include <tr1/unordered_map>
 #include <map>
 #include <set>
 #include <string>
@@ -111,7 +111,7 @@ public:
 	//-----------------------------------------------------------------------
 
 
-	std::hash_map<unsigned, NetworkId>                  pendingRequests;
+	std::tr1::unordered_map<unsigned, NetworkId>                  pendingRequests;
 	static ChatServer &  instance                   ();
 
 	static bool        isValidChatAvatarName(Unicode::String const &chatName);
@@ -225,7 +225,7 @@ private:
 		time_t chatSpamNextTimeToNotifyPlayerWhenLimited;
 		time_t unsquelchTime;
 	};
-	typedef std::hash_map<NetworkId, AvatarExtendedData, NetworkId::Hash> ChatAvatarList;
+	typedef std::tr1::unordered_map<NetworkId, AvatarExtendedData, NetworkId::Hash> ChatAvatarList;
 
 
 	struct VoiceChatAvatarData
@@ -234,7 +234,7 @@ private:
 		std::string playerName;
 	};
 
-	typedef std::hash_map<NetworkId, VoiceChatAvatarData, NetworkId::Hash> VoiceChatAvatarList;
+	typedef std::tr1::unordered_map<NetworkId, VoiceChatAvatarData, NetworkId::Hash> VoiceChatAvatarList;
 
 	static AvatarExtendedData * getAvatarExtendedDataByNetworkId(const NetworkId & id);
 
@@ -243,8 +243,8 @@ private:
 	ChatAvatarList                                                    chatAvatars;
 	ChatInterface *                                                   chatInterface;
 	VChatInterface *                                                  voiceChatInterface;
-	std::hash_map<NetworkId, ConnectionServerConnection *, NetworkId::Hash>  clientMap;
-	std::hash_map<unsigned int, GameServerConnection *>                      gameServerConnectionMap;
+	std::tr1::unordered_map<NetworkId, ConnectionServerConnection *, NetworkId::Hash>  clientMap;
+	std::tr1::unordered_map<unsigned int, GameServerConnection *>                      gameServerConnectionMap;
 	std::set<ConnectionServerConnection *>              connectionServerConnections;
 	
 	bool                             done;
@@ -255,7 +255,7 @@ private:
 	static ChatServer *              m_instance;
 	CustomerServiceServerConnection *customerServiceServerConnection;
 
-	typedef std::hash_map<unsigned int, GameServerConnection *> GameServerMap;
+	typedef std::tr1::unordered_map<unsigned int, GameServerConnection *> GameServerMap;
 	GameServerMap m_gameServerConnectionRegistry;
 	VoiceChatAvatarList m_voiceChatIdMap;
 	std::map<std::string, NetworkId> m_voiceChatNameToIdMap;

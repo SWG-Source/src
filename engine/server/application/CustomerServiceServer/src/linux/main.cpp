@@ -12,7 +12,7 @@
 #include "sharedNetworkMessages/SetupSharedNetworkMessages.h"
 #include "sharedRandom/SetupSharedRandom.h"
 #include "sharedThread/SetupSharedThread.h"
-#include <hash_map>
+#include <tr1/unordered_map>
 
 // ======================================================================
 

@@ -340,6 +340,5 @@ target_link_libraries(SwgDatabaseServer
     localizationArchive
     unicode
     unicodeArchive
-    ${STLPORT_LIBRARIES}
     ${CMAKE_DL_LIBS}
 )

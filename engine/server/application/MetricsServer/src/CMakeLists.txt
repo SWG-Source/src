@@ -71,6 +71,5 @@ target_link_libraries(MetricsServer
     unicode
     unicodeArchive
     MonAPI2
-    ${STLPORT_LIBRARIES}
     ${CMAKE_DL_LIBS}
 )

@@ -230,6 +230,8 @@
 #include "swgSharedUtility/SpeciesRestrictions.h"
 #include "unicodeArchive/UnicodeArchive.h"
 
+#include <limits>
+
 //-----------------------------------------------------------------------
 
 //#undef PROFILE_INDIVIDUAL_MESSAGES
@@ -3643,9 +3645,9 @@ bool GameServer::requestSceneWarp(const CachedNetworkId &objectId, const std::st
 
 	// clamp destination if in space
 	if (   !strncmp(sceneName.c_str(), "space_", 6)
-	    && (   abs(newPosition_w.x) > 8000.f
-	        || abs(newPosition_w.y) > 8000.f
-	        || abs(newPosition_w.z) > 8000.f))
+	    && (   std::abs(newPosition_w.x) > 8000.f
+	        || std::abs(newPosition_w.y) > 8000.f
+	        || std::abs(newPosition_w.z) > 8000.f))
 	{
 		WARNING(true, ("Tried to warp object %s outside of space zone boundaries (%g,%g,%g)", object->getDebugInformation().c_str(), newPosition_w.x, newPosition_w.y, newPosition_w.z));
 		destPosition_w.set(
@@ -3706,9 +3708,9 @@ bool GameServer::requestSceneWarp(const CachedNetworkId &objectId, const std::st
 
 	// clamp destination if in space
 	if (   !strncmp(sceneName.c_str(), "space_", 6)
-	    && (   abs(newPosition_w.x) > 8000.f
-	        || abs(newPosition_w.y) > 8000.f
-	        || abs(newPosition_w.z) > 8000.f))
+	    && (   std::abs(newPosition_w.x) > 8000.f
+	        || std::abs(newPosition_w.y) > 8000.f
+	        || std::abs(newPosition_w.z) > 8000.f))
 	{
 		WARNING(true, ("Tried to warp object %s outside of space zone boundaries (%g,%g,%g)", object->getDebugInformation().c_str(), newPosition_w.x, newPosition_w.y, newPosition_w.z));
 		destPosition_w.set(

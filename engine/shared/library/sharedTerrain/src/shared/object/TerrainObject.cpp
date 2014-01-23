@@ -740,11 +740,11 @@ bool TerrainObject::isWithinTerrainBoundaries (Vector const &position_w) const
 {
 	//-- check x and z
 	float const maxCoordinate = getMapWidthInMeters () * 0.5f;
-	if ((abs (position_w.x) > maxCoordinate) || (abs (position_w.z) > maxCoordinate))
+	if ((std::abs (position_w.x) > maxCoordinate) || (std::abs (position_w.z) > maxCoordinate))
 		return false;
 
 	//-- check y
-	if (abs (position_w.y) > getMaximumValidHeightInMeters ())
+	if (std::abs (position_w.y) > getMaximumValidHeightInMeters ())
 		return false;
 
 	return true;

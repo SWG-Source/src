@@ -16,6 +16,7 @@
 #include "sharedFoundation/NetworkIdArchive.h"
 #include "sharedLog/Log.h"
 #include "sharedNetworkMessages/GenericValueTypeMessage.h"
+#include <algorithm>
 #include <queue>
 #include <cstdio>
 

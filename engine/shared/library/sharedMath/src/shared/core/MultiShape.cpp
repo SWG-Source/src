@@ -221,7 +221,7 @@ float MultiShape::calcAvoidanceRadius ( void ) const
 			float sinTheta = m_axisY.y;
 			float cosTheta = sqrt( m_axisY.x * m_axisY.x + m_axisY.z * m_axisY.z );
 
-			float twoContactRadius = abs(m_extentY * sinTheta + m_extentX * cosTheta);
+			float twoContactRadius = std::abs(m_extentY * sinTheta + m_extentX * cosTheta);
 
 			float blah = m_extentY * sinTheta;
 

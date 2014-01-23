@@ -2,7 +2,8 @@
 #define SOE__SERIALIZE_CLASSES_H
 
 
-#include <assert.h>
+#include <cassert>
+#include <cstring>
 #include <string>
 #include <list>
 #include <vector>

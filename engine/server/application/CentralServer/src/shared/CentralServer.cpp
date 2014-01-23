@@ -3220,7 +3220,7 @@ void CentralServer::handleRequestGameServerForLoginMessage(const RequestGameServ
 			LOG(loginTrace, ("deferring RequestGameServerForLoginMessage(%s)", msg.getCharacterId().getValueString().c_str()));
 			DEBUG_REPORT_LOG(true, ("Starting planet server for login"));
 			startPlanetServer(getHostForScene(msg.getScene()), msg.getScene(), 0);
-			m_messagesWaitingForPlanetServer.push_back();
+			m_messagesWaitingForPlanetServer.push_back(Archive::ByteStream());
 			msg.pack(m_messagesWaitingForPlanetServer.back());
 		}
 		else
@@ -3243,7 +3243,7 @@ void CentralServer::handleRequestSceneTransfer(const RequestSceneTransfer &msg)
 	{
 		DEBUG_REPORT_LOG(true, ("Starting planet server for login"));
 		startPlanetServer(getHostForScene(msg.getSceneName()), msg.getSceneName(), 0);
-		m_messagesWaitingForPlanetServer.push_back();
+		m_messagesWaitingForPlanetServer.push_back(Archive::ByteStream());
 		msg.pack(m_messagesWaitingForPlanetServer.back());
 	}
 }

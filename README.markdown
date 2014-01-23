@@ -19,14 +19,6 @@ https://help.ubuntu.com/community/Oracle%20Instant%20Client
 
 You must log out and back in (or just reboot) for the $JAVA_HOME and $ORACLE_HOME to be set properly after these tools are installed. This is required in order for cmake to be able to find these tools when configuring the source code for building.
 
-### STLPort
-
-	wget http://downloads.sourceforge.net/project/stlport/STLport/STLport-5.2.1/STLport-5.2.1.tar.bz2
-	tar -xvjf STLport-5.2.1.tar.bz2
-	cd STLport-5.2.1
-	./configure
-	sudo make install
-
 ## Build code
 
 	git clone git@bitbucket.org:apathyboy/swg-src.git -b cmake

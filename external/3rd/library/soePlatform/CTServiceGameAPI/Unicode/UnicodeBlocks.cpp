@@ -10,6 +10,8 @@
 #include "FirstUnicode.h"
 #include "UnicodeBlocks.h"
 
+#include <cstdlib>
+
 // ======================================================================
 #ifdef EXTERNAL_DISTRO
 namespace NAMESPACE

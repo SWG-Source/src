@@ -78,6 +78,5 @@ target_link_libraries(TransferServer
     unicode
     unicodeArchive
     CTServiceGameAPI
-    ${STLPORT_LIBRARIES}
     ${CMAKE_DL_LIBS}
 )

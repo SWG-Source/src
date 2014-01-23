@@ -182,7 +182,8 @@
 #include "sharedUtility/ValueDictionary.h"
 #include <algorithm>
 #include <deque>
-#include <hash_set>
+#include <limits>
+#include <tr1/unordered_set>
 #include <set>
 
 //----------------------------------------------------------------------
@@ -625,7 +626,7 @@ float CreatureAttitude::operator-(CreatureAttitude const &other) const
 	if (m_fearState != other.m_fearState)
 		result += 30.0f;
 	for (int i = 0; i < MentalStates::NumberOfMentalStates; ++i)
-		result += abs(m_currentValues[i] - other.m_currentValues[i]);
+		result += std::abs(m_currentValues[i] - other.m_currentValues[i]);
 	return result;
 }
 
@@ -651,9 +652,9 @@ bool MonitoredCreatureMovement::operator!=(MonitoredCreatureMovement const &othe
 
 float MonitoredCreatureMovement::operator-(MonitoredCreatureMovement const &other) const
 {
-	return   abs(m_lastDistance - other.m_lastDistance)
-	       + abs(m_skittishness - other.m_skittishness)
-	       + abs(m_curve - other.m_curve);
+	return   std::abs(m_lastDistance - other.m_lastDistance)
+	       + std::abs(m_skittishness - other.m_skittishness)
+	       + std::abs(m_curve - other.m_curve);
 }
 
 // ======================================================================
@@ -7717,7 +7718,7 @@ void CreatureObject::reportMonitoredCreatures(float time)
 				{
 					percent = -percent;
 				}
-				float absCurve = abs(i->second.m_curve);
+				float absCurve = std::abs(i->second.m_curve);
 				float scale = pow(percent, absCurve) * (1+absCurve);
 				float speedScale = float(sqrt(approachVelocity / getRunSpeed()));
 				float fearDelta = approach * i->second.m_skittishness * speedScale * scale;

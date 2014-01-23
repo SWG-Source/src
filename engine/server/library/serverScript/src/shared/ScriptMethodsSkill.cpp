@@ -23,6 +23,9 @@
 #include "sharedSkillSystem/SkillObject.h"
 
 #include "UnicodeUtils.h"
+
+#include <climits>
+
 using namespace JNIWrappersNamespace;
 
 

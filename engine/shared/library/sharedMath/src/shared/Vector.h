@@ -265,9 +265,9 @@ inline real Vector::magnitudeSquared(void) const
 
 inline real Vector::approximateMagnitude(void) const
 {
-	real minc = abs(x);
-	real midc = abs(y);
-	real maxc = abs(z);
+	real minc = std::abs(x);
+	real midc = std::abs(y);
+	real maxc = std::abs(z);
 
 	// sort the vectors
 	// we do our own swapping to avoid heavy-weight includes in such a low-level class

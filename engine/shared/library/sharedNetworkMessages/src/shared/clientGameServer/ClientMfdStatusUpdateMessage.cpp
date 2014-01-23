@@ -11,6 +11,8 @@
 #include "sharedMathArchive/VectorArchive.h"
 #include "sharedNetworkMessages/ClientMfdStatusUpdateMessage.h"
 
+#include <algorithm>
+
 //-----------------------------------------------------------------------
 
 const char * const ClientMfdStatusUpdateMessage::MESSAGE_TYPE = "ClientMfdStatusUpdateMessage";

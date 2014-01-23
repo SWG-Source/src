@@ -12,7 +12,7 @@
 
 #include <map>
 #include <string>
-#include <hash_map>
+#include <tr1/unordered_map>
 #include <vector>
 #include <set> //TODO: remove when we clean up newCharacterLock hack
 
@@ -105,7 +105,7 @@ class Persister : public MessageDispatch::Receiver
 	};
 
 	typedef std::map<uint32,Snapshot*>            ServerSnapshotMap;
-	typedef std::hash_map<NetworkId,Snapshot*>    ObjectSnapshotMap; 
+	typedef std::tr1::unordered_map<NetworkId,Snapshot*>    ObjectSnapshotMap; 
 	typedef std::map<NetworkId,PendingCharacter>  PendingCharactersType;
 	typedef std::vector<Snapshot*>                SnapshotListType;
 	typedef std::set<uint32>                      NewCharacterLockType;

@@ -12,7 +12,7 @@
 #include "ChatServerAvatarOwner.h"
 #include "ChatServerRoomOwner.h"
 #include <deque>
-#include <hash_map>
+#include <tr1/unordered_map>
 #include <map>
 #include <set>
 #include <string>
@@ -47,7 +47,7 @@ public:
 	const NetworkId & getNetworkIdByAvatarId(const ChatAvatarId &id);
 	ChatServerAvatarOwner *getAvatarOwner(const ChatAvatar *avatar);
 	void          disconnectPlayer  (const ChatAvatarId & avatarId);
-	const std::hash_map<std::string, ChatServerRoomOwner> &  getRoomList  () const;
+	const std::tr1::unordered_map<std::string, ChatServerRoomOwner> &  getRoomList  () const;
 
 	const ChatServerRoomOwner *getRoomOwner(const std::string &roomName);
 	ChatServerRoomOwner *getRoomOwner(unsigned roomId);
@@ -157,11 +157,11 @@ public:
 
 private:
 	std::map<ChatAvatarId, ChatServerAvatarOwner *>  avatarMap;
-	std::hash_map<std::string, NetworkId>  pendingAvatars;
+	std::tr1::unordered_map<std::string, NetworkId>  pendingAvatars;
 	std::set<NetworkId> pendingRoomQueries;
 	int                 roomQueriesThisFrame;
-	std::hash_map<std::string, ChatServerRoomOwner> roomList;
-	std::hash_map<NetworkId, std::vector<Archive::ByteStream>, NetworkId::Hash >  deferredChatMessages;
+	std::tr1::unordered_map<std::string, ChatServerRoomOwner> roomList;
+	std::tr1::unordered_map<NetworkId, std::vector<Archive::ByteStream>, NetworkId::Hash >  deferredChatMessages;
 	std::map<ChatAvatarId, std::pair<unsigned long, std::deque<const ChatPersistentMessageToClient *> > > queuedHeaders;
 	std::map<unsigned, std::pair<std::pair<ChatUnicodeString, ChatUnicodeString>, int> > trackingRequestGetAnyAvatarForDestroy;
 };

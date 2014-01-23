@@ -104,6 +104,5 @@ target_link_libraries(ConnectionServer
     Base
     CommonAPI
     LoginAPI
-    ${STLPORT_LIBRARIES}
     ${CMAKE_DL_LIBS}
 )

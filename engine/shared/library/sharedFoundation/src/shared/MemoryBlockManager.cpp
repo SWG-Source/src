@@ -14,6 +14,7 @@
 #include "sharedFoundation/ConfigSharedFoundation.h"
 #include "sharedSynchronization/Mutex.h"
 
+#include <algorithm>
 #include <map>
 #include <vector>
 

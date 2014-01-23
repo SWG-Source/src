@@ -18,6 +18,7 @@
 #endif
 
 #include <string>
+#include <tr1/unordered_map>
 
 //-----------------------------------------------------------------
 
@@ -44,6 +45,26 @@ namespace Unicode
 
 	const String                               emptyString;
 }
+
+namespace std {
+namespace tr1 {
+
+	template<>
+	struct hash<Unicode::String>
+	{
+		std::size_t operator()(const Unicode::String& s) const
+		{
+			std::size_t hash = 0;
+			int offset = 'a' - 1;
+			for(Unicode::String::const_iterator it=s.begin(); it!=s.end(); ++it) {
+  				hash = hash << 1 | (*it - offset);
+			}
+
+			return hash;
+		}
+	};
+
+}}
 
 //-----------------------------------------------------------------
 

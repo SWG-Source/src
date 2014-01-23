@@ -46,6 +46,7 @@
 #include "sharedUtility/DataTable.h"
 #include "sharedUtility/DataTableManager.h"
 #include <algorithm>
+#include <limits>
 
 // ======================================================================
 

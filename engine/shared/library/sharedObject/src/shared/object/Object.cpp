@@ -559,7 +559,7 @@ void ObjectNamespace::deleteLocalTransform(Transform *transform)
 
 void ObjectNamespace::validatePosition(Object const & object, Vector const & position)
 {
-	if (abs(position.x) > 16000.0f || abs(position.y) > 16000.0f || abs(position.z) > 16000.0f)
+	if (std::abs(position.x) > 16000.0f || std::abs(position.y) > 16000.0f || std::abs(position.z) > 16000.0f)
 	{
 		Object const * parent = object.getAttachedTo();
 

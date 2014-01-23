@@ -17,6 +17,8 @@
 #include <libgen.h>
 #endif
 
+#include <climits>
+
 const char WIN32_PATH_SEPARATOR = '\\';
 const char LINUX_PATH_SEPARATOR = '/';
 

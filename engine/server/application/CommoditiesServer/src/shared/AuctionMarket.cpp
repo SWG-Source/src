@@ -4326,8 +4326,7 @@ void    AuctionMarket::OnVendorStatusChange (
 
 void static decodeOOB(const std::string & UTF8String, Unicode::String & UniString)
 {
-
-	std::string::iterator c = const_cast<std::string::iterator> (UTF8String.begin());
+	std::string::const_iterator c = UTF8String.begin();
 	std::string tempstring;
 	unsigned short unicharvalue;
 	char * pEnd;

@@ -17,6 +17,8 @@
 #pragma warning (disable:4786)
 #endif
 
+#include <cstring>
+
 #include "Unicode.h"
 #include "utf8.h"
 

@@ -32,6 +32,8 @@
 #include "sharedObject/Portal.h"
 #include "sharedObject/Tweakable.h"
 
+#include <algorithm>
+
 static VectorArgb gs_forceFieldColor(0.6f,0.5f,0.5f,1.0f);
 
 // ======================================================================

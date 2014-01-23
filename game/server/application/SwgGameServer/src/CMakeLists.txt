@@ -150,6 +150,5 @@ target_link_libraries(SwgGameServer
     unicode
     unicodeArchive
     Base
-    ${STLPORT_LIBRARIES}
     ${CMAKE_DL_LIBS}
 )

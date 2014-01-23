@@ -23,7 +23,7 @@
 #include "sharedFoundation/FormattedString.h"
 #include "sharedNetworkMessages/ChatRoomData.h"
 
-#include <hash_map>
+#include <tr1/unordered_map>
 
 // ======================================================================
 

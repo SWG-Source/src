@@ -1,5 +1,7 @@
 #include "Base64.h"
-#include <stdio.h>
+
+#include <cstdio>
+#include <cstring>
 
 #ifdef EXTERNAL_DISTRO
 namespace NAMESPACE 

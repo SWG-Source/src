@@ -519,7 +519,7 @@ public:
 		};
 	};
 
-	typedef stdhash_set<const CreatureObject *, CreatureObjectPointerHash>::fwd AllCreaturesSet;
+	typedef stdunordered_set<const CreatureObject *, CreatureObjectPointerHash>::fwd AllCreaturesSet;
 	static const AllCreaturesSet & getAllCreatures();
 
 	bool monitorCreatureMovement(const CachedNetworkId &ofTarget, float i_skittishness, float i_curve);

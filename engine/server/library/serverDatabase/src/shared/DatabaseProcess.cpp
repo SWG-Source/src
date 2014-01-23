@@ -369,7 +369,7 @@ void DatabaseProcess::connectToGameServer(const char *address, uint16 port, uint
 	if(i == pendingGameServerConnections.end())
 	{		
 		// check to see if there is already a connection active
-		std::hash_map<uint32, GameServerConnection *>::const_iterator j = gameServerConnections.find(processId);
+		std::tr1::unordered_map<uint32, GameServerConnection *>::const_iterator j = gameServerConnections.find(processId);
 		if(j == gameServerConnections.end())
 		{
 			// make the connection
@@ -383,7 +383,7 @@ void DatabaseProcess::connectToGameServer(const char *address, uint16 port, uint
 GameServerConnection * DatabaseProcess::getConnectionByProcess(const uint32 processId)
 {
 	GameServerConnection * result = 0;
-	std::hash_map<uint32, GameServerConnection *>::const_iterator j = gameServerConnections.find(processId);
+	std::tr1::unordered_map<uint32, GameServerConnection *>::const_iterator j = gameServerConnections.find(processId);
 	if(j != gameServerConnections.end())
 	{
 		result = (*j).second;
@@ -395,7 +395,7 @@ GameServerConnection * DatabaseProcess::getConnectionByProcess(const uint32 proc
 
 void DatabaseProcess::getGameServerProcessIds(std::vector<uint32> &processIds) const
 {
-	for (std::hash_map<uint32, GameServerConnection *>::const_iterator i = gameServerConnections.begin(); i != gameServerConnections.end(); ++i)
+	for (std::tr1::unordered_map<uint32, GameServerConnection *>::const_iterator i = gameServerConnections.begin(); i != gameServerConnections.end(); ++i)
 		processIds.push_back((*i).first);
 }
 
@@ -637,7 +637,7 @@ void DatabaseProcess::sendToCommoditiesServer(GameNetworkMessage const &message,
 
 void DatabaseProcess::sendToAllGameServers(GameNetworkMessage const &message, bool reliable)
 {
-	for (std::hash_map<uint32, GameServerConnection *>::const_iterator i=gameServerConnections.begin(); i!=gameServerConnections.end(); ++i)
+	for (std::tr1::unordered_map<uint32, GameServerConnection *>::const_iterator i=gameServerConnections.begin(); i!=gameServerConnections.end(); ++i)
 		i->second->send(message,reliable);
 }
 
@@ -645,7 +645,7 @@ void DatabaseProcess::sendToAllGameServers(GameNetworkMessage const &message, bo
 
 void DatabaseProcess::sendToGameServer(uint32 serverId, GameNetworkMessage const &message)
 {
-	std::hash_map<uint32, GameServerConnection *>::const_iterator i=gameServerConnections.find(serverId);
+	std::tr1::unordered_map<uint32, GameServerConnection *>::const_iterator i=gameServerConnections.find(serverId);
 	if (i!=gameServerConnections.end())
 		i->second->send(message,true);
 	else

@@ -67,7 +67,7 @@ public:
 		};
 	};
 
-	typedef stdhash_set<const InstallationObject *, InstallationObjectPointerHash>::fwd AllInstallationsSet;
+	typedef stdunordered_set<const InstallationObject *, InstallationObjectPointerHash>::fwd AllInstallationsSet;
 	static const AllInstallationsSet & getAllInstallations();
 
 protected:

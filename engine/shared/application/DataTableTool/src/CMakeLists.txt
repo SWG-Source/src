@@ -53,6 +53,5 @@ target_link_libraries(DataTableTool
     localizationArchive
     unicode
     unicodeArchive
-    ${STLPORT_LIBRARIES}
     ${CMAKE_DL_LIBS}
 )

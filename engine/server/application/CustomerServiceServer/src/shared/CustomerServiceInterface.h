@@ -37,7 +37,7 @@ private:
 		int                         m_pendingTicketCount;
 	};
 
-	typedef stdhash_map<NetworkId, ClientInfo, NetworkId::Hash>::fwd ClientConnectionMap;
+	typedef stdunordered_map<NetworkId, ClientInfo, NetworkId::Hash>::fwd ClientConnectionMap;
 	typedef stdmap<unsigned int, NetworkId>::fwd                     SuidToNetworkIdMap;
 	typedef stdvector<CustomerServiceCategory>::fwd                  CategoryList;
 

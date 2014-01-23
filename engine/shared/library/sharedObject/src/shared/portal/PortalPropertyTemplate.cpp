@@ -166,7 +166,7 @@ void PortalPropertyTemplateNamespace::validateCoplanar(IndexedTriangleList const
 	for (uint i = 3; i < numberOfVertices; ++i)
 	{
 		float const distance = p.computeDistanceTo(vertexList[i]);
-		WARNING(abs(distance) > 0.001f, ("[%s]: portal is not planar, vertex %d is %8.6f from the plane", fileName, static_cast<int>(i), distance));
+		WARNING(std::abs(distance) > 0.001f, ("[%s]: portal is not planar, vertex %d is %8.6f from the plane", fileName, static_cast<int>(i), distance));
 	}
 }
 #endif

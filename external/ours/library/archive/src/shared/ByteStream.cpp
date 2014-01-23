@@ -3,6 +3,7 @@
 #include "ByteStream.h"
 #include "ArchiveMutex.h"
 #include <cassert>
+#include <cstring>
 
 // ======================================================================
 

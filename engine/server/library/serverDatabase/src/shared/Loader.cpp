@@ -51,6 +51,8 @@
 #include "sharedNetworkMessages/GenericValueTypeMessage.h"
 #include "unicodeArchive/UnicodeArchive.h"
 
+#include <algorithm>
+
 // ======================================================================
 
 Loader *Loader::ms_instance = NULL;

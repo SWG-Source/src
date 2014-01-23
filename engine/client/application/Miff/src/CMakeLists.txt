@@ -67,34 +67,12 @@ add_executable(Miff
 )
 
 target_link_libraries(Miff
-    #sharedCommandParser
     sharedCompression
     sharedDebug
     sharedFile
     sharedFoundation
-    #sharedGame
-    #sharedLog
-    #sharedMath
     sharedMemoryManager
-    #sharedMessageDispatch
-    #sharedNetwork
-    #sharedNetworkMessages
-    #sharedObject
-    #sharedRandom
-    #sharedSynchronization
     sharedThread
-    #sharedUtility
-    #serverKeyShare
-    #serverMetrics
-    #serverNetworkMessages
-    #serverUtility
-    #archive
-    #crypto
     fileInterface
-    #localization
-    #localizationArchive
-    #unicode
-    #unicodeArchive
-    ${STLPORT_LIBRARIES}
     ${CMAKE_DL_LIBS}
 )

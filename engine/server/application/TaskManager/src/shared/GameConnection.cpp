@@ -15,6 +15,8 @@
 #include "sharedNetworkMessages/GenericValueTypeMessage.h"
 #include "ProcessSpawner.h"
 
+#include <algorithm>
+
 //-----------------------------------------------------------------------
 
 namespace GameConnectionNamespace

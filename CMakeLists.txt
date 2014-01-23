@@ -22,7 +22,6 @@ find_package(LibXml2 REQUIRED)
 find_package(Oracle REQUIRED)
 find_package(PCRE REQUIRED)
 find_package(Perl REQUIRED)
-find_package(STLPort REQUIRED)
 find_package(Threads)
 find_package(ZLIB REQUIRED)
 
@@ -44,9 +43,6 @@ elseif(UNIX)
 
 	add_definitions(-DLINUX -D_REENTRANT -Dlinux -D_USING_STL -D__STL_NO_BAD_ALLOC -D_GNU_SOURCE -D_XOPEN_SOURCE=500)
 endif()
-
-include_directories(${STLPORT_INCLUDE_DIR})
-link_directories(${STLPORT_LIBDIR})
 
 add_subdirectory(external)
 add_subdirectory(engine)

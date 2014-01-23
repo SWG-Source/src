@@ -14,6 +14,8 @@
 #include "serverGame/ServerWeaponObjectTemplate.h"
 #include "sharedGame/SharedWeaponObjectTemplate.h"
 
+#include <climits>
+
 class NetworkId;
 
 /** 

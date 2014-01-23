@@ -8,6 +8,7 @@ extern int errno;
 #endif
 
 #include <cstdio>
+#include <cstring>
 
 #define NAME_SIZE 256
 

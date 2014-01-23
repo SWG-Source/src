@@ -520,7 +520,7 @@ bool ConsoleCommandParserServer::performParsing (const NetworkId & userId, const
 			sprintf(
 				count, 
 				"Sphere id=[%lu] origin=[%f, %f, %f] radius=[%f] OID=[%s] %s\n", 
-				reinterpret_cast<unsigned long>(i), 
+				std::distance(results.begin(), i),//reinterpret_cast<unsigned long>(i), 
 				(*i).second.getCenter().x, 
 				(*i).second.getCenter().y, 
 				(*i).second.getCenter().z, 
@@ -556,7 +556,7 @@ bool ConsoleCommandParserServer::performParsing (const NetworkId & userId, const
 			sprintf(
 				count, 
 				"Sphere id=[%lu] origin=[%f, %f, %f] radius=[%f] OID=[%s] %s\n", 
-				reinterpret_cast<unsigned long>(i), 
+				std::distance(results.begin(), i),
 				(*i).second.getCenter().x, 
 				(*i).second.getCenter().y, 
 				(*i).second.getCenter().z, 

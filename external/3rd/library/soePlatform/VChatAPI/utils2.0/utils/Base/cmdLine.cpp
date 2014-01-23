@@ -35,7 +35,8 @@
 
 #include "cmdLine.h"
 //#include "crtdbg.h"
-#include <ctype.h>
+#include <cctype>
+#include <cstring>
 
 #ifdef NAMESPACE
 namespace NAMESPACE

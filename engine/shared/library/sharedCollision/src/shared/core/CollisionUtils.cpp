@@ -913,7 +913,7 @@ void BuildConvexHull ( VertexList const & verts, VertexList & outPoly )
 
 	int count = verts.size();
 
-	BuildConvexHull( sortedVerts.begin(), count, outPoly );
+	BuildConvexHull( &sortedVerts.front(), count, outPoly );
 }
 
 // ----------------------------------------------------------------------
@@ -1512,7 +1512,7 @@ bool CalcAvoidancePoints3d ( Sphere const & mob, Vector const & delta, Sphere co
 
 	Vector I,J;
 
-	if(abs(K.y) > 0.95)
+	if(std::abs(K.y) > 0.95)
 	{
 		// line A-B is almost vertical, build orthonormal basis using X axis
 
@@ -1781,14 +1781,14 @@ bool testPortalVis ( CellProperty const * cellA, Vector const & pointA, CellProp
 
 bool epsilonEqual ( Sphere const & A, Sphere const & B, float epsilon )
 {
-	if(abs(A.getRadius() - B.getRadius()) > epsilon) return false;
+	if(std::abs(A.getRadius() - B.getRadius()) > epsilon) return false;
 
 	Vector cA = A.getCenter();
 	Vector cB = B.getCenter();
 
-	if(abs(cA.x - cB.x) > epsilon) return false;
-	if(abs(cA.y - cB.y) > epsilon) return false;
-	if(abs(cA.z - cB.z) > epsilon) return false;
+	if(std::abs(cA.x - cB.x) > epsilon) return false;
+	if(std::abs(cA.y - cB.y) > epsilon) return false;
+	if(std::abs(cA.z - cB.z) > epsilon) return false;
 
 	return true;
 }

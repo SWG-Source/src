@@ -18,7 +18,7 @@
 #pragma warning (disable:4786)
 #endif
 
-#include <hash_map>
+#include <tr1/unordered_map>
 #include "Unicode.h"
 #include "UnicodeUtils.h"
 
@@ -57,8 +57,8 @@ public:
 	                             ~LocalizationManager     ();
 
 	typedef std::pair<time_t, LocalizedStringTable *> TimedStringTable;
-	typedef std::hash_map<Unicode::NarrowString, TimedStringTable> StringTableMap_t;
-	typedef std::hash_map<Unicode::NarrowString, LocalizationManager *> LocalizationManagerHashMap;
+	typedef std::tr1::unordered_map<Unicode::NarrowString, TimedStringTable> StringTableMap_t;
+	typedef std::tr1::unordered_map<Unicode::NarrowString, LocalizationManager *> LocalizationManagerHashMap;
 
 	static void                   install                 (AbstractFileFactory * fileFactory, Unicode::UnicodeNarrowStringVector & localeNames, bool debugStrings, DebugBadStringsFunc debugBadStringsFunc = 0, bool displayBadStringIds = true);
 	static void                   remove                  ();

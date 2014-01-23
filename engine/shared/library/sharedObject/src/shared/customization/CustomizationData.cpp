@@ -22,6 +22,7 @@
 #include "sharedObject/Object.h"
 #include "UnicodeUtils.h"
 
+#include <algorithm>
 #include <map>
 #include <string>
 #include <vector>

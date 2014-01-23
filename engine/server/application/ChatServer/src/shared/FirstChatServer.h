@@ -27,7 +27,7 @@ namespace Archive
 #include "sharedFoundation/NetworkId.h"
 #include "sharedNetwork/Connection.h"
 #include "ChatAPI/ChatAPI.h"
-#include <hash_map>
+#include <tr1/unordered_map>
 #include <string>
 
 //-----------------------------------------------------------------------

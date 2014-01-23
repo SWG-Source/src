@@ -13,6 +13,7 @@
 #include "UnicodeUtils.h"
 #include <cassert>
 #include <cctype>
+#include <cstdlib>
 
 //----------------------------------------------------------------------
 

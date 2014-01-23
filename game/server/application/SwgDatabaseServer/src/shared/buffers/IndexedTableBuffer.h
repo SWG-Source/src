@@ -11,7 +11,7 @@
 
 // ======================================================================
 
-#include <hash_map>
+#include <tr1/unordered_map>
 #include "serverDatabase/TableBuffer.h"
 
 // ======================================================================
@@ -37,7 +37,7 @@ class IndexedNetworkTableBuffer : public TableBuffer
 	IndexedNetworkTableBuffer(TableBufferMode mode, DB::ModeQuery *query);
 	
   private:
-	typedef std::hash_map<int, DB::Row*> IndexType;
+	typedef std::tr1::unordered_map<int, DB::Row*> IndexType;
 	/**
 	 * Index to locate rows.
 	 *

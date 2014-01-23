@@ -34,10 +34,10 @@ class ObjvarNameManager
 	DB::TaskRequest *saveNewNames();
 	
   private:
-	typedef stdhash_map<std::string, int>::fwd NameToIdMapType;
+	typedef stdunordered_map<std::string, int>::fwd NameToIdMapType;
 	NameToIdMapType *m_nameToIdMap;
 
-	typedef stdhash_map<int, std::string>::fwd IdToNameMapType;
+	typedef stdunordered_map<int, std::string>::fwd IdToNameMapType;
 	IdToNameMapType *m_idToNameMap;
 
 	typedef stdvector<std::pair<int, std::string> >::fwd NewNamesType;

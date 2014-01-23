@@ -12,7 +12,7 @@
 
 #include "Unicode.h"
 
-#include <hash_map>
+#include <tr1/unordered_map>
 
 //======================================================================
 
@@ -273,7 +273,7 @@ namespace ShipChassisSlotTypeNamespace
 		static_cast<int>(ShipComponentType::SCT_weapon),           // SCST_weapon_99
 	};
 
-	typedef stdhash_map<std::string, ShipChassisSlotType::Type>::fwd SlotNameTypeMap;
+	typedef stdunordered_map<std::string, ShipChassisSlotType::Type>::fwd SlotNameTypeMap;
 	SlotNameTypeMap s_slotNameTypeMap;
 
 	bool s_installed = false;

@@ -1,5 +1,6 @@
 #include "Base64.h"
-#include <stdio.h>
+#include <cstdio>
+#include <cstring>
 
 #ifdef WIN32
 #define snprintf _snprintf

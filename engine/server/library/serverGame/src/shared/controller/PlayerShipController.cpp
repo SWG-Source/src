@@ -36,6 +36,7 @@
 #include "sharedObject/AlterResult.h"
 #include "sharedObject/NetworkIdManager.h"
 
+#include <limits>
 #include <map>
 
 // ======================================================================

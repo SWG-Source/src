@@ -19,7 +19,7 @@
 #include "sharedObject/CachedNetworkId.h"
 #include "sharedObject/Object.h"
 #include "unicodeArchive/UnicodeArchive.h"
-#include <hash_set>
+#include <tr1/unordered_set>
 #include <map>
 
 class ConnectionServerConnection;
@@ -128,12 +128,12 @@ public:
 			return (reinterpret_cast<const size_t>(ptr) >> 4);
 		};
 	};
-	typedef std::hash_set<ServerObject*, ServerObjectPointerHash> ObservingList;
+	typedef std::tr1::unordered_set<ServerObject*, ServerObjectPointerHash> ObservingList;
 
 	// objects being observed that are in this list needs
 	// to have their pvp status updated when there are changes
 	// that requires pvp status to be recalcuclated
-	typedef std::hash_set<TangibleObject*, TangibleObjectPointerHash> ObservingListPvpSync;
+	typedef std::tr1::unordered_set<TangibleObject*, TangibleObjectPointerHash> ObservingListPvpSync;
 
 	ObservingList const &          getObserving() const;
 	ObservingListPvpSync const &   getObservingPvpSync() const;

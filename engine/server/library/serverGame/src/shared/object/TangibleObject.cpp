@@ -116,6 +116,7 @@
 
 #include <cstdio>
 #include <algorithm>
+#include <limits>
 
 #pragma warning(disable:4355)
 

@@ -14,7 +14,7 @@
 #include "sharedFoundation/NetworkId.h"
 #include "sharedUtility/PooledString.h"
 
-#include <hash_set>
+#include <tr1/unordered_set>
 
 // ======================================================================
 
@@ -40,7 +40,7 @@ public:
 		};
 	};
 
-	typedef std::hash_set<ServerObject *, ServerObjectPointerHash> ContentsSet;
+	typedef std::tr1::unordered_set<ServerObject *, ServerObjectPointerHash> ContentsSet;
 
 	void                              addObject(ServerObject &object);
 	void                              addEventSource(NetworkId const &source);

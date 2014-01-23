@@ -11,6 +11,7 @@
 #include "sharedMath/Capsule.h"
 #include "sharedMath/SpatialSubdivision.h"
 
+#include <algorithm>
 #include <vector>
 
 static const float SphereTreeEpsilon = 0.01f;
@@ -1436,7 +1437,7 @@ inline void SphereTreeNode<ObjectType, ExtentAccessor>::resizeRealSphere(const f
 		float BR = realSphere.getRadius();
 
 		float D = A.magnitudeBetween(B);
-		float O = abs(AR - (D + BR));
+		float O = std::abs(AR - (D + BR));
 
 		// Fatal if the error is significant, otherwise just warn.
 

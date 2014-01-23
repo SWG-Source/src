@@ -92,6 +92,7 @@
 #include "sharedUtility/LocationArchive.h"
 #include "UnicodeUtils.h"
 
+#include <limits>
 #include <list>
 
 const SharedObjectTemplate * PlayerObject::m_defaultSharedTemplate = NULL;
@@ -6210,8 +6211,7 @@ void PlayerObject::setAutoVariableFromByteStream(const std::string & name, const
 
 		for (std::vector<Commands>::const_iterator questIter = quests.begin(); questIter != quests.end(); ++questIter)
 		{
-			if (questIter)
-				m_quests.set(questIter->key, questIter->value);
+			m_quests.set(questIter->key, questIter->value);
 		}
 	}
 	else if(name == "completedQuests")

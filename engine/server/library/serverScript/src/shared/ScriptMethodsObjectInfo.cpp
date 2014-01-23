@@ -2310,7 +2310,7 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::isFacing(JNIEnv *env, jobject
 	Vector positionInObjectSpace = object->rotateTranslate_w2o (v);
 	real theta = positionInObjectSpace.theta ();
 
-	if (abs(theta) <= PI_OVER_4)
+	if (std::abs(theta) <= PI_OVER_4)
 		return JNI_TRUE;
 	else
 		return JNI_FALSE;
@@ -2559,7 +2559,7 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::areFacingEachOther(JNIEnv *en
 	Vector positionInObjectSpace = object1->rotateTranslate_w2o (object2->getPosition_w());
 	real theta = positionInObjectSpace.theta ();
 
-	if (abs(theta) > PI_OVER_4)
+	if (std::abs(theta) > PI_OVER_4)
 		return JNI_FALSE;
 	else
 	{
@@ -2567,7 +2567,7 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::areFacingEachOther(JNIEnv *en
 		Vector positionInObjectSpace2 = object2->rotateTranslate_w2o (object1->getPosition_w());
 		real theta2 = positionInObjectSpace2.theta ();
 
-		if (abs(theta2) > PI_OVER_4)
+		if (std::abs(theta2) > PI_OVER_4)
 			return JNI_FALSE;
 		else
 			return JNI_TRUE;

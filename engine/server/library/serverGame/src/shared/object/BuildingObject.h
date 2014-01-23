@@ -89,7 +89,7 @@ public:
 		};
 	};
 
-	typedef stdhash_set<const BuildingObject *, BuildingObjectPointerHash>::fwd AllBuildingsSet;
+	typedef stdunordered_set<const BuildingObject *, BuildingObjectPointerHash>::fwd AllBuildingsSet;
 	static const AllBuildingsSet & getAllBuildings();
 
 protected:

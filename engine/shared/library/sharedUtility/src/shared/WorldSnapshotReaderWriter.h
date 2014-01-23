@@ -175,7 +175,7 @@ private:
 	typedef stdvector<char*>::fwd ObjectTemplateNameList;
 	ObjectTemplateNameList* const m_objectTemplateNameList;
 
-	typedef stdhash_map<uint32, uint>::fwd ObjectTemplateCrcMap;
+	typedef stdunordered_map<uint32, uint>::fwd ObjectTemplateCrcMap;
 	ObjectTemplateCrcMap* const m_objectTemplateCrcMap; // map from crc to index in name list
 
 	typedef stdmap<int64, Node*>::fwd NetworkIdNodeMap;

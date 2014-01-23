@@ -8,7 +8,7 @@
 #include "sharedGame/FirstSharedGame.h"
 #include "sharedGame/ShipComponentType.h"
 
-#include <hash_map>
+#include <tr1/unordered_map>
 
 //======================================================================
 
@@ -48,7 +48,7 @@ namespace ShipComponentTypeNamespace
 		"mod_"
 	};
 
-	typedef stdhash_map<std::string, ShipComponentType::Type>::fwd ComponentNameTypeMap;
+	typedef stdunordered_map<std::string, ShipComponentType::Type>::fwd ComponentNameTypeMap;
 	ComponentNameTypeMap s_componentNameTypeMap;
 
 	bool s_installed = false;

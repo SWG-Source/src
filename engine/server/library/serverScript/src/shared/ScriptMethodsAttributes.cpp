@@ -19,6 +19,8 @@
 #include "sharedGame/GameObjectTypes.h"
 #include "swgSharedUtility/CombatEngineData.h"
 
+#include <climits>
+
 using namespace JNIWrappersNamespace;
 
 

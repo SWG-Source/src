@@ -23,6 +23,8 @@
 #include "sharedNetworkMessages/GenericValueTypeMessage.h"
 #include "sharedNetworkMessages/LoginEnumCluster.h"
 
+#include <algorithm>
+
 //-----------------------------------------------------------------------
 
 ClientConnection::ClientConnection(UdpConnectionMT * u, TcpClient * t) :
@@ -194,7 +196,7 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 
 		if (suid==0)
 		{
-			std::hash<std::string> h;
+			std::tr1::hash<std::string> h;
 			suid = h(id); //lint !e603 // Symbol 'h' not initialized (it's a functor)
 		}
 		

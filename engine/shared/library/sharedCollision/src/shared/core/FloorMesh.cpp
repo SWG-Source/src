@@ -1614,7 +1614,7 @@ bool FloorMesh::findFloorTri ( FloorLocator const & testLoc,
 
 	// ----------
 
-	if(abs(dist) < gs_hopTolerance)
+	if(std::abs(dist) < gs_hopTolerance)
 	{
 		// Floor tri is above the test point but within the hop
 		// tolerance and we're allowing hops - we can hop up onto it.
@@ -2911,7 +2911,7 @@ PathWalkResult FloorMesh::pathWalkCircleGetIds ( FloorLocator const & inStartLoc
 	{
 		float stepDistance = delta.magnitude();
 
-		float contactDist = abs(stepDistance * circleHitTime);
+		float contactDist = std::abs(stepDistance * circleHitTime);
 
 		if((circleHitTime < 0) && (contactDist > wallEpsilon))
 		{
@@ -3619,8 +3619,8 @@ bool FloorMesh::dropTest ( FloorLocator const & testLoc, float hopHeight, FloorL
 
 	if( findClosestPair(line,-1,closestBelow,closestAbove) )
 	{
-		float distBelow = abs(closestBelow.getOffset());
-		float distAbove = abs(closestAbove.getOffset());
+		float distBelow = std::abs(closestBelow.getOffset());
+		float distAbove = std::abs(closestAbove.getOffset());
 
 		closestAbove.setSurface(this);
 		closestBelow.setSurface(this);
@@ -3701,7 +3701,7 @@ bool FloorMesh::dropTest ( FloorLocator const & testLoc, int triID, FloorLocator
 
 	if(testIntersect(line,triID,tempLoc))
 	{
-		float absDist = abs(tempLoc.getOffset());
+		float absDist = std::abs(tempLoc.getOffset());
 
 		if(absDist <= ConfigSharedCollision::getHopHeight())
 		{

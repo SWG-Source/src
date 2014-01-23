@@ -62,7 +62,7 @@ class GameServer :
 public MessageDispatch::Receiver
 {
 public:
-	typedef stdhash_map<NetworkId, Client *, NetworkId::Hash>::fwd ClientMap;
+	typedef stdunordered_map<NetworkId, Client *, NetworkId::Hash>::fwd ClientMap;
 	typedef stdvector<ConnectionServerConnection *>::fwd           ConnectionServerVector;
 
 	virtual ~GameServer ();

@@ -24,7 +24,7 @@
 #include <algorithm>
 #include <map>
 #include <vector>
-#include <hash_map>
+#include <tr1/unordered_map>
 
 //===================================================================
 
@@ -710,7 +710,7 @@ WorldSnapshotReaderWriter::Node const *WorldSnapshotReaderWriter::addObject (
 	//-- find objectTemplateNameIndex
 	uint objectTemplateNameIndex = 0;
 
-	std::hash_map<uint32, uint>::const_iterator i = m_objectTemplateCrcMap->find(objectTemplateName.getCrc());
+	ObjectTemplateCrcMap::const_iterator i = m_objectTemplateCrcMap->find(objectTemplateName.getCrc());
 	if (i != m_objectTemplateCrcMap->end())
 		objectTemplateNameIndex = (*i).second;
 	else

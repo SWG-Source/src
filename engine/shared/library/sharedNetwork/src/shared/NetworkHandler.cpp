@@ -24,6 +24,7 @@
 
 #include "TcpClient.h"
 
+#include <algorithm>
 #include <deque>
 #include <map>
 #include <set>
@@ -255,7 +256,7 @@ void NetworkHandler::onReceive(Connection * c, const unsigned char * d, int s)
 {
 	if(c)
 	{
-		services.inputQueue.push_back();
+		services.inputQueue.push_back(IncomingData());
 		services.inputQueue.back().connection = c;
 		services.inputQueue.back().byteStream.put(d, s);
 

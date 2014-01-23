@@ -50,6 +50,5 @@ target_link_libraries(ServerConsole
     sharedNetwork
     sharedNetworkMessages
     sharedThread
-    ${STLPORT_LIBRARIES}
     ${CMAKE_DL_LIBS}
 )

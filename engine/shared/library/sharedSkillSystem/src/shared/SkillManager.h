@@ -16,8 +16,8 @@ class DataTable;
 class SkillManager
 {
 public:
-	typedef stdhash_map<std::string, SkillObject *>::fwd SkillMap;
-	typedef stdhash_map<std::string, uint32>::fwd        XpLimitMap;
+	typedef stdunordered_map<std::string, SkillObject *>::fwd SkillMap;
+	typedef stdunordered_map<std::string, uint32>::fwd        XpLimitMap;
 
 	virtual              ~SkillManager ();
 

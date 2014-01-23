@@ -13,7 +13,7 @@
 #include "SwgDatabaseServer/CommoditiesQuery.h"
 #include "SwgDatabaseServer/CommoditiesSchema.h"
 #include "serverDatabase/AbstractTableBuffer.h"
-#include <hash_map>
+#include <tr1/unordered_map>
 #include <string>
 
 // ======================================================================
@@ -47,10 +47,10 @@ private:
 	void                      addRowToIndex          (const NetworkId &itemId, DBSchema::MarketAuctionsRow *row);
 
 private:
-	typedef std::hash_map<NetworkId, DBSchema::MarketAuctionsRow*> IndexType;
+	typedef std::tr1::unordered_map<NetworkId, DBSchema::MarketAuctionsRow*> IndexType;
 	IndexType m_rows;
 
-	typedef std::hash_map<NetworkId, std::vector<std::pair<std::string, Unicode::String> > > AttributesType;
+	typedef std::tr1::unordered_map<NetworkId, std::vector<std::pair<std::string, Unicode::String> > > AttributesType;
 	AttributesType m_attributes;
 
 private:
@@ -79,7 +79,7 @@ private:
 	void                      addRowToIndex          (const NetworkId &itemId, DBSchema::MarketAuctionsRowDelete *row);
 
 private:
-	typedef std::hash_map<NetworkId, DBSchema::MarketAuctionsRowDelete*> IndexType;
+	typedef std::tr1::unordered_map<NetworkId, DBSchema::MarketAuctionsRowDelete*> IndexType;
 	IndexType m_rows;
 
 private:
@@ -108,7 +108,7 @@ private:
 	void                      addRowToIndex          (const NetworkId &itemId, DBSchema::MarketAuctionsRowUpdate *row);
 
 private:
-	typedef std::hash_map<NetworkId, DBSchema::MarketAuctionsRowUpdate*> IndexType;
+	typedef std::tr1::unordered_map<NetworkId, DBSchema::MarketAuctionsRowUpdate*> IndexType;
 	IndexType m_rows;
 
 private:

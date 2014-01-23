@@ -10,6 +10,8 @@
 #include "sharedMath/MxCifQuadTree.h"
 #include "sharedMath/MxCifQuadTreeBounds.h"
 
+#include <algorithm>
+
 
 //==============================================================================
 
