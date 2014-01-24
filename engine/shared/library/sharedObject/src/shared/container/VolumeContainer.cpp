@@ -17,6 +17,7 @@
 
 #include "sharedFoundation/CrcLowerString.h"
 
+#include <algorithm>
 #include <cstdio>
 
 //-----------------------------------------------------------------------

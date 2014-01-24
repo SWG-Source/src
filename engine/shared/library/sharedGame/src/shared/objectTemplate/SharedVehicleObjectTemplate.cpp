@@ -18,7 +18,8 @@
 #include "sharedObject/ObjectTemplateList.h"
 //@BEGIN TFD TEMPLATE REFS
 //@END TFD TEMPLATE REFS
-#include <stdio.h>
+#include <algorithm>
+#include <cstdio>
 
 const std::string DefaultString("");
 const StringId DefaultStringId("", 0);

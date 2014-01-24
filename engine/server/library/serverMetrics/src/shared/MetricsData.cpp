@@ -10,6 +10,7 @@
 #include "sharedFoundation/ConfigFile.h"
 #include "sharedFoundation/Os.h"
 
+#include <algorithm>
 #include <vector>
 
 //---------------------------------------------
@@ -46,7 +47,7 @@ m_frameTimeHistoryTotalTime(0.0f)
 	{
 		m_frameTimeHistorySize = 1;
 	}
-	m_frameTimeHistory.reserve(m_frameTimeHistorySize);
+	m_frameTimeHistory.resize(m_frameTimeHistorySize);
 	for (int i = 0; i < m_frameTimeHistorySize; ++i)
 	{
 		m_frameTimeHistory[i] = 0.0f;

@@ -25,6 +25,7 @@
 
 //@BEGIN TFD TEMPLATE REFS
 //@END TFD TEMPLATE REFS
+#include <algorithm>
 #include <cstdio>
 
 const std::string DefaultString("");

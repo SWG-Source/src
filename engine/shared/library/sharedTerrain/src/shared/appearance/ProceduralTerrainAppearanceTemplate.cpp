@@ -23,6 +23,7 @@
 #include "sharedUtility/PackedFixedPointMap.h"
 #include "sharedUtility/BakedTerrain.h"
 
+#include <algorithm>
 #include <string>
 #include <vector>
 

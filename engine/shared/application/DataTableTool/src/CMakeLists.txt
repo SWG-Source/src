@@ -39,7 +39,9 @@ target_link_libraries(DataTableTool
     sharedFile
     sharedFoundation
     sharedIoWin
+    sharedLog
     sharedMemoryManager
+    sharedMessageDispatch
     sharedObject
     sharedRandom
     sharedRegex

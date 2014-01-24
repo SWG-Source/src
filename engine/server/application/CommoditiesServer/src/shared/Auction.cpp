@@ -27,9 +27,7 @@
 #include "sharedUtility/DataTable.h"
 #include "sharedUtility/DataTableManager.h"
 
-#ifndef max
-using std::max;
-#endif
+#include <algorithm>
 
 // src/engine/client/library/clientGame/src/shared/core/AuctionManagerClient.cpp (s_maxBid)
 // src/engine/server/application/CommoditiesServer/src/shared/Auction.cpp (MAX_BID)
@@ -680,13 +678,13 @@ const AuctionBid *Auction::GetPreviousBid() const
 int Auction::GetActualBid(AuctionBid *bid)
 {
 	assert(bid != NULL);
-	int bidNeeded = max(m_minBid, bid->GetBid());
+	int bidNeeded = std::max(m_minBid, bid->GetBid());
 	if (m_highBid != NULL)
 	{
 		bidNeeded = m_highBid->GetBid();
 		if (*bid > *m_highBid)
 		{
-			bidNeeded = max(bid->GetBid(), m_highBid->GetMaxProxyBid() + 1);
+			bidNeeded = std::max(bid->GetBid(), m_highBid->GetMaxProxyBid() + 1);
 		}
 		else if (*bid == *m_highBid)
 		{
@@ -694,7 +692,7 @@ int Auction::GetActualBid(AuctionBid *bid)
 		}
 		else if (*bid < *m_highBid)
 		{
-			bidNeeded = max(m_highBid->GetBid(), bid->GetMaxProxyBid() + 1);
+			bidNeeded = std::max(m_highBid->GetBid(), bid->GetMaxProxyBid() + 1);
 		}
 	}
 	return bidNeeded;
@@ -737,7 +735,7 @@ AuctionResultCode Auction::AddBid(
 )
 {
 	AuctionResultCode success = ARC_Success;
-	int maxBid = max(bid, maxProxyBid);
+	int maxBid = std::max(bid, maxProxyBid);
 
 	if (!m_active || m_sold)
 	{

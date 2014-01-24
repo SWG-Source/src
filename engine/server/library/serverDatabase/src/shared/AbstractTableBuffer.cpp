@@ -9,6 +9,7 @@
 #include "serverDatabase/AbstractTableBuffer.h"
 
 #include <algorithm>
+#include <iterator>
 #include <set>
 #include <vector>
 

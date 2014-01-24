@@ -24,8 +24,9 @@
 #include "sharedObject/PortalPropertyTemplate.h"
 #include "sharedObject/PortalPropertyTemplateList.h"
 
-#include <cstdio>
+#include <algorithm>
 #include <limits>
+#include <cstdio>
 
 // ======================================================================
 

@@ -11,6 +11,8 @@
 #include "sharedFoundation/ConfigFile.h"
 #include "sharedMath/ConfigSharedMath.h"
 
+#include <cmath>
+
 // ----------
 
 float RangeLoop::clip ( float x )

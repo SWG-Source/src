@@ -5,6 +5,8 @@
 #ifndef	_SkillManager_H
 #define	_SkillManager_H
 
+#include <unordered_map>
+
 //---------------------------------------------------------------------
 #pragma warning (disable : 4786 )
 

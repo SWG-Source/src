@@ -19,6 +19,8 @@
 #include "serverUtility/ClusterWideDataManagerList.h"
 #include "sharedNetworkMessages/GameNetworkMessage.h"
 
+#include <algorithm>
+
 // ======================================================================
 
 CentralServerMetricsData::CentralServerMetricsData() :

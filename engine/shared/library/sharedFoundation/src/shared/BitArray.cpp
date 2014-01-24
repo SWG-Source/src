@@ -12,6 +12,8 @@
 #include "Archive/Archive.h"
 #include "sharedFoundation/FormattedString.h"
 
+#include <algorithm>
+
 // ======================================================================
 
 BitArray::BitArray() :

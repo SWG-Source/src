@@ -22,6 +22,8 @@
 
 #pragma warning(pop)
 
+#include <cstdio>
+
 
 namespace UdpLibrary
 {

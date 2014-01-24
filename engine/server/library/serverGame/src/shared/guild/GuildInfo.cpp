@@ -12,6 +12,8 @@
 #include "Archive/Archive.h"
 #include "sharedFoundation/NetworkIdArchive.h"
 
+#include <algorithm>
+
 // ======================================================================
 
 namespace Archive

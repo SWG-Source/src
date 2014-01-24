@@ -11,6 +11,7 @@
 
 #include "sharedMath/Quaternion.h"
 
+#include <algorithm>
 #include <limits>
 #include <vector>
 

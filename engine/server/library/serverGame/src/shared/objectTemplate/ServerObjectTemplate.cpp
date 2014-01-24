@@ -19,7 +19,8 @@
 //@BEGIN TFD TEMPLATE REFS
 #include "ServerObjectTemplate.h"
 //@END TFD TEMPLATE REFS
-#include <stdio.h>
+#include <algorithm>
+#include <cstdio>
 
 #include <unordered_map>
 

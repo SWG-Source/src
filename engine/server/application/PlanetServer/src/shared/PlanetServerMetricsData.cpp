@@ -13,6 +13,7 @@
 #include "sharedFoundation/Os.h"
 #include "sharedNetworkMessages/GameNetworkMessage.h"
 
+#include <algorithm>
 
 //-----------------------------------------------------------------------
 

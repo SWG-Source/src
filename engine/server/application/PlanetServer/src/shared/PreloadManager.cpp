@@ -18,10 +18,11 @@
 #include "sharedUtility/DataTable.h"
 #include "sharedUtility/DataTableManager.h"
 
-#include <cstdio>
+#include <algorithm>
 #include <map>
 #include <set>
 #include <vector>
+#include <cstdio>
 
 // ======================================================================
 

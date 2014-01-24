@@ -35,6 +35,7 @@ include_directories(
     ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/archive/include
     ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/localization/include
     ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicode/include
+    ${PCRE_INCLUDE_DIR}
 )
 
 add_executable(TemplateCompiler
@@ -47,7 +48,9 @@ target_link_libraries(TemplateCompiler
     sharedDebug
     sharedFile
     sharedFoundation
+    sharedLog
     sharedMemoryManager
+    sharedMessageDispatch
     sharedObject
     sharedRandom
     sharedRegex

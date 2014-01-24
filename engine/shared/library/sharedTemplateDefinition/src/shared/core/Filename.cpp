@@ -326,18 +326,18 @@ void Filename::verifyAndCreatePath(void) const
 		splitPath(destPath, splitDestPath,
 			static_cast<Unicode::unicode_char_t>(WIN32_PATH_SEPARATOR));
 
-      Unicode::String prefix = L"\\\\?\\";
+		Unicode::String prefix = L"\\\\?\\";
 		destPath = prefix + splitDestPath[0];
 		
 		for (size_t i = 1; i < splitDestPath.size(); ++i)
 		{
 			destPath += WIN32_PATH_SEPARATOR;
 			destPath += splitDestPath[i];
-			if (SetCurrentDirectoryW(destPath.c_str()) == 0)
+			if (SetCurrentDirectoryW((LPCWSTR)destPath.c_str()) == 0)
 			{
-				if (CreateDirectoryW(destPath.c_str(), NULL) == 0)
+				if (CreateDirectoryW((LPCWSTR)destPath.c_str(), NULL) == 0)
 					return;
-				if (SetCurrentDirectoryW(destPath.c_str()) == 0)
+				if (SetCurrentDirectoryW((LPCWSTR)destPath.c_str()) == 0)
 					return;
 			}
 		}

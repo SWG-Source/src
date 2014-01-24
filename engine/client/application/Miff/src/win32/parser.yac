@@ -29,6 +29,7 @@
 #include <wchar.h>			/* for wide character (16bit) strings */
 
 #include <stdio.h>
+#include <ctype.h>
 
 /*----------------------------------------------------------------**
 ** debug options, turn these on to TEST ONLY!  don't leave these  **

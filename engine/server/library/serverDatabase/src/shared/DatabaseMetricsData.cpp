@@ -18,6 +18,8 @@
 #include "sharedDatabaseInterface/DbTaskQueue.h"
 #include "Snapshot.h"
 
+#include <algorithm>
+
 //-----------------------------------------------------------------------
 
 DatabaseMetricsData::DatabaseMetricsData() :

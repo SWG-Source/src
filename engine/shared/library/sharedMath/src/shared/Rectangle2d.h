@@ -11,6 +11,9 @@
 #ifndef INCLUDED_Rectangle2d_H
 #define INCLUDED_Rectangle2d_H
 
+#include <algorithm>
+#include <cmath>
+
 //-------------------------------------------------------------------
 
 class Line2d;

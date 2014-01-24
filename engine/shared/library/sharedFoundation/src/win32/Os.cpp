@@ -617,7 +617,7 @@ void Os::setIMEHookFunction(IMEHookFunction imeHookFunction)
 	ms_IMEHookFunction = imeHookFunction;
 
 	// do not install the hotkey fix if the debugger is present.
-	if (ms_IMEHookFunction && !IsDebuggerPresent()) 
+	if (ms_IMEHookFunction && !OsNamespace::IsDebuggerPresent()) 
 	{
 		RegisterHotKey(ms_window, ms_hotKeyId, 0, VK_F5);
 	}

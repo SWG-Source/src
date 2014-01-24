@@ -23,6 +23,8 @@
 #include "sharedUtility/DataTableManager.h"
 #include "sharedUtility/NameGenerator.h"
 
+#include <algorithm>
+
 // ======================================================================
 
 NameManager *NameManager::ms_instance = NULL;

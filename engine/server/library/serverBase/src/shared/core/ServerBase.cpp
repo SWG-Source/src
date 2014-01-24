@@ -35,7 +35,9 @@ void ServerBase::install (ServerBaseImpl* implementation)
 	SetupSharedNetwork::SetupData  networkSetupData;
 	SetupSharedNetwork::getDefaultServerSetupData(networkSetupData);
 	SetupSharedNetwork::install(networkSetupData);
+#ifndef WIN32
 	Os::setProgramName(ConfigServerBase::getServerName());
+#endif
 	NetworkHandler::install();
 	char tmp[128] = {"\0"};
 	IGNORE_RETURN(snprintf(tmp, sizeof(tmp), "%s:%d", ConfigServerBase::getServerName() ,Os::getProcessId()));

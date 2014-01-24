@@ -19,6 +19,7 @@
 #include "sharedGame/PlatformFeatureBits.h"
 #include "sharedLog/Log.h"
 
+#include <algorithm>
 #include <map>
 #include <vector>
 

@@ -17,6 +17,8 @@
 #include "sharedCollision/Footprint.h"
 #include "sharedTerrain/TerrainObject.h"
 
+#include <algorithm>
+
 //----------------------------------------------------------------------
 
 namespace

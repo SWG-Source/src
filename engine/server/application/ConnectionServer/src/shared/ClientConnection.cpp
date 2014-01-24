@@ -50,6 +50,8 @@
 #include "Session/LoginAPI/Client.h"
 #include "UdpLibrary.h"
 
+#include <algorithm>
+
 //-----------------------------------------------------------------------
 
 namespace ClientConnectionNamespace

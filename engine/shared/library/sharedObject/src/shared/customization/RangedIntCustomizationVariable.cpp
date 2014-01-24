@@ -10,10 +10,11 @@
 #include "sharedObject/RangedIntCustomizationVariable.h"
 #include "sharedObject/CustomizationData.h"
 
-#include <cstdio>
+#include <algorithm>
 #include <limits>
 #include <string>
 #include <vector>
+#include <cstdio>
 
 // ======================================================================
 

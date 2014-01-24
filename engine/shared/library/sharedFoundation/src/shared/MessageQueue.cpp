@@ -10,6 +10,7 @@
 #include "sharedFoundation/FirstSharedFoundation.h"
 #include "sharedFoundation/MessageQueue.h"
 
+#include <algorithm>
 #include <vector>
 
 // ======================================================================

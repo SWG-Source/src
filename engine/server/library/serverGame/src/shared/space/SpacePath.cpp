@@ -13,8 +13,10 @@
 #include "sharedDebug/Profiler.h"
 #include "sharedLog/Log.h"
 
+#include <algorithm>
 #include <vector>
 #include <map>
+#include <cstdio>
 
 // ======================================================================
 //

@@ -18,7 +18,8 @@
 #include "sharedDebug/DataLint.h"
 #include "sharedFile/Iff.h"
 #include "sharedTemplateDefinition/ObjectTemplate.h"
-#include <stdio.h>
+#include <algorithm>
+#include <cstdio>
 
 
 

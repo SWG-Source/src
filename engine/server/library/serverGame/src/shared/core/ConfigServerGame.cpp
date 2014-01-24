@@ -11,6 +11,8 @@
 #include "sharedFoundation/NetworkId.h"
 #include "sharedMath/Vector.h"
 
+#include <algorithm>
+
 //-------------------------------------------------------------------
 
 ConfigServerGame::Data* ConfigServerGame::data;

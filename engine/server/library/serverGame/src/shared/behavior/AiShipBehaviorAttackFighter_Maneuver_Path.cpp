@@ -15,6 +15,7 @@
 #include "sharedRandom/Random.h"
 #include "sharedFoundation/Misc.h"
 
+#include <algorithm>
 #include <deque>
 
 // ======================================================================

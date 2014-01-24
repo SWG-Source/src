@@ -17,6 +17,8 @@
 #include "unicodeArchive/UnicodeArchive.h"
 #include "UnicodeUtils.h"
 
+#include <algorithm>
+
 // ======================================================================
 
 namespace LfgCharacterDataNamespace

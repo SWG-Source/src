@@ -63,7 +63,7 @@ namespace DebugHelpNamespace
 
    // ----------------------------------------------------------------------
 
-	static BOOL CALLBACK loadSymbolsForDllCallback(PTSTR ModuleName, DWORD64 ModuleBase, ULONG ModuleSize, PVOID UserContext);
+	//BOOL CALLBACK loadSymbolsForDllCallback(PTSTR ModuleName, DWORD64 ModuleBase, ULONG ModuleSize, PVOID UserContext);
 
    // ----------------------------------------------------------------------
 
@@ -356,7 +356,7 @@ using namespace DebugHelpNamespace;
 
 // ----------------------------------------------------------------------
 
-BOOL CALLBACK DebugHelpNamespace::loadSymbolsForDllCallback(PTSTR ModuleName, DWORD64 ModuleBase, ULONG ModuleSize, PVOID UserContext)
+BOOL CALLBACK loadSymbolsForDllCallback(PSTR ModuleName, DWORD64 ModuleBase, ULONG ModuleSize, PVOID UserContext)
 {
 	if (!library)
 		return false;
@@ -475,7 +475,7 @@ bool DebugHelp::loadSymbolsForDll(const char *name)
 		return false;
 
 	CallbackData callbackData = { name, false };
-	enumerateLoadedModules64(process, loadSymbolsForDllCallback, reinterpret_cast<void *>(&callbackData));
+	enumerateLoadedModules64(process, (PENUMLOADED_MODULES_CALLBACK64)loadSymbolsForDllCallback, reinterpret_cast<void *>(&callbackData));
 	return callbackData.loaded;
 }
 

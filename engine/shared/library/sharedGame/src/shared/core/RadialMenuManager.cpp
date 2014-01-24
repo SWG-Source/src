@@ -12,6 +12,7 @@
 #include "sharedFile/TreeFile.h"
 #include "sharedUtility/DataTable.h"
 #include "sharedNetworkMessages/ObjectMenuRequestData.h"
+#include <algorithm>
 #include <map>
 
 //======================================================================

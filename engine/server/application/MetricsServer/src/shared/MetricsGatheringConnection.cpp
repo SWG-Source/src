@@ -10,6 +10,8 @@
 #include "MonAPI2/MonitorAPI.h"
 #include "serverNetworkMessages/MetricsInitiationMessage.h"
 
+#include <algorithm>
+
 //-----------------------------------------------------------------------
 
 std::map<std::string, int> MetricsGatheringConnection::ms_metricsSummaryTotalVal;
