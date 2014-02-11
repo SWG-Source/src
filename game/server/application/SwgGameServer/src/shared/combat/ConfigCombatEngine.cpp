@@ -46,7 +46,7 @@ void ConfigCombatEngine::install(void)
 	Iff file;
 
 	ms_boneMap.insert(BoneMap::value_type(CrcLowerString("CSB_body"), static_cast<int>(CSB_body)));
-	ms_boneMap.insert(BoneMap::value_type(CrcLowerString("CSB_head"), static_cast<int>(CSB_head))); 
+	ms_boneMap.insert(BoneMap::value_type(CrcLowerString("CSB_head"), static_cast<int>(CSB_head)));
 	ms_boneMap.insert(BoneMap::value_type(CrcLowerString("CSB_rightArm"), static_cast<int>(CSB_rightArm)));
 	ms_boneMap.insert(BoneMap::value_type(CrcLowerString("CSB_leftArm"), static_cast<int>(CSB_leftArm)));
 	ms_boneMap.insert(BoneMap::value_type(CrcLowerString("CSB_rightLeg"), static_cast<int>(CSB_rightLeg)));
@@ -96,11 +96,11 @@ void ConfigCombatEngine::parseVersion0(Iff & file)
 std::string paramName, tempString;
 ConfigCombatEngineData::BodyAttackMod bodyAttackMod;
 ConfigCombatEngine::SkeletonAttackMod skeletonAttackMod;
-
-	//-- Initialize data structures.
-	memset(&bodyAttackMod, 0, sizeof(bodyAttackMod));
-	memset(&skeletonAttackMod, 0, sizeof(skeletonAttackMod));
-
+//
+//	//-- Initialize data structures.
+//	memset(&bodyAttackMod, 0, sizeof(bodyAttackMod));
+//	memset(&skeletonAttackMod, 0, sizeof(skeletonAttackMod));
+//
 	file.enterForm();
 
 	for (;;)
@@ -212,7 +212,7 @@ ConfigCombatEngine::SkeletonAttackMod skeletonAttackMod;
 			bodyLoc.damageBonus[Attributes::Mind] = static_cast<float>(file.read_uint8()) / 100.0f;
 		}
 		file.exitChunk();
-	}	
+	}
 
 	file.exitForm();
 
