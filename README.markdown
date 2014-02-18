@@ -4,7 +4,7 @@
 
 Note that the server only supports 32bit linux platforms at this time.
 
-	sudo apt-get install build-essential zlib1g-dev libpcre3-dev cmake libboost-dev libxml2-dev libncurses5-dev flex bison git-core alien
+	sudo apt-get install build-essential zlib1g-dev libpcre3-dev cmake libboost-dev libxml2-dev libncurses5-dev flex bison git-core alien libaio1
 
 ### Oracle Instant Client
 
@@ -23,7 +23,7 @@ You must log out and back in (or just reboot) for the $JAVA_HOME and $ORACLE_HOM
 
 ## Build code
 
-	git clone git@bitbucket.org:apathyboy/swg-src.git -b cmake
+	git clone git@bitbucket.org:apathyboy/swg-src.git
 	mkdir swg-src/build
 	cd swg-src/build
 	cmake ..
