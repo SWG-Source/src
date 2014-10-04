@@ -253,7 +253,7 @@ namespace soe
         Update( achar, achar.size() );
     }
 
-    void MD5::Update(vector<char> achar0)
+    void MD5::Update(const vector<char> &achar0)
     {
         Update(achar0, 0, achar0.size());
     }

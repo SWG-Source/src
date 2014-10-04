@@ -33,7 +33,7 @@ namespace soe
             void Update(char char0);
             void Update(State & state1, const std::vector<char> &achar0, int i, int j);
             void Update(const std::string &s);
-            void Update(std::vector<char> achar0);
+            void Update(const std::vector<char> &achar0);
             void Update(const std::vector<char> &achar0, int i);
             void Update(const std::vector<char> &achar0, int i, int j);
             std::string asHex();
