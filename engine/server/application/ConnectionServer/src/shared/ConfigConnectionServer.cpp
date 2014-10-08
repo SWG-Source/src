@@ -56,7 +56,7 @@ void ConfigConnectionServer::install(void)
 
 	data = new ConfigConnectionServer::Data;
 
-	KEY_STRING  (centralServerAddress, "swo-dev5.station.sony.com");
+	KEY_STRING  (centralServerAddress, "swo-dev5.localnet.loc");
 	KEY_INT     (centralServerPort, 0);
 	KEY_STRING  (clientServiceBindInterface, "");
 	KEY_INT     (clientServicePortPrivate, 44464);

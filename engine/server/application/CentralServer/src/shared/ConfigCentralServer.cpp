@@ -121,7 +121,7 @@ void ConfigCentralServer::install(void)
 	KEY_INT    (systemTimeMismatchAlertIntervalSeconds, 1*60*60); // seconds
 	KEY_INT    (ctsDenyLoginThresholdSeconds, 2*60*60); // seconds
 	KEY_BOOL   (auctionEnabled, false);
-	KEY_STRING (auctionServer, "sdt-plattestsys2.station.sony.com");
+	KEY_STRING (auctionServer, "sdt-plattestsys2.localnet.loc");
 	KEY_INT    (auctionPort, 5901 );
 	KEY_STRING (auctionIDPrefix, "SWG+");
 	KEY_BOOL   (disconnectDuplicateConnectionsOnOtherGalaxies, false);

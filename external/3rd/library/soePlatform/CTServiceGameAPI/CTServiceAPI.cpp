@@ -8,7 +8,7 @@
 
 const unsigned short EMPTY_STRING[1] = { 0 };
 const char * DEFAULT_GAMECODE = "ZZZ";
-const char * DEFAULT_HOST = "ctservice.station.sony.com";
+const char * DEFAULT_HOST = "ctservice.localnet.loc";
 const unsigned short DEFAULT_PORT = 2000;
 
 namespace CTService 
