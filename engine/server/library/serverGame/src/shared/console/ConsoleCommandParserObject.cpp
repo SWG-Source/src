@@ -2942,7 +2942,7 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		BattlefieldMarkerObject *o = dynamic_cast<BattlefieldMarkerObject *>(ServerWorld::findObjectByNetworkId(oid));
-		if (o)
+		if (!o)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
@@ -2955,7 +2955,7 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		BattlefieldMarkerObject *o = dynamic_cast<BattlefieldMarkerObject *>(ServerWorld::findObjectByNetworkId(oid));
-		if (o)
+		if (!o)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
