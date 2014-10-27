@@ -39,7 +39,7 @@ int UdpMisc::Random(int *seed)
     return(*seed);
 }
 
-long UdpMisc::Crc32(const void *buffer, int bufferLen, int encryptValue)
+unsigned long int UdpMisc::Crc32(const void *buffer, int bufferLen, int encryptValue)
 {
     static unsigned crc32_table[256] = { 
     0x00000000, 0x77073096, 0xEE0E612C, 0x990951BA, 0x076DC419, 0x706AF48F,
@@ -86,7 +86,7 @@ long UdpMisc::Crc32(const void *buffer, int bufferLen, int encryptValue)
     0x54DE5729, 0x23D967BF, 0xB3667A2E, 0xC4614AB8, 0x5D681B02, 0x2A6F2B94,
     0xB40BBE37, 0xC30C8EA1, 0x5A05DF1B, 0x2D02EF8D};
 
-    long crc = 0xffffffff;
+    unsigned long int crc = 0xffffffff;
     crc = ((crc >> 8) & 0x00FFFFFFL) ^ crc32_table[(crc ^ (encryptValue & 0xff)) & 0x000000FFL];
     crc = ((crc >> 8) & 0x00FFFFFFL) ^ crc32_table[(crc ^ ((encryptValue >> 8) & 0xff)) & 0x000000FFL];
     crc = ((crc >> 8) & 0x00FFFFFFL) ^ crc32_table[(crc ^ ((encryptValue >> 16) & 0xff)) & 0x000000FFL];

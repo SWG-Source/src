@@ -36,7 +36,7 @@ class UdpMisc
 
 
         static int ClockDiff(UdpClockStamp start, UdpClockStamp stop);    // returns a time difference in milliseconds (if difference is over 23 days, it returns 23 days)
-        static long Crc32(const void *buffer, int bufferLen, int encryptValue = 0);                // calculate a 32-bit crc for a buffer (encrypt value simple scrambles the crc at the beginning so the same packet doesn't produce the same crc on different connections)
+		static unsigned long int Crc32(const void *buffer, int bufferLen, int encryptValue = 0);                // calculate a 32-bit crc for a buffer (encrypt value simple scrambles the crc at the beginning so the same packet doesn't produce the same crc on different connections)
         static int Random(int *seed);                                // random number generator
         static void Sleep(int milliseconds);
 
