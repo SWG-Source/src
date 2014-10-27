@@ -141,7 +141,7 @@ void CallStackCollectorNamespace::Node::addCallStack(uint32 * const callStack)
 	{
 		//-- Create new callstack
 		uint32 * const newCallStack = new uint32[CALLSTACK_DEPTH];
-		memcpy(newCallStack, callStack, (sizeof(uint32) * CALLSTACK_DEPTH));
+		memcpy(newCallStack, callStack, (*newCallStack));
 
 		CallStackEntry callStackEntry;
 		callStackEntry.m_callStack = newCallStack;
