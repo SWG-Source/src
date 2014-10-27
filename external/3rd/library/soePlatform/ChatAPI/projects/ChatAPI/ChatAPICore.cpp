@@ -1890,7 +1890,7 @@ void ChatAPICore::responseCallback(short type, ByteStream::ReadIterator &iter)
 			ChatAvatar *destAvatar = M.getDestAvatar()->getNewChatAvatar();
 			ChatAvatar *srcAvatar = M.getSrcAvatar()->getNewChatAvatar();
 			ChatAvatarCore *kickedAvatar = destRoomCore ? destRoomCore->removeAvatar(destAvatar->getAvatarID()) : NULL;
-				
+			
 			ChatRoom *destRoom = getRoom(M.getRoomID());
 			if (!srcAvatar || !destAvatar || !kickedAvatar || !destRoom) 
 			{
