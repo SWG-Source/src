@@ -771,7 +771,6 @@ void ChatInterface::ConnectPlayer(unsigned int suid, const std::string & charact
 		return;
 	}
 
-	std::string canonicalName = makeCanonicalName(characterName);
 	static const std::string game("SOE+SWG");
 	IGNORE_RETURN(pendingAvatars.insert(std::make_pair(characterName, networkId)));
 

@@ -539,8 +539,6 @@ void ClientConnection::onConnectionOverflowing  (const unsigned int bytesPending
 {
 	char errbuf[1024];
 	snprintf(errbuf, sizeof(errbuf), "Connection overflow from server to client, %d bytes. Disconnected.", bytesPending);
-	std::string name("Connection overflow server->client");
-	std::string desc(errbuf);
 	LOG("Network", ("Disconnect: Client connection overflowing. %d bytes pending", bytesPending));
 
 	std::vector<std::pair<std::string, int> >::const_iterator i;

@@ -50,7 +50,6 @@ PlanetConnection & PlanetConnection::operator = (const PlanetConnection & rhs)
 
 void PlanetConnection::receive(const Archive::ByteStream & message)
 {
-	static const std::string localName = NetworkHandler::getHostName();
 	Archive::ReadIterator r(message);
 	GameNetworkMessage m(r);
 

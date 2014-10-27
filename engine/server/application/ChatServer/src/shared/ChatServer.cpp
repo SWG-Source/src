@@ -304,7 +304,6 @@ m_voiceChatIdMap()
 
 	const std::string	getGameCode = ConfigChatServer::getGameCode();
 	const std::string	getGatewayServerIP = ConfigChatServer::getGatewayServerIP();
-	const std::string	getBackupGatewayServerIP = ConfigChatServer::getBackupGatewayServerIP();
 	chatInterface = new ChatInterface(getGameCode, getGatewayServerIP, ConfigChatServer::getGatewayServerPort(), ConfigChatServer::getRegistrarHost(), static_cast<unsigned short>(ConfigChatServer::getRegistrarPort()));
 
 
@@ -1178,9 +1177,6 @@ void ChatServer::createRoom(const NetworkId & id, const unsigned int sequence, c
 	Unicode::String wideRoomName;
 	Unicode::String wideRoomAddress;
 	splitRoomName(tmpRoomName, wideRoomName, wideRoomAddress);
-
-	std::string narrowRoomName = Unicode::wideToNarrow(wideRoomName);
-	std::string narrowRoomAddress = Unicode::wideToNarrow(wideRoomAddress);
 
 	Unicode::String wideTitle    = Unicode::narrowToWide(title);
 

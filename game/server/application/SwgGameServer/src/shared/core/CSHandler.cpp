@@ -488,7 +488,6 @@ namespace CSHandlerNamespace
 		if(!container)
 			return;
 		char stringbuffer[CSHandlerNamespace::largeBufferSize];
-		std::vector<Unicode::String> objList;
 		for (ContainerConstIterator iter(container->begin());
 			iter != container->end(); ++iter)
 		{
@@ -827,7 +826,6 @@ CS_CMD( get_player_items )
 				{
 
 					int item_num = 0;
-					std::vector<Unicode::String> objList;
 					for (ContainerConstIterator iter(inventoryContainer->begin());
 						iter != inventoryContainer->end(); ++iter)
 					{

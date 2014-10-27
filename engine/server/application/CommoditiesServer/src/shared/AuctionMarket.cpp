@@ -671,8 +671,6 @@ AuctionMarket::~AuctionMarket()
 
 AuctionLocation *AuctionMarket::CreateLocation(const NetworkId & ownerId, const std::string & locationString, int entranceCharge)
 {
-	std::string locationId;
-
 	NetworkId loc_id = GetLocationId(locationString);
 	AuctionLocation *auctionLocation = new AuctionLocation(loc_id, locationString, ownerId, 0, zeroNetworkId, 0, m_gameTime, 0, ACTIVE, true, entranceCharge);
 
@@ -1802,7 +1800,6 @@ void AuctionMarket::AddBid(const AddBidMessage &message)
 	const AuctionBid *previousBid = auction->GetPreviousBid();
 	NetworkId previousBidder = zeroNetworkId;
 	int previousBidAmount = 0;
-	std::string previousBidderName;
 	int maxProxyBid = message.GetMaxProxyBid();
 	int salesTaxAmount = 0;
 	NetworkId bankId = zeroNetworkId;

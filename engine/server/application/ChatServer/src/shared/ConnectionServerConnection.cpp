@@ -141,7 +141,6 @@ void ConnectionServerConnection::onReceive(const Archive::ByteStream & message)
 				//printf("!Sending via the shortcut\n");
 				cri = c.getByteStream().begin();
 
-				static const std::string gameType("SWG");
 				if(cm.isType("ChatInstantMessageToCharacter"))
 				{
 					// deliver IM to character
@@ -172,8 +171,6 @@ void ConnectionServerConnection::onReceive(const Archive::ByteStream & message)
 			if(avatar)
 			{
 				cri = c.getByteStream().begin();
-
-				static const std::string gameType("SWG");
 
 				if(cm.isType("ChatDeleteAllPersistentMessages"))
 				{

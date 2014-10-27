@@ -2764,7 +2764,6 @@ void CentralServer::run(void)
 			if (curTime > nextLoadingLogTime)
 			{
 				nextLoadingLogTime = curTime + 10000;
-				std::string planets;
 				for (std::set<std::string>::const_iterator i=getInstance().m_planetsWaitingForPreload.begin(); i!=getInstance().m_planetsWaitingForPreload.end(); ++i)
 					LOG("Preload",("Waiting for planet %s",i->c_str()));
 			}

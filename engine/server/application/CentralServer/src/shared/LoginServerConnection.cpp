@@ -272,8 +272,6 @@ void LoginServerConnection::onReceive(const Archive::ByteStream & message)
 		unsigned pos = req.getCommandString().find( " " );
 		pos = pos == std::string::npos ? req.getCommandString().length() : pos;
 		
-		std::string command = req.getCommandString().substr( 0, pos );
-
 		CentralCSHandler::getInstance().handle( req, getProcessId() );
 		
 

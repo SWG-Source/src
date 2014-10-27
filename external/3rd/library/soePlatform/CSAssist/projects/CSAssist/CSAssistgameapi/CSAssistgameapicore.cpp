@@ -1078,8 +1078,6 @@ void CSAssistGameAPIcore::OnConnectLB(unsigned track, unsigned result, std::stri
 	}
 	if (result == CSASSIST_RESULT_TIMEOUT)
 	{
-		//fprintf(stderr, "OnConnectLB: result=timeout\n");
-		std::string connectString = wideToNarrow(m_identityGame) + ":" + wideToNarrow(m_identityServer);
 		GetLBHost();
 		if (connectRequest && connectResponse)
 			SubmitRequest(connectRequest, connectResponse);
@@ -1091,7 +1089,6 @@ void CSAssistGameAPIcore::OnConnectLB(unsigned track, unsigned result, std::stri
 		if (connectRequest && connectResponse)
 			SubmitRequest(connectRequest, connectResponse);
 	}
-	//fprintf(stderr, "debug: OnConnectLB(): Now m_connectState=%u\n", m_connectState);
 }
 
 //-------------------------------------------------------------

@@ -70,8 +70,6 @@ void LoggingServerApiObserver::log(const LogMessage & msg)
 		}
 
 		msgText = splittext.substr(splittext.find(":") + 1);
-
-		std::string u = Unicode::wideToNarrow(msg.getUnicodeAttach());
 		
 		// If there is ANY Unicode, send the whole log as Unicode. If there is ONLY non-Unicode, then send the log non-Unicode.
 
