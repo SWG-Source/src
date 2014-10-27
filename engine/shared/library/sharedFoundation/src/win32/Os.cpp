@@ -1599,7 +1599,6 @@ bool Os::getUserName(char *buffer, int &bufferSize)
 	DWORD windowsBufferSize = static_cast<DWORD>(bufferSize);
 	buffer[0] = '\0';
 	bool result = GetUserName(buffer, &windowsBufferSize) == TRUE;
-	bufferSize = static_cast<int>(bufferSize);
 	return result;
 }
 
