@@ -849,7 +849,7 @@ namespace LoginAPI
         ////////////////////////////////////////
         //  Validate and set input parameters
         //  (1) sessionID
-        if (!sessionID || !sessionID || strlen(sessionID) > SESSION_TICKET_LENGTH)
+        if (!sessionID || strlen(sessionID) > SESSION_TICKET_LENGTH)
             return;
         else
             sessionList.push_back(sessionID);
@@ -887,7 +887,7 @@ namespace LoginAPI
         ////////////////////////////////////////
         //  Validate and set input parameters
         //  (1) sessionID
-        if (!sessionID || !sessionID || strlen(sessionID) > SESSION_TICKET_LENGTH)
+        if (!sessionID || strlen(sessionID) > SESSION_TICKET_LENGTH)
             return;
         else
             sessionList.push_back(sessionID);
@@ -1022,7 +1022,7 @@ namespace LoginAPI
         ////////////////////////////////////////
         //  Validate and set input parameters
         //  (1) sessionID
-        if (!sessionID || !sessionID || strlen(sessionID) > SESSION_TICKET_LENGTH)
+        if (!sessionID || strlen(sessionID) > SESSION_TICKET_LENGTH)
             return;
         else
             input.SetSessionId(sessionID);
