@@ -66,22 +66,6 @@ bool CentralCommandParserGame::performParsing (const NetworkId &, const StringVe
 				retval = true;
 			}
 		}
-		else if( cmd == "public" )
-		{
-//			LOG("ServerConsole", ("Setting cluster to public."));
-			SetConnectionServerPublic const p(true);
-			GameServer::getInstance().sendToCentralServer(p);
-			result += Unicode::narrowToWide("Cluster set to public.\n");
-			retval = true;
-		}
-		else if( cmd == "private" )
-		{
-//			LOG("ServerConsole", ("Setting cluster to private."));
-			SetConnectionServerPublic const p(false);
-			GameServer::getInstance().sendToCentralServer(p);
-			result += Unicode::narrowToWide("Cluster set to private.\n");
-			retval = true;
-		}
 		else if(cmd == "systemMessage")
 		{
 			std::string targetId = "SWG." + GameServer::getInstance().getClusterName() + ".SYSTEM";

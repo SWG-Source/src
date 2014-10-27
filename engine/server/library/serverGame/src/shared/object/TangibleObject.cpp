@@ -3426,7 +3426,7 @@ void TangibleObject::clearCraftingManufactureSchematic(void)
 		if (container)
 		{
 			Container::ContainerErrorCode error = Container::CEC_Success;
-			CachedNetworkId schematicId = container->getObjectInSlot(
+			schematicId = container->getObjectInSlot(
 				getCraftingManufactureSchematicSlotId(), error);
 		}
 		else
