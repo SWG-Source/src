@@ -148,13 +148,11 @@ void ServerBuffBuilderManager::cancelSession(NetworkId const & bufferId, Network
 	if(bufferController)
 	{
 		BuffBuilderChangeMessage * outMsg = new BuffBuilderChangeMessage();
-		if(outMsg)
-		{
-			outMsg->setBufferId(bufferId);
-			outMsg->setRecipientId(recipientId);
-			outMsg->setOrigin(BuffBuilderChangeMessage::O_SERVER);
-			bufferController->appendMessage(static_cast<int>(CM_buffBuilderCancel), 0.0f, outMsg, GameControllerMessageFlags::SEND | GameControllerMessageFlags::RELIABLE | GameControllerMessageFlags::DEST_AUTH_CLIENT);
-		}
+
+		outMsg->setBufferId(bufferId);
+		outMsg->setRecipientId(recipientId);
+		outMsg->setOrigin(BuffBuilderChangeMessage::O_SERVER);
+		bufferController->appendMessage(static_cast<int>(CM_buffBuilderCancel), 0.0f, outMsg, GameControllerMessageFlags::SEND | GameControllerMessageFlags::RELIABLE | GameControllerMessageFlags::DEST_AUTH_CLIENT);
 	}
 
 	//send the cancel message to the recipient
@@ -163,13 +161,11 @@ void ServerBuffBuilderManager::cancelSession(NetworkId const & bufferId, Network
 	if(recipientController && bufferController != recipientController)
 	{
 		BuffBuilderChangeMessage * outMsg = new BuffBuilderChangeMessage();
-		if(outMsg)
-		{
-			outMsg->setBufferId(bufferId);
-			outMsg->setRecipientId(recipientId);
-			outMsg->setOrigin(BuffBuilderChangeMessage::O_SERVER);
-			recipientController->appendMessage(static_cast<int>(CM_buffBuilderCancel), 0.0f, outMsg, GameControllerMessageFlags::SEND | GameControllerMessageFlags::RELIABLE | GameControllerMessageFlags::DEST_AUTH_CLIENT);
-		}
+
+		outMsg->setBufferId(bufferId);
+		outMsg->setRecipientId(recipientId);
+		outMsg->setOrigin(BuffBuilderChangeMessage::O_SERVER);
+		recipientController->appendMessage(static_cast<int>(CM_buffBuilderCancel), 0.0f, outMsg, GameControllerMessageFlags::SEND | GameControllerMessageFlags::RELIABLE | GameControllerMessageFlags::DEST_AUTH_CLIENT);
 	}
 
 	//send cancel trigger to buffer player

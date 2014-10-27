@@ -298,38 +298,37 @@ void ManufactureSchematicObject::endBaselines()
 ServerSynchronizedUi * ManufactureSchematicObject::createSynchronizedUi ()
 {
 	ManufactureSchematicSynchronizedUi * sync = new ManufactureSchematicSynchronizedUi(*this);
-	if (sync)
-	{
-		// set up the sync ui for our slots
-		int i;
-		int count;
-		const DraftSchematicObject * draft = DraftSchematicObject::getSchematic(
-			m_draftSchematic.get());
-		NOT_NULL(draft);
-		DynamicVariableList::NestedList slots(getObjVars(),OBJVAR_SLOTS);
-		{
-			Crafting::IngredientSlot slotData;
-			count = slots.getCount();
-			for (i = 0; i < count; ++i)
-			{
-				if (getSlot(i, slotData, false))
-				{
-					sync->createNewSlot(slotData.name, slotData.complexity);
-					sync->setSlotType(slotData.name, slotData.ingredientType);
-					sync->setSlotOption(slotData.name, slotData.draftSlotOption);
-					sync->setSlotIndex(slotData.name, slotData.draftSlotIndex);
-				}
-			}
-		}
 
-		count = draft->getExperimentalAttributesCount();
+	// set up the sync ui for our slots
+	int i;
+	int count;
+	const DraftSchematicObject * draft = DraftSchematicObject::getSchematic(
+		m_draftSchematic.get());
+	NOT_NULL(draft);
+	DynamicVariableList::NestedList slots(getObjVars(),OBJVAR_SLOTS);
+	{
+		Crafting::IngredientSlot slotData;
+		count = slots.getCount();
 		for (i = 0; i < count; ++i)
 		{
-			sync->setAttribute(draft->getExperimentalAttribute(i), 0);
+			if (getSlot(i, slotData, false))
+			{
+				sync->createNewSlot(slotData.name, slotData.complexity);
+				sync->setSlotType(slotData.name, slotData.ingredientType);
+				sync->setSlotOption(slotData.name, slotData.draftSlotOption);
+				sync->setSlotIndex(slotData.name, slotData.draftSlotIndex);
+			}
 		}
-
-		sync->setReady();
 	}
+
+	count = draft->getExperimentalAttributesCount();
+	for (i = 0; i < count; ++i)
+	{
+		sync->setAttribute(draft->getExperimentalAttribute(i), 0);
+	}
+
+	sync->setReady();
+
 	return sync;
 }
 
@@ -647,8 +646,7 @@ bool ManufactureSchematicObject::getSlot(int index, Crafting::IngredientSlot & d
 			const DynamicVariableList::NestedList ingredient(slotIngredients,buffer);
 
 			Crafting::ComponentIngredient * const component = new Crafting::ComponentIngredient();
-			if (component == NULL)
-				return false;
+
 			data.ingredients.push_back(Crafting::SimpleIngredientPtr(component));
 			component->count = 1;
 			if (!ingredient.hasItem(OBJVAR_COMPONENT_NAME))

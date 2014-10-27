@@ -791,8 +791,6 @@ void CityPathGraphManager::moveBuilding ( BuildingObject * building, Vector cons
 
 	UNREF(oldPosition);
 
-	if(building == NULL) return;
-
 	NetworkIdList ids;
 	if (!building->getObjVars().getItem(OBJVAR_PATHFINDING_BUILDING_WAYPOINTS,ids)) return;
 

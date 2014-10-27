@@ -614,7 +614,6 @@ int DataTable::searchColumnString( int column, const std::string & searchValue )
 	if (!voidIndex)
 	{
 		std::pair<std::multimap<const std::string, int>, std::multimap<int, int> > * indexPair = new std::pair<std::multimap<const std::string, int>, std::multimap<int, int> >;
-		NOT_NULL(indexPair);
 
 		m_index[static_cast<size_t>(column)] = static_cast<void *>(indexPair);
 
@@ -653,7 +652,6 @@ int DataTable::searchColumnFloat( int column, float searchValue ) const
 	if (!voidIndex)
 	{
 		std::multimap<float, int> * index = new std::multimap<float, int>;
-		NOT_NULL(index);
 
 		m_index[static_cast<size_t>(column)] = static_cast<void *>(index);
 
@@ -692,7 +690,6 @@ int DataTable::searchColumnInt( int column, int searchValue ) const
 		if (columnType == DataTableColumnType::DT_Int)
 		{
 			std::multimap<int, int> * index = new std::multimap<int, int>;
-			NOT_NULL(index);
 
 			m_index[static_cast<size_t>(column)] = static_cast<void *>(index);
 
@@ -709,7 +706,6 @@ int DataTable::searchColumnInt( int column, int searchValue ) const
 		else if (columnType == DataTableColumnType::DT_String)
 		{
 			std::pair<std::multimap<const std::string, int>, std::multimap<int, int> > * indexPair = new std::pair<std::multimap<const std::string, int>, std::multimap<int, int> >;
-			NOT_NULL(indexPair);
 
 			m_index[static_cast<size_t>(column)] = static_cast<void *>(indexPair);
 

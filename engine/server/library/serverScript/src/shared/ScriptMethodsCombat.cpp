@@ -1687,8 +1687,6 @@ jboolean JNICALL ScriptMethodsCombatNamespace::doCombatResults(JNIEnv *env, jobj
 
 	// create a CombatAction message and fill it in
 	MessageQueueCombatAction * message = new MessageQueueCombatAction();
-	if (message == NULL)
-		return JNI_FALSE;
 	message->setActionId(animationString);
 	// @todo: change set postures to set locomotions
 

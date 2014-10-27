@@ -47,7 +47,6 @@ void MessageQueueStopNpcConversation::pack(const MessageQueue::Data* const data,
 MessageQueue::Data* MessageQueueStopNpcConversation::unpack(Archive::ReadIterator & source)
 {
 	MessageQueueStopNpcConversation * msg = new MessageQueueStopNpcConversation;
-	NOT_NULL(msg);
 
 	// npc
 	{

@@ -1918,7 +1918,6 @@ std::string name;
 		// now parse the objvar data
 		line = paramStart;
 		CompilerDynamicVariableParamData *newData = new CompilerDynamicVariableParamData(name, type);
-		NOT_NULL(newData);
 		switch (type)
 		{
 			case DynamicVariableParamData::INTEGER:
@@ -2431,7 +2430,6 @@ const char *parseWeightedList(
 	TpfFile &file, Q & param, const char *line)
 {
 	LIST *list = new LIST;
-	NOT_NULL(list);
 	param.setValue(list);
 	int totalWeight = 0;
 	for (;;)
@@ -2439,7 +2437,6 @@ const char *parseWeightedList(
 		VALUE value;
 		Q *valueParam = NULL;
 		value.value = valueParam = new Q;
-		NOT_NULL(valueParam);
 		list->push_back(value);
 		VALUE *newValue = &list->back();
 		// test to see if we need to go to the next line

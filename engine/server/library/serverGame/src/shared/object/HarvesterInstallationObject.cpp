@@ -93,7 +93,6 @@ HarvesterInstallationObject::~HarvesterInstallationObject()
 Controller* HarvesterInstallationObject::createDefaultController(void)
 {
 	Controller* _controller = new HarvesterInstallationController(this);
-	NOT_NULL(_controller);
 
 	setController(_controller);
 	return _controller;

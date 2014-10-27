@@ -86,8 +86,6 @@ MessageQueue::Data* MessageQueueCombatDamageList::unpack(Archive::ReadIterator &
 	uint8 temp8;
 	
 	MessageQueueCombatDamageList * msg = new MessageQueueCombatDamageList;
-	NOT_NULL(msg);
-	
 	
 	uint16 listCount;
 	Archive::get(source, listCount);

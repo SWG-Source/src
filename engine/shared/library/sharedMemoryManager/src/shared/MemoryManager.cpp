@@ -1612,9 +1612,9 @@ int MemoryManagerNamespace::quickGuessIsValidPointerFromHeap(void const * userPo
 	AllocatedBlock const * allocatedBlock = reinterpret_cast<AllocatedBlock const *>(reinterpret_cast<byte const *>(userPointer) - (cms_allocatedBlockSize + cms_guardBandSize));
 
 	ms_criticalSection->enter();
-		if (!result && allocatedBlock->getNext()->getPrevious() != allocatedBlock) result =  1;
-		if (!result && allocatedBlock->getPrevious()->getNext() != allocatedBlock) result =  2;
-		if (!result && allocatedBlock->isFree()) result =  3;
+		if (allocatedBlock->getNext()->getPrevious() != allocatedBlock) result =  1;
+		if (allocatedBlock->getPrevious()->getNext() != allocatedBlock) result =  2;
+		if (allocatedBlock->isFree()) result =  3;
 	ms_criticalSection->leave();
 
 	return result;

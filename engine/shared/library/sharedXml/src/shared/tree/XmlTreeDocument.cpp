@@ -99,11 +99,10 @@ XmlTreeDocument* XmlTreeDocument::createDocument(const char * rootNodeName)
 	XmlTreeDocument *treeDoc = new XmlTreeDocument(doc);
 	
 	DEBUG_WARNING( !treeDoc, ("Attempted to make new XmlTreeDoc but failed") );
-	if (!treeDoc)
-	{
-		xmlFree(doc);
-		return 0;
-	}
+
+	xmlFree(doc);
+	return 0;
+
 	treeDoc->fetch();
 	return treeDoc;
 }
@@ -120,12 +119,11 @@ XmlTreeDocument * XmlTreeDocument::buildDocumentFromText(const std::string &inpu
 		return 0;
 	}
 	XmlTreeDocument *treeDoc = new XmlTreeDocument(doc);
-	if(!treeDoc)
-	{
-		DEBUG_FATAL(true, ("Failure building XmlTreeDocument after successful parsing of memory buffer."));
-		xmlFree(doc);
-		return 0;
-	}
+
+	DEBUG_FATAL(true, ("Failure building XmlTreeDocument after successful parsing of memory buffer."));
+	xmlFree(doc);
+	return 0;
+
 	treeDoc->fetch();
 	return treeDoc;
 }

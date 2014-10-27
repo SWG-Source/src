@@ -71,7 +71,6 @@ MessageQueue::Data* MessageQueueDraftSlots::unpack(Archive::ReadIterator & sourc
 	Archive::get(source, canManufacture);
 	
 	MessageQueueDraftSlots * const msg = new MessageQueueDraftSlots(toolId, manfSchemId);
-	NOT_NULL(msg);
 
 	msg->setPrototypeId(testProtoId);
 	msg->setVolume(volume);

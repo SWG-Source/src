@@ -543,7 +543,6 @@ void DataTableWriter::_loadFromSpreadsheetTab(const char * filename)
 	int bufferLength = fileLength + 1;
 	char* buffer = new char[bufferLength];
 	memset(buffer, 0, bufferLength);
-	NOT_NULL(buffer);
 
 	int bytes_read = inputFile.read(buffer, fileLength);
 	FATAL(!bytes_read, ("Didn't read in any bytes when loading %s.", filename));

@@ -5450,14 +5450,6 @@ int CreatureObject::getInstrumentVisualId() const
 			return visualId;
 	}
 
-	// last, check the look at target if no weapon is equipped
-	if (!hasWeapon)
-	{
-		int visualId = internalGetInstrumentVisualId(getLookAtTarget());
-		if(visualId)
-			return visualId;
-	}
-
 	return 0;
 }
 

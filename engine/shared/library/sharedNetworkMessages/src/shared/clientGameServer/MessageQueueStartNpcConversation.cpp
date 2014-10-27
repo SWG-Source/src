@@ -48,7 +48,6 @@ void MessageQueueStartNpcConversation::pack(const MessageQueue::Data* const data
 MessageQueue::Data* MessageQueueStartNpcConversation::unpack(Archive::ReadIterator & source)
 {
 	MessageQueueStartNpcConversation * msg = new MessageQueueStartNpcConversation;
-	NOT_NULL(msg);
 	
 	NetworkId npc;
 	Archive::get(source, npc);

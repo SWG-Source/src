@@ -57,7 +57,6 @@ MessageQueue::Data* MessageQueueCraftExperiment::unpack(Archive::ReadIterator & 
 	uint8 sequenceId;
 	Archive::get(source, sequenceId);
 	MessageQueueCraftExperiment* const msg = new MessageQueueCraftExperiment(sequenceId);
-	NOT_NULL(msg);
 	
 	int count;
 	int attribute, points;

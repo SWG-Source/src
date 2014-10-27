@@ -114,7 +114,6 @@ GuildObject::~GuildObject()
 Controller* GuildObject::createDefaultController()
 {
 	Controller* controller = new GuildController(this);
-	NOT_NULL(controller);
 
 	setController(controller);
 	return controller;

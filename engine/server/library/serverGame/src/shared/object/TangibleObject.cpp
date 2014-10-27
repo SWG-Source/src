@@ -1736,7 +1736,6 @@ void TangibleObject::setPvpRegion(Region const * pvpRegion)
 Controller* TangibleObject::createDefaultController(void)
 {
 	Controller* controller = new TangibleController(this);
-	NOT_NULL(controller);
 
 	setController(controller);
 	return controller;

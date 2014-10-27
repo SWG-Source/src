@@ -190,7 +190,6 @@ void ManufactureInstallationObject::endBaselines()
 Controller* ManufactureInstallationObject::createDefaultController()
 {
 	Controller* const _controller = new ManufactureInstallationController(this);
-	NOT_NULL(_controller);
 
 	setController(_controller);
 	return _controller;

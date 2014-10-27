@@ -60,7 +60,6 @@ MessageQueue::Data* MessageQueueOpponentInfo::unpack(Archive::ReadIterator & sou
 	MessageQueueOpponentInfo * msg = new MessageQueueOpponentInfo();
 	msg->setOpponent(opponent);
 	msg->setAttributes(health, action, mind);
-	NOT_NULL(msg);
 	
 	return msg;
 }

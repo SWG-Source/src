@@ -198,14 +198,12 @@ jboolean JNICALL ScriptMethodsBuffBuilderNamespace::buffBuilderValidated(JNIEnv 
 		if(bufferController)
 		{
 			BuffBuilderChangeMessage * outMsg = new BuffBuilderChangeMessage();
-			if(outMsg)
-			{
-				outMsg->setBufferId(session.bufferId);
-				outMsg->setRecipientId(session.recipientId);
-				outMsg->setOrigin(BuffBuilderChangeMessage::O_SERVER);
-				outMsg->setAccepted(true);
-				bufferController->appendMessage(static_cast<int>(CM_buffBuilderChange), 0.0f, outMsg, GameControllerMessageFlags::SEND | GameControllerMessageFlags::RELIABLE | GameControllerMessageFlags::DEST_AUTH_CLIENT);
-			}
+
+			outMsg->setBufferId(session.bufferId);
+			outMsg->setRecipientId(session.recipientId);
+			outMsg->setOrigin(BuffBuilderChangeMessage::O_SERVER);
+			outMsg->setAccepted(true);
+			bufferController->appendMessage(static_cast<int>(CM_buffBuilderChange), 0.0f, outMsg, GameControllerMessageFlags::SEND | GameControllerMessageFlags::RELIABLE | GameControllerMessageFlags::DEST_AUTH_CLIENT);
 		}
 	}
 

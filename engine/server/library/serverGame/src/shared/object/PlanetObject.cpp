@@ -238,7 +238,6 @@ PlanetObject::~PlanetObject()
 Controller* PlanetObject::createDefaultController(void)
 {
 	Controller* controller = new PlanetController(this);
-	NOT_NULL(controller);
 
 	setController(controller);
 	return controller;

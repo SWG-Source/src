@@ -259,7 +259,6 @@ void StructureFootprint::load_0000 (Iff& iff)
 		//-- allocate footprint
 		IS_NULL (m_data);
 		m_data = new LotType [static_cast<size_t> (m_width * m_height)];
-		NOT_NULL (m_data);
 
 		//-- convert string to footprint
 		const char* const buffer = footprint.c_str ();

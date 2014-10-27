@@ -52,7 +52,7 @@ namespace DebugMonitorNamespace
 		DWORD type = 0;
 		DWORD size = sizeof(DWORD);
 		LONG result = RegQueryValueEx(registryKey, name, NULL, &type, reinterpret_cast<LPBYTE>(&value), &size);
-		if (result != ERROR_SUCCESS || type != REG_DWORD && size != sizeof(int))
+		if ((result != ERROR_SUCCESS || type != REG_DWORD) && (size != sizeof(int)))
 			value = defaultValue;
 		return value;
 	}

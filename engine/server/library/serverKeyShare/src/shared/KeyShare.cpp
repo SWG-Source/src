@@ -22,7 +22,6 @@ cipherDataLen(newCipherDataLen),
 dataLen(newDataLen)
 {
 	cipherData = new unsigned char[cipherDataLen];
-	NOT_NULL(cipherData);
 	memcpy(cipherData, newCipherData, cipherDataLen);
 	memcpy(digest, newDigest, KeyShareConstants::keyLength);
 }
@@ -35,7 +34,6 @@ cipherDataLen(source.cipherDataLen),
 dataLen(source.dataLen)
 {
 	cipherData = new unsigned char[cipherDataLen];
-	NOT_NULL(cipherData);
 	memcpy(cipherData, source.cipherData, cipherDataLen);
 	memcpy(digest, source.digest, KeyShareConstants::keyLength);
 }
@@ -137,10 +135,6 @@ keys(0)
 	decryptors = new Crypto::TwofishDecryptor *[keyCount];
 	encryptors = new Crypto::TwofishEncryptor *[keyCount];
 
-	NOT_NULL(keys);
-	NOT_NULL(decryptors);
-	NOT_NULL(encryptors);
-
 	for(unsigned int i = 0; i < keyCount; i ++)
 	{
 		decryptors[i] = 0;
@@ -179,9 +173,6 @@ bool KeyShare::decipherToken(const KeyShare::Token & token, unsigned char * clea
 		unsigned int	cipherDataLen = token.getCipherDataLen();
 		unsigned char * cipherText = new unsigned char[cipherDataLen];
 		unsigned char * clearText = new unsigned char[cipherDataLen];
-
-		NOT_NULL(cipherText);
-		NOT_NULL(clearText);
 
 		memcpy(cipherText, token.getData(), cipherDataLen);
 		for(unsigned int i = 0; i < keyCount; i ++)

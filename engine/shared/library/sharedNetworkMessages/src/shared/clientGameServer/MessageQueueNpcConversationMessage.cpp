@@ -44,7 +44,6 @@ void MessageQueueNpcConversationMessage::pack(const MessageQueue::Data* const da
 MessageQueue::Data* MessageQueueNpcConversationMessage::unpack(Archive::ReadIterator & source)
 {
 	MessageQueueNpcConversationMessage * msg = new MessageQueueNpcConversationMessage;
-	NOT_NULL(msg);
 	
 	Unicode::String response;
 	Archive::get(source, response);

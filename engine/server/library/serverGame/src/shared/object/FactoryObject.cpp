@@ -231,7 +231,6 @@ void FactoryObject::removeDefaultTemplate()
 Controller* FactoryObject::createDefaultController()
 {
 	Controller* controller = new TangibleController(this);
-	NOT_NULL(controller);
 
 	setController(controller);
 	return controller;

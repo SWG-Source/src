@@ -151,7 +151,6 @@ void WeaponObject::onLoadedFromDatabase()
 Controller* WeaponObject::createDefaultController(void)
 {
 	Controller* controller = new WeaponController(this);
-	NOT_NULL(controller);
 
 	setController(controller);
 	return controller;

@@ -1666,7 +1666,6 @@ void ServerObject::conclude()
 Controller* ServerObject::createDefaultController(void)
 {
 	Controller* controller = new ServerController(this);
-	NOT_NULL(controller);
 
 	setController(controller);
 	return controller;

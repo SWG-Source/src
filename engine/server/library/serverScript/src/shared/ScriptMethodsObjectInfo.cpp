@@ -3238,7 +3238,7 @@ jobjectArray JNICALL ScriptMethodsObjectInfoNamespace::getCtsDestinationClusters
 		}
 	}
 
-	if (!s_ctsDestinationClusters || s_ctsDestinationClusters->empty())
+	if (s_ctsDestinationClusters->empty())
 		return 0;
 
 	LocalObjectArrayRefPtr valueArray = createNewObjectArray(s_ctsDestinationClusters->size(), JavaLibrary::getClsString());

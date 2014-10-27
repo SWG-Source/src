@@ -591,13 +591,11 @@ void ServerImageDesignerManager::cancelSession(NetworkId const & designerId, Net
 	if(designerController)
 	{
 		ImageDesignChangeMessage * outMsg = new ImageDesignChangeMessage();
-		if(outMsg)
-		{
-			outMsg->setDesignerId(designerId);
-			outMsg->setRecipientId(recipientId);
-			outMsg->setOrigin(ImageDesignChangeMessage::O_SERVER);
-			designerController->appendMessage(static_cast<int>(CM_imageDesignerCancel), 0.0f, outMsg, GameControllerMessageFlags::SEND | GameControllerMessageFlags::RELIABLE | GameControllerMessageFlags::DEST_AUTH_CLIENT);
-		}
+
+		outMsg->setDesignerId(designerId);
+		outMsg->setRecipientId(recipientId);
+		outMsg->setOrigin(ImageDesignChangeMessage::O_SERVER);
+		designerController->appendMessage(static_cast<int>(CM_imageDesignerCancel), 0.0f, outMsg, GameControllerMessageFlags::SEND | GameControllerMessageFlags::RELIABLE | GameControllerMessageFlags::DEST_AUTH_CLIENT);
 	}
 
 	//send the cancel message to the recipient
@@ -606,13 +604,11 @@ void ServerImageDesignerManager::cancelSession(NetworkId const & designerId, Net
 	if(recipientController && designerController != recipientController)
 	{
 		ImageDesignChangeMessage * outMsg = new ImageDesignChangeMessage();
-		if(outMsg)
-		{
-			outMsg->setDesignerId(designerId);
-			outMsg->setRecipientId(recipientId);
-			outMsg->setOrigin(ImageDesignChangeMessage::O_SERVER);
-			recipientController->appendMessage(static_cast<int>(CM_imageDesignerCancel), 0.0f, outMsg, GameControllerMessageFlags::SEND | GameControllerMessageFlags::RELIABLE | GameControllerMessageFlags::DEST_AUTH_CLIENT);
-		}
+
+		outMsg->setDesignerId(designerId);
+		outMsg->setRecipientId(recipientId);
+		outMsg->setOrigin(ImageDesignChangeMessage::O_SERVER);
+		recipientController->appendMessage(static_cast<int>(CM_imageDesignerCancel), 0.0f, outMsg, GameControllerMessageFlags::SEND | GameControllerMessageFlags::RELIABLE | GameControllerMessageFlags::DEST_AUTH_CLIENT);
 	}
 
 	//send cancel trigger to designer player

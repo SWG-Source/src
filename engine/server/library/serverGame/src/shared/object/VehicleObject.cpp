@@ -38,7 +38,6 @@ VehicleObject::~VehicleObject()
 Controller* VehicleObject::createDefaultController(void)
 {
 	Controller* controller = new VehicleController(this);
-	NOT_NULL(controller);
 
 	setController(controller);
 	return controller;

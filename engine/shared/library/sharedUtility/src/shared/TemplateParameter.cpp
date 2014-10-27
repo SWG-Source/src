@@ -998,7 +998,6 @@ void DynamicVariableParamData::loadFromIff(Iff &file)
 				for (int i = 0; i < count; ++i)
 				{
 					DynamicVariableParamData *newData = new DynamicVariableParamData;
-					NOT_NULL(newData);
 					newData->loadFromIff(file);
 					m_data.lparam->push_back(newData);
 				}

@@ -71,11 +71,10 @@ void AiMovementMessage::pack(const MessageQueue::Data* const data, Archive::Byte
 MessageQueue::Data* AiMovementMessage::unpack(Archive::ReadIterator & source)
 {
 	AiMovementMessage * msg = new AiMovementMessage();
-	if (msg)
-	{
-		if (GameServerMessageInterface::getInstance() != NULL)
-			GameServerMessageInterface::getInstance()->unpack(source, *msg);
-	}
+
+	if (GameServerMessageInterface::getInstance() != NULL)
+		GameServerMessageInterface::getInstance()->unpack(source, *msg);
+
 	return msg;
 }
 

@@ -465,7 +465,6 @@ MessageQueue::Data* MessageQueueCombatAction::unpack(Archive::ReadIterator & sou
 	int actionNameCrc;
 	
 	MessageQueueCombatAction * msg = new MessageQueueCombatAction;
-	NOT_NULL(msg);
 	
 	Archive::get(source, actionId);
 	msg->setActionId(actionId);

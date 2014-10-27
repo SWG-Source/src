@@ -136,7 +136,6 @@ void ServerObjectTemplate::registerMe(void)
 	if (XpMap == NULL)
 	{
 		XpMap = new XP_MAP();
-		NOT_NULL(XpMap);
 		ExitChain::add(exit, "ServerObjectTemplate");
 
 		// @todo: fill in the rest of this map

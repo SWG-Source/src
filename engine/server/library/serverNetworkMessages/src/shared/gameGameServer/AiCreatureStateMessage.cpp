@@ -52,12 +52,9 @@ MessageQueue::Data * AiCreatureStateMessage::unpack(Archive::ReadIterator & sour
 {
 	AiCreatureStateMessage * msg = new AiCreatureStateMessage();
 
-	if (msg != NULL)
+	if (GameServerMessageInterface::getInstance() != NULL)
 	{
-		if (GameServerMessageInterface::getInstance() != NULL)
-		{
-			GameServerMessageInterface::getInstance()->unpack(source, *msg);
-		}
+		GameServerMessageInterface::getInstance()->unpack(source, *msg);
 	}
 
 	return msg;

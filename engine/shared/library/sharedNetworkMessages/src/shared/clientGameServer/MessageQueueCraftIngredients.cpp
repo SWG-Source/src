@@ -53,7 +53,6 @@ void MessageQueueCraftIngredients::pack(const MessageQueue::Data* const data, Ar
 MessageQueue::Data* MessageQueueCraftIngredients::unpack(Archive::ReadIterator & source)
 {
 	MessageQueueCraftIngredients* const msg = new MessageQueueCraftIngredients();
-	NOT_NULL(msg);
 	
 	int count;
 	Unicode::String name;

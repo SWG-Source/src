@@ -130,7 +130,6 @@ GroupObject::~GroupObject()
 Controller* GroupObject::createDefaultController()
 {
 	Controller* controller = new GroupController(this);
-	NOT_NULL(controller);
 
 	setController(controller);
 	return controller;

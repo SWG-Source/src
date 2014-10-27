@@ -87,7 +87,6 @@ void UniverseObject::removeDefaultTemplate(void)
 Controller* UniverseObject::createDefaultController (void)
 {
 	Controller* controller = new UniverseController(this);
-	NOT_NULL(controller);
 	
 	setController(controller);
 	return controller;

@@ -518,11 +518,9 @@ int i;
 
 		// Create a dummy object.
 		Object *dummyObject = new MemoryBlockManagedObject();
-		NOT_NULL(dummyObject);
 
 		// Create a CustomizationData instance.
 		CustomizationData *customizationData = new CustomizationData(*dummyObject);
-		NOT_NULL(customizationData);
 		customizationData->fetch();
 
 		// Retrieve CustomizationData for crafted object's appearance template name.

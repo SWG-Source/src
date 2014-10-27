@@ -53,7 +53,6 @@ void Portal::install()
 	{
 		delete ms_doorStyleTable;
 		ms_doorStyleTable = new DataTable();
-		NOT_NULL(ms_doorStyleTable);
 		ms_doorStyleTable->load(dataTableIff);
 	}
 

@@ -1171,11 +1171,9 @@ void PlayerCreatureController::handleMessage (const int message, const float val
 							if(recipientController)
 							{
 								ImageDesignChangeMessage * outMsg = new ImageDesignChangeMessage();
-								if(outMsg)
-								{
-									*outMsg = *inMsg;
-									recipientController->appendMessage(CM_imageDesignerChange, 0, outMsg, GameControllerMessageFlags::SEND | GameControllerMessageFlags::RELIABLE | GameControllerMessageFlags::DEST_AUTH_CLIENT);
-								}
+
+								*outMsg = *inMsg;
+								recipientController->appendMessage(CM_imageDesignerChange, 0, outMsg, GameControllerMessageFlags::SEND | GameControllerMessageFlags::RELIABLE | GameControllerMessageFlags::DEST_AUTH_CLIENT);
 							}
 						}
 						else
@@ -1188,11 +1186,9 @@ void PlayerCreatureController::handleMessage (const int message, const float val
 								if(recipientController)
 								{
 									ImageDesignChangeMessage * outMsg = new ImageDesignChangeMessage();
-									if(outMsg)
-									{
-										*outMsg = *inMsg;
-										recipientController->appendMessage(CM_imageDesignerChange, 0, outMsg, GameControllerMessageFlags::SEND | GameControllerMessageFlags::RELIABLE | GameControllerMessageFlags::DEST_AUTH_CLIENT);
-									}
+
+									*outMsg = *inMsg;
+									recipientController->appendMessage(CM_imageDesignerChange, 0, outMsg, GameControllerMessageFlags::SEND | GameControllerMessageFlags::RELIABLE | GameControllerMessageFlags::DEST_AUTH_CLIENT);
 								}
 							}
 						}
@@ -1209,12 +1205,10 @@ void PlayerCreatureController::handleMessage (const int message, const float val
 							if(designerController)
 							{
 								ImageDesignChangeMessage * outMsg = new ImageDesignChangeMessage();
-								if(outMsg)
-								{
-									*outMsg = *inMsg;
-									outMsg->setOrigin(ImageDesignChangeMessage::O_SERVER);
-									designerController->appendMessage(CM_imageDesignerChange, 0, outMsg, GameControllerMessageFlags::SEND | GameControllerMessageFlags::RELIABLE | GameControllerMessageFlags::DEST_AUTH_CLIENT);
-								}
+
+								*outMsg = *inMsg;
+								outMsg->setOrigin(ImageDesignChangeMessage::O_SERVER);
+								designerController->appendMessage(CM_imageDesignerChange, 0, outMsg, GameControllerMessageFlags::SEND | GameControllerMessageFlags::RELIABLE | GameControllerMessageFlags::DEST_AUTH_CLIENT);
 							}
 						}
 						else
@@ -1328,11 +1322,9 @@ void PlayerCreatureController::handleMessage (const int message, const float val
 							if(recipientController)
 							{
 								BuffBuilderChangeMessage * outMsg = new BuffBuilderChangeMessage();
-								if(outMsg)
-								{
-									*outMsg = *inMsg;
-									recipientController->appendMessage(CM_buffBuilderChange, 0, outMsg, GameControllerMessageFlags::SEND | GameControllerMessageFlags::RELIABLE | GameControllerMessageFlags::DEST_AUTH_CLIENT);
-								}
+
+								*outMsg = *inMsg;
+								recipientController->appendMessage(CM_buffBuilderChange, 0, outMsg, GameControllerMessageFlags::SEND | GameControllerMessageFlags::RELIABLE | GameControllerMessageFlags::DEST_AUTH_CLIENT);
 							}
 						}
 						else
@@ -1345,11 +1337,8 @@ void PlayerCreatureController::handleMessage (const int message, const float val
 								if(recipientController)
 								{
 									BuffBuilderChangeMessage * outMsg = new BuffBuilderChangeMessage();
-									if(outMsg)
-									{
-										*outMsg = *inMsg;
-										recipientController->appendMessage(CM_buffBuilderChange, 0, outMsg, GameControllerMessageFlags::SEND | GameControllerMessageFlags::RELIABLE | GameControllerMessageFlags::DEST_AUTH_CLIENT);
-									}
+									*outMsg = *inMsg;
+									recipientController->appendMessage(CM_buffBuilderChange, 0, outMsg, GameControllerMessageFlags::SEND | GameControllerMessageFlags::RELIABLE | GameControllerMessageFlags::DEST_AUTH_CLIENT);
 								}
 							}
 						}
@@ -1366,12 +1355,10 @@ void PlayerCreatureController::handleMessage (const int message, const float val
 							if(bufferController)
 							{
 								BuffBuilderChangeMessage * outMsg = new BuffBuilderChangeMessage();
-								if(outMsg)
-								{
-									*outMsg = *inMsg;
-									outMsg->setOrigin(BuffBuilderChangeMessage::O_SERVER);
-									bufferController->appendMessage(CM_buffBuilderChange, 0, outMsg, GameControllerMessageFlags::SEND | GameControllerMessageFlags::RELIABLE | GameControllerMessageFlags::DEST_AUTH_CLIENT);
-								}
+
+								*outMsg = *inMsg;
+								outMsg->setOrigin(BuffBuilderChangeMessage::O_SERVER);
+								bufferController->appendMessage(CM_buffBuilderChange, 0, outMsg, GameControllerMessageFlags::SEND | GameControllerMessageFlags::RELIABLE | GameControllerMessageFlags::DEST_AUTH_CLIENT);
 							}
 						}
 						else

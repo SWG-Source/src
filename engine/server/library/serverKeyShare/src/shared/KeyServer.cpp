@@ -20,7 +20,6 @@ randomNumberGenerator(0),
 updateRate(newUpdateRate)
 {
 	randomNumberGenerator = new RandomGenerator(unsigned(time(0))); //lint !e732 //loss of sign ok.
-	NOT_NULL(randomNumberGenerator);
 	Key	k;
 	for(unsigned int i = 0; i < getKeyCount(); i ++)
 	{

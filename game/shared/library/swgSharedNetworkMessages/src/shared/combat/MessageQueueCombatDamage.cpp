@@ -88,9 +88,7 @@ MessageQueue::Data* MessageQueueCombatDamage::unpack(Archive::ReadIterator & sou
 	Attributes::Enumerator attribute;
 	Attributes::Value value;
 	
-	MessageQueueCombatDamage * msg = new MessageQueueCombatDamage;
-	NOT_NULL(msg);
-	
+	MessageQueueCombatDamage * msg = new MessageQueueCombatDamage;	
 	
 	Archive::get(source, actionId);
 	msg->setActionId(actionId);

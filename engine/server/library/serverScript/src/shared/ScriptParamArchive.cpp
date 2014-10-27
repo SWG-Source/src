@@ -36,7 +36,6 @@ void get(ReadIterator & source, std::vector<const std::vector<NetworkId> *> & ta
 	for (int i = 0; i < length; ++i)
 	{
 		std::vector<NetworkId> * inner = new std::vector<NetworkId>();
-		NOT_NULL(inner);
 		signed int innerLength = 0;
 		get(source, innerLength);
 		NetworkId id;

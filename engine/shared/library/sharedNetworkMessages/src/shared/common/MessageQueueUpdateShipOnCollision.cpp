@@ -72,7 +72,6 @@ MessageQueue::Data* MessageQueueUpdateShipOnCollision::unpack(Archive::ReadItera
 	Archive::get(source, clampedStrengthOfImpact);
 
 	MessageQueueUpdateShipOnCollision * const msg = new MessageQueueUpdateShipOnCollision(deltaToMove, newVelocity, clampedStrengthOfImpact);
-	NOT_NULL(msg);
 
 	return msg;
 }

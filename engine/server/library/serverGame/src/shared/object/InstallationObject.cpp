@@ -129,7 +129,6 @@ void InstallationObject::removeDefaultTemplate(void)
 Controller* InstallationObject::createDefaultController(void)
 {
 	Controller* _controller = new InstallationController(this);
-	NOT_NULL(_controller);
 
 	setController(_controller);
 	return _controller;

@@ -100,7 +100,6 @@ void ResourceContainerObject::removeDefaultTemplate(void)
 Controller* ResourceContainerObject::createDefaultController(void)
 {
 	Controller* _controller = new ResourceContainerController(this);
-	NOT_NULL(_controller);
 
 	setController(_controller);
 	return _controller;
