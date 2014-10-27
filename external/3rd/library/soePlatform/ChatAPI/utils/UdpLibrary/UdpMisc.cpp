@@ -87,10 +87,10 @@ int UdpMisc::Crc32(const void *buffer, int bufferLen, int encryptValue)
     0xB40BBE37, 0xC30C8EA1, 0x5A05DF1B, 0x2D02EF8D};
 
     int crc = 0xffffffff;
-    crc = (crc >> (8 & 0x00FFFFFFL)) ^ crc32_table[(crc ^ (encryptValue & 0xff)) & 0x000000FFL];
-    crc = (crc >> (8 & 0x00FFFFFFL)) ^ crc32_table[(crc ^ ((encryptValue >> 8) & 0xff)) & 0x000000FFL];
-    crc = (crc >> (8 & 0x00FFFFFFL)) ^ crc32_table[(crc ^ ((encryptValue >> 16) & 0xff)) & 0x000000FFL];
-    crc = (crc >> (8 & 0x00FFFFFFL)) ^ crc32_table[(crc ^ ((encryptValue >> 24) & 0xff)) & 0x000000FFL];
+    crc = (crc >> 8) & 0x00FFFFFFL) ^ crc32_table[(crc ^ (encryptValue & 0xff)) & 0x000000FFL];
+    crc = (crc >> 8) & 0x00FFFFFFL) ^ crc32_table[(crc ^ ((encryptValue >> 8) & 0xff)) & 0x000000FFL];
+    crc = (crc >> 8) & 0x00FFFFFFL) ^ crc32_table[(crc ^ ((encryptValue >> 16) & 0xff)) & 0x000000FFL];
+    crc = (crc >> 8) & 0x00FFFFFFL) ^ crc32_table[(crc ^ ((encryptValue >> 24) & 0xff)) & 0x000000FFL];
 
     const udp_uchar *bufPtr = (const udp_uchar *)buffer;
     const udp_uchar *endPtr = (const udp_uchar *)buffer + bufferLen;

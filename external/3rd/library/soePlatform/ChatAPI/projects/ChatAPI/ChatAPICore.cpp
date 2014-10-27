@@ -1875,11 +1875,18 @@ void ChatAPICore::responseCallback(short type, ByteStream::ReadIterator &iter)
 		{
 			MKickRoom M(iter);
 			ChatRoomCore *destRoomCore = getRoomCore(M.getRoomID());
+
+			if (!destRoomCore) {
+				_chatdebug_("ChatAPI:destroomCore is null!");
+				break;
+			}
+
 			if (!M.getSrcAvatar() || !M.getDestAvatar())
 			{
 				_chatdebug_("ChatAPI:BadData: MESSAGE_KICKROOM: M.getSrcAvatar()=%p, M.getDestAvatar()=%p\n", M.getSrcAvatar(), M.getDestAvatar());
 				break; 
 			}
+
 			ChatAvatar *destAvatar = M.getDestAvatar()->getNewChatAvatar();
 			ChatAvatar *srcAvatar = M.getSrcAvatar()->getNewChatAvatar();
 			ChatAvatarCore *kickedAvatar = destRoomCore ? destRoomCore->removeAvatar(destAvatar->getAvatarID()) : NULL;
