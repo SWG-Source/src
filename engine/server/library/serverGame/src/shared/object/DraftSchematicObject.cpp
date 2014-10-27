@@ -326,7 +326,6 @@ bool DraftSchematicObject::getAttribMinMax(int index, int & minValue,
 {
 	const SharedDraftSchematicObjectTemplate::SchematicAttribute & minAttrib = 
 		getAttribMin(index);
-	minValue = minAttrib.value;
 	const SharedDraftSchematicObjectTemplate::SchematicAttribute & maxAttrib = 
 		getAttribMax(index);
 		

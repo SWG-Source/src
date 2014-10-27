@@ -416,7 +416,6 @@ void BuildingObject::removeDefaultTemplate(void)
 Controller* BuildingObject::createDefaultController(void)
 {
 	Controller* _controller = new BuildingController(this);
-	NOT_NULL(_controller);
 
 	setController(_controller);
 	return _controller;

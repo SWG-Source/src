@@ -560,7 +560,6 @@ void DatabaseProcess::receiveMessage(const MessageDispatch::Emitter & source, co
 	else if (message.isType("ExcommunicateGameServerMessage"))
 	{
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		ExcommunicateGameServerMessage msg(ri);
 
 		LOG("GameGameConnect",("Database Process was told to drop connection to %lu by Central",msg.getServerId()));

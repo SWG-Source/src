@@ -350,11 +350,8 @@ void Logger::logSimple(unsigned logenum, int level, const char *message)
 											
 	if(m_rollDate && info->ts.tm_mday != m_lastDateTime.tm_mday)
 	{
-		if(info->ts.tm_mday != m_lastDateTime.tm_mday)
-		{
-			memcpy(&m_lastDateTime, &info->ts, sizeof(tm));
-			rollDate(t);
-		}
+		memcpy(&m_lastDateTime, &info->ts, sizeof(tm));
+		rollDate(t);
 	}
 	if(iter != m_logTable.end())
 	{
@@ -426,11 +423,8 @@ void Logger::logSimpleWithSys(unsigned logenum, unsigned priority, int level, co
 												
 		if(m_rollDate && info->ts.tm_mday != m_lastDateTime.tm_mday)
 		{
-			if(info->ts.tm_mday != m_lastDateTime.tm_mday)
-			{
-				memcpy(&m_lastDateTime, &info->ts, sizeof(tm));
-				rollDate(t);
-			}
+			memcpy(&m_lastDateTime, &info->ts, sizeof(tm));
+			rollDate(t);
 		}
 		if(iter != m_logTable.end())
 		{
@@ -507,11 +501,8 @@ void Logger::logWithSys(unsigned logenum, unsigned priority, int level, const ch
 		}
 		if(m_rollDate && info->ts.tm_mday != m_lastDateTime.tm_mday)
 		{
-			if(info->ts.tm_mday != m_lastDateTime.tm_mday)
-			{
-				memcpy(&m_lastDateTime, &info->ts, sizeof(tm));
-				rollDate(t);
-			}
+			memcpy(&m_lastDateTime, &info->ts, sizeof(tm));
+			rollDate(t);
 		}
 
 		if(iter != m_logTable.end())
@@ -590,11 +581,8 @@ void Logger::vlogWithSys(unsigned logenum, unsigned priority, int level, const c
 		}
 		if(m_rollDate && info->ts.tm_mday != m_lastDateTime.tm_mday)
 		{
-			if(info->ts.tm_mday != m_lastDateTime.tm_mday)
-			{
-				memcpy(&m_lastDateTime, &info->ts, sizeof(tm));
-				rollDate(t);
-			}
+			memcpy(&m_lastDateTime, &info->ts, sizeof(tm));
+			rollDate(t);
 		}
 
 		if(iter != m_logTable.end())

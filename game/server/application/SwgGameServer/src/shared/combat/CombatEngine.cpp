@@ -274,7 +274,6 @@ bool CombatEngine::onSuccessfulAttack(const TangibleObject & attacker,
 
 		// send the damage info to the authoritative object
 		MessageQueueCombatDamageList * message = new MessageQueueCombatDamageList();
-		NOT_NULL(message);
 		CombatEngineData::DamageData & damageData = message->addDamage();
 
 		damageData.attackerId = attacker.getNetworkId();
@@ -372,7 +371,6 @@ bool CombatEngine::onSuccessfulAttack(const TangibleObject & attacker,
 
 		// send the damage info to the authoritative object
 		MessageQueueCombatDamageList * message = new MessageQueueCombatDamageList();
-		NOT_NULL(message);
 		CombatEngineData::DamageData & damageData = message->addDamage();
 
 		damageData.attackerId = attacker.getNetworkId();
@@ -722,7 +720,6 @@ void CombatEngine::alter(TangibleObject & object)
 
 		// send the damage info to the authoritative object
 		MessageQueueCombatDamageList * message = new MessageQueueCombatDamageList();
-		NOT_NULL(message);
 		for (iter = damageData.begin(); iter != damageData.end(); ++iter)
 			message->addDamage(*iter);
 		tangibleController->appendMessage(

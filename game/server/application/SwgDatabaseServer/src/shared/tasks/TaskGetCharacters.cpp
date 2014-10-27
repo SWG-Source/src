@@ -48,8 +48,6 @@ bool TaskGetCharacters::process(DB::Session *session)
 	{
 		CharacterRec *cr=new CharacterRec;
 
-		NOT_NULL(cr);
-
 		cr->characterName = qry.getData().character_name.getValue();
 		cr->characterId = NetworkId(qry.getData().object_id.getValue());
 		cr->location = Unicode::wideToNarrow(qry.getData().scene_id.getValue());

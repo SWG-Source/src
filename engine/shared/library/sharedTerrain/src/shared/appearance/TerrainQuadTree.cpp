@@ -567,7 +567,6 @@ TerrainQuadTree::Node * TerrainQuadTree::Node::findChunkNode (const ProceduralTe
 
 TerrainQuadTree::Node * TerrainQuadTree::Node::findFirstRenderablePeerNeighbor (const TerrainQuadTree::Node * const otherNode, const int dir)
 {
-	NOT_NULL (this);
 	NOT_NULL (otherNode);
 	
 	const int dir_offsets[4][2] =
@@ -595,7 +594,6 @@ TerrainQuadTree::Node * TerrainQuadTree::Node::findFirstRenderablePeerNeighbor (
 
 TerrainQuadTree::Node * TerrainQuadTree::Node::findFirstRenderableLowerNeighbor (const TerrainQuadTree::Node * const otherNode, const int dir)
 {
-	NOT_NULL (this);
 	NOT_NULL (otherNode);
 	
 	const int halfSize = otherNode->getSize () / 2;
