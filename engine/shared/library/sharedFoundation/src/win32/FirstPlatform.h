@@ -9,6 +9,12 @@
 #ifndef INCLUDED_FirstPlatform_H
 #define INCLUDED_FirstPlatform_H
 
+
+#ifdef WIN32
+#include <WinNT.h>
+#include <WinDef.h>
+#endif
+
 // ======================================================================
 
 // C4127 conditional expression is constant
