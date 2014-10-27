@@ -322,7 +322,6 @@ void SpaceDockingManager::fetchDockingProcedure(Object const & dockingUnit, Obje
 
 	// Find the correct dock pad to set down on
 
-	std::string finalDockPadLetter;
 	ShipsBeingDockedList::iterator iterShipsBeingDockedList = s_shipsBeingDockedList.find(CachedNetworkId(dockTarget));
 
 	if (iterShipsBeingDockedList == s_shipsBeingDockedList.end())

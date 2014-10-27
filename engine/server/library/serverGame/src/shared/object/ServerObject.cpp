@@ -6339,7 +6339,6 @@ void ServerObject::getAttributes(AttributeVector &) const
 void ServerObject::getAttributesForAuction(AttributeVector &data) const
 {
 	static const std::string attributeClientSharedTemplateName("ClientSharedTemplateName");
-	static const std::string attributeAppearanceData("AppearanceData");
 
 	DEBUG_FATAL(strlen(getClientSharedTemplateName()) > 1000,("Client shared template name was more than 1000 characters long, too long to save."));
 	

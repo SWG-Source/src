@@ -227,7 +227,6 @@ namespace NAMESPACE
 	void CommonAPI::OnTerminated(TcpConnection * connection)
 #endif
 	{
-		std::string host;
 		HostMap_t::iterator iter;
 		if ((iter = mHostMap[0].find(connection)) != mHostMap[0].end())
 		{

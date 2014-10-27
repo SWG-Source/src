@@ -875,7 +875,6 @@ bool TreeFile::stripTreeFileSearchPathFromFile(const char *inputPath, char *outp
 			{
 				// make sure the output buffer has enough room
 				int const pathLength = static_cast<int>(strlen(path));
-				int const outputLength = static_cast<int>(strlen(buffer)) - pathLength;
 				if (outputLength > outputPathBufferSize)
 					return false;
 

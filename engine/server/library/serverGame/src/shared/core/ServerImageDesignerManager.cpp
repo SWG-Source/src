@@ -541,7 +541,6 @@ void ServerImageDesignerManager::sendSessionToScript(SharedImageDesignerManager:
 			std::vector<float> morphValues;
 			std::vector<const char *> indexKeys;
 			std::vector<int> indexValues;
-			std::vector<const char *> holoEmotes;
 			for(std::map<std::string, float>::const_iterator i = session.morphChanges.begin(); i != session.morphChanges.end(); ++i)
 			{
 				morphKeys.push_back(i->first.c_str());

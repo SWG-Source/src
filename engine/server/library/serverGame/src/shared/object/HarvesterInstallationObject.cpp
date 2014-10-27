@@ -252,7 +252,6 @@ void HarvesterInstallationObject::selectResource (const NetworkId & resourceType
 	if (isAuthoritative())
 	{
 		bool found=false;
-		std::vector<NetworkId> pools;
 
 		if (!m_survey)
 			takeSurvey();

@@ -166,7 +166,6 @@ bool ConsoleCommandParserAi::performParsing(const NetworkId & userId, const Stri
 			}
 
 			AICreatureController * const aiCreatureController = AICreatureController::getAiCreatureController(targetNetworkId);
-			Unicode::String systemMessage;
 
 			if (aiCreatureController == NULL)
 			{

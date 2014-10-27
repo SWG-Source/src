@@ -139,8 +139,6 @@ inline void DataTableWriter::NamedDataTable::setName(const std::string& name)
 
 std::string & DataTableWriterNamespace::unquotify(std::string &s)
 {
-	static const std::string quote = "\"";
-
 	//First strip any beginning end quotes.
 	if (s.length() >= 2)
 	{

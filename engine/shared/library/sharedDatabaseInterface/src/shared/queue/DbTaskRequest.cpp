@@ -40,7 +40,6 @@ void DB::TaskRequest::workerThreadLoop(DB::Session *ses)
 		{
 			// save off the failed query statement from the process() that failed
 			// because it will be overwritten by the test query statement
-			std::string failedQuery = ses->getLastQueryStatement();
 
 			ses->rollbackTransaction();
 			Os::sleep(DB::Server::getErrorSleepTime());

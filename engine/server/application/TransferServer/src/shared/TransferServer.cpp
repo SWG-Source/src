@@ -267,7 +267,6 @@ void TransferServer::requestCharacterList(unsigned int track, unsigned int stati
 		// list. The LoginServer returns the list, with the tracking
 		// ID, to the CentralServer, and ultimately responds to this
 		// transfer server with the listing.
-		static const std::string emptyString("");
 		TransferCharacterData characterData(TransferRequestMoveValidation::TRS_transfer_server);
 		characterData.setCustomerLocalizedLanguage(customerLocalizedLanguage);
 		characterData.setSourceGalaxy(serverName);

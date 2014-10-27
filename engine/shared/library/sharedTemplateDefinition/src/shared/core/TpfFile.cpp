@@ -329,7 +329,6 @@ int TpfFile::WriteIffFile(Iff & iffData, const Filename & fileName)
 			buflen = GetFullPathName(".", 0, buffer, NULL);
 			buffer = new char[buflen + 1];
 			buflen = GetFullPathName(".", buflen + 1, buffer, NULL);
-			std::string srcPath = buffer;
 			delete[] buffer;
 			// get the destination path
 			std::string correctPath(fileName.getDrive() + fileName.getPath());

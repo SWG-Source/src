@@ -3861,9 +3861,6 @@ unsigned long GameServerNamespace::getFrameRateLimit()
 
 void GameServer::run(void)
 {
-	static const std::string frameLogChannel = "EndFrame:Time";
-	static const std::string frameLogCount = "EndFrame:Objects";
-
 	getInstance().initialize();
 
 	unsigned long lastFrameTime = 0;

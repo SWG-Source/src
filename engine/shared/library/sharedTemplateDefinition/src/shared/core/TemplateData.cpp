@@ -1692,8 +1692,6 @@ std::string upperName;
  */
 void TemplateData::writeCompilerHeaderMethods(File &fp) const
 {
-std::string upperName;
-
 	DEBUG_FATAL(!m_writeForCompilerFlag, ("write for compiler not enabled"));
 
 	fp.print("public:\n");

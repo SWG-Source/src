@@ -1151,7 +1151,6 @@ bool PlayerObject::requestCraftingSession(const NetworkId & toolId)
 			VolumeContainer const * const inventoryContainer = ContainerInterface::getVolumeContainer(*inventory);
 			if (inventoryContainer)
 			{
-				std::vector<Unicode::String> objList;
 				for (ContainerConstIterator iter(inventoryContainer->begin()); iter != inventoryContainer->end(); ++iter)
 				{
 					CachedNetworkId const & objId = (*iter);

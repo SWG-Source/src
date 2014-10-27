@@ -1992,8 +1992,6 @@ void JNICALL ScriptMethodsCraftingNamespace::getValidManufactureSchematicsForSta
  */
 jboolean JNICALL ScriptMethodsCraftingNamespace::hasValidManufactureSchematicsForStation(JNIEnv *env, jobject self, jlong player, jlong station)
 {
-	static const Unicode::String SEPARATOR(Unicode::narrowToWide("*"));
-
 	UNREF(self);
 
 	if (player == 0 || station == 0)

@@ -1086,7 +1086,6 @@ void ManufactureSchematicObject::addSlotComponent(const StringId & name,
 			std::vector<int> attribBonuses;
 			if (component.getAttribBonuses(attribBonuses))
 			{
-				const std::string bonusObjVarName(componentCopyName + "." + OBJVAR_ATTRIBUTE_BONUSES);
 				std::vector<float> componentBonuses(attribBonuses.size());
 				std::copy(attribBonuses.begin(), attribBonuses.end(), componentBonuses.begin());
 				setObjVarItem(componentCopyName + "." + OBJVAR_ATTRIBUTE_BONUSES, componentBonuses);
@@ -2485,7 +2484,6 @@ bool ManufactureSchematicObject::setObjectComponents(TangibleObject * object, bo
 
 	// check the objects in the schematic volume container to make sure they match 
 	// the ingredients needed
-	std::vector<ResourceContainerObject *> crateList;
 	Crafting::IngredientSlot slotData;
 	ContainerIterator iter;
 	Crafting::Ingredients::const_iterator ingredientIter;

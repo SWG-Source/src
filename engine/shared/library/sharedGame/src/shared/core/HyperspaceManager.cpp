@@ -105,7 +105,6 @@ void HyperspaceManager::install()
 			return;
 		}
 		DataTable const * const hyperspaceLocationsTable = DataTableManager::getTable(cms_hyperspaceLocationsTableName, true);
-		std::string hyperspacePointName;
 		if(hyperspaceLocationsTable)
 		{
 			HyperspaceLocation hyperspaceLoc;

@@ -75,7 +75,6 @@ MessageQueue::Data* MessageQueueCreateSaga::unpack(Archive::ReadIterator & sourc
 
 	int numTasks;
 	int taskType, numParameters;
-	std::string parameter;
 	Archive::get(source, numTasks);
 	msg->setTotalTasks(numTasks);
 	for (int i = 0; i < numTasks; ++i)

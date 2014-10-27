@@ -9500,7 +9500,7 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 		const StringId subject("player_structure", "vendor_purge_warning_subject");
 		const StringId body("player_structure", "vendor_purge_warning_body");
 		const Unicode::String mail_subject = Unicode::narrowToWide("@" + subject.getCanonicalRepresentation());
-		const Unicode::String mail_body = Unicode::narrowToWide("@" + body.getCanonicalRepresentation());
+		/*const Unicode::String mail_body = Unicode::narrowToWide("@" + body.getCanonicalRepresentation());*/
 
 		ProsePackage pp;
 		pp.stringId     = body;

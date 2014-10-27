@@ -344,7 +344,6 @@ bool TaskGetCharacterId::process(DB::Session *session)
 void TaskGetCharacterId::onComplete()
 {
 //	REPORT_LOG(true, ("TaskGetCharactersForAccount::onComplete()\n"));
-	std::string response = "";
 	NetworkId characterId;
 	uint32 stationId = 0;
 	if(m_characterIds.size() > 1 )

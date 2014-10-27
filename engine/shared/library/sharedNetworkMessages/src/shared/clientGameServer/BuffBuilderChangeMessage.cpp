@@ -84,7 +84,6 @@ MessageQueue::Data* BuffBuilderChangeMessage::unpack(Archive::ReadIterator & sou
 
 	NetworkId tempId;
 	bool tempBool = false;
-	std::string tempStr;
 	int tempInt = 0;
 	time_t tempTime = 0;
 

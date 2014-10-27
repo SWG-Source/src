@@ -288,7 +288,6 @@ void RemoteDebugClient::receive(const unsigned char * const message, const uint3
 	//can't have local variables defined within switch statements, so place them out here.
 	int32 t;
 	VARIABLE_TYPES varType;
-	std::string variableName;
 
 	switch(type)
 	{

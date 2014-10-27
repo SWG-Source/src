@@ -86,8 +86,6 @@ bool MatchMakingId::isBitSet(Bit const bit) const
 //-----------------------------------------------------------------------------
 std::string MatchMakingId::getDebugIntString() const
 {	
-	IntVector ints(getInts());
-
 	std::string result;
 
 	for (int bit = 0; bit < getBitCount(); ++bit)

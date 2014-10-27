@@ -280,7 +280,6 @@ namespace API_NAMESPACE
 	void CommonAPI::OnTerminated(TcpConnection * connection)
 #endif
 	{
-		std::string host;
 		HostMap_t::iterator iter;
 		ApiConnectionInfo * pInfo = FindConnectionInfo(connection);
 		bool isShuttingDown = pInfo ? (pInfo->mIsShuttingDown && pInfo->mOutstandingRequests.empty()) : false;

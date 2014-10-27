@@ -80,7 +80,6 @@ void AiCombatPulseQueue::setAiMaxWaitTimeMs(unsigned int amount)
 void AiCombatPulseQueue::alter(real time)
 {
 	int count = 0;
-	static const std::vector<int8> emptyVector;
 	unsigned long timeMs = Clock::getFrameStartTimeMs() + static_cast<unsigned long>(time * 1000.0f);
 
 	s_timeOrderedAi.clear();
