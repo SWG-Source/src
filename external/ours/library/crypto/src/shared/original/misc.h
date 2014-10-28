@@ -55,7 +55,7 @@ inline unsigned int RoundUpToMultipleOf(unsigned int n, unsigned int m)
 template <class T>
 inline bool IsAligned(const void *p)
 {
-	return (unsigned int)p % sizeof(T) == 0;
+	return (uintptr_t)p % sizeof(T) == 0;
 }
 
 inline bool CheckEndianess(bool highFirst)

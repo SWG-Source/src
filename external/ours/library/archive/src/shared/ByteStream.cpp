@@ -345,7 +345,7 @@ ByteStream::Data *ByteStream::Data::getNewData()
 
 void ByteStream::Data::releaseOldData(ByteStream::Data *oldData)
 {
-	assert(reinterpret_cast<unsigned int>(oldData) != 0xefefefefu);
+	assert(reinterpret_cast<long>(oldData) != 0xefefefefu);
 
 	if (oldData->size > 4096)
 		delete oldData;
