@@ -334,7 +334,7 @@ class RSearchKB : public Request
 		RSearchKB(unsigned track, const Plat_Unicode::String &searchstring, const Plat_Unicode::String &language, const unsigned uid);
 		virtual void pack(Base::ByteStream &msg);
 	private:
-		Plat_Unicode::String m&searchstring;
+		Plat_Unicode::String mSearchstring;
 		Plat_Unicode::String mLanguage;
 		unsigned mUID;
 };
