@@ -455,7 +455,7 @@ void RGetKBArticle::pack(ByteStream &msg)
 //----------------------------------------------
 	RSearchKB::RSearchKB(unsigned track, const Plat_Unicode::String &searchstring, const Plat_Unicode::String &language, const unsigned uid)
 : Request(CSASSIST_CALL_SEARCHKB, track),
-  m&searchstring(&searchstring), 
+  msearchstring(&searchstring), 
   mLanguage(language),
   mUID(uid)
 //----------------------------------------------
@@ -470,7 +470,7 @@ void RSearchKB::pack(ByteStream &msg)
 	put(msg, num_args);
 	put(msg, mType);
 	put(msg, mTrack);
-	put(msg, m&searchstring);
+	put(msg, msearchstring);
 	put(msg, mLanguage);
 	put(msg, mUID);
 }
