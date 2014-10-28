@@ -228,8 +228,8 @@ namespace Crafting
 
 		IngredientSlot(enum IngredientType _ingredientType,
 		               const StringId & _name,
-					   const stdvector<NetworkId>::fwd slotIngredients,
-					   const stdvector<int>::fwd slotIngredientsCount,
+					   const stdvector<NetworkId>::fwd &slotIngredients,
+					   const stdvector<int>::fwd &slotIngredientsCount,
 		               float _complexity,
 		               int _draftSlotOption,
 		               int _draftSlotIndex);

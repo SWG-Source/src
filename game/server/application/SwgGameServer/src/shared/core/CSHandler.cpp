@@ -532,8 +532,7 @@ void CSHandler::install()
 
 void CSHandler::remove()
 {
-	if( sm_instance )
-		delete sm_instance;
+	delete sm_instance;
 }
 
 CSHandler & CSHandler::getInstance()

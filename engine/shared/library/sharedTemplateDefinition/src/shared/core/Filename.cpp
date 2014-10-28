@@ -40,7 +40,7 @@ const char PATH_SEPARATOR = LINUX_PATH_SEPARATOR;
 void Filename::setPath(const char *path)
 {
 	if (path == NULL || *path == '\0')
-		m_path = "";
+		m_path.clear();
 	else
 	{
 #ifdef WIN32
@@ -70,7 +70,7 @@ void Filename::setPath(const char *path)
 void Filename::setName(const char *name)
 {
 	if (name == NULL || *name == '\0')
-		m_name = "";
+		m_name.clear();
 	else
 	{
 #ifdef WIN32
@@ -130,7 +130,7 @@ void Filename::setName(const char *name)
 void Filename::setExtension(const char *extension)
 {
 	if (extension == NULL || *extension == '\0')
-		m_extension = "";
+		m_extension.clear();
 	else
 	{
 		if (*extension == '.')
@@ -256,7 +256,7 @@ void Filename::setDrive(const char *drive)
 	if (drive != NULL && isalpha(*drive))
 		m_drive = std::string(drive, 1) + ":";
 	else
-		m_drive = "";
+		m_drive.clear();
 
 	makeFullPath();
 }	// Filename::setDrive

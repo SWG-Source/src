@@ -73,18 +73,12 @@ int x;
 
 	for(x=0;x<m_count;x++)
 	{
-		if( m_data[x].discription )
-			delete m_data[x].discription;
-
-		if( m_data[x].label )
-			delete m_data[x].label;
+		delete m_data[x].discription;
+		delete m_data[x].label;
 	}
 
-	if(m_buffer) 
-		delete m_buffer; 
-
-	if( m_data )
-		delete [] m_data;
+	delete m_buffer; 
+	delete [] m_data;
 }
 
 void CMonitorData::resize_buffer(int new_size)
@@ -338,14 +332,12 @@ int x;
 			m_data[x].id = id;
 
 			//*******  Label  ***********
-			if( m_data[x].label )
-				delete m_data[x].label;
+			delete m_data[x].label;
 			m_data[x].label = new char [strlen(label)+1];
 			strcpy(m_data[x].label,label);
 			
 			//*******  Discription ******
-			if( m_data[x].discription != NULL )
-				delete [] m_data[x].discription;
+			delete [] m_data[x].discription;
 			m_data[x].discription = NULL;
 			
 			if( des )
@@ -376,8 +368,7 @@ int x;
 	strcpy(m_data[m_count].label,label);
 	if( des )
 	{
-		if(  m_data[x].discription )
-			delete [] m_data[x].discription;
+		delete [] m_data[x].discription;
 		m_data[x].discription = new char [strlen(des)+1];
 		strcpy(m_data[x].discription,des);
 	}
@@ -394,26 +385,23 @@ int x;
 
 	for(x=0;x<m_count;x++)
 	{
-		if( Id == m_data[x].id )
-		{
-			if( Description == NULL )
-			{
-				if( m_data[x].discription )
-					delete [] m_data[x].discription;
-				m_data[x].discription = NULL;
-				mode = 0;				
-				return x;
-			}
-			if( m_data[x].discription && !strcmp( m_data[x].discription, Description ) )
-				return -1;
 
-			if( m_data[x].discription )
-				delete [] m_data[x].discription;
-			m_data[x].discription = new char [ sDescP1 ];
-			strcpy(m_data[x].discription,Description);
-			mode = 1;					
+		if( Description == NULL )
+		{
+			delete [] m_data[x].discription;
+			m_data[x].discription = NULL;
+			mode = 0;				
 			return x;
 		}
+		if( m_data[x].discription && !strcmp( m_data[x].discription, Description ) )
+			return -1;
+
+		if( m_data[x].discription )
+			delete [] m_data[x].discription;
+		m_data[x].discription = new char [ sDescP1 ];
+		strcpy(m_data[x].discription,Description);
+		mode = 1;					
+		return x;
 	}
 	return -1;
 }
@@ -453,8 +441,7 @@ int x;
 
 	if( m_count == 1 )
 	{
-		if( m_data[0].label )
-			delete [] m_data[0].label;
+		delete [] m_data[0].label;
 
 		m_data[0].label = 0;
 		m_data[0].id = 0;
@@ -469,8 +456,7 @@ int x;
 	{
 		if( Id == m_data[x].id )
 		{
-			if( m_data[x].label )
-				delete [] m_data[x].label;
+			delete [] m_data[x].label;
 			m_data[x].label = 0;
 			if( x < m_count -1 )
 			{

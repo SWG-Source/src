@@ -6163,7 +6163,7 @@ void TangibleObject::forceHateTarget(NetworkId const & target)
 
 }
 
-bool TangibleObject::isUserOnAccessList(NetworkId const user) const
+bool TangibleObject::isUserOnAccessList(NetworkId const& user) const
 {
 	return (std::find(m_accessList.begin(), m_accessList.end(), user) != m_accessList.end());
 }
@@ -6173,7 +6173,7 @@ bool TangibleObject::isGuildOnAccessList(int guildId) const
 	return (std::find(m_guildAccessList.begin(), m_guildAccessList.end(), guildId) != m_guildAccessList.end());
 }
 
-void TangibleObject::addUserToAccessList(const NetworkId user)
+void TangibleObject::addUserToAccessList(const NetworkId &user)
 {
 	if(isAuthoritative())
 	{
@@ -6214,7 +6214,7 @@ void TangibleObject::addGuildToAccessList(int guildId)
 }
 
 
-void TangibleObject::removeUserFromAccessList(const NetworkId user)
+void TangibleObject::removeUserFromAccessList(const NetworkId &user)
 {
 	if(isAuthoritative())
 	{

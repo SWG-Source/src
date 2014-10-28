@@ -146,8 +146,7 @@ inline void ArrayList<T>::copy (const ArrayList<T>& rhs)
 	// only delete and re-new the list if we don't have enough elements to hold the contents of rhs
 	if (m_numberOfElements < rhs.m_numberOfElements)
 	{
-		if (m_data)
-			delete [] m_data;
+		delete [] m_data;
 
 		m_size = rhs.m_size;
 		m_data = new T [m_size];

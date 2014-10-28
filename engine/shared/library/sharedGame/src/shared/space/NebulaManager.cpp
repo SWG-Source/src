@@ -175,7 +175,7 @@ void NebulaManager::clear()
 		}
 	}
 
-	s_currentSceneId = "";
+	s_currentSceneId.clear();
 
 	if (s_clearFunction != NULL)
 		s_clearFunction();

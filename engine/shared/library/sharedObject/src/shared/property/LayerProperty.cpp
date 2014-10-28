@@ -42,8 +42,7 @@ LayerProperty::~LayerProperty()
 
 void LayerProperty::setLayer(TerrainGenerator::Layer* layer)
 {
-	if (m_layer != NULL)
-		delete m_layer;
+	delete m_layer;
 
 	m_layer = layer;
 }

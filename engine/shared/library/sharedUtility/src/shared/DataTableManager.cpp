@@ -45,7 +45,7 @@ void DataTableManager::remove()
 {
 	FATAL(!m_installed, ("DataTableManager::remove: not installed."));
 	m_cachedTable = 0;
-	m_cachedTableName = "";
+	m_cachedTableName.clear();
 
 	std::map<std::string, DataTable *>::iterator i;
 	for (i=m_tables.begin(); i != m_tables.end(); ++i)
@@ -103,7 +103,7 @@ void DataTableManager::close(const std::string& table)
 	if (m_cachedTable == i->second)
 	{
 		DEBUG_WARNING(m_cachedTableName != table, ("Cached name got out of sync"));
-		m_cachedTableName = "";
+		m_cachedTableName.clear();
 		m_cachedTable = 0;
 	}
 

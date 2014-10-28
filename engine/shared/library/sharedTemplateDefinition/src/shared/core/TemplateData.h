@@ -91,7 +91,7 @@ public:
 public:
 
 	explicit TemplateData(int version, const TemplateDefinitionFile &parent);
-	explicit TemplateData(const TemplateData *parent, const std::string name);
+	explicit TemplateData(const TemplateData *parent, const std::string &name);
 	~TemplateData();
 
 	const std::string getName(void) const;

@@ -44,8 +44,7 @@ MonitorObject::MonitorObject(UdpConnection *con,CMonitorData *_gamedata, char *p
 
 MonitorObject::~MonitorObject()
 {
-	if( mMark )
-		delete [] mMark;
+	delete [] mMark;
 
 	if( mConnection )
 	{
@@ -277,8 +276,7 @@ int x;
 	while( allowedAddressList[x])
 		free(allowedAddressList[x++]);
 
-	if( passString )
-		free( passString );
+	free( passString );
 
 	for (int i =0; i < mObjectCount; i++ )
 		delete mObject[i];
@@ -350,8 +348,7 @@ char buffer[1024];
 		return false;
 	}
 	
-	if( passString )
-		free(passString);
+	free(passString);
 
 
 	for(x=0;x<AUTHADDRESS_MAX;x++)
@@ -436,16 +433,13 @@ CMonitorAPI::CMonitorAPI( char *configFile, unsigned short Port, bool _bprint , 
 	
 CMonitorAPI::~CMonitorAPI()
 {
-	if( mAddress )
-		free(mAddress);
+	free(mAddress);
 
-	if( mObjectManager )
-		delete mObjectManager;
+	delete mObjectManager;
 
 	mManager->Release();
 
-	if( mMonitorData )
-		delete mMonitorData;
+	delete mMonitorData;
 
 }
 
@@ -527,8 +521,7 @@ monMessage(command, sequence, size)
 //----------------------------------------------------------------
 stringMessage::~stringMessage()
 {
-	if(data)
-		delete [] data;
+	delete [] data;
 	data = 0;
 }
 

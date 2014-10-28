@@ -66,7 +66,7 @@ bool HashModule::Verify(const byte *digestIn)
 BufferedTransformation::Err::Err(ErrorType errorType, const std::string &s)
 	: Exception(s), m_errorType(errorType)
 {
-	if (GetWhat() == "")
+	if (GetWhat().empty())
 	{
 		switch (errorType)
 		{

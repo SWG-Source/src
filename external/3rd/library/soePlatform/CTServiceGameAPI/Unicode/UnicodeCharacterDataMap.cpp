@@ -69,8 +69,7 @@ void CharDataMap::initSingleton ()
 
 void  CharDataMap::explicitDestroy ()
 {
-	if (ms_singleton)
-		delete ms_singleton;
+	delete ms_singleton;
 
 	ms_singleton = 0;
 }
@@ -248,8 +247,7 @@ CharDataMap::ErrorCode CharDataMap::generateMapFromBuffer (const Blocks::Mapping
 	//-- pack all the char data into a contiguous block of memory
 	//--
 	
-	if (m_contiguousData)
-		delete[] m_contiguousData;
+	delete[] m_contiguousData;
 	
 	m_contiguousData = new CharData [validChars];
 

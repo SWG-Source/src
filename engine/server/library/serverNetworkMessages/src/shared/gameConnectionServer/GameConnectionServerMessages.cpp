@@ -85,7 +85,7 @@ TransferControlMessage::~TransferControlMessage()
 
 //-----------------------------------------------------------------------
 ControlAssumed::ControlAssumed(NetworkId oid, const std::string & newSceneName, const bool skipLoadScreen,
-							   const Vector startPos, const float startYaw, const std::string & templateName,
+							   const Vector &startPos, const float startYaw, const std::string & templateName,
 							   const int64 t) : 
 		GameNetworkMessage("ControlAssumed"),
 		m_oid(oid),

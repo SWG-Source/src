@@ -202,8 +202,7 @@ void LocationManager::setPlanetName (char const * const planetName)
 	char fileName [256];
 	sprintf (fileName, "terrain/%s.trn", planetName);
 
-	if (ms_bakedTerrain)
-		delete ms_bakedTerrain;
+	delete ms_bakedTerrain;
 
 	ms_bakedTerrain = BakedTerrainReader::create (fileName);
 }

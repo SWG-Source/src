@@ -117,7 +117,7 @@ class ControlAssumed : public GameNetworkMessage
 {
   public:
     explicit ControlAssumed(NetworkId oid, const std::string & newSceneName, const bool skipLoadScreen,
-                            const Vector startPos, const float startYaw, const std::string & templateName,
+                            const Vector &startPos, const float startYaw, const std::string & templateName,
                             const int64 timeSeconds);
     ControlAssumed(Archive::ReadIterator & source);
     virtual ~ControlAssumed();

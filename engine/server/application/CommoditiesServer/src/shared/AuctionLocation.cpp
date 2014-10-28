@@ -116,7 +116,7 @@ m_auctionsIndexedByTemplate(),
 m_auctionsResourceContainer(),
 m_vendorOffers()
 {
-	assert(location != "");
+	assert(location.empty());
 	assert(GetStatus() >= AuctionMarket::ACTIVE && GetStatus() <= AuctionMarket::REMOVED);
 
 	AuctionMarket::getPlanetAndRegionFromLocationString(m_location, m_locationPlanet, m_locationRegion);

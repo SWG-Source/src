@@ -1541,8 +1541,7 @@ CommandLine::MatchCode CommandLine::parseOptions(const OptionSpec *optionTree, i
 	MatchCode  mc;
 
 	// create the option information table
-	if (optionTable)
-		delete optionTable;
+	delete optionTable;
 	optionTable = new OptionTable;
 
 	// build the option tree corresponding to the option spec,

@@ -41,7 +41,7 @@ public:
 	PackedBuff getPackedBuffValue();
 	static PackedBuff makePackedBuff(uint64 oldSchoolPackedBuff);
 
-	void set(uint32 buffNameCrc, PackedBuff buffValues);
+	void set(uint32 buffNameCrc, const PackedBuff &buffValues);
 
 	std::string m_name;
 	uint32 m_nameCrc;

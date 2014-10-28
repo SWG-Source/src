@@ -821,8 +821,7 @@ void getStringArray(const LocalObjectArrayRefParam & array, std::vector<const Un
 	std::vector<const Unicode::String *>::iterator stringsIter = strings.begin();
 	for (jsize i = 0; i < count; ++i, ++stringsIter)
 	{
-		if (*stringsIter != 0)
-			delete *stringsIter;
+		delete *stringsIter;
 
 		stringElement = static_cast<jstring>(env->GetObjectArrayElement(arrayRef, i));
 		if (stringElement != 0)

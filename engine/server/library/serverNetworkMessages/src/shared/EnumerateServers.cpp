@@ -9,7 +9,7 @@
 
 //-----------------------------------------------------------------------
 
-EnumerateServers::EnumerateServers(const bool a, const std::string addr, const unsigned short p, const int t) :
+EnumerateServers::EnumerateServers(const bool a, const std::string &addr, const unsigned short p, const int t) :
 GameNetworkMessage("EnumerateServers"),
 add(a),
 address(addr),

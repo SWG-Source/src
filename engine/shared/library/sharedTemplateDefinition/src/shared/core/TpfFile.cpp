@@ -237,7 +237,7 @@ int TpfFile::loadTemplate(const Filename & filename)
 		}
 		else
 		{
-			m_iffPath = "";
+			m_iffPath.clear();
 			m_fp.printError("can't find \"dsrc\" in template path");
 			result = -1;
 		}
@@ -1769,7 +1769,7 @@ const char * TpfFile::parseDynamicVariableParameter(DynamicVariableParam & param
 			m_fp.printError("objvar parser given non-empty param");
 			return CHAR_ERROR;
 		}
-		data.m_name = "";
+		data.m_name.clear();
 		data.m_type = DynamicVariableParamData::LIST;
 		data.m_data.lparam = new std::vector<DynamicVariableParamData *>;
 

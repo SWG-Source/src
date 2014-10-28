@@ -301,10 +301,7 @@ int TcpConnection::finishConnect()
 
 TcpConnection::~TcpConnection()
 {
-    if (m_recvBuff != NULL)
-    {
-        delete [] m_recvBuff;
-    }
+    delete [] m_recvBuff;
 
     while(m_head != NULL)
     {
@@ -547,8 +544,7 @@ int TcpConnection::processIncoming()
                     }
                     else if (m_params.maxRecvMessageSize == 0)
                     {
-                        if (m_recvBuff!=NULL)
-                            delete [] m_recvBuff;
+                        delete [] m_recvBuff;
                         m_recvBuff = new char[m_bytesNeeded-4];
                     }
                     else if (m_params.maxRecvMessageSize != 0 && (m_bytesNeeded-4) > m_params.maxRecvMessageSize)

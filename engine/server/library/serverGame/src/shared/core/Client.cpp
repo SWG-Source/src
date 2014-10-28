@@ -472,8 +472,7 @@ Client::~Client()
 	for (std::vector<Watcher<ServerSynchronizedUi> >::iterator i = m_syncUIs.begin(); i != m_syncUIs.end(); ++i)
 	{
 		ServerSynchronizedUi* syncUI = i->getPointer();
-		if (syncUI)
-			delete syncUI;
+		delete syncUI;
 	}
 
 	ObjectTracker::removePlayer();

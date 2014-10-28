@@ -980,7 +980,6 @@ ServerObject::~ServerObject()
 
 	{
 	PROFILER_AUTO_BLOCK_DEFINE("ServerObject::~ServerObject delete script object");
-	if (m_scriptObject != NULL)
 		delete m_scriptObject;
 	}
 	m_scriptObject = NULL;

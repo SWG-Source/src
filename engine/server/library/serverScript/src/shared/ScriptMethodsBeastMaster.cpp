@@ -221,7 +221,7 @@ jboolean JNICALL ScriptMethodsBeastMasterNamespace::setBeastMasterPetCommands(JN
 		if (item != JavaString::cms_nullPtr)
 			JavaLibrary::convert(*item, commands[i]);
 		else
-			commands[i] = "";
+			commands[i].clear();
 	}
 	po->setPetCommandList(commands);
 	return JNI_TRUE;
@@ -261,7 +261,7 @@ jboolean JNICALL ScriptMethodsBeastMasterNamespace::setBeastMasterToggledPetComm
 		if (item != JavaString::cms_nullPtr)
 			JavaLibrary::convert(*item, commands[i]);
 		else
-			commands[i] = "";
+			commands[i]clear();
 	}
 	po->setPetToggledCommands(commands);
 	return JNI_TRUE;

@@ -72,8 +72,7 @@ bool CConfig::LoadFile(char * file)
 void CConfig::UnloadFile(void)
 //-----------------------------------
 {
-	if (pConfig)
-		delete[] pConfig;
+	delete[] pConfig;
 	pConfig = NULL;
 }
 

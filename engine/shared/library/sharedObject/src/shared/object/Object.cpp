@@ -880,10 +880,8 @@ Object::~Object(void)
 
 	deletePropertyList(m_propertyList);
 
-	if(m_defaultAppearance)
-		delete m_defaultAppearance;
-	if(m_alternateAppearance)
-		delete m_alternateAppearance;
+	delete m_defaultAppearance;
+	delete m_alternateAppearance;
 
 	m_appearance = 0;
 	m_defaultAppearance = 0;

@@ -24,7 +24,7 @@ public: //ctor/dtor
 	                    const Archive::AutoByteStream & sourcePackage, 
 	                    const unsigned char packageId);
 
-	BaselinesMessage   (const NetworkId id, 
+	BaselinesMessage   (const NetworkId &id, 
 		                const Tag objectType, 
 	                    const unsigned char newPackageId, 
 						const Archive::ByteStream & newPackage);

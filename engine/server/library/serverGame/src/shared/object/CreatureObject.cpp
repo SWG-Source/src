@@ -11719,10 +11719,8 @@ void CreatureObject::addPackedWearable(std::string const &appearanceData, int ar
 
 			// we own the weaponSharedBaselines and weaponSharedBaselines pointers, so if
 			// we are not going to add them to the wearables list, we must delete them
-			if (weaponSharedBaselines)
-				delete weaponSharedBaselines;
-			if (weaponSharedNpBaselines)
-				delete weaponSharedNpBaselines;
+			delete weaponSharedBaselines;
+			delete weaponSharedNpBaselines;
 
 			return;
 		}

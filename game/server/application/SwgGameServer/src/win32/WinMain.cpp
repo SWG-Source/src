@@ -161,7 +161,7 @@ int main(int argc, char ** argv)
 	SharedRemoteDebugServer::install();
 
 	//-- setup game server
-	cmdLine = "";
+	cmdLine.clear();
 	// now, the real command line
 	for(i = 0; i < argc; ++i)
 	{
@@ -350,8 +350,7 @@ static void lintType(char const *filePath, DataLint::AssetType const assetType, 
 							if (strstr(filePath, "/base/") == NULL)
 							{
 								Object* const object = objectTemplate->createObject ();
-								if (object != NULL)
-									delete object;
+								delete object;
 							}
 
 							objectTemplate->releaseReference();

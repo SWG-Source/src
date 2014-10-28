@@ -167,9 +167,9 @@ void GameServerConnection::onReceive(const Archive::ByteStream & message)
 //printf("GameServerConnection -- ChatInviteAvatarToRoom\n");
 		ChatInviteAvatarToRoom chat(ri);
 		ChatAvatarId characterName = chat.getAvatarId();
-		if(characterName.gameCode == "")
+		if(characterName.gameCode.empty())
 			characterName.gameCode = "SWG";
-		if(characterName.cluster == "")
+		if(characterName.cluster.empty())
 			characterName.cluster = ConfigChatServer::getClusterName();
 		ChatServer::invite(NetworkId::cms_invalid, characterName, chat.getRoomName());
 	}
@@ -186,9 +186,9 @@ void GameServerConnection::onReceive(const Archive::ByteStream & message)
 //printf("GameServerConnection -- ChatUninviteAvatarFromRoom\n");
 		ChatUninviteFromRoom chat(ri);
 		ChatAvatarId characterName = chat.getAvatar();
-		if(characterName.gameCode == "")
+		if(characterName.gameCode.empty())
 			characterName.gameCode = "SWG";
-		if(characterName.cluster == "")
+		if(characterName.cluster.empty())
 			characterName.cluster = ConfigChatServer::getClusterName();
 		ChatServer::uninvite(ChatServer::getNetworkIdByAvatarId(characterName), chat.getSequence(), characterName, chat.getRoomName());
 	}

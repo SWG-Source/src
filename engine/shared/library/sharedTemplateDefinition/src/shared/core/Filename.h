@@ -74,11 +74,11 @@ inline Filename::operator const char *(void) const
 
 inline void Filename::clear(void)
 {
-	m_path = "";
-	m_name = "";
-	m_extension = "";
-	m_fullFilename = "";
-	m_drive = "";
+	m_path.clear();
+	m_name.clear();
+	m_extension.clear();
+	m_fullFilename.clear();
+	m_drive.clear();
 }	// Filename::clear
 
 inline const std::string & Filename::getPath(void) const

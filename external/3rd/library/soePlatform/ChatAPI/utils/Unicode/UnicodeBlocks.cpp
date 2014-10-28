@@ -139,8 +139,7 @@ void Mapping::initSingleton ()
 
 void  Mapping::explicitDestroy ()
 {
-	if (ms_singleton)
-		delete ms_singleton;
+	delete ms_singleton;
 
 	ms_singleton = 0;
 }

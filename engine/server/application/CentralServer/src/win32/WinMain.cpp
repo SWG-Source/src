@@ -60,7 +60,7 @@ int main(int argc, char ** argv)
 
 	ConfigCentralServer::install();
 
-	cmdLine = "";
+	cmdLine.clear();
 	// now, the real command line
 	for(i = 0; i < argc; ++i)
 	{

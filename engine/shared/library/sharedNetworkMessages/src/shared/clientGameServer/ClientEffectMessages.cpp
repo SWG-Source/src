@@ -151,7 +151,7 @@ const std::string & PlayClientEffectObjectTransformMessage::getLabel() const
 
 // ======================================================================
 
-PlayClientEffectLocMessage::PlayClientEffectLocMessage(const std::string& effectName, const Vector& location, const std::string planet, const NetworkId & cell, float terrainDelta, const std::string& label)
+PlayClientEffectLocMessage::PlayClientEffectLocMessage(const std::string& effectName, const Vector& location, const std::string &planet, const NetworkId & cell, float terrainDelta, const std::string& label)
 : GameNetworkMessage(MESSAGE_TYPE),
   m_effectName(effectName),
   m_planet(planet),
@@ -342,7 +342,7 @@ Transform const & PlayClientEventObjectTransformMessage::getTransform() const
 //----------------------------------------------------------------------
 // ======================================================================
 
-PlayClientEventLocMessage::PlayClientEventLocMessage(const std::string& eventSource, const std::string& eventDest, const Vector& location, const std::string planet, const NetworkId & cell, float terrainDelta)
+PlayClientEventLocMessage::PlayClientEventLocMessage(const std::string& eventSource, const std::string& eventDest, const Vector& location, const std::string &planet, const NetworkId & cell, float terrainDelta)
 : GameNetworkMessage(MESSAGE_TYPE),
   m_eventSourceName(eventSource),
   m_eventDestName(eventDest),

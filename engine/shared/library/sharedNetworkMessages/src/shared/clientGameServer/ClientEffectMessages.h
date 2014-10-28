@@ -96,7 +96,7 @@ class PlayClientEffectLocMessage : public GameNetworkMessage
 public:
 	PlayClientEffectLocMessage(const std::string& effectName, 
 	                           const Vector& location, 
-	                           const std::string planet,
+	                           const std::string &planet,
 	                           const NetworkId & cell,
 	                           float terrainDelta,
 							   const std::string& label);
@@ -191,7 +191,7 @@ public:
 	PlayClientEventLocMessage(const std::string& eventSource, 
 	                          const std::string& eventDest, 
 	                          const Vector& position, 
-	                          const std::string planet,
+	                          const std::string &planet,
 	                          const NetworkId & cell,
 	                          float terrainDelta);
 	explicit PlayClientEventLocMessage(Archive::ReadIterator& source);

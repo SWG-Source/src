@@ -62,8 +62,7 @@ InputFileHandler::InputFileHandler(const char *infilename)
 //
 InputFileHandler::~InputFileHandler(void)
 {
-	if(file)
-		delete file;
+	delete file;
 }
 
 

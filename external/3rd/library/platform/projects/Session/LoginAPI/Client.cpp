@@ -101,7 +101,7 @@ namespace LoginAPI
 		}
 		else
 		{
-			value = "";
+			value.clear();
 		}
 		return value;
 	}

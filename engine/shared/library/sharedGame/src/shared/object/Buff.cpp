@@ -113,9 +113,9 @@ Buff::PackedBuff Buff::getPackedBuffValue()
 	return result;
 }
 
-void Buff::set(uint32 buffNameCrc, Buff::PackedBuff buffValues)
+void Buff::set(uint32 buffNameCrc, const Buff::PackedBuff &buffValues)
 {
-	m_name = "";
+	m_name.clear();
 	m_nameCrc = buffNameCrc;
 	m_timestamp = buffValues.endtime;
 	m_value = buffValues.value;

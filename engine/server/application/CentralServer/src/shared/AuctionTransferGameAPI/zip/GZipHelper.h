@@ -78,7 +78,7 @@ class CA2GZIPT
   }
   ~CA2GZIPT()
   {
-    if(pgzip!=m_buffer) TRYFREE(pgzip);
+    free(pgzip);
   }
   void Init(char *lpsz,int len=-1)
   {
@@ -191,7 +191,7 @@ class CA2GZIPT
     err = deflateEnd(&(m_zstream));
     }
     if (m_z_err < 0) err = m_z_err;
-    TRYFREE(m_outbuf);
+    free(m_outbuf);
     return err;
  }
 
@@ -219,7 +219,7 @@ class CGZIP2AT
   }
   ~CGZIP2AT()
   {
-    if(psz!=m_buffer) TRYFREE(psz);  
+    if(psz!=m_buffer) free(psz);  
   }
   void Init()
   {
@@ -463,7 +463,7 @@ class CGZIP2AT
 	    err = inflateEnd(&(m_zstream));
 	}
     if (m_z_err < 0) err = m_z_err;
-    TRYFREE(m_inbuf);
+    free(m_inbuf);
     return err;
 }
 

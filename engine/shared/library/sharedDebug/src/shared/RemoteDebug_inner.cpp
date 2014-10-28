@@ -106,8 +106,7 @@ RemoteDebug::Variable::Variable(const std::string& name, void *memLoc, VARIABLE_
 RemoteDebug::Variable::~Variable()
 {
 	if(m_type == CSTRING)
-		if (m_value.stringValue != NULL)
-			delete m_value.stringValue;
+		delete m_value.stringValue;
 	
 	if(m_name)
 	{
@@ -157,8 +156,7 @@ void RemoteDebug::Variable::setValue(void *memLoc)
 				break;
 
 			case CSTRING:
-				if (m_value.stringValue)
-					delete[] m_value.stringValue;
+				delete[] m_value.stringValue;
 				m_value.stringValue = new char[strlen(static_cast<char *>(memLoc))];
 				strcpy(m_value.stringValue, const_cast<const char *>(static_cast<char *>(memLoc)));
 				break;

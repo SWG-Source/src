@@ -200,8 +200,7 @@ TerrainQuadTree::Node::Node (const int x, const int z, const int size, const flo
 
 TerrainQuadTree::Node::~Node ()
 {
-	if (m_chunk)
-		delete m_chunk;
+	delete m_chunk;
 
 	m_chunk = 0;
 }

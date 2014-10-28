@@ -34,8 +34,8 @@ MetricsGatheringConnection::MetricsGatheringConnection(UdpConnectionMT * u, TcpC
 		m_processLabel(),
 		m_metricsChannels()
 {
-	m_label = "";
-	m_processLabel = "";
+	m_label.clear();
+	m_processLabel.clear();
 }
 
 //-----------------------------------------------------------------------
@@ -116,8 +116,7 @@ void MetricsGatheringConnection::initialize(const std::string & process, const s
 {
 	const std::string dot = ".";
 	m_label = process;
-	if (planet != "")
-		m_label = m_label + dot + planet;
+	m_label = m_label + dot + planet;
 
 	m_processLabel = m_label;
 	if (numberedProcess)

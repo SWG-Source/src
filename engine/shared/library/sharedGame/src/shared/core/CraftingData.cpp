@@ -39,8 +39,8 @@ draftSlotIndex(-1)
 
 Crafting::IngredientSlot::IngredientSlot(enum IngredientType _ingredientType,
 			   const StringId & _name,
-			   const std::vector<NetworkId> slotIngredients,
-			   const std::vector<int> slotIngredientsCount,
+			   const std::vector<NetworkId> &slotIngredients,
+			   const std::vector<int> &slotIngredientsCount,
 			   float _complexity,
 			   int _draftSlotOption,
 			   int _draftSlotIndex) :

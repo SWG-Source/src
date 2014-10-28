@@ -217,7 +217,7 @@ LocalizationManager & LocalizationManager::getManager ()
 /**
 * Get the locale specified by locale ("en" == English, "ja" == Japanese).  Undefined results if called without first calling install ()
 */ 
-LocalizationManager & LocalizationManager::getManager (Unicode::NarrowString locale)
+LocalizationManager & LocalizationManager::getManager (const Unicode::NarrowString &locale)
 {
 	LocalizationManagerHashMap::iterator f = LocalizationManager::ms_singletonHashMap->find(locale);
 	if(f != LocalizationManager::ms_singletonHashMap->end())

@@ -177,7 +177,7 @@ Object const *getContainingPobForObjectInWorld(Object const &object)
 
 
 
-void compare_results_int( std::set<TriggerVolume *> &results, std::set<TriggerVolume *> results2, ServerObject* object )
+void compare_results_int( std::set<TriggerVolume *> &results, const std::set<TriggerVolume *> &results2, ServerObject* object )
 {
 	if ( results.empty() && results2.empty() )    // nothing to say........
 		return;
@@ -224,7 +224,7 @@ void compare_results_int( std::set<TriggerVolume *> &results, std::set<TriggerVo
 
 
 
-void compare_results( Capsule const &test, std::vector<TriggerVolume *> &results_in, std::set<TriggerVolume *> results2, ServerObject* object )
+void compare_results( Capsule const &test, std::vector<TriggerVolume *> &results_in, const std::set<TriggerVolume *> &results2, ServerObject* object )
 {
 	size_t i;
 	std::set<TriggerVolume*> results;
@@ -244,7 +244,7 @@ void compare_results( Capsule const &test, std::vector<TriggerVolume *> &results
 }
 
 
-void compare_results( Vector const &center_w, float radius, std::vector<TriggerVolume *> &results_in, std::set<TriggerVolume *> results2, ServerObject* object )
+void compare_results( Vector const &center_w, float radius, std::vector<TriggerVolume *> &results_in, const std::set<TriggerVolume *> &results2, ServerObject* object )
 {
 	size_t i;
 	std::set<TriggerVolume*> results;

@@ -21,7 +21,7 @@ public:
 		PLANET_SERVER
 	};
 
-	EnumerateServers(const bool add, const std::string address, const unsigned short port, const int serverType);
+	EnumerateServers(const bool add, const std::string &address, const unsigned short port, const int serverType);
 	explicit EnumerateServers(Archive::ReadIterator & source);
 	~EnumerateServers();
 

@@ -467,8 +467,7 @@ void Scripting::InitScriptFuncHashMap(void)
  */
 void Scripting::RemoveScriptFuncHashMap(void)
 {
-    if (Scripting::ScriptFuncHashMap)
-        delete Scripting::ScriptFuncHashMap;
+    delete Scripting::ScriptFuncHashMap;
     Scripting::ScriptFuncHashMap = NULL;
 }
 

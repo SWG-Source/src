@@ -1136,8 +1136,7 @@ void CommoditiesMarket::remove()
 
 		for(std::map<NetworkId, SalesTaxInfo*>::iterator i = s_pendingSalesTax.begin(); i != s_pendingSalesTax.end(); ++i)
 		{
-			if (i->second)
-				delete i->second;
+			delete i->second;
 		}
 		s_pendingSalesTax.clear();
 	}

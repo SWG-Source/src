@@ -339,7 +339,7 @@ void FileManifest::setSceneId(const char *newScene)
 	if (s_currentSceneId.compare(newScene) == 0)
 		return;
 
-	if (strlen(newScene) == 0)
+	if (newScene[0] == '\0')
 		s_currentSceneId = "unknown";
 	else
 		s_currentSceneId = newScene;

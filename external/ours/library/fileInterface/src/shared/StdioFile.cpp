@@ -137,7 +137,7 @@ AbstractFile* StdioFileFactory::createFile(const char *fileName, const char *ope
 {
 	if(!fileName || !openType)
 		return NULL;
-	else if(strlen(fileName) == 0 || strlen(openType) == 0)
+	else if (fileName[0] == '\0' || openType[0] == '\0')
 		return NULL;
 	else
 		return new StdioFile(fileName, openType);

@@ -589,7 +589,7 @@ void DataTableWriter::_loadFromSpreadsheetTab(const char * filename)
 
 bool DataTableWriter::save(const char * outputFileName, bool optional) const
 {
-	if (!outputFileName || strlen(outputFileName) == 0)
+	if (!outputFileName || outputFileName[0] != '\0')
 	{
 		DEBUG_FATAL(true, ("OutputFileName is NULL or empty."));
 		return false;
@@ -1038,7 +1038,7 @@ bool DataTableWriter::saveTable( const char* tableName, const char* fileName, bo
 
 	if (i != m_tables.end())
 	{
-		if (!fileName || strlen(fileName) == 0)
+		if (!fileName || fileName[0] != '\0')
 		{
 			std::string outputFile;
 			getTableOutputFileName((*i)->getName().c_str(), outputFile);

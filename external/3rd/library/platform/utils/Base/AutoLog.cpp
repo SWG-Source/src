@@ -133,10 +133,7 @@ void CAutoLog::Close(void)
 	}
 	pFile = (FILE *)-1;
 
-    if (pFilename)
-    {
-        free(pFilename);
-    }
+    free(pFilename);
     pFilename = NULL;
 }
 

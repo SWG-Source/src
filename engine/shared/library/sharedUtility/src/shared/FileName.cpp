@@ -240,7 +240,7 @@ void FileName::stripSpecificPathAndExt (Path path, char* nameBuffer, int nameBuf
 
         //correct path, now check extension.
         //first make sure this path has an extension
-    if (strlen(pathTable[path].ext) > 0)
+    if (pathTable[path].ext[0] != '\0')
     {
         end = strrchr(nameBuffer, '.');
             //make sure to compare strings starting just after the dot

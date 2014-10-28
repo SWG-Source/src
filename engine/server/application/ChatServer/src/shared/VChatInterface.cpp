@@ -690,7 +690,7 @@ void VChatInterface::OnGetChannelInfo(unsigned track, unsigned result, const std
 		{
 			VChatSystem::Channel data;
 			data.m_channelName = channelName;
-			data.m_channelPassword = ""; // none of the channels have passwords at this point so this is a safe assumption
+			data.m_channelPassword.clear(); // none of the channels have passwords at this point so this is a safe assumption
 			data.m_channelURI = channelURI;
 			data.m_channelID = channelID;
 			setChannelData(data);

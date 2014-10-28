@@ -86,7 +86,7 @@ void TemplateDefinitionFile::setWriteForCompiler(bool flag)
 	}
 	else if (!flag && m_baseName == COMPILER_ROOT_TEMPLATE_NAME)
 	{
-		m_baseName = "";
+		m_baseName.clear();
 	}
 
 	std::map<int, TemplateData *>::iterator iter;

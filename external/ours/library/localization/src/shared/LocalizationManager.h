@@ -52,7 +52,7 @@ public:
 
 	                              LocalizationManager     (AbstractFileFactory * fileFactory, const Unicode::NarrowString & localeName, DebugBadStringsFunc debugBadStringsFunc = 0, bool displayBadStringIds = true);
 	static LocalizationManager &  getManager              ();
-	static LocalizationManager &  getManager              (Unicode::NarrowString locale);
+	static LocalizationManager &  getManager              (const Unicode::NarrowString &locale);
 
 	                             ~LocalizationManager     ();
 

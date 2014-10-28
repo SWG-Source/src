@@ -2126,7 +2126,7 @@ void ChatAPICore::responseCallback(short type, ByteStream::ReadIterator &iter)
 			}
 
 			ChatAvatarCore *removedAvatar = destRoomCore->removeAvatar(destAvatar->getAvatarID());
-			if (removedAvatar) delete removedAvatar;
+			delete removedAvatar;
 
 			m_api->OnReceiveAddBanRoom(srcAvatar, destAvatar, destRoom);
 

@@ -253,8 +253,7 @@ void AffectorColorRampHeight::setImage (const std::string& newImageName)
 {
 	*imageName = newImageName;
 
-	if (image)
-		delete image;
+	delete image;
 
 	image = ImageFormatList::loadImage (imageName->c_str ());
 	if (image)
@@ -452,8 +451,7 @@ void AffectorColorRampFractal::setImage (const std::string& newImageName)
 {
 	*imageName = newImageName;
 
-	if (image)
-		delete image;
+	delete image;
 
 	image = ImageFormatList::loadImage (imageName->c_str ());
 	if (image)

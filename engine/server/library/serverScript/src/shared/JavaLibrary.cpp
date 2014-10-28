@@ -1265,7 +1265,7 @@ void JavaLibrary::initializeJavaThread()
 			const char * jdwpString = "-Xrunjdwp:transport=dt_socket,server=y,suspend=n";
 			jdwpBuffer = new char[strlen(jdwpString) + 32];
 			strcpy(jdwpBuffer, jdwpString);
-			if (strlen(ConfigServerGame::getJavaDebugPort()) > 0)
+			if (ConfigServerGame::getJavaDebugPort()[0] == '\0')
 			{
 				strcat(jdwpBuffer, ",address=");
 				strcat(jdwpBuffer, ConfigServerGame::getJavaDebugPort());
@@ -5945,7 +5945,7 @@ const bool convert(const jobject & source, Vector & targetLoc, std::string & tar
 		JavaStringPtr sceneId = getStringField(LocalRefParam(source), JavaLibrary::ms_fidLocationArea);
 		if (sceneId == JavaString::cms_nullPtr)
 		{
-			targetSceneId = "";
+			targetSceneId.clear();
 			return false;
 		}
 		JavaLibrary::convert(*sceneId, targetSceneId);
@@ -5989,7 +5989,7 @@ const bool convertWorld(const jobject & source, Vector & targetLoc, std::string 
 		JavaStringPtr sceneId = getStringField(LocalRefParam(source), JavaLibrary::ms_fidLocationArea);
 		if (sceneId == JavaString::cms_nullPtr)
 		{
-			targetSceneId = "";
+			targetSceneId.clear();
 			return false;
 		}
 		JavaLibrary::convert(*sceneId, targetSceneId);

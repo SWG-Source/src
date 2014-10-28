@@ -95,7 +95,7 @@ CentralGameServerSetProcessId::~CentralGameServerSetProcessId()
 
 //-----------------------------------------------------------------------
 
-CentralGameServerProxyObject::CentralGameServerProxyObject(const NetworkId newObjectId, 
+CentralGameServerProxyObject::CentralGameServerProxyObject(const NetworkId &newObjectId, 
 		                                                   const char * const newTemplateName,
 	                                                       const uint32 newGameServerProcessId,
 														   const std::string & newGameServerAddress,
@@ -386,7 +386,7 @@ DatabaseSaveStart::~DatabaseSaveStart()
 
 //----------------------------------------------------------------------
 
-DatabaseCreateCharacterSuccess::DatabaseCreateCharacterSuccess(const NetworkId objectId, StationId stationId, const Unicode::String &characterName, int templateId, bool jedi) :
+DatabaseCreateCharacterSuccess::DatabaseCreateCharacterSuccess(const NetworkId &objectId, StationId stationId, const Unicode::String &characterName, int templateId, bool jedi) :
 		GameNetworkMessage("DatabaseCreateCharacterSuccess"),
 		m_objectId(objectId),
 		m_stationId(stationId),
@@ -495,7 +495,7 @@ ConnectionServerAddress ::~ConnectionServerAddress ()
 //-----------------------------------------------------------------------
 
 //-----------------------------------------------------------------------
-ShutdownCluster::ShutdownCluster(const uint32 timeToShutdown, const uint32 maxTime, const Unicode::String systemMessage):
+ShutdownCluster::ShutdownCluster(const uint32 timeToShutdown, const uint32 maxTime, const Unicode::String &systemMessage):
 GameNetworkMessage("ShutdownCluster"),
 m_timeToShutdown(timeToShutdown),
 m_maxTime(maxTime),

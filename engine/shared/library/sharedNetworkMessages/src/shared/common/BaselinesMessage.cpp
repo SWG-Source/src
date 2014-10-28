@@ -85,7 +85,7 @@ package()
 
 //-----------------------------------------------------------------------
 
-BaselinesMessage::BaselinesMessage(const NetworkId id, 
+BaselinesMessage::BaselinesMessage(const NetworkId &id, 
 	                               const Tag objectType, 
 	                               const unsigned char newPackageId, 
 	                               const Archive::ByteStream & newPackage) :

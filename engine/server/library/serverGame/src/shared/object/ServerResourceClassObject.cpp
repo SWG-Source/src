@@ -374,11 +374,11 @@ void ServerResourceClassObject::checkAttributeLimits()
 					camm.minValue = iClassAttribs->second.first;
 					camm.minClassName = safe_cast<ServerResourceClassObject*>((*i))->getResourceClassName();
 					camm.nextMinValue = std::numeric_limits<int>::max();
-					camm.nextMinClassName = "";
+					camm.nextMinClassName.clear();
 					camm.maxValue = iClassAttribs->second.second;
 					camm.maxClassName = camm.minClassName;
 					camm.nextMaxValue = std::numeric_limits<int>::min();
-					camm.nextMaxClassName = "";
+					camm.nextMaxClassName.clear();
 
 					childrenClassAttributeRanges[iClassAttribs->first] = camm;
 				}

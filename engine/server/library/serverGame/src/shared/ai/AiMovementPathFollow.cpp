@@ -258,7 +258,7 @@ void AiMovementPathFollow::popNodeBack ( void )
 
 	AiPath::iterator it = m_path->end();
 
-	it--;
+	--it;
 
 	m_path->erase(it);
 }
@@ -293,7 +293,7 @@ void AiMovementPathFollow::swapPath ( AiPath * newPath )
 	AiPath::iterator it;
 
 #ifdef _DEBUG
-	for(it = m_path->begin(); it != m_path->end(); it++)
+	for(it = m_path->begin(); it != m_path->end(); ++it)
 	{
 		sendEraseWaypoint(*it);
 	}
@@ -303,7 +303,7 @@ void AiMovementPathFollow::swapPath ( AiPath * newPath )
 
 	m_path->swap(*newPath);
 
-	for(it = m_path->begin(); it != m_path->end(); it++)
+	for(it = m_path->begin(); it != m_path->end(); ++it)
 	{
 		(*it).detach();
 
@@ -323,7 +323,7 @@ void AiMovementPathFollow::clearPath ( void )
 	{
 		AiPath::iterator it;
 
-		for(it = m_path->begin(); it != m_path->end(); it++)
+		for(it = m_path->begin(); it != m_path->end(); ++it)
 		{
 			sendEraseWaypoint(*it);
 		}

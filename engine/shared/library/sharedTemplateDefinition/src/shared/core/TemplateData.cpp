@@ -251,7 +251,7 @@ TemplateData::TemplateData(int version, const TemplateDefinitionFile &parent) :
  * @param parent	the template data this structure belongs to
  * @param name		the structure's name
  */
-TemplateData::TemplateData(const TemplateData *parent, const std::string name) :
+TemplateData::TemplateData(const TemplateData *parent, const std::string &name) :
 	m_fileParent(NULL),
 	m_templateParent(parent),
 	m_hasTemplateParam(false),

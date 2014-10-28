@@ -27,8 +27,7 @@ OutputFileHandler::OutputFileHandler(const char *filename)
 
 void OutputFileHandler::setCurrentFilename(const char *filename)
 {
-	if (outFilename)
-		delete [] outFilename;
+	delete [] outFilename;
 
 	outFilename = new char[strlen(filename)+1];
 	strcpy(outFilename, filename);

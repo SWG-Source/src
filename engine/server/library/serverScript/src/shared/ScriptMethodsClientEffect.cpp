@@ -109,7 +109,7 @@ jboolean JNICALL ScriptMethodsClientEffectNamespace::playClientEventObj(JNIEnv *
 	//get the event
 	std::string event;
 	JavaLibrary::convert(localEventType, event);
-	if (event == "")
+	if (event.empty())
 		return JNI_FALSE;
 
 	//get the hardpoint
@@ -167,7 +167,7 @@ jboolean JNICALL ScriptMethodsClientEffectNamespace::playClientEventObjLimited(J
 	//get the event
 	std::string event;
 	JavaLibrary::convert(localEventType, event);
-	if (event == "")
+	if (event.empty())
 		return JNI_FALSE;
 
 	//get the hardpoint
@@ -219,11 +219,11 @@ jboolean JNICALL ScriptMethodsClientEffectNamespace::playClientEventLoc(JNIEnv *
 	//get the events
 	std::string eventSource;
 	JavaLibrary::convert(localEventSourceType, eventSource);
-	if(eventSource == "")
+	if(eventSource.empty())
 		return JNI_FALSE;
 	std::string eventDest;
 	JavaLibrary::convert(localEventDestType, eventDest);
-	if(eventDest == "")
+	if(eventDest.empty())
 		return JNI_FALSE;
 
 	//get the location
@@ -254,11 +254,11 @@ jboolean JNICALL ScriptMethodsClientEffectNamespace::playClientEventLocLimited(J
 	//get the events
 	std::string eventSource;
 	JavaLibrary::convert(localEventSourceType, eventSource);
-	if(eventSource == "")
+	if(eventSource.empty())
 		return JNI_FALSE;
 	std::string eventDest;
 	JavaLibrary::convert(localEventDestType, eventDest);
-	if(eventDest == "")
+	if(eventDest.empty())
 		return JNI_FALSE;
 
 	//get the location
@@ -302,7 +302,7 @@ jboolean JNICALL ScriptMethodsClientEffectNamespace::playClientEffectObj(JNIEnv 
 	//get the effect
 	std::string effect;
 	JavaLibrary::convert(localEffectName, effect);
-	if(effect == "")
+	if(effect.empty())
 		return JNI_FALSE;
 
 	//get the hardpoint
@@ -369,7 +369,7 @@ jboolean JNICALL ScriptMethodsClientEffectNamespace::playClientEffectObjLimited(
 	//get the effect
 	std::string effect;
 	JavaLibrary::convert(localEffectName, effect);
-	if(effect == "")
+	if(effect.empty())
 		return JNI_FALSE;
 
 	//get the hardpoint
@@ -432,7 +432,7 @@ jboolean JNICALL ScriptMethodsClientEffectNamespace::playClientEffectLoc(JNIEnv 
 	//get the effect
 	std::string effect;
 	JavaLibrary::convert(localEffectName, effect);
-	if(effect == "")
+	if(effect.empty())
 		return JNI_FALSE;
 
 	//get the location
@@ -470,7 +470,7 @@ jboolean JNICALL ScriptMethodsClientEffectNamespace::playClientEffectLocLimited(
 	//get the effect
 	std::string effect;
 	JavaLibrary::convert(localEffectName, effect);
-	if(effect == "")
+	if(effect.empty())
 		return JNI_FALSE;
 
 	//get the location
@@ -554,7 +554,7 @@ jboolean JNICALL ScriptMethodsClientEffectNamespace::stopClientEffectObjByLabel(
 	//get the effect
 	std::string strLabelName;
 	JavaLibrary::convert(localLabel, strLabelName);
-	if(strLabelName == "")
+	if(strLabelName.empty())
 		return JNI_FALSE;
 
 	const NetworkId nid(objectEffectIsOn);
@@ -587,7 +587,7 @@ jboolean JNICALL ScriptMethodsClientEffectNamespace::stopClientEffectObjByLabelL
 	//get the effect
 	std::string strLabelName;
 	JavaLibrary::convert(localLabel, strLabelName);
-	if(strLabelName == "")
+	if(strLabelName.empty())
 		return JNI_FALSE;
 
 	const NetworkId nid(objectEffectIsOn);
@@ -613,7 +613,7 @@ jboolean JNICALL ScriptMethodsClientEffectNamespace::play2dNonLoopingMusic(JNIEn
 
 	std::string music;
 	JavaLibrary::convert(localMusicName, music);
-	if (music == "")
+	if (music.empty())
 		return JNI_FALSE;
 
 	PlayMusicMessage const msg(music, NetworkId::cms_invalid, 0, false);
@@ -637,7 +637,7 @@ jboolean JNICALL ScriptMethodsClientEffectNamespace::play2dNonLoopingSound(JNIEn
 
 	std::string music;
 	JavaLibrary::convert(localMusicName, music);
-	if (music == "")
+	if (music.empty())
 		return JNI_FALSE;
 
 	PlayMusicMessage const msg(music, NetworkId::cms_invalid, 1, false);
@@ -661,7 +661,7 @@ jboolean JNICALL ScriptMethodsClientEffectNamespace::playMusicWithParms(JNIEnv *
 
 	std::string music;
 	JavaLibrary::convert(localMusicName, music);
-	if (music == "")
+	if (music.empty())
 		return JNI_FALSE;
 
 	PlayMusicMessage const msg(music, NetworkId(source), playType, loop);
@@ -688,7 +688,7 @@ jboolean JNICALL ScriptMethodsClientEffectNamespace::createClientProjectile(JNIE
 	// get the weapon object template name string
 	std::string weaponObjectTemplateNameString;
 	JavaLibrary::convert(localWeaponObjectTemplateName, weaponObjectTemplateNameString);
-	if (weaponObjectTemplateNameString == "")
+	if (weaponObjectTemplateNameString.empty())
 		return JNI_FALSE;
 
 	// get the start location
@@ -730,7 +730,7 @@ jboolean JNICALL ScriptMethodsClientEffectNamespace::createClientProjectileObjec
 	// get the weapon object template name string
 	std::string weaponObjectTemplateNameString;
 	JavaLibrary::convert(localWeaponObjectTemplateName, weaponObjectTemplateNameString);
-	if (weaponObjectTemplateNameString == "")
+	if (weaponObjectTemplateNameString.empty())
 		return JNI_FALSE;
 
 	// Get our source object
@@ -788,7 +788,7 @@ jboolean JNICALL  ScriptMethodsClientEffectNamespace::createClientProjectileObje
 	// get the weapon object template name string
 	std::string weaponObjectTemplateNameString;
 	JavaLibrary::convert(localWeaponObjectTemplateName, weaponObjectTemplateNameString);
-	if (weaponObjectTemplateNameString == "")
+	if (weaponObjectTemplateNameString.empty())
 		return JNI_FALSE;
 
 	// Get our source object
@@ -841,7 +841,7 @@ jboolean JNICALL ScriptMethodsClientEffectNamespace::createClientProjectileLocat
 	// get the weapon object template name string
 	std::string weaponObjectTemplateNameString;
 	JavaLibrary::convert(localWeaponObjectTemplateName, weaponObjectTemplateNameString);
-	if (weaponObjectTemplateNameString == "")
+	if (weaponObjectTemplateNameString.empty())
 		return JNI_FALSE;
 
 	// Get our target object

@@ -893,7 +893,7 @@ bool Os::handleDebugMenu()
 
 		// create the menu
 		HMENU menu = CreatePopupMenu();
-		const char *lastSection = "";
+		const char *lastSection.clear();
 		HMENU lastSubmenu = NULL;
 		int index = 1;
 		DebugFlags::FlagVector::const_iterator end = DebugFlags::ms_flagsSortedByName.end();
@@ -1508,7 +1508,7 @@ void Os::buildRelativePath(const char *baseDirectory, const char *targetPathname
 	}
 
 	//-- for each directory in base directory not matched, insert a "backup directory" string
-	relativePath = "";
+	relativePath.clear();
 	{
 		for (size_t i = matchCount; i < workingBaseDirectoryLength; ++i)
 			if (workingBaseDirectory[i] == directorySeparator)

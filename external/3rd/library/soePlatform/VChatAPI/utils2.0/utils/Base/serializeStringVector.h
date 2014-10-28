@@ -53,7 +53,7 @@ namespace soe
 		SerializeStringList(stringList_t vStrings)
 			: mMaxStringLength(DEFAULT_MAX_LENGTH_STRING), mMaxListLength(DEFAULT_MAX_NUMBER_ELEMENTS)
 		{
-			for(stringList_t::iterator i = vStrings.begin(); i != vStrings.end(); i++)
+			for(stringList_t::iterator i = vStrings.begin(); i != vStrings.end(); ++i)
 			{
 				push_back(*i);
 			}
@@ -103,7 +103,7 @@ namespace soe
 #endif
 				return 0;
 			}
-			for (stringList_t::const_iterator iter = begin(); iter != end(); iter++, index++)
+			for (stringList_t::const_iterator iter = begin(); iter != end(); ++iter, ++index)
 			{
 				elementBytes = soe::Write(stream+bytes, size-bytes, *iter);
 				if (!elementBytes) {
@@ -156,7 +156,7 @@ namespace soe
 		SerializeStringVector(stringVector_t vStrings)
 			: mMaxStringLength(DEFAULT_MAX_LENGTH_STRING), mMaxVectorLength(DEFAULT_MAX_NUMBER_ELEMENTS)
 		{
-			for(stringVector_t::iterator i = vStrings.begin(); i != vStrings.end(); i++)
+			for(stringVector_t::iterator i = vStrings.begin(); i != vStrings.end(); ++i)
 			{
 				push_back(*i);
 			}
@@ -206,7 +206,7 @@ namespace soe
 #endif
 				return 0;
 			}
-			for (stringVector_t::const_iterator iter = begin(); iter != end(); iter++, index++)
+			for (stringVector_t::const_iterator iter = begin(); iter != end(); ++iter, ++index)
 			{
 				elementBytes = soe::Write(stream+bytes, size-bytes, *iter);
 				if (!elementBytes) {

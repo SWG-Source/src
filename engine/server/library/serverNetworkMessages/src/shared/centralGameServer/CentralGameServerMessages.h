@@ -144,7 +144,7 @@ inline const uint32 CentralGameServerSetProcessId::getProcessId(void) const
 class CentralGameServerProxyObject : public GameNetworkMessage
 {
 public:
-	CentralGameServerProxyObject(const NetworkId newObjectId, 
+	CentralGameServerProxyObject(const NetworkId &newObjectId, 
 		                         const char * const newTemplateName,
 	                             const uint32 newGameServerProcessId,
 								 const std::string & newGameServerAddress,
@@ -587,7 +587,7 @@ public:
 class DatabaseCreateCharacterSuccess : public GameNetworkMessage
 {
 public:
-	DatabaseCreateCharacterSuccess(const NetworkId objectId, StationId stationId, const Unicode::String &characterName, int templateId, bool jedi);
+	DatabaseCreateCharacterSuccess(const NetworkId &objectId, StationId stationId, const Unicode::String &characterName, int templateId, bool jedi);
 	DatabaseCreateCharacterSuccess(Archive::ReadIterator & source);
 	~DatabaseCreateCharacterSuccess();
 
@@ -739,7 +739,7 @@ inline const uint16 ConnectionServerAddress::getGameServicePort (void) const
 class ShutdownCluster : public GameNetworkMessage
 {
 public:
-	ShutdownCluster( const uint32 timeToShutdown, const uint32 maxTime, const Unicode::String systemMessage);
+	ShutdownCluster( const uint32 timeToShutdown, const uint32 maxTime, const Unicode::String &systemMessage);
 	ShutdownCluster(Archive::ReadIterator &source);
 	virtual ~ShutdownCluster();
 

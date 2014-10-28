@@ -85,7 +85,7 @@ bool DB::OCIQueryImpl::prepare()
 							OCIStmtPrepare(m_stmthp,
 										   m_session->errhp,
 										   reinterpret_cast<OraText*>(const_cast<char*>(m_sql.c_str())),
-										   strlen(m_sql.c_str()),
+										   m_sql.length(),
 										   (ub4) OCI_NTV_SYNTAX,
 										   (ub4) OCI_DEFAULT)))
 		return false;
