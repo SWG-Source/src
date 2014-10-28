@@ -168,7 +168,7 @@ void ChatAvatarCore::setLoginPriority(int loginPriority)
 	m_loginPriority = loginPriority;
 }
 
-void ChatAvatarCore::setEmail(const Plat_Unicode::String email)
+void ChatAvatarCore::setEmail(static const Plat_Unicode::String &email)
 {
 	m_email = email;
 }
@@ -178,7 +178,7 @@ void ChatAvatarCore::setInboxLimit(unsigned inboxLimit)
 	m_inboxLimit = inboxLimit;
 }
 
-void ChatAvatarCore::setStatusMessage(const Plat_Unicode::String statusMessage)
+void ChatAvatarCore::setStatusMessage(const Plat_Unicode::String &statusMessage)
 {
     m_statusMessage = statusMessage;
 }
