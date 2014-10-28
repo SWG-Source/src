@@ -382,6 +382,7 @@ int CMonitorData::setDescription( int Id, const char *Description , int & mode)
 int x;
 	
 	size_t sDescP1 = (strlen(Description) + 1);
+	int retVal = -1;
 
 	for(x=0;x<m_count;x++)
 	{
@@ -391,19 +392,19 @@ int x;
 			delete [] m_data[x].discription;
 			m_data[x].discription = NULL;
 			mode = 0;				
-			return x;
+			retVal = x;
 		}
 		if( m_data[x].discription && !strcmp( m_data[x].discription, Description ) )
-			return -1;
+			retVal = - 1;
 
-		if( m_data[x].discription )
-			delete [] m_data[x].discription;
+		delete [] m_data[x].discription;
 		m_data[x].discription = new char [ sDescP1 ];
 		strcpy(m_data[x].discription,Description);
 		mode = 1;					
-		return x;
+		retVal = x;
 	}
-	return -1;
+
+	return retVal;
 }
 
 int CMonitorData::pingValue(int p)

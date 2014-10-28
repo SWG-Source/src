@@ -564,10 +564,7 @@ dataReplyMessage::dataReplyMessage(const unsigned short command,
 monMessage(command, sequence, size)
 {
 	data = new unsigned char[newDataLen];
-	if (data)
-		memcpy(data, newData, newDataLen);
-	else
-		data = NULL;
+	memcpy(data, newData, newDataLen);
 }
 
 //----------------------------------------------------------------

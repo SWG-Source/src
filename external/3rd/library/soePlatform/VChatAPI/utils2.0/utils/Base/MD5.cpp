@@ -273,7 +273,7 @@ namespace soe
         return asHex(Final());
     }
 
-    string MD5::asHex(vector<char> achar0)
+    string MD5::asHex(const vector<char> &achar0)
     {
         const string hex = "0123456789abcdef";
 

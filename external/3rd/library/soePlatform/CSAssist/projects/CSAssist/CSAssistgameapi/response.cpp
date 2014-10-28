@@ -112,8 +112,7 @@ ResGetIssueHierarchy::ResGetIssueHierarchy(unsigned track, const void *userData)
 ResGetIssueHierarchy::~ResGetIssueHierarchy()
 //----------------------------------------------
 {
-	if (rawStringPtr)
-		delete [] rawStringPtr;
+	delete [] rawStringPtr;
 }
 
 //----------------------------------------------
@@ -190,8 +189,7 @@ ResGetTicketComments::ResGetTicketComments(unsigned track, const void *userData)
 ResGetTicketComments::~ResGetTicketComments()
 //----------------------------------------------
 {
-	if (mCommentArray != 0)
-		delete [] mCommentArray;		// be sure to free up any resources!
+	delete [] mCommentArray;		// be sure to free up any resources!
 }
 
 //----------------------------------------------
@@ -224,8 +222,7 @@ ResGetTicketByCharacter::ResGetTicketByCharacter(unsigned track, const void *use
 ResGetTicketByCharacter::~ResGetTicketByCharacter()
 //----------------------------------------------
 {
-	if (mTicketArray != 0)
-		delete [] mTicketArray;		// be sure to free up any resources!
+	delete [] mTicketArray;		// be sure to free up any resources!
 }
 
 //----------------------------------------------
@@ -259,8 +256,7 @@ ResTicketChange::ResTicketChange(unsigned track)
 ResTicketChange::~ResTicketChange()
 //----------------------------------------------
 {
-	if (rawCharacter)
-		delete [] rawCharacter;
+	delete [] rawCharacter;
 }
 
 //----------------------------------------------
@@ -329,8 +325,7 @@ rawCharacter(0)
 ResRequestGameLocation::~ResRequestGameLocation()
 //----------------------------------------------
 {
-	if (rawCharacter)
-		delete [] rawCharacter;
+	delete [] rawCharacter;
 }
 
 //----------------------------------------------
@@ -362,8 +357,7 @@ ResGetDocumentList::ResGetDocumentList(unsigned track, const void *userData)
 ResGetDocumentList::~ResGetDocumentList()
 //----------------------------------------------
 {
-	if (mDocumentArray != 0)
-		delete [] mDocumentArray;		// be sure to free up any resources!
+	delete [] mDocumentArray;		// be sure to free up any resources!
 }
 
 //----------------------------------------------
@@ -397,8 +391,7 @@ ResGetDocument::ResGetDocument(unsigned track, const void *userData)
 ResGetDocument::~ResGetDocument()
 //----------------------------------------------
 {
-	if (rawDocument)
-		delete [] rawDocument;
+	delete [] rawDocument;
 }
 
 //----------------------------------------------
@@ -420,8 +413,7 @@ ResGetTicketXMLBlock::ResGetTicketXMLBlock(unsigned track, const void *userData)
 ResGetTicketXMLBlock::~ResGetTicketXMLBlock()
 //----------------------------------------------
 {
-	if (rawXML)
-		delete [] rawXML;
+	delete [] rawXML;
 }
 
 //----------------------------------------------
@@ -443,10 +435,8 @@ ResGetKBArticle::ResGetKBArticle(unsigned track, const void *userData)
 ResGetKBArticle::~ResGetKBArticle()
 //----------------------------------------------
 {
-	if (rawArticle)
-		delete [] rawArticle;
-	if (rawTitle)
-		delete [] rawTitle;
+	delete [] rawArticle;
+	delete [] rawTitle;
 }
 
 //----------------------------------------------
@@ -473,8 +463,7 @@ ResSearchKB::ResSearchKB(unsigned track, const void *userData)
 ResSearchKB::~ResSearchKB()
 //----------------------------------------------
 {
-	if (mArticleArray != 0)
-		delete [] mArticleArray;		// be sure to free up any resources!
+	delete [] mArticleArray;		// be sure to free up any resources!
 }
 
 //----------------------------------------------
@@ -507,12 +496,9 @@ rawGame(0), rawVersion(0), rawLanguage(0), mChangeType(CSASSIST_HIERARCHY_NONE)
 
 ResHierarchyChange::~ResHierarchyChange()
 {
-	if (rawGame)
-		delete [] rawGame;
-	if (rawVersion)
-		delete [] rawVersion;
-	if (rawLanguage)
-		delete [] rawLanguage;
+	delete [] rawGame;
+	delete [] rawVersion;
+	delete [] rawLanguage;
 }
 
 //----------------------------------------------

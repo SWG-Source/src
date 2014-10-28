@@ -37,7 +37,7 @@ namespace soe
             void Update(const std::vector<char> &achar0, int i);
             void Update(const std::vector<char> &achar0, int i, int j);
             std::string asHex();
-            static std::string asHex(std::vector<char> achar0);
+            static std::string asHex(const std::vector<char> &achar0);
 
         private:
             std::vector<int> Decode(const std::vector<char> &achar0, int i, int j);
