@@ -257,12 +257,13 @@ void CentralServerMetricsData::updateData()
 		{
 			for (std::map<int, std::pair<std::string, int> >::const_iterator iter = lastLoginTimeStatistics.begin(); iter != lastLoginTimeStatistics.end(); ++iter)
 			{
-				if (!iter->second.first.empty() && (m_mapLastLoginTimeStatisticsIndex.count(iter->second.first) < 1))
+				std::pair<std::string, int> secondIter = iter->second;
+				if (!secondIter.first.empty() && (m_mapLastLoginTimeStatisticsIndex.count(secondIter.first) < 1))
 				{
 					std::string label("population.");
-					label += iter->second.first;
+					label += secondIter.first;
 
-					m_mapLastLoginTimeStatisticsIndex[iter->second.first] = addMetric(label.c_str(), 0, NULL, false, false);
+					m_mapLastLoginTimeStatisticsIndex[secondIter.first] = addMetric(label.c_str(), 0, NULL, false, false);
 				}
 			}
 		}

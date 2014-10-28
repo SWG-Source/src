@@ -95,7 +95,7 @@ public:
 	unsigned			submitRequest(GenericRequest *req, GenericResponse *res);
     GenericConnection	*getNextActiveConnection();
 	std::string			&getGameCode()		{ return m_game; }
-	void				addIdentifier(std::string id) { m_gameIdentifiers.push_back(id);}
+	void				addIdentifier(const std::string &id) { m_gameIdentifiers.push_back(id);}
 
 protected:	
     std::vector<GenericConnection *>		m_serverConnections;

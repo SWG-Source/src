@@ -36,9 +36,9 @@ public:
 	unsigned	getID() const				{ return m_id; }
 	std::string getData() const				{ return m_XMLdata; }
 
-	void setName(const std::string name)	{ m_name = name; }
+	void setName(const std::string &name)	{ m_name = name; }
 	void setID(unsigned id)					{ m_id = id; }
-	void setData(const std::string data)	{ m_XMLdata = data; }
+	void setData(const std::string &data)	{ m_XMLdata = data; }
 
 protected:
 	std::string m_name;

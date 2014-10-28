@@ -320,13 +320,13 @@ CentralCSHandler::~CentralCSHandler()
 
 CS_CMD( login_character )
 {
-	unsigned pos = request.getCommandString().find(" ");
+	const unsigned &pos = request.getCommandString().find(" ");
 	std::string id;
 	std::string account;
 
 	if(pos == std::string::npos)
 		return;
-	unsigned pos2 = request.getCommandString().find(" ", pos + 1 );
+	const unsigned &pos2 = request.getCommandString().find(" ", pos + 1 );
 	id = request.getCommandString().substr(pos, pos2 - pos);
 	account = request.getCommandString().substr(pos2 + 1);
 
