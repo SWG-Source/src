@@ -97,8 +97,6 @@ XmlTreeDocument* XmlTreeDocument::createDocument(const char * rootNodeName)
 	xmlDocSetRootElement(doc, node);
 
 	XmlTreeDocument *treeDoc = new XmlTreeDocument(doc);
-	
-	DEBUG_WARNING( !treeDoc, ("Attempted to make new XmlTreeDoc but failed") );
 
 	xmlFree(doc);
 	return 0;

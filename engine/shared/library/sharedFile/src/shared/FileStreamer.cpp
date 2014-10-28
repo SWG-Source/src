@@ -229,7 +229,7 @@ int FileStreamer::File::read(int offset, void *destinationBuffer, int numberOfBy
 	newRequest->bytesRead      = 0;
 	newRequest->gate           = gate;
 	newRequest->priority       = priority;
-	newRequest->returnValue    = &returnValue;
+	newRequest->returnValue    = returnValue;
 
 	// submit the request
 	FileStreamerThread::submitRequest(newRequest);

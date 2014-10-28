@@ -520,9 +520,10 @@ int high, i, low;
 
    if ( high < m_count &&  Id==m_data[high].id )  
    {
-		if( m_data[high].ChangedTime == 0 ||  m_data[high].value != value )
-			m_data[high].ChangedTime = (long)time(NULL);
-			m_data[high].value = value;
+	   if (m_data[high].ChangedTime == 0 || m_data[high].value != value) {
+		   m_data[high].ChangedTime = (long)time(NULL);
+		   m_data[high].value = value;
+	   }
    }
 }
 

@@ -198,7 +198,6 @@ bool ConnectionServer::decryptToken(const KeyShare::Token & token, uint32 & stat
 	uint32 len = sizeof(uint32) + sizeof(bool) + MAX_ACCOUNT_NAME_LENGTH + 1;
 	unsigned char * keyBuffer = new unsigned char[len];
 	unsigned char * keyBufferPointer = keyBuffer;
-	NOT_NULL(keyBuffer);
 	memset(keyBuffer, 0, len);
 	
 	
@@ -228,7 +227,6 @@ bool ConnectionServer::decryptToken(const KeyShare::Token & token, char* session
 	uint32 len = apiSessionIdWidth + sizeof(StationId);
 	unsigned char * keyBuffer = new unsigned char[len + 1];
 	unsigned char * keyBufferPointer = keyBuffer;
-	NOT_NULL(keyBuffer);
 	memset(keyBuffer, 0, sizeof(*keyBuffer));
 	
 	
@@ -237,7 +235,7 @@ bool ConnectionServer::decryptToken(const KeyShare::Token & token, char* session
 	if (! retval)
 		return retval;
 
-	memcpy(sessionKey, keyBufferPointer, apiSessionIdWidth);
+	memcpy(sessionKey, keyBufferPointer, sizeof(*keyBuffer));
 	keyBufferPointer += apiSessionIdWidth;
 	memcpy(&stationId, keyBufferPointer, sizeof(StationId));
 	delete [] keyBuffer;
@@ -912,7 +910,6 @@ void ConnectionServer::receiveMessage(const MessageDispatch::Emitter & source, c
 	else if (message.isType("ExcommunicateGameServerMessage"))
 	{
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		ExcommunicateGameServerMessage msg(ri);
 
 		LOG("GameGameConnect",("Told to drop connection to %lu by Central",msg.getServerId()));
@@ -1040,7 +1037,7 @@ void ConnectionServer::run(void)
 				Os::sleep(1);
 			}
 
-		} while (!barrierReached && !cserver.done);
+		} while (!cserver.done);
 
 		NetworkHandler::clearBytesThisFrame();
 			
@@ -1418,7 +1415,6 @@ void ConnectionServer::installSessionValidation()
 void ConnectionServer::addToClientMap(const NetworkId &oid, ClientConnection* cconn)
 {
 	Client * newClient = new Client(cconn, oid);
-	NOT_NULL(newClient);
 
 	clientMap[oid] = newClient;
 

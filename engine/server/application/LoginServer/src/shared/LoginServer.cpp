@@ -1171,19 +1171,17 @@ void LoginServer::run(void)
 		}
 
 		NetworkHandler::clearBytesThisFrame();
-		if(mon)
+
+		mon->set(WORLD_COUNT_CHANNEL, static_cast<int>(getInstance().m_clientMap.size()));
+		int count = 0;
+		ClusterListType::const_iterator i;
+		for(i = getInstance().m_clusterList.begin(); i != getInstance().m_clusterList.end(); ++i)
 		{
-			mon->set(WORLD_COUNT_CHANNEL, static_cast<int>(getInstance().m_clientMap.size()));
-			int count = 0;
-			ClusterListType::const_iterator i;
-			for(i = getInstance().m_clusterList.begin(); i != getInstance().m_clusterList.end(); ++i)
-			{
-				if((*i)->m_connected)
-					++count;
-			}
-			mon->set(CLUSTER_COUNT_CHANNEL, count);
-			mon->Update();
+			if((*i)->m_connected)
+				++count;
 		}
+		mon->set(CLUSTER_COUNT_CHANNEL, count);
+		mon->Update();
 	}
 
 	NetworkHandler::update();
@@ -1373,7 +1371,6 @@ void LoginServer::onValidateClient(StationId suid, const std::string & username,
 	size_t len = sizeof(uint32) + sizeof(bool) + MAX_ACCOUNT_NAME_LENGTH + 1;
 	unsigned char * keyBuffer = new unsigned char[len];
 	unsigned char * keyBufferPointer = keyBuffer;
-	NOT_NULL(keyBuffer);
 
 	IGNORE_RETURN(memset(keyBuffer, 0, len));
 

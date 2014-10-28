@@ -42,12 +42,6 @@ bool CConfig::LoadFile(char * file)
     // allocate buffer
 	pConfig = new char[length + 1];
 
-	if (pConfig == NULL)
-	{
-		fclose(fp);
-		fprintf(stderr,"Failed to alloc config buffer length %d",(int32)length);
-		return false;
-	}
 	memset(pConfig,0,length);
 
     // read data, stripping comments

@@ -204,12 +204,6 @@ void ResGetTicketComments::decode(Base::ByteStream::ReadIterator &msg)
 	if (mNumberRead > 0)
 	{
 		mCommentArray = new CSAssistGameAPITicketComment[mNumberRead];
-		if (mCommentArray == 0)			// memory allocation error, return error code
-		{
-			mNumberRead = 0;
-			setResult(CSASSIST_RESULT_OUTOFMEMORY);
-			return;
-		}
 		CSAssistGameAPITicketComment *pcomments = mCommentArray;
 		for (unsigned i=0; i < mNumberRead; i++)
 		{
@@ -245,13 +239,6 @@ void ResGetTicketByCharacter::decode(Base::ByteStream::ReadIterator &msg)
 	if (mNumberReturned > 0)
 	{
 		mTicketArray = new CSAssistGameAPITicket[mNumberReturned];
-		if (mTicketArray == 0)			// memory allocation error, return error code
-		{
-			mNumberReturned = 0;
-			mTotalNumber = 0;
-			setResult(CSASSIST_RESULT_OUTOFMEMORY);
-			return;
-		}
 		CSAssistGameAPITicket *ptickets = mTicketArray;
 		for (unsigned i=0; i < mNumberReturned; i++)
 		{
@@ -389,12 +376,6 @@ void ResGetDocumentList::decode(Base::ByteStream::ReadIterator &msg)
 	if (mNumberRead > 0)
 	{
 		mDocumentArray = new CSAssistGameAPIDocumentHeader[mNumberRead];
-		if (mDocumentArray == 0)			// memory allocation error, return error code
-		{
-			mNumberRead = 0;
-			setResult(CSASSIST_RESULT_OUTOFMEMORY);
-			return;
-		}
 		CSAssistGameAPIDocumentHeader *pdocs = mDocumentArray;
 		for (unsigned i=0; i < mNumberRead; i++)
 		{
@@ -506,12 +487,6 @@ void ResSearchKB::decode(Base::ByteStream::ReadIterator &msg)
 	if (mNumberRead > 0)
 	{
 		mArticleArray = new CSAssistGameAPISearchResult[mNumberRead];
-		if (mArticleArray == 0)			// memory allocation error, return error code
-		{
-			mNumberRead = 0;
-			setResult(CSASSIST_RESULT_OUTOFMEMORY);
-			return;
-		}
 		CSAssistGameAPISearchResult *pdocs = mArticleArray;
 		for (unsigned i=0; i < mNumberRead; i++)
 		{

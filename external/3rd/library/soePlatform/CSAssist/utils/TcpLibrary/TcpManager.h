@@ -18,8 +18,8 @@
     #include <sys/time.h>
     #include <sys/types.h>
     #include <unistd.h>
-    const int INVALID_SOCKET = 0xFFFFFFFF;
-    const int SOCKET_ERROR   = 0xFFFFFFFF;
+	const unsigned long int INVALID_SOCKET = 0xFFFFFFFF;
+	const unsigned long int SOCKET_ERROR   = 0xFFFFFFFF;
     typedef int SOCKET;
 #endif
 

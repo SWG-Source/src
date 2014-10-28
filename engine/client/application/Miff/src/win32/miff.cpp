@@ -605,27 +605,21 @@ static errorType loadInputToBuffer(
 {
 	errorType			retVal = ERR_NONE;
 	InputFileHandler	*inFileHandler = new InputFileHandler("mIFF.$$$");
-	if (inFileHandler)
-	{
-		int sizeRead = inFileHandler->read(dest, maxBufferSize);
-		if (sizeRead >= maxBufferSize)
-		{
-			retVal = ERR_BUFFERTOOSMALL;
-		}
-		else
-		{
-			reinterpret_cast<char *>(dest)[sizeRead] = 0;  // so stupid... but if you don't zero-terminate at exact spot, YYInput may chokes because of extra grammer that may exist...
-		}
-		if (!debugMode)
-			inFileHandler->deleteFile("mIFF.$$$", true);	// no need for temp file now...
 
-		// we've successfully read the file, now close it...
-		delete inFileHandler;
-	}
-	else	// inFileName is NULL
+	int sizeRead = inFileHandler->read(dest, maxBufferSize);
+	if (sizeRead >= maxBufferSize)
 	{
-		retVal = ERR_FILENOTFOUND;
+		retVal = ERR_BUFFERTOOSMALL;
 	}
+	else
+	{
+		reinterpret_cast<char *>(dest)[sizeRead] = 0;  // so stupid... but if you don't zero-terminate at exact spot, YYInput may chokes because of extra grammer that may exist...
+	}
+	if (!debugMode)
+		inFileHandler->deleteFile("mIFF.$$$", true);	// no need for temp file now...
+
+	// we've successfully read the file, now close it...
+	delete inFileHandler;
 
 	return(retVal);
 }
@@ -909,16 +903,14 @@ extern "C" int MIFFloadRawData(char *fname, void * buffer, unsigned maxBufferSiz
 		return(sizeRead);		// should be -1
 		
 	InputFileHandler * inFileName = new InputFileHandler(fname);
-	if (inFileName)
+
+	sizeRead = inFileName->read(buffer, maxBufferSize);
+	if (static_cast<unsigned>(sizeRead) >= maxBufferSize)
 	{
-		sizeRead = inFileName->read(buffer, maxBufferSize);
-		if (static_cast<unsigned>(sizeRead) >= maxBufferSize)
-		{
-			handleError(ERR_BUFFERTOOSMALL);
-			sizeRead = -1;
-		}
-		delete inFileName;
+		handleError(ERR_BUFFERTOOSMALL);
+		sizeRead = -1;
 	}
+	delete inFileName;
 
 	return(sizeRead);
 }	

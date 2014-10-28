@@ -477,24 +477,17 @@ void ChatServer::onEnumerateServers(const EnumerateServers & e)
 
 				ConnectionServerConnection * c = new ConnectionServerConnection(e.getAddress(), e.getPort());
 
-				if (c != NULL)
+				if (   !e.getAddress().empty()
+					&& (e.getPort() != 0))
 				{
-					if (   !e.getAddress().empty()
-						&& (e.getPort() != 0))
-					{
-						ChatServer::fileLog(true, "ChatServer", "onEnumerateServers() count(%d) address(%s)", count, getConnectionAddress(c).c_str());
+					ChatServer::fileLog(true, "ChatServer", "onEnumerateServers() count(%d) address(%s)", count, getConnectionAddress(c).c_str());
 
-						IGNORE_RETURN(connectionServerConnections.insert(c));
-						s_chatServerMetricsData->setConnectionServerConnectionCount(instance().connectionServerConnections.size());
-					}
-					else
-					{
-						ChatServer::fileLog(true, "ChatServer", "onEnumerateServers() count(%d) Empty server address", count);
-					}
+					IGNORE_RETURN(connectionServerConnections.insert(c));
+					s_chatServerMetricsData->setConnectionServerConnectionCount(instance().connectionServerConnections.size());
 				}
 				else
 				{
-					ChatServer::fileLog(true, "ChatServer", "onEnumerateServers() count(%d) NULL connection", count);
+					ChatServer::fileLog(true, "ChatServer", "onEnumerateServers() count(%d) Empty server address", count);
 				}
 			}//lint !e429  Custodial pointer 'c' (line 232) has not been freed or returned //jrandall tracked by connectionServerConnections
 			break;

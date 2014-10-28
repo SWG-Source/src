@@ -26,7 +26,6 @@ namespace Base
 	        CScopeLock(CMutex& mutex);
 	        CScopeLock(CScopeLock& lock);
 	        virtual ~CScopeLock();
-
         private:
             CMutex *mMutex;
     };

@@ -703,7 +703,6 @@ void PlanetServer::receiveMessage(const MessageDispatch::Emitter & source, const
 	else if (message.isType("ExcommunicateGameServerMessage"))
 	{
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		ExcommunicateGameServerMessage msg(ri);
 
 		LOG("GameGameConnect",("Planet Server %s was told to drop connection to %lu by Central",Scene::getInstance().getSceneId().c_str(),msg.getServerId()));
@@ -715,7 +714,6 @@ void PlanetServer::receiveMessage(const MessageDispatch::Emitter & source, const
 	else if (message.isType("FactionalSystemMessage"))
 	{
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		FactionalSystemMessage msg(ri);
 
 		// forward message to all game servers on this planet for processing
@@ -725,7 +723,6 @@ void PlanetServer::receiveMessage(const MessageDispatch::Emitter & source, const
 	else if (message.isType("MessageToPlayersOnPlanet"))
 	{
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		GenericValueTypeMessage<std::pair<std::pair<std::pair<std::string, std::vector<int8> >, std::pair<float, bool> >, std::pair<Vector, float> > > const msg(ri);
 
 		// forward message to all game servers on this planet for processing

@@ -4301,12 +4301,14 @@ static const int internalTagBufLen = strlen(internalTagBuf);
 					do
 					{
 						newMod.mod.tag = Crc::calculate(&internalTagBuf[0]);
-						char * c = &internalTagBuf[internalTagBufLen-1];
-						while (++(*c) == '9' + 1)
-						{
-							*c-- = '0';
+						if ((internalTagBufLen - 1) > 0) {
+							char * c = &internalTagBuf[internalTagBufLen - 1];
+							while (++(*c) == '9' + 1)
+							{
+								*c-- = '0';
+							}
+							insertResult = m_attributeModList.insert(newMod.mod.tag, newMod);
 						}
-						insertResult = m_attributeModList.insert(newMod.mod.tag, newMod);
 					} while (!insertResult.second);
 
 					// clear any flags that assume we have a valid tag.
@@ -5488,13 +5490,6 @@ int CreatureObject::getInstrumentAudioId() const
 			return audioId;		
 	}
 	
-	// last, check the look at target if no weapon is equipped
-	if (!hasWeapon)
-	{
-		int audioId = internalGetInstrumentAudioId(getLookAtTarget());
-		if(audioId)
-			return audioId;	
-	}
 	return 0;
 }
 

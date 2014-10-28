@@ -2881,7 +2881,7 @@ void ChatInterface::OnReceivePersistentMessage(const ChatAvatar *destAvatar, con
 		DEBUG_WARNING(true, ("We received an OnREceivePersistentMessage with a success result code but NULL data.  This is an error that the API should never give."));
 		return;
 	}
-	if (!destAvatar || !header)
+	if (!header)
 	{
 		return;	
 	}
@@ -3018,10 +3018,6 @@ void ChatInterface::OnReceiveInstantMessage(const ChatAvatar *srcAvatar, const C
 	if ((srcAvatar == NULL || destAvatar == NULL))
 	{
 		DEBUG_WARNING(true, ("We received an OnReceiveInstantMessage with a success result code but NULL data.  This is an error that the API should never give."));
-		return;
-	}
-	if (!srcAvatar || !destAvatar)
-	{
 		return;
 	}
 	ChatAvatarId fromId;

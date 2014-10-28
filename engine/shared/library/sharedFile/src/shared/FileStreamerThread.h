@@ -115,7 +115,7 @@ public:
 	AbstractFile::PriorityType  priority;
 
 	// storage held by game thread used to pass back return value
-	int                        *returnValue;
+	int                        returnValue;
 
 public:
 

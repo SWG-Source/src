@@ -217,12 +217,10 @@ Plat_Unicode::String UTF8ToUnicode(const char *source)
 	Plat_Unicode::String s = narrowToWide("");
 	int length = strlen(source) + 1;
 	UTF16 *buffer = new UTF16[length];	
-	if (buffer != NULL)
-	{
-		UTF8_convertToUTF16(const_cast<char *>(source) , buffer, length);
-		s =buffer;
-		delete [] buffer;
-	}
+	UTF8_convertToUTF16(const_cast<char *>(source) , buffer, length);
+	s =buffer;
+	delete [] buffer;
+	
 	return s;
 }
 

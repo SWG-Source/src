@@ -604,7 +604,6 @@ void Iff::adjustDataAsNeeded(int size)
 		// allocate the new memory
 		DEBUG_FATAL(newLength < 0, ("negative array allocation"));
 		byte *newData = new byte[static_cast<size_t>(newLength)];
-		NOT_NULL(newData);
 
 		// copy the old data over to the new data
 		memcpy(newData, data, stack[0].length);

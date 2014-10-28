@@ -1006,7 +1006,7 @@ void ClientConnection::onReceive(const Archive::ByteStream & message)
 			else
 			{
 				//Forward on to Game Server
-				DEBUG_REPORT_LOG((!m_client || !m_client->getGameConnection()), ("Warn, received game message with no game connection.  This may happen for a short time after a GameServer crashes.  If it continues to happen, it indicates a bug.\n"));
+				DEBUG_REPORT_LOG(!m_client || !m_client->getGameConnection()), ("Warn, received game message with no game connection.  This may happen for a short time after a GameServer crashes.  If it continues to happen, it indicates a bug.\n");
 
 				if (m_client && m_client->getGameConnection())
 				{

@@ -92,7 +92,7 @@ RemoteDebug::Variable::Variable(const std::string& name, void *memLoc, VARIABLE_
 			break;
 
 		case CSTRING:
-			m_value.stringValue = &s;
+			m_value.stringValue = s;
 			break;
 
 		case BOOL:
