@@ -326,6 +326,8 @@ int x;
 		return 0;
 	}
 
+	size_t desP1 = (strlen(des) + 1);
+
 	for(x=0;x<m_count;x++)
 	{
 		if( id == m_data[x].id )
@@ -345,9 +347,10 @@ int x;
 			if( m_data[x].discription != NULL )
 				delete [] m_data[x].discription;
 			m_data[x].discription = NULL;
+			
 			if( des )
 			{
-				m_data[x].discription = new char [strlen(des)+1];
+				m_data[x].discription = new char[desP1];
 				strcpy(m_data[x].discription,des);
 			}
 			m_sort = 1;
@@ -386,6 +389,8 @@ int x;
 int CMonitorData::setDescription( int Id, const char *Description , int & mode) 
 {
 int x;
+	
+	size_t sDescP1 = (strlen(Description) + 1);
 
 	for(x=0;x<m_count;x++)
 	{
@@ -404,7 +409,7 @@ int x;
 
 			if( m_data[x].discription )
 				delete [] m_data[x].discription;
-			m_data[x].discription = new char [ strlen(Description) +1 ];
+			m_data[x].discription = new char [ sDescP1 ];
 			strcpy(m_data[x].discription,Description);
 			mode = 1;					
 			return x;
