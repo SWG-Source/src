@@ -29,7 +29,7 @@ BasicConfig::~BasicConfig()
 
 void BasicConfig::Push(const soe::NameValuePairs_t & paramValuePairs)
 {
-	for (soe::NameValuePairs_t::const_iterator pIter = paramValuePairs.begin(); pIter != paramValuePairs.end(); pIter++)
+	for (soe::NameValuePairs_t::const_iterator pIter = paramValuePairs.begin(); pIter != paramValuePairs.end(); ++pIter)
 	{
 		Set(pIter->name, pIter->value);
 	}
@@ -40,7 +40,7 @@ void BasicConfig::Pull(soe::NameValuePairs_t & paramValuePairs) const
 	size_t index = paramValuePairs.size();
 
 	paramValuePairs.resize(index + mParamMap.size());
-	for (ConfigMap_t::const_iterator pIter = mParamMap.begin(); pIter != mParamMap.end(); pIter++, index++)
+	for (ConfigMap_t::const_iterator pIter = mParamMap.begin(); pIter != mParamMap.end(); ++pIter, ++index)
 	{
 		paramValuePairs[index].name = pIter->first;
 		paramValuePairs[index].value = pIter->second.first;

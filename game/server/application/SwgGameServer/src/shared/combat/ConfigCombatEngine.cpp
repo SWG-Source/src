@@ -163,17 +163,17 @@ ConfigCombatEngine::SkeletonAttackMod skeletonAttackMod;
 		{
 			m_data.numberSkeletons = file.read_uint8() + 1;
 			// set up all-body skeleton
-			bodyAttackMod.name = "";
-			bodyAttackMod.modelBoneName = "";
+			bodyAttackMod.name.clear();
+			bodyAttackMod.modelBoneName.clear();
 			bodyAttackMod.toHitChance = 100;
 			bodyAttackMod.toWoundBonus = 0;
 			bodyAttackMod.combatSkeletonBone = 0;
 			bodyAttackMod.damageBonus[Attributes::Health] = 0;
 			bodyAttackMod.damageBonus[Attributes::Action] = 0;
 			bodyAttackMod.damageBonus[Attributes::Mind] = 0;
-			skeletonAttackMod.name = "";
+			skeletonAttackMod.name.clear();
 			skeletonAttackMod.numHitLocations = 1;
-			skeletonAttackMod.script = "";
+			skeletonAttackMod.script.clear();
 			skeletonAttackMod.attackMods.clear();
 			skeletonAttackMod.attackMods.push_back(bodyAttackMod);
 			m_data.skeletonAttackMods.push_back(skeletonAttackMod);

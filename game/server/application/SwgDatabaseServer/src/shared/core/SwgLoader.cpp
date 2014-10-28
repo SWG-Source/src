@@ -114,7 +114,7 @@ void SwgLoader::verifyCharacterFinished (TaskVerifyCharacter *task)
 
 // ----------------------------------------------------------------------
 
-void SwgLoader::locateStructure(const NetworkId &structureId, const std::string whoRequested)
+void SwgLoader::locateStructure(const NetworkId &structureId, const std::string &whoRequested)
 {
 	TaskLocateStructure *task = new TaskLocateStructure(structureId, whoRequested);
 	taskQ->asyncRequest(task);

@@ -47,7 +47,7 @@ namespace soe
         Update(input);
     }
 
-    vector<int> MD5::Decode(vector<char> achar0, int i, int j)
+    vector<int> MD5::Decode(const vector<char> &achar0, int i, int j)
     {
         vector<int> ai(16,0);
         int l;
@@ -61,7 +61,7 @@ namespace soe
         return ai;
     }
 
-    vector<char> MD5::Encode(vector<int> ai, int i)
+    vector<char> MD5::Encode(const vector<int> &ai, int i)
     {
         vector<char> achar0(i,0);
         int k;
@@ -127,7 +127,7 @@ namespace soe
         finalsNull = true;
     }
 
-    void MD5::Transform(State & state1, vector<char> achar0, int i)
+    void MD5::Transform(State & state1, const vector<char> &achar0, int i)
     {
         int j = state1.state[0];
         int k = state1.state[1];
@@ -211,7 +211,7 @@ namespace soe
         Update(achar0, 1);
     }
 
-    void MD5::Update(State & state1, vector<char> achar0, int i, int j)
+    void MD5::Update(State & state1, const vector<char> &achar0, int i, int j)
     {
         finalsNull = true;
         if (j - i > (int)achar0.size())
@@ -245,7 +245,7 @@ namespace soe
         }
     }
 
-    void MD5::Update(string s)
+    void MD5::Update(const string &s)
     {
         vector<char> achar(s.size(),0);
         for (int i=0; i<(int)s.size(); i++)
@@ -258,12 +258,12 @@ namespace soe
         Update(achar0, 0, achar0.size());
     }
 
-    void MD5::Update(vector<char> achar0, int i)
+    void MD5::Update(const vector<char> &achar0, int i)
     {
         Update(state, achar0, 0, i);
     }
 
-    void MD5::Update(vector<char> achar0, int i, int j)
+    void MD5::Update(const vector<char> &achar0, int i, int j)
     {
         Update(state, achar0, i, j);
     }

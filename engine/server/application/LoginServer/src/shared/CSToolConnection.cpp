@@ -176,7 +176,7 @@ void CSToolConnection::onReceive( const Archive::ByteStream & message )
 		}
 		else
 		{
-			m_sInputBuffer = "";
+			m_sInputBuffer.clear();
 		}
 			
 	}

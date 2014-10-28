@@ -24,7 +24,7 @@ namespace API_NAMESPACE
 #ifdef TRACK_READ_WRITE_FAILURES
 		soe::ClearMessageFailureStack();
 #endif
-		for(iterator=mMembers.begin(); iterator!=mMembers.end(); iterator++)
+		for(iterator=mMembers.begin(); iterator!=mMembers.end(); ++iterator)
 		{
 			MemberInfo_t & memberInfo = *iterator;
 
@@ -50,7 +50,7 @@ namespace API_NAMESPACE
 		}
 		if (succeeded) 
 		{
-			for(iterator=mOptionalMembers.begin(); iterator!=mOptionalMembers.end(); iterator++)
+			for(iterator=mOptionalMembers.begin(); iterator!=mOptionalMembers.end(); ++iterator)
 			{
 				MemberInfo_t & memberInfo = *iterator;
 				unsigned bytes = memberInfo.data->Read(stream, size, memberInfo.size, version);
@@ -80,7 +80,7 @@ namespace API_NAMESPACE
 		soe::ClearMessageFailureStack();
 #endif
 
-	    for (iterator=mMembers.begin(); iterator!=mMembers.end(); iterator++)
+	    for (iterator=mMembers.begin(); iterator!=mMembers.end(); ++iterator)
 	    {
 			const MemberInfo_t & memberInfo = *iterator;
 
@@ -107,7 +107,7 @@ namespace API_NAMESPACE
 	    }
 		if (succeeded)
 		{
-			for (iterator=mOptionalMembers.begin(); iterator!=mOptionalMembers.end(); iterator++)
+			for (iterator=mOptionalMembers.begin(); iterator!=mOptionalMembers.end(); ++iterator)
 			{
 				const MemberInfo_t & memberInfo = *iterator;
 				unsigned bytes = memberInfo.data->Write(stream, size, version);
@@ -151,7 +151,7 @@ namespace API_NAMESPACE
 
 		bool printedOne = false;
 		MemberVector_t::const_iterator iterator;
-		for (iterator=mMembers.begin(); iterator!=mMembers.end(); iterator++)
+		for (iterator=mMembers.begin(); iterator!=mMembers.end(); ++iterator)
 		{
 			int bytes = 0;
 
@@ -184,7 +184,7 @@ namespace API_NAMESPACE
 				bytesTotal += bytes;
 			}
 		}
-		for (iterator=mOptionalMembers.begin(); iterator!=mOptionalMembers.end(); iterator++)
+		for (iterator=mOptionalMembers.begin(); iterator!=mOptionalMembers.end(); ++iterator)
 		{
 			int bytes = 0;
 

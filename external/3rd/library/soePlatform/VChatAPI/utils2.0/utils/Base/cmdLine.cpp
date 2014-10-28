@@ -79,7 +79,7 @@ int CmdLine::SplitLine(int argc, char **argv)
             }
             else
             {
-               arg = "";
+               arg.clear();
             }
          }
 
@@ -87,7 +87,7 @@ int CmdLine::SplitLine(int argc, char **argv)
          CmdParam cmd;
 
          // only add non-empty args
-         if (arg != "")
+         if (!arg.empty())
          {
             cmd.m_strings.push_back(arg);
          }

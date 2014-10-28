@@ -24,7 +24,7 @@ namespace soe
 			return 0;
 		}
 		size_t index = 0;
-		for (typename std::map<K, T>::const_iterator iter = data.begin(); iter != data.end(); iter++, index++)
+		for (typename std::map<K, T>::const_iterator iter = data.begin(); iter != data.end(); ++iter, ++index)
 		{
 			elementBytes = Write(stream+bytes, size-bytes, iter->second, version);
 			if (!elementBytes) {
@@ -621,7 +621,7 @@ namespace soe
 		virtual void ClearMembers()
 		{
 			typename MemberScribeVector_t::const_iterator memberIter;
-			for (memberIter = mMemberScribes.begin(); memberIter != mMemberScribes.end(); memberIter++)
+			for (memberIter = mMemberScribes.begin(); memberIter != mMemberScribes.end(); ++memberIter)
 			{
 				MemberScribe_t * pMemberScribe = *memberIter;
 				delete pMemberScribe;
@@ -655,7 +655,7 @@ namespace soe
 		unsigned bytesTotal = 0;
 		typename MemberScribeVector_t::const_iterator memberIter;
 
-		for (memberIter = mMemberScribes.begin(); memberIter != mMemberScribes.end(); memberIter++)
+		for (memberIter = mMemberScribes.begin(); memberIter != mMemberScribes.end(); ++memberIter)
 		{
 			MemberScribe_t * pMemberScribe = *memberIter;
 
@@ -688,7 +688,7 @@ namespace soe
 		unsigned bytesTotal = 0;
 		typename MemberScribeVector_t::const_iterator memberIter;
 
-		for (memberIter = mMemberScribes.begin(); memberIter != mMemberScribes.end(); memberIter++)
+		for (memberIter = mMemberScribes.begin(); memberIter != mMemberScribes.end(); ++memberIter)
 		{
 			const MemberScribe_t * pMemberScribe = *memberIter;
 

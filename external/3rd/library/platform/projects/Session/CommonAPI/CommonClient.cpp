@@ -632,7 +632,7 @@ void apiCore::Process()
         while (mapIterator != mRequestMap.end())
         {
             apiTrackedRequest & request = (*mapIterator).second;
-            mapIterator++;
+            ++mapIterator;
 
             if (request.Expired())
             {

@@ -119,12 +119,12 @@ namespace API_NAMESPACE
 	{ 
 		//	ensure that callback mecahnism isn't triggered at this point
 		HostMap_t::iterator iter;
-		for (iter = mHostMap[0].begin(); iter != mHostMap[0].end(); iter++)
+		for (iter = mHostMap[0].begin(); iter != mHostMap[0].end(); ++iter)
 		{
 			iter->first->SetHandler(0);
 			iter->first->Release();
 		}
-		for (iter = mHostMap[1].begin(); iter != mHostMap[1].end(); iter++)
+		for (iter = mHostMap[1].begin(); iter != mHostMap[1].end(); ++iter)
 		{
 			iter->first->SetHandler(0);
 			iter->first->Release();
@@ -555,7 +555,7 @@ namespace API_NAMESPACE
 		if (mTimeoutTimer != currentTime)
 		{
 			TimeoutMap_t::iterator iterator;
-			for (iterator = mTimeoutMap.begin(); iterator != mTimeoutMap.end(); iterator++)
+			for (iterator = mTimeoutMap.begin(); iterator != mTimeoutMap.end(); ++iterator)
 			{
 				TimeoutList_t & timeoutList = iterator->second;
 				while (!timeoutList.empty() && timeoutList.front().second < currentTime)
@@ -870,7 +870,7 @@ namespace API_NAMESPACE
 		size_t i = labelsAndValues.size();
 
 		labelsAndValues.resize(labelsAndValues.size() + mspLabelToEntryMap->size());
-		for (LabelToEntryMap_t::const_iterator it = mspLabelToEntryMap->begin(); it != mspLabelToEntryMap->end(); it++, i++)
+		for (LabelToEntryMap_t::const_iterator it = mspLabelToEntryMap->begin(); it != mspLabelToEntryMap->end(); ++it, ++i)
 		{
 			string value;
 
@@ -938,7 +938,7 @@ namespace API_NAMESPACE
 	{
 		initializeMap();
 
-		for	(soe::NameValuePairs_t::const_iterator it = labelsAndValues.begin(); it != labelsAndValues.end(); it++)
+		for	(soe::NameValuePairs_t::const_iterator it = labelsAndValues.begin(); it != labelsAndValues.end(); ++it)
 		{
 			LabelToEntryMap_t::iterator mIter = mspLabelToEntryMap->find(it->name);
 
@@ -1029,7 +1029,7 @@ namespace API_NAMESPACE
 	{
 		ClassScribeSet_t::iterator scribeIter;
 
-		for (scribeIter = classScribeSet.begin(); scribeIter != classScribeSet.end(); scribeIter++)
+		for (scribeIter = classScribeSet.begin(); scribeIter != classScribeSet.end(); ++scribeIter)
 		{
 			// This will cause the scribe to reinitialize itself next time it's used,
 			// thereby copying the new values. Storing references was too dangerous.

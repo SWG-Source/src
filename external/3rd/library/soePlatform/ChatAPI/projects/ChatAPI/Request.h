@@ -185,7 +185,7 @@ private:
 class RSearchAvatarKeywords : public GenericAPI::GenericRequest
 {
 public:
-	RSearchAvatarKeywords(const ChatUnicodeString nodeAddress, const ChatUnicodeString *keywordsList, unsigned keywordsLength);
+	RSearchAvatarKeywords(const ChatUnicodeString &nodeAddress, const ChatUnicodeString *keywordsList, unsigned keywordsLength);
 	virtual ~RSearchAvatarKeywords();
 
 	virtual void pack(Base::ByteStream &msg);

@@ -273,9 +273,9 @@ namespace DB
 	template<int S>
 	void BindableString<S>::setValue(const std::string &buffer)
 	{
-		FATAL(strlen(buffer.c_str())>S,("Attempt to save a std::string \"%s\"that is too long to the database.", buffer.c_str()));
+		FATAL(buffer.length())>S,("Attempt to save a std::string \"%s\"that is too long to the database.", buffer.c_str()));
 		strncpy(m_value, buffer.c_str(), S+1);
-		indicator=strlen(buffer.c_str());
+		indicator=buffer.length();
 	}
 
 	template<int S>

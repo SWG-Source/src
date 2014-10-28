@@ -118,7 +118,7 @@ namespace TaskManagerNameSpace
 	std::vector<QueuedSpawnRequest> s_delayedSpawnRequests;
 	struct OutstandingSpawnRequestAck
 	{
-		OutstandingSpawnRequestAck(const std::string n, const Archive::ByteStream & a, int t) :
+		OutstandingSpawnRequestAck(const std::string &n, const Archive::ByteStream & a, int t) :
 		nodeLabel(n), request(a), transactionId(t)
 		{
 		}

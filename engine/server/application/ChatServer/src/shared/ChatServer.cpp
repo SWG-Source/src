@@ -1299,7 +1299,7 @@ void ChatServer::destroyRoom(const std::string & roomName)
 			if (pos != roomName.npos)
 			{
 				std::string tmpRoomName = roomName.substr(0, pos);
-				char lastChar = tmpRoomName[strlen(tmpRoomName.c_str()) - 1];
+				char lastChar = tmpRoomName[tmpRoomName.length() - 1];
 				if (lastChar >= '0' && lastChar <= '9')
 				{
 					ChatServer::destroyRoom(tmpRoomName);

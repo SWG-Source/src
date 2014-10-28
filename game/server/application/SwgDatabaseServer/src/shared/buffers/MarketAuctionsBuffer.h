@@ -39,7 +39,7 @@ public:
 	DBSchema::MarketAuctionsRow * findRowByIndex     (const NetworkId &itemId);
 
 	void                      setMarketAuctions      (const NetworkId &itemId, const NetworkId &ownerId, const int active);
-	void                      setMarketAuctions      (const NetworkId &itemId, const NetworkId &ownerId, const NetworkId &creatorId, const NetworkId &locationId, const int minBid, const int buyNowPrice, const int auctionTimer, std::vector<std::pair<std::string, Unicode::String> > const & attributes, const Unicode::String userDescription, const int category, const int itemTemplateId, const Unicode::String itemName, const int itemTimer, const int active, const int itemSize);
+	void                      setMarketAuctions      (const NetworkId &itemId, const NetworkId &ownerId, const NetworkId &creatorId, const NetworkId &locationId, const int minBid, const int buyNowPrice, const int auctionTimer, std::vector<std::pair<std::string, Unicode::String> > const & attributes, const Unicode::String &userDescription, const int category, const int itemTemplateId, const Unicode::String &itemName, const int itemTimer, const int active, const int itemSize);
 	void                      removeMarketAuctions   (const NetworkId &itemId);
 	virtual void              removeObject           (const NetworkId &object);
 

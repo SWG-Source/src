@@ -146,9 +146,9 @@ void ConnectionServerConnection::onReceive(const Archive::ByteStream & message)
 					// deliver IM to character
 					ChatInstantMessageToCharacter chat(cri);
 					ChatAvatarId characterName = chat.getCharacterName();
-					if(characterName.gameCode == "")
+					if(characterName.gameCode.empty())
 						characterName.gameCode = "SWG";
-					if(characterName.cluster == "")
+					if(characterName.cluster.empty())
 						characterName.cluster = ConfigChatServer::getClusterName();
 
 					ChatAvatarId fromName;
@@ -185,9 +185,9 @@ void ConnectionServerConnection::onReceive(const Archive::ByteStream & message)
 					// deliver IM to character
 					ChatInstantMessageToCharacter chat(cri);
 					ChatAvatarId characterName = chat.getCharacterName();
-					if(characterName.gameCode == "")
+					if(characterName.gameCode.empty())
 						characterName.gameCode = "SWG";
-					if(characterName.cluster == "")
+					if(characterName.cluster.empty())
 						characterName.cluster = ConfigChatServer::getClusterName();
 
 					ChatServer::sendInstantMessage(*i, chat.getSequence(), characterName, chat.getMessage(), chat.getOutOfBand());			
@@ -205,9 +205,9 @@ void ConnectionServerConnection::onReceive(const Archive::ByteStream & message)
 //printf("ConnectionServerConnection -- ChatPersistentMessageToServer\n");		
 					ChatPersistentMessageToServer chat(cri);
 					ChatAvatarId characterName = chat.getToCharacterName();
-					if(characterName.gameCode == "")
+					if(characterName.gameCode.empty())
 						characterName.gameCode = "SWG";
-					if(characterName.cluster == "")
+					if(characterName.cluster.empty())
 						characterName.cluster = ConfigChatServer::getClusterName();
 			
 					ChatServer::sendPersistentMessage((*i), chat.getSequence(), characterName, chat.getSubject(), chat.getMessage(), chat.getOutOfBand());
@@ -283,9 +283,9 @@ void ConnectionServerConnection::onReceive(const Archive::ByteStream & message)
 //printf("ConnectionServerConnection -- ChatREmoveModeratorFromRoom\n");		
 					ChatRemoveModeratorFromRoom chat(cri);
 					ChatAvatarId characterName = chat.getAvatarId();
-					if(characterName.gameCode == "")
+					if(characterName.gameCode.empty())
 						characterName.gameCode = "SWG";
-					if(characterName.cluster == "")
+					if(characterName.cluster.empty())
 						characterName.cluster = ConfigChatServer::getClusterName();
 					ChatServer::removeModeratorFromRoom(chat.getSequenceId(), (*i), characterName, chat.getRoomName());
 				}
@@ -316,9 +316,9 @@ void ConnectionServerConnection::onReceive(const Archive::ByteStream & message)
 //printf("ConnectionServerConnection -- ChatInviteAvatarToRoom\n");		
 					ChatInviteAvatarToRoom chat(cri);
 					ChatAvatarId characterName = chat.getAvatarId();
-					if(characterName.gameCode == "")
+					if(characterName.gameCode.empty())
 						characterName.gameCode = "SWG";
-					if(characterName.cluster == "")
+					if(characterName.cluster.empty())
 						characterName.cluster = ConfigChatServer::getClusterName();
 					ChatServer::invite((*i), characterName, chat.getRoomName());
 				}
@@ -328,9 +328,9 @@ void ConnectionServerConnection::onReceive(const Archive::ByteStream & message)
 //printf("ConnectionServerConnection -- ChatUninviteAvatarToRoom\n");		
 					ChatUninviteFromRoom chat(cri);
 					ChatAvatarId characterName = chat.getAvatar();
-					if(characterName.gameCode == "")
+					if(characterName.gameCode.empty())
 						characterName.gameCode = "SWG";
-					if(characterName.cluster == "")
+					if(characterName.cluster.empty())
 						characterName.cluster = ConfigChatServer::getClusterName();
 					ChatServer::uninvite((*i), chat.getSequence(), characterName, chat.getRoomName());
 				}
@@ -340,9 +340,9 @@ void ConnectionServerConnection::onReceive(const Archive::ByteStream & message)
 //printf("ConnectionServerConnection -- ChatBanAvatarFromRoom\n");		
 					ChatBanAvatarFromRoom chat(cri);
 					ChatAvatarId characterName = chat.getAvatarId();
-					if(characterName.gameCode == "")
+					if(characterName.gameCode.empty())
 						characterName.gameCode = "SWG";
-					if(characterName.cluster == "")
+					if(characterName.cluster.empty())
 						characterName.cluster = ConfigChatServer::getClusterName();
 					ChatServer::banFromRoom(chat.getSequence(), (*i), characterName, chat.getRoomName());
 				}
@@ -352,9 +352,9 @@ void ConnectionServerConnection::onReceive(const Archive::ByteStream & message)
 //printf("ConnectionServerConnection -- ChatUnbanAvatarFromRoom\n");		
 					ChatUnbanAvatarFromRoom chat(cri);
 					ChatAvatarId characterName = chat.getAvatarId();
-					if(characterName.gameCode == "")
+					if(characterName.gameCode.empty())
 						characterName.gameCode = "SWG";
-					if(characterName.cluster == "")
+					if(characterName.cluster.empty())
 						characterName.cluster = ConfigChatServer::getClusterName();
 					ChatServer::unbanFromRoom(chat.getSequence(), (*i), characterName, chat.getRoomName());
 				}

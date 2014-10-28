@@ -124,7 +124,7 @@ void RGetAvatarKeywords::pack(ByteStream &msg)
 	put(msg, m_srcAvatarID);
 }
 
-RSearchAvatarKeywords::RSearchAvatarKeywords(const ChatUnicodeString nodeAddress, const ChatUnicodeString *keywordsList, unsigned keywordsLength)
+RSearchAvatarKeywords::RSearchAvatarKeywords(const ChatUnicodeString &nodeAddress, const ChatUnicodeString *keywordsList, unsigned keywordsLength)
 : GenericRequest(REQUEST_SEARCHAVATARKEYWORDS),
   m_keywordsLength(keywordsLength),
   m_keywordsList(NULL)
@@ -1282,7 +1282,7 @@ void RClassifyPersistentMessages::pack(ByteStream &msg)
 	put(msg, m_track);
 	put(msg, m_srcAvatarID);
 	put(msg, m_messageIDs.size());
-	for (idIter = m_messageIDs.begin(); idIter != m_messageIDs.end(); idIter++)
+	for (idIter = m_messageIDs.begin(); idIter != m_messageIDs.end(); ++idIter)
 	{
 		put(msg, *idIter);
 	}

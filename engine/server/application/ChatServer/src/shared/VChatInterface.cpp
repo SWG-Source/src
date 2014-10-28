@@ -905,7 +905,7 @@ std::string VChatInterface::parseWorldName(std::string const & input)
 	std::string::size_type findIndex = input.find(worldCode);
 	if(findIndex != std::string::npos)
 	{
-		findIndex += strlen(worldCode.c_str());
+		findIndex += worldCode.length());
 		output = input.substr(findIndex);
 	}
 	else
