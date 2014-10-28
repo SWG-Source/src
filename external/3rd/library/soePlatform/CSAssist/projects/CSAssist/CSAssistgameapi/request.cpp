@@ -470,7 +470,7 @@ void RSearchKB::pack(ByteStream &msg)
 	put(msg, num_args);
 	put(msg, mType);
 	put(msg, mTrack);
-	put(msg, mS);
+	put(msg, mSearchstring);
 	put(msg, mLanguage);
 	put(msg, mUID);
 }
@@ -478,7 +478,7 @@ void RSearchKB::pack(ByteStream &msg)
 //----------------------------------------------
 RConnectLB::RConnectLB(unsigned track, const std::string &connectString)
 : Request(CSASSIST_CALL_CONNECTLB, track), 
-m&connectString(&connectString)
+mconnectString(&connectString)
 //----------------------------------------------
 {
 	setTimeout(time(0) + 5);
@@ -492,7 +492,7 @@ void RConnectLB::pack(ByteStream &msg)
 	put(msg, num_args);
 	put(msg, mType);
 	put(msg, mTrack);
-	put(msg, m&connectString);
+	put(msg, mconnectString);
 }
 
 } // namespace CSAssist

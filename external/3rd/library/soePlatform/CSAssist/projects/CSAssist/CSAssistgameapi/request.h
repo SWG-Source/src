@@ -347,7 +347,7 @@ class RConnectLB : public Request
 		RConnectLB(unsigned track, const std::string &connectString);
 		virtual void pack(Base::ByteStream &msg);
 	private:
-		std::string m&connectString;
+		std::string mconnectString;
 };
 
 } // namespace CSAssist
