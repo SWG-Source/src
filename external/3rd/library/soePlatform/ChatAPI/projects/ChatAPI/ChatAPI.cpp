@@ -105,7 +105,7 @@ unsigned ChatAPI::RequestGetAvatarKeywords(const ChatAvatar *srcAvatar, void *us
 	return(m_core->submitRequest(req, res));
 }
 
-unsigned ChatAPI::RequestSearchAvatarKeywords(const ChatUnicodeString nodeAddress, const ChatUnicodeString *keywordList, unsigned keywordLength, void *user)
+unsigned ChatAPI::RequestSearchAvatarKeywords(const ChatUnicodeString &nodeAddress, const ChatUnicodeString *keywordList, unsigned keywordLength, void *user)
 {
 	RSearchAvatarKeywords *req = new RSearchAvatarKeywords(nodeAddress, keywordList, keywordLength);
 	ResSearchAvatarKeywords *res = new ResSearchAvatarKeywords(user);

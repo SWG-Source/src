@@ -174,7 +174,7 @@ void Logger::LoggerInit(const char *programName)
 Logger::~Logger()
 {
 	map<unsigned, LogInfo *>::iterator iter;
-	for(iter = m_logTable.begin(); iter != m_logTable.end(); iter++)
+	for(iter = m_logTable.begin(); iter != m_logTable.end(); ++iter)
 	{
 		logWithSys((*iter).first, LOG_INFO, LOG_FILEONLY, "---=== Log Stopped ===---");
 		fflush((*iter).second->file);
@@ -219,7 +219,7 @@ void Logger::setLoggingType(unsigned logLevel, ELogType logType)
 
 			for (levelIter = m_logLevelToTypeMap.begin();
 				 levelIter != m_logLevelToTypeMap.end();
-				 levelIter++)
+				 ++levelIter)
 			{
 				m_combinedLogType = (ELogType)(m_combinedLogType | logType);
 			}
@@ -245,7 +245,7 @@ void Logger::flushAll()
 	{
 		map<unsigned, LogInfo *>::iterator iter;
 
-		for(iter = m_logTable.begin(); iter != m_logTable.end(); iter++)
+		for(iter = m_logTable.begin(); iter != m_logTable.end(); ++iter)
 		{
 			LogInfo *info = (*iter).second;
 			fflush(info->file);
@@ -634,7 +634,7 @@ void Logger::rollDate(time_t t)
 	m_logPrefix = buf;
 
 	map<unsigned, LogInfo *>::iterator iter;
-	for(iter = m_logTable.begin(); iter != m_logTable.end(); iter++)
+	for(iter = m_logTable.begin(); iter != m_logTable.end(); ++iter)
 	{
 		(*iter).second->filename = m_logPrefix + file_sep + (*iter).second->name.c_str() + ".log";
 		fflush((*iter).second->file);	

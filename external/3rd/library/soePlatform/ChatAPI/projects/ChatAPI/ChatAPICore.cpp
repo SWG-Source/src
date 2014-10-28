@@ -135,25 +135,25 @@ ChatAPICore::~ChatAPICore()
 	m_api = NULL;
 
 	std::map<unsigned, ChatAvatarCore*>::iterator iter = m_avatarCoreCache.begin();
-	for (; iter != m_avatarCoreCache.end(); iter++)
+	for (; iter != m_avatarCoreCache.end(); ++iter)
 	{
 		delete (*iter).second;
 	}
 
 	std::map<unsigned, ChatAvatar*>::iterator iter2 = m_avatarCache.begin();
-	for (; iter2 != m_avatarCache.end(); iter2++)
+	for (; iter2 != m_avatarCache.end(); ++iter2)
 	{
 		delete (*iter2).second;
 	}
 
 	std::map<unsigned, ChatRoomCore*>::iterator iter3 = m_roomCoreCache.begin();
-	for (; iter3 != m_roomCoreCache.end(); iter3++)
+	for (; iter3 != m_roomCoreCache.end(); ++iter3)
 	{
 		delete (*iter3).second;
 	}
 
 	std::map<unsigned, ChatRoom*>::iterator iter4 = m_roomCache.begin();
-	for (; iter4 != m_roomCache.end(); iter4++)
+	for (; iter4 != m_roomCache.end(); ++iter4)
 	{
 		delete (*iter4).second;
 	}
@@ -669,7 +669,7 @@ void ChatAPICore::responseCallback(GenericResponse *res)
 					// created that we need to cache as well?
 					const set<ChatRoomCore *> &extraRooms = R->getExtraRooms();
 					set<ChatRoomCore *>::const_iterator iter = extraRooms.begin();
-					for (; iter != extraRooms.end(); iter++)
+					for (; iter != extraRooms.end(); ++iter)
 					{
 						cacheRoom(*iter);
 					}
@@ -687,7 +687,7 @@ void ChatAPICore::responseCallback(GenericResponse *res)
 					// the ChatRoomCore objects because we shouldn't need them
 					const set<ChatRoomCore *> &extraRooms = R->getExtraRooms();
 					set<ChatRoomCore *>::const_iterator iter = extraRooms.begin();
-					for (; iter != extraRooms.end(); iter++)
+					for (; iter != extraRooms.end(); ++iter)
 					{
 						delete (*iter);
 					}
@@ -727,7 +727,7 @@ void ChatAPICore::responseCallback(GenericResponse *res)
 						// created that we need to cache as well?
 						const set<ChatRoomCore *> &extraRooms = R->getExtraRooms();
 						set<ChatRoomCore *>::const_iterator iter = extraRooms.begin();
-						for (; iter != extraRooms.end(); iter++)
+						for (; iter != extraRooms.end(); ++iter)
 						{
 							cacheRoom(*iter);
 						}
@@ -915,7 +915,7 @@ void ChatAPICore::responseCallback(GenericResponse *res)
 					// created that we need to cache as well?
 					const set<ChatRoomCore *> &extraRooms = R->getExtraRooms();
 					set<ChatRoomCore *>::const_iterator iter = extraRooms.begin();
-					for (; iter != extraRooms.end(); iter++)
+					for (; iter != extraRooms.end(); ++iter)
 					{
 						cacheRoom(*iter);
 					}
@@ -931,7 +931,7 @@ void ChatAPICore::responseCallback(GenericResponse *res)
 					// the ChatRoomCore objects because we shouldn't need them
 					const set<ChatRoomCore *> &extraRooms = R->getExtraRooms();
 					set<ChatRoomCore *>::const_iterator iter = extraRooms.begin();
-					for (; iter != extraRooms.end(); iter++)
+					for (; iter != extraRooms.end(); ++iter)
 					{
 						delete (*iter);
 					}
@@ -2849,7 +2849,7 @@ void ChatAPICore::responseCallback(short type, ByteStream::ReadIterator &iter)
 
 			const set<ChatRoomCore *> &extraRooms = M.getExtraRooms();
 			set<ChatRoomCore *>::const_iterator iter = extraRooms.begin();
-			for (; iter != extraRooms.end(); iter++)
+			for (; iter != extraRooms.end(); ++iter)
 			{
 				if (room)
 				{
@@ -2898,7 +2898,7 @@ void ChatAPICore::responseCallback(short type, ByteStream::ReadIterator &iter)
 			{
 				// iterate through rooms, checking if we must fail them over
 				map<unsigned, ChatRoomCore *>::const_iterator roomIter = m_roomCoreCache.begin();
-				for (; roomIter != m_roomCoreCache.end(); roomIter++)
+				for (; roomIter != m_roomCoreCache.end(); ++roomIter)
 				{
 					ChatRoomCore *room = (*roomIter).second;
 					const String &roomAddress = room->getAddress();
@@ -2907,7 +2907,7 @@ void ChatAPICore::responseCallback(short type, ByteStream::ReadIterator &iter)
 					// if aid string is found at index 0 (start of roomAddr string)
 					String::size_type index;
 					list<String>::const_iterator aidIter = aidList.begin();
-					for (; aidIter != aidList.end(); aidIter++)
+					for (; aidIter != aidList.end(); ++aidIter)
 					{
 						index = roomAddress.find(*aidIter);
 						if (index == 0)
@@ -3183,7 +3183,7 @@ void ChatAPICore::failoverReloginAvatars()
 
 	if (m_avatarCoreCache.size() > 0)
 	{
-		for (avatarIter = m_avatarCoreCache.begin(); avatarIter != m_avatarCoreCache.end(); avatarIter++)
+		for (avatarIter = m_avatarCoreCache.begin(); avatarIter != m_avatarCoreCache.end(); ++avatarIter)
 		{
 			// build failover-login request for avatar
 			failoverReloginOneAvatar(avatarIter->second);
@@ -3242,7 +3242,7 @@ void ChatAPICore::failoverRecreateRooms()
 		// first build multimap of rooms keyed by their node level (ascending order is default).
 		multimap<unsigned, ChatRoomCore *> levelMap;
 		ChatRoomCore *roomCore = NULL;
-		for (roomIter = m_roomCoreCache.begin(); roomIter != m_roomCoreCache.end(); roomIter++)
+		for (roomIter = m_roomCoreCache.begin(); roomIter != m_roomCoreCache.end(); ++roomIter)
 		{
 			roomCore = (*roomIter).second;
 			if (roomCore->getNodeLevel() != 0)
@@ -3251,7 +3251,7 @@ void ChatAPICore::failoverRecreateRooms()
 			}
 		}
 
-		for (roomMultiIter = levelMap.begin(); roomMultiIter != levelMap.end(); roomMultiIter++)
+		for (roomMultiIter = levelMap.begin(); roomMultiIter != levelMap.end(); ++roomMultiIter)
 		{
 			roomCore = (*roomMultiIter).second;
 
@@ -3300,7 +3300,7 @@ ChatAvatar *ChatAPICore::getAvatar(const ChatUnicodeString &avatarName, const Ch
 
 	map<unsigned, ChatAvatar *>::iterator iter = m_avatarCache.begin();
 
-	for (; iter != m_avatarCache.end(); iter++)
+	for (; iter != m_avatarCache.end(); ++iter)
 	{
 		ChatAvatar *avatar = (*iter).second;
 
@@ -3321,7 +3321,7 @@ ChatRoom *ChatAPICore::getRoom(const ChatUnicodeString &roomAddress)
 
 	map<unsigned, ChatRoom *>::iterator iter = m_roomCache.begin();
 
-	for (; iter != m_roomCache.end(); iter++)
+	for (; iter != m_roomCache.end(); ++iter)
 	{
 		ChatRoom *room = (*iter).second;
 

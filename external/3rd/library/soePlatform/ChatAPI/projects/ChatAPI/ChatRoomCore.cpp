@@ -115,72 +115,72 @@ ChatRoomCore::~ChatRoomCore()
 	set<ChatAvatarCore *>::iterator setIterCore;
 	set<ChatAvatar *>::iterator setIter;
 
-	for (iterCore = m_inroomAvatarsCore.begin(); iterCore != m_inroomAvatarsCore.end(); iterCore++)
+	for (iterCore = m_inroomAvatarsCore.begin(); iterCore != m_inroomAvatarsCore.end(); ++iterCore)
 	{
 		delete (iterCore->second);
 	}
 
-	for (iter = m_inroomAvatars.begin(); iter != m_inroomAvatars.end(); iter++)
+	for (iter = m_inroomAvatars.begin(); iter != m_inroomAvatars.end(); ++iter)
 	{
 		delete (iter->second);
 	}
 
-	for (iterCore = m_adminAvatarsCore.begin(); iterCore != m_adminAvatarsCore.end(); iterCore++)
+	for (iterCore = m_adminAvatarsCore.begin(); iterCore != m_adminAvatarsCore.end(); ++iterCore)
 	{
 		delete (iterCore->second);
 	}
 
-	for (iter = m_adminAvatars.begin(); iter != m_adminAvatars.end(); iter++)
+	for (iter = m_adminAvatars.begin(); iter != m_adminAvatars.end(); ++iter)
 	{
 		delete (iter->second);
 	}
 
-	for (setIterCore = m_moderatorAvatarsCore.begin(); setIterCore != m_moderatorAvatarsCore.end(); setIterCore++)
+	for (setIterCore = m_moderatorAvatarsCore.begin(); setIterCore != m_moderatorAvatarsCore.end(); ++setIterCore)
 	{
 		delete (*setIterCore);
 	}
 
-	for (setIter = m_moderatorAvatars.begin(); setIter != m_moderatorAvatars.end(); setIter++)
+	for (setIter = m_moderatorAvatars.begin(); setIter != m_moderatorAvatars.end(); ++setIter)
 	{
 		delete (*setIter);
 	}
 
-	for (setIterCore = m_tempModeratorAvatarsCore.begin(); setIterCore != m_tempModeratorAvatarsCore.end(); setIterCore++)
+	for (setIterCore = m_tempModeratorAvatarsCore.begin(); setIterCore != m_tempModeratorAvatarsCore.end(); ++setIterCore)
 	{
 		delete (*setIterCore);
 	}
 
-	for (setIter = m_tempModeratorAvatars.begin(); setIter != m_tempModeratorAvatars.end(); setIter++)
+	for (setIter = m_tempModeratorAvatars.begin(); setIter != m_tempModeratorAvatars.end(); ++setIter)
 	{
 		delete (*setIter);
 	}
 
-	for (setIterCore = m_banAvatarsCore.begin(); setIterCore != m_banAvatarsCore.end(); setIterCore++)
+	for (setIterCore = m_banAvatarsCore.begin(); setIterCore != m_banAvatarsCore.end(); ++setIterCore)
 	{
 		delete (*setIterCore);
 	}
 
-	for (setIter = m_banAvatars.begin(); setIter != m_banAvatars.end(); setIter++)
+	for (setIter = m_banAvatars.begin(); setIter != m_banAvatars.end(); ++setIter)
 	{
 		delete (*setIter);
 	}
 
-	for (setIterCore = m_inviteAvatarsCore.begin(); setIterCore != m_inviteAvatarsCore.end(); setIterCore++)
+	for (setIterCore = m_inviteAvatarsCore.begin(); setIterCore != m_inviteAvatarsCore.end(); ++setIterCore)
 	{
 		delete (*setIterCore);
 	}
 
-	for (setIter = m_inviteAvatars.begin(); setIter != m_inviteAvatars.end(); setIter++)
+	for (setIter = m_inviteAvatars.begin(); setIter != m_inviteAvatars.end(); ++setIter)
 	{
 		delete (*setIter);
 	}
 
-	for (setIterCore = m_voiceAvatarsCore.begin(); setIterCore != m_voiceAvatarsCore.end(); setIterCore++)
+	for (setIterCore = m_voiceAvatarsCore.begin(); setIterCore != m_voiceAvatarsCore.end(); ++setIterCore)
 	{
 		delete (*setIterCore);
 	}
 
-	for (setIter = m_voiceAvatars.begin(); setIter != m_voiceAvatars.end(); setIter++)
+	for (setIter = m_voiceAvatars.begin(); setIter != m_voiceAvatars.end(); ++setIter)
 	{
 		delete (*setIter);
 	}
@@ -219,7 +219,7 @@ ChatAvatarCore *ChatRoomCore::getModeratorCore(const Plat_Unicode::String &name,
 
 	set<ChatAvatarCore *>::iterator iterCore = m_moderatorAvatarsCore.begin();
 
-	for(; iterCore != m_moderatorAvatarsCore.end(); iterCore++)
+	for(; iterCore != m_moderatorAvatarsCore.end(); ++iterCore)
 	{
 		ChatAvatarCore *avatarCore = (*iterCore);
 		if (caseInsensitiveCompare(name, avatarCore->getName()) &&
@@ -242,7 +242,7 @@ ChatAvatar *ChatRoomCore::getModerator(const Plat_Unicode::String &name, const P
 
 	set<ChatAvatar *>::iterator iter = m_moderatorAvatars.begin();
 
-	for(; iter != m_moderatorAvatars.end(); iter++)
+	for(; iter != m_moderatorAvatars.end(); ++iter)
 	{
 		ChatAvatar *avatar = (*iter);
 		Plat_Unicode::String avatarName(avatar->getName().string_data, avatar->getName().string_length);
@@ -267,7 +267,7 @@ ChatAvatarCore *ChatRoomCore::getBannedCore(const Plat_Unicode::String &name, co
 
 	set<ChatAvatarCore *>::iterator iterCore = m_banAvatarsCore.begin();
 
-	for(; iterCore != m_banAvatarsCore.end(); iterCore++)
+	for(; iterCore != m_banAvatarsCore.end(); ++iterCore)
 	{
 		ChatAvatarCore *avatarCore = (*iterCore);
 		if (caseInsensitiveCompare(name, avatarCore->getName()) &&
@@ -290,7 +290,7 @@ ChatAvatar *ChatRoomCore::getBanned(const Plat_Unicode::String &name, const Plat
 
 	set<ChatAvatar *>::iterator iter = m_banAvatars.begin();
 
-	for(; iter != m_banAvatars.end(); iter++)
+	for(; iter != m_banAvatars.end(); ++iter)
 	{
 		ChatAvatar *avatar = (*iter);
 		Plat_Unicode::String avatarName(avatar->getName().string_data, avatar->getName().string_length);
@@ -315,7 +315,7 @@ ChatAvatarCore *ChatRoomCore::getInvitedCore(const Plat_Unicode::String &name, c
 
 	set<ChatAvatarCore *>::iterator iterCore = m_inviteAvatarsCore.begin();
 
-	for(; iterCore != m_inviteAvatarsCore.end(); iterCore++)
+	for(; iterCore != m_inviteAvatarsCore.end(); ++iterCore)
 	{
 		ChatAvatarCore *avatarCore = (*iterCore);
 		if (caseInsensitiveCompare(name, avatarCore->getName()) &&
@@ -338,7 +338,7 @@ ChatAvatar *ChatRoomCore::getInvited(const Plat_Unicode::String &name, const Pla
 
 	set<ChatAvatar *>::iterator iter = m_inviteAvatars.begin();
 
-	for(; iter != m_inviteAvatars.end(); iter++)
+	for(; iter != m_inviteAvatars.end(); ++iter)
 	{
 		ChatAvatar *avatar = (*iter);
 		Plat_Unicode::String avatarName(avatar->getName().string_data, avatar->getName().string_length);
@@ -450,7 +450,7 @@ ChatAvatarCore *ChatRoomCore::removeBan(const Plat_Unicode::String &name, const 
 
 	set<ChatAvatarCore *>::iterator iterCore = m_banAvatarsCore.begin();
 
-	for(; iterCore != m_banAvatarsCore.end(); iterCore++)
+	for(; iterCore != m_banAvatarsCore.end(); ++iterCore)
 	{
 		ChatAvatarCore *avatarCore = (*iterCore);
 		if (caseInsensitiveCompare(name, avatarCore->getName()) &&
@@ -469,7 +469,7 @@ ChatAvatarCore *ChatRoomCore::removeBan(const Plat_Unicode::String &name, const 
 		// because the addBan() made the ChatAvatar, removeBan() deletes it.
 		set<ChatAvatar *>::iterator iter = m_banAvatars.begin();
 
-		for(; iter != m_banAvatars.end(); iter++)
+		for(; iter != m_banAvatars.end(); ++iter)
 		{
 			ChatAvatar *avatar = (*iter);
 			Plat_Unicode::String avatarName(avatar->getName().string_data, avatar->getName().string_length);
@@ -569,7 +569,7 @@ ChatAvatarCore *ChatRoomCore::removeModerator(const Plat_Unicode::String &name, 
 
 	set<ChatAvatarCore *>::iterator iterCore = m_moderatorAvatarsCore.begin();
 
-	for(; iterCore != m_moderatorAvatarsCore.end(); iterCore++)
+	for(; iterCore != m_moderatorAvatarsCore.end(); ++iterCore)
 	{
 		ChatAvatarCore *avatarCore = (*iterCore);
 		if (caseInsensitiveCompare(name, avatarCore->getName()) &&
@@ -588,7 +588,7 @@ ChatAvatarCore *ChatRoomCore::removeModerator(const Plat_Unicode::String &name, 
 		// because the addBan() made the ChatAvatar, removeBan() deletes it.
 		set<ChatAvatar *>::iterator iter = m_moderatorAvatars.begin();
 
-		for(; iter != m_moderatorAvatars.end(); iter++)
+		for(; iter != m_moderatorAvatars.end(); ++iter)
 		{
 			ChatAvatar *avatar = (*iter);
 			Plat_Unicode::String avatarName(avatar->getName().string_data, avatar->getName().string_length);
@@ -641,7 +641,7 @@ ChatAvatarCore *ChatRoomCore::removeTempModerator(const Plat_Unicode::String &na
 
 	set<ChatAvatarCore *>::iterator iterCore = m_tempModeratorAvatarsCore.begin();
 
-	for(; iterCore != m_tempModeratorAvatarsCore.end(); iterCore++)
+	for(; iterCore != m_tempModeratorAvatarsCore.end(); ++iterCore)
 	{
 		ChatAvatarCore *avatarCore = (*iterCore);
 		if (caseInsensitiveCompare(name, avatarCore->getName()) &&
@@ -660,7 +660,7 @@ ChatAvatarCore *ChatRoomCore::removeTempModerator(const Plat_Unicode::String &na
 		// because the addBan() made the ChatAvatar, removeBan() deletes it.
 		set<ChatAvatar *>::iterator iter = m_tempModeratorAvatars.begin();
 
-		for(; iter != m_tempModeratorAvatars.end(); iter++)
+		for(; iter != m_tempModeratorAvatars.end(); ++iter)
 		{
 			ChatAvatar *avatar = (*iter);
 			Plat_Unicode::String avatarName(avatar->getName().string_data, avatar->getName().string_length);
@@ -713,7 +713,7 @@ ChatAvatarCore *ChatRoomCore::removeInvite(const Plat_Unicode::String &name, con
 
 	set<ChatAvatarCore *>::iterator iterCore = m_inviteAvatarsCore.begin();
 
-	for(; iterCore != m_inviteAvatarsCore.end(); iterCore++)
+	for(; iterCore != m_inviteAvatarsCore.end(); ++iterCore)
 	{
 		ChatAvatarCore *avatarCore = (*iterCore);
 		if (caseInsensitiveCompare(name, avatarCore->getName()) &&
@@ -732,7 +732,7 @@ ChatAvatarCore *ChatRoomCore::removeInvite(const Plat_Unicode::String &name, con
 		// because the addBan() made the ChatAvatar, removeBan() deletes it.
 		set<ChatAvatar *>::iterator iter = m_inviteAvatars.begin();
 
-		for(; iter != m_inviteAvatars.end(); iter++)
+		for(; iter != m_inviteAvatars.end(); ++iter)
 		{
 			ChatAvatar *avatar = (*iter);
 			Plat_Unicode::String avatarName(avatar->getName().string_data, avatar->getName().string_length);
@@ -785,7 +785,7 @@ ChatAvatarCore *ChatRoomCore::removeVoice(const Plat_Unicode::String &name, cons
 
 	set<ChatAvatarCore *>::iterator iterCore = m_voiceAvatarsCore.begin();
 
-	for(; iterCore != m_voiceAvatarsCore.end(); iterCore++)
+	for(; iterCore != m_voiceAvatarsCore.end(); ++iterCore)
 	{
 		ChatAvatarCore *avatarCore = (*iterCore);
 		if (caseInsensitiveCompare(name, avatarCore->getName()) &&
@@ -804,7 +804,7 @@ ChatAvatarCore *ChatRoomCore::removeVoice(const Plat_Unicode::String &name, cons
 		// because the addBan() made the ChatAvatar, removeBan() deletes it.
 		set<ChatAvatar *>::iterator iter = m_voiceAvatars.begin();
 
-		for(; iter != m_voiceAvatars.end(); iter++)
+		for(; iter != m_voiceAvatars.end(); ++iter)
 		{
 			ChatAvatar *avatar = (*iter);
 			Plat_Unicode::String avatarName(avatar->getName().string_data, avatar->getName().string_length);
@@ -874,7 +874,7 @@ AvatarIteratorCore ChatRoomCore::findAvatar(const String &name, const String &ad
 {
 	map<unsigned, ChatAvatar *>::iterator iter;
 
-	for (iter = m_inroomAvatars.begin(); iter != m_inroomAvatars.end(); iter++)
+	for (iter = m_inroomAvatars.begin(); iter != m_inroomAvatars.end(); ++iter)
 	{
 		if(String((*iter).second->getName().string_data, (*iter).second->getName().string_length) == name &&
 		  String((*iter).second->getAddress().string_data, (*iter).second->getAddress().string_length) == address)
@@ -895,7 +895,7 @@ ModeratorIteratorCore ChatRoomCore::findModerator(const String &name, const Stri
 {
 	set<ChatAvatar *>::iterator iter;
 
-	for (iter = m_moderatorAvatars.begin(); iter != m_moderatorAvatars.end(); iter++)
+	for (iter = m_moderatorAvatars.begin(); iter != m_moderatorAvatars.end(); ++iter)
 	{
 		ChatAvatar *avatar = (*iter);
 		Plat_Unicode::String avatarName(avatar->getName().string_data, avatar->getName().string_length);
@@ -919,7 +919,7 @@ TemporaryModeratorIteratorCore ChatRoomCore::findTemporaryModerator(const String
 {
 	set<ChatAvatar *>::iterator iter;
 
-	for (iter = m_tempModeratorAvatars.begin(); iter != m_tempModeratorAvatars.end(); iter++)
+	for (iter = m_tempModeratorAvatars.begin(); iter != m_tempModeratorAvatars.end(); ++iter)
 	{
 		ChatAvatar *avatar = (*iter);
 		Plat_Unicode::String avatarName(avatar->getName().string_data, avatar->getName().string_length);
@@ -943,7 +943,7 @@ BanIteratorCore ChatRoomCore::findBanned(const String &name, const String &addre
 {
 	set<ChatAvatar *>::iterator iter;
 
-	for (iter = m_banAvatars.begin(); iter != m_banAvatars.end(); iter++)
+	for (iter = m_banAvatars.begin(); iter != m_banAvatars.end(); ++iter)
 	{
 		ChatAvatar *avatar = (*iter);
 		Plat_Unicode::String avatarName(avatar->getName().string_data, avatar->getName().string_length);
@@ -967,7 +967,7 @@ InviteIteratorCore ChatRoomCore::findInvited(const String &name, const String &a
 {
 	set<ChatAvatar *>::iterator iter;
 
-	for (iter = m_inviteAvatars.begin(); iter != m_inviteAvatars.end(); iter++)
+	for (iter = m_inviteAvatars.begin(); iter != m_inviteAvatars.end(); ++iter)
 	{
 		ChatAvatar *avatar = (*iter);
 		Plat_Unicode::String avatarName(avatar->getName().string_data, avatar->getName().string_length);
@@ -991,7 +991,7 @@ VoiceIteratorCore ChatRoomCore::findVoice(const String &name, const String &addr
 {
 	set<ChatAvatar *>::iterator iter;
 
-	for (iter = m_voiceAvatars.begin(); iter != m_voiceAvatars.end(); iter++)
+	for (iter = m_voiceAvatars.begin(); iter != m_voiceAvatars.end(); ++iter)
 	{
 		ChatAvatar *avatar = (*iter);
 		Plat_Unicode::String avatarName(avatar->getName().string_data, avatar->getName().string_length);
@@ -1050,7 +1050,7 @@ void ChatRoomCore::serializeWithLocalAvatarsOnly(Base::ByteStream &msg)
 	std::map<unsigned, ChatAvatarCore *>::iterator avatarIter;
 	std::set<ChatAvatarCore *> avatarsToSend;
 
-	for (avatarIter = m_inroomAvatarsCore.begin(); avatarIter != m_inroomAvatarsCore.end(); avatarIter++)
+	for (avatarIter = m_inroomAvatarsCore.begin(); avatarIter != m_inroomAvatarsCore.end(); ++avatarIter)
 	{
 		// include only the avatars that are on this API
 		if ( this->getAvatar((*avatarIter).second->getAvatarID()) != NULL )
@@ -1064,7 +1064,7 @@ void ChatRoomCore::serializeWithLocalAvatarsOnly(Base::ByteStream &msg)
 	put(msg, avatarCount);
 
 	std::set<ChatAvatarCore *>::iterator sendIter;
-	for (sendIter = avatarsToSend.begin(); sendIter != avatarsToSend.end(); sendIter++)
+	for (sendIter = avatarsToSend.begin(); sendIter != avatarsToSend.end(); ++sendIter)
 	{
 		(*sendIter)->serialize(msg);
 	}
@@ -1074,7 +1074,7 @@ void ChatRoomCore::serializeWithLocalAvatarsOnly(Base::ByteStream &msg)
 	put(msg, administratorCount);
 	
 	std::map<unsigned, ChatAvatarCore *>::iterator adminIter;
-	for (adminIter = m_adminAvatarsCore.begin(); adminIter != m_adminAvatarsCore.end(); adminIter++)
+	for (adminIter = m_adminAvatarsCore.begin(); adminIter != m_adminAvatarsCore.end(); ++adminIter)
 	{
 		(*adminIter).second->serialize(msg);
 	}
@@ -1084,7 +1084,7 @@ void ChatRoomCore::serializeWithLocalAvatarsOnly(Base::ByteStream &msg)
 	put(msg, moderatorCount);
 	
 	std::set<ChatAvatarCore *>::iterator moderatorIter;
-	for (moderatorIter = m_moderatorAvatarsCore.begin(); moderatorIter != m_moderatorAvatarsCore.end(); moderatorIter++)
+	for (moderatorIter = m_moderatorAvatarsCore.begin(); moderatorIter != m_moderatorAvatarsCore.end(); ++moderatorIter)
 	{
 		(*moderatorIter)->serialize(msg);
 	}
@@ -1094,7 +1094,7 @@ void ChatRoomCore::serializeWithLocalAvatarsOnly(Base::ByteStream &msg)
 	put(msg, tempModeratorCount);
 	
 	std::set<ChatAvatarCore *>::iterator tempModeratorIter;
-	for (tempModeratorIter = m_tempModeratorAvatarsCore.begin(); tempModeratorIter != m_tempModeratorAvatarsCore.end(); tempModeratorIter++)
+	for (tempModeratorIter = m_tempModeratorAvatarsCore.begin(); tempModeratorIter != m_tempModeratorAvatarsCore.end(); ++tempModeratorIter)
 	{
 		(*tempModeratorIter)->serialize(msg);
 	}
@@ -1104,7 +1104,7 @@ void ChatRoomCore::serializeWithLocalAvatarsOnly(Base::ByteStream &msg)
 	put(msg, bannedCount);
 	
 	std::set<ChatAvatarCore *>::iterator bannedIter;
-	for (bannedIter = m_banAvatarsCore.begin(); bannedIter != m_banAvatarsCore.end(); bannedIter++)
+	for (bannedIter = m_banAvatarsCore.begin(); bannedIter != m_banAvatarsCore.end(); ++bannedIter)
 	{
 		(*bannedIter)->serialize(msg);
 	}
@@ -1114,7 +1114,7 @@ void ChatRoomCore::serializeWithLocalAvatarsOnly(Base::ByteStream &msg)
 	put(msg, invitedCount);
 	
 	std::set<ChatAvatarCore *>::iterator invitesIter;
-	for (invitesIter = m_inviteAvatarsCore.begin(); invitesIter != m_inviteAvatarsCore.end(); invitesIter++)
+	for (invitesIter = m_inviteAvatarsCore.begin(); invitesIter != m_inviteAvatarsCore.end(); ++invitesIter)
 	{
 		(*invitesIter)->serialize(msg);
 	}
@@ -1124,7 +1124,7 @@ void ChatRoomCore::serializeWithLocalAvatarsOnly(Base::ByteStream &msg)
 	put(msg, voiceCount);
 	
 	std::set<ChatAvatarCore *>::iterator voicesIter;
-	for (voicesIter = m_voiceAvatarsCore.begin(); voicesIter != m_voiceAvatarsCore.end(); voicesIter++)
+	for (voicesIter = m_voiceAvatarsCore.begin(); voicesIter != m_voiceAvatarsCore.end(); ++voicesIter)
 	{
 		(*voicesIter)->serialize(msg);
 	}

@@ -52,7 +52,7 @@ namespace Base
         Update(input);
     }
 
-    vector<int> MD5::Decode(vector<char> achar0, int i, int j)
+    vector<int> MD5::Decode(const vector<char> &achar0, int i, int j)
     {
         vector<int> ai(16,0);
         int l;
@@ -66,7 +66,7 @@ namespace Base
         return ai;
     }
 
-    vector<char> MD5::Encode(vector<int> ai, int i)
+    vector<char> MD5::Encode(vector<int> &ai, int i)
     {
         vector<char> achar0(i,0);
         int k;
@@ -250,7 +250,7 @@ namespace Base
         }
     }
 
-    void MD5::Update(string s)
+    void MD5::Update(const string &s)
     {
         vector<char> achar(s.size(),0);
         for (int i=0; i<(int)s.size(); i++)
@@ -258,17 +258,17 @@ namespace Base
         Update( achar, achar.size() );
     }
 
-    void MD5::Update(vector<char> achar0)
+    void MD5::Update(const vector<char> &achar0)
     {
         Update(achar0, 0, achar0.size());
     }
 
-    void MD5::Update(vector<char> achar0, int i)
+    void MD5::Update(const vector<char> &achar0, int i)
     {
         Update(state, achar0, 0, i);
     }
 
-    void MD5::Update(vector<char> achar0, int i, int j)
+    void MD5::Update(const vector<char> &achar0, int i, int j)
     {
         Update(state, achar0, i, j);
     }
@@ -278,7 +278,7 @@ namespace Base
         return asHex(Final());
     }
 
-    string MD5::asHex(vector<char> achar0)
+    string MD5::asHex(const vector<char> &achar0)
     {
         const string hex = "0123456789abcdef";
 

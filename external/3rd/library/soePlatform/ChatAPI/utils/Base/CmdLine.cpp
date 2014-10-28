@@ -82,7 +82,7 @@ int CCmdLine::SplitLine(int argc, char **argv)
             }
             else
             {
-               arg = "";
+               arg.clear();
             }
          }
 
@@ -90,7 +90,7 @@ int CCmdLine::SplitLine(int argc, char **argv)
          CCmdParam cmd;
 
          // only add non-empty args
-         if (arg != "")
+         if (arg.empty())
          {
             cmd.m_strings.push_back(arg);
          }

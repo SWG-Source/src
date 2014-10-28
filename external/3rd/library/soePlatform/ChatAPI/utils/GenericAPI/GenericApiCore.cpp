@@ -69,7 +69,7 @@ GenericAPICore::GenericAPICore(const char *hosts[],
 
 GenericAPICore::~GenericAPICore()
 {
-    for (std::vector<GenericConnection *>::iterator conIter = m_serverConnections.begin(); conIter != m_serverConnections.end(); conIter++)
+    for (std::vector<GenericConnection *>::iterator conIter = m_serverConnections.begin(); conIter != m_serverConnections.end(); ++conIter)
     {
         GenericConnection *con = *conIter;
         delete con;
@@ -209,7 +209,7 @@ void GenericAPICore::process()
 		}
 	}
 
-    for (std::vector<GenericConnection *>::iterator conIter = m_serverConnections.begin(); conIter != m_serverConnections.end(); conIter++)
+    for (std::vector<GenericConnection *>::iterator conIter = m_serverConnections.begin(); conIter != m_serverConnections.end(); ++conIter)
     {
         GenericConnection *con = *conIter;
 	    con->process();

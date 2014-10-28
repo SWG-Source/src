@@ -254,7 +254,7 @@ namespace ChatSystem
 
 		// RequestSearchAvatarKeywords
 		//    Searches the keywords on within the chat system and returns a list of avatars that match
-		unsigned RequestSearchAvatarKeywords(const ChatUnicodeString nodeAddress, const ChatUnicodeString *keywordList, unsigned keywordLength, void *user);
+		unsigned RequestSearchAvatarKeywords(const ChatUnicodeString &nodeAddress, const ChatUnicodeString *keywordList, unsigned keywordLength, void *user);
 
 		// ---- FANCLUB handle lookup method ----
 		
