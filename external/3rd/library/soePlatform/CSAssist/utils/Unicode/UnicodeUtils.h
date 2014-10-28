@@ -196,7 +196,7 @@ namespace Plat_Unicode
 		unsigned index = 0;
 		s.resize(nstr.size());
 		const NarrowString::const_iterator end = nstr.end();
-		for (NarrowString::const_iterator iter = nstr.begin(); iter != end; iter++)
+		for (NarrowString::const_iterator iter = nstr.begin(); iter != end; ++iter)
 		{
 			s[index++] = *iter;
 		}
@@ -214,7 +214,7 @@ namespace Plat_Unicode
 		unsigned index = 0;
 		str.resize(nstr.size());
 		const NarrowString::const_iterator end = nstr.end();
-		for (NarrowString::const_iterator iter = nstr.begin(); iter != end; iter++)
+		for (NarrowString::const_iterator iter = nstr.begin(); iter != end; ++iter)
 		{
 			str[index++] = *iter;
 		}
@@ -237,7 +237,7 @@ namespace Plat_Unicode
 		unsigned index = 0;
 		s.resize(str.size());
 		const String::const_iterator end = str.end();
-		for (String::const_iterator iter = str.begin(); iter != end; iter++)
+		for (String::const_iterator iter = str.begin(); iter != end; ++iter)
 		{
 			s[index++] = (char)*iter;
 		}
@@ -259,7 +259,7 @@ namespace Plat_Unicode
 		unsigned index = 0;
 		nstr.resize(str.size());
 		const String::const_iterator end = str.end();
-		for (String::const_iterator iter = str.begin(); iter != end; iter++)
+		for (String::const_iterator iter = str.begin(); iter != end; ++iter)
 		{
 			nstr[index++] = (char)*iter;
 		}

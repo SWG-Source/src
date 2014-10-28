@@ -89,7 +89,7 @@ class RegisteredCharacter
 {
 public:
 
-	RegisteredCharacter(const unsigned uid, const Plat_Unicode::String character, const unsigned avaconID);
+	RegisteredCharacter(const unsigned uid, const Plat_Unicode::String &character, const unsigned avaconID);
 	virtual ~RegisteredCharacter();
 
 	Plat_Unicode::String getCharacter()		{ return character; }
@@ -144,8 +144,8 @@ public:
 
 	void Update();
 	void CSAssistGameCallback(Response *);
-	void localUnRegisterCharacter(const unsigned uid, const Plat_Unicode::String character);
-	void localRegisterCharacter(const unsigned uid, const Plat_Unicode::String character, const unsigned avaconID);
+	void localUnRegisterCharacter(const unsigned uid, const Plat_Unicode::String &character);
+	void localRegisterCharacter(const unsigned uid, const Plat_Unicode::String &character, const unsigned avaconID);
 	void reregisterCharacters();
 	bool isInternalTrackingNumber(const unsigned track);
 	void batchRegisterCharacters(const unsigned numToSend);

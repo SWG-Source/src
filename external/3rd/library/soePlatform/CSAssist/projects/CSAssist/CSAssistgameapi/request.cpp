@@ -50,7 +50,7 @@ void Request::pack(ByteStream &msg)
 //----------------------------------------------
 
 //----------------------------------------------
-RConnectCSAssist::RConnectCSAssist(unsigned track, Plat_Unicode::String GameName, const Plat_Unicode::String ServerName)
+RConnectCSAssist::RConnectCSAssist(unsigned track, Plat_Unicode::String GameName, const Plat_Unicode::String &ServerName)
 : Request(CSASSIST_CALL_CONNECT, track), 
   mGameName(GameName),
   mServerName(ServerName)
@@ -80,7 +80,7 @@ void RConnectCSAssist::pack(ByteStream &msg)
 }
 
 //----------------------------------------------
-	RNewTicketActivity::RNewTicketActivity(unsigned track, const unsigned uid, const Plat_Unicode::String character)
+	RNewTicketActivity::RNewTicketActivity(unsigned track, const unsigned uid, const Plat_Unicode::String &character)
 : Request(CSASSIST_CALL_NEWTICKETACTIVITY, track), 
   mUID(uid), 
   mCharacter(character)
@@ -101,7 +101,7 @@ void RNewTicketActivity::pack(ByteStream &msg)
 }
 
 //----------------------------------------------
-	RRegisterCharacter::RRegisterCharacter(unsigned track, const unsigned uid, const Plat_Unicode::String character, const unsigned avaconID)
+	RRegisterCharacter::RRegisterCharacter(unsigned track, const unsigned uid, const Plat_Unicode::String &character, const unsigned avaconID)
 : Request(CSASSIST_CALL_REGISTERCHARACTER, track), 
   mUID(uid), 
   mCharacter(character),
@@ -124,7 +124,7 @@ void RRegisterCharacter::pack(ByteStream &msg)
 }
 
 //----------------------------------------------
-	RUnRegisterCharacter::RUnRegisterCharacter(unsigned track, const unsigned uid, const Plat_Unicode::String character)
+	RUnRegisterCharacter::RUnRegisterCharacter(unsigned track, const unsigned uid, const Plat_Unicode::String &character)
 : Request(CSASSIST_CALL_UNREGISTERCHARACTER, track), 
   mUID(uid), 
   mCharacter(character)
@@ -145,7 +145,7 @@ void RUnRegisterCharacter::pack(ByteStream &msg)
 }
 
 //----------------------------------------------
-	RGetIssueHierarchy::RGetIssueHierarchy(unsigned track, const Plat_Unicode::String version, const Plat_Unicode::String language)
+	RGetIssueHierarchy::RGetIssueHierarchy(unsigned track, const Plat_Unicode::String &version, const Plat_Unicode::String &language)
 : Request(CSASSIST_CALL_GETISSUEHIERARCHY, track),
   mVersion(version), 
   mLanguage(language)
@@ -166,7 +166,7 @@ void RGetIssueHierarchy::pack(ByteStream &msg)
 }
 
 //----------------------------------------------
-RCreateTicket::RCreateTicket(unsigned track, const CSAssistGameAPITicket *ticketBody, const Plat_Unicode::String XMLBody, const unsigned uid)
+RCreateTicket::RCreateTicket(unsigned track, const CSAssistGameAPITicket *ticketBody, const Plat_Unicode::String &XMLBody, const unsigned uid)
 : Request(CSASSIST_CALL_CREATETICKET, track), 
   mXMLBody(XMLBody),
   mUID(uid)
@@ -188,7 +188,7 @@ void RCreateTicket::pack(ByteStream &msg)
 }
 
 //----------------------------------------------
-RAppendComment::RAppendComment(unsigned track, const unsigned ticket, const unsigned uid, const Plat_Unicode::String character, const Plat_Unicode::String comment)
+RAppendComment::RAppendComment(unsigned track, const unsigned ticket, const unsigned uid, const Plat_Unicode::String &character, const Plat_Unicode::String &comment)
 : Request(CSASSIST_CALL_APPENDCOMMENT, track), 
   mTicketID(ticket), 
   mUID(uid),
@@ -259,7 +259,7 @@ void RGetTicketComments::pack(ByteStream &msg)
 }
 
 //----------------------------------------------
-RGetTicketByCharacter::RGetTicketByCharacter(unsigned track, const unsigned uid, const Plat_Unicode::String character, const unsigned Start, const unsigned Count, const unsigned MarkAsRead)
+RGetTicketByCharacter::RGetTicketByCharacter(unsigned track, const unsigned uid, const Plat_Unicode::String &character, const unsigned Start, const unsigned Count, const unsigned MarkAsRead)
 : Request(CSASSIST_CALL_GETTICKET, track), 
   mUID(uid), 
   mCharacter(character),
@@ -305,7 +305,7 @@ void RMarkTicketRead::pack(ByteStream &msg)
 }
 
 //----------------------------------------------
-RCancelTicket::RCancelTicket(unsigned track, const unsigned ticket, const unsigned uid, const Plat_Unicode::String comment)
+RCancelTicket::RCancelTicket(unsigned track, const unsigned ticket, const unsigned uid, const Plat_Unicode::String &comment)
 : Request(CSASSIST_CALL_CANCELTICKET, track), 
   mTicketID(ticket), 
   mUID(uid),
@@ -347,7 +347,7 @@ void RCommentCount::pack(ByteStream &msg)
 }
 
 //----------------------------------------------
-	RReplyGameLocation::RReplyGameLocation(unsigned track, const unsigned sourceTrack, const unsigned uid, const Plat_Unicode::String character, const unsigned csruid, const Plat_Unicode::String location)
+	RReplyGameLocation::RReplyGameLocation(unsigned track, const unsigned sourceTrack, const unsigned uid, const Plat_Unicode::String &character, const unsigned csruid, const Plat_Unicode::String &location)
 : Request(CSASSIST_CALL_REPLYLOCATION, track), 
   mSourceTrack(sourceTrack),
   mUID(uid),
@@ -430,7 +430,7 @@ void RGetTicketXMLBlock::pack(ByteStream &msg)
 }
 
 //----------------------------------------------
-	RGetKBArticle::RGetKBArticle(unsigned track, const Plat_Unicode::String id, const Plat_Unicode::String language, const unsigned uid)
+	RGetKBArticle::RGetKBArticle(unsigned track, const Plat_Unicode::String &id, const Plat_Unicode::String &language, const unsigned uid)
 : Request(CSASSIST_CALL_GETKBARTICLE, track),
   mID(id),
   mLanguage(language),
@@ -453,9 +453,9 @@ void RGetKBArticle::pack(ByteStream &msg)
 }
 
 //----------------------------------------------
-	RSearchKB::RSearchKB(unsigned track, const Plat_Unicode::String searchstring, const Plat_Unicode::String language, const unsigned uid)
+	RSearchKB::RSearchKB(unsigned track, const Plat_Unicode::String &searchstring, const Plat_Unicode::String &language, const unsigned uid)
 : Request(CSASSIST_CALL_SEARCHKB, track),
-  mSearchString(searchstring), 
+  m&searchstring(&searchstring), 
   mLanguage(language),
   mUID(uid)
 //----------------------------------------------
@@ -470,15 +470,15 @@ void RSearchKB::pack(ByteStream &msg)
 	put(msg, num_args);
 	put(msg, mType);
 	put(msg, mTrack);
-	put(msg, mSearchString);
+	put(msg, m&searchstring);
 	put(msg, mLanguage);
 	put(msg, mUID);
 }
 
 //----------------------------------------------
-RConnectLB::RConnectLB(unsigned track, const std::string connectString)
+RConnectLB::RConnectLB(unsigned track, const std::string &connectString)
 : Request(CSASSIST_CALL_CONNECTLB, track), 
-mConnectString(connectString)
+m&connectString(&connectString)
 //----------------------------------------------
 {
 	setTimeout(time(0) + 5);
@@ -492,7 +492,7 @@ void RConnectLB::pack(ByteStream &msg)
 	put(msg, num_args);
 	put(msg, mType);
 	put(msg, mTrack);
-	put(msg, mConnectString);
+	put(msg, m&connectString);
 }
 
 } // namespace CSAssist

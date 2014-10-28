@@ -250,7 +250,7 @@ namespace Base
         }
     }
 
-    void MD5::Update(string s)
+    void MD5::Update(const string s)
     {
         vector<char> achar(s.size(),0);
         for (int i=0; i<(int)s.size(); i++)

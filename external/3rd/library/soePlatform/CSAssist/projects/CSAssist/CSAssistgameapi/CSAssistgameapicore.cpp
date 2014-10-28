@@ -138,7 +138,7 @@ CSAssistGameAPIcore::CSAssistGameAPIcore(CSAssistGameAPI *api, const char *serve
 		servers.push_back(p2);
 		p2 = strtok(NULL, delims);
 	}
-	for (list<string>::iterator iter = servers.begin(); iter != servers.end(); iter++)
+	for (list<string>::iterator iter = servers.begin(); iter != servers.end(); ++iter)
 	{
 		char *p = new char[iter->size()+1];
 		memset(p, 0, iter->size()+1);
@@ -219,13 +219,13 @@ CSAssistGameAPIcore::~CSAssistGameAPIcore()
 
 	// ----- clear pending map -----
 	map<CSAssistGameAPITrack, Response *>::iterator iter;
-	for(iter = m_pending.begin(); iter != m_pending.end(); iter++)
+	for(iter = m_pending.begin(); iter != m_pending.end(); ++iter)
 	{
 		delete (*iter).second;
 	}
 	m_pending.clear();
 
-	for(iter = m_pendingInt.begin(); iter != m_pendingInt.end(); iter++)
+	for(iter = m_pendingInt.begin(); iter != m_pendingInt.end(); ++iter)
 	{
 		delete (*iter).second;
 	}
@@ -524,7 +524,7 @@ void CSAssistGameAPIcore::CSAssistGameCallback(Response *response)
 }
 
 //--------------------------------------
-void CSAssistGameAPIcore::localRegisterCharacter(const unsigned uid, const Plat_Unicode::String character, const unsigned avaconID)
+void CSAssistGameAPIcore::localRegisterCharacter(const unsigned uid, const Plat_Unicode::String &character, const unsigned avaconID)
 //--------------------------------------
 {
 	//RegisteredCharacter *obj = new RegisteredCharacter(uid, character, avaconID);
@@ -534,7 +534,7 @@ void CSAssistGameAPIcore::localRegisterCharacter(const unsigned uid, const Plat_
 }
 
 //--------------------------------------
-void CSAssistGameAPIcore::localUnRegisterCharacter(const unsigned uid, const Plat_Unicode::String character)
+void CSAssistGameAPIcore::localUnRegisterCharacter(const unsigned uid, const Plat_Unicode::String &character)
 //--------------------------------------
 {
 	multimap<unsigned, RegisteredCharacter>::iterator iter;
@@ -553,7 +553,7 @@ void CSAssistGameAPIcore::localUnRegisterCharacter(const unsigned uid, const Pla
 				m_registeredCharacters.erase(iter);	// registered by character string. Erase just this element
 				break;
 			}
-			iter++;
+			++iter;
 		} while (iter != m_registeredCharacters.upper_bound(uid));
 	}
 
@@ -570,7 +570,7 @@ void CSAssistGameAPIcore::localUnRegisterCharacter(const unsigned uid, const Pla
 				m_registeredCharactersCopy.erase(iter);	// registered by character string. Erase just this element
 				break;
 			}
-			iter++;
+			++iter;
 		} while (iter != m_registeredCharactersCopy.upper_bound(uid));
 	}
 }
@@ -1029,7 +1029,7 @@ void CSAssistGameAPIcore::GetLBHost()
 		m_ip   = (*m_curServer).host;
 		m_port = (*m_curServer).port;
 		//fprintf(stderr, "GetLBHost(): host:%s, port:%d\n", m_ip.c_str(), m_port);
-		m_curServer++;
+		++m_curServer;
 	}
 }
 
@@ -1301,8 +1301,8 @@ CSAssistGameAPITrack CSAssistGameAPIcore::requestCreateTicket(const void *userDa
 	else
 		xml = XMLBody;
 	ResCreateTicket *Res = new ResCreateTicket(m_currTrack, userData);
-	if (uid == 0 || ticketBody == 0 || strlen(ticketBody->game) == 0 || strlen(ticketBody->server) == 0
-		|| strlen(ticketBody->character) == 0 || strlen(ticketBody->details) == 0)
+	if (uid == 0 || ticketBody == 0 || ticketBody->game[0] != '\0' || ticketBody->server[0] != '\0'
+		|| ticketBody->character[0] != '\0' || ticketBody->details[0] != '\0')
 	{
 		SubmitImmediateError(Res);
 	}
@@ -1556,7 +1556,7 @@ CSAssistGameAPITrack CSAssistGameAPIcore::requestSearchKB(const void *userData, 
 }
 
 //--------------------------------------
-RegisteredCharacter::RegisteredCharacter(const unsigned uid_in, const Plat_Unicode::String name, const unsigned avacon)
+RegisteredCharacter::RegisteredCharacter(const unsigned uid_in, const Plat_Unicode::String &name, const unsigned avacon)
 : uid(uid_in), character(name), avaconID(avacon)
 //--------------------------------------
 {
