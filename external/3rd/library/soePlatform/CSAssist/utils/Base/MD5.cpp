@@ -132,7 +132,7 @@ namespace Base
         finalsNull = true;
     }
 
-    void MD5::Transform(State & state1, vector<char> achar0, int i)
+    void MD5::Transform(State & state1, const vector<char> &achar0, int i)
     {
         int j = state1.state[0];
         int k = state1.state[1];
@@ -216,7 +216,7 @@ namespace Base
         Update(achar0, 1);
     }
 
-    void MD5::Update(State & state1, vector<char> achar0, int i, int j)
+    void MD5::Update(State & state1, const vector<char> &achar0, int i, int j)
     {
         finalsNull = true;
         if (j - i > (int)achar0.size())

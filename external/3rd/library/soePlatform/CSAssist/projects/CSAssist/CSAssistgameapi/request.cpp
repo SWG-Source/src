@@ -470,7 +470,7 @@ void RSearchKB::pack(ByteStream &msg)
 	put(msg, num_args);
 	put(msg, mType);
 	put(msg, mTrack);
-	put(msg, msearchstring);
+	put(msg, mS);
 	put(msg, mLanguage);
 	put(msg, mUID);
 }
