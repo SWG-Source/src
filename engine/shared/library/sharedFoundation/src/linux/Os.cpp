@@ -119,10 +119,11 @@ void Os::installCommon(void)
 		char buffer[512];
 		while (!feof(f))
 		{
-			fgets(buffer, 512, f);
-			if (strncmp(buffer, "processor\t: ", 12)==0)
-			{
-				processorCount = atoi(buffer+12)+1;
+			if (fgets(buffer, 512, f) != NULL) {
+				if (strncmp(buffer, "processor\t: ", 12)==0)
+				{
+					processorCount = atoi(buffer+12)+1;
+				}
 			}
 		}
 		fclose(f);

@@ -370,28 +370,27 @@ char buffer[1024];
 	x = 0;
 	while(!feof(fp))
 	{
-		fgets( buffer, 1023, fp);
-
-		// get rid of '\n' and '\r' for comparisons
-		strtok(buffer,"\r\n");
-		len = (int)strlen(buffer);
-		if( len > 0 )
-		{
-			if( nline == 0 )
+		if (fgets( buffer, 1023, fp) != NULL) {
+			// get rid of '\n' and '\r' for comparisons
+			strtok(buffer,"\r\n");
+			len = (int)strlen(buffer);
+			if( len > 0 )
 			{
-				passString = (char *)malloc( len + 1 );
-				strcpy(passString,buffer);
+				if( nline == 0 )
+				{
+					passString = (char *)malloc( len + 1 );
+					strcpy(passString,buffer);
+				}
+				else
+				{
+					allowedAddressList[x] = (char *)malloc( len + 1 );
+					strcpy(allowedAddressList[x],buffer);
+					x++;
+				}
 			}
-			else
-			{
-				allowedAddressList[x] = (char *)malloc( len + 1 );
-				strcpy(allowedAddressList[x],buffer);
-				x++;
-			}
-		}
-		nline++;
-	} 
-
+			nline++;
+		} 
+	}
 	// clean up
 	fclose(fp);
 	return true;

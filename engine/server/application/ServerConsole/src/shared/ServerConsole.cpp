@@ -59,9 +59,10 @@ void ServerConsole::run()
 		char inBuf[1024] = {"\0"};
 		while(! feof(stdin))
 		{
-			fread(inBuf, 1024, 1, stdin);
-			input += inBuf;
-			memset(inBuf, 0, sizeof(inBuf));
+			if (fread(inBuf, 1024, 1, stdin)) {
+				input += inBuf;
+				memset(inBuf, 0, sizeof(inBuf));
+			}
 		}
 
 		if(input.length() > 0)
