@@ -47,7 +47,7 @@ namespace ChatSystem
 
 		void setAttributes(unsigned long attributes);
 		void setLoginPriority(int loginPriority);
-		void setEmail(const Plat_Unicode::String &email);
+		void setEmail(const Plat_Unicode::String email);
 		void setInboxLimit(unsigned inboxLimit);
         void setStatusMessage(const Plat_Unicode::String &statusMessage);
 
