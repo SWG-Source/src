@@ -168,7 +168,7 @@ void ChatAvatarCore::setLoginPriority(int loginPriority)
 	m_loginPriority = loginPriority;
 }
 
-void ChatAvatarCore::setEmail(static const Plat_Unicode::String email)
+void ChatAvatarCore::setEmail(const Plat_Unicode::String email)
 {
 	m_email = email;
 }
