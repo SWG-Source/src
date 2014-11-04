@@ -20,7 +20,7 @@ namespace Base
 		void returnBlock(unsigned *handle);
 
 	private:
-		uintptr_t  *m_blocks[31];
+		unsigned  *m_blocks[31];
 	};
 };
 #ifdef EXTERNAL_DISTRO

@@ -79,7 +79,7 @@ namespace Base
 		if(m_blocks[accum] == 0)
 		{
 			// remove the pre allocated block from the linked list
-			handle = (uintptr_t *)calloc(((1 << accum) / 4) + 2, sizeof(uintptr_t));
+			handle = (uintptr_t *)calloc(((1 << accum) / 4) + 2, sizeof(unsigned));
 			handle[1] = accum;
 			handle[0] = 0;
 		}
@@ -94,7 +94,7 @@ namespace Base
 		return(handle + 2);
 	}
 
-	void BlockAllocator::returnBlock(uintptr_t *handle)
+	void BlockAllocator::returnBlock(unsigned *handle)
 	{
 		// C++ allows for safe deletion of a NULL pointer
 		if(handle)

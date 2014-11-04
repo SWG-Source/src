@@ -36,7 +36,7 @@ namespace Base
 				if (!mLastSampleTime)
 					mLastSampleTime = time(NULL);
 				
-				if (!mSampleFrequency || mLastSampleTime + mSampleFrequency < (uintptr_t)time(NULL))
+				if (!mSampleFrequency || mLastSampleTime + mSampleFrequency < (unsigned)time(NULL))
 				{
 					mSampleTotal++;
 					mAggregateTotal += value;
