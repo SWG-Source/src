@@ -49,9 +49,9 @@ void ConfigServerDatabase::install(void)
 	KEY_STRING  (databaseUID,"gameserver");
 	KEY_STRING  (databasePWD,"gameserver");
 	KEY_STRING  (databaseProtocol,"DEFAULT");
-	KEY_STRING  (centralServerAddress, "swo-dev1.station.sony.com");
+	KEY_STRING  (centralServerAddress, "swo-dev1.localnet.loc");
 	KEY_INT     (centralServerPort, 44451);
-	KEY_STRING  (commoditiesServerAddress, "swo-dev1.station.sony.com");
+	KEY_STRING  (commoditiesServerAddress, "swo-dev1.localnet.loc");
 	KEY_INT     (commoditiesServerPort, 44457);	//todo: confirm that this is a good port MSH
 	KEY_INT     (taskManagerPort, 60001);
 	KEY_INT     (expectedDBVersion, 270);

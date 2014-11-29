@@ -50,7 +50,7 @@ void ConfigServerGame::install(void)
 	KEY_FLOAT   (startZ, 0.0f);
 	startingPosition = Vector(data->startX,data->startY,data->startZ);
 	KEY_INT		(taskManagerPort, 60001);	
-	KEY_STRING	(centralServerAddress, "swo-dev1.station.sony.com");
+	KEY_STRING	(centralServerAddress, "swo-dev1.localnet.loc");
 	KEY_INT		(centralServerPort, 44451);
 	KEY_STRING  (javaVMName, "");
 	KEY_STRING  (scriptPath, "../../data/sku.0/sys.server/compiled/game");

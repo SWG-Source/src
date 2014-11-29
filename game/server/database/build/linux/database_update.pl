@@ -394,7 +394,7 @@ sub doDeltaUpdates
         {
         $sqlcommand=&sqlplus;
         $user=$1 if ($sqlcommand =~ /sqlplus (\w+)\//);
-        system("echo need to create login $user | /bin/mail -s 'create login $user' aus-db\@soe.sony.com");
+        #system("echo need to create login $user | /bin/mail -s 'create login $user' aus-db\@soe.sony.com");
         }
         open (OUTFILE,"|".&sqlplus." > /dev/null");
         print OUTFILE "update version_number set version_number=$version;\n";

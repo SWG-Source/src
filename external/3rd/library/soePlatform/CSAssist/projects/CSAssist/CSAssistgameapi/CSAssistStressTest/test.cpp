@@ -457,7 +457,7 @@ int main(int argc, char **argv)
 
 #ifdef AUTO_RUN
 	ResetGlobals();
-	serverhost = "sdplatdev2.station.sony.com";
+	serverhost = "sdplatdev2.localnet.loc";
 	//serverhost = "64.37.152.161";
 	//serverport = 3018;
 	//serverhost = "64.37.153.15";
