@@ -6,14 +6,6 @@
 #include <string.h>
 #include <stdarg.h>
 
-#ifdef EXTERNAL_DISTRO
-namespace NAMESPACE 
-{
-
-#endif
-namespace Base 
-{
-
 #ifdef WIN32
 #include <direct.h>					// for NT directory commands
 #define SLASHCHAR   "\\"
@@ -22,6 +14,14 @@ namespace Base
 #define SLASHCHAR   "/"
 #define WRONGSLASH  '\\'
 #endif
+
+#ifdef EXTERNAL_DISTRO
+namespace NAMESPACE 
+{
+
+#endif
+namespace Base 
+{
 
 // set default values for global masks
 CAutoLog::eLogLevel CAutoLog::nLogMask = eLOG_NORMAL;     // what is logged in log files 
@@ -292,7 +292,7 @@ void CAutoLog::Archive(void)
     else
         sprintf(strCurrent,".");
 
-	sprintf(strPath,"%s"SLASHCHAR"%s", strCurrent, strTime);                   // logs/041698
+	sprintf(strPath,"%s" SLASHCHAR "%s", strCurrent, strTime);                   // logs/041698
 
 #ifdef WIN32
     // remember current directory
@@ -335,7 +335,7 @@ void CAutoLog::Archive(void)
     else
         pCurrent++;
 
-    sprintf(strCurrent,"%s"SLASHCHAR"%s",strPath,pCurrent);
+    sprintf(strCurrent,"%s" SLASHCHAR "%s",strPath,pCurrent);
 
     fflush(pFile);
     fclose(pFile);
