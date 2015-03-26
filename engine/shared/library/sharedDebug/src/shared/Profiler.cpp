@@ -217,8 +217,8 @@ bool VisibleExpandableEntry::pruneInvisibleChildren()
 	for (Children::iterator i = m_children.begin(); i != m_children.end(); )
 		if ((*i)->m_visible == false)
 		{
-			delete *i;
 			m_children.erase(i);
+			delete *i;		
 		}
 		else
 			++i;
