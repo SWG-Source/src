@@ -1,4 +1,3 @@
-15
 // ConnectionServer.cpp
 // copyright 2001 Verant Interactive
 
