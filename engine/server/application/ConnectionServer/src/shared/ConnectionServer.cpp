@@ -1,4 +1,4 @@
-15
+
 // ConnectionServer.cpp
 // copyright 2001 Verant Interactive
 
@@ -1577,8 +1577,7 @@ void ConnectionServer::setDone(char const *reasonfmt, ...)
 				"ConnectionServer (pid %d) shutdown, reason: %s\n",
 				static_cast<int>(Os::getProcessId()),
 				reason));
-		
-		va_end(ap);
+
 		done = true;
 	}
 }

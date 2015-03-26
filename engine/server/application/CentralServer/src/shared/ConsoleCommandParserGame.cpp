@@ -79,7 +79,7 @@ bool ConsoleCommandParserGame::performParsing(const NetworkId & track, const Str
 				if(argv.size() > 2)
 				{
 					unsigned int pid;
-					sscanf(Unicode::wideToNarrow(argv[2]).c_str(), "%u", &pid);
+					sscanf(Unicode::wideToNarrow(argv[2]).c_str(), "%d", &pid);
 					GameServerConnection * gameConn = CentralServer::getInstance().getGameServer(pid);
 					if(gameConn)
 					{

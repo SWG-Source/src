@@ -554,7 +554,6 @@ void PlayerShipController::logMoveFail(char const *reasonFmt, ...) const
 			client->getCharacterObjectId().getValueString().c_str(),
 			client->getStationId(),
 			reason));
-	va_end(ap);
 }
 
 // ----------------------------------------------------------------------

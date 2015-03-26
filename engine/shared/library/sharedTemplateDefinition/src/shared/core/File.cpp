@@ -185,6 +185,4 @@ int File::print(const char *format, ...)
 	va_start(argptr, format);
 
 	return vfprintf(m_fp, format, argptr);
-
-	va_end(argptr); //make cppcheck happy
 }	// File::print

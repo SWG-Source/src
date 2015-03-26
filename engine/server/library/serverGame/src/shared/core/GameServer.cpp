@@ -4890,7 +4890,6 @@ void GameServer::setDone(char const *reasonfmt, ...)
 				static_cast<int>(Os::getProcessId()),
 				reason));
 
-		va_end(ap);
 		m_done = true;
 	}
 }
