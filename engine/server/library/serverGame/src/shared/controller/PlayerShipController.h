@@ -76,7 +76,7 @@ private:
 
 	uint32 getCurSyncStamp() const;
 	bool checkValidMove(Transform const &transform, Vector const &velocity, float speed, uint32 syncStamp);
-	void logMoveFail(char const reasonFmt, ...) const;
+	void logMoveFail(char const *reasonFmt, ...) const;
 
 private:
 

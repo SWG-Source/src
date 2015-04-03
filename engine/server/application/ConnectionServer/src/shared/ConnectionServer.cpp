@@ -1554,7 +1554,7 @@ SessionApiClient* ConnectionServer::getSessionApiClient()
 
 // ----------------------------------------------------------------------
 
-void ConnectionServer::setDone(char const reasonfmt, ...)
+void ConnectionServer::setDone(char const *reasonfmt, ...)
 {
 	if (!done)
 	{

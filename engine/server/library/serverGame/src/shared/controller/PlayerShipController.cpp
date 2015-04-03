@@ -535,7 +535,7 @@ uint32 PlayerShipController::getCurSyncStamp() const
 
 // ----------------------------------------------------------------------
 
-void PlayerShipController::logMoveFail(char const reasonFmt, ...) const
+void PlayerShipController::logMoveFail(char const *reasonFmt, ...) const
 {
 	ShipObject const * const ship = NON_NULL(getShipOwner());
 	Client const * const client = NON_NULL(ship->getClient());

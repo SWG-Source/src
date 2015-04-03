@@ -30,7 +30,7 @@ public:
 	static void remove();
 	static void run();
 	void mainLoop();
-	void setDone(char const reason, ...);
+	void setDone(char const *reasonfmt, ...);
 
 	virtual void receiveMessage(MessageDispatch::Emitter const &source, MessageDispatch::MessageBase const &message);
 

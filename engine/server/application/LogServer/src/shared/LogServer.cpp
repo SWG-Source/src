@@ -127,7 +127,7 @@ void LogServer::receiveMessage(MessageDispatch::Emitter const &source, MessageDi
 
 // ----------------------------------------------------------------------
 
-void LogServer::setDone(char const reasonfmt, ...)
+void LogServer::setDone(char const *reasonfmt, ...)
 {
 	if (!m_done)
 	{

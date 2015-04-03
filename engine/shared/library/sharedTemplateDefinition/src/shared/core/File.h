@@ -33,7 +33,7 @@ public:
 	int readLine(char *buffer, int bufferSize);
 
 	int puts(const char *string);
-	int print(const char format, ...);
+	int print(const char *format, ...);
 
 	void printWarning(const char *buffer) const;
 	void printError(const char *buffer) const;

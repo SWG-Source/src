@@ -49,7 +49,7 @@ public:
 
 	static void          run(void);
 	void                 mainLoop(void);
-	void                 setDone(char const reasonfmt, ...);
+	void                 setDone(char const *reasonfmt, ...);
 
 	const unsigned short getGameServicePort() const;
 	const Service *      getGameService() const;

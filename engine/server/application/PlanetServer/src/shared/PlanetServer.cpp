@@ -1449,7 +1449,7 @@ void PlanetServer::sendQueuedMessagesForObject(const PlanetProxyObject &theObjec
 
 // ----------------------------------------------------------------------
 
-void PlanetServer::setDone(char const reasonfmt, ...)
+void PlanetServer::setDone(char const *reasonfmt, ...)
 {
 	if (!m_done)
 	{

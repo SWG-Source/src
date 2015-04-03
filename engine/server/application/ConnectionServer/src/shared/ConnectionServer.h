@@ -36,7 +36,7 @@ class ConnectionServer : public MessageDispatch::Receiver
   public:
 	static void            install();
 	static void            remove();
-	void setDone(char const reasonfmt, ...);
+	void setDone(char const *reasonfmt, ...);
 
 	~ConnectionServer ();
 		

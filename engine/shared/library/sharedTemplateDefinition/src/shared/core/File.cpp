@@ -177,7 +177,7 @@ int File::readLine(char *buffer, int bufferSize)
 /**
  * fprintf functionality.
  */
-int File::print(const char format, ...)
+int File::print(const char *format, ...)
 {
 	NOT_NULL(m_fp);
 

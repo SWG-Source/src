@@ -311,7 +311,7 @@ void DatabaseProcess::run(void)
 
 // ----------------------------------------------------------------------
 
-void DatabaseProcess::setDone(char const reasonfmt, ...)
+void DatabaseProcess::setDone(char const *reasonfmt, ...)
 {
 	if (!done)
 	{
