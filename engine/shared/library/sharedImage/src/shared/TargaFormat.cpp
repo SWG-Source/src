@@ -1231,6 +1231,7 @@ bool TargaFormat::saveImage(const Image &image, const char *filename)
 			numWritten = fwrite(destPixelsLine, destYStride, 1, f);
 			if (numWritten!=1)
 			{
+				fclose(f);
 				DEBUG_WARNING(true, ("Targa image data not written successfully for %s\n", filename));
 				return false;
 			}
@@ -1245,6 +1246,7 @@ bool TargaFormat::saveImage(const Image &image, const char *filename)
 			numWritten = fwrite(piter, sourceYStride, 1, f);
 			if (numWritten!=1)
 			{
+				fclose(f);
 				DEBUG_WARNING(true, ("Targa image data not written successfully for %s\n", filename));
 				return false;
 			}

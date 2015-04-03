@@ -212,6 +212,8 @@ void DebugMonitor::install(void)
 	// Allow translation of arrow keys.
 	if (keypad(s_outputWindow, true) == ERR)
 	{
+		fclose(s_ttyOutputFile);
+		fclose(s_ttyInputFile);
 		DEBUG_WARNING(true, ("DebugMonitor: keypad() failed [%s].", strerror(errno)));
 		return;
 	}

@@ -184,7 +184,9 @@ int File::print(const char *format, ...)
 	va_list argptr;
 	va_start(argptr, format);
 
-	return vfprintf(m_fp, format, argptr);
+	int ret = vfprintf(m_fp, format, argptr);
 
 	va_end(argptr);
+	
+	return ret;
 }	// File::print
