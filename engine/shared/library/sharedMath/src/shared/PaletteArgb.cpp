@@ -253,7 +253,7 @@ bool PaletteArgb::write(const char *pathName) const
 
 	// open file
 	FILE *const file = fopen(pathName, "wb");
-	if (file==NULL)
+	if (!file)
 	{
 		WARNING(true, ("failed to open file [%s] for writing.", pathName));
 		return false;
