@@ -1270,7 +1270,8 @@ bool TargaFormat::saveImage(const Image &image, const char *filename)
 	numWritten = fwrite(&footer, sizeof(footer), 1, f);
    if (numWritten != 1)
    {
-		DEBUG_WARNING(true, ("Targa footer not written successfully for %s\n", filename));
+	  fclose(f);
+	  DEBUG_WARNING(true, ("Targa footer not written successfully for %s\n", filename));
       return false;
    }
 	//------------------------------------------

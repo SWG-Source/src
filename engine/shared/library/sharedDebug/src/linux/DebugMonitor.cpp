@@ -224,6 +224,9 @@ void DebugMonitor::install(void)
 	// NOTE: this can't go on the exit chain because the MemoryManager
 	//       will write to it way late in processing.
 	//ExitChain::add(remove, "DebugMonitor");
+
+	fclose(s_ttyOutputFile);
+	fclose(s_ttyInputFile);
 }
 
 // ----------------------------------------------------------------------
