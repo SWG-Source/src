@@ -129,6 +129,8 @@ void DebugMonitor::install(void)
 	if (tcgetattr(inputFd, &terminalAttributes) != 0)
 	{
 		DEBUG_WARNING(true, ("DebugMonitor: tcgetattr failed [%s].", strerror(errno)));
+		fclose(s_ttyOutputFile);
+		fclose(s_ttyInputFile);
 		return;
 	}
 	
@@ -146,6 +148,8 @@ void DebugMonitor::install(void)
 	if (tcsetattr(inputFd, TCSAFLUSH, &terminalAttributes) != 0)
 	{
 		DEBUG_WARNING(true, ("DebugMonitor: tcsetattr failed [%s].", strerror(errno)));
+		fclose(s_ttyOutputFile);
+		fclose(s_ttyInputFile);
 		return;
 	}
 #endif
