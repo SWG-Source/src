@@ -311,7 +311,7 @@ void DatabaseProcess::run(void)
 
 // ----------------------------------------------------------------------
 
-void DatabaseProcess::setDone(char const *reasonfmt, ...)
+void DatabaseProcess::setDone(char const reasonfmt, ...)
 {
 	if (!done)
 	{
@@ -336,7 +336,8 @@ void DatabaseProcess::setDone(char const *reasonfmt, ...)
 				static_cast<int>(getProcessId()),
 				static_cast<int>(Os::getProcessId()),
 				reason));
-
+		
+		va_end(ap);
 		done = true;
 	}
 }

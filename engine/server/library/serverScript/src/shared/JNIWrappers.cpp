@@ -78,6 +78,9 @@ LocalRefPtr createNewObject(jclass clazz, jmethodID constructorID, ...)
 	va_start(marker, constructorID);
 
 	LocalRefPtr result(new LocalRef(JavaLibrary::getEnv()->NewObjectV(clazz, constructorID, marker)));
+
+	va_end(marker);
+	
 	if (result->getValue() == 0)
 		return LocalRef::cms_nullPtr;
 	return result;
@@ -187,8 +190,11 @@ LocalRefPtr callObjectMethod(const LocalRefParam & object, jmethodID methodID, .
 	{
 		va_list marker;
 		va_start(marker, methodID);
-
+	
 		LocalRefPtr result(new LocalRef(JavaLibrary::getEnv()->CallObjectMethodV(object.getValue(), methodID, marker)));
+
+		va_end(marker);
+		
 		if (result->getValue() != 0)
 			return result;
 	}
@@ -205,6 +211,9 @@ LocalObjectArrayRefPtr callObjectArrayMethod(const LocalRefParam & object, jmeth
 		va_start(marker, methodID);
 
 		LocalObjectArrayRefPtr result(new LocalObjectArrayRef(static_cast<jobjectArray>(JavaLibrary::getEnv()->CallObjectMethodV(object.getValue(), methodID, marker))));
+
+		va_end(marker);
+
 		if (result->getValue() != 0)
 			return result;
 	}
@@ -221,6 +230,9 @@ LocalByteArrayRefPtr callByteArrayMethod(const LocalRefParam & object, jmethodID
 		va_start(marker, methodID);
 
 		LocalByteArrayRefPtr result(new LocalByteArrayRef(static_cast<jbyteArray>(JavaLibrary::getEnv()->CallObjectMethodV(object.getValue(), methodID, marker))));
+
+		va_end(marker);
+		
 		if (result->getValue() != 0)
 			return result;
 	}
@@ -236,7 +248,11 @@ jint callIntMethod(const LocalRefParam & object, jmethodID methodID, ...)
 		va_list marker;
 		va_start(marker, methodID);
 
-		return JavaLibrary::getEnv()->CallIntMethodV(object.getValue(), methodID, marker);
+		jint result = JavaLibrary::getEnv()->CallIntMethodV(object.getValue(), methodID, marker);
+
+		va_end(marker); 
+		
+		return result;
 	}
 	return 0;
 }
@@ -250,7 +266,11 @@ jlong callLongMethod(const LocalRefParam & object, jmethodID methodID, ...)
 		va_list marker;
 		va_start(marker, methodID);
 
-		return JavaLibrary::getEnv()->CallLongMethodV(object.getValue(), methodID, marker);
+		jlong result = JavaLibrary::getEnv()->CallLongMethodV(object.getValue(), methodID, marker);
+
+		va_end(marker); 
+		
+		return result;
 	}
 	return 0;
 }
@@ -264,7 +284,11 @@ jfloat callFloatMethod(const LocalRefParam & object, jmethodID methodID, ...)
 		va_list marker;
 		va_start(marker, methodID);
 
-		return JavaLibrary::getEnv()->CallFloatMethodV(object.getValue(), methodID, marker);
+		jfloat result = JavaLibrary::getEnv()->CallFloatMethodV(object.getValue(), methodID, marker);
+
+		va_end(marker); 
+		
+		return result;
 	}
 	return 0;
 }
@@ -278,7 +302,11 @@ jboolean callBooleanMethod(const LocalRefParam & object, jmethodID methodID, ...
 		va_list marker;
 		va_start(marker, methodID);
 
-		return JavaLibrary::getEnv()->CallBooleanMethodV(object.getValue(), methodID, marker);
+		jboolean result = JavaLibrary::getEnv()->CallBooleanMethodV(object.getValue(), methodID, marker);
+
+		va_end(marker); 
+		
+		return result;
 	}
 	return JNI_FALSE;
 }
@@ -293,6 +321,8 @@ void callVoidMethod(const LocalRefParam & object, jmethodID methodID, ...)
 		va_start(marker, methodID);
 
 		JavaLibrary::getEnv()->CallVoidMethodV(object.getValue(), methodID, marker);
+
+		va_end(marker);
 	}
 }
 
@@ -305,7 +335,11 @@ jboolean callNonvirtualBooleanMethod(const LocalRefParam & object, jclass clazz,
 		va_list marker;
 		va_start(marker, methodID);
 
-		return JavaLibrary::getEnv()->CallNonvirtualBooleanMethodV(object.getValue(), clazz, methodID, marker);
+		jboolean result = JavaLibrary::getEnv()->CallNonvirtualBooleanMethodV(object.getValue(), clazz, methodID, marker);
+
+		va_end(marker);
+		
+		return result;
 	}
 	return JNI_FALSE;
 }
@@ -318,6 +352,8 @@ void callStaticVoidMethod(jclass clazz, jmethodID methodID, ...)
 	va_start(marker, methodID);
 
 	JavaLibrary::getEnv()->CallStaticVoidMethodV(clazz, methodID, marker);
+
+	va_end(marker);
 }
 
 //-----------------------------------------------------------------------
@@ -328,6 +364,9 @@ LocalRefPtr callStaticObjectMethod(jclass clazz, jmethodID methodID, ...)
 	va_start(marker, methodID);
 
 	LocalRefPtr result(new LocalRef(JavaLibrary::getEnv()->CallStaticObjectMethodV(clazz, methodID, marker)));
+
+	va_end(marker);
+	
 	if (result->getValue() == 0)
 		return LocalRef::cms_nullPtr;
 	return result;
@@ -341,6 +380,9 @@ LocalObjectArrayRefPtr callStaticObjectArrayMethod(jclass clazz, jmethodID metho
 	va_start(marker, methodID);
 
 	LocalObjectArrayRefPtr result(new LocalObjectArrayRef(static_cast<jobjectArray>(JavaLibrary::getEnv()->CallStaticObjectMethodV(clazz, methodID, marker))));
+
+	va_end(marker); 
+	
 	if (result->getValue() == 0)
 		return LocalObjectArrayRef::cms_nullPtr;
 	return result;
@@ -354,6 +396,9 @@ LocalByteArrayRefPtr callStaticByteArrayMethod(jclass clazz, jmethodID methodID,
 	va_start(marker, methodID);
 
 	LocalByteArrayRefPtr result(new LocalByteArrayRef(static_cast<jbyteArray>(JavaLibrary::getEnv()->CallStaticObjectMethodV(clazz, methodID, marker))));
+
+	va_end(marker);
+	
 	if (result->getValue() == 0)
 		return LocalByteArrayRef::cms_nullPtr;
 	return result;
@@ -407,6 +452,9 @@ JavaStringPtr callStringMethod(const LocalRefParam & object, jmethodID methodID,
 		va_start(marker, methodID);
 
 		jobject result = JavaLibrary::getEnv()->CallObjectMethodV(object.getValue(), methodID, marker);
+
+		va_end(marker);
+
 		if (result != 0)
 		{
 #ifdef _DEBUG
@@ -432,6 +480,9 @@ JavaStringPtr callStaticStringMethod(jclass clazz, jmethodID methodID, ...)
 
 	JavaStringPtr result(new JavaString(static_cast<jstring>(JavaLibrary::getEnv()->CallStaticObjectMethodV(clazz,
 		methodID, marker))));
+
+	va_end(marker);
+	
 	if (result->getValue() != 0)
 		return result;
 	return JavaString::cms_nullPtr;

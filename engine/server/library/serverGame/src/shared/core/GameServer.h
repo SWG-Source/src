@@ -106,7 +106,7 @@ public:
 	void                         clearCustomerServiceServerConnection();
 	void                         setCentralServerConnection    (CentralServerConnection *newCentralServerConnection);
 	void                         setDatabaseProcessConnection  (DatabaseProcessConnection *newDatabaseProcessConnection);
-	void                         setDone                       (char const *reason, ...);
+	void                         setDone                       (char const reasonfmt, ...);
 	void                         setProcessId                  (uint32 newProcessId);
 	void                         onDatabaseProcessConnectionEstablished();
 	void                         onPlanetServerConnectionEstablished ();

@@ -1449,7 +1449,7 @@ void PlanetServer::sendQueuedMessagesForObject(const PlanetProxyObject &theObjec
 
 // ----------------------------------------------------------------------
 
-void PlanetServer::setDone(char const *reasonfmt, ...)
+void PlanetServer::setDone(char const reasonfmt, ...)
 {
 	if (!m_done)
 	{
@@ -1472,7 +1472,8 @@ void PlanetServer::setDone(char const *reasonfmt, ...)
 				"PlanetServer (pid %d) shutdown, reason: %s\n",
 				static_cast<int>(Os::getProcessId()),
 				reason));
-
+		
+		va_end(ap);
 		m_done = true;
 	}
 }

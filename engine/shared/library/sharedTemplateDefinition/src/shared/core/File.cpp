@@ -177,7 +177,7 @@ int File::readLine(char *buffer, int bufferSize)
 /**
  * fprintf functionality.
  */
-int File::print(const char *format, ...)
+int File::print(const char format, ...)
 {
 	NOT_NULL(m_fp);
 
@@ -185,4 +185,6 @@ int File::print(const char *format, ...)
 	va_start(argptr, format);
 
 	return vfprintf(m_fp, format, argptr);
+
+	va_end(argptr);
 }	// File::print

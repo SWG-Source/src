@@ -127,7 +127,7 @@ void LogServer::receiveMessage(MessageDispatch::Emitter const &source, MessageDi
 
 // ----------------------------------------------------------------------
 
-void LogServer::setDone(char const *reasonfmt, ...)
+void LogServer::setDone(char const reasonfmt, ...)
 {
 	if (!m_done)
 	{
@@ -151,6 +151,7 @@ void LogServer::setDone(char const *reasonfmt, ...)
 				static_cast<int>(Os::getProcessId()),
 				reason));
 
+		va_end(ap);
 		m_done = true;
 	}
 }

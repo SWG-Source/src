@@ -40,7 +40,7 @@ class DatabaseProcess : public MessageDispatch::Receiver
 	
 // running:
 	virtual void run (void) = 0;
-	void setDone(char const *reasonfmt, ...);
+	void setDone(char const reasonfmt, ...);
 
 	virtual void frameTick(void) {}
 
