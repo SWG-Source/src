@@ -263,6 +263,7 @@ bool PaletteArgb::write(const char *pathName) const
 	const size_t unitsWritten = fwrite(buffer, static_cast<size_t>(numberOfBytesWritten), 1, file);
 	if (unitsWritten != 1)
 	{
+		fclose(file);
 		WARNING(true, ("failed to write palette data (%d bytes) to file [%s].", numberOfBytesWritten, pathName));
 		return false;
 	}
