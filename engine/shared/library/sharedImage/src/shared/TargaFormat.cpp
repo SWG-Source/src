@@ -1167,7 +1167,7 @@ bool TargaFormat::saveImage(const Image &image, const char *filename)
 	//---------------------------------------------------
 
 	f = fopen(filename, "wb");
-	if (!f)
+	if (f==NULL)
 	{
 		DEBUG_WARNING(true, ("Unable to open Targa destination file %s.\n", filename));
 		return false;
