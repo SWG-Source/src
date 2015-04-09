@@ -26,6 +26,10 @@
 # (To distribute this file outside of CMake, substitute the full
 #  License text for the above reference.)
 
+# hacky workaround but since we always use these paths...who cares?
+SET(JAVA_INCLUDE_PATH2 "$ENV{JAVA_HOME}/include")
+SET(JAVA_INCLUDE_PATH "$ENV{JAVA_HOME}/include")
+
 # Expand {libarch} occurences to java_libarch subdirectory(-ies) and set ${_var}
 macro(java_append_library_directories _var)
     # Determine java arch-specific library subdir
