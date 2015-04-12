@@ -64,8 +64,7 @@ void ConfigServerScript::install(void)
 {
 	data = &staticData;
 
-	KEY_STRING  (scriptPath, "../../data/sku.0/sys.server/plt.shared/loc.shared"
-		"/compiled/game/script");
+	KEY_STRING  (scriptPath, "../../data/sku.0/sys.server/compiled/game/script");
 	KEY_STRING  (javaLibPath, "./jvm");
 	KEY_STRING  (javaDebugPort, "8000");
 	KEY_BOOL    (useRemoteDebugJava, false);
