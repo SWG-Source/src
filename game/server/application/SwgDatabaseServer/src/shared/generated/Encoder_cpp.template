@@ -50,4 +50,2694 @@
 #include <string>
 
 //!!!BEGIN GENERATED ENCODER
+bool SwgSnapshot::encodeSharedBattlefieldMarkerObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=13;
+		Archive::put(data,temp);
+	}
+	encodeSharedTangibleObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeSharedBattlefieldMarkerObject");
+
+	const DBSchema::BattlefieldMarkerObjectBufferRow *row=m_battlefieldMarkerObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no BattlefieldMarkerObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	return true;
+}
+
+bool SwgSnapshot::encodeServerBattlefieldMarkerObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=18;
+		Archive::put(data,temp);
+	}
+	encodeServerTangibleObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeServerBattlefieldMarkerObject");
+
+	const DBSchema::BattlefieldMarkerObjectBufferRow *row=m_battlefieldMarkerObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no BattlefieldMarkerObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	{
+		std::string temp;
+		row->region_name.getValue(temp);
+		Archive::put(data,temp);
+	}
+		encodeBattlefieldParticipants(objectId,data);
+	return true;
+}
+
+bool SwgSnapshot::encodeClientBattlefieldMarkerObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=2;
+		Archive::put(data,temp);
+	}
+	encodeClientTangibleObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeClientBattlefieldMarkerObject");
+
+	const DBSchema::BattlefieldMarkerObjectBufferRow *row=m_battlefieldMarkerObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no BattlefieldMarkerObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	return true;
+}
+
+bool SwgSnapshot::encodeSharedBuildingObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=13;
+		Archive::put(data,temp);
+	}
+	encodeSharedTangibleObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeSharedBuildingObject");
+
+	const DBSchema::BuildingObjectBufferRow *row=m_buildingObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no BuildingObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	return true;
+}
+
+bool SwgSnapshot::encodeServerBuildingObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=22;
+		Archive::put(data,temp);
+	}
+	encodeServerTangibleObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeServerBuildingObject");
+
+	const DBSchema::BuildingObjectBufferRow *row=m_buildingObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no BuildingObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+		encodePropertyList(objectId,PropertyListBuffer::LI_Allowed,data);
+		encodePropertyList(objectId,PropertyListBuffer::LI_Banned,data);
+	{
+		bool temp;
+		row->is_public.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		int temp;
+		row->maintenance_cost.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		real temp;
+		row->time_last_checked.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		int temp;
+		row->city_id.getValue(temp);
+		Archive::put(data,temp);
+	}
+	return true;
+}
+
+bool SwgSnapshot::encodeClientBuildingObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=2;
+		Archive::put(data,temp);
+	}
+	encodeClientTangibleObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeClientBuildingObject");
+
+	const DBSchema::BuildingObjectBufferRow *row=m_buildingObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no BuildingObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	return true;
+}
+
+bool SwgSnapshot::encodeSharedCellObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=6;
+		Archive::put(data,temp);
+	}
+	encodeSharedServerObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeSharedCellObject");
+
+	const DBSchema::CellObjectBufferRow *row=m_cellObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no CellObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	{
+		bool temp;
+		row->is_public.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		int temp;
+		row->cell_number.getValue(temp);
+		Archive::put(data,temp);
+	}
+	return true;
+}
+
+bool SwgSnapshot::encodeServerCellObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=13;
+		Archive::put(data,temp);
+	}
+	encodeServerServerObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeServerCellObject");
+
+	const DBSchema::CellObjectBufferRow *row=m_cellObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no CellObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+		encodePropertyList(objectId,PropertyListBuffer::LI_Allowed,data);
+		encodePropertyList(objectId,PropertyListBuffer::LI_Banned,data);
+	return true;
+}
+
+bool SwgSnapshot::encodeClientCellObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=2;
+		Archive::put(data,temp);
+	}
+	encodeClientServerObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeClientCellObject");
+
+	const DBSchema::CellObjectBufferRow *row=m_cellObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no CellObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	return true;
+}
+
+bool SwgSnapshot::encodeSharedCityObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=4;
+		Archive::put(data,temp);
+	}
+	encodeSharedUniverseObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeSharedCityObject");
+
+	const DBSchema::CityObjectBufferRow *row=m_cityObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no CityObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	return true;
+}
+
+bool SwgSnapshot::encodeServerCityObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=14;
+		Archive::put(data,temp);
+	}
+	encodeServerUniverseObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeServerCityObject");
+
+	const DBSchema::CityObjectBufferRow *row=m_cityObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no CityObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+		encodePropertyList(objectId,PropertyListBuffer::LI_Cities,data);
+		encodePropertyList(objectId,PropertyListBuffer::LI_Citizens,data);
+		encodePropertyList(objectId,PropertyListBuffer::LI_CityStructures,data);
+	return true;
+}
+
+bool SwgSnapshot::encodeClientCityObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=2;
+		Archive::put(data,temp);
+	}
+	encodeClientUniverseObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeClientCityObject");
+
+	const DBSchema::CityObjectBufferRow *row=m_cityObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no CityObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	return true;
+}
+
+bool SwgSnapshot::encodeSharedCreatureObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=19;
+		Archive::put(data,temp);
+	}
+	encodeSharedTangibleObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeSharedCreatureObject");
+
+	const DBSchema::CreatureObjectBufferRow *row=m_creatureObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no CreatureObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	{
+		Postures::Enumerator temp;
+		row->posture.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		uint8 temp;
+		row->rank.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		NetworkId temp;
+		row->master_id.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		float temp;
+		row->scale_factor.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		int temp;
+		row->shock_wounds.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		uint64 temp;
+		row->states.getValue(temp);
+		Archive::put(data,temp);
+	}
+	return true;
+}
+
+bool SwgSnapshot::encodeServerCreatureObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=23;
+		Archive::put(data,temp);
+	}
+	encodeServerTangibleObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeServerCreatureObject");
+
+	const DBSchema::CreatureObjectBufferRow *row=m_creatureObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no CreatureObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+		encodeAttributes(objectId,data,0);
+	{
+		float temp;
+		row->base_run_speed.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		float temp;
+		row->base_walk_speed.getValue(temp);
+		Archive::put(data,temp);
+	}
+		encodePersistedBuffs(data,row->persisted_buffs);
+	{
+		float temp;
+		row->ws_x.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		float temp;
+		row->ws_y.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		float temp;
+		row->ws_z.getValue(temp);
+		Archive::put(data,temp);
+	}
+	return true;
+}
+
+bool SwgSnapshot::encodeClientCreatureObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=4;
+		Archive::put(data,temp);
+	}
+	encodeClientTangibleObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeClientCreatureObject");
+
+	const DBSchema::CreatureObjectBufferRow *row=m_creatureObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no CreatureObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+		encodeAttributes(objectId,data,9);
+		encodePropertyList(objectId,PropertyListBuffer::LI_Skills,data);
+	return true;
+}
+
+bool SwgSnapshot::encodeSharedFactoryObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=13;
+		Archive::put(data,temp);
+	}
+	encodeSharedTangibleObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeSharedFactoryObject");
+
+	const DBSchema::FactoryObjectBufferRow *row=m_factoryObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no FactoryObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	return true;
+}
+
+bool SwgSnapshot::encodeServerFactoryObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=16;
+		Archive::put(data,temp);
+	}
+	encodeServerTangibleObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeServerFactoryObject");
+
+	const DBSchema::FactoryObjectBufferRow *row=m_factoryObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no FactoryObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	return true;
+}
+
+bool SwgSnapshot::encodeClientFactoryObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=2;
+		Archive::put(data,temp);
+	}
+	encodeClientTangibleObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeClientFactoryObject");
+
+	const DBSchema::FactoryObjectBufferRow *row=m_factoryObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no FactoryObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	return true;
+}
+
+bool SwgSnapshot::encodeSharedGuildObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=5;
+		Archive::put(data,temp);
+	}
+	encodeSharedUniverseObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeSharedGuildObject");
+
+	const DBSchema::GuildObjectBufferRow *row=m_guildObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no GuildObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+		encodePropertyList(objectId,PropertyListBuffer::LI_GuildAbbrevs,data);
+	return true;
+}
+
+bool SwgSnapshot::encodeServerGuildObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=15;
+		Archive::put(data,temp);
+	}
+	encodeServerUniverseObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeServerGuildObject");
+
+	const DBSchema::GuildObjectBufferRow *row=m_guildObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no GuildObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+		encodePropertyList(objectId,PropertyListBuffer::LI_GuildNames,data);
+		encodePropertyList(objectId,PropertyListBuffer::LI_GuildLeaders,data);
+		encodePropertyList(objectId,PropertyListBuffer::LI_GuildMembers,data);
+		encodePropertyList(objectId,PropertyListBuffer::LI_GuildEnemies,data);
+	return true;
+}
+
+bool SwgSnapshot::encodeClientGuildObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=2;
+		Archive::put(data,temp);
+	}
+	encodeClientUniverseObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeClientGuildObject");
+
+	const DBSchema::GuildObjectBufferRow *row=m_guildObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no GuildObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	return true;
+}
+
+bool SwgSnapshot::encodeSharedHarvesterInstallationObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=16;
+		Archive::put(data,temp);
+	}
+	encodeSharedInstallationObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeSharedHarvesterInstallationObject");
+
+	const DBSchema::HarvesterInstallationObjectBufferRow *row=m_harvesterInstallationObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no HarvesterInstallationObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	return true;
+}
+
+bool SwgSnapshot::encodeServerHarvesterInstallationObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=26;
+		Archive::put(data,temp);
+	}
+	encodeServerInstallationObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeServerHarvesterInstallationObject");
+
+	const DBSchema::HarvesterInstallationObjectBufferRow *row=m_harvesterInstallationObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no HarvesterInstallationObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	{
+		float temp;
+		row->installed_efficiency.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		NetworkId temp;
+		row->resource_type.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		int temp;
+		row->max_extraction_rate.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		float temp;
+		row->current_extraction_rate.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		int temp;
+		row->max_hopper_amount.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		NetworkId temp;
+		row->hopper_resource.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		float temp;
+		row->hopper_amount.getValue(temp);
+		Archive::put(data,temp);
+	}
+	return true;
+}
+
+bool SwgSnapshot::encodeClientHarvesterInstallationObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=2;
+		Archive::put(data,temp);
+	}
+	encodeClientInstallationObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeClientHarvesterInstallationObject");
+
+	const DBSchema::HarvesterInstallationObjectBufferRow *row=m_harvesterInstallationObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no HarvesterInstallationObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	return true;
+}
+
+bool SwgSnapshot::encodeSharedInstallationObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=16;
+		Archive::put(data,temp);
+	}
+	encodeSharedTangibleObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeSharedInstallationObject");
+
+	const DBSchema::InstallationObjectBufferRow *row=m_installationObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no InstallationObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	{
+		bool temp;
+		row->activated.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		float temp;
+		row->power.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		float temp;
+		row->power_rate.getValue(temp);
+		Archive::put(data,temp);
+	}
+	return true;
+}
+
+bool SwgSnapshot::encodeServerInstallationObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=19;
+		Archive::put(data,temp);
+	}
+	encodeServerTangibleObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeServerInstallationObject");
+
+	const DBSchema::InstallationObjectBufferRow *row=m_installationObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no InstallationObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	{
+		int32 temp;
+		row->installation_type.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		float temp;
+		row->tick_count.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		float temp;
+		row->activate_start_time.getValue(temp);
+		Archive::put(data,temp);
+	}
+	return true;
+}
+
+bool SwgSnapshot::encodeClientInstallationObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=2;
+		Archive::put(data,temp);
+	}
+	encodeClientTangibleObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeClientInstallationObject");
+
+	const DBSchema::InstallationObjectBufferRow *row=m_installationObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no InstallationObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	return true;
+}
+
+bool SwgSnapshot::encodeSharedIntangibleObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=5;
+		Archive::put(data,temp);
+	}
+	encodeSharedServerObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeSharedIntangibleObject");
+
+	const DBSchema::IntangibleObjectBufferRow *row=m_intangibleObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no IntangibleObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	{
+		int temp;
+		row->count.getValue(temp);
+		Archive::put(data,temp);
+	}
+	return true;
+}
+
+bool SwgSnapshot::encodeServerIntangibleObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=11;
+		Archive::put(data,temp);
+	}
+	encodeServerServerObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeServerIntangibleObject");
+
+	const DBSchema::IntangibleObjectBufferRow *row=m_intangibleObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no IntangibleObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	return true;
+}
+
+bool SwgSnapshot::encodeClientIntangibleObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=2;
+		Archive::put(data,temp);
+	}
+	encodeClientServerObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeClientIntangibleObject");
+
+	const DBSchema::IntangibleObjectBufferRow *row=m_intangibleObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no IntangibleObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	return true;
+}
+
+bool SwgSnapshot::encodeSharedManufactureInstallationObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=16;
+		Archive::put(data,temp);
+	}
+	encodeSharedInstallationObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeSharedManufactureInstallationObject");
+
+	const DBSchema::ManufactureInstallationObjectBufferRow *row=m_manufactureInstallationObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no ManufactureInstallationObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	return true;
+}
+
+bool SwgSnapshot::encodeServerManufactureInstallationObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=19;
+		Archive::put(data,temp);
+	}
+	encodeServerInstallationObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeServerManufactureInstallationObject");
+
+	const DBSchema::ManufactureInstallationObjectBufferRow *row=m_manufactureInstallationObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no ManufactureInstallationObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	return true;
+}
+
+bool SwgSnapshot::encodeClientManufactureInstallationObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=2;
+		Archive::put(data,temp);
+	}
+	encodeClientInstallationObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeClientManufactureInstallationObject");
+
+	const DBSchema::ManufactureInstallationObjectBufferRow *row=m_manufactureInstallationObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no ManufactureInstallationObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	return true;
+}
+
+bool SwgSnapshot::encodeSharedManufactureSchematicObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=8;
+		Archive::put(data,temp);
+	}
+	encodeSharedIntangibleObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeSharedManufactureSchematicObject");
+
+	const DBSchema::ManufactureSchematicObjectBufferRow *row=m_manufactureSchematicObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no ManufactureSchematicObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+		encodeManufactureSchematicAttributes(objectId,data);
+	{
+		int temp;
+		row->items_per_container.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		float temp;
+		row->manufacture_time.getValue(temp);
+		Archive::put(data,temp);
+	}
+	return true;
+}
+
+bool SwgSnapshot::encodeServerManufactureSchematicObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=14;
+		Archive::put(data,temp);
+	}
+	encodeServerIntangibleObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeServerManufactureSchematicObject");
+
+	const DBSchema::ManufactureSchematicObjectBufferRow *row=m_manufactureSchematicObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no ManufactureSchematicObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	{
+		int temp;
+		row->draft_schematic.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		NetworkId temp;
+		row->creator_id.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		Unicode::String temp;
+		row->creator_name.getValue(temp);
+		Archive::put(data,temp);
+	}
+	return true;
+}
+
+bool SwgSnapshot::encodeClientManufactureSchematicObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=2;
+		Archive::put(data,temp);
+	}
+	encodeClientIntangibleObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeClientManufactureSchematicObject");
+
+	const DBSchema::ManufactureSchematicObjectBufferRow *row=m_manufactureSchematicObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no ManufactureSchematicObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	return true;
+}
+
+bool SwgSnapshot::encodeSharedMissionObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=17;
+		Archive::put(data,temp);
+	}
+	encodeSharedIntangibleObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeSharedMissionObject");
+
+	const DBSchema::MissionObjectBufferRow *row=m_missionObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no MissionObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	{
+		int temp;
+		row->difficulty.getValue(temp);
+		Archive::put(data,temp);
+	}
+		encodeLocation(data,row->end_x,row->end_y,row->end_z,row->end_cell,row->end_scene);
+	{
+		Unicode::String temp;
+		row->mission_creator.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		int temp;
+		row->reward.getValue(temp);
+		Archive::put(data,temp);
+	}
+		encodeLocation(data,row->start_x,row->start_y,row->start_z,row->start_cell,row->start_scene);
+	{
+		uint32 temp;
+		row->target_appearance.getValue(temp);
+		Archive::put(data,temp);
+	}
+		encodeStringId(data,row->description_table,row->description_text);
+		encodeStringId(data,row->title_table,row->title_text);
+	{
+		int temp;
+		row->status.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		uint32 temp;
+		row->mission_type.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		std::string temp;
+		row->target_name.getValue(temp);
+		Archive::put(data,temp);
+	}
+		encodeSingleWaypoint(objectId,data);
+	return true;
+}
+
+bool SwgSnapshot::encodeServerMissionObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=13;
+		Archive::put(data,temp);
+	}
+	encodeServerIntangibleObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeServerMissionObject");
+
+	const DBSchema::MissionObjectBufferRow *row=m_missionObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no MissionObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	{
+		std::string temp;
+		row->root_script_name.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		NetworkId temp;
+		row->mission_holder_id.getValue(temp);
+		Archive::put(data,temp);
+	}
+	return true;
+}
+
+bool SwgSnapshot::encodeClientMissionObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=2;
+		Archive::put(data,temp);
+	}
+	encodeClientIntangibleObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeClientMissionObject");
+
+	const DBSchema::MissionObjectBufferRow *row=m_missionObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no MissionObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	return true;
+}
+
+bool SwgSnapshot::encodeSharedPlanetObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=4;
+		Archive::put(data,temp);
+	}
+	encodeSharedUniverseObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeSharedPlanetObject");
+
+	const DBSchema::PlanetObjectBufferRow *row=m_planetObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no PlanetObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	return true;
+}
+
+bool SwgSnapshot::encodeServerPlanetObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=12;
+		Archive::put(data,temp);
+	}
+	encodeServerUniverseObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeServerPlanetObject");
+
+	const DBSchema::PlanetObjectBufferRow *row=m_planetObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no PlanetObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	{
+		std::string temp;
+		row->planet_name.getValue(temp);
+		Archive::put(data,temp);
+	}
+	return true;
+}
+
+bool SwgSnapshot::encodeClientPlanetObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=2;
+		Archive::put(data,temp);
+	}
+	encodeClientUniverseObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeClientPlanetObject");
+
+	const DBSchema::PlanetObjectBufferRow *row=m_planetObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no PlanetObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	return true;
+}
+
+bool SwgSnapshot::encodeSharedPlayerObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=20;
+		Archive::put(data,temp);
+	}
+	encodeSharedIntangibleObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeSharedPlayerObject");
+
+	const DBSchema::PlayerObjectBufferRow *row=m_playerObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no PlayerObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+		encodeMatchMakingId(data,row->character_profile_id);
+		encodeMatchMakingId(data,row->personal_profile_id);
+	{
+		NullEncodedStandardString temp;
+		row->skill_title.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		int temp;
+		row->born_date.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		int temp;
+		row->played_time.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		int temp;
+		row->role_icon_choice.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		std::string temp;
+		row->skill_template.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		int32 temp;
+		row->current_gcw_points.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		int32 temp;
+		row->current_pvp_kills.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		int64 temp;
+		row->lifetime_gcw_points.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		int32 temp;
+		row->lifetime_pvp_kills.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		BitArray temp;
+		row->collections.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		BitArray temp;
+		row->collections2.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		bool temp;
+		row->show_backpack.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		bool temp;
+		row->show_helmet.getValue(temp);
+		Archive::put(data,temp);
+	}
+	return true;
+}
+
+bool SwgSnapshot::encodeServerPlayerObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=22;
+		Archive::put(data,temp);
+	}
+	encodeServerIntangibleObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeServerPlayerObject");
+
+	const DBSchema::PlayerObjectBufferRow *row=m_playerObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no PlayerObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	{
+		StationId temp;
+		row->station_id.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		NetworkId temp;
+		row->house_id.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		int temp;
+		row->account_num_lots.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		int temp;
+		row->account_max_lots_adjustment.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		bool temp;
+		row->account_is_outcast.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		float temp;
+		row->account_cheater_level.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		float temp;
+		row->force_regen_rate.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		int32 temp;
+		row->current_gcw_rating.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		int32 temp;
+		row->max_gcw_imperial_rating.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		int32 temp;
+		row->max_gcw_rebel_rating.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		int32 temp;
+		row->next_gcw_rating_calc_time.getValue(temp);
+		Archive::put(data,temp);
+	}
+	return true;
+}
+
+bool SwgSnapshot::encodeClientPlayerObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=2;
+		Archive::put(data,temp);
+	}
+	encodeClientIntangibleObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeClientPlayerObject");
+
+	const DBSchema::PlayerObjectBufferRow *row=m_playerObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no PlayerObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	return true;
+}
+
+bool SwgSnapshot::encodeSharedPlayerQuestObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=42;
+		Archive::put(data,temp);
+	}
+	encodeSharedTangibleObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeSharedPlayerQuestObject");
+
+	const DBSchema::PlayerQuestObjectBufferRow *row=m_playerQuestObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no PlayerQuestObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	{
+		std::string temp;
+		row->title.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		std::string temp;
+		row->description.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		NetworkId temp;
+		row->creator.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		int temp;
+		row->total_tasks.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		int temp;
+		row->difficulty.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		std::string temp;
+		row->task_title1.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		std::string temp;
+		row->task_description1.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		std::string temp;
+		row->task_title2.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		std::string temp;
+		row->task_description2.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		std::string temp;
+		row->task_title3.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		std::string temp;
+		row->task_description3.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		std::string temp;
+		row->task_title4.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		std::string temp;
+		row->task_description4.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		std::string temp;
+		row->task_title5.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		std::string temp;
+		row->task_description5.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		std::string temp;
+		row->task_title6.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		std::string temp;
+		row->task_description6.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		std::string temp;
+		row->task_title7.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		std::string temp;
+		row->task_description7.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		std::string temp;
+		row->task_title8.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		std::string temp;
+		row->task_description8.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		std::string temp;
+		row->task_title9.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		std::string temp;
+		row->task_description9.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		std::string temp;
+		row->task_title10.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		std::string temp;
+		row->task_description10.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		std::string temp;
+		row->task_title11.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		std::string temp;
+		row->task_description11.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		std::string temp;
+		row->task_title12.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		std::string temp;
+		row->task_description12.getValue(temp);
+		Archive::put(data,temp);
+	}
+	return true;
+}
+
+bool SwgSnapshot::encodeServerPlayerQuestObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=16;
+		Archive::put(data,temp);
+	}
+	encodeServerTangibleObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeServerPlayerQuestObject");
+
+	const DBSchema::PlayerQuestObjectBufferRow *row=m_playerQuestObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no PlayerQuestObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	return true;
+}
+
+bool SwgSnapshot::encodeClientPlayerQuestObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=2;
+		Archive::put(data,temp);
+	}
+	encodeClientTangibleObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeClientPlayerQuestObject");
+
+	const DBSchema::PlayerQuestObjectBufferRow *row=m_playerQuestObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no PlayerQuestObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	return true;
+}
+
+bool SwgSnapshot::encodeSharedResourceContainerObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=15;
+		Archive::put(data,temp);
+	}
+	encodeSharedTangibleObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeSharedResourceContainerObject");
+
+	const DBSchema::ResourceContainerObjectBufferRow *row=m_resourceContainerObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no ResourceContainerObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	{
+		int temp;
+		row->quantity.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		NetworkId temp;
+		row->resource_type.getValue(temp);
+		Archive::put(data,temp);
+	}
+	return true;
+}
+
+bool SwgSnapshot::encodeServerResourceContainerObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=17;
+		Archive::put(data,temp);
+	}
+	encodeServerTangibleObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeServerResourceContainerObject");
+
+	const DBSchema::ResourceContainerObjectBufferRow *row=m_resourceContainerObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no ResourceContainerObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	{
+		NetworkId temp;
+		row->source.getValue(temp);
+		Archive::put(data,temp);
+	}
+	return true;
+}
+
+bool SwgSnapshot::encodeClientResourceContainerObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=2;
+		Archive::put(data,temp);
+	}
+	encodeClientTangibleObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeClientResourceContainerObject");
+
+	const DBSchema::ResourceContainerObjectBufferRow *row=m_resourceContainerObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no ResourceContainerObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	return true;
+}
+
+bool SwgSnapshot::encodeSharedServerObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=4;
+		Archive::put(data,temp);
+	}
+	PROFILER_AUTO_BLOCK_DEFINE("encodeSharedServerObject");
+
+	const DBSchema::ObjectBufferRow *row=m_objectTableBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no ObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	{
+		float temp;
+		row->complexity.getValue(temp);
+		Archive::put(data,temp);
+	}
+		encodeStringId(data,row->name_string_table,row->name_string_text);
+	{
+		NullEncodedUnicodeString temp;
+		row->object_name.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		int temp;
+		row->volume.getValue(temp);
+		Archive::put(data,temp);
+	}
+	return true;
+}
+
+bool SwgSnapshot::encodeServerServerObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=11;
+		Archive::put(data,temp);
+	}
+	PROFILER_AUTO_BLOCK_DEFINE("encodeServerServerObject");
+
+	const DBSchema::ObjectBufferRow *row=m_objectTableBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no ObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	{
+		int temp;
+		row->cache_version.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		bool temp;
+		row->load_contents.getValue(temp);
+		Archive::put(data,temp);
+	}
+		encodeObjVarFreeFlags(objectId,data);
+		encodeObjVars(objectId,data);
+		Archive::put(data,true);
+	{
+		bool temp;
+		row->player_controlled.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		std::string temp;
+		row->scene_id.getValue(temp);
+		Archive::put(data,temp);
+	}
+		encodeScriptObject(objectId,data);
+	{
+		int temp;
+		row->conversion_id.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		std::string temp;
+		row->static_item_name.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		int temp;
+		row->static_item_version.getValue(temp);
+		Archive::put(data,temp);
+	}
+	return true;
+}
+
+bool SwgSnapshot::encodeClientServerObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=2;
+		Archive::put(data,temp);
+	}
+	PROFILER_AUTO_BLOCK_DEFINE("encodeClientServerObject");
+
+	const DBSchema::ObjectBufferRow *row=m_objectTableBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no ObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	{
+		int temp;
+		row->bank_balance.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		int temp;
+		row->cash_balance.getValue(temp);
+		Archive::put(data,temp);
+	}
+	return true;
+}
+
+bool SwgSnapshot::encodeSharedShipObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=24;
+		Archive::put(data,temp);
+	}
+	encodeSharedTangibleObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeSharedShipObject");
+
+	const DBSchema::ShipObjectBufferRow *row=m_shipObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no ShipObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	{
+		float temp;
+		row->slide_dampener.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		float temp;
+		row->current_chassis_hit_points.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		float temp;
+		row->maximum_chassis_hit_points.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		uint32 temp;
+		row->chassis_type.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		std::string packedValue;
+		row->cmp_armor_hp_maximum.getValue(packedValue);
+		Archive::AutoDeltaPackedMap<int,float>::pack(data, packedValue);
+	}
+	{
+		std::string packedValue;
+		row->cmp_armor_hp_current.getValue(packedValue);
+		Archive::AutoDeltaPackedMap<int,float>::pack(data, packedValue);
+	}
+	{
+		std::string packedValue;
+		row->cmp_hp_current.getValue(packedValue);
+		Archive::AutoDeltaPackedMap<int,float>::pack(data, packedValue);
+	}
+	{
+		std::string packedValue;
+		row->cmp_hp_maximum.getValue(packedValue);
+		Archive::AutoDeltaPackedMap<int,float>::pack(data, packedValue);
+	}
+	{
+		std::string packedValue;
+		row->cmp_flags.getValue(packedValue);
+		Archive::AutoDeltaPackedMap<int,int>::pack(data, packedValue);
+	}
+	{
+		float temp;
+		row->shield_hp_front_maximum.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		float temp;
+		row->shield_hp_back_maximum.getValue(temp);
+		Archive::put(data,temp);
+	}
+	return true;
+}
+
+bool SwgSnapshot::encodeServerShipObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=17;
+		Archive::put(data,temp);
+	}
+	encodeServerTangibleObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeServerShipObject");
+
+	const DBSchema::ShipObjectBufferRow *row=m_shipObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no ShipObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	{
+		std::string packedValue;
+		row->cmp_crc.getValue(packedValue);
+		Archive::AutoDeltaPackedMap<int,uint32>::pack(data, packedValue);
+	}
+	return true;
+}
+
+bool SwgSnapshot::encodeClientShipObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=41;
+		Archive::put(data,temp);
+	}
+	encodeClientTangibleObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeClientShipObject");
+
+	const DBSchema::ShipObjectBufferRow *row=m_shipObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no ShipObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	{
+		std::string packedValue;
+		row->cmp_efficiency_general.getValue(packedValue);
+		Archive::AutoDeltaPackedMap<int,float>::pack(data, packedValue);
+	}
+	{
+		std::string packedValue;
+		row->cmp_efficiency_eng.getValue(packedValue);
+		Archive::AutoDeltaPackedMap<int,float>::pack(data, packedValue);
+	}
+	{
+		std::string packedValue;
+		row->cmp_eng_maintenance.getValue(packedValue);
+		Archive::AutoDeltaPackedMap<int,float>::pack(data, packedValue);
+	}
+	{
+		std::string packedValue;
+		row->cmp_mass.getValue(packedValue);
+		Archive::AutoDeltaPackedMap<int,float>::pack(data, packedValue);
+	}
+	{
+		std::string packedValue;
+		row->cmp_names.getValue(packedValue);
+		Archive::AutoDeltaPackedMap<int,Unicode::String>::pack(data, packedValue);
+	}
+	{
+		std::string packedValue;
+		row->cmp_creators.getValue(packedValue);
+		Archive::AutoDeltaPackedMap<int,NetworkId>::pack(data, packedValue);
+	}
+	{
+		std::string packedValue;
+		row->weapon_damage_maximum.getValue(packedValue);
+		Archive::AutoDeltaPackedMap<int,float>::pack(data, packedValue);
+	}
+	{
+		std::string packedValue;
+		row->weapon_damage_minimum.getValue(packedValue);
+		Archive::AutoDeltaPackedMap<int,float>::pack(data, packedValue);
+	}
+	{
+		std::string packedValue;
+		row->weapon_effectiveness_shields.getValue(packedValue);
+		Archive::AutoDeltaPackedMap<int,float>::pack(data, packedValue);
+	}
+	{
+		std::string packedValue;
+		row->weapon_effectiveness_armor.getValue(packedValue);
+		Archive::AutoDeltaPackedMap<int,float>::pack(data, packedValue);
+	}
+	{
+		std::string packedValue;
+		row->weapon_eng_per_shot.getValue(packedValue);
+		Archive::AutoDeltaPackedMap<int,float>::pack(data, packedValue);
+	}
+	{
+		std::string packedValue;
+		row->weapon_refire_rate.getValue(packedValue);
+		Archive::AutoDeltaPackedMap<int,float>::pack(data, packedValue);
+	}
+	{
+		std::string packedValue;
+		row->weapon_ammo_current.getValue(packedValue);
+		Archive::AutoDeltaPackedMap<int,int>::pack(data, packedValue);
+	}
+	{
+		std::string packedValue;
+		row->weapon_ammo_maximum.getValue(packedValue);
+		Archive::AutoDeltaPackedMap<int,int>::pack(data, packedValue);
+	}
+	{
+		std::string packedValue;
+		row->weapon_ammo_type.getValue(packedValue);
+		Archive::AutoDeltaPackedMap<int,uint32>::pack(data, packedValue);
+	}
+	{
+		float temp;
+		row->chassis_cmp_mass_maximum.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		float temp;
+		row->shield_recharge_rate.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		float temp;
+		row->capacitor_eng_maximum.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		float temp;
+		row->capacitor_eng_recharge_rate.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		float temp;
+		row->engine_acc_rate.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		float temp;
+		row->engine_deceleration_rate.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		float temp;
+		row->engine_pitch_acc_rate.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		float temp;
+		row->engine_yaw_acc_rate.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		float temp;
+		row->engine_roll_acc_rate.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		float temp;
+		row->engine_pitch_rate_maximum.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		float temp;
+		row->engine_yaw_rate_maximum.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		float temp;
+		row->engine_roll_rate_maximum.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		float temp;
+		row->engine_speed_maximum.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		float temp;
+		row->reactor_eng_generation_rate.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		float temp;
+		row->booster_eng_maximum.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		float temp;
+		row->booster_eng_recharge_rate.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		float temp;
+		row->booster_eng_consumption_rate.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		float temp;
+		row->booster_acc.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		float temp;
+		row->booster_speed_maximum.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		float temp;
+		row->droid_if_cmd_speed.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		NetworkId temp;
+		row->installed_dcd.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		int temp;
+		row->cargo_hold_contents_maximum.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		int temp;
+		row->cargo_hold_contents_current.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		std::string packedValue;
+		row->cargo_hold_contents.getValue(packedValue);
+		Archive::AutoDeltaPackedMap<NetworkId,int>::pack(data, packedValue);
+	}
+	return true;
+}
+
+bool SwgSnapshot::encodeSharedStaticObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=4;
+		Archive::put(data,temp);
+	}
+	encodeSharedServerObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeSharedStaticObject");
+
+	const DBSchema::StaticObjectBufferRow *row=m_staticObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no StaticObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	return true;
+}
+
+bool SwgSnapshot::encodeServerStaticObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=11;
+		Archive::put(data,temp);
+	}
+	encodeServerServerObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeServerStaticObject");
+
+	const DBSchema::StaticObjectBufferRow *row=m_staticObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no StaticObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	return true;
+}
+
+bool SwgSnapshot::encodeClientStaticObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=2;
+		Archive::put(data,temp);
+	}
+	encodeClientServerObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeClientStaticObject");
+
+	const DBSchema::StaticObjectBufferRow *row=m_staticObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no StaticObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	return true;
+}
+
+bool SwgSnapshot::encodeSharedTangibleObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=13;
+		Archive::put(data,temp);
+	}
+	encodeSharedServerObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeSharedTangibleObject");
+
+	const DBSchema::TangibleObjectBufferRow *row=m_tangibleObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no TangibleObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	{
+		uint32 temp;
+		row->pvp_faction.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		int temp;
+		row->pvp_type.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		std::string temp;
+		row->appearance_data.getValue(temp);
+		Archive::put(data,temp);
+	}
+		encodeComponents(objectId,data);
+	{
+		int temp;
+		row->condition.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		int temp;
+		row->count.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		int temp;
+		row->damage_taken.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		int temp;
+		row->max_hit_points.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		bool temp;
+		row->visible.getValue(temp);
+		Archive::put(data,temp);
+	}
+	return true;
+}
+
+bool SwgSnapshot::encodeServerTangibleObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=16;
+		Archive::put(data,temp);
+	}
+	encodeServerServerObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeServerTangibleObject");
+
+	const DBSchema::TangibleObjectBufferRow *row=m_tangibleObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no TangibleObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	{
+		std::string temp;
+		row->custom_appearance.getValue(temp);
+		Archive::put(data,temp);
+	}
+		encodeLocationDataList(objectId,1,data);
+	{
+		NetworkId temp;
+		row->owner_id.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		NetworkId temp;
+		row->creator_id.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		uint32 temp;
+		row->source_draft_schematic.getValue(temp);
+		Archive::put(data,temp);
+	}
+	return true;
+}
+
+bool SwgSnapshot::encodeClientTangibleObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=2;
+		Archive::put(data,temp);
+	}
+	encodeClientServerObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeClientTangibleObject");
+
+	const DBSchema::TangibleObjectBufferRow *row=m_tangibleObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no TangibleObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	return true;
+}
+
+bool SwgSnapshot::encodeSharedUniverseObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=4;
+		Archive::put(data,temp);
+	}
+	encodeSharedServerObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeSharedUniverseObject");
+
+	const DBSchema::UniverseObjectBufferRow *row=m_universeObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no UniverseObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	return true;
+}
+
+bool SwgSnapshot::encodeServerUniverseObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=11;
+		Archive::put(data,temp);
+	}
+	encodeServerServerObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeServerUniverseObject");
+
+	const DBSchema::UniverseObjectBufferRow *row=m_universeObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no UniverseObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	return true;
+}
+
+bool SwgSnapshot::encodeClientUniverseObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=2;
+		Archive::put(data,temp);
+	}
+	encodeClientServerObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeClientUniverseObject");
+
+	const DBSchema::UniverseObjectBufferRow *row=m_universeObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no UniverseObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	return true;
+}
+
+bool SwgSnapshot::encodeSharedVehicleObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=13;
+		Archive::put(data,temp);
+	}
+	encodeSharedTangibleObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeSharedVehicleObject");
+
+	const DBSchema::VehicleObjectBufferRow *row=m_vehicleObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no VehicleObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	return true;
+}
+
+bool SwgSnapshot::encodeServerVehicleObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=17;
+		Archive::put(data,temp);
+	}
+	encodeServerTangibleObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeServerVehicleObject");
+
+	const DBSchema::VehicleObjectBufferRow *row=m_vehicleObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no VehicleObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	{
+		int temp;
+		row->bogus.getValue(temp);
+		Archive::put(data,temp);
+	}
+	return true;
+}
+
+bool SwgSnapshot::encodeClientVehicleObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=2;
+		Archive::put(data,temp);
+	}
+	encodeClientTangibleObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeClientVehicleObject");
+
+	const DBSchema::VehicleObjectBufferRow *row=m_vehicleObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no VehicleObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	return true;
+}
+
+bool SwgSnapshot::encodeSharedWeaponObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=20;
+		Archive::put(data,temp);
+	}
+	encodeSharedTangibleObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeSharedWeaponObject");
+
+	const DBSchema::WeaponObjectBufferRow *row=m_weaponObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no WeaponObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	{
+		float temp;
+		row->attack_speed.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		int temp;
+		row->accuracy.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		float temp;
+		row->min_range.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		float temp;
+		row->max_range.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		int temp;
+		row->damage_type.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		int temp;
+		row->elemental_type.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		int temp;
+		row->elemental_value.getValue(temp);
+		Archive::put(data,temp);
+	}
+	return true;
+}
+
+bool SwgSnapshot::encodeServerWeaponObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=21;
+		Archive::put(data,temp);
+	}
+	encodeServerTangibleObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeServerWeaponObject");
+
+	const DBSchema::WeaponObjectBufferRow *row=m_weaponObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no WeaponObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	{
+		int temp;
+		row->min_damage.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		int temp;
+		row->max_damage.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		float temp;
+		row->wound_chance.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		int temp;
+		row->attack_cost.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		float temp;
+		row->damage_radius.getValue(temp);
+		Archive::put(data,temp);
+	}
+	return true;
+}
+
+bool SwgSnapshot::encodeClientWeaponObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=2;
+		Archive::put(data,temp);
+	}
+	encodeClientTangibleObject(objectId, data, false);
+
+	PROFILER_AUTO_BLOCK_DEFINE("encodeClientWeaponObject");
+
+	const DBSchema::WeaponObjectBufferRow *row=m_weaponObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no WeaponObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+	return true;
+}
+
+bool SwgSnapshot::encodeParentClientPlayerObject(NetworkId const & objectId, Archive::ByteStream &data, bool addCount) const
+{
+	if (addCount)
+	{
+		uint16 temp=9;
+		Archive::put(data,temp);
+	}
+	PROFILER_AUTO_BLOCK_DEFINE("encodeParentClientPlayerObject");
+
+	const DBSchema::PlayerObjectBufferRow *row=m_playerObjectBuffer.findConstRowByIndex(objectId);
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no PlayerObjectBufferRow in the buffer\n",objectId.getValueString().c_str()));
+	if (!row)
+		return false;
+
+		encodeExperience(objectId,data);
+		encodeWaypoints(objectId,data);
+	{
+		int temp;
+		row->force_power.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		int temp;
+		row->max_force_power.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		BitArray temp;
+		row->completed_quests.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		BitArray temp;
+		row->active_quests.getValue(temp);
+		Archive::put(data,temp);
+	}
+	{
+		uint32 temp;
+		row->current_quest.getValue(temp);
+		Archive::put(data,temp);
+	}
+		encodeQuests(data,row->quests,row->quests2,row->quests3,row->quests4);
+	{
+		std::string temp;
+		row->working_skill.getValue(temp);
+		Archive::put(data,temp);
+	}
+	return true;
+}
+
+bool SwgSnapshot::encodeSharedData(NetworkId const & objectId, Tag typeId, std::vector<BatchBaselinesMessageData> &baselines) const
+{
+	Archive::ByteStream bs;
+	switch (typeId)
+	{
+	case ServerBattlefieldMarkerObjectTemplate::ServerBattlefieldMarkerObjectTemplate_tag:
+		if (!encodeSharedBattlefieldMarkerObject(objectId, bs)) return false;
+		break;
+	case ServerBuildingObjectTemplate::ServerBuildingObjectTemplate_tag:
+		if (!encodeSharedBuildingObject(objectId, bs)) return false;
+		break;
+	case ServerCellObjectTemplate::ServerCellObjectTemplate_tag:
+		if (!encodeSharedCellObject(objectId, bs)) return false;
+		break;
+	case ServerCityObjectTemplate::ServerCityObjectTemplate_tag:
+		if (!encodeSharedCityObject(objectId, bs)) return false;
+		break;
+	case ServerCreatureObjectTemplate::ServerCreatureObjectTemplate_tag:
+		if (!encodeSharedCreatureObject(objectId, bs)) return false;
+		break;
+	case ServerFactoryObjectTemplate::ServerFactoryObjectTemplate_tag:
+		if (!encodeSharedFactoryObject(objectId, bs)) return false;
+		break;
+	case ServerGuildObjectTemplate::ServerGuildObjectTemplate_tag:
+		if (!encodeSharedGuildObject(objectId, bs)) return false;
+		break;
+	case ServerHarvesterInstallationObjectTemplate::ServerHarvesterInstallationObjectTemplate_tag:
+		if (!encodeSharedHarvesterInstallationObject(objectId, bs)) return false;
+		break;
+	case ServerInstallationObjectTemplate::ServerInstallationObjectTemplate_tag:
+		if (!encodeSharedInstallationObject(objectId, bs)) return false;
+		break;
+	case ServerIntangibleObjectTemplate::ServerIntangibleObjectTemplate_tag:
+		if (!encodeSharedIntangibleObject(objectId, bs)) return false;
+		break;
+	case ServerManufactureInstallationObjectTemplate::ServerManufactureInstallationObjectTemplate_tag:
+		if (!encodeSharedManufactureInstallationObject(objectId, bs)) return false;
+		break;
+	case ServerManufactureSchematicObjectTemplate::ServerManufactureSchematicObjectTemplate_tag:
+		if (!encodeSharedManufactureSchematicObject(objectId, bs)) return false;
+		break;
+	case ServerMissionObjectTemplate::ServerMissionObjectTemplate_tag:
+		if (!encodeSharedMissionObject(objectId, bs)) return false;
+		break;
+	case ServerPlanetObjectTemplate::ServerPlanetObjectTemplate_tag:
+		if (!encodeSharedPlanetObject(objectId, bs)) return false;
+		break;
+	case ServerPlayerObjectTemplate::ServerPlayerObjectTemplate_tag:
+		if (!encodeSharedPlayerObject(objectId, bs)) return false;
+		break;
+	case ServerPlayerQuestObjectTemplate::ServerPlayerQuestObjectTemplate_tag:
+		if (!encodeSharedPlayerQuestObject(objectId, bs)) return false;
+		break;
+	case ServerResourceContainerObjectTemplate::ServerResourceContainerObjectTemplate_tag:
+		if (!encodeSharedResourceContainerObject(objectId, bs)) return false;
+		break;
+	case ServerObjectTemplate::ServerObjectTemplate_tag:
+		if (!encodeSharedServerObject(objectId, bs)) return false;
+		break;
+	case ServerShipObjectTemplate::ServerShipObjectTemplate_tag:
+		if (!encodeSharedShipObject(objectId, bs)) return false;
+		break;
+	case ServerStaticObjectTemplate::ServerStaticObjectTemplate_tag:
+		if (!encodeSharedStaticObject(objectId, bs)) return false;
+		break;
+	case ServerTangibleObjectTemplate::ServerTangibleObjectTemplate_tag:
+		if (!encodeSharedTangibleObject(objectId, bs)) return false;
+		break;
+	case ServerUniverseObjectTemplate::ServerUniverseObjectTemplate_tag:
+		if (!encodeSharedUniverseObject(objectId, bs)) return false;
+		break;
+	case ServerVehicleObjectTemplate::ServerVehicleObjectTemplate_tag:
+		if (!encodeSharedVehicleObject(objectId, bs)) return false;
+		break;
+	case ServerWeaponObjectTemplate::ServerWeaponObjectTemplate_tag:
+		if (!encodeSharedWeaponObject(objectId, bs)) return false;
+		break;
+	}
+
+	// test for 0-length message
+	if (bs.getSize() == 0)
+		return true;
+	
+	{
+		PROFILER_AUTO_BLOCK_DEFINE("new BaselinesMessage");
+		baselines.push_back(BatchBaselinesMessageData(objectId,typeId,BaselinesMessage::BASELINES_SHARED,bs));
+	}
+	return true;
+}
+
+bool SwgSnapshot::encodeServerData(NetworkId const & objectId, Tag typeId, std::vector<BatchBaselinesMessageData> &baselines) const
+{
+	Archive::ByteStream bs;
+	switch (typeId)
+	{
+	case ServerBattlefieldMarkerObjectTemplate::ServerBattlefieldMarkerObjectTemplate_tag:
+		if (!encodeServerBattlefieldMarkerObject(objectId, bs)) return false;
+		break;
+	case ServerBuildingObjectTemplate::ServerBuildingObjectTemplate_tag:
+		if (!encodeServerBuildingObject(objectId, bs)) return false;
+		break;
+	case ServerCellObjectTemplate::ServerCellObjectTemplate_tag:
+		if (!encodeServerCellObject(objectId, bs)) return false;
+		break;
+	case ServerCityObjectTemplate::ServerCityObjectTemplate_tag:
+		if (!encodeServerCityObject(objectId, bs)) return false;
+		break;
+	case ServerCreatureObjectTemplate::ServerCreatureObjectTemplate_tag:
+		if (!encodeServerCreatureObject(objectId, bs)) return false;
+		break;
+	case ServerFactoryObjectTemplate::ServerFactoryObjectTemplate_tag:
+		if (!encodeServerFactoryObject(objectId, bs)) return false;
+		break;
+	case ServerGuildObjectTemplate::ServerGuildObjectTemplate_tag:
+		if (!encodeServerGuildObject(objectId, bs)) return false;
+		break;
+	case ServerHarvesterInstallationObjectTemplate::ServerHarvesterInstallationObjectTemplate_tag:
+		if (!encodeServerHarvesterInstallationObject(objectId, bs)) return false;
+		break;
+	case ServerInstallationObjectTemplate::ServerInstallationObjectTemplate_tag:
+		if (!encodeServerInstallationObject(objectId, bs)) return false;
+		break;
+	case ServerIntangibleObjectTemplate::ServerIntangibleObjectTemplate_tag:
+		if (!encodeServerIntangibleObject(objectId, bs)) return false;
+		break;
+	case ServerManufactureInstallationObjectTemplate::ServerManufactureInstallationObjectTemplate_tag:
+		if (!encodeServerManufactureInstallationObject(objectId, bs)) return false;
+		break;
+	case ServerManufactureSchematicObjectTemplate::ServerManufactureSchematicObjectTemplate_tag:
+		if (!encodeServerManufactureSchematicObject(objectId, bs)) return false;
+		break;
+	case ServerMissionObjectTemplate::ServerMissionObjectTemplate_tag:
+		if (!encodeServerMissionObject(objectId, bs)) return false;
+		break;
+	case ServerPlanetObjectTemplate::ServerPlanetObjectTemplate_tag:
+		if (!encodeServerPlanetObject(objectId, bs)) return false;
+		break;
+	case ServerPlayerObjectTemplate::ServerPlayerObjectTemplate_tag:
+		if (!encodeServerPlayerObject(objectId, bs)) return false;
+		break;
+	case ServerPlayerQuestObjectTemplate::ServerPlayerQuestObjectTemplate_tag:
+		if (!encodeServerPlayerQuestObject(objectId, bs)) return false;
+		break;
+	case ServerResourceContainerObjectTemplate::ServerResourceContainerObjectTemplate_tag:
+		if (!encodeServerResourceContainerObject(objectId, bs)) return false;
+		break;
+	case ServerObjectTemplate::ServerObjectTemplate_tag:
+		if (!encodeServerServerObject(objectId, bs)) return false;
+		break;
+	case ServerShipObjectTemplate::ServerShipObjectTemplate_tag:
+		if (!encodeServerShipObject(objectId, bs)) return false;
+		break;
+	case ServerStaticObjectTemplate::ServerStaticObjectTemplate_tag:
+		if (!encodeServerStaticObject(objectId, bs)) return false;
+		break;
+	case ServerTangibleObjectTemplate::ServerTangibleObjectTemplate_tag:
+		if (!encodeServerTangibleObject(objectId, bs)) return false;
+		break;
+	case ServerUniverseObjectTemplate::ServerUniverseObjectTemplate_tag:
+		if (!encodeServerUniverseObject(objectId, bs)) return false;
+		break;
+	case ServerVehicleObjectTemplate::ServerVehicleObjectTemplate_tag:
+		if (!encodeServerVehicleObject(objectId, bs)) return false;
+		break;
+	case ServerWeaponObjectTemplate::ServerWeaponObjectTemplate_tag:
+		if (!encodeServerWeaponObject(objectId, bs)) return false;
+		break;
+	}
+
+	// test for 0-length message
+	if (bs.getSize() == 0)
+		return true;
+	
+	{
+		PROFILER_AUTO_BLOCK_DEFINE("new BaselinesMessage");
+		baselines.push_back(BatchBaselinesMessageData(objectId,typeId,BaselinesMessage::BASELINES_SERVER,bs));
+	}
+	return true;
+}
+
+bool SwgSnapshot::encodeClientData(NetworkId const & objectId, Tag typeId, std::vector<BatchBaselinesMessageData> &baselines) const
+{
+	Archive::ByteStream bs;
+	switch (typeId)
+	{
+	case ServerBattlefieldMarkerObjectTemplate::ServerBattlefieldMarkerObjectTemplate_tag:
+		if (!encodeClientBattlefieldMarkerObject(objectId, bs)) return false;
+		break;
+	case ServerBuildingObjectTemplate::ServerBuildingObjectTemplate_tag:
+		if (!encodeClientBuildingObject(objectId, bs)) return false;
+		break;
+	case ServerCellObjectTemplate::ServerCellObjectTemplate_tag:
+		if (!encodeClientCellObject(objectId, bs)) return false;
+		break;
+	case ServerCityObjectTemplate::ServerCityObjectTemplate_tag:
+		if (!encodeClientCityObject(objectId, bs)) return false;
+		break;
+	case ServerCreatureObjectTemplate::ServerCreatureObjectTemplate_tag:
+		if (!encodeClientCreatureObject(objectId, bs)) return false;
+		break;
+	case ServerFactoryObjectTemplate::ServerFactoryObjectTemplate_tag:
+		if (!encodeClientFactoryObject(objectId, bs)) return false;
+		break;
+	case ServerGuildObjectTemplate::ServerGuildObjectTemplate_tag:
+		if (!encodeClientGuildObject(objectId, bs)) return false;
+		break;
+	case ServerHarvesterInstallationObjectTemplate::ServerHarvesterInstallationObjectTemplate_tag:
+		if (!encodeClientHarvesterInstallationObject(objectId, bs)) return false;
+		break;
+	case ServerInstallationObjectTemplate::ServerInstallationObjectTemplate_tag:
+		if (!encodeClientInstallationObject(objectId, bs)) return false;
+		break;
+	case ServerIntangibleObjectTemplate::ServerIntangibleObjectTemplate_tag:
+		if (!encodeClientIntangibleObject(objectId, bs)) return false;
+		break;
+	case ServerManufactureInstallationObjectTemplate::ServerManufactureInstallationObjectTemplate_tag:
+		if (!encodeClientManufactureInstallationObject(objectId, bs)) return false;
+		break;
+	case ServerManufactureSchematicObjectTemplate::ServerManufactureSchematicObjectTemplate_tag:
+		if (!encodeClientManufactureSchematicObject(objectId, bs)) return false;
+		break;
+	case ServerMissionObjectTemplate::ServerMissionObjectTemplate_tag:
+		if (!encodeClientMissionObject(objectId, bs)) return false;
+		break;
+	case ServerPlanetObjectTemplate::ServerPlanetObjectTemplate_tag:
+		if (!encodeClientPlanetObject(objectId, bs)) return false;
+		break;
+	case ServerPlayerObjectTemplate::ServerPlayerObjectTemplate_tag:
+		if (!encodeClientPlayerObject(objectId, bs)) return false;
+		break;
+	case ServerPlayerQuestObjectTemplate::ServerPlayerQuestObjectTemplate_tag:
+		if (!encodeClientPlayerQuestObject(objectId, bs)) return false;
+		break;
+	case ServerResourceContainerObjectTemplate::ServerResourceContainerObjectTemplate_tag:
+		if (!encodeClientResourceContainerObject(objectId, bs)) return false;
+		break;
+	case ServerObjectTemplate::ServerObjectTemplate_tag:
+		if (!encodeClientServerObject(objectId, bs)) return false;
+		break;
+	case ServerShipObjectTemplate::ServerShipObjectTemplate_tag:
+		if (!encodeClientShipObject(objectId, bs)) return false;
+		break;
+	case ServerStaticObjectTemplate::ServerStaticObjectTemplate_tag:
+		if (!encodeClientStaticObject(objectId, bs)) return false;
+		break;
+	case ServerTangibleObjectTemplate::ServerTangibleObjectTemplate_tag:
+		if (!encodeClientTangibleObject(objectId, bs)) return false;
+		break;
+	case ServerUniverseObjectTemplate::ServerUniverseObjectTemplate_tag:
+		if (!encodeClientUniverseObject(objectId, bs)) return false;
+		break;
+	case ServerVehicleObjectTemplate::ServerVehicleObjectTemplate_tag:
+		if (!encodeClientVehicleObject(objectId, bs)) return false;
+		break;
+	case ServerWeaponObjectTemplate::ServerWeaponObjectTemplate_tag:
+		if (!encodeClientWeaponObject(objectId, bs)) return false;
+		break;
+	}
+
+	// test for 0-length message
+	if (bs.getSize() == 0)
+		return true;
+	
+	{
+		PROFILER_AUTO_BLOCK_DEFINE("new BaselinesMessage");
+		baselines.push_back(BatchBaselinesMessageData(objectId,typeId,BaselinesMessage::BASELINES_CLIENT_SERVER,bs));
+	}
+	return true;
+}
+
+bool SwgSnapshot::encodeParentClientData(NetworkId const & objectId, Tag typeId, std::vector<BatchBaselinesMessageData> &baselines) const
+{
+	Archive::ByteStream bs;
+	switch (typeId)
+	{
+	case ServerPlayerObjectTemplate::ServerPlayerObjectTemplate_tag:
+		if (!encodeParentClientPlayerObject(objectId, bs)) return false;
+		break;
+	}
+
+	// test for 0-length message
+	if (bs.getSize() == 0)
+		return true;
+	
+	{
+		PROFILER_AUTO_BLOCK_DEFINE("new BaselinesMessage");
+		baselines.push_back(BatchBaselinesMessageData(objectId,typeId,BaselinesMessage::BASELINES_FIRST_PARENT_CLIENT_SERVER,bs));
+	}
+	return true;
+}
+
 //!!!END GENERATED ENCODER

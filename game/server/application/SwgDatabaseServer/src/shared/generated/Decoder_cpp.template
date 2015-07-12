@@ -49,4 +49,3384 @@
 #pragma warning(disable : 4100)
 
 //!!!BEGIN GENERATED DECODER
+void SwgSnapshot::decodeSharedBattlefieldMarkerObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 13)
+	{
+		decodeSharedTangibleObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::BattlefieldMarkerObjectBufferRow *row=m_battlefieldMarkerObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_battlefieldMarkerObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeSharedBattlefieldMarkerObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeServerBattlefieldMarkerObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 16)
+	{
+		decodeServerTangibleObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::BattlefieldMarkerObjectBufferRow *row=m_battlefieldMarkerObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_battlefieldMarkerObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		case 16:
+		{
+			std::string temp;
+			Archive::get(data,temp);
+			row->region_name=temp;
+			break;
+		}
+		case 17:
+		{
+			decodeBattlefieldParticipants(objectId,data,isBaseline);
+			break;
+		}
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeServerBattlefieldMarkerObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeClientBattlefieldMarkerObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 2)
+	{
+		decodeClientTangibleObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::BattlefieldMarkerObjectBufferRow *row=m_battlefieldMarkerObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_battlefieldMarkerObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeClientBattlefieldMarkerObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeSharedBuildingObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 13)
+	{
+		decodeSharedTangibleObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::BuildingObjectBufferRow *row=m_buildingObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_buildingObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeSharedBuildingObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeServerBuildingObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 16)
+	{
+		decodeServerTangibleObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::BuildingObjectBufferRow *row=m_buildingObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_buildingObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		case 16:
+		{
+			decodePropertyList(objectId,PropertyListBuffer::LI_Allowed,data,isBaseline);
+			break;
+		}
+		case 17:
+		{
+			decodePropertyList(objectId,PropertyListBuffer::LI_Banned,data,isBaseline);
+			break;
+		}
+		case 18:
+		{
+			bool temp;
+			Archive::get(data,temp);
+			row->is_public=temp;
+			break;
+		}
+		case 19:
+		{
+			int temp;
+			Archive::get(data,temp);
+			row->maintenance_cost=temp;
+			break;
+		}
+		case 20:
+		{
+			real temp;
+			Archive::get(data,temp);
+			row->time_last_checked=temp;
+			break;
+		}
+		case 21:
+		{
+			int temp;
+			Archive::get(data,temp);
+			row->city_id=temp;
+			break;
+		}
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeServerBuildingObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeClientBuildingObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 2)
+	{
+		decodeClientTangibleObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::BuildingObjectBufferRow *row=m_buildingObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_buildingObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeClientBuildingObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeSharedCellObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 4)
+	{
+		decodeSharedServerObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::CellObjectBufferRow *row=m_cellObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_cellObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		case 4:
+		{
+			bool temp;
+			Archive::get(data,temp);
+			row->is_public=temp;
+			break;
+		}
+		case 5:
+		{
+			int temp;
+			Archive::get(data,temp);
+			row->cell_number=temp;
+			WARNING_STRICT_FATAL(temp==-1,("Received CellObject %s with cell number -1.\n",objectId.getValueString().c_str()));
+			break;
+		}
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeSharedCellObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeServerCellObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 11)
+	{
+		decodeServerServerObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::CellObjectBufferRow *row=m_cellObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_cellObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		case 11:
+		{
+			decodePropertyList(objectId,PropertyListBuffer::LI_Allowed,data,isBaseline);
+			break;
+		}
+		case 12:
+		{
+			decodePropertyList(objectId,PropertyListBuffer::LI_Banned,data,isBaseline);
+			break;
+		}
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeServerCellObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeClientCellObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 2)
+	{
+		decodeClientServerObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::CellObjectBufferRow *row=m_cellObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_cellObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeClientCellObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeSharedCityObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 4)
+	{
+		decodeSharedUniverseObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::CityObjectBufferRow *row=m_cityObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_cityObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeSharedCityObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeServerCityObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 11)
+	{
+		decodeServerUniverseObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::CityObjectBufferRow *row=m_cityObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_cityObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		case 11:
+		{
+			decodePropertyList(objectId,PropertyListBuffer::LI_Cities,data,isBaseline);
+			break;
+		}
+		case 12:
+		{
+			decodePropertyList(objectId,PropertyListBuffer::LI_Citizens,data,isBaseline);
+			break;
+		}
+		case 13:
+		{
+			decodePropertyList(objectId,PropertyListBuffer::LI_CityStructures,data,isBaseline);
+			break;
+		}
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeServerCityObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeClientCityObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 2)
+	{
+		decodeClientUniverseObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::CityObjectBufferRow *row=m_cityObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_cityObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeClientCityObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeSharedCreatureObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 13)
+	{
+		decodeSharedTangibleObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::CreatureObjectBufferRow *row=m_creatureObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_creatureObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		case 13:
+		{
+			Postures::Enumerator temp;
+			Archive::get(data,temp);
+			row->posture=temp;
+			break;
+		}
+		case 14:
+		{
+			uint8 temp;
+			Archive::get(data,temp);
+			row->rank=temp;
+			break;
+		}
+		case 15:
+		{
+			NetworkId temp;
+			Archive::get(data,temp);
+			row->master_id=temp;
+			break;
+		}
+		case 16:
+		{
+			float temp;
+			Archive::get(data,temp);
+			row->scale_factor=temp;
+			break;
+		}
+		case 17:
+		{
+			int temp;
+			Archive::get(data,temp);
+			row->shock_wounds=temp;
+			break;
+		}
+		case 18:
+		{
+			uint64 temp;
+			Archive::get(data,temp);
+			row->states=temp;
+			break;
+		}
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeSharedCreatureObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeServerCreatureObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 16)
+	{
+		decodeServerTangibleObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::CreatureObjectBufferRow *row=m_creatureObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_creatureObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		case 16:
+		{
+			decodeAttributes(objectId,data,isBaseline,0);
+			break;
+		}
+		case 17:
+		{
+			float temp;
+			Archive::get(data,temp);
+			row->base_run_speed=temp;
+			break;
+		}
+		case 18:
+		{
+			float temp;
+			Archive::get(data,temp);
+			row->base_walk_speed=temp;
+			break;
+		}
+		case 19:
+		{
+			decodePersistedBuffs(data,row->persisted_buffs);
+			break;
+		}
+		case 20:
+		{
+			float temp;
+			Archive::get(data,temp);
+			row->ws_x=temp;
+			break;
+		}
+		case 21:
+		{
+			float temp;
+			Archive::get(data,temp);
+			row->ws_y=temp;
+			break;
+		}
+		case 22:
+		{
+			float temp;
+			Archive::get(data,temp);
+			row->ws_z=temp;
+			break;
+		}
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeServerCreatureObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeClientCreatureObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 2)
+	{
+		decodeClientTangibleObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::CreatureObjectBufferRow *row=m_creatureObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_creatureObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		case 2:
+		{
+			decodeAttributes(objectId,data,isBaseline,9);
+			break;
+		}
+		case 3:
+		{
+			decodePropertyList(objectId,PropertyListBuffer::LI_Skills,data,isBaseline);
+			break;
+		}
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeClientCreatureObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeSharedFactoryObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 13)
+	{
+		decodeSharedTangibleObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::FactoryObjectBufferRow *row=m_factoryObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_factoryObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeSharedFactoryObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeServerFactoryObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 16)
+	{
+		decodeServerTangibleObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::FactoryObjectBufferRow *row=m_factoryObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_factoryObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeServerFactoryObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeClientFactoryObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 2)
+	{
+		decodeClientTangibleObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::FactoryObjectBufferRow *row=m_factoryObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_factoryObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeClientFactoryObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeSharedGuildObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 4)
+	{
+		decodeSharedUniverseObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::GuildObjectBufferRow *row=m_guildObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_guildObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		case 4:
+		{
+			decodePropertyList(objectId,PropertyListBuffer::LI_GuildAbbrevs,data,isBaseline);
+			break;
+		}
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeSharedGuildObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeServerGuildObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 11)
+	{
+		decodeServerUniverseObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::GuildObjectBufferRow *row=m_guildObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_guildObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		case 11:
+		{
+			decodePropertyList(objectId,PropertyListBuffer::LI_GuildNames,data,isBaseline);
+			break;
+		}
+		case 12:
+		{
+			decodePropertyList(objectId,PropertyListBuffer::LI_GuildLeaders,data,isBaseline);
+			break;
+		}
+		case 13:
+		{
+			decodePropertyList(objectId,PropertyListBuffer::LI_GuildMembers,data,isBaseline);
+			break;
+		}
+		case 14:
+		{
+			decodePropertyList(objectId,PropertyListBuffer::LI_GuildEnemies,data,isBaseline);
+			break;
+		}
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeServerGuildObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeClientGuildObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 2)
+	{
+		decodeClientUniverseObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::GuildObjectBufferRow *row=m_guildObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_guildObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeClientGuildObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeSharedHarvesterInstallationObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 16)
+	{
+		decodeSharedInstallationObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::HarvesterInstallationObjectBufferRow *row=m_harvesterInstallationObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_harvesterInstallationObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeSharedHarvesterInstallationObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeServerHarvesterInstallationObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 19)
+	{
+		decodeServerInstallationObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::HarvesterInstallationObjectBufferRow *row=m_harvesterInstallationObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_harvesterInstallationObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		case 19:
+		{
+			float temp;
+			Archive::get(data,temp);
+			row->installed_efficiency=temp;
+			break;
+		}
+		case 20:
+		{
+			NetworkId temp;
+			Archive::get(data,temp);
+			row->resource_type=temp;
+			break;
+		}
+		case 21:
+		{
+			int temp;
+			Archive::get(data,temp);
+			row->max_extraction_rate=temp;
+			break;
+		}
+		case 22:
+		{
+			float temp;
+			Archive::get(data,temp);
+			row->current_extraction_rate=temp;
+			break;
+		}
+		case 23:
+		{
+			int temp;
+			Archive::get(data,temp);
+			row->max_hopper_amount=temp;
+			break;
+		}
+		case 24:
+		{
+			NetworkId temp;
+			Archive::get(data,temp);
+			row->hopper_resource=temp;
+			break;
+		}
+		case 25:
+		{
+			float temp;
+			Archive::get(data,temp);
+			row->hopper_amount=temp;
+			break;
+		}
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeServerHarvesterInstallationObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeClientHarvesterInstallationObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 2)
+	{
+		decodeClientInstallationObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::HarvesterInstallationObjectBufferRow *row=m_harvesterInstallationObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_harvesterInstallationObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeClientHarvesterInstallationObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeSharedInstallationObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 13)
+	{
+		decodeSharedTangibleObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::InstallationObjectBufferRow *row=m_installationObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_installationObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		case 13:
+		{
+			bool temp;
+			Archive::get(data,temp);
+			row->activated=temp;
+			break;
+		}
+		case 14:
+		{
+			float temp;
+			Archive::get(data,temp);
+			row->power=temp;
+			break;
+		}
+		case 15:
+		{
+			float temp;
+			Archive::get(data,temp);
+			row->power_rate=temp;
+			break;
+		}
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeSharedInstallationObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeServerInstallationObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 16)
+	{
+		decodeServerTangibleObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::InstallationObjectBufferRow *row=m_installationObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_installationObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		case 16:
+		{
+			int32 temp;
+			Archive::get(data,temp);
+			row->installation_type=temp;
+			break;
+		}
+		case 17:
+		{
+			float temp;
+			Archive::get(data,temp);
+			row->tick_count=temp;
+			break;
+		}
+		case 18:
+		{
+			float temp;
+			Archive::get(data,temp);
+			row->activate_start_time=temp;
+			break;
+		}
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeServerInstallationObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeClientInstallationObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 2)
+	{
+		decodeClientTangibleObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::InstallationObjectBufferRow *row=m_installationObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_installationObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeClientInstallationObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeSharedIntangibleObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 4)
+	{
+		decodeSharedServerObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::IntangibleObjectBufferRow *row=m_intangibleObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_intangibleObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		case 4:
+		{
+			int temp;
+			Archive::get(data,temp);
+			row->count=temp;
+			break;
+		}
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeSharedIntangibleObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeServerIntangibleObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 11)
+	{
+		decodeServerServerObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::IntangibleObjectBufferRow *row=m_intangibleObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_intangibleObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeServerIntangibleObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeClientIntangibleObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 2)
+	{
+		decodeClientServerObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::IntangibleObjectBufferRow *row=m_intangibleObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_intangibleObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeClientIntangibleObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeSharedManufactureInstallationObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 16)
+	{
+		decodeSharedInstallationObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::ManufactureInstallationObjectBufferRow *row=m_manufactureInstallationObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_manufactureInstallationObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeSharedManufactureInstallationObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeServerManufactureInstallationObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 19)
+	{
+		decodeServerInstallationObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::ManufactureInstallationObjectBufferRow *row=m_manufactureInstallationObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_manufactureInstallationObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeServerManufactureInstallationObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeClientManufactureInstallationObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 2)
+	{
+		decodeClientInstallationObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::ManufactureInstallationObjectBufferRow *row=m_manufactureInstallationObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_manufactureInstallationObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeClientManufactureInstallationObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeSharedManufactureSchematicObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 5)
+	{
+		decodeSharedIntangibleObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::ManufactureSchematicObjectBufferRow *row=m_manufactureSchematicObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_manufactureSchematicObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		case 5:
+		{
+			decodeManufactureSchematicAttributes(objectId,data,isBaseline);
+			break;
+		}
+		case 6:
+		{
+			int temp;
+			Archive::get(data,temp);
+			row->items_per_container=temp;
+			break;
+		}
+		case 7:
+		{
+			float temp;
+			Archive::get(data,temp);
+			row->manufacture_time=temp;
+			break;
+		}
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeSharedManufactureSchematicObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeServerManufactureSchematicObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 11)
+	{
+		decodeServerIntangibleObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::ManufactureSchematicObjectBufferRow *row=m_manufactureSchematicObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_manufactureSchematicObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		case 11:
+		{
+			int temp;
+			Archive::get(data,temp);
+			row->draft_schematic=temp;
+			break;
+		}
+		case 12:
+		{
+			NetworkId temp;
+			Archive::get(data,temp);
+			row->creator_id=temp;
+			break;
+		}
+		case 13:
+		{
+			Unicode::String temp;
+			Archive::get(data,temp);
+			row->creator_name=temp;
+			break;
+		}
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeServerManufactureSchematicObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeClientManufactureSchematicObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 2)
+	{
+		decodeClientIntangibleObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::ManufactureSchematicObjectBufferRow *row=m_manufactureSchematicObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_manufactureSchematicObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeClientManufactureSchematicObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeSharedMissionObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 5)
+	{
+		decodeSharedIntangibleObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::MissionObjectBufferRow *row=m_missionObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_missionObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		case 5:
+		{
+			int temp;
+			Archive::get(data,temp);
+			row->difficulty=temp;
+			break;
+		}
+		case 6:
+		{
+			decodeLocation(data,row->end_x,row->end_y,row->end_z,row->end_cell,row->end_scene);
+			break;
+		}
+		case 7:
+		{
+			Unicode::String temp;
+			Archive::get(data,temp);
+			row->mission_creator=temp;
+			break;
+		}
+		case 8:
+		{
+			int temp;
+			Archive::get(data,temp);
+			row->reward=temp;
+			break;
+		}
+		case 9:
+		{
+			decodeLocation(data,row->start_x,row->start_y,row->start_z,row->start_cell,row->start_scene);
+			break;
+		}
+		case 10:
+		{
+			uint32 temp;
+			Archive::get(data,temp);
+			row->target_appearance=temp;
+			break;
+		}
+		case 11:
+		{
+			decodeStringId(data,row->description_table,row->description_text);
+			break;
+		}
+		case 12:
+		{
+			decodeStringId(data,row->title_table,row->title_text);
+			break;
+		}
+		case 13:
+		{
+			int temp;
+			Archive::get(data,temp);
+			row->status=temp;
+			break;
+		}
+		case 14:
+		{
+			uint32 temp;
+			Archive::get(data,temp);
+			row->mission_type=temp;
+			break;
+		}
+		case 15:
+		{
+			std::string temp;
+			Archive::get(data,temp);
+			row->target_name=temp;
+			break;
+		}
+		case 16:
+		{
+			decodeSingleWaypoint(objectId,data,isBaseline);
+			break;
+		}
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeSharedMissionObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeServerMissionObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 11)
+	{
+		decodeServerIntangibleObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::MissionObjectBufferRow *row=m_missionObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_missionObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		case 11:
+		{
+			std::string temp;
+			Archive::get(data,temp);
+			row->root_script_name=temp;
+			break;
+		}
+		case 12:
+		{
+			NetworkId temp;
+			Archive::get(data,temp);
+			row->mission_holder_id=temp;
+			break;
+		}
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeServerMissionObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeClientMissionObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 2)
+	{
+		decodeClientIntangibleObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::MissionObjectBufferRow *row=m_missionObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_missionObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeClientMissionObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeSharedPlanetObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 4)
+	{
+		decodeSharedUniverseObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::PlanetObjectBufferRow *row=m_planetObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_planetObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeSharedPlanetObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeServerPlanetObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 11)
+	{
+		decodeServerUniverseObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::PlanetObjectBufferRow *row=m_planetObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_planetObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		case 11:
+		{
+			std::string temp;
+			Archive::get(data,temp);
+			row->planet_name=temp;
+			break;
+		}
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeServerPlanetObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeClientPlanetObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 2)
+	{
+		decodeClientUniverseObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::PlanetObjectBufferRow *row=m_planetObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_planetObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeClientPlanetObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeSharedPlayerObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 5)
+	{
+		decodeSharedIntangibleObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::PlayerObjectBufferRow *row=m_playerObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_playerObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		case 5:
+		{
+			decodeMatchMakingId(data,row->character_profile_id);
+			break;
+		}
+		case 6:
+		{
+			decodeMatchMakingId(data,row->personal_profile_id);
+			break;
+		}
+		case 7:
+		{
+			NullEncodedStandardString temp;
+			Archive::get(data,temp);
+			row->skill_title=temp;
+			break;
+		}
+		case 8:
+		{
+			int temp;
+			Archive::get(data,temp);
+			row->born_date=temp;
+			break;
+		}
+		case 9:
+		{
+			int temp;
+			Archive::get(data,temp);
+			row->played_time=temp;
+			break;
+		}
+		case 10:
+		{
+			int temp;
+			Archive::get(data,temp);
+			row->role_icon_choice=temp;
+			break;
+		}
+		case 11:
+		{
+			std::string temp;
+			Archive::get(data,temp);
+			row->skill_template=temp;
+			break;
+		}
+		case 12:
+		{
+			int32 temp;
+			Archive::get(data,temp);
+			row->current_gcw_points=temp;
+			break;
+		}
+		case 13:
+		{
+			int32 temp;
+			Archive::get(data,temp);
+			row->current_pvp_kills=temp;
+			break;
+		}
+		case 14:
+		{
+			int64 temp;
+			Archive::get(data,temp);
+			row->lifetime_gcw_points=temp;
+			break;
+		}
+		case 15:
+		{
+			int32 temp;
+			Archive::get(data,temp);
+			row->lifetime_pvp_kills=temp;
+			break;
+		}
+		case 16:
+		{
+			BitArray temp;
+			Archive::get(data,temp);
+			row->collections=temp;
+			break;
+		}
+		case 17:
+		{
+			BitArray temp;
+			Archive::get(data,temp);
+			row->collections2=temp;
+			break;
+		}
+		case 18:
+		{
+			bool temp;
+			Archive::get(data,temp);
+			row->show_backpack=temp;
+			break;
+		}
+		case 19:
+		{
+			bool temp;
+			Archive::get(data,temp);
+			row->show_helmet=temp;
+			break;
+		}
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeSharedPlayerObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeServerPlayerObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 11)
+	{
+		decodeServerIntangibleObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::PlayerObjectBufferRow *row=m_playerObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_playerObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		case 11:
+		{
+			StationId temp;
+			Archive::get(data,temp);
+			row->station_id=temp;
+			break;
+		}
+		case 12:
+		{
+			NetworkId temp;
+			Archive::get(data,temp);
+			row->house_id=temp;
+			break;
+		}
+		case 13:
+		{
+			int temp;
+			Archive::get(data,temp);
+			row->account_num_lots=temp;
+			break;
+		}
+		case 14:
+		{
+			int temp;
+			Archive::get(data,temp);
+			row->account_max_lots_adjustment=temp;
+			break;
+		}
+		case 15:
+		{
+			bool temp;
+			Archive::get(data,temp);
+			row->account_is_outcast=temp;
+			break;
+		}
+		case 16:
+		{
+			float temp;
+			Archive::get(data,temp);
+			row->account_cheater_level=temp;
+			break;
+		}
+		case 17:
+		{
+			float temp;
+			Archive::get(data,temp);
+			row->force_regen_rate=temp;
+			break;
+		}
+		case 18:
+		{
+			int32 temp;
+			Archive::get(data,temp);
+			row->current_gcw_rating=temp;
+			break;
+		}
+		case 19:
+		{
+			int32 temp;
+			Archive::get(data,temp);
+			row->max_gcw_imperial_rating=temp;
+			break;
+		}
+		case 20:
+		{
+			int32 temp;
+			Archive::get(data,temp);
+			row->max_gcw_rebel_rating=temp;
+			break;
+		}
+		case 21:
+		{
+			int32 temp;
+			Archive::get(data,temp);
+			row->next_gcw_rating_calc_time=temp;
+			break;
+		}
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeServerPlayerObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeClientPlayerObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 2)
+	{
+		decodeClientIntangibleObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::PlayerObjectBufferRow *row=m_playerObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_playerObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeClientPlayerObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeSharedPlayerQuestObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 13)
+	{
+		decodeSharedTangibleObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::PlayerQuestObjectBufferRow *row=m_playerQuestObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_playerQuestObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		case 13:
+		{
+			std::string temp;
+			Archive::get(data,temp);
+			row->title=temp;
+			break;
+		}
+		case 14:
+		{
+			std::string temp;
+			Archive::get(data,temp);
+			row->description=temp;
+			break;
+		}
+		case 15:
+		{
+			NetworkId temp;
+			Archive::get(data,temp);
+			row->creator=temp;
+			break;
+		}
+		case 16:
+		{
+			int temp;
+			Archive::get(data,temp);
+			row->total_tasks=temp;
+			break;
+		}
+		case 17:
+		{
+			int temp;
+			Archive::get(data,temp);
+			row->difficulty=temp;
+			break;
+		}
+		case 18:
+		{
+			std::string temp;
+			Archive::get(data,temp);
+			row->task_title1=temp;
+			break;
+		}
+		case 19:
+		{
+			std::string temp;
+			Archive::get(data,temp);
+			row->task_description1=temp;
+			break;
+		}
+		case 20:
+		{
+			std::string temp;
+			Archive::get(data,temp);
+			row->task_title2=temp;
+			break;
+		}
+		case 21:
+		{
+			std::string temp;
+			Archive::get(data,temp);
+			row->task_description2=temp;
+			break;
+		}
+		case 22:
+		{
+			std::string temp;
+			Archive::get(data,temp);
+			row->task_title3=temp;
+			break;
+		}
+		case 23:
+		{
+			std::string temp;
+			Archive::get(data,temp);
+			row->task_description3=temp;
+			break;
+		}
+		case 24:
+		{
+			std::string temp;
+			Archive::get(data,temp);
+			row->task_title4=temp;
+			break;
+		}
+		case 25:
+		{
+			std::string temp;
+			Archive::get(data,temp);
+			row->task_description4=temp;
+			break;
+		}
+		case 26:
+		{
+			std::string temp;
+			Archive::get(data,temp);
+			row->task_title5=temp;
+			break;
+		}
+		case 27:
+		{
+			std::string temp;
+			Archive::get(data,temp);
+			row->task_description5=temp;
+			break;
+		}
+		case 28:
+		{
+			std::string temp;
+			Archive::get(data,temp);
+			row->task_title6=temp;
+			break;
+		}
+		case 29:
+		{
+			std::string temp;
+			Archive::get(data,temp);
+			row->task_description6=temp;
+			break;
+		}
+		case 30:
+		{
+			std::string temp;
+			Archive::get(data,temp);
+			row->task_title7=temp;
+			break;
+		}
+		case 31:
+		{
+			std::string temp;
+			Archive::get(data,temp);
+			row->task_description7=temp;
+			break;
+		}
+		case 32:
+		{
+			std::string temp;
+			Archive::get(data,temp);
+			row->task_title8=temp;
+			break;
+		}
+		case 33:
+		{
+			std::string temp;
+			Archive::get(data,temp);
+			row->task_description8=temp;
+			break;
+		}
+		case 34:
+		{
+			std::string temp;
+			Archive::get(data,temp);
+			row->task_title9=temp;
+			break;
+		}
+		case 35:
+		{
+			std::string temp;
+			Archive::get(data,temp);
+			row->task_description9=temp;
+			break;
+		}
+		case 36:
+		{
+			std::string temp;
+			Archive::get(data,temp);
+			row->task_title10=temp;
+			break;
+		}
+		case 37:
+		{
+			std::string temp;
+			Archive::get(data,temp);
+			row->task_description10=temp;
+			break;
+		}
+		case 38:
+		{
+			std::string temp;
+			Archive::get(data,temp);
+			row->task_title11=temp;
+			break;
+		}
+		case 39:
+		{
+			std::string temp;
+			Archive::get(data,temp);
+			row->task_description11=temp;
+			break;
+		}
+		case 40:
+		{
+			std::string temp;
+			Archive::get(data,temp);
+			row->task_title12=temp;
+			break;
+		}
+		case 41:
+		{
+			std::string temp;
+			Archive::get(data,temp);
+			row->task_description12=temp;
+			break;
+		}
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeSharedPlayerQuestObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeServerPlayerQuestObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 16)
+	{
+		decodeServerTangibleObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::PlayerQuestObjectBufferRow *row=m_playerQuestObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_playerQuestObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeServerPlayerQuestObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeClientPlayerQuestObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 2)
+	{
+		decodeClientTangibleObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::PlayerQuestObjectBufferRow *row=m_playerQuestObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_playerQuestObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeClientPlayerQuestObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeSharedResourceContainerObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 13)
+	{
+		decodeSharedTangibleObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::ResourceContainerObjectBufferRow *row=m_resourceContainerObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_resourceContainerObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		case 13:
+		{
+			int temp;
+			Archive::get(data,temp);
+			row->quantity=temp;
+			break;
+		}
+		case 14:
+		{
+			NetworkId temp;
+			Archive::get(data,temp);
+			row->resource_type=temp;
+			break;
+		}
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeSharedResourceContainerObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeServerResourceContainerObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 16)
+	{
+		decodeServerTangibleObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::ResourceContainerObjectBufferRow *row=m_resourceContainerObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_resourceContainerObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		case 16:
+		{
+			NetworkId temp;
+			Archive::get(data,temp);
+			row->source=temp;
+			break;
+		}
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeServerResourceContainerObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeClientResourceContainerObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 2)
+	{
+		decodeClientTangibleObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::ResourceContainerObjectBufferRow *row=m_resourceContainerObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_resourceContainerObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeClientResourceContainerObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeSharedServerObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+		DBSchema::ObjectBufferRow *row=m_objectTableBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_objectTableBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		case 0:
+		{
+			float temp;
+			Archive::get(data,temp);
+			row->complexity=temp;
+			break;
+		}
+		case 1:
+		{
+			decodeStringId(data,row->name_string_table,row->name_string_text);
+			break;
+		}
+		case 2:
+		{
+			NullEncodedUnicodeString temp;
+			Archive::get(data,temp);
+			row->object_name=temp;
+			break;
+		}
+		case 3:
+		{
+			int temp;
+			Archive::get(data,temp);
+			row->volume=temp;
+			break;
+		}
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeSharedServerObject.  Index is %hu.\n",index));
+		}
+}
+
+void SwgSnapshot::decodeServerServerObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+		DBSchema::ObjectBufferRow *row=m_objectTableBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_objectTableBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		case 0:
+		{
+			int temp;
+			Archive::get(data,temp);
+			row->cache_version=temp;
+			break;
+		}
+		case 1:
+		{
+			bool temp;
+			Archive::get(data,temp);
+			row->load_contents=temp;
+			break;
+		}
+		case 2:
+		{
+			decodeObjVarFreeFlags(objectId,data,isBaseline);
+			break;
+		}
+		case 3:
+		{
+			decodeObjVars(objectId,data,isBaseline);
+			break;
+		}
+		case 4:
+		{
+			ignorePersistedFlag(objectId,data);
+			break;
+		}
+		case 5:
+		{
+			bool temp;
+			Archive::get(data,temp);
+			row->player_controlled=temp;
+			break;
+		}
+		case 6:
+		{
+			std::string temp;
+			Archive::get(data,temp);
+			row->scene_id=temp;
+			break;
+		}
+		case 7:
+		{
+			decodeScriptObject(objectId,data,isBaseline);
+			break;
+		}
+		case 8:
+		{
+			int temp;
+			Archive::get(data,temp);
+			row->conversion_id=temp;
+			break;
+		}
+		case 9:
+		{
+			std::string temp;
+			Archive::get(data,temp);
+			row->static_item_name=temp;
+			break;
+		}
+		case 10:
+		{
+			int temp;
+			Archive::get(data,temp);
+			row->static_item_version=temp;
+			break;
+		}
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeServerServerObject.  Index is %hu.\n",index));
+		}
+}
+
+void SwgSnapshot::decodeClientServerObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+		DBSchema::ObjectBufferRow *row=m_objectTableBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_objectTableBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		case 0:
+		{
+			int temp;
+			Archive::get(data,temp);
+			row->bank_balance=temp;
+			break;
+		}
+		case 1:
+		{
+			int temp;
+			Archive::get(data,temp);
+			row->cash_balance=temp;
+			break;
+		}
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeClientServerObject.  Index is %hu.\n",index));
+		}
+}
+
+void SwgSnapshot::decodeSharedShipObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 13)
+	{
+		decodeSharedTangibleObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::ShipObjectBufferRow *row=m_shipObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_shipObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		case 13:
+		{
+			float temp;
+			Archive::get(data,temp);
+			row->slide_dampener=temp;
+			break;
+		}
+		case 14:
+		{
+			float temp;
+			Archive::get(data,temp);
+			row->current_chassis_hit_points=temp;
+			break;
+		}
+		case 15:
+		{
+			float temp;
+			Archive::get(data,temp);
+			row->maximum_chassis_hit_points=temp;
+			break;
+		}
+		case 16:
+		{
+			uint32 temp;
+			Archive::get(data,temp);
+			row->chassis_type=temp;
+			break;
+		}
+		case 17:
+		{
+			std::string packedValue;
+			Archive::AutoDeltaPackedMap<int,float>::unpack(data,packedValue);
+			row->cmp_armor_hp_maximum=packedValue;
+			break;
+		}
+		case 18:
+		{
+			std::string packedValue;
+			Archive::AutoDeltaPackedMap<int,float>::unpack(data,packedValue);
+			row->cmp_armor_hp_current=packedValue;
+			break;
+		}
+		case 19:
+		{
+			std::string packedValue;
+			Archive::AutoDeltaPackedMap<int,float>::unpack(data,packedValue);
+			row->cmp_hp_current=packedValue;
+			break;
+		}
+		case 20:
+		{
+			std::string packedValue;
+			Archive::AutoDeltaPackedMap<int,float>::unpack(data,packedValue);
+			row->cmp_hp_maximum=packedValue;
+			break;
+		}
+		case 21:
+		{
+			std::string packedValue;
+			Archive::AutoDeltaPackedMap<int,int>::unpack(data,packedValue);
+			row->cmp_flags=packedValue;
+			break;
+		}
+		case 22:
+		{
+			float temp;
+			Archive::get(data,temp);
+			row->shield_hp_front_maximum=temp;
+			break;
+		}
+		case 23:
+		{
+			float temp;
+			Archive::get(data,temp);
+			row->shield_hp_back_maximum=temp;
+			break;
+		}
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeSharedShipObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeServerShipObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 16)
+	{
+		decodeServerTangibleObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::ShipObjectBufferRow *row=m_shipObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_shipObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		case 16:
+		{
+			std::string packedValue;
+			Archive::AutoDeltaPackedMap<int,uint32>::unpack(data,packedValue);
+			row->cmp_crc=packedValue;
+			break;
+		}
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeServerShipObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeClientShipObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 2)
+	{
+		decodeClientTangibleObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::ShipObjectBufferRow *row=m_shipObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_shipObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		case 2:
+		{
+			std::string packedValue;
+			Archive::AutoDeltaPackedMap<int,float>::unpack(data,packedValue);
+			row->cmp_efficiency_general=packedValue;
+			break;
+		}
+		case 3:
+		{
+			std::string packedValue;
+			Archive::AutoDeltaPackedMap<int,float>::unpack(data,packedValue);
+			row->cmp_efficiency_eng=packedValue;
+			break;
+		}
+		case 4:
+		{
+			std::string packedValue;
+			Archive::AutoDeltaPackedMap<int,float>::unpack(data,packedValue);
+			row->cmp_eng_maintenance=packedValue;
+			break;
+		}
+		case 5:
+		{
+			std::string packedValue;
+			Archive::AutoDeltaPackedMap<int,float>::unpack(data,packedValue);
+			row->cmp_mass=packedValue;
+			break;
+		}
+		case 6:
+		{
+			std::string packedValue;
+			Archive::AutoDeltaPackedMap<int,Unicode::String>::unpack(data,packedValue);
+			row->cmp_names=packedValue;
+			break;
+		}
+		case 7:
+		{
+			std::string packedValue;
+			Archive::AutoDeltaPackedMap<int,NetworkId>::unpack(data,packedValue);
+			row->cmp_creators=packedValue;
+			break;
+		}
+		case 8:
+		{
+			std::string packedValue;
+			Archive::AutoDeltaPackedMap<int,float>::unpack(data,packedValue);
+			row->weapon_damage_maximum=packedValue;
+			break;
+		}
+		case 9:
+		{
+			std::string packedValue;
+			Archive::AutoDeltaPackedMap<int,float>::unpack(data,packedValue);
+			row->weapon_damage_minimum=packedValue;
+			break;
+		}
+		case 10:
+		{
+			std::string packedValue;
+			Archive::AutoDeltaPackedMap<int,float>::unpack(data,packedValue);
+			row->weapon_effectiveness_shields=packedValue;
+			break;
+		}
+		case 11:
+		{
+			std::string packedValue;
+			Archive::AutoDeltaPackedMap<int,float>::unpack(data,packedValue);
+			row->weapon_effectiveness_armor=packedValue;
+			break;
+		}
+		case 12:
+		{
+			std::string packedValue;
+			Archive::AutoDeltaPackedMap<int,float>::unpack(data,packedValue);
+			row->weapon_eng_per_shot=packedValue;
+			break;
+		}
+		case 13:
+		{
+			std::string packedValue;
+			Archive::AutoDeltaPackedMap<int,float>::unpack(data,packedValue);
+			row->weapon_refire_rate=packedValue;
+			break;
+		}
+		case 14:
+		{
+			std::string packedValue;
+			Archive::AutoDeltaPackedMap<int,int>::unpack(data,packedValue);
+			row->weapon_ammo_current=packedValue;
+			break;
+		}
+		case 15:
+		{
+			std::string packedValue;
+			Archive::AutoDeltaPackedMap<int,int>::unpack(data,packedValue);
+			row->weapon_ammo_maximum=packedValue;
+			break;
+		}
+		case 16:
+		{
+			std::string packedValue;
+			Archive::AutoDeltaPackedMap<int,uint32>::unpack(data,packedValue);
+			row->weapon_ammo_type=packedValue;
+			break;
+		}
+		case 17:
+		{
+			float temp;
+			Archive::get(data,temp);
+			row->chassis_cmp_mass_maximum=temp;
+			break;
+		}
+		case 18:
+		{
+			float temp;
+			Archive::get(data,temp);
+			row->shield_recharge_rate=temp;
+			break;
+		}
+		case 19:
+		{
+			float temp;
+			Archive::get(data,temp);
+			row->capacitor_eng_maximum=temp;
+			break;
+		}
+		case 20:
+		{
+			float temp;
+			Archive::get(data,temp);
+			row->capacitor_eng_recharge_rate=temp;
+			break;
+		}
+		case 21:
+		{
+			float temp;
+			Archive::get(data,temp);
+			row->engine_acc_rate=temp;
+			break;
+		}
+		case 22:
+		{
+			float temp;
+			Archive::get(data,temp);
+			row->engine_deceleration_rate=temp;
+			break;
+		}
+		case 23:
+		{
+			float temp;
+			Archive::get(data,temp);
+			row->engine_pitch_acc_rate=temp;
+			break;
+		}
+		case 24:
+		{
+			float temp;
+			Archive::get(data,temp);
+			row->engine_yaw_acc_rate=temp;
+			break;
+		}
+		case 25:
+		{
+			float temp;
+			Archive::get(data,temp);
+			row->engine_roll_acc_rate=temp;
+			break;
+		}
+		case 26:
+		{
+			float temp;
+			Archive::get(data,temp);
+			row->engine_pitch_rate_maximum=temp;
+			break;
+		}
+		case 27:
+		{
+			float temp;
+			Archive::get(data,temp);
+			row->engine_yaw_rate_maximum=temp;
+			break;
+		}
+		case 28:
+		{
+			float temp;
+			Archive::get(data,temp);
+			row->engine_roll_rate_maximum=temp;
+			break;
+		}
+		case 29:
+		{
+			float temp;
+			Archive::get(data,temp);
+			row->engine_speed_maximum=temp;
+			break;
+		}
+		case 30:
+		{
+			float temp;
+			Archive::get(data,temp);
+			row->reactor_eng_generation_rate=temp;
+			break;
+		}
+		case 31:
+		{
+			float temp;
+			Archive::get(data,temp);
+			row->booster_eng_maximum=temp;
+			break;
+		}
+		case 32:
+		{
+			float temp;
+			Archive::get(data,temp);
+			row->booster_eng_recharge_rate=temp;
+			break;
+		}
+		case 33:
+		{
+			float temp;
+			Archive::get(data,temp);
+			row->booster_eng_consumption_rate=temp;
+			break;
+		}
+		case 34:
+		{
+			float temp;
+			Archive::get(data,temp);
+			row->booster_acc=temp;
+			break;
+		}
+		case 35:
+		{
+			float temp;
+			Archive::get(data,temp);
+			row->booster_speed_maximum=temp;
+			break;
+		}
+		case 36:
+		{
+			float temp;
+			Archive::get(data,temp);
+			row->droid_if_cmd_speed=temp;
+			break;
+		}
+		case 37:
+		{
+			NetworkId temp;
+			Archive::get(data,temp);
+			row->installed_dcd=temp;
+			break;
+		}
+		case 38:
+		{
+			int temp;
+			Archive::get(data,temp);
+			row->cargo_hold_contents_maximum=temp;
+			break;
+		}
+		case 39:
+		{
+			int temp;
+			Archive::get(data,temp);
+			row->cargo_hold_contents_current=temp;
+			break;
+		}
+		case 40:
+		{
+			std::string packedValue;
+			Archive::AutoDeltaPackedMap<NetworkId,int>::unpack(data,packedValue);
+			row->cargo_hold_contents=packedValue;
+			break;
+		}
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeClientShipObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeSharedStaticObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 4)
+	{
+		decodeSharedServerObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::StaticObjectBufferRow *row=m_staticObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_staticObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeSharedStaticObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeServerStaticObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 11)
+	{
+		decodeServerServerObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::StaticObjectBufferRow *row=m_staticObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_staticObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeServerStaticObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeClientStaticObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 2)
+	{
+		decodeClientServerObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::StaticObjectBufferRow *row=m_staticObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_staticObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeClientStaticObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeSharedTangibleObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 4)
+	{
+		decodeSharedServerObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::TangibleObjectBufferRow *row=m_tangibleObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_tangibleObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		case 4:
+		{
+			uint32 temp;
+			Archive::get(data,temp);
+			row->pvp_faction=temp;
+			break;
+		}
+		case 5:
+		{
+			int temp;
+			Archive::get(data,temp);
+			row->pvp_type=temp;
+			break;
+		}
+		case 6:
+		{
+			std::string temp;
+			Archive::get(data,temp);
+			row->appearance_data=temp;
+			break;
+		}
+		case 7:
+		{
+			decodeComponents(objectId,data,isBaseline);
+			break;
+		}
+		case 8:
+		{
+			int temp;
+			Archive::get(data,temp);
+			row->condition=temp;
+			break;
+		}
+		case 9:
+		{
+			int temp;
+			Archive::get(data,temp);
+			row->count=temp;
+			break;
+		}
+		case 10:
+		{
+			int temp;
+			Archive::get(data,temp);
+			row->damage_taken=temp;
+			break;
+		}
+		case 11:
+		{
+			int temp;
+			Archive::get(data,temp);
+			row->max_hit_points=temp;
+			break;
+		}
+		case 12:
+		{
+			bool temp;
+			Archive::get(data,temp);
+			row->visible=temp;
+			break;
+		}
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeSharedTangibleObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeServerTangibleObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 11)
+	{
+		decodeServerServerObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::TangibleObjectBufferRow *row=m_tangibleObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_tangibleObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		case 11:
+		{
+			std::string temp;
+			Archive::get(data,temp);
+			row->custom_appearance=temp;
+			break;
+		}
+		case 12:
+		{
+			decodeLocationDataList(objectId,1,data,isBaseline);
+			break;
+		}
+		case 13:
+		{
+			NetworkId temp;
+			Archive::get(data,temp);
+			row->owner_id=temp;
+			break;
+		}
+		case 14:
+		{
+			NetworkId temp;
+			Archive::get(data,temp);
+			row->creator_id=temp;
+			break;
+		}
+		case 15:
+		{
+			uint32 temp;
+			Archive::get(data,temp);
+			row->source_draft_schematic=temp;
+			break;
+		}
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeServerTangibleObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeClientTangibleObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 2)
+	{
+		decodeClientServerObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::TangibleObjectBufferRow *row=m_tangibleObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_tangibleObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeClientTangibleObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeSharedUniverseObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 4)
+	{
+		decodeSharedServerObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::UniverseObjectBufferRow *row=m_universeObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_universeObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeSharedUniverseObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeServerUniverseObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 11)
+	{
+		decodeServerServerObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::UniverseObjectBufferRow *row=m_universeObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_universeObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeServerUniverseObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeClientUniverseObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 2)
+	{
+		decodeClientServerObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::UniverseObjectBufferRow *row=m_universeObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_universeObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeClientUniverseObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeSharedVehicleObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 13)
+	{
+		decodeSharedTangibleObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::VehicleObjectBufferRow *row=m_vehicleObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_vehicleObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeSharedVehicleObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeServerVehicleObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 16)
+	{
+		decodeServerTangibleObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::VehicleObjectBufferRow *row=m_vehicleObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_vehicleObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		case 16:
+		{
+			int temp;
+			Archive::get(data,temp);
+			row->bogus=temp;
+			break;
+		}
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeServerVehicleObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeClientVehicleObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 2)
+	{
+		decodeClientTangibleObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::VehicleObjectBufferRow *row=m_vehicleObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_vehicleObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeClientVehicleObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeSharedWeaponObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 13)
+	{
+		decodeSharedTangibleObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::WeaponObjectBufferRow *row=m_weaponObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_weaponObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		case 13:
+		{
+			float temp;
+			Archive::get(data,temp);
+			row->attack_speed=temp;
+			break;
+		}
+		case 14:
+		{
+			int temp;
+			Archive::get(data,temp);
+			row->accuracy=temp;
+			break;
+		}
+		case 15:
+		{
+			float temp;
+			Archive::get(data,temp);
+			row->min_range=temp;
+			break;
+		}
+		case 16:
+		{
+			float temp;
+			Archive::get(data,temp);
+			row->max_range=temp;
+			break;
+		}
+		case 17:
+		{
+			int temp;
+			Archive::get(data,temp);
+			row->damage_type=temp;
+			break;
+		}
+		case 18:
+		{
+			int temp;
+			Archive::get(data,temp);
+			row->elemental_type=temp;
+			break;
+		}
+		case 19:
+		{
+			int temp;
+			Archive::get(data,temp);
+			row->elemental_value=temp;
+			break;
+		}
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeSharedWeaponObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeServerWeaponObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 16)
+	{
+		decodeServerTangibleObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::WeaponObjectBufferRow *row=m_weaponObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_weaponObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		case 16:
+		{
+			int temp;
+			Archive::get(data,temp);
+			row->min_damage=temp;
+			break;
+		}
+		case 17:
+		{
+			int temp;
+			Archive::get(data,temp);
+			row->max_damage=temp;
+			break;
+		}
+		case 18:
+		{
+			float temp;
+			Archive::get(data,temp);
+			row->wound_chance=temp;
+			break;
+		}
+		case 19:
+		{
+			int temp;
+			Archive::get(data,temp);
+			row->attack_cost=temp;
+			break;
+		}
+		case 20:
+		{
+			float temp;
+			Archive::get(data,temp);
+			row->damage_radius=temp;
+			break;
+		}
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeServerWeaponObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeClientWeaponObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+	if (index < 2)
+	{
+		decodeClientTangibleObject(objectId,index,data, isBaseline);
+	}
+	else
+	{
+		DBSchema::WeaponObjectBufferRow *row=m_weaponObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_weaponObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeClientWeaponObject.  Index is %hu.\n",index));
+		}
+	}
+}
+
+void SwgSnapshot::decodeParentClientPlayerObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline)
+{
+	UNREF(isBaseline);
+
+		DBSchema::PlayerObjectBufferRow *row=m_playerObjectBuffer.findRowByIndex(objectId);
+		if (row==NULL)
+			row=m_playerObjectBuffer.addEmptyRow(objectId);
+
+		switch(index)
+		{
+		case 0:
+		{
+			decodeExperience(objectId,data,isBaseline);
+			break;
+		}
+		case 1:
+		{
+			decodeWaypoints(objectId,data,isBaseline);
+			break;
+		}
+		case 2:
+		{
+			int temp;
+			Archive::get(data,temp);
+			row->force_power=temp;
+			break;
+		}
+		case 3:
+		{
+			int temp;
+			Archive::get(data,temp);
+			row->max_force_power=temp;
+			break;
+		}
+		case 4:
+		{
+			BitArray temp;
+			Archive::get(data,temp);
+			row->completed_quests=temp;
+			break;
+		}
+		case 5:
+		{
+			BitArray temp;
+			Archive::get(data,temp);
+			row->active_quests=temp;
+			break;
+		}
+		case 6:
+		{
+			uint32 temp;
+			Archive::get(data,temp);
+			row->current_quest=temp;
+			break;
+		}
+		case 7:
+		{
+			decodeQuests(objectId,data,row->quests,row->quests2,row->quests3,row->quests4);
+			break;
+		}
+		case 8:
+		{
+			std::string temp;
+			Archive::get(data,temp);
+			row->working_skill=temp;
+			break;
+		}
+		default:
+			DEBUG_REPORT_LOG(true,("Fell through cases in decodeParentClientPlayerObject.  Index is %hu.\n",index));
+		}
+}
+
+void SwgSnapshot::decodeServerData(NetworkId const & objectId, Tag typeId, uint16 index, Archive::ReadIterator &bs, bool isBaseline)
+{
+	switch(typeId)
+	{
+		case ServerBattlefieldMarkerObjectTemplate::ServerBattlefieldMarkerObjectTemplate_tag:
+			decodeServerBattlefieldMarkerObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerBuildingObjectTemplate::ServerBuildingObjectTemplate_tag:
+			decodeServerBuildingObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerCellObjectTemplate::ServerCellObjectTemplate_tag:
+			decodeServerCellObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerCityObjectTemplate::ServerCityObjectTemplate_tag:
+			decodeServerCityObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerCreatureObjectTemplate::ServerCreatureObjectTemplate_tag:
+			decodeServerCreatureObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerFactoryObjectTemplate::ServerFactoryObjectTemplate_tag:
+			decodeServerFactoryObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerGuildObjectTemplate::ServerGuildObjectTemplate_tag:
+			decodeServerGuildObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerHarvesterInstallationObjectTemplate::ServerHarvesterInstallationObjectTemplate_tag:
+			decodeServerHarvesterInstallationObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerInstallationObjectTemplate::ServerInstallationObjectTemplate_tag:
+			decodeServerInstallationObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerIntangibleObjectTemplate::ServerIntangibleObjectTemplate_tag:
+			decodeServerIntangibleObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerManufactureInstallationObjectTemplate::ServerManufactureInstallationObjectTemplate_tag:
+			decodeServerManufactureInstallationObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerManufactureSchematicObjectTemplate::ServerManufactureSchematicObjectTemplate_tag:
+			decodeServerManufactureSchematicObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerMissionObjectTemplate::ServerMissionObjectTemplate_tag:
+			decodeServerMissionObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerPlanetObjectTemplate::ServerPlanetObjectTemplate_tag:
+			decodeServerPlanetObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerPlayerObjectTemplate::ServerPlayerObjectTemplate_tag:
+			decodeServerPlayerObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerPlayerQuestObjectTemplate::ServerPlayerQuestObjectTemplate_tag:
+			decodeServerPlayerQuestObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerResourceContainerObjectTemplate::ServerResourceContainerObjectTemplate_tag:
+			decodeServerResourceContainerObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerObjectTemplate::ServerObjectTemplate_tag:
+			decodeServerServerObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerShipObjectTemplate::ServerShipObjectTemplate_tag:
+			decodeServerShipObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerStaticObjectTemplate::ServerStaticObjectTemplate_tag:
+			decodeServerStaticObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerTangibleObjectTemplate::ServerTangibleObjectTemplate_tag:
+			decodeServerTangibleObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerUniverseObjectTemplate::ServerUniverseObjectTemplate_tag:
+			decodeServerUniverseObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerVehicleObjectTemplate::ServerVehicleObjectTemplate_tag:
+			decodeServerVehicleObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerWeaponObjectTemplate::ServerWeaponObjectTemplate_tag:
+			decodeServerWeaponObject(objectId, index, bs, isBaseline);
+			break;
+	}
+}
+
+void SwgSnapshot::decodeSharedData(NetworkId const & objectId, Tag typeId, uint16 index, Archive::ReadIterator &bs, bool isBaseline)
+{
+	switch(typeId)
+	{
+		case ServerBattlefieldMarkerObjectTemplate::ServerBattlefieldMarkerObjectTemplate_tag:
+			decodeSharedBattlefieldMarkerObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerBuildingObjectTemplate::ServerBuildingObjectTemplate_tag:
+			decodeSharedBuildingObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerCellObjectTemplate::ServerCellObjectTemplate_tag:
+			decodeSharedCellObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerCityObjectTemplate::ServerCityObjectTemplate_tag:
+			decodeSharedCityObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerCreatureObjectTemplate::ServerCreatureObjectTemplate_tag:
+			decodeSharedCreatureObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerFactoryObjectTemplate::ServerFactoryObjectTemplate_tag:
+			decodeSharedFactoryObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerGuildObjectTemplate::ServerGuildObjectTemplate_tag:
+			decodeSharedGuildObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerHarvesterInstallationObjectTemplate::ServerHarvesterInstallationObjectTemplate_tag:
+			decodeSharedHarvesterInstallationObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerInstallationObjectTemplate::ServerInstallationObjectTemplate_tag:
+			decodeSharedInstallationObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerIntangibleObjectTemplate::ServerIntangibleObjectTemplate_tag:
+			decodeSharedIntangibleObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerManufactureInstallationObjectTemplate::ServerManufactureInstallationObjectTemplate_tag:
+			decodeSharedManufactureInstallationObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerManufactureSchematicObjectTemplate::ServerManufactureSchematicObjectTemplate_tag:
+			decodeSharedManufactureSchematicObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerMissionObjectTemplate::ServerMissionObjectTemplate_tag:
+			decodeSharedMissionObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerPlanetObjectTemplate::ServerPlanetObjectTemplate_tag:
+			decodeSharedPlanetObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerPlayerObjectTemplate::ServerPlayerObjectTemplate_tag:
+			decodeSharedPlayerObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerPlayerQuestObjectTemplate::ServerPlayerQuestObjectTemplate_tag:
+			decodeSharedPlayerQuestObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerResourceContainerObjectTemplate::ServerResourceContainerObjectTemplate_tag:
+			decodeSharedResourceContainerObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerObjectTemplate::ServerObjectTemplate_tag:
+			decodeSharedServerObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerShipObjectTemplate::ServerShipObjectTemplate_tag:
+			decodeSharedShipObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerStaticObjectTemplate::ServerStaticObjectTemplate_tag:
+			decodeSharedStaticObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerTangibleObjectTemplate::ServerTangibleObjectTemplate_tag:
+			decodeSharedTangibleObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerUniverseObjectTemplate::ServerUniverseObjectTemplate_tag:
+			decodeSharedUniverseObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerVehicleObjectTemplate::ServerVehicleObjectTemplate_tag:
+			decodeSharedVehicleObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerWeaponObjectTemplate::ServerWeaponObjectTemplate_tag:
+			decodeSharedWeaponObject(objectId, index, bs, isBaseline);
+			break;
+	}
+}
+
+void SwgSnapshot::decodeClientData(NetworkId const & objectId, Tag typeId, uint16 index, Archive::ReadIterator &bs, bool isBaseline)
+{
+	switch(typeId)
+	{
+		case ServerBattlefieldMarkerObjectTemplate::ServerBattlefieldMarkerObjectTemplate_tag:
+			decodeClientBattlefieldMarkerObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerBuildingObjectTemplate::ServerBuildingObjectTemplate_tag:
+			decodeClientBuildingObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerCellObjectTemplate::ServerCellObjectTemplate_tag:
+			decodeClientCellObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerCityObjectTemplate::ServerCityObjectTemplate_tag:
+			decodeClientCityObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerCreatureObjectTemplate::ServerCreatureObjectTemplate_tag:
+			decodeClientCreatureObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerFactoryObjectTemplate::ServerFactoryObjectTemplate_tag:
+			decodeClientFactoryObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerGuildObjectTemplate::ServerGuildObjectTemplate_tag:
+			decodeClientGuildObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerHarvesterInstallationObjectTemplate::ServerHarvesterInstallationObjectTemplate_tag:
+			decodeClientHarvesterInstallationObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerInstallationObjectTemplate::ServerInstallationObjectTemplate_tag:
+			decodeClientInstallationObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerIntangibleObjectTemplate::ServerIntangibleObjectTemplate_tag:
+			decodeClientIntangibleObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerManufactureInstallationObjectTemplate::ServerManufactureInstallationObjectTemplate_tag:
+			decodeClientManufactureInstallationObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerManufactureSchematicObjectTemplate::ServerManufactureSchematicObjectTemplate_tag:
+			decodeClientManufactureSchematicObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerMissionObjectTemplate::ServerMissionObjectTemplate_tag:
+			decodeClientMissionObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerPlanetObjectTemplate::ServerPlanetObjectTemplate_tag:
+			decodeClientPlanetObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerPlayerObjectTemplate::ServerPlayerObjectTemplate_tag:
+			decodeClientPlayerObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerPlayerQuestObjectTemplate::ServerPlayerQuestObjectTemplate_tag:
+			decodeClientPlayerQuestObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerResourceContainerObjectTemplate::ServerResourceContainerObjectTemplate_tag:
+			decodeClientResourceContainerObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerObjectTemplate::ServerObjectTemplate_tag:
+			decodeClientServerObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerShipObjectTemplate::ServerShipObjectTemplate_tag:
+			decodeClientShipObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerStaticObjectTemplate::ServerStaticObjectTemplate_tag:
+			decodeClientStaticObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerTangibleObjectTemplate::ServerTangibleObjectTemplate_tag:
+			decodeClientTangibleObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerUniverseObjectTemplate::ServerUniverseObjectTemplate_tag:
+			decodeClientUniverseObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerVehicleObjectTemplate::ServerVehicleObjectTemplate_tag:
+			decodeClientVehicleObject(objectId, index, bs, isBaseline);
+			break;
+		case ServerWeaponObjectTemplate::ServerWeaponObjectTemplate_tag:
+			decodeClientWeaponObject(objectId, index, bs, isBaseline);
+			break;
+	}
+}
+
+void SwgSnapshot::decodeParentClientData(NetworkId const & objectId, Tag typeId, uint16 index, Archive::ReadIterator &bs, bool isBaseline)
+{
+	switch(typeId)
+	{
+		case ServerPlayerObjectTemplate::ServerPlayerObjectTemplate_tag:
+			decodeParentClientPlayerObject(objectId, index, bs, isBaseline);
+			break;
+	}
+}
+
 //!!!END GENERATED DECODER
