@@ -54,7 +54,7 @@ private:
 
 inline const SkillManager::SkillMap & SkillManager::getSkillMap() const
 {
-	return *NON_NULL(m_skillMap);
+	return *(m_skillMap);
 }
 
 //---------------------------------------------------------------------
