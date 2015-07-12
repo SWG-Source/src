@@ -4,7 +4,7 @@
 #include "Response.h"
 #include "zip/GZipHelper.h"
 
-#define DEFAULT_HOST "sdt-auctionsys1"
+#define DEFAULT_HOST "localhost"
 #define DEFAULT_PORT 5901
 #define DEFAULT_IDENTIFIER "GAME+UNKNOWN"
 //////////////////////////////////////////////////////////////////////////////////////

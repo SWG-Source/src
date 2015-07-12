@@ -73,13 +73,13 @@ void ConfigChatServer::install(void)
 
 	data = new ConfigChatServer::Data;
 
-	KEY_STRING (backupGatewayServerIP, "swo-dev8.localnet.loc");
+	KEY_STRING (backupGatewayServerIP, "localhost");
 	KEY_INT    (backupGatewayServerPort, 15150);
 	KEY_STRING (clusterName, "devcluster");
-	KEY_STRING (centralServerAddress, "swo-dev8.localnet.loc");
+	KEY_STRING (centralServerAddress, "localhost");
 	KEY_INT    (centralServerPort, 61232);
 	KEY_STRING (gameCode, "SWG");
-	KEY_STRING (gatewayServerIP, "sdplatdev1.localnet.loc");
+	KEY_STRING (gatewayServerIP, "localhost");
 	KEY_INT    (gatewayServerPort, 5001);
 	KEY_INT    (roomInactivityTimeout, 60 * 60 * 24 * 3);
 	KEY_INT    (roomUnpopulatedTimeout, 60 * 5);
@@ -88,7 +88,7 @@ void ConfigChatServer::install(void)
 	KEY_INT    (loginFlowControlRate, 50);
 	KEY_INT    (maxRoomQueriesPerFrame, 5);
 	KEY_BOOL   (loggingEnabled, false);
-	KEY_STRING (registrarHost, "sdplatdev1.localnet.loc");
+	KEY_STRING (registrarHost, "localhost");
 	KEY_INT    (registrarPort, 5000);
 	KEY_INT    (intervalToSendHeadersToClientSeconds, 1);
 	KEY_INT    (maxHeadersToSendToClientPerInterval, 100);
@@ -124,7 +124,7 @@ void ConfigChatServer::install(void)
 
 	if(ms_voiceGateways.empty())
 	{
-		static char const * const defaultGateway = "sdt-plattestsys1:9102";
+		static char const * const defaultGateway = "localhost:9102";
 		ms_voiceGateways.push_back(defaultGateway);
 	}
 }

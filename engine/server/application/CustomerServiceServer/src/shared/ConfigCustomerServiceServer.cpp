@@ -45,10 +45,10 @@ void ConfigCustomerServiceServer::install()
 	SetupSharedNetwork::install(networkSetupData);
 
 	KEY_STRING (clusterName, "devcluster");
-	KEY_STRING (centralServerAddress, "swo-dev8.localnet.loc");
+	KEY_STRING (centralServerAddress, "localhost");
 	KEY_INT    (centralServerPort, 61242);
 	KEY_STRING (gameCode, "SWG");
-	KEY_STRING (csServerAddress, "sdlogin1.localnet.loc");
+	KEY_STRING (csServerAddress, "localhost");
 	KEY_INT    (csServerPort, 3016);
 	KEY_INT    (maxPacketsPerSecond, 50);
 	KEY_INT    (requestTimeoutSeconds, 300);

@@ -63,7 +63,7 @@ void ConfigTaskManager::install(void)
 	KEY_INT     (gameServicePort, 60001);
 	KEY_INT     (consoleConnectionPort, 60000);
 	KEY_STRING  (consoleServiceBindInterface, "");
-	KEY_STRING	(loginServerAddress, "swo-dev5.localnet.loc");
+	KEY_STRING	(loginServerAddress, "localhost");
 	KEY_INT	    (loginServerTaskServicePort, 44459);
 	KEY_FLOAT   (maximumLoad, 3.0f);
 	KEY_FLOAT   (loadConnectionServer, 0.5f);

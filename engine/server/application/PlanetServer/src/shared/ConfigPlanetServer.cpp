@@ -31,7 +31,7 @@ void ConfigPlanetServer::install(void)
 	
 	data = new ConfigPlanetServer::Data;
 
-	KEY_STRING (centralServerAddress, "swo-dev1.localnet.loc");
+	KEY_STRING (centralServerAddress, "localhost");
 	KEY_INT    (centralServerPort, 44455);
 	KEY_STRING (sceneID, "default");
 	KEY_INT    (gameServicePort, 0);

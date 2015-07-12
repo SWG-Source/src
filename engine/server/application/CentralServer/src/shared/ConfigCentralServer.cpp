@@ -76,7 +76,7 @@ void ConfigCentralServer::install(void)
 	KEY_INT    (connectionServicePort, 0);
 	KEY_INT    (customerServicePort,   61242);
 	KEY_INT    (gameServicePort, 44451);
-	KEY_STRING (loginServerAddress, "64.37.132.178");
+	KEY_STRING (loginServerAddress, "127.0.0.1");
 	KEY_INT    (loginServerPort, 44452);
 	KEY_STRING (clusterName, "devcluster");
 	KEY_STRING (startPlanet, "tatooine");
@@ -121,7 +121,7 @@ void ConfigCentralServer::install(void)
 	KEY_INT    (systemTimeMismatchAlertIntervalSeconds, 1*60*60); // seconds
 	KEY_INT    (ctsDenyLoginThresholdSeconds, 2*60*60); // seconds
 	KEY_BOOL   (auctionEnabled, false);
-	KEY_STRING (auctionServer, "sdt-plattestsys2.localnet.loc");
+	KEY_STRING (auctionServer, "localhost");
 	KEY_INT    (auctionPort, 5901 );
 	KEY_STRING (auctionIDPrefix, "SWG+");
 	KEY_BOOL   (disconnectDuplicateConnectionsOnOtherGalaxies, false);
