@@ -97,7 +97,7 @@ void ConfigCentralServer::install(void)
 	KEY_INT    (loginServicePort, 44452);
 	KEY_BOOL   (developmentMode, true);
 	KEY_BOOL   (shouldSleep, true);
-	KEY_BOOL   (startPublic, false);
+	KEY_BOOL   (startPublic, true);
 	KEY_INT    (consoleServicePort, 61000);
 	KEY_STRING (consoleServiceBindInterface, "");
 	KEY_INT    (characterCreationTimeout,5*60); // seconds
@@ -120,7 +120,7 @@ void ConfigCentralServer::install(void)
 	KEY_INT    (gameServerConnectionPendingAllocatedSizeLimit, 0);
 	KEY_INT    (systemTimeMismatchAlertIntervalSeconds, 1*60*60); // seconds
 	KEY_INT    (ctsDenyLoginThresholdSeconds, 2*60*60); // seconds
-	KEY_BOOL   (auctionEnabled, false);
+	KEY_BOOL   (auctionEnabled, true);
 	KEY_STRING (auctionServer, "localhost");
 	KEY_INT    (auctionPort, 5901 );
 	KEY_STRING (auctionIDPrefix, "SWG+");
