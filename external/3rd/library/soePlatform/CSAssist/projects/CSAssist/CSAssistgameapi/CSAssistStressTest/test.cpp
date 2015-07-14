@@ -458,9 +458,6 @@ int main(int argc, char **argv)
 #ifdef AUTO_RUN
 	ResetGlobals();
 	serverhost = "localhost";
-	//serverhost = "64.37.152.161";
-	//serverport = 3018;
-	//serverhost = "64.37.153.15";
 	serverport = 3009;
 	if (argc > 1) 
 		gamep = argv[1];

@@ -29,6 +29,7 @@
 #include "sharedNetworkMessages/GenericValueTypeMessage.h"
 #include "sharedLog/Log.h"
 #include "sharedLog/SetupSharedLog.h"
+#include <stdio.h>
 
 //-----------------------------------------------------------------------
 

@@ -1,0 +1,9 @@
+ConnectionServer local D:\whitengold\build\bin\Release\ConnectionServer -- @servercommon.cfg
+CentralServer local D:\whitengold\build\bin\Release\CentralServer -- @servercommon.cfg
+SwgDatabaseServer local D:\whitengold\build\bin\Release\SwgDatabaseServer -- @servercommon.cfg
+PlanetServer local D:\whitengold\build\bin\Release\PlanetServer -- @servercommon.cfg
+SwgGameServer local D:\whitengold\build\bin\Release\SwgGameServer -- @servercommon.cfg
+#ChatServer local D:\whitengold\build\bin\Release\ChatServer -- @servercommon.cfg
+#LogServer local D:\whitengold\build\bin\Release\LogServer -- @servercommon.cfg @logServerTargets.cfg
+#MetricsServer local D:\whitengold\build\bin\Release\MetricsServer -- @servercommon.cfg
+#CommoditiesServer local D:\whitengold\build\bin\Release\CommoditiesServer -- @servercommon.cfg

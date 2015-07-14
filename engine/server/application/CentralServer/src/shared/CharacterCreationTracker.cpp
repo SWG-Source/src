@@ -102,7 +102,7 @@ void CharacterCreationTracker::handleCreateNewCharacter(const ConnectionCreateCh
 	}
 	
 	if (creationRecord == m_creations.end())
-		creationRecord = m_creations.insert(std::make_pair<StationId,CreationRecord*>(msg.getStationId(),new CreationRecord)).first;
+		creationRecord = m_creations.insert(std::pair<StationId,CreationRecord*>(msg.getStationId(),new CreationRecord)).first;
 
 	// - determine starting location
 	static std::string tutorialPlanetName("tutorial");

@@ -169,14 +169,14 @@ void Report::puts(const char *buffer)
 	}
 
 	// fatal strings should be made very obvious, so pop up a message box
-	if ((flags & RF_dialog) && Os::isMainThread())
-	{
-		const char *title = "Report";
-		if (flags & RF_fatal)
-			title = "Fatal Report";
+	//if ((flags & RF_dialog) && Os::isMainThread())
+	//{
+	//	const char *title = "Report";
+	//	if (flags & RF_fatal)
+	//		title = "Fatal Report";
 
-		MessageBox(NULL, buffer, title, MB_OK | MB_ICONEXCLAMATION);
-	}
+	//	MessageBox(NULL, buffer, title, MB_OK | MB_ICONEXCLAMATION);
+	//}
 }
 
 // ----------------------------------------------------------------------

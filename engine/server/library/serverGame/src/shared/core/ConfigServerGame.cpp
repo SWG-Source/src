@@ -126,7 +126,7 @@ void ConfigServerGame::install(void)
 	KEY_BOOL    (adminGodToAll, false);
 	KEY_INT     (adminGodToAllGodLevel, 50);
 	KEY_BOOL    (useSecureLoginForGodAccess, false);
-	KEY_BOOL    (useIPForGodAccess, true);
+	KEY_BOOL    (useIPForGodAccess, false);
 	KEY_BOOL    (adminPersistAllCreates, false);
 	KEY_BOOL    (buildCluster, false);
 	KEY_INT     (requestSceneWarpTimeoutSeconds, 60);

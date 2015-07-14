@@ -36,7 +36,7 @@ sub main
 
     if ($opt_windows == 1)
     {
-	open (FILELIST,"bash -c \"ls ${opt_ddldirectory}/*.tab\"|"); #dir /f /b ${opt_ddldirectory}\\*.tab|");
+	open (FILELIST,"c:\cygwin\bin\bash -c \"c:\cygwin\bin\ls ${opt_ddldirectory}/*.tab\"|"); #dir /f /b ${opt_ddldirectory}\\*.tab|");
     }
     else
     {
@@ -287,7 +287,8 @@ sub output
 
     if ($opt_windows == 1)
     {
-	system ("copy ${filename}.make_encoder_temporary_file $filename");
+	#system ("copy ${filename}.make_encoder_temporary_file $filename");
+	system ("copy d:\\whitengold\\src\\game\\server\\application\\SwgDatabaseServer\\src\\shared\\generated\\Schema_h.template $filename");
 	system ("del ${filename}.make_encoder_temporary_file");
     }
     else

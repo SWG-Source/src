@@ -693,8 +693,8 @@ void GameServer::createProxyOnAllServers(ServerObject *object)
 void GameServer::debugIO (void)
 {
 #ifdef _DEBUG
-	DebugMonitor::flushOutput();
-	DebugMonitor::clearScreen();
+//	DebugMonitor::flushOutput();
+//	DebugMonitor::clearScreen();
 	DebugFlags::callReportRoutines();
 #endif
 }

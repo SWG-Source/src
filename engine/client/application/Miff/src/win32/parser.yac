@@ -1,0 +1,1004 @@
+%expect 1
+%{
+/*-----------------------------------------------------------------------------**
+** FILE:  parser.yac                                                           **
+** (c) 1998 - Bootprint GTInteractive                                          **
+**                                                                             **
+** DESCRIPTION: parser for mIFF                                                **
+**                                                                             **
+** AUTHOR: Hideki Ikeda                                                        **
+** HISTORY:                                                                    **
+**                                                                             **
+** Notes: companion to parser.lex                                              **
+**-----------------------------------------------------------------------------*/
+
+/*---------------**
+** C declaration **
+**---------------*/
+#pragma warning (disable: 4005)		/* macro redefinition - bision.simple redefines alloca() */
+#pragma warning (disable: 4127)		/* conditional expression is constant - in bison.simple */
+#pragma warning (disable: 4131)		/* uses old-style declarator - mostly in bison.simple */
+#pragma warning (disable: 4244)		/* possible loss of data due to conversion from one type to another - bision.simple */
+#pragma warning (disable: 4701)   /* local variable ('yyval' in first case) may be used without having been initialed */
+// #pragma warning (disable: 6311)   /* compiler malloc.h: see previous definition of alloca() */
+
+/* include files */
+#include <math.h>			/* for pow() and stuff */
+#include <string.h>
+#include <stdlib.h>			/* for toupper() */
+#include <wchar.h>			/* for wide character (16bit) strings */
+
+#include <stdio.h>
+#include <ctype.h>
+
+/*----------------------------------------------------------------**
+** debug options, turn these on to TEST ONLY!  don't leave these  **
+** switch on, it's annoying as hell in console mode!              **
+** NOTE: if you turn YYERROR_VERBOSE on, you MUST have YYDEBUG!   **
+** IMHO, it's better off using primitive printf() method to debug **
+**----------------------------------------------------------------*/
+#define	YYERROR_VERBOSE	1
+#define	YYDEBUG			1
+
+#undef	YYERROR_VERBOSE
+#undef	YYDEBUG
+
+/* external prototype declaration */
+extern void MIFFMessage(char *message);		/* found in mIFF.CPP */
+extern char * MIFFallocString(int sizeOfString);
+extern void MIFFfreeString(char * pointer);
+extern int  validateTargetFilename(char *fname, int fnameSize);		/* found mIFF.CPP */
+extern void yyerror(char *);
+extern int  yylex(void);
+extern void setCurrentLineNumber(int lineNum, char * fileName, int mysteryNum);
+extern void MIFFSetIFFName(const char *newFileName);
+extern void MIFFinsertForm(const char *formName);
+extern void MIFFinsertChunk(const char *chunkName);
+extern void MIFFinsertChunkData(void * buffer, unsigned bufferSize);
+extern int  MIFFloadRawData(char *fname, void * buffer, unsigned maxBufferSize);
+extern void MIFFexitChunk(void);
+extern void MIFFexitForm(void);
+extern unsigned long MIFFgetLabelHash(char *inputStream);
+
+/* local prototype declaration */
+void	initGlobalVars(void);
+void	checkArgs(void);
+void	checkPragmas(void);
+
+void	includeBinary(char *fname);
+
+void	write32(long i32);
+void	write16(short i16);
+void	write8(char i8);
+void	writeU32(unsigned long ui32);
+void	writeU16(unsigned short ui16);
+void	writeU8(unsigned char u8);
+void	writeDouble(double d);
+void	writeFloat(float f);
+void	writeString(char *s);
+void	writeString16(char *s);
+void	writeLabelHash(char *s);
+void	writeTag(char *tag);
+void	writeSize(unsigned long size);
+void	writeData(void *dataPtr, unsigned dataSize);
+
+void	initSymTable(void);
+long	searchEnumSymbolTable(char *symString);
+long	getEnumValue(long index);
+void	addEnumSymbol(char *symString, long value);
+void	parseESCstring(char *str, char *targetBuffer, int sizeOfTarget);
+
+/*----------------------------------------------**
+** Global vars used by all functions and parser **
+**----------------------------------------------*/
+char	err_msg[256];
+int		errorFlag;
+
+/*-----------------------------------------------------------------------------**
+** NOTE: this symbol table is ONLY used to construct symbols for enum table!!! **
+**-----------------------------------------------------------------------------*/
+#define	MAX_SYMBOLS		(1024)			/* total number of symbols it can grow to... */
+#define	MAX_SYMCHARS	(128)			/* I label thee insane if you have more the 128 char for your variable! */
+struct structEnumSymTableType
+{
+	char	symbol[MAX_SYMCHARS];
+	long	value;
+};
+
+struct structEnumSymTableType		symbolEnumTable[MAX_SYMBOLS];
+unsigned					currSymIndex = 0;
+long						lastValue = -1;
+char						id[MAX_SYMCHARS];
+
+/* vars set by pragmas */
+#define	MAX_BUFFER_SIZE				(16 * 1024 * 1024)
+#define MAX_STRING_SIZE				(512)
+char	drive[8];
+char	directory[MAX_STRING_SIZE/2];
+char	filename[MAX_STRING_SIZE/2];
+char	extension[8];
+char	outFileName[MAX_STRING_SIZE];
+int		usePragmas;
+
+/*------------------------------------------------------------------------**
+** The IRONY of these so-called temp-data's that are GLOBAL is            **
+** that they aren't temp if functions called within are also using it     **
+** This really gives me the creeps and goosbumps!  DOWN with GLOBAL VARS! **
+**------------------------------------------------------------------------*/
+int		iTemp, jTemp;
+char	byteTemp;
+short	wordTemp;
+char	tempStr[MAX_STRING_SIZE];
+
+%}
+
+/*--------------------**
+** Bison declarations **
+**--------------------*/
+%union {
+	long			ltype;
+	double			dtype;
+	char			*stype;
+	char			chtype;
+
+	int				tokentype;
+}
+
+/*------------------------------------------------**
+** define tokens defined in lex file              **
+** NOTE: all LITERALs are treated as signed long  **
+**       all FLOAT_LITERALs are treated as double **
+**------------------------------------------------*/
+%token	<chtype>	CHAR_LIT
+%token	<stype>		STR_LIT
+%token	<stype>		IDENTIFIER
+%token	<ltype>		LIT
+%token	<dtype>		FLOAT_LIT
+
+/* all command tokens are <tokentype> type */
+%token	<tokentype>		INT32
+%token	<tokentype>		INT16
+%token	<tokentype>		INT8
+%token	<tokentype>		UINT32
+%token	<tokentype>		UINT16
+%token	<tokentype>		UINT8
+%token	<tokentype>		FLOAT
+%token	<tokentype>		DOUBLE
+%token	<tokentype>		STRING
+%token	<tokentype>		WSTRING
+%token	<tokentype>		LABELHASH
+
+%token	<tokentype>		FORM
+%token	<tokentype>		CHUNK
+%token	<tokentype>		PRAGMA
+%token	<tokentype>		PRAGMA_DRIVE PRAGMA_DIR PRAGMA_FNAME PRAGMA_EXT
+%token	<tokentype>		ENUMSTRUCT
+%token	<tokentype>		INCLUDESOURCE
+%token	<tokentype>		INCLUDEBIN
+%token	<tokentype>		INCLUDEIFF
+%token	<tokentype>		SIN
+%token	<tokentype>		COS
+%token	<tokentype>		TAN
+%token	<tokentype>		ACOS
+%token	<tokentype>		ASIN
+%token	<tokentype>		ATAN
+%token	<tokentype>		POUND
+%token	<tokentype>		SHIFTRIGHT
+%token	<tokentype>		SHIFTLEFT
+%token	<tokentype>		RAISEDPOWER
+
+%%
+
+/*------------------------------------------------------------------------**
+** Begin Grammar rules                                                    **
+**                                                                        **
+** Note: if possible, always try to use left recurrsion rather then right **
+**       to save stack depth...                                           **
+**------------------------------------------------------------------------*/
+mIFFSource:
+		{
+			/* initialize some global varibles before we start */
+			initGlobalVars();
+			checkArgs();
+		}
+		preprocessor
+		{
+			/* take care of any mIFF related preprocessors that we might encounter */
+			checkPragmas();
+		}
+		body
+	;
+
+/*----------------------**
+** Preprocessor handler **
+**----------------------*/
+preprocessor:	{ /* we don't really have to have preprocessor */}
+	|		preprocessor pragma
+	|		preprocessor debugInfo			/* we have to have debugInfo or else pragma gets confused when it finds a # line */
+	;
+
+pragma:		PRAGMA PRAGMA_DRIVE STR_LIT		{
+												if (usePragmas)
+												{
+													strcpy(drive, $<stype>3);
+													if (strlen(drive) > 2)
+													{
+														sprintf(err_msg, "Drive [%s] is not a valid drive [must be in C: format]", drive);
+														yyerror(err_msg);
+													}
+													drive[1] = ':';
+													drive[2] = 0;
+												}
+												MIFFfreeString($<stype>3);
+											}
+	|		PRAGMA PRAGMA_DIR STR_LIT		{
+												if (usePragmas)
+												{
+													strcpy(directory, $<stype>3);
+													if (directory[strlen(directory)] != '\\')
+														directory[strlen(directory)] = '\\';
+													directory[strlen(directory) + 1] = 0;
+												}
+												MIFFfreeString($<stype>3);
+											}
+	|		PRAGMA PRAGMA_FNAME STR_LIT		{
+												if (usePragmas)
+													strcpy(filename, $<stype>3);
+												MIFFfreeString($<stype>3);
+											}
+	|		PRAGMA PRAGMA_EXT STR_LIT		{
+												if (usePragmas)
+													strcpy(extension, $<stype>3);
+												MIFFfreeString($<stype>3);
+											}
+	|		PRAGMA IDENTIFIER STR_LIT		{
+												sprintf(err_msg, "Unknown PRAGMA identifier [%s]", $<stype>2); 
+												yyerror(err_msg); 
+												MIFFfreeString($<stype>2);
+												MIFFfreeString($<stype>3);
+											}
+	;
+
+/*-------------------------------------------------------**
+** This is the #line pragmas in a format of:             **
+** # lineNum "FileName" mysteryNumber                    **
+** We call setCurrentLineNumber so when an error occurs, **
+** it will be sync'd to correct filename and linenumber  **
+**-------------------------------------------------------*/
+debugInfo:	POUND LIT STR_LIT				{ setCurrentLineNumber($<ltype>2, $<stype>3, 0); MIFFfreeString($<stype>3);}
+	|		POUND LIT STR_LIT LIT			{ setCurrentLineNumber($<ltype>2, $<stype>3, $<ltype>4); MIFFfreeString($<stype>3);}
+	;
+
+/*-----------------------**
+** The main body section **
+**-----------------------*/
+body:		/* body can be empty */
+	|		body form formbody
+	|		body chunk chunkbody
+	|		body enumSection
+	|		body includesource		{ /* do nothing... should not exist if went thru the preprocessor */ }
+	|		body includeIFF
+	|		body debugInfo
+	;
+
+/*------------------------**
+** Enumeration definition **
+**------------------------*/
+enumSection:	ENUMSTRUCT enumDeclare '{' enumBody '}' enumType ';' { /* enumSection */ }
+	;
+
+enumDeclare:							{ /* could have no declaration */ lastValue = -1; }
+	|			IDENTIFIER				{ /* enumDeclare: ID */           lastValue = -1; MIFFfreeString($<stype>1);}
+	;
+
+enumBody:									{ /* enumBody: can be empty list */ }
+	|			enumAssign					{ /* enumAssign */ }
+	|			enumBody ',' enumAssign		{ /* enumAssign, enumBody */ }
+	;
+
+enumAssign:		IDENTIFIER '=' exprL	{
+											addEnumSymbol($<stype>1, $<ltype>3);
+											MIFFfreeString($<stype>1);
+										}
+	|			IDENTIFIER				{ /* in this case, inc 1 from last count */
+											addEnumSymbol($<stype>1,  ++lastValue);
+											MIFFfreeString($<stype>1);
+										}
+	;
+
+enumType:		/* type declaration can be empty */
+	|			enumList
+	;
+
+enumList:	IDENTIFIER					{ /* enumList: just ID */ MIFFfreeString($<stype>1);}
+	|		enumList ',' IDENTIFIER		{ /* enumList: ID, enumList */ MIFFfreeString($<stype>3);}
+	;
+
+/*----------------------------**
+** different types of include **
+**----------------------------*/
+includesource:	INCLUDESOURCE STR_LIT	{ /* do nothing... because CCCP/preprocessor takes care of this*/ MIFFfreeString($<stype>2);}
+	;
+
+includebin:	INCLUDEBIN STR_LIT	{ includeBinary($<stype>2); MIFFfreeString($<stype>2);}
+	;
+
+includeIFF:	INCLUDEIFF STR_LIT	{ includeBinary($<stype>2); MIFFfreeString($<stype>2);}
+	;
+
+/*------------------**
+** the FORM section **
+**------------------*/
+form:		FORM STR_LIT	{
+								/* first make sure we have 4 char for FORM name */
+								if (strlen($<stype>2) > 4)
+								{
+									sprintf(err_msg, "FORM name %s greater then 4 char", $<stype>2);
+									yyerror(err_msg);
+								}
+								else if (!errorFlag)
+								{
+									/* pack the string with ' ' (spaces) if less then 4 chars */
+									strcpy(tempStr, $<stype>2);
+									if (strlen(tempStr) < 4)
+									{
+										/* pack the string */
+										for (iTemp = strlen(tempStr);iTemp < 4; iTemp++)
+										{
+											tempStr[iTemp] = ' ';	/* pack it with space */
+										}
+									}
+
+									/* let's make sure we don't have a smart ass who wants to do form "FORM" */
+									if ((toupper(tempStr[0]) == 'F') &&
+										(toupper(tempStr[1]) == 'O') &&
+										(toupper(tempStr[2]) == 'R') &&
+										(toupper(tempStr[3]) == 'M'))
+									{
+										yyerror("FORM name CANNOT BE 'FORM'... nice try bozo!");
+									}
+
+									/* FORM <size> <tagname> */
+									MIFFinsertForm(tempStr);
+								}
+								MIFFfreeString($<stype>2);
+							}
+	;
+
+formbody:	'{'	formelements '}'	{ if (!errorFlag) MIFFexitForm(); };
+
+formelements:	body				{ /* recursion of multiple depth in form is allowed */ }
+	|			INCLUDEBIN STR_LIT	{ 
+										yyerror("Found attempt to include binary file inside FORM\nBinary file inclusion ONLY allowed inside a CHUNK!\nError"); 
+										MIFFfreeString($<stype>2);
+									}
+	;
+
+/*-------------------**
+** the CHUNK section **
+**-------------------*/
+chunk:		CHUNK STR_LIT	{
+								/* first make sure we have 4 char for CHUNK name */
+								if (strlen($<stype>2) > 4)
+								{
+									sprintf(err_msg, "CHUNK name %s greater then 4 char", $<stype>2);
+									yyerror(err_msg);
+								}
+								else if (!errorFlag)
+								{
+									/* pack the string with ' ' (spaces) if less then 4 chars */
+									strcpy(tempStr, $<stype>2);
+									if (strlen(tempStr) < 4)
+									{
+										/* pack the string */
+										for (iTemp = strlen(tempStr);iTemp < 4; iTemp++)
+										{
+											tempStr[iTemp] = ' ';	/* pack it with space */
+										}
+									}
+
+									/* let's make sure we don't have a smart ass who wants to do chunk "FORM" */
+									if ((toupper(tempStr[0]) == 'F') &&
+										(toupper(tempStr[1]) == 'O') &&
+										(toupper(tempStr[2]) == 'R') &&
+										(toupper(tempStr[3]) == 'M'))
+									{
+										yyerror("CHUNK name CANNOT BE 'FORM'... nice try bozo!");
+									}
+
+									MIFFinsertChunk(tempStr);
+								}
+								MIFFfreeString($<stype>2);
+							}
+	;
+
+chunkbody:	'{' chunkelements '}'	{ if (!errorFlag) MIFFexitChunk(); };
+
+chunkelements:	/* can be empty */
+	|		chunkelements memalloc
+	|		chunkelements includebin
+	|		chunkelements debugInfo
+	|		chunkelements includeIFF	{ yyerror("Found attempt to include IFF (binary) file inside CHUNK\nIFF inclusion ONLY allowed outside a CHUNK!\nError"); }
+	;
+
+memalloc:	INT32  l32AllocExpr		{ }
+	|		INT16  l16AllocExpr		{ }
+	|		INT8   l8AllocExpr		{ }
+	|		UINT32 lU32AllocExpr	{ }
+	|		UINT16 lU16AllocExpr	{ }
+	|		UINT8  lU8AllocExpr		{ }
+	|		FLOAT  fAllocExpr		{ }
+	|		DOUBLE dAllocExpr		{ }
+	|		LABELHASH STR_LIT		{ 
+										writeLabelHash($<stype>2);
+									}
+	|		STRING STR_LIT			{ writeString($<stype>2);
+										/* now, add a NULL termination for this string */
+										byteTemp = 0; write8(byteTemp);
+										MIFFfreeString($<stype>2);
+									}
+	|		WSTRING STR_LIT			{ writeString16($<stype>2);
+										/* now, add a NULL termination for this string */
+										wordTemp = 0; write16(wordTemp);
+										MIFFfreeString($<stype>2);
+									}
+	;
+
+l32AllocExpr:	exprL					{ write32($<ltype>1); }
+	|			l32AllocExpr ',' exprL	{ write32($<ltype>3); }
+	;
+
+l16AllocExpr:	exprL					{ write16((short) $<ltype>1); }
+	|			l16AllocExpr ',' exprL	{ write16((short) $<ltype>3); }
+	;
+
+l8AllocExpr:	exprL					{ write8((char) $<ltype>1); }
+	|			l8AllocExpr ',' exprL	{ write8((char) $<ltype>3); }
+	;
+
+lU32AllocExpr:	exprL					{ writeU32($<ltype>1); }
+	|			lU32AllocExpr ',' exprL	{ writeU32($<ltype>3); }
+	;
+
+lU16AllocExpr:	exprL					{ writeU16((unsigned short) $<ltype>1); }
+	|			lU16AllocExpr ',' exprL	{ writeU16((unsigned short) $<ltype>3); }
+	;
+
+lU8AllocExpr:	exprL					{ writeU8((unsigned char) $<ltype>1); }
+	|			lU8AllocExpr ',' exprL	{ writeU8((unsigned char) $<ltype>3); }
+	;
+
+fAllocExpr:	exprD					{ writeFloat((float) $<dtype>1); }
+	|		fAllocExpr ',' exprD	{ writeFloat((float) $<dtype>3); }
+	;
+
+dAllocExpr:	exprD					{ writeDouble($<dtype>1); }
+	|		dAllocExpr ',' exprD	{ writeDouble($<dtype>3); }
+	;
+
+
+/*-------------------------**
+** expression for integers **
+**-------------------------*/
+exprL:		exprL '+' factorL			{ $<ltype>$ = $<ltype>1 + $<ltype>3;	}
+	|		exprL '-' factorL			{ $<ltype>$ = $<ltype>1 - $<ltype>3;	}
+	|		exprL SHIFTLEFT factorL		{ $<ltype>$ = $<ltype>1 << $<ltype>3;	}
+	|		exprL SHIFTRIGHT factorL	{ $<ltype>$ = $<ltype>1 >> $<ltype>3;	}
+	|		exprL '&' factorL			{ $<ltype>$ = $<ltype>1 & $<ltype>3;	}
+	|		exprL '|' factorL			{ $<ltype>$ = $<ltype>1 | $<ltype>3;	}
+	|		exprL '^' factorL			{ $<ltype>$ = $<ltype>1 ^ $<ltype>3;	}
+	|		factorL						{ $<ltype>$ = ($<ltype>1);				}
+	;
+
+factorL:	factorL '*' termL			{ $<ltype>$ = $<ltype>1 * $<ltype>3;	}
+	|		factorL '/' termL			{ $<ltype>$ = $<ltype>1 / $<ltype>3;	}
+	|		factorL '%' termL			{ $<ltype>$ = $<ltype>1 % $<ltype>3;	}
+	|		termL						{ $<ltype>$ = ($<ltype>1);				}
+	;
+
+termL:		LIT							{ $<ltype>$ = $<ltype>1;	}
+	|		'~' termL					{ $<ltype>$ = ~$<ltype>2;	}	/* bitwise NOT */
+	|		'-' termL					{ $<ltype>$ = -$<ltype>2;	}	/* Unary minus */
+	|		'+' termL					{ $<ltype>$ = $<ltype>2;	}	/* Unary plus */
+	|		'(' exprL ')'				{ $<ltype>$ = ($<ltype>2);	}
+	|		IDENTIFIER					{ /* assume it's enum symbol */
+											$<ltype>$ = (signed long) getEnumValue(searchEnumSymbolTable($<stype>1));
+											MIFFfreeString($<stype>1);
+										}
+	;
+
+/*-----------------------**
+** expression for floats **
+**-----------------------*/
+exprD:		exprD '+' factorD			{ $<dtype>$ = $<dtype>1 + $<dtype>3;	}
+	|		exprD '-' factorD			{ $<dtype>$ = $<dtype>1 - $<dtype>3;	}
+	|		exprD RAISEDPOWER factorD	{ $<dtype>$ = pow($<dtype>1, $<dtype>3);}	/* exponentiation */
+	|		factorD						{ $<dtype>$ = ($<dtype>1);				}
+	;
+
+factorD:	factorD '*' termD			{ $<dtype>$ = $<dtype>1 * $<dtype>3;	}
+	|		factorD '/' termD			{ $<dtype>$ = $<dtype>1 / $<dtype>3;	}
+	|		termD						{ $<dtype>$ = ($<dtype>1);				}
+	;
+
+termD:		FLOAT_LIT					{ $<dtype>$ = $<dtype>1;			}
+	|		LIT							{ $<dtype>$ = (double) $<ltype>1;	}	/* we should be able to handle values that are integer and treat it as float */
+	|		'-' termD					{ $<dtype>$ = -$<dtype>2;			}	/* Unary minus */
+	|		'+' termD					{ $<dtype>$ = $<dtype>2;			}	/* Unary plus */
+	|		'(' exprD ')'				{ $<dtype>$ = ($<dtype>2);			}
+	|		SIN '(' exprD ')'			{ $<dtype>$ = sin( $<dtype>3 );		}
+	|		COS '(' exprD ')'			{ $<dtype>$ = cos( $<dtype>3 );		}
+	|		TAN '(' exprD ')'			{ $<dtype>$ = tan( $<dtype>3 );		}
+	|		ACOS '(' exprD ')'			{ $<dtype>$ = acos( $<dtype>3 );	}
+	|		ASIN '(' exprD ')'			{ $<dtype>$ = asin( $<dtype>3 );	}
+	|		ATAN '(' exprD ')'			{ $<dtype>$ = atan( $<dtype>3 );	}
+	|		IDENTIFIER					{ /* assume it's enum symbol */
+											$<dtype>$ = (signed long) getEnumValue(searchEnumSymbolTable($<stype>1));
+											MIFFfreeString($<stype>1);
+										}
+	;
+
+%%
+
+/*-------------------------------------------**
+** and now... the supporting C functions...  **
+**-------------------------------------------*/
+void initGlobalVars(void)
+{
+	/* assign defaults */
+	drive[0] = 0;
+	directory[0] = 0;
+	filename[0] = 0;
+	extension[0] = 0;
+	err_msg[0] = 0;
+	usePragmas = 1;				/* default to #pragmas enabled because as a stand-alone .YAC, we have no knowledge of outFileName */
+
+	errorFlag = 0;
+
+	initSymTable();
+}
+
+void checkPragmas(void)
+{
+	int  indexOriginal, indexDest;
+	char _tempStr[512];
+
+	if (usePragmas)
+	{
+		/* check after pre processor if output target is still NULL */
+		if (!drive[0] && !errorFlag)
+		{
+			yyerror("Drive pragma not defined");
+			errorFlag = 1;
+		}
+		if (!directory[0] && !errorFlag)
+		{
+			yyerror("Directory pragma not defined");
+			errorFlag = 1;
+		}
+		if (!filename[0] && !errorFlag)
+		{
+			yyerror("Filename pragma not defined");
+			errorFlag = 1;
+		}
+		if (!extension[0] && !errorFlag)
+		{
+			yyerror("Extension pragma not defined");
+			errorFlag = 1;
+		}
+
+		if (!errorFlag)
+		{
+			/* create an output file */
+			strcpy(_tempStr, directory);   /* copy directory to _tempStr because we'll be messing with directory */
+			for (indexOriginal = 0, indexDest = 0; indexOriginal < (int) strlen(_tempStr); indexOriginal++)
+			{
+				/* search for double-slashes and convert it to single slash */
+				if ((_tempStr[indexOriginal] == '\\') && (_tempStr[indexOriginal+1] == '\\'))
+				{
+					directory[indexDest] = '\\';
+					indexOriginal++;
+				}
+				else
+					directory[indexDest] = _tempStr[indexOriginal];  /* copy current position of _tempStr to directory */
+				indexDest++;
+				directory[indexDest] = 0;  /* force NULL termination */
+			}
+			sprintf(outFileName, "%s%s%s%s", drive, directory, filename, extension);
+		}
+	}	/* if usePragmas */
+
+	MIFFSetIFFName(outFileName);    /* tell mIFF we want to use this filename instead of whatever it has! */
+}
+
+/*--------------------------------------------------------------------------------------**
+** This function is called early in the process to find out if usePragma flag was set   **
+** in the command line or not.  If it was, mIFF already has the outfile and will stuff  **
+** it into the outFileName data pool.  Even if mIFF had an idea of what the output file **
+** name is, if usePragma flag returned said it is true, then #pragas in the mIFF source **
+** is used instead and overrides whatever file name it has returned.                    **
+** see usePragmas() for more details.                                                   **
+**--------------------------------------------------------------------------------------*/
+void checkArgs(void)
+{
+	/* request an external function (found in either mIFF.CPP or mIFFView.CPP) to see if pragmas and filename was set... */
+	usePragmas = validateTargetFilename(outFileName, sizeof(outFileName));
+}
+
+/*----------------------------**
+** Write to FILE functions... **
+**----------------------------*/
+void write32(long i32)
+{
+	MIFFinsertChunkData(&i32, sizeof(long));
+}
+
+void write16(short i16)
+{
+	MIFFinsertChunkData(&i16, sizeof(short));
+}
+
+void write8(char i8)
+{
+	MIFFinsertChunkData(&i8, sizeof(char));
+}
+
+void writeU32(unsigned long ui32)
+{
+	MIFFinsertChunkData(&ui32, sizeof(long));
+}
+
+void writeU16(unsigned short ui16)
+{
+	MIFFinsertChunkData(&ui16, sizeof(short));
+}
+
+void writeU8(unsigned char ui8)
+{
+	MIFFinsertChunkData(&ui8, sizeof(char));
+}
+
+void writeDouble(double d)
+{
+	MIFFinsertChunkData(&d, sizeof(double));
+}
+
+void writeFloat(float f)
+{
+	MIFFinsertChunkData(&f, sizeof(float));
+}
+
+void writeString(char *s)
+{
+	char  tempS[MAX_STRING_SIZE];
+	parseESCstring(s, tempS, MAX_STRING_SIZE);
+
+	MIFFinsertChunkData(tempS, strlen(tempS));
+}
+
+void writeString16(char *s)
+{
+	char  tempS[MAX_STRING_SIZE];
+	int     charCount = 0;
+	wchar_t wtempStr[512];			/* just to be on the safe side, allocating huge array... */
+
+	parseESCstring(s, tempS, MAX_STRING_SIZE);
+
+	/* make sure string length is less then the allocated wchar size */
+	if ((strlen(tempS) * sizeof(wchar_t)) > (512* sizeof(wchar_t)))
+		yyerror("wstring: 16bit string too long to handle in buffer!\n");
+	else
+	{
+		/* call MultiByteString to WideCharString function */
+		charCount = mbstowcs(wtempStr, tempS, strlen(tempS));
+		writeData(wtempStr, charCount * sizeof(wchar_t));
+	}
+}
+
+void writeLabelHash(char *s)
+{
+	writeU32(MIFFgetLabelHash(s));
+}
+
+/* search from escape string such as \n and convert it to actual byte */
+void parseESCstring(char *str, char *targetBuffer, int sizeOfTarget)
+{
+	char  *sPtr = str;
+	int   strIndex = 0;
+	char  numString[32];  /* hopefully, never go over 3 char i.e. \x0FF */
+	int   numIndex = 0;
+	int   tempNum = 0;
+	int   exitParser = 0;
+	int   loopFlag = 0;
+
+	/* memory hog but cute way to convert ascii hex to number */
+	int   hexTable[256];
+	memset(hexTable, 0xFF, 256);
+	hexTable['0'] = 0x00;
+	hexTable['1'] = 0x01;
+	hexTable['2'] = 0x02;
+	hexTable['3'] = 0x03;
+	hexTable['4'] = 0x04;
+	hexTable['5'] = 0x05;
+	hexTable['6'] = 0x06;
+	hexTable['7'] = 0x07;
+	hexTable['8'] = 0x08;
+	hexTable['9'] = 0x09;
+	hexTable['A'] = 0x0A;		hexTable['a'] = 0x0A;
+	hexTable['B'] = 0x0B;		hexTable['b'] = 0x0B;
+	hexTable['C'] = 0x0C;		hexTable['c'] = 0x0C;
+	hexTable['D'] = 0x0D;		hexTable['d'] = 0x0D;
+	hexTable['E'] = 0x0E;		hexTable['e'] = 0x0E;
+	hexTable['F'] = 0x0F;		hexTable['f'] = 0x0F;
+
+	memset(targetBuffer, 0, sizeOfTarget);
+	while ((*sPtr) && !exitParser)		/* assume we can go until NULL termination */
+	{
+		/* check for escape sequences */
+		if (*sPtr == '\\')
+		{
+			sPtr++;  /* check out next character */
+			switch (tolower(*sPtr))
+			{
+				case 'a':   /* BELL */
+				{
+					targetBuffer[strIndex++] = '\a';
+					break;
+				}
+
+				case 'b':   /* BACKSPACE */
+				{
+					targetBuffer[strIndex++] = '\b';
+					break;
+				}
+
+				case 'f':   /* FORMFEED */
+				{
+					targetBuffer[strIndex++] = '\a';
+					break;
+				}
+
+				case 'n':   /* NEWLINE */
+				{
+					targetBuffer[strIndex++] = '\n';
+					break;
+				}
+
+				case 'r':   /* CARRIAGE RETURN */
+				{
+					targetBuffer[strIndex++] = '\r';
+					break;
+				}
+
+				case 't':   /* TAB */
+				{
+					targetBuffer[strIndex++] = '\t';
+					break;
+				}
+
+				case 'v':   /* VERTICAL TAB */
+				{
+					targetBuffer[strIndex++] = '\v';
+					break;
+				}
+
+				case '\'':   /* SINGLE QUOTE */
+				{
+					targetBuffer[strIndex++] = '\'';
+					break;
+				}
+
+				case '\"':   /* DOUBLE QUOTE */
+				{
+					targetBuffer[strIndex++] = '\"';
+					break;
+				}
+
+				case '\\':   /* BACKSLASH */
+				{
+					targetBuffer[strIndex++] = '\\';
+					break;
+				}
+
+				case '?':   /* LITERAL QUESTION MARK */
+				{
+					targetBuffer[strIndex++] = '\?';
+					break;
+				}
+
+				case '0':   /* ASCII octal */
+				case '1':   /* ASCII octal */
+				case '2':   /* ASCII octal */
+				case '3':   /* ASCII octal */
+				case '4':   /* ASCII octal */
+				case '5':   /* ASCII octal */
+				case '6':   /* ASCII octal */
+				case '7':   /* ASCII octal */
+				{
+					/* read until non-digit encountered - if octal value is greater then \377 (400 or more) it is bigger the 255! */
+					numIndex = 0;
+
+					while ((*sPtr >= '0') && (*sPtr <= '7') && (*sPtr))
+					{
+						numString[numIndex++] = *sPtr;
+						sPtr++;
+						if (numIndex > 3)
+						{
+							sprintf(err_msg, "Escape sequence Octal numbers greater then\noctal o400 (256 decimal)! [more then 3 digits]", *sPtr);
+							yyerror(err_msg);
+							exitParser = 1;
+						}
+					}
+
+					/* now we should have string of octal number in numString */
+					if (!exitParser)
+					{
+						if (numIndex == 3)
+							tempNum = (hexTable[numString[0]] * 64) + (hexTable[numString[1]] * 8) + hexTable[numString[2]];
+						else if (numIndex == 2)
+							tempNum = (hexTable[numString[0]] * 8) + hexTable[numString[1]];
+						else
+							tempNum = hexTable[numString[0]];
+
+						if (tempNum > 255)
+						{
+							sprintf(err_msg, "Escape sequence Octal numbers greater then\noctal o400 (256 decimal)!", tempNum);
+							yyerror(err_msg);
+							exitParser = 1;
+						}
+
+						if (!exitParser)
+							targetBuffer[strIndex++] = tempNum;
+					}
+					break;
+				}
+
+				case 'x':   /* ASCII hex */
+				{
+					/* we have to make sure the hex value is less then 256! */
+					numIndex = 0;
+					loopFlag = 1;
+					sPtr++;  /* skip the 'x' */
+
+					while ((0xFF != hexTable[*sPtr]) && (*sPtr))
+					{
+						numString[numIndex++] = *sPtr;
+						sPtr++;
+						if (numIndex > 3)
+						{
+							sprintf(err_msg, "Escape sequence HEX numbers greater then 0x100\n(256 decimal)! [more then 3 digits]", *sPtr);
+							yyerror(err_msg);
+							exitParser = 1;
+						}
+					}
+
+					if (!exitParser)
+					{
+						if (numIndex == 3)
+							tempNum = (hexTable[numString[0]] * 0x100) + (hexTable[numString[1]] * 0x10) + hexTable[numString[2]];
+						else if (numIndex == 2)
+							tempNum = (hexTable[numString[0]] * 0x10) + hexTable[numString[1]];
+						else
+							tempNum = hexTable[numString[0]];
+					}
+
+					if (tempNum > 255)
+					{
+						sprintf(err_msg, "Escape sequence HEX numbers greater then 0x100\n(256 decimal)!", *sPtr);
+						yyerror(err_msg);
+						exitParser = 1;
+					}
+
+					if (!exitParser)
+						targetBuffer[strIndex++] = tempNum;
+
+					break;
+				}
+
+				case '8':
+				case '9':
+				{
+					/* they tried to do octal mode, but 8 and 9 is not in the definition of octal */
+					yyerror("Attempted to enter escape sequence with non-octal value");
+					exitParser = 1;
+					break;
+				}
+
+				default:
+					sprintf(err_msg, "Unknown ESCape sequence \\%c found in string.\n", *sPtr);
+					yyerror(err_msg);
+					exitParser = 1;
+					break;
+			}
+		}
+		else
+			targetBuffer[strIndex++] = *sPtr;
+		sPtr++;
+	}
+}	
+
+
+void writeData(void *dataPtr, unsigned dataSize)
+{
+	MIFFinsertChunkData(dataPtr, dataSize);
+}
+
+
+/* NOTE: includeBinary modifies fsize for the caller to access for adjusting the chunk size */
+void includeBinary(char *fname)
+{
+	char	buffer[MAX_BUFFER_SIZE+1];
+	int		fsize = 0;
+
+	fsize = MIFFloadRawData(fname, buffer, MAX_BUFFER_SIZE);
+	MIFFinsertChunkData(buffer, fsize);
+}
+
+/*--------------------------------------------------------------------------------**
+** Following functions below are all used for constructing, adding, and searching **
+** the symbol table created by enum keyword.  It is at this moment, set in a way  **
+** that if two identical symbols are added to the list, it will use the first     **
+** symbol added to the list and ignores the rest (because of forward search)      **
+**--------------------------------------------------------------------------------*/
+void initSymTable(void)
+{
+	memset(symbolEnumTable, 0, sizeof(struct structEnumSymTableType) * MAX_SYMBOLS);
+	currSymIndex = 0;
+	lastValue = -1;
+}
+
+/* Searches thru the symbol table and returns the index */
+long searchEnumSymbolTable(char *symString)
+{
+	long index = 0;
+	int found = 0;
+	while ((0 != symbolEnumTable[index].symbol[0]) && !found)
+	{
+
+		if (0 == strcmp(symbolEnumTable[index].symbol, symString))
+		{
+			found = 1;
+			break;
+		}
+		else
+			index++;
+	}
+
+	if (!found)
+	{
+		index = -1;
+		sprintf(err_msg, "Undefined symbol %s", symString);
+		yyerror(err_msg);
+	}
+
+	return(index);
+}
+
+long getEnumValue(long index)
+{
+	if (index >= 0)
+		return(symbolEnumTable[index].value);
+	return(-1);
+}
+
+void addEnumSymbol(char *symString, long value)
+{
+	if (MAX_SYMCHARS < strlen(symString))
+	{
+		/* somebody insane decided to use variable longer then max size! */
+		sprintf(err_msg, "%s is longer then %d characters! [value: %d]", symString, MAX_SYMCHARS, value);
+		yyerror(err_msg);
+	}
+	else
+	{
+		strcpy(symbolEnumTable[currSymIndex].symbol, symString);
+		symbolEnumTable[currSymIndex].value = value;
+		lastValue = value;
+		currSymIndex++;
+		if (MAX_SYMBOLS < currSymIndex)
+		{
+			sprintf(err_msg, "Symbol table reached maximum size of %d", MAX_SYMBOLS);
+			yyerror(err_msg);
+		}
+	}
+}
