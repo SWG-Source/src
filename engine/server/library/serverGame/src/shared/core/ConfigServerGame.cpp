@@ -67,7 +67,7 @@ void ConfigServerGame::install(void)
 	KEY_BOOL    (profileScripts, false);
 	KEY_BOOL    (crashOnScriptError, false);
 	KEY_BOOL    (compileScripts, true);
-	KEY_BOOL    (trapScriptCrashes, false);
+	KEY_BOOL    (trapScriptCrashes, true);
 	KEY_INT     (scriptWatcherWarnTime, 5000);
 	KEY_INT     (scriptWatcherInterruptTime, 5000);
 	KEY_INT     (scriptStackErrorLimit, 35);

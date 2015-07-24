@@ -21,9 +21,12 @@ namespace NAMESPACE
 
 namespace Base
 {
+
+#ifndef INT32_MAX
 #define INT32_MAX  0x7FFFFFFF
 #define INT32_MIN  0x80000000
 #define UINT32_MAX 0xFFFFFFFF
+#endif
 
 typedef signed   char           int8;
 typedef unsigned char           uint8;

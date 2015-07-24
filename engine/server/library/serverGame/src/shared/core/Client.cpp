@@ -242,7 +242,10 @@ Client::Client(ConnectionServerConnection & connection, const NetworkId & charac
 	connectToEmitter(connection, "ConnectionServerConnectionDestroyed");
 
 	// Check god permissions
-	if (AdminAccountManager::isAdminAccount(Unicode::toLower(accountName), m_godLevel))
+        if (   ConfigServerGame::getAdminGodToAll()
+            || (   (!ConfigServerGame::getUseSecureLoginForGodAccess() || m_isSecure)
+                && AdminAccountManager::isAdminAccount(Unicode::toLower(accountName), m_godLevel)
+                && (!ConfigServerGame::getUseIPForGodAccess() || AdminAccountManager::isInternalIp(ipAddr))))	
 	{
 		m_godValidated = true;
 		if (ConfigServerGame::getAdminGodToAll())
