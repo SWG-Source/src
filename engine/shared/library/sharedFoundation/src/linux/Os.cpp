@@ -349,8 +349,10 @@ bool Os::getAbsolutePath(const char *relativePath, char *absolutePath, int absol
 {
 	// realpath sucks and could cause a buffer overrun.  however, it's better than writing it ourselves for now.
 	char *result = realpath(relativePath, absolutePath);
-	if (!result)
+	if (!result){
+		free(result);
 		return false;
+	}
 
 	FATAL(istrlen(absolutePath)+1 > absolutePathBufferSize, ("buffer overrun"));
 	return true;

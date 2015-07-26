@@ -27,7 +27,11 @@ public:
 
 	enum
 	{
+#ifdef PATH_MAX
+		MAX_PATH_LENGTH = PATH_MAX+1
+#else
 		MAX_PATH_LENGTH = 512
+#endif
 	};
 
 	typedef void (*QueueCharacterHookFunction)(int keyboard, int character);
