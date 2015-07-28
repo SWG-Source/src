@@ -320,6 +320,11 @@ void Loader::startLoadForServer(uint32 serverId)
 					
 					locators->pop_front();
 					--m_numQueuedLocators;
+
+					delete regularLocator;
+					delete goldLocator;
+					regularLocator = NULL;
+					goldLocator = NULL;
 				}
 
 				snapshot->setLoadSerialNumber(++m_loadSerialNumber);
@@ -651,6 +656,11 @@ void Loader::requestChunk(uint32 processId,int nodeX, int nodeZ, const std::stri
 	if (ConfigServerDatabase::getEnableGoldDatabase())
 		goldLocator = new ChunkLocator(nodeX, nodeZ, sceneId, processId, false);
 	addLocatorsForServer(processId, regularLocator, goldLocator);
+
+	delete regularLocator;
+	delete goldLocator;
+	regularLocator = NULL;
+	goldLocator = NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -931,6 +941,11 @@ void Loader::addLocatorsForServer(uint32 serverId, ObjectLocator * regularLocato
 
 	NON_NULL(i->second)->push_back(std::make_pair(regularLocator, goldLocator));
 	++m_numQueuedLocators;
+
+	delete regularLocator;
+	delete goldLocator;
+	regularLocator = NULL;
+	goldLocator = NULL;
 }
 
 // ----------------------------------------------------------------------
