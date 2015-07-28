@@ -96,7 +96,7 @@ addrList()
 				if (errno != EINVAL || lastReqSize != 0)
 				{
 					WARNING(true, ("Error getting interface list: %s", strerror(errno)));
-					delete buf;
+					delete[] buf;
 					return;
 				}
 			}

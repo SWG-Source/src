@@ -154,7 +154,7 @@ double evaluateQuarticDerivative ( double x, const double c[5] )
 	return ((4.0*x*c[4] + 3.0*c[3]) * x + 2.0*c[2]) * x + c[1];
 }
 
-double cleanQuarticRoot( double x, const double c[4] )
+double cleanQuarticRoot( double x, const double c[5] )
 {
 	double e;
 

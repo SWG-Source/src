@@ -323,26 +323,6 @@ void DataLint::report()
 					writeError(assetErrorFileAllWarning, *warningListIter, totalErrorCountAllWarning);
 				}
 			}
-
-			if (assetErrorFileAll) { fclose(assetErrorFileAll); }
-			if (assetErrorFileAllFatal) { fclose(assetErrorFileAllFatal); }
-			if (assetErrorFileAllWarning) { fclose(assetErrorFileAllWarning); }
-			if (assetErrorFileObjectTemplate) { fclose(assetErrorFileObjectTemplate); }
-
-			if (m_mode == M_client)
-			{
-				if (assetErrorFileAppearance) { fclose(assetErrorFileAppearance); }
-				if (assetErrorFileArrangementDescriptor) { fclose(assetErrorFileArrangementDescriptor); }
-				if (assetErrorFileLocalizedStringTable) { fclose(assetErrorFileLocalizedStringTable); }
-				if (assetErrorFilePortalProperty) { fclose(assetErrorFilePortalProperty); }
-				if (assetErrorFileShaderTemplate) { fclose(assetErrorFileShaderTemplate); }
-				if (assetErrorFileSkyBox) { fclose(assetErrorFileSkyBox); }
-				if (assetErrorFileSlotDescriptor) { fclose(assetErrorFileSlotDescriptor); }
-				if (assetErrorFileSoundTemplate) { fclose(assetErrorFileSoundTemplate); }
-				if (assetErrorFileTerrain) { fclose(assetErrorFileTerrain); }
-				if (assetErrorFileTexture) { fclose(assetErrorFileTexture); }
-				if (assetErrorFileTextureRenderer) { fclose(assetErrorFileTextureRenderer); }
-			}
 		}
 
 		// UnSupported Assets
@@ -410,6 +390,26 @@ void DataLint::report()
 			writeToCategorizedFile(fp, "Texture Renderer Templates", AT_textureRendererTemplate);
 
 			fclose(fp);
+		}
+
+		if (assetErrorFileAll) { fclose(assetErrorFileAll); }
+		if (assetErrorFileAllFatal) { fclose(assetErrorFileAllFatal); }
+		if (assetErrorFileAllWarning) { fclose(assetErrorFileAllWarning); }
+		if (assetErrorFileObjectTemplate) { fclose(assetErrorFileObjectTemplate); }
+
+		if (m_mode == M_client)
+		{
+			if (assetErrorFileAppearance) { fclose(assetErrorFileAppearance); }
+			if (assetErrorFileArrangementDescriptor) { fclose(assetErrorFileArrangementDescriptor); }
+			if (assetErrorFileLocalizedStringTable) { fclose(assetErrorFileLocalizedStringTable); }
+			if (assetErrorFilePortalProperty) { fclose(assetErrorFilePortalProperty); }
+			if (assetErrorFileShaderTemplate) { fclose(assetErrorFileShaderTemplate); }
+			if (assetErrorFileSkyBox) { fclose(assetErrorFileSkyBox); }
+			if (assetErrorFileSlotDescriptor) { fclose(assetErrorFileSlotDescriptor); }
+			if (assetErrorFileSoundTemplate) { fclose(assetErrorFileSoundTemplate); }
+			if (assetErrorFileTerrain) { fclose(assetErrorFileTerrain); }
+			if (assetErrorFileTexture) { fclose(assetErrorFileTexture); }
+			if (assetErrorFileTextureRenderer) { fclose(assetErrorFileTextureRenderer); }
 		}
 	}
 }
