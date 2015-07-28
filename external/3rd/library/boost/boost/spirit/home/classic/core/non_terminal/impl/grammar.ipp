@@ -15,7 +15,7 @@
 #include <boost/spirit/home/classic/core/non_terminal/impl/object_with_id.ipp>
 #include <algorithm>
 #include <functional>
-#include <memory> // for std::auto_ptr
+#include <memory> // for std::unique_ptr
 #include <boost/weak_ptr.hpp>
 #endif
 
@@ -155,7 +155,7 @@ struct grammar_definition
             if (definitions[id]!=0)
                 return *definitions[id];
 
-            std::auto_ptr<definition_t>
+            std::unique_ptr<definition_t>
                 result(new definition_t(target_grammar->derived()));
 
 #ifdef BOOST_SPIRIT_THREADSAFE

@@ -45,7 +45,7 @@ namespace detail
       template <class U>
       void dispatch(U* x, mpl::true_) const
       {
-          std::auto_ptr<U> owner(x);
+          std::unique_ptr<U> owner(x);
           dispatch(owner, mpl::false_());
       }
       

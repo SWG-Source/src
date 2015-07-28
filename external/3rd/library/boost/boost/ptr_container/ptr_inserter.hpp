@@ -75,7 +75,7 @@ namespace ptr_container
 
         template< class T >
         ptr_back_insert_iterator& 
-        operator=( std::auto_ptr<T> r )
+        operator=( std::unique_ptr<T> r )
         {
             container->push_back( r );
             return *this;
@@ -135,7 +135,7 @@ namespace ptr_container
 
         template< class T >
         ptr_front_insert_iterator& 
-        operator=( std::auto_ptr<T> r )
+        operator=( std::unique_ptr<T> r )
         {
             container->push_front( r );
             return *this;
@@ -196,7 +196,7 @@ namespace ptr_container
 
         template< class T >
         ptr_insert_iterator& 
-        operator=( std::auto_ptr<T> r )
+        operator=( std::unique_ptr<T> r )
         {
             iter = container->insert( iter, r );
             return *this;

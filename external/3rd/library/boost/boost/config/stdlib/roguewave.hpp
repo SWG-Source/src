@@ -78,7 +78,7 @@
 #endif
 
 //
-// Prior to version 2.0, std::auto_ptr was buggy, and there were no
+// Prior to version 2.0, std::unique_ptr was buggy, and there were no
 // new-style iostreams, and no conformant std::allocator:
 //
 #if (BOOST_RWSTD_VER < 0x020000)

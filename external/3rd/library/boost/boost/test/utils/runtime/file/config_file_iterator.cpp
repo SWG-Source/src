@@ -118,7 +118,7 @@ is_valid_identifier( cstring const& source )
 // ************************************************************************** //
 
 struct include_level;
-typedef std::auto_ptr<include_level> include_level_ptr;
+typedef std::unique_ptr<include_level> include_level_ptr;
 
 struct include_level : noncopyable
 {

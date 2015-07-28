@@ -116,10 +116,10 @@ public:
 protected:
     typedef detail::basic_charset<CharT> charset;
     typedef detail::ptr_list<charset> charset_list;
-    typedef std::auto_ptr<charset> charset_ptr;
+    typedef std::unique_ptr<charset> charset_ptr;
     typedef detail::equivset equivset;
     typedef detail::ptr_list<equivset> equivset_list;
-    typedef std::auto_ptr<equivset> equivset_ptr;
+    typedef std::unique_ptr<equivset> equivset_ptr;
     typedef typename charset::index_set index_set;
     typedef std::vector<index_set> index_set_vector;
     typedef detail::basic_parser<CharT> parser;
@@ -377,8 +377,8 @@ protected:
         if (followpos_->empty ()) return npos;
 
         std::size_t index_ = 0;
-        std::auto_ptr<node_set> set_ptr_ (new node_set);
-        std::auto_ptr<node_vector> vector_ptr_ (new node_vector);
+        std::unique_ptr<node_set> set_ptr_ (new node_set);
+        std::unique_ptr<node_vector> vector_ptr_ (new node_vector);
 
         for (typename detail::node::node_vector::const_iterator iter_ =
             followpos_->begin (), end_ = followpos_->end ();

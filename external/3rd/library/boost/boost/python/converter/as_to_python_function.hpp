@@ -27,15 +27,15 @@ struct as_to_python_function
         convert_function_must_take_value_or_const_reference(&ToPython::convert, 1L);
         
         // Yes, the const_cast below opens a hole in const-correctness,
-        // but it's needed to convert auto_ptr<U> to python.
+        // but it's needed to convert unique_ptr<U> to python.
         //
         // How big a hole is it?  It allows ToPython::convert() to be
         // a function which modifies its argument. The upshot is that
         // client converters applied to const objects may invoke
         // undefined behavior. The damage, however, is limited by the
         // use of the assertion function. Thus, the only way this can
-        // modify its argument is if T is an auto_ptr-like type. There
-        // is still a const-correctness hole w.r.t. auto_ptr<U> const,
+        // modify its argument is if T is an unique_ptr-like type. There
+        // is still a const-correctness hole w.r.t. unique_ptr<U> const,
         // but c'est la vie.
         return ToPython::convert(*const_cast<T*>(static_cast<T const*>(x)));
     }

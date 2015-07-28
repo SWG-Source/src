@@ -441,7 +441,7 @@ load_impl(Archiver& ar, boost::python::object& obj,
   int len;
   ar >> len;
 
-  std::auto_ptr<char> string(new char[len]);
+  std::unique_ptr<char> string(new char[len]);
   ar >> boost::serialization::make_array(string.get(), len);
   boost::python::str py_string(string.get(), len);
   obj = boost::python::pickle::loads(py_string);

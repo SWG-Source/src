@@ -100,7 +100,7 @@ namespace boost
                                         static_cast<const T*>( &r[i] ) ); 
         }
 
-        explicit ptr_array( std::auto_ptr<this_type> r )
+        explicit ptr_array( std::unique_ptr<this_type> r )
         : base_class( r ) { }
 
         ptr_array& operator=( ptr_array r )
@@ -109,22 +109,22 @@ namespace boost
             return *this;            
         }
 
-        ptr_array& operator=( std::auto_ptr<this_type> r )
+        ptr_array& operator=( std::unique_ptr<this_type> r )
         {
             base_class::operator=(r);
             return *this;
         }
 
-        std::auto_ptr<this_type> release()
+        std::unique_ptr<this_type> release()
         {
-            std::auto_ptr<this_type> ptr( new this_type );
+            std::unique_ptr<this_type> ptr( new this_type );
             this->swap( *ptr );
             return ptr;
         }
 
-        std::auto_ptr<this_type> clone() const
+        std::unique_ptr<this_type> clone() const
         {
-            std::auto_ptr<this_type> pa( new this_type );
+            std::unique_ptr<this_type> pa( new this_type );
             for( size_t i = 0; i != N; ++i )
             {
                 if( ! is_null(i) )
@@ -158,7 +158,7 @@ namespace boost
         }
 
         template< size_t idx, class V >
-        auto_type replace( std::auto_ptr<V> r )
+        auto_type replace( std::unique_ptr<V> r )
         {
             return replace<idx>( r.release() );
         }
@@ -178,7 +178,7 @@ namespace boost
         }
 
         template< class V >
-        auto_type replace( size_t idx, std::auto_ptr<V> r )
+        auto_type replace( size_t idx, std::unique_ptr<V> r )
         {
             return replace( idx, r.release() );
         }

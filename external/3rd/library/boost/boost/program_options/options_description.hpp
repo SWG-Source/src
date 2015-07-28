@@ -51,7 +51,7 @@ namespace program_options {
 
         /** Initializes the object with the passed data.
 
-            Note: it would be nice to make the second parameter auto_ptr,
+            Note: it would be nice to make the second parameter unique_ptr,
             to explicitly pass ownership. Unfortunately, it's often needed to
             create objects of types derived from 'value_semantic':
                options_description d;
@@ -59,7 +59,7 @@ namespace program_options {
             Here, the static type returned by 'parameter' should be derived
             from value_semantic.
 
-            Alas, derived->base conversion for auto_ptr does not really work,
+            Alas, derived->base conversion for unique_ptr does not really work,
             see
             http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2000/n1232.pdf
             http://www.open-std.org/jtc1/sc22/wg21/docs/cwg_defects.html#84

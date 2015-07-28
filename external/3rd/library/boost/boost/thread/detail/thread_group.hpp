@@ -75,7 +75,7 @@ namespace boost
         thread* create_thread(F threadfunc)
         {
             boost::lock_guard<shared_mutex> guard(m);
-            std::auto_ptr<thread> new_thread(new thread(threadfunc));
+            std::unique_ptr<thread> new_thread(new thread(threadfunc));
             threads.push_back(new_thread.get());
             return new_thread.release();
         }

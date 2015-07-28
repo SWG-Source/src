@@ -224,7 +224,7 @@ void ProxyFilter::SetFilter(Filter *filter)
 	m_filter.reset(filter);
 	if (filter)
 	{
-		std::auto_ptr<OutputProxy> temp(m_proxy = new OutputProxy(*this, passSignal));
+		std::unique_ptr<OutputProxy> temp(m_proxy = new OutputProxy(*this, passSignal));
 		m_filter->TransferAllTo(*m_proxy);
 		m_filter->Attach(temp.release());
 	}

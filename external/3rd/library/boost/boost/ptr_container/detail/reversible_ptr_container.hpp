@@ -338,7 +338,7 @@ namespace ptr_container_detail
         { }
         
         template< class PtrContainer >
-        explicit reversible_ptr_container( std::auto_ptr<PtrContainer> clone )                
+        explicit reversible_ptr_container( std::unique_ptr<PtrContainer> clone )                
         { 
             swap( *clone ); 
         }
@@ -355,7 +355,7 @@ namespace ptr_container_detail
         }
 
         template< class PtrContainer >
-        reversible_ptr_container& operator=( std::auto_ptr<PtrContainer> clone ) // nothrow
+        reversible_ptr_container& operator=( std::unique_ptr<PtrContainer> clone ) // nothrow
         {
             swap( *clone );
             return *this;
@@ -569,7 +569,7 @@ namespace ptr_container_detail
         }
 
         template< class U >
-        iterator insert( iterator before, std::auto_ptr<U> x )
+        iterator insert( iterator before, std::unique_ptr<U> x )
         {
             return insert( before, x.release() );
         }
@@ -633,7 +633,7 @@ namespace ptr_container_detail
         }
 
         template< class U >
-        auto_type replace( iterator where, std::auto_ptr<U> x )
+        auto_type replace( iterator where, std::unique_ptr<U> x )
         {
             return replace( where, x.release() ); 
         }
@@ -653,7 +653,7 @@ namespace ptr_container_detail
         } 
 
         template< class U >
-        auto_type replace( size_type idx, std::auto_ptr<U> x )
+        auto_type replace( size_type idx, std::unique_ptr<U> x )
         {
             return replace( idx, x.release() );
         }
@@ -678,26 +678,26 @@ namespace ptr_container_detail
     // is buggy on most compilers, so we use a macro instead
     //
 #define BOOST_PTR_CONTAINER_DEFINE_RELEASE_AND_CLONE( PC, base_type, this_type ) \
-    explicit PC( std::auto_ptr<this_type> r )       \
+    explicit PC( std::unique_ptr<this_type> r )       \
     : base_type ( r ) { }                           \
                                                     \
-    PC& operator=( std::auto_ptr<this_type> r )     \
+    PC& operator=( std::unique_ptr<this_type> r )     \
     {                                               \
         base_type::operator=( r );                  \
         return *this;                               \
     }                                               \
                                                     \
-    std::auto_ptr<this_type> release()              \
+    std::unique_ptr<this_type> release()              \
     {                                               \
-      std::auto_ptr<this_type> ptr( new this_type );\
+      std::unique_ptr<this_type> ptr( new this_type );\
       this->swap( *ptr );                           \
       return ptr;                                   \
     }                                               \
     BOOST_PTR_CONTAINER_DEFINE_RELEASE( base_type ) \
                                                     \
-    std::auto_ptr<this_type> clone() const          \
+    std::unique_ptr<this_type> clone() const          \
     {                                               \
-       return std::auto_ptr<this_type>( new this_type( this->begin(), this->end() ) ); \
+       return std::unique_ptr<this_type>( new this_type( this->begin(), this->end() ) ); \
     }
 
 #define BOOST_PTR_CONTAINER_DEFINE_COPY_CONSTRUCTORS( PC, base_type ) \

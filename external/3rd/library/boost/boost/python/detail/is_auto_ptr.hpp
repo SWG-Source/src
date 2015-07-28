@@ -14,12 +14,12 @@ namespace boost { namespace python { namespace detail {
 
 # if !defined(BOOST_NO_AUTO_PTR)
 
-BOOST_PYTHON_IS_XXX_DEF(auto_ptr, std::auto_ptr, 1)
+BOOST_PYTHON_IS_XXX_DEF(unique_ptr, std::unique_ptr, 1)
 
 # else
 
 template <class T>
-struct is_auto_ptr : mpl::false_
+struct is_unique_ptr : mpl::false_
 {
 };
 

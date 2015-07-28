@@ -20,7 +20,7 @@
 #include <boost/detail/atomic_count.hpp>
 
 #ifndef BOOST_NO_AUTO_PTR
-# include <memory>          // for std::auto_ptr
+# include <memory>          // for std::unique_ptr
 #endif
 
 #include <algorithm>        // for std::swap
@@ -91,13 +91,13 @@ public:
 
 #ifndef BOOST_NO_AUTO_PTR
 
-    explicit shared_ptr(std::auto_ptr< T > & r)
+    explicit shared_ptr(std::unique_ptr< T > & r)
     { 
         pn = new count_type(1); // may throw
         px = r.release(); // fix: moved here to stop leak if new throws
     } 
 
-    shared_ptr & operator=(std::auto_ptr< T > & r)
+    shared_ptr & operator=(std::unique_ptr< T > & r)
     {
         shared_ptr(r).swap(*this);
         return *this;

@@ -294,7 +294,7 @@ namespace boost
         }
 
         template< class U >
-        void push_back( std::auto_ptr<U> ptr ) // nothrow
+        void push_back( std::unique_ptr<U> ptr ) // nothrow
         {
             push_back( ptr.release() ); 
         }
@@ -311,7 +311,7 @@ namespace boost
         }
 
         template< class U >
-        void push_front( std::auto_ptr<U> ptr ) // nothrow
+        void push_front( std::unique_ptr<U> ptr ) // nothrow
         {
             push_front( ptr.release() ); 
         }
@@ -335,7 +335,7 @@ namespace boost
         }
 
         template< class U >
-        iterator insert( iterator pos, std::auto_ptr<U> ptr ) // nothrow
+        iterator insert( iterator pos, std::unique_ptr<U> ptr ) // nothrow
         {
             return insert( pos, ptr.release() );
         }
@@ -378,7 +378,7 @@ namespace boost
         }
 
         template< class U >
-        iterator rinsert( iterator pos, std::auto_ptr<U> ptr ) // nothrow
+        iterator rinsert( iterator pos, std::unique_ptr<U> ptr ) // nothrow
         {
             return rinsert( pos, ptr.release() );
         }

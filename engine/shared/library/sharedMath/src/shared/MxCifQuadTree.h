@@ -83,7 +83,7 @@ private:
 		MxCifBinTree * m_left;  // left child
 		MxCifBinTree * m_right; // right child
 
-		// @todo: use an auto_ptr here?
+		// @todo: use an unique_ptr here?
 		std::vector<const MxCifQuadTreeBounds *> m_objects;   // objects that are contained in our bounds
 	};
 

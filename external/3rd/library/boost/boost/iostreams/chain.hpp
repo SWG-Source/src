@@ -17,7 +17,7 @@
 #include <functional>                           // unary_function.
 #include <iterator>                             // advance.
 #include <list>
-#include <memory>                               // allocator, auto_ptr.
+#include <memory>                               // allocator, unique_ptr.
 #include <typeinfo>
 #include <stdexcept>                            // logic_error, out_of_range.
 #include <boost/checked_delete.hpp>
@@ -253,7 +253,7 @@ private:
             pback_size != -1 ?
                 pback_size :
                 pimpl_->pback_size_;
-        std::auto_ptr<streambuf_t>
+        std::unique_ptr<streambuf_t>
             buf(new streambuf_t(t, buffer_size, pback_size));
         list().push_back(buf.get());
         buf.release();

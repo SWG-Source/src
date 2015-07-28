@@ -81,13 +81,13 @@ namespace detail
       template <class T>
       static PyObject* execute(T* p)
       {
-          // can't use auto_ptr with Intel 5 and VC6 Dinkum library
-          // for some reason. We get link errors against the auto_ptr
+          // can't use unique_ptr with Intel 5 and VC6 Dinkum library
+          // for some reason. We get link errors against the unique_ptr
           // copy constructor.
 # if defined(__ICL) && __ICL < 600 
           typedef boost::shared_ptr<T> smart_pointer;
 # else 
-          typedef std::auto_ptr<T> smart_pointer;
+          typedef std::unique_ptr<T> smart_pointer;
 # endif
           typedef objects::pointer_holder<smart_pointer, T> holder_t;
 

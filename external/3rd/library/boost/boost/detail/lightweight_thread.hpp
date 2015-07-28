@@ -77,7 +77,7 @@ public:
 
 extern "C" void * lw_thread_routine( void * pv )
 {
-    std::auto_ptr<lw_abstract_thread> pt( static_cast<lw_abstract_thread *>( pv ) );
+    std::unique_ptr<lw_abstract_thread> pt( static_cast<lw_abstract_thread *>( pv ) );
 
     pt->run();
 
@@ -88,7 +88,7 @@ extern "C" void * lw_thread_routine( void * pv )
 
 unsigned __stdcall lw_thread_routine( void * pv )
 {
-    std::auto_ptr<lw_abstract_thread> pt( static_cast<lw_abstract_thread *>( pv ) );
+    std::unique_ptr<lw_abstract_thread> pt( static_cast<lw_abstract_thread *>( pv ) );
 
     pt->run();
 
@@ -117,7 +117,7 @@ private:
 
 template<class F> int lw_thread_create( pthread_t & pt, F f )
 {
-    std::auto_ptr<lw_abstract_thread> p( new lw_thread_impl<F>( f ) );
+    std::unique_ptr<lw_abstract_thread> p( new lw_thread_impl<F>( f ) );
 
     int r = pthread_create( &pt, 0, lw_thread_routine, p.get() );
 

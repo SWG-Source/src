@@ -220,7 +220,7 @@ namespace ptr_container_detail
         { }
         
         template< class PtrContainer >
-        explicit ptr_sequence_adapter( std::auto_ptr<PtrContainer> clone )
+        explicit ptr_sequence_adapter( std::unique_ptr<PtrContainer> clone )
           : base_type( clone )
         { }
 
@@ -231,7 +231,7 @@ namespace ptr_container_detail
         }
         
         template< class PtrContainer >
-        ptr_sequence_adapter& operator=( std::auto_ptr<PtrContainer> clone )    
+        ptr_sequence_adapter& operator=( std::unique_ptr<PtrContainer> clone )    
         {
             base_type::operator=( clone );
             return *this;
@@ -251,7 +251,7 @@ namespace ptr_container_detail
         }
 
         template< class U >
-        void push_back( std::auto_ptr<U> x )
+        void push_back( std::unique_ptr<U> x )
         {
             push_back( x.release() );
         }
@@ -266,7 +266,7 @@ namespace ptr_container_detail
         }
 
         template< class U >
-        void push_front( std::auto_ptr<U> x )
+        void push_front( std::unique_ptr<U> x )
         {
             push_front( x.release() );
         }

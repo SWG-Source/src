@@ -47,7 +47,7 @@ namespace assign_detail
     {
     protected:
         typedef boost::ptr_vector<T>       impl_type;
-        typedef std::auto_ptr<impl_type>   release_type;
+        typedef std::unique_ptr<impl_type>   release_type;
         mutable impl_type                  values_;
         
     public:
@@ -92,9 +92,9 @@ namespace assign_detail
         }
 
         template< class PtrContainer >
-        std::auto_ptr<PtrContainer> convert( const PtrContainer* c ) const
+        std::unique_ptr<PtrContainer> convert( const PtrContainer* c ) const
         {
-            std::auto_ptr<PtrContainer> res( new PtrContainer() );
+            std::unique_ptr<PtrContainer> res( new PtrContainer() );
             while( !empty() )
                 res->insert( res->end(), 
                              values_.pop_back().release() );
@@ -102,7 +102,7 @@ namespace assign_detail
         }
 
         template< class PtrContainer >
-        std::auto_ptr<PtrContainer> to_container( const PtrContainer& c ) const
+        std::unique_ptr<PtrContainer> to_container( const PtrContainer& c ) const
         {
             return convert( &c ); 
         }

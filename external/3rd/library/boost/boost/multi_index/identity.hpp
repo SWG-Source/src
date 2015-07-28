@@ -39,7 +39,7 @@ namespace detail{
  * mean a  type  P such that, given a p of type P
  *   *...n...*x is convertible to Type&, for some n>=1.
  * Examples of chained pointers are raw and smart pointers, iterators and
- * arbitrary combinations of these (vg. Type** or auto_ptr<Type*>.)
+ * arbitrary combinations of these (vg. Type** or unique_ptr<Type*>.)
  */
 
 template<typename Type>

@@ -164,7 +164,7 @@ struct py_function
     }
     
  private:
-    mutable std::auto_ptr<py_function_impl_base> m_impl;
+    mutable std::unique_ptr<py_function_impl_base> m_impl;
 };
 
 }}} // namespace boost::python::objects

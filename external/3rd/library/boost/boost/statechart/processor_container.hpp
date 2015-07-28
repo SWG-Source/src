@@ -24,7 +24,7 @@
 #include <boost/detail/allocator_utilities.hpp>
 
 #include <set>
-#include <memory>   // std::allocator, std::auto_ptr
+#include <memory>   // std::allocator, std::unique_ptr
 
 
 
@@ -64,7 +64,7 @@ template<
 class processor_container : noncopyable
 {
   typedef event_processor< Scheduler > processor_base_type;
-  typedef std::auto_ptr< processor_base_type > processor_holder_type;
+  typedef std::unique_ptr< processor_base_type > processor_holder_type;
   typedef shared_ptr< processor_holder_type > processor_holder_ptr_type;
 
   public:

@@ -31,7 +31,7 @@
 #include <boost/detail/quick_allocator.hpp>
 #endif
 
-#include <memory>           // std::auto_ptr, std::allocator
+#include <memory>           // std::unique_ptr, std::allocator
 #include <functional>       // std::less
 #include <exception>        // std::exception
 #include <new>              // std::bad_alloc
@@ -365,10 +365,10 @@ public:
 
 #ifndef BOOST_NO_AUTO_PTR
 
-    // auto_ptr<Y> is special cased to provide the strong guarantee
+    // unique_ptr<Y> is special cased to provide the strong guarantee
 
     template<class Y>
-    explicit shared_count(std::auto_ptr<Y> & r): pi_(
+    explicit shared_count(std::unique_ptr<Y> & r): pi_(
         new sp_counted_base_impl<
             Y *, 
             boost::checked_deleter<Y>

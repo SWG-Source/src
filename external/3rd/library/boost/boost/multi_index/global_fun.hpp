@@ -43,7 +43,7 @@ namespace detail{
  * pointer to T we  mean a type P such that, given a p of Type P
  *   *...n...*x is convertible to T&, for some n>=1.
  * Examples of chained pointers are raw and smart pointers, iterators and
- * arbitrary combinations of these (vg. T** or auto_ptr<T*>.)
+ * arbitrary combinations of these (vg. T** or unique_ptr<T*>.)
  */
 
 template<class Value,typename Type,Type (*PtrToFunction)(Value)>

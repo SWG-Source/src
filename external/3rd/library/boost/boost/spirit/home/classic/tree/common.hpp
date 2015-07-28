@@ -615,7 +615,7 @@ public:
     tree_match(tree_match const& x)
     : match<T>(x), trees()
     {
-        // use auto_ptr like ownership for the trees data member
+        // use unique_ptr like ownership for the trees data member
         impl::cp_swap(trees, x.trees);
     }
 
@@ -1552,7 +1552,7 @@ struct tree_parse_info
         using boost::swap;
         using BOOST_SPIRIT_CLASSIC_NS::swap;
 
-        // use auto_ptr like ownership for the trees data member
+        // use unique_ptr like ownership for the trees data member
         swap(trees, pi.trees);
     }
 
@@ -1572,7 +1572,7 @@ struct tree_parse_info
         using boost::swap;
         using BOOST_SPIRIT_CLASSIC_NS::swap;
 
-        // use auto_ptr like ownership for the trees data member
+        // use unique_ptr like ownership for the trees data member
         swap(trees, trees_);
     }
 };

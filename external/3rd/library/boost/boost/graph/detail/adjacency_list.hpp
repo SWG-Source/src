@@ -281,9 +281,9 @@ namespace boost {
     protected:
       // Holding the property by-value causes edge-descriptor
       // invalidation for add_edge() with EdgeList=vecS. Instead we
-      // hold a pointer to the property. std::auto_ptr is not
+      // hold a pointer to the property. std::unique_ptr is not
       // a perfect fit for the job, but it is darn close.
-      std::auto_ptr<Property> m_property;
+      std::unique_ptr<Property> m_property;
     };
 #else
     template <class Vertex, class Property>

@@ -471,14 +471,14 @@ unsigned int PK_FixedLengthDecryptor::Decrypt(const byte *cipherText, unsigned i
 
 void PK_Signer::SignMessage(RandomNumberGenerator &rng, const byte *message, unsigned int messageLen, byte *signature) const
 {
-	std::auto_ptr<HashModule> accumulator(NewMessageAccumulator());
+	std::unique_ptr<HashModule> accumulator(NewMessageAccumulator());
 	accumulator->Update(message, messageLen);
 	Sign(rng, accumulator.release(), signature);
 }
 
 bool PK_Verifier::VerifyMessage(const byte *message, unsigned int messageLen, const byte *sig) const
 {
-	std::auto_ptr<HashModule> accumulator(NewMessageAccumulator());
+	std::unique_ptr<HashModule> accumulator(NewMessageAccumulator());
 	accumulator->Update(message, messageLen);
 	return Verify(accumulator.release(), sig);
 }
