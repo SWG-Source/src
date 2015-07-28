@@ -180,8 +180,8 @@ void TemplateDefinitionFile::writeTemplateId(File &fp) const
 void TemplateDefinitionFile::writeClassHeaderBegin(File &fp) const
 {
 	const char * name = getTemplateName().c_str();
-	const char * baseName = getBaseName();
-	baseName = baseName.c_str();
+	std::string bn = getBaseName();
+	const char * baseName = bn.c_str();
 	const char * baseNamePath = "";
 	if (baseName[0] == '\0' && m_templateLocation != LOC_NONE)
 	{
