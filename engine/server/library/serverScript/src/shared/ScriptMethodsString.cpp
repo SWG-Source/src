@@ -100,11 +100,12 @@ jstring JNICALL ScriptMethodsStringNamespace::getString(JNIEnv *env, jobject sel
 		JavaString result(localized);
 		return result.getReturnValue();
 	}
+#ifdef DEBUG
 	else
 	{
 		WARNING(true, ("JavaLibrary::log failed to localize the stringId(%s, %s)", table.c_str(), asciiId.c_str()));
 	}
-
+#endif
 	return 0;
 
 }	// JavaLibrary::getString
