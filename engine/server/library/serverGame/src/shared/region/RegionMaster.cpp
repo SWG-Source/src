@@ -31,7 +31,7 @@
 #include "serverScript/ScriptParameters.h"
 #include "sharedUtility/DataTable.h"
 #include "sharedUtility/DataTableManager.h"
-#include <hash_set>
+#include <unordered_set>
 #include <map>
 #include <vector>
 
