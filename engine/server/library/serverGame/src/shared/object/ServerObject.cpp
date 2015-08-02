@@ -1980,7 +1980,9 @@ void ServerObject::endBaselines()
 		{
 			FATAL(ConfigServerGame::getFatalOnGoldPobChange() && getCacheVersion() != 0, 
 				("Object %s is a client cached object and the POB changed from [%d] to [%d]", getNetworkId().getValueString().c_str(), crcValue, portalProperty->getCrc()));
+#ifdef DEBUG
 			WARNING(getCacheVersion() != 0, ("Object %s is a client cached object and the POB changed from [%d] to [%d]", getNetworkId().getValueString().c_str(), crcValue, portalProperty->getCrc()));
+#endif
 			if (isAuthoritative())
 				setCacheVersion(0);
 		}
