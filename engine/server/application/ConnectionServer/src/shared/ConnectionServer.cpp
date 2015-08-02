@@ -1218,7 +1218,7 @@ void ConnectionServer::setupConnections()
 	NetworkSetupData setup;
 	setup.port = ConfigConnectionServer::getGameServicePort();
 	setup.bindInterface = ConfigConnectionServer::getGameServiceBindInterface();
-	setup.maxConnections = 100;
+	setup.maxConnections = 1000;
 
 	gameService = new Service(ConnectionAllocator<GameConnection>(), setup);
 	connectToMessage("GameConnectionOpened");

@@ -31,24 +31,19 @@ find_package(ZLIB REQUIRED)
 
 if(WIN32)
 	find_package(Iconv REQUIRED)
+ 	#Dont-Build-PDB RELEASE build use the following (by either commenting---uncommenting the line as needed)
+ 	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} /NODEFAULTLIB:libc.lib /SAFESEH:NO")
 
-	#Do-Build-PDB RELEASE build use the following (by either commenting---uncommenting the line as needed)
-	#add -> /OPT:REF /OPT:ICF (if you want to limit what is in the pdb files)
-	#set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} /DEBUG /NODEFAULTLIB:libc.lib /SAFESEH:NO")
-	#Dont-Build-PDB RELEASE build use the following (by either commenting---uncommenting the line as needed)
-	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} /NODEFAULTLIB:libc.lib /SAFESEH:NO")
-
+	####################################
+ 	#Do-Build-PDB RELEASE build use the following (by either commenting---uncommenting the line as needed)
+	#set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DWIN32 -Dwin32 -DUDP_LIBRARY -DDEBUG_LEVEL=0 -DPRODUCTION=1 /Oi /Ot /Oy /O2 /GF /Gy /Zi /MT -D_USE_32BIT_TIME_T=1 -D_MBCS -DPLATFORM_BASE_SINGLE_THREAD -D_CRT_SECURE_NO_WARNINGS /MP /wd4244 /wd4996 /wd4018 /wd4351 /Zc:wchar_t- /Ob1 /FC")
+ 	#Dont-Build-PDB RELEASE build use the following (by either commenting---uncommenting the line as needed)
+	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DWIN32 -Dwin32 -DUDP_LIBRARY -DDEBUG_LEVEL=0 -DPRODUCTION=1 /Oi /Ot /Oy /O2 /GF /Gy /MT -D_USE_32BIT_TIME_T=1 -D_MBCS -DPLATFORM_BASE_SINGLE_THREAD -D_CRT_SECURE_NO_WARNINGS /MP /wd4244 /wd4996 /wd4018 /wd4351 /Zc:wchar_t- /Ob1 /FC")
+ 
+	####################################
 	#Standard DEBUG build use the following	(by either commenting---uncommenting the line as needed)
-	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG -DDEBUG_LEVEL=2 -DPRODUCTION=0 /MTd")
-
-	#Do-Build-PDB RELEASE build use the following (by either commenting---uncommenting the line as needed)
-	#set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DDEBUG_LEVEL=0 -DPRODUCTION=1 /Oi /Ot /Oy /O2 /GF /Gy /Zi /MT")
-	#Dont-Build-PDB RELEASE build use the following (by either commenting---uncommenting the line as needed)
-	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DDEBUG_LEVEL=0 -DPRODUCTION=1 /Oi /Ot /Oy /O2 /GF /Gy /MT")
-
-	#Standard add_definitions as follows
-	add_definitions(-DWIN32 -Dwin32 -D_USE_32BIT_TIME_T=1 -D_MBCS -DPLATFORM_BASE_SINGLE_THREAD -D_CRT_SECURE_NO_WARNINGS /MP /wd4244 /wd4996 /wd4018 /wd4351 /Zc:wchar_t- /Ob1 /FC)
-
+	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DWIN32 -Dwin32 -D_DEBUG -DUDP_LIBRARY -DDEBUG_LEVEL=2 -DPRODUCTION=0 /MTd -D_USE_32BIT_TIME_T=1 -D_MBCS -DPLATFORM_BASE_SINGLE_THREAD -D_CRT_SECURE_NO_WARNINGS /MP /wd4244 /wd4996 /wd4018 /wd4351 /Zc:wchar_t- /Ob1 /FC")
+ 
 elseif(UNIX)
 	find_package(Curses REQUIRED)
 

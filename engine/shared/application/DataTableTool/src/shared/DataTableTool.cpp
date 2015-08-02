@@ -107,7 +107,7 @@ int main(int argc, char **argv)
 		data.argc  = argc;
 		data.argv  = argv;
 #if defined(PLATFORM_WIN32)
-		data.demoMode = true;
+		data.demoMode = false;
 #endif
 //Remove need for tools.cfg.  You should include the path directly.  This fixes the annoying warning that desigers get.
 //		data.configFile = "tools.cfg";

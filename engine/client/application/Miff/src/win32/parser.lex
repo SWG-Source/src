@@ -351,7 +351,7 @@ static char	*MIFFInputStream;
 int			column = 0;
 int			line_num = 1;
 int			line_num2 = 1;
-char		error_line_buffer[4096];
+char		error_line_buffer[256];
 long		brace_counter = 0;
 
 

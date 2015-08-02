@@ -59,7 +59,7 @@ void PreloadManager::handlePreloadList()
 	m_listReceived=true;
 
 	WARNING(ConfigPlanetServer::getLoadWholePlanet() && ConfigPlanetServer::getLoadWholePlanetMultiserver(),("You have specified both loadWholePlanet and loadWholePlanetMultiserver.  LoadWholePlanet (single-server) will take precedence."));
-	
+
 	if (ConfigPlanetServer::getLoadWholePlanet() || PlanetServer::getInstance().isInSpaceMode() || !PlanetServer::getInstance().getEnablePreload())
 	{
 		// Set up a single server to handle the whole planet
@@ -71,103 +71,66 @@ void PreloadManager::handlePreloadList()
 		fakeBeacon.m_cityServerId = 1;
 		fakeBeacon.m_wildernessServerId = 1;
 
-		m_preloadList->clear();
+		//m_preloadList->clear();
 		m_preloadList->push_back(fakeBeacon);
-		
+
 		m_serversWaiting->insert(1);
+
 		PreloadServerInformation & psi = (*m_serverMap)[1];
 		psi.m_actualServerId = 0;
 		psi.m_timeLoadStarted = time(0);
 		psi.m_loadTime = -1;
+
 	}
-	// WTF is this ... the tutorial planet bypasses the preload multiserver setting in favor of this pie slice algorithm
-	// We should not need this anymore with the NPE tutorial
-	// NPE will use the preload tables for multiserver and the 'NewbieTutorial' manager for placing the tutotial instances 
-	/*
-	else if(PlanetServer::getInstance().isInTutorialMode())
+	if (PlanetServer::getInstance().getEnablePreload())
 	{
-		m_preloadList->clear();
+		DataTable * data = DataTableManager::getTable(ConfigPlanetServer::getPreloadDataTableName(),true);
+		FATAL(data==NULL,("Could not find data table %s, needed for preload",ConfigPlanetServer::getPreloadDataTableName()));
 
-		int n=ConfigPlanetServer::getNumTutorialServers();
-		if ((ConfigPlanetServer::getMaxGameServers() != 0) && (n > ConfigPlanetServer::getMaxGameServers()))
-			n=ConfigPlanetServer::getMaxGameServers();
-		for (int i=0 ; i<n; ++i)
+		int numRows = data->getNumRows();
+		for (int row=0; row<numRows; ++row)
 		{
-			float angle = PI_TIMES_2 * (static_cast<float>(i)/static_cast<float>(n));
-
-			// Make a circle of load beacons.  The effect will be to divide the map into wedges
-			PreloadListData fakeBeacon;
-			fakeBeacon.m_topLeftChunkX = Node::roundToNode(static_cast<int>(cos(angle) * 1000.0f));
-			fakeBeacon.m_topLeftChunkZ = Node::roundToNode(static_cast<int>(sin(angle) * 1000.0f));
-			fakeBeacon.m_bottomRightChunkX = fakeBeacon.m_topLeftChunkX + Node::getNodeSize();
-			fakeBeacon.m_bottomRightChunkZ = fakeBeacon.m_topLeftChunkZ + Node::getNodeSize();
-			fakeBeacon.m_cityServerId = i+1;
-			fakeBeacon.m_wildernessServerId = i+1;
-
-			DEBUG_REPORT_LOG(true,("Loadbeacon at %i, %i\n",fakeBeacon.m_topLeftChunkX, fakeBeacon.m_topLeftChunkZ));
-			
-			m_preloadList->push_back(fakeBeacon);
-			PreloadServerInformation & psi = (*m_serverMap)[i+1];
-			psi.m_actualServerId = 0;
-			psi.m_timeLoadStarted = time(0);
-			psi.m_loadTime = -1;
-			m_serversWaiting->insert(i+1);
-		}
-	}*/
-	else
-	{
-		if (PlanetServer::getInstance().getEnablePreload())
-		{
-			DataTable * data = DataTableManager::getTable(ConfigPlanetServer::getPreloadDataTableName(),true);
-			FATAL(data==NULL,("Could not find data table %s, needed for preload",ConfigPlanetServer::getPreloadDataTableName()));
-			
-			int numRows = data->getNumRows();
-			for (int row=0; row<numRows; ++row)
+			if (data->getStringValue("Scene",row)==Scene::getInstance().getSceneId())
 			{
-				if (data->getStringValue("Scene",row)==Scene::getInstance().getSceneId())
-				{
-					PreloadListData item;
-					item.m_topLeftChunkX=data->getIntValue("Top Left Chunk X",row);
-					item.m_topLeftChunkZ=data->getIntValue("Top Left Chunk Z",row);
-					item.m_bottomRightChunkX=data->getIntValue("Bottom Right Chunk X",row);
-					item.m_bottomRightChunkZ=data->getIntValue("Bottom Right Chunk Z",row);
-					item.m_cityServerId=data->getIntValue("City Server Id",row);
-					item.m_wildernessServerId=data->getIntValue("Wilderness Server Id",row);
+				PreloadListData item;
+				item.m_topLeftChunkX=data->getIntValue("Top Left Chunk X",row);
+				item.m_topLeftChunkZ=data->getIntValue("Top Left Chunk Z",row);
+				item.m_bottomRightChunkX=data->getIntValue("Bottom Right Chunk X",row);
+				item.m_bottomRightChunkZ=data->getIntValue("Bottom Right Chunk Z",row);
+				item.m_cityServerId=data->getIntValue("City Server Id",row);
+				item.m_wildernessServerId=data->getIntValue("Wilderness Server Id",row);
 
-					if (ConfigPlanetServer::getMaxGameServers() != 0)
-					{
-						// Reduce the total number of game servers
-						item.m_cityServerId = ((item.m_cityServerId - 1) % ConfigPlanetServer::getMaxGameServers()) + 1;
+				//if (ConfigPlanetServer::getMaxGameServers() != 0)
+				//{
+				//	// Reduce the total number of game servers
+				//	item.m_cityServerId = ((item.m_cityServerId - 1) % ConfigPlanetServer::getMaxGameServers()) + 1;
 
-						if (item.m_wildernessServerId != 0)
-							item.m_wildernessServerId = ((item.m_wildernessServerId - 1) % ConfigPlanetServer::getMaxGameServers()) + 1;
-					}
+				//	if (item.m_wildernessServerId != 0)
+				//			item.m_wildernessServerId = ((item.m_wildernessServerId - 1) % ConfigPlanetServer::getMaxGameServers()) + 1;
+				//}
 					
-					m_preloadList->push_back(item);
+				m_preloadList->push_back(item);
 				
-					ServerMapType::iterator mapIter = m_serverMap->find(item.m_cityServerId);
-					if (mapIter == m_serverMap->end())
-					{
-						PreloadServerInformation & psi = (*m_serverMap)[item.m_cityServerId];
-						psi.m_actualServerId = 0;
-						psi.m_timeLoadStarted = time(0);
-						psi.m_loadTime = -1;
-						m_serversWaiting->insert(item.m_cityServerId);
-					}
-
-					if (item.m_wildernessServerId != 0)
-					{
-						mapIter = m_serverMap->find(item.m_wildernessServerId);
-						if (mapIter == m_serverMap->end())
-						{
-							PreloadServerInformation & psi = (*m_serverMap)[item.m_wildernessServerId];
-							psi.m_actualServerId = 0;
-							psi.m_timeLoadStarted = time(0);
-							psi.m_loadTime = -1;
-							m_serversWaiting->insert(item.m_wildernessServerId);
-						}
-					}
+				ServerMapType::iterator mapIter = m_serverMap->find(item.m_cityServerId);
+				if (mapIter == m_serverMap->end())
+				{
+					PreloadServerInformation & psi = (*m_serverMap)[item.m_cityServerId];
+					psi.m_actualServerId = 0;
+					psi.m_timeLoadStarted = time(0);
+					psi.m_loadTime = -1;
 				}
+				//if (item.m_wildernessServerId != 0)
+				//{
+				//	ServerMapType::iterator mapIter = m_serverMap->find(item.m_wildernessServerId);
+				//	if (mapIter == m_serverMap->end())
+				//	{
+				//		PreloadServerInformation & psi = (*m_serverMap)[item.m_wildernessServerId];
+				//		psi.m_actualServerId = 0;
+				//		psi.m_timeLoadStarted = time(0);
+				//		psi.m_loadTime = -1;
+				//		//m_serversWaiting->insert(item.m_wildernessServerId);
+				//	}
+				//}
 			}
 		}
 	}

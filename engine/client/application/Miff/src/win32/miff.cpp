@@ -62,15 +62,15 @@ const int   maxStringSize = 256;
 const char  version[] = "1.3 September 18, 2000";
 
 // vars set by pragmas or via command line
-char        drive[4];                               // should be no more then 2 char "C:"
+char        drive[8];                               // should be no more then 2 char "C:"
 char        directory[maxStringSize];
 char        filename[maxStringSize];
 char        extension[8];                           // we'll truncate if the extension is more then 8 chars...
-char        inFileName[maxStringSize];
+char        inFileName[512];
 
 // switches to be sent to mIFF Compiler
 char        sourceBuffer[bufferSize];
-char        outFileName[(maxStringSize * 2) + 8];   // x2 to combine filename, dir, and ext
+char        outFileName[512];   // x2 to combine filename, dir, and ext
 bool        usePragma = false;
 bool        useCCCP = false;
 bool        verboseMode = false;										// default to non-verbose mode
@@ -95,7 +95,7 @@ enum errorType {
 
 		ERR_NONE = 0
 	};
-char        err_msg[512];
+char        err_msg[256];
 errorType   errorFlag = ERR_NONE;            // assume no error (default)
 
 
@@ -211,7 +211,7 @@ int main(	int argc,				// number of args in commandline
 	SetupSharedFoundationData.useWindowHandle  = false;
 	SetupSharedFoundationData.argc = argc;
 	SetupSharedFoundationData.argv = argv;	
-	SetupSharedFoundationData.demoMode = true;
+	SetupSharedFoundationData.demoMode = false;
 	SetupSharedFoundation::install (SetupSharedFoundationData);
 
 	SetupSharedCompression::install();
@@ -832,20 +832,21 @@ static int preprocessSource(char *sourceName)
 		// -dD                   - output #defines (for the purpose of error msg I parse)
 		// -H                    - display the name of the header/included files (verbose mode)
 		// -P                    - originally, I had this...  so it won't show the # line_num "filename" ???
-		if (!useCCCP && verboseMode)
-		{
-			sprintf(shellCommand, "cpp.exe -nostdinc -nostdinc++ -pedantic -Wall -dD -H %s mIFF.$$$", sourceName);
-		}
-		else if (!useCCCP && !verboseMode)
-		{
-			sprintf(shellCommand, "cpp.exe -nostdinc -nostdinc++ -pedantic -Wall -dD %s mIFF.$$$", sourceName);
-		}
-		else if (useCCCP && verboseMode)
-		{
-			sprintf(shellCommand, "cccp.exe -nostdinc -nostdinc++ -pedantic -Wall -dD -H %s mIFF.$$$", sourceName);
-		}
-		else
-			sprintf(shellCommand, "cccp.exe -nostdinc -nostdinc++ -pedantic -Wall -dD %s mIFF.$$$", sourceName);
+ 		if (!useCCCP && verboseMode)
+ 		{
+			sprintf(shellCommand, "cpp.exe -nostdinc -nostdinc++ -x c++ -pedantic -Wall -dD -H %s mIFF.$$$", sourceName);
+ 		}
+ 		else if (!useCCCP && !verboseMode)
+ 		{
+			sprintf(shellCommand, "cpp.exe -nostdinc -nostdinc++ -x c++ -pedantic -Wall -dD %s mIFF.$$$", sourceName);
+ 		}
+ 		else if (useCCCP && verboseMode)
+ 		{
+			sprintf(shellCommand, "cccp.exe -nostdinc -nostdinc++ -x c++ -pedantic -Wall -dD -H %s mIFF.$$$", sourceName);
+ 		}
+ 		else
+			sprintf(shellCommand, "cccp.exe -nostdinc -nostdinc++ -x c++ -pedantic -Wall -dD %s mIFF.$$$", sourceName);
+ 	}
 	}
 //	else
 	{

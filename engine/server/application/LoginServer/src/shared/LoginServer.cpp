@@ -158,7 +158,7 @@ m_soeMonitor(0)
 	if (ConfigLoginServer::getDevelopmentMode())
 	{
 		setup.port = ConfigLoginServer::getCentralServicePort();
-		setup.maxConnections = 100;
+		setup.maxConnections = 1000;
 		m_centralService = new Service(ConnectionAllocator<CentralServerConnection>(), setup);
 	}
 	

@@ -100,12 +100,12 @@ void ConfigLoginServer::install(void)
 	KEY_INT (clusterGroup,1);
 	KEY_INT(maxSimultaneousPurgeAccounts,1000);
 	KEY_INT(purgeSleepTime,600);
-	KEY_BOOL(enableStructurePurge,false);
-	KEY_BOOL(enableCharacterPurge,false);
+	KEY_BOOL(enableStructurePurge,true);
+	KEY_BOOL(enableCharacterPurge,true);
 	KEY_INT (updatePurgeAccountListTime, 0);
 	KEY_STRING (purgeAccountSourceTable,"account_extract");
 	KEY_STRING (adminAccountDataTable, "datatables/admin/us_admin.iff");
-	KEY_BOOL(allowSkipTutorialToAll,false);
+	KEY_BOOL(allowSkipTutorialToAll,true);
 	KEY_BOOL(internalBypassOnlineLimit,true);
 	KEY_INT (populationExtremelyHeavyThresholdPercent, 50);
 	KEY_INT (populationVeryHeavyThresholdPercent, 40);

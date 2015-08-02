@@ -38,7 +38,7 @@ void ConfigServerGame::install(void)
 	ConfigServerUtility::install();
 	data = &staticData;
 
-	KEY_BOOL    (allowDefaultTemplateParams, false);
+	KEY_BOOL    (allowDefaultTemplateParams, true);
 	KEY_BOOL    (skipTutorial, false);
 	KEY_STRING	(groundScene, 0);
 	KEY_STRING	(spaceScene, 0);
@@ -66,7 +66,7 @@ void ConfigServerGame::install(void)
 	KEY_BOOL    (useRemoteDebugJava, false);
 	KEY_BOOL    (profileScripts, false);
 	KEY_BOOL    (crashOnScriptError, false);
-	KEY_BOOL    (compileScripts, true);
+	KEY_BOOL    (compileScripts, false);
 	KEY_BOOL    (trapScriptCrashes, true);
 	KEY_INT     (scriptWatcherWarnTime, 5000);
 	KEY_INT     (scriptWatcherInterruptTime, 5000);
@@ -241,7 +241,7 @@ void ConfigServerGame::install(void)
 	KEY_STRING  (gameServiceBindInterface, "");
 	KEY_BOOL    (logPvpUpdates, false);
 	KEY_FLOAT   (npcConversationDistance, 6.0f);
-	KEY_INT     (serverSpawnLimit, 800);
+	KEY_INT     (serverSpawnLimit, 1200);
 	KEY_INT     (spawnQueueSize, 1);
 	KEY_INT     (framesPerSpawn, 0);
 	KEY_BOOL    (enableSpawningNearLoadBeacons, true);
@@ -255,8 +255,8 @@ void ConfigServerGame::install(void)
 	KEY_INT     (maxGalacticReserveDepositBillion, 3); // 3 billion
 	KEY_INT     (maxMoneyTransfer,  100000000); // 100 million
 	KEY_INT     (maxFreeTrialMoney, 50000); //50k credits limited to demo customers
-	KEY_BOOL    (enablePreload, false);
-	KEY_BOOL    (buildPreloadLists, false);
+	KEY_BOOL    (enablePreload, true);
+	KEY_BOOL    (buildPreloadLists, true);
 	KEY_BOOL    (logAuthTransfer, false);
 
 	KEY_INT     (overrideUpdateRadius, 0);
@@ -285,7 +285,7 @@ void ConfigServerGame::install(void)
 	KEY_INT     (loadHouseContentsDelaySeconds, 0);
 	KEY_BOOL    (boundarySpawningAllowed, true);
 	KEY_BOOL    (debugMovement, false);
-	KEY_BOOL    (spawnAllResources, false);
+	KEY_BOOL    (spawnAllResources, true);
 	KEY_BOOL    (skipUnreliableTransformsForOtherCells, false);
 	KEY_INT     (maxPlayerSanityCheckFailures, 3);
 	KEY_BOOL    (disablePlayerSanityChecker, false);
@@ -321,12 +321,12 @@ void ConfigServerGame::install(void)
 	KEY_BOOL    (logoutTriggerEnabled, true);
 	KEY_BOOL    (loginAsBountyHunter, false);
 	KEY_INT     (veteranRewardTradeInWaitPeriodSeconds, 30 * 24 * 60 * 60); // 30 days
-	KEY_BOOL    (enableVeteranRewards, false);
-	KEY_BOOL    (enableOneYearAnniversary, false);
+	KEY_BOOL    (enableVeteranRewards, true);
+	KEY_BOOL    (enableOneYearAnniversary, true);
 	KEY_INT     (minEntitledTime, -1);
 	KEY_BOOL    (veteranDebugTriggerAll, false);
 	KEY_BOOL    (veteranDebugEnableOverrideAccountAge, false);
-	KEY_BOOL    (enableNewVeteranRewards, false);
+	KEY_BOOL    (enableNewVeteranRewards, true);
 	KEY_FLOAT   (buddyPointTimeBonus, 30.0f/4.0f); // 4 buddy points = 30 days
 
 #ifdef _DEBUG
@@ -334,7 +334,7 @@ void ConfigServerGame::install(void)
 #endif
 
 	KEY_INT     (theaterCreationLimitMilliseconds, 25);
-	KEY_BOOL    (fatalOnGoldPobChange, true);
+	KEY_BOOL    (fatalOnGoldPobChange, false);
 	KEY_INT     (lineOfSightCacheDurationMs, 1500);
 	KEY_FLOAT   (lineOfSightCacheMinHeight, 0.8f);
 	KEY_FLOAT   (lineOfSightLocationRoundValue, 5.0f);
@@ -376,7 +376,7 @@ void ConfigServerGame::install(void)
 	}
 
 	KEY_BOOL    (sendAsteroidExtents, false);
-	KEY_BOOL    (createZoneObjects, false);
+	KEY_BOOL    (createZoneObjects, true);
 	KEY_INT     (shipUpdatesPerSecond, 32);
 	KEY_BOOL    (debugSpaceVisibilityManager, false);
 	KEY_INT     (groundFrameRateLimit, 5);

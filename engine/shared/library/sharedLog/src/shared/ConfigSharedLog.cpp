@@ -38,7 +38,7 @@ void ConfigSharedLog::install()
 	KEY_INT (logNetQueueSize,   2000);
 	KEY_INT (logNetReconnectTimeMs, 10000);
 	KEY_BOOL(logReportLogs,     false);
-	KEY_BOOL(logReportWarnings, true);
+	KEY_BOOL(logReportWarnings, false);
 	KEY_BOOL(logReportFatals,   true);
 	KEY_BOOL(logStderr,         false);
 

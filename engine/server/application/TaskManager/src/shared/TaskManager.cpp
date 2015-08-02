@@ -526,7 +526,7 @@ void TaskManager::run()
 	NetworkHandler::install();
 	NetworkSetupData setup;
 	setup.port = ConfigTaskManager::getGameServicePort();
-	setup.maxConnections = 100;
+	setup.maxConnections = 1000;
 	setup.bindInterface = ConfigTaskManager::getGameServiceBindInterface();
 	instance().m_taskService = new Service(ConnectionAllocator<TaskConnection>(), setup);
 	setup.port = ConfigTaskManager::getTaskManagerServicePort();

@@ -1112,7 +1112,9 @@ void CommoditiesMarket::install()
 	}
 	else
 	{
+#ifdef DEBUG
 		WARNING(true, ("[Commodities API] : No commodities server connection to send SetGameTime.\n"));
+#endif
 		getCommoditiesServerConnection(); //attempt to reconnect to commodities server
 	}
 	
@@ -1180,7 +1182,9 @@ void CommoditiesMarket::giveTime()
 	{
 		if (Clock::timeSeconds() - ConfigServerGame::getCommoditiesServerReconnectIntervalSec() > reconnectTime)
 		{
+#ifdef DEBUG
 			WARNING(true, ("[Commodities API] : No commodities server connection to send GiveTime.\n"));
+#endif
 			getCommoditiesServerConnection(); //attempt to reconnect to commodities server
 			reconnectTime = Clock::timeSeconds();
 		}
@@ -1391,8 +1395,10 @@ void CommoditiesMarket::onAddAuction(int sequence, int32 result, const NetworkId
 			}	
 			else
 			{
+#ifdef DEBUG
 				WARNING(true, ("[Commodities API] : No commodities server connection to send CancelAuction.\n"));
 				getCommoditiesServerConnection(); //attempt to reconnect to commodities server
+#endif
 			}
 		}
 		CreateAuctionResponseMessage msg(NetworkId(itemId.getValue()),
@@ -1507,7 +1513,9 @@ void CommoditiesMarket::auctionCreate(CreatureObject &owner, ServerObject &item,
 		}
 		else
 		{
+#ifdef DEBUG
 			WARNING(true, ("[Commodities API] : No commodities server connection to send AddAuction.\n"));
+#endif
 			getCommoditiesServerConnection(); //attempt to reconnect to commodities server
 		}
 		
@@ -1577,7 +1585,9 @@ void CommoditiesMarket::transferVendorItemFromStockroom(CreatureObject &owner, N
 		}
 		else
 		{
+#ifdef DEBUG
 			WARNING(true, ("[Commodities API] : No commodities server connection to send AddImmediateAuction.\n"));
+#endif
 			getCommoditiesServerConnection(); //attempt to reconnect to commodities server
 		}
 			
@@ -1750,7 +1760,9 @@ void CommoditiesMarket::auctionCreateImmediate(CreatureObject &owner, ServerObje
 		}
 		else
 		{
+#ifdef DEBUG
 			WARNING(true, ("[Commodities API] : No commodities server connection to send AddImmediateAuction.\n"));
+#endif
 			getCommoditiesServerConnection(); //attempt to reconnect to commodities server
 		}
 		
@@ -1767,8 +1779,9 @@ void CommoditiesMarket::auctionCreatePermanent(const std::string &, const Server
 {
 	if (!ConfigServerGame::getCommoditiesMarketEnabled())
 		return;
-
+#ifdef DEBUG
 	WARNING(true, ("auctionCreatePermanent has been depricated and shouldn't be used.  If you see this WARNING, add a line to catch cheaters in the command in CommandCppFuncs.cpp"));
+#endif
 	return;
 	
 #if 0
@@ -1819,7 +1832,9 @@ void CommoditiesMarket::auctionCreatePermanent(const std::string &, const Server
 	}
 	else
 	{
+#ifdef DEBUG
 		WARNING(true, ("[Commodities API] : No commodities server connection to send AddImmediateAuction.\n"));
+#endif
 		getCommoditiesServerConnection(); //attempt to reconnect to commodities server
 	}
 #endif
@@ -1881,7 +1896,9 @@ void CommoditiesMarket::auctionBid(CreatureObject &bidder, AuctionId auctionId, 
 		}
 		else
 		{
+#ifdef DEBUG
 			WARNING(true, ("[Commodities API] : No commodities server connection to send AddBid.\n"));
+#endif
 			getCommoditiesServerConnection(); //attempt to reconnect to commodities server
 		}
 		//response message will be sent in onAddBid
@@ -1918,7 +1935,9 @@ void CommoditiesMarket::auctionCancel(const NetworkId &playerId, AuctionId aucti
 	}
 	else
 	{
+#ifdef DEBUG
 		WARNING(true, ("[Commodities API] : No commodities server connection to send CancelAuction.\n"));
+#endif
 		getCommoditiesServerConnection(); //attempt to reconnect to commodities server
 	}
 }
@@ -2086,7 +2105,9 @@ void CommoditiesMarket::auctionQueryHeaders(
 	}
 	else
 	{
+#ifdef DEBUG
 		WARNING(true, ("[Commodities API] : No commodities server connection to send QueryAuctionHeaders.\n"));
+#endif
 		getCommoditiesServerConnection(); //attempt to reconnect to commodities server
 	}
 
@@ -2136,7 +2157,9 @@ void CommoditiesMarket::getAuctionDetails(CreatureObject &who, const NetworkId &
 	}
 	else
 	{
+#ifdef DEBUG
 		WARNING(true, ("[Commodities API] : No commodities server connection to send GetItemDetails.\n"));
+#endif
 		getCommoditiesServerConnection(); //attempt to reconnect to commodities server
 	}
 }
@@ -2152,7 +2175,9 @@ void CommoditiesMarket::getVendorValue(ServerObject &container)
 	}
 	else
 	{
+#ifdef DEBUG
 		WARNING(true, ("[Commodities API] : No commodities server connection to send GetVendorValue.\n"));
+#endif
 		getCommoditiesServerConnection(); //attempt to reconnect to commodities server
 	}
 }
@@ -2170,7 +2195,9 @@ void CommoditiesMarket::createVendorMarket(const CreatureObject &who, ServerObje
 	}
 	else
 	{
+#ifdef DEBUG
 		WARNING(true, ("[Commodities API] : No commodities server connection to send CreateVendorMarket.\n"));
+#endif
 		getCommoditiesServerConnection(); //attempt to reconnect to commodities server
 	}
 
@@ -2192,7 +2219,9 @@ void CommoditiesMarket::destroyVendorMarket(const NetworkId &playerId, ServerObj
 	}
 	else
 	{
+#ifdef DEBUG
 		WARNING(true, ("[Commodities API] : No commodities server connection to send DestroyVendorMarket.\n"));
+#endif
 		getCommoditiesServerConnection(); //attempt to reconnect to commodities server
 	}
 }
@@ -2210,7 +2239,9 @@ void CommoditiesMarket::deleteAuctionLocation(const NetworkId& locationId, const
 	}
 	else
 	{
+#ifdef DEBUG
 		WARNING(true, ("[Commodities API] : No commodities server connection to send DestroyVendorMarket.\n"));
+#endif
 		getCommoditiesServerConnection(); //attempt to reconnect to commodities server
 	}
 }
@@ -2230,7 +2261,9 @@ void CommoditiesMarket::isVendorOwner(CreatureObject &who, const NetworkId &cont
 		}
 		else
 		{
+#ifdef DEBUG
 			WARNING(true, ("[Commodities API] : No commodities server connection to send GetVendorOwner.\n"));
+#endif
 			onIsVendorOwner(who.getNetworkId(), zeroNetworkId, zeroNetworkId);
 			getCommoditiesServerConnection(); //attempt to reconnect to commodities server
 		}
@@ -2533,7 +2566,9 @@ void CommoditiesMarket::checkPendingLoads(const NetworkId &itemId)
 					}
 					else
 					{
+#ifdef DEBUG
 						WARNING(true, ("[Commodities API] : No commodities server connection to send GetItem.\n"));
+#endif						
 						getCommoditiesServerConnection(); //attempt to reconnect to commodities server
 					}
 				}
@@ -3378,7 +3413,9 @@ bool CommoditiesMarket::restoreItem(ServerObject& item, TangibleObject & vendor)
 	}
 	else
 	{
+#ifdef DEBUG
 		WARNING(true, ("[Commodities API] : No commodities server connection to send AddImmediateAuction.\n"));
+#endif
 		getCommoditiesServerConnection(); //attempt to reconnect to commodities server
 		
 	}

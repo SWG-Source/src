@@ -124,7 +124,7 @@ FileStreamer::File *FileStreamer::open(const char *fileName, bool randomAccess)
 	reportModDirectory(fileName, "music/", "Music") ||
 	reportModDirectory(fileName, "sound/", "Sound") ||
 	reportModDirectory(fileName, "camera/", "Camera"); // ||
-	//reportModDirectory(fileName, "shader/", "Shader");
+	reportModDirectory(fileName, "shader/", "Shader");
 #endif
 
 	// return the opened file

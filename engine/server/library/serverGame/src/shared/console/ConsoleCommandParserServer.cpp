@@ -460,12 +460,12 @@ bool ConsoleCommandParserServer::performParsing (const NetworkId & userId, const
 	//-----------------------------------------------------------------
 	else if (isAbbrev( argv[0], "dumpMemToFile"))
 	{	
-		//std::string fileName(Unicode::wideToNarrow(argv[1]));
-		//std::string leakStr(Unicode::wideToNarrow(argv[2]));
-		//bool leak = (leakStr == "true" || leakStr == "1");
-		//	
-		//MemoryManager::reportToFile(fileName.c_str(), leak);
-		//result += getErrorMessage (argv[0], ERR_SUCCESS);
+		std::string fileName(Unicode::wideToNarrow(argv[1]));
+		std::string leakStr(Unicode::wideToNarrow(argv[2]));
+		bool leak = (leakStr == "true" || leakStr == "1");
+			
+		MemoryManager::reportToFile(fileName.c_str(), leak);
+		result += getErrorMessage (argv[0], ERR_SUCCESS);
 	}
 	
 	//-----------------------------------------------------------------

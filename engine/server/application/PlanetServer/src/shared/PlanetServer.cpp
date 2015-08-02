@@ -141,7 +141,7 @@ PlanetServer::PlanetServer() :
 	NetworkSetupData setup;
 	setup.port = ConfigPlanetServer::getGameServicePort();
 	setup.bindInterface = ConfigPlanetServer::getGameServiceBindInterface();
-	setup.maxConnections = 100;
+	setup.maxConnections = 1000;
 	m_gameService = new Service(ConnectionAllocator<GameServerConnection>(), setup);
 
 	// set up watcher connection

@@ -34,7 +34,6 @@ namespace
 {
 	int       s_recursionCountDepends    = 0;
 	const int s_recursionCountDependsMax = 7;
-	const std::string m_Deprecated = "DEPRECATED_SKILLS";
 
 	//----------------------------------------------------------------------
 
@@ -437,11 +436,6 @@ void SkillObject::connectLinks(DataTable &dataTable, const std::string & parentN
 			{
 				skillData.nextSkillBoxes.push_back(nextSkill);
 			}
-			else
-			{
-				if (m_Deprecated.compare(nextSkillName.c_str()) != 0)
-					WARNING (true, ("Could not find skill %s in DataTable", nextSkillName.c_str()));
-			}
 		}
 	}
 
@@ -470,8 +464,6 @@ bool SkillObject::load(DataTable & dataTable, const std::string & skillName)
 	if (skillRow == -1)
 	{
 		skillData = SkillData();		
-		if (m_Deprecated.compare(skillName.c_str()) != 0)
-			WARNING (true, ("SkillObject::load Could not find skill %s in DataTable", skillName.c_str()));
 		return false;
 	}
 	
