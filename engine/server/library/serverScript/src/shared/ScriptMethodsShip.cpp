@@ -1339,7 +1339,7 @@ jstring JNICALL ScriptMethodsShipNamespace::getShipComponentName(JNIEnv * env, j
 {
 	ShipObject const * const shipObject = JavaLibrary::getShipThrow(env, jobject_shipId, "getShipComponentName() invalid ship", false);
 	if (!shipObject)
-		return false;
+		return NULL;
 
 	Unicode::String const & name = shipObject->getComponentName(chassisSlot);
 	if (!name.empty())
@@ -4073,7 +4073,7 @@ jlongArray JNICALL ScriptMethodsShipNamespace::getShipCargoHoldContentsResourceT
 {
 	ShipObject const * const shipObject = getShipThrowTestSlot(env, jobject_shipId, "getShipCargoHoldContents()", false, static_cast<int>(ShipChassisSlotType::SCST_cargo_hold));
 	if (!shipObject)
-		return false;
+		return NULL;
 
 	ShipObject::NetworkIdIntMap const & contents = shipObject->getCargoHoldContents();
 
@@ -4099,7 +4099,7 @@ jintArray JNICALL ScriptMethodsShipNamespace::getShipCargoHoldContentsAmounts(JN
 {
 	ShipObject const * const shipObject = getShipThrowTestSlot(env, jobject_shipId, "getShipCargoHoldContents()", false, static_cast<int>(ShipChassisSlotType::SCST_cargo_hold));
 	if (!shipObject)
-		return false;
+		return NULL;
 
 	ShipObject::NetworkIdIntMap const & contents = shipObject->getCargoHoldContents();
 

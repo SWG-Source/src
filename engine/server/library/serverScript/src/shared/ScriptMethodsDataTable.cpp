@@ -1121,7 +1121,7 @@ jobject JNICALL ScriptMethodsDataTableNamespace::dataTableGetRow(JNIEnv *env, jo
 	
 	LocalRefPtr target = createNewObject(JavaLibrary::getClsDictionary(), JavaLibrary::getMidDictionary());
 	if (target == LocalRef::cms_nullPtr)
-		return false;
+		return JNI_FALSE;
 
 	for (int i = 0; i < dt->getNumColumns(); ++i)
 	{
