@@ -1415,8 +1415,6 @@ static void commandFuncAuctionBid(Command const &, NetworkId const &actor, Netwo
 
 	CommoditiesMarket::getAuctionDetails(*actorCreature, auctionId);
 
-	return;
-
 	if (actorCreature)
 	{
 		CommoditiesMarket::auctionBid(
