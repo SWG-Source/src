@@ -1999,6 +1999,7 @@ ShipComponentData * ShipObject::createShipComponentData (int chassisSlot) const
 	if (shipComponentData == NULL)
 	{
 		WARNING (true, ("ShipObject::createShipComponentData failed for slot [%d] ship Component data could not be constructed", chassisSlot));
+		delete(shipComponentData);
 		return NULL;
 	}
 
