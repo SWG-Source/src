@@ -1405,7 +1405,7 @@ bool Auction::IsAdvancedFilterMatch(std::list<AuctionQueryHeadersMessage::Search
 
 	int filterCountMatch = 0;
 	int filterCountNotMatch = 0;
-	bool applicableFilter;
+	bool applicableFilter = 0;
 	bool matchFilter;
 	for (std::list<AuctionQueryHeadersMessage::SearchCondition>::const_iterator iter = advancedSearch.begin(); iter != advancedSearch.end(); ++iter)
 	{
