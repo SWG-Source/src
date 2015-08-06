@@ -283,6 +283,7 @@ void verifyUpdateRanges (const char* const filename)
 		DEBUG_REPORT_LOG (true, ("OK:\t%s\t%s\t%1.1f\n", serverObjectTemplateName, sharedObjectTemplateName.c_str (), farUpdateRange));
 		objectTemplate->releaseReference ();
 	}
+	fclose(infile);
 }
 
 static std::string currentLintedAsset;
