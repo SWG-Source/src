@@ -706,7 +706,7 @@ const Region * RegionMaster::addDynamicRegion(const UniverseObject & source)
 			DEBUG_WARNING(true, ("RegionMaster::addDynamicRegion object %s has unknown "
 				"geometry type", source.getNetworkId().getValueString().c_str(),
 				geometry));
-			return false;
+			return NULL;
 	}
 	if (region == NULL)
 	{

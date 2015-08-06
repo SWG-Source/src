@@ -74,7 +74,7 @@ void GameScheduler::remove()
 	DEBUG_FATAL(!s_installed, ("GameScheduler not installed."));
 
 	delete s_scheduler;
-	s_scheduler = false;
+	s_scheduler = NULL;
 
 	s_installed = false;
 }

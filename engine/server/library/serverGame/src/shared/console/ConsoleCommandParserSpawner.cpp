@@ -12,7 +12,7 @@
 #include "serverGame/CreatureObject.h"
 
 #include <cstdio>
-#include <hash_set>
+#include <unordered_set>
 
 // ======================================================================
 
