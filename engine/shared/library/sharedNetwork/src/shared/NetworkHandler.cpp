@@ -318,7 +318,7 @@ void NetworkHandler::onTerminate(void * m, UdpConnectionMT * u)
 {
 	if(m)
 	{
-//		NetworkHandler * s = reinterpret_cast<NetworkHandler *>(m);
+ 	NetworkHandler * s = reinterpret_cast<NetworkHandler *>(m);
 		if(u)
 		{
 			u->AddRef();

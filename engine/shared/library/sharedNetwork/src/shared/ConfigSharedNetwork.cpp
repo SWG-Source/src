@@ -518,12 +518,12 @@ void ConfigSharedNetwork::install(int newClockSyncDelay)
 	KEY_INT   (incomingBufferSize, 4 * 1024 * 1024);
 	KEY_INT   (outgoingBufferSize, 4 * 1024 * 1024);
 	KEY_INT   (maxConnections, 1000);
-	KEY_INT   (maxRawPacketSize, 496); 
+	KEY_INT   (maxRawPacketSize, 1460); 
 	KEY_INT   (maxInstandingPackets, 400);
-	KEY_INT   (maxOutstandingBytes, 200 * 1024);
+	KEY_INT   (maxOutstandingBytes, 1 * 1024);
 	KEY_INT   (maxOutstandingPackets, 400);
 	KEY_BOOL  (processOnSend, false);
-	KEY_BOOL  (processIcmpErrors, true);
+	KEY_BOOL  (processIcmpErrors, false);
 	KEY_INT   (fragmentSize, 496);
 	KEY_INT   (pooledPacketMax, 1024);
 	KEY_INT   (pooledPacketSize, -1);
@@ -555,7 +555,7 @@ void ConfigSharedNetwork::install(int newClockSyncDelay)
 	KEY_BOOL  (allowPortRemapping, true);
 	KEY_BOOL  (useTcp, true);
 	KEY_INT   (tcpMinimumFrame, 1000);
-	KEY_BOOL  (reportUdpDisconnects, false);
+	KEY_BOOL  (reportUdpDisconnects, true);
 	KEY_BOOL  (reportTcpDisconnects, true);
 	KEY_BOOL  (logConnectionConstructionDestruction, false);
 	KEY_BOOL  (logConnectionOpenedClosed, false);

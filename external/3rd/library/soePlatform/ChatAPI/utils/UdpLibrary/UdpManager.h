@@ -562,7 +562,7 @@ class UdpManager : public UdpGuardedRefCount
         typedef UdpParams Params;                   // DEPRECATED: in here for backwards compatibility
 
         enum { cProtocolVersion = 2 };        // protocol version must match on both ends, or connect packets are simply ignored by the server
-        enum { cHardMaxRawPacketSize = 8192 };
+        enum { cHardMaxRawPacketSize = 1460 };
         enum { cHardMaxOutstandingPackets = 30000 };    // don't change this
 
         UdpManager(const UdpParams *params);
@@ -1076,7 +1076,7 @@ inline UdpParams::UdpParams(ManagerRole role)
     packetHistoryMax = 4;
     maxDataHoldTime = 50;
     maxDataHoldSize = -1;
-    maxRawPacketSize = 512;
+    maxRawPacketSize = 1460;
     hashTableSize = 100;
     avoidPriorityQueue = false;
     clockSyncDelay = 0;
@@ -1113,7 +1113,7 @@ inline UdpParams::UdpParams(ManagerRole role)
     userSuppliedEncryptExpansionBytes2 = 0;
 
     reliable[0].maxInstandingPackets = 400;
-    reliable[0].maxOutstandingBytes = 200 * 1024;
+    reliable[0].maxOutstandingBytes = 1 * 1024;
     reliable[0].maxOutstandingPackets = 400;
     reliable[0].outOfOrder = false;
     reliable[0].coalesce = true;
@@ -1143,7 +1143,7 @@ inline UdpParams::UdpParams(ManagerRole role)
             pooledPacketInitial = 1000;
             allowPortRemapping = false;
             reliable[0].maxInstandingPackets = 1000;
-            reliable[0].maxOutstandingBytes = 1024 * 1024;
+            reliable[0].maxOutstandingBytes = 1 * 1024;
             reliable[0].maxOutstandingPackets = 1000;
             reliable[0].congestionWindowMinimum = 8192;
             reliable[0].resendDelayAdjust = 150;
@@ -1162,7 +1162,7 @@ inline UdpParams::UdpParams(ManagerRole role)
             pooledPacketInitial = 100;
             allowPortRemapping = false;
             reliable[0].maxInstandingPackets = 1000;
-            reliable[0].maxOutstandingBytes = 1024 * 1024;
+            reliable[0].maxOutstandingBytes = 1 * 1024;
             reliable[0].maxOutstandingPackets = 1000;
             reliable[0].congestionWindowMinimum = 8192;
             reliable[0].resendDelayAdjust = 150;
@@ -1204,7 +1204,7 @@ inline UdpParams::UdpParams(ManagerRole role)
             incomingLogicalPacketMax = 200 * 1024 * 1024;
             callbackEventPoolMax = 50000;
             reliable[0].maxInstandingPackets = 32000;
-            reliable[0].maxOutstandingBytes = 50 * 1024 * 1024;
+            reliable[0].maxOutstandingBytes = 1 * 1024;
             reliable[0].maxOutstandingPackets = 32000;
             reliable[0].congestionWindowMinimum = 300000;
             reliable[0].toleranceLossCount = 100;
