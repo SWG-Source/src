@@ -1184,24 +1184,25 @@ void AlterScheduler::moveObjectsFromAlterNextFrameListToAlterNowList(int schedul
 	{
 		PROFILER_AUTO_BLOCK_DEFINE("copy next frame");
 
-		NOT_NULL(s_alterNextFrameListFirst);
-		for (Object *object = s_alterNextFrameListFirst[schedulePhaseIndex]->getNextFromAlterNextFrameList(); object != NULL; )
-		{
-			//-- Add object to alter now list.  This removes the object from the alter next frame list.
-			DO_ON_VALIDATE_OBJECTS(validateObject(object));
+		if (s_alterNextFrameListFirst != NULL) {
+			for (Object *object = s_alterNextFrameListFirst[schedulePhaseIndex]->getNextFromAlterNextFrameList(); object != NULL; )
+			{
+				//-- Add object to alter now list.  This removes the object from the alter next frame list.
+				DO_ON_VALIDATE_OBJECTS(validateObject(object));
 
-			//-- Save next object in list.
-			Object *const nextObject = object->getNextFromAlterNextFrameList();
+				//-- Save next object in list.
+				Object *const nextObject = object->getNextFromAlterNextFrameList();
 
-			addToAlterNowList(*object);
-			++s_objectsAltered;
+				addToAlterNowList(*object);
+				++s_objectsAltered;
 
-			DO_ON_HARDCORE_VALIDATION( DEBUG_FATAL(findObjectInScheduleTimeMap(object), ("found object in time schedule map, unexpected.")) );
-			DO_ON_HARDCORE_VALIDATION( DEBUG_FATAL(findObjectInAlterNextFrameList(object), ("found object in alter next frame list, unexpected.")) );
-			DO_ON_HARDCORE_VALIDATION( DEBUG_FATAL(!findObjectInAlterNowList(object), ("didn't find object in alter now list, unexpected.")) );
+				DO_ON_HARDCORE_VALIDATION( DEBUG_FATAL(findObjectInScheduleTimeMap(object), ("found object in time schedule map, unexpected.")) );
+				DO_ON_HARDCORE_VALIDATION( DEBUG_FATAL(findObjectInAlterNextFrameList(object), ("found object in alter next frame list, unexpected.")) );
+				DO_ON_HARDCORE_VALIDATION( DEBUG_FATAL(!findObjectInAlterNowList(object), ("didn't find object in alter now list, unexpected.")) );
 
-			//-- Increment loop.
-			object = nextObject;
+				//-- Increment loop.
+				object = nextObject;
+			}
 		}
 	}
 }

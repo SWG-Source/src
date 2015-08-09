@@ -1356,7 +1356,7 @@ bool Iff::seek(Tag name, BlockType type)
 
 	while (!atEndOfForm())
 	{
-		if (getCurrentName() == name && (type == BT_either || (type == BT_form && isCurrentForm() ||  (type == BT_chunk && isCurrentChunk()))))
+		if ((getCurrentName() == name) && ((type == BT_either) || ((type == BT_form && isCurrentForm()) ||  (type == BT_chunk && isCurrentChunk()))))
 			return true;
 
 		// advance past the current block

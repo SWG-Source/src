@@ -140,7 +140,6 @@ bool HoverPlaneHelper::findMinimumHoverPlane (const Object & obj, float & roll, 
 	if (!terrainObject)
 		return false;
 
-	float oldPointHeights [10];
 	Vector normals [10];
 	Vector avgNormal;
 
@@ -159,8 +158,6 @@ bool HoverPlaneHelper::findMinimumHoverPlane (const Object & obj, float & roll, 
 		float y = 0.0f;
 		for (int i = 0; i < 10; ++i)
 		{
-			oldPointHeights [i] = points [i].y;
-			
 			if (terrainObject->getHeight (points [i], y, normals [i]))
 			{
 				float waterHeight = 0.0f;
