@@ -318,7 +318,6 @@ void NetworkHandler::onTerminate(void * m, UdpConnectionMT * u)
 {
 	if(m)
 	{
- 	NetworkHandler * s = reinterpret_cast<NetworkHandler *>(m);
 		if(u)
 		{
 			u->AddRef();
@@ -552,7 +551,6 @@ void NetworkHandler::clearBytesThisFrame()
 		if(reportMessages)
 		{
 			std::map<std::string, std::pair<int, int> >::iterator i;
-			static std::pair<int, int> zeros = std::make_pair(0, 0);
 			static char msgBuf[256];
 			for(i = s_messageCount.begin(); i != s_messageCount.end(); ++i)
 			{

@@ -28,7 +28,7 @@ public:
 	virtual void OnConnectComplete(UdpConnection *con);
 	virtual void OnTerminated(UdpConnection *con);
 	virtual void OnPacketCorrupt(UdpConnection *con, const uchar *data, int dataLen, UdpCorruptionReason reason);
-
+	virtual void ~UdpConnectionHandlerInternal();
 private:
 	UdpConnectionHandlerInternal(UdpConnectionHandlerInternal const &);
 	UdpConnectionHandlerInternal &operator=(UdpConnectionHandlerInternal const &);
