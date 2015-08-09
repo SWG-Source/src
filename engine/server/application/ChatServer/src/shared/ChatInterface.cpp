@@ -2346,10 +2346,12 @@ void ChatInterface::OnAddInvite(unsigned track, unsigned result, const ChatAvata
 
 	AvatarIdSequencePair *pair = (AvatarIdSequencePair *)user;
 
+	unsigned sequence = 0;
 	ChatAvatarId destId;
 	if (pair)
 	{
 		destId = pair->avatar;
+		sequence = pair->sequence;
 
 		delete pair;
 		pair = NULL;
@@ -2462,10 +2464,12 @@ void ChatInterface::OnRemoveInvite(unsigned track, unsigned result, const ChatAv
 
 	AvatarIdSequencePair *pair = (AvatarIdSequencePair *)user;
 
+	unsigned sequence = 0;
 	ChatAvatarId inviteeId;
 	if (pair)
 	{
 		inviteeId = pair->avatar;
+		sequence = pair->sequence;
 
 		delete pair;
 		pair = NULL;
