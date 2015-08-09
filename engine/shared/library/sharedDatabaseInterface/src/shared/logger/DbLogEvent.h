@@ -27,7 +27,7 @@ namespace DB
 		 * Default constructor stored the current system time in eventTime.
 		 */
 		LogEvent();
-
+		virtual ~LogEvent(){return;};
 	  public:
 		/**
 		 * Saves the LogEvent to the database.
