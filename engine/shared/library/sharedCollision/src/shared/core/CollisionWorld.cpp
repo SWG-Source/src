@@ -1200,7 +1200,7 @@ void CollisionWorld::removeObject ( Object * object )
 				query = SpatialDatabase::Q_Barriers;
 			}
 
-			removed = ms_database->removeObject(SpatialDatabase::Q_Static, object) || removed;
+			removed = ms_database->removeObject(query, object) || removed;
 		}
 
 		environmentChanged(MultiShape(collision->getBoundingSphere_w()));
