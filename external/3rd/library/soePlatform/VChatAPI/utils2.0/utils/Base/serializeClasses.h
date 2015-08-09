@@ -390,8 +390,8 @@ namespace soe
 		if (size < sizeof(int64))
 			return 0;
 #if (defined(WIN32) || defined(linux))
-		uint32 low = *(uint32 *)(&data);
-		uint32 high = *((uint32 *)&data+1);
+		uint32 low = *(uint32_t *) &data;
+		uint32 high = *((uint32_t *)&data+1);
 #elif defined(sparc)
 		uint32 low = *((uint32 *)&data+1);
 		uint32 high = *(uint32 *)(&data);
@@ -413,8 +413,8 @@ namespace soe
 		if (size < sizeof(uint64))
 			return 0;
 #if (defined(WIN32) || defined(linux))
-		uint32 low = *(uint32 *)(&data);
-		uint32 high = *((uint32 *)&data+1);
+	uint32 low = *(uint32_t *) &data;		
+	uint32 high = *((uint32_t *)&data+1);
 #elif defined(sparc)
 		uint32 low = *((uint32 *)&data+1);
 		uint32 high = *(uint32 *)(&data);
@@ -433,7 +433,7 @@ namespace soe
 	//	360 ns
 	inline unsigned Write(unsigned char * stream, unsigned size, float data, unsigned version = 0)
 	{
-		uint32 & dataRef = *(uint32 *)(&data);
+		uint32 & dataRef = *(uint32_t *)(&data);
 		if (size < sizeof(float))
 			return 0;
 		stream[BYTE1] = dataRef&0xff;
@@ -449,8 +449,8 @@ namespace soe
 		if (size < sizeof(double))
 			return 0;
 #if (defined(WIN32) || defined(linux))
-		uint32 low = *(uint32 *)(&data);
-		uint32 high = *((uint32 *)&data+1);
+		uint32 low = *(uint32_t *)(&data);
+		uint32 high = *((uint32_t *)&data+1);
 #elif defined(sparc)
 		uint32 low = *((uint32 *)&data+1);
 		uint32 high = *(uint32 *)(&data);
