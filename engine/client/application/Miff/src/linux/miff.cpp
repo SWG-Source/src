@@ -75,7 +75,7 @@ bool        useCCCP = false;
 bool        verboseMode = false;										// default to non-verbose mode
 bool        debugMode = false;                      // set this on and the preprocessed source file (miff.$$$) won't be deleted
 
-static bool runningUnderNT;
+static bool runningUnderNT = false;
 
 enum errorType {
 		ERR_FILENOTFOUND    = -1,
@@ -814,7 +814,7 @@ static int preprocessSource(char *sourceName)
 
 	memset(shellCommand, 0, sizeof(shellCommand));
 
-//	if (!runningUnderNT)
+	if (!runningUnderNT)
 	{
 	
 		if (verboseMode)
@@ -844,11 +844,11 @@ static int preprocessSource(char *sourceName)
 		else
 			sprintf(shellCommand, "cccp -nostdinc -nostdinc++ -x c++ -pedantic -Wall -dD %s 'miff.$$$'", sourceName);
 	}
-//	else
+	else
 	{
 		// running under NT.  Use the MSVC cl since it deals with long filenames on fat16/fat32 partitions correctly
 		// and ccp and cccp don't
-//		sprintf(shellCommand, "cl /nologo /W4 /EP %s > miff.$$$", sourceName);
+		sprintf(shellCommand, "cl /nologo /W4 /EP %s > miff.$$$", sourceName);
 	}
 
 	retVal = system(shellCommand);
