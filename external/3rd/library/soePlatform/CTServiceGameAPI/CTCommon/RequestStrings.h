@@ -8,20 +8,6 @@
 
 namespace CTService
 {
-static const char * _gamecodeName[] = 
-{  
-	"",
-	"SP",
-	"EQ",
-	"EQ2",
-	"SWG",
-	"PS",
-	"EQOA-beta",
-	"EQOA",
-	"EQIM",
-	"EQM"
-};
-
 
 #define key_text std::pair<unsigned,const char *>
 
