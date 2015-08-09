@@ -46,16 +46,8 @@ LogObserver * LoggingServerApiObserver::create(const std::string &)
 
 void LoggingServerApiObserver::log(const LogMessage & msg)
 {
-	const char * procId = "\0";
-	const char * channel = "\0";
 	std::string fileName = "misc.txt";
 	
-	if(!msg.getProcId().empty())
-		procId = msg.getProcId().c_str();
-
-	if(! msg.getChannel().empty())
-		channel = msg.getChannel().c_str();
-
 	std::string msgText;
 
 	if(! msg.getText().empty())

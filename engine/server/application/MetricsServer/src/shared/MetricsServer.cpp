@@ -93,8 +93,6 @@ void MetricsServer::install()
 	setup.port = ConfigMetricsServer::getMetricsServicePort();
 	setup.maxConnections = 200;
 	setup.bindInterface = ConfigMetricsServer::getMetricsServiceBindInterface();
-	Service * ms_service;
-	ms_service = new Service(ConnectionAllocator<MetricsGatheringConnection>(), setup);
 
 	// connect to the task manager
 	ms_taskConnection = new TaskConnection("127.0.0.1", ConfigMetricsServer::getTaskManagerPort());
