@@ -251,9 +251,9 @@ const bool Address::operator == (const Address & rhs) const
 */
 const bool Address::operator < (const Address & rhs) const
 {
-	return(addr4->sin_addr.s_addr < rhs.addr4->sin_addr.s_addr ||
-		addr4->sin_addr.s_addr == rhs.addr4->sin_addr.s_addr &&
-		addr4->sin_port < rhs.addr4->sin_port);
+	return((addr4->sin_addr.s_addr < rhs.addr4->sin_addr.s_addr) ||
+		(addr4->sin_addr.s_addr == rhs.addr4->sin_addr.s_addr &&
+		addr4->sin_port < rhs.addr4->sin_port));
 }
 
 //---------------------------------------------------------------------
@@ -293,9 +293,9 @@ const bool Address::operator != (const Address & rhs) const
 */
 const bool Address::operator > (const Address & rhs) const
 {
-	return(addr4->sin_addr.s_addr > rhs.addr4->sin_addr.s_addr ||
-		addr4->sin_addr.s_addr == rhs.addr4->sin_addr.s_addr &&
-		addr4->sin_port > rhs.addr4->sin_port);
+	return((addr4->sin_addr.s_addr > rhs.addr4->sin_addr.s_addr) ||
+		(addr4->sin_addr.s_addr == rhs.addr4->sin_addr.s_addr &&
+		addr4->sin_port > rhs.addr4->sin_port));
 }
 
 //---------------------------------------------------------------------
