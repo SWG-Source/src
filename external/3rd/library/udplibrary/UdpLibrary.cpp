@@ -163,7 +163,7 @@ UdpManager::Params::Params()
 	packetHistoryMax = 100;
 	maxDataHoldTime = 50;
 	maxDataHoldSize = -1;
-	maxRawPacketSize = 1460;
+	maxRawPacketSize = 512;
 	hashTableSize = 100;
 	avoidPriorityQueue = false;
 	clockSyncDelay = 0;
@@ -200,7 +200,7 @@ UdpManager::Params::Params()
 	simulateOutgoingOverloadLevel = 0;
 
 	reliable[0].maxInstandingPackets = 400;
-	reliable[0].maxOutstandingBytes = 1 * 1024;
+	reliable[0].maxOutstandingBytes = 200 * 1024;
 	reliable[0].maxOutstandingPackets = 400;
 	reliable[0].outOfOrder = false;
 	reliable[0].processOnSend = false;

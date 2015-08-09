@@ -140,7 +140,7 @@ namespace NAMESPACE
 		params.allowPortRemapping					= false;				// set to false (optional)
 		params.oldestUnacknowledgedTimeout			= 15 * 1000;			// set to 30000 (longer for debugging tolerance)
 		params.maxDataHoldTime						= 0;					// set to 0 (this is critical)
-		params.reliable[0].maxOutstandingBytes		= 1 * 1024;		// set to 2mb
+		params.reliable[0].maxOutstandingBytes		= 2 * 1024 * 1024;		// set to 2mb
 		params.reliable[0].maxOutstandingPackets	= 4000;					// set to 4000
 		params.reliable[0].resendDelayAdjust		= 1500;					// set to 1500
 		params.reliable[0].congestionWindowMinimum  = 50000;				// set to 50000

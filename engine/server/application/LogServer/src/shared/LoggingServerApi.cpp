@@ -70,7 +70,7 @@ void LoggingServerApi::Connect(const char *address, int port, const char *loginN
 	params.port = 0;
 	params.pooledPacketMax = 1000;
 	params.reliable[0].maxInstandingPackets = 512;
-	params.reliable[0].maxOutstandingBytes = 1 * 1024;
+	params.reliable[0].maxOutstandingBytes = 128 * 1024;
 	params.reliable[0].congestionWindowMinimum = 50000;
 	params.reliable[0].maxOutstandingPackets = 512;
 	params.reliable[0].processOnSend = false;

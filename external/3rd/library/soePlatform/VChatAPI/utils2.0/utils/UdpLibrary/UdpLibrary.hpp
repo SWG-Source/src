@@ -443,7 +443,7 @@ class UdpManager
 		enum { cReliableChannelCount = 4 };
 		enum { cEncryptPasses = 2 };
 		enum { cProtocolVersion = 2 };		// protocol version must match on both ends, or connect packets are simply ignored by the server
-		enum { cHardMaxRawPacketSize = 1460 };
+		enum { cHardMaxRawPacketSize = 16384 };
 		enum { cHardMaxOutstandingPackets = 30000 };	// don't change this
 
 		struct ReliableConfig
