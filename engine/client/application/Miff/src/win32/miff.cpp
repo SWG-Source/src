@@ -846,7 +846,6 @@ static int preprocessSource(char *sourceName)
  		}
  		else
 			sprintf(shellCommand, "cccp.exe -nostdinc -nostdinc++ -x c++ -pedantic -Wall -dD %s mIFF.$$$", sourceName);
- 	}
 	}
 //	else
 	{

@@ -185,6 +185,7 @@ static const char * SubscriptionStatusString[SUBSCRIPTION_STATUS_END] =
 	"SUBSCRIPTION_STATUS_BANNED_CHARGEBACK",
 };
 
+#ifdef UNIX
 const std::pair<std::string, apiGamecode> _gamecodeID[GAMECODE_END] = 
 {  
     text_gamecode(std::string("SP"),		GAMECODE_STATION_PASS),
@@ -246,6 +247,6 @@ const gamecode_text _gamecodeName[GAMECODE_END] =
 };
 static std::map<apiGamecode,const char *> GamecodeName((const std::map<apiGamecode,const char *>::value_type *)&_gamecodeName[0],(const std::map<apiGamecode,const char *>::value_type *)&_gamecodeName[GAMECODE_END]);
 
-
+#endif UNIX
 #endif
 
