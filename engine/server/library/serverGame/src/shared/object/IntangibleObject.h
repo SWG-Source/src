@@ -44,7 +44,7 @@ public:
 
 	virtual float alter(float time);
 	virtual void  onPermanentlyDestroyed();
-	virtual void  persist();
+	virtual bool  persist();
 	virtual bool  isVisibleOnClient (const Client & client) const;
 	virtual void  getAttributes     (stdvector<std::pair<std::string, Unicode::String> >::fwd &data) const;
 	virtual bool  onContainerAboutToTransfer(ServerObject * destination, ServerObject* transferer);

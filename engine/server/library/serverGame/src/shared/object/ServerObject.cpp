@@ -3214,11 +3214,11 @@ void ServerObject::onRemovedFromTriggerVolume(TriggerVolume & triggerVolume)
  * After this function is called, changes to this object will be sent to the database.
  */
 
-void ServerObject::persist()
+bool ServerObject::persist()
 {
 	// Do not persist buildout objects (buildout objects have negative networkIds)
 	if (getNetworkId() < NetworkId::cms_invalid)
-		return;
+		return false;
 
 	if (isAuthoritative())
 	{
@@ -3232,7 +3232,7 @@ void ServerObject::persist()
 			if (!contained && !isPlayerControlled() && getPosition_p() != Vector::zero)
 			{
 				WARNING_STRICT_FATAL(true, ("Tried to persist non-player object %s in a space scene away from the origin (not persisting).", getDebugInformation().c_str()));
-				return;
+				return false;
 			}
 		}
 		else
@@ -3257,11 +3257,15 @@ void ServerObject::persist()
 
 			PositionUpdateTracker::sendPositionUpdate(*this);
 		}
+
+		return true;
 	}
 	else
 	{
 		sendControllerMessageToAuthServer(CM_persistObject, 0);
 	}
+
+	return false;
 }
 
 // ----------------------------------------------------------------------
