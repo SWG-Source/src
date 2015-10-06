@@ -34,6 +34,12 @@ if(DEFINED ENV{ORACLE_HOME})
   find_path(ORACLE_INCLUDE_DIR
     NAMES oci.h
     PATHS
+    /usr/include/oracle/12.1/client64
+    /usr/include/oracle/12.1/client
+    /usr/lib/oracle/12.1/client64
+    /usr/share/oracle/12.1/client64
+    /usr/lib/oracle/12.1/client
+    /usr/share/oracle/12.1/client
     ${ORACLE_HOME}/rdbms/public
     ${ORACLE_HOME}/include
     ${ORACLE_HOME}/sdk/include  # Oracle SDK
