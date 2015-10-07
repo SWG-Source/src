@@ -1123,8 +1123,11 @@ jboolean JNICALL ScriptMethodsObjectCreateNamespace::persistObject(JNIEnv *env, 
 	ServerObject* object = NULL;
 	if (!JavaLibrary::getObject(target, object))
 		return JNI_FALSE;
-	object->persist();
-	return JNI_TRUE;
+	if (object->persist()) {
+		return JNI_TRUE;
+	} else {
+		return JNI_FALSE;
+	}
 }	// JavaLibrary::persistObject
 
 /**

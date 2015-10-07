@@ -297,7 +297,7 @@ public:
 	bool                         isInEndBaselines() const;
 	bool                         isNeedingPobFixup() const;
 	bool                         permanentlyDestroy             (DeleteReasons::Enumerator reason);
-	virtual void                 persist                        ();
+	virtual bool                 persist                        ();
 	virtual void                 onRemovingFromWorld            ();
 	virtual void                 unload                         ();
 	void                         moveToPlayerAndUnload          (const NetworkId &player);
