@@ -28,7 +28,7 @@ namespace PreloadManagerNameSpace
 	void loadObjectTemplates()
 	{
 		FILE* fp = fopen("objectTemplates.plf","r");
-		char buf [128];
+		char buf [256];
 		if (fp)
 		{
 			DEBUG_REPORT_LOG(true, ("Scanning templates"));
