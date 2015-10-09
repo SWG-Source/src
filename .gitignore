@@ -1,3 +1,5 @@
+latex
+html
 build*/
 !game/server/database/build/
 game/server/database/data/templates.sql
