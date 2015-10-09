@@ -28,11 +28,11 @@ namespace PreloadManagerNameSpace
 	void loadObjectTemplates()
 	{
 		FILE* fp = fopen("objectTemplates.plf","r");
-		char buf [128];
+		char buf [256];
 		if (fp)
 		{
 			DEBUG_REPORT_LOG(true, ("Scanning templates"));
-			char* line = fgets(buf, 128, fp);
+			char* line = fgets(buf, 256, fp);
 			while (line)
 			{
                 //strip newline
@@ -58,7 +58,7 @@ namespace PreloadManagerNameSpace
 					objectTemplate->preloadAssets();
 				}
 				DEBUG_REPORT_LOG(true, ("."));
-				line = fgets(buf, 128, fp);
+				line = fgets(buf, 256, fp);
 			}
 			fclose(fp);
 			DEBUG_REPORT_LOG(true, ("\n"));
@@ -68,11 +68,11 @@ namespace PreloadManagerNameSpace
 	void loadDataTables()
 	{
 		FILE* fp = fopen("datatables.plf","r");
-		char buf [128];
+		char buf [256];
 		if (fp)
 		{
 			DEBUG_REPORT_LOG(true, ("Scanning tables"));
-			char* line = fgets(buf, 128, fp);
+			char* line = fgets(buf, 256, fp);
 			while (line)
 			{
 				
@@ -99,7 +99,7 @@ namespace PreloadManagerNameSpace
 				UNREF(dt);
 #endif
 				DEBUG_REPORT_LOG(true, ("."));
-				line = fgets(buf, 128, fp);
+				line = fgets(buf, 256, fp);
 			}
 			fclose(fp);
 			DEBUG_REPORT_LOG(true, ("\n"));
