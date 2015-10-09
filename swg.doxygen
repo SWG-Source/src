@@ -32,7 +32,7 @@ DOXYFILE_ENCODING      = UTF-8
 # title of most generated pages and in a few other places.
 # The default value is: My Project.
 
-PROJECT_NAME           = "My Project"
+PROJECT_NAME           = "Star Wars Galaxies"
 
 # The PROJECT_NUMBER tag can be used to enter a project or revision number. This
 # could be handy for archiving the generated documentation or if some version
@@ -808,6 +808,7 @@ EXCLUDE_SYMLINKS       = NO
 # exclude all test directories for example use the pattern */test/*
 
 EXCLUDE_PATTERNS = */cmake/* */CMakeLists/* */alienbrain110/* */alienbrain122/* */alienbrain123/* */atiDxtc/* */atlmfc/* */bink/* */boost/* */debugHelp/* */dimm/* */directx9/* */dpvs/* */java/* */lcdui/* */lcdui_src/* */libiconv/* */libjpeg/* */libMozilla/* */libxml/* */libxml2/* */libxml2-2.6.7.win32/* */ms_unicode/* */nvtristrip/* */OCI/* */oracle/* */oracle_win32/* */pcre/* */perforce/* */qt/* */stlport453/* */tinyxml/* */vtune/* */zlib/* */zlib-1.2.3/* */CSAssist/utils/AES/*
+
 # The EXCLUDE_SYMBOLS tag can be used to specify one or more symbol names
 # (namespaces, classes, functions, etc.) that should be excluded from the
 # output. The symbol name can be a fully qualified name, a word, or if the
