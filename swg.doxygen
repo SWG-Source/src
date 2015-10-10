@@ -32,7 +32,7 @@ DOXYFILE_ENCODING      = UTF-8
 # title of most generated pages and in a few other places.
 # The default value is: My Project.
 
-PROJECT_NAME           = "My Project"
+PROJECT_NAME           = "Star Wars Galaxies"
 
 # The PROJECT_NUMBER tag can be used to enter a project or revision number. This
 # could be handy for archiving the generated documentation or if some version
@@ -395,8 +395,7 @@ TYPEDEF_HIDES_STRUCT   = NO
 # the optimal cache size from a speed point of view.
 # Minimum value: 0, maximum value: 9, default value: 0.
 
-LOOKUP_CACHE_SIZE      = 0
-
+LOOKUP_CACHE_SIZE      = 5
 #---------------------------------------------------------------------------
 # Build related configuration options
 #---------------------------------------------------------------------------
@@ -808,7 +807,7 @@ EXCLUDE_SYMLINKS       = NO
 # Note that the wildcards are matched against the file with absolute path, so to
 # exclude all test directories for example use the pattern */test/*
 
-EXCLUDE_PATTERNS = */cmake/* */CMakeLists/* */alienbrain110/* */alienbrain122/* */alienbrain123/* */atiDxtc/* */atlmfc/* */bink/* */boost/* */debugHelp/* */dimm/* */directx9/* */dpvs/* */java/* */lcdui/* */lcdui_src/* */libiconv/* */libjpeg/* */libMozilla/* */libxml/* */libxml2/* */libxml2-2.6.7.win32/* */ms_unicode/* */nvtristrip/* */OCI/* */oracle/* */oracle_win32/* */pcre/* */perforce/* */qt/* */stlport453/* */tinyxml/* */vtune/* */zlib/* */zlib-1.2.3/*
+EXCLUDE_PATTERNS = */cmake/* */CMakeLists/* */alienbrain110/* */alienbrain122/* */alienbrain123/* */atiDxtc/* */atlmfc/* */bink/* */boost/* */debugHelp/* */dimm/* */directx9/* */dpvs/* */java/* */lcdui/* */lcdui_src/* */libiconv/* */libjpeg/* */libMozilla/* */libxml/* */libxml2/* */libxml2-2.6.7.win32/* */ms_unicode/* */nvtristrip/* */OCI/* */oracle/* */oracle_win32/* */pcre/* */perforce/* */qt/* */stlport453/* */tinyxml/* */vtune/* */zlib/* */zlib-1.2.3/* */CSAssist/utils/AES/*
 
 # The EXCLUDE_SYMBOLS tag can be used to specify one or more symbol names
 # (namespaces, classes, functions, etc.) that should be excluded from the
@@ -1577,8 +1576,7 @@ EXTRA_SEARCH_MAPPINGS  =
 # If the GENERATE_LATEX tag is set to YES, doxygen will generate LaTeX output.
 # The default value is: YES.
 
-GENERATE_LATEX         = YES
-
+GENERATE_LATEX         = NO
 # The LATEX_OUTPUT tag is used to specify where the LaTeX docs will be put. If a
 # relative path is entered the value of OUTPUT_DIRECTORY will be put in front of
 # it.
@@ -1725,7 +1723,7 @@ LATEX_SOURCE_CODE      = NO
 # http://en.wikipedia.org/wiki/BibTeX and \cite for more info.
 # The default value is: plain.
 # This tag requires that the tag GENERATE_LATEX is set to YES.
-
+	
 LATEX_BIB_STYLE        = plain
 
 #---------------------------------------------------------------------------
