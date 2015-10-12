@@ -70,8 +70,8 @@ class PopulationList
 	PopulationMapType m_populationMap;
 	mutable PopulationMapType m_populationCache;
 
-	friend void Archive::get(ReadIterator & source, PopulationList & target);
-	friend void Archive::put(ByteStream & target, const PopulationList & source);
+	friend void Archive::get(Archive::ReadIterator & source, PopulationList & target);
+	friend void Archive::put(Archive::ByteStream & target, const PopulationList & source);
 };
 
 // ======================================================================

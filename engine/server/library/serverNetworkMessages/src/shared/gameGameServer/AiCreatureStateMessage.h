@@ -30,7 +30,7 @@ class AiCreatureStateMessage : public MessageQueue::Data
 {
 	CONTROLLER_MESSAGE_INTERFACE;
 
-	friend void Archive::get(ReadIterator & source, AiCreatureStateMessage & target);
+	friend void Archive::get(Archive::ReadIterator & source, AiCreatureStateMessage & target);
 
 public:
 

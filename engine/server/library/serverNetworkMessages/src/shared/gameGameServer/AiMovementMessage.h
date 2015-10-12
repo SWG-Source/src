@@ -35,7 +35,7 @@ class AiMovementMessage : public MessageQueue::Data
 {
 	CONTROLLER_MESSAGE_INTERFACE;
 
-	friend void Archive::get(ReadIterator & source, AiMovementMessage & target);
+	friend void Archive::get(Archive::ReadIterator & source, AiMovementMessage & target);
 
 public:
 	         AiMovementMessage();
