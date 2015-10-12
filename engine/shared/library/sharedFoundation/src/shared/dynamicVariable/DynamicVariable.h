@@ -161,8 +161,8 @@ private:
 	mutable bool m_cachedValueDirty;
 	mutable void * m_cachedValue[2];
 
-	friend void Archive::get(ReadIterator & source, DynamicVariable & target);
-	friend void Archive::put(ByteStream & target, const DynamicVariable & source);
+	friend void Archive::get(Archive::ReadIterator & source, DynamicVariable & target);
+	friend void Archive::put(Archive::ByteStream & target, const DynamicVariable & source);
 };
 
 //========================================================================
