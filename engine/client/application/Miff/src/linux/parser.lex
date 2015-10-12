@@ -39,7 +39,7 @@ int		yyparse();
 int		MIFFYYInput(char *buf,int max_size);
 void	initParser(void);
 void	count(void);
-void	yyerror(char *err);
+int	yyerror(char *err);
 void	open_brace(void);
 void	close_brace(void);
 int		count_brace(void);
@@ -374,7 +374,7 @@ void initParser(void)
 /*-------------------------------------------------**
 ** generate a dialog box to MFC to report an error **
 **-------------------------------------------------*/
-void yyerror(char *err)		/* called by yyparse() */
+int yyerror(char *err)		/* called by yyparse() */
 {
 	char myString[256];
 
