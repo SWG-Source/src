@@ -84,7 +84,7 @@ namespace Base
 
     int MD5::FF(int i, int j, int k, int l, int i1, int j1, int k1)
     {
-        i = uadd(i, j & k | ~j & l, i1, k1);
+        i = uadd(i, (j & k) | (~j & l), i1, k1);
         return uadd(rotate_left(i, j1), j);
     }
 
@@ -106,7 +106,7 @@ namespace Base
 
     int MD5::GG(int i, int j, int k, int l, int i1, int j1, int k1)
     {
-        i = uadd(i, j & l | k & ~l, i1, k1);
+        i = uadd(i, (j & l) | (k & ~l), i1, k1);
         return uadd(rotate_left(i, j1), j);
     }
 
