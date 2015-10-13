@@ -73,7 +73,6 @@ char * CSpanUtil::getDescriptionFromCardNum(const char *cardNum)
 			char temp[8];
 			memcpy(temp, cardNum, 7);
 			temp[7] = 0;
-			int value7 = atoi(temp);
 			temp[6] = 0;
 			int value6 = atoi(temp);
 			temp[5] = 0;

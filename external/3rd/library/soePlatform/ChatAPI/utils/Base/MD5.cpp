@@ -59,7 +59,7 @@ namespace Base
         int k = l = 0;
         for(; l < i; l += 4)
         {
-            ai[k] = achar0[l + j] & 0xff | (achar0[l + 1 + j] & 0xff) << 8 | (achar0[l + 2 + j] & 0xff) << 16 | (achar0[l + 3 + j] & 0xff) << 24;
+            ai[k] = (achar0[l + j] & 0xff) | (achar0[l + 1 + j] & 0xff) << 8 | (achar0[l + 2 + j] & 0xff) << 16 | (achar0[l + 3 + j] & 0xff) << 24;
             k++;
         }
 
@@ -84,7 +84,7 @@ namespace Base
 
     int MD5::FF(int i, int j, int k, int l, int i1, int j1, int k1)
     {
-        i = uadd(i, j & k | ~j & l, i1, k1);
+        i = uadd(i, (j & k) | (~j & l), i1, k1);
         return uadd(rotate_left(i, j1), j);
     }
 
@@ -106,7 +106,7 @@ namespace Base
 
     int MD5::GG(int i, int j, int k, int l, int i1, int j1, int k1)
     {
-        i = uadd(i, j & l | k & ~l, i1, k1);
+        i = uadd(i, (j & l) | (k & ~l), i1, k1);
         return uadd(rotate_left(i, j1), j);
     }
 

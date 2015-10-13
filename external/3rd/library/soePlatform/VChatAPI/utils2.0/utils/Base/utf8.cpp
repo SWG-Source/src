@@ -264,7 +264,7 @@ namespace soe
     {
         int wchar_length=0; //number of utf-8 characters
         int code_size;		//number of bytes each wchar
-		int cur_bytes_count = 0;
+	unsigned cur_bytes_count = 0;
         unsigned char byte;
 		char *pout = output;
 

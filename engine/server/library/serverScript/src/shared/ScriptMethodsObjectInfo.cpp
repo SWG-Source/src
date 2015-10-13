@@ -2699,58 +2699,6 @@ namespace
 
 	//-----------------------------------------------------------------------
 
-	bool DebugDumpCustomVar(JNIEnv *env, LocalRefPtr customVar)
-	{
-		NOT_NULL(env);
-		NOT_NULL(customVar.get());
-		NOT_NULL(customVar->getValue());
-
-		//-- get class for custom_var
-		const jclass customVarClass = env->FindClass("custom_var");
-
-		DEBUG_REPORT_LOG(!customVarClass, ("FindClass() failed for custom_var.\n"));
-		if (!customVarClass)
-			return false;
-
-		//-- invoke "String getVarName()" method
-		const jmethodID getVarNameMid = env->GetMethodID(customVarClass, "getVarName", "()Ljava/lang/String;");
-
-		DEBUG_REPORT_LOG(!getVarNameMid , ("GetMethodId() failed for getVarName().\n"));
-		if (!getVarNameMid)
-		{
-			env->DeleteLocalRef(customVarClass);
-			return false;
-		}
-
-		std::string  nativeCustomVarName;
-
-		JavaStringPtr javaCustomVarName = callStringMethod(*customVar, getVarNameMid);
-		JavaLibrary::convert(*javaCustomVarName, nativeCustomVarName);
-
-		//-- invoke "int getTypeId()" method
-		const jmethodID getTypeIdMid = env->GetMethodID(customVarClass, "getTypeId", "()I");
-
-		DEBUG_REPORT_LOG(!getTypeIdMid, ("GetMethodId() failed for getTypeId().\n"));
-		if (!getTypeIdMid)
-		{
-			env->DeleteLocalRef(customVarClass);
-			return false;
-		}
-
-		const int nativeCustomVarTypeId = callIntMethod(*customVar, getTypeIdMid);
-
-		//-- cleanup
-		env->DeleteLocalRef(customVarClass);
-
-		//-- print results
-		REPORT_LOG(true, ("<*> <CustomVar varName=[%s] typeId=[%d]\n", nativeCustomVarName.c_str(), nativeCustomVarTypeId));
-
-		//-- success
-		return true;
-	}
-
-	// ----------------------------------------------------------------------
-
 	void CustomizationVariableCollector(const std::string &fullVariablePathName, CustomizationVariable *customizationVariable, void *context)
 	{
 		//-- validate arguments
@@ -2770,51 +2718,6 @@ namespace
 
 	// ----------------------------------------------------------------------
 
-	void BasicRangedIntCustomizationVariableCollector(const std::string &fullVariablePathName, CustomizationVariable *customizationVariable, void *context)
-	{
-		//-- validate arguments
-		if (!customizationVariable || !context)
-		{
-			DEBUG_FATAL(true, ("programmer error: callback made with NULL arguments.\n"));
-			return;
-		}
-
-		//-- check if this is a basic ranged int
-		BasicRangedIntCustomizationVariable *const variable = dynamic_cast<BasicRangedIntCustomizationVariable*>(customizationVariable);
-		if (!variable)
-			return;
-
-		//-- convert context to customization variable collection
-		CustomizationVariableIteratorData *const iteratorData = reinterpret_cast<CustomizationVariableIteratorData*>(context);
-
-		//-- add CustomizationVariable to the container
-		iteratorData->m_variableNames.push_back(fullVariablePathName);
-		iteratorData->m_customizationVariables.push_back(customizationVariable);
-	}
-
-	// ----------------------------------------------------------------------
-
-	void PalcolorCustomizationVariableCollector(const std::string &fullVariablePathName, CustomizationVariable *customizationVariable, void *context)
-	{
-		//-- validate arguments
-		if (!customizationVariable || !context)
-		{
-			DEBUG_FATAL(true, ("programmer error: callback made with NULL arguments.\n"));
-			return;
-		}
-
-		//-- check if this is a PaletteColorCustomizationVariable
-		PaletteColorCustomizationVariable *const variable = dynamic_cast<PaletteColorCustomizationVariable*>(customizationVariable);
-		if (!variable)
-			return;
-
-		//-- convert context to customization variable collection
-		CustomizationVariableIteratorData *const iteratorData = reinterpret_cast<CustomizationVariableIteratorData*>(context);
-
-		//-- add CustomizationVariable to the container
-		iteratorData->m_variableNames.push_back(fullVariablePathName);
-		iteratorData->m_customizationVariables.push_back(customizationVariable);
-	}
 }
 
 // ----------------------------------------------------------------------

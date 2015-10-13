@@ -44,13 +44,7 @@ std::string soegethostname()
 	char res[NAME_SIZE];
 	memset(res, 0, NAME_SIZE);
 	std::string retVal;
-	int error = gethostname(res, NAME_SIZE-1);
 
-	int errdetail;
-	if(error !=0)
-	{
-		errdetail = errno;
-	}
 	retVal = res;
 	return retVal;
 }
