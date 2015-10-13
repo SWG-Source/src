@@ -280,10 +280,8 @@ void NpcConversation::sendResponses()
  */
 const NpcConversation::Response & NpcConversation::getResponse(int index) const
 {
-	const static Response dummy;
-
 	if (m_responses->empty())
-		return dummy;
+		return m_responses->at(static_cast<size_t>(0));
 
 	const int size = static_cast<int>(m_responses->size());
 	if (index < 0)
