@@ -17,9 +17,12 @@ class CTServiceServer
 			target[0] = 0;
 			return;
 		}
+	
 		int offset = 0;
-		while (offset < length && (target[offset++] = source[offset]));
-		target[length-1] = 0;
+		while (offset < length && (target[(offset+1)] = source[offset])) {		
+			target[length-1] = 0;
+			offset++;
+		}
 	}
 	public:
 		enum { SERVER_SIZE=64, SERVER_BUFFER, REASON_SIZE=4096, REASON_BUFFER };
