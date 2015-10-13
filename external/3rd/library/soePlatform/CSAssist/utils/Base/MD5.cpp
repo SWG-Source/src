@@ -59,7 +59,7 @@ namespace Base
         int k = l = 0;
         for(; l < i; l += 4)
         {
-            ai[k] = achar0[l + j] & 0xff | (achar0[l + 1 + j] & 0xff) << 8 | (achar0[l + 2 + j] & 0xff) << 16 | (achar0[l + 3 + j] & 0xff) << 24;
+            ai[k] = (achar0[l + j] & 0xff) | (achar0[l + 1 + j] & 0xff) << 8 | (achar0[l + 2 + j] & 0xff) << 16 | (achar0[l + 3 + j] & 0xff) << 24;
             k++;
         }
 
