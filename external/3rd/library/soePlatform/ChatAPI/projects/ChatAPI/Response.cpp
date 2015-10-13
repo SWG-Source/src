@@ -28,7 +28,7 @@ ResLoginAvatar::ResLoginAvatar(void *user, int avatarLoginPriority)
 
 void ResLoginAvatar::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	Plat_Unicode::String email;
 	unsigned inboxLimit = 0;
 	
@@ -69,7 +69,7 @@ ResTemporaryAvatar::ResTemporaryAvatar(void *user)
 
 void ResTemporaryAvatar::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
     get(iter, m_type);
     get(iter, m_track);
     get(iter, m_result);
@@ -88,7 +88,7 @@ ResLogoutAvatar::ResLogoutAvatar(void *user, unsigned avatarID)
 
 void ResLogoutAvatar::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -102,7 +102,7 @@ ResDestroyAvatar::ResDestroyAvatar(void *user, unsigned avatarID)
 
 void ResDestroyAvatar::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -116,7 +116,7 @@ ResGetAvatar::ResGetAvatar(void *user)
 
 void ResGetAvatar::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -150,7 +150,7 @@ ResGetAnyAvatar::ResGetAnyAvatar(void* user)
 
 void ResGetAnyAvatar::unpack(Base::ByteStream::ReadIterator& iter)
 {
-	unsigned numRead = 0;
+	
     get(iter, m_type);
     get(iter, m_track);
     get(iter, m_result);
@@ -194,7 +194,7 @@ ResAvatarList::~ResAvatarList()
 
 void ResAvatarList::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
     get(iter, m_type);
     get(iter, m_track);
     get(iter, m_result);
@@ -220,7 +220,7 @@ ResSetAvatarAttributes::ResSetAvatarAttributes(void *user)
 
 void ResSetAvatarAttributes::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -254,7 +254,7 @@ m_avatar(NULL)
 
 void ResSetAvatarStatusMessage::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
     get(iter, m_type);
     get(iter, m_track);
     get(iter, m_result);
@@ -291,7 +291,7 @@ ResSetAvatarForwardingEmail::ResSetAvatarForwardingEmail(void *user)
 
 void ResSetAvatarForwardingEmail::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -318,7 +318,7 @@ ResSetAvatarInboxLimit::ResSetAvatarInboxLimit(void *user)
 
 void ResSetAvatarInboxLimit::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -346,7 +346,7 @@ ResSearchAvatarKeywords::ResSearchAvatarKeywords(void *user)
 
 void ResSearchAvatarKeywords::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -379,7 +379,7 @@ ResSetAvatarKeywords::ResSetAvatarKeywords(void *user, unsigned avatarID)
 
 void ResSetAvatarKeywords::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -401,7 +401,7 @@ ResGetAvatarKeywords::~ResGetAvatarKeywords()
 
 void ResGetAvatarKeywords::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -427,7 +427,7 @@ ResGetRoom::ResGetRoom(void *user)
 
 void ResGetRoom::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -455,7 +455,7 @@ ResCreateRoom::ResCreateRoom(void *user, unsigned avatarID)
 
 void ResCreateRoom::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -481,7 +481,7 @@ ResDestroyRoom::ResDestroyRoom(void *user, unsigned avatarID)
 
 void ResDestroyRoom::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -498,7 +498,7 @@ ResSendInstantMessage::ResSendInstantMessage(void *user, unsigned avatarID, cons
 
 void ResSendInstantMessage::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -513,7 +513,7 @@ ResSendRoomMessage::ResSendRoomMessage(void *user, unsigned avatarID)
 
 void ResSendRoomMessage::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -529,7 +529,7 @@ ResSendBroadcastMessage::ResSendBroadcastMessage(void *user, unsigned avatarID, 
 
 void ResSendBroadcastMessage::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -543,7 +543,7 @@ ResFilterMessage::ResFilterMessage(void *user, unsigned version)
 
 void ResFilterMessage::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -561,7 +561,7 @@ ResAddFriend::ResAddFriend(void *user, unsigned avatarID, const ChatUnicodeStrin
 
 void ResAddFriend::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -578,7 +578,7 @@ m_comment(comment.string_data, comment.string_length)
 
 void ResAddFriendReciprocate::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -596,7 +596,7 @@ ResSetFriendComment::ResSetFriendComment(void *user, unsigned avatarID, const Ch
 
 void ResSetFriendComment::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -612,7 +612,7 @@ ResRemoveFriend::ResRemoveFriend(void *user, unsigned avatarID, const ChatUnicod
 
 void ResRemoveFriend::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -627,7 +627,7 @@ m_address(address.string_data, address.string_length)
 
 void ResRemoveFriendReciprocate::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -650,7 +650,7 @@ ResFriendStatus::~ResFriendStatus()
 
 void ResFriendStatus::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -678,7 +678,7 @@ ResAddIgnore::ResAddIgnore(void *user, unsigned avatarID, const ChatUnicodeStrin
 
 void ResAddIgnore::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -694,7 +694,7 @@ ResRemoveIgnore::ResRemoveIgnore(void *user, unsigned avatarID, const ChatUnicod
 
 void ResRemoveIgnore::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -717,7 +717,7 @@ ResIgnoreStatus::~ResIgnoreStatus()
 
 void ResIgnoreStatus::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -747,7 +747,7 @@ ResEnterRoom::ResEnterRoom(void *user, unsigned avatarID, const ChatUnicodeStrin
 
 void ResEnterRoom::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -778,7 +778,7 @@ ResAllowRoomEntry::ResAllowRoomEntry(void *user, unsigned srcAvatarID, const Cha
 
 void ResAllowRoomEntry::unpack(Base::ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -794,7 +794,7 @@ ResLeaveRoom::ResLeaveRoom(void *user, unsigned avatarID, const ChatUnicodeStrin
 
 void ResLeaveRoom::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -810,7 +810,7 @@ ResAddModerator::ResAddModerator(void *user, unsigned srcAvatarID)
 
 void ResAddModerator::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -826,7 +826,7 @@ ResRemoveModerator::ResRemoveModerator(void *user, unsigned srcAvatarID)
 
 void ResRemoveModerator::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -842,7 +842,7 @@ ResAddTemporaryModerator::ResAddTemporaryModerator(void *user, unsigned srcAvata
 
 void ResAddTemporaryModerator::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -858,7 +858,7 @@ ResRemoveTemporaryModerator::ResRemoveTemporaryModerator(void *user, unsigned sr
 
 void ResRemoveTemporaryModerator::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -874,7 +874,7 @@ ResAddBan::ResAddBan(void *user, unsigned srcAvatarID)
 
 void ResAddBan::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -890,7 +890,7 @@ ResRemoveBan::ResRemoveBan(void *user, unsigned srcAvatarID)
 
 void ResRemoveBan::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -906,7 +906,7 @@ ResAddInvite::ResAddInvite(void *user, unsigned srcAvatarID)
 
 void ResAddInvite::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -922,7 +922,7 @@ ResRemoveInvite::ResRemoveInvite(void *user, unsigned srcAvatarID)
 
 void ResRemoveInvite::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -938,7 +938,7 @@ ResGrantVoice::ResGrantVoice(void *user, unsigned srcAvatarID)
 
 void ResGrantVoice::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -954,7 +954,7 @@ ResRevokeVoice::ResRevokeVoice(void *user, unsigned srcAvatarID)
 
 void ResRevokeVoice::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -970,7 +970,7 @@ ResKickAvatar::ResKickAvatar(void *user, unsigned srcAvatarID)
 
 void ResKickAvatar::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -986,7 +986,7 @@ ResSetRoomParams::ResSetRoomParams(void *user, unsigned srcAvatarID)
 
 void ResSetRoomParams::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -1002,7 +1002,7 @@ ResChangeRoomOwner::ResChangeRoomOwner(void *user, unsigned srcAvatarID)
 
 void ResChangeRoomOwner::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -1023,7 +1023,7 @@ ResGetRoomSummaries::~ResGetRoomSummaries()
 
 void ResGetRoomSummaries::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -1062,7 +1062,7 @@ ResSendPersistentMessage::ResSendPersistentMessage(void *user, unsigned srcAvata
 
 void ResSendPersistentMessage::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -1082,7 +1082,7 @@ ResSendMultiplePersistentMessages::ResSendMultiplePersistentMessages(void *user,
 
 void ResSendMultiplePersistentMessages::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	unsigned resultIndex;
 
 	get(iter, m_type);
@@ -1122,7 +1122,7 @@ ResAlterPersistentMessage::~ResAlterPersistentMessage()
 
 void ResAlterPersistentMessage::unpack(Base::ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -1144,7 +1144,7 @@ ResGetPersistentMessage::~ResGetPersistentMessage()
 }
 void ResGetPersistentMessage::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -1193,7 +1193,7 @@ PersistentMessage ** const ResGetMultiplePersistentMessages::getList() const
 
 void ResGetMultiplePersistentMessages::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -1230,7 +1230,7 @@ ResGetPersistentHeaders::~ResGetPersistentHeaders()
 
 void ResGetPersistentHeaders::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -1276,7 +1276,7 @@ ResGetPartialPersistentHeaders::~ResGetPartialPersistentHeaders()
 
 void ResGetPartialPersistentHeaders::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -1315,7 +1315,7 @@ ResCountPersistentMessages::ResCountPersistentMessages(void *user, const ChatUni
 
 void ResCountPersistentMessages::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -1331,7 +1331,7 @@ ResUpdatePersistentMessage::ResUpdatePersistentMessage(void *user, unsigned srcA
 
 void ResUpdatePersistentMessage::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -1358,7 +1358,7 @@ ResClassifyPersistentMessages::ResClassifyPersistentMessages(void *user, unsigne
 
 void ResClassifyPersistentMessages::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -1374,7 +1374,7 @@ ResDeleteAllPersistentMessages::ResDeleteAllPersistentMessages(void *user, const
 
 void ResDeleteAllPersistentMessages::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -1468,7 +1468,7 @@ ResGetFanClubHandle::ResGetFanClubHandle(unsigned stationID, unsigned fanClubCod
 
 void ResGetFanClubHandle::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -1494,7 +1494,7 @@ ResFindAvatarByUID::~ResFindAvatarByUID()
 
 void ResFindAvatarByUID::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -1518,7 +1518,7 @@ ResRegistrarGetChatServer::ResRegistrarGetChatServer()
 
 void ResRegistrarGetChatServer::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
@@ -1622,7 +1622,7 @@ ResGetSnoopList::~ResGetSnoopList()
 
 void ResGetSnoopList::unpack(ByteStream::ReadIterator &iter)
 {
-	unsigned numRead = 0;
+	
 	get(iter, m_type);
 	get(iter, m_track);
 	get(iter, m_result);
