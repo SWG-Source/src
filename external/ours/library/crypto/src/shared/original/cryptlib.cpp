@@ -51,7 +51,7 @@ void StreamCipher::ProcessString(byte *outString, const byte *inString, unsigned
 void StreamCipher::ProcessString(byte *inoutString, unsigned int length)
 {
 	while(length--) {
-		*inoutString++;
+		(*inoutString)++;
 		*inoutString = ProcessByte(*inoutString);
 	}
 }
