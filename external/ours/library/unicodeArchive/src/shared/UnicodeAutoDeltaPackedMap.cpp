@@ -19,7 +19,6 @@ namespace Archive
 	template <> void AutoDeltaPackedMap<int, Unicode::String>::pack(ByteStream & target, const std::string & buffer)
 	{
 		char temp[200];
-		char valueBuffer[200];
 		Command c;
 
 		Archive::put(target, countCharacter(buffer,':'));
@@ -31,7 +30,6 @@ namespace Archive
 			if (*i==':')
 			{
 				temp[tempPos]='\0';
-				valueBuffer[0]='\0';
 				sscanf(temp,"%i",&c.key);
 				char const * const valueStart = strchr(temp,' ');
 				if (valueStart)
