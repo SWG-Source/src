@@ -33,7 +33,7 @@ public:
 	CSAssistGameAPIResult	setDetails(const CSAssistUnicodeChar *string);
 	CSAssistGameAPIResult	setLanguage(const CSAssistUnicodeChar *string);
 	CSAssistGameAPIResult	setLocation(const CSAssistUnicodeChar *string);
-	CSAssistGameAPIResult	setCategory(unsigned index, unsigned value);
+	CSAssistGameAPIResult	setCategory(int index, unsigned value);
 
 	CSAssistGameAPITicketID	ticketID;										// unique ID
 	CSAssistGameAPIUID		uid;											// station UID
