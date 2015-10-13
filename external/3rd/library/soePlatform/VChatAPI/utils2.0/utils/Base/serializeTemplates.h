@@ -719,9 +719,10 @@ namespace soe
 	int	ClassScribe<ClassType>::Print(char * stream, unsigned size, const ClassType & data, unsigned maxDepth) const
 	{
 		int bytesTotal = 0;
-		int bytes = 0;
 
 #ifdef PRINTABLE_MESSAGES
+		int bytes = 0;
+
 		if (maxDepth == 0) {
 			bytes = snprintf(stream, size, "%s{mMembers(%u)}", ClassName(), mMemberScribes.size());
 			return bytes;
