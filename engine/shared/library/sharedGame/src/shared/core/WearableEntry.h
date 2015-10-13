@@ -28,8 +28,8 @@ namespace Archive
 
 class WearableEntry
 {
-	friend void Archive::get(ReadIterator & source, WearableEntry & target);
-	friend void Archive::put(ByteStream & target, const WearableEntry & source);
+	friend void Archive::get(Archive::ReadIterator & source, WearableEntry & target);
+	friend void Archive::put(Archive::ByteStream & target, const WearableEntry & source);
 
   public:
 	WearableEntry(const std::string&, int, const NetworkId&, int);

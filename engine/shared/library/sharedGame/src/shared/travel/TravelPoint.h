@@ -31,8 +31,8 @@ namespace Archive
 
 class TravelPoint
 {
-	friend void Archive::get(ReadIterator& source, TravelPoint& target);
-	friend void Archive::put(ByteStream& target, const TravelPoint& source);
+	friend void Archive::get(Archive::ReadIterator& source, TravelPoint& target);
+	friend void Archive::put(Archive::ByteStream& target, const TravelPoint& source);
 
 public:
 
