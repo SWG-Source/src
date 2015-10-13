@@ -315,7 +315,7 @@ namespace soe
 			UUEncodeTripleToQuadPtr(source + z,quad,(z + 3 < sourceLen) ? 3 : (sourceLen - z));
 			destLen -= strlen(quad);
 			if (destLen > 0) {
-				dest += snprintf(dest, sizeof(dest), quad);
+				dest += snprintf(dest, sourceLen, quad);
 			} else {
 				noErrors = false;
 			}
@@ -355,7 +355,7 @@ namespace soe
 		{
 			UUEncodeTripleToQuadRef(source.begin() + z,quad,(z + 3 < sourceLen) ? 3 : (sourceLen - z));
 			if (destLen > 0) {
-				dest += snprintf(dest, sizeof(dest), quad);
+				dest += snprintf(dest, sourceLen, quad);
 			} else {
 				noErrors = false;
 			}
@@ -389,7 +389,7 @@ namespace soe
 		for (; sourceLen > 0; sourceLen--, source++)
 		{
 			if (destLen >= 2) {
-				destLen -= snprintf(dest, sizeof(dest), format, *source);
+				destLen -= snprintf(dest, sourceLen, format, *source);
 			} else {
 				noErrors = false;
 			}
