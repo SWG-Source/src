@@ -19,10 +19,14 @@ class CTServiceCustomer
 			target[0] = 0;
 			return;
 		}
+		
 		int offset = 0;
-		while (offset < length && (target[offset++] = source[offset]));
-		target[length-1] = 0;
+		while (offset < length && (target[(offset+1)] = source[offset])){
+			target[length-1] = 0;
+			offset++;
+		}
 	}
+
 	public:
 		enum {	SHORT_NAME_SIZE=64,			SHORT_NAME_BUFFER,
 				PHONE_SIZE=32,				PHONE_BUFFER, 
