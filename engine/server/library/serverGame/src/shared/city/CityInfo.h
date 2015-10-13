@@ -34,8 +34,8 @@ namespace Archive
 
 class CityInfo
 {
-	friend void Archive::get(ReadIterator & source, CityInfo & target);
-	friend void Archive::put(ByteStream & target, const CityInfo & source);
+	friend void Archive::get(Archive::ReadIterator & source, CityInfo & target);
+	friend void Archive::put(Archive::ByteStream & target, const CityInfo & source);
 
 public:
 	CityInfo();

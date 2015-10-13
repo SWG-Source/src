@@ -74,8 +74,8 @@ class PlayerQuestData
 	uint32 m_relativeAgeIndex;  // This is not meant to be persisted
 	bool   m_hasReceivedReward;
 
-	friend void Archive::get(ReadIterator & source, PlayerQuestData & target);
-	friend void Archive::put(ByteStream & target, const PlayerQuestData & source);
+	friend void Archive::get(Archive::ReadIterator & source, PlayerQuestData & target);
+	friend void Archive::put(Archive::ByteStream & target, const PlayerQuestData & source);
 };
 
 // ======================================================================

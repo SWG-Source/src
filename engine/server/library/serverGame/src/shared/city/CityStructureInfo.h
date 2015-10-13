@@ -30,8 +30,8 @@ namespace Archive
 
 class CityStructureInfo
 {
-	friend void Archive::get(ReadIterator & source, CityStructureInfo & target);
-	friend void Archive::put(ByteStream & target, const CityStructureInfo & source);
+	friend void Archive::get(Archive::ReadIterator & source, CityStructureInfo & target);
+	friend void Archive::put(Archive::ByteStream & target, const CityStructureInfo & source);
 
 public:
 	bool operator== (const CityStructureInfo& rhs) const;

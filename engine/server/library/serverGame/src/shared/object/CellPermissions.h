@@ -48,8 +48,8 @@ namespace CellPermissions
 
 	class PermissionObject
 	{
-		friend void Archive::get( ReadIterator & source, CellPermissions::PermissionObject & target );
-		friend void Archive::put( ByteStream & target, const CellPermissions::PermissionObject & source );
+		friend void Archive::get( Archive::ReadIterator & source, CellPermissions::PermissionObject & target );
+		friend void Archive::put( Archive::ByteStream & target, const CellPermissions::PermissionObject & source );
 
 		friend class ::BuildingObject;
 		friend class ::CellObject;

@@ -210,7 +210,7 @@ public:
 	const stdvector<ValueDictionary>::fwd &                   getValueDictionaryArrayParam(int index) const;
 
 protected:
-	friend void Archive::get(ReadIterator & source, ScriptParams & target);
+	friend void Archive::get(Archive::ReadIterator & source, ScriptParams & target);
 
 private:
 

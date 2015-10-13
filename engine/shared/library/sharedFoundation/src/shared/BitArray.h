@@ -63,8 +63,8 @@ public:
 	void getAsDbTextString(std::string &result, int maxNibbleCount = 32767) const;
 	void setFromDbTextString(const char * text);
 
-	friend void Archive::get (ReadIterator &source, BitArray &target);
-	friend void Archive::put (ByteStream &target, const BitArray &source);
+	friend void Archive::get (Archive::ReadIterator &source, BitArray &target);
+	friend void Archive::put (Archive::ByteStream &target, const BitArray &source);
 
 private:
 	// *****WARNING***** *****WARNING***** *****WARNING***** *****WARNING*****
