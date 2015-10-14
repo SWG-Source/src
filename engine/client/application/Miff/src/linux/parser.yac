@@ -27,7 +27,7 @@
 #include <string.h>
 #include <stdlib.h>			/* for toupper() */
 #include <wchar.h>			/* for wide character (16bit) strings */
-
+#include <ctype.h> 			/* for strtoupper and strtolower */
 #include <stdio.h>
 
 /*----------------------------------------------------------------**
