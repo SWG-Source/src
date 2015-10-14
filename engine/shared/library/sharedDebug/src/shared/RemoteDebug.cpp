@@ -674,7 +674,7 @@ void RemoteDebug::send(MESSAGE_TYPE type, const char* theName)
 
 	if (explicitMessageLength != 0)
 		messageLength         = explicitMessageLength;
-	else if (ms_varArgs_buffer)
+	else if (strlen(ms_varArgs_buffer) > 0)
 	{
 		//only grab buffer sizes if needed
 		messageLength         = strlen(ms_varArgs_buffer)+1;
@@ -688,7 +688,7 @@ void RemoteDebug::send(MESSAGE_TYPE type, const char* theName)
 
 	uint32 packetLength = static_cast<uint32>(messageTypeLength + channelNumberLength + messageLengthLength + static_cast<int>(messageLength));
 
-	if (ms_varArgs_buffer)
+	if (strlen(ms_varArgs_buffer) > 0)
 	{
 		//copy data into the packet
 		memcpy(ms_buffer, &messageType, static_cast<uint32>(messageTypeLength));

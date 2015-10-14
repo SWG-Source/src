@@ -22,9 +22,12 @@ class CTServiceDBOrder
 			target[0] = 0;
 			return;
 		}
+		
 		int offset = 0;
-		while (offset < length && (target[offset++] = source[offset]));
-		target[length-1] = 0;
+		while (offset < length && (target[(offset+1)] = source[offset])){
+			target[length-1] = 0;
+			offset++;
+		}
 	}
 
 	public:

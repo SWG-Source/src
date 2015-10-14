@@ -45,10 +45,11 @@ ClockStamp Clock::getCurTime()
 
     return ret;
 #else
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wuninitialized"
     struct timeval tv;
-    int err;
-    err = gettimeofday(&tv, NULL);
     return (static_cast<ClockStamp>(tv.tv_sec) * 1000 + static_cast<ClockStamp>(tv.tv_usec / 1000));
+#pragma clang diagnostic pop
 #endif    
 }
 

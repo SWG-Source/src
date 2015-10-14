@@ -82,7 +82,7 @@ unsigned int FilterWithBufferedInput::BlockQueue::GetAll(byte *outString)
 void FilterWithBufferedInput::BlockQueue::Put(const byte *inString, unsigned int length)
 {
 	assert(m_size + length <= m_buffer.size);
-	byte *end = (m_size < m_buffer+m_buffer.size-m_begin) ? m_begin + m_size : m_begin + m_size - m_buffer.size;
+	byte *end = (m_size < (unsigned)(m_buffer+m_buffer.size-m_begin)) ? m_begin + m_size : m_begin + m_size - m_buffer.size;
 	unsigned int len = STDMIN(length, (unsigned int)(m_buffer+m_buffer.size-end));
 	memcpy(end, inString, len);
 	if (len < length)

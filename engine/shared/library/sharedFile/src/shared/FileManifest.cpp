@@ -296,7 +296,7 @@ void FileManifest::addStoredManifestEntry(const char *fileName, const char * sce
 	entry->size     = fileSize;
 	entry->accesses = 0;
 
-	std::pair<ManifestMap::iterator, bool> insertReturn = s_manifest.insert(std::pair<const uint32, FileManifestEntry*>(crc, entry));
+	s_manifest.insert(std::pair<const uint32, FileManifestEntry*>(crc, entry));
 
 	delete entry;
 }

@@ -77,7 +77,7 @@ template<typename T, typename P> PriorityQueue<T, P>::PriorityQueue(int queueSiz
 	mQueueEnd = 0;
 	mQueueSize = queueSize;
 	mQueue = new QueueEntry[mQueueSize];
-	memset(mQueue, 0, sizeof(mQueue));
+	memset(mQueue, 0, mQueueSize);
 }
 
 template<typename T, typename P> PriorityQueue<T, P>::~PriorityQueue()

@@ -50,8 +50,10 @@ void StreamCipher::ProcessString(byte *outString, const byte *inString, unsigned
 
 void StreamCipher::ProcessString(byte *inoutString, unsigned int length)
 {
-	while(length--)
-		*inoutString++ = ProcessByte(*inoutString); //TODO: order of operations issue here, per the warning
+	while(length--) {
+		(*inoutString)++;
+		*inoutString = ProcessByte(*inoutString);
+	}
 }
 
 bool HashModule::Verify(const byte *digestIn)

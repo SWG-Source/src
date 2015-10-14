@@ -39,10 +39,6 @@ if(WIN32)
 	set(PLATFORM_SOURCES
 		win32/FirstServerUtility.cpp
 	)
-else()
-	set(PLATFORM_SOURCES
-		linux/stlhack.cpp
-	)
 endif()
 
 include_directories(

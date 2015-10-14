@@ -125,7 +125,7 @@ CSAssistGameAPIResult CSAssistGameAPITicket::setLocation(const CSAssistUnicodeCh
 }
 
 //-----------------------------------------------------------
-CSAssistGameAPIResult CSAssistGameAPITicket::setCategory(unsigned index, unsigned value)
+CSAssistGameAPIResult CSAssistGameAPITicket::setCategory(int index, unsigned value)
 //-----------------------------------------------------------
 {
 	if (index < 0 || index >= (short)CSASSIST_NUM_CATEGORIES)

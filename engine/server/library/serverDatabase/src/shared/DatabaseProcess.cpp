@@ -193,7 +193,6 @@ DatabaseProcess::~DatabaseProcess()
 void DatabaseProcess::run(void)
 {
 	static bool shouldSleep = ConfigServerDatabase::getShouldSleep();
-	unsigned long startTime;
 	bool idle=false;
 	int loopcount=0;
 	float nextMemoryReportTime=0;
@@ -204,8 +203,6 @@ void DatabaseProcess::run(void)
 	while (!done)
 	{
 		PROFILER_AUTO_BLOCK_DEFINE("main loop");
-
-		startTime = Clock::timeMs();
 
 		if (!Os::update())
 			setDone("OS condition (Parent pid change)");

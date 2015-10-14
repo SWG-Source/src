@@ -1814,8 +1814,6 @@ void CreatureObject::initializeFirstTimeObject()
 
 void CreatureObject::onLoadedFromDatabase()
 {
-	typedef const std::string * strptr;
-
 	if (isAuthoritative())
 	{
 		if (isPlayerControlled())
@@ -8545,8 +8543,6 @@ void CreatureObject::onCharacterMatchRetrieved(MatchMakingCharacterResult const 
 
 	if (creatureController != NULL)
 	{
-		typedef std::pair<NetworkId, Unicode::String> Payload;
-
 		MessageQueueGenericValueType<MatchMakingCharacterResult> * const msg = new MessageQueueGenericValueType<MatchMakingCharacterResult>(results);
 
 		creatureController->appendMessage(static_cast<int>(CM_characterMatchRetrieved), 0.0f, msg, GameControllerMessageFlags::SEND | GameControllerMessageFlags::RELIABLE | GameControllerMessageFlags::DEST_AUTH_CLIENT);

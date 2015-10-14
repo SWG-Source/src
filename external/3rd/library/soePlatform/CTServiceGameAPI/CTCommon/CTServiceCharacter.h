@@ -18,9 +18,12 @@ class CTServiceCharacter
 			target[0] = 0;
 			return;
 		}
+
 		int offset = 0;
-		while (offset < length && (target[offset++] = source[offset]));
-		target[length-1] = 0;
+		while (offset < length && (target[(offset+1)] = source[offset])) {
+			target[length-1] = 0;
+			offset++;
+		}
 	}
 	public:
 		enum { CHARACTER_SIZE=64, CHARACTER_BUFFER, REASON_SIZE=4096, REASON_BUFFER };

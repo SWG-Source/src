@@ -148,7 +148,7 @@ inline int UpperHashString(char *string)
 	int h = 0;
 	while (*string != 0)
 	{
-		h = ((31 * h) + (*string >= 'a' && *string <= 'z') ? (*string - 0x20) : *string) ^ (h >> 26);
+		h = ((31 * h) + (((*string >= 'a' && *string <= 'z') ? (*string - 0x20) : *string) ^ (h >> 26)));
 		string++;
 	}
 	return(h);

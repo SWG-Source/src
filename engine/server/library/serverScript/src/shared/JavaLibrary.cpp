@@ -1232,7 +1232,7 @@ void JavaLibrary::initializeJavaThread()
 		}
 
 #ifdef JNI_VERSION_1_4
-		if (!ms_javaVmType == JV_ibm)
+		if ((!ms_javaVmType) == JV_ibm)
 		{
 			tempOption.optionString = "-Xrs";
 			options.push_back(tempOption);
@@ -1243,14 +1243,6 @@ void JavaLibrary::initializeJavaThread()
 		{
 			tempOption.optionString = "-Xloggc:javagc.log";
 			options.push_back(tempOption);
-//			tempOption.optionString = "-Xrunpri";
-//			options.push_back(tempOption);
-//			tempOption.optionString = "-Xbootclasspath/a:/home/sjakab/temp/OptimizeitSuiteDemo/lib/oibcp.jar";
-//			options.push_back(tempOption);
-//			tempOption.optionString = "-Xboundthreads";
-//			options.push_back(tempOption);
-//			tempOption.optionString = "-Xrunhprof:heap=format=b";
-//			options.push_back(tempOption);
 		}
 
 #endif
