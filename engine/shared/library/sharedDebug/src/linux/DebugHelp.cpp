@@ -404,8 +404,9 @@ static bool dwarfSearch(char const *dwarfLines, unsigned int linesLength, void c
 		char const *srcFile = bestUnderSrcFileTable+1;
 		for (int i = 0; i < bestUnderSrcFileNum; ++i)
 		{
-			while (*srcFile++);
+			while (*srcFile++) {
 				srcFile += 3;
+			}
 		}
 		retSrcFile = SymbolCache::uniqueString(srcFile);
 		retSrcLine = bestUnderSrcLine;

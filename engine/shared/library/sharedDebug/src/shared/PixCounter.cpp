@@ -461,7 +461,7 @@ void PixCounter::String::set(const char * format, ...)
 
 			char buffer[512];
 			vsnprintf(buffer, sizeof(buffer), format, va);
-			buffer[sizeof(buffer-1)] = '\0';
+			buffer[sizeof(buffer)-1] = '\0';
 			operator =(buffer);
 
 		va_end(va);
