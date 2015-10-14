@@ -84,7 +84,7 @@ public:
 	};
 
 public:
-	const TriggerVolumeData & getTriggerVolumes(int index) const;
+	const TriggerVolumeData getTriggerVolumes(int index) const;
 	size_t            getTriggerVolumesCount(void) const;
 	CombatSkeleton     getCombatSkeleton(bool testData = false) const;
 	int                    getMaxHitPoints(bool testData = false) const;

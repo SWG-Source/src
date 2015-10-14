@@ -124,7 +124,7 @@ Object * ServerTangibleObjectTemplate::createObject(void) const
 }	// ServerTangibleObjectTemplate::createObject
 
 //@BEGIN TFD
-const TriggerVolumeData & ServerTangibleObjectTemplate::getTriggerVolumes(int index) const
+const TriggerVolumeData ServerTangibleObjectTemplate::getTriggerVolumes(int index) const
 {
 	const ServerTangibleObjectTemplate * base = NULL;
 	if (m_baseData != NULL)
@@ -155,7 +155,8 @@ const TriggerVolumeData & ServerTangibleObjectTemplate::getTriggerVolumes(int in
 	}
 
 	DEBUG_FATAL(index < 0 || static_cast<size_t>(index) >= m_triggerVolumes.size(), ("template param index out of range"));
-	const TriggerVolumeData & value = m_triggerVolumes[index]->getValue();
+	const TriggerVolumeData value = m_triggerVolumes[index]->getValue();
+
 	return value;
 }	// ServerTangibleObjectTemplate::getTriggerVolumes
 
