@@ -247,6 +247,6 @@ const gamecode_text _gamecodeName[GAMECODE_END] =
 };
 static std::map<apiGamecode,const char *> GamecodeName((const std::map<apiGamecode,const char *>::value_type *)&_gamecodeName[0],(const std::map<apiGamecode,const char *>::value_type *)&_gamecodeName[GAMECODE_END]);
 
-#endif UNIX
+#endif
 #endif
 

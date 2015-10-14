@@ -4156,11 +4156,13 @@ void ServerObject::performCombatSpam (const MessageQueueCombatSpam & spamMsg, bo
 	if (sendToTarget && !sendToBystanders)
 	{
 		ServerObject * const target = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(spamMsg.m_defender));
-		if (target)
-			if (target->getNetworkId() != spamMsg.m_attacker)
+		if (target) {
+			if (target->getNetworkId() != spamMsg.m_attacker) {
 				target->seeCombatSpam (spamMsg);
-		else
+			}
+		} else {
 			WARNING_STRICT_FATAL (!sendToSelf && !sendToBystanders, ("null target_obj in commandFuncCombatSpam, when sendToTarget was set true"));
+		}
 	}
 
 	if (sendToBystanders)

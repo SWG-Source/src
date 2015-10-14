@@ -421,7 +421,7 @@ void ConnectionServerConnection::onReceive(const Archive::ByteStream & message)
 						NetworkId targetId = message.getKickeeId();
 						std::string const & targetName = message.getKickeeName();
 						if(targetId.isValid() ||
-							!targetName.empty() && (ChatServer::getVoiceChatLoginInfoFromName(targetName, targetId)))
+							(!targetName.empty() && (ChatServer::getVoiceChatLoginInfoFromName(targetName, targetId))))
 						{
 							ChatServer::requestKickPlayerFromChannel(message.getRequester(), targetId, message.getChannelName());
 						}

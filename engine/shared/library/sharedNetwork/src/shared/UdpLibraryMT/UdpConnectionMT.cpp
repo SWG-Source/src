@@ -18,6 +18,7 @@ class UdpConnectionHandlerInternal: public UdpConnectionHandler
 {
 public:
 	UdpConnectionHandlerInternal();
+	virtual ~UdpConnectionHandlerInternal();
 
 	void setOwner(UdpConnectionHandlerMT *owner);
 	void processReceive(UdpConnectionMT *conMT, unsigned char const *data, int dataLen);
@@ -42,6 +43,8 @@ UdpConnectionHandlerInternal::UdpConnectionHandlerInternal() :
 	m_owner(0)
 {
 }
+
+UdpConnectionHandlerInternal::~UdpConnectionHandlerInternal(){}
 
 // ----------------------------------------------------------------------
 

@@ -3923,8 +3923,8 @@ void GameServer::run(void)
 				NetworkHandler::update();
 			}
 
-			if (   ServerWorld::isSpaceScene() && ConfigServerGame::getSpaceShouldSleep()
-			    || !ServerWorld::isSpaceScene() && ConfigServerGame::getGroundShouldSleep())
+			if ((ServerWorld::isSpaceScene() && ConfigServerGame::getSpaceShouldSleep())
+			    || (!ServerWorld::isSpaceScene() && ConfigServerGame::getGroundShouldSleep()))
 			{
 				PROFILER_AUTO_BLOCK_DEFINE("Os::sleep");
 				Os::sleep(1);
