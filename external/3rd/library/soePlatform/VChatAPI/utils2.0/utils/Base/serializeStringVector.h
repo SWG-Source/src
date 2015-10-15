@@ -221,9 +221,6 @@ namespace soe
 			return bytes;
 		}
 
-		operator stringVector_t () { return *this; }
-
-		//unsigned Read(const unsigned char * stream, unsigned size);
 		//DECLARE_SCRIBE_MEMBERS
 	};
 
