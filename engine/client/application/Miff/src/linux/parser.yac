@@ -985,7 +985,7 @@ void addEnumSymbol(char *symString, long value)
 	if (MAX_SYMCHARS < strlen(symString))
 	{
 		/* somebody insane decided to use variable longer then max size! */
-		sprintf(err_msg, "%s is longer then %d characters! [value: %d]", symString, MAX_SYMCHARS, value);
+		sprintf(err_msg, "%s is longer then %d characters! [value: %ld]", symString, MAX_SYMCHARS, value);
 		yyerror(err_msg);
 	}
 	else
