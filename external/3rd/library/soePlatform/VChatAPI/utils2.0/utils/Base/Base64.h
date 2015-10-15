@@ -13,7 +13,7 @@ namespace soe
 		static bool UUEncode(const unsigned char *source, unsigned sourceLen, std::string &destString);
 		static bool UUEncode(const std::vector<unsigned char> &source, char *dest, unsigned destLen);
 		static bool UUEncode(const std::vector<unsigned char> &source, std::string &destString);
-		static bool UUDecode(const char *source, unsigned sourceLen, unsigned char *dest, unsigned *destLen);
+		static bool UUDecode(const char *source, unsigned sourceLen, unsigned char *dest, int *destLen);
 		static bool UUDecode(const char *source, unsigned sourceLen, std::vector<unsigned char> &destVector);
 		static bool UUDecode(const char *source, unsigned sourceLen, std::string &destString);
 
