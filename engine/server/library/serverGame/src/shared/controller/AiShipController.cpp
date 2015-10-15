@@ -1648,7 +1648,7 @@ void AiShipController::sendDebugAiToClients(AiDebugString & aiDebugString)
 				float const turretMissChance = getTurretMissChance() * 100.0f;
 				float const turretMissAngleDegrees = convertRadiansToDegrees(getTurretMissAngle());
 
-				aiDebugString.addText(formattedString.sprintf("turret miss(%.0f%% @ %.0f°)\n", turretMissChance, turretMissAngleDegrees));
+				aiDebugString.addText(formattedString.sprintf("turret miss(%.0f%% @ %.0f)\n", turretMissChance, turretMissAngleDegrees));
 			}
 		}
 		
