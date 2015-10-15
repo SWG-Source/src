@@ -68,7 +68,7 @@ void SetWarningCallback(WarningCallback);
 	template <class T>
 	inline T *NonNull(T *pointer, const char *name)
 	{
-		FATAL(!pointer, ("%s pointer is null", name));
+		WARNING(!pointer, ("%s pointer is null", name));
 		return pointer;
 	}
 
