@@ -343,7 +343,7 @@ float SharedCreatureObjectTemplate::getAcceleration(MovementTypes index) const
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
 	}
 
-	DEBUG_FATAL(index < 0 || index >= 2, ("template param index out of range"));
+	DEBUG_FATAL(static_cast<int>(index) < 0 || static_cast<int>(index) >= 2, ("template param index out of range"));
 	if (!m_acceleration[index].isLoaded())
 	{
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
@@ -392,7 +392,7 @@ float SharedCreatureObjectTemplate::getAccelerationMin(MovementTypes index) cons
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
 	}
 
-	DEBUG_FATAL(index < 0 || index >= 2, ("template param index out of range"));
+	DEBUG_FATAL(static_cast<int>(index) < 0 || static_cast<int>(index) >= 2, ("template param index out of range"));
 	if (!m_acceleration[index].isLoaded())
 	{
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
@@ -441,7 +441,7 @@ float SharedCreatureObjectTemplate::getAccelerationMax(MovementTypes index) cons
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
 	}
 
-	DEBUG_FATAL(index < 0 || index >= 2, ("template param index out of range"));
+	DEBUG_FATAL(static_cast<int>(index) < 0 || static_cast<int>(index) >= 2, ("template param index out of range"));
 	if (!m_acceleration[index].isLoaded())
 	{
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
@@ -490,7 +490,7 @@ float SharedCreatureObjectTemplate::getSpeed(MovementTypes index) const
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
 	}
 
-	DEBUG_FATAL(index < 0 || index >= 2, ("template param index out of range"));
+	DEBUG_FATAL(static_cast<int>(index) < 0 || static_cast<int>(index) >= 2, ("template param index out of range"));
 	if (!m_speed[index].isLoaded())
 	{
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
@@ -539,7 +539,7 @@ float SharedCreatureObjectTemplate::getSpeedMin(MovementTypes index) const
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
 	}
 
-	DEBUG_FATAL(index < 0 || index >= 2, ("template param index out of range"));
+	DEBUG_FATAL(static_cast<int>(index) < 0 || static_cast<int>(index) >= 2, ("template param index out of range"));
 	if (!m_speed[index].isLoaded())
 	{
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
@@ -588,7 +588,7 @@ float SharedCreatureObjectTemplate::getSpeedMax(MovementTypes index) const
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
 	}
 
-	DEBUG_FATAL(index < 0 || index >= 2, ("template param index out of range"));
+	DEBUG_FATAL(static_cast<int>(index) < 0 || static_cast<int>(index) >= 2, ("template param index out of range"));
 	if (!m_speed[index].isLoaded())
 	{
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
@@ -637,7 +637,7 @@ float SharedCreatureObjectTemplate::getTurnRate(MovementTypes index) const
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
 	}
 
-	DEBUG_FATAL(index < 0 || index >= 2, ("template param index out of range"));
+	DEBUG_FATAL(static_cast<int>(index) < 0 || static_cast<int>(index) >= 2, ("template param index out of range"));
 	if (!m_turnRate[index].isLoaded())
 	{
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
@@ -686,7 +686,7 @@ float SharedCreatureObjectTemplate::getTurnRateMin(MovementTypes index) const
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
 	}
 
-	DEBUG_FATAL(index < 0 || index >= 2, ("template param index out of range"));
+	DEBUG_FATAL(static_cast<int>(index) < 0 || static_cast<int>(index) >= 2, ("template param index out of range"));
 	if (!m_turnRate[index].isLoaded())
 	{
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
@@ -735,7 +735,7 @@ float SharedCreatureObjectTemplate::getTurnRateMax(MovementTypes index) const
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
 	}
 
-	DEBUG_FATAL(index < 0 || index >= 2, ("template param index out of range"));
+	DEBUG_FATAL(static_cast<int>(index) < 0 || static_cast<int>(index) >= 2, ("template param index out of range"));
 	if (!m_turnRate[index].isLoaded())
 	{
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
