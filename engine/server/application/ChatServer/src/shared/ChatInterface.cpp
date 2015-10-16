@@ -1851,7 +1851,7 @@ void ChatInterface::OnReceiveForcedLogout(const ChatAvatar *oldAvatar)
 	ChatServer::fileLog(false, "ChatInterface", "OnReceiveForcedLogout() oldAvatar(%s)", ChatServer::getFullChatAvatarName(oldAvatar).c_str());
 
 	PROFILER_AUTO_BLOCK_DEFINE("ChatInterface - OnReceiveForcedLogout");
-	if ((oldAvatar == NULL))
+	if (oldAvatar == NULL)
 	{
 		DEBUG_WARNING(true, ("We received an OnReceiveForcedLogout with a success result code but NULL data.  This is an error that the API should never give."));
 		return;
@@ -2877,7 +2877,7 @@ void ChatInterface::OnReceivePersistentMessage(const ChatAvatar *destAvatar, con
 	ChatServer::fileLog(false, "ChatInterface", "OnReceivePersistentMessage() destAvatar(%s)", ChatServer::getFullChatAvatarName(destAvatar).c_str());
 
 	PROFILER_AUTO_BLOCK_DEFINE("ChatInterface - OnReceivePersistentMessage");
-	if ((destAvatar == NULL))
+	if (destAvatar == NULL)
 	{
 		DEBUG_WARNING(true, ("We received an OnREceivePersistentMessage with a success result code but NULL data.  This is an error that the API should never give."));
 		return;

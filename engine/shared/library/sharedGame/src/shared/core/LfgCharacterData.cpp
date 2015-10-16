@@ -616,7 +616,7 @@ Unicode::String const & LfgCharacterData::getProfessionDisplayString(LfgCharacte
 
 	static Unicode::String empty;
 
-	if ((static_cast<size_t>(profession) >= 0) && (static_cast<size_t>(profession) < s_professionDisplayString.size()))
+	if ((static_cast<int>(profession) >= 0) && (static_cast<int>(profession) < s_professionDisplayString.size()))
 		return s_professionDisplayString[static_cast<size_t>(profession)];
 
 	return empty;

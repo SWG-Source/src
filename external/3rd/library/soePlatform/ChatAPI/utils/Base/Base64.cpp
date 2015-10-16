@@ -170,7 +170,7 @@ namespace Base
 		return bytes;
 	}
 
-	bool Base64::UUDecode(const char *source, unsigned sourceLen, unsigned char *dest, unsigned *destLen)
+	bool Base64::UUDecode(const char *source, unsigned sourceLen, unsigned char *dest, int *destLen)
 	{
 		unsigned char q[3];
 		unsigned index;

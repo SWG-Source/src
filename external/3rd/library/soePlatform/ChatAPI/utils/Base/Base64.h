@@ -15,7 +15,7 @@ namespace Base
 	public:
 		static bool UUEncode(const unsigned char *source, unsigned sourceLen, char *dest, unsigned destLen);
 		static bool UUEncode(const unsigned char *source, unsigned sourceLen, std::string &destString);
-		static bool UUDecode(const char *source, unsigned sourceLen, unsigned char *dest, unsigned *destLen);
+		static bool UUDecode(const char *source, unsigned sourceLen, unsigned char *dest, int *destLen);
 		static bool UUDecode(const char *source, unsigned sourceLen, std::string &destString);
 
 		// these don't *exactly* belong here, but it's a convenient place for them

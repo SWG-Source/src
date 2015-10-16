@@ -119,7 +119,8 @@ bool ConsoleCommandParserSpaceAi::performParsing(const NetworkId & userId, const
 					{
 						Vector const & position_w = iterTransformList->getPosition_p();
 
-						message += formattedString.sprintf("[%d] %.2f, %.2f, %.2f%s", index++, position_w.x, position_w.y, position_w.z, (index < static_cast<int>(transformList.size())) ? "\n" : "");
+						message += formattedString.sprintf("[%d] %.2f, %.2f, %.2f%s", (index+1), position_w.x, position_w.y, position_w.z, (index < static_cast<int>(transformList.size())) ? "\n" : "");
+						index++;
 					}
 
 					Chat::sendSystemMessage(*serverObject, Unicode::narrowToWide(message.c_str()), Unicode::emptyString);

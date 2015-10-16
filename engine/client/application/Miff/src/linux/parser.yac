@@ -823,7 +823,7 @@ void parseESCstring(char *str, char *targetBuffer, int sizeOfTarget)
 						sPtr++;
 						if (numIndex > 3)
 						{
-							sprintf(err_msg, "Escape sequence Octal numbers greater then\noctal o400 (256 decimal)! [more then 3 digits]", *sPtr);
+							sprintf(err_msg, "Escape sequence Octal numbers greater then\noctal o400 (256 decimal)! [more then 3 digits]");
 							yyerror(err_msg);
 							exitParser = 1;
 						}
@@ -841,7 +841,7 @@ void parseESCstring(char *str, char *targetBuffer, int sizeOfTarget)
 
 						if (tempNum > 255)
 						{
-							sprintf(err_msg, "Escape sequence Octal numbers greater then\noctal o400 (256 decimal)!", tempNum);
+							sprintf(err_msg, "Escape sequence Octal numbers greater then\noctal o400 (256 decimal)!");
 							yyerror(err_msg);
 							exitParser = 1;
 						}
@@ -865,7 +865,7 @@ void parseESCstring(char *str, char *targetBuffer, int sizeOfTarget)
 						sPtr++;
 						if (numIndex > 3)
 						{
-							sprintf(err_msg, "Escape sequence HEX numbers greater then 0x100\n(256 decimal)! [more then 3 digits]", *sPtr);
+							sprintf(err_msg, "Escape sequence HEX numbers greater then 0x100\n(256 decimal)! [more then 3 digits]");
 							yyerror(err_msg);
 							exitParser = 1;
 						}
@@ -883,7 +883,7 @@ void parseESCstring(char *str, char *targetBuffer, int sizeOfTarget)
 
 					if (tempNum > 255)
 					{
-						sprintf(err_msg, "Escape sequence HEX numbers greater then 0x100\n(256 decimal)!", *sPtr);
+						sprintf(err_msg, "Escape sequence HEX numbers greater then 0x100\n(256 decimal)!");
 						yyerror(err_msg);
 						exitParser = 1;
 					}
@@ -985,7 +985,7 @@ void addEnumSymbol(char *symString, long value)
 	if (MAX_SYMCHARS < strlen(symString))
 	{
 		/* somebody insane decided to use variable longer then max size! */
-		sprintf(err_msg, "%s is longer then %d characters! [value: %d]", symString, MAX_SYMCHARS, value);
+		sprintf(err_msg, "%s is longer then %d characters! [value: %ld]", symString, MAX_SYMCHARS, value);
 		yyerror(err_msg);
 	}
 	else

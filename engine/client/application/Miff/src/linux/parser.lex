@@ -387,7 +387,7 @@ int yyerror(char *err)		/* called by yyparse() */
 		MIFFSetError();		/* set global error flag for shell as well */
 		yyterminate();
 	}
-
+	return 0;
 }
 
 /*-------------------------**
