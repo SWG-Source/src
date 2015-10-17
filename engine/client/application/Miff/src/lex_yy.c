@@ -4520,7 +4520,7 @@ static void yy_flex_strncpy (char *,yyconst char *,int );
 #endif
 
 #ifdef YY_NEED_STRLEN
-static int yy_flex_strlen (yyconst char * );
+static int yy_flex_strnlen (yyconst char * );
 #endif
 
 #ifndef YY_NO_INPUT
@@ -4726,9 +4726,9 @@ YY_RULE_SETUP
 				char *s;			// allocate space for string and pass the string pointer rather then yytext
 
 				count();
-				s = MIFFallocString(strlen(yytext) + 1);
+				s = MIFFallocString(strnlen(yytext) + 1);
 				strcpy(s, yytext+1);		/* strip off the double quotes */
-				s[strlen(yytext+1)-1] = 0;	/* strip off the ending double quotes */
+				s[strnlen(yytext+1)-1] = 0;	/* strip off the ending double quotes */
 				yylval.stype = s;
 				return(STR_LIT);
 			}
@@ -4977,7 +4977,7 @@ YY_RULE_SETUP
 								char *s;			// allocate space for string and pass the string pointer rather then yytext
 
 								count();
-								s = MIFFallocString(strlen(yytext) + 1);
+								s = MIFFallocString(strnlen(yytext) + 1);
 								strcpy(s, yytext);
 								yylval.stype = s;
 								return(IDENTIFIER);
@@ -5915,7 +5915,7 @@ YY_BUFFER_STATE yy_scan_buffer  (char * base, yy_size_t  size )
 YY_BUFFER_STATE yy_scan_string (yyconst char * yystr )
 {
     
-	return yy_scan_bytes(yystr,strlen(yystr) );
+	return yy_scan_bytes(yystr,strnlen(yystr) );
 }
 
 /** Setup the input buffer state to scan the given bytes. The next call to yylex() will
@@ -6126,7 +6126,7 @@ static void yy_flex_strncpy (char* s1, yyconst char * s2, int n )
 #endif
 
 #ifdef YY_NEED_STRLEN
-static int yy_flex_strlen (yyconst char * s )
+static int yy_flex_strnlen (yyconst char * s )
 {
 	register int n;
 	for ( n = 0; s[n]; ++n )
@@ -6219,7 +6219,7 @@ void yyerror(char *err)		/* called by yyparse() */
 **-------------------------*/
 int MIFFYYInput(char *buf,int max_size)
 {
-	int len = strlen(MIFFInputStream);
+	int len = strnlen(MIFFInputStream);
 	int n = max_size < len ? max_size : len;
 	if (n > 0)
 	{
