@@ -11892,7 +11892,7 @@ void CreatureObject::setNumberOfMissionsWantedInMissionBag(int n)
 		{
 			// remove mission objects from the bag
 			int j = 0;
-			for (iter = container->begin(), j = 0; iter != container->end(), j < i - n; ++iter, ++j)
+			for (iter = container->begin(), j = 0; (iter != container->end() && j < i - n); ++iter, ++j)
 			{
 				Object * const o = (*iter).getObject();
 				if (o)
