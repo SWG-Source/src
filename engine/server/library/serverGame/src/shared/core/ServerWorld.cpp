@@ -199,18 +199,11 @@ void compare_results_int( std::set<TriggerVolume *> &results, std::set<TriggerVo
 	{
 		TriggerVolume* volume = *iter;
 		ServerObject const &volumeOwner = volume->getOwner();
-		if ( &volumeOwner == NULL )
-		{
-			LOG("SphereGrid", ("Ack null owner!"));
-		}
-		else
-		{
-			const Object* pob = getContainingPobForObjectInWorld(volume->getOwner());
-			Sphere const &localSphere = volumeOwner.getLocalSphere();
-			Sphere world(volumeOwner.getTransform_o2w().rotateTranslate_l2p(localSphere.getCenter()), volume->getRadius());
-			Vector c=world.getCenter();
-			LOG("SphereGrid",(" (%f %f %f) %f POB = %p  DIST=%f",c.x,c.y,c.z,world.getRadius(),pob, c.magnitudeBetween(v) ));
-		}
+		const Object* pob = getContainingPobForObjectInWorld(volume->getOwner());
+		Sphere const &localSphere = volumeOwner.getLocalSphere();
+		Sphere world(volumeOwner.getTransform_o2w().rotateTranslate_l2p(localSphere.getCenter()), volume->getRadius());
+		Vector c=world.getCenter();
+		LOG("SphereGrid",(" (%f %f %f) %f POB = %p  DIST=%f",c.x,c.y,c.z,world.getRadius(),pob, c.magnitudeBetween(v) ));
 
 	}
 	LOG("SphereGrid", ("------------------ Grid Results %d ------------------",results2.size()));
@@ -218,18 +211,11 @@ void compare_results_int( std::set<TriggerVolume *> &results, std::set<TriggerVo
 	{
 		TriggerVolume* volume = *iter;
 		ServerObject const &volumeOwner = volume->getOwner();
-		if ( &volumeOwner == NULL )
-		{
-			LOG("SphereGrid", ("shit null owner."));
-		}
-		else
-		{
-			const Object* pob = getContainingPobForObjectInWorld(volume->getOwner());
-			Sphere const &localSphere = volumeOwner.getLocalSphere();
-			Sphere world(volumeOwner.getTransform_o2w().rotateTranslate_l2p(localSphere.getCenter()), volume->getRadius());   // o2p or o2w
-			Vector c=world.getCenter();
-			LOG("SphereGrid",(" (%f %f %f) %f POB = %p  DIST=%f",c.x,c.y,c.z,world.getRadius(),pob, c.magnitudeBetween(v) ));
-		}
+		const Object* pob = getContainingPobForObjectInWorld(volume->getOwner());
+		Sphere const &localSphere = volumeOwner.getLocalSphere();
+		Sphere world(volumeOwner.getTransform_o2w().rotateTranslate_l2p(localSphere.getCenter()), volume->getRadius());   // o2p or o2w
+		Vector c=world.getCenter();
+		LOG("SphereGrid",(" (%f %f %f) %f POB = %p  DIST=%f",c.x,c.y,c.z,world.getRadius(),pob, c.magnitudeBetween(v) ));
 
 	}
 	DEBUG_FATAL(true,("FATAL: SphereGrid failed to match SphereTree result set."));
