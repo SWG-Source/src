@@ -20,6 +20,7 @@ class MxCifQuadTreeBounds
 {
 public:
 	MxCifQuadTreeBounds(float minX, float minY, float maxX, float maxY, void * data = NULL);
+	virtual ~MxCifQuadTreeBounds(){};
 
 	const float getMinX(void) const;
 	const float getMinY(void) const;

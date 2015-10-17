@@ -168,7 +168,7 @@ int ServerCreatureObjectTemplate::getAttributes(Attributes index) const
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 	}
 
-	DEBUG_FATAL(index < 0 || index >= 6, ("template param index out of range"));
+	DEBUG_FATAL(static_cast<int>(index) < 0 || static_cast<int>(index) >= 6, ("template param static_cast<int>(index) <out of range"));
 	if (!m_attributes[index].isLoaded())
 	{
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
@@ -217,7 +217,7 @@ int ServerCreatureObjectTemplate::getAttributesMin(Attributes index) const
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 	}
 
-	DEBUG_FATAL(index < 0 || index >= 6, ("template param index out of range"));
+	DEBUG_FATAL(static_cast<int>(index) < 0 || static_cast<int>(index) >= 6, ("template param static_cast<int>(index) <out of range"));
 	if (!m_attributes[index].isLoaded())
 	{
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
@@ -266,7 +266,7 @@ int ServerCreatureObjectTemplate::getAttributesMax(Attributes index) const
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 	}
 
-	DEBUG_FATAL(index < 0 || index >= 6, ("template param index out of range"));
+	DEBUG_FATAL(static_cast<int>(index) < 0 || static_cast<int>(index) >= 6, ("template param static_cast<int>(index) <out of range"));
 	if (!m_attributes[index].isLoaded())
 	{
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
@@ -315,7 +315,7 @@ int ServerCreatureObjectTemplate::getMinAttributes(Attributes index) const
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 	}
 
-	DEBUG_FATAL(index < 0 || index >= 6, ("template param index out of range"));
+	DEBUG_FATAL(static_cast<int>(index) < 0 || static_cast<int>(index) >= 6, ("template param static_cast<int>(index) <out of range"));
 	if (!m_minAttributes[index].isLoaded())
 	{
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
@@ -364,7 +364,7 @@ int ServerCreatureObjectTemplate::getMinAttributesMin(Attributes index) const
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 	}
 
-	DEBUG_FATAL(index < 0 || index >= 6, ("template param index out of range"));
+	DEBUG_FATAL(static_cast<int>(index) < 0 || static_cast<int>(index) >= 6, ("template param static_cast<int>(index) <out of range"));
 	if (!m_minAttributes[index].isLoaded())
 	{
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
@@ -413,7 +413,7 @@ int ServerCreatureObjectTemplate::getMinAttributesMax(Attributes index) const
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 	}
 
-	DEBUG_FATAL(index < 0 || index >= 6, ("template param index out of range"));
+	DEBUG_FATAL(static_cast<int>(index) < 0 || static_cast<int>(index) >= 6, ("template param static_cast<int>(index) <out of range"));
 	if (!m_minAttributes[index].isLoaded())
 	{
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
@@ -462,7 +462,7 @@ int ServerCreatureObjectTemplate::getMaxAttributes(Attributes index) const
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 	}
 
-	DEBUG_FATAL(index < 0 || index >= 6, ("template param index out of range"));
+	DEBUG_FATAL(static_cast<int>(index) < 0 || static_cast<int>(index) >= 6, ("template param static_cast<int>(index) <out of range"));
 	if (!m_maxAttributes[index].isLoaded())
 	{
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
@@ -511,7 +511,7 @@ int ServerCreatureObjectTemplate::getMaxAttributesMin(Attributes index) const
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 	}
 
-	DEBUG_FATAL(index < 0 || index >= 6, ("template param index out of range"));
+	DEBUG_FATAL(static_cast<int>(index) < 0 || static_cast<int>(index) >= 6, ("template param static_cast<int>(index) <out of range"));
 	if (!m_maxAttributes[index].isLoaded())
 	{
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
@@ -560,7 +560,7 @@ int ServerCreatureObjectTemplate::getMaxAttributesMax(Attributes index) const
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 	}
 
-	DEBUG_FATAL(index < 0 || index >= 6, ("template param index out of range"));
+	DEBUG_FATAL(static_cast<int>(index) < 0 || static_cast<int>(index) >= 6, ("template param static_cast<int>(index) <out of range"));
 	if (!m_maxAttributes[index].isLoaded())
 	{
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
@@ -1395,7 +1395,7 @@ void ServerCreatureObjectTemplate::getAttribMods(AttribMod &data, int index) con
 	if (m_attribModsAppend && base != NULL)
 	{
 		int baseCount = base->getAttribModsCount();
-		if (index < baseCount)
+		if (static_cast<int>(index) < baseCount)
 			{
 				base->getAttribMods(data, index);
 				return;
@@ -1403,7 +1403,7 @@ void ServerCreatureObjectTemplate::getAttribMods(AttribMod &data, int index) con
 		index -= baseCount;
 	}
 
-	DEBUG_FATAL(index < 0 || static_cast<size_t>(index) >= m_attribMods.size(), ("template param index out of range"));
+	DEBUG_FATAL(static_cast<int>(index) < 0 || static_cast<size_t>(index) >= m_attribMods.size(), ("template param static_cast<int>(index) <out of range"));
 	const ObjectTemplate * structTemplate = (*m_attribMods[index]).getValue();
 	NOT_NULL(structTemplate);
 	const _AttribMod *param = dynamic_cast<const _AttribMod *>(structTemplate);
@@ -1441,7 +1441,7 @@ void ServerCreatureObjectTemplate::getAttribModsMin(AttribMod &data, int index) 
 	if (m_attribModsAppend && base != NULL)
 	{
 		int baseCount = base->getAttribModsCount();
-		if (index < baseCount)
+		if (static_cast<int>(index) < baseCount)
 			{
 				base->getAttribModsMin(data, index);
 				return;
@@ -1449,7 +1449,7 @@ void ServerCreatureObjectTemplate::getAttribModsMin(AttribMod &data, int index) 
 		index -= baseCount;
 	}
 
-	DEBUG_FATAL(index < 0 || static_cast<size_t>(index) >= m_attribMods.size(), ("template param index out of range"));
+	DEBUG_FATAL(static_cast<int>(index) < 0 || static_cast<size_t>(index) >= m_attribMods.size(), ("template param static_cast<int>(index) <out of range"));
 	const ObjectTemplate * structTemplate = (*m_attribMods[index]).getValue();
 	NOT_NULL(structTemplate);
 	const _AttribMod *param = dynamic_cast<const _AttribMod *>(structTemplate);
@@ -1487,7 +1487,7 @@ void ServerCreatureObjectTemplate::getAttribModsMax(AttribMod &data, int index) 
 	if (m_attribModsAppend && base != NULL)
 	{
 		int baseCount = base->getAttribModsCount();
-		if (index < baseCount)
+		if (static_cast<int>(index) < baseCount)
 			{
 				base->getAttribModsMax(data, index);
 				return;
@@ -1495,7 +1495,7 @@ void ServerCreatureObjectTemplate::getAttribModsMax(AttribMod &data, int index) 
 		index -= baseCount;
 	}
 
-	DEBUG_FATAL(index < 0 || static_cast<size_t>(index) >= m_attribMods.size(), ("template param index out of range"));
+	DEBUG_FATAL(static_cast<int>(index) < 0 || static_cast<size_t>(index) >= m_attribMods.size(), ("template param static_cast<int>(index) <out of range"));
 	const ObjectTemplate * structTemplate = (*m_attribMods[index]).getValue();
 	NOT_NULL(structTemplate);
 	const _AttribMod *param = dynamic_cast<const _AttribMod *>(structTemplate);
@@ -2007,7 +2007,7 @@ float ServerCreatureObjectTemplate::getMaxMentalStates(MentalStates index) const
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 	}
 
-	DEBUG_FATAL(index < 0 || index >= 4, ("template param index out of range"));
+	DEBUG_FATAL(static_cast<int>(index) < 0 || static_cast<int>(index) >= 4, ("template param static_cast<int>(index) <out of range"));
 	if (!m_maxMentalStates[index].isLoaded())
 	{
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
@@ -2056,7 +2056,7 @@ float ServerCreatureObjectTemplate::getMaxMentalStatesMin(MentalStates index) co
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 	}
 
-	DEBUG_FATAL(index < 0 || index >= 4, ("template param index out of range"));
+	DEBUG_FATAL(static_cast<int>(index) < 0 || static_cast<int>(index) >= 4, ("template param static_cast<int>(index) <out of range"));
 	if (!m_maxMentalStates[index].isLoaded())
 	{
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
@@ -2105,7 +2105,7 @@ float ServerCreatureObjectTemplate::getMaxMentalStatesMax(MentalStates index) co
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 	}
 
-	DEBUG_FATAL(index < 0 || index >= 4, ("template param index out of range"));
+	DEBUG_FATAL(static_cast<int>(index) < 0 || static_cast<int>(index) >= 4, ("template param static_cast<int>(index) <out of range"));
 	if (!m_maxMentalStates[index].isLoaded())
 	{
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
@@ -2154,7 +2154,7 @@ float ServerCreatureObjectTemplate::getMentalStatesDecay(MentalStates index) con
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 	}
 
-	DEBUG_FATAL(index < 0 || index >= 4, ("template param index out of range"));
+	DEBUG_FATAL(static_cast<int>(index) < 0 || static_cast<int>(index) >= 4, ("template param static_cast<int>(index) <out of range"));
 	if (!m_mentalStatesDecay[index].isLoaded())
 	{
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
@@ -2203,7 +2203,7 @@ float ServerCreatureObjectTemplate::getMentalStatesDecayMin(MentalStates index) 
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 	}
 
-	DEBUG_FATAL(index < 0 || index >= 4, ("template param index out of range"));
+	DEBUG_FATAL(static_cast<int>(index) < 0 || static_cast<int>(index) >= 4, ("template param static_cast<int>(index) <out of range"));
 	if (!m_mentalStatesDecay[index].isLoaded())
 	{
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
@@ -2252,7 +2252,7 @@ float ServerCreatureObjectTemplate::getMentalStatesDecayMax(MentalStates index) 
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 	}
 
-	DEBUG_FATAL(index < 0 || index >= 4, ("template param index out of range"));
+	DEBUG_FATAL(static_cast<int>(index) < 0 || static_cast<int>(index) >= 4, ("template param static_cast<int>(index) <out of range"));
 	if (!m_mentalStatesDecay[index].isLoaded())
 	{
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)

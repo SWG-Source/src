@@ -1184,7 +1184,7 @@ void AlterScheduler::moveObjectsFromAlterNextFrameListToAlterNowList(int schedul
 	{
 		PROFILER_AUTO_BLOCK_DEFINE("copy next frame");
 
-		if (s_alterNextFrameListFirst != NULL) {
+		//if (s_alterNextFrameListFirst != NULL) {
 			for (Object *object = s_alterNextFrameListFirst[schedulePhaseIndex]->getNextFromAlterNextFrameList(); object != NULL; )
 			{
 				//-- Add object to alter now list.  This removes the object from the alter next frame list.
@@ -1203,7 +1203,7 @@ void AlterScheduler::moveObjectsFromAlterNextFrameListToAlterNowList(int schedul
 				//-- Increment loop.
 				object = nextObject;
 			}
-		}
+		//}
 	}
 }
 
