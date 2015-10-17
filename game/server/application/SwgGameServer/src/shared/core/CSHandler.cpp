@@ -80,7 +80,7 @@ namespace CSHandlerNamespace
 		return 0;
 	}
 
-	std::string getOneArg( std::string input, unsigned &position )
+	std::string getOneArg( std::string input, int position)
 	{
 		unsigned pos; // where we stop looking
 		unsigned lastpos;  // the last character in our argument.
