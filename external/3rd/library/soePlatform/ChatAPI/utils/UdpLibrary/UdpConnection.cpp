@@ -542,7 +542,7 @@ void UdpConnection::ProcessRawPacket(const UdpManager::PacketHistoryEntry *e)
                     wantCrc = UdpMisc::GetValue32(crcPtr);
                     break;
             }
-            if (wantCrc != actualCrc)
+            if (wantCrc != actualCrc && mUdpManager != nullptr)
             {
                 mConnectionStats.crcRejectedPackets++;
                 mUdpManager->IncrementCrcRejectedPackets();

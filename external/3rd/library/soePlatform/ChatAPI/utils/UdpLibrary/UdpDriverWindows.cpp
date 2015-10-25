@@ -383,14 +383,18 @@ UdpPlatformAddress &UdpPlatformAddress::operator=(const UdpPlatformAddress &e)
 
 char *UdpPlatformAddress::GetAddress(char *buffer, int bufferLen) const
 {
-    if (bufferLen < 16)
-    {
-        *buffer = 0;
-        return(buffer);
-    }
-    assert(buffer != NULL);
-    sprintf(buffer, "%d.%d.%d.%d", mData[0], mData[1], mData[2], mData[3]);
-    return(buffer);
+	if (buffer != nullptr) {
+		if (bufferLen < 16)
+		{
+			*buffer = 0;
+			return(buffer);
+		}
+		assert(buffer != NULL);
+		sprintf(buffer, "%d.%d.%d.%d", mData[0], mData[1], mData[2], mData[3]);
+		return(buffer);
+	}
+
+	return nullptr;
 }
 
 void UdpPlatformAddress::SetAddress(const char *address)

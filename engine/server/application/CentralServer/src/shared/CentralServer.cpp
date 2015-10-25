@@ -2569,53 +2569,60 @@ void CentralServer::removeConnectionServerConnection(const ConnectionServerConne
 */
 void CentralServer::removeGameServer(GameServerConnection const *gameServer)
 {
-	uint32 const pid = gameServer->getProcessId();
-
-	LOG("ServerStartup", ("Game Server %lu went down", pid));
-
-	//@todo this whole function needs a re-write.
-	NOT_NULL(gameServer);
-	std::map<uint32, GameServerConnection *>::iterator const i = m_gameServerConnections.find(pid);
-	if (i == m_gameServerConnections.end())
-		return;
-
-	for (std::vector<GameServerConnection *>::iterator ii = m_gameServerConnectionsList.begin(); ii != m_gameServerConnectionsList.end();)
+	if (gameServer != nullptr)
 	{
-		if ((*ii) == i->second)
-			ii = m_gameServerConnectionsList.erase(ii);
-		else
-			++ii;
+		uint32 const pid = gameServer->getProcessId();
+
+		LOG("ServerStartup", ("Game Server %lu went down", pid));
+
+		//@todo this whole function needs a re-write.
+		NOT_NULL(gameServer);
+		std::map<uint32, GameServerConnection *>::iterator const i = m_gameServerConnections.find(pid);
+		if (i == m_gameServerConnections.end())
+			return;
+
+		for (std::vector<GameServerConnection *>::iterator ii = m_gameServerConnectionsList.begin(); ii != m_gameServerConnectionsList.end();)
+		{
+			if ((*ii) == i->second)
+				ii = m_gameServerConnectionsList.erase(ii);
+			else
+				++ii;
+		}
+
+		m_gameServerConnections.erase(i);
+
+		/** @todo: this is slow, find a better way (probably by creating reverse
+		* lookup table(s))
+		*/
+		if (pid == m_dbProcessServerProcessId)
+		{
+			DEBUG_REPORT_LOG(true, ("Database process died -- Central will exit and let the cluster restart\n"));
+			m_done = true;
+			return; //lint !e527 Unreachable
+		}
+
+		DEBUG_WARNING(true, ("Game server %lu crashed", pid));
+
+		for (SceneGameMap::iterator j = m_gameServers.begin(); j != m_gameServers.end();)
+		{
+			if ((*j).second == gameServer)
+				m_gameServers.erase(j++);
+			else
+				++j;
+		}
+
+		UniverseManager::getInstance().onGameServerDisconnect(*gameServer);
+		PlanetManager::onGameServerDisconnect(gameServer);
+		CharacterCreationTracker::getInstance().onGameServerDisconnect(pid);
+		ClusterWideDataManagerList::onGameServerDisconnect(pid);
+
+		ExcommunicateGameServerMessage const excommunicateMessage(pid, 0, "");
+		sendToAllGameServersExceptDBProcess(excommunicateMessage, true);
 	}
-
-	m_gameServerConnections.erase(i);
-
-	/** @todo: this is slow, find a better way (probably by creating reverse
-	* lookup table(s))
-	*/
-	if (pid == m_dbProcessServerProcessId)
+	else 
 	{
-		DEBUG_REPORT_LOG(true, ("Database process died -- Central will exit and let the cluster restart\n"));
-		m_done = true;
-		return; //lint !e527 Unreachable
+		DEBUG_WARNING(true, ("A game server crashed but our process ID ptr is null."));
 	}
-
-	DEBUG_WARNING(true, ("Game server %lu crashed", pid));
-
-	for (SceneGameMap::iterator j = m_gameServers.begin(); j != m_gameServers.end();)
-	{
-		if ((*j).second == gameServer)
-			m_gameServers.erase(j++);
-		else
-			++j;
-	}
-
-	UniverseManager::getInstance().onGameServerDisconnect(*gameServer);
-	PlanetManager::onGameServerDisconnect(gameServer);
-	CharacterCreationTracker::getInstance().onGameServerDisconnect(pid);
-	ClusterWideDataManagerList::onGameServerDisconnect(pid);
-
-	ExcommunicateGameServerMessage const excommunicateMessage(pid, 0, "");
-	sendToAllGameServersExceptDBProcess(excommunicateMessage, true);
 }
 
 //-----------------------------------------------------------------------

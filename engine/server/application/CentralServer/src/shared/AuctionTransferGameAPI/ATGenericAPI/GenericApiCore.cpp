@@ -97,8 +97,6 @@ GenericAPICore::~GenericAPICore()
 		delete (*iter).second;
 	}
 
-	m_pending.empty();
-
 	while(m_outCount > 0)
 	{
 		delete m_outboundQueue.front().second;
