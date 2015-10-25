@@ -979,39 +979,37 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 
 		GameServerConnection *g = const_cast<GameServerConnection *>(safe_cast<GameServerConnection const *>(&source));
 
-		FATAL(ConfigCentralServer::getValidateBuildVersionNumber() && strcmp(ApplicationVersion::getInternalVersion(), c.getBuildVersionNumber().c_str()),
-		      ("Build version number mismatch: central server (%s), remote server %s (%s)", ApplicationVersion::getInternalVersion(), g->getRemoteAddress().c_str(), c.getBuildVersionNumber().c_str())
-		     );
+		if (g != nullptr) {
 
-		// a game server (or db process) has connected...
-		addGameServer(g);
+			FATAL(ConfigCentralServer::getValidateBuildVersionNumber() && strcmp(ApplicationVersion::getInternalVersion(), c.getBuildVersionNumber().c_str()),
+				("Build version number mismatch: central server (%s), remote server %s (%s)",
+				ApplicationVersion::getInternalVersion(), g->getRemoteAddress().c_str(), c.getBuildVersionNumber().c_str()));
 
-		//Send connection server data
-		ConnectionServerConnectionList::iterator i = m_connectionServerConnections.begin();
-		for(; i != m_connectionServerConnections.end(); ++i)
-		{
-			if ((*i)->getGameServicePort() != 0)
+			// a game server (or db process) has connected...
+			addGameServer(g);
+
+			//Send connection server data
+			ConnectionServerConnectionList::iterator i = m_connectionServerConnections.begin();
+			for (; i != m_connectionServerConnections.end(); ++i)
 			{
-				ConnectionServerAddress csa((*i)->getGameServiceAddress(), (*i)->getGameServicePort());
-				g->send(csa, true);
+				if ((*i)->getGameServicePort() != 0)
+				{
+					ConnectionServerAddress csa((*i)->getGameServiceAddress(), (*i)->getGameServicePort());
+					g->send(csa, true);
+				}
 			}
-		}
 
-		std::set<ChatServerConnection *>::const_iterator chatIter;
-		for(chatIter = m_chatServerConnections.begin(); chatIter != m_chatServerConnections.end(); ++chatIter)
-		{
-			if((*chatIter)->getGameServicePort())
+			std::set<ChatServerConnection *>::const_iterator chatIter;
+			for (chatIter = m_chatServerConnections.begin(); chatIter != m_chatServerConnections.end(); ++chatIter)
 			{
-				ChatServerOnline cso((*chatIter)->getRemoteAddress(), (*chatIter)->getGameServicePort());
-				g->send(cso, true);
+				if ((*chatIter)->getGameServicePort())
+				{
+					ChatServerOnline cso((*chatIter)->getRemoteAddress(), (*chatIter)->getGameServicePort());
+					g->send(cso, true);
+				}
 			}
-		}
 
-		if (g != NULL)
-		{
-			//DEBUG_REPORT_LOG(true, ("CentralServer: Sending CustomerServiceServerGameServerServiceAddress to game server (%s:%d) pid(%i)\n", g->getRemoteAddress().c_str(), g->getRemotePort(), g->getProcessId()));
 			const GenericValueTypeMessage<std::pair<std::string, unsigned short> > address("CustomerServiceServerGameServerServiceAddress", std::make_pair(s_customerServiceServerGameServerServiceAddress.first, s_customerServiceServerGameServerServiceAddress.second));
-
 			g->send(address, true);
 		}
 	}

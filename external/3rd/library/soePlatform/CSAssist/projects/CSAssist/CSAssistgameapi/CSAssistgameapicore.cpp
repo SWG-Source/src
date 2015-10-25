@@ -113,7 +113,12 @@ CSAssistGameAPIcore::CSAssistGameAPIcore(CSAssistGameAPI *api, const char *serve
 
 	///////////////////////////////////////////
 	// populate server list
-	int size = ::strlen(serverList);
+	int size = 0;
+
+	if (serverList != nullptr) {
+		size = ::strlen(serverList);
+	}
+
 	if (!serverList || (size <= 0))
 	{
 		fprintf(stderr, "CSASsistGameAPIcore()::serverList==NULL! aborting...\n");
@@ -151,10 +156,10 @@ CSAssistGameAPIcore::CSAssistGameAPIcore(CSAssistGameAPI *api, const char *serve
 			m_serverList.push_back(sid);
 		}
 		//fprintf(stderr, "res=%d, p=%s, host=%s, port=%d, size=%d\n", res, p, host, port, m_serverList.size());
-		delete p;
+		delete [] p;
 	}
 	delete host;
-	delete buf;
+	delete [] buf;
 	m_curServer = m_serverList.begin();
 	GetLBHost();
 	//
