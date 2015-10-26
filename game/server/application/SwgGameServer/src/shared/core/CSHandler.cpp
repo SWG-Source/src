@@ -85,17 +85,17 @@ namespace CSHandlerNamespace
 		unsigned pos; // where we stop looking
 		unsigned lastpos;  // the last character in our argument.
 		// bounds checking.
-		if( position < 0 || position >= input.length() )
+		if( position < 0 || position >= (int) input.length() )
 		{
 			return "";
 		}
 		// skip whitespace
-		while( input[ position ] == ' ' && position < input.length() )
+		while( input[ position ] == ' ' && position < (int) input.length() )
 		{
 			++position;
 		}
 
-		if( position == input.length() )
+		if( position == (int) input.length() )
 			return "";
 		// see if the first character is a quote.
 		if( input[ position ] == '"' )

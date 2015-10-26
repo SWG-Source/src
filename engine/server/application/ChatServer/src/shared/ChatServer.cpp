@@ -1810,72 +1810,75 @@ void ChatServer::removeAvatarFromRoom(const NetworkId & id, const ChatAvatarId &
 	ChatServer::fileLog(s_enableChatRoomLogs, "ChatServer", "removeAvatarFromRoom() id(%s) avatarName(%s) roomName(%s)", id.getValueString().c_str(), avatarName.getFullName().c_str(), roomName.c_str());
 
 	const ChatAvatar * avatar = getAvatarByNetworkId(id);
-	ChatAvatarId removerId;
-	makeAvatarId(*avatar, removerId);
-	size_t pos = roomName.rfind(".");
-	std::string leaf;
-	if(pos != std::string::npos)
-	{
-		leaf = toLower(roomName.substr(pos));
-	}
-	//REPORT_LOG(true, ("removeAvatarFromRoom()\n"));
 
-	if(avatar)
-	{
-		bool removeAvatar = false;
-		if(avatarName == removerId)
+	if (avatar != nullptr) {
+		ChatAvatarId removerId;
+		makeAvatarId(*avatar, removerId);
+		size_t pos = roomName.rfind(".");
+		std::string leaf;
+		if (pos != std::string::npos)
 		{
-			// avatar is attempting to remove self from the room
-			if(leaf != ".system")
-				removeAvatar = true;
+			leaf = toLower(roomName.substr(pos));
 		}
-		else if(isGod(id))
+		//REPORT_LOG(true, ("removeAvatarFromRoom()\n"));
+
+		if (avatar)
 		{
-			removeAvatar = true;
-		}
-		else
-		{
-			const ChatServerRoomOwner * r = instance().chatInterface->getRoomByName(roomName);
-			if(r)
+			bool removeAvatar = false;
+			if (avatarName == removerId)
 			{
-				// if the avatar is the room owner, remove the target
-				if( r->getRoomData().owner == removerId )
-				{
+				// avatar is attempting to remove self from the room
+				if (leaf != ".system")
 					removeAvatar = true;
-				}
-				// if the avatar is the room creator, remove the target
-				else if( r->getRoomData().creator == removerId )
+			}
+			else if (isGod(id))
+			{
+				removeAvatar = true;
+			}
+			else
+			{
+				const ChatServerRoomOwner * r = instance().chatInterface->getRoomByName(roomName);
+				if (r)
 				{
-					removeAvatar = true;
-				}
-				// if the avatar is a moderator, remove the target
-				else
-				{
-/*MLSTODO					if(r->getRoom())
+					// if the avatar is the room owner, remove the target
+					if (r->getRoomData().owner == removerId)
 					{
-						AvatarIterator i = r->getRoom()->getFirstModerator();
-						for(; !i.outOfBounds(); ++i)
-						{
-							ChatAvatarId tmpAvatarId;
-							makeAvatarId(*(*i), tmpAvatarId);
-							if(tmpAvatarId == removerId)
-							{
-								removeAvatar = true;
-								break;
-							}
-						}
+						removeAvatar = true;
 					}
-		*/
+					// if the avatar is the room creator, remove the target
+					else if (r->getRoomData().creator == removerId)
+					{
+						removeAvatar = true;
+					}
+					// if the avatar is a moderator, remove the target
+					else
+					{
+						/*MLSTODO					if(r->getRoom())
+											{
+											AvatarIterator i = r->getRoom()->getFirstModerator();
+											for(; !i.outOfBounds(); ++i)
+											{
+											ChatAvatarId tmpAvatarId;
+											makeAvatarId(*(*i), tmpAvatarId);
+											if(tmpAvatarId == removerId)
+											{
+											removeAvatar = true;
+											break;
+											}
+											}
+											}
+											*/
+					}
 				}
 			}
-		}
-		if(removeAvatar)
-		{
-			const ChatServerRoomOwner * r = instance().chatInterface->getRoomByName(roomName);
-			const NetworkId &id = getNetworkIdByAvatarId(avatarName);
-			if (r)
+			if (removeAvatar)
 			{
-				leaveRoom(id, 0, r->getRoomData().id);
+				const ChatServerRoomOwner * r = instance().chatInterface->getRoomByName(roomName);
+				const NetworkId &id = getNetworkIdByAvatarId(avatarName);
+				if (r)
+				{
+					leaveRoom(id, 0, r->getRoomData().id);
+				}
 			}
 		}
 	}
