@@ -1182,21 +1182,6 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 
 		IGNORE_RETURN(sendToRandomGameServer(msg));
 	}
-	else if(message.isType("LoginRestoreCharacterMessage"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		LoginRestoreCharacterMessage msg(ri);
-
-		IGNORE_RETURN(sendToArbitraryLoginServer(msg));
-	}
-	else if(message.isType("DatabaseConsoleReplyMessage"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		GenericValueTypeMessage<std::pair<std::string, std::string> > msg(ri);
-
-		IGNORE_RETURN(sendToRandomGameServer(msg));
-	}
 	else if(message.isType("LoginUpgradeAccountMessage"))
 	{
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
