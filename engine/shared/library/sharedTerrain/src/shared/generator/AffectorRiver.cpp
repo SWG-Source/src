@@ -758,7 +758,7 @@ void AffectorRiver::createWaterTables (ArrayList<AffectorRiver::WaterTable>& wat
 		const Vector2d  currentEndRight       = currentEnd   + currentNormal * waterWidth;
 
 		const Vector2d& previousStart         = !atStart ? m_pointList [i - 1] : m_pointList [i];
-		const Vector2d& previousEnd           = !atStart ? m_pointList [i]     : m_pointList [i];
+		const Vector2d& previousEnd           = m_pointList [i];
 		const Vector2d  previousSegment       = previousEnd - previousStart;
 		const Vector2d  previousDirection     = !atStart ? Vector2d::normalized (previousSegment) : currentDirection;
 		const Vector2d  previousNormal        = !atStart ? Vector2d::normal (previousDirection, false) : currentNormal;
@@ -768,7 +768,7 @@ void AffectorRiver::createWaterTables (ArrayList<AffectorRiver::WaterTable>& wat
 		const Vector2d  previousEndLeft       = previousEnd   - previousNormal * waterWidth;
 		const Vector2d  previousEndRight      = previousEnd   + previousNormal * waterWidth;
 
-		const Vector2d& nextStart             = !atEndNext ? m_pointList [i + 1] : m_pointList [i + 1];
+		const Vector2d& nextStart             = m_pointList [i + 1];
 		const Vector2d& nextEnd               = !atEndNext ? m_pointList [i + 2] : m_pointList [i + 1];
 		const Vector2d  nextSegment           = nextEnd - nextStart;
 		const Vector2d  nextDirection         = !atEndNext ? Vector2d::normalized (nextSegment) : currentDirection;

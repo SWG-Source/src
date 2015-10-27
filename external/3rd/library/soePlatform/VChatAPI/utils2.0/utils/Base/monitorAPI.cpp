@@ -520,10 +520,7 @@ stringMessage::stringMessage(const unsigned short command,const unsigned short s
 monMessage(command, sequence, size)
 {
 	data = new char [strlen(newData) + 1];
-	if (data)
-		strncpy(data, newData, strlen(newData + 1));
-	else
-		data = NULL;
+	strncpy(data, newData, strlen(newData + 1));
 }
 
 //----------------------------------------------------------------
@@ -559,13 +556,8 @@ monMessage(source)
 {
 	data = new unsigned char[getSize()+1];
 	
-	if (data)
-	{
-		memcpy(data, source + 6, getSize());
-		data[getSize()] = 0;
-	}
-	else
-		data = NULL;
+	memcpy(data, source + 6, getSize());
+	data[getSize()] = 0;
 }
 
 //----------------------------------------------------------------
@@ -586,11 +578,8 @@ monMessage(command, sequence, size)
 //----------------------------------------------------------------
 dataReplyMessage::~dataReplyMessage()
 {
-	if (data)
-	{
-		delete [] data;
-		data = 0;
-	}
+	delete [] data;
+	data = 0;
 }
 
 //----------------------------------------------------------------

@@ -84,7 +84,6 @@ CellObject::~CellObject()
 Controller * CellObject::createDefaultController()
 {
 	Controller *controller = new CellController(this);
-	NOT_NULL(controller);
 	setController(controller);
 	return controller;
 }

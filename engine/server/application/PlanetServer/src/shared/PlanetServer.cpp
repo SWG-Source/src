@@ -735,7 +735,6 @@ void PlanetServer::receiveMessage(const MessageDispatch::Emitter & source, const
 	else if (message.isType("RequestSameServer"))
 	{
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		GenericValueTypeMessage<std::pair<NetworkId, NetworkId> > msg(ri);
 
 		bool result=Scene::getInstance().requestSameServer(msg.getValue().first, msg.getValue().second);
@@ -751,7 +750,6 @@ void PlanetServer::receiveMessage(const MessageDispatch::Emitter & source, const
 	else if (message.isType("RequestAuthTransfer"))
 	{
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		GenericValueTypeMessage<std::pair<NetworkId, uint32> > msg(ri);
 
 		bool result=Scene::getInstance().requestAuthTransfer(msg.getValue().first, msg.getValue().second);
@@ -767,7 +765,6 @@ void PlanetServer::receiveMessage(const MessageDispatch::Emitter & source, const
 	else if (message.isType("GameServerForceChangeAuthorityMessage"))
 	{
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		GameServerForceChangeAuthorityMessage msg(ri);
 		GameServerData * fromServer = PlanetServer::getGameServerData(msg.getFromProcess());
 		GameServerData * toServer = PlanetServer::getGameServerData(msg.getToProcess());
@@ -805,7 +802,6 @@ void PlanetServer::receiveMessage(const MessageDispatch::Emitter & source, const
 	else if (message.isType("FindAuthObjectResponse"))
 	{
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		GenericValueTypeMessage<std::pair<std::pair<NetworkId, unsigned int>, bool> > msg(ri);
 		GameServerConnection const *gameServer = dynamic_cast<const GameServerConnection*>(&source);
 		NOT_NULL(gameServer);
@@ -814,7 +810,6 @@ void PlanetServer::receiveMessage(const MessageDispatch::Emitter & source, const
 	else if (message.isType("TaskProcessDiedMessage"))
 	{
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		TaskProcessDiedMessage died(ri);
 		// verify it was a game server
 		const std::string & proc = died.getProcessName();

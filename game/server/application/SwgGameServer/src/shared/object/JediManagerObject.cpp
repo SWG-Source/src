@@ -163,7 +163,6 @@ void JediManagerObject::onServerUniverseGainedAuthority()
 Controller * JediManagerObject::createDefaultController()
 {
 	Controller * controller = new JediManagerController(this);
-	NOT_NULL(controller);
 
 	setController(controller);
 	return controller;

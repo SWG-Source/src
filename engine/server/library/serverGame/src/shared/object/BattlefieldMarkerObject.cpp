@@ -97,7 +97,6 @@ void BattlefieldMarkerObject::onRegionNameChanged(std::string const &oldName, st
 Controller *BattlefieldMarkerObject::createDefaultController()
 {
 	Controller * _controller = new BattlefieldMarkerController(this);
-	NOT_NULL(_controller);
 
 	setController(_controller);
 	return _controller;

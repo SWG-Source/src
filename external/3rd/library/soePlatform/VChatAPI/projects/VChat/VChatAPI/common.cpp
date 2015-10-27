@@ -266,10 +266,8 @@ namespace VChatSystem
 			output = (char*)outBuffer;
 		}
 
-		if (outBuffer)
-		{
-			delete [] outBuffer;
-		}
+
+		delete [] outBuffer;
 	}
 
 	void DecodeVivoxString(const std::string & input, std::string & output)
@@ -293,10 +291,7 @@ namespace VChatSystem
 			output = (char*)outBuffer;
 		}
 
-		if (outBuffer)
-		{
-			delete [] outBuffer;
-		}
+		delete [] outBuffer;
 	}
 	
 

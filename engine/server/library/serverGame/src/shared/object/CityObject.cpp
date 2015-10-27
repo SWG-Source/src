@@ -114,7 +114,6 @@ CityObject::~CityObject()
 Controller* CityObject::createDefaultController()
 {
 	Controller* controller = new CityController(this);
-	NOT_NULL(controller);
 
 	setController(controller);
 	return controller;

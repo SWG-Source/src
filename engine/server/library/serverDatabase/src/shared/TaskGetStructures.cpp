@@ -52,8 +52,6 @@ bool TaskGetStructures::process(DB::Session *session)
 	{
 		StructureRec *cr=new StructureRec;
 
-		NOT_NULL(cr);
-
 		cr->structureId = NetworkId(qry.getData().object_id.getValue());
 		cr->location = Unicode::wideToNarrow(qry.getData().scene_id.getValue());
 		cr->objectTemplate = Unicode::wideToNarrow(qry.getData().object_template.getValue());

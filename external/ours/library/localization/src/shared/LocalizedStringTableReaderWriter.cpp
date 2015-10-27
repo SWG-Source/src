@@ -529,7 +529,6 @@ void LocalizedStringTableRW::prepareTable (const LocalizedStringTableRW & rhs)
 
 	m_idNameMap    = rhs.m_idNameMap;
 	m_nameMap      = rhs.m_nameMap;
-	m_map.clear ();
 	m_nextUniqueId = rhs.m_nextUniqueId;
 	m_name         = rhs.m_name;
 

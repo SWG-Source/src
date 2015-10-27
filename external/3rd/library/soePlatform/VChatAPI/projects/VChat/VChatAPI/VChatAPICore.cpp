@@ -223,16 +223,18 @@ namespace VChatSystem
 			case MESSAGE_REMOVE_CHARACTER_CHANNEL_REPLY:
 			{
 				Message::RemoveCharacterChannelReply message;
-				if(message.Read(data, dataLen))
+				if (message.Read(data, dataLen)) {
 					mClient.OnRemoveCharacterChannel(message.GetTrackingNumber(), message.GetResult(), userData);
 					break;
+				}
 			}
 			case MESSAGE_GET_CHARACTER_CHANNEL_REPLY:
 			{
 				Message::GetCharacterChannelReply message;
-				if(message.Read(data, dataLen))
+				if (message.Read(data, dataLen)) {
 					mClient.OnGetCharacterChannel(message.GetTrackingNumber(), message.GetResult(), message.GetChannelList(), userData);
 					break;
+				}
 			}
 			
 			default:

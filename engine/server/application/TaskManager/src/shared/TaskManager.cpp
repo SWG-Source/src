@@ -240,82 +240,75 @@ void TaskManager::remove()
 void TaskManager::processRcFile()
 {
 	AbstractFile * file = new StdioFile(ConfigTaskManager::getRcFileName(), "r");
-	if(file)
+	if(file->isOpen())
 	{
-		if(file->isOpen())
+		// read spawn directives
+		int fileLength = file->length();
+		if(fileLength > 0)
 		{
-			// read spawn directives
-			int fileLength = file->length();
-			if(fileLength > 0)
+			char * buffer = new char[fileLength + 1]; //lint !e737 Loss of sign in promotion from int to unsigned long
+			IGNORE_RETURN(memset(buffer, 0, fileLength + 1)); //lint !e732 loss of sign in promotion from int to unsigned long
+			int readResult = file->read(buffer, fileLength);
+			if(readResult > 0)
 			{
-				char * buffer = new char[fileLength + 1]; //lint !e737 Loss of sign in promotion from int to unsigned long
-				IGNORE_RETURN(memset(buffer, 0, fileLength + 1)); //lint !e732 loss of sign in promotion from int to unsigned long
-				int readResult = file->read(buffer, fileLength);
-				if(readResult > 0)
+				// parse the file
+				size_t start = 0;
+				std::string rcData = buffer;
+				while(start < rcData.size())
 				{
-					// parse the file
-					size_t start = 0;
-					std::string rcData = buffer;
-					while(start < rcData.size())
+					size_t recordEnd = rcData.find_first_of('\n', start);
+					if(recordEnd < std::string::npos)
 					{
-						size_t recordEnd = rcData.find_first_of('\n', start);
-						if(recordEnd < std::string::npos)
+						std::string record = rcData.substr(start, recordEnd - start);
+						if(record.length() > 0)
 						{
-							std::string record = rcData.substr(start, recordEnd - start);
-							if(record.length() > 0)
+							size_t firstChar = record.find_first_not_of(" \t");
+							if(firstChar < std::string::npos)
 							{
-								size_t firstChar = record.find_first_not_of(" \t");
+								if(record[firstChar] == '#')
+								{
+									start = recordEnd + 1;
+									continue;
+								}
+							}
+							ProcessEntry pe;
+
+							// get server name
+							size_t serverNameEndPos = record.find_first_of(' ', firstChar);
+							if(serverNameEndPos < std::string::npos)
+							{
+								pe.processName = record.substr(firstChar, serverNameEndPos - firstChar);
+
+								// get target host directive
+								firstChar = record.find_first_not_of(' ', serverNameEndPos);
 								if(firstChar < std::string::npos)
 								{
-									if(record[firstChar] == '#')
+									size_t hostEndPos = record.find_first_of(' ', firstChar);
+									if(hostEndPos < std::string::npos)
 									{
-										start = recordEnd + 1;
-										continue;
-									}
-								}
-								ProcessEntry pe;
-
-								// get server name
-								size_t serverNameEndPos = record.find_first_of(' ', firstChar);
-								if(serverNameEndPos < std::string::npos)
-								{
-									pe.processName = record.substr(firstChar, serverNameEndPos - firstChar);
-
-									// get target host directive
-									firstChar = record.find_first_not_of(' ', serverNameEndPos);
-									if(firstChar < std::string::npos)
-									{
-										size_t hostEndPos = record.find_first_of(' ', firstChar);
-										if(hostEndPos < std::string::npos)
+										pe.targetHost = record.substr(firstChar, hostEndPos - firstChar);
+										if(pe.targetHost != "any" && pe.targetHost != "local")
 										{
-											pe.targetHost = record.substr(firstChar, hostEndPos - firstChar);
-											if(pe.targetHost != "any" && pe.targetHost != "local")
-											{
-												Address a(pe.targetHost, 0);
-												pe.targetHost = a.getHostAddress();
-											}
+											Address a(pe.targetHost, 0);
+											pe.targetHost = a.getHostAddress();
+										}
 
-											// get executable name
-											firstChar = record.find_first_not_of(' ', hostEndPos);
-											if(firstChar < std::string::npos)
+										// get executable name
+										firstChar = record.find_first_not_of(' ', hostEndPos);
+										if(firstChar < std::string::npos)
+										{
+											size_t executableEndPos = record.find_first_of(' ', firstChar);
+											if(executableEndPos < std::string::npos)
 											{
-												size_t executableEndPos = record.find_first_of(' ', firstChar);
-												if(executableEndPos < std::string::npos)
+												pe.executable = record.substr(firstChar, executableEndPos - firstChar);
+
+												// get options
+												firstChar = record.find_first_not_of(' ', executableEndPos);
+												if(firstChar < std::string::npos)
 												{
-													pe.executable = record.substr(firstChar, executableEndPos - firstChar);
+													pe.options = record.substr(firstChar);
 
-													// get options
-													firstChar = record.find_first_not_of(' ', executableEndPos);
-													if(firstChar < std::string::npos)
-													{
-														pe.options = record.substr(firstChar);
-
-														IGNORE_RETURN(m_processEntries.insert(std::make_pair(pe.processName, pe)));
-													}
-													else
-													{
-														REPORT_LOG(true, ("Could not parse taskmanager.rc entry [%s]\n", record.c_str()));
-													}
+													IGNORE_RETURN(m_processEntries.insert(std::make_pair(pe.processName, pe)));
 												}
 												else
 												{
@@ -339,26 +332,29 @@ void TaskManager::processRcFile()
 								}
 								else
 								{
-									REPORT_LOG(true, ("Could not parse taskmanager.rc ent-ry [%s]\n", record.c_str()));
+									REPORT_LOG(true, ("Could not parse taskmanager.rc entry [%s]\n", record.c_str()));
 								}
+							}
+							else
+							{
+								REPORT_LOG(true, ("Could not parse taskmanager.rc ent-ry [%s]\n", record.c_str()));
+							}
 //									m_localServers.insert(std::pair<std::string, unsigned long>(record,0));
 //								IGNORE_RETURN(loadOnStart.insert(record));
-							}
 						}
-						else
-						{
-							break;
-						}
-						start = recordEnd + 1;
 					}
+					else
+					{
+						break;
+					}
+					start = recordEnd + 1;
 				}
-				delete [] buffer;
 			}
-			file->close();
-			delete file;
+			delete [] buffer;
 		}
+		file->close();
+		delete file;
 	}
-
 }
 
 //-----------------------------------------------------------------------

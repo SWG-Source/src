@@ -128,7 +128,7 @@ CrcString const & CallStackCollectorNamespace::Node::getName() const
 void CallStackCollectorNamespace::Node::addCallStack(uint32 * const callStack)
 {
 	//-- Compute crc of memory
-	uint32 const crc = Crc::calculate(callStack, sizeof(uint32) * CALLSTACK_DEPTH);
+	uint32 const crc = Crc::calculate(callStack, (sizeof(uint32) * CALLSTACK_DEPTH));
 
 	//-- Find callstack in list
 	CallStackEntryMap::iterator iter = m_callStackEntryMap.find(crc);
@@ -141,7 +141,7 @@ void CallStackCollectorNamespace::Node::addCallStack(uint32 * const callStack)
 	{
 		//-- Create new callstack
 		uint32 * const newCallStack = new uint32[CALLSTACK_DEPTH];
-		memcpy(newCallStack, callStack, sizeof(uint32) * CALLSTACK_DEPTH);
+		memcpy(newCallStack, callStack, (sizeof(uint32) * CALLSTACK_DEPTH));
 
 		CallStackEntry callStackEntry;
 		callStackEntry.m_callStack = newCallStack;

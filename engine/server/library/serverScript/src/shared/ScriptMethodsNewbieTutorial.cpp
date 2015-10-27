@@ -52,7 +52,7 @@ namespace ScriptMethodsNewbieTutorialNamespace
 		else
 		{
 			WARNING (true, ("newbieTutorialSendStartingLocationsToPlayer: bad controller"));
-			delete & msg;
+			delete msg;
 		}
 	}
 
