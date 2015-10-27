@@ -1720,7 +1720,7 @@ void UdpConnection::ProcessRawPacket(const UdpManager::PacketHistoryEntry *e)
 			}
 
 			uchar *crcPtr = finalStart + (finalLen - mConnectionConfig.crcBytes);
-			int actualCrc = UdpMisc::Crc32(finalStart, finalLen - mConnectionConfig.crcBytes, mConnectionConfig.encryptCode);
+			long actualCrc = UdpMisc::Crc32(finalStart, finalLen - mConnectionConfig.crcBytes, mConnectionConfig.encryptCode);
 			int wantCrc = 0;
 			switch(mConnectionConfig.crcBytes)
 			{
@@ -2547,7 +2547,7 @@ void UdpConnection::PhysicalSend(const uchar *data, int dataLen, bool appendAllo
 			finalStart = tempEncryptBuffer[0];
 		}
 
-		int crc = UdpMisc::Crc32(finalStart, finalLen, mConnectionConfig.encryptCode);
+		long crc = UdpMisc::Crc32(finalStart, finalLen, mConnectionConfig.encryptCode);
 		uchar *crcPtr = const_cast<uchar *>(finalStart) + finalLen;		// safe cast, since we make a copy of the data above if we would have ended up appending to the original
 		switch(mConnectionConfig.crcBytes)
 		{
@@ -4153,7 +4153,7 @@ int UdpMisc::Random(int *seed)
 	return(*seed);
 }
 
-int UdpMisc::Crc32(const void *buffer, int bufferLen, int encryptValue)
+long UdpMisc::Crc32(const void *buffer, int bufferLen, int encryptValue)
 {
 	static unsigned crc32_table[256] = { 
 	0x00000000, 0x77073096, 0xEE0E612C, 0x990951BA, 0x076DC419, 0x706AF48F,
@@ -4200,11 +4200,11 @@ int UdpMisc::Crc32(const void *buffer, int bufferLen, int encryptValue)
 	0x54DE5729, 0x23D967BF, 0xB3667A2E, 0xC4614AB8, 0x5D681B02, 0x2A6F2B94,
 	0xB40BBE37, 0xC30C8EA1, 0x5A05DF1B, 0x2D02EF8D};
 
-	int crc = 0xffffffff;
-	crc = (crc >> 8 & 0x00FFFFFFL) ^ crc32_table[(crc ^ (encryptValue & 0xff)) & 0x000000FFL];
-	crc = (crc >> 8 & 0x00FFFFFFL) ^ crc32_table[(crc ^ ((encryptValue >> 8) & 0xff)) & 0x000000FFL];
-	crc = (crc >> 8 & 0x00FFFFFFL) ^ crc32_table[(crc ^ ((encryptValue >> 16) & 0xff)) & 0x000000FFL];
-	crc = (crc >> 8 & 0x00FFFFFFL) ^ crc32_table[(crc ^ ((encryptValue >> 24) & 0xff)) & 0x000000FFL];
+	long crc = 0xffffffff;
+	crc = ((crc >> 8) & 0x00FFFFFFL) ^ crc32_table[(crc ^ (encryptValue & 0xff)) & 0x000000FFL];
+	crc = ((crc >> 8) & 0x00FFFFFFL) ^ crc32_table[(crc ^ ((encryptValue >> 8) & 0xff)) & 0x000000FFL];
+	crc = ((crc >> 8) & 0x00FFFFFFL) ^ crc32_table[(crc ^ ((encryptValue >> 16) & 0xff)) & 0x000000FFL];
+	crc = ((crc >> 8) & 0x00FFFFFFL) ^ crc32_table[(crc ^ ((encryptValue >> 24) & 0xff)) & 0x000000FFL];
 
 	const uchar *bufPtr = (const uchar *)buffer;
 	const uchar *endPtr = (const uchar *)buffer + bufferLen;
