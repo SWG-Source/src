@@ -3,12 +3,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <limits.h>
 
 #include "UdpLibrary.hpp"
-
-#define LEFT_SHIFT(a, b) ((b) >= CHAR_BIT * sizeof(a)? 0 : (a) << (b))
-
 
 #if defined(WIN32)
 	#pragma warning(disable : 4710)
