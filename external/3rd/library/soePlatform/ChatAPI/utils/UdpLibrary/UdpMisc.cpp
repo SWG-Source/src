@@ -2,6 +2,7 @@
 // Author: Jeff Petersen
 
 #include <string.h>
+#include <limits.h>
 
 #include "UdpMisc.h"
 #include "UdpLogicalPacket.h"
