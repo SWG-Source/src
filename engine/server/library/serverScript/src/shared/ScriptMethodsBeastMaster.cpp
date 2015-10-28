@@ -261,7 +261,7 @@ jboolean JNICALL ScriptMethodsBeastMasterNamespace::setBeastMasterToggledPetComm
 		if (item != JavaString::cms_nullPtr)
 			JavaLibrary::convert(*item, commands[i]);
 		else
-			commands[i]clear();
+			commands[i].clear();
 	}
 	po->setPetToggledCommands(commands);
 	return JNI_TRUE;
