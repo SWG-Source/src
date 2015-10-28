@@ -45,7 +45,7 @@ class RemoteDebug::Variable
 			int32 intValue;
 			float floatValue;
 			int32 boolValue;
-			char stringValue;
+			char* stringValue;
 		};
 		
 		Variable(const std::string& name, void *memLoc, VARIABLE_TYPES type);
