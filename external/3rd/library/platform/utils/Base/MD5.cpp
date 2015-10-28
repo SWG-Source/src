@@ -68,7 +68,7 @@ namespace Base
 
     vector<char> MD5::Encode(const vector<int> &ai, int i)
     {
-        const vector<char> &achar0(i,0);
+        vector<char> achar0(i,0);
         int k;
         int j = k = 0;
         for(; k < i; k += 4){
@@ -211,7 +211,7 @@ namespace Base
 
     void MD5::Update(char char0)
     {
-        const vector<char> &achar0(1,0);
+        vector<char> achar0(1,0);
         achar0[0] = char0;
         Update(achar0, 1);
     }
