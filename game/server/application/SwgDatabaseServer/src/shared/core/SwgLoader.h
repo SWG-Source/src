@@ -32,7 +32,7 @@ class SwgLoader : public Loader
 	virtual void verifyCharacter(StationId suid, const NetworkId &id, const TransferCharacterData *);
 	virtual void update(real updateTime);
 	void verifyCharacterFinished (TaskVerifyCharacter *task);
-	virtual void locateStructure(const NetworkId &structureId, const std::string &whoRequested);
+	virtual void locateStructure(const NetworkId &structureId, const std::string whoRequested);
 		
   private:
 	virtual LoaderSnapshotGroup *makeLoaderSnapshotGroup(uint32 processId);
