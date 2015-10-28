@@ -1177,6 +1177,7 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 	else if(message.isType("DatabaseConsoleReplyMessage"))
 	{
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+		ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		GenericValueTypeMessage<std::pair<std::string, std::string> > msg(ri);
 
 		IGNORE_RETURN(sendToRandomGameServer(msg));
@@ -2656,6 +2657,7 @@ void CentralServer::run(void)
 	setup.port = ConfigCentralServer::getConnectionServicePort();
 	setup.bindInterface = ConfigCentralServer::getConnectionServiceBindInterface();
 	Service * cons = new Service(ConnectionAllocator<ConnectionServerConnection>(), setup);
+	NOT_NULL(cons);
 	cserver.m_connService = cons;
 
 	setup.port = ConfigCentralServer::getConsoleServicePort();
@@ -2741,7 +2743,7 @@ void CentralServer::run(void)
 				Os::sleep(1);
 			}
 
-		} while (!cserver.m_done);
+		} while (!barrierReached && !cserver.m_done);
 
 		//@todo Central needs to run a clock so we can schedule re-tries with the login server.
 		{
