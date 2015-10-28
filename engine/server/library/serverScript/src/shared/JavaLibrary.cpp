@@ -1283,7 +1283,6 @@ void JavaLibrary::initializeJavaThread()
 				strcpy(profileBuffer,"-Xrunhprof:cpu=times");
 				tempOption.optionString = profileBuffer;
 				options.push_back(tempOption);
-				delete [] profileBuffer;
 			}
 			else
 			{
