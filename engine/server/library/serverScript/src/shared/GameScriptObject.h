@@ -66,7 +66,7 @@ enum
 	SCRIPT_INTERNAL_ERROR = 99		// internal scripting engine error
 };
 
-const size_t MAX_SCRIPT_NAME_LEN = 128;		// including final '\0'
+const size_t MAX_SCRIPT_NAME_LEN = 512;		// including final '\0'
 
 
 /*************************************************************************/
