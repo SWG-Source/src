@@ -109,8 +109,7 @@ void ExpertiseManagerNamespace::loadExpertiseTable(DataTable const & datatable)
 		std::pair<ExpertiseGrid::iterator, bool> result = s_expertiseGrid.insert(std::make_pair(expertiseCoord, skillName));
 
 		UNREF(result);
-		DEBUG_WARNING(!result.second, ("ExpertiseManager: %s row %d: duplicate expertise: %s",
-			cs_expertiseDatatableName.c_str(), row, name.c_str()));
+		//DEBUG_WARNING(!result.second, ("ExpertiseManager: %s row %d: duplicate expertise: %s", cs_expertiseDatatableName.c_str(), row, name.c_str()));
 	}
 }
 
