@@ -1,3 +1,4 @@
+#include <cstdint>
 #include "../BlockAllocator.h"
 
 #ifdef EXTERNAL_DISTRO
