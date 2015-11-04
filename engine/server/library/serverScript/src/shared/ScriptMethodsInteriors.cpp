@@ -458,7 +458,7 @@ jlong JNICALL ScriptMethodsInteriorsNamespace::getCellId(JNIEnv *env, jobject se
 	PortalProperty const * const portalProp = serverObject->getPortalProperty();
 	if (!portalProp)
 	{
-		DEBUG_WARNING(true, ("[script bug] JavaLibrary::getCellId server object %s has no portal property", serverObject->getDebugInformation().c_str()));
+		//DEBUG_WARNING(true, ("[script bug] JavaLibrary::getCellId server object %s has no portal property", serverObject->getDebugInformation().c_str()));
 		return 0;
 	}
 
