@@ -472,7 +472,7 @@ jlong JNICALL ScriptMethodsInteriorsNamespace::getCellId(JNIEnv *env, jobject se
 	CellProperty const * const cellProp = portalProp->getCell(cellNameString.c_str());
 	if (!cellProp)
 	{
-		DEBUG_WARNING(true, ("[script bug] JavaLibrary::getCellId passed bad cell name %s for portallized object %s", cellNameString.c_str(), serverObject->getDebugInformation().c_str()));
+		//DEBUG_WARNING(true, ("[script bug] JavaLibrary::getCellId passed bad cell name %s for portallized object %s", cellNameString.c_str(), serverObject->getDebugInformation().c_str()));
 		return 0;
 	}
 
