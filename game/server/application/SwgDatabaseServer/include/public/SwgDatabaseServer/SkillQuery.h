@@ -1,1 +1,1 @@
-#include "../../src/shared/queries/SkillQuery.h"
+#include "../../../src/shared/queries/SkillQuery.h"

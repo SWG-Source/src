@@ -1,1 +1,1 @@
-#include "../../src/shared/queries/PropertyListQuery.h"
+#include "../../../src/shared/queries/PropertyListQuery.h"

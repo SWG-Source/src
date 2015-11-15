@@ -1,1 +1,1 @@
-#include "../../src/shared/queries/WaypointQuery.h"
+#include "../../../src/shared/queries/WaypointQuery.h"

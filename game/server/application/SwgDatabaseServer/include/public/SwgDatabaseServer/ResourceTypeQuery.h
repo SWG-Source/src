@@ -1,1 +1,1 @@
-#include "../../src/shared/queries/ResourceTypeQuery.h"
+#include "../../../src/shared/queries/ResourceTypeQuery.h"

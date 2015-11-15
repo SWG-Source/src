@@ -1,1 +1,1 @@
-#include "../../src/shared/queries/ObjectsTableQuery.h"
+#include "../../../src/shared/queries/ObjectsTableQuery.h"

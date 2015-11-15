@@ -1,1 +1,1 @@
-#include "../../src/shared/queries/MessageQuery.h"
+#include "../../../src/shared/queries/MessageQuery.h"

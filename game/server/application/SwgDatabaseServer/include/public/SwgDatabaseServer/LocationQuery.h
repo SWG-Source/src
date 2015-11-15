@@ -1,1 +1,1 @@
-#include "../../src/shared/queries/LocationQuery.h"
+#include "../../../src/shared/queries/LocationQuery.h"

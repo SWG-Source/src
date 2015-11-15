@@ -1,1 +1,1 @@
-#include "../../src/shared/queries/BountyHunterTargetQuery.h"
+#include "../../../src/shared/queries/BountyHunterTargetQuery.h"
