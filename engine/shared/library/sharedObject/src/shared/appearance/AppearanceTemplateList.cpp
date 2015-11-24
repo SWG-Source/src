@@ -286,7 +286,7 @@ const AppearanceTemplate *AppearanceTemplateList::fetch(Iff *const iff)
 	{
 		char tagString[5];
 		ConvertTagToString(tag, tagString);
-		DEBUG_FATAL(true, ("AppearanceTemplate binding %s not found", tagString));
+		WARNING(true, ("AppearanceTemplate binding %s not found", tagString));
 		return 0; //lint !e527 // unreachable
 	}
 
@@ -398,6 +398,12 @@ Appearance *AppearanceTemplateList::createAppearance(const char *const fileName)
 
 	//-- creating the appearance will increment the reference count
 	Appearance *const appearance = appearanceTemplate->createAppearance();
+
+	// Return if we can't find the appearance file
+	if (appearanceTemplate == NULL) {
+		return NULL;
+	}
+
 
 #ifdef _DEBUG
 	DataLint::popAsset();
@@ -586,7 +592,7 @@ AppearanceTemplate *AppearanceTemplateListNamespace::create(const char *const fi
 		{
 			char tagString[5];
 			ConvertTagToString(tag, tagString);
-			DEBUG_FATAL(true, ("AppearanceTemplate binding %s not found for file %s", tagString, actualFileName.getString()));
+			WARNING(true, ("AppearanceTemplate binding %s not found for file %s", tagString, actualFileName.getString()));
 		}
 	}
 
