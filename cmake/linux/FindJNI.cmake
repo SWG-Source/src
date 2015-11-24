@@ -127,6 +127,11 @@ JAVA_APPEND_LIBRARY_DIRECTORIES(JAVA_AWT_LIBRARY_DIRECTORIES
   /usr/local/jre-1.7.0/lib/{libarch}
   /usr/local/jdk-1.6.0/jre/lib/{libarch}
   /usr/local/jre-1.6.0/lib/{libarch}
+  # Webupd8 Oracle Java Paths for Debian and Ubuntu
+  /usr/lib/jvm/java-9-oracle/jre/lib/{libarch}
+  /usr/lib/jvm/java-8-oracle/jre/lib/{libarch}
+  /usr/lib/jvm/java-7-oracle/jre/lib/{libarch}
+  /usr/lib/jvm/java-6-oracle/jre/lib/{libarch}
   )
 
 set(JAVA_JVM_LIBRARY_DIRECTORIES)
@@ -163,6 +168,11 @@ set(JAVA_AWT_INCLUDE_DIRECTORIES
   # OpenBSD specific path for default JVM
   /usr/local/jdk-1.7.0/include
   /usr/local/jdk-1.6.0/include
+  # Webupd8 Oracle Java Paths for Debian and Ubuntu
+  /usr/lib/jvm/java-9-oracle/include
+  /usr/lib/jvm/java-8-oracle/include
+  /usr/lib/jvm/java-7-oracle/include
+  /usr/lib/jvm/java-6-oracle/include
   )
 
 foreach(JAVA_PROG "${JAVA_RUNTIME}" "${JAVA_COMPILE}" "${JAVA_ARCHIVE}")
