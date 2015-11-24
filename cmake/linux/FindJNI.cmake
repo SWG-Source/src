@@ -127,6 +127,7 @@ JAVA_APPEND_LIBRARY_DIRECTORIES(JAVA_AWT_LIBRARY_DIRECTORIES
   /usr/local/jre-1.7.0/lib/{libarch}
   /usr/local/jdk-1.6.0/jre/lib/{libarch}
   /usr/local/jre-1.6.0/lib/{libarch}
+  /usr/lib/jvm/java-6-oracle/jre/lib/{libarch} # This is to add Oracle Java 6 support.
   )
 
 set(JAVA_JVM_LIBRARY_DIRECTORIES)
@@ -163,6 +164,7 @@ set(JAVA_AWT_INCLUDE_DIRECTORIES
   # OpenBSD specific path for default JVM
   /usr/local/jdk-1.7.0/include
   /usr/local/jdk-1.6.0/include
+  /usr/lib/jvm/java-6-oracle/include # This is to add Oracle Java 6 support.
   )
 
 foreach(JAVA_PROG "${JAVA_RUNTIME}" "${JAVA_COMPILE}" "${JAVA_ARCHIVE}")
