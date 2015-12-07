@@ -396,6 +396,11 @@ Appearance *AppearanceTemplateList::createAppearance(const char *const fileName)
 	//-- get the appearance template
 	const AppearanceTemplate *const appearanceTemplate = fetch(fileName);
 
+	if(!appearanceTemplate){
+        DEBUG_WARNING(true, ("FIX ME: Appearance template for %s could not be fetched - is it missing?", fileName));
+	    return NULL;  // Cekis: TODO: Figure out why the template can't be fetched.
+	}
+
 	//-- creating the appearance will increment the reference count
 	Appearance *const appearance = appearanceTemplate->createAppearance();
 
