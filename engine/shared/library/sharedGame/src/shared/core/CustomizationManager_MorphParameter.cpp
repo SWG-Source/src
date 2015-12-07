@@ -223,7 +223,7 @@ float CustomizationManager::MorphParameter::normalizeScale (Object const & obj, 
 
 float CustomizationManager::MorphParameter::denormalizeScale (SharedObjectTemplate const * const tmpl, float const normalizedValue)
 {
-	if (tmpl)
+	if (tmpl && normalizedValue <= 1.0f) // Cekis: Godzilla must die!
 	{
 		float const scaleMax   = tmpl->getScaleMax ();
 		float const scaleMin   = tmpl->getScaleMin ();
