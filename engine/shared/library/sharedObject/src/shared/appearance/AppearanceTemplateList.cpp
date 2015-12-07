@@ -404,12 +404,6 @@ Appearance *AppearanceTemplateList::createAppearance(const char *const fileName)
 	//-- creating the appearance will increment the reference count
 	Appearance *const appearance = appearanceTemplate->createAppearance();
 
-	// Return if we can't find the appearance file
-	if (appearanceTemplate == NULL) {
-		return NULL;
-	}
-
-
 #ifdef _DEBUG
 	DataLint::popAsset();
 #endif // _DEBUG
