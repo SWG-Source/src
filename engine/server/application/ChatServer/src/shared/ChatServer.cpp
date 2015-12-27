@@ -651,7 +651,7 @@ ChatServer::AvatarExtendedData * ChatServer::getAvatarExtendedDataByNetworkId(co
 const NetworkId &  ChatServer::getNetworkIdByAvatarId(const ChatAvatarId & id)
 {
 	PROFILER_AUTO_BLOCK_DEFINE("ChatServer - getNetworkIdByAvatarId");
-	/*ChatAvatarList::const_iterator f;
+	ChatAvatarList::const_iterator f;
 	for (f = instance().chatAvatars.begin(); f != instance().chatAvatars.end(); ++f)
 	{
 		ChatAvatarId av;
@@ -663,7 +663,7 @@ const NetworkId &  ChatServer::getNetworkIdByAvatarId(const ChatAvatarId & id)
 	}
 	static NetworkId badId;
 	return badId;
-	*/
+	
 	return instance().chatInterface->getNetworkIdByAvatarId(id);
 }
 
