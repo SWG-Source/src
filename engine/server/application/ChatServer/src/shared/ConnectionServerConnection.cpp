@@ -91,13 +91,13 @@ void ConnectionServerConnection::onReceive(const Archive::ByteStream & message)
 {
 	Archive::ReadIterator ri = message.begin();
 	GameNetworkMessage m(ri);
-	/*
+	
 	static int count = 0;
 	if ((count % 10) == 0)
 	{
 		ChatServer::getChatInterface()->Process();
 	}
-	++count;*/
+	++count;
 
 	ri = message.begin();
 
@@ -105,7 +105,7 @@ void ConnectionServerConnection::onReceive(const Archive::ByteStream & message)
 
 	if(m.isType("ChatConnectAvatar"))
 	{
-//printf("ConnectionServerConnection -- ChatConnectAvatar\n");		
+		//printf("ConnectionServerConnection -- ChatConnectAvatar\n");		
 		PROFILER_AUTO_BLOCK_DEFINE("ConnectionServer - ChatConnectAvatar");
 		ChatConnectAvatar c(ri);
 		// break surname from last name
@@ -118,7 +118,7 @@ void ConnectionServerConnection::onReceive(const Archive::ByteStream & message)
 	else if(m.isType("ChatDisconnectAvatar"))
 	{
 		PROFILER_AUTO_BLOCK_DEFINE("ConnectionServer - ChatDisconnectAvatar");
-//printf("ConnectionServerConnection -- ChatDisconnectAvatar\n");		
+		//printf("ConnectionServerConnection -- ChatDisconnectAvatar\n");		
 		static MessageDispatch::Transceiver<const ChatDisconnectAvatar &> disconn;
 		ChatDisconnectAvatar d(ri);
 		disconn.emitMessage(d);
