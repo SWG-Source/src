@@ -431,11 +431,14 @@ void CellProperty::initialize(const PortalProperty &portalProperty, int cellInde
 		m_appearanceObject->setDebugName("Cell appearance object");
 		m_appearanceObject->attachToObject_p(&getOwner(), true);
 		Appearance * const appearance = AppearanceTemplateList::createAppearance(cellTemplate.getAppearanceName());
-		appearance->setShadowBlobAllowed();
-		m_appearanceObject->setAppearance(appearance);
 
-		if (ms_addToRenderWorldHook)
-			ms_addToRenderWorldHook(*m_appearanceObject);
+		if (appearance != NULL) {
+			appearance->setShadowBlobAllowed();
+			m_appearanceObject->setAppearance(appearance);
+
+			if (ms_addToRenderWorldHook)
+				ms_addToRenderWorldHook(*m_appearanceObject);
+		}
 	}
 
 	// ----------

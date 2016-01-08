@@ -2460,8 +2460,11 @@ void Object::setAppearanceByName(char const *path)
 			// Create the object's new appearance
 
 			Appearance *appearance = AppearanceTemplateList::createAppearance(path);
-
-			setAppearance(appearance);
+			
+			if (appearance != NULL) 
+			{
+				setAppearance(appearance);
+			} 
 		}
 		else
 		{
@@ -3270,6 +3273,10 @@ void Object::setAlternateAppearance(const char * path)
 	if (TreeFile::exists(path))
 	{	
 		alternateAppearance = AppearanceTemplateList::createAppearance(path);
+
+		if (alternateAppearance == NULL) {
+			return;
+		}
 	}
 	else
 	{

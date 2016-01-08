@@ -208,7 +208,11 @@ void DoorObject::createAppearance ( DoorInfo const & info )
 {
 	if (info.m_frameAppearance && info.m_frameAppearance[0])
 	{
-		setAppearance(AppearanceTemplateList::createAppearance(info.m_frameAppearance));
+		Appearance * const appearance = AppearanceTemplateList::createAppearance(info.m_frameAppearance); 
+
+		if (appearance != NULL) {
+			setAppearance(appearance);
+		}
 	}
 
 	m_drawnDoor[0] = new Object();
@@ -239,14 +243,24 @@ void DoorObject::createAppearance ( DoorInfo const & info )
 	{
 		if (info.m_doorAppearance && info.m_doorAppearance[0])
 		{
-			m_drawnDoor[0]->setAppearance(AppearanceTemplateList::createAppearance(info.m_doorAppearance));
+			Appearance * const appearance = AppearanceTemplateList::createAppearance(info.m_doorAppearance);
+
+			if (appearance != NULL) {
+				m_drawnDoor[0]->setAppearance(appearance);
+			}
 		}
 
 		if (info.m_doorAppearance2 && info.m_doorAppearance2[0])
 		{
 			m_drawnDoor[1] = new Object();
 			m_drawnDoor[1]->attachToObject_p(this,true);
-			m_drawnDoor[1]->setAppearance(AppearanceTemplateList::createAppearance(info.m_doorAppearance2));
+
+			Appearance * const appearance = AppearanceTemplateList::createAppearance(info.m_doorAppearance2);
+
+			if (appearance != NULL) {
+				m_drawnDoor[1]->setAppearance(appearance);
+			}
+
 			if (info.m_doorFlip2)
 				m_drawnDoor[1]->yaw_o(PI);
 		}

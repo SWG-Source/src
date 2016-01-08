@@ -460,8 +460,10 @@ void PortalProperty::debugPrint(std::string &buffer) const
 void PortalProperty::createAppearance()
 {
 	Appearance * const appearance = AppearanceTemplateList::createAppearance(m_template->getExteriorAppearanceName());
-	appearance->setShadowBlobAllowed();
-	getOwner().setAppearance(appearance);
+	if (appearance != NULL) {
+		appearance->setShadowBlobAllowed();
+		getOwner().setAppearance(appearance);
+	}
 }
 
 // ----------------------------------------------------------------------

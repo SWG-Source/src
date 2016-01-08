@@ -232,14 +232,21 @@ const AppearanceTemplate *AppearanceTemplateList::fetch(const char *const fileNa
 		DEBUG_WARNING(true, ("AppearanceTemplateList::fetch could not open '%s', using default", fileName));
 		actualFileName = getDefaultAppearanceTemplateName();
 	}
-	else
+	
+	if (actualFileName) 
+	{
 		found = true;
 
-	//-- search for the appearance
-	AppearanceTemplate *const appearanceTemplate = create(actualFileName);
+		//-- search for the appearance
+		AppearanceTemplate *const appearanceTemplate = create(actualFileName);
 
-	//-- up the reference count
-	return fetch(appearanceTemplate);
+		//-- up the reference count
+		return fetch(appearanceTemplate);
+	}
+
+	DEBUG_WARNING(true, ("AppearanceTemplateList::fetch actualFileName fetch for %s failed.", actualFileName));
+
+	return NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -389,17 +396,17 @@ Appearance *AppearanceTemplateList::createAppearance(const char *const fileName)
 {
 	DEBUG_FATAL(!ms_installed, ("not installed"));
 
-#ifdef _DEBUG
-	DataLint::pushAsset(fileName);
-#endif
-
 	//-- get the appearance template
 	const AppearanceTemplate *const appearanceTemplate = fetch(fileName);
 
-	if(!appearanceTemplate){
+	if (appearanceTemplate == NULL){
         DEBUG_WARNING(true, ("FIX ME: Appearance template for %s could not be fetched - is it missing?", fileName));
 	    return NULL;  // Cekis: TODO: Figure out why the template can't be fetched.
 	}
+
+#ifdef _DEBUG
+        DataLint::pushAsset(fileName);
+#endif
 
 	//-- creating the appearance will increment the reference count
 	Appearance *const appearance = appearanceTemplate->createAppearance();
@@ -585,8 +592,9 @@ AppearanceTemplate *AppearanceTemplateListNamespace::create(const char *const fi
 
 		const Tag tag = iff.getCurrentName();
 		TagBindingMap::iterator iter = ms_tagBindingMap.find(tag);
-		if (iter != ms_tagBindingMap.end())
+		if (iter != ms_tagBindingMap.end()) {
 			appearanceTemplate = iter->second(actualFileName.getString(), &iff);
+		}
 		else
 		{
 			char tagString[5];

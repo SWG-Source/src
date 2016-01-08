@@ -1182,22 +1182,25 @@ void ProceduralTerrainAppearance::_legacyCreateFlora(const Chunk* const chunk)
  					Object* const object = new Object ();
 					object->yaw_o (yaw);
 					Appearance * const appearance = AppearanceTemplateList::createAppearance (FileName (FileName::P_appearance, data.familyChildData->appearanceTemplateName));
-					appearance->setKeepAlive (true);
-					object->setAppearance (appearance);
-					object->setScale (Vector::xyz111 * scale);						
 
-					if (ms_createFloraHookFunction)
+					if (appearance != NULL) {
+						appearance->setKeepAlive (true);
+						object->setAppearance (appearance);
+						object->setScale (Vector::xyz111 * scale);						
+	
+						if (ms_createFloraHookFunction)
 						ms_createFloraHookFunction (*object);
+	
+						object->setPosition_p (floraPosition);
 
-					object->setPosition_p (floraPosition);
+						CollisionProperty* const collisionProperty = new CollisionProperty (*object);
+						collisionProperty->setFlora (true);
+						object->addProperty (*collisionProperty);
 
-					CollisionProperty* const collisionProperty = new CollisionProperty (*object);
-					collisionProperty->setFlora (true);
-					object->addProperty (*collisionProperty);
+						object->addToWorld ();
 
-					object->addToWorld ();
-
-					IGNORE_RETURN (m_floraMap->insert (std::make_pair (key, object)));
+						IGNORE_RETURN (m_floraMap->insert (std::make_pair (key, object)));
+					}
 				}  //lint !e429  //-- collisionProperty has not been freed or returned
 			}
 		}
@@ -1334,24 +1337,27 @@ void ProceduralTerrainAppearance::createFlora (const Chunk* const chunk)
 		Object* const object = new Object ();
 		object->yaw_o (yaw);
 		Appearance * const appearance = AppearanceTemplateList::createAppearance (FileName (FileName::P_appearance, data.familyChildData->appearanceTemplateName));
-		appearance->setKeepAlive (true);
-		object->setAppearance (appearance);
-		object->setScale (Vector::xyz111 * scale);						
 
-		if (ms_createFloraHookFunction)
-		{
-			ms_createFloraHookFunction(*object);
+		if (appearance != NULL) {
+			appearance->setKeepAlive (true);
+			object->setAppearance (appearance);
+			object->setScale (Vector::xyz111 * scale);						
+
+			if (ms_createFloraHookFunction)
+			{
+				ms_createFloraHookFunction(*object);
+			}
+
+			object->setPosition_p (floraPosition);
+
+			CollisionProperty* const collisionProperty = new CollisionProperty (*object);
+			collisionProperty->setFlora (true);
+			object->addProperty (*collisionProperty);
+
+			object->addToWorld ();
+
+			IGNORE_RETURN (m_floraMap->insert (std::make_pair (key, object)));
 		}
-
-		object->setPosition_p (floraPosition);
-
-		CollisionProperty* const collisionProperty = new CollisionProperty (*object);
-		collisionProperty->setFlora (true);
-		object->addProperty (*collisionProperty);
-
-		object->addToWorld ();
-
-		IGNORE_RETURN (m_floraMap->insert (std::make_pair (key, object)));
 	}  //lint !e429  //-- collisionProperty has not been freed or returned
 }
 

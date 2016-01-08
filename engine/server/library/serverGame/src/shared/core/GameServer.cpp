@@ -835,12 +835,16 @@ void GameServer::loadTerrain ()
 
 	TerrainObject * const terrainObject = new TerrainObject(ServerWorld::getTerrainObjectNotification());
 	terrainObject->setDebugName("terrain");
+
 	Appearance * const appearance = AppearanceTemplateList::createAppearance(terrainFileName);
-	terrainObject->setAppearance(appearance);
+	if (appearance != NULL) {
+		terrainObject->setAppearance(appearance);
+	}
 
 	ProceduralTerrainAppearance * const proceduralTerrainAppearance = dynamic_cast<ProceduralTerrainAppearance *>(appearance);
-	if (proceduralTerrainAppearance)
+	if (proceduralTerrainAppearance) {
 		ServerObjectTerrainModificationNotification::setTerrainAppearance(proceduralTerrainAppearance);
+	}
 
 	terrainObject->addToWorld();
 }
