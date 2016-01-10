@@ -399,12 +399,12 @@ Appearance *AppearanceTemplateList::createAppearance(const char *const fileName)
 	//-- get the appearance template
 	const AppearanceTemplate *const appearanceTemplate = fetch(fileName);
 
+#ifdef _DEBUG
 	if (appearanceTemplate == NULL){
         DEBUG_WARNING(true, ("FIX ME: Appearance template for %s could not be fetched - is it missing?", fileName));
 	    return NULL;  // Cekis: TODO: Figure out why the template can't be fetched.
 	}
 
-#ifdef _DEBUG
         DataLint::pushAsset(fileName);
 #endif
 
