@@ -472,6 +472,8 @@ TangibleObject::TangibleObject(const ServerTangibleObjectTemplate* newTemplate) 
 				if(newAppearance != NULL)
 				{
 					setAppearance(newAppearance);
+				} else {
+					DEBUG_WARNING(true, ("Missing appearance for TangibleObject::TangibleObject %s", appearanceString.c_str()));
 				}
 			}
 		}

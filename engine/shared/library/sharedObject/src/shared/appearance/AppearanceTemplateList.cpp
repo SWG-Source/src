@@ -399,10 +399,10 @@ Appearance *AppearanceTemplateList::createAppearance(const char *const fileName)
 	//-- get the appearance template
 	const AppearanceTemplate *const appearanceTemplate = fetch(fileName);
 
-#ifdef _DEBUG
+#ifdef _DEBUG //probably should modify the macro sometime to just be quiet if this isn't defined
 	if (appearanceTemplate == NULL){
-        DEBUG_WARNING(true, ("FIX ME: Appearance template for %s could not be fetched - is it missing?", fileName));
-	    return NULL;  // Cekis: TODO: Figure out why the template can't be fetched.
+	    DEBUG_WARNING(true, ("FIX ME: Appearance template for %s could not be fetched - is it missing?", fileName));
+	    return NULL;  // Cekis: TODO: Figure out why the template can't be fetched. DarthArgus: always is due to a missing file or one of the redirectors having a bad path
 	}
 
         DataLint::pushAsset(fileName);

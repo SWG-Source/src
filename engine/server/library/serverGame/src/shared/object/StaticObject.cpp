@@ -42,6 +42,8 @@ StaticObject::StaticObject(const ServerStaticObjectTemplate* newTemplate) :
 			if(newAppearance != NULL)
 			{
 				setAppearance(newAppearance);
+			} else {
+				DEBUG_WARNING(true, ("FIX ME: Appearance template for StaticObject::StaticObject missing for %s.", newTemplate->DataResource::getName()));
 			}
 		}
 	}

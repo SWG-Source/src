@@ -438,6 +438,8 @@ void CellProperty::initialize(const PortalProperty &portalProperty, int cellInde
 
 			if (ms_addToRenderWorldHook)
 				ms_addToRenderWorldHook(*m_appearanceObject);
+		} else {
+			DEBUG_WARNING(true, ("FIX ME: Appearance template in CellProperty::initialize missing"));
 		}
 	}
 

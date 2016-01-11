@@ -212,6 +212,8 @@ void DoorObject::createAppearance ( DoorInfo const & info )
 
 		if (appearance != NULL) {
 			setAppearance(appearance);
+		} else {
+			DEBUG_WARNING(true, ("FIX ME: Appearance template for DoorObject::createAppearance missing, first stanza."));
 		}
 	}
 
@@ -237,6 +239,8 @@ void DoorObject::createAppearance ( DoorInfo const & info )
 			Extent * appearanceExtent = new Extent( Containment3d::EncloseSphere(verts) );
 			appearanceExtent->incrementReference();
 			appearance->setExtent( appearanceExtent );
+		} else {
+			DEBUG_WARNING(true, ("FIX ME: Appearance template for DoorObject::createAppearance missing, second stanza."));
 		}
 	}
 	else
@@ -247,6 +251,8 @@ void DoorObject::createAppearance ( DoorInfo const & info )
 
 			if (appearance != NULL) {
 				m_drawnDoor[0]->setAppearance(appearance);
+			} else {
+				DEBUG_WARNING(true, ("FIX ME: Appearance template for DoorObject::createAppearance missing, third stanza."));
 			}
 		}
 
@@ -259,6 +265,8 @@ void DoorObject::createAppearance ( DoorInfo const & info )
 
 			if (appearance != NULL) {
 				m_drawnDoor[1]->setAppearance(appearance);
+			} else {
+				DEBUG_WARNING(true, ("FIX ME: Appearance template for DoorObject::createAppearance missing, fourth stanza."));
 			}
 
 			if (info.m_doorFlip2)

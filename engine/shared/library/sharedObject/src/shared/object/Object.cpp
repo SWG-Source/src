@@ -2464,7 +2464,9 @@ void Object::setAppearanceByName(char const *path)
 			if (appearance != NULL) 
 			{
 				setAppearance(appearance);
-			} 
+			} else {
+				DEBUG_WARNING(true, ("Object::setAppearanceByName() - Unable to find the object's appearance because the file does not exist: %s", path));
+			}
 		}
 		else
 		{
@@ -3275,6 +3277,7 @@ void Object::setAlternateAppearance(const char * path)
 		alternateAppearance = AppearanceTemplateList::createAppearance(path);
 
 		if (alternateAppearance == NULL) {
+			DEBUG_WARNING(true, ("Object::setAlternateAppearance() - Unable to change the object's appearance because the file does not exist: %s", path));
 			return;
 		}
 	}

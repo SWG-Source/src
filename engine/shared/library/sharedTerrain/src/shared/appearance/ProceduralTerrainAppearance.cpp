@@ -1200,6 +1200,8 @@ void ProceduralTerrainAppearance::_legacyCreateFlora(const Chunk* const chunk)
 						object->addToWorld ();
 
 						IGNORE_RETURN (m_floraMap->insert (std::make_pair (key, object)));
+					} else {
+						DEBUG_WARNING(true, ("FIX ME: Appearance template in ProceduralTerrainAppearance::_legacyCreateFlora is not found"));
 					}
 				}  //lint !e429  //-- collisionProperty has not been freed or returned
 			}
@@ -1357,7 +1359,10 @@ void ProceduralTerrainAppearance::createFlora (const Chunk* const chunk)
 			object->addToWorld ();
 
 			IGNORE_RETURN (m_floraMap->insert (std::make_pair (key, object)));
-		}
+	    	} else {
+	        	DEBUG_WARNING(true, ("FIX ME: Appearance template in ProceduralTerrainAppearance::createFlora is not found"));
+                }
+
 	}  //lint !e429  //-- collisionProperty has not been freed or returned
 }
 

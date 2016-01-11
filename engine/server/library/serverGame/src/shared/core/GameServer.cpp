@@ -839,7 +839,10 @@ void GameServer::loadTerrain ()
 	Appearance * const appearance = AppearanceTemplateList::createAppearance(terrainFileName);
 	if (appearance != NULL) {
 		terrainObject->setAppearance(appearance);
+	} else {
+		DEBUG_WARNING(true, ("FIX ME: Appearance template for GameServer::loadTerrain missing for %s.", terrainFileName));
 	}
+	  
 
 	ProceduralTerrainAppearance * const proceduralTerrainAppearance = dynamic_cast<ProceduralTerrainAppearance *>(appearance);
 	if (proceduralTerrainAppearance) {

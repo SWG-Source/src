@@ -463,6 +463,8 @@ void PortalProperty::createAppearance()
 	if (appearance != NULL) {
 		appearance->setShadowBlobAllowed();
 		getOwner().setAppearance(appearance);
+	} else {
+		DEBUG_WARNING(true, ("FIX ME: Appearance template for PortalProperty::createAppearance missing"));
 	}
 }
 
