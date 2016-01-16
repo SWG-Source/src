@@ -163,7 +163,7 @@ namespace soe
 		}
 
 		///////////////////////////////////////////////////////////////////////////////////////////
-		unsigned SerializeStringVector::Read(const unsigned char * stream, unsigned size)
+		unsigned Read(const unsigned char * stream, unsigned size)
 		{
 			// fix this:
 			std::string element;
