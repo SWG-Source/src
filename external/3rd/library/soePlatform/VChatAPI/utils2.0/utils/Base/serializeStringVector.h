@@ -50,7 +50,7 @@ namespace soe
 			: mMaxStringLength(maxStringLength), mMaxListLength(maxListLength)
 		{
 		}
-		SerializeStringList::SerializeStringList(stringList_t vStrings)
+		SerializeStringList(stringList_t vStrings)
 			: mMaxStringLength(DEFAULT_MAX_LENGTH_STRING), mMaxListLength(DEFAULT_MAX_NUMBER_ELEMENTS)
 		{
 			for(stringList_t::iterator i = vStrings.begin(); i != vStrings.end(); i++)
@@ -60,7 +60,7 @@ namespace soe
 		}
 
 		///////////////////////////////////////////////////////////////////////////////////////////
-		unsigned SerializeStringList::Read(const unsigned char * stream, unsigned size)
+		unsigned Read(const unsigned char * stream, unsigned size)
 		{
 			// fix this:
 			std::string element;
@@ -91,7 +91,7 @@ namespace soe
 		}
 
 		///////////////////////////////////////////////////////////////////////////////////////////
-		unsigned SerializeStringList::Write(unsigned char * stream, unsigned size) const
+		unsigned Write(unsigned char * stream, unsigned size) const
 		{
 			unsigned index = 0;
 			unsigned bytes = 0;
@@ -153,7 +153,7 @@ namespace soe
 			: mMaxStringLength(maxStringLength), mMaxVectorLength(maxVectorLength)
 		{
 		}
-		SerializeStringVector::SerializeStringVector(stringVector_t vStrings)
+		SerializeStringVector(stringVector_t vStrings)
 			: mMaxStringLength(DEFAULT_MAX_LENGTH_STRING), mMaxVectorLength(DEFAULT_MAX_NUMBER_ELEMENTS)
 		{
 			for(stringVector_t::iterator i = vStrings.begin(); i != vStrings.end(); i++)
@@ -194,7 +194,7 @@ namespace soe
 		}
 
 		///////////////////////////////////////////////////////////////////////////////////////////
-		unsigned SerializeStringVector::Write(unsigned char * stream, unsigned size) const
+		unsigned Write(unsigned char * stream, unsigned size) const
 		{
 			unsigned index = 0;
 			unsigned bytes = 0;
