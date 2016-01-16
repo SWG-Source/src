@@ -85,7 +85,7 @@ GenericAPICore::GenericAPICore(const char *game, const char *hosts[],
 GenericAPICore::~GenericAPICore()
 //----------------------------------------
 {
-    for (std::vector<GenericConnection *>::iterator conIter = m_serverConnections.begin(); conIter != m_serverConnections.end();++conIter)
+    for (std::vector<GenericConnection *>::iterator conIter = m_serverConnections.begin(); conIter != m_serverConnections.end(); conIter++)
     {
         GenericConnection *con = *conIter;
         delete con;
@@ -96,6 +96,8 @@ GenericAPICore::~GenericAPICore()
 	{
 		delete (*iter).second;
 	}
+
+	m_pending.empty();
 
 	while(m_outCount > 0)
 	{
@@ -198,7 +200,7 @@ void GenericAPICore::process()
 		}
 	}
 
-   for (std::vector<GenericConnection *>::iterator conIter = m_serverConnections.begin(); conIter != m_serverConnections.end();++conIter)
+   for (std::vector<GenericConnection *>::iterator conIter = m_serverConnections.begin(); conIter != m_serverConnections.end(); conIter++)
     {
 		GenericConnection *con = *conIter;
 	    con->process();
@@ -245,7 +247,7 @@ void GenericAPICore::countOpenConnections()
 	m_currentConnections = 0;
 	m_maxConnections = m_serverConnections.size();
 
-    for (std::vector<GenericConnection *>::iterator conIter = m_serverConnections.begin(); conIter != m_serverConnections.end();++conIter)
+    for (std::vector<GenericConnection *>::iterator conIter = m_serverConnections.begin(); conIter != m_serverConnections.end(); conIter++)
     {
 		GenericConnection *con = *conIter;
 		if (con->isConnected())
