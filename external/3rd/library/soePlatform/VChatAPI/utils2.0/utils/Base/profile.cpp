@@ -57,7 +57,7 @@ void Profiler::AddNode(Node & lhs, const Node & rhs)
 		lhs.mData.mMinLatency = rhs.mData.mMinLatency;
 
 	NodeMap_t::const_iterator iter;
-	for (iter = rhs.mNodeMap.begin(); iter != rhs.mNodeMap.end(); ++iter)
+	for (iter = rhs.mNodeMap.begin(); iter != rhs.mNodeMap.end(); iter++)
 	{
 		Node & node = lhs.mNodeMap[iter->first];
 		AddNode(node, iter->second);
@@ -69,7 +69,7 @@ void Profiler::AddData(const Profiler & rhs, bool hierarchy)
 	if (hierarchy)
 	{
 		NodeMap_t::const_iterator nodeIter;
-		for (nodeIter = rhs.mNodeMap.begin(); nodeIter != rhs.mNodeMap.end(); ++nodeIter)
+		for (nodeIter = rhs.mNodeMap.begin(); nodeIter != rhs.mNodeMap.end(); nodeIter++)
 		{
 			Node & node = mNodeMap[nodeIter->first];
 			AddNode(node, nodeIter->second);
@@ -77,7 +77,7 @@ void Profiler::AddData(const Profiler & rhs, bool hierarchy)
 	}
 
 	DataMap_t::const_iterator iter;
-	for (iter = rhs.mDataMap.begin(); iter != rhs.mDataMap.end(); ++iter)
+	for (iter = rhs.mDataMap.begin(); iter != rhs.mDataMap.end(); iter++)
 	{
 		NodeData & lhs = mDataMap[iter->first];
 		const NodeData & rhs = iter->second;
@@ -195,7 +195,7 @@ void Profiler::GetOutput(std::string & output, bool hierarchy)
 
 	//  print data map (linear call profile)
 	DataMap_t::const_iterator iter;
-	for (iter = mDataMap.begin(); iter != mDataMap.end(); ++iter)
+	for (iter = mDataMap.begin(); iter != mDataMap.end(); iter++)
 	{
 		const NodeData & data = iter->second;
 		double trueLatency = data.mTotalLatency-data.mTotalChildLatency;
@@ -254,7 +254,7 @@ void Profiler::GetXmlOutput(std::string & output, bool hierarchy)
 	//  print data map (linear call profile)
 	int i = 1;
 	DataMap_t::const_iterator iter;
-	for (iter = mDataMap.begin(); iter != mDataMap.end(); ++iter)
+	for (iter = mDataMap.begin(); iter != mDataMap.end(); iter++)
 	{
 		const NodeData & data = iter->second;
 		double trueLatency = data.mTotalLatency-data.mTotalChildLatency;
@@ -332,7 +332,7 @@ void Profiler::GetNodeOutput(std::string & output, const NodeMap_t & nodeMap, do
 	
 	//  recursively print node map
 	NodeMap_t::const_iterator iter;
-	for (iter = nodeMap.begin(); iter != nodeMap.end(); ++iter)
+	for (iter = nodeMap.begin(); iter != nodeMap.end(); iter++)
 	{
 		//	output node description
 		const Node & node = iter->second;
@@ -361,7 +361,7 @@ void Profiler::GetXmlNodeOutput(std::string & output, const NodeMap_t & nodeMap,
 	//  recursively print node map
 	int i = 1;
 	NodeMap_t::const_iterator iter;
-	for (iter = nodeMap.begin(); iter != nodeMap.end(); ++iter)
+	for (iter = nodeMap.begin(); iter != nodeMap.end(); iter++)
 	{
 		snprintf(buffer, sizeof(buffer), "<Node%d>", i);
 		output += buffer;

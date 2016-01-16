@@ -138,7 +138,7 @@ RotaryCache::getNext()
 	{
 		void*	retVal = (*mIterList).value;
 
-		++mIterList;
+		mIterList++;
 
 		return retVal;
 	}

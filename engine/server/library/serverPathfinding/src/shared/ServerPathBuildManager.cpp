@@ -45,7 +45,7 @@ void updateQueue ( BuildQueue * queue, PerformanceTimer const & timer, float tim
 		currentBuilder->update();
 
 		BuildQueue::iterator old = it;
-		++it;
+		it++;
 
 		if(currentBuilder->buildDone())
 		{

@@ -22,7 +22,7 @@ namespace soe
 	//
 	//	This class is designed to handle the serialization of a vector of strings.  This was necessary
 	//	because the default serialization routines did not handle the length of the string properly, and
-	//	there was more risk involved in modifying all the serialization routines to handle the
+	//	there was more risk involved in modifying all the serialization routines to handle the 
 	//	extra length property for the string as well as the vector.
 	//
 	// this is intenede to be used with the serialization macros
@@ -50,17 +50,17 @@ namespace soe
 			: mMaxStringLength(maxStringLength), mMaxListLength(maxListLength)
 		{
 		}
-		SerializeStringList(stringList_t vStrings)
+		SerializeStringList::SerializeStringList(stringList_t vStrings)
 			: mMaxStringLength(DEFAULT_MAX_LENGTH_STRING), mMaxListLength(DEFAULT_MAX_NUMBER_ELEMENTS)
 		{
-			for(stringList_t::iterator i = vStrings.begin(); i != vStrings.end(); ++i)
+			for(stringList_t::iterator i = vStrings.begin(); i != vStrings.end(); i++)
 			{
 				push_back(*i);
 			}
 		}
 
 		///////////////////////////////////////////////////////////////////////////////////////////
-		unsigned Read(const unsigned char * stream, unsigned size)
+		unsigned SerializeStringList::Read(const unsigned char * stream, unsigned size)
 		{
 			// fix this:
 			std::string element;
@@ -91,7 +91,7 @@ namespace soe
 		}
 
 		///////////////////////////////////////////////////////////////////////////////////////////
-		unsigned Write(unsigned char * stream, unsigned size) const
+		unsigned SerializeStringList::Write(unsigned char * stream, unsigned size) const
 		{
 			unsigned index = 0;
 			unsigned bytes = 0;
@@ -103,7 +103,7 @@ namespace soe
 #endif
 				return 0;
 			}
-			for (stringList_t::const_iterator iter = begin(); iter != end(); ++iter, ++index)
+			for (stringList_t::const_iterator iter = begin(); iter != end(); iter++, index++)
 			{
 				elementBytes = soe::Write(stream+bytes, size-bytes, *iter);
 				if (!elementBytes) {
@@ -153,17 +153,17 @@ namespace soe
 			: mMaxStringLength(maxStringLength), mMaxVectorLength(maxVectorLength)
 		{
 		}
-		SerializeStringVector(stringVector_t vStrings)
+		SerializeStringVector::SerializeStringVector(stringVector_t vStrings)
 			: mMaxStringLength(DEFAULT_MAX_LENGTH_STRING), mMaxVectorLength(DEFAULT_MAX_NUMBER_ELEMENTS)
 		{
-			for(stringVector_t::iterator i = vStrings.begin(); i != vStrings.end(); ++i)
+			for(stringVector_t::iterator i = vStrings.begin(); i != vStrings.end(); i++)
 			{
 				push_back(*i);
 			}
 		}
 
 		///////////////////////////////////////////////////////////////////////////////////////////
-		unsigned Read(const unsigned char * stream, unsigned size)
+		unsigned SerializeStringVector::Read(const unsigned char * stream, unsigned size)
 		{
 			// fix this:
 			std::string element;
@@ -194,7 +194,7 @@ namespace soe
 		}
 
 		///////////////////////////////////////////////////////////////////////////////////////////
-		unsigned Write(unsigned char * stream, unsigned size) const
+		unsigned SerializeStringVector::Write(unsigned char * stream, unsigned size) const
 		{
 			unsigned index = 0;
 			unsigned bytes = 0;
@@ -206,7 +206,7 @@ namespace soe
 #endif
 				return 0;
 			}
-			for (stringVector_t::const_iterator iter = begin(); iter != end(); ++iter, ++index)
+			for (stringVector_t::const_iterator iter = begin(); iter != end(); iter++, index++)
 			{
 				elementBytes = soe::Write(stream+bytes, size-bytes, *iter);
 				if (!elementBytes) {
@@ -221,6 +221,9 @@ namespace soe
 			return bytes;
 		}
 
+		operator stringVector_t () { return *this; }
+
+		//unsigned Read(const unsigned char * stream, unsigned size);
 		//DECLARE_SCRIBE_MEMBERS
 	};
 
