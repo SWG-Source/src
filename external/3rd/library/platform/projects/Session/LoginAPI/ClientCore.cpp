@@ -1657,7 +1657,7 @@ namespace LoginAPI
         Message::NotifySessionKick message(iterator);
 
         std::vector<const char *> sessionList;
-        for (std::vector<std::string>::const_iterator i=message.GetSessionList().begin(); i!=message.GetSessionList().end(); ++i)
+        for (std::vector<std::string>::const_iterator i=message.GetSessionList().begin(); i!=message.GetSessionList().end(); i++)
         {
             sessionList.push_back(i->c_str());
         }

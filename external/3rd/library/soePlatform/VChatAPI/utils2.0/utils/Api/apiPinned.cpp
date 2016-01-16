@@ -109,12 +109,12 @@ namespace NAMESPACE
 	{ 
 		//	ensure that callback mecahnism isn't triggered at this point
 		HostMap_t::iterator iter;
-		for (iter = mHostMap[0].begin(); iter != mHostMap[0].end(); ++iter)
+		for (iter = mHostMap[0].begin(); iter != mHostMap[0].end(); iter++)
 		{
 			iter->first->SetHandler(0);
 			iter->first->Release();
 		}
-		for (iter = mHostMap[1].begin(); iter != mHostMap[1].end(); ++iter)
+		for (iter = mHostMap[1].begin(); iter != mHostMap[1].end(); iter++)
 		{
 			iter->first->SetHandler(0);
 			iter->first->Release();
@@ -294,7 +294,7 @@ namespace NAMESPACE
             ApiConnection * connection = NULL;
             unsigned hashIndex = hashValue % mActiveHosts[0].size();
             unsigned curIndex = 0;
-            for (ConnectionSet_t::iterator it = mActiveHosts[0].begin(); it != mActiveHosts[0].end(); ++it, ++curIndex)
+            for (ConnectionSet_t::iterator it = mActiveHosts[0].begin(); it != mActiveHosts[0].end(); it++, curIndex++)
             {
                 if (hashIndex == curIndex)
                 {
@@ -317,7 +317,7 @@ namespace NAMESPACE
             ApiConnection * connection = NULL;
             unsigned hashIndex = hashValue % mActiveHosts[1].size();
             unsigned curIndex = 0;
-            for (ConnectionSet_t::iterator it = mActiveHosts[1].begin(); it != mActiveHosts[1].end(); ++it, ++curIndex)
+            for (ConnectionSet_t::iterator it = mActiveHosts[1].begin(); it != mActiveHosts[1].end(); it++, curIndex++)
             {
                 if (hashIndex == curIndex)
                 {
@@ -399,7 +399,7 @@ namespace NAMESPACE
 		if (mTimeoutTimer != currentTime)
 		{
 			TimeoutMap_t::iterator iterator;
-			for (iterator = mTimeoutMap.begin(); iterator != mTimeoutMap.end(); ++iterator)
+			for (iterator = mTimeoutMap.begin(); iterator != mTimeoutMap.end(); iterator++)
 			{
 				TimeoutList_t & timeoutList = iterator->second;
 				while (!timeoutList.empty() && timeoutList.front().second < currentTime)
