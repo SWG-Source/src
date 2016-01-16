@@ -124,7 +124,7 @@ void RGetAvatarKeywords::pack(ByteStream &msg)
 	put(msg, m_srcAvatarID);
 }
 
-RSearchAvatarKeywords::RSearchAvatarKeywords(const ChatUnicodeString nodeAddress, const ChatUnicodeString *keywordsList, unsigned keywordsLength)
+RSearchAvatarKeywords::RSearchAvatarKeywords(const ChatUnicodeString &nodeAddress, const ChatUnicodeString *keywordsList, unsigned keywordsLength)
 : GenericRequest(REQUEST_SEARCHAVATARKEYWORDS),
   m_keywordsLength(keywordsLength),
   m_keywordsList(NULL)
