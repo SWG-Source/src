@@ -88,9 +88,7 @@ void SetupSharedFoundation::install(const Data &data)
 //
 //   this is stubbed and exception handling is ignored currently
 
-void SetupSharedFoundation::callbackWithExceptionHandling(
-	void (*callback)(void)   // Routine to call with exception handling
-	)
+void SetupSharedFoundation::callbackWithExceptionHandling( void (*callback)(void) )   // Routine to call with exception handling
 {
 	if (ConfigSharedFoundation::getNoExceptionHandling())
 	{
@@ -98,7 +96,6 @@ void SetupSharedFoundation::callbackWithExceptionHandling(
 	}
 	else
 	{
-#if 0
 		try
 		{
 			callback();
@@ -120,9 +117,6 @@ void SetupSharedFoundation::callbackWithExceptionHandling(
 		{
 			FATAL(true, ("Unknown exception\n"));
 		}
-#else
-		callback();
-#endif
 	}
 }
 
