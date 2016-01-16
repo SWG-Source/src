@@ -657,13 +657,11 @@ AuctionMarket::~AuctionMarket()
 	//We need to delete the auction and auction location objects
 	for (std::map<NetworkId, Auction *>::iterator i = m_auctions.begin(); i != m_auctions.end(); ++i)
 	{
-		if ((*i).second)
-			delete (*i).second;
+		delete (*i).second;
 	}
 	for (std::map<NetworkId, AuctionLocation *>::iterator i = m_locationIdMap.begin(); i != m_locationIdMap.end(); ++i)
 	{
-		if ((*i).second)
-			delete (*i).second;
+		delete (*i).second;
 	}
 }
 
