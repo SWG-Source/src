@@ -80,7 +80,7 @@ namespace AuctionMarketNamespace
 			{
 				HexString += buffer;
 			}
-			++z;
+			z++;
 		}
 
 		DEBUG_REPORT_LOG(ConfigCommodityServer::getShowAllDebugInfo(), ("[Commodities Server ][HEX OOB IN] : %s \n", HexString.c_str()));
@@ -657,11 +657,13 @@ AuctionMarket::~AuctionMarket()
 	//We need to delete the auction and auction location objects
 	for (std::map<NetworkId, Auction *>::iterator i = m_auctions.begin(); i != m_auctions.end(); ++i)
 	{
-		delete (*i).second;
+		if ((*i).second)
+			delete (*i).second;
 	}
 	for (std::map<NetworkId, AuctionLocation *>::iterator i = m_locationIdMap.begin(); i != m_locationIdMap.end(); ++i)
 	{
-		delete (*i).second;
+		if ((*i).second)
+			delete (*i).second;
 	}
 }
 
@@ -3000,7 +3002,7 @@ void AuctionMarket::DestroyVendorMarket(const DestroyVendorMarketMessage &messag
 		std::vector<std::map<NetworkId, Auction *>::iterator> destroyedAuctions;
 		std::map<NetworkId, Auction *>::iterator item;
 		// get all the auctions for this location and get an iterator from the real auctions map
-		for( std::map<NetworkId, Auction*>::iterator j = (*i).second->GetAuctions().begin(); j != (*i).second->GetAuctions().end(); ++j )
+		for( std::map<NetworkId, Auction*>::iterator j = (*i).second->GetAuctions().begin(); j != (*i).second->GetAuctions().end(); j++ )
 		{
 			item = m_auctions.find((*j).first);
 			if( item != m_auctions.end() )
@@ -3010,7 +3012,7 @@ void AuctionMarket::DestroyVendorMarket(const DestroyVendorMarketMessage &messag
 		}
 
 		// do it again for all vendor offers
-		for( std::map<NetworkId, Auction*>::iterator k = (*i).second->GetVendorOffers().begin(); k != (*i).second->GetVendorOffers().end(); ++k )
+		for( std::map<NetworkId, Auction*>::iterator k = (*i).second->GetVendorOffers().begin(); k != (*i).second->GetVendorOffers().end(); k++ )
 		{
 			item = m_auctions.find((*k).first);
 			if( item != m_auctions.end() )
@@ -3075,7 +3077,7 @@ void AuctionMarket::DeleteAuctionLocation(const DeleteAuctionLocationMessage &me
 		std::vector<std::map<NetworkId, Auction *>::iterator> destroyedAuctions;
 		std::map<NetworkId, Auction *>::iterator item;
 		// get all the auctions for this location and get an iterator from the real auctions map
-		for( std::map<NetworkId, Auction*>::iterator j = (*i).second->GetAuctions().begin(); j != (*i).second->GetAuctions().end(); ++j )
+		for( std::map<NetworkId, Auction*>::iterator j = (*i).second->GetAuctions().begin(); j != (*i).second->GetAuctions().end(); j++ )
 		{
 			item = m_auctions.find((*j).first);
 			if( item != m_auctions.end() )
@@ -3085,7 +3087,7 @@ void AuctionMarket::DeleteAuctionLocation(const DeleteAuctionLocationMessage &me
 		}
 
 		// do it again for all vendor offers
-		for( std::map<NetworkId, Auction*>::iterator k = (*i).second->GetVendorOffers().begin(); k != (*i).second->GetVendorOffers().end(); ++k )
+		for( std::map<NetworkId, Auction*>::iterator k = (*i).second->GetVendorOffers().begin(); k != (*i).second->GetVendorOffers().end(); k++ )
 		{
 			item = m_auctions.find((*k).first);
 			if( item != m_auctions.end() )
@@ -3471,7 +3473,7 @@ bool AuctionMarket::FixVendorLocation( const std::string &loc )
 			}
 		}
 
-		++i;
+		i++;
 	}
 
 	return false;
@@ -4339,7 +4341,7 @@ void static decodeOOB(const std::string & UTF8String, Unicode::String & UniStrin
 			UniString.push_back(unicharvalue);
 			tempstring.clear();
 		}
-		++c;
+		c++;
 	}
 	if (tempstring.length() != 0)
 	{
