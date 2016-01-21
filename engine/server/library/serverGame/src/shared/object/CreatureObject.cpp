@@ -1782,8 +1782,14 @@ void CreatureObject::initializeFirstTimeObject()
 		setCurrentWeapon(*weapon);
 
 	//Quick error check since all creatures should have a default weapon
-	WARNING_STRICT_FATAL(!getDefaultWeapon(), ("Creature %s (%s) has no default "
-		"weapon", getNetworkId().getValueString().c_str(), getTemplateName()));
+        std::string creature = getTemplateName();
+
+        //all but 3 object templates in theme_park all have "HACK" in the header, so we don't need warns on them
+        if (creature.find("object/creature/npc/theme_park") == std::string::npos)
+        {
+		WARNING_STRICT_FATAL(!getDefaultWeapon(), ("Creature %s (%s) has no default "
+			"weapon", getNetworkId().getValueString(), getTemplateName()));
+	}
 
 	const ServerCreatureObjectTemplate * myTemplate = safe_cast<const ServerCreatureObjectTemplate *>(getObjectTemplate());
 	Unicode::String newName = NameManager::getInstance().generateRandomName(ConfigServerGame::getCharacterNameGeneratorDirectory(), myTemplate->getNameGeneratorType());
@@ -3008,8 +3014,14 @@ void CreatureObject::initializeDefaultWeapon()
 		ServerWeaponObjectTemplate const *weaponTemplate = myTemplate->getDefaultWeapon();
 		if (weaponTemplate == NULL)
 		{
-			WARNING(true, ("Creature template %s has no valid default weapon!", getTemplateName()));
+			std::string creature = getTemplateName();
 
+			//all but 3 object templates in theme_park all have "HACK" in the header, so we don't need warns on them
+			if (creature.find("object/creature/npc/theme_park") == std::string::npos)
+			{ 
+				WARNING(true, ("Creature template %s has no valid default weapon!", creature));
+			}
+		
 			// try to use the fallback weapon
 			weaponTemplate = dynamic_cast<ServerWeaponObjectTemplate const *>(ObjectTemplateList::fetch(ConfigServerGame::getFallbackDefaultWeapon()));
 
@@ -3019,7 +3031,9 @@ void CreatureObject::initializeDefaultWeapon()
 		WeaponObject * const weapon = safe_cast<WeaponObject *>(ServerWorld::createNewObject(*weaponTemplate, *this, s_defaultWeaponSlotId, false));
 
 		if (weapon != NULL)
+		{
 			weapon->setAsDefaultWeapon(true);
+		}
 		else
 		{
 			WARNING_STRICT_FATAL(true, ("CreatureObject::initializeDefaultWeapon unable to create default weapon %s for creature %s", weaponTemplate->getName(), getNetworkId().getValueString().c_str()));
