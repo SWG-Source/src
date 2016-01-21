@@ -1773,20 +1773,25 @@ void CreatureObject::initializeFirstTimeObject()
 	//-- Get ourselves into a reasonable locomotion state.
 	updateMovementInfo();
 
-	// create the default weapon
-	initializeDefaultWeapon();
-
-	// set the current weapon
-	WeaponObject * weapon = getReadiedWeapon();
-	if (weapon != NULL)
-		setCurrentWeapon(*weapon);
-
 	//Quick error check since all creatures should have a default weapon
         std::string creature = getTemplateName();
 
-        //all but 3 object templates in theme_park all have "HACK" in the header, so we don't need warns on them
+	//transport shuttles and other animated ships are "Creatures" but don't need weapons
+	//and throw warns if we try to give them one
+	//in their templates, most are marked "HACK" so let's just silence stuff for those
         if (creature.find("object/creature/npc/theme_park") == std::string::npos)
         {
+		// create the default weapon
+		initializeDefaultWeapon();
+
+		// set the current weapon
+		WeaponObject * weapon = getReadiedWeapon();
+		if (weapon != NULL)
+			setCurrentWeapon(*weapon);
+
+		//Quick error check since all creatures should have a default weapon
+        	std::string creature = getTemplateName();
+
 		WARNING_STRICT_FATAL(!getDefaultWeapon(), ("Creature %s (%s) has no default "
 			"weapon", getNetworkId().getValueString(), getTemplateName()));
 	}
@@ -3016,11 +3021,7 @@ void CreatureObject::initializeDefaultWeapon()
 		{
 			std::string creature = getTemplateName();
 
-			//all but 3 object templates in theme_park all have "HACK" in the header, so we don't need warns on them
-			if (creature.find("object/creature/npc/theme_park") == std::string::npos)
-			{ 
-				WARNING(true, ("Creature template %s has no valid default weapon!", creature));
-			}
+			WARNING(true, ("Creature template %s has no valid default weapon!", creature));
 		
 			// try to use the fallback weapon
 			weaponTemplate = dynamic_cast<ServerWeaponObjectTemplate const *>(ObjectTemplateList::fetch(ConfigServerGame::getFallbackDefaultWeapon()));
