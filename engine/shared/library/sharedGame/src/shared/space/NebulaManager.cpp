@@ -200,8 +200,12 @@ void NebulaManager::loadSceneData(std::string const & sceneId)
 	{
 		//-- apparently not a space scene
 		// @todo: need better way to detect this
+#ifdef _DEBUG
 		if (!(strncmp(sceneId.c_str(), "space_", 6) != 0))
-			WARNING(true, ("NebulaManager no such datatable [%s]", filename.c_str()));
+		{
+			WARNING(true, ("NebulaManager no such datatable [%s]. We may need to create one if anything is missing in the zone.", filename.c_str()));
+		}
+#endif
 		return;
 	}
 	
