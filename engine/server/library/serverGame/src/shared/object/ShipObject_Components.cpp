@@ -1899,21 +1899,24 @@ bool ShipObject::installComponentFromData(int chassisSlot, ShipComponentData con
 	ShipChassis const * const shipChassis = ShipChassis::findShipChassisByCrc (getChassisType ());
 	if (shipChassis == NULL)
 	{
+#ifdef _DEBUG
 		WARNING (true, ("Ship [%s] chassis [%d] is invalid for installing component [%s]",
 			getNetworkId().getValueString().c_str(), 
 			static_cast<int>(getChassisType ()),
 			shipComponentData.getDescriptor().getName().getString()));
+#endif	
 		return false;
 	}
 	
 	if (isSlotInstalled (chassisSlot))
 	{
+#ifdef _DEBUG
 		WARNING (true, ("Ship [%s] chassis [%s] slot [%s] is already filled, cannot install [%s]",
 			getNetworkId().getValueString().c_str(), 
 			shipChassis->getName().getString(),
 			ShipChassisSlotType::getNameFromType(static_cast<ShipChassisSlotType::Type>(chassisSlot)).c_str(),
 			shipComponentData.getDescriptor().getName().getString()));
-		
+#endif		
 		return false;
 	}
 
@@ -1925,16 +1928,19 @@ bool ShipObject::installComponentFromData(int chassisSlot, ShipComponentData con
 	ShipChassisSlot const * const slot = shipChassis->getSlot (static_cast<ShipChassisSlotType::Type>(effectiveCompatibilitySlot));
 	if (slot == NULL)
 	{
+#ifdef _DEBUG
 		WARNING (true, ("Ship [%s] chassis [%s] does not support slot [%s] for installing component [%s]",
 			getNetworkId().getValueString().c_str(), 
 			shipChassis->getName().getString(),
 			ShipChassisSlotType::getNameFromType(static_cast<ShipChassisSlotType::Type>(chassisSlot)).c_str(),
 			shipComponentData.getDescriptor().getName().getString()));
 		return false;
+#endif
 	}
 	
 	if (!slot->canAcceptComponent(shipComponentData.getDescriptor()))
 	{
+#ifdef _DEBUG
 		WARNING (true, ("Component [%s], compat [%s] cannot be installed in ship [%s] chassis [%s], slot [%s], compats [%s].", 
 			shipComponentData.getDescriptor().getName().getString(), 
 			shipComponentData.getDescriptor().getCompatibility().getString(),
@@ -1942,6 +1948,7 @@ bool ShipObject::installComponentFromData(int chassisSlot, ShipComponentData con
 			shipChassis->getName().getString(),
 			ShipChassisSlotType::getNameFromType(static_cast<ShipChassisSlotType::Type>(chassisSlot)).c_str(),
 			slot->getCompatibilityString().c_str()));
+#endif
 		return false;
 	}
 	

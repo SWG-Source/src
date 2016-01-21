@@ -1475,8 +1475,13 @@ void ShipObject::constructFromTemplate()
 
 			if (shipComponentData != NULL)
 			{
-				if (!installComponentFromData(i, *shipComponentData))
+				if (!installComponentFromData(i, *shipComponentData)) {
+#ifdef _DEBUG
 					WARNING(true, ("ShipObject::constructFromTemplate() failed to install component at slot [%s]", ShipChassisSlotType::getNameFromType(static_cast<ShipChassisSlotType::Type>(i)).c_str()));
+#else
+					continue; //gcc complains without something to do inside this if statement
+#endif
+				}
 			}
 		}
 	}
