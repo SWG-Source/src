@@ -457,14 +457,14 @@ JavaStringPtr callStringMethod(const LocalRefParam & object, jmethodID methodID,
 
 		if (result != 0)
 		{
-#ifdef _DEBUG
 			if (!JavaLibrary::getEnv()->IsInstanceOf(result, JavaLibrary::ms_clsString))
 			{
+#ifdef _DEBUG
 				WARNING_STRICT_FATAL(true, ("JavaLibrary::callStringMethod called with non-string result"));
 				JavaLibrary::getEnv()->DeleteLocalRef(result);
+#endif
 				return JavaString::cms_nullPtr;
 			}
-#endif
 			return JavaStringPtr(new JavaString(static_cast<jstring>(result)));
 		}
 	}
@@ -577,14 +577,14 @@ void setObjectArrayElement(const LocalObjectArrayRefParam & array, jsize index, 
 {
 	if (array.getValue() != 0 && index >= 0)
 	{
-#ifdef _DEBUG
 		if (index >= JavaLibrary::getEnv()->GetArrayLength(array.getValue()))
 		{
+#ifdef _DEBUG 
 			WARNING(true, ("JavaLibrary::setObjectArrayElement array index %d "
 				"out of bounds", static_cast<int>(index)));
+#endif
 			return;
 		}
-#endif
 		JavaLibrary::getEnv()->SetObjectArrayElement(array.getValue(), index, value.getValue());
 	}
 }
