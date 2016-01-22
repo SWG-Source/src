@@ -109,7 +109,9 @@ void LocationBuffer::getLocationList(const NetworkId &objectId, size_t listId, s
 	
 	for (LoadDataType::const_iterator i=m_loadData.find(IndexKey(objectId, listId, 0)); (i!=m_loadData.end()) && (i->first.m_objectId == objectId) && (i->first.m_listId == listId); ++i)
 	{
+#ifdef _DEBUG
 		DEBUG_FATAL(i->first.m_index != expectedIndex++,("Programmer bug:  location list was not sorted or had gaps in the sequence.  Object id %s, list id %i, sequence %i\n",objectId.getValueString().c_str(), listId, i->first.m_index));
+#endif
 
 		values.push_back(i->second);
 	}

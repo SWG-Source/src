@@ -98,7 +98,9 @@ void ScriptBuffer::getScriptsForObject(const NetworkId &objectId, std::vector<st
 	
 	for (LoadedDataType::const_iterator i=m_loadedData->find(IndexKey(objectId,0)); (i!=m_loadedData->end()) && (i->first.m_objectId==objectId); ++i)
 	{
+#ifdef _DEBUG
 		DEBUG_WARNING((i->first.m_index != expectedIndex++), ("Programmer bug:  Script buffer was not sorted, or there were gaps in the sequence.  ObjectId %s, sequence number %i\n",objectId.getValueString().c_str(),i->first.m_index));
+#endif
 		scripts.push_back(i->second);
 	}
 }
