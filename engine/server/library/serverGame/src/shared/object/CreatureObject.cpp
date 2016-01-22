@@ -1781,9 +1781,13 @@ void CreatureObject::initializeFirstTimeObject()
 	if (weapon != NULL)
 		setCurrentWeapon(*weapon);
 
+#ifdef _DEBUG
 	//Quick error check since all creatures should have a default weapon
 	WARNING_STRICT_FATAL(!getDefaultWeapon(), ("Creature %s (%s) has no default "
 		"weapon", getNetworkId().getValueString().c_str(), getTemplateName()));
+#else
+	getDefaultWeapon(); //silence, dammit
+#endif 
 
 	const ServerCreatureObjectTemplate * myTemplate = safe_cast<const ServerCreatureObjectTemplate *>(getObjectTemplate());
 	Unicode::String newName = NameManager::getInstance().generateRandomName(ConfigServerGame::getCharacterNameGeneratorDirectory(), myTemplate->getNameGeneratorType());
@@ -3019,12 +3023,15 @@ void CreatureObject::initializeDefaultWeapon()
 		WeaponObject * const weapon = safe_cast<WeaponObject *>(ServerWorld::createNewObject(*weaponTemplate, *this, s_defaultWeaponSlotId, false));
 
 		if (weapon != NULL)
+		{
 			weapon->setAsDefaultWeapon(true);
+		}
+#ifdef _DEBUG
 		else
 		{
 			WARNING_STRICT_FATAL(true, ("CreatureObject::initializeDefaultWeapon unable to create default weapon %s for creature %s", weaponTemplate->getName(), getNetworkId().getValueString().c_str()));
 		}
-
+#endif
 		weaponTemplate->releaseReference();
 	}
 }
