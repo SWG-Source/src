@@ -3026,15 +3026,12 @@ void CreatureObject::initializeDefaultWeapon()
 		{
 			weapon->setAsDefaultWeapon(true);
 		}
+#ifdef _DEBUG
 		else
 		{
-#ifdef _DEBUG
 			WARNING_STRICT_FATAL(true, ("CreatureObject::initializeDefaultWeapon unable to create default weapon %s for creature %s", weaponTemplate->getName(), getNetworkId().getValueString().c_str()));
-#else
-			continue;
-#endif
 		}
-
+#endif
 		weaponTemplate->releaseReference();
 	}
 }
