@@ -1793,7 +1793,7 @@ void CreatureObject::initializeFirstTimeObject()
         	std::string creature = getTemplateName();
 
 		WARNING_STRICT_FATAL(!getDefaultWeapon(), ("Creature %s (%s) has no default "
-			"weapon", getNetworkId().getValueString().c_str(), creature));
+			"weapon", getNetworkId().getValueString().c_str(), getTemplateName()));
 	}
 
 	const ServerCreatureObjectTemplate * myTemplate = safe_cast<const ServerCreatureObjectTemplate *>(getObjectTemplate());
@@ -3019,9 +3019,7 @@ void CreatureObject::initializeDefaultWeapon()
 		ServerWeaponObjectTemplate const *weaponTemplate = myTemplate->getDefaultWeapon();
 		if (weaponTemplate == NULL)
 		{
-			std::string creature = getTemplateName();
-
-			WARNING(true, ("Creature template %s has no valid default weapon!", creature));
+			WARNING(true, ("Creature template %s has no valid default weapon!", getTemplateName()));
 		
 			// try to use the fallback weapon
 			weaponTemplate = dynamic_cast<ServerWeaponObjectTemplate const *>(ObjectTemplateList::fetch(ConfigServerGame::getFallbackDefaultWeapon()));
