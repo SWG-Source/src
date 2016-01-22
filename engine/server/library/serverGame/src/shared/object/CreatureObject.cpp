@@ -1793,7 +1793,7 @@ void CreatureObject::initializeFirstTimeObject()
         	std::string creature = getTemplateName();
 
 		WARNING_STRICT_FATAL(!getDefaultWeapon(), ("Creature %s (%s) has no default "
-			"weapon", getNetworkId().getValueString(), getTemplateName()));
+			"weapon", getNetworkId().getValueString(), creature));
 	}
 
 	const ServerCreatureObjectTemplate * myTemplate = safe_cast<const ServerCreatureObjectTemplate *>(getObjectTemplate());
