@@ -169,6 +169,7 @@ int CreatureObjectNamespace::getSaddleSeatingCapacity(CreatureObject const * con
 
 	{
 		ServerObject const * const serverObject = mount->asServerObject();
+		//SharedObjectTemplate const * const sharedObjectTemplate = serverObject->getSharedTemplate();
 
 		//std::string const appearanceFilename = (sharedObjectTemplate != 0) ? sharedObjectTemplate->getAppearanceFilename() : "None";
 		//DEBUG_REPORT_LOG(true, ("sharedObjectTemplate appearanceFilename = '%s'\n", appearanceFilename.c_str()));
