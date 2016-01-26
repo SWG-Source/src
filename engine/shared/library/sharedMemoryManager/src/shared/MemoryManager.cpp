@@ -256,7 +256,7 @@ namespace MemoryManagerNamespace
 	bool                  ms_installed;
 	bool                  ms_limitSet;
 	bool                  ms_hardLimit;
-	int                   ms_limitMegabytes = 4195;
+	int                   ms_limitMegabytes = 4095;
 	SystemAllocation *    ms_firstSystemAllocation;
 	int                   ms_numberOfSystemAllocations;
 	int                   ms_systemMemoryAllocatedMegabytes;
