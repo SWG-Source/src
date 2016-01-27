@@ -1,2 +1,0 @@
-
-#include "serverScript/FirstServerScript.h"
