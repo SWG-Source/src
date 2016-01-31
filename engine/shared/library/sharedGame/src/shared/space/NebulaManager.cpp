@@ -15,6 +15,7 @@
 #include "sharedMath/SphereTree.h"
 #include "sharedUtility/DataTable.h"
 #include "sharedUtility/DataTableManager.h"
+#include "sharedFile/TreeFile.h"
 
 #include <algorithm>
 #include <map>
@@ -194,20 +195,15 @@ void NebulaManager::loadSceneData(std::string const & sceneId)
 
 	std::string const & filename = "datatables/space/nebula/" + sceneId + ".iff";
 	
-	DataTable * const dt = DataTableManager::getTable(filename, true);
-	
-	if (dt == NULL)
+	//technically this means that this will be called twice for existing nebula tables
+	// but it's worth it to kill that fucking annoying warning
+	// not a space scene...or a missing space scene
+	if (!TreeFile::exists(fileName.c_str()) 
 	{
-		//-- apparently not a space scene
-		// @todo: need better way to detect this
-#ifdef _DEBUG
-		if (!(strncmp(sceneId.c_str(), "space_", 6) != 0))
-		{
-			WARNING(true, ("NebulaManager no such datatable [%s]. We may need to create one if anything is missing in the zone.", filename.c_str()));
-		}
-#endif
 		return;
 	}
+
+	DataTable * const dt = DataTableManager::getTable(filename, true);
 	
 	float styleWeightings[16] = {0};
 
