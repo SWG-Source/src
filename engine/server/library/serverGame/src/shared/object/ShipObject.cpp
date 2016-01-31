@@ -1476,11 +1476,10 @@ void ShipObject::constructFromTemplate()
 			if (shipComponentData != NULL)
 			{
 				if (!installComponentFromData(i, *shipComponentData)) {
-#ifdef _DEBUG
-					WARNING(true, ("ShipObject::constructFromTemplate() failed to install component at slot [%s]", ShipChassisSlotType::getNameFromType(static_cast<ShipChassisSlotType::Type>(i)).c_str()));
-#else
-					continue; //gcc complains without something to do inside this if statement
-#endif
+					std::string chassis = shipChassis->getName().getString();
+						
+					DEBUG_WARNING((chassis != "player_yt1300"), ("ShipObject::constructFromTemplate() failed to install component at slot [%s]", 
+						ShipChassisSlotType::getNameFromType(static_cast<ShipChassisSlotType::Type>(i)).c_str()));
 				}
 			}
 		}
@@ -2401,6 +2400,7 @@ float ShipObject::getMovementPercent() const
 
 void ShipObject::setInvulnerabilityTimer(float duration)
 {
+	//note: this isn't really a warning but an FYI - in the case of the falcon for the npe instance, it is always invulnerable
 	DEBUG_REPORT_LOG(true, ("Setting ship invulnerability timer for %s to %g\n", getDebugInformation().c_str(), duration));
 	PvpUpdateObserver o(this, Archive::ADOO_generic);
 	m_invulnerabilityTimer = duration;
