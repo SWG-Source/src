@@ -1087,10 +1087,10 @@ static const ConstCharCrcLowerString templateName("object/creature/base/shared_c
 	{
 		m_defaultSharedTemplate = safe_cast<const SharedObjectTemplate *>(
 			ObjectTemplateList::fetch(templateName));
-#ifdef DEBUG
-		WARNING(m_defaultSharedTemplate == NULL, ("Cannot create "
+
+		DEBUG_WARNING(m_defaultSharedTemplate == NULL, ("Cannot create "
 			"default shared object template %s", templateName.getString()));
-#endif
+			
 		if (m_defaultSharedTemplate != NULL)
 			ExitChain::add (removeDefaultTemplate, "CreatureObject::removeDefaultTemplate");
 	}
