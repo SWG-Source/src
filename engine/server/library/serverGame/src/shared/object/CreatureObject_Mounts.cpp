@@ -167,13 +167,13 @@ int CreatureObjectNamespace::getSaddleSeatingCapacity(CreatureObject const * con
 	// default to 1 seat...
 	int saddleSeatingCapacity = 1;
 
-	{
+	/*{
 		ServerObject const * const serverObject = mount->asServerObject();
-		//SharedObjectTemplate const * const sharedObjectTemplate = serverObject->getSharedTemplate();
+		SharedObjectTemplate const * const sharedObjectTemplate = serverObject->getSharedTemplate();
 
-		//std::string const appearanceFilename = (sharedObjectTemplate != 0) ? sharedObjectTemplate->getAppearanceFilename() : "None";
-		//DEBUG_REPORT_LOG(true, ("sharedObjectTemplate appearanceFilename = '%s'\n", appearanceFilename.c_str()));
-	}
+		std::string const appearanceFilename = (sharedObjectTemplate != 0) ? sharedObjectTemplate->getAppearanceFilename() : "None";
+		DEBUG_REPORT_LOG(true, ("sharedObjectTemplate appearanceFilename = '%s'\n", appearanceFilename.c_str()));
+	}*/
 
 	CrcString const * const logicalSaddleName = getLogicalSaddleNameForMount(mount);
 

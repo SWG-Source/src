@@ -134,7 +134,7 @@ void WorldSnapshotParser::createWorldSnapshots (const char* const filename)
 */
 
 	//-- scan each line of the file
-	bool quit = false;
+	//bool quit = false;
 	while (fgets (buffer, 1024, infile) != 0)
 	{
 		const char* current = buffer;

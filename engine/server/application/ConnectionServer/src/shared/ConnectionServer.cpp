@@ -986,7 +986,7 @@ void ConnectionServer::run(void)
 	{
 		PROFILER_AUTO_BLOCK_DEFINE("main loop");
 
-		bool barrierReached = true;
+		//bool barrierReached = true;
 
 		do
 		{
