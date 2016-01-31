@@ -382,11 +382,7 @@ void ResourceClassObject::loadTreeFromIff()
 	if (resourceClassExclusionDataTable)
 	{
 		int const classColumn = resourceClassExclusionDataTable->findColumnNumber("class");
-		if (classColumn < 0)
-		{
-			DEBUG_WARNING(true, ("Could not find column \"class\" in resource commodities exclusion data table datatables/commodity/resource_class_exclusion.iff.\n"));
-		}
-		else
+		if (classColumn > 0)
 		{
 			unsigned int const numRows = static_cast<unsigned int>(resourceClassExclusionDataTable->getNumRows());
 			if (numRows == 0)
