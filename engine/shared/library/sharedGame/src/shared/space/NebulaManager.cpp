@@ -198,7 +198,7 @@ void NebulaManager::loadSceneData(std::string const & sceneId)
 	//technically this means that this will be called twice for existing nebula tables
 	// but it's worth it to kill that fucking annoying warning
 	// not a space scene...or a missing space scene
-	if (!TreeFile::exists(fileName.c_str()) 
+	if (!TreeFile::exists(filename.c_str()))
 	{
 		return;
 	}
