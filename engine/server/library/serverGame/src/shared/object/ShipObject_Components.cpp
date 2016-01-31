@@ -1934,11 +1934,14 @@ bool ShipObject::installComponentFromData(int chassisSlot, ShipComponentData con
 	
 	if (!slot->canAcceptComponent(shipComponentData.getDescriptor()))
 	{
-		DEBUG_WARNING (true, ("Component [%s], compat [%s] cannot be installed in ship [%s] chassis [%s], slot [%s], compats [%s].", 
+		//this chassis check, in the warning, is to suppress output related to the npe tutorial falcon instance, as it seems "special"
+		std::string chassis = shipChassis->getName().getString();
+
+		DEBUG_WARNING ((chassis != "player_yt1300"), ("Component [%s], compat [%s] cannot be installed in ship [%s] chassis [%s], slot [%s], compats [%s].", 
 			shipComponentData.getDescriptor().getName().getString(), 
 			shipComponentData.getDescriptor().getCompatibility().getString(),
 			getNetworkId().getValueString().c_str(), 
-			shipChassis->getName().getString(),
+			chassis,
 			ShipChassisSlotType::getNameFromType(static_cast<ShipChassisSlotType::Type>(chassisSlot)).c_str(),
 			slot->getCompatibilityString().c_str()));
 		return false;
