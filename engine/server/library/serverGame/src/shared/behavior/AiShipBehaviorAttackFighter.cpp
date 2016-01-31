@@ -935,7 +935,7 @@ void AiShipBehaviorAttackFighter::calculateWeaponProjectileSpeed()
 
 	if (m_projectileSpeed <= 0.0f)
 	{
-		DEBUG_WARNING(true, ("debug_ai: unit(%s) ERROR: This ship has a projectile speed of %.2f.", ownerShipObject.getDebugInformation().c_str(), m_projectileSpeed));
+		//DEBUG_WARNING(true, ("debug_ai: unit(%s) ERROR: This ship has a projectile speed of %.2f.", ownerShipObject.getDebugInformation().c_str(), m_projectileSpeed));
 
 		m_projectileSpeed = 1.0f;
 	}
