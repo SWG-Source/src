@@ -58,7 +58,7 @@ TcpConnection::TcpConnection(TcpManager *tcpManager, TcpBlockAllocator *sendAllo
 
     int err = connect(m_socket, (sockaddr *)&m_addr, sizeof(m_addr));
 
-    if(err == SOCKET_ERROR)
+    if((unsigned) err == SOCKET_ERROR)
     {
 #ifdef WIN32
         int sockerr = WSAGetLastError();
@@ -132,7 +132,7 @@ TcpConnection::TcpConnection(TcpManager *tcpManager, TcpBlockAllocator *sendAllo
 
 void TcpConnection::setOptions()
 {
-    if (m_socket != INVALID_SOCKET)
+    if ((unsigned) m_socket != INVALID_SOCKET)
     {
 #if defined(WIN32)
         unsigned long isNonBlocking = 1;
@@ -249,7 +249,7 @@ int TcpConnection::finishConnect()
 #else  // not WIN32
             int err = connect(m_socket, (sockaddr *)&m_addr, sizeof(m_addr));
 
-            if(err == SOCKET_ERROR)
+            if((unsigned) err == SOCKET_ERROR)
             {
                 if (errno != EINPROGRESS && errno != EALREADY)
                 {
@@ -413,7 +413,7 @@ void TcpConnection::Disconnect(bool notifyApplication)
     }
 
 
-    if(m_socket != INVALID_SOCKET)
+    if((unsigned) m_socket != INVALID_SOCKET)
     {
 #if defined(WIN32)
         closesocket(m_socket);

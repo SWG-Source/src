@@ -101,7 +101,7 @@ bool TcpManager::BindAsServer()
 
     m_socket = socket(AF_INET, SOCK_STREAM, 0);
 
-    if (m_socket != INVALID_SOCKET)
+    if ((unsigned) m_socket != INVALID_SOCKET)
     {
 #if defined(WIN32)
         FD_SET(m_socket, &m_permfds);//the socket this server is listening on
@@ -197,7 +197,7 @@ TcpConnection *TcpManager::acceptClient()
         SOCKET sock = ::accept(m_socket, (sockaddr *) &addr, (socklen_t *) &addrLength);
 
 
-        if (sock != INVALID_SOCKET)
+        if ((unsigned) sock != INVALID_SOCKET)
         {
             newConn = new TcpConnection(this, &m_allocator, m_params, sock, IPAddress(addr.sin_addr.s_addr), ntohs(addr.sin_port));
             addNewConnection(newConn);
@@ -445,7 +445,7 @@ bool TcpManager::GiveTime(unsigned maxTimeAcceptingConnections,unsigned maxSendT
 
         int cnt = poll(pollfds, numfds, 1);
 
-        if(cnt == SOCKET_ERROR)
+        if((unsigned) cnt == SOCKET_ERROR)
         {
             //poll not working?
             //TODO:  need to notify client somehow, don't think we can assume a fatal error here
