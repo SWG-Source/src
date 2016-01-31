@@ -585,7 +585,6 @@ jobject JNICALL ScriptMethodsInteriorsNamespace::getBuildingEjectLocation(JNIEnv
 	PortalProperty const *portalProp = portallizedObject->getPortalProperty();
 	if (!portalProp)
 	{
-		DEBUG_WARNING(true, ("[designer bug] getBuildingEjectLocation was passed an objid (%s) of an object that has no PortalProperty", portallizedObject->getDebugInformation().c_str()));
 		return 0;
 	}
 
