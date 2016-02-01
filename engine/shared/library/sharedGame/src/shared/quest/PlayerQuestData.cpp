@@ -331,25 +331,32 @@ namespace Archive
 				//active quests
 				switch (numScanned) {
 				  case 4:
-				    // in-progress quest
-				    Archive::put(target, static_cast<unsigned char>(Command::ADD));
-				    Archive::put(target, c.key);
-				    Archive::put(target, PlayerQuestData(NetworkId(giver), activeTasks, completedTasks, false));
+					{
+				    		// in-progress quest
+				    		Archive::put(target, static_cast<unsigned char>(Command::ADD));
+				    		Archive::put(target, c.key);
+				    		Archive::put(target, PlayerQuestData(NetworkId(giver), activeTasks, completedTasks, false));
+					}
 				  break;
 				  case 1:
-				    // completed quest
-				    Archive::put(target, static_cast<unsigned char>(Command::ADD));
-				    Archive::put(target, c.key);
-				    Archive::put(target, PlayerQuestData(true, true));
+					{
+				    		// completed quest
+				    		Archive::put(target, static_cast<unsigned char>(Command::ADD));
+				    		Archive::put(target, c.key);
+				    		Archive::put(target, PlayerQuestData(true, true));
+					}
 				  break;
 				  case 2: 
-					// completed quest
-					Archive::put(target, static_cast<unsigned char>(Command::ADD));
-					Archive::put(target, c.key);
-					//this is really a flags field
-					uint16 const flags = activeTasks;
-					bool const hasReceivedReward = (flags != 0);
-					Archive::put(target, PlayerQuestData(true, hasReceivedReward));
+					{
+						// completed quest
+						Archive::put(target, static_cast<unsigned char>(Command::ADD));
+						Archive::put(target, c.key);
+
+						//this is really a flags field
+						uint16 const flags = activeTasks;
+						bool const hasReceivedReward = (flags != 0);
+						Archive::put(target, PlayerQuestData(true, hasReceivedReward));
+					}
 				  break;
 				  default:
 					FATAL(true,("Could not parse packed quest data %s,",temp));
