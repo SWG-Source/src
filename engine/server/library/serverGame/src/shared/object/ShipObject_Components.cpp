@@ -1941,7 +1941,7 @@ bool ShipObject::installComponentFromData(int chassisSlot, ShipComponentData con
 			shipComponentData.getDescriptor().getName().getString(), 
 			shipComponentData.getDescriptor().getCompatibility().getString(),
 			getNetworkId().getValueString().c_str(), 
-			chassis,
+			chassis.c_str(),
 			ShipChassisSlotType::getNameFromType(static_cast<ShipChassisSlotType::Type>(chassisSlot)).c_str(),
 			slot->getCompatibilityString().c_str()));
 		return false;
