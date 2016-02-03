@@ -1101,6 +1101,13 @@ void JavaLibrary::initializeJavaThread()
 			setenv("LD_LIBRARY_PATH", tmpbuffer, 1);
 			delete [] tmpbuffer;
 		}
+		
+		// check if LD_ASSUME_KERNEL is defined
+		env = getenv("LD_ASSUME_KERNEL");
+		if (env == NULL || strcmp(env, "2.4.1") != 0)
+		{
+//			WARNING(true, ("LD_ASSUME_KERNEL=2.4.1 not set, Java may not run correctly"));
+		}
 	}
 #endif	// linux
 
@@ -1178,15 +1185,15 @@ void JavaLibrary::initializeJavaThread()
 		// use options derived from config file settings
 
 		// set up memory requirements
-		tempOption.optionString = "-Xms512m"; // minimum or initial stack size, originally was 128m
+		tempOption.optionString = "-Xms128m";
 		options.push_back(tempOption);
-		tempOption.optionString = "-Xmx2048m"; // max stack size (in total?) was originally 512m (we got PAE!)
+		tempOption.optionString = "-Xmx512m";
 		options.push_back(tempOption);
-		tempOption.optionString = "-Xss2m"; // frame stack size, was originally 768 k
+		tempOption.optionString = "-Xss768k";
 			options.push_back(tempOption);
 		if (ms_javaVmType == JV_ibm)
 		{
-			tempOption.optionString = "-Xoss2m"; // max value for the stack size, originally was 768k or so
+			tempOption.optionString = "-Xoss768k";
 			options.push_back(tempOption);
 		}
 
