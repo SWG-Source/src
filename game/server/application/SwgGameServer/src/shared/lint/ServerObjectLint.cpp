@@ -46,43 +46,6 @@ void ServerObjectLint::install()
 void ServerObjectLint::run(const std::vector<std::string> & templateList)
 {
 	install();
-
-	/*
-	ServerArmorTemplate::install(true);
-	ServerBuildingObjectTemplate::install(true);
-	ServerCellObjectTemplate::install();
-	ServerCreatureObjectTemplate::install(true);
-	ServerDraftSchematicObjectTemplate::install(true);
-	ServerInstallationObjectTemplate::install(true);
-	ServerIntangibleObjectTemplate::install(true);
-	ServerManufactureSchematicObjectTemplate::install(true);
-	ServerMissionBoardObjectTemplate::install(true);
-	ServerMissionObjectTemplate::install(true);
-	ServerObjectTemplate::install(true);
-	ServerPlanetObjectTemplate::install(true);
-	ServerResourceClassObjectTemplate::install(true);
-	ServerResourceContainerObjectTemplate::install(true);
-	ServerResourcePoolObjectTemplate::install(true);
-	ServerResourceTypeObjectTemplate::install(true);
-	ServerStaticObjectTemplate::install(true);
-	ServerTangibleObjectTemplate::install(true);
-	ServerVehicleObjectTemplate::install(true);
-	ServerWeaponObjectTemplate::install(true);
-
-	SharedBuildingObjectTemplate::install(true);
-	SharedCellObjectTemplate::install(true);
-	SharedCreatureObjectTemplate::install(true);
-	SharedDraftSchematicObjectTemplate::install(true);
-	SharedInstallationObjectTemplate::install(true);
-	SharedIntangibleObjectTemplate::install(true);
-	SharedObjectTemplate::install(true);
-	SharedResourceContainerObjectTemplate::install(true);
-	SharedStaticObjectTemplate::install(true);
-	SharedTangibleObjectTemplate::install(true);
-	SharedTerrainSurfaceObjectTemplate::install(true);
-	SharedVehicleObjectTemplate::install(true);
-	SharedWeaponObjectTemplate::install(true);
-*/
 	ServerWorld::install();
 
 
