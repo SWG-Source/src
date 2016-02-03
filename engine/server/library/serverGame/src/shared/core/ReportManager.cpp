@@ -123,7 +123,6 @@ void ReportManager::addReport(Unicode::String const &reportingName, NetworkId co
 			if (((systemTime - iterReportThrottle->second) >= s_throttleTime))
 			{
 				s_reportThrottle.erase(iterReportThrottle);
-				break;
 			}
 		}
 	}
