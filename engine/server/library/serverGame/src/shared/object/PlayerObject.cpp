@@ -1637,9 +1637,9 @@ Crafting::CraftingError PlayerObject::fillSlot(int slotIndex, int slotOptionInde
 	}
 	slotOptionIndex = i;
 
-	if (slotOption->ingredients.size() != 1)
+	if (slotOption == NULL || slotOption->ingredients.size() != 1)
 	{
-		WARNING(true, ("Ingredient %d for draft schematic %s, slot %s, has ingredient count != 1",
+		WARNING(true, ("slotOption is NULL or ingredient %d for draft schematic %s, slot %s, has ingredient count != 1",
 			slotOptionIndex, m_draftSchematic->getTemplateName(), draftSlot.name.getText().c_str()));
 		return Crafting::CE_invalidIngredientSize;
 	}

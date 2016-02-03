@@ -158,7 +158,7 @@ CSAssistGameAPIcore::CSAssistGameAPIcore(CSAssistGameAPI *api, const char *serve
 		//fprintf(stderr, "res=%d, p=%s, host=%s, port=%d, size=%d\n", res, p, host, port, m_serverList.size());
 		delete [] p;
 	}
-	delete host;
+	delete [] host;
 	delete [] buf;
 	m_curServer = m_serverList.begin();
 	GetLBHost();
