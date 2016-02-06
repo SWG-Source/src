@@ -103,6 +103,8 @@ JAVA_APPEND_LIBRARY_DIRECTORIES(JAVA_AWT_LIBRARY_DIRECTORIES
   ${_JAVA_HOME}/jre/bin/classic
   ${_JAVA_HOME}/lib
   ${_JAVA_HOME}
+  /usr/java/jre/lib/i386
+  /usr/java/jre/lib
   /usr/lib
   /usr/local/lib
   /usr/lib/jvm/java/lib
