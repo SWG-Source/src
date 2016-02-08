@@ -459,9 +459,7 @@ JavaStringPtr callStringMethod(const LocalRefParam & object, jmethodID methodID,
 		{
 			if (!JavaLibrary::getEnv()->IsInstanceOf(result, JavaLibrary::ms_clsString))
 			{
-#ifdef _DEBUG
 				WARNING_STRICT_FATAL(true, ("JavaLibrary::callStringMethod called with non-string result"));
-#endif
 				JavaLibrary::getEnv()->DeleteLocalRef(result);
 				return JavaString::cms_nullPtr;
 			}
