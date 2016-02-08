@@ -1101,13 +1101,6 @@ void JavaLibrary::initializeJavaThread()
 			setenv("LD_LIBRARY_PATH", tmpbuffer, 1);
 			delete [] tmpbuffer;
 		}
-		
-		// check if LD_ASSUME_KERNEL is defined
-		env = getenv("LD_ASSUME_KERNEL");
-		if (env == NULL || strcmp(env, "2.4.1") != 0)
-		{
-//			WARNING(true, ("LD_ASSUME_KERNEL=2.4.1 not set, Java may not run correctly"));
-		}
 	}
 #endif	// linux
 
