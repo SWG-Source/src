@@ -461,8 +461,8 @@ JavaStringPtr callStringMethod(const LocalRefParam & object, jmethodID methodID,
 			{
 #ifdef _DEBUG
 				WARNING_STRICT_FATAL(true, ("JavaLibrary::callStringMethod called with non-string result"));
-				JavaLibrary::getEnv()->DeleteLocalRef(result);
 #endif
+				JavaLibrary::getEnv()->DeleteLocalRef(result);
 				return JavaString::cms_nullPtr;
 			}
 			return JavaStringPtr(new JavaString(static_cast<jstring>(result)));
