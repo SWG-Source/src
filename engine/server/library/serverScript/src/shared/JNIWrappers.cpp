@@ -459,9 +459,7 @@ JavaStringPtr callStringMethod(const LocalRefParam & object, jmethodID methodID,
 		{
 			if (!JavaLibrary::getEnv()->IsInstanceOf(result, JavaLibrary::ms_clsString))
 			{
-#ifdef _DEBUG
 				WARNING_STRICT_FATAL(true, ("JavaLibrary::callStringMethod called with non-string result"));
-#endif
 				JavaLibrary::getEnv()->DeleteLocalRef(result);
 				return JavaString::cms_nullPtr;
 			}
@@ -904,6 +902,7 @@ LocalRef::LocalRef(jobject src) :
 
 LocalRef::~LocalRef()
 {
+	WARNING(true, ("m_ref is %i in LocalRef destructor", m_ref));
 	if (m_ref != 0 && JavaLibrary::getEnv() != NULL)
 		JavaLibrary::getEnv()->DeleteLocalRef(m_ref);
 	m_ref = 0;
@@ -919,6 +918,7 @@ LocalArrayRef::LocalArrayRef(jarray src) :
 
 LocalArrayRef::~LocalArrayRef()
 {
+	WARNING(true, ("m_ref is %i in LocalArrayRef destructor", m_ref));
 	if (m_ref != 0 && JavaLibrary::getEnv() != NULL)
 		JavaLibrary::getEnv()->DeleteLocalRef(m_ref);
 	m_ref = 0;
@@ -934,6 +934,7 @@ LocalObjectArrayRef::LocalObjectArrayRef(jobjectArray src) :
 
 LocalObjectArrayRef::~LocalObjectArrayRef()
 {
+	WARNING(true, ("m_ref is %i in LocalObjectArrayRef destructor", m_ref));
 	if (m_ref != 0 && JavaLibrary::getEnv() != NULL)
 		JavaLibrary::getEnv()->DeleteLocalRef(m_ref);
 	m_ref = 0;
@@ -1010,6 +1011,7 @@ GlobalRef::GlobalRef(const LocalRefParam & src) :
 
 GlobalRef::~GlobalRef()
 {
+	WARNING(true, ("m_ref is %i in GlobalRef destructor", m_ref));
 	if (m_ref != 0 && JavaLibrary::getEnv() != NULL)
 		JavaLibrary::getEnv()->DeleteGlobalRef(m_ref);
 	m_ref = 0;
@@ -1027,6 +1029,8 @@ GlobalArrayRef::GlobalArrayRef(const LocalObjectArrayRefParam & src) :
 
 GlobalArrayRef::~GlobalArrayRef()
 {
+
+	WARNING(true, ("m_ref is %i in GlobalArrayRef destructor", m_ref));
 	if (m_ref != 0 && JavaLibrary::getEnv() != NULL)
 		JavaLibrary::getEnv()->DeleteGlobalRef(m_ref);
 	m_ref = 0;
@@ -1095,6 +1099,7 @@ JavaString::JavaString(const Unicode::String & src) :
 
 JavaString::~JavaString()
 {
+	WARNING(true, ("m_ref is %i in JavaString destructor", m_ref));
 	if (m_ref != 0 && JavaLibrary::getEnv() != NULL)
 		JavaLibrary::getEnv()->DeleteLocalRef(m_ref);
 	m_ref = 0;
