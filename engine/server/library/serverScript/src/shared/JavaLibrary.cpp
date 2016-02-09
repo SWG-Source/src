@@ -50,19 +50,6 @@ using namespace JNIWrappersNamespace;
 #error Unsupported platform
 #endif
 
-#if !defined(JNI_IBM_JAVA) && defined(WIN32)
-//-- Justin Randall [1/21/2003 4:43:15 PM] --
-// The scripting system simply will not work properly with
-// our linux servers running the ibm java vm if the win32
-// server is not also using that vm. There are serialization
-// issues that render the game useless. Please do not
-// change this until the broken interaction between various 
-// VM's has been rectified!
-//#error Unsupported Java VM
-#endif//JNI_IBM_JAVA
-
-//#undef JNI_IBM_JAVA
-
 #ifdef linux
 // shared library includes
 #include <dlfcn.h>
@@ -771,7 +758,7 @@ void JavaLibrary::throwScriptException(char const * const format, ...)
 	va_list va;
 	va_start(va, format);
 
-		throwScriptException(format, va);
+	throwScriptException(format, va);
 
 	va_end(va);
 }
@@ -1147,10 +1134,7 @@ void JavaLibrary::initializeJavaThread()
 
 	// set up the args to initialize the jvm
 	std::string classPath = "-Djava.class.path=";
-//	classPath += PATH_SEPARATOR;
 	classPath += ConfigServerGame::getScriptPath();
-
-//	DEBUG_REPORT_LOG(true, ("Java class path = %s\n", classPath.c_str()));
 
 	JavaVMInitArgs vm_args;
 	JavaVMOption tempOption = {NULL, NULL};
@@ -1158,11 +1142,6 @@ void JavaLibrary::initializeJavaThread()
 	char *jdwpBuffer = NULL;
 
 	UNREF(jdwpBuffer);
-
-//	classPath += PATH_SEPARATOR;
-//	classPath += "/home/sjakab/temp/OptimizeitSuiteDemo/lib/optit.jar";
-//	tempOption.optionString = "-Xnoclassgc";
-//	options.push_back(tempOption);
 
 	if (ConfigServerScript::hasJavaOptions())
 	{
@@ -1184,7 +1163,8 @@ void JavaLibrary::initializeJavaThread()
 		tempOption.optionString = "-Xmx512m";
 		options.push_back(tempOption);
 		tempOption.optionString = "-Xss768k";
-			options.push_back(tempOption);
+		options.push_back(tempOption);
+
 		if (ms_javaVmType == JV_ibm)
 		{
 			tempOption.optionString = "-Xoss768k";
@@ -1207,7 +1187,6 @@ void JavaLibrary::initializeJavaThread()
 				tempOption.optionString = "-Xint";
 				options.push_back(tempOption);
 			}
-			tempOption.optionString = "-Xincgc";
 			options.push_back(tempOption);
 		}
 
@@ -1220,8 +1199,7 @@ void JavaLibrary::initializeJavaThread()
 			tempOption.optionString = "-verbose:class";
 			options.push_back(tempOption);
 		}
-
-		if ((!ms_javaVmType) == JV_ibm)
+		if (ms_javaVmType != JV_ibm)
 		{
 			tempOption.optionString = "-Xrs";
 			options.push_back(tempOption);
@@ -1247,11 +1225,13 @@ void JavaLibrary::initializeJavaThread()
 			}
 			tempOption.optionString = "-Xdebug";
 			options.push_back(tempOption);
+
 			// we need to copy the -Xrunjdwp parameter into a char buffer due to a bug
 			// in the Java VM
 			const char * jdwpString = "-Xrunjdwp:transport=dt_socket,server=y,suspend=n";
 			jdwpBuffer = new char[strlen(jdwpString) + 32];
 			strcpy(jdwpBuffer, jdwpString);
+
 			if (ConfigServerGame::getJavaDebugPort()[0] == '\0')
 			{
 				strcat(jdwpBuffer, ",address=");
@@ -1281,7 +1261,6 @@ void JavaLibrary::initializeJavaThread()
 
 	tempOption.optionString = const_cast<char *>(classPath.c_str());
 	options.push_back(tempOption);
-
 
 #ifdef JNI_VERSION_1_8
         vm_args.version = JNI_VERSION_1_8;
@@ -1322,7 +1301,7 @@ void JavaLibrary::initializeJavaThread()
 
 	vm_args.options = &options[0];
 	vm_args.nOptions = options.size();
-	vm_args.ignoreUnrecognized = JNI_FALSE;
+	vm_args.ignoreUnrecognized = JNI_TRUE;
 
 	// create the JVM
 	JNIEnv * env = NULL;
