@@ -184,12 +184,6 @@ inline typename AutoDeltaSet<ValueType, ObjectType>::const_iterator AutoDeltaSet
 		m_commands.push_back(c);
 		++m_baselineCommandCount;
 		
-		// @note apathy - hack to convert from const_iterator to iterator as requried by STLPort
-		typename SetType::iterator tmp(m_set.begin());
-        std::advance(tmp, std::distance<const_iterator>(tmp, i));
-        i++;
-        m_set.erase(tmp);
-
 		touch();
 		onErase(c.value);
 		onChanged();
