@@ -69,8 +69,8 @@ using namespace JNIWrappersNamespace;
 #include <signal.h>
 #endif
 
-#ifndef JNI_VERSION_1_2
-#error JNI version 1.2 or better only!
+#ifndef JNI_VERSION_1_4
+#error JNI version 1.4 or better only!
 #endif
 
 //========================================================================
@@ -1026,16 +1026,17 @@ void JavaLibrary::initializeJavaThread()
 	if (javaVMName == NULL || (
 		strcmp(javaVMName, "none") != 0 &&
 		strcmp(javaVMName, "ibm") != 0 &&
-		strcmp(javaVMName, "sun") != 0))
+		strcmp(javaVMName, "sun") != 0 &&
+		strcmp(javaVMName, "oracle") != 0))
 	{
 		FATAL(true, ("[ServerGame] javaVMName not defined. Valid values are: "
-			"none, ibm, or sun"));
+			"none, ibm, oracle, or sun"));
 	}
 	else if (strcmp(javaVMName, "ibm") == 0)
 	{
 		ms_javaVmType = JV_ibm;
 	}
-	else if (strcmp(javaVMName, "sun") == 0)
+	else if (strcmp(javaVMName, "sun") == 0 || strcmp(javaVMName, "oracle") == 0)
 	{
 		ms_javaVmType = JV_sun;
 	}
@@ -1188,10 +1189,6 @@ void JavaLibrary::initializeJavaThread()
 		{
 			tempOption.optionString = "-Xoss768k";
 			options.push_back(tempOption);
-		}
-
-		if (ms_javaVmType == JV_ibm)
-		{
 			tempOption.optionString = "-Xcheck:jni";
 			options.push_back(tempOption);
 			tempOption.optionString = "-Xcheck:nabounds";
@@ -1224,7 +1221,6 @@ void JavaLibrary::initializeJavaThread()
 			options.push_back(tempOption);
 		}
 
-#ifdef JNI_VERSION_1_4
 		if ((!ms_javaVmType) == JV_ibm)
 		{
 			tempOption.optionString = "-Xrs";
@@ -1237,8 +1233,6 @@ void JavaLibrary::initializeJavaThread()
 			tempOption.optionString = "-Xloggc:javagc.log";
 			options.push_back(tempOption);
 		}
-
-#endif
 
 #ifdef REMOTE_DEBUG_ON
 		char *jdwpBuffer = NULL;
@@ -1288,11 +1282,40 @@ void JavaLibrary::initializeJavaThread()
 	tempOption.optionString = const_cast<char *>(classPath.c_str());
 	options.push_back(tempOption);
 
-#ifdef JNI_VERSION_1_4
-	vm_args.version = JNI_VERSION_1_4;
-#else
-	vm_args.version = JNI_VERSION_1_2;
+
+#ifdef JNI_VERSION_1_8
+        vm_args.version = JNI_VERSION_1_8;
+#define JAVAVERSET = 1
 #endif
+
+#ifndef JAVAVERSET
+#ifdef JNI_VERSION_1_7
+        vm_args.version = JNI_VERSION_1_7;
+#define JAVAVERSET = 1
+#endif
+#endif
+
+#ifndef JAVAVERSET
+#ifdef JNI_VERSION_1_6
+        vm_args.version = JNI_VERSION_1_6;
+#define JAVAVERSET = 1
+#endif
+#endif
+
+#ifndef JAVAVERSET
+#ifdef JNI_VERSION_1_5
+        vm_args.version = JNI_VERSION_1_5;
+#define JAVAVERSET = 1
+#endif
+#endif
+
+#ifndef JAVAVERSET
+#ifdef JNI_VERSION_1_4
+        vm_args.version = JNI_VERSION_1_4;
+#define JAVAVERSET = 1
+#endif
+#endif
+
 	vm_args.options = &options[0];
 	vm_args.nOptions = options.size();
 	vm_args.ignoreUnrecognized = JNI_FALSE;
