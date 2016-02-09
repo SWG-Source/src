@@ -1316,6 +1316,10 @@ void JavaLibrary::initializeJavaThread()
 #endif
 #endif
 
+#ifdef JAVAVERSET
+#undef JAVAVERSET
+#endif
+
 	vm_args.options = &options[0];
 	vm_args.nOptions = options.size();
 	vm_args.ignoreUnrecognized = JNI_FALSE;
