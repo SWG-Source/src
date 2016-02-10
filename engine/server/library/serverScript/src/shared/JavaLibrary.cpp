@@ -1255,9 +1255,17 @@ void JavaLibrary::initializeJavaThread()
 	tempOption.optionString = const_cast<char *>(classPath.c_str());
 	options.push_back(tempOption);
 
-#ifdef JNI_VERSION_1_8
-        vm_args.version = JNI_VERSION_1_8;
+// the below is ok but could use the dynamic function call too if we want someday 
+#ifdef JNI_VERSION_1_9
+        vm_args.version = JNI_VERSION_1_9;
 #define JAVAVERSET = 1
+#endif
+
+#ifndef JAVAVERSET
+#ifdef JNI_VERSION_1_8
+	vm_args.version = JNI_VERSION_1_8;
+#define JAVAVERSET = 1 
+#endif
 #endif
 
 #ifndef JAVAVERSET
