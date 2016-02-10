@@ -103,6 +103,10 @@ JAVA_APPEND_LIBRARY_DIRECTORIES(JAVA_AWT_LIBRARY_DIRECTORIES
   ${_JAVA_HOME}/jre/bin/classic
   ${_JAVA_HOME}/lib
   ${_JAVA_HOME}
+  /opt/java17/jre/lib/i386
+  /opt/java17/jre/lib
+  /opt/java17/jre
+  /opt/java17/lib
   /usr/java/jre/lib/i386
   /usr/java/jre/lib
   /usr/lib
@@ -152,6 +156,8 @@ set(JAVA_AWT_INCLUDE_DIRECTORIES
   "[HKEY_LOCAL_MACHINE\\SOFTWARE\\JavaSoft\\Java Development Kit\\1.3;JavaHome]/include"
   "[HKEY_LOCAL_MACHINE\\SOFTWARE\\JavaSoft\\Java Development Kit\\${java_install_version};JavaHome]/include"
   ${_JAVA_HOME}/include
+  /opt/java17/include
+  /opt/java17/jre/include
   /usr/include
   /usr/local/include
   /usr/lib/java/include
