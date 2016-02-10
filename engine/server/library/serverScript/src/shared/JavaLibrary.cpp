@@ -866,7 +866,7 @@ void JavaLibrary::fatalHandler(int signum)
 		else
 		{
 			// destroy Java threads
-			// @note apathy - this pthread method is not in later versions of glibc
+			// this pthread method is not in later versions of glibc as the kernel should handle the kill
 			//pthread_kill_other_threads_np();
 			ms_instance = NULL;
 			ms_env = NULL;
