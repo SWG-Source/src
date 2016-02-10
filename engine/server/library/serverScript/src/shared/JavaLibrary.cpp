@@ -1199,13 +1199,6 @@ void JavaLibrary::initializeJavaThread()
 			tempOption.optionString = "-verbose:class";
 			options.push_back(tempOption);
 		}
-		if (ms_javaVmType != JV_ibm)
-		{
-			tempOption.optionString = "-Xrs";
-			options.push_back(tempOption);
-			tempOption.optionString = "-Xcheck:jni";
-			options.push_back(tempOption);
-		}
 		if (ConfigServerGame::getLogJavaGc())
 		{
 			tempOption.optionString = "-Xloggc:javagc.log";
