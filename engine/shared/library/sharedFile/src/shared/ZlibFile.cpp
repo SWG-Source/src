@@ -66,7 +66,7 @@ ZlibFile::ZlibFile(int uncompressedLength, byte *compressedBuffer, int compresse
 	m_compressedBuffer(compressedBuffer),
 	m_compressedBufferLength(compressedBufferLength),
 	m_ownsCompressedBuffer(ownsCompressedBuffer),
-	m_decompressedMemoryFile(NULL)
+	m_decompressedMemoryFile(nullptr)
 {
 }
 
@@ -137,10 +137,10 @@ void ZlibFile::close()
 {
 	if (m_ownsCompressedBuffer)
 		delete [] m_compressedBuffer;
-	m_compressedBuffer = NULL;
+	m_compressedBuffer = nullptr;
 
 	delete m_decompressedMemoryFile;
-	m_decompressedMemoryFile = NULL;
+	m_decompressedMemoryFile = nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -197,7 +197,7 @@ void ZlibFile::getZlibCompressedDataAndClose(byte *& compressedBuffer, int & com
 	if (m_ownsCompressedBuffer)
 	{
 		compressedBuffer = m_compressedBuffer;
-		m_compressedBuffer = NULL;
+		m_compressedBuffer = nullptr;
 		compressedBufferLength = m_compressedBufferLength;
 	}
 	else

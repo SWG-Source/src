@@ -138,7 +138,7 @@ void Quaternion::getTransform(Transform *transform) const
 
 void Quaternion::getTransformPreserveTranslation(Transform *transform) const
 {
-	DEBUG_FATAL(!transform, ("null transform arg"));
+	DEBUG_FATAL(!transform, ("nullptr transform arg"));
 
 	if ((w + s_quatEqualityEpsilon) < 1.f) 
 	{

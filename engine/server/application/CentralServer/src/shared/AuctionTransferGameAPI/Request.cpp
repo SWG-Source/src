@@ -7,7 +7,7 @@ void put(Base::ByteStream &msg, const Blob &source);
 
 //////////////////////////////////////////////////////////////////////////////////////
 	Blob::Blob(const unsigned char *data, unsigned len)
-		: m_data(NULL),
+		: m_data(nullptr),
 		m_len(len)      
 	{
 		if (m_len > 0)
@@ -20,7 +20,7 @@ void put(Base::ByteStream &msg, const Blob &source);
 
 //////////////////////////////////////////////////////////////////////////////////////
 	Blob::Blob(const Blob &cpy)
-		: m_data(NULL),
+		: m_data(nullptr),
 		m_len(cpy.m_len)
 	{
 		if (m_len > 0)
@@ -45,7 +45,7 @@ void put(Base::ByteStream &msg, const Blob &source);
 			if (m_data)
 			{
 				delete [] m_data;
-				m_data = NULL;
+				m_data = nullptr;
 			}
 
 			m_len = cpy.m_len;

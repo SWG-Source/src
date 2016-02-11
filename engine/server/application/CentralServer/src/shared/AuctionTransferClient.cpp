@@ -35,7 +35,7 @@ void AuctionTransferClient::addCoinToAuction( const ExchangeListCreditsMessage& 
     //    2bi. if user connected: send VeAuctionCoinReply (with result code) to user's ES
     //    2bii. if user not connected: send immediate abort back to auction service
     
-    const unsigned uTrack = getNewTransactionID( NULL );
+    const unsigned uTrack = getNewTransactionID( nullptr );
 
     AuctionAssetDetails &details = m_mPendingRequestDetails[ uTrack ];
     details.u8Type = AuctionAssetDetails::TYPE_COIN;

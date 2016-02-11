@@ -245,7 +245,7 @@ void DataTableTool::createOutputDirectoryForFile(const std::string & fileName)
 
 	std::string directoryName(fileName, 0, slashPos);
 #if defined(PLATFORM_WIN32)
-	int result = CreateDirectory(directoryName.c_str(), NULL);
+	int result = CreateDirectory(directoryName.c_str(), nullptr);
 #elif defined(PLATFORM_LINUX)
 	// make sure slashes are forward
 	{

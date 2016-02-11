@@ -20,7 +20,7 @@
 OutputFileHandler::OutputFileHandler(const char *filename)
 {
 	outputIFF = new Iff(MAXIFFDATASIZE);
-	outFilename = NULL;
+	outFilename = nullptr;
 
 	setCurrentFilename(filename);
 }
@@ -45,7 +45,7 @@ OutputFileHandler::~OutputFileHandler(void)
 		delete [] outFilename;
 	}
 
-	outputIFF = NULL;
+	outputIFF = nullptr;
 }
 
 

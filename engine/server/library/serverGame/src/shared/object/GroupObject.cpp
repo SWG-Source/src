@@ -1412,7 +1412,7 @@ unsigned int GroupObject::getSecondsLeftOnGroupPickup() const
 	std::pair<int32, int32> const & groupPickupTimer = m_groupPickupTimer.get();
 	if ((groupPickupTimer.first > 0) && (groupPickupTimer.second > 0))
 	{
-		time_t const timeNow = ::time(NULL);
+		time_t const timeNow = ::time(nullptr);
 		if (groupPickupTimer.second > timeNow)
 			return (groupPickupTimer.second - (int)timeNow);
 	}

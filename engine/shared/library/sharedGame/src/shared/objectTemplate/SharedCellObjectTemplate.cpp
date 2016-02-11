@@ -94,10 +94,10 @@ Tag SharedCellObjectTemplate::getTemplateVersion(void) const
  */
 Tag SharedCellObjectTemplate::getHighestTemplateVersion(void) const
 {
-	if (m_baseData == NULL)
+	if (m_baseData == nullptr)
 		return m_templateVersion;
 	const SharedCellObjectTemplate * base = dynamic_cast<const SharedCellObjectTemplate *>(m_baseData);
-	if (base == NULL)
+	if (base == nullptr)
 		return m_templateVersion;
 	return std::max(m_templateVersion, base->getHighestTemplateVersion());
 } // SharedCellObjectTemplate::getHighestTemplateVersion
@@ -140,12 +140,12 @@ char paramName[MAX_NAME_SIZE];
 		file.read_string(baseFilename);
 		file.exitChunk();
 		const ObjectTemplate *base = ObjectTemplateList::fetch(baseFilename);
-		DEBUG_WARNING(base == NULL, ("was unable to load base template %s", baseFilename.c_str()));
-		if (m_baseData == base && base != NULL)
+		DEBUG_WARNING(base == nullptr, ("was unable to load base template %s", baseFilename.c_str()));
+		if (m_baseData == base && base != nullptr)
 			base->releaseReference();
 		else
 		{
-			if (m_baseData != NULL)
+			if (m_baseData != nullptr)
 				m_baseData->releaseReference();
 			m_baseData = base;
 		}

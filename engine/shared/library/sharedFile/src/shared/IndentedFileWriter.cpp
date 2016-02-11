@@ -23,7 +23,7 @@ IndentedFileWriter *IndentedFileWriter::createWriter(char const *filename)
 	{
 		// Kill the new writer since we weren't able to open the file for writing.
 		delete newWriter;
-		return NULL;
+		return nullptr;
 	}
 }
 
@@ -36,7 +36,7 @@ IndentedFileWriter::~IndentedFileWriter()
 	if (m_file)
 	{
 		fclose(m_file);
-		m_file = NULL;
+		m_file = nullptr;
 	}
 }
 
@@ -63,8 +63,8 @@ void IndentedFileWriter::unindent()
 
 void IndentedFileWriter::writeLine(char const *line) const
 {
-	FATAL(!m_file, ("writeLine(): m_file is NULL, programmer error."));
-	FATAL(!line, ("writeLine(): line argument is NULL."));
+	FATAL(!m_file, ("writeLine(): m_file is nullptr, programmer error."));
+	FATAL(!line, ("writeLine(): line argument is nullptr."));
 
 	//-- Write one tab for each indentation level.
 	for (int i = 0; i < m_indentCount; ++i)
@@ -92,7 +92,7 @@ void IndentedFileWriter::writeLineFormat(char const *format, ...) const
 	int const formatCount = vsnprintf(buffer, sizeof(buffer), format, varArgList);
 	UNREF(formatCount);
 
-	//-- Ensure it's null terminated.
+	//-- Ensure it's nullptr terminated.
 	buffer[sizeof(buffer) - 1] = '\0';
 
 	//-- Do the real print.
@@ -108,7 +108,7 @@ void IndentedFileWriter::writeLineFormat(char const *format, ...) const
 
 IndentedFileWriter::IndentedFileWriter() :
 	m_indentCount(0),
-	m_file(NULL)
+	m_file(nullptr)
 {
 }
 
@@ -123,7 +123,7 @@ bool IndentedFileWriter::createFile(char const *filename)
 	}
 
 	m_file = fopen(filename, "w");
-	return (m_file != NULL);
+	return (m_file != nullptr);
 }
 
 // ======================================================================

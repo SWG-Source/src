@@ -34,7 +34,7 @@ float computeMovementModifier (CreatureObject * const object)
 {
 	if (!object)
 	{
-		DEBUG_FATAL(true, ("object is NULL."));
+		DEBUG_FATAL(true, ("object is nullptr."));
 		return 0.0f;
 	}
 
@@ -81,7 +81,7 @@ float computeMovementModifier (CreatureObject * const object)
 	// if the creature has a slope effect property, see if it has a greater
 	// (more negative) effect on the creature than the terrain
 	const Property * property = object->getProperty(SlopeEffectProperty::getClassPropertyId());
-	if (property != NULL)
+	if (property != nullptr)
 	{
 		// note we use the creature's base speed modifier, not the one modified by skills
 		// (although for ai they're probably the same)

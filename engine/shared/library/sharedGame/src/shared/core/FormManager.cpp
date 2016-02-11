@@ -81,10 +81,10 @@ FormManager::Field::Field(Form const * const parent)
 FormManager::Field::~Field()
 {
 	delete m_choices;
-	m_choices = NULL;
+	m_choices = nullptr;
 	delete m_otherValidationRules;
-	m_otherValidationRules = NULL;
-	m_parentForm = NULL;
+	m_otherValidationRules = nullptr;
+	m_parentForm = nullptr;
 }
 
 //----------------------------------------------------------------------
@@ -453,12 +453,12 @@ FormManager::Form::~Form()
 {
 	//this vector does NOT own the pointers
 	delete m_orderedFieldList;
-	m_orderedFieldList = NULL;
+	m_orderedFieldList = nullptr;
 
 	//this list owns the pointers, so release it
 	std::for_each(m_fields->begin(), m_fields->end(), PointerDeleterPairSecond());
 	delete m_fields;
-	m_fields = NULL;
+	m_fields = nullptr;
 }
 
 //----------------------------------------------------------------------
@@ -477,7 +477,7 @@ FormManager::Field const * FormManager::Form::getField(std::string const & field
 	if(i != m_fields->end())
 		return i->second;
 	else
-		return NULL;
+		return nullptr;
 }
 
 //----------------------------------------------------------------------
@@ -531,13 +531,13 @@ void FormManager::remove ()
 	clearData();
 
 	delete ms_forms;
-	ms_forms = NULL;
+	ms_forms = nullptr;
 	delete ms_serverObjectTemplateToForms;
-	ms_serverObjectTemplateToForms = NULL;
+	ms_serverObjectTemplateToForms = nullptr;
 	delete ms_sharedObjectTemplateToForms;
-	ms_sharedObjectTemplateToForms = NULL;
+	ms_sharedObjectTemplateToForms = nullptr;
 	delete ms_automaticallyCreateObjectForServerObjectTemplate;
-	ms_automaticallyCreateObjectForServerObjectTemplate = NULL;
+	ms_automaticallyCreateObjectForServerObjectTemplate = nullptr;
 
 	s_tablesLoaded = false;
 	s_installed = false;
@@ -764,13 +764,13 @@ FormManager::Form const * FormManager::getFormByName(std::string const & formNam
 {
 	DEBUG_FATAL (!s_installed, ("not installed"));
 	if(!s_installed)
-		return NULL;
+		return nullptr;
 
 	std::map<std::string, Form*>::iterator i = ms_forms->find(formName);
 	if(i != ms_forms->end())
 		return i->second;
 	else
-		return NULL;
+		return nullptr;
 }
 
 //----------------------------------------------------------------------
@@ -779,13 +779,13 @@ FormManager::Form const * FormManager::getFormForServerObjectTemplate(std::strin
 {
 	DEBUG_FATAL (!s_installed, ("not installed"));
 	if(!s_installed)
-		return NULL;
+		return nullptr;
 
 	std::map<std::string, const Form*>::iterator i = ms_serverObjectTemplateToForms->find(serverTemplateName);
 	if(i != ms_serverObjectTemplateToForms->end())
 		return i->second;
 	else
-		return NULL;
+		return nullptr;
 }
 
 //----------------------------------------------------------------------
@@ -794,13 +794,13 @@ FormManager::Form const * FormManager::getFormForSharedObjectTemplate(std::strin
 {
 	DEBUG_FATAL (!s_installed, ("not installed"));
 	if(!s_installed)
-		return NULL;
+		return nullptr;
 
 	std::map<std::string, const Form*>::iterator i = ms_sharedObjectTemplateToForms->find(sharedTemplateName);
 	if(i != ms_sharedObjectTemplateToForms->end())
 		return i->second;
 	else
-		return NULL;
+		return nullptr;
 }
 
 //----------------------------------------------------------------------

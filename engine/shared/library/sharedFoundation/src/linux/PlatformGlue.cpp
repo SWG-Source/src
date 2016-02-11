@@ -33,7 +33,7 @@ char* _itoa(int value, char* stringOut, int radix)
 bool QueryPerformanceCounter(__int64* time)
 {
   struct timeval tv;
-  gettimeofday(&tv, NULL);
+  gettimeofday(&tv, nullptr);
   *time = static_cast<LARGE_INTEGER>(tv.tv_sec);
   *time = (*time * 1000000) + static_cast<LARGE_INTEGER>(tv.tv_usec);
 
@@ -107,7 +107,7 @@ FILE* CreateFile(const char* fileName, DWORD access, DWORD shareMode, void* unsu
     FILE* retval = 0;
 
     DEBUG_FATAL(flagsAndAttributes != FILE_ATTRIBUTE_NORMAL, ("Unsupported File mode call to CreateFile()"));
-    DEBUG_FATAL(unsupB != NULL, ("Unsupported File mode call to CreateFile()"));
+    DEBUG_FATAL(unsupB != nullptr, ("Unsupported File mode call to CreateFile()"));
     //DEBUG_FATAL(shareMode != 0, ("Unsupported File mode call to CreateFile()"));
     DEBUG_FATAL(unsupA != 0, ("Unsupported File mode call to CreateFile()"));
 
@@ -118,7 +118,7 @@ FILE* CreateFile(const char* fileName, DWORD access, DWORD shareMode, void* unsu
             if (retval)
             {
                 fclose(retval);
-                retval = NULL;
+                retval = nullptr;
             }
             else
             {

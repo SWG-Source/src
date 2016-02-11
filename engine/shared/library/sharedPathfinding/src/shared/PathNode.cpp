@@ -13,7 +13,7 @@
 // ======================================================================
 
 PathNode::PathNode()
-: m_graph(NULL),
+: m_graph(nullptr),
   m_index(-1),
   m_id(-1),
   m_key(-1),
@@ -27,7 +27,7 @@ PathNode::PathNode()
 }
 
 PathNode::PathNode ( Vector const & position )
-: m_graph(NULL),
+: m_graph(nullptr),
   m_index(-1),
   m_id(-1),
   m_key(-1),

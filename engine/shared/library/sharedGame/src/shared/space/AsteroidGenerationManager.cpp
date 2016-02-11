@@ -79,7 +79,7 @@ void AsteroidGenerationManager::install()
 	DEBUG_FATAL(s_installed, ("AsteroidGenerationManager already installed"));
 	s_installed = true;
 
-	ms_getRadiusFunction = NULL;
+	ms_getRadiusFunction = nullptr;
 
 	ExitChain::add(AsteroidGenerationManager::remove, "AsteroidGenerationManager::remove");
 }
@@ -88,7 +88,7 @@ void AsteroidGenerationManager::install()
 
 void AsteroidGenerationManager::remove()
 {
-	ms_getRadiusFunction = NULL;
+	ms_getRadiusFunction = nullptr;
 
 	clearStaticFieldData();
 	clearInstantiatedData();
@@ -381,7 +381,7 @@ bool AsteroidGenerationManager::generateField(AsteroidFieldData const & fieldDat
 
 	s_randomGenerator.setSeed(fieldData.seed);
 
-	WaveForm3D * splineWaveform = NULL;
+	WaveForm3D * splineWaveform = nullptr;
 	if (fieldData.fieldType == AsteroidFieldData::FT_spline)
 	{
 		splineWaveform = new WaveForm3D;
@@ -403,7 +403,7 @@ bool AsteroidGenerationManager::generateField(AsteroidFieldData const & fieldDat
 	{
 		bool valid = false;
 		std::vector<Sphere*> collisionResult;
-		Sphere * s = NULL;
+		Sphere * s = nullptr;
 		while(!valid)
 		{
 			//create asteroid locations until we find one that doesn't penetrate any existing objects
@@ -444,11 +444,11 @@ bool AsteroidGenerationManager::generateField(AsteroidFieldData const & fieldDat
 			{
 				DEBUG_REPORT_LOG_PRINT(ConfigSharedGame::getSpamAsteroidGenerationData(), ("Asteroid creation collision at [%f, %f, %f], radius [%f], trying again...\n", newAsteroid.position.x, newAsteroid.position.y, newAsteroid.position.z, s->getRadius()));
 				delete s;
-				s = NULL;
+				s = nullptr;
 			}
 		}
 
-		NOT_NULL(s); //lint !e644 // s could be uninitialized (not true -- initialized to NULL above, should be set to a value during the while loop)
+		NOT_NULL(s); //lint !e644 // s could be uninitialized (not true -- initialized to nullptr above, should be set to a value during the while loop)
 
 		SpatialSubdivisionHandle* handle = ms_collisionSphereTree.addObject(s);
 		if(handle)

@@ -55,7 +55,7 @@ SharedTangibleObjectTemplate::~SharedTangibleObjectTemplate()
 		for (iter = m_paletteColorCustomizationVariables.begin(); iter != m_paletteColorCustomizationVariables.end(); ++iter)
 		{
 			delete *iter;
-			*iter = NULL;
+			*iter = nullptr;
 		}
 		m_paletteColorCustomizationVariables.clear();
 	}
@@ -64,7 +64,7 @@ SharedTangibleObjectTemplate::~SharedTangibleObjectTemplate()
 		for (iter = m_rangedIntCustomizationVariables.begin(); iter != m_rangedIntCustomizationVariables.end(); ++iter)
 		{
 			delete *iter;
-			*iter = NULL;
+			*iter = nullptr;
 		}
 		m_rangedIntCustomizationVariables.clear();
 	}
@@ -73,7 +73,7 @@ SharedTangibleObjectTemplate::~SharedTangibleObjectTemplate()
 		for (iter = m_constStringCustomizationVariables.begin(); iter != m_constStringCustomizationVariables.end(); ++iter)
 		{
 			delete *iter;
-			*iter = NULL;
+			*iter = nullptr;
 		}
 		m_constStringCustomizationVariables.clear();
 	}
@@ -82,7 +82,7 @@ SharedTangibleObjectTemplate::~SharedTangibleObjectTemplate()
 		for (iter = m_socketDestinations.begin(); iter != m_socketDestinations.end(); ++iter)
 		{
 			delete *iter;
-			*iter = NULL;
+			*iter = nullptr;
 		}
 		m_socketDestinations.clear();
 	}
@@ -91,7 +91,7 @@ SharedTangibleObjectTemplate::~SharedTangibleObjectTemplate()
 		for (iter = m_certificationsRequired.begin(); iter != m_certificationsRequired.end(); ++iter)
 		{
 			delete *iter;
-			*iter = NULL;
+			*iter = nullptr;
 		}
 		m_certificationsRequired.clear();
 	}
@@ -100,7 +100,7 @@ SharedTangibleObjectTemplate::~SharedTangibleObjectTemplate()
 		for (iter = m_customizationVariableMapping.begin(); iter != m_customizationVariableMapping.end(); ++iter)
 		{
 			delete *iter;
-			*iter = NULL;
+			*iter = nullptr;
 		}
 		m_customizationVariableMapping.clear();
 	}
@@ -152,10 +152,10 @@ Tag SharedTangibleObjectTemplate::getTemplateVersion(void) const
  */
 Tag SharedTangibleObjectTemplate::getHighestTemplateVersion(void) const
 {
-	if (m_baseData == NULL)
+	if (m_baseData == nullptr)
 		return m_templateVersion;
 	const SharedTangibleObjectTemplate * base = dynamic_cast<const SharedTangibleObjectTemplate *>(m_baseData);
-	if (base == NULL)
+	if (base == nullptr)
 		return m_templateVersion;
 	return std::max(m_templateVersion, base->getHighestTemplateVersion());
 } // SharedTangibleObjectTemplate::getHighestTemplateVersion
@@ -181,9 +181,9 @@ CompilerIntegerParam * SharedTangibleObjectTemplate::getCompilerIntegerParam(con
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_clientVisabilityFlag;
 		}
@@ -191,7 +191,7 @@ CompilerIntegerParam * SharedTangibleObjectTemplate::getCompilerIntegerParam(con
 	}
 	else
 		return SharedObjectTemplate::getCompilerIntegerParam(name, deepCheck, index);
-	return NULL;
+	return nullptr;
 }	//SharedTangibleObjectTemplate::getCompilerIntegerParam
 
 FloatParam * SharedTangibleObjectTemplate::getFloatParam(const char *name, bool deepCheck, int index)
@@ -207,9 +207,9 @@ BoolParam * SharedTangibleObjectTemplate::getBoolParam(const char *name, bool de
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getBoolParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_useStructureFootprintOutline;
 		}
@@ -221,9 +221,9 @@ BoolParam * SharedTangibleObjectTemplate::getBoolParam(const char *name, bool de
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getBoolParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_targetable;
 		}
@@ -231,7 +231,7 @@ BoolParam * SharedTangibleObjectTemplate::getBoolParam(const char *name, bool de
 	}
 	else
 		return SharedObjectTemplate::getBoolParam(name, deepCheck, index);
-	return NULL;
+	return nullptr;
 }	//SharedTangibleObjectTemplate::getBoolParam
 
 StringParam * SharedTangibleObjectTemplate::getStringParam(const char *name, bool deepCheck, int index)
@@ -242,9 +242,9 @@ StringParam * SharedTangibleObjectTemplate::getStringParam(const char *name, boo
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getStringParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_structureFootprintFileName;
 		}
@@ -264,7 +264,7 @@ StringParam * SharedTangibleObjectTemplate::getStringParam(const char *name, boo
 	}
 	else
 		return SharedObjectTemplate::getStringParam(name, deepCheck, index);
-	return NULL;
+	return nullptr;
 }	//SharedTangibleObjectTemplate::getStringParam
 
 StringIdParam * SharedTangibleObjectTemplate::getStringIdParam(const char *name, bool deepCheck, int index)
@@ -334,7 +334,7 @@ StructParamOT * SharedTangibleObjectTemplate::getStructParamOT(const char *name,
 	}
 	else
 		return SharedObjectTemplate::getStructParamOT(name, deepCheck, index);
-	return NULL;
+	return nullptr;
 }	//SharedTangibleObjectTemplate::getStructParamOT
 
 TriggerVolumeParam * SharedTangibleObjectTemplate::getTriggerVolumeParam(const char *name, bool deepCheck, int index)
@@ -488,12 +488,12 @@ char paramName[MAX_NAME_SIZE];
 		file.read_string(baseFilename);
 		file.exitChunk();
 		const ObjectTemplate *base = ObjectTemplateList::fetch(baseFilename);
-		DEBUG_WARNING(base == NULL, ("was unable to load base template %s", baseFilename.c_str()));
-		if (m_baseData == base && base != NULL)
+		DEBUG_WARNING(base == nullptr, ("was unable to load base template %s", baseFilename.c_str()));
+		if (m_baseData == base && base != nullptr)
 			base->releaseReference();
 		else
 		{
-			if (m_baseData != NULL)
+			if (m_baseData != nullptr)
 				m_baseData->releaseReference();
 			m_baseData = base;
 		}
@@ -521,7 +521,7 @@ char paramName[MAX_NAME_SIZE];
 			for (iter = m_paletteColorCustomizationVariables.begin(); iter != m_paletteColorCustomizationVariables.end(); ++iter)
 			{
 				delete *iter;
-				*iter = NULL;
+				*iter = nullptr;
 			}
 			m_paletteColorCustomizationVariables.clear();
 			m_paletteColorCustomizationVariablesAppend = file.read_bool8();
@@ -540,7 +540,7 @@ char paramName[MAX_NAME_SIZE];
 			for (iter = m_rangedIntCustomizationVariables.begin(); iter != m_rangedIntCustomizationVariables.end(); ++iter)
 			{
 				delete *iter;
-				*iter = NULL;
+				*iter = nullptr;
 			}
 			m_rangedIntCustomizationVariables.clear();
 			m_rangedIntCustomizationVariablesAppend = file.read_bool8();
@@ -559,7 +559,7 @@ char paramName[MAX_NAME_SIZE];
 			for (iter = m_constStringCustomizationVariables.begin(); iter != m_constStringCustomizationVariables.end(); ++iter)
 			{
 				delete *iter;
-				*iter = NULL;
+				*iter = nullptr;
 			}
 			m_constStringCustomizationVariables.clear();
 			m_constStringCustomizationVariablesAppend = file.read_bool8();
@@ -578,7 +578,7 @@ char paramName[MAX_NAME_SIZE];
 			for (iter = m_socketDestinations.begin(); iter != m_socketDestinations.end(); ++iter)
 			{
 				delete *iter;
-				*iter = NULL;
+				*iter = nullptr;
 			}
 			m_socketDestinations.clear();
 			m_socketDestinationsAppend = file.read_bool8();
@@ -603,7 +603,7 @@ char paramName[MAX_NAME_SIZE];
 			for (iter = m_certificationsRequired.begin(); iter != m_certificationsRequired.end(); ++iter)
 			{
 				delete *iter;
-				*iter = NULL;
+				*iter = nullptr;
 			}
 			m_certificationsRequired.clear();
 			m_certificationsRequiredAppend = file.read_bool8();
@@ -622,7 +622,7 @@ char paramName[MAX_NAME_SIZE];
 			for (iter = m_customizationVariableMapping.begin(); iter != m_customizationVariableMapping.end(); ++iter)
 			{
 				delete *iter;
-				*iter = NULL;
+				*iter = nullptr;
 			}
 			m_customizationVariableMapping.clear();
 			m_customizationVariableMappingAppend = file.read_bool8();
@@ -866,9 +866,9 @@ StringParam * SharedTangibleObjectTemplate::_ConstStringCustomizationVariable::g
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getStringParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_variableName;
 		}
@@ -880,9 +880,9 @@ StringParam * SharedTangibleObjectTemplate::_ConstStringCustomizationVariable::g
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getStringParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_constValue;
 		}
@@ -890,7 +890,7 @@ StringParam * SharedTangibleObjectTemplate::_ConstStringCustomizationVariable::g
 	}
 	else
 		return TpfTemplate::getStringParam(name, deepCheck, index);
-	return NULL;
+	return nullptr;
 }	//SharedTangibleObjectTemplate::_ConstStringCustomizationVariable::getStringParam
 
 StringIdParam * SharedTangibleObjectTemplate::_ConstStringCustomizationVariable::getStringIdParam(const char *name, bool deepCheck, int index)
@@ -1084,9 +1084,9 @@ StringParam * SharedTangibleObjectTemplate::_CustomizationVariableMapping::getSt
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getStringParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_sourceVariable;
 		}
@@ -1098,9 +1098,9 @@ StringParam * SharedTangibleObjectTemplate::_CustomizationVariableMapping::getSt
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getStringParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_dependentVariable;
 		}
@@ -1108,7 +1108,7 @@ StringParam * SharedTangibleObjectTemplate::_CustomizationVariableMapping::getSt
 	}
 	else
 		return TpfTemplate::getStringParam(name, deepCheck, index);
-	return NULL;
+	return nullptr;
 }	//SharedTangibleObjectTemplate::_CustomizationVariableMapping::getStringParam
 
 StringIdParam * SharedTangibleObjectTemplate::_CustomizationVariableMapping::getStringIdParam(const char *name, bool deepCheck, int index)
@@ -1287,9 +1287,9 @@ CompilerIntegerParam * SharedTangibleObjectTemplate::_PaletteColorCustomizationV
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_defaultPaletteIndex;
 		}
@@ -1297,7 +1297,7 @@ CompilerIntegerParam * SharedTangibleObjectTemplate::_PaletteColorCustomizationV
 	}
 	else
 		return TpfTemplate::getCompilerIntegerParam(name, deepCheck, index);
-	return NULL;
+	return nullptr;
 }	//SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getCompilerIntegerParam
 
 FloatParam * SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getFloatParam(const char *name, bool deepCheck, int index)
@@ -1318,9 +1318,9 @@ StringParam * SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getStringParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_variableName;
 		}
@@ -1332,9 +1332,9 @@ StringParam * SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getStringParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_palettePathName;
 		}
@@ -1342,7 +1342,7 @@ StringParam * SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::
 	}
 	else
 		return TpfTemplate::getStringParam(name, deepCheck, index);
-	return NULL;
+	return nullptr;
 }	//SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getStringParam
 
 StringIdParam * SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getStringIdParam(const char *name, bool deepCheck, int index)
@@ -1529,9 +1529,9 @@ CompilerIntegerParam * SharedTangibleObjectTemplate::_RangedIntCustomizationVari
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_minValueInclusive;
 		}
@@ -1543,9 +1543,9 @@ CompilerIntegerParam * SharedTangibleObjectTemplate::_RangedIntCustomizationVari
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_defaultValue;
 		}
@@ -1557,9 +1557,9 @@ CompilerIntegerParam * SharedTangibleObjectTemplate::_RangedIntCustomizationVari
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_maxValueExclusive;
 		}
@@ -1567,7 +1567,7 @@ CompilerIntegerParam * SharedTangibleObjectTemplate::_RangedIntCustomizationVari
 	}
 	else
 		return TpfTemplate::getCompilerIntegerParam(name, deepCheck, index);
-	return NULL;
+	return nullptr;
 }	//SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getCompilerIntegerParam
 
 FloatParam * SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getFloatParam(const char *name, bool deepCheck, int index)
@@ -1588,9 +1588,9 @@ StringParam * SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::get
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getStringParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_variableName;
 		}
@@ -1598,7 +1598,7 @@ StringParam * SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::get
 	}
 	else
 		return TpfTemplate::getStringParam(name, deepCheck, index);
-	return NULL;
+	return nullptr;
 }	//SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getStringParam
 
 StringIdParam * SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getStringIdParam(const char *name, bool deepCheck, int index)

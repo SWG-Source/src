@@ -189,7 +189,7 @@ bool CustomizationIdManager::mapIdToString(int id, char *variableName, int buffe
 	NOT_NULL(variableName);
 	DEBUG_FATAL(bufferLength < 1, ("CustomizationIdManager: bufferLength of [%d] too small to hold anything.", bufferLength));
 
-	//-- Copy variable name to user buffer, ensure it gets NULL terminated.
+	//-- Copy variable name to user buffer, ensure it gets nullptr terminated.
 	strncpy(variableName, NON_NULL(s_idToVariableName[static_cast<StringVector::size_type>(id)])->getString(), static_cast<size_t>(bufferLength - 1));
 	variableName[bufferLength - 1] = '\0';
 	

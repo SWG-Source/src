@@ -68,8 +68,8 @@ float    ms_terrainLOSMaxDistance    = 64.0f;
 float    ms_losUprightScale          = 1.5f;
 float    ms_losProneScale            = 1.0f;
 
-PlayEffectHook    ms_playEffectHook    = NULL;
-IsPlayerHouseHook ms_isPlayerHouseHook = NULL;
+PlayEffectHook    ms_playEffectHook    = nullptr;
+IsPlayerHouseHook ms_isPlayerHouseHook = nullptr;
 
 	int ms_spatialSweepAndResolveDefaultMask = static_cast<int>(SpatialDatabase::Q_Static);
 

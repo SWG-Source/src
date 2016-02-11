@@ -48,7 +48,7 @@ SimpleCollisionMesh::SimpleCollisionMesh( IndexedTriangleList * tris )
 SimpleCollisionMesh::~SimpleCollisionMesh()
 {
 	delete m_tris;
-	m_tris = NULL;
+	m_tris = nullptr;
 	delete m_bucket;
 }
 
@@ -178,7 +178,7 @@ void SimpleCollisionMesh::drawDebugShapes ( DebugShapeRenderer * renderer ) cons
 	UNREF(renderer);
 
 #ifdef _DEBUG
-	if(renderer == NULL) return;
+	if(renderer == nullptr) return;
 
 	if (s_renderCollisionBuckets)
 	{

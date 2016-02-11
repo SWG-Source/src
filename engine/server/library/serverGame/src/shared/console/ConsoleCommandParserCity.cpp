@@ -415,7 +415,7 @@ bool ConsoleCommandParserCity::performParsing (const NetworkId & userId, const S
 		}
 		else
 		{
-			time_t const rawtime = ::time(NULL);
+			time_t const rawtime = ::time(nullptr);
 			struct tm * timeinfo = ::localtime(&rawtime);
 			timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1900;
 			timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[3]).c_str()) - 1;

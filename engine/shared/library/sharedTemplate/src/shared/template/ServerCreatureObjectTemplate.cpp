@@ -45,7 +45,7 @@ ServerCreatureObjectTemplate::~ServerCreatureObjectTemplate()
 		for (iter = m_attribMods.begin(); iter != m_attribMods.end(); ++iter)
 		{
 			delete *iter;
-			*iter = NULL;
+			*iter = nullptr;
 		}
 		m_attribMods.clear();
 	}
@@ -97,10 +97,10 @@ Tag ServerCreatureObjectTemplate::getTemplateVersion(void) const
  */
 Tag ServerCreatureObjectTemplate::getHighestTemplateVersion(void) const
 {
-	if (m_baseData == NULL)
+	if (m_baseData == nullptr)
 		return m_templateVersion;
 	const ServerCreatureObjectTemplate * base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
-	if (base == NULL)
+	if (base == nullptr)
 		return m_templateVersion;
 	return std::max(m_templateVersion, base->getHighestTemplateVersion());
 } // ServerCreatureObjectTemplate::getHighestTemplateVersion
@@ -114,9 +114,9 @@ CompilerIntegerParam * ServerCreatureObjectTemplate::getCompilerIntegerParam(con
 		{
 			if (deepCheck && !isParamLoaded(name, false, index))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_attributes[index];
 		}
@@ -128,9 +128,9 @@ CompilerIntegerParam * ServerCreatureObjectTemplate::getCompilerIntegerParam(con
 		{
 			if (deepCheck && !isParamLoaded(name, false, index))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_minAttributes[index];
 		}
@@ -142,9 +142,9 @@ CompilerIntegerParam * ServerCreatureObjectTemplate::getCompilerIntegerParam(con
 		{
 			if (deepCheck && !isParamLoaded(name, false, index))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_maxAttributes[index];
 		}
@@ -156,9 +156,9 @@ CompilerIntegerParam * ServerCreatureObjectTemplate::getCompilerIntegerParam(con
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_shockWounds;
 		}
@@ -166,7 +166,7 @@ CompilerIntegerParam * ServerCreatureObjectTemplate::getCompilerIntegerParam(con
 	}
 	else
 		return ServerTangibleObjectTemplate::getCompilerIntegerParam(name, deepCheck, index);
-	return NULL;
+	return nullptr;
 }	//ServerCreatureObjectTemplate::getCompilerIntegerParam
 
 FloatParam * ServerCreatureObjectTemplate::getFloatParam(const char *name, bool deepCheck, int index)
@@ -177,9 +177,9 @@ FloatParam * ServerCreatureObjectTemplate::getFloatParam(const char *name, bool 
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getFloatParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_minDrainModifier;
 		}
@@ -191,9 +191,9 @@ FloatParam * ServerCreatureObjectTemplate::getFloatParam(const char *name, bool 
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getFloatParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_maxDrainModifier;
 		}
@@ -205,9 +205,9 @@ FloatParam * ServerCreatureObjectTemplate::getFloatParam(const char *name, bool 
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getFloatParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_minFaucetModifier;
 		}
@@ -219,9 +219,9 @@ FloatParam * ServerCreatureObjectTemplate::getFloatParam(const char *name, bool 
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getFloatParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_maxFaucetModifier;
 		}
@@ -233,9 +233,9 @@ FloatParam * ServerCreatureObjectTemplate::getFloatParam(const char *name, bool 
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getFloatParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_approachTriggerRange;
 		}
@@ -247,9 +247,9 @@ FloatParam * ServerCreatureObjectTemplate::getFloatParam(const char *name, bool 
 		{
 			if (deepCheck && !isParamLoaded(name, false, index))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getFloatParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_maxMentalStates[index];
 		}
@@ -261,9 +261,9 @@ FloatParam * ServerCreatureObjectTemplate::getFloatParam(const char *name, bool 
 		{
 			if (deepCheck && !isParamLoaded(name, false, index))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getFloatParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_mentalStatesDecay[index];
 		}
@@ -271,7 +271,7 @@ FloatParam * ServerCreatureObjectTemplate::getFloatParam(const char *name, bool 
 	}
 	else
 		return ServerTangibleObjectTemplate::getFloatParam(name, deepCheck, index);
-	return NULL;
+	return nullptr;
 }	//ServerCreatureObjectTemplate::getFloatParam
 
 BoolParam * ServerCreatureObjectTemplate::getBoolParam(const char *name, bool deepCheck, int index)
@@ -282,9 +282,9 @@ BoolParam * ServerCreatureObjectTemplate::getBoolParam(const char *name, bool de
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getBoolParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_canCreateAvatar;
 		}
@@ -292,7 +292,7 @@ BoolParam * ServerCreatureObjectTemplate::getBoolParam(const char *name, bool de
 	}
 	else
 		return ServerTangibleObjectTemplate::getBoolParam(name, deepCheck, index);
-	return NULL;
+	return nullptr;
 }	//ServerCreatureObjectTemplate::getBoolParam
 
 StringParam * ServerCreatureObjectTemplate::getStringParam(const char *name, bool deepCheck, int index)
@@ -303,9 +303,9 @@ StringParam * ServerCreatureObjectTemplate::getStringParam(const char *name, boo
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getStringParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_defaultWeapon;
 		}
@@ -317,9 +317,9 @@ StringParam * ServerCreatureObjectTemplate::getStringParam(const char *name, boo
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getStringParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_nameGeneratorType;
 		}
@@ -327,7 +327,7 @@ StringParam * ServerCreatureObjectTemplate::getStringParam(const char *name, boo
 	}
 	else
 		return ServerTangibleObjectTemplate::getStringParam(name, deepCheck, index);
-	return NULL;
+	return nullptr;
 }	//ServerCreatureObjectTemplate::getStringParam
 
 StringIdParam * ServerCreatureObjectTemplate::getStringIdParam(const char *name, bool deepCheck, int index)
@@ -361,7 +361,7 @@ StructParamOT * ServerCreatureObjectTemplate::getStructParamOT(const char *name,
 	}
 	else
 		return ServerTangibleObjectTemplate::getStructParamOT(name, deepCheck, index);
-	return NULL;
+	return nullptr;
 }	//ServerCreatureObjectTemplate::getStructParamOT
 
 TriggerVolumeParam * ServerCreatureObjectTemplate::getTriggerVolumeParam(const char *name, bool deepCheck, int index)
@@ -464,12 +464,12 @@ char paramName[MAX_NAME_SIZE];
 		file.read_string(baseFilename);
 		file.exitChunk();
 		const ObjectTemplate *base = ObjectTemplateList::fetch(baseFilename);
-		DEBUG_WARNING(base == NULL, ("was unable to load base template %s", baseFilename.c_str()));
-		if (m_baseData == base && base != NULL)
+		DEBUG_WARNING(base == nullptr, ("was unable to load base template %s", baseFilename.c_str()));
+		if (m_baseData == base && base != nullptr)
 			base->releaseReference();
 		else
 		{
-			if (m_baseData != NULL)
+			if (m_baseData != nullptr)
 				m_baseData->releaseReference();
 			m_baseData = base;
 		}
@@ -549,7 +549,7 @@ char paramName[MAX_NAME_SIZE];
 			for (iter = m_attribMods.begin(); iter != m_attribMods.end(); ++iter)
 			{
 				delete *iter;
-				*iter = NULL;
+				*iter = nullptr;
 			}
 			m_attribMods.clear();
 			m_attribModsAppend = file.read_bool8();

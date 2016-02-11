@@ -82,7 +82,7 @@ private:
 template <typename T>
 inline void DataResourceList<T>::install()
 {
-	if (ms_bindings == NULL)
+	if (ms_bindings == nullptr)
 	{
 		ms_bindings = new CreateDataResourceMap();
 		ms_loaded   = new LoadedDataResourceMap();
@@ -100,7 +100,7 @@ inline void DataResourceList<T>::install()
 template <typename T>
 inline void DataResourceList<T>::remove(void)
 {
-	if (ms_loaded != NULL)
+	if (ms_loaded != nullptr)
 	{
 #ifdef _DEBUG
 		if (!ms_loaded->empty())
@@ -122,13 +122,13 @@ inline void DataResourceList<T>::remove(void)
 #endif // _DEBUG
 
 		delete ms_loaded;
-		ms_loaded = NULL;
+		ms_loaded = nullptr;
 	}
 
-	if (ms_bindings != NULL)
+	if (ms_bindings != nullptr)
 	{
 		delete ms_bindings;
-		ms_bindings = NULL;
+		ms_bindings = nullptr;
 	}
 }	// DataResourceList<T>::remove
 
@@ -144,7 +144,7 @@ template <typename T>
 inline void DataResourceList<T>::registerTemplate(Tag id,
 	CreateDataResourceFunc createFunc)
 {
-	if (ms_bindings == NULL)
+	if (ms_bindings == nullptr)
 		install();
 
 #ifdef _DEBUG
@@ -237,7 +237,7 @@ inline T * DataResourceList<T>::fetch(Tag id)
 
 	typename CreateDataResourceMap::iterator iter = ms_bindings->find(id);
 	if (iter == ms_bindings->end())
-		return NULL;
+		return nullptr;
 
 	return (*(*iter).second)("");
 }	// DataResourceList<T>::fetch(Tag)
@@ -268,11 +268,11 @@ inline const T * DataResourceList<T>::fetch(Iff &source)
 		char buffer[5];
 		ConvertTagToString(id, buffer);
 		DEBUG_WARNING(true, ("DataResourceList::fetch Iff: trying to fetch resource for unknown tag %s!", buffer));
-		return NULL;
+		return nullptr;
 	}
 
 	T *newDataResource = (*(*createIter).second)(source.getFileName());
-	if (newDataResource != NULL)
+	if (newDataResource != nullptr)
 	{
 		// initialize the data resource
 		newDataResource->loadFromIff(source);
@@ -310,11 +310,11 @@ inline const T * DataResourceList<T>::fetch(const CrcString &filename)
 	// load the template
 	Iff iff;
 	if (!iff.open(filename.getString(), true))
-		return NULL;
+		return nullptr;
 
 	// put the template in the loaded list
 	const T * const newDataResource = fetch(iff);
-	if (newDataResource != NULL)
+	if (newDataResource != nullptr)
 	{
 		newDataResource->addReference();
 		ms_loaded->insert(std::make_pair(&newDataResource->getCrcName (), newDataResource));
@@ -337,13 +337,13 @@ inline void DataResourceList<T>::release(const T & dataResource)
 {
 	NOT_NULL(ms_loaded);
 
-	if (ms_loaded != NULL && dataResource.getReferenceCount() == 0)
+	if (ms_loaded != nullptr && dataResource.getReferenceCount() == 0)
 	{
 		typename LoadedDataResourceMap::iterator iter = ms_loaded->find(&dataResource.getCrcName());
 		if (iter != ms_loaded->end())
 		{
 			const T * const temp = (*iter).second;
-			(*iter).second = NULL;
+			(*iter).second = nullptr;
 			ms_loaded->erase(iter);
 			delete temp;
 		}
@@ -369,11 +369,11 @@ inline T * DataResourceList<T>::reload(Iff &source)
 	if (iter == ms_loaded->end())
 	{
 		DEBUG_WARNING(true, ("DataResourceList::reload: trying to reload unloaded resource %s!", source.getFileName()));
-		return NULL;
+		return nullptr;
 	}
 
 	T * const dataResource = const_cast<T *>((*iter).second);
-	if (dataResource != NULL)
+	if (dataResource != nullptr)
 	{
 		// initialize the data resource
 		dataResource->loadFromIff(source);

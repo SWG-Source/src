@@ -43,7 +43,7 @@
 
 // ======================================================================
 
-const SharedObjectTemplate * IntangibleObject::m_defaultSharedTemplate = NULL;
+const SharedObjectTemplate * IntangibleObject::m_defaultSharedTemplate = nullptr;
 uint32 IntangibleObject::ms_lastFrame = 0;
 uint32 IntangibleObject::ms_theaterTime = 0;
 
@@ -82,7 +82,7 @@ IntangibleObject::IntangibleObject(const ServerIntangibleObjectTemplate* newTemp
 #endif
 {
 
-	WARNING_STRICT_FATAL(!getSharedTemplate(), ("Shared template for %s is NULL", getTemplateName()));
+	WARNING_STRICT_FATAL(!getSharedTemplate(), ("Shared template for %s is nullptr", getTemplateName()));
 	addMembersToPackages();
 	ObjectTracker::addIntangible();
 }	
@@ -105,13 +105,13 @@ const SharedObjectTemplate * IntangibleObject::getDefaultSharedTemplate(void) co
 {
 static const ConstCharCrcLowerString templateName("object/intangible/base/shared_intangible_default.iff");
 
-	if (m_defaultSharedTemplate == NULL)
+	if (m_defaultSharedTemplate == nullptr)
 	{
 		m_defaultSharedTemplate = safe_cast<const SharedObjectTemplate *>(
 			ObjectTemplateList::fetch(templateName));
-		WARNING_STRICT_FATAL(m_defaultSharedTemplate == NULL, ("Cannot create "
+		WARNING_STRICT_FATAL(m_defaultSharedTemplate == nullptr, ("Cannot create "
 			"default shared object template %s", templateName.getString()));
-		if (m_defaultSharedTemplate != NULL)
+		if (m_defaultSharedTemplate != nullptr)
 			ExitChain::add (removeDefaultTemplate, "IntangibleObject::removeDefaultTemplate");
 	}
 	return m_defaultSharedTemplate;
@@ -124,10 +124,10 @@ static const ConstCharCrcLowerString templateName("object/intangible/base/shared
  */
 void IntangibleObject::removeDefaultTemplate(void)
 {
-	if (m_defaultSharedTemplate != NULL)
+	if (m_defaultSharedTemplate != nullptr)
 	{
 		m_defaultSharedTemplate->releaseReference();
-		m_defaultSharedTemplate = NULL;
+		m_defaultSharedTemplate = nullptr;
 	}
 }	// IntangibleObject::removeDefaultTemplate
 
@@ -161,7 +161,7 @@ void IntangibleObject::onLoadedFromDatabase()
 				if (flatten != 0)
 				{
 					TerrainGenerator::Layer * layer = TerrainModificationHelper::importLayer(THEATER_FLATTEN_LAYER.c_str());
-					if (layer != NULL)
+					if (layer != nullptr)
 					{
 						setLayer(layer);
 					}
@@ -192,7 +192,7 @@ void IntangibleObject::onLoadedFromDatabase()
 void IntangibleObject::sendObjectSpecificBaselinesToClient(Client const &client) const
 {
 	ServerObject::sendObjectSpecificBaselinesToClient(client);
-	if (getLayer() != NULL)
+	if (getLayer() != nullptr)
 	{
 		client.send(GenericValueTypeMessage<std::pair<NetworkId, bool> >(
 			"IsFlattenedTheaterMessage", std::make_pair(getNetworkId(), true)), true);
@@ -235,9 +235,9 @@ size_t i;
 				Transform tr;
 				tr.setPosition_p(myPos+m_positions[i]);
 				ServerObject * newObject = ServerWorld::createNewObject(m_crcs[i], tr, 0, false);
-				if (newObject != NULL)
+				if (newObject != nullptr)
 				{
-					if (newObject->asTangibleObject() != NULL)
+					if (newObject->asTangibleObject() != nullptr)
 						newObject->asTangibleObject()->setVisible(false);
 					newObject->addToWorld();
 					m_objects.push_back(CachedNetworkId(*newObject));
@@ -300,7 +300,7 @@ size_t i;
 				for (i = 0; i < count; ++i)
 				{
 					ServerObject * object = safe_cast<ServerObject *>(m_objects[i].getObject());
-					if (object != NULL && object->asTangibleObject() != NULL)
+					if (object != nullptr && object->asTangibleObject() != nullptr)
 					{
 						const ServerObjectTemplate * objTemplate = safe_cast<const ServerObjectTemplate *>(object->getObjectTemplate());
 						for (size_t j = 0; j < objTemplate->getVisibleFlagsCount(); ++j)
@@ -360,7 +360,7 @@ bool IntangibleObject::isVisibleOnClient (const Client & client) const
 {
 	if (isTheater())
 	{
-		return getLayer() != NULL;
+		return getLayer() != nullptr;
 	}
 	return true;
 }
@@ -388,7 +388,7 @@ void IntangibleObject::onPermanentlyDestroyed()
 		for (size_t i = 0; i < count; ++i)
 		{
 			ServerObject * object = safe_cast<ServerObject *>(m_objects[i].getObject());
-			if (object != NULL)
+			if (object != nullptr)
 				object->permanentlyDestroy(DeleteReasons::Consumed);
 		}
 		if (!m_theaterName.get().empty())
@@ -439,7 +439,7 @@ bool IntangibleObject::persist()
 				splitCount = 0;
 			}
 			ServerObject * o = safe_cast<ServerObject *>((*i).getObject());
-			if (o != NULL)
+			if (o != nullptr)
 			{
 				o->persist();
 				splitObjects.back().push_back(*i);
@@ -452,7 +452,7 @@ bool IntangibleObject::persist()
 		if (m_player.get() != CachedNetworkId::cms_cachedInvalid)
 			setObjVarItem(OBJVAR_THEATER_PLAYER, m_player.get());
 		setObjVarItem(OBJVAR_THEATER_NAME, m_theaterName.get());
-		if (getLayer() != NULL)
+		if (getLayer() != nullptr)
 			setObjVarItem(OBJVAR_THEATER_FLATTEN, 1);
 		
 		char buffer[32];
@@ -551,7 +551,7 @@ int IntangibleObject::getObjectsCreatedPerFrame()
 int IntangibleObject::getNumObjects(const std::string & datatable)
 {
 	DataTable * dt = DataTableManager::getTable(datatable, true);
-	if (dt == NULL)
+	if (dt == nullptr)
 	{
 		WARNING(true, ("IntangibleObject::getNumObjects could not open "
 			"datatable %s", datatable.c_str()));
@@ -586,7 +586,7 @@ int IntangibleObject::getNumObjects(const std::string & datatable)
 float IntangibleObject::getRadius(const std::string & datatable)
 {
 	DataTable * dt = DataTableManager::getTable(datatable, true);
-	if (dt == NULL)
+	if (dt == nullptr)
 	{
 		WARNING(true, ("IntangibleObject::getRadius could not open "
 			"datatable %s", datatable.c_str()));
@@ -648,18 +648,18 @@ IntangibleObject * IntangibleObject::spawnTheater(const std::string & datatable,
 	const Vector & position, const std::string & script, TheaterLocationType locationType)
 {
 	DataTable * dt = DataTableManager::getTable(datatable, true);
-	if (dt == NULL)
+	if (dt == nullptr)
 	{
 		WARNING(true, ("IntangibleObject::spawnTheater could not open "
 			"datatable %s", datatable.c_str()));
-		return NULL;
+		return nullptr;
 	}
 	int rows = dt->getNumRows();
 	if (rows <= 0)
 	{
 		WARNING(true, ("IntangibleObject::spawnTheater datatable %s has no "
 			"rows", datatable.c_str()));
-		return NULL;
+		return nullptr;
 	}
 
 	int templateColumn = dt->findColumnNumber("template");
@@ -684,7 +684,7 @@ IntangibleObject * IntangibleObject::spawnTheater(const std::string & datatable,
 		{
 			WARNING(true, ("IntangibleObject::spawnTheater datatable %s has no "
 				"objects", datatable.c_str()));
-			return NULL;
+			return nullptr;
 		}
 		skipFirstRow = true;
 		objectCrcs.erase(objectCrcs.begin());
@@ -737,11 +737,11 @@ IntangibleObject * IntangibleObject::spawnTheater(const std::string & datatable,
 	float centerX = minx + dx / 2.0f + position.x;
 	float centerZ = minz + dz / 2.0f + position.z;
 
-	TerrainGenerator::Layer * layer = NULL;
+	TerrainGenerator::Layer * layer = nullptr;
 	if (locationType == TLT_flatten)
 	{
 		layer = TerrainModificationHelper::importLayer(THEATER_FLATTEN_LAYER.c_str());
-		if (layer == NULL)
+		if (layer == nullptr)
 		{
 			WARNING (true, ("Layer %s not found for theater %s, using getGoodLocation "
 				"instead", THEATER_FLATTEN_LAYER.c_str(), datatable.c_str()));
@@ -770,7 +770,7 @@ IntangibleObject * IntangibleObject::spawnTheater(const std::string & datatable,
 		iter != regions.end(); ++iter)
 	{
 		const Region * region = *iter;
-		if (region != NULL)
+		if (region != nullptr)
 		{
 			if (region->getPvp() == RegionNamespace::RP_pvpBattlefield ||
 				region->getPvp() == RegionNamespace::RP_pveBattlefield ||
@@ -796,7 +796,7 @@ IntangibleObject * IntangibleObject::spawnTheater(const std::string & datatable,
 	IntangibleObject * theater = safe_cast<IntangibleObject *>(ServerWorld::createNewObject(THEATER_TEMPLATE, tr, 0, false));
 	NOT_NULL(theater);
 
-	if (layer != NULL)
+	if (layer != nullptr)
 	{
 		theater->setLayer(layer);
 	}

@@ -127,7 +127,7 @@ void RGetAvatarKeywords::pack(ByteStream &msg)
 RSearchAvatarKeywords::RSearchAvatarKeywords(const ChatUnicodeString &nodeAddress, const ChatUnicodeString *keywordsList, unsigned keywordsLength)
 : GenericRequest(REQUEST_SEARCHAVATARKEYWORDS),
   m_keywordsLength(keywordsLength),
-  m_keywordsList(NULL)
+  m_keywordsList(nullptr)
 {
 	m_nodeAddress.assign(nodeAddress.string_data);
 	m_keywordsList = new String[keywordsLength];
@@ -898,7 +898,7 @@ m_srcAddress(srcAddress.string_data, srcAddress.string_length),
   m_destRoomAddress(destRoomAddress.string_data, destRoomAddress.string_length)
 {
 	// we take in a const RoomParams, so make our own and guarantee
-	// null-terminated char buffers.
+	// nullptr-terminated char buffers.
 	m_newRoomName.assign(params->getRoomName().string_data, params->getRoomName().string_length);
 	m_newRoomTopic.assign(params->getRoomTopic().string_data, params->getRoomTopic().string_length);
 	m_newRoomPassword.assign(params->getRoomPassword().string_data, params->getRoomPassword().string_length);

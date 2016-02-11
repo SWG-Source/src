@@ -121,7 +121,7 @@ jint JNICALL ScriptMethodsScriptNamespace::attachScript(JNIEnv *env, jobject sel
 		return SCRIPT_OVERRIDE;
 
 	GameScriptObject* scripts = object->getScriptObject();
-	if (scripts == NULL)
+	if (scripts == nullptr)
 		return SCRIPT_OVERRIDE;
 
 	char buffer[MAX_SCRIPT_NAME_LEN];
@@ -162,7 +162,7 @@ jboolean JNICALL ScriptMethodsScriptNamespace::detachScript(JNIEnv *env, jobject
 		return JNI_FALSE;
 
 	GameScriptObject* scripts = object->getScriptObject();
-	if (scripts == NULL)
+	if (scripts == nullptr)
 		return JNI_FALSE;
 
 	char buffer[MAX_SCRIPT_NAME_LEN];
@@ -192,7 +192,7 @@ jboolean JNICALL ScriptMethodsScriptNamespace::detachAllScripts(JNIEnv *env, job
 		return JNI_FALSE;
 
 	GameScriptObject* scriptObject = object->getScriptObject();
-	if (scriptObject == NULL)
+	if (scriptObject == nullptr)
 		return JNI_FALSE;
 
 	std::vector<std::string> scriptNames;
@@ -230,7 +230,7 @@ jboolean JNICALL ScriptMethodsScriptNamespace::hasScript(JNIEnv *env, jobject se
 		return JNI_FALSE;
 
 	GameScriptObject* scripts = object->getScriptObject();
-	if (scripts == NULL)
+	if (scripts == nullptr)
 		return JNI_FALSE;
 
 	char buffer[MAX_SCRIPT_NAME_LEN];
@@ -325,7 +325,7 @@ jboolean JNICALL ScriptMethodsScriptNamespace::localMessageTo(JNIEnv *env, jobje
 		else
 		{
 			GameScriptObject* scripts = object->getScriptObject();
-			if (scripts == NULL)
+			if (scripts == nullptr)
 				return JNI_FALSE;
 			
 			ScriptDictionaryPtr dictionary(new JavaDictionary(params));
@@ -400,7 +400,7 @@ jboolean JNICALL ScriptMethodsScriptNamespace::remoteMessageTo(JNIEnv *env, jobj
 * "messageTo" for players on the current planet
 *
 * If you want everyone on the planet to receive the message,
-* specify null for loc and -1.0f for radius; otherwise, specify
+* specify nullptr for loc and -1.0f for radius; otherwise, specify
 * a loc and a radius and only players on the planet within the
 * specified area will receive the message
 */
@@ -447,7 +447,7 @@ jint JNICALL ScriptMethodsScriptNamespace::remoteMessageToCalendarTimeDayOfWeek(
 		return -1;
 
 	// calculate the absolute time when the messageTo should go off
-	time_t const timeNow = ::time(NULL);
+	time_t const timeNow = ::time(nullptr);
 	time_t const timeTarget = CalendarTime::getNextGMTTimeOcurrence(timeNow, dayOfWeek, hour, minute, second);
 
 	if ((timeTarget <= 0) || (timeTarget <= timeNow))
@@ -487,7 +487,7 @@ jint JNICALL ScriptMethodsScriptNamespace::remoteMessageToCalendarTimeDayOfMonth
 		return -1;
 
 	// calculate the absolute time when the messageTo should go off
-	time_t const timeNow = ::time(NULL);
+	time_t const timeNow = ::time(nullptr);
 	time_t const timeTarget = CalendarTime::getNextGMTTimeOcurrence(timeNow, month, dayOfMonth, hour, minute, second);
 
 	if ((timeTarget <= 0) || (timeTarget <= timeNow))
@@ -562,7 +562,7 @@ void JNICALL ScriptMethodsScriptNamespace::cancelRecurringMessageTo(JNIEnv *env,
 // returns -1 if object doesn't have the messageTo
 jint JNICALL ScriptMethodsScriptNamespace::timeUntilMessageTo(JNIEnv *env, jobject self, jlong object, jstring methodName)
 {
-	ServerObject const * so = NULL;
+	ServerObject const * so = nullptr;
 	if (!JavaLibrary::getObject(object, so))
 		return -1;
 
@@ -606,7 +606,7 @@ jint JNICALL ScriptMethodsScriptNamespace::getCalendarTimeSeconds(JNIEnv * env, 
 	if(env == 0)
 		return 0;
 
-	return ::time(NULL);
+	return ::time(nullptr);
 }
 
 //-----------------------------------------------------------------------
@@ -616,7 +616,7 @@ jint JNICALL ScriptMethodsScriptNamespace::getCalendarTimeSeconds2(JNIEnv * env,
 	if(env == 0)
 		return -1;
 
-	time_t const rawtime = ::time(NULL);
+	time_t const rawtime = ::time(nullptr);
 	struct tm * timeinfo = ::localtime(&rawtime);
 	if (!timeinfo)
 		return -1;
@@ -678,7 +678,7 @@ jint JNICALL ScriptMethodsScriptNamespace::secondsUntilCalendarTimeDayOfWeek(JNI
 	UNREF(self);
 
 	// calculate the time between now and the specified time
-	time_t const timeNow = ::time(NULL);
+	time_t const timeNow = ::time(nullptr);
 	time_t const timeTarget = CalendarTime::getNextGMTTimeOcurrence(timeNow, dayOfWeek, hour, minute, second);
 
 	if ((timeTarget <= 0) || (timeTarget <= timeNow))
@@ -694,7 +694,7 @@ jint JNICALL ScriptMethodsScriptNamespace::secondsUntilCalendarTimeDayOfMonth(JN
 	UNREF(self);
 
 	// calculate the time between now and the specified time
-	time_t const timeNow = ::time(NULL);
+	time_t const timeNow = ::time(nullptr);
 	time_t const timeTarget = CalendarTime::getNextGMTTimeOcurrence(timeNow, month, dayOfMonth, hour, minute, second);
 
 	if ((timeTarget <= 0) || (timeTarget <= timeNow))

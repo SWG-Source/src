@@ -58,7 +58,7 @@ void ServerBuffBuilderManager::remove()
 	ms_installed = false;
 
 	delete ms_callback;
-	ms_callback = NULL;
+	ms_callback = nullptr;
 }
 
 //-----------------------------------------------------------------------------
@@ -73,12 +73,12 @@ bool ServerBuffBuilderManager::makeChanges(SharedBuffBuilderManager::Session con
 
 	NetworkId const & recipientId = session.recipientId;
 	Object * const recipientObj = NetworkIdManager::getObjectById(recipientId);
-	ServerObject * const recipientServerObj = recipientObj ? recipientObj->asServerObject() : NULL;
-	CreatureObject * const recipient = recipientServerObj ? recipientServerObj->asCreatureObject() : NULL;
+	ServerObject * const recipientServerObj = recipientObj ? recipientObj->asServerObject() : nullptr;
+	CreatureObject * const recipient = recipientServerObj ? recipientServerObj->asCreatureObject() : nullptr;
 	NetworkId const & bufferId = session.bufferId;
 	Object * const bufferObj = NetworkIdManager::getObjectById(bufferId);
-	ServerObject * const bufferServerObj = bufferObj ? bufferObj->asServerObject() : NULL;
-	CreatureObject * const buffer = bufferServerObj ? bufferServerObj->asCreatureObject() : NULL;
+	ServerObject * const bufferServerObj = bufferObj ? bufferObj->asServerObject() : nullptr;
+	CreatureObject * const buffer = bufferServerObj ? bufferServerObj->asCreatureObject() : nullptr;
 	if(buffer && recipient)
 	{
 		sendSessionToScript(session, session.bufferId, static_cast<int>(Scripting::TRIG_BUFF_BUILDER_COMPLETED));
@@ -93,11 +93,11 @@ void ServerBuffBuilderManager::sendSessionToScriptForValidation(SharedBuffBuilde
 	NetworkId const & bufferId = session.bufferId;
 	NetworkId const & recipientId = session.recipientId;
 	Object const * const bufferObj = NetworkIdManager::getObjectById(bufferId);
-	ServerObject const * const bufferServer = bufferObj ? bufferObj->asServerObject() : NULL;
-	CreatureObject const * const buffer = bufferServer ? bufferServer->asCreatureObject() : NULL;
+	ServerObject const * const bufferServer = bufferObj ? bufferObj->asServerObject() : nullptr;
+	CreatureObject const * const buffer = bufferServer ? bufferServer->asCreatureObject() : nullptr;
 	Object * const recipientObj = NetworkIdManager::getObjectById(recipientId);
-	ServerObject * const recipientServer = recipientObj ? recipientObj->asServerObject() : NULL;
-	CreatureObject * const recipient = recipientServer ? recipientServer->asCreatureObject() : NULL;
+	ServerObject * const recipientServer = recipientObj ? recipientObj->asServerObject() : nullptr;
+	CreatureObject * const recipient = recipientServer ? recipientServer->asCreatureObject() : nullptr;
 	if(buffer && recipient)
 	{
 		sendSessionToScript(session, session.bufferId, static_cast<int>(Scripting::TRIG_BUFF_BUILDER_VALIDATE));
@@ -109,7 +109,7 @@ void ServerBuffBuilderManager::sendSessionToScriptForValidation(SharedBuffBuilde
 void ServerBuffBuilderManager::sendSessionToScript(SharedBuffBuilderManager::Session const & session, NetworkId const & objectToTriggerId, int const trigger)
 {
 	Object * const objectToTrigger = NetworkIdManager::getObjectById(objectToTriggerId);
-	ServerObject * const serverObjectToTrigger = objectToTrigger ? objectToTrigger->asServerObject() : NULL;
+	ServerObject * const serverObjectToTrigger = objectToTrigger ? objectToTrigger->asServerObject() : nullptr;
 	if(serverObjectToTrigger)
 	{
 		GameScriptObject * const scriptObject = serverObjectToTrigger->getScriptObject();
@@ -144,7 +144,7 @@ void ServerBuffBuilderManager::cancelSession(NetworkId const & bufferId, Network
 {
 	//send the cancel message to the buffer
 	Object * const bufferObject = NetworkIdManager::getObjectById(bufferId);
-	Controller * const bufferController = bufferObject ? bufferObject->getController() : NULL;
+	Controller * const bufferController = bufferObject ? bufferObject->getController() : nullptr;
 	if(bufferController)
 	{
 		BuffBuilderChangeMessage * outMsg = new BuffBuilderChangeMessage();
@@ -157,7 +157,7 @@ void ServerBuffBuilderManager::cancelSession(NetworkId const & bufferId, Network
 
 	//send the cancel message to the recipient
 	Object * const recipientObject = NetworkIdManager::getObjectById(recipientId);
-	Controller * const recipientController = recipientObject ? recipientObject->getController() : NULL;
+	Controller * const recipientController = recipientObject ? recipientObject->getController() : nullptr;
 	if(recipientController && bufferController != recipientController)
 	{
 		BuffBuilderChangeMessage * outMsg = new BuffBuilderChangeMessage();
@@ -169,7 +169,7 @@ void ServerBuffBuilderManager::cancelSession(NetworkId const & bufferId, Network
 	}
 
 	//send cancel trigger to buffer player
-	ServerObject * const bufferServerObject = bufferObject ? bufferObject->asServerObject() : NULL;
+	ServerObject * const bufferServerObject = bufferObject ? bufferObject->asServerObject() : nullptr;
 	if(bufferServerObject)
 	{
 		GameScriptObject * const scriptObject = bufferServerObject->getScriptObject();
@@ -181,7 +181,7 @@ void ServerBuffBuilderManager::cancelSession(NetworkId const & bufferId, Network
 	}
 
 	//send cancel trigger to recipient player
-	ServerObject * const recipientServerObject = recipientObject ? recipientObject->asServerObject() : NULL;
+	ServerObject * const recipientServerObject = recipientObject ? recipientObject->asServerObject() : nullptr;
 	if(recipientServerObject && recipientServerObject != bufferServerObject)
 	{
 		GameScriptObject * const scriptObject = recipientServerObject->getScriptObject();

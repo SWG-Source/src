@@ -16,7 +16,7 @@
 
 // ======================================================================
 
-MessageToManager *MessageToManager::ms_instance=NULL;
+MessageToManager *MessageToManager::ms_instance=nullptr;
 
 // ======================================================================
 
@@ -34,7 +34,7 @@ void MessageToManager::remove()
 {
 	NOT_NULL(ms_instance);
 	delete ms_instance;
-	ms_instance = NULL;
+	ms_instance = nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -51,7 +51,7 @@ MessageToManager::~MessageToManager()
 	for (MessagesByObjectType::iterator i=m_messagesByObject.begin(); i!=m_messagesByObject.end(); ++i)
 	{
 		delete i->second;
-		i->second=NULL;
+		i->second=nullptr;
 	}
 }
 
@@ -71,7 +71,7 @@ void MessageToManager::handleMessageTo(const MessageToPayload &data)
 	{
 		DEBUG_WARNING(true,("Received message %s twice.",data.getMessageId().getValueString().c_str()));
 		delete i->second;
-		i->second = NULL;
+		i->second = nullptr;
 	}
 	
 	m_messagesByObject[theKey]=new MessageToPayload(data);
@@ -127,7 +127,7 @@ void MessageToManager::removeMessage(const MessageToId &messageId)
 		if (j!=m_messagesByObject.end())
 		{
 			delete j->second;
-			j->second=NULL;
+			j->second=nullptr;
 			m_messagesByObject.erase(j);
 		}
 		m_messageToObjectMap.erase(i);

@@ -93,7 +93,7 @@ bool SuiPageData::addCommand(SuiCommand const & command)
 
 		SuiCommand const * const oldCommand = findSubscribeToEventCommand(eventType, targetWidget);
 
-		if (oldCommand != NULL)
+		if (oldCommand != nullptr)
 		{
 			WARNING(true, ("SuiPageData::addCommand attempt to add duplicate SCT_subscribeToEvent command.  Type=[%d], target=[%s]", eventType, targetWidget.c_str()));
 			return false;
@@ -130,7 +130,7 @@ void SuiPageData::subscribeToPropertyForEvent(int eventType, std::string const &
 {
 	SuiCommand * const command = findSubscribeToEventCommand(eventType, eventWidgetName);
 
-	if (command == NULL)
+	if (command == nullptr)
 	{
 		SuiCommand newCommand(SuiCommand::SCT_subscribeToEvent, eventWidgetName);
 		newCommand.initSubscribeToEvent(eventType, std::string());
@@ -148,7 +148,7 @@ bool SuiPageData::subscribeToEvent(int eventType, std::string const & eventWidge
 {
 	SuiCommand * const command = findSubscribeToEventCommand(eventType, eventWidgetName);
 
-	if (command == NULL)
+	if (command == nullptr)
 	{
 		SuiCommand newCommand(SuiCommand::SCT_subscribeToEvent, eventWidgetName);
 		newCommand.initSubscribeToEvent(eventType, callback);
@@ -182,7 +182,7 @@ SuiCommand * SuiPageData::findSubscribeToEventCommand(int const eventType, std::
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 //----------------------------------------------------------------------
@@ -203,7 +203,7 @@ SuiCommand * SuiPageData::findSubscribeToEventCommandByIndex(int const index)
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 //----------------------------------------------------------------------

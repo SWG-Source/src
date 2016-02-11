@@ -70,7 +70,7 @@ MemoryFile::MemoryFile(byte *buffer, int length)
 
 MemoryFile::MemoryFile(AbstractFile *file)
 : AbstractFile(PriorityData),
-	m_buffer(NULL),
+	m_buffer(nullptr),
 	m_length(file->length()),
 	m_offset(0)
 {
@@ -88,7 +88,7 @@ MemoryFile::~MemoryFile()
 
 bool MemoryFile::isOpen() const
 {
-	return m_buffer != NULL;
+	return m_buffer != nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -162,7 +162,7 @@ int MemoryFile::write(int, const void *)
 void MemoryFile::close()
 {
 	delete [] m_buffer;
-	m_buffer = NULL;
+	m_buffer = nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -170,7 +170,7 @@ void MemoryFile::close()
 byte *MemoryFile::readEntireFileAndClose()
 {
 	byte *result = m_buffer;
-	m_buffer = NULL;
+	m_buffer = nullptr;
 	return result;
 }
 

@@ -65,15 +65,15 @@ ServerUniverse::ServerUniverse() :
 		m_universeProcess        (0),
 		m_nextCheckTimer         (static_cast<float>(ConfigServerGame::getUniverseCheckFrequencySeconds())),
 		m_doImmediateCheck       (false),
-		m_thisPlanet             (NULL),
-		m_tatooinePlanet         (NULL),
+		m_thisPlanet             (nullptr),
+		m_tatooinePlanet         (nullptr),
 		m_planetNameMap          (new PlanetNameMap),
 		m_resourceTypeNameMap    (new ResourceTypeNameMap),
 		m_resourceTypeIdMap      (new ResourceTypeIdMap),
 		m_importedResourceTypeIdMap(new ResourceTypeIdMap),
 		m_resourcesToSend        (new ResourcesToSendType),
-		m_masterGuildObject      (NULL),
-		m_masterCityObject       (NULL),
+		m_masterGuildObject      (nullptr),
+		m_masterCityObject       (nullptr),
 		m_theaterNameIdMap       (new TheaterNameIdMap),
 		m_theaterIdNameMap       (new TheaterIdNameMap),
 		m_populationList         (new PopulationList),
@@ -152,7 +152,7 @@ ResourceTypeObject *ServerUniverse::getResourceTypeByName(std::string const & na
 ResourceTypeObject * ServerUniverse::getResourceTypeById(NetworkId const & id) const
 {
 	if (id==NetworkId::cms_invalid)
-		return NULL;
+		return nullptr;
 	
 	if (id.getValue() <= NetworkId::cms_maxNetworkIdWithoutClusterId)
 	{
@@ -160,7 +160,7 @@ ResourceTypeObject * ServerUniverse::getResourceTypeById(NetworkId const & id) c
 	if (i!=m_resourceTypeIdMap->end())
 		return (*i).second;
 	else
-		return NULL;
+		return nullptr;
 	}
 	else
 	{
@@ -168,7 +168,7 @@ ResourceTypeObject * ServerUniverse::getResourceTypeById(NetworkId const & id) c
 		if (i!=m_importedResourceTypeIdMap->end())
 			return (*i).second;
 		else
-			return NULL;
+			return nullptr;
 	}
 }
 
@@ -177,13 +177,13 @@ ResourceTypeObject * ServerUniverse::getResourceTypeById(NetworkId const & id) c
 ResourceTypeObject * ServerUniverse::getImportedResourceTypeById(NetworkId const & id) const
 {
 	if (id==NetworkId::cms_invalid)
-		return NULL;
+		return nullptr;
 
 	ResourceTypeIdMap::const_iterator i=m_importedResourceTypeIdMap->find(id);
 	if (i!=m_importedResourceTypeIdMap->end())
 		return (*i).second;
 	else
-		return NULL;
+		return nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -329,7 +329,7 @@ void ServerUniverse::createProxiesOnServer(std::vector<uint32> const & remotePro
 			LOG("UniverseLoading", ("Game Server %lu sent UniverseComplete to Game Servers %s.", GameServer::getInstance().getProcessId(), serverListAsString.c_str()));
 
 			if (ConfigServerGame::getTimeoutToAckUniverseDataReceived() > 0)
-				m_timeUniverseDataSent = ::time(NULL);
+				m_timeUniverseDataSent = ::time(nullptr);
 		}
 	}
 	else
@@ -519,7 +519,7 @@ std::string ServerUniverse::generateRandomResourceName(const std::string &nameTa
 	std::string newName(Unicode::wideToNarrow(NameManager::getInstance().generateRandomName("name_resource",nameTable))); // name generator always builds ASCII names, although it returns a Unicode string
 	int failCount = 0;
 	UNREF(failCount); // because of Windows release build 
-	for(; getResourceTypeByName(newName) != NULL; newName = Unicode::wideToNarrow(NameManager::getInstance().generateRandomName("name_resource",nameTable))) // generate names until we find an unused one
+	for(; getResourceTypeByName(newName) != nullptr; newName = Unicode::wideToNarrow(NameManager::getInstance().generateRandomName("name_resource",nameTable))) // generate names until we find an unused one
 		DEBUG_FATAL(++failCount > 100,("Failed to generate an unused resource name in 100 tries.\n"));
 
 	return newName; 
@@ -725,7 +725,7 @@ void ServerUniverse::update(float frameTime)
 {
 	if (!m_pendingUniverseLoadedAckList.empty())
 	{
-		time_t const nowTime = ::time(NULL);
+		time_t const nowTime = ::time(nullptr);
 		int const secondsSinceUniverseDataSent = (int)(nowTime - m_timeUniverseDataSent);
 
 		// don't wait forever for ack from another game server
@@ -866,7 +866,7 @@ void ServerUniverse::handleAddResourceTypeMessage(AddResourceTypeMessage const &
 
 const NetworkId & ServerUniverse::findTheaterId(const std::string & name)
 {
-	if (m_theaterNameIdMap == NULL)
+	if (m_theaterNameIdMap == nullptr)
 		return NetworkId::cms_invalid;
 
 	TheaterNameIdMap::const_iterator result = m_theaterNameIdMap->find(name);
@@ -882,7 +882,7 @@ const std::string & ServerUniverse::findTheaterName(const NetworkId & id)
 {
 static const std::string emptyString;
 
-	if (m_theaterIdNameMap == NULL)
+	if (m_theaterIdNameMap == nullptr)
 		return emptyString;
 
 	TheaterIdNameMap::const_iterator result = m_theaterIdNameMap->find(id);
@@ -924,9 +924,9 @@ bool ServerUniverse::remoteSetTheater(const std::string & name, const NetworkId 
 		return false;
 	}
 
-	if (m_theaterNameIdMap != NULL)
+	if (m_theaterNameIdMap != nullptr)
 		m_theaterNameIdMap->insert(std::make_pair(name, id));
-	if (m_theaterIdNameMap != NULL)
+	if (m_theaterIdNameMap != nullptr)
 		m_theaterIdNameMap->insert(std::make_pair(id, name));
 	return true;
 }
@@ -953,9 +953,9 @@ void ServerUniverse::remoteClearTheater(const std::string & name)
 {
 	const NetworkId & id = findTheaterId(name);
 
-	if (m_theaterNameIdMap != NULL)
+	if (m_theaterNameIdMap != nullptr)
 		m_theaterNameIdMap->erase(name);
-	if (m_theaterIdNameMap != NULL)
+	if (m_theaterIdNameMap != nullptr)
 		m_theaterIdNameMap->erase(id);
 }
 

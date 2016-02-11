@@ -159,7 +159,7 @@ jboolean ScriptMethodsPlayerQuestNamespace::addPlayerQuestTask(JNIEnv * env, job
 	std::string sceneId;
 	if (!ScriptConversion::convertWorld(waypointLocation, waypointVec, sceneId))
 	{
-		// NULL or Invalid Location passed in. That's fine, just means no waypoint.
+		// nullptr or Invalid Location passed in. That's fine, just means no waypoint.
 		if(questObject)
 		{
 			std::string titleString;
@@ -456,7 +456,7 @@ jobject ScriptMethodsPlayerQuestNamespace::getPlayerQuestWaypoint(JNIEnv * env, 
 	if(!JavaLibrary::getObject(quest, questObject))
 	{
 		WARNING(true, ("getPlayerQuestWaypoint: Could not get valid Player Quest Object from OID: %d", quest));
-		return NULL;
+		return nullptr;
 	}
 
 	if(questObject)
@@ -465,7 +465,7 @@ jobject ScriptMethodsPlayerQuestNamespace::getPlayerQuestWaypoint(JNIEnv * env, 
 		return jString.getReturnValue();
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 
@@ -520,7 +520,7 @@ jobject ScriptMethodsPlayerQuestNamespace::getPlayerQuestTitle(JNIEnv * env, job
 	if(!JavaLibrary::getObject(quest, questObject))
 	{
 		WARNING(true, ("getPlayerQuestTitle: Could not get valid Player Quest Object from OID: %d", quest));
-		return NULL;
+		return nullptr;
 	}
 
 	if(questObject)
@@ -529,7 +529,7 @@ jobject ScriptMethodsPlayerQuestNamespace::getPlayerQuestTitle(JNIEnv * env, job
 		return returnVal.getReturnValue();
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 jobject ScriptMethodsPlayerQuestNamespace::getPlayerQuestDescription(JNIEnv * env, jobject self, jlong quest)
@@ -541,7 +541,7 @@ jobject ScriptMethodsPlayerQuestNamespace::getPlayerQuestDescription(JNIEnv * en
 	if(!JavaLibrary::getObject(quest, questObject))
 	{
 		WARNING(true, ("getPlayerQuestDescription: Could not get valid Player Quest Object from OID: %d", quest));
-		return NULL;
+		return nullptr;
 	}
 
 	if(questObject)
@@ -550,7 +550,7 @@ jobject ScriptMethodsPlayerQuestNamespace::getPlayerQuestDescription(JNIEnv * en
 		return returnVal.getReturnValue();
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 jobject ScriptMethodsPlayerQuestNamespace::getPlayerQuestTaskTitle(JNIEnv * env, jobject self, jlong quest, jint index)
@@ -562,7 +562,7 @@ jobject ScriptMethodsPlayerQuestNamespace::getPlayerQuestTaskTitle(JNIEnv * env,
 	if(!JavaLibrary::getObject(quest, questObject))
 	{
 		WARNING(true, ("getPlayerQuestTaskTitle: Could not get valid Player Quest Object from OID: %d", quest));
-		return NULL;
+		return nullptr;
 	}
 
 	if(questObject)
@@ -571,7 +571,7 @@ jobject ScriptMethodsPlayerQuestNamespace::getPlayerQuestTaskTitle(JNIEnv * env,
 		return returnVal.getReturnValue();
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 jobject ScriptMethodsPlayerQuestNamespace::getPlayerQuestTaskDescription(JNIEnv * env, jobject self, jlong quest, jint index)
@@ -583,7 +583,7 @@ jobject ScriptMethodsPlayerQuestNamespace::getPlayerQuestTaskDescription(JNIEnv 
 	if(!JavaLibrary::getObject(quest, questObject))
 	{
 		WARNING(true, ("getPlayerQuestTaskDescription: Could not get valid Player Quest Object from OID: %d", quest));
-		return NULL;
+		return nullptr;
 	}
 
 	if(questObject)
@@ -592,7 +592,7 @@ jobject ScriptMethodsPlayerQuestNamespace::getPlayerQuestTaskDescription(JNIEnv 
 		return returnVal.getReturnValue();
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 void ScriptMethodsPlayerQuestNamespace::setPlayerQuestRecipe(JNIEnv * env, jobject self, jlong quest, jboolean recipe)
@@ -768,21 +768,21 @@ void ScriptMethodsPlayerQuestNamespace::openPlayerQuestRecipe(JNIEnv * env, jobj
 	UNREF(env);
 	UNREF(self);
 
-	CreatureObject * playerCreature = NULL;
+	CreatureObject * playerCreature = nullptr;
 	if (!JavaLibrary::getObject(player, playerCreature))
 	{
 		DEBUG_WARNING(true, ("openPlayerQuestRecipe: Failed to get valid creature object with OID %d", player));
 		return;
 	}
 
-	ServerObject * recipeObj = NULL;
+	ServerObject * recipeObj = nullptr;
 	if (!JavaLibrary::getObject(recipe, recipeObj))
 	{
 		DEBUG_WARNING(true, ("openPlayerQuestRecipe: Failed to get valid recipe object with OID %d", player));
 		return;
 	}
 
-	if (playerCreature->isPlayerControlled() && playerCreature->getController() != NULL)
+	if (playerCreature->isPlayerControlled() && playerCreature->getController() != nullptr)
 	{
 		playerCreature->getController()->appendMessage(
 			static_cast<int>(CM_openRecipe),
@@ -801,7 +801,7 @@ void ScriptMethodsPlayerQuestNamespace::resetAllPlayerQuestData(JNIEnv * env, jo
 	UNREF(env);
 	UNREF(self);
 
-	PlayerQuestObject * playerQuest = NULL;
+	PlayerQuestObject * playerQuest = nullptr;
 	if (!JavaLibrary::getObject(quest, playerQuest))
 	{
 		DEBUG_WARNING(true, ("resetAllPlayerQuestData: Failed to get valid recipe object with OID %d", quest));

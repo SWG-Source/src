@@ -67,7 +67,7 @@ HarvesterInstallationObject::HarvesterInstallationObject(const ServerHarvesterIn
 	m_maxHopperAmount(newTemplate->getMaxHopperSize()),
 	m_hopperResource(NetworkId::cms_invalid),
 	m_hopperAmount(0.0f),
-	m_survey(NULL),
+	m_survey(nullptr),
 	m_surveyTime(0)
 {
 	//Installation objects have real time updated UI
@@ -79,7 +79,7 @@ HarvesterInstallationObject::HarvesterInstallationObject(const ServerHarvesterIn
 HarvesterInstallationObject::~HarvesterInstallationObject()
 {
 	delete m_survey;
-	m_survey = NULL;
+	m_survey = nullptr;
 	// 	m_synchronizedUi deleted by superclass
 }
 
@@ -397,7 +397,7 @@ std::vector<ResourceTypeObject const *> const & HarvesterInstallationObject::get
 	if (!m_survey || ServerClock::getInstance().getGameTimeSeconds() - m_surveyTime > (60*60))
 	{
 		delete m_survey;
-		m_survey = NULL;
+		m_survey = nullptr;
 		takeSurvey();
 	}
 
@@ -728,7 +728,7 @@ void HarvesterInstallationObject::handleCMessageTo (const MessageToPayload &mess
 
 ResourceClassObject *HarvesterInstallationObject::getMasterClass() const
 {
-	ResourceClassObject *obj = NULL;
+	ResourceClassObject *obj = nullptr;
 	const ServerHarvesterInstallationObjectTemplate *harvesterTemplate = dynamic_cast<const ServerHarvesterInstallationObjectTemplate*>(getObjectTemplate());
 	if (harvesterTemplate)
 		obj=ServerUniverse::getInstance().getResourceClassByName(harvesterTemplate->getMasterClassName());
@@ -855,7 +855,7 @@ NetworkId const &HarvesterInstallationObject::getSelectedResourceTypeId() const
 ResourcePoolObject const * HarvesterInstallationObject::getSelectedResourcePool() const
 {
 	if (getSelectedResourceTypeId() == NetworkId::cms_invalid)
-		return NULL;
+		return nullptr;
 	
 	ResourceTypeObject const * const typeObject = ServerUniverse::getInstance().getResourceTypeById(getSelectedResourceTypeId());
 	if (typeObject)
@@ -863,7 +863,7 @@ ResourcePoolObject const * HarvesterInstallationObject::getSelectedResourcePool(
 		return typeObject->getPoolForCurrentPlanet();
 	}
 	else
-		return NULL;
+		return nullptr;
 }
 
 // ======================================================================

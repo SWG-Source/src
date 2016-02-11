@@ -25,8 +25,8 @@ std::vector<DebugFlags::Flag> DebugFlags::ms_flagsSortedByReportPriority;
 
 void DebugFlags::config(bool &variable, const char *configSection, const char *configName)
 {
-	DEBUG_FATAL(strchr(configSection, ' ') != NULL, ("no spaces are allowed in debug flag section names: %s", configSection));
-	DEBUG_FATAL(strchr(configName, ' ') != NULL, ("no spaces are allowed in debug flag names: %s", configName));
+	DEBUG_FATAL(strchr(configSection, ' ') != nullptr, ("no spaces are allowed in debug flag section names: %s", configSection));
+	DEBUG_FATAL(strchr(configName, ' ') != nullptr, ("no spaces are allowed in debug flag names: %s", configName));
 
 	if (configSection && configName && ConfigFile::isInstalled())
 	{
@@ -102,9 +102,9 @@ void DebugFlags::registerFlag(bool &variable, const char *section, const char *n
 	f.section = section;
 	f.name = name;
 	f.reportPriority = 0;
-	f.reportRoutine1 = NULL;
-	f.reportRoutine2 = NULL;
-	f.context = NULL;
+	f.reportRoutine1 = nullptr;
+	f.reportRoutine2 = nullptr;
+	f.context = nullptr;
 #ifdef _DEBUG
 	f.m_callStack.sample();
 #endif
@@ -127,8 +127,8 @@ void DebugFlags::registerFlag(bool &variable, const char *section, const char *n
 	f.name = name;
 	f.reportPriority = reportPriority;
 	f.reportRoutine1 = reportRoutine;
-	f.reportRoutine2 = NULL;
-	f.context = NULL;
+	f.reportRoutine2 = nullptr;
+	f.context = nullptr;
 #ifdef _DEBUG
 	f.m_callStack.sample();
 #endif
@@ -150,7 +150,7 @@ void DebugFlags::registerFlag(bool &variable, const char *section, const char *n
 	f.section = section;
 	f.name = name;
 	f.reportPriority = reportPriority;
-	f.reportRoutine1 = NULL;
+	f.reportRoutine1 = nullptr;
 	f.reportRoutine2 = reportRoutine;
 	f.context = context;
 #ifdef _DEBUG
@@ -230,7 +230,7 @@ DebugFlags::Flag const * DebugFlags::getFlag(char const * const section, char co
 			return &f;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 // ----------------------------------------------------------------------

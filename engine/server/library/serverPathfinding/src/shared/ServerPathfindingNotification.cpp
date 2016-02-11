@@ -44,7 +44,7 @@ void ServerPathfindingNotification::addToWorld ( Object & object ) const
 	{
 		CityPathGraphManager::addBuilding( building );
 	}
-	else if(object.asServerObject() != NULL && object.asServerObject()->isWaypoint()) 
+	else if(object.asServerObject() != nullptr && object.asServerObject()->isWaypoint()) 
 	{
 		CityPathGraphManager::addWaypoint( object.asServerObject() );
 	}
@@ -61,7 +61,7 @@ void ServerPathfindingNotification::removeFromWorld ( Object & object ) const
 	{
 		CityPathGraphManager::removeBuilding( building );
 	}
-	else if(object.asServerObject() != NULL && object.asServerObject()->isWaypoint())
+	else if(object.asServerObject() != nullptr && object.asServerObject()->isWaypoint())
 	{
 		CityPathGraphManager::removeWaypoint( object.asServerObject() );
 	}
@@ -79,7 +79,7 @@ bool ServerPathfindingNotification::positionChanged ( Object & object, bool /*du
 	{
 		CityPathGraphManager::moveBuilding( building, oldPosition );
 	}
-	else if(object.asServerObject() != NULL && object.asServerObject()->isWaypoint()) 
+	else if(object.asServerObject() != nullptr && object.asServerObject()->isWaypoint()) 
 	{
 		CityPathGraphManager::moveWaypoint( object.asServerObject(), oldPosition );
 	}
@@ -95,7 +95,7 @@ bool ServerPathfindingNotification::positionAndRotationChanged ( Object & object
 	{
 		CityPathGraphManager::moveBuilding( building, oldPosition );
 	}
-	else if(object.asServerObject() != NULL && object.asServerObject()->isWaypoint()) 
+	else if(object.asServerObject() != nullptr && object.asServerObject()->isWaypoint()) 
 	{
 		CityPathGraphManager::moveWaypoint( object.asServerObject(), oldPosition );
 	}

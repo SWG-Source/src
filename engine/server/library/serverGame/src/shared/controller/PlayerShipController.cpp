@@ -295,10 +295,10 @@ void PlayerShipController::handleMessage(int const message, float const value, M
 	case CM_spaceMiningSaleSellResource:
 		{
 			MessageQueueSpaceMiningSellResource const * const msg = dynamic_cast<MessageQueueSpaceMiningSellResource const *>(data);
-			if (msg != NULL)
+			if (msg != nullptr)
 			{
 				ServerObject * const spaceStation = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(msg->m_spaceStationId));
-				if (NULL == spaceStation)
+				if (nullptr == spaceStation)
 				{
 					WARNING(true, ("PlayerCreatureController CM_spaceMiningSaleSellResource invalid station [%s]", msg->m_spaceStationId.getValueString().c_str()));
 				}
@@ -376,16 +376,16 @@ float PlayerShipController::realAlter(float const elapsedTime)
 
 	if (owner && owner->isInitialized())
 	{
-		if (m_pendingDockingBehavior != NULL)
+		if (m_pendingDockingBehavior != nullptr)
 		{
 			delete m_dockingBehavior;
 			m_dockingBehavior = m_pendingDockingBehavior;
-			m_pendingDockingBehavior = NULL;
+			m_pendingDockingBehavior = nullptr;
 
 			getShipOwner()->setCondition(static_cast<int>(TangibleObject::C_docking));
 			Client * const client = owner->getClient();
 
-			if (client != NULL)
+			if (client != nullptr)
 			{
 				ShipClientUpdateTracker::queueForUpdate(*client, *owner);
 			}
@@ -395,16 +395,16 @@ float PlayerShipController::realAlter(float const elapsedTime)
 			}
 		}
 
-		if (   (m_dockingBehavior != NULL)
+		if (   (m_dockingBehavior != nullptr)
 		    && m_dockingBehavior->isDockFinished())
 		{
 			delete m_dockingBehavior;
-			m_dockingBehavior = NULL;
+			m_dockingBehavior = nullptr;
 
 			getShipOwner()->clearCondition(static_cast<int>(TangibleObject::C_docking));
 		}
 
-		if (m_dockingBehavior != NULL)
+		if (m_dockingBehavior != nullptr)
 		{
 			//-- The docking behavior will calculate new values for m_yaw/m_pitch/m_roll/m_throttle[Position] implicitly through calling ShipController members
 			m_dockingBehavior->alter(elapsedTime);
@@ -806,7 +806,7 @@ void PlayerShipController::setWeaponIndexPlayerControlled(int const weaponIndex,
 {
 	DEBUG_FATAL((weaponIndex < 0), ("Invalid weaponIndex(%d)", weaponIndex));
 
-	if (m_turretTargetingSystem != NULL)
+	if (m_turretTargetingSystem != nullptr)
 	{
 		safe_cast<PlayerShipTurretTargetingSystem*>(m_turretTargetingSystem)->setWeaponIndexPlayerControlled(weaponIndex, playerControlled);
 	}

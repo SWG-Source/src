@@ -68,7 +68,7 @@ namespace ContainerInterfaceNamespace
 
 				if (creature->getBank() == lastContainer)
 				{
-					//-- if player is passed in non-null, the found creature must match it
+					//-- if player is passed in non-nullptr, the found creature must match it
 					if (player && player != creature)
 						return false;
 
@@ -340,8 +340,8 @@ namespace ContainerInterfaceNamespace
 		{
 			// This item is not contained by anything!
 			// This means it is in the world!
-			// Return null for the source container, but succeed.
-			sourceContainer = NULL;
+			// Return nullptr for the source container, but succeed.
+			sourceContainer = nullptr;
 			return true;
 		}
 
@@ -550,7 +550,7 @@ bool ContainerInterface::canTransferTo(ServerObject *destination, ServerObject &
 				if (transfererCreatureObject->getObjVars().getItem("lotOverlimit.structure_id", lotOverlimitStructure) && lotOverlimitStructure.isValid())
 				{
 					// determine the destination type
-					ServerObject const * topmostDestinationParent = NULL;
+					ServerObject const * topmostDestinationParent = nullptr;
 					ServerObject const * destinationParent = destination;
 					while (destinationParent)
 					{
@@ -734,8 +734,8 @@ bool ContainerInterface::transferItemToSlottedContainer(ServerObject &destinatio
 		}
 	}
 
-	ServerObject *sourceObject = NULL;
-	Container *sourceContainer = NULL;
+	ServerObject *sourceObject = nullptr;
+	Container *sourceContainer = nullptr;
 
 	if (!sharedTransferBegin(item, sourceObject, sourceContainer, error))
 		return false;
@@ -829,8 +829,8 @@ bool ContainerInterface::transferItemToVolumeContainer(ServerObject &destination
 {
 	error = Container::CEC_Success;
 
-	ServerObject *sourceObject = NULL;
-	Container *sourceContainer = NULL;
+	ServerObject *sourceObject = nullptr;
+	Container *sourceContainer = nullptr;
 
 	if (!sharedTransferBegin(item, sourceObject, sourceContainer, error))
 		return false;
@@ -898,8 +898,8 @@ bool ContainerInterface::transferItemToCell(ServerObject &destination, ServerObj
 {
 	error = Container::CEC_Success;
 
-	ServerObject *sourceObject = NULL;
-	Container *sourceContainer = NULL;
+	ServerObject *sourceObject = nullptr;
+	Container *sourceContainer = nullptr;
 
 	//check source & item
 	if (!sharedTransferBegin(item, sourceObject, sourceContainer, error))
@@ -980,13 +980,13 @@ bool ContainerInterface::transferItemToWorld(ServerObject &item, Transform const
 		return false;
 	}
 
-	if (!canTransferTo(NULL, item, transferer, error))
+	if (!canTransferTo(nullptr, item, transferer, error))
 	{
 		return false;
 	}
 
-	ServerObject *sourceObject = NULL;
-	Container *sourceContainer = NULL;
+	ServerObject *sourceObject = nullptr;
+	Container *sourceContainer = nullptr;
 
 	if (!sharedTransferBegin(item, sourceObject, sourceContainer, error))
 	{
@@ -1009,8 +1009,8 @@ bool ContainerInterface::transferItemToWorld(ServerObject &item, Transform const
 
 	item.setTransform_o2p(pos);
 
-	item.onContainerTransferComplete(sourceObject, NULL);
-	handleTransferScripts(item, sourceObject, NULL, transferer, error);
+	item.onContainerTransferComplete(sourceObject, nullptr);
+	handleTransferScripts(item, sourceObject, nullptr, transferer, error);
 	return true;
 }
 
@@ -1084,7 +1084,7 @@ Object *ContainerInterface::getContainedByObject(Object &obj)
 	ContainedByProperty * const containedBy = getContainedByProperty(obj);
 	if (containedBy)
 		return containedBy->getContainedBy();
-	return NULL;
+	return nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -1094,7 +1094,7 @@ Object const *ContainerInterface::getContainedByObject(Object const &obj)
 	ContainedByProperty const * const containedBy = getContainedByProperty(obj);
 	if (containedBy)
 		return containedBy->getContainedBy();
-	return NULL;
+	return nullptr;
 }
 
 // -----------------------------------------------------------------------
@@ -1180,7 +1180,7 @@ Object const *ContainerInterface::getTopmostContainer(Object const &obj)
 
 // -----------------------------------------------------------------------
 // Returns the object if it is in the world, or the first parent of the object
-// that is in the world.  This returns null, if the none of the parents of the object are in the world.
+// that is in the world.  This returns nullptr, if the none of the parents of the object are in the world.
 
 Object *ContainerInterface::getFirstParentInWorld(Object &obj)
 {
@@ -1193,20 +1193,20 @@ Object *ContainerInterface::getFirstParentInWorld(Object &obj)
 	if (!containedBy)
 	{
 		WARNING_STRICT_FATAL(true, ("All objects should have a containedby property"));
-		return NULL;
+		return nullptr;
 	}
 
 	// Is my containedBy property empty?  If so I am topmost but am not in the world
 	Object *currentContainer = containedBy->getContainedBy();
 	if (!currentContainer)
 	{
-		return NULL;
+		return nullptr;
 	}
 
-	// Does my parent expose contents?  If it does, then return NULL since I have been removed from the world.
+	// Does my parent expose contents?  If it does, then return nullptr since I have been removed from the world.
 	if (!getContainer(*currentContainer) || getContainer(*currentContainer)->isContentItemExposedWith(*currentContainer))
 	{
-		return NULL;
+		return nullptr;
 	}
 
 	// Is my parent in the world?  If so, he is topmost
@@ -1218,7 +1218,7 @@ Object *ContainerInterface::getFirstParentInWorld(Object &obj)
 	if (!containedBy)
 	{
 		WARNING_STRICT_FATAL(true, ("All objects should have a containedby property"));
-		return (currentContainer->isInWorld()) ? currentContainer : NULL;
+		return (currentContainer->isInWorld()) ? currentContainer : nullptr;
 	}
 
 	// Iterate from here.
@@ -1236,12 +1236,12 @@ Object *ContainerInterface::getFirstParentInWorld(Object &obj)
 		if (!containedBy)
 		{
 			WARNING_STRICT_FATAL(true, ("All objects should have a containedby property"));
-			return NULL;
+			return nullptr;
 		}
 
 		nextContainer = containedBy->getContainedBy();
 	}
-	return currentContainer->isInWorld() ? currentContainer : NULL;
+	return currentContainer->isInWorld() ? currentContainer : nullptr;
 }
 
 // -----------------------------------------------------------------------
@@ -1388,7 +1388,7 @@ bool ContainerInterface::onObjectDestroy(ServerObject& item) // currently only c
 				
 				return false;
 			}
-			handleTransferScripts(item, parentObject, NULL, NULL, error);
+			handleTransferScripts(item, parentObject, nullptr, nullptr, error);
 		}
 	}
 	return true;

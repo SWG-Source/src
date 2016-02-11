@@ -64,7 +64,7 @@ using namespace ChatNamespace;
 
 //-----------------------------------------------------------------------
 
-Chat *Chat::m_instance = NULL;
+Chat *Chat::m_instance = nullptr;
 
 
 Chat::Chat () :

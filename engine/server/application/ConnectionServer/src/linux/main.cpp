@@ -37,7 +37,7 @@ int main(int argc, char ** argv)
 
 	SetupSharedFile::install(false);
 	SetupSharedNetworkMessages::install();
-	SetupSharedRandom::install(time(NULL));
+	SetupSharedRandom::install(time(nullptr));
 
 	//setup the server
 	NetworkHandler::install();

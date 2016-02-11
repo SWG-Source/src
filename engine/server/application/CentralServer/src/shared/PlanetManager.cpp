@@ -138,7 +138,7 @@ PlanetServerConnection *PlanetManager::getPlanetServerForScene(const std::string
 	if (i!=instance().m_servers.end())
 		return (*i).second.m_connection;
 	else
-		return NULL;
+		return nullptr;
 }
 
 // ----------------------------------------------------------------------

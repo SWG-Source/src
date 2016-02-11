@@ -115,7 +115,7 @@ LocalObjectArrayRefPtr ScriptMethodsRegionNamespace::_getRegionsAtPoint(jobject 
 	std::vector<const Region *> result;
 	RegionMaster::getRegionsAtPoint(sceneId, locationVec.x, locationVec.z, result);
 
-	//-- return null instead of a zero-length array
+	//-- return nullptr instead of a zero-length array
 	if (result.empty ())
 		return LocalObjectArrayRef::cms_nullPtr;
 
@@ -127,7 +127,7 @@ LocalObjectArrayRefPtr ScriptMethodsRegionNamespace::_getRegionsAtPoint(jobject 
 	{
 		LocalRefPtr javaRegion;
 		const Region * r = *it;
-		if (r != NULL)
+		if (r != nullptr)
 		{
 			if (!ScriptConversion::convert(*r, javaRegion))
 				return LocalObjectArrayRef::cms_nullPtr;
@@ -195,7 +195,7 @@ void JNICALL ScriptMethodsRegionNamespace::createCircleRegion(JNIEnv *env, jobje
 	UNREF(self);
 
 	// validate scripter's input
-	if (center == NULL || radius <= 0 || name == 0)
+	if (center == nullptr || radius <= 0 || name == 0)
 		return;
 
 	JavaStringParam jname(name);
@@ -239,7 +239,7 @@ jobject JNICALL ScriptMethodsRegionNamespace::getRegion(JNIEnv *env, jobject sel
 		return 0;
 
 	const Region * r = RegionMaster::getRegionByName(planetName, regionName);
-	if (r == NULL)
+	if (r == nullptr)
 		return 0;
 
 	LocalRefPtr jr;
@@ -255,7 +255,7 @@ jobject JNICALL ScriptMethodsRegionNamespace::getRegion(JNIEnv *env, jobject sel
 jobjectArray JNICALL ScriptMethodsRegionNamespace::getRegionsAtPoint(JNIEnv *env, jobject self, jobject location)
 {
 	LocalObjectArrayRefPtr regions = _getRegionsAtPoint(location);
-	if (regions.get() == NULL)
+	if (regions.get() == nullptr)
 		return 0;
 	return regions->getReturnValue();
 }
@@ -279,9 +279,9 @@ jobjectArray JNICALL ScriptMethodsRegionNamespace::getRegions(JNIEnv *env, jobje
 	std::vector<const Region*> result;
 	RegionMaster::getRegionsForPlanet(sceneId, result);
 
-	//-- return null instead of a zero-length array
+	//-- return nullptr instead of a zero-length array
 	if (result.empty ())
-		return NULL;
+		return nullptr;
 
 	//put them into the jobjectarray
 	LocalObjectArrayRefPtr regions = createNewObjectArray(result.size(), JavaLibrary::getClsRegion());
@@ -291,11 +291,11 @@ jobjectArray JNICALL ScriptMethodsRegionNamespace::getRegions(JNIEnv *env, jobje
 	{
 		LocalRefPtr javaRegion;
 		const Region * r = *i;
-		if (r != NULL)
+		if (r != nullptr)
 		{
 			if (!ScriptConversion::convert(*r, javaRegion))
 			{
-				return NULL;
+				return nullptr;
 			}
 		}
 		setObjectArrayElement(*regions, index, *javaRegion);
@@ -329,7 +329,7 @@ jobjectArray JNICALL ScriptMethodsRegionNamespace::getRegionsWithPvP(JNIEnv *env
 			goodRegions.push_back(*i);
 	}
 
-	//-- return null instead of a zero-length array
+	//-- return nullptr instead of a zero-length array
 	if (goodRegions.empty())
 		return 0;
 
@@ -342,7 +342,7 @@ jobjectArray JNICALL ScriptMethodsRegionNamespace::getRegionsWithPvP(JNIEnv *env
 		LocalRefPtr javaRegion;
 		if (!ScriptConversion::convert(**it, javaRegion))
 		{
-			return NULL;
+			return nullptr;
 		}
 		setObjectArrayElement(*result, index, *javaRegion);
 	}
@@ -375,7 +375,7 @@ jobjectArray JNICALL ScriptMethodsRegionNamespace::getRegionsWithBuildable(JNIEn
 			goodRegions.push_back(*i);
 	}
 
-	//-- return null instead of a zero-length array
+	//-- return nullptr instead of a zero-length array
 	if (goodRegions.empty())
 		return 0;
 
@@ -388,7 +388,7 @@ jobjectArray JNICALL ScriptMethodsRegionNamespace::getRegionsWithBuildable(JNIEn
 		LocalRefPtr javaRegion;
 		if (!ScriptConversion::convert(**it, javaRegion))
 		{
-			return NULL;
+			return nullptr;
 		}
 		setObjectArrayElement(*result, index, *javaRegion);
 	}
@@ -421,7 +421,7 @@ jobjectArray JNICALL ScriptMethodsRegionNamespace::getRegionsWithMunicipal(JNIEn
 			goodRegions.push_back(*i);
 	}
 
-	//-- return null instead of a zero-length array
+	//-- return nullptr instead of a zero-length array
 	if (goodRegions.empty())
 		return 0;
 
@@ -434,7 +434,7 @@ jobjectArray JNICALL ScriptMethodsRegionNamespace::getRegionsWithMunicipal(JNIEn
 		LocalRefPtr javaRegion;
 		if (!ScriptConversion::convert(**it, javaRegion))
 		{
-			return NULL;
+			return nullptr;
 		}
 		setObjectArrayElement(*result, index, *javaRegion);
 	}
@@ -467,7 +467,7 @@ jobjectArray JNICALL ScriptMethodsRegionNamespace::getRegionsWithGeographical(JN
 			goodRegions.push_back(*i);
 	}
 
-	//-- return null instead of a zero-length array
+	//-- return nullptr instead of a zero-length array
 	if (goodRegions.empty())
 		return 0;
 
@@ -480,7 +480,7 @@ jobjectArray JNICALL ScriptMethodsRegionNamespace::getRegionsWithGeographical(JN
 		LocalRefPtr javaRegion;
 		if (!ScriptConversion::convert(**it, javaRegion))
 		{
-			return NULL;
+			return nullptr;
 		}
 		setObjectArrayElement(*result, index, *javaRegion);
 	}
@@ -513,7 +513,7 @@ jobjectArray JNICALL ScriptMethodsRegionNamespace::getRegionsWithDifficulty(JNIE
 			goodRegions.push_back(*i);
 	}
 
-	//-- return null instead of a zero-length array
+	//-- return nullptr instead of a zero-length array
 	if (goodRegions.empty())
 		return 0;
 
@@ -526,7 +526,7 @@ jobjectArray JNICALL ScriptMethodsRegionNamespace::getRegionsWithDifficulty(JNIE
 		LocalRefPtr javaRegion;
 		if (!ScriptConversion::convert(**it, javaRegion))
 		{
-			return NULL;
+			return nullptr;
 		}
 		setObjectArrayElement(*result, index, *javaRegion);
 	}
@@ -559,7 +559,7 @@ jobjectArray JNICALL ScriptMethodsRegionNamespace::getRegionsWithSpawnable(JNIEn
 			goodRegions.push_back(*i);
 	}
 
-	//-- return null instead of a zero-length array
+	//-- return nullptr instead of a zero-length array
 	if (goodRegions.empty())
 		return 0;
 
@@ -572,7 +572,7 @@ jobjectArray JNICALL ScriptMethodsRegionNamespace::getRegionsWithSpawnable(JNIEn
 		LocalRefPtr javaRegion;
 		if (!ScriptConversion::convert(**it, javaRegion))
 		{
-			return NULL;
+			return nullptr;
 		}
 		setObjectArrayElement(*result, index, *javaRegion);
 	}
@@ -605,7 +605,7 @@ jobjectArray JNICALL ScriptMethodsRegionNamespace::getRegionsWithMission(JNIEnv 
 			goodRegions.push_back(*i);
 	}
 
-	//-- return null instead of a zero-length array
+	//-- return nullptr instead of a zero-length array
 	if (goodRegions.empty())
 		return 0;
 
@@ -618,7 +618,7 @@ jobjectArray JNICALL ScriptMethodsRegionNamespace::getRegionsWithMission(JNIEnv 
 		LocalRefPtr javaRegion;
 		if (!ScriptConversion::convert(**it, javaRegion))
 		{
-			return NULL;
+			return nullptr;
 		}
 		setObjectArrayElement(*result, index, *javaRegion);
 	}
@@ -657,7 +657,7 @@ jboolean JNICALL ScriptMethodsRegionNamespace::deleteRegion(JNIEnv *env, jobject
 		return JNI_FALSE;
 
 	UniverseObject * regionObject = dynamic_cast<UniverseObject *>(r->getDynamicRegionId().getObject());
-	if (regionObject == NULL)
+	if (regionObject == nullptr)
 		return JNI_FALSE;
 	regionObject->permanentlyDestroy(DeleteReasons::Script);
 	return JNI_TRUE;
@@ -711,7 +711,7 @@ jobjectArray JNICALL ScriptMethodsRegionNamespace::getRegionExtent(JNIEnv *env, 
 //-----------------------------------------------------------------------
 
 /** Find a random point in the given region
- *  @return a script.location inside the region, or a null reference if any problems occur
+ *  @return a script.location inside the region, or a nullptr reference if any problems occur
  */
 jobject JNICALL ScriptMethodsRegionNamespace::findPointInRegion(JNIEnv *env, jobject self, jobject region)
 {
@@ -732,7 +732,7 @@ jobject JNICALL ScriptMethodsRegionNamespace::findPointInRegion(JNIEnv *env, job
 	Vector loc3d(x, 0, z);
 	LocalRefPtr location;
 	if (!ScriptConversion::convert(loc3d, r->getPlanet(), NetworkId::cms_invalid, location))
-		return NULL;
+		return nullptr;
 	return location->getReturnValue();
 }
 
@@ -744,7 +744,7 @@ jobjectArray JNICALL ScriptMethodsRegionNamespace::getRegionsWithPvPAtPoint(JNIE
 {
 	//get all the regions at the given point
 	LocalObjectArrayRefPtr regionsAtPoint = _getRegionsAtPoint(location);
-	if (regionsAtPoint.get() == NULL || regionsAtPoint == LocalObjectArrayRef::cms_nullPtr)
+	if (regionsAtPoint.get() == nullptr || regionsAtPoint == LocalObjectArrayRef::cms_nullPtr)
 		return 0;
 
 	//parse out the ones with the right property
@@ -760,9 +760,9 @@ jobjectArray JNICALL ScriptMethodsRegionNamespace::getRegionsWithPvPAtPoint(JNIE
 			result.push_back(r);
 	}
 
-	//-- return null instead of a zero-length array
+	//-- return nullptr instead of a zero-length array
 	if (result.empty ())
-		return NULL;
+		return nullptr;
 
 	//put them into the jobjectarray
 	LocalObjectArrayRefPtr regions = createNewObjectArray(result.size(), JavaLibrary::getClsRegion());
@@ -772,10 +772,10 @@ jobjectArray JNICALL ScriptMethodsRegionNamespace::getRegionsWithPvPAtPoint(JNIE
 	{
 		LocalRefPtr javaRegion;
 		const Region * r = *it;
-		if (r != NULL)
+		if (r != nullptr)
 		{
 			if (!ScriptConversion::convert(*r, javaRegion))
-				return NULL;
+				return nullptr;
 		}
 		setObjectArrayElement(*regions, index, *javaRegion);
 	}
@@ -790,7 +790,7 @@ jobjectArray JNICALL ScriptMethodsRegionNamespace::getRegionsWithBuildableAtPoin
 {
 	//get all the regions at the given point
 	LocalObjectArrayRefPtr regionsAtPoint = _getRegionsAtPoint(location);
-	if (regionsAtPoint.get() == NULL || regionsAtPoint == LocalObjectArrayRef::cms_nullPtr)
+	if (regionsAtPoint.get() == nullptr || regionsAtPoint == LocalObjectArrayRef::cms_nullPtr)
 		return 0;
 
 	//parse out the ones with the right property
@@ -806,9 +806,9 @@ jobjectArray JNICALL ScriptMethodsRegionNamespace::getRegionsWithBuildableAtPoin
 			result.push_back(r);
 	}
 
-	//-- return null instead of a zero-length array
+	//-- return nullptr instead of a zero-length array
 	if (result.empty ())
-		return NULL;
+		return nullptr;
 
 	//put them into the jobjectarray
 	LocalObjectArrayRefPtr regions = createNewObjectArray(result.size(), JavaLibrary::getClsRegion());
@@ -818,10 +818,10 @@ jobjectArray JNICALL ScriptMethodsRegionNamespace::getRegionsWithBuildableAtPoin
 	{
 		LocalRefPtr javaRegion;
 		const Region * r = *it;
-		if (r != NULL)
+		if (r != nullptr)
 		{
 			if(!ScriptConversion::convert(*r, javaRegion))
-				return NULL;
+				return nullptr;
 		}
 		setObjectArrayElement(*regions, index, *javaRegion);
 	}
@@ -837,7 +837,7 @@ jobjectArray JNICALL ScriptMethodsRegionNamespace::getRegionsWithMunicipalAtPoin
 	PROFILER_AUTO_BLOCK_DEFINE("JNI::getRegionsWithMunicipalAtPoint");
 	//get all the regions at the given point
 	LocalObjectArrayRefPtr regionsAtPoint = _getRegionsAtPoint(location);
-	if (regionsAtPoint.get() == NULL || regionsAtPoint == LocalObjectArrayRef::cms_nullPtr)
+	if (regionsAtPoint.get() == nullptr || regionsAtPoint == LocalObjectArrayRef::cms_nullPtr)
 		return 0;
 
 	//parse out the ones with the right property
@@ -853,9 +853,9 @@ jobjectArray JNICALL ScriptMethodsRegionNamespace::getRegionsWithMunicipalAtPoin
 			result.push_back(r);
 	}
 
-	//-- return null instead of a zero-length array
+	//-- return nullptr instead of a zero-length array
 	if (result.empty ())
-		return NULL;
+		return nullptr;
 
 	//put them into the jobjectarray
 	LocalObjectArrayRefPtr regions = createNewObjectArray(result.size(), JavaLibrary::getClsRegion());
@@ -865,10 +865,10 @@ jobjectArray JNICALL ScriptMethodsRegionNamespace::getRegionsWithMunicipalAtPoin
 	{
 		LocalRefPtr javaRegion;
 		const Region * r = *it;
-		if (r != NULL)
+		if (r != nullptr)
 		{
 			if(!ScriptConversion::convert(*r, javaRegion))
-				return NULL;
+				return nullptr;
 		}
 		setObjectArrayElement(*regions, index, *javaRegion);
 	}
@@ -884,7 +884,7 @@ jobjectArray JNICALL ScriptMethodsRegionNamespace::getRegionsWithGeographicalAtP
 	PROFILER_AUTO_BLOCK_DEFINE("JNI::getRegionsWithGeographicalAtPoint");
 	//get all the regions at the given point
 	LocalObjectArrayRefPtr regionsAtPoint = _getRegionsAtPoint(location);
-	if (regionsAtPoint.get() == NULL || regionsAtPoint == LocalObjectArrayRef::cms_nullPtr)
+	if (regionsAtPoint.get() == nullptr || regionsAtPoint == LocalObjectArrayRef::cms_nullPtr)
 		return 0;
 
 	//parse out the ones with the right property
@@ -900,9 +900,9 @@ jobjectArray JNICALL ScriptMethodsRegionNamespace::getRegionsWithGeographicalAtP
 			result.push_back(r);
 	}
 
-	//-- return null instead of a zero-length array
+	//-- return nullptr instead of a zero-length array
 	if (result.empty ())
-		return NULL;
+		return nullptr;
 
 	//put them into the jobjectarray
 	LocalObjectArrayRefPtr regions = createNewObjectArray(result.size(), JavaLibrary::getClsRegion());
@@ -912,10 +912,10 @@ jobjectArray JNICALL ScriptMethodsRegionNamespace::getRegionsWithGeographicalAtP
 	{
 		LocalRefPtr javaRegion;
 		const Region * r = *it;
-		if (r != NULL)
+		if (r != nullptr)
 		{
 			if(!ScriptConversion::convert(*r, javaRegion))
-				return NULL;
+				return nullptr;
 		}
 		setObjectArrayElement(*regions, index, *javaRegion);
 	}
@@ -930,7 +930,7 @@ jobjectArray JNICALL ScriptMethodsRegionNamespace::getRegionsWithDifficultyAtPoi
 {
 	//get all the regions at the given point
 	LocalObjectArrayRefPtr regionsAtPoint = _getRegionsAtPoint(location);
-	if (regionsAtPoint.get() == NULL || regionsAtPoint == LocalObjectArrayRef::cms_nullPtr)
+	if (regionsAtPoint.get() == nullptr || regionsAtPoint == LocalObjectArrayRef::cms_nullPtr)
 		return 0;
 
 	//parse out the ones with the right property
@@ -946,9 +946,9 @@ jobjectArray JNICALL ScriptMethodsRegionNamespace::getRegionsWithDifficultyAtPoi
 			result.push_back(r);
 	}
 
-	//-- return null instead of a zero-length array
+	//-- return nullptr instead of a zero-length array
 	if (result.empty ())
-		return NULL;
+		return nullptr;
 
 	//put them into the jobjectarray
 	LocalObjectArrayRefPtr regions = createNewObjectArray(result.size(), JavaLibrary::getClsRegion());
@@ -958,10 +958,10 @@ jobjectArray JNICALL ScriptMethodsRegionNamespace::getRegionsWithDifficultyAtPoi
 	{
 		LocalRefPtr javaRegion;
 		const Region * r = *it;
-		if (r != NULL)
+		if (r != nullptr)
 		{
 			if(!ScriptConversion::convert(*r, javaRegion))
-				return NULL;
+				return nullptr;
 		}
 		setObjectArrayElement(*regions, index, *javaRegion);
 	}
@@ -976,7 +976,7 @@ jobjectArray JNICALL ScriptMethodsRegionNamespace::getRegionsWithSpawnableAtPoin
 {
 	//get all the regions at the given point
 	LocalObjectArrayRefPtr regionsAtPoint = _getRegionsAtPoint(location);
-	if (regionsAtPoint.get() == NULL || regionsAtPoint == LocalObjectArrayRef::cms_nullPtr)
+	if (regionsAtPoint.get() == nullptr || regionsAtPoint == LocalObjectArrayRef::cms_nullPtr)
 		return 0;
 
 	//parse out the ones with the right property
@@ -992,9 +992,9 @@ jobjectArray JNICALL ScriptMethodsRegionNamespace::getRegionsWithSpawnableAtPoin
 			result.push_back(r);
 	}
 
-	//-- return null instead of a zero-length array
+	//-- return nullptr instead of a zero-length array
 	if (result.empty ())
-		return NULL;
+		return nullptr;
 
 	//put them into the jobjectarray
 	LocalObjectArrayRefPtr regions = createNewObjectArray(result.size(), JavaLibrary::getClsRegion());
@@ -1004,10 +1004,10 @@ jobjectArray JNICALL ScriptMethodsRegionNamespace::getRegionsWithSpawnableAtPoin
 	{
 		LocalRefPtr javaRegion;
 		const Region * r = *it;
-		if (r != NULL)
+		if (r != nullptr)
 		{
 			if(!ScriptConversion::convert(*r, javaRegion))
-				return NULL;
+				return nullptr;
 		}
 		setObjectArrayElement(*regions, index, *javaRegion);
 	}
@@ -1022,7 +1022,7 @@ jobjectArray JNICALL ScriptMethodsRegionNamespace::getRegionsWithMissionAtPoint(
 {
 	//get all the regions at the given point
 	LocalObjectArrayRefPtr regionsAtPoint = _getRegionsAtPoint(location);
-	if (regionsAtPoint.get() == NULL || regionsAtPoint == LocalObjectArrayRef::cms_nullPtr)
+	if (regionsAtPoint.get() == nullptr || regionsAtPoint == LocalObjectArrayRef::cms_nullPtr)
 		return 0;
 
 	//parse out the ones with the right property
@@ -1038,9 +1038,9 @@ jobjectArray JNICALL ScriptMethodsRegionNamespace::getRegionsWithMissionAtPoint(
 			result.push_back(r);
 	}
 
-	//-- return null instead of a zero-length array
+	//-- return nullptr instead of a zero-length array
 	if (result.empty ())
-		return NULL;
+		return nullptr;
 
 	//put them into the jobjectarray
 	LocalObjectArrayRefPtr regions = createNewObjectArray(result.size(), JavaLibrary::getClsRegion());
@@ -1050,10 +1050,10 @@ jobjectArray JNICALL ScriptMethodsRegionNamespace::getRegionsWithMissionAtPoint(
 	{
 		LocalRefPtr javaRegion;
 		const Region * r = *it;
-		if (r != NULL)
+		if (r != nullptr)
 		{
 			if(!ScriptConversion::convert(*r, javaRegion))
-				return NULL;
+				return nullptr;
 		}
 		setObjectArrayElement(*regions, index, *javaRegion);
 	}
@@ -1072,16 +1072,16 @@ jobject JNICALL ScriptMethodsRegionNamespace::getSmallestRegionAtPoint(JNIEnv *e
 	Vector locationVec;
 	std::string sceneId;
 	if(!ScriptConversion::convertWorld(location, locationVec, sceneId))
-		return NULL;
+		return nullptr;
 
 	const Region * r = RegionMaster::getSmallestRegionAtPoint(sceneId, locationVec.x,
 		locationVec.z);
-	if (r == NULL)
-		return NULL;
+	if (r == nullptr)
+		return nullptr;
 
 	LocalRefPtr region;
 	if (!ScriptConversion::convert(*r, region))
-		return NULL;
+		return nullptr;
 	return region->getReturnValue();
 }
 
@@ -1095,16 +1095,16 @@ jobject JNICALL ScriptMethodsRegionNamespace::getSmallestVisibleRegionAtPoint(JN
 	Vector locationVec;
 	std::string sceneId;
 	if(!ScriptConversion::convertWorld(location, locationVec, sceneId))
-		return NULL;
+		return nullptr;
 
 	const Region * r = RegionMaster::getSmallestVisibleRegionAtPoint(sceneId, locationVec.x,
 		locationVec.z);
-	if (r == NULL)
-		return NULL;
+	if (r == nullptr)
+		return nullptr;
 
 	LocalRefPtr region;
 	if (!ScriptConversion::convert(*r, region))
-		return NULL;
+		return nullptr;
 	return region->getReturnValue();
 }
 
@@ -1140,7 +1140,7 @@ jlong JNICALL ScriptMethodsRegionNamespace::createCircleRegionWithSpawn(JNIEnv *
 	UNREF(self);
 
 	// validate scripter's input
-	if (center == NULL || radius <= 0 || name == 0)
+	if (center == nullptr || radius <= 0 || name == 0)
 		return 0;
 
 	JavaStringParam jname(name);

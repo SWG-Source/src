@@ -182,7 +182,7 @@ Player::~Player()
 {
 	char hold[256];
 	printf("TERMINATE %s,%d   \n", mConnection->GetDestinationIp().GetAddress(hold), mConnection->GetDestinationPort());
-	mConnection->SetHandler(NULL);
+	mConnection->SetHandler(nullptr);
 	mConnection->Disconnect();
 	mConnection->Release();
 }

@@ -34,7 +34,7 @@ FloorTri gs_dummyFloorTri;
 FloorLocator::FloorLocator() 
 : ContactPoint(),
   m_valid(false),
-  m_floor(NULL),
+  m_floor(nullptr),
   m_radius(0.0f),
   m_time(0.0f),
   m_edgeId(-1),
@@ -47,7 +47,7 @@ FloorLocator::FloorLocator()
 // ----------
 
 FloorLocator::FloorLocator( Floor const * floor, Vector const & localPoint, int triId, float dist, float radius )
-: ContactPoint((floor ? floor->getFloorMesh() : NULL),localPoint,triId,dist),
+: ContactPoint((floor ? floor->getFloorMesh() : nullptr),localPoint,triId,dist),
   m_valid(true),
   m_floor(floor),
   m_radius(radius),
@@ -64,7 +64,7 @@ FloorLocator::FloorLocator( Floor const * floor, Vector const & localPoint, int 
 FloorLocator::FloorLocator( CollisionSurface const * mesh, Vector const & point, int triId, float dist, float radius )
 : ContactPoint(mesh,point,triId,dist),
   m_valid(true),
-  m_floor(NULL),
+  m_floor(nullptr),
   m_radius(radius),
   m_time(0.0f),
   m_edgeId(-1),
@@ -78,7 +78,7 @@ FloorLocator::FloorLocator( CollisionSurface const * mesh, Vector const & point,
 // ----------
 
 FloorLocator::FloorLocator( Floor const * floor, Vector const & localPoint )
-: ContactPoint((floor ? floor->getFloorMesh() : NULL),localPoint,-1,0.0f),
+: ContactPoint((floor ? floor->getFloorMesh() : nullptr),localPoint,-1,0.0f),
   m_valid(true),
   m_floor(floor),
   m_radius(0.0f),
@@ -95,7 +95,7 @@ FloorLocator::FloorLocator( Floor const * floor, Vector const & localPoint )
 FloorLocator::FloorLocator( CollisionSurface const * mesh, Vector const & point )
 : ContactPoint(mesh,point,-1,0.0f),
   m_valid(true),
-  m_floor(NULL),
+  m_floor(nullptr),
   m_radius(0.0f),
   m_time(0.0f),
   m_edgeId(-1),
@@ -109,9 +109,9 @@ FloorLocator::FloorLocator( CollisionSurface const * mesh, Vector const & point 
 // ----------
 
 FloorLocator::FloorLocator( Vector const & point, float radius )
-: ContactPoint(NULL,point,-1,0.0f),
+: ContactPoint(nullptr,point,-1,0.0f),
   m_valid(true),
-  m_floor(NULL),
+  m_floor(nullptr),
   m_radius(radius),
   m_time(0.0f),
   m_edgeId(-1),
@@ -226,7 +226,7 @@ void FloorLocator::setFloor ( Floor const * newFloor )
 		}
 		else
 		{
-			if(getFloorMesh() == NULL)
+			if(getFloorMesh() == nullptr)
 			{
 				Vector oldPos = getPosition_p();
 
@@ -239,7 +239,7 @@ void FloorLocator::setFloor ( Floor const * newFloor )
 	}
 	else
 	{
-		m_floor = NULL;
+		m_floor = nullptr;
 	}
 }
 
@@ -289,7 +289,7 @@ CellProperty const * FloorLocator::getCell ( void ) const
 	{
 		if(getFloorMesh())
 		{
-			return NULL;
+			return nullptr;
 		}
 		else
 		{
@@ -312,7 +312,7 @@ CellProperty * FloorLocator::getCell ( void )
 	{
 		if(getFloorMesh())
 		{
-			return NULL;
+			return nullptr;
 		}
 		else
 		{
@@ -417,7 +417,7 @@ void FloorLocator::write ( Iff & iff ) const
 
 void FloorLocator::detach ( void )
 {
-	setFloor(NULL);
+	setFloor(nullptr);
 	setId(-1);
 }
 

@@ -150,10 +150,10 @@ namespace TransferServerNamespace
 		if(s_apiClient)
 		{
 			const std::string resultString = resultToString(resultCode);
-			LOG("CustomerService", ("CharacterTransfer: transactionId=%u replyMove(%u, %s, NULL, NULL)", reply.getTransactionId(), reply.getTrack(), resultString.c_str()));
+			LOG("CustomerService", ("CharacterTransfer: transactionId=%u replyMove(%u, %s, nullptr, nullptr)", reply.getTransactionId(), reply.getTrack(), resultString.c_str()));
 			const unsigned int result = static_cast<unsigned int>(resultCode);
 			s_apiClient->moveComplete(reply.getSourceStationId(), reply.getTrack(), result);
-			IGNORE_RETURN(s_apiClient->replyMove(reply.getTrack(), result, Unicode::narrowToWide(resultString).c_str(), NULL));
+			IGNORE_RETURN(s_apiClient->replyMove(reply.getTrack(), result, Unicode::narrowToWide(resultString).c_str(), nullptr));
 		}
 	}
 
@@ -282,7 +282,7 @@ void TransferServer::requestCharacterList(unsigned int track, unsigned int stati
 		{
 			const unsigned int result = static_cast<int>(CTService::CT_RESULT_FAILURE);
 			   
-			IGNORE_RETURN(s_apiClient->replyCharacterList(track, result, 0, NULL, NULL));
+			IGNORE_RETURN(s_apiClient->replyCharacterList(track, result, 0, nullptr, nullptr));
 			s_apiClient->moveComplete(stationId, track, result);
 		}
 	}
@@ -410,7 +410,7 @@ void TransferServer::requestTransferAccount(unsigned int track, unsigned int sou
 		if(s_apiClient)
 		{
 			const unsigned int result = static_cast<unsigned int>(CTService::CT_GAMERESULT_HARDERROR);
-			IGNORE_RETURN(s_apiClient->replyValidateMove(track, result, NULL, NULL, NULL));
+			IGNORE_RETURN(s_apiClient->replyValidateMove(track, result, nullptr, nullptr, nullptr));
 			s_apiClient->moveComplete(sourceStationId, track, result);
 		}
 
@@ -430,7 +430,7 @@ void TransferServer::requestTransferAccount(unsigned int track, unsigned int sou
 		if(s_apiClient)
 		{
 			const unsigned int result = static_cast<unsigned int>(CTService::CT_GAMERESULT_SERVER_IS_DOWN);
-			IGNORE_RETURN(s_apiClient->replyTransferAccount(track, result, NULL, NULL));
+			IGNORE_RETURN(s_apiClient->replyTransferAccount(track, result, nullptr, nullptr));
 			s_apiClient->moveComplete(sourceStationId, track, result);
 		}
 
@@ -442,12 +442,12 @@ void TransferServer::requestTransferAccount(unsigned int track, unsigned int sou
 
 	if(destinationStationId == 0 || sourceStationId == 0)
 	{
-		LOG("CustomerService", ("CharacterTransfer: Account move request made with a null destination station id: or source station id: %lu\n", sourceStationId));
+		LOG("CustomerService", ("CharacterTransfer: Account move request made with a nullptr destination station id: or source station id: %lu\n", sourceStationId));
 
 		if(s_apiClient)
 		{
 			const unsigned int result = static_cast<unsigned int>(CTService::CT_GAMERESULT_HARDERROR);
-			IGNORE_RETURN(s_apiClient->replyTransferAccount(track, result, NULL, NULL));
+			IGNORE_RETURN(s_apiClient->replyTransferAccount(track, result, nullptr, nullptr));
 			s_apiClient->moveComplete(sourceStationId, track, result);
 		}
 
@@ -488,7 +488,7 @@ void TransferServer::requestMoveValidation(unsigned int track, unsigned int sour
 		if(s_apiClient)
 		{
 			const unsigned int result = static_cast<unsigned int>(CTService::CT_GAMERESULT_HARDERROR);
-			IGNORE_RETURN(s_apiClient->replyValidateMove(track, result, NULL, NULL, NULL));
+			IGNORE_RETURN(s_apiClient->replyValidateMove(track, result, nullptr, nullptr, nullptr));
 			s_apiClient->moveComplete(sourceStationId, track, result);
 		}
 	}
@@ -516,7 +516,7 @@ void TransferServer::requestMoveValidation(unsigned int track, unsigned int sour
 			if(s_apiClient)
 			{
 				const unsigned int result = static_cast<unsigned int>(CTService::CT_GAMERESULT_SERVER_IS_DOWN);
-				IGNORE_RETURN(s_apiClient->replyValidateMove(track, result, NULL, NULL, NULL));
+				IGNORE_RETURN(s_apiClient->replyValidateMove(track, result, nullptr, nullptr, nullptr));
 				s_apiClient->moveComplete(sourceStationId, track, result);
 			}
 		}
@@ -651,8 +651,8 @@ void TransferServer::replyCharacterList(const TransferReplyCharacterList & reply
 			result = static_cast<unsigned int>(CTService::CT_RESULT_FAILURE);
 			s_apiClient->moveComplete(reply.getStationId(), reply.getTrack(), result);
 		}
-		LOG("CTSAPI", ("invoking CTServiceAPI::replyCharacterList(%d, %d, %d, characters, NULL)", reply.getTrack(), result, chars.size()));
-		IGNORE_RETURN(s_apiClient->replyCharacterList(reply.getTrack(), result, reply.getAvatarList().size(), characters, NULL));
+		LOG("CTSAPI", ("invoking CTServiceAPI::replyCharacterList(%d, %d, %d, characters, nullptr)", reply.getTrack(), result, chars.size()));
+		IGNORE_RETURN(s_apiClient->replyCharacterList(reply.getTrack(), result, reply.getAvatarList().size(), characters, nullptr));
 	}
 	// else use another interface if available
 }
@@ -675,7 +675,7 @@ void TransferServer::replyValidateMove(const TransferCharacterData & reply)
 		{
 			LOG("CustomerService", ("CharacterTransfer: replyValidateMove passed name validation for %s", reply.toString().c_str()));
 		}
-		IGNORE_RETURN(s_apiClient->replyValidateMove(reply.getTrack(), result, NULL, NULL, NULL));
+		IGNORE_RETURN(s_apiClient->replyValidateMove(reply.getTrack(), result, nullptr, nullptr, nullptr));
 		s_apiClient->moveComplete(reply.getSourceStationId(), reply.getTrack(), result);
 	}
 }
@@ -736,7 +736,7 @@ void TransferServer::replyTransferAccountSuccess(const TransferAccountData & rep
 				LOG("CustomerService", ("CharacterTransfer: Could not transfer chat avatars for character %s on cluster %s from %lu to %lu: central connection does not exist in transferserver", i->second.c_str(), i->first.c_str(), reply.getSourceStationId(), reply.getDestinationStationId()));
 				const unsigned int result = static_cast<unsigned int>(CTService::CT_GAMERESULT_HARDERROR);
 				s_apiClient->moveComplete(reply.getSourceStationId(), reply.getTrack(), result);
-				IGNORE_RETURN(s_apiClient->replyTransferAccount(reply.getTrack(), result, NULL, NULL));
+				IGNORE_RETURN(s_apiClient->replyTransferAccount(reply.getTrack(), result, nullptr, nullptr));
 			}
 		}
 	}
@@ -748,7 +748,7 @@ void TransferServer::replyTransferAccountSuccess(const TransferAccountData & rep
 	if(s_apiClient)
 	{
 		const unsigned int result = static_cast<unsigned int>(CTService::CT_GAMERESULT_SUCCESS);
-		IGNORE_RETURN(s_apiClient->replyTransferAccount(reply.getTrack(), result, NULL, NULL));
+		IGNORE_RETURN(s_apiClient->replyTransferAccount(reply.getTrack(), result, nullptr, nullptr));
 		s_apiClient->moveComplete(reply.getSourceStationId(), reply.getTrack(), result);
 	}
 }
@@ -808,7 +808,7 @@ void TransferServer::failedToTransferAccountNoCentralConnection(const TransferAc
 		LOG("CustomerService", ("CharacterTransfer: Transfer failed: Could not connect to central server to update game database. Sending HARD ERROR to CTS API. %s", failed.toString().c_str()));
 		const unsigned int result = static_cast<unsigned int>(CTService::CT_GAMERESULT_HARDERROR);
 		s_apiClient->moveComplete(failed.getSourceStationId(), failed.getTrack(), result);
-		IGNORE_RETURN(s_apiClient->replyTransferAccount(failed.getTrack(), result, NULL, NULL));
+		IGNORE_RETURN(s_apiClient->replyTransferAccount(failed.getTrack(), result, nullptr, nullptr));
 	}
 }
 
@@ -821,7 +821,7 @@ void TransferServer::failedToTransferAccountDestinationNotEmpty (const TransferA
 		LOG("CustomerService", ("CharacterTransfer: Transfer failed: Destination stationId has avatars. Sending HARD ERROR to CTS API. %s", failed.toString().c_str()));
 		const unsigned int result = static_cast<unsigned int>(CTService::CT_GAMERESULT_HARDERROR);
 		s_apiClient->moveComplete(failed.getSourceStationId(), failed.getTrack(), result);
-		IGNORE_RETURN(s_apiClient->replyTransferAccount(failed.getTrack(), result, NULL, NULL));
+		IGNORE_RETURN(s_apiClient->replyTransferAccount(failed.getTrack(), result, nullptr, nullptr));
 	}
 }
 
@@ -860,7 +860,7 @@ void TransferServer::failedToValidateTransfer(const TransferReplyMoveValidation 
 	{
 		const unsigned int result = ((reply.getResult() == TransferReplyMoveValidation::TRMVR_cannot_create_regular_character) ? static_cast<unsigned int>(CTService::CT_GAMERESULT_MAX_CHAR_ON_DEST_SERVER) : static_cast<unsigned int>(CTService::CT_GAMERESULT_SERVER_IS_DOWN));
 
-		IGNORE_RETURN(s_apiClient->replyValidateMove(reply.getTrack(), result, NULL, NULL, NULL));
+		IGNORE_RETURN(s_apiClient->replyValidateMove(reply.getTrack(), result, nullptr, nullptr, nullptr));
 		s_apiClient->moveComplete(reply.getSourceStationId(), reply.getTrack(), result);
 
 		// close pseudoclientconnections

@@ -80,8 +80,8 @@ void Appearance::setRenderHardpointFunction(RenderHardpointFunction renderHardpo
 
 Appearance::Appearance(const AppearanceTemplate *newAppearanceTemplate) :
 	m_appearanceTemplate(AppearanceTemplateList::fetch(newAppearanceTemplate)),
-	m_extent(m_appearanceTemplate ? ExtentList::fetch(m_appearanceTemplate->getExtent()) : NULL),
-	m_owner(NULL),
+	m_extent(m_appearanceTemplate ? ExtentList::fetch(m_appearanceTemplate->getExtent()) : nullptr),
+	m_owner(nullptr),
 	m_renderedFrameNumber(0),
 	m_scale(Vector::xyz111),
 	m_keepAlive(false),
@@ -100,15 +100,15 @@ Appearance::Appearance(const AppearanceTemplate *newAppearanceTemplate) :
 Appearance::~Appearance()
 {
 	ExtentList::release(m_extent);
-	m_extent = NULL;
+	m_extent = nullptr;
 
 	if (m_appearanceTemplate)
 	{
 		AppearanceTemplateList::release(m_appearanceTemplate);
-		m_appearanceTemplate = NULL;
+		m_appearanceTemplate = nullptr;
 	}
 
-	m_owner = NULL;
+	m_owner = nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -269,7 +269,7 @@ void Appearance::render() const
 void Appearance::objectListCameraRenderDescend(Object const & obj)
 {
 	//-- don't descend through cells
-	if (NULL != obj.getCellProperty())
+	if (nullptr != obj.getCellProperty())
 		return;
 
 	int const childCount = obj.getNumberOfChildObjects();
@@ -378,7 +378,7 @@ bool Appearance::implementsCollide() const
  * CustomizationDataProperty.  If there is such a property, this
  * function will invoke Appearance::setCustomizationData() with the 
  * appropriate value.  If the property doesn't exist, this function
- * will invoke Appearance::setCustomizationData() with NULL.  Note if
+ * will invoke Appearance::setCustomizationData() with nullptr.  Note if
  * the caller sets the CustomizationDataProperty for an Object after
  * associating the Object instance with the appearance, the caller is
  * responsible for calling Appearance::setCustomizationData().
@@ -457,7 +457,7 @@ const char * Appearance::getFloorName () const
 	if (m_appearanceTemplate)
 		return m_appearanceTemplate->getFloorName();
 
-	return NULL;
+	return nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -607,7 +607,7 @@ const char * Appearance::getAppearanceTemplateName () const
 
 DPVS::Object *Appearance::getDpvsObject() const
 {
-	return NULL;
+	return nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -748,14 +748,14 @@ SkeletalAppearance2 const * Appearance::asSkeletalAppearance2() const
 
 ComponentAppearance * Appearance::asComponentAppearance()
 {
-	return NULL;
+	return nullptr;
 }
 
 // ----------------------------------------------------------------------
 
 ComponentAppearance const * Appearance::asComponentAppearance() const
 {
-	return NULL;
+	return nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -783,14 +783,14 @@ void Appearance::onEvent(LabelHash::Id /* eventId */)
 
 int Appearance::getHardpointCount() const
 {
-	return m_appearanceTemplate != NULL ? m_appearanceTemplate->getHardpointCount() : 0;
+	return m_appearanceTemplate != nullptr ? m_appearanceTemplate->getHardpointCount() : 0;
 }
 
 // ----------------------------------------------------------------------
 
 int Appearance::getHardpointIndex(CrcString const &hardpointName, bool optional) const
 {
-	return m_appearanceTemplate != NULL ? m_appearanceTemplate->getHardpointIndex(hardpointName, optional) : -1;
+	return m_appearanceTemplate != nullptr ? m_appearanceTemplate->getHardpointIndex(hardpointName, optional) : -1;
 }
 
 // ----------------------------------------------------------------------
@@ -855,42 +855,42 @@ bool Appearance::usesRenderEffectsFlag() const
 
 ParticleEffectAppearance * Appearance::asParticleEffectAppearance()
 {
-	return NULL;
+	return nullptr;
 }
 
 // ----------------------------------------------------------------------
 
 ParticleEffectAppearance const * Appearance::asParticleEffectAppearance() const
 {
-	return NULL;
+	return nullptr;
 }
 
 // ----------------------------------------------------------------------
 
 SwooshAppearance * Appearance::asSwooshAppearance()
 {
-	return NULL;
+	return nullptr;
 }
 
 // ----------------------------------------------------------------------
 
 SwooshAppearance const * Appearance::asSwooshAppearance() const
 {
-	return NULL;
+	return nullptr;
 }
 
 // ----------------------------------------------------------------------
 
 LightningAppearance * Appearance::asLightningAppearance()
 {
-	return NULL;
+	return nullptr;
 }
 
 // ----------------------------------------------------------------------
 
 LightningAppearance const * Appearance::asLightningAppearance() const
 {
-	return NULL;
+	return nullptr;
 }
 
 // ======================================================================

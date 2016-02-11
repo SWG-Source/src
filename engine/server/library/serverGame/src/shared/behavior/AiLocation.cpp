@@ -43,9 +43,9 @@ namespace AiLocationArchive
 AiLocation::AiLocation ( void )
 :	m_valid(false),
 	m_attached(false),
-	m_object(NULL),
+	m_object(nullptr),
 	m_objectId(),
-	m_cellObject(NULL),
+	m_cellObject(nullptr),
 	m_position_p(Vector::zero),
 	m_position_w(Vector::zero),
 	m_radius(0.0f),
@@ -60,9 +60,9 @@ AiLocation::AiLocation ( void )
 AiLocation::AiLocation ( CellProperty const * cell, Vector const & position, float radius )
 :	m_valid(true),
 	m_attached(false),
-	m_object(NULL),
+	m_object(nullptr),
 	m_objectId(),
-	m_cellObject(cell ? &cell->getOwner() : NULL),
+	m_cellObject(cell ? &cell->getOwner() : nullptr),
 	m_position_p(position),
 	m_position_w(CollisionUtils::transformToWorld(cell,position)),
 	m_radius(radius),
@@ -78,9 +78,9 @@ AiLocation::AiLocation ( CellProperty const * cell, Vector const & position, flo
 AiLocation::AiLocation ( NetworkId const & cellId, Vector const & position, float radius )
 :	m_valid(true),
 	m_attached(false),
-	m_object(NULL),
+	m_object(nullptr),
 	m_objectId(),
-	m_cellObject(NULL),
+	m_cellObject(nullptr),
 	m_position_p(position),
 	m_position_w(position),
 	m_radius(radius),
@@ -110,9 +110,9 @@ AiLocation::AiLocation ( NetworkId const & cellId, Vector const & position, floa
 AiLocation::AiLocation ( Object const * object )
 :	m_valid(true),
 	m_attached(true),
-	m_object(NULL),
+	m_object(nullptr),
 	m_objectId(),
-	m_cellObject(NULL),
+	m_cellObject(nullptr),
 	m_position_p(Vector::zero),
 	m_position_w(Vector::zero),
 	m_radius(0.0f),
@@ -129,9 +129,9 @@ AiLocation::AiLocation ( Object const * object )
 AiLocation::AiLocation ( NetworkId const & objectId )
 :	m_valid(true),
 	m_attached(true),
-	m_object(NULL),
+	m_object(nullptr),
 	m_objectId(),
-	m_cellObject(NULL),
+	m_cellObject(nullptr),
 	m_position_p(Vector::zero),
 	m_position_w(Vector::zero),
 	m_radius(0.0f),
@@ -148,9 +148,9 @@ AiLocation::AiLocation ( NetworkId const & objectId )
 AiLocation::AiLocation ( Object const * object, Vector const & offset, bool relativeOffset )
 :	m_valid(true),
 	m_attached(true),
-	m_object(NULL),
+	m_object(nullptr),
 	m_objectId(),
-	m_cellObject(NULL),
+	m_cellObject(nullptr),
 	m_position_p(Vector::zero),
 	m_position_w(Vector::zero),
 	m_radius(0.0f),
@@ -167,9 +167,9 @@ AiLocation::AiLocation ( Object const * object, Vector const & offset, bool rela
 AiLocation::AiLocation ( NetworkId const & objectId, Vector const & offset, bool relativeOffset )
 :	m_valid(true),
 	m_attached(true),
-	m_object(NULL),
+	m_object(nullptr),
 	m_objectId(),
-	m_cellObject(NULL),
+	m_cellObject(nullptr),
 	m_position_p(Vector::zero),
 	m_position_w(Vector::zero),
 	m_radius(0.0f),
@@ -365,7 +365,7 @@ void AiLocation::setObject ( Object const * object )
 {
 	if(m_attached)
 	{
-		if (object == NULL)
+		if (object == nullptr)
 		{
 			clear();
 			return;
@@ -385,7 +385,7 @@ void AiLocation::setObject ( Object const * object )
 
 void AiLocation::detach ( void )
 {
-	m_object = NULL;
+	m_object = nullptr;
 	m_objectId = NetworkId::cms_invalid;
 	m_attached = false;
 }
@@ -394,7 +394,7 @@ void AiLocation::detach ( void )
 
 CellProperty const * AiLocation::getCell ( void ) const
 {
-	return m_cellObject ? m_cellObject->getCellProperty() : NULL;
+	return m_cellObject ? m_cellObject->getCellProperty() : nullptr;
 }
 
 // ----------
@@ -424,7 +424,7 @@ bool AiLocation::hasChanged ( void ) const
 
 Vector AiLocation::getPosition_p ( void ) const
 {
-	if(m_cellObject.getPointer() == NULL)
+	if(m_cellObject.getPointer() == nullptr)
 	{
 		WARNING(ConfigServerGame::getReportAiWarnings(),("AiLocation::getPosition_p - Locations's parent cell has disappeared\n"));
 		
@@ -572,8 +572,8 @@ void AiLocation::clear ( void )
 
 	m_valid = false;
 	m_attached = false;
-	m_object = NULL;
-	m_cellObject = NULL;
+	m_object = nullptr;
+	m_cellObject = nullptr;
 	m_position_p = Vector::zero;
 	m_radius = 0.0f;
 	m_offset_p = Vector::zero;
@@ -585,7 +585,7 @@ void AiLocation::clear ( void )
 
 bool AiLocation::isInWorldCell ( void ) const
 {
-	return isValid() && ( (getCell() == NULL) || (getCell() == CellProperty::getWorldCellProperty()) );
+	return isValid() && ( (getCell() == nullptr) || (getCell() == CellProperty::getWorldCellProperty()) );
 
 }
 
@@ -599,7 +599,7 @@ bool AiLocation::validate ( void ) const
 
 	TerrainObject * terrain = TerrainObject::getInstance();
 
-	if(terrain == NULL) return true;
+	if(terrain == nullptr) return true;
 
 	float w = terrain->getMapWidthInMeters() / 2.0f;
 

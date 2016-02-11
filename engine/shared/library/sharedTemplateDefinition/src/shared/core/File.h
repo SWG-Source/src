@@ -54,13 +54,13 @@ private:
 
 
 inline File::File(void) :
-	m_fp(NULL),
+	m_fp(nullptr),
 	m_currentLine(0)
 {
 }	// File::File(void)
 
 inline File::File(const char *filename, const char *mode) :
-	m_fp(NULL),
+	m_fp(nullptr),
 	m_currentLine(0)
 {
 	open(filename, mode);
@@ -83,15 +83,15 @@ inline const Filename & File::getFilename(void) const
 
 inline bool File::isOpened(void) const
 {
-	return (m_fp != NULL);
+	return (m_fp != nullptr);
 }	// File::isOpened
 
 inline void File::close(void)
 {
-	if (m_fp != NULL)
+	if (m_fp != nullptr)
 	{
 		fclose(m_fp);
-		m_fp = NULL;
+		m_fp = nullptr;
 	}
 }	// File::close
 
@@ -110,7 +110,7 @@ inline void File::printWarning(const char *buffer) const
 
 	fprintf(stderr, "%s", error);
 
-	if (m_callBack != NULL)
+	if (m_callBack != nullptr)
 	{
 		m_callBack(error);
 	}
@@ -125,7 +125,7 @@ inline void File::printError(const char *buffer) const
 
 	fprintf(stderr, "%s", error);
 
-	if (m_callBack != NULL)
+	if (m_callBack != nullptr)
 	{
 		m_callBack(error);
 	}

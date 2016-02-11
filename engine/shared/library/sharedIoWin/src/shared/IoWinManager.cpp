@@ -35,7 +35,7 @@ namespace IoWinManagerNamespace
 	
 	// Inactivity timer.
 	float const s_defaultInactivityTimeSeconds = 15.0f * 60.0f;
-	IoWinManager::InactivityCallback s_inactivityCallback = NULL;
+	IoWinManager::InactivityCallback s_inactivityCallback = nullptr;
 	Timer s_inactivityTimer(s_defaultInactivityTimeSeconds);
 	bool s_isInactive = true;
 
@@ -76,7 +76,7 @@ void IoWinManagerNamespace::triggerInactive(bool inactive)
 {
 	if (!boolEqual(s_isInactive, inactive))
 	{
-		if (s_inactivityCallback != NULL) 
+		if (s_inactivityCallback != nullptr) 
 		{
 			(*s_inactivityCallback)(inactive);
 		}
@@ -105,7 +105,7 @@ IoEvent                          *IoWinManager::firstEvent;
 IoEvent                          *IoWinManager::lastEvent;
 
 MemoryBlockManager *IoWinManager::eventBlockManager;
-IoWinManager::IMEFunctionPointer  IoWinManager::imeFunction = NULL;
+IoWinManager::IMEFunctionPointer  IoWinManager::imeFunction = nullptr;
 
 // ======================================================================
 // Install the IoWinManager
@@ -122,8 +122,8 @@ IoWinManager::IMEFunctionPointer  IoWinManager::imeFunction = NULL;
 void IoWinManager::install()
 {
 	DEBUG_FATAL(installed, ("double install"));
-	top = NULL;
-	captured = NULL;
+	top = nullptr;
+	captured = nullptr;
 	ExitChain::add(IoWinManager::remove, "IoWinManager::remove");
 	eventBlockManager = new MemoryBlockManager("IoWinManager eventBlockManager", true, sizeof(IoEvent), 0, 0, 0);
 	installed = true;
@@ -162,9 +162,9 @@ void IoWinManager::remove(void)
 	IoResult   result;
 	IoEvent   *event;
 
-	Os::setQueueCharacterHookFunction(NULL);
-	Os::setSetSystemMouseCursorPositionHookFunction(NULL);
-	Os::setQueueKeyDownHookFunction(NULL);
+	Os::setQueueCharacterHookFunction(nullptr);
+	Os::setSetSystemMouseCursorPositionHookFunction(nullptr);
+	Os::setQueueKeyDownHookFunction(nullptr);
 
 	DEBUG_FATAL(!installed, ("not installed"));
 	installed = false;
@@ -191,7 +191,7 @@ void IoWinManager::remove(void)
 	delete eventBlockManager;
 
 	// Remove the inactivity timer.
-	registerInactivityCallback(NULL, 0.0f);
+	registerInactivityCallback(nullptr, 0.0f);
 }
 
 // ----------------------------------------------------------------------
@@ -229,10 +229,10 @@ void IoWinManager::debugReport()
 
 void IoWinManager::processEvents(float elapsedTime)
 {
-	IoWin * w = NULL;
-	IoWin * next = NULL;
-	IoEvent * queue = NULL;
-	IoEvent * event = NULL;
+	IoWin * w = nullptr;
+	IoWin * next = nullptr;
+	IoEvent * queue = nullptr;
+	IoEvent * event = nullptr;
 
 	IoResult  result;
 
@@ -244,8 +244,8 @@ void IoWinManager::processEvents(float elapsedTime)
 	queue->next = firstEvent;
 
 	// the event list is now empty
-	firstEvent = NULL;
-	lastEvent = NULL;
+	firstEvent = nullptr;
+	lastEvent = nullptr;
 
 	// Update the activity timer.
 	if (!s_isInactive)
@@ -267,7 +267,7 @@ void IoWinManager::processEvents(float elapsedTime)
 		queue = queue->next;
 
 		// keep people from peeking ahead in the event queue
-		event->next = NULL;
+		event->next = nullptr;
 
 
 		// Check to see if the event resets 
@@ -310,7 +310,7 @@ void IoWinManager::processEvents(float elapsedTime)
 
 		if (debugReportEvents)
 		{
-			const char *name = NULL;
+			const char *name = nullptr;
 
 			switch (event->type)
 			{
@@ -434,7 +434,7 @@ void IoWinManager::open(IoWin *window)
 	// validate the arguments
 	if (!window)
 	{
-		DEBUG_FATAL(true, ("null window"));
+		DEBUG_FATAL(true, ("nullptr window"));
 		return; //lint !e527 // Warning -- Unreachable
 	}
 
@@ -511,13 +511,13 @@ void IoWinManager::close(IoWin *window, bool allowDelete)
 	// validate the arguments
 	if (!window)
 	{
-		DEBUG_FATAL(true, ("null window"));
+		DEBUG_FATAL(true, ("nullptr window"));
 		return;  //lint !e527 // Warning -- Unreachable
 	}
 
 	// linked list traversal with a back pointer
 	IoWin *back, *front;
-	for (back = NULL, front = top; front && front != window; back = front, front = front->ioNext)
+	for (back = nullptr, front = top; front && front != window; back = front, front = front->ioNext)
 		;
 
 	// verify the window was found
@@ -528,7 +528,7 @@ void IoWinManager::close(IoWin *window, bool allowDelete)
 	}
 
 	// -qq- lint hack
-	DEBUG_FATAL(!window, ("null window"));
+	DEBUG_FATAL(!window, ("nullptr window"));
 
 	// remove it from the singly linked list
 	if (back)
@@ -566,7 +566,7 @@ IoEvent *IoWinManager::newEvent(IoEventType eventType, int arg1, int arg2, real 
 	IoEvent * const event = reinterpret_cast<IoEvent *>(eventBlockManager->allocate());
 
 	// fill out the event data
-	event->next = NULL;
+	event->next = nullptr;
 	event->type = eventType;
 	event->arg1 = arg1;
 	event->arg2 = arg2;

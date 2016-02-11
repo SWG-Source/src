@@ -379,10 +379,10 @@ void LfgDataTable::install()
 		unsigned long maxValueForNumBits;
 		std::map<std::string, int> names;
 		std::map<int, LfgNode const *> allSlotsById;
-		LfgNode * lfgNode = NULL;
-		LfgNode * currentTier1Node = NULL;
-		LfgNode * currentTier2Node = NULL;
-		LfgNode * currentTier3Node = NULL;
+		LfgNode * lfgNode = nullptr;
+		LfgNode * currentTier1Node = nullptr;
+		LfgNode * currentTier2Node = nullptr;
+		LfgNode * currentTier3Node = nullptr;
 
 		for (int i = 0; i < numRows; ++i)
 		{
@@ -472,15 +472,15 @@ void LfgDataTable::install()
 			FATAL(((minValue > 0) && (maxValueBeginSlotId < 0)), ("%s, row %d: minValueBeginSlotId/minValueEndSlotId/maxValueBeginSlotId/maxValueEndSlotId must be specified if minValue/maxValue is specified", cs_lfgDataTableName, (i+3)));
 
 			// create a new node
-			lfgNode = NULL;
+			lfgNode = nullptr;
 			if (!tier1.empty())
 			{
-				lfgNode = new LfgNode(tier1, internalAttribute, minValueBeginSlotId, minValueEndSlotId, maxValueBeginSlotId, maxValueEndSlotId, minValue, maxValue, defaultMatchCondition, NULL);
+				lfgNode = new LfgNode(tier1, internalAttribute, minValueBeginSlotId, minValueEndSlotId, maxValueBeginSlotId, maxValueEndSlotId, minValue, maxValue, defaultMatchCondition, nullptr);
 				s_topLevelNodes.push_back(lfgNode);
 
 				currentTier1Node = lfgNode;
-				currentTier2Node = NULL;
-				currentTier3Node = NULL;
+				currentTier2Node = nullptr;
+				currentTier3Node = nullptr;
 			}
 			else if (!tier2.empty())
 			{
@@ -490,7 +490,7 @@ void LfgDataTable::install()
 				currentTier1Node->children.push_back(lfgNode);
 
 				currentTier2Node = lfgNode;
-				currentTier3Node = NULL;
+				currentTier3Node = nullptr;
 			}
 			else if (!tier3.empty())
 			{
@@ -580,7 +580,7 @@ void LfgDataTable::install()
 
 				// find out the leaf node's ancestor, if any, that has the Any/All option
 				LfgNode const * parentNode = node.parent;
-				bool const hasParent = (parentNode != NULL);
+				bool const hasParent = (parentNode != nullptr);
 				int countParentWithNonNaDefaultMatchCondition = 0;
 				std::string stringParentWithNonNaDefaultMatchCondition;
 				while (parentNode)
@@ -670,7 +670,7 @@ LfgDataTable::LfgNode const * LfgDataTable::getLfgNodeByName(std::string const &
 {
 	std::map<std::string, LfgNode const *>::const_iterator iterNode = s_allNodesByName.find(lfgNodeName);
 	if (iterNode == s_allNodesByName.end())
-		return NULL;
+		return nullptr;
 
 	return iterNode->second;
 }
@@ -681,7 +681,7 @@ LfgDataTable::LfgNode const * LfgDataTable::getLfgLeafNodeByName(std::string con
 {
 	std::map<std::string, LfgNode const *>::const_iterator iterNode = s_allLeafNodesByName.find(lfgNodeName);
 	if (iterNode == s_allLeafNodesByName.end())
-		return NULL;
+		return nullptr;
 
 	return iterNode->second;
 }

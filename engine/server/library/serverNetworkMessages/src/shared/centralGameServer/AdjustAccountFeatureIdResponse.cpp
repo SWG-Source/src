@@ -10,7 +10,7 @@
 
 // ======================================================================
 
-AdjustAccountFeatureIdResponse::AdjustAccountFeatureIdResponse(NetworkId const & requestingPlayer, uint32 gameServer, NetworkId const & targetPlayer, std::string const & targetPlayerDescription, StationId targetStationId, NetworkId const & targetItem, std::string const & targetItemDescription, uint32 gameCode, uint32 featureId, int oldValue, int newValue, unsigned int resultCode, bool resultCameFromSession, const char * sessionResultString /*= NULL*/, const char * sessionResultText /*= NULL*/) :
+AdjustAccountFeatureIdResponse::AdjustAccountFeatureIdResponse(NetworkId const & requestingPlayer, uint32 gameServer, NetworkId const & targetPlayer, std::string const & targetPlayerDescription, StationId targetStationId, NetworkId const & targetItem, std::string const & targetItemDescription, uint32 gameCode, uint32 featureId, int oldValue, int newValue, unsigned int resultCode, bool resultCameFromSession, const char * sessionResultString /*= nullptr*/, const char * sessionResultText /*= nullptr*/) :
 GameNetworkMessage("AdjustAccountFeatureIdResponse"),
 m_requestingPlayer(requestingPlayer),
 m_gameServer(gameServer),

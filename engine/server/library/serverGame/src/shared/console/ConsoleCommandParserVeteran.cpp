@@ -42,7 +42,7 @@ bool ConsoleCommandParserVeteran::performParsing (const NetworkId & userId, cons
 	{
 		NetworkId targetPlayer(Unicode::wideToNarrow (argv[1]));
 		ServerObject const * const so = safe_cast<ServerObject const *>(NetworkIdManager::getObjectById(targetPlayer));
-		Client const * const client = so ? so->getClient() : NULL;
+		Client const * const client = so ? so->getClient() : nullptr;
 		if (client)
 		{
 			std::string output;
@@ -107,7 +107,7 @@ bool ConsoleCommandParserVeteran::performParsing (const NetworkId & userId, cons
 	{
 		NetworkId targetPlayer(Unicode::wideToNarrow(argv[1]));
 		ServerObject const * const so = safe_cast<ServerObject const *>(NetworkIdManager::getObjectById(targetPlayer));
-		CreatureObject const * const playerCreature = so ? so->asCreatureObject() : NULL;
+		CreatureObject const * const playerCreature = so ? so->asCreatureObject() : nullptr;
 		if (!playerCreature)
 			result += getErrorMessage(argv[0],ERR_INVALID_OBJECT);
 		else
@@ -126,7 +126,7 @@ bool ConsoleCommandParserVeteran::performParsing (const NetworkId & userId, cons
 	{
 		std::string url(Unicode::wideToNarrow(argv[1]));
 		ServerObject const * const so = safe_cast<ServerObject const *>(NetworkIdManager::getObjectById(userId));
-		Client const * const client = so ? so->getClient() : NULL;
+		Client const * const client = so ? so->getClient() : nullptr;
 		if (client)
 		{
 			client->launchWebBrowser(url);

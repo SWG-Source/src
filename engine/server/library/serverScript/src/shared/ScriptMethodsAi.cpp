@@ -126,18 +126,18 @@ AICreatureController * const ScriptMethodsAiNamespace::getAiCreatureController(j
 	NetworkId const aiNetworkId(ai);
 	CreatureObject * const aiCreatureObject = CreatureObject::getCreatureObject(aiNetworkId);
 
-	if (aiCreatureObject == NULL)
+	if (aiCreatureObject == nullptr)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("Unable to resolve the ai(%s) to a CreatureObject.", aiNetworkId.getValueString().c_str()));
-		return NULL;
+		return nullptr;
 	}
 
 	AICreatureController * const aiCreatureController = AICreatureController::asAiCreatureController(aiCreatureObject->getController());
 
-	if (aiCreatureController == NULL)
+	if (aiCreatureController == nullptr)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("Unable to get the ai's(%s) AiCreatureController.", aiCreatureObject->getDebugInformation().c_str()));
-		return NULL;
+		return nullptr;
 	}
 
 	return aiCreatureController;
@@ -155,14 +155,14 @@ jint JNICALL ScriptMethodsAiNamespace::aiGetMovementState(JNIEnv * /*env*/, jobj
 	NetworkId const aiNetworkId(ai);
 	CreatureObject * const aiCreatureObject = CreatureObject::getCreatureObject(aiNetworkId);
 
-	if (aiCreatureObject == NULL)
+	if (aiCreatureObject == nullptr)
 	{
 		return AMT_invalid;
 	}
 
 	AICreatureController * const aiCreatureController = AICreatureController::asAiCreatureController(aiCreatureObject->getController());
 
-	if (aiCreatureController == NULL)
+	if (aiCreatureController == nullptr)
 	{
 		return AMT_invalid;
 	}
@@ -187,14 +187,14 @@ jboolean JNICALL ScriptMethodsAiNamespace::aiLoggingEnabled(JNIEnv * /*env*/, jo
 	NetworkId const aiNetworkId(ai);
 	CreatureObject * const aiCreatureObject = CreatureObject::getCreatureObject(aiNetworkId);
 
-	if (aiCreatureObject == NULL)
+	if (aiCreatureObject == nullptr)
 	{
 		return JNI_FALSE;
 	}
 
 	AICreatureController * const aiCreatureController = AICreatureController::asAiCreatureController(aiCreatureObject->getController());
 
-	if (aiCreatureController == NULL)
+	if (aiCreatureController == nullptr)
 	{
 		return JNI_FALSE;
 	}
@@ -212,7 +212,7 @@ jboolean JNICALL ScriptMethodsAiNamespace::aiIsFrozen(JNIEnv * /*env*/, jobject 
 {
 	AICreatureController * const aiCreatureController = ScriptMethodsAiNamespace::getAiCreatureController(ai);
 
-	if (aiCreatureController == NULL)
+	if (aiCreatureController == nullptr)
 	{
 		return JNI_FALSE;
 	}
@@ -226,14 +226,14 @@ jboolean JNICALL ScriptMethodsAiNamespace::aiIsAggressive(JNIEnv * /*env*/, jobj
 	NetworkId const aiNetworkId(ai);
 	CreatureObject * const aiCreatureObject = CreatureObject::getCreatureObject(aiNetworkId);
 
-	if (aiCreatureObject == NULL)
+	if (aiCreatureObject == nullptr)
 	{
 		return JNI_FALSE;
 	}
 
 	AICreatureController * const aiCreatureController = AICreatureController::asAiCreatureController(aiCreatureObject->getController());
 
-	if (aiCreatureController == NULL)
+	if (aiCreatureController == nullptr)
 	{
 		return JNI_FALSE;
 	}
@@ -247,14 +247,14 @@ jboolean JNICALL ScriptMethodsAiNamespace::aiIsAssist(JNIEnv * /*env*/, jobject 
 	NetworkId const aiNetworkId(ai);
 	CreatureObject * const aiCreatureObject = CreatureObject::getCreatureObject(aiNetworkId);
 
-	if (aiCreatureObject == NULL)
+	if (aiCreatureObject == nullptr)
 	{
 		return JNI_FALSE;
 	}
 
 	AICreatureController * const aiCreatureController = AICreatureController::asAiCreatureController(aiCreatureObject->getController());
 
-	if (aiCreatureController == NULL)
+	if (aiCreatureController == nullptr)
 	{
 		return JNI_FALSE;
 	}
@@ -267,7 +267,7 @@ jboolean JNICALL ScriptMethodsAiNamespace::aiIsStalker(JNIEnv * /*env*/, jobject
 {
 	AICreatureController * const aiCreatureController = ScriptMethodsAiNamespace::getAiCreatureController(ai);
 
-	if (aiCreatureController == NULL)
+	if (aiCreatureController == nullptr)
 	{
 		return JNI_FALSE;
 	}
@@ -282,14 +282,14 @@ jboolean JNICALL ScriptMethodsAiNamespace::aiIsKiller(JNIEnv * /*env*/, jobject 
 	NetworkId const aiNetworkId(ai);
 	CreatureObject * const aiCreatureObject = CreatureObject::getCreatureObject(aiNetworkId);
 
-	if (aiCreatureObject == NULL)
+	if (aiCreatureObject == nullptr)
 	{
 		return JNI_FALSE;
 	}
 
 	AICreatureController * const aiCreatureController = AICreatureController::asAiCreatureController(aiCreatureObject->getController());
 
-	if (aiCreatureController == NULL)
+	if (aiCreatureController == nullptr)
 	{
 		return JNI_FALSE;
 	}
@@ -302,7 +302,7 @@ void JNICALL ScriptMethodsAiNamespace::aiTether(JNIEnv * /*env*/, jobject /*self
 {
 	AICreatureController * const aiCreatureController = ScriptMethodsAiNamespace::getAiCreatureController(ai);
 
-	if (aiCreatureController == NULL)
+	if (aiCreatureController == nullptr)
 	{
 		return;
 	}
@@ -316,14 +316,14 @@ jboolean JNICALL ScriptMethodsAiNamespace::aiIsTethered(JNIEnv * /*env*/, jobjec
 	NetworkId const aiNetworkId(ai);
 	CreatureObject * const aiCreatureObject = CreatureObject::getCreatureObject(aiNetworkId);
 
-	if (aiCreatureObject == NULL)
+	if (aiCreatureObject == nullptr)
 	{
 		return JNI_FALSE;
 	}
 
 	AICreatureController * const aiCreatureController = AICreatureController::asAiCreatureController(aiCreatureObject->getController());
 
-	if (aiCreatureController == NULL)
+	if (aiCreatureController == nullptr)
 	{
 		return JNI_FALSE;
 	}
@@ -336,7 +336,7 @@ void JNICALL ScriptMethodsAiNamespace::aiSetHomeLocation(JNIEnv * /*env*/, jobje
 {
 	AICreatureController * const aiCreatureController = ScriptMethodsAiNamespace::getAiCreatureController(ai);
 
-	if (aiCreatureController == NULL)
+	if (aiCreatureController == nullptr)
 	{
 		return;
 	}
@@ -356,7 +356,7 @@ jobject JNICALL ScriptMethodsAiNamespace::aiGetHomeLocation(JNIEnv * /*env*/, jo
 {
 	AICreatureController * const aiCreatureController = ScriptMethodsAiNamespace::getAiCreatureController(ai);
 
-	if (aiCreatureController == NULL)
+	if (aiCreatureController == nullptr)
 	{
 		return JavaLibrary::getVector(Vector::zero)->getReturnValue();
 	}
@@ -373,7 +373,7 @@ jobject JNICALL ScriptMethodsAiNamespace::aiGetLeashAnchorLocation(JNIEnv * /*en
 {
 	AICreatureController * const aiCreatureController = ScriptMethodsAiNamespace::getAiCreatureController(ai);
 
-	if (aiCreatureController == NULL)
+	if (aiCreatureController == nullptr)
 	{
 		return JavaLibrary::getVector(Vector::zero)->getReturnValue();
 	}
@@ -396,7 +396,7 @@ jfloat JNICALL ScriptMethodsAiNamespace::aiGetRespectRadius(JNIEnv * /*env*/, jo
 {
 	AICreatureController * const aiCreatureController = ScriptMethodsAiNamespace::getAiCreatureController(ai);
 
-	if (aiCreatureController == NULL)
+	if (aiCreatureController == nullptr)
 	{
 		return 0.0f;
 	}
@@ -411,7 +411,7 @@ jfloat JNICALL ScriptMethodsAiNamespace::aiGetAggroRadius(JNIEnv * /*env*/, jobj
 {
 	AICreatureController * const aiCreatureController = ScriptMethodsAiNamespace::getAiCreatureController(ai);
 
-	if (aiCreatureController == NULL)
+	if (aiCreatureController == nullptr)
 	{
 		return 0.0f;
 	}
@@ -424,7 +424,7 @@ void JNICALL ScriptMethodsAiNamespace::aiEquipPrimaryWeapon(JNIEnv * /*env*/, jo
 {
 	AICreatureController * const aiCreatureController = ScriptMethodsAiNamespace::getAiCreatureController(ai);
 
-	if (aiCreatureController == NULL)
+	if (aiCreatureController == nullptr)
 	{
 		return;
 	}
@@ -437,7 +437,7 @@ void JNICALL ScriptMethodsAiNamespace::aiEquipSecondaryWeapon(JNIEnv * /*env*/, 
 {
 	AICreatureController * const aiCreatureController = ScriptMethodsAiNamespace::getAiCreatureController(ai);
 
-	if (aiCreatureController == NULL)
+	if (aiCreatureController == nullptr)
 	{
 		return;
 	}
@@ -450,7 +450,7 @@ void JNICALL ScriptMethodsAiNamespace::aiUnEquipWeapons(JNIEnv * /*env*/, jobjec
 {
 	AICreatureController * const aiCreatureController = ScriptMethodsAiNamespace::getAiCreatureController(ai);
 
-	if (aiCreatureController == NULL)
+	if (aiCreatureController == nullptr)
 	{
 		return;
 	}
@@ -463,7 +463,7 @@ jboolean JNICALL ScriptMethodsAiNamespace::aiHasPrimaryWeapon(JNIEnv * /*env*/, 
 {
 	AICreatureController * const aiCreatureController = ScriptMethodsAiNamespace::getAiCreatureController(ai);
 
-	if (aiCreatureController == NULL)
+	if (aiCreatureController == nullptr)
 	{
 		return JNI_FALSE;
 	}
@@ -476,7 +476,7 @@ jboolean JNICALL ScriptMethodsAiNamespace::aiHasSecondaryWeapon(JNIEnv * /*env*/
 {
 	AICreatureController * const aiCreatureController = ScriptMethodsAiNamespace::getAiCreatureController(ai);
 
-	if (aiCreatureController == NULL)
+	if (aiCreatureController == nullptr)
 	{
 		return JNI_FALSE;
 	}
@@ -489,7 +489,7 @@ jboolean JNICALL ScriptMethodsAiNamespace::aiUsingPrimaryWeapon(JNIEnv * /*env*/
 {
 	AICreatureController * const aiCreatureController = ScriptMethodsAiNamespace::getAiCreatureController(ai);
 
-	if (aiCreatureController == NULL)
+	if (aiCreatureController == nullptr)
 	{
 		return JNI_FALSE;
 	}
@@ -502,7 +502,7 @@ jboolean JNICALL ScriptMethodsAiNamespace::aiUsingSecondaryWeapon(JNIEnv * /*env
 {
 	AICreatureController * const aiCreatureController = ScriptMethodsAiNamespace::getAiCreatureController(ai);
 
-	if (aiCreatureController == NULL)
+	if (aiCreatureController == nullptr)
 	{
 		return JNI_FALSE;
 	}
@@ -515,7 +515,7 @@ jlong JNICALL ScriptMethodsAiNamespace::aiGetPrimaryWeapon(JNIEnv * /*env*/, job
 {
 	AICreatureController * const aiCreatureController = ScriptMethodsAiNamespace::getAiCreatureController(ai);
 
-	if (aiCreatureController == NULL)
+	if (aiCreatureController == nullptr)
 	{
 		return 0;
 	}
@@ -528,7 +528,7 @@ jlong JNICALL ScriptMethodsAiNamespace::aiGetSecondaryWeapon(JNIEnv * /*env*/, j
 {
 	AICreatureController * const aiCreatureController = ScriptMethodsAiNamespace::getAiCreatureController(ai);
 
-	if (aiCreatureController == NULL)
+	if (aiCreatureController == nullptr)
 	{
 		return 0;
 	}
@@ -541,7 +541,7 @@ jfloat JNICALL ScriptMethodsAiNamespace::aiGetMovementSpeedPercent(JNIEnv * /*en
 {
 	AICreatureController * const aiCreatureController = ScriptMethodsAiNamespace::getAiCreatureController(ai);
 
-	if (aiCreatureController == NULL)
+	if (aiCreatureController == nullptr)
 	{
 		return 0.0f;
 	}
@@ -554,7 +554,7 @@ void JNICALL ScriptMethodsAiNamespace::loiterLocation(JNIEnv * /*env*/, jobject 
 {
 	AICreatureController * const aiCreatureController = ScriptMethodsAiNamespace::getAiCreatureController(ai);
 
-	if (aiCreatureController == NULL)
+	if (aiCreatureController == nullptr)
 	{
 		return;
 	}
@@ -585,7 +585,7 @@ void JNICALL ScriptMethodsAiNamespace::loiterLocation(JNIEnv * /*env*/, jobject 
 
 			CellObject const * const cellObject = CellObject::getCellObject(cellId);
 
-			if (cellObject != NULL)
+			if (cellObject != nullptr)
 			{
 				CellProperty const * const cellProperty = cellObject->getCellProperty();
 
@@ -608,7 +608,7 @@ void JNICALL ScriptMethodsAiNamespace::loiterTarget(JNIEnv * /*env*/, jobject /*
 {
 	AICreatureController * const aiCreatureController = ScriptMethodsAiNamespace::getAiCreatureController(ai);
 
-	if (aiCreatureController == NULL)
+	if (aiCreatureController == nullptr)
 	{
 		return;
 	}
@@ -623,7 +623,7 @@ void JNICALL ScriptMethodsAiNamespace::loiterTarget(JNIEnv * /*env*/, jobject /*
 	NetworkId const targetNetworkId(static_cast<NetworkId::NetworkIdType>(target));
 	Object * const targetObject = NetworkIdManager::getObjectById(targetNetworkId);
 
-	if (targetObject == NULL)
+	if (targetObject == nullptr)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsAi::loiterTarget() ai(%s) Unable to resolve the target(%s) to a Object", aiCreatureController->getCreature()->getDebugInformation().c_str(), targetNetworkId.getValueString().c_str()));
 		return;
@@ -643,7 +643,7 @@ void JNICALL ScriptMethodsAiNamespace::pathToLocation(JNIEnv * /*env*/, jobject 
 {
 	AICreatureController * const aiCreatureController = ScriptMethodsAiNamespace::getAiCreatureController(ai);
 
-	if (aiCreatureController == NULL)
+	if (aiCreatureController == nullptr)
 	{
 		return;
 	}
@@ -664,7 +664,7 @@ void JNICALL ScriptMethodsAiNamespace::pathToLocation(JNIEnv * /*env*/, jobject 
 		{
 			CellObject const * const cellObject = CellObject::getCellObject(cellId);
 
-			if (cellObject != NULL)
+			if (cellObject != nullptr)
 			{
 				CellProperty const * const cellProperty = cellObject->getCellProperty();
 
@@ -697,7 +697,7 @@ void JNICALL ScriptMethodsAiNamespace::pathToName(JNIEnv * /*env*/, jobject /*se
 {
 	AICreatureController * const aiCreatureController = ScriptMethodsAiNamespace::getAiCreatureController(ai);
 
-	if (aiCreatureController == NULL)
+	if (aiCreatureController == nullptr)
 	{
 		return;
 	}
@@ -731,7 +731,7 @@ void JNICALL ScriptMethodsAiNamespace::pathToName(JNIEnv * /*env*/, jobject /*se
 void JNICALL ScriptMethodsAiNamespace::patrolToLocation(JNIEnv *, jobject, jlong ai, jobjectArray targets, jboolean random, jboolean flip, jboolean repeat, jint startPoint)
 {
 	AICreatureController * const aiCreatureController = ScriptMethodsAiNamespace::getAiCreatureController(ai);
-	if (aiCreatureController == NULL)
+	if (aiCreatureController == nullptr)
 		return;
 
 	std::vector<Location> locations;
@@ -755,7 +755,7 @@ void JNICALL ScriptMethodsAiNamespace::patrolToLocation(JNIEnv *, jobject, jlong
 void JNICALL ScriptMethodsAiNamespace::patrolToName(JNIEnv *, jobject, jlong ai, jobjectArray targetNames, jboolean random, jboolean flip, jboolean repeat, jint startPoint)
 {
 	AICreatureController * const aiCreatureController = ScriptMethodsAiNamespace::getAiCreatureController(ai);
-	if (aiCreatureController == NULL)
+	if (aiCreatureController == nullptr)
 		return;
 
 	std::vector<const Unicode::String *> locations;
@@ -768,11 +768,11 @@ void JNICALL ScriptMethodsAiNamespace::patrolToName(JNIEnv *, jobject, jlong ai,
 	for (int i = 0; i < count; ++i)
 	{
 		const Unicode::String * location = locations[i];
-		if (location != NULL)
+		if (location != nullptr)
 		{
 			realLocations.push_back(*location);
 			delete location;
-			locations[i] = NULL;
+			locations[i] = nullptr;
 		}
 	}
 	aiCreatureController->patrol(realLocations, random, flip, repeat, startPoint);
@@ -783,16 +783,16 @@ jstring JNICALL ScriptMethodsAiNamespace::aiGetCombatAction(JNIEnv * /*env*/, jo
 {
 	AICreatureController * const aiCreatureController = ScriptMethodsAiNamespace::getAiCreatureController(ai);
 
-	if (aiCreatureController == NULL)
+	if (aiCreatureController == nullptr)
 	{
-		return NULL;
+		return nullptr;
 	}
 
 	PersistentCrcString const & result = aiCreatureController->getCombatAction();
 
 	if (result.isEmpty())
 	{
-		return NULL;
+		return nullptr;
 	}
 
 	JavaString javaString(result.getString());
@@ -805,7 +805,7 @@ jint JNICALL ScriptMethodsAiNamespace::aiGetKnockDownRecoveryTime(JNIEnv * /*env
 {
 	AICreatureController * const aiCreatureController = ScriptMethodsAiNamespace::getAiCreatureController(ai);
 
-	if (aiCreatureController == NULL)
+	if (aiCreatureController == nullptr)
 	{
 		return 0;
 	}
@@ -819,7 +819,7 @@ jboolean JNICALL ScriptMethodsAiNamespace::setHibernationDelay(JNIEnv *env, jobj
 {
 	AICreatureController * const aiCreatureController = ScriptMethodsAiNamespace::getAiCreatureController(creature);
 
-	if (aiCreatureController == NULL)
+	if (aiCreatureController == nullptr)
 		return JNI_FALSE;
 
 	aiCreatureController->setHibernationDelay(delay);

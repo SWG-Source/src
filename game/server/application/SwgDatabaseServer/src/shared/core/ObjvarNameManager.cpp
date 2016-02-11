@@ -17,8 +17,8 @@
 
 // ======================================================================
 
-ObjvarNameManager * ObjvarNameManager::ms_instance = NULL;
-ObjvarNameManager * ObjvarNameManager::ms_goldInstance = NULL;
+ObjvarNameManager * ObjvarNameManager::ms_instance = nullptr;
+ObjvarNameManager * ObjvarNameManager::ms_goldInstance = nullptr;
 
 // ======================================================================
 
@@ -37,11 +37,11 @@ void ObjvarNameManager::remove()
 {
 	NOT_NULL(ms_instance);
 	delete ms_instance;
-	ms_instance = NULL;
+	ms_instance = nullptr;
 
 	NOT_NULL(ms_goldInstance);
 	delete ms_goldInstance;
-	ms_goldInstance = NULL;
+	ms_goldInstance = nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -64,9 +64,9 @@ ObjvarNameManager::~ObjvarNameManager()
 	delete m_nameToIdMap;
 	delete m_idToNameMap;
 	delete m_newNames;
-	m_nameToIdMap=NULL;
-	m_idToNameMap=NULL;
-	m_newNames=NULL;
+	m_nameToIdMap=nullptr;
+	m_idToNameMap=nullptr;
+	m_newNames=nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -169,7 +169,7 @@ DB::TaskRequest *ObjvarNameManager::saveNewNames()
 		return task;
 	}
 	else
-		return NULL;
+		return nullptr;
 }
 
 // ======================================================================

@@ -52,8 +52,8 @@ static const bool HasMinMax[] =
 // map enum ParamType to access function return value
 static const char * const PaddedDataMethodNames[] =
 {
-	NULL,
-	NULL,
+	nullptr,
+	nullptr,
 	"int                   ",
 	"float                 ",
 	"bool                  ",
@@ -62,25 +62,25 @@ static const char * const PaddedDataMethodNames[] =
 	"const Vector &        ",
 	"void                  ",
 	"const ObjectTemplate *",
-	NULL,
-	NULL,
+	nullptr,
+	nullptr,
 	"const TriggerVolumeData &",
 	"const std::string &   "
 };
 static const char * const UnpaddedDataMethodNames[] =
 {
-	NULL,
-	NULL,
+	nullptr,
+	nullptr,
 	"int",
 	"float",
 	"bool",
 	"const std::string &",
 	"const StringId",
 	"const Vector &",
-	NULL,
+	nullptr,
 	"const ObjectTemplate *",
-	NULL,
-	NULL,
+	nullptr,
+	nullptr,
 	"const TriggerVolumeData &",
 	"const std::string &"
 };
@@ -88,8 +88,8 @@ static const char * const UnpaddedDataMethodNames[] =
 // map enum ParamType to struct storage type
 static const char * const PaddedDataStructNames[] =
 {
-	NULL,
-	NULL,
+	nullptr,
+	nullptr,
 	"int                   ",
 	"float                 ",
 	"bool                  ",
@@ -98,15 +98,15 @@ static const char * const PaddedDataStructNames[] =
 	"Vector                ",
 	"DynamicVariableList   ",
 	"const ObjectTemplate *",
-	NULL,
-	NULL,
+	nullptr,
+	nullptr,
 	"TriggerVolumeData     ",
 	"std::string           "
 };
 static const char * const UnpaddedDataStructNames[] =
 {
-	NULL,
-	NULL,
+	nullptr,
+	nullptr,
 	"int",
 	"float",
 	"bool",
@@ -115,8 +115,8 @@ static const char * const UnpaddedDataStructNames[] =
 	"Vector",
 	"DynamicVariableList",
 	"const ObjectTemplate *",
-	NULL,
-	NULL,
+	nullptr,
+	nullptr,
 	"TriggerVolumeData",
 	"std::string"
 };
@@ -160,8 +160,8 @@ static const char * const CompilerDataVariableNames[] =
 
 static const char * const DefaultDataReturnValue[] =
 {
-	NULL,
-	NULL,
+	nullptr,
+	nullptr,
 	"0",
 	"0.0f",
 	"false",
@@ -169,7 +169,7 @@ static const char * const DefaultDataReturnValue[] =
 	"DefaultStringId",
 	"DefaultVector",
 	"",
-	"NULL",
+	"nullptr",
 	"(0)",
 	"",
 	"DefaultTriggerVolumeData",
@@ -217,7 +217,7 @@ static const char * const EnumLocationNames[] =
  */
 TemplateData::TemplateData(int version, const TemplateDefinitionFile &parent) :
 	m_fileParent(&parent),
-	m_templateParent(NULL),
+	m_templateParent(nullptr),
 	m_hasTemplateParam(false),
 	m_hasDynamicVarParam(false),
 	m_hasList(false),
@@ -228,9 +228,9 @@ TemplateData::TemplateData(int version, const TemplateDefinitionFile &parent) :
 	m_parseState(STATE_PARAM),
 	m_parameters(),
 	m_parameterMap(),
-	m_currentEnumList(NULL),
+	m_currentEnumList(nullptr),
 	m_enumMap(),
-	m_currentStruct(NULL),
+	m_currentStruct(nullptr),
 	m_structMap(),
 	m_structList()
 {
@@ -252,7 +252,7 @@ TemplateData::TemplateData(int version, const TemplateDefinitionFile &parent) :
  * @param name		the structure's name
  */
 TemplateData::TemplateData(const TemplateData *parent, const std::string &name) :
-	m_fileParent(NULL),
+	m_fileParent(nullptr),
 	m_templateParent(parent),
 	m_hasTemplateParam(false),
 	m_hasDynamicVarParam(false),
@@ -265,9 +265,9 @@ TemplateData::TemplateData(const TemplateData *parent, const std::string &name) 
 	m_parseState(STATE_PARAM),
 	m_parameters(),
 	m_parameterMap(),
-	m_currentEnumList(NULL),
+	m_currentEnumList(nullptr),
 	m_enumMap(),
-	m_currentStruct(NULL),
+	m_currentStruct(nullptr),
 	m_structMap(),
 	m_structList()
 {
@@ -284,15 +284,15 @@ TemplateData::~TemplateData()
 	for (iter = m_structMap.begin(); iter != m_structMap.end(); ++iter)
 	{
 		delete (*iter).second;
-		(*iter).second = NULL;
+		(*iter).second = nullptr;
 	}
 
 	m_parameterMap.clear();
 	m_parameters.clear();
 	m_structMap.clear();
 	m_structList.clear();
-	m_currentEnumList = NULL;
-	m_currentStruct = NULL;
+	m_currentEnumList = nullptr;
+	m_currentStruct = nullptr;
 }	// TemplateData::~TemplateData
 
 
@@ -306,9 +306,9 @@ TemplateData::~TemplateData()
  */
 const std::string TemplateData::getName(void) const
 {
-	if (m_fileParent != NULL)
+	if (m_fileParent != nullptr)
 		return m_fileParent->getTemplateName();
-	if (m_templateParent != NULL)
+	if (m_templateParent != nullptr)
 		return m_templateParent->getName() + "::_" + m_name;
 	return "";
 }
@@ -320,9 +320,9 @@ const std::string TemplateData::getName(void) const
  */
 const std::string TemplateData::getBaseName(void) const
 {
-	if (m_fileParent != NULL && !m_fileParent->getBaseName().empty())
+	if (m_fileParent != nullptr && !m_fileParent->getBaseName().empty())
 		return m_fileParent->getBaseName();
-//	if (m_templateParent != NULL)
+//	if (m_templateParent != nullptr)
 		return m_baseName;
 //	return "";
 }
@@ -334,9 +334,9 @@ const std::string TemplateData::getBaseName(void) const
  */
 TemplateLocation TemplateData::getTemplateLocation(void) const
 {
-	if (m_fileParent != NULL)
+	if (m_fileParent != nullptr)
 		return m_fileParent->getTemplateLocation();
-	if (m_templateParent != NULL)
+	if (m_templateParent != nullptr)
 		return m_templateParent->getTemplateLocation();
 	return LOC_NONE;
 }	// TemplateData::getTemplateLocation
@@ -359,8 +359,8 @@ const char * TemplateData::parseLine(const File &fp, const char *buffer,
 {
 ParamState paramState = STATE_LIST;
 
-	if (buffer == NULL || *buffer == '\0')
-		return NULL;
+	if (buffer == nullptr || *buffer == '\0')
+		return nullptr;
 
 	const char *line = buffer;
 
@@ -413,7 +413,7 @@ ParamState paramState = STATE_LIST;
 						return CHAR_ERROR;
 					}
 					const EnumList * enumList = getEnumList(tokenbuf, true);
-					if (enumList != NULL)
+					if (enumList != nullptr)
 					{
 						fp.printError("enum already defined");
 						return CHAR_ERROR;
@@ -421,7 +421,7 @@ ParamState paramState = STATE_LIST;
 					m_currentEnumList = &(*m_enumMap.insert(std::make_pair(
 						std::string(tokenbuf), EnumList())).first).second;
 					m_parseState = STATE_ENUM;
-					if (line != NULL && *line != '\0')
+					if (line != nullptr && *line != '\0')
 						return parseEnum(fp, line, tokenbuf);
 					return line;
 				}
@@ -455,7 +455,7 @@ ParamState paramState = STATE_LIST;
 					m_structMap.insert(std::make_pair(tokenbuf, m_currentStruct));
 					m_structList.push_back(m_currentStruct);
 					m_parseState = STATE_STRUCT;
-					if (line != NULL && *line != '\0')
+					if (line != nullptr && *line != '\0')
 						return parseStruct(fp, line, tokenbuf);
 					return line;
 				}
@@ -463,7 +463,7 @@ ParamState paramState = STATE_LIST;
 				return CHAR_ERROR;
 			}
 			// if we are a structure, the 1st item should be the structure id
-			else if (strcmp(tokenbuf, "id") == 0 && m_templateParent != NULL &&
+			else if (strcmp(tokenbuf, "id") == 0 && m_templateParent != nullptr &&
 				m_structId.tag == NO_TAG)
 			{
 				line = getNextToken(line, tokenbuf);
@@ -479,7 +479,7 @@ ParamState paramState = STATE_LIST;
 		}
 
 		// if we are a structure, the 1st item should be the structure id
-		if (m_templateParent != NULL && m_structId.tag == NO_TAG)
+		if (m_templateParent != nullptr && m_structId.tag == NO_TAG)
 		{
 			fp.printError("struct id not defined");
 			return CHAR_ERROR;
@@ -508,7 +508,7 @@ ParamState paramState = STATE_LIST;
 						parameter.list_type = LIST_ENUM_ARRAY;
 						parameter.enum_list_name = &tokenbuf[8];
 						const EnumList * list = getEnumList(parameter.enum_list_name.c_str(), false);
-						if (list == NULL)
+						if (list == nullptr)
 						{
 							fp.printError("enum name not defined!");
 							return CHAR_ERROR;
@@ -592,7 +592,7 @@ ParamState paramState = STATE_LIST;
 				{
 					parameter.type = TYPE_ENUM;
 					parameter.extendedName = &tokenbuf[4];
-					if (getEnumList(&tokenbuf[4], false) == NULL)
+					if (getEnumList(&tokenbuf[4], false) == nullptr)
 					{
 						std::string errbuf = "enum type " + parameter.extendedName +
 							" not defined";
@@ -605,7 +605,7 @@ ParamState paramState = STATE_LIST;
 				{
 					parameter.type = TYPE_STRUCT;
 					parameter.extendedName = &tokenbuf[6];
-					if (getStruct(&tokenbuf[6]) == NULL)
+					if (getStruct(&tokenbuf[6]) == nullptr)
 					{
 						std::string errbuf = "struct " + parameter.extendedName +
 							" not defined";
@@ -640,12 +640,12 @@ ParamState paramState = STATE_LIST;
 						tempToken = getNextToken(tempToken, tempBuf);
 						if (parameter.type == TYPE_INTEGER)
 						{
-							parameter.min_int_limit = strtol(tempBuf, NULL, 10);
+							parameter.min_int_limit = strtol(tempBuf, nullptr, 10);
 						}
 						else
 						{
 							parameter.min_float_limit = static_cast<float>(
-								strtod(tempBuf, NULL));
+								strtod(tempBuf, nullptr));
 						}
 					}
 					if (*tempToken == '.' && *(tempToken + 1) == '.')
@@ -682,7 +682,7 @@ ParamState paramState = STATE_LIST;
 	}
 
 	// anything left over in the line is the parameter description
-	if (line != NULL)
+	if (line != nullptr)
 		parameter.description = line;
 
 	m_parameters.push_back(parameter);
@@ -714,12 +714,12 @@ int TemplateData::getEnumValue(const char * enumValue) const
 		}
 	}
 
-	if (m_templateParent != NULL)
+	if (m_templateParent != nullptr)
 		return m_templateParent->getEnumValue(enumValue);
-	if (m_fileParent != NULL)
+	if (m_fileParent != nullptr)
 	{
 		const TemplateDefinitionFile * baseFile = m_fileParent->getBaseDefinitionFile();
-		if (baseFile != NULL)
+		if (baseFile != nullptr)
 		{
 			return baseFile->getTemplateData(baseFile->getHighestVersion())->
 				getEnumValue(enumValue);
@@ -742,7 +742,7 @@ int TemplateData::getEnumValue(const std::string & enumType,
 	NOT_NULL(enumValue);
 
 	const EnumList *elist = getEnumList(enumType.c_str(), false);
-	if (elist == NULL)
+	if (elist == nullptr)
 		return INVALID_ENUM_RESULT;
 	EnumList::const_iterator listIter;
 	for (listIter = elist->begin(); listIter != elist->end(); ++listIter)
@@ -760,7 +760,7 @@ int TemplateData::getEnumValue(const std::string & enumType,
  * @param name		the enum list name
  * @param define	flag that we are defining templates and should not look in base templates
  *
- * @return the enum list definition, or NULL if not found
+ * @return the enum list definition, or nullptr if not found
  */
 const TemplateData::EnumList * TemplateData::getEnumList(const std::string & name,
 	bool define) const
@@ -768,17 +768,17 @@ const TemplateData::EnumList * TemplateData::getEnumList(const std::string & nam
 	EnumMap::const_iterator iter = m_enumMap.find(name);
 	if (iter != m_enumMap.end())
 		return &(*iter).second;
-	if (m_templateParent != NULL)
+	if (m_templateParent != nullptr)
 		return m_templateParent->getEnumList(name, define);
-	if (!define && m_fileParent != NULL && m_fileParent->getBaseDefinitionFile() != NULL)
+	if (!define && m_fileParent != nullptr && m_fileParent->getBaseDefinitionFile() != nullptr)
 	{
 		const TemplateData * baseData = m_fileParent->getBaseDefinitionFile()->
 			getTemplateData(m_fileParent->getBaseDefinitionFile()->
 			getHighestVersion());
-		if (baseData != NULL)
+		if (baseData != nullptr)
 			return baseData->getEnumList(name, define);
 	}
-	return NULL;
+	return nullptr;
 }	// TemplateData::getEnumList
 
 /**
@@ -787,7 +787,7 @@ const TemplateData::EnumList * TemplateData::getEnumList(const std::string & nam
  *
  * @param name		the enum list name
  *
- * @return the struct definition, or NULL if not found
+ * @return the struct definition, or nullptr if not found
  */
 const TemplateData * TemplateData::getStruct(const char *name) const
 {
@@ -796,23 +796,23 @@ const TemplateData * TemplateData::getStruct(const char *name) const
 	StructMap::const_iterator iter = m_structMap.find(name);
 	if (iter != m_structMap.end())
 		return (*iter).second;
-	if (m_templateParent != NULL)
+	if (m_templateParent != nullptr)
 		return m_templateParent->getStruct(name);
-	if (m_fileParent != NULL && m_fileParent->getBaseDefinitionFile() != NULL)
+	if (m_fileParent != nullptr && m_fileParent->getBaseDefinitionFile() != nullptr)
 	{
 		const TemplateData * baseData = m_fileParent->getBaseDefinitionFile()->
 			getTemplateData(m_fileParent->getBaseDefinitionFile()->
 			getHighestVersion());
-		if (baseData != NULL)
+		if (baseData != nullptr)
 			return baseData->getStruct(name);
 	}
-	return NULL;
+	return nullptr;
 }	// TemplateData::getStruct
 
 /**
  * Returns the tdf file for this TemplateData
  *
- * @return the TemplateDefinitionFile, or NULL if not there
+ * @return the TemplateDefinitionFile, or nullptr if not there
  */
 
 const TemplateDefinitionFile * TemplateData::getTdf() const
@@ -823,7 +823,7 @@ const TemplateDefinitionFile * TemplateData::getTdf() const
 /**
  * Returns the tdf file for this TemplateData's first ancestor
  *
- * @return the TemplateDefinitionFile, or NULL if not there
+ * @return the TemplateDefinitionFile, or nullptr if not there
  */
 
 const TemplateDefinitionFile * TemplateData::getTdfParent() const
@@ -834,19 +834,19 @@ const TemplateDefinitionFile * TemplateData::getTdfParent() const
 	}
 	else
 	{
-		return NULL;
+		return nullptr;
 	}
 }
 
 /**
  * Returns the tdf file that contains the parameter
  *
- * @return the TemplateDefinitionFile, or NULL if not found
+ * @return the TemplateDefinitionFile, or nullptr if not found
  */
 
 const TemplateDefinitionFile * TemplateData::getTdfForParameter(const char *parameterName) const
 {
-	if(m_fileParent != NULL)
+	if(m_fileParent != nullptr)
 	{
 		if(getParameter(parameterName))
 		{
@@ -855,18 +855,18 @@ const TemplateDefinitionFile * TemplateData::getTdfForParameter(const char *para
 
 		const TemplateDefinitionFile* ancestorTemplateDefinitionFile = m_fileParent->getBaseDefinitionFile();
 
-		if(ancestorTemplateDefinitionFile != NULL)
+		if(ancestorTemplateDefinitionFile != nullptr)
 		{
 			const TemplateData *ancestorTemplateData = ancestorTemplateDefinitionFile->getTemplateData(ancestorTemplateDefinitionFile->getHighestVersion());
 
-			if(ancestorTemplateData != NULL)
+			if(ancestorTemplateData != nullptr)
 			{
 				return ancestorTemplateData->getTdfForParameter(parameterName);
 			}
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 /**
@@ -883,7 +883,7 @@ int TemplateData::parseIntValue(const File &fp, const char * line, const char **
 	char * intbuf) const
 {
 	NOT_NULL(endLine);
-	if (line == NULL || *line == '\0' || intbuf == NULL)
+	if (line == nullptr || *line == '\0' || intbuf == nullptr)
 	{
 		fp.printError("bad value passed to TemplateData::parseIntValue");
 		*endLine = CHAR_ERROR;
@@ -920,7 +920,7 @@ int TemplateData::parseIntValue(const File &fp, const char * line, const char **
 			*endLine = CHAR_ERROR;
 			return 0;
 		}
-		if (tempLine != NULL)
+		if (tempLine != nullptr)
 			line = tempLine;
 		else
 			line += strlen(line);
@@ -954,8 +954,8 @@ int TemplateData::parseIntValue(const File &fp, const char * line, const char **
 	strncpy(intbuf, startLine, line - startLine);
 	intbuf[line - startLine] = '\0';
 	intbuf += strlen(intbuf);
-	if (line != NULL && *line == '\0')
-		*endLine = NULL;
+	if (line != nullptr && *line == '\0')
+		*endLine = nullptr;
 	else
 		*endLine = line;
 
@@ -1010,7 +1010,7 @@ const char * TemplateData::parseEnum(const File &fp, const char *buffer,
 		if (m_bracketCount == 1)
 		{
 			m_bracketCount = 0;
-			m_currentEnumList = NULL;
+			m_currentEnumList = nullptr;
 			m_parseState = STATE_PARAM;
 			return line;
 		}
@@ -1023,7 +1023,7 @@ const char * TemplateData::parseEnum(const File &fp, const char *buffer,
 
 	EnumData enumData;
 	enumData.name = tokenbuf;
-	if (line != NULL && *line == '=')
+	if (line != nullptr && *line == '=')
 	{
 
 		line = getNextToken(line, tokenbuf);
@@ -1054,12 +1054,12 @@ const char * TemplateData::parseEnum(const File &fp, const char *buffer,
 		enumData.value = m_currentEnumList->back().value + 1;
 	}
 
-	if (line != NULL && *line == ',')
+	if (line != nullptr && *line == ',')
 		line = getNextToken(line, tokenbuf);
-	if (line != NULL)
+	if (line != nullptr)
 	{
 		enumData.comment = line;
-		line = NULL;
+		line = nullptr;
 	}
 
 	m_currentEnumList->push_back(enumData);
@@ -1103,7 +1103,7 @@ const char * TemplateData::parseStruct(const File &fp, const char *buffer,
 		if (m_bracketCount == 1)
 		{
 			m_bracketCount = 0;
-			m_currentStruct = NULL;
+			m_currentStruct = nullptr;
 			m_parseState = STATE_PARAM;
 			return line;
 		}
@@ -1194,7 +1194,7 @@ char buffer[256];
 					else if (param.list_type == LIST_ENUM_ARRAY)
 					{
 						const EnumList * enumList = getEnumList(param.enum_list_name, false);
-						FATAL(enumList == NULL, ("Enum list %s missing",
+						FATAL(enumList == nullptr, ("Enum list %s missing",
 							param.enum_list_name.c_str()));
 						sprintf(buffer, "missing parameter %s[%s] from section "
 							"@class %s", param.name.c_str(), enumList->at(i).name.c_str(),
@@ -1280,10 +1280,10 @@ void TemplateData::setWriteForCompiler(bool flag)
  */
 void TemplateData::writeRegisterTemplate(File &fp, const char * leadInChars) const
 {
-	if (m_fileParent != NULL)
+	if (m_fileParent != nullptr)
 		fp.print("%s\n", TDF_INSTALL_BEGIN);
 
-	if (leadInChars != NULL)
+	if (leadInChars != nullptr)
 		fp.print("%s", leadInChars);
 	fp.print("%s::registerMe();\n", getName().c_str());
 
@@ -1296,7 +1296,7 @@ void TemplateData::writeRegisterTemplate(File &fp, const char * leadInChars) con
 		subStruct->writeRegisterTemplate(fp, leadInChars);
 	}
 
-	if (m_fileParent != NULL)
+	if (m_fileParent != nullptr)
 		fp.print("%s\n", TDF_INSTALL_END);
 }	// TemplateData::writeRegisterTemplate
 
@@ -1338,7 +1338,7 @@ std::vector<std::string> paramStrings;
 			paramStrings.push_back(param.enum_list_name + " index");
 			break;
 	}
-	if (m_templateParent != NULL)
+	if (m_templateParent != nullptr)
 		paramStrings.push_back("bool versionOk");
 	if (param.list_type == LIST_NONE)
 	{
@@ -1420,7 +1420,7 @@ void TemplateData::getTemplateNames(std::set<std::string> &names) const
 		else if (param.type == TYPE_STRUCT)
 		{
 			const TemplateData * structData = getStruct(param.extendedName.c_str());
-			if (structData != NULL)
+			if (structData != nullptr)
 				structData->getTemplateNames(names);
 		}
 	}
@@ -1439,7 +1439,7 @@ void TemplateData::writeHeaderParams(File &fp) const
 		return;
 	}
 
-	if (m_fileParent != NULL)
+	if (m_fileParent != nullptr)
 		fp.print("%s\n", TDF_BEGIN);
 
 	writeHeaderEnums(fp);
@@ -1447,7 +1447,7 @@ void TemplateData::writeHeaderParams(File &fp) const
 	writeHeaderMethods(fp);
 	writeHeaderVariables(fp);
 
-	if (m_fileParent != NULL)
+	if (m_fileParent != nullptr)
 		fp.print("%s\n", TDF_END);
 }	// TemplateData::writeHeaderParams
 
@@ -1461,7 +1461,7 @@ void TemplateData::writeCompilerHeaderParams(File &fp) const
 {
 	DEBUG_FATAL(!m_writeForCompilerFlag, ("write for compiler not enabled"));
 
-	if (m_fileParent != NULL)
+	if (m_fileParent != nullptr)
 		fp.print("%s\n", TDF_BEGIN);
 
 	writeHeaderEnums(fp);
@@ -1469,7 +1469,7 @@ void TemplateData::writeCompilerHeaderParams(File &fp) const
 	writeCompilerHeaderMethods(fp);
 	writeHeaderVariables(fp);
 
-	if (m_fileParent != NULL)
+	if (m_fileParent != nullptr)
 		fp.print("%s\n", TDF_END);
 }	// TemplateData::writeCompilerHeaderParams
 
@@ -1883,7 +1883,7 @@ ParameterList::const_iterator iter;
 			case LIST_NONE:
 			case LIST_INT_ARRAY:
 			case LIST_ENUM_ARRAY:
-				if (PaddedDataStructNames[param.type] != NULL)
+				if (PaddedDataStructNames[param.type] != nullptr)
 				{
 					fp.print("\t\t%s %s", PaddedDataStructNames[param.type],
 						param.name.c_str());
@@ -1904,7 +1904,7 @@ ParameterList::const_iterator iter;
 				break;
 			case LIST_LIST:
 				fp.print("\t\tstdvector<");
-				if (UnpaddedDataStructNames[param.type] != NULL)
+				if (UnpaddedDataStructNames[param.type] != nullptr)
 					fp.print("%s", UnpaddedDataStructNames[param.type]);
 				else if (param.type == TYPE_ENUM)
 					fp.print("enum %s", param.extendedName.c_str());
@@ -1953,7 +1953,7 @@ void TemplateData::writeSourceLoadedFlagInit(File &fp) const
 {
 ParameterList::const_iterator iter;
 
-	if (m_fileParent != NULL)
+	if (m_fileParent != nullptr)
 		fp.print("%s\n", TDF_INIT_BEGIN);
 
 	fp.print("\t: %s(filename)\n", getBaseName().c_str());
@@ -1968,13 +1968,13 @@ ParameterList::const_iterator iter;
 		fp.print("m_%sLoaded(false)\n", param.name.c_str());
 		fp.print("\t,m_%sAppend(false)\n", param.name.c_str());
 	}
-	if (m_templateParent == NULL && !isWritingForCompiler())
+	if (m_templateParent == nullptr && !isWritingForCompiler())
 	{
 		fp.print("\t,");
 		fp.print("m_versionOk(true)\n");
 	}
 
-	if (m_fileParent != NULL)
+	if (m_fileParent != nullptr)
 		fp.print("%s\n", TDF_INIT_END);
 }	// TemplateData::writeSourceLoadedFlagInit
 
@@ -1985,7 +1985,7 @@ ParameterList::const_iterator iter;
  */
 void TemplateData::writeSourceStructStart(File &fp) const
 {
-	if (m_templateParent == NULL)
+	if (m_templateParent == nullptr)
 		return;
 
 	const std::string & templateNameString = getName();
@@ -2051,7 +2051,7 @@ void TemplateData::writeSourceStructStart(File &fp, const std::string &name) con
 {
 ParameterList::const_iterator iter;
 
-	if (m_templateParent == NULL || !m_hasTemplateParam)
+	if (m_templateParent == nullptr || !m_hasTemplateParam)
 		return;
 
 	std::string className = m_templateParent->getName() + "::" + name;
@@ -2079,18 +2079,18 @@ ParameterList::const_iterator iter;
 		switch (param.list_type)
 		{
 			case LIST_NONE:
-				fp.print("\t%s = NULL;\n", pname);
+				fp.print("\t%s = nullptr;\n", pname);
 				break;
 			case LIST_INT_ARRAY:
 				fp.print("\tfor (int i = 0; i < %d; ++i)\n", param.list_size);
 				fp.print("\t{\n");
-				fp.print("\t\t%s[i] = NULL;\n", pname);
+				fp.print("\t\t%s[i] = nullptr;\n", pname);
 				fp.print("\t}\n");
 				break;
 			case LIST_ENUM_ARRAY:
 				fp.print("\tfor (int i = 0; i < %d; ++i)\n", param.list_size);
 				fp.print("\t{\n");
-				fp.print("\t\t%s[static_cast<%s>(i)] = NULL;\n", pname,
+				fp.print("\t\t%s[static_cast<%s>(i)] = nullptr;\n", pname,
 					param.enum_list_name.c_str());
 				fp.print("\t}\n");
 				break;
@@ -2134,14 +2134,14 @@ ParameterList::const_iterator iter;
 		switch (param.list_type)
 		{
 			case LIST_NONE:
-				fp.print("\tif (%s != NULL)\n", pname);
+				fp.print("\tif (%s != nullptr)\n", pname);
 				fp.print("\t\tconst_cast<ObjectTemplate *>(%s)->addReference();\n",
 					pname);
 				break;
 			case LIST_INT_ARRAY:
 				fp.print("\tfor (int i = 0; i < %d; ++i)\n", param.list_size);
 				fp.print("\t{\n");
-				fp.print("\t\tif (%s[i] != NULL)\n", pname);
+				fp.print("\t\tif (%s[i] != nullptr)\n", pname);
 				fp.print("\t\t\tconst_cast<ObjectTemplate *>(%s[i])->addReference"
 					"();\n", pname);
 				fp.print("\t}\n");
@@ -2149,7 +2149,7 @@ ParameterList::const_iterator iter;
 			case LIST_ENUM_ARRAY:
 				fp.print("\tfor (int i = 0; i < %d; ++i)\n", param.list_size);
 				fp.print("\t{\n");
-				fp.print("\t\tif (%s[static_cast<%s>(i)] != NULL)\n", pname,
+				fp.print("\t\tif (%s[static_cast<%s>(i)] != nullptr)\n", pname,
 					param.enum_list_name.c_str());
 				fp.print("\t\t\tconst_cast<ObjectTemplate *>(%s[static_cast<%s>"
 					"(i)])->addReference();\n", pname, param.enum_list_name.c_str());
@@ -2182,10 +2182,10 @@ ParameterList::const_iterator iter;
 		switch (param.list_type)
 		{
 			case LIST_NONE:
-				fp.print("\tif (%s != NULL)\n", pname);
+				fp.print("\tif (%s != nullptr)\n", pname);
 				fp.print("\t{\n");
 				fp.print("\t\t%s->releaseReference();\n", pname);
-				fp.print("\t\t%s = NULL;\n", pname);
+				fp.print("\t\t%s = nullptr;\n", pname);
 				fp.print("\t}\n");
 				break;
 			case LIST_LIST:
@@ -2198,23 +2198,23 @@ ParameterList::const_iterator iter;
 				else
 					fp.print("\tfor (int i = 0; i < %d; ++i)\n", param.list_size);
 				fp.print("\t{\n");
-				fp.print("\t\tif (%s[i] != NULL)\n", pname);
+				fp.print("\t\tif (%s[i] != nullptr)\n", pname);
 				fp.print("\t\t{\n");
 				fp.print("\t\t\t%s[i]->releaseReference();\n",
 					pname);
-				fp.print("\t\t\t%s[i] = NULL;\n", pname);
+				fp.print("\t\t\t%s[i] = nullptr;\n", pname);
 				fp.print("\t\t}\n");
 				fp.print("\t}\n");
 				break;
 			case LIST_ENUM_ARRAY:
 				fp.print("\tfor (int i = 0; i < %d; ++i)\n", param.list_size);
 				fp.print("\t{\n");
-				fp.print("\t\tif (%s[static_cast<%s>(i)] != NULL)\n", pname,
+				fp.print("\t\tif (%s[static_cast<%s>(i)] != nullptr)\n", pname,
 					param.enum_list_name.c_str());
 				fp.print("\t\t{\n");
 				fp.print("\t\t\t%s[static_cast<%s>(i)]->releaseReference();\n",
 					pname, param.enum_list_name.c_str());
-				fp.print("\t\t\t%s[static_cast<%s>(i)] = NULL;\n", pname,
+				fp.print("\t\t\t%s[static_cast<%s>(i)] = nullptr;\n", pname,
 					param.enum_list_name.c_str());
 				fp.print("\t\t}\n");
 				fp.print("\t}\n");
@@ -2259,7 +2259,7 @@ int result;
 		return 0;
 	}
 
-	if (m_fileParent != NULL)
+	if (m_fileParent != nullptr)
 		fp.print("%s\n", TDF_BEGIN);
 
 	result = writeSourceGetData(fp);
@@ -2282,7 +2282,7 @@ int result;
 			return result;
 	}
 
-	if (m_fileParent != NULL)
+	if (m_fileParent != nullptr)
 		fp.print("%s\n", TDF_END);
 	return 0;
 }	// TemplateData::writeSourceMethods
@@ -2297,7 +2297,7 @@ void TemplateData::writeCompilerSourceMethods(File &fp) const
 {
 	DEBUG_FATAL(!m_writeForCompilerFlag, ("write for compiler not enabled"));
 
-	if (m_fileParent != NULL)
+	if (m_fileParent != nullptr)
 		fp.print("%s\n", TDF_BEGIN);
 
 	writeCompilerSourceAccessMethods(fp);
@@ -2314,7 +2314,7 @@ void TemplateData::writeCompilerSourceMethods(File &fp) const
 		subStruct->writeCompilerSourceMethods(fp);
 	}
 
-	if (m_fileParent != NULL)
+	if (m_fileParent != nullptr)
 		fp.print("%s\n", TDF_END);
 }	// TemplateData::writeCompilerSourceMethods
 
@@ -2355,7 +2355,7 @@ void TemplateData::writeSourceReturnBaseValue(File &fp, const Parameter &param,
 	}
 	else if (param.list_type != LIST_NONE)
 		indexString = "index";
-	if (m_templateParent != NULL)
+	if (m_templateParent != nullptr)
 	{
 		if (!indexString.empty())
 			indexString += ", ";
@@ -2372,10 +2372,10 @@ void TemplateData::writeSourceReturnBaseValue(File &fp, const Parameter &param,
 		fp.print("\tif (!m_%s[index].isLoaded())\n", param.name.c_str());
 
 	fp.print("\t{\n");
-	if (DefaultDataReturnValue[param.type] != NULL)
+	if (DefaultDataReturnValue[param.type] != nullptr)
 	{
 		fp.print("\t\tif (ms_allowDefaultTemplateParams && "
-			"/*!%s &&*/ base == NULL)\n", m_templateParent == NULL ? "m_versionOk" :
+			"/*!%s &&*/ base == nullptr)\n", m_templateParent == nullptr ? "m_versionOk" :
 			"versionOk");
 		fp.print("\t\t{\n");
 		fp.print("\t\t\tDEBUG_WARNING(true, (\"Returning default value for "
@@ -2391,7 +2391,7 @@ void TemplateData::writeSourceReturnBaseValue(File &fp, const Parameter &param,
 		fp.print("\t\t}\n");
 		fp.print("\t\telse\n");
 		fp.print("\t\t{\n");
-		fp.print("\t\t\tDEBUG_FATAL(base == NULL, (\"Template parameter %s has "
+		fp.print("\t\t\tDEBUG_FATAL(base == nullptr, (\"Template parameter %s has "
 			"not been defined in template %%s!\", DataResource::getName()));\n",
 			param.name.c_str());
 		if (DefaultDataReturnValue[param.type][0] != '\0')
@@ -2419,7 +2419,7 @@ void TemplateData::writeSourceReturnBaseValue(File &fp, const Parameter &param,
 	// we need to get the base value instead of ours
 	if (param.list_type == LIST_LIST)
 	{
-		fp.print("\tif (m_%sAppend && base != NULL)\n", param.name.c_str());
+		fp.print("\tif (m_%sAppend && base != nullptr)\n", param.name.c_str());
 		fp.print("\t{\n");
 		fp.print("\t\tint baseCount = base->get%sCount();\n",
 			upperName.c_str());
@@ -2505,21 +2505,21 @@ int result;
 			fp.print("{\n");
 			fp.print("\tif (!m_%sLoaded)\n", pname);
 			fp.print("\t{\n");
-			fp.print("\t\tif (m_baseData == NULL)\n");
+			fp.print("\t\tif (m_baseData == nullptr)\n");
 			fp.print("\t\t\treturn 0;\n");
 			fp.print("\t\tconst %s * base = dynamic_cast<const %s *>"
 				"(m_baseData);\n", templateName, templateName);
-			fp.print("\t\tDEBUG_FATAL(base == NULL, (\"base template wrong "
+			fp.print("\t\tDEBUG_FATAL(base == nullptr, (\"base template wrong "
 				"type\"));\n");
 			fp.print("\t\treturn base->get%sCount();\n", upperName.c_str());
 			fp.print("\t}\n\n");
 			fp.print("\tsize_t count = m_%s.size();\n\n", pname);
 			fp.print("\t// if we are extending our base template, add it's count\n");
-			fp.print("\tif (m_%sAppend && m_baseData != NULL)\n", pname);
+			fp.print("\tif (m_%sAppend && m_baseData != nullptr)\n", pname);
 			fp.print("\t{\n");
 			fp.print("\t\tconst %s * base = dynamic_cast<const %s *>(m_baseData);\n",
 				templateName, templateName);
-			fp.print("\t\tif (base != NULL)\n");
+			fp.print("\t\tif (base != nullptr)\n");
 			fp.print("\t\t\tcount += base->get%sCount();\n", upperName.c_str());
 			fp.print("\t}\n\n");
 			fp.print("\treturn count;\n");
@@ -2582,7 +2582,7 @@ void TemplateData::writeSourceTestData(File &fp) const
 		}
 	}
 
-	if (m_fileParent != NULL)
+	if (m_fileParent != nullptr)
 	{
 		// check the base class
 		if (!getBaseName().empty() && getBaseName() != ROOT_TEMPLATE_NAME)
@@ -2631,18 +2631,18 @@ void TemplateData::writeSourceGetGeneric(File &fp, const Parameter &param) const
 			fp.print("#endif\n\n");
 		}
 
-		fp.print("\tconst %s * base = NULL;\n", templateName);
-		fp.print("\tif (m_baseData != NULL)\n");
+		fp.print("\tconst %s * base = nullptr;\n", templateName);
+		fp.print("\tif (m_baseData != nullptr)\n");
 		fp.print("\t{\n");
 		fp.print("\t\tbase = dynamic_cast<const %s *>(m_baseData);\n",
 			templateName);
-//		fp.print("\t\tDEBUG_FATAL(base == NULL, (\"base template wrong type\"));\n");
+//		fp.print("\t\tDEBUG_FATAL(base == nullptr, (\"base template wrong type\"));\n");
 
 		if (param.list_type == LIST_NONE)
 		{
 			// get the test base value
 			fp.print("#ifdef _DEBUG\n");
-			fp.print("\t\tif (testData && base != NULL)\n");
+			fp.print("\t\tif (testData && base != nullptr)\n");
 			fp.print("\t\t\ttestDataValue = base->get%s%s(true);\n", upperName.c_str(),
 				MinMaxNames[i]);
 			fp.print("#endif\n");
@@ -2651,7 +2651,7 @@ void TemplateData::writeSourceGetGeneric(File &fp, const Parameter &param) const
 		fp.print("\t}\n\n");
 
 		const char *arrayIndex = "";
-		std::string indexName = m_templateParent == NULL ? "" : "versionOk";
+		std::string indexName = m_templateParent == nullptr ? "" : "versionOk";
 		const char *access = ".";
 		if (param.list_type == LIST_NONE)
 		{
@@ -2689,9 +2689,9 @@ void TemplateData::writeSourceGetGeneric(File &fp, const Parameter &param) const
 			fp.print("\tif (delta == '+' || delta == '-' || delta == '_' || delta == '=')\n");
 			fp.print("\t{\n");
 			fp.print("\t\t%s baseValue = 0;\n", UnpaddedDataMethodNames[param.type]);
-			fp.print("\t\tif (m_baseData != NULL)\n");
+			fp.print("\t\tif (m_baseData != nullptr)\n");
 			fp.print("\t\t{\n");
-			fp.print("\t\t\tif (base != NULL)\n");
+			fp.print("\t\t\tif (base != nullptr)\n");
 			fp.print("\t\t\t\tbaseValue = base->get%s%s(%s);\n", upperName.c_str(),
 				MinMaxNames[i], indexName.c_str());
 			fp.print("\t\t\telse if (ms_allowDefaultTemplateParams)\n");
@@ -2716,7 +2716,7 @@ void TemplateData::writeSourceGetGeneric(File &fp, const Parameter &param) const
 		{
 			// check the return value vs the base value, and warn if the same
 			fp.print("#ifdef _DEBUG\n");
-			fp.print("\tif (testData && base != NULL)\n");
+			fp.print("\tif (testData && base != nullptr)\n");
 			fp.print("\t{\n");
 //			fp.print("\t\tif (testDataValue == value)\n");
 //			fp.print("\t\t\tDEBUG_WARNING(true, (\"Template %%s, parameter %s is "
@@ -2758,12 +2758,12 @@ void TemplateData::writeSourceGetVector(File &fp, const Parameter &param) const
 	fp.print(") const\n");
 	fp.print("{\n");
 
-	fp.print("\tconst %s * base = NULL;\n", templateName);
-	fp.print("\tif (m_baseData != NULL)\n");
+	fp.print("\tconst %s * base = nullptr;\n", templateName);
+	fp.print("\tif (m_baseData != nullptr)\n");
 	fp.print("\t{\n");
 	fp.print("\t\tbase = dynamic_cast<const %s *>(m_baseData);\n",
 		templateName);
-//	fp.print("\t\tDEBUG_FATAL(base == NULL, (\"base template wrong type\"));\n");
+//	fp.print("\t\tDEBUG_FATAL(base == nullptr, (\"base template wrong type\"));\n");
 	fp.print("\t}\n\n");
 
 	const char *arrayIndex = "";
@@ -2820,18 +2820,18 @@ void TemplateData::writeSourceGetDynamicVariable(File &fp, const Parameter &para
 	fp.print(") const\n");
 	fp.print("{\n");
 
-	fp.print("\tconst %s * base = NULL;\n", templateName);
-	fp.print("\tif (m_baseData != NULL)\n");
+	fp.print("\tconst %s * base = nullptr;\n", templateName);
+	fp.print("\tif (m_baseData != nullptr)\n");
 	fp.print("\t{\n");
 	fp.print("\t\tbase = dynamic_cast<const %s *>(m_baseData);\n",
 		templateName);
-//	fp.print("\t\tDEBUG_FATAL(base == NULL, (\"base template wrong type\"));\n");
+//	fp.print("\t\tDEBUG_FATAL(base == nullptr, (\"base template wrong type\"));\n");
 	fp.print("\t}\n\n");
 
 	if (param.list_type == LIST_NONE)
 	{
 		writeSourceReturnBaseValue(fp, param, "");
-		fp.print("\tif (m_%s.isExtendingBaseList() && base != NULL)\n", pname);
+		fp.print("\tif (m_%s.isExtendingBaseList() && base != nullptr)\n", pname);
 		fp.print("\t\tbase->get%s(list);\n", upperName.c_str());
 		fp.print("\tm_%s.getDynamicVariableList(list);\n", pname);
 	}
@@ -2840,7 +2840,7 @@ void TemplateData::writeSourceGetDynamicVariable(File &fp, const Parameter &para
 		fp.print("\tDEBUG_FATAL(index < 0 || index >= %d, (\""
 			"template param index out of range\"));\n", param.list_size);
 		writeSourceReturnBaseValue(fp, param, "");
-		fp.print("\tif (m_%s[index].isExtendingBaseList() && base != NULL)\n", pname);
+		fp.print("\tif (m_%s[index].isExtendingBaseList() && base != nullptr)\n", pname);
 		fp.print("\t\tbase->get%s(list, index);\n", upperName.c_str());
 		fp.print("\tm_%s[index].getDynamicVariableList(list);\n", pname);
 	}
@@ -2872,19 +2872,19 @@ void TemplateData::writeSourceGetTemplate(File &fp, const Parameter &param) cons
 	fp.print(") const\n");
 	fp.print("{\n");
 
-	fp.print("\tconst %s * base = NULL;\n", templateName);
-	fp.print("\tif (m_baseData != NULL)\n");
+	fp.print("\tconst %s * base = nullptr;\n", templateName);
+	fp.print("\tif (m_baseData != nullptr)\n");
 	fp.print("\t{\n");
 	fp.print("\t\tbase = dynamic_cast<const %s *>(m_baseData);\n",
 		templateName);
-//	fp.print("\t\tDEBUG_FATAL(base == NULL, (\"base template wrong type\"));\n");
+//	fp.print("\t\tDEBUG_FATAL(base == nullptr, (\"base template wrong type\"));\n");
 	fp.print("\t}\n\n");
 
 	if (param.list_type == LIST_NONE)
 	{
 		writeSourceReturnBaseValue(fp, param, "");
 
-		fp.print("\tconst %s%s * returnValue = NULL;\n",
+		fp.print("\tconst %s%s * returnValue = nullptr;\n",
 			EnumLocationTypes[getTemplateLocation()],
 			filenameLowerToUpper(param.extendedName).c_str());
 		fp.print("\tconst std::string & templateName = m_%s.getValue();\n", pname);
@@ -2894,7 +2894,7 @@ void TemplateData::writeSourceGetTemplate(File &fp, const Parameter &param) cons
 			"ObjectTemplateList::fetch(templateName));\n",
 			EnumLocationTypes[getTemplateLocation()],
 			filenameLowerToUpper(param.extendedName).c_str());
-		fp.print("\t\tif (returnValue == NULL)\n");
+		fp.print("\t\tif (returnValue == nullptr)\n");
 		fp.print("\t\t\tWARNING_STRICT_FATAL(true, (\"Error loading template %%s\","
 			"templateName.c_str()));\n");
 		fp.print("\t}\n");
@@ -2918,7 +2918,7 @@ void TemplateData::writeSourceGetTemplate(File &fp, const Parameter &param) cons
 			writeSourceReturnBaseValue(fp, param, "");
 		}
 
-		fp.print("\tconst %s%s * returnValue = NULL;\n",
+		fp.print("\tconst %s%s * returnValue = nullptr;\n",
 			EnumLocationTypes[getTemplateLocation()],
 			filenameLowerToUpper(param.extendedName).c_str());
 		fp.print("\tconst std::string & templateName = m_%s[index]%sgetValue();\n",
@@ -2929,7 +2929,7 @@ void TemplateData::writeSourceGetTemplate(File &fp, const Parameter &param) cons
 			"ObjectTemplateList::fetch(templateName));\n",
 			EnumLocationTypes[getTemplateLocation()],
 			filenameLowerToUpper(param.extendedName).c_str());
-		fp.print("\t\tif (returnValue == NULL)\n");
+		fp.print("\t\tif (returnValue == nullptr)\n");
 		fp.print("\t\t\tWARNING_STRICT_FATAL(true, (\"Error loading template %%s\","
 			"templateName.c_str()));\n");
 		fp.print("\t}\n");
@@ -2974,17 +2974,17 @@ void TemplateData::writeSourceGetEnum(File &fp, const Parameter &param) const
 		fp.print("#endif\n\n");
 	}
 
-	fp.print("\tconst %s * base = NULL;\n", className);
-	fp.print("\tif (m_baseData != NULL)\n");
+	fp.print("\tconst %s * base = nullptr;\n", className);
+	fp.print("\tif (m_baseData != nullptr)\n");
 	fp.print("\t{\n");
 	fp.print("\t\tbase = dynamic_cast<const %s *>(m_baseData);\n", className);
-//	fp.print("\t\tDEBUG_FATAL(base == NULL, (\"base template wrong type\"));\n");
+//	fp.print("\t\tDEBUG_FATAL(base == nullptr, (\"base template wrong type\"));\n");
 
 	if (param.list_type == LIST_NONE)
 	{
 		// get the test base value
 		fp.print("#ifdef _DEBUG\n");
-		fp.print("\t\tif (testData && base != NULL)\n");
+		fp.print("\t\tif (testData && base != nullptr)\n");
 		fp.print("\t\t\ttestDataValue = base->get%s(true);\n", upperName.c_str());
 		fp.print("#endif\n");
 	}
@@ -2999,7 +2999,7 @@ void TemplateData::writeSourceGetEnum(File &fp, const Parameter &param) const
 
 		// check the return value vs the base value, and warn if the same
 		fp.print("#ifdef _DEBUG\n");
-		fp.print("\tif (testData && base != NULL)\n");
+		fp.print("\tif (testData && base != nullptr)\n");
 		fp.print("\t{\n");
 //		fp.print("\t\tif (testDataValue == value)\n");
 //		fp.print("\t\t\tDEBUG_WARNING(true, (\"Template %%s, parameter %s is "
@@ -3061,11 +3061,11 @@ std::string upperName;
 		fp.print(") const\n");
 		fp.print("{\n");
 
-		fp.print("\tconst %s * base = NULL;\n", templateName);
-		fp.print("\tif (m_baseData != NULL)\n");
+		fp.print("\tconst %s * base = nullptr;\n", templateName);
+		fp.print("\tif (m_baseData != nullptr)\n");
 		fp.print("\t{\n");
 		fp.print("\t\tbase = dynamic_cast<const %s *>(m_baseData);\n", templateName);
-//		fp.print("\t\tDEBUG_FATAL(base == NULL, (\"base template wrong type\"));\n");
+//		fp.print("\t\tDEBUG_FATAL(base == nullptr, (\"base template wrong type\"));\n");
 		fp.print("\t}\n\n");
 
 		if (param.list_type == LIST_NONE)
@@ -3100,7 +3100,7 @@ std::string upperName;
 		fp.print("\tNOT_NULL(param);\n");
 
 		const TemplateData *structData = getStruct(param.extendedName.c_str());
-		if (structData == NULL)
+		if (structData == nullptr)
 		{
 			fprintf(stderr, "unable to find structure %s\n",
 				param.extendedName.c_str());
@@ -3108,7 +3108,7 @@ std::string upperName;
 		}
 
 		std::string versionString = "versionOk";
-		if (m_templateParent == NULL)
+		if (m_templateParent == nullptr)
 			versionString = "m_" + versionString;
 		structData->writeSourceGetStructAssignments(fp, versionString, MinMaxNames[i]);
 
@@ -3248,7 +3248,7 @@ void TemplateData::writeSourceReadIff(File &fp) const
 	fp.print("char paramName[MAX_NAME_SIZE];\n");
 	fp.print("\n");
 
-	if (m_fileParent != NULL)
+	if (m_fileParent != nullptr)
 	{
 		// check that we are in our form
 		fp.print("\tif (file.getCurrentName() != %s_tag)\n",
@@ -3277,14 +3277,14 @@ void TemplateData::writeSourceReadIff(File &fp) const
 
 		//		fp.print("\t\t%s * mybase = dynamic_cast<%s *>(base);\n",
 		//			templateName, templateName);
-		//		fp.print("\t\tFATAL(mybase == NULL, (\"trying to derive a template from an incompatable template type\"));\n");
-		fp.print("\t\tDEBUG_WARNING(base == NULL, (\"was unable to load base template %%s\", baseFilename.c_str()));\n");
-		fp.print("\t\tif (m_baseData == base && base != NULL)\n");
+		//		fp.print("\t\tFATAL(mybase == nullptr, (\"trying to derive a template from an incompatable template type\"));\n");
+		fp.print("\t\tDEBUG_WARNING(base == nullptr, (\"was unable to load base template %%s\", baseFilename.c_str()));\n");
+		fp.print("\t\tif (m_baseData == base && base != nullptr)\n");
 		fp.print("\t\t\tbase->releaseReference();\n");
 
 		fp.print("\t\telse\n");
 		fp.print("\t\t{\n");
-		fp.print("\t\t\tif (m_baseData != NULL)\n");
+		fp.print("\t\t\tif (m_baseData != nullptr)\n");
 		fp.print("\t\t\t\tm_baseData->releaseReference();\n");
 
 		fp.print("\t\t\tm_baseData = base;\n");
@@ -3356,7 +3356,7 @@ void TemplateData::writeSourceReadIff(File &fp) const
 						" ++iter)\n", param.name.c_str(), param.name.c_str());
 					fp.print("\t\t\t{\n");
 					fp.print("\t\t\t\tdelete *iter;\n");
-					fp.print("\t\t\t\t*iter = NULL;\n");
+					fp.print("\t\t\t\t*iter = nullptr;\n");
 					fp.print("\t\t\t}\n");
 					fp.print("\t\t\tm_%s.clear();\n", param.name.c_str());
 					fp.print("\t\t\tm_%sAppend = file.read_bool8();\n", param.name.c_str());
@@ -3408,7 +3408,7 @@ void TemplateData::writeSourceReadIff(File &fp) const
 	fp.print("\n");
 	fp.print("\tfile.exitForm();\n");
 
-	if (m_fileParent != NULL)
+	if (m_fileParent != nullptr)
 	{
 		// enter the next form
 		if (!baseNameString.empty() && baseNameString != ROOT_TEMPLATE_NAME)
@@ -3450,7 +3450,7 @@ void TemplateData::writeSourceWriteIff(File &fp) const
 	fp.print("int count;\n\n");
 
 	// write form enter header stuff
-	if (m_fileParent != NULL)
+	if (m_fileParent != nullptr)
 	{
 		fp.print("\tfile.insertForm(%s_tag);\n",
 			m_fileParent->getTemplateName().c_str());
@@ -3552,7 +3552,7 @@ void TemplateData::writeSourceWriteIff(File &fp) const
 	fp.print("\n");
 	fp.print("\tfile.exitForm(true);\n");
 
-	if (m_fileParent != NULL)
+	if (m_fileParent != nullptr)
 	{
 		// call base class write iff method
 		if (!getBaseName().empty() && getBaseName() != ROOT_TEMPLATE_NAME)
@@ -3576,7 +3576,7 @@ void TemplateData::writeSourceWriteIff(File &fp) const
  */
 void TemplateData::writeSourceCleanup(File &fp) const
 {
-	if (m_fileParent != NULL)
+	if (m_fileParent != nullptr)
 		fp.print("%s\n", TDF_CLEANUP_BEGIN);
 
 	const char * const * variableNames = DataVariableNames;
@@ -3613,7 +3613,7 @@ void TemplateData::writeSourceCleanup(File &fp) const
 						" ++iter)\n", param.name.c_str(), param.name.c_str());
 					fp.print("\t\t{\n");
 					fp.print("\t\t\tdelete *iter;\n");
-					fp.print("\t\t\t*iter = NULL;\n");
+					fp.print("\t\t\t*iter = nullptr;\n");
 					fp.print("\t\t}\n");
 					fp.print("\t\tm_%s.clear();\n", param.name.c_str());
 					fp.print("\t}\n");
@@ -3624,7 +3624,7 @@ void TemplateData::writeSourceCleanup(File &fp) const
 		}
 	}
 
-	if (m_fileParent != NULL)
+	if (m_fileParent != nullptr)
 		fp.print("%s\n", TDF_CLEANUP_END);
 }	// TemplateData::writeSourceCleanup
 
@@ -3719,9 +3719,9 @@ ParameterList::const_iterator iter;
 						fp.print("\t\t{\n");
 						fp.print("\t\t\tif (deepCheck && !isParamLoaded(name, false, 0))\n");
 						fp.print("\t\t\t{\n");
-						fp.print("\t\t\t\tif (getBaseTemplate() != NULL)\n");
+						fp.print("\t\t\t\tif (getBaseTemplate() != nullptr)\n");
 						fp.print("\t\t\t\t\treturn getBaseTemplate()->get%s(name, deepCheck, index);\n", FUNC_NAMES[i]);
-						fp.print("\t\t\t\treturn NULL;\n");
+						fp.print("\t\t\t\treturn nullptr;\n");
 						fp.print("\t\t\t}\n");
 						fp.print("\t\t\treturn &m_%s;\n", pname);
 						fp.print("\t\t}\n");
@@ -3751,9 +3751,9 @@ ParameterList::const_iterator iter;
 						fp.print("\t\t{\n");
 						fp.print("\t\t\tif (deepCheck && !isParamLoaded(name, false, index))\n");
 						fp.print("\t\t\t{\n");
-						fp.print("\t\t\t\tif (getBaseTemplate() != NULL)\n");
+						fp.print("\t\t\t\tif (getBaseTemplate() != nullptr)\n");
 						fp.print("\t\t\t\t\treturn getBaseTemplate()->get%s(name, deepCheck, index);\n", FUNC_NAMES[i]);
-						fp.print("\t\t\t\treturn NULL;\n");
+						fp.print("\t\t\t\treturn nullptr;\n");
 						fp.print("\t\t\t}\n");
 						fp.print("\t\t\treturn &m_%s[index];\n", pname);
 						fp.print("\t\t}\n");
@@ -3774,7 +3774,7 @@ ParameterList::const_iterator iter;
 			fp.print("\treturn %s::get%s(name, deepCheck, index);\n", baseName, FUNC_NAMES[i]);
 		}
 		if (paramCount != 0)
-			fp.print("\treturn NULL;\n");
+			fp.print("\treturn nullptr;\n");
 		fp.print("}\t//%s::get%s\n", templateName, FUNC_NAMES[i]);
 		fp.print("\n");
 	}
@@ -4227,7 +4227,7 @@ void TemplateData::writeParameterDefault(File &fp, const Parameter &param, int i
 		case LIST_ENUM_ARRAY:
 			{
 				const EnumList * enumList = getEnumList(param.enum_list_name, false);
-				DEBUG_FATAL(enumList == NULL, ("unknown enum name %s",
+				DEBUG_FATAL(enumList == nullptr, ("unknown enum name %s",
 					param.enum_list_name.c_str()));
 
 				if (index >= 0 && index < param.list_size)
@@ -4288,7 +4288,7 @@ void TemplateData::writeStructParameterDefault(File &fp, const Parameter &param,
 		case LIST_ENUM_ARRAY:
 			{
 				const EnumList * enumList = getEnumList(param.enum_list_name, false);
-				DEBUG_FATAL(enumList == NULL, ("unknown enum name %s",
+				DEBUG_FATAL(enumList == nullptr, ("unknown enum name %s",
 					param.enum_list_name.c_str()));
 
 				EnumList::const_iterator listIter;
@@ -4357,7 +4357,7 @@ void TemplateData::writeDefaultValue(File &fp, const Parameter &param) const
 		case TYPE_ENUM:
 			{
 				const EnumList * enumList = getEnumList(param.extendedName, false);
-				DEBUG_FATAL(enumList == NULL, ("unknown enum name %s",
+				DEBUG_FATAL(enumList == nullptr, ("unknown enum name %s",
 					param.extendedName.c_str()));
 				fp.print("%s", enumList->at(0).name.c_str());
 			}
@@ -4398,7 +4398,7 @@ const TemplateData::Parameter *TemplateData::getParameter(
 {
 	NOT_NULL(name);
 
-	TemplateData::Parameter const *result = NULL;
+	TemplateData::Parameter const *result = nullptr;
 
 	// Shallow check, just checks this immediate tdf
 
@@ -4414,7 +4414,7 @@ const TemplateData::Parameter *TemplateData::getParameter(
 
 		const TemplateDefinitionFile *TemplateDefinitionFile = getTdfForParameter(name);
 
-		if (TemplateDefinitionFile != NULL)
+		if (TemplateDefinitionFile != nullptr)
 		{
 			result = TemplateDefinitionFile->getTemplateData(TemplateDefinitionFile->getHighestVersion())->getParameter(name);
 		}

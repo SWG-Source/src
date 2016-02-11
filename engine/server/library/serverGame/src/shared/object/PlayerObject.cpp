@@ -95,7 +95,7 @@
 #include <limits>
 #include <list>
 
-const SharedObjectTemplate * PlayerObject::m_defaultSharedTemplate = NULL;
+const SharedObjectTemplate * PlayerObject::m_defaultSharedTemplate = nullptr;
 bool PlayerObject::m_allowEmptySlot = false;
 
 
@@ -317,7 +317,7 @@ PlayerObject::PlayerObject(const ServerPlayerObjectTemplate* newTemplate) :
 		m_craftingStation(),
 		m_craftingComponentBioLink(),
 		m_useableDraftSchematics(),
-		m_draftSchematic(NULL),
+		m_draftSchematic(nullptr),
 		m_matchMakingPersonalProfileId(),
 		m_matchMakingCharacterProfileId(),
 		m_friendList(),
@@ -451,13 +451,13 @@ const SharedObjectTemplate * PlayerObject::getDefaultSharedTemplate() const
 {
 static const ConstCharCrcLowerString templateName("object/player/base/shared_player_default.iff");
 
-	if (m_defaultSharedTemplate == NULL)
+	if (m_defaultSharedTemplate == nullptr)
 	{
 		m_defaultSharedTemplate = safe_cast<const SharedObjectTemplate *>(
 			ObjectTemplateList::fetch(templateName));
-		WARNING_STRICT_FATAL(m_defaultSharedTemplate == NULL, ("Cannot create "
+		WARNING_STRICT_FATAL(m_defaultSharedTemplate == nullptr, ("Cannot create "
 			"default shared object template %s", templateName.getString()));
-		if (m_defaultSharedTemplate != NULL)
+		if (m_defaultSharedTemplate != nullptr)
 			ExitChain::add (removeDefaultTemplate, "PlayerObject::removeDefaultTemplate");
 	}
 	return m_defaultSharedTemplate;
@@ -470,10 +470,10 @@ static const ConstCharCrcLowerString templateName("object/player/base/shared_pla
  */
 void PlayerObject::removeDefaultTemplate()
 {
-	if (m_defaultSharedTemplate != NULL)
+	if (m_defaultSharedTemplate != nullptr)
 	{
 		m_defaultSharedTemplate->releaseReference();
-		m_defaultSharedTemplate = NULL;
+		m_defaultSharedTemplate = nullptr;
 	}
 }	// PlayerObject::removeDefaultTemplate
 
@@ -514,7 +514,7 @@ int PlayerObject::getCurrentBornDate()
 	time_t baseTime = mktime(&baseTimeData);
 
 	// get the current time and compute the birth date
-	time_t currentTime = time(NULL);
+	time_t currentTime = time(nullptr);
 	time_t delta = (currentTime - baseTime) / (60 * 60 * 24);
 	delta += ((currentTime - baseTime) % (60 * 60 * 24) != 0 ? 1 : 0);
 	return int(delta);
@@ -631,14 +631,14 @@ void PlayerObject::virtualOnSetAuthority()
 	if (isCrafting())
 	{
 		const TangibleObject * tool = safe_cast<TangibleObject *>(getCraftingTool().getObject());
-		if (tool != NULL)
+		if (tool != nullptr)
 		{
 			const ManufactureSchematicObject * manfSchematic = tool->getCraftingManufactureSchematic();
-			if (manfSchematic != NULL)
+			if (manfSchematic != nullptr)
 			{
 				m_draftSchematic = DraftSchematicObject::getSchematic(
 					manfSchematic->getDraftSchematic());
-				if (m_draftSchematic.getPointer() == NULL)
+				if (m_draftSchematic.getPointer() == nullptr)
 				{
 					WARNING(true, ("PlayerObject::virtualOnSetAuthority object "
 						"%s is flagged as crafting, but has bad manf schematic %lu",
@@ -749,7 +749,7 @@ int PlayerObject::getExperienceLimit(const std::string & experienceType) const
 			if((*iter))
 			{
 				const SkillObject::ExperiencePair * xpInfo = (*iter)->getPrerequisiteExperience();
-				if (xpInfo != NULL && experienceType == xpInfo->first && xpInfo->second.second > 0)
+				if (xpInfo != nullptr && experienceType == xpInfo->first && xpInfo->second.second > 0)
 				{
 					if (limit == static_cast<uint32>(-1) ||
 						limit < static_cast<uint32>(xpInfo->second.second))
@@ -797,9 +797,9 @@ int PlayerObject::grantExperiencePoints(const std::string & experienceType, int 
 			// adjust the xp based on what faction is doing best
 			// NOTE: HACK HACK HACK!
 			const PlanetObject * tatooine = ServerUniverse::getInstance().getTatooinePlanet();
-			if (tatooine == NULL)
+			if (tatooine == nullptr)
 				tatooine = ServerUniverse::getInstance().getPlanetByName("Tatooine");
-			if (tatooine == NULL)
+			if (tatooine == nullptr)
 			{
 				WARNING(true, ("Can't find planet tatooine from ServerUniverse"));
 			}
@@ -932,7 +932,7 @@ bool PlayerObject::grantSchematic(uint32 schematicCrc, bool fromSkill)
 
 		const DraftSchematicObject * schematic = DraftSchematicObject::getSchematic(
 			schematicCrc);
-		if (schematic != NULL)
+		if (schematic != nullptr)
 		{
 			// add the schematic to the player's draft schematic list
 			Archive::AutoDeltaMap<std::pair<uint32, uint32>, int>::const_iterator found = m_draftSchematics.find(schematic->getCombinedCrc());
@@ -982,7 +982,7 @@ bool PlayerObject::revokeSchematic(uint32 schematicCrc, bool fromSkill)
 			stopCrafting(false);
 
 		const DraftSchematicObject * schematic = DraftSchematicObject::getSchematic(schematicCrc);
-		if (schematic != NULL)
+		if (schematic != nullptr)
 		{
 			// remove the schematic from the player's draft schematic list
 			Archive::AutoDeltaMap<std::pair<uint32, uint32>, int>::const_iterator found = m_draftSchematics.find(schematic->getCombinedCrc());
@@ -1028,7 +1028,7 @@ bool PlayerObject::revokeSchematic(uint32 schematicCrc, bool fromSkill)
 bool PlayerObject::hasSchematic(uint32 schematicCrc)
 {
 	const DraftSchematicObject * schematic = DraftSchematicObject::getSchematic(schematicCrc);
-	if (schematic != NULL)
+	if (schematic != nullptr)
 	{
 		std::map<std::pair<uint32, uint32>,int>::const_iterator found = m_draftSchematics.find(schematic->getCombinedCrc());
 		if (found != m_draftSchematics.end())
@@ -1065,7 +1065,7 @@ void PlayerObject::setCraftingTool(const TangibleObject & tool)
  */
 void PlayerObject::setCraftingStation(const TangibleObject * station)
 {
-	if (station != NULL)
+	if (station != nullptr)
 	{
 		// verify the crafting station is valid
 		if (station->getObjVars().hasItem(OBJVAR_CRAFTING_STATION))
@@ -1075,7 +1075,7 @@ void PlayerObject::setCraftingStation(const TangibleObject * station)
 			// if we are private, make sure we have an ingredient hopper
 			int privateStation = 0;
 			station->getObjVars().getItem(OBJVAR_PRIVATE_STATION, privateStation);
-			if (privateStation == 1 && getCraftingLevel() == 3 && station->getIngredientHopper() == NULL)
+			if (privateStation == 1 && getCraftingLevel() == 3 && station->getIngredientHopper() == nullptr)
 			{
 				CreatureObject * const owner = getCreatureObject();
 				NOT_NULL(owner);
@@ -1105,7 +1105,7 @@ void PlayerObject::setCraftingStation(const TangibleObject * station)
 bool PlayerObject::requestCraftingSession(const NetworkId & toolId)
 {
 	CreatureObject * const owner = getCreatureObject();
-	if (owner == NULL)
+	if (owner == nullptr)
 		return false;
 
 	const std::string myId        = getNetworkId().getValueString();
@@ -1133,7 +1133,7 @@ bool PlayerObject::requestCraftingSession(const NetworkId & toolId)
 	}
 
 	TangibleObject * const tool = dynamic_cast<TangibleObject *>(CachedNetworkId(toolId).getObject());
-	if (tool == NULL)
+	if (tool == nullptr)
 	{
 		DEBUG_WARNING(true, ("Player %s requesting crafting session with invalid "
 			"object %s", myIdString, toolIdString));
@@ -1155,7 +1155,7 @@ bool PlayerObject::requestCraftingSession(const NetworkId & toolId)
 				{
 					CachedNetworkId const & objId = (*iter);
 					TangibleObject * const obj = safe_cast<TangibleObject *>(objId.getObject());
-					if ((obj != NULL) && obj->isCraftingTool() && (toolType & obj->getCraftingType()))
+					if ((obj != nullptr) && obj->isCraftingTool() && (toolType & obj->getCraftingType()))
 					{
 						return requestCraftingSession(objId) ;
 					}
@@ -1182,7 +1182,7 @@ bool PlayerObject::requestCraftingSession(const NetworkId & toolId)
 void PlayerObject::sendUseableDraftSchematics(std::vector<uint32> & schematicNames)
 {
 	CreatureObject * const owner = getCreatureObject();
-	if (owner == NULL)
+	if (owner == nullptr)
 		return;
 
 	// keep around the names since we are just going to get an index back from
@@ -1198,7 +1198,7 @@ void PlayerObject::sendUseableDraftSchematics(std::vector<uint32> & schematicNam
 		if (*iter != 0)
 		{
 			const DraftSchematicObject * const schematic = DraftSchematicObject::getSchematic(*iter);
-			if (schematic != NULL)
+			if (schematic != nullptr)
 			{
 				message->addSchematic(schematic->getCombinedCrc(),
 					static_cast<int>(schematic->getCategory()));
@@ -1248,37 +1248,37 @@ void PlayerObject::sendUseableDraftSchematics(std::vector<uint32> & schematicNam
  */
 bool PlayerObject::requestDraftSlots(uint32 draftSchematicCrc, MessageQueueDraftSlots * message, MessageQueueDraftSlotsQueryResponse * queryMessage)
 {
-	ManufactureSchematicObject * manfSchematic = NULL;
+	ManufactureSchematicObject * manfSchematic = nullptr;
 	MessageQueueDraftSlots::Slot slotInfo;
 	MessageQueueDraftSlots::Option optionInfo;
 
-	if ((message == NULL && queryMessage == NULL) ||
-		(message != NULL && queryMessage != NULL))
+	if ((message == nullptr && queryMessage == nullptr) ||
+		(message != nullptr && queryMessage != nullptr))
 	{
 		return false;
 	}
 
 	CreatureObject * const owner = getCreatureObject();
-	if (owner == NULL)
+	if (owner == nullptr)
 		return false;
 
 	const ConstCharCrcString & schematicName = ObjectTemplateList::lookUp(draftSchematicCrc);
 	UNREF(schematicName);
 
 	const DraftSchematicObject * const draftSchematic = DraftSchematicObject::getSchematic(draftSchematicCrc);
-	if (draftSchematic == NULL)
+	if (draftSchematic == nullptr)
 	{
 		DEBUG_WARNING(true, ("Player %s requested invalid draft schematic %s", owner->getNetworkId().getValueString().c_str(), schematicName.getString()));
 		return false;
 	}
 
-	if (message != NULL)
+	if (message != nullptr)
 	{
 		m_draftSchematic = draftSchematic;
 
 		TangibleObject * const tool = safe_cast<TangibleObject *>(getCraftingTool().getObject());
 		NOT_NULL(tool);
-		if (tool == NULL)
+		if (tool == nullptr)
 			return false;
 
 		tool->clearCraftingManufactureSchematic();
@@ -1287,7 +1287,7 @@ bool PlayerObject::requestDraftSlots(uint32 draftSchematicCrc, MessageQueueDraft
 		// make a temporary manufacturing schematic based on the draft scematic
 		manfSchematic = ServerWorld::createNewManufacturingSchematic(CachedNetworkId(
 			*owner), *tool, tool->getCraftingManufactureSchematicSlotId(), false);
-		if (manfSchematic == NULL)
+		if (manfSchematic == nullptr)
 		{
 			DEBUG_WARNING(true, ("Error creating manufacturing schematic!"));
 			return false;
@@ -1305,7 +1305,7 @@ bool PlayerObject::requestDraftSlots(uint32 draftSchematicCrc, MessageQueueDraft
 		// being made
 		ServerObject * prototype = manfSchematic->manufactureObject(owner->getNetworkId(),
 			*tool, tool->getCraftingPrototypeSlotId(), true);
-		if (prototype == NULL)
+		if (prototype == nullptr)
 		{
 			DEBUG_WARNING(true, ("Error creating temp prototype!"));
 			return false;
@@ -1322,7 +1322,7 @@ bool PlayerObject::requestDraftSlots(uint32 draftSchematicCrc, MessageQueueDraft
 			getAccountDescription().c_str()));
 	}
 
-	if (queryMessage != NULL)
+	if (queryMessage != nullptr)
 	{
 		queryMessage->setComplexity(static_cast<int>(draftSchematic->getComplexity()));
 		queryMessage->setVolume(draftSchematic->getVolume());
@@ -1343,7 +1343,7 @@ bool PlayerObject::requestDraftSlots(uint32 draftSchematicCrc, MessageQueueDraft
 		if (!slot.optional || slot.optionalSkillCommand.empty() ||
 			owner->hasCommand(slot.optionalSkillCommand))
 		{
-			if (manfSchematic != NULL)
+			if (manfSchematic != nullptr)
 			{
 				// create the slot
 				IGNORE_RETURN(manfSchematic->getSlot(slot.name, manfSlot));
@@ -1370,13 +1370,13 @@ bool PlayerObject::requestDraftSlots(uint32 draftSchematicCrc, MessageQueueDraft
 						{
 							// get the default object name from the shared template
 							const ObjectTemplate *const ingredientTemplate = ObjectTemplateList::fetch(simple.ingredient);
-							if (ingredientTemplate == NULL)
+							if (ingredientTemplate == nullptr)
 							{
 								DEBUG_WARNING(true, ("draft schematic component ingredient %s not found!", simple.ingredient.c_str()));
 								continue;
 							}
 							const SharedObjectTemplate * const sharedTemplate = safe_cast<const SharedObjectTemplate *>(ObjectTemplateList::fetch((safe_cast<const ServerObjectTemplate *>(ingredientTemplate))->getSharedTemplate()));
-							if (sharedTemplate == NULL)
+							if (sharedTemplate == nullptr)
 							{
 								DEBUG_WARNING(true, ("draft schematic component ingredient %s shared template not found!", simple.ingredient.c_str()));
 								continue;
@@ -1391,19 +1391,19 @@ bool PlayerObject::requestDraftSlots(uint32 draftSchematicCrc, MessageQueueDraft
 						{
 							// get the default object name from the shared template of the crafted object
 							const ObjectTemplate * const ingredientTemplate = ObjectTemplateList::fetch(simple.ingredient);
-							if (ingredientTemplate == NULL)
+							if (ingredientTemplate == nullptr)
 							{
 								DEBUG_WARNING(true, ("draft schematic schematic ingredient %s not found!", simple.ingredient.c_str()));
 								continue;
 							}
 							const ServerObjectTemplate * const craftedTemplate = safe_cast<const ServerDraftSchematicObjectTemplate *>(ingredientTemplate)->getCraftedObjectTemplate();
-							if (craftedTemplate == NULL)
+							if (craftedTemplate == nullptr)
 							{
 								DEBUG_WARNING(true, ("draft schematic schematic ingredient %s not found!", simple.ingredient.c_str()));
 								continue;
 							}
 							const SharedObjectTemplate * const sharedTemplate = safe_cast<const SharedObjectTemplate *>(ObjectTemplateList::fetch((safe_cast<const ServerObjectTemplate *>(craftedTemplate))->getSharedTemplate()));
-							if (sharedTemplate == NULL)
+							if (sharedTemplate == nullptr)
 							{
 								DEBUG_WARNING(true, ("draft schematic component ingredient %s shared template not found!", simple.ingredient.c_str()));
 								continue;
@@ -1434,7 +1434,7 @@ bool PlayerObject::requestDraftSlots(uint32 draftSchematicCrc, MessageQueueDraft
 			}	// for (int j = 0; j < optionsCount; ++j)
 			if (componentSlot)
 				slotInfo.hardpoint = slot.appearance;
-			if (message != NULL)
+			if (message != nullptr)
 				message->addSlot(slotInfo);
 			else
 				queryMessage->addSlot(slotInfo);
@@ -1443,7 +1443,7 @@ bool PlayerObject::requestDraftSlots(uint32 draftSchematicCrc, MessageQueueDraft
 	}	// for (int i = 0; i < slotCount; ++i)
 
 	// send the slot info to the player
-	if (message != NULL)
+	if (message != nullptr)
 	{
 		(safe_cast<ServerController *>(owner->getController()))->appendMessage(
 			static_cast<int>(CM_draftSlotsMessage), 0.0f, message,
@@ -1475,7 +1475,7 @@ bool PlayerObject::requestDraftSlots(uint32 draftSchematicCrc, MessageQueueDraft
 void PlayerObject::selectDraftSchematic(int index)
 {
 	CreatureObject * const owner = getCreatureObject();
-	if (owner == NULL)
+	if (owner == nullptr)
 		return;
 
 	const std::string myId        = getNetworkId().getValueString();
@@ -1510,7 +1510,7 @@ void PlayerObject::selectDraftSchematic(int index)
 
 			MessageQueueDraftSlots * message = new MessageQueueDraftSlots(
 				getCraftingTool(), NetworkId::cms_invalid);
-			if (requestDraftSlots(m_useableDraftSchematics[static_cast<unsigned int>(index)], message, NULL))
+			if (requestDraftSlots(m_useableDraftSchematics[static_cast<unsigned int>(index)], message, nullptr))
 			{
 				m_craftingStage = static_cast<int>(Crafting::CS_assembly);
 				m_craftingComponentBioLink = NetworkId::cms_invalid;
@@ -1540,11 +1540,11 @@ Crafting::CraftingError PlayerObject::fillSlot(int slotIndex, int slotOptionInde
 	UNREF(myIdString);		// needed for release mode
 
 	CreatureObject * const owner = getCreatureObject();
-	if (owner == NULL)
+	if (owner == nullptr)
 		return Crafting::CE_noOwner;
 
 	// check the draft schematic
-	if (m_draftSchematic.getPointer() == NULL)
+	if (m_draftSchematic.getPointer() == nullptr)
 	{
 		WARNING(true, ("Player %s trying to fill slot with no draft schematic!", myIdString));
 		return Crafting::CE_noDraftSchematic;
@@ -1572,9 +1572,9 @@ Crafting::CraftingError PlayerObject::fillSlot(int slotIndex, int slotOptionInde
 	}
 
 	TangibleObject * const tool = safe_cast<TangibleObject *>(getCraftingTool().getObject());
-	if (tool == NULL)
+	if (tool == nullptr)
 	{
-		WARNING(true, ("Player %s trying to fill slot with crafting tool %s, but tool is NULL!", myIdString, getCraftingTool().getValueString().c_str()));
+		WARNING(true, ("Player %s trying to fill slot with crafting tool %s, but tool is nullptr!", myIdString, getCraftingTool().getValueString().c_str()));
 		return Crafting::CE_noCraftingTool;
 	}
 
@@ -1583,7 +1583,7 @@ Crafting::CraftingError PlayerObject::fillSlot(int slotIndex, int slotOptionInde
 
 	// check the manufacturing schematic
 	ManufactureSchematicObject * const manfSchematic = tool->getCraftingManufactureSchematic();
-	if (manfSchematic == NULL)
+	if (manfSchematic == nullptr)
 	{
 		WARNING(true, ("Player %s trying to fill slot with no manufacturing schematic!", myIdString));
 		return Crafting::CE_noManfSchematic;
@@ -1614,7 +1614,7 @@ Crafting::CraftingError PlayerObject::fillSlot(int slotIndex, int slotOptionInde
 	// get the draft schematic option, convert the passed-in option index to the
 	// unfiltered index
 	int i, j;
-	const ServerIntangibleObjectTemplate::Ingredient * slotOption = NULL;
+	const ServerIntangibleObjectTemplate::Ingredient * slotOption = nullptr;
 	const int optionsCount = static_cast<int>(draftSlot.options.size());
 	for (i = 0, j = 0; i < optionsCount; ++i)
 	{
@@ -1637,9 +1637,9 @@ Crafting::CraftingError PlayerObject::fillSlot(int slotIndex, int slotOptionInde
 	}
 	slotOptionIndex = i;
 
-	if (slotOption == NULL || slotOption->ingredients.size() != 1)
+	if (slotOption == nullptr || slotOption->ingredients.size() != 1)
 	{
-		WARNING(true, ("slotOption is NULL or ingredient %d for draft schematic %s, slot %s, has ingredient count != 1",
+		WARNING(true, ("slotOption is nullptr or ingredient %d for draft schematic %s, slot %s, has ingredient count != 1",
 			slotOptionIndex, m_draftSchematic->getTemplateName(), draftSlot.name.getText().c_str()));
 		return Crafting::CE_invalidIngredientSize;
 	}
@@ -1671,7 +1671,7 @@ Crafting::CraftingError PlayerObject::fillSlot(int slotIndex, int slotOptionInde
 	int numIngredientsToAdd = neededIngredientCount - currentIngredientCount;
 
 	TangibleObject * const ingredient = dynamic_cast<TangibleObject *>(NetworkIdManager::getObjectById(ingredientId));
-	if (ingredient == NULL)
+	if (ingredient == nullptr)
 	{
 		WARNING(true, ("No object for ingredient id %s", ingredientId.getValueString().c_str()));
 		return Crafting::CE_invalidIngredient;
@@ -1698,7 +1698,7 @@ Crafting::CraftingError PlayerObject::fillSlot(int slotIndex, int slotOptionInde
 	if (!owner->isIngredientInInventory(*ingredient))
 	{
 		// if we are crafting level 3, also check the crafting station's hopper
-		if (getCraftingLevel() != 3 || (station != NULL &&
+		if (getCraftingLevel() != 3 || (station != nullptr &&
 			!station->isIngredientInHopper(ingredientId)))
 		{
 			DEBUG_WARNING(true, ("Player %s chose invalid ingredient %s", myIdString, ingredientId.getValueString().c_str()));
@@ -1709,7 +1709,7 @@ Crafting::CraftingError PlayerObject::fillSlot(int slotIndex, int slotOptionInde
 
 	// see if the ingredient is a resource or component
 	ResourceContainerObject * const crate = dynamic_cast<ResourceContainerObject *>(ingredient);
-	if (crate != NULL)
+	if (crate != nullptr)
 	{
 		// get the resource type name and class name
 		ResourceTypeObject const * const resource = crate->getResourceType();
@@ -1731,7 +1731,7 @@ Crafting::CraftingError PlayerObject::fillSlot(int slotIndex, int slotOptionInde
 				else if (slotOption->ingredientType == ServerIntangibleObjectTemplate::IT_resourceClass)
 				{
 					ResourceClassObject const * resourceClass = &(resource->getParentClass());
-					while (resourceClass != NULL)
+					while (resourceClass != nullptr)
 					{
 						const std::string className (resourceClass->getResourceClassName());
 						if (className == slotIngredient.ingredient)
@@ -1805,11 +1805,11 @@ Crafting::CraftingError PlayerObject::fillSlot(int slotIndex, int slotOptionInde
 		FactoryObject * factory = dynamic_cast<FactoryObject *>(ingredient);
 
 		// if this is an old-style factory, we can't use it directly in crafting
-		if (factory != NULL && !factory->getLoadContents())
-			factory = NULL;
+		if (factory != nullptr && !factory->getLoadContents())
+			factory = nullptr;
 
 		// make sure the component isn't damaged
-		if (factory == NULL && ingredient->getDamageTaken() != 0 &&
+		if (factory == nullptr && ingredient->getDamageTaken() != 0 &&
 			!ingredient->getObjVars().hasItem(OBJVAR_CRAFTING_COMPONENT_CAN_BE_DAMAGED))
 		{
 			DEBUG_WARNING(true, ("Tried to use damaged component %s for draft schematic %s, slot %s, option %d",
@@ -1853,27 +1853,27 @@ Crafting::CraftingError PlayerObject::fillSlot(int slotIndex, int slotOptionInde
 
 				// check the ingredient template name for every template in it's
 				// heirarchy
-				const ObjectTemplate * testTemplate = NULL;
+				const ObjectTemplate * testTemplate = nullptr;
 				if (slotOption->ingredientType == ServerIntangibleObjectTemplate::IT_template ||
 					slotOption->ingredientType == ServerIntangibleObjectTemplate::IT_templateGeneric)
 				{
-					if (factory == NULL)
+					if (factory == nullptr)
 						testTemplate = ingredient->getObjectTemplate();
 					else
 						testTemplate = factory->getContainedObjectTemplate();
 				}
 				else
 				{
-					const DraftSchematicObject * itemSchematic = NULL;
-					if (factory == NULL)
+					const DraftSchematicObject * itemSchematic = nullptr;
+					if (factory == nullptr)
 						itemSchematic = DraftSchematicObject::getSchematic(ingredient->getSourceDraftSchematic());
 					else
 						itemSchematic = DraftSchematicObject::getSchematic(factory->getDraftSchematic());
-					if (itemSchematic != NULL)
+					if (itemSchematic != nullptr)
 						testTemplate = itemSchematic->getObjectTemplate();
 				}
 
-				while (testTemplate != NULL)
+				while (testTemplate != nullptr)
 				{
 					const std::string ingredientName(testTemplate->getName());
 					if (ingredientName == requiredIngredientName)
@@ -1896,7 +1896,7 @@ Crafting::CraftingError PlayerObject::fillSlot(int slotIndex, int slotOptionInde
 			// this is a configureable setting
 			const Crafting::ComponentIngredient * testComponent = dynamic_cast<
 				const Crafting::ComponentIngredient *>(manfSlot.ingredients.front().get());
-			if (testComponent != NULL)
+			if (testComponent != nullptr)
 			{
 				if (ConfigServerGame::getCraftingComponentStrict() &&
 					(slotOption->ingredientType != ServerIntangibleObjectTemplate::IT_templateGeneric &&
@@ -1909,15 +1909,15 @@ Crafting::CraftingError PlayerObject::fillSlot(int slotIndex, int slotOptionInde
 				else
 				{
 					// component from same template
-					if (factory == NULL)
+					if (factory == nullptr)
 					{
-						if (ingredient->getObjectTemplateName() != NULL &&
+						if (ingredient->getObjectTemplateName() != nullptr &&
 							ingredient->getObjectTemplateName() == testComponent->templateName)
 						{
 							slotOk = true;
 						}
 					}
-					else if (factory->getContainedTemplateName() != NULL &&
+					else if (factory->getContainedTemplateName() != nullptr &&
 						factory->getContainedTemplateName() == testComponent->templateName)
 					{
 						slotOk = true;
@@ -1927,7 +1927,7 @@ Crafting::CraftingError PlayerObject::fillSlot(int slotIndex, int slotOptionInde
 		}
 		if (slotOk)
 		{
-			if (factory == NULL || factory->getCount() <= numIngredientsToAdd)
+			if (factory == nullptr || factory->getCount() <= numIngredientsToAdd)
 			{
 				// adding normal component or a complete factory object
 				if (manfSchematic->addIngredient(*ingredient))
@@ -1938,7 +1938,7 @@ Crafting::CraftingError PlayerObject::fillSlot(int slotIndex, int slotOptionInde
 						manfSchematic->setSlotOption(manfSlot.name, slotOptionIndex);
 						manfSchematic->modifySlotComplexity(manfSlot.name, slotOption->complexity);
 					}
-					if (factory == NULL)
+					if (factory == nullptr)
 					{
 						manfSchematic->addSlotComponent(manfSlot.name, *ingredient,
 							slotOption->ingredientType);
@@ -2014,7 +2014,7 @@ Crafting::CraftingError PlayerObject::emptySlot(int slotIndex, const NetworkId &
 	UNREF(myIdString);		// needed for release mode
 
 	CreatureObject * const owner = getCreatureObject();
-	if (owner == NULL)
+	if (owner == nullptr)
 		return Crafting::CE_noOwner;
 
 	if (getCraftingStage() != Crafting::CS_assembly && !m_allowEmptySlot)
@@ -2024,7 +2024,7 @@ Crafting::CraftingError PlayerObject::emptySlot(int slotIndex, const NetworkId &
 	}
 
 	// check the draft schematic
-	if (m_draftSchematic.getPointer() == NULL)
+	if (m_draftSchematic.getPointer() == nullptr)
 	{
 		WARNING(true, ("Player %s trying to empty slot with no draft schematic!", myIdString));
 		return Crafting::CE_noDraftSchematic;
@@ -2037,15 +2037,15 @@ Crafting::CraftingError PlayerObject::emptySlot(int slotIndex, const NetworkId &
 		return Crafting::CE_noCraftingTool;
 	}
 	TangibleObject * const tool = safe_cast<TangibleObject *>(getCraftingTool().getObject());
-	if (tool == NULL)
+	if (tool == nullptr)
 	{
-		WARNING(true, ("Player %s trying to empty slot with crafting tool %s, but tool is NULL!", myIdString, getCraftingTool().getValueString().c_str()));
+		WARNING(true, ("Player %s trying to empty slot with crafting tool %s, but tool is nullptr!", myIdString, getCraftingTool().getValueString().c_str()));
 		return Crafting::CE_noCraftingTool;
 	}
 
 	// get the crafting station (if any)
 	TangibleObject * station = dynamic_cast<TangibleObject *>(getCraftingStation().getObject());
-	if (station != NULL && getCraftingLevel() == 3 && station->getIngredientHopper() == NULL)
+	if (station != nullptr && getCraftingLevel() == 3 && station->getIngredientHopper() == nullptr)
 	{
 		WARNING_STRICT_FATAL(true, ("Player %s trying to empty crafting slot near "
 			"a crafting station %s that has no ingredient hopper!",
@@ -2055,7 +2055,7 @@ Crafting::CraftingError PlayerObject::emptySlot(int slotIndex, const NetworkId &
 	}
 
 	ServerObject * const inventory = owner->getInventory();
-	if (inventory == NULL)
+	if (inventory == nullptr)
 	{
 		WARNING (true, ("Player %s has no inventory.", myIdString));
 		return Crafting::CE_noInventory;
@@ -2077,7 +2077,7 @@ Crafting::CraftingError PlayerObject::emptySlot(int slotIndex, const NetworkId &
 
 			// if we are crafting level 3, also check the crafting station's hopper
 			if (!containerIsWorn &&
-				(getCraftingLevel() != 3 || (station != NULL &&
+				(getCraftingLevel() != 3 || (station != nullptr &&
 				!isNestedInContainer (targetContainerId, station->getIngredientHopper()->getNetworkId()))))
 			{
 				WARNING (true, ("Player %s attempted to empty slot into invalid container [%s].", myIdString, targetContainerId.getValueString().c_str()));
@@ -2087,7 +2087,7 @@ Crafting::CraftingError PlayerObject::emptySlot(int slotIndex, const NetworkId &
 
 		targetContainer = safe_cast<ServerObject *>(NetworkIdManager::getObjectById (targetContainerId));
 
-		if (targetContainer == NULL)
+		if (targetContainer == nullptr)
 		{
 			WARNING (true, ("Player %s attempted to empty slot into non-existant container [%s].", myIdString, targetContainerId.getValueString ().c_str ()));
 			return Crafting::CE_badTargetContainer;
@@ -2102,7 +2102,7 @@ Crafting::CraftingError PlayerObject::emptySlot(int slotIndex, const NetworkId &
 
 	// check the manufacturing schematic
 	ManufactureSchematicObject * const manfSchematic = tool->getCraftingManufactureSchematic();
-	if (manfSchematic == NULL)
+	if (manfSchematic == nullptr)
 	{
 		WARNING(true, ("Player %s trying to empty slot with no manufacturing schematic!", myIdString));
 		return Crafting::CE_noManfSchematic;
@@ -2154,7 +2154,7 @@ Crafting::CraftingError PlayerObject::emptySlot(int slotIndex, const NetworkId &
 			const Crafting::ComponentIngredient * const componentInfo = dynamic_cast<const Crafting::ComponentIngredient *>((*iter).get());
 			NOT_NULL(componentInfo);
 			TangibleObject * const component = manfSchematic->getComponent(*componentInfo);
-			if (component != NULL)
+			if (component != nullptr)
 			{
 				// move the component from the schematic to the player
 				if (!manfSchematic->removeIngredient(*component, *targetContainer))
@@ -2180,7 +2180,7 @@ Crafting::CraftingError PlayerObject::emptySlot(int slotIndex, const NetworkId &
 	{
 		// ingredient is a resource
 		VolumeContainer * const targetVolumeContainer = ContainerInterface::getVolumeContainer(*targetContainer);
-		if (targetVolumeContainer == NULL)
+		if (targetVolumeContainer == nullptr)
 		{
 			DEBUG_WARNING(true, ("PlayerObject::emptySlot: targetContainer %s does not have a volume container",
 								 targetContainer->getNetworkId().getValueString().c_str()));
@@ -2203,7 +2203,7 @@ Crafting::CraftingError PlayerObject::emptySlot(int slotIndex, const NetworkId &
 					{
 						ResourceContainerObject * crate = dynamic_cast<
 							ResourceContainerObject *>(NetworkIdManager::getObjectById((*iter2)));
-						if (crate != NULL && crate->getResourceTypeId() == resourceId)
+						if (crate != nullptr && crate->getResourceTypeId() == resourceId)
 						{
 							int emptySpace = crate->getMaxQuantity() - crate->getQuantity();
 							if (emptySpace > 0)
@@ -2236,7 +2236,7 @@ Crafting::CraftingError PlayerObject::emptySlot(int slotIndex, const NetworkId &
 					{
 						ServerObject * crateObject = ServerWorld::createNewObject(
 							crateTemplateName, *targetContainer, true);
-						if (crateObject == NULL)
+						if (crateObject == nullptr)
 						{
 							// @todo: inform the player
 							DEBUG_WARNING(true, ("PlayerObject::emptySlot tried to "
@@ -2322,14 +2322,14 @@ int PlayerObject::startCraftingExperiment ()
 	int i;
 
 	CreatureObject * const owner = getCreatureObject();
-	if (owner == NULL)
+	if (owner == nullptr)
 		return -Crafting::CE_noOwner;
 
 	std::string myId = getNetworkId().getValueString();
 	const char * myIdString = myId.c_str();
 	UNREF(myIdString);		// needed for release mode
 
-	if (m_draftSchematic.getPointer() == NULL)
+	if (m_draftSchematic.getPointer() == nullptr)
 	{
 		DEBUG_WARNING(true, ("Player %s tried to start crafting experimentation with invalid schematic.", myIdString));
 		return -Crafting::CE_noDraftSchematic;
@@ -2350,13 +2350,13 @@ int PlayerObject::startCraftingExperiment ()
 
 	if (!tool)
 	{
-		DEBUG_WARNING(true, ("Player %s tried to start crafting experimentation with null crafting tool [%s].", myIdString, getCraftingTool().getValueString().c_str()));
+		DEBUG_WARNING(true, ("Player %s tried to start crafting experimentation with nullptr crafting tool [%s].", myIdString, getCraftingTool().getValueString().c_str()));
 		return -Crafting::CE_noCraftingTool;
 	}
 
 	// check the manufacturing schematic
 	ManufactureSchematicObject * const manfSchematic = tool->getCraftingManufactureSchematic();
-	if (manfSchematic == NULL)
+	if (manfSchematic == nullptr)
 	{
 		DEBUG_WARNING(true, ("Player %s tried to start crafting experimentation with invalid manufacture schematic.", myIdString));
 		return -Crafting::CE_noManfSchematic;
@@ -2425,7 +2425,7 @@ int PlayerObject::startCraftingExperiment ()
 	}
 
 	ServerObject * prototype = tool->getCraftingPrototype();
-	if (prototype == NULL)
+	if (prototype == nullptr)
 	{
 		DEBUG_WARNING(true, ("PlayerObject::startCraftingExperiment crafting "
 			"tool %s has no prototype object!",
@@ -2530,7 +2530,7 @@ int PlayerObject::startCraftingExperiment ()
 Crafting::CraftingResult PlayerObject::experiment(const std::vector<MessageQueueCraftExperiment::ExperimentInfo> & experiments, int totalPoints, int corelevel)
 {
 	CreatureObject * const owner = getCreatureObject();
-	if (owner == NULL)
+	if (owner == nullptr)
 		return Crafting::CR_internalFailure;
 
 	std::string myId = getNetworkId().getValueString();
@@ -2554,7 +2554,7 @@ Crafting::CraftingResult PlayerObject::experiment(const std::vector<MessageQueue
 	}
 
 	// verify the tool
-	if (m_draftSchematic.getPointer() == NULL || getCraftingTool() == NetworkId::cms_invalid)
+	if (m_draftSchematic.getPointer() == nullptr || getCraftingTool() == NetworkId::cms_invalid)
 	{
 		DEBUG_WARNING(true, ("Player %s tried to start crafting experimentation "
 			"with invalid schematic or crafting tool.", myIdString));
@@ -2567,7 +2567,7 @@ Crafting::CraftingResult PlayerObject::experiment(const std::vector<MessageQueue
 
 	// check the manufacturing schematic
 	ManufactureSchematicObject * const manfSchematic = tool->getCraftingManufactureSchematic();
-	if (manfSchematic == NULL)
+	if (manfSchematic == nullptr)
 	{
 		DEBUG_WARNING(true, ("Player %s tried to experiment with invalid "
 			"manufacture schematic.", myIdString));
@@ -2577,7 +2577,7 @@ Crafting::CraftingResult PlayerObject::experiment(const std::vector<MessageQueue
 
 	// check the test prototype
 	ServerObject * prototype = tool->getCraftingPrototype();
-	if (prototype == NULL)
+	if (prototype == nullptr)
 	{
 		DEBUG_WARNING(true, ("Player %s tried to experiment with invalid test "
 			"prototype.", myIdString));
@@ -2680,7 +2680,7 @@ bool PlayerObject::customize(int property, int value) const
 		return false;
 	}
 
-	if (m_draftSchematic.getPointer() == NULL || getCraftingTool() == NetworkId::cms_invalid)
+	if (m_draftSchematic.getPointer() == nullptr || getCraftingTool() == NetworkId::cms_invalid)
 	{
 		DEBUG_WARNING(true, ("Player %s tried to customize with invalid "
 			"schematic or crafting tool.", myIdString));
@@ -2732,7 +2732,7 @@ int PlayerObject::setCustomizationData(const Unicode::String & name,
 		return Crafting::CE_notCustomizeStage;
 	}
 
-	if (m_draftSchematic.getPointer() == NULL)
+	if (m_draftSchematic.getPointer() == nullptr)
 	{
 		DEBUG_WARNING(true, ("Player %s tried to customize with invalid schematic.", myIdString));
 		return Crafting::CE_noDraftSchematic;
@@ -2804,7 +2804,7 @@ int PlayerObject::setCustomizationData(const Unicode::String & name,
 bool PlayerObject::createPrototype(bool keepPrototype)
 {
 	CreatureObject * const owner = getCreatureObject();
-	if (owner == NULL)
+	if (owner == nullptr)
 		return false;
 
 	std::string myId = getNetworkId().getValueString();
@@ -2821,7 +2821,7 @@ bool PlayerObject::createPrototype(bool keepPrototype)
 		return false;
 	}
 
-	if (m_draftSchematic.getPointer() == NULL || getCraftingTool() == NetworkId::cms_invalid)
+	if (m_draftSchematic.getPointer() == nullptr || getCraftingTool() == NetworkId::cms_invalid)
 	{
 		DEBUG_WARNING(true, ("Player %s tried to create prototype with invalid "
 			"schematic or crafting tool.", myIdString));
@@ -2842,7 +2842,7 @@ bool PlayerObject::createPrototype(bool keepPrototype)
 	}
 
 	ManufactureSchematicObject * const manfSchematic = tool->getCraftingManufactureSchematic();
-	if (manfSchematic == NULL)
+	if (manfSchematic == nullptr)
 	{
 		WARNING_STRICT_FATAL(true, ("No manf schematic in crafting tool %s",
 			tool->getNetworkId().getValueString().c_str()));
@@ -2961,7 +2961,7 @@ bool PlayerObject::createPrototype(bool keepPrototype)
 	params.addParam(prototype->getNetworkId(), "prototype");
 	ScriptDictionaryPtr dictionary;
 	getScriptObject()->makeScriptDictionary(params, dictionary);
-	if (dictionary.get() != NULL)
+	if (dictionary.get() != nullptr)
 	{
 		dictionary->serialize();
 
@@ -2969,7 +2969,7 @@ bool PlayerObject::createPrototype(bool keepPrototype)
 		{
 			Client * client = owner->getClient();
 
-			if (client != NULL && client->isGod())
+			if (client != nullptr && client->isGod())
 			{
 				Chat::sendSystemMessage(*owner, Unicode::narrowToWide("Crafting time changed due to god mode and crafting_qa objvar."), Unicode::emptyString);
 				prototypeTime = 1;
@@ -3022,7 +3022,7 @@ bool PlayerObject::createManufacturingSchematic()
 		return false;
 
 	CreatureObject * const owner = getCreatureObject();
-	if (owner == NULL)
+	if (owner == nullptr)
 		return false;
 
 	// @todo: need to filter the name
@@ -3034,7 +3034,7 @@ bool PlayerObject::createManufacturingSchematic()
 		return false;
 	}
 
-	if (m_draftSchematic.getPointer() == NULL || getCraftingTool() == NetworkId::cms_invalid)
+	if (m_draftSchematic.getPointer() == nullptr || getCraftingTool() == NetworkId::cms_invalid)
 	{
 		WARNING(true, ("Player %s tried to create manf schematic with invalid schematic or crafting tool.", getNetworkId().getValueString().c_str ()));
 		return false;
@@ -3048,19 +3048,19 @@ bool PlayerObject::createManufacturingSchematic()
 	}
 
 	TangibleObject * const tool = safe_cast<TangibleObject *>(getCraftingTool().getObject());
-	if (tool == NULL)
+	if (tool == nullptr)
 	{
 		WARNING_STRICT_FATAL(true, ("Could not find crafting tool during create manf schematic phase."));
 		return false;
 	}
 	ManufactureSchematicObject * const manfSchematic = tool->removeCraftingManufactureSchematic();
-	if (manfSchematic == NULL)
+	if (manfSchematic == nullptr)
 	{
 		WARNING_STRICT_FATAL(true, ("Could not find manf schematic during create manf schematic phase."));
 		return false;
 	}
 	TangibleObject * const prototype = safe_cast<TangibleObject *>(tool->getCraftingPrototype());
-	if (prototype == NULL)
+	if (prototype == nullptr)
 	{
 		WARNING_STRICT_FATAL(true, ("Could not find prototype during create manf schematic phase."));
 		return false;
@@ -3141,14 +3141,14 @@ bool PlayerObject::createManufacturingSchematic()
 	manfSchematic->persist();
 
 	ServerObject * const datapad = owner->getDatapad ();
-	if (datapad == NULL)
+	if (datapad == nullptr)
 	{
 		DEBUG_WARNING(true, ("Can't find datapad for player %s", getAccountDescription().c_str()));
 		return false;
 	}
 
 	Container::ContainerErrorCode tmp = Container::CEC_Success;
-	if (!ContainerInterface::transferItemToVolumeContainer(*datapad, *manfSchematic, NULL, tmp))
+	if (!ContainerInterface::transferItemToVolumeContainer(*datapad, *manfSchematic, nullptr, tmp))
 	{
 		return false;
 	}
@@ -3173,7 +3173,7 @@ bool PlayerObject::createManufacturingSchematic()
 bool PlayerObject::restartCrafting ()
 {
 	CreatureObject * const owner = getCreatureObject();
-	if (owner == NULL)
+	if (owner == nullptr)
 		return false;
 
 	std::string myId = getNetworkId().getValueString();
@@ -3195,7 +3195,7 @@ bool PlayerObject::restartCrafting ()
 	}
 
 	// verify the tool
-	if (m_draftSchematic.getPointer() == NULL || getCraftingTool() == NetworkId::cms_invalid)
+	if (m_draftSchematic.getPointer() == nullptr || getCraftingTool() == NetworkId::cms_invalid)
 	{
 		DEBUG_WARNING(true, ("Player %s tried to start crafting experimentation "
 			"with invalid schematic or crafting tool.", myIdString));
@@ -3208,7 +3208,7 @@ bool PlayerObject::restartCrafting ()
 
 	// reset the manf schematic
 	ManufactureSchematicObject * manfSchematic = tool->getCraftingManufactureSchematic();
-	if (manfSchematic == NULL)
+	if (manfSchematic == nullptr)
 	{
 		DEBUG_WARNING(true, ("Player %s has no manufacturing schematic!", myIdString));
 		return false;
@@ -3262,21 +3262,21 @@ void PlayerObject::stopCrafting (bool normalExit)
 {
 	CreatureObject * const owner = getCreatureObject();
 
-	if (getCraftingTool().getObject() != NULL)
+	if (getCraftingTool().getObject() != nullptr)
 	{
 		TangibleObject * tool = dynamic_cast<TangibleObject *>(getCraftingTool().getObject());
-		if (tool != NULL)
+		if (tool != nullptr)
 		{
 			IGNORE_RETURN(tool->stopCraftingSession());
 		}
 
 		// tell scripts that the session has ended
 		ScriptParams params;
-		if (owner != NULL)
+		if (owner != nullptr)
 			params.addParam(owner->getNetworkId());
 		else
 			params.addParam(getNetworkId());
-		if (getCurrentDraftSchematic() != NULL)
+		if (getCurrentDraftSchematic() != nullptr)
 			params.addParam(getCurrentDraftSchematic()->getTemplateName());
 		else
 			params.addParam("");
@@ -3292,7 +3292,7 @@ void PlayerObject::stopCrafting (bool normalExit)
 	m_craftingComponentBioLink = NetworkId::cms_invalid;
 
 	// tell the player crafting has ended
-	if (owner != NULL && owner->getController() != NULL)
+	if (owner != nullptr && owner->getController() != nullptr)
 	{
 		(safe_cast<ServerController *>(owner->getController()))->appendMessage(
 			static_cast<int>(CM_craftingSessionEnded), 0.0f,
@@ -3348,7 +3348,7 @@ void PlayerObject::requestFriendList() const
 {
 	CreatureObject const *owner = safe_cast<const CreatureObject *>(ContainerInterface::getContainedByObject(*this));
 
-	if (owner != NULL)
+	if (owner != nullptr)
 	{
 		ChatAvatarId chatAvatarId(Chat::constructChatAvatarId(*owner));
 
@@ -3410,7 +3410,7 @@ void PlayerObject::requestIgnoreList() const
 {
 	CreatureObject const *owner = safe_cast<const CreatureObject *>(ContainerInterface::getContainedByObject(*this));
 
-	if (owner != NULL)
+	if (owner != nullptr)
 	{
 		ChatAvatarId chatAvatarId(Chat::constructChatAvatarId(*owner));
 
@@ -3767,7 +3767,7 @@ void PlayerObject::setTitle(std::string const &title)
 					m_skillTitle = title;
 			}
 		}
-		else if (title.empty() || (title == "citizenship") || (SkillManager::getInstance().getSkill(title) != NULL) || (CollectionsDataTable::isASlotTitle(title) != NULL) || (CollectionsDataTable::isACollectionTitle(title) != NULL) || (CollectionsDataTable::isAPageTitle(title) != NULL) || (GuildRankDataTable::isARankTitle(title) != NULL) || (CitizenRankDataTable::isARankTitle(title) != NULL))
+		else if (title.empty() || (title == "citizenship") || (SkillManager::getInstance().getSkill(title) != nullptr) || (CollectionsDataTable::isASlotTitle(title) != nullptr) || (CollectionsDataTable::isACollectionTitle(title) != nullptr) || (CollectionsDataTable::isAPageTitle(title) != nullptr) || (GuildRankDataTable::isARankTitle(title) != nullptr) || (CitizenRankDataTable::isARankTitle(title) != nullptr))
 		{
 			if (title != m_skillTitle.get())
 				m_skillTitle = title;
@@ -4075,7 +4075,7 @@ void PlayerObject::handleCMessageTo(const MessageToPayload &message)
 				}
 
 				{
-				BiographyManager::requestBiography(owner->getNetworkId(), NULL);
+				BiographyManager::requestBiography(owner->getNetworkId(), nullptr);
 				}
 
 				bool needsTitleCheck = false;
@@ -4139,7 +4139,7 @@ void PlayerObject::handleCMessageTo(const MessageToPayload &message)
 				// also check to see if the citizen rank has changed, and if so, update the citizen rank information
 				{
 					std::vector<int> const & cityIds = CityInterface::getCitizenOfCityId(owner->getNetworkId());
-					CitizenInfo const * const citizenInfo = (!cityIds.empty() ? CityInterface::getCitizenInfo(cityIds.front(), owner->getNetworkId()) : NULL);
+					CitizenInfo const * const citizenInfo = (!cityIds.empty() ? CityInterface::getCitizenInfo(cityIds.front(), owner->getNetworkId()) : nullptr);
 					if (!citizenInfo)
 					{
 						// not a citizen, so make sure the citizen rank is empty
@@ -4265,12 +4265,12 @@ void PlayerObject::endBaselines()
 
 	const CreatureObject * owner = safe_cast<const CreatureObject *>(ContainerInterface::getContainedByObject(*this));
 
-	if (owner != NULL)
+	if (owner != nullptr)
 	{
 		SharedCreatureObjectTemplate::Species const species = owner->getSpecies();
 		setSpokenLanguage(GameLanguageManager::getStartingLanguage(species));
 
-//		if (owner->isAuthoritative() && ServerUniverse::getInstance().getXpManager() != NULL)
+//		if (owner->isAuthoritative() && ServerUniverse::getInstance().getXpManager() != nullptr)
 //		{
 //			// get any xp we earned while offline
 //			ServerUniverse::getInstance().getXpManager()->requestXp(*this);
@@ -4326,7 +4326,7 @@ void PlayerObject::endBaselines()
 		}
 		else
 		{
-			m_chatSpamTimeEndInterval = static_cast<int>(::time(NULL)) + (ConfigServerGame::getChatSpamLimiterIntervalMinutes() * 60);
+			m_chatSpamTimeEndInterval = static_cast<int>(::time(nullptr)) + (ConfigServerGame::getChatSpamLimiterIntervalMinutes() * 60);
 			m_chatSpamSpatialNumCharacters = 0;
 			m_chatSpamNonSpatialNumCharacters = 0;
 			m_chatSpamNextTimeToSyncWithChatServer = 0;
@@ -4362,7 +4362,7 @@ void PlayerObject::endBaselines()
 					{
 						m_squelchedById = tempNetworkId;
 						m_squelchedByName = tempString;
-						m_squelchExpireTime = static_cast<int32>(::time(NULL)) + (temp - gameTimeNow);
+						m_squelchExpireTime = static_cast<int32>(::time(nullptr)) + (temp - gameTimeNow);
 					}
 				}
 			}
@@ -4373,7 +4373,7 @@ void PlayerObject::endBaselines()
 			DynamicVariableList::NestedList const gcwContribution(getObjVars(), "gcwContributionTracking");
 			if (!gcwContribution.empty())
 			{
-				int const timeExpired = static_cast<int>(::time(NULL)) - (60 * 60 * 24 * 30); // 30 days
+				int const timeExpired = static_cast<int>(::time(nullptr)) - (60 * 60 * 24 * 30); // 30 days
 				std::list<std::string> gcwContributionToRemove;
 				int timeLastContributed;
 				for (DynamicVariableList::NestedList::const_iterator i = gcwContribution.begin(); i != gcwContribution.end(); ++i)
@@ -4724,12 +4724,12 @@ std::string PlayerObject::getAccountDescription() const
 {
 	const ServerObject * owner = safe_cast<const ServerObject *>(
 		ContainerInterface::getContainedByObject(*this));
-	if (owner == NULL)
+	if (owner == nullptr)
 		return "UNKNOWN";
 
 	bool isGod = false;
 	bool isSecure = false;
-	Client * client = NULL;
+	Client * client = nullptr;
 	if (owner && owner->getClient())
 	{
 		client = owner->getClient();
@@ -4768,7 +4768,7 @@ std::string PlayerObject::getAccountDescription() const
 
 void PlayerObject::logChat(int const logIndex)
 {
-	if (m_chatLog != NULL)
+	if (m_chatLog != nullptr)
 	{
 		time_t const logTime = Os::getRealSystemTime();
 
@@ -5276,10 +5276,10 @@ void PlayerObject::checkTheater(const Vector & pos, const std::string & scene,
 		IntangibleObject * theater = IntangibleObject::spawnTheater(m_theaterDatatable.get(),
 			m_theaterPosition.get(), m_theaterScript.get(),
 			static_cast<IntangibleObject::TheaterLocationType>(m_theaterLocationType.get()));
-		if (theater != NULL)
+		if (theater != nullptr)
 		{
 			const CreatureObject * owner = getCreatureObject();
-			if (owner != NULL)
+			if (owner != nullptr)
 				theater->setPlayer(*owner);
 			theater->setTheaterCreator(m_theaterCreator.get());
 			if (!theater->setTheaterName(m_theaterName.get()))
@@ -5287,10 +5287,10 @@ void PlayerObject::checkTheater(const Vector & pos, const std::string & scene,
 				WARNING(true, ("PlayerObject::checkTheater could not create "
 					"theater with name %s", m_theaterName.get().c_str()));
 				theater->permanentlyDestroy(DeleteReasons::SetupFailed);
-				theater = NULL;
+				theater = nullptr;
 			}
 		}
-		if (theater == NULL)
+		if (theater == nullptr)
 		{
 			CreatureObject * creatureObject = getCreatureObject();
 			if (creatureObject)
@@ -5357,7 +5357,7 @@ bool PlayerObject::setTheater(const std::string & datatable, const Vector & posi
 		return false;
 	}
 
-	if (ServerUniverse::getInstance().getPlanetByName(scene) == NULL)
+	if (ServerUniverse::getInstance().getPlanetByName(scene) == nullptr)
 	{
 		WARNING(true, ("PlayerObject::setTheater called with invalid scene %s",
 			scene.c_str()));
@@ -6342,7 +6342,7 @@ unsigned long PlayerObject::getSessionPlayTimeDuration() const
 	time_t const sessionStartPlayTime = static_cast<time_t>(m_sessionStartPlayTime.get());
 	if (sessionStartPlayTime > 0)
 	{
-		time_t const now = ::time(NULL);
+		time_t const now = ::time(nullptr);
 		if (now > sessionStartPlayTime)
 			return static_cast<unsigned long>(now - sessionStartPlayTime);
 	}
@@ -6359,7 +6359,7 @@ unsigned long PlayerObject::getSessionActivePlayTimeDuration() const
 	time_t const sessionLastActiveTime = static_cast<time_t>(m_sessionLastActiveTime.get());
 	if (sessionLastActiveTime > 0)
 	{
-		time_t const now = ::time(NULL);
+		time_t const now = ::time(nullptr);
 		if (now > sessionLastActiveTime)
 			activePlayTimeDuration += static_cast<unsigned long>(now - sessionLastActiveTime);
 	}
@@ -6393,7 +6393,7 @@ void PlayerObject::setSessionPlayTimeInfo(int32 sessionStartPlayTime, int32 sess
 
 			ServerUniverse::setConnectedCharacterLfgData(owner->getNetworkId(), lfgCharacterData);
 
-			BiographyManager::requestBiography(owner->getNetworkId(), NULL);
+			BiographyManager::requestBiography(owner->getNetworkId(), nullptr);
 
 			// check/set "account age" title
 			checkAndSetAccountAgeTitle(*this);
@@ -7040,7 +7040,7 @@ void PlayerObject::modifyNextGcwRatingCalcTime(int const weekCount)
 			return;
 
 		static int32 const max = std::numeric_limits<int32>::max();
-		int32 const now = static_cast<int32>(::time(NULL));
+		int32 const now = static_cast<int32>(::time(nullptr));
 
 		// m_nextGcwRatingCalcTime should always be >= 0
 		int32 const currentValue = std::max(static_cast<int32>(0), m_nextGcwRatingCalcTime.get());
@@ -7176,7 +7176,7 @@ void PlayerObject::setNextGcwRatingCalcTime(bool const alwaysSendMessageToForRec
 		return;
 
 	bool needToSendMessageTo = alwaysSendMessageToForRecalc;
-	int32 const now = static_cast<int32>(::time(NULL));
+	int32 const now = static_cast<int32>(::time(nullptr));
 
 	// if the player needs a rating recalculation,
 	// make sure that m_nextGcwRatingCalcTime is set so that the
@@ -7232,7 +7232,7 @@ void PlayerObject::handleRecalculateGcwRating()
 		return;
 
 	// is it time to recalculate?
-	int32 const now = static_cast<int32>(::time(NULL));
+	int32 const now = static_cast<int32>(::time(nullptr));
 	if ((m_nextGcwRatingCalcTime.get() > 0) && (m_nextGcwRatingCalcTime.get() <= now))
 	{
 		// is recalculation required?
@@ -7367,7 +7367,7 @@ void PlayerObject::sendRecalculateGcwRatingMessageTo(int delay)
 	// send new messageTo
 	int const adjustedDelay = std::max(5, delay);
 	MessageToQueue::getInstance().sendMessageToC(getNetworkId(), "C++RecalculateGcwRating", "", adjustedDelay, false);
-	m_gcwRatingActualCalcTime = static_cast<int32>(::time(NULL) + adjustedDelay);
+	m_gcwRatingActualCalcTime = static_cast<int32>(::time(nullptr) + adjustedDelay);
 }
 
 // ----------------------------------------------------------------------
@@ -7728,7 +7728,7 @@ bool PlayerObject::getCollectionSlotValue(CollectionsDataTable::CollectionInfoSl
 
 // ----------------------------------------------------------------------
 
-bool PlayerObject::hasCompletedCollectionSlotPrereq(std::string const & slotName, std::vector<CollectionsDataTable::CollectionInfoSlot const *> * collectionInfo /*= NULL*/) const
+bool PlayerObject::hasCompletedCollectionSlotPrereq(std::string const & slotName, std::vector<CollectionsDataTable::CollectionInfoSlot const *> * collectionInfo /*= nullptr*/) const
 {
 	CollectionsDataTable::CollectionInfoSlot const * slotInfo = CollectionsDataTable::getSlotByName(slotName);
 	if (!slotInfo)
@@ -7742,7 +7742,7 @@ bool PlayerObject::hasCompletedCollectionSlotPrereq(std::string const & slotName
 
 // ----------------------------------------------------------------------
 
-bool PlayerObject::hasCompletedCollectionSlotPrereq(CollectionsDataTable::CollectionInfoSlot const & slotInfo, std::vector<CollectionsDataTable::CollectionInfoSlot const *> * collectionInfo /*= NULL*/) const
+bool PlayerObject::hasCompletedCollectionSlotPrereq(CollectionsDataTable::CollectionInfoSlot const & slotInfo, std::vector<CollectionsDataTable::CollectionInfoSlot const *> * collectionInfo /*= nullptr*/) const
 {
 	if (collectionInfo)
 		collectionInfo->clear();
@@ -7862,7 +7862,7 @@ bool PlayerObject::hasCompletedCollectionBook(std::string const & bookName) cons
 
 // ----------------------------------------------------------------------
 
-int PlayerObject::getCompletedCollectionSlotCountInCollection(std::string const & collectionName, stdvector<CollectionsDataTable::CollectionInfoSlot const *>::fwd * collectionInfo /*= NULL*/) const
+int PlayerObject::getCompletedCollectionSlotCountInCollection(std::string const & collectionName, stdvector<CollectionsDataTable::CollectionInfoSlot const *>::fwd * collectionInfo /*= nullptr*/) const
 {
 	if (collectionInfo)
 		collectionInfo->clear();
@@ -7885,7 +7885,7 @@ int PlayerObject::getCompletedCollectionSlotCountInCollection(std::string const 
 
 // ----------------------------------------------------------------------
 
-int PlayerObject::getCompletedCollectionSlotCountInPage(std::string const & pageName, std::vector<CollectionsDataTable::CollectionInfoSlot const *> * collectionInfo /*= NULL*/) const
+int PlayerObject::getCompletedCollectionSlotCountInPage(std::string const & pageName, std::vector<CollectionsDataTable::CollectionInfoSlot const *> * collectionInfo /*= nullptr*/) const
 {
 	if (collectionInfo)
 		collectionInfo->clear();
@@ -7908,7 +7908,7 @@ int PlayerObject::getCompletedCollectionSlotCountInPage(std::string const & page
 
 // ----------------------------------------------------------------------
 
-int PlayerObject::getCompletedCollectionCountInPage(std::string const & pageName, std::vector<CollectionsDataTable::CollectionInfoCollection const *> * collectionInfo /*= NULL*/) const
+int PlayerObject::getCompletedCollectionCountInPage(std::string const & pageName, std::vector<CollectionsDataTable::CollectionInfoCollection const *> * collectionInfo /*= nullptr*/) const
 {
 	if (collectionInfo)
 		collectionInfo->clear();
@@ -7931,7 +7931,7 @@ int PlayerObject::getCompletedCollectionCountInPage(std::string const & pageName
 
 // ----------------------------------------------------------------------
 
-int PlayerObject::getCompletedCollectionSlotCountInBook(std::string const & bookName, std::vector<CollectionsDataTable::CollectionInfoSlot const *> * collectionInfo /*= NULL*/) const
+int PlayerObject::getCompletedCollectionSlotCountInBook(std::string const & bookName, std::vector<CollectionsDataTable::CollectionInfoSlot const *> * collectionInfo /*= nullptr*/) const
 {
 	if (collectionInfo)
 		collectionInfo->clear();
@@ -7954,7 +7954,7 @@ int PlayerObject::getCompletedCollectionSlotCountInBook(std::string const & book
 
 // ----------------------------------------------------------------------
 
-int PlayerObject::getCompletedCollectionCountInBook(std::string const & bookName, std::vector<CollectionsDataTable::CollectionInfoCollection const *> * collectionInfo /*= NULL*/) const
+int PlayerObject::getCompletedCollectionCountInBook(std::string const & bookName, std::vector<CollectionsDataTable::CollectionInfoCollection const *> * collectionInfo /*= nullptr*/) const
 {
 	if (collectionInfo)
 		collectionInfo->clear();
@@ -7977,7 +7977,7 @@ int PlayerObject::getCompletedCollectionCountInBook(std::string const & bookName
 
 // ----------------------------------------------------------------------
 
-int PlayerObject::getCompletedCollectionPageCountInBook(std::string const & bookName, std::vector<CollectionsDataTable::CollectionInfoPage const *> * collectionInfo /*= NULL*/) const
+int PlayerObject::getCompletedCollectionPageCountInBook(std::string const & bookName, std::vector<CollectionsDataTable::CollectionInfoPage const *> * collectionInfo /*= nullptr*/) const
 {
 	if (collectionInfo)
 		collectionInfo->clear();
@@ -8000,7 +8000,7 @@ int PlayerObject::getCompletedCollectionPageCountInBook(std::string const & book
 
 // ----------------------------------------------------------------------
 
-int PlayerObject::getCompletedCollectionBookCount(std::vector<CollectionsDataTable::CollectionInfoBook const *> * collectionInfo /*= NULL*/) const
+int PlayerObject::getCompletedCollectionBookCount(std::vector<CollectionsDataTable::CollectionInfoBook const *> * collectionInfo /*= nullptr*/) const
 {
 	if (collectionInfo)
 		collectionInfo->clear();
@@ -8103,7 +8103,7 @@ void PlayerObject::updateChatSpamSpatialNumCharacters(NetworkId const & characte
 	if (!isAuthoritative())
 		return;
 
-	int const timeNow = static_cast<int>(::time(NULL));
+	int const timeNow = static_cast<int>(::time(nullptr));
 	bool syncChatServer = false;
 
 	// new interval, reset
@@ -8125,7 +8125,7 @@ void PlayerObject::updateChatSpamSpatialNumCharacters(NetworkId const & characte
 	{
 		time_t timeUnsquelch = static_cast<time_t>(getSecondsUntilUnsquelched());
 		if (timeUnsquelch > 0)
-			timeUnsquelch += ::time(NULL);
+			timeUnsquelch += ::time(nullptr);
 
 		GenericValueTypeMessage<std::pair<std::pair<std::pair<NetworkId, int>, int>, std::pair<int, int> > > chatStatistics("ChatStatisticsGS", std::make_pair(std::make_pair(std::make_pair(character, static_cast<int>(timeUnsquelch)), m_chatSpamTimeEndInterval.get()), std::make_pair(m_chatSpamSpatialNumCharacters.get(), m_chatSpamNonSpatialNumCharacters.get())));
 		Chat::sendToChatServer(chatStatistics);
@@ -8140,7 +8140,7 @@ void PlayerObject::handleChatStatisticsFromChatServer(NetworkId const & characte
 	if (!isAuthoritative())
 		return;
 
-	int const timeNow = static_cast<int>(::time(NULL));
+	int const timeNow = static_cast<int>(::time(nullptr));
 	bool syncChatServer = false;
 
 	// new interval, reset
@@ -8168,7 +8168,7 @@ void PlayerObject::handleChatStatisticsFromChatServer(NetworkId const & characte
 	{
 		time_t timeUnsquelch = static_cast<time_t>(getSecondsUntilUnsquelched());
 		if (timeUnsquelch > 0)
-			timeUnsquelch += ::time(NULL);
+			timeUnsquelch += ::time(nullptr);
 
 		GenericValueTypeMessage<std::pair<std::pair<std::pair<NetworkId, int>, int>, std::pair<int, int> > > chatStatistics("ChatStatisticsGS", std::make_pair(std::make_pair(std::make_pair(character, static_cast<int>(timeUnsquelch)), m_chatSpamTimeEndInterval.get()), std::make_pair(m_chatSpamSpatialNumCharacters.get(), m_chatSpamNonSpatialNumCharacters.get())));
 		Chat::sendToChatServer(chatStatistics);
@@ -8274,7 +8274,7 @@ void PlayerObject::updateGcwDefenderRegionInfo()
 			cityGcwDefenderRegion = gcwDefenderRegion;
 
 			int const timeJoinedGcwDefenderRegion = cityInfo.getTimeJoinedGcwDefenderRegion();
-			timeQualifyForBonus = static_cast<int>(::time(NULL)) - (ConfigServerGame::getGcwDaysRequiredForGcwRegionDefenderBonus() * 86400);
+			timeQualifyForBonus = static_cast<int>(::time(nullptr)) - (ConfigServerGame::getGcwDaysRequiredForGcwRegionDefenderBonus() * 86400);
 			if (!PvpData::isNeutralFactionId(cityFaction) && (cityFaction == owner->getPvpFaction()) && (timeJoinedGcwDefenderRegion < timeQualifyForBonus))
 			{				
 				cityGcwDefenderRegionHasBonus = true;
@@ -8316,7 +8316,7 @@ void PlayerObject::updateGcwDefenderRegionInfo()
 
 				int const timeJoinedGcwDefenderRegion = GuildInterface::getTimeJoinedGuildCurrentGcwDefenderRegion(*gi);
 				if (timeQualifyForBonus < 0)
-					timeQualifyForBonus = static_cast<int>(::time(NULL)) - (ConfigServerGame::getGcwDaysRequiredForGcwRegionDefenderBonus() * 86400);
+					timeQualifyForBonus = static_cast<int>(::time(nullptr)) - (ConfigServerGame::getGcwDaysRequiredForGcwRegionDefenderBonus() * 86400);
 
 				if (!PvpData::isNeutralFactionId(guildFaction) && (guildFaction == owner->getPvpFaction()) && (timeJoinedGcwDefenderRegion < timeQualifyForBonus))
 				{
@@ -8417,7 +8417,7 @@ void PlayerObject::squelch(NetworkId const & squelchedById, std::string const & 
 		}
 		else
 		{
-			m_squelchExpireTime = static_cast<int32>(::time(NULL)) + squelchDurationSeconds;
+			m_squelchExpireTime = static_cast<int32>(::time(nullptr)) + squelchDurationSeconds;
 
 			// persist squelch info
 			setObjVarItem(OBJVAR_SQUELCH_EXPIRE, static_cast<int>(ServerClock::getInstance().getGameTimeSeconds()) + squelchDurationSeconds);
@@ -8466,7 +8466,7 @@ void PlayerObject::unsquelch()
 	{
 		CreatureObject * const owner = getCreatureObject();
 		if (owner)
-			owner->sendControllerMessageToAuthServer(CM_unsquelch, NULL);
+			owner->sendControllerMessageToAuthServer(CM_unsquelch, nullptr);
 	}
 }
 
@@ -8482,7 +8482,7 @@ int PlayerObject::getSecondsUntilUnsquelched()
 	if (m_squelchExpireTime.get() < 0) // squelched indefinitely
 		return -1;
 
-	int32 const timeNow = static_cast<int32>(::time(NULL));
+	int32 const timeNow = static_cast<int32>(::time(nullptr));
 	if (timeNow < m_squelchExpireTime.get()) // still in squelch period
 		return (m_squelchExpireTime.get() - timeNow);
 
@@ -8570,7 +8570,7 @@ void PlayerObject::setAccountNumLotsOverLimitSpam()
 		{
 			m_accountNumLotsOverLimitSpam = m_accountNumLots.get() - owner->getMaxNumberOfLots();
 
-			int const timeNow = static_cast<int>(::time(NULL));
+			int const timeNow = static_cast<int>(::time(nullptr));
 			int violationTime = 0;
 			if (!owner->getObjVars().getItem("lotOverlimit.violation_time", violationTime))
 			{
@@ -9010,7 +9010,7 @@ void PlayerObjectNamespace::grantGcwFactionalPresenceScore(std::string const & g
 	//
 	// for space, give bonus if the player's citizenship city is on the
 	// corresponding ground planet and is the same faction as the player
-	CityInfo const * ci = NULL;
+	CityInfo const * ci = nullptr;
 	if (!ServerWorld::isSpaceScene())
 	{
 		Vector const creaturePosition = co.findPosition_w();
@@ -9132,7 +9132,7 @@ void PlayerObjectNamespace::grantGcwFactionalPresenceScore(std::string const & g
 				playerCitySpaceZone = std::string("space_") + playerCityPlanet;
 
 			if (playerCitySpaceZone != ServerWorld::getSceneId())
-				ci = NULL;
+				ci = nullptr;
 		}
 	}
 
@@ -9155,7 +9155,7 @@ void PlayerObjectNamespace::grantGcwFactionalPresenceScore(std::string const & g
 			bonus += (cityRank * ConfigServerGame::getGcwFactionalPresenceAlignedCityRankBonusPct());
 
 			if (ci->getCreationTime() > 0)
-				bonus += std::max(0, (static_cast<int>(::time(NULL)) - std::max(1041408000, ci->getCreationTime())) / 31536000 * ConfigServerGame::getGcwFactionalPresenceAlignedCityAgeBonusPct());
+				bonus += std::max(0, (static_cast<int>(::time(nullptr)) - std::max(1041408000, ci->getCreationTime())) / 31536000 * ConfigServerGame::getGcwFactionalPresenceAlignedCityAgeBonusPct());
 		}
 	}
 

@@ -70,7 +70,7 @@ public:
 		// Specifies whether or not ObjectTemplateList should load the object template crc table
 		bool loadObjectTemplateCrcStringTable;
 
-		// Specifies the name of the POB ejection point transform override filename to use; use NULL (default) if no ejection point support.
+		// Specifies the name of the POB ejection point transform override filename to use; use nullptr (default) if no ejection point support.
 		char const     *pobEjectionTransformFilename;
 
 	private:

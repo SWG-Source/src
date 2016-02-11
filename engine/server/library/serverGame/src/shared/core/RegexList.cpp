@@ -55,7 +55,7 @@ RegexList::Entry::Entry(char const *pattern, bool matchWords, char const *reason
 	char const *errorString = 0;
 	int         errorOffset = 0;
 
-	m_pcre = pcre_compile(pattern, 0, &errorString, &errorOffset, NULL);
+	m_pcre = pcre_compile(pattern, 0, &errorString, &errorOffset, nullptr);
 	WARNING(!m_pcre, ("failed to compile regex pattern [%s] into a pcre regex.", pattern));
 }
 
@@ -175,7 +175,7 @@ bool RegexList::doesStringMatch(const Unicode::String &name, std::string &ruleDe
 			std::vector<std::string>::iterator nameIter;
 			for (nameIter = names.begin(); nameIter != names.end(); ++nameIter)
 			{
-				int const returnCode = pcre_exec(compiledRegex, NULL, nameIter->c_str(), nameIter->length(), 0, 0, captureData, dataElementCount);
+				int const returnCode = pcre_exec(compiledRegex, nullptr, nameIter->c_str(), nameIter->length(), 0, 0, captureData, dataElementCount);
 				if (returnCode >= 0)
 				{
 					ruleDescription = entry->getReason();
@@ -187,7 +187,7 @@ bool RegexList::doesStringMatch(const Unicode::String &name, std::string &ruleDe
 		}
 		else
 		{
-			int const returnCode = pcre_exec(compiledRegex, NULL, testName.c_str(), testName.length(), 0, 0, captureData, dataElementCount);
+			int const returnCode = pcre_exec(compiledRegex, nullptr, testName.c_str(), testName.length(), 0, 0, captureData, dataElementCount);
 			if (returnCode >= 0)
 			{
 				ruleDescription = entry->getReason();

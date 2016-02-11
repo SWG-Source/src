@@ -36,7 +36,7 @@ namespace ClusterWideDataManagerListNamespace
 
 	struct QueuedRequestInfo
 	{
-		QueuedRequestInfo() : processId(0), requestTime(0.0), request(NULL), server(NULL) {};
+		QueuedRequestInfo() : processId(0), requestTime(0.0), request(nullptr), server(nullptr) {};
 
 		unsigned long                      processId;
 		float                              requestTime;
@@ -272,7 +272,7 @@ void ClusterWideDataManagerList::onGameServerDisconnect(unsigned long const proc
 
 	ClusterWideDataManagerListNamespace::ServerLockListConstRange range = ClusterWideDataManagerListNamespace::s_serverLockList.equal_range(processId);
 
-	ClusterWideDataManager * manager = NULL;
+	ClusterWideDataManager * manager = nullptr;
 	for (ClusterWideDataManagerListNamespace::ServerLockList::const_iterator iter2 = range.first; iter2 != range.second; ++iter2)
 	{
 		manager = ClusterWideDataManagerListNamespace::getClusterWideDataManager((iter2->second).managerName, false);
@@ -327,7 +327,7 @@ ClusterWideDataManager * ClusterWideDataManagerListNamespace::getClusterWideData
 		return manager;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 // ----------------------------------------------------------------------

@@ -55,7 +55,7 @@ SwgGameServer::~SwgGameServer()
 
 void SwgGameServer::install()
 {
-	DEBUG_FATAL (ms_instance != NULL, ("already installed"));
+	DEBUG_FATAL (ms_instance != nullptr, ("already installed"));
 	ms_instance = new SwgGameServer;
 
 	SwgServerUniverse::install();
@@ -110,7 +110,7 @@ void SwgGameServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		JediManagerObject * jediManager = static_cast<SwgServerUniverse &>(
 			ServerUniverse::getInstance()).getJediManager();
 
-		if (jediManager != NULL && jediManager->isAuthoritative())
+		if (jediManager != nullptr && jediManager->isAuthoritative())
 		{
 			jediManager->addJediBounties(*msg);
 			delete msg;
@@ -129,7 +129,7 @@ void SwgGameServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		JediManagerObject * jediManager = static_cast<SwgServerUniverse &>(
 			ServerUniverse::getInstance()).getJediManager();
 
-		if (jediManager != NULL)
+		if (jediManager != nullptr)
 		{
 			jediManager->characterBeingDeleted(msg.getValue());
 		}

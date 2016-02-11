@@ -83,13 +83,13 @@ namespace ScriptMethodsShipNamespace
 	{
 		//-- Make sure ships are enabled
 		if (!verifyShipsEnabled())
-			return NULL;
+			return nullptr;
 
 		char buf[256];
 		snprintf(buf, sizeof(buf), "JavaLibrary::%s: ship obj_id did not resolve to a ShipObject", functionName);
 		ShipObject * const shipObject = JavaLibrary::getShipThrow(env, jobject_shipId, buf, throwIfNotOnServer);
 		if (!shipObject)
-			return NULL;
+			return nullptr;
 
 		if (chassisSlot != ShipChassisSlotType::SCST_num_types && !shipObject->isSlotInstalled(chassisSlot))
 			JAVA_THROW_SCRIPT_EXCEPTION(true, ("JavaLibrary::%s chassisSlot [%d] not installed", functionName, chassisSlot));
@@ -1115,17 +1115,17 @@ jstring JNICALL ScriptMethodsShipNamespace::getShipChassisType(JNIEnv * env, job
 {
 	//-- Make sure ships are enabled
 	if (!verifyShipsEnabled())
-		return NULL;
+		return nullptr;
 
 	ShipObject const * const shipObject = JavaLibrary::getShipThrow(env, jobject_shipId, "getShipChassisType(): shipId obj_id did not resolve to a ShipObject", false);
 	if (!shipObject)
-		return NULL;
+		return nullptr;
 
 	ShipChassis const * const shipChassis = ShipChassis::findShipChassisByCrc (shipObject->getChassisType());
 	if (shipChassis)
 		return JavaString(shipChassis->getName ().getString ()).getReturnValue();
 
-	return NULL;
+	return nullptr;
 }
 
 //----------------------------------------------------------------------
@@ -1339,7 +1339,7 @@ jstring JNICALL ScriptMethodsShipNamespace::getShipComponentName(JNIEnv * env, j
 {
 	ShipObject const * const shipObject = JavaLibrary::getShipThrow(env, jobject_shipId, "getShipComponentName() invalid ship", false);
 	if (!shipObject)
-		return NULL;
+		return nullptr;
 
 	Unicode::String const & name = shipObject->getComponentName(chassisSlot);
 	if (!name.empty())
@@ -1918,9 +1918,9 @@ void JNICALL ScriptMethodsShipNamespace::setShipComponentName(JNIEnv * env, jobj
 	if (!shipObject)
 		return;
 
-	if (componentName == NULL)
+	if (componentName == nullptr)
 	{
-		JAVA_THROW_SCRIPT_EXCEPTION(true, ("JavaLibrary::setShipComponentName (): null name"));
+		JAVA_THROW_SCRIPT_EXCEPTION(true, ("JavaLibrary::setShipComponentName (): nullptr name"));
 		return;
 	}
 
@@ -2442,7 +2442,7 @@ jboolean JNICALL ScriptMethodsShipNamespace::shipCanInstallComponent(JNIEnv * en
 		return false;
 
 	TangibleObject * tangibleComponent = 0;
-	if (JavaLibrary::getObject (component, tangibleComponent) && tangibleComponent != NULL)
+	if (JavaLibrary::getObject (component, tangibleComponent) && tangibleComponent != nullptr)
 		return shipObject->canInstallComponent(chassisSlot, *tangibleComponent);
 	else
 	{
@@ -2481,7 +2481,7 @@ jboolean JNICALL ScriptMethodsShipNamespace::shipInstallComponent(JNIEnv * env, 
 	NetworkId installerId(jobject_installerId);
 
 	TangibleObject * tangibleComponent = 0;
-	if (JavaLibrary::getObject (component, tangibleComponent) && tangibleComponent != NULL)
+	if (JavaLibrary::getObject (component, tangibleComponent) && tangibleComponent != nullptr)
 		return shipObject->installComponent(installerId, chassisSlot, *tangibleComponent);
 	else
 	{
@@ -2546,11 +2546,11 @@ jintArray JNICALL ScriptMethodsShipNamespace::getShipChassisSlots(JNIEnv * env, 
 {
 	//-- Make sure ships are enabled
 	if (!verifyShipsEnabled())
-		return NULL;
+		return nullptr;
 
 	ShipObject const * const shipObject = JavaLibrary::getShipThrow(env, jobject_shipId, "getShipChassisSlots(): shipId obj_id did not resolve to a ShipObject", false);
 	if (!shipObject)
-		return NULL;
+		return nullptr;
 
 	ShipChassis const * const shipChassis = ShipChassis::findShipChassisByCrc (shipObject->getChassisType());
 	if (shipChassis)
@@ -2571,7 +2571,7 @@ jintArray JNICALL ScriptMethodsShipNamespace::getShipChassisSlots(JNIEnv * env, 
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 //----------------------------------------------------------------------
@@ -2585,7 +2585,7 @@ jint JNICALL ScriptMethodsShipNamespace::getShipComponentDescriptorType(JNIEnv *
 	TangibleObject * tangibleComponent = 0;
 	if (JavaLibrary::getObject (jobject_component, tangibleComponent))
 	{
-		if (tangibleComponent != NULL && tangibleComponent->getObjectTemplate () != NULL)
+		if (tangibleComponent != nullptr && tangibleComponent->getObjectTemplate () != nullptr)
 		{
 			ShipComponentDescriptor const * const shipComponentDescriptor =
 				ShipComponentDescriptor::findShipComponentDescriptorByObjectTemplate (tangibleComponent->getObjectTemplate ()->getCrcName ().getCrc ());
@@ -2623,7 +2623,7 @@ jstring    JNICALL ScriptMethodsShipNamespace::getShipComponentDescriptorTypeNam
 {
 	//-- Make sure ships are enabled
 	if (!verifyShipsEnabled())
-		return NULL;
+		return nullptr;
 
 	std::string const & typeName = ShipComponentType::getNameFromType(static_cast<ShipComponentType::Type>(componentType));
 
@@ -2641,7 +2641,7 @@ jint       JNICALL ScriptMethodsShipNamespace::getShipComponentDescriptorCrc(JNI
 	TangibleObject * tangibleComponent = 0;
 	if (JavaLibrary::getObject (jobject_component, tangibleComponent))
 	{
-		if (tangibleComponent != NULL && tangibleComponent->getObjectTemplate () != NULL)
+		if (tangibleComponent != nullptr && tangibleComponent->getObjectTemplate () != nullptr)
 		{
 			ShipComponentDescriptor const * const shipComponentDescriptor =
 				ShipComponentDescriptor::findShipComponentDescriptorByObjectTemplate (tangibleComponent->getObjectTemplate ()->getCrcName ().getCrc ());
@@ -2659,11 +2659,11 @@ jstring    JNICALL ScriptMethodsShipNamespace::getShipComponentDescriptorCrcName
 {
 	//-- Make sure ships are enabled
 	if (!verifyShipsEnabled())
-		return NULL;
+		return nullptr;
 
 	ShipComponentDescriptor const * const shipComponentDescriptor = ShipComponentDescriptor::findShipComponentDescriptorByCrc(static_cast<uint32>(componentCrc));
-	if (shipComponentDescriptor == NULL)
-		return NULL;
+	if (shipComponentDescriptor == nullptr)
+		return nullptr;
 
 	return JavaString(shipComponentDescriptor->getName().getString()).getReturnValue();
 }
@@ -2674,11 +2674,11 @@ jstring    JNICALL ScriptMethodsShipNamespace::getShipComponentDescriptorCompati
 {
 	//-- Make sure ships are enabled
 	if (!verifyShipsEnabled())
-		return NULL;
+		return nullptr;
 
 	ShipComponentDescriptor const * const shipComponentDescriptor = ShipComponentDescriptor::findShipComponentDescriptorByCrc(static_cast<uint32>(componentCrc));
-	if (shipComponentDescriptor == NULL)
-		return NULL;
+	if (shipComponentDescriptor == nullptr)
+		return nullptr;
 
 	return JavaString(shipComponentDescriptor->getCompatibility().getString()).getReturnValue();
 }
@@ -2776,15 +2776,15 @@ void JNICALL ScriptMethodsShipNamespace::notifyShipDamage(JNIEnv * env, jobject 
 		if (victimShipObject->isPlayerShip())
 		{
 			//-- Get the attacker object.  It can be any tangible object.
-			TangibleObject const * attackerTangibleObject = NULL;
+			TangibleObject const * attackerTangibleObject = nullptr;
 			if (jobject_attacker)
 				IGNORE_RETURN(JavaLibrary::getObject(jobject_attacker, attackerTangibleObject));
 
 			Controller * const victimShipController = victimShipObject->getController();
 			if (victimShipController)
 			{
-				ShipDamageMessage shipDamage(attackerTangibleObject != NULL ? attackerTangibleObject->getNetworkId() : NetworkId::cms_invalid,
-					attackerTangibleObject != NULL ? attackerTangibleObject->getPosition_w() : victimShipObject->getPosition_w(),
+				ShipDamageMessage shipDamage(attackerTangibleObject != nullptr ? attackerTangibleObject->getNetworkId() : NetworkId::cms_invalid,
+					attackerTangibleObject != nullptr ? attackerTangibleObject->getPosition_w() : victimShipObject->getPosition_w(),
 					totalDamage );
 
 				//lint -esym(429, damageMessage)
@@ -3008,7 +3008,7 @@ jlong JNICALL ScriptMethodsShipNamespace::getDroidControlDeviceForShip(JNIEnv * 
 
 	NetworkId const & droidControlDeviceId = shipObject->getInstalledDroidControlDevice();
 	Object const * const droidControlDevice = NetworkIdManager::getObjectById(droidControlDeviceId);
-	ServerObject const * const serverDroidControlDevice = droidControlDevice ? droidControlDevice->asServerObject() : NULL;
+	ServerObject const * const serverDroidControlDevice = droidControlDevice ? droidControlDevice->asServerObject() : nullptr;
 	if(!serverDroidControlDevice)
 		return 0;
 	else
@@ -3050,7 +3050,7 @@ void JNICALL ScriptMethodsShipNamespace::commPlayers(JNIEnv *env, jobject /*self
 
 	uint32 appearanceOverloadSharedTemplateCrc = 0;
 	ObjectTemplate const * const ot = ObjectTemplateList::fetch(Unicode::wideToNarrow(appearanceOverloadServerTemplateWide));
-	ServerObjectTemplate const * const sot = ot ? ot->asServerObjectTemplate() : NULL;
+	ServerObjectTemplate const * const sot = ot ? ot->asServerObjectTemplate() : nullptr;
 	if(sot)
 	{
 		std::string const & sharedTemplateName = sot->getSharedTemplate();
@@ -3197,7 +3197,7 @@ jlong JNICALL ScriptMethodsShipNamespace::launchShipFromHangar(JNIEnv *env, jobj
 	Transform const & finalCreateTransform = launchingShip->getTransform_o2p().rotateTranslate_l2p(finalHangarDelta_o);
 
 	ServerObject * const newShip = ServerWorld::createNewObject(crcName.getCrc(), finalCreateTransform, cell, false);
-	if (newShip == NULL)
+	if (newShip == nullptr)
 		return 0;
 
 	// create an objId to return
@@ -3223,7 +3223,7 @@ void       JNICALL ScriptMethodsShipNamespace::handleShipDestruction(JNIEnv * en
 
 	//convert ship
 	ShipObject * const ship = JavaLibrary::getShipThrow(env, jship, "handleShipDestruction(): shipId obj_id did not resolve to a ShipObject", false);
-	if (ship == NULL)
+	if (ship == nullptr)
 		return;
 
 	DestroyShipMessage const msg(ship->getNetworkId(), severity);
@@ -3401,7 +3401,7 @@ jfloat JNICALL ScriptMethodsShipNamespace::getShipInternalDamageOverTimeDamageRa
 		return 0.0f;
 
 	static ShipInternalDamageOverTime const * const idot = ShipInternalDamageOverTimeManager::findEntry(*ship, chassisSlot);
-	if (idot == NULL)
+	if (idot == nullptr)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("JavaLibrary::getShipInternalDamageOverTimeDamageThreshold idot for [%s] slot [%d] not found", ship->getNetworkId().getValueString().c_str(), chassisSlot));
 		return 0.0f;
@@ -3419,7 +3419,7 @@ jfloat JNICALL ScriptMethodsShipNamespace::getShipInternalDamageOverTimeDamageTh
 		return 0.0f;
 
 	static ShipInternalDamageOverTime const * const idot = ShipInternalDamageOverTimeManager::findEntry(*ship, chassisSlot);
-	if (idot == NULL)
+	if (idot == nullptr)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("JavaLibrary::getShipInternalDamageOverTimeDamageThreshold idot for [%s] slot [%d] not found", ship->getNetworkId().getValueString().c_str(), chassisSlot));
 		return 0.0f;
@@ -3437,11 +3437,11 @@ jboolean JNICALL ScriptMethodsShipNamespace::hasShipInternalDamageOverTime(JNIEn
 
 	//convert ship
 	ShipObject * const ship = JavaLibrary::getShipThrow(env, jship, "hasShipInternalDamageOverTime(): shipId obj_id did not resolve to a ShipObject", false);
-	if (ship == NULL)
+	if (ship == nullptr)
 		return false;
 
 	static ShipInternalDamageOverTime const * const idot = ShipInternalDamageOverTimeManager::findEntry(*ship, chassisSlot);
-	return idot != NULL;
+	return idot != nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -3576,7 +3576,7 @@ jboolean JNICALL ScriptMethodsShipNamespace::shipIsInNebula(JNIEnv *env, jobject
 
 	std::string nebulaName;
 
-	if (NULL != j_nebulaName)
+	if (nullptr != j_nebulaName)
 	{
 		JavaStringParam const jsp(j_nebulaName);
 		if (!JavaLibrary::convert(jsp, nebulaName))
@@ -3593,7 +3593,7 @@ jboolean JNICALL ScriptMethodsShipNamespace::shipIsInNebula(JNIEnv *env, jobject
 	{
 		int const id = *it;
 		Nebula const * const nebula = NebulaManager::getNebulaById(id);
-		if (NULL != nebula)
+		if (nullptr != nebula)
 		{
 			if (nebula->getName() == nebulaName)
 				return JNI_TRUE;
@@ -3637,7 +3637,7 @@ jboolean JNICALL ScriptMethodsShipNamespace::setShipWingName(JNIEnv * /*env*/, j
 
 jstring JNICALL ScriptMethodsShipNamespace::getShipWingName(JNIEnv * /*env*/, jobject /*self*/, jlong target)
 {
-	ServerObject const * object = NULL;
+	ServerObject const * object = nullptr;
 	if (!JavaLibrary::getObject(target, object))
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("JavaLibrary::getShipWingName (): could not convert the target"));
@@ -3686,7 +3686,7 @@ jboolean JNICALL ScriptMethodsShipNamespace::setShipTypeName(JNIEnv * /*env*/, j
 
 jstring JNICALL ScriptMethodsShipNamespace::getShipTypeName(JNIEnv * /*env*/, jobject /*self*/, jlong target)
 {
-	ServerObject const * object = NULL;
+	ServerObject const * object = nullptr;
 	if (!JavaLibrary::getObject(target, object))
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("JavaLibrary::getShipTypeName (): could not convert the target"));
@@ -3735,7 +3735,7 @@ jboolean JNICALL ScriptMethodsShipNamespace::setShipDifficulty(JNIEnv * /*env*/,
 
 jstring JNICALL ScriptMethodsShipNamespace::getShipDifficulty(JNIEnv * /*env*/, jobject /*self*/, jlong target)
 {
-	ServerObject const * object = NULL;
+	ServerObject const * object = nullptr;
 	if (!JavaLibrary::getObject(target, object))
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("JavaLibrary::getShipDifficulty (): could not convert the target"));
@@ -3783,7 +3783,7 @@ jboolean JNICALL ScriptMethodsShipNamespace::setShipFaction(JNIEnv * /*env*/, jo
 
 jstring JNICALL ScriptMethodsShipNamespace::getShipFaction(JNIEnv * /*env*/, jobject /*self*/, jlong target)
 {
-	ServerObject const * object = NULL;
+	ServerObject const * object = nullptr;
 	if (!JavaLibrary::getObject(target, object))
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("JavaLibrary::getShipFaction (): could not convert the target"));
@@ -3871,7 +3871,7 @@ jboolean JNICALL ScriptMethodsShipNamespace::isMissionCriticalObject(JNIEnv * en
 
 	if (!ship)
 	{
-		JAVA_THROW_SCRIPT_EXCEPTION(true, ("isMissionCriticalObject(): playerId ship is null"));
+		JAVA_THROW_SCRIPT_EXCEPTION(true, ("isMissionCriticalObject(): playerId ship is nullptr"));
 		return JNI_FALSE;
 	}
 
@@ -3973,7 +3973,7 @@ void JNICALL ScriptMethodsShipNamespace::setDynamicMiningAsteroidVelocity(JNIEnv
 	}
 
 	MiningAsteroidController * const miningAsteroidController = dynamic_cast<MiningAsteroidController * >(shipObject->getController());
-	if (NULL == miningAsteroidController)
+	if (nullptr == miningAsteroidController)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("setDynamicMiningAsteroidVelocity(): called on a ship which is not a dynamic mining asteroid"));
 		return;
@@ -3988,12 +3988,12 @@ jobject JNICALL ScriptMethodsShipNamespace::getDynamicMiningAsteroidVelocity(JNI
 {
 	ShipObject * const shipObject = JavaLibrary::getShipThrow(env, jobject_asteroidId, "getDynamicMiningAsteroidVelocity(): shipId did not resolve to a ShipObject", false);
 	if (!shipObject)
-		return NULL;
+		return nullptr;
 	MiningAsteroidController * const miningAsteroidController = dynamic_cast<MiningAsteroidController * >(shipObject->getController());
-	if (NULL == miningAsteroidController)
+	if (nullptr == miningAsteroidController)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("setDynamicMiningAsteroidVelocity(): called on a ship which is not a dynamic mining asteroid"));
-		return NULL;
+		return nullptr;
 	}
 
 	Vector const & velocity_w = miningAsteroidController->getVelocity_w();
@@ -4073,7 +4073,7 @@ jlongArray JNICALL ScriptMethodsShipNamespace::getShipCargoHoldContentsResourceT
 {
 	ShipObject const * const shipObject = getShipThrowTestSlot(env, jobject_shipId, "getShipCargoHoldContents()", false, static_cast<int>(ShipChassisSlotType::SCST_cargo_hold));
 	if (!shipObject)
-		return NULL;
+		return nullptr;
 
 	ShipObject::NetworkIdIntMap const & contents = shipObject->getCargoHoldContents();
 
@@ -4090,7 +4090,7 @@ jlongArray JNICALL ScriptMethodsShipNamespace::getShipCargoHoldContentsResourceT
 		return jids->getReturnValue();
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 //----------------------------------------------------------------------
@@ -4099,7 +4099,7 @@ jintArray JNICALL ScriptMethodsShipNamespace::getShipCargoHoldContentsAmounts(JN
 {
 	ShipObject const * const shipObject = getShipThrowTestSlot(env, jobject_shipId, "getShipCargoHoldContents()", false, static_cast<int>(ShipChassisSlotType::SCST_cargo_hold));
 	if (!shipObject)
-		return NULL;
+		return nullptr;
 
 	ShipObject::NetworkIdIntMap const & contents = shipObject->getCargoHoldContents();
 
@@ -4115,7 +4115,7 @@ jintArray JNICALL ScriptMethodsShipNamespace::getShipCargoHoldContentsAmounts(JN
 		return jamounts->getReturnValue();
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 //----------------------------------------------------------------------
@@ -4125,9 +4125,9 @@ void JNICALL ScriptMethodsShipNamespace::openSpaceMiningUi(JNIEnv * env, jobject
 	NetworkId const & playerId = NetworkId(jobject_player);
 	NetworkId const & spaceStationId = NetworkId(jobject_spaceStation);
 
-	if (jstring_spaceStationName == NULL)
+	if (jstring_spaceStationName == nullptr)
 	{
-		JAVA_THROW_SCRIPT_EXCEPTION(true, ("JavaLibrary::setShipComponentName (): null name"));
+		JAVA_THROW_SCRIPT_EXCEPTION(true, ("JavaLibrary::setShipComponentName (): nullptr name"));
 		return;
 	}
 
@@ -4140,7 +4140,7 @@ void JNICALL ScriptMethodsShipNamespace::openSpaceMiningUi(JNIEnv * env, jobject
 	}
 
 	Object * const player = NetworkIdManager::getObjectById(playerId);
-	Controller * const controller = player ? player->getController(): NULL;
+	Controller * const controller = player ? player->getController(): nullptr;
 
 	if (!controller)
 	{

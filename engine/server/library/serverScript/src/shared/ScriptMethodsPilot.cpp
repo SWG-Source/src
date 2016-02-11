@@ -177,7 +177,7 @@ jint JNICALL ScriptMethodsPilotNamespace::spaceUnitGetBehavior(JNIEnv * env, job
 	if (!shipObject)
 		return JNI_FALSE;
 
-	AiShipController * const aiShipController = (shipObject->getController()->asShipController() != NULL) ? shipObject->getController()->asShipController()->asAiShipController() : NULL;
+	AiShipController * const aiShipController = (shipObject->getController()->asShipController() != nullptr) ? shipObject->getController()->asShipController()->asAiShipController() : nullptr;
 	if (!aiShipController)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsPilot::spaceUnitGetBehavior() called on unit(%s) without AiShipController", shipObject->getNetworkId().getValueString().c_str()));
@@ -200,7 +200,7 @@ jlong JNICALL ScriptMethodsPilotNamespace::spaceUnitGetPrimaryAttackTarget(JNIEn
 	if (!shipObject)
 		return JNI_FALSE;
 
-	AiShipController * const aiShipController = (shipObject->getController()->asShipController() != NULL) ? shipObject->getController()->asShipController()->asAiShipController() : NULL;
+	AiShipController * const aiShipController = (shipObject->getController()->asShipController() != nullptr) ? shipObject->getController()->asShipController()->asAiShipController() : nullptr;
 	if (!aiShipController)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsPilot::spaceUnitGetPrimaryAttackTarget() called on unit(%s) without AiShipController", shipObject->getNetworkId().getValueString().c_str()));
@@ -223,7 +223,7 @@ jlongArray JNICALL ScriptMethodsPilotNamespace::spaceUnitGetAttackTargetList(JNI
 	if (!shipObject)
 		return JNI_FALSE;
 
-	AiShipController * const aiShipController = (shipObject->getController()->asShipController() != NULL) ? shipObject->getController()->asShipController()->asAiShipController() : NULL;
+	AiShipController * const aiShipController = (shipObject->getController()->asShipController() != nullptr) ? shipObject->getController()->asShipController()->asAiShipController() : nullptr;
 	if (!aiShipController)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsPilot::spaceUnitGetAttackTargetList() called on unit(%s) without AiShipController", shipObject->getNetworkId().getValueString().c_str()));
@@ -311,7 +311,7 @@ jboolean JNICALL ScriptMethodsPilotNamespace::spaceUnitIsAttacking(JNIEnv * env,
 	if (!shipObject)
 		return JNI_FALSE;
 
-	AiShipController * const aiShipController = (shipObject->getController()->asShipController() != NULL) ? shipObject->getController()->asShipController()->asAiShipController() : NULL;
+	AiShipController * const aiShipController = (shipObject->getController()->asShipController() != nullptr) ? shipObject->getController()->asShipController()->asAiShipController() : nullptr;
 	if (!aiShipController)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsPilot::spaceUnitIsAttacking() called on unit(%s) without AiShipController", shipObject->getNetworkId().getValueString().c_str()));
@@ -334,7 +334,7 @@ void JNICALL ScriptMethodsPilotNamespace::spaceUnitIdle(JNIEnv * env, jobject /*
 	if (!shipObject)
 		return;
 
-	AiShipController * const aiShipController = (shipObject->getController()->asShipController() != NULL) ? shipObject->getController()->asShipController()->asAiShipController() : NULL;
+	AiShipController * const aiShipController = (shipObject->getController()->asShipController() != nullptr) ? shipObject->getController()->asShipController()->asAiShipController() : nullptr;
 	if (!aiShipController)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsPilot::spaceUnitIdle() called on unit(%s) without AiShipController", shipObject->getNetworkId().getValueString().c_str()));
@@ -357,14 +357,14 @@ void JNICALL ScriptMethodsPilotNamespace::spaceUnitTrack(JNIEnv * env, jobject /
 	if (!shipObject)
 		return;
 
-	AiShipController * const aiShipController = (shipObject->getController()->asShipController() != NULL) ? shipObject->getController()->asShipController()->asAiShipController() : NULL;
+	AiShipController * const aiShipController = (shipObject->getController()->asShipController() != nullptr) ? shipObject->getController()->asShipController()->asAiShipController() : nullptr;
 	if (!aiShipController)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsPilot::spaceUnitTrack() called on unit(%s) without AiShipController", shipObject->getNetworkId().getValueString().c_str()));
 		return;
 	}
 
-	Object * target = NULL;
+	Object * target = nullptr;
 	if (!JavaLibrary::getObject(jobject_target, target))
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsPilot::spaceUnitTrack() The target did not resolve to an Object"));
@@ -387,7 +387,7 @@ void JNICALL ScriptMethodsPilotNamespace::spaceUnitMoveTo(JNIEnv * env, jobject 
 	if (!shipObject)
 		return;
 
-	AiShipController * const aiShipController = (shipObject->getController()->asShipController() != NULL) ? shipObject->getController()->asShipController()->asAiShipController() : NULL;
+	AiShipController * const aiShipController = (shipObject->getController()->asShipController() != nullptr) ? shipObject->getController()->asShipController()->asAiShipController() : nullptr;
 	if (!aiShipController)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsPilot::spaceUnitMoveTo() called on unit(%s) without AiShipController", shipObject->getNetworkId().getValueString().c_str()));
@@ -410,7 +410,7 @@ void JNICALL ScriptMethodsPilotNamespace::spaceUnitMoveTo(JNIEnv * env, jobject 
 		return;
 	}
 
-	SpacePath * const path = SpacePathManager::fetch(NULL, aiShipController->getOwner(), aiShipController->getShipRadius());
+	SpacePath * const path = SpacePathManager::fetch(nullptr, aiShipController->getOwner(), aiShipController->getShipRadius());
 	AiShipController::TransformList::const_iterator iterTransformList = convertedPath.begin();
 
 	for (; iterTransformList != convertedPath.end(); ++iterTransformList)
@@ -435,7 +435,7 @@ void JNICALL ScriptMethodsPilotNamespace::spaceUnitAddPatrolPath(JNIEnv * env, j
 	if (!shipObject)
 		return;
 
-	AiShipController * const aiShipController = (shipObject->getController()->asShipController() != NULL) ? shipObject->getController()->asShipController()->asAiShipController() : NULL;
+	AiShipController * const aiShipController = (shipObject->getController()->asShipController() != nullptr) ? shipObject->getController()->asShipController()->asAiShipController() : nullptr;
 	if (!aiShipController)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsPilot::spaceUnitAddPatrolPath() called on unit(%s) without AiShipController", shipObject->getNetworkId().getValueString().c_str()));
@@ -483,7 +483,7 @@ void JNICALL ScriptMethodsPilotNamespace::spaceUnitClearPatrolPath(JNIEnv * env,
 	if (!shipObject)
 		return;
 
-	AiShipController * const aiShipController = (shipObject->getController()->asShipController() != NULL) ? shipObject->getController()->asShipController()->asAiShipController() : NULL;
+	AiShipController * const aiShipController = (shipObject->getController()->asShipController() != nullptr) ? shipObject->getController()->asShipController()->asAiShipController() : nullptr;
 	if (!aiShipController)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsPilot::spaceUnitClearPatrolPath() called on unit(%s) without AiShipController", shipObject->getNetworkId().getValueString().c_str()));
@@ -506,14 +506,14 @@ void JNICALL ScriptMethodsPilotNamespace::spaceUnitFollow(JNIEnv * env, jobject 
 	if (!shipObject)
 		return;
 
-	AiShipController * const aiShipController = (shipObject->getController()->asShipController() != NULL) ? shipObject->getController()->asShipController()->asAiShipController() : NULL;
+	AiShipController * const aiShipController = (shipObject->getController()->asShipController() != nullptr) ? shipObject->getController()->asShipController()->asAiShipController() : nullptr;
 	if (!aiShipController)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsPilot::spaceUnitFollow() called on unit(%s) without AiShipController", shipObject->getNetworkId().getValueString().c_str()));
 		return;
 	}
 
-	Object * followedUnit = NULL;
+	Object * followedUnit = nullptr;
 	if (!JavaLibrary::getObject(jobject_followedUnit, followedUnit))
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsPilot::spaceUnitFollow() followedUnit did not resolve to an Object"));
@@ -592,10 +592,10 @@ void JNICALL ScriptMethodsPilotNamespace::spaceUnitAddDamageTaken(JNIEnv * env, 
 	}
 
 	ShipController * const shipController = shipObject->getController()->asShipController();
-	AiShipController * const aiShipController = (shipController != NULL) ? shipController->asAiShipController() : NULL;
+	AiShipController * const aiShipController = (shipController != nullptr) ? shipController->asAiShipController() : nullptr;
 	bool const verifyAttacker = true;
 
-	if (aiShipController != NULL)
+	if (aiShipController != nullptr)
 	{
 		// This adds damage to an AI unit
 
@@ -607,7 +607,7 @@ void JNICALL ScriptMethodsPilotNamespace::spaceUnitAddDamageTaken(JNIEnv * env, 
 			LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "debug_ai", ("ScriptMethodsPilot::spaceUnitAddDamageTaken() targetUnit(%s) is not attackable", targetShipObject->getNetworkId().getValueString().c_str()));
 		}
 	}
-	else if (shipController != NULL)
+	else if (shipController != nullptr)
 	{
 		// This adds damage to a player unit
 
@@ -635,7 +635,7 @@ void JNICALL ScriptMethodsPilotNamespace::spaceUnitSetAttackOrders(JNIEnv * env,
 	if (!shipObject)
 		return;
 
-	AiShipController * const aiShipController = (shipObject->getController()->asShipController() != NULL) ? shipObject->getController()->asShipController()->asAiShipController() : NULL;
+	AiShipController * const aiShipController = (shipObject->getController()->asShipController() != nullptr) ? shipObject->getController()->asShipController()->asAiShipController() : nullptr;
 	if (!aiShipController)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsPilot::spaceUnitSetAttackOrder() called on unit(%s) without AiShipController", shipObject->getNetworkId().getValueString().c_str()));
@@ -665,7 +665,7 @@ void JNICALL ScriptMethodsPilotNamespace::spaceUnitSetPilotType(JNIEnv * env, jo
 	if (!shipObject)
 		return;
 
-	AiShipController * const aiShipController = (shipObject->getController()->asShipController() != NULL) ? shipObject->getController()->asShipController()->asAiShipController() : NULL;
+	AiShipController * const aiShipController = (shipObject->getController()->asShipController() != nullptr) ? shipObject->getController()->asShipController()->asAiShipController() : nullptr;
 	if (!aiShipController)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsPilot::spaceUnitSetPilotType() called on unit(%s) without AiShipController", shipObject->getNetworkId().getValueString().c_str()));
@@ -697,13 +697,13 @@ jstring JNICALL ScriptMethodsPilotNamespace::spaceUnitGetPilotType(JNIEnv * env,
 	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "debug_ai", ("ScriptMethodsPilot::spaceUnitGetPilotType()"));
 
 	if (!verifyShipsEnabled())
-		return NULL;
+		return nullptr;
 
 	ShipObject * const shipObject = JavaLibrary::getShipThrow(env, jobject_unit, "ScriptMethodsPilot::spaceUnitGetPilotType() unit did not resolve to a ShipObject");
 	if (!shipObject)
-		return NULL;
+		return nullptr;
 
-	AiShipController * const aiShipController = (shipObject->getController()->asShipController() != NULL) ? shipObject->getController()->asShipController()->asAiShipController() : NULL;
+	AiShipController * const aiShipController = (shipObject->getController()->asShipController() != nullptr) ? shipObject->getController()->asShipController()->asAiShipController() : nullptr;
 	if (!aiShipController)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsPilot::spaceUnitGetPilotType() called on unit(%s) without AiShipController", shipObject->getNetworkId().getValueString().c_str()));
@@ -726,7 +726,7 @@ void JNICALL ScriptMethodsPilotNamespace::spaceUnitRemoveAttackTarget(JNIEnv * e
 	if (!shipObject)
 		return;
 
-	AiShipController * const aiShipController = (shipObject->getController()->asShipController() != NULL) ? shipObject->getController()->asShipController()->asAiShipController() : NULL;
+	AiShipController * const aiShipController = (shipObject->getController()->asShipController() != nullptr) ? shipObject->getController()->asShipController()->asAiShipController() : nullptr;
 	if (!aiShipController)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsPilot::spaceUnitRemoveAttackTarget() called on unit(%s) without AiShipController", shipObject->getNetworkId().getValueString().c_str()));
@@ -765,7 +765,7 @@ void JNICALL ScriptMethodsPilotNamespace::spaceUnitSetLeashDistance(JNIEnv * env
 	if (!shipObject)
 		return;
 
-	AiShipController * const aiShipController = (shipObject->getController()->asShipController() != NULL) ? shipObject->getController()->asShipController()->asAiShipController() : NULL;
+	AiShipController * const aiShipController = (shipObject->getController()->asShipController() != nullptr) ? shipObject->getController()->asShipController()->asAiShipController() : nullptr;
 	if (!aiShipController)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsPilot::spaceUnitSetLeashDistance() called on unit(%s) without AiShipController", shipObject->getNetworkId().getValueString().c_str()));
@@ -805,7 +805,7 @@ jint JNICALL ScriptMethodsPilotNamespace::spaceUnitGetSquadId(JNIEnv * env, jobj
 	if (!shipObject)
 		return JNI_FALSE;
 
-	AiShipController * const aiShipController = (shipObject->getController()->asShipController() != NULL) ? shipObject->getController()->asShipController()->asAiShipController() : NULL;
+	AiShipController * const aiShipController = (shipObject->getController()->asShipController() != nullptr) ? shipObject->getController()->asShipController()->asAiShipController() : nullptr;
 	if (!aiShipController)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsPilot::spaceUnitGetSquadId() called on unit(%s) without AiShipController", shipObject->getNetworkId().getValueString().c_str()));
@@ -849,7 +849,7 @@ void JNICALL ScriptMethodsPilotNamespace::spaceSquadMoveTo(JNIEnv * /*env*/, job
 	}
 
 	float const largestShipRadius = squad->getLargestShipRadius();
-	SpacePath * const path = SpacePathManager::fetch(NULL, squad, largestShipRadius);
+	SpacePath * const path = SpacePathManager::fetch(nullptr, squad, largestShipRadius);
 	AiShipController::TransformList::const_iterator iterTransformList = convertedPath.begin();
 
 	for (; iterTransformList != convertedPath.end(); ++iterTransformList)
@@ -936,7 +936,7 @@ jint JNICALL ScriptMethodsPilotNamespace::spaceSquadRemoveUnit(JNIEnv * env, job
 	if (!shipObject)
 		return JNI_FALSE;
 
-	AiShipController * const aiShipController = (shipObject->getController()->asShipController() != NULL) ? shipObject->getController()->asShipController()->asAiShipController() : NULL;
+	AiShipController * const aiShipController = (shipObject->getController()->asShipController() != nullptr) ? shipObject->getController()->asShipController()->asAiShipController() : nullptr;
 	if (!aiShipController)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsPilot::spaceSquadRemoveUnit() called on unit(%s) without AiShipController", shipObject->getNetworkId().getValueString().c_str()));
@@ -1148,7 +1148,7 @@ void JNICALL ScriptMethodsPilotNamespace::spaceSquadTrack(JNIEnv * /*env*/, jobj
 		return;
 	}
 
-	Object * target = NULL;
+	Object * target = nullptr;
 	if (!JavaLibrary::getObject(jobject_target, target))
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsPilot::spaceSquadTrack() The target did not resolve to an Object"));
@@ -1171,7 +1171,7 @@ void JNICALL ScriptMethodsPilotNamespace::spaceSquadSetLeader(JNIEnv * env, jobj
 	if (!leaderShipObject)
 		return;
 
-	AiShipController * const aiShipController = (leaderShipObject->getController()->asShipController() != NULL) ? leaderShipObject->getController()->asShipController()->asAiShipController() : NULL;
+	AiShipController * const aiShipController = (leaderShipObject->getController()->asShipController() != nullptr) ? leaderShipObject->getController()->asShipController()->asAiShipController() : nullptr;
 	if (!aiShipController)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsPilot::spaceSquadSetLeader() called on unit(%s) without AiShipController", leaderShipObject->getNetworkId().getValueString().c_str()));
@@ -1251,7 +1251,7 @@ void JNICALL ScriptMethodsPilotNamespace::spaceSquadFollow(JNIEnv * /*env*/, job
 		return;
 	}
 
-	Object * followedUnit = NULL;
+	Object * followedUnit = nullptr;
 	if (!JavaLibrary::getObject(jobject_followedUnit, followedUnit))
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsPilot::spaceSquadFollow() followedUnit did not resolve to an Object"));
@@ -1418,7 +1418,7 @@ jint JNICALL ScriptMethodsPilotNamespace::spaceSquadGetGuardTarget(JNIEnv * /*en
 		return JNI_FALSE;
 	}
 
-	if (squad->getGuardTarget() == NULL)
+	if (squad->getGuardTarget() == nullptr)
 	{
 		return 0;
 	}
@@ -1463,7 +1463,7 @@ void JNICALL ScriptMethodsPilotNamespace::setShipAggroDistance(JNIEnv * env, job
 	if (!shipObject)
 		return;
 
-	AiShipController * const aiShipController = (shipObject->getController()->asShipController() != NULL) ? shipObject->getController()->asShipController()->asAiShipController() : NULL;
+	AiShipController * const aiShipController = (shipObject->getController()->asShipController() != nullptr) ? shipObject->getController()->asShipController()->asAiShipController() : nullptr;
 	if (!aiShipController)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsPilot::setShipAggroDistance(): unit(%s) does not have an AiShipController",shipObject->getNetworkId().getValueString().c_str()));
@@ -1557,14 +1557,14 @@ jobject JNICALL ScriptMethodsPilotNamespace::spaceUnitGetDockTransform(JNIEnv * 
 	if (!verifyShipsEnabled())
 		return 0;
 
-	Object * dockTarget = NULL;
+	Object * dockTarget = nullptr;
 	if (!JavaLibrary::getObject(jobject_dockTarget, dockTarget))
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsPilot::spaceUnitGetDockTransform() dockTarget did not resolve to an Object"));
 		return 0;
 	}
 
-	Object * dockingUnit = NULL;
+	Object * dockingUnit = nullptr;
 	if (!JavaLibrary::getObject(jobject_dockingUnit, dockingUnit))
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsPilot::spaceUnitGetDockTransform() dockingUnit did not resolve to an Object"));
@@ -1600,14 +1600,14 @@ void JNICALL ScriptMethodsPilotNamespace::spaceUnitAddExclusiveAggro(JNIEnv * en
 		return;
 	}
 
-	AiShipController * const unitAiShipController = (unitShipObject->getController()->asShipController() != NULL) ? unitShipObject->getController()->asShipController()->asAiShipController() : NULL;
+	AiShipController * const unitAiShipController = (unitShipObject->getController()->asShipController() != nullptr) ? unitShipObject->getController()->asShipController()->asAiShipController() : nullptr;
 	if (!unitAiShipController)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsPilot::spaceUnitAddExclusiveAggro() called on unit(%s) without AiShipController", unitShipObject->getDebugInformation().c_str()));
 		return;
 	}
 
-	Object * pilotObject = NULL;
+	Object * pilotObject = nullptr;
 	if (!JavaLibrary::getObject(jobject_pilot, pilotObject))
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsPilot::spaceUnitAddExclusiveAggro() pilot did not resolve to an Object"));
@@ -1642,14 +1642,14 @@ void JNICALL ScriptMethodsPilotNamespace::spaceUnitRemoveExclusiveAggro(JNIEnv *
 		return;
 	}
 
-	AiShipController * const unitAiShipController = (unitShipObject->getController()->asShipController() != NULL) ? unitShipObject->getController()->asShipController()->asAiShipController() : NULL;
+	AiShipController * const unitAiShipController = (unitShipObject->getController()->asShipController() != nullptr) ? unitShipObject->getController()->asShipController()->asAiShipController() : nullptr;
 	if (!unitAiShipController)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsPilot::spaceUnitRemoveExclusiveAggro() called on unit(%s) without AiShipController", unitShipObject->getDebugInformation().c_str()));
 		return;
 	}
 
-	Object * pilotObject = NULL;
+	Object * pilotObject = nullptr;
 	if (!JavaLibrary::getObject(jobject_pilot, pilotObject))
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsPilot::spaceUnitRemoveExclusiveAggro() pilot did not resolve to an Object"));

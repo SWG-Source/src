@@ -351,7 +351,7 @@ bool SlotIdManager::isSlotPlayerModifiable(const SlotId &slotId)
  *
  * If the slot can have something put in it that directly affects what you 
  * see on the client, this will return true.  If this returns false,
- * getSlotHardpointName() will return a NULL string.
+ * getSlotHardpointName() will return a nullptr string.
  *
  * @param slotId  a SlotId instance for the slot under question.
  *
@@ -381,9 +381,9 @@ bool SlotIdManager::isSlotAppearanceRelated(const SlotId &slotId)
  *
  * The caller should check the result of isSlotAppearanceRelated() before
  * calling this function.  If the slot is not appearance related, this function
- * will always return NULL.  Also, if the SlotIdManager is installed such that
+ * will always return nullptr.  Also, if the SlotIdManager is installed such that
  * hardpoint names are not loaded (currently the server is loaded this way),
- * the specified hardpoint name will return NULL.
+ * the specified hardpoint name will return nullptr.
  *
  * @param slotId  a SlotId instance for the slot under question.
  *

@@ -16,7 +16,7 @@
 
 DataTable * AdminAccountManager::ms_adminTable = 0;
 bool        AdminAccountManager::ms_installed = false;
-std::string *AdminAccountManager::ms_dataTableName = NULL;
+std::string *AdminAccountManager::ms_dataTableName = nullptr;
 
 //-----------------------------------------------------------------------
 
@@ -42,7 +42,7 @@ void AdminAccountManager::remove()
 	DataTableManager::close(*ms_dataTableName);
 	ms_installed = false;
 	delete ms_dataTableName;
-	ms_dataTableName = NULL;
+	ms_dataTableName = nullptr;
 }
 
 //-----------------------------------------------------------------------

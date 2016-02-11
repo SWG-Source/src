@@ -156,7 +156,7 @@ public:
      * simply need to derive your class (multiply if necessary) from TcpManagerHandler, then you can use
      * this method to set the object the TcpManager will call as appropriate.  The TcpConnection object
      * also has a handler mechanism that replaces the other callback functions below, see TcpConnection::SetHandler
-     * default = NULL (no callbacks made)
+     * default = nullptr (no callbacks made)
      *
      * @param handler  The object which will be called for manager related notifications.
      */
@@ -211,7 +211,7 @@ public:
      * the connect-complete callback to be called if the connection is succesfull.
      *
      * @return A pointer to a TcpConnection object.
-     *          NULL if the manager object has exceeded its maximum number of connections
+     *          nullptr if the manager object has exceeded its maximum number of connections
      * or if the serverAddress cannot be resolved to an IP address.
      */
     TcpConnection *EstablishConnection(const char *serverAddress, unsigned short serverPort, unsigned timeout = 0);

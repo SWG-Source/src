@@ -163,7 +163,7 @@ const CustomerServiceConnection * ConnectionServer::getCustomerServiceConnection
 	{
 		return (*(instance().customerServiceServers.begin()));
 	}
-	return NULL;
+	return nullptr;
 }
 
 //-----------------------------------------------------------------------
@@ -366,7 +366,7 @@ void ConnectionServer::addNewClient(ClientConnection* cconn, const NetworkId &oi
 	//send the game server a message about this client.
 	static const std::string loginTrace("TRACE_LOGIN");
 	LOG(loginTrace, ("NewClient(%d, %s, %s)", cconn->getSUID(), oid.getValueString().c_str(), cconn->getAccountName().c_str()));
-	NewClient m(oid, cconn->getAccountName(), cconn->getRemoteAddress(), cconn->getIsSecure(), false, cconn->getSUID(), NULL, cconn->getGameFeatures(), cconn->getSubscriptionFeatures(), cconn->getEntitlementTotalTime(), cconn->getEntitlementEntitledTime(), cconn->getEntitlementTotalTimeSinceLastLogin(), cconn->getEntitlementEntitledTimeSinceLastLogin(), cconn->getBuddyPoints(), cconn->getConsumedRewardEvents(), cconn->getClaimedRewardItems(), cconn->isUsingAdminLogin(), cconn->getCanSkipTutorial(), sendToStarport );
+	NewClient m(oid, cconn->getAccountName(), cconn->getRemoteAddress(), cconn->getIsSecure(), false, cconn->getSUID(), nullptr, cconn->getGameFeatures(), cconn->getSubscriptionFeatures(), cconn->getEntitlementTotalTime(), cconn->getEntitlementEntitledTime(), cconn->getEntitlementTotalTimeSinceLastLogin(), cconn->getEntitlementEntitledTimeSinceLastLogin(), cconn->getBuddyPoints(), cconn->getConsumedRewardEvents(), cconn->getClaimedRewardItems(), cconn->isUsingAdminLogin(), cconn->getCanSkipTutorial(), sendToStarport );
 	gconn->send(m, true);
 	//@todo move this to ClientConnection.cpp
 }
@@ -375,7 +375,7 @@ void ConnectionServer::addNewClient(ClientConnection* cconn, const NetworkId &oi
 
 void ConnectionServer::dropClient(ClientConnection * conn, const std::string& description)
 {
-	DEBUG_FATAL(!conn, ("Cannot call dropClient with NULL connection"));
+	DEBUG_FATAL(!conn, ("Cannot call dropClient with nullptr connection"));
 	if (!conn) //lint !e774 // boolean within 'if' always evaluates to False //suppresed because this is only relevant in DEBUG builds
 		return;
 	
@@ -466,7 +466,7 @@ GameConnection* ConnectionServer::getGameConnection(const std::string &sceneName
 			return (*i).second;
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -477,15 +477,15 @@ void ConnectionServer::handleConnectionServerIdMessage(const ConnectionServerId 
 
 	const Service * const servicePrivate = getClientServicePrivate();
 	const Service * const servicePublic = getClientServicePublic();
-	FATAL(servicePrivate == NULL && servicePublic == NULL, ("No client service is active!"));
+	FATAL(servicePrivate == nullptr && servicePublic == nullptr, ("No client service is active!"));
 
 	const Service * const g = getGameService();
-	FATAL(g == NULL, ("No game service is active!"));
+	FATAL(g == nullptr, ("No game service is active!"));
 	const Service * const c = getChatService();
 	const Service * const cs = getCustomerService();
 	const uint16   pingPort = getPingPort ();
 
-	if((servicePrivate != NULL || servicePublic != NULL) && g != NULL) //lint !e774 // always evaluates to false // suppresed because the FATAL macro triggers this lint warning
+	if((servicePrivate != nullptr || servicePublic != nullptr) && g != nullptr) //lint !e774 // always evaluates to false // suppresed because the FATAL macro triggers this lint warning
 	{
 		uint16 chatPort = 0;
 		uint16 csPort = 0;
@@ -739,7 +739,7 @@ void ConnectionServer::receiveMessage(const MessageDispatch::Emitter & source, c
 				std::set<Client *>::const_iterator i;
 				for(i = clients.begin(); i != clients.end(); ++ i)
 				{
-					(*i)->setChatConnection(NULL);
+					(*i)->setChatConnection(nullptr);
 				}
 			}
 		}
@@ -782,7 +782,7 @@ void ConnectionServer::receiveMessage(const MessageDispatch::Emitter & source, c
 				std::set<Client *>::const_iterator i;
 				for(i = clients.begin(); i != clients.end(); ++ i)
 				{
-					(*i)->setCustomerServiceConnection(NULL);
+					(*i)->setCustomerServiceConnection(nullptr);
 				}
 			}
 
@@ -960,7 +960,7 @@ void ConnectionServer::remove()
 
 	// explicitly delete all connections that were setup from setupConnections rather than letting 
 	// Connection::remove do it.  There are connections that require a valid s_connectionServer which is deleted
-	// and set to NULL.
+	// and set to nullptr.
 	s_connectionServer->unsetupConnections();
 	
 	SetupSharedLog::remove();
@@ -1316,7 +1316,7 @@ GameConnection* ConnectionServer::getGameConnection(uint32 gameServerId)
 	if (i != cs.gameServerMap.end())
 		return (*i).second;
 	
-	return NULL;
+	return nullptr;
 }
 
 //-----------------------------------------------------------------------
@@ -1327,7 +1327,7 @@ GameConnection* ConnectionServer::getAnyGameConnection()
 	if (!cs.gameServerMap.empty())
 		return cs.gameServerMap.begin()->second;
 
-	return NULL;
+	return nullptr;
 }
 
 //-----------------------------------------------------------------------

@@ -34,12 +34,12 @@ namespace Archive
 		get(source, target.m_objectId);
 		get(source, movementType);
 
-		AICreatureController * controller = NULL;
+		AICreatureController * controller = nullptr;
 		Object * object = NetworkIdManager::getObjectById(target.getObjectId());
-		if (object != NULL)
+		if (object != nullptr)
 			controller = dynamic_cast<AICreatureController *>(object->getController());
 
-		if (controller == NULL)
+		if (controller == nullptr)
 		{
 			WARNING(true, ("AiMovementMessage Archive::get, got message to object %s that doesn't have an AICreatureController", target.getObjectId().getValueString().c_str()));
 			target.m_movement = AiMovementBaseNullPtr;

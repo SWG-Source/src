@@ -129,7 +129,7 @@ DataTable * DataTableManager::getTable(const std::string& table, bool openIfNotF
 			if (!dt)
 			{
 				DEBUG_WARNING(true, ("Could not find table [%s]", table.c_str()));
-				return NULL;
+				return nullptr;
 			}
 			else
 			{
@@ -140,7 +140,7 @@ DataTable * DataTableManager::getTable(const std::string& table, bool openIfNotF
 		}
 		else
 		{
-			return NULL;
+			return nullptr;
 		}
 	}
 
@@ -158,7 +158,7 @@ DataTable*  DataTableManager::reload(const std::string & table)
 
 	DataTable * const dataTable = open(table);
 
-	if (dataTable != NULL)
+	if (dataTable != nullptr)
 	{
 		std::multimap<std::string, DataTableReloadCallback>::const_iterator i = m_reloadCallbacks.lower_bound(table);
 		for (; i != m_reloadCallbacks.end() && (*i).first == table; ++i)
@@ -175,7 +175,7 @@ DataTable*  DataTableManager::reloadIfOpen(const std::string & table)
 	if(isOpen(table))
 		return reload(table);
 	else
-		return NULL;
+		return nullptr;
 }
 
 // ----------------------------------------------------------------------

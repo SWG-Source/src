@@ -84,7 +84,7 @@ void TwofishCrypt::process(const unsigned char * const inputBuffer, unsigned cha
 		}
 		assert( r == 0 );	// size must be a 16 byte block for Twofish to do it's job!
 	}
-	assert(cipher != NULL); // can't process data without a twofish encryptor or decryptor!
+	assert(cipher != nullptr); // can't process data without a twofish encryptor or decryptor!
 }
 
 //-----------------------------------------------------------------------

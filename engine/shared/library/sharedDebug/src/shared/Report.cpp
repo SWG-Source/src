@@ -175,7 +175,7 @@ void Report::puts(const char *buffer)
 	//	if (flags & RF_fatal)
 	//		title = "Fatal Report";
 
-	//	MessageBox(NULL, buffer, title, MB_OK | MB_ICONEXCLAMATION);
+	//	MessageBox(nullptr, buffer, title, MB_OK | MB_ICONEXCLAMATION);
 	//}
 }
 
@@ -198,7 +198,7 @@ void Report::vprintf(const char *format, va_list va)
 {
 	char buffer[8 * 1024];
 
-	// make sure the buffer is always NULL terminated
+	// make sure the buffer is always nullptr terminated
 	buffer[sizeof(buffer)-1] = '\0';
 
 	// format the string

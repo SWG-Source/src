@@ -35,9 +35,9 @@ namespace DataLintNamespace
 	bool                       ms_installed = false;
 	DataLint::AssetType        m_currentAssetType = DataLint::AT_invalid;
 	bool                       m_enabled = false;
-	WarningList *              m_warningList = NULL;
-	StringList *               m_assetStack = NULL;
-	DataLint::StringPairList * m_assetList = NULL;
+	WarningList *              m_warningList = nullptr;
+	StringList *               m_assetStack = nullptr;
+	DataLint::StringPairList * m_assetList = nullptr;
 	std::string                m_dataLintCategorizedAssetsFile("DataLint_CategorizedAssets.txt");
 	std::string                m_dataLintUnSupportedAssetsFile("DataLint_UnSupportedAssets.txt");
 	Mode                       m_mode = M_client;
@@ -123,17 +123,17 @@ void DataLint::report()
 
 		// Client only
 
-		FILE *assetErrorFileAppearance = NULL;
-		FILE *assetErrorFileArrangementDescriptor = NULL;
-		FILE *assetErrorFileLocalizedStringTable = NULL;
-		FILE *assetErrorFilePortalProperty = NULL;
-		FILE *assetErrorFileShaderTemplate = NULL;
-		FILE *assetErrorFileSkyBox = NULL;
-		FILE *assetErrorFileSlotDescriptor = NULL;
-		FILE *assetErrorFileSoundTemplate = NULL;
-		FILE *assetErrorFileTerrain = NULL;
-		FILE *assetErrorFileTexture = NULL;
-		FILE *assetErrorFileTextureRenderer = NULL;
+		FILE *assetErrorFileAppearance = nullptr;
+		FILE *assetErrorFileArrangementDescriptor = nullptr;
+		FILE *assetErrorFileLocalizedStringTable = nullptr;
+		FILE *assetErrorFilePortalProperty = nullptr;
+		FILE *assetErrorFileShaderTemplate = nullptr;
+		FILE *assetErrorFileSkyBox = nullptr;
+		FILE *assetErrorFileSlotDescriptor = nullptr;
+		FILE *assetErrorFileSoundTemplate = nullptr;
+		FILE *assetErrorFileTerrain = nullptr;
+		FILE *assetErrorFileTexture = nullptr;
+		FILE *assetErrorFileTextureRenderer = nullptr;
 
 		if (m_mode == M_client)
 		{
@@ -450,7 +450,7 @@ std::string DataLintNamespace::formatErrorMessage(WarningPair &warningPair, int 
 
 	char *assetError = strstr(text, " : ");
 
-	if (assetError != NULL)
+	if (assetError != nullptr)
 	{
 		++assetError;
 		++assetError;
@@ -567,12 +567,12 @@ void DataLint::clearAssetStack()
 //-----------------------------------------------------------------------------
 void DataLint::addFilePath(char const *filePath)
 {
-	if (filePath == NULL || (strlen(filePath) <= 0))
+	if (filePath == nullptr || (strlen(filePath) <= 0))
 	{
 		return;
 	}
 
-	if (m_assetList != NULL)
+	if (m_assetList != nullptr)
 	{
 		char text[4096];
 		sprintf(text, "%s", filePath);
@@ -592,7 +592,7 @@ void DataLint::addFilePath(char const *filePath)
 //-----------------------------------------------------------------------------
 void DataLint::removeFilePath(char const *filePath)
 {
-	if (m_assetList != NULL)
+	if (m_assetList != nullptr)
 	{
 		StringPairList::iterator stringPairListIter = m_assetList->begin();
 
@@ -611,8 +611,8 @@ void DataLint::removeFilePath(char const *filePath)
 //-----------------------------------------------------------------------------
 bool DataLintNamespace::isAnAppearanceAsset(char const *text)
 {
-	bool const appearanceAsset = (strstr(text, "appearance/") != NULL);
-	bool const portalPropertyAsset = (strstr(text, ".pob") != NULL);
+	bool const appearanceAsset = (strstr(text, "appearance/") != nullptr);
+	bool const portalPropertyAsset = (strstr(text, ".pob") != nullptr);
 
 	return (appearanceAsset && !portalPropertyAsset);
 }
@@ -620,7 +620,7 @@ bool DataLintNamespace::isAnAppearanceAsset(char const *text)
 //-----------------------------------------------------------------------------
 bool DataLintNamespace::isAnArrangementDescriptorAsset(char const *text)
 {
-	bool const arrangementDescriptorAsset = (strstr(text, "slot/arrangement/") != NULL);
+	bool const arrangementDescriptorAsset = (strstr(text, "slot/arrangement/") != nullptr);
 
 	return arrangementDescriptorAsset;
 }
@@ -628,7 +628,7 @@ bool DataLintNamespace::isAnArrangementDescriptorAsset(char const *text)
 //-----------------------------------------------------------------------------
 bool DataLintNamespace::isALocalizedStringAsset(char const *text)
 {
-	bool const localizedStringAsset = (strstr(text, ".stf") != NULL);
+	bool const localizedStringAsset = (strstr(text, ".stf") != nullptr);
 
 	return localizedStringAsset;
 }
@@ -638,8 +638,8 @@ bool DataLintNamespace::isAnObjectTemplateAsset(char const *text)
 {
 	bool result = false;
 	UNREF(text);
-	bool const isInTheObjectDirectory = (strstr(text, "object/") != NULL);
-	bool const isInTheAbstractDirectory = (strstr(text, "abstract/") != NULL);
+	bool const isInTheObjectDirectory = (strstr(text, "object/") != nullptr);
+	bool const isInTheAbstractDirectory = (strstr(text, "abstract/") != nullptr);
 
 	if (isInTheObjectDirectory || isInTheAbstractDirectory)
 	{
@@ -655,7 +655,7 @@ bool DataLintNamespace::isAnObjectTemplateAsset(char const *text)
 //-----------------------------------------------------------------------------
 bool DataLintNamespace::isAPortalProprtyAsset(char const *text)
 {
-	bool const portalPropertyAsset = (strstr(text, ".pob") != NULL);
+	bool const portalPropertyAsset = (strstr(text, ".pob") != nullptr);
 
 	return portalPropertyAsset;
 }
@@ -663,7 +663,7 @@ bool DataLintNamespace::isAPortalProprtyAsset(char const *text)
 //-----------------------------------------------------------------------------
 bool DataLintNamespace::isAShaderTemplateAsset(char const *text)
 {
-	bool const shaderTemplateAsset = (strstr(text, "shader/") != NULL);
+	bool const shaderTemplateAsset = (strstr(text, "shader/") != nullptr);
 
 	return shaderTemplateAsset;
 }
@@ -671,7 +671,7 @@ bool DataLintNamespace::isAShaderTemplateAsset(char const *text)
 //-----------------------------------------------------------------------------
 bool DataLintNamespace::isASkyBoxAsset(char const *text)
 {
-	bool const skyBoxAsset = (strstr(text, "skybox/") != NULL);
+	bool const skyBoxAsset = (strstr(text, "skybox/") != nullptr);
 
 	return skyBoxAsset;
 }
@@ -679,7 +679,7 @@ bool DataLintNamespace::isASkyBoxAsset(char const *text)
 //-----------------------------------------------------------------------------
 bool DataLintNamespace::isASlotDescriptorAsset(char const *text)
 {
-	bool const slotDescriptorAsset = (strstr(text, "slot/descriptor/") != NULL);
+	bool const slotDescriptorAsset = (strstr(text, "slot/descriptor/") != nullptr);
 
 	return slotDescriptorAsset;
 }
@@ -687,7 +687,7 @@ bool DataLintNamespace::isASlotDescriptorAsset(char const *text)
 //-----------------------------------------------------------------------------
 bool DataLintNamespace::isASoundAsset(char const *text)
 {
-	bool const soundAsset = (strstr(text, "sound/") != NULL);
+	bool const soundAsset = (strstr(text, "sound/") != nullptr);
 
 	return soundAsset;
 }
@@ -701,7 +701,7 @@ bool DataLintNamespace::isATerrainAsset(char const *text)
 //-----------------------------------------------------------------------------
 bool DataLintNamespace::isATextureAsset(char const *text)
 {
-	bool const textureAsset = (strstr(text, ".dds") != NULL);
+	bool const textureAsset = (strstr(text, ".dds") != nullptr);
 
 	return textureAsset;
 }
@@ -709,7 +709,7 @@ bool DataLintNamespace::isATextureAsset(char const *text)
 //-----------------------------------------------------------------------------
 bool DataLintNamespace::isATextureRendererTemplateAsset(char const *text)
 {
-	bool const textureRendererAsset = (strstr(text, ".trt") != NULL);
+	bool const textureRendererAsset = (strstr(text, ".trt") != nullptr);
 
 	return textureRendererAsset;
 }
@@ -749,7 +749,7 @@ bool DataLintNamespace::isAnUnSupportedAsset(char const *text)
 //-----------------------------------------------------------------------------
 DataLint::StringPairList DataLintNamespace::getList(int const reserveCount, AssetFunction assetTypeFunction)
 {
-	DEBUG_FATAL(!m_assetList, ("DataLint::getList() - m_assetList is NULL"));
+	DEBUG_FATAL(!m_assetList, ("DataLint::getList() - m_assetList is nullptr"));
 
 	// Create the list of terrains
 

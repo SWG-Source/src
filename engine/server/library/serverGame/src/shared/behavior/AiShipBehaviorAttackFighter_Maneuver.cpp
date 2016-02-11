@@ -72,7 +72,7 @@ AiShipBehaviorAttackFighter::Maneuver::~Maneuver()
 	
 	delete m_pathList;
 
-	//m_currentPath = NULL;
+	//m_currentPath = nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -128,7 +128,7 @@ void AiShipBehaviorAttackFighter::Maneuver::addPath(Path * const path)
 
 AiShipBehaviorAttackFighter::Maneuver::Path * AiShipBehaviorAttackFighter::Maneuver::getCurrentPath()
 {
-	Path * currentPath = NULL;
+	Path * currentPath = nullptr;
 	
 	if (!m_pathList->empty() && m_currentPath != m_pathList->end())
 	{
@@ -230,7 +230,7 @@ void AiShipBehaviorAttackFighter::Maneuver::alterThrottle(float const /*timeDelt
 
 AiShipBehaviorAttackFighter::Maneuver * AiShipBehaviorAttackFighter::Maneuver::createManeuver(FighterManeuver const manueverType, AiShipBehaviorAttackFighter & aiShipBehaviorAttack, AiAttackTargetInformation const & targetInfo)
 {
-	Maneuver * aiManeuver = NULL;
+	Maneuver * aiManeuver = nullptr;
 
 	switch(manueverType)
 	{
@@ -298,7 +298,7 @@ public:
 
 		ShipObject const * const primaryTargetShipObject = getAiShipController().getPrimaryAttackTargetShipObject();
 
-		if (primaryTargetShipObject != NULL)
+		if (primaryTargetShipObject != nullptr)
 		{
 			float const ownerShipRadius = getAiShipController().getShipOwner()->getRadius();
 			float const ownerTurnRadius = getAiShipController().getLargestTurnRadius();
@@ -337,7 +337,7 @@ protected:
 
 		ShipObject const * const primaryTargetShipObject = getAiShipController().getPrimaryAttackTargetShipObject();
 
-		if (primaryTargetShipObject != NULL)
+		if (primaryTargetShipObject != nullptr)
 		{
 			bool const facingTarget = m_aiShipBehaviorAttack.isFacingTarget();
 
@@ -450,7 +450,7 @@ private:
 		{
 			ShipObject const * const primaryTargetShipObject = getAiShipController().getPrimaryAttackTargetShipObject();
 
-			if (primaryTargetShipObject != NULL)
+			if (primaryTargetShipObject != nullptr)
 			{
 				AiShipPilotData const & pilotData = *NON_NULL(getAiShipController().getPilotData());
 				float const currentSpeed = getAiShipController().getShipOwner()->getCurrentSpeed();
@@ -665,11 +665,11 @@ private:
 	{
 		ShipObject const * const primaryTargetShipObject = getAiShipController().getPrimaryAttackTargetShipObject();
 
-		if (primaryTargetShipObject!= NULL)
+		if (primaryTargetShipObject!= nullptr)
 		{
 			ShipController const * const targetShipController = primaryTargetShipObject->getController()->asShipController();
 
-			if (targetShipController != NULL)
+			if (targetShipController != nullptr)
 			{
 				Transform transform;
 				Vector velocity;

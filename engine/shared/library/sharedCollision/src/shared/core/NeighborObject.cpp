@@ -12,7 +12,7 @@
 // ----------------------------------------------------------------------
 
 NeighborObject::NeighborObject()
-: m_neighbor(NULL)
+: m_neighbor(nullptr)
 {
 }
 

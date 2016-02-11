@@ -67,7 +67,7 @@ const char * const ChatAPICore::ms_errorStringsEnglish[] =
 	"UID node already exists",
 	"Wrong chat server for request",
 	"Succeeded, but local data is invalid",
-	"Login with null name",
+	"Login with nullptr name",
 	"No server assigned to this identity",			// 45
 	"Another server already assumed this identity",
 	"Remote server is down",
@@ -82,9 +82,9 @@ const char * const ChatAPICore::ms_errorStringsEnglish[] =
 	"Duplicate voice",
 	"Chat avatar must first be logged out",
 	"No work to do",
-	"Cannot perform rename to NULL avatar name",
+	"Cannot perform rename to nullptr avatar name",
 	"Cannot perform station acct transfer to stationID = 0",	// 60
-	"Cannot perform avatar move to NULL avatar address",
+	"Cannot perform avatar move to nullptr avatar address",
 	"Failed to obtain an ID for a new room or avatar",
 	"Room is local to namespace/world; cannot enter from other worlds",
 	"Room is local to game; cannot enter from other game namespaces",
@@ -122,7 +122,7 @@ ChatAPICore::ChatAPICore(const char *registrar_host, short registrar_port, const
   m_registrarPort(registrar_port),
   m_defaultServerPort(server_port),
   m_assignedServerPort(server_port),
-  m_timeSinceLastDisconnect(time(NULL)),
+  m_timeSinceLastDisconnect(time(nullptr)),
   m_rcvdRegistrarResponse(false),
   m_shouldSendVersion(true)
 {
@@ -132,7 +132,7 @@ ChatAPICore::ChatAPICore(const char *registrar_host, short registrar_port, const
 
 ChatAPICore::~ChatAPICore()
 {
-	m_api = NULL;
+	m_api = nullptr;
 
 	std::map<unsigned, ChatAvatarCore*>::iterator iter = m_avatarCoreCache.begin();
 	for (; iter != m_avatarCoreCache.end(); ++iter)
@@ -209,7 +209,7 @@ void ChatAPICore::cacheAvatar(ChatAvatarCore *avatarCore)
 
 ChatAvatarCore *ChatAPICore::getAvatarCore(unsigned avatarID)
 {
-	ChatAvatarCore *returnAvatar = NULL;
+	ChatAvatarCore *returnAvatar = nullptr;
 
 	std::map<unsigned, ChatAvatarCore *>::iterator iter = m_avatarCoreCache.find(avatarID);
 	if(iter != m_avatarCoreCache.end())
@@ -221,7 +221,7 @@ ChatAvatarCore *ChatAPICore::getAvatarCore(unsigned avatarID)
 
 ChatAvatar *ChatAPICore::getAvatar(unsigned avatarID)
 {
-	ChatAvatar *returnAvatar = NULL;
+	ChatAvatar *returnAvatar = nullptr;
 
 	std::map<unsigned, ChatAvatar *>::iterator iter = m_avatarCache.find(avatarID);
 	if(iter != m_avatarCache.end())
@@ -233,7 +233,7 @@ ChatAvatar *ChatAPICore::getAvatar(unsigned avatarID)
 
 ChatAvatarCore *ChatAPICore::decacheAvatar(unsigned avatarID)
 {
-	ChatAvatarCore *returnAvatar = NULL;
+	ChatAvatarCore *returnAvatar = nullptr;
 	std::map<unsigned, ChatAvatarCore *>::iterator iterCore = m_avatarCoreCache.find(avatarID);
 	if(iterCore != m_avatarCoreCache.end())
 	{
@@ -267,7 +267,7 @@ void ChatAPICore::cacheRoom(ChatRoomCore *roomCore)
 
 ChatRoomCore *ChatAPICore::getRoomCore(unsigned roomID)
 {
-	ChatRoomCore *returnRoom = NULL;
+	ChatRoomCore *returnRoom = nullptr;
 	std::map<unsigned, ChatRoomCore *>::iterator iter = m_roomCoreCache.find(roomID);
 	if(iter != m_roomCoreCache.end())
 	{
@@ -279,7 +279,7 @@ ChatRoomCore *ChatAPICore::getRoomCore(unsigned roomID)
 
 ChatRoom *ChatAPICore::getRoom(unsigned roomID)
 {
-	ChatRoom *returnRoom = NULL;
+	ChatRoom *returnRoom = nullptr;
 	std::map<unsigned, ChatRoom *>::iterator iter = m_roomCache.find(roomID);
 	if(iter != m_roomCache.end())
 	{
@@ -291,7 +291,7 @@ ChatRoom *ChatAPICore::getRoom(unsigned roomID)
 
 ChatRoomCore *ChatAPICore::decacheRoom(unsigned roomID)
 {
-	ChatRoomCore *returnRoom = NULL;
+	ChatRoomCore *returnRoom = nullptr;
 
 	std::map<unsigned, ChatRoomCore *>::iterator iterCore = m_roomCoreCache.find(roomID);
 	if(iterCore != m_roomCoreCache.end())
@@ -315,7 +315,7 @@ void ChatAPICore::responseCallback(GenericResponse *res)
 	case RESPONSE_LOGINAVATAR:
 		{
 			ResLoginAvatar *R = static_cast<ResLoginAvatar *>(res);
-			ChatAvatar *avatar = NULL;
+			ChatAvatar *avatar = nullptr;
 
 			if(R->getAvatar())
 			{
@@ -338,7 +338,7 @@ void ChatAPICore::responseCallback(GenericResponse *res)
     case RESPONSE_TEMPORARYAVATAR:
         {
             ResTemporaryAvatar* R = static_cast<ResTemporaryAvatar*>(res);
-            ChatAvatar* avatar = NULL;
+            ChatAvatar* avatar = nullptr;
 
             if ( R->getAvatar() )
             {
@@ -394,8 +394,8 @@ void ChatAPICore::responseCallback(GenericResponse *res)
 	case RESPONSE_GETAVATAR:
 		{
 			ResGetAvatar *R = static_cast<ResGetAvatar *>(res);
-			ChatAvatar *cachedAvatar = NULL;
-			ChatAvatar *avatar = NULL;
+			ChatAvatar *cachedAvatar = nullptr;
+			ChatAvatar *avatar = nullptr;
 			ChatAvatarCore *avatarCore = R->getAvatar();
 			
 			if (R->getResult() == 0 && avatarCore) // if success
@@ -403,7 +403,7 @@ void ChatAPICore::responseCallback(GenericResponse *res)
 				// attempt to return locally cached avatar, if available
 				cachedAvatar = getAvatar(avatarCore->getAvatarID());
 				
-				if (cachedAvatar != NULL)
+				if (cachedAvatar != nullptr)
 				{
 					// update cached information with returned data
 					cachedAvatar->setAttributes(avatarCore->getAttributes());
@@ -427,7 +427,7 @@ void ChatAPICore::responseCallback(GenericResponse *res)
 
 			m_api->OnGetAvatar(R->getTrack(), R->getResult(), avatar, R->getUser());
 
-			if (cachedAvatar == NULL)
+			if (cachedAvatar == nullptr)
 			{
 				delete avatar;
 			}
@@ -438,8 +438,8 @@ void ChatAPICore::responseCallback(GenericResponse *res)
     case RESPONSE_GETANYAVATAR:
         {
             ResGetAnyAvatar *R = static_cast<ResGetAnyAvatar *>(res);
-            ChatAvatar *cachedAvatar = NULL;
-            ChatAvatar *avatar = NULL;
+            ChatAvatar *cachedAvatar = nullptr;
+            ChatAvatar *avatar = nullptr;
             ChatAvatarCore *avatarCore = R->getAvatar();
 
             if (R->getResult() == 0 && avatarCore) // if success
@@ -447,7 +447,7 @@ void ChatAPICore::responseCallback(GenericResponse *res)
                 // attempt to return locally cached avatar, if available
                 cachedAvatar = getAvatar(avatarCore->getAvatarID());
 
-                if (cachedAvatar != NULL)
+                if (cachedAvatar != nullptr)
                 {
                     // update cached information with returned data
                     cachedAvatar->setAttributes(avatarCore->getAttributes());
@@ -471,7 +471,7 @@ void ChatAPICore::responseCallback(GenericResponse *res)
 
             m_api->OnGetAnyAvatar(R->getTrack(), R->getResult(), avatar, R->isLoggedIn(), R->getUser());
 
-            if (cachedAvatar == NULL)
+            if (cachedAvatar == nullptr)
             {
                 delete avatar;
             }
@@ -490,8 +490,8 @@ void ChatAPICore::responseCallback(GenericResponse *res)
 	case RESPONSE_SETAVATARATTRIBUTES:
 		{
 			ResSetAvatarAttributes *R = static_cast<ResSetAvatarAttributes *>(res);
-			ChatAvatar *cachedAvatar = NULL;
-			ChatAvatar *avatar = NULL;
+			ChatAvatar *cachedAvatar = nullptr;
+			ChatAvatar *avatar = nullptr;
 			ChatAvatarCore *avatarCore = R->getAvatar();
 			
 			if (R->getResult() == 0 && avatarCore) // if success
@@ -502,14 +502,14 @@ void ChatAPICore::responseCallback(GenericResponse *res)
 					// attempt to return locally cached avatar, if available
 					cachedAvatar = getAvatar(avatar->getAvatarID());
 
-					if (cachedAvatar != NULL)
+					if (cachedAvatar != nullptr)
 					{
 						cachedAvatar->setAttributes(avatar->getAttributes());
 					}
 				}
 			}
 			
-			if (cachedAvatar != NULL)
+			if (cachedAvatar != nullptr)
 			{
 				cachedAvatar = avatar;
 				m_api->OnSetAvatarAttributes(R->getTrack(), R->getResult(), cachedAvatar, R->getUser());
@@ -531,8 +531,8 @@ void ChatAPICore::responseCallback(GenericResponse *res)
     case RESPONSE_SETSTATUSMESSAGE:
         {
             ResSetAvatarStatusMessage *R = static_cast<ResSetAvatarStatusMessage*>(res);
-            ChatAvatar *cachedAvatar = NULL;
-            ChatAvatar *avatar = NULL;
+            ChatAvatar *cachedAvatar = nullptr;
+            ChatAvatar *avatar = nullptr;
             ChatAvatarCore *avatarCore = R->getAvatar();
 
             if (R->getResult() == 0 && avatarCore) // if success
@@ -543,14 +543,14 @@ void ChatAPICore::responseCallback(GenericResponse *res)
                     // attempt to return locally cached avatar, if available
                     cachedAvatar = getAvatar(avatar->getAvatarID());
 
-                    if (cachedAvatar != NULL)
+                    if (cachedAvatar != nullptr)
                     {
                         cachedAvatar->setStatusMessage(avatar->getStatusMessage());
                     }
                 }
             }
 
-            if (cachedAvatar != NULL)
+            if (cachedAvatar != nullptr)
             {
                 cachedAvatar = avatar;
                 m_api->OnSetAvatarStatusMessage(R->getTrack(), R->getResult(), cachedAvatar, R->getUser());
@@ -572,8 +572,8 @@ void ChatAPICore::responseCallback(GenericResponse *res)
 	case RESPONSE_SETAVATAREMAIL:
 		{
 			ResSetAvatarForwardingEmail*R = static_cast<ResSetAvatarForwardingEmail*>(res);
-			ChatAvatar *cachedAvatar = NULL;
-			ChatAvatar *avatar = NULL;
+			ChatAvatar *cachedAvatar = nullptr;
+			ChatAvatar *avatar = nullptr;
 			ChatAvatarCore *avatarCore = R->getAvatar();
 			
 			if (R->getResult() == 0 && avatarCore) // if success
@@ -584,14 +584,14 @@ void ChatAPICore::responseCallback(GenericResponse *res)
 					// attempt to return locally cached avatar, if available
 					cachedAvatar = getAvatar(avatar->getAvatarID());
 
-					if (cachedAvatar != NULL)
+					if (cachedAvatar != nullptr)
 					{
 						cachedAvatar->setForwardingEmail(avatar->getForwardingEmail());
 					}
 				}
 			}
 			
-			if (cachedAvatar != NULL)
+			if (cachedAvatar != nullptr)
 			{
 				cachedAvatar = avatar;
 				m_api->OnSetAvatarForwardingEmail(R->getTrack(), R->getResult(), cachedAvatar, R->getUser());
@@ -613,8 +613,8 @@ void ChatAPICore::responseCallback(GenericResponse *res)
 	case RESPONSE_SETAVATARINBOXLIMIT:
 		{
 			ResSetAvatarInboxLimit *R = static_cast<ResSetAvatarInboxLimit*>(res);
-			ChatAvatar *cachedAvatar = NULL;
-			ChatAvatar *avatar = NULL;
+			ChatAvatar *cachedAvatar = nullptr;
+			ChatAvatar *avatar = nullptr;
 			ChatAvatarCore *avatarCore = R->getAvatar();
 			
 			if (R->getResult() == 0 && avatarCore) // if success
@@ -625,14 +625,14 @@ void ChatAPICore::responseCallback(GenericResponse *res)
 					// attempt to return locally cached avatar, if available
 					cachedAvatar = getAvatar(avatar->getAvatarID());
 
-					if (cachedAvatar != NULL)
+					if (cachedAvatar != nullptr)
 					{
 						cachedAvatar->setInboxLimit(avatar->getInboxLimit());
 					}
 				}
 			}
 			
-			if (cachedAvatar != NULL)
+			if (cachedAvatar != nullptr)
 			{
 				cachedAvatar = avatar;
 				m_api->OnSetAvatarInboxLimit(R->getTrack(), R->getResult(), cachedAvatar, R->getUser());
@@ -654,13 +654,13 @@ void ChatAPICore::responseCallback(GenericResponse *res)
 	case RESPONSE_GETROOM:
 		{
 			ResGetRoom *R = static_cast<ResGetRoom *>(res);
-			ChatRoom *room = NULL;
+			ChatRoom *room = nullptr;
 			ChatRoomCore *roomCore = R->getRoom();
 
 			if (R->getResult() == 0 && roomCore) // if success
 			{
 				unsigned roomid = roomCore->getRoomID();
-				if (getRoomCore(roomid) == NULL)
+				if (getRoomCore(roomid) == nullptr)
 				{
 					// we need to cache this room first
 					cacheRoom(roomCore);					
@@ -708,8 +708,8 @@ void ChatAPICore::responseCallback(GenericResponse *res)
 		{
 			ResCreateRoom *R = static_cast<ResCreateRoom *>(res);
 
-			ChatRoom *room = NULL;
-			ChatRoomCore* roomCore = NULL;
+			ChatRoom *room = nullptr;
+			ChatRoomCore* roomCore = nullptr;
 
 			if (R->getResult() == 0) // if success
 			{
@@ -939,7 +939,7 @@ void ChatAPICore::responseCallback(GenericResponse *res)
 				else if (!room && !roomCore)
 				{
 					// we didn't have room cached, and we didn't get one to cache,
-					// thus we'll have trouble giving a callback with a NULL pointer.
+					// thus we'll have trouble giving a callback with a nullptr pointer.
 					_chatdebug_("ChatAPI:BadData: RESPONSE_ENTERROOM: avatar=%p, room=%p , roomCore=%p\n", avatar, room, roomCore);
 				}
 			}
@@ -1175,8 +1175,8 @@ void ChatAPICore::responseCallback(GenericResponse *res)
 	case RESPONSE_FINDAVATARBYUID:
 		{
 			ResFindAvatarByUID *R = static_cast<ResFindAvatarByUID *>(res);
-			ChatAvatar **avatarMatches = NULL;
-			ChatAvatarCore **avatarCoreMatches = NULL;
+			ChatAvatar **avatarMatches = nullptr;
+			ChatAvatarCore **avatarCoreMatches = nullptr;
 			
 			unsigned numAvatarsOnline = R->getNumAvatarsOnline();
 
@@ -1374,7 +1374,7 @@ void ChatAPICore::responseCallback(GenericResponse *res)
 					// duplicate login from this API, then effectively
 					// our API must consider him logged out because he's now
 					// no longer logged in to his AID controller.
-					m_api->OnLogoutAvatar(0, 0, avatar, NULL);
+					m_api->OnLogoutAvatar(0, 0, avatar, nullptr);
 				}
 			}
 			
@@ -1476,7 +1476,7 @@ void ChatAPICore::responseCallback(GenericResponse *res)
 	case RESPONSE_GETAVATARKEYWORDS:
 		{
 			ResGetAvatarKeywords *R = static_cast<ResGetAvatarKeywords *>(res);
-			ChatAvatar *avatar = NULL;
+			ChatAvatar *avatar = nullptr;
 
 			if(R->getResult() == CHATRESULT_SUCCESS)
 			{
@@ -1494,7 +1494,7 @@ void ChatAPICore::responseCallback(GenericResponse *res)
 	case RESPONSE_SETAVATARKEYWORDS:
 		{
 			ResSetAvatarKeywords *R = static_cast<ResSetAvatarKeywords *>(res);
-			ChatAvatar *avatar = NULL;
+			ChatAvatar *avatar = nullptr;
 			if(R->getResult() == CHATRESULT_SUCCESS)
 			{
 				avatar = getAvatar(R->getAvatarID());
@@ -1510,8 +1510,8 @@ void ChatAPICore::responseCallback(GenericResponse *res)
 	case RESPONSE_SEARCHAVATARKEYWORDS:
 		{
 			ResSearchAvatarKeywords *R = static_cast<ResSearchAvatarKeywords *>(res);
-			ChatAvatar **avatarMatches = NULL;
-			ChatAvatarCore **avatarCoreMatches = NULL;
+			ChatAvatar **avatarMatches = nullptr;
+			ChatAvatarCore **avatarCoreMatches = nullptr;
 			
 			if(R->getResult() == CHATRESULT_SUCCESS)
 			{
@@ -1530,7 +1530,7 @@ void ChatAPICore::responseCallback(GenericResponse *res)
 	case RESPONSE_CONFIRMFRIEND:
 		{
 			ResFriendConfirm *R = static_cast<ResFriendConfirm *>(res);
-			ChatAvatar *avatar = NULL;
+			ChatAvatar *avatar = nullptr;
 			if(R->getResult() == CHATRESULT_SUCCESS)
 			{
 				avatar = getAvatar(R->getAvatarID());
@@ -1546,7 +1546,7 @@ void ChatAPICore::responseCallback(GenericResponse *res)
 	case RESPONSE_CONFIRMFRIEND_RECIPROCATE:
 		{
 			ResFriendConfirmReciprocate *R = static_cast<ResFriendConfirmReciprocate *>(res);
-			ChatAvatar *avatar = NULL;
+			ChatAvatar *avatar = nullptr;
 			if(R->getResult() == CHATRESULT_SUCCESS)
 			{
 				avatar = getAvatar(R->getAvatarID());
@@ -1616,7 +1616,7 @@ void ChatAPICore::responseCallback(GenericResponse *res)
 	case RESPONSE_ADDSNOOPAVATAR:
 		{
 			ResAddSnoopAvatar *R = static_cast<ResAddSnoopAvatar *>(res);
-			ChatAvatar *avatar = NULL;
+			ChatAvatar *avatar = nullptr;
 			if(R->getResult() == CHATRESULT_SUCCESS)
 			{
 				avatar = getAvatar(R->getSrcAvatarID());
@@ -1632,7 +1632,7 @@ void ChatAPICore::responseCallback(GenericResponse *res)
 	case RESPONSE_REMOVESNOOPAVATAR:
 		{
 			ResRemoveSnoopAvatar *R = static_cast<ResRemoveSnoopAvatar *>(res);
-			ChatAvatar *avatar = NULL;
+			ChatAvatar *avatar = nullptr;
 			if(R->getResult() == CHATRESULT_SUCCESS)
 			{
 				avatar = getAvatar(R->getSrcAvatarID());
@@ -1648,7 +1648,7 @@ void ChatAPICore::responseCallback(GenericResponse *res)
 	case RESPONSE_ADDSNOOPROOM:
 		{
 			ResAddSnoopRoom *R = static_cast<ResAddSnoopRoom *>(res);
-			ChatAvatar *avatar = NULL;
+			ChatAvatar *avatar = nullptr;
 			if(R->getResult() == CHATRESULT_SUCCESS)
 			{
 				avatar = getAvatar(R->getSrcAvatarID());
@@ -1664,7 +1664,7 @@ void ChatAPICore::responseCallback(GenericResponse *res)
 	case RESPONSE_REMOVESNOOPROOM:
 		{
 			ResRemoveSnoopRoom *R = static_cast<ResRemoveSnoopRoom *>(res);
-			ChatAvatar *avatar = NULL;
+			ChatAvatar *avatar = nullptr;
 			if(R->getResult() == CHATRESULT_SUCCESS)
 			{
 				avatar = getAvatar(R->getSrcAvatarID());
@@ -1680,7 +1680,7 @@ void ChatAPICore::responseCallback(GenericResponse *res)
 	case RESPONSE_GETSNOOPLIST:
 		{
 			ResGetSnoopList *R = static_cast<ResGetSnoopList *>(res);
-			ChatAvatar *avatar = NULL;
+			ChatAvatar *avatar = nullptr;
 			if(R->getResult() == CHATRESULT_SUCCESS)
 			{
 				avatar = getAvatar(R->getSrcAvatarID());
@@ -1691,8 +1691,8 @@ void ChatAPICore::responseCallback(GenericResponse *res)
 				_chatdebug_("ChatAPI:BadData: RESPONSE_REMOVESNOOPROOM: avatar=%p\n", avatar);
 			}
 
-			AvatarSnoopPair **avatarList = NULL;
-			ChatUnicodeString **roomList = NULL;
+			AvatarSnoopPair **avatarList = nullptr;
+			ChatUnicodeString **roomList = nullptr;
 			
 			unsigned numAvatars = R->getAvatarSnoopListLength();
 			unsigned numRooms = R->getRoomSnoopListLength();
@@ -1763,7 +1763,7 @@ void ChatAPICore::responseCallback(short type, ByteStream::ReadIterator &iter)
 				ChatAvatar *destAvatar = getAvatar(M.getDestList()[i]);
 				if (!destAvatar)
 				{
-					_chatdebug_("ChatAPI:BadData: MESSAGE_ROOMMESSAGE: destAvatar[%i]=NULL\n", i);
+					_chatdebug_("ChatAPI:BadData: MESSAGE_ROOMMESSAGE: destAvatar[%i]=nullptr\n", i);
 					continue;
 				}
 				m_api->OnReceiveRoomMessage(srcAvatar, destAvatar, destRoom, ChatUnicodeString(M.getMsg().data(), M.getMsg().size()), ChatUnicodeString(M.getOOB().data(), M.getOOB().size()));
@@ -1797,7 +1797,7 @@ void ChatAPICore::responseCallback(short type, ByteStream::ReadIterator &iter)
 				ChatAvatar *destAvatar = getAvatar(M.getDestList()[i]);
 				if (!destAvatar) 
 				{
-					_chatdebug_("ChatAPI:BadData: MESSAGE_BROADCASTMESSAGE: destAvatar[%i]=NULL\n", i);
+					_chatdebug_("ChatAPI:BadData: MESSAGE_BROADCASTMESSAGE: destAvatar[%i]=nullptr\n", i);
 					continue;
 				}
 				m_api->OnReceiveBroadcastMessage(srcAvatar, ChatUnicodeString(M.getSrcAddress().data(), M.getSrcAddress().size()), destAvatar, ChatUnicodeString(M.getMsg().data(), M.getMsg().size()), ChatUnicodeString(M.getOOB().data(), M.getOOB().size()));
@@ -1877,7 +1877,7 @@ void ChatAPICore::responseCallback(short type, ByteStream::ReadIterator &iter)
 			ChatRoomCore *destRoomCore = getRoomCore(M.getRoomID());
 
 			if (!destRoomCore) {
-				_chatdebug_("ChatAPI:destroomCore is null!");
+				_chatdebug_("ChatAPI:destroomCore is nullptr!");
 				break;
 			}
 
@@ -1889,7 +1889,7 @@ void ChatAPICore::responseCallback(short type, ByteStream::ReadIterator &iter)
 
 			ChatAvatar *destAvatar = M.getDestAvatar()->getNewChatAvatar();
 			ChatAvatar *srcAvatar = M.getSrcAvatar()->getNewChatAvatar();
-			ChatAvatarCore *kickedAvatar = destRoomCore ? destRoomCore->removeAvatar(destAvatar->getAvatarID()) : NULL;
+			ChatAvatarCore *kickedAvatar = destRoomCore ? destRoomCore->removeAvatar(destAvatar->getAvatarID()) : nullptr;
 			
 			ChatRoom *destRoom = getRoom(M.getRoomID());
 			if (!srcAvatar || !destAvatar || !kickedAvatar || !destRoom) 
@@ -2439,12 +2439,12 @@ void ChatAPICore::responseCallback(short type, ByteStream::ReadIterator &iter)
 			ChatAvatar *srcAvatar = M.getSrcAvatar()->getNewChatAvatar();
 			if (!srcAvatar)
 			{
-				_chatdebug_("ChatAPI:BadData: MESSAGE_ENTERROOM: srcAvatar=NULL\n");
+				_chatdebug_("ChatAPI:BadData: MESSAGE_ENTERROOM: srcAvatar=nullptr\n");
 				delete M.getSrcAvatar();
 				break;
 			}
 
-			bool isLocalAvatar = (getAvatar(srcAvatar->getAvatarID()) != NULL);
+			bool isLocalAvatar = (getAvatar(srcAvatar->getAvatarID()) != nullptr);
 			if(!destRoomCore->addAvatar(M.getSrcAvatar(),isLocalAvatar))
 			{
  				delete M.getSrcAvatar();
@@ -2492,10 +2492,10 @@ void ChatAPICore::responseCallback(short type, ByteStream::ReadIterator &iter)
 			if (destRoomCore)
 			{
 				ChatRoom *destRoom = getRoom(M.getRoomID());
-				ChatAvatar *srcAvatar = NULL;
+				ChatAvatar *srcAvatar = nullptr;
 				if (!M.getSrcAvatar())
 				{
-					_chatdebug_("ChatAPI:BadData: MESSAGE_DESTROYROOM: M.getSrcAvatar=NULL\n");
+					_chatdebug_("ChatAPI:BadData: MESSAGE_DESTROYROOM: M.getSrcAvatar=nullptr\n");
 				}
 				else
 				{
@@ -2527,7 +2527,7 @@ void ChatAPICore::responseCallback(short type, ByteStream::ReadIterator &iter)
 			ChatRoomCore *destRoomCore = getRoomCore(M.getRoomID());
 			if (!destRoomCore) 
 			{
-				_chatdebug_("ChatAPI:BadData: MESSAGE_SETROOMPARAMS: destRoomCore=NULL\n");
+				_chatdebug_("ChatAPI:BadData: MESSAGE_SETROOMPARAMS: destRoomCore=nullptr\n");
 				break;
 			}
 
@@ -2544,7 +2544,7 @@ void ChatAPICore::responseCallback(short type, ByteStream::ReadIterator &iter)
 			
 			if (!M.getSrcAvatar())
 			{
-				_chatdebug_("ChatAPI:BadData: MESSAGE_SETROOMPARAMS: M.getSrcAvatar=NULL\n");
+				_chatdebug_("ChatAPI:BadData: MESSAGE_SETROOMPARAMS: M.getSrcAvatar=nullptr\n");
 				break;
 			}
 			ChatAvatar *srcAvatar = M.getSrcAvatar()->getNewChatAvatar();
@@ -2686,7 +2686,7 @@ void ChatAPICore::responseCallback(short type, ByteStream::ReadIterator &iter)
 		{
 			MAddAdmin M(iter);
 			ChatRoomCore *destRoomCore = getRoomCore(M.getRoomID());
-			if (destRoomCore && (destRoomCore->addAdministrator(M.getAvatar()) == NULL))
+			if (destRoomCore && (destRoomCore->addAdministrator(M.getAvatar()) == nullptr))
 			{
 				delete (M.getAvatar());
 			}
@@ -2696,7 +2696,7 @@ void ChatAPICore::responseCallback(short type, ByteStream::ReadIterator &iter)
 		{
 			MRemoveAdmin M(iter);
 			ChatRoomCore *destRoomCore = getRoomCore(M.getRoomID());
-			ChatAvatarCore *admin = NULL;
+			ChatAvatarCore *admin = nullptr;
 			if (destRoomCore)
 				admin = destRoomCore->removeAdministrator(M.getAvatarID());
 			delete admin;
@@ -2707,7 +2707,7 @@ void ChatAPICore::responseCallback(short type, ByteStream::ReadIterator &iter)
 			MFriendConfirmRequest M(iter);
 			if (!M.getSrcAvatar())
 			{
-				_chatdebug_("ChatAPI:BadData: MESSAGE_FRIENDCONFIRMREQUEST: M.getSrcAvatar=NULL\n");
+				_chatdebug_("ChatAPI:BadData: MESSAGE_FRIENDCONFIRMREQUEST: M.getSrcAvatar=nullptr\n");
 				break;
 			}
 			ChatAvatar *srcAvatar = M.getSrcAvatar()->getNewChatAvatar();
@@ -2730,7 +2730,7 @@ void ChatAPICore::responseCallback(short type, ByteStream::ReadIterator &iter)
 
 			if (!M.getSrcAvatar()) 			
 			{
-				_chatdebug_("ChatAPI:BadData: MESSAGE_FRIENDCONFIRMRESPONSE: M.getSrcAvatar=NULL\n");
+				_chatdebug_("ChatAPI:BadData: MESSAGE_FRIENDCONFIRMRESPONSE: M.getSrcAvatar=nullptr\n");
 				break;
 			}
 			ChatAvatar *srcAvatar = M.getSrcAvatar()->getNewChatAvatar();
@@ -2752,7 +2752,7 @@ void ChatAPICore::responseCallback(short type, ByteStream::ReadIterator &iter)
 			MFriendConfirmReciprocateRequest M(iter);
 			if (!M.getSrcAvatar())
 			{
-				_chatdebug_("ChatAPI:BadData: MESSAGE_FRIENDCONFIRMRECIPROCATE_REQUEST: M.getSrcAvatar=NULL\n");
+				_chatdebug_("ChatAPI:BadData: MESSAGE_FRIENDCONFIRMRECIPROCATE_REQUEST: M.getSrcAvatar=nullptr\n");
 				break;
 			}
 			ChatAvatar *srcAvatar = M.getSrcAvatar()->getNewChatAvatar();
@@ -2775,7 +2775,7 @@ void ChatAPICore::responseCallback(short type, ByteStream::ReadIterator &iter)
 
 			if (!M.getSrcAvatar()) 			
 			{
-				_chatdebug_("ChatAPI:BadData: MESSAGE_FRIENDCONFIRMRECIPROCATE_RESPONSE: M.getSrcAvatar=NULL\n");
+				_chatdebug_("ChatAPI:BadData: MESSAGE_FRIENDCONFIRMRECIPROCATE_RESPONSE: M.getSrcAvatar=nullptr\n");
 				break;
 			}
 			ChatAvatar *srcAvatar = M.getSrcAvatar()->getNewChatAvatar();
@@ -2799,7 +2799,7 @@ void ChatAPICore::responseCallback(short type, ByteStream::ReadIterator &iter)
 			ChatRoomCore *destRoomCore = getRoomCore(M.getDestRoomID());
 			if (!destRoomCore) 
 			{
-				_chatdebug_("ChatAPI:BadData: MESSAGE_CHANGEROOMOWNER: destRoomCore=NULL\n");
+				_chatdebug_("ChatAPI:BadData: MESSAGE_CHANGEROOMOWNER: destRoomCore=nullptr\n");
 				break;
 			}
 
@@ -2822,7 +2822,7 @@ void ChatAPICore::responseCallback(short type, ByteStream::ReadIterator &iter)
 
 			if (!M.getRequestorAvatar()) 			
 			{
-				_chatdebug_("ChatAPI:BadData: MESSAGE_REQUESTROOMENTRY: M.getRequestorAvatar=NULL\n");
+				_chatdebug_("ChatAPI:BadData: MESSAGE_REQUESTROOMENTRY: M.getRequestorAvatar=nullptr\n");
 				break;
 			}
 			ChatAvatar *srcAvatar = M.getRequestorAvatar()->getNewChatAvatar();
@@ -3025,7 +3025,7 @@ void ChatAPICore::processAPI()
 	}
 	// if we've been disconnected for at least a minute...
 	else if (!m_connected &&
-			 time(NULL) - m_timeSinceLastDisconnect >= 60)
+			 time(nullptr) - m_timeSinceLastDisconnect >= 60)
 	{
 		if (m_setToRegistrar)
 		{
@@ -3043,7 +3043,7 @@ void ChatAPICore::processAPI()
 			m_setToRegistrar = true;
 		}
 
-		m_timeSinceLastDisconnect = time(NULL);
+		m_timeSinceLastDisconnect = time(nullptr);
 	}
 
 
@@ -3072,7 +3072,7 @@ void ChatAPICore::OnConnect(const char *host, short port)
 		res->setTrack(m_currTrack);
 		m_currTrack++;
 
-		time_t timeout = time(NULL) + m_requestTimeout;
+		time_t timeout = time(nullptr) + m_requestTimeout;
 		req->setTimeout(timeout);
 		res->setTimeout(timeout);
 		
@@ -3103,7 +3103,7 @@ void ChatAPICore::OnConnect(const char *host, short port)
 		res->setTrack(m_currTrack);
 		m_currTrack++;
 
-		time_t timeout = time(NULL) + m_requestTimeout;
+		time_t timeout = time(nullptr) + m_requestTimeout;
 		req->setTimeout(timeout);
 		res->setTimeout(timeout);
 
@@ -3147,7 +3147,7 @@ void ChatAPICore::OnDisconnect(const char *host, short port)
 		// stop processing immediately
 		suspendProcessing();
 
-		m_timeSinceLastDisconnect = time(NULL);
+		m_timeSinceLastDisconnect = time(nullptr);
 
 		// determine who we disconnected from and take appropriate action
 		if (strcmp(host, m_registrarHost.c_str()) == 0 &&
@@ -3214,7 +3214,7 @@ void ChatAPICore::failoverReloginOneAvatar(ChatAvatarCore * avatarCore)
 		res->setTrack(m_currTrack);
 		m_currTrack++;
 
-		time_t timeout = time(NULL) + m_requestTimeout;
+		time_t timeout = time(nullptr) + m_requestTimeout;
 		req->setTimeout(timeout);
 		res->setTimeout(timeout);
 
@@ -3241,7 +3241,7 @@ void ChatAPICore::failoverRecreateRooms()
 	{
 		// first build multimap of rooms keyed by their node level (ascending order is default).
 		multimap<unsigned, ChatRoomCore *> levelMap;
-		ChatRoomCore *roomCore = NULL;
+		ChatRoomCore *roomCore = nullptr;
 		for (roomIter = m_roomCoreCache.begin(); roomIter != m_roomCoreCache.end(); ++roomIter)
 		{
 			roomCore = (*roomIter).second;
@@ -3268,7 +3268,7 @@ void ChatAPICore::failoverRecreateRooms()
 			res->setTrack(m_currTrack);
 			m_currTrack++;
 
-			time_t timeout = time(NULL) + m_requestTimeout;
+			time_t timeout = time(nullptr) + m_requestTimeout;
 			req->setTimeout(timeout);
 			res->setTimeout(timeout);
 			
@@ -3296,7 +3296,7 @@ void ChatAPICore::failoverRecreateRooms()
 
 ChatAvatar *ChatAPICore::getAvatar(const ChatUnicodeString &avatarName, const ChatUnicodeString &avatarAddress)
 {
-	ChatAvatar *returnVal = NULL;
+	ChatAvatar *returnVal = nullptr;
 
 	map<unsigned, ChatAvatar *>::iterator iter = m_avatarCache.begin();
 
@@ -3317,7 +3317,7 @@ ChatAvatar *ChatAPICore::getAvatar(const ChatUnicodeString &avatarName, const Ch
 
 ChatRoom *ChatAPICore::getRoom(const ChatUnicodeString &roomAddress)
 {
-	ChatRoom *returnVal = NULL;
+	ChatRoom *returnVal = nullptr;
 
 	map<unsigned, ChatRoom *>::iterator iter = m_roomCache.begin();
 

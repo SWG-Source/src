@@ -35,7 +35,7 @@ m_numInUseBits(0)
 {
 	if (numBits > (m_numAllocatedBytes << 3))
 	{
-		m_arrayData = NULL;
+		m_arrayData = nullptr;
 		m_numAllocatedBytes = 0;
 		reserve(numBits);
 		m_numInUseBytes = 0;
@@ -294,7 +294,7 @@ void BitArray::reserve(int const numBits)
 		{
 			signed char * tmp = new signed char[static_cast<size_t>(m_numInUseBytes)];
 			memset(&(tmp[oldNumInUseBytes]), 0, static_cast<size_t>(m_numInUseBytes - oldNumInUseBytes));
-			if ((oldNumInUseBytes > 0) && (m_arrayData != NULL))
+			if ((oldNumInUseBytes > 0) && (m_arrayData != nullptr))
 				memcpy(tmp, m_arrayData, static_cast<size_t>(oldNumInUseBytes)); //lint !e671 !e670 logically, you can't enter this code block unless oldNumInUseBytes is smaller.
 
 			m_numAllocatedBytes = m_numInUseBytes;

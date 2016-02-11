@@ -29,7 +29,7 @@ namespace SharedBuffBuilderManagerNamespace
 	const std::string ms_reactiveSecondChanceComponentName = "reactive_second_chance";
 }
 
-SharedBuffBuilderManager::BuffBuilderDataType * SharedBuffBuilderManager::ms_buffBuilderData=NULL;
+SharedBuffBuilderManager::BuffBuilderDataType * SharedBuffBuilderManager::ms_buffBuilderData=nullptr;
 using namespace SharedBuffBuilderManagerNamespace;
 
 // ======================================================================
