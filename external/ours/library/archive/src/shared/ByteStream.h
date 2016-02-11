@@ -261,7 +261,7 @@ inline void ReadIterator::get(void * target, const unsigned long int readSize)
 	}
 	else
 	{
-		static const char * const desc = "Archive::ReadIterator::get - read operation on null stream object";
+		static const char * const desc = "Archive::ReadIterator::get - read operation on nullptr stream object";
 		ReadException ex(desc);
 		throw (ex);
 	}

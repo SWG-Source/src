@@ -146,7 +146,7 @@ void SimpleExtent::drawDebugShapes ( DebugShapeRenderer * renderer ) const
 
 #ifdef _DEBUG
 
-	if(renderer == NULL) return;
+	if(renderer == nullptr) return;
 
 	switch( getShape().getShapeType() )
 	{

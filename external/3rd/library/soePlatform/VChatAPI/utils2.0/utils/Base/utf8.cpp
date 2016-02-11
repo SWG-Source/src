@@ -81,7 +81,7 @@ namespace soe
     size_t UTF8_convertToUTF16( char * ptr , UTF16 * ret, size_t limit )
     {
 	    size_t len = 0;
-        while (( *ptr != 0 ) && ( len < ( limit - 1 ) ))//we use limit -1 to leave room for the null terminator
+        while (( *ptr != 0 ) && ( len < ( limit - 1 ) ))//we use limit -1 to leave room for the nullptr terminator
         {
             size_t clen = UTF8_convertCharToUTF16( ptr, ret );
             ptr += clen;

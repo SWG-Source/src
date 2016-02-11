@@ -94,10 +94,10 @@ Tag SharedTerrainSurfaceObjectTemplate::getTemplateVersion(void) const
  */
 Tag SharedTerrainSurfaceObjectTemplate::getHighestTemplateVersion(void) const
 {
-	if (m_baseData == NULL)
+	if (m_baseData == nullptr)
 		return m_templateVersion;
 	const SharedTerrainSurfaceObjectTemplate * base = dynamic_cast<const SharedTerrainSurfaceObjectTemplate *>(m_baseData);
-	if (base == NULL)
+	if (base == nullptr)
 		return m_templateVersion;
 	return std::max(m_templateVersion, base->getHighestTemplateVersion());
 } // SharedTerrainSurfaceObjectTemplate::getHighestTemplateVersion
@@ -111,26 +111,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const SharedTerrainSurfaceObjectTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const SharedTerrainSurfaceObjectTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedTerrainSurfaceObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getCover(true);
 #endif
 	}
 
 	if (!m_cover.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter cover in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter cover has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter cover has not been defined in template %s!", DataResource::getName()));
 			return base->getCover();
 		}
 	}
@@ -140,9 +140,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getCover();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -159,7 +159,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 		if (testDataValue == value)
 			DEBUG_WARNING(true, ("Template %s, parameter cover is returning same value as base template.", DataResource::getName()));
@@ -177,26 +177,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const SharedTerrainSurfaceObjectTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const SharedTerrainSurfaceObjectTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedTerrainSurfaceObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getCoverMin(true);
 #endif
 	}
 
 	if (!m_cover.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter cover in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter cover has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter cover has not been defined in template %s!", DataResource::getName()));
 			return base->getCoverMin();
 		}
 	}
@@ -206,9 +206,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getCoverMin();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -225,7 +225,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 		if (testDataValue == value)
 			DEBUG_WARNING(true, ("Template %s, parameter cover is returning same value as base template.", DataResource::getName()));
@@ -243,26 +243,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const SharedTerrainSurfaceObjectTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const SharedTerrainSurfaceObjectTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedTerrainSurfaceObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getCoverMax(true);
 #endif
 	}
 
 	if (!m_cover.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter cover in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter cover has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter cover has not been defined in template %s!", DataResource::getName()));
 			return base->getCoverMax();
 		}
 	}
@@ -272,9 +272,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getCoverMax();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -291,7 +291,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 		if (testDataValue == value)
 			DEBUG_WARNING(true, ("Template %s, parameter cover is returning same value as base template.", DataResource::getName()));
@@ -309,33 +309,33 @@ std::string testDataValue = DefaultString;
 UNREF(testData);
 #endif
 
-	const SharedTerrainSurfaceObjectTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const SharedTerrainSurfaceObjectTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedTerrainSurfaceObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getSurfaceType(true);
 #endif
 	}
 
 	if (!m_surfaceType.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter surfaceType in template %s", DataResource::getName()));
 			return DefaultString;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter surfaceType has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter surfaceType has not been defined in template %s!", DataResource::getName()));
 			return base->getSurfaceType();
 		}
 	}
 
 	const std::string & value = m_surfaceType.getValue();
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 		if (testDataValue == value)
 			DEBUG_WARNING(true, ("Template %s, parameter surfaceType is returning same value as base template.", DataResource::getName()));
@@ -383,12 +383,12 @@ char paramName[MAX_NAME_SIZE];
 		file.read_string(baseFilename);
 		file.exitChunk();
 		const ObjectTemplate *base = ObjectTemplateList::fetch(baseFilename);
-		DEBUG_WARNING(base == NULL, ("was unable to load base template %s", baseFilename.c_str()));
-		if (m_baseData == base && base != NULL)
+		DEBUG_WARNING(base == nullptr, ("was unable to load base template %s", baseFilename.c_str()));
+		if (m_baseData == base && base != nullptr)
 			base->releaseReference();
 		else
 		{
-			if (m_baseData != NULL)
+			if (m_baseData != nullptr)
 				m_baseData->releaseReference();
 			m_baseData = base;
 		}

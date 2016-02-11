@@ -803,7 +803,7 @@ TerrainGeneratorWaterType ProceduralTerrainAppearance::getWaterType (const Vecto
 
 bool ProceduralTerrainAppearance::getWater (const int chunkX, const int chunkZ) const
 {
-	if (proceduralTerrainAppearanceTemplate->getBakedTerrain () != NULL)
+	if (proceduralTerrainAppearanceTemplate->getBakedTerrain () != nullptr)
 		return proceduralTerrainAppearanceTemplate->getBakedTerrain ()->getWater (chunkX, chunkZ);
 
 	return false;
@@ -813,7 +813,7 @@ bool ProceduralTerrainAppearance::getWater (const int chunkX, const int chunkZ) 
 
 bool ProceduralTerrainAppearance::getSlope (const int chunkX, const int chunkZ) const
 {
-	if (proceduralTerrainAppearanceTemplate->getBakedTerrain () != NULL)
+	if (proceduralTerrainAppearanceTemplate->getBakedTerrain () != nullptr)
 		return proceduralTerrainAppearanceTemplate->getBakedTerrain ()->getSlope (chunkX, chunkZ);
 
 	return false;
@@ -823,7 +823,7 @@ bool ProceduralTerrainAppearance::getSlope (const int chunkX, const int chunkZ) 
 
 bool ProceduralTerrainAppearance::getWater (const Rectangle2d& rectangle) const
 {
-	if (proceduralTerrainAppearanceTemplate->getBakedTerrain () != NULL)
+	if (proceduralTerrainAppearanceTemplate->getBakedTerrain () != nullptr)
 		return proceduralTerrainAppearanceTemplate->getBakedTerrain ()->getWater (rectangle);
 
 	return false;
@@ -833,7 +833,7 @@ bool ProceduralTerrainAppearance::getWater (const Rectangle2d& rectangle) const
 
 bool ProceduralTerrainAppearance::getSlope (const Rectangle2d& rectangle) const
 {
-	if (proceduralTerrainAppearanceTemplate->getBakedTerrain () != NULL)
+	if (proceduralTerrainAppearanceTemplate->getBakedTerrain () != nullptr)
 		return proceduralTerrainAppearanceTemplate->getBakedTerrain ()->getSlope (rectangle);
 
 	return false;
@@ -877,7 +877,7 @@ float ProceduralTerrainAppearance::alter (float elapsedTime)
 #ifdef _DEBUG
 			const char* const appearanceTemplateName = object->getAppearance () && object->getAppearance ()->getAppearanceTemplate () ? object->getAppearance ()->getAppearanceTemplate ()->getCrcName ().getString () : 0;
 			const Vector position = object->getPosition_w ();
-			DEBUG_REPORT_LOG (ms_logFloraCreation, ("flora delete: <%1.2f, %1.2f> [%s]\n", position.x, position.z, appearanceTemplateName ? appearanceTemplateName : "null"));
+			DEBUG_REPORT_LOG (ms_logFloraCreation, ("flora delete: <%1.2f, %1.2f> [%s]\n", position.x, position.z, appearanceTemplateName ? appearanceTemplateName : "nullptr"));
 #endif
 			delete object;
 		}
@@ -1054,7 +1054,7 @@ bool ProceduralTerrainAppearance::isPassableForceChunkCreation(const Vector& pos
 
 #ifndef WIN32
 	if (!chunk)
-		LOG("PTA::isPFCC", ("(%g,%g,%g) chunk is NULL, %d/%d/%d/%d", position.x, position.y, position.z, getNumberOfChunks(), maximumNumberOfChunksAllowed, getNumberOfReferenceObjects(), maximumNumberOfChunksAlongSide));
+		LOG("PTA::isPFCC", ("(%g,%g,%g) chunk is nullptr, %d/%d/%d/%d", position.x, position.y, position.z, getNumberOfChunks(), maximumNumberOfChunksAllowed, getNumberOfReferenceObjects(), maximumNumberOfChunksAlongSide));
 #endif
 
 	return isPassable;
@@ -1183,7 +1183,7 @@ void ProceduralTerrainAppearance::_legacyCreateFlora(const Chunk* const chunk)
 					object->yaw_o (yaw);
 					Appearance * const appearance = AppearanceTemplateList::createAppearance (FileName (FileName::P_appearance, data.familyChildData->appearanceTemplateName));
 
-					if (appearance != NULL) {
+					if (appearance != nullptr) {
 						appearance->setKeepAlive (true);
 						object->setAppearance (appearance);
 						object->setScale (Vector::xyz111 * scale);						
@@ -1340,7 +1340,7 @@ void ProceduralTerrainAppearance::createFlora (const Chunk* const chunk)
 		object->yaw_o (yaw);
 		Appearance * const appearance = AppearanceTemplateList::createAppearance (FileName (FileName::P_appearance, data.familyChildData->appearanceTemplateName));
 
-		if (appearance != NULL) {
+		if (appearance != nullptr) {
 			appearance->setKeepAlive (true);
 			object->setAppearance (appearance);
 			object->setScale (Vector::xyz111 * scale);						
@@ -1403,7 +1403,7 @@ void ProceduralTerrainAppearance::destroyFlora (const Chunk* const chunk)
 		{
 #ifdef _DEBUG
 			const char* const appearanceTemplateName = object->getAppearance () && object->getAppearance ()->getAppearanceTemplate () ? object->getAppearance ()->getAppearanceTemplate ()->getCrcName ().getString () : 0;
-			DEBUG_REPORT_LOG (ms_logFloraCreation, ("flora cache: <%1.2f, %1.2f> [%s]\n", position.x, position.z, appearanceTemplateName ? appearanceTemplateName : "null"));
+			DEBUG_REPORT_LOG (ms_logFloraCreation, ("flora cache: <%1.2f, %1.2f> [%s]\n", position.x, position.z, appearanceTemplateName ? appearanceTemplateName : "nullptr"));
 #endif
 			iter->second->removeFromWorld ();
 			IGNORE_RETURN (m_cachedFloraMap->insert (std::make_pair (key, iter->second)));

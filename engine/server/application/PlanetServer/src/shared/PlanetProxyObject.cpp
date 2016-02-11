@@ -41,9 +41,9 @@ PlanetProxyObject::PlanetProxyObject (const NetworkId &objectId) :
 		m_authoritativeServer(0),
 		m_lastReportedServer(0),
 		m_interestRadius(0),
-		m_quadtreeNode(NULL),
+		m_quadtreeNode(nullptr),
 		m_authTransferTimeMs(Clock::timeMs()),
-		m_contents(NULL),
+		m_contents(nullptr),
 		m_level(0),
 		m_hibernating(false),
 		m_templateCrc(0),
@@ -137,9 +137,9 @@ void PlanetProxyObject::update(int x, int y, int z, NetworkId containedBy, uint3
 		if (ConfigPlanetServer::getEnableContentsChecking() && (m_containedBy!=containedBy))
 			updateContentsTracking(containedBy);
 		
-		bool const firstUpdate = (m_quadtreeNode == NULL);
+		bool const firstUpdate = (m_quadtreeNode == nullptr);
 
-		if (m_quadtreeNode!=NULL) // if this is the first update for this object, m_quadtreeNode will be NULL because it hasn't been placed anywhere yet
+		if (m_quadtreeNode!=nullptr) // if this is the first update for this object, m_quadtreeNode will be nullptr because it hasn't been placed anywhere yet
 		{
 			removeServerStatistics();
 

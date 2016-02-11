@@ -66,9 +66,9 @@ bool ConsoleCommandParserSpaceAi::performParsing(const NetworkId & userId, const
 		AiShipController::setAttackingEnabled(true);
 
 		Object * const object = NetworkIdManager::getObjectById(userId);
-		ServerObject * const serverObject = (object != NULL) ? object->asServerObject() : NULL;
+		ServerObject * const serverObject = (object != nullptr) ? object->asServerObject() : nullptr;
 		
-		if (serverObject != NULL)
+		if (serverObject != nullptr)
 		{
 			Chat::sendSystemMessage(*serverObject, Unicode::narrowToWide("[WAR] AI will now attack."), Unicode::emptyString);
 		}
@@ -80,9 +80,9 @@ bool ConsoleCommandParserSpaceAi::performParsing(const NetworkId & userId, const
 		AiShipController::setAttackingEnabled(false);
 
 		Object * const object = NetworkIdManager::getObjectById(userId);
-		ServerObject * const serverObject = (object != NULL) ? object->asServerObject() : NULL;
+		ServerObject * const serverObject = (object != nullptr) ? object->asServerObject() : nullptr;
 		
-		if (serverObject != NULL)
+		if (serverObject != nullptr)
 		{
 			Chat::sendSystemMessage(*serverObject, Unicode::narrowToWide("[PEACE] AI will no longer attack."), Unicode::emptyString);
 		}
@@ -92,20 +92,20 @@ bool ConsoleCommandParserSpaceAi::performParsing(const NetworkId & userId, const
 	else if (isAbbrev(argv[0], "path"))
 	{
 		Object * const object = NetworkIdManager::getObjectById(userId);
-		ServerObject * const serverObject = (object != NULL) ? object->asServerObject() : NULL;
+		ServerObject * const serverObject = (object != nullptr) ? object->asServerObject() : nullptr;
 
-		if (   (serverObject != NULL)
+		if (   (serverObject != nullptr)
 		    && (argv.size () > 1))
 		{
 			NetworkId networkId(Unicode::wideToNarrow(argv[1]));
 
 			AiShipController * const aiShipController = AiShipController::getAiShipController(networkId);
 
-			if (aiShipController != NULL)
+			if (aiShipController != nullptr)
 			{
 				SpacePath * const spacePath = aiShipController->getPath();
 
-				if (spacePath != NULL)
+				if (spacePath != nullptr)
 				{
 					SpacePath::TransformList const & transformList = spacePath->getTransformList();
 					SpacePath::TransformList::const_iterator iterTransformList = transformList.begin();
@@ -127,7 +127,7 @@ bool ConsoleCommandParserSpaceAi::performParsing(const NetworkId & userId, const
 				}
 				else
 				{
-					Chat::sendSystemMessage(*serverObject, Unicode::narrowToWide("NULL path"), Unicode::emptyString);
+					Chat::sendSystemMessage(*serverObject, Unicode::narrowToWide("nullptr path"), Unicode::emptyString);
 				}
 			}
 			else
@@ -141,9 +141,9 @@ bool ConsoleCommandParserSpaceAi::performParsing(const NetworkId & userId, const
 	else if (isAbbrev(argv[0], "reloaddata"))
 	{
 		Object * const object = NetworkIdManager::getObjectById(userId);
-		ServerObject * const serverObject = (object != NULL) ? object->asServerObject() : NULL;
+		ServerObject * const serverObject = (object != nullptr) ? object->asServerObject() : nullptr;
 
-		if (serverObject != NULL)
+		if (serverObject != nullptr)
 		{
 			AiShipPilotData::reload();
 
@@ -156,10 +156,10 @@ bool ConsoleCommandParserSpaceAi::performParsing(const NetworkId & userId, const
 	else if (isAbbrev(argv[0], "clientDebug"))
 	{
 		Object * const object = NetworkIdManager::getObjectById(userId);
-		ServerObject * const serverObject = (object != NULL) ? object->asServerObject() : NULL;
+		ServerObject * const serverObject = (object != nullptr) ? object->asServerObject() : nullptr;
 		int temp;
 		
-		if (serverObject != NULL)
+		if (serverObject != nullptr)
 		{
 		    if (   serverObject->getObjVars().getItem("ai_debug_string", temp)
 		        && (temp > 0))
@@ -180,7 +180,7 @@ bool ConsoleCommandParserSpaceAi::performParsing(const NetworkId & userId, const
 
 					Client * const client = serverObject->getClient();
 
-					if (client != NULL)
+					if (client != nullptr)
 					{
 						AiDebugString aiDebugString;
 						aiDebugString.enableClearClientFlag();
@@ -209,9 +209,9 @@ bool ConsoleCommandParserSpaceAi::performParsing(const NetworkId & userId, const
 	else if (isAbbrev(argv[0], "serverDebug"))
 	{
 		Object * const object = NetworkIdManager::getObjectById(userId);
-		ServerObject * const serverObject = (object != NULL) ? object->asServerObject() : NULL;
+		ServerObject * const serverObject = (object != nullptr) ? object->asServerObject() : nullptr;
 
-		if (serverObject != NULL)
+		if (serverObject != nullptr)
 		{
 			AiShipController::setClientDebugEnabled(!AiShipController::isClientDebugEnabled());
 			
@@ -225,9 +225,9 @@ bool ConsoleCommandParserSpaceAi::performParsing(const NetworkId & userId, const
 	else if (isAbbrev(argv[0], "clientDebugText"))
 	{
 		Object * const object = NetworkIdManager::getObjectById(userId);
-		ServerObject * const serverObject = (object != NULL) ? object->asServerObject() : NULL;
+		ServerObject * const serverObject = (object != nullptr) ? object->asServerObject() : nullptr;
 
-		if (serverObject != NULL)
+		if (serverObject != nullptr)
 		{
 			AiDebugString::setTextEnabled(!AiDebugString::isTextEnabled());
 			
@@ -241,12 +241,12 @@ bool ConsoleCommandParserSpaceAi::performParsing(const NetworkId & userId, const
 	else if (isAbbrev(argv[0], "maneuver"))
 	{
 		Object * const object = NetworkIdManager::getObjectById(userId);
-		ServerObject * const serverObject = (object != NULL) ? object->asServerObject() : NULL;
-		CreatureObject const * const creatureObject = serverObject ? serverObject->asCreatureObject() : NULL;
+		ServerObject * const serverObject = (object != nullptr) ? object->asServerObject() : nullptr;
+		CreatureObject const * const creatureObject = serverObject ? serverObject->asCreatureObject() : nullptr;
 
 		if (serverObject)
 		{
-			if ((creatureObject != NULL) && (argv.size () > 1))
+			if ((creatureObject != nullptr) && (argv.size () > 1))
 			{
 				AiShipController const * const lookAtAiShipController = AiShipController::getAiShipController(creatureObject->getLookAtTarget());
 				
@@ -295,9 +295,9 @@ bool ConsoleCommandParserSpaceAi::performParsing(const NetworkId & userId, const
 	else if (isAbbrev(argv[0], "fastAxis"))
 	{
 		Object * const object = NetworkIdManager::getObjectById(userId);
-		ServerObject * const serverObject = (object != NULL) ? object->asServerObject() : NULL;
+		ServerObject * const serverObject = (object != nullptr) ? object->asServerObject() : nullptr;
 		
-		if (serverObject != NULL)
+		if (serverObject != nullptr)
 		{
 			Unicode::String systemMessage;
 

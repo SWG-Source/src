@@ -210,19 +210,19 @@ inline void TemplateBase<DataType, ReturnType>::cleanData(void)
 					++iter)
 				{
 					delete (*iter).value;
-					(*iter).value = NULL;
+					(*iter).value = nullptr;
 				}
 				delete m_data.weightedList;
-				m_data.weightedList = NULL;
+				m_data.weightedList = nullptr;
 			}
 			break;
 		case RANGE:
 			delete m_data.range;
-			m_data.range = NULL;
+			m_data.range = nullptr;
 			break;
 		case DIE_ROLL:
 			delete m_data.dieRoll;
-			m_data.dieRoll = NULL;
+			m_data.dieRoll = nullptr;
 			break;
 		case NONE:
 		default:
@@ -288,7 +288,7 @@ inline const typename TemplateBase<DataType, ReturnType>::Range * TemplateBase<D
 {
 	if (m_dataType == RANGE)
 		return m_data.range;
-	return NULL;
+	return nullptr;
 }
 
 template <class DataType, class ReturnType>
@@ -296,7 +296,7 @@ inline const typename TemplateBase<DataType, ReturnType>::DieRoll * TemplateBase
 {
 	if (m_dataType == DIE_ROLL)
 		return m_data.dieRoll;
-	return NULL;
+	return nullptr;
 }
 
 template <class DataType, class ReturnType>
@@ -304,7 +304,7 @@ inline const typename TemplateBase<DataType, ReturnType>::WeightedList * Templat
 {
 	if (m_dataType == WEIGHTED_LIST)
 		return m_data.weightedList;
-	return NULL;
+	return nullptr;
 }
 
 template <class DataType, class ReturnType>
@@ -541,7 +541,7 @@ inline const IntegerParam::DieRoll * IntegerParam::getDieRollStruct(void) const
 	}
 	else
 	{
-		return NULL;
+		return nullptr;
 	}
 }
 
@@ -553,7 +553,7 @@ inline const IntegerParam::Range * IntegerParam::getRangeStruct(void) const
 	}
 	else
 	{
-		return NULL;
+		return nullptr;
 	}
 }
 
@@ -637,7 +637,7 @@ inline const FloatParam::Range * FloatParam::getRangeStruct() const
 	}
 	else
 	{
-		return NULL;
+		return nullptr;
 	}
 }
 
@@ -765,7 +765,7 @@ class TriggerVolumeData
 {
 	friend class TriggerVolumeParam;
 public:
-	TriggerVolumeData(void) : m_name(NULL), m_radius(0.0f) {}
+	TriggerVolumeData(void) : m_name(nullptr), m_radius(0.0f) {}
 	TriggerVolumeData(const std::string & name, float radius) : m_name(&name), m_radius(radius) {}
 
 	const std::string & getName(void) const;
@@ -962,7 +962,7 @@ inline TemplateBase<SP *, SP *> *StructParam<SP>::createNewParam(void)
 template <class SP>
 inline StructParam<SP>::StructParam(void) : TemplateBase<SP *, SP *>()
 {
-	this->m_dataSingle = NULL;
+	this->m_dataSingle = nullptr;
 }	// StructParam<SP>::StructParam
 
 /**
@@ -974,7 +974,7 @@ inline StructParam<SP>::~StructParam()
 	if (this->m_dataType == TemplateBase<SP *, SP *>::SINGLE)
 	{
 		delete this->m_dataSingle;
-		this->m_dataSingle = NULL;
+		this->m_dataSingle = nullptr;
 		this->m_dataType = TemplateBase<SP *, SP *>::NONE;
 	}
 }	// StructParam<SP>::~StructParam
@@ -986,7 +986,7 @@ template <class SP>
 inline void StructParam<SP>::cleanSingleParam(void)
 {
 	delete this->m_dataSingle;
-	this->m_dataSingle = NULL;
+	this->m_dataSingle = nullptr;
 }	// StructParam<SP>::cleanSingleParam
 
 /**

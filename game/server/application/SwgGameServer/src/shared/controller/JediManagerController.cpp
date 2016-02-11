@@ -40,7 +40,7 @@ void JediManagerController::handleMessage (const int message, const float value,
 	case CM_removeJedi:
 		{
 			const MessageQueueGenericValueType<NetworkId> * const msg = safe_cast<const MessageQueueGenericValueType<NetworkId> *>(data);
-			if (msg != NULL)
+			if (msg != nullptr)
 			{
 				owner->removeJedi(msg->getValue());
 			}
@@ -49,7 +49,7 @@ void JediManagerController::handleMessage (const int message, const float value,
 	case CM_addJedi:
 		{
 			const MessageQueueJediData * const msg = safe_cast<const MessageQueueJediData *>(data);
-			if (msg != NULL)
+			if (msg != nullptr)
 			{
 				owner->addJedi(msg->getId(), 
 				               msg->getName(),
@@ -69,7 +69,7 @@ void JediManagerController::handleMessage (const int message, const float value,
 	case CM_updateJedi:
 		{
 			const MessageQueueJediData * const msg = safe_cast<const MessageQueueJediData *>(data);
-			if (msg != NULL)
+			if (msg != nullptr)
 			{
 				owner->updateJedi(msg->getId(), 
 				                  msg->getVisibility(),
@@ -83,7 +83,7 @@ void JediManagerController::handleMessage (const int message, const float value,
 	case CM_updateJediState:
 		{
 			const MessageQueueGenericValueType<std::pair<NetworkId, int> > * const msg = safe_cast<const MessageQueueGenericValueType<std::pair<NetworkId, int> > *>(data);
-			if (msg != NULL)
+			if (msg != nullptr)
 			{
 				owner->updateJedi(msg->getValue().first,
 				                  static_cast<JediState>(msg->getValue().second)
@@ -95,7 +95,7 @@ void JediManagerController::handleMessage (const int message, const float value,
 		{
 /*
 			const MessageQueueGenericValueType<std::pair<NetworkId, std::vector<NetworkId> > > * const msg = safe_cast<const MessageQueueGenericValueType<std::pair<NetworkId, std::vector<NetworkId> > > *>(data);
-			if (msg != NULL)
+			if (msg != nullptr)
 			{
 				owner->updateJedi(msg->getValue().first,
 				                  msg->getValue().second
@@ -107,7 +107,7 @@ void JediManagerController::handleMessage (const int message, const float value,
 	case CM_updateJediLocation:
 		{
 			const MessageQueueJediLocation * const msg = safe_cast<const MessageQueueJediLocation *>(data);
-			if (msg != NULL)
+			if (msg != nullptr)
 			{
 				owner->updateJediLocation(msg->getId(), 
 				                          msg->getLocation(),
@@ -119,7 +119,7 @@ void JediManagerController::handleMessage (const int message, const float value,
 	case CM_setJediOffline:
 		{
 			const MessageQueueJediLocation * const msg = safe_cast<const MessageQueueJediLocation *>(data);
-			if (msg != NULL)
+			if (msg != nullptr)
 			{
 				owner->setJediOffline(msg->getId(), 
 				                      msg->getLocation(),
@@ -131,7 +131,7 @@ void JediManagerController::handleMessage (const int message, const float value,
 	case CM_requestJediBounty:
 		{
 			const MessageQueueRequestJediBounty * const msg = safe_cast<const MessageQueueRequestJediBounty *>(data);
-			if (msg != NULL)
+			if (msg != nullptr)
 			{
 				owner->requestJediBounty(msg->getTargetId(), 
 				                         msg->getHunterId(),
@@ -145,7 +145,7 @@ void JediManagerController::handleMessage (const int message, const float value,
 	case CM_removeJediBounty:
 		{
 			const MessageQueueGenericValueType<std::pair<NetworkId, NetworkId> > * const msg = safe_cast<const MessageQueueGenericValueType<std::pair<NetworkId, NetworkId> > *>(data);
-			if (msg != NULL)
+			if (msg != nullptr)
 			{
 				owner->removeJediBounty(msg->getValue().first, msg->getValue().second);
 			}	
@@ -154,7 +154,7 @@ void JediManagerController::handleMessage (const int message, const float value,
 	case CM_removeAllJediBounties:
 		{
 			const MessageQueueGenericValueType<NetworkId> * const msg = safe_cast<const MessageQueueGenericValueType<NetworkId> *>(data);
-			if (msg != NULL)
+			if (msg != nullptr)
 			{
 				owner->removeAllJediBounties(msg->getValue());
 			}	
@@ -163,7 +163,7 @@ void JediManagerController::handleMessage (const int message, const float value,
 	case CM_updateJediSpentJediSkillPoints:
 		{
 			const MessageQueueGenericValueType<std::pair<NetworkId, int> > * const msg = safe_cast<const MessageQueueGenericValueType<std::pair<NetworkId, int> > *>(data);
-			if (msg != NULL)
+			if (msg != nullptr)
 			{
 				owner->updateJediSpentJediSkillPoints(msg->getValue().first, msg->getValue().second);
 			}
@@ -172,7 +172,7 @@ void JediManagerController::handleMessage (const int message, const float value,
 	case CM_updateJediFaction:
 		{
 			const MessageQueueGenericValueType<std::pair<NetworkId, int> > * const msg = safe_cast<const MessageQueueGenericValueType<std::pair<NetworkId, int> > *>(data);
-			if (msg != NULL)
+			if (msg != nullptr)
 			{
 				owner->updateJediFaction(msg->getValue().first, msg->getValue().second);
 			}
@@ -181,7 +181,7 @@ void JediManagerController::handleMessage (const int message, const float value,
 	case CM_updateJediScriptData:
 		{
 			const MessageQueueGenericValueType<std::pair<NetworkId, std::pair<std::string, int> > > * const msg = safe_cast<const MessageQueueGenericValueType<std::pair<NetworkId, std::pair<std::string, int> > > *>(data);
-			if (msg != NULL)
+			if (msg != nullptr)
 			{
 				owner->updateJediScriptData(msg->getValue().first, msg->getValue().second.first, msg->getValue().second.second);
 			}
@@ -190,7 +190,7 @@ void JediManagerController::handleMessage (const int message, const float value,
 	case CM_removeJediScriptData:
 		{
 			const MessageQueueGenericValueType<std::pair<NetworkId, std::string> > * const msg = safe_cast<const MessageQueueGenericValueType<std::pair<NetworkId, std::string> > *>(data);
-			if (msg != NULL)
+			if (msg != nullptr)
 			{
 				owner->removeJediScriptData(msg->getValue().first, msg->getValue().second);
 			}

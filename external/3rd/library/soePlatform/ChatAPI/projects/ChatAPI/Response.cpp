@@ -20,7 +20,7 @@ using namespace Plat_Unicode;
 
 ResLoginAvatar::ResLoginAvatar(void *user, int avatarLoginPriority)
 : GenericResponse(RESPONSE_LOGINAVATAR, CHATRESULT_TIMEOUT, user),
-  m_avatar(NULL),
+  m_avatar(nullptr),
   m_submittedPriority(avatarLoginPriority),
   m_requiredPriority(INT_MAX)
 {
@@ -63,7 +63,7 @@ void ResLoginAvatar::unpack(ByteStream::ReadIterator &iter)
 
 ResTemporaryAvatar::ResTemporaryAvatar(void *user)
 : GenericResponse(RESPONSE_TEMPORARYAVATAR, CHATRESULT_TIMEOUT, user)
-, m_avatar(NULL)
+, m_avatar(nullptr)
 {
 }
 
@@ -110,7 +110,7 @@ void ResDestroyAvatar::unpack(ByteStream::ReadIterator &iter)
 
 ResGetAvatar::ResGetAvatar(void *user)
 : GenericResponse(RESPONSE_GETAVATAR, CHATRESULT_TIMEOUT, user),
-  m_avatar(NULL)
+  m_avatar(nullptr)
 {
 }
 
@@ -144,7 +144,7 @@ void ResGetAvatar::unpack(ByteStream::ReadIterator &iter)
 
 ResGetAnyAvatar::ResGetAnyAvatar(void* user)
     : GenericResponse( RESPONSE_GETANYAVATAR, CHATRESULT_TIMEOUT, user )
-    , m_avatar( NULL )
+    , m_avatar( nullptr )
 {
 }
 
@@ -181,8 +181,8 @@ void ResGetAnyAvatar::unpack(Base::ByteStream::ReadIterator& iter)
 ResAvatarList::ResAvatarList(void *user)
 : GenericResponse(RESPONSE_AVATARLIST, CHATRESULT_TIMEOUT, user)
 , m_listLength(0)
-, m_avatarList(NULL)
-, m_cores(NULL)
+, m_avatarList(nullptr)
+, m_cores(nullptr)
 {
 }
 
@@ -214,7 +214,7 @@ void ResAvatarList::unpack(ByteStream::ReadIterator &iter)
 
 ResSetAvatarAttributes::ResSetAvatarAttributes(void *user)
 : GenericResponse(RESPONSE_SETAVATARATTRIBUTES, CHATRESULT_TIMEOUT, user),
-  m_avatar(NULL)
+  m_avatar(nullptr)
 {
 }
 
@@ -248,7 +248,7 @@ void ResSetAvatarAttributes::unpack(ByteStream::ReadIterator &iter)
 
 ResSetAvatarStatusMessage::ResSetAvatarStatusMessage(void *user)
 : GenericResponse(RESPONSE_SETSTATUSMESSAGE, CHATRESULT_TIMEOUT, user),
-m_avatar(NULL)
+m_avatar(nullptr)
 {
 }
 
@@ -285,7 +285,7 @@ void ResSetAvatarStatusMessage::unpack(ByteStream::ReadIterator &iter)
 
 ResSetAvatarForwardingEmail::ResSetAvatarForwardingEmail(void *user)
 : GenericResponse(RESPONSE_SETAVATAREMAIL, CHATRESULT_TIMEOUT, user),
-  m_avatar(NULL)
+  m_avatar(nullptr)
 {
 }
 
@@ -312,7 +312,7 @@ void ResSetAvatarForwardingEmail::unpack(ByteStream::ReadIterator &iter)
 
 ResSetAvatarInboxLimit::ResSetAvatarInboxLimit(void *user)
 : GenericResponse(RESPONSE_SETAVATARINBOXLIMIT, CHATRESULT_TIMEOUT, user),
-  m_avatar(NULL)
+  m_avatar(nullptr)
 {
 }
 
@@ -340,7 +340,7 @@ void ResSetAvatarInboxLimit::unpack(ByteStream::ReadIterator &iter)
 ResSearchAvatarKeywords::ResSearchAvatarKeywords(void *user)
 : GenericResponse(RESPONSE_SETAVATARKEYWORDS, CHATRESULT_TIMEOUT, user),
   m_numMatches(0), 
-  m_avatarMatches(NULL)
+  m_avatarMatches(nullptr)
 {
 }
 
@@ -388,8 +388,8 @@ void ResSetAvatarKeywords::unpack(ByteStream::ReadIterator &iter)
 ResGetAvatarKeywords::ResGetAvatarKeywords(void *user, unsigned avatarID)
 : GenericResponse(RESPONSE_GETAVATARKEYWORDS, CHATRESULT_TIMEOUT, user),
   m_avatarID(avatarID),
-  m_keywordList(NULL),
-  m_chatStrList(NULL)
+  m_keywordList(nullptr),
+  m_chatStrList(nullptr)
 {
 }
 
@@ -420,7 +420,7 @@ void ResGetAvatarKeywords::unpack(ByteStream::ReadIterator &iter)
 
 ResGetRoom::ResGetRoom(void *user)
 : GenericResponse(RESPONSE_GETROOM, CHATRESULT_TIMEOUT, user),
-  m_room(NULL),
+  m_room(nullptr),
   m_numExtraRooms(0)
 {
 }
@@ -448,7 +448,7 @@ void ResGetRoom::unpack(ByteStream::ReadIterator &iter)
 ResCreateRoom::ResCreateRoom(void *user, unsigned avatarID)
 : GenericResponse(RESPONSE_CREATEROOM, CHATRESULT_TIMEOUT, user),
   m_srcAvatarID(avatarID),
-  m_room(NULL),
+  m_room(nullptr),
   m_numExtraRooms(0)
 {
 }
@@ -637,8 +637,8 @@ ResFriendStatus::ResFriendStatus(void *user, unsigned avatarID)
 : GenericResponse(RESPONSE_FRIENDSTATUS, CHATRESULT_TIMEOUT, user),
   m_avatarID(avatarID),
   m_listLength(0),
-  m_friendList(NULL),
-  m_cores(NULL)
+  m_friendList(nullptr),
+  m_cores(nullptr)
 {
 }
 
@@ -704,8 +704,8 @@ ResIgnoreStatus::ResIgnoreStatus(void *user, unsigned avatarID)
 : GenericResponse(RESPONSE_IGNORESTATUS, CHATRESULT_TIMEOUT, user),
   m_avatarID(avatarID),
   m_listLength(0),
-  m_ignoreList(NULL),
-  m_cores(NULL)
+  m_ignoreList(nullptr),
+  m_cores(nullptr)
 {
 }
 
@@ -740,7 +740,7 @@ ResEnterRoom::ResEnterRoom(void *user, unsigned avatarID, const ChatUnicodeStrin
   m_avatarID(avatarID),
   m_destAddress(destAddress.string_data, destAddress.string_length),
   m_gotRoomObj(false),
-  m_room(NULL),
+  m_room(nullptr),
   m_numExtraRooms(0)
 {
 }
@@ -1012,7 +1012,7 @@ void ResChangeRoomOwner::unpack(ByteStream::ReadIterator &iter)
 ResGetRoomSummaries::ResGetRoomSummaries(void *user)
 : GenericResponse(RESPONSE_GETROOMSUMMARIES, CHATRESULT_TIMEOUT, user),
   m_numRooms(0),
-  m_roomSummaries(NULL)
+  m_roomSummaries(nullptr)
 {
 }
 
@@ -1132,8 +1132,8 @@ ResGetPersistentMessage::ResGetPersistentMessage(void *user, unsigned srcAvatarI
 : GenericResponse(RESPONSE_GETPERSISTENTMESSAGE, CHATRESULT_TIMEOUT, user),
   m_srcAvatarID(srcAvatarID),
   m_messageID(messageID),
-  m_core(NULL),
-  m_header(NULL)
+  m_core(nullptr),
+  m_header(nullptr)
 {
 }
 
@@ -1167,7 +1167,7 @@ void ResGetPersistentMessage::unpack(ByteStream::ReadIterator &iter)
 ResGetMultiplePersistentMessages::ResGetMultiplePersistentMessages(void *user, unsigned srcAvatarID)
 : GenericResponse(RESPONSE_GETMULTIPLEPERSISTENTMESSAGES, CHATRESULT_TIMEOUT, user),
   m_srcAvatarID(srcAvatarID),
-  m_messages(NULL)
+  m_messages(nullptr)
 {
 }
 
@@ -1217,8 +1217,8 @@ ResGetPersistentHeaders::ResGetPersistentHeaders(void *user, unsigned srcAvatarI
 : GenericResponse(RESPONSE_GETPERSISTENTHEADERS, CHATRESULT_TIMEOUT, user),
   m_srcAvatarID(srcAvatarID),
   m_listLength(0),
-  m_headers(NULL),
-  m_cores(NULL)
+  m_headers(nullptr),
+  m_cores(nullptr)
 {
 }
 
@@ -1263,8 +1263,8 @@ ResGetPartialPersistentHeaders::ResGetPartialPersistentHeaders(void *user, unsig
 : GenericResponse(RESPONSE_PARTIALPERSISTENTHEADERS, CHATRESULT_TIMEOUT, user),
   m_srcAvatarID(srcAvatarID),
   m_listLength(0),
-  m_headers(NULL),
-  m_cores(NULL)
+  m_headers(nullptr),
+  m_cores(nullptr)
 {
 }
 
@@ -1396,7 +1396,7 @@ void ResUnregisterRoom::unpack(ByteStream::ReadIterator &iter)
 }
 
 ResFailoverReloginAvatar::ResFailoverReloginAvatar(unsigned avatarID)
-: GenericResponse(RESPONSE_FAILOVER_RELOGINAVATAR, CHATRESULT_TIMEOUT, NULL),
+: GenericResponse(RESPONSE_FAILOVER_RELOGINAVATAR, CHATRESULT_TIMEOUT, nullptr),
   m_avatarID(avatarID)
 {
 }
@@ -1414,9 +1414,9 @@ void ResFailoverReloginAvatar::unpack(ByteStream::ReadIterator &iter)
 }
 
 ResFailoverRecreateRoom::ResFailoverRecreateRoom(unsigned roomID, bool forced)
-: GenericResponse(RESPONSE_FAILOVER_RECREATEROOM, CHATRESULT_TIMEOUT, NULL),
+: GenericResponse(RESPONSE_FAILOVER_RECREATEROOM, CHATRESULT_TIMEOUT, nullptr),
   m_roomID(roomID),
-  m_room(NULL),
+  m_room(nullptr),
   m_forced(forced)
 {
 }
@@ -1478,7 +1478,7 @@ void ResGetFanClubHandle::unpack(ByteStream::ReadIterator &iter)
 ResFindAvatarByUID::ResFindAvatarByUID(void *user)
 : GenericResponse(RESPONSE_FINDAVATARBYUID, CHATRESULT_TIMEOUT, user),
   m_numAvatarsOnline(0),
-  m_avatars(NULL)
+  m_avatars(nullptr)
 {
 }
 
@@ -1512,7 +1512,7 @@ void ResFindAvatarByUID::unpack(ByteStream::ReadIterator &iter)
 }
 
 ResRegistrarGetChatServer::ResRegistrarGetChatServer()
-: GenericResponse(RESPONSE_REGISTRAR_GETCHATSERVER, CHATRESULT_TIMEOUT, NULL)
+: GenericResponse(RESPONSE_REGISTRAR_GETCHATSERVER, CHATRESULT_TIMEOUT, nullptr)
 {
 }
 
@@ -1527,7 +1527,7 @@ void ResRegistrarGetChatServer::unpack(ByteStream::ReadIterator &iter)
 }
 
 ResSendApiVersion::ResSendApiVersion()
-: GenericResponse(RESPONSE_SETAPIVERSION, CHATRESULT_TIMEOUT, NULL)
+: GenericResponse(RESPONSE_SETAPIVERSION, CHATRESULT_TIMEOUT, nullptr)
 {
 }
 
@@ -1600,8 +1600,8 @@ void ResRemoveSnoopRoom::unpack(ByteStream::ReadIterator &iter)
 ResGetSnoopList::ResGetSnoopList(void *user, unsigned srcAvatarID)
 : GenericResponse(RESPONSE_GETSNOOPLIST, CHATRESULT_TIMEOUT, user),
   m_srcAvatarID(srcAvatarID),
-  m_avatarSnoops(NULL),
-  m_roomSnoops(NULL)
+  m_avatarSnoops(nullptr),
+  m_roomSnoops(nullptr)
 {
 }
 

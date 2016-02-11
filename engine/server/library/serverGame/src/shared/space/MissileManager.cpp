@@ -21,7 +21,7 @@
 
 // ======================================================================
 
-MissileManager * MissileManager::ms_instance = NULL;
+MissileManager * MissileManager::ms_instance = nullptr;
 
 // ======================================================================
 
@@ -37,7 +37,7 @@ void MissileManager::install()
 void MissileManager::remove()
 {
 	delete ms_instance;
-	ms_instance = NULL;
+	ms_instance = nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -217,7 +217,7 @@ Missile * MissileManager::getMissile(int missileId)
 	if (i!=m_missiles.end())
 		return i->second;
 	else
-		return NULL;
+		return nullptr;
 }	
 
 // ----------------------------------------------------------------------
@@ -228,7 +228,7 @@ const Missile * MissileManager::getConstMissile(int missileId) const
 	if (i!=m_missiles.end())
 		return i->second;
 	else
-		return NULL;
+		return nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -241,13 +241,13 @@ int MissileManager::getNearestUnlockedMissileForTarget(const NetworkId &target) 
 {
 	const std::pair<MissilesForTargetType::const_iterator, MissilesForTargetType::const_iterator> range=m_missilesForTarget.equal_range(target);
 
-	const Missile *targetedMissile=NULL;
+	const Missile *targetedMissile=nullptr;
 	for (MissilesForTargetType::const_iterator i=range.first; i!=range.second; ++i)
 	{
 		const Missile * const missile=getConstMissile(i->second);
 		DEBUG_FATAL(!missile,("Programmer bug:  Missile %i was in m_missilesForTarget, but was not in m_missiles",i->second));
 		if (missile && missile->getState() == Missile::MS_Launched &&
-			(!targetedMissile || (missile->getImpactTime() < targetedMissile->getImpactTime()))) //lint !e774:  missile is non-null in debug mode
+			(!targetedMissile || (missile->getImpactTime() < targetedMissile->getImpactTime()))) //lint !e774:  missile is non-nullptr in debug mode
 				targetedMissile = missile;
 	}
 
@@ -315,7 +315,7 @@ const MissileManager::MissileTypeDataRecord * MissileManager::getMissileTypeData
 	if (i!=m_missileTypeData.end())
 		return &(i->second);
 	else
-		return NULL;
+		return nullptr;
 }
 
 // ----------------------------------------------------------------------

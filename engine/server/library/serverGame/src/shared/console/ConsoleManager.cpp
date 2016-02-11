@@ -41,14 +41,14 @@
 #include "sharedCommandParser/CommandParser.h"
 #include "sharedNetworkMessages/ConsoleChannelMessages.h"
 
-CommandParser * ConsoleMgr::ms_parser = NULL;
+CommandParser * ConsoleMgr::ms_parser = nullptr;
 
 
 //-----------------------------------------------------------------------
 
 void ConsoleMgr::install()
 {
-	if (ms_parser == NULL)
+	if (ms_parser == nullptr)
 	{
 		ms_parser = new ConsoleCommandParserDefault();
 		ms_parser->addSubCommand(new ConsoleCommandParserCombatEngine ());
@@ -80,10 +80,10 @@ void ConsoleMgr::install()
 
 void ConsoleMgr::remove()
 {
-	if (ms_parser != NULL)
+	if (ms_parser != nullptr)
 	{
 		delete ms_parser;
-		ms_parser = NULL;
+		ms_parser = nullptr;
 	}
 }	// ConsoleMgr::remove
 
@@ -93,7 +93,7 @@ void ConsoleMgr::processString(const std::string & msg, Client *from, uint32 msg
 {
     DEBUG_REPORT_LOG_PRINT(true, ("Console Message Received: %s\n",(msg.c_str())));
 
-	if (ms_parser == NULL)
+	if (ms_parser == nullptr)
 	{
 		DEBUG_WARNING(true, ("Console command parser has not been created!"));
 		return;

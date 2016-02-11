@@ -303,10 +303,10 @@ void SessionApiClient::OnGetFeatures(const apiTrackingNumber trackingNumber,
 	if (i != ms_getFeaturesTrackingNumberMap.end())
 	{
 		bool reuseMessage = false;
-		AccountFeatureIdRequest const * accountFeatureIdRequest = NULL;
-		AdjustAccountFeatureIdRequest const * adjustAccountFeatureIdRequest = NULL;
-		AdjustAccountFeatureIdResponse * adjustAccountFeatureIdResponse = NULL;
-		ClaimRewardsMessage * claimRewardsMessage = NULL;
+		AccountFeatureIdRequest const * accountFeatureIdRequest = nullptr;
+		AdjustAccountFeatureIdRequest const * adjustAccountFeatureIdRequest = nullptr;
+		AdjustAccountFeatureIdResponse * adjustAccountFeatureIdResponse = nullptr;
+		ClaimRewardsMessage * claimRewardsMessage = nullptr;
 
 		if (i->second->isType("AccountFeatureIdRequest"))
 			accountFeatureIdRequest = dynamic_cast<AccountFeatureIdRequest const *>(i->second);
@@ -319,7 +319,7 @@ void SessionApiClient::OnGetFeatures(const apiTrackingNumber trackingNumber,
 
 		if (result == RESULT_SUCCESS)
 		{
-			ClientConnection * clientConnection = NULL;
+			ClientConnection * clientConnection = nullptr;
 			if (accountFeatureIdRequest)
 				clientConnection = ConnectionServer::getClientConnection(accountFeatureIdRequest->getTargetStationId());
 			else if (adjustAccountFeatureIdRequest)
@@ -391,7 +391,7 @@ void SessionApiClient::OnGetFeatures(const apiTrackingNumber trackingNumber,
 			else
 			{
 				// if account already has the feature, adjust it, otherwise add the feature
-				LoginAPI::Feature const * existingFeature = NULL;
+				LoginAPI::Feature const * existingFeature = nullptr;
 
 				for (unsigned k = 0; k < featureCount; ++k)
 				{
@@ -444,7 +444,7 @@ void SessionApiClient::OnGetFeatures(const apiTrackingNumber trackingNumber,
 			}
 			else
 			{
-				LoginAPI::Feature const * newlyAddedFeature = NULL;
+				LoginAPI::Feature const * newlyAddedFeature = nullptr;
 
 				for (unsigned k = 0; k < featureCount; ++k)
 				{
@@ -506,7 +506,7 @@ void SessionApiClient::OnGetFeatures(const apiTrackingNumber trackingNumber,
 			else
 			{
 				// see if account already has the required feature
-				LoginAPI::Feature const * existingFeature = NULL;
+				LoginAPI::Feature const * existingFeature = nullptr;
 
 				for (unsigned k = 0; k < featureCount; ++k)
 				{
@@ -904,7 +904,7 @@ void SessionApiClient::validateClient (ClientConnection* client, const std::stri
 
 void SessionApiClient::startPlay(const ClientConnection& client)
 {
-	IGNORE_RETURN(SessionStartPlay(client.getSessionId().c_str(), ConfigConnectionServer::getClusterName(), client.getCharacterName().c_str(), NULL));
+	IGNORE_RETURN(SessionStartPlay(client.getSessionId().c_str(), ConfigConnectionServer::getClusterName(), client.getCharacterName().c_str(), nullptr));
 }
 
 //------------------------------------------------------------

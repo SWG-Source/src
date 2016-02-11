@@ -99,7 +99,7 @@ uint32 Crc::calculateWithToLower(const char *string)
 
 uint32 Crc::calculate(const void *data, int length, uint32 initCrc)
 {
-	DEBUG_FATAL(!data, ("null data arg"));
+	DEBUG_FATAL(!data, ("nullptr data arg"));
 
 	uint32       crc;
 	const byte  *d = reinterpret_cast<const byte *>(data);

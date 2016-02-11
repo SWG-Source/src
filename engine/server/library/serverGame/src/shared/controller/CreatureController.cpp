@@ -122,7 +122,7 @@ CreatureController::~CreatureController()
 void CreatureController::handleMessage (const int message, const float value, const MessageQueue::Data* const data, const uint32 flags)
 {
 	CreatureObject * const owner = static_cast<CreatureObject*>(getOwner());
-	DEBUG_FATAL(!owner, ("Owner is NULL in CreatureController::handleMessage\n"));
+	DEBUG_FATAL(!owner, ("Owner is nullptr in CreatureController::handleMessage\n"));
 
 	switch(message)
 	{
@@ -629,7 +629,7 @@ void CreatureController::handleMessage (const int message, const float value, co
 	case CM_setIncapacitated:
 		{
 			const MessageQueueGenericValueType<std::pair<bool, NetworkId> > * const msg = safe_cast<const MessageQueueGenericValueType<std::pair<bool, NetworkId> > *>(data);
-			if (msg != NULL)
+			if (msg != nullptr)
 				owner->setIncapacitated(msg->getValue().first, msg->getValue().second);
 		}
 		break;
@@ -853,7 +853,7 @@ void CreatureController::handleMessage (const int message, const float value, co
 			if (owner && msg)
 				owner->setAlternateAppearance(msg->getValue());
 			else
-				WARNING(true, ("CreatureController: received CM_setAppearanceFromObjectTemplate but owner or message was NULL."));
+				WARNING(true, ("CreatureController: received CM_setAppearanceFromObjectTemplate but owner or message was nullptr."));
 		}
 		break;
 
@@ -873,9 +873,9 @@ void CreatureController::handleMessage (const int message, const float value, co
 			if (msg)
 			{
 				ServerObject * defender = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(msg->getDefender()));
-				if (defender != NULL)
+				if (defender != nullptr)
 				{
-					if (defender->asCreatureObject() != NULL)
+					if (defender->asCreatureObject() != nullptr)
 					{
 						defender->asCreatureObject()->pushedMe(msg->getAttacker(), msg->getAttackerPos(), msg->getDefenderPos(), msg->getDistance());
 					}
@@ -894,7 +894,7 @@ void CreatureController::handleMessage (const int message, const float value, co
 			if (msg)
 			{
 				ServerObject * target = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(msg->getTarget()));
-				if (target != NULL && target->asTangibleObject() != NULL)
+				if (target != nullptr && target->asTangibleObject() != nullptr)
 				{
 					if (owner->isAuthoritative())
 						owner->addSlowDownEffect(*(target->asTangibleObject()), msg->getConeLength(), msg->getConeAngle(), msg->getSlopeAngle(), msg->getExpireTime());
@@ -964,7 +964,7 @@ void CreatureController::handleMessage (const int message, const float value, co
 		{
 			MessageQueueCyberneticsChangeRequest const * const msg = safe_cast<MessageQueueCyberneticsChangeRequest const *>(data);
 			NOT_NULL(msg);
-			if (msg != NULL)
+			if (msg != nullptr)
 			{
 				NetworkId const & playerId = msg->getTarget();
 				GameScriptObject * const scriptObject = owner->getScriptObject();
@@ -984,10 +984,10 @@ void CreatureController::handleMessage (const int message, const float value, co
 	case CM_setCurrentQuest:
 		{
 			MessageQueueGenericValueType<uint32> const * const msg = safe_cast<MessageQueueGenericValueType<uint32> const *>(data);
-			if (msg != NULL)
+			if (msg != nullptr)
 			{
 				PlayerObject * player = PlayerCreatureController::getPlayerObject(owner);
-				if (player != NULL)
+				if (player != nullptr)
 				{
 					player->setCurrentQuest(msg->getValue());
 				}
@@ -1003,7 +1003,7 @@ void CreatureController::handleMessage (const int message, const float value, co
 	case CM_setRegenRate:
 		{
 			MessageQueueGenericValueType<std::pair<int, float> > const * const msg = safe_cast<MessageQueueGenericValueType<std::pair<int, float> > const *>(data);
-			if (msg != NULL)
+			if (msg != nullptr)
 			{
 				owner->setRegenRate(static_cast<Attributes::Enumerator>(msg->getValue().first), msg->getValue().second);
 			}
@@ -1516,7 +1516,7 @@ void CreatureController::conclude()
 			//   combatants must be adjusted to reflect the server's idea of the post-alter end posture.
 			//   This information was not known at the time the message was constructed.
 			MessageQueueCombatAction * combatMessage = safe_cast<MessageQueueCombatAction *>(data);
-			if (combatMessage != NULL)
+			if (combatMessage != nullptr)
 			{
 				//-- Fix up end postures in messages.
 				
@@ -1527,7 +1527,7 @@ void CreatureController::conclude()
 						combatMessage->getAttacker());
 				const CreatureObject * attacker = dynamic_cast<const CreatureObject *>(
 					NetworkIdManager::getObjectById(attackerData.id));
-				attackerData.endPosture = (attacker != NULL) ? attacker->getPosture() : static_cast<Postures::Enumerator>(0);
+				attackerData.endPosture = (attacker != nullptr) ? attacker->getPosture() : static_cast<Postures::Enumerator>(0);
 				
 				// set the defenders' posture
 				const MessageQueueCombatAction::DefenderDataVector & defenderData = 
@@ -1539,7 +1539,7 @@ void CreatureController::conclude()
 						const_cast<MessageQueueCombatAction::DefenderData &>(*iter);
 					const CreatureObject * defender = dynamic_cast<const CreatureObject *>(
 						NetworkIdManager::getObjectById(defenderData.id));
-					defenderData.endPosture = (defender != NULL) ? defender->getPosture() : static_cast<Postures::Enumerator>(0);
+					defenderData.endPosture = (defender != nullptr) ? defender->getPosture() : static_cast<Postures::Enumerator>(0);
 				}
 			}
 		}
@@ -1667,7 +1667,7 @@ void CreatureController::handleSecureTradeMessage(const MessageQueueSecureTrade 
 						));
 				}
 			}
-			else if (recipient->getClient() == NULL)
+			else if (recipient->getClient() == nullptr)
 			{
 //				GameServer::getInstance().sendToPlanetServer(
 //					GenericValueTypeMessage<std::pair<NetworkId, NetworkId> >(
@@ -1862,7 +1862,7 @@ void CreatureController::setAppearanceFromObjectTemplate(std::string const &serv
 	CreatureObject * owner = dynamic_cast<CreatureObject *>(getOwner());
 	if (!owner)
 	{
-		WARNING(true, ("setAppearanceFromObjectTemplate(): owner is NULL or not a CreatureObject."));
+		WARNING(true, ("setAppearanceFromObjectTemplate(): owner is nullptr or not a CreatureObject."));
 		return;
 	}
 
@@ -2007,7 +2007,7 @@ void CreatureController::calculateWaterState(bool& isSwimming, bool &isBurning, 
 	if (ownerCreature->getState(States::RidingMount))
 	{
 		CreatureObject const     *const mountCreature = ownerCreature->getMountedCreature();
-		CreatureController const *const mountCreatureController = mountCreature ? safe_cast<CreatureController const*>(mountCreature->getController()) : NULL;
+		CreatureController const *const mountCreatureController = mountCreature ? safe_cast<CreatureController const*>(mountCreature->getController()) : nullptr;
 		if (mountCreatureController)
 		{
 			// Note: we do the real computation for the mount here because the rider gets
@@ -2135,28 +2135,28 @@ CreatureController const * CreatureController::asCreatureController() const
 
 PlayerCreatureController * CreatureController::asPlayerCreatureController()
 {
-	return NULL;
+	return nullptr;
 }
 
 //----------------------------------------------------------------------
 
 PlayerCreatureController const * CreatureController::asPlayerCreatureController() const
 {
-	return NULL;
+	return nullptr;
 }
 
 //----------------------------------------------------------------------
 
 AICreatureController * CreatureController::asAiCreatureController()
 {
-	return NULL;
+	return nullptr;
 }
 
 //----------------------------------------------------------------------
 
 AICreatureController const * CreatureController::asAiCreatureController() const
 {
-	return NULL;
+	return nullptr;
 }
 
 //-----------------------------------------------------------------------
@@ -2170,23 +2170,23 @@ CreatureController * CreatureController::getCreatureController(NetworkId const &
 
 CreatureController * CreatureController::getCreatureController(Object * object)
 {
-	Controller * controller = (object != NULL) ? object->getController() : NULL;
+	Controller * controller = (object != nullptr) ? object->getController() : nullptr;
 
-	return (controller != NULL) ? controller->asCreatureController() : NULL;
+	return (controller != nullptr) ? controller->asCreatureController() : nullptr;
 }
 
 // ----------------------------------------------------------------------
 
 CreatureController * CreatureController::asCreatureController(Controller * controller)
 {
-	return (controller != NULL) ? controller->asCreatureController() : NULL;
+	return (controller != nullptr) ? controller->asCreatureController() : nullptr;
 }
 
 // ----------------------------------------------------------------------
 
 CreatureController const * CreatureController::asCreatureController(Controller const * controller)
 {
-	return (controller != NULL) ? controller->asCreatureController() : NULL;
+	return (controller != nullptr) ? controller->asCreatureController() : nullptr;
 }
 
 // ======================================================================

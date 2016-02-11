@@ -263,8 +263,8 @@ Client::Client(ConnectionServerConnection & connection, const NetworkId & charac
 		{
 			// Don't ever put the character into a packed house
 			ServerObject * const serverObject = containerObject->asServerObject();
-			CellObject * const cellObject = (serverObject ? serverObject->asCellObject() : NULL);
-			BuildingObject * const buildingObject = (cellObject ? cellObject->getOwnerBuilding() : NULL);
+			CellObject * const cellObject = (serverObject ? serverObject->asCellObject() : nullptr);
+			BuildingObject * const buildingObject = (cellObject ? cellObject->getOwnerBuilding() : nullptr);
 
 			if ((buildingObject) && (!buildingObject->isInWorld()))
 			{
@@ -713,8 +713,8 @@ void Client::receiveClientMessage(const GameNetworkMessage & message)
 					SlottedContainer const * const slottedContainer = ContainerInterface::getSlottedContainer(*containedBy);
 					ShipObject * const shipObject = ShipObject::getContainingShipObject(containedBy);
 
-					if (   (shipObject != NULL)
-					    && (slottedContainer != NULL)
+					if (   (shipObject != nullptr)
+					    && (slottedContainer != nullptr)
 					    && !shipObject->hasCondition(TangibleObject::C_docking))
 					{
 						bool shotOk = false;
@@ -958,7 +958,7 @@ void Client::receiveClientMessage(const GameNetworkMessage & message)
 			const ObjectMenuSelectMessage m (ri);
 			ServerObject * const target           = safe_cast<ServerObject *>(NetworkIdManager::getObjectById (m.getNetworkId()));
 			GameScriptObject * const scriptObject = target ? target->getScriptObject() : 0;
-			Object * const targetContainedBy = target ? ContainerInterface::getContainedByObject(*target) : NULL;
+			Object * const targetContainedBy = target ? ContainerInterface::getContainedByObject(*target) : nullptr;
 			const int menuType                    = m.getSelectedItemId();
 
 			static int examineMenuType = RadialMenuManager::getMenuTypeByName("EXAMINE");
@@ -1080,7 +1080,7 @@ void Client::receiveClientMessage(const GameNetworkMessage & message)
 				{
 					// apply the controller message
 					ServerController * controller = dynamic_cast<ServerController *>(target->getController());
-					if (controller != NULL)
+					if (controller != nullptr)
 					{
 						uint32 flags = o.getFlags();
 						flags &= ~GameControllerMessageFlags::SOURCE_REMOTE;
@@ -1096,7 +1096,7 @@ void Client::receiveClientMessage(const GameNetworkMessage & message)
 					if (target)
 					{
 						ServerController * controller = dynamic_cast<ServerController *>(target->getController());
-						if (controller != NULL)
+						if (controller != nullptr)
 						{
 							uint32 flags = o.getFlags();
 							flags &= ~GameControllerMessageFlags::SOURCE_REMOTE;
@@ -1315,11 +1315,11 @@ void Client::receiveClientMessage(const GameNetworkMessage & message)
 		{
 			CreatureObject *creatureObject = dynamic_cast<CreatureObject*>(getCharacterObject());
 
-			if (creatureObject != NULL)
+			if (creatureObject != nullptr)
 			{
 				GameScriptObject *gameScriptObject = creatureObject->getScriptObject();
 
-				if(gameScriptObject != NULL)
+				if(gameScriptObject != nullptr)
 				{
 					ScriptParams scriptParams;
 					IGNORE_RETURN(gameScriptObject->trigAllScripts(Scripting::TRIG_STOMACH_UPDATE, scriptParams));
@@ -1964,7 +1964,7 @@ void Client::receiveClientMessage(const GameNetworkMessage & message)
 			GenericValueTypeMessage<std::pair<int32, std::pair<int32, unsigned long> > > const msgPlayTimeInfo(readIterator);
 
 			PlayerObject * playerObject = PlayerCreatureController::getPlayerObject(safe_cast<CreatureObject*>(getCharacterObject()));
-			if (playerObject != NULL)
+			if (playerObject != nullptr)
 			{
 				playerObject->setSessionPlayTimeInfo(msgPlayTimeInfo.getValue().first, msgPlayTimeInfo.getValue().second.first, msgPlayTimeInfo.getValue().second.second);
 			}
@@ -2222,7 +2222,7 @@ void Client::addObserving(ServerObject* o)
 	{
 		IGNORE_RETURN(m_observing.insert(o));
 		TangibleObject *to = o->asTangibleObject();
-		if (to && PvpUpdateObserver::satisfyPvpSyncCondition(to->isNonPvpObject(), to->hasCondition(ServerTangibleObjectTemplate::C_invulnerable), (o->asCreatureObject() != NULL), to->getPvpFaction()))
+		if (to && PvpUpdateObserver::satisfyPvpSyncCondition(to->isNonPvpObject(), to->hasCondition(ServerTangibleObjectTemplate::C_invulnerable), (o->asCreatureObject() != nullptr), to->getPvpFaction()))
 			addObservingPvpSync(to);
 	}
 }

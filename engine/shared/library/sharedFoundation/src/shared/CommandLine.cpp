@@ -63,7 +63,7 @@ bool CommandLine::Option::isOptionNext(
 	int               optionSpecCount
 	)
 {
-	DEBUG_FATAL(!optionSpec, ("null optionSpec arg"));
+	DEBUG_FATAL(!optionSpec, ("nullptr optionSpec arg"));
 	if (!optionSpecCount)
 		return false;
 	else
@@ -77,8 +77,8 @@ CommandLine::Option *CommandLine::Option::createOption(
 	int               *optionCount
 	)
 {
-	DEBUG_FATAL(!optionSpec, ("null optionSpec arg"));
-	DEBUG_FATAL(!optionCount, ("null optionCount arg"));
+	DEBUG_FATAL(!optionSpec, ("nullptr optionSpec arg"));
+	DEBUG_FATAL(!optionCount, ("nullptr optionCount arg"));
 	DEBUG_FATAL(!isOptionNext(*optionSpec, *optionCount), ("attempted to create option with non-option data"));
 
 	const char      newShortName = (*optionSpec)->char1;
@@ -129,7 +129,7 @@ CommandLine::MatchCode CommandLine::Option::match(void)
 	// matching this short or long name.  If the arg specs don't match, we've
 	// got an argument matching error.
 
-	DEBUG_FATAL(!optionTable, ("internal error: null option table"));
+	DEBUG_FATAL(!optionTable, ("internal error: nullptr option table"));
 
 	OptionTable::Record *record = 0;
 
@@ -145,7 +145,7 @@ CommandLine::MatchCode CommandLine::Option::match(void)
 		DEBUG_FATAL(!record, ("failed to find option info record for option --%s", longName));
 	}
 	else
-		DEBUG_FATAL(true, ("corrupted option?  both short and long name are null"));
+		DEBUG_FATAL(true, ("corrupted option?  both short and long name are nullptr"));
 
 
 	// attempt to match against this option against commandline-specified options
@@ -200,7 +200,7 @@ bool CommandLine::Collection::isCollectionNext(
 	int               optionSpecCount
 	)
 {
-	DEBUG_FATAL(!optionSpec, ("null optionSpec arg"));
+	DEBUG_FATAL(!optionSpec, ("nullptr optionSpec arg"));
 	if (!optionSpecCount)
 		return false;
 	else
@@ -214,8 +214,8 @@ CommandLine::Collection *CommandLine::Collection::createCollection(
 	int               *optionSpecCount
 	)
 {
-	DEBUG_FATAL(!optionSpec, ("null optionSpec arg"));
-	DEBUG_FATAL(!optionSpecCount, ("null optionSpecCount arg"));
+	DEBUG_FATAL(!optionSpec, ("nullptr optionSpec arg"));
+	DEBUG_FATAL(!optionSpecCount, ("nullptr optionSpecCount arg"));
 
 	DEBUG_FATAL(!isCollectionNext(*optionSpec, *optionSpecCount), ("tried to create collection from non-collection optionSpec"));
 	if ((*optionSpec)->optionType == OST_BeginList)
@@ -289,7 +289,7 @@ bool CommandLine::List::Node::isNode(
 	int               optionCount
 	)
 {
-	DEBUG_FATAL(!optionSpec, ("null optionSpec arg"));
+	DEBUG_FATAL(!optionSpec, ("nullptr optionSpec arg"));
 	if (!optionCount)
 		return false;
 	else
@@ -303,8 +303,8 @@ CommandLine::List::Node *CommandLine::List::Node::createNode(
 	int               *optionCount
 	)
 {
-	DEBUG_FATAL(!optionSpec, ("null optionSpec arg"));
-	DEBUG_FATAL(!optionCount, ("null optionCount arg"));
+	DEBUG_FATAL(!optionSpec, ("nullptr optionSpec arg"));
+	DEBUG_FATAL(!optionCount, ("nullptr optionCount arg"));
 	DEBUG_FATAL(!isNode(*optionSpec, *optionCount), ("attempted to create list node with non-list-node data"));
 
 	Option     *newOption = 0;
@@ -350,7 +350,7 @@ CommandLine::List::List(
 	listType(newListType),
 	minimumNodeCount(0)
 {
-	DEBUG_FATAL(!newFirstNode, ("null newFirstNode arg"));
+	DEBUG_FATAL(!newFirstNode, ("nullptr newFirstNode arg"));
 	DEBUG_FATAL(newListType != OPLT_Normal, ("constructor only good for OPLT_Normal lists, caller passed %d", newListType));
 }
 
@@ -366,7 +366,7 @@ CommandLine::List::List(
 	listType(newListType),
 	minimumNodeCount(newMinimumNodeCount)
 {
-	DEBUG_FATAL(!newFirstNode, ("null newFirstNode arg"));
+	DEBUG_FATAL(!newFirstNode, ("nullptr newFirstNode arg"));
 	DEBUG_FATAL(newListType != OPLT_MinimumMatch, ("constructor only good for OPLT_MinimumMatch lists, caller passed %d", newListType));
 }
 
@@ -391,7 +391,7 @@ bool CommandLine::List::isListNext(
 	int               optionCount
 	)
 {
-	DEBUG_FATAL(!optionSpec, ("null optionSpec arg"));
+	DEBUG_FATAL(!optionSpec, ("nullptr optionSpec arg"));
 	if (!optionCount)
 		return false;
 	else
@@ -405,8 +405,8 @@ CommandLine::List *CommandLine::List::createList(
 	int               *optionCount
 	)
 {
-	DEBUG_FATAL(!optionSpec, ("null optionSpec arg"));
-	DEBUG_FATAL(!optionCount, ("null optionCount arg"));
+	DEBUG_FATAL(!optionSpec, ("nullptr optionSpec arg"));
+	DEBUG_FATAL(!optionCount, ("nullptr optionCount arg"));
 	DEBUG_FATAL(!isListNext(*optionSpec, *optionCount), ("tried to create list from non-list optionSpec"));
 
 	Node *newFirstNode = 0;
@@ -582,7 +582,7 @@ bool CommandLine::Switch::Node::isNode(
 	const OptionSpec *optionSpec,
 	int               optionCount)
 {
-	DEBUG_FATAL(!optionSpec, ("null optionSpec arg"));
+	DEBUG_FATAL(!optionSpec, ("nullptr optionSpec arg"));
 	if (!optionCount)
 		return false;
 	else
@@ -596,8 +596,8 @@ CommandLine::Switch::Node *CommandLine::Switch::Node::createNode(
 	int               *optionCount
 	)
 {
-	DEBUG_FATAL(!optionSpec, ("null optionSpec arg"));
-	DEBUG_FATAL(!optionCount, ("null optionCount arg"));
+	DEBUG_FATAL(!optionSpec, ("nullptr optionSpec arg"));
+	DEBUG_FATAL(!optionCount, ("nullptr optionCount arg"));
 	DEBUG_FATAL(!isNode(*optionSpec, *optionCount), ("attempted to create list node with non-list-node data"));
 
 	Option     *newOption = 0;
@@ -664,7 +664,7 @@ bool CommandLine::Switch::isSwitchNext(
 	int               optionCount
 	)
 {
-	DEBUG_FATAL(!optionSpec, ("null optionSpec arg"));
+	DEBUG_FATAL(!optionSpec, ("nullptr optionSpec arg"));
 	if (!optionCount)
 		return false;
 	else
@@ -678,8 +678,8 @@ CommandLine::Switch *CommandLine::Switch::createSwitch(
 	int               *optionCount
 	)
 {
-	DEBUG_FATAL(!optionSpec, ("null optionSpec arg"));
-	DEBUG_FATAL(!optionCount, ("null optionCount arg"));
+	DEBUG_FATAL(!optionSpec, ("nullptr optionSpec arg"));
+	DEBUG_FATAL(!optionCount, ("nullptr optionCount arg"));
 	DEBUG_FATAL(!isSwitchNext(*optionSpec, *optionCount), ("tried to create switch from non-switch option spec"));
 
 	const bool newOneNodeIsRequired = ((*optionSpec)->int1 != 0);
@@ -886,7 +886,7 @@ CommandLine::OptionTable::Record *CommandLine::OptionTable::findOptionRecord(
 	char shortName
 	) const
 {
-	DEBUG_FATAL(!shortName, ("null shortName arg"));
+	DEBUG_FATAL(!shortName, ("nullptr shortName arg"));
 
 	// walk the list
 	for (Record *record = firstRecord; record; record = record->getNext())
@@ -960,7 +960,7 @@ CommandLine::Lexer::Lexer(
 	) :
 	nextCharacter(newBuffer)
 {
-	DEBUG_FATAL(!newBuffer, ("null newBuffer arg"));
+	DEBUG_FATAL(!newBuffer, ("nullptr newBuffer arg"));
 }
 
 // ----------------------------------------------------------------------
@@ -994,10 +994,10 @@ CommandLine::Lexer::~Lexer(void)
 
 bool CommandLine::Lexer::gobbleString(bool isRequired, char *stringBuffer, int stringSize)
 {
-	DEBUG_FATAL(!stringBuffer, ("null stringStart arg"));
+	DEBUG_FATAL(!stringBuffer, ("nullptr stringStart arg"));
 	DEBUG_FATAL(!stringSize, ("stringSize is zero"));
 
-	DEBUG_FATAL(!nextCharacter, ("null nextChar"));
+	DEBUG_FATAL(!nextCharacter, ("nullptr nextChar"));
 
 
 	int  stringLength = 0;
@@ -1069,7 +1069,7 @@ bool CommandLine::Lexer::gobbleString(bool isRequired, char *stringBuffer, int s
 	if (isRequired && (stringLength == 0))
 		return false;
 
-	// null-terminate the string
+	// nullptr-terminate the string
 	*stringBuffer = 0;
 	return true;
 }
@@ -1078,8 +1078,8 @@ bool CommandLine::Lexer::gobbleString(bool isRequired, char *stringBuffer, int s
 
 bool CommandLine::Lexer::getNextToken(Token *token)
 {
-	DEBUG_FATAL(!token, ("null token arg"));
-	DEBUG_FATAL(!nextCharacter, ("null nextCharacter"));
+	DEBUG_FATAL(!token, ("nullptr token arg"));
+	DEBUG_FATAL(!nextCharacter, ("nullptr nextCharacter"));
 
 	// clear out the token
 	memset(token, 0, sizeof(*token));
@@ -1204,7 +1204,7 @@ void CommandLine::remove(void)
 
 void CommandLine::buildOptionTree(const OptionSpec *specList, int specCount)
 {
-	DEBUG_FATAL(!specList, ("null specList arg"));
+	DEBUG_FATAL(!specList, ("nullptr specList arg"));
 
 	if (!specCount)
 	{
@@ -1247,7 +1247,7 @@ CommandLine::MatchCode CommandLine::parseCommandLineBuffer(void)
 		case Lexer::TT_ShortOption:
 			// we've found a short option, make sure specified short option exists
 			{
-				DEBUG_FATAL(!optionTable, ("internal error: null optionTable"));
+				DEBUG_FATAL(!optionTable, ("internal error: nullptr optionTable"));
 				OptionTable::Record *record = optionTable->findOptionRecord(token.getShortName());
 				if (!record)
 				{
@@ -1279,7 +1279,7 @@ CommandLine::MatchCode CommandLine::parseCommandLineBuffer(void)
 		case Lexer::TT_LongOption:
 			// we've found a long option, make sure specified long option exists
 			{
-				DEBUG_FATAL(!optionTable, ("internal error: null optionTable"));
+				DEBUG_FATAL(!optionTable, ("internal error: nullptr optionTable"));
 				OptionTable::Record *record = optionTable->findOptionRecord(token.getLongName());
 				if (!record)
 				{
@@ -1322,7 +1322,7 @@ CommandLine::MatchCode CommandLine::parseCommandLineBuffer(void)
 
 		case Lexer::TT_Argument:
 			{
-				DEBUG_FATAL(!optionTable, ("internal error: null optionTable"));
+				DEBUG_FATAL(!optionTable, ("internal error: nullptr optionTable"));
 				OptionTable::Record *record = optionTable->findOptionRecord(OP_SNAME_UNTAGGED);
 				if (!record)
 				{
@@ -1382,7 +1382,7 @@ CommandLine::MatchCode CommandLine::parseCommandLineBuffer(void)
 void CommandLine::absorbString(const char *newString)
 {
 	DEBUG_FATAL(!installed, ("CommandLine not installed"));
-	DEBUG_FATAL(!newString, ("null newString arg"));
+	DEBUG_FATAL(!newString, ("nullptr newString arg"));
 
 	const int stringLength   = static_cast<int>(strlen(newString));
 	int requiredBufferSpace;
@@ -1398,7 +1398,7 @@ void CommandLine::absorbString(const char *newString)
 		buffer[bufferSize++] = ' ';
 	}
 
-	// copy contents of buffer, including null
+	// copy contents of buffer, including nullptr
 	memcpy(buffer + bufferSize, newString, stringLength + 1);
 	bufferSize += stringLength;
 
@@ -1437,7 +1437,7 @@ void CommandLine::absorbString(const char *newString)
 void CommandLine::absorbStrings(const char **stringArray, int stringCount)
 {
 	DEBUG_FATAL(!installed, ("CommandLine not installed"));
-	DEBUG_FATAL(!stringArray, ("null string array"));
+	DEBUG_FATAL(!stringArray, ("nullptr string array"));
 
 	for (int i = 0; i < stringCount; ++i)
 		absorbString(stringArray[i]);
@@ -1452,7 +1452,7 @@ void CommandLine::absorbStrings(const char **stringArray, int stringCount)
  * (i.e. "-- ") will be considered part of the post command line string.
  *
  * @return A read-only pointer to the portion of the command line not meant
- * for CommandLine parsing.  May be NULL if the entire command line
+ * for CommandLine parsing.  May be nullptr if the entire command line
  * was meant for CommandLine or if no command line was specified.
  */
 
@@ -1704,7 +1704,7 @@ int CommandLine::getOccurrenceCount(const char *longName)
  * @param shortName  [IN] short name of the option
  * @param occurrenceIndex  [IN] zero-based occurrence number
  * @return The read-only argument string associated with the specified option occurrence.
- * May be NULL if no argument was associated with the specified option.
+ * May be nullptr if no argument was associated with the specified option.
  */
 
 const char *CommandLine::getOptionString(char shortName, int occurrenceIndex)
@@ -1730,7 +1730,7 @@ const char *CommandLine::getOptionString(char shortName, int occurrenceIndex)
  * @param longName  [IN] long name of the option
  * @param occurrenceIndex  [IN] zero-based occurrence number
  * @return The read-only argument string associated with the specified option occurrence.
- * May be NULL if no argument was associated with the specified option.
+ * May be nullptr if no argument was associated with the specified option.
  */
 
 const char *CommandLine::getOptionString(const char *longName, int occurrenceIndex)

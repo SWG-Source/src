@@ -128,8 +128,8 @@ void Formation::build(Squad & squad)
 	DEBUG_FATAL(squad.isEmpty(), ("Building a formation on an empty squad."));
 
 	Object const * const leaderObject = squad.getLeader().getObject();
-	CollisionProperty const * const leaderCollisionProperty = (leaderObject != NULL) ? leaderObject->getCollisionProperty() : NULL;
-	float const leaderRadius = (leaderCollisionProperty != NULL) ? (leaderCollisionProperty->getBoundingSphere_l().getRadius() * 2.0f) : 1.0f;
+	CollisionProperty const * const leaderCollisionProperty = (leaderObject != nullptr) ? leaderObject->getCollisionProperty() : nullptr;
+	float const leaderRadius = (leaderCollisionProperty != nullptr) ? (leaderCollisionProperty->getBoundingSphere_l().getRadius() * 2.0f) : 1.0f;
 
 	int slotIndex = 0;
 	Squad::UnitMap const & unitSet = squad.getUnitMap();

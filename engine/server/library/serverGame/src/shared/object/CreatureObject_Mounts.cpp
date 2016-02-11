@@ -77,18 +77,18 @@ CreatureObject * CreatureObjectNamespace::realGetMountingRider(CreatureObject co
 {
 	//-- Ensure mounts are enabled.
 	if (!ConfigServerGame::getMountsEnabled())
-		return NULL;
+		return nullptr;
 
 	//-- Get the rider element from the slotted container.	
 	SlottedContainer const * const slottedContainer = ContainerInterface::getSlottedContainer(*mount);
 	if (!slottedContainer)
-		return NULL;
+		return nullptr;
 
 	//-- Check for a rider.
 	Container::ContainerErrorCode errorCode = Container::CEC_Success;
 	CachedNetworkId riderId = slottedContainer->getObjectInSlot(slot, errorCode);
 	if (errorCode != Container::CEC_Success)
-		return NULL;
+		return nullptr;
 
 	Object * const riderObject = riderId.getObject();
 
@@ -236,7 +236,7 @@ bool CreatureObjectNamespace::realDetachRider(CreatureObject * const mount, Slot
 				{
 					// Transfer rider to world.
 					// @todo: -TRF- transfer to mount's cell if we allow mounts inside cells.
-					IGNORE_RETURN(ContainerInterface::transferItemToWorld(*rider, mount->getTransform_o2w(), NULL, errorCode));
+					IGNORE_RETURN(ContainerInterface::transferItemToWorld(*rider, mount->getTransform_o2w(), nullptr, errorCode));
 					if (errorCode == Container::CEC_Success)
 					{
 						detachedRider = true;
@@ -318,7 +318,7 @@ void CreatureObject::transferRiderPositionToMount()
 	CreatureObject *const mountObject = getMountedCreature();
 	if (!mountObject)
 	{
-		LOG("mounts-bug", ("CreatureObject::transferRiderPositionToMount(): server id=[%d],object id=[%s] has state RidingMount but getMountedCreature() returns NULL.", static_cast<int>(GameServer::getInstance().getProcessId()), getNetworkId().getValueString().c_str()));
+		LOG("mounts-bug", ("CreatureObject::transferRiderPositionToMount(): server id=[%d],object id=[%s] has state RidingMount but getMountedCreature() returns nullptr.", static_cast<int>(GameServer::getInstance().getProcessId()), getNetworkId().getValueString().c_str()));
 		emergencyDismountForRider();
 		return;
 	}
@@ -397,7 +397,7 @@ void CreatureObject::alterAuthoritativeForMounts()
 				}
 			}
 			else
-				LOG(cs_mountErrorChannelName, ("unexpected: rider object id=[%s],template=[%s] is reporting state States::RidingMount turned on but getMountedCreature() returned NULL.", getNetworkId().getValueString().c_str(), getObjectTemplateName()));
+				LOG(cs_mountErrorChannelName, ("unexpected: rider object id=[%s],template=[%s] is reporting state States::RidingMount turned on but getMountedCreature() returned nullptr.", getNetworkId().getValueString().c_str(), getObjectTemplateName()));
 		}
 		else if (getState(States::MountedCreature))
 		{
@@ -484,7 +484,7 @@ void CreatureObject::alterAnyForMounts()
 				if (isAuthoritative() && !getState(States::MountedCreature))
 				{
 					WARNING(true,
-									("mounts sanity check failure: game server id=[%d], mount id=[%s,%s], rider id=[%s,%s]: authoritative mount does not have MountedCreature state set but getMountingRider returned a non-NULL value.",
+									("mounts sanity check failure: game server id=[%d], mount id=[%s,%s], rider id=[%s,%s]: authoritative mount does not have MountedCreature state set but getMountingRider returned a non-nullptr value.",
 									 static_cast<int>(GameServer::getInstance().getProcessId()),
 									 getNetworkId().getValueString().c_str(),
 									 isAuthoritative() ? "authoritative" : "proxy",
@@ -511,7 +511,7 @@ void CreatureObject::alterAnyForMounts()
 				// Ensure we don't have the mounted creature state set (only do check on authoritative mount).
 				
 				WARNING(isAuthoritative() && getState(States::MountedCreature),
-								("mounts sanity check failure: game server id=[%d], mount id=[%s,%s]: authoritative mount does have MountedCreature state set but getMountingRider() returned a NULL value.",
+								("mounts sanity check failure: game server id=[%d], mount id=[%s,%s]: authoritative mount does have MountedCreature state set but getMountingRider() returned a nullptr value.",
 								 static_cast<int>(GameServer::getInstance().getProcessId()),
 								 getNetworkId().getValueString().c_str(),
 								 isAuthoritative() ? "authoritative" : "proxy"
@@ -550,7 +550,7 @@ void CreatureObject::alterAnyForMounts()
 			if (isAuthoritative() && !getState(States::RidingMount))
 			{
 				WARNING(true,
-								("mounts sanity check failure: game server id=[%d], rider id=[%s,%s], mount id=[%s,%s]: authoritative rider does not have RidingMount state set but getMountedCreature() returned a non-NULL value.",
+								("mounts sanity check failure: game server id=[%d], rider id=[%s,%s], mount id=[%s,%s]: authoritative rider does not have RidingMount state set but getMountedCreature() returned a non-nullptr value.",
 								 static_cast<int>(GameServer::getInstance().getProcessId()),
 								 getNetworkId().getValueString().c_str(),
 								 isAuthoritative() ? "authoritative" : "proxy",
@@ -576,7 +576,7 @@ void CreatureObject::alterAnyForMounts()
 		{
 			// Ensure we don't have the RidingMount state set (only do check on authoritative rider).
 			WARNING(isAuthoritative() && getState(States::RidingMount),
-							("mounts sanity check failure: game server id=[%d], rider id=[%s,%s]: authoritative rider does have RidingMount state set but getMountedCreature() returned a NULL value.",
+							("mounts sanity check failure: game server id=[%d], rider id=[%s,%s]: authoritative rider does have RidingMount state set but getMountedCreature() returned a nullptr value.",
 							 static_cast<int>(GameServer::getInstance().getProcessId()),
 							 getNetworkId().getValueString().c_str(),
 							 isAuthoritative() ? "authoritative" : "proxy"
@@ -599,13 +599,13 @@ bool CreatureObject::onContainerAboutToTransferForMounts(ServerObject const * de
 	//   (i.e. the container creature has not yet been set.)  We must clear the RidingMount
 	//   state on a rider prior to intentionally dismounting the rider (see and use detachRider()
 	//   on the mount object.
-	bool const canChangeContainerNow = (getMountedCreature() == NULL);
+	bool const canChangeContainerNow = (getMountedCreature() == nullptr);
 	if (!canChangeContainerNow)
 	{
 		LOG("mounts-bug", ("CO::onContainerAboutToTransferForMounts():server id=[%d],rider id=[%s] erroneously tried to transfer the player into object id=[%s].",
 											 static_cast<int>(GameServer::getInstance().getProcessId()),
 											 getNetworkId().getValueString().c_str(),
-											 (destination == NULL) ? "<null (world cell)>" : destination->getNetworkId().getValueString().c_str()));
+											 (destination == nullptr) ? "<nullptr (world cell)>" : destination->getNetworkId().getValueString().c_str()));
 	}
 	return canChangeContainerNow;
 }
@@ -839,7 +839,7 @@ bool CreatureObject::detachAllRiders()
 	if (!isAuthoritative())
 	{
 		// add a plural message
-		sendControllerMessageToAuthServer(CM_detachAllRidersForMount, NULL);
+		sendControllerMessageToAuthServer(CM_detachAllRidersForMount, nullptr);
 		return true;
 	}
 
@@ -988,9 +988,9 @@ bool CreatureObject::mountCreature(CreatureObject &mountObject)
 
 	for (int i = 0; i < maxSlots; ++i)
 	{
-		if (ContainerInterface::canTransferToSlot(mountObject, *this, s_riderSlotId[i], NULL, errorCode))
+		if (ContainerInterface::canTransferToSlot(mountObject, *this, s_riderSlotId[i], nullptr, errorCode))
 		{
-			transferSuccess = ContainerInterface::transferItemToSlottedContainer(mountObject, *this, s_riderSlotId[i], NULL, errorCode);
+			transferSuccess = ContainerInterface::transferItemToSlottedContainer(mountObject, *this, s_riderSlotId[i], nullptr, errorCode);
 
 			if ((transferSuccess) && (errorCode == Container::CEC_Success))
 			{
@@ -1051,20 +1051,20 @@ CreatureObject *CreatureObject::getMountedCreature()
 {
 	//-- Ensure mounts are enabled.
 	if (!ConfigServerGame::getMountsEnabled())
-		return NULL;
+		return nullptr;
 
 	//-- Check this creature's container object.
 	ServerObject *const container = safe_cast<ServerObject*>(ContainerInterface::getContainedByObject(*this));
 	if (!container)
-		return NULL;
+		return nullptr;
 
 	//-- Check if the container is a creature.
 	CreatureObject *const creatureContainer = container->asCreatureObject();
 	if (!creatureContainer)
-		return NULL;
+		return nullptr;
 
 	//-- Ignore non-mountable creature objects.
-	CreatureObject *const mount = creatureContainer->isMountable() ? creatureContainer : NULL;
+	CreatureObject *const mount = creatureContainer->isMountable() ? creatureContainer : nullptr;
 	return mount;
 }
 
@@ -1096,7 +1096,7 @@ void CreatureObject::emergencyDismountForRider()
 	//-- Pass request along to authoritative server if we're not it.
 	if (!isAuthoritative())
 	{
-		sendControllerMessageToAuthServer(CM_emergencyDismountForRider, NULL);
+		sendControllerMessageToAuthServer(CM_emergencyDismountForRider, nullptr);
 		return;
 	}
 	
@@ -1116,7 +1116,7 @@ void CreatureObject::emergencyDismountForRider()
 
 	//-- Transfer the rider to the world cell.
 	Container::ContainerErrorCode  errorCode = Container::CEC_Success;
-	bool const transferSucceeded = ContainerInterface::transferItemToWorld (*this, this->getTransform_o2w(), NULL, errorCode);
+	bool const transferSucceeded = ContainerInterface::transferItemToWorld (*this, this->getTransform_o2w(), nullptr, errorCode);
 	WARNING(!transferSucceeded || (errorCode != Container::CEC_Success), ("Transfer to world failed, return value=[%s], error code=[%d].", transferSucceeded ? "true" : "false", static_cast<int>(errorCode)));
 }
 

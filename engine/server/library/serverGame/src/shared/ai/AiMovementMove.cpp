@@ -85,7 +85,7 @@ AiMovementMove::AiMovementMove( AICreatureController * controller, Archive::Read
 AiMovementMove::~AiMovementMove()
 {
 	delete m_pathBuilder;
-	m_pathBuilder = NULL;
+	m_pathBuilder = nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -151,7 +151,7 @@ void AiMovementMove::refresh( void )
 	m_target = target;
 	m_targetName = targetName;
 	
-	if (m_controller != NULL)
+	if (m_controller != nullptr)
 		m_start = AiLocation(m_controller->getCreatureCell(), m_controller->getCreaturePosition_p());
 	CHANGE_STATE( AiMovementMove::stateWaiting );
 }

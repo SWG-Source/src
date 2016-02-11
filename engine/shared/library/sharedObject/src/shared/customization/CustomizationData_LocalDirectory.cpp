@@ -95,7 +95,7 @@ bool CustomizationData::LocalDirectory::resolvePathNameToDirectory(const std::st
 	//-- ensure we've got a directory
 	if (!subdir)
 	{
-		WARNING(true, ("resolvePathNameToDirectory(): logic failure, subdir is null"));
+		WARNING(true, ("resolvePathNameToDirectory(): logic failure, subdir is nullptr"));
 		return false;
 	}
 
@@ -110,7 +110,7 @@ bool CustomizationData::LocalDirectory::addVariableTakeOwnership(const std::stri
 	//-- ensure caller passed in valid customizationVariable
 	if (!variable)
 	{
-		WARNING(true, ("addVariableTakeOwnership(): caller passed in NULL variable"));
+		WARNING(true, ("addVariableTakeOwnership(): caller passed in nullptr variable"));
 		return false;
 	}
 
@@ -210,10 +210,10 @@ CustomizationData::Directory *CustomizationData::LocalDirectory::findDirectory(c
 
 void CustomizationData::LocalDirectory::deleteDirectory(Directory *childDirectory)
 {
-	//-- check for null directory
+	//-- check for nullptr directory
 	if (!childDirectory)
 	{
-		WARNING(true, ("deleteDirectory(): NULL childDirectory arg"));
+		WARNING(true, ("deleteDirectory(): nullptr childDirectory arg"));
 		return;
 	}
 
@@ -255,10 +255,10 @@ void CustomizationData::LocalDirectory::iterateOverConstVariables(const std::str
 		const DirectoryMap::const_iterator endIt = m_directories.end();
 		for (DirectoryMap::const_iterator it = m_directories.begin(); it != endIt; ++it)
 		{
-			//-- check for null directory pointer (shouldn't happen but shouldn't FATAL)
+			//-- check for nullptr directory pointer (shouldn't happen but shouldn't FATAL)
 			if (!it->second)
 			{
-				WARNING(true, ("iterateOverConstVariables(): directory 0x%08x has null child directory for [%s].", this, it->first.getString()));
+				WARNING(true, ("iterateOverConstVariables(): directory 0x%08x has nullptr child directory for [%s].", this, it->first.getString()));
 				return;
 			}
 
@@ -292,10 +292,10 @@ void CustomizationData::LocalDirectory::iterateOverVariables(const std::string &
 		const DirectoryMap::iterator endIt = m_directories.end();
 		for (DirectoryMap::iterator it = m_directories.begin(); it != endIt; ++it)
 		{
-			//-- check for null directory pointer (shouldn't happen but shouldn't FATAL)
+			//-- check for nullptr directory pointer (shouldn't happen but shouldn't FATAL)
 			if (!it->second)
 			{
-				WARNING(true, ("iterateOverConstVariables(): directory 0x%08x has null child directory for [%s].", this, it->first.getString()));
+				WARNING(true, ("iterateOverConstVariables(): directory 0x%08x has nullptr child directory for [%s].", this, it->first.getString()));
 				return;
 			}
 
@@ -314,10 +314,10 @@ void CustomizationData::LocalDirectory::iterateOverVariables(const std::string &
 
 void CustomizationData::LocalDirectory::replaceOrAddDirectory(const std::string &directoryPathName, int directoryNameStartIndex, Directory *directory)
 {
-	//-- ensure attached directory is not null
+	//-- ensure attached directory is not nullptr
 	if (!directory)
 	{
-		WARNING(true, ("replaceOrAddDirectory(): directory arg is NULL"));
+		WARNING(true, ("replaceOrAddDirectory(): directory arg is nullptr"));
 		return;
 	}
 
@@ -411,7 +411,7 @@ std::string CustomizationData::LocalDirectory::writeLocalDirectoryToString() con
 		const CustomizationVariableMap::const_iterator endIt = m_variables.end();
 		for (CustomizationVariableMap::const_iterator it = m_variables.begin(); it != endIt; ++it)
 		{
-			//-- verify it's a non-null variable
+			//-- verify it's a non-nullptr variable
 			const CustomizationVariable *const variable = it->second;
 			if (variable && variable->doesVariablePersist())
 			{
@@ -430,11 +430,11 @@ std::string CustomizationData::LocalDirectory::writeLocalDirectoryToString() con
 		const CustomizationVariableMap::const_iterator endIt = m_variables.end();
 		for (CustomizationVariableMap::const_iterator it = m_variables.begin(); it != endIt; ++it)
 		{
-			//-- verify it's a non-null variable
+			//-- verify it's a non-nullptr variable
 			const CustomizationVariable *const variable = it->second;
 			if (!variable)
 			{
-				WARNING(true, ("writeLocalDirectoryToString: NULL variable for [%s], skipping variable writing."));
+				WARNING(true, ("writeLocalDirectoryToString: nullptr variable for [%s], skipping variable writing."));
 				continue;
 			}
 

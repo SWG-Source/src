@@ -99,7 +99,7 @@ bool ConsoleCommandParserSkill::performParsing (const NetworkId & userId, const 
 	{
 		CreatureObject * const creature = findCreature (userId, argv, 2);
 
-		if (creature == NULL)
+		if (creature == nullptr)
 		{
 			result += getErrorMessage (argv[0], ERR_INVALID_OBJECT);
 		}
@@ -107,7 +107,7 @@ bool ConsoleCommandParserSkill::performParsing (const NetworkId & userId, const 
 		{
 			const std::string skillName = Unicode::wideToNarrow (argv[1]);
 			const SkillObject * const skill = SkillManager::getInstance ().getSkill (skillName);
-			if (skill == NULL)
+			if (skill == nullptr)
 			{
 				result += Unicode::narrowToWide ("unknown skill");
 			}
@@ -126,7 +126,7 @@ bool ConsoleCommandParserSkill::performParsing (const NetworkId & userId, const 
 	{
 		CreatureObject * const creature = findCreature (userId, argv, 3);
 
-		if (creature == NULL)
+		if (creature == nullptr)
 		{
 			result += getErrorMessage (argv[0], ERR_INVALID_OBJECT);
 		}
@@ -146,7 +146,7 @@ bool ConsoleCommandParserSkill::performParsing (const NetworkId & userId, const 
 	{
 		CreatureObject * const creature = findCreature (userId, argv, 2);
 
-		if (creature == NULL)
+		if (creature == nullptr)
 		{
 			result += getErrorMessage (argv[0], ERR_INVALID_OBJECT);
 		}
@@ -198,7 +198,7 @@ bool ConsoleCommandParserSkill::performParsing (const NetworkId & userId, const 
 	{
 		CreatureObject * const creature = findCreature (userId, argv, 1);
 
-		if (creature == NULL)
+		if (creature == nullptr)
 		{
 			result += getErrorMessage (argv[0], ERR_INVALID_OBJECT);
 		}
@@ -233,7 +233,7 @@ bool ConsoleCommandParserSkill::performParsing (const NetworkId & userId, const 
 	{
 		CreatureObject * const creature = findCreature (userId, argv, 1);
 		
-		if (creature == NULL)
+		if (creature == nullptr)
 		{
 			result += getErrorMessage (argv[0], ERR_INVALID_OBJECT);
 		}
@@ -262,7 +262,7 @@ bool ConsoleCommandParserSkill::performParsing (const NetworkId & userId, const 
 	{
 		CreatureObject * const creature = findCreature (userId, argv, 1);
 		
-		if (creature == NULL)
+		if (creature == nullptr)
 		{
 			result += getErrorMessage (argv[0], ERR_INVALID_OBJECT);
 		}
@@ -288,7 +288,7 @@ bool ConsoleCommandParserSkill::performParsing (const NetworkId & userId, const 
 	{
 		CreatureObject * const creature = findCreature (userId, argv, 2);
 
-		if (creature == NULL)
+		if (creature == nullptr)
 		{
 			result += getErrorMessage (argv[0], ERR_INVALID_OBJECT);
 		}
@@ -296,7 +296,7 @@ bool ConsoleCommandParserSkill::performParsing (const NetworkId & userId, const 
 		{
 			std::string skillName = Unicode::wideToNarrow (argv[1]);
 			const SkillObject * skill = SkillManager::getInstance ().getSkill (skillName);
-			if (skill == NULL)
+			if (skill == nullptr)
 			{
 				result += Unicode::narrowToWide ("unknown skill");
 			}
@@ -317,7 +317,7 @@ bool ConsoleCommandParserSkill::performParsing (const NetworkId & userId, const 
 	{
 		CreatureObject * const creature = findCreature (userId, argv, 2);
 
-		if (creature == NULL)
+		if (creature == nullptr)
 		{
 			result += getErrorMessage (argv[0], ERR_INVALID_OBJECT);
 		}
@@ -336,7 +336,7 @@ bool ConsoleCommandParserSkill::performParsing (const NetworkId & userId, const 
 	{
 		CreatureObject * const creature = findCreature (userId, argv, 1);
 		
-		if (creature == NULL)
+		if (creature == nullptr)
 		{
 			result += getErrorMessage (argv[0], ERR_INVALID_OBJECT);
 		}
@@ -367,7 +367,7 @@ bool ConsoleCommandParserSkill::performParsing (const NetworkId & userId, const 
 	{
 		CreatureObject * const creature = findCreature (userId, argv, 2);
 		
-		if (creature == NULL)
+		if (creature == nullptr)
 		{
 			result += getErrorMessage (argv[0], ERR_INVALID_OBJECT);
 		}
@@ -384,7 +384,7 @@ bool ConsoleCommandParserSkill::performParsing (const NetworkId & userId, const 
 	{
 		CreatureObject * const creature = findCreature (userId, argv, 2);
 		
-		if (creature == NULL)
+		if (creature == nullptr)
 		{
 			result += getErrorMessage (argv[0], ERR_INVALID_OBJECT);
 		}
@@ -401,7 +401,7 @@ bool ConsoleCommandParserSkill::performParsing (const NetworkId & userId, const 
 	{
 		CreatureObject * const creature = findCreature (userId, argv, 2);
 		
-		if (creature == NULL)
+		if (creature == nullptr)
 		{
 			result += getErrorMessage (argv[0], ERR_INVALID_OBJECT);
 		}
@@ -418,7 +418,7 @@ bool ConsoleCommandParserSkill::performParsing (const NetworkId & userId, const 
 	{
 		CreatureObject * const creature = findCreature (userId, argv, 2);
 		
-		if (creature == NULL)
+		if (creature == nullptr)
 		{
 			result += getErrorMessage (argv[0], ERR_INVALID_OBJECT);
 		}
@@ -435,7 +435,7 @@ bool ConsoleCommandParserSkill::performParsing (const NetworkId & userId, const 
 	{
 		CreatureObject * const creature = findCreature (userId, argv, 1);
 		
-		if (creature == NULL)
+		if (creature == nullptr)
 		{
 			result += getErrorMessage (argv[0], ERR_INVALID_OBJECT);
 		}

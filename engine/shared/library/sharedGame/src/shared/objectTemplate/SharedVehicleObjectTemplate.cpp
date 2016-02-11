@@ -94,10 +94,10 @@ Tag SharedVehicleObjectTemplate::getTemplateVersion(void) const
  */
 Tag SharedVehicleObjectTemplate::getHighestTemplateVersion(void) const
 {
-	if (m_baseData == NULL)
+	if (m_baseData == nullptr)
 		return m_templateVersion;
 	const SharedVehicleObjectTemplate * base = dynamic_cast<const SharedVehicleObjectTemplate *>(m_baseData);
-	if (base == NULL)
+	if (base == nullptr)
 		return m_templateVersion;
 	return std::max(m_templateVersion, base->getHighestTemplateVersion());
 } // SharedVehicleObjectTemplate::getHighestTemplateVersion
@@ -105,8 +105,8 @@ Tag SharedVehicleObjectTemplate::getHighestTemplateVersion(void) const
 //@BEGIN TFD
 float SharedVehicleObjectTemplate::getSpeed(MovementTypes index) const
 {
-	const SharedVehicleObjectTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const SharedVehicleObjectTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedVehicleObjectTemplate *>(m_baseData);
 	}
@@ -114,14 +114,14 @@ float SharedVehicleObjectTemplate::getSpeed(MovementTypes index) const
 	DEBUG_FATAL(index < 0 || index >= 5, ("template param index out of range"));
 	if (!m_speed[index].isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter speed in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter speed has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter speed has not been defined in template %s!", DataResource::getName()));
 			return base->getSpeed(index);
 		}
 	}
@@ -131,9 +131,9 @@ float SharedVehicleObjectTemplate::getSpeed(MovementTypes index) const
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getSpeed(index);
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -154,8 +154,8 @@ float SharedVehicleObjectTemplate::getSpeed(MovementTypes index) const
 
 float SharedVehicleObjectTemplate::getSpeedMin(MovementTypes index) const
 {
-	const SharedVehicleObjectTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const SharedVehicleObjectTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedVehicleObjectTemplate *>(m_baseData);
 	}
@@ -163,14 +163,14 @@ float SharedVehicleObjectTemplate::getSpeedMin(MovementTypes index) const
 	DEBUG_FATAL(index < 0 || index >= 5, ("template param index out of range"));
 	if (!m_speed[index].isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter speed in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter speed has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter speed has not been defined in template %s!", DataResource::getName()));
 			return base->getSpeedMin(index);
 		}
 	}
@@ -180,9 +180,9 @@ float SharedVehicleObjectTemplate::getSpeedMin(MovementTypes index) const
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getSpeedMin(index);
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -203,8 +203,8 @@ float SharedVehicleObjectTemplate::getSpeedMin(MovementTypes index) const
 
 float SharedVehicleObjectTemplate::getSpeedMax(MovementTypes index) const
 {
-	const SharedVehicleObjectTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const SharedVehicleObjectTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedVehicleObjectTemplate *>(m_baseData);
 	}
@@ -212,14 +212,14 @@ float SharedVehicleObjectTemplate::getSpeedMax(MovementTypes index) const
 	DEBUG_FATAL(index < 0 || index >= 5, ("template param index out of range"));
 	if (!m_speed[index].isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter speed in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter speed has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter speed has not been defined in template %s!", DataResource::getName()));
 			return base->getSpeedMax(index);
 		}
 	}
@@ -229,9 +229,9 @@ float SharedVehicleObjectTemplate::getSpeedMax(MovementTypes index) const
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getSpeedMax(index);
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -258,26 +258,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const SharedVehicleObjectTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const SharedVehicleObjectTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedVehicleObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getSlopeAversion(true);
 #endif
 	}
 
 	if (!m_slopeAversion.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter slopeAversion in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter slopeAversion has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter slopeAversion has not been defined in template %s!", DataResource::getName()));
 			return base->getSlopeAversion();
 		}
 	}
@@ -287,9 +287,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getSlopeAversion();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -306,7 +306,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -322,26 +322,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const SharedVehicleObjectTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const SharedVehicleObjectTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedVehicleObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getSlopeAversionMin(true);
 #endif
 	}
 
 	if (!m_slopeAversion.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter slopeAversion in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter slopeAversion has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter slopeAversion has not been defined in template %s!", DataResource::getName()));
 			return base->getSlopeAversionMin();
 		}
 	}
@@ -351,9 +351,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getSlopeAversionMin();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -370,7 +370,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -386,26 +386,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const SharedVehicleObjectTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const SharedVehicleObjectTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedVehicleObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getSlopeAversionMax(true);
 #endif
 	}
 
 	if (!m_slopeAversion.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter slopeAversion in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter slopeAversion has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter slopeAversion has not been defined in template %s!", DataResource::getName()));
 			return base->getSlopeAversionMax();
 		}
 	}
@@ -415,9 +415,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getSlopeAversionMax();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -434,7 +434,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -450,26 +450,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const SharedVehicleObjectTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const SharedVehicleObjectTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedVehicleObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getHoverValue(true);
 #endif
 	}
 
 	if (!m_hoverValue.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter hoverValue in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter hoverValue has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter hoverValue has not been defined in template %s!", DataResource::getName()));
 			return base->getHoverValue();
 		}
 	}
@@ -479,9 +479,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getHoverValue();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -498,7 +498,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -514,26 +514,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const SharedVehicleObjectTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const SharedVehicleObjectTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedVehicleObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getHoverValueMin(true);
 #endif
 	}
 
 	if (!m_hoverValue.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter hoverValue in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter hoverValue has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter hoverValue has not been defined in template %s!", DataResource::getName()));
 			return base->getHoverValueMin();
 		}
 	}
@@ -543,9 +543,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getHoverValueMin();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -562,7 +562,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -578,26 +578,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const SharedVehicleObjectTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const SharedVehicleObjectTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedVehicleObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getHoverValueMax(true);
 #endif
 	}
 
 	if (!m_hoverValue.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter hoverValue in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter hoverValue has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter hoverValue has not been defined in template %s!", DataResource::getName()));
 			return base->getHoverValueMax();
 		}
 	}
@@ -607,9 +607,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getHoverValueMax();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -626,7 +626,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -642,26 +642,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const SharedVehicleObjectTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const SharedVehicleObjectTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedVehicleObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getTurnRate(true);
 #endif
 	}
 
 	if (!m_turnRate.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter turnRate in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter turnRate has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter turnRate has not been defined in template %s!", DataResource::getName()));
 			return base->getTurnRate();
 		}
 	}
@@ -671,9 +671,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getTurnRate();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -690,7 +690,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -706,26 +706,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const SharedVehicleObjectTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const SharedVehicleObjectTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedVehicleObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getTurnRateMin(true);
 #endif
 	}
 
 	if (!m_turnRate.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter turnRate in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter turnRate has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter turnRate has not been defined in template %s!", DataResource::getName()));
 			return base->getTurnRateMin();
 		}
 	}
@@ -735,9 +735,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getTurnRateMin();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -754,7 +754,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -770,26 +770,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const SharedVehicleObjectTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const SharedVehicleObjectTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedVehicleObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getTurnRateMax(true);
 #endif
 	}
 
 	if (!m_turnRate.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter turnRate in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter turnRate has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter turnRate has not been defined in template %s!", DataResource::getName()));
 			return base->getTurnRateMax();
 		}
 	}
@@ -799,9 +799,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getTurnRateMax();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -818,7 +818,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -834,26 +834,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const SharedVehicleObjectTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const SharedVehicleObjectTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedVehicleObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getMaxVelocity(true);
 #endif
 	}
 
 	if (!m_maxVelocity.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter maxVelocity in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter maxVelocity has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter maxVelocity has not been defined in template %s!", DataResource::getName()));
 			return base->getMaxVelocity();
 		}
 	}
@@ -863,9 +863,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getMaxVelocity();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -882,7 +882,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -898,26 +898,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const SharedVehicleObjectTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const SharedVehicleObjectTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedVehicleObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getMaxVelocityMin(true);
 #endif
 	}
 
 	if (!m_maxVelocity.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter maxVelocity in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter maxVelocity has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter maxVelocity has not been defined in template %s!", DataResource::getName()));
 			return base->getMaxVelocityMin();
 		}
 	}
@@ -927,9 +927,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getMaxVelocityMin();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -946,7 +946,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -962,26 +962,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const SharedVehicleObjectTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const SharedVehicleObjectTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedVehicleObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getMaxVelocityMax(true);
 #endif
 	}
 
 	if (!m_maxVelocity.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter maxVelocity in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter maxVelocity has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter maxVelocity has not been defined in template %s!", DataResource::getName()));
 			return base->getMaxVelocityMax();
 		}
 	}
@@ -991,9 +991,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getMaxVelocityMax();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -1010,7 +1010,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -1026,26 +1026,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const SharedVehicleObjectTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const SharedVehicleObjectTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedVehicleObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getAcceleration(true);
 #endif
 	}
 
 	if (!m_acceleration.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter acceleration in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter acceleration has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter acceleration has not been defined in template %s!", DataResource::getName()));
 			return base->getAcceleration();
 		}
 	}
@@ -1055,9 +1055,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getAcceleration();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -1074,7 +1074,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -1090,26 +1090,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const SharedVehicleObjectTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const SharedVehicleObjectTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedVehicleObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getAccelerationMin(true);
 #endif
 	}
 
 	if (!m_acceleration.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter acceleration in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter acceleration has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter acceleration has not been defined in template %s!", DataResource::getName()));
 			return base->getAccelerationMin();
 		}
 	}
@@ -1119,9 +1119,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getAccelerationMin();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -1138,7 +1138,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -1154,26 +1154,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const SharedVehicleObjectTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const SharedVehicleObjectTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedVehicleObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getAccelerationMax(true);
 #endif
 	}
 
 	if (!m_acceleration.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter acceleration in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter acceleration has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter acceleration has not been defined in template %s!", DataResource::getName()));
 			return base->getAccelerationMax();
 		}
 	}
@@ -1183,9 +1183,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getAccelerationMax();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -1202,7 +1202,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -1218,26 +1218,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const SharedVehicleObjectTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const SharedVehicleObjectTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedVehicleObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getBraking(true);
 #endif
 	}
 
 	if (!m_braking.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter braking in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter braking has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter braking has not been defined in template %s!", DataResource::getName()));
 			return base->getBraking();
 		}
 	}
@@ -1247,9 +1247,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getBraking();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -1266,7 +1266,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -1282,26 +1282,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const SharedVehicleObjectTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const SharedVehicleObjectTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedVehicleObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getBrakingMin(true);
 #endif
 	}
 
 	if (!m_braking.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter braking in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter braking has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter braking has not been defined in template %s!", DataResource::getName()));
 			return base->getBrakingMin();
 		}
 	}
@@ -1311,9 +1311,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getBrakingMin();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -1330,7 +1330,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -1346,26 +1346,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const SharedVehicleObjectTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const SharedVehicleObjectTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedVehicleObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getBrakingMax(true);
 #endif
 	}
 
 	if (!m_braking.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter braking in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter braking has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter braking has not been defined in template %s!", DataResource::getName()));
 			return base->getBrakingMax();
 		}
 	}
@@ -1375,9 +1375,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getBrakingMax();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -1394,7 +1394,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -1451,12 +1451,12 @@ char paramName[MAX_NAME_SIZE];
 		file.read_string(baseFilename);
 		file.exitChunk();
 		const ObjectTemplate *base = ObjectTemplateList::fetch(baseFilename);
-		DEBUG_WARNING(base == NULL, ("was unable to load base template %s", baseFilename.c_str()));
-		if (m_baseData == base && base != NULL)
+		DEBUG_WARNING(base == nullptr, ("was unable to load base template %s", baseFilename.c_str()));
+		if (m_baseData == base && base != nullptr)
 			base->releaseReference();
 		else
 		{
-			if (m_baseData != NULL)
+			if (m_baseData != nullptr)
 				m_baseData->releaseReference();
 			m_baseData = base;
 		}

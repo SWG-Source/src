@@ -920,7 +920,7 @@ void JNICALL ScriptMethodsCityNamespace::cityRemoveStructure(JNIEnv *env, jobjec
 
 jboolean JNICALL ScriptMethodsCityNamespace::cityIsInactivePackupActive(JNIEnv *env, jobject self)
 {
-	return (ConfigServerGame::getCityCitizenshipInactivePackupStartTimeEpoch() <= static_cast<int>(::time(NULL)));
+	return (ConfigServerGame::getCityCitizenshipInactivePackupStartTimeEpoch() <= static_cast<int>(::time(nullptr)));
 }
 
 // ----------------------------------------------------------------------

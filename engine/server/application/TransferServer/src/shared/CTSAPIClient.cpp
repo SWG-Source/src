@@ -147,7 +147,7 @@ void CTSAPIClient::onRequestMove(const unsigned server_track, const char *langua
 	{
 		LOG("CTSAPI", ("Received a transfer request for station ID %d, but a transfer for that id is already in progress", uid));
 		const unsigned int result = static_cast<unsigned int>(CTService::CT_GAMERESULT_SOFTERROR);
-		IGNORE_RETURN(replyMove(server_track, result, NULL, NULL));
+		IGNORE_RETURN(replyMove(server_track, result, nullptr, nullptr));
 	}
 }
 
@@ -165,7 +165,7 @@ void CTSAPIClient::onRequestTransferAccount(const unsigned server_track, const u
 	{
 		LOG("CTSAPI", ("Received a transfer request for station ID %d, but a transfer for that id is already in progress", uid));
 		const unsigned int result = static_cast<unsigned int>(CTService::CT_GAMERESULT_SOFTERROR);
-		IGNORE_RETURN(replyTransferAccount(server_track, result, NULL, NULL));
+		IGNORE_RETURN(replyTransferAccount(server_track, result, nullptr, nullptr));
 	}
 }
 
@@ -197,12 +197,12 @@ void CTSAPIClient::onRequestServerList(const unsigned server_track, const char *
 	if(! servers.empty())
 	{
 		const unsigned int result = static_cast<unsigned int>(CTService::CT_RESULT_SUCCESS);
-		IGNORE_RETURN(replyServerList(server_track, result, servers.size(), &servers[0], NULL));
+		IGNORE_RETURN(replyServerList(server_track, result, servers.size(), &servers[0], nullptr));
 	}
 	else
 	{
 		const unsigned int result = static_cast<unsigned int>(CTService::CT_RESULT_FAILURE);
-		IGNORE_RETURN(replyServerList(server_track, result, servers.size(), NULL, NULL));
+		IGNORE_RETURN(replyServerList(server_track, result, servers.size(), nullptr, nullptr));
 	}
 }
 
@@ -226,12 +226,12 @@ void CTSAPIClient::onRequestDestinationServerList(const unsigned server_track, c
 	if(! servers.empty())
 	{
 		const unsigned int result = static_cast<unsigned int>(CTService::CT_RESULT_SUCCESS);
-		IGNORE_RETURN(replyDestinationServerList(server_track, result, servers.size(), &servers[0], NULL));
+		IGNORE_RETURN(replyDestinationServerList(server_track, result, servers.size(), &servers[0], nullptr));
 	}
 	else
 	{
 		const unsigned int result = static_cast<unsigned int>(CTService::CT_RESULT_FAILURE);
-		IGNORE_RETURN(replyDestinationServerList(server_track, result, servers.size(), NULL, NULL));
+		IGNORE_RETURN(replyDestinationServerList(server_track, result, servers.size(), nullptr, nullptr));
 	}
 }
 
@@ -260,7 +260,7 @@ void CTSAPIClient::moveStart(unsigned int stationId, unsigned int track, const C
 	std::map<unsigned int, int>::iterator f = s_completedTransfers.find(track);
 	if(f != s_completedTransfers.end())
 	{
-		IGNORE_RETURN(replyMove(track, f->second, NULL, NULL));
+		IGNORE_RETURN(replyMove(track, f->second, nullptr, nullptr));
 	}
 	else
 	{
@@ -284,7 +284,7 @@ void CTSAPIClient::lostCentralServerConnection(const CentralServerConnection * c
 	{
 		if(i->second.m_sourceCentralServerConnection == centralServerConnection || i->second.m_destinationCentralServerConnection == centralServerConnection)
 		{
-			IGNORE_RETURN(replyMove(i->second.m_track, result, NULL, NULL));
+			IGNORE_RETURN(replyMove(i->second.m_track, result, nullptr, nullptr));
 			s_activeTransfers.erase(i++);
 		}
 		else

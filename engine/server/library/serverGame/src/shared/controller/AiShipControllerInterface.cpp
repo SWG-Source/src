@@ -25,7 +25,7 @@ bool AiShipControllerInterface::addDamageTaken(NetworkId const & unit, NetworkId
 	bool result = false;
 	AiShipController * const aiShipController = AiShipController::getAiShipController(unit);
 
-	if (aiShipController != NULL)
+	if (aiShipController != nullptr)
 	{
 		bool const verifyAttacker = false;
 
@@ -45,7 +45,7 @@ bool AiShipControllerInterface::setAttackOrders(NetworkId const & unit, AiShipCo
 	bool result = false;
 	AiShipController * const aiShipController = AiShipController::getAiShipController(unit);
 
-	if (aiShipController != NULL)
+	if (aiShipController != nullptr)
 	{
 		result = true;
 		aiShipController->setAttackOrders(attackOrders);
@@ -64,7 +64,7 @@ bool AiShipControllerInterface::idle(NetworkId const & unit)
 	bool result = false;
 	AiShipController * const aiShipController = AiShipController::getAiShipController(unit);
 
-	if (aiShipController != NULL)
+	if (aiShipController != nullptr)
 	{
 		result = true;
 		aiShipController->idle();
@@ -83,7 +83,7 @@ bool AiShipControllerInterface::track(NetworkId const & unit, Object const & tar
 	bool result = false;
 	AiShipController * const aiShipController = AiShipController::getAiShipController(unit);
 
-	if (aiShipController != NULL)
+	if (aiShipController != nullptr)
 	{
 		result = true;
 		aiShipController->track(target);
@@ -102,7 +102,7 @@ bool AiShipControllerInterface::setLeashRadius(NetworkId const & unit, float con
 	bool result = false;
 	AiShipController * const aiShipController = AiShipController::getAiShipController(unit);
 
-	if (aiShipController != NULL)
+	if (aiShipController != nullptr)
 	{
 		result = true;
 		aiShipController->setLeashRadius(radius);
@@ -121,7 +121,7 @@ bool AiShipControllerInterface::follow(NetworkId const & unit, NetworkId const &
 	bool result = false;
 	AiShipController * const aiShipController = AiShipController::getAiShipController(unit);
 
-	if (aiShipController != NULL)
+	if (aiShipController != nullptr)
 	{
 		result = true;
 		aiShipController->follow(followedUnit, direction_o, direction);
@@ -140,7 +140,7 @@ bool AiShipControllerInterface::addPatrolPath(NetworkId const & unit, SpacePath 
 	bool result = false;
 	AiShipController * const aiShipController = AiShipController::getAiShipController(unit);
 
-	if (aiShipController != NULL)
+	if (aiShipController != nullptr)
 	{
 		result = true;
 		aiShipController->addPatrolPath(path);
@@ -159,7 +159,7 @@ bool AiShipControllerInterface::clearPatrolPath(NetworkId const & unit)
 	bool result = false;
 	AiShipController * const aiShipController = AiShipController::getAiShipController(unit);
 
-	if (aiShipController != NULL)
+	if (aiShipController != nullptr)
 	{
 		result = true;
 		aiShipController->clearPatrolPath();
@@ -178,7 +178,7 @@ bool AiShipControllerInterface::moveTo(NetworkId const & unit, SpacePath * const
 	bool result = false;
 	AiShipController * const aiShipController = AiShipController::getAiShipController(unit);
 
-	if (aiShipController != NULL)
+	if (aiShipController != nullptr)
 	{
 		result = true;
 		aiShipController->moveTo(path);

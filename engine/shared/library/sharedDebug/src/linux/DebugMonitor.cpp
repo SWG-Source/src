@@ -160,7 +160,7 @@ void DebugMonitor::install(void)
 	//         handle input from the output terminal, particularly to
 	//         handle profiler modifications when the output window
 	//         is active.
-	s_outputScreen = newterm(NULL, s_ttyOutputFile, stdin);
+	s_outputScreen = newterm(nullptr, s_ttyOutputFile, stdin);
 	if (!s_outputScreen)
 	{
 		DEBUG_WARNING(true, ("DebugMonitor: newterm() failed [%s].", strerror(errno)));

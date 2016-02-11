@@ -26,13 +26,13 @@
 
 // ======================================================================
 
-CharacterCreationTracker * CharacterCreationTracker::ms_instance = NULL;
+CharacterCreationTracker * CharacterCreationTracker::ms_instance = nullptr;
 
 // ======================================================================
 
 void CharacterCreationTracker::install()
 {
-	DEBUG_FATAL(ms_instance != NULL,("Called install() twice.\n"));
+	DEBUG_FATAL(ms_instance != nullptr,("Called install() twice.\n"));
 	ms_instance = new CharacterCreationTracker;
 	ExitChain::add(CharacterCreationTracker::remove,"CharacterCreationTracker::remove");
 }
@@ -354,8 +354,8 @@ void CharacterCreationTracker::setFastCreationLock(StationId account)
 
 CharacterCreationTracker::CreationRecord::CreationRecord() :
 		m_stage(S_queuedForGameServer),
-		m_gameCreationRequest(NULL),
-		m_loginCreationRequest(NULL),
+		m_gameCreationRequest(nullptr),
+		m_loginCreationRequest(nullptr),
 		m_creationTime(ServerClock::getInstance().getGameTimeSeconds()),
 		m_gameServerId(0),
 		m_loginServerId(0),

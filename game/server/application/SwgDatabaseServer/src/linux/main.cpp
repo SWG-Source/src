@@ -43,7 +43,7 @@ int main(int argc, char ** argv)
 	SetupSharedFoundation::install (setupFoundationData);
 
 	SetupSharedFile::install(false);
-	SetupSharedRandom::install(time(NULL));
+	SetupSharedRandom::install(time(nullptr));
 	SetupSharedNetwork::SetupData  networkSetupData;
 	SetupSharedNetwork::getDefaultServerSetupData(networkSetupData);
 	SetupSharedNetwork::install(networkSetupData);

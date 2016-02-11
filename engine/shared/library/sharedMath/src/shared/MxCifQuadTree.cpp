@@ -32,10 +32,10 @@ MxCifQuadTree::MxCifQuadTree(float minX, float minY, float maxX, float maxY, int
 	m_centerX((m_maxX - m_minX) / 2.0f + m_minX),
 	m_centerY((m_maxY - m_minY) / 2.0f + m_minY),
 	m_maxDepth(maxDepth),
-	m_urTree(NULL),
-	m_ulTree(NULL),
-	m_llTree(NULL),
-	m_lrTree(NULL),
+	m_urTree(nullptr),
+	m_ulTree(nullptr),
+	m_llTree(nullptr),
+	m_lrTree(nullptr),
 	m_xAxisTree(minX, maxX, maxDepth),
 	m_yAxisTree(minY, maxY, maxDepth)
 {
@@ -49,13 +49,13 @@ MxCifQuadTree::MxCifQuadTree(float minX, float minY, float maxX, float maxY, int
 MxCifQuadTree::~MxCifQuadTree()
 {
 	delete m_urTree;
-	m_urTree = NULL;
+	m_urTree = nullptr;
 	delete m_ulTree;
-	m_ulTree = NULL;
+	m_ulTree = nullptr;
 	delete m_llTree;
-	m_llTree = NULL;
+	m_llTree = nullptr;
 	delete m_lrTree;
-	m_lrTree = NULL;
+	m_lrTree = nullptr;
 }	// MxCifQuadTree::~MxCifQuadTree
 
 //------------------------------------------------------------------------------
@@ -99,7 +99,7 @@ bool MxCifQuadTree::addObject(const MxCifQuadTreeBounds & object)
 		// try putting the object in a child node
 		if (m_maxDepth > 1)
 		{
-			if (m_urTree == NULL)
+			if (m_urTree == nullptr)
 			{
 				if (!split())
 					return false;
@@ -158,7 +158,7 @@ bool MxCifQuadTree::removeObject(const MxCifQuadTreeBounds & object)
 	{
 		if (m_maxDepth > 1)
 		{
-			if (m_urTree != NULL)
+			if (m_urTree != nullptr)
 			{
 				// check if the object is in a sub-node 
 				if (m_urTree->removeObject(object) ||
@@ -212,7 +212,7 @@ void MxCifQuadTree::getObjectsAt(float x, float y,
 		y >= m_minY)
 	{
 		// if we have sub-trees, pass the point to the tree that contains it
-		if (m_urTree != NULL)
+		if (m_urTree != nullptr)
 		{
 			if (x >= m_centerX && y >= m_centerY)
 				m_urTree->getObjectsAt(x, y, objects);
@@ -239,7 +239,7 @@ void MxCifQuadTree::getObjectsAt(float x, float y,
 void MxCifQuadTree::getAllObjects(std::vector<const MxCifQuadTreeBounds *> & objects) const
 {
 	// if we have sub-trees, pass the point to the tree that contains it
-	if (m_urTree != NULL)
+	if (m_urTree != nullptr)
 	{
 		m_urTree->getAllObjects(objects);
 		m_ulTree->getAllObjects(objects);
@@ -265,8 +265,8 @@ MxCifQuadTree::MxCifBinTree::MxCifBinTree(float min, float max, int maxDepth) :
 	m_max(max),
 	m_center((max - min) / 2.0f + min),
 	m_maxDepth(maxDepth),
-	m_left(NULL),
-	m_right(NULL),
+	m_left(nullptr),
+	m_right(nullptr),
 	m_objects()
 {
 }	// MxCifBinTree::MxCifBinTree
@@ -277,9 +277,9 @@ MxCifQuadTree::MxCifBinTree::MxCifBinTree(float min, float max, int maxDepth) :
 MxCifQuadTree::MxCifBinTree::~MxCifBinTree()
 {
 	delete m_left;
-	m_left = NULL;
+	m_left = nullptr;
 	delete m_right;
-	m_right = NULL;
+	m_right = nullptr;
 	m_objects.clear();
 }	// MxCifBinTree::~MxCifBinTree
 
@@ -315,7 +315,7 @@ bool MxCifQuadTree::MxCifBinTree::addObject(const MxCifQuadTreeBounds & object)
 		// try putting the object in a child node
 		if (m_maxDepth > 1)
 		{
-			if (m_left == NULL)
+			if (m_left == nullptr)
 			{
 				if (!split())
 					return false;
@@ -348,7 +348,7 @@ bool MxCifQuadTree::MxCifBinTree::removeObject(const MxCifQuadTreeBounds & objec
 	{
 		if (m_maxDepth > 1)
 		{
-			if (m_left != NULL)
+			if (m_left != nullptr)
 			{
 				// check if the object is in a sub-node 
 				if (m_left->removeObject(object) ||
@@ -379,7 +379,7 @@ void MxCifQuadTree::MxCifBinTree::getAllObjects(
 	std::vector<const MxCifQuadTreeBounds *> & objects) const
 {
 	// if we have sub-trees, pass the point to the tree that contains it
-	if (m_left != NULL)
+	if (m_left != nullptr)
 	{
 		m_right->getAllObjects(objects);
 		m_left->getAllObjects(objects);
@@ -435,7 +435,7 @@ void MxCifQuadTree::MxCifXBinTree::getObjectsAt(float x, float y,
 		x >= m_min)
 	{
 		// if we have sub-trees, pass the point to the tree that contains it
-		if (m_left != NULL)
+		if (m_left != nullptr)
 		{
 			if (x >= m_center)
 				m_right->getObjectsAt(x, y, objects);
@@ -498,7 +498,7 @@ void MxCifQuadTree::MxCifYBinTree::getObjectsAt(float x, float y,
 		y >= m_min)
 	{
 		// if we have sub-trees, pass the point to the tree that contains it
-		if (m_left != NULL)
+		if (m_left != nullptr)
 		{
 			if (y >= m_center)
 				m_right->getObjectsAt(x, y, objects);

@@ -132,7 +132,7 @@ bool SurveySystem::TaskSurvey::run()
 	Client const *              client            = GameServer::getInstance().getClient(m_playerId);
 	ResourceTypeObject const *  typeObj           = ServerUniverse::getInstance().getResourceTypeByName(*m_resourceTypeName);
 	ResourceClassObject const * parentClass       = ServerUniverse::getInstance().getResourceClassByName(*m_parentResourceClassName);
-	ResourcePoolObject const *  pool              = typeObj ? typeObj->getPoolForCurrentPlanet() : NULL;
+	ResourcePoolObject const *  pool              = typeObj ? typeObj->getPoolForCurrentPlanet() : nullptr;
 	int                         distBetweenPoints = m_surveyRange / (m_numPoints - 1); // -1 is so that we get points at both ends
 	int                         radius            = m_surveyRange / 2;
 	

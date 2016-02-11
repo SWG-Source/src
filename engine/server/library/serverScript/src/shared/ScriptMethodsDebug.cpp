@@ -188,7 +188,7 @@ void JNICALL ScriptMethodsDebugNamespace::debugServerConsoleMsg(JNIEnv *env, job
 	ServerObject * object = 0;
 	JavaLibrary::getObject(objId, object);
 
-	if (object == NULL)
+	if (object == nullptr)
 	{
 		DEBUG_REPORT_LOG(true, ("debugServerConsoleMsg from <unknown>: %s\n",
 			msgString.c_str()));
@@ -212,8 +212,8 @@ void JNICALL ScriptMethodsDebugNamespace::debugServerConsoleMsg(JNIEnv *env, job
  * @param channel	the channel to log to
  * @param msg		the message to log
  * @param logger    id of the object where the log is coming from
- * @param player1	the 1st player for the message (may be null)
- * @param player2	the 2nd player for the message (may be null)
+ * @param player1	the 1st player for the message (may be nullptr)
+ * @param player2	the 2nd player for the message (may be nullptr)
  * @param alwaysLog flag to ignore the disableScriptLogs flag and always log this message
  */
 void JNICALL ScriptMethodsDebugNamespace::log(JNIEnv *env, jobject self, jstring channel, jstring msg, jlong logger, jlong player1, jlong player2, jboolean alwaysLog)
@@ -222,7 +222,7 @@ void JNICALL ScriptMethodsDebugNamespace::log(JNIEnv *env, jobject self, jstring
 
 	if (channel == 0 || msg == 0)
 	{
-		JavaLibrary::throwInternalScriptError("[designer bug] JavaLibrary::log called with null channel or message");
+		JavaLibrary::throwInternalScriptError("[designer bug] JavaLibrary::log called with nullptr channel or message");
 		return;
 	}
 
@@ -248,7 +248,7 @@ void JNICALL ScriptMethodsDebugNamespace::log(JNIEnv *env, jobject self, jstring
 
 		if (player1 != 0)
 		{
-			const ServerObject * playerObject = NULL;
+			const ServerObject * playerObject = nullptr;
 			if (JavaLibrary::getObject(player1, playerObject))
 			{
 				std::string::size_type p = msgStr.find("%TU");
@@ -264,7 +264,7 @@ void JNICALL ScriptMethodsDebugNamespace::log(JNIEnv *env, jobject self, jstring
 
 		if (player2 != 0)
 		{
-			const ServerObject * playerObject = NULL;
+			const ServerObject * playerObject = nullptr;
 			if (JavaLibrary::getObject(player2, playerObject))
 			{
 				std::string::size_type p = msgStr.find("%TT");

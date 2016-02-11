@@ -317,11 +317,11 @@ namespace GameServerNamespace
 	bool getConfigSetting(const char *section, const char *key, int & value)
 	{
 		const ConfigFile::Section * sec = ConfigFile::getSection(section);
-		if (sec == NULL)
+		if (sec == nullptr)
 			return false;
 
 		const ConfigFile::Key * ky = sec->findKey(key);
-		if (ky == NULL)
+		if (ky == nullptr)
 			return false;
 
 		value = ky->getAsInt(ky->getCount()-1, value);
@@ -753,7 +753,7 @@ Client * GameServer::getClient(const NetworkId& networkId)
 	{
 		return i->second;
 	}
-	return NULL;
+	return nullptr;
 }
 
 //-----------------------------------------------------------------------
@@ -837,7 +837,7 @@ void GameServer::loadTerrain ()
 	terrainObject->setDebugName("terrain");
 
 	Appearance * const appearance = AppearanceTemplateList::createAppearance(terrainFileName);
-	if (appearance != NULL) {
+	if (appearance != nullptr) {
 		terrainObject->setAppearance(appearance);
 	} else {
 		DEBUG_WARNING(true, ("FIX ME: Appearance template for GameServer::loadTerrain missing for %s.", terrainFileName));
@@ -866,7 +866,7 @@ void GameServer::shutdown()
 	m_centralService = 0;
 	m_planetServerConnection = 0;
 
-	if (m_customerServiceServerConnection != NULL)
+	if (m_customerServiceServerConnection != nullptr)
 	{
 		m_customerServiceServerConnection->disconnect();
 	}
@@ -909,7 +909,7 @@ void GameServer::receiveMessage(const MessageDispatch::Emitter & source, const M
 
 		DEBUG_REPORT_LOG(true, ("GameServer: Creating customer service server connection @ (%s:%d)\n", address.getValue().first.c_str(), address.getValue().second));
 
-		if (m_customerServiceServerConnection != NULL)
+		if (m_customerServiceServerConnection != nullptr)
 		{
 			m_customerServiceServerConnection->disconnect();
 		}
@@ -949,7 +949,7 @@ void GameServer::receiveMessage(const MessageDispatch::Emitter & source, const M
 
 		std::vector<BatchBaselinesMessageData> const & baselines = m.getData();
 
-		ServerObject * lastObject = NULL;
+		ServerObject * lastObject = nullptr;
 		
 		for (std::vector<BatchBaselinesMessageData>::const_iterator i=baselines.begin(); i!=baselines.end(); ++i)
 		{
@@ -1286,7 +1286,7 @@ void GameServer::receiveMessage(const MessageDispatch::Emitter & source, const M
 
 				if (topmostContainer != object)
 				{
-					WARNING(true, ("Denying authority transfer for (%s) from game server (%lu) to game server (%lu) because it is contained by (%s)", object->getDebugInformation().c_str(), GameServer::getInstance().getProcessId(), t.getProcess(), (topmostContainer ? topmostContainer->getDebugInformation().c_str() : "NULL")));
+					WARNING(true, ("Denying authority transfer for (%s) from game server (%lu) to game server (%lu) because it is contained by (%s)", object->getDebugInformation().c_str(), GameServer::getInstance().getProcessId(), t.getProcess(), (topmostContainer ? topmostContainer->getDebugInformation().c_str() : "nullptr")));
 
 					allowed = false;
 
@@ -1425,11 +1425,11 @@ void GameServer::receiveMessage(const MessageDispatch::Emitter & source, const M
 		bool appended = false;
 
 		ServerObject * const target = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(c.getNetworkId()));
-		if (target != NULL)
+		if (target != nullptr)
 		{
 			// valid target, get its controller
 			ServerController * const controller = safe_cast<ServerController *>(target->getController());
-			if (controller != NULL)
+			if (controller != nullptr)
 			{
 				uint32 flags = c.getFlags();
 				if(flags & GameControllerMessageFlags::DEST_AUTH_SERVER)
@@ -1473,7 +1473,7 @@ void GameServer::receiveMessage(const MessageDispatch::Emitter & source, const M
 		ri = static_cast<GameNetworkMessage const &>(message).getByteStream().begin();
 		EndBaselinesMessage const t(ri);
 		ServerObject * const object = ServerWorld::findUninitializedObjectByNetworkId(t.getId());
-		if (object != NULL)
+		if (object != nullptr)
 		{
 			DEBUG_REPORT_LOG(ConfigServerGame::getLogObjectLoading(), ("Received EndBaselinesMessage for %s\n", t.getId().getValueString().c_str()));
 			ServerController * const controller = dynamic_cast<ServerController *>(object->getController());
@@ -1778,7 +1778,7 @@ void GameServer::receiveMessage(const MessageDispatch::Emitter & source, const M
 						}
 						else
 						{
-							LOG("mounts-bug", ("GS::SceneTransferMessage: server id=[%d],rider id=[%s] has RidingMount state but getMountedCreature() returns NULL.", static_cast<int>(getProcessId()), obj->getNetworkId().getValueString().c_str()));
+							LOG("mounts-bug", ("GS::SceneTransferMessage: server id=[%d],rider id=[%s] has RidingMount state but getMountedCreature() returns nullptr.", static_cast<int>(getProcessId()), obj->getNetworkId().getValueString().c_str()));
 							objAsCreature->emergencyDismountForRider();
 						}
 					}
@@ -2297,7 +2297,7 @@ void GameServer::receiveMessage2(const MessageDispatch::Emitter & source, const 
 			if (creatureObj->isAuthoritative())
 			{
 				AICreatureController const * const aiCreatureController = AICreatureController::asAiCreatureController(creatureObj->getController());
-				if (aiCreatureController == NULL)
+				if (aiCreatureController == nullptr)
 				{
 					continue;
 				}
@@ -2359,7 +2359,7 @@ void GameServer::receiveMessage2(const MessageDispatch::Emitter & source, const 
 #endif
 
 		std::string time = FormattedString<1024>().sprintf("(%3d,%5dms) %30s.%-2lu (%3lu) on %35s:%-7d (%lu) ", ObjectTracker::getNumPlayers(), static_cast<int>(Clock::frameTime()*1000), ServerWorld::getSceneId().c_str(), m_preloadAreaId, m_processId, hostName.c_str(), Os::getProcessId(), ServerClock::getInstance().getGameTimeSeconds());
-		time += CalendarTime::convertEpochToTimeStringGMT(::time(NULL));
+		time += CalendarTime::convertEpochToTimeStringGMT(::time(nullptr));
 
 		GenericValueTypeMessage<std::pair<uint32, std::pair<std::string, NetworkId> > > rsctr(
 			"ReportSystemClockTimeResponse", std::make_pair(msg.getValue().first, std::make_pair(time, msg.getValue().second)));
@@ -2378,7 +2378,7 @@ void GameServer::receiveMessage2(const MessageDispatch::Emitter & source, const 
 		ri = static_cast<GameNetworkMessage const &>(message).getByteStream().begin();
 		GenericValueTypeMessage<std::pair<uint32, NetworkId> > const msg(ri);
 
-		time_t const timeNow = ::time(NULL);
+		time_t const timeNow = ::time(nullptr);
 		std::string time = FormattedString<1024>().sprintf("%30s.%-2lu (%3lu) (%lu) (%ld, ", ServerWorld::getSceneId().c_str(), m_preloadAreaId, m_processId, ServerClock::getInstance().getGameTimeSeconds(), timeNow);
 		time += CalendarTime::convertEpochToTimeStringGMT(timeNow);
 		time += ")";
@@ -2404,7 +2404,7 @@ void GameServer::receiveMessage2(const MessageDispatch::Emitter & source, const 
 		}
 		else
 		{
-			time += " (terrainObject is NULL)";
+			time += " (terrainObject is nullptr)";
 		}
 
 		GenericValueTypeMessage<std::pair<uint32, std::pair<std::string, NetworkId> > > rptr(
@@ -2596,7 +2596,7 @@ void GameServer::receiveMessage2(const MessageDispatch::Emitter & source, const 
 					bool removeCurrentCitizenDeleted;
 					bool removeCurrentCitizenInactive;
 					bool hasDeclaredResidence;
-					int const timeNow = static_cast<int>(::time(NULL));
+					int const timeNow = static_cast<int>(::time(nullptr));
 					bool const citizenInactivePackupActive = (ConfigServerGame::getCityCitizenshipInactivePackupStartTimeEpoch() <= timeNow);
 					std::map<std::pair<int, NetworkId>, CitizenInfo> const & allCitizens = CityInterface::getAllCitizensInfo();
 					for (std::map<int, std::set<NetworkId> >::iterator iterCityId = s_clusterStartupResidenceStructureListByCity.begin(); iterCityId != s_clusterStartupResidenceStructureListByCity.end(); ++iterCityId)
@@ -2614,7 +2614,7 @@ void GameServer::receiveMessage2(const MessageDispatch::Emitter & source, const 
 						if (currentCityMayor.isValid())
 							currentCityMayorCitizenInfo = CityInterface::getCitizenInfo(iterCityId->first, currentCityMayor);
 						else
-							currentCityMayorCitizenInfo = NULL;
+							currentCityMayorCitizenInfo = nullptr;
 
 						if (currentCityMayorCitizenInfo)
 							currentCityMayorName = currentCityMayorCitizenInfo->m_citizenName;
@@ -2958,7 +2958,7 @@ void GameServer::receiveMessage2(const MessageDispatch::Emitter & source, const 
 
 			ScriptDictionaryPtr dictionary;
 			responseObject->getScriptObject()->makeScriptDictionary(params, dictionary);
-			if (dictionary.get() != NULL)
+			if (dictionary.get() != nullptr)
 			{
 				dictionary->serialize();
 				MessageToQueue::getInstance().sendMessageToJava(responseObject->getNetworkId(), "foundObject", dictionary->getSerializedData(), 0, false);
@@ -3140,11 +3140,11 @@ void GameServer::receiveMessage2(const MessageDispatch::Emitter & source, const 
 
 		CreatureObject * const creatureObject = CreatureObject::getCreatureObject(networkId);
 
-		if (creatureObject != NULL)
+		if (creatureObject != nullptr)
 		{
 			Controller * const controller = creatureObject->getController();
 
-			if (controller != NULL)
+			if (controller != nullptr)
 			{
 				DEBUG_LOG("debug_ai", ("GameServer::receiveMessage() Received AiCreatureStateMessage for networkId(%s) movementType(%s)", networkId.getValueString().c_str(), AiMovementBase::getMovementString(movement.getMovementType())));
 
@@ -3211,7 +3211,7 @@ void GameServer::receiveMessage2(const MessageDispatch::Emitter & source, const 
 		Archive::ReadIterator ri = static_cast<GameNetworkMessage const &>(message).getByteStream().begin();
 		PlayedTimeAccumMessage const ptam(ri);
 		Object * obj = NetworkIdManager::getObjectById(ptam.getNetworkId());
-		if (obj != NULL && obj->asServerObject() != NULL && obj->asServerObject()->asCreatureObject() != NULL)
+		if (obj != nullptr && obj->asServerObject() != nullptr && obj->asServerObject()->asCreatureObject() != nullptr)
 		{
 			CreatureObject * target = obj->asServerObject()->asCreatureObject();
 			PlayerObject *targetPlayer = target->asPlayerObject();
@@ -3260,13 +3260,13 @@ void GameServer::receiveMessage2(const MessageDispatch::Emitter & source, const 
 
 		// get the attacker
 		Object * obj = NetworkIdManager::getObjectById(msg.getSource());
-		if (obj != NULL && obj->asServerObject() != NULL && obj->asServerObject()->asCreatureObject() != NULL)
+		if (obj != nullptr && obj->asServerObject() != nullptr && obj->asServerObject()->asCreatureObject() != nullptr)
 		{
 			CreatureObject * attacker = obj->asServerObject()->asCreatureObject();
 
 			// get the target
 			obj = NetworkIdManager::getObjectById(msg.getTarget());
-			if (obj != NULL && obj->asServerObject() != NULL && obj->asServerObject()->asTangibleObject() != NULL)
+			if (obj != nullptr && obj->asServerObject() != nullptr && obj->asServerObject()->asTangibleObject() != nullptr)
 			{
 				TangibleObject * defender = obj->asServerObject()->asTangibleObject();
 				if (attacker->isAuthoritative())
@@ -3597,7 +3597,7 @@ bool GameServer::isPlanetEnabledForCluster(std::string const &sceneName) const
 
 void GameServerNamespace::broadCastHyperspaceOnWarp(ServerObject const * const owner)
 {
-	// warpingClient can be NULL if the owner is AI
+	// warpingClient can be nullptr if the owner is AI
 	Client const * const warpingClient = owner->getClient();
 
 	typedef std::map<ConnectionServerConnection *, std::vector<NetworkId> > DistributionList;
@@ -4098,13 +4098,13 @@ void GameServer::sendToConnectionServers(GameNetworkMessage const &message)
 
 void GameServer::sendToCustomerServiceServer(GameNetworkMessage const &message)
 {
-	if (m_customerServiceServerConnection != NULL)
+	if (m_customerServiceServerConnection != nullptr)
 	{
 		m_customerServiceServerConnection->send(message, true);
 	}
 	else
 	{
-		REPORT_LOG(true, ("GameServer::sendToCustomerServiceServer() ERROR: Unable to send to NULL customer service server connection\n"));
+		REPORT_LOG(true, ("GameServer::sendToCustomerServiceServer() ERROR: Unable to send to nullptr customer service server connection\n"));
 	}
 }
 
@@ -4112,12 +4112,12 @@ void GameServer::sendToCustomerServiceServer(GameNetworkMessage const &message)
 
 void GameServer::clearCustomerServiceServerConnection()
 {
-	if (m_customerServiceServerConnection != NULL)
+	if (m_customerServiceServerConnection != nullptr)
 	{
 		m_customerServiceServerConnection->disconnect();
 	}
 
-	m_customerServiceServerConnection = NULL;
+	m_customerServiceServerConnection = nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -4600,7 +4600,7 @@ void GameServer::handleCharacterCreateNameVerification(const VerifyNameResponse 
 			{
 				Container::ContainedItem itemId = container->getObjectInSlot(slot, tmp);
 				Object* appearanceInventory = itemId.getObject();
-				if(appearanceInventory == NULL)
+				if(appearanceInventory == nullptr)
 				{
 					WARNING(true, ("Player %s has lost their appearance inventory", newCharacterObject->getNetworkId().getValueString().c_str()));
 					appearanceInventory = ServerWorld::createNewObject(s_appearanceTemplate, *newCharacterObject, slot, false);
@@ -4663,7 +4663,7 @@ void GameServer::handleVerifyAndLockNameVerification(const VerifyNameResponse &v
 			params.addParam(errorText.c_str(), "reason");
 			ScriptDictionaryPtr dictionary;
 			GameScriptObject::makeScriptDictionary(params, dictionary);
-			if (dictionary.get() != NULL)
+			if (dictionary.get() != nullptr)
 			{
 				dictionary->serialize();
 				MessageToQueue::getInstance().sendMessageToJava(vrn.getCharacterId(), "renameCharacterNameValidationFail", dictionary->getSerializedData(), 0, false);
@@ -4943,7 +4943,7 @@ bool GameServer::addPendingLoadRequest(NetworkId const & id)
 	if (s_pendingLoadRequests.find(id) != s_pendingLoadRequests.end())
 		return false;
 
-	s_pendingLoadRequests[id] = (unsigned int)::time(NULL);
+	s_pendingLoadRequests[id] = (unsigned int)::time(nullptr);
 
 	return true;
 }
@@ -5113,11 +5113,11 @@ void GameServerNamespace::loadRetroactiveCtsHistory()
 			
 			{
 				int index = 0;
-				char const * pszCtsDataFromConfig = NULL;
+				char const * pszCtsDataFromConfig = nullptr;
 				do
 				{
-					pszCtsDataFromConfig = ConfigFile::getKeyString("GameServer", "retroactiveCtsHistory", index++, NULL);
-					if (pszCtsDataFromConfig != NULL)
+					pszCtsDataFromConfig = ConfigFile::getKeyString("GameServer", "retroactiveCtsHistory", index++, nullptr);
+					if (pszCtsDataFromConfig != nullptr)
 					{
 						ctsDataFromConfig.push_back(pszCtsDataFromConfig);
 					}
@@ -5196,7 +5196,7 @@ void GameServerNamespace::loadRetroactiveCtsHistory()
 				else
 				{
 					ctsDataFromConfigTokens.clear();
-					if ((Unicode::tokenize(Unicode::narrowToWide(*iterCtsDataFromConfig), ctsDataFromConfigTokens, &ctsDataFromConfigDelimiter, NULL)) && (ctsDataFromConfigTokens.size() == 7))
+					if ((Unicode::tokenize(Unicode::narrowToWide(*iterCtsDataFromConfig), ctsDataFromConfigTokens, &ctsDataFromConfigDelimiter, nullptr)) && (ctsDataFromConfigTokens.size() == 7))
 					{
 						// sanity check
 						ctsDataFromConfigParsedData = FormattedString<2048>().sprintf("%s|%s|%s|%s|%s|%s|%s", Unicode::wideToNarrow(ctsDataFromConfigTokens[0]).c_str(), Unicode::wideToNarrow(ctsDataFromConfigTokens[1]).c_str(), Unicode::wideToNarrow(ctsDataFromConfigTokens[2]).c_str(), Unicode::wideToNarrow(ctsDataFromConfigTokens[3]).c_str(), Unicode::wideToNarrow(ctsDataFromConfigTokens[4]).c_str(), Unicode::wideToNarrow(ctsDataFromConfigTokens[5]).c_str(), Unicode::wideToNarrow(ctsDataFromConfigTokens[6]).c_str());
@@ -5225,7 +5225,7 @@ void GameServerNamespace::loadRetroactiveCtsHistory()
 				FATAL(((sourceCharacterInfo.sourceCharacterBornDate > 0) && (sourceCharacterInfo.sourceCharacterBornDate < 907)), ("source character (%s, %s) has born date (%d) < 907", sourceCharacterInfo.sourceCluster.c_str(), sourceCharacterInfo.sourceCharacterId.getValueString().c_str(), sourceCharacterInfo.sourceCharacterBornDate));
 				FATAL((sourceCharacterInfo.sourceCharacterBornDate > currentBornDate), ("source character (%s, %s) has born date (%d) > current born date (%d)", sourceCharacterInfo.sourceCluster.c_str(), sourceCharacterInfo.sourceCharacterId.getValueString().c_str(), sourceCharacterInfo.sourceCharacterBornDate, currentBornDate));
 
-				std::map<NetworkId, std::vector<CtsSourceCharacterInfo> > * clusterCtsHistory = NULL;
+				std::map<NetworkId, std::vector<CtsSourceCharacterInfo> > * clusterCtsHistory = nullptr;
 #ifdef _DEBUG
 				IGNORE_RETURN(allCtsSourceCluster.insert(sourceCharacterInfo.sourceCluster));
 				clusterCtsHistory = &(s_retroactiveCtsHistoryList[targetCluster]);
@@ -5381,11 +5381,11 @@ void GameServerNamespace::loadRetroactivePlayerCityCreationTime()
 
 			{
 				int index = 0;
-				char const * pszPlayerCityCreationTimeDataFromConfig = NULL;
+				char const * pszPlayerCityCreationTimeDataFromConfig = nullptr;
 				do
 				{
-					pszPlayerCityCreationTimeDataFromConfig = ConfigFile::getKeyString("GameServer", "retroactivePlayerCityCreationTime", index++, NULL);
-					if (pszPlayerCityCreationTimeDataFromConfig != NULL)
+					pszPlayerCityCreationTimeDataFromConfig = ConfigFile::getKeyString("GameServer", "retroactivePlayerCityCreationTime", index++, nullptr);
+					if (pszPlayerCityCreationTimeDataFromConfig != nullptr)
 					{
 						playerCityCreationTimeDataFromConfig.push_back(pszPlayerCityCreationTimeDataFromConfig);
 					}
@@ -5427,7 +5427,7 @@ void GameServerNamespace::loadRetroactivePlayerCityCreationTime()
 				else
 				{
 					playerCityCreationTimeDataFromConfigTokens.clear();
-					if ((Unicode::tokenize(Unicode::narrowToWide(*iterPlayerCityCreationTimeDataFromConfig), playerCityCreationTimeDataFromConfigTokens, &playerCityCreationTimeDataFromConfigDelimiter, NULL)) && (playerCityCreationTimeDataFromConfigTokens.size() == 3))
+					if ((Unicode::tokenize(Unicode::narrowToWide(*iterPlayerCityCreationTimeDataFromConfig), playerCityCreationTimeDataFromConfigTokens, &playerCityCreationTimeDataFromConfigDelimiter, nullptr)) && (playerCityCreationTimeDataFromConfigTokens.size() == 3))
 					{
 						// sanity check
 						playerCityCreationTimeDataFromConfigParsedData = FormattedString<2048>().sprintf("%s|%s|%s", Unicode::wideToNarrow(playerCityCreationTimeDataFromConfigTokens[0]).c_str(), Unicode::wideToNarrow(playerCityCreationTimeDataFromConfigTokens[1]).c_str(), Unicode::wideToNarrow(playerCityCreationTimeDataFromConfigTokens[2]).c_str());
@@ -5449,7 +5449,7 @@ void GameServerNamespace::loadRetroactivePlayerCityCreationTime()
 					++iterPlayerCityCreationTimeDataFromConfig;
 				}
 
-				std::map<int, time_t> * clusterPlayerCityCreationTimeHistory = NULL;
+				std::map<int, time_t> * clusterPlayerCityCreationTimeHistory = nullptr;
 #ifdef _DEBUG
 				clusterPlayerCityCreationTimeHistory = &(s_retroactivePlayerCityCreationTime[cluster]);
 #else
@@ -5475,7 +5475,7 @@ void GameServerNamespace::loadRetroactivePlayerCityCreationTime()
 
 bool GameServerNamespace::checkAndSetOutstandingRequestSceneTransfer(ServerObject & object)
 {
-	int const timeNow = static_cast<int>(::time(NULL));
+	int const timeNow = static_cast<int>(::time(nullptr));
 
 	// don't send multiple RequestSceneTransfer message
 	if (object.getObjVars().hasItem(OBJVAR_HAS_OUTSTANDING_REQUEST_SCENE_TRANSFER) && (object.getObjVars().getType(OBJVAR_HAS_OUTSTANDING_REQUEST_SCENE_TRANSFER) == DynamicVariable::INT))
@@ -5846,7 +5846,7 @@ void GameServerNamespace::handleAccountFeatureIdResponse(AccountFeatureIdRespons
 std::string GameServer::getRetroactiveCtsHistory(std::string const & clusterName, NetworkId const & characterId)
 {
 	std::string result;
-	std::map<NetworkId, std::vector<CtsSourceCharacterInfo> > const * clusterCtsHistory = NULL;
+	std::map<NetworkId, std::vector<CtsSourceCharacterInfo> > const * clusterCtsHistory = nullptr;
 
 #ifdef _DEBUG
 	std::map<std::string, std::map<NetworkId, std::vector<CtsSourceCharacterInfo> > >::const_iterator const iterFindCluster = s_retroactiveCtsHistoryList.find(clusterName);
@@ -5901,7 +5901,7 @@ void GameServer::setRetroactiveCtsHistory(CreatureObject & player)
 	if (!playerObject->isAuthoritative())
 		return;
 
-	std::map<NetworkId, std::vector<CtsSourceCharacterInfo> > const * clusterCtsHistory = NULL;
+	std::map<NetworkId, std::vector<CtsSourceCharacterInfo> > const * clusterCtsHistory = nullptr;
 
 #ifdef _DEBUG
 	std::map<std::string, std::map<NetworkId, std::vector<CtsSourceCharacterInfo> > >::const_iterator const iterFindCluster = s_retroactiveCtsHistoryList.find(GameServer::getInstance().getClusterName());
@@ -5990,7 +5990,7 @@ std::vector<std::vector<std::pair<std::string, DynamicVariable> > const *> const
 	static std::vector<std::vector<std::pair<std::string, DynamicVariable> > const *> returnValue;
 	returnValue.clear();
 
-	std::map<NetworkId, std::vector<CtsSourceCharacterInfo> > const * clusterCtsHistory = NULL;
+	std::map<NetworkId, std::vector<CtsSourceCharacterInfo> > const * clusterCtsHistory = nullptr;
 
 #ifdef _DEBUG
 	std::map<std::string, std::map<NetworkId, std::vector<CtsSourceCharacterInfo> > >::const_iterator const iterFindCluster = s_retroactiveCtsHistoryList.find(GameServer::getInstance().getClusterName());
@@ -6028,7 +6028,7 @@ std::vector<std::vector<std::pair<std::string, DynamicVariable> > const *> const
 
 time_t GameServer::getRetroactivePlayerCityCreationTime(std::string const & clusterName, int cityId)
 {
-	std::map<int, time_t> const * clusterPlayerCityCreationTimeHistory = NULL;
+	std::map<int, time_t> const * clusterPlayerCityCreationTimeHistory = nullptr;
 
 #ifdef _DEBUG
 	std::map<std::string, std::map<int, time_t> >::const_iterator const iterFindCluster = s_retroactivePlayerCityCreationTime.find(clusterName);

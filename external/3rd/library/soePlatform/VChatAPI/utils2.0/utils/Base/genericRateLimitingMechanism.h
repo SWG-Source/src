@@ -245,7 +245,7 @@ namespace soe
 	template<typename FixedKeyType, typename ArbitraryKeyType, typename LimitType, typename CounterType, typename TimeType>
 	const LimitType * GenericRateLimitingMechanism<FixedKeyType, ArbitraryKeyType, LimitType, CounterType, TimeType>::GetRateLimit(const FixedKeyType & fixedKey) const
 	{
-		LimitType const * rateLimit = NULL;
+		LimitType const * rateLimit = nullptr;
 		typename RateLimitByFixedKeyMap_t::const_iterator limIter = mRateLimits.find(fixedKey);
 
 		if (limIter != mRateLimits.end()) {
@@ -258,7 +258,7 @@ namespace soe
 	template<typename FixedKeyType, typename ArbitraryKeyType, typename LimitType, typename CounterType, typename TimeType>
 	const LimitType * GenericRateLimitingMechanism<FixedKeyType, ArbitraryKeyType, LimitType, CounterType, TimeType>::GetNextRateLimit(FixedKeyType & fixedKey) const
 	{
-		LimitType const * rateLimit = NULL;
+		LimitType const * rateLimit = nullptr;
 		typename RateLimitByFixedKeyMap_t::const_iterator limIter = mRateLimits.upper_bound(fixedKey);
 
 		if (limIter != mRateLimits.end()) {
@@ -272,7 +272,7 @@ namespace soe
 	template<typename FixedKeyType, typename ArbitraryKeyType, typename LimitType, typename CounterType, typename TimeType>
 	const CounterType * GenericRateLimitingMechanism<FixedKeyType, ArbitraryKeyType, LimitType, CounterType, TimeType>::GetRateCounter(const FixedKeyType & fixedKey, const ArbitraryKeyType & arbitraryKey) const
 	{
-		const CounterType * counter = NULL;
+		const CounterType * counter = nullptr;
 		typename RateCounterByKeyPairMap_t::const_iterator counterIter = mRateCounters.find(KeyPair(fixedKey, arbitraryKey));
 		if (counterIter != mRateCounters.end()) {
 			counter = &(counterIter->second->mCounter);

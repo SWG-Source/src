@@ -159,7 +159,7 @@ void BitmapGroup::Family::loadBitmapByFilename()
 	{
 		if(!m_bitmapName)
 		{
-			DEBUG_WARNING (true, ("BitmapGroup::Family::loadBitmapByFilename() - invalid image - m_bitmapName is NULL"));
+			DEBUG_WARNING (true, ("BitmapGroup::Family::loadBitmapByFilename() - invalid image - m_bitmapName is nullptr"));
 		}
 		else
 		{

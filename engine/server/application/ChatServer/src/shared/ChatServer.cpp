@@ -162,7 +162,7 @@ void ChatServerNamespace::cleanChatLog()
 
 //-----------------------------------------------------------------------
 
-ChatServer *ChatServer::m_instance = NULL;
+ChatServer *ChatServer::m_instance = nullptr;
 
 #include <stdio.h>
 
@@ -250,7 +250,7 @@ if ((t3 - t2) > (1000 * 5))
 		static Unicode::String wideFilter = Unicode::narrowToWide("");
 		static ChatUnicodeString swgNode(wideSWG.data(), wideSWG.size());
 		static ChatUnicodeString filter(wideFilter.data(), wideFilter.size());
-		instance().chatInterface->RequestGetRoomSummaries(swgNode, filter, NULL);
+		instance().chatInterface->RequestGetRoomSummaries(swgNode, filter, nullptr);
 	}
 
 	++i;
@@ -286,7 +286,7 @@ gameService(0),
 planetService(),
 ownerSystem(0),
 systemAvatarId("SWG", ConfigChatServer::getClusterName(), "SYSTEM"),
-customerServiceServerConnection(NULL),
+customerServiceServerConnection(nullptr),
 m_gameServerConnectionRegistry(),
 m_voiceChatIdMap()
 {
@@ -452,7 +452,7 @@ void ChatServer::setOwnerSystem(const ChatAvatar * o)
 
 		Connection *connection = safe_cast<Connection *>(instance().centralServerConnection);
 
-		if (connection != NULL)
+		if (connection != nullptr)
 		{
 			connection->send(bs, true);
 		}
@@ -618,7 +618,7 @@ const ChatAvatar * ChatServer::getAvatarByNetworkId(const NetworkId & id)
 {
 	if (id.getValue() == 0)
 	{
-		return NULL;
+		return nullptr;
 	}
 	const ChatAvatar * result = 0;
 	ChatAvatarList::const_iterator f = instance().chatAvatars.find(id);
@@ -635,7 +635,7 @@ ChatServer::AvatarExtendedData * ChatServer::getAvatarExtendedDataByNetworkId(co
 {
 	if (id.getValue() == 0)
 	{
-		return NULL;
+		return nullptr;
 	}
 	ChatServer::AvatarExtendedData * result = 0;
 	ChatAvatarList::iterator f = instance().chatAvatars.find(id);
@@ -783,7 +783,7 @@ void ChatServer::addFriend(const NetworkId & id, const unsigned int sequence, co
 
 		unsigned track = instance().chatInterface->RequestAddFriend(from, ChatUnicodeString(friendName.data(), friendName.length()),
 			ChatUnicodeString(friendAddress.data(), friendAddress.length()),
-			false, NULL);
+			false, nullptr);
 		instance().pendingRequests[track] = id;
 	}
 	else
@@ -810,7 +810,7 @@ void ChatServer::removeFriend(const NetworkId & id, const unsigned int sequence,
 		splitChatAvatarId(friendId, friendName, friendAddress);
 
 		unsigned track = instance().chatInterface->RequestRemoveFriend(from, ChatUnicodeString(friendName.data(), friendName.length()),
-			ChatUnicodeString(friendAddress.data(), friendAddress.length()), NULL);
+			ChatUnicodeString(friendAddress.data(), friendAddress.length()), nullptr);
 		instance().pendingRequests[track] = id;
 	}
 	else
@@ -829,7 +829,7 @@ void ChatServer::getFriendsList(const ChatAvatarId &characterName)
 	const ChatAvatar *avatar = getAvatarByNetworkId(id);
 	if (avatar)
 	{
-		unsigned track = instance().chatInterface->RequestFriendStatus(avatar, NULL);
+		unsigned track = instance().chatInterface->RequestFriendStatus(avatar, nullptr);
 		instance().pendingRequests[track] = id;
 	}
 	else
@@ -857,7 +857,7 @@ void ChatServer::addIgnore(const NetworkId & id, const unsigned int sequence, co
 
 		unsigned track = instance().chatInterface->RequestAddIgnore(from, ChatUnicodeString(ignoreName.data(), ignoreName.length()),
 			ChatUnicodeString(ignoreAddress.data(), ignoreAddress.length()),
-			NULL);
+			nullptr);
 		instance().pendingRequests[track] = id;
 	}
 	else
@@ -884,7 +884,7 @@ void ChatServer::removeIgnore(const NetworkId & id, const unsigned int sequence,
 		splitChatAvatarId(ignoreId, ignoreName, ignoreAddress);
 
 		unsigned track = instance().chatInterface->RequestRemoveIgnore(from, ChatUnicodeString(ignoreName.data(), ignoreName.length()),
-			ChatUnicodeString(ignoreAddress.data(), ignoreAddress.length()), NULL);
+			ChatUnicodeString(ignoreAddress.data(), ignoreAddress.length()), nullptr);
 		instance().pendingRequests[track] = id;
 	}
 	else
@@ -905,7 +905,7 @@ void ChatServer::getIgnoreList(const ChatAvatarId &characterName)
 
 	if (avatar)
 	{
-		unsigned track = instance().chatInterface->RequestIgnoreStatus(avatar, NULL);
+		unsigned track = instance().chatInterface->RequestIgnoreStatus(avatar, nullptr);
 		instance().pendingRequests[track] = id;
 	}
 	else
@@ -1160,7 +1160,7 @@ void ChatServer::createRoom(const NetworkId & id, const unsigned int sequence, c
 	{
 		roomAttr |= ROOMATTR_PRIVATE;
 	}
-	if (isSystemOwner && (strstr(roomName.c_str(), "system") != NULL))
+	if (isSystemOwner && (strstr(roomName.c_str(), "system") != nullptr))
 	{
 		roomAttr |= ROOMATTR_PERSISTENT;
 	}
@@ -1193,7 +1193,7 @@ void ChatServer::deleteAllPersistentMessages(const NetworkId &sourceNetworkId, c
 
 	ChatAvatar const *avatar = getAvatarByNetworkId(targetNetworkId);
 
-	if (avatar != NULL)
+	if (avatar != nullptr)
 	{
 		{
 			NetworkId *tmpNetworkId = new NetworkId(sourceNetworkId);
@@ -1225,7 +1225,7 @@ void ChatServer::deletePersistentMessage(const NetworkId &id, const unsigned int
 	const ChatAvatar *avatar = getAvatarByNetworkId(id);
 	if (avatar)
 	{
-		instance().chatInterface->RequestUpdatePersistentMessage(avatar, messageId, PERSISTENT_DELETED, NULL);
+		instance().chatInterface->RequestUpdatePersistentMessage(avatar, messageId, PERSISTENT_DELETED, nullptr);
 	}
 }
 
@@ -1290,10 +1290,10 @@ void ChatServer::destroyRoom(const std::string & roomName)
 {
 	ChatServer::fileLog(s_enableChatRoomLogs, "ChatServer", "destroyRoom() roomName(%s)", roomName.c_str());
 
-	if ((strstr(roomName.c_str(), ConfigChatServer::getClusterName()) != NULL) ||
+	if ((strstr(roomName.c_str(), ConfigChatServer::getClusterName()) != nullptr) ||
 		(strstr(roomName.c_str(), toLower(std::string(ConfigChatServer::getClusterName() ) ).c_str() ) ))
 	{
-		if ((strstr(roomName.c_str(), "GroupChat") != NULL) || (strstr(roomName.c_str(), "groupchat") != NULL))
+		if ((strstr(roomName.c_str(), "GroupChat") != nullptr) || (strstr(roomName.c_str(), "groupchat") != nullptr))
 		{
 			size_t pos = roomName.rfind(".");
 			if (pos != roomName.npos)
@@ -1311,7 +1311,7 @@ void ChatServer::destroyRoom(const std::string & roomName)
 	const ChatServerRoomOwner *owner = instance().chatInterface->getRoomOwner(roomName);
 	if (!instance().ownerSystem)
 	{
-		DEBUG_WARNING(true, ("Chat ownerSystem is NULL"));
+		DEBUG_WARNING(true, ("Chat ownerSystem is nullptr"));
 		return;
 	}
 	if (owner)
@@ -1331,7 +1331,7 @@ void ChatServer::disconnectAvatar(const ChatAvatar & avatar)
 
 	if (&avatar == instance().ownerSystem)
 	{
-		instance().ownerSystem = NULL;
+		instance().ownerSystem = nullptr;
 	}
 	ChatAvatarList::iterator i;
 	for(i = instance().chatAvatars.begin(); i != instance().chatAvatars.end(); ++i)
@@ -1423,7 +1423,7 @@ void ChatServer::enterRoom(const ChatAvatarId & id, const std::string & roomName
 	const ChatAvatar *avatar = getAvatarByNetworkId(getNetworkIdByAvatarId(id));
 	if (room && avatar)
 	{
-		instance().chatInterface->RequestEnterRoom(avatar, room->getAddress(), NULL);
+		instance().chatInterface->RequestEnterRoom(avatar, room->getAddress(), nullptr);
 	}
 	else
 	{
@@ -1450,7 +1450,7 @@ void ChatServer::putSystemAvatarInRoom(const std::string & roomName)
 	const ChatServerRoomOwner *room = instance().chatInterface->getRoomOwner(roomName);
 	if (room && instance().ownerSystem)
 	{
-		instance().chatInterface->RequestEnterRoom(instance().ownerSystem, room->getAddress(), NULL);
+		instance().chatInterface->RequestEnterRoom(instance().ownerSystem, room->getAddress(), nullptr);
 	}
 }
 
@@ -1619,7 +1619,7 @@ void ChatServer::invite(const NetworkId & id, const ChatAvatarId & avatarId, con
 	ChatServer::fileLog(s_enableChatRoomLogs, "ChatServer", "invite() id(%s) avatar(%s) roomName(%s)", id.getValueString().c_str(), avatarId.getFullName().c_str(), roomName.c_str());
 
 	// Try to get an invitor
-	ChatAvatar const * invitor = NULL;
+	ChatAvatar const * invitor = nullptr;
 	if (id != NetworkId::cms_invalid)
 	{
 		invitor = getAvatarByNetworkId(id);
@@ -1738,7 +1738,7 @@ void ChatServer::inviteGroupMembers(const NetworkId & id, const ChatAvatarId & a
 
 void ChatServer::removeSystemAvatarFromRoom(const ChatRoom *room)
 {
-	ChatServer::fileLog(s_enableChatRoomLogs, "ChatServer", "removeSystemAvatarFromRoom() room(%s)", (room != NULL) ? toNarrowString(room->getRoomName()).c_str() : "NULL");
+	ChatServer::fileLog(s_enableChatRoomLogs, "ChatServer", "removeSystemAvatarFromRoom() room(%s)", (room != nullptr) ? toNarrowString(room->getRoomName()).c_str() : "nullptr");
 
 	if (!room || !instance().ownerSystem)
 	{
@@ -1754,7 +1754,7 @@ void ChatServer::removeSystemAvatarFromRoom(const ChatRoom *room)
 		}
 	}
 
-	instance().chatInterface->RequestLeaveRoom(instance().ownerSystem, room->getAddress(), NULL);
+	instance().chatInterface->RequestLeaveRoom(instance().ownerSystem, room->getAddress(), nullptr);
 }
 
 //-----------------------------------------------------------------------
@@ -1991,7 +1991,7 @@ void ChatServer::sendInstantMessage(const ChatAvatarId & from, const ChatAvatarI
 	const NetworkId &toNetworkId = getNetworkIdByAvatarId(to);
 	const ChatAvatar * toAvatar = getAvatarByNetworkId(toNetworkId);
 
-	if (toAvatar != NULL)
+	if (toAvatar != nullptr)
 	{
 		ChatServer::fileLog(false, "ChatServer", "sendInstantMessage() resolved tell locally");
 
@@ -2022,7 +2022,7 @@ void ChatServer::sendInstantMessage(const ChatAvatarId & from, const ChatAvatarI
 				IGNORE_RETURN(instance().chatInterface->RequestSendInstantMessage(fromAvatar,
 					ChatUnicodeString(friendName.data(), friendName.size()),
 					ChatUnicodeString(friendAddress.data(), friendAddress.size()),
-					ChatUnicodeString(message.data(), message.size()), ChatUnicodeString(outOfBand.data(), outOfBand.size()), NULL));
+					ChatUnicodeString(message.data(), message.size()), ChatUnicodeString(outOfBand.data(), outOfBand.size()), nullptr));
 			}
 		}
 	}
@@ -2054,7 +2054,7 @@ void ChatServer::sendInstantMessage(const NetworkId & fromId, const unsigned int
 			{
 				return;
 			}
-			else if (::time(NULL) < aed->unsquelchTime) // still in squelch period
+			else if (::time(nullptr) < aed->unsquelchTime) // still in squelch period
 			{
 				return;
 			}
@@ -2076,14 +2076,14 @@ void ChatServer::sendInstantMessage(const NetworkId & fromId, const unsigned int
 			Unicode::String wideFrom;
 			Unicode::String wideTo;
 
-			if (from != NULL)
+			if (from != nullptr)
 			{
 				makeAvatarId(*from, fromAvatarId);
 				wideFrom = (Unicode::narrowToWide(fromAvatarId.getFullName()));
 			}
 
 			ChatAvatarId toAvatarId;
-			if (toAvatar != NULL)
+			if (toAvatar != nullptr)
 			{
 				ChatServer::fileLog(false, "ChatServer", "sendInstantMessage() resolved tell locally");
 
@@ -2158,7 +2158,7 @@ void ChatServer::sendPersistentMessage(const ChatAvatarId & from, const ChatAvat
 		ChatUnicodeString(subject.data(), subject.size()),
 		ChatUnicodeString(message.data(), message.size()),
 		ChatUnicodeString(oob.data(), oob.size()),
-		NULL
+		nullptr
 		);
 
 	Unicode::String log;
@@ -2187,7 +2187,7 @@ void ChatServer::sendPersistentMessage(const NetworkId & fromId, const unsigned 
 //		to.cluster.c_str(), to.name.c_str());
 	UNREF(sequenceId);
 	ChatServer::AvatarExtendedData * aed = getAvatarExtendedDataByNetworkId(fromId);
-	const ChatAvatar * from = (aed ? &(aed->chatAvatar) : NULL);
+	const ChatAvatar * from = (aed ? &(aed->chatAvatar) : nullptr);
 	if(from)
 	{
 		// see if player is squelched
@@ -2197,7 +2197,7 @@ void ChatServer::sendPersistentMessage(const NetworkId & fromId, const unsigned 
 			{
 				return;
 			}
-			else if (::time(NULL) < aed->unsquelchTime) // still in squelch period
+			else if (::time(nullptr) < aed->unsquelchTime) // still in squelch period
 			{
 				return;
 			}
@@ -2225,7 +2225,7 @@ void ChatServer::sendPersistentMessage(const NetworkId & fromId, const unsigned 
 
 	ChatAvatarId fromAvatarId;
 
-	if (from != NULL)
+	if (from != nullptr)
 	{
 		makeAvatarId(*from, fromAvatarId);
 	}
@@ -2255,7 +2255,7 @@ void ChatServer::sendRoomMessage(const ChatAvatarId &id, const std::string & roo
 	
 		if (!instance().ownerSystem)
 		{
-			DEBUG_WARNING(true, ("Chat ownerSystem is NULL"));
+			DEBUG_WARNING(true, ("Chat ownerSystem is nullptr"));
 			return;
 		}
 		// get room id
@@ -2265,7 +2265,7 @@ void ChatServer::sendRoomMessage(const ChatAvatarId &id, const std::string & roo
 		{
 			const ChatAvatar *sender = instance().ownerSystem;
 			
-			IGNORE_RETURN(instance().chatInterface->RequestSendRoomMessage(sender, (*f).second.getAddress(), ChatUnicodeString(msg.data(), msg.size()), ChatUnicodeString(oob.data(), oob.size()), NULL));
+			IGNORE_RETURN(instance().chatInterface->RequestSendRoomMessage(sender, (*f).second.getAddress(), ChatUnicodeString(msg.data(), msg.size()), ChatUnicodeString(oob.data(), oob.size()), nullptr));
 		}
 	}
 }
@@ -2280,7 +2280,7 @@ void ChatServer::sendRoomMessage(const NetworkId & id, const unsigned int sequen
 	
 		UNREF(sequence);
 		ChatServer::AvatarExtendedData * aed = getAvatarExtendedDataByNetworkId(id);
-		const ChatAvatar * sender = (aed ? &(aed->chatAvatar) : NULL);
+		const ChatAvatar * sender = (aed ? &(aed->chatAvatar) : nullptr);
 		const ChatServerRoomOwner *room = instance().chatInterface->getRoomOwner(roomId);
 		if(sender && room)
 		{
@@ -2296,7 +2296,7 @@ void ChatServer::sendRoomMessage(const NetworkId & id, const unsigned int sequen
 					aed->nonSpatialCharCount += msg.size();
 
 					// sync chat character count with game server
-					timeNow = ::time(NULL);
+					timeNow = ::time(nullptr);
 					if ((timeNow > aed->chatSpamNextTimeToSyncWithGameServer) || (timeNow > aed->chatSpamTimeEndInterval))
 					{
 						GenericValueTypeMessage<std::pair<std::pair<NetworkId, int>, std::pair<int, int> > > chatStatistics("ChatStatisticsCS", std::make_pair(std::make_pair(id, static_cast<int>(aed->chatSpamTimeEndInterval)), std::make_pair(aed->spatialCharCount, aed->nonSpatialCharCount)));
@@ -2322,7 +2322,7 @@ void ChatServer::sendRoomMessage(const NetworkId & id, const unsigned int sequen
 						allowToSpeak = false;
 						squelched = true;
 					}
-					else if (::time(NULL) < aed->unsquelchTime) // still in squelch period
+					else if (::time(nullptr) < aed->unsquelchTime) // still in squelch period
 					{
 						allowToSpeak = false;
 						squelched = true;
@@ -2393,7 +2393,7 @@ void ChatServer::sendStandardRoomMessage(const ChatAvatarId &senderId, const std
 			}
 			if (sender)
 			{
-				IGNORE_RETURN(instance().chatInterface->RequestSendRoomMessage(sender, (*f).second.getAddress(), ChatUnicodeString(msg.data(), msg.size()), ChatUnicodeString(oob.data(), oob.size()),  NULL));
+				IGNORE_RETURN(instance().chatInterface->RequestSendRoomMessage(sender, (*f).second.getAddress(), ChatUnicodeString(msg.data(), msg.size()), ChatUnicodeString(oob.data(), oob.size()),  nullptr));
 			}
 		}
 	}
@@ -2505,7 +2505,7 @@ std::string ChatServer::getFullChatAvatarName(ChatAvatar const *chatAvatar)
 {
 	std::string result;
 
-	if (chatAvatar != NULL)
+	if (chatAvatar != nullptr)
 	{
 		result += toNarrowString(chatAvatar->getName());
 		result += '.';
@@ -2513,7 +2513,7 @@ std::string ChatServer::getFullChatAvatarName(ChatAvatar const *chatAvatar)
 	}
 	else
 	{
-		result = "NULL";
+		result = "nullptr";
 	}
 
 	return result;
@@ -2539,7 +2539,7 @@ std::string ChatServer::getConnectionAddress(Connection const *connection)
 {
 	std::string result;
 
-	if (connection != NULL)
+	if (connection != nullptr)
 	{
 		char text[256];
 		snprintf(text, sizeof(text), "%s:%d", connection->getRemoteAddress().c_str(), connection->getRemotePort());
@@ -2547,7 +2547,7 @@ std::string ChatServer::getConnectionAddress(Connection const *connection)
 	}
 	else
 	{
-		result = "NULL";
+		result = "nullptr";
 	}
 
 	return result;
@@ -2566,13 +2566,13 @@ Unicode::String ChatServer::getChatRoomName(ChatRoom const *chatRoom)
 {
 	Unicode::String result;
 
-	if (chatRoom != NULL)
+	if (chatRoom != nullptr)
 	{
 		result = toUnicodeString(chatRoom->getRoomName());
 	}
 	else
 	{
-		result = Unicode::narrowToWide("NULL");
+		result = Unicode::narrowToWide("nullptr");
 	}
 
 	return result;
@@ -2582,12 +2582,12 @@ Unicode::String ChatServer::getChatRoomName(ChatRoom const *chatRoom)
 
 void ChatServer::clearCustomerServiceServerConnection()
 {
-	if (instance().customerServiceServerConnection != NULL)
+	if (instance().customerServiceServerConnection != nullptr)
 	{
 		instance().customerServiceServerConnection->disconnect();
 	}
 
-	instance().customerServiceServerConnection = NULL;
+	instance().customerServiceServerConnection = nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -2596,7 +2596,7 @@ void ChatServer::connectToCustomerServiceServer(const std::string &address, cons
 {
 	//DEBUG_REPORT_LOG(true, ("***ChatServer::connectToCustomerServiceServer() address(%s) port(%d)\n", address.c_str(), port));
 
-	if (instance().customerServiceServerConnection != NULL)
+	if (instance().customerServiceServerConnection != nullptr)
 	{
 		instance().customerServiceServerConnection->disconnect();
 	}
@@ -2670,7 +2670,7 @@ bool ChatServer::isValidChatAvatarName(Unicode::String const &chatAvatarName)
 
 void ChatServer::logChatMessage(Unicode::String const &logPlayer, Unicode::String const &fromPlayer, Unicode::String const &toPlayer, Unicode::String const &text, Unicode::String const &channel)
 {
-	DEBUG_WARNING(toPlayer.empty(), ("toPlayer is NULL"));
+	DEBUG_WARNING(toPlayer.empty(), ("toPlayer is nullptr"));
 
 	Unicode::String lowerLogPlayer(Unicode::toLower(logPlayer));
 	Unicode::String lowerFromPlayer(Unicode::toLower(fromPlayer));
@@ -2760,7 +2760,7 @@ void ChatServer::requestTransferAvatar(const TransferCharacterData & request)
 			
 		ChatAvatarId destinationAvatar("SWG", destination, request.getDestinationCharacterName());
 		
-		instance().chatInterface->RequestTransferAvatar(request.getSourceStationId(), makeChatUnicodeString(sourceAvatar.getName()), makeChatUnicodeString(sourceAvatar.getAPIAddress()), request.getDestinationStationId(), makeChatUnicodeString(destinationAvatar.getName()), makeChatUnicodeString(destinationAvatar.getAPIAddress()), true, NULL);
+		instance().chatInterface->RequestTransferAvatar(request.getSourceStationId(), makeChatUnicodeString(sourceAvatar.getName()), makeChatUnicodeString(sourceAvatar.getAPIAddress()), request.getDestinationStationId(), makeChatUnicodeString(destinationAvatar.getName()), makeChatUnicodeString(destinationAvatar.getAPIAddress()), true, nullptr);
 	}
 }
 
@@ -2845,7 +2845,7 @@ void ChatServer::handleChatStatisticsFromGameServer(NetworkId const & character,
 		// non-spatial chat to report to the game server
 		else if (aed->nonSpatialCharCount != nonSpatialNumCharacters)
 		{
-			time_t const timeNow = ::time(NULL);
+			time_t const timeNow = ::time(nullptr);
 			if (timeNow > aed->chatSpamNextTimeToSyncWithGameServer)
 			{
 				GenericValueTypeMessage<std::pair<std::pair<NetworkId, int>, std::pair<int, int> > > chatStatistics("ChatStatisticsCS", std::make_pair(std::make_pair(character, static_cast<int>(aed->chatSpamTimeEndInterval)), std::make_pair(aed->spatialCharCount, aed->nonSpatialCharCount)));
@@ -2904,7 +2904,7 @@ void ChatServer::sendToGameServerById(unsigned const connectionId, GameNetworkMe
 
 GameServerConnection *ChatServer::getGameServerConnectionFromId(unsigned int sequence)
 {
-	GameServerConnection * result = NULL;
+	GameServerConnection * result = nullptr;
 	std::unordered_map<unsigned int, GameServerConnection *>::iterator f = m_gameServerConnectionRegistry.find(sequence);
 	if(f != m_gameServerConnectionRegistry.end())
 	{

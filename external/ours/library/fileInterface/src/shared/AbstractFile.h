@@ -110,7 +110,7 @@ public:
 	 * Read the entire file into a memory buffer.  The client is responsible for deleting the buffer
 	 * using operator delete().  The file will be closed after the read completes.
 	 *
-	 * @return null if an error occured
+	 * @return nullptr if an error occured
 	 */
 	virtual unsigned char *readEntireFileAndClose();
 

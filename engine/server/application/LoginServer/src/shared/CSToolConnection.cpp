@@ -51,7 +51,7 @@ void CSToolConnection::validateCSTool(uint32 toolId, apiResult result, const api
 			p_connection->m_bSecure = true;
 		}
 		
-		// if we have a null session type, then we aren't connected to the
+		// if we have a nullptr session type, then we aren't connected to the
 		// Session Server and are in debug mode.
 		//
 		// if we *do* have a good session, then check the admin table for access level.
@@ -71,7 +71,7 @@ void CSToolConnection::validateCSTool(uint32 toolId, apiResult result, const api
 		bool canLogin = isInternal; // we always have to be internal.
 		if (sessionNull)
 		{
-			// null session means we can skip everything else.
+			// nullptr session means we can skip everything else.
 			canLogin = canLogin && true;
 			accessLevel = 100;
 		}

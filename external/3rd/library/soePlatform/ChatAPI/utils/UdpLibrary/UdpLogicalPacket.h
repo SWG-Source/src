@@ -81,7 +81,7 @@ class SimpleLogicalPacket : public LogicalPacket
         // it was originally created to allow the internal code to handle reliable data that was sent
         // via the Send(char *, int) api call.
     public:
-        SimpleLogicalPacket(const void *data, int dataLen);        // data can be NULL if you want to populate it after it is allocated (get the pointer and write to it)
+        SimpleLogicalPacket(const void *data, int dataLen);        // data can be nullptr if you want to populate it after it is allocated (get the pointer and write to it)
         virtual void *GetDataPtr();
         virtual const void *GetDataPtr() const;
         virtual int GetDataLen() const;
@@ -152,7 +152,7 @@ template<typename T> class StructLogicalPacket : public LogicalPacket
         // with virtual functions) via this method as they may contain hidden data-members (such as pointers
         // to vtables).
     public:
-        StructLogicalPacket(T *initData = NULL);
+        StructLogicalPacket(T *initData = nullptr);
         virtual void *GetDataPtr();
         virtual const void *GetDataPtr() const;
         virtual int GetDataLen() const;
@@ -226,7 +226,7 @@ class PooledLogicalPacket : public LogicalPacket
     protected:
         friend class UdpManager;
         void TrueRelease() const;
-        void SetData(const void *data, int dataLen, const void *data2 = NULL, int dataLen2 = 0);
+        void SetData(const void *data, int dataLen, const void *data2 = nullptr, int dataLen2 = 0);
         UdpManager *mUdpManager;
         UdpLinkedListMember<PooledLogicalPacket> mAvailableLink;  // for available linked list in manager
         UdpLinkedListMember<PooledLogicalPacket> mCreatedLink;    // for created linked list in manager
@@ -240,7 +240,7 @@ class PooledLogicalPacket : public LogicalPacket
 template<int t_quickSize> FixedLogicalPacket<t_quickSize>::FixedLogicalPacket(const void *data, int dataLen)
 {
     mDataLen = dataLen;
-    if (data != NULL)
+    if (data != nullptr)
         memcpy(mData, data, mDataLen);
 }
 
@@ -270,7 +270,7 @@ template<int t_quickSize> void FixedLogicalPacket<t_quickSize>::SetDataLen(int l
         /////////////////////////////////////////////////////////////////////////
 template<typename T> StructLogicalPacket<T>::StructLogicalPacket(T *initData)
 {
-    if (initData != NULL)
+    if (initData != nullptr)
         mStruct = *initData;
 }
 

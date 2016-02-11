@@ -140,9 +140,9 @@ void GuildObject::setupUniverse()
 		// build the guild and guild member info from data read in from DB
 
 		// disable notification while building the initial list
-		m_membersInfo.setOnErase(NULL, NULL);
-		m_membersInfo.setOnInsert(NULL, NULL);
-		m_membersInfo.setOnSet(NULL, NULL);
+		m_membersInfo.setOnErase(nullptr, nullptr);
+		m_membersInfo.setOnInsert(nullptr, nullptr);
+		m_membersInfo.setOnSet(nullptr, nullptr);
 
 		// build names
 		{
@@ -238,7 +238,7 @@ void GuildObject::setupUniverse()
 					// update guild info members count
 					GuildInfo & gi = guildInfoMembersCount[guildId];
 					GuildMemberInfo const * const existingGmi = getGuildMemberInfo(guildId, memberId);
-					updateGuildInfoMembersCount(gi, (existingGmi ? ((existingGmi->m_permissions == -1) ? &allAdministrativePermissions : &(existingGmi->m_permissions)) : NULL), ((permissions == -1) ? &allAdministrativePermissions : &permissions));
+					updateGuildInfoMembersCount(gi, (existingGmi ? ((existingGmi->m_permissions == -1) ? &allAdministrativePermissions : &(existingGmi->m_permissions)) : nullptr), ((permissions == -1) ? &allAdministrativePermissions : &permissions));
 
 					if (existingGmi)
 					{
@@ -391,7 +391,7 @@ GuildInfo const * GuildObject::getGuildInfo(int guildId) const
 	if (iterFind != m_guildsInfo.end())
 		return &(iterFind->second);
 
-	return NULL;
+	return nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -402,7 +402,7 @@ GuildMemberInfo const * GuildObject::getGuildMemberInfo(int guildId, NetworkId c
 	if (iterFind != m_membersInfo.end())
 		return &(iterFind->second);
 
-	return NULL;
+	return nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -738,7 +738,7 @@ void GuildObject::removeGuildMember(int guildId, NetworkId const &memberId)
 			m_members.erase(memberSpec);
 
 			GuildInfo updatedGi(gi);
-			updateGuildInfoMembersCount(updatedGi, &(gmi->m_permissions), NULL);
+			updateGuildInfoMembersCount(updatedGi, &(gmi->m_permissions), nullptr);
 			m_guildsInfo.set(guildId, updatedGi);
 
 			std::map<NetworkId, int>::const_iterator iterFind = m_fullMembers.find(memberId);
@@ -771,7 +771,7 @@ void GuildObject::addGuildCreatorMember(int guildId, NetworkId const &memberId, 
 	if (realMemberName.empty() && existingGmi)
 		realMemberName = existingGmi->m_name;
 
-	ServerObject const *so = NULL;
+	ServerObject const *so = nullptr;
 	if (realMemberName.empty())
 	{
 		so = ServerWorld::findObjectByNetworkId(memberId);
@@ -848,7 +848,7 @@ void GuildObject::addGuildCreatorMember(int guildId, NetworkId const &memberId, 
 			m_members.insert(memberSpec);
 
 			GuildInfo updatedGi(gi);
-			updateGuildInfoMembersCount(updatedGi, (existingGmi ? &(existingGmi->m_permissions) : NULL), &permissions);
+			updateGuildInfoMembersCount(updatedGi, (existingGmi ? &(existingGmi->m_permissions) : nullptr), &permissions);
 			m_guildsInfo.set(guildId, updatedGi);
 
 			if (existingGmi)
@@ -883,7 +883,7 @@ void GuildObject::addGuildSponsorMember(int guildId, NetworkId const &memberId, 
 	if (realMemberName.empty() && existingGmi)
 		realMemberName = existingGmi->m_name;
 
-	ServerObject const *so = NULL;
+	ServerObject const *so = nullptr;
 	if (realMemberName.empty())
 	{
 		so = ServerWorld::findObjectByNetworkId(memberId);
@@ -958,7 +958,7 @@ void GuildObject::addGuildSponsorMember(int guildId, NetworkId const &memberId, 
 			m_members.insert(memberSpec);
 
 			GuildInfo updatedGi(gi);
-			updateGuildInfoMembersCount(updatedGi, (existingGmi ? &(existingGmi->m_permissions) : NULL), &permissions);
+			updateGuildInfoMembersCount(updatedGi, (existingGmi ? &(existingGmi->m_permissions) : nullptr), &permissions);
 			m_guildsInfo.set(guildId, updatedGi);
 
 			if (existingGmi)
@@ -1465,7 +1465,7 @@ void GuildObject::modifyGuildWarKillTracking(int killerGuildId, int victimGuildI
 	}
 
 	if (updateTime <= 0)
-		updateTime = static_cast<int>(::time(NULL));
+		updateTime = static_cast<int>(::time(nullptr));
 
 	// queue up adjustments and periodically update the data
 	std::pair<std::map<std::pair<int, int>, std::pair<int, int> >::iterator, bool> result = m_guildWarKillTrackingAdjustment.insert(std::make_pair(std::make_pair(killerGuildId, victimGuildId), std::make_pair(adjustment, updateTime)));
@@ -1635,7 +1635,7 @@ void GuildObject::setGuildFaction(int guildId, uint32 guildFaction)
 
 			if (factionChange)
 			{
-				int const timeLeftGuildFaction = static_cast<int>(::time(NULL));
+				int const timeLeftGuildFaction = static_cast<int>(::time(nullptr));
 
 				std::string oldNameSpec, newNameSpec;
 				GuildStringParser::buildNameSpec(guildId, gi->m_name, gi->m_guildElectionPreviousEndTime, gi->m_guildElectionNextEndTime, gi->m_guildFaction, gi->m_timeLeftGuildFaction, gi->m_guildGcwDefenderRegion, gi->m_timeJoinedGuildGcwDefenderRegion, gi->m_timeLeftGuildGcwDefenderRegion, oldNameSpec);
@@ -1723,7 +1723,7 @@ void GuildObject::setGuildGcwDefenderRegion(int guildId, std::string const &guil
 					if ((gi->m_guildGcwDefenderRegion == guildGcwDefenderRegion) && (gi->m_timeJoinedGuildGcwDefenderRegion > 0))
 						timeJoinedGuildGcwDefenderRegion = gi->m_timeJoinedGuildGcwDefenderRegion;
 					else
-						timeJoinedGuildGcwDefenderRegion = static_cast<int>(::time(NULL));
+						timeJoinedGuildGcwDefenderRegion = static_cast<int>(::time(nullptr));
 				}
 			}
 			else if (gi->m_guildGcwDefenderRegion != guildGcwDefenderRegion)
@@ -1732,13 +1732,13 @@ void GuildObject::setGuildGcwDefenderRegion(int guildId, std::string const &guil
 
 				if (!guildGcwDefenderRegion.empty())
 				{
-					timeJoinedGuildGcwDefenderRegion = static_cast<int>(::time(NULL));
+					timeJoinedGuildGcwDefenderRegion = static_cast<int>(::time(nullptr));
 				}
 				else
 				{
 					// stop defending
 					timeJoinedGuildGcwDefenderRegion = gi->m_timeJoinedGuildGcwDefenderRegion;
-					timeLeftGuildGcwDefenderRegion = static_cast<int>(::time(NULL));
+					timeLeftGuildGcwDefenderRegion = static_cast<int>(::time(nullptr));
 				}
 			}
 
@@ -2052,7 +2052,7 @@ void GuildObject::depersistGcwImperialScorePercentile()
 
 	// GCW category
 	{
-		int const timeNow = static_cast<int>(::time(NULL));
+		int const timeNow = static_cast<int>(::time(nullptr));
 		int gcwImperialScorePercentile;
 		std::map<std::string, Pvp::GcwScoreCategory const *> const & allGcwScoreCategory = Pvp::getAllGcwScoreCategory(); 
 		for (std::map<std::string, Pvp::GcwScoreCategory const *>::const_iterator iter = allGcwScoreCategory.begin(); iter != allGcwScoreCategory.end(); ++iter)
@@ -2154,7 +2154,7 @@ void GuildObject::updateGcwImperialScorePercentile(std::set<std::string> const &
 	if (m_gcwImperialScorePercentileThisGalaxy.empty())
 		depersistGcwImperialScorePercentile();
 
-	int const timeNow = static_cast<int>(::time(NULL));
+	int const timeNow = static_cast<int>(::time(nullptr));
 	GameScriptObject * const gameScriptObject = tatooine->getScriptObject();
 	int currentScorePercentile, newScorePercentile, newGroupCategoryScoreRaw, scoreCategoryGroupTotalPoints, deltaGroupCategoryScoreRaw;
 	std::map<std::pair<std::string, std::string>, int>::const_iterator iterGroupCategoryScoreRaw;
@@ -2515,8 +2515,8 @@ void GuildObjectNamespace::replaceSetIfNeeded(char const *label, Archive::AutoDe
 }
 
 // ----------------------------------------------------------------------
-// NULL oldPermissions means wasn't an existing guild member
-// NULL newPermissions means will not be a guild member
+// nullptr oldPermissions means wasn't an existing guild member
+// nullptr newPermissions means will not be a guild member
 void GuildObjectNamespace::updateGuildInfoMembersCount(GuildInfo & gi, int const * const oldPermissions, int const * const newPermissions)
 {
 	bool existingMember = false;
@@ -2596,7 +2596,7 @@ void GuildObjectNamespace::updateGcwPercentileHistory(Archive::AutoDeltaMap<std:
 	if (ConfigServerGame::getTrackGcwPercentileHistoryCount() <= 0)
 		return;
 
-	history.set(std::make_pair(scoreName, static_cast<int>(::time(NULL))), score);
+	history.set(std::make_pair(scoreName, static_cast<int>(::time(nullptr))), score);
 
 	int newCount = 1;
 	Archive::AutoDeltaMap<std::string, int>::const_iterator const iterHistoryCount = historyCount.find(scoreName);

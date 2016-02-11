@@ -103,7 +103,7 @@ namespace Archive
 		put(target, source.m_networkId);
 		put(target, source.m_objectTemplate);
 
-		bool isWeapon = (source.m_weaponSharedBaselines.get() != NULL);
+		bool isWeapon = (source.m_weaponSharedBaselines.get() != nullptr);
 		put(target, isWeapon);
 		if (isWeapon)
 		{

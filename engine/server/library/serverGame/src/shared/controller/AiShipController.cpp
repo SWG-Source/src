@@ -127,15 +127,15 @@ AiShipController * AiShipController::getAiShipController(NetworkId const & unit)
 {
 	Object * const object = NetworkIdManager::getObjectById(unit);
 
-	return (object != NULL) ? AiShipController::asAiShipController(object->getController()) : NULL;
+	return (object != nullptr) ? AiShipController::asAiShipController(object->getController()) : nullptr;
 }
 
 // ----------------------------------------------------------------------
 
 AiShipController * AiShipController::asAiShipController(Controller * const controller)
 {
-	ShipController * const shipController = (controller != NULL) ? controller->asShipController() : NULL;
-	AiShipController * const aiShipController = (shipController != NULL) ? shipController->asAiShipController() : NULL;
+	ShipController * const shipController = (controller != nullptr) ? controller->asShipController() : nullptr;
+	AiShipController * const aiShipController = (shipController != nullptr) ? shipController->asAiShipController() : nullptr;
 	
 	return aiShipController;
 }
@@ -144,8 +144,8 @@ AiShipController * AiShipController::asAiShipController(Controller * const contr
 
 AiShipController const * AiShipController::asAiShipController(Controller const * const controller)
 {
-	ShipController const * const shipController = (controller != NULL) ? controller->asShipController() : NULL;
-	AiShipController const * const aiShipController = (shipController != NULL) ? shipController->asAiShipController() : NULL;
+	ShipController const * const shipController = (controller != nullptr) ? controller->asShipController() : nullptr;
+	AiShipController const * const aiShipController = (shipController != nullptr) ? shipController->asAiShipController() : nullptr;
 	
 	return aiShipController;
 }
@@ -155,18 +155,18 @@ AiShipController const * AiShipController::asAiShipController(Controller const *
 AiShipController::AiShipController(ShipObject * const owner) :
 	ShipController(owner),
 	m_pilotData(&AiShipPilotData::getDefaultPilotData()),
-	m_pendingNonAttackBehavior(NULL),
-	m_nonAttackBehavior(NULL),
-	m_pendingAttackBehavior(NULL),
-	m_attackBehavior(NULL),
+	m_pendingNonAttackBehavior(nullptr),
+	m_nonAttackBehavior(nullptr),
+	m_pendingAttackBehavior(nullptr),
+	m_attackBehavior(nullptr),
 	m_shipName(),
 	m_shipClass(ShipAiReactionManager::SC_invalid),
 	m_requestedSlowDown(false),
-	m_squad(NULL),
-	m_attackSquad(NULL),
+	m_squad(nullptr),
+	m_attackSquad(nullptr),
 	m_formationPosition_l(),
 	m_attackFormationPosition_l(),
-	m_path(NULL),
+	m_path(nullptr),
 	m_currentPathIndex(0),
 	m_aggroRadius(200.0f),
 	m_countermeasureState(CS_none),
@@ -190,22 +190,22 @@ AiShipController::~AiShipController()
 
 	// Remove this unit from its squad
 
-	if (m_squad != NULL)
+	if (m_squad != nullptr)
 	{
 		// The owner of the squad is SpaceSquadManager
 
 		getSquad().removeUnit(getOwner()->getNetworkId());
-		m_squad = NULL;
+		m_squad = nullptr;
 	}
 
 	// Remove this unit from its attack squad
 
-	if (m_attackSquad != NULL)
+	if (m_attackSquad != nullptr)
 	{
 		// The owner of the attack squad is SpaceSquad
 
 		m_attackSquad->removeUnit(getOwner()->getNetworkId());
-		m_attackSquad = NULL;
+		m_attackSquad = nullptr;
 	}
 	else
 	{
@@ -215,17 +215,17 @@ AiShipController::~AiShipController()
 	// Remove path here.
 	SpacePathManager::release(m_path, getOwner());
 
-	m_path = NULL;
-	m_pilotData = NULL;
+	m_path = nullptr;
+	m_pilotData = nullptr;
 
 	delete m_nonAttackBehavior;
-	m_nonAttackBehavior = NULL;
+	m_nonAttackBehavior = nullptr;
 	delete m_pendingNonAttackBehavior;
-	m_pendingNonAttackBehavior = NULL;
+	m_pendingNonAttackBehavior = nullptr;
 	delete m_pendingAttackBehavior;
-	m_pendingAttackBehavior = NULL;
+	m_pendingAttackBehavior = nullptr;
 	delete m_attackBehavior;
-	m_attackBehavior = NULL;
+	m_attackBehavior = nullptr;
 	delete m_reactToMissileTimer;
 	delete m_pilotManagerInfo;
 	delete m_exclusiveAggroSet;
@@ -234,7 +234,7 @@ AiShipController::~AiShipController()
 // ----------------------------------------------------------------------
 void AiShipController::endBaselines()
 {
-	DEBUG_FATAL((m_squad != NULL), ("m_squad should be NULL"));
+	DEBUG_FATAL((m_squad != nullptr), ("m_squad should be nullptr"));
 	m_squad = SpaceSquadManager::createSquad();
 
 	getSquad().addUnit(getOwner()->getNetworkId());
@@ -252,7 +252,7 @@ float AiShipController::realAlter(float const elapsedTime)
 
 #ifdef _DEBUG
 
-	AiDebugString * aiDebugString = NULL;
+	AiDebugString * aiDebugString = nullptr;
 	if (   s_spaceAiClientDebugEnabled
 	    && !getShipOwner()->getObservers().empty())
 	{
@@ -263,25 +263,25 @@ float AiShipController::realAlter(float const elapsedTime)
 
 	// We have to have a pending behavior because while in a behavior a trigger can get called which can then kill that behavior, so we have to wait until the next frame to switch behaviors so they don't stomp each other from triggers.
 
-	if (m_pendingNonAttackBehavior != NULL)
+	if (m_pendingNonAttackBehavior != nullptr)
 	{
 		delete m_nonAttackBehavior;
 		m_nonAttackBehavior = m_pendingNonAttackBehavior;
-		m_pendingNonAttackBehavior = NULL;
+		m_pendingNonAttackBehavior = nullptr;
 	}
 
-	if (m_pendingDockingBehavior != NULL)
+	if (m_pendingDockingBehavior != nullptr)
 	{
 		delete m_dockingBehavior;
 		m_dockingBehavior = m_pendingDockingBehavior;
-		m_pendingDockingBehavior = NULL;
+		m_pendingDockingBehavior = nullptr;
 	}
 
-	if (   (m_dockingBehavior != NULL)
+	if (   (m_dockingBehavior != nullptr)
 	    && (m_dockingBehavior->isDockFinished()))
 	{
 		delete m_dockingBehavior;
-		m_dockingBehavior = NULL;
+		m_dockingBehavior = nullptr;
 	}
 
 	m_yawPosition = 0.f;
@@ -292,7 +292,7 @@ float AiShipController::realAlter(float const elapsedTime)
 	ShipObject * const shipOwner = NON_NULL(getShipOwner());
 
 	PROFILER_AUTO_BLOCK_DEFINE("behaviors");
-	if (m_attackBehavior != NULL) // This was added for ships that are contructed for AI but not fully contructed proper using the space_mobile.tab
+	if (m_attackBehavior != nullptr) // This was added for ships that are contructed for AI but not fully contructed proper using the space_mobile.tab
 	{
 		if (isAttacking()) // Capital ships never go into attack mode as such, always follow their non-attacking behavior (although they may fire turrets as they go)
 		{
@@ -314,7 +314,7 @@ float AiShipController::realAlter(float const elapsedTime)
 				shipOwner->openWings();
 			}
 
-			if (m_dockingBehavior != NULL)
+			if (m_dockingBehavior != nullptr)
 			{
 				m_dockingBehavior->unDock();
 			}
@@ -325,7 +325,7 @@ float AiShipController::realAlter(float const elapsedTime)
 				m_attackBehavior->alter(elapsedTime);
 
 #ifdef _DEBUG
-				if (aiDebugString != NULL)
+				if (aiDebugString != nullptr)
 				{
 					m_attackBehavior->addDebug(*aiDebugString);
 				}
@@ -337,9 +337,9 @@ float AiShipController::realAlter(float const elapsedTime)
 
 				Object * const leaderObject = getAttackSquad().getLeader().getObject();
 				ShipController * const leaderShipController = leaderObject->getController()->asShipController();
-				AiShipController * const leaderAiShipController = (leaderShipController != NULL) ? leaderShipController->asAiShipController() : NULL;
+				AiShipController * const leaderAiShipController = (leaderShipController != nullptr) ? leaderShipController->asAiShipController() : nullptr;
 
-				if (leaderAiShipController != NULL)
+				if (leaderAiShipController != nullptr)
 				{
 					Transform transform(leaderObject->getTransform_o2w());
 					transform.setPosition_p(leaderAiShipController->getMoveToGoalPosition_w());
@@ -361,7 +361,7 @@ float AiShipController::realAlter(float const elapsedTime)
 			{
 				delete m_attackBehavior;
 				m_attackBehavior = m_pendingAttackBehavior;
-				m_pendingAttackBehavior = NULL;
+				m_pendingAttackBehavior = nullptr;
 			}
 		}
 		else if (isBeingDocked())
@@ -370,18 +370,18 @@ float AiShipController::realAlter(float const elapsedTime)
 
 			setThrottle(0.0f);
 		}
-		else if (m_dockingBehavior != NULL)
+		else if (m_dockingBehavior != nullptr)
 		{
 			m_dockingBehavior->alter(elapsedTime);
 
 #ifdef _DEBUG
-			if (aiDebugString != NULL)
+			if (aiDebugString != nullptr)
 			{
 				m_dockingBehavior->addDebug(*aiDebugString);
 			}
 #endif // _DEBUG
 		}
-		else if (m_nonAttackBehavior != NULL)
+		else if (m_nonAttackBehavior != nullptr)
 		{
 			PROFILER_AUTO_BLOCK_DEFINE("non-attack behaviors");
 
@@ -413,7 +413,7 @@ float AiShipController::realAlter(float const elapsedTime)
 				m_nonAttackBehavior->alter(elapsedTime);
 
 #ifdef _DEBUG
-				if (aiDebugString != NULL)
+				if (aiDebugString != nullptr)
 				{
 					m_nonAttackBehavior->addDebug(*aiDebugString);
 				}
@@ -425,7 +425,7 @@ float AiShipController::realAlter(float const elapsedTime)
 
 				Object * const squadLeader = getSquad().getLeader().getObject();
 
-				if (squadLeader != NULL)
+				if (squadLeader != nullptr)
 				{
 					Vector goalPosition_w(Formation::getPosition_w(squadLeader->getTransform_o2w(), getFormationPosition_l()));
 
@@ -434,9 +434,9 @@ float AiShipController::realAlter(float const elapsedTime)
 					if (getOwner()->getPosition_w().magnitudeBetweenSquared(goalPosition_w) > sqr(getLargestTurnRadius() * s_slowDownTurnRadiusGain))
 					{
 						ShipController * const followedUnitShipController = squadLeader->getController()->asShipController();
-						AiShipController * const followedUnitAiShipController = (followedUnitShipController != NULL) ? followedUnitShipController->asAiShipController() : NULL;
+						AiShipController * const followedUnitAiShipController = (followedUnitShipController != nullptr) ? followedUnitShipController->asAiShipController() : nullptr;
 						
-						if (followedUnitAiShipController != NULL)
+						if (followedUnitAiShipController != nullptr)
 						{
 							followedUnitAiShipController->requestSlowDown();
 						}
@@ -462,7 +462,7 @@ float AiShipController::realAlter(float const elapsedTime)
 					}
 
 #ifdef _DEBUG
-					if (aiDebugString != NULL)
+					if (aiDebugString != nullptr)
 					{
 						m_nonAttackBehavior->addDebug(*aiDebugString);
 					}
@@ -476,7 +476,7 @@ float AiShipController::realAlter(float const elapsedTime)
 		}
 		else
 		{
-			DEBUG_WARNING(true, ("debug_ai: There should never be a NULL non-attacking behavior %s", getOwner()->getDebugInformation().c_str()));
+			DEBUG_WARNING(true, ("debug_ai: There should never be a nullptr non-attacking behavior %s", getOwner()->getDebugInformation().c_str()));
 		}
 	}
 
@@ -551,8 +551,8 @@ float AiShipController::realAlter(float const elapsedTime)
 	}
 
 #ifdef _DEBUG
-	if (   (m_attackBehavior != NULL)
-	    && (aiDebugString != NULL))
+	if (   (m_attackBehavior != nullptr)
+	    && (aiDebugString != nullptr))
 	{
 		PROFILER_AUTO_BLOCK_DEFINE("sendDebugAiToClients");
 		sendDebugAiToClients(*aiDebugString);
@@ -574,7 +574,7 @@ void AiShipController::moveTo(Vector const & position_w, float const throttle, f
 
 	// If we are not following a unit, see if we need to slow down for someone
 
-	if (   (m_nonAttackBehavior != NULL)
+	if (   (m_nonAttackBehavior != nullptr)
 	    && (m_nonAttackBehavior->getBehaviorType() != ASBT_follow)
 	    && m_requestedSlowDown
 		&& !isAttacking())
@@ -645,16 +645,16 @@ bool AiShipController::addDamageTaken(NetworkId const & attackingUnit, float con
 		{
 			ShipObject const * const attackingShipObject = ShipObject::asShipObject(NetworkIdManager::getObjectById(attackingUnit));
 
-			if (attackingShipObject != NULL)
+			if (attackingShipObject != nullptr)
 			{
 				CreatureObject const * const attackingPilotCreatureObject = attackingShipObject->getPilot();
 
-				if (   (attackingPilotCreatureObject != NULL)
+				if (   (attackingPilotCreatureObject != nullptr)
 					&& attackingPilotCreatureObject->isPlayerControlled())
 				{
 					GroupObject * const groupObject = attackingPilotCreatureObject->getGroup();
 
-					if (groupObject != NULL)
+					if (groupObject != nullptr)
 					{
 						GroupObject::GroupMemberVector const & groupMembers = groupObject->getGroupMembers();
 						GroupObject::GroupMemberVector::const_iterator iterGroupMembers = groupMembers.begin();
@@ -665,11 +665,11 @@ bool AiShipController::addDamageTaken(NetworkId const & attackingUnit, float con
 							NetworkId const & groupMemberPilotNetworkId = groupMember.first;
 							CreatureObject const * const groupMemberPilotCreatureObject = CreatureObject::asCreatureObject(NetworkIdManager::getObjectById(groupMemberPilotNetworkId));
 
-							if (groupMemberPilotCreatureObject != NULL)
+							if (groupMemberPilotCreatureObject != nullptr)
 							{
 								ShipObject const * const groupMemberShipObject = groupMemberPilotCreatureObject->getPilotedShip();
 
-								if (groupMemberShipObject != NULL)
+								if (groupMemberShipObject != nullptr)
 								{
 									if (groupMemberShipObject != attackingShipObject)
 									{
@@ -749,24 +749,24 @@ void AiShipController::follow(NetworkId const & followedUnit, Vector const & dir
 	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "debug_ai", ("AiShipController::follow() owner(%s) followedUnit(%s) direction_o(%.1f, %.1f, %.1f) offset(%.1f)", getOwner()->getNetworkId().getValueString().c_str(), followedUnit.getValueString().c_str(), direction_l.x, direction_l.y, direction_l.z, distance));
 
 	SpacePathManager::release(m_path, getOwner());
-	m_path = NULL;
+	m_path = nullptr;
 
 	float appearanceRadius = 0.0f;
 	Object const * const followedObject = NetworkIdManager::getObjectById(followedUnit);
 
-	if (followedObject != NULL)
+	if (followedObject != nullptr)
 	{
 		//-- This needs to be improved to cast a ray from this position back towards the ship and get the actual collision position
 
 		CollisionProperty const * const ownerCollisionProperty = getOwner()->getCollisionProperty();
 		CollisionProperty const * const followedObjectCollisionProperty = followedObject->getCollisionProperty();
 		
-		if (ownerCollisionProperty != NULL)
+		if (ownerCollisionProperty != nullptr)
 		{
 			appearanceRadius += ownerCollisionProperty->getBoundingSphere_l().getRadius();
 		}
 
-		if (followedObjectCollisionProperty != NULL)
+		if (followedObjectCollisionProperty != nullptr)
 		{
 			appearanceRadius += followedObjectCollisionProperty ->getBoundingSphere_l().getRadius();
 		}
@@ -786,7 +786,7 @@ int AiShipController::getBehaviorType() const
 {
 	AiShipBehaviorType result = ASBT_idle;
 
-	if (m_nonAttackBehavior != NULL)
+	if (m_nonAttackBehavior != nullptr)
 	{
 		result = m_nonAttackBehavior->getBehaviorType();
 	}
@@ -803,7 +803,7 @@ void AiShipController::idle()
 	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "debug_ai", ("AiShipController::idle() owner(%s)", getOwner()->getNetworkId().getValueString().c_str()));
 
 	SpacePathManager::release(m_path, getOwner());
-	m_path = NULL;
+	m_path = nullptr;
 
 	delete m_pendingNonAttackBehavior;
 	m_pendingNonAttackBehavior = new AiShipBehaviorIdle(*this);;
@@ -818,7 +818,7 @@ void AiShipController::track(Object const & target)
 	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "debug_ai", ("AiShipController::track() owner(%s) target(%s)", getOwner()->getNetworkId().getValueString().c_str(), target.getNetworkId().getValueString().c_str()));
 
 	SpacePathManager::release(m_path, getOwner());
-	m_path = NULL;
+	m_path = nullptr;
 
 	delete m_pendingNonAttackBehavior;
 	m_pendingNonAttackBehavior = new AiShipBehaviorTrack(*this, target);
@@ -871,7 +871,7 @@ void AiShipController::clearPatrolPath()
 {
 	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "debug_ai", ("AiShipController::clearPatrolPath() owner(%s)", getOwner()->getNetworkId().getValueString().c_str()));
 
-	if (m_path != NULL)
+	if (m_path != nullptr)
 	{
 		m_path->clear();
 	}
@@ -896,15 +896,15 @@ void AiShipController::triggerBehaviorChanged(AiShipBehaviorType const newBehavi
 {
 	// Only send the trigger if the new behavior is different from the old behavior
 
-	AiShipBehaviorType const oldBehavior = (m_nonAttackBehavior != NULL) ? m_nonAttackBehavior->getBehaviorType() : ASBT_idle;
+	AiShipBehaviorType const oldBehavior = (m_nonAttackBehavior != nullptr) ? m_nonAttackBehavior->getBehaviorType() : ASBT_idle;
 
 	if (oldBehavior != newBehavior)
 	{
 		Object * const object = getOwner();
-		ServerObject * const serverObject = (object != NULL) ? object->asServerObject() : NULL;
-		GameScriptObject * const gameScriptObject = (serverObject != NULL) ? serverObject->getScriptObject() : NULL;
+		ServerObject * const serverObject = (object != nullptr) ? object->asServerObject() : nullptr;
+		GameScriptObject * const gameScriptObject = (serverObject != nullptr) ? serverObject->getScriptObject() : nullptr;
 
-		if (gameScriptObject != NULL)
+		if (gameScriptObject != nullptr)
 		{
 			LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "debug_ai", ("AiShipController::triggerBehaviorChanged() unit(%s) old(%s) new(%s)", getOwner()->getNetworkId().getValueString().c_str(), AiShipBehaviorBase::getBehaviorString(oldBehavior), AiShipBehaviorBase::getBehaviorString(newBehavior)));
 
@@ -925,10 +925,10 @@ void AiShipController::triggerBehaviorChanged(AiShipBehaviorType const newBehavi
 void AiShipController::triggerEnterCombat(NetworkId const & attackTarget)
 {
 	Object * const object = getOwner();
-	ServerObject * const serverObject = (object != NULL) ? object->asServerObject() : NULL;
-	GameScriptObject * const gameScriptObject = (serverObject != NULL) ? serverObject->getScriptObject() : NULL;
+	ServerObject * const serverObject = (object != nullptr) ? object->asServerObject() : nullptr;
+	GameScriptObject * const gameScriptObject = (serverObject != nullptr) ? serverObject->getScriptObject() : nullptr;
 
-	if (gameScriptObject != NULL)
+	if (gameScriptObject != nullptr)
 	{
 		LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "debug_ai", ("AiShipController::triggerEnterCombat() unit(%s) attackTarget(%s)", getOwner()->getNetworkId().getValueString().c_str(), attackTarget.getValueString().c_str()));
 
@@ -968,7 +968,7 @@ void AiShipController::setPilotType(std::string const & pilotType)
 	AiPilotManager::getPilotData(*m_pilotData, *m_pilotManagerInfo);
 
 	// Make sure the ship name is set
-	if (shipObject != NULL)
+	if (shipObject != nullptr)
 	{
 		std::string shipName;
 
@@ -986,7 +986,7 @@ void AiShipController::setPilotType(std::string const & pilotType)
 	// Create the attack behavior based on the ship class
 
 	delete m_attackBehavior;
-	m_attackBehavior = NULL;
+	m_attackBehavior = nullptr;
 
 	m_shipClass = ShipAiReactionManager::getShipClass(m_shipName);
 
@@ -1009,7 +1009,7 @@ void AiShipController::setPilotType(std::string const & pilotType)
 
 	setAggroRadius(m_pilotData->m_aggroRadius);
 		
-	FATAL((m_attackBehavior == NULL), ("The attack behavior can not be NULL."));
+	FATAL((m_attackBehavior == nullptr), ("The attack behavior can not be nullptr."));
 }
 
 // ----------------------------------------------------------------------
@@ -1029,8 +1029,8 @@ CachedNetworkId const & AiShipController::getPrimaryAttackTarget() const
 ShipObject const * AiShipController::getPrimaryAttackTargetShipObject() const
 {
 	Object const * const targetObject = getPrimaryAttackTarget().getObject();
-	ServerObject const * const targetServerObject = (targetObject != NULL) ? targetObject->asServerObject() : NULL;
-	ShipObject const * const targetShipObject = (targetServerObject != NULL) ? targetServerObject->asShipObject() : NULL;
+	ServerObject const * const targetServerObject = (targetObject != nullptr) ? targetObject->asServerObject() : nullptr;
+	ShipObject const * const targetShipObject = (targetServerObject != nullptr) ? targetServerObject->asShipObject() : nullptr;
 
 	return targetShipObject;
 }
@@ -1097,7 +1097,7 @@ void AiShipController::setSquad(SpaceSquad * const squad)
 	{
 		// Remove the unit from its previous squad
 
-		if (   (m_squad != NULL)
+		if (   (m_squad != nullptr)
 		    && !m_squad->isEmpty())
 		{
 			m_squad->removeUnit(getOwner()->getNetworkId());
@@ -1170,7 +1170,7 @@ void AiShipController::setAttackSquad(SpaceAttackSquad * const attackSquad)
 	{
 		// Remove the unit from its pervious attack squad
 
-		if (m_attackSquad != NULL)
+		if (m_attackSquad != nullptr)
 		{
 			m_attackSquad->removeUnit(getOwner()->getNetworkId());
 		}
@@ -1210,7 +1210,7 @@ float AiShipController::getShipRadius() const
 	ShipObject const * const shipObject = getShipOwner();
 	CollisionProperty const * const shipCollision = shipObject->getCollisionProperty();
 	
-	if (shipCollision != NULL)
+	if (shipCollision != nullptr)
 	{
 		result = shipCollision->getBoundingSphere_l().getRadius();
 	}
@@ -1288,9 +1288,9 @@ bool AiShipController::shouldCheckForEnemies() const
 
 void AiShipController::setCurrentPathIndex(unsigned int const index)
 {
-	//LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "debug_ai", ("AiShipController::setCurrentPathIndex() unit(%s) pathIndex(%u) pathSize(%u)", getOwner()->getNetworkId().getValueString().c_str(), index, (m_path != NULL) ? m_path->getTransformList().size() : 0));
+	//LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "debug_ai", ("AiShipController::setCurrentPathIndex() unit(%s) pathIndex(%u) pathSize(%u)", getOwner()->getNetworkId().getValueString().c_str(), index, (m_path != nullptr) ? m_path->getTransformList().size() : 0));
 
-	if (   (m_path != NULL)
+	if (   (m_path != nullptr)
 	    && !m_path->isEmpty())
 	{
 		m_currentPathIndex = index;
@@ -1298,7 +1298,7 @@ void AiShipController::setCurrentPathIndex(unsigned int const index)
 	else
 	{
 		m_currentPathIndex = 0;
-		LOGC(ConfigServerGame::isSpaceAiLoggingEnabled() && (m_currentPathIndex > 0), "debug_ai", ("AiShipController::setCurrentPathIndex() Setting a non-zero path index(%d) on a NULL or empty path", index));
+		LOGC(ConfigServerGame::isSpaceAiLoggingEnabled() && (m_currentPathIndex > 0), "debug_ai", ("AiShipController::setCurrentPathIndex() Setting a non-zero path index(%d) on a nullptr or empty path", index));
 	}
 }
 
@@ -1317,7 +1317,7 @@ float AiShipController::calculateThrottleToPosition_w(Vector const & position_w,
 	
 	Object const * const object = getOwner();
 
-	if (object != NULL)
+	if (object != nullptr)
 	{
 		float const distanceToGoalSquared = object->getPosition_w().magnitudeBetweenSquared(position_w);
 
@@ -1420,7 +1420,7 @@ void AiShipController::switchToBomberAttack()
 bool AiShipController::removeAttackTarget(NetworkId const & unit)
 {
 	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "debug_ai", ("AiShipController::removeAttackTarget() owner(%s) unit(%s)", getOwner()->getNetworkId().getValueString().c_str(), unit.getValueString().c_str()));
-	DEBUG_WARNING((unit == NetworkId::cms_invalid), ("debug_ai: owner(%s) ERROR: Trying to remove a NULL unit(%s) from the attack target list.", getOwner()->getNetworkId().getValueString().c_str(), unit.getValueString().c_str()));
+	DEBUG_WARNING((unit == NetworkId::cms_invalid), ("debug_ai: owner(%s) ERROR: Trying to remove a nullptr unit(%s) from the attack target list.", getOwner()->getNetworkId().getValueString().c_str(), unit.getValueString().c_str()));
 
 	return ShipController::removeAttackTarget(unit);
 }
@@ -1637,7 +1637,7 @@ void AiShipController::sendDebugAiToClients(AiDebugString & aiDebugString)
 				bool const checkForEnemies = shouldCheckForEnemies();
 				float const leashRadius = m_attackBehavior->getLeashRadius();
 
-				aiDebugString.addText(formattedString.sprintf("%s agg(%.0f) lsh(%.0f) %s\n", AiShipController::getAttackOrdersString(getAttackOrders()), m_aggroRadius, leashRadius, (m_attackBehavior == NULL) ? " [NO ATTACK BEHAVIOR]" : (checkForEnemies ? " [LFE]" : "")));
+				aiDebugString.addText(formattedString.sprintf("%s agg(%.0f) lsh(%.0f) %s\n", AiShipController::getAttackOrdersString(getAttackOrders()), m_aggroRadius, leashRadius, (m_attackBehavior == nullptr) ? " [NO ATTACK BEHAVIOR]" : (checkForEnemies ? " [LFE]" : "")));
 			}
 		}
 
@@ -1687,7 +1687,7 @@ void AiShipController::sendDebugAiToClients(AiDebugString & aiDebugString)
 				// Only send to the client if the objvar is set
 
 				int temp = 0;
-				if (   (characterObject != NULL)
+				if (   (characterObject != nullptr)
 				    && characterObject->getObjVars().getItem("ai_debug_string", temp))
 				{
 					if (temp > 0)
@@ -1768,8 +1768,8 @@ void AiShipController::addExclusiveAggro(NetworkId const & unit)
 		// Make sure this is a player
 
 		Object * const unitObject = NetworkIdManager::getObjectById(unit);
-		ServerObject * const unitServerObject = (unitObject != NULL) ? unitObject->asServerObject() : NULL;
-		CreatureObject * const unitCreatureObject = (unitServerObject != NULL) ? unitServerObject->asCreatureObject() : NULL;
+		ServerObject * const unitServerObject = (unitObject != nullptr) ? unitObject->asServerObject() : nullptr;
+		CreatureObject * const unitCreatureObject = (unitServerObject != nullptr) ? unitServerObject->asCreatureObject() : nullptr;
 
 		if (   !unitCreatureObject
 		    || !unitCreatureObject->isPlayerControlled())
@@ -1829,11 +1829,11 @@ bool AiShipController::isExclusiveAggro(CreatureObject const & pilot) const
 
 		CreatureObject const * const aggroCreatureObject = CreatureObject::asCreatureObject(aggroCachedNetworkId.getObject());
 
-		if (aggroCreatureObject != NULL)
+		if (aggroCreatureObject != nullptr)
 		{
 			GroupObject * const groupObject = aggroCreatureObject->getGroup();
 
-			if (groupObject != NULL)
+			if (groupObject != nullptr)
 			{
 				GroupObject::GroupMemberVector const & groupMembers = groupObject->getGroupMembers();
 				GroupObject::GroupMemberVector::const_iterator iterGroupMembers = groupMembers.begin();
@@ -1871,7 +1871,7 @@ bool AiShipController::isValidTarget(ShipObject const & unit) const
 
 	CreatureObject const * const pilotCreatureObject = unit.getPilot();
 
-	if (pilotCreatureObject != NULL)
+	if (pilotCreatureObject != nullptr)
 	{
 		if (pilotCreatureObject->isPlayerControlled())
 		{

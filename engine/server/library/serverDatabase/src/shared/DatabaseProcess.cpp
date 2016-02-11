@@ -46,7 +46,7 @@
 
 // ----------------------------------------------------------------------
 
-DatabaseProcess *DatabaseProcess::ms_theInstance = NULL;
+DatabaseProcess *DatabaseProcess::ms_theInstance = nullptr;
 
 // ----------------------------------------------------------------------
 
@@ -627,7 +627,7 @@ void DatabaseProcess::sendToCommoditiesServer(GameNetworkMessage const &message,
 		commoditiesConnection->send(message,reliable);
 	}
 	else
-		DEBUG_REPORT_LOG(true, ("commoditiesConnection is NULL\n"));
+		DEBUG_REPORT_LOG(true, ("commoditiesConnection is nullptr\n"));
 }
 
 // ----------------------------------------------------------------------

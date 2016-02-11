@@ -70,14 +70,14 @@ namespace CellPropertyNamespace
 	Object                                            *ms_worldCellObject;
 	Notification                                       ms_portalCrossingNotification;
 	bool                                               ms_renderPortals;
-	CellProperty::CreateDpvsCellHookFunction           ms_createDpvsCellHookFunction = NULL;
-	CellProperty::DestroyDpvsCellHookFunction          ms_destroyDpvsCellHookFunction = NULL;
-	CellProperty::AddToRenderWorldHookFunction         ms_addToRenderWorldHook = NULL;
+	CellProperty::CreateDpvsCellHookFunction           ms_createDpvsCellHookFunction = nullptr;
+	CellProperty::DestroyDpvsCellHookFunction          ms_destroyDpvsCellHookFunction = nullptr;
+	CellProperty::AddToRenderWorldHookFunction         ms_addToRenderWorldHook = nullptr;
 
-	CellProperty::PolyAppearanceFactory                ms_portalBarrierFactory = NULL;
-	CellProperty::PolyAppearanceFactory                ms_forceFieldFactory = NULL;
+	CellProperty::PolyAppearanceFactory                ms_portalBarrierFactory = nullptr;
+	CellProperty::PolyAppearanceFactory                ms_forceFieldFactory = nullptr;
 
-	CellProperty::AccessAllowedHookFunction            ms_accessAllowedHookFunction = NULL;
+	CellProperty::AccessAllowedHookFunction            ms_accessAllowedHookFunction = nullptr;
 }  
 using namespace CellPropertyNamespace;
 
@@ -86,9 +86,9 @@ using namespace CellPropertyNamespace;
 bool                                     CellPropertyNamespace::Notification::ms_enabled = true;
 
 CellProperty                            *CellProperty::ms_worldCellProperty;
-CellProperty::TextureFetch               CellProperty::ms_textureFetch = NULL;
-CellProperty::TextureRelease             CellProperty::ms_textureRelease = NULL;
-CellProperty::DeleteVisibleCellProperty  CellProperty::ms_deleteVisibleCellProperty = NULL;
+CellProperty::TextureFetch               CellProperty::ms_textureFetch = nullptr;
+CellProperty::TextureRelease             CellProperty::ms_textureRelease = nullptr;
+CellProperty::DeleteVisibleCellProperty  CellProperty::ms_deleteVisibleCellProperty = nullptr;
 
 // ======================================================================
 
@@ -148,9 +148,9 @@ bool CellPropertyNamespace::Notification::positionChanged(Object &object, bool c
 	start += objUpW;
 	end += objUpW;
 
-	CellProperty *targetCell = NULL;
+	CellProperty *targetCell = nullptr;
 
-	CellProperty *lastCell = NULL;
+	CellProperty *lastCell = nullptr;
 	CellProperty *currentCell = object.getParentCell();
 
 	while(currentCell)
@@ -163,7 +163,7 @@ bool CellPropertyNamespace::Notification::positionChanged(Object &object, bool c
 
 		if(time == 1.0f) break;
 
-		if(nextCell == NULL) break;
+		if(nextCell == nullptr) break;
 		if(nextCell == currentCell) break;	
 		if(nextCell == lastCell) break;
 
@@ -235,8 +235,8 @@ void CellProperty::install()
 void CellProperty::remove()
 {
 	delete ms_worldCellObject;
-	ms_worldCellObject = NULL;
-	ms_worldCellProperty = NULL;
+	ms_worldCellObject = nullptr;
+	ms_worldCellProperty = nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -282,7 +282,7 @@ Appearance *CellProperty::createPortalBarrier(VertexList const & verts, const Ve
 	if (ms_portalBarrierFactory)
 		return ms_portalBarrierFactory(verts,color);
 
-	return NULL;
+	return nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -292,7 +292,7 @@ Appearance *CellProperty::createForceField(VertexList const & verts, const Vecto
 	if (ms_forceFieldFactory)
 		return ms_forceFieldFactory(verts,color);
 
-	return NULL;
+	return nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -342,24 +342,24 @@ void CellProperty::setPortalTransitionsEnabled(bool enabled)
 
 CellProperty::CellProperty(Object &owner)
 : Container(getClassPropertyId(), owner),
-	m_portalProperty(NULL),
+	m_portalProperty(nullptr),
 	m_cellIndex(-1),
-	m_appearanceObject(NULL),
+	m_appearanceObject(nullptr),
 	m_portalObjectList(new PortalObjectList),
 	m_visible(false),
-	m_floor(NULL),
-	m_cellName(NULL),
+	m_floor(nullptr),
+	m_cellName(nullptr),
 	m_cellNameCrc(0),
-	m_dpvsCell(NULL),
-	m_environmentTexture(NULL),
+	m_dpvsCell(nullptr),
+	m_environmentTexture(nullptr),
 	m_fogEnabled(false),
 	m_fogColor(0),
 	m_fogDensity(0.f),
 	m_appliedInteriorLayout(false),
-	m_preVisibilityTraversalRenderHookFunctionList(NULL),
-	m_enterRenderHookFunctionList(NULL),
-	m_preDrawRenderHookFunctionList(NULL),
-	m_exitRenderHookFunctionList(NULL)
+	m_preVisibilityTraversalRenderHookFunctionList(nullptr),
+	m_enterRenderHookFunctionList(nullptr),
+	m_preDrawRenderHookFunctionList(nullptr),
+	m_exitRenderHookFunctionList(nullptr)
 {
 	if (ms_createDpvsCellHookFunction)
 		m_dpvsCell = (*ms_createDpvsCellHookFunction)(this);
@@ -379,7 +379,7 @@ CellProperty::~CellProperty()
 	{
 		NOT_NULL(ms_textureRelease);
 		ms_textureRelease(m_environmentTexture);
-		m_environmentTexture = NULL;
+		m_environmentTexture = nullptr;
 	}
 
 	if (!m_portalObjectList->empty())
@@ -391,18 +391,18 @@ CellProperty::~CellProperty()
 		delete portalList;
 	}
 
-	m_portalProperty = NULL;
+	m_portalProperty = nullptr;
 	delete m_appearanceObject;
 	delete m_portalObjectList;
 	delete m_floor;
-	m_cellName = NULL;
+	m_cellName = nullptr;
 	m_cellNameCrc = 0;
 
 	if (m_dpvsCell)
 	{
 		NOT_NULL(ms_destroyDpvsCellHookFunction);
 		(*ms_destroyDpvsCellHookFunction)(m_dpvsCell);
-		m_dpvsCell = NULL;
+		m_dpvsCell = nullptr;
 	}
 
 	delete m_preVisibilityTraversalRenderHookFunctionList;
@@ -432,7 +432,7 @@ void CellProperty::initialize(const PortalProperty &portalProperty, int cellInde
 		m_appearanceObject->attachToObject_p(&getOwner(), true);
 		Appearance * const appearance = AppearanceTemplateList::createAppearance(cellTemplate.getAppearanceName());
 
-		if (appearance != NULL) {
+		if (appearance != nullptr) {
 			appearance->setShadowBlobAllowed();
 			m_appearanceObject->setAppearance(appearance);
 
@@ -448,7 +448,7 @@ void CellProperty::initialize(const PortalProperty &portalProperty, int cellInde
 
 	if (cellTemplate.getFloorName())
 	{
-		m_floor = FloorManager::createFloor(cellTemplate.getFloorName(),&getOwner(),NULL,false);
+		m_floor = FloorManager::createFloor(cellTemplate.getFloorName(),&getOwner(),nullptr,false);
 		WARNING(!m_floor, ("Cell %s could not load floor %s", cellTemplate.getAppearanceName(), cellTemplate.getFloorName()));
 	}
 	else
@@ -622,8 +622,8 @@ bool CellProperty::areAdjacent(const CellProperty *cellProperty1, const CellProp
 {
 	bool result = false;
 
-	if (   (cellProperty1 != NULL)
-	    && (cellProperty2 != NULL))
+	if (   (cellProperty1 != nullptr)
+	    && (cellProperty2 != nullptr))
 	{
 		if (cellProperty1 == cellProperty2)
 		{
@@ -640,8 +640,8 @@ bool CellProperty::areAdjacent(const CellProperty *cellProperty1, const CellProp
 
 			result = false;
 		}
-		else if (   (cellProperty1->m_portalObjectList != NULL)
-		         && (cellProperty2->m_portalObjectList != NULL))
+		else if (   (cellProperty1->m_portalObjectList != nullptr)
+		         && (cellProperty2->m_portalObjectList != nullptr))
 		{
 			// Pick the list that is not the world cell property, or the
 			// smallest list
@@ -657,7 +657,7 @@ bool CellProperty::areAdjacent(const CellProperty *cellProperty1, const CellProp
 				checkCellProperty = cellProperty1;
 			}
 
-			if (portalObjectList != NULL)
+			if (portalObjectList != nullptr)
 			{
 				//DEBUG_REPORT_LOG((portalObjectList->size() > 1), ("Portal Object List > 1 - size: %d", portalObjectList->size()));
 
@@ -714,7 +714,7 @@ void CellProperty::releaseWorldCellPropertyEnvironmentTexture()
  *
  * @param startPosition Starting position, in the space of this cell.
  * @param endPosition   Ending position, in the space of this cell.
- * @return  The CellProperty that an object traversing the object is in.  Will return NULL if remaining in this cell.
+ * @return  The CellProperty that an object traversing the object is in.  Will return nullptr if remaining in this cell.
  */
  
 CellProperty *CellProperty::getDestinationCell(const Vector &startPosition, const Vector &endPosition, float &closestPortalT, bool passableOnly) const
@@ -773,8 +773,8 @@ CellProperty *CellProperty::getDestinationCell(const Vector &startPosition, cons
 
 CellProperty *CellProperty::getDestinationCell(const Object *object, int portalId) const
 {
-	if(portalId < 0) return NULL;
-	if(object == NULL) return NULL;
+	if(portalId < 0) return nullptr;
+	if(object == nullptr) return nullptr;
 
 	const PortalObjectList::const_iterator iEnd = m_portalObjectList->end();
 	for (PortalObjectList::const_iterator i = m_portalObjectList->begin(); i != iEnd; ++i)
@@ -796,13 +796,13 @@ CellProperty *CellProperty::getDestinationCell(const Object *object, int portalI
 		{
 			DEBUG_WARNING(true,("CellProperty::getDestinationCell(portalId) - tried to get an invalid portal\n"));
 
-			return NULL;
+			return nullptr;
 		}
 
 		return portalList[static_cast<PortalList::size_type>(portalId)]->getNeighbor()->getParentCell();
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -840,7 +840,7 @@ bool CellProperty::getDestinationCells(const Sphere &sphere, std::vector<CellPro
 
 				const Portal *neighbor = portal->getNeighbor();
 
-				WARNING(neighbor == NULL,("CellProperty::getDestinationCells - Cell %s has a portal without a neighbor\n",getOwner().getNetworkId().getValueString().c_str()));
+				WARNING(neighbor == nullptr,("CellProperty::getDestinationCells - Cell %s has a portal without a neighbor\n",getOwner().getNetworkId().getValueString().c_str()));
 
 				if(neighbor)
 				{
@@ -864,7 +864,7 @@ bool CellProperty::isAdjacentTo(const CellProperty *cell) const
 {
 	if(this == cell) return true;
 
-	if(cell == NULL) return false;
+	if(cell == nullptr) return false;
 
 	// ----------
 
@@ -964,7 +964,7 @@ const BaseExtent *CellProperty::getCollisionExtent() const
 	}
 	else
 	{
-		return NULL;
+		return nullptr;
 	}
 }
 
@@ -982,7 +982,7 @@ const BaseClass *CellProperty::getPathGraph() const
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -1111,7 +1111,7 @@ void CellProperty::drawDebugShapes(DebugShapeRenderer * const renderer) const
 
 #ifdef _DEBUG
 
-	if (renderer == NULL) 
+	if (renderer == nullptr) 
 		return;
 
 	Floor const * const floor = getFloor();
@@ -1192,7 +1192,7 @@ CellProperty::PortalObjectEntry const &CellProperty::getPortalObject(int index) 
 
 bool CellProperty::getAccessAllowed() const
 {
-	if (ms_accessAllowedHookFunction != NULL)
+	if (ms_accessAllowedHookFunction != nullptr)
 		return (*ms_accessAllowedHookFunction)(*this);
 	else
 		return true;
@@ -1286,7 +1286,7 @@ Vector const CellProperty::getPosition_w(Location const & location)
 	Vector result = location.getCoordinates();
 	CellProperty const * const worldCellProperty = CellProperty::getWorldCellProperty();
 
-	if (worldCellProperty != NULL)
+	if (worldCellProperty != nullptr)
 	{
 		if (location.getCell() != worldCellProperty->getOwner().getNetworkId())
 		{
@@ -1295,7 +1295,7 @@ Vector const CellProperty::getPosition_w(Location const & location)
 
 			Object const * const cell = NetworkIdManager::getObjectById(location.getCell());
 
-			if (cell != NULL)
+			if (cell != nullptr)
 			{
 				result = cell->rotateTranslate_o2w(location.getCoordinates());
 			}

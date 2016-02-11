@@ -40,7 +40,7 @@ Plat_Unicode::String globalArticleID;
 //----------------------------------------------
 CSAssistUnicodeChar *get_c_str(Plat_Unicode::String s)
 // This replaces c_str() by allocating a new buffer, erasing it, and then
-// using the non-null terminated data() to copy the data into the buffer.
+// using the non-nullptr terminated data() to copy the data into the buffer.
 //----------------------------------------------
 {
 	unsigned length = s.size() + 1;
@@ -94,7 +94,7 @@ void DisplayTicket(const CSAssistGameAPITicket *t)
 		std::cout << wideToNarrow(details) << "\n***\n";
 	}
 	else
-		std::cout << "***Ticket IS NULL! ***\n";
+		std::cout << "***Ticket IS nullptr! ***\n";
 }
 
 //---------------------------------------------
@@ -110,7 +110,7 @@ void DisplayComment(const CSAssistGameAPITicketComment *t)
 		std::cout << "\n   " << wideToNarrow(comment) << "\n";
 	}
 	else
-		std::cout << "***Comment IS NULL! ***\n";
+		std::cout << "***Comment IS nullptr! ***\n";
 }
 
 //---------------------------------------------
@@ -132,7 +132,7 @@ void DisplayDocumentHeader(const CSAssistGameAPIDocumentHeader *doc)
 		std::cout << ", Modified: " << date2 << "\n";
 	}	
 	else
-		std::cout << "***Document Header IS NULL! ***\n";
+		std::cout << "***Document Header IS nullptr! ***\n";
 }
 
 //---------------------------------------------
@@ -148,7 +148,7 @@ void DisplaySearchResult(const CSAssistGameAPISearchResult *doc)
 		std::cout << ", Title: " << wideToNarrow(title) << "\n";
 	}	
 	else
-		std::cout << "***Search Result IS NULL! ***\n";
+		std::cout << "***Search Result IS nullptr! ***\n";
 }
 
 
@@ -360,7 +360,7 @@ void apiTest::OnRequestGameLocation(const CSAssistGameAPITrack sourceTrack, cons
 	CSAssistUnicodeChar *rawLoc = get_c_str(loc);
 	std::cout << "Request Game Location: Source Track(" << sourceTrack << "), uid(" << uid << "), character(";
 	std::cout << wideToNarrow(charry) << "), CSR UID(" << CSRUID << ")\n";
-	api->replyGameLocation(NULL, sourceTrack, uid, rawCharry, CSRUID, rawLoc);
+	api->replyGameLocation(nullptr, sourceTrack, uid, rawCharry, CSRUID, rawLoc);
 	delete [] rawCharry;
 	delete [] rawLoc;
 }

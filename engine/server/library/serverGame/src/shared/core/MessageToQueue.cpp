@@ -88,7 +88,7 @@ namespace MessageToQueueNamespace
 	typedef std::set<SchedulerItem, SchedulerItem::IsSoonerThan> SchedulerItemsType;
 	typedef std::vector<MessageToPayload> FrameMessagesType;
 	
-	MessageToQueue * ms_instance=NULL;
+	MessageToQueue * ms_instance=nullptr;
 	LastKnownLocationsType ms_lastKnownLocations;
 	ObjectLocatorsType ms_objectLocators;
 	SchedulerItemsType ms_schedulerItems;
@@ -134,7 +134,7 @@ void MessageToQueue::install()
 void MessageToQueue::remove()
 {
 	delete ms_instance;
-	ms_instance = NULL;
+	ms_instance = nullptr;
 }
 
 // ----------------------------------------------------------------------

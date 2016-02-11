@@ -93,10 +93,10 @@ Tag ServerPlanetObjectTemplate::getTemplateVersion(void) const
  */
 Tag ServerPlanetObjectTemplate::getHighestTemplateVersion(void) const
 {
-	if (m_baseData == NULL)
+	if (m_baseData == nullptr)
 		return m_templateVersion;
 	const ServerPlanetObjectTemplate * base = dynamic_cast<const ServerPlanetObjectTemplate *>(m_baseData);
-	if (base == NULL)
+	if (base == nullptr)
 		return m_templateVersion;
 	return std::max(m_templateVersion, base->getHighestTemplateVersion());
 } // ServerPlanetObjectTemplate::getHighestTemplateVersion
@@ -120,33 +120,33 @@ std::string testDataValue = DefaultString;
 UNREF(testData);
 #endif
 
-	const ServerPlanetObjectTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const ServerPlanetObjectTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerPlanetObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getPlanetName(true);
 #endif
 	}
 
 	if (!m_planetName.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter planetName in template %s", DataResource::getName()));
 			return DefaultString;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter planetName has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter planetName has not been defined in template %s!", DataResource::getName()));
 			return base->getPlanetName();
 		}
 	}
 
 	const std::string & value = m_planetName.getValue();
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -192,12 +192,12 @@ char paramName[MAX_NAME_SIZE];
 		file.read_string(baseFilename);
 		file.exitChunk();
 		const ObjectTemplate *base = ObjectTemplateList::fetch(baseFilename);
-		DEBUG_WARNING(base == NULL, ("was unable to load base template %s", baseFilename.c_str()));
-		if (m_baseData == base && base != NULL)
+		DEBUG_WARNING(base == nullptr, ("was unable to load base template %s", baseFilename.c_str()));
+		if (m_baseData == base && base != nullptr)
 			base->releaseReference();
 		else
 		{
-			if (m_baseData != NULL)
+			if (m_baseData != nullptr)
 				m_baseData->releaseReference();
 			m_baseData = base;
 		}

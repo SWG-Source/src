@@ -165,7 +165,7 @@ void ShipComponentDataCargoHold::printDebugString      (Unicode::String & result
 		int const amount = (*it).second;
 
 		ResourceTypeObject const * const resourceType = ServerUniverse::getInstance().getResourceTypeById(id);
-		std::string const resourceName = resourceType ? resourceType->getResourceName() : "NULL RESOURCE";
+		std::string const resourceName = resourceType ? resourceType->getResourceName() : "nullptr RESOURCE";
 
 		snprintf(buf, buf_size, "%s     %15s (%s): %3d\n", nPad.c_str (), id.getValueString().c_str(), resourceName.c_str(), amount);
 		result += Unicode::narrowToWide(buf);

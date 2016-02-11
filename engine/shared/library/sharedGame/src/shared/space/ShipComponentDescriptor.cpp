@@ -115,7 +115,7 @@ void ShipComponentDescriptor::load()
 		DEBUG_WARNING(!sharedTemplateName.empty() && sharedCrcString.isEmpty(), ("Data error: in ship_components.tab - Component [%s] Shared template [%s] not found for row [%d]", name.c_str(), sharedTemplateName.c_str(), row));
 #endif
 		
-		ShipComponentDescriptor * componentDescriptor = NULL;
+		ShipComponentDescriptor * componentDescriptor = nullptr;
 		
 		if (s_useWritableComponentDescriptor)
 			componentDescriptor = new ShipComponentDescriptorWritable (TemporaryCrcString (name.c_str (), true), type, TemporaryCrcString (compatibility.c_str (), true), serverObjectTemplateName, sharedTemplateName);
@@ -174,7 +174,7 @@ bool ShipComponentDescriptor::save(std::string const & filename)
 
 	StdioFileFactory sff;
 	AbstractFile * const af = sff.createFile(filename.c_str(), "wb");
-	if (NULL != af && af->isOpen())
+	if (nullptr != af && af->isOpen())
 	{
 		int const bytesWritten = af->write(static_cast<int>(tabStr.size()), tabStr.c_str());
 		retval = (bytesWritten == static_cast<int>(tabStr.size()));
@@ -285,7 +285,7 @@ ShipComponentDescriptor const * ShipComponentDescriptor::findShipComponentDescri
 	if (it != s_crcComponentMap.end ())
 		return (*it).second;
 
-	return NULL;
+	return nullptr;
 }
 
 //----------------------------------------------------------------------
@@ -297,7 +297,7 @@ ShipComponentDescriptor const * ShipComponentDescriptor::findShipComponentDescri
 	if (it != s_nameComponentMap->end ())
 		return (*it).second;
 
-	return NULL;
+	return nullptr;
 }
 
 //----------------------------------------------------------------------
@@ -309,7 +309,7 @@ ShipComponentDescriptor const * ShipComponentDescriptor::findShipComponentDescri
 	if (it != s_objectTemplateCrcComponentMap.end ())
 		return (*it).second;
 
-	return NULL;
+	return nullptr;
 }
 
 //----------------------------------------------------------------------
@@ -321,7 +321,7 @@ ShipComponentDescriptor const * ShipComponentDescriptor::findShipComponentDescri
 	if (it != s_sharedObjectTemplateCrcComponentMap.end ())
 		return (*it).second;
 
-	return NULL;
+	return nullptr;
 }
 
 //----------------------------------------------------------------------
@@ -348,7 +348,7 @@ ShipComponentDescriptor::StringVector ShipComponentDescriptor::getComponentDescr
 bool ShipComponentDescriptor::setName(std::string const & name)
 {
 	ShipComponentDescriptor const * const dupeNameShipComponentDescriptor = findShipComponentDescriptorByName(ConstCharCrcString(name.c_str()));
-	if (NULL != dupeNameShipComponentDescriptor)
+	if (nullptr != dupeNameShipComponentDescriptor)
 	{
 		WARNING(true, ("ShipComponentDescriptor attempt to set name [%s] already exists", name.c_str()));
 		return false;
@@ -379,14 +379,14 @@ bool ShipComponentDescriptor::setName(std::string const & name)
 bool ShipComponentDescriptor::setObjectTemplateCrcs(uint32 crc, uint32 sharedCrc)
 {
 	ShipComponentDescriptor const * const dupeTemplateShipComponentDescriptor = findShipComponentDescriptorByObjectTemplate(crc);
-	if (NULL != dupeTemplateShipComponentDescriptor && this != dupeTemplateShipComponentDescriptor)
+	if (nullptr != dupeTemplateShipComponentDescriptor && this != dupeTemplateShipComponentDescriptor)
 	{
 		WARNING(true, ("ShipComponentDescriptor attempt to set ot crc [%s] already exists", dupeTemplateShipComponentDescriptor->getName().getString()));
 		return false;
 	}
 
 	ShipComponentDescriptor const * const dupeSharedTemplateShipComponentDescriptor = findShipComponentDescriptorBySharedObjectTemplate(crc);
-	if (NULL != dupeSharedTemplateShipComponentDescriptor && this != dupeSharedTemplateShipComponentDescriptor)
+	if (nullptr != dupeSharedTemplateShipComponentDescriptor && this != dupeSharedTemplateShipComponentDescriptor)
 	{
 		WARNING(true, ("ShipComponentDescriptor attempt to set shared ot crc [%s] already exists", dupeSharedTemplateShipComponentDescriptor->getName().getString()));
 		return false;
@@ -432,7 +432,7 @@ bool ShipComponentDescriptor::addShipComponentDescriptor(bool checkValidity, boo
 	{
 		{
 			ShipComponentDescriptor const * const shipComponentDescriptor = findShipComponentDescriptorByName(m_name);
-			if (NULL != shipComponentDescriptor)
+			if (nullptr != shipComponentDescriptor)
 			{
 				WARNING(true, ("ShipComponentDescriptor::addShipComponentDescriptor name [%s] is already in map", m_name.getString()));
 				return false;
@@ -441,7 +441,7 @@ bool ShipComponentDescriptor::addShipComponentDescriptor(bool checkValidity, boo
 		
 		{
 			ShipComponentDescriptor const * const shipComponentDescriptor = findShipComponentDescriptorByCrc(getCrc());
-			if (NULL != shipComponentDescriptor)
+			if (nullptr != shipComponentDescriptor)
 			{
 				WARNING(true, ("ShipComponentDescriptor::addShipComponentDescriptor [%s] crc [0x%x] is already in map via [%s]", m_name.getString(), static_cast<int>(getCrc()), shipComponentDescriptor->getName().getString()));
 				return false;
@@ -453,7 +453,7 @@ bool ShipComponentDescriptor::addShipComponentDescriptor(bool checkValidity, boo
 			if (0 != objectTemplateCrc)
 			{
 				ShipComponentDescriptor const * const shipComponentDescriptor = findShipComponentDescriptorByObjectTemplate(objectTemplateCrc);
-				if (NULL != shipComponentDescriptor)
+				if (nullptr != shipComponentDescriptor)
 				{
 					WARNING(true, ("ShipComponentDescriptor::addShipComponentDescriptor [%s] server template [%s] [0x%x] is already in map via [%s]", m_name.getString(), getObjectTemplateName().c_str(), static_cast<int>(getObjectTemplateCrc()), shipComponentDescriptor->getName().getString()));
 					if (strict)
@@ -467,7 +467,7 @@ bool ShipComponentDescriptor::addShipComponentDescriptor(bool checkValidity, boo
 			if (0 != sharedObjectTemplateCrc)
 			{
 				ShipComponentDescriptor const * const shipComponentDescriptor = findShipComponentDescriptorBySharedObjectTemplate(sharedObjectTemplateCrc);
-				if (NULL != shipComponentDescriptor)
+				if (nullptr != shipComponentDescriptor)
 				{
 					WARNING(true, ("ShipComponentDescriptor::addShipComponentDescriptor [%s] shared template [%s] [0x%x] is already in map via [%s]", m_name.getString(), getSharedTemplateName().c_str(), static_cast<int>(getSharedObjectTemplateCrc()), shipComponentDescriptor->getName().getString()));
 					if (strict)

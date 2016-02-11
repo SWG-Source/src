@@ -23,7 +23,7 @@ ImmediateDeleteCustomPersistStep::ImmediateDeleteCustomPersistStep() :
 ImmediateDeleteCustomPersistStep::~ImmediateDeleteCustomPersistStep()
 {
 	delete m_objects;
-	m_objects = NULL;
+	m_objects = nullptr;
 }
 
 // ----------------------------------------------------------------------

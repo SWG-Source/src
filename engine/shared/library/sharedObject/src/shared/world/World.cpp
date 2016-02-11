@@ -305,7 +305,7 @@ bool World::removeObject (const Object* object, int listIndex)
 {
 	DEBUG_FATAL (!ms_installed, ("not installed"));
 	NOT_NULL (object);
-	DEBUG_FATAL (!object, ("World::removeObject - object is null"));
+	DEBUG_FATAL (!object, ("World::removeObject - object is nullptr"));
 	VALIDATE_RANGE_INCLUSIVE_EXCLUSIVE (0, listIndex, static_cast<int>(WOL_Count));
 
 	ms_objectSet.erase(object);
@@ -349,7 +349,7 @@ bool World::removeObject (const Object* object, int listIndex)
 void World::queueObject  (Object* object)
 {
 	DEBUG_FATAL (!ms_installed, ("not installed"));
-	DEBUG_FATAL (!object, ("World::queueObject - object is null"));
+	DEBUG_FATAL (!object, ("World::queueObject - object is nullptr"));
 
 	ms_queuedObjectList->addObject (object);
 }

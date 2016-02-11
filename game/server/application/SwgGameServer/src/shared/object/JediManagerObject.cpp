@@ -43,7 +43,7 @@ namespace JediManagerObjectNamespace
 	// the bounty hunter target list loaded from the DB; we store it here
 	// and wait until the JediManagerObject object is created, and then
 	// read it into the JediManagerObject object
-	const BountyHunterTargetListMessage * s_queuedBountyHunterTargetListFromDB = NULL;
+	const BountyHunterTargetListMessage * s_queuedBountyHunterTargetListFromDB = nullptr;
 }
 
 using namespace JediManagerObjectNamespace;
@@ -151,7 +151,7 @@ void JediManagerObject::onServerUniverseGainedAuthority()
 		addJediBounties(*s_queuedBountyHunterTargetListFromDB);
 
 		delete s_queuedBountyHunterTargetListFromDB;
-		s_queuedBountyHunterTargetListFromDB = NULL;
+		s_queuedBountyHunterTargetListFromDB = nullptr;
 	}
 }
 
@@ -450,7 +450,7 @@ void JediManagerObject::characterBeingDeleted(const NetworkId & id)
 
 		ScriptDictionaryPtr dictionary;
 		GameScriptObject::makeScriptDictionary(params, dictionary);
-		if (dictionary.get() != NULL)
+		if (dictionary.get() != nullptr)
 		{
 			dictionary->serialize();
 
@@ -1252,7 +1252,7 @@ void JediManagerObject::requestJediBounty(const NetworkId & targetId,
 
 			ScriptDictionaryPtr dictionary;
 			GameScriptObject::makeScriptDictionary(params, dictionary);
-			if (dictionary.get() != NULL)
+			if (dictionary.get() != nullptr)
 			{
 				dictionary->serialize();
 				if (success)

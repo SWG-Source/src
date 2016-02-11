@@ -87,7 +87,7 @@ struct Region3dPtrVolumeComparator
 
 ScriptParams *ScriptMethodsRegion3dNamespace::convertRegionDictionaryToScriptParams(jobject regionDictionary)
 {
-	// If we're passed a null dictionary, we just don't have any extra data but
+	// If we're passed a nullptr dictionary, we just don't have any extra data but
 	// we still want to return a ScriptParams to fill in the standard values.
 	if (!regionDictionary)
 		return new ScriptParams;

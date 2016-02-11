@@ -27,22 +27,22 @@ class Floor;
 struct ObstacleInfo
 {
 	ObstacleInfo()
-	: m_cell(NULL),
-	  m_extent(NULL),
-	  m_floorContact(NULL)
+	: m_cell(nullptr),
+	  m_extent(nullptr),
+	  m_floorContact(nullptr)
 	{
 	}
 
 	ObstacleInfo ( CellProperty const * cell, SimpleExtent const * extent ) 
 	: m_cell(cell),
 	  m_extent(extent), 
-	  m_floorContact(NULL) 
+	  m_floorContact(nullptr) 
 	{
 	}
 
 	ObstacleInfo ( CellProperty const * cell, FloorContactShape * contact ) 
 	: m_cell(cell),
-	  m_extent(NULL), 
+	  m_extent(nullptr), 
 	  m_floorContact(contact)
 	{
 	}

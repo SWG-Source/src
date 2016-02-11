@@ -17,7 +17,7 @@ public:
 	bool Attachable() {return true;}
 	BufferedTransformation *AttachedTransformation() {return m_outQueue.get();}
 	const BufferedTransformation *AttachedTransformation() const {return m_outQueue.get();}
-	void Detach(BufferedTransformation *newOut = NULL);
+	void Detach(BufferedTransformation *newOut = nullptr);
 
 protected:
 	virtual void NotifyAttachmentChange() {}
@@ -33,7 +33,7 @@ private:
 class TransparentFilter : public Filter
 {
 public:
-	TransparentFilter(BufferedTransformation *outQ=NULL) : Filter(outQ) {}
+	TransparentFilter(BufferedTransformation *outQ=nullptr) : Filter(outQ) {}
 	void Put(byte inByte) {AttachedTransformation()->Put(inByte);}
 	void Put(const byte *inString, unsigned int length) {AttachedTransformation()->Put(inString, length);}
 };
@@ -42,7 +42,7 @@ public:
 class OpaqueFilter : public Filter
 {
 public:
-	OpaqueFilter(BufferedTransformation *outQ=NULL) : Filter(outQ) {}
+	OpaqueFilter(BufferedTransformation *outQ=nullptr) : Filter(outQ) {}
 	void Put(byte inByte) {}
 	void Put(const byte *inString, unsigned int length) {}
 };
@@ -122,7 +122,7 @@ class StreamCipherFilter : public Filter
 {
 public:
 	StreamCipherFilter(StreamCipher &c,
-					   BufferedTransformation *outQueue = NULL)
+					   BufferedTransformation *outQueue = nullptr)
 		: cipher(c), Filter(outQueue) {}
 
 	void Put(byte inByte)
@@ -138,7 +138,7 @@ private:
 class HashFilter : public Filter
 {
 public:
-	HashFilter(HashModule &hm, BufferedTransformation *outQueue = NULL, bool putMessage=false)
+	HashFilter(HashModule &hm, BufferedTransformation *outQueue = nullptr, bool putMessage=false)
 		: Filter(outQueue), m_hashModule(hm), m_putMessage(putMessage) {}
 
 	void MessageEnd(int propagation=-1);
@@ -163,7 +163,7 @@ public:
 	};
 
 	enum Flags {HASH_AT_BEGIN=1, PUT_MESSAGE=2, PUT_HASH=4, PUT_RESULT=8, THROW_EXCEPTION=16};
-	HashVerifier(HashModule &hm, BufferedTransformation *outQueue = NULL, word32 flags = HASH_AT_BEGIN | PUT_RESULT);
+	HashVerifier(HashModule &hm, BufferedTransformation *outQueue = nullptr, word32 flags = HASH_AT_BEGIN | PUT_RESULT);
 
 	bool GetLastResult() const {return m_verified;}
 
@@ -183,7 +183,7 @@ private:
 class SignerFilter : public Filter
 {
 public:
-	SignerFilter(RandomNumberGenerator &rng, const PK_Signer &signer, BufferedTransformation *outQueue = NULL)
+	SignerFilter(RandomNumberGenerator &rng, const PK_Signer &signer, BufferedTransformation *outQueue = nullptr)
 		: m_rng(rng), m_signer(signer), m_messageAccumulator(signer.NewMessageAccumulator()), Filter(outQueue) {}
 
 	void MessageEnd(int propagation);
@@ -204,7 +204,7 @@ private:
 class VerifierFilter : public Filter
 {
 public:
-	VerifierFilter(const PK_Verifier &verifier, BufferedTransformation *outQueue = NULL)
+	VerifierFilter(const PK_Verifier &verifier, BufferedTransformation *outQueue = nullptr)
 		: m_verifier(verifier), m_messageAccumulator(verifier.NewMessageAccumulator())
 		, m_signature(verifier.SignatureLength()), Filter(outQueue) {}
 
@@ -244,11 +244,11 @@ extern BitBucket g_bitBucket;
 class Redirector : public Sink
 {
 public:
-	Redirector() : m_target(NULL), m_passSignal(true) {}
+	Redirector() : m_target(nullptr), m_passSignal(true) {}
 	Redirector(BufferedTransformation &target, bool passSignal=true) : m_target(&target), m_passSignal(passSignal) {}
 
 	void Redirect(BufferedTransformation &target) {m_target = &target;}
-	void StopRedirect() {m_target = NULL;}
+	void StopRedirect() {m_target = nullptr;}
 	bool GetPassSignal() const {return m_passSignal;}
 	void SetPassSignal(bool passSignal) {m_passSignal = passSignal;}
 
@@ -498,7 +498,7 @@ public:
 class GeneralSource : public Source
 {
 public:
-	GeneralSource(BufferedTransformation &store, bool pumpAll, BufferedTransformation *outQueue = NULL)
+	GeneralSource(BufferedTransformation &store, bool pumpAll, BufferedTransformation *outQueue = nullptr)
 		: Source(outQueue), m_store(store)
 	{
 		if (pumpAll) PumpAll();
@@ -517,13 +517,13 @@ private:
 class StringSource : public Source
 {
 public:
-	StringSource(const char *string, bool pumpAll, BufferedTransformation *outQueue = NULL);
-	StringSource(const byte *string, unsigned int length, bool pumpAll, BufferedTransformation *outQueue = NULL);
+	StringSource(const char *string, bool pumpAll, BufferedTransformation *outQueue = nullptr);
+	StringSource(const byte *string, unsigned int length, bool pumpAll, BufferedTransformation *outQueue = nullptr);
 
 #ifdef __MWERKS__	// CW60 workaround
-	StringSource(const std::string &string, bool pumpAll, BufferedTransformation *outQueue = NULL)
+	StringSource(const std::string &string, bool pumpAll, BufferedTransformation *outQueue = nullptr)
 #else
-	template <class T> StringSource(const T &string, bool pumpAll, BufferedTransformation *outQueue = NULL)
+	template <class T> StringSource(const T &string, bool pumpAll, BufferedTransformation *outQueue = nullptr)
 #endif
 		: Source(outQueue), m_store(string)
 	{
@@ -544,7 +544,7 @@ private:
 class RandomNumberSource : public Source
 {
 public:
-	RandomNumberSource(RandomNumberGenerator &rng, unsigned int length, bool pumpAll, BufferedTransformation *outQueue = NULL);
+	RandomNumberSource(RandomNumberGenerator &rng, unsigned int length, bool pumpAll, BufferedTransformation *outQueue = nullptr);
 
 	unsigned long Pump(unsigned long pumpMax=ULONG_MAX)
 		{return m_store.TransferTo(*AttachedTransformation(), pumpMax);}

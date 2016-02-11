@@ -235,7 +235,7 @@ void JNICALL ScriptMethodsMountNamespace::dismountCreature(JNIEnv *env, jobject 
 	CreatureObject *const mountObject = riderObject->getMountedCreature();
 	if (!mountObject)
 	{
-		LOG(LOCAL_LOG_CHANNEL, ("JavaLibrary::dismountCreature(): server id=[%d],rider id=[%s] has RidingMount state but CreatureObject::getMountedCreature() returns NULL, skipping dismount.", GameServer::getInstance().getProcessId(), riderObject->getNetworkId().getValueString().c_str()));
+		LOG(LOCAL_LOG_CHANNEL, ("JavaLibrary::dismountCreature(): server id=[%d],rider id=[%s] has RidingMount state but CreatureObject::getMountedCreature() returns nullptr, skipping dismount.", GameServer::getInstance().getProcessId(), riderObject->getNetworkId().getValueString().c_str()));
 		return;
 	}
 
@@ -393,7 +393,7 @@ void JNICALL JNICALL ScriptMethodsMountNamespace::makeContainerStateInconsistent
 	//-- Get the ServerObject from the object id.
 	if (!containedObjectId)
 	{
-		LOG("script-bug", ("makeContainerStateInconsistentTestOnly(): containedObjectId is NULL"));
+		LOG("script-bug", ("makeContainerStateInconsistentTestOnly(): containedObjectId is nullptr"));
 		return;
 	}
 
@@ -428,7 +428,7 @@ void JNICALL JNICALL ScriptMethodsMountNamespace::makeContainerStateInconsistent
 	Container* container = ContainerInterface::getContainer(*containerObject);
 	if (!container)
 	{
-		LOG("script-bug", ("makeContainerStateInconsistentTestOnly(): containerObject [%s] returned a NULL container", containerObject->getNetworkId().getValueString().c_str()));
+		LOG("script-bug", ("makeContainerStateInconsistentTestOnly(): containerObject [%s] returned a nullptr container", containerObject->getNetworkId().getValueString().c_str()));
 		return;
 	}
 

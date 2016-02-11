@@ -125,7 +125,7 @@ void CommoditiesAdvancedSearchAttribute::install()
 			{
 				// handle search attribute name alias
 				tokens.clear();
-				if (Unicode::tokenize(Unicode::narrowToWide(searchAttributeName), tokens, NULL, NULL) && (tokens.size() > 1))
+				if (Unicode::tokenize(Unicode::narrowToWide(searchAttributeName), tokens, nullptr, nullptr) && (tokens.size() > 1))
 				{
 					// the first value is the search attribute name to display
 					searchAttributeName = Unicode::wideToNarrow(tokens[0]);
@@ -177,7 +177,7 @@ void CommoditiesAdvancedSearchAttribute::install()
 							{
 								// for enum, parse out the aliases (if any) for the enum value
 								tokens.clear();
-								if (Unicode::tokenize(Unicode::narrowToWide(defaultSearchValue), tokens, NULL, NULL) && !tokens.empty())
+								if (Unicode::tokenize(Unicode::narrowToWide(defaultSearchValue), tokens, nullptr, nullptr) && !tokens.empty())
 								{
 #ifdef _WIN32
 #ifdef _DEBUG
@@ -340,7 +340,7 @@ CommoditiesAdvancedSearchAttribute::SearchAttribute const * CommoditiesAdvancedS
 			return iterFindAttribute->second;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 //----------------------------------------------------------------------

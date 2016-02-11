@@ -96,7 +96,7 @@ using namespace ManufactureSchematicObjectNamespace;
 
 //----------------------------------------------------------------------
 
-const SharedObjectTemplate * ManufactureSchematicObject::m_defaultSharedTemplate = NULL;
+const SharedObjectTemplate * ManufactureSchematicObject::m_defaultSharedTemplate = nullptr;
 
 
 //========================================================================
@@ -170,11 +170,11 @@ const SharedObjectTemplate * ManufactureSchematicObject::getDefaultSharedTemplat
 {
 	static const ConstCharCrcLowerString templateName("object/manufacture_schematic/base/shared_manufacture_schematic_default.iff");
 
-	if (m_defaultSharedTemplate == NULL)
+	if (m_defaultSharedTemplate == nullptr)
 	{
 		m_defaultSharedTemplate = safe_cast<const SharedObjectTemplate *>(ObjectTemplateList::fetch(templateName));
-		WARNING_STRICT_FATAL(m_defaultSharedTemplate == NULL, ("Cannot create default shared object template %s", templateName.getString()));
-		if (m_defaultSharedTemplate != NULL)
+		WARNING_STRICT_FATAL(m_defaultSharedTemplate == nullptr, ("Cannot create default shared object template %s", templateName.getString()));
+		if (m_defaultSharedTemplate != nullptr)
 			ExitChain::add (removeDefaultTemplate, "ManufactureSchematicObject::removeDefaultTemplate");
 	}
 	return m_defaultSharedTemplate;
@@ -187,10 +187,10 @@ const SharedObjectTemplate * ManufactureSchematicObject::getDefaultSharedTemplat
  */
 void ManufactureSchematicObject::removeDefaultTemplate()
 {
-	if (m_defaultSharedTemplate != NULL)
+	if (m_defaultSharedTemplate != nullptr)
 	{
 		m_defaultSharedTemplate->releaseReference();
-		m_defaultSharedTemplate = NULL;
+		m_defaultSharedTemplate = nullptr;
 	}
 }	// ManufactureSchematicObject::removeDefaultTemplate
 
@@ -209,7 +209,7 @@ void ManufactureSchematicObject::init(const DraftSchematicObject & schematic, co
 	m_draftSchematicSharedTemplate = schematic.getSharedTemplate()->getCrcName().getCrc();
 
 	m_creatorId = creator;
-	if (creator.getObject() != NULL)
+	if (creator.getObject() != nullptr)
 	{
 		m_creatorName = safe_cast<const ServerObject *>(creator.getObject())->
 			getObjectName();
@@ -481,7 +481,7 @@ ServerIntangibleObjectTemplate::CraftingType ManufactureSchematicObject::getCate
 	{
 		schematicOk = false;
 	}
-	else if (draft != NULL)
+	else if (draft != nullptr)
 	{
 		// test the ingredients
 		Crafting::IngredientSlot sourceSlot;
@@ -520,11 +520,11 @@ ServerIntangibleObjectTemplate::CraftingType ManufactureSchematicObject::getCate
 		return draft->getCategory();
 
 	// this schematic can't be used, inform the player
-	const CreatureObject * owner = NULL;
+	const CreatureObject * owner = nullptr;
 	const Object * object = ContainerInterface::getContainedByObject(*this);
-	while (owner == NULL && object != NULL && object->asServerObject() != NULL)
+	while (owner == nullptr && object != nullptr && object->asServerObject() != nullptr)
 	{
-		if (object->asServerObject()->asCreatureObject() != NULL)
+		if (object->asServerObject()->asCreatureObject() != nullptr)
 			owner = object->asServerObject()->asCreatureObject();
 		else
 			object = ContainerInterface::getContainedByObject(*object);
@@ -534,7 +534,7 @@ ServerIntangibleObjectTemplate::CraftingType ManufactureSchematicObject::getCate
 	LOG("CustomerService", ("Crafting:Manufacturing schematic %s "
 		"owned by %s is unuseable due to %s", getNetworkId().getValueString().c_str(), 
 		PlayerObject::getAccountDescription(owner).c_str(), errBuffer));
-	if (owner != NULL)
+	if (owner != nullptr)
 	{
 		// send mail to the owner telling them their schematic can't be used
 		const static StringId message("system_msg", "manf_schematic_unuseable");
@@ -562,7 +562,7 @@ bool ManufactureSchematicObject::mustDestroyIngredients() const
 	const DraftSchematicObject * draft = DraftSchematicObject::getSchematic(
 		m_draftSchematic.get());
 	NOT_NULL(draft);
-	if (draft != NULL)
+	if (draft != nullptr)
 		return draft->mustDestroyIngredients();
 	return false;
 }	// ManufactureSchematicObject::mustDestroyIngredients
@@ -701,12 +701,12 @@ bool ManufactureSchematicObject::getSlot(int index, Crafting::IngredientSlot & d
 			// get the xp type based on the resource container
 			int xpType = 0;
 			const ResourceTypeObject * const resourceType = ServerUniverse::getInstance().getResourceTypeById(ingredientId);
-			if (resourceType != NULL)
+			if (resourceType != nullptr)
 			{
 				std::string crateTemplateName;
 				resourceType->getCrateTemplate(crateTemplateName);
 				const ServerObjectTemplate * crateTemplate = safe_cast<const ServerObjectTemplate *>(ObjectTemplateList::fetch(crateTemplateName));
-				if (crateTemplate != NULL && crateTemplate->getXpPointsCount() > 0)
+				if (crateTemplate != nullptr && crateTemplate->getXpPointsCount() > 0)
 				{
 					ServerObjectTemplate::Xp xpData;
 					crateTemplate->getXpPoints(xpData, 0);
@@ -1024,10 +1024,10 @@ void ManufactureSchematicObject::addSlotComponent(const StringId & name,
 	// Check if the object being added is a factory
 	const TangibleObject * componentPtr = &component;
 	const FactoryObject * factory = dynamic_cast<const FactoryObject *>(&component);
-	if (factory != NULL)
+	if (factory != nullptr)
 	{
 		componentPtr = factory->getContainedObject();
-		if (componentPtr == NULL)
+		if (componentPtr == nullptr)
 		{
 			WARNING(true, ("ManufactureSchematicObject::addSlotComponent passed "
 				"FactoryObject %s with no contained object", 
@@ -1112,11 +1112,11 @@ TangibleObject * ManufactureSchematicObject::getComponent(
 	const Crafting::ComponentIngredient & info) const
 {
 	const VolumeContainer * volumeContainer = ContainerInterface::getVolumeContainer(*this);
-	if (volumeContainer == NULL)
+	if (volumeContainer == nullptr)
 	{
 		DEBUG_WARNING(true, ("Manf schematic %s does not have a volume container!",
 			getNetworkId().getValueString().c_str()));
-		return NULL;
+		return nullptr;
 	}
 
 	// check if the component is in a FactoryObject; if it is, return the factory,
@@ -1124,10 +1124,10 @@ TangibleObject * ManufactureSchematicObject::getComponent(
 	if (info.ingredient != NetworkId::cms_invalid)
 	{
 		ServerObject * object = ServerWorld::findObjectByNetworkId(info.ingredient);
-		if (object != NULL)
+		if (object != nullptr)
 		{
 			Object * container = ContainerInterface::getContainedByObject(*object);
-			if (container != NULL && dynamic_cast<FactoryObject*>(container) != NULL)
+			if (container != nullptr && dynamic_cast<FactoryObject*>(container) != nullptr)
 				return safe_cast<TangibleObject *>(container);
 		}
 	}
@@ -1137,7 +1137,7 @@ TangibleObject * ManufactureSchematicObject::getComponent(
 	{
 		const Container::ContainedItem & item = *iter;
 		TangibleObject * object = safe_cast<TangibleObject *>(item.getObject());
-		if (object != NULL)
+		if (object != nullptr)
 		{
 			if (info.ingredient != NetworkId::cms_invalid)
 			{
@@ -1154,7 +1154,7 @@ TangibleObject * ManufactureSchematicObject::getComponent(
 			}
 		}
 	}
-	return NULL;
+	return nullptr;
 }	// ManufactureSchematicObject::getComponent
 
 //-----------------------------------------------------------------------
@@ -1295,7 +1295,7 @@ void ManufactureSchematicObject::clearSlotSources()
 			m_factories.begin(); iter != m_factories.end(); ++iter)
 		{
 			FactoryObject * factory = safe_cast<FactoryObject *>((*iter).getObject());
-			if (factory != NULL)
+			if (factory != nullptr)
 			{
 				factory->endCraftingSession();
 			}
@@ -1305,23 +1305,23 @@ void ManufactureSchematicObject::clearSlotSources()
 
 	// get rid of all our held ingredients
 	VolumeContainer * volumeContainer = ContainerInterface::getVolumeContainer(*this);
-	if (volumeContainer != NULL && volumeContainer->getNumberOfItems() > 0)
+	if (volumeContainer != nullptr && volumeContainer->getNumberOfItems() > 0)
 	{
 		// for a stacked ingredient, if there are still more than one items in the stack,
 		// "consume" 1 item from the stack, and return it to the player's inventory
 		std::set<ServerObject*> itemsToReturnToInventory;
-		ServerObject* inventory = NULL;
+		ServerObject* inventory = nullptr;
 
 		for (ContainerIterator iter = volumeContainer->begin(); 
 			iter != volumeContainer->end(); ++iter)
 		{
-			if ((*iter).getObject() != NULL)
+			if ((*iter).getObject() != nullptr)
 			{
 				bool destroyItem = true;
 				TangibleObject* to = safe_cast<ServerObject*>((*iter).getObject())->asTangibleObject();
-				if (to && (to->getCount() > 1) && (dynamic_cast<FactoryObject *>(to) == NULL))
+				if (to && (to->getCount() > 1) && (dynamic_cast<FactoryObject *>(to) == nullptr))
 				{
-					if (inventory == NULL)
+					if (inventory == nullptr)
 					{
 						ServerObject * o = safe_cast<ServerObject*>(ContainerInterface::getContainedByObject(*to));
 						while (o)
@@ -1357,7 +1357,7 @@ void ManufactureSchematicObject::clearSlotSources()
 			Container::ContainerErrorCode errCode;
 			for (std::set<ServerObject*>::const_iterator iter = itemsToReturnToInventory.begin(); iter != itemsToReturnToInventory.end(); ++iter)
 			{
-				if (!ContainerInterface::transferItemToVolumeContainer(*inventory, **iter, NULL, errCode))
+				if (!ContainerInterface::transferItemToVolumeContainer(*inventory, **iter, nullptr, errCode))
 				{
 					(*iter)->permanentlyDestroy(DeleteReasons::Replaced);
 				}
@@ -1741,11 +1741,11 @@ bool ManufactureSchematicObject::getCustomization(const std::string & name,
 	const DynamicVariableList * objvars = getObjVars();
 	NOT_NULL(objvars);
 	const DynamicVariableList * customs = safe_cast<const DynamicVariableList *>(objvars->getItemByName("cust"));
-	if (customs == NULL)	
+	if (customs == nullptr)	
 		return false;
 
 	const DynamicVariableList * custom = safe_cast<const DynamicVariableList *>(customs->getItemByName(name));
-	if (custom == NULL)
+	if (custom == nullptr)
 		return false;
 
 	data.name = name;
@@ -1771,7 +1771,7 @@ bool ManufactureSchematicObject::getCustomization(int index,
 	const DynamicVariableList * objvars = getObjVars();
 	NOT_NULL(objvars);
 	const DynamicVariableList * customs = safe_cast<const DynamicVariableList *>(objvars->getItemByName("cust"));
-	if (customs == NULL)	
+	if (customs == nullptr)	
 		return false;
 
 	int count = customs->getCount();
@@ -1799,7 +1799,7 @@ int ManufactureSchematicObject::getCustomizationsCount() const
 	const DynamicVariableList * objvars = getObjVars();
 	NOT_NULL(objvars);
 	const DynamicVariableList * customs = safe_cast<const DynamicVariableList *>(objvars->getItemByName("cust"));
-	if (customs == NULL)	
+	if (customs == nullptr)	
 		return 0;
 
 	return customs->getCount();
@@ -1838,7 +1838,7 @@ bool ManufactureSchematicObject::setCustomization(int index, int value,
 	ServerObject & prototype)
 {
 	ManufactureSchematicSynchronizedUi * sync = safe_cast<ManufactureSchematicSynchronizedUi *>(getSynchronizedUi ());
-	if (sync == NULL)
+	if (sync == nullptr)
 		return false;
 
 	const std::string & customName = sync->getCustomizationName(index);
@@ -1863,7 +1863,7 @@ bool ManufactureSchematicObject::setCustomization(const std::string & name,
 	int value, ServerObject & prototype)
 {
 	ManufactureSchematicSynchronizedUi * sync = safe_cast<ManufactureSchematicSynchronizedUi *>(getSynchronizedUi ());
-	if (sync == NULL)
+	if (sync == nullptr)
 		return false;
 
 	// make sure the value is within range
@@ -1878,10 +1878,10 @@ bool ManufactureSchematicObject::setCustomization(const std::string & name,
 
 	// save the customization string
 	CustomizationDataProperty * const cdProperty = safe_cast<CustomizationDataProperty*>(prototype.getProperty(CustomizationDataProperty::getClassPropertyId()));
-	if (cdProperty != NULL)
+	if (cdProperty != nullptr)
 	{
 		CustomizationData *const customizationData = cdProperty->fetchCustomizationData();
-		if (customizationData != NULL)
+		if (customizationData != nullptr)
 		{
 			m_appearanceData = customizationData->writeLocalDataToString();
 			setObjVarItem("customization_data", m_appearanceData.get());
@@ -1993,7 +1993,7 @@ void ManufactureSchematicObject::removeCraftingFactory(const FactoryObject & fac
 bool ManufactureSchematicObject::addIngredient(ServerObject & component)
 {
 	Container::ContainerErrorCode tmp = Container::CEC_Success;		
-	return ContainerInterface::transferItemToVolumeContainer(*this, component, NULL, tmp);
+	return ContainerInterface::transferItemToVolumeContainer(*this, component, nullptr, tmp);
 }	// ManufactureSchematicObject::addIngredient
 
 //-----------------------------------------------------------------------
@@ -2037,7 +2037,7 @@ bool ManufactureSchematicObject::removeIngredient(ServerObject & component,
 {
 	// if the component is a factory, treat is differently
 	FactoryObject * factory = dynamic_cast<FactoryObject *>(&component);
-	if (factory != NULL)
+	if (factory != nullptr)
 	{
 		// if the factory is contained by us, move it to the destination,
 		// making sure that its count is 1; if it is not contained by us,
@@ -2050,7 +2050,7 @@ bool ManufactureSchematicObject::removeIngredient(ServerObject & component,
 				factory->removeCraftingReferences(factory->getCount() - 1);
 			Container::ContainerErrorCode errCode;
 			return ContainerInterface::transferItemToVolumeContainer(destination, 
-				*factory, NULL, errCode);
+				*factory, nullptr, errCode);
 		}
 		else
 		{
@@ -2064,17 +2064,17 @@ bool ManufactureSchematicObject::removeIngredient(ServerObject & component,
 	{
 		// make sure the component is in our container
 		Object * container = ContainerInterface::getContainedByObject(component);
-		if (container == NULL || container->getNetworkId() != getNetworkId())
+		if (container == nullptr || container->getNetworkId() != getNetworkId())
 		{
 			FactoryObject * factory = dynamic_cast<FactoryObject *>(container);
-			if (factory != NULL)
+			if (factory != nullptr)
 				return removeIngredient(*factory, destination);
 			return false;
 		}
 
 		Container::ContainerErrorCode errCode;
 		return ContainerInterface::transferItemToVolumeContainer(destination, component,
-			NULL, errCode);
+			nullptr, errCode);
 	}
 }	// ManufactureSchematicObject::removeIngredient
 
@@ -2169,7 +2169,7 @@ void ManufactureSchematicObject::destroyAllIngredients()
 				m_factories.begin(); iter != m_factories.end(); ++iter)
 			{
 				FactoryObject * factory = safe_cast<FactoryObject *>((*iter).getObject());
-				if (factory != NULL)
+				if (factory != nullptr)
 				{
 					factory->endCraftingSession();
 				}
@@ -2179,24 +2179,24 @@ void ManufactureSchematicObject::destroyAllIngredients()
 
 		// empty our volume container
 		VolumeContainer * const container = ContainerInterface::getVolumeContainer(*this);
-		if (container != NULL)
+		if (container != nullptr)
 		{
 			// for a stacked ingredient, if there are still more than one items in the stack,
 			// "consume" 1 item from the stack, and return it to the player's inventory
 			std::set<ServerObject*> itemsToReturnToInventory;
-			ServerObject* inventory = NULL;
+			ServerObject* inventory = nullptr;
 
 			ContainerIterator iter;
 			for (iter = container->begin(); iter != container->end(); ++iter)
 			{
 				CachedNetworkId & itemId = *iter;
-				if (itemId.getObject() != NULL)
+				if (itemId.getObject() != nullptr)
 				{
 					bool destroyItem = true;
 					TangibleObject* to = safe_cast<ServerObject*>(itemId.getObject())->asTangibleObject();
-					if (to && (to->getCount() > 1) && (dynamic_cast<FactoryObject *>(to) == NULL))
+					if (to && (to->getCount() > 1) && (dynamic_cast<FactoryObject *>(to) == nullptr))
 					{
-						if (inventory == NULL)
+						if (inventory == nullptr)
 						{
 							ServerObject * o = safe_cast<ServerObject*>(ContainerInterface::getContainedByObject(*to));
 							while (o)
@@ -2235,7 +2235,7 @@ void ManufactureSchematicObject::destroyAllIngredients()
 				Container::ContainerErrorCode errCode;
 				for (std::set<ServerObject*>::const_iterator iter = itemsToReturnToInventory.begin(); iter != itemsToReturnToInventory.end(); ++iter)
 				{
-					if (!ContainerInterface::transferItemToVolumeContainer(*inventory, **iter, NULL, errCode))
+					if (!ContainerInterface::transferItemToVolumeContainer(*inventory, **iter, nullptr, errCode))
 					{
 						(*iter)->permanentlyDestroy(DeleteReasons::Consumed);
 					}
@@ -2281,29 +2281,29 @@ void ManufactureSchematicObject::destroyAllIngredients()
 ServerObject * ManufactureSchematicObject::manufactureObject(const NetworkId & creatorId, ServerObject & container, const SlotId & containerSlotId, bool prototype)
 {
 	if (getCount() <= 0)
-		return NULL;
+		return nullptr;
 
 	const DraftSchematicObject * draftSchematic = DraftSchematicObject::getSchematic(m_draftSchematic.get());
 
-	if (draftSchematic == NULL)
+	if (draftSchematic == nullptr)
 	{
-		return NULL;
+		return nullptr;
 	}
-	if (draftSchematic->getCraftedObjectTemplate() == NULL)
+	if (draftSchematic->getCraftedObjectTemplate() == nullptr)
 	{
 		DEBUG_WARNING(true, ("Draft schematic %s does not have a craftable object template!\n", draftSchematic->getTemplateName()));
-		return NULL;
+		return nullptr;
 	}
 
 	// create the item
 	TangibleObject * const object = 
 		dynamic_cast<TangibleObject *>(ServerWorld::createNewObject(*draftSchematic->getCraftedObjectTemplate(), container, containerSlotId, false));
-	if (object == NULL)
+	if (object == nullptr)
 	{
 		DEBUG_WARNING(true, ("Player %s failed to create object for template "
 			"%s.\n", creatorId.getValueString().c_str(), 
 			draftSchematic->getCraftedObjectTemplate()->getName()));
-		return NULL;
+		return nullptr;
 	}
 
 	if (!getAssignedObjectName().empty())
@@ -2327,7 +2327,7 @@ ServerObject * ManufactureSchematicObject::manufactureObject(const NetworkId & c
 	// set the creator xp type from the schematic template
 	const ServerObjectTemplate * schematicTemplate = safe_cast<const 
 		ServerObjectTemplate *>(draftSchematic->getObjectTemplate());
-	if (schematicTemplate != NULL && schematicTemplate->getXpPointsCount() > 0)
+	if (schematicTemplate != nullptr && schematicTemplate->getXpPointsCount() > 0)
 	{
 		ServerObjectTemplate::Xp xpData;
 		schematicTemplate->getXpPoints(xpData, 0);
@@ -2339,7 +2339,7 @@ ServerObject * ManufactureSchematicObject::manufactureObject(const NetworkId & c
 		if (!setObjectComponents(object, true))
 		{
 			object->permanentlyDestroy(DeleteReasons::BadContainerTransfer);
-			return NULL;
+			return nullptr;
 		}
 
 		// allow the schematic scripts to modify the object
@@ -2356,7 +2356,7 @@ ServerObject * ManufactureSchematicObject::manufactureObject(const NetworkId & c
 		if (result == SCRIPT_OVERRIDE)
 		{
 			object->permanentlyDestroy(DeleteReasons::Script);
-			return NULL;
+			return nullptr;
 		}
 
 		incrementCount(-1);
@@ -2392,15 +2392,15 @@ ServerObject * ManufactureSchematicObject::manufactureObject(const Vector & posi
 {
 	const DraftSchematicObject * draftSchematic = DraftSchematicObject::getSchematic(
 		m_draftSchematic.get());
-	if (draftSchematic == NULL)
+	if (draftSchematic == nullptr)
 	{
-		return NULL;
+		return nullptr;
 	}
-	if (draftSchematic->getCraftedObjectTemplate() == NULL)
+	if (draftSchematic->getCraftedObjectTemplate() == nullptr)
 	{
 		DEBUG_WARNING(true, ("Draft schematic %s does not have a craftable "
 			"object template!\n", draftSchematic->getTemplateName()));
-		return NULL;
+		return nullptr;
 	}
 
 	Transform tr;
@@ -2409,11 +2409,11 @@ ServerObject * ManufactureSchematicObject::manufactureObject(const Vector & posi
 	TangibleObject * object = dynamic_cast<TangibleObject *>(ServerWorld::createNewObject(
 		*draftSchematic->getCraftedObjectTemplate(), tr, 0,
 		false));
-	if (object == NULL)
+	if (object == nullptr)
 	{
 		DEBUG_WARNING(true, ("Failed to create object for template "
 			"%s.\n", draftSchematic->getCraftedObjectTemplate()->getName()));
-		return NULL;
+		return nullptr;
 	}
 
 	if (!getAssignedObjectName().empty())
@@ -2468,7 +2468,7 @@ bool ManufactureSchematicObject::setObjectComponents(TangibleObject * object, bo
 
 	// check the objects in the schematic volume container to make sure they match 
 	VolumeContainer * volumeContainer = ContainerInterface::getVolumeContainer(*this);
-	if (volumeContainer == NULL)
+	if (volumeContainer == nullptr)
 	{
 		DEBUG_WARNING(true, ("Manf schematic %s does not have a volume container!",
 			getNetworkId().getValueString().c_str()));
@@ -2478,7 +2478,7 @@ bool ManufactureSchematicObject::setObjectComponents(TangibleObject * object, bo
 	// for a stacked ingredient, if there are still more than one items in the stack,
 	// "consume" 1 item from the stack, and return it to the player's inventory
 	std::set<ServerObject*> itemsToReturnToInventory;
-	ServerObject* inventory = NULL;
+	ServerObject* inventory = nullptr;
 
 	DynamicVariableList::NestedList slots(getObjVars(),OBJVAR_SLOTS);
 
@@ -2533,11 +2533,11 @@ bool ManufactureSchematicObject::setObjectComponents(TangibleObject * object, bo
 				{
 					Container::ContainedItem & item = *iter;
 					TangibleObject * const testComponent = dynamic_cast<TangibleObject *>(item.getObject());
-					if (testComponent == NULL)
+					if (testComponent == nullptr)
 						continue;
 					if (itemsToReturnToInventory.count(testComponent) > 0)
 						continue;
-					FactoryObject * crate = NULL;
+					FactoryObject * crate = nullptr;
 					bool found = false;
 					bool foundCrate = false;
 					if (component->ingredient != NetworkId::cms_invalid)
@@ -2548,7 +2548,7 @@ bool ManufactureSchematicObject::setObjectComponents(TangibleObject * object, bo
 							
 							// see if the test component is a crate
 							crate = dynamic_cast<FactoryObject *>(testComponent);
-							if (crate != NULL && crate->getCount() == ingredientCount)
+							if (crate != nullptr && crate->getCount() == ingredientCount)
 							{
 								foundCrate = true;
 							}
@@ -2598,7 +2598,7 @@ bool ManufactureSchematicObject::setObjectComponents(TangibleObject * object, bo
 									if (!componentTableName.empty())
 									{
 										DataTable * componentTable = DataTableManager::getTable(componentTableName, true);
-										if (componentTable != NULL)
+										if (componentTable != nullptr)
 										{
 											uint32 value = INVALID_CRC;
 											if (draftSlot.appearance == "component")
@@ -2645,9 +2645,9 @@ bool ManufactureSchematicObject::setObjectComponents(TangibleObject * object, bo
 						}
 
 						bool destroyItem = true;
-						if ((testComponent->getCount() > 1) && (dynamic_cast<FactoryObject *>(testComponent) == NULL))
+						if ((testComponent->getCount() > 1) && (dynamic_cast<FactoryObject *>(testComponent) == nullptr))
 						{
-							if (inventory == NULL)
+							if (inventory == nullptr)
 							{
 								ServerObject * o = safe_cast<ServerObject*>(ContainerInterface::getContainedByObject(*testComponent));
 								while (o)
@@ -2701,7 +2701,7 @@ bool ManufactureSchematicObject::setObjectComponents(TangibleObject * object, bo
 		Container::ContainerErrorCode errCode;
 		for (std::set<ServerObject*>::const_iterator iter = itemsToReturnToInventory.begin(); iter != itemsToReturnToInventory.end(); ++iter)
 		{
-			if (!ContainerInterface::transferItemToVolumeContainer(*inventory, **iter, NULL, errCode))
+			if (!ContainerInterface::transferItemToVolumeContainer(*inventory, **iter, nullptr, errCode))
 			{
 				(*iter)->permanentlyDestroy(DeleteReasons::Consumed);
 			}
@@ -2723,15 +2723,15 @@ bool ManufactureSchematicObject::setObjectComponents(TangibleObject * object, bo
 
 		for (iter = volumeContainer->begin(); iter != volumeContainer->end(); ++iter)
 		{
-			if ((*iter).getObject() != NULL)
+			if ((*iter).getObject() != nullptr)
 			{
 				ServerObject * temp = safe_cast<ServerObject*>((*iter).getObject());
 
 				bool destroyItem = true;
 				TangibleObject* to = temp->asTangibleObject();
-				if (to && (to->getCount() > 1) && (dynamic_cast<FactoryObject *>(to) == NULL))
+				if (to && (to->getCount() > 1) && (dynamic_cast<FactoryObject *>(to) == nullptr))
 				{
-					if (inventory == NULL)
+					if (inventory == nullptr)
 					{
 						ServerObject * o = safe_cast<ServerObject*>(ContainerInterface::getContainedByObject(*to));
 						while (o)
@@ -2787,7 +2787,7 @@ bool ManufactureSchematicObject::setObjectComponents(TangibleObject * object, bo
 		Container::ContainerErrorCode errCode;
 		for (std::set<ServerObject*>::const_iterator iter = itemsToReturnToInventory.begin(); iter != itemsToReturnToInventory.end(); ++iter)
 		{
-			if (!ContainerInterface::transferItemToVolumeContainer(*inventory, **iter, NULL, errCode))
+			if (!ContainerInterface::transferItemToVolumeContainer(*inventory, **iter, nullptr, errCode))
 			{
 				(*iter)->permanentlyDestroy(DeleteReasons::Replaced);
 			}
@@ -2847,7 +2847,7 @@ void ManufactureSchematicObject::requestSlots(ServerObject & player) const
 				case Crafting::IT_schematicGeneric:
 					{
 						const TangibleObject * const ingredient = dynamic_cast<const TangibleObject *>(NetworkIdManager::getObjectById(ingredientId));
-						if (ingredient != NULL)
+						if (ingredient != nullptr)
 						{
 							optionInfo.ingredient = ingredient->getEncodedObjectName();
 							// since names can be duplicated, concatinate the id of
@@ -2870,7 +2870,7 @@ void ManufactureSchematicObject::requestSlots(ServerObject & player) const
 				case Crafting::IT_resourceClass:
 					{
 						ResourceTypeObject const * const ingredient = ServerUniverse::getInstance().getResourceTypeById(ingredientId);
-						if (ingredient != NULL)
+						if (ingredient != nullptr)
 							optionInfo.ingredient = Unicode::narrowToWide(ingredient->getResourceName());
 						else
 							optionInfo.ingredient = Unicode::narrowToWide("unknown");
@@ -2942,7 +2942,7 @@ void ManufactureSchematicObject::getIngredientInfo (IngredientInfoVector & iiv) 
 				// the manf schematic to the name
 				if (component->ingredient != NetworkId::cms_invalid)
 				{
-					//-- null-separate the string if needed
+					//-- nullptr-separate the string if needed
 					if (!ingredientName.empty () && ingredientName [0] == '@')
 						ingredientName.push_back ('\0');
 
@@ -2990,7 +2990,7 @@ void ManufactureSchematicObject::getIngredientInfo (IngredientInfoVector & iiv) 
 		case Crafting::IT_resourceClass:
 			{
 				ResourceTypeObject const * const ingredient = ServerUniverse::getInstance().getResourceTypeById(ingredientId);
-				if (ingredient != NULL)
+				if (ingredient != nullptr)
 					ingredientName = Unicode::narrowToWide(ingredient->getResourceName ());
 				}
 			break;
@@ -3125,7 +3125,7 @@ const std::map<StringId, float> & ManufactureSchematicObject::getAttributes() co
 int ManufactureSchematicObject::getVolume() const
 {
 	const DraftSchematicObject * const schematic = DraftSchematicObject::getSchematic(getDraftSchematic());
-	if (schematic != NULL)
+	if (schematic != nullptr)
 		return schematic->getObjectTemplate()->asServerObjectTemplate()->getVolume();
 	return IntangibleObject::getVolume();
 }	// ManufactureSchematicObject::getVolume
@@ -3212,7 +3212,7 @@ void ManufactureSchematicObject::recalculateData()
 		else
 		{
 			const DraftSchematicObject * const missingSchematic = DraftSchematicObject::getSchematic(MISSING_SCHEMATIC_SUBSTITUTE);
-			if (missingSchematic != NULL)
+			if (missingSchematic != nullptr)
 				m_draftSchematicSharedTemplate = missingSchematic->getSharedTemplate()->getCrcName().getCrc();
 			else
 				WARNING_STRICT_FATAL(true, ("Cannot find draft schematic %s! This must always exist!", MISSING_SCHEMATIC_SUBSTITUTE.c_str()));
@@ -3262,7 +3262,7 @@ void ManufactureSchematicObject::getByteStreamFromAutoVariable(const std::string
 	if (name == "msoCtsPackUnpack")
 	{
 		// creator Id/Name
-		CreatureObject const * containingPlayer = NULL;
+		CreatureObject const * containingPlayer = nullptr;
 
 		ServerObject const * parent = safe_cast<ServerObject const*>(ContainerInterface::getContainedByObject(*this));
 		while (parent)
@@ -3271,7 +3271,7 @@ void ManufactureSchematicObject::getByteStreamFromAutoVariable(const std::string
 			if (containingPlayer && PlayerCreatureController::getPlayerObject(containingPlayer))
 				break;
 
-			containingPlayer = NULL;
+			containingPlayer = nullptr;
 			parent = safe_cast<ServerObject const*>(ContainerInterface::getContainedByObject(*parent));
 		}
 
@@ -3329,7 +3329,7 @@ void ManufactureSchematicObject::setAutoVariableFromByteStream(const std::string
 		Archive::AutoDeltaVariable<bool> creatorIsOwner;
 		creatorIsOwner.unpackDelta(ri);
 
-		CreatureObject const * containingPlayer = NULL;
+		CreatureObject const * containingPlayer = nullptr;
 
 		if (creatorIsOwner.get())
 		{
@@ -3340,7 +3340,7 @@ void ManufactureSchematicObject::setAutoVariableFromByteStream(const std::string
 				if (containingPlayer && PlayerCreatureController::getPlayerObject(containingPlayer))
 					break;
 
-				containingPlayer = NULL;
+				containingPlayer = nullptr;
 				parent = safe_cast<ServerObject const*>(ContainerInterface::getContainedByObject(*parent));
 			}
 		}

@@ -60,8 +60,8 @@ void ShipAiEnemySearchManagerNamespace::checkForEnemies(ShipObject &ship)
 
 	if (shipController)
 	{
-		AiShipController * const aiShipController = (shipController != NULL) ? shipController->asAiShipController() : NULL;
-		float const aggroRadiusSquared = sqr((aiShipController != NULL) ? aiShipController->getAggroRadius() : 512.0f); // 512.0f is the distance at which turrets on player ships start getting targets
+		AiShipController * const aiShipController = (shipController != nullptr) ? shipController->asAiShipController() : nullptr;
+		float const aggroRadiusSquared = sqr((aiShipController != nullptr) ? aiShipController->getAggroRadius() : 512.0f); // 512.0f is the distance at which turrets on player ships start getting targets
 		Vector const shipPosition_w = ship.getPosition_w();
 		
 		static std::vector<ServerObject *> s_visibilityList;
@@ -117,7 +117,7 @@ void ShipAiEnemySearchManagerNamespace::checkForEnemies(ShipObject &ship)
 				ShipObject * const enemy = s_enemyList[randomIndex];
 				ShipController * const enemyShipController = enemy->getController()->asShipController();
 
-				if (enemyShipController != NULL)
+				if (enemyShipController != nullptr)
 				{
 					// Limit the number of ships that can attack a single enemy
 

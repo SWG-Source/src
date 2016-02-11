@@ -85,7 +85,7 @@ jobjectArray JNICALL ScriptMethodsPermissionsNamespace::permissionsGetBanned(JNI
 {
 	ServerObject *serverObj = 0;
 	if (!JavaLibrary::getObject(target, serverObj))
-		return NULL;
+		return nullptr;
 
 	LocalObjectArrayRefPtr strArray;
 	BuildingObject *buildingObj = dynamic_cast<BuildingObject*>(serverObj);
@@ -96,7 +96,7 @@ jobjectArray JNICALL ScriptMethodsPermissionsNamespace::permissionsGetBanned(JNI
 	if (cellObj)
 		if (ScriptConversion::convert(cellObj->getBanned(), strArray))
 			return strArray->getReturnValue();
-	return NULL;
+	return nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -114,7 +114,7 @@ jobjectArray JNICALL ScriptMethodsPermissionsNamespace::permissionsGetAllowed(JN
 {
 	ServerObject *serverObj = 0;
 	if (!JavaLibrary::getObject(target, serverObj))
-		return NULL;
+		return nullptr;
 
 	LocalObjectArrayRefPtr strArray;
 	BuildingObject *buildingObj = dynamic_cast<BuildingObject*>(serverObj);
@@ -125,7 +125,7 @@ jobjectArray JNICALL ScriptMethodsPermissionsNamespace::permissionsGetAllowed(JN
 	if (cellObj)
 		if (ScriptConversion::convert(cellObj->getAllowed(), strArray))
 			return strArray->getReturnValue();
-	return NULL;
+	return nullptr;
 }
 
 // ----------------------------------------------------------------------

@@ -169,19 +169,19 @@ void MetricsGatheringConnection::update(const std::vector<MetricsPair> & data)
 
 			//note: we know that the "isSecret", and "isLocked" nodes will come after the "population" node in the list 
 			//		we are iterating over, so they will override the population setting
-			if (strstr((*dataIter).m_label.c_str(), "population") != NULL)
+			if (strstr((*dataIter).m_label.c_str(), "population") != nullptr)
 			{
 				// there are nodes under the population node, so don't interpret them as the population
-				if (strstr((*dataIter).m_label.c_str(), "population.") == NULL)
+				if (strstr((*dataIter).m_label.c_str(), "population.") == nullptr)
 					mon->set(MetricsServer::getWorldCountChannel(), std::max((*dataIter).m_value, 0));
 			}
-			else if (strstr((*dataIter).m_label.c_str(), "isSecret") != NULL
-				|| strstr((*dataIter).m_label.c_str(), "isLocked") != NULL)
+			else if (strstr((*dataIter).m_label.c_str(), "isSecret") != nullptr
+				|| strstr((*dataIter).m_label.c_str(), "isLocked") != nullptr)
 			{
 				if ((*dataIter).m_value == 1)
 					mon->set(MetricsServer::getWorldCountChannel(), STATUS_LOCKED);
 			}
-			else if (strstr((*dataIter).m_label.c_str(), "isLoading") != NULL)
+			else if (strstr((*dataIter).m_label.c_str(), "isLoading") != nullptr)
 			{
 				// include in the root node description how
 				// long the cluster has been loading
@@ -226,19 +226,19 @@ void MetricsGatheringConnection::update(const std::vector<MetricsPair> & data)
 			
 			//note: we know that the "isSecret", and "isLocked" nodes will come after the "population" node in the list 
 			//		we are iterating over, so they will override the population setting
-			if (strstr((*dataIter).m_label.c_str(), "population") != NULL)
+			if (strstr((*dataIter).m_label.c_str(), "population") != nullptr)
 			{
 				// there are nodes under the population node, so don't interpret them as the population
-				if (strstr((*dataIter).m_label.c_str(), "population.") == NULL)
+				if (strstr((*dataIter).m_label.c_str(), "population.") == nullptr)
 					mon->set(MetricsServer::getWorldCountChannel(), std::max((*dataIter).m_value, 0));
 			}
-			else if (strstr((*dataIter).m_label.c_str(), "isSecret") != NULL
-				|| strstr((*dataIter).m_label.c_str(), "isLocked") != NULL)
+			else if (strstr((*dataIter).m_label.c_str(), "isSecret") != nullptr
+				|| strstr((*dataIter).m_label.c_str(), "isLocked") != nullptr)
 			{
 				if ((*dataIter).m_value == 1)
 					mon->set(MetricsServer::getWorldCountChannel(), STATUS_LOCKED);
 			}
-			else if (strstr((*dataIter).m_label.c_str(), "isLoading") != NULL)
+			else if (strstr((*dataIter).m_label.c_str(), "isLoading") != nullptr)
 			{
 				// include in the root node description how
 				// long the cluster has been loading

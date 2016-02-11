@@ -373,14 +373,14 @@ inline void SphereGrid<ObjectType, ExtentAccessor>::findInRangeCapsule( Object c
 template<class ObjectType, class ExtentAccessor>
 inline void SphereGrid<ObjectType, ExtentAccessor>::findInRange( const Capsule & range, std::set<ObjectType> & results)
 {
-	findInRangeCapsule( INVALID_POB, range, NULL, results );
+	findInRangeCapsule( INVALID_POB, range, nullptr, results );
 }
 
 
 template<class ObjectType, class ExtentAccessor>
 inline void SphereGrid<ObjectType, ExtentAccessor>::findInRange( Vector const &center_w, float radius, std::set<ObjectType> & results)
 {
-	findInRangeSphere( INVALID_POB, center_w, radius, NULL, results );
+	findInRangeSphere( INVALID_POB, center_w, radius, nullptr, results );
 }
 
 
@@ -401,7 +401,7 @@ inline void SphereGrid<ObjectType, ExtentAccessor>::findInRange( Vector const &c
 template<class ObjectType, class ExtentAccessor>
 inline void SphereGrid<ObjectType, ExtentAccessor>::findInRange( Object const *pob, Vector const &center_w, float radius, std::set<ObjectType> & results)
 {
-	findInRangeSphere( pob, center_w, radius, NULL, results );
+	findInRangeSphere( pob, center_w, radius, nullptr, results );
 }
 
 template<class ObjectType, class ExtentAccessor>

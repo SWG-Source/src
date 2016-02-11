@@ -111,10 +111,10 @@ UdpManager::UdpManager(const UdpParams *params) : mConnectionList(&UdpConnection
     mParams.maxDataHoldSize = udpMin(mParams.maxDataHoldSize, mParams.maxRawPacketSize);
     mParams.packetHistoryMax = udpMax(1, mParams.packetHistoryMax);
     mPacketHistoryPosition = 0;
-    mPassThroughData = NULL;
-    mBackgroundThread = NULL;
+    mPassThroughData = nullptr;
+    mBackgroundThread = nullptr;
 
-    if (mParams.udpDriver != NULL)
+    if (mParams.udpDriver != nullptr)
     {
         mDriver = mParams.udpDriver;
     }
@@ -154,7 +154,7 @@ UdpManager::UdpManager(const UdpParams *params) : mConnectionList(&UdpConnection
     mSimulateOutgoingQueueBytes = 0;
 
     if (mParams.avoidPriorityQueue)
-        mPriorityQueue = NULL;
+        mPriorityQueue = nullptr;
     else
         mPriorityQueue = new PriorityQueue<UdpConnection, UdpClockStamp>(mParams.maxConnections);
 
@@ -181,7 +181,7 @@ UdpManager::~UdpManager()
 {
         // Since the background thread holds a reference to the UdpManager while it is running, this should
         // not be possible.  The only way it could happen is if somebody released the manager who should not have.
-    assert(mBackgroundThread == NULL);
+    assert(mBackgroundThread == nullptr);
 
         // next thing we must do is tell all the connections to disconnect (which severs their link to this dying manager)
         // this has to be done first since they will call back into us and have themselves removed from our connection-list/priority-queue/etc
@@ -191,7 +191,7 @@ UdpManager::~UdpManager()
         UdpGuard cg(&mConnectionGuard);
 
         UdpConnection *cur = mConnectionList.First();
-        while (cur != NULL)
+        while (cur != nullptr)
         {
             cur->AddRef();
             cur->InternalDisconnect(0, UdpConnection::cDisconnectReasonManagerDeleted);   // this will cause it to remove us from the mConnectionList
@@ -216,9 +216,9 @@ UdpManager::~UdpManager()
         UdpGuard guard(&mPoolGuard);
 
         PooledLogicalPacket *walk = mPoolCreatedList.RemoveHead();
-        while (walk != NULL)
+        while (walk != nullptr)
         {
-            walk->mUdpManager = NULL;
+            walk->mUdpManager = nullptr;
             walk = mPoolCreatedList.RemoveHead();
         }
             // next release the ones we have in our available pool
@@ -232,11 +232,11 @@ UdpManager::~UdpManager()
 
     CloseSocket();
 
-    if (mParams.udpDriver == NULL)
+    if (mParams.udpDriver == nullptr)
     {
         delete mDriver;     // we were not given a driver to use, so we must own this driver we have, so destroy it
     }
-    mDriver = NULL;
+    mDriver = nullptr;
 
     delete mAddressHashTable;
     delete mConnectCodeHashTable;
@@ -295,7 +295,7 @@ void UdpManager::ProcessDisconnectPending()
     UdpGuard guard(&mDisconnectPendingGuard);
 
     UdpConnection *entry = mDisconnectPendingList.First();
-    while (entry != NULL)
+    while (entry != nullptr)
     {
         UdpConnection *next = mDisconnectPendingList.Next(entry);
         if (entry->GetStatus() == UdpConnection::cStatusDisconnected)
@@ -309,12 +309,12 @@ void UdpManager::ProcessDisconnectPending()
 
 void UdpManager::RemoveConnection(UdpConnection *con)
 {
-    assert(con != NULL);        // attemped to remove a NULL connection object
+    assert(con != nullptr);        // attemped to remove a nullptr connection object
 
         // note: it's a bug to Remove a connection object that is already removed...should never be able to happen.
     UdpGuard cg(&mConnectionGuard);
 
-    if (mPriorityQueue != NULL)
+    if (mPriorityQueue != nullptr)
     {
         mPriorityQueue->Remove(con);
     }
@@ -326,7 +326,7 @@ void UdpManager::RemoveConnection(UdpConnection *con)
 
 void UdpManager::AddConnection(UdpConnection *con)
 {
-    assert(con != NULL);        // attemped to add a NULL connection object
+    assert(con != nullptr);        // attemped to add a nullptr connection object
 
     UdpGuard cg(&mConnectionGuard);
     con->AddRef();      // UdpManager keeps a soft reference to the connection (ie. if it sees it is the only one holding a reference, it releases it)
@@ -341,17 +341,17 @@ void UdpManager::FlushAllMultiBuffer()
 
     mConnectionGuard.Enter();
     UdpConnection *cur = mConnectionList.First();
-    if (cur != NULL)
+    if (cur != nullptr)
         cur->AddRef();
     mConnectionGuard.Leave();
 
-    while (cur != NULL)
+    while (cur != nullptr)
     {
         cur->FlushMultiBuffer();
 
         mConnectionGuard.Enter();
         UdpConnection *next = mConnectionList.Next(cur);
-        if (next != NULL)
+        if (next != nullptr)
             next->AddRef();
         mConnectionGuard.Leave();
 
@@ -366,15 +366,15 @@ void UdpManager::DisconnectAll()
 
     mConnectionGuard.Enter();
     UdpConnection *cur = mConnectionList.First();
-    if (cur != NULL)
+    if (cur != nullptr)
         cur->AddRef();
     mConnectionGuard.Leave();
 
-    while (cur != NULL)
+    while (cur != nullptr)
     {
         mConnectionGuard.Enter();
         UdpConnection *next = mConnectionList.Next(cur);
-        if (next != NULL)
+        if (next != nullptr)
             next->AddRef();
         mConnectionGuard.Leave();
 
@@ -392,7 +392,7 @@ void UdpManager::DeliverEvents(int maxProcessingTime)
     for (;;)
     {
         CallbackEvent *ce = EventListPop();
-        if (ce == NULL)
+        if (ce == nullptr)
             break;
 
         switch(ce->mEventType)
@@ -426,13 +426,13 @@ void UdpManager::DeliverEvents(int maxProcessingTime)
             {
                 {   // guard block
                     UdpGuard hguard(&mHandlerGuard);
-                    if (mParams.handler != NULL)
+                    if (mParams.handler != nullptr)
                     {
                         mParams.handler->OnConnectRequest(ce->mSource);
                     }
                 }
 
-                if (ce->mSource->GetHandler() == NULL)   // if application did not set a handler, then the connection is considered refused
+                if (ce->mSource->GetHandler() == nullptr)   // if application did not set a handler, then the connection is considered refused
                 {
                     ce->mSource->InternalDisconnect(0, UdpConnection::cDisconnectReasonConnectionRefused);
                 }
@@ -513,7 +513,7 @@ bool UdpManager::GiveTime(int maxPollingTime, bool giveConnectionsTime)
             PacketHistoryEntry *e = SimulationReceive();
 #endif
 
-            if (e == NULL)
+            if (e == nullptr)
             {
                 mLastEmptySocketBufferStamp = CachedClock();
                 break;
@@ -545,7 +545,7 @@ bool UdpManager::GiveTime(int maxPollingTime, bool giveConnectionsTime)
 
     if (giveConnectionsTime)
     {
-        if (mPriorityQueue != NULL)
+        if (mPriorityQueue != nullptr)
         {
                 // give time to everybody in the priority-queue that needs it
             UdpClockStamp curPriority = CachedClock();
@@ -570,10 +570,10 @@ bool UdpManager::GiveTime(int maxPollingTime, bool giveConnectionsTime)
 
                 mConnectionGuard.Enter();
                 top = mPriorityQueue->TopRemove(curPriority);
-                if (top != NULL)
+                if (top != nullptr)
                     top->AddRef();      // must always addref connections while inside the connection guard
                 mConnectionGuard.Leave();
-                if (top == NULL)
+                if (top == nullptr)
                   break;
 
                 top->GiveTime(true);
@@ -593,17 +593,17 @@ bool UdpManager::GiveTime(int maxPollingTime, bool giveConnectionsTime)
                 // give time to everybody
             mConnectionGuard.Enter();
             UdpConnection *cur = mConnectionList.First();
-            if (cur != NULL)
+            if (cur != nullptr)
                 cur->AddRef();
             mConnectionGuard.Leave();
 
-            while (cur != NULL)
+            while (cur != nullptr)
             {
                 cur->GiveTime(true);
 
                 mConnectionGuard.Enter();
                 UdpConnection *next = mConnectionList.Next(cur);
-                if (next != NULL)
+                if (next != nullptr)
                     next->AddRef();
                 mConnectionGuard.Leave();
 
@@ -621,13 +621,13 @@ bool UdpManager::GiveTime(int maxPollingTime, bool giveConnectionsTime)
         UdpClockStamp curStamp = CachedClock();
 
         SimulateQueueEntry *entry = mSimulateOutgoingList.First();
-        while (entry != NULL && curStamp >= mSimulateNextOutgoingTime)
+        while (entry != nullptr && curStamp >= mSimulateNextOutgoingTime)
         {
             mSimulateOutgoingList.Remove(entry);
             SimulateQueueEntry *next = mSimulateOutgoingList.First();
 
                 // simulate a delay before next packet is considered (ie. simple lag)
-            if (next != NULL)
+            if (next != nullptr)
             {
                 int latencyDelay = (mSimulation.simulateOutgoingLatency - CachedClockElapsed(next->mQueueTime));
                 mSimulateNextOutgoingTime = curStamp + latencyDelay;
@@ -644,7 +644,7 @@ bool UdpManager::GiveTime(int maxPollingTime, bool giveConnectionsTime)
             ActualSendHelper(entry->mData, entry->mDataLen, entry->mIp, entry->mPort);
 
             UdpConnection *con = AddressGetConnection(entry->mIp, entry->mPort);
-            if (con != NULL)
+            if (con != nullptr)
             {
                 con->mSimulateOutgoingQueueBytes -= entry->mDataLen;
                 con->Release();
@@ -664,12 +664,12 @@ UdpConnection *UdpManager::EstablishConnection(const char *serverAddress, int se
 {
     UdpGuard guard(&mGiveTimeGuard);      // probably not needed, I don't see any reason we can't do this while GiveTime is happening in the background...the connection list is protected independently...still, better safe than sorry
 
-    assert(serverAddress != NULL);
+    assert(serverAddress != nullptr);
 
     char useServerAddress[512];
     UdpLibrary::UdpMisc::Strncpy(useServerAddress, serverAddress, sizeof(useServerAddress));
     char *portPtr = strchr(useServerAddress, ':');
-    if (portPtr != NULL)
+    if (portPtr != nullptr)
     {
         *portPtr++ = 0;
         serverPort = atoi(portPtr);
@@ -679,21 +679,21 @@ UdpConnection *UdpManager::EstablishConnection(const char *serverAddress, int se
     assert(serverPort != 0);        // can't connect to no port
 
     if (mConnectionList.Count() >= mParams.maxConnections)
-        return(NULL);
+        return(nullptr);
 
         // get server address
     UdpPlatformAddress destIp;
     if (!mDriver->GetHostByName(&destIp, useServerAddress))
     {
-        return(NULL);       // could not resolve name
+        return(nullptr);       // could not resolve name
     }
 
         // first, see if we already have a connection object managing this ip/port, if we do, then fail
     UdpConnection *con = AddressGetConnection(destIp, serverPort);
-    if (con != NULL)
+    if (con != nullptr)
     {
         con->Release();
-        return(NULL);       // already connected to this address/port
+        return(nullptr);       // already connected to this address/port
     }
     return(new UdpConnection(this, destIp, serverPort, timeout));
 }
@@ -709,7 +709,7 @@ void UdpManager::GetStats(UdpManagerStatistics *stats)
 {
     UdpGuard sg(&mStatsGuard);
 
-    assert(stats != NULL);
+    assert(stats != nullptr);
     *stats = mManagerStats;
     stats->poolAvailable = mPoolAvailableList.Count();
     stats->poolCreated = mPoolCreatedList.Count();
@@ -737,10 +737,10 @@ void UdpManager::DumpPacketHistory(const char *filename) const
 {
     UdpGuard guard(&mGiveTimeGuard);
 
-    assert(filename != NULL);
+    assert(filename != nullptr);
     assert(filename[0] != 0);
     FILE *file = fopen(filename, "wt");
-    if (file != NULL)
+    if (file != nullptr)
     {
             // dump history of packets...
         for (int i = 0; i < mParams.packetHistoryMax; i++)
@@ -789,7 +789,7 @@ UdpManager::PacketHistoryEntry *UdpManager::SimulationReceive()
     for (;;)
     {
         PacketHistoryEntry *entry = ActualReceive();
-        if (entry == NULL)
+        if (entry == nullptr)
             break;
 
         SimulateQueueEntry *qe = new SimulateQueueEntry(entry->mBuffer, entry->mLen, entry->mIp, entry->mPort, curStamp);
@@ -797,7 +797,7 @@ UdpManager::PacketHistoryEntry *UdpManager::SimulationReceive()
     }
 
     SimulateQueueEntry *winner = mSimulateIncomingList.First();
-    if (winner != NULL && CachedClockElapsed(winner->mQueueTime) >= mSimulation.simulateIncomingLatency)
+    if (winner != nullptr && CachedClockElapsed(winner->mQueueTime) >= mSimulation.simulateIncomingLatency)
     {
         mSimulateIncomingList.Remove(winner);
         int pos = mPacketHistoryPosition;
@@ -809,14 +809,14 @@ UdpManager::PacketHistoryEntry *UdpManager::SimulationReceive()
         delete winner;
         return(mPacketHistory[pos]);
     }
-    return(NULL);
+    return(nullptr);
 }
 
 UdpManager::PacketHistoryEntry *UdpManager::ActualReceive()
 {
     UdpClockStamp curStamp = CachedClock();
     if (mSimulation.simulateIncomingByteRate > 0 && curStamp < mSimulateNextIncomingTime)
-        return(NULL);
+        return(nullptr);
 
     UdpPlatformAddress fromAddress;
     int fromPort = 0;
@@ -855,7 +855,7 @@ UdpManager::PacketHistoryEntry *UdpManager::ActualReceive()
         }
         return(mPacketHistory[pos]);
     }
-    return(NULL);
+    return(nullptr);
 }
 
 void UdpManager::ActualSend(const udp_uchar *data, int dataLen, UdpPlatformAddress ip, int port)
@@ -876,7 +876,7 @@ void UdpManager::ActualSend(const udp_uchar *data, int dataLen, UdpPlatformAddre
             return;        // no room, packet gets lost
 
         UdpConnection *con = AddressGetConnection(ip, port);
-        if (con != NULL)
+        if (con != nullptr)
         {
             if (mSimulation.simulateDestinationOverloadLevel > 0 && con->mSimulateOutgoingQueueBytes + dataLen > mSimulation.simulateDestinationOverloadLevel)
             {
@@ -928,7 +928,7 @@ void UdpManager::ProcessRawPacket(const PacketHistoryEntry *e)
     
     UdpConnection *con = AddressGetConnection(e->mIp, e->mPort);
 
-    if (con == NULL)
+    if (con == nullptr)
     {
         if (e->mLen == 0)     // len = 0 = ICMP error
         {
@@ -946,7 +946,7 @@ void UdpManager::ProcessRawPacket(const PacketHistoryEntry *e)
             if (mConnectionList.Count() >= mParams.maxConnections)
                 return;        // can't handle any more connections, so ignore this request entirely
 
-            if (mParams.handler != NULL)
+            if (mParams.handler != nullptr)
             {
                 UdpConnection *newcon = new UdpConnection(this, e);
                 CallbackConnectRequest(newcon);
@@ -968,7 +968,7 @@ void UdpManager::ProcessRawPacket(const PacketHistoryEntry *e)
                     int encryptCode = UdpMisc::GetValue32(ptr);
 
                     UdpConnection *con = ConnectCodeGetConnection(connectCode);
-                    if (con != NULL)
+                    if (con != nullptr)
                     {
                         if (mParams.allowAddressRemapping || con->mIp == e->mIp)
                         {
@@ -1025,7 +1025,7 @@ UdpConnection *UdpManager::AddressGetConnection(UdpPlatformAddress ip, int port)
     UdpGuard guard(&mConnectionGuard);
 
     UdpConnection *found = mAddressHashTable->FindFirst(AddressHashValue(ip, port));
-    while (found != NULL)
+    while (found != nullptr)
     {
         if (found->mIp == ip && found->mPort == port)
         {
@@ -1034,7 +1034,7 @@ UdpConnection *UdpManager::AddressGetConnection(UdpPlatformAddress ip, int port)
         }
         found = mAddressHashTable->FindNext(found);
     }
-    return(NULL);
+    return(nullptr);
 }
 
 UdpConnection *UdpManager::ConnectCodeGetConnection(int connectCode) const
@@ -1042,7 +1042,7 @@ UdpConnection *UdpManager::ConnectCodeGetConnection(int connectCode) const
     UdpGuard guard(&mConnectionGuard);
 
     UdpConnection *found = mConnectCodeHashTable->FindFirst(connectCode);
-    while (found != NULL)
+    while (found != nullptr)
     {
         if (found->mConnectCode == connectCode)
         {
@@ -1051,7 +1051,7 @@ UdpConnection *UdpManager::ConnectCodeGetConnection(int connectCode) const
         }
         found = mConnectCodeHashTable->FindNext(found);
     }
-    return(NULL);
+    return(nullptr);
 }
 
 LogicalPacket *UdpManager::CreatePacket(const void *data, int dataLen, const void *data2, int dataLen2)
@@ -1063,7 +1063,7 @@ LogicalPacket *UdpManager::CreatePacket(const void *data, int dataLen, const voi
         {
             UdpGuard guard(&mPoolGuard);
             PooledLogicalPacket *lp = mPoolAvailableList.RemoveHead();
-            if (lp == NULL)
+            if (lp == nullptr)
             {
                     // create a new pooled packet to fulfil request
                 lp = new PooledLogicalPacket(this, mParams.pooledPacketSize);
@@ -1091,7 +1091,7 @@ void UdpManager::PoolDestroyed(PooledLogicalPacket *packet)
 char *UdpManager::GetLocalString(char *buf, int bufLen) const
 {
     if (bufLen < 22)
-        return(NULL);
+        return(nullptr);
     UdpPlatformAddress ip = GetLocalIp();
     int port = GetLocalPort();
     char hold[256];
@@ -1103,7 +1103,7 @@ UdpManager::CallbackEvent *UdpManager::AvailableEventBorrow()
 {
     UdpGuard guard(&mAvailableEventGuard);
     CallbackEvent *ce = mAvailableEventList.RemoveHead();
-    if (ce == NULL)
+    if (ce == nullptr)
     {
         ce = new CallbackEvent();
     }
@@ -1127,7 +1127,7 @@ void UdpManager::EventListAppend(CallbackEvent *ce)
 {
     UdpGuard guard(&mEventListGuard);
     mEventList.InsertTail(ce);
-    if (ce->mPayload != NULL)
+    if (ce->mPayload != nullptr)
     {
         mEventListBytes += ce->mPayload->GetDataLen();
     }
@@ -1137,7 +1137,7 @@ UdpManager::CallbackEvent *UdpManager::EventListPop()
 {
     UdpGuard guard(&mEventListGuard);
     CallbackEvent *event = mEventList.RemoveHead();
-    if (event != NULL && event->mPayload != NULL)
+    if (event != nullptr && event->mPayload != nullptr)
     {
         mEventListBytes -= event->mPayload->GetDataLen();
     }
@@ -1148,7 +1148,7 @@ UdpManager::CallbackEvent *UdpManager::EventListPop()
 void UdpManager::ThreadStart()
 {
     UdpGuard guard(&mThreadGuard);
-    if (mBackgroundThread == NULL)
+    if (mBackgroundThread == nullptr)
     {
         mBackgroundThread = new UdpManagerThread(this, mParams.threadSleepTime);
         mBackgroundThread->Start();
@@ -1158,12 +1158,12 @@ void UdpManager::ThreadStart()
 void UdpManager::ThreadStop()
 {
     UdpGuard guard(&mThreadGuard);
-    if (mBackgroundThread != NULL)
+    if (mBackgroundThread != nullptr)
     {
         assert(mRefCount > 1);    // caller must hold a reference, and thread must hold a reference, so this should be true.  If it asserts, it means the caller is using a UdpManager that it does not hold a reference to.
         mBackgroundThread->Stop(true);
         mBackgroundThread->Release();
-        mBackgroundThread = NULL;
+        mBackgroundThread = nullptr;
     }
 }
 
@@ -1256,13 +1256,13 @@ void UdpManager::CallbackConnectRequest(UdpConnection *con)
     {
         {   // guard block
             UdpGuard hguard(&mHandlerGuard);
-            if (mParams.handler != NULL)
+            if (mParams.handler != nullptr)
             {
                 mParams.handler->OnConnectRequest(con);
             }
         }
 
-        if (con->GetHandler() == NULL)   // if application did not set a handler, then the connection is considered refused
+        if (con->GetHandler() == nullptr)   // if application did not set a handler, then the connection is considered refused
         {
             con->InternalDisconnect(0, UdpConnection::cDisconnectReasonConnectionRefused);
         }
@@ -1276,8 +1276,8 @@ void UdpManager::CallbackConnectRequest(UdpConnection *con)
 UdpManager::CallbackEvent::CallbackEvent()
 {
     mEventType = cCallbackEventNone;
-    mSource = NULL;
-    mPayload = NULL;
+    mSource = nullptr;
+    mPayload = nullptr;
     mReason = cUdpCorruptionReasonNone;
 }
 
@@ -1291,7 +1291,7 @@ void UdpManager::CallbackEvent::SetEventData(CallbackEventType eventType, UdpCon
     mEventType = eventType;
     mSource = con;
     mSource->AddRef();
-    if (payload != NULL)
+    if (payload != nullptr)
     {
         mPayload = payload;
         mPayload->AddRef();
@@ -1300,16 +1300,16 @@ void UdpManager::CallbackEvent::SetEventData(CallbackEventType eventType, UdpCon
 
 void UdpManager::CallbackEvent::ClearEventData()
 {
-    if (mSource != NULL)
+    if (mSource != nullptr)
     {
         mSource->Release();
-        mSource = NULL;
+        mSource = nullptr;
     }
 
-    if (mPayload != NULL)
+    if (mPayload != nullptr)
     {
         mPayload->Release();
-        mPayload = NULL;
+        mPayload = nullptr;
     }
 }
 

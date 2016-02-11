@@ -117,7 +117,7 @@ namespace Unicode
 	
 	/**
 	* Find a CharData for the given code point.
-	* @return null if no CharData exists for this code point
+	* @return nullptr if no CharData exists for this code point
 	*/
 
 	inline const CharData *     CharDataMap::findCharData (const unicode_char_t code) const

@@ -10,7 +10,7 @@
 using namespace CTService;
 
 unsigned						openRequests = 0;
-CTServiceAPI					*waitclient = NULL;
+CTServiceAPI					*waitclient = nullptr;
 std::map<unsigned, unsigned>	m_tests;
 std::string						game_code;
 

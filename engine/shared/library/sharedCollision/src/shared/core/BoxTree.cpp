@@ -156,8 +156,8 @@ BoxTreeNode::BoxTreeNode()
 : m_box(),
   m_index(-1),
   m_userId(-1),
-  m_childA(NULL),
-  m_childB(NULL)
+  m_childA(nullptr),
+  m_childB(nullptr)
 {
 }
 
@@ -165,8 +165,8 @@ BoxTreeNode::BoxTreeNode ( AxialBox const & box, int userId )
 : m_box(box),
   m_index(-1),
   m_userId(userId),
-  m_childA(NULL),
-  m_childB(NULL)
+  m_childA(nullptr),
+  m_childB(nullptr)
 {
 }
 
@@ -195,10 +195,10 @@ void BoxTreeNode::drawDebugShapes ( DebugShapeRenderer * renderer, VectorArgb co
 
 #ifdef _DEBUG
 
-	if(m_childA == NULL) return;
-	if(m_childB == NULL) return;
+	if(m_childA == nullptr) return;
+	if(m_childB == nullptr) return;
 
-	if(renderer == NULL) return;
+	if(renderer == nullptr) return;
 
 	VectorArgb newColor( color.a, color.r * 0.9f, color.g * 0.9f, color.b * 0.9f );
 
@@ -227,7 +227,7 @@ int BoxTreeNode::getNodeCount ( void ) const
 
 float BoxTreeNode::calcWeight ( void ) const
 {
-	if((m_childA == NULL) && (m_childB == NULL)) return 1.0f;
+	if((m_childA == nullptr) && (m_childB == nullptr)) return 1.0f;
 
 	float accum = 0.0f;
 
@@ -241,9 +241,9 @@ float BoxTreeNode::calcWeight ( void ) const
 
 float BoxTreeNode::calcBalance ( void ) const
 {
-	if((m_childA == NULL) && (m_childB == NULL)) return 1.0f;
+	if((m_childA == nullptr) && (m_childB == nullptr)) return 1.0f;
 
-	if((m_childA != NULL) && (m_childB != NULL))
+	if((m_childA != nullptr) && (m_childB != nullptr))
 	{
 		return m_childA->calcWeight() / m_childB->calcWeight();
 	}
@@ -288,8 +288,8 @@ void BoxTreeNode::packInto ( BoxTreeNode * node, BoxTreeNode * base ) const
 	node->m_box = m_box;
 	node->m_index = m_index;
 
-	node->m_childA = m_childA ? (base + m_childA->m_index) : NULL;
-	node->m_childB = m_childB ? (base + m_childB->m_index) : NULL;
+	node->m_childA = m_childA ? (base + m_childA->m_index) : nullptr;
+	node->m_childB = m_childB ? (base + m_childB->m_index) : nullptr;
 
 	node->m_userId = m_userId;
 }
@@ -302,10 +302,10 @@ void BoxTreeNode::deleteChildren ( void )
 	if(m_childB) m_childB->deleteChildren();
 
 	delete m_childA;
-	m_childA = NULL;
+	m_childA = nullptr;
 
 	delete m_childB;
-	m_childB = NULL;
+	m_childB = nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -341,8 +341,8 @@ void BoxTreeNode::read ( Iff & iff, BoxTreeNode * base )
 	int indexA = iff.read_int32();
 	int indexB = iff.read_int32();
 
-	m_childA = ( indexA != -1 ? base + indexA : NULL );
-	m_childB = ( indexB != -1 ? base + indexB : NULL );
+	m_childA = ( indexA != -1 ? base + indexA : nullptr );
+	m_childB = ( indexB != -1 ? base + indexB : nullptr );
 }
 
 // ----------------------------------------------------------------------
@@ -361,7 +361,7 @@ bool BoxTreeNode::findClosest ( Vector const & V, float maxDistance, float & out
 	// ----------
 	// Leaf node case - this leaf node is closer 
 
-	if((m_childA == NULL) && (m_childB == NULL))
+	if((m_childA == nullptr) && (m_childB == nullptr))
 	{
 		outDistance = dist;
 		outIndex = m_userId;
@@ -417,8 +417,8 @@ void BoxTree::install()
 // ----------------------------------------------------------------------
 
 BoxTree::BoxTree()
-: m_flatNodes(NULL),
-  m_root(NULL),
+: m_flatNodes(nullptr),
+  m_root(nullptr),
   m_testCounter(0)
 {
 }
@@ -443,7 +443,7 @@ void BoxTree::build ( BoxVec const & boxes )
 
 	// ----------
 
-	BoxTreeNodePVec nodes(boxes.size(),NULL);
+	BoxTreeNodePVec nodes(boxes.size(),nullptr);
 
 	int boxcount = boxes.size();
 
@@ -488,7 +488,7 @@ void BoxTree::drawDebugShapes ( DebugShapeRenderer * renderer ) const
 
 #ifdef _DEBUG
 
-	if(renderer == NULL) return;
+	if(renderer == nullptr) return;
 
 	if(m_root) m_root->drawDebugShapes( renderer, VectorArgb::solidWhite, 0 );
 
@@ -546,7 +546,7 @@ static inline void templateTestOverlapRecurse( BoxTreeNode const * node, TestSha
 template< class TestShape >
 static inline bool templateTestOverlap( BoxTree const & tree, TestShape const & testShape, IdVec & outIds )
 {
-	if(tree.getRoot() == NULL) return false;
+	if(tree.getRoot() == nullptr) return false;
 
 	int oldSize = outIds.size();
 
@@ -580,7 +580,7 @@ static inline void templateTestOverlapRecurse2( BoxTreeNode const * node, TestSh
 template< class TestShape >
 static inline bool templateTestOverlap2( BoxTree const & tree, TestShape const & testShape, IdVec & outIds )
 {
-	if(tree.getRoot() == NULL) return false;
+	if(tree.getRoot() == nullptr) return false;
 
 	int oldSize = outIds.size();
 
@@ -701,11 +701,11 @@ void BoxTree::clear ( void )
 		m_root->deleteChildren();
 
 		delete m_root;
-		m_root = NULL;
+		m_root = nullptr;
 	}
 
 	delete m_flatNodes;
-	m_flatNodes = NULL;
+	m_flatNodes = nullptr;
 }
 
 // ----------------------------------------------------------------------

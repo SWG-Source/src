@@ -301,7 +301,7 @@ bool ConsoleCommandParserServer::performParsing (const NetworkId & userId, const
 			return true;
 		}
 
-		unsigned long val = strtoul(Unicode::wideToNarrow(argv[1]).c_str(), NULL, 10);
+		unsigned long val = strtoul(Unicode::wideToNarrow(argv[1]).c_str(), nullptr, 10);
 		const bool isPublic = (val != 0);
 		SetConnectionServerPublic const p(isPublic);
 		
@@ -354,8 +354,8 @@ bool ConsoleCommandParserServer::performParsing (const NetworkId & userId, const
 			return true;
 		}
 	
-		unsigned long secsToWait = strtoul(Unicode::wideToNarrow(argv[1]).c_str(), NULL, 10);
-		unsigned long maxSecs = strtoul(Unicode::wideToNarrow(argv[2]).c_str(), NULL, 10);
+		unsigned long secsToWait = strtoul(Unicode::wideToNarrow(argv[1]).c_str(), nullptr, 10);
+		unsigned long maxSecs = strtoul(Unicode::wideToNarrow(argv[2]).c_str(), nullptr, 10);
 		Unicode::String systemMessage;
 		for( size_t i=3; i< argv.size(); ++i)
 		{
@@ -386,7 +386,7 @@ bool ConsoleCommandParserServer::performParsing (const NetworkId & userId, const
 			return true;
 		}
 		
-		unsigned long val = strtoul(Unicode::wideToNarrow(argv[1]).c_str (), NULL, 10);
+		unsigned long val = strtoul(Unicode::wideToNarrow(argv[1]).c_str (), nullptr, 10);
 		switch (val)
 		{
 			case 1:
@@ -482,7 +482,7 @@ bool ConsoleCommandParserServer::performParsing (const NetworkId & userId, const
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		ServerObject* object = ServerWorld::findObjectByNetworkId(oid);
-		if (object == NULL)
+		if (object == nullptr)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
@@ -574,7 +574,7 @@ bool ConsoleCommandParserServer::performParsing (const NetworkId & userId, const
 	}
 	else if (isAbbrev (argv[0], "getSceneId"))
 	{
-		if (user == NULL)
+		if (user == nullptr)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
@@ -596,7 +596,7 @@ bool ConsoleCommandParserServer::performParsing (const NetworkId & userId, const
 			return true;
 		}
 
-		unsigned long val = strtoul(Unicode::wideToNarrow(argv[1]).c_str (), NULL, 10);
+		unsigned long val = strtoul(Unicode::wideToNarrow(argv[1]).c_str (), nullptr, 10);
 		if (user->getClient()->setGodMode(val != 0))
 			result += getErrorMessage (argv[0], ERR_SUCCESS);
 		else
@@ -637,7 +637,7 @@ bool ConsoleCommandParserServer::performParsing (const NetworkId & userId, const
 	{
 		std::string tableName;
 		tableName = Unicode::wideToNarrow(argv[1]);
-		if (DataTableManager::reload(tableName) != NULL)
+		if (DataTableManager::reload(tableName) != nullptr)
 		{
 			ServerMessageForwarding::beginBroadcast();
 
@@ -694,7 +694,7 @@ bool ConsoleCommandParserServer::performParsing (const NetworkId & userId, const
 			else
 			{
 				PlanetObject * planet = ServerUniverse::getInstance().getCurrentPlanet();
-				if (planet == NULL)
+				if (planet == nullptr)
 				{
 					result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 					return true;
@@ -708,7 +708,7 @@ bool ConsoleCommandParserServer::performParsing (const NetworkId & userId, const
 			for (std::vector<const Region *>::const_iterator i = regions.begin();	i != regions.end(); ++i)
 			{
 				const RegionRectangle * ro = dynamic_cast<const RegionRectangle*>(*i);
-				if (ro != NULL)
+				if (ro != nullptr)
 				{
 					float minX, minY, maxX, maxY;
 					ro->getExtent(minX, minY, maxX, maxY);
@@ -717,7 +717,7 @@ bool ConsoleCommandParserServer::performParsing (const NetworkId & userId, const
 					client->send(mrgrr, true);
 				}
 				const RegionCircle* co = dynamic_cast<const RegionCircle*>(*i);
-				if (co != NULL)
+				if (co != nullptr)
 				{
 					float centerX, centerY, radius;
 					co->getExtent(centerX, centerY, radius);
@@ -743,7 +743,7 @@ bool ConsoleCommandParserServer::performParsing (const NetworkId & userId, const
 				{
 					uint32 processId = GameServer::getInstance().getProcessId();
 					if (argv.size() > 3)
-						processId = strtoul(Unicode::wideToNarrow(argv[3]).c_str(), NULL, 10);
+						processId = strtoul(Unicode::wideToNarrow(argv[3]).c_str(), nullptr, 10);
 
 					std::string op = Unicode::wideToNarrow(argv[1]) + " " + Unicode::wideToNarrow(argv[2]);
 
@@ -760,7 +760,7 @@ bool ConsoleCommandParserServer::performParsing (const NetworkId & userId, const
 			{
 				uint32 processId = GameServer::getInstance().getProcessId();
 				if (argv.size() > 2)
-					processId = strtoul(Unicode::wideToNarrow(argv[2]).c_str(), NULL, 10);
+					processId = strtoul(Unicode::wideToNarrow(argv[2]).c_str(), nullptr, 10);
 
 				std::string op(Unicode::wideToNarrow(argv[1]));
 				if (processId == GameServer::getInstance().getProcessId())
@@ -840,8 +840,8 @@ bool ConsoleCommandParserServer::performParsing (const NetworkId & userId, const
 	}
 	else if (isAbbrev(argv[0], "getRegionsAt"))
 	{
-		float x = static_cast<real>(strtod(Unicode::wideToNarrow(argv[1]).c_str(), NULL));
-		float z = static_cast<real>(strtod(Unicode::wideToNarrow(argv[2]).c_str(), NULL));
+		float x = static_cast<real>(strtod(Unicode::wideToNarrow(argv[1]).c_str(), nullptr));
+		float z = static_cast<real>(strtod(Unicode::wideToNarrow(argv[2]).c_str(), nullptr));
 
 		std::vector<const Region *> results;
 
@@ -990,10 +990,10 @@ bool ConsoleCommandParserServer::performParsing (const NetworkId & userId, const
 		//"<server_table> <client_table> <x1> <z1> <x2> <z2>", "Save out an area for buildout datatables"
 		std::string const &serverFilename = Unicode::wideToNarrow(argv[1]);
 		std::string const &clientFilename = Unicode::wideToNarrow(argv[2]);
-		float x1 = static_cast<float>(strtod(Unicode::wideToNarrow(argv[3]).c_str(), NULL));
-		float z1 = static_cast<float>(strtod(Unicode::wideToNarrow(argv[4]).c_str(), NULL));
-		float x2 = static_cast<float>(strtod(Unicode::wideToNarrow(argv[5]).c_str(), NULL));
-		float z2 = static_cast<float>(strtod(Unicode::wideToNarrow(argv[6]).c_str(), NULL));
+		float x1 = static_cast<float>(strtod(Unicode::wideToNarrow(argv[3]).c_str(), nullptr));
+		float z1 = static_cast<float>(strtod(Unicode::wideToNarrow(argv[4]).c_str(), nullptr));
+		float x2 = static_cast<float>(strtod(Unicode::wideToNarrow(argv[5]).c_str(), nullptr));
+		float z2 = static_cast<float>(strtod(Unicode::wideToNarrow(argv[6]).c_str(), nullptr));
 		ServerBuildoutManager::saveArea(serverFilename, clientFilename, x1, z1, x2, z2);
 	}
 	else if (isAbbrev(argv[0], "clientSaveBuildoutArea"))
@@ -1001,10 +1001,10 @@ bool ConsoleCommandParserServer::performParsing (const NetworkId & userId, const
 		//"<scene> <area_name> <x1> <z1> <x2> <z2>"
 		std::string const &scene = Unicode::wideToNarrow(argv[1]);
 		std::string const &areaName = Unicode::wideToNarrow(argv[2]);
-		float x1 = static_cast<float>(strtod(Unicode::wideToNarrow(argv[3]).c_str(), NULL));
-		float z1 = static_cast<float>(strtod(Unicode::wideToNarrow(argv[4]).c_str(), NULL));
-		float x2 = static_cast<float>(strtod(Unicode::wideToNarrow(argv[5]).c_str(), NULL));
-		float z2 = static_cast<float>(strtod(Unicode::wideToNarrow(argv[6]).c_str(), NULL));
+		float x1 = static_cast<float>(strtod(Unicode::wideToNarrow(argv[3]).c_str(), nullptr));
+		float z1 = static_cast<float>(strtod(Unicode::wideToNarrow(argv[4]).c_str(), nullptr));
+		float x2 = static_cast<float>(strtod(Unicode::wideToNarrow(argv[5]).c_str(), nullptr));
+		float z2 = static_cast<float>(strtod(Unicode::wideToNarrow(argv[6]).c_str(), nullptr));
 		if (scene == ConfigServerGame::getSceneID() && user->getClient())
 			ServerBuildoutManager::clientSaveArea(*user->getClient(), areaName, x1, z1, x2, z2);
 	}
@@ -1044,7 +1044,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		if (argv.size() == 2)
 		{
 			// specify server by process id
-			uint32 serverId = strtoul(Unicode::wideToNarrow(argv[1]).c_str(), NULL, 10);
+			uint32 serverId = strtoul(Unicode::wideToNarrow(argv[1]).c_str(), nullptr, 10);
 			if (serverId != 0)
 			{
 				ExcommunicateGameServerMessage exmsg(serverId, 0, "");
@@ -1058,7 +1058,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		{
 			// specify server by scene & preload role number
 			std::string const &scene = Unicode::wideToNarrow(argv[1]);
-			uint32 preloadRole = strtoul(Unicode::wideToNarrow(argv[2]).c_str(), NULL, 10);
+			uint32 preloadRole = strtoul(Unicode::wideToNarrow(argv[2]).c_str(), nullptr, 10);
 
 			GenericValueTypeMessage<std::pair<std::string, uint32> > msg("RestartServerByRoleMessage", std::make_pair(scene, preloadRole));
 			if (scene == ConfigServerGame::getSceneID())
@@ -1072,8 +1072,8 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		{
 			// specify server by geographic location
 			std::string const &scene = Unicode::wideToNarrow(argv[1]);
-			int x = static_cast<int>(strtod(Unicode::wideToNarrow(argv[2]).c_str(), NULL));
-			int z = static_cast<int>(strtod(Unicode::wideToNarrow(argv[3]).c_str(), NULL));
+			int x = static_cast<int>(strtod(Unicode::wideToNarrow(argv[2]).c_str(), nullptr));
+			int z = static_cast<int>(strtod(Unicode::wideToNarrow(argv[3]).c_str(), nullptr));
 		
 			RestartServerMessage msg(scene, x, z);
 			if (scene == ConfigServerGame::getSceneID())
@@ -1322,14 +1322,14 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		NetworkId oid2(Unicode::wideToNarrow(argv[2]));
 
 		ServerObject const * const object1 = ServerWorld::findObjectByNetworkId(oid1);
-		if (object1 == NULL)
+		if (object1 == nullptr)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
 		}
 
 		ServerObject const * const object2 = ServerWorld::findObjectByNetworkId(oid2);
-		if (object2 == NULL)
+		if (object2 == nullptr)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
@@ -1366,7 +1366,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		TerrainObject const * terrain = TerrainObject::getConstInstance();
 		if (!terrain)
 		{
-			result += Unicode::narrowToWide("terrain object is NULL\n");
+			result += Unicode::narrowToWide("terrain object is nullptr\n");
 			return true;
 		}
 
@@ -1443,7 +1443,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		TerrainObject const * terrain = TerrainObject::getConstInstance();
 		if (!terrain)
 		{
-			result += Unicode::narrowToWide("terrain object is NULL\n");
+			result += Unicode::narrowToWide("terrain object is nullptr\n");
 			return true;
 		}
 
@@ -1491,7 +1491,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		TerrainObject * terrain = TerrainObject::getInstance();
 		if (!terrain)
 		{
-			result += Unicode::narrowToWide("terrain object is NULL\n");
+			result += Unicode::narrowToWide("terrain object is nullptr\n");
 			return true;
 		}
 
@@ -1557,8 +1557,8 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		{
 			result += Unicode::narrowToWide(iterFind->second.getDebugString());
 
-			ServerObject const * const soGroupObject = (iterFind->second.groupId.isValid() ? safe_cast<ServerObject const *>(NetworkIdManager::getObjectById(iterFind->second.groupId)) : NULL);
-			GroupObject const * const groupObject = (soGroupObject ? soGroupObject->asGroupObject() : NULL);
+			ServerObject const * const soGroupObject = (iterFind->second.groupId.isValid() ? safe_cast<ServerObject const *>(NetworkIdManager::getObjectById(iterFind->second.groupId)) : nullptr);
+			GroupObject const * const groupObject = (soGroupObject ? soGroupObject->asGroupObject() : nullptr);
 			if (groupObject)
 			{
 				unsigned int const secondsLeftOnGroupPickup = groupObject->getSecondsLeftOnGroupPickup();
@@ -1717,7 +1717,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	else if (isAbbrev(argv[0], "listCharacterLastLoginTimeBrief"))
 	{
 		int const days = atoi(Unicode::wideToNarrow(argv[1]).c_str());
-		time_t const cutoff = std::max(static_cast<time_t>(0), static_cast<time_t>(::time(NULL) - (60 * 60 * 24 * days)));
+		time_t const cutoff = std::max(static_cast<time_t>(0), static_cast<time_t>(::time(nullptr) - (60 * 60 * 24 * days)));
 
 		std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> > resultList;
 		NameManager::getInstance().getPlayerWithLastLoginTimeAfter(cutoff, resultList);
@@ -1726,7 +1726,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	}
 	else if (isAbbrev(argv[0], "listCharacterLastLoginTimeAfterBrief"))
 	{
-		time_t const rawtime = ::time(NULL);
+		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
 		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
 		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
@@ -1749,7 +1749,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	}
 	else if (isAbbrev(argv[0], "listCharacterLastLoginTimeBeforeBrief"))
 	{
-		time_t const rawtime = ::time(NULL);
+		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
 		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
 		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
@@ -1772,7 +1772,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	}
 	else if (isAbbrev(argv[0], "listCharacterLastLoginTimeBetweenBrief"))
 	{
-		time_t const rawtime = ::time(NULL);
+		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
 		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
 		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
@@ -1817,7 +1817,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	else if (isAbbrev(argv[0], "listCharacterLastLoginTimeDetailed"))
 	{
 		int const days = atoi(Unicode::wideToNarrow(argv[1]).c_str());
-		time_t const cutoff = std::max(static_cast<time_t>(0), static_cast<time_t>(::time(NULL) - (60 * 60 * 24 * days)));
+		time_t const cutoff = std::max(static_cast<time_t>(0), static_cast<time_t>(::time(nullptr) - (60 * 60 * 24 * days)));
 
 		std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> > resultList;
 		NameManager::getInstance().getPlayerWithLastLoginTimeAfter(cutoff, resultList);
@@ -1829,7 +1829,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	}
 	else if (isAbbrev(argv[0], "listCharacterLastLoginTimeAfterDetailed"))
 	{
-		time_t const rawtime = ::time(NULL);
+		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
 		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
 		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
@@ -1855,7 +1855,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	}
 	else if (isAbbrev(argv[0], "listCharacterLastLoginTimeBeforeDetailed"))
 	{
-		time_t const rawtime = ::time(NULL);
+		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
 		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
 		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
@@ -1881,7 +1881,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	}
 	else if (isAbbrev(argv[0], "listCharacterLastLoginTimeBetweenDetailed"))
 	{
-		time_t const rawtime = ::time(NULL);
+		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
 		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
 		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
@@ -1929,7 +1929,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	else if (isAbbrev(argv[0], "sendMailToCharacterLastLoginTime"))
 	{
 		int const days = atoi(Unicode::wideToNarrow(argv[1]).c_str());
-		time_t const cutoff = std::max(static_cast<time_t>(0), static_cast<time_t>(::time(NULL) - (60 * 60 * 24 * days)));
+		time_t const cutoff = std::max(static_cast<time_t>(0), static_cast<time_t>(::time(nullptr) - (60 * 60 * 24 * days)));
 
 		int const argc = argv.size();
 		Unicode::String mailBody;
@@ -1952,7 +1952,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		static Unicode::String s_mailBody;
 		static time_t s_confirmationTimeout = 0;
 
-		time_t const timeNow = ::time(NULL);
+		time_t const timeNow = ::time(nullptr);
 
 		if ((s_days == days) && (s_confirmationTimeout > timeNow) && (s_fromName == Unicode::wideToNarrow(argv[2])) && (s_mailSubject == argv[3]) && (s_mailBody == mailBody))
 		{
@@ -1991,7 +1991,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	}
 	else if (isAbbrev(argv[0], "sendMailToCharacterLastLoginTimeAfter"))
 	{
-		time_t const rawtime = ::time(NULL);
+		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
 		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
 		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
@@ -2028,7 +2028,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		static Unicode::String s_mailBody;
 		static time_t s_confirmationTimeout = 0;
 
-		time_t const timeNow = ::time(NULL);
+		time_t const timeNow = ::time(nullptr);
 
 		if ((s_cutoff == cutoff) && (s_confirmationTimeout > timeNow) && (s_fromName == Unicode::wideToNarrow(argv[7])) && (s_mailSubject == argv[8]) && (s_mailBody == mailBody))
 		{
@@ -2067,7 +2067,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	}
 	else if (isAbbrev(argv[0], "sendMailToCharacterLastLoginTimeBefore"))
 	{
-		time_t const rawtime = ::time(NULL);
+		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
 		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
 		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
@@ -2104,7 +2104,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		static Unicode::String s_mailBody;
 		static time_t s_confirmationTimeout = 0;
 
-		time_t const timeNow = ::time(NULL);
+		time_t const timeNow = ::time(nullptr);
 
 		if ((s_cutoff == cutoff) && (s_confirmationTimeout > timeNow) && (s_fromName == Unicode::wideToNarrow(argv[7])) && (s_mailSubject == argv[8]) && (s_mailBody == mailBody))
 		{
@@ -2143,7 +2143,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	}
 	else if (isAbbrev(argv[0], "sendMailToCharacterLastLoginTimeBetween"))
 	{
-		time_t const rawtime = ::time(NULL);
+		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
 		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
 		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
@@ -2202,7 +2202,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		static Unicode::String s_mailBody;
 		static time_t s_confirmationTimeout = 0;
 
-		time_t const timeNow = ::time(NULL);
+		time_t const timeNow = ::time(nullptr);
 
 		if ((s_cutoffLower == cutoffLower) && (s_cutoffUpper == cutoffUpper) && (s_confirmationTimeout > timeNow) && (s_fromName == Unicode::wideToNarrow(argv[13])) && (s_mailSubject == argv[14]) && (s_mailBody == mailBody))
 		{
@@ -2244,7 +2244,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	else if (isAbbrev(argv[0], "listCharacterCreateTimeBrief"))
 	{
 		int const days = atoi(Unicode::wideToNarrow(argv[1]).c_str());
-		time_t const cutoff = std::max(static_cast<time_t>(0), static_cast<time_t>(::time(NULL) - (60 * 60 * 24 * days)));
+		time_t const cutoff = std::max(static_cast<time_t>(0), static_cast<time_t>(::time(nullptr) - (60 * 60 * 24 * days)));
 
 		std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> > resultList;
 		NameManager::getInstance().getPlayerWithCreateTimeAfter(cutoff, resultList);
@@ -2253,7 +2253,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	}
 	else if (isAbbrev(argv[0], "listCharacterCreateTimeAfterBrief"))
 	{
-		time_t const rawtime = ::time(NULL);
+		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
 		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
 		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
@@ -2276,7 +2276,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	}
 	else if (isAbbrev(argv[0], "listCharacterCreateTimeBeforeBrief"))
 	{
-		time_t const rawtime = ::time(NULL);
+		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
 		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
 		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
@@ -2299,7 +2299,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	}
 	else if (isAbbrev(argv[0], "listCharacterCreateTimeBetweenBrief"))
 	{
-		time_t const rawtime = ::time(NULL);
+		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
 		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
 		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
@@ -2344,7 +2344,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	else if (isAbbrev(argv[0], "listCharacterCreateTimeDetailed"))
 	{
 		int const days = atoi(Unicode::wideToNarrow(argv[1]).c_str());
-		time_t const cutoff = std::max(static_cast<time_t>(0), static_cast<time_t>(::time(NULL) - (60 * 60 * 24 * days)));
+		time_t const cutoff = std::max(static_cast<time_t>(0), static_cast<time_t>(::time(nullptr) - (60 * 60 * 24 * days)));
 
 		std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> > resultList;
 		NameManager::getInstance().getPlayerWithCreateTimeAfter(cutoff, resultList);
@@ -2356,7 +2356,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	}
 	else if (isAbbrev(argv[0], "listCharacterCreateTimeAfterDetailed"))
 	{
-		time_t const rawtime = ::time(NULL);
+		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
 		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
 		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
@@ -2382,7 +2382,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	}
 	else if (isAbbrev(argv[0], "listCharacterCreateTimeBeforeDetailed"))
 	{
-		time_t const rawtime = ::time(NULL);
+		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
 		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
 		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
@@ -2408,7 +2408,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	}
 	else if (isAbbrev(argv[0], "listCharacterCreateTimeBetweenDetailed"))
 	{
-		time_t const rawtime = ::time(NULL);
+		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
 		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
 		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
@@ -2456,7 +2456,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	else if (isAbbrev(argv[0], "sendMailToCharacterCreateTime"))
 	{
 		int const days = atoi(Unicode::wideToNarrow(argv[1]).c_str());
-		time_t const cutoff = std::max(static_cast<time_t>(0), static_cast<time_t>(::time(NULL) - (60 * 60 * 24 * days)));
+		time_t const cutoff = std::max(static_cast<time_t>(0), static_cast<time_t>(::time(nullptr) - (60 * 60 * 24 * days)));
 
 		int const argc = argv.size();
 		Unicode::String mailBody;
@@ -2479,7 +2479,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		static Unicode::String s_mailBody;
 		static time_t s_confirmationTimeout = 0;
 
-		time_t const timeNow = ::time(NULL);
+		time_t const timeNow = ::time(nullptr);
 
 		if ((s_days == days) && (s_confirmationTimeout > timeNow) && (s_fromName == Unicode::wideToNarrow(argv[2])) && (s_mailSubject == argv[3]) && (s_mailBody == mailBody))
 		{
@@ -2518,7 +2518,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	}
 	else if (isAbbrev(argv[0], "sendMailToCharacterCreateTimeAfter"))
 	{
-		time_t const rawtime = ::time(NULL);
+		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
 		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
 		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
@@ -2555,7 +2555,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		static Unicode::String s_mailBody;
 		static time_t s_confirmationTimeout = 0;
 
-		time_t const timeNow = ::time(NULL);
+		time_t const timeNow = ::time(nullptr);
 
 		if ((s_cutoff == cutoff) && (s_confirmationTimeout > timeNow) && (s_fromName == Unicode::wideToNarrow(argv[7])) && (s_mailSubject == argv[8]) && (s_mailBody == mailBody))
 		{
@@ -2594,7 +2594,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	}
 	else if (isAbbrev(argv[0], "sendMailToCharacterCreateTimeBefore"))
 	{
-		time_t const rawtime = ::time(NULL);
+		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
 		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
 		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
@@ -2631,7 +2631,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		static Unicode::String s_mailBody;
 		static time_t s_confirmationTimeout = 0;
 
-		time_t const timeNow = ::time(NULL);
+		time_t const timeNow = ::time(nullptr);
 
 		if ((s_cutoff == cutoff) && (s_confirmationTimeout > timeNow) && (s_fromName == Unicode::wideToNarrow(argv[7])) && (s_mailSubject == argv[8]) && (s_mailBody == mailBody))
 		{
@@ -2670,7 +2670,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	}
 	else if (isAbbrev(argv[0], "sendMailToCharacterCreateTimeBetween"))
 	{
-		time_t const rawtime = ::time(NULL);
+		time_t const rawtime = ::time(nullptr);
 		struct tm * timeinfo = ::localtime(&rawtime);
 		timeinfo->tm_year = atoi(Unicode::wideToNarrow(argv[1]).c_str()) - 1900;
 		timeinfo->tm_mon = atoi(Unicode::wideToNarrow(argv[2]).c_str()) - 1;
@@ -2729,7 +2729,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		static Unicode::String s_mailBody;
 		static time_t s_confirmationTimeout = 0;
 
-		time_t const timeNow = ::time(NULL);
+		time_t const timeNow = ::time(nullptr);
 
 		if ((s_cutoffLower == cutoffLower) && (s_cutoffUpper == cutoffUpper) && (s_confirmationTimeout > timeNow) && (s_fromName == Unicode::wideToNarrow(argv[13])) && (s_mailSubject == argv[14]) && (s_mailBody == mailBody))
 		{
@@ -2776,7 +2776,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		uint32 const targetStationId = static_cast<uint32>(atoi(Unicode::wideToNarrow(argv[4]).c_str()));
 		std::string const targetCluster = Unicode::wideToNarrow(argv[5]);
 
-		time_t const timeNow = ::time(NULL);
+		time_t const timeNow = ::time(nullptr);
 		result += Unicode::narrowToWide(FormattedString<512>().sprintf("              currentTime: %ld, %s\n", timeNow, CalendarTime::convertEpochToTimeStringLocal(timeNow).c_str()));
 
 		result += Unicode::narrowToWide(FormattedString<512>().sprintf("\n      characterCreateTime: %ld\n", sourceCharacterCreateTime));
@@ -2837,7 +2837,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	{
 		std::string const sourceCluster = Unicode::wideToNarrow(argv[1]);
 
-		time_t const timeNow = ::time(NULL);
+		time_t const timeNow = ::time(nullptr);
 		result += Unicode::narrowToWide(FormattedString<512>().sprintf("              currentTime: %ld, %s\n", timeNow, CalendarTime::convertEpochToTimeStringLocal(timeNow).c_str()));
 		result += Unicode::narrowToWide(FormattedString<512>().sprintf("            sourceCluster: %s\n", sourceCluster.c_str()));
 
@@ -2893,7 +2893,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		{
 			result += Unicode::narrowToWide(FormattedString<512>().sprintf("       free CTS info file: %s\n", FreeCtsDataTable::getFreeCtsFileName().c_str()));
 
-			time_t const timeNow = ::time(NULL);
+			time_t const timeNow = ::time(nullptr);
 			result += Unicode::narrowToWide(FormattedString<512>().sprintf("              currentTime: %ld, %s\n", timeNow, CalendarTime::convertEpochToTimeStringLocal(timeNow).c_str()));
 		}
 
@@ -3125,7 +3125,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		else
 		{
 			result += Unicode::narrowToWide(FormattedString<1024>().sprintf("Requesting adjustment of imperial score for GCW score category (%s) by (%d).  It can take up to 1 minute for the adjustment request to be completed.\n", category.c_str(), adjustment));
-			ServerUniverse::getInstance().adjustGcwImperialScore("remote server adjustGcwImperialScore", NULL, category, adjustment);
+			ServerUniverse::getInstance().adjustGcwImperialScore("remote server adjustGcwImperialScore", nullptr, category, adjustment);
 		}
 	}
 	else if (isAbbrev(argv[0], "adjustGcwRebelScore"))
@@ -3148,7 +3148,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		else
 		{
 			result += Unicode::narrowToWide(FormattedString<1024>().sprintf("Requesting adjustment of rebel score for GCW score category (%s) by (%d).  It can take up to 1 minute for the adjustment request to be completed.\n", category.c_str(), adjustment));
-			ServerUniverse::getInstance().adjustGcwRebelScore("remote server adjustGcwRebelScore", NULL, category, adjustment);
+			ServerUniverse::getInstance().adjustGcwRebelScore("remote server adjustGcwRebelScore", nullptr, category, adjustment);
 		}
 	}
 	else if (isAbbrev(argv[0], "decayGcwScore"))
@@ -3202,20 +3202,20 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		ServerObject const * const o = dynamic_cast<ServerObject *>(ServerWorld::findObjectByNetworkId(oid));
-		if (o == NULL)
+		if (o == nullptr)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
 		}
 
 		CreatureObject const * const c = o->asCreatureObject();
-		if (c == NULL)
+		if (c == nullptr)
 		{
 			result += Unicode::narrowToWide("specified object is not a creature object\n");
 			return true;
 		}
 
-		if (PlayerCreatureController::getPlayerObject(c) == NULL)
+		if (PlayerCreatureController::getPlayerObject(c) == nullptr)
 		{
 			result += Unicode::narrowToWide("specified object is not a character object\n");
 			return true;
@@ -3240,21 +3240,21 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		ServerObject const * const o = dynamic_cast<ServerObject *>(ServerWorld::findObjectByNetworkId(oid));
-		if (o == NULL)
+		if (o == nullptr)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
 		}
 
 		CreatureObject const * const c = o->asCreatureObject();
-		if (c == NULL)
+		if (c == nullptr)
 		{
 			result += Unicode::narrowToWide("specified object is not a creature object\n");
 			return true;
 		}
 
 		PlayerObject const * const p = PlayerCreatureController::getPlayerObject(c);
-		if (p == NULL)
+		if (p == nullptr)
 		{
 			result += Unicode::narrowToWide("specified object is not a character object\n");
 			return true;

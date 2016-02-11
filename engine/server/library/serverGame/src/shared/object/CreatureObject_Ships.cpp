@@ -71,7 +71,7 @@ bool CreatureObject::pilotShip(ServerObject &pilotSlotObject)
 	SlotId const pilotSlotId = pilotSlotObject.asShipObject() ? ShipSlotIdManager::getShipPilotSlotId() : ShipSlotIdManager::getPobShipPilotSlotId();
 
 	Container::ContainerErrorCode errorCode = Container::CEC_Success;
-	bool const transferSuccess = ContainerInterface::transferItemToSlottedContainer(pilotSlotObject, *this, pilotSlotId, NULL, errorCode);
+	bool const transferSuccess = ContainerInterface::transferItemToSlottedContainer(pilotSlotObject, *this, pilotSlotId, nullptr, errorCode);
 	DEBUG_FATAL(transferSuccess && (errorCode != Container::CEC_Success), ("pilotShip(): transferItemToSlottedContainer() returned success but container error code returned error %d.", static_cast<int>(errorCode)));
 
 	if (transferSuccess)
@@ -199,7 +199,7 @@ void CreatureObject::getAllShipsInDatapad(std::vector<NetworkId> & result) const
 			for(ContainerConstIterator iter = datapadContainer->begin(); iter != datapadContainer->end(); ++iter)
 			{
 				Object const * const itemO = (*iter).getObject();
-				ServerObject const * const itemSO = itemO ? itemO->asServerObject() : NULL;
+				ServerObject const * const itemSO = itemO ? itemO->asServerObject() : nullptr;
 				if(itemSO && (itemSO->getGameObjectType() == SharedObjectTemplate::GOT_data_ship_control_device))
 				{
 					Container const * const itemContainer = ContainerInterface::getContainer(*itemSO);
@@ -211,8 +211,8 @@ void CreatureObject::getAllShipsInDatapad(std::vector<NetworkId> & result) const
 						for(ContainerConstIterator iter2 = itemContainer->begin(); iter2 != itemContainer->end(); ++iter2)
 						{
 							Object const * const o = (*iter2).getObject();
-							ServerObject const * const so = o ? o->asServerObject() : NULL;
-							ShipObject const * const ship = so ? so->asShipObject() : NULL;
+							ServerObject const * const so = o ? o->asServerObject() : nullptr;
+							ShipObject const * const ship = so ? so->asShipObject() : nullptr;
 							if(ship)
 							{
 								result.push_back(ship->getNetworkId());

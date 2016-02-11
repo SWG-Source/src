@@ -192,31 +192,31 @@ void AssetCustomizationManagerNamespace::remove()
 	s_installed = false;
 
 	delete [] s_nameDataBlock;
-	s_nameDataBlock     = NULL;
+	s_nameDataBlock     = nullptr;
 	s_nameDataBlockSize = 0;
 
 	delete [] s_paletteIdNameOffsetMap;
-	s_paletteIdNameOffsetMap = NULL;
+	s_paletteIdNameOffsetMap = nullptr;
 	s_maxValidPaletteId      = 0;
 
 	delete [] s_variableIdNameOffsetMap;
-	s_variableIdNameOffsetMap = NULL;
+	s_variableIdNameOffsetMap = nullptr;
 	s_maxValidVariableId      = 0;
 
 	delete [] s_defaultValueMap;
-	s_defaultValueMap   = NULL;
+	s_defaultValueMap   = nullptr;
 	s_maxValidDefaultId = 0;
 
 	delete [] s_intRangeMap;
-	s_intRangeMap        = NULL;
+	s_intRangeMap        = nullptr;
 	s_maxValidIntRangeId = 0;
 
 	delete [] s_rangeTypeMap;
-	s_rangeTypeMap    = NULL;
+	s_rangeTypeMap    = nullptr;
 	s_maxValidRangeId = 0;
 
 	delete [] s_variableUsageMap;
-	s_variableUsageMap        = NULL;
+	s_variableUsageMap        = nullptr;
 	s_maxValidVariableUsageId = 0;
 
 	delete [] s_variableUsageList;
@@ -224,19 +224,19 @@ void AssetCustomizationManagerNamespace::remove()
 	s_variableUsageListEntryCount = 0;
 
 	delete [] s_usageIndex;
-	s_usageIndex           = NULL;
+	s_usageIndex           = nullptr;
 	s_usageIndexEntryCount = 0;
 
 	delete [] s_linkList;
-	s_linkList           = NULL;
+	s_linkList           = nullptr;
 	s_linkListEntryCount = 0;
 
 	delete [] s_linkIndex;
-	s_linkIndex           = NULL;
+	s_linkIndex           = nullptr;
 	s_linkIndexEntryCount = 0;
 
 	delete [] s_crcLookupTable;
-	s_crcLookupTable      = NULL;
+	s_crcLookupTable      = nullptr;
 	s_crcLookupEntryCount = 0;
 }
 
@@ -488,7 +488,7 @@ int AssetCustomizationManagerNamespace::lookupAssetId(CrcString const &assetName
 	uint32 const key            = assetName.getCrc();
 	CrcLookupEntry const *entry = static_cast<CrcLookupEntry*>(bsearch(&key, s_crcLookupTable, static_cast<size_t>(s_crcLookupEntryCount), sizeof(CrcLookupEntry), compare_uint32));
 
-	return (entry != NULL) ? entry->assetId : 0;
+	return (entry != nullptr) ? entry->assetId : 0;
 }
 
 // ----------------------------------------------------------------------
@@ -584,7 +584,7 @@ void AssetCustomizationManagerNamespace::addVariablesForAssetAndLinks(int assetI
 			getRangeTypeInfoFromRangeId(variableUsage->rangeId, isPalette, idForRealType);
 
 			//-- Create variable based on type.
-			CustomizationVariable *variable = NULL;
+			CustomizationVariable *variable = nullptr;
 			if (isPalette)
 			{
 				//-- Get palette.

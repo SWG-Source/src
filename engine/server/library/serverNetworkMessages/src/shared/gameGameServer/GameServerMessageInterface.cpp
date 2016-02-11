@@ -13,7 +13,7 @@
 
 //-----------------------------------------------------------------------
 
-GameServerMessageInterface * GameServerMessageInterface::ms_instance = NULL;
+GameServerMessageInterface * GameServerMessageInterface::ms_instance = nullptr;
 
 
 //=======================================================================
@@ -27,14 +27,14 @@ GameServerMessageInterface::GameServerMessageInterface()
 GameServerMessageInterface::~GameServerMessageInterface()
 {
 	if (ms_instance == this)
-		ms_instance = NULL;
+		ms_instance = nullptr;
 }
 
 //-----------------------------------------------------------------------
 
 void GameServerMessageInterface::setInstance(GameServerMessageInterface * instance)
 {
-	if (ms_instance == NULL)
+	if (ms_instance == nullptr)
 		ms_instance = instance;
 	else if (ms_instance != instance)
 	{

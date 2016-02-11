@@ -53,14 +53,14 @@ ServerObject * ServerWorld::createObjectFromTemplate(uint32 templateCrc, const N
 	WARNING(!objectTemplate, ("Missing Template!  Can't create object from "
 		"template crc %lu(%s), file not found", templateCrc, 
 		ObjectTemplateList::lookUp(templateCrc).getString()));
-	Object *object = NULL;
+	Object *object = nullptr;
 
 	if (objectTemplate)
 	{
 		ServerObjectTemplate const * serverObjectTemplate = objectTemplate->asServerObjectTemplate();
 
-		if (   (serverObjectTemplate == NULL)
-		    || ((serverObjectTemplate != NULL) && (ObjectTemplateList::lookUp(serverObjectTemplate->getSharedTemplate().c_str()).getCrc() != 0)))
+		if (   (serverObjectTemplate == nullptr)
+		    || ((serverObjectTemplate != nullptr) && (ObjectTemplateList::lookUp(serverObjectTemplate->getSharedTemplate().c_str()).getCrc() != 0)))
 		{
 			PROFILER_AUTO_BLOCK_DEFINE("ObjectTemplate::createObject");
 			object = objectTemplate->createObject();

@@ -117,8 +117,8 @@ bool ConsoleCommandParserGame::performParsing(const NetworkId & track, const Str
 				if( argv.size() > 4 )
 				{
 					LOG("ServerConsole", ("Received command to shutdown the cluster."));
-					uint32 timeToShutdown = strtoul(Unicode::wideToNarrow(argv[2]).c_str(), NULL, 10);
-					uint32 maxTime = strtoul(Unicode::wideToNarrow(argv[3]).c_str(), NULL, 10);
+					uint32 timeToShutdown = strtoul(Unicode::wideToNarrow(argv[2]).c_str(), nullptr, 10);
+					uint32 maxTime = strtoul(Unicode::wideToNarrow(argv[3]).c_str(), nullptr, 10);
 					Unicode::String systemMessage = Unicode::narrowToWide("");
 					for(unsigned int i = 4; i < argv.size(); ++i)
 					{
@@ -141,7 +141,7 @@ bool ConsoleCommandParserGame::performParsing(const NetworkId & track, const Str
 			{
 				if(argv.size() > 1)
 				{
-					unsigned int stationId = strtoul(Unicode::wideToNarrow(argv[2]).c_str(), NULL, 10);
+					unsigned int stationId = strtoul(Unicode::wideToNarrow(argv[2]).c_str(), nullptr, 10);
 					if(stationId > 0)
 					{
 						GenericValueTypeMessage<unsigned int> auth("AuthorizeDownload", stationId);

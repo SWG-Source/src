@@ -15,7 +15,7 @@
 
 namespace AbstractFileNamespace
 {
-	AbstractFile::AudioServeFunction s_audioServeFunction = NULL;
+	AbstractFile::AudioServeFunction s_audioServeFunction = nullptr;
 }
 
 using namespace AbstractFileNamespace;
@@ -51,7 +51,7 @@ void AbstractFile::flush()
 
 byte *AbstractFile::readEntireFileAndClose()
 {
-	if (s_audioServeFunction != NULL)
+	if (s_audioServeFunction != nullptr)
 		(*s_audioServeFunction)();
 
 	seek(SeekBegin, 0);
@@ -84,7 +84,7 @@ int AbstractFile::getZlibCompressedLength() const
 
 void AbstractFile::getZlibCompressedDataAndClose(byte *& compressedBuffer, int & compressedBufferLength)
 {
-	compressedBuffer = NULL;
+	compressedBuffer = nullptr;
 	compressedBufferLength = -1;
 }
 

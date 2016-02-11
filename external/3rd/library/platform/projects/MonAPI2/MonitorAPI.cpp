@@ -51,7 +51,7 @@ MonitorObject::~MonitorObject()
 
 	if( mConnection )
 	{
-		mConnection->SetHandler(NULL);
+		mConnection->SetHandler(nullptr);
 		mConnection->Disconnect();
 		mConnection->Release();
 	}
@@ -75,10 +75,10 @@ char hold[214];
 					UdpConnection::DisconnectReasonText( mConnection->GetOtherSideDisconnectReason()));
 			}
 		}
-		mConnection->SetHandler(NULL);
+		mConnection->SetHandler(nullptr);
 		mConnection->Disconnect();
 		mConnection->Release();
-		mConnection = NULL;
+		mConnection = nullptr;
 	}
 }
 
@@ -94,10 +94,10 @@ void MonitorObject::OnRoutePacket( UdpConnection * con,  const unsigned char *da
 
 	simpleMessage msg(data);
 
-	if( con == NULL )
+	if( con == nullptr )
 	{
 		if( mbprint)
-			fprintf(stderr,"MONITOR API: MonitorObject.OnRoutePacket, recived a NULL connection.?\n");
+			fprintf(stderr,"MONITOR API: MonitorObject.OnRoutePacket, recived a nullptr connection.?\n");
 		return;
 	}
 
@@ -123,7 +123,7 @@ void MonitorObject::OnRoutePacket( UdpConnection * con,  const unsigned char *da
 		if( mHierarchySent == true )
 		{ 
 			mMonitorData->processElementsRequest(con,mSequence,(char *)&data[6],dataLen,mlastUpdateTime );
-			mlastUpdateTime = (long)time(NULL);
+			mlastUpdateTime = (long)time(nullptr);
 			break;
 		}
 
@@ -261,7 +261,7 @@ MonitorManager::MonitorManager(const char *configFile, CMonitorData *_gamedata, 
 {
 	mManager = manager;
 	mbprint = _bprint;
-	passString   = NULL;
+	passString   = nullptr;
 	mMonitorData = _gamedata;
 	mObjectCount = 0;
 
@@ -291,7 +291,7 @@ void MonitorManager::OnConnectRequest(UdpConnection *con)
 	{
 		if( con )
 		{
-			con->SetHandler(NULL);
+			con->SetHandler(nullptr);
 			con->Disconnect();
 			con->Release();
 		}
@@ -313,7 +313,7 @@ void MonitorManager::GiveTime()
 	// check if the monitor object is no longer connected
 	for (int i = 0; i < mObjectCount; i++)
 	{
-		if( mObject[i]->mConnection  == NULL || 
+		if( mObject[i]->mConnection  == nullptr || 
 			mObject[i]->mConnection->GetStatus() == UdpConnection::cStatusDisconnected )
 		{
 			MonitorObject *o = mObject[i];
@@ -345,7 +345,7 @@ int x;
 char buffer[1024];
 
 	FILE *fp = fopen(filename,"r");
-	if (fp == NULL)
+	if (fp == nullptr)
 	{
 		fprintf(stderr,"Monitor API: could not open %s file\nTHIS FILE IS REQUIRED.\n", filename);
 		return false;
@@ -367,7 +367,7 @@ char buffer[1024];
 	x = 0;
 	while(!feof(fp))
 	{
-		if (fgets( buffer, 1023, fp) != NULL) {
+		if (fgets( buffer, 1023, fp) != nullptr) {
 			// get rid of '\n' and '\r' for comparisons
 			strtok(buffer,"\r\n");
 			len = (int)strlen(buffer);
@@ -403,17 +403,17 @@ CMonitorAPI::CMonitorAPI( const char *configFile, unsigned short Port, bool _bpr
 	mbprint = _bprint;
 	mPort = Port;
 
-	mAddress = NULL;
+	mAddress = nullptr;
 	if( address )
 	{
 		mAddress = (char *)malloc(strlen(address)+1);
 		strcpy(mAddress,address);
 	}
 
-	if( mang == NULL )
+	if( mang == nullptr )
 	{
 		UdpManager::Params params;
-		params.handler			= NULL;
+		params.handler			= nullptr;
 		params.maxConnections	= CONNECTION_MAX;
 		params.outgoingBufferSize = 1000000;
 		params.noDataTimeout	=            130000;
@@ -595,7 +595,7 @@ int err;
 unsigned long S = 4000000;
 unsigned char *p;
 
-	data = NULL;
+	data = nullptr;
 	p = (unsigned char *)malloc(4000000);
 	memset(p,0,4000000);
    err = uncompress(p,&S,(source+6),(long)getSize());

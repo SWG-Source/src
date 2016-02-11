@@ -47,7 +47,7 @@ public:
 	{
 	public:
 		LfgNode(std::string const & pName, bool pInternalAttribute, int pMinValueBeginSlotId, int pMinValueEndSlotId, int pMaxValueBeginSlotId, int pMaxValueEndSlotId, int pMinValue, int pMaxValue, DefaultMatchConditionType pDefaultMatchCondition, LfgNode const * pParent) :
-		  name(pName), internalAttribute(pInternalAttribute), minValueBeginSlotId(pMinValueBeginSlotId), minValueEndSlotId(pMinValueEndSlotId), maxValueBeginSlotId(pMaxValueBeginSlotId), maxValueEndSlotId(pMaxValueEndSlotId), minValue(pMinValue), maxValue(pMaxValue), defaultMatchCondition(pDefaultMatchCondition), actualMatchCondition(DMCT_NA), parent(pParent), anyAllGroupingParent(NULL), children(), hasAnyInternalAttributeLeafNodeDescendants(false), hasAnyExternalAttributeLeafNodeDescendants(false), internalAttributeMatchFunction(NULL) {};
+		  name(pName), internalAttribute(pInternalAttribute), minValueBeginSlotId(pMinValueBeginSlotId), minValueEndSlotId(pMinValueEndSlotId), maxValueBeginSlotId(pMaxValueBeginSlotId), maxValueEndSlotId(pMaxValueEndSlotId), minValue(pMinValue), maxValue(pMaxValue), defaultMatchCondition(pDefaultMatchCondition), actualMatchCondition(DMCT_NA), parent(pParent), anyAllGroupingParent(nullptr), children(), hasAnyInternalAttributeLeafNodeDescendants(false), hasAnyExternalAttributeLeafNodeDescendants(false), internalAttributeMatchFunction(nullptr) {};
 
 		std::string const name;
 		bool const internalAttribute;

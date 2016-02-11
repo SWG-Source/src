@@ -86,10 +86,10 @@ Tag SharedShipObjectTemplate::getTemplateVersion(void) const
  */
 Tag SharedShipObjectTemplate::getHighestTemplateVersion(void) const
 {
-	if (m_baseData == NULL)
+	if (m_baseData == nullptr)
 		return m_templateVersion;
 	const SharedShipObjectTemplate * base = dynamic_cast<const SharedShipObjectTemplate *>(m_baseData);
-	if (base == NULL)
+	if (base == nullptr)
 		return m_templateVersion;
 	return std::max(m_templateVersion, base->getHighestTemplateVersion());
 } // SharedShipObjectTemplate::getHighestTemplateVersion
@@ -113,9 +113,9 @@ BoolParam * SharedShipObjectTemplate::getBoolParam(const char *name, bool deepCh
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getBoolParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_hasWings;
 		}
@@ -127,9 +127,9 @@ BoolParam * SharedShipObjectTemplate::getBoolParam(const char *name, bool deepCh
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getBoolParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_playerControlled;
 		}
@@ -137,7 +137,7 @@ BoolParam * SharedShipObjectTemplate::getBoolParam(const char *name, bool deepCh
 	}
 	else
 		return SharedTangibleObjectTemplate::getBoolParam(name, deepCheck, index);
-	return NULL;
+	return nullptr;
 }	//SharedShipObjectTemplate::getBoolParam
 
 StringParam * SharedShipObjectTemplate::getStringParam(const char *name, bool deepCheck, int index)
@@ -148,9 +148,9 @@ StringParam * SharedShipObjectTemplate::getStringParam(const char *name, bool de
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getStringParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_cockpitFilename;
 		}
@@ -162,9 +162,9 @@ StringParam * SharedShipObjectTemplate::getStringParam(const char *name, bool de
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getStringParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_interiorLayoutFileName;
 		}
@@ -172,7 +172,7 @@ StringParam * SharedShipObjectTemplate::getStringParam(const char *name, bool de
 	}
 	else
 		return SharedTangibleObjectTemplate::getStringParam(name, deepCheck, index);
-	return NULL;
+	return nullptr;
 }	//SharedShipObjectTemplate::getStringParam
 
 StringIdParam * SharedShipObjectTemplate::getStringIdParam(const char *name, bool deepCheck, int index)
@@ -255,12 +255,12 @@ char paramName[MAX_NAME_SIZE];
 		file.read_string(baseFilename);
 		file.exitChunk();
 		const ObjectTemplate *base = ObjectTemplateList::fetch(baseFilename);
-		DEBUG_WARNING(base == NULL, ("was unable to load base template %s", baseFilename.c_str()));
-		if (m_baseData == base && base != NULL)
+		DEBUG_WARNING(base == nullptr, ("was unable to load base template %s", baseFilename.c_str()));
+		if (m_baseData == base && base != nullptr)
 			base->releaseReference();
 		else
 		{
-			if (m_baseData != NULL)
+			if (m_baseData != nullptr)
 				m_baseData->releaseReference();
 			m_baseData = base;
 		}

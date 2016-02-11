@@ -353,14 +353,14 @@ void ObserveTracker::onObjectContainerChanged(ServerObject &obj)
 			bool isObservedWith = (newContainer->getContainerProperty() ? newContainer->getContainerProperty()->isContentItemObservedWith(obj) : false);
 			CellProperty * newContainerCell = newContainer->getCellProperty();
 			ServerObject const * newContainerContainer = safe_cast<ServerObject const *>(ContainerInterface::getContainedByObject(*newContainer));
-			if (newContainerCell == NULL || newContainerContainer != NULL)
+			if (newContainerCell == nullptr || newContainerContainer != nullptr)
 			{
 				std::set<Client *> const &newObservers = newContainer->getObservers();
 				for (std::set<Client *>::const_iterator i = newObservers.begin(); i != newObservers.end(); ++i)
 				{
 					if (isObservedWith ||
 						(*i)->getOpenedContainers().count(newContainer) ||
-						(newContainerCell != NULL && shouldObserveCellContentsDueToClientContainmentChain(**i, *newContainerContainer)))
+						(newContainerCell != nullptr && shouldObserveCellContentsDueToClientContainmentChain(**i, *newContainerContainer)))
 					{
 						IGNORE_RETURN(observe(**i, obj));
 					}

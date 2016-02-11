@@ -193,10 +193,10 @@ LocalizedString * LocalizedString::load_0000 (AbstractFile & fl)
 	if (!fl.read (&buflen, sizeof (id_type)))
 		return 0;
 
-	// buflen does not include null terminator
+	// buflen does not include nullptr terminator
 	Unicode::unicode_char_t * buf = new Unicode::unicode_char_t [buflen+1];
 
-	assert (buf != NULL); //lint !e1924 // c-style cast.  MSVC bug
+	assert (buf != nullptr); //lint !e1924 // c-style cast.  MSVC bug
 	
 	buf [buflen] = 0;
 	
@@ -214,7 +214,7 @@ LocalizedString * LocalizedString::load_0000 (AbstractFile & fl)
 	// TODO: Localized strings are stored little endian!
 	
 	loc_str = new LocalizedString(id, buf);
-	assert (loc_str != NULL); //lint !e1924 // c-style cast.  MSVC bug
+	assert (loc_str != nullptr); //lint !e1924 // c-style cast.  MSVC bug
 
 	loc_str->resetLineCounts ();
 
@@ -247,10 +247,10 @@ LocalizedString * LocalizedString::load_0001 (AbstractFile & fl)
 	if (!fl.read (&buflen, sizeof (id_type)))
 		return 0;
 
-	// buflen does not include null terminator
+	// buflen does not include nullptr terminator
 	Unicode::unicode_char_t * buf = new Unicode::unicode_char_t [buflen+1];
 
-	assert (buf != NULL); //lint !e1924 // c-style cast.  MSVC bug
+	assert (buf != nullptr); //lint !e1924 // c-style cast.  MSVC bug
 	
 	buf [buflen] = 0;
 	
@@ -268,7 +268,7 @@ LocalizedString * LocalizedString::load_0001 (AbstractFile & fl)
 	// TODO: Localized strings are stored little endian!
 	
 	loc_str = new LocalizedString(id, crcSource, buf);
-	assert (loc_str != NULL); //lint !e1924 // c-style cast.  MSVC bug
+	assert (loc_str != nullptr); //lint !e1924 // c-style cast.  MSVC bug
 
 	loc_str->resetLineCounts ();
 

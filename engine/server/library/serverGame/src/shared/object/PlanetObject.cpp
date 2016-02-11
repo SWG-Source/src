@@ -126,7 +126,7 @@ namespace PlanetObjectNamespace
 
 	const char * makeCopyOfString(const char * rhs)
 	{
-		char * lhs = NULL;
+		char * lhs = nullptr;
 		if (rhs)
 		{
 			lhs = new char[strlen(rhs) + 1];
@@ -144,7 +144,7 @@ namespace PlanetObjectNamespace
 	int getNextGcwScoreDecayTime(int base);
 
 	// dictionary containing the table showing factional presence activity
-	ScriptParams * s_factionalPresenceSuiTable = NULL;
+	ScriptParams * s_factionalPresenceSuiTable = nullptr;
 	bool s_factionalPresenceSuiTableNeedRebuild = true;
 
 	void decrementConnectedCharacterLfgDataFactionalPresenceCount(Archive::AutoDeltaMap<std::string, std::pair<int, int>, PlanetObject> & connectedCharacterLfgDataFactionalPresence, const LfgCharacterData & lfgCharacterData);
@@ -914,7 +914,7 @@ void PlanetObject::onLoadedFromDatabase()
 	// "server first" information and manually create the CollectionServerFirstObserver
 	// object, so that there will only be 1 call to the CollectionServerFirstObserver
 	// object when it goes out of scope at the end of the function
-	m_collectionServerFirst.setSourceObject(NULL);
+	m_collectionServerFirst.setSourceObject(nullptr);
 	CollectionServerFirstObserver observer(this, Archive::ADOO_set);
 
 	const DynamicVariableList & objvars = getObjVars();
@@ -1004,7 +1004,7 @@ void PlanetObject::setCollectionServerFirst(const CollectionsDataTable::Collecti
 		if (objvars.hasItem(objvar) && (DynamicVariable::STRING_ARRAY == objvars.getType(objvar)))
 			return;
 
-		const time_t timeNow = ::time(NULL);
+		const time_t timeNow = ::time(nullptr);
 		char buffer[64];
 		snprintf(buffer, sizeof(buffer)-1, "%ld", timeNow);
 		buffer[sizeof(buffer)-1] = '\0';
@@ -1131,7 +1131,7 @@ void PlanetObject::handleCMessageTo(MessageToPayload const &message)
 			std::string const params(message.getPackedDataVector().begin(), message.getPackedDataVector().end());
 			Unicode::String const delimiters(Unicode::narrowToWide("|"));
 			Unicode::UnicodeStringVector tokens;
-			if ((Unicode::tokenize(Unicode::narrowToWide(params), tokens, &delimiters, NULL)) && (tokens.size() == 2))
+			if ((Unicode::tokenize(Unicode::narrowToWide(params), tokens, &delimiters, nullptr)) && (tokens.size() == 2))
 			{
 				CollectionsDataTable::CollectionInfoCollection const * const collectionInfo = CollectionsDataTable::getCollectionByName(Unicode::wideToNarrow(tokens[0]));
 				if (collectionInfo && collectionInfo->trackServerFirst && (collectionInfo->serverFirstClaimTime > 0))
@@ -1193,7 +1193,7 @@ void PlanetObject::handleCMessageTo(MessageToPayload const &message)
 	else if (message.getMethod() == "C++DoGcwDecay")
 	{
 		// start decay handling loop
-		int const now = static_cast<int>(::time(NULL));
+		int const now = static_cast<int>(::time(nullptr));
 		int timeNextGcwScoreDecay;
 		if (!getObjVars().getItem("gcwScore.nextDecayTime", timeNextGcwScoreDecay) || (timeNextGcwScoreDecay <= 0))
 		{
@@ -1397,7 +1397,7 @@ void PlanetObject::endBaselines()
 		}
 
 		// start decay handling loop
-		int const now = static_cast<int>(::time(NULL));
+		int const now = static_cast<int>(::time(nullptr));
 		int timeNextGcwScoreDecay;
 		if (!getObjVars().getItem("gcwScore.nextDecayTime", timeNextGcwScoreDecay) || (timeNextGcwScoreDecay <= 0))
 		{
@@ -1481,7 +1481,7 @@ ScriptParams const *PlanetObject::getConnectedCharacterLfgDataFactionalPresenceT
 	if (s_factionalPresenceSuiTableNeedRebuild)
 	{
 		delete s_factionalPresenceSuiTable;
-		s_factionalPresenceSuiTable = NULL;
+		s_factionalPresenceSuiTable = nullptr;
 
 		PlanetObject const * const tatooine = ServerUniverse::getInstance().getTatooinePlanet();
 		if (tatooine)
@@ -2156,8 +2156,8 @@ void PlanetObject::updateGcwTrackingData()
 	// send our GCW score to the other clusters and process GCW scores we received from other clusters
 	if (isAuthoritative() && (ConfigServerGame::getBroadcastGcwScoreToOtherGalaxies() || ConfigServerGame::getReceiveGcwScoreFromOtherGalaxies()))
 	{
-		static time_t timeNextBroadcast = ::time(NULL) + ConfigServerGame::getBroadcastGcwScoreToOtherGalaxiesIntervalSeconds();
-		time_t const timeNow = ::time(NULL);
+		static time_t timeNextBroadcast = ::time(nullptr) + ConfigServerGame::getBroadcastGcwScoreToOtherGalaxiesIntervalSeconds();
+		time_t const timeNow = ::time(nullptr);
 		if (timeNextBroadcast < timeNow)
 		{
 			if (ConfigServerGame::getBroadcastGcwScoreToOtherGalaxies())
@@ -2342,7 +2342,7 @@ void PlanetObject::adjustGcwImperialScore(std::string const & source, CreatureOb
 			PlayerObject * const playerObject = PlayerCreatureController::getPlayerObject(sourceObject);
 			if (playerObject)
 			{
-				int const timeNow = static_cast<int>(::time(NULL));
+				int const timeNow = static_cast<int>(::time(nullptr));
 				IGNORE_RETURN(playerObject->setObjVarItem(std::string("gcwContributionTracking.") + gcwCategory, timeNow));
 				IGNORE_RETURN(playerObject->setObjVarItem(std::string("gcwContributionTrackingLastUpdated"), timeNow));
 
@@ -2387,7 +2387,7 @@ void PlanetObject::adjustGcwRebelScore(std::string const & source, CreatureObjec
 			PlayerObject * const playerObject = PlayerCreatureController::getPlayerObject(sourceObject);
 			if (playerObject)
 			{
-				int const timeNow = static_cast<int>(::time(NULL));
+				int const timeNow = static_cast<int>(::time(nullptr));
 				IGNORE_RETURN(playerObject->setObjVarItem(std::string("gcwContributionTracking.") + gcwCategory, timeNow));
 				IGNORE_RETURN(playerObject->setObjVarItem(std::string("gcwContributionTrackingLastUpdated"), timeNow));
 
@@ -2441,7 +2441,7 @@ int PlanetObjectNamespace::getNextGcwScoreDecayTime(int base)
 	}
 
 	if (nextTime < 0)
-		nextTime = static_cast<int>(::time(NULL)) + (60 * 60 * 24 * 7);
+		nextTime = static_cast<int>(::time(nullptr)) + (60 * 60 * 24 * 7);
 
 	return nextTime;
 }

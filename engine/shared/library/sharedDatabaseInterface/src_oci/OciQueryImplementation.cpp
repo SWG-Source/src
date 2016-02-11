@@ -49,13 +49,13 @@ bool DB::OCIQueryImpl::setup(Session *session)
 {
 //	setSession(session);
 
-	DEBUG_FATAL(m_session!=0,("m_session was not NULL"));
-	DEBUG_FATAL(m_server!=0,("m_server was not NULL"));
+	DEBUG_FATAL(m_session!=0,("m_session was not nullptr"));
+	DEBUG_FATAL(m_server!=0,("m_server was not nullptr"));
 	DEBUG_FATAL(m_stmthp!=0,("m_stmthp was not 0"));
 	DEBUG_FATAL(m_cursorhp!=0,("m_cursorhp was not 0"));
 	
 	m_session=dynamic_cast<DB::OCISession*>(session);
-	FATAL((m_session==0),("Must pass a non-NULL OCISession to setup()."));
+	FATAL((m_session==0),("Must pass a non-nullptr OCISession to setup()."));
 
 	m_server=m_session->m_server;
 	NOT_NULL(m_server);
@@ -180,7 +180,7 @@ bool DB::OCIQueryImpl::exec()
 	m_session->setOkToFetch();
 	m_session->setLastQueryStatement(m_sql);
 	sword status=OCIStmtExecute(m_session->svchp, m_stmthp, m_session->errhp, 1, 0,
-								NULL, NULL, OCI_DEFAULT);
+								nullptr, nullptr, OCI_DEFAULT);
 	
 	if (status == OCI_NO_DATA)
 	{
@@ -393,8 +393,8 @@ DB::OCIQueryImpl::BindRec::BindRec(size_t numElements) :
 		length(0),
 		stringAdjust(false),
 		m_numElements(numElements),
-		m_indicatorArray(NULL),
-		m_lengthArray(NULL)
+		m_indicatorArray(nullptr),
+		m_lengthArray(nullptr)
 {
 	// This is ugly, but it avoids having to create two different kinds of bindrecs that inherit from an abstract base class
 	if (m_numElements > 1)
@@ -714,11 +714,11 @@ bool DB::OCIQueryImpl::bindParameter(BindableVarray &buffer)
 																	 &(br->bindp),
 																	 m_session->errhp,
 																	 nextParameter++,
-																	 NULL,
+																	 nullptr,
 																	 0,
 																	 SQLT_NTY,
-																	 NULL,
-																	 NULL,
+																	 nullptr,
+																	 nullptr,
 																	 0,
 																	 0,
 																	 0,

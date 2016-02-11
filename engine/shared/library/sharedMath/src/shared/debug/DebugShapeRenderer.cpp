@@ -10,7 +10,7 @@
 
 #include "sharedMath/Transform.h"
 
-static DebugShapeRenderer::DebugShapeRendererFactory * gs_factory = NULL;
+static DebugShapeRenderer::DebugShapeRendererFactory * gs_factory = nullptr;
 
 // ----------------------------------------------------------------------
 
@@ -145,8 +145,8 @@ void DebugShapeRenderer::setFactory ( DebugShapeRenderer::DebugShapeRendererFact
 
 DebugShapeRenderer * DebugShapeRenderer::create ( Object const * object )
 {
-	if(gs_factory == NULL)
-		return NULL;
+	if(gs_factory == nullptr)
+		return nullptr;
 
 	return gs_factory(object);
 }

@@ -93,7 +93,7 @@ public:
  *         threads existing at the time of slot creation.  Thus, if you build a
  *         plugin that only initializes the engine the first time it is
  *         used, and other threads already exist in the app, those threads
- *         will contain bogus non-null data in the TLS slot.  If the plugin really
+ *         will contain bogus non-nullptr data in the TLS slot.  If the plugin really
  *         wants to do lazy initialization of the engine, it will need
  *         to handle calling PerThreadData::threadInstall() for all existing threads
  *         (except the thread that initialized the engine, which already
@@ -102,7 +102,7 @@ public:
 
 inline bool PerThreadData::isThreadInstalled(void)
 {
-	return (getData(true) != NULL);
+	return (getData(true) != nullptr);
 }
 
 // ----------------------------------------------------------------------
@@ -168,7 +168,7 @@ inline void PerThreadData::setExitChainFataling(bool newValue)
  * Get the first entry for the exit chain.
  *
  * This routine is not intended for general use; it should only be used by the ExitChain class.
- * This routine may return NULL.
+ * This routine may return nullptr.
  *
  * @return Pointer to the first entry on the exit chain
  * @see ExitChain::isFataling()
@@ -184,7 +184,7 @@ inline ExitChain::Entry *PerThreadData::getExitChainFirstEntry(void)
  * Set the exit chain fataling flag value.
  *
  * This routine is not intended for general use; it should only be used by the ExitChain class.
- * The parameter to this routine may be NULL.
+ * The parameter to this routine may be nullptr.
  *
  * @param newValue  New value for the exit chain first entry
  */

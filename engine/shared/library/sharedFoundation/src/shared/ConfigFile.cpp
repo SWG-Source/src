@@ -30,7 +30,7 @@ static char tagBuffer[6];
 #define CONFIG_FILE_TEMPLATE_CREATE_INT(section, key, def)    DEBUG_REPORT_LOG(true, ("cfg: [%s] %s=%d\n", section, key, def))
 #define CONFIG_FILE_TEMPLATE_CREATE_BOOL(section, key, def)   DEBUG_REPORT_LOG(true, ("cfg: [%s] %s=%s\n", section, key, def ? "true" : "false"))
 #define CONFIG_FILE_TEMPLATE_CREATE_FLOAT(section, key, def)  DEBUG_REPORT_LOG(true, ("cfg: [%s] %s=%3.1f\n", section, key, def))
-#define CONFIG_FILE_TEMPLATE_CREATE_STRING(section, key, def) DEBUG_REPORT_LOG(true, ("cfg: [%s] %s=%s\n", section, key, def ? def : "NULL"))
+#define CONFIG_FILE_TEMPLATE_CREATE_STRING(section, key, def) DEBUG_REPORT_LOG(true, ("cfg: [%s] %s=%s\n", section, key, def ? def : "nullptr"))
 #define CONFIG_FILE_TEMPLATE_CREATE_TAG(section, key, def)    ConvertTagToString(def, tagBuffer), DEBUG_REPORT_LOG(true, ("cfg: [%s] %s=%d\n", section, key, tagBuffer))
 
 #else
@@ -43,8 +43,8 @@ static char tagBuffer[6];
 
 #endif
 
-#define NO_SPACE_SECTION(a) DEBUG_FATAL(strchr(a, ' ') != NULL, ("No spaces are allowed in config file section names: %s", a))
-#define NO_SPACE_KEY(a)     DEBUG_FATAL(strchr(a, ' ') != NULL, ("No spaces are allowed in config file key names: %s", a))
+#define NO_SPACE_SECTION(a) DEBUG_FATAL(strchr(a, ' ') != nullptr, ("No spaces are allowed in config file section names: %s", a))
+#define NO_SPACE_KEY(a)     DEBUG_FATAL(strchr(a, ' ') != nullptr, ("No spaces are allowed in config file key names: %s", a))
 
 // ======================================================================
 
@@ -81,7 +81,7 @@ void ConfigFile::install(void)
 #endif
 
 	ms_sections = new ConfigFile::SectionMap;
-	ms_currentSection = NULL;
+	ms_currentSection = nullptr;
 	ExitChain::add(ConfigFile::remove, "ConfigFile::remove");
 	ms_installed = true;
 }
@@ -110,7 +110,7 @@ void ConfigFile::remove(void)
 	for (std::map<const char *, Section *, StringCompare>::iterator it = ms_sections->begin(); it != ms_sections->end(); ++it)
 		delete it->second;
 	delete ms_sections;
-	ms_sections = NULL;
+	ms_sections = nullptr;
 	ms_installed = false;
 }
 
@@ -142,7 +142,7 @@ bool ConfigFile::loadFromCommandLine(const char *buffer)
 		while (isspace(*buffer))
 		{
 			++buffer;
-			// advancing buffer, check for null (trailing white space on command line)
+			// advancing buffer, check for nullptr (trailing white space on command line)
 			if(! *buffer)
 				break;
 		}
@@ -196,7 +196,7 @@ bool ConfigFile::loadFromCommandLine(const char *buffer)
 				//allocate a new section and set it as the current one
 				Section *newSection = createSection(sectionName);
 				//note that newSection is memory owned by the created Section object
-				//while sectionName is memory allocated to create a null terminated string
+				//while sectionName is memory allocated to create a nullptr terminated string
 				ms_currentSection = newSection;
 			}
 			delete[] sectionName;
@@ -292,7 +292,7 @@ bool ConfigFile::loadFromBuffer(char const * const buffer, int const length)
 		processLine(currentLine);
 		delete[] currentLine;
 		bufferPosition += lineLength+1;
-		//trim ending whitespace.  Remember that this string is not guaranteed to be NULL terminated.
+		//trim ending whitespace.  Remember that this string is not guaranteed to be nullptr terminated.
 		while (*bufferPosition && (bufferPosition < buffer + length) && isspace(static_cast<unsigned char>(*bufferPosition)))
 			++bufferPosition;
 	}
@@ -311,26 +311,26 @@ bool ConfigFile::loadFile(const char *file)
 {
 	DEBUG_FATAL(!ms_installed, ("ConfigFile not installed"));
 	NOT_NULL(file);
-	ms_currentSection = NULL;
-	HANDLE handle = CreateFile(file, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	ms_currentSection = nullptr;
+	HANDLE handle = CreateFile(file, GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
 
 	if (handle != INVALID_HANDLE_VALUE)
 	{
 		// get the length of the config file
-		const DWORD length = GetFileSize(handle, NULL);
+		const DWORD length = GetFileSize(handle, nullptr);
 
 		if (length != 0xffffffff)
 		{
 			// create a buffer to load the config file into
 			char * const buffer = new char[length+2];
 
-			// make sure the buffer is null terminated
+			// make sure the buffer is nullptr terminated
 			buffer[length] = '\n';
 			buffer[length+1] = '\0';
 
 			// read the config file in
 			DWORD readResult;
-			const BOOL result = ReadFile(handle, buffer, length, &readResult, NULL);
+			const BOOL result = ReadFile(handle, buffer, length, &readResult, nullptr);
 
 			// make sure we read all the correct stuff
 			if (result && readResult == length)
@@ -360,7 +360,7 @@ void ConfigFile::processLine(const char *line)
 {
 	DEBUG_FATAL(!ms_installed, ("ConfigFile not installed"));
 	// validate argument
-	DEBUG_FATAL(!line, ("ConfigFile::processLine NULL"));
+	DEBUG_FATAL(!line, ("ConfigFile::processLine nullptr"));
 
 	// check for a full line comment
 	if (*line == '#' || *line == ';')
@@ -418,7 +418,7 @@ void ConfigFile::processLine(const char *line)
 			//allocate a new section and set it as the current one
 			Section *newSection = createSection(sectionName);
 			//note that newSection is memory owned by the created Section object
-			//while sectionName is memory allocated to create a null terminated string
+			//while sectionName is memory allocated to create a nullptr terminated string
 			ms_currentSection = newSection;
 		}
 		delete[] sectionName;
@@ -468,7 +468,7 @@ void ConfigFile::processKeys(const char *line)
 	while (*endValue)
 	{
 		//build the value
-		char *value = NULL;
+		char *value = nullptr;
 		while(isspace(*beginValue))
 			++beginValue;
 		if (*beginValue != '"')
@@ -542,7 +542,7 @@ void ConfigFile::processKeys(const char *line)
 /** Get a Section pointer from a string
  *
  *  @param section the name of the section
- *  @return the pointer if valid, otherwise NULL
+ *  @return the pointer if valid, otherwise nullptr
 */
 ConfigFile::Section *ConfigFile::getSection(const char *section)
 {
@@ -550,7 +550,7 @@ ConfigFile::Section *ConfigFile::getSection(const char *section)
 	if (it != ms_sections->end())
 		return it->second;
 
-	return NULL;
+	return nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -581,7 +581,7 @@ void ConfigFile::removeSection(const char *name)
 	if (iter != ms_sections->end())
 	{
 		delete iter->second;
-		iter->second = NULL;
+		iter->second = nullptr;
 		ms_sections->erase(iter);
 	}
 }
@@ -991,7 +991,7 @@ Tag ConfigFile::getKeyTag(const char *section, const char *key, Tag defaultValue
 
 ConfigFile::Element::Element(void)
 :
-	m_entry(NULL)
+	m_entry(nullptr)
 {}
 
 // ----------------------------------------------------------------------
@@ -1105,8 +1105,8 @@ Tag ConfigFile::Element::getAsTag(void) const
 
 ConfigFile::Key::Key(const char *name, const char *value, bool lazyAdd)
 :
-	m_elements(NULL),
-	m_name(NULL),
+	m_elements(nullptr),
+	m_name(nullptr),
 	m_lazyAdd(lazyAdd)
 {
 	m_name = new char[strlen(name)+1];
@@ -1248,8 +1248,8 @@ void ConfigFile::Key::dump(const char *keyName) const
 
 ConfigFile::Section::Section(const char *name)
 :
-	m_keys(NULL),
-	m_name(NULL)
+	m_keys(nullptr),
+	m_name(nullptr)
 {
 	m_name = new char[strlen(name)+1];
 	strcpy(m_name, name);
@@ -1284,7 +1284,7 @@ ConfigFile::Key *ConfigFile::Section::findKey(const char *key) const
 	if (it != m_keys->end())
 		return it->second;
 
-	return NULL;
+	return nullptr;
 }
 
 // ----------------------------------------------------------------------

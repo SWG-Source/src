@@ -92,14 +92,14 @@ namespace Base
     //-------------------------------------
     inline CAutoLog::CAutoLog()
     {
-        pFilename = NULL;
+        pFilename = nullptr;
 	    pFile = (FILE *)-1;	
     }
 
     //-------------------------------------
     inline CAutoLog::CAutoLog(const char * file)
     {
-        pFilename = NULL;
+        pFilename = nullptr;
 	    pFile = (FILE *)-1;	
 	    Open(file);
     }

@@ -105,7 +105,7 @@ bool DynamicPathNode::removeEdge ( int nodeIndex )
 {
 	DynamicPathNode * neighbor = _getGraph()->_getNode(nodeIndex);
 
-	if(neighbor == NULL) return false;
+	if(neighbor == nullptr) return false;
 	
 	if(!_removeEdge(nodeIndex)) return false;
 
@@ -175,8 +175,8 @@ int DynamicPathNode::markRedundantEdges ( void ) const
 			PathEdge const * edgeA = getEdge(i);
 			PathEdge const * edgeB = getEdge(j);
 
-			if(edgeA == NULL) continue;
-			if(edgeB == NULL) continue;
+			if(edgeA == nullptr) continue;
+			if(edgeB == nullptr) continue;
 
 			int iA = edgeA->getIndexA();
 			int iB = edgeA->getIndexB();

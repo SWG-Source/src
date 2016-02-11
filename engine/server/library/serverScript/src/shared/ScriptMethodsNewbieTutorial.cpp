@@ -439,7 +439,7 @@ jobject     JNICALL ScriptMethodsNewbieTutorialNamespace::getStartingLocationInf
 
 	if (!jName)
 	{
-		WARNING (true, ("getStartingLocationInfo null name"));
+		WARNING (true, ("getStartingLocationInfo nullptr name"));
 		return JNI_FALSE;
 	}
 
