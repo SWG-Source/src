@@ -30,7 +30,7 @@
 //==============================================================================
 // file variables
 
-const TemplateData *currentTemplateData = nullptr;
+const TemplateData *currentTemplateData = NULL;
 
 
 //==============================================================================
@@ -118,7 +118,7 @@ File fp;
 			return;
 
 		File temp_fp;
-		if (!temp_fp.open(tmpnam(nullptr), "wt"))
+		if (!temp_fp.open(tmpnam(NULL), "wt"))
 		{
 			fprintf(stderr, "error opening temp file for template header "
 				"replacement [%s]\n", temp_fp.getFilename().getFullFilename().c_str());
@@ -244,7 +244,7 @@ int result;
 		}
 
 		File temp_fp;
-		if (!temp_fp.open(tmpnam(nullptr), "wt"))
+		if (!temp_fp.open(tmpnam(NULL), "wt"))
 		{
 			fprintf(stderr, "error opening temp file for template source "
 				"replacement [%s]\n", temp_fp.getFilename().getFullFilename().c_str());
@@ -337,8 +337,8 @@ int result;
 //	std::string oldTemplateName = tdfFile.getTemplateName();
 //	std::string oldBaseName = tdfFile.getBaseName();
 
-	Filename fullName(nullptr, path.getPath().c_str(), tdfFile.getTemplateName().c_str(),
-		nullptr);
+	Filename fullName(NULL, path.getPath().c_str(), tdfFile.getTemplateName().c_str(),
+		NULL);
 
 	writeTemplateHeader(tdfFile, fullName);
 	result = writeTemplateSource(tdfFile, fullName);
@@ -397,7 +397,7 @@ TemplateDefinitionFile tdfFile;
 //Error e;
 //
 //	// check filename extensions
-//	Filename templateFileName(nullptr, nullptr, filename, TEMPLATE_DEFINITION_EXTENSION);
+//	Filename templateFileName(NULL, NULL, filename, TEMPLATE_DEFINITION_EXTENSION);
 //
 //	// Connect to Perforce server
 //	client.Init( &e );
@@ -433,7 +433,7 @@ TemplateDefinitionFile tdfFile;
 //	if (tdfFile.getPath().getFullFilename().size() != 0)
 //	{
 //		// check out the source files
-//		Filename sourceName(nullptr, tdfFile.getPath().getPath().c_str(),
+//		Filename sourceName(NULL, tdfFile.getPath().getPath().c_str(),
 //			tdfFile.getTemplateName().c_str(), "cpp");
 //		commands[1] = sourceName;
 //		client.SetArgv( 1, const_cast<char **>(&commands[1]) );
@@ -453,7 +453,7 @@ TemplateDefinitionFile tdfFile;
 //		std::string compilerFilename;
 //		compilerFilename = EnumLocationTypes[tdfFile.getTemplateLocation()] +
 //			filenameLowerToUpper(templateFileName.getName());
-//		Filename compilerName(nullptr, tdfFile.getCompilerPath().getPath().c_str(),
+//		Filename compilerName(NULL, tdfFile.getCompilerPath().getPath().c_str(),
 //			tdfFile.getTemplateName().c_str(), "cpp");
 //		commands[1] = compilerName;
 //		client.SetArgv( 1, const_cast<char **>(&commands[1]) );
@@ -485,7 +485,7 @@ TemplateDefinitionFile tdfFile;
 //Error e;
 //
 //	// check filename extensions
-//	Filename templateFileName(nullptr, nullptr, filename, TEMPLATE_DEFINITION_EXTENSION);
+//	Filename templateFileName(NULL, NULL, filename, TEMPLATE_DEFINITION_EXTENSION);
 //
 //	// find the client and server paths
 //	File fp(templateFileName, "rt");
@@ -546,7 +546,7 @@ TemplateDefinitionFile tdfFile;
 //		if (tdfFile.getPath().getFullFilename().size() != 0)
 //		{
 //			// check in the source files
-//			Filename sourceName(nullptr, tdfFile.getPath().getPath().c_str(),
+//			Filename sourceName(NULL, tdfFile.getPath().getPath().c_str(),
 //				tdfFile.getTemplateName().c_str(), "cpp");
 //			commands[1] = sourceName;
 //			client.SetArgv( 1, const_cast<char **>(&commands[1]) );
@@ -563,7 +563,7 @@ TemplateDefinitionFile tdfFile;
 //		if (tdfFile.getCompilerPath().getFullFilename().size() != 0)
 //		{
 //			// check in the compiler source files
-//			Filename compilerName(nullptr, tdfFile.getCompilerPath().getPath().c_str(),
+//			Filename compilerName(NULL, tdfFile.getCompilerPath().getPath().c_str(),
 //				tdfFile.getTemplateName().c_str(), "cpp");
 //			commands[1] = compilerName;
 //			client.SetArgv( 1, const_cast<char **>(&commands[1]) );
@@ -669,7 +669,7 @@ int main(int argc, char *argv[ ])
 		SetupSharedFoundation::Data data(SetupSharedFoundation::Data::D_console);
 #ifdef WIN32
 		char buffer[1024];
-		GetModuleFileName(GetModuleHandle(nullptr), buffer, 1024);
+		GetModuleFileName(GetModuleHandle(NULL), buffer, 1024);
 		Filename configName;
 		configName.setName(buffer);
 		configName.setName("templateCompiler.cfg");
@@ -685,7 +685,7 @@ int main(int argc, char *argv[ ])
 
 	// setup the random number generator
 	// @todo need a better seed
-	SetupSharedRandom::install(static_cast<uint32>(time(nullptr)));
+	SetupSharedRandom::install(static_cast<uint32>(time(NULL)));
 
 	int result = processArgs(argc, argv);
 

@@ -69,7 +69,7 @@ const JNINativeMethod NATIVES[] = {
  */
 LocalRefPtr JavaLibrary::convert(const ValueDictionary & source)
 {
-	if (ms_env == nullptr)
+	if (ms_env == NULL)
 		return LocalRef::cms_nullPtr;
 
 	// create the dictionary
@@ -150,7 +150,7 @@ void JavaLibrary::convert(const jobject & source, ValueDictionary & target)
 	target.clear();
 
 	JNIEnv * env = getEnv();
-	if (env == nullptr)
+	if (env == NULL)
 		return;
 
 	if (!env->IsInstanceOf(source, ms_clsDictionary))

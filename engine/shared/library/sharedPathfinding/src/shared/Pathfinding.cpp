@@ -69,7 +69,7 @@ BaseClass * Pathfinding::graphFactory ( Iff & iff )
 	{
 		DEBUG_WARNING(true,("Pathfinding::graphFactory - Don't know how to construct a path graph from the IFF in %s\n",iff.getFileName()));
 
-		return nullptr;
+		return NULL;
 	}
 }
 

@@ -47,7 +47,7 @@ Lz77::Lz77(uint32 _indexBitCount, uint32 _lengthBitCount)
 	lookAheadSize(rawLookAheadSize + breakEven),
 	treeRoot(windowSize),
 	window(new byte[windowSize]),
-	tree(nullptr)
+	tree(NULL)
 {
 }
 
@@ -232,10 +232,10 @@ uint32 Lz77::findNextNode(uint32 node)
  * Delete a string from the tree.
  * 
  * This routine performs the classic binary tree deletion algorithm.
- * If the node to be deleted has a nullptr link in either direction, we
- * just pull the non-nullptr link up one to replace the existing link.
+ * If the node to be deleted has a null link in either direction, we
+ * just pull the non-null link up one to replace the existing link.
  * If both links exist, we instead delete the next link in order, which
- * is guaranteed to have a nullptr link, then replace the node to be deleted
+ * is guaranteed to have a null link, then replace the node to be deleted
  * with the next link.
  */
 
@@ -286,7 +286,7 @@ uint32 Lz77::addString(uint32 newNode, uint32 *matchPosition)
 	uint32 *child;
 	int     delta = 0;
 
-	DEBUG_FATAL(!matchPosition, ("matchPosition is nullptr"));
+	DEBUG_FATAL(!matchPosition, ("matchPosition is NULL"));
 
 	if (newNode == endOfStream)
 		return 0;

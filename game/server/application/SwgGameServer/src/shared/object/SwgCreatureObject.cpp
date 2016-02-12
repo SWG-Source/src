@@ -96,7 +96,7 @@ void SwgCreatureObject::onRemovingFromWorld()
 	if (isAuthoritative() && isPlayerControlled() && (getBountyValue() > 0))
 	{
 		JediManagerObject * const jediManager = static_cast<SwgServerUniverse &>(ServerUniverse::getInstance()).getJediManager();
-		if (jediManager != nullptr)
+		if (jediManager != NULL)
 		{
 			jediManager->setJediOffline(getNetworkId(), getPosition_w(), getSceneId());
 		}
@@ -116,7 +116,7 @@ void SwgCreatureObject::onPermanentlyDestroyed()
 	if (isAuthoritative() && isPlayerControlled() && (getBountyValue() > 0))
 	{
 		JediManagerObject * const jediManager = static_cast<SwgServerUniverse &>(ServerUniverse::getInstance()).getJediManager();
-		if (jediManager != nullptr)
+		if (jediManager != NULL)
 		{
 			jediManager->removeJedi(getNetworkId());
 		}
@@ -178,7 +178,7 @@ const int SwgCreatureObject::getSpentJediSkillPoints() const
 		}
 		else
 		{
-			WARNING(true, ("Creature %s had a nullptr in their skill list", getNetworkId().getValueString().c_str()));
+			WARNING(true, ("Creature %s had a null in their skill list", getNetworkId().getValueString().c_str()));
 		}
 	}
 	*/
@@ -198,7 +198,7 @@ bool SwgCreatureObject::hasBounty(const CreatureObject & target) const
 {
 	const SwgCreatureObject * swgTarget = dynamic_cast<const SwgCreatureObject *>(
 		&target);
-	if (swgTarget == nullptr)
+	if (swgTarget == NULL)
 		return false;
 
 	JediManagerObject * jediManager = static_cast<SwgServerUniverse &>(
@@ -296,7 +296,7 @@ void SwgCreatureObject::onAddedToWorld()
 	if (isAuthoritative() && isPlayerControlled() && (getBountyValue() > 0))
 	{
 		JediManagerObject * jediManager = static_cast<SwgServerUniverse &>(ServerUniverse::getInstance()).getJediManager();
-		if (jediManager != nullptr)
+		if (jediManager != NULL)
 		{
 			jediManager->updateJediLocation(getNetworkId(), getPosition_w(), getSceneId());
 		}
@@ -330,7 +330,7 @@ void SwgCreatureObject::setPvpFaction(Pvp::FactionId factionId)
 	if ((oldId != newId) && isAuthoritative() && isPlayerControlled() && (getBountyValue() > 0))
 	{
 		JediManagerObject * jediManager = static_cast<SwgServerUniverse &>(ServerUniverse::getInstance()).getJediManager();
-		if (jediManager != nullptr)
+		if (jediManager != NULL)
 		{
 			jediManager->updateJediFaction(getNetworkId(), newId);
 		}

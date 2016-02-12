@@ -282,13 +282,13 @@ void CentralServerConnection::onReceive(const Archive::ByteStream & message)
 	else if(m.isType("GcwScoreStatRaw"))
 	{
 		GenericValueTypeMessage<std::pair<std::string, std::pair<std::map<std::string, std::pair<int64, int64> >, std::map<std::string, std::pair<int64, int64> > > > > const msg(ri);
-		LoginServer::getInstance().sendToAllClusters(msg, nullptr, 0, msg.getValue().first.c_str());
+		LoginServer::getInstance().sendToAllClusters(msg, NULL, 0, msg.getValue().first.c_str());
 	}
 
 	else if(m.isType("GcwScoreStatPct"))
 	{
 		GenericValueTypeMessage<std::pair<std::string, std::pair<std::map<std::string, int>, std::map<std::string, int> > > > const msg(ri);
-		LoginServer::getInstance().sendToAllClusters(msg, nullptr, 0, msg.getValue().first.c_str());
+		LoginServer::getInstance().sendToAllClusters(msg, NULL, 0, msg.getValue().first.c_str());
 	}
 }
 

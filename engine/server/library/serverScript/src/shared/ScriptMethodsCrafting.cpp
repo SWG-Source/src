@@ -232,7 +232,7 @@ void ScriptMethodsCraftingNamespace::collectRangedIntVariableCallback(const std:
  * @param draftSchematic	draft schematic the attribute belongs to
  * @param attribIndex		index of the attribute
  *
- * @return the attribute instance, or nullptr on error
+ * @return the attribute instance, or NULL on error
  */
 LocalRefPtr JavaLibrary::createObjectAttribute(const ManufactureObjectInterface & manfSchematic,
 	const DraftSchematicObject & draftSchematic, int attribIndex)
@@ -291,7 +291,7 @@ LocalRefPtr JavaLibrary::createObjectAttribute(const ManufactureObjectInterface 
  * @param manfSchematic		manufacture schematic the attribute belongs to
  * @param attribName		name of the attribute
  *
- * @return the attribute instance, or nullptr on error
+ * @return the attribute instance, or NULL on error
  */
 LocalRefPtr JavaLibrary::createExperimentAttribute(const ManufactureObjectInterface & manfSchematic,
 	const StringId & attribName)
@@ -341,7 +341,7 @@ int i;
 
 	const DraftSchematicObject * draft = DraftSchematicObject::getSchematic(
 		source.getDraftSchematic());
-	if (draft == nullptr)
+	if (draft == NULL)
 		return LocalRef::cms_nullPtr;
 
 	LocalRefPtr target = allocObject(ms_clsDraftSchematic);
@@ -501,7 +501,7 @@ int i;
 
 	// set the customization info from the shared object template
 	const ServerObjectTemplate * objectTemplate = draft->getCraftedObjectTemplate();
-	if (objectTemplate == nullptr)
+	if (objectTemplate == NULL)
 	{
 		return LocalRef::cms_nullPtr;
 	}
@@ -509,7 +509,7 @@ int i;
 		ObjectTemplateList::fetch(objectTemplate->getSharedTemplate()));
 	const SharedTangibleObjectTemplate * sharedTangibleTemplate = dynamic_cast<
 		const SharedTangibleObjectTemplate *>(sharedTemplate);
-	if (sharedTangibleTemplate != nullptr)
+	if (sharedTangibleTemplate != NULL)
 	{
 		// New method using the AssetCustomizationManager mechanism.
 
@@ -818,9 +818,9 @@ int i;
 
 	// set the created item template crc value
 	const ServerObjectTemplate * craftedTemplate = source.getCraftedObjectTemplate();
-	if (craftedTemplate == nullptr)
+	if (craftedTemplate == NULL)
 	{
-		WARNING(true, ("JavaLibrary::convert DraftSchematicObject got nullptr crafted "
+		WARNING(true, ("JavaLibrary::convert DraftSchematicObject got null crafted "
 			"template for draft schematic %s", source.getObjectTemplateName()));
 		return 0;
 	}
@@ -830,7 +830,7 @@ int i;
 	const ServerDraftSchematicObjectTemplate * const sourceSchematicTemplate =
 		safe_cast<const ServerDraftSchematicObjectTemplate *>(source.getObjectTemplate());
 	NOT_NULL(sourceSchematicTemplate);
-	if (sourceSchematicTemplate == nullptr)
+	if (sourceSchematicTemplate == NULL)
 	{
 		// emergency case for release mode
 		return 0;
@@ -873,11 +873,11 @@ jboolean JNICALL ScriptMethodsCraftingNamespace::startCraftingSession(JNIEnv *en
 	UNREF(env);
 	UNREF(self);
 
-	CreatureObject* playerObj = nullptr;
+	CreatureObject* playerObj = NULL;
 	if (!JavaLibrary::getObject(player, playerObj))
 		return JNI_FALSE;
 
-	TangibleObject* stationObj = nullptr;
+	TangibleObject* stationObj = NULL;
 	if (!JavaLibrary::getObject(station, stationObj))
 		return JNI_FALSE;
 
@@ -894,7 +894,7 @@ jboolean JNICALL ScriptMethodsCraftingNamespace::startCraftingSession(JNIEnv *en
  * @param self			class calling this function
  * @param crafter		the player that was crafting
  * @param tool			the crafting tool that was being used
- * @param prototype		the prototype that was created (may be nullptr)
+ * @param prototype		the prototype that was created (may be null)
  *
  * @return true on success, false on fail
  */
@@ -908,11 +908,11 @@ jboolean JNICALL ScriptMethodsCraftingNamespace::endCraftingSession(JNIEnv *env,
 	if (prototype == 0)
 		return JNI_TRUE;
 
-	CreatureObject * crafterObj = nullptr;
+	CreatureObject * crafterObj = NULL;
 	if (!JavaLibrary::getObject(crafter, crafterObj))
 		return JNI_FALSE;
 
-	TangibleObject * prototypeObj = nullptr;
+	TangibleObject * prototypeObj = NULL;
 	if (!JavaLibrary::getObject(prototype, prototypeObj))
 		return JNI_FALSE;
 
@@ -937,11 +937,11 @@ jboolean JNICALL ScriptMethodsCraftingNamespace::setCraftingLevelAndStation(JNIE
 {
 	UNREF(self);
 
-	CreatureObject* creatureObject = nullptr;
+	CreatureObject* creatureObject = NULL;
 	if (!JavaLibrary::getObject(player, creatureObject))
 		return JNI_FALSE;
 	PlayerObject * playerObject = PlayerCreatureController::getPlayerObject(creatureObject);
-	if (playerObject == nullptr)
+	if (playerObject == NULL)
 		return JNI_FALSE;
 
 	if (craftingLevel >= 0 && craftingLevel <= Crafting::MAX_CRAFTING_LEVEL)
@@ -949,12 +949,12 @@ jboolean JNICALL ScriptMethodsCraftingNamespace::setCraftingLevelAndStation(JNIE
 
 	if (station != 0)
 	{
-		const TangibleObject * stationObject = nullptr;
+		const TangibleObject * stationObject = NULL;
 		const NetworkId stationId(station);
 		if (stationId != NetworkId::cms_invalid)
 		{
 			stationObject = dynamic_cast<const TangibleObject *>(ServerWorld::findObjectByNetworkId(stationId));
-			if (stationObject == nullptr)
+			if (stationObject == NULL)
 				return JNI_FALSE;
 		}
 		playerObject->setCraftingStation(stationObject);
@@ -976,11 +976,11 @@ jint JNICALL ScriptMethodsCraftingNamespace::getCraftingLevel(JNIEnv *env, jobje
 {
 	UNREF(self);
 
-	const CreatureObject* creatureObject = nullptr;
+	const CreatureObject* creatureObject = NULL;
 	if (!JavaLibrary::getObject(player, creatureObject))
 		return -1;
 	const PlayerObject * playerObject = PlayerCreatureController::getPlayerObject(creatureObject);
-	if (playerObject == nullptr)
+	if (playerObject == NULL)
 		return -1;
 
 	return playerObject->getCraftingLevel();
@@ -999,11 +999,11 @@ jlong JNICALL ScriptMethodsCraftingNamespace::getCraftingStation(JNIEnv *env, jo
 {
 	UNREF(self);
 
-	const CreatureObject* creatureObject = nullptr;
+	const CreatureObject* creatureObject = NULL;
 	if (!JavaLibrary::getObject(player, creatureObject))
 		return 0;
 	const PlayerObject * playerObject = PlayerCreatureController::getPlayerObject(creatureObject);
-	if (playerObject == nullptr)
+	if (playerObject == NULL)
 		return 0;
 
 	return (playerObject->getCraftingStation()).getValue();
@@ -1023,11 +1023,11 @@ jboolean JNICALL ScriptMethodsCraftingNamespace::sendUseableDraftSchematics(JNIE
 {
 	UNREF(self);
 
-	CreatureObject* creatureObject = nullptr;
+	CreatureObject* creatureObject = NULL;
 	if (!JavaLibrary::getObject(player, creatureObject))
 		return JNI_FALSE;
 	PlayerObject * playerObject = PlayerCreatureController::getPlayerObject(creatureObject);
-	if (playerObject == nullptr)
+	if (playerObject == NULL)
 	{
 		DEBUG_WARNING(true, ("JavaLibrary::sendUseableDraftSchematics non-player "
 			"object %s\n", creatureObject->getNetworkId().getValueString().c_str()));
@@ -1038,8 +1038,8 @@ jboolean JNICALL ScriptMethodsCraftingNamespace::sendUseableDraftSchematics(JNIE
 	if (count == 0)
 		return JNI_FALSE;
 
-	jint * schematicsArray = env->GetIntArrayElements(schematics, nullptr);
-	if (schematicsArray != nullptr)
+	jint * schematicsArray = env->GetIntArrayElements(schematics, NULL);
+	if (schematicsArray != NULL)
 	{
 		std::vector<uint32> schematicCrcs(schematicsArray, &schematicsArray[count]);
 		playerObject->sendUseableDraftSchematics(schematicCrcs);
@@ -1072,7 +1072,7 @@ jboolean JNICALL ScriptMethodsCraftingNamespace::setSchematicAttribute(JNIEnv *e
 	if (manufacturingSchematic == 0 || attribute == 0)
 		return JNI_FALSE;
 
-	ManufactureObjectInterface * schematic = nullptr;
+	ManufactureObjectInterface * schematic = NULL;
 	if (!JavaLibrary::getObject(manufacturingSchematic, schematic))
 		return JNI_FALSE;
 
@@ -1120,7 +1120,7 @@ jboolean JNICALL ScriptMethodsCraftingNamespace::setSchematicAttributes(JNIEnv *
 	if (manufacturingSchematic == 0 || attributes == 0)
 		return JNI_FALSE;
 
-	ManufactureObjectInterface * schematic = nullptr;
+	ManufactureObjectInterface * schematic = NULL;
 	if (!JavaLibrary::getObject(manufacturingSchematic, schematic))
 		return JNI_FALSE;
 
@@ -1169,7 +1169,7 @@ jboolean JNICALL ScriptMethodsCraftingNamespace::setSchematicAttributes(JNIEnv *
  * @param name							name of the attribute to get
  * @param experiment					flag that these are experimental attributes
  *
- * @return the attribute, or nullptr on error
+ * @return the attribute, or null on error
  */
 jobject JNICALL ScriptMethodsCraftingNamespace::getSchematicAttribute(JNIEnv *env, jobject self, jlong manufacturingSchematic, jobject name, jboolean experiment)
 {
@@ -1178,13 +1178,13 @@ jobject JNICALL ScriptMethodsCraftingNamespace::getSchematicAttribute(JNIEnv *en
 	if (manufacturingSchematic == 0 || name == 0)
 		return 0;
 
-	ManufactureObjectInterface * schematic = nullptr;
+	ManufactureObjectInterface * schematic = NULL;
 	if (!JavaLibrary::getObject(manufacturingSchematic, schematic))
 		return 0;
 
 	const DraftSchematicObject * draft = DraftSchematicObject::getSchematic(
 		schematic->getDraftSchematic());
-	if (draft == nullptr)
+	if (draft == NULL)
 		return 0;
 
 	StringId nameId;
@@ -1210,7 +1210,7 @@ jobject JNICALL ScriptMethodsCraftingNamespace::getSchematicAttribute(JNIEnv *en
  * @param names							names of the attributes to get
  * @param experiment					flag that these are experimental attributes
  *
- * @return the attributes, or nullptr on error
+ * @return the attributes, or null on error
  */
 jobjectArray JNICALL ScriptMethodsCraftingNamespace::getSchematicAttributes(JNIEnv *env, jobject self, jlong manufacturingSchematic, jobjectArray names, jboolean experiment)
 {
@@ -1219,13 +1219,13 @@ jobjectArray JNICALL ScriptMethodsCraftingNamespace::getSchematicAttributes(JNIE
 	if (manufacturingSchematic == 0)
 		return 0;
 
-	ManufactureObjectInterface * schematic = nullptr;
+	ManufactureObjectInterface * schematic = NULL;
 	if (!JavaLibrary::getObject(manufacturingSchematic, schematic))
 		return 0;
 
 	const DraftSchematicObject * draft = DraftSchematicObject::getSchematic(
 		schematic->getDraftSchematic());
-	if (draft == nullptr)
+	if (draft == NULL)
 		return 0;
 
 	int numAttribs = env->GetArrayLength(names);
@@ -1276,7 +1276,7 @@ jobjectArray JNICALL ScriptMethodsCraftingNamespace::getSchematicAttributes(JNIE
  * @param manufacturingSchematic		the schematic
  * @param experiment					flag that these are experimental attributes
  *
- * @return the attributes, or nullptr on error
+ * @return the attributes, or null on error
  */
 jobjectArray JNICALL ScriptMethodsCraftingNamespace::getAllSchematicAttributes(JNIEnv *env, jobject self, jlong manufacturingSchematic, jboolean experiment)
 {
@@ -1286,13 +1286,13 @@ jobjectArray JNICALL ScriptMethodsCraftingNamespace::getAllSchematicAttributes(J
 	if (manufacturingSchematic == 0)
 		return 0;
 
-	ManufactureObjectInterface * schematic = nullptr;
+	ManufactureObjectInterface * schematic = NULL;
 	if (!JavaLibrary::getObject(manufacturingSchematic, schematic))
 		return 0;
 
 	const DraftSchematicObject * draft = DraftSchematicObject::getSchematic(
 		schematic->getDraftSchematic());
-	if (draft == nullptr)
+	if (draft == NULL)
 		return 0;
 
 	// set the attributes
@@ -1337,7 +1337,7 @@ jobjectArray JNICALL ScriptMethodsCraftingNamespace::getAllSchematicAttributes(J
  * @param manufacturingSchematic		the schematic to get the data from
  * @param attributeNames				the experimental attributes we're interested about
  *
- * @return the draft_schematic object, or nullptr on error
+ * @return the draft_schematic object, or null on error
  */
 jobject JNICALL ScriptMethodsCraftingNamespace::getSchematicForExperimentalAttributes(JNIEnv *env, jobject self, jlong manufacturingSchematic, jobjectArray attributeNames)
 {
@@ -1348,13 +1348,13 @@ int i;
 	if (manufacturingSchematic == 0 || attributeNames == 0)
 		return 0;
 
-	const ManufactureObjectInterface * manfSchematic = nullptr;
+	const ManufactureObjectInterface * manfSchematic = NULL;
 	if (!JavaLibrary::getObject(manufacturingSchematic, manfSchematic))
 		return 0;
 
 	const DraftSchematicObject * draftSchematic = DraftSchematicObject::getSchematic(
 		manfSchematic->getDraftSchematic());
-	if (draftSchematic == nullptr)
+	if (draftSchematic == NULL)
 		return 0;
 
 	// create a draft_schematic object to return
@@ -1481,7 +1481,7 @@ jboolean JNICALL ScriptMethodsCraftingNamespace::setSchematicExperimentMod(JNIEn
 {
 	UNREF(self);
 
-	ManufactureSchematicObject * schematic = nullptr;
+	ManufactureSchematicObject * schematic = NULL;
 	if (!JavaLibrary::getObject(manufacturingSchematic, schematic))
 		return JNI_FALSE;
 
@@ -1510,7 +1510,7 @@ jboolean JNICALL ScriptMethodsCraftingNamespace::setSchematicAppearances(JNIEnv 
 	if (manufacturingSchematic == 0 || appearances == 0)
 		return JNI_FALSE;
 
-	ManufactureSchematicObject * schematic = nullptr;
+	ManufactureSchematicObject * schematic = NULL;
 	if (!JavaLibrary::getObject(manufacturingSchematic, schematic))
 		return JNI_FALSE;
 
@@ -1550,7 +1550,7 @@ jboolean JNICALL ScriptMethodsCraftingNamespace::setSchematicCustomizations(JNIE
 	if (manufacturingSchematic == 0 || customizations == 0)
 		return JNI_FALSE;
 
-	ManufactureSchematicObject * schematic = nullptr;
+	ManufactureSchematicObject * schematic = NULL;
 	if (!JavaLibrary::getObject(manufacturingSchematic, schematic))
 		return JNI_FALSE;
 
@@ -1596,7 +1596,7 @@ jint JNICALL ScriptMethodsCraftingNamespace::getSchematicItemCount(JNIEnv *env, 
 	if (manufacturingSchematic == 0)
 		return -1;
 
-	const ManufactureSchematicObject * schematic = nullptr;
+	const ManufactureSchematicObject * schematic = NULL;
 	if (!JavaLibrary::getObject(manufacturingSchematic, schematic))
 		return -1;
 
@@ -1622,7 +1622,7 @@ jboolean JNICALL ScriptMethodsCraftingNamespace::setSchematicItemCount(JNIEnv *e
 	if (manufacturingSchematic == 0)
 		return JNI_FALSE;
 
-	ManufactureSchematicObject * schematic = nullptr;
+	ManufactureSchematicObject * schematic = NULL;
 	if (!JavaLibrary::getObject(manufacturingSchematic, schematic))
 		return JNI_FALSE;
 
@@ -1649,7 +1649,7 @@ jint JNICALL ScriptMethodsCraftingNamespace::getSchematicItemsPerContainer(JNIEn
 	if (manufacturingSchematic == 0)
 		return -1;
 
-	const ManufactureSchematicObject * schematic = nullptr;
+	const ManufactureSchematicObject * schematic = NULL;
 	if (!JavaLibrary::getObject(manufacturingSchematic, schematic))
 		return -1;
 
@@ -1676,7 +1676,7 @@ jboolean JNICALL ScriptMethodsCraftingNamespace::setSchematicItemsPerContainer(J
 	if (manufacturingSchematic == 0)
 		return JNI_FALSE;
 
-	ManufactureSchematicObject * schematic = nullptr;
+	ManufactureSchematicObject * schematic = NULL;
 	if (!JavaLibrary::getObject(manufacturingSchematic, schematic))
 		return JNI_FALSE;
 
@@ -1703,7 +1703,7 @@ jfloat JNICALL ScriptMethodsCraftingNamespace::getSchematicManufactureTime(JNIEn
 	if (manufacturingSchematic == 0)
 		return -1.0f;
 
-	const ManufactureSchematicObject * schematic = nullptr;
+	const ManufactureSchematicObject * schematic = NULL;
 	if (!JavaLibrary::getObject(manufacturingSchematic, schematic))
 		return -1.0f;
 
@@ -1730,7 +1730,7 @@ jboolean JNICALL ScriptMethodsCraftingNamespace::setSchematicManufactureTime(JNI
 	if (manufacturingSchematic == 0)
 		return JNI_FALSE;
 
-	ManufactureSchematicObject * schematic = nullptr;
+	ManufactureSchematicObject * schematic = NULL;
 	if (!JavaLibrary::getObject(manufacturingSchematic, schematic))
 		return JNI_FALSE;
 
@@ -1754,7 +1754,7 @@ jboolean JNICALL ScriptMethodsCraftingNamespace::setCreatorXp(JNIEnv *env, jobje
 {
 	UNREF(self);
 
-	TangibleObject * target = nullptr;
+	TangibleObject * target = NULL;
 	if (!JavaLibrary::getObject(object, target))
 		return JNI_FALSE;
 
@@ -1778,7 +1778,7 @@ void JNICALL ScriptMethodsCraftingNamespace::getIngredientsForManufactureStation
 	if (station == 0 || ingredients == 0)
 		return;
 
-	const ManufactureInstallationObject * manfStation = nullptr;
+	const ManufactureInstallationObject * manfStation = NULL;
 	if (!JavaLibrary::getObject(station, manfStation))
 		return;
 
@@ -1786,7 +1786,7 @@ void JNICALL ScriptMethodsCraftingNamespace::getIngredientsForManufactureStation
 		return;
 
 	const ManufactureSchematicObject * const schematic = manfStation->getSchematic();
-	if (schematic == nullptr)
+	if (schematic == NULL)
 		return;
 
 	static ManufactureSchematicObject::IngredientInfoVector iiv;
@@ -1841,7 +1841,7 @@ void JNICALL ScriptMethodsCraftingNamespace::getIngredientsForManufactureStation
  * @param self			class calling this function
  * @param station		the station id
  *
- * @return the hopper id, or nullptr on error
+ * @return the hopper id, or null on error
  */
 jlong JNICALL ScriptMethodsCraftingNamespace::getManufactureStationInputHopper(JNIEnv *env, jobject self, jlong station)
 {
@@ -1850,12 +1850,12 @@ jlong JNICALL ScriptMethodsCraftingNamespace::getManufactureStationInputHopper(J
 	if (station == 0)
 		return 0;
 
-	const ManufactureInstallationObject * manfStation = nullptr;
+	const ManufactureInstallationObject * manfStation = NULL;
 	if (!JavaLibrary::getObject(station, manfStation))
 		return 0;
 
 	ServerObject * hopper = manfStation->getInputHopper();
-	if (hopper == nullptr)
+	if (hopper == NULL)
 		return 0;
 
 	return (hopper->getNetworkId()).getValue();
@@ -1870,7 +1870,7 @@ jlong JNICALL ScriptMethodsCraftingNamespace::getManufactureStationInputHopper(J
  * @param self			class calling this function
  * @param station		the station id
  *
- * @return the hopper id, or nullptr on error
+ * @return the hopper id, or null on error
  */
 jlong JNICALL ScriptMethodsCraftingNamespace::getManufactureStationOutputHopper(JNIEnv *env, jobject self, jlong station)
 {
@@ -1879,12 +1879,12 @@ jlong JNICALL ScriptMethodsCraftingNamespace::getManufactureStationOutputHopper(
 	if (station == 0)
 		return 0;
 
-	const ManufactureInstallationObject * manfStation = nullptr;
+	const ManufactureInstallationObject * manfStation = NULL;
 	if (!JavaLibrary::getObject(station, manfStation))
 		return 0;
 
 	ServerObject * hopper = manfStation->getOutputHopper();
-	if (hopper == nullptr)
+	if (hopper == NULL)
 		return 0;
 
 	return (hopper->getNetworkId()).getValue();
@@ -1899,7 +1899,7 @@ jlong JNICALL ScriptMethodsCraftingNamespace::getManufactureStationOutputHopper(
  * @param self			class calling this function
  * @param station		the station id
  *
- * @return a string of the form <id> "*" <name>, or nullptr if the station has no schematic
+ * @return a string of the form <id> "*" <name>, or null if the station has no schematic
  */
 jstring JNICALL ScriptMethodsCraftingNamespace::getManufactureStationSchematic(JNIEnv *env, jobject self, jlong station)
 {
@@ -1907,12 +1907,12 @@ jstring JNICALL ScriptMethodsCraftingNamespace::getManufactureStationSchematic(J
 
 	UNREF(self);
 
-	const ManufactureInstallationObject * manfStation = nullptr;
+	const ManufactureInstallationObject * manfStation = NULL;
 	if (!JavaLibrary::getObject(station, manfStation))
 		return 0;
 
 	const ManufactureSchematicObject * manfSchematic = manfStation->getSchematic();
-	if (manfSchematic == nullptr)
+	if (manfSchematic == NULL)
 		return 0;
 
 	return JavaString(
@@ -1943,11 +1943,11 @@ void JNICALL ScriptMethodsCraftingNamespace::getValidManufactureSchematicsForSta
 	if (player == 0 || station == 0 || schematics == 0)
 		return;
 
-	CreatureObject * playerCreature = nullptr;
+	CreatureObject * playerCreature = NULL;
 	if (!JavaLibrary::getObject(player, playerCreature))
 		return;
 
-	const ManufactureInstallationObject * manfStation = nullptr;
+	const ManufactureInstallationObject * manfStation = NULL;
 	if (!JavaLibrary::getObject(station, manfStation))
 		return;
 
@@ -1997,11 +1997,11 @@ jboolean JNICALL ScriptMethodsCraftingNamespace::hasValidManufactureSchematicsFo
 	if (player == 0 || station == 0)
 		return JNI_FALSE;
 
-	CreatureObject * playerCreature = nullptr;
+	CreatureObject * playerCreature = NULL;
 	if (!JavaLibrary::getObject(player, playerCreature))
 		return JNI_FALSE;
 
-	const ManufactureInstallationObject * manfStation = nullptr;
+	const ManufactureInstallationObject * manfStation = NULL;
 	if (!JavaLibrary::getObject(station, manfStation))
 		return JNI_FALSE;
 
@@ -2030,24 +2030,24 @@ jboolean JNICALL ScriptMethodsCraftingNamespace::transferManufactureSchematicToP
 {
 	UNREF(self);
 
-	const ManufactureInstallationObject * manfStation = nullptr;
+	const ManufactureInstallationObject * manfStation = NULL;
 	if (!JavaLibrary::getObject(station, manfStation))
 		return JNI_FALSE;
 
 	ManufactureSchematicObject * schematic = manfStation->getSchematic();
-	if (schematic == nullptr)
+	if (schematic == NULL)
 		return JNI_TRUE;
 
-	CreatureObject * playerCreature = nullptr;
+	CreatureObject * playerCreature = NULL;
 	if (!JavaLibrary::getObject(player, playerCreature))
 		return JNI_FALSE;
 
 	ServerObject * datapad = playerCreature->getDatapad();
-	if (datapad == nullptr)
+	if (datapad == NULL)
 		return JNI_FALSE;
 
 	Container::ContainerErrorCode tmp = Container::CEC_Success;
-	if (ContainerInterface::transferItemToVolumeContainer(*datapad, *schematic, nullptr, tmp))
+	if (ContainerInterface::transferItemToVolumeContainer(*datapad, *schematic, NULL, tmp))
 		return JNI_TRUE;
 	return JNI_FALSE;
 }	// JavaLibrary::transferManufactureSchematicToPlayer
@@ -2068,15 +2068,15 @@ jboolean JNICALL ScriptMethodsCraftingNamespace::transferManufactureSchematicToS
 {
 	UNREF(self);
 
-	ManufactureSchematicObject * manfSchematic = nullptr;
+	ManufactureSchematicObject * manfSchematic = NULL;
 	if (!JavaLibrary::getObject(schematic, manfSchematic))
 		return JNI_FALSE;
 
-	ManufactureInstallationObject * manfStation = nullptr;
+	ManufactureInstallationObject * manfStation = NULL;
 	if (!JavaLibrary::getObject(station, manfStation))
 		return JNI_FALSE;
 
-	if (manfStation->addSchematic(*manfSchematic, nullptr))
+	if (manfStation->addSchematic(*manfSchematic, NULL))
 		return JNI_TRUE;
 	return JNI_FALSE;
 }	// JavaLibrary::transferManufactureSchematicToStation
@@ -2099,11 +2099,11 @@ void JNICALL ScriptMethodsCraftingNamespace::getRepairableObjectsForTool(JNIEnv 
 	if (player == 0 || tool == 0 || objects == 0)
 		return;
 
-	CreatureObject * playerCreature = nullptr;
+	CreatureObject * playerCreature = NULL;
 	if (!JavaLibrary::getObject(player, playerCreature))
 		return;
 
-	const TangibleObject * toolObject = nullptr;
+	const TangibleObject * toolObject = NULL;
 	if (!JavaLibrary::getObject(tool, toolObject))
 		return;
 	if (!toolObject->isRepairTool())
@@ -2123,11 +2123,11 @@ void JNICALL ScriptMethodsCraftingNamespace::getRepairableObjectsForTool(JNIEnv 
 	// objects
 
 	const ServerObject * inventory = playerCreature->getInventory();
-	if (inventory == nullptr)
+	if (inventory == NULL)
 		return;
 
 	const VolumeContainer * inventoryContainer = ContainerInterface::getVolumeContainer(*inventory);
-	if (inventoryContainer == nullptr)
+	if (inventoryContainer == NULL)
 		return;
 
 	std::vector<Unicode::String> objList;
@@ -2136,7 +2136,7 @@ void JNICALL ScriptMethodsCraftingNamespace::getRepairableObjectsForTool(JNIEnv 
 	{
 		const CachedNetworkId & objId = (*iter);
 		const TangibleObject * obj = safe_cast<const TangibleObject *>(objId.getObject());
-		if (obj != nullptr && !obj->isCraftingTool() && !obj->isRepairTool() &&
+		if (obj != NULL && !obj->isCraftingTool() && !obj->isRepairTool() &&
 			obj->getDamageTaken() > 0)
 		{
 			if ((genericTool && (toolType & obj->getGameObjectType()) != 0) ||
@@ -2172,22 +2172,22 @@ void JNICALL ScriptMethodsCraftingNamespace::getRepairableObjectsForTool(JNIEnv 
  * @param self			class calling this function
  * @param target		the object
  *
- * @return an array with the bonus for each attribute, or nullptr on error
+ * @return an array with the bonus for each attribute, or null on error
  */
 jintArray JNICALL ScriptMethodsCraftingNamespace::getAttributeBonuses(JNIEnv *env, jobject self, jlong target)
 {
 	UNREF(self);
 
-	const ServerObject * object = nullptr;
+	const ServerObject * object = NULL;
 	if (!JavaLibrary::getObject(target, object))
 		return 0;
 
 	std::vector<std::pair<int, int> > bonuses;
-	if (object->asTangibleObject() != nullptr)
+	if (object->asTangibleObject() != NULL)
 	{
 		object->asTangibleObject()->getAttribBonuses(bonuses);
 	}
-	else if (object->asManufactureSchematicObject() != nullptr)
+	else if (object->asManufactureSchematicObject() != NULL)
 	{
 		object->asManufactureSchematicObject()->getAttribBonuses(bonuses);
 	}
@@ -2235,16 +2235,16 @@ jint JNICALL ScriptMethodsCraftingNamespace::getAttributeBonus(JNIEnv *env, jobj
 	if (attribute < 0 || attribute >= Attributes::NumberOfAttributes)
 		return 0;
 
-	const ServerObject * object = nullptr;
+	const ServerObject * object = NULL;
 	if (!JavaLibrary::getObject(target, object))
 		return 0;
 
 	jint bonus = 0;
-	if (object->asTangibleObject() != nullptr)
+	if (object->asTangibleObject() != NULL)
 	{
 		bonus = object->asTangibleObject()->getAttribBonus(attribute);
 	}
-	else if (object->asManufactureSchematicObject() != nullptr)
+	else if (object->asManufactureSchematicObject() != NULL)
 	{
 		bonus = object->asManufactureSchematicObject()->getAttribBonus(attribute);
 	}
@@ -2271,15 +2271,15 @@ jboolean JNICALL ScriptMethodsCraftingNamespace::setAttributeBonus(JNIEnv *env, 
 	if (attribute < 0 || attribute >= Attributes::NumberOfAttributes)
 		return JNI_FALSE;
 
-	ServerObject * object = nullptr;
+	ServerObject * object = NULL;
 	if (!JavaLibrary::getObject(target, object))
 		return JNI_FALSE;
 
-	if (object->asTangibleObject() != nullptr)
+	if (object->asTangibleObject() != NULL)
 	{
 		object->asTangibleObject()->setAttribBonus(attribute, bonus);
 	}
-	else if (object->asManufactureSchematicObject() != nullptr)
+	else if (object->asManufactureSchematicObject() != NULL)
 	{
 		object->asManufactureSchematicObject()->setAttribBonus(attribute, bonus);
 	}
@@ -2307,7 +2307,7 @@ jboolean JNICALL ScriptMethodsCraftingNamespace::setAttributeBonuses(JNIEnv *env
 	if (bonuses == 0)
 		return JNI_FALSE;
 
-	ServerObject * object = nullptr;
+	ServerObject * object = NULL;
 	if (!JavaLibrary::getObject(target, object))
 		return JNI_FALSE;
 
@@ -2322,13 +2322,13 @@ jboolean JNICALL ScriptMethodsCraftingNamespace::setAttributeBonuses(JNIEnv *env
 	jint buffer[Attributes::NumberOfAttributes];
 	env->GetIntArrayRegion(bonuses, 0, count, buffer);
 
-	if (object->asTangibleObject() != nullptr)
+	if (object->asTangibleObject() != NULL)
 	{
 		TangibleObject * tangibleObject = object->asTangibleObject();
 		for (jsize i = 0; i < count; ++i)
 			tangibleObject->setAttribBonus(i, buffer[i]);
 	}
-	else if (object->asManufactureSchematicObject() != nullptr)
+	else if (object->asManufactureSchematicObject() != NULL)
 	{
 		ManufactureSchematicObject * manufactureSchematicObject = object->asManufactureSchematicObject();
 		for (jsize i = 0; i < count; ++i)
@@ -2349,13 +2349,13 @@ jboolean JNICALL ScriptMethodsCraftingNamespace::setAttributeBonuses(JNIEnv *env
  * @param self			class calling this function
  * @param target		the object
  *
- * @return a dictionary of skill mod names -> mod values, or nullptr on error
+ * @return a dictionary of skill mod names -> mod values, or null on error
  */
 jobject JNICALL ScriptMethodsCraftingNamespace::getSkillModBonuses(JNIEnv *env, jobject self, jlong target)
 {
 	UNREF(self);
 
-	const TangibleObject * object = nullptr;
+	const TangibleObject * object = NULL;
 	if (!JavaLibrary::getObject(target, object))
 		return 0;
 
@@ -2393,7 +2393,7 @@ jint JNICALL ScriptMethodsCraftingNamespace::getSkillModBonus(JNIEnv *env, jobje
 
 	JavaStringParam jskillMod(skillMod);
 
-	const TangibleObject * object = nullptr;
+	const TangibleObject * object = NULL;
 	if (!JavaLibrary::getObject(target, object))
 		return 0;
 
@@ -2423,7 +2423,7 @@ jboolean JNICALL ScriptMethodsCraftingNamespace::setSkillModBonus(JNIEnv *env, j
 
 	JavaStringParam jskillMod(skillMod);
 
-	TangibleObject * object = nullptr;
+	TangibleObject * object = NULL;
 	if (!JavaLibrary::getObject(target, object))
 		return JNI_FALSE;
 
@@ -2452,7 +2452,7 @@ jboolean JNICALL ScriptMethodsCraftingNamespace::setSkillModBonuses(JNIEnv *env,
 {
 	UNREF(self);
 
-	TangibleObject * object = nullptr;
+	TangibleObject * object = NULL;
 	if (!JavaLibrary::getObject(target, object))
 		return JNI_FALSE;
 
@@ -2469,7 +2469,7 @@ jboolean JNICALL ScriptMethodsCraftingNamespace::setSkillModBonuses(JNIEnv *env,
 	}
 
 	std::string skillName;
-	const jint * bonusArray = env->GetIntArrayElements(bonus, nullptr);
+	const jint * bonusArray = env->GetIntArrayElements(bonus, NULL);
 	for (int i = 0; i < skillModCount; ++i)
 	{
 		JavaStringParam jskillName(static_cast<jstring>(env->GetObjectArrayElement(skillMod, i)));
@@ -2505,7 +2505,7 @@ jboolean JNICALL ScriptMethodsCraftingNamespace::setCategorizedSkillModBonus(JNI
 	JavaStringParam jcategory(category);
 	JavaStringParam jskillMod(skillMod);
 
-	TangibleObject * object = nullptr;
+	TangibleObject * object = NULL;
 	if (!JavaLibrary::getObject(target, object))
 		return JNI_FALSE;
 
@@ -2540,7 +2540,7 @@ void JNICALL ScriptMethodsCraftingNamespace::removeCategorizedSkillModBonuses(JN
 
 	JavaStringParam jcategory(category);
 
-	TangibleObject * object = nullptr;
+	TangibleObject * object = NULL;
 	if (!JavaLibrary::getObject(target, object))
 		return;
 
@@ -2566,7 +2566,7 @@ jint JNICALL ScriptMethodsCraftingNamespace::getSkillModSockets(JNIEnv *env, job
 {
 	UNREF(self);
 
-	const TangibleObject * object = nullptr;
+	const TangibleObject * object = NULL;
 	if (!JavaLibrary::getObject(target, object))
 		return 0;
 
@@ -2589,7 +2589,7 @@ jboolean JNICALL ScriptMethodsCraftingNamespace::setSkillModSockets(JNIEnv *env,
 {
 	UNREF(self);
 
-	TangibleObject * object = nullptr;
+	TangibleObject * object = NULL;
 	if (!JavaLibrary::getObject(target, object))
 		return JNI_FALSE;
 
@@ -2610,7 +2610,7 @@ jboolean JNICALL ScriptMethodsCraftingNamespace::setSkillModSockets(JNIEnv *env,
  * @param qualityPercent	% stat adjustment
  * @param container			the container to create the item in
  *
- * @return the item, or nullptr on error
+ * @return the item, or null on error
  */
 jlong JNICALL ScriptMethodsCraftingNamespace::makeCraftedItem(JNIEnv *env, jobject self, jstring draftSchematic, jfloat qualityPercent, jlong container)
 {
@@ -2618,7 +2618,7 @@ jlong JNICALL ScriptMethodsCraftingNamespace::makeCraftedItem(JNIEnv *env, jobje
 
 	if (draftSchematic == 0 || container == 0)
 	{
-		WARNING(true, ("[script bug] nullptr schematic or container passed to "
+		WARNING(true, ("[script bug] null schematic or container passed to "
 			"makeCraftedItem"));
 		return 0;
 	}
@@ -2634,21 +2634,21 @@ jlong JNICALL ScriptMethodsCraftingNamespace::makeCraftedItem(JNIEnv *env, jobje
 
 	const DraftSchematicObject * schematic = DraftSchematicObject::getSchematic(
 		draftSchematicName);
-	if (schematic == nullptr)
+	if (schematic == NULL)
 	{
 		WARNING(true, ("[script bug] bad schematic name %s passed to "
 			"makeCraftedItem", draftSchematicName.c_str()));
 		return 0;
 	}
 
-	ServerObject * target = nullptr;
+	ServerObject * target = NULL;
 	if (!JavaLibrary::getObject(container, target))
 	{
 		WARNING(true, ("[script bug] bad container id passed to makeCraftedItem"));
 		return 0;
 	}
 	Object * targetParent = ContainerInterface::getFirstParentInWorld(*target);
-	if (targetParent == nullptr)
+	if (targetParent == NULL)
 	{
 		WARNING(true, ("JavaLibrary::makeCraftedItem can't find parent in world "
 			"for container %s", target->getNetworkId().getValueString().c_str()));
@@ -2660,14 +2660,14 @@ jlong JNICALL ScriptMethodsCraftingNamespace::makeCraftedItem(JNIEnv *env, jobje
 	// create a manf schematic and prototype
 	ManufactureSchematicObject * manfSchematic = ServerWorld::createNewManufacturingSchematic(
 		*schematic, createPos, false);
-	if (manfSchematic == nullptr)
+	if (manfSchematic == NULL)
 	{
 		WARNING(true, ("JavaLibrary::makeCraftedItem: error creating manf "
 			"schematic!"));
 		return 0;
 	}
 	ServerObject * prototype = manfSchematic->manufactureObject(createPos);
-	if (prototype == nullptr)
+	if (prototype == NULL)
 	{
 		WARNING(true, ("JavaLibrary::makeCraftedItem: error creating "
 			"prototype!"));
@@ -2690,7 +2690,7 @@ jlong JNICALL ScriptMethodsCraftingNamespace::makeCraftedItem(JNIEnv *env, jobje
 	manfSchematic->permanentlyDestroy(DeleteReasons::Consumed);
 	Container::ContainerErrorCode error;
 	if (!ContainerInterface::transferItemToVolumeContainer (*target, *prototype,
-		nullptr, error, true))
+		NULL, error, true))
 	{
 		WARNING(true, ("JavaLibrary::makeCraftedItem: error can't store prototype "
 			"in container, error = %d", error));
@@ -2711,14 +2711,14 @@ jlong JNICALL ScriptMethodsCraftingNamespace::makeCraftedItem(JNIEnv *env, jobje
  * @param self						class calling this function
  * @param manufacturingSchematic	the schematic to get the data from
  *
- * @return the draft_schematic object, or nullptr on error
+ * @return the draft_schematic object, or null on error
  */
 jobject JNICALL ScriptMethodsCraftingNamespace::getSchematicData(JNIEnv *env, jobject self, jlong manufacturingSchematic)
 {
 	if (manufacturingSchematic == 0)
 		return 0;
 
-	const ManufactureSchematicObject * schematicObject = nullptr;
+	const ManufactureSchematicObject * schematicObject = NULL;
 	if (!JavaLibrary::getObject(manufacturingSchematic, schematicObject))
 		return 0;
 
@@ -2735,7 +2735,7 @@ jobject JNICALL ScriptMethodsCraftingNamespace::getSchematicData(JNIEnv *env, jo
  * @param self				class calling this function
  * @param draftSchematic	the schematic to get the data from
  *
- * @return the draft_schematic object, or nullptr on error
+ * @return the draft_schematic object, or null on error
  */
 jobject JNICALL ScriptMethodsCraftingNamespace::getDraftSchematicData(JNIEnv *env, jobject self,
 	jstring draftSchematic)
@@ -2749,7 +2749,7 @@ jobject JNICALL ScriptMethodsCraftingNamespace::getDraftSchematicData(JNIEnv *en
 		return 0;
 
 	const DraftSchematicObject * schematicObject = DraftSchematicObject::getSchematic(schematicName);
-	if (schematicObject == nullptr)
+	if (schematicObject == NULL)
 		return 0;
 
 	return JavaLibrary::convert(*schematicObject);
@@ -2765,7 +2765,7 @@ jobject JNICALL ScriptMethodsCraftingNamespace::getDraftSchematicData(JNIEnv *en
  * @param self				class calling this function
  * @param draftSchematicCrc	the schematic to get the data from
  *
- * @return the draft_schematic object, or nullptr on error
+ * @return the draft_schematic object, or null on error
  */
 jobject JNICALL ScriptMethodsCraftingNamespace::getDraftSchematicDataCrc(JNIEnv *env, jobject self,
 	jint draftSchematicCrc)
@@ -2774,7 +2774,7 @@ jobject JNICALL ScriptMethodsCraftingNamespace::getDraftSchematicDataCrc(JNIEnv 
 		return 0;
 
 	const DraftSchematicObject * schematicObject = DraftSchematicObject::getSchematic(draftSchematicCrc);
-	if (schematicObject == nullptr)
+	if (schematicObject == NULL)
 		return 0;
 
 	return JavaLibrary::convert(*schematicObject);
@@ -2794,7 +2794,7 @@ jobject JNICALL ScriptMethodsCraftingNamespace::getDraftSchematicDataCrc(JNIEnv 
  */
 void JNICALL ScriptMethodsCraftingNamespace::recomputeCrateAttributes(JNIEnv *env, jobject self, jlong crate)
 {
-	FactoryObject * factory = nullptr;
+	FactoryObject * factory = NULL;
 	if (!JavaLibrary::getObject(crate, factory))
 		return;
 

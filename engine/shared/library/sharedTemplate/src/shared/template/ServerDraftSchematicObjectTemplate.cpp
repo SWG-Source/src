@@ -49,7 +49,7 @@ ServerDraftSchematicObjectTemplate::~ServerDraftSchematicObjectTemplate()
 		for (iter = m_slots.begin(); iter != m_slots.end(); ++iter)
 		{
 			delete *iter;
-			*iter = nullptr;
+			*iter = NULL;
 		}
 		m_slots.clear();
 	}
@@ -58,7 +58,7 @@ ServerDraftSchematicObjectTemplate::~ServerDraftSchematicObjectTemplate()
 		for (iter = m_skillCommands.begin(); iter != m_skillCommands.end(); ++iter)
 		{
 			delete *iter;
-			*iter = nullptr;
+			*iter = NULL;
 		}
 		m_skillCommands.clear();
 	}
@@ -67,7 +67,7 @@ ServerDraftSchematicObjectTemplate::~ServerDraftSchematicObjectTemplate()
 		for (iter = m_manufactureScripts.begin(); iter != m_manufactureScripts.end(); ++iter)
 		{
 			delete *iter;
-			*iter = nullptr;
+			*iter = NULL;
 		}
 		m_manufactureScripts.clear();
 	}
@@ -119,10 +119,10 @@ Tag ServerDraftSchematicObjectTemplate::getTemplateVersion(void) const
  */
 Tag ServerDraftSchematicObjectTemplate::getHighestTemplateVersion(void) const
 {
-	if (m_baseData == nullptr)
+	if (m_baseData == NULL)
 		return m_templateVersion;
 	const ServerDraftSchematicObjectTemplate * base = dynamic_cast<const ServerDraftSchematicObjectTemplate *>(m_baseData);
-	if (base == nullptr)
+	if (base == NULL)
 		return m_templateVersion;
 	return std::max(m_templateVersion, base->getHighestTemplateVersion());
 } // ServerDraftSchematicObjectTemplate::getHighestTemplateVersion
@@ -136,9 +136,9 @@ CompilerIntegerParam * ServerDraftSchematicObjectTemplate::getCompilerIntegerPar
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_category;
 		}
@@ -150,9 +150,9 @@ CompilerIntegerParam * ServerDraftSchematicObjectTemplate::getCompilerIntegerPar
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_itemsPerContainer;
 		}
@@ -160,7 +160,7 @@ CompilerIntegerParam * ServerDraftSchematicObjectTemplate::getCompilerIntegerPar
 	}
 	else
 		return ServerIntangibleObjectTemplate::getCompilerIntegerParam(name, deepCheck, index);
-	return nullptr;
+	return NULL;
 }	//ServerDraftSchematicObjectTemplate::getCompilerIntegerParam
 
 FloatParam * ServerDraftSchematicObjectTemplate::getFloatParam(const char *name, bool deepCheck, int index)
@@ -171,9 +171,9 @@ FloatParam * ServerDraftSchematicObjectTemplate::getFloatParam(const char *name,
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getFloatParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_manufactureTime;
 		}
@@ -185,9 +185,9 @@ FloatParam * ServerDraftSchematicObjectTemplate::getFloatParam(const char *name,
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getFloatParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_prototypeTime;
 		}
@@ -195,7 +195,7 @@ FloatParam * ServerDraftSchematicObjectTemplate::getFloatParam(const char *name,
 	}
 	else
 		return ServerIntangibleObjectTemplate::getFloatParam(name, deepCheck, index);
-	return nullptr;
+	return NULL;
 }	//ServerDraftSchematicObjectTemplate::getFloatParam
 
 BoolParam * ServerDraftSchematicObjectTemplate::getBoolParam(const char *name, bool deepCheck, int index)
@@ -206,9 +206,9 @@ BoolParam * ServerDraftSchematicObjectTemplate::getBoolParam(const char *name, b
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getBoolParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_destroyIngredients;
 		}
@@ -216,7 +216,7 @@ BoolParam * ServerDraftSchematicObjectTemplate::getBoolParam(const char *name, b
 	}
 	else
 		return ServerIntangibleObjectTemplate::getBoolParam(name, deepCheck, index);
-	return nullptr;
+	return NULL;
 }	//ServerDraftSchematicObjectTemplate::getBoolParam
 
 StringParam * ServerDraftSchematicObjectTemplate::getStringParam(const char *name, bool deepCheck, int index)
@@ -227,9 +227,9 @@ StringParam * ServerDraftSchematicObjectTemplate::getStringParam(const char *nam
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getStringParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_craftedObjectTemplate;
 		}
@@ -241,9 +241,9 @@ StringParam * ServerDraftSchematicObjectTemplate::getStringParam(const char *nam
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getStringParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_crateObjectTemplate;
 		}
@@ -275,7 +275,7 @@ StringParam * ServerDraftSchematicObjectTemplate::getStringParam(const char *nam
 	}
 	else
 		return ServerIntangibleObjectTemplate::getStringParam(name, deepCheck, index);
-	return nullptr;
+	return NULL;
 }	//ServerDraftSchematicObjectTemplate::getStringParam
 
 StringIdParam * ServerDraftSchematicObjectTemplate::getStringIdParam(const char *name, bool deepCheck, int index)
@@ -309,7 +309,7 @@ StructParamOT * ServerDraftSchematicObjectTemplate::getStructParamOT(const char 
 	}
 	else
 		return ServerIntangibleObjectTemplate::getStructParamOT(name, deepCheck, index);
-	return nullptr;
+	return NULL;
 }	//ServerDraftSchematicObjectTemplate::getStructParamOT
 
 TriggerVolumeParam * ServerDraftSchematicObjectTemplate::getTriggerVolumeParam(const char *name, bool deepCheck, int index)
@@ -418,12 +418,12 @@ char paramName[MAX_NAME_SIZE];
 		file.read_string(baseFilename);
 		file.exitChunk();
 		const ObjectTemplate *base = ObjectTemplateList::fetch(baseFilename);
-		DEBUG_WARNING(base == nullptr, ("was unable to load base template %s", baseFilename.c_str()));
-		if (m_baseData == base && base != nullptr)
+		DEBUG_WARNING(base == NULL, ("was unable to load base template %s", baseFilename.c_str()));
+		if (m_baseData == base && base != NULL)
 			base->releaseReference();
 		else
 		{
-			if (m_baseData != nullptr)
+			if (m_baseData != NULL)
 				m_baseData->releaseReference();
 			m_baseData = base;
 		}
@@ -457,7 +457,7 @@ char paramName[MAX_NAME_SIZE];
 			for (iter = m_slots.begin(); iter != m_slots.end(); ++iter)
 			{
 				delete *iter;
-				*iter = nullptr;
+				*iter = NULL;
 			}
 			m_slots.clear();
 			m_slotsAppend = file.read_bool8();
@@ -476,7 +476,7 @@ char paramName[MAX_NAME_SIZE];
 			for (iter = m_skillCommands.begin(); iter != m_skillCommands.end(); ++iter)
 			{
 				delete *iter;
-				*iter = nullptr;
+				*iter = NULL;
 			}
 			m_skillCommands.clear();
 			m_skillCommandsAppend = file.read_bool8();
@@ -497,7 +497,7 @@ char paramName[MAX_NAME_SIZE];
 			for (iter = m_manufactureScripts.begin(); iter != m_manufactureScripts.end(); ++iter)
 			{
 				delete *iter;
-				*iter = nullptr;
+				*iter = NULL;
 			}
 			m_manufactureScripts.clear();
 			m_manufactureScriptsAppend = file.read_bool8();
@@ -672,7 +672,7 @@ ServerDraftSchematicObjectTemplate::_IngredientSlot::~_IngredientSlot()
 		for (iter = m_options.begin(); iter != m_options.end(); ++iter)
 		{
 			delete *iter;
-			*iter = nullptr;
+			*iter = NULL;
 		}
 		m_options.clear();
 	}
@@ -719,9 +719,9 @@ FloatParam * ServerDraftSchematicObjectTemplate::_IngredientSlot::getFloatParam(
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getFloatParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_complexity;
 		}
@@ -729,7 +729,7 @@ FloatParam * ServerDraftSchematicObjectTemplate::_IngredientSlot::getFloatParam(
 	}
 	else
 		return TpfTemplate::getFloatParam(name, deepCheck, index);
-	return nullptr;
+	return NULL;
 }	//ServerDraftSchematicObjectTemplate::_IngredientSlot::getFloatParam
 
 BoolParam * ServerDraftSchematicObjectTemplate::_IngredientSlot::getBoolParam(const char *name, bool deepCheck, int index)
@@ -740,9 +740,9 @@ BoolParam * ServerDraftSchematicObjectTemplate::_IngredientSlot::getBoolParam(co
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getBoolParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_optional;
 		}
@@ -750,7 +750,7 @@ BoolParam * ServerDraftSchematicObjectTemplate::_IngredientSlot::getBoolParam(co
 	}
 	else
 		return TpfTemplate::getBoolParam(name, deepCheck, index);
-	return nullptr;
+	return NULL;
 }	//ServerDraftSchematicObjectTemplate::_IngredientSlot::getBoolParam
 
 StringParam * ServerDraftSchematicObjectTemplate::_IngredientSlot::getStringParam(const char *name, bool deepCheck, int index)
@@ -761,9 +761,9 @@ StringParam * ServerDraftSchematicObjectTemplate::_IngredientSlot::getStringPara
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getStringParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_optionalSkillCommand;
 		}
@@ -775,9 +775,9 @@ StringParam * ServerDraftSchematicObjectTemplate::_IngredientSlot::getStringPara
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getStringParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_appearance;
 		}
@@ -785,7 +785,7 @@ StringParam * ServerDraftSchematicObjectTemplate::_IngredientSlot::getStringPara
 	}
 	else
 		return TpfTemplate::getStringParam(name, deepCheck, index);
-	return nullptr;
+	return NULL;
 }	//ServerDraftSchematicObjectTemplate::_IngredientSlot::getStringParam
 
 StringIdParam * ServerDraftSchematicObjectTemplate::_IngredientSlot::getStringIdParam(const char *name, bool deepCheck, int index)
@@ -796,9 +796,9 @@ StringIdParam * ServerDraftSchematicObjectTemplate::_IngredientSlot::getStringId
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getStringIdParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_name;
 		}
@@ -806,7 +806,7 @@ StringIdParam * ServerDraftSchematicObjectTemplate::_IngredientSlot::getStringId
 	}
 	else
 		return TpfTemplate::getStringIdParam(name, deepCheck, index);
-	return nullptr;
+	return NULL;
 }	//ServerDraftSchematicObjectTemplate::_IngredientSlot::getStringIdParam
 
 VectorParam * ServerDraftSchematicObjectTemplate::_IngredientSlot::getVectorParam(const char *name, bool deepCheck, int index)
@@ -835,7 +835,7 @@ StructParamOT * ServerDraftSchematicObjectTemplate::_IngredientSlot::getStructPa
 	}
 	else
 		return TpfTemplate::getStructParamOT(name, deepCheck, index);
-	return nullptr;
+	return NULL;
 }	//ServerDraftSchematicObjectTemplate::_IngredientSlot::getStructParamOT
 
 TriggerVolumeParam * ServerDraftSchematicObjectTemplate::_IngredientSlot::getTriggerVolumeParam(const char *name, bool deepCheck, int index)
@@ -921,7 +921,7 @@ char paramName[MAX_NAME_SIZE];
 			for (iter = m_options.begin(); iter != m_options.end(); ++iter)
 			{
 				delete *iter;
-				*iter = nullptr;
+				*iter = NULL;
 			}
 			m_options.clear();
 			m_optionsAppend = file.read_bool8();

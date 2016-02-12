@@ -55,7 +55,7 @@
 //================================================= static vars assignment ==
 const int	entryPointVersion = 1;				// constantly check DataEntryPoint.h to see if this value has changed
 
-OutputFileHandler   *outfileHandler = nullptr;
+OutputFileHandler   *outfileHandler = NULL;
 const int   bufferSize = 16 * 1024 * 1024;
 const int   maxStringSize = 256;
 const char  version[] = "1.3 September 18, 2000";
@@ -242,7 +242,7 @@ int main(	int argc,				// number of args in commandline
 //
 static void callbackFunction(void)
 {
-	outfileHandler = nullptr;
+	outfileHandler = NULL;
 
 #ifdef WIN32
 
@@ -392,13 +392,13 @@ static errorType evaluateArgs(void)
 
 	// get default values from DOS
 	char		currentDir[maxStringSize];
-	if (nullptr == getcwd(currentDir, maxStringSize))		// get current working directory
+	if (NULL == getcwd(currentDir, maxStringSize))		// get current working directory
 	{
 		retVal = ERR_UNKNOWNDIR;
 		return(retVal);
 	}
 	drive[0] = currentDir[0];				// drive letter
-	drive[1] = 0;							// and nullptr terminate it
+	drive[1] = 0;							// and null terminate it
 	strcpy(extension, "IFF");				// default to uppercase .IFF
 	strcpy(directory, &currentDir[2]);		// get everything after the Drive: including the first backslash
 	filename[0] = 0;
@@ -619,7 +619,7 @@ static errorType loadInputToBuffer(
 		// we've successfully read the file, now close it...
 		delete inFileHandler;
 	}
-	else	// inFileName is nullptr
+	else	// inFileName is NULL
 	{
 		retVal = ERR_FILENOTFOUND;
 	}
@@ -746,7 +746,7 @@ static void handleError(errorType error)
 // Revisions and History:
 //   1/07/99 [] - created
 //
-extern "C" void MIFFMessage(char *message,			// nullptr terminated string to be displayed
+extern "C" void MIFFMessage(char *message,			// null terminated string to be displayed
 							int  forceOutput)		// if non-zero, it will print out even in quiet mode (for ERRORs)
 {
 	if (forceOutput)

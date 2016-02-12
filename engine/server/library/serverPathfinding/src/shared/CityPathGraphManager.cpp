@@ -58,7 +58,7 @@
 struct RegionCacheEntry
 {
 	RegionCacheEntry ( void )
-	: m_shape(), m_graph(nullptr)
+	: m_shape(), m_graph(NULL)
 	{
 	}
 
@@ -143,7 +143,7 @@ void CityPathGraphManager::update ( float time )
 
 		CityPathGraph * graph = g_regionCache[g_scrubberGraphIndex].m_graph;
 
-		if(graph == nullptr) return;
+		if(graph == NULL) return;
 
 		if(g_scrubberNodeIndex >= graph->getNodeCount())
 		{
@@ -156,7 +156,7 @@ void CityPathGraphManager::update ( float time )
 
 		g_scrubberNodeIndex++;
 
-		if(node == nullptr) return;
+		if(node == NULL) return;
 
 		if(!node->sanityCheck(false))
 		{
@@ -233,14 +233,14 @@ Region const * getCityRegionFor( Vector const & position )
 		return results[0];
 	}
 
-	return nullptr;
+	return NULL;
 }
 
 // ----------------------------------------------------------------------
 
 int getCityTokenFor ( Region const * region )
 {
-	if(region == nullptr) return -1;
+	if(region == NULL) return -1;
 
 	Unicode::String const & name = region->getName();
 
@@ -294,7 +294,7 @@ bool checkRegionCache ( Vector const & position, CityPathGraph * & outGraph )
 
 bool addToRegionCache ( MultiShape const & shape, CityPathGraph * graph )
 {
-	if(graph == nullptr) return false;
+	if(graph == NULL) return false;
 
 	RegionCacheEntry entry(shape,graph);
 
@@ -325,12 +325,12 @@ bool addToRegionCache ( AxialBox const & box, CityPathGraph * graph )
 
 bool addToRegionCache ( Region const * region, CityPathGraph * graph )
 {
-	if(region == nullptr) return false;
-	if(graph == nullptr) return false;
+	if(region == NULL) return false;
+	if(graph == NULL) return false;
 
 	MxCifQuadTreeBounds const * bounds = &region->getBounds();
 
-	if(bounds == nullptr) return false;
+	if(bounds == NULL) return false;
 
 	MxCifQuadTreeCircleBounds const * circleBounds = dynamic_cast<MxCifQuadTreeCircleBounds const *>(bounds);
 
@@ -390,7 +390,7 @@ CityPathGraph * createCityGraphFor ( Region const * region )
 {
 	int token = getCityTokenFor(region);
 
-	if(token == -1) return nullptr;
+	if(token == -1) return NULL;
 
 	CityPathGraph * graph = new CityPathGraph(token);
 
@@ -401,7 +401,7 @@ CityPathGraph * createCityGraphFor ( Region const * region )
 
 CityPathGraph * createCityGraphFor ( ServerObject const * creator, MultiShape const & shape )
 {
-	if(creator == nullptr) return nullptr;
+	if(creator == NULL) return NULL;
 
 	CityPathGraph * newGraph = new CityPathGraph(-1);
 
@@ -416,7 +416,7 @@ CityPathGraph * createCityGraphFor ( ServerObject const * creator, MultiShape co
 
 CityPathGraph * _getCityGraphFor ( Vector const & position )
 {
-	CityPathGraph * graph = nullptr;
+	CityPathGraph * graph = NULL;
 
 	if(checkRegionCache(position,graph))
 	{
@@ -436,9 +436,9 @@ CityPathGraph * _getCityGraphFor ( Vector const & position )
 
 CityPathGraph * _getCityGraphFor ( ServerObject const * object )
 {
-	if(object == nullptr)
+	if(object == NULL)
 	{
-		return nullptr;
+		return NULL;
 	}
 	else
 	{
@@ -450,8 +450,8 @@ CityPathGraph * _getCityGraphFor ( ServerObject const * object )
 
 CityPathNode * _getCityNodeFor ( ServerObject const * object, CityPathGraph * graph )
 {
-	if(object == nullptr) return nullptr;
-	if(graph == nullptr) return nullptr;
+	if(object == NULL) return NULL;
+	if(graph == NULL) return NULL;
 
 	return graph->findNodeForObject(*object);
 }
@@ -462,7 +462,7 @@ CityPathNode * _getCityNodeFor ( ServerObject const * object )
 {
 	CityPathGraph * graph = _getCityGraphFor(object);
 
-	if(graph == nullptr) return nullptr;
+	if(graph == NULL) return NULL;
 
 	return _getCityNodeFor(object,graph);
 }
@@ -471,19 +471,19 @@ CityPathNode * _getCityNodeFor ( ServerObject const * object )
 
 PathGraph const * _getExteriorGraph ( ServerObject const * object )
 {
-	if(object == nullptr) return nullptr;
+	if(object == NULL) return NULL;
 
 	CollisionProperty const * collision = object->getCollisionProperty();
 
-	if(collision == nullptr) return nullptr;
+	if(collision == NULL) return NULL;
 
 	Floor const * floor = collision->getFloor();
 
-	if(floor == nullptr) return nullptr;
+	if(floor == NULL) return NULL;
 
 	FloorMesh const * floorMesh = floor->getFloorMesh();
 
-	if(floorMesh == nullptr) return nullptr;
+	if(floorMesh == NULL) return NULL;
 
 	PathGraph const * pathGraph = safe_cast<PathGraph const *>(floorMesh->getPathGraph());
 
@@ -507,8 +507,8 @@ CityPathGraph const * CityPathGraphManager::getCityGraphFor ( Vector const & pos
 CityPathNode const * CityPathGraphManager::getNamedNodeFor( ServerObject const & object, Unicode::String const & nodeName )
 {
 	CityPathGraph const * cityGraph = getCityGraphFor(&object);
-	if (cityGraph == nullptr)
-		return nullptr;
+	if (cityGraph == NULL)
+		return NULL;
 
 	return cityGraph->findNearestNodeForName(nodeName, object.getPosition_w());
 }
@@ -517,7 +517,7 @@ CityPathNode const * CityPathGraphManager::getNamedNodeFor( ServerObject const &
 
 bool CityPathGraphManager::getClosestPathNodePos ( ServerObject const * object, Vector & outPos )
 {
-	if(object == nullptr) return false;
+	if(object == NULL) return false;
 
 	if(object->getParentCell() == CellProperty::getWorldCellProperty()) 
 	{
@@ -548,11 +548,11 @@ bool CityPathGraphManager::getClosestPathNodePos ( ServerObject const * object, 
 
 void CityPathGraphManager::addWaypoint ( ServerObject * sourceObject )
 {
-	if(sourceObject == nullptr) return;
+	if(sourceObject == NULL) return;
 
 	CityPathGraph * graph = _getCityGraphFor(sourceObject);
 
-	if(graph == nullptr) 
+	if(graph == NULL) 
 	{
 		return;
 	}
@@ -561,7 +561,7 @@ void CityPathGraphManager::addWaypoint ( ServerObject * sourceObject )
 
 	DynamicVariableList const & objvars = sourceObject->getObjVars();
 
-	CityPathNode * newNode = nullptr;
+	CityPathNode * newNode = NULL;
 
 	Vector sourcePos_w = sourceObject->getPosition_w();
 
@@ -626,11 +626,11 @@ void CityPathGraphManager::removeWaypoint ( ServerObject * sourceObject )
 {
 	CityPathGraph * graph = _getCityGraphFor(sourceObject);
 
-	if(graph == nullptr) return;
+	if(graph == NULL) return;
 
 	CityPathNode * unloadingNode = _getCityNodeFor(sourceObject,graph);
 
-	if(unloadingNode == nullptr) return;
+	if(unloadingNode == NULL) return;
 
 	// ----------
 
@@ -679,15 +679,15 @@ void CityPathGraphManager::moveWaypoint ( ServerObject * sourceObject, Vector co
 {
 	UNREF(oldPosition);
 
-	if(sourceObject == nullptr) return;
+	if(sourceObject == NULL) return;
 
 	CityPathGraph * graph = _getCityGraphFor(sourceObject);
 
-	if(graph == nullptr) return;
+	if(graph == NULL) return;
 
 	CityPathNode * node = _getCityNodeFor(sourceObject,graph);
 
-	if(node == nullptr) return;
+	if(node == NULL) return;
 
 	// ----------
 
@@ -719,11 +719,11 @@ void CityPathGraphManager::moveWaypoint ( ServerObject * sourceObject, Vector co
 
 void CityPathGraphManager::addBuilding ( BuildingObject * building )
 {
-	if(building == nullptr) return;
+	if(building == NULL) return;
 
 	CityPathGraph * graph = _getCityGraphFor(building);
 
-	if(graph == nullptr) 
+	if(graph == NULL) 
 	{
 		return;
 	}
@@ -752,11 +752,11 @@ void CityPathGraphManager::addBuilding ( BuildingObject * building )
 		{
 			ServerObject * serverObject = ServerWorld::findObjectByNetworkId(ids[i]);
 
-			if(serverObject == nullptr) continue;
+			if(serverObject == NULL) continue;
 
 			CityPathNode * node = _getCityNodeFor(serverObject,graph);
 
-			if(node == nullptr) continue;
+			if(node == NULL) continue;
 
 			node->setCreator(building->getNetworkId());
 		}
@@ -783,11 +783,11 @@ void CityPathGraphManager::destroyBuilding ( BuildingObject * building )
 
 void CityPathGraphManager::moveBuilding ( BuildingObject * building, Vector const & oldPosition )
 {
-	if(building == nullptr) return;
+	if(building == NULL) return;
 
 	CityPathGraph * graph = _getCityGraphFor(building);
 
-	if(graph == nullptr) return;
+	if(graph == NULL) return;
 
 	UNREF(oldPosition);
 
@@ -800,11 +800,11 @@ void CityPathGraphManager::moveBuilding ( BuildingObject * building, Vector cons
 	{
 		ServerObject * serverObject = ServerWorld::findObjectByNetworkId(ids[i]);
 
-		if(serverObject == nullptr) continue;
+		if(serverObject == NULL) continue;
 
 		CityPathNode * node = _getCityNodeFor(serverObject,graph);
 
-		if(node == nullptr) continue;
+		if(node == NULL) continue;
 
 		Vector relativePos_o = node->getRelativePosition_o();
 
@@ -851,7 +851,7 @@ bool CityPathGraphManager::destroyPathGraph ( ServerObject const * creator )
 
 bool CityPathGraphManager::createPathNodes ( ServerObject * building )
 {
-	if(building == nullptr) return false;
+	if(building == NULL) return false;
 
 	// Destroy any old path nodes for the building
 
@@ -862,7 +862,7 @@ bool CityPathGraphManager::createPathNodes ( ServerObject * building )
 
 	PathGraph const * pathGraph = _getExteriorGraph(building);
 
-	if(pathGraph == nullptr) return false;
+	if(pathGraph == NULL) return false;
 
 	// ----------
 	// Go through all the nodes in the building's graph and create city
@@ -878,7 +878,7 @@ bool CityPathGraphManager::createPathNodes ( ServerObject * building )
 	{
 		PathNode const * node = pathGraph->getNode(i);
 
-		if(node == nullptr) continue;
+		if(node == NULL) continue;
 
 		// ----------
 
@@ -975,11 +975,11 @@ void CityPathGraphManager::destroyWaypoint ( ServerObject * object )
 {
 	CityPathGraph * graph = _getCityGraphFor(object);
 
-	if(graph == nullptr) return;
+	if(graph == NULL) return;
 
 	CityPathNode * deadNode = _getCityNodeFor(object,graph);
 
-	if(deadNode == nullptr) return;
+	if(deadNode == NULL) return;
 
 	// ----------
 
@@ -1025,11 +1025,11 @@ void CityPathGraphManager::destroyWaypoint ( ServerObject * object )
 
 bool CityPathGraphManager::destroyPathNodes ( ServerObject * object )
 {
-	if(object == nullptr) return false;
+	if(object == NULL) return false;
 
 	BuildingObject * building = dynamic_cast<BuildingObject*>(object);
 
-	if(building == nullptr) return false;
+	if(building == NULL) return false;
 
 	NetworkIdList ids;
 	if (!building->getObjVars().getItem(OBJVAR_PATHFINDING_BUILDING_WAYPOINTS,ids)) return false;
@@ -1044,7 +1044,7 @@ bool CityPathGraphManager::destroyPathNodes ( ServerObject * object )
 
 		ServerObject * serverObject = ServerWorld::findObjectByNetworkId(id);
 
-		if(serverObject == nullptr) continue;
+		if(serverObject == NULL) continue;
 
 		serverObject->permanentlyDestroy(DeleteReasons::Replaced);
 	}
@@ -1156,7 +1156,7 @@ void CityPathGraphManager::setLinkDistance ( float dist )
 
 void CityPathGraphManager::relinkGraph ( CityPathGraph const * constGraph )
 {
-	if(constGraph == nullptr) return;
+	if(constGraph == NULL) return;
 
 	CityPathGraph * graph = const_cast<CityPathGraph*>(constGraph);
 

@@ -613,7 +613,7 @@ void Pvp::updateTimedFlags(const void *context)
 
 	unsigned long const updateTimeMs = static_cast<unsigned long>(ConfigServerGame::getPvpUpdateTimeMs());
 	PvpInternal::updateTimedFlags(updateTimeMs);
-	getScheduler().setCallback(Pvp::updateTimedFlags, nullptr, updateTimeMs);
+	getScheduler().setCallback(Pvp::updateTimedFlags, NULL, updateTimeMs);
 }
 
 // ----------------------------------------------------------------------
@@ -754,7 +754,7 @@ Pvp::GcwScoreCategory const * Pvp::getGcwScoreCategory(std::string const & score
 	if (iterFind != s_gcwScoreCategory.end())
 		return iterFind->second;
 
-	return nullptr;
+	return NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -765,7 +765,7 @@ Pvp::GcwScoreCategory const * Pvp::getGcwScoreDefaultCategoryForPlanet(std::stri
 	if (iterFind != s_gcwScoreDefaultCategoryForPlanet.end())
 		return iterFind->second;
 
-	return nullptr;
+	return NULL;
 }
 
 // ----------------------------------------------------------------------

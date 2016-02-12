@@ -58,7 +58,7 @@ bool ConsoleCommandParserMoney::performParsing (const NetworkId & userId, const 
 	{
 		NetworkId sourceId(Unicode::wideToNarrow (argv[1]));
 		NetworkId targetId(Unicode::wideToNarrow (argv[2]));
-		int amount(strtoul(Unicode::wideToNarrow (argv[3]).c_str (), nullptr, 10));
+		int amount(strtoul(Unicode::wideToNarrow (argv[3]).c_str (), NULL, 10));
 
 		ServerObject* source = dynamic_cast<ServerObject*>(NetworkIdManager::getObjectById(sourceId));
 		if (!source)
@@ -75,7 +75,7 @@ bool ConsoleCommandParserMoney::performParsing (const NetworkId & userId, const 
 	{
 		NetworkId sourceId(Unicode::wideToNarrow (argv[1]));
 		NetworkId targetId(Unicode::wideToNarrow (argv[2]));
-		int amount(strtoul(Unicode::wideToNarrow (argv[3]).c_str (), nullptr, 10));
+		int amount(strtoul(Unicode::wideToNarrow (argv[3]).c_str (), NULL, 10));
 
 		ServerObject* source = dynamic_cast<ServerObject*>(NetworkIdManager::getObjectById(sourceId));
 		if (!source)
@@ -91,7 +91,7 @@ bool ConsoleCommandParserMoney::performParsing (const NetworkId & userId, const 
 	else if (isAbbrev( argv [0], "namedTransfer"))
 	{
 		NetworkId sourceId(Unicode::wideToNarrow (argv[1]));
-		int amount(strtol(Unicode::wideToNarrow (argv[3]).c_str (), nullptr, 10));
+		int amount(strtol(Unicode::wideToNarrow (argv[3]).c_str (), NULL, 10));
 
 		ServerObject* source = dynamic_cast<ServerObject*>(NetworkIdManager::getObjectById(sourceId));
 		if (!source)
@@ -117,7 +117,7 @@ bool ConsoleCommandParserMoney::performParsing (const NetworkId & userId, const 
 	else if (isAbbrev( argv [0], "withdraw"))
 	{
 		NetworkId sourceId(Unicode::wideToNarrow (argv[1]));
-		int amount(strtoul(Unicode::wideToNarrow (argv[2]).c_str (), nullptr, 10));
+		int amount(strtoul(Unicode::wideToNarrow (argv[2]).c_str (), NULL, 10));
 
 		ServerObject* source = dynamic_cast<ServerObject*>(NetworkIdManager::getObjectById(sourceId));
 		if (!source)
@@ -133,7 +133,7 @@ bool ConsoleCommandParserMoney::performParsing (const NetworkId & userId, const 
 	else if (isAbbrev( argv [0], "deposit"))
 	{
 		NetworkId sourceId(Unicode::wideToNarrow (argv[1]));
-		int amount(strtoul(Unicode::wideToNarrow (argv[2]).c_str (), nullptr, 10));
+		int amount(strtoul(Unicode::wideToNarrow (argv[2]).c_str (), NULL, 10));
 
 		ServerObject* source = dynamic_cast<ServerObject*>(NetworkIdManager::getObjectById(sourceId));
 		if (!source)
@@ -175,7 +175,7 @@ bool ConsoleCommandParserMoney::performParsing (const NetworkId & userId, const 
 	}
 	else if (isAbbrev( argv [0], "setGalacticReserve"))
 	{
-		int const newGalacticReserve(strtoul(Unicode::wideToNarrow (argv[2]).c_str (), nullptr, 10));
+		int const newGalacticReserve(strtoul(Unicode::wideToNarrow (argv[2]).c_str (), NULL, 10));
 		if ((newGalacticReserve < 0) || (newGalacticReserve > ConfigServerGame::getMaxGalacticReserveDepositBillion()))
 		{
 			result += Unicode::narrowToWide(FormattedString<1024>().sprintf("specified galactic reserve balance (%d) must be in the (inclusive) range (0, %d)\n", newGalacticReserve, ConfigServerGame::getMaxGalacticReserveDepositBillion()));

@@ -50,7 +50,7 @@ public:
      * connection is disconnected, you simply need to derive your class
      * (multiply if necessary) from TcpConnectionHandler, then you can use
      * this method to set the object the TcpConnection will call as appropriate.
-     * default = nullptr (no callbacks made)
+     * default = NULL (no callbacks made)
      *
      * @param handler  The object which will be called for notifications.
      */

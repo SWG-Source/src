@@ -63,7 +63,7 @@ ObjectList::~ObjectList()
 /**
  * Add an Object to the ObjectList.
  * 
- * This routine will call Fatal in debug compiles if it is passed a nullptr
+ * This routine will call Fatal in debug compiles if it is passed a NULL
  * object.
  * 
  * This routine will call Fatal in debug compiles if the object list
@@ -85,7 +85,7 @@ void ObjectList::addObject(Object *objectToAdd)
 /**
  * Remove an Object from the ObjectList.
  * 
- * This routine will call Fatal in debug compiles if it is passed a nullptr
+ * This routine will call Fatal in debug compiles if it is passed a NULL
  * object.
  * 
  * @param objectToRemove  Pointer to the object to remove
@@ -113,13 +113,13 @@ void ObjectList::removeObjectByIndex(const Object* object, int index)
 	// Remove the last item in the vector.
 	m_objectVector->pop_back();
 
-	// nullptr the object from the alter-safe object list.
+	// NULL the object from the alter-safe object list.
 	uint size = m_alterSafeObjectVector->size();
 	for (uint i = 0; i < size; ++i)
 	{
 		if ((*m_alterSafeObjectVector)[i] == object)
 		{
-			(*m_alterSafeObjectVector)[i] = nullptr;
+			(*m_alterSafeObjectVector)[i] = NULL;
 			return;
 		}
 	}
@@ -224,7 +224,7 @@ float ObjectList::alter(real time)
 			if (alterResult == AlterResult::cms_kill) //lint !e777 // Testing floats for equality // It's okay, we're using constants.
 			{
 				// Make sure the object is still in the object list before removing it
-				if ((*m_alterSafeObjectVector)[i] != nullptr)
+				if ((*m_alterSafeObjectVector)[i] != NULL)
 					removeObject(obj);
 				delete obj;
 			}

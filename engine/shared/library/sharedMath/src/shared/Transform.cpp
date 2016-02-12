@@ -493,7 +493,7 @@ void Transform::reorthonormalize(void)
 /**
  * Send this transform to the DebugPrint system.
  *
- * The header parameter may be nullptr.
+ * The header parameter may be NULL.
  *
  * @param header  Header for the transform
  */
@@ -524,8 +524,8 @@ void Transform::debugPrint(const char *header) const
 
 void Transform::rotate_l2p(const Vector *source, Vector *result, int count) const
 {
-	DEBUG_FATAL(!source, ("source array is nullptr"));
-	DEBUG_FATAL(!result, ("result array is nullptr"));
+	DEBUG_FATAL(!source, ("source array is NULL"));
+	DEBUG_FATAL(!result, ("result array is NULL"));
 	DEBUG_FATAL(source == result, ("source and result array can not be the same"));
 
     NOT_NULL(source);
@@ -559,8 +559,8 @@ void Transform::rotate_l2p(const Vector *source, Vector *result, int count) cons
 
 void Transform::rotateTranslate_l2p(const Vector *source, Vector *result, int count) const
 {
-	DEBUG_FATAL(!source, ("source array is nullptr"));
-	DEBUG_FATAL(!result, ("result array is nullptr"));
+	DEBUG_FATAL(!source, ("source array is NULL"));
+	DEBUG_FATAL(!result, ("result array is NULL"));
 
     NOT_NULL(source);
     NOT_NULL(result);
@@ -594,8 +594,8 @@ void Transform::rotateTranslate_l2p(const Vector *source, Vector *result, int co
 
 void Transform::rotate_p2l(const Vector *source, Vector *result, int count) const
 {
-	DEBUG_FATAL(!source, ("source array is nullptr"));
-	DEBUG_FATAL(!result, ("result array is nullptr"));
+	DEBUG_FATAL(!source, ("source array is NULL"));
+	DEBUG_FATAL(!result, ("result array is NULL"));
 
     NOT_NULL(source);
     NOT_NULL(result);
@@ -629,8 +629,8 @@ void Transform::rotate_p2l(const Vector *source, Vector *result, int count) cons
 
 void Transform::rotateTranslate_p2l(const Vector *source, Vector *result, int count) const
 {
-	DEBUG_FATAL(!source, ("source array is nullptr"));
-	DEBUG_FATAL(!result, ("result array is nullptr"));
+	DEBUG_FATAL(!source, ("source array is NULL"));
+	DEBUG_FATAL(!result, ("result array is NULL"));
 
     NOT_NULL(source);
     NOT_NULL(result);

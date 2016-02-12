@@ -41,14 +41,14 @@ void ShipInternalDamageOverTime::setDamageThreshold(float damageThreshold)
 ShipObject * const ShipInternalDamageOverTime::getShipObject() const
 {
 	Object  * const object = m_shipId.getObject();
-	if (object != nullptr && object->isAuthoritative())
+	if (object != NULL && object->isAuthoritative())
 	{
 		ServerObject  * const serverObject = object->asServerObject();
-		if (serverObject != nullptr)
+		if (serverObject != NULL)
 			return serverObject->asShipObject();
 	}
 	
-	return nullptr;
+	return NULL;
 }
 
 //----------------------------------------------------------------------
@@ -56,7 +56,7 @@ ShipObject * const ShipInternalDamageOverTime::getShipObject() const
 bool ShipInternalDamageOverTime::checkValidity(float & hpCurrent, float & hpMaximum) const
 {
 	ShipObject * const ship = getShipObject();
-	if (ship == nullptr)
+	if (ship == NULL)
 		return false;
 
 	if (m_chassisSlot < 0 || m_chassisSlot > ShipChassisSlotType::SCST_num_types)
@@ -91,7 +91,7 @@ bool ShipInternalDamageOverTime::checkValidity(float & hpCurrent, float & hpMaxi
 bool ShipInternalDamageOverTime::applyDamage(float elapsedTime, float & damageApplied) const
 {
 	ShipObject * const ship = getShipObject();
-	if (ship == nullptr)
+	if (ship == NULL)
 		return false;
 
 	float hpCurrent = 0.0f;

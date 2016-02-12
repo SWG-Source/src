@@ -135,7 +135,7 @@ namespace CTService
 		const char *game, 
 		const char *param)
 	{
-		printf("onServerTest(%u, %s, %s)\n", server_track, game ? game : "(nullptr)", param ? param : "(nullptr)");
+		printf("onServerTest(%u, %s, %s)\n", server_track, game ? game : "(null)", param ? param : "(null)");
 		replyTest(server_track, 999, 0);
 	}
 

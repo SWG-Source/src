@@ -21,8 +21,8 @@ class RequestSceneTransfer : public GameNetworkMessage
 {
 public:
     
-	RequestSceneTransfer(const NetworkId &oid, const std::string & sceneName, uint32 sourceGameServer, const Vector &position_p, const Vector &position_w, const NetworkId &containerId, const char * scriptCallback = nullptr);
-	RequestSceneTransfer(const NetworkId &oid, const std::string & sceneName, uint32 sourceGameServer, const Vector &position_p, const Vector &position_w, const NetworkId &buildingId, const std::string &containerName, const char * scriptCallback = nullptr);
+	RequestSceneTransfer(const NetworkId &oid, const std::string & sceneName, uint32 sourceGameServer, const Vector &position_p, const Vector &position_w, const NetworkId &containerId, const char * scriptCallback = NULL);
+	RequestSceneTransfer(const NetworkId &oid, const std::string & sceneName, uint32 sourceGameServer, const Vector &position_p, const Vector &position_w, const NetworkId &buildingId, const std::string &containerName, const char * scriptCallback = NULL);
 	RequestSceneTransfer(Archive::ReadIterator & source);
 	~RequestSceneTransfer();
 

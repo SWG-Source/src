@@ -7,7 +7,7 @@ namespace ChatSystem
 	using namespace Plat_Unicode;
 
 	ChatIgnoreStatus::ChatIgnoreStatus()
-	: m_core(nullptr)
+	: m_core(NULL)
 	{
 	}
 
@@ -16,7 +16,7 @@ namespace ChatSystem
 	}
 
 	ChatIgnoreStatusCore::ChatIgnoreStatusCore()
-	: m_interface(nullptr)
+	: m_interface(NULL)
 	{
 	}
 

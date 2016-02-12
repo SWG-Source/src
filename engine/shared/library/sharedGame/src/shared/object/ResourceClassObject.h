@@ -118,7 +118,7 @@ inline const StringId & ResourceClassObject::getFriendlyName () const
 
 inline bool ResourceClassObject::isRoot() const
 {
-	return (m_parentClass == nullptr);
+	return (m_parentClass == NULL);
 }
 
 // ----------------------------------------------------------------------

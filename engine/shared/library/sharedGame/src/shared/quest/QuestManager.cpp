@@ -192,7 +192,7 @@ void QuestManager::remove()
 Quest const * QuestManager::getQuest(CrcString const & fileName)
 {
 	Quest const * const quest = getQuest(fileName.getCrc());
-	DEBUG_WARNING(quest == nullptr, ("QuestManager::getQuest(%s): FAILED - testquest not found", fileName.getString()));
+	DEBUG_WARNING(quest == NULL, ("QuestManager::getQuest(%s): FAILED - testquest not found", fileName.getString()));
 	return quest;
 }
 
@@ -200,7 +200,7 @@ Quest const * QuestManager::getQuest(CrcString const & fileName)
 
 Quest const * QuestManager::getQuest(uint32 const questCrc)
 {
-	Quest * quest = nullptr;
+	Quest * quest = NULL;
 
 	//-- Look for the quest in the quest map
 	QuestMap::iterator const iter = s_quests.find(questCrc);
@@ -223,7 +223,7 @@ Quest const * QuestManager::getQuest(uint32 const questCrc)
 		}
 	}
 	
-	DEBUG_WARNING(quest == nullptr, ("QuestManager::getQuest: FAILED - testquest not found"));
+	DEBUG_WARNING(quest == NULL, ("QuestManager::getQuest: FAILED - testquest not found"));
 
 	return quest;
 }
@@ -234,7 +234,7 @@ Quest const * QuestManager::getQuest(std::string const & questName)
 {
 	TemporaryCrcString const fileName(questName.c_str(), true);
 	Quest const * const quest = getQuest(fileName);
-	DEBUG_WARNING(quest == nullptr, ("QuestManager::getQuest(%s): FAILED - testquest not found", questName.c_str()));
+	DEBUG_WARNING(quest == NULL, ("QuestManager::getQuest(%s): FAILED - testquest not found", questName.c_str()));
 	return quest;
 }
 

@@ -27,8 +27,8 @@ namespace PvpRuleSetBaseNamespace
 
 		// if object is authoritative, then apply repercussions immediately;
 		// otherwise, forward repercussions over to the authoritative server
-		PvpUpdateObserver * o = nullptr;
-		MessageQueuePvpCommand * messageQueuePvpCommand = nullptr;
+		PvpUpdateObserver * o = NULL;
+		MessageQueuePvpCommand * messageQueuePvpCommand = NULL;
 
 		if (actor.isAuthoritative())
 			o = new PvpUpdateObserver(&actor, Archive::ADOO_generic);

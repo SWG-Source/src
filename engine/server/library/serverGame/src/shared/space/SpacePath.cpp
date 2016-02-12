@@ -96,7 +96,7 @@ bool SpacePath::isEmpty() const
 // ----------------------------------------------------------------------
 void SpacePath::addReference(void const * const object, float const objectSize)
 {
-	DEBUG_FATAL(object == nullptr, ("Passing a nullptr object into path 0x%p.", this));
+	DEBUG_FATAL(object == NULL, ("Passing a NULL object into path 0x%p.", this));
 
 	++m_referenceCount;
 
@@ -112,7 +112,7 @@ void SpacePath::addReference(void const * const object, float const objectSize)
 // ----------------------------------------------------------------------
 void SpacePath::releaseReference(void const * const object)
 {
-	DEBUG_FATAL(object == nullptr, ("Passing a nullptr object into path 0x%p.", this));
+	DEBUG_FATAL(object == NULL, ("Passing a NULL object into path 0x%p.", this));
 
 	if (--m_referenceCount < 0)
 	{
@@ -178,7 +178,7 @@ bool SpacePath::refine(int & pathRefinementsAvailable)
 
 					Vector avoidancePosition_w;
 					
-					bool const pathAdjusted = SpaceAvoidanceManager::getAvoidancePosition(currentTransform, collisionRadius, sweepVector, nextPosition_w, avoidancePosition_w, nullptr);
+					bool const pathAdjusted = SpaceAvoidanceManager::getAvoidancePosition(currentTransform, collisionRadius, sweepVector, nextPosition_w, avoidancePosition_w, NULL);
 					if (pathAdjusted)
 					{
 						newTransform.setPosition_p(avoidancePosition_w);
@@ -278,7 +278,7 @@ void SpacePath::requestPathResize()
 // ----------------------------------------------------------------------
 bool SpacePath::updateCollisionRadius(void const * const object, float const objectSize)
 {
-	DEBUG_FATAL(object == nullptr, ("Passing a nullptr object into path(0x%p) updateCollisionRadius.", this));
+	DEBUG_FATAL(object == NULL, ("Passing a NULL object into path(0x%p) updateCollisionRadius.", this));
 
 	bool requiresPathUpdate = false;
 

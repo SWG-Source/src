@@ -124,7 +124,7 @@ void ShipTurretTargetingSystem::onTargetLost(NetworkId const & target)
 	ShipObject * const shipObject = NON_NULL(NON_NULL(NON_NULL(m_shipController.getOwner())->asServerObject())->asShipObject());
 	if (!shipObject)  // for release builds
 	{
-		WARNING(true,("Programmer bug:  got a nullptr ShipObject in ShipTurretTargetingSystem::onTargetLost().  May indicate that the ShipObject has already been partially deconstructed."));
+		WARNING(true,("Programmer bug:  got a NULL ShipObject in ShipTurretTargetingSystem::onTargetLost().  May indicate that the ShipObject has already been partially deconstructed."));
 		return;
 	}
 
@@ -168,7 +168,7 @@ bool ShipTurretTargetingSystem::buildTargetList()
 	bool result = false;
 	m_targetList->clear();
 	
-	if (ownerShipController != nullptr)
+	if (ownerShipController != NULL)
 	{
 		if (!ownerShipController->getAttackTargetList().isEmpty())
 		{

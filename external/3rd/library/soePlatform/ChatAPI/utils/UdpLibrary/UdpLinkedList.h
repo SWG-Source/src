@@ -14,8 +14,8 @@ template<typename T> class UdpLinkedList;
 template<typename M> class UdpLinkedListMember
 {
     public:
-        UdpLinkedListMember() { mPrev = nullptr; mNext = nullptr; }
-        UdpLinkedListMember(const UdpLinkedListMember &) { mPrev = nullptr; mNext = nullptr; }
+        UdpLinkedListMember() { mPrev = NULL; mNext = NULL; }
+        UdpLinkedListMember(const UdpLinkedListMember &) { mPrev = NULL; mNext = NULL; }
         ~UdpLinkedListMember() {}
 
 #if defined(_MSC_VER) && (_MSC_VER < 1300)        // MSVC 7.0 is the first version to support friend templates
@@ -60,8 +60,8 @@ template<typename T> class UdpLinkedList
 
 template<typename T> UdpLinkedList<T>::UdpLinkedList(UdpLinkedListMember<T> T::*node)
 {
-    mHead = nullptr;
-    mTail = nullptr;
+    mHead = NULL;
+    mTail = NULL;
     mNode = node;
     mCount = 0;
 }
@@ -98,7 +98,7 @@ template<typename T> int UdpLinkedList<T>::Count() const
 template<typename T> T *UdpLinkedList<T>::Position(int index) const
 {
     T *cur = mHead;
-    while (cur != nullptr && index > 0)
+    while (cur != NULL && index > 0)
     {
         cur = Next(cur);
         index--;
@@ -109,43 +109,43 @@ template<typename T> T *UdpLinkedList<T>::Position(int index) const
 template<typename T> T *UdpLinkedList<T>::Remove(T *cur)
 {
     UdpLinkedListMember<T> *node = &(cur->*mNode);
-    if (node->mPrev == nullptr)
+    if (node->mPrev == NULL)
         mHead = node->mNext;
     else
         ((node->mPrev)->*mNode).mNext = node->mNext;
         
-    if (node->mNext == nullptr)
+    if (node->mNext == NULL)
         mTail = node->mPrev;
     else
         ((node->mNext)->*mNode).mPrev = node->mPrev;
 
-    node->mNext = nullptr;
-    node->mPrev = nullptr;
+    node->mNext = NULL;
+    node->mPrev = NULL;
     mCount--;
     return(cur);
 }
 
 template<typename T> T *UdpLinkedList<T>::RemoveHead()
 {
-    if (mHead == nullptr)
-        return(nullptr);
+    if (mHead == NULL)
+        return(NULL);
     return(Remove(mHead));
 }
 
 template<typename T> T *UdpLinkedList<T>::RemoveTail()
 {
-    if (mTail == nullptr)
-        return(nullptr);
+    if (mTail == NULL)
+        return(NULL);
     return(Remove(mTail));
 }
 
 template<typename T> T *UdpLinkedList<T>::InsertHead(T *cur)
 {
-    assert((cur->*mNode).mPrev == nullptr);
-    assert((cur->*mNode).mNext == nullptr);
+    assert((cur->*mNode).mPrev == NULL);
+    assert((cur->*mNode).mNext == NULL);
     (cur->*mNode).mNext = mHead;
 
-    if (mHead != nullptr)
+    if (mHead != NULL)
     {
         (mHead->*mNode).mPrev = cur;
         mHead = cur;
@@ -161,12 +161,12 @@ template<typename T> T *UdpLinkedList<T>::InsertHead(T *cur)
 
 template<typename T> T *UdpLinkedList<T>::InsertTail(T *cur)
 {
-    assert((cur->*mNode).mPrev == nullptr);
-    assert((cur->*mNode).mNext == nullptr);
+    assert((cur->*mNode).mPrev == NULL);
+    assert((cur->*mNode).mNext == NULL);
 
     (cur->*mNode).mPrev = mTail;
 
-    if (mTail != nullptr)
+    if (mTail != NULL)
     {
         (mTail->*mNode).mNext = cur;
         mTail = cur;
@@ -182,17 +182,17 @@ template<typename T> T *UdpLinkedList<T>::InsertTail(T *cur)
 
 template<typename T> T *UdpLinkedList<T>::InsertAfter(T *cur, T *prev)
 {
-    assert((cur->*mNode).mPrev == nullptr);
-    assert((cur->*mNode).mNext == nullptr);
+    assert((cur->*mNode).mPrev == NULL);
+    assert((cur->*mNode).mNext == NULL);
     
-    if (prev == nullptr)
+    if (prev == NULL)
         return(InsertHead(cur));
         
     (cur->*mNode).mPrev = prev;
     (cur->*mNode).mNext = (prev->*mNode).mNext;
     (prev->*mNode).mNext = cur;
     
-    if ((cur->*mNode).mNext != nullptr)
+    if ((cur->*mNode).mNext != NULL)
         (((cur->*mNode).mNext)->*mNode).mPrev = cur;
     else
         mTail = cur;
@@ -204,7 +204,7 @@ template<typename T> T *UdpLinkedList<T>::InsertAfter(T *cur, T *prev)
 template<typename T> void UdpLinkedList<T>::DeleteAll()
 {
     T *cur = First();
-    while (cur != nullptr)
+    while (cur != NULL)
     {
         T *next = Next(cur);
         Remove(cur);
@@ -216,7 +216,7 @@ template<typename T> void UdpLinkedList<T>::DeleteAll()
 template<typename T> void UdpLinkedList<T>::ReleaseAll()
 {
     T *cur = First();
-    while (cur != nullptr)
+    while (cur != NULL)
     {
         T *next = Next(cur);
         Remove(cur);

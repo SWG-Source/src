@@ -21,9 +21,9 @@
  */
 TpfTemplate::TpfTemplate(const std::string & filename) :
 	ObjectTemplate(filename),
-	m_parentFile(nullptr),
+	m_parentFile(NULL),
 	m_baseTemplateName(),
-	m_baseTemplateFile(nullptr)
+	m_baseTemplateFile(NULL)
 {
 }	// TpfTemplate::TpfTemplate
 
@@ -32,12 +32,12 @@ TpfTemplate::TpfTemplate(const std::string & filename) :
  */
 TpfTemplate::~TpfTemplate()
 {
-	m_parentFile = nullptr;
+	m_parentFile = NULL;
 	m_baseTemplateName.clear();
-	if (m_baseTemplateFile != nullptr)
+	if (m_baseTemplateFile != NULL)
 	{
 		delete m_baseTemplateFile;
-		m_baseTemplateFile = nullptr;
+		m_baseTemplateFile = NULL;
 	}
 }	// TpfTemplate::~TpfTemplate
 
@@ -52,18 +52,18 @@ int TpfTemplate::setBaseTemplateName(const std::string & name)
 {
 	m_baseTemplateName = name;
 	
-	if (m_parentFile == nullptr)
+	if (m_parentFile == NULL)
 		return -1;
 
 	// load the base template
-	if (m_baseTemplateFile != nullptr)
+	if (m_baseTemplateFile != NULL)
 	{
 		delete m_baseTemplateFile;
-		m_baseTemplateFile = nullptr;
+		m_baseTemplateFile = NULL;
 	}
 
-	Filename baseTemplateFileName(nullptr, nullptr, name.c_str(), TEMPLATE_EXTENSION);
-	Filename sourceTpfPath(nullptr, m_parentFile->getTpfPath().c_str(), nullptr, nullptr);
+	Filename baseTemplateFileName(NULL, NULL, name.c_str(), TEMPLATE_EXTENSION);
+	Filename sourceTpfPath(NULL, m_parentFile->getTpfPath().c_str(), NULL, NULL);
 	Filename tempPath(baseTemplateFileName);
 
 	tempPath.setPath(sourceTpfPath.getPath().c_str());
@@ -93,9 +93,9 @@ int TpfTemplate::setBaseTemplateName(const std::string & name)
  */
 TpfTemplate * TpfTemplate::getBaseTemplate(void) const
 {
-	if (m_baseTemplateFile != nullptr)
+	if (m_baseTemplateFile != NULL)
 		return m_baseTemplateFile->getTemplate();
-	return nullptr;
+	return NULL;
 }	// TpfTemplate::getBaseTemplate
 
 /**
@@ -115,14 +115,14 @@ void TpfTemplate::save(Iff &file)
  * @param deepcheck		flag to check base template if the parameter isn't loaded
  * @param index			array index of the parameter
  *
- * @return the parameter, or nullptr if not found
+ * @return the parameter, or NULL if not found
  */
 CompilerIntegerParam *TpfTemplate::getCompilerIntegerParam(const char *name, bool deepCheck, int index)
 {
 	UNREF(name);
 	UNREF(deepCheck);
 	UNREF(index);
-	return nullptr;
+	return NULL;
 }	// TpfTemplate::getCompilerIntegerParam
 
 /**
@@ -132,14 +132,14 @@ CompilerIntegerParam *TpfTemplate::getCompilerIntegerParam(const char *name, boo
  * @param deepcheck		flag to check base template if the parameter isn't loaded
  * @param index			array index of the parameter
  *
- * @return the parameter, or nullptr if not found
+ * @return the parameter, or NULL if not found
  */
 FloatParam *TpfTemplate::getFloatParam(const char *name, bool deepCheck, int index)
 {
 	UNREF(name);
 	UNREF(deepCheck);
 	UNREF(index);
-	return nullptr;
+	return NULL;
 }	// TpfTemplate::getFloatParam
 
 /**
@@ -149,14 +149,14 @@ FloatParam *TpfTemplate::getFloatParam(const char *name, bool deepCheck, int ind
  * @param deepcheck		flag to check base template if the parameter isn't loaded
  * @param index			array index of the parameter
  *
- * @return the parameter, or nullptr if not found
+ * @return the parameter, or NULL if not found
  */
 BoolParam *TpfTemplate::getBoolParam(const char *name, bool deepCheck, int index)
 {
 	UNREF(name);
 	UNREF(deepCheck);
 	UNREF(index);
-	return nullptr;
+	return NULL;
 }	// TpfTemplate::getBoolParam
 
 /**
@@ -166,14 +166,14 @@ BoolParam *TpfTemplate::getBoolParam(const char *name, bool deepCheck, int index
  * @param deepcheck		flag to check base template if the parameter isn't loaded
  * @param index			array index of the parameter
  *
- * @return the parameter, or nullptr if not found
+ * @return the parameter, or NULL if not found
  */
 StringParam *TpfTemplate::getStringParam(const char *name, bool deepCheck, int index)
 {
 	UNREF(name);
 	UNREF(deepCheck);
 	UNREF(index);
-	return nullptr;
+	return NULL;
 }	// TpfTemplate::getStringParam
 
 /**
@@ -183,14 +183,14 @@ StringParam *TpfTemplate::getStringParam(const char *name, bool deepCheck, int i
  * @param deepcheck		flag to check base template if the parameter isn't loaded
  * @param index			array index of the parameter
  *
- * @return the parameter, or nullptr if not found
+ * @return the parameter, or NULL if not found
  */
 StringIdParam *TpfTemplate::getStringIdParam(const char *name, bool deepCheck, int index)
 {
 	UNREF(name);
 	UNREF(deepCheck);
 	UNREF(index);
-	return nullptr;
+	return NULL;
 }	// TpfTemplate::getStringIdParam
 
 /**
@@ -200,14 +200,14 @@ StringIdParam *TpfTemplate::getStringIdParam(const char *name, bool deepCheck, i
  * @param deepcheck		flag to check base template if the parameter isn't loaded
  * @param index			array index of the parameter
  *
- * @return the parameter, or nullptr if not found
+ * @return the parameter, or NULL if not found
  */
 VectorParam *TpfTemplate::getVectorParam(const char *name, bool deepCheck, int index)
 {
 	UNREF(name);
 	UNREF(deepCheck);
 	UNREF(index);
-	return nullptr;
+	return NULL;
 }	// TpfTemplate::getVectorParam
 
 /**
@@ -217,14 +217,14 @@ VectorParam *TpfTemplate::getVectorParam(const char *name, bool deepCheck, int i
  * @param deepcheck		flag to check base template if the parameter isn't loaded
  * @param index			array index of the parameter
  *
- * @return the parameter, or nullptr if not found
+ * @return the parameter, or NULL if not found
  */
 DynamicVariableParam *TpfTemplate::getDynamicVariableParam(const char *name, bool deepCheck, int index)
 {
 	UNREF(name);
 	UNREF(deepCheck);
 	UNREF(index);
-	return nullptr;
+	return NULL;
 }	// TpfTemplate::getDynamicVariableParam
 
 /**
@@ -234,14 +234,14 @@ DynamicVariableParam *TpfTemplate::getDynamicVariableParam(const char *name, boo
  * @param deepcheck		flag to check base template if the parameter isn't loaded
  * @param index			array index of the parameter
  *
- * @return the parameter, or nullptr if not found
+ * @return the parameter, or NULL if not found
  */
 StructParamOT *TpfTemplate::getStructParamOT(const char *name, bool deepCheck, int index)
 {
 	UNREF(name);
 	UNREF(deepCheck);
 	UNREF(index);
-	return nullptr;
+	return NULL;
 }	// TpfTemplate::getStructParamOT
 
 /**
@@ -251,14 +251,14 @@ StructParamOT *TpfTemplate::getStructParamOT(const char *name, bool deepCheck, i
  * @param deepcheck		flag to check base template if the parameter isn't loaded
  * @param index			array index of the parameter
  *
- * @return the parameter, or nullptr if not found
+ * @return the parameter, or NULL if not found
  */
 TriggerVolumeParam *TpfTemplate::getTriggerVolumeParam(const char *name, bool deepCheck, int index)
 {
 	UNREF(name);
 	UNREF(deepCheck);
 	UNREF(index);
-	return nullptr;
+	return NULL;
 }	// TpfTemplate::getTriggerVolumeParam
 
 /**
@@ -408,7 +408,7 @@ bool TpfTemplate::isParamLoadedLocal(const std::string &name, bool deepCheck) co
 	{
 		result = true;
 	}
-	else if (deepCheck && getBaseTemplate() != nullptr)
+	else if (deepCheck && getBaseTemplate() != NULL)
 	{
 		result = getBaseTemplate()->isParamLoadedLocal(name);
 	}
@@ -433,7 +433,7 @@ bool TpfTemplate::isParamPureVirtualLocal(const std::string &name, bool deepChec
 	{
 		result = true;
 	}
-	else if (deepCheck && (getBaseTemplate() != nullptr))
+	else if (deepCheck && (getBaseTemplate() != NULL))
 	{
 		result = getBaseTemplate()->isParamPureVirtualLocal(name);
 	}

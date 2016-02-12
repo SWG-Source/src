@@ -92,7 +92,7 @@ void makeParameters(const std::vector<std::string> & parameters, std::vector<cha
 		strcpy(arg, (*i).c_str()); //lint !e64 !e534
 		p.push_back(arg);
 	}
-	p.push_back(nullptr);
+	p.push_back(NULL);
 }
 
 // ----------------------------------------------------------------------

@@ -48,7 +48,7 @@ const JNINativeMethod NATIVES[] = {
 jboolean JNICALL ScriptMethodsFormNamespace::editFormData(JNIEnv * env, jobject self, jlong player, jlong jObjectToEdit, jobjectArray jKeys, jobjectArray jValues)
 {
 	UNREF(self);
-	ServerObject * playerServerObject = nullptr;
+	ServerObject * playerServerObject = NULL;
 	if (!JavaLibrary::getObject(player, playerServerObject) || !playerServerObject)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("[script bug] can't get player in editFormData"));
@@ -62,7 +62,7 @@ jboolean JNICALL ScriptMethodsFormNamespace::editFormData(JNIEnv * env, jobject 
 		return JNI_FALSE;
 	}
 
-	ServerObject * objectToEditServerObject = nullptr;
+	ServerObject * objectToEditServerObject = NULL;
 	if (!JavaLibrary::getObject(jObjectToEdit, objectToEditServerObject) || !objectToEditServerObject)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("[script bug] objectToEdit is not a ServerObject in editFormData"));

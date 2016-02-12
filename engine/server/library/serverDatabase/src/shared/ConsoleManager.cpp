@@ -14,7 +14,7 @@
 
 namespace ConsoleManagerNamespace
 {
-	ConsoleCommandParser * s_consoleCommandParserRoot = nullptr;
+	ConsoleCommandParser * s_consoleCommandParserRoot = NULL;
 }
 
 using namespace ConsoleManagerNamespace;

@@ -160,7 +160,7 @@ WaypointDataBase::WaypointDataBase() :
 void WaypointDataBase::setName(Unicode::String const &name)
 {
 	//This magical number (250) is chosen because the waypoint datatable has VARCHAR2(512) in this column,
-	//and we're assuming 2 bytes per char (which is not quite true actually) plus an extra one for nullptr plus
+	//and we're assuming 2 bytes per char (which is not quite true actually) plus an extra one for null plus
 	//a few extra for good measure and because nobody needs 251-character waypoint names.
 	if (name.length() > 250)
 	{

@@ -36,7 +36,7 @@ m_pageDataServer(pageDataServer)
 ServerUIPage::~ServerUIPage()
 {
 	delete m_pageDataServer;
-	m_pageDataServer = nullptr;
+	m_pageDataServer = NULL;
 }
 
 //-----------------------------------------------------------------------
@@ -52,19 +52,19 @@ Client* ServerUIPage::getClient() const
 	if(!object)
 	{
 		WARNING(true, ("ServerUIPage PrimaryControlledObject doesn't exist"));
-		return nullptr;
+		return NULL;
 	}
 	ServerObject *const serverObject = object->asServerObject();
 	if(!serverObject)
 	{
 		WARNING(true, ("ServerUIPage PrimaryControlledObject isn't a server object"));
-		return nullptr;
+		return NULL;
 	}
 	Client * const result = serverObject->getClient();	
 	if(!result)
 	{
 		WARNING(true, ("ServerUIPage PrimaryControlledObject has no client yet"));
-		return nullptr;
+		return NULL;
 	}
 	return result;
 }
@@ -74,9 +74,9 @@ Client* ServerUIPage::getClient() const
 ServerObject* ServerUIPage::getOwner() const
 {
 	Object * const object = NetworkIdManager::getObjectById(getPageDataServer().getOwnerId());
-	if (object != nullptr)
+	if (object != NULL)
 		return object->asServerObject();
-	return nullptr;
+	return NULL;
 }
 
 //-----------------------------------------------------------------------

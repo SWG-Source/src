@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
 	SetupSharedFile::install(false);
 	SetupSharedNetworkMessages::install();
 
-	SetupSharedRandom::install(static_cast<uint32>(time(nullptr)));
+	SetupSharedRandom::install(static_cast<uint32>(time(NULL)));
 	Os::setProgramName("CustomerServiceServer");
 	ConfigCustomerServiceServer::install();
 	NetworkHandler::install();

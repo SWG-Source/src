@@ -159,7 +159,7 @@ TerrainObject::~TerrainObject ()
 		TerrainObject::removeFromWorld ();
 	
 	DEBUG_FATAL (ms_instance != this, ("TerrainObject instance is not this object"));
-	ms_instance = nullptr;
+	ms_instance = NULL;
 }
 
 //-------------------------------------------------------------------

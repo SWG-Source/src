@@ -28,7 +28,7 @@ bool CConfig::LoadFile(char * file)
 	
     // open file
 	fp = fopen(file, "r");
-	if (fp == nullptr || fp == (FILE *)-1)
+	if (fp == NULL || fp == (FILE *)-1)
 	{
 		//fprintf(stderr,"Failed to open config file %s!",file);
 		delete fp;
@@ -73,21 +73,21 @@ void CConfig::UnloadFile(void)
 //-----------------------------------
 {
 	delete[] pConfig;
-	pConfig = nullptr;
+	pConfig = NULL;
 }
 
 //-----------------------------------
 /// finds a key of the config in memory
 // key argument is case-insensitive, but must be upper case in config file
-// Returns true for success (passing nullptr is a special case returned as success)
+// Returns true for success (passing NULL is a special case returned as success)
 bool CConfig::FindKey(char *key)
 //-----------------------------------
 {
-	if (pConfig == nullptr)
+	if (pConfig == NULL)
 		return false;
 
     // special case...continue with existing key
-    if (key == nullptr)
+    if (key == NULL)
         return true;
 
     // form the search key
@@ -98,12 +98,12 @@ bool CConfig::FindKey(char *key)
 
     // find the key heading
 	pCursor = strstr(pConfig,strBuffer);
-	if (pCursor==nullptr)
+	if (pCursor==NULL)
 		return false;
 
     // find the closing bracket of key heading
 	pCursor = strchr(pCursor,']');
-	if (pCursor==nullptr)
+	if (pCursor==NULL)
 		return false;
 	pCursor++;
 
@@ -112,7 +112,7 @@ bool CConfig::FindKey(char *key)
 
 //-----------------------------------
 /// extract a number from the config string
-// pass the key to find the first number in the list, else nullptr to find the next number in the list
+// pass the key to find the first number in the list, else NULL to find the next number in the list
 // returns 0 if no number is found, else returns the number
 long CConfig::GetLong(char *key)
 //-----------------------------------
@@ -135,20 +135,20 @@ long CConfig::GetLong(char *key)
 
 //-----------------------------------
 /// extract string (in double-quotes) from the list.
-// pass the key to find the first string in the list, else nullptr to find the next string in the list
-// returns nullptr if no string found, else returns a temporary copy of the string (without quotes)
+// pass the key to find the first string in the list, else NULL to find the next string in the list
+// returns NULL if no string found, else returns a temporary copy of the string (without quotes)
 char * CConfig::GetString(char *key)
 //-----------------------------------
 {
     if (!FindKey(key))
-		return nullptr;
+		return NULL;
 
 
     // look for start of string or end of key
 	while (*pCursor && *pCursor != '"' && *pCursor != '[')	
 		pCursor++;
 	if (*(pCursor++) != '"')
-		return nullptr;
+		return NULL;
 
     // until closing quote
     int c = 0;
@@ -162,7 +162,7 @@ char * CConfig::GetString(char *key)
 		}
 	}
 
-	return nullptr;
+	return NULL;
 }
 
 

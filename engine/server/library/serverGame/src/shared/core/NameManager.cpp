@@ -27,7 +27,7 @@
 
 // ======================================================================
 
-NameManager *NameManager::ms_instance = nullptr;
+NameManager *NameManager::ms_instance = NULL;
 
 // ======================================================================
 
@@ -45,14 +45,14 @@ void NameManager::remove()
 {
 	NOT_NULL(ms_instance);
 	delete ms_instance;
-	ms_instance = nullptr;
+	ms_instance = NULL;
 }
 
 // ----------------------------------------------------------------------
 	
 NameManager::NameManager() :
 		m_nameGenerators (new NameGeneratorMapType),
-		m_reservedNames  (nullptr),
+		m_reservedNames  (NULL),
 		m_nameToIdMap    (new NameToIdMapType),
 		m_idToCharacterDataMap(new IdToCharacterDataMapType)
 {
@@ -72,20 +72,20 @@ NameManager::~NameManager()
 		delete i->second;
 	}
 	delete m_nameGenerators;
-	m_nameGenerators = nullptr;
+	m_nameGenerators = NULL;
 	delete m_reservedNames;
-	m_reservedNames = nullptr;
+	m_reservedNames = NULL;
 	delete m_nameToIdMap;
-	m_nameToIdMap = nullptr;
+	m_nameToIdMap = NULL;
 	delete m_idToCharacterDataMap;
-	m_idToCharacterDataMap = nullptr;
+	m_idToCharacterDataMap = NULL;
 }
 
 // ----------------------------------------------------------------------
 
 const NameGenerator & NameManager::getNameGenerator(const std::string &directory, const std::string &nameTable) const
 {
-	NameGenerator *generator=nullptr;
+	NameGenerator *generator=NULL;
 	NOT_NULL(m_nameGenerators);
 	NameGeneratorMapType::const_iterator i=m_nameGenerators->find(NameTableIdentifier(directory,nameTable));
 	if (i==m_nameGenerators->end())
@@ -204,7 +204,7 @@ void NameManager::addPlayer(const NetworkId &id, uint32 stationId, const std::st
 	{
 		createTime = static_cast<time_t>(getPlayerCreateTime(id));
 		if (createTime <= 0)
-			createTime = ::time(nullptr);
+			createTime = ::time(NULL);
 	}
 	characterData.createTime = createTime;
 
@@ -212,7 +212,7 @@ void NameManager::addPlayer(const NetworkId &id, uint32 stationId, const std::st
 	{
 		lastLoginTime = static_cast<time_t>(getPlayerLastLoginTime(id));
 		if (lastLoginTime <= 0)
-			lastLoginTime = ::time(nullptr);
+			lastLoginTime = ::time(NULL);
 	}
 	characterData.lastLoginTime = lastLoginTime;
 
@@ -382,7 +382,7 @@ void NameManager::getPlayerWithLastLoginTimeAfterDistribution(std::map<int, std:
 	for (std::map<int, std::pair<std::string, int> >::iterator iter = result.begin(); iter != result.end(); ++iter)
 		iter->second.second = 0;
 
-	int const timeNow = static_cast<int>(::time(nullptr));
+	int const timeNow = static_cast<int>(::time(NULL));
 	for (IdToCharacterDataMapType::const_iterator i = m_idToCharacterDataMap->begin(); i != m_idToCharacterDataMap->end(); ++i)
 	{
 		int const lastLoginTimeSecondsAgo = std::max(static_cast<int>(0), static_cast<int>(timeNow - static_cast<int>(i->second.lastLoginTime)));
@@ -439,7 +439,7 @@ void NameManager::getPlayerWithCreateTimeAfterDistribution(std::map<int, std::pa
 	for (std::map<int, std::pair<std::string, int> >::iterator iter = result.begin(); iter != result.end(); ++iter)
 		iter->second.second = 0;
 
-	int const timeNow = static_cast<int>(::time(nullptr));
+	int const timeNow = static_cast<int>(::time(NULL));
 	for (IdToCharacterDataMapType::const_iterator i = m_idToCharacterDataMap->begin(); i != m_idToCharacterDataMap->end(); ++i)
 	{
 		int const createTimeSecondsAgo = std::max(static_cast<int>(0), static_cast<int>(timeNow - static_cast<int>(i->second.createTime)));

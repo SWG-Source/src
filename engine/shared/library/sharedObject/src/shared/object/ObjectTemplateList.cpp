@@ -24,8 +24,8 @@
 
 typedef DataResourceList<ObjectTemplate>          ObjectTemplateListDataResourceList;
 
-template <> ObjectTemplateListDataResourceList::CreateDataResourceMap *ObjectTemplateListDataResourceList::ms_bindings = nullptr;
-template <> ObjectTemplateListDataResourceList::LoadedDataResourceMap *ObjectTemplateListDataResourceList::ms_loaded = nullptr;
+template <> ObjectTemplateListDataResourceList::CreateDataResourceMap *ObjectTemplateListDataResourceList::ms_bindings = NULL;
+template <> ObjectTemplateListDataResourceList::LoadedDataResourceMap *ObjectTemplateListDataResourceList::ms_loaded = NULL;
 
 namespace ObjectTemplateListNamespace
 {

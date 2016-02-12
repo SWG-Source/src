@@ -53,7 +53,7 @@ inline bool ScriptListEntry::operator==(ScriptListEntry const &rhs) const
 
 inline bool ScriptListEntry::isValid() const
 {
-	return m_data != nullptr;
+	return m_data != NULL;
 }
 
 // ======================================================================

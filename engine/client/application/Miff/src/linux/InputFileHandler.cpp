@@ -124,7 +124,7 @@ int InputFileHandler::deleteFile(
 	if (deleteHandleFlag && file)
 	{
 		delete file;
-		file = nullptr;
+		file = NULL;
 	}
 	return(unlink(filename));
 }

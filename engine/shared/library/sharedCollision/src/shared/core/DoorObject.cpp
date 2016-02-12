@@ -99,11 +99,11 @@ DoorObject::DoorObject ( DoorInfo const & info, Portal * portal )
   m_doorHelper2 ( info ),
   m_delta		( info.m_delta ),
   m_portal		( portal ),
-  m_neighbor	( nullptr ),
+  m_neighbor	( NULL ),
   m_spring		( info.m_spring ),
   m_smoothness	( info.m_smoothness ),
   m_draw		( true ),
-  m_barrier		( nullptr ),
+  m_barrier		( NULL ),
   m_oldDoorPos  ( Vector::maxXYZ ),
   m_wasOpen(false),
   m_isForceField( false ),
@@ -119,7 +119,7 @@ DoorObject::DoorObject ( DoorInfo const & info, Portal * portal )
 	setDebugName("Door object");
 
 	for (int i = 0; i < MAX_DRAWN_DOORS; ++i)
-		m_drawnDoor[i] = nullptr;
+		m_drawnDoor[i] = NULL;
 
 	createAppearance(info);
 	createTrigger(info);
@@ -131,7 +131,7 @@ DoorObject::DoorObject ( DoorInfo const & info, Portal * portal )
 DoorObject::~DoorObject()
 {
 	m_hitByObjects.clear();
-	m_portal = nullptr;
+	m_portal = NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -181,7 +181,7 @@ DoorObject const * DoorObject::getNeighbor ( void ) const
 int DoorObject::getNumberOfDrawnDoors ( void )
 {
 	for (int i = 0; i < MAX_DRAWN_DOORS; ++i)
-		if (m_drawnDoor[i] == nullptr)
+		if (m_drawnDoor[i] == NULL)
 			return i;
 
 	return MAX_DRAWN_DOORS;
@@ -210,7 +210,7 @@ void DoorObject::createAppearance ( DoorInfo const & info )
 	{
 		Appearance * const appearance = AppearanceTemplateList::createAppearance(info.m_frameAppearance); 
 
-		if (appearance != nullptr) {
+		if (appearance != NULL) {
 			setAppearance(appearance);
 		} else {
 			DEBUG_WARNING(true, ("FIX ME: Appearance template for DoorObject::createAppearance missing, first stanza."));
@@ -233,7 +233,7 @@ void DoorObject::createAppearance ( DoorInfo const & info )
 		Collision3d::MovePolyOnto(verts,Vector::zero);
 		Appearance * appearance = CellProperty::createForceField(verts,gs_forceFieldColor);
 
-		if(appearance != nullptr)
+		if(appearance != NULL)
 		{
 			m_drawnDoor[0]->setAppearance( appearance );
 			Extent * appearanceExtent = new Extent( Containment3d::EncloseSphere(verts) );
@@ -249,7 +249,7 @@ void DoorObject::createAppearance ( DoorInfo const & info )
 		{
 			Appearance * const appearance = AppearanceTemplateList::createAppearance(info.m_doorAppearance);
 
-			if (appearance != nullptr) {
+			if (appearance != NULL) {
 				m_drawnDoor[0]->setAppearance(appearance);
 			} else {
 				DEBUG_WARNING(true, ("FIX ME: Appearance template for DoorObject::createAppearance missing, third stanza."));
@@ -263,7 +263,7 @@ void DoorObject::createAppearance ( DoorInfo const & info )
 
 			Appearance * const appearance = AppearanceTemplateList::createAppearance(info.m_doorAppearance2);
 
-			if (appearance != nullptr) {
+			if (appearance != NULL) {
 				m_drawnDoor[1]->setAppearance(appearance);
 			} else {
 				DEBUG_WARNING(true, ("FIX ME: Appearance template for DoorObject::createAppearance missing, fourth stanza."));
@@ -476,7 +476,7 @@ float DoorObject::tween ( float t ) const
 
 void DoorObject::hitBy( CollisionProperty const * collision )
 {
-	if(collision == nullptr) return;
+	if(collision == NULL) return;
 
 	CellProperty const * doorCell            = getParentCell();
 	CellProperty const * doorNeighborCell    = m_neighbor ? m_neighbor->getParentCell() : doorCell;
@@ -533,7 +533,7 @@ void DoorObject::setNeighbor ( DoorObject * newNeighbor )
 		if (newNeighbor)
 			m_barrier->setNeighbor( newNeighbor->m_barrier );
 		else
-			m_barrier->setNeighbor( nullptr );
+			m_barrier->setNeighbor( NULL );
 	}
 }
 
@@ -587,7 +587,7 @@ void DoorObject::trackHitByObject(Object const &hitByObject)
 	if (static_cast<int>(m_hitByObjects.size()) >= cs_maxHitByObjectsToTrack)
 		return;
 
-	// NOTE: This can't be a set because the key's value can change when a watcher's value changes from non-nullptr to nullptr.
+	// NOTE: This can't be a set because the key's value can change when a watcher's value changes from non-NULL to NULL.
 	// Check if the object already exists in the list.
 	if (std::find(m_hitByObjects.begin(), m_hitByObjects.end(), ConstWatcher<Object>(&hitByObject)) != m_hitByObjects.end())
 		return;
@@ -607,7 +607,7 @@ void DoorObject::maintainHitByObjectVector()
 	// Remove any objects that no longer exist or no longer are within the trigger radius.
 	for (WatcherObjectVector::iterator it = m_hitByObjects.begin(); it != m_hitByObjects.end(); )
 	{
-		if (it->getPointer() == nullptr)
+		if (it->getPointer() == NULL)
 		{
 			// This hit-by object has been deleted so clear it out of the tracking list.
 			it = m_hitByObjects.erase(it);

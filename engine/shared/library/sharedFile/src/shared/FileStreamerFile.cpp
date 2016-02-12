@@ -93,7 +93,7 @@ FileStreamerFile::~FileStreamerFile()
 
 bool FileStreamerFile::isOpen() const
 {
-	return m_file != nullptr;
+	return m_file != NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -174,7 +174,7 @@ void FileStreamerFile::close()
 {
 	if (m_owner)
 		delete m_file;
-	m_file = nullptr;
+	m_file = NULL;
 }
 
 // ======================================================================

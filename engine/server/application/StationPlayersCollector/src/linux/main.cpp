@@ -35,7 +35,7 @@ int main(int argc, char ** argv)
 	SetupSharedFile::install(false);
 	SetupSharedNetworkMessages::install();
 
-	SetupSharedRandom::install(static_cast<uint32>(time(nullptr))); //lint !e1924 !e64 // nullptr is a C-Style cast?
+	SetupSharedRandom::install(static_cast<uint32>(time(NULL))); //lint !e1924 !e64 // NULL is a C-Style cast?
 
 	Os::setProgramName("StationPlayersCollector");
 	        

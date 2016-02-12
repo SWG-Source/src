@@ -8,7 +8,7 @@
 // @todo How do I get this into doxygen?  It's information that really spans multiple classes
 //
 // The Watcher system allows pointers to objects to be automatically
-// reset to nullptr when the object watching them is destoyed.
+// reset to NULL when the object watching them is destoyed.
 // 
 // For something <T> to be watchable, it must provide a routine of the form:
 //
@@ -66,7 +66,7 @@ class Watcher : public BaseWatcher
 {
 public:
 
-	explicit Watcher(T *data=nullptr);
+	explicit Watcher(T *data=NULL);
 	Watcher(const Watcher &newValue);
 	~Watcher();  //lint !e1509 // Warning -- base class destructor for class is not virtual
 
@@ -96,7 +96,7 @@ class ConstWatcher : public BaseWatcher
 {
 public:
 
-	explicit ConstWatcher(const T *data=nullptr);
+	explicit ConstWatcher(const T *data=NULL);
 	ConstWatcher(const ConstWatcher &newValue);
 	~ConstWatcher();  //lint !e1509 // Warning -- base class destructor for class is not virtual
 
@@ -177,7 +177,7 @@ inline BaseWatcher::BaseWatcher(void *data)
 
 inline void BaseWatcher::reset()
 {
-	m_data = nullptr;
+	m_data = NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -190,7 +190,7 @@ inline void BaseWatcher::reset()
 
 inline BaseWatcher::~BaseWatcher()
 {
-	m_data = nullptr;
+	m_data = NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -593,11 +593,11 @@ inline const T *ConstWatcher<T>::operator ->() const
 /**
  * Construct a WatchedByList.
  *
- * This list of watchers remains nullptr until someone first watches the object.
+ * This list of watchers remains NULL until someone first watches the object.
  */
 
 inline WatchedByList::WatchedByList()
-: m_list(nullptr)
+: m_list(NULL)
 {
 }
 

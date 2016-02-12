@@ -135,7 +135,7 @@ void ChatLogManagerNamespace::addChatLogEntry(Unicode::String const &fromPlayer,
 	}
 	else
 	{
-		Unicode::String const *finalMessage = nullptr;
+		Unicode::String const *finalMessage = NULL;
 
 		// Add the new string to the master message list, or if it already exists, just increase the reference count
 

@@ -26,7 +26,7 @@ void SwgServerUniverse::install()
 
 SwgServerUniverse::SwgServerUniverse() :
 	ServerUniverse (),
-	m_jediManager  (nullptr)
+	m_jediManager  (NULL)
 {
 }
 
@@ -51,7 +51,7 @@ void SwgServerUniverse::updateAndValidateData()
 		"only be called on the process that is authoritative for UniverseObjects.\n"));
 
 	// create Jedi manager
-	if (m_jediManager == nullptr)
+	if (m_jediManager == NULL)
 	{
 		const ServerObjectTemplate * objTemplate = safe_cast<const ServerObjectTemplate *>(ObjectTemplateList::fetch(ConfigServerGame::getJediManagerTemplate()));
 		m_jediManager = safe_cast<JediManagerObject *>(ServerWorld::createNewObject(*objTemplate, Transform::identity, 0, false));

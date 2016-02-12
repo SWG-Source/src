@@ -45,7 +45,7 @@ namespace API_NAMESPACE
 	////////////////////////////////////////////////////////////////////////////////
 
 	CommonAPI::CommonAPI(const char * hostList, const char * failoverHostList, unsigned connectionLimit, unsigned maxMsgSize, unsigned bufferSize) 
-		: mManager(nullptr)
+		: mManager(NULL)
 		, mHostReconnectTimeout()
 		, mIdleHosts()
 		, mHostMap()
@@ -247,7 +247,7 @@ namespace API_NAMESPACE
 			connection->Send((const char*)buffer, size);
 #endif
 		}
-		mLastRequestInputTime = time(nullptr);
+		mLastRequestInputTime = time(NULL);
 	}
 
 #ifdef UDP_LIBRARY
@@ -466,7 +466,7 @@ namespace API_NAMESPACE
 		RequestMap_t::iterator reqIterator = mRequestMap.find(trackingNumber);
 		bool found = false;
 		
-		*pUserData = nullptr;
+		*pUserData = NULL;
 		if (reqIterator != mRequestMap.end())
 		{
 			TrackedRequest & request = reqIterator->second;
@@ -594,7 +594,7 @@ namespace API_NAMESPACE
 
 	CommonAPI::ApiConnectionInfo * CommonAPI::GetNextUsableConnection()
 	{
-		ApiConnectionInfo * connectionInfo = nullptr;
+		ApiConnectionInfo * connectionInfo = NULL;
 
 		if (!mUsableHosts[0].empty())
 		{
@@ -617,7 +617,7 @@ namespace API_NAMESPACE
 	CommonAPI::ApiConnectionInfo * CommonAPI::FindConnectionInfo(ApiConnection * connection)
 	{
 		// find the connection in the set
-		ApiConnectionInfo * pInfo = nullptr;
+		ApiConnectionInfo * pInfo = NULL;
 		ConnectionMap_t::iterator iter;
 		if ( ((iter = mActiveHosts[0].find(connection)) != mActiveHosts[0].end()) ||
 			 ((iter = mActiveHosts[1].find(connection)) != mActiveHosts[1].end()) )
@@ -777,8 +777,8 @@ namespace API_NAMESPACE
 		mspEnumerationToVersionStringMap = &enumerationToVersionStringMap;
 	}
 
-	std::map<std::string, unsigned> *VersionMap::mspVersionStringToEnumerationMap = nullptr;
-	std::map<unsigned, std::string> *VersionMap::mspEnumerationToVersionStringMap = nullptr;
+	std::map<std::string, unsigned> *VersionMap::mspVersionStringToEnumerationMap = NULL;
+	std::map<unsigned, std::string> *VersionMap::mspEnumerationToVersionStringMap = NULL;
 
 	////////////////////////////////////////////////////////////////////////////////
 
@@ -1009,7 +1009,7 @@ namespace API_NAMESPACE
 		mspLabelToEntryMap = &labelToEntryMap;
 	}
 
-	ConfigurationMap::LabelToEntryMap_t *ConfigurationMap::mspLabelToEntryMap = nullptr;
+	ConfigurationMap::LabelToEntryMap_t *ConfigurationMap::mspLabelToEntryMap = NULL;
 
 	////////////////////////////////////////////////////////////////////////////////
 

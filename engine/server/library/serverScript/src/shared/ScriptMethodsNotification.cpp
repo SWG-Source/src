@@ -52,7 +52,7 @@ const JNINativeMethod NATIVES[] = {
 
 jint JNICALL ScriptMethodsNotificationNamespace::addNotification(JNIEnv *env, jobject self, jlong player, jstring contents, jboolean useNotificationIcon, jint iconStyle, jfloat timeout, jint channel, jstring sound)
 {	
-	CreatureObject const * playerObject = nullptr;
+	CreatureObject const * playerObject = NULL;
 	if (!JavaLibrary::getObject(player, playerObject))
 		return 0;
 	
@@ -79,7 +79,7 @@ jint JNICALL ScriptMethodsNotificationNamespace::addNotification(JNIEnv *env, jo
 
 void JNICALL ScriptMethodsNotificationNamespace::cancelNotification(JNIEnv *env, jobject self, jlong player, jint notification)
 {
-	CreatureObject const * playerObject = nullptr;
+	CreatureObject const * playerObject = NULL;
 	if (!JavaLibrary::getObject(player, playerObject))
 		return;
 	ClientNotificationBoxMessage cnbm(notification, playerObject->getNetworkId(), Unicode::emptyString, FALSE, 0, 0.0f, ClientNotificationBoxMessage::NC_SPECIAL_CANCEL, std::string(""));
@@ -94,7 +94,7 @@ void JNICALL ScriptMethodsNotificationNamespace::cancelNotification(JNIEnv *env,
 
 void JNICALL ScriptMethodsNotificationNamespace::cancelAllNotifications(JNIEnv *env, jobject self, jlong player)
 {
-	CreatureObject const * playerObject = nullptr;
+	CreatureObject const * playerObject = NULL;
 	if (!JavaLibrary::getObject(player, playerObject))
 		return;
 	ClientNotificationBoxMessage cnbm(0, playerObject->getNetworkId(), Unicode::emptyString, FALSE, 0, 0.0f, ClientNotificationBoxMessage::NC_SPECIAL_CANCEL_ALL, std::string(""));

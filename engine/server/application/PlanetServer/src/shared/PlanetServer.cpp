@@ -102,12 +102,12 @@ using namespace PlanetServerNamespace;
 PlanetServer::PlanetServer() :
 		Singleton<PlanetServer>(),
 		MessageDispatch::Receiver(),
-		m_pendingCentralServerConnection(nullptr),
-		m_centralServerConnection(nullptr),
-		m_gameService(nullptr),
-		m_watcherService(nullptr),
+		m_pendingCentralServerConnection(NULL),
+		m_centralServerConnection(NULL),
+		m_gameService(NULL),
+		m_watcherService(NULL),
 		m_gameServers(),
-		m_taskConnection(nullptr),
+		m_taskConnection(NULL),
 		m_done(false),
 		m_roundRobinGameServer(0),
 		m_pendingServerStarts(new std::map<PreloadServerId, GameServerSpawnDelaySeconds>()),
@@ -117,7 +117,7 @@ PlanetServer::PlanetServer() :
 		m_spaceMode(false),
 		m_messagesWaitingForGameServer(),
 		m_metricsData(0),
-		m_taskManagerConnection(nullptr),
+		m_taskManagerConnection(NULL),
 		m_sceneTransferChunkLoads(new std::list<const RequestSceneTransfer*>),
 		m_pendingCharacterSaves(new std::map<NetworkId, uint32>),
 		m_watchers(),
@@ -433,7 +433,7 @@ void PlanetServer::receiveMessage(const MessageDispatch::Emitter & source, const
 		GameServerConnection *gameServer=const_cast<GameServerConnection *>(dynamic_cast<const GameServerConnection*>(&source));
 		std::set<GameServerConnection *>::iterator f = m_pendingGameServerDisconnects.find(gameServer);
 
-		WARNING_DEBUG_FATAL(gameServer==0,("Source was nullptr or source was not a GameServerConnection."));
+		WARNING_DEBUG_FATAL(gameServer==0,("Source was NULL or source was not a GameServerConnection."));
 		DEBUG_REPORT_LOG(true, ("removing crashed gameserver\n"));
 		uint32 id = gameServer->getProcessId();
 		GameServerMapType::iterator i=m_gameServers.find(id);
@@ -688,7 +688,7 @@ void PlanetServer::receiveMessage(const MessageDispatch::Emitter & source, const
 		UnloadedPlayerMessage msg(ri);
 
 		GameServerConnection *gameServer=const_cast<GameServerConnection *>(dynamic_cast<const GameServerConnection*>(&source));
-		WARNING_DEBUG_FATAL(gameServer==0,("Source was nullptr or source was not a GameServerConnection."));
+		WARNING_DEBUG_FATAL(gameServer==0,("Source was NULL or source was not a GameServerConnection."));
 		uint32 gameServerId = gameServer->getProcessId();
 
 		(*m_pendingCharacterSaves)[msg.getPlayerId()]=gameServerId;
@@ -766,19 +766,19 @@ void PlanetServer::receiveMessage(const MessageDispatch::Emitter & source, const
 		GameServerData * fromServer = PlanetServer::getGameServerData(msg.getFromProcess());
 		GameServerData * toServer = PlanetServer::getGameServerData(msg.getToProcess());
 		PlanetProxyObject * object = Scene::getInstance().findObjectByID(msg.getId());
-		if (fromServer == nullptr || toServer == nullptr || object == nullptr)
+		if (fromServer == NULL || toServer == NULL || object == NULL)
 		{
-			if (fromServer == nullptr)
+			if (fromServer == NULL)
 			{
 				WARNING(true, ("Message GameServerForceChangeAuthorityMessage: no "
 					"from server %lu", msg.getFromProcess()));
 			}
-			if (toServer == nullptr)
+			if (toServer == NULL)
 			{
 				WARNING(true, ("Message GameServerForceChangeAuthorityMessage: no "
 					"to server %lu", msg.getToProcess()));
 			}
-			if (object == nullptr)
+			if (object == NULL)
 			{
 				WARNING(true, ("Message GameServerForceChangeAuthorityMessage: no "
 					"object for id %s", msg.getId().getValueString().c_str()));
@@ -914,7 +914,7 @@ void PlanetServer::receiveMessage(const MessageDispatch::Emitter & source, const
 		{
 			// if it's been "awhile" since we requested to restart the GameServer,
 			// then assume that something has gone wrong, and try the restart again
-			time_t const timeNow = ::time(nullptr);
+			time_t const timeNow = ::time(NULL);
 
 			for (std::map<int, std::pair<std::string, time_t> >::iterator iter = m_startingGameServers->begin(); iter != m_startingGameServers->end(); ++iter)
 			{
@@ -1005,7 +1005,7 @@ GameServerConnection *PlanetServer::getGameServerConnection(uint32 serverId)
 	if (i!=m_gameServers.end())
 		return (*i).second->getConnection();
 	else
-		return nullptr;
+		return NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -1290,7 +1290,7 @@ void PlanetServer::startGameServer(const std::set<PreloadServerId> & preloadServ
 			TaskSpawnProcess spawn("any", "SwgGameServer", options, i->second);
 			if (m_centralServerConnection)
 			{
-				(*m_startingGameServers)[cookie] = std::make_pair(options, ::time(nullptr));
+				(*m_startingGameServers)[cookie] = std::make_pair(options, ::time(NULL));
 				++cookie;
 				m_centralServerConnection->send(spawn,true);
 				DEBUG_REPORT_LOG(true, ("Sent start gameserver request for scene %s\n", ConfigPlanetServer::getSceneID()));
@@ -1321,7 +1321,7 @@ GameServerData *PlanetServer::getGameServerData(uint32 serverId) const
 	if (i!=m_gameServers.end())
 		return i->second;
 	else
-		return nullptr;
+		return NULL;
 }
 
 // ----------------------------------------------------------------------

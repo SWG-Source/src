@@ -85,7 +85,7 @@ bool ShipComponentDescriptorWritable::setName(std::string const & name)
 {
 	if (ShipComponentDescriptor::setName(name))
 	{
-		if (nullptr != ShipComponentDescriptor::findShipComponentDescriptorByCrc(Crc::normalizeAndCalculate(name.c_str())))
+		if (NULL != ShipComponentDescriptor::findShipComponentDescriptorByCrc(Crc::normalizeAndCalculate(name.c_str())))
 		{
 			notifyChanged();
 			Transceivers::componentListChanged.emitMessage(true);

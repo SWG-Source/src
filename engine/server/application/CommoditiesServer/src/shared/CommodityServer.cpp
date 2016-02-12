@@ -191,7 +191,7 @@ void CommodityServer::run()
 	s_commodityServerMetricsData = new CommodityServerMetricsData;
 	MetricsManager::install(s_commodityServerMetricsData, false, "CommoditiesServer", "", 0);
 
-	time_t timePrevious = ::time(nullptr);
+	time_t timePrevious = ::time(NULL);
 	time_t timeCurrent = timePrevious;
 
 	while (true)
@@ -202,7 +202,7 @@ void CommodityServer::run()
 			break;
 		NetworkHandler::update();
 
-		timeCurrent = ::time(nullptr);
+		timeCurrent = ::time(NULL);
 		MetricsManager::update(static_cast<float>((timeCurrent - timePrevious) * 1000));
 		timePrevious = timeCurrent;
 
@@ -229,18 +229,18 @@ void CommodityServer::run()
 	// this is not a high priority thing, so wait until
 	// the cluster has started and "stabilized" before
 	// doing this; 3 hours should be adequate
-	time_t timeToRequestExcludedType = ::time(nullptr) + 10800;
+	time_t timeToRequestExcludedType = ::time(NULL) + 10800;
 
 	// one time request from the game server (any game server)
 	// to receive the resource tree hierarchy to support
 	// searching for resource container
-	time_t timeToRequestResourceTree = ::time(nullptr);
+	time_t timeToRequestResourceTree = ::time(NULL);
 
 	while(true)
 	{
 		NetworkHandler::update();
 
-		timeCurrent = ::time(nullptr);
+		timeCurrent = ::time(NULL);
 		MetricsManager::update(static_cast<float>((timeCurrent - timePrevious) * 1000));
 		timePrevious = timeCurrent;
 

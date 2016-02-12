@@ -148,7 +148,7 @@ class UdpMisc
 			// memory manager does a little bit of this, but if you know you have an allocation that is likely
 			// to grow quite a bit, you can set the round'ing size up to a fairly large number and avoid
 			// unnecessary reallocs at the cost of a little potentially wasted space
-			// initial allocations are done by passing in ptr==nullptr, freeing is done by passing in bytes==0
+			// initial allocations are done by passing in ptr==NULL, freeing is done by passing in bytes==0
 		static void *SmartResize(void *ptr, int bytes, int round = 1);
 
 			// the following two functions store values in the buffer as a variable length (B1, 0xffB2B1, 0xffffffB4B3B2B1)
@@ -168,7 +168,7 @@ class UdpMisc
 		static uint GetValue24(const void *buffer);				// gets a 24-bit value from the buffer in big-endian format
 		static ushort GetValue16(const void *buffer);			// gets a 16-bit value from the buffer in big-endian format
 
-		static LogicalPacket *CreateQuickLogicalPacket(const void *data, int dataLen, const void *data2 = nullptr, int dataLen2 = 0);
+		static LogicalPacket *CreateQuickLogicalPacket(const void *data, int dataLen, const void *data2 = NULL, int dataLen2 = 0);
 
 			// looks up the specified name and translates it to an IP address
 			// this is a blocking call that can at times take a significant amount of time, but will generally be fast (less than 300ms)
@@ -241,7 +241,7 @@ class LogicalPacket
 	protected:
 		friend class UdpReliableChannel;
 		mutable const LogicalPacket *mReliableQueueNext;	// owned/managed by the reliable channel object as an optimizations, do not touch
-											// nullptr = unclaimed, point-to-self = claimed, but end of list
+											// NULL = unclaimed, point-to-self = claimed, but end of list
 };
 
 class SimpleLogicalPacket : public LogicalPacket
@@ -250,7 +250,7 @@ class SimpleLogicalPacket : public LogicalPacket
 		// it was originally created to allow the internal code to handle reliable data that was sent
 		// via the Send(char *, int) api call.
 	public:
-		SimpleLogicalPacket(const void *data, int dataLen);		// data can be nullptr if you want to populate it after it is allocated (get the pointer and write to it)
+		SimpleLogicalPacket(const void *data, int dataLen);		// data can be NULL if you want to populate it after it is allocated (get the pointer and write to it)
 		virtual void *GetDataPtr();
 		virtual const void *GetDataPtr() const;
 		virtual int GetDataLen() const;
@@ -321,7 +321,7 @@ template<typename T> class StructLogicalPacket : public LogicalPacket
 		// with virtual functions) via this method as they may contain hidden data-members (such as pointers
 		// to vtables).
 	public:
-		StructLogicalPacket(T *initData = nullptr);
+		StructLogicalPacket(T *initData = NULL);
 		virtual void *GetDataPtr();
 		virtual const void *GetDataPtr() const;
 		virtual int GetDataLen() const;
@@ -394,7 +394,7 @@ class PooledLogicalPacket : public LogicalPacket
 		int mMaxDataLen;
 	protected:
 		friend class UdpManager;
-		void SetData(const void *data, int dataLen, const void *data2 = nullptr, int dataLen2 = 0);
+		void SetData(const void *data, int dataLen, const void *data2 = NULL, int dataLen2 = 0);
 		UdpManager *mUdpManager;
 		PooledLogicalPacket *mAvailableNext;
 		PooledLogicalPacket *mCreatedNext;
@@ -474,7 +474,7 @@ class UdpManager
 					// pointer equal to your object and the UdpManager will call it as appropriate.  The UdpConnection object
 					// also has a handler mechanism that replaces the other callback functions below, see UdpConnection::SetHandler
 					// if a handler is specified, the callback function is ignored, even if specified.
-					// default = nullptr (not used)
+					// default = NULL (not used)
 			UdpManagerHandler *handler;
 
 					// this is the maximum number of connections that can be established by this manager, any incoming/outgoing connections
@@ -883,7 +883,7 @@ class UdpManager
 			// will call EstablishConnection, then sit in a loop calling UdpManager::GiveTime and checking to see
 			// if the status of the returned UdpConnection object is changed from cStatusNegotiating.  This allows
 			// the application to look for the ESC key or timeout an attempted connection.
-			// This function will return nullptr if the manager object has exceeded its maximum number of connections
+			// This function will return NULL if the manager object has exceeded its maximum number of connections
 			// or if the serverAddress cannot be resolved to an IP address
 			// as is noted in the declaration, it is the responsibility of the application establishing the connection to delete it
 			// setting the timeout value (in milliseconds) to something greater than 0 will cause the UdpConnection object to change
@@ -915,13 +915,13 @@ class UdpManager
 			// manually forces all live connections to flush their multi buffers immediately
 		void FlushAllMultiBuffer();
 
-			// creates a logical packet and populates it with data.  data can be nullptr, in which case it gives you logical packet
+			// creates a logical packet and populates it with data.  data can be NULL, in which case it gives you logical packet
 			// of the size specified, but copies no data into it.  If you are using pool management (see Params::poolPacketMax),
 			// it will give you a packet out of the pool if possible, otherwise it will create a packet for you.  When logical
 			// are packets are needed internally for various things (like reliable channel sends that use the (void *, int) interface)
 			// they are gotten from this function, so your application can likely take advantage of pooling, even if it never bothers
 			// to explicitly call this function.
-		LogicalPacket *CreatePacket(const void *data, int dataLen, const void *data2 = nullptr, int dataLen2 = 0);
+		LogicalPacket *CreatePacket(const void *data, int dataLen, const void *data2 = NULL, int dataLen2 = 0);
 
 	protected:
 		friend class PooledLogicalPacket;
@@ -1147,7 +1147,7 @@ class UdpConnection : public PriorityQueueMember, public AddressHashTableMember,
 		int ConnectionAge() const;
 
 			// returns the UdpManager object that is managing this connection
-			// will return nullptr if the connection has been disconnected for some reason (because disconnecting severes the link to UdpManager)
+			// will return NULL if the connection has been disconnected for some reason (because disconnecting severes the link to UdpManager)
 		UdpManager *GetUdpManager() const;
 
 			// returns the 32-bit encryption-code that was negotiated as part of the connection-establishment process.
@@ -1227,9 +1227,9 @@ class UdpConnection : public PriorityQueueMember, public AddressHashTableMember,
 		friend class UdpManager;
 		friend class UdpReliableChannel;
 
-			// note: if connectPacket is nullptr, that means this connection object is being created to establish
+			// note: if connectPacket is NULL, that means this connection object is being created to establish
 			// a new connection to the specified ip/port (ie. the connection starts out in cStatusNegotiating mode)
-			// if connectPacket is non-nullptr, that menas this connection object is being created to handle an
+			// if connectPacket is non-NULL, that menas this connection object is being created to handle an
 			// incoming connect request and it will start out in cStatusConnected mode.
 		UdpConnection(UdpManager *udpManager, UdpIpAddress destIp, int destPort, int timeout);	// starts connection-establishment protocol
 		UdpConnection(UdpManager *udpManager, const UdpManager::PacketHistoryEntry *e);				// starts already connected, replying to connection request
@@ -1264,7 +1264,7 @@ class UdpConnection : public PriorityQueueMember, public AddressHashTableMember,
 		void PhysicalSend(const uchar *data, int dataLen, bool appendAllowed);		// sends a physical packet (encrypts and adds crc bytes)
 		uchar *BufferedSend(const uchar *data, int dataLen, const uchar *data2, int dataLen2, bool appendAllowed);		// buffers logical packets waiting til we have more data (makes multi-packets)
 		bool InternalSend(UdpChannel channel, const LogicalPacket *packet);
-		bool InternalSend(UdpChannel channel, const uchar *data, int dataLen, const uchar *data2 = nullptr, int dataLen2 = 0);
+		bool InternalSend(UdpChannel channel, const uchar *data, int dataLen, const uchar *data2 = NULL, int dataLen2 = 0);
 
 		uchar *InternalAckSend(uchar *bufferedAckPtr, const uchar *ackPtr, int ackLen);		// used by reliable channel to send acks (special send that allows for deduping ack feature)
 
@@ -1555,7 +1555,7 @@ class UdpReliableChannel
 		void ProcessPacket(ReliablePacketMode mode, const uchar *data, int dataLen);
 		bool PullDown(int windowSpaceLeft);
 		void FlushCoalesce();
-		void SendCoalesce(const uchar *data, int dataLen, const uchar *data2 = nullptr, int dataLen2 = 0);
+		void SendCoalesce(const uchar *data, int dataLen, const uchar *data2 = NULL, int dataLen2 = 0);
 		void QueueLogicalPacket(const LogicalPacket *packet);
 
 		UdpManager::ReliableConfig mConfig;
@@ -1609,7 +1609,7 @@ class UdpReliableChannel
 template<int t_quickSize> FixedLogicalPacket<t_quickSize>::FixedLogicalPacket(const void *data, int dataLen)
 {
 	mDataLen = dataLen;
-	if (data != nullptr)
+	if (data != NULL)
 		memcpy(mData, data, mDataLen);
 }
 
@@ -1639,7 +1639,7 @@ template<int t_quickSize> void FixedLogicalPacket<t_quickSize>::SetDataLen(int l
 		/////////////////////////////////////////////////////////////////////////
 template<typename T> StructLogicalPacket<T>::StructLogicalPacket(T *initData)
 {
-	if (initData != nullptr)
+	if (initData != NULL)
 		mStruct = *initData;
 }
 
@@ -1784,7 +1784,7 @@ inline void UdpManager::SetPriority(UdpConnection *con, UdpMisc::ClockStamp stam
 	if (stamp < mMinimumScheduledStamp)
 		stamp = mMinimumScheduledStamp;
 
-	if (mPriorityQueue != nullptr)
+	if (mPriorityQueue != NULL)
 		mPriorityQueue->Add(con, stamp);
 }
 
@@ -1811,7 +1811,7 @@ inline void UdpManager::PoolReturn(PooledLogicalPacket *packet)
 
 inline void UdpManager::WrappedReturn(WrappedLogicalPacket *wp)
 {
-	wp->SetLogicalPacket(nullptr);
+	wp->SetLogicalPacket(NULL);
 
 	if (mWrappedAvailable < mParams.wrappedPoolMax)
 	{
@@ -1859,7 +1859,7 @@ inline void UdpConnection::ScheduleTimeNow()
 		// prevents us from reprioritizing to 0, only to shortly thereafter be reprioritized to where we actually belong.
 	if (!mGettingTime)
 	{
-		if (mUdpManager != nullptr)
+		if (mUdpManager != NULL)
 			mUdpManager->SetPriority(this, 0);
 	}
 }
@@ -2048,7 +2048,7 @@ inline int UdpReliableChannel::TotalPendingBytes() const
 
 inline void UdpReliableChannel::ClearBufferedAck()
 {
-	mBufferedAckPtr = nullptr;
+	mBufferedAckPtr = NULL;
 }
 
 inline udp_int64 UdpReliableChannel::GetReliableOutgoingId(int reliableStamp) const

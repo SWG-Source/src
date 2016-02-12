@@ -94,7 +94,7 @@ bool AiTargetingSystem::canAttackTarget(TangibleObject const * target)
 {
 	bool result = false;
 
-	if (target != nullptr)
+	if (target != NULL)
 	{
 		if (   (m_owner.getDistanceBetweenCollisionSpheres_w(*target) <= ConfigServerGame::getMaxCombatRange())
 		    && m_owner.checkLOSTo(*target))

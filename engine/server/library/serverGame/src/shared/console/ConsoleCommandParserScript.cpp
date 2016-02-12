@@ -62,7 +62,7 @@ bool ConsoleCommandParserScript::performParsing (const NetworkId & userId, const
 	{
 		NetworkId oid(Unicode::wideToNarrow (argv[2]));
 		ServerObject* object = ServerWorld::findObjectByNetworkId(oid);
-		if (object == nullptr)
+		if (object == NULL)
 		{
 			result += getErrorMessage (argv [0], ERR_INVALID_OBJECT);
 			return true;
@@ -81,7 +81,7 @@ bool ConsoleCommandParserScript::performParsing (const NetworkId & userId, const
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[2]));
 		ServerObject* object = ServerWorld::findObjectByNetworkId(oid);
-		if (object == nullptr)
+		if (object == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
@@ -100,7 +100,7 @@ bool ConsoleCommandParserScript::performParsing (const NetworkId & userId, const
 	{
 		ServerObject * const userServerObject = ServerWorld::findObjectByNetworkId(userId);
 
-		if (userServerObject != nullptr)
+		if (userServerObject != NULL)
 		{
 			NetworkId specifiedNetworkId;
 
@@ -112,7 +112,7 @@ bool ConsoleCommandParserScript::performParsing (const NetworkId & userId, const
 			{
 				CreatureObject * const userCreatureObject = CreatureObject::asCreatureObject(userServerObject);
 
-				if (userCreatureObject != nullptr)
+				if (userCreatureObject != NULL)
 				{
 					specifiedNetworkId = userCreatureObject->getLookAtTarget();
 				}
@@ -120,7 +120,7 @@ bool ConsoleCommandParserScript::performParsing (const NetworkId & userId, const
 
 			ServerObject * const specifiedServerObject = ServerObject::getServerObject(specifiedNetworkId);
 
-			if (specifiedServerObject != nullptr)
+			if (specifiedServerObject != NULL)
 			{
 				ScriptList const & scripts = specifiedServerObject->getScriptObject()->getScripts();
 				FormattedString<1024> fs;
@@ -226,7 +226,7 @@ bool ConsoleCommandParserScript::performParsing (const NetworkId & userId, const
 		// get the object id
 		NetworkId oid(Unicode::wideToNarrow(argv[oidIndex]));
 		ServerObject* object = ServerWorld::findObjectByNetworkId(oid);
-		if (object == nullptr)
+		if (object == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;

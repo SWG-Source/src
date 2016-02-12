@@ -9,7 +9,7 @@ NAMESPACE_BEGIN(CryptoPP)
 template<class T> class member_ptr
 {
 public:
-	explicit member_ptr(T *p = nullptr) : m_p(p) {}
+	explicit member_ptr(T *p = NULL) : m_p(p) {}
 
 	~member_ptr();
 
@@ -47,9 +47,9 @@ template<class T> class value_ptr : public member_ptr<T>
 {
 public:
 	value_ptr(const T &obj) : member_ptr<T>(new T(obj)) {}
-	value_ptr(T *p = nullptr) : member_ptr<T>(p) {}
+	value_ptr(T *p = NULL) : member_ptr<T>(p) {}
 	value_ptr(const value_ptr<T>& rhs)
-		: member_ptr<T>(rhs.m_p ? new T(*rhs.m_p) : nullptr) {}
+		: member_ptr<T>(rhs.m_p ? new T(*rhs.m_p) : NULL) {}
 
 	value_ptr<T>& operator=(const value_ptr<T>& rhs);
 	bool operator==(const value_ptr<T>& rhs)
@@ -61,7 +61,7 @@ public:
 template <class T> value_ptr<T>& value_ptr<T>::operator=(const value_ptr<T>& rhs)
 {
 	T *old_p = this->m_p;
-	this->m_p = rhs.m_p ? new T(*rhs.m_p) : nullptr;
+	this->m_p = rhs.m_p ? new T(*rhs.m_p) : NULL;
 	delete old_p;
 	return *this;
 }
@@ -72,9 +72,9 @@ template<class T> class clonable_ptr : public member_ptr<T>
 {
 public:
 	clonable_ptr(const T &obj) : member_ptr<T>(obj.Clone()) {}
-	clonable_ptr(T *p = nullptr) : member_ptr<T>(p) {}
+	clonable_ptr(T *p = NULL) : member_ptr<T>(p) {}
 	clonable_ptr(const clonable_ptr<T>& rhs)
-		: member_ptr<T>(rhs.m_p ? rhs.m_p->Clone() : nullptr) {}
+		: member_ptr<T>(rhs.m_p ? rhs.m_p->Clone() : NULL) {}
 
 	clonable_ptr<T>& operator=(const clonable_ptr<T>& rhs);
 };
@@ -82,7 +82,7 @@ public:
 template <class T> clonable_ptr<T>& clonable_ptr<T>::operator=(const clonable_ptr<T>& rhs)
 {
 	T *old_p = this->m_p;
-	this->m_p = rhs.m_p ? rhs.m_p->Clone() : nullptr;
+	this->m_p = rhs.m_p ? rhs.m_p->Clone() : NULL;
 	delete old_p;
 	return *this;
 }
@@ -184,8 +184,8 @@ template <class T>
 class ConstructorTemp
 {
 protected:
-	ConstructorTemp(const ConstructorTemp &copy) : m_temp(nullptr) {}
-	ConstructorTemp(T *t = nullptr) : m_temp(t) {}
+	ConstructorTemp(const ConstructorTemp &copy) : m_temp(NULL) {}
+	ConstructorTemp(T *t = NULL) : m_temp(t) {}
 	ConstructorTemp(const T &t) : m_temp(new T(t)) {}
 	member_ptr<T> m_temp;
 };

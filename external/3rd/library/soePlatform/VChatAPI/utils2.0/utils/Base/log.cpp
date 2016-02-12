@@ -115,7 +115,7 @@ Logger::Logger(const char *programName,
 void Logger::LoggerInit(const char *programName)
 {
 	char buf[1024];
-	FILE *logDir = nullptr;
+	FILE *logDir = NULL;
 	
 	if (0 != (m_logType & eUseLocalFile))
 	{
@@ -124,13 +124,13 @@ void Logger::LoggerInit(const char *programName)
 		{
 			cmkdir(m_dirPrefix.c_str(), 0755);
 		}
-		else if(logDir != nullptr)
+		else if(logDir != NULL)
 		{
 			fclose(logDir);
 		}
 		
 		tm now;
-		time_t t = time(nullptr);
+		time_t t = time(NULL);
 
 		LOGGER_GET_CURR_TIME(now, t);
 
@@ -148,7 +148,7 @@ void Logger::LoggerInit(const char *programName)
 		{
 			cmkdir(buf, 0755);
 		}
-		else if(logDir != nullptr)
+		else if(logDir != NULL)
 		{
 			fclose(logDir);
 		}
@@ -330,7 +330,7 @@ void Logger::logSimple(unsigned logenum, int level, const char *message)
 	{
 		return;
 	}
-	time_t t = time(nullptr);
+	time_t t = time(NULL);
 	LogInfo *info = (*iter).second;
 	if(level >= info->level)
 	{
@@ -400,7 +400,7 @@ void Logger::logSimpleWithSys(unsigned logenum, unsigned priority, int level, co
 		{
 			return;
 		}
-		time_t t = time(nullptr);
+		time_t t = time(NULL);
 		LogInfo *info = (*iter).second;
 
 		if(level >= info->level)
@@ -482,7 +482,7 @@ void Logger::logWithSys(unsigned logenum, unsigned priority, int level, const ch
 		{
 					return;
 		}
-		time_t t = time(nullptr);
+		time_t t = time(NULL);
 		LogInfo *info = (*iter).second;
 
 		if(level >= info->level)
@@ -562,7 +562,7 @@ void Logger::vlogWithSys(unsigned logenum, unsigned priority, int level, const c
 		{
 			return;
 		}
-		time_t t = time(nullptr);
+		time_t t = time(NULL);
 		LogInfo *info = (*iter).second;
 
 		if(level >= info->level)
@@ -630,14 +630,14 @@ void Logger::vlog(unsigned logenum, int level, const char *message, va_list argp
 void Logger::rollDate(time_t t)
 {
 	char buf[80];
-	FILE *logDir = nullptr;
+	FILE *logDir = NULL;
 	
 	logDir = fopen(m_dirPrefix.c_str(), "r+");
 	if(errno == ENOENT)
 	{
 		cmkdir(m_dirPrefix.c_str(), 0755);
 	}
-	else if(logDir != nullptr)
+	else if(logDir != NULL)
 	{
 		fclose(logDir);
 	}
@@ -653,7 +653,7 @@ void Logger::rollDate(time_t t)
 	{
 		cmkdir(buf, 0755);
 	}
-	else if(logDir != nullptr)
+	else if(logDir != NULL)
 	{
 		fclose(logDir);
 	}
@@ -737,7 +737,7 @@ void Logger::rollLog(LogInfo *logInfo)
 {
 	std::string newLogName;
 	char timeStampBuffer[256];
-	time_t t = time(nullptr);
+	time_t t = time(NULL);
 	tm now;
 	int r;
 	int nTries = 10;

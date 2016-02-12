@@ -42,7 +42,7 @@ CConnectionHandler::~CConnectionHandler()
 {
     if (mConnection)
     {
-        mConnection->SetHandler(nullptr);
+        mConnection->SetHandler(NULL);
         mConnection->Disconnect();
         mConnection->Release();
     }
@@ -79,7 +79,7 @@ void CConnectionHandler::OnTerminated(UdpConnection *)
 
     if (mConnection)
     {
-        mConnection->SetHandler(nullptr);
+        mConnection->SetHandler(NULL);
         mConnection->Release();
         mConnection = 0;
     }

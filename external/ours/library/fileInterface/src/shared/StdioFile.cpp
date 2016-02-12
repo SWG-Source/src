@@ -35,7 +35,7 @@ void StdioFile::close()
 	if(m_file)
 	{
 		fclose(m_file);
-		m_file = nullptr;
+		m_file = NULL;
 	}
 }
 
@@ -43,7 +43,7 @@ void StdioFile::close()
 
 bool StdioFile::isOpen() const
 {
-	return m_file != nullptr;
+	return m_file != NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -71,7 +71,7 @@ int StdioFile::tell() const
 
 bool StdioFile::seek(SeekType seekType, int offset)
 {
-	assert(m_file != nullptr);
+	assert(m_file != NULL);
 
 	m_justWrote = false;
 	int result = 0;
@@ -97,7 +97,7 @@ bool StdioFile::seek(SeekType seekType, int offset)
 
 int StdioFile::read(void* dest_buffer, int num_bytes)
 {
-	assert(m_file != nullptr);
+	assert(m_file != NULL);
 	resyncStream();
 	return static_cast<int>(fread(dest_buffer, 1, static_cast<unsigned int>(num_bytes), m_file));
 }
@@ -106,7 +106,7 @@ int StdioFile::read(void* dest_buffer, int num_bytes)
 
 int StdioFile::write(int num_bytes, const void* source_buffer)
 {
-	assert(m_file != nullptr);
+	assert(m_file != NULL);
 	m_justWrote = true;
 	return static_cast<int>(fwrite(source_buffer, 1, static_cast<unsigned int>(num_bytes), m_file));
 }
@@ -115,7 +115,7 @@ int StdioFile::write(int num_bytes, const void* source_buffer)
 
 void StdioFile::flush()
 {
-	assert(m_file != nullptr);
+	assert(m_file != NULL);
 	fflush(m_file);
 	m_justWrote = false;
 }
@@ -136,9 +136,9 @@ void StdioFile::resyncStream()
 AbstractFile* StdioFileFactory::createFile(const char *fileName, const char *openType)
 {
 	if(!fileName || !openType)
-		return nullptr;
+		return NULL;
 	else if (fileName[0] == '\0' || openType[0] == '\0')
-		return nullptr;
+		return NULL;
 	else
 		return new StdioFile(fileName, openType);
 }

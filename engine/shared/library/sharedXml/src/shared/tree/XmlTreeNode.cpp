@@ -42,7 +42,7 @@ XmlTreeNode::XmlTreeNode(const std::string &name, const std::string &content) :
 	}
 
 	xmlNode *textNode = xmlNewText(BAD_CAST contentCopy.c_str() );
-	m_treeNode = xmlNewNode(nullptr, BAD_CAST nameCopy.c_str());
+	m_treeNode = xmlNewNode(NULL, BAD_CAST nameCopy.c_str());
 	
 	// verify new nodes
 	DEBUG_FATAL(!textNode, ("Failed to create xml text node"));
@@ -70,7 +70,7 @@ XmlTreeNode::XmlTreeNode(const std::string &name) :
 		nameCopy = "garbage";
 	}
 
-	m_treeNode = xmlNewNode(nullptr, BAD_CAST nameCopy.c_str());
+	m_treeNode = xmlNewNode(NULL, BAD_CAST nameCopy.c_str());
 
 	// verify new nodes
 	DEBUG_FATAL(!m_treeNode, ("Failed to create new xml tree node"));
@@ -80,7 +80,7 @@ XmlTreeNode::XmlTreeNode(const std::string &name) :
 
 XmlTreeNode XmlTreeNode::addChildNode(const char * name)
 {
-	DEBUG_FATAL( !m_treeNode, ("Attempted to add child to nullptr xml node"));
+	DEBUG_FATAL( !m_treeNode, ("Attempted to add child to null xml node"));
 
 	XmlTreeNode node(name);
 	if (m_treeNode)
@@ -109,7 +109,7 @@ void XmlTreeNode::addChild( const XmlTreeNode& node )
 
 bool XmlTreeNode::isNull() const
 {
-	return (m_treeNode == nullptr);
+	return (m_treeNode == NULL);
 }
 
 // ----------------------------------------------------------------------
@@ -140,7 +140,7 @@ void XmlTreeNode::assertIsElement(char const *const elementName) const
 	char const *const nodeName = getName();
 	UNREF(elementName);
 	UNREF(nodeName);
-	DEBUG_FATAL(!isElement(), ("expecting element named [%s], found non-element entity named [%s].", elementName ? elementName : "<nullptr element name>", nodeName));
+	DEBUG_FATAL(!isElement(), ("expecting element named [%s], found non-element entity named [%s].", elementName ? elementName : "<null element name>", nodeName));
 	DEBUG_FATAL(_stricmp(elementName, nodeName), ("expecting element named [%s], found element named [%s] instead.", nodeName));
 }
 
@@ -148,14 +148,14 @@ void XmlTreeNode::assertIsElement(char const *const elementName) const
 
 char const *XmlTreeNode::getName() const
 {
-	return (m_treeNode ? reinterpret_cast<char const*>(m_treeNode->name) : "<nullptr tree node>");
+	return (m_treeNode ? reinterpret_cast<char const*>(m_treeNode->name) : "<null tree node>");
 }
 
 // ----------------------------------------------------------------------
 
 XmlTreeNode XmlTreeNode::getNextSiblingElementNode() const
 {
-	xmlNode *siblingNode = m_treeNode ? m_treeNode->next : nullptr;
+	xmlNode *siblingNode = m_treeNode ? m_treeNode->next : NULL;
 	while (siblingNode && (siblingNode->type != XML_ELEMENT_NODE))
 		siblingNode = siblingNode->next;
 
@@ -166,16 +166,16 @@ XmlTreeNode XmlTreeNode::getNextSiblingElementNode() const
 
 XmlTreeNode XmlTreeNode::getFirstChildNode() const
 {
-	return XmlTreeNode(m_treeNode ? m_treeNode->children : nullptr);
+	return XmlTreeNode(m_treeNode ? m_treeNode->children : NULL);
 }
 
 // ----------------------------------------------------------------------
 
 XmlTreeNode XmlTreeNode::getFirstChildElementNode() const
 {
-	//-- Check if we have a nullptr node.
+	//-- Check if we have a NULL node.
 	if (!m_treeNode)
-		return XmlTreeNode(nullptr);
+		return XmlTreeNode(NULL);
 
 	//-- Look for the first child node that is an element.
 	xmlNode *childNode = m_treeNode->children;
@@ -190,9 +190,9 @@ XmlTreeNode XmlTreeNode::getFirstChildElementNode() const
 
 XmlTreeNode XmlTreeNode::getFirstChildTextNode() const
 {
-	//-- Check if we have a nullptr node.
+	//-- Check if we have a NULL node.
 	if (!m_treeNode)
-		return XmlTreeNode(nullptr);
+		return XmlTreeNode(NULL);
 
 	//-- Look for the first child node that is a text node.
 	xmlNode *childNode = m_treeNode->children;
@@ -212,18 +212,18 @@ XmlTreeNode XmlTreeNode::getElementAttributeValueNode(char const *attributeName,
 	//-- Validate parameters and preconditions.
 	if (!isElement())
 	{
-        DEBUG_FATAL(!optional, ("getElementAttributeValueNode(): node [%s] is not an element.", m_treeNode ? reinterpret_cast<char const*>(m_treeNode->name) : "<nullptr node>"));
-		return XmlTreeNode(nullptr);
+        DEBUG_FATAL(!optional, ("getElementAttributeValueNode(): node [%s] is not an element.", m_treeNode ? reinterpret_cast<char const*>(m_treeNode->name) : "<null node>"));
+		return XmlTreeNode(NULL);
 	}
 
 	if (!attributeName)
 	{
-		DEBUG_FATAL(!optional, ("getElementAttributeValueNode(): attributeName is nullptr."));
-		return XmlTreeNode(nullptr);
+		DEBUG_FATAL(!optional, ("getElementAttributeValueNode(): attributeName is NULL."));
+		return XmlTreeNode(NULL);
 	}
 
 	//-- Check the attribute nodes for a match on the given name.  Ignore case.
-	for (xmlAttr *attributeNode = m_treeNode ? m_treeNode->properties : nullptr; attributeNode; attributeNode = attributeNode->next)
+	for (xmlAttr *attributeNode = m_treeNode ? m_treeNode->properties : NULL; attributeNode; attributeNode = attributeNode->next)
 	{
 		if (!_stricmp(attributeName, reinterpret_cast<char const*>(attributeNode->name)))
 		{
@@ -234,7 +234,7 @@ XmlTreeNode XmlTreeNode::getElementAttributeValueNode(char const *attributeName,
 
 	//-- No attribute node matched the attribute name.
 	DEBUG_FATAL(!optional, ("getElementAttributeValueNode(): failed to find attribute [%s] on element node [%s].", attributeName, getName()));
-	return XmlTreeNode(nullptr);
+	return XmlTreeNode(NULL);
 }
 
 // ----------------------------------------------------------------------
@@ -250,7 +250,7 @@ bool XmlTreeNode::getElementAttributeAsBool(char const *attributeName, bool &val
 	char const *const contents = attributeValueNode.getTextValue();
 	if (!contents)
 	{
-		DEBUG_FATAL(!contents, ("contents of attribute [%s] is nullptr.", attributeName));
+		DEBUG_FATAL(!contents, ("contents of attribute [%s] is NULL.", attributeName));
 		return false; //lint !e527 // unreachable // reachable in release.
 	}
 
@@ -275,7 +275,7 @@ bool XmlTreeNode::getElementAttributeAsFloat(char const *attributeName, float &v
 	char const *const contents = attributeValueNode.getTextValue();
 	if (!contents)
 	{
-		DEBUG_FATAL(!contents, ("contents of attribute [%s] is nullptr.", attributeName));
+		DEBUG_FATAL(!contents, ("contents of attribute [%s] is NULL.", attributeName));
 		return false; //lint !e527 // unreachable // reachable in release.
 	}
 
@@ -306,7 +306,7 @@ bool XmlTreeNode::getElementAttributeAsInt(char const *attributeName, int &value
 	char const *const contents = attributeValueNode.getTextValue();
 	if (!contents)
 	{
-		DEBUG_FATAL(!contents, ("contents of attribute [%s] is nullptr.", attributeName));
+		DEBUG_FATAL(!contents, ("contents of attribute [%s] is NULL.", attributeName));
 		return false; //lint !e527 // unreachable // reachable in release.
 	}
 
@@ -366,12 +366,12 @@ char const *XmlTreeNode::getTextValue() const
 	//-- Ensure we're a text node.
 	if(!node.isText())
 	{
-		DEBUG_FATAL(true, ("node [%s] is not a text node", m_treeNode ? reinterpret_cast<char const*>(m_treeNode->name) : "<nullptr>"));
-		return nullptr; //lint !e527 // unreachable // reachable in release.
+		DEBUG_FATAL(true, ("node [%s] is not a text node", m_treeNode ? reinterpret_cast<char const*>(m_treeNode->name) : "<null>"));
+		return NULL; //lint !e527 // unreachable // reachable in release.
 	}
 
 	//-- Return contents.
-	return node.m_treeNode ? reinterpret_cast<char const*>(node.m_treeNode->content) : nullptr;
+	return node.m_treeNode ? reinterpret_cast<char const*>(node.m_treeNode->content) : NULL;
 }
 
 // ----------------------------------------------------------------------

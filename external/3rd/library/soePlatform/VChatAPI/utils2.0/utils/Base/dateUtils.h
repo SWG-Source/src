@@ -144,7 +144,7 @@ namespace soe
 
 	inline time_t localTimeToGmt(int dstOffsetMinutes = DST_OFFSET_MINUTES_USA)
 	{
-		time_t localTime = time(nullptr);
+		time_t localTime = time(NULL);
 		struct tm gt = *(gmtime(&localTime));
 		struct tm lt = *(localtime(&localTime));
 		bool isDst = (lt.tm_isdst? true:false);
@@ -187,7 +187,7 @@ namespace soe
 		dstOffsetSecs = dstOffsetMS/1000;
 		return retval;
 	}
-	inline int getGMT(time_t & theTime, const char *id = nullptr)
+	inline int getGMT(time_t & theTime, const char *id = NULL)
 	{
 		UDate date;
 		UErrorCode ec;

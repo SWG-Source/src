@@ -23,7 +23,7 @@ namespace ObjectWatcherListNamespace
 {
 	void setRegionOfInfluenceEnabled(Object const * const object, bool const enabled, bool skipCell)
 	{
-		if (skipCell && nullptr != object->getCellProperty())
+		if (skipCell && NULL != object->getCellProperty())
 			return;
 
 		object->setRegionOfInfluenceEnabled(enabled);
@@ -67,7 +67,7 @@ ObjectWatcherList::~ObjectWatcherList(void)
 /**
  * Add an Object to the ObjectWatcherList.
  * 
- * This routine will call Fatal in debug compiles if it is passed a nullptr
+ * This routine will call Fatal in debug compiles if it is passed a NULL
  * object.
  * 
  * This routine will call Fatal in debug compiles if the object list
@@ -85,7 +85,7 @@ void ObjectWatcherList::addObject(Object & objectToAdd)
 /**
  * Remove an Object from the ObjectWatcherList.
  * 
- * This routine will call Fatal in debug compiles if it is passed a nullptr
+ * This routine will call Fatal in debug compiles if it is passed a NULL
  * object.
  * 
  * @param objectToRemove  Pointer to the object to remove
@@ -112,13 +112,13 @@ void ObjectWatcherList::removeObjectByIndex (const Object & object, int index)
 	// Remove the last item in the vector.
 	m_objectVector->pop_back();
 
-	// nullptr the object from the alter-safe object list.
+	// NULL the object from the alter-safe object list.
 	uint size = m_alterSafeObjectVector->size();
 	for (uint i = 0; i < size; ++i)
 	{
 		if ((*m_alterSafeObjectVector)[i] == &object)
 		{
-			(*m_alterSafeObjectVector)[i] = nullptr;
+			(*m_alterSafeObjectVector)[i] = NULL;
 			return;
 		}
 	}
@@ -232,7 +232,7 @@ void ObjectWatcherList::alter(real time)
 	
 			// Make sure the object is still in the object list before removing it
 			
-			if ((*m_alterSafeObjectVector)[i] != nullptr)
+			if ((*m_alterSafeObjectVector)[i] != NULL)
 			{
 				removeObject(*obj);
 			}

@@ -69,7 +69,7 @@ namespace CachedFileManagerNamespace
 
 	Tag const TAG_CACH = TAG (C,A,C,H);
 
-	char * ms_filenames = nullptr;
+	char * ms_filenames = NULL;
 	size_t ms_filenamesLength = 0;
 	size_t ms_filenamesCurrentPos = 0;
 	unsigned long ms_totalTime;
@@ -150,7 +150,7 @@ void CachedFileManager::install(bool const allowFileCaching)
 			iff.enterForm (TAG_CACH);
 				iff.enterChunk (TAG_0000);
 
-					//-- the entire chunk is filled with nullptr terminated strings
+					//-- the entire chunk is filled with null terminated strings
 					ms_filenamesLength = iff.getChunkLengthLeft();
 					ms_filenames = iff.readRest_char();
 
@@ -168,7 +168,7 @@ void CachedFileManager::install(bool const allowFileCaching)
 void CachedFileManagerNamespace::remove ()
 {
 	delete[] ms_filenames;
-	ms_filenames = nullptr;
+	ms_filenames = NULL;
 	ms_filenamesCurrentPos = 0;
 	ms_filenamesLength = 0;
 
@@ -255,7 +255,7 @@ void CachedFileManager::preloadSomeAssets ()
 #endif
 
 			delete[] ms_filenames;
-			ms_filenames = nullptr;
+			ms_filenames = NULL;
 			ms_filenamesCurrentPos = 0;
 			ms_filenamesLength = 0;
 		}
@@ -266,7 +266,7 @@ void CachedFileManager::preloadSomeAssets ()
 
 bool CachedFileManager::donePreloading ()
 {
-	return ms_filenames == nullptr || (ms_filenamesCurrentPos >= ms_filenamesLength);
+	return ms_filenames == NULL || (ms_filenamesCurrentPos >= ms_filenamesLength);
 }
 
 // ----------------------------------------------------------------------

@@ -36,8 +36,8 @@ static const std::string REQUEST_RESOURCE_WEIGHTS_SCRIPT_METHOD("OnRequestResour
 // ======================================================================
 // static members
 
-DraftSchematicObject::SchematicMap * DraftSchematicObject::m_schematics = nullptr;
-const SharedObjectTemplate * DraftSchematicObject::m_defaultSharedTemplate = nullptr;
+DraftSchematicObject::SchematicMap * DraftSchematicObject::m_schematics = NULL;
+const SharedObjectTemplate * DraftSchematicObject::m_defaultSharedTemplate = NULL;
 
 
 // ======================================================================
@@ -105,13 +105,13 @@ const SharedObjectTemplate * DraftSchematicObject::getDefaultSharedTemplate(void
 {
 static const ConstCharCrcLowerString templateName("object/draft_schematic/base/shared_draft_schematic_default.iff");
 
-	if (m_defaultSharedTemplate == nullptr)
+	if (m_defaultSharedTemplate == NULL)
 	{
 		m_defaultSharedTemplate = safe_cast<const SharedObjectTemplate *>(
 			ObjectTemplateList::fetch(templateName));
-		WARNING_STRICT_FATAL(m_defaultSharedTemplate == nullptr, ("Cannot create "
+		WARNING_STRICT_FATAL(m_defaultSharedTemplate == NULL, ("Cannot create "
 			"default shared object template %s", templateName.getString()));
-		if (m_defaultSharedTemplate != nullptr)
+		if (m_defaultSharedTemplate != NULL)
 			ExitChain::add (removeDefaultTemplate, "DraftSchematicObject::removeDefaultTemplate");
 	}
 	return m_defaultSharedTemplate;
@@ -124,10 +124,10 @@ static const ConstCharCrcLowerString templateName("object/draft_schematic/base/s
  */
 void DraftSchematicObject::removeDefaultTemplate(void)
 {
-	if (m_defaultSharedTemplate != nullptr)
+	if (m_defaultSharedTemplate != NULL)
 	{
 		m_defaultSharedTemplate->releaseReference();
-		m_defaultSharedTemplate = nullptr;
+		m_defaultSharedTemplate = NULL;
 	}
 }	// DraftSchematicObject::removeDefaultTemplate
 
@@ -141,21 +141,21 @@ void DraftSchematicObject::removeDefaultTemplate(void)
  */
 void DraftSchematicObject::requestResourceWeights(ServerObject & requester, uint32 draftSchematicCrc)
 {
-	if (requester.getClient() == nullptr)
+	if (requester.getClient() == NULL)
 	{
 		WARNING (true, ("DraftSchematicObject::requestResourceWeights invalid client for [%s]", requester.getNetworkId ().getValueString ().c_str ()));
 		return;
 	}
 
 	const DraftSchematicObject * const schematic = getSchematic(draftSchematicCrc);
-	if (schematic == nullptr)
+	if (schematic == NULL)
 	{
 		WARNING (true, ("DraftSchematicObject::requestResourceWeights invalid schematic [%lu] for [%s]", draftSchematicCrc, requester.getNetworkId ().getValueString ().c_str ()));
 		return;
 	}
 
 	const ServerDraftSchematicObjectTemplate * const schematicTemplate = safe_cast<const ServerDraftSchematicObjectTemplate *>(schematic->getObjectTemplate());
-	if (schematicTemplate == nullptr)
+	if (schematicTemplate == NULL)
 	{
 		WARNING (true, ("DraftSchematicObject::requestResourceWeights invalid schematic template [%lu] for [%s]", draftSchematicCrc, requester.getNetworkId ().getValueString ().c_str ()));
 		return;
@@ -167,7 +167,7 @@ void DraftSchematicObject::requestResourceWeights(ServerObject & requester, uint
 			desiredAttribs.push_back((*i).first.getText().c_str());
 	}
 
-	std::vector<const char *> attributes(MAX_ATTRIBUTES * 2, static_cast<const char *>(nullptr));
+	std::vector<const char *> attributes(MAX_ATTRIBUTES * 2, static_cast<const char *>(NULL));
 	std::vector<int> slots(MAX_ATTRIBUTES * 2, 0);
 	std::vector<int> counts(MAX_ATTRIBUTES * 2, 0);
 	std::vector<int> weights(MAX_ATTRIBUTES * 2 * Crafting::RA_numResourceAttributes * 2, 0);
@@ -198,7 +198,7 @@ void DraftSchematicObject::requestResourceWeights(ServerObject & requester, uint
 		for (std::vector<const char *>::const_iterator i(newAttributes.begin());
 			i != newAttributes.end(); ++i, ++attribCount)
 		{
-			if (*i == nullptr)
+			if (*i == NULL)
 				break;
 		}
 	}
@@ -257,8 +257,8 @@ ManufactureSchematicObject * DraftSchematicObject::createManufactureSchematic(
 {
 	Object * object = ServerManufactureSchematicObjectTemplate::createObject(
 		"object/manufacture_schematic/generic_schematic.iff", *this);
-	if (object == nullptr)
-		return nullptr;
+	if (object == NULL)
+		return NULL;
 	ManufactureSchematicObject * schematic = safe_cast<ManufactureSchematicObject *>(object);
 	schematic->init(*this, creator);
 	schematic->setNetworkId(ObjectIdManager::getInstance().getNewObjectId());
@@ -478,8 +478,8 @@ const DraftSchematicObject * DraftSchematicObject::getSchematic(
 const DraftSchematicObject * DraftSchematicObject::getSchematic(uint32 crc)
 {
 	NOT_NULL(m_schematics);
-	if (m_schematics == nullptr || crc == 0)
-		return nullptr;
+	if (m_schematics == NULL || crc == 0)
+		return NULL;
 
 	// see if the schematic is already loaded
 	SchematicMap::iterator result = m_schematics->find(crc);
@@ -491,30 +491,30 @@ const DraftSchematicObject * DraftSchematicObject::getSchematic(uint32 crc)
 	if (name.isEmpty())
 	{
 		WARNING(true, ("Unable to find template name for crc %u", crc));
-		return nullptr;
+		return NULL;
 	}
 
 	// create a new schematic
 	if (!TreeFile::exists(name.getString()))
 	{
 		WARNING(true, ("Draft schematic template %s file not found", name.getString()));
-		return nullptr;
+		return NULL;
 	}
 
 	const ObjectTemplate * objTemplate = ObjectTemplateList::fetch(name);
-	if (objTemplate == nullptr)
+	if (objTemplate == NULL)
 	{
 		WARNING(true, ("Can't create object template %s", name.getString()));
-		return nullptr;
+		return NULL;
 	}
 
 	const ServerDraftSchematicObjectTemplate * schematicTemplate = 
 		dynamic_cast<const ServerDraftSchematicObjectTemplate *>(objTemplate);
-	if (schematicTemplate == nullptr)
+	if (schematicTemplate == NULL)
 	{
 		WARNING(true, ("Template %s is not a draft schematic", name.getString()));
 		objTemplate->releaseReference();
-		return nullptr;
+		return NULL;
 	}
 
 	const DraftSchematicObject * schematic = new DraftSchematicObject(schematicTemplate);
@@ -531,7 +531,7 @@ const DraftSchematicObject * DraftSchematicObject::getSchematic(uint32 crc)
  */
 void DraftSchematicObject::install()
 {
-	if (m_schematics == nullptr)
+	if (m_schematics == NULL)
 		m_schematics = new SchematicMap();
 }	// DraftSchematicObject::install
 
@@ -542,16 +542,16 @@ void DraftSchematicObject::install()
  */
 void DraftSchematicObject::remove()
 {
-	if (m_schematics != nullptr)
+	if (m_schematics != NULL)
 	{
 		SchematicMap::iterator iter;
 		for (iter = m_schematics->begin(); iter != m_schematics->end(); ++iter)
 		{
 			delete (*iter).second;
-			(*iter).second = nullptr;
+			(*iter).second = NULL;
 		}
 		delete m_schematics;
-		m_schematics = nullptr;
+		m_schematics = NULL;
 	}
 }	// DraftSchematicObject::remove
 

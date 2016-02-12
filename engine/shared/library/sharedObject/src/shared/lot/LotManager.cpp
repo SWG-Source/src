@@ -129,7 +129,7 @@ void LotManager::addNoBuildEntry (Object const & object, float const noBuildRadi
 	bool const result = m_noBuildEntryMap->insert (std::make_pair (&object, noBuildEntry)).second;
 	UNREF (result);
 	DEBUG_FATAL (!result, ("LotManager::addNoBuildEntry - entry already exists"));
-	DEBUG_REPORT_LOG (ms_logEntries, ("LotManager: added no build entry for object %s [%s] at <%1.2f, %1.2f>\n", object.getNetworkId ().getValueString ().c_str (), object.getObjectTemplateName () ? object.getObjectTemplateName () : "nullptr", position_w.x, position_w.z));
+	DEBUG_REPORT_LOG (ms_logEntries, ("LotManager: added no build entry for object %s [%s] at <%1.2f, %1.2f>\n", object.getNetworkId ().getValueString ().c_str (), object.getObjectTemplateName () ? object.getObjectTemplateName () : "null", position_w.x, position_w.z));
 }
 
 //-------------------------------------------------------------------
@@ -150,7 +150,7 @@ void LotManager::removeNoBuildEntry (const Object& object)
 	else
 		DEBUG_FATAL (true, ("LotManager::removeNoBuildEntry - entry not found"));
 
-	DEBUG_REPORT_LOG (ms_logEntries, ("LotManager: removed no build entry for object %s [%s]\n", object.getNetworkId ().getValueString ().c_str (), object.getObjectTemplateName () ? object.getObjectTemplateName () : "nullptr"));
+	DEBUG_REPORT_LOG (ms_logEntries, ("LotManager: removed no build entry for object %s [%s]\n", object.getNetworkId ().getValueString ().c_str (), object.getObjectTemplateName () ? object.getObjectTemplateName () : "null"));
 }
 
 //-------------------------------------------------------------------
@@ -177,7 +177,7 @@ void LotManager::addStructureFootprintEntry (const Object& object, const Structu
 	UNREF (result);
 	DEBUG_FATAL (!result, ("LotManager::addStructureFootprintEntry - entry already exists"));
 
-	DEBUG_REPORT_LOG (ms_logEntries, ("LotManager: added structure footprint entry for object %s [%s] at <%1.2f, %1.2f>\n", object.getNetworkId ().getValueString ().c_str (), object.getObjectTemplateName () ? object.getObjectTemplateName () : "nullptr", x * m_chunkWidthInMeters + m_chunkWidthInMeters * 0.5f, z * m_chunkWidthInMeters + m_chunkWidthInMeters * 0.5f));
+	DEBUG_REPORT_LOG (ms_logEntries, ("LotManager: added structure footprint entry for object %s [%s] at <%1.2f, %1.2f>\n", object.getNetworkId ().getValueString ().c_str (), object.getObjectTemplateName () ? object.getObjectTemplateName () : "null", x * m_chunkWidthInMeters + m_chunkWidthInMeters * 0.5f, z * m_chunkWidthInMeters + m_chunkWidthInMeters * 0.5f));
 }
 
 //-------------------------------------------------------------------
@@ -191,7 +191,7 @@ void LotManager::removeStructureFootprintEntry (const Object& object)
 	else
 		DEBUG_FATAL (true, ("LotManager::removeStructureFootprintEntry - entry not found"));
 
-	DEBUG_REPORT_LOG (ms_logEntries, ("LotManager: removed structure footprint entry for object %s [%s]\n", object.getNetworkId ().getValueString ().c_str (), object.getObjectTemplateName () ? object.getObjectTemplateName () : "nullptr"));
+	DEBUG_REPORT_LOG (ms_logEntries, ("LotManager: removed structure footprint entry for object %s [%s]\n", object.getNetworkId ().getValueString ().c_str (), object.getObjectTemplateName () ? object.getObjectTemplateName () : "null"));
 }
 
 //-------------------------------------------------------------------

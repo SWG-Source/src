@@ -23,7 +23,7 @@ CTServiceAPI::CTServiceAPI(const char *hostName, const char *game)
 	std::vector<const char *> hostArray;
 	std::vector<short> portArray;
 	char hostConfig[4096];
-	if (hostName == nullptr) 
+	if (hostName == NULL) 
 		hostName = DEFAULT_HOST;
 	if (!game)
 		game = DEFAULT_GAMECODE;
@@ -47,7 +47,7 @@ CTServiceAPI::CTServiceAPI(const char *hostName, const char *game)
 				portArray.push_back(port);
 			}
 		}
-		while ((ptr = strtok(nullptr, " ")) != nullptr);
+		while ((ptr = strtok(NULL, " ")) != NULL);
 	}
 	if (hostArray.empty())
 	{

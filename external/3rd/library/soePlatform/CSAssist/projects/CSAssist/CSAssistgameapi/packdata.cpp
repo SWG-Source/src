@@ -30,7 +30,7 @@ using namespace Plat_Unicode;
 //----------------------------------------------
 CSAssistUnicodeChar *get_c_str(Plat_Unicode::String s)
 // This replaces c_str() by allocating a new buffer, erasing it, and then
-// using the non-nullptr terminated data() to copy the data into the buffer.
+// using the non-null terminated data() to copy the data into the buffer.
 //----------------------------------------------
 {
 	unsigned length = s.size() + 1;

@@ -35,7 +35,7 @@ bool CAutoLog::Open(const char * filename)
 //-------------------------------------
 {
 
-    if( nullptr == filename)
+    if( NULL == filename)
 		return false;
 
     if (pFilename)
@@ -49,13 +49,13 @@ bool CAutoLog::Open(const char * filename)
 
     //  Sanitize slashes
     char *ptr;
-    while ((ptr = strchr(pFilename,WRONGSLASH)) != nullptr)
+    while ((ptr = strchr(pFilename,WRONGSLASH)) != NULL)
         *ptr = SLASHCHAR[0];
 
 	char    strPath[1024];
 	strcpy(strPath,pFilename);
 	ptr = strrchr(strPath, SLASHCHAR[0]);
-    if (ptr != nullptr)
+    if (ptr != NULL)
     {
         *ptr = 0;
 
@@ -63,11 +63,11 @@ bool CAutoLog::Open(const char * filename)
 	    char    curdir[128];
 
         // remember current directory
-	    if( _getcwd(curdir,sizeof(curdir)) == nullptr )
+	    if( _getcwd(curdir,sizeof(curdir)) == NULL )
         {
        	    fprintf(stderr,"CAutoLog::Archive failed to get current directory!\n");
             free(pFilename);
-            pFilename = nullptr;
+            pFilename = NULL;
 		    return false; // error, can't proceed
         }
 
@@ -78,7 +78,7 @@ bool CAutoLog::Open(const char * filename)
             {
         	    fprintf(stderr,"CAutoLog::Archive failed to make directory: %s\n", strPath);
                 free(pFilename);
-                pFilename = nullptr;
+                pFilename = NULL;
 			    return false; // error, can't proceed
             }
 	    }
@@ -98,7 +98,7 @@ bool CAutoLog::Open(const char * filename)
             {
         	    fprintf(stderr,"CAutoLog::Archive failed to make directory: %s\n", strPath);
                 free(pFilename);
-                pFilename = nullptr;
+                pFilename = NULL;
 			    return false; // error, can't proceed
             }
         }
@@ -107,7 +107,7 @@ bool CAutoLog::Open(const char * filename)
 
 
     pFile = fopen(pFilename,"a+");
-    if( pFile == nullptr || pFile == (FILE *)-1)
+    if( pFile == NULL || pFile == (FILE *)-1)
 	{
     	//fprintf(stderr,"CAutoLog::Open failed to open log file: %s\n",pFilename);
         Close();
@@ -127,14 +127,14 @@ bool CAutoLog::Open(const char * filename)
 void CAutoLog::Close(void)
 //-------------------------------------
 {
-	if( pFile != (FILE *)-1 && pFile != nullptr)
+	if( pFile != (FILE *)-1 && pFile != NULL)
 	{
 		fclose(pFile);
 	}
 	pFile = (FILE *)-1;
 
     free(pFilename);
-    pFilename = nullptr;
+    pFilename = NULL;
 }
 
 //-------------------------------------
@@ -197,7 +197,7 @@ void CAutoLog::LogDebug(char * format, ...)
 void CAutoLog::Log(eLogLevel severity, char *fmt, ...)
 //-------------------------------------
 {
-	if (pFile == (FILE *)-1 || pFile == nullptr)
+	if (pFile == (FILE *)-1 || pFile == NULL)
     {
     	//fprintf(stderr,"CAutoLog::Log called with no file open!\n");
 		return;
@@ -253,7 +253,7 @@ void CAutoLog::Log(eLogLevel severity, char *fmt, ...)
 void CAutoLog::Archive(void)
 //-------------------------------------
 {
-	if( pFile == (FILE *)-1 || pFile == nullptr)
+	if( pFile == (FILE *)-1 || pFile == NULL)
     {
     	//fprintf(stderr,"CAutoLog::Archive called with no file open!\n");
 		return;
@@ -284,7 +284,7 @@ void CAutoLog::Archive(void)
 
 	strcpy(strCurrent,pFilename);
 	pCurrent = strrchr(strCurrent, SLASHCHAR[0]);
-    if (pCurrent != nullptr)
+    if (pCurrent != NULL)
         *pCurrent = 0;
     else
         sprintf(strCurrent,".");
@@ -293,7 +293,7 @@ void CAutoLog::Archive(void)
 
 #ifdef WIN32
     // remember current directory
-	if( _getcwd(curdir,sizeof(curdir)) == nullptr )
+	if( _getcwd(curdir,sizeof(curdir)) == NULL )
     {
        	fprintf(stderr,"CAutoLog::Archive failed to get current directory!\n");
 		return; // error, can't proceed
@@ -327,7 +327,7 @@ void CAutoLog::Archive(void)
 #endif
 
 	pCurrent = strrchr(pFilename, SLASHCHAR[0]);
-    if (pCurrent == nullptr)
+    if (pCurrent == NULL)
         pCurrent = pFilename;
     else
         pCurrent++;

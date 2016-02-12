@@ -415,7 +415,7 @@ class AuthoritativeNonPlayerCreatureFilter: public SpatialSubdivisionFilter<Serv
 public:
 	AuthoritativeNonPlayerCreatureFilter() {}
 	bool operator() (ServerObject * const &object) const {
-		return (object->isAuthoritative() && object->asCreatureObject() != nullptr && !object->isPlayerControlled()); }
+		return (object->isAuthoritative() && object->asCreatureObject() != NULL && !object->isPlayerControlled()); }
 };
 
 class TriggerVolumeFilter: public SpatialSubdivisionFilter<ServerObject *>
@@ -905,26 +905,26 @@ ManufactureSchematicObject* ServerWorld::createNewManufacturingSchematic (
 	bool persisted)
 {
 	CreatureObject * const creature = dynamic_cast<CreatureObject *>(creator.getObject());
-	if (creature == nullptr)
-		return nullptr;
+	if (creature == NULL)
+		return NULL;
 	
 	PlayerObject * player = PlayerCreatureController::getPlayerObject(creature);
-	if (player == nullptr)
-		return nullptr;
+	if (player == NULL)
+		return NULL;
 
 	const DraftSchematicObject * const draftSchematic = player->getCurrentDraftSchematic();
-	if (draftSchematic == nullptr)
-		return nullptr;
+	if (draftSchematic == NULL)
+		return NULL;
 
 	ManufactureSchematicObject * const manfSchematic = draftSchematic->createManufactureSchematic(creator);
-	if (manfSchematic == nullptr)
-		return nullptr;
+	if (manfSchematic == NULL)
+		return NULL;
 
 	if (createNewObjectIntermediate(manfSchematic, container, slotId, 
-		persisted) == nullptr)
+		persisted) == NULL)
 	{
 		delete manfSchematic;
-		return nullptr;
+		return NULL;
 	}
 
 	return manfSchematic;
@@ -948,15 +948,15 @@ ManufactureSchematicObject* ServerWorld::createNewManufacturingSchematic (
 {
 	ManufactureSchematicObject * const manfSchematic = 
 		source.createManufactureSchematic(CachedNetworkId::cms_cachedInvalid);
-	if (manfSchematic == nullptr)
-		return nullptr;
+	if (manfSchematic == NULL)
+		return NULL;
 
 	Transform transform;
 	transform.setPosition_p(position);
-	if (createNewObjectIntermediate(manfSchematic, transform, 0, persisted) == nullptr)
+	if (createNewObjectIntermediate(manfSchematic, transform, 0, persisted) == NULL)
 	{
 		delete manfSchematic;
-		return nullptr;
+		return NULL;
 	}
 
 	return manfSchematic;
@@ -980,11 +980,11 @@ ManufactureSchematicObject* ServerWorld::createNewManufacturingSchematic (
 {
 	ManufactureSchematicObject * const manfSchematic = 
 		source.createManufactureSchematic(CachedNetworkId::cms_cachedInvalid);
-	if (manfSchematic == nullptr)
-		return nullptr;
+	if (manfSchematic == NULL)
+		return NULL;
 
-	if (createNewObjectIntermediate(manfSchematic, container, persisted, false) == nullptr)
-		return nullptr;
+	if (createNewObjectIntermediate(manfSchematic, container, persisted, false) == NULL)
+		return NULL;
 	return manfSchematic;
 }	// ServerWorld::createNewManufacturingSchematic
 
@@ -1008,11 +1008,11 @@ ServerObject* ServerWorld::createNewObjectIntermediate(ServerObject *newObject, 
 	if (newObject->getNetworkId() == NetworkId::cms_invalid)
 	{
 		WARNING_STRICT_FATAL(true, ("Tried to create an object with network id 0."));
-		return nullptr;
+		return NULL;
 	}
 	
 	NetworkController *objectController = dynamic_cast<NetworkController *>(newObject->getController());
-	if (objectController == nullptr)
+	if (objectController == NULL)
 		objectController = dynamic_cast<NetworkController *>(newObject->createDefaultController());
 	NOT_NULL(objectController);
 
@@ -1022,7 +1022,7 @@ ServerObject* ServerWorld::createNewObjectIntermediate(ServerObject *newObject, 
 	if (!newObject->serverObjectInitializeFirstTimeObject(cell, transform))
 	{
 		delete newObject;
-		return nullptr;
+		return NULL;
 	}
 
 	// prevent initial object data from being re-sent as deltas
@@ -1057,11 +1057,11 @@ ServerObject* ServerWorld::createNewObjectIntermediate(ServerObject* newObject, 
 	if (newObject->getNetworkId() == NetworkId::cms_invalid)
 	{
 		WARNING_STRICT_FATAL(true, ("Tried to create an object with network id 0."));
-		return nullptr;
+		return NULL;
 	}
 	
 	NetworkController *objectController = dynamic_cast<NetworkController *>(newObject->getController());
-	if (objectController == nullptr)
+	if (objectController == NULL)
 		objectController = dynamic_cast<NetworkController *>(newObject->createDefaultController());
 	NOT_NULL(objectController);
 
@@ -1073,10 +1073,10 @@ ServerObject* ServerWorld::createNewObjectIntermediate(ServerObject* newObject, 
 	// prevent initial object data from being re-sent as deltas
 	newObject->clearDeltas();
 	Container::ContainerErrorCode tmp = Container::CEC_Success;		
-	if (!ContainerInterface::transferItemToGeneralContainer(container, *newObject, nullptr, tmp, allowOverload))
+	if (!ContainerInterface::transferItemToGeneralContainer(container, *newObject, NULL, tmp, allowOverload))
 	{
 		IGNORE_RETURN(newObject->permanentlyDestroy(DeleteReasons::BadContainerTransfer));
-		newObject = nullptr;
+		newObject = NULL;
 	}
 	else
 	{
@@ -1101,13 +1101,13 @@ ServerObject* ServerWorld::createNewObjectIntermediate(ServerObject* newObject, 
 	if (newObject->getNetworkId() == NetworkId::cms_invalid)
 	{
 		WARNING_STRICT_FATAL(true, ("Tried to create an object with network id 0."));
-		return nullptr;
+		return NULL;
 	}
 
 	{
 		PROFILER_AUTO_BLOCK_DEFINE("createNewObjectIntermedate,getController");
 		NetworkController *objectController = dynamic_cast<NetworkController *>(newObject->getController());
-		if (objectController == nullptr)
+		if (objectController == NULL)
 			objectController = dynamic_cast<NetworkController *>(newObject->createDefaultController());
 		NOT_NULL(objectController);
 	}
@@ -1130,11 +1130,11 @@ ServerObject* ServerWorld::createNewObjectIntermediate(ServerObject* newObject, 
 	{
 		PROFILER_AUTO_BLOCK_DEFINE("transferItem");
 		Container::ContainerErrorCode tmp = Container::CEC_Success;
-		if (!ContainerInterface::transferItemToSlottedContainer(container, *newObject, slotId, nullptr, tmp))
+		if (!ContainerInterface::transferItemToSlottedContainer(container, *newObject, slotId, NULL, tmp))
 		{
 			PROFILER_AUTO_BLOCK_DEFINE("failedTransfer");
 			IGNORE_RETURN(newObject->permanentlyDestroy(DeleteReasons::BadContainerTransfer));
-			newObject = nullptr;
+			newObject = NULL;
 		}
 		else
 		{
@@ -1189,7 +1189,7 @@ ServerObject* ServerWorld::createProxyObject(uint32 templateCrc, const NetworkId
 	if(newObject)
 	{
 		ServerController *objectController = dynamic_cast<ServerController *>(newObject->getController());
-		if (objectController == nullptr)
+		if (objectController == NULL)
 			objectController = dynamic_cast<ServerController *>(newObject->createDefaultController());
 		NOT_NULL(objectController);
 	
@@ -1455,10 +1455,10 @@ static void _isObjectInConeLoopSetup(const Object & coneCenterObject, const Loca
 	// NOTE: all calculations are made within the object space of coneCenterObject.
 
 	//-- Compute cone axis vector.
-	const ServerObject * cell = nullptr;
+	const ServerObject * cell = NULL;
 	if (coneDirection.getCell() != NetworkId::cms_invalid)
 		cell = safe_cast<const ServerObject *>(NetworkIdManager::getObjectById(coneDirection.getCell()));
-	if (cell == nullptr)
+	if (cell == NULL)
 		coneAxisVector = coneCenterObject.rotateTranslate_w2o(coneDirection.getCoordinates());
 	else
 	{
@@ -1984,7 +1984,7 @@ CellProperty const * ServerWorld::findCellAtLocation(const Vector & location_w)
  */
 ServerObject *ServerWorld::findClosestObjectInList(const Vector &location, const std::vector<ServerObject*> &candidates)
 {
-	if (candidates.empty()) return nullptr;
+	if (candidates.empty()) return NULL;
 	
 	typedef std::vector<ServerObject *> CandidatesType;
 	
@@ -2097,7 +2097,7 @@ void ServerWorld::install()
 
 		data.installExtents = true;
 		data.installCollisionWorld = true;
-		data.playEffect = nullptr;
+		data.playEffect = NULL;
 		data.isPlayerHouse = &isPlayerHouseHook;
 		data.serverSide = true;
 
@@ -2187,7 +2187,7 @@ void ServerWorld::install()
 
 	m_sceneId = new std::string(ConfigServerGame::getSceneID());
 
-	Pvp::getScheduler().setCallback(Pvp::updateTimedFlags, nullptr, ConfigServerGame::getPvpUpdateTimeMs());
+	Pvp::getScheduler().setCallback(Pvp::updateTimedFlags, NULL, ConfigServerGame::getPvpUpdateTimeMs());
 
 	NebulaManagerServer::loadScene(*m_sceneId);
 
@@ -2420,7 +2420,7 @@ void ServerWorld::triggerMovingTriggers(ServerObject &movingObject, Vector const
 							clcount++;
 					}
 				
-					if (object != nullptr)
+					if (object != NULL)
 						t->moveTriggerVolume(*object, start, end);
 				}
 				DEBUG_REPORT_LOG(ms_logTriggerStats, ("       Creature count: %d Client count: %d\n", crcount, clcount));
@@ -2559,8 +2559,8 @@ void ServerWorld::remove()
 
 	gs_pendingConcludeVector.clear();
 
-	CollisionWorld::setNearWarpWarningCallback(nullptr);
-	CollisionWorld::setFarWarpWarningCallback(nullptr);
+	CollisionWorld::setNearWarpWarningCallback(NULL);
+	CollisionWorld::setFarWarpWarningCallback(NULL);
 
 	Pvp::remove();
 
@@ -2629,7 +2629,7 @@ void ServerWorld::removeObjectFromGame(const ServerObject& object)
 void ServerWorld::removeTangibleObject(ServerObject *object)
 {
 	PROFILER_AUTO_BLOCK_DEFINE("ServerWorld::removeTangibleObject");
-	DEBUG_WARNING(!object, ("removeTangibleObject() was called with a nullptr object parameter, this is probably not what the program intended to do"));
+	DEBUG_WARNING(!object, ("removeTangibleObject() was called with a NULL object parameter, this is probably not what the program intended to do"));
 
 	if (!object)
 		return;
@@ -2643,7 +2643,7 @@ void ServerWorld::removeTangibleObject(ServerObject *object)
 	// if the object is being destroyed, the trigger has already gone off
 	// player creatures aren't destroyed before being removed, so it's safe to invoke
 	// the trigger here
-	if (object->isAuthoritative() && (object->getScriptObject() != nullptr) && !object->isBeingDestroyed())
+	if (object->isAuthoritative() && (object->getScriptObject() != NULL) && !object->isBeingDestroyed())
 	{
 		ScriptParams params;
 		IGNORE_RETURN(object->getScriptObject()->trigAllScripts(Scripting::TRIG_REMOVING_FROM_WORLD, params));
@@ -2897,7 +2897,7 @@ void ServerWorld::update(real time)
 					for(concludeIter = gs_pendingConcludeVector.begin(); concludeIter != gs_pendingConcludeVector.end(); ++concludeIter)
 					{
 						ServerObject *o = (*concludeIter)->asServerObject();
-						WARNING_STRICT_FATAL(!o, ("nullptr object in conclude list!"));
+						WARNING_STRICT_FATAL(!o, ("NULL object in conclude list!"));
 						if (o)
 						{
 							if (o->isInitialized())

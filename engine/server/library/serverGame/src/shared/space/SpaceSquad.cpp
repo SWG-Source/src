@@ -95,7 +95,7 @@ void SpaceSquad::remove()
 // ----------------------------------------------------------------------
 SpaceSquad::SpaceSquad()
  : Squad()
- , m_guardTarget(nullptr)
+ , m_guardTarget(NULL)
  , m_guardedByList(new SpaceSquadList)
  , m_attackSquadList(new AttackSquadList)
  , m_guarding(false)
@@ -109,10 +109,10 @@ SpaceSquad::~SpaceSquad()
 {
 	// The the squad that I am guarding that I am no longer guarding it
 
-	if (m_guardTarget != nullptr)
+	if (m_guardTarget != NULL)
 	{
 		removeGuardTarget();
-		m_guardTarget = nullptr;
+		m_guardTarget = NULL;
 	}
 
 	// Tell all the squads guarding me that I am not longer guardable
@@ -156,7 +156,7 @@ SpacePath * SpaceSquad::getPath() const
 
 	AiShipController * const aiShipController = AiShipController::getAiShipController(getLeader());
 
-	return nullptr != aiShipController ? aiShipController->getPath() : nullptr;
+	return NULL != aiShipController ? aiShipController->getPath() : NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -194,7 +194,7 @@ void SpaceSquad::track(Object const & target) const
 // ----------------------------------------------------------------------
 void SpaceSquad::moveTo(SpacePath * const path) const
 {
-	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("SpaceSquad::moveTo() squadId(%d) path(0x%p) pathSize(%u)", getId(), path, (path != nullptr) ? path->getTransformList().size() : 0));
+	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("SpaceSquad::moveTo() squadId(%d) path(0x%p) pathSize(%u)", getId(), path, (path != NULL) ? path->getTransformList().size() : 0));
 
 	UnitMap const & unitMap = getUnitMap();
 	UnitMap::const_iterator iterUnitMap = unitMap.begin();
@@ -210,7 +210,7 @@ void SpaceSquad::moveTo(SpacePath * const path) const
 // ----------------------------------------------------------------------
 void SpaceSquad::addPatrolPath(SpacePath * const path) const
 {
-	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("SpaceSquad::addPatrolPath() squadId(%d) squadSize(%u) path(0x%p) pathSize(%u)", getId(), getUnitMap().size(), path, (path != nullptr) ? path->getTransformList().size() : 0));
+	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("SpaceSquad::addPatrolPath() squadId(%d) squadSize(%u) path(0x%p) pathSize(%u)", getId(), getUnitMap().size(), path, (path != NULL) ? path->getTransformList().size() : 0));
 
 	UnitMap const & unitMap = getUnitMap();
 	UnitMap::const_iterator iterUnitMap = unitMap.begin();
@@ -293,7 +293,7 @@ bool SpaceSquad::setGuardTarget(int const squadId)
 #endif // _DEBUG
 	}
 
-	return (m_guardTarget != nullptr);
+	return (m_guardTarget != NULL);
 }
 
 // ----------------------------------------------------------------------
@@ -305,14 +305,14 @@ SpaceSquad * SpaceSquad::getGuardTarget()
 // ----------------------------------------------------------------------
 void SpaceSquad::removeGuardTarget()
 {
-	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("SpaceSquad::removeGuardTarget() squadId(%d) guardedBySquad(%d)", getId(), (m_guardTarget != nullptr) ? m_guardTarget->getId() : 0));
+	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("SpaceSquad::removeGuardTarget() squadId(%d) guardedBySquad(%d)", getId(), (m_guardTarget != NULL) ? m_guardTarget->getId() : 0));
 
 	//-- Tell the guard target it's no longer being guarded
 
-	if (m_guardTarget != nullptr)
+	if (m_guardTarget != NULL)
 	{
 		m_guardTarget->removeGuardedBy(*this);
-		m_guardTarget = nullptr;
+		m_guardTarget = NULL;
 	}
 }
 
@@ -360,7 +360,7 @@ void SpaceSquad::onAddUnit(NetworkId const & unit)
 {
 	AiShipController * unitAiShipController = AiShipController::getAiShipController(unit);
 	
-	if (unitAiShipController != nullptr)
+	if (unitAiShipController != NULL)
 	{
 		unitAiShipController->setSquad(this);
 
@@ -391,12 +391,12 @@ void SpaceSquad::onNewLeader(NetworkId const & oldLeader)
 {
 	AiShipController * const newLeaderAiShipController = AiShipController::getAiShipController(getLeader());
 
-	if (newLeaderAiShipController != nullptr)
+	if (newLeaderAiShipController != NULL)
 	{
 		AiShipController * const oldLeaderAiShipController = AiShipController::getAiShipController(oldLeader);
-		LOGC(ConfigServerGame::isSpaceAiLoggingEnabled() && (oldLeaderAiShipController == nullptr) && (getUnitCount() > 1), "space_debug_ai", ("Squad::onNewLeader() ERROR: The old leader(%s) could not resolve to an AiShipController.", oldLeader.getValueString().c_str()));
+		LOGC(ConfigServerGame::isSpaceAiLoggingEnabled() && (oldLeaderAiShipController == NULL) && (getUnitCount() > 1), "space_debug_ai", ("Squad::onNewLeader() ERROR: The old leader(%s) could not resolve to an AiShipController.", oldLeader.getValueString().c_str()));
 
-		if (oldLeaderAiShipController != nullptr)
+		if (oldLeaderAiShipController != NULL)
 		{
 			newLeaderAiShipController->setCurrentPathIndex(oldLeaderAiShipController->getCurrentPathIndex());
 		}
@@ -420,7 +420,7 @@ void SpaceSquad::onSetUnitFormationPosition_l(NetworkId const & unit, Vector con
 {
 	AiShipController * const aiShipController = AiShipController::getAiShipController(unit);
 
-	if (aiShipController != nullptr)
+	if (aiShipController != NULL)
 	{
 		aiShipController->setFormationPosition_l(position_l);
 	}
@@ -457,13 +457,13 @@ void SpaceSquad::alter(float const deltaSeconds)
 
 		AiShipController const * const leaderAiShipController = AiShipController::getAiShipController(getLeader());
 
-		if (leaderAiShipController != nullptr)
+		if (leaderAiShipController != NULL)
 		{
 			if (isGuarding())
 			{
 				SpaceSquad * const guardTarget = getGuardTarget();
 
-				if (guardTarget != nullptr)
+				if (guardTarget != NULL)
 				{
 					m_leashAnchorPosition_w = guardTarget->getSquadPosition_w();
 				}
@@ -499,7 +499,7 @@ void SpaceSquad::assignNewLeader()
 		CachedNetworkId const & unit = iterUnitMap->first;
 		AiShipController const * const unitAiShipController = AiShipController::getAiShipController(unit);
 
-		if (unitAiShipController != nullptr)
+		if (unitAiShipController != NULL)
 		{
 			if (   unitAiShipController->getShipOwner()->isComponentFunctional(ShipChassisSlotType::SCST_engine)
 			    && !unitAiShipController->isAttacking()
@@ -550,7 +550,7 @@ bool SpaceSquad::isGuarding() const
 	    && !m_guardTarget)
 	{
 		FormattedString<1024> fs;
-		char const * const text = fs.sprintf("SpaceSquad::isGuarding() squadId(%d) ERROR: Why are we guarding a nullptr guard target?", getId());
+		char const * const text = fs.sprintf("SpaceSquad::isGuarding() squadId(%d) ERROR: Why are we guarding a NULL guard target?", getId());
 		DEBUG_WARNING(true, (text));
 		LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", (text));
 	}
@@ -572,7 +572,7 @@ bool SpaceSquad::isAttackTargetListEmpty() const
 		NetworkId const & unit = iterUnitMap->first;
 		AiShipController * const aiShipController = AiShipController::getAiShipController(unit);
 
-		if (   (aiShipController != nullptr)
+		if (   (aiShipController != NULL)
 		    && !aiShipController->getAttackTargetList().isEmpty())
 		{
 			result = false;
@@ -623,10 +623,10 @@ Vector SpaceSquad::getAvoidanceVector(ShipObject const & unit) const
 			}
 
 			Object * const squadUnitObject = squadUnit.getObject();
-			ServerObject * const squadUnitServerObject = (squadUnitObject != nullptr) ? squadUnitObject->asServerObject() : nullptr;
-			ShipObject * const squadUnitShipObject = (squadUnitServerObject != nullptr) ? squadUnitServerObject->asShipObject() : nullptr;
+			ServerObject * const squadUnitServerObject = (squadUnitObject != NULL) ? squadUnitObject->asServerObject() : NULL;
+			ShipObject * const squadUnitShipObject = (squadUnitServerObject != NULL) ? squadUnitServerObject->asShipObject() : NULL;
 
-			if (squadUnitShipObject != nullptr)
+			if (squadUnitShipObject != NULL)
 			{
 				Vector const & unitPosition_w = unit.getPosition_w();
 				Vector const & squadUnitPosition_w = squadUnitShipObject->getPosition_w();
@@ -760,7 +760,7 @@ float SpaceSquad::getLargestShipRadius() const
 	{
 		CachedNetworkId const & unit = iterUnitMap->first;
 		Object const * const unitObject = unit.getObject();
-		ServerObject const * const unitServerObject = unitObject ? unitObject->asServerObject() : nullptr;
+		ServerObject const * const unitServerObject = unitObject ? unitObject->asServerObject() : NULL;
 		
 		if (unitServerObject) 
 		{
@@ -787,7 +787,7 @@ void SpaceSquad::refreshPathInfo() const
 			{
 				CachedNetworkId const & unit = iterUnitMap->first;
 				Object const * const unitObject = unit.getObject();
-				ServerObject const * const unitServerObject = unitObject ? unitObject->asServerObject() : nullptr;
+				ServerObject const * const unitServerObject = unitObject ? unitObject->asServerObject() : NULL;
 				if (unitObject && unitServerObject) 
 				{
 					IGNORE_RETURN(path->updateCollisionRadius(unitObject, unitServerObject->getRadius()));

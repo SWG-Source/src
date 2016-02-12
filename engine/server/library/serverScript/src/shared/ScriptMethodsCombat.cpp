@@ -211,12 +211,12 @@ const JNINativeMethod NATIVES[] = {
 void JavaLibrary::setupWeaponCombatData(JNIEnv *env, const WeaponObject * weapon,
 	jobject weaponData)
 {
-	if (env == nullptr || weaponData == nullptr)
+	if (env == NULL || weaponData == NULL)
 		return;
 
-	if (weapon == nullptr)
+	if (weapon == NULL)
 	{
-		env->SetObjectField(weaponData, ms_fidCombatEngineWeaponDataId, nullptr);
+		env->SetObjectField(weaponData, ms_fidCombatEngineWeaponDataId, NULL);
 		return;
 	}
 
@@ -252,7 +252,7 @@ jint JNICALL ScriptMethodsCombatNamespace::getCombatDuration(JNIEnv * /*env*/, j
 	NetworkId const networkId(object);
 	TangibleObject const * const tangibleObject = TangibleObject::getTangibleObject(networkId);
 	
-	if (tangibleObject == nullptr)
+	if (tangibleObject == NULL)
 	{
 		return 0;
 	}
@@ -267,7 +267,7 @@ jint JNICALL ScriptMethodsCombatNamespace::getCombatDuration(JNIEnv * /*env*/, j
  * @param self		    class calling this function
  * @param target	    id of the creature
  *
- * @return the object id of the weapon, or nullptr on error
+ * @return the object id of the weapon, or NULL on error
  */
 jlong JNICALL ScriptMethodsCombatNamespace::getCurrentWeapon(JNIEnv *env, jobject self, jlong target)
 {
@@ -278,7 +278,7 @@ jlong JNICALL ScriptMethodsCombatNamespace::getCurrentWeapon(JNIEnv *env, jobjec
 		return 0;
 
 	const WeaponObject * weapon = creature->getCurrentWeapon();
-	if (weapon == nullptr)
+	if (weapon == NULL)
 		return 0;
 
 	return (weapon->getNetworkId()).getValue();
@@ -313,7 +313,7 @@ jboolean JNICALL ScriptMethodsCombatNamespace::setCurrentWeapon(JNIEnv *env, job
  * @param self		    class calling this function
  * @param target	    id of the creature
  *
- * @return the object id of the weapon, or nullptr on error
+ * @return the object id of the weapon, or NULL on error
  */
 jlong JNICALL ScriptMethodsCombatNamespace::getHeldWeapon(JNIEnv *env, jobject self, jlong target)
 {
@@ -324,7 +324,7 @@ jlong JNICALL ScriptMethodsCombatNamespace::getHeldWeapon(JNIEnv *env, jobject s
 		return 0;
 
 	const WeaponObject * weapon = creature->getReadiedWeapon();
-	if (weapon == nullptr)
+	if (weapon == NULL)
 		return 0;
 
 	return (weapon->getNetworkId()).getValue();
@@ -337,7 +337,7 @@ jlong JNICALL ScriptMethodsCombatNamespace::getHeldWeapon(JNIEnv *env, jobject s
  * @param self		    class calling this function
  * @param target	    id of the creature
  *
- * @return the object id of the default weapon, or nullptr on error
+ * @return the object id of the default weapon, or NULL on error
  */
 jlong JNICALL ScriptMethodsCombatNamespace::getDefaultWeapon(JNIEnv *env, jobject self, jlong target)
 {
@@ -348,7 +348,7 @@ UNREF(self);
 		return 0;
 
 	const WeaponObject * weapon = creature->getDefaultWeapon();
-	if (weapon == nullptr)
+	if (weapon == NULL)
 		return 0;
 
 	return (weapon->getNetworkId()).getValue();
@@ -422,7 +422,7 @@ jboolean JNICALL ScriptMethodsCombatNamespace::isDefaultWeapon(JNIEnv *env, jobj
 		return JNI_FALSE;
 
 	const CreatureObject * owner = dynamic_cast<const CreatureObject *>(ContainerInterface::getContainedByObject(*weapon));
-	if (owner == nullptr || owner->getDefaultWeapon() != weapon)
+	if (owner == NULL || owner->getDefaultWeapon() != weapon)
 		return JNI_FALSE;
 
 	return JNI_TRUE;
@@ -441,7 +441,7 @@ jfloat JNICALL ScriptMethodsCombatNamespace::getMinRange(JNIEnv *env, jobject se
 {
 	UNREF(self);
 
-	const WeaponObject *weapon = nullptr;
+	const WeaponObject *weapon = NULL;
 	if (!JavaLibrary::getObject(weaponId, weapon))
 		return -1.0f;
 
@@ -462,7 +462,7 @@ jfloat JNICALL ScriptMethodsCombatNamespace::getMaxRange(JNIEnv *env, jobject se
 {
 	UNREF(self);
 
-	const WeaponObject *weapon = nullptr;
+	const WeaponObject *weapon = NULL;
 	if (!JavaLibrary::getObject(weaponId, weapon))
 		return -1.0f;
 
@@ -483,7 +483,7 @@ jfloat JNICALL ScriptMethodsCombatNamespace::getAverageDamage(JNIEnv *env, jobje
 {
 	UNREF(self);
 
-	const WeaponObject *weapon = nullptr;
+	const WeaponObject *weapon = NULL;
 	if (!JavaLibrary::getObject(weaponId, weapon))
 		return 0;
 
@@ -506,7 +506,7 @@ jint JNICALL ScriptMethodsCombatNamespace::getWeaponType(JNIEnv *env, jobject se
 {
 	UNREF(self);
 
-	const WeaponObject *weapon = nullptr;
+	const WeaponObject *weapon = NULL;
 	if (!JavaLibrary::getObject(weaponId, weapon))
 		return -1;
 
@@ -527,7 +527,7 @@ jint JNICALL ScriptMethodsCombatNamespace::getWeaponAttackType(JNIEnv *env, jobj
 {
 	UNREF(self);
 
-	const WeaponObject *weapon = nullptr;
+	const WeaponObject *weapon = NULL;
 	if (!JavaLibrary::getObject(weaponId, weapon))
 		return -1;
 
@@ -546,7 +546,7 @@ jint JNICALL ScriptMethodsCombatNamespace::getWeaponDamageType(JNIEnv *env, jobj
 {
 	UNREF(self);
 
-	const WeaponObject *weapon = nullptr;
+	const WeaponObject *weapon = NULL;
 	if (!JavaLibrary::getObject(weaponId, weapon))
 		return -1;
 
@@ -590,7 +590,7 @@ jint JNICALL ScriptMethodsCombatNamespace::getWeaponMinDamage(JNIEnv *env, jobje
 {
 	UNREF(self);
 
-	const WeaponObject *weapon = nullptr;
+	const WeaponObject *weapon = NULL;
 	if (!JavaLibrary::getObject(weaponId, weapon))
 		return -1;
 
@@ -636,7 +636,7 @@ jint JNICALL ScriptMethodsCombatNamespace::getWeaponMaxDamage(JNIEnv *env, jobje
 {
 	UNREF(self);
 
-	const WeaponObject *weapon = nullptr;
+	const WeaponObject *weapon = NULL;
 	if (!JavaLibrary::getObject(weaponId, weapon))
 		return -1;
 
@@ -682,7 +682,7 @@ jfloat JNICALL ScriptMethodsCombatNamespace::getWeaponAttackSpeed(JNIEnv *env, j
 {
 	UNREF(self);
 
-	const WeaponObject *weapon = nullptr;
+	const WeaponObject *weapon = NULL;
 	if (!JavaLibrary::getObject(weaponId, weapon))
 		return -1.0f;
 
@@ -728,7 +728,7 @@ jfloat JNICALL ScriptMethodsCombatNamespace::getWeaponWoundChance(JNIEnv *env, j
 {
 	UNREF(self);
 
-	const WeaponObject *weapon = nullptr;
+	const WeaponObject *weapon = NULL;
 	if (!JavaLibrary::getObject(weaponId, weapon))
 		return -1.0f;
 
@@ -743,13 +743,13 @@ jfloat JNICALL ScriptMethodsCombatNamespace::getWeaponWoundChance(JNIEnv *env, j
  * @param self		    class calling this function
  * @param weaponId		the id of the weapon
  *
- * @return the range info, or nullptr on error
+ * @return the range info, or null on error
  */
 jobject JNICALL ScriptMethodsCombatNamespace::getWeaponRangeInfo(JNIEnv *env, jobject self, jlong weaponId)
 {
 	UNREF(self);
 
-	const WeaponObject *weapon = nullptr;
+	const WeaponObject *weapon = NULL;
 	if (!JavaLibrary::getObject(weaponId, weapon))
 		return 0;
 
@@ -827,7 +827,7 @@ jfloat JNICALL ScriptMethodsCombatNamespace::getWeaponDamageRadius(JNIEnv *env, 
 {
 	UNREF(self);
 
-	const WeaponObject *weapon = nullptr;
+	const WeaponObject *weapon = NULL;
 	if (!JavaLibrary::getObject(weaponId, weapon))
 		return -1.0f;
 
@@ -865,7 +865,7 @@ jboolean JNICALL ScriptMethodsCombatNamespace::setWeaponDamageRadius(JNIEnv *env
  */
 jfloat JNICALL ScriptMethodsCombatNamespace::getAudibleRange(JNIEnv *env, jobject self, jlong weaponId)
 {
-	const WeaponObject *weapon = nullptr;
+	const WeaponObject *weapon = NULL;
 	if (!JavaLibrary::getObject(weaponId, weapon))
 		return -1;
 
@@ -887,7 +887,7 @@ jint JNICALL ScriptMethodsCombatNamespace::getWeaponAttackCost(JNIEnv *env, jobj
 {
 	UNREF(self);
 
-	const WeaponObject *weapon = nullptr;
+	const WeaponObject *weapon = NULL;
 	if (!JavaLibrary::getObject(weaponId, weapon))
 		return 0;
 
@@ -932,7 +932,7 @@ jint JNICALL ScriptMethodsCombatNamespace::getWeaponAccuracy(JNIEnv *env, jobjec
 {
 	UNREF(self);
 
-	const WeaponObject *weapon = nullptr;
+	const WeaponObject *weapon = NULL;
 	if (!JavaLibrary::getObject(weaponId, weapon))
 		return 0;
 
@@ -977,7 +977,7 @@ jint JNICALL ScriptMethodsCombatNamespace::getWeaponElementalType(JNIEnv *env, j
 {
 	UNREF(self);
 
-	const WeaponObject *weapon = nullptr;
+	const WeaponObject *weapon = NULL;
 	if (!JavaLibrary::getObject(weaponId, weapon))
 		return 0;
 
@@ -1022,7 +1022,7 @@ jint JNICALL ScriptMethodsCombatNamespace::getWeaponElementalValue(JNIEnv *env, 
 {
 	UNREF(self);
 
-	const WeaponObject *weapon = nullptr;
+	const WeaponObject *weapon = NULL;
 	if (!JavaLibrary::getObject(weaponId, weapon))
 		return 0;
 
@@ -1218,7 +1218,7 @@ void _startCombat(char const * const functionName, jlong attacker, jlong defende
 	NetworkId const attackerId(attacker);
 	TangibleObject * const attackerTangibleObject = TangibleObject::getTangibleObject(attackerId);
 
-	if (attackerTangibleObject == nullptr)
+	if (attackerTangibleObject == NULL)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsCombat::%s() Unable to resolve the attacker(%s) to a TangibleObject.", functionName, attackerId.getValueString().c_str()));
 		return;
@@ -1227,7 +1227,7 @@ void _startCombat(char const * const functionName, jlong attacker, jlong defende
 	NetworkId const defenderId(defender);
 	TangibleObject * const defenderTangibleObject = TangibleObject::getTangibleObject(defenderId);
 
-	if (defenderTangibleObject == nullptr)
+	if (defenderTangibleObject == NULL)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsCombat::%s() attacker(%s) Unable to resolve the defender(%s) to a TangibleObject.", functionName, attackerId.getValueString().c_str(), defenderId.getValueString().c_str()));
 		return;
@@ -1302,7 +1302,7 @@ void JNICALL ScriptMethodsCombatNamespace::stopCombat(JNIEnv * /*env*/, jobject 
 	NetworkId const objectId(object);
 	TangibleObject * const tangibleObject = TangibleObject::getTangibleObject(objectId);
 
-	if (tangibleObject == nullptr)
+	if (tangibleObject == NULL)
 	{
 		return;
 	}
@@ -1334,9 +1334,9 @@ int i;
 	int attackerCount = 0;
 	int defenderCount = 0;
 
-	if (attackers != nullptr)
+	if (attackers != NULL)
 		attackerCount = env->GetArrayLength(attackers);
-	if (defenders != nullptr)
+	if (defenders != NULL)
 		defenderCount = env->GetArrayLength(defenders);
 
 	// get the attacker and weapon data
@@ -1348,22 +1348,22 @@ int i;
 		LocalRefPtr weaponData = getObjectArrayElement(LocalObjectArrayRefParam(weaponsData), i);
 		if (!attackerId)
 		{
-			WARNING(true, ("JavaLibrary::getCombatData got nullptr attacker id"));
+			WARNING(true, ("JavaLibrary::getCombatData got null attacker id"));
 			return JNI_FALSE;
 		}
 		if (attackerData == LocalRef::cms_nullPtr)
 		{
-			WARNING(true, ("JavaLibrary::getCombatData got nullptr attacker data"));
+			WARNING(true, ("JavaLibrary::getCombatData got null attacker data"));
 			return JNI_FALSE;
 		}
 		if (weaponData == LocalRef::cms_nullPtr)
 		{
-			WARNING(true, ("JavaLibrary::getCombatData got nullptr weapon data"));
+			WARNING(true, ("JavaLibrary::getCombatData got null weapon data"));
 			return JNI_FALSE;
 		}
 
 		// set up the attacker data
-		const TangibleObject * attacker = nullptr;
+		const TangibleObject * attacker = NULL;
 		if (!JavaLibrary::getObject(attackerId, attacker))
 		{
 			WARNING(true, ("JavaLibrary::getCombatData cannot get attacker object"));
@@ -1377,7 +1377,7 @@ int i;
 		ScriptConversion::convert(attacker->getPosition_p(), attacker->getSceneId(),
 			attackerCell ? attackerCell->getNetworkId() : NetworkId::cms_invalid,
 			location);
-		if (location.get() == nullptr || location == LocalRef::cms_nullPtr)
+		if (location.get() == NULL || location == LocalRef::cms_nullPtr)
 		{
 			WARNING(true, ("JavaLibrary::getCombatData cannot convert local position "
 				"of attacker %s to Java", attacker->getNetworkId().getValueString().c_str()));
@@ -1390,7 +1390,7 @@ int i;
 			ScriptConversion::convert(attacker->getPosition_w(), attacker->getSceneId(),
 				CellProperty::getWorldCellProperty()->getOwner().getNetworkId(),
 				worldLocation);
-			if (worldLocation.get() == nullptr || worldLocation == LocalRef::cms_nullPtr)
+			if (worldLocation.get() == NULL || worldLocation == LocalRef::cms_nullPtr)
 			{
 				WARNING(true, ("JavaLibrary::getCombatData cannot convert world position "
 					"of attacker %s to Java", attacker->getNetworkId().getValueString().c_str()));
@@ -1398,14 +1398,14 @@ int i;
 			}
 		}
 
-		const WeaponObject * weapon = nullptr;
+		const WeaponObject * weapon = NULL;
 		bool isCreature = false;
 		int posture = 0;
 		int locomotion = 0;
 		int weaponSkill = 0;
 		int aims = 0;
 		const CreatureObject * creature = dynamic_cast<const CreatureObject *>(attacker);
-		if (creature != nullptr)
+		if (creature != NULL)
 		{
 			isCreature = true;
 			posture = creature->getPosture();
@@ -1419,7 +1419,7 @@ int i;
 
 		CombatEngineData::CombatData const * combatData = attacker->getCombatData();
 
-		if (combatData != nullptr)
+		if (combatData != NULL)
 		{
 			aims = combatData->attackData.aims;
 		}
@@ -1446,17 +1446,17 @@ int i;
 		LocalRefPtr defenderData = getObjectArrayElement(LocalObjectArrayRefParam(defendersData), i);
 		if (!defenderId)
 		{
-			WARNING(true, ("JavaLibrary::getCombatData got nullptr defender id"));
+			WARNING(true, ("JavaLibrary::getCombatData got null defender id"));
 			return JNI_FALSE;
 		}
 		if (defenderData == LocalRef::cms_nullPtr)
 		{
-			WARNING(true, ("JavaLibrary::getCombatData got nullptr defender data"));
+			WARNING(true, ("JavaLibrary::getCombatData got null defender data"));
 			return JNI_FALSE;
 		}
 
 		// set up the defender data
-		const TangibleObject * defender = nullptr;
+		const TangibleObject * defender = NULL;
 		if (!JavaLibrary::getObject(defenderId, defender))
 		{
 			WARNING(true, ("JavaLibrary::getCombatData cannot get defender object"));
@@ -1470,7 +1470,7 @@ int i;
 		ScriptConversion::convert(defender->getPosition_p(), defender->getSceneId(),
 			defenderCell ? defenderCell->getNetworkId() : NetworkId::cms_invalid,
 			location);
-		if (location.get() == nullptr || location == LocalRef::cms_nullPtr)
+		if (location.get() == NULL || location == LocalRef::cms_nullPtr)
 		{
 			WARNING(true, ("JavaLibrary::getCombatData cannot convert local position "
 				"of defender %s to Java", defender->getNetworkId().getValueString().c_str()));
@@ -1483,7 +1483,7 @@ int i;
 			ScriptConversion::convert(defender->getPosition_w(), defender->getSceneId(),
 				CellProperty::getWorldCellProperty()->getOwner().getNetworkId(),
 				worldLocation);
-			if (worldLocation.get() == nullptr || worldLocation == LocalRef::cms_nullPtr)
+			if (worldLocation.get() == NULL || worldLocation == LocalRef::cms_nullPtr)
 			{
 				WARNING(true, ("JavaLibrary::getCombatData cannot convert world position "
 					"of defender %s to Java", defender->getNetworkId().getValueString().c_str()));
@@ -1497,7 +1497,7 @@ int i;
 		int combatSkeleton = defender->getCombatSkeleton();
 		int cover = 0;
 		const CreatureObject * creature = dynamic_cast<const CreatureObject *>(defender);
-		if (creature != nullptr)
+		if (creature != NULL)
 		{
 			isCreature = true;
 			posture = creature->getPosture();
@@ -1557,7 +1557,7 @@ jboolean JNICALL ScriptMethodsCombatNamespace::getWeaponData(JNIEnv *env, jobjec
 	if (weapon == 0 || weaponData == 0)
 		return JNI_FALSE;
 
-	const WeaponObject * localWeapon = nullptr;
+	const WeaponObject * localWeapon = NULL;
 	if (!JavaLibrary::getObject(weapon, localWeapon))
 		return JNI_FALSE;
 
@@ -1587,15 +1587,15 @@ jboolean JNICALL ScriptMethodsCombatNamespace::doDamage(JNIEnv *env, jobject sel
 	if (damage <= 0)
 		return JNI_TRUE;
 
-	TangibleObject * attacker = nullptr;
+	TangibleObject * attacker = NULL;
 	if (!JavaLibrary::getObject(attackerId, attacker))
 		return JNI_FALSE;
 
-	TangibleObject * defender = nullptr;
+	TangibleObject * defender = NULL;
 	if (!JavaLibrary::getObject(defenderId, defender))
 		return JNI_FALSE;
 
-	WeaponObject * weapon = nullptr;
+	WeaponObject * weapon = NULL;
 	if (!JavaLibrary::getObject(weaponId, weapon))
 		return JNI_FALSE;
 
@@ -1627,11 +1627,11 @@ jboolean JNICALL ScriptMethodsCombatNamespace::doDamageNoWeapon(JNIEnv *env, job
 	if (damage <= 0)
 		return JNI_TRUE;
 
-	TangibleObject * attacker = nullptr;
+	TangibleObject * attacker = NULL;
 	if (!JavaLibrary::getObject(attackerId, attacker))
 		return JNI_FALSE;
 
-	TangibleObject * defender = nullptr;
+	TangibleObject * defender = NULL;
 	if (!JavaLibrary::getObject(defenderId, defender))
 		return JNI_FALSE;
 
@@ -1699,7 +1699,7 @@ jboolean JNICALL ScriptMethodsCombatNamespace::doCombatResults(JNIEnv *env, jobj
 	{
 		message->setAttacker(attacker, weapon);
 		CreatureObject * creature = dynamic_cast<CreatureObject *>(attacker.getObject());
-		if (creature != nullptr)
+		if (creature != NULL)
 		{
 			Postures::Enumerator posture = static_cast<Postures::Enumerator>(
 				env->GetIntField(attackerResult, JavaLibrary::getFidBaseClassAttackerResultsPosture()));
@@ -1816,7 +1816,7 @@ jboolean JNICALL ScriptMethodsCombatNamespace::doCombatResults(JNIEnv *env, jobj
 	// send the message
 
 	Controller *const controller = attacker.getObject()->getController();
-	if (controller != nullptr)
+	if (controller != NULL)
 	{
 		float f_hold_ms = ConfigServerGame::getCombatDamageDelaySeconds() * 1000.0f;
 		if ( f_hold_ms < 1.0 )  // 0 hold time (allowing for rounding error) 
@@ -1834,7 +1834,7 @@ jboolean JNICALL ScriptMethodsCombatNamespace::doCombatResults(JNIEnv *env, jobj
 		{
 			MessageQueueCombatAction *held = (MessageQueueCombatAction*)controller->peekHeldMessage( CM_combatAction );
 			bool b_merge = true;
-			if ( held == nullptr )
+			if ( held == NULL )
 				b_merge = false;
 			else if ( held->getComparisonChecksum() != message->getComparisonChecksum() )
 				b_merge = false;
@@ -1900,24 +1900,24 @@ jboolean JNICALL ScriptMethodsCombatNamespace::callDefenderCombatAction(JNIEnv *
 	{
 		// use the attacker's current weapon
 		CreatureObject * creatureAttacker = dynamic_cast<CreatureObject *>(attackerId.getObject());
-		if (creatureAttacker != nullptr)
+		if (creatureAttacker != NULL)
 		{
 			const WeaponObject * weaponObject = creatureAttacker->getCurrentWeapon();
-			if (weaponObject != nullptr)
+			if (weaponObject != NULL)
 				weaponId = weaponObject->getNetworkId();
 		}
 		else
 		{
 			const WeaponObject * weaponAttacker = dynamic_cast<const WeaponObject *>(
 				attackerId.getObject());
-			if (weaponAttacker != nullptr)
+			if (weaponAttacker != NULL)
 				weaponId = weaponAttacker->getNetworkId();
 		}
 	}
 
 	// call the trigger for each defender
-	jint * resultsArray = env->GetIntArrayElements(results, nullptr);
-	if (resultsArray == nullptr)
+	jint * resultsArray = env->GetIntArrayElements(results, NULL);
+	if (resultsArray == NULL)
 		return JNI_FALSE;
 
 	for (jsize i = 0; i < defenderCount; ++i)
@@ -1927,11 +1927,11 @@ jboolean JNICALL ScriptMethodsCombatNamespace::callDefenderCombatAction(JNIEnv *
 		if (defender)
 		{
 			CachedNetworkId defenderId(defender);
-			if (defenderId.getObject() != nullptr)
+			if (defenderId.getObject() != NULL)
 			{
 				ServerObject * defenderObject = safe_cast<ServerObject *>(
 					defenderId.getObject());
-				if (defenderObject->getScriptObject() != nullptr)
+				if (defenderObject->getScriptObject() != NULL)
 				{
 					ScriptParams params;
 					params.addParam(attackerId);
@@ -1961,7 +1961,7 @@ jboolean JNICALL ScriptMethodsCombatNamespace::callDefenderCombatAction(JNIEnv *
  */
 void JNICALL ScriptMethodsCombatNamespace::setWantSawAttackTriggers(JNIEnv *env, jobject self, jlong obj, jboolean enable)
 {
-	TangibleObject * tangible = nullptr;
+	TangibleObject * tangible = NULL;
 
 	if (!JavaLibrary::getObject(obj, tangible))
 	{
@@ -2021,7 +2021,7 @@ jboolean JNICALL ScriptMethodsCombatNamespace::addSlowDownEffect(JNIEnv *env, jo
 		return JNI_FALSE;
 	}
 
-	CreatureObject * attackerObject = nullptr;
+	CreatureObject * attackerObject = NULL;
 	if (!JavaLibrary::getObject(attacker, attackerObject))
 	{
 		WARNING(true, ("[script bug] JavaLibrary::addSlowDownEffect called "
@@ -2029,7 +2029,7 @@ jboolean JNICALL ScriptMethodsCombatNamespace::addSlowDownEffect(JNIEnv *env, jo
 		return JNI_FALSE;
 	}
 
-	const TangibleObject * defenderObject = nullptr;
+	const TangibleObject * defenderObject = NULL;
 	if (!JavaLibrary::getObject(defender, defenderObject))
 	{
 		WARNING(true, ("[script bug] JavaLibrary::addSlowDownEffect called "
@@ -2057,7 +2057,7 @@ jboolean JNICALL ScriptMethodsCombatNamespace::addSlowDownEffect(JNIEnv *env, jo
  */
 jboolean JNICALL ScriptMethodsCombatNamespace::removeSlowDownEffect(JNIEnv *env, jobject self, jlong attacker)
 {
-	CreatureObject * attackerObject = nullptr;
+	CreatureObject * attackerObject = NULL;
 	if (!JavaLibrary::getObject(attacker, attackerObject))
 	{
 		WARNING(true, ("[script bug] JavaLibrary::removeSlowDownEffect called "
@@ -2090,14 +2090,14 @@ void JNICALL ScriptMethodsCombatNamespace::sendCombatSpam(JNIEnv *env, jobject s
 {
 	NetworkId attackerId(attacker);
 	ServerObject * attackerObj = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(attackerId));
-	if (attackerObj == nullptr)
+	if (attackerObj == NULL)
 	{
 		WARNING(true, ("WARNING: JavaLibrary::sendCombatSpam could not find attacker for id %s", attackerId.getValueString().c_str()));
 		return;
 	}
 
 	NetworkId defenderId(defender);
-	Object const * const defenderObj = (defenderId.isValid() ? NetworkIdManager::getObjectById(defenderId) : nullptr);
+	Object const * const defenderObj = (defenderId.isValid() ? NetworkIdManager::getObjectById(defenderId) : NULL);
 
 	NetworkId weaponId(weapon);
 	StringId attackNameSid;
@@ -2189,14 +2189,14 @@ void JNICALL ScriptMethodsCombatNamespace::sendCombatSpamWeaponString(JNIEnv *en
 {
 	NetworkId attackerId(attacker);
 	ServerObject * attackerObj = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(attackerId));
-	if (attackerObj == nullptr)
+	if (attackerObj == NULL)
 	{
 		WARNING(true, ("WARNING: JavaLibrary::sendCombatSpam could not find attacker for id %s", attackerId.getValueString().c_str()));
 		return;
 	}
 
 	NetworkId defenderId(defender);
-	Object const * const defenderObj = (defenderId.isValid() ? NetworkIdManager::getObjectById(defenderId) : nullptr);
+	Object const * const defenderObj = (defenderId.isValid() ? NetworkIdManager::getObjectById(defenderId) : NULL);
 
 	StringId weaponNameSid;
 	if (!ScriptConversion::convert(weaponName, weaponNameSid))
@@ -2287,12 +2287,12 @@ void JNICALL ScriptMethodsCombatNamespace::sendCombatSpamWeaponString(JNIEnv *en
  */
 void JNICALL ScriptMethodsCombatNamespace::sendCombatSpamMessage(JNIEnv *env, jobject self, jlong attacker, jlong defender, jobject message, jboolean sendToAttacker, jboolean sendToDefender, jboolean sendToBystanders, jint spamType)
 {
-	ServerObject * attackerObj = nullptr;
+	ServerObject * attackerObj = NULL;
 	if (!JavaLibrary::getObject(attacker, attackerObj))
 		return;
 
 	NetworkId defenderId(defender);
-	Object const * const defenderObj = (defenderId.isValid() ? NetworkIdManager::getObjectById(defenderId) : nullptr);
+	Object const * const defenderObj = (defenderId.isValid() ? NetworkIdManager::getObjectById(defenderId) : NULL);
 
 	StringId messageSid;
 	if (!ScriptConversion::convert(message, messageSid))
@@ -2322,12 +2322,12 @@ void JNICALL ScriptMethodsCombatNamespace::sendCombatSpamMessage(JNIEnv *env, jo
 */
 void JNICALL ScriptMethodsCombatNamespace::sendCombatSpamMessageCGP(JNIEnv *env, jobject self, jlong attacker, jlong defender, jobject message, jboolean sendToAttacker, jboolean sendToDefender, jboolean sendToBystanders, jboolean critical, jboolean glancing, jboolean proc, jint spamType)
 {
-	ServerObject * attackerObj = nullptr;
+	ServerObject * attackerObj = NULL;
 	if (!JavaLibrary::getObject(attacker, attackerObj))
 		return;
 
 	NetworkId defenderId(defender);
-	Object const * const defenderObj = (defenderId.isValid() ? NetworkIdManager::getObjectById(defenderId) : nullptr);
+	Object const * const defenderObj = (defenderId.isValid() ? NetworkIdManager::getObjectById(defenderId) : NULL);
 
 	StringId messageSid;
 	if (!ScriptConversion::convert(message, messageSid))
@@ -2353,12 +2353,12 @@ void JNICALL ScriptMethodsCombatNamespace::sendCombatSpamMessageCGP(JNIEnv *env,
  */
 void JNICALL ScriptMethodsCombatNamespace::sendCombatSpamMessageOob(JNIEnv *env, jobject self, jlong attacker, jlong defender, jstring oob, jboolean sendToAttacker, jboolean sendToDefender, jboolean sendToBystanders, jint spamType)
 {
-	ServerObject * attackerObj = nullptr;
+	ServerObject * attackerObj = NULL;
 	if (!JavaLibrary::getObject(attacker, attackerObj))
 		return;
 
 	NetworkId defenderId(defender);
-	Object const * const defenderObj = (defenderId.isValid() ? NetworkIdManager::getObjectById(defenderId) : nullptr);
+	Object const * const defenderObj = (defenderId.isValid() ? NetworkIdManager::getObjectById(defenderId) : NULL);
 
 	Unicode::String oobString;
 	if (!JavaLibrary::convert(JavaStringParam(oob), oobString))

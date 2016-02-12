@@ -94,10 +94,10 @@ Tag SharedWeaponObjectTemplate::getTemplateVersion(void) const
  */
 Tag SharedWeaponObjectTemplate::getHighestTemplateVersion(void) const
 {
-	if (m_baseData == nullptr)
+	if (m_baseData == NULL)
 		return m_templateVersion;
 	const SharedWeaponObjectTemplate * base = dynamic_cast<const SharedWeaponObjectTemplate *>(m_baseData);
-	if (base == nullptr)
+	if (base == NULL)
 		return m_templateVersion;
 	return std::max(m_templateVersion, base->getHighestTemplateVersion());
 } // SharedWeaponObjectTemplate::getHighestTemplateVersion
@@ -111,33 +111,33 @@ std::string testDataValue = DefaultString;
 UNREF(testData);
 #endif
 
-	const SharedWeaponObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const SharedWeaponObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const SharedWeaponObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getWeaponEffect(true);
 #endif
 	}
 
 	if (!m_weaponEffect.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter weaponEffect in template %s", DataResource::getName()));
 			return DefaultString;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter weaponEffect has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter weaponEffect has not been defined in template %s!", DataResource::getName()));
 			return base->getWeaponEffect();
 		}
 	}
 
 	const std::string & value = m_weaponEffect.getValue();
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -153,26 +153,26 @@ int testDataValue = 0;
 UNREF(testData);
 #endif
 
-	const SharedWeaponObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const SharedWeaponObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const SharedWeaponObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getWeaponEffectIndex(true);
 #endif
 	}
 
 	if (!m_weaponEffectIndex.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter weaponEffectIndex in template %s", DataResource::getName()));
 			return 0;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter weaponEffectIndex has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter weaponEffectIndex has not been defined in template %s!", DataResource::getName()));
 			return base->getWeaponEffectIndex();
 		}
 	}
@@ -182,9 +182,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		int baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getWeaponEffectIndex();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -201,7 +201,7 @@ UNREF(testData);
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -217,26 +217,26 @@ int testDataValue = 0;
 UNREF(testData);
 #endif
 
-	const SharedWeaponObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const SharedWeaponObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const SharedWeaponObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getWeaponEffectIndexMin(true);
 #endif
 	}
 
 	if (!m_weaponEffectIndex.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter weaponEffectIndex in template %s", DataResource::getName()));
 			return 0;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter weaponEffectIndex has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter weaponEffectIndex has not been defined in template %s!", DataResource::getName()));
 			return base->getWeaponEffectIndexMin();
 		}
 	}
@@ -246,9 +246,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		int baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getWeaponEffectIndexMin();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -265,7 +265,7 @@ UNREF(testData);
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -281,26 +281,26 @@ int testDataValue = 0;
 UNREF(testData);
 #endif
 
-	const SharedWeaponObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const SharedWeaponObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const SharedWeaponObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getWeaponEffectIndexMax(true);
 #endif
 	}
 
 	if (!m_weaponEffectIndex.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter weaponEffectIndex in template %s", DataResource::getName()));
 			return 0;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter weaponEffectIndex has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter weaponEffectIndex has not been defined in template %s!", DataResource::getName()));
 			return base->getWeaponEffectIndexMax();
 		}
 	}
@@ -310,9 +310,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		int baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getWeaponEffectIndexMax();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -329,7 +329,7 @@ UNREF(testData);
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -345,33 +345,33 @@ SharedWeaponObjectTemplate::AttackType testDataValue = static_cast<SharedWeaponO
 UNREF(testData);
 #endif
 
-	const SharedWeaponObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const SharedWeaponObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const SharedWeaponObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getAttackType(true);
 #endif
 	}
 
 	if (!m_attackType.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter attackType in template %s", DataResource::getName()));
 			return static_cast<AttackType>(0);
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter attackType has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter attackType has not been defined in template %s!", DataResource::getName()));
 			return base->getAttackType();
 		}
 	}
 
 	AttackType value = static_cast<AttackType>(m_attackType.getValue());
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -420,12 +420,12 @@ char paramName[MAX_NAME_SIZE];
 		file.read_string(baseFilename);
 		file.exitChunk();
 		const ObjectTemplate *base = ObjectTemplateList::fetch(baseFilename);
-		DEBUG_WARNING(base == nullptr, ("was unable to load base template %s", baseFilename.c_str()));
-		if (m_baseData == base && base != nullptr)
+		DEBUG_WARNING(base == NULL, ("was unable to load base template %s", baseFilename.c_str()));
+		if (m_baseData == base && base != NULL)
 			base->releaseReference();
 		else
 		{
-			if (m_baseData != nullptr)
+			if (m_baseData != NULL)
 				m_baseData->releaseReference();
 			m_baseData = base;
 		}

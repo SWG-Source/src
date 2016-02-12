@@ -33,7 +33,7 @@ namespace FatalNamespace
 	int   ms_numberOfWarnings = 0;
 	bool  ms_strict = false;
 
-	WarningCallback s_warningCallback = nullptr;
+	WarningCallback s_warningCallback = NULL;
 
 #if PRODUCTION == 0
 	PixCounter::ResetInteger ms_numberOfWarningsThisFrame;
@@ -70,7 +70,7 @@ static void formatMessage(char *buffer, int bufferLength, int stackDepth, const 
 	else
 		DebugHelp::getCallStack(callStack, callStackOffset + stackDepth);
 
-	// make sure the buffer is always nullptr terminated
+	// make sure the buffer is always null terminated
 	buffer[--bufferLength] = '\0';
 
 	// look up the caller's file and line
@@ -191,7 +191,7 @@ static void InternalWarning(const char *format, int extraFlags, va_list va, int 
 
 	char buffer[4 * 1024];
 
-	if (nullptr != s_warningCallback)
+	if (NULL != s_warningCallback)
 	{
 		strcpy(buffer, "WARNING: ");
 		vsnprintf(buffer + 9, sizeof(buffer) - 9, format, va);

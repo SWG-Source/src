@@ -12,7 +12,7 @@ namespace Base
 	{
 		for(unsigned i = 0; i < 31; i++)
 		{
-			m_blocks[i] = nullptr;
+			m_blocks[i] = NULL;
 		}
 	}
 
@@ -21,7 +21,7 @@ namespace Base
 		// free all allocated memory blocks
 		for(unsigned i = 0; i < 31; i++)
 		{
-			while(m_blocks[i] != nullptr)
+			while(m_blocks[i] != NULL)
 			{
 				unsigned *tmp = m_blocks[i];
 				m_blocks[i] = (unsigned *)*m_blocks[i];
@@ -36,7 +36,7 @@ namespace Base
 	void *BlockAllocator::getBlock(unsigned bytes)
 	{
 		unsigned accum = 16, bits = 16;
-		unsigned *handle = nullptr;
+		unsigned *handle = NULL;
 
 		// Perform a binary search looking for the highest bit.
 
@@ -96,7 +96,7 @@ namespace Base
 
 	void BlockAllocator::returnBlock(unsigned *handle)
 	{
-		// C++ allows for safe deletion of a nullptr pointer
+		// C++ allows for safe deletion of a NULL pointer
 		if(handle)
 		{
 			// Update the allocator linked list, insert this entry at the head

@@ -297,7 +297,7 @@ void MessageQueueCombatAction::debugDump() const
 	bool  hasActionName;
 	char  actionName[256];
 
-	if (s_actionNameLookupFunction != nullptr)
+	if (s_actionNameLookupFunction != NULL)
 	{
 		hasActionName = true;
 		(*s_actionNameLookupFunction)(m_actionId, actionName, sizeof(actionName));
@@ -316,9 +316,9 @@ void MessageQueueCombatAction::debugDump() const
 
 	// Print attacker info.
 	DEBUG_REPORT_LOG(true, ("MQCA: attacker: id              =[%s].\n", m_attacker.id.getValueString().c_str()));
-	DEBUG_REPORT_LOG(true, ("MQCA: attacker: template        =[%s].\n", attackerObject ? attackerObject->getObjectTemplateName() : "<nullptr object>"));
+	DEBUG_REPORT_LOG(true, ("MQCA: attacker: template        =[%s].\n", attackerObject ? attackerObject->getObjectTemplateName() : "<NULL object>"));
 	DEBUG_REPORT_LOG(true, ("MQCA: attacker: weapon          =[%s].\n", m_attacker.weapon.getValueString().c_str()));
-	DEBUG_REPORT_LOG(true, ("MQCA: attacker: weapon template =[%s].\n", weaponObject ? weaponObject->getObjectTemplateName() : "<nullptr weapon>"));
+	DEBUG_REPORT_LOG(true, ("MQCA: attacker: weapon template =[%s].\n", weaponObject ? weaponObject->getObjectTemplateName() : "<NULL weapon>"));
 	DEBUG_REPORT_LOG(true, ("MQCA: attacker: end posture     =[%s].\n", Postures::getPostureName(m_attacker.endPosture)));
 	DEBUG_REPORT_LOG(true, ("MQCA: attacker: trailBits       =[0x%02x].\n", m_attacker.trailBits));
 	DEBUG_REPORT_LOG(true, ("MQCA: attacker: client effect id=[%d].\n", m_attacker.clientEffectId));
@@ -341,7 +341,7 @@ void MessageQueueCombatAction::debugDump() const
 		UNREF(defenderObject);
 
 		DEBUG_REPORT_LOG(true, ("MQCA: defender #%d: id              =[%s].\n", i + 1, data.id.getValueString().c_str()));
-		DEBUG_REPORT_LOG(true, ("MQCA: defender #%d: template        =[%s].\n", i + 1, defenderObject ? defenderObject->getObjectTemplateName() : "<nullptr object>"));
+		DEBUG_REPORT_LOG(true, ("MQCA: defender #%d: template        =[%s].\n", i + 1, defenderObject ? defenderObject->getObjectTemplateName() : "<NULL object>"));
 		DEBUG_REPORT_LOG(true, ("MQCA: defender #%d: end posture     =[%s].\n", i + 1, Postures::getPostureName(data.endPosture)));
 		DEBUG_REPORT_LOG(true, ("MQCA: defender #%d: defense         =[%s].\n", i + 1, CombatEngineData::getCombatDefenseName(data.defense)));
 		DEBUG_REPORT_LOG(true, ("MQCA: defender #%d: client effect id=[%d].\n", i + 1, data.clientEffectId));

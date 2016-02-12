@@ -31,7 +31,7 @@ namespace FootprintForceReattachManagerNamespace
 
 		DataTable const * const dt = DataTableManager::getTable(ms_datatableName, true);
 
-		if (nullptr == dt)
+		if (NULL == dt)
 			WARNING(true, ("FootprintForceReattachManager unable to find [%s]", ms_datatableName));
 		else
 		{

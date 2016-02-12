@@ -350,7 +350,7 @@ void ChatInterface::OnGetRoom(unsigned track, unsigned result, const ChatRoom *r
 	if (room)
 		makeRoomName(room, roomName);
 	//printf("!!!!!!!!!!!!got room %s\n", roomName.c_str());
-	if (strstr(roomName.c_str(), "group") == nullptr)
+	if (strstr(roomName.c_str(), "group") == NULL)
 	{
 		ChatServer::putSystemAvatarInRoom(roomName);
 	}
@@ -373,7 +373,7 @@ void ChatInterface::OnGetRoom(unsigned track, unsigned result, const ChatRoom *r
 		}
 	}
 
-	ChatServerRoomOwner *owner = nullptr;
+	ChatServerRoomOwner *owner = NULL;
 	if (room)
 		owner = getRoomOwner(room->getRoomID());
 
@@ -709,12 +709,12 @@ std::string makeCanonicalName(const std::string &characterName)
 	{
 		retVal = toUpper(tmp);
 	}
-	tmp = strtok(nullptr, ".");
+	tmp = strtok(NULL, ".");
 	if (tmp)
 	{
 		retVal += (dot + tmp);
 	}
-	tmp = strtok(nullptr, ".");
+	tmp = strtok(NULL, ".");
 	if (tmp)
 	{
 		retVal += (dot + tmp);
@@ -796,7 +796,7 @@ void ChatInterface::DestroyAvatar(const std::string & characterName)
 
 	// track how many times we have called RequestGetAnyAvatar() for this particular DestroyAvatar
 	// operation, so that we can stop if we somehow get stuck in an infinite loop 
-	unsigned const trackID = RequestGetAnyAvatar(ChatUnicodeString(avatar.getName()), ChatUnicodeString(avatar.getAPIAddress()), nullptr);
+	unsigned const trackID = RequestGetAnyAvatar(ChatUnicodeString(avatar.getName()), ChatUnicodeString(avatar.getAPIAddress()), NULL);
 	trackingRequestGetAnyAvatarForDestroy[trackID] = std::make_pair(std::make_pair(ChatUnicodeString(avatar.getName()), ChatUnicodeString(avatar.getAPIAddress())), 1);
 }
 
@@ -848,7 +848,7 @@ void ChatInterface::sendQueuedHeadersToClient()
 	const unsigned long queuedHeadersSendTime = currentTime + static_cast<unsigned long>(s_intervalToSendHeadersToClientSeconds);
 
 	int numberHeadersSent = 0;
-	const ChatPersistentMessageToClient * header = nullptr;
+	const ChatPersistentMessageToClient * header = NULL;
 
 	for (std::map<ChatAvatarId, std::pair<unsigned long, std::deque<const ChatPersistentMessageToClient *> > >::iterator iter = queuedHeaders.begin(); iter != queuedHeaders.end();)
 	{
@@ -900,7 +900,7 @@ void ChatInterface::clearQueuedHeadersForAvatar(const ChatAvatarId & avatarId)
 
 void ChatInterface::addQueuedHeaderForAvatar(const ChatAvatarId & avatarId, const ChatPersistentMessageToClient * header, unsigned long sendTime)
 {
-	if (header == nullptr)
+	if (header == NULL)
 		return;
 
 	std::pair<unsigned long, std::deque<const ChatPersistentMessageToClient *> > & queuedHeader = queuedHeaders[avatarId];
@@ -923,7 +923,7 @@ ChatServerAvatarOwner *ChatInterface::getAvatarOwner(const ChatAvatar *avatar)
 			return (*f).second;
 		}
 	}
-	return nullptr;
+	return NULL;
 }
 
 //-----------------------------------------------------------------------
@@ -944,7 +944,7 @@ void ChatInterface::OnAddModerator(unsigned track, unsigned result, const ChatAv
 		sequence = pair->sequence;
 
 		delete pair;
-		pair = nullptr;
+		pair = NULL;
 	}
 
 	ChatAvatarId srcId;
@@ -1057,7 +1057,7 @@ void ChatInterface::OnRemoveModerator(unsigned track, unsigned result, const Cha
 		sequence = pair->sequence;
 
 		delete pair;
-		pair = nullptr;
+		pair = NULL;
 	}
 
 	ChatAvatarId srcId;
@@ -1178,7 +1178,7 @@ void ChatInterface::OnAddFriend(unsigned track, unsigned result, const ChatAvata
 	ChatAvatarId d;
 	makeAvatarId(destName, destAddress, d);
 
-	ChatServerAvatarOwner * mo = nullptr;
+	ChatServerAvatarOwner * mo = NULL;
 	if (srcAvatar)
 		mo = getAvatarOwner(srcAvatar);
 
@@ -1206,7 +1206,7 @@ void ChatInterface::OnRemoveFriend(unsigned track, unsigned result, const ChatAv
 	ChatAvatarId d;
 	makeAvatarId(destName, destAddress, d);
 
-	ChatServerAvatarOwner * mo = nullptr;
+	ChatServerAvatarOwner * mo = NULL;
 	if (srcAvatar)
 		mo =  getAvatarOwner(srcAvatar);
 
@@ -1245,7 +1245,7 @@ void ChatInterface::OnIgnoreStatus(unsigned track, unsigned result, const ChatAv
 			}
 		}
 
-		ChatServerAvatarOwner * mo = nullptr;
+		ChatServerAvatarOwner * mo = NULL;
 		if (srcAvatar)
 			mo =  getAvatarOwner(srcAvatar);
 		if(mo)
@@ -1281,7 +1281,7 @@ void ChatInterface::OnFriendStatus(unsigned track, unsigned result, const ChatAv
 				idList.push_back(id);
 			}
 		}
-		ChatServerAvatarOwner * mo = nullptr;
+		ChatServerAvatarOwner * mo = NULL;
 		if (srcAvatar)
 			mo =  getAvatarOwner(srcAvatar);
 		if(mo)
@@ -1304,7 +1304,7 @@ void ChatInterface::OnReceiveFriendLogin(const ChatAvatar *srcAvatar, const Chat
 
 	PROFILER_AUTO_BLOCK_DEFINE("ChatInterface - OnReceiveFriendLogin");
 	UNREF(srcAddress);
-	ChatServerAvatarOwner * owner = nullptr;
+	ChatServerAvatarOwner * owner = NULL;
 	if (destAvatar)
 		owner = getAvatarOwner(destAvatar);
 	if(owner)
@@ -1332,7 +1332,7 @@ void ChatInterface::OnReceiveFriendLogout(const ChatAvatar *srcAvatar, const Cha
 
 	PROFILER_AUTO_BLOCK_DEFINE("ChatInterface - OnReceiveFriendLogout");
 	UNREF(srcAddress);
-	ChatServerAvatarOwner * owner = nullptr;
+	ChatServerAvatarOwner * owner = NULL;
 	if (destAvatar)
 		owner = getAvatarOwner(destAvatar);
 	if(owner)
@@ -1395,7 +1395,7 @@ void ChatInterface::OnRemoveIgnore(unsigned track, unsigned result, const ChatAv
 	ChatAvatarId d;
 	makeAvatarId(destName, destAddress, d);
 
-	ChatServerAvatarOwner * mo = nullptr;
+	ChatServerAvatarOwner * mo = NULL;
 	if (srcAvatar)
 		mo = getAvatarOwner(srcAvatar);
 	if(mo)
@@ -1435,7 +1435,7 @@ void ChatInterface::OnLoginAvatar(unsigned track, unsigned result, const ChatAva
 		if ((result == CHATRESULT_SUCCESS) && newAvatar)
 		{
 			// destroy chat avatar
-			unsigned const trackID = RequestDestroyAvatar(newAvatar, nullptr);
+			unsigned const trackID = RequestDestroyAvatar(newAvatar, NULL);
 			trackingRequestGetAnyAvatarForDestroy[trackID] = iterFind->second;
 		}
 
@@ -1504,7 +1504,7 @@ void ChatInterface::OnLoginAvatar(unsigned track, unsigned result, const ChatAva
 			static Unicode::String wideFilter = Unicode::narrowToWide("");
 			static ChatUnicodeString swgNode(wideSWG.data(), wideSWG.size());
 			static ChatUnicodeString filter(wideFilter.data(), wideFilter.size());
-			IGNORE_RETURN(RequestGetRoomSummaries(swgNode, filter, nullptr));
+			IGNORE_RETURN(RequestGetRoomSummaries(swgNode, filter, NULL));
 		}
 	}
 	else
@@ -1525,11 +1525,11 @@ void ChatInterface::OnLoginAvatar(unsigned track, unsigned result, const ChatAva
 
 				if(ChatServer::isGod(f->second))
 				{
-					RequestSetAvatarAttributes(newAvatar, AVATARATTR_GM, nullptr);
+					RequestSetAvatarAttributes(newAvatar, AVATARATTR_GM, NULL);
 				}
 				else
 				{
-					RequestSetAvatarAttributes(newAvatar, 0, nullptr);
+					RequestSetAvatarAttributes(newAvatar, 0, NULL);
 				}
 
 				ChatServer::chatConnectedAvatar((*f).second, *newAvatar);
@@ -1549,7 +1549,7 @@ void ChatInterface::OnLoginAvatar(unsigned track, unsigned result, const ChatAva
 				//ChatServer::getFriendsList(id);
 				
 				clearQueuedHeadersForAvatar(avId);
-				IGNORE_RETURN(RequestGetPersistentHeaders(newAvatar, nullptr));
+				IGNORE_RETURN(RequestGetPersistentHeaders(newAvatar, NULL));
 				//REPORT_LOG(true, ("Connection to chat system for %s.%s.%s confirmed\n", avatar.GetGameCode().c_str(), avatar.GetGameServerName().c_str(), avatar.GetCharacterName().c_str()));
 			}//lint !e429 Custodial pointer 'owner' has not been freed or returned // jrandall avatar owns it
 			pendingAvatars.erase(f);
@@ -1560,7 +1560,7 @@ void ChatInterface::OnLoginAvatar(unsigned track, unsigned result, const ChatAva
 			// the time they connected to the connection server and the time
 			// this message arrived from the chat backend.
 			if (newAvatar)
-				IGNORE_RETURN(RequestLogoutAvatar(newAvatar, nullptr));
+				IGNORE_RETURN(RequestLogoutAvatar(newAvatar, NULL));
 		}
 	}
 	ChatOnConnectAvatar const connect;
@@ -1585,7 +1585,7 @@ void ChatInterface::OnCreateRoom(unsigned track,unsigned result, const ChatRoom 
 	static ChatUnicodeString swgNode(wideSWG.data(), wideSWG.size());
 	static ChatUnicodeString filter(wideFilter.data(), wideFilter.size());
 	//printf("!!!!Calling GetRoomSummaries from OnCreateRoom\n");
-	//IGNORE_RETURN(RequestGetRoomSummaries(swgNode, filter, nullptr));
+	//IGNORE_RETURN(RequestGetRoomSummaries(swgNode, filter, NULL));
 
 	ChatRoomData roomData;
 
@@ -1598,7 +1598,7 @@ void ChatInterface::OnCreateRoom(unsigned track,unsigned result, const ChatRoom 
 		//Unicode::String wideRoomName(newRoom->getRoomName().string_data, newRoom->getRoomName().string_length);
 		std::string roomName;
 		makeRoomName(newRoom, roomName);
-		if (strstr(roomName.c_str(), "group") == nullptr)
+		if (strstr(roomName.c_str(), "group") == NULL)
 		{
 			ChatServer::putSystemAvatarInRoom(roomName);
 		}
@@ -1644,7 +1644,7 @@ void ChatInterface::OnGetRoomSummaries(unsigned track, unsigned result, unsigned
 			std::unordered_map<std::string, ChatServerRoomOwner>::const_iterator f = roomList.find(lowerRoomName);
 			if(f == roomList.end())
 			{
-				RequestGetRoom(foundRooms[i].getRoomAddress(), nullptr);
+				RequestGetRoom(foundRooms[i].getRoomAddress(), NULL);
 				//ChatServerRoomOwner * o = new ChatServerRoomOwner((*i));
 				//(*i)->SetRoomOwnerPtr(o);
 				//IGNORE_RETURN(roomList.insert(std::make_pair(lowerRoomName, *o)));
@@ -1664,7 +1664,7 @@ const ChatServerRoomOwner *ChatInterface::getRoomOwner(const std::string & roomN
 	{
 		return &((*f).second);
 	}
-	return nullptr;
+	return NULL;
 }
 
 //-----------------------------------------------------------------------
@@ -1680,7 +1680,7 @@ ChatServerRoomOwner *ChatInterface::getRoomOwner(unsigned roomId)
 		}
 		++f;
 	}
-	return nullptr;
+	return NULL;
 }
 
 //-----------------------------------------------------------------------
@@ -1727,13 +1727,13 @@ void ChatInterface::OnDestroyRoom(unsigned track, unsigned result, void *user)
 	static Unicode::String wideFilter = Unicode::narrowToWide("");
 	static ChatUnicodeString swgNode(wideSWG.data(), wideSWG.size());
 	static ChatUnicodeString filter(wideFilter.data(), wideFilter.size());
-	//IGNORE_RETURN(RequestGetRoomSummaries(swgNode, filter, nullptr));
+	//IGNORE_RETURN(RequestGetRoomSummaries(swgNode, filter, NULL));
 
 	ChatAvatarId destroyer;
 
 	RoomOwnerSequencePair *pair = (RoomOwnerSequencePair *)user;
 
-	const ChatServerRoomOwner * owner = nullptr;
+	const ChatServerRoomOwner * owner = NULL;
 	unsigned sequence = 0;
 	if (pair)
 	{
@@ -1805,7 +1805,7 @@ void ChatInterface::OnDestroyAvatar(unsigned track, unsigned result, const ChatA
 			// stop if it looks like we're in an infinite loop
 			if (iterFind->second.second <= 25)
 			{
-				unsigned const trackID = RequestGetAnyAvatar(iterFind->second.first.first, iterFind->second.first.second, nullptr);
+				unsigned const trackID = RequestGetAnyAvatar(iterFind->second.first.first, iterFind->second.first.second, NULL);
 				trackingRequestGetAnyAvatarForDestroy[trackID] = std::make_pair(iterFind->second.first, (iterFind->second.second + 1));
 			}
 		}
@@ -1828,13 +1828,13 @@ void ChatInterface::OnGetAnyAvatar(unsigned track, unsigned result, const ChatAv
 			// can only destroy the avatar if he is logged in
 			if (loggedIn)
 			{
-				unsigned const trackID = RequestDestroyAvatar(foundAvatar, nullptr);
+				unsigned const trackID = RequestDestroyAvatar(foundAvatar, NULL);
 				trackingRequestGetAnyAvatarForDestroy[trackID] = iterFind->second;
 			}
 			// log in the chat avatar so we can destroy him
 			else
 			{
-				unsigned const trackID = RequestLoginAvatar(foundAvatar->getUserID(), foundAvatar->getName(), foundAvatar->getAddress(), nullptr);
+				unsigned const trackID = RequestLoginAvatar(foundAvatar->getUserID(), foundAvatar->getName(), foundAvatar->getAddress(), NULL);
 				trackingRequestGetAnyAvatarForDestroy[trackID] = iterFind->second;
 			}
 		}
@@ -1850,9 +1850,9 @@ void ChatInterface::OnReceiveForcedLogout(const ChatAvatar *oldAvatar)
 	ChatServer::fileLog(false, "ChatInterface", "OnReceiveForcedLogout() oldAvatar(%s)", ChatServer::getFullChatAvatarName(oldAvatar).c_str());
 
 	PROFILER_AUTO_BLOCK_DEFINE("ChatInterface - OnReceiveForcedLogout");
-	if (oldAvatar == nullptr)
+	if (oldAvatar == NULL)
 	{
-		DEBUG_WARNING(true, ("We received an OnReceiveForcedLogout with a success result code but nullptr data.  This is an error that the API should never give."));
+		DEBUG_WARNING(true, ("We received an OnReceiveForcedLogout with a success result code but NULL data.  This is an error that the API should never give."));
 		return;
 	}
 	ChatAvatarId id;
@@ -1876,9 +1876,9 @@ void ChatInterface::OnEnterRoom(unsigned track, unsigned result, const ChatAvata
 
 	PROFILER_AUTO_BLOCK_DEFINE("ChatInterface - OnEnterRoom");
 
-	if (result == CHATRESULT_SUCCESS && (srcAvatar == nullptr || destRoom == nullptr))
+	if (result == CHATRESULT_SUCCESS && (srcAvatar == NULL || destRoom == NULL))
 	{
-		DEBUG_WARNING(true, ("We received an OnEnterRoom with a success result code but nullptr data.  This is an error that the API should never give."));
+		DEBUG_WARNING(true, ("We received an OnEnterRoom with a success result code but NULL data.  This is an error that the API should never give."));
 		return;
 	}
 
@@ -2097,9 +2097,9 @@ void ChatInterface::OnAddBan(unsigned track, unsigned result, const ChatAvatar *
 
 	PROFILER_AUTO_BLOCK_DEFINE("ChatInterface - OnAddBan");
 
-	if (result == CHATRESULT_SUCCESS && (srcAvatar == nullptr || destRoom == nullptr))
+	if (result == CHATRESULT_SUCCESS && (srcAvatar == NULL || destRoom == NULL))
 	{
-		DEBUG_WARNING(true, ("We received an OnAddBan with a success result code but nullptr data.  This is an error that the API should never give."));
+		DEBUG_WARNING(true, ("We received an OnAddBan with a success result code but NULL data.  This is an error that the API should never give."));
 		return;
 	}
 
@@ -2113,7 +2113,7 @@ void ChatInterface::OnAddBan(unsigned track, unsigned result, const ChatAvatar *
 		sequence = pair->sequence;
 
 		delete pair;
-		pair = nullptr;
+		pair = NULL;
 	}
 
 	ChatAvatarId srcId;
@@ -2218,9 +2218,9 @@ void ChatInterface::OnRemoveBan(unsigned track, unsigned result, const ChatAvata
 
 	PROFILER_AUTO_BLOCK_DEFINE("ChatInterface - OnRemoveBan");
 
-	if (result == CHATRESULT_SUCCESS && (srcAvatar == nullptr || destRoom == nullptr))
+	if (result == CHATRESULT_SUCCESS && (srcAvatar == NULL || destRoom == NULL))
 	{
-		DEBUG_WARNING(true, ("We received an OnRemoveBan with a success result code but nullptr data.  This is an error that the API should never give."));
+		DEBUG_WARNING(true, ("We received an OnRemoveBan with a success result code but NULL data.  This is an error that the API should never give."));
 		return;
 	}
 
@@ -2234,7 +2234,7 @@ void ChatInterface::OnRemoveBan(unsigned track, unsigned result, const ChatAvata
 		sequence = pair->sequence;
 
 		delete pair;
-		pair = nullptr;
+		pair = NULL;
 	}
 
 	ChatAvatarId srcId;
@@ -2337,9 +2337,9 @@ void ChatInterface::OnAddInvite(unsigned track, unsigned result, const ChatAvata
 
 	PROFILER_AUTO_BLOCK_DEFINE("ChatInterface - OnAddInvite");
 
-	if (result == CHATRESULT_SUCCESS && (srcAvatar == nullptr || destRoom == nullptr))
+	if (result == CHATRESULT_SUCCESS && (srcAvatar == NULL || destRoom == NULL))
 	{
-		DEBUG_WARNING(true, ("We received an OnAddInvite with a success result code but nullptr data.  This is an error that the API should never give."));
+		DEBUG_WARNING(true, ("We received an OnAddInvite with a success result code but NULL data.  This is an error that the API should never give."));
 		return;
 	}
 
@@ -2353,7 +2353,7 @@ void ChatInterface::OnAddInvite(unsigned track, unsigned result, const ChatAvata
 		sequence = pair->sequence;
 
 		delete pair;
-		pair = nullptr;
+		pair = NULL;
 	}
 
 	ChatAvatarId srcId;
@@ -2378,7 +2378,7 @@ void ChatInterface::OnAddInvite(unsigned track, unsigned result, const ChatAvata
 		{
 			// Calling this on a room will cause the API to cache the room
 			// and to receive room updates for the room.
-			RequestGetRoom(destRoom->getAddress(), nullptr);
+			RequestGetRoom(destRoom->getAddress(), NULL);
 
 			// Send the room data for the room the avatar was invited to join
 			// since the room may be private and may be unknown to the player
@@ -2455,9 +2455,9 @@ void ChatInterface::OnRemoveInvite(unsigned track, unsigned result, const ChatAv
 
 	PROFILER_AUTO_BLOCK_DEFINE("ChatInterface - OnRemoveInvite");
 
-	if (result == CHATRESULT_SUCCESS && (srcAvatar == nullptr || destRoom == nullptr))
+	if (result == CHATRESULT_SUCCESS && (srcAvatar == NULL || destRoom == NULL))
 	{
-		DEBUG_WARNING(true, ("We received an OnRemoveInvite with a success result code but nullptr data.  This is an error that the API should never give."));
+		DEBUG_WARNING(true, ("We received an OnRemoveInvite with a success result code but NULL data.  This is an error that the API should never give."));
 		return;
 	}
 
@@ -2471,7 +2471,7 @@ void ChatInterface::OnRemoveInvite(unsigned track, unsigned result, const ChatAv
 		sequence = pair->sequence;
 
 		delete pair;
-		pair = nullptr;
+		pair = NULL;
 	}
 
 	std::string roomName;
@@ -2555,9 +2555,9 @@ void ChatInterface::OnLeaveRoom(unsigned track, unsigned result, const ChatAvata
 
 	PROFILER_AUTO_BLOCK_DEFINE("ChatInterface - OnLeaveRoom");
 
-	if (result == CHATRESULT_SUCCESS && (srcAvatar == nullptr || destRoom == nullptr))
+	if (result == CHATRESULT_SUCCESS && (srcAvatar == NULL || destRoom == NULL))
 	{
-		DEBUG_WARNING(true, ("We received an OnLeaveRoom with a success result code but nullptr data.  This is an error that the API should never give."));
+		DEBUG_WARNING(true, ("We received an OnLeaveRoom with a success result code but NULL data.  This is an error that the API should never give."));
 		return;
 	}
 
@@ -2653,7 +2653,7 @@ void ChatInterface::OnKickAvatar(unsigned track, unsigned result, const ChatAvat
 		sequence = pair->sequence;
 
 		delete pair;
-		pair = nullptr;
+		pair = NULL;
 	}
 
 	std::string roomName;
@@ -2755,9 +2755,9 @@ void ChatInterface::OnGetPersistentMessage(unsigned track, unsigned result, Chat
 	ChatServer::fileLog(false, "ChatInterface", "OnGetPersistentMessage() track(%u) result(%u) destAvatar(%s)", track, result, ChatServer::getFullChatAvatarName(destAvatar).c_str());
 
 	PROFILER_AUTO_BLOCK_DEFINE("ChatInterface - OnGetPersistentMessage");
-	if (result == CHATRESULT_SUCCESS && (destAvatar == nullptr))
+	if (result == CHATRESULT_SUCCESS && (destAvatar == NULL))
 	{
-		DEBUG_WARNING(true, ("We received an OnGetPersistentMessage with a success result code but nullptr data.  This is an error that the API should never give."));
+		DEBUG_WARNING(true, ("We received an OnGetPersistentMessage with a success result code but NULL data.  This is an error that the API should never give."));
 		return;
 	}
 	UNREF(user);
@@ -2807,9 +2807,9 @@ void ChatInterface::OnGetPersistentHeaders(unsigned track, unsigned result, Chat
 	ChatServer::fileLog(false, "ChatInterface", "OnGetPersistentHeaders() track(%u) result(%u) destAvatar(%s)", track, result, ChatServer::getFullChatAvatarName(destAvatar).c_str(), listLength);
 
 	PROFILER_AUTO_BLOCK_DEFINE("ChatInterface - OnGetPersistentHeaders");
-	if (result == CHATRESULT_SUCCESS && (destAvatar == nullptr))
+	if (result == CHATRESULT_SUCCESS && (destAvatar == NULL))
 	{
-		DEBUG_WARNING(true, ("We received an OnGetPersistentHeaders with a success result code but nullptr data.  This is an error that the API should never give."));
+		DEBUG_WARNING(true, ("We received an OnGetPersistentHeaders with a success result code but NULL data.  This is an error that the API should never give."));
 		return;
 	}
 	UNREF(track);
@@ -2876,9 +2876,9 @@ void ChatInterface::OnReceivePersistentMessage(const ChatAvatar *destAvatar, con
 	ChatServer::fileLog(false, "ChatInterface", "OnReceivePersistentMessage() destAvatar(%s)", ChatServer::getFullChatAvatarName(destAvatar).c_str());
 
 	PROFILER_AUTO_BLOCK_DEFINE("ChatInterface - OnReceivePersistentMessage");
-	if (destAvatar == nullptr)
+	if (destAvatar == NULL)
 	{
-		DEBUG_WARNING(true, ("We received an OnREceivePersistentMessage with a success result code but nullptr data.  This is an error that the API should never give."));
+		DEBUG_WARNING(true, ("We received an OnREceivePersistentMessage with a success result code but NULL data.  This is an error that the API should never give."));
 		return;
 	}
 	if (!header)
@@ -2910,9 +2910,9 @@ void ChatInterface::OnSendRoomMessage(unsigned track, unsigned result, const Cha
 	ChatServer::fileLog(false, "ChatInterface", "OnSendRoomMessage() track(%u) result(%u) srcAvatar(%s) destRoom(%s)", track, result, ChatServer::getFullChatAvatarName(srcAvatar).c_str(), ChatServer::getChatRoomNameNarrow(destRoom).c_str());
 
 	PROFILER_AUTO_BLOCK_DEFINE("ChatInterface - OnSendRoomMessage");
-	if (result == CHATRESULT_SUCCESS && (srcAvatar == nullptr || destRoom == nullptr))
+	if (result == CHATRESULT_SUCCESS && (srcAvatar == NULL || destRoom == NULL))
 	{
-		DEBUG_WARNING(true, ("We received an OnsendRoomMessage with a success result code but nullptr data.  This is an error that the API should never give."));
+		DEBUG_WARNING(true, ("We received an OnsendRoomMessage with a success result code but NULL data.  This is an error that the API should never give."));
 		return;
 	}
 	UNREF(srcAvatar);
@@ -2931,7 +2931,7 @@ void ChatInterface::OnReceiveRoomMessage(const ChatAvatar *srcAvatar, const Chat
 	PROFILER_AUTO_BLOCK_DEFINE("ChatInterface - OnReceiveRoomMessage");
 	if(! srcAvatar || ! destAvatar || ! destRoom)
 	{
-		DEBUG_WARNING(true, ("We received an OnREceiveRoomMessage with a success result code but nullptr data.  This is an error that the API should never give."));
+		DEBUG_WARNING(true, ("We received an OnREceiveRoomMessage with a success result code but NULL data.  This is an error that the API should never give."));
 		return;
 	}
 
@@ -2995,9 +2995,9 @@ void ChatInterface::OnSendInstantMessage(unsigned track, unsigned result, const 
 
 	PROFILER_AUTO_BLOCK_DEFINE("ChatInterface - OnSendInstantMessage");
 
-	if (result == CHATRESULT_SUCCESS && (srcAvatar == nullptr))
+	if (result == CHATRESULT_SUCCESS && (srcAvatar == NULL))
 	{
-		DEBUG_WARNING(true, ("We received an OnSendInstantMessage with a success result code but nullptr data.  This is an error that the API should never give."));
+		DEBUG_WARNING(true, ("We received an OnSendInstantMessage with a success result code but NULL data.  This is an error that the API should never give."));
 		return;
 	}
 	UNREF(srcAvatar);
@@ -3015,9 +3015,9 @@ void ChatInterface::OnReceiveInstantMessage(const ChatAvatar *srcAvatar, const C
 	ChatServer::fileLog(false, "ChatInterface", "OnReceiveInstantMessage() srcAvatar(%s) destAvatar(%s)", ChatServer::getFullChatAvatarName(srcAvatar).c_str(), ChatServer::getFullChatAvatarName(destAvatar).c_str());
 
 	PROFILER_AUTO_BLOCK_DEFINE("ChatInterface - OnReceiveInstantMessage");
-	if ((srcAvatar == nullptr || destAvatar == nullptr))
+	if ((srcAvatar == NULL || destAvatar == NULL))
 	{
-		DEBUG_WARNING(true, ("We received an OnReceiveInstantMessage with a success result code but nullptr data.  This is an error that the API should never give."));
+		DEBUG_WARNING(true, ("We received an OnReceiveInstantMessage with a success result code but NULL data.  This is an error that the API should never give."));
 		return;
 	}
 	ChatAvatarId fromId;
@@ -3052,9 +3052,9 @@ void ChatInterface::OnSendPersistentMessage(unsigned track, unsigned result, con
 	ChatServer::fileLog(false, "ChatInterface", "OnSendPersistentMessage() track(%u) result(%u) srcAvatar(%s)", track, result, ChatServer::getFullChatAvatarName(srcAvatar).c_str());
 
 	PROFILER_AUTO_BLOCK_DEFINE("ChatInterface - OnSendPersistentMessage");
-	if (result == CHATRESULT_SUCCESS && (srcAvatar == nullptr))
+	if (result == CHATRESULT_SUCCESS && (srcAvatar == NULL))
 	{
-		DEBUG_WARNING(true, ("We received an OnSendPersistentMessage with a success result code but nullptr data.  This is an error that the API should never give."));
+		DEBUG_WARNING(true, ("We received an OnSendPersistentMessage with a success result code but NULL data.  This is an error that the API should never give."));
 		return;
 	}
 	unsigned sequence = (unsigned)user;
@@ -3120,7 +3120,7 @@ void ChatInterface::OnUpdatePersistentMessages(unsigned track, unsigned result, 
 
 	ChatAvatarId targetChatAvatarId;
 
-	if (targetAvatar != nullptr)
+	if (targetAvatar != NULL)
 	{
 		makeAvatarId(*targetAvatar, targetChatAvatarId);
 	}
@@ -3130,17 +3130,17 @@ void ChatInterface::OnUpdatePersistentMessages(unsigned track, unsigned result, 
 	ChatAvatarId sourceChatAvatarId;
 	NetworkId const *tmpNetworkId = reinterpret_cast<NetworkId const *>(user);
 
-	if (tmpNetworkId != nullptr)
+	if (tmpNetworkId != NULL)
 	{
 		ChatAvatar const *sourceAvatar = ChatServer::getAvatarByNetworkId(*tmpNetworkId);
 
-		if (sourceAvatar != nullptr)
+		if (sourceAvatar != NULL)
 		{
 			makeAvatarId(*sourceAvatar, sourceChatAvatarId);
 		}
 
 		delete tmpNetworkId;
-		tmpNetworkId = nullptr;
+		tmpNetworkId = NULL;
 	}
 
 	ChatServer::fileLog(false, "ChatInterface", "OnUpdatePersistentMessage() track(%u) result(%u) sourceAvatar(%s) targetAvatar(%s)", track, result, sourceChatAvatarId.getFullName().c_str(), targetChatAvatarId.getFullName().c_str());

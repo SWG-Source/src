@@ -215,7 +215,7 @@ const JNINativeMethod NATIVES[] = {
  */
 bool ScriptMethodsObjectMoveNamespace::testInvalidObjectMove(const ServerObject * object)
 {
-	if (object->getCacheVersion() > 0 || object->getCellProperty() != nullptr)
+	if (object->getCacheVersion() > 0 || object->getCellProperty() != NULL)
 	{
 		char buffer[1024];
 		sprintf(buffer, "A script is trying to move object %s, which is a cached "
@@ -323,7 +323,7 @@ jboolean JNICALL ScriptMethodsObjectMoveNamespace::setLocationFromObj(JNIEnv *en
  * @param self		    class calling this function
  * @param objectId		object to get
  *
- * @return the object's location, or nullptr on error
+ * @return the object's location, or null on error
  */
 jobject JNICALL ScriptMethodsObjectMoveNamespace::getLocation(JNIEnv *env, jobject self, jlong objectId)
 {
@@ -337,13 +337,13 @@ jobject JNICALL ScriptMethodsObjectMoveNamespace::getLocation(JNIEnv *env, jobje
 	//   (e.g. for mounts, the immediate Container is the mount).
 	NOT_NULL(object);
 	CellProperty const *const cellProperty = object->getParentCell();
-	Object const *const cell = (cellProperty != nullptr) ? &(cellProperty->getOwner()) : nullptr;
+	Object const *const cell = (cellProperty != NULL) ? &(cellProperty->getOwner()) : NULL;
 
 	// Remember, just because we're not in a cell doesn't mean we're not contained by something else,
 	// particularly in the case of a rider mounted where the mount is in the world cell.
-	Vector const positionRelativeToCellOrWorld = (cell != nullptr) ? object->getPosition_c() :
+	Vector const positionRelativeToCellOrWorld = (cell != NULL) ? object->getPosition_c() :
 		object->getPosition_w();
-	NetworkId const &networkIdForCellOrWorld = (cell != nullptr) ? cell->getNetworkId() :
+	NetworkId const &networkIdForCellOrWorld = (cell != NULL) ? cell->getNetworkId() :
 		NetworkId::cms_invalid;
 
 	LocalRefPtr location;
@@ -362,7 +362,7 @@ jobject JNICALL ScriptMethodsObjectMoveNamespace::getLocation(JNIEnv *env, jobje
  * @param self		    class calling this function
  * @param objectId		object to get
  *
- * @return the object's world location, or nullptr on error
+ * @return the object's world location, or null on error
  */
 jobject JNICALL ScriptMethodsObjectMoveNamespace::getWorldLocation(JNIEnv *env, jobject self, jlong objectId)
 {
@@ -387,7 +387,7 @@ jobject JNICALL ScriptMethodsObjectMoveNamespace::getWorldLocation(JNIEnv *env, 
  * @param self		    class calling this function
  * @param objectId		object to get
  *
- * @return the object's location, or nullptr on error
+ * @return the object's location, or null on error
  */
 jobject JNICALL ScriptMethodsObjectMoveNamespace::getHeading(JNIEnv *env, jobject self, jlong objectId)
 {
@@ -553,7 +553,7 @@ jboolean JNICALL ScriptMethodsObjectMoveNamespace::faceToBehavior(JNIEnv *env, j
 
 jfloat JNICALL ScriptMethodsObjectMoveNamespace::getYaw(JNIEnv *env, jobject self, jlong target)
 {
-	const ServerObject * object = nullptr;
+	const ServerObject * object = NULL;
 	if (!JavaLibrary::getObject(target, object))
 		return -1.0f;
 
@@ -565,7 +565,7 @@ jfloat JNICALL ScriptMethodsObjectMoveNamespace::getYaw(JNIEnv *env, jobject sel
 jboolean JNICALL ScriptMethodsObjectMoveNamespace::setYaw(JNIEnv *env, jobject self, jlong target, jfloat yaw)
 {
 	PROFILER_AUTO_BLOCK_DEFINE("JavaLibrary::setYaw");
-	ServerObject * object = nullptr;
+	ServerObject * object = NULL;
 	{
 		PROFILER_AUTO_BLOCK_DEFINE("JavaLibrary::setYaw::getObject");
 		if (!JavaLibrary::getObject(target, object))
@@ -608,7 +608,7 @@ jboolean JNICALL ScriptMethodsObjectMoveNamespace::setYaw(JNIEnv *env, jobject s
 void JNICALL ScriptMethodsObjectMoveNamespace::modifyYaw(JNIEnv *env, jobject self, jlong target, jfloat degrees)
 {
 	PROFILER_AUTO_BLOCK_DEFINE("JavaLibrary::modifyYaw");
-	ServerObject * object = nullptr;
+	ServerObject * object = NULL;
 	{
 		PROFILER_AUTO_BLOCK_DEFINE("JavaLibrary::modifyYaw::getObject");
 		if (!JavaLibrary::getObject(target, object))
@@ -650,7 +650,7 @@ void JNICALL ScriptMethodsObjectMoveNamespace::modifyYaw(JNIEnv *env, jobject se
 void JNICALL ScriptMethodsObjectMoveNamespace::modifyPitch(JNIEnv *env, jobject self, jlong target, jfloat degrees)
 {
 	PROFILER_AUTO_BLOCK_DEFINE("JavaLibrary::modifyPitch");
-	ServerObject * object = nullptr;
+	ServerObject * object = NULL;
 	{
 		PROFILER_AUTO_BLOCK_DEFINE("JavaLibrary::modifyPitch::getObject");
 		if (!JavaLibrary::getObject(target, object))
@@ -692,7 +692,7 @@ void JNICALL ScriptMethodsObjectMoveNamespace::modifyPitch(JNIEnv *env, jobject 
 void JNICALL ScriptMethodsObjectMoveNamespace::modifyRoll(JNIEnv *env, jobject self, jlong target, jfloat degrees)
 {
 	PROFILER_AUTO_BLOCK_DEFINE("JavaLibrary::modifyRoll");
-	ServerObject * object = nullptr;
+	ServerObject * object = NULL;
 	{
 		PROFILER_AUTO_BLOCK_DEFINE("JavaLibrary::modifyRoll::getObject");
 		if (!JavaLibrary::getObject(target, object))
@@ -734,7 +734,7 @@ void JNICALL ScriptMethodsObjectMoveNamespace::modifyRoll(JNIEnv *env, jobject s
 jfloatArray JNICALL ScriptMethodsObjectMoveNamespace::getQuaternion(JNIEnv *env, jobject self, jlong target)
 {
 	PROFILER_AUTO_BLOCK_DEFINE("JavaLibrary::getQuaternion");
-	ServerObject * object = nullptr;
+	ServerObject * object = NULL;
 	{
 		PROFILER_AUTO_BLOCK_DEFINE("JavaLibrary::getQuaternion::getObject");
 		if (!JavaLibrary::getObject(target, object))
@@ -771,7 +771,7 @@ jfloatArray JNICALL ScriptMethodsObjectMoveNamespace::getQuaternion(JNIEnv *env,
 void JNICALL ScriptMethodsObjectMoveNamespace::setQuaternion(JNIEnv *env, jobject self, jlong target, jfloat qw, jfloat qx, jfloat qy, jfloat qz)
 {
 	PROFILER_AUTO_BLOCK_DEFINE("JavaLibrary::setQuaternion");
-	ServerObject * object = nullptr;
+	ServerObject * object = NULL;
 	{
 		PROFILER_AUTO_BLOCK_DEFINE("JavaLibrary::setQuaternion::getObject");
 		if (!JavaLibrary::getObject(target, object))
@@ -804,7 +804,7 @@ void JNICALL ScriptMethodsObjectMoveNamespace::setQuaternion(JNIEnv *env, jobjec
 jint JNICALL ScriptMethodsObjectMoveNamespace::getFurnitureRotationDegree(JNIEnv *env, jobject self, jlong player)
 {
 	PROFILER_AUTO_BLOCK_DEFINE("JavaLibrary::getFurnitureRotationDegree");
-	ServerObject * object = nullptr;
+	ServerObject * object = NULL;
 	{
 		PROFILER_AUTO_BLOCK_DEFINE("JavaLibrary::getFurnitureRotationDegree::getObject");
 		if (!JavaLibrary::getObject(player, object))
@@ -823,11 +823,11 @@ jint JNICALL ScriptMethodsObjectMoveNamespace::getFurnitureRotationDegree(JNIEnv
 
 void JNICALL ScriptMethodsObjectMoveNamespace::saveDecorationLayout(JNIEnv *env, jobject self, jlong player, jlong pob, jint saveSlotNumber, jstring description)
 {
-	CreatureObject * playerObject = nullptr;
+	CreatureObject * playerObject = NULL;
 	if (!JavaLibrary::getObject(player, playerObject) || !playerObject)
 		return;
 
-	ServerObject const * pobObject = nullptr;
+	ServerObject const * pobObject = NULL;
 	if (!JavaLibrary::getObject(pob, pobObject) || !pobObject)
 		return;
 
@@ -843,11 +843,11 @@ void JNICALL ScriptMethodsObjectMoveNamespace::saveDecorationLayout(JNIEnv *env,
 
 void JNICALL ScriptMethodsObjectMoveNamespace::restoreDecorationLayout(JNIEnv *env, jobject self, jlong player, jlong pob, jint saveSlotNumber)
 {
-	CreatureObject * playerObject = nullptr;
+	CreatureObject * playerObject = NULL;
 	if (!JavaLibrary::getObject(player, playerObject) || !playerObject)
 		return;
 
-	ServerObject const * pobObject = nullptr;
+	ServerObject const * pobObject = NULL;
 	if (!JavaLibrary::getObject(pob, pobObject) || !pobObject)
 		return;
 
@@ -1402,11 +1402,11 @@ jobject JNICALL ScriptMethodsObjectMoveNamespace::getConnectedPlayerLocation(JNI
 	std::map<NetworkId, LfgCharacterData> const & connectedCharacterLfgData = ServerUniverse::getConnectedCharacterLfgData();
 	std::map<NetworkId, LfgCharacterData>::const_iterator const iterFind = connectedCharacterLfgData.find(NetworkId(static_cast<NetworkId::NetworkIdType>(player)));
 	if (iterFind == connectedCharacterLfgData.end())
-		return nullptr;
+		return NULL;
 
 	LocalRefPtr dictionary = createNewObject(JavaLibrary::getClsDictionary(), JavaLibrary::getMidDictionary());
 	if (dictionary == LocalRef::cms_nullPtr)
-		return nullptr;
+		return NULL;
 
 	callObjectMethod(*dictionary, JavaLibrary::getMidDictionaryPut(), JavaString("planet").getValue(), JavaString(iterFind->second.locationPlanet).getValue());
 
@@ -1457,7 +1457,7 @@ jfloat JNICALL ScriptMethodsObjectMoveNamespace::getMovementSpeed(JNIEnv * /*env
 	NetworkId const networkId(object);
 	CreatureController * const creatureController = CreatureController::getCreatureController(networkId);
 
-	return (creatureController != nullptr) ? creatureController->getCurrentVelocity().magnitude() : 0.0f;
+	return (creatureController != NULL) ? creatureController->getCurrentVelocity().magnitude() : 0.0f;
 }
 
 // ----------------------------------------------------------------------
@@ -1467,7 +1467,7 @@ jfloat JNICALL ScriptMethodsObjectMoveNamespace::getWalkSpeed(JNIEnv * /*env*/, 
 	NetworkId const networkId(object);
 	CreatureObject * const creatureObject = CreatureObject::getCreatureObject(networkId);
 
-	return (creatureObject != nullptr) ? creatureObject->getWalkSpeed() : 0.0f;
+	return (creatureObject != NULL) ? creatureObject->getWalkSpeed() : 0.0f;
 }
 
 // ----------------------------------------------------------------------
@@ -1477,7 +1477,7 @@ jfloat JNICALL ScriptMethodsObjectMoveNamespace::getRunSpeed(JNIEnv * /*env*/, j
 	NetworkId const networkId(object);
 	CreatureObject * const creatureObject = CreatureObject::getCreatureObject(networkId);
 
-	return (creatureObject != nullptr) ? creatureObject->getRunSpeed() : 0.0f;
+	return (creatureObject != NULL) ? creatureObject->getRunSpeed() : 0.0f;
 }
 
 // ----------------------------------------------------------------------
@@ -1487,7 +1487,7 @@ void JNICALL ScriptMethodsObjectMoveNamespace::setBaseWalkSpeed(JNIEnv * /*env*/
 	NetworkId const networkId(object);
 	CreatureObject * const creatureObject = CreatureObject::getCreatureObject(networkId);
 
-	if (creatureObject == nullptr)
+	if (creatureObject == NULL)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsObjectMove::setBaseWalkSpeed() Unable to resolve the object(%s) to a CreatureObject.", networkId.getValueString().c_str()));
 		return;
@@ -1505,7 +1505,7 @@ jfloat JNICALL ScriptMethodsObjectMoveNamespace::getBaseWalkSpeed(JNIEnv * /*env
 	NetworkId const networkId(object);
 	CreatureObject * const creatureObject = CreatureObject::getCreatureObject(networkId);
 
-	return (creatureObject != nullptr) ? creatureObject->getBaseWalkSpeed() : 0.0f;
+	return (creatureObject != NULL) ? creatureObject->getBaseWalkSpeed() : 0.0f;
 }
 
 // ----------------------------------------------------------------------
@@ -1515,7 +1515,7 @@ void JNICALL ScriptMethodsObjectMoveNamespace::setBaseRunSpeed(JNIEnv * /*env*/,
 	NetworkId const networkId(object);
 	CreatureObject * const creatureObject = CreatureObject::getCreatureObject(networkId);
 
-	if (creatureObject == nullptr)
+	if (creatureObject == NULL)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsObjectMove::setBaseRunSpeed() Unable to resolve the object(%s) to a CreatureObject.", networkId.getValueString().c_str()));
 		return;
@@ -1533,7 +1533,7 @@ jfloat JNICALL ScriptMethodsObjectMoveNamespace::getBaseRunSpeed(JNIEnv * /*env*
 	NetworkId const networkId(object);
 	CreatureObject * const creatureObject = CreatureObject::getCreatureObject(networkId);
 
-	return (creatureObject != nullptr) ? creatureObject->getBaseRunSpeed() : 0.0f;
+	return (creatureObject != NULL) ? creatureObject->getBaseRunSpeed() : 0.0f;
 }
 
 // ----------------------------------------------------------------------
@@ -1543,7 +1543,7 @@ void JNICALL ScriptMethodsObjectMoveNamespace::setMovementWalk(JNIEnv * /*env*/,
 	NetworkId const networkId(object);
 	CreatureObject * const creatureObject = CreatureObject::getCreatureObject(networkId);
 
-	if (creatureObject == nullptr)
+	if (creatureObject == NULL)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsObjectMove::setMovementWalk() Unable to resolve the object(%s) to a CreatureObject.", networkId.getValueString().c_str()));
 		return;
@@ -1551,7 +1551,7 @@ void JNICALL ScriptMethodsObjectMoveNamespace::setMovementWalk(JNIEnv * /*env*/,
 
 	AICreatureController * const aiCreatureController = AICreatureController::asAiCreatureController(creatureObject->getController());
 
-	if (aiCreatureController == nullptr)
+	if (aiCreatureController == NULL)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsObjectMove::setMovementWalk() Unable to resolve the object's(%s) controller to an AiCreatureController.", creatureObject->getDebugInformation().c_str()));
 		return;
@@ -1569,7 +1569,7 @@ void JNICALL ScriptMethodsObjectMoveNamespace::setMovementRun(JNIEnv * /*env*/, 
 	NetworkId const networkId(object);
 	CreatureObject * const creatureObject = CreatureObject::getCreatureObject(networkId);
 
-	if (creatureObject == nullptr)
+	if (creatureObject == NULL)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsObjectMove::setMovementRun() Unable to resolve the object(%s) to a CreatureObject.", networkId.getValueString().c_str()));
 		return;
@@ -1577,7 +1577,7 @@ void JNICALL ScriptMethodsObjectMoveNamespace::setMovementRun(JNIEnv * /*env*/, 
 
 	AICreatureController * const aiCreatureController = AICreatureController::asAiCreatureController(creatureObject->getController());
 
-	if (aiCreatureController == nullptr)
+	if (aiCreatureController == NULL)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsObjectMove::setMovementRun() Unable to resolve the object's(%s) controller to an AiCreatureController.", creatureObject->getDebugInformation().c_str()));
 		return;

@@ -8,7 +8,7 @@ using namespace Base;
 using namespace Plat_Unicode;
 
 PersistentHeader::PersistentHeader()
-: m_core(nullptr)
+: m_core(NULL)
 {
 }
 
@@ -66,7 +66,7 @@ PersistentHeaderCore::PersistentHeaderCore()
   m_avatarID(0),
   m_sentTime(0),
   m_status(0),
-  m_interface(nullptr)
+  m_interface(NULL)
 {
 }
 

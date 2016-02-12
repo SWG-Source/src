@@ -137,7 +137,7 @@ jlong JNICALL ScriptMethodsInteriorsNamespace::createObjectInCell(JNIEnv *env, j
 		return 0;
 
 	std::string templateName;
-	ServerObject* sourceObject = nullptr;
+	ServerObject* sourceObject = NULL;
 	if (!JavaLibrary::getObject(source, sourceObject))
 		return 0;
 	templateName = sourceObject->getTemplateName();
@@ -149,7 +149,7 @@ jlong JNICALL ScriptMethodsInteriorsNamespace::_createObjectInCellInternal(JNIEn
 {
 	JavaStringParam localCellName(cellName);
 
-	ServerObject * portallizedObject = nullptr;
+	ServerObject * portallizedObject = NULL;
 	if (!JavaLibrary::getObject(building, portallizedObject))
 		return 0;
 
@@ -183,7 +183,7 @@ jlong JNICALL ScriptMethodsInteriorsNamespace::_createObjectInCellInternal(JNIEn
 	Transform tr;
 	tr.setPosition_p(newPos);
 	ServerObject *newObject = ServerWorld::createNewObject(templateName, tr, cellObject, false);
-	if (newObject == nullptr)
+	if (newObject == NULL)
 		return 0;
 
 	//@todo do we need to snap to floor or something?
@@ -226,7 +226,7 @@ jlong JNICALL ScriptMethodsInteriorsNamespace::createObjectInCellAnywhere(JNIEnv
 		return 0;
 
 	std::string templateName;
-	ServerObject* sourceObject = nullptr;
+	ServerObject* sourceObject = NULL;
 	if (!JavaLibrary::getObject(source, sourceObject))
 		return 0;
 	templateName = sourceObject->getTemplateName();
@@ -261,7 +261,7 @@ jlong JNICALL ScriptMethodsInteriorsNamespace::_createObjectInCellAnywhereIntern
 	//@todo need to find a way to get a good location in a cell.  For now just use the coordinates of the cell?
 	JavaStringParam localCellName(cellName);
 
-	ServerObject *portallizedObject = nullptr;
+	ServerObject *portallizedObject = NULL;
 	if (!JavaLibrary::getObject(building, portallizedObject))
 		return 0;
 
@@ -289,7 +289,7 @@ jlong JNICALL ScriptMethodsInteriorsNamespace::_createObjectInCellAnywhereIntern
 	Transform tr;
 	tr.setPosition_p(createPosition);
 	ServerObject *newObject = ServerWorld::createNewObject(templateName, tr, cellObject, false);
-	if (newObject == nullptr)
+	if (newObject == NULL)
 		return 0;
 
 	// create an networkId to return
@@ -306,7 +306,7 @@ jlong JNICALL ScriptMethodsInteriorsNamespace::_createObjectInCellAnywhereIntern
 
 jobjectArray JNICALL ScriptMethodsInteriorsNamespace::getCellNames(JNIEnv *env, jobject self, jlong target)
 {
-	ServerObject const *portallizedObject = nullptr;
+	ServerObject const *portallizedObject = NULL;
 	if (!JavaLibrary::getObject(target, portallizedObject))
 		return 0;
 
@@ -329,7 +329,7 @@ jobjectArray JNICALL ScriptMethodsInteriorsNamespace::getCellNames(JNIEnv *env, 
 
 jstring JNICALL ScriptMethodsInteriorsNamespace::getCellName(JNIEnv *env, jobject self, jlong target)
 {
-	CellObject const *cellObject = nullptr;
+	CellObject const *cellObject = NULL;
 	if (!JavaLibrary::getObject(target, cellObject))
 		return 0;
 
@@ -342,7 +342,7 @@ jstring JNICALL ScriptMethodsInteriorsNamespace::getCellName(JNIEnv *env, jobjec
 	}
 
 	ServerObject const * const portallizedObject = safe_cast<ServerObject const *>(ContainerInterface::getContainedByObject(*cellObject));
-	if (portallizedObject == nullptr)
+	if (portallizedObject == NULL)
 		return 0;
 
 	PortalProperty const * const cellProp = portallizedObject->getPortalProperty();
@@ -370,7 +370,7 @@ jstring JNICALL ScriptMethodsInteriorsNamespace::getCellName(JNIEnv *env, jobjec
 
 jlongArray JNICALL ScriptMethodsInteriorsNamespace::getCellIds(JNIEnv *env, jobject self, jlong target)
 {
-	ServerObject const *portallizedObject = nullptr;
+	ServerObject const *portallizedObject = NULL;
 	if (!JavaLibrary::getObject(target, portallizedObject))
 		return 0;
 
@@ -387,11 +387,11 @@ jlongArray JNICALL ScriptMethodsInteriorsNamespace::getCellIds(JNIEnv *env, jobj
 	cellIds.reserve(count);
 	for (int i = 0; i < count; ++i)
 	{
-		ServerObject const * cellObject = nullptr;
+		ServerObject const * cellObject = NULL;
 		CellProperty const * const cellProp = portalProp->getCell(nameList[i]);
-		if (cellProp != nullptr)
+		if (cellProp != NULL)
 			cellObject = cellProp->getOwner().asServerObject();
-		if (cellObject != nullptr)
+		if (cellObject != NULL)
 		{
 			cellIds.push_back(cellObject->getNetworkId());
 		}
@@ -412,7 +412,7 @@ jboolean JNICALL ScriptMethodsInteriorsNamespace::hasCell(JNIEnv *env, jobject s
 {
 	JavaStringParam localCellName(cellName);
 
-	ServerObject const * serverObject = nullptr;
+	ServerObject const * serverObject = NULL;
 	if (!JavaLibrary::getObject(portallizedObject, serverObject))
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("JavaLibrary::hasCell passed invalid object"));
@@ -448,7 +448,7 @@ jlong JNICALL ScriptMethodsInteriorsNamespace::getCellId(JNIEnv *env, jobject se
 {
 	JavaStringParam localCellName(cellName);
 
-	ServerObject const * serverObject = nullptr;
+	ServerObject const * serverObject = NULL;
 	if (!JavaLibrary::getObject(portallizedObject, serverObject))
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("[script bug] JavaLibrary::getCellId passed invalid object"));
@@ -571,7 +571,7 @@ jobject JNICALL ScriptMethodsInteriorsNamespace::getBuildingEjectLocation(JNIEnv
 
 	if (building == 0)
 	{
-		DEBUG_WARNING(true, ("[designer bug] getBuildingEjectLocation was passed a nullptr building objid"));
+		DEBUG_WARNING(true, ("[designer bug] getBuildingEjectLocation was passed a NULL building objid"));
 		return 0;
 	}
 
@@ -598,7 +598,7 @@ jobject JNICALL ScriptMethodsInteriorsNamespace::getBuildingEjectLocation(JNIEnv
 	CellProperty const *worldCell = CellProperty::getWorldCellProperty();
 	if (!worldCell)
 	{
-		DEBUG_WARNING(true, ("getBuildingEjectLocation get a nullptr worldCell back from CellProperty::getWorldCellProperty()"));
+		DEBUG_WARNING(true, ("getBuildingEjectLocation get a NULL worldCell back from CellProperty::getWorldCellProperty()"));
 		return 0;
 	}
 
@@ -666,7 +666,7 @@ jlong JNICALL ScriptMethodsInteriorsNamespace::moveHouseItemToPlayer(JNIEnv * /*
 {
 	if (building == 0)
 	{
-		DEBUG_WARNING(true, ("[designer bug] moveHouseItemToPlayer was passed a nullptr building objid"));
+		DEBUG_WARNING(true, ("[designer bug] moveHouseItemToPlayer was passed a NULL building objid"));
 		return 0;
 	}
 
@@ -693,7 +693,7 @@ jlong JNICALL ScriptMethodsInteriorsNamespace::moveHouseItemToPlayer2(JNIEnv * /
 {
 	if (building == 0)
 	{
-		DEBUG_WARNING(true, ("[designer bug] moveHouseItemToPlayer2 was passed a nullptr building objid"));
+		DEBUG_WARNING(true, ("[designer bug] moveHouseItemToPlayer2 was passed a NULL building objid"));
 		return 0;
 	}
 
@@ -721,7 +721,7 @@ void JNICALL ScriptMethodsInteriorsNamespace::deleteAllHouseItems(JNIEnv * /*env
 {
 	if (building == 0)
 	{
-		DEBUG_WARNING(true, ("[designer bug] deleteAllHouseItems was passed a nullptr building objid"));
+		DEBUG_WARNING(true, ("[designer bug] deleteAllHouseItems was passed a NULL building objid"));
 		return ;
 	}
 
@@ -747,11 +747,11 @@ jboolean JNICALL ScriptMethodsInteriorsNamespace::areAllContentsLoaded(JNIEnv * 
 {
 	if (building == 0)
 	{
-		DEBUG_WARNING(true, ("[designer bug] areAllContentsLoaded was passed a nullptr building objid"));
+		DEBUG_WARNING(true, ("[designer bug] areAllContentsLoaded was passed a NULL building objid"));
 		return JNI_FALSE;
 	}
 
-	const BuildingObject * buildingObject = nullptr;
+	const BuildingObject * buildingObject = NULL;
 	if (!JavaLibrary::getObject(building, buildingObject))
 	{
 		DEBUG_WARNING(true, ("[designer bug] areAllContentsLoaded was passed a non-ServerObject objid"));
@@ -767,11 +767,11 @@ void JNICALL ScriptMethodsInteriorsNamespace::loadBuildingContents(JNIEnv * /*en
 {
 	if (building == 0)
 	{
-		DEBUG_WARNING(true, ("[designer bug] loadBuildingContents was passed a nullptr building objid"));
+		DEBUG_WARNING(true, ("[designer bug] loadBuildingContents was passed a NULL building objid"));
 		return;
 	}
 
-	BuildingObject * buildingObject = nullptr;
+	BuildingObject * buildingObject = NULL;
 	if (!JavaLibrary::getObject(building, buildingObject))
 	{
 		DEBUG_WARNING(true, ("[designer bug] loadBuildingContents was passed a non-ServerObject objid"));
@@ -815,9 +815,9 @@ jboolean JNICALL ScriptMethodsInteriorsNamespace::isAtPendingLoadRequestLimit(JN
 
 jstring JNICALL ScriptMethodsInteriorsNamespace::getCellLabel(JNIEnv * env, jobject self, jlong target)
 {
-	CellObject const *cellObject = nullptr;
+	CellObject const *cellObject = NULL;
 	if (!JavaLibrary::getObject(target, cellObject))
-		return nullptr;
+		return NULL;
 
 	JavaString cellLabel(cellObject->getCellLabel());
 	return cellLabel.getReturnValue();
@@ -833,7 +833,7 @@ jboolean JNICALL ScriptMethodsInteriorsNamespace::setCellLabel(JNIEnv * env, job
 	if (!JavaLibrary::convert(localCellLabel, cellLabelString))
 		return JNI_FALSE;
 
-	CellObject * cellObject = nullptr;
+	CellObject * cellObject = NULL;
 	if (!JavaLibrary::getObject(target, cellObject))
 		return JNI_FALSE;
 
@@ -846,7 +846,7 @@ jboolean JNICALL ScriptMethodsInteriorsNamespace::setCellLabel(JNIEnv * env, job
 
 jboolean JNICALL ScriptMethodsInteriorsNamespace::setCellLabelOffset(JNIEnv * env, jobject self, jlong target, jfloat x, jfloat y, jfloat z)
 {
-	CellObject * cellObject = nullptr;
+	CellObject * cellObject = NULL;
 	if (!JavaLibrary::getObject(target, cellObject))
 		return JNI_FALSE;
 

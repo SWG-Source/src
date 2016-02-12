@@ -48,8 +48,8 @@ BitBuffer::BitBuffer(void *buffer, int size, bool inputStream)
 	current(base),
 	bufSize(size)
 {
-	DEBUG_FATAL(!buffer, ("buffer nullptr"));
-	DEBUG_FATAL(!current, ("buffer nullptr"));
+	DEBUG_FATAL(!buffer, ("buffer null"));
+	DEBUG_FATAL(!current, ("buffer null"));
 }
 
 // ----------------------------------------------------------------------
@@ -59,8 +59,8 @@ BitBuffer::BitBuffer(void *buffer, int size, bool inputStream)
 
 BitBuffer::~BitBuffer(void)
 {
-	base = nullptr;
-	current = nullptr;
+	base = NULL;
+	current = NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -181,17 +181,17 @@ BitFile::BitFile(const char *fileName, bool inputStream)
 {
 	if (isInput)
 	{
-		hFile = CreateFile(fileName, GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+		hFile = CreateFile(fileName, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	}
 	else
 	{
 		// try to truncate it first
-		hFile = CreateFile(fileName, GENERIC_READ | GENERIC_WRITE, 0, nullptr, TRUNCATE_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+		hFile = CreateFile(fileName, GENERIC_READ | GENERIC_WRITE, 0, NULL, TRUNCATE_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
 		if (hFile == INVALID_HANDLE_VALUE)
 		{
 			//if that fails, create it
-			hFile = CreateFile(fileName, GENERIC_READ | GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
+			hFile = CreateFile(fileName, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 		}
 	}
 
@@ -215,7 +215,7 @@ BitFile::~BitFile(void)
 		}
 	}
 
-	hFile = nullptr;
+	hFile = NULL;
 
 	delete [] name;
 }
@@ -224,7 +224,7 @@ BitFile::~BitFile(void)
 
 int BitFile::getOffset(void) const
 {
-	return static_cast<int>(SetFilePointer(hFile, 0, nullptr, FILE_CURRENT));
+	return static_cast<int>(SetFilePointer(hFile, 0, NULL, FILE_CURRENT));
 }
 
 // ----------------------------------------------------------------------
@@ -254,7 +254,7 @@ void BitFile::outputBits(uint32 code, uint32 count)
 		if (!mask)
 		{
 			uint32 bytesWritten;
-			if (!WriteFile(hFile, &rack, sizeof(rack), &bytesWritten, nullptr))
+			if (!WriteFile(hFile, &rack, sizeof(rack), &bytesWritten, NULL))
 			{
 				DEBUG_FATAL(true,("BitFile::outputBits error %d.", GetLastError()));
 			}
@@ -280,7 +280,7 @@ void BitFile::outputRack(void)
 
 	if (mask != INITIAL_MASK_VALUE)
 	{
-		if (!WriteFile(hFile, &rack, sizeof(rack), &bytesWritten, nullptr))
+		if (!WriteFile(hFile, &rack, sizeof(rack), &bytesWritten, NULL))
 		{
 			DEBUG_FATAL(true,("BitFile::outputRack writing error %d.", GetLastError()));
 		}
@@ -312,7 +312,7 @@ uint32 BitFile::inputBits(uint32 count)
 		{
 			uint32 bytesRead;
 
-			const BOOL result = ReadFile(hFile, &rack, sizeof(rack), &bytesRead, nullptr);
+			const BOOL result = ReadFile(hFile, &rack, sizeof(rack), &bytesRead, NULL);
 
 			UNREF(result);
 			DEBUG_FATAL(result && !bytesRead,("BitFile::inputBits hit EOF"));
@@ -383,8 +383,8 @@ ByteBuffer::ByteBuffer(void *buffer, int size, bool inputStream)
 
 ByteBuffer::~ByteBuffer(void)
 {
-	base = nullptr;
-	current = nullptr;
+	base = NULL;
+	current = NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -422,7 +422,7 @@ void ByteBuffer::output(byte b)
 
 bool ByteBuffer::input(byte *b)
 {
-	DEBUG_FATAL(!b, ("nullptr pointer"));
+	DEBUG_FATAL(!b, ("null pointer"));
 	DEBUG_FATAL(!isInput,("ByteBuffer::input called on output stream"));
 
 	if ((current - base) >= bufSize)
@@ -446,15 +446,15 @@ ByteFile::ByteFile(const char *fileName, bool inputStream)
 {
 	if (isInput)
 	{
-		hFile = CreateFile(fileName, GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+		hFile = CreateFile(fileName, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	}
 	else
 	{
-		hFile = CreateFile(fileName, GENERIC_READ | GENERIC_WRITE, 0, nullptr, TRUNCATE_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+		hFile = CreateFile(fileName, GENERIC_READ | GENERIC_WRITE, 0, NULL, TRUNCATE_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
 		if (hFile == INVALID_HANDLE_VALUE)
 		{
-			hFile = CreateFile(fileName, GENERIC_READ | GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
+			hFile = CreateFile(fileName, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 		}
 	}
 
@@ -473,7 +473,7 @@ ByteFile::~ByteFile(void)
 	if (hFile != INVALID_HANDLE_VALUE && !CloseHandle(hFile))
 		DEBUG_FATAL(true,("ByteFile::~ByteFile - Unable to close HANDLE for file %s - Error %d", name, GetLastError()));
 
-	hFile = nullptr;
+	hFile = NULL;
 
 	delete [] name;
 }
@@ -482,7 +482,7 @@ ByteFile::~ByteFile(void)
 
 int ByteFile::getOffset(void) const
 {
-	return static_cast<int>(SetFilePointer(hFile, 0, nullptr, FILE_CURRENT));
+	return static_cast<int>(SetFilePointer(hFile, 0, NULL, FILE_CURRENT));
 }
 
 // ----------------------------------------------------------------------
@@ -497,7 +497,7 @@ void ByteFile::output(byte b)
 	byte	out = b;
 	uint32  bytesWritten;
 
-	if (!WriteFile(hFile, &out, sizeof(byte), &bytesWritten, nullptr))
+	if (!WriteFile(hFile, &out, sizeof(byte), &bytesWritten, NULL))
 	{
 		DEBUG_FATAL(true,("ByteFile::output error %d.", GetLastError()));
 	}
@@ -518,7 +518,7 @@ bool ByteFile::input(byte *b)
 	DEBUG_FATAL(!isInput,("ByteFile::input called on output stream."));
 
 	uint32 bytesRead;
-	BOOL result = ReadFile(hFile, b, sizeof(byte), &bytesRead, nullptr);
+	BOOL result = ReadFile(hFile, b, sizeof(byte), &bytesRead, NULL);
 
 	// check for EOS
 	return (result && !bytesRead);

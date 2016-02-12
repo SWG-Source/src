@@ -218,7 +218,7 @@ CharDataMap::ErrorCode CharDataMap::generateMapFromBuffer (const Unicode::Blocks
 		{
 			CharData * data = new CharData;
 			
-			assert (data != nullptr); //lint !e1924 // c-style cast.  MSVC bug
+			assert (data != NULL); //lint !e1924 // c-style cast.  MSVC bug
 
 			data->m_reverseCase = 0;
 			
@@ -244,7 +244,7 @@ CharDataMap::ErrorCode CharDataMap::generateMapFromBuffer (const Unicode::Blocks
 	
 	m_contiguousData = new CharData [validChars];
 
-	assert (m_contiguousData != nullptr); //lint !e1924 // c-style cast.  MSVC bug
+	assert (m_contiguousData != NULL); //lint !e1924 // c-style cast.  MSVC bug
 	
 	size_t dataIndex = 0;
 	
@@ -288,7 +288,7 @@ CharDataMap::ErrorCode CharDataMap::generateMap (const Unicode::Blocks::Mapping 
 	char * buffer = new char [fileLen + 1];
 	buffer [fileLen] = 0;
 
-	assert (buffer != nullptr); //lint !e1924 // c-style cast.  MSVC bug
+	assert (buffer != NULL); //lint !e1924 // c-style cast.  MSVC bug
 
 	if (fread (buffer, fileLen, 1, fl) != 1)
 	{

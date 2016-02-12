@@ -97,7 +97,7 @@ jboolean JNICALL ScriptMethodsCommandQueueNamespace::queueCommand(JNIEnv *env, j
 	NetworkId actorId(actor);
 	TangibleObject * const actorTangibleObject = TangibleObject::getTangibleObject(actorId);
 
-	if (actorTangibleObject == nullptr)
+	if (actorTangibleObject == NULL)
 	{
 		WARNING(true, ("JavaLibrary::queueCommand() Unable to resolve actor(%s) to a TangibleObject", actorId.getValueString().c_str()));
 		return JNI_FALSE;
@@ -142,7 +142,7 @@ jboolean JNICALL ScriptMethodsCommandQueueNamespace::queueClear(JNIEnv *env, job
 	NetworkId actorId(actor);
 	TangibleObject * const actorTangibleObject = TangibleObject::getTangibleObject(actorId);
 
-	if (actorTangibleObject == nullptr)
+	if (actorTangibleObject == NULL)
 	{
 		WARNING(true, ("JavaLibrary::queueClear() Unable to resolve actor(%s) to a TangibleObject", actorId.getValueString().c_str()));
 		return JNI_FALSE;
@@ -170,7 +170,7 @@ jboolean JNICALL ScriptMethodsCommandQueueNamespace::queueHasCommandFromGroup(JN
 	NetworkId actorId(actor);
 	TangibleObject * const actorTangibleObject = TangibleObject::getTangibleObject(actorId);
 
-	if (actorTangibleObject == nullptr)
+	if (actorTangibleObject == NULL)
 	{
 		WARNING(true, ("JavaLibrary::queueHasCommandFromGroup() Unable to resolve actor(%s) to a TangibleObject", actorId.getValueString().c_str()));
 		return JNI_FALSE;
@@ -196,7 +196,7 @@ jboolean JNICALL ScriptMethodsCommandQueueNamespace::queueClearCommandsFromGroup
 	NetworkId actorId(actor);
 	TangibleObject * const actorTangibleObject = TangibleObject::getTangibleObject(actorId);
 
-	if (actorTangibleObject == nullptr)
+	if (actorTangibleObject == NULL)
 	{
 		WARNING(true, ("JavaLibrary::queueClearCommandsFromGroup() Unable to resolve actor(%s) to a TangibleObject", actorId.getValueString().c_str()));
 		return JNI_FALSE;
@@ -239,14 +239,14 @@ jboolean JNICALL ScriptMethodsCommandQueueNamespace::setCommandTimerValue( JNIEn
 	NetworkId actorId(actor);
 	TangibleObject * const actorTangibleObject = TangibleObject::getTangibleObject(actorId);
 
-	if (actorTangibleObject == nullptr)
+	if (actorTangibleObject == NULL)
 	{
 		WARNING(true, ("JavaLibrary::setCommandTimerValue() Unable to resolve actor(%s) to a TangibleObject", actorId.getValueString().c_str()));
 		return JNI_FALSE;
 	}
 	CommandQueue * const queue = actorTangibleObject->getCommandQueue();
 
-	if (queue == nullptr)
+	if (queue == NULL)
 	{
 		WARNING(true, ("JavaLibrary::setCommandTimerValue() object(%s) does not have a CommandQueue", actorTangibleObject->getDebugInformation().c_str()));
 		return JNI_FALSE;
@@ -267,7 +267,7 @@ jint JNICALL ScriptMethodsCommandQueueNamespace::getCurrentCommand( JNIEnv *env,
 	NetworkId actorId(actor);
 	TangibleObject * const actorTangibleObject = TangibleObject::getTangibleObject(actorId);
 
-	if (actorTangibleObject == nullptr)
+	if (actorTangibleObject == NULL)
 	{
 		WARNING(true, ("JavaLibrary::getCurrentCommand() Unable to resolve actor(%s) to a TangibleObject", actorId.getValueString().c_str()));
 		return 0;
@@ -275,7 +275,7 @@ jint JNICALL ScriptMethodsCommandQueueNamespace::getCurrentCommand( JNIEnv *env,
 
 	CommandQueue const * const queue = actorTangibleObject->getCommandQueue();
 
-	if (queue == nullptr)
+	if (queue == NULL)
 	{
 		WARNING(true, ("JavaLibrary::getCurrentCommand() object(%s) does not have a CommandQueue", actorTangibleObject->getDebugInformation().c_str()));
 		return 0;
@@ -298,7 +298,7 @@ jfloat JNICALL ScriptMethodsCommandQueueNamespace::getCooldownTimeLeft( JNIEnv *
 	NetworkId actorId(actor);
 	TangibleObject * const actorTangibleObject = TangibleObject::getTangibleObject(actorId);
 
-	if (actorTangibleObject == nullptr)
+	if (actorTangibleObject == NULL)
 	{
 		WARNING(true, ("JavaLibrary::getCooldownTimeLeft() Unable to resolve actor(%s) to a TangibleObject", actorId.getValueString().c_str()));
 		return 0.0f;
@@ -306,7 +306,7 @@ jfloat JNICALL ScriptMethodsCommandQueueNamespace::getCooldownTimeLeft( JNIEnv *
 
 	CommandQueue const * const queue = actorTangibleObject->getCommandQueue();
 
-	if (queue == nullptr)
+	if (queue == NULL)
 	{
 		WARNING(true, ("JavaLibrary::getCooldownTimeLeft() object(%s) does not have a CommandQueue", actorTangibleObject->getDebugInformation().c_str()));
 		return 0.0f;
@@ -329,7 +329,7 @@ jfloat JNICALL ScriptMethodsCommandQueueNamespace::getCooldownTimeLeftString( JN
 	NetworkId actorId(actor);
 	TangibleObject * const actorTangibleObject = TangibleObject::getTangibleObject(actorId);
 
-	if (actorTangibleObject == nullptr)
+	if (actorTangibleObject == NULL)
 	{
 		WARNING(true, ("JavaLibrary::getCooldownTimeLeftString() Unable to resolve actor(%s) to a TangibleObject", actorId.getValueString().c_str()));
 		return 0.0f;
@@ -347,13 +347,13 @@ jfloat JNICALL ScriptMethodsCommandQueueNamespace::getCooldownTimeLeftString( JN
 	CommandQueue const * const queue = actorTangibleObject->getCommandQueue();
 	float value = 0.0f;
 	
-	if (queue == nullptr)
+	if (queue == NULL)
 	{
 		WARNING(true, ("JavaLibrary::getCooldownTimeLeftString() object(%s) does not have a CommandQueue", actorTangibleObject->getDebugInformation().c_str()));
 		return 0.0f;
 	}
 
-	if (queue != nullptr)
+	if (queue != NULL)
 	{
 		value = queue->getCooldownTimeLeft( out );
 	}
@@ -369,7 +369,7 @@ void JNICALL ScriptMethodsCommandQueueNamespace::sendCooldownGroupTimingOnly(JNI
 	NetworkId actorId(actor);
 	CreatureObject * const actorCreatureObject = CreatureObject::getCreatureObject(actorId);
 
-	if (actorCreatureObject == nullptr)
+	if (actorCreatureObject == NULL)
 	{
 		WARNING(true, ("JavaLibrary::sendCooldownGroupTimingOnly() Unable to resolve actor(%s) to a CreatureObject", actorId.getValueString().c_str()));
 		return;

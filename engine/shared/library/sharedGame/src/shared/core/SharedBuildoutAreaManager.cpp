@@ -321,7 +321,7 @@ std::string SharedBuildoutAreaManager::getBuildoutNameForPosition(std::string co
 {
 	BuildoutArea const * const ba = findBuildoutAreaAtPosition(sceneName, location_w.x, location_w.z, ignoreInternal, ignoreNonActiveEvents);
 	
-	if (nullptr != ba)
+	if (NULL != ba)
 		return sceneName + cms_sceneAndAreaDelimeter + ba->areaName;
 
 	return sceneName;
@@ -537,7 +537,7 @@ SharedBuildoutAreaManager::BuildoutAreaVector const * SharedBuildoutAreaManager:
 	{
 		return &it->second;
 	}
-	return nullptr;
+	return NULL;
 }
 
 //----------------------------------------------------------------------
@@ -546,8 +546,8 @@ BuildoutArea const * SharedBuildoutAreaManager::findBuildoutAreaAtPosition(std::
 {
 	BuildoutAreaVector const * const bav = findBuildoutAreasForScene(sceneId);
 
-	if (nullptr == bav)
-		return nullptr;
+	if (NULL == bav)
+		return NULL;
 
 	for (BuildoutAreaVector::const_iterator it = bav->begin(); it != bav->end(); ++it)
 	{
@@ -567,7 +567,7 @@ BuildoutArea const * SharedBuildoutAreaManager::findBuildoutAreaAtPosition(std::
 		}
 	}
 
-	return nullptr;
+	return NULL;
 }
 //----------------------------------------------------------------------
 
@@ -579,11 +579,11 @@ BuildoutArea const * SharedBuildoutAreaManager::findBuildoutAreaAtPosition(float
 
 		if (ignoreInternal && buildoutArea.internalBuildoutArea)
 		{
-			return nullptr;
+			return NULL;
 		}
 
 		if(ignoreNonActiveEvents && !buildoutArea.requiredEventName.empty())
-			return nullptr;
+			return NULL;
 
 		if (buildoutArea.isLocationInside(x, z))
 		{
@@ -591,7 +591,7 @@ BuildoutArea const * SharedBuildoutAreaManager::findBuildoutAreaAtPosition(float
 		}
 	}
 
-	return nullptr;
+	return NULL;
 }
 
 //----------------------------------------------------------------------

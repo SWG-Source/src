@@ -107,7 +107,7 @@ unsigned GenericAPICore::submitRequest(GenericRequest *req, GenericResponse *res
 	}
 	req->setTrack(m_currTrack);
 	res->setTrack(m_currTrack);
-	time_t timeout = time(nullptr) + m_requestTimeout;
+	time_t timeout = time(NULL) + m_requestTimeout;
 
 	req->setTimeout(timeout);
 	res->setTimeout(timeout);
@@ -125,7 +125,7 @@ unsigned GenericAPICore::submitRequest(GenericRequest *req, GenericResponse *res
 	}
 	req->setTrack(m_currTrack);
 	res->setTrack(m_currTrack);
-	time_t timeout = time(nullptr) + reqTimeout;
+	time_t timeout = time(NULL) + reqTimeout;
 
 	req->setTimeout(timeout);
 	res->setTimeout(timeout);
@@ -140,7 +140,7 @@ void GenericAPICore::process()
 	GenericResponse *res;
 	
 	// Process timeout on pending requests - regardless of whether processing is suspended or not
-	while((m_outCount > 0) && ((req = m_outboundQueue.front().first)->getTimeout() <= time(nullptr)))
+	while((m_outCount > 0) && ((req = m_outboundQueue.front().first)->getTimeout() <= time(NULL)))
 	{
 		--m_outCount;
 		res = m_outboundQueue.front().second;
@@ -152,7 +152,7 @@ void GenericAPICore::process()
 	}
 	
 	// Process timeout on pending responses
-	while((m_pendingCount > 0) && ((res = (*m_pending.begin()).second)->getTimeout() <= time(nullptr)))
+	while((m_pendingCount > 0) && ((res = (*m_pending.begin()).second)->getTimeout() <= time(NULL)))
 	{
 		--m_pendingCount;
 		m_pending.erase(m_pending.begin());
@@ -165,7 +165,7 @@ void GenericAPICore::process()
 		while(m_outCount > 0)
 		{
             GenericConnection *con = getNextActiveConnection();
-            if (con != nullptr)
+            if (con != NULL)
             {
 				pair<GenericRequest *, GenericResponse *> out_pair = m_outboundQueue.front();
 
@@ -184,7 +184,7 @@ void GenericAPICore::process()
                 else
                 {
 #ifdef USE_SERIALIZE_LIB
-                    const unsigned char *msgBuf = nullptr;
+                    const unsigned char *msgBuf = NULL;
                     unsigned msgSize = 0;
                     msgBuf = req->pack(msgSize);
                     con->Send(msgBuf, msgSize);
@@ -222,7 +222,7 @@ GenericConnection *GenericAPICore::getNextActiveConnection()
     unsigned startIndex = m_nextConnectionIndex;
     unsigned maxIndex = m_serverConnections.size() - 1;
 
-    GenericConnection *con = nullptr;
+    GenericConnection *con = NULL;
 
     //loop until we find an active connection, or until we get back
     //              to where we started
@@ -242,7 +242,7 @@ GenericConnection *GenericAPICore::getNextActiveConnection()
             //went past end of vector, start back at 0
             m_nextConnectionIndex = 0;
         }
-    }while (con == nullptr && m_nextConnectionIndex != startIndex);
+    }while (con == NULL && m_nextConnectionIndex != startIndex);
 
     return con;
 }

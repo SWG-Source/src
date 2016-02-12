@@ -29,8 +29,8 @@ std::string MetricsServer::m_worldCountChannelDescription;
 bool MetricsServer::m_done = false;
 Service*   MetricsServer::m_metricsService;
 CMonitorAPI * MetricsServer::m_soeMonitor;
-Service * MetricsServer::ms_service = nullptr;
-TaskConnection * MetricsServer::ms_taskConnection = nullptr;
+Service * MetricsServer::ms_service = NULL;
+TaskConnection * MetricsServer::ms_taskConnection = NULL;
 
 //----------------------------------------------------------------
 

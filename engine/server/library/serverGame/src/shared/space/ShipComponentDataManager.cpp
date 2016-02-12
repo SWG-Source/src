@@ -42,16 +42,16 @@ ShipComponentData * ShipComponentDataManager::create (TangibleObject const & com
 	ShipComponentDescriptor const * const shipComponentDescriptor = 
 		ShipComponentDescriptor::findShipComponentDescriptorByObjectTemplate (component.getObjectTemplate ()->getCrcName ().getCrc ());
 
-	if (shipComponentDescriptor == nullptr)
+	if (shipComponentDescriptor == NULL)
 	{
 		WARNING (true, ("ShipComponentDataManager [%s] [%s] is not a component", component.getNetworkId ().getValueString ().c_str (), component.getObjectTemplateName()));
-		return nullptr;
+		return NULL;
 	}
 
 	ShipComponentData * const shipComponent = create (*shipComponentDescriptor);
 
 	if (!shipComponent)
-		return nullptr;
+		return NULL;
 
 	shipComponent->readDataFromComponent (component);
 	return shipComponent;
@@ -61,7 +61,7 @@ ShipComponentData * ShipComponentDataManager::create (TangibleObject const & com
 
 ShipComponentData * ShipComponentDataManager::create (ShipComponentDescriptor const & shipComponentDescriptor)
 {
-	ShipComponentData * shipComponent = nullptr;
+	ShipComponentData * shipComponent = NULL;
 
 	switch (shipComponentDescriptor.getComponentType ())
 	{
@@ -106,7 +106,7 @@ ShipComponentData * ShipComponentDataManager::create (ShipComponentDescriptor co
 			break;
 	default:
 		WARNING (true, ("ShipComponentDataManager::create descriptor has type [%d] invalid", shipComponentDescriptor.getComponentType ()));
-		return nullptr;
+		return NULL;
 	}
 
 	return shipComponent;

@@ -515,7 +515,7 @@ void ObjectNamespace::remove()
 #endif
 
 	delete ms_transformMemoryBlockManager;
-	ms_transformMemoryBlockManager = nullptr;
+	ms_transformMemoryBlockManager = NULL;
 
 	DEBUG_WARNING(static_cast<int>(ms_freeDpvsObjectsList.size()) != ms_allocatedDpvsObjects, ("Leaked %d DpvsObjects lists", ms_allocatedDpvsObjects - static_cast<int>(ms_freeDpvsObjectsList.size())));
 	while (!ms_systemAllocatedDpvsObjectsList.empty())
@@ -570,11 +570,11 @@ void ObjectNamespace::validatePosition(Object const & object, Vector const & pos
 			object.getNetworkId().getValueString().c_str(), 
 			object.getObjectTemplateName(), 
 			&object, 
-			object.getAppearance() ? object.getAppearance()->getAppearanceTemplateName() : nullptr, 
-			parent ? parent->getNetworkId().getValueString().c_str() : nullptr, 
-			parent ? parent->getObjectTemplateName() : nullptr, 
-			parent ? parent : nullptr, 
-			parent && parent->getAppearance() ? parent->getAppearance()->getAppearanceTemplateName() : nullptr));
+			object.getAppearance() ? object.getAppearance()->getAppearanceTemplateName() : NULL, 
+			parent ? parent->getNetworkId().getValueString().c_str() : NULL, 
+			parent ? parent->getObjectTemplateName() : NULL, 
+			parent ? parent : NULL, 
+			parent && parent->getAppearance() ? parent->getAppearance()->getAppearanceTemplateName() : NULL));
 	}
 }
 
@@ -703,30 +703,30 @@ Object::Object():
 #if OBJECT_SUPPORTS_IS_ALTERING_FLAG
 	m_isAltering(false),
 #endif
-	m_objectTemplate(nullptr),
+	m_objectTemplate(NULL),
 	m_notificationList(NotificationListManager::getEmptyNotificationList()),
-	m_debugName(nullptr),
+	m_debugName(NULL),
 	m_networkId(NetworkId::cms_invalid),
-	m_appearance(nullptr),
-	m_controller(nullptr),
-	m_dynamics(nullptr),
-	m_attachedToObject(nullptr),
-	m_attachedObjects(nullptr),
-	m_dpvsObjects(nullptr),
+	m_appearance(NULL),
+	m_controller(NULL),
+	m_dynamics(NULL),
+	m_attachedToObject(NULL),
+	m_attachedObjects(NULL),
+	m_dpvsObjects(NULL),
 	m_rotations(0),
 	m_scale(Vector::xyz111),
 	m_objectToParent(),
-	m_objectToWorld(nullptr),
+	m_objectToWorld(NULL),
 	m_watchedByList(),
-	m_containerProperty(nullptr),
-	m_collisionProperty(nullptr),
+	m_containerProperty(NULL),
+	m_collisionProperty(NULL),
 	m_spatialSubdivisionHandle (0),
 	m_useAlterScheduler(true),
-	m_scheduleData(nullptr),
+	m_scheduleData(NULL),
 	m_shouldBakeIntoMesh(true),
-	m_defaultAppearance(nullptr),
-	m_alternateAppearance(nullptr),
-	m_containedBy(nullptr)
+	m_defaultAppearance(NULL),
+	m_alternateAppearance(NULL),
+	m_containedBy(NULL)
 {
 	m_defaultAppearance = m_appearance;
 }
@@ -752,25 +752,25 @@ Object::Object(const ObjectTemplate *objectTemplate, const NetworkId &networkId)
 	m_debugName(0),
 	m_networkId(networkId),
 	m_appearance(0),
-	m_controller(nullptr),
-	m_dynamics(nullptr),
-	m_attachedToObject(nullptr),
-	m_attachedObjects(nullptr),
-	m_dpvsObjects(nullptr),
+	m_controller(NULL),
+	m_dynamics(NULL),
+	m_attachedToObject(NULL),
+	m_attachedObjects(NULL),
+	m_dpvsObjects(NULL),
 	m_rotations(0),
 	m_scale(Vector::xyz111),
 	m_objectToParent(),
-	m_objectToWorld(nullptr),
+	m_objectToWorld(NULL),
 	m_watchedByList(),
-	m_containerProperty(nullptr),
-	m_collisionProperty(nullptr),
+	m_containerProperty(NULL),
+	m_collisionProperty(NULL),
 	m_spatialSubdivisionHandle (0),
 	m_useAlterScheduler(true),
-	m_scheduleData(nullptr),
+	m_scheduleData(NULL),
 	m_shouldBakeIntoMesh(true),
-	m_defaultAppearance(nullptr),
-	m_alternateAppearance(nullptr),
-	m_containedBy(nullptr)
+	m_defaultAppearance(NULL),
+	m_alternateAppearance(NULL),
+	m_containedBy(NULL)
 {
 	objectTemplate->addReference();
 	NetworkIdManager::addObject(*this);
@@ -799,25 +799,25 @@ Object::Object(const ObjectTemplate *objectTemplate, InitializeFlag):
 	m_debugName(0),
 	m_networkId(NetworkId::cms_invalid),
 	m_appearance(0),
-	m_controller(nullptr),
-	m_dynamics(nullptr),
-	m_attachedToObject(nullptr),
-	m_attachedObjects(nullptr),
-	m_dpvsObjects(nullptr),
+	m_controller(NULL),
+	m_dynamics(NULL),
+	m_attachedToObject(NULL),
+	m_attachedObjects(NULL),
+	m_dpvsObjects(NULL),
 	m_rotations(0),
 	m_scale(Vector::xyz111),
 	m_objectToParent(),
-	m_objectToWorld(nullptr),
+	m_objectToWorld(NULL),
 	m_watchedByList(),
-	m_containerProperty(nullptr),
-	m_collisionProperty(nullptr),
+	m_containerProperty(NULL),
+	m_collisionProperty(NULL),
 	m_spatialSubdivisionHandle (0),
 	m_useAlterScheduler(true),
-	m_scheduleData(nullptr),
+	m_scheduleData(NULL),
 	m_shouldBakeIntoMesh(true),
-	m_defaultAppearance(nullptr),
-	m_alternateAppearance(nullptr),
-	m_containedBy(nullptr)
+	m_defaultAppearance(NULL),
+	m_alternateAppearance(NULL),
+	m_containedBy(NULL)
 {
 	objectTemplate->addReference();
 	NetworkIdManager::addObject(*this);
@@ -836,7 +836,7 @@ Object::~Object(void)
 	IGNORE_RETURN(snprintf(ms_crashReportInfo, sizeof(ms_crashReportInfo) - 1, "~Object: name=[%s] template=[%s]\n", getDebugName(), getObjectTemplateName()));
 	ms_crashReportInfo[sizeof(ms_crashReportInfo) - 1] = '\0';
 
-	DEBUG_REPORT_LOG(ms_logObjectDelete, ("Deleting object id=[%s], template=[%s], pointer=[%p], appearance=[%s], parent id=[%s], template=[%s], pointer=[%p], appearance=[%s]\n", getNetworkId().getValueString().c_str(), getObjectTemplateName(), this, getAppearance() ? getAppearance()->getAppearanceTemplateName() : nullptr, m_attachedToObject ? m_attachedToObject->getNetworkId().getValueString().c_str() : nullptr, m_attachedToObject ? m_attachedToObject->getObjectTemplateName() : nullptr, m_attachedToObject ? m_attachedToObject : nullptr, m_attachedToObject && m_attachedToObject->getAppearance() ? m_attachedToObject->getAppearance()->getAppearanceTemplateName() : nullptr));
+	DEBUG_REPORT_LOG(ms_logObjectDelete, ("Deleting object id=[%s], template=[%s], pointer=[%p], appearance=[%s], parent id=[%s], template=[%s], pointer=[%p], appearance=[%s]\n", getNetworkId().getValueString().c_str(), getObjectTemplateName(), this, getAppearance() ? getAppearance()->getAppearanceTemplateName() : NULL, m_attachedToObject ? m_attachedToObject->getNetworkId().getValueString().c_str() : NULL, m_attachedToObject ? m_attachedToObject->getObjectTemplateName() : NULL, m_attachedToObject ? m_attachedToObject : NULL, m_attachedToObject && m_attachedToObject->getAppearance() ? m_attachedToObject->getAppearance()->getAppearanceTemplateName() : NULL));
 	FATAL(ConfigSharedObject::getAllowDisallowObjectDelete() && ms_disallowObjectDelete, ("Object id=[%s], template=[%s], pointer=[%p] is deleting itself when delete is not allowed", getNetworkId().getValueString().c_str(), getObjectTemplateName(), this));
 
 #if OBJECT_SUPPORTS_IS_ALTERING_FLAG
@@ -905,7 +905,7 @@ Object::~Object(void)
 		}
 
 		deleteAttachedObjects(m_attachedObjects);
-		m_attachedObjects = nullptr;
+		m_attachedObjects = NULL;
 	}
 
 	if (m_objectToWorld)
@@ -914,9 +914,9 @@ Object::~Object(void)
 		m_objectToWorld = 0;
 	}
 
-	if (m_objectTemplate != nullptr)
+	if (m_objectTemplate != NULL)
 		m_objectTemplate->releaseReference();
-	m_objectTemplate = nullptr;
+	m_objectTemplate = NULL;
 
 	m_notificationList = 0;
 
@@ -1139,7 +1139,7 @@ void Object::removeFromWorld()
 			{
 				if (attached->isInWorld())
 				{
-					DEBUG_WARNING(true, ("Removing an object [id=%s template=%s] from the world with non-child attached objects [id=%s ptr=0x%08x template=%s name=%s]", getNetworkId ().getValueString ().c_str (), getObjectTemplateName () ? getObjectTemplateName () : "nullptr", attached->getNetworkId ().getValueString ().c_str (), attached, attached->getObjectTemplateName () ? attached->getObjectTemplateName () : "nullptr", attached->getDebugName()));
+					DEBUG_WARNING(true, ("Removing an object [id=%s template=%s] from the world with non-child attached objects [id=%s ptr=0x%08x template=%s name=%s]", getNetworkId ().getValueString ().c_str (), getObjectTemplateName () ? getObjectTemplateName () : "null", attached->getNetworkId ().getValueString ().c_str (), attached, attached->getObjectTemplateName () ? attached->getObjectTemplateName () : "null", attached->getDebugName()));
 					attached->detachFromObject(DF_parent);
 				}
 			}
@@ -1369,7 +1369,7 @@ bool Object::isInWorldCell() const
 
 CellProperty *Object::getParentCell() const
 {
-	Property *cell = nullptr;
+	Property *cell = NULL;
 
 	for (Object *o = const_cast<Object *>(getAttachedTo()); o && !cell; o = o->getAttachedTo())
 		cell = o->getCellProperty();
@@ -1580,7 +1580,7 @@ void Object::setAppearance(Appearance *newAppearance)
  * Steal the Appearance from this object.
  *
  * This routine will return the current appearance of this object, and
- * then reset its appearance to nullptr.
+ * then reset its appearance to NULL.
  *
  * @return The current appearance of this object
  */
@@ -1590,18 +1590,18 @@ Appearance *Object::stealAppearance(void)
 	Appearance *oldAppearance = m_appearance;
 
 	if(m_appearance == m_defaultAppearance)
-		m_defaultAppearance = nullptr;
+		m_defaultAppearance = NULL;
 	else if (m_appearance == m_alternateAppearance)
-		m_alternateAppearance = nullptr;
+		m_alternateAppearance = NULL;
 	
-	m_appearance = nullptr;
+	m_appearance = NULL;
 
 	if (oldAppearance)
 	{
 		if (isInWorld())
 			oldAppearance->removeFromWorld();
 
-		oldAppearance->setOwner(nullptr);
+		oldAppearance->setOwner(NULL);
 	}
 
 	return oldAppearance;
@@ -1999,7 +1999,7 @@ void Object::detachFromObject(DetachFlags const detachFlags)
 	bool const shouldAttach = (!toParentCell || noCell) ? false : m_attachedToObject != &cellProperty->getOwner();
 	m_objectToParent = shouldAttach ? getTransform_o2c() : getTransform_o2w();
 	deleteLocalTransform(m_objectToWorld);
-	m_objectToWorld = nullptr;
+	m_objectToWorld = NULL;
 	setObjectToWorldDirty(true);
 
 	// remove from the attached objects list
@@ -2010,7 +2010,7 @@ void Object::detachFromObject(DetachFlags const detachFlags)
 	attachedObjects->pop_back();
 
 	// set as unattached
-	m_attachedToObject = nullptr;
+	m_attachedToObject = NULL;
 
 	bool const wasChildObject = isChildObject();
 	bool const wasInWorld = isInWorld();
@@ -2102,7 +2102,7 @@ void Object::removeChildObject(Object * childObjectToRemove, DetachFlags detachF
 
 Object *Object::getRootParent(void)
 {
-	DEBUG_FATAL(m_childObject && m_attachedToObject == nullptr, ("am a child but attached to is nullptr"));
+	DEBUG_FATAL(m_childObject && m_attachedToObject == NULL, ("am a child but attached to is NULL"));
 	return m_childObject ? NON_NULL(m_attachedToObject)->getRootParent() : this;
 }
 
@@ -2116,7 +2116,7 @@ Object *Object::getRootParent(void)
 
 const Object *Object::getRootParent(void) const
 {
-	DEBUG_FATAL(m_childObject && m_attachedToObject == nullptr, ("am a child but attached to is nullptr"));
+	DEBUG_FATAL(m_childObject && m_attachedToObject == NULL, ("am a child but attached to is NULL"));
 	return m_childObject ? NON_NULL(m_attachedToObject)->getRootParent() : this;
 }
 
@@ -2231,7 +2231,7 @@ void Object::setRecursiveScale(Vector const & scale)
 Controller* Object::stealController(void)
 {
 	Controller* returnValue = m_controller;
-	m_controller = nullptr;
+	m_controller = NULL;
 	return returnValue;
 }
 
@@ -2362,7 +2362,7 @@ Property const *Object::getProperty(PropertyId const &id) const
 		if ((*i)->getPropertyId() == id)
 			return *i;
 
-	return nullptr;
+	return NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -2376,7 +2376,7 @@ Property *Object::getProperty(PropertyId const &id)
 		if ((*i)->getPropertyId() == id)
 			return *i;
 
-	return nullptr;
+	return NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -2399,13 +2399,13 @@ void Object::removeProperty(PropertyId const &id)
 	}
 
 	if (id == CellProperty::getClassPropertyId() || id == PortalProperty::getClassPropertyId() || id == SlottedContainer::getClassPropertyId() || id == VolumeContainer::getClassPropertyId())
-		m_containerProperty = nullptr;
+		m_containerProperty = NULL;
 	else
 		if (id == ContainedByProperty::getClassPropertyId())
-			m_containedBy = nullptr;
+			m_containedBy = NULL;
 		else
 			if (id == CollisionProperty::getClassPropertyId())
-				m_collisionProperty = nullptr;
+				m_collisionProperty = NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -2453,7 +2453,7 @@ void Object::lookAt_o (const Vector &position_o, const Vector &j_o)
 
 void Object::setAppearanceByName(char const *path)
 {
-	if (path != nullptr)
+	if (path != NULL)
 	{
 		if (TreeFile::exists(path))
 		{
@@ -2461,7 +2461,7 @@ void Object::setAppearanceByName(char const *path)
 
 			Appearance *appearance = AppearanceTemplateList::createAppearance(path);
 			
-			if (appearance != nullptr) 
+			if (appearance != NULL) 
 			{
 				setAppearance(appearance);
 			} else {
@@ -2475,7 +2475,7 @@ void Object::setAppearanceByName(char const *path)
 	}
 	else
 	{
-		DEBUG_WARNING(true, ("Object::setAppearanceByName() - nullptr appearance path specified for object: %s", (getObjectTemplateName() == nullptr) ? "" : getObjectTemplateName()));
+		DEBUG_WARNING(true, ("Object::setAppearanceByName() - NULL appearance path specified for object: %s", (getObjectTemplateName() == NULL) ? "" : getObjectTemplateName()));
 	}
 }
 
@@ -2539,7 +2539,7 @@ SlottedContainer * Object::getSlottedContainerProperty()
 	Container *container = getContainerProperty();
 	if (container && container->getPropertyId() == SlottedContainer::getClassPropertyId())
 		return safe_cast<SlottedContainer *>(container);
-	return nullptr;
+	return NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -2549,7 +2549,7 @@ SlottedContainer const * Object::getSlottedContainerProperty() const
 	Container const *container = getContainerProperty();
 	if (container && container->getPropertyId() == SlottedContainer::getClassPropertyId())
 		return safe_cast<SlottedContainer const *>(container);
-	return nullptr;
+	return NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -2559,7 +2559,7 @@ VolumeContainer * Object::getVolumeContainerProperty()
 	Container *container = getContainerProperty();
 	if (container && container->getPropertyId() == VolumeContainer::getClassPropertyId())
 		return safe_cast<VolumeContainer *>(container);
-	return nullptr;
+	return NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -2569,7 +2569,7 @@ VolumeContainer const * Object::getVolumeContainerProperty() const
 	Container const *container = getContainerProperty();
 	if (container && container->getPropertyId() == VolumeContainer::getClassPropertyId())
 		return safe_cast<VolumeContainer const *>(container);
-	return nullptr;
+	return NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -2579,7 +2579,7 @@ CellProperty * Object::getCellProperty()
 	Container *container = getContainerProperty();
 	if (container && container->getPropertyId() == CellProperty::getClassPropertyId())
 		return safe_cast<CellProperty *>(container);
-	return nullptr;
+	return NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -2589,7 +2589,7 @@ CellProperty const * Object::getCellProperty() const
 	Container const *container = getContainerProperty();
 	if (container && container->getPropertyId() == CellProperty::getClassPropertyId())
 		return safe_cast<CellProperty const *>(container);
-	return nullptr;
+	return NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -2599,7 +2599,7 @@ PortalProperty * Object::getPortalProperty()
 	Container *container = getContainerProperty();
 	if (container && container->getPropertyId() == PortalProperty::getClassPropertyId())
 		return safe_cast<PortalProperty *>(container);
-	return nullptr;
+	return NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -2609,7 +2609,7 @@ PortalProperty const * Object::getPortalProperty() const
 	Container const *container = getContainerProperty();
 	if (container && container->getPropertyId() == PortalProperty::getClassPropertyId())
 		return safe_cast<PortalProperty const *>(container);
-	return nullptr;
+	return NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -2658,7 +2658,7 @@ ServerObject const * Object::asServerObject() const
 
 bool Object::hasScheduleData() const
 {
-	return (m_scheduleData != nullptr);
+	return (m_scheduleData != NULL);
 }
 
 // ----------------------------------------------------------------------
@@ -2697,7 +2697,7 @@ void Object::setMostRecentAlterTime(ScheduleTime  mostRecentAlterTime)
 
 bool Object::isInAlterNextFrameList() const
 {
-	return (m_scheduleData == nullptr) ? false : (m_scheduleData->getAlterNextFrameNext() != nullptr) || (m_scheduleData->getAlterNextFramePrevious() != nullptr);
+	return (m_scheduleData == NULL) ? false : (m_scheduleData->getAlterNextFrameNext() != NULL) || (m_scheduleData->getAlterNextFramePrevious() != NULL);
 }
 
 // ----------------------------------------------------------------------
@@ -2708,7 +2708,7 @@ void Object::insertIntoAlterNextFrameList(Object *afterThisObject)
 	DEBUG_FATAL(isInAlterNextFrameList(), ("insertIntoAlterNextFrameList(): object id=[%s],template=[%s] already in AlterNextFrame list.", getNetworkId().getValueString().c_str(), getObjectTemplateName()));
 	NOT_NULL(afterThisObject);
 	NOT_NULL(afterThisObject->m_scheduleData);
-	DEBUG_FATAL(afterThisObject->m_scheduleData->getAlterNextFrameNext() && !afterThisObject->m_scheduleData->getAlterNextFrameNext()->m_scheduleData, ("Non-nullptr forward link does not have schedule data."));
+	DEBUG_FATAL(afterThisObject->m_scheduleData->getAlterNextFrameNext() && !afterThisObject->m_scheduleData->getAlterNextFrameNext()->m_scheduleData, ("Non-NULL forward link does not have schedule data."));
 	DEBUG_FATAL(afterThisObject->m_scheduleData->getAlterNextFrameNext() && (afterThisObject->m_scheduleData->getAlterNextFrameNext()->m_scheduleData->getAlterNextFramePrevious() != afterThisObject), ("List corruption: alter next frame."));
 
 	//-- Get new next and previous object for the list.
@@ -2745,13 +2745,13 @@ void Object::removeFromAlterNextFrameList()
 	DEBUG_FATAL(newNext     && !newNext->m_scheduleData,     ("Next node missing schedule data."));
 
 	//-- Handle previous.
-	m_scheduleData->setAlterNextFramePrevious(nullptr);
+	m_scheduleData->setAlterNextFramePrevious(NULL);
 	if (newPrevious)
 		newPrevious->m_scheduleData->setAlterNextFrameNext(newNext);
 
 
 	//-- Handle next.
-	m_scheduleData->setAlterNextFrameNext(nullptr);
+	m_scheduleData->setAlterNextFrameNext(NULL);
 	if (newNext)
 		newNext->m_scheduleData->setAlterNextFramePrevious(newPrevious);
 
@@ -2766,7 +2766,7 @@ void Object::removeFromAlterNextFrameList()
 
 int Object::getAlterSchedulePhase() const
 {
-	DEBUG_FATAL(m_scheduleData == nullptr, ("calling Object::getAlterSchedulePhase() when Object has no schedule data: id=[%s], template=[%s]", getNetworkId().getValueString().c_str(), getObjectTemplateName()));
+	DEBUG_FATAL(m_scheduleData == NULL, ("calling Object::getAlterSchedulePhase() when Object has no schedule data: id=[%s], template=[%s]", getNetworkId().getValueString().c_str(), getObjectTemplateName()));
 	return m_scheduleData->getSchedulePhase();
 }
 
@@ -2774,7 +2774,7 @@ int Object::getAlterSchedulePhase() const
 
 void Object::setAlterSchedulePhase(int schedulePhaseIndex)
 {
-	DEBUG_FATAL(m_scheduleData == nullptr, ("calling Object::setAlterSchedulePhase() when Object has no schedule data: id=[%s], template=[%s]", getNetworkId().getValueString().c_str(), getObjectTemplateName()));
+	DEBUG_FATAL(m_scheduleData == NULL, ("calling Object::setAlterSchedulePhase() when Object has no schedule data: id=[%s], template=[%s]", getNetworkId().getValueString().c_str(), getObjectTemplateName()));
 	m_scheduleData->setSchedulePhase(schedulePhaseIndex);
 }
 
@@ -2782,7 +2782,7 @@ void Object::setAlterSchedulePhase(int schedulePhaseIndex)
 
 bool Object::isInAlterNowList() const
 {
-	return (m_scheduleData == nullptr) ? false : (m_scheduleData->getAlterNowNext() != nullptr) || (m_scheduleData->getAlterNowPrevious() != nullptr);
+	return (m_scheduleData == NULL) ? false : (m_scheduleData->getAlterNowNext() != NULL) || (m_scheduleData->getAlterNowPrevious() != NULL);
 }
 
 // ----------------------------------------------------------------------
@@ -2793,7 +2793,7 @@ void Object::insertIntoAlterNowList(Object *afterThisObject)
 	DEBUG_FATAL(isInAlterNowList(), ("insertIntoAlterNowList(): object id=[%s],template=[%s] already in AlterNow list.", getNetworkId().getValueString().c_str(), getObjectTemplateName()));
 	NOT_NULL(afterThisObject);
 	NOT_NULL(afterThisObject->m_scheduleData);
-	DEBUG_FATAL(afterThisObject->m_scheduleData->getAlterNowNext() && !afterThisObject->m_scheduleData->getAlterNowNext()->m_scheduleData, ("Non-nullptr forward link does not have schedule data."));
+	DEBUG_FATAL(afterThisObject->m_scheduleData->getAlterNowNext() && !afterThisObject->m_scheduleData->getAlterNowNext()->m_scheduleData, ("Non-NULL forward link does not have schedule data."));
 	DEBUG_FATAL(afterThisObject->m_scheduleData->getAlterNowNext() && (afterThisObject->m_scheduleData->getAlterNowNext()->m_scheduleData->getAlterNowPrevious() != afterThisObject), ("List corruption: alter now."));
 
 	//-- Get new next and previous object for the list.
@@ -2830,12 +2830,12 @@ void Object::removeFromAlterNowList()
 	DEBUG_FATAL(newNext     && !newNext->m_scheduleData,     ("Next node missing schedule data."));
 
 	//-- Handle previous.
-	m_scheduleData->setAlterNowPrevious(nullptr);
+	m_scheduleData->setAlterNowPrevious(NULL);
 	if (newPrevious)
 		newPrevious->m_scheduleData->setAlterNowNext(newNext);
 
 	//-- Handle next.
-	m_scheduleData->setAlterNowNext(nullptr);
+	m_scheduleData->setAlterNowNext(NULL);
 	if (newNext)
 		newNext->m_scheduleData->setAlterNowPrevious(newPrevious);
 
@@ -2849,7 +2849,7 @@ void Object::removeFromAlterNowList()
 
 bool Object::isInConcludeList() const
 {
-	return (m_scheduleData == nullptr) ? false : (m_scheduleData->getConcludeNext() != nullptr) || (m_scheduleData->getConcludePrevious() != nullptr);
+	return (m_scheduleData == NULL) ? false : (m_scheduleData->getConcludeNext() != NULL) || (m_scheduleData->getConcludePrevious() != NULL);
 }
 
 // ----------------------------------------------------------------------
@@ -2860,7 +2860,7 @@ void Object::insertIntoConcludeList(Object *afterThisObject)
 	DEBUG_FATAL(isInConcludeList(), ("insertIntoConcludeList(): object id=[%s],template=[%s] already in Conclude list.", getNetworkId().getValueString().c_str(), getObjectTemplateName()));
 	NOT_NULL(afterThisObject);
 	NOT_NULL(afterThisObject->m_scheduleData);
-	DEBUG_FATAL(afterThisObject->m_scheduleData->getConcludeNext() && !afterThisObject->m_scheduleData->getConcludeNext()->m_scheduleData, ("Non-nullptr forward link does not have schedule data."));
+	DEBUG_FATAL(afterThisObject->m_scheduleData->getConcludeNext() && !afterThisObject->m_scheduleData->getConcludeNext()->m_scheduleData, ("Non-NULL forward link does not have schedule data."));
 	DEBUG_FATAL(afterThisObject->m_scheduleData->getConcludeNext() && (afterThisObject->m_scheduleData->getConcludeNext()->m_scheduleData->getConcludePrevious() != afterThisObject), ("List corruption: alter now."));
 
 	//-- Get new next and previous object for the list.
@@ -2897,12 +2897,12 @@ void Object::removeFromConcludeList()
 	DEBUG_FATAL(newNext     && !newNext->m_scheduleData,     ("Next node missing schedule data."));
 
 	//-- Handle previous.
-	m_scheduleData->setConcludePrevious(nullptr);
+	m_scheduleData->setConcludePrevious(NULL);
 	if (newPrevious)
 		newPrevious->m_scheduleData->setConcludeNext(newNext);
 
 	//-- Handle next.
-	m_scheduleData->setConcludeNext(nullptr);
+	m_scheduleData->setConcludeNext(NULL);
 	if (newNext)
 		newNext->m_scheduleData->setConcludePrevious(newPrevious);
 
@@ -3015,7 +3015,7 @@ void Object::scheduleForAlter_scheduleTopmostWorldParent()
 	do
 	{
 		//-- Traverse parent links until there is no more parent.
-		for (Object *parentObject = alterObject->getParent(); parentObject != nullptr; parentObject = alterObject->getParent())
+		for (Object *parentObject = alterObject->getParent(); parentObject != NULL; parentObject = alterObject->getParent())
 			alterObject = parentObject;
 
 		//-- Traverse container until we're at a container object that is in the world.
@@ -3035,7 +3035,7 @@ void Object::scheduleForAlter_scheduleTopmostWorldParent()
 					if (alterObject->isInWorld())
 					{
 						// We're done searching.
-						containedByProperty = nullptr;
+						containedByProperty = NULL;
 					}
 					else
 					{
@@ -3052,7 +3052,7 @@ void Object::scheduleForAlter_scheduleTopmostWorldParent()
 
 		// New container might be a child object, make sure we test for a parent again.
 		// If a parent exists, we need to run through the loop again to find the parent object.
-	} while (alterObject->getParent() != nullptr);
+	} while (alterObject->getParent() != NULL);
 
 	NOT_NULL(alterObject);
 	if (alterObject->isInitialized())
@@ -3270,13 +3270,13 @@ void Object::setAlternateAppearance(const char * path)
 	if(!path)
 		return;
 	
-	Appearance *alternateAppearance = nullptr;
+	Appearance *alternateAppearance = NULL;
 	
 	if (TreeFile::exists(path))
 	{	
 		alternateAppearance = AppearanceTemplateList::createAppearance(path);
 
-		if (alternateAppearance == nullptr) {
+		if (alternateAppearance == NULL) {
 			DEBUG_WARNING(true, ("Object::setAlternateAppearance() - Unable to change the object's appearance because the file does not exist: %s", path));
 			return;
 		}
@@ -3313,7 +3313,7 @@ void Object::setAlternateAppearance(const char * path)
 
 		delete m_alternateAppearance;
 
-		m_alternateAppearance = nullptr;
+		m_alternateAppearance = NULL;
 	}
 	else
 	{

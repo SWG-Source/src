@@ -108,7 +108,7 @@ inline int BoxTree::getTestCounter ( void ) const
 
 inline bool BoxTree::isFlat ( void ) const
 {
-	return m_flatNodes != nullptr;
+	return m_flatNodes != NULL;
 }
 
 // ======================================================================

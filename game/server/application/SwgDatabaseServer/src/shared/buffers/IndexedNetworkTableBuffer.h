@@ -103,7 +103,7 @@ IndexedNetworkTableBuffer<BUFFERROW,ROW,QUERY,SELECTQUERY>::~IndexedNetworkTable
 	{
 		delete i->second;
 		++m_sRowsDeleted;
-		i->second=nullptr;
+		i->second=NULL;
 	}
 }
 
@@ -161,7 +161,7 @@ void IndexedNetworkTableBuffer<BUFFERROW,ROW,QUERY,SELECTQUERY>::removeObject(co
 	{
 		delete i->second;
 		++m_sRowsDeleted;
-		i->second=nullptr;
+		i->second=NULL;
 		m_rows.erase(i);
 	}
 }

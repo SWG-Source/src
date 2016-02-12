@@ -239,7 +239,7 @@ void GameServerMetricsData::updateData()
 		"Max: %s requested load on %s which has been pending for %s. Limit = %d.",
 		id.getValueString().c_str(),
 		CalendarTime::convertEpochToTimeStringLocal(oldestPendingLoadRequestTime).c_str(),
-		CalendarTime::convertSecondsToMS((int)::time(nullptr) - oldestPendingLoadRequestTime).c_str(),
+		CalendarTime::convertSecondsToMS((int)::time(NULL) - oldestPendingLoadRequestTime).c_str(),
 		GameServer::getPendingLoadRequestLimit()
 		);
 	else

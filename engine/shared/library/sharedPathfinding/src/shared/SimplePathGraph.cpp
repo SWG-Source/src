@@ -39,7 +39,7 @@ void readArray_Class ( Iff & iff, T * & array, Tag tag )
 	{
 		int count = iff.read_int32();
 
-		if(array == nullptr) array = new T();
+		if(array == NULL) array = new T();
 
 		array->resize(count);
 
@@ -58,7 +58,7 @@ void readArray_Class ( Iff & iff, T * & array, Tag tag, Reader R )
 	{
 		int count = iff.read_int32();
 
-		if(array == nullptr) array = new T();
+		if(array == NULL) array = new T();
 
 		array->resize(count);
 
@@ -77,7 +77,7 @@ void readArray_Struct ( Iff & iff, T * & array, Tag tag )
 	{
 		int count = iff.read_int32();
 
-		if(array == nullptr) array = new T();
+		if(array == NULL) array = new T();
 
 		array->resize(count);
 
@@ -157,7 +157,7 @@ SimplePathGraph::SimplePathGraph ( PathGraphType type )
 {
 #ifdef _DEBUG
 
-	m_debugLines = nullptr;
+	m_debugLines = NULL;
 
 #endif
 }
@@ -181,7 +181,7 @@ SimplePathGraph::SimplePathGraph( SimplePathGraph::NodeList * nodes, SimplePathG
 
 #ifdef _DEBUG
 
-	m_debugLines = nullptr;
+	m_debugLines = NULL;
 
 #endif
 }
@@ -189,21 +189,21 @@ SimplePathGraph::SimplePathGraph( SimplePathGraph::NodeList * nodes, SimplePathG
 SimplePathGraph::~SimplePathGraph()
 {
 	delete m_nodes;
-	m_nodes = nullptr;
+	m_nodes = NULL;
 
 	delete m_edges;
-	m_edges = nullptr;
+	m_edges = NULL;
 
 	delete m_edgeCounts;
-	m_edgeCounts = nullptr;
+	m_edgeCounts = NULL;
 
 	delete m_edgeStarts;
-	m_edgeStarts = nullptr;
+	m_edgeStarts = NULL;
 
 #ifdef _DEBUG
 
 	delete m_debugLines;
-	m_debugLines = nullptr;
+	m_debugLines = NULL;
 
 #endif
 }
@@ -265,7 +265,7 @@ PathNode * SimplePathGraph::getNode ( int nodeIndex )
 	if (static_cast<unsigned int>(nodeIndex) < m_nodes->size())
 		return &m_nodes->at(nodeIndex);
 
-	return nullptr;
+	return NULL;
 }
 
 PathNode const * SimplePathGraph::getNode ( int nodeIndex ) const
@@ -273,7 +273,7 @@ PathNode const * SimplePathGraph::getNode ( int nodeIndex ) const
 	if (static_cast<unsigned int>(nodeIndex) < m_nodes->size())
 		return &m_nodes->at(nodeIndex);
 
-	return nullptr;
+	return NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -507,7 +507,7 @@ void SimplePathGraph::drawDebugShapes ( DebugShapeRenderer * renderer ) const
 
 #ifdef _DEBUG
 
-	if(renderer == nullptr) return;
+	if(renderer == NULL) return;
 
 	if( m_debugLines ) renderer->drawLineList( *m_debugLines, VectorArgb::solidYellow );
 

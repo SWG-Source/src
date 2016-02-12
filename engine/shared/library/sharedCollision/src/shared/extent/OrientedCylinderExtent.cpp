@@ -106,7 +106,7 @@ void OrientedCylinderExtent::drawDebugShapes ( DebugShapeRenderer * renderer ) c
 
 #ifdef _DEBUG
 
-	if(renderer == nullptr) return;
+	if(renderer == NULL) return;
 
 	renderer->setColor( VectorArgb::solidGreen );
 	renderer->draw(m_cylinder);

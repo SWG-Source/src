@@ -66,7 +66,7 @@ ObjectTemplate::ObjectTemplate(const std::string & filename) :
 {
 	//-- Track name of most recently loading object template name to give us more 
 	//   data to work with when we receive crash info.
-	IGNORE_RETURN(snprintf(s_crashReportInfoConstructor, sizeof(s_crashReportInfoConstructor) - 1, "ObjectTemplate_Constructor: %s\n", !filename.empty() ? filename.c_str() : "<nullptr>"));
+	IGNORE_RETURN(snprintf(s_crashReportInfoConstructor, sizeof(s_crashReportInfoConstructor) - 1, "ObjectTemplate_Constructor: %s\n", !filename.empty() ? filename.c_str() : "<NULL>"));
 	s_crashReportInfoConstructor[sizeof(s_crashReportInfoConstructor) - 1] = '\0';
 }
 
@@ -165,7 +165,7 @@ Object *ObjectTemplate::createObject() const
  */
 void ObjectTemplate::addReference() const
 {
-	if (m_baseData != nullptr)
+	if (m_baseData != NULL)
 		m_baseData->addReference();
 
 	DataResource::addReference();
@@ -178,7 +178,7 @@ void ObjectTemplate::addReference() const
  */
 void ObjectTemplate::releaseReference() const
 {
-	if (m_baseData != nullptr)
+	if (m_baseData != NULL)
 		m_baseData->releaseReference();
 	
 	DataResource::releaseReference();
@@ -199,7 +199,7 @@ void ObjectTemplate::loadFromIff(Iff &iff)
 	//-- Track name of most recently loading object template name to give us more 
 	//   data to work with when we receive crash info.
 	char const *const filename = iff.getFileName();
-	IGNORE_RETURN(snprintf(s_crashReportInfoLoadFromIff, sizeof(s_crashReportInfoLoadFromIff) - 1, "ObjectTemplate_Iff: %s\n", (filename && *filename) ? filename : "<nullptr>"));
+	IGNORE_RETURN(snprintf(s_crashReportInfoLoadFromIff, sizeof(s_crashReportInfoLoadFromIff) - 1, "ObjectTemplate_Iff: %s\n", (filename && *filename) ? filename : "<NULL>"));
 	s_crashReportInfoLoadFromIff[sizeof(s_crashReportInfoLoadFromIff) - 1] = '\0';
 
 	preLoad();

@@ -205,7 +205,7 @@ void FreeCtsDataTableNamespace::loadData()
 
 				tokensSourceClusterList.clear();
 				tokensTargetClusterList.clear();
-				if (Unicode::tokenize(Unicode::narrowToWide(sourceClusterList), tokensSourceClusterList, &clusterListDelimiters, nullptr) && (tokensSourceClusterList.size() > 0) && Unicode::tokenize(Unicode::narrowToWide(targetClusterList), tokensTargetClusterList, &clusterListDelimiters, nullptr) && (tokensTargetClusterList.size() > 0))
+				if (Unicode::tokenize(Unicode::narrowToWide(sourceClusterList), tokensSourceClusterList, &clusterListDelimiters, NULL) && (tokensSourceClusterList.size() > 0) && Unicode::tokenize(Unicode::narrowToWide(targetClusterList), tokensTargetClusterList, &clusterListDelimiters, NULL) && (tokensTargetClusterList.size() > 0))
 				{
 					for (tokensIter = tokensTargetClusterList.begin(); tokensIter != tokensTargetClusterList.end(); ++tokensIter)
 						freeCtsInfo.targetCluster[Unicode::wideToNarrow(Unicode::toLower(*tokensIter))] = Unicode::wideToNarrow(*tokensIter);
@@ -258,9 +258,9 @@ void FreeCtsDataTableNamespace::loadData()
 
 time_t FreeCtsDataTableNamespace::convertToEpoch(int const year, int const month, int const day, int const hour, int const minute, int const second)
 {
-	time_t const timeNow = ::time(nullptr);
+	time_t const timeNow = ::time(NULL);
 	struct tm * timeinfo = ::localtime(&timeNow);
-	FATAL(!timeinfo, ("::localtime() returns nullptr"));
+	FATAL(!timeinfo, ("::localtime() returns NULL"));
 
 	// greater than zero if Daylight Saving Time is in effect,
 	// zero if Daylight Saving Time is not in effect,
@@ -288,7 +288,7 @@ time_t FreeCtsDataTableNamespace::convertToEpoch(int const year, int const month
 	// "opposite" standard/daylight period than the current time,
 	// and it should be OK
 	timeinfo = ::localtime(&convertedTime);
-	FATAL(!timeinfo, ("::localtime() returns nullptr"));
+	FATAL(!timeinfo, ("::localtime() returns NULL"));
 
 	if ((timeinfo->tm_year != (year - 1900)) ||
 		(timeinfo->tm_mon != (month - 1)) ||
@@ -342,9 +342,9 @@ FreeCtsDataTable::FreeCtsInfo const * FreeCtsDataTable::isFreeCtsSourceCluster(s
 		loadData();
 
 	if (s_freeCtsList.empty())
-		return nullptr;
+		return NULL;
 
-	time_t const timeNow = ::time(nullptr);
+	time_t const timeNow = ::time(NULL);
 	std::pair<std::multimap<std::string, FreeCtsInfo>::const_iterator, std::multimap<std::string, FreeCtsInfo>::const_iterator> range = s_freeCtsList.equal_range(Unicode::toLower(sourceCluster));
 	for (std::multimap<std::string, FreeCtsInfo>::const_iterator iter = range.first; iter != range.second; ++iter)
 	{
@@ -355,7 +355,7 @@ FreeCtsDataTable::FreeCtsInfo const * FreeCtsDataTable::isFreeCtsSourceCluster(s
 			return &(iter->second);
 	}
 
-	return nullptr;
+	return NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -366,15 +366,15 @@ FreeCtsDataTable::FreeCtsInfo const * FreeCtsDataTable::wouldCharacterTransferBe
 		loadData();
 
 	if (s_freeCtsList.empty())
-		return nullptr;
+		return NULL;
 
 	if ((sourceCharacterCreateTime <= 0) && !ignoreTimeRestriction)
-		return nullptr;
+		return NULL;
 
 	if (sourceStationId != targetStationId)
-		return nullptr;
+		return NULL;
 
-	time_t const timeNow = ::time(nullptr);
+	time_t const timeNow = ::time(NULL);
 
 	std::string const lowerTargetCluster(Unicode::toLower(targetCluster));
 	std::pair<std::multimap<std::string, FreeCtsInfo>::const_iterator, std::multimap<std::string, FreeCtsInfo>::const_iterator> range = s_freeCtsList.equal_range(Unicode::toLower(sourceCluster));
@@ -396,7 +396,7 @@ FreeCtsDataTable::FreeCtsInfo const * FreeCtsDataTable::wouldCharacterTransferBe
 		}
 	}
 
-	return nullptr;
+	return NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -407,12 +407,12 @@ FreeCtsDataTable::FreeCtsInfo const * FreeCtsDataTable::getFreeCtsInfoForCharact
 		loadData();
 
 	if (s_freeCtsList.empty())
-		return nullptr;
+		return NULL;
 
 	if ((sourceCharacterCreateTime <= 0) && !ignoreTimeRestriction)
-		return nullptr;
+		return NULL;
 
-	time_t const timeNow = ::time(nullptr);
+	time_t const timeNow = ::time(NULL);
 	std::pair<std::multimap<std::string, FreeCtsInfo>::const_iterator, std::multimap<std::string, FreeCtsInfo>::const_iterator> range = s_freeCtsList.equal_range(Unicode::toLower(sourceCluster));
 	for (std::multimap<std::string, FreeCtsInfo>::const_iterator iter = range.first; iter != range.second; ++iter)
 	{
@@ -429,5 +429,5 @@ FreeCtsDataTable::FreeCtsInfo const * FreeCtsDataTable::getFreeCtsInfoForCharact
 			return &(iter->second);
 	}
 
-	return nullptr;
+	return NULL;
 }

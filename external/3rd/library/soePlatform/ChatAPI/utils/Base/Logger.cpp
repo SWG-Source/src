@@ -120,7 +120,7 @@ Logger::Logger(const char *programName,
 void Logger::LoggerInit(const char *programName)
 {
 	char buf[1024];
-	FILE *logDir = nullptr;
+	FILE *logDir = NULL;
 	
 	if (0 != (m_combinedLogType & eUseLocalFile))
 	{
@@ -129,13 +129,13 @@ void Logger::LoggerInit(const char *programName)
 		{
 			cmkdir(m_dirPrefix.c_str(), 0755);
 		}
-		else if(logDir != nullptr)
+		else if(logDir != NULL)
 		{
 			fclose(logDir);
 		}
 		
 		tm now;
-		time_t t = time(nullptr);
+		time_t t = time(NULL);
 
 		LOGGER_GET_CURR_TIME(now, t);
 
@@ -153,7 +153,7 @@ void Logger::LoggerInit(const char *programName)
 		{
 			cmkdir(buf, 0755);
 		}
-		else if(logDir != nullptr)
+		else if(logDir != NULL)
 		{
 			fclose(logDir);
 		}
@@ -279,7 +279,7 @@ void Logger::addLog(const char *id, unsigned logenum, int level, unsigned size)
 		else
 		{
 			newLog->file = fopen(newLog->filename.c_str(), "a+");
-			if(newLog->file == nullptr)
+			if(newLog->file == NULL)
 			{
 				printf("Open file %s failed\n", newLog->filename.c_str());
 			}
@@ -313,7 +313,7 @@ void Logger::addLog(const char *id, unsigned logenum)
 		else
 		{
 			newLog->file = fopen(newLog->filename.c_str(), "a+");
-			if(newLog->file == nullptr)
+			if(newLog->file == NULL)
 			{
 				printf("Open file %s failed\n", newLog->filename.c_str());
 			}
@@ -368,7 +368,7 @@ void Logger::logSimple(unsigned logenum, int level, const char *message)
 	{
 		return;
 	}
-	time_t t = time(nullptr);
+	time_t t = time(NULL);
 	LogInfo *info = (*iter).second;
 	if(level >= info->level)
 	{
@@ -444,7 +444,7 @@ void Logger::logSimpleWithSys(unsigned logenum, unsigned priority, int level, co
 		{
 			return;
 		}
-		time_t t = time(nullptr);
+		time_t t = time(NULL);
 		LogInfo *info = (*iter).second;
 
 		if(level >= info->level)
@@ -514,7 +514,7 @@ void Logger::log(unsigned logenum, int level, const char *message, ...)
 	// ensure that the buf does not contain any '%' characters.
 	// prevent crash problem 
 	char *rv;
-	while((rv = strchr(buf, '%')) != nullptr)
+	while((rv = strchr(buf, '%')) != NULL)
 	{
 		*rv = ' '; // replace with space	
 	}
@@ -546,7 +546,7 @@ void Logger::logWithSys(unsigned logenum, unsigned priority, int level, const ch
 		{
 					return;
 		}
-		time_t t = time(nullptr);
+		time_t t = time(NULL);
 		LogInfo *info = (*iter).second;
 
 		if(level >= info->level)
@@ -604,14 +604,14 @@ void Logger::logWithSys(unsigned logenum, unsigned priority, int level, const ch
 void Logger::rollDate(time_t t)
 {
 	char buf[80];
-	FILE *logDir = nullptr;
+	FILE *logDir = NULL;
 	
 	logDir = fopen(m_dirPrefix.c_str(), "r+");
 	if(errno == ENOENT)
 	{
 		cmkdir(m_dirPrefix.c_str(), 0755);
 	}
-	else if(logDir != nullptr)
+	else if(logDir != NULL)
 	{
 		fclose(logDir);
 	}
@@ -627,7 +627,7 @@ void Logger::rollDate(time_t t)
 	{
 		cmkdir(buf, 0755);
 	}
-	else if(logDir != nullptr)
+	else if(logDir != NULL)
 	{
 		fclose(logDir);
 	}
@@ -711,7 +711,7 @@ void Logger::rollLog(LogInfo *logInfo)
 {
 	std::string newLogName;
 	char timeStampBuffer[256];
-	time_t t = time(nullptr);
+	time_t t = time(NULL);
 	tm now;
 	int r;
 	int nTries = 10;

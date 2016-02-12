@@ -130,7 +130,7 @@ LoginServer::LoginServer() :
 Singleton<LoginServer>(),
 MessageDispatch::Receiver(),
 done(false),
-m_centralService(nullptr),
+m_centralService(NULL),
 clientService(0),
 pingService(0),
 keyServer(0),
@@ -391,7 +391,7 @@ void LoginServer::receiveMessage(const MessageDispatch::Emitter & source, const 
     {
 			CentralServerConnection * connection = const_cast<CentralServerConnection*>(safe_cast<const CentralServerConnection *>(&source));
 			DEBUG_REPORT_LOG(true, ("Cluster connection %s opened\n", msg.getClusterName().c_str()));
-			ClusterListEntry *cle=nullptr;
+			ClusterListEntry *cle=NULL;
 			if (ConfigLoginServer::getDevelopmentMode())
 			{
 				// in this mode, we trust the name sent by the cluster and we dynamically add clusters we don't know about
@@ -410,7 +410,7 @@ void LoginServer::receiveMessage(const MessageDispatch::Emitter & source, const 
 					{
 						WARNING(true,("Server %i is named \"%s\" in the database.  The server at the specified address (%s:%hu) reports its name as \"%s\".  It will not be allowed in the service.  Either the name in the database or the name in Central's config file should be corrected.\n",cle->m_clusterId, cle->m_clusterName.c_str(), connection->getRemoteAddress().c_str(), connection->getRemotePort(), msg.getClusterName().c_str()));
 						disconnectCluster(*cle,true,false);
-						cle=nullptr;
+						cle=NULL;
 					}
 			}
 
@@ -589,7 +589,7 @@ void LoginServer::receiveMessage(const MessageDispatch::Emitter & source, const 
 			// for testing purpose when not using session authentication, store
 			// the account feature Ids locally in memory, which will get cleared
 			// (obviously) when the LoginServer is restarted
-			std::map<uint32, std::map<uint32, int> > * nonSessionTestingAccountFeatureIds = nullptr;
+			std::map<uint32, std::map<uint32, int> > * nonSessionTestingAccountFeatureIds = NULL;
 			if (msg.getGameCode() == PlatformGameCode::SWG)
 				nonSessionTestingAccountFeatureIds = &s_nonSessionTestingAccountSwgFeatureIds;
 			else if (msg.getGameCode() == PlatformGameCode::SWGTCG)
@@ -648,7 +648,7 @@ void LoginServer::receiveMessage(const MessageDispatch::Emitter & source, const 
 			// for testing purpose when not using session authentication, store
 			// the account feature Ids locally in memory, which will get cleared
 			// (obviously) when the LoginServer is restarted
-			std::map<uint32, std::map<uint32, int> > * nonSessionTestingAccountFeatureIds = nullptr;
+			std::map<uint32, std::map<uint32, int> > * nonSessionTestingAccountFeatureIds = NULL;
 			if (msg.getGameCode() == PlatformGameCode::SWG)
 				nonSessionTestingAccountFeatureIds = &s_nonSessionTestingAccountSwgFeatureIds;
 			else if (msg.getGameCode() == PlatformGameCode::SWGTCG)
@@ -826,7 +826,7 @@ void LoginServer::receiveMessage(const MessageDispatch::Emitter & source, const 
 
 		const CentralServerConnection *conn = dynamic_cast<const CentralServerConnection *>(&source);
 		if (conn)
-			DatabaseConnection::getInstance().renameCharacter(conn->getClusterId(), msg.getCharacterId(), msg.getNewName(), nullptr);
+			DatabaseConnection::getInstance().renameCharacter(conn->getClusterId(), msg.getCharacterId(), msg.getNewName(), NULL);
 		else
 			WARNING_STRICT_FATAL(true,("Got RenameCharacterMessage from something other than CentralServerConnection.\n"));
 	}
@@ -1461,11 +1461,11 @@ LoginServer::ClusterListEntry *LoginServer::findClusterByName(const std::string 
 	ClusterListType::iterator i;
 	for (i=m_clusterList.begin(); i!=m_clusterList.end(); ++i)
 	{
-		NOT_NULL(*i); // not legal to push nullptr pointers on the vector
+		NOT_NULL(*i); // not legal to push null pointers on the vector
 		if ((*i)->m_clusterName == clusterName)
 			return *i;
 	}
-	return nullptr;
+	return NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -1555,7 +1555,7 @@ void LoginServer::sendClusterStatus(ClientConnection &conn) const
 		//   5) Cluster has told us its ready for players
 		if (cle && cle->m_clusterId!=0 && cle->m_connected && !cle->m_connectionServers.empty() && (clientIsPrivate || !cle->m_secret))
 		{
-			DEBUG_FATAL(!cle->m_centralServerConnection,("Programmer bug:  m_connected was true but m_centralServerConnection was nullptr\n"));
+			DEBUG_FATAL(!cle->m_centralServerConnection,("Programmer bug:  m_connected was true but m_centralServerConnection was NULL\n"));
 			LoginClusterStatus::ClusterData item;
 			item.m_clusterId = cle->m_clusterId;
 			item.m_timeZone = cle->m_timeZone;
@@ -1840,12 +1840,12 @@ LoginServer::ClusterListEntry * LoginServer::findClusterById(uint32 clusterId)
 	ClusterListType::const_iterator i;
 	for (i=m_clusterList.begin(); i!=m_clusterList.end(); ++i)
 	{
-		NOT_NULL(*i); // not legal to push nullptr pointers on the vector
+		NOT_NULL(*i); // not legal to push null pointers on the vector
 		if ((*i)->m_clusterId == clusterId)
 			return *i;
 	}
 
-	return nullptr;
+	return NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -1859,12 +1859,12 @@ LoginServer::ClusterListEntry * LoginServer::findClusterByConnection(const Centr
 	ClusterListType::const_iterator i;
 	for (i=m_clusterList.begin(); i!=m_clusterList.end(); ++i)
 	{
-		NOT_NULL(*i); // not legal to push nullptr pointers on the vector
+		NOT_NULL(*i); // not legal to push null pointers on the vector
 		if ((*i)->m_centralServerConnection == connection)
 			return *i;
 	}
 
-	return nullptr;
+	return NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -1908,12 +1908,12 @@ void LoginServer::setDone(const bool isDone)
 
 // ----------------------------------------------------------------------
 
-void LoginServer::sendToAllClusters(GameNetworkMessage const & message, Connection const * excludeCentralConnection /*= nullptr*/, uint32 excludeClusterId /*= 0*/, char const * excludeClusterName /*= nullptr*/)
+void LoginServer::sendToAllClusters(GameNetworkMessage const & message, Connection const * excludeCentralConnection /*= NULL*/, uint32 excludeClusterId /*= 0*/, char const * excludeClusterName /*= NULL*/)
 {
 	ClusterListType::const_iterator i;
 	for (i=m_clusterList.begin(); i!=m_clusterList.end(); ++i)
 	{
-		if (NON_NULL(*i)->m_connected && (*i)->m_centralServerConnection && ((*i)->m_centralServerConnection != excludeCentralConnection) && ((*i)->m_clusterId != excludeClusterId) && ((excludeClusterName == nullptr) || _stricmp(excludeClusterName, (*i)->m_centralServerConnection->getClusterName().c_str())))
+		if (NON_NULL(*i)->m_connected && (*i)->m_centralServerConnection && ((*i)->m_centralServerConnection != excludeCentralConnection) && ((*i)->m_clusterId != excludeClusterId) && ((excludeClusterName == NULL) || _stricmp(excludeClusterName, (*i)->m_centralServerConnection->getClusterName().c_str())))
 			(*i)->m_centralServerConnection->send(message,true);
 	}
 }

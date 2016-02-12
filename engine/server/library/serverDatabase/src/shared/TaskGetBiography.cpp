@@ -19,7 +19,7 @@
 TaskGetBiography::TaskGetBiography(const NetworkId &owner, uint32 requestingProcess) :
 		m_owner(owner),
 		m_requestingProcess(requestingProcess),
-		m_bio(nullptr)
+		m_bio(NULL)
 {
 }
 
@@ -28,7 +28,7 @@ TaskGetBiography::TaskGetBiography(const NetworkId &owner, uint32 requestingProc
 TaskGetBiography::~TaskGetBiography()
 {
 	delete m_bio;
-	m_bio=nullptr;
+	m_bio=NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -53,7 +53,7 @@ bool TaskGetBiography::process(DB::Session *session)
 
 void TaskGetBiography::onComplete()
 {
-	WARNING_STRICT_FATAL(!m_bio,("In TaskGetBiography::onComplete, but m_bio is nullptr\n"));
+	WARNING_STRICT_FATAL(!m_bio,("In TaskGetBiography::onComplete, but m_bio is NULL\n"));
 	if (m_bio)
 	{
 		BiographyMessage msg(m_owner, *m_bio);

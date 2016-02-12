@@ -52,7 +52,7 @@ public:
 	typedef std::pair<NetworkId, float>              HopperContentElement;
 	typedef stdvector<HopperContentElement>::fwd     HopperContentsVector;
 	
-	float                   getHopperContents(HopperContentsVector * data=nullptr) const;
+	float                   getHopperContents(HopperContentsVector * data=NULL) const;
 	void                    getResourceData(ResourceDataVector & data);
 	std::vector<ResourceTypeObject const *> const & getSurveyTypes();
 	int                     getMaxExtractionRate() const;

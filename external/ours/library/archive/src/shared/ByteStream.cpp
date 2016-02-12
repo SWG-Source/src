@@ -20,7 +20,7 @@ namespace Archive {
 	@brief ReadIterator ctor
 
 	Initializes the read position to zero, and the ByteStream member value
-	is nullptr
+	is NULL
 */
 ReadIterator::ReadIterator() :
 	readPtr(0),

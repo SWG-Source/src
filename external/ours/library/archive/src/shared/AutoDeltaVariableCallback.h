@@ -186,7 +186,7 @@ inline void AutoDeltaVariableCallback<ValueType, Callback, SourceObjectType>::se
 	ValueType const tmp = this->get();
 	AutoDeltaVariable<ValueType>::set(source);
 	
-	if (sourceObject != nullptr && tmp != source)
+	if (sourceObject != NULL && tmp != source)
 		callback.modified(*sourceObject, tmp, source, true);
 }
 

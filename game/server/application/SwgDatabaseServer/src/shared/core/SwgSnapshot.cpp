@@ -96,8 +96,8 @@ SwgSnapshot::SwgSnapshot(DB::ModeQuery::Mode mode, bool useGoldDatabase) :
 		m_vehicleObjectBuffer(mode),
 		m_waypointBuffer(mode),
 		m_weaponObjectBuffer(mode),
-		m_immediateDeleteStep(nullptr),
-		m_offlineMoneyCustomPersistStep(nullptr)
+		m_immediateDeleteStep(NULL),
+		m_offlineMoneyCustomPersistStep(NULL)
 {
 	m_bufferList.push_back(&m_battlefieldMarkerObjectBuffer);
 	m_bufferList.push_back(&m_battlefieldParticipantBuffer);
@@ -290,10 +290,10 @@ void SwgSnapshot::decodeScriptObject(NetworkId const & objectId, Archive::ReadIt
 	Archive::get(data,packedScriptList);
 
 	if (packedScriptList.length()==0)
-		packedScriptList=' '; // avoid confusing an empty list with nullptr
+		packedScriptList=' '; // avoid confusing an empty list with NULL
 
 	DBSchema::ObjectBufferRow *row=m_objectTableBuffer.findRowByIndex(objectId);
-	if (row==nullptr)
+	if (row==NULL)
 		row=m_objectTableBuffer.addEmptyRow(objectId);
 
 	row->script_list=packedScriptList;

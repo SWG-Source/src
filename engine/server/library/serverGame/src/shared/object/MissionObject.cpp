@@ -32,7 +32,7 @@
 
 //-----------------------------------------------------------------------
 
-const SharedObjectTemplate * MissionObject::m_defaultSharedTemplate = nullptr;
+const SharedObjectTemplate * MissionObject::m_defaultSharedTemplate = NULL;
 const char * const s_missionObjectTemplateName = "object/mission/base_mission_object.iff";
 
 //-----------------------------------------------------------------------
@@ -125,13 +125,13 @@ const SharedObjectTemplate * MissionObject::getDefaultSharedTemplate(void) const
 {
 static const ConstCharCrcLowerString templateName("object/mission/base/shared_mission_default.iff");
 
-	if (m_defaultSharedTemplate == nullptr)
+	if (m_defaultSharedTemplate == NULL)
 	{
 		m_defaultSharedTemplate = safe_cast<const SharedObjectTemplate *>(
 			ObjectTemplateList::fetch(templateName));
-		WARNING_STRICT_FATAL(m_defaultSharedTemplate == nullptr, ("Cannot create "
+		WARNING_STRICT_FATAL(m_defaultSharedTemplate == NULL, ("Cannot create "
 			"default shared object template %s", templateName.getString()));
-		if (m_defaultSharedTemplate != nullptr)
+		if (m_defaultSharedTemplate != NULL)
 			ExitChain::add (removeDefaultTemplate, "MissionObject::removeDefaultTemplate");
 	}
 	return m_defaultSharedTemplate;
@@ -144,10 +144,10 @@ static const ConstCharCrcLowerString templateName("object/mission/base/shared_mi
  */
 void MissionObject::removeDefaultTemplate(void)
 {
-	if (m_defaultSharedTemplate != nullptr)
+	if (m_defaultSharedTemplate != NULL)
 	{
 		m_defaultSharedTemplate->releaseReference();
-		m_defaultSharedTemplate = nullptr;
+		m_defaultSharedTemplate = NULL;
 	}
 }	// MissionObject::removeDefaultTemplate
 
@@ -158,7 +158,7 @@ void MissionObject::abortMission()
 	ScriptParams params;
 	ScriptDictionaryPtr dictionary;
 	getScriptObject()->makeScriptDictionary(params, dictionary);
-	if (dictionary.get() != nullptr)
+	if (dictionary.get() != NULL)
 	{
 		dictionary->serialize();
 		MessageToQueue::getInstance().sendMessageToJava(getNetworkId(), 
@@ -710,7 +710,7 @@ void MissionObject::getByteStreamFromAutoVariable(const std::string & name, Arch
 		Archive::put(target, m_waypoint.get().getWaypointDataBase());
 
 		// mission location target
-		CreatureObject const * containingPlayer = nullptr;
+		CreatureObject const * containingPlayer = NULL;
 		ServerObject const * parent = safe_cast<ServerObject const*>(ContainerInterface::getContainedByObject(*this));
 		while (parent)
 		{
@@ -718,7 +718,7 @@ void MissionObject::getByteStreamFromAutoVariable(const std::string & name, Arch
 			if (containingPlayer && PlayerCreatureController::getPlayerObject(containingPlayer))
 				break;
 
-			containingPlayer = nullptr;
+			containingPlayer = NULL;
 			parent = safe_cast<ServerObject const*>(ContainerInterface::getContainedByObject(*parent));
 		}
 
@@ -785,7 +785,7 @@ void MissionObject::setAutoVariableFromByteStream(const std::string & name, cons
 		m_title.unpackDelta(ri);
 
 		// mission holder id
-		CreatureObject * containingPlayer = nullptr;
+		CreatureObject * containingPlayer = NULL;
 		ServerObject * parent = safe_cast<ServerObject *>(ContainerInterface::getContainedByObject(*this));
 		while (parent)
 		{
@@ -793,7 +793,7 @@ void MissionObject::setAutoVariableFromByteStream(const std::string & name, cons
 			if (containingPlayer && PlayerCreatureController::getPlayerObject(containingPlayer))
 				break;
 
-			containingPlayer = nullptr;
+			containingPlayer = NULL;
 			parent = safe_cast<ServerObject *>(ContainerInterface::getContainedByObject(*parent));
 		}
 

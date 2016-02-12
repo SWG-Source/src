@@ -21,7 +21,7 @@
 //
 // Remarks:
 //
-//   If the buffer would overflow, the nullptr terminating character is not written and -1
+//   If the buffer would overflow, the null terminating character is not written and -1
 //   will be returned.
 
 #ifdef _MSC_VER

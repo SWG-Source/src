@@ -103,7 +103,7 @@ namespace Unicode
 			}
 			else if (*from == 0x0000)
 			{
-				// nullptr character
+				// null character
 				str += static_cast<char>(0x0000);
 			}
 			else if (*from >= 0x0800)

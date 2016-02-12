@@ -63,7 +63,7 @@ void Plane::set(const Vector &point0, const Vector &point1, const Vector &point2
  * Find the intersection between a line segment and the plane.
  * 
  * If the line segment does intersect the plane, and the intersection
- * pointer is non-nullptr, then intersection will be set to the point on
+ * pointer is non-NULL, then intersection will be set to the point on
  * the line segment that crosses the plane.
  * 
  * @param point0  [IN] Start of the line segment
@@ -85,7 +85,7 @@ bool Plane::findIntersection(const Vector &point0, const Vector &point1) const
  * Find the intersection between a line segment and the plane.
  * 
  * If the line segment does intersect the plane, and the intersection
- * pointer is non-nullptr, then intersection will be set to the point on
+ * pointer is non-NULL, then intersection will be set to the point on
  * the line segment that crosses the plane.
  * 
  * @param point0  [IN] Start of the line segment
@@ -120,7 +120,7 @@ bool Plane::findIntersection(const Vector &point0, const Vector &point1, Vector 
  * Find the intersection between a line segment and the plane.
  * 
  * If the line segment does intersect the plane, and the intersection
- * pointer is non-nullptr, then intersection will be set to the point on
+ * pointer is non-NULL, then intersection will be set to the point on
  * the line segment that crosses the plane.
  * 
  * @param point0  [IN] Start of the line segment
@@ -159,7 +159,7 @@ bool Plane::findIntersection(const Vector &point0, const Vector &point1, Vector 
  * Find the intersection between a line segment and the plane.
  * 
  * If the line segment does intersect the plane, and the intersection
- * pointer is non-nullptr, then intersection will be set to the point on
+ * pointer is non-NULL, then intersection will be set to the point on
  * the line segment that crosses the plane.
  * 
  * @param point0  [IN] Start of the line segment
@@ -198,7 +198,7 @@ bool Plane::findIntersection(const Vector &point0, const Vector &point1, float &
  * back side of the plane.
  * 
  * If the line segment does intersect the plane, and the intersection
- * pointer is non-nullptr, then intersection will be set to the point on
+ * pointer is non-NULL, then intersection will be set to the point on
  * the line segment that crosses the plane.
  * 
  * @param point0  [IN] Start of the line segment
@@ -224,12 +224,12 @@ bool Plane::findDirectedIntersection(const Vector &point0, const Vector &point1)
  * back side of the plane.
  * 
  * If the line segment does intersect the plane, and the intersection
- * pointer is non-nullptr, then intersection will be set to the point on
+ * pointer is non-NULL, then intersection will be set to the point on
  * the line segment that crosses the plane.
  * 
  * @param point0  [IN] Start of the line segment
  * @param point1  [IN]  End of the line segment
- * @param intersection  [OUT] Intersection of the point and the plane (may be nullptr)
+ * @param intersection  [OUT] Intersection of the point and the plane (may be NULL)
  * @param t  [OUT] parameterized t from 0..1
  * @return True if the line segment intersects the plane from front-to-rear, otherwise false.
  */
@@ -265,12 +265,12 @@ bool Plane::findDirectedIntersection(const Vector &point0, const Vector &point1,
  * back side of the plane.
  * 
  * If the line segment does intersect the plane, and the intersection
- * pointer is non-nullptr, then intersection will be set to the point on
+ * pointer is non-NULL, then intersection will be set to the point on
  * the line segment that crosses the plane.
  * 
  * @param point0  [IN] Start of the line segment
  * @param point1  [IN]  End of the line segment
- * @param intersection  [OUT] Intersection of the point and the plane (may be nullptr)
+ * @param intersection  [OUT] Intersection of the point and the plane (may be NULL)
  * @param t  [OUT] parameterized t from 0..1
  * @return True if the line segment intersects the plane from front-to-rear, otherwise false.
  */
@@ -308,12 +308,12 @@ bool Plane::findDirectedIntersection(const Vector &point0, const Vector &point1,
  * back side of the plane.
  * 
  * If the line segment does intersect the plane, and the intersection
- * pointer is non-nullptr, then intersection will be set to the point on
+ * pointer is non-NULL, then intersection will be set to the point on
  * the line segment that crosses the plane.
  * 
  * @param point0  [IN] Start of the line segment
  * @param point1  [IN]  End of the line segment
- * @param intersection  [OUT] Intersection of the point and the plane (may be nullptr)
+ * @param intersection  [OUT] Intersection of the point and the plane (may be NULL)
  * @param t  [OUT] parameterized t from 0..1
  * @return True if the line segment intersects the plane from front-to-rear, otherwise false.
  */

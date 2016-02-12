@@ -31,7 +31,7 @@ struct Emitter::ReceiverList
 Emitter::Emitter() :
 receiverList(new ReceiverList)
 {
-	assert (receiverList != nullptr);
+	assert (receiverList != NULL);
 }
 
 //---------------------------------------------------------------------

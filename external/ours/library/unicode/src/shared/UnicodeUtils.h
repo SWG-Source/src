@@ -79,8 +79,8 @@ namespace Unicode
 	bool                       getNthToken    (const Unicode::NarrowString & str, const size_t n, size_t & pos, size_t & endpos, Unicode::NarrowString & token, const char * sepChars = ascii_whitespace);
 	size_t                     skipWhitespace (const Unicode::NarrowString & str, size_t pos, const char * white = ascii_whitespace);
 
-	bool                       tokenize (const Unicode::String & theStr, UnicodeStringVector & result, Unicode::String const * const delimiters = nullptr, Unicode::String const * const separators = nullptr);
-	bool                       tokenize (const Unicode::String & theStr, UnicodeStringVector & result, const size_t tokenPos, size_t & whichToken, size_t & token_start, size_t & token_end, Unicode::String const * const delimiters = nullptr, Unicode::String const * const separators = nullptr);
+	bool                       tokenize (const Unicode::String & theStr, UnicodeStringVector & result, Unicode::String const * const delimiters = NULL, Unicode::String const * const separators = NULL);
+	bool                       tokenize (const Unicode::String & theStr, UnicodeStringVector & result, const size_t tokenPos, size_t & whichToken, size_t & token_start, size_t & token_end, Unicode::String const * const delimiters = NULL, Unicode::String const * const separators = NULL);
 
 	bool                       isUnicode (const Unicode::String & theStr);
 

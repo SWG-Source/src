@@ -137,7 +137,7 @@ MEMORY_BLOCK_MANAGER_IMPLEMENTATION_WITH_INSTALL(PathSearchNode, true, 0, 0, 0);
 
 PathSearchNode::PathSearchNode ( PathSearch * search, PathGraph const * graph, PathNode const * node )
 : m_search(search),
-  m_parent(nullptr),
+  m_parent(NULL),
   m_graph(graph),
   m_node(node),
   m_queued(false),
@@ -164,13 +164,13 @@ PathSearchNode * PathSearchNode::getNeighbor ( int whichNeighbor )
 
 	PathNode const * neighborNode = m_graph->getNode(neighborIndex);
 
-	if(neighborNode != nullptr)
+	if(neighborNode != NULL)
 	{
 		return getSearchNode(neighborNode);
 	}
 	else
 	{
-		return nullptr;
+		return NULL;
 	}
 }
 
@@ -180,7 +180,7 @@ PathSearchNode * PathSearchNode::createSearchNode( PathNode const * node )
 {
 	// doing bad voodoo with the node marks
 
-	PathSearchNode * oldNode = nullptr;
+	PathSearchNode * oldNode = NULL;
 
 	int mark = node->getMark(3);
 
@@ -206,7 +206,7 @@ PathSearchNode * PathSearchNode::getSearchNode( PathNode const * node )
 {
 	// doing bad voodoo with the node marks
 
-	PathSearchNode * searchNode = nullptr;
+	PathSearchNode * searchNode = NULL;
 
 	int mark = node->getMark(3);
 
@@ -215,7 +215,7 @@ PathSearchNode * PathSearchNode::getSearchNode( PathNode const * node )
 		searchNode = (PathSearchNode*)((void*)mark);
 	}
 
-	if(searchNode == nullptr)
+	if(searchNode == NULL)
 	{
 		return createSearchNode(node);
 	}
@@ -305,9 +305,9 @@ void PathSearch::install()
 // ----------------------------------------------------------------------
 
 PathSearch::PathSearch ( void )
-: m_graph(nullptr),
-  m_start(nullptr),
-  m_goal(nullptr),
+: m_graph(NULL),
+  m_start(NULL),
+  m_goal(NULL),
   m_multiGoal(false),
   m_goals(new NodeList()),
   m_queue(new PathSearchQueue()),
@@ -321,16 +321,16 @@ PathSearch::PathSearch ( void )
 PathSearch::~PathSearch()
 {
 	delete m_goals;
-	m_goals = nullptr;
+	m_goals = NULL;
 
 	delete m_queue;
-	m_queue = nullptr;
+	m_queue = NULL;
 
 	delete m_path;
-	m_path = nullptr;
+	m_path = NULL;
 
 	delete m_visitedNodes;
-	m_visitedNodes = nullptr;
+	m_visitedNodes = NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -361,7 +361,7 @@ PathSearchNode * PathSearch::search ( void )
 		{
 			PathSearchNode * neighbor = node->getNeighbor(i);
 
-			if(neighbor != nullptr)
+			if(neighbor != NULL)
 			{
 				float newCost = node->getCost() + costBetween(node->getPathNode(),neighbor->getPathNode());
 
@@ -377,7 +377,7 @@ PathSearchNode * PathSearch::search ( void )
 		}
 	}
 
-	return nullptr;
+	return NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -395,8 +395,8 @@ bool PathSearch::search ( PathGraph const * graph, int startIndex, int goalIndex
 	m_goal = graph->getNode(goalIndex);
 	m_multiGoal = false;
 
-	if(m_start == nullptr)	return false;
-	if(m_goal == nullptr) return false;
+	if(m_start == NULL)	return false;
+	if(m_goal == NULL) return false;
 
 	m_path->clear();
 
@@ -429,7 +429,7 @@ bool PathSearch::search ( PathGraph const * graph, int startIndex, IndexList con
 	int goalCount = goalIndices.size();
 
 	if(goalCount == 0) return false;
-	if(m_start == nullptr)	return false;
+	if(m_start == NULL)	return false;
 
 	m_goals->resize(goalCount);
 
@@ -455,7 +455,7 @@ bool PathSearch::search ( PathGraph const * graph, int startIndex, IndexList con
 
 bool PathSearch::buildPath ( PathSearchNode * endNode )
 {
-	if( endNode == nullptr )
+	if( endNode == NULL )
 	{
 		m_path->clear();
 		return false;
@@ -633,13 +633,13 @@ IndexList const & PathSearch::getPath ( void ) const
 
 bool PathSearch::atGoal ( PathSearchNode * searchNode ) const
 {
-	if(searchNode == nullptr) return false;
+	if(searchNode == NULL) return false;
 
 	if(m_multiGoal)
 	{
 		PathNode const * pathNode = searchNode->getPathNode();
 
-		if(pathNode == nullptr) return false;
+		if(pathNode == NULL) return false;
 
 		return std::find( m_goals->begin(), m_goals->end(), pathNode ) != m_goals->end();
 	}

@@ -56,11 +56,11 @@ static void freeHook(dvoid *, dvoid *memptr)
 
 DB::OCISession::OCISession(DB::OCIServer *server) :
 		m_server(server),
-		envhp(nullptr),
-		errhp(nullptr),
-		srvhp(nullptr),
-		sesp(nullptr),
-		svchp(nullptr),
+		envhp(NULL),
+		errhp(NULL),
+		srvhp(NULL),
+		sesp(NULL),
+		svchp(NULL),
 		autoCommitMode(true),
 		m_resetTime(server->getReconnectTime()==0 ?	0 : time(0) + server->getReconnectTime()),
 		m_okToFetch(true)
@@ -235,11 +235,11 @@ bool DB::OCISession::disconnect()
 		success = false;
 	}
 
-	svchp = nullptr;
-	sesp = nullptr;
-	srvhp = nullptr;
-	errhp = nullptr;
-	envhp = nullptr;
+	svchp = NULL;
+	sesp = NULL;
+	srvhp = NULL;
+	errhp = NULL;
+	envhp = NULL;
 
 	connectLock.leave();
 	return success;

@@ -87,7 +87,7 @@ namespace InstallationSynchronizedUiNamespace
 	InstallationResourceData makeInstallationResourceData (const NetworkId & id, const Vector & position)
 	{
 		ResourceTypeObject const * const rto = ServerUniverse::getInstance().getResourceTypeById(id);
-		ResourcePoolObject const * const pool = rto ? rto->getPoolForCurrentPlanet() : nullptr;
+		ResourcePoolObject const * const pool = rto ? rto->getPoolForCurrentPlanet() : NULL;
 		if (rto && pool)
 		{
 			std::string const & resourceTypeParent = rto->getParentClass().getResourceClassName();
@@ -219,7 +219,7 @@ void InstallationSynchronizedUi::resetResourcePools   ()
 	HarvesterInstallationObject * const harvester = dynamic_cast<HarvesterInstallationObject *>(getOwner ());
 	NOT_NULL (harvester);
 
-	if (harvester) //lint !e774 // harvester is not nullptr in debug
+	if (harvester) //lint !e774 // harvester is not NULL in debug
 	{
 		std::vector<ResourceTypeObject const *> const & pools = harvester->getSurveyTypes();
 		for (std::vector<ResourceTypeObject const *>::const_iterator i=pools.begin(); i!=pools.end(); ++i)

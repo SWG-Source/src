@@ -86,7 +86,7 @@ void CollisionCallbacksNamespace::remove()
 
 int CollisionCallbacksNamespace::convertObjectToIndex(Object * const object)
 {
-	FATAL(!object, ("CollisionCallbacksNamespace::convertObjectToIndex: object == nullptr."));
+	FATAL(!object, ("CollisionCallbacksNamespace::convertObjectToIndex: object == NULL."));
 
 	ServerObject const * serverObject = object->asServerObject();
 	if (serverObject)
@@ -99,11 +99,11 @@ int CollisionCallbacksNamespace::convertObjectToIndex(Object * const object)
 
 bool CollisionCallbacksNamespace::onHitDoCollisionWith(Object * const object, Object * const wasHitByThisObject)
 {
-	DEBUG_WARNING(!object, ("CollisionCallbacksNamespace::onHitDoCollisionWith: Object == nullptr"));
-	DEBUG_WARNING(!wasHitByThisObject, ("CollisionCallbacksNamespace::onHitDoCollisionWith: wasHitByThisObject == nullptr"));
+	DEBUG_WARNING(!object, ("CollisionCallbacksNamespace::onHitDoCollisionWith: Object == NULL"));
+	DEBUG_WARNING(!wasHitByThisObject, ("CollisionCallbacksNamespace::onHitDoCollisionWith: wasHitByThisObject == NULL"));
 
 	ShipObject * shipObject = safe_cast<ShipObject *>(object);
-	DEBUG_WARNING(!shipObject, ("CollisionCallbacksNamespace::onHitDoCollisionWith: shipObject == nullptr"));
+	DEBUG_WARNING(!shipObject, ("CollisionCallbacksNamespace::onHitDoCollisionWith: shipObject == NULL"));
 
 	CollisionCallbackManager::Result result;
 	if (CollisionCallbackManager::intersectAndReflect(object, wasHitByThisObject, result))
@@ -123,10 +123,10 @@ bool CollisionCallbacksNamespace::onHitDoCollisionWith(Object * const object, Ob
 
 bool CollisionCallbacksNamespace::onDoCollisionWithTerrain(Object * const object)
 {
-	DEBUG_FATAL (!object, ("CollisionCallbacksNamespace::onDoCollisionWithTerrain: Object == nullptr"));
+	DEBUG_FATAL (!object, ("CollisionCallbacksNamespace::onDoCollisionWithTerrain: Object == NULL"));
 
 	ShipObject * shipObject = safe_cast<ShipObject *>(object);
-	DEBUG_FATAL (!shipObject, ("CollisionCallbacksNamespace::onDoCollisionWithTerrain: shipObject == nullptr"));
+	DEBUG_FATAL (!shipObject, ("CollisionCallbacksNamespace::onDoCollisionWithTerrain: shipObject == NULL"));
 
 	CollisionCallbackManager::Result result;
 	if (CollisionCallbackManager::intersectAndReflectWithTerrain(object, result))

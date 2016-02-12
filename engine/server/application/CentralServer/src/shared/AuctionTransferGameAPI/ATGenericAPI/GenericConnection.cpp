@@ -25,7 +25,7 @@ using namespace Base;
 GenericConnection::GenericConnection(const char *host, short port, GenericAPICore *apiCore, unsigned reconnectTimeout, unsigned noDataTimeoutSecs, unsigned, unsigned incomingBufSizeInKB, unsigned outgoingBufSizeInKB, unsigned keepAlive, unsigned maxRecvMessageSizeInKB)
 : m_bConnected(CON_NONE),
   m_apiCore(apiCore),
-  m_con(nullptr),
+  m_con(NULL),
   m_host(host), 
   m_port(port),
   m_lastTrack(123455), //random choice != 1
@@ -50,8 +50,8 @@ GenericConnection::~GenericConnection()
 {
 	if(m_con)
 	{
-        m_con->SetHandler(nullptr);
-        m_con->Disconnect();//don't worry about onterminated being called, we've set it's handler to nullptr, so it wont
+        m_con->SetHandler(NULL);
+        m_con->Disconnect();//don't worry about onterminated being called, we've set it's handler to null, so it wont
         m_con->Release();
 	}
 
@@ -64,7 +64,7 @@ void GenericConnection::disconnect()
 	{
         m_con->Disconnect();
 		//no need to release, since callback to onTerminated releases it, and callback is allways made   m_con->Release();
-		m_con = nullptr;
+		m_con = NULL;
 	}
 	m_conState = CON_DISCONNECT;
 	m_bConnected = CON_NONE;
@@ -77,7 +77,7 @@ void GenericConnection::OnTerminated(TcpConnection *)
 	if(m_con)
 	{
         m_con->Release();
-		m_con = nullptr;
+		m_con = NULL;
 	}
 	m_conState = CON_DISCONNECT;
     m_bConnected = CON_NONE;
@@ -93,7 +93,7 @@ void GenericConnection::OnRoutePacket(TcpConnection *, const unsigned char *data
 
 	get(iter, type);
 	get(iter, track);
-	GenericResponse *res = nullptr;
+	GenericResponse *res = NULL;
 
 	// the following if block is a temporary fix that prevents
 	// a crash with a game team in which they occasionally find
@@ -152,7 +152,7 @@ void GenericConnection::process()
 		{
             m_con->SetHandler(this);
 			m_conState = CON_NEGOTIATE;
-			m_conTimeout = time(nullptr) + m_reconnectTimeout;
+			m_conTimeout = time(NULL) + m_reconnectTimeout;
 		}
 		break;
 	case CON_NEGOTIATE:
@@ -178,12 +178,12 @@ void GenericConnection::process()
 				put(msg, std::string(m_apiCore->m_gameIdentifiers[index]));
 			Send(msg);
 		}
-		else if(time(nullptr) > m_conTimeout)
+		else if(time(NULL) > m_conTimeout)
 		{
 			// we did not connect
             m_con->Disconnect();
 			//no need to release, since callback to onTerminated releases it, and callback is allways made   m_con->Release();
-			m_con = nullptr;
+			m_con = NULL;
 			m_conState = CON_DISCONNECT;
             m_bConnected = CON_NONE;
 		}
@@ -199,7 +199,7 @@ void GenericConnection::process()
 		{
             m_con->Disconnect();
 			//no need to release, since callback to onTerminated releases it, and callback is allways made   m_con->Release();
-			m_con = nullptr;
+			m_con = NULL;
 		}
 	}
 	m_manager->GiveTime();

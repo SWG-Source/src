@@ -73,7 +73,7 @@ AiMovementPathFollow::AiMovementPathFollow( AICreatureController * controller, A
 : AiMovementWaypoint( controller, source ),
   m_path( new AiPath() )
 {
-	if (m_path != nullptr)
+	if (m_path != NULL)
 		Archive::get(source, *m_path);
 }
 
@@ -84,7 +84,7 @@ AiMovementPathFollow::~AiMovementPathFollow()
 	clearPath();
 
 	delete m_path;
-	m_path = nullptr;
+	m_path = NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -92,7 +92,7 @@ AiMovementPathFollow::~AiMovementPathFollow()
 void AiMovementPathFollow::pack( Archive::ByteStream & target ) const
 {
 	AiMovementWaypoint::pack(target);
-	if (m_path != nullptr)
+	if (m_path != NULL)
 		Archive::put(target, *m_path);
 	else
 		Archive::put(target, static_cast<int>(0));
@@ -288,7 +288,7 @@ AiPath const * AiMovementPathFollow::getPath ( void ) const
 
 void AiMovementPathFollow::swapPath ( AiPath * newPath )
 {
-	if(newPath == nullptr) return;
+	if(newPath == NULL) return;
 
 	AiPath::iterator it;
 

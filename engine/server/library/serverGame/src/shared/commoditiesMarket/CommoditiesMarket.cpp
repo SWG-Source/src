@@ -201,7 +201,7 @@ namespace CommoditiesMarketNamespace
 		
 		Container::ContainerErrorCode tmp = Container::CEC_Success;
 		ServerObject *bazaarContainer = auctionContainer.getBazaarContainer();
-		if (!bazaarContainer || !ContainerInterface::canTransferTo(bazaarContainer, item, nullptr, tmp))
+		if (!bazaarContainer || !ContainerInterface::canTransferTo(bazaarContainer, item, NULL, tmp))
 		{
 			errorCode = ar_INVALID_ITEM_ID;
 		}
@@ -326,7 +326,7 @@ bool CommoditiesMarketNamespace::isVendorItemRestriction(ServerObject const & it
 		return false;
 	}
 
-	ItemRestriction const * itemRestriction = nullptr;
+	ItemRestriction const * itemRestriction = NULL;
 
 	std::map<std::string, ItemRestriction>::const_iterator const iterFind = itemRestrictionList.find(itemRestrictionFile);
 	if (iterFind != itemRestrictionList.end())
@@ -1068,7 +1068,7 @@ void CommoditiesMarket::getCommoditiesServerConnection()
 	if (ObjectIdManager::hasAvailableObjectId())
 	{
 		s_market = new CommoditiesServerConnection(ConfigServerGame::getCommoditiesServerServiceBindInterface(), static_cast<unsigned short>(ConfigServerGame::getCommoditiesServerServiceBindPort()));
-		s_timeMarketConnectionCreated = ::time(nullptr);
+		s_timeMarketConnectionCreated = ::time(NULL);
 	}
 }
 
@@ -1082,10 +1082,10 @@ int CommoditiesMarket::getCommoditiesServerConnectionAgeSeconds()
 	if (s_timeMarketConnectionCreated <= 0)
 		return 0;
 
-	if (s_market == nullptr)
+	if (s_market == NULL)
 		return 0;
 
-	return static_cast<int>(::time(nullptr) - s_timeMarketConnectionCreated);
+	return static_cast<int>(::time(NULL) - s_timeMarketConnectionCreated);
 }
 
 // ----------------------------------------------------------------------
@@ -1295,7 +1295,7 @@ void CommoditiesMarket::onAddAuction(int sequence, int32 result, const NetworkId
 
 	CreatureObject * const auctionCreator = dynamic_cast<CreatureObject*>(NetworkIdManager::getObjectById(auctionOwnerId));
 	ServerObject * const item             = dynamic_cast<ServerObject*>(NetworkIdManager::getObjectById(itemId));
-	Client *client = nullptr;
+	Client *client = NULL;
 	if (auctionCreator)
 		client = auctionCreator->getClient();
 
@@ -1347,7 +1347,7 @@ void CommoditiesMarket::onAddAuction(int sequence, int32 result, const NetworkId
 			if (container)
 			{
 				Container::ContainerErrorCode tmp = Container::CEC_Success;
-				bool result = ContainerInterface::transferItemToVolumeContainer(*container,*item, nullptr, tmp);
+				bool result = ContainerInterface::transferItemToVolumeContainer(*container,*item, NULL, tmp);
 				if (!result)
 				{
 					LOG("CustomerService", ("Auction: Player %s transfer of item (%Ld) to auction container (%Ld) failed with code %d",
@@ -2536,7 +2536,7 @@ void CommoditiesMarket::checkPendingLoads(const NetworkId &itemId)
 
 				bool transferAllowed = true;
 				Container::ContainerErrorCode error = Container::CEC_Success;
-				transferAllowed = ContainerInterface::canTransferTo(targetContainer, *item, nullptr, error);
+				transferAllowed = ContainerInterface::canTransferTo(targetContainer, *item, NULL, error);
 
 				if (!transferAllowed)
 				{
@@ -2603,11 +2603,11 @@ void CommoditiesMarket::onGetItemReply(int32 result, int32 requestId, NetworkId 
 	LOG("AuctionRetrieval", ("CommoditiesMarket::received onGetItemReply for loading object %s for retrieval", itemId.getValueString().c_str()));
 	AuctionResult auctionResult = ar_OK;
 	CreatureObject *player = dynamic_cast<CreatureObject*>(NetworkIdManager::getObjectById(itemOwnerId));
-	Client *client = player ? player->getClient() : nullptr;
+	Client *client = player ? player->getClient() : NULL;
 	bool transactionFailed = false;
 
-	ServerObject* vendor = nullptr;
-	ServerObject* item = nullptr;
+	ServerObject* vendor = NULL;
+	ServerObject* item = NULL;
 	
 	if (result == ARC_AuctionDoesNotExist)
 	{
@@ -2637,7 +2637,7 @@ void CommoditiesMarket::onGetItemReply(int32 result, int32 requestId, NetworkId 
 					vendor = safe_cast<ServerObject*>(ContainerInterface::getContainedByObject(*item));
 					if (vendor && vendor->getNetworkId() == location)
 					{
-						bool retval = ContainerInterface::transferItemToVolumeContainer(*inventory, *item, nullptr, tmp, false);
+						bool retval = ContainerInterface::transferItemToVolumeContainer(*inventory, *item, NULL, tmp, false);
 						if (retval)
 						{
 
@@ -2779,7 +2779,7 @@ void CommoditiesMarket::onIsVendorOwner(const NetworkId & requesterId, const Net
 
 	ServerObject * const auctionContainer = safe_cast<ServerObject*>(NetworkIdManager::getObjectById(container));
 	NetworkId resultContainer = container;
-	const TangibleObject * resultContainerObject = auctionContainer ? auctionContainer->asTangibleObject() : nullptr;
+	const TangibleObject * resultContainerObject = auctionContainer ? auctionContainer->asTangibleObject() : NULL;
 	if (auctionContainer)
 	{
 		marketName = getLocationString(*auctionContainer);
@@ -2952,7 +2952,7 @@ void CommoditiesMarket::onGetItemDetailsReply(int32 result, int32 requestId, Net
 				OutOfBandBase *base = *it;
 				if (!base)
 				{
-					WARNING(true, ("nullptr OOB Base for Auction Data"));
+					WARNING(true, ("NULL OOB Base for Auction Data"));
 					return;
 				}
 				if (base->getTypeId() == OutOfBandPackager::OT_auctionToken)
@@ -2979,7 +2979,7 @@ void CommoditiesMarket::onGetItemDetailsReply(int32 result, int32 requestId, Net
 				base = *it;
 				if (!base)
 				{
-					WARNING(true, ("nullptr OOB Base for Auction Data"));
+					WARNING(true, ("NULL OOB Base for Auction Data"));
 					return;
 				}
 				if (base->getTypeId() == OutOfBandPackager::OT_objectAttributes)
@@ -3624,22 +3624,22 @@ void CommoditiesMarket::updateItemTypeMap(int itemTypeMapVersionNumber, int item
 
 	// get the server template
 	const ObjectTemplate * ot = ObjectTemplateList::fetch(static_cast<uint32>(itemTemplateId));
-	if (ot != nullptr)
+	if (ot != NULL)
 	{
 		objectName = StringId(std::string(ot->getName()));
 
 		// get the shared template 
 		const ServerObjectTemplate * serverOt = ot->asServerObjectTemplate();
-		if (serverOt != nullptr)
+		if (serverOt != NULL)
 		{
 			const std::string sharedTemplateName(serverOt->getSharedTemplate());
 			serverOt->releaseReference();
-			serverOt = nullptr;
+			serverOt = NULL;
 			ot = ObjectTemplateList::fetch(sharedTemplateName);
-			if (ot != nullptr)
+			if (ot != NULL)
 			{
 				const SharedObjectTemplate * sharedOt = ot->asSharedObjectTemplate();
-				if (sharedOt != nullptr)
+				if (sharedOt != NULL)
 				{
 					gameObjectType = static_cast<int>(sharedOt->getGameObjectType());
 					StringId const tempObjectName(objectName);
@@ -3649,19 +3649,19 @@ void CommoditiesMarket::updateItemTypeMap(int itemTypeMapVersionNumber, int item
 						objectName = tempObjectName;
 					}
 					sharedOt->releaseReference();
-					sharedOt = nullptr;
+					sharedOt = NULL;
 				}
 				else
 				{
 					ot->releaseReference();
-					ot = nullptr;
+					ot = NULL;
 				}
 			}
 		}
 		else
 		{
 			ot->releaseReference();
-			ot = nullptr;
+			ot = NULL;
 		}
 	}
 	else

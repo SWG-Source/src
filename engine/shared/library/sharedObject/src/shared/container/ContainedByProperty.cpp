@@ -49,7 +49,7 @@ ContainedByProperty::~ContainedByProperty()
  * property.
  *
  * @return  Pointer to the object that contains the object with this 
- *          ContainedByProperty.  Returns nullptr if the object isn't
+ *          ContainedByProperty.  Returns NULL if the object isn't
  *          contained by anything at the moment.
  */
 

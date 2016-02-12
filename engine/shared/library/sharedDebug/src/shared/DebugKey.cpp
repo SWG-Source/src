@@ -108,7 +108,7 @@ bool DebugKey::isDown(int i)
 bool DebugKey::isActive()
 {
 #if PRODUCTION == 0
-	return ms_currentFlag != nullptr;
+	return ms_currentFlag != NULL;
 #else
 	return false;
 #endif

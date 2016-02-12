@@ -92,10 +92,10 @@ void RemoteDebug::remove(void)
 		return;
 	}
 
-	ms_removeFunction = nullptr;
-	ms_openFunction = nullptr;
-	ms_closeFunction = nullptr;
-	ms_sendFunction = nullptr;
+	ms_removeFunction = NULL;
+	ms_openFunction = NULL;
+	ms_closeFunction = NULL;
+	ms_sendFunction = NULL;
 
 	//empty out session-level data
 	for (StreamMap::iterator it = ms_streams->begin(); it != ms_streams->end(); ++it)
@@ -147,7 +147,7 @@ uint32 RemoteDebug::registerStream(const std::string& streamName)
 	DEBUG_FATAL(!ms_installed, ("remoteDebug not installed"));
 
 	uint32 streamNum = 0;
-	Channel *parent = nullptr;
+	Channel *parent = NULL;
 	std::string base;
 	std::string rest = streamName;
 	//look for subchannels with a double backslash
@@ -203,7 +203,7 @@ uint32 RemoteDebug::registerStaticView(const std::string& channelName)
 {
 	DEBUG_FATAL(!ms_installed, ("remoteDebug not installed"));
 	uint32 staticViewNum = 0;
-	Channel *parent = nullptr;
+	Channel *parent = NULL;
 	std::string base;
 	std::string rest = channelName;
 	//look for subchannels with a double backslash
@@ -356,7 +356,7 @@ uint32 RemoteDebug::registerVariable(const char* variableName, void *memLoc, VAR
 	std::string variable = variableName;
 
 	uint32 variableNum = 0;
-	Channel *parent = nullptr;
+	Channel *parent = NULL;
 	std::string base;
 	std::string rest = variable;
 	//look for subchannels with a double backslash
@@ -375,7 +375,7 @@ uint32 RemoteDebug::registerVariable(const char* variableName, void *memLoc, VAR
 		//only add the variable if we don't have it yet
 		if (variableNumber == -1)
 		{
-			registerVariable(newBase.c_str(), nullptr, BOOL, sendToClients);
+			registerVariable(newBase.c_str(), NULL, BOOL, sendToClients);
 		}
 		//look for any other subChannel
 		uint32 oldRestIndex = restIndex;

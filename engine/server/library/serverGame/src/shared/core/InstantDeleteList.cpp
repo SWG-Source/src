@@ -20,7 +20,7 @@
 
 // ======================================================================
 
-InstantDeleteList::ListType *InstantDeleteList::ms_theList = nullptr;
+InstantDeleteList::ListType *InstantDeleteList::ms_theList = NULL;
 
 // ======================================================================
 
@@ -47,7 +47,7 @@ void InstantDeleteList::install()
 void InstantDeleteList::remove()
 {
 	delete ms_theList;
-	ms_theList = nullptr;
+	ms_theList = NULL;
 }
 
 // ----------------------------------------------------------------------

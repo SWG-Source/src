@@ -250,7 +250,7 @@ public:
 	Unicode::String read_unicodeString();
 
 #if 0
-	real *read_float (int count, real   *array=nullptr);
+	real *read_float (int count, real   *array=NULL);
 #endif
 };
 
@@ -294,7 +294,7 @@ inline int Iff::getRawDataSize(void) const
  * to store raw iff data via a mechanism other than Iff::write().
  * 
  * @return A read-only pointer to the data buffer containing the raw Iff data
- * managed by this Iff object.  It may be nullptr if no data is currently
+ * managed by this Iff object.  It may be NULL if no data is currently
  * managed by the Iff.
  * @see Iff::getRawDataSize(), Iff::write()
  */

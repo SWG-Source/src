@@ -97,14 +97,14 @@ AppearanceTemplate::PreloadManager::~PreloadManager ()
 AppearanceTemplate::AppearanceTemplate(const char *newName)
 :	m_referenceCount(0),
 	m_crcName(new CrcLowerString(newName)),
-	m_extent(nullptr),
-	m_collisionExtent(nullptr),
-	m_hardpoints(nullptr),
-	m_floorName(nullptr),
+	m_extent(NULL),
+	m_collisionExtent(NULL),
+	m_hardpoints(NULL),
+	m_floorName(NULL),
 	m_preloadManager (0)
 {
 	//-- Save info on most recently constructed appearance template.
-	IGNORE_RETURN(snprintf(ms_crashReportInfo, sizeof(ms_crashReportInfo) - 1, "AppearanceTemplate: %s\n", newName ? newName : "<nullptr>"));
+	IGNORE_RETURN(snprintf(ms_crashReportInfo, sizeof(ms_crashReportInfo) - 1, "AppearanceTemplate: %s\n", newName ? newName : "<NULL>"));
 	ms_crashReportInfo[sizeof(ms_crashReportInfo) - 1] = '\0';
 }
 
@@ -118,10 +118,10 @@ AppearanceTemplate::~AppearanceTemplate(void)
 	delete m_crcName;
 
 	ExtentList::release(m_extent);
-	m_extent = nullptr;
+	m_extent = NULL;
 
 	ExtentList::release(m_collisionExtent);
-	m_collisionExtent = nullptr;
+	m_collisionExtent = NULL;
 
 	if (m_hardpoints)
 	{
@@ -482,7 +482,7 @@ const CrcLowerString &AppearanceTemplate::getCrcName() const
 /**
  *Get the name of this AppearanceTemplate.
  *
- *This routine may return nullptr.
+ *This routine may return NULL.
  */
 
 const char *AppearanceTemplate::getName() const

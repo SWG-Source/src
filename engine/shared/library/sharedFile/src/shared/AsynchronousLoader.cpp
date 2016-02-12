@@ -169,9 +169,9 @@ void AsynchronousLoader::install(const char *fileName)
 				const int numberOfExtensions = iff.getChunkLengthTotal(sizeof(int32));
 				ms_extensionFunctionsList.reserve(numberOfExtensions);
 				ExtensionFunctions extensionFunctions;
-				extensionFunctions.extension = nullptr;
-				extensionFunctions.fetchFunction = nullptr;
-				extensionFunctions.releaseFunction = nullptr;
+				extensionFunctions.extension = NULL;
+				extensionFunctions.fetchFunction = NULL;
+				extensionFunctions.releaseFunction = NULL;
 				for (int i = 0; i < numberOfExtensions; ++i)
 				{
 					extensionFunctions.extension = ms_fileData + iff.read_int32();
@@ -235,10 +235,10 @@ void AsynchronousLoaderNamespace::remove()
 {
 	DEBUG_FATAL(!ms_installed, ("not installed"));
 	Request *request = reinterpret_cast<Request*>(ms_requestMemoryBlockManager->allocate());
-	request->fileRecordList = nullptr;
-	request->callback = nullptr;
-	request->data = nullptr;
-	request->cachedFiles = nullptr;
+	request->fileRecordList = NULL;
+	request->callback = NULL;
+	request->data = NULL;
+	request->cachedFiles = NULL;
 
 	submitRequest(request);
 
@@ -270,7 +270,7 @@ void AsynchronousLoaderNamespace::remove()
 	ms_cachedFilesPool.clear();
 
 	delete ms_requestMemoryBlockManager;
-	ms_requestMemoryBlockManager = nullptr;
+	ms_requestMemoryBlockManager = NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -369,7 +369,7 @@ void AsynchronousLoader::add(const char *fileName, Callback callback, void *data
 		request->fileRecordList = i->second;
 		request->callback = callback;
 		request->data = data;
-		request->cachedFiles = nullptr;
+		request->cachedFiles = NULL;
 		submitRequest(request);
 	}
 	else
@@ -390,8 +390,8 @@ void AsynchronousLoader::remove(Callback callback, void *data)
 			for (Requests::iterator i = ms_pendingRequests.begin(); i != iEnd; ++i)
 				if ((*i)->callback == callback && (*i)->data == data)
 				{
-					(*i)->callback = nullptr;
-					(*i)->data = nullptr;
+					(*i)->callback = NULL;
+					(*i)->data = NULL;
 				}
 		}
 
@@ -400,8 +400,8 @@ void AsynchronousLoader::remove(Callback callback, void *data)
 			for (Requests::iterator i = ms_completedRequests.begin(); i != iEnd; ++i)
 				if ((*i)->callback == callback && (*i)->data == data)
 				{
-					(*i)->callback = nullptr;
-					(*i)->data = nullptr;
+					(*i)->callback = NULL;
+					(*i)->data = NULL;
 				}
 		}
 
@@ -466,8 +466,8 @@ void AsynchronousLoaderNamespace::threadRoutine()
 
 				CachedFile cachedFile;
 				cachedFile.fileRecord = fileRecord;
-				cachedFile.file = nullptr;
-				cachedFile.resource = nullptr;
+				cachedFile.file = NULL;
+				cachedFile.resource = NULL;
 
 				// check if the resource is already loaded
 				if (!fileRecord->alreadyCached)
@@ -622,7 +622,7 @@ void AsynchronousLoader::processCallbacks()
 							else
 								bytes += cachedFile.file->length();
 							TreeFile::addCachedFile(cachedFile.fileRecord->fileName, cachedFile.file);
-							cachedFile.file = nullptr;
+							cachedFile.file = NULL;
 						}
 					}
 				}
@@ -653,13 +653,13 @@ void AsynchronousLoader::processCallbacks()
 						else
 							bytes += cachedFile.file->length();
 						delete cachedFile.file;
-						cachedFile.file = nullptr;
+						cachedFile.file = NULL;
 					}
 
 					if (cachedFile.resource)
 					{
 						ms_extensionFunctionsList[cachedFile.fileRecord->extensionFunctionsIndex].releaseFunction(cachedFile.resource);
-						cachedFile.resource = nullptr;
+						cachedFile.resource = NULL;
 					}
 				}
 				request->cachedFiles->clear();
@@ -667,7 +667,7 @@ void AsynchronousLoader::processCallbacks()
 				ms_mutex.enter();
 
 					ms_cachedFilesPool.push_back(request->cachedFiles);
-					request->cachedFiles = nullptr;
+					request->cachedFiles = NULL;
 
 				ms_mutex.leave();
 			}

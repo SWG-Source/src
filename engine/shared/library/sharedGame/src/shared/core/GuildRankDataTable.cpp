@@ -65,7 +65,7 @@ void GuildRankDataTable::install()
 		FATAL((columnRankSlotId < 0), ("column \"rankSlotId\" not found in %s", cs_guildRankDataTableName));
 		FATAL((columnTitle < 0), ("column \"title\" not found in %s", cs_guildRankDataTableName));
 
-		GuildRankDataTable::GuildRank const * currentRank = nullptr;
+		GuildRankDataTable::GuildRank const * currentRank = NULL;
 
 		int const numRows = table->getNumRows();
 		std::string rankName, alternateTitle;
@@ -207,7 +207,7 @@ GuildRankDataTable::GuildRank const * GuildRankDataTable::getRank(std::string co
 	if (iterFind != s_allGuildRanksByName.end())
 		return iterFind->second;
 
-	return nullptr;
+	return NULL;
 }
 
 //----------------------------------------------------------------------
@@ -218,7 +218,7 @@ GuildRankDataTable::GuildRank const * GuildRankDataTable::getRankForDisplayRankN
 	if (iterFind != s_allGuildRanksByDisplayName.end())
 		return iterFind->second;
 
-	return nullptr;
+	return NULL;
 }
 
 //----------------------------------------------------------------------
@@ -229,7 +229,7 @@ GuildRankDataTable::GuildRank const * GuildRankDataTable::isARankTitle(std::stri
 	if (iterFind != s_allGuildRanksByTitle.end())
 		return iterFind->second;
 
-	return nullptr;
+	return NULL;
 }
 
 // ======================================================================

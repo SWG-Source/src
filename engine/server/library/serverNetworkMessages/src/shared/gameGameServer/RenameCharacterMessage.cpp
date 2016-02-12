@@ -64,11 +64,11 @@ RenameCharacterMessageEx::RenameCharacterMessageEx(RenameCharacterMessageSource 
 		static Unicode::String const delimiters(Unicode::narrowToWide(" "));
 
 		Unicode::UnicodeStringVector newNameTokens;
-		if (!Unicode::tokenize(newName, newNameTokens, &delimiters, nullptr))
+		if (!Unicode::tokenize(newName, newNameTokens, &delimiters, NULL))
 			newNameTokens.clear();
 
 		Unicode::UnicodeStringVector oldNameTokens;
-		if (!Unicode::tokenize(oldName, oldNameTokens, &delimiters, nullptr))
+		if (!Unicode::tokenize(oldName, oldNameTokens, &delimiters, NULL))
 			oldNameTokens.clear();
 
 		m_lastNameChangeOnly.set(((newNameTokens.size() >= 1) && (oldNameTokens.size() >= 1) && Unicode::caseInsensitiveCompare(newNameTokens[0], oldNameTokens[0])));

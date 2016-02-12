@@ -45,7 +45,7 @@ void CombatTracker::getInterestedViewers(TangibleObject const *defender, std::ve
 	AICreatureController const * const defenderAiCreatureController = AICreatureController::asAiCreatureController(defender->getController());
 	bool const defenderIsInWorldCell = defender->isInWorldCell();
 
-	if (defenderAiCreatureController != nullptr)
+	if (defenderAiCreatureController != NULL)
 	{
 		ServerWorld::findObjectsInRange(defender->getPosition_w(), defenderAiCreatureController->getAssistRadius(), unfilteredViewers);
 
@@ -54,7 +54,7 @@ void CombatTracker::getInterestedViewers(TangibleObject const *defender, std::ve
 			bool interested = true;
 			ServerObject const * const serverObject = *i;
 
-			if (   (serverObject == nullptr)
+			if (   (serverObject == NULL)
 				|| (serverObject == defender)
 				|| serverObject->isPlayerControlled()
 				|| !serverObject->wantSawAttackTriggers())
@@ -65,7 +65,7 @@ void CombatTracker::getInterestedViewers(TangibleObject const *defender, std::ve
 			{
 				TangibleObject const * const tangibleObject = serverObject->asTangibleObject();
 
-				if (tangibleObject != nullptr)
+				if (tangibleObject != NULL)
 				{
 					if (   tangibleObject->isInCombat()
 						|| tangibleObject->isDisabled()
@@ -77,7 +77,7 @@ void CombatTracker::getInterestedViewers(TangibleObject const *defender, std::ve
 					{
 						CreatureObject const * const creatureObject = tangibleObject->asCreatureObject();
 
-						if (creatureObject != nullptr)
+						if (creatureObject != NULL)
 						{
 							if (   creatureObject->isIncapacitated()
 								|| creatureObject->isDead())
@@ -88,7 +88,7 @@ void CombatTracker::getInterestedViewers(TangibleObject const *defender, std::ve
 							{	
 								AICreatureController const * const aiCreatureController = AICreatureController::asAiCreatureController(creatureObject->getController());
 
-								if (aiCreatureController != nullptr)
+								if (aiCreatureController != NULL)
 								{
 									if (aiCreatureController->isRetreating())
 									{
@@ -138,7 +138,7 @@ void CombatTracker::update()
 			{
 				TangibleObject const * const attackerTangibleObject = TangibleObject::asTangibleObject(iterAttackers->getObject());
 
-				if (attackerTangibleObject != nullptr)
+				if (attackerTangibleObject != NULL)
 				{
 					localAttackers.push_back(attackerTangibleObject->getNetworkId());
 				}
@@ -158,7 +158,7 @@ void CombatTracker::update()
 					ServerObject * const combatViewer = *iterCombatViewers;
 					GameScriptObject * const gameScriptObject = GameScriptObject::asGameScriptObject(combatViewer);
 
-					if (gameScriptObject != nullptr)
+					if (gameScriptObject != NULL)
 					{
 						ScriptParams scriptParams;
 						scriptParams.addParam(defender->getNetworkId());

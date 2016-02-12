@@ -93,10 +93,10 @@ Tag ServerVehicleObjectTemplate::getTemplateVersion(void) const
  */
 Tag ServerVehicleObjectTemplate::getHighestTemplateVersion(void) const
 {
-	if (m_baseData == nullptr)
+	if (m_baseData == NULL)
 		return m_templateVersion;
 	const ServerVehicleObjectTemplate * base = dynamic_cast<const ServerVehicleObjectTemplate *>(m_baseData);
-	if (base == nullptr)
+	if (base == NULL)
 		return m_templateVersion;
 	return std::max(m_templateVersion, base->getHighestTemplateVersion());
 } // ServerVehicleObjectTemplate::getHighestTemplateVersion
@@ -120,33 +120,33 @@ std::string testDataValue = DefaultString;
 UNREF(testData);
 #endif
 
-	const ServerVehicleObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerVehicleObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerVehicleObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getFuelType(true);
 #endif
 	}
 
 	if (!m_fuelType.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter fuelType in template %s", DataResource::getName()));
 			return DefaultString;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter fuelType has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter fuelType has not been defined in template %s!", DataResource::getName()));
 			return base->getFuelType();
 		}
 	}
 
 	const std::string & value = m_fuelType.getValue();
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -162,26 +162,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const ServerVehicleObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerVehicleObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerVehicleObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getCurrentFuel(true);
 #endif
 	}
 
 	if (!m_currentFuel.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter currentFuel in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter currentFuel has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter currentFuel has not been defined in template %s!", DataResource::getName()));
 			return base->getCurrentFuel();
 		}
 	}
@@ -191,9 +191,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getCurrentFuel();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -210,7 +210,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -226,26 +226,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const ServerVehicleObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerVehicleObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerVehicleObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getCurrentFuelMin(true);
 #endif
 	}
 
 	if (!m_currentFuel.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter currentFuel in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter currentFuel has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter currentFuel has not been defined in template %s!", DataResource::getName()));
 			return base->getCurrentFuelMin();
 		}
 	}
@@ -255,9 +255,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getCurrentFuelMin();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -274,7 +274,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -290,26 +290,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const ServerVehicleObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerVehicleObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerVehicleObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getCurrentFuelMax(true);
 #endif
 	}
 
 	if (!m_currentFuel.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter currentFuel in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter currentFuel has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter currentFuel has not been defined in template %s!", DataResource::getName()));
 			return base->getCurrentFuelMax();
 		}
 	}
@@ -319,9 +319,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getCurrentFuelMax();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -338,7 +338,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -354,26 +354,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const ServerVehicleObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerVehicleObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerVehicleObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getMaxFuel(true);
 #endif
 	}
 
 	if (!m_maxFuel.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter maxFuel in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter maxFuel has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter maxFuel has not been defined in template %s!", DataResource::getName()));
 			return base->getMaxFuel();
 		}
 	}
@@ -383,9 +383,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getMaxFuel();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -402,7 +402,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -418,26 +418,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const ServerVehicleObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerVehicleObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerVehicleObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getMaxFuelMin(true);
 #endif
 	}
 
 	if (!m_maxFuel.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter maxFuel in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter maxFuel has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter maxFuel has not been defined in template %s!", DataResource::getName()));
 			return base->getMaxFuelMin();
 		}
 	}
@@ -447,9 +447,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getMaxFuelMin();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -466,7 +466,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -482,26 +482,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const ServerVehicleObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerVehicleObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerVehicleObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getMaxFuelMax(true);
 #endif
 	}
 
 	if (!m_maxFuel.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter maxFuel in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter maxFuel has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter maxFuel has not been defined in template %s!", DataResource::getName()));
 			return base->getMaxFuelMax();
 		}
 	}
@@ -511,9 +511,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getMaxFuelMax();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -530,7 +530,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -546,26 +546,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const ServerVehicleObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerVehicleObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerVehicleObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getConsumpsion(true);
 #endif
 	}
 
 	if (!m_consumpsion.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter consumpsion in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter consumpsion has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter consumpsion has not been defined in template %s!", DataResource::getName()));
 			return base->getConsumpsion();
 		}
 	}
@@ -575,9 +575,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getConsumpsion();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -594,7 +594,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -610,26 +610,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const ServerVehicleObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerVehicleObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerVehicleObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getConsumpsionMin(true);
 #endif
 	}
 
 	if (!m_consumpsion.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter consumpsion in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter consumpsion has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter consumpsion has not been defined in template %s!", DataResource::getName()));
 			return base->getConsumpsionMin();
 		}
 	}
@@ -639,9 +639,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getConsumpsionMin();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -658,7 +658,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -674,26 +674,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const ServerVehicleObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerVehicleObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerVehicleObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getConsumpsionMax(true);
 #endif
 	}
 
 	if (!m_consumpsion.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter consumpsion in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter consumpsion has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter consumpsion has not been defined in template %s!", DataResource::getName()));
 			return base->getConsumpsionMax();
 		}
 	}
@@ -703,9 +703,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getConsumpsionMax();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -722,7 +722,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -774,12 +774,12 @@ char paramName[MAX_NAME_SIZE];
 		file.read_string(baseFilename);
 		file.exitChunk();
 		const ObjectTemplate *base = ObjectTemplateList::fetch(baseFilename);
-		DEBUG_WARNING(base == nullptr, ("was unable to load base template %s", baseFilename.c_str()));
-		if (m_baseData == base && base != nullptr)
+		DEBUG_WARNING(base == NULL, ("was unable to load base template %s", baseFilename.c_str()));
+		if (m_baseData == base && base != NULL)
 			base->releaseReference();
 		else
 		{
-			if (m_baseData != nullptr)
+			if (m_baseData != NULL)
 				m_baseData->releaseReference();
 			m_baseData = base;
 		}

@@ -528,10 +528,10 @@ void ConfigServerGame::install(void)
 	// GCW score decay time(s)
 	data->gcwScoreDecayTime.clear();
 	int index = 0;
-	char const * dayOfWeek = nullptr;
-	char const * hour = nullptr;
-	char const * minute = nullptr;
-	char const * second = nullptr;
+	char const * dayOfWeek = NULL;
+	char const * hour = NULL;
+	char const * minute = NULL;
+	char const * second = NULL;
 	do
 	{
 		dayOfWeek = ConfigFile::getKeyString("GameServer", "gcwScoreDecayTimeDayOfWeek", index, 0);

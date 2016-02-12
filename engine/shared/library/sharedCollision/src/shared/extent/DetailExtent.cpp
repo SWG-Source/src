@@ -232,11 +232,11 @@ void DetailExtent::updateBounds ( void )
 
 int countExtents ( BaseExtent const * extent )
 {
-	if(extent == nullptr) return 0;
+	if(extent == NULL) return 0;
 
 	CompositeExtent const * composite = dynamic_cast<CompositeExtent const *>(extent);
 
-	if(composite == nullptr) return 1;
+	if(composite == NULL) return 1;
 
 	int accum = 0;
 

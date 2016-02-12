@@ -951,7 +951,7 @@ DynamicVariableParamData::~DynamicVariableParamData()
 				for (int i = 0; i < count; ++i)
 				{
 					DynamicVariableParamData *temp = m_data.lparam->at(i);
-					m_data.lparam->at(i) = nullptr;
+					m_data.lparam->at(i) = NULL;
 					delete temp;
 				}
 				delete m_data.lparam;
@@ -1134,15 +1134,15 @@ void DynamicVariableParam::cleanSingleParam(void)
 	{
 		case DynamicVariableParamData::INTEGER:
 			delete m_dataSingle.m_data.iparam;
-			m_dataSingle.m_data.iparam = nullptr;
+			m_dataSingle.m_data.iparam = NULL;
 			break;
 		case DynamicVariableParamData::FLOAT:
 			delete m_dataSingle.m_data.fparam;
-			m_dataSingle.m_data.fparam = nullptr;
+			m_dataSingle.m_data.fparam = NULL;
 			break;
 		case DynamicVariableParamData::STRING:
 			delete m_dataSingle.m_data.sparam;
-			m_dataSingle.m_data.sparam = nullptr;
+			m_dataSingle.m_data.sparam = NULL;
 			break;
 		case DynamicVariableParamData::LIST:
 			{
@@ -1152,11 +1152,11 @@ void DynamicVariableParam::cleanSingleParam(void)
 					++iter)
 				{
 					delete *iter;
-					*iter = nullptr;
+					*iter = NULL;
 				}
 			}
 			delete m_dataSingle.m_data.lparam;
-			m_dataSingle.m_data.lparam = nullptr;
+			m_dataSingle.m_data.lparam = NULL;
 			break;
 		case DynamicVariableParamData::UNKNOWN:
 		default:

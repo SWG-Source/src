@@ -31,7 +31,7 @@ GameServerMessageArchive::~GameServerMessageArchive()
 
 void GameServerMessageArchive::install()
 {
-	if (getInstance() == nullptr)
+	if (getInstance() == NULL)
 	{
 		setInstance(new GameServerMessageArchive);
 		ExitChain::add(GameServerMessageArchive::remove, "GameServerMessageArchive::remove");

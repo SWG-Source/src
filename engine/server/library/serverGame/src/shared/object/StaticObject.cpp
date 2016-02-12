@@ -21,7 +21,7 @@
 #include "sharedObject/AppearanceTemplateList.h"
 #include "sharedObject/ObjectTemplateList.h"
 
-const SharedObjectTemplate * StaticObject::m_defaultSharedTemplate = nullptr;
+const SharedObjectTemplate * StaticObject::m_defaultSharedTemplate = NULL;
 
 //-----------------------------------------------------------------------
 
@@ -39,7 +39,7 @@ StaticObject::StaticObject(const ServerStaticObjectTemplate* newTemplate) :
 		{
 			Appearance * newAppearance = AppearanceTemplateList::createAppearance(appearanceString.c_str());
 
-			if(newAppearance != nullptr)
+			if(newAppearance != NULL)
 			{
 				setAppearance(newAppearance);
 			} else {
@@ -82,13 +82,13 @@ const SharedObjectTemplate * StaticObject::getDefaultSharedTemplate(void) const
 {
 static const ConstCharCrcLowerString templateName("object/static/base/shared_static_default.iff");
 
-	if (m_defaultSharedTemplate == nullptr)
+	if (m_defaultSharedTemplate == NULL)
 	{
 		m_defaultSharedTemplate = safe_cast<const SharedObjectTemplate *>(
 			ObjectTemplateList::fetch(templateName));
-		WARNING_STRICT_FATAL(m_defaultSharedTemplate == nullptr, ("Cannot create "
+		WARNING_STRICT_FATAL(m_defaultSharedTemplate == NULL, ("Cannot create "
 			"default shared object template %s", templateName.getString()));
-		if (m_defaultSharedTemplate != nullptr)
+		if (m_defaultSharedTemplate != NULL)
 			ExitChain::add (removeDefaultTemplate, "StaticObject::removeDefaultTemplate");
 	}
 	return m_defaultSharedTemplate;
@@ -101,10 +101,10 @@ static const ConstCharCrcLowerString templateName("object/static/base/shared_sta
  */
 void StaticObject::removeDefaultTemplate(void)
 {
-	if (m_defaultSharedTemplate != nullptr)
+	if (m_defaultSharedTemplate != NULL)
 	{
 		m_defaultSharedTemplate->releaseReference();
-		m_defaultSharedTemplate = nullptr;
+		m_defaultSharedTemplate = NULL;
 	}
 }	// StaticObject::removeDefaultTemplate
 

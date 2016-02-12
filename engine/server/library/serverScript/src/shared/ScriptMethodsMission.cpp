@@ -170,17 +170,17 @@ void JNICALL ScriptMethodsMissionNamespace::abortMission(JNIEnv * env, jobject s
 			}
 			else
 			{
-				DEBUG_WARNING(true, ("[designer bug] abortMission() missionObject is nullptr"));
+				DEBUG_WARNING(true, ("[designer bug] abortMission() missionObject is NULL"));
 			}
 		}
 		else
 		{
-			DEBUG_WARNING(true, ("[programmer bug] abortMission() self is nullptr"));
+			DEBUG_WARNING(true, ("[programmer bug] abortMission() self is NULL"));
 		}
 	}
 	else
 	{
-		DEBUG_WARNING(true, ("[programmer bug] abortMission() JNIEnv is nullptr"));
+		DEBUG_WARNING(true, ("[programmer bug] abortMission() JNIEnv is NULL"));
 	}
 }
 
@@ -283,17 +283,17 @@ jstring JNICALL ScriptMethodsMissionNamespace::getMissionCreator(JNIEnv * env, j
 			}
 			else
 			{
-				DEBUG_WARNING(true, ("[designer bug] getMissionCreator() missionObject (parameter 1) is nullptr"));
+				DEBUG_WARNING(true, ("[designer bug] getMissionCreator() missionObject (parameter 1) is NULL"));
 			}
 		}
 		else
 		{
-			DEBUG_WARNING(true, ("[programmer bug] getMissionCreator() self is nullptr"));
+			DEBUG_WARNING(true, ("[programmer bug] getMissionCreator() self is NULL"));
 		}
 	}
 	else
 	{
-		DEBUG_WARNING(true, ("[programmer bug] getMissionCreator() JNIEnv is nullptr"));
+		DEBUG_WARNING(true, ("[programmer bug] getMissionCreator() JNIEnv is NULL"));
 	}
 	return result;
 }
@@ -304,13 +304,13 @@ jobject JNICALL ScriptMethodsMissionNamespace::getMissionDescription(JNIEnv * en
 {
 	if(! env)
 	{
-		DEBUG_WARNING(true, ("[programmer bug] getMissionDescription() JNIEnv is nullptr"));
+		DEBUG_WARNING(true, ("[programmer bug] getMissionDescription() JNIEnv is NULL"));
 		return 0;
 	}
 
 	if(! missionObject)
 	{
-		DEBUG_WARNING(true, ("[designer bug] getMissionDescription() missionObject (parameter 1) is nullptr"));
+		DEBUG_WARNING(true, ("[designer bug] getMissionDescription() missionObject (parameter 1) is NULL"));
 		return 0;
 	}
 
@@ -352,17 +352,17 @@ jint JNICALL ScriptMethodsMissionNamespace::getMissionDifficulty(JNIEnv * env, j
 			}
 			else
 			{
-				DEBUG_WARNING(true, ("[designer bug] getMissionDifficulty() missionObject (parameter 1) is nullptr"));
+				DEBUG_WARNING(true, ("[designer bug] getMissionDifficulty() missionObject (parameter 1) is NULL"));
 			}
 		}
 		else
 		{
-			DEBUG_WARNING(true, ("[programmer bug] getMissionDifficulty() self is nullptr"));
+			DEBUG_WARNING(true, ("[programmer bug] getMissionDifficulty() self is NULL"));
 		}
 	}
 	else
 	{
-		DEBUG_WARNING(true, ("[programmer bug] getMissionDifficulty() JNIEnv is nullptr"));
+		DEBUG_WARNING(true, ("[programmer bug] getMissionDifficulty() JNIEnv is NULL"));
 	}
 	return result;
 }
@@ -390,7 +390,7 @@ jobject JNICALL ScriptMethodsMissionNamespace::getMissionEndLocation(JNIEnv * en
 	}
 	else
 	{
-		DEBUG_WARNING(true, ("[designer bug] getMissionEndLocation() missionObject (parameter1) is nullptr"));
+		DEBUG_WARNING(true, ("[designer bug] getMissionEndLocation() missionObject (parameter1) is NULL"));
 	}
 	return 0;
 }
@@ -418,17 +418,17 @@ jint JNICALL ScriptMethodsMissionNamespace::getMissionReward(JNIEnv * env, jobje
 			}
 			else
 			{
-				DEBUG_WARNING(true, ("[designer bug] getMissionReward() missionObject (parameter 1) is nullptr"));
+				DEBUG_WARNING(true, ("[designer bug] getMissionReward() missionObject (parameter 1) is NULL"));
 			}
 		}
 		else
 		{
-			DEBUG_WARNING(true, ("[programmer bug] getMissionReward() self is nullptr"));
+			DEBUG_WARNING(true, ("[programmer bug] getMissionReward() self is NULL"));
 		}
 	}
 	else
 	{
-		DEBUG_WARNING(true, ("[programmer bug] getMissionReward() JNIEnv is nullptr"));
+		DEBUG_WARNING(true, ("[programmer bug] getMissionReward() JNIEnv is NULL"));
 	}
 	return result;
 }
@@ -454,7 +454,7 @@ jobject JNICALL ScriptMethodsMissionNamespace::getMissionStartLocation(JNIEnv * 
 		}
 	else
 	{
-		DEBUG_WARNING(true, ("[designer bug] getMissionStartLocation() missionObject (parameter 1) is nullptr"));
+		DEBUG_WARNING(true, ("[designer bug] getMissionStartLocation() missionObject (parameter 1) is NULL"));
 	}
 	return 0;
 }
@@ -483,7 +483,7 @@ jstring JNICALL ScriptMethodsMissionNamespace::getMissionTargetName(JNIEnv * env
 	}
 	else
 	{
-		DEBUG_WARNING(true, ("[designer bug] getMissionTargetName() missionObject (parameter 1) is nullptr"));
+		DEBUG_WARNING(true, ("[designer bug] getMissionTargetName() missionObject (parameter 1) is NULL"));
 	}
 	return 0;
 }
@@ -494,7 +494,7 @@ jobject JNICALL ScriptMethodsMissionNamespace::getMissionTitle(JNIEnv * env, job
 {
 	if(! missionObject)
 	{
-		DEBUG_WARNING(true, ("[designer bug] getMissionTitle() missionObject (parameter 1) is nullptr"));
+		DEBUG_WARNING(true, ("[designer bug] getMissionTitle() missionObject (parameter 1) is NULL"));
 		return 0;
 	}
 
@@ -537,7 +537,7 @@ jstring JNICALL ScriptMethodsMissionNamespace::getMissionType(JNIEnv * env, jobj
 	}
 	else
 	{
-		DEBUG_WARNING(true, ("[designer bug] getMissionType() missionObject (parameter 1) is nullptr"));
+		DEBUG_WARNING(true, ("[designer bug] getMissionType() missionObject (parameter 1) is NULL"));
 	}
 	return 0;
 }
@@ -556,7 +556,7 @@ jlong JNICALL ScriptMethodsMissionNamespace::getMissionHolder(JNIEnv * env, jobj
 				MissionObject * mo = 0;
 				if(JavaLibrary::getObject(missionObject, mo))
 				{
-					if (mo != nullptr && mo->getMissionHolderId() != NetworkId::cms_invalid)
+					if (mo != NULL && mo->getMissionHolderId() != NetworkId::cms_invalid)
 					{
 						result = (mo->getMissionHolderId()).getValue();
 					}
@@ -572,17 +572,17 @@ jlong JNICALL ScriptMethodsMissionNamespace::getMissionHolder(JNIEnv * env, jobj
 			}
 			else
 			{
-				DEBUG_WARNING(true, ("[designer bug] getMissionHolder() missionObject (parameter 1) is nullptr"));
+				DEBUG_WARNING(true, ("[designer bug] getMissionHolder() missionObject (parameter 1) is NULL"));
 			}
 		}
 		else
 		{
-			DEBUG_WARNING(true, ("[programmer bug] getMissionHolder() self is nullptr"));
+			DEBUG_WARNING(true, ("[programmer bug] getMissionHolder() self is NULL"));
 		}
 	}
 	else
 	{
-		DEBUG_WARNING(true, ("[programmer bug] getMissionHolder() JNIEnv is nullptr"));
+		DEBUG_WARNING(true, ("[programmer bug] getMissionHolder() JNIEnv is NULL"));
 	}
 	return result;
 }
@@ -609,7 +609,7 @@ jstring JNICALL ScriptMethodsMissionNamespace::getMissionRootScriptName(JNIEnv *
 	}
 	else
 	{
-		DEBUG_WARNING(true, ("[designer bug] getMissionRootScriptName() missionObject (parameter 1) is nullptr"));
+		DEBUG_WARNING(true, ("[designer bug] getMissionRootScriptName() missionObject (parameter 1) is NULL"));
 	}
 	return 0;
 }
@@ -641,22 +641,22 @@ void JNICALL ScriptMethodsMissionNamespace::setMissionCreator(JNIEnv *env, jobje
 				}
 				else
 				{
-					DEBUG_WARNING(true, ("[designer bug] setMissionCreator() creator (parameter 2) is nullptr"));
+					DEBUG_WARNING(true, ("[designer bug] setMissionCreator() creator (parameter 2) is NULL"));
 				}
 			}
 			else
 			{
-				DEBUG_WARNING(true, ("[designer bug] setMissionCreator() missionObject (parameter 1) is nullptr"));
+				DEBUG_WARNING(true, ("[designer bug] setMissionCreator() missionObject (parameter 1) is NULL"));
 			}
 		}
 		else
 		{
-			DEBUG_WARNING(true, ("[programmer bug] setMissionCreator() self is nullptr"));
+			DEBUG_WARNING(true, ("[programmer bug] setMissionCreator() self is NULL"));
 		}
 	}
 	else
 	{
-		DEBUG_WARNING(true, ("[programmer bug] setMissionCreator() JNIEnv is nullptr"));
+		DEBUG_WARNING(true, ("[programmer bug] setMissionCreator() JNIEnv is NULL"));
 	}
 }
 
@@ -686,7 +686,7 @@ void JNICALL ScriptMethodsMissionNamespace::setMissionDescription(JNIEnv * env, 
 	}
 	else
 	{
-		DEBUG_WARNING(true, ("[designer bug] setMissionDescription() missionObject (parameter 1) is nullptr"));
+		DEBUG_WARNING(true, ("[designer bug] setMissionDescription() missionObject (parameter 1) is NULL"));
 	}
 }
 
@@ -708,7 +708,7 @@ void JNICALL ScriptMethodsMissionNamespace::setMissionDifficulty(JNIEnv * env, j
 	}
 	else
 	{
-		DEBUG_WARNING(true, ("[designer bug] setMissionDifficulty() missionObject (parameter 1) is nullptr"));
+		DEBUG_WARNING(true, ("[designer bug] setMissionDifficulty() missionObject (parameter 1) is NULL"));
 	}
 }
 
@@ -764,17 +764,17 @@ void JNICALL ScriptMethodsMissionNamespace::setMissionReward(JNIEnv * env, jobje
 			}
 			else
 			{
-				DEBUG_WARNING(true, ("[designer bug] setMissionProfessionRank() missionObject (parameter 1) is nullptr"));
+				DEBUG_WARNING(true, ("[designer bug] setMissionProfessionRank() missionObject (parameter 1) is NULL"));
 			}
 		}
 		else
 		{
-			DEBUG_WARNING(true, ("[programmer bug] setMissionProfessionRank() self is nullptr"));
+			DEBUG_WARNING(true, ("[programmer bug] setMissionProfessionRank() self is NULL"));
 		}
 	}
 	else
 	{
-		DEBUG_WARNING(true, ("[programmer bug] setMissionProfessionRank() JNIEnv is nullptr"));
+		DEBUG_WARNING(true, ("[programmer bug] setMissionProfessionRank() JNIEnv is NULL"));
 	}
 }
 
@@ -806,7 +806,7 @@ void JNICALL ScriptMethodsMissionNamespace::setMissionStartLocation(JNIEnv * env
 					}
 					else
 					{
-						DEBUG_WARNING(true, ("[designer bug] setMissionStartLocation() location (parameter 2) is nullptr"));
+						DEBUG_WARNING(true, ("[designer bug] setMissionStartLocation() location (parameter 2) is NULL"));
 					}
 				}
 				else
@@ -816,17 +816,17 @@ void JNICALL ScriptMethodsMissionNamespace::setMissionStartLocation(JNIEnv * env
 			}
 			else
 			{
-				DEBUG_WARNING(true, ("[designer bug] setMissionStartLocation() missionObject (parameter 1) is nullptr"));
+				DEBUG_WARNING(true, ("[designer bug] setMissionStartLocation() missionObject (parameter 1) is NULL"));
 			}
 		}
 		else
 		{
-			DEBUG_WARNING(true, ("[programmer bug] setMissionStartLocation() self is nullptr"));
+			DEBUG_WARNING(true, ("[programmer bug] setMissionStartLocation() self is NULL"));
 		}
 	}
 	else
 	{
-		DEBUG_WARNING(true, ("[programmer bug] setMissionStartLocation() JNIEnv is nullptr"));
+		DEBUG_WARNING(true, ("[programmer bug] setMissionStartLocation() JNIEnv is NULL"));
 	}
 }
 
@@ -856,17 +856,17 @@ void JNICALL ScriptMethodsMissionNamespace::setMissionTargetAppearance(JNIEnv * 
 			}
 			else
 			{
-				DEBUG_WARNING(true, ("[designer bug] setMissionTarget() missionObject (parameter 1) is nullptr"));
+				DEBUG_WARNING(true, ("[designer bug] setMissionTarget() missionObject (parameter 1) is NULL"));
 			}
 		}
 		else
 		{
-			DEBUG_WARNING(true, ("[programmer bug] setMissionTarget() self is nullptr"));
+			DEBUG_WARNING(true, ("[programmer bug] setMissionTarget() self is NULL"));
 		}
 	}
 	else
 	{
-		DEBUG_WARNING(true, ("[programmer bug] setMissionTarget() JNIEnv is nullptr"));
+		DEBUG_WARNING(true, ("[programmer bug] setMissionTarget() JNIEnv is NULL"));
 	}
 }
 
@@ -896,17 +896,17 @@ void JNICALL ScriptMethodsMissionNamespace::setMissionTargetName(JNIEnv * env, j
 			}
 			else
 			{
-				DEBUG_WARNING(true, ("[designer bug] setMissionTarget() missionObject (parameter 1) is nullptr"));
+				DEBUG_WARNING(true, ("[designer bug] setMissionTarget() missionObject (parameter 1) is NULL"));
 			}
 		}
 		else
 		{
-			DEBUG_WARNING(true, ("[programmer bug] setMissionTarget() self is nullptr"));
+			DEBUG_WARNING(true, ("[programmer bug] setMissionTarget() self is NULL"));
 		}
 	}
 	else
 	{
-		DEBUG_WARNING(true, ("[programmer bug] setMissionTarget() JNIEnv is nullptr"));
+		DEBUG_WARNING(true, ("[programmer bug] setMissionTarget() JNIEnv is NULL"));
 	}
 }
 
@@ -936,7 +936,7 @@ void JNICALL ScriptMethodsMissionNamespace::setMissionTitle(JNIEnv * env, jobjec
 	}
 	else
 	{
-		DEBUG_WARNING(true, ("[designer bug] setMissionTitle() missionObject (parameter 1) is nullptr"));
+		DEBUG_WARNING(true, ("[designer bug] setMissionTitle() missionObject (parameter 1) is NULL"));
 	}
 }
 
@@ -969,22 +969,22 @@ void JNICALL ScriptMethodsMissionNamespace::setMissionType(JNIEnv *env, jobject 
 				}
 				else
 				{
-					DEBUG_WARNING(true, ("[designer bug] setMissionType() typeName (parameter 2) is nullptr"));
+					DEBUG_WARNING(true, ("[designer bug] setMissionType() typeName (parameter 2) is NULL"));
 				}
 			}
 			else
 			{
-				DEBUG_WARNING(true, ("[designer bug] setMissionType() missionObject (parameter 1) is nullptr"));
+				DEBUG_WARNING(true, ("[designer bug] setMissionType() missionObject (parameter 1) is NULL"));
 			}
 		}
 		else
 		{
-			DEBUG_WARNING(true, ("[programmer bug] setMissionType() self is nullptr"));
+			DEBUG_WARNING(true, ("[programmer bug] setMissionType() self is NULL"));
 		}
 	}
 	else
 	{
-		DEBUG_WARNING(true, ("[programmer bug] setMissionType() JNIEnv is nullptr"));
+		DEBUG_WARNING(true, ("[programmer bug] setMissionType() JNIEnv is NULL"));
 	}
 }
 
@@ -1022,22 +1022,22 @@ void JNICALL ScriptMethodsMissionNamespace::setMissionRootScriptName(JNIEnv *env
 				}
 				else
 				{
-					DEBUG_WARNING(true, ("[designer bug] setMissionRootScriptName() rootScriptName (parameter 2) is nullptr"));
+					DEBUG_WARNING(true, ("[designer bug] setMissionRootScriptName() rootScriptName (parameter 2) is NULL"));
 				}
 			}
 			else
 			{
-				DEBUG_WARNING(true, ("[designer bug] setMissionRootScriptName() missionObject (parameter 1) is nullptr"));
+				DEBUG_WARNING(true, ("[designer bug] setMissionRootScriptName() missionObject (parameter 1) is NULL"));
 			}
 		}
 		else
 		{
-			DEBUG_WARNING(true, ("[programmer bug] setMissionRootScriptName() self is nullptr"));
+			DEBUG_WARNING(true, ("[programmer bug] setMissionRootScriptName() self is NULL"));
 		}
 	}
 	else
 	{
-		DEBUG_WARNING(true, ("[programmer bug] setMissionRootScriptName() JNIEnv is nullptr"));
+		DEBUG_WARNING(true, ("[programmer bug] setMissionRootScriptName() JNIEnv is NULL"));
 	}
 }
 

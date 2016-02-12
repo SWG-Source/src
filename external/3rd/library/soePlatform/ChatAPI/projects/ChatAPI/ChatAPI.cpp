@@ -13,7 +13,7 @@ namespace ChatSystem
 {
 
 ChatAPI::ChatAPI(const char *registrar_host, short registrar_port, const char *server_host, short server_port)
-: m_defaultRoomParams(nullptr), 
+: m_defaultRoomParams(NULL), 
   m_defaultLoginPriority(0), 
   m_defaultEntryType(false)
 {
@@ -25,13 +25,13 @@ ChatAPI::ChatAPI(const char *registrar_host, short registrar_port, const char *s
 ChatAPI::~ChatAPI()
 {
 	delete m_defaultRoomParams;
-	m_defaultRoomParams = nullptr;
+	m_defaultRoomParams = NULL;
 	delete m_core;
-	m_core = nullptr;
+	m_core = NULL;
 }
 
 ChatAPI::ChatAPI(ChatAPICore *core)
-: m_defaultRoomParams(nullptr)
+: m_defaultRoomParams(NULL)
 {
 	m_core = core;
 	m_core->setAPI(this);
@@ -721,7 +721,7 @@ void ChatAPI::setDefaultRoomParams(RoomParams *roomParams)
 {
 	if (roomParams)
 	{
-		if (m_defaultRoomParams == nullptr)
+		if (m_defaultRoomParams == NULL)
 		{
 			m_defaultRoomParams = new RoomParams;
 		}
@@ -732,7 +732,7 @@ void ChatAPI::setDefaultRoomParams(RoomParams *roomParams)
 	else
 	{
 		delete m_defaultRoomParams;
-		m_defaultRoomParams = nullptr;
+		m_defaultRoomParams = NULL;
 	}
 }
 void ChatAPI::setDefaultLoginLocation(const ChatUnicodeString &defaultLoginLocation)

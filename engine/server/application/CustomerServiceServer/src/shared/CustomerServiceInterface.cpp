@@ -38,7 +38,7 @@ using namespace CSAssist;
 ///////////////////////////////////////////////////////////////////////////////
 
 CustomerServiceInterface::ClientInfo::ClientInfo()
- : m_connection(nullptr)
+ : m_connection(NULL)
  , m_stationUserId(0)
  , m_ticketCount(-1)
  , m_pendingTicketCount(0)
@@ -71,10 +71,10 @@ CustomerServiceInterface::~CustomerServiceInterface()
 	delete m_japaneseCategoryList;
 
 	delete m_clientConnectionMap;
-	m_clientConnectionMap = nullptr;
+	m_clientConnectionMap = NULL;
 
 	delete m_suidToNetworkIdMap;
-	m_suidToNetworkIdMap = nullptr;
+	m_suidToNetworkIdMap = NULL;
 }
 
 //-----------------------------------------------------------------------
@@ -97,8 +97,8 @@ void CustomerServiceInterface::OnConnectCSAssist(
 		}
 
 		m_connectionToBackEndEstablised = true;
-		m_englishCategoryTrack = requestGetIssueHierarchy(nullptr, Unicode::narrowToWide("Default").data(), Unicode::narrowToWide("en").data());;
-		m_japaneseCategoryTrack = requestGetIssueHierarchy(nullptr, Unicode::narrowToWide("Default").data(), Unicode::narrowToWide("ja").data());;
+		m_englishCategoryTrack = requestGetIssueHierarchy(NULL, Unicode::narrowToWide("Default").data(), Unicode::narrowToWide("en").data());;
+		m_japaneseCategoryTrack = requestGetIssueHierarchy(NULL, Unicode::narrowToWide("Default").data(), Unicode::narrowToWide("ja").data());;
 	}
 }
 
@@ -117,7 +117,7 @@ void CustomerServiceInterface::OnConnectRejectedCSAssist(const CSAssistGameAPITr
 
 void CustomerServiceInterface::parseIssueChild(CategoryList & categoryList, xmlNodePtr childPtr)
 {
-	static CustomerServiceCategory *currentCategory = nullptr;
+	static CustomerServiceCategory *currentCategory = NULL;
 	xmlNodePtr child = childPtr->children;
 
 	//start element
@@ -142,19 +142,19 @@ void CustomerServiceInterface::parseIssueChild(CategoryList & categoryList, xmlN
 	
 	val = reinterpret_cast<char *>(xmlGetProp(childPtr, (const unsigned char *)"isBugType")); 
 	
-	bool const isBugType = (val != nullptr) && (strcmp(val, "true") == 0);
+	bool const isBugType = (val != NULL) && (strcmp(val, "true") == 0);
 	
 	// Check for service type
 	
 	val = reinterpret_cast<char *>(xmlGetProp(childPtr, (const unsigned char *)"isServiceType")); 
 	
-	bool const isServiceType = (val != nullptr) && (strcmp(val, "true") == 0);
+	bool const isServiceType = (val != NULL) && (strcmp(val, "true") == 0);
 	
 	// Check if valid
 
 	val = reinterpret_cast<char *>(xmlGetProp(childPtr, (const unsigned char *)"invalid")); 
 
-	bool const invalid = (val != nullptr) && (strcmp(val, "true") == 0);
+	bool const invalid = (val != NULL) && (strcmp(val, "true") == 0);
 
 	if (!invalid)
 	{
@@ -187,9 +187,9 @@ void CustomerServiceInterface::parseIssueChild(CategoryList & categoryList, xmlN
 		}
 	}
 
-	while (child != nullptr)
+	while (child != NULL)
 	{
-		if (child->name != nullptr)
+		if (child->name != NULL)
 		{
 			parseIssueChild(categoryList, child);
 		}
@@ -204,7 +204,7 @@ void CustomerServiceInterface::parseIssueChild(CategoryList & categoryList, xmlN
 		if (currentCategory)
 		{
 			delete currentCategory;
-			currentCategory = nullptr;
+			currentCategory = NULL;
 		}
 	}
 
@@ -215,13 +215,13 @@ void CustomerServiceInterface::parseIssueChild(CategoryList & categoryList, xmlN
 
 void CustomerServiceInterface::parseIssueHierarchy(CategoryList & categoryList, Unicode::String const & xmlData)
 {
-	xmlDocPtr xmlInfo = nullptr;
+	xmlDocPtr xmlInfo = NULL;
 	Unicode::UTF8String xmlDataUtf8(Unicode::wideToUTF8(xmlData));
 	
-	if ((xmlInfo = xmlParseMemory(xmlDataUtf8.c_str(), xmlDataUtf8.length())) != nullptr)
+	if ((xmlInfo = xmlParseMemory(xmlDataUtf8.c_str(), xmlDataUtf8.length())) != NULL)
 	{
 		xmlNodePtr xmlCurrent = xmlDocGetRootElement(xmlInfo);
-		if (xmlCurrent != nullptr)
+		if (xmlCurrent != NULL)
 		{
 			parseIssueChild(categoryList, xmlCurrent);
 		}
@@ -247,7 +247,7 @@ void CustomerServiceInterface::OnGetIssueHierarchy(
 		return;
 	}
 
-	if (hierarchyBody != nullptr)
+	if (hierarchyBody != NULL)
 	{
 		if (track == m_englishCategoryTrack)
 		{
@@ -266,7 +266,7 @@ void CustomerServiceInterface::OnGetIssueHierarchy(
 	}
 	else
 	{
-		LOG("CSServer", ("ERROR: nullptr hierarchy returned from platform...why did this happen?", track, modifyData, result, getErrorString(result)));
+		LOG("CSServer", ("ERROR: NULL hierarchy returned from platform...why did this happen?", track, modifyData, result, getErrorString(result)));
 	}
 }
 
@@ -282,9 +282,9 @@ void CustomerServiceInterface::OnCreateTicket(
 	CreateTicketResponseMessage message(result, ticket);
 	const NetworkId *tmpNetworkId = reinterpret_cast<const NetworkId *>(userData);
 
-	LOG("CSServer", ("OnCreateTicket() track(%i) result(%i) (%s) networkId(%s) ticketId(%i)", track, result, getErrorString(result), (tmpNetworkId != nullptr) ? tmpNetworkId->getValueString().c_str() : "NA", ticket));
+	LOG("CSServer", ("OnCreateTicket() track(%i) result(%i) (%s) networkId(%s) ticketId(%i)", track, result, getErrorString(result), (tmpNetworkId != NULL) ? tmpNetworkId->getValueString().c_str() : "NA", ticket));
 
-	if (tmpNetworkId != nullptr)
+	if (tmpNetworkId != NULL)
 	{
 		if (result == CSASSIST_RESULT_SUCCESS)
 		{
@@ -296,7 +296,7 @@ void CustomerServiceInterface::OnCreateTicket(
 		sendToClient(*tmpNetworkId, message);
 
 		delete tmpNetworkId;
-		tmpNetworkId = nullptr;
+		tmpNetworkId = NULL;
 	}
 }
 
@@ -312,14 +312,14 @@ void CustomerServiceInterface::OnAppendTicketComment(
 	AppendCommentResponseMessage message(result, ticket);
 	const NetworkId *tmpNetworkId = reinterpret_cast<const NetworkId *>(userData);
 
-	LOG("CSServer", ("OnAppendTicketComment() track(%i) result(%i) (%s) networkId(%s) ticketId(%i)", track, result, getErrorString(result), (tmpNetworkId != nullptr) ? tmpNetworkId->getValueString().c_str() : "NA", ticket));
+	LOG("CSServer", ("OnAppendTicketComment() track(%i) result(%i) (%s) networkId(%s) ticketId(%i)", track, result, getErrorString(result), (tmpNetworkId != NULL) ? tmpNetworkId->getValueString().c_str() : "NA", ticket));
 
-	if (tmpNetworkId != nullptr)
+	if (tmpNetworkId != NULL)
 	{
 		sendToClient(*tmpNetworkId, message);
 
 		delete tmpNetworkId;
-		tmpNetworkId = nullptr;
+		tmpNetworkId = NULL;
 	}
 }
 
@@ -335,9 +335,9 @@ void CustomerServiceInterface::OnCancelTicket(
 	CancelTicketResponseMessage message(result, ticket);
 	const NetworkId *tmpNetworkId = reinterpret_cast<const NetworkId *>(userData);
 
-	LOG("CSServer", ("OnCancelTicket() track(%i) result(%i) (%s) networkId(%s) ticketId(%i)", track, result, getErrorString(result), (tmpNetworkId != nullptr) ? tmpNetworkId->getValueString().c_str() : "NA", ticket));
+	LOG("CSServer", ("OnCancelTicket() track(%i) result(%i) (%s) networkId(%s) ticketId(%i)", track, result, getErrorString(result), (tmpNetworkId != NULL) ? tmpNetworkId->getValueString().c_str() : "NA", ticket));
 
-	if (tmpNetworkId != nullptr)
+	if (tmpNetworkId != NULL)
 	{
 		if (result == CSASSIST_RESULT_SUCCESS)
 		{
@@ -347,7 +347,7 @@ void CustomerServiceInterface::OnCancelTicket(
 		sendToClient(*tmpNetworkId, message);
 
 		delete tmpNetworkId;
-		tmpNetworkId = nullptr;
+		tmpNetworkId = NULL;
 	}
 }
 
@@ -378,9 +378,9 @@ void CustomerServiceInterface::OnGetTicketByCharacter(
 	GetTicketsResponseMessage message(result, totalNumber, tickets); 	
 	const NetworkId *tmpNetworkId = reinterpret_cast<const NetworkId *>(userData);
 
-	LOG("CSServer", ("OnGetTicketByCharacter() track(%i) result(%i) (%s) networkId(%s) totalNumber(%i) numberReturned(%i)", track, result, getErrorString(result), (tmpNetworkId != nullptr) ? tmpNetworkId->getValueString().c_str() : "NA", totalNumber, numberReturned));
+	LOG("CSServer", ("OnGetTicketByCharacter() track(%i) result(%i) (%s) networkId(%s) totalNumber(%i) numberReturned(%i)", track, result, getErrorString(result), (tmpNetworkId != NULL) ? tmpNetworkId->getValueString().c_str() : "NA", totalNumber, numberReturned));
 
-	if (tmpNetworkId != nullptr)
+	if (tmpNetworkId != NULL)
 	{
 		// Save the number of tickets this player has
 
@@ -396,7 +396,7 @@ void CustomerServiceInterface::OnGetTicketByCharacter(
 		sendToClient(*tmpNetworkId, message);
 
 		delete tmpNetworkId;
-		tmpNetworkId = nullptr;
+		tmpNetworkId = NULL;
 	}
 }
 
@@ -423,14 +423,14 @@ void CustomerServiceInterface::OnGetTicketComments(
 
 	const NetworkId *tmpNetworkId = reinterpret_cast<const NetworkId *>(userData);
 
-	LOG("CSServer", ("OnGetTicketComments() track(%i) result(%i) (%s) networkId(%s) numberRead(%i)", track, result, getErrorString(result), (tmpNetworkId != nullptr) ? tmpNetworkId->getValueString().c_str() : "NA", numberRead));
+	LOG("CSServer", ("OnGetTicketComments() track(%i) result(%i) (%s) networkId(%s) numberRead(%i)", track, result, getErrorString(result), (tmpNetworkId != NULL) ? tmpNetworkId->getValueString().c_str() : "NA", numberRead));
 
-	if (tmpNetworkId != nullptr)
+	if (tmpNetworkId != NULL)
 	{
 		sendToClient(*tmpNetworkId, message);
 
 		delete tmpNetworkId;
-		tmpNetworkId = nullptr;
+		tmpNetworkId = NULL;
 	}
 }
 
@@ -455,14 +455,14 @@ void CustomerServiceInterface::OnSearchKB(
 	SearchKnowledgeBaseResponseMessage message(result, searchResultsVector); 	
 	const NetworkId *tmpNetworkId = reinterpret_cast<const NetworkId *>(userData);
 
-	LOG("CSServer", ("OnSearchKB() track(%i) result(%i) (%s) networkId(%s) numberRead(%i)", track, result, getErrorString(result), (tmpNetworkId != nullptr) ? tmpNetworkId->getValueString().c_str() : "NA", numberRead));
+	LOG("CSServer", ("OnSearchKB() track(%i) result(%i) (%s) networkId(%s) numberRead(%i)", track, result, getErrorString(result), (tmpNetworkId != NULL) ? tmpNetworkId->getValueString().c_str() : "NA", numberRead));
 
-	if (tmpNetworkId != nullptr)
+	if (tmpNetworkId != NULL)
 	{
 		sendToClient(*tmpNetworkId, message);
 
 		delete tmpNetworkId;
-		tmpNetworkId = nullptr;
+		tmpNetworkId = NULL;
 	}
 }
 
@@ -482,12 +482,12 @@ void CustomerServiceInterface::OnGetKBArticle(
 	{
 		GetArticleResponseMessage message(result, Unicode::String(articleBody));
 		const NetworkId *tmpNetworkId = reinterpret_cast<const NetworkId *>(userData);
-		if (tmpNetworkId != nullptr)
+		if (tmpNetworkId != NULL)
 		{
 			sendToClient(*tmpNetworkId, message);
 
 			delete tmpNetworkId;
-			tmpNetworkId = nullptr;
+			tmpNetworkId = NULL;
 		}
 	}
 }
@@ -501,7 +501,7 @@ void CustomerServiceInterface::OnIssueHierarchyChanged(
 {
 	LOG("CSServer", ("OnIssueHierarchyChanged()"));
 
-	requestGetIssueHierarchy(nullptr, version, language);
+	requestGetIssueHierarchy(NULL, version, language);
 }
 
 //-----------------------------------------------------------------------
@@ -512,9 +512,9 @@ void CustomerServiceInterface::OnNewTicketActivity(const CSAssistGameAPITrack tr
 
 	const NetworkId *tmpNetworkId = reinterpret_cast<const NetworkId *>(userData);
 
-	LOG("CSServer", ("OnNewTicketActivity() track(%i) result(%i) (%s) networkId(%s) activity(%s) ticket count(%i)", track, result, getErrorString(result), (tmpNetworkId != nullptr) ? tmpNetworkId->getValueString().c_str() : "NA", NewActivityFlag ? "yes" : "no", HasTickets));
+	LOG("CSServer", ("OnNewTicketActivity() track(%i) result(%i) (%s) networkId(%s) activity(%s) ticket count(%i)", track, result, getErrorString(result), (tmpNetworkId != NULL) ? tmpNetworkId->getValueString().c_str() : "NA", NewActivityFlag ? "yes" : "no", HasTickets));
 
-	if (tmpNetworkId != nullptr)
+	if (tmpNetworkId != NULL)
 	{
 		// Save the number of tickets this player has
 
@@ -530,7 +530,7 @@ void CustomerServiceInterface::OnNewTicketActivity(const CSAssistGameAPITrack tr
 		sendToClient(*tmpNetworkId, message);
 
 		delete tmpNetworkId;
-		tmpNetworkId = nullptr;
+		tmpNetworkId = NULL;
 	}
 }
 
@@ -540,12 +540,12 @@ void CustomerServiceInterface::OnMarkTicketRead(const CSAssistGameAPITrack track
 {
 	const NetworkId *tmpNetworkId = reinterpret_cast<const NetworkId *>(userData);
 
-	LOG("CSServer", ("OnMarkTicketRead() track(%i) result(%i) (%s) networkId(%s)", track, result, getErrorString(result), (tmpNetworkId != nullptr) ? tmpNetworkId->getValueString().c_str() : "NA"));
+	LOG("CSServer", ("OnMarkTicketRead() track(%i) result(%i) (%s) networkId(%s)", track, result, getErrorString(result), (tmpNetworkId != NULL) ? tmpNetworkId->getValueString().c_str() : "NA"));
 
-	if (tmpNetworkId != nullptr)
+	if (tmpNetworkId != NULL)
 	{
 		delete tmpNetworkId;
-		tmpNetworkId = nullptr;
+		tmpNetworkId = NULL;
 	}
 }
 
@@ -575,16 +575,16 @@ void CustomerServiceInterface::OnRegisterCharacter(const CSAssistGameAPITrack tr
 {
 	const NetworkId *tmpNetworkId = reinterpret_cast<const NetworkId *>(userData);
 
-	LOG("CSServer", ("OnRegisterCharacter() track(%i) result(%i) (%s) networkId(%s)", track, result, getErrorString(result), (tmpNetworkId != nullptr) ? tmpNetworkId->getValueString().c_str() : "NA"));
+	LOG("CSServer", ("OnRegisterCharacter() track(%i) result(%i) (%s) networkId(%s)", track, result, getErrorString(result), (tmpNetworkId != NULL) ? tmpNetworkId->getValueString().c_str() : "NA"));
 
-	if (tmpNetworkId != nullptr)
+	if (tmpNetworkId != NULL)
 	{
 		ConnectPlayerResponseMessage message(result);
 		
 		sendToClient(*tmpNetworkId, message);
 
 		delete tmpNetworkId;
-		tmpNetworkId = nullptr;
+		tmpNetworkId = NULL;
 	}
 }
 
@@ -594,9 +594,9 @@ void CustomerServiceInterface::OnUnRegisterCharacter(const CSAssistGameAPITrack 
 {
 	const NetworkId *tmpNetworkId = reinterpret_cast<const NetworkId *>(userData);
 
-	LOG("CSServer", ("OnUnRegisterCharacter() track(%i) result(%i) (%s) networkId(%s)", track, result, getErrorString(result), (tmpNetworkId != nullptr) ? tmpNetworkId->getValueString().c_str() : "NA"));
+	LOG("CSServer", ("OnUnRegisterCharacter() track(%i) result(%i) (%s) networkId(%s)", track, result, getErrorString(result), (tmpNetworkId != NULL) ? tmpNetworkId->getValueString().c_str() : "NA"));
 
-	if (tmpNetworkId != nullptr)
+	if (tmpNetworkId != NULL)
 	{
 		// If the player was successfully unregistered, remove the local cached reference
 
@@ -606,7 +606,7 @@ void CustomerServiceInterface::OnUnRegisterCharacter(const CSAssistGameAPITrack 
 		}
 
 		delete tmpNetworkId;
-		tmpNetworkId = nullptr;
+		tmpNetworkId = NULL;
 	}
 }
 
@@ -708,7 +708,7 @@ void CustomerServiceInterface::sendToClient(const NetworkId &player, const GameN
 		}
 		else
 		{
-			LOG("CSServer", ("sendToClient() Connection is nullptr: networkId(%s) cmdName(%s)", player.getValueString().c_str(), message.getCmdName().c_str()));
+			LOG("CSServer", ("sendToClient() Connection is NULL: networkId(%s) cmdName(%s)", player.getValueString().c_str(), message.getCmdName().c_str()));
 		}
 	}
 	else
@@ -779,7 +779,7 @@ void CustomerServiceInterface::requestUnRegisterCharacter(const NetworkId &reque
 		LOG("CSServer", ("requestUnRegisterCharacter() networkId(%s) suid(%i)", requester.getValueString().c_str(), suid));
 
 		NetworkId *tmpNetworkId = new NetworkId(requester);
-		CSAssistGameAPI::requestUnRegisterCharacter(reinterpret_cast<const void *>(tmpNetworkId), suid, nullptr);
+		CSAssistGameAPI::requestUnRegisterCharacter(reinterpret_cast<const void *>(tmpNetworkId), suid, NULL);
 	}
 	else
 	{

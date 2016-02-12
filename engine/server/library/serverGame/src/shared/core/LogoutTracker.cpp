@@ -87,7 +87,7 @@ void LogoutTracker::add(NetworkId const &networkId)
 	}
 
 	// set the callback
-	getScheduler().setCallback(handleLogoutCallback, nullptr, ConfigServerGame::getUnsafeLogoutTimeMs());
+	getScheduler().setCallback(handleLogoutCallback, NULL, ConfigServerGame::getUnsafeLogoutTimeMs());
 }
 
 // ----------------------------------------------------------------------
@@ -223,7 +223,7 @@ ServerObject *LogoutTracker::findPendingCharacterSave(const NetworkId &character
 		return obj;
 	}
 	else
-		return nullptr;
+		return NULL;
 }
 
 // ======================================================================

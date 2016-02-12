@@ -92,12 +92,12 @@ void SwgPlayerObject::virtualOnSetAuthority()
 	PlayerObject::virtualOnSetAuthority();
 
 	const SwgCreatureObject * owner = safe_cast<const SwgCreatureObject *>(getCreatureObject());
-	if ((owner != nullptr) && owner->isPlayerControlled() && (owner->getBountyValue() > 0))
+	if ((owner != NULL) && owner->isPlayerControlled() && (owner->getBountyValue() > 0))
 	{
 		// tell the Jedi manager our position
 		JediManagerObject * jediManager = static_cast<SwgServerUniverse &>(
 			ServerUniverse::getInstance()).getJediManager();
-		if (jediManager != nullptr)
+		if (jediManager != NULL)
 		{
 			jediManager->updateJediLocation(owner->getNetworkId(), 
 				owner->getPosition_w(), owner->getSceneId());
@@ -192,7 +192,7 @@ void SwgPlayerObject::updateJediLocationTime(float time)
 			// tell the Jedi manager our position
 			JediManagerObject * jediManager = static_cast<SwgServerUniverse &>(
 				ServerUniverse::getInstance()).getJediManager();
-			if (jediManager != nullptr)
+			if (jediManager != NULL)
 			{
 				const CreatureObject * owner = getCreatureObject();
 				if (owner->isInWorld())
@@ -324,7 +324,7 @@ void SwgPlayerObject::setJediBounties(const std::vector<NetworkId> & bounties)
 	// update the Jedi manager
 	JediManagerObject * jediManager = static_cast<SwgServerUniverse &>(
 		ServerUniverse::getInstance()).getJediManager();
-	if (jediManager != nullptr)
+	if (jediManager != NULL)
 	{
 		const CreatureObject * owner = getCreatureObject();
 		jediManager->updateJedi(owner->getNetworkId(), bounties);
@@ -351,7 +351,7 @@ bool SwgPlayerObject::getJediBounties(std::vector<NetworkId> & bounties)
 
 	bounties.clear();
 	SwgCreatureObject * owner = safe_cast<SwgCreatureObject *>(getCreatureObject());
-	if (owner != nullptr)
+	if (owner != NULL)
 	{
 		if (owner->getObjVars().getItem(OBJVAR_JEDI_BOUNTIES, bounties))
 		{

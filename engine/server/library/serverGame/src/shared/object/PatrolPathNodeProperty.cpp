@@ -36,7 +36,7 @@ m_roots(new std::set<CachedNetworkId>)
 PatrolPathNodeProperty::~PatrolPathNodeProperty()
 {
 	delete m_roots;
-	m_roots = nullptr;
+	m_roots = NULL;
 }
 
 //-------------------------------------------------------------------------

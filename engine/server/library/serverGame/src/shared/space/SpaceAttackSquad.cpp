@@ -68,7 +68,7 @@ void SpaceAttackSquad::onAddUnit(NetworkId const & unit)
 {
 	AiShipController * const aiShipController = AiShipController::getAiShipController(unit);
 	
-	if (aiShipController != nullptr)
+	if (aiShipController != NULL)
 	{
 		aiShipController->setAttackSquad(this);
 	}
@@ -96,7 +96,7 @@ void SpaceAttackSquad::onNewLeader(NetworkId const & /*oldLeader*/)
 {
 	AiShipController * const newLeaderAiShipController = AiShipController::getAiShipController(getLeader());
 
-	if (newLeaderAiShipController != nullptr)
+	if (newLeaderAiShipController != NULL)
 	{
 		m_leaderOffsetPosition_l = -newLeaderAiShipController->getFormationPosition_l();
 	}
@@ -116,7 +116,7 @@ void SpaceAttackSquad::onSetUnitFormationPosition_l(NetworkId const & unit, Vect
 {
 	AiShipController * const aiShipController = AiShipController::getAiShipController(unit);
 
-	if (aiShipController != nullptr)
+	if (aiShipController != NULL)
 	{
 		aiShipController->setAttackFormationPosition_l(position_l);
 	}
@@ -154,7 +154,7 @@ CachedNetworkId const & SpaceAttackSquad::getPrimaryAttackTarget() const
 {
 	Object * const leaderObject = getLeader().getObject();
 
-	if (leaderObject != nullptr)
+	if (leaderObject != NULL)
 	{
 		AiShipController * const leaderAiShipController = AiShipController::asAiShipController(leaderObject->getController());
 
@@ -163,7 +163,7 @@ CachedNetworkId const & SpaceAttackSquad::getPrimaryAttackTarget() const
 
 #ifdef _DEBUG
 	FormattedString<1024> fs;
-	char const * const text = fs.sprintf("SpaceAttackSquad::getPrimaryAttackTarget() ERROR: Why is the attack squad leader(%s) object nullptr?", getLeader().getValueString().c_str());
+	char const * const text = fs.sprintf("SpaceAttackSquad::getPrimaryAttackTarget() ERROR: Why is the attack squad leader(%s) object NULL?", getLeader().getValueString().c_str());
 	DEBUG_WARNING(true, (text));
 	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", (text));
 #endif // _DEBUG
@@ -176,7 +176,7 @@ bool SpaceAttackSquad::isAttacking() const
 {
 	Object * const leaderObject = getLeader().getObject();
 
-	if (leaderObject != nullptr)
+	if (leaderObject != NULL)
 	{
 		AiShipController * const leaderAiShipController = AiShipController::asAiShipController(leaderObject->getController());
 
@@ -185,7 +185,7 @@ bool SpaceAttackSquad::isAttacking() const
 
 #ifdef _DEBUG
 	FormattedString<1024> fs;
-	char const * const text = fs.sprintf("SpaceAttackSquad::isAttacking() ERROR: Why is the attack squad leader(%s) object nullptr?", getLeader().getValueString().c_str());
+	char const * const text = fs.sprintf("SpaceAttackSquad::isAttacking() ERROR: Why is the attack squad leader(%s) object NULL?", getLeader().getValueString().c_str());
 	DEBUG_WARNING(true, (text));
 	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", (text));
 #endif // _DEBUG
@@ -231,7 +231,7 @@ int SpaceAttackSquad::getMaxNumberOfUnits() const
 		NetworkId const & unit = unitMap.begin()->first;
 		AiShipController * const unitAiShipController = AiShipController::getAiShipController(unit);
 
-		if (unitAiShipController != nullptr)
+		if (unitAiShipController != NULL)
 		{
 			if (unitAiShipController->getAttackOrders() == AiShipController::AO_holdFire)
 			{
@@ -282,10 +282,10 @@ void SpaceAttackSquad::calculateAttackRanges()
 	{
 		CachedNetworkId const & unit = iterUnitMap->first;
 		Object * const unitObject = unit.getObject();
-		ServerObject * const unitServerObject = (unitObject != nullptr) ? unitObject->asServerObject() : nullptr;
-		ShipObject * const unitShipObject = (unitServerObject != nullptr) ? unitServerObject->asShipObject() : nullptr;
+		ServerObject * const unitServerObject = (unitObject != NULL) ? unitObject->asServerObject() : NULL;
+		ShipObject * const unitShipObject = (unitServerObject != NULL) ? unitServerObject->asShipObject() : NULL;
 
-		if (unitShipObject != nullptr)
+		if (unitShipObject != NULL)
 		{
 			m_projectileAttackRange = std::min(m_projectileAttackRange, unitShipObject->getApproximateAttackRange());
 			
@@ -328,10 +328,10 @@ void SpaceAttackSquad::assignNewLeader()
 	{
 		CachedNetworkId const & unit = iterUnitMap->first;
 		Object * const unitObject = unit.getObject();
-		ServerObject * const unitServerObject = (unitObject != nullptr) ? unitObject->asServerObject() : nullptr;
-		ShipObject * const unitShipObject = (unitServerObject != nullptr) ? unitServerObject->asShipObject() : nullptr;
+		ServerObject * const unitServerObject = (unitObject != NULL) ? unitObject->asServerObject() : NULL;
+		ShipObject * const unitShipObject = (unitServerObject != NULL) ? unitServerObject->asShipObject() : NULL;
 
-		if (unitShipObject != nullptr)
+		if (unitShipObject != NULL)
 		{
 			if (unitShipObject->isComponentFunctional(ShipChassisSlotType::SCST_engine))
 			{

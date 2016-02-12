@@ -99,11 +99,11 @@ namespace ManufactureInstallationObjectNamespace
 	bool isOutputHopperFull(ManufactureInstallationObject const & mio)
 	{
 		ServerObject const * const outputHopper = mio.getOutputHopper();
-		if (outputHopper == nullptr)
+		if (outputHopper == NULL)
 			return false;
 
 		VolumeContainer const * const hopperContainer = ContainerInterface::getVolumeContainer(*outputHopper);
-		if (hopperContainer == nullptr)
+		if (hopperContainer == NULL)
 			return false;
 
 		return (hopperContainer->getCurrentVolume() >= hopperContainer->getTotalVolume());
@@ -170,7 +170,7 @@ void ManufactureInstallationObject::endBaselines()
 	// if we are active, make sure we have the right data
 	if (isAuthoritative() && isActive())
 	{
-		if (getSchematic() == nullptr)
+		if (getSchematic() == NULL)
 		{
 			WARNING(true, ("Manufacture installation %s is set to active but has not schematic available!", 
 				getNetworkId().getValueString().c_str()));
@@ -302,17 +302,17 @@ void ManufactureInstallationObject::setOwnerId(const NetworkId &id)
 	InstallationObject::setOwnerId(id);
 
 	const Object * const object = NetworkIdManager::getObjectById(id);
-	if (object != nullptr)
+	if (object != NULL)
 	{
 		const ServerObject * const owner = safe_cast<const ServerObject *>(object);
 		setObjVarItem(OBJVAR_OWNER_NAME, Unicode::wideToNarrow(owner->getObjectName()));
 
 		// we need to store the owner's Station id for logging purposes
 		const CreatureObject * const creatureOwner = owner->asCreatureObject();
-		if (creatureOwner != nullptr)
+		if (creatureOwner != NULL)
 		{
 			const PlayerObject * const player = PlayerCreatureController::getPlayerObject(creatureOwner);
-			if (player != nullptr)
+			if (player != NULL)
 			{
 				setObjVarItem(OBJVAR_OWNER_STATION_ID, static_cast<int>(player->getStationId()));
 			}
@@ -331,10 +331,10 @@ ServerObject * ManufactureInstallationObject::getInputHopper() const
 {
 	SlottedContainer const * const container = ContainerInterface::getSlottedContainer(*this);
 
-	if (container == nullptr)
+	if (container == NULL)
 	{
 		DEBUG_WARNING(true, ("Manufacture installation %s does not have a container!", getDebugInformation().c_str()));
-		return nullptr;
+		return NULL;
 	}
 
 	Container::ContainerErrorCode tmp = Container::CEC_Success;
@@ -342,7 +342,7 @@ ServerObject * ManufactureInstallationObject::getInputHopper() const
 	if (hopperId == NetworkId::cms_invalid)
 	{
 		DEBUG_WARNING(true, ("Manufacture installation %s does not have an input hopper!", getDebugInformation().c_str()));
-		return nullptr;
+		return NULL;
 	}
 
 	return safe_cast<ServerObject *>(hopperId.getObject());
@@ -359,10 +359,10 @@ ServerObject * ManufactureInstallationObject::getOutputHopper() const
 {
 	SlottedContainer const * const container = ContainerInterface::getSlottedContainer(*this);
 
-	if (container == nullptr)
+	if (container == NULL)
 	{
 		DEBUG_WARNING(true, ("Manufacture installation %s does not have a container!", getDebugInformation().c_str()));
-		return nullptr;
+		return NULL;
 	}
 
 	Container::ContainerErrorCode tmp = Container::CEC_Success;
@@ -370,7 +370,7 @@ ServerObject * ManufactureInstallationObject::getOutputHopper() const
 	if (hopperId == NetworkId::cms_invalid)
 	{
 		DEBUG_WARNING(true, ("Manufacture installation %s does not have an output hopper!", getDebugInformation().c_str()));
-		return nullptr;
+		return NULL;
 	}
 
 	return safe_cast<ServerObject *>(hopperId.getObject());
@@ -399,7 +399,7 @@ bool ManufactureInstallationObject::addSchematic(ManufactureSchematicObject & sc
 
 		SlottedContainer const * const container = ContainerInterface::getSlottedContainer(*this);
 
-		if (container == nullptr)
+		if (container == NULL)
 		{
 			DEBUG_WARNING(true, ("Manufacture installation %s does not have a container!", getDebugInformation().c_str()));
 			return false;
@@ -433,7 +433,7 @@ bool ManufactureInstallationObject::onContainerAboutToLoseItem(ServerObject * de
 	{
 		bool isSchematic = false;
 		const ManufactureSchematicObject * const schematic = getSchematic();
-		if (schematic != nullptr && schematic->getNetworkId() == item.getNetworkId())
+		if (schematic != NULL && schematic->getNetworkId() == item.getNetworkId())
 		{
 			isSchematic = true;
 			if (isActive())
@@ -465,10 +465,10 @@ ManufactureSchematicObject * ManufactureInstallationObject::getSchematic() const
 	// get our manufacturing schematic
 	SlottedContainer const * const container = ContainerInterface::getSlottedContainer(*this);
 
-	if (container == nullptr)
+	if (container == NULL)
 	{
 		DEBUG_WARNING(true, ("Manufacture installation %s does not have a container!", getDebugInformation().c_str()));
-		return nullptr;
+		return NULL;
 	}
 
 	Container::ContainerErrorCode tmp = Container::CEC_Success;
@@ -486,7 +486,7 @@ ManufactureSchematicObject * ManufactureInstallationObject::getSchematic() const
 float ManufactureInstallationObject::getTimePerObject() const
 {
 	ManufactureSchematicObject * const schematic = getSchematic();
-	if (schematic == nullptr)
+	if (schematic == NULL)
 		return 0;
 
 #ifdef _DEBUG
@@ -516,7 +516,7 @@ float ManufactureInstallationObject::getTimePerObject() const
 		getObjVars().getItem(OBJVAR_OWNER_SKILL,ownerSkill);
 
 		int skill = 0;
-		if (owner != nullptr)
+		if (owner != NULL)
 		{
 			skill = owner->getEnhancedModValue(FACTORY_SKILL_MOD);
 
@@ -551,7 +551,7 @@ void ManufactureInstallationObject::activate(const NetworkId &actorId)
 {
 	if (isAuthoritative() && !isActive())
 	{
-		if (getSchematic() == nullptr)
+		if (getSchematic() == NULL)
 		{
 			WARNING(true, ("Manufacture installation %s tried to activate with "
 				"no schematic available!", getNetworkId().getValueString().c_str()));
@@ -588,7 +588,7 @@ void ManufactureInstallationObject::activate(const NetworkId &actorId)
 			OutOfBandPackager::pack(pp, -1, oob);
 		}
 		const Object * const owner = NetworkIdManager::getObjectById(getOwnerId());
-		if (owner != nullptr)
+		if (owner != NULL)
 		{
 			Chat::sendSystemMessage(getOwnerName(), Unicode::emptyString, oob);
 		}
@@ -615,7 +615,7 @@ void ManufactureInstallationObject::deactivate()
 			OutOfBandPackager::pack(pp, -1, oob);
 		}
 		const Object * const owner = NetworkIdManager::getObjectById(getOwnerId());
-		if (owner != nullptr)
+		if (owner != NULL)
 		{
 			Chat::sendSystemMessage(getOwnerName(), Unicode::emptyString, oob);
 		}
@@ -645,13 +645,13 @@ void ManufactureInstallationObject::harvest()
 				maxItemCount = schematic->getCount();
 			}
 
-			if (schematic == nullptr || maxItemCount <= 0)
+			if (schematic == NULL || maxItemCount <= 0)
 			{
 				setTickCount(0);	// to avoid recursion
 				deactivate();
-				if (schematic == nullptr)
+				if (schematic == NULL)
 				{
-					WARNING(true, ("ManufactureInstallationObject::harvest called on object %s with a nullptr schematic", 
+					WARNING(true, ("ManufactureInstallationObject::harvest called on object %s with a NULL schematic", 
 						getNetworkId().getValueString().c_str()));
 
 					Chat::sendPersistentMessage(*this, getOwnerName(), StringIds::manf_error, StringIds::manf_error_1, Unicode::emptyString);
@@ -694,7 +694,7 @@ void ManufactureInstallationObject::harvest()
 						OutOfBandPackager::pack(pp, -1, oob);
 					}
 					const Object * owner = NetworkIdManager::getObjectById(getOwnerId());
-					if (owner != nullptr)
+					if (owner != NULL)
 					{
 						Chat::sendSystemMessage(getOwnerName(), Unicode::emptyString, oob);
 					}
@@ -748,7 +748,7 @@ bool ManufactureInstallationObject::createObject(bool testOnly)
 	int i;
 	
 	ManufactureSchematicObject * schematic = getSchematic();
-	if (schematic == nullptr)
+	if (schematic == NULL)
 	{
 		WARNING(true, ("ManufactureInstallationObject::createObject can't find schematic for station %s", 
 			getNetworkId().getValueString().c_str()));
@@ -771,7 +771,7 @@ bool ManufactureInstallationObject::createObject(bool testOnly)
 	}
 	
 	ServerObject * inputHopper = getInputHopper();
-	if (inputHopper == nullptr)
+	if (inputHopper == NULL)
 	{
 		WARNING_STRICT_FATAL(true, ("ManufactureInstallationObject::createObject can't find input hopper for station %s", 
 			getNetworkId().getValueString().c_str()));
@@ -782,7 +782,7 @@ bool ManufactureInstallationObject::createObject(bool testOnly)
 	}
 	
 	ServerObject * outputHopper = getOutputHopper();
-	if (outputHopper == nullptr)
+	if (outputHopper == NULL)
 	{
 		WARNING_STRICT_FATAL(true, ("ManufactureInstallationObject::createObject can't find output hopper for station %s", 
 			getNetworkId().getValueString().c_str()));
@@ -803,7 +803,7 @@ bool ManufactureInstallationObject::createObject(bool testOnly)
 	{
 		// is there a current crate in the output hopper put we can stuff objects into
 		FactoryObject * crate = getCurrentCrate(*schematic);
-		if (crate == nullptr)
+		if (crate == NULL)
 		{
 			// is there room in the output hopper for a new crate
 			outputHopperFull = isOutputHopperFull(*this);
@@ -819,7 +819,7 @@ bool ManufactureInstallationObject::createObject(bool testOnly)
 			OutOfBandPackager::pack(pp, -1, oob);
 		}
 		const Object * const owner = NetworkIdManager::getObjectById(getOwnerId());
-		if (owner != nullptr)
+		if (owner != NULL)
 		{
 			Chat::sendSystemMessage(getOwnerName(), Unicode::emptyString, oob);
 		}
@@ -894,7 +894,7 @@ bool ManufactureInstallationObject::createObject(bool testOnly)
 					// the ingredient needs to be made with the same template
 					const ObjectTemplate * componentTemplate = ObjectTemplateList::fetch(
 						componentInfo->templateName);
-					if (componentTemplate != nullptr)
+					if (componentTemplate != NULL)
 					{
 						for (j = 0; j < ingredientCount; ++j)
 						{
@@ -945,7 +945,7 @@ bool ManufactureInstallationObject::createObject(bool testOnly)
 				ProsePackage pp;
 				ProsePackageManagerServer::createSimpleProsePackageParticipant (*this, pp.target);
 				
-				if (resource != nullptr)
+				if (resource != NULL)
 				{
 					pp.stringId = StringIds::manf_no_named_resource;
 					pp.other.str = Unicode::narrowToWide(resource->getResourceName());
@@ -957,7 +957,7 @@ bool ManufactureInstallationObject::createObject(bool testOnly)
 			}
 
 			const Object * const owner = NetworkIdManager::getObjectById(getOwnerId());
-			if (owner != nullptr)
+			if (owner != NULL)
 				Chat::sendSystemMessage(getOwnerName(), Unicode::emptyString, oob);
 			
 			Chat::sendPersistentMessage(*this, getOwnerName(), StringIds::no_ingredients, Unicode::emptyString, oob);
@@ -1000,7 +1000,7 @@ bool ManufactureInstallationObject::createObject(bool testOnly)
 	{
 		TangibleObject * object = safe_cast<TangibleObject *>(schematic->
 			manufactureObject(getOwnerId(), *this, newObjectSlotId, false));
-		if (object == nullptr)
+		if (object == NULL)
 		{
 			WARNING_STRICT_FATAL(true, ("ManufactureInstallationObject::createObject, Unable to create object for station %s", 
 				getNetworkId().getValueString().c_str()));
@@ -1009,7 +1009,7 @@ bool ManufactureInstallationObject::createObject(bool testOnly)
 			
 			return false;
 		}
-		if (!ContainerInterface::transferItemToVolumeContainer(*outputHopper, *object, nullptr, tmp))
+		if (!ContainerInterface::transferItemToVolumeContainer(*outputHopper, *object, NULL, tmp))
 		{
 			object->permanentlyDestroy(DeleteReasons::BadContainerTransfer);
 			WARNING_STRICT_FATAL(true, ("ManufactureInstallationObject::createObject, Unable to transfer new object for station %s, error code = %d",
@@ -1024,12 +1024,12 @@ bool ManufactureInstallationObject::createObject(bool testOnly)
 	{
 		// put the object in a box of objects
 		FactoryObject * crate = getCurrentCrate(*schematic);
-		if (crate == nullptr)
+		if (crate == NULL)
 		{
 			// make a new crate to put the object in
 			crate = makeNewCrate(*schematic);
 		}
-		if (crate == nullptr)
+		if (crate == NULL)
 		{
 			WARNING_STRICT_FATAL(true, ("ManufactureInstallationObject::createObject, Unable to create factory crate for station %s", 
 				getNetworkId().getValueString().c_str()));
@@ -1082,7 +1082,7 @@ void ManufactureInstallationObject::restoreIngredients(IngredientVector const &i
 		if (count != 0)
 		{
 			FactoryObject * crate = dynamic_cast<FactoryObject *>(itemId.getObject());
-			if (crate != nullptr)
+			if (crate != NULL)
 				crate->incrementCount(count);
 		}
 	}
@@ -1109,7 +1109,7 @@ void ManufactureInstallationObject::destroyIngredients(IngredientVector const &i
 		else
 		{
 			FactoryObject * crate = dynamic_cast<FactoryObject *>(itemId.getObject());
-			if (crate != nullptr)
+			if (crate != NULL)
 			{
 				LOG("CustomerService", ("Crafting:destroying %d ingredients from crate %s in manf station %s owned by %s", count, itemId.getValueString().c_str(), getNetworkId().getValueString().c_str(), PlayerObject::getAccountDescription(getOwnerId()).c_str()));
 				if (crate->getCount() == 0)
@@ -1149,7 +1149,7 @@ bool ManufactureInstallationObject::transferCraftedIngredientToSchematic(
 	// crafted id as the component wanted
 
 	VolumeContainer * container = ContainerInterface::getVolumeContainer(inputHopper);
-	if (container == nullptr)
+	if (container == NULL)
 		return false;
 
 	// stuff to keep track of crates that don't have enough ingredients
@@ -1160,11 +1160,11 @@ bool ManufactureInstallationObject::transferCraftedIngredientToSchematic(
 	{
 		const Container::ContainedItem & itemId = *iter;
 		TangibleObject * object = safe_cast<TangibleObject *>(itemId.getObject());
-		if (object != nullptr && object->getCraftedId() == craftedId)
+		if (object != NULL && object->getCraftedId() == craftedId)
 		{
 			// see if the object is a factory or not
 			FactoryObject * crate = dynamic_cast<FactoryObject *>(object);
-			if (crate != nullptr)
+			if (crate != NULL)
 			{
 				// see if the crate has enough objects or not
 				int crateCount = crate->getCount();
@@ -1247,18 +1247,18 @@ const NetworkId & ManufactureInstallationObject::transferTemplateIngredientToSch
 
 	VolumeContainer * container = ContainerInterface::getVolumeContainer(
 		inputHopper);
-	if (container == nullptr)
+	if (container == NULL)
 		return NetworkId::cms_invalid;
 
 	for (ContainerIterator iter = container->begin(); iter != container->end(); ++iter)
 	{
 		const Container::ContainedItem & itemId = *iter;
 		TangibleObject * object = safe_cast<TangibleObject *>(itemId.getObject());
-		if (object != nullptr)
+		if (object != NULL)
 		{
 			// see if the object is a factory or not
 			FactoryObject * crate = dynamic_cast<FactoryObject *>(object);
-			if (crate != nullptr && crate->getCount() > 0)
+			if (crate != NULL && crate->getCount() > 0)
 			{
 				if (crate->getContainedObjectTemplate() == &componentTemplate)
 				{
@@ -1300,7 +1300,7 @@ const NetworkId & ManufactureInstallationObject::transferResourceTypeToSchematic
 	const NetworkId & resourceTypeId, int resourceCount)
 {
 	VolumeContainer * const container = ContainerInterface::getVolumeContainer(inputHopper);
-	if (container == nullptr)
+	if (container == NULL)
 		return NetworkId::cms_invalid;
 
 	// keep a map of the sources that are providing the resources
@@ -1317,7 +1317,7 @@ const NetworkId & ManufactureInstallationObject::transferResourceTypeToSchematic
 		const Container::ContainedItem & itemId = *iter;
 		ResourceContainerObject * object = dynamic_cast<ResourceContainerObject *>(
 			itemId.getObject());
-		if (object != nullptr && object->getResourceTypeId() == resourceTypeId)
+		if (object != NULL && object->getResourceTypeId() == resourceTypeId)
 		{
 			// see if this crate fills our requirements
 			if (object->getQuantity() >= resourceCount)
@@ -1346,7 +1346,7 @@ const NetworkId & ManufactureInstallationObject::transferResourceTypeToSchematic
 							if (!smallCrate->removeResource(resourceTypeId, smallCrate->getQuantity(), &sources))
 								return NetworkId::cms_invalid;
 							// small crate has been deleted by the resource system
-							*crateIter = nullptr;
+							*crateIter = NULL;
 							++crateIter;
 						}
 						else
@@ -1390,41 +1390,41 @@ const NetworkId & ManufactureInstallationObject::transferResourceTypeToSchematic
  *
  * @param contents		an object we want to put in the crate
  *
- * @return the crate, or nullptr if we have no crate
+ * @return the crate, or NULL if we have no crate
  */
 FactoryObject * ManufactureInstallationObject::getCurrentCrate(const ManufactureSchematicObject & source)
 {
-	FactoryObject * crate = nullptr;
+	FactoryObject * crate = NULL;
 
 	ServerObject * outputHopper = getOutputHopper();
-	if (outputHopper == nullptr)
-		return nullptr;
+	if (outputHopper == NULL)
+		return NULL;
 
-	if (m_currentCrate.getObject() != nullptr)
+	if (m_currentCrate.getObject() != NULL)
 	{
 		crate = safe_cast<FactoryObject *>(m_currentCrate.getObject());
 
 		// make sure the crate is still in our hopper and is not full
-		if (crate != nullptr && ContainerInterface::getContainedByObject(*crate) == outputHopper &&
+		if (crate != NULL && ContainerInterface::getContainedByObject(*crate) == outputHopper &&
 			crate->getCraftedId() == source.getOriginalId())
 		{
 			if (crate->getCount() < source.getItemsPerContainer())
 				return crate;
 			else
-				return nullptr;
+				return NULL;
 		}
 	}
 
 	// see if there is another non-full crate in the output hopper we could use
 	const VolumeContainer * hopperContainer = ContainerInterface::getVolumeContainer(
 		*outputHopper);
-	if (hopperContainer != nullptr)
+	if (hopperContainer != NULL)
 	{
 		for (ContainerConstIterator iter = hopperContainer->begin();
 			iter != hopperContainer->end(); ++iter)
 		{
 			crate = dynamic_cast<FactoryObject *>((*iter).getObject());
-			if (crate != nullptr && crate->getCraftedId() == source.getOriginalId() && crate->getCount() < source.getItemsPerContainer())
+			if (crate != NULL && crate->getCraftedId() == source.getOriginalId() && crate->getCount() < source.getItemsPerContainer())
 			{
 				// change our current crate to the one we found
 				m_currentCrate = CachedNetworkId(*crate);
@@ -1433,7 +1433,7 @@ FactoryObject * ManufactureInstallationObject::getCurrentCrate(const Manufacture
 		}
 	}
 
-	return nullptr;
+	return NULL;
 }	// ManufactureInstallationObject::getCurrentCrate
 
 // ----------------------------------------------------------------------
@@ -1449,21 +1449,21 @@ FactoryObject * ManufactureInstallationObject::getCurrentCrate(const Manufacture
 FactoryObject * ManufactureInstallationObject::makeNewCrate(const ManufactureSchematicObject & source)
 {
 	ServerObject * outputHopper = getOutputHopper();
-	if (outputHopper == nullptr)
-		return nullptr;
+	if (outputHopper == NULL)
+		return NULL;
 
 	// get the correct factory object template from the draft schematic
 	const ManufactureSchematicObject * manfSchematic = getSchematic();
-	if (manfSchematic == nullptr)
-		return nullptr;
+	if (manfSchematic == NULL)
+		return NULL;
 	const DraftSchematicObject * draftSchematic = DraftSchematicObject::getSchematic(
 		manfSchematic->getDraftSchematic());
-	if (draftSchematic == nullptr)
-		return nullptr;
+	if (draftSchematic == NULL)
+		return NULL;
 
-	ServerObject * object = nullptr;
+	ServerObject * object = NULL;
 	const ServerFactoryObjectTemplate * crateTemplate = draftSchematic->getCrateObjectTemplate();
-	if (crateTemplate != nullptr)
+	if (crateTemplate != NULL)
 	{
 		object = ServerWorld::createNewObject(*crateTemplate, *outputHopper, false);
 	}
@@ -1472,11 +1472,11 @@ FactoryObject * ManufactureInstallationObject::makeNewCrate(const ManufactureSch
 		object = ServerWorld::createNewObject(DEFAULT_FACTORY_OBJECT_TEMPLATE,
 			*outputHopper, false);
 	}
-	if (object == nullptr)
-		return nullptr;
+	if (object == NULL)
+		return NULL;
 
 	FactoryObject * crate = dynamic_cast<FactoryObject *>(object);
-	if (crate == nullptr)
+	if (crate == NULL)
 		object->permanentlyDestroy(DeleteReasons::SetupFailed);
 	else
 	{
@@ -1526,7 +1526,7 @@ bool ManufactureInstallationObject::TaskManufactureObject::run()
 {
 	ManufactureInstallationObject * manfInst = safe_cast<ManufactureInstallationObject *>
 		(m_manfInstallation.getObject());
-	if (manfInst == nullptr || !manfInst->isActive())
+	if (manfInst == NULL || !manfInst->isActive())
 		return true;
 
 	if (!manfInst->createObject())
@@ -1545,7 +1545,7 @@ void ManufactureInstallationObject::getAttributes(AttributeVector & data) const
 	InstallationObject::getAttributes(data);
 
 	ManufactureSchematicObject * schematic = getSchematic();
-	if (schematic != nullptr)
+	if (schematic != NULL)
 	{
 		char valueBuffer[32];
   		const size_t valueBuffer_size = sizeof (valueBuffer);

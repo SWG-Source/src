@@ -106,8 +106,8 @@ m_value(),
 m_position(-1),
 m_cachedValueDirty(true)
 {
-	m_cachedValue[0] = nullptr;
-	m_cachedValue[1] = nullptr;
+	m_cachedValue[0] = NULL;
+	m_cachedValue[1] = NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -131,8 +131,8 @@ DynamicVariable::DynamicVariable(const DynamicVariable &rhs) :
 		m_position(rhs.m_position),
 		m_cachedValueDirty(true)
 {
-	m_cachedValue[0] = nullptr;
-	m_cachedValue[1] = nullptr;
+	m_cachedValue[0] = NULL;
+	m_cachedValue[1] = NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -158,8 +158,8 @@ DynamicVariable& DynamicVariable::operator=(const DynamicVariable &rhs)
 				(*f)(m_cachedValue[0]);
 			}
 
-			m_cachedValue[0] = nullptr;
-			m_cachedValue[1] = nullptr;
+			m_cachedValue[0] = NULL;
+			m_cachedValue[1] = NULL;
 		}
 	}
 
@@ -201,8 +201,8 @@ void DynamicVariable::load(int position, int typeId, const Unicode::String &pack
 				(*f)(m_cachedValue[0]);
 			}
 
-			m_cachedValue[0] = nullptr;
-			m_cachedValue[1] = nullptr;
+			m_cachedValue[0] = NULL;
+			m_cachedValue[1] = NULL;
 		}
 	}
 
@@ -235,8 +235,8 @@ DynamicVariable::DynamicVariable(int value) :
 		m_position(-1),
 		m_cachedValueDirty(true)
 {
-	m_cachedValue[0] = nullptr;
-	m_cachedValue[1] = nullptr;
+	m_cachedValue[0] = NULL;
+	m_cachedValue[1] = NULL;
 
 	pack(value, m_value);
 }
@@ -249,8 +249,8 @@ DynamicVariable::DynamicVariable(const std::vector<int> & value) :
 		m_position(-1),
 		m_cachedValueDirty(true)
 {
-	m_cachedValue[0] = nullptr;
-	m_cachedValue[1] = nullptr;
+	m_cachedValue[0] = NULL;
+	m_cachedValue[1] = NULL;
 
 	pack(value, m_value);
 }
@@ -263,8 +263,8 @@ DynamicVariable::DynamicVariable(float value) :
 		m_position(-1),
 		m_cachedValueDirty(true)
 {
-	m_cachedValue[0] = nullptr;
-	m_cachedValue[1] = nullptr;
+	m_cachedValue[0] = NULL;
+	m_cachedValue[1] = NULL;
 
 	pack(value, m_value);
 }
@@ -277,8 +277,8 @@ DynamicVariable::DynamicVariable(const std::vector<float> & value) :
 		m_position(-1),
 		m_cachedValueDirty(true)
 {
-	m_cachedValue[0] = nullptr;
-	m_cachedValue[1] = nullptr;
+	m_cachedValue[0] = NULL;
+	m_cachedValue[1] = NULL;
 
 	pack(value, m_value);
 }
@@ -291,8 +291,8 @@ DynamicVariable::DynamicVariable(const Unicode::String &value) :
 		m_position(-1),
 		m_cachedValueDirty(true)
 {
-	m_cachedValue[0] = nullptr;
-	m_cachedValue[1] = nullptr;
+	m_cachedValue[0] = NULL;
+	m_cachedValue[1] = NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -303,8 +303,8 @@ DynamicVariable::DynamicVariable(const std::string &value) :
 		m_position(-1),
 		m_cachedValueDirty(true)
 {
-	m_cachedValue[0] = nullptr;
-	m_cachedValue[1] = nullptr;
+	m_cachedValue[0] = NULL;
+	m_cachedValue[1] = NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -315,8 +315,8 @@ DynamicVariable::DynamicVariable(const std::vector<Unicode::String> & value) :
 		m_position(-1),
 		m_cachedValueDirty(true)
 {
-	m_cachedValue[0] = nullptr;
-	m_cachedValue[1] = nullptr;
+	m_cachedValue[0] = NULL;
+	m_cachedValue[1] = NULL;
 
 	pack(value, m_value);
 }
@@ -329,8 +329,8 @@ DynamicVariable::DynamicVariable(const NetworkId & value) :
 		m_position(-1),
 		m_cachedValueDirty(true)
 {
-	m_cachedValue[0] = nullptr;
-	m_cachedValue[1] = nullptr;
+	m_cachedValue[0] = NULL;
+	m_cachedValue[1] = NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -341,8 +341,8 @@ DynamicVariable::DynamicVariable(const std::vector<NetworkId> & value) :
 		m_position(-1),
 		m_cachedValueDirty(true)
 {
-	m_cachedValue[0] = nullptr;
-	m_cachedValue[1] = nullptr;
+	m_cachedValue[0] = NULL;
+	m_cachedValue[1] = NULL;
 
 	pack(value, m_value);
 }
@@ -355,8 +355,8 @@ DynamicVariable::DynamicVariable(const DynamicVariableLocationData & value) :
 		m_position(-1),
 		m_cachedValueDirty(true)
 {
-	m_cachedValue[0] = nullptr;
-	m_cachedValue[1] = nullptr;
+	m_cachedValue[0] = NULL;
+	m_cachedValue[1] = NULL;
 
 	pack(value, m_value);
 }
@@ -369,8 +369,8 @@ DynamicVariable::DynamicVariable(const std::vector<DynamicVariableLocationData> 
 		m_position(-1),
 		m_cachedValueDirty(true)
 {
-	m_cachedValue[0] = nullptr;
-	m_cachedValue[1] = nullptr;
+	m_cachedValue[0] = NULL;
+	m_cachedValue[1] = NULL;
 
 	pack(value, m_value);
 }
@@ -383,8 +383,8 @@ DynamicVariable::DynamicVariable(const StringId &value) :
 		m_position(-1),
 		m_cachedValueDirty(true)
 {
-	m_cachedValue[0] = nullptr;
-	m_cachedValue[1] = nullptr;
+	m_cachedValue[0] = NULL;
+	m_cachedValue[1] = NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -395,8 +395,8 @@ DynamicVariable::DynamicVariable(const std::vector<StringId> &value) :
 		m_position(-1),
 		m_cachedValueDirty(true)
 {
-	m_cachedValue[0] = nullptr;
-	m_cachedValue[1] = nullptr;
+	m_cachedValue[0] = NULL;
+	m_cachedValue[1] = NULL;
 
 	pack(value, m_value);
 }
@@ -409,8 +409,8 @@ DynamicVariable::DynamicVariable(const Transform &value) :
 		m_position(-1),
 		m_cachedValueDirty(true)
 {
-	m_cachedValue[0] = nullptr;
-	m_cachedValue[1] = nullptr;
+	m_cachedValue[0] = NULL;
+	m_cachedValue[1] = NULL;
 
 	pack(value, m_value);
 }
@@ -423,8 +423,8 @@ DynamicVariable::DynamicVariable(const std::vector<Transform> &value) :
 		m_position(-1),
 		m_cachedValueDirty(true)
 {
-	m_cachedValue[0] = nullptr;
-	m_cachedValue[1] = nullptr;
+	m_cachedValue[0] = NULL;
+	m_cachedValue[1] = NULL;
 
 	pack(value, m_value);
 }
@@ -437,8 +437,8 @@ DynamicVariable::DynamicVariable(const Vector &value) :
 		m_position(-1),
 		m_cachedValueDirty(true)
 {
-	m_cachedValue[0] = nullptr;
-	m_cachedValue[1] = nullptr;
+	m_cachedValue[0] = NULL;
+	m_cachedValue[1] = NULL;
 
 	pack(value, m_value);
 }
@@ -451,8 +451,8 @@ DynamicVariable::DynamicVariable(const std::vector<Vector> &value) :
 		m_position(-1),
 		m_cachedValueDirty(true)
 {
-	m_cachedValue[0] = nullptr;
-	m_cachedValue[1] = nullptr;
+	m_cachedValue[0] = NULL;
+	m_cachedValue[1] = NULL;
 
 	pack(value, m_value);
 }
@@ -786,7 +786,7 @@ bool DynamicVariable::get(DynamicVariableLocationData & value) const
 		char tempCell[BUFSIZE];
 		std::string data(Unicode::wideToNarrow(m_value));
 		const char * bufptrStart = data.c_str();
-		char * bufptrEnd = nullptr;
+		char * bufptrEnd = NULL;
 		cachedValue.pos.x = static_cast<float>(strtod(bufptrStart, &bufptrEnd));
 		bufptrStart = bufptrEnd;
 		while (*bufptrStart != '\0' && isspace(*bufptrStart))
@@ -811,7 +811,7 @@ bool DynamicVariable::get(DynamicVariableLocationData & value) const
 			while (*bufptrStart != '\0' && isspace(*bufptrStart))
 				++bufptrStart;
 			bufptrEnd = const_cast<char *>(strchr(bufptrStart, ' '));
-			if (bufptrEnd == nullptr || bufptrEnd - bufptrStart >= BUFSIZE)
+			if (bufptrEnd == NULL || bufptrEnd - bufptrStart >= BUFSIZE)
 			{
 				WARNING_STRICT_FATAL(true, ("DynamicVariable::get location buffer overflow in scene"));
 				return false;
@@ -875,7 +875,7 @@ bool DynamicVariable::get(std::vector<DynamicVariableLocationData> & value) cons
 				char tempCell[BUFSIZE];
 
 				const char * bufptrStart = buffer;
-				char * bufptrEnd = nullptr;
+				char * bufptrEnd = NULL;
 				temp.pos.x = static_cast<float>(strtod(bufptrStart, &bufptrEnd));
 				bufptrStart = bufptrEnd;
 				while (*bufptrStart != '\0' && isspace(*bufptrStart))
@@ -900,7 +900,7 @@ bool DynamicVariable::get(std::vector<DynamicVariableLocationData> & value) cons
 					while (*bufptrStart != '\0' && isspace(*bufptrStart))
 						++bufptrStart;
 					bufptrEnd = const_cast<char *>(strchr(bufptrStart, ' '));
-					if (bufptrEnd == nullptr || bufptrEnd - bufptrStart >= BUFSIZE)
+					if (bufptrEnd == NULL || bufptrEnd - bufptrStart >= BUFSIZE)
 					{
 						WARNING_STRICT_FATAL(true, ("DynamicVariable::get location array buffer overflow in scene"));
 						return false;
@@ -1430,8 +1430,8 @@ namespace Archive
 					(*f)(target.m_cachedValue[0]);
 				}
 
-				target.m_cachedValue[0] = nullptr;
-				target.m_cachedValue[1] = nullptr;
+				target.m_cachedValue[0] = NULL;
+				target.m_cachedValue[1] = NULL;
 			}
 		}
 

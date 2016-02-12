@@ -157,7 +157,7 @@ void GameConnection::onReceive(const Archive::ByteStream & message)
 				ca.getStartYaw(),
 				ca.getTemplateName(),
 				ca.getTimeSeconds(),
-				static_cast<int32>(::time(nullptr)),
+				static_cast<int32>(::time(NULL)),
 				ConfigConnectionServer::getDisableWorldSnapshot());
 			client->getClientConnection()->send(startScene, true);
 		}
@@ -166,7 +166,7 @@ void GameConnection::onReceive(const Archive::ByteStream & message)
 		// record the time when play started for the character
 		if (client->getClientConnection()->getStartPlayTime() == 0)
 		{
-			client->getClientConnection()->setStartPlayTime(::time(nullptr));
+			client->getClientConnection()->setStartPlayTime(::time(NULL));
 		}
 
 		// update the play time info on the game server

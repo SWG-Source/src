@@ -164,7 +164,7 @@ namespace PlayerCreatureControllerNamespace
 
 		if(!mount)
 		{
-			LOG("mounts-bug", ("PlayerCreatureControllerNamespace::isCreaturePassenger(): server id=[%d],object id=[%s] creature has state RidingMount but getMountedCreature() returns nullptr.", static_cast<int>(GameServer::getInstance().getProcessId()), creature.getNetworkId().getValueString().c_str()));
+			LOG("mounts-bug", ("PlayerCreatureControllerNamespace::isCreaturePassenger(): server id=[%d],object id=[%s] creature has state RidingMount but getMountedCreature() returns NULL.", static_cast<int>(GameServer::getInstance().getProcessId()), creature.getNetworkId().getValueString().c_str()));
 			return false;
 		}
 
@@ -172,7 +172,7 @@ namespace PlayerCreatureControllerNamespace
 
 		if(!primaryRider)
 		{
-			LOG("mounts-bug", ("PlayerCreatureControllerNamespace::isCreaturePassenger(): server id=[%d],object id=[%s] creature has state RidingMount but mount->getPrimaryMountingRider() returns nullptr.", static_cast<int>(GameServer::getInstance().getProcessId()), creature.getNetworkId().getValueString().c_str()));
+			LOG("mounts-bug", ("PlayerCreatureControllerNamespace::isCreaturePassenger(): server id=[%d],object id=[%s] creature has state RidingMount but mount->getPrimaryMountingRider() returns NULL.", static_cast<int>(GameServer::getInstance().getProcessId()), creature.getNetworkId().getValueString().c_str()));
 			return false;
 		}
 
@@ -411,7 +411,7 @@ void PlayerCreatureController::logMoveFailed(char const *reason)
 		"movement",
 		(
 			"move fail - object %s stationId %u - %s",
-			creature ? creature->getNetworkId().getValueString().c_str() : "<nullptr>",
+			creature ? creature->getNetworkId().getValueString().c_str() : "<null>",
 			stationId,
 			reason));
 }
@@ -425,7 +425,7 @@ bool PlayerCreatureController::isLocationValid(Vector const &position_w, CellObj
 		return false;
 
 	TerrainObject const *const terrainObject = TerrainObject::getConstInstance();
-	if (nullptr != terrainObject && (nullptr == cell || cell->getCellProperty()->isWorldCell()))
+	if (NULL != terrainObject && (NULL == cell || cell->getCellProperty()->isWorldCell()))
 	{
 		if (!terrainObject->isPassableForceChunkCreation(position_w))
 			return false;
@@ -445,7 +445,7 @@ bool PlayerCreatureController::isLocationValid(Vector const &position_w, CellObj
 
 		Sphere testSphere(position_w + localSphere.getCenter(), localSphere.getRadius());
 
-		if (CollisionWorld::query(testSphere, nullptr)) 
+		if (CollisionWorld::query(testSphere, NULL)) 
 			return false;
 	}
 	return true;
@@ -464,7 +464,7 @@ bool PlayerCreatureController::checkValidMove(MoveSnapshot const &m, float const
 	CreatureObject * const creature = NON_NULL(getCreature());
 
 	// update the velocity in the serverController
-	if (creature != nullptr)
+	if (creature != NULL)
 	{
 		Vector moveDistance = m.getPosition_w() - creature->getPosition_w();
 		moveDistance.y = 0.0f;
@@ -495,8 +495,8 @@ bool PlayerCreatureController::checkValidMove(MoveSnapshot const &m, float const
 	if (!m.isValid())
 		return handleInvalidMove("invalid destination");
 
-	if (creature == nullptr)
-		return handleInvalidMove("creature is nullptr");
+	if (creature == NULL)
+		return handleInvalidMove("creature is null");
 	
 	if (!m.isAllowed(*creature))
 		return handleInvalidMove("not allowed in dest cell");
@@ -513,7 +513,7 @@ bool PlayerCreatureController::checkValidMove(MoveSnapshot const &m, float const
 		PortalProperty const *destPortalProperty = destCell ? ContainerInterface::getContainedByObject(*destCell)->getPortalProperty() : 0;
 		if (sourcePortalProperty != destPortalProperty)
 		{
-			// Moving between pobs.  This is only valid if one of these is nullptr, since pobs only connect to the world
+			// Moving between pobs.  This is only valid if one of these is null, since pobs only connect to the world
 			if (sourcePortalProperty && destPortalProperty)
 				return handleInvalidMove("tried to move from one pob to another without passing through the world cell");
 			if (sourcePortalProperty && !sourcePortalProperty->hasPassablePortalToParentCell())
@@ -548,7 +548,7 @@ bool PlayerCreatureController::checkValidMove(MoveSnapshot const &m, float const
 
 	Client * const client = creature->getClient();
 	if (!client)
-		return handleInvalidMove("Creature's client is nullptr");
+		return handleInvalidMove("Creature's client is NULL");
 	
 	uint32 const currentServerSyncStamp = client->getServerSyncStampLong();
 	
@@ -741,7 +741,7 @@ bool PlayerCreatureController::checkValidMove(MoveSnapshot const &m, float const
 			}
 
 			
-			m_lastSpeedCheckFailureTime = ::time(nullptr);
+			m_lastSpeedCheckFailureTime = ::time(NULL);
 			++m_speedCheckConsecutiveFailureCount;
 
 			// if this is the first validation failure "in a while", let it pass, because it may be a false positive
@@ -1153,11 +1153,11 @@ void PlayerCreatureController::handleMessage (const int message, const float val
 				NetworkId const & designerId = inMsg->getDesignerId();
 				NetworkId const & recipientId = inMsg->getRecipientId();
 				Object const * const designerObj = NetworkIdManager::getObjectById(designerId);
-				ServerObject const * const designerServer = designerObj ? designerObj->asServerObject() : nullptr;
-				CreatureObject const * const designer = designerServer ? designerServer->asCreatureObject() : nullptr;
+				ServerObject const * const designerServer = designerObj ? designerObj->asServerObject() : NULL;
+				CreatureObject const * const designer = designerServer ? designerServer->asCreatureObject() : NULL;
 				Object * const recipientObj = NetworkIdManager::getObjectById(recipientId);
-				ServerObject * const recipientServer = recipientObj ? recipientObj->asServerObject() : nullptr;
-				CreatureObject * const recipient = recipientServer ? recipientServer->asCreatureObject() : nullptr;
+				ServerObject * const recipientServer = recipientObj ? recipientObj->asServerObject() : NULL;
+				CreatureObject * const recipient = recipientServer ? recipientServer->asCreatureObject() : NULL;
 				if(designer && recipient)
 				{
 					//designer-sent message, either data to sync to the recipient, or committed data to check and apply
@@ -1167,7 +1167,7 @@ void PlayerCreatureController::handleMessage (const int message, const float val
 						{
 							//designer hasn't accepted yet, send change to the client so they can see it before agreeing
 							Object * const recipientObject = NetworkIdManager::getObjectById(inMsg->getRecipientId());
-							Controller * const recipientController = recipientObject ? recipientObject->getController() : nullptr;
+							Controller * const recipientController = recipientObject ? recipientObject->getController() : NULL;
 							if(recipientController)
 							{
 								ImageDesignChangeMessage * outMsg = new ImageDesignChangeMessage();
@@ -1182,7 +1182,7 @@ void PlayerCreatureController::handleMessage (const int message, const float val
 							{
 								//check and apply this data once the recipient also accepts
 								Object * const recipientObject = NetworkIdManager::getObjectById(inMsg->getRecipientId());
-								Controller * const recipientController = recipientObject ? recipientObject->getController() : nullptr;
+								Controller * const recipientController = recipientObject ? recipientObject->getController() : NULL;
 								if(recipientController)
 								{
 									ImageDesignChangeMessage * outMsg = new ImageDesignChangeMessage();
@@ -1201,7 +1201,7 @@ void PlayerCreatureController::handleMessage (const int message, const float val
 							//recipient hasn't accepted yet, send the data to the designer to update the recipient-sent amount of money
 							//designer hasn't accepted yet, send change to the client so they can see it before agreeing
 							Object * const designerObject = NetworkIdManager::getObjectById(inMsg->getDesignerId());
-							Controller * const designerController = designerObject ? designerObject->getController() : nullptr;
+							Controller * const designerController = designerObject ? designerObject->getController() : NULL;
 							if(designerController)
 							{
 								ImageDesignChangeMessage * outMsg = new ImageDesignChangeMessage();
@@ -1232,8 +1232,8 @@ void PlayerCreatureController::handleMessage (const int message, const float val
 							std::string const recipientSpeciesGender = CustomizationManager::getServerSpeciesGender(*recipient);
 							CustomizationData * const customizationData = recipient->fetchCustomizationData();
 							ServerObject * const hair = recipient->getHair();
-							TangibleObject * const tangibleHair = hair ? hair->asTangibleObject() : nullptr;
-							CustomizationData * customizationDataHair = nullptr;
+							TangibleObject * const tangibleHair = hair ? hair->asTangibleObject() : NULL;
+							CustomizationData * customizationDataHair = NULL;
 							if(tangibleHair)
 								customizationDataHair = tangibleHair->fetchCustomizationData();
 							if(customizationData)
@@ -1285,7 +1285,7 @@ void PlayerCreatureController::handleMessage (const int message, const float val
 				{
 					//if the recipient canceled the session, tell the designer
 					Object const * const designerObject = NetworkIdManager::getObjectById(session.designerId);
-					ServerObject const * const designer = designerObject ? designerObject->asServerObject() : nullptr;
+					ServerObject const * const designer = designerObject ? designerObject->asServerObject() : NULL;
 					if(designer && (owner->getNetworkId() != session.designerId))
 						Chat::sendSystemMessage(*designer, SharedStringIds::imagedesigner_canceled_by_recip, Unicode::emptyString);
 
@@ -1304,11 +1304,11 @@ void PlayerCreatureController::handleMessage (const int message, const float val
 				NetworkId const & bufferId = inMsg->getBufferId();
 				NetworkId const & recipientId = inMsg->getRecipientId();
 				Object const * const bufferObj = NetworkIdManager::getObjectById(bufferId);
-				ServerObject const * const bufferServer = bufferObj ? bufferObj->asServerObject() : nullptr;
-				CreatureObject const * const buffer = bufferServer ? bufferServer->asCreatureObject() : nullptr;
+				ServerObject const * const bufferServer = bufferObj ? bufferObj->asServerObject() : NULL;
+				CreatureObject const * const buffer = bufferServer ? bufferServer->asCreatureObject() : NULL;
 				Object * const recipientObj = NetworkIdManager::getObjectById(recipientId);
-				ServerObject * const recipientServer = recipientObj ? recipientObj->asServerObject() : nullptr;
-				CreatureObject * const recipient = recipientServer ? recipientServer->asCreatureObject() : nullptr;
+				ServerObject * const recipientServer = recipientObj ? recipientObj->asServerObject() : NULL;
+				CreatureObject * const recipient = recipientServer ? recipientServer->asCreatureObject() : NULL;
 				if(buffer && recipient)
 				{
 					//buffer-sent message, either data to sync to the recipient, or committed data to check and apply
@@ -1318,7 +1318,7 @@ void PlayerCreatureController::handleMessage (const int message, const float val
 						{
 							//buffer hasn't accepted yet, send change to the client so they can see it before agreeing
 							Object * const recipientObject = NetworkIdManager::getObjectById(inMsg->getRecipientId());
-							Controller * const recipientController = recipientObject ? recipientObject->getController() : nullptr;
+							Controller * const recipientController = recipientObject ? recipientObject->getController() : NULL;
 							if(recipientController)
 							{
 								BuffBuilderChangeMessage * outMsg = new BuffBuilderChangeMessage();
@@ -1333,7 +1333,7 @@ void PlayerCreatureController::handleMessage (const int message, const float val
 							{
 								//check and apply this data once the recipient also accepts
 								Object * const recipientObject = NetworkIdManager::getObjectById(inMsg->getRecipientId());
-								Controller * const recipientController = recipientObject ? recipientObject->getController() : nullptr;
+								Controller * const recipientController = recipientObject ? recipientObject->getController() : NULL;
 								if(recipientController)
 								{
 									BuffBuilderChangeMessage * outMsg = new BuffBuilderChangeMessage();
@@ -1351,7 +1351,7 @@ void PlayerCreatureController::handleMessage (const int message, const float val
 							//recipient hasn't accepted yet, send the data to the buffer to update the recipient-sent amount of money
 							//buffer hasn't accepted yet, send change to the client so they can see it before agreeing
 							Object * const bufferObject = NetworkIdManager::getObjectById(inMsg->getBufferId());
-							Controller * const bufferController = bufferObject ? bufferObject->getController() : nullptr;
+							Controller * const bufferController = bufferObject ? bufferObject->getController() : NULL;
 							if(bufferController)
 							{
 								BuffBuilderChangeMessage * outMsg = new BuffBuilderChangeMessage();
@@ -1425,7 +1425,7 @@ void PlayerCreatureController::handleMessage (const int message, const float val
 				{
 					//if the recipient canceled the session, tell the designer
 					Object const * const bufferObject = NetworkIdManager::getObjectById(session.bufferId);
-					ServerObject const * const buffer = bufferObject ? bufferObject->asServerObject() : nullptr;
+					ServerObject const * const buffer = bufferObject ? bufferObject->asServerObject() : NULL;
 					
 					if(buffer && (owner->getNetworkId() != session.bufferId))
 					{
@@ -1447,7 +1447,7 @@ void PlayerCreatureController::handleMessage (const int message, const float val
 				if(msg)
 				{
 					Object const * const terminalO = NetworkIdManager::getObjectById(msg->getValue());
-					ServerObject const * const terminal = terminalO ? terminalO->asServerObject() : nullptr;
+					ServerObject const * const terminal = terminalO ? terminalO->asServerObject() : NULL;
 					if(terminal)
 					{
 						Client const * const client = owner->getClient();
@@ -1461,7 +1461,7 @@ void PlayerCreatureController::handleMessage (const int message, const float val
 						if(!client->isGod())
 						{
 							Object const * const buildingO = ContainerInterface::getTopmostContainer(*terminal);
-							ServerObject const * const building = buildingO ? buildingO->asServerObject() : nullptr;
+							ServerObject const * const building = buildingO ? buildingO->asServerObject() : NULL;
 							if(building)
 							{
 								DynamicVariableList const & buildingObjVars = building->getObjVars();
@@ -1478,13 +1478,13 @@ void PlayerCreatureController::handleMessage (const int message, const float val
 								for(std::vector<NetworkId>::const_iterator i = ships.begin(); i != ships.end(); ++i)
 								{
 									Object const * const shipO = NetworkIdManager::getObjectById(*i);
-									ServerObject const * const shipSO = shipO ? shipO->asServerObject() : nullptr;
-									ShipObject const * const ship = shipSO ? shipSO->asShipObject() : nullptr;
+									ServerObject const * const shipSO = shipO ? shipO->asServerObject() : NULL;
+									ShipObject const * const ship = shipSO ? shipSO->asShipObject() : NULL;
 									if(ship)
 									{
 										ContainedByProperty const * const contained = ship->getContainedByProperty();
-										Object const * const containerO = contained ? contained->getContainedBy() : nullptr;
-										ServerObject const * const container = containerO ? containerO->asServerObject() : nullptr;
+										Object const * const containerO = contained ? contained->getContainedBy() : NULL;
+										ServerObject const * const container = containerO ? containerO->asServerObject() : NULL;
 										if(container)
 										{
 											DynamicVariableList const & shipControlDeviceObjVars = container->getObjVars();
@@ -1665,14 +1665,14 @@ void PlayerCreatureController::handleMessage (const int message, const float val
 		{
 			MessageQueueCyberneticsChangeRequest const * const msg = dynamic_cast<MessageQueueCyberneticsChangeRequest const *>(data);
 			NOT_NULL(msg);
-			if (msg != nullptr)
+			if (msg != NULL)
 			{
 				CreatureObject * const owner = NON_NULL(getCreature());
 				if(owner)
 				{
 					NetworkId const & npcId = msg->getTarget();
 					Object * const o = NetworkIdManager::getObjectById(npcId);
-					ServerObject * const so = o ? o->asServerObject() : nullptr;
+					ServerObject * const so = o ? o->asServerObject() : NULL;
 					if(so)
 					{
 						Controller * const npcController = so->getController();
@@ -1696,10 +1696,10 @@ void PlayerCreatureController::handleMessage (const int message, const float val
 	case CM_spaceMiningSaleSellResource:
 		{
 			MessageQueueSpaceMiningSellResource const * const msg = dynamic_cast<MessageQueueSpaceMiningSellResource const *>(data);
-			if (msg != nullptr)
+			if (msg != NULL)
 			{
 				ServerObject * const spaceStation = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(msg->m_spaceStationId));
-				if (nullptr == spaceStation)
+				if (NULL == spaceStation)
 				{
 					WARNING(true, ("PlayerCreatureController CM_spaceMiningSaleSellResource invalid station [%s]", msg->m_spaceStationId.getValueString().c_str()));
 				}
@@ -1784,7 +1784,7 @@ void PlayerCreatureController::handleMessage (const int message, const float val
 
 				DictionaryValueMap::const_iterator itr = valueMap.find(minigameResultTargetName);
 
-				if(itr != valueMap.end() && itr->second != nullptr)
+				if(itr != valueMap.end() && itr->second != NULL)
 				{
 					if(itr->second->getType() == ValueTypeObjId::ms_type)
 					{
@@ -1798,7 +1798,7 @@ void PlayerCreatureController::handleMessage (const int message, const float val
 
 							ScriptDictionaryPtr dictionary;
 							GameScriptObject::makeScriptDictionary(params, dictionary);
-							if (dictionary.get() != nullptr)
+							if (dictionary.get() != NULL)
 							{
 								dictionary->serialize();
 								MessageToQueue::getInstance().sendMessageToJava(tableOid, 
@@ -1859,7 +1859,7 @@ void PlayerCreatureController::handleMessage (const int message, const float val
 						params.addParam(paramsDict, "taskDictionary");
 						ScriptDictionaryPtr dictionary;
 						GameScriptObject::makeScriptDictionary(params, dictionary);
-						if (dictionary.get() != nullptr)
+						if (dictionary.get() != NULL)
 						{
 							dictionary->serialize();
 							MessageToQueue::getInstance().sendMessageToJava(owner->getNetworkId(), 

@@ -113,7 +113,7 @@ SceneData * SceneGlobalDataNamespace::getSceneDataByName(std::string const & sce
 	if (i!=ms_SceneDataItems.end())
 		return i->second;
 	else
-		return nullptr;
+		return NULL;
 }
 
 // ======================================================================

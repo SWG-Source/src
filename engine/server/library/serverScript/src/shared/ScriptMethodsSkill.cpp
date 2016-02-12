@@ -276,7 +276,7 @@ jobjectArray JNICALL ScriptMethodsSkillNamespace::getSkillCommandsProvided(JNIEn
 
 	const SkillObject * skill = getSkill(localSkillName);
 	if(! skill)
-		return nullptr;
+		return NULL;
 
 	LocalObjectArrayRefPtr strArray;
 	if(! ScriptConversion::convert(skill->getCommandsProvided(), strArray))
@@ -293,7 +293,7 @@ jobject JNICALL ScriptMethodsSkillNamespace::getSkillPrerequisiteExperience(JNIE
 
 	const SkillObject * skill = getSkill(localSkillName);
 	if(! skill)
-		return nullptr;
+		return NULL;
 
 	JavaDictionaryPtr dict;
 	if (!JavaLibrary::convert(skill->getPrerequisiteExperienceVector(), dict))
@@ -334,7 +334,7 @@ jobjectArray JNICALL ScriptMethodsSkillNamespace::getSkillPrerequisiteSkills(JNI
 
 	const SkillObject * skill = getSkill(localSkillName);
 	if(! skill)
-		return nullptr;
+		return NULL;
 
 	std::vector<std::string> skillNames;
 	std::vector<const SkillObject *>::const_iterator i;
@@ -358,7 +358,7 @@ jobject JNICALL ScriptMethodsSkillNamespace::getSkillPrerequisiteSpecies(JNIEnv 
 
 	const SkillObject * skill = getSkill(localSkillName);
 	if(! skill)
-		return nullptr;
+		return NULL;
 
 	JavaDictionaryPtr dict;
 	if (!JavaLibrary::convert(skill->getPrerequisiteSpecies(), dict))
@@ -374,14 +374,14 @@ jstring JNICALL ScriptMethodsSkillNamespace::getSkillProfession(JNIEnv *env, job
 
 	const SkillObject * const skill = getSkill(localSkillName);
 	if(!skill)
-		return nullptr;
+		return NULL;
 	const SkillObject * const prof = skill->findProfessionForSkill ();
 	if(prof)
 	{
 		JavaString str(prof->getSkillName().c_str());
 		return str.getReturnValue();
 	}
-	return nullptr;
+	return NULL;
 }
 
 //-----------------------------------------------------------------------
@@ -423,7 +423,7 @@ jobject JNICALL ScriptMethodsSkillNamespace::getSkillStatisticModifiers(JNIEnv *
 
 	const SkillObject * skill = getSkill(localSkillName);
 	if(! skill)
-		return nullptr;
+		return NULL;
 
 	JavaDictionaryPtr dict;
 	if (!JavaLibrary::convert(skill->getStatisticModifiers(), dict))
@@ -450,7 +450,7 @@ jint JNICALL ScriptMethodsSkillNamespace::getCreatureSkillStatisticModifier(JNIE
 
 	JavaStringParam jskillStatName(skillStatName);
 
-	const CreatureObject * object = nullptr;
+	const CreatureObject * object = NULL;
 	if (!JavaLibrary::getObject(creature, object))
 		return 0;
 
@@ -472,7 +472,7 @@ jint JNICALL ScriptMethodsSkillNamespace::getCreatureSkillStatisticModifier(JNIE
  * @param creature			the creature whose stat mod we want
  * @param skillStatNames 	array of names of the skill stat mods we want
  *
- * @return the skill stat mod values, or nullptr on error
+ * @return the skill stat mod values, or null on error
  */
 jintArray JNICALL ScriptMethodsSkillNamespace::getCreatureSkillStatisticModifiers(JNIEnv *env, jobject self, jlong creature, jobjectArray skillStatNames)
 {
@@ -481,7 +481,7 @@ jintArray JNICALL ScriptMethodsSkillNamespace::getCreatureSkillStatisticModifier
 	if (skillStatNames == 0)
 		return 0;
 
-	const CreatureObject * object = nullptr;
+	const CreatureObject * object = NULL;
 	if (!JavaLibrary::getObject(creature, object))
 		return 0;
 
@@ -555,7 +555,7 @@ jint JNICALL ScriptMethodsSkillNamespace::internalGetCreatureEnhancedSkillStatis
 
 	JavaStringParam jskillStatName(skillStatName);
 
-	const CreatureObject * object = nullptr;
+	const CreatureObject * object = NULL;
 	if (!JavaLibrary::getObject(creature, object))
 		return 0;
 
@@ -577,7 +577,7 @@ jint JNICALL ScriptMethodsSkillNamespace::internalGetCreatureEnhancedSkillStatis
  * @param creature			the creature whose stat mod we want
  * @param skillStatNames 	array of names of the skill stat mods we want
  *
- * @return the skill stat mod values, or nullptr on error
+ * @return the skill stat mod values, or null on error
  */
 jintArray JNICALL ScriptMethodsSkillNamespace::internalGetCreatureEnhancedSkillStatisticModifiers(JNIEnv *env, jobject self, jlong creature, jobjectArray skillStatNames, jboolean useBonusCap)
 {
@@ -586,7 +586,7 @@ jintArray JNICALL ScriptMethodsSkillNamespace::internalGetCreatureEnhancedSkillS
 	if (skillStatNames == 0)
 		return 0;
 
-	const CreatureObject * object = nullptr;
+	const CreatureObject * object = NULL;
 	if (!JavaLibrary::getObject(creature, object))
 		return 0;
 
@@ -621,7 +621,7 @@ jstring JNICALL ScriptMethodsSkillNamespace::getSkillTitleGranted(JNIEnv *env, j
 
 	const SkillObject * const skill = getSkill(localSkillName);
 	if(! skill)
-		return nullptr;
+		return NULL;
 
 	if (skill->isTitle ())
 		return JavaString(skill->getSkillName ().c_str()).getReturnValue();
@@ -665,7 +665,7 @@ jint JNICALL ScriptMethodsSkillNamespace::grantExperiencePointsByString(JNIEnv *
 	if(name.empty())
 	{
 		// throw java exception
-		JavaLibrary::throwInternalScriptError("JavaLibrary::grantExperiencePoints() was passed an EMPTY or nullptr experience name. This is probably not what the script intends to do, and the database cannot save unnamed XP. Change your script to ensure that it is calling grantExperiencePoints with the intended parameters.");
+		JavaLibrary::throwInternalScriptError("JavaLibrary::grantExperiencePoints() was passed an EMPTY or NULL experience name. This is probably not what the script intends to do, and the database cannot save unnamed XP. Change your script to ensure that it is calling grantExperiencePoints with the intended parameters.");
 	}
 	else
 	{
@@ -675,7 +675,7 @@ jint JNICALL ScriptMethodsSkillNamespace::grantExperiencePointsByString(JNIEnv *
 			WARNING(true, ("JavaLibrary::grantExperiencePointsByString called "
 				"with target id = 0"));
 		}
-		else if (targetId.getObject() == nullptr)
+		else if (targetId.getObject() == NULL)
 		{
 			if (NameManager::getInstance().getPlayerName(targetId).empty())
 			{
@@ -683,7 +683,7 @@ jint JNICALL ScriptMethodsSkillNamespace::grantExperiencePointsByString(JNIEnv *
 					"with target id = %s, who is not in the player name map",
 					targetId.getValueString().c_str()));
 			}
-//			else if (ServerUniverse::getInstance().getXpManager() != nullptr)
+//			else if (ServerUniverse::getInstance().getXpManager() != NULL)
 //			{
 //				ServerUniverse::getInstance().getXpManager()->grantXp(targetId,
 //					name, amount);
@@ -701,7 +701,7 @@ jint JNICALL ScriptMethodsSkillNamespace::grantExperiencePointsByString(JNIEnv *
 		else
 		{
 			CreatureObject * creature = dynamic_cast<CreatureObject *>(targetId.getObject());
-			if (creature != nullptr)
+			if (creature != NULL)
 			{
 				result = creature->grantExperiencePoints(name, static_cast<int>(amount));
 			}
@@ -741,7 +741,7 @@ jint JNICALL ScriptMethodsSkillNamespace::grantExperiencePointsByInt(JNIEnv *env
 
 	jint result = INT_MIN;
 	CachedNetworkId targetId(target);
-	if (targetId.getObject() == nullptr)
+	if (targetId.getObject() == NULL)
 	{
 		if (targetId == CachedNetworkId::cms_cachedInvalid)
 		{
@@ -754,7 +754,7 @@ jint JNICALL ScriptMethodsSkillNamespace::grantExperiencePointsByInt(JNIEnv *env
 				"with target id = %s, who is not in the player name map",
 				targetId.getValueString().c_str()));
 		}
-//		else if (ServerUniverse::getInstance().getXpManager() != nullptr)
+//		else if (ServerUniverse::getInstance().getXpManager() != NULL)
 //		{
 //			ServerUniverse::getInstance().getXpManager()->grantXp(targetId,
 //				experienceTypeString, amount);
@@ -772,7 +772,7 @@ jint JNICALL ScriptMethodsSkillNamespace::grantExperiencePointsByInt(JNIEnv *env
 	else
 	{
 		CreatureObject * creature = dynamic_cast<CreatureObject *>(targetId.getObject());
-		if (creature != nullptr)
+		if (creature != NULL)
 		{
 			result = creature->grantExperiencePoints(experienceTypeString, static_cast<int>(amount));
 		}
@@ -977,7 +977,7 @@ jboolean JNICALL ScriptMethodsSkillNamespace::grantSchematicGroup(JNIEnv *env, j
 
 	JavaStringParam groupNameParam(groupName);
 
-	CreatureObject * creature = nullptr;
+	CreatureObject * creature = NULL;
 	if (!JavaLibrary::getObject(target, creature))
 		return JNI_FALSE;
 
@@ -1010,7 +1010,7 @@ jboolean JNICALL ScriptMethodsSkillNamespace::revokeSchematicGroup(JNIEnv *env, 
 
 	JavaStringParam groupNameParam(groupName);
 
-	CreatureObject * creature = nullptr;
+	CreatureObject * creature = NULL;
 	if (!JavaLibrary::getObject(target, creature))
 		return JNI_FALSE;
 
@@ -1067,7 +1067,7 @@ jboolean JNICALL ScriptMethodsSkillNamespace::grantSchematicCrc(JNIEnv *env, job
 {
 	UNREF(self);
 
-	CreatureObject * creature = nullptr;
+	CreatureObject * creature = NULL;
 	if (!JavaLibrary::getObject(target, creature))
 		return JNI_FALSE;
 
@@ -1120,7 +1120,7 @@ jboolean JNICALL ScriptMethodsSkillNamespace::revokeSchematicCrc(JNIEnv *env, jo
 {
 	UNREF(self);
 
-	CreatureObject * creature = nullptr;
+	CreatureObject * creature = NULL;
 	if (!JavaLibrary::getObject(target, creature))
 		return JNI_FALSE;
 
@@ -1173,7 +1173,7 @@ jboolean JNICALL ScriptMethodsSkillNamespace::hasSchematicCrc(JNIEnv *env, jobje
 {
 	UNREF(self);
 
-	CreatureObject * creature = nullptr;
+	CreatureObject * creature = NULL;
 	if (!JavaLibrary::getObject(target, creature))
 		return JNI_FALSE;
 
@@ -1191,11 +1191,11 @@ jboolean JNICALL ScriptMethodsSkillNamespace::hasSchematicCrc(JNIEnv *env, jobje
  * @param self		    class calling this function
  * @param player		the player
  *
- * @return the skill mod names the player has, or nullptr on error
+ * @return the skill mod names the player has, or null on error
  */
 jobjectArray JNICALL ScriptMethodsSkillNamespace::getSkillStatModListingForPlayer(JNIEnv *env, jobject self, jlong player)
 {
-	const CreatureObject * creature = nullptr;
+	const CreatureObject * creature = NULL;
 	if (!JavaLibrary::getObject(player, creature))
 		return 0;
 
@@ -1221,11 +1221,11 @@ jobjectArray JNICALL ScriptMethodsSkillNamespace::getSkillStatModListingForPlaye
  * @param self		    class calling this function
  * @param player		the player
  *
- * @return the commands the player has, or nullptr on error
+ * @return the commands the player has, or null on error
  */
 jobjectArray JNICALL ScriptMethodsSkillNamespace::getCommandListingForPlayer(JNIEnv *env, jobject self, jlong player)
 {
-	const CreatureObject * creature = nullptr;
+	const CreatureObject * creature = NULL;
 	if (!JavaLibrary::getObject(player, creature))
 		return 0;
 
@@ -1261,7 +1261,7 @@ jintArray JNICALL ScriptMethodsSkillNamespace::getSkillSchematicsGranted(JNIEnv 
 		return 0;
 
 	const SkillObject * skill = SkillManager::getInstance().getSkill(name);
-	if (skill == nullptr)
+	if (skill == NULL)
 		return 0;
 
 	// get all the granted schematics from the skill groups for the skill
@@ -1304,11 +1304,11 @@ jintArray JNICALL ScriptMethodsSkillNamespace::getSkillSchematicsGranted(JNIEnv 
  * @param self		    class calling this function
  * @param player		the player
  *
- * @return the schematics' crc, or nullptr on error
+ * @return the schematics' crc, or null on error
  */
 jintArray JNICALL ScriptMethodsSkillNamespace::getSchematicListingForPlayer(JNIEnv *env, jobject self, jlong player)
 {
-	const CreatureObject * creature = nullptr;
+	const CreatureObject * creature = NULL;
 	if (!JavaLibrary::getObject(player, creature))
 		return 0;
 
@@ -1335,7 +1335,7 @@ jintArray JNICALL ScriptMethodsSkillNamespace::getSchematicListingForPlayer(JNIE
 
 jboolean JNICALL ScriptMethodsSkillNamespace::hasCertificationsForItem(JNIEnv *env, jobject self, jlong player, jlong item)
 {
-	const CreatureObject * creatureObject = nullptr;
+	const CreatureObject * creatureObject = NULL;
 	if (!JavaLibrary::getObject(player, creatureObject) || !creatureObject)
 		return JNI_FALSE;
 
@@ -1349,7 +1349,7 @@ jboolean JNICALL ScriptMethodsSkillNamespace::hasCertificationsForItem(JNIEnv *e
 		}
 	}
 
-	const TangibleObject * itemObject = nullptr;
+	const TangibleObject * itemObject = NULL;
 	if (!JavaLibrary::getObject(item, itemObject) || !itemObject)
 		return JNI_FALSE;
 
@@ -1360,11 +1360,11 @@ jboolean JNICALL ScriptMethodsSkillNamespace::hasCertificationsForItem(JNIEnv *e
 
 jobjectArray JNICALL ScriptMethodsSkillNamespace::getRequiredCertifications(JNIEnv *env, jobject self, jlong item)
 {
-	const TangibleObject * itemAsTangible = nullptr;
+	const TangibleObject * itemAsTangible = NULL;
 	if (!JavaLibrary::getObject(item, itemAsTangible) || !itemAsTangible)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true,("getRequiredCertifications called with an object that does not exist"));
-		return nullptr;
+		return NULL;
 	}
 
 	std::vector<std::string> certs;
@@ -1372,7 +1372,7 @@ jobjectArray JNICALL ScriptMethodsSkillNamespace::getRequiredCertifications(JNIE
 
 	LocalObjectArrayRefPtr results;
 	if (!ScriptConversion::convert(certs, results))
-		return nullptr;
+		return NULL;
 
 	return results->getReturnValue();
 }
@@ -1381,7 +1381,7 @@ jobjectArray JNICALL ScriptMethodsSkillNamespace::getRequiredCertifications(JNIE
 
 jstring JNICALL ScriptMethodsSkillNamespace::getSkillTemplate(JNIEnv *env, jobject self, jlong player)
 {
-	CreatureObject const * creature = nullptr;
+	CreatureObject const * creature = NULL;
 	
 	if (JavaLibrary::getObject(player, creature))
 	{
@@ -1393,14 +1393,14 @@ jstring JNICALL ScriptMethodsSkillNamespace::getSkillTemplate(JNIEnv *env, jobje
 		}
 	}
 
-	return nullptr;
+	return NULL;
 }
 
 // ----------------------------------------------------------------------
 
 void JNICALL ScriptMethodsSkillNamespace::setSkillTemplate(JNIEnv *env, jobject self, jlong player, jstring skillTemplateName)
 {
-	CreatureObject * creature = nullptr;
+	CreatureObject * creature = NULL;
 	
 	if (JavaLibrary::getObject(player, creature))
 	{
@@ -1422,7 +1422,7 @@ void JNICALL ScriptMethodsSkillNamespace::setSkillTemplate(JNIEnv *env, jobject 
 
 jstring JNICALL ScriptMethodsSkillNamespace::getWorkingSkill(JNIEnv *env, jobject self, jlong player)
 {
-	CreatureObject const * creature = nullptr;
+	CreatureObject const * creature = NULL;
 
 	if (JavaLibrary::getObject(player, creature))
 	{
@@ -1435,14 +1435,14 @@ jstring JNICALL ScriptMethodsSkillNamespace::getWorkingSkill(JNIEnv *env, jobjec
 		}
 	}
 
-	return nullptr;
+	return NULL;
 }
 
 // ----------------------------------------------------------------------
 
 void JNICALL ScriptMethodsSkillNamespace::setWorkingSkill(JNIEnv *env, jobject self, jlong player, jstring workingSkillName)
 {
-	CreatureObject * creature = nullptr;
+	CreatureObject * creature = NULL;
 
 	if (JavaLibrary::getObject(player, creature))
 	{
@@ -1464,7 +1464,7 @@ void JNICALL ScriptMethodsSkillNamespace::setWorkingSkill(JNIEnv *env, jobject s
 
 void JNICALL ScriptMethodsSkillNamespace::recomputeCommandSeries(JNIEnv *env, jobject self, jlong player)
 {
-	CreatureObject * creature = nullptr;
+	CreatureObject * creature = NULL;
 
 	if (JavaLibrary::getObject(player, creature))
 	{
@@ -1476,7 +1476,7 @@ void JNICALL ScriptMethodsSkillNamespace::recomputeCommandSeries(JNIEnv *env, jo
 
 void JNICALL ScriptMethodsSkillNamespace::resetExpertises(JNIEnv *env, jobject self, jlong player)
 {
-	CreatureObject * creature = nullptr;
+	CreatureObject * creature = NULL;
 
 	if (JavaLibrary::getObject(player, creature))
 	{

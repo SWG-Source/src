@@ -69,7 +69,7 @@ int PathGraph::findNode ( PathNodeType type, int key ) const
 
 		if(getEdgeCount(i) == 0) continue;
 		
-		if((node != nullptr) && (node->getType() == type) && (node->getKey() == key))
+		if((node != NULL) && (node->getType() == type) && (node->getKey() == key))
 		{
 			return i;
 		}
@@ -88,7 +88,7 @@ int PathGraph::findEntrance ( int key ) const
 	{
 		PathNode const * node = getNode(i);
 
-		if(node == nullptr) continue;
+		if(node == NULL) continue;
 		
 		if(getEdgeCount(i) == 0) continue;
 		
@@ -119,7 +119,7 @@ int PathGraph::findNearestNode ( Vector const & position_p ) const
 	{
 		PathNode const * node = getNode(i);
 
-		if(node == nullptr) continue;
+		if(node == NULL) continue;
 
 		if(getEdgeCount(i) == 0) continue;
 		
@@ -148,7 +148,7 @@ int PathGraph::findNearestNode ( PathNodeType searchType, Vector const & positio
 	{
 		PathNode const * node = getNode(i);
 
-		if(node == nullptr) continue;
+		if(node == NULL) continue;
 		
 		if(getEdgeCount(i) == 0) continue;
 		
@@ -180,7 +180,7 @@ void PathGraph::findNodesInRange ( Vector const & position_p, float range, PathN
 	{
 		PathNode const * node = getNode(i);
 
-		if(node == nullptr) continue;
+		if(node == NULL) continue;
 		
 		if(getEdgeCount(i) == 0) continue;
 		

@@ -749,7 +749,7 @@ namespace LoginAPI
         else
             input.SetSessionID(sessionID);
 
-        // don't validate session type, there are clients that pass in nullptr.
+        // don't validate session type, there are clients that pass in NULL.
         input.SetSessionType(sessionType);
 
         ////////////////////////////////////////
@@ -776,7 +776,7 @@ namespace LoginAPI
         else
             input.SetSessionID(sessionID);
 
-        // don't validate session type, there are clients that pass in nullptr.
+        // don't validate session type, there are clients that pass in NULL.
         input.SetSessionType(sessionType);
 
         ////////////////////////////////////////
@@ -803,7 +803,7 @@ namespace LoginAPI
         else
             input.SetSessionID(sessionID);
 
-        // don't validate session type, there are clients that pass in nullptr.
+        // don't validate session type, there are clients that pass in NULL.
         input.SetSessionType(sessionType);
 
         ////////////////////////////////////////
@@ -830,7 +830,7 @@ namespace LoginAPI
         else
             input.SetSessionID(sessionID);
 
-        // don't validate session type, there are clients that pass in nullptr.
+        // don't validate session type, there are clients that pass in NULL.
         input.SetSessionType(sessionType);
 
         ////////////////////////////////////////

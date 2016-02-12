@@ -32,7 +32,7 @@ public:
      * @brief Used to retreive the the dot-notation represenatatiion of this address.
      *
      * @param buffer  A pointer to the buffer to place the ip address into.
-     *          Must be at least 17 characters long, will be nullptr terminated.
+     *          Must be at least 17 characters long, will be null terminated.
      *
      * @return A pointer to the buffer the address was placed into.
      */

@@ -207,7 +207,7 @@ void ScriptParams::addParam(bool param, const std::string & paramName, bool owne
  * This call occurs because of a conversion of a datatype passing through this function from std::string to Unicode::String.
  * Basically, most times it is called with std::string the c_str() function is called.  Since this is still valid when the
  * type is changed to Unicode::String and the const Unicode::unicode_char_t * is successfully auto-converted to const char *
- * you wind up having a nullptr string when it get explicitly converted to const char * on the other side.  So, this should never
+ * you wind up having a NULL string when it get explicitly converted to const char * on the other side.  So, this should never
  * be called except in error.
  *
 void ScriptParams::addParam(const Unicode::unicode_char_t * param, const std::string & paramName, bool owned)
@@ -659,7 +659,7 @@ bool ScriptParams::changeParam(int index, const StringId & param, bool owned)
 	if (p.m_type != Param::STRING_ID)
 		return false;
 	
-	if (p.m_param.sidParam == nullptr)
+	if (p.m_param.sidParam == NULL)
 		return false;
 	
 	if (p.m_owned)

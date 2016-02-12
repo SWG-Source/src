@@ -591,7 +591,7 @@ bool DataTableWriter::save(const char * outputFileName, bool optional) const
 {
 	if (!outputFileName || outputFileName[0] != '\0')
 	{
-		DEBUG_FATAL(true, ("OutputFileName is nullptr or empty."));
+		DEBUG_FATAL(true, ("OutputFileName is NULL or empty."));
 		return false;
 	}
 
@@ -728,7 +728,7 @@ DataTableCell *DataTableWriter::_getNewCell(DataTableColumnType const &columnTyp
 	switch (columnType.getBasicType())
 	{
 	case DataTableColumnType::DT_Int:
-		return new DataTableCell(static_cast<int>(strtol(value.c_str(), nullptr, 0)));
+		return new DataTableCell(static_cast<int>(strtol(value.c_str(), NULL, 0)));
 		break;
 	case DataTableColumnType::DT_Float:
 		return new DataTableCell(static_cast<float>(atof(value.c_str())));

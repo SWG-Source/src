@@ -68,15 +68,15 @@ void SetWarningCallback(WarningCallback);
 	template <class T>
 	inline T *NonNull(T *pointer, const char *name)
 	{
-		WARNING(!pointer, ("%s pointer is nullptr", name));
+		WARNING(!pointer, ("%s pointer is null", name));
 		return pointer;
 	}
 
 	#define NON_NULL(a) NonNull(a, #a)
-	#define NOT_NULL(a) FATAL(!a, ("%s pointer is nullptr", #a))
+	#define NOT_NULL(a) FATAL(!a, ("%s pointer is null", #a))
 
-	// FATAL if the specified pointer is not nullptr (i.e. assert that the pointer is nullptr, the opposite of NOT_NULL).
-	#define IS_NULL(a)  FATAL(a, ("%s pointer is not nullptr, unexpected.", #a))
+	// FATAL if the specified pointer is not NULL (i.e. assert that the pointer is null, the opposite of NOT_NULL).
+	#define IS_NULL(a)  FATAL(a, ("%s pointer is not null, unexpected.", #a))
 
 #else
 

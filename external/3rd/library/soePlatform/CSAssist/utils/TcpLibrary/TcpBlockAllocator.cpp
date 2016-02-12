@@ -6,7 +6,7 @@ namespace NAMESPACE
 #endif
 
 TcpBlockAllocator::TcpBlockAllocator(const unsigned initSize, const unsigned initCount)
-: m_freeHead(nullptr), m_blockCount(initCount), m_blockSize(initSize), m_numAvailBlocks(0)
+: m_freeHead(NULL), m_blockCount(initCount), m_blockSize(initSize), m_numAvailBlocks(0)
 {
     realloc();
 }
@@ -33,7 +33,7 @@ data_block *TcpBlockAllocator::getBlock()
 
     tmp = m_freeHead;
     m_freeHead = m_freeHead->m_next;
-    tmp->m_next = nullptr;
+    tmp->m_next = NULL;
     m_numAvailBlocks--;
     return(tmp);
 }
@@ -56,7 +56,7 @@ void TcpBlockAllocator::returnBlock(data_block *b)
 
 void TcpBlockAllocator::realloc()
 {
-    data_block *tmp = nullptr, *cursor = nullptr;
+    data_block *tmp = NULL, *cursor = NULL;
     
     tmp = new data_block; m_numAvailBlocks++;
     cursor = tmp;

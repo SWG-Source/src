@@ -39,8 +39,8 @@ using namespace ResourceClassObjectNamespace;
 
 ResourceClassObject::ResourceClassObject() : 
 		m_resourceClassName(),
-		m_parentClass(nullptr),
-		m_friendlyName(nullptr),
+		m_parentClass(NULL),
+		m_friendlyName(NULL),
 		m_minTypes(0),
 		m_maxTypes(0),
 		m_minPools(0),
@@ -49,7 +49,7 @@ ResourceClassObject::ResourceClassObject() :
 		m_nameTable(),
 		m_recycled(false),
 		m_permanent(false),
-		m_recycledVersion(nullptr),
+		m_recycledVersion(NULL),
 		m_resourceAttributeRanges(new ResourceAttributeRangesType()),
 		m_children(new ClassList)
 {
@@ -60,18 +60,18 @@ ResourceClassObject::ResourceClassObject() :
 ResourceClassObject::~ResourceClassObject()
 {
 	delete m_children;
-	m_children = nullptr;
+	m_children = NULL;
 
 	delete m_resourceAttributeRanges;
-	m_resourceAttributeRanges = nullptr;
+	m_resourceAttributeRanges = NULL;
 
-	m_parentClass = nullptr;
-	m_recycledVersion = nullptr;
+	m_parentClass = NULL;
+	m_recycledVersion = NULL;
 	
-	if (m_friendlyName != nullptr)
+	if (m_friendlyName != NULL)
 	{
 		delete m_friendlyName;
-		m_friendlyName = nullptr;
+		m_friendlyName = NULL;
 	}
 }
 
@@ -254,7 +254,7 @@ ResourceClassObject::ResourceAttributeRangesType const & ResourceClassObject::ge
 {
 static const ResourceAttributeRangesType emptyRanges;
 
-	if (m_resourceAttributeRanges != nullptr)
+	if (m_resourceAttributeRanges != NULL)
 		return *m_resourceAttributeRanges;
 	return emptyRanges;
 }
@@ -304,7 +304,7 @@ void ResourceClassObject::loadTreeFromIff()
 		int numRows = resourceDataTable->getNumRows();
 		ResourceClassObject * parents[8];
 		for (int i=0; i<8; ++i)
-			parents[i]=nullptr;
+			parents[i]=NULL;
 		
 		static const std::string colName_resourceClassName = "ENUM";
 		static const std::string colName_maxTypes          = "Maximum # types";
@@ -334,7 +334,7 @@ void ResourceClassObject::loadTreeFromIff()
 					if (possibleName.size()!=0)
 					{
 						if (wheresTheName==0)
-							newClass->m_parentClass = nullptr;
+							newClass->m_parentClass = NULL;
 						else
 						{
 							newClass->m_parentClass = parents[wheresTheName-1];
@@ -438,12 +438,12 @@ bool ResourceClassObject::isLeaf() const
 
 void ResourceClassObject::getChildren(std::vector<const ResourceClassObject *> & children, bool recurse) const
 {
-	if (m_children == nullptr)
+	if (m_children == NULL)
 		return;
 
 	for (ClassList::const_iterator i = m_children->begin(); i != m_children->end(); ++i)
 	{
-		if (*i != nullptr)
+		if (*i != NULL)
 		{
 			children.push_back(*i);
 			if (recurse)
@@ -456,12 +456,12 @@ void ResourceClassObject::getChildren(std::vector<const ResourceClassObject *> &
 
 void ResourceClassObject::getLeafChildren(std::vector<const ResourceClassObject *> & children) const
 {
-	if (m_children == nullptr)
+	if (m_children == NULL)
 		return;
 
 	for (ClassList::const_iterator i = m_children->begin(); i != m_children->end(); ++i)
 	{
-		if (*i != nullptr)
+		if (*i != NULL)
 		{
 			if ((*i)->isLeaf())
 				children.push_back(*i);
@@ -493,7 +493,7 @@ ResourceClassObject const * ResourceClassObject::getRecycledVersion() const
 		return m_recycledVersion;
 	else if (m_parentClass)
 		return m_parentClass->getRecycledVersion();
-	else return nullptr;
+	else return NULL;
 }
 
 // ----------------------------------------------------------------------

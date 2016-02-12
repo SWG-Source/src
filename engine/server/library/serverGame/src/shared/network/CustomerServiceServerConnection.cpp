@@ -58,12 +58,12 @@ void CustomerServiceServerConnection::onReceive(const Archive::ByteStream & mess
 		ChatRequestLog chatRequestLog(ri);
 		Object * const reportingObject = NetworkIdManager::getObjectById(NetworkId(Unicode::wideToNarrow(chatRequestLog.getPlayer())));
 
-		if (   (reportingObject != nullptr)
+		if (   (reportingObject != NULL)
 		    && reportingObject->isAuthoritative())
 		{
 			PlayerObject const * const reportingPlayerObject = PlayerCreatureController::getPlayerObject(CreatureObject::asCreatureObject(reportingObject));
 			
-			if (reportingPlayerObject != nullptr)
+			if (reportingPlayerObject != NULL)
 			{
 				PlayerObject::ChatLog const &reportingPlayerChatLog = reportingPlayerObject->getChatLog();
 				PlayerObject::ChatLog::const_iterator iterReportingPlayerChatLog = reportingPlayerChatLog.begin();

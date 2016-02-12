@@ -19,7 +19,7 @@ RequestSceneTransfer::RequestSceneTransfer(const NetworkId &oid, const std::stri
 	m_containerName(),
 	m_scriptCallback()
 {
-	if (scriptCallback != nullptr)
+	if (scriptCallback != NULL)
 		m_scriptCallback.set(scriptCallback);
 
 	addVariable(m_oid);
@@ -45,7 +45,7 @@ RequestSceneTransfer::RequestSceneTransfer(const NetworkId &oid, const std::stri
 	m_containerName(containerName),
 	m_scriptCallback()
 {
-	if (scriptCallback != nullptr)
+	if (scriptCallback != NULL)
 		m_scriptCallback.set(scriptCallback);
 
 	addVariable(m_oid);

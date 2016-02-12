@@ -64,7 +64,7 @@ class UdpReliableChannel
         void ProcessPacket(ReliablePacketMode mode, const udp_uchar *data, int dataLen);
         bool PullDown(int windowSpaceLeft);
         void FlushCoalesce();
-        void SendCoalesce(const udp_uchar *data, int dataLen, const udp_uchar *data2 = nullptr, int dataLen2 = 0);
+        void SendCoalesce(const udp_uchar *data, int dataLen, const udp_uchar *data2 = NULL, int dataLen2 = 0);
         void QueueLogicalPacket(LogicalPacket *packet);
 
         UdpReliableConfig mConfig;
@@ -138,7 +138,7 @@ inline int UdpReliableChannel::TotalPendingBytes() const
 
 inline void UdpReliableChannel::ClearBufferedAck()
 {
-    mBufferedAckPtr = nullptr;
+    mBufferedAckPtr = NULL;
 }
 
 inline udp_int64 UdpReliableChannel::GetReliableOutgoingId(int reliableStamp) const

@@ -100,7 +100,7 @@ void ClientConnection::onReceive(const Archive::ByteStream & message)
 			// client has an idea of how much difference there is between
 			// the client's Epoch time and the server Epoch time
 			GenericValueTypeMessage<int32> const serverNowEpochTime(
-				"ServerNowEpochTime", static_cast<int32>(::time(nullptr)));
+				"ServerNowEpochTime", static_cast<int32>(::time(NULL)));
 			send(serverNowEpochTime, true);
 
 			LoginClientId id(ri); 
@@ -202,7 +202,7 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 		
 		LOG("LoginClientConnection", ("validateClient() for stationId (%lu) at IP (%s), id (%s) key (%s), skipping validating session", m_stationId, getRemoteAddress().c_str(), id.c_str(), key.c_str()));
 
-		LoginServer::getInstance().onValidateClient(suid, id, this, true, nullptr, 0xFFFFFFFF, 0xFFFFFFFF);
+		LoginServer::getInstance().onValidateClient(suid, id, this, true, NULL, 0xFFFFFFFF, 0xFFFFFFFF);
 	}
 }
 

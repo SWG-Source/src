@@ -435,7 +435,7 @@ void SessionApiClient::NotifySessionKick(const char ** sessionList,
 
 void SessionApiClient::checkStatusForPurge(StationId account)
 {
-	GetAccountSubscription(account, PlatformGameCode::SWG, nullptr);
+	GetAccountSubscription(account, PlatformGameCode::SWG, NULL);
 }
 
 //------------------------------------------------------------------------------------------

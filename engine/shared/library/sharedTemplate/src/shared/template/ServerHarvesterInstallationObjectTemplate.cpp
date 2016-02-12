@@ -86,10 +86,10 @@ Tag ServerHarvesterInstallationObjectTemplate::getTemplateVersion(void) const
  */
 Tag ServerHarvesterInstallationObjectTemplate::getHighestTemplateVersion(void) const
 {
-	if (m_baseData == nullptr)
+	if (m_baseData == NULL)
 		return m_templateVersion;
 	const ServerHarvesterInstallationObjectTemplate * base = dynamic_cast<const ServerHarvesterInstallationObjectTemplate *>(m_baseData);
-	if (base == nullptr)
+	if (base == NULL)
 		return m_templateVersion;
 	return std::max(m_templateVersion, base->getHighestTemplateVersion());
 } // ServerHarvesterInstallationObjectTemplate::getHighestTemplateVersion
@@ -103,9 +103,9 @@ CompilerIntegerParam * ServerHarvesterInstallationObjectTemplate::getCompilerInt
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_maxExtractionRate;
 		}
@@ -117,9 +117,9 @@ CompilerIntegerParam * ServerHarvesterInstallationObjectTemplate::getCompilerInt
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_currentExtractionRate;
 		}
@@ -131,9 +131,9 @@ CompilerIntegerParam * ServerHarvesterInstallationObjectTemplate::getCompilerInt
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_maxHopperSize;
 		}
@@ -141,7 +141,7 @@ CompilerIntegerParam * ServerHarvesterInstallationObjectTemplate::getCompilerInt
 	}
 	else
 		return ServerInstallationObjectTemplate::getCompilerIntegerParam(name, deepCheck, index);
-	return nullptr;
+	return NULL;
 }	//ServerHarvesterInstallationObjectTemplate::getCompilerIntegerParam
 
 FloatParam * ServerHarvesterInstallationObjectTemplate::getFloatParam(const char *name, bool deepCheck, int index)
@@ -162,9 +162,9 @@ StringParam * ServerHarvesterInstallationObjectTemplate::getStringParam(const ch
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getStringParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_masterClassName;
 		}
@@ -172,7 +172,7 @@ StringParam * ServerHarvesterInstallationObjectTemplate::getStringParam(const ch
 	}
 	else
 		return ServerInstallationObjectTemplate::getStringParam(name, deepCheck, index);
-	return nullptr;
+	return NULL;
 }	//ServerHarvesterInstallationObjectTemplate::getStringParam
 
 StringIdParam * ServerHarvesterInstallationObjectTemplate::getStringIdParam(const char *name, bool deepCheck, int index)
@@ -255,12 +255,12 @@ char paramName[MAX_NAME_SIZE];
 		file.read_string(baseFilename);
 		file.exitChunk();
 		const ObjectTemplate *base = ObjectTemplateList::fetch(baseFilename);
-		DEBUG_WARNING(base == nullptr, ("was unable to load base template %s", baseFilename.c_str()));
-		if (m_baseData == base && base != nullptr)
+		DEBUG_WARNING(base == NULL, ("was unable to load base template %s", baseFilename.c_str()));
+		if (m_baseData == base && base != NULL)
 			base->releaseReference();
 		else
 		{
-			if (m_baseData != nullptr)
+			if (m_baseData != NULL)
 				m_baseData->releaseReference();
 			m_baseData = base;
 		}

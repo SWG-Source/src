@@ -109,8 +109,8 @@ SharedObjectTemplate::SharedObjectTemplate(const std::string & filename)
 	: ObjectTemplate(filename)
 	,m_versionOk(true)
 //@END TFD INIT
-	, m_slotDescriptor(nullptr)
-	, m_arrangementDescriptor(nullptr)
+	, m_slotDescriptor(NULL)
+	, m_arrangementDescriptor(NULL)
 	, m_clientData (0)
 	, m_preloadManager (0)	
 {
@@ -232,10 +232,10 @@ Tag SharedObjectTemplate::getTemplateVersion(void) const
  */
 Tag SharedObjectTemplate::getHighestTemplateVersion(void) const
 {
-	if (m_baseData == nullptr)
+	if (m_baseData == NULL)
 		return m_templateVersion;
 	const SharedObjectTemplate * base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
-	if (base == nullptr)
+	if (base == NULL)
 		return m_templateVersion;
 	return std::max(m_templateVersion, base->getHighestTemplateVersion());
 } // SharedObjectTemplate::getHighestTemplateVersion
@@ -274,33 +274,33 @@ StringId testDataValue = DefaultStringId;
 UNREF(testData);
 #endif
 
-	const SharedObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const SharedObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getObjectName(true);
 #endif
 	}
 
 	if (!m_objectName.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter objectName in template %s", DataResource::getName()));
 			return DefaultStringId;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter objectName has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter objectName has not been defined in template %s!", DataResource::getName()));
 			return base->getObjectName();
 		}
 	}
 
 	const StringId value = m_objectName.getValue();
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -316,33 +316,33 @@ StringId testDataValue = DefaultStringId;
 UNREF(testData);
 #endif
 
-	const SharedObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const SharedObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getDetailedDescription(true);
 #endif
 	}
 
 	if (!m_detailedDescription.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter detailedDescription in template %s", DataResource::getName()));
 			return DefaultStringId;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter detailedDescription has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter detailedDescription has not been defined in template %s!", DataResource::getName()));
 			return base->getDetailedDescription();
 		}
 	}
 
 	const StringId value = m_detailedDescription.getValue();
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -358,33 +358,33 @@ StringId testDataValue = DefaultStringId;
 UNREF(testData);
 #endif
 
-	const SharedObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const SharedObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getLookAtText(true);
 #endif
 	}
 
 	if (!m_lookAtText.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter lookAtText in template %s", DataResource::getName()));
 			return DefaultStringId;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter lookAtText has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter lookAtText has not been defined in template %s!", DataResource::getName()));
 			return base->getLookAtText();
 		}
 	}
 
 	const StringId value = m_lookAtText.getValue();
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -400,33 +400,33 @@ bool testDataValue = false;
 UNREF(testData);
 #endif
 
-	const SharedObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const SharedObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getSnapToTerrain(true);
 #endif
 	}
 
 	if (!m_snapToTerrain.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter snapToTerrain in template %s", DataResource::getName()));
 			return false;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter snapToTerrain has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter snapToTerrain has not been defined in template %s!", DataResource::getName()));
 			return base->getSnapToTerrain();
 		}
 	}
 
 	bool value = m_snapToTerrain.getValue();
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -442,33 +442,33 @@ SharedObjectTemplate::ContainerType testDataValue = static_cast<SharedObjectTemp
 UNREF(testData);
 #endif
 
-	const SharedObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const SharedObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getContainerType(true);
 #endif
 	}
 
 	if (!m_containerType.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter containerType in template %s", DataResource::getName()));
 			return static_cast<ContainerType>(0);
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter containerType has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter containerType has not been defined in template %s!", DataResource::getName()));
 			return base->getContainerType();
 		}
 	}
 
 	ContainerType value = static_cast<ContainerType>(m_containerType.getValue());
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -484,26 +484,26 @@ int testDataValue = 0;
 UNREF(testData);
 #endif
 
-	const SharedObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const SharedObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getContainerVolumeLimit(true);
 #endif
 	}
 
 	if (!m_containerVolumeLimit.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter containerVolumeLimit in template %s", DataResource::getName()));
 			return 0;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter containerVolumeLimit has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter containerVolumeLimit has not been defined in template %s!", DataResource::getName()));
 			return base->getContainerVolumeLimit();
 		}
 	}
@@ -513,9 +513,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		int baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getContainerVolumeLimit();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -532,7 +532,7 @@ UNREF(testData);
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -548,26 +548,26 @@ int testDataValue = 0;
 UNREF(testData);
 #endif
 
-	const SharedObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const SharedObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getContainerVolumeLimitMin(true);
 #endif
 	}
 
 	if (!m_containerVolumeLimit.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter containerVolumeLimit in template %s", DataResource::getName()));
 			return 0;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter containerVolumeLimit has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter containerVolumeLimit has not been defined in template %s!", DataResource::getName()));
 			return base->getContainerVolumeLimitMin();
 		}
 	}
@@ -577,9 +577,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		int baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getContainerVolumeLimitMin();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -596,7 +596,7 @@ UNREF(testData);
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -612,26 +612,26 @@ int testDataValue = 0;
 UNREF(testData);
 #endif
 
-	const SharedObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const SharedObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getContainerVolumeLimitMax(true);
 #endif
 	}
 
 	if (!m_containerVolumeLimit.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter containerVolumeLimit in template %s", DataResource::getName()));
 			return 0;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter containerVolumeLimit has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter containerVolumeLimit has not been defined in template %s!", DataResource::getName()));
 			return base->getContainerVolumeLimitMax();
 		}
 	}
@@ -641,9 +641,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		int baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getContainerVolumeLimitMax();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -660,7 +660,7 @@ UNREF(testData);
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -676,33 +676,33 @@ std::string testDataValue = DefaultString;
 UNREF(testData);
 #endif
 
-	const SharedObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const SharedObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getTintPalette(true);
 #endif
 	}
 
 	if (!m_tintPalette.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter tintPalette in template %s", DataResource::getName()));
 			return DefaultString;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter tintPalette has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter tintPalette has not been defined in template %s!", DataResource::getName()));
 			return base->getTintPalette();
 		}
 	}
 
 	const std::string & value = m_tintPalette.getValue();
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -718,33 +718,33 @@ std::string testDataValue = DefaultString;
 UNREF(testData);
 #endif
 
-	const SharedObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const SharedObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getSlotDescriptorFilename(true);
 #endif
 	}
 
 	if (!m_slotDescriptorFilename.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter slotDescriptorFilename in template %s", DataResource::getName()));
 			return DefaultString;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter slotDescriptorFilename has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter slotDescriptorFilename has not been defined in template %s!", DataResource::getName()));
 			return base->getSlotDescriptorFilename();
 		}
 	}
 
 	const std::string & value = m_slotDescriptorFilename.getValue();
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -760,33 +760,33 @@ std::string testDataValue = DefaultString;
 UNREF(testData);
 #endif
 
-	const SharedObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const SharedObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getArrangementDescriptorFilename(true);
 #endif
 	}
 
 	if (!m_arrangementDescriptorFilename.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter arrangementDescriptorFilename in template %s", DataResource::getName()));
 			return DefaultString;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter arrangementDescriptorFilename has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter arrangementDescriptorFilename has not been defined in template %s!", DataResource::getName()));
 			return base->getArrangementDescriptorFilename();
 		}
 	}
 
 	const std::string & value = m_arrangementDescriptorFilename.getValue();
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -802,33 +802,33 @@ std::string testDataValue = DefaultString;
 UNREF(testData);
 #endif
 
-	const SharedObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const SharedObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getAppearanceFilename(true);
 #endif
 	}
 
 	if (!m_appearanceFilename.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter appearanceFilename in template %s", DataResource::getName()));
 			return DefaultString;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter appearanceFilename has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter appearanceFilename has not been defined in template %s!", DataResource::getName()));
 			return base->getAppearanceFilename();
 		}
 	}
 
 	const std::string & value = m_appearanceFilename.getValue();
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -844,33 +844,33 @@ std::string testDataValue = DefaultString;
 UNREF(testData);
 #endif
 
-	const SharedObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const SharedObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getPortalLayoutFilename(true);
 #endif
 	}
 
 	if (!m_portalLayoutFilename.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter portalLayoutFilename in template %s", DataResource::getName()));
 			return DefaultString;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter portalLayoutFilename has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter portalLayoutFilename has not been defined in template %s!", DataResource::getName()));
 			return base->getPortalLayoutFilename();
 		}
 	}
 
 	const std::string & value = m_portalLayoutFilename.getValue();
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -886,33 +886,33 @@ std::string testDataValue = DefaultString;
 UNREF(testData);
 #endif
 
-	const SharedObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const SharedObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getClientDataFile(true);
 #endif
 	}
 
 	if (!m_clientDataFile.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter clientDataFile in template %s", DataResource::getName()));
 			return DefaultString;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter clientDataFile has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter clientDataFile has not been defined in template %s!", DataResource::getName()));
 			return base->getClientDataFile();
 		}
 	}
 
 	const std::string & value = m_clientDataFile.getValue();
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -928,26 +928,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const SharedObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const SharedObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getScale(true);
 #endif
 	}
 
 	if (!m_scale.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter scale in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter scale has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter scale has not been defined in template %s!", DataResource::getName()));
 			return base->getScale();
 		}
 	}
@@ -957,9 +957,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getScale();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -976,7 +976,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -992,26 +992,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const SharedObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const SharedObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getScaleMin(true);
 #endif
 	}
 
 	if (!m_scale.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter scale in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter scale has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter scale has not been defined in template %s!", DataResource::getName()));
 			return base->getScaleMin();
 		}
 	}
@@ -1021,9 +1021,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getScaleMin();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -1040,7 +1040,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -1056,26 +1056,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const SharedObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const SharedObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getScaleMax(true);
 #endif
 	}
 
 	if (!m_scale.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter scale in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter scale has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter scale has not been defined in template %s!", DataResource::getName()));
 			return base->getScaleMax();
 		}
 	}
@@ -1085,9 +1085,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getScaleMax();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -1104,7 +1104,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -1120,33 +1120,33 @@ SharedObjectTemplate::GameObjectType testDataValue = static_cast<SharedObjectTem
 UNREF(testData);
 #endif
 
-	const SharedObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const SharedObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getGameObjectType(true);
 #endif
 	}
 
 	if (!m_gameObjectType.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter gameObjectType in template %s", DataResource::getName()));
 			return static_cast<GameObjectType>(0);
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter gameObjectType has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter gameObjectType has not been defined in template %s!", DataResource::getName()));
 			return base->getGameObjectType();
 		}
 	}
 
 	GameObjectType value = static_cast<GameObjectType>(m_gameObjectType.getValue());
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -1162,33 +1162,33 @@ bool testDataValue = false;
 UNREF(testData);
 #endif
 
-	const SharedObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const SharedObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getSendToClient(true);
 #endif
 	}
 
 	if (!m_sendToClient.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter sendToClient in template %s", DataResource::getName()));
 			return false;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter sendToClient has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter sendToClient has not been defined in template %s!", DataResource::getName()));
 			return base->getSendToClient();
 		}
 	}
 
 	bool value = m_sendToClient.getValue();
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -1204,26 +1204,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const SharedObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const SharedObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getScaleThresholdBeforeExtentTest(true);
 #endif
 	}
 
 	if (!m_scaleThresholdBeforeExtentTest.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter scaleThresholdBeforeExtentTest in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter scaleThresholdBeforeExtentTest has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter scaleThresholdBeforeExtentTest has not been defined in template %s!", DataResource::getName()));
 			return base->getScaleThresholdBeforeExtentTest();
 		}
 	}
@@ -1233,9 +1233,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getScaleThresholdBeforeExtentTest();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -1252,7 +1252,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -1268,26 +1268,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const SharedObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const SharedObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getScaleThresholdBeforeExtentTestMin(true);
 #endif
 	}
 
 	if (!m_scaleThresholdBeforeExtentTest.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter scaleThresholdBeforeExtentTest in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter scaleThresholdBeforeExtentTest has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter scaleThresholdBeforeExtentTest has not been defined in template %s!", DataResource::getName()));
 			return base->getScaleThresholdBeforeExtentTestMin();
 		}
 	}
@@ -1297,9 +1297,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getScaleThresholdBeforeExtentTestMin();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -1316,7 +1316,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -1332,26 +1332,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const SharedObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const SharedObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getScaleThresholdBeforeExtentTestMax(true);
 #endif
 	}
 
 	if (!m_scaleThresholdBeforeExtentTest.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter scaleThresholdBeforeExtentTest in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter scaleThresholdBeforeExtentTest has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter scaleThresholdBeforeExtentTest has not been defined in template %s!", DataResource::getName()));
 			return base->getScaleThresholdBeforeExtentTestMax();
 		}
 	}
@@ -1361,9 +1361,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getScaleThresholdBeforeExtentTestMax();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -1380,7 +1380,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -1396,26 +1396,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const SharedObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const SharedObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getClearFloraRadius(true);
 #endif
 	}
 
 	if (!m_clearFloraRadius.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter clearFloraRadius in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter clearFloraRadius has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter clearFloraRadius has not been defined in template %s!", DataResource::getName()));
 			return base->getClearFloraRadius();
 		}
 	}
@@ -1425,9 +1425,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getClearFloraRadius();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -1444,7 +1444,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -1460,26 +1460,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const SharedObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const SharedObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getClearFloraRadiusMin(true);
 #endif
 	}
 
 	if (!m_clearFloraRadius.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter clearFloraRadius in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter clearFloraRadius has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter clearFloraRadius has not been defined in template %s!", DataResource::getName()));
 			return base->getClearFloraRadiusMin();
 		}
 	}
@@ -1489,9 +1489,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getClearFloraRadiusMin();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -1508,7 +1508,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -1524,26 +1524,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const SharedObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const SharedObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getClearFloraRadiusMax(true);
 #endif
 	}
 
 	if (!m_clearFloraRadius.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter clearFloraRadius in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter clearFloraRadius has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter clearFloraRadius has not been defined in template %s!", DataResource::getName()));
 			return base->getClearFloraRadiusMax();
 		}
 	}
@@ -1553,9 +1553,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getClearFloraRadiusMax();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -1572,7 +1572,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -1588,33 +1588,33 @@ SharedObjectTemplate::SurfaceType testDataValue = static_cast<SharedObjectTempla
 UNREF(testData);
 #endif
 
-	const SharedObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const SharedObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getSurfaceType(true);
 #endif
 	}
 
 	if (!m_surfaceType.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter surfaceType in template %s", DataResource::getName()));
 			return static_cast<SurfaceType>(0);
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter surfaceType has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter surfaceType has not been defined in template %s!", DataResource::getName()));
 			return base->getSurfaceType();
 		}
 	}
 
 	SurfaceType value = static_cast<SurfaceType>(m_surfaceType.getValue());
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -1630,26 +1630,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const SharedObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const SharedObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getNoBuildRadius(true);
 #endif
 	}
 
 	if (!m_noBuildRadius.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter noBuildRadius in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter noBuildRadius has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter noBuildRadius has not been defined in template %s!", DataResource::getName()));
 			return base->getNoBuildRadius();
 		}
 	}
@@ -1659,9 +1659,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getNoBuildRadius();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -1678,7 +1678,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -1694,26 +1694,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const SharedObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const SharedObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getNoBuildRadiusMin(true);
 #endif
 	}
 
 	if (!m_noBuildRadius.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter noBuildRadius in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter noBuildRadius has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter noBuildRadius has not been defined in template %s!", DataResource::getName()));
 			return base->getNoBuildRadiusMin();
 		}
 	}
@@ -1723,9 +1723,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getNoBuildRadiusMin();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -1742,7 +1742,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -1758,26 +1758,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const SharedObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const SharedObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getNoBuildRadiusMax(true);
 #endif
 	}
 
 	if (!m_noBuildRadius.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter noBuildRadius in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter noBuildRadius has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter noBuildRadius has not been defined in template %s!", DataResource::getName()));
 			return base->getNoBuildRadiusMax();
 		}
 	}
@@ -1787,9 +1787,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getNoBuildRadiusMax();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -1806,7 +1806,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -1822,33 +1822,33 @@ bool testDataValue = false;
 UNREF(testData);
 #endif
 
-	const SharedObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const SharedObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getOnlyVisibleInTools(true);
 #endif
 	}
 
 	if (!m_onlyVisibleInTools.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter onlyVisibleInTools in template %s", DataResource::getName()));
 			return false;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter onlyVisibleInTools has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter onlyVisibleInTools has not been defined in template %s!", DataResource::getName()));
 			return base->getOnlyVisibleInTools();
 		}
 	}
 
 	bool value = m_onlyVisibleInTools.getValue();
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -1864,26 +1864,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const SharedObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const SharedObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getLocationReservationRadius(true);
 #endif
 	}
 
 	if (!m_locationReservationRadius.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter locationReservationRadius in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter locationReservationRadius has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter locationReservationRadius has not been defined in template %s!", DataResource::getName()));
 			return base->getLocationReservationRadius();
 		}
 	}
@@ -1893,9 +1893,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getLocationReservationRadius();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -1912,7 +1912,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -1928,26 +1928,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const SharedObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const SharedObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getLocationReservationRadiusMin(true);
 #endif
 	}
 
 	if (!m_locationReservationRadius.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter locationReservationRadius in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter locationReservationRadius has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter locationReservationRadius has not been defined in template %s!", DataResource::getName()));
 			return base->getLocationReservationRadiusMin();
 		}
 	}
@@ -1957,9 +1957,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getLocationReservationRadiusMin();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -1976,7 +1976,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -1992,26 +1992,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const SharedObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const SharedObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getLocationReservationRadiusMax(true);
 #endif
 	}
 
 	if (!m_locationReservationRadius.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter locationReservationRadius in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter locationReservationRadius has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter locationReservationRadius has not been defined in template %s!", DataResource::getName()));
 			return base->getLocationReservationRadiusMax();
 		}
 	}
@@ -2021,9 +2021,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getLocationReservationRadiusMax();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -2040,7 +2040,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -2056,33 +2056,33 @@ bool testDataValue = false;
 UNREF(testData);
 #endif
 
-	const SharedObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const SharedObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getForceNoCollision(true);
 #endif
 	}
 
 	if (!m_forceNoCollision.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter forceNoCollision in template %s", DataResource::getName()));
 			return false;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter forceNoCollision has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter forceNoCollision has not been defined in template %s!", DataResource::getName()));
 			return base->getForceNoCollision();
 		}
 	}
 
 	bool value = m_forceNoCollision.getValue();
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -2153,12 +2153,12 @@ char paramName[MAX_NAME_SIZE];
 		file.read_string(baseFilename);
 		file.exitChunk();
 		const ObjectTemplate *base = ObjectTemplateList::fetch(baseFilename);
-		DEBUG_WARNING(base == nullptr, ("was unable to load base template %s", baseFilename.c_str()));
-		if (m_baseData == base && base != nullptr)
+		DEBUG_WARNING(base == NULL, ("was unable to load base template %s", baseFilename.c_str()));
+		if (m_baseData == base && base != NULL)
 			base->releaseReference();
 		else
 		{
-			if (m_baseData != nullptr)
+			if (m_baseData != NULL)
 				m_baseData->releaseReference();
 			m_baseData = base;
 		}

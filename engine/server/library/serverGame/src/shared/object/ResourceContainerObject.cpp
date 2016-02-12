@@ -27,7 +27,7 @@
 
 // ======================================================================
 
-const SharedObjectTemplate * ResourceContainerObject::m_defaultSharedTemplate = nullptr;
+const SharedObjectTemplate * ResourceContainerObject::m_defaultSharedTemplate = NULL;
 
 namespace ResourceContainerObjectNamespace
 {
@@ -66,11 +66,11 @@ const SharedObjectTemplate * ResourceContainerObject::getDefaultSharedTemplate(v
 {
 	static const ConstCharCrcLowerString templateName("object/resource_container/base/shared_resource_container_default.iff");
 
-	if (m_defaultSharedTemplate == nullptr)
+	if (m_defaultSharedTemplate == NULL)
 	{
 		m_defaultSharedTemplate = safe_cast<const SharedObjectTemplate *>(ObjectTemplateList::fetch(templateName));
-		WARNING_STRICT_FATAL(m_defaultSharedTemplate == nullptr, ("Cannot create default shared object template %s", templateName.getString()));
-		if (m_defaultSharedTemplate != nullptr)
+		WARNING_STRICT_FATAL(m_defaultSharedTemplate == NULL, ("Cannot create default shared object template %s", templateName.getString()));
+		if (m_defaultSharedTemplate != NULL)
 			ExitChain::add (removeDefaultTemplate, "ResourceContainerObject::removeDefaultTemplate");
 	}
 	return m_defaultSharedTemplate;
@@ -83,10 +83,10 @@ const SharedObjectTemplate * ResourceContainerObject::getDefaultSharedTemplate(v
  */
 void ResourceContainerObject::removeDefaultTemplate(void)
 {
-	if (m_defaultSharedTemplate != nullptr)
+	if (m_defaultSharedTemplate != NULL)
 	{
 		m_defaultSharedTemplate->releaseReference();
-		m_defaultSharedTemplate = nullptr;
+		m_defaultSharedTemplate = NULL;
 	}
 }	// ResourceContainerObject::removeDefaultTemplate
 
@@ -398,7 +398,7 @@ bool ResourceContainerObject::transferTo(ResourceContainerObject &destination, i
  * @param destContainer The container into which the new ResourceContainer should be placed, or cms_Invalid if no container
  * @param arrangementId -1 If destContainer is not slotted, otherwise the ID of the arrangement to use
  * @param newLocation The coordinates at which to place the new ResourceContainer.  (Ignored if it is going into a non-positional container.)
- * @param actor The player making the split, or nullptr
+ * @param actor The player making the split, or NULL
  */
 
 bool ResourceContainerObject::splitContainer(int amount, const CachedNetworkId &destContainer, int arrangementId, const Vector &newLocation, ServerObject *actor)
@@ -407,7 +407,7 @@ bool ResourceContainerObject::splitContainer(int amount, const CachedNetworkId &
 
 	bool result = false;
 	
-	ResourceContainerObject *newCrate = nullptr;
+	ResourceContainerObject *newCrate = NULL;
 	
 	if (destContainer == CachedNetworkId::cms_cachedInvalid)
 	{
@@ -420,7 +420,7 @@ bool ResourceContainerObject::splitContainer(int amount, const CachedNetworkId &
 	{
 		// create in volume container
 		ServerObject * destObject = safe_cast<ServerObject *>(destContainer.getObject());
-		if (destObject == nullptr)
+		if (destObject == NULL)
 			return false;
 		newCrate = dynamic_cast<ResourceContainerObject*>(ServerWorld::createNewObject(getObjectTemplateName(), *destObject, isPersisted()));
 	}
@@ -428,10 +428,10 @@ bool ResourceContainerObject::splitContainer(int amount, const CachedNetworkId &
 	{
 		// create in slotted container
 		ServerObject * destObject = safe_cast<ServerObject *>(destContainer.getObject());
-		if (destObject == nullptr)
+		if (destObject == NULL)
 			return false;
 		const SlottedContainmentProperty* containmentProperty = ContainerInterface::getSlottedContainmentProperty(*destObject);
-		if (containmentProperty == nullptr)
+		if (containmentProperty == NULL)
 			return false;
 		const SlottedContainmentProperty::SlotArrangement & slots = containmentProperty->getSlotArrangement(arrangementId);
 		if (slots.empty())

@@ -103,7 +103,7 @@ bool ValueDictionary::exists(std::string const & name) const
 
 ValueTypeBase * ValueDictionary::getCopy(std::string const & name) const
 {
-	ValueTypeBase * returnValue = nullptr;
+	ValueTypeBase * returnValue = NULL;
 
 	DictionaryValueMap::const_iterator iter = m_valueMap.find(name);
 	if (iter != m_valueMap.end())

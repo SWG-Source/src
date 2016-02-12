@@ -53,7 +53,7 @@ TreeFile::SearchNode::~SearchNode(void)
 
 TreeFile::SearchPath::SearchPath(int priority, const char *path)
 : SearchNode(priority),
-	m_pathName(nullptr),
+	m_pathName(NULL),
 	m_pathNameLength(0)
 {
 	NOT_NULL(path);
@@ -145,7 +145,7 @@ AbstractFile *TreeFile::SearchPath::open(const char *fileName, AbstractFile::Pri
 	makeAbsolutePath(fileName, buffer);
 	FileStreamer::File *file = FileStreamer::open(buffer);
 	if (!file)
-		return nullptr;
+		return NULL;
 	return new FileStreamerFile(priority, *file);
 }
 
@@ -209,7 +209,7 @@ AbstractFile *TreeFile::SearchAbsolute::open(const char *fileName, AbstractFile:
 
 	FileStreamer::File *file = FileStreamer::open(fileName);
 	if (!file)
-		return nullptr;
+		return NULL;
 	return new FileStreamerFile(priority, *file);
 }
 
@@ -248,12 +248,12 @@ bool TreeFile::SearchTree::validate(const char *fileName)
 
 TreeFile::SearchTree::SearchTree(int priority, const char *fileName)
 : SearchNode(priority),
-	m_treeFileName(nullptr),
-	m_treeFile(nullptr),
+	m_treeFileName(NULL),
+	m_treeFile(NULL),
 	m_version(0),
 	m_numberOfFiles(0),
-	m_fileNames(nullptr),
-	m_tableOfContents(nullptr)
+	m_fileNames(NULL),
+	m_tableOfContents(NULL)
 {
 	NOT_NULL(fileName);
 
@@ -435,7 +435,7 @@ void TreeFile::SearchTree::debugPrint(void)
 bool TreeFile::SearchTree::exists(const char *fileName, bool &deleted) const
 {
 	NOT_NULL(fileName);
-	return localExists(fileName, nullptr, deleted);
+	return localExists(fileName, NULL, deleted);
 }
 
 // ----------------------------------------------------------------------
@@ -497,7 +497,7 @@ AbstractFile *TreeFile::SearchTree::open(const char *fileName, AbstractFile::Pri
 		return new ZlibFile(entry.length, compressedBuffer, entry.compressedLength, true);
 	}
 
-	return nullptr;
+	return NULL;
 }
 
 // ======================================================================
@@ -535,14 +535,14 @@ bool TreeFile::SearchTOC::validate(const char *fileName)
 
 TreeFile::SearchTOC::SearchTOC(int priority, const char *fileName)
 : SearchNode(priority),
-	m_TOCFileName(nullptr),
-	m_TOCFile(nullptr),
-	m_treeFiles(nullptr),
+	m_TOCFileName(NULL),
+	m_TOCFile(NULL),
+	m_treeFiles(NULL),
 	m_numberOfFiles(0),
-	m_treeFileNames(nullptr),
-	m_treeFileNamePointers(nullptr),
-	m_tableOfContents(nullptr),
-	m_fileNames(nullptr)
+	m_treeFileNames(NULL),
+	m_treeFileNamePointers(NULL),
+	m_tableOfContents(NULL),
+	m_fileNames(NULL)
 {
 	NOT_NULL(fileName);
 
@@ -587,7 +587,7 @@ TreeFile::SearchTOC::SearchTOC(int priority, const char *fileName)
 
 					// add on all paths in config file
 					const char * result;
-					for (int index = 0; (result = ConfigFile::getKeyString("SharedFile", "TOCTreePath", index, nullptr)) != nullptr; ++index)
+					for (int index = 0; (result = ConfigFile::getKeyString("SharedFile", "TOCTreePath", index, NULL)) != NULL; ++index)
 						treePaths.push_back(result);
 
 					// read in the tree file names and open the files
@@ -598,7 +598,7 @@ TreeFile::SearchTOC::SearchTOC(int priority, const char *fileName)
 					for (int treeFileNameIndex = 0, treeFileNameReadPosition = 0; treeFileNameIndex < static_cast<int>(header.numberOfTreeFiles); treeFileNameIndex++)
 					{
 						m_treeFileNamePointers[treeFileNameIndex] = (m_treeFileNames + treeFileNameReadPosition);
-						m_treeFiles[treeFileNameIndex] = nullptr;						
+						m_treeFiles[treeFileNameIndex] = NULL;						
 
 						// try to open the tree file in each of the relative paths 
 						for (std::vector<const char *>::const_iterator pathIter = treePaths.begin(); pathIter != treePaths.end(); ++pathIter)
@@ -656,7 +656,7 @@ TreeFile::SearchTOC::SearchTOC(int priority, const char *fileName)
 					{
 						currentFileNameLength = m_tableOfContents[i].fileNameOffset;
 						m_tableOfContents[i].fileNameOffset = currentFileNameOffset;
-						// + 1 for the nullptr termination
+						// + 1 for the null termination
 						currentFileNameOffset += (currentFileNameLength + 1);
 					}
 				}
@@ -792,7 +792,7 @@ bool TreeFile::SearchTOC::exists(const char *fileName, bool &deleted) const
 {
 	NOT_NULL(fileName);
 	deleted = false;
-	return localExists(fileName, nullptr);
+	return localExists(fileName, NULL);
 }
 
 // ----------------------------------------------------------------------
@@ -862,7 +862,7 @@ AbstractFile *TreeFile::SearchTOC::open(const char *fileName, AbstractFile::Prio
 		return new ZlibFile(entry.length, compressedBuffer, entry.compressedLength, true);
 	}
 
-	return nullptr;
+	return NULL;
 }
 
 // ======================================================================

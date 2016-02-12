@@ -58,7 +58,7 @@ namespace API_NAMESPACE
 		typedef std::set<unsigned> TrackingSet_t;
 		struct ApiConnectionInfo 
 		{
-			ApiConnectionInfo(ApiConnection * Connection = nullptr) : mConnection(Connection), mIsShuttingDown(false) { }
+			ApiConnectionInfo(ApiConnection * Connection = NULL) : mConnection(Connection), mIsShuttingDown(false) { }
 
 			ApiConnection * mConnection;
 			TrackingSet_t mOutstandingRequests;

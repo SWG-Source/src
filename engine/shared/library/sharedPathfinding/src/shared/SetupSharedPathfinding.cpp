@@ -67,7 +67,7 @@ int findNeighbor ( PathNode * node, PathNodeType neighborType, int neighborKey )
 
 BaseClass * expandBuildingGraph ( PortalPropertyTemplate * portalTemplate, BaseClass * baseBuildingGraph )
 {
-	if(baseBuildingGraph == nullptr) return nullptr;
+	if(baseBuildingGraph == NULL) return NULL;
 
 	SimplePathGraph * buildingGraph = safe_cast<SimplePathGraph*>(baseBuildingGraph);
 
@@ -92,11 +92,11 @@ BaseClass * expandBuildingGraph ( PortalPropertyTemplate * portalTemplate, BaseC
 
 		FloorMesh const * floorMesh = cell->getFloorMesh();
 
-		if(floorMesh == nullptr) continue;
+		if(floorMesh == NULL) continue;
 
 		PathGraph const * cellGraph = safe_cast<PathGraph const *>(floorMesh->getPathGraph());
 
-		if(cellGraph == nullptr) continue;
+		if(cellGraph == NULL) continue;
 
 		// ----------
 

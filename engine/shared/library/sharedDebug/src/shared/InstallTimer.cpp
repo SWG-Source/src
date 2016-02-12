@@ -64,7 +64,7 @@ void InstallTimer::manualExit()
 		unsigned long const endingNumberOfBytesAllocated = MemoryManager::getCurrentNumberOfBytesAllocated();
 		--ms_indent;
 		REPORT_LOG_PRINT(ms_enabled, ("InstallTimer:%*c%6.4f %d %s\n", ms_indent * 2, ' ', m_performanceTimer.getElapsedTime(), static_cast<int>(endingNumberOfBytesAllocated - m_startingNumberOfBytesAllocated), m_description));
-		m_description = nullptr;
+		m_description = NULL;
 	}
 }
 

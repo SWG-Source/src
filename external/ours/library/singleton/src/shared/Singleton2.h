@@ -138,7 +138,7 @@ inline Singleton2<ValueType>::Singleton2()
 template<class ValueType>
 inline Singleton2<ValueType>::~Singleton2()
 {
-	assert(instance != nullptr);
+	assert(instance != NULL);
 	instance = 0;
 }
 
@@ -165,7 +165,7 @@ inline Singleton2<ValueType>::~Singleton2()
 template<class ValueType>
 inline ValueType & Singleton2<ValueType>::getInstance()
 {
-	assert(instance != nullptr);
+	assert(instance != NULL);
 	return *instance;
 }
 

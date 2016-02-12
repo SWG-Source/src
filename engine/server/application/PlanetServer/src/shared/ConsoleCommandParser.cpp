@@ -31,7 +31,7 @@ const CommandParser::CmdInfo cmds[] =
 //-----------------------------------------------------------------------
 
 ConsoleCommandParser::ConsoleCommandParser() :
-CommandParser ("", 0, "...", "console commands", nullptr)
+CommandParser ("", 0, "...", "console commands", NULL)
 {
 	createDelegateCommands(cmds);
 }

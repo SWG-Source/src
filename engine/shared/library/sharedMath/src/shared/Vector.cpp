@@ -115,7 +115,7 @@ bool Vector::isNormalized(void) const
 
 const Vector Vector::findClosestPointOnLine(const Vector &line0, const Vector &line1, real *t) const
 {
-	DEBUG_FATAL(!t, ("t arg is nullptr"));
+	DEBUG_FATAL(!t, ("t arg is null"));
 
     NOT_NULL(t);
 
@@ -189,7 +189,7 @@ real Vector::distanceToLineSegment(const Vector &line0, const Vector &line1) con
 /**
  * Send this vector to the DebugPrint system.
  * 
- * The header parameter may be nullptr.
+ * The header parameter may be NULL.
  * 
  * @param header  Header for the vector
  */

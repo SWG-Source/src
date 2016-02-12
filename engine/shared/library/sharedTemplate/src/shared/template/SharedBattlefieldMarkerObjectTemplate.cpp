@@ -86,10 +86,10 @@ Tag SharedBattlefieldMarkerObjectTemplate::getTemplateVersion(void) const
  */
 Tag SharedBattlefieldMarkerObjectTemplate::getHighestTemplateVersion(void) const
 {
-	if (m_baseData == nullptr)
+	if (m_baseData == NULL)
 		return m_templateVersion;
 	const SharedBattlefieldMarkerObjectTemplate * base = dynamic_cast<const SharedBattlefieldMarkerObjectTemplate *>(m_baseData);
-	if (base == nullptr)
+	if (base == NULL)
 		return m_templateVersion;
 	return std::max(m_templateVersion, base->getHighestTemplateVersion());
 } // SharedBattlefieldMarkerObjectTemplate::getHighestTemplateVersion
@@ -103,9 +103,9 @@ CompilerIntegerParam * SharedBattlefieldMarkerObjectTemplate::getCompilerInteger
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_numberOfPoles;
 		}
@@ -113,7 +113,7 @@ CompilerIntegerParam * SharedBattlefieldMarkerObjectTemplate::getCompilerInteger
 	}
 	else
 		return SharedTangibleObjectTemplate::getCompilerIntegerParam(name, deepCheck, index);
-	return nullptr;
+	return NULL;
 }	//SharedBattlefieldMarkerObjectTemplate::getCompilerIntegerParam
 
 FloatParam * SharedBattlefieldMarkerObjectTemplate::getFloatParam(const char *name, bool deepCheck, int index)
@@ -124,9 +124,9 @@ FloatParam * SharedBattlefieldMarkerObjectTemplate::getFloatParam(const char *na
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getFloatParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_radius;
 		}
@@ -134,7 +134,7 @@ FloatParam * SharedBattlefieldMarkerObjectTemplate::getFloatParam(const char *na
 	}
 	else
 		return SharedTangibleObjectTemplate::getFloatParam(name, deepCheck, index);
-	return nullptr;
+	return NULL;
 }	//SharedBattlefieldMarkerObjectTemplate::getFloatParam
 
 BoolParam * SharedBattlefieldMarkerObjectTemplate::getBoolParam(const char *name, bool deepCheck, int index)
@@ -227,12 +227,12 @@ char paramName[MAX_NAME_SIZE];
 		file.read_string(baseFilename);
 		file.exitChunk();
 		const ObjectTemplate *base = ObjectTemplateList::fetch(baseFilename);
-		DEBUG_WARNING(base == nullptr, ("was unable to load base template %s", baseFilename.c_str()));
-		if (m_baseData == base && base != nullptr)
+		DEBUG_WARNING(base == NULL, ("was unable to load base template %s", baseFilename.c_str()));
+		if (m_baseData == base && base != NULL)
 			base->releaseReference();
 		else
 		{
-			if (m_baseData != nullptr)
+			if (m_baseData != NULL)
 				m_baseData->releaseReference();
 			m_baseData = base;
 		}

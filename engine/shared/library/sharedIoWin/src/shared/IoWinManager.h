@@ -131,7 +131,7 @@ public:
 
 inline bool IoWinManager::haveWindow(void)
 {
-	return (top != nullptr);
+	return (top != NULL);
 }
 
 // ----------------------------------------------------------------------

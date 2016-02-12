@@ -122,7 +122,7 @@ bool PositionUpdateTracker::shouldSendPositionUpdate(ServerObject const &obj)
 		return false;
 
 	ServerObject const   *containedByObj    = safe_cast<ServerObject const *>(ContainerInterface::getContainedByObject(obj));
-	CreatureObject const *creatureContainer = (containedByObj ? containedByObj->asCreatureObject() : nullptr);
+	CreatureObject const *creatureContainer = (containedByObj ? containedByObj->asCreatureObject() : NULL);
 	bool const objectIsRidingMount          = (creatureContainer && creatureContainer->isMountable());
 	
 	if (containedByObj && !isContainerConsideredPersisted(obj, *containedByObj) && !objectIsRidingMount)
@@ -204,7 +204,7 @@ void PositionUpdateTracker::sendPositionUpdate(ServerObject &obj)
 			else
 			{
 				ServerObject const * const container = safe_cast<ServerObject const *>(ContainerInterface::getContainedByObject(obj));
-				CreatureObject const * const creatureContainer = (container ? container->asCreatureObject() : nullptr);
+				CreatureObject const * const creatureContainer = (container ? container->asCreatureObject() : NULL);
 				if (creatureContainer && creatureContainer->isMountable())
 				{
 					// Riders of mounts persist at the location of the mount

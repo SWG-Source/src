@@ -805,7 +805,7 @@ void ServerProceduralTerrainAppearance::generateBetween(Vector const & start_o, 
 		}
 	}
 
-	// add on all chunks to be generated to chunkList. if we encounter invalid chunks (nullptr), don't include them
+	// add on all chunks to be generated to chunkList. if we encounter invalid chunks (null), don't include them
 	const Chunk* chunk;
 	for (GenerateList::iterator iter = generateList.begin(); iter != generateList.end(); ++iter)
 	{

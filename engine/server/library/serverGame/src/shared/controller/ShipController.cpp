@@ -58,12 +58,12 @@ ShipController::ShipController(ShipObject * newOwner) :
 	m_pitchPosition(0.0f),
 	m_rollPosition(0.0f),
 	m_throttlePosition(0.0f),
-	m_pendingDockingBehavior(nullptr),
-	m_dockingBehavior(nullptr),
+	m_pendingDockingBehavior(NULL),
+	m_dockingBehavior(NULL),
 	m_attackTargetList(new AiShipAttackTargetList(newOwner)),
 	m_attackTargetDecayTimer(new Timer(static_cast<float>(s_maxTargetAge))),
 	m_enemyCheckQueued(false),
-	m_turretTargetingSystem(nullptr),
+	m_turretTargetingSystem(NULL),
 	m_dockedByList(new DockedByList),
 	m_aiTargetingMeList(new CachedNetworkIdList)
 {
@@ -77,7 +77,7 @@ ShipController::~ShipController()
 	// The turret targeting system must be deleted before clearAiTargetingMeList(), because
 	// otherwise it will try to acquire new targets as the list is being cleared
 	delete m_turretTargetingSystem;
-	m_turretTargetingSystem = nullptr;
+	m_turretTargetingSystem = NULL;
 
 	clearAiTargetingMeList();
 
@@ -85,9 +85,9 @@ ShipController::~ShipController()
 	delete m_dockedByList;
 	delete m_aiTargetingMeList;
 	delete m_pendingDockingBehavior;
-	m_pendingDockingBehavior = nullptr;
+	m_pendingDockingBehavior = NULL;
 	delete m_dockingBehavior;
-	m_dockingBehavior = nullptr;
+	m_dockingBehavior = NULL;
 	delete m_attackTargetList;
 	delete m_attackTargetDecayTimer;
 }
@@ -226,7 +226,7 @@ void ShipController::handleMessage (const int message, const float value, const 
 	UNREF(flags);
 	UNREF(value);
 	ShipObject * const owner = getShipOwner();
-	DEBUG_FATAL(!owner, ("Owner is nullptr in ShipController::handleMessage\n"));
+	DEBUG_FATAL(!owner, ("Owner is NULL in ShipController::handleMessage\n"));
 	switch(message)
 	{
 	case CM_clientLookAtTarget:
@@ -265,7 +265,7 @@ void ShipController::addTurretTargetingSystem(ShipTurretTargetingSystem * newSys
 void ShipController::removeTurretTargetingSystem()
 {
 	delete m_turretTargetingSystem;
-	m_turretTargetingSystem = nullptr;
+	m_turretTargetingSystem = NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -281,7 +281,7 @@ void ShipController::addDockedBy(Object const & unit)
 {
 	IGNORE_RETURN(m_dockedByList->insert(CachedNetworkId(unit)));
 
-	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("ShipController::addDockedBy() owner(%s) dockedBy(%s) dockedByListSize(%u)", (getOwner() != nullptr) ? getOwner()->getNetworkId().getValueString().c_str() : "nullptr", unit.getNetworkId().getValueString().c_str(), m_dockedByList->size()));
+	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("ShipController::addDockedBy() owner(%s) dockedBy(%s) dockedByListSize(%u)", (getOwner() != NULL) ? getOwner()->getNetworkId().getValueString().c_str() : "NULL", unit.getNetworkId().getValueString().c_str(), m_dockedByList->size()));
 }
 
 // ----------------------------------------------------------------------
@@ -294,7 +294,7 @@ void ShipController::removeDockedBy(Object const & unit)
 	{
 		m_dockedByList->erase(iterDockedByList);
 
-		LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("ShipController::removeDockedBy() owner(%s) dockedBy(%s) dockedByListSize(%u)", (getOwner() != nullptr) ? getOwner()->getNetworkId().getValueString().c_str() : "nullptr", unit.getNetworkId().getValueString().c_str(), m_dockedByList->size()));
+		LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("ShipController::removeDockedBy() owner(%s) dockedBy(%s) dockedByListSize(%u)", (getOwner() != NULL) ? getOwner()->getNetworkId().getValueString().c_str() : "NULL", unit.getNetworkId().getValueString().c_str(), m_dockedByList->size()));
 	}
 	else
 	{
@@ -314,7 +314,7 @@ ShipController::DockedByList const & ShipController::getDockedByList() const
 void ShipController::addAiTargetingMe(NetworkId const & unit)
 {
 	//LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("ShipController::addAiTargetingMe() owner(%s) unit(%s) m_aiTargetingMeList->size(%u+1)", getOwner()->getNetworkId().getValueString().c_str(), unit.getValueString().c_str(), m_aiTargetingMeList->size()));
-	DEBUG_FATAL((NetworkIdManager::getObjectById(unit) == nullptr), ("ShipController::addAiTargetingMe() owner(%s) unit(%s) ERROR: The Ai who is targeting you is not a valid networkId", getOwner()->getNetworkId().getValueString().c_str(), unit.getValueString().c_str()));
+	DEBUG_FATAL((NetworkIdManager::getObjectById(unit) == NULL), ("ShipController::addAiTargetingMe() owner(%s) unit(%s) ERROR: The Ai who is targeting you is not a valid networkId", getOwner()->getNetworkId().getValueString().c_str(), unit.getValueString().c_str()));
 
 	// Make sure this is a valid networkId of an alive object
 
@@ -346,11 +346,11 @@ void ShipController::removeAiTargetingMe(NetworkId const & unit)
 	{
 		ShipObject * const shipOwner = getShipOwner();
 
-		if (shipOwner != nullptr)
+		if (shipOwner != NULL)
 		{
 			CreatureObject * const pilotOwner = CreatureObject::asCreatureObject(shipOwner->getPilot());
 
-			if (   (pilotOwner != nullptr)
+			if (   (pilotOwner != NULL)
 			    && pilotOwner->isPlayerControlled())
 			{
 				shipOwner->clearCondition(static_cast<int>(TangibleObject::C_spaceCombatMusic));
@@ -442,7 +442,7 @@ bool ShipController::face(Vector const & goalPosition_w, float elapsedTime)
 		bool useFastAxis = true;
 		AiShipController const * const aiShipController = asAiShipController();
 
-		if (aiShipController != nullptr)
+		if (aiShipController != NULL)
 		{
 			if (   (aiShipController->getShipClass() == ShipAiReactionManager::SC_capitalShip)
 				|| (aiShipController->getShipClass() == ShipAiReactionManager::SC_transport)
@@ -620,7 +620,7 @@ float ShipController::getLargestTurnRadius() const
 
 	ShipObject const * const shipObject = getShipOwner();
 
-	if (shipObject != nullptr)
+	if (shipObject != NULL)
 	{
 		float const maxYawRate = shipObject->getShipActualYawRateMaximum();
 		float const maxPitchRate = shipObject->getShipActualPitchRateMaximum();
@@ -650,11 +650,11 @@ void ShipController::dock(ShipObject & dockTarget, float const secondsAtDock)
 
 void ShipController::unDock()
 {
-	if (m_pendingDockingBehavior != nullptr)
+	if (m_pendingDockingBehavior != NULL)
 	{
 		m_pendingDockingBehavior->unDock();
 	}
-	else if (m_dockingBehavior != nullptr)
+	else if (m_dockingBehavior != NULL)
 	{
 		m_dockingBehavior->unDock();
 	}
@@ -664,14 +664,14 @@ void ShipController::unDock()
 
 bool ShipController::isDocking() const
 {
-	return (m_dockingBehavior != nullptr) || (m_pendingDockingBehavior != nullptr);
+	return (m_dockingBehavior != NULL) || (m_pendingDockingBehavior != NULL);
 }
 
 // ----------------------------------------------------------------------
 
 bool ShipController::isDocked() const
 {
-	return ((m_dockingBehavior != nullptr) && m_dockingBehavior->isDocked());
+	return ((m_dockingBehavior != NULL) && m_dockingBehavior->isDocked());
 }
 
 // ----------------------------------------------------------------------
@@ -698,28 +698,28 @@ ShipController const * ShipController::asShipController() const
 
 PlayerShipController * ShipController::asPlayerShipController()
 {
-	return nullptr;
+	return NULL;
 }
 
 // ----------------------------------------------------------------------
 
 PlayerShipController const * ShipController::asPlayerShipController() const
 {
-	return nullptr;
+	return NULL;
 }
 
 // ----------------------------------------------------------------------
 
 AiShipController * ShipController::asAiShipController()
 {
-	return nullptr;
+	return NULL;
 }
 
 // ----------------------------------------------------------------------
 
 AiShipController const * ShipController::asAiShipController() const
 {
-	return nullptr;
+	return NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -736,7 +736,7 @@ bool ShipController::addDamageTaken(NetworkId const & attackingUnit, float const
 	bool result = false;
 	ShipObject * const attackingUnitShipObject = ShipObject::asShipObject(NetworkIdManager::getObjectById(attackingUnit));
 
-	if (   (attackingUnitShipObject != nullptr)
+	if (   (attackingUnitShipObject != NULL)
 	    && !attackingUnitShipObject->isDamageAggroImmune())
 	{
 		result = verifyAttacker ? Pvp::canAttack(*attackingUnitShipObject, *NON_NULL(getShipOwner())) : true;
@@ -754,7 +754,7 @@ bool ShipController::addDamageTaken(NetworkId const & attackingUnit, float const
 
 bool ShipController::hasTurretTargetingSystem() const
 {
-	return (m_turretTargetingSystem != nullptr);
+	return (m_turretTargetingSystem != NULL);
 }
 
 // ----------------------------------------------------------------------
@@ -792,7 +792,7 @@ bool ShipController::removeAttackTarget(NetworkId const & unit)
 
 void ShipController::onAttackTargetChanged(NetworkId const & target)
 {
-	if (m_turretTargetingSystem != nullptr)
+	if (m_turretTargetingSystem != NULL)
 	{
 		m_turretTargetingSystem->onTargetChanged(target);
 	}
@@ -802,7 +802,7 @@ void ShipController::onAttackTargetChanged(NetworkId const & target)
 
 void ShipController::onAttackTargetLost(NetworkId const & target)
 {
-	if (m_turretTargetingSystem != nullptr)
+	if (m_turretTargetingSystem != NULL)
 	{
 		m_turretTargetingSystem->onTargetLost(target);
 	}
@@ -834,12 +834,12 @@ int ShipController::getNumberOfAiUnitsAttackingMe() const
 		CachedNetworkId const & ai = (*iterAiTargetingMeList);
 		Object const * const aiObject = ai.getObject();
 
-		if (aiObject != nullptr)
+		if (aiObject != NULL)
 		{
 			ShipController const * const shipController = aiObject->getController()->asShipController();
-			AiShipController const * const aiShipController = (shipController != nullptr) ? shipController->asAiShipController() : nullptr;
+			AiShipController const * const aiShipController = (shipController != NULL) ? shipController->asAiShipController() : NULL;
 
-			if (aiShipController != nullptr)
+			if (aiShipController != NULL)
 			{
 				if (aiShipController->getPrimaryAttackTarget() == getOwner()->getNetworkId())
 				{
@@ -849,7 +849,7 @@ int ShipController::getNumberOfAiUnitsAttackingMe() const
 		}
 		else
 		{
-			DEBUG_WARNING(true, ("ShipController::getNumberOfAiShipAttackingMe() ERROR: Why am I(%s) being targeted by a nullptr object(%s)?", getOwner()->getDebugInformation().c_str(), ai.getValueString().c_str()));
+			DEBUG_WARNING(true, ("ShipController::getNumberOfAiShipAttackingMe() ERROR: Why am I(%s) being targeted by a NULL object(%s)?", getOwner()->getDebugInformation().c_str(), ai.getValueString().c_str()));
 		}
 	}
 
@@ -910,11 +910,11 @@ void ShipController::clearAiTargetingMeList()
 	{
 		CachedNetworkId const & id = (*iterPurgeList);
 
-		if (id.getObject() != nullptr)
+		if (id.getObject() != NULL)
 		{
 			ShipController * const shipController = id.getObject()->getController()->asShipController();
 
-			if (shipController != nullptr)
+			if (shipController != NULL)
 			{
 				IGNORE_RETURN(shipController->removeAttackTarget(getOwner()->getNetworkId()));
 			}

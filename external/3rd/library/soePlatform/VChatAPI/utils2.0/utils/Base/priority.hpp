@@ -37,12 +37,12 @@ template<typename T, typename P> class PriorityQueue
 		PriorityQueue(int queueSize);
 		~PriorityQueue();
 
-		T* Top();							// returns nullptr if queue is empty
-		T* TopRemove();						// returns nullptr if queue is empty
-		T* TopRemove(P priority);			// removes item from queue if it has a lower priority value, otherwise return nullptr
+		T* Top();							// returns NULL if queue is empty
+		T* TopRemove();						// returns NULL if queue is empty
+		T* TopRemove(P priority);			// removes item from queue if it has a lower priority value, otherwise return NULL
 		T* Add(T* entry, P priority);		// reprioritizes if already in queue, returns entry always
 		T* Remove(T* entry);				// returns entry always (even if it was not in the queue)
-		P *GetPriority(T* entry);			// returns nullptr if entry is not in the queue
+		P *GetPriority(T* entry);			// returns NULL if entry is not in the queue
 		int QueueUsed();					// returns how many entries are in the queue
 	protected:
 		struct QueueEntry
@@ -88,14 +88,14 @@ template<typename T, typename P> PriorityQueue<T, P>::~PriorityQueue()
 template<typename T, typename P> T* PriorityQueue<T, P>::Top()
 {
 	if (mQueueEnd == 0)
-		return(nullptr);
+		return(NULL);
 	return(mQueue[0].entry);
 }
 
 template<typename T, typename P> T* PriorityQueue<T, P>::TopRemove()
 {
 	if (mQueueEnd == 0)
-		return(nullptr);
+		return(NULL);
 	T* top = mQueue[0].entry;
 	Remove(top);
 	return(top);
@@ -105,14 +105,14 @@ template<typename T, typename P> T* PriorityQueue<T, P>::TopRemove(P priority)
 {
 	if (mQueueEnd > 0 && mQueue[0].priority <= priority)
 		return(Remove(mQueue[0].entry));
-	return(nullptr);
+	return(NULL);
 }
 
 template<typename T, typename P> P* PriorityQueue<T, P>::GetPriority(T* entry)
 {
 	if (entry->mPriorityQueuePosition >= 0)
 		return(&mQueue[entry->mPriorityQueuePosition].priority);
-	return(nullptr);
+	return(NULL);
 }
 
 template<typename T, typename P> T* PriorityQueue<T, P>::Add(T* entry, P priority)
@@ -121,7 +121,7 @@ template<typename T, typename P> T* PriorityQueue<T, P>::Add(T* entry, P priorit
 	{
 			// not in queue, so add it to the bottom
 		if (mQueueEnd >= mQueueSize)
-			return(nullptr);
+			return(NULL);
 		mQueue[mQueueEnd].entry = entry;
 		mQueue[mQueueEnd].priority = priority;
 		mQueue[mQueueEnd].entry->mPriorityQueuePosition = mQueueEnd;

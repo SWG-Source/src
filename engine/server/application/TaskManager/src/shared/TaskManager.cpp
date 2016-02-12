@@ -161,7 +161,7 @@ m_processEntries(),
 m_localServers(),
 m_remoteServers(),
 m_nodeLabel(),
-m_startTime(::time(nullptr)),
+m_startTime(::time(NULL)),
 m_nodeList(),
 m_nodeNumber(-1),
 m_nodeToConnectToList(),
@@ -362,7 +362,7 @@ void TaskManager::processRcFile()
 void TaskManager::setupNodeList()
 {
 	char buffer[64];
-	const char* result = nullptr;
+	const char* result = NULL;
 	int nodeIndex = 0;
 	bool found = true;
 
@@ -375,7 +375,7 @@ void TaskManager::setupNodeList()
 	{
 		found = false;
 		sprintf(buffer, "node%d", nodeIndex);
-		result = ConfigFile::getKeyString("TaskManager", buffer, nullptr);
+		result = ConfigFile::getKeyString("TaskManager", buffer, NULL);
 		if (result)
 		{
 			NodeEntry n(result, buffer, nodeIndex);
@@ -967,8 +967,8 @@ void TaskManager::update()
 	// of slave TaskManager that has disconnected but has not reconnected,
 	// so that an alert can be made in SOEMon so ops can see it and restart
 	// the disconnected TaskManager
-	static time_t timeSystemTimeCheck = ::time(nullptr) + ConfigTaskManager::getSystemTimeCheckIntervalSeconds();
-	time_t const timeNow = ::time(nullptr);
+	static time_t timeSystemTimeCheck = ::time(NULL) + ConfigTaskManager::getSystemTimeCheckIntervalSeconds();
+	time_t const timeNow = ::time(NULL);
 	if (timeSystemTimeCheck <= timeNow)
 	{
 		if (getNodeLabel() != "node0")

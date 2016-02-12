@@ -82,7 +82,7 @@ struct RegionMaster::RegionData
 	MxCifQuadTree *     tree;
 	RegionsMappedByName nameMap;
 	
-	RegionData() : tree(nullptr), nameMap() {}
+	RegionData() : tree(NULL), nameMap() {}
 };
 
 namespace RegionMasterNamspace
@@ -133,7 +133,7 @@ void RegionMaster::exit()
 				i1 != ms_planetRegions.end(); ++i1)
 			{
 				delete (*i1).second.tree;
-				(*i1).second.tree = nullptr;
+				(*i1).second.tree = NULL;
 			}
 			ms_planetRegions.clear();
 		}
@@ -143,7 +143,7 @@ void RegionMaster::exit()
 				i2 != ms_staticRegions.end(); ++i2)
 			{
 				delete const_cast<Region *>(*i2);
-				*i2 = nullptr;
+				*i2 = NULL;
 			}
 			ms_staticRegions.clear();
 		}
@@ -153,7 +153,7 @@ void RegionMaster::exit()
 				i2 != ms_dynamicRegions.end(); ++i2)
 			{
 				delete const_cast<Region *>(*i2);
-				*i2 = nullptr;
+				*i2 = NULL;
 			}
 			ms_dynamicRegions.clear();
 		}
@@ -178,7 +178,7 @@ void RegionMaster::readRegionDataTables()
 	const char * regionFilesName = ConfigServerGame::getRegionFilesName();
 
 	DataTable * const regionFilesTable = DataTableManager::getTable(regionFilesName, true);
-	if (regionFilesTable == nullptr)
+	if (regionFilesTable == NULL)
 	{
 		WARNING(true, ("RegionMaster::readRegionDataTables could not open file %s, static regions will not be read!", regionFilesName));
 		return;
@@ -197,14 +197,14 @@ void RegionMaster::readRegionDataTables()
 			float               regionMaxY     = regionFilesTable->getFloatValue (5, i);
 			
 			DataTable * const regionTable = DataTableManager::getTable(regionFileName, true);
-			if (regionTable == nullptr)
+			if (regionTable == NULL)
 			{
 				WARNING(true, ("RegionMaster::readRegionDataTables could not open region file %s.", regionFileName.c_str()));
 				continue;
 			}
 			
 			RegionData & regionData = ms_planetRegions[planetName];
-			if (regionData.tree == nullptr)
+			if (regionData.tree == NULL)
 			{
 				regionData.tree = new MxCifQuadTree(regionMinX, regionMinY, regionMaxX, regionMaxY, ConfigServerGame::getRegionTreeDepth());
 			}
@@ -246,7 +246,7 @@ void RegionMaster::readRegionDataTables()
 				}
 				
 				// create a rectangular or circular region and add it to the region tree
-				Region * region = nullptr;
+				Region * region = NULL;
 				switch (geometry)
 				{
 				case RG_rectagle:
@@ -284,7 +284,7 @@ void RegionMaster::readRegionDataTables()
 					continue;
 				}
 				// set the rest of the region's data
-				if (region != nullptr)
+				if (region != NULL)
 				{
 					region->setName(name);
 					region->setPlanet(planetName);
@@ -400,7 +400,7 @@ void RegionMaster::createNewDynamicRegion(float minX, float minZ,
  * @param visible		visible flag
  * @param notify        notify flag
  *
- * @return the new region, or nullptr on error
+ * @return the new region, or NULL on error
  */
 void RegionMaster::createNewDynamicRegion(float centerX, float centerZ, 
 	float radius, const Unicode::String & name, const std::string & planet, int pvp, 
@@ -512,7 +512,7 @@ const Region * RegionMaster::addDynamicRegion(const UniverseObject & source)
 	if (!ms_installed)
 	{
 		WARNING(true, ("RegionMaster::addDynamicRegion, not installed"));
-		return nullptr;
+		return NULL;
 	}
 
 	DynamicVariableList::NestedList regionObjvars(source.getObjVars(),OBJVAR_DYNAMIC_REGION);
@@ -521,124 +521,124 @@ const Region * RegionMaster::addDynamicRegion(const UniverseObject & source)
 	if (!regionObjvars.getItem(OBJVAR_DYNAMIC_REGION_PLANET,planet))
 	{
 		DEBUG_WARNING(true, ("RegionMaster::addDynamicRegion object %s has no planet data", source.getNetworkId().getValueString().c_str()));
-		return nullptr;
+		return NULL;
 	}
 	Unicode::String name;
 	if (!regionObjvars.getItem(OBJVAR_DYNAMIC_REGION_NAME,name))
 	{
 		DEBUG_WARNING(true, ("RegionMaster::addDynamicRegion object %s has no name data", source.getNetworkId().getValueString().c_str()));
-		return nullptr;
+		return NULL;
 	}
 	if (name.empty())
 	{
 		DEBUG_WARNING(true, ("RegionMaster::addDynamicRegion object %s has empty "
 			"name data", source.getNetworkId().getValueString().c_str()));
-		return nullptr;
+		return NULL;
 	}
 	int geometry = 0;
 	if (!regionObjvars.getItem(OBJVAR_DYNAMIC_REGION_GEOMETRY,geometry))
 	{
 		DEBUG_WARNING(true, ("RegionMaster::addDynamicRegion object %s has no "
 			"geometry data", source.getNetworkId().getValueString().c_str()));
-		return nullptr;
+		return NULL;
 	}
 	float minX;
 	if (!regionObjvars.getItem(OBJVAR_DYNAMIC_REGION_MINX,minX))
 	{
 		DEBUG_WARNING(true, ("RegionMaster::addDynamicRegion object %s has no "
 			"minX data", source.getNetworkId().getValueString().c_str()));
-		return nullptr;
+		return NULL;
 	}
 	float minY;
 	if (!regionObjvars.getItem(OBJVAR_DYNAMIC_REGION_MINY,minY))
 	{
 		DEBUG_WARNING(true, ("RegionMaster::addDynamicRegion object %s has no "
 			"minY data", source.getNetworkId().getValueString().c_str()));
-		return nullptr;
+		return NULL;
 	}
 	float maxX;
 	if (!regionObjvars.getItem(OBJVAR_DYNAMIC_REGION_MAXX,maxX))
 	{
 		DEBUG_WARNING(true, ("RegionMaster::addDynamicRegion object %s has no "
 			"maxX data", source.getNetworkId().getValueString().c_str()));
-		return nullptr;
+		return NULL;
 	}
 	float maxY;
 	if (!regionObjvars.getItem(OBJVAR_DYNAMIC_REGION_MAXY,maxY))
 	{
 		DEBUG_WARNING(true, ("RegionMaster::addDynamicRegion object %s has no "
 			"maxY data", source.getNetworkId().getValueString().c_str()));
-		return nullptr;
+		return NULL;
 	}
 	int pvp=0;
 	if (!regionObjvars.getItem(OBJVAR_DYNAMIC_REGION_PVP,pvp))
 	{
 		DEBUG_WARNING(true, ("RegionMaster::addDynamicRegion object %s has no "
 			"pvp data", source.getNetworkId().getValueString().c_str()));
-		return nullptr;
+		return NULL;
 	}
 	int geography=0;
 	if (!regionObjvars.getItem(OBJVAR_DYNAMIC_REGION_GEOGRAPHY,geography))
 	{
 		DEBUG_WARNING(true, ("RegionMaster::addDynamicRegion object %s has no "
 			"geography data", source.getNetworkId().getValueString().c_str()));
-		return nullptr;
+		return NULL;
 	}
 	int minDifficulty = 0;
 	if (!regionObjvars.getItem(OBJVAR_DYNAMIC_REGION_MIN_DIFFICULTY, minDifficulty))
 	{
 		DEBUG_WARNING(true, ("RegionMaster::addDynamicRegion object %s has no "
 			"min difficulty data", source.getNetworkId().getValueString().c_str()));
-		return nullptr;
+		return NULL;
 	}
 	int maxDifficulty = 0;
 	if (!regionObjvars.getItem(OBJVAR_DYNAMIC_REGION_MAX_DIFFICULTY, maxDifficulty))
 	{
 		DEBUG_WARNING(true, ("RegionMaster::addDynamicRegion object %s has no "
 			"max difficulty data", source.getNetworkId().getValueString().c_str()));
-		return nullptr;
+		return NULL;
 	}
 	int spawn = 0;
 	if (!regionObjvars.getItem(OBJVAR_DYNAMIC_REGION_SPAWN,spawn))
 	{
 		DEBUG_WARNING(true, ("RegionMaster::addDynamicRegion object %s has no "
 			"spawn data", source.getNetworkId().getValueString().c_str()));
-		return nullptr;
+		return NULL;
 	}
 	int mission = 0;
 	if (!regionObjvars.getItem(OBJVAR_DYNAMIC_REGION_MISSION,mission))
 	{
 		DEBUG_WARNING(true, ("RegionMaster::addDynamicRegion object %s has no "
 			"mission data", source.getNetworkId().getValueString().c_str()));
-		return nullptr;
+		return NULL;
 	}
 	int buildable = 0;
 	if (!regionObjvars.getItem(OBJVAR_DYNAMIC_REGION_BUILDABLE,buildable))
 	{
 		DEBUG_WARNING(true, ("RegionMaster::addDynamicRegion object %s has no "
 			"buildable data", source.getNetworkId().getValueString().c_str()));
-		return nullptr;
+		return NULL;
 	}
 	int municipal = 0;
 	if (!regionObjvars.getItem(OBJVAR_DYNAMIC_REGION_MUNICIPAL,municipal))
 	{
 		DEBUG_WARNING(true, ("RegionMaster::addDynamicRegion object %s has no "
 			"municipal data", source.getNetworkId().getValueString().c_str()));
-		return nullptr;
+		return NULL;
 	}
 	int visible = 0;
 	if (!regionObjvars.getItem(OBJVAR_DYNAMIC_REGION_VISIBLE,visible))
 	{
 		DEBUG_WARNING(true, ("RegionMaster::addDynamicRegion object %s has no "
 			"visible data", source.getNetworkId().getValueString().c_str()));
-		return nullptr;
+		return NULL;
 	}
 	int notify = 0;
 	if (!regionObjvars.getItem(OBJVAR_DYNAMIC_REGION_NOTIFY,notify))
 	{
 		DEBUG_WARNING(true, ("RegionMaster::addDynamicRegion object %s has no "
 			"notify data", source.getNetworkId().getValueString().c_str()));
-		return nullptr;
+		return NULL;
 	}
 
 	// find the appropriate region data for the planet
@@ -650,14 +650,14 @@ const Region * RegionMaster::addDynamicRegion(const UniverseObject & source)
 		WARNING(true, ("RegionMaster::addDynamicRegion object %s gave unknown "
 			"planet %s for its region", source.getNetworkId().getValueString().c_str(),
 			Unicode::wideToNarrow(planet).c_str()));
-		return nullptr;
+		return NULL;
 	}
 	RegionData & regionData = (*result).second;
-	if (regionData.tree == nullptr)
+	if (regionData.tree == NULL)
 	{
 		WARNING_STRICT_FATAL(true, ("RegionMaster::addDynamicRegion planet %s "
 			"has no tree defined!", Unicode::wideToNarrow(planet).c_str()));
-		return nullptr;
+		return NULL;
 	}
 
 	// make sure the region name is unique
@@ -666,11 +666,11 @@ const Region * RegionMaster::addDynamicRegion(const UniverseObject & source)
 		WARNING(true, ("RegionMaster::addDynamicRegion object %s is trying "
 			"to add duplicate region %s", source.getNetworkId().getValueString().c_str(),
 			Unicode::wideToNarrow(name).c_str()));
-		return nullptr;
+		return NULL;
 	}
 
 	// create a rectangular or circular region and add it to the region tree
-	Region * region = nullptr;
+	Region * region = NULL;
 	switch (geometry)
 	{
 		case RG_rectagle:
@@ -706,14 +706,14 @@ const Region * RegionMaster::addDynamicRegion(const UniverseObject & source)
 			DEBUG_WARNING(true, ("RegionMaster::addDynamicRegion object %s has unknown "
 				"geometry type", source.getNetworkId().getValueString().c_str(),
 				geometry));
-			return nullptr;
+			return NULL;
 	}
-	if (region == nullptr)
+	if (region == NULL)
 	{
 		WARNING(true, ("RegionMaster::readRegionDataTables could "
 			"not add region defined by object %s to region tree", 
 			source.getNetworkId().getValueString().c_str()));
-		 return nullptr;
+		 return NULL;
 	}
 
 	// set the rest of the region's data
@@ -803,7 +803,7 @@ void RegionMaster::removeDynamicRegion(const UniverseObject & source)
 		return;
 	}
 	RegionData & regionData = (*dataResult).second;
-	if (regionData.tree == nullptr)
+	if (regionData.tree == NULL)
 	{
 		WARNING_STRICT_FATAL(true, ("RegionMaster::addDynamicRegion planet %s "
 			"has no tree defined!", Unicode::wideToNarrow(planet).c_str()));
@@ -888,7 +888,7 @@ const Region * RegionMaster::getDynamicRegionFromObject(const UniverseObject & s
 	if (!ms_installed)
 	{
 		WARNING(true, ("RegionMaster::getDynamicRegionFromObject, not installed"));
-		return nullptr;
+		return NULL;
 	}
 
 	DynamicVariableList::NestedList regionObjVars(source.getObjVars(),OBJVAR_DYNAMIC_REGION);
@@ -898,14 +898,14 @@ const Region * RegionMaster::getDynamicRegionFromObject(const UniverseObject & s
 	{
 		DEBUG_WARNING(true, ("RegionMaster::getDynamicRegionFromObject object %s has no "
 			"planet data", source.getNetworkId().getValueString().c_str()));
-		return nullptr;
+		return NULL;
 	}
 	Unicode::String name;
 	if (!regionObjVars.getItem(OBJVAR_DYNAMIC_REGION_NAME,name))
 	{
 		DEBUG_WARNING(true, ("RegionMaster::getDynamicRegionFromObject object %s has no "
 			"name data", source.getNetworkId().getValueString().c_str()));
-		return nullptr;
+		return NULL;
 	}
 
 	return getRegionByName(Unicode::wideToNarrow(planet), name);
@@ -921,17 +921,17 @@ Region * RegionMaster::getRegionByName(const std::string & planetName, const Uni
 	if (!ms_installed)
 	{
 		WARNING(true, ("RegionMaster::getRegionByName, not installed"));
-		return nullptr;
+		return NULL;
 	}
 
 	const RegionData & regionData = ms_planetRegions[planetName];
-	if (regionData.tree != nullptr)
+	if (regionData.tree != NULL)
 	{
 		RegionsMappedByName::const_iterator result = regionData.nameMap.find(regionName);
 		if (result != regionData.nameMap.end())
 			return (*result).second;
 	}
-	return nullptr;
+	return NULL;
 }	// RegionMaster::getRegionByName
 
 //----------------------------------------------------------------------
@@ -944,18 +944,18 @@ const Region * RegionMaster::getSmallestRegionAtPoint(const std::string & planet
 	if (!ms_installed)
 	{
 		WARNING(true, ("RegionMaster::getSmallestRegionAtPoint, not installed"));
-		return nullptr;
+		return NULL;
 	}
 
 	std::vector<const Region *> regions;
 	getRegionsAtPoint(planet, x, z, regions);
 	
 	float area = 0;
-	const Region * region = nullptr;
+	const Region * region = NULL;
 	for (std::vector<const Region *>::const_iterator iter = regions.begin();
 		iter != regions.end(); ++iter)
 	{
-		if (region == nullptr)
+		if (region == NULL)
 		{
 			region = *iter;
 			area = region->getArea();
@@ -983,19 +983,19 @@ const Region * RegionMaster::getSmallestVisibleRegionAtPoint(const std::string &
 	if (!ms_installed)
 	{
 		WARNING(true, ("RegionMaster::getSmallestRegionAtPoint, not installed"));
-		return nullptr;
+		return NULL;
 	}
 
 	std::vector<const Region *> regions;
 	getRegionsAtPoint(planet, x, z, regions);
 	
 	float area = 0;
-	const Region * region = nullptr;
+	const Region * region = NULL;
 	for (std::vector<const Region *>::const_iterator iter = regions.begin(); iter != regions.end(); ++iter)
 	{
 		if ((*iter)->isVisible())
 		{
-			if (region == nullptr)
+			if (region == NULL)
 			{
 				region = *iter;
 				area = region->getArea();
@@ -1036,7 +1036,7 @@ void RegionMaster::getRegionsAtPoint(const std::string & planet, float x, float 
 	}
 
 	const RegionData & regionData = ms_planetRegions[planet];
-	if (regionData.tree != nullptr)
+	if (regionData.tree != NULL)
 	{
 		std::vector<const MxCifQuadTreeBounds *> objects;
 		regionData.tree->getObjectsAt(x, z, objects);
@@ -1065,7 +1065,7 @@ void RegionMaster::getRegionsForPlanet(const std::string & planetName,
 	}
 
 	const RegionData & regionData = ms_planetRegions[planetName];
-	if (regionData.tree != nullptr)
+	if (regionData.tree != NULL)
 	{
 		std::vector<const MxCifQuadTreeBounds *> objects;
 		regionData.tree->getAllObjects(objects);
@@ -1222,7 +1222,7 @@ bool RegionMaster::setDynamicSpawnRegionObjectData(UniverseObject & object,
 											  int municipal, int geography, int minDifficulty, int maxDifficulty, int spawnable,
 											  int mission, bool visible, bool notify, std::string spawntable, int duration)
 {
-	time_t const birthEpoch = ::time(nullptr);
+	time_t const birthEpoch = ::time(NULL);
 	time_t const endEpoch = birthEpoch + (duration * 60); // Duration is in minutes.
 
 	object.setObjVarItem(OBJVAR_DYNAMIC_REGION + "." + OBJVAR_DYNAMIC_REGION_NAME, name);

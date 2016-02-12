@@ -291,7 +291,7 @@ namespace NAMESPACE
 		if (!mActiveHosts[0].empty())
 		{
             // get connection that corresponds to hash index
-            ApiConnection * connection = nullptr;
+            ApiConnection * connection = NULL;
             unsigned hashIndex = hashValue % mActiveHosts[0].size();
             unsigned curIndex = 0;
             for (ConnectionSet_t::iterator it = mActiveHosts[0].begin(); it != mActiveHosts[0].end(); it++, curIndex++)
@@ -314,7 +314,7 @@ namespace NAMESPACE
 		else if (!mActiveHosts[1].empty())
 		{
             // get connection that corresponds to hash index
-            ApiConnection * connection = nullptr;
+            ApiConnection * connection = NULL;
             unsigned hashIndex = hashValue % mActiveHosts[1].size();
             unsigned curIndex = 0;
             for (ConnectionSet_t::iterator it = mActiveHosts[1].begin(); it != mActiveHosts[1].end(); it++, curIndex++)

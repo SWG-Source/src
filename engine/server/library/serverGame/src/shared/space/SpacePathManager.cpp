@@ -59,9 +59,9 @@ void SpacePathManager::remove()
 // ----------------------------------------------------------------------
 SpacePath * SpacePathManager::fetch(SpacePath * const path, void const * const object, float const objectRadius)
 {
-	SpacePath * result = nullptr;
+	SpacePath * result = NULL;
 
-	if (path == nullptr)
+	if (path == NULL)
 	{
 		// This is a new path, add it to the list
 	
@@ -105,7 +105,7 @@ SpacePath * SpacePathManager::fetch(SpacePath * const path, void const * const o
 // ----------------------------------------------------------------------
 void SpacePathManager::release(SpacePath * const path, void const * const object)
 {
-	if (path == nullptr)
+	if (path == NULL)
 	{
 		return;
 	}

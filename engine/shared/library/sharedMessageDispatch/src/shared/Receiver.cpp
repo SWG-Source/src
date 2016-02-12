@@ -33,7 +33,7 @@ Receiver::Receiver() :
 emitterTargets(new EmitterTargets),
 hasTargets(false)
 {
-	assert(emitterTargets != nullptr);
+	assert(emitterTargets != NULL);
 }
 
 //---------------------------------------------------------------------

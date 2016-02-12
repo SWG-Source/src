@@ -48,12 +48,12 @@ UdpReliableChannel::UdpReliableChannel(int channelNumber, UdpConnection *con, Ud
     mReliableOutgoingBytes = 0;
     mLogicalBytesQueued = 0;
 
-    mCoalescePacket = nullptr;
-    mCoalesceStartPtr = nullptr;
-    mCoalesceEndPtr = nullptr;
+    mCoalescePacket = NULL;
+    mCoalesceStartPtr = NULL;
+    mCoalesceEndPtr = NULL;
     mCoalesceCount = 0;
 
-    mBufferedAckPtr = nullptr;
+    mBufferedAckPtr = NULL;
 
     mStatDuplicatePacketsReceived = 0;
     mStatResentPacketsAccelerated = 0;
@@ -69,7 +69,7 @@ UdpReliableChannel::UdpReliableChannel(int channelNumber, UdpConnection *con, Ud
 
     mBigDataLen = 0;
     mBigDataTargetLen = 0;
-    mBigDataPtr = nullptr;
+    mBigDataPtr = NULL;
     mFragmentNextPos = 0;
     mLastTimeStampAcknowledged = 0;
     mMaxxedOutCurrentWindow = false;
@@ -81,14 +81,14 @@ UdpReliableChannel::UdpReliableChannel(int channelNumber, UdpConnection *con, Ud
 
 UdpReliableChannel::~UdpReliableChannel()
 {
-    if (mCoalescePacket != nullptr)
+    if (mCoalescePacket != NULL)
     {
         mCoalescePacket->Release();
-        mCoalescePacket = nullptr;
+        mCoalescePacket = NULL;
     }
 
     const LogicalPacket *cur = mLogicalPacketList.RemoveHead();
-    while (cur != nullptr)
+    while (cur != NULL)
     {
         cur->Release();
         cur = mLogicalPacketList.RemoveHead();
@@ -103,7 +103,7 @@ UdpReliableChannel::~UdpReliableChannel()
 
 void UdpReliableChannel::Send(const udp_uchar *data, int dataLen, const udp_uchar *data2, int dataLen2)
 {
-    if (mLogicalPacketList.Count() == 0 && mCoalescePacket == nullptr)
+    if (mLogicalPacketList.Count() == 0 && mCoalescePacket == NULL)
     {
             // if we are adding something to a previously empty logical queue, then it is possible that
             // we may be able to send it, so mark ourselves to take time the next time it is offered
@@ -126,7 +126,7 @@ void UdpReliableChannel::Send(const udp_uchar *data, int dataLen, const udp_ucha
 
 void UdpReliableChannel::FlushCoalesce()
 {
-    if (mCoalescePacket != nullptr)
+    if (mCoalescePacket != NULL)
     {
         if (mCoalesceCount == 1)
         {
@@ -140,16 +140,16 @@ void UdpReliableChannel::FlushCoalesce()
         mCoalescePacket->SetDataLen((int)(mCoalesceEndPtr - mCoalesceStartPtr));
         QueueLogicalPacket(mCoalescePacket);
         mCoalescePacket->Release();
-        mCoalescePacket = nullptr;
+        mCoalescePacket = NULL;
     }
 }
 
 void UdpReliableChannel::SendCoalesce(const udp_uchar *data, int dataLen, const udp_uchar *data2, int dataLen2)
 {
     int totalLen = dataLen + dataLen2;
-    if (mCoalescePacket == nullptr)
+    if (mCoalescePacket == NULL)
     {
-        mCoalescePacket = mUdpConnection->mUdpManager->CreatePacket(nullptr, mMaxDataBytes);
+        mCoalescePacket = mUdpConnection->mUdpManager->CreatePacket(NULL, mMaxDataBytes);
         mCoalesceEndPtr = mCoalesceStartPtr = (udp_uchar *)mCoalescePacket->GetDataPtr();
         *mCoalesceEndPtr++ = 0;
         *mCoalesceEndPtr++ = UdpConnection::cUdpPacketGroup;
@@ -169,10 +169,10 @@ void UdpReliableChannel::SendCoalesce(const udp_uchar *data, int dataLen, const 
         // append on end of coalesce
     mCoalesceCount++;
     mCoalesceEndPtr += UdpMisc::PutVariableValue(mCoalesceEndPtr, totalLen);
-    if (data != nullptr)
+    if (data != NULL)
         memcpy(mCoalesceEndPtr, data, dataLen);
     mCoalesceEndPtr += dataLen;
-    if (data2 != nullptr)
+    if (data2 != NULL)
         memcpy(mCoalesceEndPtr, data2, dataLen2);
     mCoalesceEndPtr += dataLen2;
 }
@@ -287,7 +287,7 @@ int UdpReliableChannel::GiveTime()
     mMaxxedOutCurrentWindow = false;
     int outstandingNextSendTime = 10 * 60000;
             // if we have something to do
-    if (mReliableOutgoingPendingId < mReliableOutgoingId || mLogicalPacketList.Count() != 0 || mCoalescePacket != nullptr)
+    if (mReliableOutgoingPendingId < mReliableOutgoingId || mLogicalPacketList.Count() != 0 || mCoalescePacket != NULL)
     {
             // first, let's calculate how many bytes we figure is outstanding based on who is still waiting for an ack-packet
         UdpClockStamp oldestResendTime = udpMax(hotClock - optimalResendDelay, mLastTimeStampAcknowledged);    // anything older than this, we need to resend
@@ -317,7 +317,7 @@ int UdpReliableChannel::GiveTime()
                     // if this packet has not been acked and it is NOT ready to be sent (was recently sent) then we consider it outstanding
                     // note: packets needing re-sending probably got lost and are therefore not outstanding
                 PhysicalPacket *entry = &mPhysicalPackets[i % mConfig.maxOutstandingPackets];
-                if (entry->mDataPtr != nullptr)        // acked packets set the dataPtr to nullptr
+                if (entry->mDataPtr != NULL)        // acked packets set the dataPtr to NULL
                 {
                         // if this packet is ready to be sent (ie: needs time now, or some later packet has already been ack'ed)
                     windowSpaceLeft -= entry->mDataLen;        // window-space is effectively taken whether we have sent it yet or not
@@ -524,7 +524,7 @@ int UdpReliableChannel::GiveTime()
 void UdpReliableChannel::GetChannelStatus(UdpConnection::ChannelStatus *channelStatus) const
 {
     int coalesceBytes = 0;
-    if (mCoalescePacket != nullptr)
+    if (mCoalescePacket != NULL)
         coalesceBytes = (int)(mCoalesceEndPtr - mCoalesceStartPtr);
 
     channelStatus->totalPendingBytes = mLogicalBytesQueued + mReliableOutgoingBytes + coalesceBytes;
@@ -550,7 +550,7 @@ void UdpReliableChannel::GetChannelStatus(UdpConnection::ChannelStatus *channelS
         PhysicalPacket *entry = &mPhysicalPackets[mReliableOutgoingPendingId % mConfig.maxOutstandingPackets];
         if (entry->mFirstTimeStamp != 0)        // if has been sent (we know it hasn't been acknowledged or we couldn't possibly be pointing at it as pending)
         {
-            if (mUdpConnection->GetUdpManager() != nullptr)
+            if (mUdpConnection->GetUdpManager() != NULL)
             {
                 channelStatus->oldestUnacknowledgedAge = mUdpConnection->GetUdpManager()->CachedClockElapsed(entry->mFirstTimeStamp);
             }
@@ -588,7 +588,7 @@ void UdpReliableChannel::ReliablePacket(const udp_uchar *data, int dataLen)
             mReliableIncomingId++;
 
                 // process other packets that have arrived
-            while (mReliableIncoming[mReliableIncomingId % mConfig.maxInstandingPackets].mPacket != nullptr)
+            while (mReliableIncoming[mReliableIncomingId % mConfig.maxInstandingPackets].mPacket != NULL)
             {
                 int spot = (int)(mReliableIncomingId % mConfig.maxInstandingPackets);
                 if (mReliableIncoming[spot].mMode != cReliablePacketModeDelivered)
@@ -597,7 +597,7 @@ void UdpReliableChannel::ReliablePacket(const udp_uchar *data, int dataLen)
                 }
                 
                 mReliableIncoming[spot].mPacket->Release();
-                mReliableIncoming[spot].mPacket = nullptr;
+                mReliableIncoming[spot].mPacket = NULL;
                 mReliableIncomingId++;
             }
         }
@@ -605,7 +605,7 @@ void UdpReliableChannel::ReliablePacket(const udp_uchar *data, int dataLen)
         {
                 // not the one we need next, but it is later than the one we need , so store it in our buffer until it's turn comes up
             int spot = (int)(reliableId % mConfig.maxInstandingPackets);
-            if (mReliableIncoming[spot].mPacket == nullptr)        // only make the copy of it if we don't already have it in our buffer (in cases where it was sent twice, there would be no harm in the copy again since it must be the same packet, it's just inefficient)
+            if (mReliableIncoming[spot].mPacket == NULL)        // only make the copy of it if we don't already have it in our buffer (in cases where it was sent twice, there would be no harm in the copy again since it must be the same packet, it's just inefficient)
             {
                 mReliableIncoming[spot].mMode = mode;
                 mReliableIncoming[spot].mPacket = mUdpConnection->mUdpManager->CreatePacket(data + UdpConnection::cUdpPacketReliableSize, dataLen - UdpConnection::cUdpPacketReliableSize);
@@ -651,14 +651,14 @@ void UdpReliableChannel::ReliablePacket(const udp_uchar *data, int dataLen)
         bufPtr += UdpMisc::PutValue16(bufPtr, (udp_ushort)(reliableId & 0xffff));
     }
 
-    if (mBufferedAckPtr != nullptr && mConfig.ackDeduping && ackAll)
+    if (mBufferedAckPtr != NULL && mConfig.ackDeduping && ackAll)
     {
         memcpy(mBufferedAckPtr, buf, bufPtr - buf);
     }
     else
     {
-        udp_uchar *ptr = mUdpConnection->BufferedSend(buf, (int)(bufPtr - buf), nullptr, 0, true);    // safe to append on our data, it is stack data
-        if (mBufferedAckPtr == nullptr)
+        udp_uchar *ptr = mUdpConnection->BufferedSend(buf, (int)(bufPtr - buf), NULL, 0, true);    // safe to append on our data, it is stack data
+        if (mBufferedAckPtr == NULL)
         {
                 // the buffered-ack ptr should always point to the earliest ack in the buffer, such that
                 // a replacement ack-all will be processed by the receiver before any selective acks that may
@@ -676,7 +676,7 @@ void UdpReliableChannel::ProcessPacket(ReliablePacketMode mode, const udp_uchar 
     if (mode == cReliablePacketModeReliable)
     {
             // we are not a fragment, nor was there a fragment in progress, so we are a simple reliable packet, just send it to the app
-        if (mBigDataPtr != nullptr)
+        if (mBigDataPtr != NULL)
         {
             mUdpConnection->CallbackCorruptPacket(data, dataLen, cUdpCorruptionReasonFragmentExpected);
             return;
@@ -687,7 +687,7 @@ void UdpReliableChannel::ProcessPacket(ReliablePacketMode mode, const udp_uchar 
     else if (mode == cReliablePacketModeFragment)
     {
             // append onto end of big packet (or create new big packet if not existing already)
-        if (mBigDataPtr == nullptr)
+        if (mBigDataPtr == NULL)
         {
             if (dataLen < 4)
             {
@@ -729,7 +729,7 @@ void UdpReliableChannel::ProcessPacket(ReliablePacketMode mode, const udp_uchar 
             delete[] mBigDataPtr;
             mBigDataLen = 0;
             mBigDataTargetLen = 0;
-            mBigDataPtr = nullptr;
+            mBigDataPtr = NULL;
         }
     }
 }
@@ -767,7 +767,7 @@ void UdpReliableChannel::Ack(udp_int64 reliableId)
         int pos = (int)(reliableId % mConfig.maxOutstandingPackets);
         PhysicalPacket *entry = &mPhysicalPackets[pos];
 
-        if (entry->mDataPtr != nullptr)        // if this packet has not been acknowledged yet (sometimes we get back two acks for the same packet)
+        if (entry->mDataPtr != NULL)        // if this packet has not been acknowledged yet (sometimes we get back two acks for the same packet)
         {
             mNextNeedTime = 0;        // something got acked, so we actually need to take the time next time it is offered
 
@@ -829,14 +829,14 @@ void UdpReliableChannel::Ack(udp_int64 reliableId)
                 // this packet we have queued has been acknowledged, so delete it from queue
             mReliableOutgoingBytes -= entry->mDataLen;
             entry->mDataLen = 0;
-            entry->mDataPtr = nullptr;
+            entry->mDataPtr = NULL;
             entry->mParent->Release();
-            entry->mParent = nullptr;
+            entry->mParent = NULL;
 
                 // advance the pending ptr until it reaches outgoingId or an entry that has yet to acknowledged
             while (mReliableOutgoingPendingId < mReliableOutgoingId)
             {
-                if (mPhysicalPackets[mReliableOutgoingPendingId % mConfig.maxOutstandingPackets].mDataPtr != nullptr)
+                if (mPhysicalPackets[mReliableOutgoingPendingId % mConfig.maxOutstandingPackets].mDataPtr != NULL)
                     break;
                 mReliableOutgoingPendingId++;
             }
@@ -855,25 +855,25 @@ void UdpReliableChannel::Ack(udp_int64 reliableId)
 
 UdpReliableChannel::IncomingQueueEntry::IncomingQueueEntry()
 {
-    mPacket = nullptr;
+    mPacket = NULL;
     mMode = UdpReliableChannel::cReliablePacketModeReliable;
 }
 
 UdpReliableChannel::IncomingQueueEntry::~IncomingQueueEntry()
 {
-    if (mPacket != nullptr)
+    if (mPacket != NULL)
         mPacket->Release();
 }
 
 
 UdpReliableChannel::PhysicalPacket::PhysicalPacket()
 {
-    mParent = nullptr;
+    mParent = NULL;
 }
 
 UdpReliableChannel::PhysicalPacket::~PhysicalPacket()
 {
-    if (mParent != nullptr)
+    if (mParent != NULL)
         mParent->Release();
 }
 

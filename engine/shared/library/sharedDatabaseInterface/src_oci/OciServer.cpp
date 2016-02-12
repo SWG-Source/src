@@ -63,7 +63,7 @@ bool DB::OCIServer::checkerr(OCISession const & session, int status)
 			text errbuf[512];
 			sb4 errcode = 0;
 			
-			OCIErrorGet((dvoid *)(session.errhp), (ub4) 1, (text *) nullptr, &errcode,
+			OCIErrorGet((dvoid *)(session.errhp), (ub4) 1, (text *) NULL, &errcode,
 							   errbuf, (ub4) sizeof(errbuf), OCI_HTYPE_ERROR);
 
 			WARNING(true,("Database error: %.*s",512,errbuf));

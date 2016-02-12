@@ -30,7 +30,7 @@ ResourcePoolObject::ResourcePoolObject(ResourceTypeObject const & resourceType, 
 		m_fractalData(resourceType.getFractalData()),
 		m_fractalSeed(fractalSeed),
 		m_depletedTimestamp(resourceType.getDepletedTimestamp()),
-		m_efficiencyMap(nullptr)
+		m_efficiencyMap(NULL)
 {
 }
 
@@ -39,7 +39,7 @@ ResourcePoolObject::ResourcePoolObject(ResourceTypeObject const & resourceType, 
 ResourcePoolObject::~ResourcePoolObject()
 {
 	delete m_efficiencyMap;
-	m_efficiencyMap=nullptr;
+	m_efficiencyMap=NULL;
 }
 
 // ----------------------------------------------------------------------

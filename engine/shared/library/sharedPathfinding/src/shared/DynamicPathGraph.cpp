@@ -25,10 +25,10 @@ DynamicPathGraph::~DynamicPathGraph()
 	clear();
 
 	delete m_nodeList;
-	m_nodeList = nullptr;
+	m_nodeList = NULL;
 
 	delete m_dirtyNodes;
-	m_dirtyNodes = nullptr;
+	m_dirtyNodes = NULL;
 }
 
 // ----------
@@ -72,7 +72,7 @@ int DynamicPathGraph::getEdgeCount ( int nodeIndex ) const
 {
 	DynamicPathNode const * node = _getNode(nodeIndex);
 
-	if(node == nullptr)
+	if(node == NULL)
 	{
 		return 0;
 	}
@@ -86,13 +86,13 @@ PathEdge * DynamicPathGraph::getEdge ( int nodeIndex, int edgeIndex )
 {
 	DynamicPathNode * node = _getNode(nodeIndex);
 
-	if(node != nullptr)
+	if(node != NULL)
 	{
 		return node->getEdge(edgeIndex);
 	}
 	else
 	{
-		return nullptr;
+		return NULL;
 	}
 }
 
@@ -100,13 +100,13 @@ PathEdge const * DynamicPathGraph::getEdge ( int nodeIndex, int edgeIndex ) cons
 {
 	DynamicPathNode const * node = _getNode(nodeIndex);
 
-	if(node != nullptr)
+	if(node != NULL)
 	{
 		return node->getEdge(edgeIndex);
 	}
 	else
 	{
-		return nullptr;
+		return NULL;
 	}
 }
 
@@ -114,7 +114,7 @@ PathEdge const * DynamicPathGraph::getEdge ( int nodeIndex, int edgeIndex ) cons
 
 int DynamicPathGraph::addNode ( DynamicPathNode * newNode )
 {
-	if(newNode == nullptr) return -1;
+	if(newNode == NULL) return -1;
 
 	int listSize = m_nodeList->size();
 
@@ -124,7 +124,7 @@ int DynamicPathGraph::addNode ( DynamicPathNode * newNode )
 	{
 		for(int i = 0; i < listSize; i++)
 		{
-			if(m_nodeList->at(i) == nullptr)
+			if(m_nodeList->at(i) == NULL)
 			{
 				nodeIndex = i;
 				break;
@@ -155,11 +155,11 @@ void DynamicPathGraph::removeNode ( int nodeIndex )
 
 	DynamicPathNode * node = _getNode(nodeIndex);
 
-	if(node != nullptr)
+	if(node != NULL)
 	{
 		unlinkNode(nodeIndex);
 
-		m_nodeList->at(nodeIndex) = nullptr;
+		m_nodeList->at(nodeIndex) = NULL;
 
 		delete node;
 
@@ -171,7 +171,7 @@ void DynamicPathGraph::moveNode ( int nodeIndex, Vector const & newPosition )
 {
 	DynamicPathNode * node = _getNode(nodeIndex);
 
-	if(node != nullptr)
+	if(node != NULL)
 	{
 		node->setPosition_p(newPosition);
 
@@ -230,7 +230,7 @@ void DynamicPathGraph::unlinkNode ( int nodeIndex )
 {
 	DynamicPathNode * node = _getNode(nodeIndex);
 
-	if(node == nullptr) return;
+	if(node == NULL) return;
 
 	// ----------
 
@@ -254,7 +254,7 @@ void DynamicPathGraph::relinkNode ( int nodeIndex )
 {
 	DynamicPathNode * nodeA = _getNode(nodeIndex);
 
-	if(nodeA == nullptr) return;
+	if(nodeA == NULL) return;
 
 	// ----------
 
@@ -268,7 +268,7 @@ void DynamicPathGraph::relinkNode ( int nodeIndex )
 	{
 		DynamicPathNode * nodeB = _getNode(i);
 
-		if(nodeB == nullptr) continue;
+		if(nodeB == NULL) continue;
 		if(nodeA == nodeB) continue;
 
 		Vector const & posA = nodeA->getPosition_p();
@@ -314,7 +314,7 @@ void DynamicPathGraph::relinkNode ( int nodeIndex )
 	{
 		DynamicPathNode * neighborNode = _getNode(neighborList[i]);
 
-		if(neighborNode != nullptr)
+		if(neighborNode != NULL)
 		{
 			neighborNode->markRedundantEdges();
 			neighborNode->removeMarkedEdges();
@@ -326,7 +326,7 @@ void DynamicPathGraph::relinkNode ( int nodeIndex )
 
 DynamicPathNode * DynamicPathGraph::_getNode ( int nodeIndex )
 {
-	if(nodeIndex == -1) return nullptr;
+	if(nodeIndex == -1) return NULL;
 
 	return m_nodeList->at(nodeIndex);
 }
@@ -335,7 +335,7 @@ DynamicPathNode * DynamicPathGraph::_getNode ( int nodeIndex )
 
 DynamicPathNode const * DynamicPathGraph::_getNode ( int nodeIndex ) const
 {
-	if(nodeIndex == -1) return nullptr;
+	if(nodeIndex == -1) return NULL;
 
 	return m_nodeList->at(nodeIndex);
 }

@@ -21,7 +21,7 @@ namespace ChatSystem
 
 	MRoomMessage::MRoomMessage(ByteStream::ReadIterator &iter)
 	: GenericMessage(MESSAGE_ROOMMESSAGE),
-	  m_destList(nullptr),
+	  m_destList(NULL),
 	  m_srcAvatar(iter),
 	  m_messageID(0)
 	{
@@ -45,13 +45,13 @@ namespace ChatSystem
 	MRoomMessage::~MRoomMessage()
 	{
 		delete[] m_destList;
-		m_destList = nullptr;
+		m_destList = NULL;
 	}
 
 	MBroadcastMessage::MBroadcastMessage(ByteStream::ReadIterator &iter)
 	: GenericMessage(MESSAGE_BROADCASTMESSAGE),
 	  m_srcAvatar(iter),
-	  m_destList(nullptr)
+	  m_destList(NULL)
 	{
 		ASSERT_VALID_STRING_LENGTH(get(iter, m_srcAddress));
 		get(iter, m_listLength);
@@ -68,7 +68,7 @@ namespace ChatSystem
 	MBroadcastMessage::~MBroadcastMessage()
 	{
 		delete[] m_destList;
-		m_destList = nullptr;
+		m_destList = NULL;
 	}
 
 	MFilterMessage::MFilterMessage(ByteStream::ReadIterator &iter)

@@ -61,7 +61,7 @@ void PlanetController::handleMessage (const int message, const float value, cons
 		case CM_setWeather:
 			{
 				const MessageQueueGenericValueType<std::pair<int, Vector> >* const message = safe_cast<const MessageQueueGenericValueType<std::pair<int, Vector> >*> (data);
-				if (message != nullptr)
+				if (message != NULL)
 				{
 					owner->setWeather(
 						message->getValue().first, 
@@ -280,7 +280,7 @@ void PlanetController::handleMessage (const int message, const float value, cons
 					const std::map<std::string, int64> & data = message->getValue();
 
 					for (std::map<std::string, int64>::const_iterator iter = data.begin(); iter != data.end(); ++iter)
-						owner->adjustGcwImperialScore("CM_adjustGcwImperialScore", nullptr, iter->first, iter->second);
+						owner->adjustGcwImperialScore("CM_adjustGcwImperialScore", NULL, iter->first, iter->second);
 				}
 			}
 			break;
@@ -293,7 +293,7 @@ void PlanetController::handleMessage (const int message, const float value, cons
 					const std::map<std::string, int64> & data = message->getValue();
 
 					for (std::map<std::string, int64>::const_iterator iter = data.begin(); iter != data.end(); ++iter)
-						owner->adjustGcwRebelScore("CM_adjustGcwRebelScore", nullptr, iter->first, iter->second);
+						owner->adjustGcwRebelScore("CM_adjustGcwRebelScore", NULL, iter->first, iter->second);
 				}
 			}
 			break;

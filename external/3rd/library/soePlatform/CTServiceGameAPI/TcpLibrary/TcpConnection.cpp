@@ -11,28 +11,28 @@ namespace NAMESPACE
 
 //used when want to open new connection with this socket
 TcpConnection::TcpConnection(TcpManager *tcpManager, TcpBlockAllocator *sendAlloc, TcpManager::TcpParams &params, const IPAddress &destIP, short destPort, unsigned timeout)
-: m_nextConnection(nullptr),
-  m_prevConnection(nullptr),
+: m_nextConnection(NULL),
+  m_prevConnection(NULL),
   m_socket(INVALID_SOCKET),
-  m_nextKeepAliveConnection(nullptr),
-  m_prevKeepAliveConnection(nullptr),
+  m_nextKeepAliveConnection(NULL),
+  m_prevKeepAliveConnection(NULL),
   m_aliveListId(tcpManager->m_aliveList.m_listID),
-  m_nextRecvDataConnection(nullptr),
-  m_prevRecvDataConnection(nullptr),
+  m_nextRecvDataConnection(NULL),
+  m_prevRecvDataConnection(NULL),
   m_recvDataListId(tcpManager->m_dataList.m_listID),
   m_manager(tcpManager),
   m_status(StatusNegotiating),
-  m_handler(nullptr),
+  m_handler(NULL),
   m_destIP(destIP),
   m_destPort(destPort),
   m_refCount(0),
   m_sendAllocator(sendAlloc),
-  m_head(nullptr),
-  m_tail(nullptr),
+  m_head(NULL),
+  m_tail(NULL),
   m_bytesRead(0),
   m_bytesNeeded(0),
   m_params(params),
-  m_recvBuff(nullptr),
+  m_recvBuff(NULL),
   m_connectTimeout(timeout),
   m_connectTimer(),
   m_wasConRemovedFromMgr(false)
@@ -94,28 +94,28 @@ TcpConnection::TcpConnection(TcpManager *tcpManager, TcpBlockAllocator *sendAllo
 
 //used when server mode creates new connection object representing a connect request
 TcpConnection::TcpConnection(TcpManager *tcpManager, TcpBlockAllocator *sendAlloc, TcpManager::TcpParams &params, SOCKET socket, const IPAddress &destIP, short destPort)
-: m_nextConnection(nullptr),
-  m_prevConnection(nullptr),
+: m_nextConnection(NULL),
+  m_prevConnection(NULL),
   m_socket(socket),
-  m_nextKeepAliveConnection(nullptr),
-  m_prevKeepAliveConnection(nullptr),
+  m_nextKeepAliveConnection(NULL),
+  m_prevKeepAliveConnection(NULL),
   m_aliveListId(tcpManager->m_aliveList.m_listID),
-  m_nextRecvDataConnection(nullptr),
-  m_prevRecvDataConnection(nullptr),
+  m_nextRecvDataConnection(NULL),
+  m_prevRecvDataConnection(NULL),
   m_recvDataListId(tcpManager->m_dataList.m_listID),
   m_manager(tcpManager),
   m_status(StatusConnected),
-  m_handler(nullptr),
+  m_handler(NULL),
   m_destIP(destIP),
   m_destPort(destPort),
   m_refCount(0),
   m_sendAllocator(sendAlloc),
-  m_head(nullptr),
-  m_tail(nullptr),
+  m_head(NULL),
+  m_tail(NULL),
   m_bytesRead(0),
   m_bytesNeeded(0),
   m_params(params),
-  m_recvBuff(nullptr),
+  m_recvBuff(NULL),
   m_connectTimeout(0),
   m_connectTimer(),
   m_wasConRemovedFromMgr(false)
@@ -205,7 +205,7 @@ int TcpConnection::finishConnect()
             t.tv_sec = 0;
             t.tv_usec = 0;
 
-            int err = select(m_socket + 1, nullptr, &wrSet, nullptr, &t);
+            int err = select(m_socket + 1, NULL, &wrSet, NULL, &t);
 
             if (err == 0)
             {
@@ -300,7 +300,7 @@ TcpConnection::~TcpConnection()
 {
     delete [] m_recvBuff;
 
-    while(m_head != nullptr)
+    while(m_head != NULL)
     {
         data_block *tmp = m_head;
         m_head = m_head->m_next;
@@ -324,22 +324,22 @@ void TcpConnection::Send(const char *data, unsigned int dataLen)
     {
         m_aliveListId = m_manager->m_keepAliveList.m_listID;
 
-        if (m_prevKeepAliveConnection != nullptr)
+        if (m_prevKeepAliveConnection != NULL)
             m_prevKeepAliveConnection->m_nextKeepAliveConnection = m_nextKeepAliveConnection;
-        if (m_nextKeepAliveConnection != nullptr)
+        if (m_nextKeepAliveConnection != NULL)
             m_nextKeepAliveConnection->m_prevKeepAliveConnection = m_prevKeepAliveConnection;
         if (m_manager->m_keepAliveList.m_beginList == this)
             m_manager->m_keepAliveList.m_beginList = m_nextKeepAliveConnection;
 
         m_nextKeepAliveConnection = m_manager->m_aliveList.m_beginList;
-        m_prevKeepAliveConnection = nullptr;
-        if (m_manager->m_aliveList.m_beginList != nullptr)
+        m_prevKeepAliveConnection = NULL;
+        if (m_manager->m_aliveList.m_beginList != NULL)
             m_manager->m_aliveList.m_beginList->m_prevKeepAliveConnection = this;
         m_manager->m_aliveList.m_beginList = this;
     }
         
 
-    data_block *work = nullptr;    
+    data_block *work = NULL;    
 
     // this connection has no send buffer. Get a block
     if(!m_tail)
@@ -464,16 +464,16 @@ int TcpConnection::processIncoming()
     {
         m_recvDataListId = m_manager->m_noDataList.m_listID;
 
-        if (m_prevRecvDataConnection != nullptr)
+        if (m_prevRecvDataConnection != NULL)
             m_prevRecvDataConnection->m_nextRecvDataConnection = m_nextRecvDataConnection;
-        if (m_nextRecvDataConnection != nullptr)
+        if (m_nextRecvDataConnection != NULL)
             m_nextRecvDataConnection->m_prevRecvDataConnection = m_prevRecvDataConnection;
         if (m_manager->m_noDataList.m_beginList == this)
             m_manager->m_noDataList.m_beginList = m_nextRecvDataConnection;
 
         m_nextRecvDataConnection = m_manager->m_dataList.m_beginList;
-        m_prevRecvDataConnection = nullptr;
-        if (m_manager->m_dataList.m_beginList != nullptr)
+        m_prevRecvDataConnection = NULL;
+        if (m_manager->m_dataList.m_beginList != NULL)
             m_manager->m_dataList.m_beginList->m_prevRecvDataConnection = this;
         m_manager->m_dataList.m_beginList = this;
     }
@@ -619,7 +619,7 @@ int TcpConnection::processOutgoing()
 
     int sendError = 1;
 
-    // If m_head is not nullptr, then this connection has something to send
+    // If m_head is not null, then this connection has something to send
 
 
     if(m_head)

@@ -49,7 +49,7 @@ SlottedContainer::~SlottedContainer()
 	if (m_slotMap)
 	{
 		delete m_slotMap;
-		m_slotMap = nullptr;
+		m_slotMap = NULL;
 	}
 }
 

@@ -42,14 +42,14 @@ using namespace CommunityManagerNameSpace;
 //-----------------------------------------------------------------------------
 PlayerObject *CommunityManagerNameSpace::getPlayerObject(NetworkId const &networkId)
 {
-	PlayerObject *result = nullptr;
+	PlayerObject *result = NULL;
 	Object *object = NetworkIdManager::getObjectById(networkId);
 	
-	if (object != nullptr)
+	if (object != NULL)
 	{
 		CreatureObject *creatureObject = dynamic_cast<CreatureObject *>(object);
 		
-		if (creatureObject != nullptr)
+		if (creatureObject != NULL)
 		{
 			result = PlayerCreatureController::getPlayerObject(creatureObject);
 		}
@@ -61,10 +61,10 @@ PlayerObject *CommunityManagerNameSpace::getPlayerObject(NetworkId const &networ
 //-----------------------------------------------------------------------------
 ServerObject *CommunityManagerNameSpace::getServerObject(NetworkId const &networkId)
 {
-	ServerObject *result = nullptr;
+	ServerObject *result = NULL;
 	Object *object = NetworkIdManager::getObjectById(networkId);
 	
-	if (object != nullptr)
+	if (object != NULL)
 	{
 		result = dynamic_cast<ServerObject *>(object);
 	}
@@ -77,11 +77,11 @@ void CommunityManagerNameSpace::sendProseChatMessage(NetworkId const &networkId,
 {
 	Object *object = NetworkIdManager::getObjectById(networkId);
 
-	if (object != nullptr)
+	if (object != NULL)
 	{
 		ServerObject *serverObject = dynamic_cast<ServerObject *>(object);
 		
-		if (serverObject != nullptr)
+		if (serverObject != NULL)
 		{
 			ProsePackage prosePackage;
 			prosePackage.stringId = stringId;
@@ -117,7 +117,7 @@ void CommunityManager::handleMessage(ChatOnChangeFriendStatus const &message)
 	
 				PlayerObject *playerObject = getPlayerObject(message.getCharacter());
 	
-				if (playerObject != nullptr)
+				if (playerObject != NULL)
 				{
 					if (message.getAdd())
 					{
@@ -170,7 +170,7 @@ void CommunityManager::handleMessage(ChatOnGetFriendsList const &message)
 
 	PlayerObject *playerObject = getPlayerObject(message.getCharacter());
 
-	if (playerObject != nullptr)
+	if (playerObject != NULL)
 	{
 		typedef std::vector<std::string> StringVector;
 		StringVector friendList;
@@ -231,7 +231,7 @@ void CommunityManager::handleMessage(ChatOnChangeIgnoreStatus const &message)
 	
 				PlayerObject *playerObject = getPlayerObject(message.getCharacter());
 	
-				if (playerObject != nullptr)
+				if (playerObject != NULL)
 				{
 					if (message.getIgnore())
 					{
@@ -284,7 +284,7 @@ void CommunityManager::handleMessage(ChatOnGetIgnoreList const &message)
 
 	PlayerObject *playerObject = getPlayerObject(message.getCharacter());
 
-	if (playerObject != nullptr)
+	if (playerObject != NULL)
 	{
 		typedef std::vector<std::string> StringVector;
 		StringVector ignoreList;

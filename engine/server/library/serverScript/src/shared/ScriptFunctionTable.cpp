@@ -434,7 +434,7 @@ static const Scripting::ScriptFuncTable ScriptFuncList[] =
 
 //-- finish it up
 
-	{Scripting::TRIG_LAST_TRIGGER,			nullptr,					nullptr}
+	{Scripting::TRIG_LAST_TRIGGER,			NULL,					NULL}
 };
 
 const int NUM_SCRIPT_FUNCTIONS = sizeof(ScriptFuncList) / sizeof(ScriptFuncList[0]) - 1;
@@ -444,7 +444,7 @@ const int NUM_SCRIPT_FUNCTIONS = sizeof(ScriptFuncList) / sizeof(ScriptFuncList[
 // globals
 //========================================================================
 
-Scripting::_ScriptFuncHashMap *Scripting::ScriptFuncHashMap = nullptr;
+Scripting::_ScriptFuncHashMap *Scripting::ScriptFuncHashMap = NULL;
 
 
 //========================================================================
@@ -468,6 +468,6 @@ void Scripting::InitScriptFuncHashMap(void)
 void Scripting::RemoveScriptFuncHashMap(void)
 {
     delete Scripting::ScriptFuncHashMap;
-    Scripting::ScriptFuncHashMap = nullptr;
+    Scripting::ScriptFuncHashMap = NULL;
 }
 

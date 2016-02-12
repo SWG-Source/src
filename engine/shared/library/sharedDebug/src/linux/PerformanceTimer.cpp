@@ -39,7 +39,7 @@ PerformanceTimer::~PerformanceTimer()
 
 void PerformanceTimer::start()
 {
-	int const result = gettimeofday(&startTime, nullptr);
+	int const result = gettimeofday(&startTime, NULL);
 	FATAL(result != 0,("PerformanceTimer::start failed"));
 }
 
@@ -55,7 +55,7 @@ void PerformanceTimer::resume()
 	  usec += 1000000;
 	}
 
-	int const result = gettimeofday(&startTime, nullptr);
+	int const result = gettimeofday(&startTime, NULL);
 	FATAL(result != 0,("PerformanceTimer::resume failed"));
 
 	startTime.tv_sec -= sec;
@@ -71,7 +71,7 @@ void PerformanceTimer::resume()
 
 void PerformanceTimer::stop()
 {
-	int  result = gettimeofday(&stopTime, nullptr);
+	int  result = gettimeofday(&stopTime, NULL);
 	FATAL(result != 0,("PerformanceTimer::start failed"));
 }
 
@@ -95,7 +95,7 @@ float PerformanceTimer::getSplitTime() const
 {
 	timeval currentTime;
 
-	int const result = gettimeofday(&currentTime, nullptr);
+	int const result = gettimeofday(&currentTime, NULL);
 	FATAL(result != 0,("PerformanceTimer::getSplitTime failed"));
 
 	long sec = currentTime.tv_sec - startTime.tv_sec;
@@ -117,7 +117,7 @@ void PerformanceTimer::logElapsedTime(const char* string) const
 
 #ifdef _DEBUG
 	static char buffer [1000];
-	sprintf(buffer, "%s : %1.5f seconds\n", string ? string : "nullptr", getElapsedTime());
+	sprintf(buffer, "%s : %1.5f seconds\n", string ? string : "null", getElapsedTime());
 	DEBUG_REPORT_LOG_PRINT(true, ("%s", buffer));
 #endif
 }

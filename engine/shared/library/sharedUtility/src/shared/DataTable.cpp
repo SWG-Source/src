@@ -50,7 +50,7 @@ DataTable::~DataTable()
 				if (*k)
 				{
 					delete static_cast<std::multimap<int, int> *>(*k);
-					*k = nullptr;
+					*k = NULL;
 				}
 			}
 			break;
@@ -59,7 +59,7 @@ DataTable::~DataTable()
 				if (*k)
 				{
 					delete static_cast<std::multimap<float, int> *>(*k);
-					*k = nullptr;
+					*k = NULL;
 				}
 
 			}
@@ -69,7 +69,7 @@ DataTable::~DataTable()
 				if (*k)
 				{
 					delete static_cast<std::pair<std::multimap<const std::string, int>, std::multimap<int, int> > *>(*k);
-					*k = nullptr;
+					*k = NULL;
 				}
 
 			}
@@ -83,7 +83,7 @@ DataTable::~DataTable()
 			case DataTableColumnType::DT_PackedObjVars:
 			default:
 			{
-				WARNING_STRICT_FATAL((*k) != nullptr, ("Bad column Index %d. Unsupported datatype.  This may leak memory.", count));
+				WARNING_STRICT_FATAL((*k) != NULL, ("Bad column Index %d. Unsupported datatype.  This may leak memory.", count));
 			}
 			break;
 		}
@@ -112,7 +112,7 @@ DataTable::~DataTable()
 	}
 
 	delete m_columnIndexMap;
-	m_columnIndexMap = nullptr;
+	m_columnIndexMap = NULL;
 }
 
 //----------------------------------------------------------------------------
@@ -464,12 +464,12 @@ void DataTable::load(Iff & iff)
 	for (int i = 0; i < count; ++i)
 	{
 		//initialize the table index used for searching.
-		m_index.push_back(nullptr);
+		m_index.push_back(NULL);
 	}
 
 	buildColumnIndexMap();
 
-	if (nullptr != iff.getFileName())
+	if (NULL != iff.getFileName())
 		m_name = iff.getFileName();
 	else
 		m_name.clear();

@@ -69,7 +69,7 @@ bool AiMovementTarget::getHibernateOk( void ) const
 {
 static const int MAX_RECURSION = 50;
 static int recursionCount = 0;
-static const AiMovementTarget * preventRecurse = nullptr;
+static const AiMovementTarget * preventRecurse = NULL;
 
 	// prevent recursing too many times
 	if (++recursionCount == MAX_RECURSION)
@@ -90,20 +90,20 @@ static const AiMovementTarget * preventRecurse = nullptr;
 		--recursionCount;
 		return true;
 	}
-	if (preventRecurse == nullptr)
+	if (preventRecurse == NULL)
 		preventRecurse = this;
 	
 	bool hibernate = true;
 	if (m_target.isValid() && m_target.getObjectId() != NetworkId::cms_invalid)
 	{
 		const Object * o = m_target.getObject();
-		if (o != nullptr && o->asServerObject() != nullptr)
+		if (o != NULL && o->asServerObject() != NULL)
 		{
 			// if the target is a player, don't hibernate
 			if (o->asServerObject()->isPlayerControlled())
 				hibernate = false;
 			// hibernate if who we're following is hibernating
-			else if (o->asServerObject()->asCreatureObject() != nullptr)
+			else if (o->asServerObject()->asCreatureObject() != NULL)
 				hibernate = (safe_cast<const CreatureController *>(o->getController()))->getHibernate();
 		}
 		else
@@ -114,7 +114,7 @@ static const AiMovementTarget * preventRecurse = nullptr;
 
 	// clean up recusion checkers
 	if (preventRecurse == this)
-		preventRecurse = nullptr;
+		preventRecurse = NULL;
 	--recursionCount;
 	return hibernate;
 }

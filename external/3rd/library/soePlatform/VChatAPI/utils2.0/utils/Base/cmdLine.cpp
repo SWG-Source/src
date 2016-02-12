@@ -132,7 +132,7 @@ int CmdLine::SplitLine(int argc, char **argv)
 
 bool CmdLine::IsSwitch(const char *pParam)
 {
-   if (pParam==nullptr)
+   if (pParam==NULL)
       return false;
 
    // switches must non-empty
@@ -201,7 +201,7 @@ StringType CmdLine::GetSafeArgument(const char *pSwitch, int iIdx, const char *p
 {
    StringType sRet;
    
-   if (pDefault!=nullptr)
+   if (pDefault!=NULL)
       sRet = pDefault;
 
    try

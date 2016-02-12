@@ -110,9 +110,9 @@ namespace ShipObjectNamespace
 
 	typedef std::map<std::string, ShipData *> ShipTypeShipDataMap;
 	ShipTypeShipDataMap ms_shipTypeShipDataMap;
-	ShipData const * ms_defaultShipData = nullptr;
+	ShipData const * ms_defaultShipData = NULL;
 
-	ShipComponentDataEngine * ms_defaultEngine = nullptr;
+	ShipComponentDataEngine * ms_defaultEngine = NULL;
 
 	unsigned int s_lastShipId = 0;
 	unsigned int const s_maxShipId = 4096;
@@ -180,7 +180,7 @@ void ShipObject::install()
 	DataTableManager::addReloadCallback(cs_shipTypeFileName, loadShipTypeDataTable);
 
 	ShipComponentDescriptor const * const genericEngineDescriptor = ShipComponentDescriptor::findShipComponentDescriptorByName(ConstCharCrcString("eng_generic"));
-	FATAL(genericEngineDescriptor == nullptr, ("ShipObject genericEngineDescriptor [eng_generic] not found"));
+	FATAL(genericEngineDescriptor == NULL, ("ShipObject genericEngineDescriptor [eng_generic] not found"));
 	ms_defaultEngine = new ShipComponentDataEngine(*genericEngineDescriptor);
 
 	// mark shipId 0 as used
@@ -243,10 +243,10 @@ ShipObject * ShipObject::getContainingShipObject(ServerObject * serverObject)
 
 void ShipObjectNamespace::remove()
 {
-	ms_defaultShipData = nullptr;
+	ms_defaultShipData = NULL;
 
 	delete ms_defaultEngine;
-	ms_defaultEngine = nullptr;
+	ms_defaultEngine = NULL;
 
 	//-- Delete the ship type to ship data map
 	std::for_each(ms_shipTypeShipDataMap.begin(), ms_shipTypeShipDataMap.end(), PointerDeleterPairSecond());
@@ -270,7 +270,7 @@ ShipObject::ShipObject(ServerShipObjectTemplate const *newTemplate) :
 	m_currentRoll(0.f),
 	m_currentChassisHitPoints(0.f),
 	m_maximumChassisHitPoints(0.f),
-	m_weaponRefireTimers(nullptr),
+	m_weaponRefireTimers(NULL),
 	m_numberOfHits(0),
 	m_chassisType                      (0),
 	m_chassisComponentMassMaximum(0.0f),
@@ -406,19 +406,19 @@ ShipObject::~ShipObject()
 	nullWatchers();
 
 	delete m_boosterAvailableTimer;
-	m_boosterAvailableTimer = nullptr;
+	m_boosterAvailableTimer = NULL;
 	
 	if (getLocalFlag(LocalObjectFlags::ShipObject_ShipIdAssigned))
 		freeShipId(m_shipId.get());
 
 	delete m_fireShotQueue;
-	m_fireShotQueue = nullptr;
+	m_fireShotQueue = NULL;
 
 	delete[] m_weaponRefireTimers;
-	m_weaponRefireTimers = nullptr;
+	m_weaponRefireTimers = NULL;
 
 	delete m_nebulas;
-	m_nebulas = nullptr;
+	m_nebulas = NULL;
 
 	delete m_autoAggroImmuneTimer;
 	delete m_turretWeaponIndices;
@@ -465,7 +465,7 @@ void ShipObject::endBaselines()
 			NetworkId const & resourceTypeId = (*it).first;
 			
 			ResourceTypeObject const * const resourceTypeObject = ServerUniverse::getInstance().getResourceTypeById(resourceTypeId);
-			if (nullptr == ServerUniverse::getInstance().getResourceTypeById(resourceTypeId))
+			if (NULL == ServerUniverse::getInstance().getResourceTypeById(resourceTypeId))
 			{
 				WARNING(true, ("ShipObject::endBaselines invalid resource type [%s]", resourceTypeId.getValueString().c_str()));
 				continue;
@@ -946,7 +946,7 @@ Controller *ShipObject::createDefaultController()
 /**
  * Get the ship's pilot, if any.
  *
- * @return the pilot if there is one, otherwise nullptr
+ * @return the pilot if there is one, otherwise NULL
  */
 CreatureObject *ShipObject::getPilot()
 {
@@ -1180,7 +1180,7 @@ void ShipObject::internalHandleFireShot(Client const *gunnerClient, int const we
 		{
 			if (!gunnerCreature)
 			{
-				WARNING(true, ("ShipObject::internalHandleFireShot cannot fire missile with a nullptr gunner"));
+				WARNING(true, ("ShipObject::internalHandleFireShot cannot fire missile with a null gunner"));
 				return;
 			}
 
@@ -1284,14 +1284,14 @@ void ShipObject::fireShotTurretServer(int const weaponIndex, NetworkId const & t
 
 	Object const * const targetObject = NetworkIdManager::getObjectById(targetId);
 
-	if (targetObject == nullptr)
+	if (targetObject == NULL)
 	{
 		WARNING(true, ("ERROR: The targetId(%s) could not be resolved to an Object. A turret shot will NOT be fired.", targetId.getValueString().c_str()));
 		return;
 	}
 
 	ServerObject const * const targetServerObject = targetObject->asServerObject();
-	ShipObject const * const targetShipObject = (targetServerObject != nullptr) ? targetServerObject->asShipObject() : nullptr;
+	ShipObject const * const targetShipObject = (targetServerObject != NULL) ? targetServerObject->asShipObject() : NULL;
 
 	if (   !targetShipObject
 	    && goodShot)
@@ -1299,7 +1299,7 @@ void ShipObject::fireShotTurretServer(int const weaponIndex, NetworkId const & t
 		WARNING(true, ("ERROR: The targetId(%s) could not be resolved to a ShipObject. Perfect shot requested, but there is no way to lead with a perfect shot.", targetId.getValueString().c_str()));
 	}
 
-	if (   (targetShipObject != nullptr)
+	if (   (targetShipObject != NULL)
 	    && goodShot)
 	{
 		// If its a good shot, lead perfectly
@@ -1335,8 +1335,8 @@ void ShipObject::fireShotTurretServer(int const weaponIndex, NetworkId const & t
 			ShipController const * const ownerShipController = getController()->asShipController();
 			DEBUG_WARNING(!ownerShipController, ("ERROR: Controller could not be resolved to a ShipController(%s)", getDebugInformation().c_str()));
 			
-			float const missHalfAngle = (ownerShipController != nullptr) ? (ownerShipController->getTurretMissAngle() / 2.0f) : 0.0f;
-			float const targetRadius = (targetServerObject != nullptr) ? targetServerObject->getRadius() : 0.0f;
+			float const missHalfAngle = (ownerShipController != NULL) ? (ownerShipController->getTurretMissAngle() / 2.0f) : 0.0f;
+			float const targetRadius = (targetServerObject != NULL) ? targetServerObject->getRadius() : 0.0f;
 
 			Transform transform;
 			transform.roll_l(Random::randomReal() * PI_TIMES_2);
@@ -1442,13 +1442,13 @@ void ShipObject::constructFromTemplate()
 	//-- setup ship chassis
 
 	ShipChassis const * shipChassis = ShipChassis::findShipChassisByName (TemporaryCrcString (shipType.c_str (), true));
-	if (shipChassis == nullptr)
+	if (shipChassis == NULL)
 	{
 		WARNING (true, ("ShipObject::constructFromTemplate failed to find a valid ship chassis for [%s], trying generic", shipType.c_str ()));
 		shipChassis = ShipChassis::findShipChassisByName (TemporaryCrcString ("generic", true));
 	}
 
-	if (shipChassis != nullptr)
+	if (shipChassis != NULL)
 		m_chassisType = shipChassis->getCrc ();
 	else
 	{
@@ -1456,7 +1456,7 @@ void ShipObject::constructFromTemplate()
 	}
 
 	//set initial slot targetability from the chassis setttings.  Code or script can change these at runtime
-	if(shipChassis != nullptr)
+	if(shipChassis != NULL)
 	{
 		for (int slot = 0; slot < static_cast<int>(ShipChassisSlotType::SCST_num_types); ++slot)
 		{
@@ -1473,7 +1473,7 @@ void ShipObject::constructFromTemplate()
 		{
 			ShipComponentData * const shipComponentData = shipData->m_components[i];
 
-			if (shipComponentData != nullptr)
+			if (shipComponentData != NULL)
 			{
 				if (!installComponentFromData(i, *shipComponentData)) {
 					std::string chassis = shipChassis->getName().getString();
@@ -1732,7 +1732,7 @@ ShipComponentDataEngine const & ShipObject::getShipDataEngine() const
 
 	ShipComponentDataEngine const * const engine = safe_cast<ShipComponentDataEngine const *>(shipData->m_components[static_cast<size_t>(ShipChassisSlotType::SCST_engine)]);
 
-	if (engine == nullptr)
+	if (engine == NULL)
 		return *ms_defaultEngine;
 
 	return *engine;
@@ -1761,9 +1761,9 @@ void ShipObject::handleGunnerChange(ServerObject const &player)
 	}
 
 	ShipController * const shipController = getController()->asShipController();
-	PlayerShipController * const playerShipController = (shipController != nullptr) ? shipController->asPlayerShipController() : nullptr;
+	PlayerShipController * const playerShipController = (shipController != NULL) ? shipController->asPlayerShipController() : NULL;
 
-	if (playerShipController != nullptr)
+	if (playerShipController != NULL)
 	{
 		playerShipController->updateGunnerWeaponIndex(player.getNetworkId(), gunnerWeaponIndex);
 	}
@@ -2152,7 +2152,7 @@ void ShipObjectNamespace::loadShipTypeDataTable(DataTable const &dataTable)
 		//-- find components
 		for (int i = 0; i < static_cast<int>(ShipChassisSlotType::SCST_num_types); ++i)
 		{
-			shipData->m_components [i] = nullptr;
+			shipData->m_components [i] = NULL;
 			std::string const & slotName = ShipChassisSlotType::getNameFromType (static_cast<ShipChassisSlotType::Type>(i));
 			if (!dataTable.doesColumnExist (slotName))
 				continue;
@@ -2164,14 +2164,14 @@ void ShipObjectNamespace::loadShipTypeDataTable(DataTable const &dataTable)
 			uint32 const componentCrc = Crc::normalizeAndCalculate (componentName.c_str ());
 			ShipComponentDescriptor const * const shipComponentDescriptor = ShipComponentDescriptor::findShipComponentDescriptorByCrc (componentCrc);
 
-			if (shipComponentDescriptor == nullptr)
+			if (shipComponentDescriptor == NULL)
 				WARNING (true, ("ShipObject ship type [%s] specified invalid [%s] component [%s]", name.c_str (), slotName.c_str (), componentName.c_str ()));
 			else
 				shipData->m_components[i] = ShipComponentDataManager::create(*shipComponentDescriptor);
 
 			ShipComponentData * const shipComponentData = shipData->m_components[i];
 
-			if (shipComponentData == nullptr)
+			if (shipComponentData == NULL)
 				continue;
 
 			//-- get common data
@@ -2532,18 +2532,18 @@ void ShipObjectNamespace::freeShipId(uint16 shipId)
 
 ShipObject const * ShipObject::asShipObject(Object const * object)
 {
-	ServerObject const * const serverObject = (object != nullptr) ? object->asServerObject() : nullptr;
+	ServerObject const * const serverObject = (object != NULL) ? object->asServerObject() : NULL;
 
-	return (serverObject != nullptr) ? serverObject->asShipObject() : nullptr;
+	return (serverObject != NULL) ? serverObject->asShipObject() : NULL;
 }
 
 // ----------------------------------------------------------------------
 
 ShipObject * ShipObject::asShipObject(Object * object)
 {
-	ServerObject * const serverObject = (object != nullptr) ? object->asServerObject() : nullptr;
+	ServerObject * const serverObject = (object != NULL) ? object->asServerObject() : NULL;
 
-	return (serverObject != nullptr) ? serverObject->asShipObject() : nullptr;
+	return (serverObject != NULL) ? serverObject->asShipObject() : NULL;
 }
 
 // ----------------------------------------------------------------------

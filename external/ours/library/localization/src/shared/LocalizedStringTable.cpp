@@ -187,10 +187,10 @@ bool LocalizedStringTable::load_0000 (AbstractFile & fl)
 			if (!fl.read (&buflen, sizeof (LocalizedString::id_type)))
 				return false;
 
-			// buflen does not include nullptr terminator
+			// buflen does not include null terminator
 			char * buf = new char [buflen+1];
 
-			assert (buf != nullptr); //lint !e1924 // c-style cast.  MSVC bug
+			assert (buf != NULL); //lint !e1924 // c-style cast.  MSVC bug
 
 			buf [buflen] = 0;
 
@@ -276,10 +276,10 @@ bool LocalizedStringTable::load_0001(AbstractFile & fl)
 			if (!fl.read (&buflen, sizeof (LocalizedString::id_type)))
 				return false;
 
-			// buflen does not include nullptr terminator
+			// buflen does not include null terminator
 			char * buf = new char [buflen+1];
 
-			assert (buf != nullptr); //lint !e1924 // c-style cast.  MSVC bug
+			assert (buf != NULL); //lint !e1924 // c-style cast.  MSVC bug
 
 			buf [buflen] = 0;
 
@@ -333,7 +333,7 @@ LocalizedStringTable *LocalizedStringTable::load (AbstractFileFactory & fileFact
 	{
 	case 0:
 		table = new LocalizedStringTable (filename);
-		assert (table != nullptr); //lint !e1924 // c-style cast.  MSVC bug
+		assert (table != NULL); //lint !e1924 // c-style cast.  MSVC bug
 
 		if (table->load_0000 (*fl) == false)
 		{
@@ -344,7 +344,7 @@ LocalizedStringTable *LocalizedStringTable::load (AbstractFileFactory & fileFact
 
 	case 1:
 		table = new LocalizedStringTable (filename);
-		assert (table != nullptr); //lint !e1924 // c-style cast.  MSVC bug
+		assert (table != NULL); //lint !e1924 // c-style cast.  MSVC bug
 		
 		if (table->load_0001 (*fl) == false)
 		{

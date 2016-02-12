@@ -27,7 +27,7 @@
 
 // ======================================================================
 
-LazyDeleter * LazyDeleter::ms_instance=nullptr;
+LazyDeleter * LazyDeleter::ms_instance=NULL;
 
 // ======================================================================
 
@@ -80,13 +80,13 @@ void LazyDeleter::remove()
 {
 	NOT_NULL(ms_instance);
 	delete ms_instance;
-	ms_instance = nullptr;
+	ms_instance = NULL;
 }
 
 // ----------------------------------------------------------------------
 
 LazyDeleter::LazyDeleter() :
-		m_workerThread(nullptr), // Avoid starting the worker thread until the other member variables are initialized
+		m_workerThread(NULL), // Avoid starting the worker thread until the other member variables are initialized
 		m_incomingObjects(new std::vector<NetworkId>),
 		m_objectsToDelete(new std::deque<NetworkId>),
 		m_objectListLock(new Mutex),
@@ -113,11 +113,11 @@ LazyDeleter::~LazyDeleter()
 	delete m_objectsToDelete;
 	delete m_objectListLock;
 	 
-	m_workerThread = nullptr;
-	m_incomingObjects = nullptr;
-	m_objectsToDelete = nullptr;
-	m_objectListLock = nullptr;
-	m_session = nullptr;
+	m_workerThread = NULL;
+	m_incomingObjects = NULL;
+	m_objectsToDelete = NULL;
+	m_objectListLock = NULL;
+	m_session = NULL;
 }
 
 // ----------------------------------------------------------------------

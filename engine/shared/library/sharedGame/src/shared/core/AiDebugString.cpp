@@ -69,7 +69,7 @@ AiDebugString::AiDebugString(std::string const & text)
 	Unicode::String const delimiters(Unicode::narrowToWide("`"));
 	Unicode::UnicodeStringVector result;
 
-	if (Unicode::tokenize(Unicode::narrowToWide(text), result, &delimiters, nullptr))
+	if (Unicode::tokenize(Unicode::narrowToWide(text), result, &delimiters, NULL))
 	{
 		Unicode::UnicodeStringVector::const_iterator iterStringVector = result.begin();
 

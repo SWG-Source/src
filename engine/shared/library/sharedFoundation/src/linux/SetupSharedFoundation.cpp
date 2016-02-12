@@ -150,11 +150,11 @@ SetupSharedFoundation::Data::Data(Defaults defaults)
 		case D_game:
 			runInBackground                 = true;
 
-			lpCmdLine                       = nullptr;
+			lpCmdLine                       = NULL;
 			argc                            = 0;
-			argv                            = nullptr;
+			argv                            = NULL;
 
-			configFile                      = nullptr;
+			configFile                      = NULL;
 
 			frameRateLimit                  = CONST_REAL(0);
 			break;
@@ -162,11 +162,11 @@ SetupSharedFoundation::Data::Data(Defaults defaults)
 		case D_console:
 			runInBackground                 = true;
 
-			lpCmdLine                       = nullptr;
+			lpCmdLine                       = NULL;
 			argc                            = 0;
-			argv                            = nullptr;
+			argv                            = NULL;
 
-			configFile                      = nullptr;
+			configFile                      = NULL;
 
 			frameRateLimit                  = CONST_REAL(0);
 			break;

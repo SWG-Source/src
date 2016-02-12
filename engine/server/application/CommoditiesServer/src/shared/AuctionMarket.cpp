@@ -121,7 +121,7 @@ namespace AuctionMarketNamespace
 		Auction const * const auction,
 		int const type,
 		int const entranceCharge,
-		AuctionBid const * const playerBid = nullptr
+		AuctionBid const * const playerBid = NULL
 	)
 	{
 		AuctionDataHeader *header = new AuctionDataHeader;
@@ -301,7 +301,7 @@ namespace AuctionMarketNamespace
 		std::map<std::string, int> attributeValue;
 	};
 
-	GetItemAttributeDataRequest * getItemAttributeDataRequest = nullptr;
+	GetItemAttributeDataRequest * getItemAttributeDataRequest = NULL;
 	
 	void processItemAttributeData(std::map<NetworkId, Auction *> const & auctions);
 
@@ -394,8 +394,8 @@ void AuctionMarketNamespace::processItemAttributeData(std::map<NetworkId, Auctio
 
 			if (proceed)
 			{
-				std::map<std::string, CommoditiesAdvancedSearchAttribute::SearchAttribute const *> const * skipAttribute = nullptr;
-				std::map<std::string, std::string> const * skipAttributeAlias = nullptr;
+				std::map<std::string, CommoditiesAdvancedSearchAttribute::SearchAttribute const *> const * skipAttribute = NULL;
+				std::map<std::string, std::string> const * skipAttributeAlias = NULL;
 				if (getItemAttributeDataRequest->ignoreSearchableAttribute)
 				{
 					std::map<std::string, CommoditiesAdvancedSearchAttribute::SearchAttribute const *> const & sa = CommoditiesAdvancedSearchAttribute::getSearchAttributeForGameObjectType(iterAuction->second->GetItem().GetCategory());
@@ -590,7 +590,7 @@ void AuctionMarketNamespace::processItemAttributeData(std::map<NetworkId, Auctio
 		}
 
 		delete getItemAttributeDataRequest;
-		getItemAttributeDataRequest = nullptr;
+		getItemAttributeDataRequest = NULL;
 	}
 }
 
@@ -862,7 +862,7 @@ void AuctionMarket::RemoveAuctionLocationFromPriorityQueue(const AuctionLocation
 
 void AuctionMarket::AddAuction(Auction *auction)
 {
-	assert(auction != nullptr);
+	assert(auction != NULL);
 
 	AuctionLocation &location = auction->GetLocation();
 	if (!location.IsOwner(auction->GetItem().GetOwnerId()))
@@ -1979,7 +1979,7 @@ void AuctionMarket::AcceptHighBid(const AcceptHighBidMessage &message)
 	DEBUG_REPORT_LOG(m_showAllDebugInfo, ("[Commodities Server AcceptHighBidMessage] : ResponseId : %d.\n", message.GetResponseId()));
 	DEBUG_REPORT_LOG(m_showAllDebugInfo, ("[Commodities Server AcceptHighBidMessage] : TrackId : %d.\n", message.GetTrackId()));
 
-	Auction *auction = nullptr;
+	Auction *auction = NULL;
 	AuctionResultCode result = ARC_Success;
 	std::map<NetworkId, Auction *>::iterator iter = m_auctions.find(
 		message.GetAuctionId());
@@ -1994,7 +1994,7 @@ void AuctionMarket::AcceptHighBid(const AcceptHighBidMessage &message)
 		{
 			result = ARC_NotItemOwner;
 		}
-		else if (auction->GetHighBid() == nullptr)
+		else if (auction->GetHighBid() == NULL)
 		{
 			result = ARC_NoBids;
 		}
@@ -2525,19 +2525,19 @@ void AuctionMarket::QueryAuctionHeaders(
 	int debugNumberLocationsMatched = 0;
 	int debugNumberAuctionsTested = 0;
 
-	std::map<NetworkId, Auction *> *auctionsPtr = nullptr;
+	std::map<NetworkId, Auction *> *auctionsPtr = NULL;
 	int entranceCharge = 0;
-	AuctionLocation *locationPtr = nullptr;
-	Auction *auctionPtr = nullptr;
+	AuctionLocation *locationPtr = NULL;
+	Auction *auctionPtr = NULL;
 	std::map<NetworkId, Auction *>::const_iterator auctionIterator;
-	AuctionDataHeader *header = nullptr;
+	AuctionDataHeader *header = NULL;
 	bool checkItemTemplate;
 	while (locationIter != locationIterEnd)
 	{
 		++debugNumberLocationsTested;
 
 		checkItemTemplate = false;
-		auctionsPtr = nullptr;
+		auctionsPtr = NULL;
 		entranceCharge = 0;
 		locationPtr = (*locationIter).second;
 
@@ -2606,7 +2606,7 @@ void AuctionMarket::QueryAuctionHeaders(
 
 				auctionPtr = (*auctionIterator).second;
 				const AuctionItem &item = auctionPtr->GetItem();
-				header = nullptr;
+				header = NULL;
 
 				// Check to see if the item template matches
 				if (searchForResourceContainer && (itemTemplateId != 0))
@@ -4977,7 +4977,7 @@ void AuctionMarket::getAuctionLocationPriorityQueue(int requestingGameServerId, 
 {
 	std::string output;
 	char buffer[2048];
-	int const timeNow = static_cast<int>(::time(nullptr));
+	int const timeNow = static_cast<int>(::time(NULL));
 	for (std::set<std::pair<int, NetworkId> >::const_iterator iterPQ = m_priorityQueueAuctionLocation.begin(); iterPQ != m_priorityQueueAuctionLocation.end(); ++iterPQ)
 	{
 		if (count <= 0)

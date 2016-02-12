@@ -35,7 +35,7 @@ Usage
 	'L' - long long int (8)
 	'i' - int (4)
 	's' - short int (2)
-	'S' - C-style, nullptr-terminated string (n + nullptr)
+	'S' - C-style, null-terminated string (n + null)
 	'Bn' - buffer, of size n.  Used for non-terminated strings, or
 	       other binary data.  
 */
@@ -115,7 +115,7 @@ private:
 
 //----------------------------------------------------------------
 // stringMessage
-// This message type is used for passing messages that can consist of a nullptr terminated string
+// This message type is used for passing messages that can consist of a NULL terminated string
 class stringMessage : public monMessage
 {
 public:
@@ -252,7 +252,7 @@ class CMonitorData {
 
 public:
 
-//	CMonitorData(GenericNotifier *notifier=nullptr );
+//	CMonitorData(GenericNotifier *notifier=NULL );
 	CMonitorData();
 	virtual ~CMonitorData();
 
@@ -266,7 +266,7 @@ public:
 	bool processDescriptionRequest(UdpConnection *con, short & sequence, char * userData, int dataLen,unsigned char *mark);
 	int add(const char *label, int id, int ping, const char *des );
 	int  setDescription( int Id, const char *Description , int & mode);
-	char *getDescription(int x){ if( m_ndata >= x ) return nullptr; return m_data[x].discription;}
+	char *getDescription(int x){ if( m_ndata >= x ) return NULL; return m_data[x].discription;}
 	int  pingValue(int p);
 	void set(int Id, int value);
 	void remove(int Id);

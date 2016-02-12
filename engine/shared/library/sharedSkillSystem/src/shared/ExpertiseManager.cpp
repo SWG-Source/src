@@ -298,7 +298,7 @@ int const ExpertiseManager::getNumExpertiseTiers()
  *             exist.
  * 
  * @return - skill object for expertise at grid location.
- *         returns nullptr if none found
+ *         returns NULL if none found
  */
 SkillObject const * ExpertiseManager::getExpertiseSkillAt(int tree, int tier, int grid, int rank)
 {

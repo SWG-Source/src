@@ -47,7 +47,7 @@ ServerManufactureSchematicObjectTemplate::~ServerManufactureSchematicObjectTempl
 		for (iter = m_ingredients.begin(); iter != m_ingredients.end(); ++iter)
 		{
 			delete *iter;
-			*iter = nullptr;
+			*iter = NULL;
 		}
 		m_ingredients.clear();
 	}
@@ -56,7 +56,7 @@ ServerManufactureSchematicObjectTemplate::~ServerManufactureSchematicObjectTempl
 		for (iter = m_attributes.begin(); iter != m_attributes.end(); ++iter)
 		{
 			delete *iter;
-			*iter = nullptr;
+			*iter = NULL;
 		}
 		m_attributes.clear();
 	}
@@ -108,10 +108,10 @@ Tag ServerManufactureSchematicObjectTemplate::getTemplateVersion(void) const
  */
 Tag ServerManufactureSchematicObjectTemplate::getHighestTemplateVersion(void) const
 {
-	if (m_baseData == nullptr)
+	if (m_baseData == NULL)
 		return m_templateVersion;
 	const ServerManufactureSchematicObjectTemplate * base = dynamic_cast<const ServerManufactureSchematicObjectTemplate *>(m_baseData);
-	if (base == nullptr)
+	if (base == NULL)
 		return m_templateVersion;
 	return std::max(m_templateVersion, base->getHighestTemplateVersion());
 } // ServerManufactureSchematicObjectTemplate::getHighestTemplateVersion
@@ -125,9 +125,9 @@ CompilerIntegerParam * ServerManufactureSchematicObjectTemplate::getCompilerInte
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_itemCount;
 		}
@@ -135,7 +135,7 @@ CompilerIntegerParam * ServerManufactureSchematicObjectTemplate::getCompilerInte
 	}
 	else
 		return ServerIntangibleObjectTemplate::getCompilerIntegerParam(name, deepCheck, index);
-	return nullptr;
+	return NULL;
 }	//ServerManufactureSchematicObjectTemplate::getCompilerIntegerParam
 
 FloatParam * ServerManufactureSchematicObjectTemplate::getFloatParam(const char *name, bool deepCheck, int index)
@@ -156,9 +156,9 @@ StringParam * ServerManufactureSchematicObjectTemplate::getStringParam(const cha
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getStringParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_draftSchematic;
 		}
@@ -170,9 +170,9 @@ StringParam * ServerManufactureSchematicObjectTemplate::getStringParam(const cha
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getStringParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_creator;
 		}
@@ -180,7 +180,7 @@ StringParam * ServerManufactureSchematicObjectTemplate::getStringParam(const cha
 	}
 	else
 		return ServerIntangibleObjectTemplate::getStringParam(name, deepCheck, index);
-	return nullptr;
+	return NULL;
 }	//ServerManufactureSchematicObjectTemplate::getStringParam
 
 StringIdParam * ServerManufactureSchematicObjectTemplate::getStringIdParam(const char *name, bool deepCheck, int index)
@@ -226,7 +226,7 @@ StructParamOT * ServerManufactureSchematicObjectTemplate::getStructParamOT(const
 	}
 	else
 		return ServerIntangibleObjectTemplate::getStructParamOT(name, deepCheck, index);
-	return nullptr;
+	return NULL;
 }	//ServerManufactureSchematicObjectTemplate::getStructParamOT
 
 TriggerVolumeParam * ServerManufactureSchematicObjectTemplate::getTriggerVolumeParam(const char *name, bool deepCheck, int index)
@@ -324,12 +324,12 @@ char paramName[MAX_NAME_SIZE];
 		file.read_string(baseFilename);
 		file.exitChunk();
 		const ObjectTemplate *base = ObjectTemplateList::fetch(baseFilename);
-		DEBUG_WARNING(base == nullptr, ("was unable to load base template %s", baseFilename.c_str()));
-		if (m_baseData == base && base != nullptr)
+		DEBUG_WARNING(base == NULL, ("was unable to load base template %s", baseFilename.c_str()));
+		if (m_baseData == base && base != NULL)
 			base->releaseReference();
 		else
 		{
-			if (m_baseData != nullptr)
+			if (m_baseData != NULL)
 				m_baseData->releaseReference();
 			m_baseData = base;
 		}
@@ -361,7 +361,7 @@ char paramName[MAX_NAME_SIZE];
 			for (iter = m_ingredients.begin(); iter != m_ingredients.end(); ++iter)
 			{
 				delete *iter;
-				*iter = nullptr;
+				*iter = NULL;
 			}
 			m_ingredients.clear();
 			m_ingredientsAppend = file.read_bool8();
@@ -382,7 +382,7 @@ char paramName[MAX_NAME_SIZE];
 			for (iter = m_attributes.begin(); iter != m_attributes.end(); ++iter)
 			{
 				delete *iter;
-				*iter = nullptr;
+				*iter = NULL;
 			}
 			m_attributes.clear();
 			m_attributesAppend = file.read_bool8();
@@ -563,9 +563,9 @@ StringIdParam * ServerManufactureSchematicObjectTemplate::_IngredientSlot::getSt
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getStringIdParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_name;
 		}
@@ -573,7 +573,7 @@ StringIdParam * ServerManufactureSchematicObjectTemplate::_IngredientSlot::getSt
 	}
 	else
 		return TpfTemplate::getStringIdParam(name, deepCheck, index);
-	return nullptr;
+	return NULL;
 }	//ServerManufactureSchematicObjectTemplate::_IngredientSlot::getStringIdParam
 
 VectorParam * ServerManufactureSchematicObjectTemplate::_IngredientSlot::getVectorParam(const char *name, bool deepCheck, int index)
@@ -594,9 +594,9 @@ StructParamOT * ServerManufactureSchematicObjectTemplate::_IngredientSlot::getSt
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getStructParamOT(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_ingredient;
 		}
@@ -604,7 +604,7 @@ StructParamOT * ServerManufactureSchematicObjectTemplate::_IngredientSlot::getSt
 	}
 	else
 		return TpfTemplate::getStructParamOT(name, deepCheck, index);
-	return nullptr;
+	return NULL;
 }	//ServerManufactureSchematicObjectTemplate::_IngredientSlot::getStructParamOT
 
 TriggerVolumeParam * ServerManufactureSchematicObjectTemplate::_IngredientSlot::getTriggerVolumeParam(const char *name, bool deepCheck, int index)

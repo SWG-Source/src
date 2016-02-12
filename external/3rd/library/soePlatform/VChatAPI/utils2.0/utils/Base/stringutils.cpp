@@ -78,12 +78,12 @@ namespace soe
 		if (pos == std::string::npos)
 		{
 			// tok not found take the whole thing
-			if (dest != nullptr) { dest->assign(*base);}
+			if (dest != NULL) { dest->assign(*base);}
 			base->clear();
 			return;
 		}
 
-		if (dest != nullptr) {dest->assign(base->substr(0,pos));}
+		if (dest != NULL) {dest->assign(base->substr(0,pos));}
 		base->erase(0,pos + tok.length());
 	}
 

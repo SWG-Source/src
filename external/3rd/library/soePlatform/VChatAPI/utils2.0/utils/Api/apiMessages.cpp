@@ -253,7 +253,7 @@ namespace API_NAMESPACE
 
 	Base * Base::Create(unsigned MsgId, StorageVector_t *pStorageVector)
 	{
-		Base * msg = nullptr;
+		Base * msg = NULL;
 
 		if (ms_pClassMap) {
 			std::map<unsigned, Base::DeepPointer>::iterator classIter = ms_pClassMap->find(MsgId);
@@ -272,7 +272,7 @@ namespace API_NAMESPACE
 
 	const char	* Base::GetMessageName(unsigned msgId)
 	{
-		const char * requestString = nullptr;
+		const char * requestString = NULL;
 
 		if (ms_pClassMap) {
 			std::map<unsigned, Base::DeepPointer>::iterator classIter = ms_pClassMap->find(msgId);
@@ -287,7 +287,7 @@ namespace API_NAMESPACE
 
 	const char	* Base::GetMessageIDString(unsigned msgId)
 	{
-		const char * idString = nullptr;
+		const char * idString = NULL;
 
 		if (ms_pClassMap) {
 			std::map<unsigned, Base::DeepPointer>::iterator classIter = ms_pClassMap->find(msgId);
@@ -304,7 +304,7 @@ namespace API_NAMESPACE
 	{
 		static std::map<unsigned, Base::DeepPointer> classMap;
 
-		if (ms_pClassMap == nullptr) {
+		if (ms_pClassMap == NULL) {
 			ms_pClassMap = &classMap;
 		}
 
@@ -326,24 +326,24 @@ namespace API_NAMESPACE
 	}
 
 	Base::DeepPointer::DeepPointer() :
-		m_ptr(nullptr)
+		m_ptr(NULL)
 	{
 	}
 
 	Base::DeepPointer::DeepPointer(const Base & source) :
-		m_ptr(nullptr)
+		m_ptr(NULL)
 	{
 		m_ptr = source.Clone(m_storageVector);
 	}
 
 	Base::DeepPointer::DeepPointer(const Base * source) :
-		m_ptr(nullptr)
+		m_ptr(NULL)
 	{
 		m_ptr = source->Clone(m_storageVector);
 	}
 
 	Base::DeepPointer::DeepPointer(const DeepPointer & source) :
-		m_ptr(nullptr)
+		m_ptr(NULL)
 	{
 		if (source.m_ptr) { m_ptr = source->Clone(m_storageVector); }
 	}
@@ -364,7 +364,7 @@ namespace API_NAMESPACE
 	{
 		Base *oldPtr = m_ptr;
 
-		m_ptr = rhs ? rhs->Clone(m_storageVector) : nullptr;
+		m_ptr = rhs ? rhs->Clone(m_storageVector) : NULL;
 
 		if (oldPtr) {
 			oldPtr->~Base();
@@ -377,7 +377,7 @@ namespace API_NAMESPACE
 	{
 		Base *oldPtr = m_ptr;
 		
-		m_ptr = rhs.m_ptr ? rhs->Clone(m_storageVector) : nullptr;
+		m_ptr = rhs.m_ptr ? rhs->Clone(m_storageVector) : NULL;
 
 		if (oldPtr) {
 			oldPtr->~Base();
@@ -396,7 +396,7 @@ namespace API_NAMESPACE
 		return *m_ptr;
 	}
 
-	std::map<unsigned, Base::DeepPointer> *Base::ms_pClassMap = nullptr;
+	std::map<unsigned, Base::DeepPointer> *Base::ms_pClassMap = NULL;
 
 #if defined(PRINTABLE_MESSAGES) || defined(TRACK_READ_WRITE_FAILURES)
 	Basic::Basic()

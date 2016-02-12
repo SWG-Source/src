@@ -61,7 +61,7 @@ jboolean JNICALL ScriptMethodsSystemNamespace::sendConsoleCommand(JNIEnv * env, 
 {
 	JavaStringParam localCommand(command);
 
-	ServerObject* object = nullptr;
+	ServerObject* object = NULL;
 	if (!JavaLibrary::getObject(target, object))
 		return JNI_FALSE;
 
@@ -86,7 +86,7 @@ jboolean JNICALL ScriptMethodsSystemNamespace::sendConsoleCommand(JNIEnv * env, 
  * @param section		the config file section
  * @param key			the config file key
  *
- * @return the key value, or nullptr if the key doesn't exist
+ * @return the key value, or null if the key doesn't exist
  */
 jstring JNICALL ScriptMethodsSystemNamespace::getConfigSetting(JNIEnv * env, jobject self,
 	jstring section, jstring key)
@@ -108,12 +108,12 @@ jstring JNICALL ScriptMethodsSystemNamespace::getConfigSetting(JNIEnv * env, job
 		return 0;
 
 	const ConfigFile::Section * sec = ConfigFile::getSection(sectionName.c_str());
-	if (sec == nullptr)
+	if (sec == NULL)
 		return 0;
 
 	const ConfigFile::Key * ky = sec->findKey(keyName.c_str());
-	if (ky == nullptr)
-		return nullptr;
+	if (ky == NULL)
+		return NULL;
 
 	JavaString jvalue(ky->getAsString(ky->getCount()-1, ""));
 	return jvalue.getReturnValue();

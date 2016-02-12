@@ -115,7 +115,7 @@ bool ClusterWideDataClient::handleMessage(const MessageDispatch::Emitter &, cons
 
 		// locate the callback object
 		ClusterWideDataClientNamespace::CallbackObjectIdList::iterator iter = ClusterWideDataClientNamespace::callbackObjectIdList.find(msg.getRequestId());
-		ServerObject * object = nullptr;
+		ServerObject * object = NULL;
 
 		if (iter != ClusterWideDataClientNamespace::callbackObjectIdList.end())
 			object = dynamic_cast<ServerObject *>(NetworkIdManager::getObjectById(iter->second));

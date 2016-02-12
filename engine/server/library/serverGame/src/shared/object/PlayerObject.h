@@ -361,8 +361,8 @@ public:
 	bool getCollectionSlotValue(std::string const & slotName, unsigned long & value) const;
 	bool getCollectionSlotValue(CollectionsDataTable::CollectionInfoSlot const & slotInfo, unsigned long & value) const;
 
-	bool hasCompletedCollectionSlotPrereq(std::string const & slotName, stdvector<CollectionsDataTable::CollectionInfoSlot const *>::fwd * collectionInfo = nullptr) const;
-	bool hasCompletedCollectionSlotPrereq(CollectionsDataTable::CollectionInfoSlot const & slotInfo, stdvector<CollectionsDataTable::CollectionInfoSlot const *>::fwd * collectionInfo = nullptr) const;
+	bool hasCompletedCollectionSlotPrereq(std::string const & slotName, stdvector<CollectionsDataTable::CollectionInfoSlot const *>::fwd * collectionInfo = NULL) const;
+	bool hasCompletedCollectionSlotPrereq(CollectionsDataTable::CollectionInfoSlot const & slotInfo, stdvector<CollectionsDataTable::CollectionInfoSlot const *>::fwd * collectionInfo = NULL) const;
 
 	bool hasCompletedCollectionSlot(std::string const & slotName) const;
 	bool hasCompletedCollectionSlot(CollectionsDataTable::CollectionInfoSlot const & slotInfo) const;
@@ -374,15 +374,15 @@ public:
 
 	bool hasCompletedCollectionBook(std::string const & bookName) const;
 
-	int getCompletedCollectionSlotCountInCollection(std::string const & collectionName, stdvector<CollectionsDataTable::CollectionInfoSlot const *>::fwd * collectionInfo = nullptr) const;
+	int getCompletedCollectionSlotCountInCollection(std::string const & collectionName, stdvector<CollectionsDataTable::CollectionInfoSlot const *>::fwd * collectionInfo = NULL) const;
 
-	int getCompletedCollectionSlotCountInPage(std::string const & pageName, stdvector<CollectionsDataTable::CollectionInfoSlot const *>::fwd * collectionInfo = nullptr) const;
-	int getCompletedCollectionCountInPage(std::string const & pageName, stdvector<CollectionsDataTable::CollectionInfoCollection const *>::fwd * collectionInfo = nullptr) const;
+	int getCompletedCollectionSlotCountInPage(std::string const & pageName, stdvector<CollectionsDataTable::CollectionInfoSlot const *>::fwd * collectionInfo = NULL) const;
+	int getCompletedCollectionCountInPage(std::string const & pageName, stdvector<CollectionsDataTable::CollectionInfoCollection const *>::fwd * collectionInfo = NULL) const;
 
-	int getCompletedCollectionSlotCountInBook(std::string const & bookName, stdvector<CollectionsDataTable::CollectionInfoSlot const *>::fwd * collectionInfo = nullptr) const;
-	int getCompletedCollectionCountInBook(std::string const & bookName, stdvector<CollectionsDataTable::CollectionInfoCollection const *>::fwd * collectionInfo = nullptr) const;
-	int getCompletedCollectionPageCountInBook(std::string const & bookName, stdvector<CollectionsDataTable::CollectionInfoPage const *>::fwd * collectionInfo = nullptr) const;
-	int getCompletedCollectionBookCount(stdvector<CollectionsDataTable::CollectionInfoBook const *>::fwd * collectionInfo = nullptr) const;
+	int getCompletedCollectionSlotCountInBook(std::string const & bookName, stdvector<CollectionsDataTable::CollectionInfoSlot const *>::fwd * collectionInfo = NULL) const;
+	int getCompletedCollectionCountInBook(std::string const & bookName, stdvector<CollectionsDataTable::CollectionInfoCollection const *>::fwd * collectionInfo = NULL) const;
+	int getCompletedCollectionPageCountInBook(std::string const & bookName, stdvector<CollectionsDataTable::CollectionInfoPage const *>::fwd * collectionInfo = NULL) const;
+	int getCompletedCollectionBookCount(stdvector<CollectionsDataTable::CollectionInfoBook const *>::fwd * collectionInfo = NULL) const;
 
 	void migrateLegacyBadgesToCollection(stdvector<int>::fwd const & badges);
 

@@ -70,7 +70,7 @@ void JNICALL ScriptMethodsImageDesignNamespace::imagedesignStart(JNIEnv *env, jo
 		return;
 	}
 
-	//the terminal can be nullptr (that means no ID terminal is being used, which is fine)
+	//the terminal can be NULL (that means no ID terminal is being used, which is fine)
 	ServerObject * terminalObj = 0;
 	JavaLibrary::getObject(jterminalId, terminalObj);
 
@@ -185,8 +185,8 @@ jboolean JNICALL ScriptMethodsImageDesignNamespace::imagedesignValidated(JNIEnv 
 		WARNING(true, ("morph keys and values arrays are of diffent sizes"));
 		return JNI_FALSE;
 	}
-	jfloat * const morphChangesValuesArray = env->GetFloatArrayElements(jmorphChangesValues, nullptr);
-	if (morphChangesValuesArray == nullptr)
+	jfloat * const morphChangesValuesArray = env->GetFloatArrayElements(jmorphChangesValues, NULL);
+	if (morphChangesValuesArray == NULL)
 	{
 		return JNI_FALSE;
 	}
@@ -211,8 +211,8 @@ jboolean JNICALL ScriptMethodsImageDesignNamespace::imagedesignValidated(JNIEnv 
 		WARNING(true, ("index keys and values arrays are of diffent sizes"));
 		return JNI_FALSE;
 	}
-	jint * const indexChangesValuesArray = env->GetIntArrayElements(jindexChangesValues, nullptr);
-	if (indexChangesValuesArray == nullptr)
+	jint * const indexChangesValuesArray = env->GetIntArrayElements(jindexChangesValues, NULL);
+	if (indexChangesValuesArray == NULL)
 	{
 		return JNI_FALSE;
 	}

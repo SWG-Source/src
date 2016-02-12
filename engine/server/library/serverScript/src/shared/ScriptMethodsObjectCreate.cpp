@@ -257,11 +257,11 @@ jlong ScriptMethodsObjectCreateNamespace::createTheater(const std::vector<jint> 
 	float centerX = minx + dx / 2.0f + center.x;
 	float centerZ = minz + dz / 2.0f + center.z;
 
-	TerrainGenerator::Layer * layer = nullptr;
+	TerrainGenerator::Layer * layer = NULL;
 	if (locationType == IntangibleObject::TLT_flatten)
 	{
 		layer = TerrainModificationHelper::importLayer(THEATER_FLATTEN_LAYER.c_str());
-		if (layer == nullptr)
+		if (layer == NULL)
 		{
 			WARNING (true, ("Layer %s not found for theater, using getGoodLocation "
 				"instead", THEATER_FLATTEN_LAYER.c_str()));
@@ -292,7 +292,7 @@ jlong ScriptMethodsObjectCreateNamespace::createTheater(const std::vector<jint> 
 	IntangibleObject * theater = safe_cast<IntangibleObject *>(ServerWorld::createNewObject(THEATER_TEMPLATE, tr, 0, false));
 	NOT_NULL(theater);
 	theater->setTheater();
-	if (layer != nullptr)
+	if (layer != NULL)
 	{
 		theater->setLayer(layer);
 	}
@@ -328,7 +328,7 @@ jlong ScriptMethodsObjectCreateNamespace::createTheater(const std::vector<jint> 
  * @param source		the template id or the object id to create the object with
  * @param location		where to put the object
  *
- * @return the new object, or nullptr on error
+ * @return the new object, or null on error
  */
 jlong JNICALL ScriptMethodsObjectCreateNamespace::createNewObjectInWorld(JNIEnv *env, jobject self, jlong source, jobject location)
 {
@@ -340,7 +340,7 @@ jlong JNICALL ScriptMethodsObjectCreateNamespace::createNewObjectInWorld(JNIEnv 
 	// determine what source is and create the object
 	std::string localName;
 
-	ServerObject* object = nullptr;
+	ServerObject* object = NULL;
 	if (!JavaLibrary::getObject(source, object))
 		return 0;
 	localName = object->getTemplateName();
@@ -366,7 +366,7 @@ jlong JNICALL ScriptMethodsObjectCreateNamespace::createNewObjectInWorld(JNIEnv 
  * @param source		the template id or the object id to create the object with
  * @param location		where to put the object
  *
- * @return the new object, or nullptr on error
+ * @return the new object, or null on error
  */
 jlong JNICALL ScriptMethodsObjectCreateNamespace::createNewObjectInWorldString(JNIEnv *env, jobject self, jobject source, jobject location)
 {
@@ -445,7 +445,7 @@ jlong JNICALL ScriptMethodsObjectCreateNamespace::createNewObjectAt(JNIEnv *env,
  * @param container		the object we want to put our new object into
  * @param slot			the container slot we want to put the object in
  *
- * @return the new object, or nullptr on error
+ * @return the new object, or null on error
  */
 jlong JNICALL ScriptMethodsObjectCreateNamespace::createNewObjectInContainer(JNIEnv *env, jobject self, jlong source, jlong container, jstring slot)
 {
@@ -457,7 +457,7 @@ jlong JNICALL ScriptMethodsObjectCreateNamespace::createNewObjectInContainer(JNI
 	// determine what source is and create the object
 	std::string templateName;
 
-	const ServerObject* object = nullptr;
+	const ServerObject* object = NULL;
 	if (!JavaLibrary::getObject(source, object))
 		return 0;
 	templateName = object->getTemplateName();
@@ -536,7 +536,7 @@ jlong JNICALL ScriptMethodsObjectCreateNamespace::createNewObjectInContainerOver
 
 	// determine what source is and create the object
 	std::string templateName;
-	const ServerObject* object = nullptr;
+	const ServerObject* object = NULL;
 	if (!JavaLibrary::getObject(source, object))
 		return 0;
 	templateName = object->getTemplateName();
@@ -598,7 +598,7 @@ jlong JNICALL ScriptMethodsObjectCreateNamespace::createNewObjectInContainerOver
  * @param sourceName	the template name used to create the object
  * @param target		the creature to create the object in
  *
- * @return the obj_id of the created object, or nullptr on error
+ * @return the obj_id of the created object, or null on error
  */
 jlong JNICALL ScriptMethodsObjectCreateNamespace::createNewObjectInInventoryOverloaded(JNIEnv *env, jobject self, jstring sourceName, jlong target)
 {
@@ -624,7 +624,7 @@ jlong JNICALL ScriptMethodsObjectCreateNamespace::createNewObjectInInventoryOver
  * @param sourceCrc		the template crc to create the object with
  * @param location		where to put the object
  *
- * @return the new object, or nullptr on error
+ * @return the new object, or null on error
  */
 jlong JNICALL ScriptMethodsObjectCreateNamespace::createNewObjectCrc(JNIEnv *env, jobject self, int sourceCrc, jobject location)
 {
@@ -656,7 +656,7 @@ jlong JNICALL ScriptMethodsObjectCreateNamespace::createNewObjectCrc(JNIEnv *env
 	Transform tr;
 	tr.setPosition_p(newPos);
 	ServerObject *newObject = ServerWorld::createNewObject(sourceCrc, tr, cell, false);
-	if (newObject != nullptr)
+	if (newObject != NULL)
 	{
 		// get the networkId to return
 		NetworkId netId = newObject->getNetworkId();
@@ -693,7 +693,7 @@ jlong JNICALL ScriptMethodsObjectCreateNamespace::createNewObjectCrc(JNIEnv *env
  * @param container		the object we want to put our new object into
  * @param slot			the container slot we want to put the object in
  *
- * @return the new object, or nullptr on error
+ * @return the new object, or null on error
  */
 jlong JNICALL ScriptMethodsObjectCreateNamespace::createNewObjectInContainerCrc(JNIEnv *env, jobject self, int sourceCrc, jlong container, jstring slot)
 {
@@ -707,10 +707,10 @@ jlong JNICALL ScriptMethodsObjectCreateNamespace::createNewObjectInContainerCrc(
 		return 0;
 
 	// make sure the container exists
-	ServerObject * containerOwner = nullptr;
+	ServerObject * containerOwner = NULL;
 	if (!JavaLibrary::getObject(container, containerOwner))
 		return 0;
-	if (ContainerInterface::getContainer(*containerOwner) == nullptr)
+	if (ContainerInterface::getContainer(*containerOwner) == NULL)
 		return 0;
 
 	//Create the object
@@ -773,10 +773,10 @@ jlong JNICALL ScriptMethodsObjectCreateNamespace::createNewObjectInContainerOver
 		return 0;
 
 	// make sure the container exists
-	ServerObject * containerOwner = nullptr;
+	ServerObject * containerOwner = NULL;
 	if (!JavaLibrary::getObject(container, containerOwner))
 		return 0;
-	if (ContainerInterface::getVolumeContainer(*containerOwner) == nullptr)
+	if (ContainerInterface::getVolumeContainer(*containerOwner) == NULL)
 	{
 		DEBUG_WARNING(true, ("createObjectin an overloaded container only works on volume containers"));
 		return 0;
@@ -811,7 +811,7 @@ jlong JNICALL ScriptMethodsObjectCreateNamespace::createNewObjectInContainerOver
  * @param sourceCrc		the template crc used to create the object
  * @param target		the creature to create the object in
  *
- * @return the obj_id of the created object, or nullptr on error
+ * @return the obj_id of the created object, or null on error
  */
 jlong JNICALL ScriptMethodsObjectCreateNamespace::createNewObjectInInventoryOverloadedCrc(
 	JNIEnv *env, jobject self, int sourceCrc, jlong target)
@@ -819,16 +819,16 @@ jlong JNICALL ScriptMethodsObjectCreateNamespace::createNewObjectInInventoryOver
 	if (sourceCrc == 0 || target == 0)
 		return 0;
 
-	CreatureObject * targetObject = nullptr;
+	CreatureObject * targetObject = NULL;
 	if (!JavaLibrary::getObject(target, targetObject))
 		return 0;
 
 	ServerObject * inventory = targetObject->getInventory();
-	if (inventory == nullptr)
+	if (inventory == NULL)
 		return 0;
 
 	VolumeContainer * volContainer = ContainerInterface::getVolumeContainer(*inventory);
-	if (volContainer == nullptr)
+	if (volContainer == NULL)
 		return 0;
 
 	int oldCapacity = volContainer->debugDoNotUseSetCapacity(-1);
@@ -838,7 +838,7 @@ jlong JNICALL ScriptMethodsObjectCreateNamespace::createNewObjectInInventoryOver
 	volContainer->debugDoNotUseSetCapacity(oldCapacity);
 	volContainer->recalculateVolume();
 
-	if (newObject == nullptr)
+	if (newObject == NULL)
 		return 0;
 
 	return (newObject->getNetworkId()).getValue();
@@ -852,7 +852,7 @@ jlong JNICALL ScriptMethodsObjectCreateNamespace::createNewObjectInInventoryOver
  * @param self		    class calling this function
  * @param sourceCrc     the template crc of the new object to create
  * @param target        an object whose location and container/cell will be used to create the object.
- * @return the obj_id of the created object, or nullptr on error
+ * @return the obj_id of the created object, or null on error
  */
 jlong JNICALL ScriptMethodsObjectCreateNamespace::createNewObjectAtCrc(JNIEnv *env, jobject self, int sourceCrc, jlong target)
 {
@@ -863,7 +863,7 @@ jlong JNICALL ScriptMethodsObjectCreateNamespace::createNewObjectAtCrc(JNIEnv *e
 	if (target == 0)
 		return 0;
 
-	ServerObject *sourceObject = nullptr;
+	ServerObject *sourceObject = NULL;
 	if (!JavaLibrary::getObject(target, sourceObject))
 		return 0;
 
@@ -878,7 +878,7 @@ jlong JNICALL ScriptMethodsObjectCreateNamespace::createNewObjectAtCrc(JNIEnv *e
 	Transform tr;
 	tr.setPosition_p(sourceObject->getPosition_p());
 	ServerObject *newObject = ServerWorld::createNewObject(sourceCrc, tr, cell, false);
-	if (newObject == nullptr)
+	if (newObject == NULL)
 	{
 		fprintf(stderr, "WARNING: Could not create object from crc %d\n", sourceCrc);
 		JavaLibrary::printJavaStack();
@@ -911,7 +911,7 @@ jlong JNICALL ScriptMethodsObjectCreateNamespace::createNewObjectAtCrc(JNIEnv *e
  * @param source		the template id or the object id to create the object with
  * @param location		where to put the object
  *
- * @return the new object, or nullptr on error
+ * @return the new object, or null on error
  */
 jlong JNICALL ScriptMethodsObjectCreateNamespace::createNewObjectSimulator(JNIEnv *env, jobject self, jstring source, jobject location)
 {
@@ -963,7 +963,7 @@ jlong JNICALL ScriptMethodsObjectCreateNamespace::createNewObjectSimulator(JNIEn
 	Transform tr;
 	tr.setPosition_p(newPos);
 	ServerObject *newObject = ServerWorld::createNewObject(sourceCrc, tr, cell, false);
-	if (newObject != nullptr)
+	if (newObject != NULL)
 	{
 		// add on the player object
 		CreatureObject * creature = dynamic_cast<CreatureObject *>(newObject);
@@ -1007,7 +1007,7 @@ jlong JNICALL ScriptMethodsObjectCreateNamespace::createNewObjectSimulator(JNIEn
  */
 jboolean JNICALL ScriptMethodsObjectCreateNamespace::destroyObjectSimulator(JNIEnv *env, jobject self, jlong target)
 {
-	CreatureObject *playerObject = nullptr;
+	CreatureObject *playerObject = NULL;
 	// get the object
 	if (!JavaLibrary::getObject(target, playerObject))
 	{
@@ -1046,7 +1046,7 @@ jboolean JNICALL ScriptMethodsObjectCreateNamespace::destroyObject(JNIEnv *env, 
 	if (targetId == NetworkId::cms_invalid)
 		return JNI_FALSE;
 
-	ServerObject* object = nullptr;
+	ServerObject* object = NULL;
 	bool retval = JavaLibrary::getObject(target, object);
 
 	if (!retval || !object) // || object->isPersisted())  will be done in permanently destroy
@@ -1060,7 +1060,7 @@ jboolean JNICALL ScriptMethodsObjectCreateNamespace::destroyObject(JNIEnv *env, 
 	{
 		// check if the object is in a FactoryObject crate
 		Object * container = ContainerInterface::getContainedByObject(*object);
-		if (container != nullptr && dynamic_cast<FactoryObject *>(container) != nullptr)
+		if (container != NULL && dynamic_cast<FactoryObject *>(container) != NULL)
 		{
 			// destroy an object in the factory; if it is the last object,
 			// the factory will destroy itself
@@ -1093,7 +1093,7 @@ jboolean JNICALL ScriptMethodsObjectCreateNamespace::destroyObjectHyperspace(JNI
 	if (targetId == NetworkId::cms_invalid)
 		return JNI_FALSE;
 
-	ServerObject * object = nullptr;
+	ServerObject * object = NULL;
 	bool retval = JavaLibrary::getObject(target, object);
 	if(retval && object)
 	{
@@ -1120,7 +1120,7 @@ jboolean JNICALL ScriptMethodsObjectCreateNamespace::persistObject(JNIEnv *env, 
 	UNREF(self);
 	NOT_NULL(env);
 
-	ServerObject* object = nullptr;
+	ServerObject* object = NULL;
 	if (!JavaLibrary::getObject(target, object))
 		return JNI_FALSE;
 	if (object->persist()) {
@@ -1144,7 +1144,7 @@ jboolean JNICALL ScriptMethodsObjectCreateNamespace::isObjectPersisted(JNIEnv *e
 	UNREF(self);
 	NOT_NULL(env);
 
-	ServerObject* object = nullptr;
+	ServerObject* object = NULL;
 	if (!JavaLibrary::getObject(target, object))
 		return JNI_FALSE;
 
@@ -1320,7 +1320,7 @@ jlong JNICALL ScriptMethodsObjectCreateNamespace::createNewObjectTransformCrcInt
  * @param name          the name of the theater
  * @param locationType	how to create the theater
  *
- * @return the id of the master theater object, or nullptr on error (bad datatable name or position)
+ * @return the id of the master theater object, or null on error (bad datatable name or position)
  */
 jlong JNICALL ScriptMethodsObjectCreateNamespace::createTheaterDatatableOnly(JNIEnv *env, jobject self, jstring datatable, jlong caller, jstring name, jint locationType)
 {
@@ -1347,7 +1347,7 @@ int i;
 
 	// read the object data from the datatable
 	DataTable * dt = DataTableManager::getTable(datatableName, true);
-	if (dt == nullptr)
+	if (dt == NULL)
 	{
 		WARNING(true, ("JavaLibrary::createTheaterDatatable could not open "
 			"datatable %s", datatableName.c_str()));
@@ -1429,7 +1429,7 @@ int i;
  * @param name          the name of the theater
  * @param locationType	how to create the theater
  *
- * @return the id of the master theater object, or nullptr on error (bad datatable name or position)
+ * @return the id of the master theater object, or null on error (bad datatable name or position)
  */
 jlong JNICALL ScriptMethodsObjectCreateNamespace::createTheaterDatatable(JNIEnv *env, jobject self, jstring datatable, jobject basePosition, jstring script, jlong caller, jstring name, jint locationType)
 {
@@ -1466,7 +1466,7 @@ int i;
 
 	// read the object data from the datatable
 	DataTable * dt = DataTableManager::getTable(datatableName, true);
-	if (dt == nullptr)
+	if (dt == NULL)
 	{
 		WARNING(true, ("JavaLibrary::createTheaterDatatable could not open "
 			"datatable %s", datatableName.c_str()));
@@ -1567,7 +1567,7 @@ jboolean JNICALL ScriptMethodsObjectCreateNamespace::createRemoteTheaterDatatabl
 
 	// read the object data from the datatable
 	DataTable * dt = DataTableManager::getTable(datatableName, true);
-	if (dt == nullptr)
+	if (dt == NULL)
 	{
 		WARNING(true, ("JavaLibrary::createRemoteTheaterDatatable could not open "
 			"datatable %s", datatableName.c_str()));
@@ -1613,7 +1613,7 @@ jboolean JNICALL ScriptMethodsObjectCreateNamespace::createRemoteTheaterDatatabl
 	params.addParam(locationType, "locationType");
 	ScriptDictionaryPtr dictionary;
 	GameScriptObject::makeScriptDictionary(params, dictionary);
-	if (dictionary.get() == nullptr)
+	if (dictionary.get() == NULL)
 	{
 		WARNING(true, ("JavaLibrary::createRemoteTheaterDatatable could not "
 			"create dictionary for theater datatable %s", datatableName.c_str()));
@@ -1624,7 +1624,7 @@ jboolean JNICALL ScriptMethodsObjectCreateNamespace::createRemoteTheaterDatatabl
 	Transform tr;
 	tr.setPosition_p(location);
 	ServerObject * spawner = ServerWorld::createNewObject("object/tangible/spawning/remote_theater_spawner.iff", tr, 0, false);
-	if (spawner == nullptr)
+	if (spawner == NULL)
 	{
 		WARNING(true, ("JavaLibrary::createRemoteTheaterDatatable unable to "
 			"create remote theater spawner for datatable %s", datatableName.c_str()));
@@ -1704,7 +1704,7 @@ jboolean JNICALL ScriptMethodsObjectCreateNamespace::createRemoteTheaterDatatabl
 
 	// read the object data from the datatable
 	DataTable * dt = DataTableManager::getTable(datatableName, true);
-	if (dt == nullptr)
+	if (dt == NULL)
 	{
 		WARNING(true, ("JavaLibrary::createRemoteTheaterDatatable could not open "
 			"datatable %s", datatableName.c_str()));
@@ -1734,7 +1734,7 @@ jboolean JNICALL ScriptMethodsObjectCreateNamespace::createRemoteTheaterDatatabl
 	params.addParam(locationType, "locationType");
 	ScriptDictionaryPtr dictionary;
 	GameScriptObject::makeScriptDictionary(params, dictionary);
-	if (dictionary.get() == nullptr)
+	if (dictionary.get() == NULL)
 	{
 		WARNING(true, ("JavaLibrary::createRemoteTheaterDatatable could not "
 			"create dictionary for theater datatable %s", datatableName.c_str()));
@@ -1747,7 +1747,7 @@ jboolean JNICALL ScriptMethodsObjectCreateNamespace::createRemoteTheaterDatatabl
 	Transform tr;
 	tr.setPosition_p(theaterCenter);
 	ServerObject * spawner = ServerWorld::createNewObject("object/tangible/spawning/remote_theater_spawner.iff", tr, 0, false);
-	if (spawner == nullptr)
+	if (spawner == NULL)
 	{
 		WARNING(true, ("JavaLibrary::createRemoteTheaterDatatable unable to "
 			"create remote theater spawner for datatable %s", datatableName.c_str()));
@@ -1778,7 +1778,7 @@ jboolean JNICALL ScriptMethodsObjectCreateNamespace::createRemoteTheaterDatatabl
  *						theater objects have been created
  * @param caller        who's creating the theater
  *
- * @return the id of the master theater object, or nullptr on error
+ * @return the id of the master theater object, or null on error
  */
 jlong JNICALL ScriptMethodsObjectCreateNamespace::createTheaterCrc(JNIEnv *env, jobject self, jintArray crcs, jobjectArray positions, jobject basePosition, jstring script, jlong caller)
 {
@@ -1843,7 +1843,7 @@ jlong JNICALL ScriptMethodsObjectCreateNamespace::createTheaterCrc(JNIEnv *env, 
  *						theater objects have been created
  * @param caller        who's creating the theater
  *
- * @return the id of the master theater object, or nullptr on error
+ * @return the id of the master theater object, or null on error
  */
 jlong JNICALL ScriptMethodsObjectCreateNamespace::createTheaterString(JNIEnv *env, jobject self, jobjectArray templates, jobjectArray positions, jobject basePosition, jstring script, jlong caller)
 {
@@ -1922,13 +1922,13 @@ jboolean JNICALL ScriptMethodsObjectCreateNamespace::assignTheaterToPlayer(JNIEn
 
 	JavaStringParam jdatatable(datatable);
 
-	CreatureObject * playerCreature = nullptr;
+	CreatureObject * playerCreature = NULL;
 	if (!JavaLibrary::getObject(playerId, playerCreature))
 		return JNI_FALSE;
 
 	PlayerObject * const player = PlayerCreatureController::getPlayerObject(
 		playerCreature);
-	if (player == nullptr)
+	if (player == NULL)
 		return JNI_FALSE;
 
 	if (player->hasTheater())
@@ -1962,7 +1962,7 @@ jboolean JNICALL ScriptMethodsObjectCreateNamespace::assignTheaterToPlayer(JNIEn
 
 	// read the object data from the datatable
 	DataTable * dt = DataTableManager::getTable(datatableName, true);
-	if (dt == nullptr)
+	if (dt == NULL)
 	{
 		WARNING(true, ("JavaLibrary::assignTheaterToPlayer could not open "
 			"datatable %s", datatableName.c_str()));
@@ -2026,13 +2026,13 @@ jboolean JNICALL ScriptMethodsObjectCreateNamespace::assignTheaterToPlayerLocati
 	JavaStringParam jdatatable(datatable);
 	JavaStringParam jscript(script);
 
-	CreatureObject * playerCreature = nullptr;
+	CreatureObject * playerCreature = NULL;
 	if (!JavaLibrary::getObject(playerId, playerCreature))
 		return JNI_FALSE;
 
 	PlayerObject * const player = PlayerCreatureController::getPlayerObject(
 		playerCreature);
-	if (player == nullptr)
+	if (player == NULL)
 		return JNI_FALSE;
 
 	std::string datatableName;
@@ -2094,13 +2094,13 @@ jboolean JNICALL ScriptMethodsObjectCreateNamespace::unassignTheaterFromPlayer(J
 	if (playerId == 0)
 		return JNI_FALSE;
 
-	CreatureObject * playerCreature = nullptr;
+	CreatureObject * playerCreature = NULL;
 	if (!JavaLibrary::getObject(playerId, playerCreature))
 		return JNI_FALSE;
 
 	PlayerObject * const player = PlayerCreatureController::getPlayerObject(
 		playerCreature);
-	if (player == nullptr)
+	if (player == NULL)
 		return JNI_FALSE;
 
 	player->clearTheater();
@@ -2123,13 +2123,13 @@ jboolean JNICALL ScriptMethodsObjectCreateNamespace::hasTheaterAssigned(JNIEnv *
 	if (playerId == 0)
 		return JNI_FALSE;
 
-	const CreatureObject * playerCreature = nullptr;
+	const CreatureObject * playerCreature = NULL;
 	if (!JavaLibrary::getObject(playerId, playerCreature))
 		return JNI_FALSE;
 
 	const PlayerObject * player = PlayerCreatureController::getPlayerObject(
 		playerCreature);
-	if (player == nullptr)
+	if (player == NULL)
 		return JNI_FALSE;
 
 	return player->hasTheater();
@@ -2142,7 +2142,7 @@ jboolean JNICALL ScriptMethodsObjectCreateNamespace::hasTheaterAssigned(JNIEnv *
  *
  * @param theater    the theater id
  *
- * @return the theater's name, or nullptr if it doesn't have one
+ * @return the theater's name, or null if it doesn't have one
  */
 jstring JNICALL ScriptMethodsObjectCreateNamespace::getTheaterName(JNIEnv *env, jobject self, jlong theater)
 {
@@ -2167,7 +2167,7 @@ jstring JNICALL ScriptMethodsObjectCreateNamespace::getTheaterName(JNIEnv *env, 
  *
  * @param name    the theater name to look for
  *
- * @return the theater's id, or nullptr if the theater doesn't exist
+ * @return the theater's id, or null if the theater doesn't exist
  */
 jlong JNICALL ScriptMethodsObjectCreateNamespace::findTheater(JNIEnv *env, jobject self, jstring name)
 {
@@ -2196,7 +2196,7 @@ jlong JNICALL ScriptMethodsObjectCreateNamespace::findTheater(JNIEnv *env, jobje
  * @param draftSchematic	the draft schematic template to create the manufacturing schematic from
  * @param container			the container to put the manufacturing schematic in
  *
- * @return the id of the manufacturing schematic, or nullptr on error
+ * @return the id of the manufacturing schematic, or null on error
  */
 jlong JNICALL ScriptMethodsObjectCreateNamespace::createSchematicString(JNIEnv *env, jobject self, jstring draftSchematic, jlong container)
 {
@@ -2222,25 +2222,25 @@ jlong JNICALL ScriptMethodsObjectCreateNamespace::createSchematicString(JNIEnv *
  * @param draftSchematicCrc	the draft schematic template crc value to create the manufacturing schematic from
  * @param container			the container to put the manufacturing schematic in
  *
- * @return the id of the manufacturing schematic, or nullptr on error
+ * @return the id of the manufacturing schematic, or null on error
  */
 jlong JNICALL ScriptMethodsObjectCreateNamespace::createSchematicCrc(JNIEnv *env, jobject self, jint draftSchematicCrc, jlong container)
 {
 	if (draftSchematicCrc == 0 || container == 0)
 		return 0;
 
-	ServerObject * containerObject = nullptr;
+	ServerObject * containerObject = NULL;
 	if (!JavaLibrary::getObject(container, containerObject))
 		return 0;
 
 	const DraftSchematicObject * const draftSchematic = DraftSchematicObject::getSchematic(
 		draftSchematicCrc);
-	if (draftSchematic == nullptr)
+	if (draftSchematic == NULL)
 		return 0;
 
 	ManufactureSchematicObject * manfSchematic = ServerWorld::createNewManufacturingSchematic(
 		*draftSchematic, *containerObject, false);
-	if (manfSchematic == nullptr)
+	if (manfSchematic == NULL)
 		return 0;
 
 	return (manfSchematic->getNetworkId()).getValue();
@@ -2260,7 +2260,7 @@ jlong JNICALL ScriptMethodsObjectCreateNamespace::createSchematicCrc(JNIEnv *env
 
 jboolean JNICALL ScriptMethodsObjectCreateNamespace::updateNetworkTriggerVolume(JNIEnv *env, jobject self, jlong target, jfloat radius)
 {
-	ServerObject * object = nullptr;
+	ServerObject * object = NULL;
 	if (!JavaLibrary::getObject(target, object))
 		return JNI_FALSE;
 

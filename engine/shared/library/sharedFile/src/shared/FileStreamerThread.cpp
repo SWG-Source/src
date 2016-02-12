@@ -294,34 +294,34 @@ void FileStreamerThread::threadRoutine()
 
 		//get the request to service
 		ms_queueCriticalSection.enter();
-			request = nullptr;
+			request = NULL;
 
 			//if there is an AudioVideo request, service it first (interrupting any current data request)
 			if (ms_firstAudioVideoRequest)
 			{
 				request = ms_firstAudioVideoRequest;
 				ms_firstAudioVideoRequest = ms_firstAudioVideoRequest->next;
-				if (ms_firstAudioVideoRequest == nullptr)
-					ms_lastAudioVideoRequest = nullptr;
-				request->next = nullptr;
+				if (ms_firstAudioVideoRequest == NULL)
+					ms_lastAudioVideoRequest = NULL;
+				request->next = NULL;
 			}
 			else
 				if (ms_firstDataRequest)
 				{
 					request = ms_firstDataRequest;
 					ms_firstDataRequest = ms_firstDataRequest->next;
-					if (ms_firstDataRequest == nullptr)
-						ms_lastDataRequest = nullptr;
-					request->next = nullptr;
+					if (ms_firstDataRequest == NULL)
+						ms_lastDataRequest = NULL;
+					request->next = NULL;
 				}
 				else
 					if (ms_firstLowRequest)
 					{
 						request = ms_firstLowRequest;
 						ms_firstLowRequest = ms_firstLowRequest->next;
-						if (ms_firstLowRequest == nullptr)
-							ms_lastLowRequest = nullptr;
-						request->next = nullptr;
+						if (ms_firstLowRequest == NULL)
+							ms_lastLowRequest = NULL;
+						request->next = NULL;
 					}
 					else
 					{
@@ -369,7 +369,7 @@ void FileStreamerThread::Request::install()
 void FileStreamerThread::Request::remove()
 {
 	delete ms_memoryBlockManager;
-	ms_memoryBlockManager = nullptr;
+	ms_memoryBlockManager = NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -395,15 +395,15 @@ void FileStreamerThread::Request::operator delete(void *pointer)
 // ----------------------------------------------------------------------
 
 FileStreamerThread::Request::Request()
-: next(nullptr),
+: next(NULL),
   type(Request::Unknown),
-	osFile(nullptr),
+	osFile(NULL),
 	buffer(0),
   bytesToBeRead(0),
   bytesRead(0),
-	gate(nullptr),
+	gate(NULL),
   priority(AbstractFile::PriorityData),
-	returnValue(nullptr)
+	returnValue(NULL)
 {
 }
 
@@ -412,10 +412,10 @@ FileStreamerThread::Request::Request()
 FileStreamerThread::Request::~Request()
 {
 #ifdef _DEBUG
-	next = nullptr;
-	buffer = nullptr;
-	gate = nullptr;
-	returnValue = nullptr;
+	next = NULL;
+	buffer = NULL;
+	gate = NULL;
+	returnValue = NULL;
 #endif
 }
 

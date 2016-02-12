@@ -96,7 +96,7 @@ void UdpConnection::Init(UdpManager *udpManager, UdpPlatformAddress destIp, int 
     mLastClockSyncTime = 0;
     mDataHoldTime = 0;
     mGettingTime = false;
-    mHandler = nullptr;
+    mHandler = NULL;
     mOtherSideProtocolVersion = 0;
 
     mNoDataTimeout = mUdpManager->mParams.noDataTimeout;
@@ -108,7 +108,7 @@ void UdpConnection::Init(UdpManager *udpManager, UdpPlatformAddress destIp, int 
     mIcmpErrorRetryStartStamp = 0;        // when the timer started for ICMP error retry delay (gets reset on a successful packet receive)
     mPortRemapRequestStartStamp = 0;
 
-    mEncryptXorBuffer = nullptr;
+    mEncryptXorBuffer = NULL;
     mEncryptExpansionBytes = 0;
     mOrderedCountOutgoing = 0;
     mOrderedCountOutgoing2 = 0;
@@ -120,7 +120,7 @@ void UdpConnection::Init(UdpManager *udpManager, UdpPlatformAddress destIp, int 
     mConnectAttemptTimeout = 0;
     mConnectionCreateTime = mUdpManager->CachedClock();
     mSimulateOutgoingQueueBytes = 0;
-    mPassThroughData = nullptr;
+    mPassThroughData = NULL;
     mSilentDisconnect = false;
 
     mLastSendBin = 0;
@@ -140,7 +140,7 @@ UdpConnection::~UdpConnection()
 {
     UdpGuard myGuard(&mGuard);
 
-    assert(mUdpManager == nullptr);    // this should not be possible, since the UdpManager holds a reference to us until we are disconnected and disassociated from the manager.  If you are hitting this, then odds are the application is releasing the UdpConnection object more times than it should
+    assert(mUdpManager == NULL);    // this should not be possible, since the UdpManager holds a reference to us until we are disconnected and disassociated from the manager.  If you are hitting this, then odds are the application is releasing the UdpConnection object more times than it should
 
     for (int i = 0; i < cReliableChannelCount; i++)
         delete mChannel[i];
@@ -189,7 +189,7 @@ void UdpConnection::InternalDisconnect(int flushTimeout, DisconnectReason reason
     if (mStatus == cStatusNegotiating)
         flushTimeout = 0;
 
-    if (mUdpManager != nullptr)
+    if (mUdpManager != NULL)
     {
         if (flushTimeout > 0)
         {
@@ -219,7 +219,7 @@ void UdpConnection::InternalDisconnect(int flushTimeout, DisconnectReason reason
         }
 
         UdpManager *holdUdpManager = mUdpManager;
-        mUdpManager = nullptr;
+        mUdpManager = NULL;
         mStatus = cStatusDisconnected;
 
             // only hold a reference to the UdpManager if it is not currently being destructed.
@@ -274,7 +274,7 @@ bool UdpConnection::Send(UdpChannel channel, const void *data, int dataLen)
     if (dataLen == 0)        // zero length packets are ignored
         return(false);
 
-    assert(data != nullptr);        // can't send a nullptr packet
+    assert(data != NULL);        // can't send a null packet
 
         // zero-escape application packets that start with 0
     if ((*(const udp_uchar *)data) == 0)
@@ -290,7 +290,7 @@ bool UdpConnection::Send(UdpChannel channel, const LogicalPacket *packet)
 {
     UdpGuard myGuard(&mGuard);
 
-    assert(packet != nullptr);        // can't send a nullptr packet
+    assert(packet != NULL);        // can't send a null packet
 
     if (mStatus != cStatusConnected)    // if we are no longer connected
         return(false);
@@ -337,7 +337,7 @@ bool UdpConnection::InternalSend(UdpChannel channel, const udp_uchar *data, int 
         {
             udp_uchar *bufPtr = tempBuffer;
             memcpy(bufPtr, data, dataLen);
-            if (data2 != nullptr)
+            if (data2 != NULL)
                 memcpy(bufPtr + dataLen, data2, dataLen2);
             PhysicalSend(bufPtr, totalDataLen, true);
             return(true);
@@ -350,9 +350,9 @@ bool UdpConnection::InternalSend(UdpChannel channel, const udp_uchar *data, int 
             bufPtr[1] = cUdpPacketOrdered;
             UdpMisc::PutValue16(bufPtr + 2, (udp_ushort)(++mOrderedCountOutgoing & 0xffff));
             memcpy(bufPtr + 4, data, dataLen);
-            if (data2 != nullptr)
+            if (data2 != NULL)
                 memcpy(bufPtr + 4 + dataLen, data2, dataLen2);
-            BufferedSend(bufPtr, totalDataLen + 4, nullptr, 0, true);
+            BufferedSend(bufPtr, totalDataLen + 4, NULL, 0, true);
             return(true);
             break;
         }
@@ -363,7 +363,7 @@ bool UdpConnection::InternalSend(UdpChannel channel, const udp_uchar *data, int 
             bufPtr[1] = cUdpPacketOrdered2;
             UdpMisc::PutValue16(bufPtr + 2, (udp_ushort)(++mOrderedCountOutgoing2 & 0xffff));
             memcpy(bufPtr + 4, data, dataLen);
-            if (data2 != nullptr)
+            if (data2 != NULL)
                 memcpy(bufPtr + 4 + dataLen, data2, dataLen2);
             PhysicalSend(bufPtr, totalDataLen + 4, true);
             return(true);
@@ -375,7 +375,7 @@ bool UdpConnection::InternalSend(UdpChannel channel, const udp_uchar *data, int 
         case cUdpChannelReliable4:
         {
             int num = channel - cUdpChannelReliable1;
-            if (mChannel[num] == nullptr)
+            if (mChannel[num] == NULL)
                 mChannel[num] = new UdpReliableChannel(num, this, &mUdpManager->mParams.reliable[num]);
             mChannel[num]->Send(data, dataLen, data2, dataLen2);
             return(true);
@@ -410,9 +410,9 @@ void UdpConnection::GetStats(UdpConnectionStatistics *cs)
 {
     UdpGuard myGuard(&mGuard);
 
-    assert(cs != nullptr);
+    assert(cs != NULL);
 
-    if (mUdpManager == nullptr)
+    if (mUdpManager == NULL)
         return;
     *cs = mConnectionStats;
 
@@ -428,7 +428,7 @@ void UdpConnection::GetStats(UdpConnectionStatistics *cs)
     if (cs->syncTheirSent > 0)
         cs->percentReceivedSuccess = (float)cs->syncOurReceived / (float)cs->syncTheirSent;
     cs->reliableAveragePing = 0;
-    if (mChannel[0] != nullptr)
+    if (mChannel[0] != NULL)
         cs->reliableAveragePing = mChannel[0]->GetAveragePing();
 }
 
@@ -437,7 +437,7 @@ void UdpConnection::ProcessRawPacket(const UdpManager::PacketHistoryEntry *e)
     UdpRef ref(this);
     UdpGuard guard(&mGuard);
 
-    if (mUdpManager == nullptr)
+    if (mUdpManager == NULL)
         return;
 
     if (e->mLen == 0)
@@ -572,7 +572,7 @@ void UdpConnection::ProcessRawPacket(const UdpManager::PacketHistoryEntry *e)
 
                     *decryptPtr++ = finalStart[1];
                     int len = (this->*(mDecryptFunction[j]))(decryptPtr, finalStart + 2, finalLen - 2);
-                    if (mUdpManager == nullptr)
+                    if (mUdpManager == NULL)
                         return;
 
                     if (len == -1)
@@ -627,7 +627,7 @@ void UdpConnection::ProcessCookedPacket(const udp_uchar *data, int dataLen)
 {
     udp_uchar buf[256];
     udp_uchar *bufPtr;
-    if (mUdpManager == nullptr)
+    if (mUdpManager == NULL)
         return;
 
     if (data[0] == 0 && dataLen > 1)
@@ -826,7 +826,7 @@ void UdpConnection::ProcessCookedPacket(const udp_uchar *data, int dataLen)
                             // (while processing this packet) ended up touching the packet-data and corrupting the next
                             // packet in the multi-sequence.
                         CallbackCorruptPacket(data, dataLen, cUdpCorruptionReasonMultiPacket);
-                        if (mUdpManager == nullptr)
+                        if (mUdpManager == NULL)
                             return;
                     }
                     else
@@ -943,7 +943,7 @@ void UdpConnection::ProcessCookedPacket(const udp_uchar *data, int dataLen)
             case cUdpPacketFragment4:
             {
                 int num = (data[1] - cUdpPacketReliable1) % cReliableChannelCount;
-                if (mChannel[num] == nullptr)
+                if (mChannel[num] == NULL)
                     mChannel[num] = new UdpReliableChannel(num, this, &mUdpManager->mParams.reliable[num]);
                 mChannel[num]->ReliablePacket(data, dataLen);
                 break;
@@ -954,7 +954,7 @@ void UdpConnection::ProcessCookedPacket(const udp_uchar *data, int dataLen)
             case cUdpPacketAck4:
             {
                 int num = data[1] - cUdpPacketAck1;
-                if (mChannel[num] != nullptr)
+                if (mChannel[num] != NULL)
                     mChannel[num]->AckPacket(data, dataLen);
                 break;
             }
@@ -964,7 +964,7 @@ void UdpConnection::ProcessCookedPacket(const udp_uchar *data, int dataLen)
             case cUdpPacketAckAll4:
             {
                 int num = data[1] - cUdpPacketAckAll1;
-                if (mChannel[num] != nullptr)
+                if (mChannel[num] != NULL)
                     mChannel[num]->AckAllPacket(data, dataLen);
                 break;
             }
@@ -1015,7 +1015,7 @@ void UdpConnection::FlagPortUnreachable()
 void UdpConnection::GiveTime(bool fromManager)
 {
     UdpGuard myGuard(&mGuard);
-    if (mUdpManager == nullptr)
+    if (mUdpManager == NULL)
         return;
 
     if (fromManager && GetRefCount() == 2)
@@ -1115,11 +1115,11 @@ void UdpConnection::InternalGiveTime()
             int totalPendingBytes = 0;
             for (int i = 0; i < cReliableChannelCount; i++)
             {
-                if (mChannel[i] != nullptr)
+                if (mChannel[i] != NULL)
                 {
                     totalPendingBytes += mChannel[i]->TotalPendingBytes();
                     int myNext = mChannel[i]->GiveTime();
-                    if (mUdpManager == nullptr)
+                    if (mUdpManager == NULL)
                         return;        // giving the reliable channel time caused it to callback the application which may disconnect us
                     nextSchedule = udpMin(nextSchedule, myNext);
                 }
@@ -1208,7 +1208,7 @@ void UdpConnection::InternalGiveTime()
             break;
     }
 
-    if (mUdpManager != nullptr)
+    if (mUdpManager != NULL)
     {
             // safety to prevent us for scheduling ourselves for a time period that has already passed,
             // as doing so could result in infinite looping in the priority queue processing.
@@ -1227,7 +1227,7 @@ int UdpConnection::TotalPendingBytes() const
     int total = 0;
     for (int i = 0; i < cReliableChannelCount; i++)
     {
-        if (mChannel[i] != nullptr)
+        if (mChannel[i] != NULL)
             total += mChannel[i]->TotalPendingBytes();
     }
     return(total);
@@ -1293,7 +1293,7 @@ void UdpConnection::ExpireReceiveBin()
 
 void UdpConnection::PhysicalSend(const udp_uchar *data, int dataLen, bool appendAllowed)
 {
-    if (mUdpManager == nullptr)
+    if (mUdpManager == NULL)
         return;
 
         // if we attempt to do a physical send (ie. encrypt/compress/crc a packet) while we are not connected
@@ -1322,7 +1322,7 @@ void UdpConnection::PhysicalSend(const udp_uchar *data, int dataLen, bool append
                     // we know this internal packet will not be a connect or confirm packet since they are sent directly to RawSend to avoid getting encrypted
                 *destPtr++ = finalStart[1];
                 int len = (this->*(mEncryptFunction[j]))(destPtr, finalStart + 2, finalLen - 2);
-                if (mUdpManager == nullptr)
+                if (mUdpManager == NULL)
                     return;
 
                     // if this assert triggers, it means the encryption pass expanded the size of the encrypted
@@ -1393,8 +1393,8 @@ void UdpConnection::PhysicalSend(const udp_uchar *data, int dataLen, bool append
     // can note where the ack was placed and replace it
 udp_uchar *UdpConnection::BufferedSend(const udp_uchar *data, int dataLen, const udp_uchar *data2, int dataLen2, bool appendAllowed)
 {
-    if (mUdpManager == nullptr)
-        return(nullptr);
+    if (mUdpManager == NULL)
+        return(NULL);
     int used = (int)(mMultiBufferPtr - mMultiBufferData);
 
     int actualMaxDataHoldSize = udpMin(mUdpManager->mParams.maxDataHoldSize, mConnectionConfig.maxRawPacketSize);
@@ -1409,7 +1409,7 @@ udp_uchar *UdpConnection::BufferedSend(const udp_uchar *data, int dataLen, const
             FlushMultiBuffer();
 
             // now send it (the multi-buffer is empty if you need to use it temporarily to concatenate two data chunks -- it is large enough to hold the largest raw packet)
-        if (data2 != nullptr)
+        if (data2 != NULL)
         {
             memcpy(mMultiBufferData, data, dataLen);
             memcpy(mMultiBufferData + dataLen, data2, dataLen2);
@@ -1417,7 +1417,7 @@ udp_uchar *UdpConnection::BufferedSend(const udp_uchar *data, int dataLen, const
         }
         else
             PhysicalSend(data, dataLen, appendAllowed);
-        return(nullptr);
+        return(NULL);
     }
 
         // if this data will not fit into buffer
@@ -1445,7 +1445,7 @@ udp_uchar *UdpConnection::BufferedSend(const udp_uchar *data, int dataLen, const
     udp_uchar *placementPtr = mMultiBufferPtr;
     memcpy(mMultiBufferPtr, data, dataLen);
     mMultiBufferPtr += dataLen;
-    if (data2 != nullptr)
+    if (data2 != NULL)
     {
         memcpy(mMultiBufferPtr, data2, dataLen2);
         mMultiBufferPtr += dataLen2;
@@ -1454,7 +1454,7 @@ udp_uchar *UdpConnection::BufferedSend(const udp_uchar *data, int dataLen, const
     if ((mMultiBufferPtr - mMultiBufferData) >= actualMaxDataHoldSize)
     {
         FlushMultiBuffer();
-        placementPtr = nullptr;    // it got flushed
+        placementPtr = NULL;    // it got flushed
     }
     return(placementPtr);
 }
@@ -1474,7 +1474,7 @@ void UdpConnection::FlushMultiBuffer()
             // notify all the reliable channels to clear their buffered acks
         for (int i = 0; i < cReliableChannelCount; i++)
         {
-            if (mChannel[i] != nullptr)
+            if (mChannel[i] != NULL)
             {
                 mChannel[i]->ClearBufferedAck();
             }
@@ -1684,7 +1684,7 @@ void UdpConnection::SetupEncryptModel()
                 mEncryptExpansionBytes += 0;
 
                     // set up encrypt buffer (random numbers generated based on seed)
-                if (mEncryptXorBuffer == nullptr)
+                if (mEncryptXorBuffer == NULL)
                 {
                     int len = ((mUdpManager->mParams.maxRawPacketSize + 1) / 4) * 4;
                     mEncryptXorBuffer = new udp_uchar[len];
@@ -1718,7 +1718,7 @@ void UdpConnection::GetChannelStatus(UdpChannel channel, ChannelStatus *channelS
         case cUdpChannelReliable2:
         case cUdpChannelReliable3:
         case cUdpChannelReliable4:
-            if (mChannel[channel - cUdpChannelReliable1] != nullptr)
+            if (mChannel[channel - cUdpChannelReliable1] != NULL)
             {
                 mChannel[channel - cUdpChannelReliable1]->GetChannelStatus(channelStatus);
             }
@@ -1763,7 +1763,7 @@ char *UdpConnection::GetDestinationString(char *buf, int bufLen) const
     UdpGuard myGuard(&mGuard);
 
     if (bufLen < 22)
-        return(nullptr);
+        return(NULL);
     UdpPlatformAddress ip = GetDestinationIp();
     int port = GetDestinationPort();
     char hold[256];
@@ -1794,7 +1794,7 @@ void UdpConnection::OnRoutePacket(const udp_uchar *data, int dataLen)
 {
     UdpGuard myGuard(&mHandlerGuard);
 
-    if (mHandler != nullptr)
+    if (mHandler != NULL)
     {
         mHandler->OnRoutePacket(this, data, dataLen);
     }
@@ -1814,7 +1814,7 @@ void UdpConnection::OnRoutePacket(const udp_uchar *data, int dataLen)
 void UdpConnection::OnConnectComplete()
 {
     UdpGuard myGuard(&mHandlerGuard);
-    if (mHandler != nullptr)
+    if (mHandler != NULL)
     {
         mHandler->OnConnectComplete(this);
     }
@@ -1823,7 +1823,7 @@ void UdpConnection::OnConnectComplete()
 void UdpConnection::OnTerminated()
 {
     UdpGuard myGuard(&mHandlerGuard);
-    if (mHandler != nullptr)
+    if (mHandler != NULL)
     {
         mHandler->OnTerminated(this);
     }
@@ -1832,7 +1832,7 @@ void UdpConnection::OnTerminated()
 void UdpConnection::OnCrcReject(const udp_uchar *data, int dataLen)
 {
     UdpGuard myGuard(&mHandlerGuard);
-    if (mHandler != nullptr)
+    if (mHandler != NULL)
     {
         mHandler->OnCrcReject(this, data, dataLen);
     }
@@ -1841,7 +1841,7 @@ void UdpConnection::OnCrcReject(const udp_uchar *data, int dataLen)
 void UdpConnection::OnPacketCorrupt(const udp_uchar *data, int dataLen, UdpCorruptionReason reason)
 {
     UdpGuard myGuard(&mHandlerGuard);
-    if (mHandler != nullptr)
+    if (mHandler != NULL)
     {
         mHandler->OnPacketCorrupt(this, data, dataLen, reason);
     }

@@ -31,7 +31,7 @@ MarketAuctionsBufferCreate::~MarketAuctionsBufferCreate(void)
 	for (IndexType::iterator i=m_rows.begin(); i!=m_rows.end(); ++i)
 	{
 		delete i->second;
-		i->second=nullptr;
+		i->second=NULL;
 	}
 }
 
@@ -217,7 +217,7 @@ MarketAuctionsBufferDelete::~MarketAuctionsBufferDelete(void)
 	for (IndexType::iterator i=m_rows.begin(); i!=m_rows.end(); ++i)
 	{
 		delete i->second;
-		i->second=nullptr;
+		i->second=NULL;
 	}
 }
 
@@ -330,7 +330,7 @@ MarketAuctionsBufferUpdate::~MarketAuctionsBufferUpdate(void)
 	for (IndexType::iterator i=m_rows.begin(); i!=m_rows.end(); ++i)
 	{
 		delete i->second;
-		i->second=nullptr;
+		i->second=NULL;
 	}
 }
 

@@ -495,7 +495,7 @@ inline const ObjectTemplate *Object::getObjectTemplate() const
 //
 // Remarks:
 //
-//   This return may return nullptr.
+//   This return may return NULL.
 
 inline const char *Object::getDebugName() const
 {
@@ -518,7 +518,7 @@ inline const Vector &Object::getScale() const
 /**
  * Get the controller for an object.
  *
- * The return value may be nullptr.
+ * The return value may be NULL.
  *
  * @return Const pointer to the controller
  */
@@ -532,7 +532,7 @@ inline const Controller *Object::getController() const
 /**
  * Get the controller for an object.
  *
- * The return value may be nullptr.
+ * The return value may be NULL.
  *
  * @return Non-const pointer to the controller
  */
@@ -546,7 +546,7 @@ inline Controller *Object::getController()
 /**
  * Get the dynamics for an object.
  *
- * The return value may be nullptr.
+ * The return value may be NULL.
  *
  * @return Const pointer to the dynamics
  */
@@ -560,7 +560,7 @@ inline const Dynamics *Object::getDynamics() const
 /**
  * Get the dynamics for an object.
  *
- * The return value may be nullptr.
+ * The return value may be NULL.
  *
  * @return Non-const pointer to the dynamics
  */
@@ -598,24 +598,24 @@ inline Appearance *Object::getAppearance()
 /**
  * Get the parent object for this object.
  *
- * This routine will return nullptr if the object is not a child object.
+ * This routine will return NULL if the object is not a child object.
  */
 
 inline Object *Object::getParent()
 {
-	return m_childObject ? m_attachedToObject : nullptr;
+	return m_childObject ? m_attachedToObject : NULL;
 }
 
 // ----------------------------------------------------------------------
 /**
  * Get the parent object for this object.
  *
- * This routine will return nullptr if the object is not a child object.
+ * This routine will return NULL if the object is not a child object.
  */
 
 inline const Object *Object::getParent() const
 {
-	return m_childObject ? m_attachedToObject : nullptr;
+	return m_childObject ? m_attachedToObject : NULL;
 }
 
 // ----------------------------------------------------------------------

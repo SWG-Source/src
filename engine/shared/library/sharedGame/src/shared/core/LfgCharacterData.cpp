@@ -1127,7 +1127,7 @@ std::map<std::string, int> const & LfgCharacterData::calculateStatistics(std::ma
 		}
 	}
 
-	int32 const timeNow = static_cast<int32>(::time(nullptr));
+	int32 const timeNow = static_cast<int32>(::time(NULL));
 	for (std::map<NetworkId, LfgCharacterData>::const_iterator iterLfgData = connectedCharacterLfgData.begin(); iterLfgData != connectedCharacterLfgData.end(); ++iterLfgData)
 	{
 		// searchable/anonymous

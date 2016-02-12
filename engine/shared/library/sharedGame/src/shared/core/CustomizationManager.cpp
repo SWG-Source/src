@@ -441,7 +441,7 @@ CustomizationVariable * CustomizationManager::findVariable (CustomizationData & 
 	if(!ms_installed)
 	{
 		DEBUG_FATAL(true, ("CustomizationManager not installed"));
-		return nullptr; //lint !e527 unreachable (reachable in release)
+		return NULL; //lint !e527 unreachable (reachable in release)
 	}
 
 	PathType type = PT_none;
@@ -455,7 +455,7 @@ CustomizationVariable * CustomizationManager::findVariable (CustomizationData & 
 	if(!ms_installed)
 	{
 		DEBUG_FATAL(true, ("CustomizationManager not installed"));
-		return nullptr; //lint !e527 unreachable (reachable in release)
+		return NULL; //lint !e527 unreachable (reachable in release)
 	}
 
 	type = PT_none;
@@ -467,7 +467,7 @@ CustomizationVariable * CustomizationManager::findVariable (CustomizationData & 
 	{
 		//if we have the ranged customization variable is a dependent variable, ignore it (there will be another that controls it)
 		if(rangedCV->getIsDependentVariable())
-			cv = nullptr;
+			cv = NULL;
 	}
 
 	if (!cv)

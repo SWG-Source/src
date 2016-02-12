@@ -81,7 +81,7 @@ PerThreadData::Data *PerThreadData::getData(bool allowReturnNull)
 	if (!slotCreated)
 	{
 		DEBUG_FATAL(true && !allowReturnNull, ("not installed"));
-		return nullptr;
+		return NULL;
 	}
 
 	Data * const data = reinterpret_cast<Data *>(pthread_getspecific(slot));
@@ -97,7 +97,7 @@ PerThreadData::Data *PerThreadData::getData(bool allowReturnNull)
  * 
  * If the client is calling this function on a thread that existed before the engine was
  * installed, the client should set isNewThread to false.  Setting isNewThread to false
- * prevents the function from validating that the thread's TLS is nullptr.  For threads existing
+ * prevents the function from validating that the thread's TLS is NULL.  For threads existing
  * before the engine is installed, the TLS data for the thread is undefined.
  * 
  * @param isNewThread  [IN] true if the thread was created after the engine was installed, false otherwise
@@ -147,10 +147,10 @@ void PerThreadData::threadRemove(void)
 
 	//close the event used for file streaming reads
 	delete data->readGate;
-	data->readGate = nullptr;
+	data->readGate = NULL;
 
 	// wipe the data in the thread slot
-	const BOOL result2 = pthread_setspecific(slot, nullptr);
+	const BOOL result2 = pthread_setspecific(slot, NULL);
 	UNREF(result2);
 	DEBUG_FATAL(result2, ("TlsSetValue failed")); //NB:  unlike Windows, returns 0 on success.
 

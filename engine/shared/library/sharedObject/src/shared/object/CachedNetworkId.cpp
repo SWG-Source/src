@@ -32,7 +32,7 @@ void CachedNetworkId::checkValidity() const
 
 CachedNetworkId::CachedNetworkId() : 
 m_id(cms_invalid),
-m_object(nullptr)
+m_object(NULL)
 {
 }
 
@@ -40,7 +40,7 @@ m_object(nullptr)
 
 CachedNetworkId::CachedNetworkId(const NetworkId& id) : 
 m_id(id),
-m_object(nullptr)
+m_object(NULL)
 {
 }
 
@@ -48,7 +48,7 @@ m_object(nullptr)
 
 CachedNetworkId::CachedNetworkId(NetworkId::NetworkIdType value) : 
 m_id(value),
-m_object(nullptr)
+m_object(NULL)
 {
 		
 }
@@ -66,7 +66,7 @@ m_object(const_cast<Object*>(&object))
 
 CachedNetworkId::CachedNetworkId(const std::string &value) :
 m_id(value),
-m_object(nullptr)
+m_object(NULL)
 {
 		
 }
@@ -98,7 +98,7 @@ CachedNetworkId& CachedNetworkId::operator= (const CachedNetworkId& rhs)
 CachedNetworkId& CachedNetworkId::operator= (const NetworkId& rhs)
 {
 	m_id = rhs;
-	m_object = nullptr;
+	m_object = NULL;
 	return *this;
 }
 // ----------------------------------------------------------
@@ -178,7 +178,7 @@ Object* CachedNetworkId::getObject() const
 		return m_object;
 	}
 
-	return nullptr;
+	return NULL;
 }
 
 // ----------------------------------------------------------

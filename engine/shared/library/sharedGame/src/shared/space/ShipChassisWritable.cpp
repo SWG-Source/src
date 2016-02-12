@@ -51,7 +51,7 @@ bool ShipChassisWritable::setName(CrcString const & name)
 {
 	if (ShipChassis::setName(name))
 	{
-		if (nullptr != findShipChassisByCrc(name.getCrc()))
+		if (NULL != findShipChassisByCrc(name.getCrc()))
 			Transceivers::chassisListChanged.emitMessage(true);
 		return true;
 	}
@@ -72,7 +72,7 @@ void ShipChassisWritable::setSlotTargetable(int chassisSlotType, bool targetable
 {
 	ShipChassisSlot * const chassisSlot = getSlot(static_cast<ShipChassisSlotType::Type>(chassisSlotType));
 
-	if (nullptr == chassisSlot)
+	if (NULL == chassisSlot)
 	{
 		WARNING(true, ("ShipChassisWritable::setSlotTargetable() invalid slot"));
 	}

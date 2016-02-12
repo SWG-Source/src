@@ -190,14 +190,14 @@ jboolean JNICALL ScriptMethodsNpcNamespace::_npcStartConversation(JNIEnv *env, j
 	if (!JavaLibrary::convert (localConvoName, convoNameStr))
 		return JNI_FALSE;
 
-	TangibleObject * playerObject = nullptr;
+	TangibleObject * playerObject = NULL;
 	if (!JavaLibrary::getObject(player, playerObject))
 		return JNI_FALSE;
 
 	if (playerObject->isInNpcConversation())
 		return JNI_FALSE;
 
-	TangibleObject * npcObject = nullptr;
+	TangibleObject * npcObject = NULL;
 	if (!JavaLibrary::getObject(npc, npcObject))
 		return JNI_FALSE;
 
@@ -234,7 +234,7 @@ jboolean JNICALL ScriptMethodsNpcNamespace::_npcStartConversation(JNIEnv *env, j
 
 jboolean JNICALL ScriptMethodsNpcNamespace::npcStartConversation(JNIEnv *env, jobject self, jlong player, jlong npc, jstring convoName, jobject greeting, jstring greetingOob, jobjectArray responses)
 {
-	TangibleObject * speakerObject = nullptr;
+	TangibleObject * speakerObject = NULL;
 	if (!JavaLibrary::getObject(npc, speakerObject) || !speakerObject)
 		return JNI_FALSE;
 
@@ -243,7 +243,7 @@ jboolean JNICALL ScriptMethodsNpcNamespace::npcStartConversation(JNIEnv *env, jo
 
 	uint32 crc = Crc::crcNull;
 	ObjectTemplate const * const ot = ObjectTemplateList::fetch(conversationAppearanceOverride);
-	ServerObjectTemplate const * const sot = ot ? ot->asServerObjectTemplate() : nullptr;
+	ServerObjectTemplate const * const sot = ot ? ot->asServerObjectTemplate() : NULL;
 	if(sot)
 	{
 		std::string const & sharedTemplateName = sot->getSharedTemplate();
@@ -263,7 +263,7 @@ jboolean JNICALL ScriptMethodsNpcNamespace::npcStartConversationAppearanceOverri
 		return JNI_FALSE;
 
 	ObjectTemplate const * const ot = ObjectTemplateList::fetch(appearanceOverrideSharedTemplateNameStr);
-	ServerObjectTemplate const * const sot = ot ? ot->asServerObjectTemplate() : nullptr;
+	ServerObjectTemplate const * const sot = ot ? ot->asServerObjectTemplate() : NULL;
 	if(!sot)
 	{
 		return JNI_FALSE;
@@ -290,7 +290,7 @@ jboolean JNICALL ScriptMethodsNpcNamespace::npcEndConversation(JNIEnv *env, jobj
 {
 	UNREF(self);
 
-	TangibleObject * playerObject = nullptr;
+	TangibleObject * playerObject = NULL;
 	if (!JavaLibrary::getObject(player, playerObject))
 		return JNI_FALSE;
 
@@ -318,7 +318,7 @@ jboolean JNICALL ScriptMethodsNpcNamespace::npcSpeak(JNIEnv *env, jobject self, 
 {
 	UNREF(self);
 
-	TangibleObject * playerObject = nullptr;
+	TangibleObject * playerObject = NULL;
 	if (!JavaLibrary::getObject(player, playerObject))
 		return JNI_FALSE;
 
@@ -367,7 +367,7 @@ jboolean JNICALL ScriptMethodsNpcNamespace::npcSetConversationResponses(JNIEnv *
 {
 	UNREF(self);
 
-	TangibleObject * playerObject = nullptr;
+	TangibleObject * playerObject = NULL;
 	if (!JavaLibrary::getObject(player, playerObject))
 		return JNI_FALSE;
 
@@ -396,7 +396,7 @@ jboolean JNICALL ScriptMethodsNpcNamespace::npcAddConversationResponse(JNIEnv *e
 {
 	UNREF(self);
 
-	TangibleObject * playerObject = nullptr;
+	TangibleObject * playerObject = NULL;
 	if (!JavaLibrary::getObject(player, playerObject))
 		return JNI_FALSE;
 
@@ -455,7 +455,7 @@ jboolean JNICALL ScriptMethodsNpcNamespace::npcRemoveConversationResponse(JNIEnv
 {
 	UNREF(self);
 
-	TangibleObject * playerObject = nullptr;
+	TangibleObject * playerObject = NULL;
 	if (!JavaLibrary::getObject(player, playerObject))
 		return JNI_FALSE;
 
@@ -488,7 +488,7 @@ jboolean JNICALL ScriptMethodsNpcNamespace::isInNpcConversation(JNIEnv *env, job
 {
 	UNREF(self);
 
-	TangibleObject * tangibleObject = nullptr;
+	TangibleObject * tangibleObject = NULL;
 	if (!JavaLibrary::getObject(creature, tangibleObject))
 		return JNI_FALSE;
 
@@ -506,13 +506,13 @@ jboolean JNICALL ScriptMethodsNpcNamespace::isInNpcConversation(JNIEnv *env, job
  * @param self		    class calling this function
  * @param creature		creature being asked about
  *
- * @return an array of obj_ids the creature is in conversation with, or nullptr on error
+ * @return an array of obj_ids the creature is in conversation with, or null on error
 */
 jlongArray JNICALL ScriptMethodsNpcNamespace::getNpcConversants(JNIEnv *env, jobject self, jlong creature)
 {
 	UNREF(self);
 
-	TangibleObject * tangibleObject = nullptr;
+	TangibleObject * tangibleObject = NULL;
 	if (!JavaLibrary::getObject(creature, tangibleObject))
 		return 0;
 
@@ -621,7 +621,7 @@ jboolean JNICALL ScriptMethodsNpcNamespace::isNameReservedIgnoreRules(JNIEnv *en
 
 jboolean JNICALL ScriptMethodsNpcNamespace::npcEndConversationWithMessage(JNIEnv * /*env*/, jobject /*self*/, jlong player, jobject response, jstring responseOob)
 {
-	TangibleObject * playerObject = nullptr;
+	TangibleObject * playerObject = NULL;
 	if(!JavaLibrary::getObject(player, playerObject))
 		return JNI_FALSE;
 	
@@ -658,7 +658,7 @@ jboolean JNICALL ScriptMethodsNpcNamespace::npcEndConversationWithMessage(JNIEnv
 
 jboolean     JNICALL ScriptMethodsNpcNamespace::setNpcDifficulty(JNIEnv *env, jobject self, jlong npc, jlong difficulty)
 {
-	TangibleObject * npcObject = nullptr;
+	TangibleObject * npcObject = NULL;
 	if (!JavaLibrary::getObject(npc, npcObject))
 		return JNI_FALSE;
 	

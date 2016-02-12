@@ -105,7 +105,7 @@ void MessageQueue::clearDataFromMessageList(MessageList &messageList, bool destr
 		{
 			DEBUG_WARNING(!destructor, ("clearing message data from beginFrame"));
 			delete message.m_data;
-			message.m_data = nullptr;
+			message.m_data = NULL;
 		}
 	}
 }
@@ -199,7 +199,7 @@ void MessageQueue::clearMessage(const int index)
 	VALIDATE_RANGE_INCLUSIVE_EXCLUSIVE(0, index, getNumberOfMessages());
 
 	Message& message = (*m_messageQueueRead)[static_cast<uint>(index)];
-	DEBUG_WARNING(message.m_data, ("MessageQueue::clearMessage - clearing message with non-nullptr data"));
+	DEBUG_WARNING(message.m_data, ("MessageQueue::clearMessage - clearing message with non-null data"));
 	message.m_message = 0;
 }
 

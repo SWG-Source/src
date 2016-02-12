@@ -115,7 +115,7 @@ public:
  * This functionality is used on the client to prevent a door from visually opening for
  * a mounted creature or a rider.  The actual stop logic for movement is on the server.
  *
- * @param callback  If nullptr, no check is made.  If non-nullptr, the callback is called
+ * @param callback  If NULL, no check is made.  If non-NULL, the callback is called
  *                  any time a mobile is detected to have collided with a DoorObject.
  *                  The return value of the callback dictates whether the hit() and hitBy()
  *                  logic is called on the mobile and door.  If the return value of callback
@@ -152,29 +152,29 @@ SpatialDatabase::SpatialDatabase()
 SpatialDatabase::~SpatialDatabase ( void )
 {
 	delete m_staticTree;
-	m_staticTree = nullptr;
+	m_staticTree = NULL;
 
 	delete m_dynamicTree;
-	m_dynamicTree = nullptr;
+	m_dynamicTree = NULL;
 
 	delete m_doorTree;
-	m_doorTree = nullptr;
+	m_doorTree = NULL;
 
 	delete m_barrierTree;
-	m_barrierTree = nullptr;
+	m_barrierTree = NULL;
 
 	delete m_floorTree;
-	m_floorTree = nullptr;
+	m_floorTree = NULL;
 
 	delete m_ignoreStack;
-	m_ignoreStack = nullptr;
+	m_ignoreStack = NULL;
 }
 
 // ----------------------------------------------------------------------
 
 bool SpatialDatabase::canCollideWithStatics ( CollisionProperty * collision ) const
 {
-	if(collision == nullptr) return false;
+	if(collision == NULL) return false;
 
 	// On the client, remote creatures and players don't collide with statics
 
@@ -207,10 +207,10 @@ bool SpatialDatabase::canCollideWithStatics ( CollisionProperty * collision ) co
 
 bool SpatialDatabase::canCollideWithStatic ( Object const * mobObject, Object * staticObject ) const
 {
-	// Objects can't collide with nullptr
+	// Objects can't collide with NULL
 
-	if(mobObject == nullptr) return false;
-	if(staticObject == nullptr) return false;
+	if(mobObject == NULL) return false;
+	if(staticObject == NULL) return false;
 
 	// Objects can't collide with themselves
 
@@ -223,7 +223,7 @@ bool SpatialDatabase::canCollideWithStatic ( Object const * mobObject, Object * 
 
 bool SpatialDatabase::canCollideWithCreatures ( CollisionProperty const * collision ) const
 {
-	if(collision == nullptr) return false;
+	if(collision == NULL) return false;
 
 	if(collision->isPlayerControlled() && collision->isServerSide())
 	{
@@ -253,9 +253,9 @@ bool SpatialDatabase::canCollideWithCreature ( Object * player, Object * creatur
 
 bool SpatialDatabase::canWalkOnFloor ( CollisionProperty * collision ) const
 {
-	if(collision == nullptr) return false;
+	if(collision == NULL) return false;
 
-	if(collision->getFootprint() == nullptr) return false;
+	if(collision->getFootprint() == NULL) return false;
 
 	return true;
 }
@@ -470,12 +470,12 @@ void SpatialDatabase::updateCreatureCollision(CollisionProperty * playerCollisio
 
 bool SpatialDatabase::addObject(Query const query, Object * const object)
 {
-	if(object == nullptr)
+	if(object == NULL)
 		return false;
 
 	CollisionProperty * collision = object->getCollisionProperty();
 
-	if(collision == nullptr)
+	if(collision == NULL)
 		return false;
 
 	if(collision->getSpatialSubdivisionHandle())
@@ -511,15 +511,15 @@ bool SpatialDatabase::addObject(Query const query, Object * const object)
 
 bool SpatialDatabase::removeObject(Query const query, Object * const object)
 {
-	if(object == nullptr)
+	if(object == NULL)
 		return false;
 
 	CollisionProperty * collision = object->getCollisionProperty();
 
-	if(collision == nullptr)
+	if(collision == NULL)
 		 return false;
 
-	if(collision->getSpatialSubdivisionHandle() == nullptr)
+	if(collision->getSpatialSubdivisionHandle() == NULL)
 		return false;
 
 	switch (query)
@@ -548,7 +548,7 @@ bool SpatialDatabase::removeObject(Query const query, Object * const object)
 			break;
 	}
 
-	collision->setSpatialSubdivisionHandle(nullptr);
+	collision->setSpatialSubdivisionHandle(NULL);
 
 	return true;
 }
@@ -645,7 +645,7 @@ bool SpatialDatabase::checkIgnoreObject ( Object const * object ) const
 
 bool SpatialDatabase::addFloor ( Floor * floor )
 {
-	if(floor == nullptr) return false;
+	if(floor == NULL) return false;
 
 	if(floor->getSpatialSubdivisionHandle()) return false;
 
@@ -660,15 +660,15 @@ bool SpatialDatabase::addFloor ( Floor * floor )
 
 bool SpatialDatabase::removeFloor ( Floor * floor )
 {
-	if(floor == nullptr) return false;
+	if(floor == NULL) return false;
 
-	if(floor->getSpatialSubdivisionHandle() == nullptr) return false;
+	if(floor->getSpatialSubdivisionHandle() == NULL) return false;
 
 	// ----------
 
 	m_floorTree->removeObject( floor->getSpatialSubdivisionHandle() );
 
-	floor->setSpatialSubdivisionHandle(nullptr);
+	floor->setSpatialSubdivisionHandle(NULL);
 
 	return true;
 }
@@ -684,11 +684,11 @@ int SpatialDatabase::getFloorCount ( void ) const
 
 bool SpatialDatabase::moveObject ( CollisionProperty * collision )
 {
-	if(collision == nullptr) return false;
+	if(collision == NULL) return false;
 
 	SpatialSubdivisionHandle * handle = collision->getSpatialSubdivisionHandle();
 
-	if(handle == nullptr) return false;
+	if(handle == NULL) return false;
 
 	// ----------
 
@@ -729,7 +729,7 @@ bool SpatialDatabase::queryStatics ( AxialBox const & box, ObjectVec * outList )
 
 bool SpatialDatabase::queryStatics ( MultiShape const & shape, ObjectVec * outList ) const
 {
-	return queryStatics( nullptr, shape, outList );
+	return queryStatics( NULL, shape, outList );
 }
 
 // ----------
@@ -779,21 +779,21 @@ bool SpatialDatabase::queryStatics ( Line3d const & line, ObjectVec * outList ) 
 
 bool SpatialDatabase::queryStatics ( CellProperty const * cell, MultiShape const & shape, ObjectVec * outList ) const
 {
-	return queryObjects(cell,shape,outList,nullptr);
+	return queryObjects(cell,shape,outList,NULL);
 }
 
 // ----------------------------------------------------------------------
 
 bool SpatialDatabase::queryDynamics ( Sphere const & sphere, ObjectVec * outList ) const
 {
-	return queryObjects( nullptr, MultiShape(sphere), nullptr, outList );
+	return queryObjects( NULL, MultiShape(sphere), NULL, outList );
 }
 
 // ----------
 
 bool SpatialDatabase::queryDynamics ( MultiShape const & shape, ObjectVec * outList ) const
 {
-	return queryObjects( nullptr, shape, nullptr, outList );
+	return queryObjects( NULL, shape, NULL, outList );
 }
 
 // ----------------------------------------------------------------------
@@ -982,7 +982,7 @@ bool SpatialDatabase::queryCloseStatics ( Vector const & point_w, float maxDista
 	float minClose;
 	float maxClose;
 
-	CollisionProperty * dummy = nullptr;
+	CollisionProperty * dummy = NULL;
 
 	if(m_staticTree->findClosest(point_w,maxDistance,dummy,minClose,maxClose))
 	{
@@ -1001,7 +1001,7 @@ bool SpatialDatabase::queryCloseFloors ( Vector const & point_w, float maxDistan
 	float minClose;
 	float maxClose;
 
-	Floor * dummy = nullptr;
+	Floor * dummy = NULL;
 
 	if(m_floorTree->findClosest(point_w,maxDistance,dummy,minClose,maxClose))
 	{
@@ -1163,7 +1163,7 @@ bool SpatialDatabase::queryMaterial ( CellProperty const * cell,
 		// TODO: why are we skipping out on the tests when the extent is a MeshExtent???
 		MeshExtent const * mesh = dynamic_cast<MeshExtent const *>(extent);
 
-		if(mesh != nullptr) continue;
+		if(mesh != NULL) continue;
 
 		Range hitRange = extent->rangedIntersect(seg_p);
 
@@ -1244,7 +1244,7 @@ bool SpatialDatabase::queryMaterial ( CellProperty const * cellA,
 			CollisionProperty * collisionB = results[i];
 
 			NOT_NULL(collisionB);
-			if (collisionB == nullptr)
+			if (collisionB == NULL)
 				continue;
 
 			// ----------

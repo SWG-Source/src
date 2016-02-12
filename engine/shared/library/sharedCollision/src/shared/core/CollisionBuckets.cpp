@@ -162,7 +162,7 @@ void CollisionBuckets::build(Vector const & minimumBounds, Vector const & maximu
 			(*m_nodeMatrix)[xx].resize(m_bucketsAlongY);
 			for (unsigned int yy = 0; yy < m_bucketsAlongY; ++yy)
 			{
-				// note that nodes are initialized to nullptr
+				// note that nodes are initialized to NULL
 				(*m_nodeMatrix)[xx][yy].resize(m_bucketsAlongZ, 0);
 			}
 		}

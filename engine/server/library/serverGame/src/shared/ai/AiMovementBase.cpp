@@ -30,9 +30,9 @@
 
 AiMovementBase::AiMovementBase( AICreatureController * controller )
 :	m_controller( controller ),
-	m_stateFunction( nullptr ),
+	m_stateFunction( NULL ),
 	m_stateName(),
-	m_pendingFunction( nullptr ),
+	m_pendingFunction( NULL ),
 	m_pendingName()
 {
 }
@@ -41,9 +41,9 @@ AiMovementBase::AiMovementBase( AICreatureController * controller )
 
 AiMovementBase::AiMovementBase( AICreatureController * controller, Archive::ReadIterator & source )
 :	m_controller( controller ),
-	m_stateFunction( nullptr ),
+	m_stateFunction( NULL ),
 	m_stateName(),
-	m_pendingFunction( nullptr ),
+	m_pendingFunction( NULL ),
 	m_pendingName()
 {
 	// !!!
@@ -177,7 +177,7 @@ void AiMovementBase::applyStateChange ( void )
 		m_stateFunction = m_pendingFunction;
 		m_stateName = m_pendingName;
 
-		m_pendingFunction = nullptr;
+		m_pendingFunction = NULL;
 		m_pendingName.clear();
 	}
 }
@@ -249,49 +249,49 @@ char const * AiMovementBase::getMovementString(AiMovementType const aiMovementTy
 // ----------------------------------------------------------------------
 AiMovementSwarm * AiMovementBase::asAiMovementSwarm()
 {
-	return nullptr;
+	return NULL;
 }
 
 // ----------------------------------------------------------------------
 AiMovementFace * AiMovementBase::asAiMovementFace()
 {
-	return nullptr;
+	return NULL;
 }
 
 // ----------------------------------------------------------------------
 AiMovementFlee * AiMovementBase::asAiMovementFlee()
 {
-	return nullptr;
+	return NULL;
 }
 
 // ----------------------------------------------------------------------
 AiMovementFollow * AiMovementBase::asAiMovementFollow()
 {
-	return nullptr;
+	return NULL;
 }
 
 // ----------------------------------------------------------------------
 AiMovementLoiter * AiMovementBase::asAiMovementLoiter()
 {
-	return nullptr;
+	return NULL;
 }
 
 // ----------------------------------------------------------------------
 AiMovementMove * AiMovementBase::asAiMovementMove()
 {
-	return nullptr;
+	return NULL;
 }
 
 // ----------------------------------------------------------------------
 AiMovementPatrol * AiMovementBase::asAiMovementPatrol()
 {
-	return nullptr;
+	return NULL;
 }
 
 // ----------------------------------------------------------------------
 AiMovementWander * AiMovementBase::asAiMovementWander()
 {
-	return nullptr;
+	return NULL;
 }
 
 // ======================================================================

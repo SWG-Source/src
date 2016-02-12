@@ -120,10 +120,10 @@ Event::Event(bool signaled) :
 	mEvent()
 {
 #ifdef WIN32
-	mEvent = CreateEvent(nullptr, FALSE, signaled ? TRUE : FALSE, nullptr);
+	mEvent = CreateEvent(NULL, FALSE, signaled ? TRUE : FALSE, NULL);
 #else
-    pthread_mutex_init(&mMutex, nullptr);
-    pthread_cond_init(&mCond, nullptr);
+    pthread_mutex_init(&mMutex, NULL);
+    pthread_cond_init(&mCond, NULL);
 #endif
 }
 
@@ -162,7 +162,7 @@ bool Event::Wait(unsigned timeoutMilliseconds)
     {
         struct timeval now;
         struct timespec abs_timeout;
-        gettimeofday(&now, nullptr);
+        gettimeofday(&now, NULL);
         abs_timeout.tv_sec  = now.tv_sec + timeoutMilliseconds/1000;
         abs_timeout.tv_nsec = now.tv_usec * 1000 + (timeoutMilliseconds%1000)*1000000;
         abs_timeout.tv_sec  += abs_timeout.tv_nsec / 1000000000;
@@ -198,10 +198,10 @@ EventLock::EventLock(bool locked) :
 	mEvent()
 {
 #ifdef WIN32
-    mEvent = CreateEvent(nullptr, TRUE, locked ? FALSE : TRUE, nullptr);
+    mEvent = CreateEvent(NULL, TRUE, locked ? FALSE : TRUE, NULL);
 #else
-    pthread_mutex_init(&mMutex, nullptr);
-    pthread_cond_init(&mCond, nullptr);
+    pthread_mutex_init(&mMutex, NULL);
+    pthread_cond_init(&mCond, NULL);
 #endif
 }
 
@@ -243,7 +243,7 @@ bool EventLock::Wait(unsigned timeoutMilliseconds)
 		{
 			struct timeval now;
 			struct timespec abs_timeout;
-			gettimeofday(&now, nullptr);
+			gettimeofday(&now, NULL);
 			abs_timeout.tv_sec  = now.tv_sec + timeoutMilliseconds/1000;
 			abs_timeout.tv_nsec = now.tv_usec * 1000 + (timeoutMilliseconds%1000)*1000000;
 			abs_timeout.tv_sec  += abs_timeout.tv_nsec / 1000000000;

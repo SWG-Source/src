@@ -254,7 +254,7 @@ namespace SetupServerNetworkMessagesNamespace
 	}
 	MessageQueue::Data* unpackNothing(Archive::ReadIterator &)
 	{
-		return nullptr;
+		return NULL;
 	}
 
 	void packVectorNetworkIdVector(const MessageQueue::Data * data, Archive::ByteStream & target)

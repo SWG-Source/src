@@ -31,7 +31,7 @@ BountyHunterTargetBuffer::~BountyHunterTargetBuffer()
 	for (DataType::iterator i=m_data.begin(); i!=m_data.end(); ++i)
 	{
 		delete i->second;
-		i->second=nullptr;
+		i->second=NULL;
 	}
 }
 

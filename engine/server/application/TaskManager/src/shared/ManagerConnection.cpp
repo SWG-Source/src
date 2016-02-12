@@ -98,7 +98,7 @@ void ManagerConnection::onReceive(const Archive::ByteStream & message)
 	r = message.begin();
 	if (m.isType("SystemTimeCheck"))
 	{
-		long const currentTime = static_cast<long>(::time(nullptr));
+		long const currentTime = static_cast<long>(::time(NULL));
 		GenericValueTypeMessage<std::pair<std::string, long > > msg(r);
 
 		if (TaskManager::getNodeLabel() == "node0")
@@ -117,7 +117,7 @@ void ManagerConnection::onReceive(const Archive::ByteStream & message)
 	else if (m.isType("TaskConnectionIdMessage"))
 	{
 		static long const clockDriftFatalTimePeriod = static_cast<long>(TaskManager::getStartTime()) + ConfigTaskManager::getClockDriftFatalIntervalSeconds();
-		long const currentTime = static_cast<long>(::time(nullptr));
+		long const currentTime = static_cast<long>(::time(NULL));
 		TaskConnectionIdMessage t(r);
 		WARNING_STRICT_FATAL(t.getServerType() != TaskConnectionIdMessage::TaskManager,
 							 ("ManagerConnection received wrong type identifier"));

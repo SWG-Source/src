@@ -25,7 +25,7 @@
 //----------------------------------------------------------------------
 
 
-const SharedObjectTemplate * WeaponObject::m_defaultSharedTemplate = nullptr;
+const SharedObjectTemplate * WeaponObject::m_defaultSharedTemplate = NULL;
 static const std::string OBJVAR_CERTIFICATION = "weapon.strCertUsed";
 
 
@@ -68,13 +68,13 @@ const SharedObjectTemplate * WeaponObject::getDefaultSharedTemplate(void) const
 {
 static const ConstCharCrcLowerString templateName("object/weapon/base/shared_weapon_default.iff");
 
-	if (m_defaultSharedTemplate == nullptr)
+	if (m_defaultSharedTemplate == NULL)
 	{
 		m_defaultSharedTemplate = safe_cast<const SharedObjectTemplate *>(
 			ObjectTemplateList::fetch(templateName));
-		WARNING_STRICT_FATAL(m_defaultSharedTemplate == nullptr, ("Cannot create "
+		WARNING_STRICT_FATAL(m_defaultSharedTemplate == NULL, ("Cannot create "
 			"default shared object template %s", templateName.getString()));
-		if (m_defaultSharedTemplate != nullptr)
+		if (m_defaultSharedTemplate != NULL)
 			ExitChain::add (removeDefaultTemplate, "WeaponObject::removeDefaultTemplate");
 	}
 	return m_defaultSharedTemplate;
@@ -87,10 +87,10 @@ static const ConstCharCrcLowerString templateName("object/weapon/base/shared_wea
  */
 void WeaponObject::removeDefaultTemplate(void)
 {
-	if (m_defaultSharedTemplate != nullptr)
+	if (m_defaultSharedTemplate != NULL)
 	{
 		m_defaultSharedTemplate->releaseReference();
-		m_defaultSharedTemplate = nullptr;
+		m_defaultSharedTemplate = NULL;
 	}
 }	// WeaponObject::removeDefaultTemplate
 
@@ -323,7 +323,7 @@ WeaponObject * WeaponObject::getWeaponObject(NetworkId const & networkId)
 {
 	ServerObject * serverObject = ServerObject::getServerObject(networkId);
 
-	return (serverObject != nullptr) ? serverObject->asWeaponObject() : nullptr;
+	return (serverObject != NULL) ? serverObject->asWeaponObject() : NULL;
 }
 
 // ----------------------------------------------------------------------

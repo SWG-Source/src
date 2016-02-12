@@ -78,8 +78,8 @@ const Tag TAG_BTRE = TAG(B,T,R,E);
 const Tag TAG_BEDG = TAG(B,E,D,G);
 const Tag TAG_PGRF = TAG(P,G,R,F);
 
-template <> FloorMeshList::CreateDataResourceMap *FloorMeshList::ms_bindings = nullptr;
-template <> FloorMeshList::LoadedDataResourceMap *FloorMeshList::ms_loaded = nullptr;
+template <> FloorMeshList::CreateDataResourceMap *FloorMeshList::ms_bindings = NULL;
+template <> FloorMeshList::LoadedDataResourceMap *FloorMeshList::ms_loaded = NULL;
 
 // ----------------------------------------------------------------------
 
@@ -92,20 +92,20 @@ FloorMesh::FloorMesh(const std::string & filename)
   m_uncrossableEdges( new FloorEdgeIdVec() ),
   m_wallBaseEdges( new FloorEdgeIdVec() ),
   m_wallTopEdges( new FloorEdgeIdVec() ),
-  m_pathGraph(nullptr),
-  m_appearance(nullptr),
+  m_pathGraph(NULL),
+  m_appearance(NULL),
   m_triMarkCounter(1000),    // just some random number
   m_objectFloor(false)
 {
 #ifdef _DEBUG
 
-	m_crossableLines = nullptr;
-	m_uncrossableLines = nullptr;
-	m_interiorLines = nullptr;
-	m_portalLines = nullptr;
-	m_rampLines = nullptr;
-	m_fallthroughTriLines = nullptr;
-	m_solidTriLines = nullptr;
+	m_crossableLines = NULL;
+	m_uncrossableLines = NULL;
+	m_interiorLines = NULL;
+	m_portalLines = NULL;
+	m_rampLines = NULL;
+	m_fallthroughTriLines = NULL;
+	m_solidTriLines = NULL;
 
 #endif
 }
@@ -121,8 +121,8 @@ FloorMesh::FloorMesh( VectorVector const & vertices, IntVector const & indices )
   m_uncrossableEdges( new FloorEdgeIdVec() ),
   m_wallBaseEdges( new FloorEdgeIdVec() ),
   m_wallTopEdges( new FloorEdgeIdVec() ),
-  m_pathGraph(nullptr),
-  m_appearance(nullptr),
+  m_pathGraph(NULL),
+  m_appearance(NULL),
   m_triMarkCounter(1000),
   m_objectFloor(false)
 {
@@ -130,13 +130,13 @@ FloorMesh::FloorMesh( VectorVector const & vertices, IntVector const & indices )
 
 #ifdef _DEBUG
 
-	m_crossableLines = nullptr;
-	m_uncrossableLines = nullptr;
-	m_interiorLines = nullptr;
-	m_portalLines = nullptr;
-	m_rampLines = nullptr;
-	m_fallthroughTriLines = nullptr;
-	m_solidTriLines = nullptr;
+	m_crossableLines = NULL;
+	m_uncrossableLines = NULL;
+	m_interiorLines = NULL;
+	m_portalLines = NULL;
+	m_rampLines = NULL;
+	m_fallthroughTriLines = NULL;
+	m_solidTriLines = NULL;
 
 #endif
 }
@@ -146,50 +146,50 @@ FloorMesh::FloorMesh( VectorVector const & vertices, IntVector const & indices )
 FloorMesh::~FloorMesh()
 {
 	delete m_vertices;
-	m_vertices = nullptr;
+	m_vertices = NULL;
 
 	delete m_floorTris;
-	m_floorTris = nullptr;
+	m_floorTris = NULL;
 
 	delete m_crossableEdges;
-	m_crossableEdges = nullptr;
+	m_crossableEdges = NULL;
 
 	delete m_uncrossableEdges;
-	m_crossableEdges = nullptr;
+	m_crossableEdges = NULL;
 
 	delete m_wallBaseEdges;
-	m_wallBaseEdges = nullptr;
+	m_wallBaseEdges = NULL;
 
 	delete m_wallTopEdges;
-	m_wallTopEdges = nullptr;
+	m_wallTopEdges = NULL;
 
 	delete m_pathGraph;
-	m_pathGraph = nullptr;
+	m_pathGraph = NULL;
 
-	m_appearance = nullptr;
+	m_appearance = NULL;
 
 #ifdef _DEBUG
 
 	delete m_crossableLines;
-	m_crossableLines = nullptr;
+	m_crossableLines = NULL;
 
 	delete m_uncrossableLines;
-	m_uncrossableLines = nullptr;
+	m_uncrossableLines = NULL;
 
 	delete m_interiorLines;
-	m_interiorLines = nullptr;
+	m_interiorLines = NULL;
 
 	delete m_portalLines;
-	m_portalLines = nullptr;
+	m_portalLines = NULL;
 
 	delete m_rampLines;
-	m_rampLines = nullptr;
+	m_rampLines = NULL;
 
 	delete m_fallthroughTriLines;
-	m_fallthroughTriLines = nullptr;
+	m_fallthroughTriLines = NULL;
 
 	delete m_solidTriLines;
-	m_solidTriLines = nullptr;
+	m_solidTriLines = NULL;
 
 #endif
 }
@@ -833,7 +833,7 @@ void FloorMesh::write ( Iff & iff )
 
 	// ----------
 
-	if(m_boxTree != nullptr)
+	if(m_boxTree != NULL)
 	{
 		m_boxTree->write(iff);
 	}
@@ -1772,7 +1772,7 @@ bool FloorMesh::canEnterEdge ( FloorLocator const & enterLoc ) const
 {
 	if(enterLoc.getEdgeId() == -1) return false;
 	if(enterLoc.getTriId() == -1) return false;
-	if(enterLoc.getFloorMesh() == nullptr) return false;
+	if(enterLoc.getFloorMesh() == NULL) return false;
 
 	// Can't enter the tri if it's facing down
 
@@ -1837,7 +1837,7 @@ bool FloorMesh::canExitEdge ( FloorLocator const & exitLoc, Vector const & delta
 {
 	if(exitLoc.getTriId() == -1) return false;
 	if(exitLoc.getEdgeId() == -1) return false;
-	if(exitLoc.getFloorMesh() == nullptr) return false;
+	if(exitLoc.getFloorMesh() == NULL) return false;
 
 	FloorEdgeType edgeType = exitLoc.getFloorTri().getEdgeType(exitLoc.getEdgeId());
 
@@ -3808,7 +3808,7 @@ void FloorMesh::drawDebugShapes ( DebugShapeRenderer * renderer, bool drawExtent
 
 #ifdef _DEBUG
 
-	if(renderer == nullptr) return;
+	if(renderer == NULL) return;
 
 	if(ConfigSharedCollision::getDrawFloors())
 	{

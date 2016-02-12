@@ -44,7 +44,7 @@
 
 namespace CollisionPropertyNamespace
 {
-	CollisionProperty * ms_activeListHead = nullptr;
+	CollisionProperty * ms_activeListHead = NULL;
 };
 
 using namespace CollisionPropertyNamespace;
@@ -64,8 +64,8 @@ void CollisionProperty::detachList ( void )
 		ms_activeListHead = m_next;
 	}
 
-	m_prev = nullptr;
-	m_next = nullptr;
+	m_prev = NULL;
+	m_next = NULL;
 }
 
 // ----------
@@ -76,7 +76,7 @@ void CollisionProperty::attachList ( CollisionProperty * & head )
 
 	if(head) head->m_prev = this;
 
-	m_prev = nullptr;
+	m_prev = NULL;
 	m_next = head;
 
 	head = this;
@@ -129,7 +129,7 @@ CollisionProperty * CollisionProperty::getActiveHead ( void )
 
 Transform getTransform_o2c( Object const * object )
 {
-	if(object == nullptr) return Transform::identity;
+	if(object == NULL) return Transform::identity;
 
 	// If this object is a cell, its o2c transform is the identity transform
 
@@ -164,23 +164,23 @@ CollisionProperty::CollisionProperty( Object & owner )
 : Property( CollisionProperty::getClassPropertyId(), owner ),
   m_lastTransform_w(Transform::identity),
   m_lastTransform_p(Transform::identity),
-  m_lastCellObject(nullptr),
+  m_lastCellObject(NULL),
   m_stepHeight(0.0f),
   m_defaultRadius(0.0f),
   m_offsetX(0.0f),
   m_offsetZ(0.0f),
   m_extentsDirty(true),
-  m_extent_l(nullptr),
-  m_extent_p(nullptr),
+  m_extent_l(NULL),
+  m_extent_p(NULL),
   m_sphere_l(),
   m_sphere_w(),
   m_scale(owner.getScale().x),
-  m_spatialSubdivisionHandle(nullptr),
-  m_floor(nullptr),
-  m_footprint(nullptr),
+  m_spatialSubdivisionHandle(NULL),
+  m_floor(NULL),
+  m_footprint(NULL),
   m_idleCounter(3),
-  m_next(nullptr),
-  m_prev(nullptr),
+  m_next(NULL),
+  m_prev(NULL),
   m_flags(F_collidable),
   m_spatialDatabaseStorageType(SpatialDatabase::Q_None)
 {
@@ -200,7 +200,7 @@ CollisionProperty::CollisionProperty( Object & owner )
 		{
 			char const * const found = strstr(templateName,"lair");
 
-			if(found != nullptr)
+			if(found != NULL)
 			{
 				setCollidable(false);
 			}
@@ -214,23 +214,23 @@ CollisionProperty::CollisionProperty( Object & owner, SharedObjectTemplate const
 : Property( CollisionProperty::getClassPropertyId(), owner ),
   m_lastTransform_w(Transform::identity),
   m_lastTransform_p(Transform::identity),
-  m_lastCellObject(nullptr),
+  m_lastCellObject(NULL),
   m_stepHeight(0.0f),
   m_defaultRadius(0.0f),
   m_offsetX(0.0f),
   m_offsetZ(0.0f),
   m_extentsDirty(true),
-  m_extent_l(nullptr),
-  m_extent_p(nullptr),
+  m_extent_l(NULL),
+  m_extent_p(NULL),
   m_sphere_l(),
   m_sphere_w(),
   m_scale(owner.getScale().x),
-  m_spatialSubdivisionHandle(nullptr),
-  m_floor(nullptr),
-  m_footprint(nullptr),
+  m_spatialSubdivisionHandle(NULL),
+  m_floor(NULL),
+  m_footprint(NULL),
   m_idleCounter(3),
-  m_next(nullptr),
-  m_prev(nullptr),
+  m_next(NULL),
+  m_prev(NULL),
   m_flags(F_collidable),
   m_spatialDatabaseStorageType(SpatialDatabase::Q_None)
 {
@@ -248,7 +248,7 @@ CollisionProperty::CollisionProperty( Object & owner, SharedObjectTemplate const
 		{
 			char const * const found = strstr(templateName,"lair");
 
-			if(found != nullptr)
+			if(found != NULL)
 			{
 				setCollidable(false);
 			}
@@ -373,7 +373,7 @@ CollisionProperty::~CollisionProperty()
 
 		static_cast<SphereTreeNode<CollisionProperty *, CollisionSphereAccessor>::NodeHandle *>(m_spatialSubdivisionHandle)->removeObject();
 
-		m_spatialSubdivisionHandle = nullptr;
+		m_spatialSubdivisionHandle = NULL;
 	}
 
 	FATAL(CollisionWorld::isUpdating(),("CollisionProperty::~CollisionProperty - Trying to destroy a collision property while the collision world is updating. This is baaaad\n"));
@@ -382,16 +382,16 @@ CollisionProperty::~CollisionProperty()
 	detachList();
 
 	delete m_extent_l;
-	m_extent_l = nullptr;
+	m_extent_l = NULL;
 
 	delete m_extent_p;
-	m_extent_p = nullptr;
+	m_extent_p = NULL;
 
 	delete m_floor;
-	m_floor = nullptr;
+	m_floor = NULL;
 
 	delete m_footprint;
-	m_footprint = nullptr;
+	m_footprint = NULL;
 
 }
 
@@ -405,7 +405,7 @@ void CollisionProperty::attachSourceExtent ( BaseExtent * newSourceExtent ) cons
 		m_extent_l = newSourceExtent;
 
 		delete m_extent_p;
-		m_extent_p = nullptr;
+		m_extent_p = NULL;
 
 		m_extentsDirty = true;
 	}
@@ -437,12 +437,12 @@ void CollisionProperty::initFloor ( void )
 	if (isMobile())
 		return;
 
-	if(m_floor != nullptr)
+	if(m_floor != NULL)
 		return;
 
 	// ----------
 
-	char const *floorName = nullptr;
+	char const *floorName = NULL;
 
 	Appearance * appearance = getOwner().getAppearance();
 	if(appearance)
@@ -487,7 +487,7 @@ void CollisionProperty::addToCollisionWorld ( void )
 		if (getOwner().getNetworkId() < NetworkId::cms_invalid)
 		{
 			delete m_footprint;
-			m_footprint = nullptr;
+			m_footprint = NULL;
 		}
 
 		if (m_footprint)
@@ -534,7 +534,7 @@ Transform CollisionProperty::getTransform_o2c ( void ) const
 
 BaseExtent * convertToSimpleExtent ( BaseExtent const * sourceExtent )
 {
-    if(!sourceExtent) return nullptr;
+    if(!sourceExtent) return NULL;
 
     switch(sourceExtent->getType())
     {
@@ -549,7 +549,7 @@ BaseExtent * convertToSimpleExtent ( BaseExtent const * sourceExtent )
         {
             Extent const * extent = safe_cast<Extent const *>(sourceExtent);
 
-            if(!extent) return nullptr;
+            if(!extent) return NULL;
 
             return new SimpleExtent( MultiShape( extent->getShape() ) );
         }
@@ -558,7 +558,7 @@ BaseExtent * convertToSimpleExtent ( BaseExtent const * sourceExtent )
         {
             CylinderExtent const * extent = safe_cast<CylinderExtent const *>(sourceExtent);
 
-            if(!extent) return nullptr;
+            if(!extent) return NULL;
 
             return new SimpleExtent( MultiShape( extent->getShape() ) );
         }
@@ -567,7 +567,7 @@ BaseExtent * convertToSimpleExtent ( BaseExtent const * sourceExtent )
         {
             BoxExtent const * extent = safe_cast<BoxExtent const *>(sourceExtent);
 
-            if(!extent) return nullptr;
+            if(!extent) return NULL;
 
             return new SimpleExtent( MultiShape( extent->getShape() ) );
         }
@@ -576,7 +576,7 @@ BaseExtent * convertToSimpleExtent ( BaseExtent const * sourceExtent )
 		{
             MeshExtent const * extent = safe_cast<MeshExtent const *>(sourceExtent);
 
-            if(!extent) return nullptr;
+            if(!extent) return NULL;
 
 			return extent->clone();
 		}
@@ -585,7 +585,7 @@ BaseExtent * convertToSimpleExtent ( BaseExtent const * sourceExtent )
         {
             DetailExtent const * extent = safe_cast<DetailExtent const *>(sourceExtent);
 
-            if(!extent) return nullptr;
+            if(!extent) return NULL;
 
             DetailExtent * newExtent = new DetailExtent();
 
@@ -603,7 +603,7 @@ BaseExtent * convertToSimpleExtent ( BaseExtent const * sourceExtent )
         {
             ComponentExtent const * extent = safe_cast<ComponentExtent const *>(sourceExtent);
 
-            if(!extent) return nullptr;
+            if(!extent) return NULL;
 
             ComponentExtent * newExtent = new ComponentExtent();
 
@@ -623,7 +623,7 @@ BaseExtent * convertToSimpleExtent ( BaseExtent const * sourceExtent )
     case ET_Null:
     case ET_ExtentTypeCount:
     default:
-        return nullptr;
+        return NULL;
     }
 }
 
@@ -653,10 +653,10 @@ void CollisionProperty::updateExtents ( void ) const
 	if(m_scale != newScale)
 	{
 		delete m_extent_l;
-		m_extent_l = nullptr;
+		m_extent_l = NULL;
 
 		delete m_extent_p;
-		m_extent_p = nullptr;
+		m_extent_p = NULL;
 
 		m_scale = newScale;
 	}
@@ -960,7 +960,7 @@ void CollisionProperty::drawDebugShapes ( DebugShapeRenderer * renderer ) const
 
 #ifdef _DEBUG
 
-    if(renderer == nullptr) return;
+    if(renderer == NULL) return;
 
     if(ConfigSharedCollision::getDrawExtents())
     {
@@ -1274,9 +1274,9 @@ void CollisionProperty::setLastPos ( CellProperty * cell, Transform const & tran
 {
 	NAN_CHECK(transform_p);
 
-	if(cell == nullptr)
+	if(cell == NULL)
 	{
-		m_lastCellObject = nullptr;
+		m_lastCellObject = NULL;
 		m_lastTransform_p = transform_p;
 		m_lastTransform_w = transform_p;
 	}
@@ -1298,7 +1298,7 @@ Object const * CollisionProperty::getStandingOn ( void ) const
 	}
 	else
 	{
-		return nullptr;
+		return NULL;
 	}
 }
 

@@ -151,7 +151,7 @@ bool ConsoleCommandParserCraft::performParsing (const NetworkId & userId, const 
 
 	else if (isAbbrev( argv [0], "enableSchematicFilter"))
 	{
-		if (creatureObject->getClient() == nullptr || !creatureObject->getClient()->isGod())
+		if (creatureObject->getClient() == NULL || !creatureObject->getClient()->isGod())
 			result += getErrorMessage (argv[0], ERR_FAIL);
 		else
 		{
@@ -164,7 +164,7 @@ bool ConsoleCommandParserCraft::performParsing (const NetworkId & userId, const 
 
 	else if (isAbbrev( argv [0], "disableSchematicFilter"))
 	{
-		if (creatureObject->getClient() == nullptr || !creatureObject->getClient()->isGod())
+		if (creatureObject->getClient() == NULL || !creatureObject->getClient()->isGod())
 			result += getErrorMessage (argv[0], ERR_FAIL);
 		else
 		{

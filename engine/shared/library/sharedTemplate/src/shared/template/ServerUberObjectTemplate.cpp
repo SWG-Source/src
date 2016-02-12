@@ -87,7 +87,7 @@ ServerUberObjectTemplate::~ServerUberObjectTemplate()
 		for (iter = m_intListSimple.begin(); iter != m_intListSimple.end(); ++iter)
 		{
 			delete *iter;
-			*iter = nullptr;
+			*iter = NULL;
 		}
 	}
 	{
@@ -95,7 +95,7 @@ ServerUberObjectTemplate::~ServerUberObjectTemplate()
 		for (iter = m_intListWeightedList.begin(); iter != m_intListWeightedList.end(); ++iter)
 		{
 			delete *iter;
-			*iter = nullptr;
+			*iter = NULL;
 		}
 	}
 	{
@@ -103,7 +103,7 @@ ServerUberObjectTemplate::~ServerUberObjectTemplate()
 		for (iter = m_intListRandomRange.begin(); iter != m_intListRandomRange.end(); ++iter)
 		{
 			delete *iter;
-			*iter = nullptr;
+			*iter = NULL;
 		}
 	}
 	{
@@ -111,7 +111,7 @@ ServerUberObjectTemplate::~ServerUberObjectTemplate()
 		for (iter = m_intListDiceRoll.begin(); iter != m_intListDiceRoll.end(); ++iter)
 		{
 			delete *iter;
-			*iter = nullptr;
+			*iter = NULL;
 		}
 	}
 	{
@@ -119,7 +119,7 @@ ServerUberObjectTemplate::~ServerUberObjectTemplate()
 		for (iter = m_floatListSimple.begin(); iter != m_floatListSimple.end(); ++iter)
 		{
 			delete *iter;
-			*iter = nullptr;
+			*iter = NULL;
 		}
 	}
 	{
@@ -127,7 +127,7 @@ ServerUberObjectTemplate::~ServerUberObjectTemplate()
 		for (iter = m_floatListWeightedList.begin(); iter != m_floatListWeightedList.end(); ++iter)
 		{
 			delete *iter;
-			*iter = nullptr;
+			*iter = NULL;
 		}
 	}
 	{
@@ -135,7 +135,7 @@ ServerUberObjectTemplate::~ServerUberObjectTemplate()
 		for (iter = m_floatListRandomRange.begin(); iter != m_floatListRandomRange.end(); ++iter)
 		{
 			delete *iter;
-			*iter = nullptr;
+			*iter = NULL;
 		}
 	}
 	{
@@ -143,7 +143,7 @@ ServerUberObjectTemplate::~ServerUberObjectTemplate()
 		for (iter = m_enumListIndexed.begin(); iter != m_enumListIndexed.end(); ++iter)
 		{
 			delete *iter;
-			*iter = nullptr;
+			*iter = NULL;
 		}
 	}
 	{
@@ -151,7 +151,7 @@ ServerUberObjectTemplate::~ServerUberObjectTemplate()
 		for (iter = m_enumListWeightedList.begin(); iter != m_enumListWeightedList.end(); ++iter)
 		{
 			delete *iter;
-			*iter = nullptr;
+			*iter = NULL;
 		}
 	}
 	{
@@ -159,7 +159,7 @@ ServerUberObjectTemplate::~ServerUberObjectTemplate()
 		for (iter = m_stringIdListSimple.begin(); iter != m_stringIdListSimple.end(); ++iter)
 		{
 			delete *iter;
-			*iter = nullptr;
+			*iter = NULL;
 		}
 	}
 	{
@@ -167,7 +167,7 @@ ServerUberObjectTemplate::~ServerUberObjectTemplate()
 		for (iter = m_stringIdListWeightedList.begin(); iter != m_stringIdListWeightedList.end(); ++iter)
 		{
 			delete *iter;
-			*iter = nullptr;
+			*iter = NULL;
 		}
 	}
 	{
@@ -175,7 +175,7 @@ ServerUberObjectTemplate::~ServerUberObjectTemplate()
 		for (iter = m_stringListSimple.begin(); iter != m_stringListSimple.end(); ++iter)
 		{
 			delete *iter;
-			*iter = nullptr;
+			*iter = NULL;
 		}
 	}
 	{
@@ -183,7 +183,7 @@ ServerUberObjectTemplate::~ServerUberObjectTemplate()
 		for (iter = m_stringListWeightedList.begin(); iter != m_stringListWeightedList.end(); ++iter)
 		{
 			delete *iter;
-			*iter = nullptr;
+			*iter = NULL;
 		}
 	}
 	{
@@ -191,7 +191,7 @@ ServerUberObjectTemplate::~ServerUberObjectTemplate()
 		for (iter = m_triggerVolumeList.begin(); iter != m_triggerVolumeList.end(); ++iter)
 		{
 			delete *iter;
-			*iter = nullptr;
+			*iter = NULL;
 		}
 	}
 	{
@@ -199,7 +199,7 @@ ServerUberObjectTemplate::~ServerUberObjectTemplate()
 		for (iter = m_triggerVolumesListWeightedList.begin(); iter != m_triggerVolumesListWeightedList.end(); ++iter)
 		{
 			delete *iter;
-			*iter = nullptr;
+			*iter = NULL;
 		}
 	}
 	{
@@ -207,7 +207,7 @@ ServerUberObjectTemplate::~ServerUberObjectTemplate()
 		for (iter = m_boolListDerived.begin(); iter != m_boolListDerived.end(); ++iter)
 		{
 			delete *iter;
-			*iter = nullptr;
+			*iter = NULL;
 		}
 	}
 	{
@@ -215,7 +215,7 @@ ServerUberObjectTemplate::~ServerUberObjectTemplate()
 		for (iter = m_boolListSimple.begin(); iter != m_boolListSimple.end(); ++iter)
 		{
 			delete *iter;
-			*iter = nullptr;
+			*iter = NULL;
 		}
 	}
 	{
@@ -223,7 +223,7 @@ ServerUberObjectTemplate::~ServerUberObjectTemplate()
 		for (iter = m_boolListWeightedList.begin(); iter != m_boolListWeightedList.end(); ++iter)
 		{
 			delete *iter;
-			*iter = nullptr;
+			*iter = NULL;
 		}
 	}
 	{
@@ -231,7 +231,7 @@ ServerUberObjectTemplate::~ServerUberObjectTemplate()
 		for (iter = m_vectorListSimple.begin(); iter != m_vectorListSimple.end(); ++iter)
 		{
 			delete *iter;
-			*iter = nullptr;
+			*iter = NULL;
 		}
 	}
 	{
@@ -239,7 +239,7 @@ ServerUberObjectTemplate::~ServerUberObjectTemplate()
 		for (iter = m_filenameListSimple.begin(); iter != m_filenameListSimple.end(); ++iter)
 		{
 			delete *iter;
-			*iter = nullptr;
+			*iter = NULL;
 		}
 	}
 	{
@@ -247,7 +247,7 @@ ServerUberObjectTemplate::~ServerUberObjectTemplate()
 		for (iter = m_templateListSimple.begin(); iter != m_templateListSimple.end(); ++iter)
 		{
 			delete *iter;
-			*iter = nullptr;
+			*iter = NULL;
 		}
 	}
 	{
@@ -255,7 +255,7 @@ ServerUberObjectTemplate::~ServerUberObjectTemplate()
 		for (iter = m_structListSimple.begin(); iter != m_structListSimple.end(); ++iter)
 		{
 			delete *iter;
-			*iter = nullptr;
+			*iter = NULL;
 		}
 	}
 //@END TFD CLEANUP
@@ -306,10 +306,10 @@ Tag ServerUberObjectTemplate::getTemplateVersion(void) const
  */
 Tag ServerUberObjectTemplate::getHighestTemplateVersion(void) const
 {
-	if (m_baseData == nullptr)
+	if (m_baseData == NULL)
 		return m_templateVersion;
 	const ServerUberObjectTemplate * base = dynamic_cast<const ServerUberObjectTemplate *>(m_baseData);
-	if (base == nullptr)
+	if (base == NULL)
 		return m_templateVersion;
 	return std::max(m_templateVersion, base->getHighestTemplateVersion());
 } // ServerUberObjectTemplate::getHighestTemplateVersion
@@ -323,9 +323,9 @@ CompilerIntegerParam * ServerUberObjectTemplate::getCompilerIntegerParam(const c
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_intAtDerived;
 		}
@@ -337,9 +337,9 @@ CompilerIntegerParam * ServerUberObjectTemplate::getCompilerIntegerParam(const c
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_intSimple;
 		}
@@ -351,9 +351,9 @@ CompilerIntegerParam * ServerUberObjectTemplate::getCompilerIntegerParam(const c
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_intSimpleDeltaPositive;
 		}
@@ -365,9 +365,9 @@ CompilerIntegerParam * ServerUberObjectTemplate::getCompilerIntegerParam(const c
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_intSimpleDeltaNegative;
 		}
@@ -379,9 +379,9 @@ CompilerIntegerParam * ServerUberObjectTemplate::getCompilerIntegerParam(const c
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_intSimpleDeltaPositivePercent;
 		}
@@ -393,9 +393,9 @@ CompilerIntegerParam * ServerUberObjectTemplate::getCompilerIntegerParam(const c
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_intSimpleDeltaNegativePercent;
 		}
@@ -407,9 +407,9 @@ CompilerIntegerParam * ServerUberObjectTemplate::getCompilerIntegerParam(const c
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_intWeightedList;
 		}
@@ -421,9 +421,9 @@ CompilerIntegerParam * ServerUberObjectTemplate::getCompilerIntegerParam(const c
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_intWeightedListDeltaPositive;
 		}
@@ -435,9 +435,9 @@ CompilerIntegerParam * ServerUberObjectTemplate::getCompilerIntegerParam(const c
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_intWeightedListDeltaNegative;
 		}
@@ -449,9 +449,9 @@ CompilerIntegerParam * ServerUberObjectTemplate::getCompilerIntegerParam(const c
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_intWeightedListDeltaPositivePercent;
 		}
@@ -463,9 +463,9 @@ CompilerIntegerParam * ServerUberObjectTemplate::getCompilerIntegerParam(const c
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_intWeightedListDeltaNegativePercent;
 		}
@@ -477,9 +477,9 @@ CompilerIntegerParam * ServerUberObjectTemplate::getCompilerIntegerParam(const c
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_intRandomRange1;
 		}
@@ -491,9 +491,9 @@ CompilerIntegerParam * ServerUberObjectTemplate::getCompilerIntegerParam(const c
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_intRandomRange2;
 		}
@@ -505,9 +505,9 @@ CompilerIntegerParam * ServerUberObjectTemplate::getCompilerIntegerParam(const c
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_intRandomRange3;
 		}
@@ -519,9 +519,9 @@ CompilerIntegerParam * ServerUberObjectTemplate::getCompilerIntegerParam(const c
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_intRandomRange4;
 		}
@@ -533,9 +533,9 @@ CompilerIntegerParam * ServerUberObjectTemplate::getCompilerIntegerParam(const c
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_intDiceRoll1;
 		}
@@ -547,9 +547,9 @@ CompilerIntegerParam * ServerUberObjectTemplate::getCompilerIntegerParam(const c
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_intDiceRoll2;
 		}
@@ -609,9 +609,9 @@ CompilerIntegerParam * ServerUberObjectTemplate::getCompilerIntegerParam(const c
 		{
 			if (deepCheck && !isParamLoaded(name, false, index))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_enumIndexedByEnumSingle[index];
 		}
@@ -623,9 +623,9 @@ CompilerIntegerParam * ServerUberObjectTemplate::getCompilerIntegerParam(const c
 		{
 			if (deepCheck && !isParamLoaded(name, false, index))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_enumIndexedByEnumWeightedList[index];
 		}
@@ -661,9 +661,9 @@ CompilerIntegerParam * ServerUberObjectTemplate::getCompilerIntegerParam(const c
 		{
 			if (deepCheck && !isParamLoaded(name, false, index))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_integerArray[index];
 		}
@@ -671,7 +671,7 @@ CompilerIntegerParam * ServerUberObjectTemplate::getCompilerIntegerParam(const c
 	}
 	else
 		return TpfTemplate::getCompilerIntegerParam(name, deepCheck, index);
-	return nullptr;
+	return NULL;
 }	//ServerUberObjectTemplate::getCompilerIntegerParam
 
 FloatParam * ServerUberObjectTemplate::getFloatParam(const char *name, bool deepCheck, int index)
@@ -682,9 +682,9 @@ FloatParam * ServerUberObjectTemplate::getFloatParam(const char *name, bool deep
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getFloatParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_floatAtDerived;
 		}
@@ -696,9 +696,9 @@ FloatParam * ServerUberObjectTemplate::getFloatParam(const char *name, bool deep
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getFloatParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_floatSimple;
 		}
@@ -710,9 +710,9 @@ FloatParam * ServerUberObjectTemplate::getFloatParam(const char *name, bool deep
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getFloatParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_floatSimpleDeltaPositive;
 		}
@@ -724,9 +724,9 @@ FloatParam * ServerUberObjectTemplate::getFloatParam(const char *name, bool deep
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getFloatParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_floatSimpleDeltaNegative;
 		}
@@ -738,9 +738,9 @@ FloatParam * ServerUberObjectTemplate::getFloatParam(const char *name, bool deep
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getFloatParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_floatSimpleDeltaPositivePercent;
 		}
@@ -752,9 +752,9 @@ FloatParam * ServerUberObjectTemplate::getFloatParam(const char *name, bool deep
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getFloatParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_floatSimpleDeltaNegativePercent;
 		}
@@ -766,9 +766,9 @@ FloatParam * ServerUberObjectTemplate::getFloatParam(const char *name, bool deep
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getFloatParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_floatWeightedList;
 		}
@@ -780,9 +780,9 @@ FloatParam * ServerUberObjectTemplate::getFloatParam(const char *name, bool deep
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getFloatParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_floatRandomRange1;
 		}
@@ -794,9 +794,9 @@ FloatParam * ServerUberObjectTemplate::getFloatParam(const char *name, bool deep
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getFloatParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_floatRandomRange2;
 		}
@@ -808,9 +808,9 @@ FloatParam * ServerUberObjectTemplate::getFloatParam(const char *name, bool deep
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getFloatParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_floatRandomRange3;
 		}
@@ -822,9 +822,9 @@ FloatParam * ServerUberObjectTemplate::getFloatParam(const char *name, bool deep
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getFloatParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_floatRandomRange4;
 		}
@@ -872,9 +872,9 @@ FloatParam * ServerUberObjectTemplate::getFloatParam(const char *name, bool deep
 		{
 			if (deepCheck && !isParamLoaded(name, false, index))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getFloatParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_floatArray[index];
 		}
@@ -882,7 +882,7 @@ FloatParam * ServerUberObjectTemplate::getFloatParam(const char *name, bool deep
 	}
 	else
 		return TpfTemplate::getFloatParam(name, deepCheck, index);
-	return nullptr;
+	return NULL;
 }	//ServerUberObjectTemplate::getFloatParam
 
 BoolParam * ServerUberObjectTemplate::getBoolParam(const char *name, bool deepCheck, int index)
@@ -893,9 +893,9 @@ BoolParam * ServerUberObjectTemplate::getBoolParam(const char *name, bool deepCh
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getBoolParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_boolDerived;
 		}
@@ -907,9 +907,9 @@ BoolParam * ServerUberObjectTemplate::getBoolParam(const char *name, bool deepCh
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getBoolParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_boolSimple;
 		}
@@ -921,9 +921,9 @@ BoolParam * ServerUberObjectTemplate::getBoolParam(const char *name, bool deepCh
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getBoolParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_boolWeightedList;
 		}
@@ -971,9 +971,9 @@ BoolParam * ServerUberObjectTemplate::getBoolParam(const char *name, bool deepCh
 		{
 			if (deepCheck && !isParamLoaded(name, false, index))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getBoolParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_boolArray[index];
 		}
@@ -981,7 +981,7 @@ BoolParam * ServerUberObjectTemplate::getBoolParam(const char *name, bool deepCh
 	}
 	else
 		return TpfTemplate::getBoolParam(name, deepCheck, index);
-	return nullptr;
+	return NULL;
 }	//ServerUberObjectTemplate::getBoolParam
 
 StringParam * ServerUberObjectTemplate::getStringParam(const char *name, bool deepCheck, int index)
@@ -992,9 +992,9 @@ StringParam * ServerUberObjectTemplate::getStringParam(const char *name, bool de
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getStringParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_stringDerived;
 		}
@@ -1006,9 +1006,9 @@ StringParam * ServerUberObjectTemplate::getStringParam(const char *name, bool de
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getStringParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_stringSimple;
 		}
@@ -1020,9 +1020,9 @@ StringParam * ServerUberObjectTemplate::getStringParam(const char *name, bool de
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getStringParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_stringWeightedList;
 		}
@@ -1058,9 +1058,9 @@ StringParam * ServerUberObjectTemplate::getStringParam(const char *name, bool de
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getStringParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_filenameAtDerived;
 		}
@@ -1072,9 +1072,9 @@ StringParam * ServerUberObjectTemplate::getStringParam(const char *name, bool de
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getStringParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_filenameSimple;
 		}
@@ -1086,9 +1086,9 @@ StringParam * ServerUberObjectTemplate::getStringParam(const char *name, bool de
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getStringParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_filenameWeightedList;
 		}
@@ -1112,9 +1112,9 @@ StringParam * ServerUberObjectTemplate::getStringParam(const char *name, bool de
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getStringParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_templateDerived;
 		}
@@ -1126,9 +1126,9 @@ StringParam * ServerUberObjectTemplate::getStringParam(const char *name, bool de
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getStringParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_templateSimple;
 		}
@@ -1140,9 +1140,9 @@ StringParam * ServerUberObjectTemplate::getStringParam(const char *name, bool de
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getStringParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_templateWeightedList;
 		}
@@ -1166,9 +1166,9 @@ StringParam * ServerUberObjectTemplate::getStringParam(const char *name, bool de
 		{
 			if (deepCheck && !isParamLoaded(name, false, index))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getStringParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_stringArray[index];
 		}
@@ -1180,9 +1180,9 @@ StringParam * ServerUberObjectTemplate::getStringParam(const char *name, bool de
 		{
 			if (deepCheck && !isParamLoaded(name, false, index))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getStringParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_fileNameArray[index];
 		}
@@ -1190,7 +1190,7 @@ StringParam * ServerUberObjectTemplate::getStringParam(const char *name, bool de
 	}
 	else
 		return TpfTemplate::getStringParam(name, deepCheck, index);
-	return nullptr;
+	return NULL;
 }	//ServerUberObjectTemplate::getStringParam
 
 StringIdParam * ServerUberObjectTemplate::getStringIdParam(const char *name, bool deepCheck, int index)
@@ -1201,9 +1201,9 @@ StringIdParam * ServerUberObjectTemplate::getStringIdParam(const char *name, boo
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getStringIdParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_stringIdDerived;
 		}
@@ -1215,9 +1215,9 @@ StringIdParam * ServerUberObjectTemplate::getStringIdParam(const char *name, boo
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getStringIdParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_stringIdSimple;
 		}
@@ -1229,9 +1229,9 @@ StringIdParam * ServerUberObjectTemplate::getStringIdParam(const char *name, boo
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getStringIdParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_stringIdWeightedList;
 		}
@@ -1267,9 +1267,9 @@ StringIdParam * ServerUberObjectTemplate::getStringIdParam(const char *name, boo
 		{
 			if (deepCheck && !isParamLoaded(name, false, index))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getStringIdParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_stringIdArray[index];
 		}
@@ -1277,7 +1277,7 @@ StringIdParam * ServerUberObjectTemplate::getStringIdParam(const char *name, boo
 	}
 	else
 		return TpfTemplate::getStringIdParam(name, deepCheck, index);
-	return nullptr;
+	return NULL;
 }	//ServerUberObjectTemplate::getStringIdParam
 
 VectorParam * ServerUberObjectTemplate::getVectorParam(const char *name, bool deepCheck, int index)
@@ -1288,9 +1288,9 @@ VectorParam * ServerUberObjectTemplate::getVectorParam(const char *name, bool de
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getVectorParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_vectorAtDerived;
 		}
@@ -1302,9 +1302,9 @@ VectorParam * ServerUberObjectTemplate::getVectorParam(const char *name, bool de
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getVectorParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_vectorSimple;
 		}
@@ -1328,9 +1328,9 @@ VectorParam * ServerUberObjectTemplate::getVectorParam(const char *name, bool de
 		{
 			if (deepCheck && !isParamLoaded(name, false, index))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getVectorParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_vectorArray[index];
 		}
@@ -1338,7 +1338,7 @@ VectorParam * ServerUberObjectTemplate::getVectorParam(const char *name, bool de
 	}
 	else
 		return TpfTemplate::getVectorParam(name, deepCheck, index);
-	return nullptr;
+	return NULL;
 }	//ServerUberObjectTemplate::getVectorParam
 
 DynamicVariableParam * ServerUberObjectTemplate::getDynamicVariableParam(const char *name, bool deepCheck, int index)
@@ -1349,9 +1349,9 @@ DynamicVariableParam * ServerUberObjectTemplate::getDynamicVariableParam(const c
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getDynamicVariableParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_objvarDerived;
 		}
@@ -1363,9 +1363,9 @@ DynamicVariableParam * ServerUberObjectTemplate::getDynamicVariableParam(const c
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getDynamicVariableParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_objvarSimple;
 		}
@@ -1373,7 +1373,7 @@ DynamicVariableParam * ServerUberObjectTemplate::getDynamicVariableParam(const c
 	}
 	else
 		return TpfTemplate::getDynamicVariableParam(name, deepCheck, index);
-	return nullptr;
+	return NULL;
 }	//ServerUberObjectTemplate::getDynamicVariableParam
 
 StructParamOT * ServerUberObjectTemplate::getStructParamOT(const char *name, bool deepCheck, int index)
@@ -1384,9 +1384,9 @@ StructParamOT * ServerUberObjectTemplate::getStructParamOT(const char *name, boo
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getStructParamOT(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_structAtDerived;
 		}
@@ -1398,9 +1398,9 @@ StructParamOT * ServerUberObjectTemplate::getStructParamOT(const char *name, boo
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getStructParamOT(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_structSimple;
 		}
@@ -1424,9 +1424,9 @@ StructParamOT * ServerUberObjectTemplate::getStructParamOT(const char *name, boo
 		{
 			if (deepCheck && !isParamLoaded(name, false, index))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getStructParamOT(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_structArrayEnum[index];
 		}
@@ -1438,9 +1438,9 @@ StructParamOT * ServerUberObjectTemplate::getStructParamOT(const char *name, boo
 		{
 			if (deepCheck && !isParamLoaded(name, false, index))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getStructParamOT(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_structArrayInteger[index];
 		}
@@ -1448,7 +1448,7 @@ StructParamOT * ServerUberObjectTemplate::getStructParamOT(const char *name, boo
 	}
 	else
 		return TpfTemplate::getStructParamOT(name, deepCheck, index);
-	return nullptr;
+	return NULL;
 }	//ServerUberObjectTemplate::getStructParamOT
 
 TriggerVolumeParam * ServerUberObjectTemplate::getTriggerVolumeParam(const char *name, bool deepCheck, int index)
@@ -1459,9 +1459,9 @@ TriggerVolumeParam * ServerUberObjectTemplate::getTriggerVolumeParam(const char 
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getTriggerVolumeParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_triggerVolumeDerived;
 		}
@@ -1473,9 +1473,9 @@ TriggerVolumeParam * ServerUberObjectTemplate::getTriggerVolumeParam(const char 
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getTriggerVolumeParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_triggerVolumeSimple;
 		}
@@ -1487,9 +1487,9 @@ TriggerVolumeParam * ServerUberObjectTemplate::getTriggerVolumeParam(const char 
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getTriggerVolumeParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_triggerVolumeWeightedList;
 		}
@@ -1525,9 +1525,9 @@ TriggerVolumeParam * ServerUberObjectTemplate::getTriggerVolumeParam(const char 
 		{
 			if (deepCheck && !isParamLoaded(name, false, index))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getTriggerVolumeParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_triggerArray[index];
 		}
@@ -1535,7 +1535,7 @@ TriggerVolumeParam * ServerUberObjectTemplate::getTriggerVolumeParam(const char 
 	}
 	else
 		return TpfTemplate::getTriggerVolumeParam(name, deepCheck, index);
-	return nullptr;
+	return NULL;
 }	//ServerUberObjectTemplate::getTriggerVolumeParam
 
 void ServerUberObjectTemplate::initStructParamOT(StructParamOT &param, const char *name)
@@ -1942,12 +1942,12 @@ char paramName[MAX_NAME_SIZE];
 		file.read_string(baseFilename);
 		file.exitChunk();
 		const ObjectTemplate *base = ObjectTemplateList::fetch(baseFilename);
-		DEBUG_WARNING(base == nullptr, ("was unable to load base template %s", baseFilename.c_str()));
-		if (m_baseData == base && base != nullptr)
+		DEBUG_WARNING(base == NULL, ("was unable to load base template %s", baseFilename.c_str()));
+		if (m_baseData == base && base != NULL)
 			base->releaseReference();
 		else
 		{
-			if (m_baseData != nullptr)
+			if (m_baseData != NULL)
 				m_baseData->releaseReference();
 			m_baseData = base;
 		}
@@ -2009,7 +2009,7 @@ char paramName[MAX_NAME_SIZE];
 			for (iter = m_intListSimple.begin(); iter != m_intListSimple.end(); ++iter)
 			{
 				delete *iter;
-				*iter = nullptr;
+				*iter = NULL;
 			}
 			m_intListSimpleAppend = file.read_bool8();
 			int listCount = file.read_int32();
@@ -2027,7 +2027,7 @@ char paramName[MAX_NAME_SIZE];
 			for (iter = m_intListWeightedList.begin(); iter != m_intListWeightedList.end(); ++iter)
 			{
 				delete *iter;
-				*iter = nullptr;
+				*iter = NULL;
 			}
 			m_intListWeightedListAppend = file.read_bool8();
 			int listCount = file.read_int32();
@@ -2045,7 +2045,7 @@ char paramName[MAX_NAME_SIZE];
 			for (iter = m_intListRandomRange.begin(); iter != m_intListRandomRange.end(); ++iter)
 			{
 				delete *iter;
-				*iter = nullptr;
+				*iter = NULL;
 			}
 			m_intListRandomRangeAppend = file.read_bool8();
 			int listCount = file.read_int32();
@@ -2063,7 +2063,7 @@ char paramName[MAX_NAME_SIZE];
 			for (iter = m_intListDiceRoll.begin(); iter != m_intListDiceRoll.end(); ++iter)
 			{
 				delete *iter;
-				*iter = nullptr;
+				*iter = NULL;
 			}
 			m_intListDiceRollAppend = file.read_bool8();
 			int listCount = file.read_int32();
@@ -2103,7 +2103,7 @@ char paramName[MAX_NAME_SIZE];
 			for (iter = m_floatListSimple.begin(); iter != m_floatListSimple.end(); ++iter)
 			{
 				delete *iter;
-				*iter = nullptr;
+				*iter = NULL;
 			}
 			m_floatListSimpleAppend = file.read_bool8();
 			int listCount = file.read_int32();
@@ -2121,7 +2121,7 @@ char paramName[MAX_NAME_SIZE];
 			for (iter = m_floatListWeightedList.begin(); iter != m_floatListWeightedList.end(); ++iter)
 			{
 				delete *iter;
-				*iter = nullptr;
+				*iter = NULL;
 			}
 			m_floatListWeightedListAppend = file.read_bool8();
 			int listCount = file.read_int32();
@@ -2139,7 +2139,7 @@ char paramName[MAX_NAME_SIZE];
 			for (iter = m_floatListRandomRange.begin(); iter != m_floatListRandomRange.end(); ++iter)
 			{
 				delete *iter;
-				*iter = nullptr;
+				*iter = NULL;
 			}
 			m_floatListRandomRangeAppend = file.read_bool8();
 			int listCount = file.read_int32();
@@ -2185,7 +2185,7 @@ char paramName[MAX_NAME_SIZE];
 			for (iter = m_enumListIndexed.begin(); iter != m_enumListIndexed.end(); ++iter)
 			{
 				delete *iter;
-				*iter = nullptr;
+				*iter = NULL;
 			}
 			m_enumListIndexedAppend = file.read_bool8();
 			int listCount = file.read_int32();
@@ -2203,7 +2203,7 @@ char paramName[MAX_NAME_SIZE];
 			for (iter = m_enumListWeightedList.begin(); iter != m_enumListWeightedList.end(); ++iter)
 			{
 				delete *iter;
-				*iter = nullptr;
+				*iter = NULL;
 			}
 			m_enumListWeightedListAppend = file.read_bool8();
 			int listCount = file.read_int32();
@@ -2227,7 +2227,7 @@ char paramName[MAX_NAME_SIZE];
 			for (iter = m_stringIdListSimple.begin(); iter != m_stringIdListSimple.end(); ++iter)
 			{
 				delete *iter;
-				*iter = nullptr;
+				*iter = NULL;
 			}
 			m_stringIdListSimpleAppend = file.read_bool8();
 			int listCount = file.read_int32();
@@ -2245,7 +2245,7 @@ char paramName[MAX_NAME_SIZE];
 			for (iter = m_stringIdListWeightedList.begin(); iter != m_stringIdListWeightedList.end(); ++iter)
 			{
 				delete *iter;
-				*iter = nullptr;
+				*iter = NULL;
 			}
 			m_stringIdListWeightedListAppend = file.read_bool8();
 			int listCount = file.read_int32();
@@ -2269,7 +2269,7 @@ char paramName[MAX_NAME_SIZE];
 			for (iter = m_stringListSimple.begin(); iter != m_stringListSimple.end(); ++iter)
 			{
 				delete *iter;
-				*iter = nullptr;
+				*iter = NULL;
 			}
 			m_stringListSimpleAppend = file.read_bool8();
 			int listCount = file.read_int32();
@@ -2287,7 +2287,7 @@ char paramName[MAX_NAME_SIZE];
 			for (iter = m_stringListWeightedList.begin(); iter != m_stringListWeightedList.end(); ++iter)
 			{
 				delete *iter;
-				*iter = nullptr;
+				*iter = NULL;
 			}
 			m_stringListWeightedListAppend = file.read_bool8();
 			int listCount = file.read_int32();
@@ -2311,7 +2311,7 @@ char paramName[MAX_NAME_SIZE];
 			for (iter = m_triggerVolumeList.begin(); iter != m_triggerVolumeList.end(); ++iter)
 			{
 				delete *iter;
-				*iter = nullptr;
+				*iter = NULL;
 			}
 			m_triggerVolumeListAppend = file.read_bool8();
 			int listCount = file.read_int32();
@@ -2329,7 +2329,7 @@ char paramName[MAX_NAME_SIZE];
 			for (iter = m_triggerVolumesListWeightedList.begin(); iter != m_triggerVolumesListWeightedList.end(); ++iter)
 			{
 				delete *iter;
-				*iter = nullptr;
+				*iter = NULL;
 			}
 			m_triggerVolumesListWeightedListAppend = file.read_bool8();
 			int listCount = file.read_int32();
@@ -2353,7 +2353,7 @@ char paramName[MAX_NAME_SIZE];
 			for (iter = m_boolListDerived.begin(); iter != m_boolListDerived.end(); ++iter)
 			{
 				delete *iter;
-				*iter = nullptr;
+				*iter = NULL;
 			}
 			m_boolListDerivedAppend = file.read_bool8();
 			int listCount = file.read_int32();
@@ -2371,7 +2371,7 @@ char paramName[MAX_NAME_SIZE];
 			for (iter = m_boolListSimple.begin(); iter != m_boolListSimple.end(); ++iter)
 			{
 				delete *iter;
-				*iter = nullptr;
+				*iter = NULL;
 			}
 			m_boolListSimpleAppend = file.read_bool8();
 			int listCount = file.read_int32();
@@ -2389,7 +2389,7 @@ char paramName[MAX_NAME_SIZE];
 			for (iter = m_boolListWeightedList.begin(); iter != m_boolListWeightedList.end(); ++iter)
 			{
 				delete *iter;
-				*iter = nullptr;
+				*iter = NULL;
 			}
 			m_boolListWeightedListAppend = file.read_bool8();
 			int listCount = file.read_int32();
@@ -2411,7 +2411,7 @@ char paramName[MAX_NAME_SIZE];
 			for (iter = m_vectorListSimple.begin(); iter != m_vectorListSimple.end(); ++iter)
 			{
 				delete *iter;
-				*iter = nullptr;
+				*iter = NULL;
 			}
 			m_vectorListSimpleAppend = file.read_bool8();
 			int listCount = file.read_int32();
@@ -2435,7 +2435,7 @@ char paramName[MAX_NAME_SIZE];
 			for (iter = m_filenameListSimple.begin(); iter != m_filenameListSimple.end(); ++iter)
 			{
 				delete *iter;
-				*iter = nullptr;
+				*iter = NULL;
 			}
 			m_filenameListSimpleAppend = file.read_bool8();
 			int listCount = file.read_int32();
@@ -2463,7 +2463,7 @@ char paramName[MAX_NAME_SIZE];
 			for (iter = m_templateListSimple.begin(); iter != m_templateListSimple.end(); ++iter)
 			{
 				delete *iter;
-				*iter = nullptr;
+				*iter = NULL;
 			}
 			m_templateListSimpleAppend = file.read_bool8();
 			int listCount = file.read_int32();
@@ -2485,7 +2485,7 @@ char paramName[MAX_NAME_SIZE];
 			for (iter = m_structListSimple.begin(); iter != m_structListSimple.end(); ++iter)
 			{
 				delete *iter;
-				*iter = nullptr;
+				*iter = NULL;
 			}
 			m_structListSimpleAppend = file.read_bool8();
 			int listCount = file.read_int32();
@@ -3487,9 +3487,9 @@ CompilerIntegerParam * ServerUberObjectTemplate::_Foo::getCompilerIntegerParam(c
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_item1;
 		}
@@ -3497,7 +3497,7 @@ CompilerIntegerParam * ServerUberObjectTemplate::_Foo::getCompilerIntegerParam(c
 	}
 	else
 		return TpfTemplate::getCompilerIntegerParam(name, deepCheck, index);
-	return nullptr;
+	return NULL;
 }	//ServerUberObjectTemplate::_Foo::getCompilerIntegerParam
 
 FloatParam * ServerUberObjectTemplate::_Foo::getFloatParam(const char *name, bool deepCheck, int index)
@@ -3508,9 +3508,9 @@ FloatParam * ServerUberObjectTemplate::_Foo::getFloatParam(const char *name, boo
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getFloatParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_item2;
 		}
@@ -3518,7 +3518,7 @@ FloatParam * ServerUberObjectTemplate::_Foo::getFloatParam(const char *name, boo
 	}
 	else
 		return TpfTemplate::getFloatParam(name, deepCheck, index);
-	return nullptr;
+	return NULL;
 }	//ServerUberObjectTemplate::_Foo::getFloatParam
 
 BoolParam * ServerUberObjectTemplate::_Foo::getBoolParam(const char *name, bool deepCheck, int index)
@@ -3534,9 +3534,9 @@ StringParam * ServerUberObjectTemplate::_Foo::getStringParam(const char *name, b
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getStringParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_item3;
 		}
@@ -3544,7 +3544,7 @@ StringParam * ServerUberObjectTemplate::_Foo::getStringParam(const char *name, b
 	}
 	else
 		return TpfTemplate::getStringParam(name, deepCheck, index);
-	return nullptr;
+	return NULL;
 }	//ServerUberObjectTemplate::_Foo::getStringParam
 
 StringIdParam * ServerUberObjectTemplate::_Foo::getStringIdParam(const char *name, bool deepCheck, int index)

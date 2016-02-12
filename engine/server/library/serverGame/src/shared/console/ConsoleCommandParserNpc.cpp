@@ -52,19 +52,19 @@ bool ConsoleCommandParserNpc::performParsing (const NetworkId & userId, const St
 
 		NetworkId const oid(Unicode::wideToNarrow(argv[1]));
         ServerObject * const object = ServerWorld::findObjectByNetworkId(oid);
-        if (object == nullptr)
+        if (object == NULL)
         {
             result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
             return true;
         }
 		TangibleObject * const npc = object->asTangibleObject();
-		if (npc == nullptr)
+		if (npc == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
             return true;
 		}
 
-		playerObject->startNpcConversation(*npc, nullptr, NpcConversationData::CS_Player, 0);
+		playerObject->startNpcConversation(*npc, NULL, NpcConversationData::CS_Player, 0);
         result += getErrorMessage (argv[0], ERR_SUCCESS);
     }
 
@@ -82,7 +82,7 @@ bool ConsoleCommandParserNpc::performParsing (const NetworkId & userId, const St
     else if (isAbbrev( argv [0], "respond"))
     {
 		TangibleObject * const playerObject = safe_cast<TangibleObject *>(ServerWorld::findObjectByNetworkId(userId));
-		int const response = strtol(Unicode::wideToNarrow(argv[1]).c_str (), nullptr, 10);
+		int const response = strtol(Unicode::wideToNarrow(argv[1]).c_str (), NULL, 10);
 		playerObject->respondToNpc(response);
         result += getErrorMessage (argv[0], ERR_SUCCESS);
     }

@@ -72,13 +72,13 @@ class CMonitorAPI {
 
 public:
 
-	CMonitorAPI( char *configFile, unsigned short Port, bool _bprint = false , char * address = nullptr, UdpManager * mang = nullptr );
+	CMonitorAPI( char *configFile, unsigned short Port, bool _bprint = false , char * address = NULL, UdpManager * mang = NULL );
 	
 	~CMonitorAPI();
 
 	void Update();
 
-	void add( const char *label, int id, int ping = MON_PING_5MIN, char *des = nullptr );
+	void add( const char *label, int id, int ping = MON_PING_5MIN, char *des = NULL );
 
 	void setDescription( int Id, const char *Description ) ;
 	

@@ -37,9 +37,9 @@ void AiCreatureStateMessage::pack(MessageQueue::Data const * const data, Archive
 {
 	AiCreatureStateMessage const * const msg = safe_cast<const AiCreatureStateMessage *>(data);
 
-	if (msg != nullptr)
+	if (msg != NULL)
 	{
-		if (GameServerMessageInterface::getInstance() != nullptr)
+		if (GameServerMessageInterface::getInstance() != NULL)
 		{
 			GameServerMessageInterface::getInstance()->pack(target, *msg);
 		}
@@ -52,7 +52,7 @@ MessageQueue::Data * AiCreatureStateMessage::unpack(Archive::ReadIterator & sour
 {
 	AiCreatureStateMessage * msg = new AiCreatureStateMessage();
 
-	if (GameServerMessageInterface::getInstance() != nullptr)
+	if (GameServerMessageInterface::getInstance() != NULL)
 	{
 		GameServerMessageInterface::getInstance()->unpack(source, *msg);
 	}

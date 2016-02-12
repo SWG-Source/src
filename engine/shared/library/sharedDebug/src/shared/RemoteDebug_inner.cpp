@@ -30,7 +30,7 @@ uint32                                     RemoteDebugServer::ms_inputTarget;
 // ======================================================================
 
 RemoteDebug::Channel::Channel(const std::string& name, Channel *parent) 
-: m_name(nullptr),
+: m_name(NULL),
   m_parent(parent)
 {
 	m_name = new std::string(name);
@@ -41,16 +41,16 @@ RemoteDebug::Channel::Channel(const std::string& name, Channel *parent)
 
 RemoteDebug::Channel::~Channel()
 {
-	m_parent = nullptr;
+	m_parent = NULL;
 	if(m_name)
 	{
 		delete m_name;
-		m_name = nullptr;
+		m_name = NULL;
 	}
 	if (m_children)
 	{
 		delete m_children;
-		m_children = nullptr;
+		m_children = NULL;
 	}
 }
 
@@ -72,7 +72,7 @@ const std::string& RemoteDebug::Channel::name()
 
 RemoteDebug::Variable::Variable(const std::string& name, void *memLoc, VARIABLE_TYPES type)
 : m_memLoc(memLoc),
-  m_name(nullptr),
+  m_name(NULL),
   m_type(type)
 {
 	m_name = new std::string(name);
@@ -111,7 +111,7 @@ RemoteDebug::Variable::~Variable()
 	if(m_name)
 	{
 		delete m_name;
-		m_name = nullptr;
+		m_name = NULL;
 	}
 }
 
@@ -307,7 +307,7 @@ void RemoteDebugClient::receive(const unsigned char * const message, const uint3
 			if (channelNumber < ms_nextVariable)
 				return;
 			//do not send value back to server (hence the "false")
-			registerVariable(ms_buffer, nullptr, BOOL, false);
+			registerVariable(ms_buffer, NULL, BOOL, false);
 			if (ms_newVariableFunction)
 				ms_newVariableFunction(channelNumber, const_cast<const char*>(ms_buffer));
 			break;
@@ -477,7 +477,7 @@ void RemoteDebugServer::receive(const unsigned char * const message, const uint3
 		memcpy(ms_buffer, charMessage + sizeOfMessageType + sizeOfChannelNumber + sizeOfSizeofPayload, sizeOfPayload);
 	}
 
-	Variable* v = nullptr;
+	Variable* v = NULL;
 	switch(type)
 	{
 		case STREAM:
@@ -524,27 +524,27 @@ void RemoteDebugServer::receive(const unsigned char * const message, const uint3
 			break;
 
 		case STATIC_UP:
-			if ((*ms_upFunctionMap)[ms_inputTarget] != nullptr)
+			if ((*ms_upFunctionMap)[ms_inputTarget] != NULL)
 				(*ms_upFunctionMap)[ms_inputTarget](); //lint !e10, !e522 ("expecting a function" and "expected void assignment)
 			break;
 
 		case STATIC_DOWN:
-			if ((*ms_downFunctionMap)[ms_inputTarget] != nullptr)
+			if ((*ms_downFunctionMap)[ms_inputTarget] != NULL)
 				(*ms_downFunctionMap)[ms_inputTarget](); //lint !e10, !e522 ("expecting a function" and "expected void assignment)
 			break;
 
 		case STATIC_LEFT:
-			if ((*ms_leftFunctionMap)[ms_inputTarget] != nullptr)
+			if ((*ms_leftFunctionMap)[ms_inputTarget] != NULL)
 				(*ms_leftFunctionMap)[ms_inputTarget](); //lint !e10, !e522 ("expecting a function" and "expected void assignment)
 			break;
 
 		case STATIC_RIGHT:
-			if ((*ms_rightFunctionMap)[ms_inputTarget] != nullptr)
+			if ((*ms_rightFunctionMap)[ms_inputTarget] != NULL)
 				(*ms_rightFunctionMap)[ms_inputTarget](); //lint !e10, !e522 ("expecting a function" and "expected void assignment)
 			break;
 
 		case STATIC_ENTER:
-			if ((*ms_enterFunctionMap)[ms_inputTarget] != nullptr)
+			if ((*ms_enterFunctionMap)[ms_inputTarget] != NULL)
 				(*ms_enterFunctionMap)[ms_inputTarget](); //lint !e10, !e522 ("expecting a function" and "expected void assignment)
 			break;
 

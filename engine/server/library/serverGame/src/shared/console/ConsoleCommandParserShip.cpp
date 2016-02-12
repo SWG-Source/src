@@ -116,7 +116,7 @@ bool ConsoleCommandParserShip::performParsing (const NetworkId & userId, const S
 				slotNameToken.clear ();
 		}
 
-		if (ship == nullptr)
+		if (ship == NULL)
 		{
 			result += getErrorMessage (argv[0], ERR_INVALID_OBJECT);
 			return true;
@@ -126,7 +126,7 @@ bool ConsoleCommandParserShip::performParsing (const NetworkId & userId, const S
 
 		ShipChassis const * const shipChassis = ShipChassis::findShipChassisByCrc    (chassisType);
 
-		if (shipChassis == nullptr)
+		if (shipChassis == NULL)
 		{
 			result += Unicode::narrowToWide ("No chassis");
 			return true;
@@ -178,7 +178,7 @@ bool ConsoleCommandParserShip::performParsing (const NetworkId & userId, const S
 			if (ship->isSlotInstalled(chassisSlot))
 				shipComponentData = ship->createShipComponentData(chassisSlot);
 
-			if (shipComponentData == nullptr)
+			if (shipComponentData == NULL)
 			{
 				result += Unicode::narrowToWide ("                Loaded NONE\n");
 			}
@@ -223,7 +223,7 @@ bool ConsoleCommandParserShip::performParsing (const NetworkId & userId, const S
 	{
 		TangibleObject * const component = findTangible (user->getLookAtTarget (), argv, 1);
 
-		if (component == nullptr)
+		if (component == NULL)
 		{
 			result += getErrorMessage (argv[0], ERR_INVALID_OBJECT);
 			return true;
@@ -231,7 +231,7 @@ bool ConsoleCommandParserShip::performParsing (const NetworkId & userId, const S
 
 		ShipComponentData * const shipComponentData = ShipComponentDataManager::create (*component);
 
-		if (shipComponentData == nullptr)
+		if (shipComponentData == NULL)
 		{
 			result += Unicode::narrowToWide ("Not a ship component");
 			return true;
@@ -252,13 +252,13 @@ bool ConsoleCommandParserShip::performParsing (const NetworkId & userId, const S
 		TangibleObject * const component = findTangible (NetworkId::cms_invalid, argv, 1);
 		std::string const & slotName     = Unicode::wideToNarrow (argv [2]);
 
-		if (ship == nullptr)
+		if (ship == NULL)
 		{
 			result += Unicode::narrowToWide ("no ship");
 			return true;
 		}
 
-		if (component == nullptr)
+		if (component == NULL)
 		{
 			result += Unicode::narrowToWide ("no component");
 			return true;
@@ -279,14 +279,14 @@ bool ConsoleCommandParserShip::performParsing (const NetworkId & userId, const S
 		}
 
 		ShipChassis const * const shipChassis = ShipChassis::findShipChassisByCrc (ship->getChassisType ());
-		if (shipChassis == nullptr)
+		if (shipChassis == NULL)
 		{
 			result += Unicode::narrowToWide ("Ship chassis invalid");
 			return true;
 		}
 
 		ShipChassisSlot const * const slot = shipChassis->getSlot (shipChassisSlotType);
-		if (slot == nullptr)
+		if (slot == NULL)
 		{
 			result += Unicode::narrowToWide ("Ship chassis does not support that slot");
 			return true;
@@ -294,7 +294,7 @@ bool ConsoleCommandParserShip::performParsing (const NetworkId & userId, const S
 		
 		ShipComponentData * const shipComponentData = ShipComponentDataManager::create (*component);
 
-		if (shipComponentData == nullptr)
+		if (shipComponentData == NULL)
 		{
 			result += Unicode::narrowToWide ("Not a ship component");
 			return true;
@@ -325,7 +325,7 @@ bool ConsoleCommandParserShip::performParsing (const NetworkId & userId, const S
 		std::string const & componentName      = Unicode::wideToNarrow (argv [1]);
 		std::string const & slotName           = Unicode::wideToNarrow (argv [2]);
 		
-		if (ship == nullptr)
+		if (ship == NULL)
 		{
 			result += Unicode::narrowToWide ("no ship");
 			return true;
@@ -334,7 +334,7 @@ bool ConsoleCommandParserShip::performParsing (const NetworkId & userId, const S
 		uint32 const componentCrc = Crc::normalizeAndCalculate (componentName.c_str ());
 
 		ShipComponentDescriptor const * const shipComponentDescriptor = ShipComponentDescriptor::findShipComponentDescriptorByCrc (componentCrc);
-		if (shipComponentDescriptor == nullptr)
+		if (shipComponentDescriptor == NULL)
 		{
 			result += Unicode::narrowToWide ("Invalid component name");
 			return true;
@@ -364,13 +364,13 @@ bool ConsoleCommandParserShip::performParsing (const NetworkId & userId, const S
 		TangibleObject * const targetContainer = findTangible (user->getInventory ()->getNetworkId (), argv, 2);
 		std::string const & slotName           = Unicode::wideToNarrow (argv [1]);
 
-		if (ship == nullptr)
+		if (ship == NULL)
 		{
 			result += Unicode::narrowToWide ("no ship");
 			return true;
 		}
 
-		if (targetContainer == nullptr)
+		if (targetContainer == NULL)
 		{
 			result += Unicode::narrowToWide ("no target container");
 			return true;
@@ -405,7 +405,7 @@ bool ConsoleCommandParserShip::performParsing (const NetworkId & userId, const S
 		ShipObject * const ship                = dynamic_cast<ShipObject *>(findTangible (user->getLookAtTarget (), argv, 2));
 		std::string const & slotName           = Unicode::wideToNarrow (argv [1]);
 		
-		if (ship == nullptr)
+		if (ship == NULL)
 		{
 			result += Unicode::narrowToWide ("no ship");
 			return true;
@@ -436,14 +436,14 @@ bool ConsoleCommandParserShip::performParsing (const NetworkId & userId, const S
 	else if (isCommand (argv[0], CommandNames::pseudoDamageShip))
 	{
 		ShipObject const * const victimShipObject = user->getPilotedShip();
-		if (victimShipObject == nullptr)
+		if (victimShipObject == NULL)
 		{
 			result += Unicode::narrowToWide ("You are not piloting a ship.");
 			return true;
 		}
 		
 		ShipObject const * const attackerShipObject = dynamic_cast<ShipObject *>(findTangible (user->getLookAtTarget (), argv, 2));
-		if (attackerShipObject == nullptr)
+		if (attackerShipObject == NULL)
 		{
 			result += Unicode::narrowToWide ("You don't have attacker ship targeted.");
 			return true;
@@ -486,12 +486,12 @@ bool ConsoleCommandParserShip::performParsing (const NetworkId & userId, const S
 
 			ShipObject const * const idotShip = idot.getShipObject();
 
-			if (ship != nullptr && ship != idotShip)
+			if (ship != NULL && ship != idotShip)
 				continue;
 
 			uint32 const chassisType = idotShip->getChassisType();
 			ShipChassis const * const chassis = ShipChassis::findShipChassisByCrc(chassisType);			
-			std::string const chassisTypeName = (chassis != nullptr) ? chassis->getName().getString() : "<NO VALID CHASSIS>";
+			std::string const chassisTypeName = (chassis != NULL) ? chassis->getName().getString() : "<NO VALID CHASSIS>";
 
 			float hpCur = 0.0f;
 			float hpMax = 0.0f;
@@ -522,7 +522,7 @@ bool ConsoleCommandParserShip::performParsing (const NetworkId & userId, const S
 	{
 		ShipObject * const ship                = dynamic_cast<ShipObject *>(findTangible (user->getLookAtTarget (), argv, 4));
 
-		if (ship == nullptr)
+		if (ship == NULL)
 		{
 			result += Unicode::narrowToWide ("no ship");
 			return true;
@@ -546,7 +546,7 @@ bool ConsoleCommandParserShip::performParsing (const NetworkId & userId, const S
 	{
 		ShipObject * const ship                = dynamic_cast<ShipObject *>(findTangible (user->getLookAtTarget (), argv, 4));
 
-		if (ship == nullptr)
+		if (ship == NULL)
 		{
 			result += Unicode::narrowToWide ("no ship");
 			return true;

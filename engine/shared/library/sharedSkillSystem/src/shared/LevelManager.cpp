@@ -335,7 +335,7 @@ void LevelManager::updateLevelDataWithSkill(LevelData &levelData, std::string co
 
 //======================================================================
 // Find the level corresponding to the xp value and
-//   returns nullptr if not found
+//   returns null if not found
 LevelRecord const * LevelManagerNamespace::getLevelRecord(int xp)
 {
 	LevelRecordsIterator itr = ms_levelRecords.begin();
@@ -365,7 +365,7 @@ LevelRecord const * LevelManagerNamespace::getLevelRecord(int xp)
 
 	WARNING(true, ("getLevelRecord: Couldn't find level for xp value[%d]\n", xp));
 
-	return nullptr;
+	return NULL;
 }
 
 //======================================================================

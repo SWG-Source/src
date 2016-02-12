@@ -111,7 +111,7 @@ inline TemplateData *TemplateDefinitionFile::getTemplateData(int version) const
 {
 	std::map<int, TemplateData *>::const_iterator iter = m_templateMap.find(version);
 	if (iter == m_templateMap.end())
-		return nullptr;
+		return NULL;
 	return (*iter).second;
 }
 

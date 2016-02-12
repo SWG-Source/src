@@ -29,9 +29,9 @@ void SwgLoader::install()
 
 SwgLoader::SwgLoader() :
 		Loader(),
-		m_pendingTaskVerifyCharacter(nullptr),
-		m_loadingTaskVerifyCharacter(nullptr),
-		m_verifyCharacterTaskQ(nullptr)
+		m_pendingTaskVerifyCharacter(NULL),
+		m_loadingTaskVerifyCharacter(NULL),
+		m_verifyCharacterTaskQ(NULL)
 {
 	m_verifyCharacterTaskQ = new DB::TaskQueue(1,DatabaseProcess::getInstance().getDBServer(),4);
 }
@@ -95,7 +95,7 @@ void SwgLoader::update(real updateTime)
 	if (m_pendingTaskVerifyCharacter && !m_loadingTaskVerifyCharacter)
 	{
 		m_loadingTaskVerifyCharacter = m_pendingTaskVerifyCharacter;
-		m_pendingTaskVerifyCharacter = nullptr;
+		m_pendingTaskVerifyCharacter = NULL;
 		m_verifyCharacterTaskQ->asyncRequest(m_loadingTaskVerifyCharacter);		
 	}
 
@@ -109,7 +109,7 @@ void SwgLoader::verifyCharacterFinished (TaskVerifyCharacter *task)
 {
 	UNREF(task);
 	DEBUG_FATAL(task!=m_loadingTaskVerifyCharacter,("Programmer bug:  wrong TaskVerifyCharacter finished.\n"));
-	m_loadingTaskVerifyCharacter = nullptr;
+	m_loadingTaskVerifyCharacter = NULL;
 }
 
 // ----------------------------------------------------------------------

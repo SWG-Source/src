@@ -126,7 +126,7 @@ bool LocalizedStringTableRW::str_write(AbstractFile & fl, LocalizedString & locs
 	// TODO: swab this buffer
 	Unicode::unicode_char_t * buf = new Unicode::unicode_char_t [buflen+1];
 
-	assert (buf != nullptr); //lint !e1924 // c-style cast.  MSVC bug
+	assert (buf != NULL); //lint !e1924 // c-style cast.  MSVC bug
 
 	buf [buflen] = 0;
 	memcpy (buf, locstr.m_str.c_str (), sizeof (Unicode::unicode_char_t) * buflen); 
@@ -183,7 +183,7 @@ bool LocalizedStringTableRW::write(AbstractFile & fl) const
 
 			char * buf = new char [buflen + 1];
 
-			assert (buf != nullptr); //lint !e1924 // c-style cast.  MSVC bug
+			assert (buf != NULL); //lint !e1924 // c-style cast.  MSVC bug
 
 			buf [buflen] = 0;
 
@@ -230,7 +230,7 @@ LocalizedStringTableRW *LocalizedStringTableRW::loadRW (AbstractFileFactory & fi
 		{
 		case 0:
 			table = new LocalizedStringTableRW (filename);
-			assert (table != nullptr);  //lint !e1924 // c-style cast.  MSVC bug
+			assert (table != NULL);  //lint !e1924 // c-style cast.  MSVC bug
 			
 			if (table->load_0000 (*fl) == false)
 			{
@@ -241,7 +241,7 @@ LocalizedStringTableRW *LocalizedStringTableRW::loadRW (AbstractFileFactory & fi
 
 		case 1:
 			table = new LocalizedStringTableRW (filename);
-			assert (table != nullptr);  //lint !e1924 // c-style cast.  MSVC bug
+			assert (table != NULL);  //lint !e1924 // c-style cast.  MSVC bug
 			
 			if (table->load_0001 (*fl) == false)
 			{
@@ -336,7 +336,7 @@ LocalizedString *  LocalizedStringTableRW::addString (const Unicode::String & st
 {
 	LocalizedString * const locstr = (m_map [m_nextUniqueId] = new LocalizedString (m_nextUniqueId, int(time(0)), str));
 
-	assert (locstr != nullptr);   //lint !e1924 // c-style cast.  MSVC bug
+	assert (locstr != NULL);   //lint !e1924 // c-style cast.  MSVC bug
 
 	char buf[64];
 	sprintf (buf, "%03ld_default", m_nextUniqueId);
@@ -538,7 +538,7 @@ void LocalizedStringTableRW::prepareTable (const LocalizedStringTableRW & rhs)
 
 		LocalizedString * locstr = new LocalizedString  (rhs_locstr->m_id, 0, rhs_locstr->m_str);
 
-		assert (locstr != nullptr); //lint !e1924 // c-style cast.  MSVC bug
+		assert (locstr != NULL); //lint !e1924 // c-style cast.  MSVC bug
 		m_map.insert (Map_t::value_type (locstr->getId (), locstr ));
 	}
 }

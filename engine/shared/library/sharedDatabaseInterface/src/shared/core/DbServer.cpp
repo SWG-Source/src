@@ -29,7 +29,7 @@ using namespace DB;
 Mutex Server::ms_profileMutex;
 bool Server::ms_enableProfiling = false;
 bool Server::ms_enableVerboseMode = false;
-DB::Profiler *Server::ms_profiler = nullptr;
+DB::Profiler *Server::ms_profiler = NULL;
 int Server::ms_reconnectTime=0;
 int Server::ms_maxErrorCountBeforeDisconnect=5;
 int Server::ms_maxErrorCountBeforeBailout=10;
@@ -51,7 +51,7 @@ Server::SesListElem::SesListElem (Session *_ses, SesListElem *_next) : ses (_ses
 // ----------------------------------------------------------------------
 
 Server::Server(const char *_dsn, const char *_uid, const char *_pwd, bool useMemoryManager) :
-		sessionList (nullptr),
+		sessionList (NULL),
 		sessionListLock(),
 		m_useMemoryManager(useMemoryManager)
 {
@@ -194,7 +194,7 @@ Session *Server::popSession()
 	else
 	{
 		sessionListLock.leave();
-		return nullptr;
+		return NULL;
 	}
 }
 
@@ -294,7 +294,7 @@ void Server::endProfiling()
 {
 	ms_profileMutex.enter();
 	delete ms_profiler;
-	ms_profiler = nullptr;
+	ms_profiler = NULL;
 	ms_enableProfiling = false;
 	ms_profileMutex.leave();	
 }

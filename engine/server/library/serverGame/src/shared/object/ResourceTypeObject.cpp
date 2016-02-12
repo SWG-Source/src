@@ -146,7 +146,7 @@ void ResourceTypeObject::setName(const std::string &newName)
 ResourcePoolObject *ResourceTypeObject::getPoolForPlanet(PlanetObject const &planetObject) const
 {
 	if (isRecycled())
-		return nullptr;
+		return NULL;
 
 	std::map<NetworkId, ResourcePoolObject*>::const_iterator i=m_pools.find(planetObject.getNetworkId());
 	if (i==m_pools.end())
@@ -167,7 +167,7 @@ ResourcePoolObject *ResourceTypeObject::getPoolForPlanet(PlanetObject const &pla
 				m_pools[planetObject.getNetworkId()]=obj;
 				return obj;
 			}
-			return nullptr; // no pool for this planet
+			return NULL; // no pool for this planet
 		}
 	}
 	else
@@ -377,7 +377,7 @@ ResourceTypeObject const * ResourceTypeObject::getRecycledVersion() const
 		return result;
 	}
 	else
-		return nullptr;
+		return NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -437,7 +437,7 @@ NetworkId ResourceTypeObject::addImportedResourceType(std::string const & resour
 	static Unicode::String const attributeDelimiters(Unicode::narrowToWide(" "));
 	Unicode::UnicodeStringVector tokens;
 	static size_t const resourceAttributeIndex = 5;
-	if ((Unicode::tokenize(Unicode::narrowToWide(resourceData), tokens, &delimiters, nullptr)) && (tokens.size() > resourceAttributeIndex))
+	if ((Unicode::tokenize(Unicode::narrowToWide(resourceData), tokens, &delimiters, NULL)) && (tokens.size() > resourceAttributeIndex))
 	{
 		AddResourceTypeMessageNamespace::ResourceTypeData rtd;
 		rtd.m_depletedTimestamp = 1;
@@ -453,7 +453,7 @@ NetworkId ResourceTypeObject::addImportedResourceType(std::string const & resour
 		for (size_t i = resourceAttributeIndex; i < tokens.size(); ++i)
 		{
 			attributeTokens.clear();
-			if ((Unicode::tokenize(tokens[i], attributeTokens, &attributeDelimiters, nullptr)) && (attributeTokens.size() == 2))
+			if ((Unicode::tokenize(tokens[i], attributeTokens, &attributeDelimiters, NULL)) && (attributeTokens.size() == 2))
 			{
 				rtd.m_attributes.push_back(std::make_pair(Unicode::wideToNarrow(attributeTokens[0]), ::atoi(Unicode::wideToNarrow(attributeTokens[1]).c_str())));
 			}

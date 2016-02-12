@@ -27,7 +27,7 @@
 
 //-----------------------------------------------------------------------
 
-const SharedObjectTemplate * PlayerQuestObject::m_defaultSharedTemplate = nullptr;
+const SharedObjectTemplate * PlayerQuestObject::m_defaultSharedTemplate = NULL;
 
 namespace PlayerQuestObjectNamespace
 {
@@ -156,7 +156,7 @@ void PlayerQuestObject::removeDefaultTemplate()
 	if(m_defaultSharedTemplate)
 	{
 		m_defaultSharedTemplate->releaseReference();
-		m_defaultSharedTemplate = nullptr;
+		m_defaultSharedTemplate = NULL;
 	}
 }
 

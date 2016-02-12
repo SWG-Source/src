@@ -87,7 +87,7 @@ char const * CrashReportInformation::getEntry(int index)
 	if (index < static_cast<int>(ms_dynamicText.size()))
 		return ms_dynamicText[index];
 
-	return nullptr;
+	return NULL;
 }
 
 // ======================================================================

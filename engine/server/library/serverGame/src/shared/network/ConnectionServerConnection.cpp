@@ -194,7 +194,7 @@ void ConnectionServerConnection::onReceive (const Archive::ByteStream & message)
 			}
 		}
 		else
-			LOG("CustomerService", ("CharacterTransfer: character object was nullptr so unable to check if bank is loaded"));
+			LOG("CustomerService", ("CharacterTransfer: character object was NULL so unable to check if bank is loaded"));
 
 	}
 
@@ -224,10 +224,10 @@ void ConnectionServerConnection::onReceive (const Archive::ByteStream & message)
 				}
 			}
 			else
-				LOG("CustomerService", ("CharacterTransfer: bank container object was nullptr for getBankContainer call"));
+				LOG("CustomerService", ("CharacterTransfer: bank container object was NULL for getBankContainer call"));
 		}
 		else
-			LOG("CustomerService", ("CharacterTransfer: character object was nullptr so unable to check if bank is loaded"));
+			LOG("CustomerService", ("CharacterTransfer: character object was NULL so unable to check if bank is loaded"));
 	}
 	else if (m.isType("RequestTransferData"))
 	{
@@ -237,7 +237,7 @@ void ConnectionServerConnection::onReceive (const Archive::ByteStream & message)
 		CreatureObject * const character = dynamic_cast<CreatureObject *>(NetworkIdManager::getObjectById(requestTransferData.getValue().getCharacterId()));
 		PlayerObject * const playerObject = PlayerCreatureController::getPlayerObject(character);
 		time_t characterCreateTime = -1;
-		FreeCtsDataTable::FreeCtsInfo const * freeCtsInfo = nullptr;
+		FreeCtsDataTable::FreeCtsInfo const * freeCtsInfo = NULL;
 		bool freeCtsBypassTimeRestriction = false;
 		if (character && playerObject)
 		{
@@ -292,7 +292,7 @@ void ConnectionServerConnection::onReceive (const Archive::ByteStream & message)
 					for (CreatureObject::SkillList::const_iterator i = skills.begin(); i != skills.end(); ++i)
 					{
 						const SkillObject * profession = (*i)->findProfessionForSkill();
-						if (profession != nullptr)
+						if (profession != NULL)
 							professionName = profession->getSkillName();
 					}
 				}
@@ -414,7 +414,7 @@ void ConnectionServerConnection::onReceive (const Archive::ByteStream & message)
 		unsigned int result = CHATRESULT_SUCCESS;
 
 		ServerObject const * const o = ServerWorld::findObjectByNetworkId(cervreq.getValue().first.first);
-		CreatureObject const * const co = (o ? o->asCreatureObject() : nullptr);
+		CreatureObject const * const co = (o ? o->asCreatureObject() : NULL);
 		if (co)
 		{
 			result = Chat::isAllowedToEnterRoom(*co, cervreq.getValue().first.second);
@@ -440,7 +440,7 @@ void ConnectionServerConnection::onReceive (const Archive::ByteStream & message)
 		bool success = false;
 
 		ServerObject const * const o = ServerWorld::findObjectByNetworkId(cqrvreq.getValue().first.first);
-		CreatureObject const * const co = (o ? o->asCreatureObject() : nullptr);
+		CreatureObject const * const co = (o ? o->asCreatureObject() : NULL);
 		if (co)
 		{
 			success = (CHATRESULT_SUCCESS == Chat::isAllowedToEnterRoom(*co, cqrvreq.getValue().first.second));

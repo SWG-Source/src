@@ -52,9 +52,9 @@ public:
 	  m_normal(newNormal),
 	  m_surfaceId1(-1),
 	  m_surfaceId2(-1),
-	  m_cell(nullptr),
-	  m_extent(nullptr),
-	  m_surface(nullptr)
+	  m_cell(NULL),
+	  m_extent(NULL),
+	  m_surface(NULL)
 	{
 	}
 

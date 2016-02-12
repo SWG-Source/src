@@ -45,7 +45,7 @@ bool TaskObjectTemplateListUpdater::process(DB::Session *session)
 					strcpy(s_sql,"commit");
 				else if ( i_retval == 2 )  // got ID & Name
 				{
-					s_name[256]=0;  // nullptr term to make sure it fits
+					s_name[256]=0;  // null term to make sure it fits
 					sprintf(s_sql,"insert into object_templates values (%d,'%s')",i_id,s_name);
 				}
 				else

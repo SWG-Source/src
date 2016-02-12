@@ -52,7 +52,7 @@ namespace NebulaManagerNamespace
 	};
 
 	typedef SphereTree<Nebula const *, NebulaSphereAccessor> NebulaSphereTree;
-	NebulaSphereTree * s_collisionSphereTree = nullptr;
+	NebulaSphereTree * s_collisionSphereTree = NULL;
 
 	enum DatatableColumns
 	{
@@ -110,7 +110,7 @@ namespace NebulaManagerNamespace
 
 	//----------------------------------------------------------------------
 
-	NebulaManager::ImplementationClearFunction s_clearFunction = nullptr;
+	NebulaManager::ImplementationClearFunction s_clearFunction = NULL;
 }
 
 using namespace NebulaManagerNamespace;
@@ -158,10 +158,10 @@ void NebulaManager::clear()
 
 	s_nebulaMap.clear();
 
-	if (s_collisionSphereTree != nullptr)
+	if (s_collisionSphereTree != NULL)
 	{
 		delete s_collisionSphereTree;
-		s_collisionSphereTree = nullptr;
+		s_collisionSphereTree = NULL;
 	}
 
 	//-- Remove nebulas for the current scene from the scene map
@@ -178,7 +178,7 @@ void NebulaManager::clear()
 
 	s_currentSceneId.clear();
 
-	if (s_clearFunction != nullptr)
+	if (s_clearFunction != NULL)
 		s_clearFunction();
 }
 
@@ -319,11 +319,11 @@ void NebulaManager::getNebulasInSphere(Vector const & pos, float const radius, N
 
 Nebula const * NebulaManager::getClosestNebula(Vector const & pos, float const maxDistance, float & outMinDistance, float & outMaxDistance)
 {
-	Nebula const * nebula = nullptr;
+	Nebula const * nebula = NULL;
 	if (NON_NULL(s_collisionSphereTree)->findClosest(pos, maxDistance, nebula, outMinDistance, outMaxDistance))
 		return nebula;
 
-	return nullptr;
+	return NULL;
 }
 
 //----------------------------------------------------------------------
@@ -334,7 +334,7 @@ Nebula const * NebulaManager::getNebulaById(int const id)
 	if (it != s_nebulaMap.end())
 		return (*it).second;
 
-	return nullptr;
+	return NULL;
 }
 
 //----------------------------------------------------------------------

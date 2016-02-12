@@ -17,14 +17,14 @@
 
 // ======================================================================
 
-Universe * Universe::ms_theInstance = nullptr;
+Universe * Universe::ms_theInstance = NULL;
 bool       Universe::ms_installed   = false;
 
 //===================================================================
 
 void Universe::installDerived(Universe *derivedInstance)
 {
-	DEBUG_FATAL(ms_installed || ms_theInstance!=nullptr,("Installed Universe twice.\n"));
+	DEBUG_FATAL(ms_installed || ms_theInstance!=NULL,("Installed Universe twice.\n"));
 	ms_theInstance = derivedInstance;
 	ms_installed = true;
 
@@ -43,7 +43,7 @@ void Universe::remove()
 Universe::Universe() :
 	m_resourceClassNameMap (new ResourceClassNameMap),
 	m_resourceClassNameCrcMap (new ResourceClassNameCrcMap),
-	m_resourceTreeRoot     (nullptr)
+	m_resourceTreeRoot     (NULL)
 {
 	ResourceClassObject::install(); // sets up some static strings used by the import process
 }

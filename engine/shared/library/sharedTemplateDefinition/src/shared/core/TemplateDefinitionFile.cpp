@@ -20,9 +20,9 @@
  * Class constructor.
  */
 TemplateDefinitionFile::TemplateDefinitionFile(void) :
-	m_baseDefinitionFile(nullptr),
+	m_baseDefinitionFile(NULL),
 	m_writeForCompilerFlag(false),
-	m_filterCompiledRegex(nullptr)
+	m_filterCompiledRegex(NULL)
 {
 	cleanup();
 }	// TemplateDefinitionFile::TemplateDefinitionFile
@@ -51,24 +51,24 @@ void TemplateDefinitionFile::cleanup(void)
 	m_compilerPath.clear();
 	m_fileComments.clear();
 
-	if (m_baseDefinitionFile != nullptr)
+	if (m_baseDefinitionFile != NULL)
 	{
 		delete m_baseDefinitionFile;
-		m_baseDefinitionFile = nullptr;
+		m_baseDefinitionFile = NULL;
 	}
 
 	std::map<int, TemplateData *>::iterator iter;
 	for (iter = m_templateMap.begin(); iter != m_templateMap.end(); ++iter)
 	{
 		delete (*iter).second;
-		(*iter).second = nullptr;
+		(*iter).second = NULL;
 	}
 	m_templateMap.clear();
 
-	if (m_filterCompiledRegex != nullptr)
+	if (m_filterCompiledRegex != NULL)
 	{
 		RegexServices::freeMemory(m_filterCompiledRegex);
-		m_filterCompiledRegex = nullptr;
+		m_filterCompiledRegex = NULL;
 	}
 }	// TemplateDefinitionFile::cleanup
 
@@ -104,7 +104,7 @@ static const std::string wildcard = "*";
 	if (!m_templateNameFilter.empty())
 		return m_templateNameFilter;
 
-	if (m_baseDefinitionFile != nullptr)
+	if (m_baseDefinitionFile != NULL)
 		return m_baseDefinitionFile->getTemplateNameFilter();
 
 	return wildcard;
@@ -121,7 +121,7 @@ bool TemplateDefinitionFile::isValidTemplateName(const Filename & name) const
 {
 	if (m_templateNameFilter.empty())
 	{
-		if (m_baseDefinitionFile != nullptr)
+		if (m_baseDefinitionFile != NULL)
 			return m_baseDefinitionFile->isValidTemplateName(name);
 		else
 			return true;
@@ -131,7 +131,7 @@ bool TemplateDefinitionFile::isValidTemplateName(const Filename & name) const
 	int const matchDataElementCount = maxCaptureCount * 3;
 	int       matchData[matchDataElementCount];
 
-	int const matchCode = pcre_exec(m_filterCompiledRegex, nullptr, name.getName().c_str(), name.getName().length(), 0, 0, matchData, matchDataElementCount);
+	int const matchCode = pcre_exec(m_filterCompiledRegex, NULL, name.getName().c_str(), name.getName().length(), 0, 0, matchData, matchDataElementCount);
 	bool const result = (matchCode >= 0);
 
 	if (matchCode < -1)
@@ -425,10 +425,10 @@ void TemplateDefinitionFile::writeClassSourceBegin(File &fp, const TemplateData 
 	fp.print(" */\n");
 	fp.print("Tag %s::getHighestTemplateVersion(void) const\n", name);
 	fp.print("{\n");
-	fp.print("\tif (m_baseData == nullptr)\n");
+	fp.print("\tif (m_baseData == NULL)\n");
 	fp.print("\t\treturn m_templateVersion;\n");
 	fp.print("\tconst %s * base = dynamic_cast<const %s *>(m_baseData);\n", name, name);
-	fp.print("\tif (base == nullptr)\n");
+	fp.print("\tif (base == NULL)\n");
 	fp.print("\t\treturn m_templateVersion;\n");
 	fp.print("\treturn std::max(m_templateVersion, base->getHighestTemplateVersion());\n");
 	fp.print("} // %s::getHighestTemplateVersion\n", name);
@@ -449,7 +449,7 @@ static const int BUFFER_SIZE = 1024;
 int lineLen;
 char buffer[BUFFER_SIZE];
 char token[BUFFER_SIZE];
-TemplateData *currentTemplate = nullptr;
+TemplateData *currentTemplate = NULL;
 
 	cleanup();
 
@@ -510,7 +510,7 @@ TemplateData *currentTemplate = nullptr;
 			currentTemplate = new TemplateData(version, *this);
 			m_templateMap[version] = currentTemplate;
 		}
-		else if (currentTemplate != nullptr)
+		else if (currentTemplate != NULL)
 		{
 			line = currentTemplate->parseLine(fp, buffer, token);
 			if (line == CHAR_ERROR)
@@ -540,7 +540,7 @@ TemplateData *currentTemplate = nullptr;
 				fp.printError("unable to open base template definition");
 				return -1;
 			}
-			if (m_baseDefinitionFile == nullptr)
+			if (m_baseDefinitionFile == NULL)
 				m_baseDefinitionFile = new TemplateDefinitionFile;
 			else
 				m_baseDefinitionFile->cleanup();
@@ -570,19 +570,19 @@ TemplateData *currentTemplate = nullptr;
 			m_templateNameFilter = token;
 
 			//-- Attempt to compile the regex.
-			if (m_filterCompiledRegex != nullptr)
+			if (m_filterCompiledRegex != NULL)
 			{
 				// First free the existing compiled regex.
 				RegexServices::freeMemory(m_filterCompiledRegex);
-				m_filterCompiledRegex = nullptr;
+				m_filterCompiledRegex = NULL;
 			}
 
 			//-- Compile the new regex.
-			char const *errorString = nullptr;
+			char const *errorString = NULL;
 			int         errorOffset = 0;
 
-			m_filterCompiledRegex = pcre_compile(m_templateNameFilter.c_str(), 0, &errorString, &errorOffset, nullptr);
-			WARNING(m_filterCompiledRegex == nullptr, ("TemplateDefinitionFile::parse(): pcre_compile() failed, error=[%s], errorOffset=[%d], regex text=[%s].", errorString, errorOffset, m_templateNameFilter.c_str()));
+			m_filterCompiledRegex = pcre_compile(m_templateNameFilter.c_str(), 0, &errorString, &errorOffset, NULL);
+			WARNING(m_filterCompiledRegex == NULL, ("TemplateDefinitionFile::parse(): pcre_compile() failed, error=[%s], errorOffset=[%d], regex text=[%s].", errorString, errorOffset, m_templateNameFilter.c_str()));
 		}
 		else if (strcmp(token, "clientpath") == 0 ||
 		         strcmp(token, "serverpath") == 0 ||

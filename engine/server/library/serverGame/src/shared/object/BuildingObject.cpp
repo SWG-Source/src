@@ -140,7 +140,7 @@ using namespace BuildingObjectNamespace;
 
 // ======================================================================
 
-const SharedObjectTemplate * BuildingObject::m_defaultSharedTemplate = nullptr;
+const SharedObjectTemplate * BuildingObject::m_defaultSharedTemplate = NULL;
 
 
 // ======================================================================
@@ -380,13 +380,13 @@ const SharedObjectTemplate * BuildingObject::getDefaultSharedTemplate(void) cons
 {
 static const ConstCharCrcLowerString templateName("object/building/base/shared_building_default.iff");
 
-	if (m_defaultSharedTemplate == nullptr)
+	if (m_defaultSharedTemplate == NULL)
 	{
 		m_defaultSharedTemplate = safe_cast<const SharedObjectTemplate *>(
 			ObjectTemplateList::fetch(templateName));
-		WARNING_STRICT_FATAL(m_defaultSharedTemplate == nullptr, ("Cannot create "
+		WARNING_STRICT_FATAL(m_defaultSharedTemplate == NULL, ("Cannot create "
 			"default shared object template %s", templateName.getString()));
-		if (m_defaultSharedTemplate != nullptr)
+		if (m_defaultSharedTemplate != NULL)
 			ExitChain::add (removeDefaultTemplate, "BuildingObject::removeDefaultTemplate");
 	}
 	return m_defaultSharedTemplate;
@@ -399,10 +399,10 @@ static const ConstCharCrcLowerString templateName("object/building/base/shared_b
  */
 void BuildingObject::removeDefaultTemplate(void)
 {
-	if (m_defaultSharedTemplate != nullptr)
+	if (m_defaultSharedTemplate != NULL)
 	{
 		m_defaultSharedTemplate->releaseReference();
-		m_defaultSharedTemplate = nullptr;
+		m_defaultSharedTemplate = NULL;
 	}
 }	// BuildingObject::removeDefaultTemplate
 
@@ -432,7 +432,7 @@ void BuildingObject::expelObject(ServerObject &who)
 		if (controller)
 		{
 			CellProperty *parentCell = getParentCell();
-			ServerObject *destinationCellObject = nullptr;			
+			ServerObject *destinationCellObject = NULL;			
 		
 			if (!parentCell->isWorldCell())
 				destinationCellObject = safe_cast<ServerObject*>(&parentCell->getOwner());
@@ -902,7 +902,7 @@ void BuildingObject::changeTeleportDestination(Vector & position, float & yaw) c
 	{
 		DataTable * respawnTable = DataTableManager::getTable(CLONE_RESPAWN_TABLE, 
 			true);
-		if (respawnTable != nullptr)
+		if (respawnTable != NULL)
 		{
 			int row = respawnTable->searchColumnString(0, getTemplateName());
 			if (row >= 0)

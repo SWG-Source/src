@@ -71,7 +71,7 @@ VectorPointerPool<ValueType>::~VectorPointerPool()
 		}
 
 		delete v;
-		v = nullptr;
+		v = NULL;
 	}
 }
 
@@ -209,7 +209,7 @@ public:
 				node->move(this);
 			else
 			{
-				WARNING_STRICT_FATAL(true, ("SphereTree::move was invoked for an object, but the real sphere tree node it refers to is nullptr."));
+				WARNING_STRICT_FATAL(true, ("SphereTree::move was invoked for an object, but the real sphere tree node it refers to is null."));
 			}
 		};
 
@@ -292,7 +292,7 @@ inline SpatialSubdivisionHandle * SphereTreeNode<ObjectType, ExtentAccessor>::ad
 	if(!isValidSphere(sphere)) 
 	{
 		WARNING_STRICT_FATAL(true, ("SphereTreeNode::addObject - sphere for the object being added is invalid"));
-		return nullptr;
+		return NULL;
 	}
 
 	SphereTreeNode * candidateNode = 0;

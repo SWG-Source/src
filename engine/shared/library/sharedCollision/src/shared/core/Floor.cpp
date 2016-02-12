@@ -49,8 +49,8 @@ Floor::Floor( FloorMesh const * pMesh, Object const * owner, Appearance const * 
   m_mesh(pMesh),
   m_footList(this,1),
   m_databaseList(this,1),
-  m_spatialSubdivisionHandle(nullptr),
-  m_extent(nullptr),
+  m_spatialSubdivisionHandle(NULL),
+  m_extent(NULL),
   m_extentDirty(true),
   m_sphere_l(),
   m_sphere_w()
@@ -104,15 +104,15 @@ Floor::~Floor()
 	}
 
     const_cast<FloorMesh*>(m_mesh)->releaseReference();
-    m_mesh = nullptr;
+    m_mesh = NULL;
 
-	m_owner = nullptr;
-	m_appearance = nullptr;
+	m_owner = NULL;
+	m_appearance = NULL;
 
-    m_spatialSubdivisionHandle = nullptr;
+    m_spatialSubdivisionHandle = NULL;
 
 	delete m_extent;
-	m_extent = nullptr;
+	m_extent = NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -255,7 +255,7 @@ bool Floor::segTestBounds ( Vector const & begin, Vector const & end ) const
 
 Object const * Floor::getOwner ( void ) const
 {
-	if(m_owner != nullptr)
+	if(m_owner != NULL)
 	{
 		return m_owner;
 	}
@@ -265,7 +265,7 @@ Object const * Floor::getOwner ( void ) const
 	}
 	else
 	{
-		return nullptr;
+		return NULL;
 	}
 }
 
@@ -273,7 +273,7 @@ Object const * Floor::getOwner ( void ) const
 
 Appearance const * Floor::getAppearance ( void ) const
 {
-	if(m_appearance != nullptr)
+	if(m_appearance != NULL)
 	{
 		return m_appearance;
 	}
@@ -283,7 +283,7 @@ Appearance const * Floor::getAppearance ( void ) const
 	}
 	else
 	{
-		return nullptr;
+		return NULL;
 	}
 }
 
@@ -301,7 +301,7 @@ CellProperty const * Floor::getCell ( void ) const
 	}
 	else
 	{
-		return nullptr;
+		return NULL;
 	}
 }
 
@@ -657,7 +657,7 @@ NetworkId const & Floor::getId() const
 {
 	CellProperty const * const cellProperty = getCell();
 
-	return (cellProperty != nullptr) ? cellProperty->getOwner().getNetworkId() : NetworkId::cms_invalid;
+	return (cellProperty != NULL) ? cellProperty->getOwner().getNetworkId() : NetworkId::cms_invalid;
 }
 
 // ======================================================================

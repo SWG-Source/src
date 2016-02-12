@@ -33,9 +33,9 @@ namespace DB
 		 * Combines the values in this row with the values in newRow.
 		 *
 		 * For each column:
-		 *    If the column is nullptr in newRow, do nothing.  (Leave the value
+		 *    If the column is null in newRow, do nothing.  (Leave the value
 		 *        in this row unchanged.)
-		 *    If the column is not nullptr in newRow, replace the value in this
+		 *    If the column is not null in newRow, replace the value in this
 		 *        row with the value in newRow.
 		 */
 		virtual void combine(const DB::Row &newRow) =0;

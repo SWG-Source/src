@@ -92,10 +92,10 @@ public:
 	uint32                       getProcessId                  () const;
 	uint32                       getPreloadAreaId              () const;
 	virtual void                 receiveMessage                (const MessageDispatch::Emitter & source, const MessageDispatch::MessageBase & message);
-	bool                         requestSceneWarp              (const CachedNetworkId &objectId, const std::string &sceneName, const Vector &newPosition_w, const NetworkId &newContainer, const Vector &newPosition_p, const char * scriptCallback = nullptr, bool forceLoadScreen = false);
-	bool                         requestSceneWarp              (const CachedNetworkId &objectId, const std::string &sceneName, const Vector &newPosition_w, const NetworkId &newBuilding, const std::string &newCellName, const Vector &newPosition_p, const char * scriptCallback = nullptr, bool forceLoadScreen = false);
-	bool                         requestSceneWarpDelayed       (const CachedNetworkId &objectId, const std::string &sceneName, const Vector &newPosition_w, const NetworkId &newContainer, const Vector &newPosition_p, float delayTime, const char * scriptCallback = nullptr, bool forceLoadScreen = false);
-	bool                         requestSceneWarpDelayed       (const CachedNetworkId &objectId, const std::string &sceneName, const Vector &newPosition_w, const NetworkId &newBuilding, const std::string &newCellName, const Vector &newPosition_p, float delayTime, const char * scriptCallback = nullptr, bool forceLoadScreen = false);
+	bool                         requestSceneWarp              (const CachedNetworkId &objectId, const std::string &sceneName, const Vector &newPosition_w, const NetworkId &newContainer, const Vector &newPosition_p, const char * scriptCallback = NULL, bool forceLoadScreen = false);
+	bool                         requestSceneWarp              (const CachedNetworkId &objectId, const std::string &sceneName, const Vector &newPosition_w, const NetworkId &newBuilding, const std::string &newCellName, const Vector &newPosition_p, const char * scriptCallback = NULL, bool forceLoadScreen = false);
+	bool                         requestSceneWarpDelayed       (const CachedNetworkId &objectId, const std::string &sceneName, const Vector &newPosition_w, const NetworkId &newContainer, const Vector &newPosition_p, float delayTime, const char * scriptCallback = NULL, bool forceLoadScreen = false);
+	bool                         requestSceneWarpDelayed       (const CachedNetworkId &objectId, const std::string &sceneName, const Vector &newPosition_w, const NetworkId &newBuilding, const std::string &newCellName, const Vector &newPosition_p, float delayTime, const char * scriptCallback = NULL, bool forceLoadScreen = false);
 	
 	static void                  run                           ();
 	void                         sendToCentralServer           (GameNetworkMessage const &message);

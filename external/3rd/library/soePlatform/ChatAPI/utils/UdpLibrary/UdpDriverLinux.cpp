@@ -101,7 +101,7 @@ bool UdpPlatformDriver::SocketOpen(int port, int incomingBufferSize, int outgoin
         addr_loc.sin_family = PF_INET;
         addr_loc.sin_port = htons((unsigned short)port);
         addr_loc.sin_addr.s_addr = htonl(INADDR_ANY);
-        if (bindIpAddress != nullptr && bindIpAddress[0] != 0)
+        if (bindIpAddress != NULL && bindIpAddress[0] != 0)
         {
             unsigned long address = inet_addr(bindIpAddress);
             if (address != INADDR_NONE)
@@ -201,7 +201,7 @@ bool UdpPlatformDriver::GetHostByName(UdpPlatformAddress *ipAddress, const char 
     {
         struct hostent *lphp;
         lphp = gethostbyname(hostName);
-        if (lphp == nullptr)
+        if (lphp == NULL)
         {
             address = 0;
         }
@@ -223,7 +223,7 @@ bool UdpPlatformDriver::GetSelfAddress(UdpPlatformAddress *ipAddress, bool prefe
     if (gethostname(hostname, sizeof(hostname)) == 0)
     {
         struct hostent *entry = gethostbyname(hostname);
-        if (entry != nullptr)
+        if (entry != NULL)
         {
             for (int i = 0; entry->h_addr_list[i] != 0; i++)
             {
@@ -273,7 +273,7 @@ UdpClockStamp UdpPlatformDriver::Clock()
     UdpGuard guard(&mData->clockGuard);
 
     struct timeval tv;
-    gettimeofday(&tv, nullptr);
+    gettimeofday(&tv, NULL);
     UdpClockStamp cs = static_cast<UdpClockStamp>(tv.tv_sec) * 1000 + static_cast<UdpClockStamp>(tv.tv_usec / 1000);
     cs += mData->currentCorrection;
     if (cs < mData->lastStamp)
@@ -319,7 +319,7 @@ int IcmpReceive(SOCKET socket, unsigned *address, int *port)
         return(-1);
 
     struct cmsghdr *cmsg;
-    for(cmsg = CMSG_FIRSTHDR(&msgh); cmsg != nullptr; cmsg = CMSG_NXTHDR(&msgh, cmsg))
+    for(cmsg = CMSG_FIRSTHDR(&msgh); cmsg != NULL; cmsg = CMSG_NXTHDR(&msgh, cmsg))
     {
         if(cmsg->cmsg_level == SOL_IP && cmsg->cmsg_type == IP_RECVERR)
         {
@@ -378,7 +378,7 @@ void *GoThread(void *param)
     thread->mThreadData->running = false;
     thread->mThreadData->handle = 0;
     thread->Release();
-    return(nullptr);
+    return(NULL);
 }
 
 UdpPlatformThreadObject::~UdpPlatformThreadObject()
@@ -435,7 +435,7 @@ char *UdpPlatformAddress::GetAddress(char *buffer, int bufferLen) const
         *buffer = 0;
         return(buffer);
     }
-    assert(buffer != nullptr);
+    assert(buffer != NULL);
     sprintf(buffer, "%d.%d.%d.%d", mData[0], mData[1], mData[2], mData[3]);
     return(buffer);
 }
@@ -444,7 +444,7 @@ void UdpPlatformAddress::SetAddress(const char *address)
 {
     for (int i = 0; i < 4; i++)
     {
-        mData[i] = (unsigned char)strtol(address, nullptr, 10);
+        mData[i] = (unsigned char)strtol(address, NULL, 10);
         while (*address >= '0' && *address <= '9') 
             address++; 
         if (*address != 0)

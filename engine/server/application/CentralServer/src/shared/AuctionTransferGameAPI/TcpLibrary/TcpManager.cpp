@@ -41,14 +41,14 @@ TcpManager::TcpParams::TcpParams(const TcpParams &cpy)
 }
 
 TcpManager::TcpManager(const TcpParams &params)
-: m_handler(nullptr),
-  m_keepAliveList(nullptr, 1),
-  m_aliveList(nullptr, 2),
-  m_noDataList(nullptr, 1),
-  m_dataList(nullptr, 2),
+: m_handler(NULL),
+  m_keepAliveList(NULL, 1),
+  m_aliveList(NULL, 2),
+  m_noDataList(NULL, 1),
+  m_dataList(NULL, 2),
   m_params(params),
   m_refCount(1),
-  m_connectionList(nullptr),
+  m_connectionList(NULL),
   m_connectionListCount(0),
   m_socket(INVALID_SOCKET),
   m_boundAsServer(false),
@@ -86,7 +86,7 @@ TcpManager::~TcpManager()
         close(m_socket);
 #endif
     }
-    while (m_connectionList != nullptr)
+    while (m_connectionList != NULL)
     {
         TcpConnection *con = m_connectionList;
         m_connectionList = m_connectionList->m_nextConnection;
@@ -166,7 +166,7 @@ bool TcpManager::BindAsServer()
         {
             struct hostent * lphp;
             lphp = gethostbyname(m_params.bindAddress);
-            if (lphp != nullptr)
+            if (lphp != NULL)
                 addr_loc.sin_addr.s_addr = ((struct in_addr *)(lphp->h_addr))->s_addr;
         }
         else
@@ -191,7 +191,7 @@ bool TcpManager::BindAsServer()
 
 TcpConnection *TcpManager::acceptClient()
 {
-    TcpConnection *newConn = nullptr;
+    TcpConnection *newConn = NULL;
     
     if (m_boundAsServer && m_connectionListCount < m_params.maxConnections)
     {
@@ -205,7 +205,7 @@ TcpConnection *TcpManager::acceptClient()
         {
             newConn = new TcpConnection(this, &m_allocator, m_params, sock, IPAddress(addr.sin_addr.s_addr), ntohs(addr.sin_port));
             addNewConnection(newConn);
-            if (m_handler != nullptr)
+            if (m_handler != NULL)
             {
                 m_handler->OnConnectRequest(newConn);
             }
@@ -230,8 +230,8 @@ SOCKET TcpManager::getMaxFD()
     if (m_boundAsServer)
         maxfd = m_socket+1;
     
-    TcpConnection *next = nullptr;
-    for (TcpConnection *con = m_connectionList ; con != nullptr ; con = next)
+    TcpConnection *next = NULL;
+    for (TcpConnection *con = m_connectionList ; con != NULL ; con = next)
     {
         next = con->m_nextConnection;
         if (con->GetStatus() != TcpConnection::StatusDisconnected && con->m_socket > maxfd)
@@ -245,8 +245,8 @@ SOCKET TcpManager::getMaxFD()
 
 TcpConnection *TcpManager::getConnection(SOCKET fd)
 {
-    TcpConnection *next = nullptr;
-    for (TcpConnection *con = m_connectionList ; con != nullptr ; con = next)
+    TcpConnection *next = NULL;
+    for (TcpConnection *con = m_connectionList ; con != NULL ; con = next)
     {
         next = con->m_nextConnection;
         if (con->m_socket == fd)
@@ -255,7 +255,7 @@ TcpConnection *TcpManager::getConnection(SOCKET fd)
         }
     }
     //if get here ,couldn't find it
-    return nullptr;
+    return NULL;
 }
 
 bool TcpManager::GiveTime(unsigned maxTimeAcceptingConnections,unsigned maxSendTimePerConnection, unsigned maxRecvTimePerConnection)
@@ -277,8 +277,8 @@ bool TcpManager::GiveTime(unsigned maxTimeAcceptingConnections,unsigned maxSendT
     {
 
         // Send output from last heartbeat
-        TcpConnection *next = nullptr;
-        for (TcpConnection *con = m_connectionList ; con != nullptr ; con = next)
+        TcpConnection *next = NULL;
+        for (TcpConnection *con = m_connectionList ; con != NULL ; con = next)
         {
 			con->AddRef();
 			if (next) next->Release();
@@ -345,7 +345,7 @@ bool TcpManager::GiveTime(unsigned maxTimeAcceptingConnections,unsigned maxSendT
         tmpfds = m_permfds;
         timeout.tv_sec = 0;
         timeout.tv_usec = 0;
-        int cnt = select(maxfd, &tmpfds, nullptr, nullptr, &timeout);    // blocks for timeout
+        int cnt = select(maxfd, &tmpfds, NULL, NULL, &timeout);    // blocks for timeout
 
 
         if (cnt > 0) 
@@ -371,8 +371,8 @@ bool TcpManager::GiveTime(unsigned maxTimeAcceptingConnections,unsigned maxSendT
             //process incoming client messages
             if (maxRecvTimePerConnection != 0)
             {
-                TcpConnection *next = nullptr;
-                for (TcpConnection *con = m_connectionList ; con != nullptr ; con = next)
+                TcpConnection *next = NULL;
+                for (TcpConnection *con = m_connectionList ; con != NULL ; con = next)
                 {
 					con->AddRef();
 					if (next) next->Release();
@@ -437,8 +437,8 @@ bool TcpManager::GiveTime(unsigned maxTimeAcceptingConnections,unsigned maxSendT
             pollfds[0].events |= POLLIN;
         }
 
-        TcpConnection *next = nullptr;
-        for (TcpConnection *con = m_connectionList ; con != nullptr ; con = next, idx++)
+        TcpConnection *next = NULL;
+        for (TcpConnection *con = m_connectionList ; con != NULL ; con = next, idx++)
         {
             next = con->m_nextConnection;
             pollfds[idx].fd = con->m_socket;
@@ -478,7 +478,7 @@ bool TcpManager::GiveTime(unsigned maxTimeAcceptingConnections,unsigned maxSendT
                     }
                     
                     //process regular msg(s)
-                    if (con == nullptr)
+                    if (con == NULL)
                     {
                         close(pollfds[idx].fd);
                         continue;
@@ -510,7 +510,7 @@ bool TcpManager::GiveTime(unsigned maxTimeAcceptingConnections,unsigned maxSendT
                 }//if(pollfds[...
                 else if (pollfds[idx].revents & POLLHUP)
                 {
-                    if (con == nullptr)
+                    if (con == NULL)
                     {
                         close(pollfds[idx].fd);
                         continue;
@@ -528,21 +528,21 @@ bool TcpManager::GiveTime(unsigned maxTimeAcceptingConnections,unsigned maxSendT
     //now process any keepalives, if time to do that
     if (m_params.keepAliveDelay > 0 && m_keepAliveTimer.isDone(m_params.keepAliveDelay))
     {
-        TcpConnection *next = nullptr;
-        for (TcpConnection *con = m_keepAliveList.m_beginList ; con != nullptr ; con = next)
+        TcpConnection *next = NULL;
+        for (TcpConnection *con = m_keepAliveList.m_beginList ; con != NULL ; con = next)
         {
 			con->AddRef();
 			if (next) next->Release();
             next = con->m_nextKeepAliveConnection;
 			if (next) next->AddRef();
             
-            con->Send(nullptr, 0); //note:  this request will move the connection from the keepAliveList to the aliveList
+            con->Send(NULL, 0); //note:  this request will move the connection from the keepAliveList to the aliveList
 			con->Release();
         }
 
         //now move the complete alive list over to the keepalive list to reset those timers
         m_keepAliveList.m_beginList = m_aliveList.m_beginList;
-        m_aliveList.m_beginList = nullptr;
+        m_aliveList.m_beginList = NULL;
 
         //switch id's for those connections that were in the alive list last go - around
         int tmpID = m_aliveList.m_listID;
@@ -556,8 +556,8 @@ bool TcpManager::GiveTime(unsigned maxTimeAcceptingConnections,unsigned maxSendT
     //now process any noDataCons, if time to do that
     if (m_params.noDataTimeout > 0 && m_noDataTimer.isDone(m_params.noDataTimeout))
     {
-        TcpConnection *next = nullptr;
-        for (TcpConnection *con = m_noDataList.m_beginList ; con != nullptr ; con = next)
+        TcpConnection *next = NULL;
+        for (TcpConnection *con = m_noDataList.m_beginList ; con != NULL ; con = next)
         {
 			con->AddRef();
 			if (next) next->Release();
@@ -571,7 +571,7 @@ bool TcpManager::GiveTime(unsigned maxTimeAcceptingConnections,unsigned maxSendT
 
         //now move the complete data list over to the nodata list to reset those timers
         m_noDataList.m_beginList = m_dataList.m_beginList;
-        m_dataList.m_beginList = nullptr;
+        m_dataList.m_beginList = NULL;
 
         //switch id's for those connections that were in the data list last go - around
         int tmpID = m_dataList.m_listID;
@@ -593,11 +593,11 @@ TcpConnection *TcpManager::EstablishConnection(const char *serverAddress, unsign
     {
         //can't open outgoing connections when in server mode
         // use a different TcpManager to do that
-        return nullptr;
+        return NULL;
     }
 
     if (m_connectionListCount >= m_params.maxConnections)
-        return(nullptr);
+        return(NULL);
 
         // get server address
     unsigned long address = inet_addr(serverAddress);
@@ -605,8 +605,8 @@ TcpConnection *TcpManager::EstablishConnection(const char *serverAddress, unsign
     {
         struct hostent * lphp;
         lphp = gethostbyname(serverAddress);
-        if (lphp == nullptr)
-            return(nullptr);
+        if (lphp == NULL)
+            return(NULL);
         address = ((struct in_addr *)(lphp->h_addr))->s_addr;
     }
     IPAddress destIP(address);
@@ -631,22 +631,22 @@ void TcpManager::addNewConnection(TcpConnection *con)
     }
 #endif
     con->m_nextConnection = m_connectionList;
-    con->m_prevConnection = nullptr;
-    if (m_connectionList != nullptr)
+    con->m_prevConnection = NULL;
+    if (m_connectionList != NULL)
         m_connectionList->m_prevConnection = con;
     m_connectionList = con;
     m_connectionListCount++;
 
     con->m_nextKeepAliveConnection = m_aliveList.m_beginList;
-    con->m_prevKeepAliveConnection = nullptr;
-    if (m_aliveList.m_beginList != nullptr)
+    con->m_prevKeepAliveConnection = NULL;
+    if (m_aliveList.m_beginList != NULL)
         m_aliveList.m_beginList->m_prevKeepAliveConnection = con;
     m_aliveList.m_beginList = con;
     con->m_aliveListId = m_keepAliveList.m_listID;//start it out thinking it's already in the alive list, since it is
 
     con->m_nextRecvDataConnection = m_dataList.m_beginList;
-    con->m_prevRecvDataConnection = nullptr;
-    if (m_dataList.m_beginList != nullptr)
+    con->m_prevRecvDataConnection = NULL;
+    if (m_dataList.m_beginList != NULL)
         m_dataList.m_beginList->m_prevRecvDataConnection = con;
     m_dataList.m_beginList = con;
     con->m_recvDataListId = m_noDataList.m_listID;//start it out thinking it's already in the data list, since it is
@@ -667,40 +667,40 @@ void TcpManager::removeConnection(TcpConnection *con)
 #pragma warning(pop)
         }
     #endif
-        if (con->m_prevConnection != nullptr)
+        if (con->m_prevConnection != NULL)
             con->m_prevConnection->m_nextConnection = con->m_nextConnection;
-        if (con->m_nextConnection != nullptr)
+        if (con->m_nextConnection != NULL)
             con->m_nextConnection->m_prevConnection = con->m_prevConnection;
         if (m_connectionList == con)
             m_connectionList = con->m_nextConnection;
-        con->m_nextConnection = nullptr;
-        con->m_prevConnection = nullptr;
+        con->m_nextConnection = NULL;
+        con->m_prevConnection = NULL;
 
-        if (con->m_prevKeepAliveConnection != nullptr)
+        if (con->m_prevKeepAliveConnection != NULL)
             con->m_prevKeepAliveConnection->m_nextKeepAliveConnection = con->m_nextKeepAliveConnection;
-        if (con->m_nextKeepAliveConnection != nullptr)
+        if (con->m_nextKeepAliveConnection != NULL)
             con->m_nextKeepAliveConnection->m_prevKeepAliveConnection = con->m_prevKeepAliveConnection;
 
         if (m_aliveList.m_beginList == con)
             m_aliveList.m_beginList = con->m_nextKeepAliveConnection;
         else if (m_keepAliveList.m_beginList == con)
             m_keepAliveList.m_beginList = con->m_nextKeepAliveConnection;
-        con->m_nextKeepAliveConnection = nullptr;
-        con->m_prevKeepAliveConnection = nullptr;
+        con->m_nextKeepAliveConnection = NULL;
+        con->m_prevKeepAliveConnection = NULL;
 
 
 
-        if (con->m_prevRecvDataConnection != nullptr)
+        if (con->m_prevRecvDataConnection != NULL)
             con->m_prevRecvDataConnection->m_nextRecvDataConnection = con->m_nextRecvDataConnection;
-        if (con->m_nextRecvDataConnection != nullptr)
+        if (con->m_nextRecvDataConnection != NULL)
             con->m_nextRecvDataConnection->m_prevRecvDataConnection = con->m_prevRecvDataConnection;
 
         if (m_dataList.m_beginList == con)
             m_dataList.m_beginList = con->m_nextRecvDataConnection;
         else if (m_noDataList.m_beginList == con)
             m_noDataList.m_beginList = con->m_nextRecvDataConnection;
-        con->m_nextRecvDataConnection = nullptr;
-        con->m_prevRecvDataConnection = nullptr;
+        con->m_nextRecvDataConnection = NULL;
+        con->m_prevRecvDataConnection = NULL;
 
 
 

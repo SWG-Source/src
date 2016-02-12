@@ -21,7 +21,7 @@ namespace soe
 	void trim(std::string& str);
 	void crack(std::string * dest, std::string * base, const std::string& tok);
 	void inline crack(std::string& dest, std::string& base, const std::string& tok) {crack(&dest, &base, tok);}
-    void inline crack(std::string& base, const std::string& tok) {crack(nullptr, &base, tok);}
+    void inline crack(std::string& base, const std::string& tok) {crack(NULL, &base, tok);}
 
 	class lowerCaseString
 	{

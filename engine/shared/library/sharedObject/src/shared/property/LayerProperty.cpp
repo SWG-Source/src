@@ -23,7 +23,7 @@ PropertyId LayerProperty::getClassPropertyId()
 
 LayerProperty::LayerProperty(Object& thisObject) : 
 Property(getClassPropertyId(), thisObject),
-m_layer(nullptr)
+m_layer(NULL)
 {
 }
 
@@ -31,10 +31,10 @@ m_layer(nullptr)
 
 LayerProperty::~LayerProperty()
 {
-	if (m_layer != nullptr)
+	if (m_layer != NULL)
 	{
 		delete m_layer;
-		m_layer = nullptr;
+		m_layer = NULL;
 	}
 }
 

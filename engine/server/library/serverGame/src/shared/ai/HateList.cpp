@@ -41,8 +41,8 @@
 
 // ----------------------------------------------------------------------
 HateList::HateList()
- : m_owner(nullptr)
- , m_playerObject(nullptr)
+ : m_owner(NULL)
+ , m_playerObject(NULL)
  , m_hateList()
  , m_target(CachedNetworkId::cms_cachedInvalid)
  , m_maxHate(0.0f)
@@ -56,8 +56,8 @@ HateList::HateList()
 HateList::~HateList()
 {
 	clear();
-	m_owner = nullptr;
-	m_playerObject = nullptr;
+	m_owner = NULL;
+	m_playerObject = NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -119,7 +119,7 @@ bool HateList::addHate(NetworkId const & target, float const hate)
 			// If a target AI has a master, the target and the master needs to be added to the hate list (ie. pets should cause their master to gain hate)
 			{
 				CreatureObject const * const targetCreatureObject = CreatureObject::asCreatureObject(targetObject);
-				NetworkId const & masterId = (targetCreatureObject != nullptr) ? targetCreatureObject->getMasterId() : NetworkId::cms_invalid;
+				NetworkId const & masterId = (targetCreatureObject != NULL) ? targetCreatureObject->getMasterId() : NetworkId::cms_invalid;
 
 				if (masterId != NetworkId::cms_invalid)
 				{
@@ -274,7 +274,7 @@ bool HateList::removeTarget(NetworkId const & target)
 		{
 			AggroListProperty * const aggroList = AggroListProperty::getAggroListProperty(*m_owner);
 
-			if (aggroList != nullptr)
+			if (aggroList != NULL)
 			{
 				aggroList->addTarget(target);
 			}
@@ -301,7 +301,7 @@ bool HateList::isValidTarget(Object * const target)
 	bool valid = true;
 	TangibleObject * const targetTangibleObject = TangibleObject::asTangibleObject(target);
 
-	if (targetTangibleObject == nullptr)
+	if (targetTangibleObject == NULL)
 	{
 		LOGC(AiLogManager::isLogging(m_owner->getNetworkId()), "debug_ai", ("HateList::isValidTarget() owner(%s:%s) TARGET IS NOT A TANGIBLEOBJECT", m_owner->getNetworkId().getValueString().c_str(), FileNameUtils::get(m_owner->getDebugName(), FileNameUtils::fileName).c_str()));
 		valid = false;
@@ -334,7 +334,7 @@ bool HateList::isValidTarget(Object * const target)
 		{
 			CreatureObject const * const targetCreatureObject = targetTangibleObject->asCreatureObject();
 
-			if (targetCreatureObject != nullptr)
+			if (targetCreatureObject != NULL)
 			{
 				if (targetTangibleObject->isDisabled())
 				{
@@ -355,7 +355,7 @@ bool HateList::isValidTarget(Object * const target)
 				{
 					AICreatureController const * const targetAiCreatureController = AICreatureController::asAiCreatureController(targetCreatureObject->getController());
 
-					if (   (targetAiCreatureController != nullptr)
+					if (   (targetAiCreatureController != NULL)
 						&& targetAiCreatureController->isRetreating())
 					{
 						LOGC(AiLogManager::isLogging(m_owner->getNetworkId()), "debug_ai", ("HateList::isValidTarget() owner(%s:%s) TARGET IS RETREATING", m_owner->getNetworkId().getValueString().c_str(), FileNameUtils::get(m_owner->getDebugName(), FileNameUtils::fileName).c_str()));
@@ -370,7 +370,7 @@ bool HateList::isValidTarget(Object * const target)
 						// themselves towards the player so that they and the player
 						// enter combat correctly.
 						{
-							if (   (m_owner->asCreatureObject() != nullptr)
+							if (   (m_owner->asCreatureObject() != NULL)
 								&& !Pvp::canAttack(*m_owner, *targetTangibleObject))
 							{
 								LOGC(AiLogManager::isLogging(m_owner->getNetworkId()), "debug_ai", ("HateList::isValidTarget() owner(%s:%s) PVP CAN'T ATTACK", m_owner->getNetworkId().getValueString().c_str(), FileNameUtils::get(m_owner->getDebugName(), FileNameUtils::fileName).c_str()));
@@ -393,7 +393,7 @@ CachedNetworkId const & HateList::getTarget() const
 	if (   (m_target.get() == CachedNetworkId::cms_cachedInvalid)
 	    && !isEmpty())
 	{
-		WARNING(true, ("HateList::getTarget() owner(%s) m_hateList.size(%u) m_target is nullptr but the HateList is not empty.", m_owner->getDebugInformation().c_str(), m_hateList.size()));
+		WARNING(true, ("HateList::getTarget() owner(%s) m_hateList.size(%u) m_target is NULL but the HateList is not empty.", m_owner->getDebugInformation().c_str(), m_hateList.size()));
 	}
 #endif // _DEBUG
 
@@ -458,7 +458,7 @@ void HateList::findNewTarget()
 
 	for (; iterHateList != m_hateList.end(); ++iterHateList)
 	{
-		if (iterHateList->first.getObject() == nullptr)
+		if (iterHateList->first.getObject() == NULL)
 		{
 			// This target will be removed in the next alter call
 			continue;
@@ -510,11 +510,11 @@ void HateList::setTarget(CachedNetworkId const & target, float const hate)
 #ifdef _DEBUG
 	// We should only have tangible objects in our target list
 
-	if (m_target.get().getObject() != nullptr)
+	if (m_target.get().getObject() != NULL)
 	{
 		TangibleObject const * const targetTangibleObject = TangibleObject::asTangibleObject(m_target.get().getObject()->asServerObject());
 
-		if (targetTangibleObject == nullptr)
+		if (targetTangibleObject == NULL)
 		{
 			WARNING(true, ("HateList::setTarget() owner(%s) How did we get a target(%s) that is not a TangibleObject", m_owner->getDebugInformation().c_str(), m_target.get().getObject()->getDebugInformation().c_str()));
 		}
@@ -559,7 +559,7 @@ void HateList::triggerTargetChanged(NetworkId const & target)
 {
 	GameScriptObject * const gameScriptObject = GameScriptObject::asGameScriptObject(m_owner);
 
-	if (gameScriptObject != nullptr)
+	if (gameScriptObject != NULL)
 	{
 		LOGC(AiLogManager::isLogging(m_owner->getNetworkId()), "debug_ai", ("HateList::triggerTargetChanged() owner(%s:%s) target(%s)", m_owner->getNetworkId().getValueString().c_str(), FileNameUtils::get(m_owner->getDebugName(), FileNameUtils::fileName).c_str(), target.getValueString().c_str()));
 
@@ -578,7 +578,7 @@ void HateList::triggerTargetAdded(NetworkId const & target)
 {
 	GameScriptObject * const gameScriptObject = GameScriptObject::asGameScriptObject(m_owner);
 
-	if (gameScriptObject != nullptr)
+	if (gameScriptObject != NULL)
 	{
 		LOGC(AiLogManager::isLogging(m_owner->getNetworkId()), "debug_ai", ("HateList::triggerTargetAdded() owner(%s:%s) target(%s)", m_owner->getNetworkId().getValueString().c_str(), FileNameUtils::get(m_owner->getDebugName(), FileNameUtils::fileName).c_str(), target.getValueString().c_str()));
 
@@ -597,7 +597,7 @@ void HateList::triggerTargetRemoved(NetworkId const & target)
 {
 	GameScriptObject * const gameScriptObject = GameScriptObject::asGameScriptObject(m_owner);
 
-	if (gameScriptObject != nullptr)
+	if (gameScriptObject != NULL)
 	{
 		LOGC(AiLogManager::isLogging(m_owner->getNetworkId()), "debug_ai", ("HateList::triggerTargetRemoved() owner(%s:%s) target(%s)", m_owner->getNetworkId().getValueString().c_str(), FileNameUtils::get(m_owner->getDebugName(), FileNameUtils::fileName).c_str(), target.getValueString().c_str()));
 
@@ -628,7 +628,7 @@ int HateList::getAutoExpireTargetDuration() const
 bool HateList::isOwnerValid() const
 {
 	CreatureObject const * const ownerCreature = CreatureObject::asCreatureObject(m_owner);
-	bool const ownerIncapacitated = (ownerCreature != nullptr) ? ownerCreature->isIncapacitated() : false;
+	bool const ownerIncapacitated = (ownerCreature != NULL) ? ownerCreature->isIncapacitated() : false;
 
 	if (ownerIncapacitated)
 	{
@@ -636,7 +636,7 @@ bool HateList::isOwnerValid() const
 		return false;
 	}
 
-	bool const ownerDead = (ownerCreature != nullptr) ? ownerCreature->isDead() : false;
+	bool const ownerDead = (ownerCreature != NULL) ? ownerCreature->isDead() : false;
 
 	if (ownerDead)
 	{
@@ -644,7 +644,7 @@ bool HateList::isOwnerValid() const
 		return false;
 	}
 
-	bool const ownerDisabled = (ownerCreature != nullptr) ? ownerCreature->isDisabled() : false;
+	bool const ownerDisabled = (ownerCreature != NULL) ? ownerCreature->isDisabled() : false;
 
 	if (ownerDisabled)
 	{
@@ -653,7 +653,7 @@ bool HateList::isOwnerValid() const
 	}
 
 	AICreatureController const * const ownerAiCreatureController = AICreatureController::asAiCreatureController(m_owner->getController());
-	const bool ownerRetreating = (ownerAiCreatureController != nullptr) ? ownerAiCreatureController->isRetreating() : false;
+	const bool ownerRetreating = (ownerAiCreatureController != NULL) ? ownerAiCreatureController->isRetreating() : false;
 
 	if (ownerRetreating)
 	{
@@ -752,11 +752,11 @@ void HateList::forceHateTarget(const NetworkId &target)
 #ifdef _DEBUG
 	// We should only have tangible objects in our target list
 
-	if (m_target.get().getObject() != nullptr)
+	if (m_target.get().getObject() != NULL)
 	{
 		TangibleObject const * const targetTangibleObject = TangibleObject::asTangibleObject(m_target.get().getObject()->asServerObject());
 
-		if (targetTangibleObject == nullptr)
+		if (targetTangibleObject == NULL)
 		{
 			WARNING(true, ("HateList::setTarget() owner(%s) How did we get a target(%s) that is not a TangibleObject", m_owner->getDebugInformation().c_str(), m_target.get().getObject()->getDebugInformation().c_str()));
 		}

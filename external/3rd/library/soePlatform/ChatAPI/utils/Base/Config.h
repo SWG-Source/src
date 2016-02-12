@@ -10,7 +10,7 @@
 
 ; list of strings, with code example
 # config.FindKey("NUMBERS");
-# while (number = config.GetLong(nullptr))
+# while (number = config.GetLong(NULL))
 #    YourHandleNumber(number);
 [NUMBERS]   100
     200, 300    ; formatting is very flexible as long as numbers are delimited by non-numbers
@@ -23,7 +23,7 @@
 
 ; list of strings, with code example
 # config.FindKey("HOSTS");
-# while (string = config.GetString(nullptr))
+# while (string = config.GetString(NULL))
 #    YourHandleString(string);
 [HOSTS]	
     "127.0.0.1:5999"
@@ -68,16 +68,16 @@ namespace Base
         // returns TRUE if key is found.
         bool FindKey(char *key);            
 
-        // extract string from config.  If key is nullptr, extract next string in list, else extract first string.
-        // if key was not found, returns nullptr
-        char * GetString(char *key = nullptr); 
+        // extract string from config.  If key is NULL, extract next string in list, else extract first string.
+        // if key was not found, returns NULL
+        char * GetString(char *key = NULL); 
 
-        // extract number from config.  If key is nullptr, extract next number in list, else extract first number.
+        // extract number from config.  If key is NULL, extract next number in list, else extract first number.
         // if key was not found, returns 0
-        long GetLong(char *key = nullptr);     // extract number from config.
+        long GetLong(char *key = NULL);     // extract number from config.
 
 		// indicate if config file has been loaded
-		inline bool FileLoaded()		{ return pConfig == nullptr ? false : true; }
+		inline bool FileLoaded()		{ return pConfig == NULL ? false : true; }
 
     private:
         char * pConfig;     // pointer to file memory
@@ -87,14 +87,14 @@ namespace Base
 
     inline CConfig::CConfig()
     {
-        pConfig = nullptr;
-        pCursor = nullptr;
+        pConfig = NULL;
+        pCursor = NULL;
     }
 
     inline CConfig::CConfig(char * file)
     {
-        pConfig = nullptr;
-        pCursor = nullptr;
+        pConfig = NULL;
+        pCursor = NULL;
         LoadFile(file);
     }
 

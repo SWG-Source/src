@@ -103,13 +103,13 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		ServerObject const* o = dynamic_cast<ServerObject const*>(ServerWorld::findObjectByNetworkId(oid));
-		CreatureObject const* c = (o ? o->asCreatureObject() : nullptr);
-		if (o == nullptr)
+		CreatureObject const* c = (o ? o->asCreatureObject() : NULL);
+		if (o == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
 		}
-		else if (c == nullptr)
+		else if (c == NULL)
 		{
 			result += Unicode::narrowToWide("specified object is not a creature object\n");
 			return true;
@@ -117,7 +117,7 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 		else
 		{
 			PlayerObject const* p = PlayerCreatureController::getPlayerObject(c);
-			if (p == nullptr)
+			if (p == NULL)
 			{
 				result += Unicode::narrowToWide("specified object is not a character object\n");
 				return true;
@@ -185,7 +185,7 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 
 				result += Unicode::narrowToWide(FormattedString<512>().sprintf("lifetime PvP kills:                     %ld\n",p->getLifetimePvpKills()));
 				result += Unicode::narrowToWide(FormattedString<512>().sprintf("next GCW rating calculation time:       %ld",p->getNextGcwRatingCalcTime()));
-				int32 const now = static_cast<int32>(::time(nullptr));
+				int32 const now = static_cast<int32>(::time(NULL));
 				if (p->getNextGcwRatingCalcTime() > 0)
 				{
 					if (p->getNextGcwRatingCalcTime() >= now)
@@ -223,13 +223,13 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		ServerObject * o = dynamic_cast<ServerObject *>(ServerWorld::findObjectByNetworkId(oid));
-		CreatureObject * c = (o ? o->asCreatureObject() : nullptr);
-		if (o == nullptr)
+		CreatureObject * c = (o ? o->asCreatureObject() : NULL);
+		if (o == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
 		}
-		else if (c == nullptr)
+		else if (c == NULL)
 		{
 			result += Unicode::narrowToWide("specified object is not a creature object\n");
 			return true;
@@ -237,7 +237,7 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 		else
 		{
 			PlayerObject * p = PlayerCreatureController::getPlayerObject(c);
-			if (p == nullptr)
+			if (p == NULL)
 			{
 				result += Unicode::narrowToWide("specified object is not a character object\n");
 				return true;
@@ -259,13 +259,13 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		ServerObject * o = dynamic_cast<ServerObject *>(ServerWorld::findObjectByNetworkId(oid));
-		CreatureObject * c = (o ? o->asCreatureObject() : nullptr);
-		if (o == nullptr)
+		CreatureObject * c = (o ? o->asCreatureObject() : NULL);
+		if (o == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
 		}
-		else if (c == nullptr)
+		else if (c == NULL)
 		{
 			result += Unicode::narrowToWide("specified object is not a creature object\n");
 			return true;
@@ -273,7 +273,7 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 		else
 		{
 			PlayerObject * p = PlayerCreatureController::getPlayerObject(c);
-			if (p == nullptr)
+			if (p == NULL)
 			{
 				result += Unicode::narrowToWide("specified object is not a character object\n");
 				return true;
@@ -295,13 +295,13 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		ServerObject * o = dynamic_cast<ServerObject *>(ServerWorld::findObjectByNetworkId(oid));
-		CreatureObject * c = (o ? o->asCreatureObject() : nullptr);
-		if (o == nullptr)
+		CreatureObject * c = (o ? o->asCreatureObject() : NULL);
+		if (o == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
 		}
-		else if (c == nullptr)
+		else if (c == NULL)
 		{
 			result += Unicode::narrowToWide("specified object is not a creature object\n");
 			return true;
@@ -309,7 +309,7 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 		else
 		{
 			PlayerObject * p = PlayerCreatureController::getPlayerObject(c);
-			if (p == nullptr)
+			if (p == NULL)
 			{
 				result += Unicode::narrowToWide("specified object is not a character object\n");
 				return true;
@@ -331,13 +331,13 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		ServerObject * o = dynamic_cast<ServerObject *>(ServerWorld::findObjectByNetworkId(oid));
-		CreatureObject * c = (o ? o->asCreatureObject() : nullptr);
-		if (o == nullptr)
+		CreatureObject * c = (o ? o->asCreatureObject() : NULL);
+		if (o == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
 		}
-		else if (c == nullptr)
+		else if (c == NULL)
 		{
 			result += Unicode::narrowToWide("specified object is not a creature object\n");
 			return true;
@@ -345,7 +345,7 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 		else
 		{
 			PlayerObject * p = PlayerCreatureController::getPlayerObject(c);
-			if (p == nullptr)
+			if (p == NULL)
 			{
 				result += Unicode::narrowToWide("specified object is not a character object\n");
 				return true;
@@ -369,13 +369,13 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		ServerObject * o = dynamic_cast<ServerObject *>(ServerWorld::findObjectByNetworkId(oid));
-		CreatureObject * c = (o ? o->asCreatureObject() : nullptr);
-		if (o == nullptr)
+		CreatureObject * c = (o ? o->asCreatureObject() : NULL);
+		if (o == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
 		}
-		else if (c == nullptr)
+		else if (c == NULL)
 		{
 			result += Unicode::narrowToWide("specified object is not a creature object\n");
 			return true;
@@ -383,7 +383,7 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 		else
 		{
 			PlayerObject * p = PlayerCreatureController::getPlayerObject(c);
-			if (p == nullptr)
+			if (p == NULL)
 			{
 				result += Unicode::narrowToWide("specified object is not a character object\n");
 				return true;
@@ -405,13 +405,13 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		ServerObject * o = dynamic_cast<ServerObject *>(ServerWorld::findObjectByNetworkId(oid));
-		CreatureObject * c = (o ? o->asCreatureObject() : nullptr);
-		if (o == nullptr)
+		CreatureObject * c = (o ? o->asCreatureObject() : NULL);
+		if (o == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
 		}
-		else if (c == nullptr)
+		else if (c == NULL)
 		{
 			result += Unicode::narrowToWide("specified object is not a creature object\n");
 			return true;
@@ -419,7 +419,7 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 		else
 		{
 			PlayerObject * p = PlayerCreatureController::getPlayerObject(c);
-			if (p == nullptr)
+			if (p == NULL)
 			{
 				result += Unicode::narrowToWide("specified object is not a character object\n");
 				return true;
@@ -441,13 +441,13 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		ServerObject * o = dynamic_cast<ServerObject *>(ServerWorld::findObjectByNetworkId(oid));
-		CreatureObject * c = (o ? o->asCreatureObject() : nullptr);
-		if (o == nullptr)
+		CreatureObject * c = (o ? o->asCreatureObject() : NULL);
+		if (o == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
 		}
-		else if (c == nullptr)
+		else if (c == NULL)
 		{
 			result += Unicode::narrowToWide("specified object is not a creature object\n");
 			return true;
@@ -455,7 +455,7 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 		else
 		{
 			PlayerObject * p = PlayerCreatureController::getPlayerObject(c);
-			if (p == nullptr)
+			if (p == NULL)
 			{
 				result += Unicode::narrowToWide("specified object is not a character object\n");
 				return true;
@@ -477,21 +477,21 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		ServerObject * o = dynamic_cast<ServerObject *>(ServerWorld::findObjectByNetworkId(oid));
-		if (o == nullptr)
+		if (o == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
 		}
 
 		CreatureObject * c = o->asCreatureObject();
-		if (c == nullptr)
+		if (c == NULL)
 		{
 			result += Unicode::narrowToWide("specified object is not a creature object\n");
 			return true;
 		}
 
 		PlayerObject * p = PlayerCreatureController::getPlayerObject(c);
-		if (p == nullptr)
+		if (p == NULL)
 		{
 			result += Unicode::narrowToWide("specified object is not a character object\n");
 			return true;
@@ -585,7 +585,7 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		ServerObject * o = dynamic_cast<ServerObject *>(ServerWorld::findObjectByNetworkId(oid));
-		if (o == nullptr)
+		if (o == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
@@ -612,21 +612,21 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		ServerObject * const o = dynamic_cast<ServerObject *>(ServerWorld::findObjectByNetworkId(oid));
-		if (o == nullptr)
+		if (o == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
 		}
 
 		CreatureObject * const c = o->asCreatureObject();
-		if (c == nullptr)
+		if (c == NULL)
 		{
 			result += Unicode::narrowToWide("specified object is not a creature object\n");
 			return true;
 		}
 
 		PlayerObject * const p = PlayerCreatureController::getPlayerObject(c);
-		if (p == nullptr)
+		if (p == NULL)
 		{
 			result += Unicode::narrowToWide("specified object is not a character object\n");
 			return true;
@@ -660,21 +660,21 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		ServerObject * const o = dynamic_cast<ServerObject *>(ServerWorld::findObjectByNetworkId(oid));
-		if (o == nullptr)
+		if (o == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
 		}
 
 		CreatureObject * const c = o->asCreatureObject();
-		if (c == nullptr)
+		if (c == NULL)
 		{
 			result += Unicode::narrowToWide("specified object is not a creature object\n");
 			return true;
 		}
 
 		PlayerObject * const p = PlayerCreatureController::getPlayerObject(c);
-		if (p == nullptr)
+		if (p == NULL)
 		{
 			result += Unicode::narrowToWide("specified object is not a character object\n");
 			return true;
@@ -708,21 +708,21 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		ServerObject * const o = dynamic_cast<ServerObject *>(ServerWorld::findObjectByNetworkId(oid));
-		if (o == nullptr)
+		if (o == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
 		}
 
 		CreatureObject * const c = o->asCreatureObject();
-		if (c == nullptr)
+		if (c == NULL)
 		{
 			result += Unicode::narrowToWide("specified object is not a creature object\n");
 			return true;
 		}
 
 		PlayerObject * const p = PlayerCreatureController::getPlayerObject(c);
-		if (p == nullptr)
+		if (p == NULL)
 		{
 			result += Unicode::narrowToWide("specified object is not a character object\n");
 			return true;
@@ -756,21 +756,21 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		ServerObject * const o = dynamic_cast<ServerObject *>(ServerWorld::findObjectByNetworkId(oid));
-		if (o == nullptr)
+		if (o == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
 		}
 
 		CreatureObject * const c = o->asCreatureObject();
-		if (c == nullptr)
+		if (c == NULL)
 		{
 			result += Unicode::narrowToWide("specified object is not a creature object\n");
 			return true;
 		}
 
 		PlayerObject * const p = PlayerCreatureController::getPlayerObject(c);
-		if (p == nullptr)
+		if (p == NULL)
 		{
 			result += Unicode::narrowToWide("specified object is not a character object\n");
 			return true;
@@ -804,21 +804,21 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		ServerObject * const o = dynamic_cast<ServerObject *>(ServerWorld::findObjectByNetworkId(oid));
-		if (o == nullptr)
+		if (o == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
 		}
 
 		CreatureObject * const c = o->asCreatureObject();
-		if (c == nullptr)
+		if (c == NULL)
 		{
 			result += Unicode::narrowToWide("specified object is not a creature object\n");
 			return true;
 		}
 
 		PlayerObject * const p = PlayerCreatureController::getPlayerObject(c);
-		if (p == nullptr)
+		if (p == NULL)
 		{
 			result += Unicode::narrowToWide("specified object is not a character object\n");
 			return true;
@@ -852,14 +852,14 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 	{
 		NetworkId const oid(Unicode::wideToNarrow(argv[1]));
 		ServerObject const * const o = dynamic_cast<ServerObject *>(ServerWorld::findObjectByNetworkId(oid));
-		if (o == nullptr)
+		if (o == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
 		}
 
 		CreatureObject const * const c = o->asCreatureObject();
-		if (c == nullptr)
+		if (c == NULL)
 		{
 			result += Unicode::narrowToWide("specified object is not a creature object\n");
 			return true;
@@ -874,14 +874,14 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 	{
 		NetworkId const actorOid(Unicode::wideToNarrow(argv[1]));
 		ServerObject const * const actorSo = dynamic_cast<ServerObject *>(ServerWorld::findObjectByNetworkId(actorOid));
-		if (actorSo == nullptr)
+		if (actorSo == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
 		}
 
 		TangibleObject const * const actorTo = actorSo->asTangibleObject();
-		if (actorTo == nullptr)
+		if (actorTo == NULL)
 		{
 			result += Unicode::narrowToWide(FormattedString<512>().sprintf("(%s) is not a TangibleObject\n", actorOid.getValueString().c_str()));
 			return true;
@@ -889,14 +889,14 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 
 		NetworkId const targetOid(Unicode::wideToNarrow(argv[2]));
 		ServerObject const * const targetSo = dynamic_cast<ServerObject *>(ServerWorld::findObjectByNetworkId(targetOid));
-		if (targetSo == nullptr)
+		if (targetSo == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
 		}
 
 		TangibleObject const * const targetTo = targetSo->asTangibleObject();
-		if (targetTo == nullptr)
+		if (targetTo == NULL)
 		{
 			result += Unicode::narrowToWide(FormattedString<512>().sprintf("(%s) is not a TangibleObject\n", targetOid.getValueString().c_str()));
 			return true;
@@ -924,14 +924,14 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 	{
 		NetworkId const actorOid(Unicode::wideToNarrow(argv[1]));
 		ServerObject * const actorSo = dynamic_cast<ServerObject *>(ServerWorld::findObjectByNetworkId(actorOid));
-		if (actorSo == nullptr)
+		if (actorSo == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
 		}
 
 		TangibleObject * const actorTo = actorSo->asTangibleObject();
-		if (actorTo == nullptr)
+		if (actorTo == NULL)
 		{
 			result += Unicode::narrowToWide(FormattedString<512>().sprintf("(%s) is not a TangibleObject\n", actorOid.getValueString().c_str()));
 			return true;
@@ -939,14 +939,14 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 
 		NetworkId const targetOid(Unicode::wideToNarrow(argv[2]));
 		ServerObject * const targetSo = dynamic_cast<ServerObject *>(ServerWorld::findObjectByNetworkId(targetOid));
-		if (targetSo == nullptr)
+		if (targetSo == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
 		}
 
 		TangibleObject * const targetTo = targetSo->asTangibleObject();
-		if (targetTo == nullptr)
+		if (targetTo == NULL)
 		{
 			result += Unicode::narrowToWide(FormattedString<512>().sprintf("(%s) is not a TangibleObject\n", targetOid.getValueString().c_str()));
 			return true;
@@ -968,28 +968,28 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 
 		NetworkId const oid(Unicode::wideToNarrow(argv[1]));
 		ServerObject const * const o = dynamic_cast<ServerObject *>(ServerWorld::findObjectByNetworkId(oid));
-		if (o == nullptr)
+		if (o == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
 		}
 
 		CreatureObject const * const c = o->asCreatureObject();
-		if (c == nullptr)
+		if (c == NULL)
 		{
 			result += Unicode::narrowToWide("specified object is not a creature object\n");
 			return true;
 		}
 
 		PlayerObject const * const p = PlayerCreatureController::getPlayerObject(c);
-		if (p == nullptr)
+		if (p == NULL)
 		{
 			result += Unicode::narrowToWide("specified object is not a character object\n");
 			return true;
 		}
 
 		ShipObject const * const ship = ShipObject::getContainingShipObject(c);
-		if (ship == nullptr)
+		if (ship == NULL)
 		{
 			result += Unicode::narrowToWide("specified character object is not in a ship\n");
 			return true;
@@ -1042,28 +1042,28 @@ bool ConsoleCommandParserPvp::performParsing (const NetworkId & userId, const St
 
 		NetworkId const oid(Unicode::wideToNarrow(argv[1]));
 		ServerObject const * const o = dynamic_cast<ServerObject *>(ServerWorld::findObjectByNetworkId(oid));
-		if (o == nullptr)
+		if (o == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
 		}
 
 		CreatureObject const * const c = o->asCreatureObject();
-		if (c == nullptr)
+		if (c == NULL)
 		{
 			result += Unicode::narrowToWide("specified object is not a creature object\n");
 			return true;
 		}
 
 		PlayerObject const * const p = PlayerCreatureController::getPlayerObject(c);
-		if (p == nullptr)
+		if (p == NULL)
 		{
 			result += Unicode::narrowToWide("specified object is not a character object\n");
 			return true;
 		}
 
 		ShipObject const * const ship = ShipObject::getContainingShipObject(c);
-		if (ship == nullptr)
+		if (ship == NULL)
 		{
 			result += Unicode::narrowToWide("specified character object is not in a ship\n");
 			return true;

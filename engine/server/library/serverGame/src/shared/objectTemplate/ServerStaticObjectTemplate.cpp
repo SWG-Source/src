@@ -93,10 +93,10 @@ Tag ServerStaticObjectTemplate::getTemplateVersion(void) const
  */
 Tag ServerStaticObjectTemplate::getHighestTemplateVersion(void) const
 {
-	if (m_baseData == nullptr)
+	if (m_baseData == NULL)
 		return m_templateVersion;
 	const ServerStaticObjectTemplate * base = dynamic_cast<const ServerStaticObjectTemplate *>(m_baseData);
-	if (base == nullptr)
+	if (base == NULL)
 		return m_templateVersion;
 	return std::max(m_templateVersion, base->getHighestTemplateVersion());
 } // ServerStaticObjectTemplate::getHighestTemplateVersion
@@ -120,33 +120,33 @@ bool testDataValue = false;
 UNREF(testData);
 #endif
 
-	const ServerStaticObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerStaticObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerStaticObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getClientOnlyBuildout(true);
 #endif
 	}
 
 	if (!m_clientOnlyBuildout.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter clientOnlyBuildout in template %s", DataResource::getName()));
 			return false;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter clientOnlyBuildout has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter clientOnlyBuildout has not been defined in template %s!", DataResource::getName()));
 			return base->getClientOnlyBuildout();
 		}
 	}
 
 	bool value = m_clientOnlyBuildout.getValue();
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -192,12 +192,12 @@ char paramName[MAX_NAME_SIZE];
 		file.read_string(baseFilename);
 		file.exitChunk();
 		const ObjectTemplate *base = ObjectTemplateList::fetch(baseFilename);
-		DEBUG_WARNING(base == nullptr, ("was unable to load base template %s", baseFilename.c_str()));
-		if (m_baseData == base && base != nullptr)
+		DEBUG_WARNING(base == NULL, ("was unable to load base template %s", baseFilename.c_str()));
+		if (m_baseData == base && base != NULL)
 			base->releaseReference();
 		else
 		{
-			if (m_baseData != nullptr)
+			if (m_baseData != NULL)
 				m_baseData->releaseReference();
 			m_baseData = base;
 		}

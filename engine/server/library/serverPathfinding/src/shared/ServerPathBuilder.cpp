@@ -41,7 +41,7 @@ const float gs_maxCanMoveDistance2 = (64.0f * 64.0f);
 
 int findClosestReachablePathNode_slow( CreatureObject const * creature, PathGraph const * graph )
 {
-	if(graph == nullptr) return -1;
+	if(graph == NULL) return -1;
 
 	Vector creaturePos = creature->getPosition_p();
 
@@ -53,7 +53,7 @@ int findClosestReachablePathNode_slow( CreatureObject const * creature, PathGrap
 
 	int resultCount = results.size();
 
-	PathNode const * reachableNode = nullptr;
+	PathNode const * reachableNode = NULL;
 	float reachableDist2 = gs_maxCanMoveDistance2;
 
 	for(int i = 0; i < resultCount; i++)
@@ -81,7 +81,7 @@ int findClosestReachablePathNode_slow( CreatureObject const * creature, PathGrap
 
 int findClosestReachablePathNode( CreatureObject const * creature, PathGraph const * graph )
 {
-	if(graph == nullptr) return -1;
+	if(graph == NULL) return -1;
 
 	Vector creaturePos = creature->getPosition_p();
 
@@ -98,7 +98,7 @@ int findClosestReachablePathNode( CreatureObject const * creature, PathGraph con
 
 	PathNode const * node = graph->getNode(closestIndex);
 
-	if(node == nullptr) return -2;
+	if(node == NULL) return -2;
 
 	Vector nodePos = node->getPosition_p();
 	float dist2 = nodePos.magnitudeBetweenSquared(creaturePos);
@@ -135,7 +135,7 @@ int findClosestReachablePathNode_slow ( CellProperty const * cell, Vector const 
 
 	int resultCount = results.size();
 
-	PathNode const * reachableNode = nullptr;
+	PathNode const * reachableNode = NULL;
 	float reachableDist2 = gs_maxCanMoveDistance2;
 
 	for(int i = 0; i < resultCount; i++)
@@ -173,7 +173,7 @@ int findClosestReachablePathNode ( CellProperty const * cell, Vector const & goa
 
 	PathNode const * node = graph->getNode(closestIndex);
 
-	if(node == nullptr) return -2;
+	if(node == NULL) return -2;
 
 	Vector nodePos = node->getPosition_p();
 	float dist2 = nodePos.magnitudeBetweenSquared(goal);
@@ -199,7 +199,7 @@ PathGraph const * getGraph ( CellProperty const * cell )
 	if(cell)
 		return safe_cast<PathGraph const *>(cell->getPathGraph());
 	else
-		return nullptr;
+		return NULL;
 }
 
 PathGraph const * getGraph ( PortalProperty const * building )
@@ -207,7 +207,7 @@ PathGraph const * getGraph ( PortalProperty const * building )
 	if(building)
 		return safe_cast<PathGraph const *>(building->getPortalPropertyTemplate().getBuildingPathGraph());
 	else
-		return nullptr;
+		return NULL;
 }
 
 // ----------
@@ -237,19 +237,19 @@ PortalProperty const * getBuilding ( BuildingObject const * buildingObject )
 	if(buildingObject)
 		return buildingObject->getPortalProperty();
 	else
-		return nullptr;
+		return NULL;
 }
 
 PortalProperty const * getBuilding ( CreatureObject const * creature )
 {
-	if(creature == nullptr) return nullptr;
+	if(creature == NULL) return NULL;
 
 	CellProperty const * cell = creature->getParentCell();
 
 	if(cell)
 		return cell->getPortalProperty();
 	else
-		return nullptr;
+		return NULL;
 }
 
 PortalProperty const * getBuilding ( AiLocation const & loc )
@@ -259,7 +259,7 @@ PortalProperty const * getBuilding ( AiLocation const & loc )
 	if(cell)
 		return cell->getPortalProperty();
 	else
-		return nullptr;
+		return NULL;
 }
 
 // ----------
@@ -388,26 +388,26 @@ int getIndexFor ( CellProperty const * cell, PathGraph const * graph, AiLocation
 // ----------------------------------------------------------------------
 
 ServerPathBuilder::ServerPathBuilder()
-: m_creatureCell(nullptr),
-  m_creatureCellGraph(nullptr),
+: m_creatureCell(NULL),
+  m_creatureCellGraph(NULL),
   m_creatureCellKey(-1),
   m_creatureCellNodeIndex(-1),
   m_creatureCellPart(-1),
-  m_creatureBuilding(nullptr),
-  m_creatureBuildingGraph(nullptr),
+  m_creatureBuilding(NULL),
+  m_creatureBuildingGraph(NULL),
   m_creatureBuildingKey(-1),
   m_creatureBuildingNodeIndex(-1),
   m_creaturePosition(),
-  m_goalCell(nullptr),
-  m_goalCellGraph(nullptr),
+  m_goalCell(NULL),
+  m_goalCellGraph(NULL),
   m_goalCellKey(-1),
   m_goalCellNodeIndex(-1),
   m_goalCellPart(-1),
-  m_goalBuilding(nullptr),
-  m_goalBuildingGraph(nullptr),
+  m_goalBuilding(NULL),
+  m_goalBuildingGraph(NULL),
   m_goalBuildingKey(-1),
   m_goalBuildingNodeIndex(-1),
-  m_goalCityGraph(nullptr),
+  m_goalCityGraph(NULL),
   m_goalCityNodeIndex(-1),
   m_path(new AiPath()),  
   m_async(false),
@@ -427,16 +427,16 @@ ServerPathBuilder::~ServerPathBuilder()
 	ServerPathBuildManager::unqueue(this);
 
 	delete m_path;
-	m_path = nullptr;
+	m_path = NULL;
 
 	delete m_cellSearch;
-	m_cellSearch = nullptr;
+	m_cellSearch = NULL;
 
 	delete m_buildingSearch;
-	m_buildingSearch = nullptr;
+	m_buildingSearch = NULL;
 
 	delete m_citySearch;
-	m_citySearch = nullptr;
+	m_citySearch = NULL;
 }
 
 
@@ -462,7 +462,7 @@ bool ServerPathBuilder::buildPathInternal( CellProperty const * cell, PathGraph 
 
 		PathNode const * node = graph->getNode(nodeIndex);
 
-		if(node == nullptr) return false;
+		if(node == NULL) return false;
 
 		addPathNode( cell, node );
 	}
@@ -484,9 +484,9 @@ bool ServerPathBuilder::buildPathInternal ( PortalProperty const * building, Pat
 
 	// ----------
 
-	PathNode const * nodeA = nullptr;
-	PathNode const * nodeB = nullptr;
-	PathNode const * nodeC = nullptr;
+	PathNode const * nodeA = NULL;
+	PathNode const * nodeB = NULL;
+	PathNode const * nodeC = NULL;
 
 	int pathLength = path.size();
 
@@ -496,7 +496,7 @@ bool ServerPathBuilder::buildPathInternal ( PortalProperty const * building, Pat
 		{
 			PathNode const * nextNode = graph->getNode(path[i]);
 
-			if(nextNode == nullptr) continue;
+			if(nextNode == NULL) continue;
 
 			nodeA = nodeB;
 			nodeB = nodeC;
@@ -506,10 +506,10 @@ bool ServerPathBuilder::buildPathInternal ( PortalProperty const * building, Pat
 		{
 			nodeA = nodeB;
 			nodeB = nodeC;
-			nodeC = nullptr;
+			nodeC = NULL;
 		}
 
-		if( nodeB == nullptr ) continue;
+		if( nodeB == NULL ) continue;
 
 		// ----------
 
@@ -519,11 +519,11 @@ bool ServerPathBuilder::buildPathInternal ( PortalProperty const * building, Pat
 
 			CellProperty const * subobject = building->getCell(cellIndex);
 
-			if(subobject == nullptr) return false;
+			if(subobject == NULL) return false;
 
 			PathGraph const * subgraph = getGraph(subobject);
 
-			if(subgraph == nullptr) return false;
+			if(subgraph == NULL) return false;
 
 			// ----------
 
@@ -576,9 +576,9 @@ bool ServerPathBuilder::buildPathInternal ( CityPathGraph const * graph, int ind
 
 bool ServerPathBuilder::expandPath ( CityPathGraph const * graph, IndexList const & path )
 {
-	PathNode const * nodeA = nullptr;
-	PathNode const * nodeB = nullptr;
-	PathNode const * nodeC = nullptr;
+	PathNode const * nodeA = NULL;
+	PathNode const * nodeB = NULL;
+	PathNode const * nodeC = NULL;
 
 	int pathLength = path.size();
 
@@ -588,7 +588,7 @@ bool ServerPathBuilder::expandPath ( CityPathGraph const * graph, IndexList cons
 		{
 			PathNode const * nextNode = graph->getNode(path[i]);
 
-			if(nextNode == nullptr) continue;
+			if(nextNode == NULL) continue;
 
 			nodeA = nodeB;
 			nodeB = nodeC;
@@ -598,10 +598,10 @@ bool ServerPathBuilder::expandPath ( CityPathGraph const * graph, IndexList cons
 		{
 			nodeA = nodeB;
 			nodeB = nodeC;
-			nodeC = nullptr;
+			nodeC = NULL;
 		}
 
-		if( nodeB == nullptr ) continue;
+		if( nodeB == NULL ) continue;
 
 		// ----------
 
@@ -609,19 +609,19 @@ bool ServerPathBuilder::expandPath ( CityPathGraph const * graph, IndexList cons
 		{
 			CityPathNode const * cityNode = safe_cast<CityPathNode const *>(nodeB);
 
-			if(cityNode == nullptr) return false;
+			if(cityNode == NULL) return false;
 
 			BuildingObject const * buildingObject = safe_cast<BuildingObject const *>(cityNode->getCreatorObject());
 
-			if(buildingObject == nullptr) return false;
+			if(buildingObject == NULL) return false;
 
 			PortalProperty const * subobject = getBuilding(buildingObject);
 
-			if(subobject == nullptr) return false;
+			if(subobject == NULL) return false;
 
 			PathGraph const * subgraph = getGraph(subobject);
 
-			if(subgraph == nullptr) return false;
+			if(subgraph == NULL) return false;
 
 			// ----------
 
@@ -652,7 +652,7 @@ bool ServerPathBuilder::buildPath_World ( void )
 {
 	Vector exitPoint(m_creature ? m_creature->getPosition_w() : m_creaturePosition);
 
-	if((m_creatureCityGraph != nullptr) && (m_creatureCityNodeIndex >= 0))
+	if((m_creatureCityGraph != NULL) && (m_creatureCityNodeIndex >= 0))
 	{
 		int indexA = m_creatureCityNodeIndex;
 		int indexB = m_creatureCityGraph->findNearestNode(m_goal.getPosition_w());
@@ -670,7 +670,7 @@ bool ServerPathBuilder::buildPath_World ( void )
 		}
 	}
 
-	if((m_goalCityGraph != nullptr) && (m_goalCityNodeIndex >= 0))
+	if((m_goalCityGraph != NULL) && (m_goalCityNodeIndex >= 0))
 	{
 		int indexA = m_goalCityGraph->findNearestNode(exitPoint);
 		int indexB = m_goalCityNodeIndex;
@@ -701,8 +701,8 @@ bool ServerPathBuilder::buildPath_ToGoal ( void )
 	m_creatureCell = m_creature->getParentCell();
 	m_goalCell = m_goal.getCell();
 
-	if(m_creatureCell == nullptr) m_creatureCell = worldCell;
-	if(m_goalCell == nullptr) m_goalCell = worldCell;
+	if(m_creatureCell == NULL) m_creatureCell = worldCell;
+	if(m_goalCell == NULL) m_goalCell = worldCell;
 
 	{
 		Vector goalPos_p = m_goal.getPosition_p(m_creatureCell);
@@ -724,23 +724,23 @@ bool ServerPathBuilder::buildPath_ToGoal ( void )
 		// we can skip some work with looking up their cell and building
 		// info.
 
-		m_creatureCellGraph     = nullptr;
+		m_creatureCellGraph     = NULL;
 		m_creatureCellKey       = -1;
 		m_creatureCellNodeIndex = -1;
 		m_creatureCellPart      = -1;
 
-		m_goalCellGraph         = nullptr;
+		m_goalCellGraph         = NULL;
 		m_goalCellKey           = -1;
 		m_goalCellNodeIndex     = -1;
 		m_goalCellPart          = -1;
 
-		m_creatureBuilding          = nullptr;
-		m_creatureBuildingGraph     = nullptr;
+		m_creatureBuilding          = NULL;
+		m_creatureBuildingGraph     = NULL;
 		m_creatureBuildingKey       = -1;
 		m_creatureBuildingNodeIndex = -1;
 
-		m_goalBuilding              = nullptr;
-		m_goalBuildingGraph         = nullptr;
+		m_goalBuilding              = NULL;
+		m_goalBuildingGraph         = NULL;
 		m_goalBuildingKey           = -1;
 		m_goalBuildingNodeIndex     = -1;
 	}
@@ -776,7 +776,7 @@ bool ServerPathBuilder::buildPath_ToGoal ( void )
 
 		// If they're in the same cell, start the search in the cell
 
-		if((m_creatureCell == m_goalCell) && (m_creatureCell != nullptr) && (m_creatureCell != CellProperty::getWorldCellProperty()) && (m_creatureCellPart == m_goalCellPart))
+		if((m_creatureCell == m_goalCell) && (m_creatureCell != NULL) && (m_creatureCell != CellProperty::getWorldCellProperty()) && (m_creatureCellPart == m_goalCellPart))
 		{
 			return buildPathInternal(m_creatureCell,m_creatureCellGraph,m_creatureCellNodeIndex,m_goalCellNodeIndex);
 		}
@@ -795,7 +795,7 @@ bool ServerPathBuilder::buildPath_ToGoal ( void )
 
 		// If they're in the same building, start the search in the building
 
-		if((m_creatureBuilding == m_goalBuilding) && (m_creatureBuilding != nullptr))
+		if((m_creatureBuilding == m_goalBuilding) && (m_creatureBuilding != NULL))
 		{
 			return buildPathInternal(m_creatureBuilding,m_creatureBuildingGraph,m_creatureBuildingNodeIndex,m_goalBuildingNodeIndex);
 		}
@@ -810,7 +810,7 @@ bool ServerPathBuilder::buildPath_ToGoal ( void )
 	m_goalCityGraph         = CityPathGraphManager::getCityGraphFor(m_goal.getPosition_w());
 	m_goalCityNodeIndex     = getIndexFor(m_goalCityGraph,m_goalBuilding,m_goal);
 
-	if((m_creatureCityGraph == m_goalCityGraph) && (m_creatureCityGraph != nullptr))
+	if((m_creatureCityGraph == m_goalCityGraph) && (m_creatureCityGraph != NULL))
 	{
 		// hack - If a creature in a city region tries to path search but it's not near a path node,
 		// make its path search succeed
@@ -875,7 +875,7 @@ bool ServerPathBuilder::buildPath_Named ( void )
 
 	// ----------
 
-	if(m_creatureCityGraph != nullptr)
+	if(m_creatureCityGraph != NULL)
 	{
 		IndexList goalList;
 
@@ -885,7 +885,7 @@ bool ServerPathBuilder::buildPath_Named ( void )
 		{
 			CityPathNode const * node = m_creatureCityGraph->_getNode(i);
 
-			if(node == nullptr) continue;
+			if(node == NULL) continue;
 
 			if(node->getName() == m_goalName)
 			{
@@ -954,7 +954,7 @@ void ServerPathBuilder::update ( void )
 
 bool ServerPathBuilder::setupBuildPath ( CreatureObject const * creature, AiLocation const & goal )
 {
-	if(creature == nullptr) return false;
+	if(creature == NULL) return false;
 	if(!goal.isValid()) return false;
 
 	m_creature = creature;
@@ -971,7 +971,7 @@ bool ServerPathBuilder::setupBuildPath ( CreatureObject const * creature, AiLoca
 
 bool ServerPathBuilder::setupBuildPath ( CreatureObject const * creature, Unicode::String const & goalName )
 {
-	if(creature == nullptr) return false;
+	if(creature == NULL) return false;
 	if(goalName.empty()) return false;
 
 	m_creature = creature;
@@ -1058,23 +1058,23 @@ bool ServerPathBuilder::buildWorldPath(AiLocation const &startLocation, AiLocati
 	// we can skip some work with looking up their cell and building
 	// info.
 
-	m_creatureCellGraph     = nullptr;
+	m_creatureCellGraph     = NULL;
 	m_creatureCellKey       = -1;
 	m_creatureCellNodeIndex = -1;
 	m_creatureCellPart      = -1;
 
-	m_goalCellGraph         = nullptr;
+	m_goalCellGraph         = NULL;
 	m_goalCellKey           = -1;
 	m_goalCellNodeIndex     = -1;
 	m_goalCellPart          = -1;
 
-	m_creatureBuilding          = nullptr;
-	m_creatureBuildingGraph     = nullptr;
+	m_creatureBuilding          = NULL;
+	m_creatureBuildingGraph     = NULL;
 	m_creatureBuildingKey       = -1;
 	m_creatureBuildingNodeIndex = -1;
 
-	m_goalBuilding              = nullptr;
-	m_goalBuildingGraph         = nullptr;
+	m_goalBuilding              = NULL;
+	m_goalBuildingGraph         = NULL;
 	m_goalBuildingKey           = -1;
 	m_goalBuildingNodeIndex     = -1;
 
@@ -1134,8 +1134,8 @@ bool ServerPathBuilder::buildWorldPath(AiLocation const &startLocation, AiLocati
 
 void ServerPathBuilder::addPathNode ( CellProperty const * cell, PathNode const * node )
 {
-	if(node == nullptr) return;
-	if(cell == nullptr) cell = CellProperty::getWorldCellProperty();
+	if(node == NULL) return;
+	if(cell == NULL) cell = CellProperty::getWorldCellProperty();
 
 	AiLocation loc(cell,node->getPosition_p());
 
@@ -1173,7 +1173,7 @@ void ServerPathBuilder::addPathNode ( CellProperty const * cell, PathNode const 
 
 bool ServerPathBuilder::buildPathImmediate(AiLocation const & creature, AiLocation const & goal)
 {
-	m_creature = nullptr;
+	m_creature = NULL;
 	m_goal = goal;
 	m_buildDone = false;
 	m_buildFailed = false;
@@ -1190,9 +1190,9 @@ bool ServerPathBuilder::buildPathImmediate(AiLocation const & creature, AiLocati
 
 	// ----------
 	CellProperty const * worldCell = CellProperty::getWorldCellProperty();
-	if(m_creatureCell == nullptr) 
+	if(m_creatureCell == NULL) 
 		m_creatureCell = worldCell;
-	if(m_goalCell == nullptr) 
+	if(m_goalCell == NULL) 
 		m_goalCell = worldCell;
 
 
@@ -1236,14 +1236,14 @@ bool ServerPathBuilder::buildPathImmediate(AiLocation const & creature, AiLocati
 	m_goalBuildingNodeIndex     = getIndexFor(m_goalBuilding, m_goalBuildingGraph, m_goal, m_goalCellPart);
 	
 	// If they're in the same building, start the search in the building
-	if((m_creatureBuilding == m_goalBuilding) && (m_creatureBuilding != nullptr))
+	if((m_creatureBuilding == m_goalBuilding) && (m_creatureBuilding != NULL))
 	{
 		if (buildPathInternal(m_creatureBuilding, m_creatureBuildingGraph, m_creatureBuildingNodeIndex, m_goalBuildingNodeIndex))
 			return true;
 	}
 
 	// If they're in the same cell, start the search in the cell
-	if((m_creatureCell == m_goalCell) && (m_creatureCell != nullptr) && (m_creatureCell != CellProperty::getWorldCellProperty()) && (m_creatureCellPart == m_goalCellPart))
+	if((m_creatureCell == m_goalCell) && (m_creatureCell != NULL) && (m_creatureCell != CellProperty::getWorldCellProperty()) && (m_creatureCellPart == m_goalCellPart))
 	{
 		if (buildPathInternal(m_creatureCell, m_creatureCellGraph, m_creatureCellNodeIndex, m_goalCellNodeIndex))
 			return true;
@@ -1257,7 +1257,7 @@ bool ServerPathBuilder::buildPathImmediate(AiLocation const & creature, AiLocati
 	m_goalCityGraph         = CityPathGraphManager::getCityGraphFor(m_goal.getPosition_w());
 	m_goalCityNodeIndex     = getIndexFor(m_goalCityGraph,m_goalBuilding,m_goal);
 
-	if((m_creatureCityGraph == m_goalCityGraph) && (m_creatureCityGraph != nullptr))
+	if((m_creatureCityGraph == m_goalCityGraph) && (m_creatureCityGraph != NULL))
 	{
 		// hack - If a creature in a city region tries to path search but it's not near a path node,
 		// make its path search succeed

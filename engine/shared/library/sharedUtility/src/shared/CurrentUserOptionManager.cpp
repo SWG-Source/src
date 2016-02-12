@@ -70,7 +70,7 @@ void CurrentUserOptionManager::load (char const * const userName)
 		ms_optionManager->load (ms_userName.c_str ());
 	}
 	else
-		DEBUG_WARNING (true, ("CurrentUserOptionManager::load: userName is nullptr"));
+		DEBUG_WARNING (true, ("CurrentUserOptionManager::load: userName is null"));
 }
 
 // ----------------------------------------------------------------------
@@ -82,7 +82,7 @@ void CurrentUserOptionManager::save ()
 	if (!ms_userName.empty ())	
 		ms_optionManager->save (ms_userName.c_str ());
 	else
-		DEBUG_REPORT_LOG (s_verbose, ("CurrentUserOptionManager::save: userName is nullptr\n"));
+		DEBUG_REPORT_LOG (s_verbose, ("CurrentUserOptionManager::save: userName is null\n"));
 }
 
 // ----------------------------------------------------------------------

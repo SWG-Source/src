@@ -59,7 +59,7 @@ namespace Archive
 
 		std::string name;
 		std::string type;
-		ValueTypeBase * value = nullptr;
+		ValueTypeBase * value = NULL;
 		ValueObjectUnpackHandlerMap::const_iterator iterFind;
 		for (int i = 0; i < static_cast<int>(count); ++i)
 		{
@@ -77,7 +77,7 @@ namespace Archive
 			target.insert(name, *value);
 
 			delete value;
-			value = nullptr;
+			value = NULL;
 		}
 	}
 

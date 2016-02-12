@@ -576,7 +576,7 @@ void CommoditiesServerConnection::onReceive(const Archive::ByteStream & message)
 
 		ScriptDictionaryPtr dictionary;
 		GameScriptObject::makeScriptDictionary(params, dictionary);
-		if (dictionary.get() != nullptr)
+		if (dictionary.get() != NULL)
 		{
 			dictionary->serialize();
 			MessageToQueue::getInstance().sendMessageToJava(response.getValue().first.first, 

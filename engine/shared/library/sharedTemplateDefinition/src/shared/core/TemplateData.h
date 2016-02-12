@@ -238,11 +238,11 @@ inline bool TemplateData::isWritingForCompiler(void) const
 
 inline const TemplateDefinitionFile * TemplateData::getFileParent(void) const
 {
-	if (m_fileParent != nullptr)
+	if (m_fileParent != NULL)
 		return m_fileParent;
-	if (m_templateParent != nullptr)
+	if (m_templateParent != NULL)
 		return m_templateParent->getFileParent();
-	return nullptr;
+	return NULL;
 }	// TemplateData::getFileParent
 
 

@@ -194,7 +194,7 @@ public:
 	virtual void        onClientReady (Client *c);
 	virtual void        onClientAboutToLoad();
 	virtual void        onLoadingScreenComplete();
-	virtual bool        canManipulateObject(ServerObject const &target, bool movingObject, bool doPermissionCheckOnItem, bool doPermissionCheckOnParent, float maxDistance, Container::ContainerErrorCode&, bool skipNoTradeCheck = false, bool * allowedByGodMode = nullptr) const;
+	virtual bool        canManipulateObject(ServerObject const &target, bool movingObject, bool doPermissionCheckOnItem, bool doPermissionCheckOnParent, float maxDistance, Container::ContainerErrorCode&, bool skipNoTradeCheck = false, bool * allowedByGodMode = NULL) const;
 
 	virtual void        onRemovingFromWorld();
 	void                addMembersToPackages();
@@ -330,7 +330,7 @@ public:
 
 	void                                addAttributeModifier(const std::string & name, Attributes::Enumerator attrib, int value, float duration, float attackRate, float decayRate, int flags);
 	void                                addSkillmodModifier(const std::string & name, const std::string & skill, int value, float duration, int flags);
-	int                                 addAttributeModifier(const AttribMod::AttribMod & mod, ServerObject * attacker = nullptr);
+	int                                 addAttributeModifier(const AttribMod::AttribMod & mod, ServerObject * attacker = NULL);
 	bool                                hasAttribModifier(const std::string & modName) const;
 	void                                removeAttributeModifier(const std::string & modName);
 	void                                removeAttributeModifiers(Attributes::Enumerator attribute);
@@ -747,7 +747,7 @@ private:
 	void     testIncapacitation(const NetworkId & attackerId);
 	void     initializeNewPlayer  ();
 	
-	void     addPackedWearable(std::string const &appearanceData, int arrangementIndex, NetworkId const &networkId, uint32 sharedTemplateCrcValue, const BaselinesMessage * weaponSharedBaselines = nullptr, const BaselinesMessage * weaponSharedNpBaselines = nullptr);
+	void     addPackedWearable(std::string const &appearanceData, int arrangementIndex, NetworkId const &networkId, uint32 sharedTemplateCrcValue, const BaselinesMessage * weaponSharedBaselines = NULL, const BaselinesMessage * weaponSharedNpBaselines = NULL);
 	void     addPackedAppearanceWearable(std::string const &appearanceData, int arrangementIndex, NetworkId const &networkId, uint32 sharedTemplateCrcValue);	
 	void     packWearables();
 	void     computeTotalAttributes ();

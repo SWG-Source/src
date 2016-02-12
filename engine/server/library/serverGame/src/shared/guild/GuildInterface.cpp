@@ -43,11 +43,11 @@ namespace GuildInterfaceNamespace
 	bool s_needEnemiesRebuild;
 
 	// dictionary containing the table showing all active guild wars with at least 1 kill
-	ScriptParams * s_activeGuildWars = nullptr;
+	ScriptParams * s_activeGuildWars = NULL;
 	bool s_activeGuildWarsNeedRebuild = true;
 
 	// dictionary containing the table showing the 100 most recently ended guild wars with at least 1 kill
-	ScriptParams * s_inactiveGuildWars = nullptr;
+	ScriptParams * s_inactiveGuildWars = NULL;
 	int s_inactiveGuildWarsMostRecentUpdateIndex = 0;
 
 	typedef std::map<std::string, NetworkId> PendingChannelAddList; //using a map to make it easier to prevent redundant entries
@@ -99,7 +99,7 @@ namespace GuildInterfaceNamespace
 
 	const char * makeCopyOfString(const char * rhs)
 	{
-		char * lhs = nullptr;
+		char * lhs = NULL;
 		if (rhs)
 		{
 			lhs = new char[strlen(rhs) + 1];
@@ -245,7 +245,7 @@ std::pair<int, time_t> const *GuildInterface::hasDeclaredWarAgainst(int actorGui
 		}
 	}
 
-	return nullptr;
+	return NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -662,7 +662,7 @@ ScriptParams const *GuildInterface::getMasterGuildWarTableDictionary()
 		}
 
 		delete s_activeGuildWars;
-		s_activeGuildWars = nullptr;
+		s_activeGuildWars = NULL;
 
 		// build the table
 		if (!guildMutuallyAtWarWithKillSummary.empty())
@@ -810,9 +810,9 @@ void GuildInterface::updateInactiveGuildWarTrackingInfo(GuildObject &masterGuild
 
 	// guild with higher kill count appears first
 	if (guildAKillCount > guildBKillCount)
-		IGNORE_RETURN(masterGuildObject.setObjVarItem(FormattedString<32>().sprintf("%s.%d", s_objvarInactiveGuildWarsPrefix.c_str(), nextIndex), FormattedString<512>().sprintf("%s~%s~%d~%s~%s~%d~%ld", giA->m_name.c_str(), giA->m_abbrev.c_str(), guildAKillCount, giB->m_name.c_str(), giB->m_abbrev.c_str(), guildBKillCount, ::time(nullptr))));
+		IGNORE_RETURN(masterGuildObject.setObjVarItem(FormattedString<32>().sprintf("%s.%d", s_objvarInactiveGuildWarsPrefix.c_str(), nextIndex), FormattedString<512>().sprintf("%s~%s~%d~%s~%s~%d~%ld", giA->m_name.c_str(), giA->m_abbrev.c_str(), guildAKillCount, giB->m_name.c_str(), giB->m_abbrev.c_str(), guildBKillCount, ::time(NULL))));
 	else
-		IGNORE_RETURN(masterGuildObject.setObjVarItem(FormattedString<32>().sprintf("%s.%d", s_objvarInactiveGuildWarsPrefix.c_str(), nextIndex), FormattedString<512>().sprintf("%s~%s~%d~%s~%s~%d~%ld", giB->m_name.c_str(), giB->m_abbrev.c_str(), guildBKillCount, giA->m_name.c_str(), giA->m_abbrev.c_str(), guildAKillCount, ::time(nullptr))));
+		IGNORE_RETURN(masterGuildObject.setObjVarItem(FormattedString<32>().sprintf("%s.%d", s_objvarInactiveGuildWarsPrefix.c_str(), nextIndex), FormattedString<512>().sprintf("%s~%s~%d~%s~%s~%d~%ld", giB->m_name.c_str(), giB->m_abbrev.c_str(), guildBKillCount, giA->m_name.c_str(), giA->m_abbrev.c_str(), guildAKillCount, ::time(NULL))));
 
 	IGNORE_RETURN(masterGuildObject.setObjVarItem(s_objvarInactiveGuildWarsMostRecentIndex, nextIndex));
 }
@@ -869,7 +869,7 @@ ScriptParams const *GuildInterface::getInactiveGuildWarTableDictionary()
 		if (!objVars.getItem(FormattedString<32>().sprintf("%s.%d", s_objvarInactiveGuildWarsPrefix.c_str(), currentIndex), guildWarData))
 			break;
 
-		if (!Unicode::tokenize(guildWarData, tokens, &delimiters, nullptr) || (tokens.size() != 7))
+		if (!Unicode::tokenize(guildWarData, tokens, &delimiters, NULL) || (tokens.size() != 7))
 			break;
 
 		scriptParamsGuildAName->push_back(new Unicode::String(tokens[0]));
@@ -891,7 +891,7 @@ ScriptParams const *GuildInterface::getInactiveGuildWarTableDictionary()
 	}
 
 	delete s_inactiveGuildWars;
-	s_inactiveGuildWars = nullptr;
+	s_inactiveGuildWars = NULL;
 
 	if (!scriptParamsGuildAName->empty())
 	{
@@ -1120,7 +1120,7 @@ void GuildInterface::updateGuildWarKillTracking(CreatureObject const &killer, Cr
 	 && hasDeclaredWarAgainst(killer.getGuildId(), victim.getGuildId())
 	 && hasDeclaredWarAgainst(victim.getGuildId(), killer.getGuildId()))
 	{
-		ServerUniverse::getInstance().getMasterGuildObject()->modifyGuildWarKillTracking(killer.getGuildId(), victim.getGuildId(), 1, static_cast<int>(::time(nullptr)));
+		ServerUniverse::getInstance().getMasterGuildObject()->modifyGuildWarKillTracking(killer.getGuildId(), victim.getGuildId(), 1, static_cast<int>(::time(NULL)));
 	}
 }
 

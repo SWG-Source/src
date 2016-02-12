@@ -755,7 +755,7 @@ inline const char *CommandLine::Lexer::getNextCharacter(void)
 
 inline void CommandLine::Lexer::gobbleWhitespace(void)
 {
-	DEBUG_FATAL(!nextCharacter, ("nullptr nextCharacter"));
+	DEBUG_FATAL(!nextCharacter, ("null nextCharacter"));
 	while (isspace(*nextCharacter))
 		++nextCharacter;
 }

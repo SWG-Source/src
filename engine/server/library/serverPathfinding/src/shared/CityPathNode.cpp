@@ -46,7 +46,7 @@ CityPathNode::CityPathNode ( Vector const & position_w, NetworkId const & source
   m_source(sourceId),
   m_creator(),
   m_relativePosition_o(Vector::zero),
-  m_spatialHandle(nullptr),
+  m_spatialHandle(NULL),
   m_debugId( gs_debugIdCounter++ )
 {
 	snapToTerrain();
@@ -59,7 +59,7 @@ CityPathNode::CityPathNode ( Vector const & position_w, NetworkId const & source
   m_source(sourceId),
   m_creator(creatorId),
   m_relativePosition_o(Vector::zero),
-  m_spatialHandle(nullptr),
+  m_spatialHandle(NULL),
   m_debugId( gs_debugIdCounter++ )
 {
 	updateRelativePosition();
@@ -158,7 +158,7 @@ void CityPathNode::loadInfoFromObjvars ( void )
 {
 	ServerObject const * sourceObject = getSourceObject();
 
-	if(sourceObject == nullptr) return;
+	if(sourceObject == NULL) return;
 
 	const DynamicVariableList & objvars = sourceObject->getObjVars();
 
@@ -188,7 +188,7 @@ void CityPathNode::loadEdgesFromObjvars ( void )
 {
 	ServerObject const * sourceObject = getSourceObject();
 
-	if(sourceObject == nullptr) return;
+	if(sourceObject == NULL) return;
 
 	DynamicVariableList const & objvars = sourceObject->getObjVars();
 
@@ -203,11 +203,11 @@ void CityPathNode::loadEdgesFromObjvars ( void )
 		{
 			ServerObject * serverObject = ServerWorld::findObjectByNetworkId( idList[i] );
 
-			if(serverObject == nullptr) continue;
+			if(serverObject == NULL) continue;
 
 			CityPathNode * otherNode = _getGraph()->findNodeForObject(*serverObject);
 
-			if(otherNode == nullptr) continue;
+			if(otherNode == NULL) continue;
 
 			addEdge(otherNode->getIndex());
 			otherNode->addEdge(getIndex());
@@ -233,7 +233,7 @@ void CityPathNode::saveInfoToObjvars ( void )
 {
 	ServerObject * sourceObject = getSourceObject();
 
-	if(sourceObject == nullptr) return;
+	if(sourceObject == NULL) return;
 
 	// ----------
 
@@ -294,7 +294,7 @@ void CityPathNode::saveEdgesToObjvars ( void )
 
 		CityPathNode * neighborNode = _getGraph()->_getNode(neighborIndex);
 
-		if(neighborNode == nullptr) continue;
+		if(neighborNode == NULL) continue;
 
 		NetworkId const & neighborSourceId = neighborNode->getSourceId();
 
@@ -327,7 +327,7 @@ void CityPathNode::saveNeighbors ( void )
 
 		CityPathNode * neighborNode = _getGraph()->_getNode(neighborIndex);
 
-		if(neighborNode == nullptr) continue;
+		if(neighborNode == NULL) continue;
 
 		neighborNode->saveToObjvars();
 	}
@@ -420,7 +420,7 @@ bool CityPathNode::sanityCheck ( bool doWarnings ) const
 
 		CityPathNode const * neighborNode = _getGraph()->_getNode(neighborIndex);
 
-		if(neighborNode == nullptr)
+		if(neighborNode == NULL)
 		{
 			DEBUG_WARNING(doWarnings,("CityPathNode::sanityCheck - Node has an edge to a non-existent node\n"));
 			insaneCount++;
@@ -458,7 +458,7 @@ bool CityPathNode::sanityCheck ( bool doWarnings ) const
 			CityPathNode const * nodeA = this;
 			CityPathNode const * nodeB = _getGraph()->_getNode(getNeighbor(i));
 
-			if(nodeB == nullptr) continue;
+			if(nodeB == NULL) continue;
 
 			if(nodeB->getType() == PNT_CityBuilding) continue;
 
@@ -493,7 +493,7 @@ void CityPathNode::reload ( void )
 {
 	ServerObject const * sourceObject = getSourceObject();
 
-	if(sourceObject == nullptr) return;
+	if(sourceObject == NULL) return;
 
 	// ----------
 
@@ -521,7 +521,7 @@ bool CityPathNode::hasEdgeTo ( NetworkId const & neighborId ) const
 
 		CityPathNode const * neighborNode = _getGraph()->_getNode(neighborIndex);
 
-		if(neighborNode == nullptr) continue;
+		if(neighborNode == NULL) continue;
 
 		if(neighborNode->getSourceId() == neighborId) return true;
 	}
@@ -535,7 +535,7 @@ void CityPathNode::snapToTerrain ( void )
 {
 	CellProperty const * cell = getCell();
 
-	if((cell == nullptr) || (cell == CellProperty::getWorldCellProperty()))
+	if((cell == NULL) || (cell == CellProperty::getWorldCellProperty()))
 	{
 		Vector pos_w = getPosition_w();
 

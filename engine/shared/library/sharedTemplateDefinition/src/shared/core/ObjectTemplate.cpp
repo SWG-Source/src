@@ -16,8 +16,8 @@
 
 //-----------------------------------------------------------------
 
-template <> ObjectTemplateList::CreateDataResourceMap *ObjectTemplateList::ms_bindings = nullptr;
-template <> ObjectTemplateList::LoadedDataResourceMap *ObjectTemplateList::ms_loaded = nullptr;
+template <> ObjectTemplateList::CreateDataResourceMap *ObjectTemplateList::ms_bindings = NULL;
+template <> ObjectTemplateList::LoadedDataResourceMap *ObjectTemplateList::ms_loaded = NULL;
 
 // ======================================================================
 
@@ -40,10 +40,10 @@ ObjectTemplate::ObjectTemplate(const std::string & filename) :
 
 ObjectTemplate::~ObjectTemplate(void)
 {
-	if (m_baseData != nullptr)
+	if (m_baseData != NULL)
 	{
 		m_baseData->releaseReference();
-		m_baseData = nullptr;
+		m_baseData = NULL;
 	}
 }
 
@@ -63,7 +63,7 @@ void ObjectTemplate::load(Iff &iff)
  */
 void ObjectTemplate::addReference(void) const
 {
-	if (m_baseData != nullptr)
+	if (m_baseData != NULL)
 		m_baseData->addReference();
 
 	DataResource::addReference();
@@ -76,7 +76,7 @@ void ObjectTemplate::addReference(void) const
  */
 void ObjectTemplate::releaseReference(void) const
 {
-	if (m_baseData != nullptr)
+	if (m_baseData != NULL)
 		m_baseData->releaseReference();
 	
 	DataResource::releaseReference();

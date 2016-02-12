@@ -26,8 +26,8 @@ int const MAX_ATTRIBS = 2000;
 void StaticLootItemManager::sendDataToClient(NetworkId const & playerId, std::string const & staticItemName)
 {
 	Object * const o = NetworkIdManager::getObjectById(playerId);
-	ServerObject * const so = o ? o->asServerObject() : nullptr;
-	CreatureObject * const co = so ? so->asCreatureObject() : nullptr;
+	ServerObject * const so = o ? o->asServerObject() : NULL;
+	CreatureObject * const co = so ? so->asCreatureObject() : NULL;
 
 	if(co)
 	{
@@ -45,8 +45,8 @@ void StaticLootItemManager::sendDataToClient(NetworkId const & playerId, std::st
 void StaticLootItemManager::getAttributes(NetworkId const & playerId, std::string const & staticItemName, AttributeVector & data)
 {
 	Object * const o = NetworkIdManager::getObjectById(playerId);
-	ServerObject * const so = o ? o->asServerObject() : nullptr;
-	CreatureObject * const co = so ? so->asCreatureObject() : nullptr;
+	ServerObject * const so = o ? o->asServerObject() : NULL;
+	CreatureObject * const co = so ? so->asCreatureObject() : NULL;
 	if(co)
 	{
 		GameScriptObject * const gso = const_cast<GameScriptObject *>(co->getScriptObject());

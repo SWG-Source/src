@@ -308,14 +308,14 @@ bool LineOfSightCache::checkLOS(Object const &a, Location const &b)
 				Clock::getFrameStartTimeMs() + ConfigServerGame::getLineOfSightCacheDurationMs()));
 
 		CellProperty const * const sourceCell = source->getParentCell();
-		CellProperty const * targetCell = nullptr;
+		CellProperty const * targetCell = NULL;
 		if (b.getCell() != NetworkId::cms_invalid)
 		{
 			Object const * cellObject = NetworkIdManager::getObjectById(b.getCell());
-			if (cellObject != nullptr)
+			if (cellObject != NULL)
 				targetCell = ContainerInterface::getCell(*cellObject);
 		}
-		if (targetCell == nullptr)
+		if (targetCell == NULL)
 			targetCell = CellProperty::getWorldCellProperty();
 
 		// if source and target are in the same cell in a player structure, skip LOS check;
@@ -418,7 +418,7 @@ bool LineOfSightCache::checkLOS(Object const &a, Location const &b)
 			qirResult = CollisionWorld::queryInteraction(
 				targetCell, b.getCoordinates(),
 				sourceCell, sourceTop,
-				nullptr,
+				NULL,
 				(!ConfigSharedCollision::getIgnoreTerrainLos() && !ConfigSharedCollision::getGenerateTerrainLos()),
 				false,
 				ConfigSharedCollision::getTerrainLOSMinDistance(),

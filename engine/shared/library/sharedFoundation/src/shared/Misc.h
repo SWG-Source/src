@@ -135,7 +135,7 @@ template<class T>inline void Zero(T &t)
  * the source string into the new memory, and then returns a pointer to
  * the new memory.
  * 
- * This routine will return nullptr if called with nullptr.
+ * This routine will return NULL if called with NULL.
  * 
  * @param source  The string to copy
  * @return A pointer to a copy of the source argument
@@ -144,7 +144,7 @@ template<class T>inline void Zero(T &t)
 inline char *DuplicateString(const char *source)
 {
 	if (!source)
-		return nullptr;
+		return NULL;
 
 	const uint length = strlen(source)+1;
 	char *result = NON_NULL (new char[length]);
@@ -160,7 +160,7 @@ inline char *DuplicateString(const char *source)
  * the source string into the new memory, and then returns a pointer to
  * the new memory.
  * 
- * This routine will return nullptr if called with nullptr.
+ * This routine will return NULL if called with NULL.
  * 
  * @param source  The string to copy
  * @return A pointer to a copy of the source argument
@@ -169,7 +169,7 @@ inline char *DuplicateString(const char *source)
 inline char *DuplicateStringWithToLower(const char *source)
 {
 	if (!source)
-		return nullptr;
+		return NULL;
 
 	const uint length = strlen(source)+1;
 	char *result = NON_NULL (new char[length]);
@@ -193,7 +193,7 @@ inline char *DuplicateStringWithToLower(const char *source)
 
 inline void imemset(void *data, int value, int length)
 {
-	DEBUG_FATAL(!data, ("nullptr data arg"));
+	DEBUG_FATAL(!data, ("null data arg"));
 	memset(data, value, static_cast<uint>(length));
 }
 
@@ -210,8 +210,8 @@ inline void imemset(void *data, int value, int length)
 
 inline void imemcpy(void *destination, const void *source, int length)
 {
-	DEBUG_FATAL(!destination, ("nullptr destination arg"));
-	DEBUG_FATAL(!source, ("nullptr source arg"));
+	DEBUG_FATAL(!destination, ("null destination arg"));
+	DEBUG_FATAL(!source, ("null source arg"));
 	memcpy(destination, source, static_cast<uint>(length));
 }
 
@@ -228,8 +228,8 @@ inline void imemcpy(void *destination, const void *source, int length)
 
 inline void *memmove(void *destination, const void *source, int length)
 {
-	DEBUG_FATAL(!destination, ("nullptr destination arg"));
-	DEBUG_FATAL(!source, ("nullptr source arg"));
+	DEBUG_FATAL(!destination, ("null destination arg"));
+	DEBUG_FATAL(!source, ("null source arg"));
 	return memmove(destination, source, static_cast<uint>(length));
 }
 
@@ -243,7 +243,7 @@ inline void *memmove(void *destination, const void *source, int length)
 
 inline int istrlen(const char *string)
 {
-	DEBUG_FATAL(!string, ("nullptr string arg"));
+	DEBUG_FATAL(!string, ("null string arg"));
 	return static_cast<int>(strlen(string));
 }
 

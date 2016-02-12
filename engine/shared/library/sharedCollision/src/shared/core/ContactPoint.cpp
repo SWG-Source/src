@@ -18,7 +18,7 @@
 // ----------------------------------------------------------------------
 
 ContactPoint::ContactPoint()
-: m_pSurface( nullptr ),
+: m_pSurface( NULL ),
   m_position( Vector::zero ),
   m_offset( 0.0f ),
   m_hitId( -1 )
@@ -45,7 +45,7 @@ ContactPoint::ContactPoint ( ContactPoint const & locCopy )
 
 bool ContactPoint::isAttached ( void ) const
 {
-	return (m_hitId != -1) && (m_pSurface != nullptr);
+	return (m_hitId != -1) && (m_pSurface != NULL);
 }
 
 // ----------------------------------------------------------------------
@@ -115,7 +115,7 @@ void ContactPoint::read_0000 ( Iff & iff )
 {
 	m_position = iff.read_floatVector();
 	m_offset = iff.read_float();
-	m_pSurface = nullptr;
+	m_pSurface = NULL;
 	m_hitId = iff.read_int32();
 
 	NAN_CHECK(m_position);

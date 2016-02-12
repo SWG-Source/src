@@ -158,7 +158,7 @@ inline Tag ConvertIntToTag(int value)
  * array with the name of the specified tag.  If a character of the tag
  * is not printable, it will be replaced with a question mark.
  * 
- * A nullptr-character will be appended to the output buffer.
+ * A null-character will be appended to the output buffer.
  * 
  * This routine assumes the specified character buffer is at least 5 characters
  * in length.
@@ -171,7 +171,7 @@ inline void ConvertTagToString(Tag tag, char *buffer)
 {
 	int  i, j, ch;
 
-	DEBUG_FATAL(!buffer, ("buffer is nullptr"));
+	DEBUG_FATAL(!buffer, ("buffer is null"));
 
 	for (i = 0, j = 24; i < 4; ++i, j -= 8)
 	{

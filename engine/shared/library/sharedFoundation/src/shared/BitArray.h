@@ -58,7 +58,7 @@ public:
 
 	// for DB persistence purpose, returns the BitArray as a
 	// std::string where each 4 bits are printed as a hex nibble;
-	// and the converse that takes the nullptr-terminated string
+	// and the converse that takes the null-terminated string
 	// and converts it back into the BitArray
 	void getAsDbTextString(std::string &result, int maxNibbleCount = 32767) const;
 	void setFromDbTextString(const char * text);

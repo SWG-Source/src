@@ -82,7 +82,7 @@ m_canCreateRegularCharacter(false),
 m_canCreateJediCharacter(false),
 m_hasRequestedCharacterCreate(false),
 m_hasCreatedCharacter(false),
-m_pendingCharacterCreate(nullptr),
+m_pendingCharacterCreate(NULL),
 m_canSkipTutorial(false),
 m_characterId(NetworkId::cms_invalid),
 m_characterName(),
@@ -144,7 +144,7 @@ ClientConnection::~ClientConnection()
 	{
 		hasBeenKicked = m_client->hasBeenKicked();
 		delete m_client;
-		m_client = nullptr;
+		m_client = NULL;
 	}
 
 	// tell Session to stop recording play time for the character
@@ -177,7 +177,7 @@ ClientConnection::~ClientConnection()
 	m_pendingChatQueryRoomRequests.clear();
 
 	delete m_pendingCharacterCreate;
-	m_pendingCharacterCreate = nullptr;
+	m_pendingCharacterCreate = NULL;
 }
 
 
@@ -202,7 +202,7 @@ std::string ClientConnection::getPlayTimeDuration() const
 	int playTimeDuration = 0;
 
 	if (m_startPlayTime > 0)
-		playTimeDuration = static_cast<int>(::time(nullptr) - m_startPlayTime);
+		playTimeDuration = static_cast<int>(::time(NULL) - m_startPlayTime);
 
 	return CalendarTime::convertSecondsToHMS(static_cast<unsigned int>(playTimeDuration));
 }
@@ -214,7 +214,7 @@ std::string ClientConnection::getActivePlayTimeDuration() const
 	int activePlayTimeDuration = static_cast<int>(m_activePlayTimeDuration);
 
 	if (m_lastActiveTime > 0)
-		activePlayTimeDuration += static_cast<int>(::time(nullptr) - m_lastActiveTime);
+		activePlayTimeDuration += static_cast<int>(::time(NULL) - m_lastActiveTime);
 
 	return CalendarTime::convertSecondsToHMS(static_cast<unsigned int>(activePlayTimeDuration));
 }
@@ -226,7 +226,7 @@ std::string ClientConnection::getCurrentActivePlayTimeDuration() const
 	int activePlayTimeDuration = 0;
 
 	if (m_lastActiveTime > 0)
-		activePlayTimeDuration = static_cast<int>(::time(nullptr) - m_lastActiveTime);
+		activePlayTimeDuration = static_cast<int>(::time(NULL) - m_lastActiveTime);
 
 	return CalendarTime::convertSecondsToHMS(static_cast<unsigned int>(activePlayTimeDuration));
 }
@@ -400,7 +400,7 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg& msg)
 				std::hash<std::string> h;
 				m_suid = h(m_accountName.c_str());
 			}
-			onValidateClient(m_suid, m_accountName, m_isSecure, nullptr, ConfigConnectionServer::getDefaultGameFeatures(), ConfigConnectionServer::getDefaultSubscriptionFeatures(), 0, 0, 0, 0, ConfigConnectionServer::getFakeBuddyPoints());
+			onValidateClient(m_suid, m_accountName, m_isSecure, NULL, ConfigConnectionServer::getDefaultGameFeatures(), ConfigConnectionServer::getDefaultSubscriptionFeatures(), 0, 0, 0, 0, ConfigConnectionServer::getFakeBuddyPoints());
 		}
 	}
 	else
@@ -452,7 +452,7 @@ void ClientConnection::onIdValidated(bool canLogin, bool canCreateRegularCharact
 		}
 
 		delete m_pendingCharacterCreate;
-		m_pendingCharacterCreate = nullptr;
+		m_pendingCharacterCreate = NULL;
 
 		return;
 	}
@@ -683,7 +683,7 @@ void ClientConnection::onReceive(const Archive::ByteStream & message)
 				}
 				else
 				{
-					ConnectionServer::dropClient(this, "m_client is nullptr while receiving a message!");
+					ConnectionServer::dropClient(this, "m_client is null while receiving a message!");
 					disconnect();
 				}
 			}
@@ -796,7 +796,7 @@ void ClientConnection::onReceive(const Archive::ByteStream & message)
 				}
 				else
 				{
-					ConnectionServer::dropClient(this, "m_client is nullptr while receiving a message!");
+					ConnectionServer::dropClient(this, "m_client is null while receiving a message!");
 					disconnect();
 				}
 			}
@@ -839,7 +839,7 @@ void ClientConnection::onReceive(const Archive::ByteStream & message)
 				}
 				else
 				{
-					ConnectionServer::dropClient(this, "m_client is nullptr while receiving a message!");
+					ConnectionServer::dropClient(this, "m_client is null while receiving a message!");
 					disconnect();
 				}
 			}
@@ -865,7 +865,7 @@ void ClientConnection::onReceive(const Archive::ByteStream & message)
 
 					//DEBUG_REPORT_LOG(true, ("CONSRV::CS - suid: %i\n", getSUID()));
 
-					if (customerServiceConnection != nullptr)
+					if (customerServiceConnection != NULL)
 					{
 						static std::vector<NetworkId> v;
 						v.clear();
@@ -935,7 +935,7 @@ void ClientConnection::onReceive(const Archive::ByteStream & message)
 				}
 				else
 				{
-					ConnectionServer::dropClient(this, "m_client is nullptr while receiving a message!");
+					ConnectionServer::dropClient(this, "m_client is null while receiving a message!");
 					disconnect();
 				}
 			}
@@ -951,7 +951,7 @@ void ClientConnection::onReceive(const Archive::ByteStream & message)
 						if (m_lastActiveTime > 0)
 						{
 							// record the amount of active time
-							m_activePlayTimeDuration += static_cast<unsigned long>(::time(nullptr) - m_lastActiveTime);
+							m_activePlayTimeDuration += static_cast<unsigned long>(::time(NULL) - m_lastActiveTime);
 
 							// tell Session to stop recording play time for the character
 							if (ConnectionServer::getSessionApiClient() && ConfigConnectionServer::getSessionRecordPlayTime())
@@ -988,7 +988,7 @@ void ClientConnection::onReceive(const Archive::ByteStream & message)
 						if (m_lastActiveTime == 0)
 						{
 							// record the time client went active
-							m_lastActiveTime = ::time(nullptr);
+							m_lastActiveTime = ::time(NULL);
 
 							// tell Session to start recording play time for the character
 							if (ConnectionServer::getSessionApiClient() && ConfigConnectionServer::getSessionRecordPlayTime())
@@ -1616,7 +1616,7 @@ void ClientConnection::onValidateClient (uint32 suid, const std::string & userna
 	}
 
 	// tell client the server-side game and subscription feature bits and which ConnectionServer we are and the current server Epoch time
-	GenericValueTypeMessage<std::pair<std::pair<unsigned long, unsigned long>, std::pair<int, int32> > > const msgFeatureBits("AccountFeatureBits", std::make_pair(std::make_pair(gameFeatures, subscriptionFeatures), std::make_pair(ConfigConnectionServer::getConnectionServerNumber(), static_cast<int32>(::time(nullptr)))));
+	GenericValueTypeMessage<std::pair<std::pair<unsigned long, unsigned long>, std::pair<int, int32> > > const msgFeatureBits("AccountFeatureBits", std::make_pair(std::make_pair(gameFeatures, subscriptionFeatures), std::make_pair(ConfigConnectionServer::getConnectionServerNumber(), static_cast<int32>(::time(NULL)))));
 	send(msgFeatureBits, true);
 
 	std::string const gameFeaturesDescription = ClientGameFeature::getDescription(gameFeatures);

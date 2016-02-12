@@ -159,7 +159,7 @@ void AiShipAttackTargetList::add(ShipObject & unit, float const damage)
 	
 	AiShipController * const ownerAiShipController = AiShipController::asAiShipController(m_owner->getController());
 
-	if (ownerAiShipController != nullptr)
+	if (ownerAiShipController != NULL)
 	{
 		if (!ownerAiShipController->isValidTarget(unit))
 		{
@@ -204,7 +204,7 @@ void AiShipAttackTargetList::add(ShipObject & unit, float const damage)
 
 	ShipController * const attackingUnitShipController = unit.getController()->asShipController();
 
-	if (attackingUnitShipController != nullptr)
+	if (attackingUnitShipController != NULL)
 	{
 		attackingUnitShipController->addAiTargetingMe(m_owner->getNetworkId());
 	}
@@ -217,7 +217,7 @@ void AiShipAttackTargetList::add(ShipObject & unit, float const damage)
 // ----------------------------------------------------------------------
 bool AiShipAttackTargetList::remove(NetworkId const & unit, bool const inDestructorHack)
 {
-	DEBUG_FATAL((unit == NetworkId::cms_invalid), ("Removing a nullptr unit"));
+	DEBUG_FATAL((unit == NetworkId::cms_invalid), ("Removing a NULL unit"));
 
 	bool result = false;
 
@@ -238,11 +238,11 @@ bool AiShipAttackTargetList::remove(NetworkId const & unit, bool const inDestruc
 
 		// Tell this unit that we are no longer targeting it
 
-		if (object != nullptr)
+		if (object != NULL)
 		{
 			ShipController * const shipController = object->getController()->asShipController();
 
-			if (shipController != nullptr)
+			if (shipController != NULL)
 			{
 				shipController->removeAiTargetingMe(m_owner->getNetworkId());
 			}
@@ -398,12 +398,12 @@ void AiShipAttackTargetList::findNewPrimaryTarget()
 
 	// We should only have ship objects in our target list
 
-	if (m_primaryTarget.getObject() != nullptr)
+	if (m_primaryTarget.getObject() != NULL)
 	{
 		ServerObject * const targetServerObject = m_primaryTarget.getObject()->asServerObject();
-		ShipObject * const targetShipObject = (targetServerObject != nullptr) ? targetServerObject->asShipObject() : nullptr;
+		ShipObject * const targetShipObject = (targetServerObject != NULL) ? targetServerObject->asShipObject() : NULL;
 
-		if (targetShipObject == nullptr)
+		if (targetShipObject == NULL)
 		{
 			DEBUG_WARNING(true, ("debug_ai: AiShipAttackTargetList::findNewPrimaryTarget() ERROR: How did we get a target that is not a ShipObject (%s)", m_primaryTarget.getObject()->getDebugInformation().c_str()));
 		}
@@ -444,7 +444,7 @@ void AiShipAttackTargetList::verify()
 
 	AiShipController * const ownerAiShipController = AiShipController::asAiShipController(m_owner->getController());
 
-	if (ownerAiShipController != nullptr)
+	if (ownerAiShipController != NULL)
 	{
 		if (ownerAiShipController->hasExclusiveAggros())
 		{
@@ -457,9 +457,9 @@ void AiShipAttackTargetList::verify()
 			for (; iterTargetList != m_targetList->end(); ++iterTargetList)
 			{
 				ShipObject * const unitShipObject = ShipObject::asShipObject(iterTargetList->first.getObject());
-				CreatureObject const * const unitPilot = (unitShipObject != nullptr) ? unitShipObject->getPilot() : nullptr;
+				CreatureObject const * const unitPilot = (unitShipObject != NULL) ? unitShipObject->getPilot() : NULL;
 
-				if (   (unitPilot == nullptr)
+				if (   (unitPilot == NULL)
 				    || !ownerAiShipController->isExclusiveAggro(*unitPilot))
 				{
 					s_purgeList.push_back(unitShipObject->getNetworkId());

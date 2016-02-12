@@ -57,7 +57,7 @@ class UdpMisc
             // memory manager does a little bit of this, but if you know you have an allocation that is likely
             // to grow quite a bit, you can set the round'ing size up to a fairly large number and avoid
             // unnecessary reallocs at the cost of a little potentially wasted space
-            // initial allocations are done by passing in ptr==nullptr, freeing is done by passing in bytes==0
+            // initial allocations are done by passing in ptr==NULL, freeing is done by passing in bytes==0
         static void *SmartResize(void *ptr, int bytes, int round = 1);
 
             // the following two functions store values in the buffer as a variable length (B1, 0xffB2B1, 0xffffffB4B3B2B1)
@@ -78,7 +78,7 @@ class UdpMisc
         static udp_uint GetValue24(const void *buffer);             // gets a 24-bit value from the buffer in big-endian format
         static udp_ushort GetValue16(const void *buffer);           // gets a 16-bit value from the buffer in big-endian format
 
-        static LogicalPacket *CreateQuickLogicalPacket(const void *data, int dataLen, const void *data2 = nullptr, int dataLen2 = 0);
+        static LogicalPacket *CreateQuickLogicalPacket(const void *data, int dataLen, const void *data2 = NULL, int dataLen2 = 0);
 
             // looks up the specified name and translates it to an IP address
             // this is a blocking call that can at times take a significant amount of time, but will generally be fast (less than 300ms)

@@ -150,8 +150,8 @@ private:
 	// caching the value so we don't constantly convert them from the string representation
 	//
 	// if the value can fit in m_cachedValue, we directly store it there
-	// int uses m_cachedValue[0], m_cachedValue[1] = nullptr
-	// float uses m_cachedValue[0], m_cachedValue[1] = nullptr
+	// int uses m_cachedValue[0], m_cachedValue[1] = NULL
+	// float uses m_cachedValue[0], m_cachedValue[1] = NULL
 	// NetworkId uses both m_cachedValue[0] and m_cachedValue[1]
 	//
 	// if not, we allocate storage for the value and store the pointer to it

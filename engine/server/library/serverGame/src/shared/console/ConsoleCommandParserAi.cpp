@@ -74,7 +74,7 @@ CreatureObject * const ConsoleCommandParserAiNamespace::getAiCreatureObject(Crea
 
 	CreatureObject * const aiCreatureObject = CreatureObject::getCreatureObject(aiNetworkId);
 
-	if (   (aiCreatureObject == nullptr)
+	if (   (aiCreatureObject == NULL)
 		|| aiCreatureObject->isPlayerControlled())
 	{
 		Chat::sendSystemMessage(user, Unicode::narrowToWide(FormattedString<1024>().sprintf("[FAILURE] Unable to resolve %s to an AI", aiNetworkId.getValueString().c_str())), Unicode::emptyString);
@@ -113,7 +113,7 @@ bool ConsoleCommandParserAi::performParsing(const NetworkId & userId, const Stri
 	{
 		CreatureObject * const userCreatureObject = CreatureObject::getCreatureObject(userId);
 
-		if (userCreatureObject == nullptr)
+		if (userCreatureObject == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_FAIL);
 		}
@@ -121,7 +121,7 @@ bool ConsoleCommandParserAi::performParsing(const NetworkId & userId, const Stri
 		{
 			CreatureObject * const aiCreatureObject = getAiCreatureObject(*userCreatureObject, argv);
 
-			if (aiCreatureObject == nullptr)
+			if (aiCreatureObject == NULL)
 			{
 				result += getErrorMessage(argv[0], ERR_FAIL);
 			}
@@ -129,7 +129,7 @@ bool ConsoleCommandParserAi::performParsing(const NetworkId & userId, const Stri
 			{
 				AICreatureController * const aiCreatureController = AICreatureController::asAiCreatureController(aiCreatureObject->getController());
 
-				if (aiCreatureController == nullptr)
+				if (aiCreatureController == NULL)
 				{
 					Chat::sendSystemMessage(*userCreatureObject, Unicode::narrowToWide(fs.sprintf("[FAILURE] Unable to resolve %s to an AI", aiCreatureObject->getNetworkId().getValueString().c_str())), Unicode::emptyString);
 					result += getErrorMessage(argv[0], ERR_FAIL);
@@ -148,7 +148,7 @@ bool ConsoleCommandParserAi::performParsing(const NetworkId & userId, const Stri
 	{
 		CreatureObject * const userCreatureObject = CreatureObject::getCreatureObject(userId);
 
-		if (userCreatureObject == nullptr)
+		if (userCreatureObject == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_FAIL);
 		}
@@ -167,7 +167,7 @@ bool ConsoleCommandParserAi::performParsing(const NetworkId & userId, const Stri
 
 			AICreatureController * const aiCreatureController = AICreatureController::getAiCreatureController(targetNetworkId);
 
-			if (aiCreatureController == nullptr)
+			if (aiCreatureController == NULL)
 			{
 				result = Unicode::narrowToWide(fs.sprintf("[FAILURE] Unable to resolve %s to an AI\n", targetNetworkId.getValueString().c_str()));
 				result += getErrorMessage(argv[0], ERR_FAIL);
@@ -190,7 +190,7 @@ bool ConsoleCommandParserAi::performParsing(const NetworkId & userId, const Stri
 				{
 					CellProperty const * const cellProperty = creatureOwner->getParentCell();
 
-					if (cellProperty != nullptr)
+					if (cellProperty != NULL)
 					{
 						Vector const & position_p = creatureOwner->getPosition_p();
 
@@ -245,13 +245,13 @@ bool ConsoleCommandParserAi::performParsing(const NetworkId & userId, const Stri
 							TangibleObject const * const hateTargetTangibleObject = TangibleObject::asTangibleObject(hateTarget.getObject());
 							float const hate = iterHateList->second;
 							std::string hateTargetName;
-							if (hateTargetTangibleObject != nullptr)
+							if (hateTargetTangibleObject != NULL)
 							{
 								hateTargetName = Unicode::wideToNarrow(hateTargetTangibleObject->getEncodedObjectName()).c_str();
 							}
 							else
 							{
-								hateTargetName = "nullptr";
+								hateTargetName = "NULL";
 							}
 
 							result += Unicode::narrowToWide(fs.sprintf("%s:%s(%.1f)\n", hateTargetName.c_str(), hateTarget.getValueString().c_str(), hate));
@@ -271,13 +271,13 @@ bool ConsoleCommandParserAi::performParsing(const NetworkId & userId, const Stri
 							CachedNetworkId const hateTarget(iter->first);
 							TangibleObject const * const hateTargetTangibleObject = TangibleObject::asTangibleObject(hateTarget.getObject());
 							std::string hateTargetName;
-							if (hateTargetTangibleObject != nullptr)
+							if (hateTargetTangibleObject != NULL)
 							{
 								hateTargetName = Unicode::wideToNarrow(hateTargetTangibleObject->getEncodedObjectName()).c_str();
 							}
 							else
 							{
-								hateTargetName = "nullptr";
+								hateTargetName = "NULL";
 							}
 
 							result += Unicode::narrowToWide(fs.sprintf("%s:%s (%.2f, %lu, %lu)\n", hateTargetName.c_str(), hateTarget.getValueString().c_str(), iter->second.first, iter->second.second.first, iter->second.second.second));
@@ -295,7 +295,7 @@ bool ConsoleCommandParserAi::performParsing(const NetworkId & userId, const Stri
 	{
 		CreatureObject * const userCreatureObject = CreatureObject::getCreatureObject(userId);
 
-		if (userCreatureObject == nullptr)
+		if (userCreatureObject == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_FAIL);
 		}
@@ -313,7 +313,7 @@ bool ConsoleCommandParserAi::performParsing(const NetworkId & userId, const Stri
 			}
 
 			TangibleObject const * const to = TangibleObject::asTangibleObject(NetworkIdManager::getObjectById(targetNetworkId));
-			if (to == nullptr)
+			if (to == NULL)
 			{
 				result += Unicode::narrowToWide(fs.sprintf("Target %s not found or not TangibleObject\n", targetNetworkId.getValueString().c_str()));
 			}
@@ -342,13 +342,13 @@ bool ConsoleCommandParserAi::performParsing(const NetworkId & userId, const Stri
 							TangibleObject const * const hateTargetTangibleObject = TangibleObject::asTangibleObject(hateTarget.getObject());
 							float const hate = iterHateList->second;
 							std::string hateTargetName;
-							if (hateTargetTangibleObject != nullptr)
+							if (hateTargetTangibleObject != NULL)
 							{
 								hateTargetName = Unicode::wideToNarrow(hateTargetTangibleObject->getEncodedObjectName()).c_str();
 							}
 							else
 							{
-								hateTargetName = "nullptr";
+								hateTargetName = "NULL";
 							}
 
 							result += Unicode::narrowToWide(fs.sprintf("%s:%s(%.1f)\n", hateTargetName.c_str(), hateTarget.getValueString().c_str(), hate));
@@ -368,13 +368,13 @@ bool ConsoleCommandParserAi::performParsing(const NetworkId & userId, const Stri
 							CachedNetworkId const hateTarget(iter->first);
 							TangibleObject const * const hateTargetTangibleObject = TangibleObject::asTangibleObject(hateTarget.getObject());
 							std::string hateTargetName;
-							if (hateTargetTangibleObject != nullptr)
+							if (hateTargetTangibleObject != NULL)
 							{
 								hateTargetName = Unicode::wideToNarrow(hateTargetTangibleObject->getEncodedObjectName()).c_str();
 							}
 							else
 							{
-								hateTargetName = "nullptr";
+								hateTargetName = "NULL";
 							}
 
 							result += Unicode::narrowToWide(fs.sprintf("%s:%s (%.2f, %lu, %lu)\n", hateTargetName.c_str(), hateTarget.getValueString().c_str(), iter->second.first, iter->second.second.first, iter->second.second.second));
@@ -390,7 +390,7 @@ bool ConsoleCommandParserAi::performParsing(const NetworkId & userId, const Stri
 	{
 		CreatureObject * const userCreatureObject = CreatureObject::getCreatureObject(userId);
 
-		if (userCreatureObject == nullptr)
+		if (userCreatureObject == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_FAIL);
 		}
@@ -398,7 +398,7 @@ bool ConsoleCommandParserAi::performParsing(const NetworkId & userId, const Stri
 		{
 			CreatureObject * const aiCreatureObject = getAiCreatureObject(*userCreatureObject, argv);
 
-			if (aiCreatureObject == nullptr)
+			if (aiCreatureObject == NULL)
 			{
 				result += getErrorMessage(argv[0], ERR_FAIL);
 			}
@@ -416,7 +416,7 @@ bool ConsoleCommandParserAi::performParsing(const NetworkId & userId, const Stri
 	{
 		CreatureObject * const userCreatureObject = CreatureObject::getCreatureObject(userId);
 
-		if (userCreatureObject == nullptr)
+		if (userCreatureObject == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_FAIL);
 		}
@@ -424,7 +424,7 @@ bool ConsoleCommandParserAi::performParsing(const NetworkId & userId, const Stri
 		{
 			CreatureObject * const aiCreatureObject = getAiCreatureObject(*userCreatureObject, argv);
 
-			if (aiCreatureObject == nullptr)
+			if (aiCreatureObject == NULL)
 			{
 				result += getErrorMessage(argv[0], ERR_FAIL);
 			}
@@ -442,14 +442,14 @@ bool ConsoleCommandParserAi::performParsing(const NetworkId & userId, const Stri
 	{
 		CreatureObject * const userCreatureObject = CreatureObject::getCreatureObject(userId);
 
-		if (userCreatureObject == nullptr)
+		if (userCreatureObject == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_FAIL);
 		}
 		else
 		{
 			NetworkId aiNetworkId;
-			CreatureObject * aiCreatureObject = nullptr;
+			CreatureObject * aiCreatureObject = NULL;
 
 			if (argv.size() > 2)
 			{
@@ -458,7 +458,7 @@ bool ConsoleCommandParserAi::performParsing(const NetworkId & userId, const Stri
 				aiNetworkId = NetworkId(Unicode::wideToNarrow(argv[1]));
 				aiCreatureObject = CreatureObject::getCreatureObject(aiNetworkId);
 
-				if (   (aiCreatureObject != nullptr)
+				if (   (aiCreatureObject != NULL)
 				    && !aiCreatureObject->isPlayerControlled())
 				{
 					aiCreatureObject->setBaseWalkSpeed(Unicode::toFloat(argv[2]));
@@ -471,14 +471,14 @@ bool ConsoleCommandParserAi::performParsing(const NetworkId & userId, const Stri
 				aiNetworkId = userCreatureObject->getLookAtTarget();
 				aiCreatureObject = CreatureObject::getCreatureObject(aiNetworkId);
 
-				if (   (aiCreatureObject != nullptr)
+				if (   (aiCreatureObject != NULL)
 				    && !aiCreatureObject->isPlayerControlled())
 				{
 					aiCreatureObject->setBaseWalkSpeed(Unicode::toFloat(argv[1]));
 				}
 			}
 
-			if (   (aiCreatureObject == nullptr)
+			if (   (aiCreatureObject == NULL)
 				|| aiCreatureObject->isPlayerControlled())
 			{
 				Chat::sendSystemMessage(*userCreatureObject, Unicode::narrowToWide(fs.sprintf("[FAILURE] Unable to resolve %s to an AI", aiNetworkId.getValueString().c_str())), Unicode::emptyString);
@@ -495,14 +495,14 @@ bool ConsoleCommandParserAi::performParsing(const NetworkId & userId, const Stri
 	{
 		CreatureObject * const userCreatureObject = CreatureObject::getCreatureObject(userId);
 
-		if (userCreatureObject == nullptr)
+		if (userCreatureObject == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_FAIL);
 		}
 		else
 		{
 			NetworkId aiNetworkId;
-			CreatureObject * aiCreatureObject = nullptr;
+			CreatureObject * aiCreatureObject = NULL;
 
 			if (argv.size() > 2)
 			{
@@ -511,7 +511,7 @@ bool ConsoleCommandParserAi::performParsing(const NetworkId & userId, const Stri
 				aiNetworkId = NetworkId(Unicode::wideToNarrow(argv[1]));
 				aiCreatureObject = CreatureObject::getCreatureObject(aiNetworkId);
 
-				if (   (aiCreatureObject != nullptr)
+				if (   (aiCreatureObject != NULL)
 				    && !aiCreatureObject->isPlayerControlled())
 				{
 					aiCreatureObject->setBaseRunSpeed(Unicode::toFloat(argv[2]));
@@ -524,14 +524,14 @@ bool ConsoleCommandParserAi::performParsing(const NetworkId & userId, const Stri
 				aiNetworkId = userCreatureObject->getLookAtTarget();
 				aiCreatureObject = CreatureObject::getCreatureObject(aiNetworkId);
 
-				if (   (aiCreatureObject != nullptr)
+				if (   (aiCreatureObject != NULL)
 				    && !aiCreatureObject->isPlayerControlled())
 				{
 					aiCreatureObject->setBaseRunSpeed(Unicode::toFloat(argv[1]));
 				}
 			}
 
-			if (   (aiCreatureObject == nullptr)
+			if (   (aiCreatureObject == NULL)
 				|| aiCreatureObject->isPlayerControlled())
 			{
 				Chat::sendSystemMessage(*userCreatureObject, Unicode::narrowToWide(fs.sprintf("[FAILURE] Unable to resolve %s to an AI", aiNetworkId.getValueString().c_str())), Unicode::emptyString);
@@ -549,7 +549,7 @@ bool ConsoleCommandParserAi::performParsing(const NetworkId & userId, const Stri
 	{
 		CreatureObject * const userCreatureObject = CreatureObject::getCreatureObject(userId);
 
-		if (userCreatureObject != nullptr)
+		if (userCreatureObject != NULL)
 		{
 			NetworkId sparedAiNetworkId;
 
@@ -573,9 +573,9 @@ bool ConsoleCommandParserAi::performParsing(const NetworkId & userId, const Stri
 			for (int i = 0; i < serverObjectCount; ++i)
 			{
 				ServerObject * const serverObject = ServerWorld::getObject(i);
-				CreatureObject * const creatureObject = (serverObject != nullptr) ? serverObject->asCreatureObject() : nullptr;
+				CreatureObject * const creatureObject = (serverObject != NULL) ? serverObject->asCreatureObject() : NULL;
 
-				if (   (creatureObject != nullptr)
+				if (   (creatureObject != NULL)
 				    && !creatureObject->isDead()
 				    && !creatureObject->isPlayerControlled()
 				    && (creatureObject->getNetworkId() != sparedAiNetworkId))
@@ -597,10 +597,10 @@ bool ConsoleCommandParserAi::performParsing(const NetworkId & userId, const Stri
 	else if (isAbbrev(argv[0], "debug"))
 	{
 		Object * const object = NetworkIdManager::getObjectById(userId);
-		ServerObject * const serverObject = (object != nullptr) ? object->asServerObject() : nullptr;
+		ServerObject * const serverObject = (object != NULL) ? object->asServerObject() : NULL;
 		int temp;
 		
-		if (serverObject != nullptr)
+		if (serverObject != NULL)
 		{
 		    if (   serverObject->getObjVars().getItem("ai_debug_string", temp)
 		        && (temp > 0))
@@ -621,7 +621,7 @@ bool ConsoleCommandParserAi::performParsing(const NetworkId & userId, const Stri
 
 					Client * const client = serverObject->getClient();
 
-					if (client != nullptr)
+					if (client != NULL)
 					{
 						AiDebugString aiDebugString;
 						aiDebugString.enableClearClientFlag();
@@ -650,9 +650,9 @@ bool ConsoleCommandParserAi::performParsing(const NetworkId & userId, const Stri
 	else if (isAbbrev(argv[0], "debugText"))
 	{
 		Object * const object = NetworkIdManager::getObjectById(userId);
-		ServerObject * const serverObject = (object != nullptr) ? object->asServerObject() : nullptr;
+		ServerObject * const serverObject = (object != NULL) ? object->asServerObject() : NULL;
 
-		if (serverObject != nullptr)
+		if (serverObject != NULL)
 		{
 			AiDebugString::setTextEnabled(!AiDebugString::isTextEnabled());
 			

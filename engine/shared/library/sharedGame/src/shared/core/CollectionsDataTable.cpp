@@ -34,7 +34,7 @@ namespace CollectionsDataTableNamespace
 	// for quick lookup of a slot by begin slot id, we use a vector because
 	// slot id are guaranteed to start at 0 and be contiguous; for counter-type
 	// slot, only the begin slot id index points to the slot; the other slot
-	// id indices point to nullptr
+	// id indices point to NULL
 	std::vector<CollectionsDataTable::CollectionInfoSlot const *> s_allSlotsById;
 
 	// all title(able) slots
@@ -232,10 +232,10 @@ void CollectionsDataTable::install()
 		FATAL((columnNoReward < 0), ("column \"noReward\" not found in %s", cs_collectionsDataTableName));
 		FATAL((columnTrackServerFirst < 0), ("column \"trackServerFirst\" not found in %s", cs_collectionsDataTableName));
 
-		CollectionsDataTable::CollectionInfoBook const * currentBook = nullptr;
-		CollectionsDataTable::CollectionInfoPage const * currentPage = nullptr;
-		CollectionsDataTable::CollectionInfoCollection const * currentCollection = nullptr;
-		CollectionsDataTable::CollectionInfoSlot const * currentSlot = nullptr;
+		CollectionsDataTable::CollectionInfoBook const * currentBook = NULL;
+		CollectionsDataTable::CollectionInfoPage const * currentPage = NULL;
+		CollectionsDataTable::CollectionInfoCollection const * currentCollection = NULL;
+		CollectionsDataTable::CollectionInfoSlot const * currentSlot = NULL;
 
 		int const numRows = table->getNumRows();
 		std::string bookName, pageName, collectionName, slotName, category, prereq, alternateTitle, icon, music;
@@ -350,8 +350,8 @@ void CollectionsDataTable::install()
 				FATAL(title, ("%s: book %s cannot be \"titleable\")", cs_collectionsDataTableName, bookName.c_str()));
 				FATAL(!titles.empty(), ("%s: book %s cannot have any alternate titles (books are not \"titleable\")", cs_collectionsDataTableName, bookName.c_str()));
 				currentBook = new CollectionInfoBook(bookName, icon, showIfNotYetEarned, hidden);
-				currentPage = nullptr;
-				currentCollection = nullptr;
+				currentPage = NULL;
+				currentCollection = NULL;
 				s_allBooks.push_back(currentBook);
 				s_allBooksByName[bookName] = currentBook;
 			}
@@ -376,7 +376,7 @@ void CollectionsDataTable::install()
 				// start new page
 				FATAL((!titles.empty() && !title), ("%s: page %s cannot have any alternate titles unless it is defined as \"titleable\")", cs_collectionsDataTableName, pageName.c_str()));
 				currentPage = new CollectionInfoPage(pageName, icon, showIfNotYetEarned, hidden, titles, *currentBook);
-				currentCollection = nullptr;
+				currentCollection = NULL;
 				s_pagesInBook[currentBook->name].push_back(currentPage);
 				s_allPagesByName[pageName] = currentPage;
 
@@ -549,7 +549,7 @@ void CollectionsDataTable::install()
 					IGNORE_RETURN(s_slotCategoriesByCollection[currentCollection->name].insert(*iterCategories));
 				}
 
-				currentSlot = nullptr;
+				currentSlot = NULL;
 				categories.clear();
 				prereqs.clear();
 			}
@@ -575,7 +575,7 @@ void CollectionsDataTable::install()
 		}
 
 		// save off all slots ordered by slot ids
-		s_allSlotsById.resize(allSlotsById.size(), nullptr);
+		s_allSlotsById.resize(allSlotsById.size(), NULL);
 		beginSlotId = -1;
 		for (std::map<int, CollectionsDataTable::CollectionInfoSlot const *>::const_iterator iterSlotId = allSlotsById.begin(); iterSlotId != allSlotsById.end(); ++iterSlotId)
 		{
@@ -612,7 +612,7 @@ void CollectionsDataTable::install()
 			}
 			else
 			{
-				s_allSlotsById[iterSlotId->first] = nullptr;
+				s_allSlotsById[iterSlotId->first] = NULL;
 			}
 		}
 
@@ -733,7 +733,7 @@ CollectionsDataTable::CollectionInfoSlot const * CollectionsDataTable::getSlotBy
 	if (iterFind != s_allSlotsByName.end())
 		return iterFind->second;
 
-	return nullptr;
+	return NULL;
 }
 
 //----------------------------------------------------------------------
@@ -743,7 +743,7 @@ CollectionsDataTable::CollectionInfoSlot const * CollectionsDataTable::getSlotBy
 CollectionsDataTable::CollectionInfoSlot const * CollectionsDataTable::getSlotByBeginSlotId(int slotId)
 {
 	if ((slotId < 0) || (slotId >= static_cast<int>(s_allSlotsById.size())))
-		return nullptr;
+		return NULL;
 
 	return s_allSlotsById[slotId];
 }
@@ -763,7 +763,7 @@ CollectionsDataTable::CollectionInfoSlot const * CollectionsDataTable::isASlotTi
 	if (iterFind != s_allSlotTitles.end())
 		return iterFind->second;
 
-	return nullptr;
+	return NULL;
 }
 
 //----------------------------------------------------------------------
@@ -796,7 +796,7 @@ CollectionsDataTable::CollectionInfoCollection const * CollectionsDataTable::isA
 	if (iterFind != s_allCollectionTitles.end())
 		return iterFind->second;
 
-	return nullptr;
+	return NULL;
 }
 
 //----------------------------------------------------------------------
@@ -818,7 +818,7 @@ CollectionsDataTable::CollectionInfoCollection const * CollectionsDataTable::get
 	if (iterFind != s_allCollectionsByName.end())
 		return iterFind->second;
 
-	return nullptr;
+	return NULL;
 }
 
 //----------------------------------------------------------------------
@@ -866,7 +866,7 @@ CollectionsDataTable::CollectionInfoPage const * CollectionsDataTable::isAPageTi
 	if (iterFind != s_allPageTitles.end())
 		return iterFind->second;
 
-	return nullptr;
+	return NULL;
 }
 
 //----------------------------------------------------------------------
@@ -879,7 +879,7 @@ CollectionsDataTable::CollectionInfoPage const * CollectionsDataTable::getPageBy
 	if (iterFind != s_allPagesByName.end())
 		return iterFind->second;
 
-	return nullptr;
+	return NULL;
 }
 
 //----------------------------------------------------------------------
@@ -946,7 +946,7 @@ CollectionsDataTable::CollectionInfoBook const * CollectionsDataTable::getBookBy
 	if (iterFind != s_allBooksByName.end())
 		return iterFind->second;
 
-	return nullptr;
+	return NULL;
 }
 
 //----------------------------------------------------------------------

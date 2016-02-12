@@ -64,7 +64,7 @@ bool ConsoleCommandParserManufacture::performParsing (const NetworkId & userId, 
 		ManufactureInstallationObject * station = dynamic_cast<ManufactureInstallationObject *>(stationId.getObject());
 		ServerObject * ingredient = safe_cast<ServerObject *>(ingredientId.getObject());
 
-		if (station == nullptr || ingredient == nullptr)
+		if (station == NULL || ingredient == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
@@ -77,7 +77,7 @@ bool ConsoleCommandParserManufacture::performParsing (const NetworkId & userId, 
 		}
 
 		ServerObject * hopper = station->getInputHopper();
-		if (hopper == nullptr)
+		if (hopper == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
@@ -99,7 +99,7 @@ bool ConsoleCommandParserManufacture::performParsing (const NetworkId & userId, 
 		ManufactureInstallationObject * station = dynamic_cast<ManufactureInstallationObject *>(stationId.getObject());
 		ServerObject * ingredient = safe_cast<ServerObject *>(ingredientId.getObject());
 
-		if (station == nullptr || ingredient == nullptr)
+		if (station == NULL || ingredient == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
@@ -112,7 +112,7 @@ bool ConsoleCommandParserManufacture::performParsing (const NetworkId & userId, 
 		}
 
 		ServerObject * hopper = station->getInputHopper();
-		if (hopper == nullptr)
+		if (hopper == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
@@ -124,7 +124,7 @@ bool ConsoleCommandParserManufacture::performParsing (const NetworkId & userId, 
 			return true;
 		}
 
-		if (playerObject->getInventory() == nullptr)
+		if (playerObject->getInventory() == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
@@ -144,7 +144,7 @@ bool ConsoleCommandParserManufacture::performParsing (const NetworkId & userId, 
 		
 		ManufactureInstallationObject * station = dynamic_cast<ManufactureInstallationObject *>(stationId.getObject());
 
-		if (station == nullptr)
+		if (station == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
@@ -157,14 +157,14 @@ bool ConsoleCommandParserManufacture::performParsing (const NetworkId & userId, 
 		}
 
 		ServerObject * hopper = station->getInputHopper();
-		if (hopper == nullptr)
+		if (hopper == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
 		}
 
 		VolumeContainer * container = ContainerInterface::getVolumeContainer(*hopper);
-		if (container == nullptr)
+		if (container == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
@@ -174,7 +174,7 @@ bool ConsoleCommandParserManufacture::performParsing (const NetworkId & userId, 
 		while (iter != container->end())
 		{
 			const Container::ContainedItem & itemId = *iter;
-			if (itemId.getObject() != nullptr)
+			if (itemId.getObject() != NULL)
 			{
 				const ServerObject * item = safe_cast<const ServerObject *>(itemId.getObject());
 				result += Unicode::narrowToWide("(");
@@ -182,7 +182,7 @@ bool ConsoleCommandParserManufacture::performParsing (const NetworkId & userId, 
 				result += Unicode::narrowToWide(") - ");
 				const ResourceContainerObject * crate = dynamic_cast<
 					const ResourceContainerObject *>(item);
-				if (crate != nullptr)
+				if (crate != NULL)
 				{
 					char buffer[32];
 					_itoa(crate->getQuantity(), buffer, 10);
@@ -226,7 +226,7 @@ bool ConsoleCommandParserManufacture::performParsing (const NetworkId & userId, 
 		ManufactureInstallationObject * station = dynamic_cast<ManufactureInstallationObject *>(stationId.getObject());
 		ManufactureSchematicObject * schematic = dynamic_cast<ManufactureSchematicObject *>(schematicId.getObject());
 
-		if (station == nullptr || schematic == nullptr)
+		if (station == NULL || schematic == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
@@ -239,7 +239,7 @@ bool ConsoleCommandParserManufacture::performParsing (const NetworkId & userId, 
 		}
 
 //		if (station->addSchematic(*schematic, playerObject))
-		if (station->addSchematic(*schematic, nullptr))
+		if (station->addSchematic(*schematic, NULL))
 			result += getErrorMessage(argv[0], ERR_SUCCESS);
 		else
 			result += getErrorMessage(argv[0], ERR_INVALID_CONTAINER_TRANSFER);			
@@ -253,7 +253,7 @@ bool ConsoleCommandParserManufacture::performParsing (const NetworkId & userId, 
 		
 		ManufactureInstallationObject * station = dynamic_cast<ManufactureInstallationObject *>(stationId.getObject());
 
-		if (station == nullptr)
+		if (station == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
@@ -266,9 +266,9 @@ bool ConsoleCommandParserManufacture::performParsing (const NetworkId & userId, 
 		}
 
 		ManufactureSchematicObject * schematic = station->getSchematic();
-		if (schematic != nullptr)
+		if (schematic != NULL)
 		{
-			if (playerObject->getDatapad() == nullptr)
+			if (playerObject->getDatapad() == NULL)
 			{
 				result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 				return true;
@@ -291,7 +291,7 @@ bool ConsoleCommandParserManufacture::performParsing (const NetworkId & userId, 
 		
 		ManufactureInstallationObject * station = dynamic_cast<ManufactureInstallationObject *>(stationId.getObject());
 
-		if (station == nullptr)
+		if (station == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
@@ -304,7 +304,7 @@ bool ConsoleCommandParserManufacture::performParsing (const NetworkId & userId, 
 		}
 
 		ManufactureSchematicObject * schematic = station->getSchematic();
-		if (schematic != nullptr)
+		if (schematic != NULL)
 		{
 			result += Unicode::narrowToWide("(");
 			result += Unicode::narrowToWide(schematic->getNetworkId().getValueString());
@@ -325,7 +325,7 @@ bool ConsoleCommandParserManufacture::performParsing (const NetworkId & userId, 
 		
 		ManufactureInstallationObject * station = dynamic_cast<ManufactureInstallationObject *>(stationId.getObject());
 		
-		if (station == nullptr)
+		if (station == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 		}
@@ -344,7 +344,7 @@ bool ConsoleCommandParserManufacture::performParsing (const NetworkId & userId, 
 
 		ManufactureInstallationObject * station = dynamic_cast<ManufactureInstallationObject *>(stationId.getObject());
 
-		if (station == nullptr)
+		if (station == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 		}
@@ -360,7 +360,7 @@ bool ConsoleCommandParserManufacture::performParsing (const NetworkId & userId, 
     else if (isAbbrev( argv [0], "getObjects"))
     {
 		ServerObject * myInventory = playerObject->getInventory();
-		if (myInventory == nullptr)
+		if (myInventory == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
@@ -370,21 +370,21 @@ bool ConsoleCommandParserManufacture::performParsing (const NetworkId & userId, 
 
 		ManufactureInstallationObject * station = dynamic_cast<ManufactureInstallationObject *>(stationId.getObject());
 
-		if (station == nullptr)
+		if (station == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
 		}
 
 		ServerObject * hopper = station->getOutputHopper();
-		if (hopper == nullptr)
+		if (hopper == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
 		}
 
 		VolumeContainer * container = ContainerInterface::getVolumeContainer(*hopper);
-		if (container == nullptr)
+		if (container == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
@@ -394,7 +394,7 @@ bool ConsoleCommandParserManufacture::performParsing (const NetworkId & userId, 
 		while (iter != container->end())
 		{
 			const Container::ContainedItem & itemId = *iter;
-			if (itemId.getObject() != nullptr)
+			if (itemId.getObject() != NULL)
 			{
 				ContainerInterface::transferItemToVolumeContainer (*myInventory, *safe_cast<ServerObject *>(itemId.getObject()), playerObject, tmp);
 			}
@@ -419,21 +419,21 @@ bool ConsoleCommandParserManufacture::performParsing (const NetworkId & userId, 
 
 		ManufactureInstallationObject * station = dynamic_cast<ManufactureInstallationObject *>(stationId.getObject());
 
-		if (station == nullptr)
+		if (station == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
 		}
 
 		ServerObject * hopper = station->getOutputHopper();
-		if (hopper == nullptr)
+		if (hopper == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
 		}
 
 		VolumeContainer * container = ContainerInterface::getVolumeContainer(*hopper);
-		if (container == nullptr)
+		if (container == NULL)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
@@ -443,7 +443,7 @@ bool ConsoleCommandParserManufacture::performParsing (const NetworkId & userId, 
 		while (iter != container->end())
 		{
 			const Container::ContainedItem & itemId = *iter;
-			if (itemId.getObject() != nullptr)
+			if (itemId.getObject() != NULL)
 			{
 				const ServerObject * item = safe_cast<const ServerObject *>(itemId.getObject());
 				result += Unicode::narrowToWide("(");

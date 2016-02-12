@@ -56,7 +56,7 @@ AiShipBehaviorAttackBomber::AiShipBehaviorAttackBomber(AiShipController & aiShip
 		m_evadeChangeDirectionTimer(0.5f),
 		m_missilesFired(0)
 {
-	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("AiShipBehaviorAttackBomber::AiShipBehaviorAttackBomber() unit(%s)", (aiShipController.getOwner() != nullptr) ? aiShipController.getOwner()->getNetworkId().getValueString().c_str() : "nullptr owner"));
+	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("AiShipBehaviorAttackBomber::AiShipBehaviorAttackBomber() unit(%s)", (aiShipController.getOwner() != NULL) ? aiShipController.getOwner()->getNetworkId().getValueString().c_str() : "NULL owner"));
 }
 
 // ----------------------------------------------------------------------
@@ -73,7 +73,7 @@ AiShipBehaviorAttackBomber::AiShipBehaviorAttackBomber(AiShipBehaviorAttack cons
 		m_evadeChangeDirectionTimer(0.5f),
 		m_missilesFired(0)
 {
-	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("AiShipBehaviorAttackBomber::AiShipBehaviorAttackBomber(AiShipBehaviorAttack &) unit(%s)", (m_aiShipController.getOwner() != nullptr) ? m_aiShipController.getOwner()->getNetworkId().getValueString().c_str() : "nullptr owner"));
+	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("AiShipBehaviorAttackBomber::AiShipBehaviorAttackBomber(AiShipBehaviorAttack &) unit(%s)", (m_aiShipController.getOwner() != NULL) ? m_aiShipController.getOwner()->getNetworkId().getValueString().c_str() : "NULL owner"));
 }
 
 // ----------------------------------------------------------------------
@@ -293,7 +293,7 @@ ShipObject const * AiShipBehaviorAttackBomber::getTargetCapitalShip() const
 		return targetShipObject;
 	}
 
-	return nullptr;
+	return NULL;
 }
 
 // ----------------------------------------------------------------------

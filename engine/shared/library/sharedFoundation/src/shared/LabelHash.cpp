@@ -109,7 +109,7 @@ const char * LabelHash::findLabel( char const * const domain, uint32 hashValue )
 	{
 		// Domain not found
 
-		return nullptr;
+		return NULL;
 	}
 
 	// ----------
@@ -127,6 +127,6 @@ const char * LabelHash::findLabel( char const * const domain, uint32 hashValue )
 	// ----------
 	// String not found
 
-	return nullptr;
+	return NULL;
 }
 

@@ -440,7 +440,7 @@ public:
 	//@{
 		//! returns whether this object allows attachment
 		virtual bool Attachable() {return false;}
-		//! returns the object immediately attached to this object or nullptr for no attachment
+		//! returns the object immediately attached to this object or NULL for no attachment
 		virtual BufferedTransformation *AttachedTransformation() {return 0;}
 		//!
 		virtual const BufferedTransformation *AttachedTransformation() const

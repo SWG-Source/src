@@ -47,7 +47,7 @@ bool TangibleObject::startNpcConversation(TangibleObject & npc, const std::strin
 			return false;
 
 		// test if already in a conversation
-		if (m_npcConversation != nullptr)
+		if (m_npcConversation != NULL)
 			return false;
 
 		if (starter == NpcConversationData::CS_Player)
@@ -120,7 +120,7 @@ void TangibleObject::endNpcConversation()
 {
 	if (isAuthoritative())
 	{
-		if (m_npcConversation != nullptr)
+		if (m_npcConversation != NULL)
 		{
 			// I am a player, end my conversation
 
@@ -128,7 +128,7 @@ void TangibleObject::endNpcConversation()
 			if (isPlayerControlled())
 			{
 				TangibleObject * const npc = safe_cast<TangibleObject*>(m_npcConversation->getNPC().getObject());
-				if (npc != nullptr)
+				if (npc != NULL)
 				{
 					// trigger OnEndNpcConversation
 					ScriptParams params;
@@ -157,13 +157,13 @@ void TangibleObject::endNpcConversation()
 			}
 			else
 			{
-				WARNING(true,("TangibleObject::endNpcConversation: creature %s has a non-nullptr m_npcConversation pointer %p but is not a player-controlled object!", 
+				WARNING(true,("TangibleObject::endNpcConversation: creature %s has a non-null m_npcConversation pointer %p but is not a player-controlled object!", 
 					getNetworkId().getValueString().c_str(), m_npcConversation));
 				m_conversations.clear();
 			}
 
 			delete m_npcConversation;
-			m_npcConversation = nullptr;
+			m_npcConversation = NULL;
 		}
 		else
 		{
@@ -182,14 +182,14 @@ void TangibleObject::endNpcConversation()
 					{
 						NetworkId const & networkId = *it;
 						TangibleObject * const player = dynamic_cast<TangibleObject *>(NetworkIdManager::getObjectById(networkId));
-						if (player != nullptr)
+						if (player != NULL)
 							player->endNpcConversation();
 					}
 				}
 			}
 			else
 			{
-				WARNING(true,("TangibleObject::endNpcConversation: creature %s has a nullptr m_npcConversation pointer but is a player-controlled object!", 
+				WARNING(true,("TangibleObject::endNpcConversation: creature %s has a null m_npcConversation pointer but is a player-controlled object!", 
 					getNetworkId().getValueString().c_str()));
 				m_conversations.clear();
 			}
@@ -217,7 +217,7 @@ void TangibleObject::endNpcConversation()
  */
 void TangibleObject::clearNpcConversation()
 {
-	if (m_npcConversation != nullptr)
+	if (m_npcConversation != NULL)
 	{
 		m_npcConversation->clearResponses();
 	}
@@ -234,7 +234,7 @@ void TangibleObject::sendNpcConversationMessage(const StringId & stringId, const
 {
 	if (isAuthoritative())
 	{
-		if (m_npcConversation != nullptr)
+		if (m_npcConversation != NULL)
 		{
 			NpcConversation::Response response;
 			response.stringId = stringId;
@@ -262,7 +262,7 @@ bool TangibleObject::addNpcConversationResponse(const StringId & stringId, const
 {
 	if (isAuthoritative())
 	{
-		if (m_npcConversation != nullptr)
+		if (m_npcConversation != NULL)
 		{
 			NpcConversation::Response response;
 			response.stringId = stringId;
@@ -293,7 +293,7 @@ bool TangibleObject::removeNpcConversationResponse(const StringId & stringId, co
 	bool result = false;
 	if (isAuthoritative())
 	{
-		if (m_npcConversation != nullptr)
+		if (m_npcConversation != NULL)
 		{
 			NpcConversation::Response response;
 			response.stringId = stringId;
@@ -319,7 +319,7 @@ void TangibleObject::sendNpcConversationResponses()
 {
 	if (isAuthoritative())
 	{
-		if (m_npcConversation != nullptr)
+		if (m_npcConversation != NULL)
 		{
 			m_npcConversation->sendResponses();
 		}
@@ -327,7 +327,7 @@ void TangibleObject::sendNpcConversationResponses()
 	else
 	{
 		Controller * const controller = NON_NULL(getController());
-		controller->appendMessage(CM_sendNpcConversationResponses, 0.0f, nullptr, GameControllerMessageFlags::SEND | GameControllerMessageFlags::RELIABLE | GameControllerMessageFlags::DEST_AUTH_SERVER);
+		controller->appendMessage(CM_sendNpcConversationResponses, 0.0f, NULL, GameControllerMessageFlags::SEND | GameControllerMessageFlags::RELIABLE | GameControllerMessageFlags::DEST_AUTH_SERVER);
 	}
 }
 
@@ -342,10 +342,10 @@ void TangibleObject::respondToNpc(int responseIndex)
 {
 	if (isAuthoritative())
 	{
-		if (m_npcConversation != nullptr)
+		if (m_npcConversation != NULL)
 		{
 			TangibleObject * const npc = safe_cast<TangibleObject *>(m_npcConversation->getNPC().getObject());
-			if (npc == nullptr)
+			if (npc == NULL)
 			{
 				endNpcConversation();
 				return;
@@ -363,7 +363,7 @@ void TangibleObject::respondToNpc(int responseIndex)
 	{
 		Controller * const controller = getController();
 		if (controller)
-			controller->appendMessage(CM_npcConversationSelect, static_cast<float>(responseIndex), nullptr, GameControllerMessageFlags::SEND | GameControllerMessageFlags::RELIABLE | GameControllerMessageFlags::DEST_AUTH_SERVER);
+			controller->appendMessage(CM_npcConversationSelect, static_cast<float>(responseIndex), NULL, GameControllerMessageFlags::SEND | GameControllerMessageFlags::RELIABLE | GameControllerMessageFlags::DEST_AUTH_SERVER);
 	}
 }
 
@@ -374,7 +374,7 @@ void TangibleObject::handlePlayerResponseToNpcConversation(const std::string & c
 	if (isAuthoritative())
 	{
 		TangibleObject * const playerObject = safe_cast<TangibleObject *>(NetworkIdManager::getObjectById(player));
-		if (playerObject != nullptr)
+		if (playerObject != NULL)
 		{
 			// trigger OnNpcConversationResponse
 			ScriptParams params;

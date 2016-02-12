@@ -47,7 +47,7 @@ jboolean JNICALL ScriptMethodsHolocubeNamespace::openHolocronToPage(JNIEnv *env,
 {
 	JavaStringParam localPage(jpage);
 
-	ServerObject* so = nullptr;
+	ServerObject* so = NULL;
 	if(!JavaLibrary::getObject(client, so))
 	{
 		WARNING (true, ("[Script bug] Could not get ServerObject for value passed in for paramter:client in JavaLibrary::openHolocronToPage"));
@@ -76,7 +76,7 @@ jboolean JNICALL ScriptMethodsHolocubeNamespace::openHolocronToPage(JNIEnv *env,
 
 jboolean JNICALL ScriptMethodsHolocubeNamespace::closeHolocron(JNIEnv *env, jobject self, jlong client)
 {
-	ServerObject* so = nullptr;
+	ServerObject* so = NULL;
 	if(!JavaLibrary::getObject(client, so))
 	{
 		WARNING (true, ("[Script bug] Could not get ServerObject for value passed in for paramter:client in JavaLibrary::closeHolocron"));

@@ -211,7 +211,7 @@ bool ShipChassis::save(std::string const & filename)
 
 				ShipChassisSlot const * const chassisSlot = shipChassis->getSlot(static_cast<ShipChassisSlotType::Type>(chassisSlotType));
 
-				if (nullptr == chassisSlot)
+				if (NULL == chassisSlot)
 				{
 					tabStr += "\t\t";
 					continue;
@@ -249,7 +249,7 @@ bool ShipChassis::save(std::string const & filename)
 
 	StdioFileFactory sff;
 	AbstractFile * const af = sff.createFile(filename.c_str(), "wb");
-	if (nullptr != af && af->isOpen())
+	if (NULL != af && af->isOpen())
 	{
 		int const bytesWritten = af->write(static_cast<int>(tabStr.size()), tabStr.c_str());
 		retval = (bytesWritten == static_cast<int>(tabStr.size()));
@@ -317,7 +317,7 @@ ShipChassis const * ShipChassis::findShipChassisByName        (CrcString const &
 	if (it != s_nameChassisMap->end ())
 		return (*it).second;
 
-	return nullptr;
+	return NULL;
 }
 
 //----------------------------------------------------------------------
@@ -330,7 +330,7 @@ ShipChassis const * ShipChassis::findShipChassisByCrc            (uint32 chassis
 	if (it != s_crcChassisMap.end ())
 		return (*it).second;
 
-	return nullptr;
+	return NULL;
 }
 
 //----------------------------------------------------------------------
@@ -365,7 +365,7 @@ void ShipChassis::setSlotTargetable(int const chassisSlotType, bool targetable)
 {
 	if (targetable)
 	{
-		if (nullptr == getSlot(static_cast<ShipChassisSlotType::Type>(chassisSlotType)))
+		if (NULL == getSlot(static_cast<ShipChassisSlotType::Type>(chassisSlotType)))
 		{
 			WARNING(true, ("ShipChassis cannot set non existant slot [%d] targetable", chassisSlotType));
 			return;
@@ -398,7 +398,7 @@ ShipChassisSlot * ShipChassis::getSlot(ShipChassisSlotType::Type shipChassisSlot
 			return &slot;
 	}
 	
-	return nullptr;
+	return NULL;
 }
 
 //----------------------------------------------------------------------
@@ -582,7 +582,7 @@ void ShipChassis::setUseWritableChassis(bool onlyUseThisForTools)
 
 bool ShipChassis::addChassis(bool doSort)
 {
-	if (doSort && nullptr != findShipChassisByCrc(getCrc()))
+	if (doSort && NULL != findShipChassisByCrc(getCrc()))
 	{
 		WARNING(true, ("ShipChassis attempt to add multiple [%s] chassis", getName().getString()));
 		return false;
@@ -628,7 +628,7 @@ bool ShipChassis::removeChassis()
 bool ShipChassis::setName(CrcString const & name)
 {
 	ShipChassis const * const dupeNameShipChassis = findShipChassisByName(name);
-	if (nullptr != dupeNameShipChassis)
+	if (NULL != dupeNameShipChassis)
 	{
 		WARNING(true, ("ShipChassis attempt to set name [%s] already exists", name.getString()));
 		return false;

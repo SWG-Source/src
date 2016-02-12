@@ -26,8 +26,8 @@ namespace Base
         mCond(),
         mThreadCount(0)
     {
-        pthread_mutex_init(&mMutex, nullptr);
-        pthread_cond_init(&mCond, nullptr);
+        pthread_mutex_init(&mMutex, NULL);
+        pthread_cond_init(&mCond, NULL);
     }
 
     CEvent::~CEvent()
@@ -74,7 +74,7 @@ namespace Base
             struct timeval now;
             struct timespec abs_timeout;
 
-            gettimeofday(&now, nullptr);
+            gettimeofday(&now, NULL);
             abs_timeout.tv_sec  = now.tv_sec + timeout/1000;
             abs_timeout.tv_nsec = now.tv_usec * 1000 + (timeout%1000)*1000000;
             abs_timeout.tv_sec  += abs_timeout.tv_nsec / 1000000000;

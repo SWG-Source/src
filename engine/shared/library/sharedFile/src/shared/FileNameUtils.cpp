@@ -59,9 +59,9 @@ bool FileNameUtils::isReadable(std::string const &path)
 	{
 		FILE *fp = fopen(path.c_str(), "r");
 
-		result = (fp != nullptr);
+		result = (fp != NULL);
 
-		if (fp != nullptr)
+		if (fp != NULL)
 		{
 			fclose(fp);
 		}
@@ -79,9 +79,9 @@ bool FileNameUtils::isWritable(std::string const &path)
 	{
 		FILE *fp = fopen(path.c_str(), "w");
 
-		result = (fp != nullptr);
+		result = (fp != NULL);
 
-		if (fp != nullptr)
+		if (fp != NULL)
 		{
 			fclose(fp);
 		}

@@ -60,7 +60,7 @@ namespace API_NAMESPACE
 	protected:
 		struct DECLSPEC MemberInfo
 		{
-			MemberInfo(soe::AutoVariableBase *dataIn = nullptr, unsigned sizeIn = 1,  unsigned versionIn = 0, soe::EVersionEffect effectIn = soe::eNoEffect)
+			MemberInfo(soe::AutoVariableBase *dataIn = NULL, unsigned sizeIn = 1,  unsigned versionIn = 0, soe::EVersionEffect effectIn = soe::eNoEffect)
 				: data(dataIn)
 				, size(sizeIn)
 				, version(versionIn)
@@ -97,8 +97,8 @@ namespace API_NAMESPACE
 		virtual Base		* Clone() const;
 		virtual Base		* Clone(StorageVector_t &storageVector) const;
 		virtual const char	* MessageName() const { return "Base"; }
-		virtual const char	* MessageIDString() const { return "nullptr"; }
-		static Base			* Create(unsigned MsgId, StorageVector_t *pStorageVector = nullptr);
+		virtual const char	* MessageIDString() const { return "NULL"; }
+		static Base			* Create(unsigned MsgId, StorageVector_t *pStorageVector = NULL);
 		static const char	* GetMessageName(unsigned msgId);
 		static const char	* GetMessageIDString(unsigned msgId);
 

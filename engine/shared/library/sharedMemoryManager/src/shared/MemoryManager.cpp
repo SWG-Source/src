@@ -327,7 +327,7 @@ using namespace MemoryManagerNamespace;
 SystemAllocation::SystemAllocation(int size)
 :
 	m_size(size),
-	m_next(nullptr),
+	m_next(NULL),
 	m_pad1(0),
 	m_pad2(0)
 {
@@ -343,7 +343,7 @@ SystemAllocation::SystemAllocation(int size)
 	Block * lastMemoryBlock = getLastMemoryBlock();
 
 	// set up the prefix sentinel block
-	firstMemoryBlock->setPrevious(nullptr);
+	firstMemoryBlock->setPrevious(NULL);
 	firstMemoryBlock->setNext(firstFreeBlock);
 	firstMemoryBlock->setFree(false);
 
@@ -353,7 +353,7 @@ SystemAllocation::SystemAllocation(int size)
 
 	// set up the suffix sentinel block
 	lastMemoryBlock->setPrevious(firstFreeBlock);
-	lastMemoryBlock->setNext(nullptr);
+	lastMemoryBlock->setNext(NULL);
 	lastMemoryBlock->setFree(false);
 
 	// put the first block on the free list
@@ -748,7 +748,7 @@ void MemoryManagerNamespace::allocateSystemMemory(int megabytes)
 	ms_systemMemoryAllocatedMegabytes += megabytes;
 
 	// insert the memory into the sorted linked list of system allocations
-	SystemAllocation * back = nullptr;
+	SystemAllocation * back = NULL;
 	SystemAllocation * front = ms_firstSystemAllocation;
 	for ( ; front && front->getFirstMemoryBlock() < systemAllocation->getFirstMemoryBlock(); back = front, front = front->getNext())
 		{}
@@ -967,7 +967,7 @@ void MemoryManagerNamespace::addToFreeList(Block * block)
 
 	FreeBlock *   freeBlock     = static_cast<FreeBlock *>(block);
 	int const     freeBlockSize = freeBlock->getSize();
-	FreeBlock *   parent        = nullptr;
+	FreeBlock *   parent        = NULL;
 	FreeBlock * * next          = &ms_firstFreeBlock;
 	FreeBlock *   same          = 0;
 
@@ -991,7 +991,7 @@ void MemoryManagerNamespace::addToFreeList(Block * block)
 	{
 
 		freeBlock->m_smallerFreeBlock = same->m_smallerFreeBlock;
-		same->m_smallerFreeBlock = nullptr;
+		same->m_smallerFreeBlock = NULL;
 		if (freeBlock->m_smallerFreeBlock)
 			freeBlock->m_smallerFreeBlock->m_parentFreeBlock = freeBlock;
 
@@ -999,7 +999,7 @@ void MemoryManagerNamespace::addToFreeList(Block * block)
 		same->m_parentFreeBlock = freeBlock;
 
 		freeBlock->m_largerFreeBlock = same->m_largerFreeBlock;
-		same->m_largerFreeBlock = nullptr;
+		same->m_largerFreeBlock = NULL;
 		if (freeBlock->m_largerFreeBlock)
 			freeBlock->m_largerFreeBlock->m_parentFreeBlock = freeBlock;
 
@@ -1009,9 +1009,9 @@ void MemoryManagerNamespace::addToFreeList(Block * block)
 	else
 	{
 		*next = freeBlock;
-		freeBlock->m_smallerFreeBlock = nullptr;
-		freeBlock->m_sameFreeBlock    = nullptr;
-		freeBlock->m_largerFreeBlock  = nullptr;
+		freeBlock->m_smallerFreeBlock = NULL;
+		freeBlock->m_sameFreeBlock    = NULL;
+		freeBlock->m_largerFreeBlock  = NULL;
 		freeBlock->m_parentFreeBlock  = parent;
 	}
 
@@ -1042,7 +1042,7 @@ void MemoryManagerNamespace::removeFromFreeList(FreeBlock * block)
 	NOT_NULL(block);
 
 	// find the pointer that points to block
-	FreeBlock * * parentPointer = nullptr;
+	FreeBlock * * parentPointer = NULL;
 	FreeBlock * parent = block->m_parentFreeBlock;
 	if (parent)
 	{
@@ -1088,7 +1088,7 @@ void MemoryManagerNamespace::removeFromFreeList(FreeBlock * block)
 			{
 				// this is the worst case.  this free block has smaller and larger children, but not any same sized children
 				// we're going to take the smallest block off the larger list and use that to replace the current node
-				FreeBlock * back = nullptr;
+				FreeBlock * back = NULL;
 				FreeBlock * replacement = block->m_largerFreeBlock;
 				while (replacement->m_smallerFreeBlock)
 				{
@@ -1133,16 +1133,16 @@ void MemoryManagerNamespace::removeFromFreeList(FreeBlock * block)
 			else
 			{
 				// this block has no children
-				*parentPointer = nullptr;
+				*parentPointer = NULL;
 			}
 		}
 	}
 
 	// remove all the pointers the block may have had
-	block->m_smallerFreeBlock = nullptr;
-	block->m_sameFreeBlock    = nullptr;
-	block->m_largerFreeBlock  = nullptr;
-	block->m_parentFreeBlock  = nullptr;
+	block->m_smallerFreeBlock = NULL;
+	block->m_sameFreeBlock    = NULL;
+	block->m_largerFreeBlock  = NULL;
+	block->m_parentFreeBlock  = NULL;
 
 	--ms_freeBlocks;
 }
@@ -1151,7 +1151,7 @@ void MemoryManagerNamespace::removeFromFreeList(FreeBlock * block)
 
 FreeBlock *MemoryManagerNamespace::searchFreeList(int blockSize)
 {
-	FreeBlock * result = nullptr;
+	FreeBlock * result = NULL;
 	FreeBlock * current = ms_firstFreeBlock;
 	while (current)
 	{
@@ -1239,7 +1239,7 @@ void * MemoryManager::allocate(size_t size, uint32 owner, bool array, bool leakT
 		// get the size of the allocation
 		int allocSize = (cms_allocatedBlockSize + cms_guardBandSize + (size ? static_cast<int>(size) : 1) + cms_guardBandSize + 15) & ~15;
 
-		FreeBlock * bestFreeBlock = nullptr;
+		FreeBlock * bestFreeBlock = NULL;
 		for (int tries = 0; !bestFreeBlock && tries < 2; ++tries)
 		{
 			bestFreeBlock = searchFreeList(allocSize);
@@ -1396,7 +1396,7 @@ void *MemoryManager::reallocate(void *userPointer, size_t newSize)
 		{
 			MemoryManager::free(userPointer, array);
 
-//			DEBUG_REPORT_LOG(ms_logEachAlloc, ("MemoryManager::reallocate() new_requested_size=%d, org ptr=%p, new ptr=nullptr\n", newSize, userPointer));
+//			DEBUG_REPORT_LOG(ms_logEachAlloc, ("MemoryManager::reallocate() new_requested_size=%d, org ptr=%p, new ptr=NULL\n", newSize, userPointer));
 
 			return 0;
 		}
@@ -1440,7 +1440,7 @@ void *MemoryManager::reallocate(void *userPointer, size_t newSize)
  * Users should not call this routine directly.  It should only be called
  * by operator delete.
  *
- * This routine should not be called with the nullptr pointer.
+ * This routine should not be called with the NULL pointer.
  *
  * @param userPointer  Pointer to the memory
  * @param array  True if the array form of operator new was used, false if the scalar form was used

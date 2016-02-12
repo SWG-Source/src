@@ -89,7 +89,7 @@ void GameConnection::receive(const Archive::ByteStream & message)
 				char filename[30];
 				snprintf(filename, sizeof(filename)-1, "/proc/%lu/cmdline", m_pid);
 
-				// format of the cmdline file is a nullptr separates every
+				// format of the cmdline file is a NULL separates every
 				// parameter, so we'll have to replace the NULLs with spaces
 				FILE *inFile = fopen(filename,"rb");
 				if (inFile)

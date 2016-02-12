@@ -110,7 +110,7 @@ jboolean JNICALL ScriptMethodsMoneyNamespace::transferCashTo(JNIEnv *env, jobjec
 		return JNI_FALSE;
 	ServerObject *sourceObj = ServerWorld::findObjectByNetworkId(sourceObjId);
 
-	if (sourceObj == nullptr || targetObjId == NetworkId::cms_invalid || ownerOID == NetworkId::cms_invalid)
+	if (sourceObj == NULL || targetObjId == NetworkId::cms_invalid || ownerOID == NetworkId::cms_invalid)
 		return JNI_FALSE;
 
 	// Do money transfer (will be forwarded if object is not authoritative)
@@ -157,7 +157,7 @@ jboolean JNICALL ScriptMethodsMoneyNamespace::transferBankCreditsTo(JNIEnv *env,
 		return JNI_FALSE;
 	ServerObject *sourceObj = ServerWorld::findObjectByNetworkId(sourceObjId);
 
-	if (sourceObj == nullptr || targetObjId == NetworkId::cms_invalid || ownerOID == NetworkId::cms_invalid)
+	if (sourceObj == NULL || targetObjId == NetworkId::cms_invalid || ownerOID == NetworkId::cms_invalid)
 		return JNI_FALSE;
 
 	// Do money transfer (will be forwarded if object is not authoritative)
@@ -203,7 +203,7 @@ jboolean JNICALL ScriptMethodsMoneyNamespace::withdrawCashFromBank (JNIEnv *env,
 		return JNI_FALSE;
 	ServerObject *sourceObj = ServerWorld::findObjectByNetworkId(sourceObjId);
 
-	if (sourceObj == nullptr  || ownerOID == NetworkId::cms_invalid)
+	if (sourceObj == NULL  || ownerOID == NetworkId::cms_invalid)
 		return JNI_FALSE;
 
 	// Do money transfer (will be forwarded if object is not authoritative)
@@ -243,7 +243,7 @@ jboolean JNICALL ScriptMethodsMoneyNamespace::depositCashToBank(JNIEnv *env, job
 	if (failCallbackFunction != 0 && !JavaLibrary::convert(JavaStringParam(failCallbackFunction), failCallback))
 		return JNI_FALSE;
 
-	ServerObject *sourceObj = nullptr;
+	ServerObject *sourceObj = NULL;
 	if (!JavaLibrary::getObject(source, sourceObj))
 		return JNI_FALSE;
 
@@ -260,7 +260,7 @@ jboolean JNICALL ScriptMethodsMoneyNamespace::depositCashToBank(JNIEnv *env, job
 
 void JNICALL ScriptMethodsMoneyNamespace::depositToGalacticReserve(JNIEnv *env, jobject self, jlong player)
 {
-	CreatureObject * objPlayer = nullptr;
+	CreatureObject * objPlayer = NULL;
 	if (!JavaLibrary::getObject(player, objPlayer) || !objPlayer)
 		return;
 
@@ -275,7 +275,7 @@ void JNICALL ScriptMethodsMoneyNamespace::depositToGalacticReserve(JNIEnv *env, 
 
 void JNICALL ScriptMethodsMoneyNamespace::withdrawFromGalacticReserve(JNIEnv *env, jobject self, jlong player)
 {
-	CreatureObject * objPlayer = nullptr;
+	CreatureObject * objPlayer = NULL;
 	if (!JavaLibrary::getObject(player, objPlayer) || !objPlayer)
 		return;
 
@@ -290,7 +290,7 @@ void JNICALL ScriptMethodsMoneyNamespace::withdrawFromGalacticReserve(JNIEnv *en
 
 jboolean JNICALL ScriptMethodsMoneyNamespace::canAccessGalacticReserve(JNIEnv *env, jobject self, jlong player)
 {
-	CreatureObject * objPlayer = nullptr;
+	CreatureObject * objPlayer = NULL;
 	if (!JavaLibrary::getObject(player, objPlayer) || !objPlayer)
 		return JNI_FALSE;
 
@@ -376,7 +376,7 @@ jboolean JNICALL ScriptMethodsMoneyNamespace::transferBankCreditsToNamedAccount(
 		return JNI_FALSE;
 	ServerObject *sourceObj = ServerWorld::findObjectByNetworkId(sourceObjId);
 
-	if (sourceObj == nullptr || targetString.size() == 0 || ownerOID == NetworkId::cms_invalid)
+	if (sourceObj == NULL || targetString.size() == 0 || ownerOID == NetworkId::cms_invalid)
 		return JNI_FALSE;
 
 	// Do money transfer (will be forwarded if object is not authoritative)
@@ -426,7 +426,7 @@ jboolean JNICALL ScriptMethodsMoneyNamespace::transferBankCreditsFromNamedAccoun
 		return JNI_FALSE;
 	ServerObject *targetObj = ServerWorld::findObjectByNetworkId(targetObjId);
 
-	if (targetObj == nullptr || sourceString.size() == 0 || ownerOID == NetworkId::cms_invalid)
+	if (targetObj == NULL || sourceString.size() == 0 || ownerOID == NetworkId::cms_invalid)
 		return JNI_FALSE;
 
 	// Do money transfer (will be forwarded if object is not authoritative)

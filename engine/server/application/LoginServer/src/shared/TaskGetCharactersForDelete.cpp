@@ -14,7 +14,7 @@
 // ======================================================================
 
 TaskGetCharactersForDelete::TaskGetCharactersForDelete (StationId stationId, int clusterGroupId) :
-		TaskGetAvatarList(stationId, clusterGroupId, nullptr)
+		TaskGetAvatarList(stationId, clusterGroupId, NULL)
 {
 }
 

@@ -165,16 +165,16 @@ jobject JNICALL ScriptMethodsTerrainNamespace::getGoodLocation(JNIEnv * /*env*/,
 	PROFILER_AUTO_BLOCK_DEFINE("JNI::getGoodLocation");
 
 	//validate scripter's input
-	if (searchRectLowerLeftLocation == nullptr)
+	if (searchRectLowerLeftLocation == NULL)
 	{
-		DEBUG_WARNING (true, ("getGoodLocation (): DB lower left is nullptr"));
-		return nullptr;
+		DEBUG_WARNING (true, ("getGoodLocation (): DB lower left is NULL"));
+		return NULL;
 	}
 
-	if (searchRectUpperRightLocation == nullptr)
+	if (searchRectUpperRightLocation == NULL)
 	{
-		DEBUG_WARNING (true, ("getGoodLocation (): DB upper right is nullptr"));
-		return nullptr;
+		DEBUG_WARNING (true, ("getGoodLocation (): DB upper right is NULL"));
+		return NULL;
 	}
 
 	//pull the data from the java Location objects. sceneid and cell are not checked or used, but sent back in the good location, if one exists
@@ -184,14 +184,14 @@ jobject JNICALL ScriptMethodsTerrainNamespace::getGoodLocation(JNIEnv * /*env*/,
 	if (!ScriptConversion::convertWorld(searchRectLowerLeftLocation, srLLLocationVec, sceneId))
 	{
 		DEBUG_WARNING (true, ("getGoodLocation (): DB could not convert lower left coordinates"));
-		return nullptr;
+		return NULL;
 	}
 
 	Vector srURLocationVec;
 	if (!ScriptConversion::convertWorld(searchRectUpperRightLocation, srURLocationVec, sceneId))
 	{
 		DEBUG_WARNING (true, ("getGoodLocation (): DB could not convert upper right coordinates"));
-		return nullptr;
+		return NULL;
 	}
 
 	// get the good location from ServerWorld
@@ -199,7 +199,7 @@ jobject JNICALL ScriptMethodsTerrainNamespace::getGoodLocation(JNIEnv * /*env*/,
 	if (successLoc3d.x == 0 && successLoc3d.y == 0 && successLoc3d.z == 0)
 	{
 		// no good location available
-		return nullptr;
+		return NULL;
 	}
 
 	//convert it back into scripter lingo (a "location"), using the default scene and cell ids
@@ -207,7 +207,7 @@ jobject JNICALL ScriptMethodsTerrainNamespace::getGoodLocation(JNIEnv * /*env*/,
 	if (!ScriptConversion::convert(successLoc3d, sceneId, NetworkId(), goodLocation))
 	{
 		DEBUG_WARNING (true, ("getGoodLocation (): PB could not convert result back to a location"));
-		return nullptr;
+		return NULL;
 	}
 
 	return goodLocation->getReturnValue();
@@ -218,16 +218,16 @@ jobject JNICALL ScriptMethodsTerrainNamespace::getGoodLocationAvoidCollidables(J
 	PROFILER_AUTO_BLOCK_DEFINE("JNI::getGoodLocationAvoidCollidables");
 
 	//validate scripter's input
-	if (searchRectLowerLeftLocation == nullptr)
+	if (searchRectLowerLeftLocation == NULL)
 	{
-		DEBUG_WARNING (true, ("getGoodLocationAvoidCollidables (): DB lower left is nullptr"));
-		return nullptr;
+		DEBUG_WARNING (true, ("getGoodLocationAvoidCollidables (): DB lower left is NULL"));
+		return NULL;
 	}
 
-	if (searchRectUpperRightLocation == nullptr)
+	if (searchRectUpperRightLocation == NULL)
 	{
-		DEBUG_WARNING (true, ("getGoodLocationAvoidCollidables (): DB upper right is nullptr"));
-		return nullptr;
+		DEBUG_WARNING (true, ("getGoodLocationAvoidCollidables (): DB upper right is NULL"));
+		return NULL;
 	}
 
 	//pull the data from the java Location objects. sceneid and cell are not checked or used, but sent back in the good location, if one exists
@@ -237,14 +237,14 @@ jobject JNICALL ScriptMethodsTerrainNamespace::getGoodLocationAvoidCollidables(J
 	if (!ScriptConversion::convertWorld(searchRectLowerLeftLocation, srLLLocationVec, sceneId))
 	{
 		DEBUG_WARNING (true, ("getGoodLocationAvoidCollidables (): DB could not convert lower left coordinates"));
-		return nullptr;
+		return NULL;
 	}
 
 	Vector srURLocationVec;
 	if (!ScriptConversion::convertWorld(searchRectUpperRightLocation, srURLocationVec, sceneId))
 	{
 		DEBUG_WARNING (true, ("getGoodLocationAvoidCollidables (): DB could not convert upper right coordinates"));
-		return nullptr;
+		return NULL;
 	}
 
 	// get the good location from ServerWorld
@@ -252,7 +252,7 @@ jobject JNICALL ScriptMethodsTerrainNamespace::getGoodLocationAvoidCollidables(J
 	if (successLoc3d.x == 0 && successLoc3d.y == 0 && successLoc3d.z == 0)
 	{
 		// no good location available
-		return nullptr;
+		return NULL;
 	}
 
 	//convert it back into scripter lingo (a "location"), using the default scene and cell ids
@@ -260,7 +260,7 @@ jobject JNICALL ScriptMethodsTerrainNamespace::getGoodLocationAvoidCollidables(J
 	if (!ScriptConversion::convert(successLoc3d, sceneId, NetworkId(), goodLocation))
 	{
 		DEBUG_WARNING (true, ("getGoodLocationAvoidCollidables (): PB could not convert result back to a location"));
-		return nullptr;
+		return NULL;
 	}
 
 	return goodLocation->getReturnValue();
@@ -587,7 +587,7 @@ jboolean JNICALL ScriptMethodsTerrainNamespace::setWeatherData (JNIEnv* env, job
 	UNREF(self);
 
 	PlanetObject * planet = ServerUniverse::getInstance().getCurrentPlanet();
-	if (planet != nullptr)
+	if (planet != NULL)
 	{
 		planet->setWeather(index, windVelocityX, 0.f, windVelocityZ);
 		return JNI_TRUE;
@@ -603,9 +603,9 @@ jboolean JNICALL ScriptMethodsTerrainNamespace::setWeatherData (JNIEnv* env, job
 
 jboolean JNICALL ScriptMethodsTerrainNamespace::isBelowWater (JNIEnv* /*env*/, jobject /*self*/, jobject location)
 {
-	if (location == nullptr)
+	if (location == NULL)
 	{
-		DEBUG_WARNING(true, ("[designer bug] isBelowWater script hook was passed a nullptr location reference"));
+		DEBUG_WARNING(true, ("[designer bug] isBelowWater script hook was passed a NULL location reference"));
 		return JNI_FALSE;
 	}
 
@@ -621,7 +621,7 @@ jboolean JNICALL ScriptMethodsTerrainNamespace::isBelowWater (JNIEnv* /*env*/, j
 	const CellProperty* worldCell = CellProperty::getWorldCellProperty();
 	if(!worldCell)
 	{
-		DEBUG_WARNING(true, ("isBelowWater got a nullptr worldCell back from CellProperty::getWorldCellProperty()"));
+		DEBUG_WARNING(true, ("isBelowWater got a NULL worldCell back from CellProperty::getWorldCellProperty()"));
 		return JNI_FALSE;
 	}
 	const NetworkId& worldCellId = worldCell->getOwner().getNetworkId();
@@ -758,9 +758,9 @@ jfloat JNICALL ScriptMethodsTerrainNamespace::getWaterTableHeight (JNIEnv* /*env
 {
 	float zero = 0.0f;
 
-	if (location == nullptr)
+	if (location == NULL)
 	{
-		DEBUG_WARNING(true, ("[designer bug] getWaterTableHeight script hook was passed a nullptr location reference"));
+		DEBUG_WARNING(true, ("[designer bug] getWaterTableHeight script hook was passed a NULL location reference"));
 		return zero;
 	}
 
@@ -776,7 +776,7 @@ jfloat JNICALL ScriptMethodsTerrainNamespace::getWaterTableHeight (JNIEnv* /*env
 	const CellProperty* worldCell = CellProperty::getWorldCellProperty();
 	if(!worldCell)
 	{
-		DEBUG_WARNING(true, ("getWaterTableHeight got a nullptr worldCell back from CellProperty::getWorldCellProperty()"));
+		DEBUG_WARNING(true, ("getWaterTableHeight got a NULL worldCell back from CellProperty::getWorldCellProperty()"));
 		return zero;
 	}
 	const NetworkId& worldCellId = worldCell->getOwner().getNetworkId();
@@ -862,7 +862,7 @@ jboolean JNICALL ScriptMethodsTerrainNamespace::requestLocation (JNIEnv * /*env*
 jboolean JNICALL ScriptMethodsTerrainNamespace::isOnAFloor (JNIEnv * env, jobject self, jlong scriptObject)
 {
 	//-- make sure we have a valid object
-	ServerObject * theObject = nullptr;
+	ServerObject * theObject = NULL;
 	if (!JavaLibrary::getObject (scriptObject, theObject))
 	{
 		DEBUG_WARNING (true, ("isOnAFloor (): could not find scriptObject"));
@@ -876,7 +876,7 @@ jboolean JNICALL ScriptMethodsTerrainNamespace::isOnAFloor (JNIEnv * env, jobjec
 		return JNI_FALSE;
 	}
 
-	if(objectCollisionProp->getStandingOn() != nullptr)
+	if(objectCollisionProp->getStandingOn() != NULL)
 		return JNI_TRUE;
 	else
 		return JNI_FALSE;
@@ -890,7 +890,7 @@ jboolean JNICALL ScriptMethodsTerrainNamespace::isRelativePointOnSameFloorAsObje
 		return JNI_FALSE;
 
 	//-- make sure we have a valid object
-	ServerObject * theObject = nullptr;
+	ServerObject * theObject = NULL;
 	if (!JavaLibrary::getObject (scriptObject, theObject))
 	{
 		DEBUG_WARNING (true, ("isRelativePointOnSameFloorAsObject (): could not find scriptObject"));
@@ -938,7 +938,7 @@ jfloat   JNICALL ScriptMethodsTerrainNamespace::getFloorHeightAtRelativePointOnS
 		return JNI_FALSE;
 
 	//-- make sure we have a valid object
-	ServerObject * theObject = nullptr;
+	ServerObject * theObject = NULL;
 	if (!JavaLibrary::getObject (scriptObject, theObject))
 	{
 		DEBUG_WARNING (true, ("getFloorHeightAtRelativePointOnSameFloorAsObject (): could not find scriptObject"));
@@ -1106,7 +1106,7 @@ jboolean JNICALL ScriptMethodsTerrainNamespace::createClientPathAdvanced(JNIEnv 
  */
 jboolean JNICALL ScriptMethodsTerrainNamespace::setCreatureCoverDefault(JNIEnv *env, jobject self, jlong target)
 {
-	CreatureObject * creature = nullptr;
+	CreatureObject * creature = NULL;
 	if (!JavaLibrary::getObject(target, creature))
 		return JNI_FALSE;
 
@@ -1137,7 +1137,7 @@ jboolean JNICALL ScriptMethodsTerrainNamespace::setCreatureCover(JNIEnv *env, jo
 {
 	UNREF(self);
 
-	CreatureObject * creature = nullptr;
+	CreatureObject * creature = NULL;
 	if (!JavaLibrary::getObject(target, creature))
 		return JNI_FALSE;
 
@@ -1149,7 +1149,7 @@ jboolean JNICALL ScriptMethodsTerrainNamespace::setCreatureCover(JNIEnv *env, jo
 
 void JNICALL ScriptMethodsTerrainNamespace::setCreatureCoverVisibility(JNIEnv * env, jobject self, jlong target, jboolean isVisible)
 {
-	CreatureObject * creature = nullptr;
+	CreatureObject * creature = NULL;
 	if(!JavaLibrary::getObject(target, creature))
 		return;
 
@@ -1160,7 +1160,7 @@ void JNICALL ScriptMethodsTerrainNamespace::setCreatureCoverVisibility(JNIEnv * 
 
 jboolean JNICALL ScriptMethodsTerrainNamespace::getCreatureCoverVisibility(JNIEnv * env, jobject self, jlong target)
 {
-	CreatureObject * creature = nullptr;
+	CreatureObject * creature = NULL;
 	if(!JavaLibrary::getObject(target, creature))
 		return JNI_FALSE;
 

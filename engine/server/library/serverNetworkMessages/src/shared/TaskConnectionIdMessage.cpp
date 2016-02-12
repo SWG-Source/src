@@ -14,7 +14,7 @@ GameNetworkMessage("TaskConnectionIdMessage"),
 serverType(static_cast<unsigned char>(id)),
 commandLine(pCommandLine),
 clusterName(pClusterName),
-currentEpochTime(static_cast<long>(::time(nullptr)))
+currentEpochTime(static_cast<long>(::time(NULL)))
 {
 	addVariable(serverType);
 	addVariable(commandLine);

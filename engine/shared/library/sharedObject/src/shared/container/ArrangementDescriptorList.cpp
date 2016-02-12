@@ -69,7 +69,7 @@ const ArrangementDescriptor *ArrangementDescriptorList::fetch(const CrcLowerStri
 			}
 			else
 			{
-				WARNING(true, ("default ArrangementDescriptor [%s] could not be loaded, returning nullptr ArrangementDescriptor", filename.getString()));
+				WARNING(true, ("default ArrangementDescriptor [%s] could not be loaded, returning NULL ArrangementDescriptor", filename.getString()));
 				return 0;
 			}
 		}

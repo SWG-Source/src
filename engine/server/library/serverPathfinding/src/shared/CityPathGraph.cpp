@@ -72,13 +72,13 @@ CityPathGraph::CityPathGraph ( int cityToken )
 CityPathGraph::~CityPathGraph()
 {
 	delete m_namedNodes;
-	m_namedNodes = nullptr;
+	m_namedNodes = NULL;
 
 	delete m_nodeTree;
-	m_nodeTree = nullptr;
+	m_nodeTree = NULL;
 
 	delete m_dirtyBoxes;
-	m_dirtyBoxes = nullptr;
+	m_dirtyBoxes = NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -92,7 +92,7 @@ int CityPathGraph::addNode ( DynamicPathNode * newNode )
 	int index = DynamicPathGraph::addNode(newNode);
 
 	SpatialHandle * handle = m_nodeTree->addObject( cityNode );
-	if (handle != nullptr)
+	if (handle != NULL)
 	{
 		if (cityNode->getName() != Unicode::emptyString)
 		{
@@ -134,7 +134,7 @@ void CityPathGraph::removeNode ( int nodeIndex )
 
 	SpatialHandle * handle = cityNode->getSpatialHandle();
 
-	if (m_namedNodes != nullptr)
+	if (m_namedNodes != NULL)
 	{
 		std::map<Unicode::String, std::set<CityPathNode *> >::iterator found = m_namedNodes->find(cityNode->getName());
 		if (found != m_namedNodes->end())
@@ -146,7 +146,7 @@ void CityPathGraph::removeNode ( int nodeIndex )
 	}
 	m_nodeTree->removeObject( handle );
 
-	cityNode->setSpatialHandle(nullptr);
+	cityNode->setSpatialHandle(NULL);
 
 	DynamicPathGraph::removeNode(nodeIndex);
 }
@@ -160,7 +160,7 @@ void CityPathGraph::destroyNode ( int nodeIndex )
 {
 	CityPathNode * cityNode = _getNode(nodeIndex);
 
-	if(cityNode == nullptr) return;
+	if(cityNode == NULL) return;
 
 	// ----------
 	// Remember which nodes were adjacent to the node we're removing
@@ -185,7 +185,7 @@ void CityPathGraph::destroyNode ( int nodeIndex )
 
 	m_nodeTree->removeObject( handle );
 
-	cityNode->setSpatialHandle(nullptr);
+	cityNode->setSpatialHandle(NULL);
 
 	// ----------
 	// Remove the node
@@ -217,7 +217,7 @@ void CityPathGraph::moveNode ( int nodeIndex, Vector const & newPosition )
 {
 	CityPathNode * cityNode = _getNode(nodeIndex);
 
-	if(cityNode == nullptr) return;
+	if(cityNode == NULL) return;
 
 	// ----------
 	// Remember which nodes were adjacent to the node we're removing
@@ -272,7 +272,7 @@ void CityPathGraph::relinkNode ( int nodeIndex )
 {
 	CityPathNode * nodeA = _getNode(nodeIndex);
 
-	if(nodeA == nullptr) return;
+	if(nodeA == NULL) return;
 
 	// ----------
 
@@ -293,16 +293,16 @@ void CityPathGraph::relinkNode ( int nodeIndex )
 		{
 			CityPathNode * nodeB = _getNode(i);
 
-			if(nodeB == nullptr) continue;
+			if(nodeB == NULL) continue;
 			if(nodeA == nodeB) continue;
 
 			PathNodeType typeB = nodeB->getType();
 
 			if(typeB != PNT_CityBuildingEntrance) continue;
 
-			if(nodeA->getCreatorObject() == nullptr) continue;
+			if(nodeA->getCreatorObject() == NULL) continue;
 
-			if(nodeB->getCreatorObject() == nullptr) continue;
+			if(nodeB->getCreatorObject() == NULL) continue;
 
 			if(nodeA->getCreatorObject() != nodeB->getCreatorObject()) continue;
 
@@ -330,16 +330,16 @@ void CityPathGraph::relinkNode ( int nodeIndex )
 		{
 			CityPathNode * nodeB = _getNode(i);
 
-			if(nodeB == nullptr) continue;
+			if(nodeB == NULL) continue;
 			if(nodeA == nodeB) continue;
 
 			PathNodeType typeB = nodeB->getType();
 
 			if(typeB != PNT_CityBuilding) continue;
 
-			if(nodeA->getCreatorObject() == nullptr) continue;
+			if(nodeA->getCreatorObject() == NULL) continue;
 
-			if(nodeB->getCreatorObject() == nullptr) continue;
+			if(nodeB->getCreatorObject() == NULL) continue;
 
 			if(nodeA->getCreatorObject() != nodeB->getCreatorObject()) continue;
 
@@ -367,7 +367,7 @@ void CityPathGraph::relinkNode ( int nodeIndex )
 	{
 		CityPathNode * nodeB = static_cast<CityPathNode*>(results[i]);
 
-		if(nodeB == nullptr) continue;
+		if(nodeB == NULL) continue;
 		if(nodeA == nodeB) continue;
 
 		PathNodeType typeB = nodeB->getType();
@@ -420,7 +420,7 @@ void CityPathGraph::relinkNode ( int nodeIndex )
 	{
 		CityPathNode * neighborNode = _getNode(neighborList[i]);
 
-		if(neighborNode != nullptr)
+		if(neighborNode != NULL)
 		{
 			neighborNode->markRedundantEdges();
 			neighborNode->removeMarkedEdges();
@@ -467,11 +467,11 @@ CityPathNode * CityPathGraph::findNodeForObject ( ServerObject const & object )
 	{
 		CityPathNode * node = _getNode(i);
 
-		if(node == nullptr) continue;
+		if(node == NULL) continue;
 
 		ServerObject const * source = node->getSourceObject();
 
-		if(source == nullptr) continue;
+		if(source == NULL) continue;
 
 		if(source == &object)
 		{
@@ -479,7 +479,7 @@ CityPathNode * CityPathGraph::findNodeForObject ( ServerObject const & object )
 		}
 	}
 
-	return nullptr;
+	return NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -492,11 +492,11 @@ CityPathNode const * CityPathGraph::findNodeForObject ( ServerObject const & obj
 	{
 		CityPathNode const * node = _getNode(i);
 
-		if(node == nullptr) continue;
+		if(node == NULL) continue;
 
 		ServerObject const * source = node->getSourceObject();
 
-		if(source == nullptr) continue;
+		if(source == NULL) continue;
 
 		if(source == &object)
 		{
@@ -504,15 +504,15 @@ CityPathNode const * CityPathGraph::findNodeForObject ( ServerObject const & obj
 		}
 	}
 
-	return nullptr;
+	return NULL;
 }
 
 // ----------------------------------------------------------------------
 
 CityPathNode * CityPathGraph::findNearestNodeForName( Unicode::String const & nodeName, Vector const & pos )
 {
-	if (m_namedNodes == nullptr)
-		return nullptr;
+	if (m_namedNodes == NULL)
+		return NULL;
 
 	std::map<Unicode::String, std::set<CityPathNode *> >::iterator found = m_namedNodes->find(nodeName);
 	if (found != m_namedNodes->end() && !found->second.empty())
@@ -521,12 +521,12 @@ CityPathNode * CityPathGraph::findNearestNodeForName( Unicode::String const & no
 		if (nodes.size() == 1)
 			return *(nodes.begin());
 		
-		CityPathNode * node = nullptr;
+		CityPathNode * node = NULL;
 		float distance = FLT_MAX;
 		for (std::set<CityPathNode *>::iterator i = nodes.begin(); i != nodes.end(); ++i)
 		{
 			float testDistance = pos.magnitudeBetweenSquared((*i)->getPosition_w());
-			if (node == nullptr || testDistance < distance)
+			if (node == NULL || testDistance < distance)
 			{
 				distance = testDistance;
 				node = *i;
@@ -535,15 +535,15 @@ CityPathNode * CityPathGraph::findNearestNodeForName( Unicode::String const & no
 		return node;
 	}
 
-	return nullptr;
+	return NULL;
 }
 
 // ----------------------------------------------------------------------
 
 CityPathNode const * CityPathGraph::findNearestNodeForName( Unicode::String const & nodeName, Vector const & pos ) const
 {
-	if (m_namedNodes == nullptr)
-		return nullptr;
+	if (m_namedNodes == NULL)
+		return NULL;
 
 	std::map<Unicode::String, std::set<CityPathNode *> >::const_iterator found = m_namedNodes->find(nodeName);
 	if (found != m_namedNodes->end() && !found->second.empty())
@@ -552,12 +552,12 @@ CityPathNode const * CityPathGraph::findNearestNodeForName( Unicode::String cons
 		if (nodes.size() == 1)
 			return *(nodes.begin());
 		
-		CityPathNode const * node = nullptr;
+		CityPathNode const * node = NULL;
 		float distance = FLT_MAX;
 		for (std::set<CityPathNode *>::const_iterator i = nodes.begin(); i != nodes.end(); ++i)
 		{
 			float testDistance = pos.magnitudeBetweenSquared((*i)->getPosition_w());
-			if (node == nullptr || testDistance < distance)
+			if (node == NULL || testDistance < distance)
 			{
 				distance = testDistance;
 				node = *i;
@@ -566,14 +566,14 @@ CityPathNode const * CityPathGraph::findNearestNodeForName( Unicode::String cons
 		return node;
 	}
 
-	return nullptr;
+	return NULL;
 }
 
 // ----------------------------------------------------------------------
 
 int CityPathGraph::findNearestNode ( Vector const & position ) const
 {
-	PathNode * temp = nullptr;
+	PathNode * temp = NULL;
 
 	float dummy1 = REAL_MAX;
 	float dummy2 = REAL_MAX;
@@ -713,7 +713,7 @@ int CityPathGraph::getNeighborCode ( int whichNode ) const
 {
 	CityPathNode const * node = _getNode(whichNode);
 
-	if(node == nullptr) return 0;
+	if(node == NULL) return 0;
 
 	int edgeCount = node->getEdgeCount();
 
@@ -725,7 +725,7 @@ int CityPathGraph::getNeighborCode ( int whichNode ) const
 
 		CityPathNode const * neighbor = _getNode(neighborId);
 
-		if(neighbor == nullptr) continue;
+		if(neighbor == NULL) continue;
 
 		int neighborInt = reinterpret_cast<int>(neighbor);
 

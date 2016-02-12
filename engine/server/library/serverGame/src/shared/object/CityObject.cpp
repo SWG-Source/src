@@ -130,9 +130,9 @@ void CityObject::setupUniverse()
 		// build the city info from data read in from DB
 
 		// disable notification while building the initial list
-		m_citizensInfo.setOnErase(nullptr, nullptr);
-		m_citizensInfo.setOnInsert(nullptr, nullptr);
-		m_citizensInfo.setOnSet(nullptr, nullptr);
+		m_citizensInfo.setOnErase(NULL, NULL);
+		m_citizensInfo.setOnInsert(NULL, NULL);
+		m_citizensInfo.setOnSet(NULL, NULL);
 
 		// build cities
 		std::map<int, CityInfo> tempCities;
@@ -462,7 +462,7 @@ int CityObject::createCity(std::string const &cityName, NetworkId const &cityHal
 			incomeTax, propertyTax, salesTax,
 			travelLoc, travelCost, travelInterplanetary,
 			cloneLoc, cloneRespawn, cloneRespawnCell, cloneId);
-		ci.setCityCreationTime(static_cast<int>(::time(nullptr)));
+		ci.setCityCreationTime(static_cast<int>(::time(NULL)));
 		m_citiesInfo.set(cityId, ci);
 
 		std::string citySpec;
@@ -1724,7 +1724,7 @@ CitizenInfo const * CityObject::getCitizenSpec(int cityId, NetworkId const &citi
 	}
 
 	result.clear();
-	return nullptr;
+	return NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -1739,7 +1739,7 @@ CityStructureInfo const * CityObject::getCityStructureSpec(int cityId, NetworkId
 	}
 
 	result.clear();
-	return nullptr;
+	return NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -1975,7 +1975,7 @@ CitizenInfo const *CityObject::getCitizenInfo(int cityId, NetworkId const &citiz
 	if (iterFind != m_citizensInfo.end())
 		return &(iterFind->second);
 
-	return nullptr;
+	return NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -2008,7 +2008,7 @@ CityStructureInfo const *CityObject::getCityStructureInfo(int cityId, NetworkId 
 	if (iterFind != m_structuresInfo.end())
 		return &(iterFind->second);
 
-	return nullptr;
+	return NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -2071,7 +2071,7 @@ PgcRatingInfo const * CityObject::getPgcRating(NetworkId const &chroniclerId) co
 	if (iterFind != m_pgcRatingInfo.end())
 		return &(iterFind->second);
 
-	return nullptr;
+	return NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -2141,7 +2141,7 @@ void CityObject::adjustPgcRating(NetworkId const &chroniclerId, std::string cons
 			m_pgcRatingChroniclerId.insert(std::make_pair(NameManager::normalizeName(updatedPgcRating.m_chroniclerName), chroniclerId));
 		}
 
-		updatedPgcRating.m_lastRatingTime = static_cast<int>(::time(nullptr));
+		updatedPgcRating.m_lastRatingTime = static_cast<int>(::time(NULL));
 
 		std::string updatedPgcRatingSpec;
 		CityStringParser::buildPgcRatingSpec(chroniclerId, updatedPgcRating, updatedPgcRatingSpec);

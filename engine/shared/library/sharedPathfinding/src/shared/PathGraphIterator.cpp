@@ -14,7 +14,7 @@
 // ======================================================================
 
 PathGraphIterator::PathGraphIterator ()
-: m_graph(nullptr),
+: m_graph(NULL),
   m_nodeIndex(-1)
 {
 }
@@ -29,18 +29,18 @@ PathGraphIterator::PathGraphIterator ( PathGraph const * graph, int nodeIndex )
 
 bool PathGraphIterator::isValid ( void ) const
 {
-	return (m_graph != nullptr) && (m_nodeIndex != -1) && (m_graph->getNode(m_nodeIndex) != nullptr);
+	return (m_graph != NULL) && (m_nodeIndex != -1) && (m_graph->getNode(m_nodeIndex) != NULL);
 }
 
 PathNode const * PathGraphIterator::getNode ( void ) const
 {
-	if( (m_graph != nullptr) && (m_nodeIndex != -1) )
+	if( (m_graph != NULL) && (m_nodeIndex != -1) )
 	{
 		return m_graph->getNode( m_nodeIndex );
 	}
 	else
 	{
-		return nullptr;
+		return NULL;
 	}
 }
 
@@ -53,7 +53,7 @@ int PathGraphIterator::getNeighborCount ( void ) const
 
 PathNode const * PathGraphIterator::getNeighbor ( int whichNeighbor ) const
 {
-	if(!isValid()) return nullptr;
+	if(!isValid()) return NULL;
 
 	return m_graph->getNode( m_graph->getEdge( m_nodeIndex, whichNeighbor )->getIndexB() );
 }

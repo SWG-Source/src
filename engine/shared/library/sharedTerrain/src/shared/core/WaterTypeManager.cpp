@@ -19,8 +19,8 @@
 // ======================================================================
 
 bool WaterTypeManager::ms_installed = false;
-WaterTypeManager::WaterTypeDataType * WaterTypeManager::ms_waterTypeData=nullptr;
-WaterTypeManager::CreatureWaterTypeDataType* WaterTypeManager::ms_creatureWaterTypeData=nullptr;
+WaterTypeManager::WaterTypeDataType * WaterTypeManager::ms_waterTypeData=NULL;
+WaterTypeManager::CreatureWaterTypeDataType* WaterTypeManager::ms_creatureWaterTypeData=NULL;
 
 // ======================================================================
 
@@ -116,9 +116,9 @@ void WaterTypeManager::remove()
 	}
 
 	delete ms_waterTypeData;
-	ms_waterTypeData=nullptr;
+	ms_waterTypeData=NULL;
 	delete ms_creatureWaterTypeData;
-	ms_creatureWaterTypeData=nullptr;
+	ms_creatureWaterTypeData=NULL;
 	ms_installed = false;
 }
 

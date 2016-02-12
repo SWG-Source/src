@@ -31,7 +31,7 @@
 #include <map>
 #include <set>
 
-ServerPathfindingMessaging * g_messaging = nullptr;
+ServerPathfindingMessaging * g_messaging = NULL;
 
 // ======================================================================
 
@@ -51,7 +51,7 @@ void ServerPathfindingMessaging::remove ( void )
 	g_messaging->disconnectFromMessage(RequestUnstick::MESSAGE_TYPE);
 
 	delete g_messaging;
-	g_messaging = nullptr;
+	g_messaging = NULL;
 }
 
 ServerPathfindingMessaging & ServerPathfindingMessaging::getInstance ( void )
@@ -75,10 +75,10 @@ ServerPathfindingMessaging::~ServerPathfindingMessaging()
 	}
 
 	delete m_clientList;
-	m_clientList = nullptr;
+	m_clientList = NULL;
 
 	delete m_callback;
-	m_callback = nullptr;
+	m_callback = NULL;
 }
 
 // ----------
@@ -178,7 +178,7 @@ void ServerPathfindingMessaging::receiveMessage(const MessageDispatch::Emitter &
 					{
 						Transform newTransform = Transform::identity;
 						newTransform.setPosition_p(unstickPoint);
-						controller->teleport(newTransform, nullptr);
+						controller->teleport(newTransform, NULL);
 					}
 
 					return;
@@ -188,7 +188,7 @@ void ServerPathfindingMessaging::receiveMessage(const MessageDispatch::Emitter &
 
 		Vector unstickPoint;
 		CellObject * cell = ContainerInterface::getContainingCellObject(*s);
-		if (cell != nullptr && s->asCreatureObject() != nullptr)
+		if (cell != NULL && s->asCreatureObject() != NULL)
 		{
 			// try finding a waypoint in the cell first
 			if (!cell->getClosestPathNodePos(*s, unstickPoint))
@@ -266,7 +266,7 @@ void ServerPathfindingMessaging::ignoreObjectPath(Client * client, const Network
 
 void ServerPathfindingMessaging::watchPathMap(Client * client)
 {
-	if(client == nullptr) return;
+	if(client == NULL) return;
 
 	// Add the client to our client list
 
@@ -290,7 +290,7 @@ void ServerPathfindingMessaging::watchPathMap(Client * client)
 
 void ServerPathfindingMessaging::ignorePathMap(Client * client)
 {
-	if(client == nullptr) return;
+	if(client == NULL) return;
 
 	m_clientList->erase(client);
 
@@ -319,7 +319,7 @@ void ServerPathfindingMessaging::onClientDestroy(ClientDestroy & d)
 
 void ServerPathfindingMessaging::sendGraphInfo ( CityPathGraph const * graph )
 {
-	if(graph == nullptr) return;
+	if(graph == NULL) return;
 
 	for(ClientList::iterator it = m_clientList->begin(); it != m_clientList->end(); ++it)
 	{
@@ -331,8 +331,8 @@ void ServerPathfindingMessaging::sendGraphInfo ( CityPathGraph const * graph )
 
 void ServerPathfindingMessaging::sendGraphInfo ( CityPathGraph const * graph, Client * client )
 {
-	if(client == nullptr) return;
-	if(graph == nullptr) return;
+	if(client == NULL) return;
+	if(graph == NULL) return;
 
 	int nodeCount = graph->getNodeCount();
 
@@ -348,7 +348,7 @@ void ServerPathfindingMessaging::sendGraphInfo ( CityPathGraph const * graph, Cl
 
 void ServerPathfindingMessaging::sendEraseGraph ( CityPathGraph const * graph )
 {
-	if(graph == nullptr) return;
+	if(graph == NULL) return;
 
 	for(ClientList::iterator it = m_clientList->begin(); it != m_clientList->end(); ++it)
 	{
@@ -360,8 +360,8 @@ void ServerPathfindingMessaging::sendEraseGraph ( CityPathGraph const * graph )
 
 void ServerPathfindingMessaging::sendEraseGraph ( CityPathGraph const * graph, Client * client )
 {
-	if(client == nullptr) return;
-	if(graph == nullptr) return;
+	if(client == NULL) return;
+	if(graph == NULL) return;
 
 	int nodeCount = graph->getNodeCount();
 
@@ -377,7 +377,7 @@ void ServerPathfindingMessaging::sendEraseGraph ( CityPathGraph const * graph, C
 
 void ServerPathfindingMessaging::sendNodeInfo ( CityPathNode const * node )
 {
-	if(node == nullptr) return;
+	if(node == NULL) return;
 
 	for(ClientList::iterator it = m_clientList->begin(); it != m_clientList->end(); ++it)
 	{
@@ -389,8 +389,8 @@ void ServerPathfindingMessaging::sendNodeInfo ( CityPathNode const * node )
 
 void ServerPathfindingMessaging::sendNodeInfo ( CityPathNode const * node, Client * client )
 {
-	if(node == nullptr) return;
-	if(client == nullptr) return;
+	if(node == NULL) return;
+	if(client == NULL) return;
 
 	AINodeInfo m;
 
@@ -428,7 +428,7 @@ void ServerPathfindingMessaging::sendNodeInfo ( CityPathNode const * node, Clien
 
 void ServerPathfindingMessaging::sendNeighborInfo ( CityPathNode const * node )
 {
-	if(node == nullptr) return;
+	if(node == NULL) return;
 
 	for(ClientList::iterator it = m_clientList->begin(); it != m_clientList->end(); ++it)
 	{
@@ -440,8 +440,8 @@ void ServerPathfindingMessaging::sendNeighborInfo ( CityPathNode const * node )
 
 void ServerPathfindingMessaging::sendNeighborInfo ( CityPathNode const * node, Client * client )
 {
-	if(node == nullptr) return;
-	if(client == nullptr) return;
+	if(node == NULL) return;
+	if(client == NULL) return;
 
 	int edgeCount = node->getEdgeCount();
 
@@ -459,7 +459,7 @@ void ServerPathfindingMessaging::sendNeighborInfo ( CityPathNode const * node, C
 
 void ServerPathfindingMessaging::sendEraseNode ( CityPathNode const * node )
 {
-	if(node == nullptr) return;
+	if(node == NULL) return;
 
 	for(ClientList::iterator it = m_clientList->begin(); it != m_clientList->end(); ++it)
 	{
@@ -471,8 +471,8 @@ void ServerPathfindingMessaging::sendEraseNode ( CityPathNode const * node )
 
 void ServerPathfindingMessaging::sendEraseNode ( CityPathNode const * node, Client * client )
 {
-	if(node == nullptr) return;
-	if(client == nullptr) return;
+	if(node == NULL) return;
+	if(client == NULL) return;
 
 	AINodeInfo m;
 
@@ -497,7 +497,7 @@ void ServerPathfindingMessaging::sendWaypointInfo ( AiLocation const & loc )
 
 void ServerPathfindingMessaging::sendWaypointInfo ( AiLocation const & loc, Client * client )
 {
-	if(client == nullptr) return;
+	if(client == NULL) return;
 
 	AINodeInfo m;
 
@@ -531,7 +531,7 @@ void ServerPathfindingMessaging::sendEraseWaypoint ( AiLocation const & loc )
 
 void ServerPathfindingMessaging::sendEraseWaypoint ( AiLocation const & loc, Client * client )
 {
-	if(client == nullptr) return;
+	if(client == NULL) return;
 
 	AINodeInfo m;
 

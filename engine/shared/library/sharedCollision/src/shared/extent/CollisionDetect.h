@@ -25,16 +25,16 @@ public:
 	DetectResult()
 	: collided(false),
 	  collisionTime(Range::empty),
-	  extentA(nullptr),
-	  extentB(nullptr)
+	  extentA(NULL),
+	  extentB(NULL)
 	{
 	}
 
 	DetectResult ( bool result )
 	: collided(result),
 	  collisionTime( result ? Range::inf : Range::empty ),
-	  extentA(nullptr),
-	  extentB(nullptr)
+	  extentA(NULL),
+	  extentB(NULL)
 	{
 	}
 	

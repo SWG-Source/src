@@ -31,9 +31,9 @@ using namespace CrcStringTableNamespace;
 CrcStringTable::CrcStringTable()
 :
 	m_numberOfEntries(0),
-	m_crcTable(nullptr),
-	m_stringsOffsetTable(nullptr),
-	m_strings(nullptr)
+	m_crcTable(NULL),
+	m_stringsOffsetTable(NULL),
+	m_strings(NULL)
 {
 }
 
@@ -42,9 +42,9 @@ CrcStringTable::CrcStringTable()
 CrcStringTable::CrcStringTable(char const * fileName)
 :
 	m_numberOfEntries(0),
-	m_crcTable(nullptr),
-	m_stringsOffsetTable(nullptr),
-	m_strings(nullptr)
+	m_crcTable(NULL),
+	m_stringsOffsetTable(NULL),
+	m_strings(NULL)
 {
 	load(fileName);
 }
@@ -69,7 +69,7 @@ void CrcStringTable::load(char const * fileName)
 		if(fileName)
 			DEBUG_WARNING(true, ("Could not load CrcStringTable %s", fileName));
 		else
-			DEBUG_WARNING(true, ("Could not load CrcStringTable, nullptr file given"));
+			DEBUG_WARNING(true, ("Could not load CrcStringTable, NULL file given"));
 		return;
 	}
 

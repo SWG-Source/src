@@ -311,7 +311,7 @@ inline const stdvector<const Vector *>::fwd & ScriptParams::getLocationArrayPara
 
 inline const NetworkId & ScriptParams::getObjIdParam(int index) const
 {
-	if (m_params[index].m_param.oidParam != nullptr)
+	if (m_params[index].m_param.oidParam != NULL)
 		return *m_params[index].m_param.oidParam;
 	return NetworkId::cms_invalid;
 }	// ScriptParams::getObjIdParam

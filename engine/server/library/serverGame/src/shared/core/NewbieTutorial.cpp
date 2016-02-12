@@ -257,10 +257,10 @@ void NewbieTutorial::getNonFreeObjectsForDeletion(const Container* const contain
 	{
 		const CachedNetworkId & itemId = *i;
 		ServerObject * item = safe_cast<ServerObject *>(itemId.getObject());
-		if (item != nullptr)
+		if (item != NULL)
 		{
 			TangibleObject *itemTangible = item->asTangibleObject();
-			if (itemTangible != nullptr)
+			if (itemTangible != NULL)
 			{
 				const char *templateName = itemTangible->getSharedTemplateName();
 				if (!FileManifest::contains(templateName))
@@ -273,7 +273,7 @@ void NewbieTutorial::getNonFreeObjectsForDeletion(const Container* const contain
 				{
 					// see if the item is a container and go through its contents
 					const Container * const itemContainer = ContainerInterface::getContainer(*item);
-					if (itemContainer != nullptr)
+					if (itemContainer != NULL)
 						getNonFreeObjectsForDeletion(itemContainer, objectsToDelete, character);
 				}
 			}

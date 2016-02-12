@@ -82,23 +82,23 @@ bool AiMovementWanderInterior::updateWaypoint ( void )
 {
 	CreatureObject const * creature = m_controller->getCreature();
 
-	if(creature == nullptr) return false;
+	if(creature == NULL) return false;
 
 	CellProperty const * cell = creature->getParentCell();
 
-	if(cell == nullptr) return false;
+	if(cell == NULL) return false;
 
 	Floor const * floor = cell->getFloor();
 
-	if(floor == nullptr) return false;
+	if(floor == NULL) return false;
 
 	FloorMesh const * floorMesh = floor->getFloorMesh();
 
-	if(floorMesh == nullptr) return false;
+	if(floorMesh == NULL) return false;
 
 	PathGraph const * graph = safe_cast<PathGraph const *>(floorMesh->getPathGraph());
 
-	if(graph == nullptr) return false;
+	if(graph == NULL) return false;
 
 	// ----------
 	
@@ -107,11 +107,11 @@ bool AiMovementWanderInterior::updateWaypoint ( void )
 	if(closestIndex == -2)
 	{
 		const CellObject *cellObject = dynamic_cast<const CellObject*>(&cell->getOwner());
-		const BuildingObject *building = (cellObject ? cellObject->getOwnerBuilding() : nullptr);
+		const BuildingObject *building = (cellObject ? cellObject->getOwnerBuilding() : NULL);
 		Vector creaturePosition = creature->getPosition_w();
 		
 		LOG("building-data-error",("Building id=%s has no path data but creature id=%s at (x=%.2f,y=%.2f,z=%.2f) requires it for wandering, stopping behavior.",	
-			(building ? building->getNetworkId().getValueString().c_str() : "<nullptr building>"),
+			(building ? building->getNetworkId().getValueString().c_str() : "<NULL building>"),
 			creature->getNetworkId().getValueString().c_str(),
 			creaturePosition.x,
 			creaturePosition.y,
@@ -132,7 +132,7 @@ bool AiMovementWanderInterior::updateWaypoint ( void )
 	{
 		PathNode const * closestNode = graph->getNode(closestIndex);
 
-		if(closestNode != nullptr)
+		if(closestNode != NULL)
 		{
 			m_target = AiLocation(m_controller->getCreatureCell(),closestNode->getPosition_p());
 

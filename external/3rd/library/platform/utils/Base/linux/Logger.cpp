@@ -18,20 +18,20 @@ Logger::Logger(const char *prefix, int level, unsigned size, bool rollDate)
 : m_defaultLevel(level), m_defaultSize(size), m_dirPrefix(prefix), m_rollDate(rollDate)
 {
 	char buf[1024];
-	FILE *logDir = nullptr;
+	FILE *logDir = NULL;
 	
 	logDir = fopen(m_dirPrefix.c_str(), "r+");
 	if(errno == ENOENT)
 	{
 		cmkdir(m_dirPrefix.c_str(), 0755);
 	}
-	else if(logDir != nullptr)
+	else if(logDir != NULL)
 	{
 		fclose(logDir);
 	}
 	
 	tm now;
-	time_t t = time(nullptr);
+	time_t t = time(NULL);
 	localtime_r(&t, &now);
 
 	memcpy(&m_lastDateTime, &now, sizeof(tm));
@@ -48,7 +48,7 @@ Logger::Logger(const char *prefix, int level, unsigned size, bool rollDate)
 	{
 		cmkdir(buf, 0755);
 	}
-	else if(logDir != nullptr)
+	else if(logDir != NULL)
 	{
 		fclose(logDir);
 	}
@@ -178,7 +178,7 @@ void Logger::logSimple(unsigned logenum, int level, const char *message)
 	{
 		return;
 	}
-	time_t t = time(nullptr);
+	time_t t = time(NULL);
 	LogInfo *info = (*iter).second;
 	if(level >= info->level)
 	{
@@ -241,7 +241,7 @@ void Logger::log(unsigned logenum, int level, const char *message, ...)
 	{
                 return;
 	}
-	time_t t = time(nullptr);
+	time_t t = time(NULL);
 	LogInfo *info = (*iter).second;
 	if(level >= info->level)
 	{
@@ -294,14 +294,14 @@ void Logger::log(unsigned logenum, int level, const char *message, ...)
 void Logger::rollDate(time_t t)
 {
 	char buf[80];
-	FILE *logDir = nullptr;
+	FILE *logDir = NULL;
 	
 	logDir = fopen(m_dirPrefix.c_str(), "r+");
 	if(errno == ENOENT)
 	{
 		cmkdir(m_dirPrefix.c_str(), 0755);
 	}
-	else if(logDir != nullptr)
+	else if(logDir != NULL)
 	{
 		fclose(logDir);
 	}
@@ -316,7 +316,7 @@ void Logger::rollDate(time_t t)
 	{
 		cmkdir(buf, 0755);
 	}
-	else if(logDir != nullptr)
+	else if(logDir != NULL)
 	{
 		fclose(logDir);
 	}

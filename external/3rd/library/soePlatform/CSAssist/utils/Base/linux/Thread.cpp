@@ -76,8 +76,8 @@ namespace Base
 
     CThreadPool::CMember::CMember(CThreadPool * parent) : 
         mParent(parent),
-        mFunction(nullptr),
-        mArgument(nullptr),
+        mFunction(NULL),
+        mArgument(NULL),
         mSemaphore()
     {
         StartThread();
@@ -116,8 +116,8 @@ namespace Base
             if (mFunction)
             {
                 mFunction(mArgument);
-                mArgument = nullptr;
-                mFunction = nullptr;
+                mArgument = NULL;
+                mFunction = NULL;
             }
             else if (mParent->OnDestory(this))
                 mThreadContinue = false;
@@ -172,7 +172,7 @@ namespace Base
         }
 
         ////////////////////////////////////////
-        //  (3) Delete the nullptr member threads
+        //  (3) Delete the null member threads
         mMutex.Lock();
         while (!mNullMember.empty())
         {
@@ -199,7 +199,7 @@ namespace Base
         }
         
         ////////////////////////////////////////
-        //  (2) Delete any nullptr member threads.
+        //  (2) Delete any null member threads.
         while (!mNullMember.empty())
         {
             delete mNullMember.front();

@@ -81,8 +81,8 @@ namespace ServerBuildoutManagerNamespace
 	struct ServerEventAreaInfo
 	{
 		ServerEventAreaInfo():
-		buildOut(nullptr),
-		loadedObject(nullptr)
+		buildOut(NULL),
+		loadedObject(NULL)
 		{
 
 		}
@@ -892,7 +892,7 @@ void ServerBuildoutManagerNamespace::instantiateAreaNode(AreaInfo const &areaInf
 			ServerEventMap::iterator searchIter = s_eventObjects.find(buildoutRow.m_eventRequired);
 			if(searchIter != s_eventObjects.end())
 			{
-				ServerEventAreaInfo newEventObj(&buildoutRow, nullptr);
+				ServerEventAreaInfo newEventObj(&buildoutRow, NULL);
 				(*searchIter).second.push_back(newEventObj);
 			}
 			else
@@ -947,7 +947,7 @@ void ServerBuildoutManagerNamespace::instantiateAreaNode(AreaInfo const &areaInf
 
 		newObject->setAuthority();
 
-		if (newObject->asTangibleObject() != nullptr)
+		if (newObject->asTangibleObject() != NULL)
 			newObject->asTangibleObject()->initializeVisibility();
 
 		//
@@ -1033,7 +1033,7 @@ void ServerBuildoutManagerNamespace::instantiateAreaNode(AreaInfo const &areaInf
 		{
 			GameScriptObject * const gso = newObject->getScriptObject();
 
-			if (nullptr != gso)
+			if (NULL != gso)
 			{
 				std::string const &scripts = buildoutRow.m_scripts;
 				unsigned int pos = 0;
@@ -1077,7 +1077,7 @@ void ServerBuildoutManagerNamespace::instantiateAreaNode(AreaInfo const &areaInf
 	if ( controllerObjectId.isValid() )
 	{
 		ServerObject * const controllerObject = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(controllerObjectId));
-		if (nullptr != controllerObject)
+		if (NULL != controllerObject)
 		{
 			GameScriptObject * const script = controllerObject->getScriptObject();
 
@@ -1092,7 +1092,7 @@ void ServerBuildoutManagerNamespace::instantiateAreaNode(AreaInfo const &areaInf
 				{
 					if (registerWithController)
 					{						
-						if (nullptr != script)
+						if (NULL != script)
 						{
 							ScriptParams p;
 							p.addParam(obj->getNetworkId());
@@ -1279,7 +1279,7 @@ void ServerBuildoutManager::onEventStarted(std::string const & eventName)
 
 		newObject->setAuthority();
 
-		if (newObject->asTangibleObject() != nullptr)
+		if (newObject->asTangibleObject() != NULL)
 			newObject->asTangibleObject()->initializeVisibility();
 
 		//
@@ -1369,7 +1369,7 @@ void ServerBuildoutManager::onEventStarted(std::string const & eventName)
 		{
 			GameScriptObject * const gso = newObject->getScriptObject();
 
-			if (nullptr != gso)
+			if (NULL != gso)
 			{
 				std::string const &scripts = buildoutRow.m_scripts;
 				unsigned int pos = 0;
@@ -1407,7 +1407,7 @@ void ServerBuildoutManager::onEventStarted(std::string const & eventName)
 	if ( controllerObjectId.isValid() )
 	{
 		ServerObject * const controllerObject = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(controllerObjectId));
-		if (nullptr != controllerObject)
+		if (NULL != controllerObject)
 		{
 			GameScriptObject * const script = controllerObject->getScriptObject();
 
@@ -1422,7 +1422,7 @@ void ServerBuildoutManager::onEventStarted(std::string const & eventName)
 				{
 					if (registerWithController)
 					{						
-						if (nullptr != script)
+						if (NULL != script)
 						{
 							ScriptParams p;
 							p.addParam(obj->getNetworkId());
@@ -1483,7 +1483,7 @@ void ServerBuildoutManager::onEventStopped(std::string const & eventName)
 			
 			object->unload();
 			
-			(*objIter).loadedObject = nullptr;
+			(*objIter).loadedObject = NULL;
 		}
 	}
 }

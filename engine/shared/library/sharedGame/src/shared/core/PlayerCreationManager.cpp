@@ -530,9 +530,9 @@ void PlayerCreationManager::buildRacialMinsMaxes()
 
 	const DataTable * dt = DataTableManager::getTable(
 		"datatables/creation/attribute_limits.iff", true);
-	WARNING_STRICT_FATAL(dt == nullptr, ("Unable to read the "
+	WARNING_STRICT_FATAL(dt == NULL, ("Unable to read the "
 		"attribute_limits datatable"));
-	if (dt == nullptr)
+	if (dt == NULL)
 		return;
 
 	int numAttribs = dt->getNumColumns() - 1;

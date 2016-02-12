@@ -98,7 +98,7 @@ void CentralServerConnection::onReceive(const Archive::ByteStream & message)
 			std::string const newNameNormalized(newName, 0, newName.find(' '));
 			ChatAvatarId const newAvatar("SWG", ConfigChatServer::getClusterName(), newNameNormalized);
 
-			IGNORE_RETURN(ChatServer::getChatInterface()->RequestTransferAvatar(msg.getStationId(), oldAvatar.getName(), oldAvatar.getAPIAddress(), msg.getStationId(), newAvatar.getName(), newAvatar.getAPIAddress(), true, nullptr));
+			IGNORE_RETURN(ChatServer::getChatInterface()->RequestTransferAvatar(msg.getStationId(), oldAvatar.getName(), oldAvatar.getAPIAddress(), msg.getStationId(), newAvatar.getName(), newAvatar.getAPIAddress(), true, NULL));
 		}
 	}
 	else if (m.isType("ChatDestroyAvatar"))

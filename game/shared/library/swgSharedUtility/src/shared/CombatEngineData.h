@@ -139,7 +139,7 @@ namespace CombatEngineData
 
 		std::vector<AttribMod::AttribMod> damage;// list of attribute modifiers this damage 
 		                                         // caused, pre armor effectiveness
-		CachedNetworkId            attackerId;   // who caused the damage (nullptr for 
+		CachedNetworkId            attackerId;   // who caused the damage (null for 
 		                                         // environmental effects, etc)
 		NetworkId                  weaponId;     // id of the weapon used
 		DamageType                 damageType;
@@ -175,10 +175,10 @@ namespace CombatEngineData
 
 	inline ActionItem::~ActionItem(void)
 	{
-		if (type == target && actionData.targetData.targets != nullptr)
+		if (type == target && actionData.targetData.targets != NULL)
 		{
 			delete[] actionData.targetData.targets;
-			actionData.targetData.targets = nullptr;
+			actionData.targetData.targets = NULL;
 		}
 	}	// ActionItem::~ActionItem
 
@@ -195,7 +195,7 @@ namespace CombatEngineData
 		actionId(0),
 		wounded(false),
 		ignoreInvulnerable(false)
-//		combatActionMessage(nullptr)
+//		combatActionMessage(NULL)
 		{
 		}
 

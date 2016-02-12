@@ -53,19 +53,19 @@ bool ConsoleCommandParserCraftStation::performParsing (const NetworkId & userId,
     {
 /*		// get the station
 		TangibleObject * station = getStation(argv, result);
-		if (station == nullptr)
+		if (station == NULL)
 			return true;
 
 		// get the ingredient
 		NetworkId ingredientId(Unicode::wideToNarrow (argv[2]));
 		ServerObject * object = ServerWorld::findObjectByNetworkId(ingredientId);
-		if (object == nullptr)
+		if (object == NULL)
 		{
 			result += getErrorMessage (argv [0], ERR_INVALID_INGREDIENT);
 			return true;
 		}
 		TangibleObject * ingredient = dynamic_cast<TangibleObject *>(object);
-		if (ingredient == nullptr)
+		if (ingredient == NULL)
 		{
 			result += getErrorMessage (argv [0], ERR_INVALID_INGREDIENT);
 			return true;
@@ -82,19 +82,19 @@ bool ConsoleCommandParserCraftStation::performParsing (const NetworkId & userId,
     {
 /*		// get the station
 		TangibleObject * station = getStation(argv, result);
-		if (station == nullptr)
+		if (station == NULL)
 			return true;
 
 		// get the ingredient
 		NetworkId ingredientId(Unicode::wideToNarrow (argv[2]));
 		ServerObject * object = ServerWorld::findObjectByNetworkId(ingredientId);
-		if (object == nullptr)
+		if (object == NULL)
 		{
 			result += getErrorMessage (argv [0], ERR_INVALID_INGREDIENT);
 			return true;
 		}
 		TangibleObject * ingredient = dynamic_cast<TangibleObject *>(object);
-		if (ingredient == nullptr)
+		if (ingredient == NULL)
 		{
 			result += getErrorMessage (argv [0], ERR_INVALID_INGREDIENT);
 			return true;
@@ -112,13 +112,13 @@ bool ConsoleCommandParserCraftStation::performParsing (const NetworkId & userId,
 /*		// get the station
 		NetworkId id(Unicode::wideToNarrow (argv[1]));
 		ServerObject * object = ServerWorld::findObjectByNetworkId(id);
-		if (object == nullptr)
+		if (object == NULL)
 		{
 			result += getErrorMessage (argv [0], ERR_INVALID_OBJECT);
 			return true;
 		}
 		TangibleObject * station = dynamic_cast<TangibleObject *>(object);
-		if (station == nullptr)
+		if (station == NULL)
 		{
 			result += getErrorMessage (argv [0], ERR_INVALID_OBJECT);
 			return true;
@@ -144,33 +144,33 @@ bool ConsoleCommandParserCraftStation::performParsing (const NetworkId & userId,
 /**
  * Finds the crafting station for a given id.
  *
- * @return the station or nullptr on error
+ * @return the station or NULL on error
  */
 TangibleObject * ConsoleCommandParserCraftStation::getStation(const StringVector_t & argv, String_t & result)
 {
 	NetworkId id(Unicode::wideToNarrow (argv[1]));
 	ServerObject * object = ServerWorld::findObjectByNetworkId(id);
-	if (object == nullptr)
+	if (object == NULL)
 	{
 		result += getErrorMessage (argv [0], ERR_INVALID_OBJECT);
-		return nullptr;
+		return NULL;
 	}
 	TangibleObject * station = dynamic_cast<TangibleObject *>(object);
-	if (station == nullptr)
+	if (station == NULL)
 	{
 		result += getErrorMessage (argv [0], ERR_INVALID_OBJECT);
-		return nullptr;
+		return NULL;
 	}
 	// make sure the station is a atation and that it isn't in use
 	if (!station->getObjVars().hasItem("crafting.station"))
 	{
 		result += getErrorMessage (argv [0], ERR_INVALID_STATION);
-		return nullptr;
+		return NULL;
 	}
 	if (station->getObjVars().hasItem("crafting.crafter"))
 	{
 		result += getErrorMessage (argv [0], ERR_STATION_IN_USE);
-		return nullptr;
+		return NULL;
 	}
 	return station;
 }	// ConsoleCommandParserCraftStation::getStation

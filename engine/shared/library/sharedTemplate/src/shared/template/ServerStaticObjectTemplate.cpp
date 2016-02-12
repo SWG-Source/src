@@ -86,10 +86,10 @@ Tag ServerStaticObjectTemplate::getTemplateVersion(void) const
  */
 Tag ServerStaticObjectTemplate::getHighestTemplateVersion(void) const
 {
-	if (m_baseData == nullptr)
+	if (m_baseData == NULL)
 		return m_templateVersion;
 	const ServerStaticObjectTemplate * base = dynamic_cast<const ServerStaticObjectTemplate *>(m_baseData);
-	if (base == nullptr)
+	if (base == NULL)
 		return m_templateVersion;
 	return std::max(m_templateVersion, base->getHighestTemplateVersion());
 } // ServerStaticObjectTemplate::getHighestTemplateVersion
@@ -113,9 +113,9 @@ BoolParam * ServerStaticObjectTemplate::getBoolParam(const char *name, bool deep
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != nullptr)
+				if (getBaseTemplate() != NULL)
 					return getBaseTemplate()->getBoolParam(name, deepCheck, index);
-				return nullptr;
+				return NULL;
 			}
 			return &m_clientOnlyBuildout;
 		}
@@ -123,7 +123,7 @@ BoolParam * ServerStaticObjectTemplate::getBoolParam(const char *name, bool deep
 	}
 	else
 		return ServerObjectTemplate::getBoolParam(name, deepCheck, index);
-	return nullptr;
+	return NULL;
 }	//ServerStaticObjectTemplate::getBoolParam
 
 StringParam * ServerStaticObjectTemplate::getStringParam(const char *name, bool deepCheck, int index)
@@ -211,12 +211,12 @@ char paramName[MAX_NAME_SIZE];
 		file.read_string(baseFilename);
 		file.exitChunk();
 		const ObjectTemplate *base = ObjectTemplateList::fetch(baseFilename);
-		DEBUG_WARNING(base == nullptr, ("was unable to load base template %s", baseFilename.c_str()));
-		if (m_baseData == base && base != nullptr)
+		DEBUG_WARNING(base == NULL, ("was unable to load base template %s", baseFilename.c_str()));
+		if (m_baseData == base && base != NULL)
 			base->releaseReference();
 		else
 		{
-			if (m_baseData != nullptr)
+			if (m_baseData != NULL)
 				m_baseData->releaseReference();
 			m_baseData = base;
 		}

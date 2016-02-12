@@ -43,7 +43,7 @@ namespace ScriptMethodsPvpNamespace
 
 	const char * makeCopyOfString(const char * rhs)
 	{
-		char * lhs = nullptr;
+		char * lhs = NULL;
 		if (rhs)
 		{
 			lhs = new char[strlen(rhs) + 1];
@@ -668,7 +668,7 @@ jobjectArray JNICALL ScriptMethodsPvpNamespace::pvpGetEnemyFlags(JNIEnv *env, jo
 		if (ScriptConversion::convert(enemyStrings, strArray))
 			return strArray->getReturnValue();
 	}
-	return nullptr;
+	return NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -749,7 +749,7 @@ jboolean JNICALL ScriptMethodsPvpNamespace::pvpHasBattlefieldEnemyFlag(JNIEnv *e
  * @param actor The actor for the enemy check
  * @param from  The center of the range
  * @param range The distance to query.
- * @return nullptr if there is an error, or an array of enemy objects which are in range.
+ * @return null if there is an error, or an array of enemy objects which are in range.
  */
 jlongArray JNICALL ScriptMethodsPvpNamespace::pvpGetEnemiesInRange(JNIEnv *env, jobject self, jlong actor, jlong location, jfloat range)
 {
@@ -799,7 +799,7 @@ jlongArray JNICALL ScriptMethodsPvpNamespace::pvpGetEnemiesInRange(JNIEnv *env, 
  * @param angle                The cone angle, in degrees, that the cone sweeps out.  The
  *                             total cone angle is twice this angle; therefore, this angle
  *                             represents the angle swept out to each side of the cone axis.
- * @return nullptr if there is an error, or an array of enemy objects which are in range.
+ * @return null if there is an error, or an array of enemy objects which are in range.
  */
 jlongArray JNICALL ScriptMethodsPvpNamespace::pvpGetEnemiesInCone(JNIEnv *env, jobject self, jlong actor, jlong coneCenterObjectId, jlong coneDirectionObjectId, jfloat range, jfloat angle)
 {
@@ -853,7 +853,7 @@ jlongArray JNICALL ScriptMethodsPvpNamespace::pvpGetEnemiesInCone(JNIEnv *env, j
  * @param angle                 The cone angle, in degrees, that the cone sweeps out.  The
  *                              total cone angle is twice this angle; therefore, this angle
  *                              represents the angle swept out to each side of the cone axis.
- * @return nullptr if there is an error, or an array of enemy objects which are in range.
+ * @return null if there is an error, or an array of enemy objects which are in range.
  */
 jlongArray JNICALL ScriptMethodsPvpNamespace::pvpGetEnemiesInConeLocation(JNIEnv *env, jobject self, jlong actor, jlong coneCenterObjectId, jobject coneDirectionLocation, jfloat range, jfloat angle)
 {
@@ -900,7 +900,7 @@ jlongArray JNICALL ScriptMethodsPvpNamespace::pvpGetEnemiesInConeLocation(JNIEnv
  * @param actor The actor for the canAttack check
  * @param from  The center of the range
  * @param range The distance to query.
- * @return nullptr if there is an error, or an array of attackable objects which are in range.
+ * @return null if there is an error, or an array of attackable objects which are in range.
  */
 jlongArray JNICALL ScriptMethodsPvpNamespace::pvpGetTargetsInRange(JNIEnv *env, jobject self, jlong actor, jlong location, jfloat range)
 {
@@ -951,7 +951,7 @@ jlongArray JNICALL ScriptMethodsPvpNamespace::pvpGetTargetsInRange(JNIEnv *env, 
  * @param angle                The cone angle, in degrees, that the cone sweeps out.  The
  *                             total cone angle is twice this angle; therefore, this angle
  *                             represents the angle swept out to each side of the cone axis.
- * @return nullptr if there is an error, or an array of attackable objects which are in range.
+ * @return null if there is an error, or an array of attackable objects which are in range.
  */
 jlongArray JNICALL ScriptMethodsPvpNamespace::pvpGetTargetsInCone(JNIEnv *env, jobject self, jlong actor, jlong coneCenterObjectId, jlong coneDirectionObjectId, jfloat range, jfloat angle)
 {
@@ -1005,7 +1005,7 @@ jlongArray JNICALL ScriptMethodsPvpNamespace::pvpGetTargetsInCone(JNIEnv *env, j
  * @param angle                 The cone angle, in degrees, that the cone sweeps out.  The
  *                              total cone angle is twice this angle; therefore, this angle
  *                              represents the angle swept out to each side of the cone axis.
- * @return nullptr if there is an error, or an array of attackable objects which are in range.
+ * @return null if there is an error, or an array of attackable objects which are in range.
  */
 jlongArray JNICALL ScriptMethodsPvpNamespace::pvpGetTargetsInConeLocation(JNIEnv *env, jobject self, jlong actor, jlong coneCenterObjectId, jobject coneDirectionLocation, jfloat range, jfloat angle)
 {

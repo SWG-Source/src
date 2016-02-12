@@ -78,7 +78,7 @@ ShipChassisSlot::~ShipChassisSlot ()
 	std::for_each(m_compatibilities->begin(), m_compatibilities->end(), PointerDeleter());
 	m_compatibilities->clear();
 	delete m_compatibilities;
-	m_compatibilities = nullptr;
+	m_compatibilities = NULL;
 }
 
 //----------------------------------------------------------------------
@@ -145,7 +145,7 @@ bool ShipChassisSlot::canAcceptComponentType (int shipComponentType) const
 
 bool ShipChassisSlot::canAcceptCompatibility (CrcString const & compatibility) const
 {
-	//-- nullptr compatibility components are universally accepted
+	//-- null compatibility components are universally accepted
 	if (compatibility.isEmpty ())
 		return true;
 

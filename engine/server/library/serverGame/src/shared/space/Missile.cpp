@@ -304,7 +304,7 @@ ServerObject * Missile::getSourceServerObject() const
 	if (sourceObject)
 		return sourceObject->asServerObject();
 	else
-		return nullptr;
+		return NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -315,7 +315,7 @@ ServerObject * Missile::getTargetServerObject() const
 	if (targetObject)
 		return targetObject->asServerObject();
 	else
-		return nullptr;
+		return NULL;
 }
 
 // ----------------------------------------------------------------------

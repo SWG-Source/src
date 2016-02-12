@@ -25,7 +25,7 @@
 #include "TaskGetLocationList.h"
 #include "TaskGetBidList.h"
 
-CMLoader *CMLoader::ms_instance = nullptr;
+CMLoader *CMLoader::ms_instance = NULL;
 
 // ======================================================================
 
@@ -42,7 +42,7 @@ void CMLoader::remove()
 {
 	NOT_NULL(ms_instance);
 	delete ms_instance;
-	ms_instance = nullptr;
+	ms_instance = NULL;
 }
 
 // ----------------------------------------------------------------------

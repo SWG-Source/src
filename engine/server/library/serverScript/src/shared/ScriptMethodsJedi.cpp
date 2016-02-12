@@ -120,7 +120,7 @@ jint JNICALL ScriptMethodsJediNamespace::getMaxForcePower(JNIEnv *env, jobject s
 {
 	UNREF(self);
 
-	const CreatureObject * creature = nullptr;
+	const CreatureObject * creature = NULL;
 	if (!JavaLibrary::getObject(target, creature))
 		return 0;
 
@@ -128,7 +128,7 @@ jint JNICALL ScriptMethodsJediNamespace::getMaxForcePower(JNIEnv *env, jobject s
 		return 0;
 
 	PlayerObject const * const playerObject = PlayerCreatureController::getPlayerObject(creature);
-	if (playerObject == nullptr)
+	if (playerObject == NULL)
 		return 0;
 
 	return playerObject->getMaxForcePower();
@@ -148,7 +148,7 @@ jboolean JNICALL ScriptMethodsJediNamespace::setMaxForcePower(JNIEnv *env, jobje
 {
 	UNREF(self);
 
-	CreatureObject * creature = nullptr;
+	CreatureObject * creature = NULL;
 	if (!JavaLibrary::getObject(target, creature))
 		return JNI_FALSE;
 
@@ -159,7 +159,7 @@ jboolean JNICALL ScriptMethodsJediNamespace::setMaxForcePower(JNIEnv *env, jobje
 	}
 
 	PlayerObject * playerObject = PlayerCreatureController::getPlayerObject(creature);
-	if (playerObject == nullptr)
+	if (playerObject == NULL)
 		return JNI_FALSE;
 
 	playerObject->setMaxForcePower(value);
@@ -180,7 +180,7 @@ jboolean JNICALL ScriptMethodsJediNamespace::alterMaxForcePower(JNIEnv *env, job
 {
 	UNREF(self);
 
-	CreatureObject * creature = nullptr;
+	CreatureObject * creature = NULL;
 	if (!JavaLibrary::getObject(target, creature))
 		return JNI_FALSE;
 
@@ -191,7 +191,7 @@ jboolean JNICALL ScriptMethodsJediNamespace::alterMaxForcePower(JNIEnv *env, job
 	}
 
 	PlayerObject * playerObject = PlayerCreatureController::getPlayerObject(creature);
-	if (playerObject == nullptr)
+	if (playerObject == NULL)
 		return JNI_FALSE;
 
 	playerObject->setMaxForcePower(playerObject->getMaxForcePower() + delta);
@@ -211,7 +211,7 @@ jint JNICALL ScriptMethodsJediNamespace::getForcePower(JNIEnv *env, jobject self
 {
 	UNREF(self);
 
-	const CreatureObject * creature = nullptr;
+	const CreatureObject * creature = NULL;
 	if (!JavaLibrary::getObject(target, creature))
 		return 0;
 
@@ -219,7 +219,7 @@ jint JNICALL ScriptMethodsJediNamespace::getForcePower(JNIEnv *env, jobject self
 		return 0;
 
 	PlayerObject const * const playerObject = PlayerCreatureController::getPlayerObject(creature);
-	if (playerObject == nullptr)
+	if (playerObject == NULL)
 		return 0;
 
 	return playerObject->getForcePower();
@@ -239,7 +239,7 @@ jboolean JNICALL ScriptMethodsJediNamespace::setForcePower(JNIEnv *env, jobject 
 {
 	UNREF(self);
 
-	CreatureObject * creature = nullptr;
+	CreatureObject * creature = NULL;
 	if (!JavaLibrary::getObject(target, creature))
 		return JNI_FALSE;
 
@@ -250,7 +250,7 @@ jboolean JNICALL ScriptMethodsJediNamespace::setForcePower(JNIEnv *env, jobject 
 	}
 
 	PlayerObject * playerObject = PlayerCreatureController::getPlayerObject(creature);
-	if (playerObject == nullptr)
+	if (playerObject == NULL)
 		return JNI_FALSE;
 
 	playerObject->setForcePower(value);
@@ -271,7 +271,7 @@ jboolean JNICALL ScriptMethodsJediNamespace::alterForcePower(JNIEnv *env, jobjec
 {
 	UNREF(self);
 
-	CreatureObject * creature = nullptr;
+	CreatureObject * creature = NULL;
 	if (!JavaLibrary::getObject(target, creature))
 		return JNI_FALSE;
 
@@ -282,7 +282,7 @@ jboolean JNICALL ScriptMethodsJediNamespace::alterForcePower(JNIEnv *env, jobjec
 	}
 
 	PlayerObject * playerObject = PlayerCreatureController::getPlayerObject(creature);
-	if (playerObject == nullptr)
+	if (playerObject == NULL)
 		return JNI_FALSE;
 
 	playerObject->setForcePower(playerObject->getForcePower() + delta);
@@ -302,7 +302,7 @@ jfloat JNICALL ScriptMethodsJediNamespace::getForcePowerRegenRate(JNIEnv *env, j
 {
 	UNREF(self);
 
-	const CreatureObject * creature = nullptr;
+	const CreatureObject * creature = NULL;
 	if (!JavaLibrary::getObject(target, creature))
 		return 0;
 
@@ -310,7 +310,7 @@ jfloat JNICALL ScriptMethodsJediNamespace::getForcePowerRegenRate(JNIEnv *env, j
 		return 0;
 
 	PlayerObject const * const playerObject = PlayerCreatureController::getPlayerObject(creature);
-	if (playerObject == nullptr)
+	if (playerObject == NULL)
 		return 0;
 
 	return playerObject->getForcePowerRegenRate();
@@ -330,7 +330,7 @@ jboolean JNICALL ScriptMethodsJediNamespace::setForcePowerRegenRate(JNIEnv *env,
 {
 	UNREF(self);
 
-	CreatureObject * creature = nullptr;
+	CreatureObject * creature = NULL;
 	if (!JavaLibrary::getObject(target, creature))
 		return JNI_FALSE;
 
@@ -341,7 +341,7 @@ jboolean JNICALL ScriptMethodsJediNamespace::setForcePowerRegenRate(JNIEnv *env,
 	}
 
 	PlayerObject * playerObject = PlayerCreatureController::getPlayerObject(creature);
-	if (playerObject == nullptr)
+	if (playerObject == NULL)
 		return JNI_FALSE;
 
 	playerObject->setForcePowerRegenRate(rate);
@@ -359,7 +359,7 @@ jboolean JNICALL ScriptMethodsJediNamespace::setForcePowerRegenRate(JNIEnv *env,
  */
 jint JNICALL ScriptMethodsJediNamespace::getJediState(JNIEnv *env, jobject self, jlong jedi)
 {
-	const CreatureObject * object = nullptr;
+	const CreatureObject * object = NULL;
 	if (!JavaLibrary::getObject(jedi, object))
 	{
 		WARNING(true, ("JavaLibrary::getJediState did not find creature for id passed in"));
@@ -367,7 +367,7 @@ jint JNICALL ScriptMethodsJediNamespace::getJediState(JNIEnv *env, jobject self,
 	}
 
 	const SwgPlayerObject * player = safe_cast<const SwgPlayerObject *>(PlayerCreatureController::getPlayerObject(object));
-	if (player == nullptr)
+	if (player == NULL)
 	{
 		WARNING(true, ("JavaLibrary::getJediState did not find player for creature "
 			"%s", object->getNetworkId().getValueString().c_str()));
@@ -389,12 +389,12 @@ jint JNICALL ScriptMethodsJediNamespace::getJediState(JNIEnv *env, jobject self,
  */
 jboolean JNICALL ScriptMethodsJediNamespace::setJediState(JNIEnv *env, jobject self, jlong jedi, jint state)
 {
-	CreatureObject * object = nullptr;
+	CreatureObject * object = NULL;
 	if (!JavaLibrary::getObject(jedi, object))
 		return JNI_FALSE;
 
 	SwgPlayerObject * const player = safe_cast<SwgPlayerObject *>(PlayerCreatureController::getPlayerObject(object));
-	if (player == nullptr)
+	if (player == NULL)
 		return JNI_FALSE;
 
 	if (state == JS_none ||
@@ -424,7 +424,7 @@ jboolean JNICALL ScriptMethodsJediNamespace::setJediState(JNIEnv *env, jobject s
  */
 jboolean JNICALL ScriptMethodsJediNamespace::hasJediSlot(JNIEnv * env, jobject self, jlong target)
 {
-	const ServerObject * player = nullptr;
+	const ServerObject * player = NULL;
 	if (!JavaLibrary::getObject(target, player))
 		return JNI_FALSE;
 
@@ -444,12 +444,12 @@ jboolean JNICALL ScriptMethodsJediNamespace::hasJediSlot(JNIEnv * env, jobject s
  */
 jboolean JNICALL ScriptMethodsJediNamespace::addJediSlot(JNIEnv * env, jobject self, jlong target)
 {
-	const CreatureObject * object = nullptr;
+	const CreatureObject * object = NULL;
 	if (!JavaLibrary::getObject(target, object))
 		return JNI_FALSE;
 
 	PlayerObject const * const player = PlayerCreatureController::getPlayerObject(object);
-	if (player == nullptr)
+	if (player == NULL)
 		return JNI_FALSE;
 
 	player->addJediToAccount();
@@ -475,12 +475,12 @@ jboolean JNICALL ScriptMethodsJediNamespace::isJedi(JNIEnv * env, jobject self, 
 {
 	UNREF(self);
 
-	const CreatureObject * creature = nullptr;
+	const CreatureObject * creature = NULL;
 	if (!JavaLibrary::getObject(target, creature))
 		return JNI_FALSE;
 
 	const PlayerObject * player = PlayerCreatureController::getPlayerObject(creature);
-	if (player == nullptr)
+	if (player == NULL)
 		return JNI_FALSE;
 	const SwgPlayerObject * jedi = safe_cast<const SwgPlayerObject *>(player);
 
@@ -502,12 +502,12 @@ jint JNICALL ScriptMethodsJediNamespace::getJediVisibility(JNIEnv * env, jobject
 {
 	UNREF(self);
 
-	const CreatureObject * creature = nullptr;
+	const CreatureObject * creature = NULL;
 	if (!JavaLibrary::getObject(target, creature))
 		return -1;
 
 	const PlayerObject * player = PlayerCreatureController::getPlayerObject(creature);
-	if (player == nullptr)
+	if (player == NULL)
 		return JNI_FALSE;
 	const SwgPlayerObject * jedi = safe_cast<const SwgPlayerObject *>(player);
 
@@ -531,12 +531,12 @@ jboolean JNICALL ScriptMethodsJediNamespace::setJediVisibility(JNIEnv * env, job
 {
 	UNREF(self);
 
-	CreatureObject * creature = nullptr;
+	CreatureObject * creature = NULL;
 	if (!JavaLibrary::getObject(target, creature))
 		return JNI_FALSE;
 
 	PlayerObject * player = PlayerCreatureController::getPlayerObject(creature);
-	if (player == nullptr)
+	if (player == NULL)
 		return JNI_FALSE;
 	SwgPlayerObject * jedi = safe_cast<SwgPlayerObject *>(player);
 
@@ -561,12 +561,12 @@ jboolean JNICALL ScriptMethodsJediNamespace::changeJediVisibility(JNIEnv * env, 
 {
 	UNREF(self);
 
-	CreatureObject * creature = nullptr;
+	CreatureObject * creature = NULL;
 	if (!JavaLibrary::getObject(target, creature))
 		return JNI_FALSE;
 
 	PlayerObject * player = PlayerCreatureController::getPlayerObject(creature);
-	if (player == nullptr)
+	if (player == NULL)
 		return JNI_FALSE;
 	SwgPlayerObject * jedi = safe_cast<SwgPlayerObject *>(player);
 
@@ -591,19 +591,19 @@ jboolean JNICALL ScriptMethodsJediNamespace::setJediBountyValue(JNIEnv * env, jo
 {
 	UNREF(self);
 
-	CreatureObject * creature = nullptr;
+	CreatureObject * creature = NULL;
 	if (!JavaLibrary::getObject(target, creature))
 		return JNI_FALSE;
 	SwgCreatureObject const * jediCreature = safe_cast<SwgCreatureObject const *>(creature);
 
 	PlayerObject const * player = PlayerCreatureController::getPlayerObject(creature);
-	if (player == nullptr)
+	if (player == NULL)
 		return JNI_FALSE;
 	SwgPlayerObject const * jediPlayer = safe_cast<SwgPlayerObject const *>(player);
 
 	JediManagerObject * jediManager = static_cast<SwgServerUniverse &>(
 			ServerUniverse::getInstance()).getJediManager();
-	if (jediManager == nullptr)
+	if (jediManager == NULL)
 		return JNI_FALSE;
 
 	jediManager->addJedi(creature->getNetworkId(), creature->getObjectName(),
@@ -631,7 +631,7 @@ jboolean JNICALL ScriptMethodsJediNamespace::setJediBountyValue(JNIEnv * env, jo
  * @param bounties		limit for number of bounties on the Jedi statistic
  * @param state         what state(s) the Jedi should have
  *
- * @return a dictionary with the Jedi data on success, nullptr on error
+ * @return a dictionary with the Jedi data on success, null on error
  */
 jobject JNICALL ScriptMethodsJediNamespace::requestJedi(JNIEnv * env, jobject self, jint visibility,
 	jint bountyValue, jint minLevel, jint maxLevel, jint hoursAlive, jint bounties, jint state)
@@ -640,7 +640,7 @@ jobject JNICALL ScriptMethodsJediNamespace::requestJedi(JNIEnv * env, jobject se
 
 	JediManagerObject * jediManager = static_cast<SwgServerUniverse &>(
 			ServerUniverse::getInstance()).getJediManager();
-	if (jediManager == nullptr)
+	if (jediManager == NULL)
 		return 0;
 
 	ScriptParams params;
@@ -658,7 +658,7 @@ jobject JNICALL ScriptMethodsJediNamespace::requestJedi(JNIEnv * env, jobject se
  * @param self		class calling this function
  * @param target	the id of the Jedi
  *
- * @return a dictionary with the Jedi data on success, nullptr on error
+ * @return a dictionary with the Jedi data on success, null on error
  */
 jobject JNICALL ScriptMethodsJediNamespace::requestOneJedi(JNIEnv * env, jobject self, jlong target)
 {
@@ -666,7 +666,7 @@ jobject JNICALL ScriptMethodsJediNamespace::requestOneJedi(JNIEnv * env, jobject
 
 	JediManagerObject * jediManager = static_cast<SwgServerUniverse &>(
 			ServerUniverse::getInstance()).getJediManager();
-	if (jediManager == nullptr)
+	if (jediManager == NULL)
 		return 0;
 
 	const NetworkId id(target);
@@ -704,7 +704,7 @@ jboolean JNICALL ScriptMethodsJediNamespace::requestJediBounty(JNIEnv * env, job
 
 	JediManagerObject * jediManager = static_cast<SwgServerUniverse &>(
 			ServerUniverse::getInstance()).getJediManager();
-	if (jediManager == nullptr)
+	if (jediManager == NULL)
 		return JNI_FALSE;
 
 	const NetworkId targetId(target);
@@ -751,7 +751,7 @@ jboolean JNICALL ScriptMethodsJediNamespace::removeJediBounty(JNIEnv * env, jobj
 
 	JediManagerObject * jediManager = static_cast<SwgServerUniverse &>(
 			ServerUniverse::getInstance()).getJediManager();
-	if (jediManager == nullptr)
+	if (jediManager == NULL)
 		return JNI_FALSE;
 
 	const NetworkId targetId(target);
@@ -781,7 +781,7 @@ jboolean JNICALL ScriptMethodsJediNamespace::removeAllJediBounties(JNIEnv * env,
 
 	JediManagerObject * jediManager = static_cast<SwgServerUniverse &>(
 			ServerUniverse::getInstance()).getJediManager();
-	if (jediManager == nullptr)
+	if (jediManager == NULL)
 		return JNI_FALSE;
 
 	const NetworkId targetId(target);
@@ -799,7 +799,7 @@ jboolean JNICALL ScriptMethodsJediNamespace::removeAllJediBounties(JNIEnv * env,
  * @param self		class calling this function
  * @param target	the Jedi
  *
- * @return an array of hunter ids, or nullptr on error
+ * @return an array of hunter ids, or null on error
  */
 jlongArray JNICALL ScriptMethodsJediNamespace::getJediBounties(JNIEnv * env, jobject self, jlong target)
 {
@@ -807,7 +807,7 @@ jlongArray JNICALL ScriptMethodsJediNamespace::getJediBounties(JNIEnv * env, job
 
 	JediManagerObject * jediManager = static_cast<SwgServerUniverse &>(
 			ServerUniverse::getInstance()).getJediManager();
-	if (jediManager == nullptr)
+	if (jediManager == NULL)
 		return 0;
 
 	const NetworkId targetId(target);
@@ -837,7 +837,7 @@ jboolean JNICALL ScriptMethodsJediNamespace::isBeingHuntedByBountyHunter(JNIEnv 
 
 	JediManagerObject * jediManager = static_cast<SwgServerUniverse &>(
 		ServerUniverse::getInstance()).getJediManager();
-	if (jediManager == nullptr)
+	if (jediManager == NULL)
 		return JNI_FALSE;
 
 	const NetworkId targetId(target);
@@ -861,7 +861,7 @@ jboolean JNICALL ScriptMethodsJediNamespace::isBeingHuntedByBountyHunter(JNIEnv 
  * @param self		class calling this function
  * @param hunter	the bounty hunter
  *
- * @return an array of jedi ids, or nullptr on error
+ * @return an array of jedi ids, or null on error
  */
 jlongArray JNICALL ScriptMethodsJediNamespace::getBountyHunterBounties(JNIEnv * env, jobject self, jlong hunter)
 {
@@ -869,7 +869,7 @@ jlongArray JNICALL ScriptMethodsJediNamespace::getBountyHunterBounties(JNIEnv * 
 
 	JediManagerObject * jediManager = static_cast<SwgServerUniverse &>(
 			ServerUniverse::getInstance()).getJediManager();
-	if (jediManager == nullptr)
+	if (jediManager == NULL)
 		return 0;
 
 	const NetworkId hunterId(hunter);
@@ -899,7 +899,7 @@ void JNICALL ScriptMethodsJediNamespace::updateJediScriptData(JNIEnv * env, jobj
 {
 	JediManagerObject * jediManager = static_cast<SwgServerUniverse &>(
 			ServerUniverse::getInstance()).getJediManager();
-	if (jediManager == nullptr)
+	if (jediManager == NULL)
 		return;
 
 	const NetworkId targetId(target);
@@ -926,7 +926,7 @@ void JNICALL ScriptMethodsJediNamespace::removeJediScriptData(JNIEnv * env, jobj
 {
 	JediManagerObject * jediManager = static_cast<SwgServerUniverse &>(
 			ServerUniverse::getInstance()).getJediManager();
-	if (jediManager == nullptr)
+	if (jediManager == NULL)
 		return;
 
 	const NetworkId targetId(target);

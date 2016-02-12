@@ -64,7 +64,7 @@ public:
 	void                     validateAccount     (const StationId& stationId, uint32 clusterId, uint32 subscriptionBits, bool canCreateRegular, bool canCreateJedi, bool canSkipTutorial, unsigned int track, std::vector<std::pair<NetworkId, std::string> > const & consumedRewardEvents, std::vector<std::pair<NetworkId, std::string> > const & claimedRewardItems);
 	void                     validateAccountForTransfer(const TransferRequestMoveValidation & request, uint32 clusterId, uint32 sourceCharacterTemplateId, bool canCreateRegular, bool canCreateJedi);
 	void                     sendToCluster       (uint32 clusterId, const GameNetworkMessage &message);
-	void                     sendToAllClusters   (GameNetworkMessage const & message, Connection const * excludeCentralConnection = nullptr, uint32 excludeClusterId = 0, char const * excludeClusterName = nullptr);
+	void                     sendToAllClusters   (GameNetworkMessage const & message, Connection const * excludeCentralConnection = NULL, uint32 excludeClusterId = 0, char const * excludeClusterName = NULL);
 	bool                     areAllClustersUp    () const;
 	void                     getClusterIds       (stdvector<uint32>::fwd result);
 	void                     performAccountTransfer (const AvatarList &avatars, TransferAccountData * transferAccountData);

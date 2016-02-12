@@ -482,7 +482,7 @@ namespace SetupSwgSharedNetworkMessagesNamespace
 
 	MessageQueue::Data* unpackNothing(Archive::ReadIterator &)
 	{
-		return nullptr;
+		return NULL;
 	}
 
 	//----------------------------------------------------------------------

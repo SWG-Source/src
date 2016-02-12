@@ -49,11 +49,11 @@ int CollisionDetect::getTestCounter ( void )
 
 BaseExtent const * getCollisionExtent_p ( Object const * obj )
 {
-	if(obj == nullptr) return nullptr;
+	if(obj == NULL) return NULL;
 
 	CollisionProperty const * collision = obj->getCollisionProperty();
 
-	if(!collision) return nullptr;
+	if(!collision) return NULL;
 
 	return collision->getExtent_p();
 }
@@ -62,8 +62,8 @@ BaseExtent const * getCollisionExtent_p ( Object const * obj )
 
 DetectResult CollisionDetect::testObjects ( Object const * objA, Object const * objB )
 {
-	if(objA == nullptr) return false;
-	if(objB == nullptr) return false;
+	if(objA == NULL) return false;
+	if(objB == NULL) return false;
 
 	// ----------
 
@@ -85,8 +85,8 @@ DetectResult CollisionDetect::testObjects ( Object const * objA, Object const * 
 
 DetectResult CollisionDetect::testObjects ( Object const * objA, Vector const & velocity, Object const * objB )
 {
-	if(objA == nullptr) return false;
-	if(objB == nullptr) return false;
+	if(objA == NULL) return false;
+	if(objB == NULL) return false;
 
 	// ----------
 
@@ -108,8 +108,8 @@ DetectResult CollisionDetect::testObjects ( Object const * objA, Vector const & 
 
 DetectResult CollisionDetect::testObjectsAsCylinders ( Object const * objA, Object const * objB )
 {
-	if(objA == nullptr) return false;
-	if(objB == nullptr) return false;
+	if(objA == NULL) return false;
+	if(objB == NULL) return false;
 
 	// ----------
 
@@ -133,7 +133,7 @@ DetectResult CollisionDetect::testObjectsAsCylinders ( Object const * objA, Obje
 
 DetectResult CollisionDetect::testObjectExtent ( Object const * objA, BaseExtent const * extentB )
 {
-	if(objA == nullptr) return false;
+	if(objA == NULL) return false;
 
 	CollisionProperty const * collA = objA->getCollisionProperty();
 
@@ -158,7 +158,7 @@ DetectResult CollisionDetect::testSphereExtent ( Sphere const & sphereA, BaseExt
 
 	// don't return a DetectResult that contains a pointer to a temporary
 	
-	result.extentA = nullptr;
+	result.extentA = NULL;
 
 	return result;
 }
@@ -175,7 +175,7 @@ DetectResult CollisionDetect::testSphereExtent ( Sphere const & sphereA, Vector 
 
 	// don't return a DetectResult that contains a pointer to a temporary
 	
-	result.extentA = nullptr;
+	result.extentA = NULL;
 
 	return result;
 }
@@ -184,7 +184,7 @@ DetectResult CollisionDetect::testSphereExtent ( Sphere const & sphereA, Vector 
 
 DetectResult CollisionDetect::testSphereObject ( Sphere const & sphereA, Object const * objB )
 {
-	if(objB == nullptr) return false;
+	if(objB == NULL) return false;
 
 	CollisionProperty const * collB = objB->getCollisionProperty();
 
@@ -201,7 +201,7 @@ DetectResult CollisionDetect::testSphereObject ( Sphere const & sphereA, Object 
 
 DetectResult CollisionDetect::testSphereObject ( Sphere const & sphereA, Vector const & velocity, Object const * objB )
 {
-	if(objB == nullptr) return false;
+	if(objB == NULL) return false;
 
 	CollisionProperty const * collB = objB->getCollisionProperty();
 
@@ -332,8 +332,8 @@ DetectResult CollisionDetect::testCapsuleObjectAgainstAllTypes(Capsule const & c
 
 DetectResult CollisionDetect::testExtents ( BaseExtent const * extentA, BaseExtent const * extentB )
 {
-	if(extentA == nullptr) return false;
-	if(extentB == nullptr) return false;
+	if(extentA == NULL) return false;
+	if(extentB == NULL) return false;
 
 	ExtentType typeA = extentA->getType();
 	ExtentType typeB = extentB->getType();
@@ -352,8 +352,8 @@ DetectResult CollisionDetect::testExtents ( BaseExtent const * extentA, BaseExte
 
 DetectResult CollisionDetect::testExtents ( BaseExtent const * extentA, Vector const & velocity, BaseExtent const * extentB )
 {
-	if(extentA == nullptr) return false;
-	if(extentB == nullptr) return false;
+	if(extentA == NULL) return false;
+	if(extentB == NULL) return false;
 
 	ExtentType typeA = extentA->getType();
 	ExtentType typeB = extentB->getType();
@@ -372,8 +372,8 @@ DetectResult CollisionDetect::testExtents ( BaseExtent const * extentA, Vector c
 
 DetectResult CollisionDetect::testExtentsAsCylinders ( BaseExtent const * extentA, BaseExtent const * extentB )
 {
-	if(extentA == nullptr) return false;
-	if(extentB == nullptr) return false;
+	if(extentA == NULL) return false;
+	if(extentB == NULL) return false;
 
 	SimpleExtent const * simpleExtentA = safe_cast<SimpleExtent const * >(extentA);
 	SimpleExtent const * simpleExtentB = safe_cast<SimpleExtent const * >(extentB);

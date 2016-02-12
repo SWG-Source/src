@@ -265,11 +265,11 @@ bool ObjectTableBuffer::save(DB::Session *session)
 #if 0  // Enable this to debug load_with problems
 			DEBUG_REPORT_LOG(true,("Save object %s ",i->second->object_id.getValue().getValueString().c_str()));
 			if (i->second->contained_by.isNull())
-				DEBUG_REPORT_LOG(true, ("contained_by nullptr "));
+				DEBUG_REPORT_LOG(true, ("contained_by NULL "));
 			else					
 				DEBUG_REPORT_LOG(true, ("contained_by %s ",i->second->contained_by.getValue().getValueString().c_str()));
 			if (i->second->load_with.isNull())
-				DEBUG_REPORT_LOG(true,("load_with nullptr\n"));
+				DEBUG_REPORT_LOG(true,("load_with NULL\n"));
 			else
 				DEBUG_REPORT_LOG(true,("load_with %s\n",i->second->load_with.getValue().getValueString().c_str()));
 #endif			
@@ -671,7 +671,7 @@ void ObjectTableBuffer::getObjvarsForObject(const NetworkId &objectId, std::vect
 int ObjectTableBuffer::encodeObjVarFreeFlags(const NetworkId & objectId) const
 {
 	const DBSchema::ObjectBufferRow *row=findConstRowByIndex(objectId);
-	WARNING_STRICT_FATAL(row==nullptr,("Loading object %s, no ObjectRow in the buffer\n",objectId.getValueString().c_str()));
+	WARNING_STRICT_FATAL(row==NULL,("Loading object %s, no ObjectRow in the buffer\n",objectId.getValueString().c_str()));
 	if (!row)
 		return 0;
 

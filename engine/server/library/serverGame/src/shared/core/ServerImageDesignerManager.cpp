@@ -56,8 +56,8 @@ namespace ServerImageDesignerManagerNamespace
 		{
 			NetworkId const & nid = payload.first;
 			Object * const o = NetworkIdManager::getObjectById(nid);
-			ServerObject * const so = o ? o->asServerObject() : nullptr;
-			CreatureObject * const creature = so ? so->asCreatureObject() : nullptr;
+			ServerObject * const so = o ? o->asServerObject() : NULL;
+			CreatureObject * const creature = so ? so->asCreatureObject() : NULL;
 			if (creature)
 			{
 				ObjectTemplate const * const tmp = creature->getSharedTemplate();
@@ -157,7 +157,7 @@ void ServerImageDesignerManager::remove()
 	ms_genderSpeciesToAllowBald.clear();
 
 	delete ms_callback;
-	ms_callback = nullptr;
+	ms_callback = NULL;
 }
 
 //-----------------------------------------------------------------------------
@@ -172,12 +172,12 @@ bool ServerImageDesignerManager::makeChanges(SharedImageDesignerManager::Session
 
 	NetworkId const & recipientId = session.recipientId;
 	Object * const recipientObj = NetworkIdManager::getObjectById(recipientId);
-	ServerObject * const recipientServerObj = recipientObj ? recipientObj->asServerObject() : nullptr;
-	CreatureObject * const recipient = recipientServerObj ? recipientServerObj->asCreatureObject() : nullptr;
+	ServerObject * const recipientServerObj = recipientObj ? recipientObj->asServerObject() : NULL;
+	CreatureObject * const recipient = recipientServerObj ? recipientServerObj->asCreatureObject() : NULL;
 	NetworkId const & designerId = session.designerId;
 	Object * const designerObj = NetworkIdManager::getObjectById(designerId);
-	ServerObject * const designerServerObj = designerObj ? designerObj->asServerObject() : nullptr;
-	CreatureObject * const designer = designerServerObj ? designerServerObj->asCreatureObject() : nullptr;
+	ServerObject * const designerServerObj = designerObj ? designerObj->asServerObject() : NULL;
+	CreatureObject * const designer = designerServerObj ? designerServerObj->asCreatureObject() : NULL;
 	if(designer && recipient)
 	{
 
@@ -332,8 +332,8 @@ bool ServerImageDesignerManager::makeChanges(SharedImageDesignerManager::Session
 				SlotId const slot = SlotIdManager::findSlotId (ConstCharCrcLowerString (cms_hairSlotName));
 				Container::ContainerErrorCode tmp = Container::CEC_Success;
 				Object * const originalHairObject = slotted->getObjectInSlot(slot, tmp).getObject();
-				ServerObject * const originalHairServerObject = originalHairObject ? originalHairObject->asServerObject() : nullptr;
-				TangibleObject * const orignalHair = originalHairServerObject ? originalHairServerObject->asTangibleObject() : nullptr;
+				ServerObject * const originalHairServerObject = originalHairObject ? originalHairObject->asServerObject() : NULL;
+				TangibleObject * const orignalHair = originalHairServerObject ? originalHairServerObject->asTangibleObject() : NULL;
 				std::string originalHairCustomizationData;
 				if(orignalHair)
 				{
@@ -434,8 +434,8 @@ SharedImageDesignerManager::SkillMods ServerImageDesignerManager::getSkillModsFo
 	}
 
 	Object const * const o = NetworkIdManager::getObjectById(designerId);
-	ServerObject const * const so = o ? o->asServerObject() : nullptr;
-	CreatureObject const * const designer = so ? so->asCreatureObject() : nullptr;
+	ServerObject const * const so = o ? o->asServerObject() : NULL;
+	CreatureObject const * const designer = so ? so->asCreatureObject() : NULL;
 	if(designer)
 	{
 		skillMods.bodySkillMod = designer->getModValue(SharedImageDesignerManager::cms_bodySkillModName);
@@ -466,7 +466,7 @@ void ServerImageDesignerManager::updateGradualCustomizations(CreatureObject * ta
 					//do this one immediately
 					SlotId const slot = SlotIdManager::findSlotId (ConstCharCrcLowerString (cms_hairCustomizationName.c_str()));
 					ServerObject * const hair = ServerWorld::createNewObject(i->second.templateName, *target, slot, true);
-					TangibleObject * const tangibleHair = hair ? hair->asTangibleObject() : nullptr;
+					TangibleObject * const tangibleHair = hair ? hair->asTangibleObject() : NULL;
 					if(tangibleHair)
 					{
 						//first set hair color to colors from old hair (if any)
@@ -503,11 +503,11 @@ void ServerImageDesignerManager::sendSessionToScriptForValidation(SharedImageDes
 	NetworkId const & designerId = session.designerId;
 	NetworkId const & recipientId = session.recipientId;
 	Object const * const designerObj = NetworkIdManager::getObjectById(designerId);
-	ServerObject const * const designerServer = designerObj ? designerObj->asServerObject() : nullptr;
-	CreatureObject const * const designer = designerServer ? designerServer->asCreatureObject() : nullptr;
+	ServerObject const * const designerServer = designerObj ? designerObj->asServerObject() : NULL;
+	CreatureObject const * const designer = designerServer ? designerServer->asCreatureObject() : NULL;
 	Object * const recipientObj = NetworkIdManager::getObjectById(recipientId);
-	ServerObject * const recipientServer = recipientObj ? recipientObj->asServerObject() : nullptr;
-	CreatureObject * const recipient = recipientServer ? recipientServer->asCreatureObject() : nullptr;
+	ServerObject * const recipientServer = recipientObj ? recipientObj->asServerObject() : NULL;
+	CreatureObject * const recipient = recipientServer ? recipientServer->asCreatureObject() : NULL;
 	if(designer && recipient)
 	{
 		sendSessionToScript(session, session.designerId, static_cast<int>(Scripting::TRIG_IMAGE_DESIGN_VALIDATE));
@@ -519,7 +519,7 @@ void ServerImageDesignerManager::sendSessionToScriptForValidation(SharedImageDes
 void ServerImageDesignerManager::sendSessionToScript(SharedImageDesignerManager::Session const & session, NetworkId const & objectToTriggerId, int const trigger)
 {
 	Object * const objectToTrigger = NetworkIdManager::getObjectById(objectToTriggerId);
-	ServerObject * const serverObjectToTrigger = objectToTrigger ? objectToTrigger->asServerObject() : nullptr;
+	ServerObject * const serverObjectToTrigger = objectToTrigger ? objectToTrigger->asServerObject() : NULL;
 	if(serverObjectToTrigger)
 	{
 		GameScriptObject * const scriptObject = serverObjectToTrigger->getScriptObject();
@@ -571,11 +571,11 @@ CustomizationData * ServerImageDesignerManager::fetchCustomizationDataForCustomi
 	if(customization.isVarHairColor)
 	{
 		ServerObject * const hair = creature.getHair();
-		TangibleObject * const tangibleHair = hair ? hair->asTangibleObject() : nullptr;
+		TangibleObject * const tangibleHair = hair ? hair->asTangibleObject() : NULL;
 		if(tangibleHair)
 			objectToQuery = tangibleHair;
 		else
-			return nullptr;
+			return NULL;
 	}
 	return objectToQuery->fetchCustomizationData();
 }
@@ -586,7 +586,7 @@ void ServerImageDesignerManager::cancelSession(NetworkId const & designerId, Net
 {
 	//send the cancel message to the designer
 	Object * const designerObject = NetworkIdManager::getObjectById(designerId);
-	Controller * const designerController = designerObject ? designerObject->getController() : nullptr;
+	Controller * const designerController = designerObject ? designerObject->getController() : NULL;
 	if(designerController)
 	{
 		ImageDesignChangeMessage * outMsg = new ImageDesignChangeMessage();
@@ -599,7 +599,7 @@ void ServerImageDesignerManager::cancelSession(NetworkId const & designerId, Net
 
 	//send the cancel message to the recipient
 	Object * const recipientObject = NetworkIdManager::getObjectById(recipientId);
-	Controller * const recipientController = recipientObject ? recipientObject->getController() : nullptr;
+	Controller * const recipientController = recipientObject ? recipientObject->getController() : NULL;
 	if(recipientController && designerController != recipientController)
 	{
 		ImageDesignChangeMessage * outMsg = new ImageDesignChangeMessage();
@@ -611,7 +611,7 @@ void ServerImageDesignerManager::cancelSession(NetworkId const & designerId, Net
 	}
 
 	//send cancel trigger to designer player
-	ServerObject * const designerServerObject = designerObject ? designerObject->asServerObject() : nullptr;
+	ServerObject * const designerServerObject = designerObject ? designerObject->asServerObject() : NULL;
 	if(designerServerObject)
 	{
 		GameScriptObject * const scriptObject = designerServerObject->getScriptObject();
@@ -623,7 +623,7 @@ void ServerImageDesignerManager::cancelSession(NetworkId const & designerId, Net
 	}
 
 	//send cancel trigger to recipient player
-	ServerObject * const recipientServerObject = recipientObject ? recipientObject->asServerObject() : nullptr;
+	ServerObject * const recipientServerObject = recipientObject ? recipientObject->asServerObject() : NULL;
 	if(recipientServerObject && recipientServerObject != designerServerObject)
 	{
 		GameScriptObject * const scriptObject = recipientServerObject->getScriptObject();
@@ -644,8 +644,8 @@ void ServerImageDesignerManager::cancelSession(NetworkId const & designerId, Net
 std::map<std::string, int> ServerImageDesignerManager::getHairCustomizations(SharedImageDesignerManager::Session const & session)
 {
 	Object * const o = NetworkIdManager::getObjectById(session.recipientId);
-	ServerObject * const so = o ? o->asServerObject() : nullptr;
-	CreatureObject * const recipient = so ? so->asCreatureObject() : nullptr;
+	ServerObject * const so = o ? o->asServerObject() : NULL;
+	CreatureObject * const recipient = so ? so->asCreatureObject() : NULL;
 	CustomizationManager::Customization customization;
 	bool result = false;
 	std::map<std::string, int> hairCustomizations;

@@ -39,7 +39,7 @@
 #include <algorithm>
 
 
-const SharedObjectTemplate * CellObject::m_defaultSharedTemplate = nullptr;
+const SharedObjectTemplate * CellObject::m_defaultSharedTemplate = NULL;
 
 
 // ======================================================================
@@ -99,13 +99,13 @@ const SharedObjectTemplate * CellObject::getDefaultSharedTemplate(void) const
 {
 static const ConstCharCrcLowerString templateName("object/cell/base/shared_cell_default.iff");
 
-	if (m_defaultSharedTemplate == nullptr)
+	if (m_defaultSharedTemplate == NULL)
 	{
 		m_defaultSharedTemplate = safe_cast<const SharedObjectTemplate *>(
 			ObjectTemplateList::fetch(templateName));
-		WARNING_STRICT_FATAL(m_defaultSharedTemplate == nullptr, ("Cannot create "
+		WARNING_STRICT_FATAL(m_defaultSharedTemplate == NULL, ("Cannot create "
 			"default shared object template %s", templateName.getString()));
-		if (m_defaultSharedTemplate != nullptr)
+		if (m_defaultSharedTemplate != NULL)
 			ExitChain::add (removeDefaultTemplate, "CellObject::removeDefaultTemplate");
 	}
 	return m_defaultSharedTemplate;
@@ -118,10 +118,10 @@ static const ConstCharCrcLowerString templateName("object/cell/base/shared_cell_
  */
 void CellObject::removeDefaultTemplate(void)
 {
-	if (m_defaultSharedTemplate != nullptr)
+	if (m_defaultSharedTemplate != NULL)
 	{
 		m_defaultSharedTemplate->releaseReference();
-		m_defaultSharedTemplate = nullptr;
+		m_defaultSharedTemplate = NULL;
 	}
 }	// CellObject::removeDefaultTemplate
 
@@ -161,7 +161,7 @@ void CellObject::endBaselines()
 	}
 	
 	Object *container = ContainerInterface::getContainedByObject(*this);
-	PortalProperty *portalProperty = nullptr;
+	PortalProperty *portalProperty = NULL;
 	if (container)
 	{
 		portalProperty = container->getPortalProperty();
@@ -531,31 +531,31 @@ bool CellObject::isAllowed(CreatureObject const &who) const
 
 bool CellObject::getClosestPathNodePos( const ServerObject & object, Vector & outPos ) const
 {
-	const PathNode * closestNode = nullptr;
+	const PathNode * closestNode = NULL;
 	float closestDistance = 0;
 	const Vector objectPos = object.getPosition_w();
 
 	const CellProperty * cell = ContainerInterface::getCell(*this);
-	if (cell != nullptr)
+	if (cell != NULL)
 	{
 		const Floor * floor = cell->getFloor();
-		if (floor != nullptr)
+		if (floor != NULL)
 		{
 			const FloorMesh * mesh = floor->getFloorMesh();
-			if (mesh != nullptr)
+			if (mesh != NULL)
 			{
 				const PathGraph * path = safe_cast<const PathGraph *>(mesh->getPathGraph());
-				if (path != nullptr)
+				if (path != NULL)
 				{
 					int nodeCount = path->getNodeCount();
 					for (int i = 0; i < nodeCount; ++i)
 					{
 						const PathNode * node = path->getNode(i);
-						if (node != nullptr)
+						if (node != NULL)
 						{
 							float distance = objectPos.magnitudeBetweenSquared(
 								rotateTranslate_p2w(node->getPosition_p()));
-							if (closestNode == nullptr || distance < closestDistance)
+							if (closestNode == NULL || distance < closestDistance)
 							{
 								closestNode = node;
 								closestDistance = distance;
@@ -567,9 +567,9 @@ bool CellObject::getClosestPathNodePos( const ServerObject & object, Vector & ou
 		}
 	}
 
-	if (closestNode != nullptr)
+	if (closestNode != NULL)
 		outPos = closestNode->getPosition_p();
-	return closestNode != nullptr;
+	return closestNode != NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -648,7 +648,7 @@ void CellObject::onContainerLostItem(ServerObject * destination, ServerObject& i
 		obj->getScriptObject()->trigAllScripts(Scripting::TRIG_LOST_ITEM, params);
 
 		BuildingObject * const b_obj = getOwnerBuilding();
-		if (b_obj && item.isPlayerControlled() && destination == nullptr)
+		if (b_obj && item.isPlayerControlled() && destination == NULL)
 		{
 			b_obj->lostPlayer(item);
 		}
@@ -772,8 +772,8 @@ CellObject * CellObject::getCellObject(NetworkId const & networkId)
 
 CellObject * CellObject::asCellObject(Object * object)
 {
-	ServerObject * const serverObject = (object != nullptr) ? object->asServerObject() : nullptr;
-	CellObject * const cellObject = (serverObject != nullptr) ? serverObject->asCellObject() : nullptr;
+	ServerObject * const serverObject = (object != NULL) ? object->asServerObject() : NULL;
+	CellObject * const cellObject = (serverObject != NULL) ? serverObject->asCellObject() : NULL;
 	
 	return cellObject;
 }
@@ -782,8 +782,8 @@ CellObject * CellObject::asCellObject(Object * object)
 
 CellObject const * CellObject::asCellObject(Object const * object)
 {
-	ServerObject const * const serverObject = (object != nullptr) ? object->asServerObject() : nullptr;
-	CellObject const * const cellObject = (serverObject != nullptr) ? serverObject->asCellObject() : nullptr;
+	ServerObject const * const serverObject = (object != NULL) ? object->asServerObject() : NULL;
+	CellObject const * const cellObject = (serverObject != NULL) ? serverObject->asCellObject() : NULL;
 	
 	return cellObject;
 }

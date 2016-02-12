@@ -2,7 +2,7 @@
 #define POINTERDEQUE_HPP
 
 	// This is a simple double ended queue template.  Any pointer-type can be stored in this deque
-	// I pop/peek return nullptr if the queue is empty.
+	// I pop/peek return NULL if the queue is empty.
 template<typename T> class PointerDeque
 {
 	public:
@@ -32,7 +32,7 @@ template<typename T> class PointerDeque
 template<typename T> PointerDeque<T>::PointerDeque(int entriesPerPage)
 {
 	mEntriesPerPage = entriesPerPage;
-	mEntries = nullptr;
+	mEntries = NULL;
 	mOffsetLeft = 0;
 	mEntriesMax = 0;
 	mEntriesCount = 0;
@@ -73,7 +73,7 @@ template<typename T> void PointerDeque<T>::PushLeft(T* obj)
 template<typename T> T* PointerDeque<T>::PopLeft()
 {
 	if (mEntriesCount == 0)
-		return(nullptr);
+		return(NULL);
 	T* hold = mEntries[mOffsetLeft];
 	mOffsetLeft = (mOffsetLeft + 1) % mEntriesMax;
 	mEntriesCount--;
@@ -91,7 +91,7 @@ template<typename T> void PointerDeque<T>::PushRight(T* obj)
 template<typename T> T* PointerDeque<T>::PopRight()
 {
 	if (mEntriesCount == 0)
-		return(nullptr);
+		return(NULL);
 	mEntriesCount--;
 	return(mEntries[(mOffsetLeft + mEntriesCount) % mEntriesMax]);
 }
@@ -99,21 +99,21 @@ template<typename T> T* PointerDeque<T>::PopRight()
 template<typename T> T* PointerDeque<T>::PeekLeft()
 {
 	if (mEntriesCount == 0)
-		return(nullptr);
+		return(NULL);
 	return(mEntries[mOffsetLeft]);
 }
 
 template<typename T> T* PointerDeque<T>::PeekRight()
 {
 	if (mEntriesCount == 0)
-		return(nullptr);
+		return(NULL);
 	return(mEntries[(mOffsetLeft + mEntriesCount - 1) % mEntriesMax]);
 }
 
 template<typename T> T* PointerDeque<T>::Peek(int index)
 {
 	if (index >= mEntriesCount)
-		return(nullptr);
+		return(NULL);
 	return(mEntries[(mOffsetLeft + index) % mEntriesMax]);
 }
 

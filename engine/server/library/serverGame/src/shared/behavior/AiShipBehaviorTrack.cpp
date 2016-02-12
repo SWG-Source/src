@@ -27,7 +27,7 @@ AiShipBehaviorTrack::AiShipBehaviorTrack(AiShipController & aiShipController, Ob
  : AiShipBehaviorBase(aiShipController)
  , m_target(&target)
 {
-	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("AiShipBehaviorTrack() unit(%s) target(%s)", (m_aiShipController.getOwner() != nullptr) ? m_aiShipController.getOwner()->getNetworkId().getValueString().c_str() : "nullptr owner", target.getNetworkId().getValueString().c_str()));
+	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("AiShipBehaviorTrack() unit(%s) target(%s)", (m_aiShipController.getOwner() != NULL) ? m_aiShipController.getOwner()->getNetworkId().getValueString().c_str() : "NULL owner", target.getNetworkId().getValueString().c_str()));
 }
 
 // ----------------------------------------------------------------------
@@ -36,7 +36,7 @@ void AiShipBehaviorTrack::alter(float deltaSeconds)
 {
 	PROFILER_AUTO_BLOCK_DEFINE("AiShipBehaviorTrack::alter");
 
-	if (m_target != nullptr)
+	if (m_target != NULL)
 	{
 		IGNORE_RETURN(m_aiShipController.face(m_target->getPosition_w(), deltaSeconds));
 	}

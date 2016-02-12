@@ -81,7 +81,7 @@ int ObjectTracker::getNumPlayers()
 
 void ObjectTracker::getNumPlayersByFaction(int & imperial, int & rebel, int & neutral)
 {
-	time_t const now = ::time(nullptr);
+	time_t const now = ::time(NULL);
 	if ((now - m_lastTimeCalculateFactionalPlayersCount) > 60)
 	{
 		m_numPlayersImperial = 0;

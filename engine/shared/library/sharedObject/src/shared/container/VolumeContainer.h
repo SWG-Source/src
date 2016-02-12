@@ -69,8 +69,8 @@ public:
 private:
 	bool checkVolume(const VolumeContainmentProperty &item) const;
 
-	bool  internalRemove(const Object & item, const VolumeContainmentProperty *itemProp = nullptr);
-	void  insertNewItem(const Object & item, const VolumeContainmentProperty *itemProp = nullptr);
+	bool  internalRemove(const Object & item, const VolumeContainmentProperty *itemProp = NULL);
+	void  insertNewItem(const Object & item, const VolumeContainmentProperty *itemProp = NULL);
 
 	void  childVolumeChanged(int volume, bool updateParent);
 

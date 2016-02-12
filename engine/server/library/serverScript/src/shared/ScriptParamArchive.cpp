@@ -56,7 +56,7 @@ void put(ByteStream & target, const std::vector<const std::vector<NetworkId> *> 
 	{
 		const std::vector<NetworkId> * inner = source[i];
 		signed int innerLength = 0;
-		if (inner != nullptr)
+		if (inner != NULL)
 			innerLength = inner->size();
 		put(target, innerLength);
 		for (int j = 0; j < innerLength; ++j)

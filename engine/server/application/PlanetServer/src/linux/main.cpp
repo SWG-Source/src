@@ -46,7 +46,7 @@ int main(int argc, char ** argv)
 
 	SetupSharedNetworkMessages::install();
 
-	SetupSharedRandom::install(time(nullptr)); //lint !e732 loss of sign (of 0!)
+	SetupSharedRandom::install(time(NULL)); //lint !e732 loss of sign (of 0!)
 
 	SetupSharedUtility::Data sharedUtilityData;
 	SetupSharedUtility::setupGameData (sharedUtilityData);

@@ -103,12 +103,12 @@ BuildoutArea const * GroundZoneManager::getZoneName(std::string const & sceneNam
 
 	if(!SharedBuildoutAreaManager::isBuildoutScene(sceneName))
 	{
-		return nullptr;
+		return NULL;
 	}	
 	else
 	{
 		BuildoutArea const * const ba = SharedBuildoutAreaManager::findBuildoutAreaAtPosition(sceneName, location_w.x, location_w.z, true);
-		if (nullptr != ba)
+		if (NULL != ba)
 		{
 			if (!ba->compositeName.empty())
 				zoneName = ba->compositeName;
@@ -126,7 +126,7 @@ Vector GroundZoneManager::transformWorldLocationToZoneLocation(std::string const
 	Vector pos_w = location_w;
 	std::string zoneName;
 	BuildoutArea const * const ba = GroundZoneManager::getZoneName(sceneName, location_w, zoneName);
-	if (nullptr != ba)
+	if (NULL != ba)
 	{
 		pos_w = ba->getRelativePosition(location_w, true);
 	}

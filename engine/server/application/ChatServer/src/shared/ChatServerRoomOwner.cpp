@@ -86,7 +86,7 @@ const ChatRoom * ChatServerRoomOwner::getRoom() const
 	if (chatInterface)
 		return chatInterface->getRoom(roomID);
 
-	return nullptr;
+	return NULL;
 }
 
 //-----------------------------------------------------------------------

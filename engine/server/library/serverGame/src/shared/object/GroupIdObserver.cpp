@@ -31,11 +31,11 @@ GroupIdObserver::~GroupIdObserver()
 	if (m_group && m_creature->getGroup() != m_group)
 		m_group->removeGroupMember(m_creature->getNetworkId());
 
-	if (m_creature->getGroup() != nullptr)
+	if (m_creature->getGroup() != NULL)
 	{
 		PlayerObject *playerObject = PlayerCreatureController::getPlayerObject(m_creature);
 
-		if ((playerObject != nullptr) &&
+		if ((playerObject != NULL) &&
 		    playerObject->isLookingForGroup())
 		{
 			playerObject->setLookingForGroup(false);

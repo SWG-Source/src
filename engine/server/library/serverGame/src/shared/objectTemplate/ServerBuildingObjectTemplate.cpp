@@ -93,10 +93,10 @@ Tag ServerBuildingObjectTemplate::getTemplateVersion(void) const
  */
 Tag ServerBuildingObjectTemplate::getHighestTemplateVersion(void) const
 {
-	if (m_baseData == nullptr)
+	if (m_baseData == NULL)
 		return m_templateVersion;
 	const ServerBuildingObjectTemplate * base = dynamic_cast<const ServerBuildingObjectTemplate *>(m_baseData);
-	if (base == nullptr)
+	if (base == NULL)
 		return m_templateVersion;
 	return std::max(m_templateVersion, base->getHighestTemplateVersion());
 } // ServerBuildingObjectTemplate::getHighestTemplateVersion
@@ -120,26 +120,26 @@ int testDataValue = 0;
 UNREF(testData);
 #endif
 
-	const ServerBuildingObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerBuildingObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerBuildingObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getMaintenanceCost(true);
 #endif
 	}
 
 	if (!m_maintenanceCost.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter maintenanceCost in template %s", DataResource::getName()));
 			return 0;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter maintenanceCost has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter maintenanceCost has not been defined in template %s!", DataResource::getName()));
 			return base->getMaintenanceCost();
 		}
 	}
@@ -149,9 +149,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		int baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getMaintenanceCost();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -168,7 +168,7 @@ UNREF(testData);
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -184,26 +184,26 @@ int testDataValue = 0;
 UNREF(testData);
 #endif
 
-	const ServerBuildingObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerBuildingObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerBuildingObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getMaintenanceCostMin(true);
 #endif
 	}
 
 	if (!m_maintenanceCost.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter maintenanceCost in template %s", DataResource::getName()));
 			return 0;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter maintenanceCost has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter maintenanceCost has not been defined in template %s!", DataResource::getName()));
 			return base->getMaintenanceCostMin();
 		}
 	}
@@ -213,9 +213,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		int baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getMaintenanceCostMin();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -232,7 +232,7 @@ UNREF(testData);
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -248,26 +248,26 @@ int testDataValue = 0;
 UNREF(testData);
 #endif
 
-	const ServerBuildingObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerBuildingObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerBuildingObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getMaintenanceCostMax(true);
 #endif
 	}
 
 	if (!m_maintenanceCost.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter maintenanceCost in template %s", DataResource::getName()));
 			return 0;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter maintenanceCost has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter maintenanceCost has not been defined in template %s!", DataResource::getName()));
 			return base->getMaintenanceCostMax();
 		}
 	}
@@ -277,9 +277,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		int baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getMaintenanceCostMax();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -296,7 +296,7 @@ UNREF(testData);
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -312,33 +312,33 @@ bool testDataValue = false;
 UNREF(testData);
 #endif
 
-	const ServerBuildingObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerBuildingObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerBuildingObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getIsPublic(true);
 #endif
 	}
 
 	if (!m_isPublic.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter isPublic in template %s", DataResource::getName()));
 			return false;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter isPublic has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter isPublic has not been defined in template %s!", DataResource::getName()));
 			return base->getIsPublic();
 		}
 	}
 
 	bool value = m_isPublic.getValue();
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -386,12 +386,12 @@ char paramName[MAX_NAME_SIZE];
 		file.read_string(baseFilename);
 		file.exitChunk();
 		const ObjectTemplate *base = ObjectTemplateList::fetch(baseFilename);
-		DEBUG_WARNING(base == nullptr, ("was unable to load base template %s", baseFilename.c_str()));
-		if (m_baseData == base && base != nullptr)
+		DEBUG_WARNING(base == NULL, ("was unable to load base template %s", baseFilename.c_str()));
+		if (m_baseData == base && base != NULL)
 			base->releaseReference();
 		else
 		{
-			if (m_baseData != nullptr)
+			if (m_baseData != NULL)
 				m_baseData->releaseReference();
 			m_baseData = base;
 		}

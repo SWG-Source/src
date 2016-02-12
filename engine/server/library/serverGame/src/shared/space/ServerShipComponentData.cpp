@@ -89,7 +89,7 @@ void ServerShipComponentData::writeDataToShip       (int const chassisSlot, Ship
 
 bool ServerShipComponentData::readDataFromComponent (TangibleObject const & component)
 {
-	if (component.getObjectTemplate () == nullptr)
+	if (component.getObjectTemplate () == NULL)
 	{
 		WARNING (true, ("ShipComponentData [%s] has no object template", component.getNetworkId ().getValueString ().c_str ()));
 		return false;
@@ -137,13 +137,13 @@ bool ServerShipComponentData::readDataFromComponent (TangibleObject const & comp
 
 void ServerShipComponentData::writeDataToComponent  (TangibleObject & component) const
 {
-	if (m_descriptor == nullptr)
+	if (m_descriptor == NULL)
 	{
-		WARNING (true, ("ShipComponentData::writeDataToComponent [%s] nullptr descriptor", component.getNetworkId ().getValueString ().c_str ()));
+		WARNING (true, ("ShipComponentData::writeDataToComponent [%s] null descriptor", component.getNetworkId ().getValueString ().c_str ()));
 		return;
 	}
 
-	if (component.getObjectTemplate () == nullptr)
+	if (component.getObjectTemplate () == NULL)
 	{
 		WARNING (true, ("ShipComponentData::writeDataToComponent [%s] has no object template", component.getNetworkId ().getValueString ().c_str ()));
 		return;
@@ -180,7 +180,7 @@ void ServerShipComponentData::writeDataToComponent  (TangibleObject & component)
 
 void ServerShipComponentData::printDebugString      (Unicode::String & result, Unicode::String const & padding) const
 {
-	if (m_descriptor == nullptr)
+	if (m_descriptor == NULL)
 		return;
 
 	char buf [2048];

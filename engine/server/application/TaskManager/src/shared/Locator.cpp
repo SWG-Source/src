@@ -25,11 +25,11 @@ namespace LocatorNamespace
 	float getConfigSetting(const char *section, const char *key, const float defaultValue)
 	{
 		const ConfigFile::Section * sec = ConfigFile::getSection(section);
-		if (sec == nullptr)
+		if (sec == NULL)
 			return defaultValue;
 
 		const ConfigFile::Key * ky = sec->findKey(key);
-		if (ky == nullptr)
+		if (ky == NULL)
 			return defaultValue;
 		
 		return ky->getAsFloat(ky->getCount()-1, defaultValue);
@@ -364,7 +364,7 @@ void Locator::opened(std::string const &label, ManagerConnection *newConnection)
 		TaskManager::runSpawnRequestQueue();
 	}
 	else
-		WARNING_STRICT_FATAL(true, ("Passed nullptr connection to Locator::opened"));
+		WARNING_STRICT_FATAL(true, ("Passed null connection to Locator::opened"));
 }
 
 // ----------------------------------------------------------------------

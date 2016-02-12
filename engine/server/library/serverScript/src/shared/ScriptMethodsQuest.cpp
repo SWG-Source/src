@@ -35,7 +35,7 @@ namespace ScriptMethodsQuestNamespace
 {
 	PlayerObject * getPlayerForCharacter(jlong playerCreatureId)
 	{
-		CreatureObject * playerCreature = nullptr;
+		CreatureObject * playerCreature = NULL;
 		if (JavaLibrary::getObject(playerCreatureId, playerCreature))
 		{
 			return PlayerCreatureController::getPlayerObject(playerCreature);
@@ -44,7 +44,7 @@ namespace ScriptMethodsQuestNamespace
 		{
 			NetworkId id(playerCreatureId);
 			JAVA_THROW_SCRIPT_EXCEPTION(true, ("Requested player %s, who could not be found.", id.getValueString().c_str()));
-			return nullptr;
+			return NULL;
 		}
 	}
 
@@ -397,8 +397,8 @@ void JNICALL ScriptMethodsQuestNamespace::questSetQuestTaskCounter(JNIEnv *env, 
 	}
 
 	PlayerObject * const playerObject = getPlayerForCharacter(playerId);
-	CreatureObject * const creatureObject = playerObject ? playerObject->getCreatureObject() : nullptr;
-	Controller * const controller = creatureObject ? creatureObject->getController() : nullptr;
+	CreatureObject * const creatureObject = playerObject ? playerObject->getCreatureObject() : NULL;
+	Controller * const controller = creatureObject ? creatureObject->getController() : NULL;
 	if(!controller)
 		return;
 
@@ -427,8 +427,8 @@ void JNICALL ScriptMethodsQuestNamespace::questSetQuestTaskLocation(JNIEnv *env,
 	}
 
 	PlayerObject * const playerObject = getPlayerForCharacter(playerId);
-	CreatureObject * const creatureObject = playerObject ? playerObject->getCreatureObject() : nullptr;
-	Controller * const controller = creatureObject ? creatureObject->getController() : nullptr;
+	CreatureObject * const creatureObject = playerObject ? playerObject->getCreatureObject() : NULL;
+	Controller * const controller = creatureObject ? creatureObject->getController() : NULL;
 	if(!controller)
 		return;
 
@@ -456,8 +456,8 @@ void JNICALL ScriptMethodsQuestNamespace::questSetQuestTaskTimer(JNIEnv *env, jo
 	}
 
 	PlayerObject * const playerObject = getPlayerForCharacter(playerId);
-	CreatureObject * const creatureObject = playerObject ? playerObject->getCreatureObject() : nullptr;
-	Controller * const controller = creatureObject ? creatureObject->getController() : nullptr;
+	CreatureObject * const creatureObject = playerObject ? playerObject->getCreatureObject() : NULL;
+	Controller * const controller = creatureObject ? creatureObject->getController() : NULL;
 	if(!controller)
 		return;
 
@@ -487,7 +487,7 @@ void JNICALL ScriptMethodsQuestNamespace::requestActivateQuest(JNIEnv * env, job
 			return;
 		}
 
-		CreatureObject * playerCreature = nullptr;
+		CreatureObject * playerCreature = NULL;
 		if (JavaLibrary::getObject(playerId, playerCreature) && playerCreature)
 		{
 			Quest const * const q = QuestManager::getQuest(questCrc);
@@ -557,7 +557,7 @@ void JNICALL ScriptMethodsQuestNamespace::requestCompleteQuest(JNIEnv * env, job
 			return;
 		}
 
-		CreatureObject * playerCreature = nullptr;
+		CreatureObject * playerCreature = NULL;
 		if (JavaLibrary::getObject(playerId, playerCreature) && playerCreature)
 		{
 			Quest const * const q = QuestManager::getQuest(questCrc);
@@ -576,14 +576,14 @@ void JNICALL ScriptMethodsQuestNamespace::showCyberneticsPage(JNIEnv *env, jobje
 {
 	MessageQueueCyberneticsOpen::OpenType const type = static_cast<MessageQueueCyberneticsOpen::OpenType>(openType);
 
-	CreatureObject * npc = nullptr;
+	CreatureObject * npc = NULL;
 	if (!JavaLibrary::getObject(npcId, npc))
 		return;
 
 	if(!npc)
 		return;
 
-	CreatureObject * playerCreature = nullptr;
+	CreatureObject * playerCreature = NULL;
 	if (JavaLibrary::getObject(playerId, playerCreature))
 	{
 		Controller * const playerController = playerCreature->getController();
@@ -659,7 +659,7 @@ void JNICALL ScriptMethodsQuestNamespace::sendStaticItemDataToPlayer(JNIEnv *env
 	}
 
 	//send to player
-	CreatureObject * playerCreature = nullptr;
+	CreatureObject * playerCreature = NULL;
 	if (JavaLibrary::getObject(playerId, playerCreature))
 	{
 		Controller * const playerController = playerCreature->getController();
@@ -683,7 +683,7 @@ void JNICALL ScriptMethodsQuestNamespace::showLootBox(JNIEnv *env, jobject self,
 		return;
 
 	//send to player
-	CreatureObject * playerCreature = nullptr;
+	CreatureObject * playerCreature = NULL;
 	if (JavaLibrary::getObject(playerId, playerCreature))
 	{
 		Controller * const playerController = playerCreature->getController();

@@ -148,7 +148,7 @@ DataTableColumnType::DataTableColumnType(std::string const &desc) :
 			std::string::size_type endPos = enumList.find(',');
 			std::string label = enumList.substr(0, eqPos);
 			std::string val = enumList.substr(eqPos+1, endPos-eqPos-1);
-			(*m_enumMap)[label] = static_cast<int>(strtol(val.c_str(), nullptr, 0));
+			(*m_enumMap)[label] = static_cast<int>(strtol(val.c_str(), NULL, 0));
 			enumList.erase(0, endPos+1);
 		}
 		// assure the default is a member of the enumeration
@@ -173,7 +173,7 @@ DataTableColumnType::DataTableColumnType(std::string const &desc) :
 			std::string::size_type endPos = enumList.find(',');
 			std::string label = enumList.substr(0, eqPos);
 			std::string val = enumList.substr(eqPos+1, endPos-eqPos-1);
-			int bit = static_cast<int>(strtol(val.c_str(), nullptr, 0));
+			int bit = static_cast<int>(strtol(val.c_str(), NULL, 0));
 			if((bit < 1) || (bit > 32))
 			{
 				WARNING(true, ("Flags value [%s] is not a whole number from 1 to 32", label.c_str()));
@@ -247,7 +247,7 @@ void DataTableColumnType::createDefaultCell()
 	switch(m_basicType)
 	{
 	case DT_Int:
-		m_defaultCell = new DataTableCell(static_cast<int>(strtol(value.c_str(), nullptr, 0)));
+		m_defaultCell = new DataTableCell(static_cast<int>(strtol(value.c_str(), NULL, 0)));
 		break;
 	case DT_Float:
 		m_defaultCell = new DataTableCell(static_cast<float>(atof(value.c_str())));

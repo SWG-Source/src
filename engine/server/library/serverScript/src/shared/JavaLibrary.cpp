@@ -70,7 +70,7 @@ using namespace JNIWrappersNamespace;
 #define GET_METHOD(var, clazz, name, sig) var = ms_env->GetMethodID(clazz, name, sig); if (ms_env->ExceptionCheck()) { ms_env->ExceptionDescribe(); WARNING(true, ("Unable to find Java method "#name" for class "#clazz)); return false; }
 #define GET_STATIC_METHOD(var, clazz, name, sig) var = ms_env->GetStaticMethodID(clazz, name, sig); if (ms_env->ExceptionCheck()) { ms_env->ExceptionDescribe(); WARNING(true, ("Unable to find Java static method "#name" for class "#clazz)); return false; }
 
-#define FREE_CLASS(var) if (ms_env != nullptr && var != nullptr) { ms_env->DeleteGlobalRef(var); var = nullptr; }
+#define FREE_CLASS(var) if (ms_env != NULL && var != NULL) { ms_env->DeleteGlobalRef(var); var = NULL; }
 
 //========================================================================
 // local constants
@@ -377,203 +377,203 @@ namespace ScriptMethodsWorldInfoNamespace
 // class JavaLibrary static members
 //========================================================================
 
-JavaLibrary* JavaLibrary::ms_instance = nullptr;
+JavaLibrary* JavaLibrary::ms_instance = NULL;
 int          JavaLibrary::ms_javaVmType = JV_none;
-//void*        JavaLibrary::ms_libHandle = nullptr;
-JavaVM*      JavaLibrary::ms_jvm = nullptr;
-JNIEnv*      JavaLibrary::ms_env = nullptr;
-Thread *     JavaLibrary::m_initializerThread = nullptr;
+//void*        JavaLibrary::ms_libHandle = NULL;
+JavaVM*      JavaLibrary::ms_jvm = NULL;
+JNIEnv*      JavaLibrary::ms_env = NULL;
+Thread *     JavaLibrary::m_initializerThread = NULL;
 int          JavaLibrary::ms_envCount = 0;
 int          JavaLibrary::ms_currentRecursionCount = 0;
 bool         JavaLibrary::ms_resetJava = false;
-jclass       JavaLibrary::ms_clsScriptEntry = nullptr;
-jobject      JavaLibrary::ms_scriptEntry = nullptr;
-jmethodID    JavaLibrary::ms_midScriptEntryGetOwnerContext = nullptr;
-jmethodID    JavaLibrary::ms_midScriptEntryEnableLogging = nullptr;
-jmethodID    JavaLibrary::ms_midScriptEntryEnableNewJediTracking = nullptr;
-jmethodID    JavaLibrary::ms_midScriptEntryGetFreeMem = nullptr;
-jclass       JavaLibrary::ms_clsObject = nullptr;
-jclass       JavaLibrary::ms_clsClass = nullptr;
-jmethodID    JavaLibrary::ms_midClassGetName = nullptr;
-jmethodID    JavaLibrary::ms_midClassGetMethods = nullptr;
-jclass       JavaLibrary::ms_clsMethod = nullptr;
-jmethodID    JavaLibrary::ms_midMethodGetName = nullptr;
-jclass       JavaLibrary::ms_clsBoolean = nullptr;
-jclass       JavaLibrary::ms_clsBooleanArray = nullptr;
-jmethodID    JavaLibrary::ms_midBoolean = nullptr;
-jmethodID    JavaLibrary::ms_midBooleanBooleanValue = nullptr;
-jclass       JavaLibrary::ms_clsInteger = nullptr;
-jclass       JavaLibrary::ms_clsIntegerArray = nullptr;
-jmethodID    JavaLibrary::ms_midInteger = nullptr;
-jmethodID    JavaLibrary::ms_midIntegerIntValue = nullptr;
-jclass       JavaLibrary::ms_clsModifiableInt = nullptr;
-jmethodID    JavaLibrary::ms_midModifiableInt = nullptr;
-jfieldID     JavaLibrary::ms_fidModifiableIntData = nullptr;
-jclass       JavaLibrary::ms_clsFloat = nullptr;
-jclass       JavaLibrary::ms_clsFloatArray = nullptr;
-jmethodID    JavaLibrary::ms_midFloat = nullptr;
-jmethodID    JavaLibrary::ms_midFloatFloatValue = nullptr;
-jclass       JavaLibrary::ms_clsModifiableFloat = nullptr;
-jmethodID    JavaLibrary::ms_midModifiableFloat = nullptr;
-jfieldID     JavaLibrary::ms_fidModifiableFloatData = nullptr;
-jclass       JavaLibrary::ms_clsString = nullptr;
-jclass       JavaLibrary::ms_clsStringArray = nullptr;
-jclass       JavaLibrary::ms_clsMap = nullptr;
-jmethodID    JavaLibrary::ms_midMapPut = nullptr;
-jmethodID    JavaLibrary::ms_midMapGet = nullptr;
-jclass       JavaLibrary::ms_clsHashtable = nullptr;
-jmethodID    JavaLibrary::ms_midHashtable = nullptr;
-jclass       JavaLibrary::ms_clsThrowable = nullptr;
-jclass       JavaLibrary::ms_clsError = nullptr;
-jclass       JavaLibrary::ms_clsStackOverflowError = nullptr;
-jmethodID    JavaLibrary::ms_midThrowableGetMessage = nullptr;
-jclass       JavaLibrary::ms_clsThread = nullptr;
-jmethodID    JavaLibrary::ms_midThreadDumpStack = nullptr;
-jclass       JavaLibrary::ms_clsInternalScriptError = nullptr;
-jclass       JavaLibrary::ms_clsInternalScriptSeriousError = nullptr;
-jfieldID     JavaLibrary::ms_fidInternalScriptSeriousErrorError = nullptr;
-jclass       JavaLibrary::ms_clsDictionary = nullptr;
-jmethodID    JavaLibrary::ms_midDictionary = nullptr;
-jmethodID    JavaLibrary::ms_midDictionaryPack = nullptr;
-jmethodID    JavaLibrary::ms_midDictionaryUnpack = nullptr;
-jmethodID    JavaLibrary::ms_midDictionaryKeys = nullptr;
-jmethodID    JavaLibrary::ms_midDictionaryValues = nullptr;
-jmethodID    JavaLibrary::ms_midDictionaryPut = nullptr;
-jmethodID    JavaLibrary::ms_midDictionaryPutInt = nullptr;
-jmethodID    JavaLibrary::ms_midDictionaryPutFloat = nullptr;
-jmethodID    JavaLibrary::ms_midDictionaryPutBool = nullptr;
-jmethodID    JavaLibrary::ms_midDictionaryGet = nullptr;
-jclass       JavaLibrary::ms_clsCollection = nullptr;
-jmethodID    JavaLibrary::ms_midCollectionToArray = nullptr;
-jclass       JavaLibrary::ms_clsEnumeration = nullptr;
-jmethodID    JavaLibrary::ms_midEnumerationHasMoreElements = nullptr;
-jmethodID    JavaLibrary::ms_midEnumerationNextElement = nullptr;
-jclass       JavaLibrary::ms_clsBaseClassRangeInfo = nullptr;
-jfieldID     JavaLibrary::ms_fidBaseClassRangeInfoMinRange = nullptr;
-jfieldID     JavaLibrary::ms_fidBaseClassRangeInfoMaxRange = nullptr;
-jclass       JavaLibrary::ms_clsBaseClassAttackerResults = nullptr;
-jfieldID     JavaLibrary::ms_fidBaseClassAttackerResultsId = nullptr;
-jfieldID     JavaLibrary::ms_fidBaseClassAttackerResultsWeapon = nullptr;
-jfieldID     JavaLibrary::ms_fidBaseClassAttackerResultsPosture = nullptr;
-jfieldID     JavaLibrary::ms_fidBaseClassAttackerResultsTrailBits = nullptr;
-jfieldID     JavaLibrary::ms_fidBaseClassAttackerResultsClientEffectId = nullptr;
-jfieldID     JavaLibrary::ms_fidBaseClassAttackerResultsActionName = nullptr;
-jfieldID     JavaLibrary::ms_fidBaseClassAttackerResultsUseLocation = nullptr;
-jfieldID     JavaLibrary::ms_fidBaseClassAttackerResultsTargetLocation = nullptr;
-jfieldID     JavaLibrary::ms_fidBaseClassAttackerResultsTargetCell = nullptr;
-jclass       JavaLibrary::ms_clsBaseClassDefenderResults = nullptr;
-jfieldID     JavaLibrary::ms_fidBaseClassDefenderResultsId = nullptr;
-jfieldID     JavaLibrary::ms_fidBaseClassDefenderResultsPosture = nullptr;
-jfieldID     JavaLibrary::ms_fidBaseClassDefenderResultsResult = nullptr;
-jfieldID     JavaLibrary::ms_fidBaseClassDefenderResultsClientEffectId = nullptr;
-jfieldID     JavaLibrary::ms_fidBaseClassDefenderResultsHitLocation = nullptr;
-jfieldID     JavaLibrary::ms_fidBaseClassDefenderDamageAmount = nullptr;
-jclass       JavaLibrary::ms_clsDynamicVariable = nullptr;
-jfieldID     JavaLibrary::ms_fidDynamicVariableName = nullptr;
-jfieldID     JavaLibrary::ms_fidDynamicVariableData = nullptr;
-jmethodID    JavaLibrary::ms_midDynamicVariableInt = nullptr;
-jmethodID    JavaLibrary::ms_midDynamicVariableIntArray = nullptr;
-jmethodID    JavaLibrary::ms_midDynamicVariableFloat = nullptr;
-jmethodID    JavaLibrary::ms_midDynamicVariableFloatArray = nullptr;
-jmethodID    JavaLibrary::ms_midDynamicVariableString = nullptr;
-jmethodID    JavaLibrary::ms_midDynamicVariableStringArray = nullptr;
-jmethodID    JavaLibrary::ms_midDynamicVariableObjId = nullptr;
-jmethodID    JavaLibrary::ms_midDynamicVariableObjIdArray = nullptr;
-jmethodID    JavaLibrary::ms_midDynamicVariableLocation = nullptr;
-jmethodID    JavaLibrary::ms_midDynamicVariableLocationArray = nullptr;
-jclass       JavaLibrary::ms_clsDynamicVariableList = nullptr;
-jmethodID    JavaLibrary::ms_midDynamicVariableList = nullptr;
-jmethodID    JavaLibrary::ms_midDynamicVariableListSet = nullptr;
-jmethodID    JavaLibrary::ms_midDynamicVariableListSetInt = nullptr;
-jmethodID    JavaLibrary::ms_midDynamicVariableListSetIntArray = nullptr;
-jmethodID    JavaLibrary::ms_midDynamicVariableListSetFloat = nullptr;
-jmethodID    JavaLibrary::ms_midDynamicVariableListSetFloatArray = nullptr;
-jmethodID    JavaLibrary::ms_midDynamicVariableListSetString = nullptr;
-jmethodID    JavaLibrary::ms_midDynamicVariableListSetStringArray = nullptr;
-jmethodID    JavaLibrary::ms_midDynamicVariableListSetObjId = nullptr;
-jmethodID    JavaLibrary::ms_midDynamicVariableListSetObjIdArray = nullptr;
-jmethodID    JavaLibrary::ms_midDynamicVariableListSetLocation = nullptr;
-jmethodID    JavaLibrary::ms_midDynamicVariableListSetLocationArray = nullptr;
-jmethodID    JavaLibrary::ms_midDynamicVariableListSetStringId = nullptr;
-jmethodID    JavaLibrary::ms_midDynamicVariableListSetStringIdArray = nullptr;
-jmethodID    JavaLibrary::ms_midDynamicVariableListSetTransform = nullptr;
-jmethodID    JavaLibrary::ms_midDynamicVariableListSetTransformArray = nullptr;
-jmethodID    JavaLibrary::ms_midDynamicVariableListSetVector = nullptr;
-jmethodID    JavaLibrary::ms_midDynamicVariableListSetVectorArray = nullptr;
-jclass       JavaLibrary::ms_clsObjId = nullptr;
-jclass       JavaLibrary::ms_clsObjIdArray = nullptr;
-jmethodID    JavaLibrary::ms_midObjIdGetValue = nullptr;
-jmethodID    JavaLibrary::ms_midObjIdGetObjId = nullptr;
-jmethodID    JavaLibrary::ms_midObjIdClearObjId = nullptr;
-jmethodID    JavaLibrary::ms_midObjIdFlagDestroyed = nullptr;
-jmethodID    JavaLibrary::ms_midObjIdSetAuthoritative = nullptr;
-jmethodID    JavaLibrary::ms_midObjIdSetLoaded = nullptr;
-jmethodID    JavaLibrary::ms_midObjIdSetInitialized = nullptr;
-jmethodID    JavaLibrary::ms_midObjIdSetLoggedIn = nullptr;
-jmethodID    JavaLibrary::ms_midObjIdPackAllDeltaScriptVars = nullptr;
-jmethodID    JavaLibrary::ms_midObjIdSetScriptVarInt = nullptr;
-jmethodID    JavaLibrary::ms_midObjIdSetScriptVarFloat = nullptr;
-jmethodID    JavaLibrary::ms_midObjIdSetScriptVarString = nullptr;
-jmethodID    JavaLibrary::ms_midObjIdClearScriptVars = nullptr;
-jmethodID    JavaLibrary::ms_midObjIdPackScriptVars = nullptr;
-jmethodID    JavaLibrary::ms_midObjIdUnpackDeltaScriptVars = nullptr;
-jmethodID    JavaLibrary::ms_midObjIdUnpackScriptVars = nullptr;
-jmethodID    JavaLibrary::ms_midObjIdAttachScript = nullptr;
-jmethodID    JavaLibrary::ms_midObjIdAttachScripts = nullptr;
-jmethodID    JavaLibrary::ms_midObjIdDetachScript = nullptr;
-jmethodID    JavaLibrary::ms_midObjIdDetachAllScripts = nullptr;
-jclass       JavaLibrary::ms_clsStringId = nullptr;
-jmethodID    JavaLibrary::ms_midStringId = nullptr;
-jclass       JavaLibrary::ms_clsStringIdArray = nullptr;
-jfieldID     JavaLibrary::ms_fidStringIdTable = nullptr;
-jfieldID     JavaLibrary::ms_fidStringIdAsciiId = nullptr;
-jfieldID     JavaLibrary::ms_fidStringIdIndexId = nullptr;
-jclass       JavaLibrary::ms_clsModifiableStringId = nullptr;
-jclass       JavaLibrary::ms_clsAttribute = nullptr;
-jmethodID    JavaLibrary::ms_midAttribute = nullptr;
-jfieldID     JavaLibrary::ms_fidAttributeType = nullptr;
-jfieldID     JavaLibrary::ms_fidAttributeValue = nullptr;
-jclass       JavaLibrary::ms_clsAttribMod = nullptr;
-jmethodID    JavaLibrary::ms_midAttribMod = nullptr;
-jfieldID     JavaLibrary::ms_fidAttribModName = nullptr;
-jfieldID     JavaLibrary::ms_fidAttribModSkill = nullptr;
-jfieldID     JavaLibrary::ms_fidAttribModType = nullptr;
-jfieldID     JavaLibrary::ms_fidAttribModValue = nullptr;
-jfieldID     JavaLibrary::ms_fidAttribModTime = nullptr;
-jfieldID     JavaLibrary::ms_fidAttribModAttack = nullptr;
-jfieldID     JavaLibrary::ms_fidAttribModDecay = nullptr;
-jfieldID     JavaLibrary::ms_fidAttribModFlags = nullptr;
-jclass       JavaLibrary::ms_clsMentalState = nullptr;
-jmethodID    JavaLibrary::ms_midMentalState = nullptr;
-jfieldID     JavaLibrary::ms_fidMentalStateType = nullptr;
-jfieldID     JavaLibrary::ms_fidMentalStateValue = nullptr;
-jclass       JavaLibrary::ms_clsMentalStateMod = nullptr;
-jmethodID    JavaLibrary::ms_midMentalStateMod = nullptr;
-jfieldID     JavaLibrary::ms_fidMentalStateModType = nullptr;
-jfieldID     JavaLibrary::ms_fidMentalStateModValue = nullptr;
-jfieldID     JavaLibrary::ms_fidMentalStateModTime = nullptr;
-jfieldID     JavaLibrary::ms_fidMentalStateModAttack = nullptr;
-jfieldID     JavaLibrary::ms_fidMentalStateModDecay = nullptr;
-jclass       JavaLibrary::ms_clsLocation = nullptr;
-jclass       JavaLibrary::ms_clsLocationArray = nullptr;
-jfieldID     JavaLibrary::ms_fidLocationX = nullptr;
-jfieldID     JavaLibrary::ms_fidLocationY = nullptr;
-jfieldID     JavaLibrary::ms_fidLocationZ = nullptr;
-jfieldID     JavaLibrary::ms_fidLocationArea = nullptr;
-jfieldID     JavaLibrary::ms_fidLocationCell = nullptr;
-jmethodID    JavaLibrary::ms_midRunOne = nullptr;
-jmethodID    JavaLibrary::ms_midRunAll = nullptr;
-jmethodID    JavaLibrary::ms_midCallMessages = nullptr;
-jmethodID    JavaLibrary::ms_midRunConsoleHandler = nullptr;
-jmethodID    JavaLibrary::ms_midUnload = nullptr;
-jmethodID    JavaLibrary::ms_midGetClass = nullptr;
-jmethodID    JavaLibrary::ms_midGetScriptFunctions = nullptr;
-jclass       JavaLibrary::ms_clsMenuInfo = nullptr;
-jmethodID    JavaLibrary::ms_midMenuInfo = nullptr;
-jmethodID    JavaLibrary::ms_midMenuInfoSetMenuItemsInternal = nullptr;
-jmethodID    JavaLibrary::ms_midMenuInfoGetMenuItemsInternal = nullptr;
-jclass       JavaLibrary::ms_clsMenuInfoData = nullptr;
-jmethodID    JavaLibrary::ms_midMenuInfoData = nullptr;
+jclass       JavaLibrary::ms_clsScriptEntry = NULL;
+jobject      JavaLibrary::ms_scriptEntry = NULL;
+jmethodID    JavaLibrary::ms_midScriptEntryGetOwnerContext = NULL;
+jmethodID    JavaLibrary::ms_midScriptEntryEnableLogging = NULL;
+jmethodID    JavaLibrary::ms_midScriptEntryEnableNewJediTracking = NULL;
+jmethodID    JavaLibrary::ms_midScriptEntryGetFreeMem = NULL;
+jclass       JavaLibrary::ms_clsObject = NULL;
+jclass       JavaLibrary::ms_clsClass = NULL;
+jmethodID    JavaLibrary::ms_midClassGetName = NULL;
+jmethodID    JavaLibrary::ms_midClassGetMethods = NULL;
+jclass       JavaLibrary::ms_clsMethod = NULL;
+jmethodID    JavaLibrary::ms_midMethodGetName = NULL;
+jclass       JavaLibrary::ms_clsBoolean = NULL;
+jclass       JavaLibrary::ms_clsBooleanArray = NULL;
+jmethodID    JavaLibrary::ms_midBoolean = NULL;
+jmethodID    JavaLibrary::ms_midBooleanBooleanValue = NULL;
+jclass       JavaLibrary::ms_clsInteger = NULL;
+jclass       JavaLibrary::ms_clsIntegerArray = NULL;
+jmethodID    JavaLibrary::ms_midInteger = NULL;
+jmethodID    JavaLibrary::ms_midIntegerIntValue = NULL;
+jclass       JavaLibrary::ms_clsModifiableInt = NULL;
+jmethodID    JavaLibrary::ms_midModifiableInt = NULL;
+jfieldID     JavaLibrary::ms_fidModifiableIntData = NULL;
+jclass       JavaLibrary::ms_clsFloat = NULL;
+jclass       JavaLibrary::ms_clsFloatArray = NULL;
+jmethodID    JavaLibrary::ms_midFloat = NULL;
+jmethodID    JavaLibrary::ms_midFloatFloatValue = NULL;
+jclass       JavaLibrary::ms_clsModifiableFloat = NULL;
+jmethodID    JavaLibrary::ms_midModifiableFloat = NULL;
+jfieldID     JavaLibrary::ms_fidModifiableFloatData = NULL;
+jclass       JavaLibrary::ms_clsString = NULL;
+jclass       JavaLibrary::ms_clsStringArray = NULL;
+jclass       JavaLibrary::ms_clsMap = NULL;
+jmethodID    JavaLibrary::ms_midMapPut = NULL;
+jmethodID    JavaLibrary::ms_midMapGet = NULL;
+jclass       JavaLibrary::ms_clsHashtable = NULL;
+jmethodID    JavaLibrary::ms_midHashtable = NULL;
+jclass       JavaLibrary::ms_clsThrowable = NULL;
+jclass       JavaLibrary::ms_clsError = NULL;
+jclass       JavaLibrary::ms_clsStackOverflowError = NULL;
+jmethodID    JavaLibrary::ms_midThrowableGetMessage = NULL;
+jclass       JavaLibrary::ms_clsThread = NULL;
+jmethodID    JavaLibrary::ms_midThreadDumpStack = NULL;
+jclass       JavaLibrary::ms_clsInternalScriptError = NULL;
+jclass       JavaLibrary::ms_clsInternalScriptSeriousError = NULL;
+jfieldID     JavaLibrary::ms_fidInternalScriptSeriousErrorError = NULL;
+jclass       JavaLibrary::ms_clsDictionary = NULL;
+jmethodID    JavaLibrary::ms_midDictionary = NULL;
+jmethodID    JavaLibrary::ms_midDictionaryPack = NULL;
+jmethodID    JavaLibrary::ms_midDictionaryUnpack = NULL;
+jmethodID    JavaLibrary::ms_midDictionaryKeys = NULL;
+jmethodID    JavaLibrary::ms_midDictionaryValues = NULL;
+jmethodID    JavaLibrary::ms_midDictionaryPut = NULL;
+jmethodID    JavaLibrary::ms_midDictionaryPutInt = NULL;
+jmethodID    JavaLibrary::ms_midDictionaryPutFloat = NULL;
+jmethodID    JavaLibrary::ms_midDictionaryPutBool = NULL;
+jmethodID    JavaLibrary::ms_midDictionaryGet = NULL;
+jclass       JavaLibrary::ms_clsCollection = NULL;
+jmethodID    JavaLibrary::ms_midCollectionToArray = NULL;
+jclass       JavaLibrary::ms_clsEnumeration = NULL;
+jmethodID    JavaLibrary::ms_midEnumerationHasMoreElements = NULL;
+jmethodID    JavaLibrary::ms_midEnumerationNextElement = NULL;
+jclass       JavaLibrary::ms_clsBaseClassRangeInfo = NULL;
+jfieldID     JavaLibrary::ms_fidBaseClassRangeInfoMinRange = NULL;
+jfieldID     JavaLibrary::ms_fidBaseClassRangeInfoMaxRange = NULL;
+jclass       JavaLibrary::ms_clsBaseClassAttackerResults = NULL;
+jfieldID     JavaLibrary::ms_fidBaseClassAttackerResultsId = NULL;
+jfieldID     JavaLibrary::ms_fidBaseClassAttackerResultsWeapon = NULL;
+jfieldID     JavaLibrary::ms_fidBaseClassAttackerResultsPosture = NULL;
+jfieldID     JavaLibrary::ms_fidBaseClassAttackerResultsTrailBits = NULL;
+jfieldID     JavaLibrary::ms_fidBaseClassAttackerResultsClientEffectId = NULL;
+jfieldID     JavaLibrary::ms_fidBaseClassAttackerResultsActionName = NULL;
+jfieldID     JavaLibrary::ms_fidBaseClassAttackerResultsUseLocation = NULL;
+jfieldID     JavaLibrary::ms_fidBaseClassAttackerResultsTargetLocation = NULL;
+jfieldID     JavaLibrary::ms_fidBaseClassAttackerResultsTargetCell = NULL;
+jclass       JavaLibrary::ms_clsBaseClassDefenderResults = NULL;
+jfieldID     JavaLibrary::ms_fidBaseClassDefenderResultsId = NULL;
+jfieldID     JavaLibrary::ms_fidBaseClassDefenderResultsPosture = NULL;
+jfieldID     JavaLibrary::ms_fidBaseClassDefenderResultsResult = NULL;
+jfieldID     JavaLibrary::ms_fidBaseClassDefenderResultsClientEffectId = NULL;
+jfieldID     JavaLibrary::ms_fidBaseClassDefenderResultsHitLocation = NULL;
+jfieldID     JavaLibrary::ms_fidBaseClassDefenderDamageAmount = NULL;
+jclass       JavaLibrary::ms_clsDynamicVariable = NULL;
+jfieldID     JavaLibrary::ms_fidDynamicVariableName = NULL;
+jfieldID     JavaLibrary::ms_fidDynamicVariableData = NULL;
+jmethodID    JavaLibrary::ms_midDynamicVariableInt = NULL;
+jmethodID    JavaLibrary::ms_midDynamicVariableIntArray = NULL;
+jmethodID    JavaLibrary::ms_midDynamicVariableFloat = NULL;
+jmethodID    JavaLibrary::ms_midDynamicVariableFloatArray = NULL;
+jmethodID    JavaLibrary::ms_midDynamicVariableString = NULL;
+jmethodID    JavaLibrary::ms_midDynamicVariableStringArray = NULL;
+jmethodID    JavaLibrary::ms_midDynamicVariableObjId = NULL;
+jmethodID    JavaLibrary::ms_midDynamicVariableObjIdArray = NULL;
+jmethodID    JavaLibrary::ms_midDynamicVariableLocation = NULL;
+jmethodID    JavaLibrary::ms_midDynamicVariableLocationArray = NULL;
+jclass       JavaLibrary::ms_clsDynamicVariableList = NULL;
+jmethodID    JavaLibrary::ms_midDynamicVariableList = NULL;
+jmethodID    JavaLibrary::ms_midDynamicVariableListSet = NULL;
+jmethodID    JavaLibrary::ms_midDynamicVariableListSetInt = NULL;
+jmethodID    JavaLibrary::ms_midDynamicVariableListSetIntArray = NULL;
+jmethodID    JavaLibrary::ms_midDynamicVariableListSetFloat = NULL;
+jmethodID    JavaLibrary::ms_midDynamicVariableListSetFloatArray = NULL;
+jmethodID    JavaLibrary::ms_midDynamicVariableListSetString = NULL;
+jmethodID    JavaLibrary::ms_midDynamicVariableListSetStringArray = NULL;
+jmethodID    JavaLibrary::ms_midDynamicVariableListSetObjId = NULL;
+jmethodID    JavaLibrary::ms_midDynamicVariableListSetObjIdArray = NULL;
+jmethodID    JavaLibrary::ms_midDynamicVariableListSetLocation = NULL;
+jmethodID    JavaLibrary::ms_midDynamicVariableListSetLocationArray = NULL;
+jmethodID    JavaLibrary::ms_midDynamicVariableListSetStringId = NULL;
+jmethodID    JavaLibrary::ms_midDynamicVariableListSetStringIdArray = NULL;
+jmethodID    JavaLibrary::ms_midDynamicVariableListSetTransform = NULL;
+jmethodID    JavaLibrary::ms_midDynamicVariableListSetTransformArray = NULL;
+jmethodID    JavaLibrary::ms_midDynamicVariableListSetVector = NULL;
+jmethodID    JavaLibrary::ms_midDynamicVariableListSetVectorArray = NULL;
+jclass       JavaLibrary::ms_clsObjId = NULL;
+jclass       JavaLibrary::ms_clsObjIdArray = NULL;
+jmethodID    JavaLibrary::ms_midObjIdGetValue = NULL;
+jmethodID    JavaLibrary::ms_midObjIdGetObjId = NULL;
+jmethodID    JavaLibrary::ms_midObjIdClearObjId = NULL;
+jmethodID    JavaLibrary::ms_midObjIdFlagDestroyed = NULL;
+jmethodID    JavaLibrary::ms_midObjIdSetAuthoritative = NULL;
+jmethodID    JavaLibrary::ms_midObjIdSetLoaded = NULL;
+jmethodID    JavaLibrary::ms_midObjIdSetInitialized = NULL;
+jmethodID    JavaLibrary::ms_midObjIdSetLoggedIn = NULL;
+jmethodID    JavaLibrary::ms_midObjIdPackAllDeltaScriptVars = NULL;
+jmethodID    JavaLibrary::ms_midObjIdSetScriptVarInt = NULL;
+jmethodID    JavaLibrary::ms_midObjIdSetScriptVarFloat = NULL;
+jmethodID    JavaLibrary::ms_midObjIdSetScriptVarString = NULL;
+jmethodID    JavaLibrary::ms_midObjIdClearScriptVars = NULL;
+jmethodID    JavaLibrary::ms_midObjIdPackScriptVars = NULL;
+jmethodID    JavaLibrary::ms_midObjIdUnpackDeltaScriptVars = NULL;
+jmethodID    JavaLibrary::ms_midObjIdUnpackScriptVars = NULL;
+jmethodID    JavaLibrary::ms_midObjIdAttachScript = NULL;
+jmethodID    JavaLibrary::ms_midObjIdAttachScripts = NULL;
+jmethodID    JavaLibrary::ms_midObjIdDetachScript = NULL;
+jmethodID    JavaLibrary::ms_midObjIdDetachAllScripts = NULL;
+jclass       JavaLibrary::ms_clsStringId = NULL;
+jmethodID    JavaLibrary::ms_midStringId = NULL;
+jclass       JavaLibrary::ms_clsStringIdArray = NULL;
+jfieldID     JavaLibrary::ms_fidStringIdTable = NULL;
+jfieldID     JavaLibrary::ms_fidStringIdAsciiId = NULL;
+jfieldID     JavaLibrary::ms_fidStringIdIndexId = NULL;
+jclass       JavaLibrary::ms_clsModifiableStringId = NULL;
+jclass       JavaLibrary::ms_clsAttribute = NULL;
+jmethodID    JavaLibrary::ms_midAttribute = NULL;
+jfieldID     JavaLibrary::ms_fidAttributeType = NULL;
+jfieldID     JavaLibrary::ms_fidAttributeValue = NULL;
+jclass       JavaLibrary::ms_clsAttribMod = NULL;
+jmethodID    JavaLibrary::ms_midAttribMod = NULL;
+jfieldID     JavaLibrary::ms_fidAttribModName = NULL;
+jfieldID     JavaLibrary::ms_fidAttribModSkill = NULL;
+jfieldID     JavaLibrary::ms_fidAttribModType = NULL;
+jfieldID     JavaLibrary::ms_fidAttribModValue = NULL;
+jfieldID     JavaLibrary::ms_fidAttribModTime = NULL;
+jfieldID     JavaLibrary::ms_fidAttribModAttack = NULL;
+jfieldID     JavaLibrary::ms_fidAttribModDecay = NULL;
+jfieldID     JavaLibrary::ms_fidAttribModFlags = NULL;
+jclass       JavaLibrary::ms_clsMentalState = NULL;
+jmethodID    JavaLibrary::ms_midMentalState = NULL;
+jfieldID     JavaLibrary::ms_fidMentalStateType = NULL;
+jfieldID     JavaLibrary::ms_fidMentalStateValue = NULL;
+jclass       JavaLibrary::ms_clsMentalStateMod = NULL;
+jmethodID    JavaLibrary::ms_midMentalStateMod = NULL;
+jfieldID     JavaLibrary::ms_fidMentalStateModType = NULL;
+jfieldID     JavaLibrary::ms_fidMentalStateModValue = NULL;
+jfieldID     JavaLibrary::ms_fidMentalStateModTime = NULL;
+jfieldID     JavaLibrary::ms_fidMentalStateModAttack = NULL;
+jfieldID     JavaLibrary::ms_fidMentalStateModDecay = NULL;
+jclass       JavaLibrary::ms_clsLocation = NULL;
+jclass       JavaLibrary::ms_clsLocationArray = NULL;
+jfieldID     JavaLibrary::ms_fidLocationX = NULL;
+jfieldID     JavaLibrary::ms_fidLocationY = NULL;
+jfieldID     JavaLibrary::ms_fidLocationZ = NULL;
+jfieldID     JavaLibrary::ms_fidLocationArea = NULL;
+jfieldID     JavaLibrary::ms_fidLocationCell = NULL;
+jmethodID    JavaLibrary::ms_midRunOne = NULL;
+jmethodID    JavaLibrary::ms_midRunAll = NULL;
+jmethodID    JavaLibrary::ms_midCallMessages = NULL;
+jmethodID    JavaLibrary::ms_midRunConsoleHandler = NULL;
+jmethodID    JavaLibrary::ms_midUnload = NULL;
+jmethodID    JavaLibrary::ms_midGetClass = NULL;
+jmethodID    JavaLibrary::ms_midGetScriptFunctions = NULL;
+jclass       JavaLibrary::ms_clsMenuInfo = NULL;
+jmethodID    JavaLibrary::ms_midMenuInfo = NULL;
+jmethodID    JavaLibrary::ms_midMenuInfoSetMenuItemsInternal = NULL;
+jmethodID    JavaLibrary::ms_midMenuInfoGetMenuItemsInternal = NULL;
+jclass       JavaLibrary::ms_clsMenuInfoData = NULL;
+jmethodID    JavaLibrary::ms_midMenuInfoData = NULL;
 jfieldID     JavaLibrary::ms_fidMenuInfoDataId;
 jfieldID     JavaLibrary::ms_fidMenuInfoDataParent;
 jfieldID     JavaLibrary::ms_fidMenuInfoDataType;
@@ -588,82 +588,82 @@ jclass       JavaLibrary::ms_clsPalcolorCustomVar;
 jmethodID    JavaLibrary::ms_midPalcolorCustomVar;
 jclass       JavaLibrary::ms_clsColor;
 jmethodID    JavaLibrary::ms_midColor;
-jclass       JavaLibrary::ms_clsDraftSchematic = nullptr;
-jfieldID     JavaLibrary::ms_fidDraftSchematicCategory = nullptr;
-jfieldID     JavaLibrary::ms_fidDraftSchematicComplexity = nullptr;
-jfieldID     JavaLibrary::ms_fidDraftSchematicSlots = nullptr;
-jfieldID     JavaLibrary::ms_fidDraftSchematicAttribs = nullptr;
-jfieldID     JavaLibrary::ms_fidDraftSchematicExperimentalAttribs = nullptr;
-jfieldID     JavaLibrary::ms_fidDraftSchematicCustomizations = nullptr;
-jfieldID     JavaLibrary::ms_fidDraftSchematicAttribMap = nullptr;
-jfieldID     JavaLibrary::ms_fidDraftSchematicObjectTemplateCreated = nullptr;
-jfieldID     JavaLibrary::ms_fidDraftSchematicScripts = nullptr;
-jclass       JavaLibrary::ms_clsDraftSchematicSlot = nullptr;
-jfieldID     JavaLibrary::ms_fidDraftSchematicSlotName = nullptr;
-jfieldID     JavaLibrary::ms_fidDraftSchematicSlotOption = nullptr;
-jfieldID     JavaLibrary::ms_fidDraftSchematicSlotIngredientType = nullptr;
-jfieldID     JavaLibrary::ms_fidDraftSchematicSlotIngredientName = nullptr;
-jfieldID     JavaLibrary::ms_fidDraftSchematicSlotIngredients = nullptr;
-jfieldID     JavaLibrary::ms_fidDraftSchematicSlotComplexity = nullptr;
-jfieldID     JavaLibrary::ms_fidDraftSchematicSlotAmountRequired = nullptr;
-jfieldID     JavaLibrary::ms_fidDraftSchematicSlotAppearance = nullptr;
-jclass       JavaLibrary::ms_clsDraftSchematicAttrib = nullptr;
-jfieldID     JavaLibrary::ms_fidDraftSchematicAttribName = nullptr;
-jfieldID     JavaLibrary::ms_fidDraftSchematicAttribMinValue = nullptr;
-jfieldID     JavaLibrary::ms_fidDraftSchematicAttribMaxValue = nullptr;
-jfieldID     JavaLibrary::ms_fidDraftSchematicAttribResourceMaxValue = nullptr;
-jfieldID     JavaLibrary::ms_fidDraftSchematicAttribCurrentValue = nullptr;
-jclass       JavaLibrary::ms_clsDraftSchematicSimpleIngredient = nullptr;
-jfieldID     JavaLibrary::ms_fidDraftSchematicSimpleIngredientIngredient = nullptr;
-jfieldID     JavaLibrary::ms_fidDraftSchematicSimpleIngredientCount = nullptr;
-jfieldID     JavaLibrary::ms_fidDraftSchematicSimpleIngredientSource = nullptr;
-jfieldID     JavaLibrary::ms_fidDraftSchematicSimpleIngredientXpType = nullptr;
-jfieldID     JavaLibrary::ms_fidDraftSchematicSimpleIngredientXpAmount = nullptr;
-jclass       JavaLibrary::ms_clsDraftSchematicCustom = nullptr;
-jfieldID     JavaLibrary::ms_fidDraftSchematicCustomName = nullptr;
-jfieldID     JavaLibrary::ms_fidDraftSchematicCustomValue = nullptr;
-jfieldID     JavaLibrary::ms_fidDraftSchematicCustomMinValue = nullptr;
-jfieldID     JavaLibrary::ms_fidDraftSchematicCustomMaxValue = nullptr;
-//jfieldID     JavaLibrary::ms_fidDraftSchematicCustomLocked = nullptr;
-jclass       JavaLibrary::ms_clsMapLocation = nullptr;
-jmethodID    JavaLibrary::ms_midMapLocation = nullptr;
-jclass       JavaLibrary::ms_clsRegion = nullptr;
-jmethodID    JavaLibrary::ms_midRegion = nullptr;
-jfieldID     JavaLibrary::ms_fidRegionName = nullptr;
-jfieldID     JavaLibrary::ms_fidRegionPlanet = nullptr;
-jclass       JavaLibrary::ms_clsCombatEngine = nullptr;
-jclass       JavaLibrary::ms_clsCombatEngineCombatantData = nullptr;
-jfieldID     JavaLibrary::ms_fidCombatEngineCombatantDataPos = nullptr;
-jfieldID     JavaLibrary::ms_fidCombatEngineCombatantDataWorldPos = nullptr;
-jfieldID     JavaLibrary::ms_fidCombatEngineCombatantDataRadius = nullptr;
-jfieldID     JavaLibrary::ms_fidCombatEngineCombatantDataIsCreature = nullptr;
-jfieldID     JavaLibrary::ms_fidCombatEngineCombatantDataPosture = nullptr;
-jfieldID     JavaLibrary::ms_fidCombatEngineCombatantDataLocomotion = nullptr;
-jfieldID     JavaLibrary::ms_fidCombatEngineCombatantDataScriptMod = nullptr;
-jclass       JavaLibrary::ms_clsCombatEngineAttackerData = nullptr;
-jfieldID     JavaLibrary::ms_fidCombatEngineAttackerDataWeaponSkill = nullptr;
-jfieldID     JavaLibrary::ms_fidCombatEngineAttackerDataAims = nullptr;
-jclass       JavaLibrary::ms_clsCombatEngineDefenderData = nullptr;
-jfieldID     JavaLibrary::ms_fidCombatEngineDefenderDataCombatSkeleton = nullptr;
-jfieldID     JavaLibrary::ms_fidCombatEngineDefenderDataCover = nullptr;
-jfieldID     JavaLibrary::ms_fidCombatEngineDefenderDataHitLocationChances = nullptr;
-jclass       JavaLibrary::ms_clsCombatEngineWeaponData = nullptr;
-jfieldID     JavaLibrary::ms_fidCombatEngineWeaponDataId = nullptr;
-jfieldID     JavaLibrary::ms_fidCombatEngineWeaponDataMinDamage = nullptr;
-jfieldID     JavaLibrary::ms_fidCombatEngineWeaponDataMaxDamage = nullptr;
-jfieldID     JavaLibrary::ms_fidCombatEngineWeaponDataWeaponType = nullptr;
-jfieldID     JavaLibrary::ms_fidCombatEngineWeaponDataAttackType = nullptr;
-jfieldID     JavaLibrary::ms_fidCombatEngineWeaponDataDamageType = nullptr;
-jfieldID     JavaLibrary::ms_fidCombatEngineWeaponDataElementalType = nullptr;
-jfieldID     JavaLibrary::ms_fidCombatEngineWeaponDataElementalValue = nullptr;
-jfieldID     JavaLibrary::ms_fidCombatEngineWeaponDataAttackSpeed = nullptr;
-jfieldID     JavaLibrary::ms_fidCombatEngineWeaponDataWoundChance = nullptr;
-jfieldID     JavaLibrary::ms_fidCombatEngineWeaponDataAccuracy = nullptr;
-jfieldID     JavaLibrary::ms_fidCombatEngineWeaponDataMinRange = nullptr;
-jfieldID     JavaLibrary::ms_fidCombatEngineWeaponDataMaxRange = nullptr;
-jfieldID     JavaLibrary::ms_fidCombatEngineWeaponDataDamageRadius = nullptr;
-jfieldID     JavaLibrary::ms_fidCombatEngineWeaponDataAttackCost = nullptr;
-jfieldID     JavaLibrary::ms_fidCombatEngineWeaponDataIsDisabled = nullptr;
+jclass       JavaLibrary::ms_clsDraftSchematic = NULL;
+jfieldID     JavaLibrary::ms_fidDraftSchematicCategory = NULL;
+jfieldID     JavaLibrary::ms_fidDraftSchematicComplexity = NULL;
+jfieldID     JavaLibrary::ms_fidDraftSchematicSlots = NULL;
+jfieldID     JavaLibrary::ms_fidDraftSchematicAttribs = NULL;
+jfieldID     JavaLibrary::ms_fidDraftSchematicExperimentalAttribs = NULL;
+jfieldID     JavaLibrary::ms_fidDraftSchematicCustomizations = NULL;
+jfieldID     JavaLibrary::ms_fidDraftSchematicAttribMap = NULL;
+jfieldID     JavaLibrary::ms_fidDraftSchematicObjectTemplateCreated = NULL;
+jfieldID     JavaLibrary::ms_fidDraftSchematicScripts = NULL;
+jclass       JavaLibrary::ms_clsDraftSchematicSlot = NULL;
+jfieldID     JavaLibrary::ms_fidDraftSchematicSlotName = NULL;
+jfieldID     JavaLibrary::ms_fidDraftSchematicSlotOption = NULL;
+jfieldID     JavaLibrary::ms_fidDraftSchematicSlotIngredientType = NULL;
+jfieldID     JavaLibrary::ms_fidDraftSchematicSlotIngredientName = NULL;
+jfieldID     JavaLibrary::ms_fidDraftSchematicSlotIngredients = NULL;
+jfieldID     JavaLibrary::ms_fidDraftSchematicSlotComplexity = NULL;
+jfieldID     JavaLibrary::ms_fidDraftSchematicSlotAmountRequired = NULL;
+jfieldID     JavaLibrary::ms_fidDraftSchematicSlotAppearance = NULL;
+jclass       JavaLibrary::ms_clsDraftSchematicAttrib = NULL;
+jfieldID     JavaLibrary::ms_fidDraftSchematicAttribName = NULL;
+jfieldID     JavaLibrary::ms_fidDraftSchematicAttribMinValue = NULL;
+jfieldID     JavaLibrary::ms_fidDraftSchematicAttribMaxValue = NULL;
+jfieldID     JavaLibrary::ms_fidDraftSchematicAttribResourceMaxValue = NULL;
+jfieldID     JavaLibrary::ms_fidDraftSchematicAttribCurrentValue = NULL;
+jclass       JavaLibrary::ms_clsDraftSchematicSimpleIngredient = NULL;
+jfieldID     JavaLibrary::ms_fidDraftSchematicSimpleIngredientIngredient = NULL;
+jfieldID     JavaLibrary::ms_fidDraftSchematicSimpleIngredientCount = NULL;
+jfieldID     JavaLibrary::ms_fidDraftSchematicSimpleIngredientSource = NULL;
+jfieldID     JavaLibrary::ms_fidDraftSchematicSimpleIngredientXpType = NULL;
+jfieldID     JavaLibrary::ms_fidDraftSchematicSimpleIngredientXpAmount = NULL;
+jclass       JavaLibrary::ms_clsDraftSchematicCustom = NULL;
+jfieldID     JavaLibrary::ms_fidDraftSchematicCustomName = NULL;
+jfieldID     JavaLibrary::ms_fidDraftSchematicCustomValue = NULL;
+jfieldID     JavaLibrary::ms_fidDraftSchematicCustomMinValue = NULL;
+jfieldID     JavaLibrary::ms_fidDraftSchematicCustomMaxValue = NULL;
+//jfieldID     JavaLibrary::ms_fidDraftSchematicCustomLocked = NULL;
+jclass       JavaLibrary::ms_clsMapLocation = NULL;
+jmethodID    JavaLibrary::ms_midMapLocation = NULL;
+jclass       JavaLibrary::ms_clsRegion = NULL;
+jmethodID    JavaLibrary::ms_midRegion = NULL;
+jfieldID     JavaLibrary::ms_fidRegionName = NULL;
+jfieldID     JavaLibrary::ms_fidRegionPlanet = NULL;
+jclass       JavaLibrary::ms_clsCombatEngine = NULL;
+jclass       JavaLibrary::ms_clsCombatEngineCombatantData = NULL;
+jfieldID     JavaLibrary::ms_fidCombatEngineCombatantDataPos = NULL;
+jfieldID     JavaLibrary::ms_fidCombatEngineCombatantDataWorldPos = NULL;
+jfieldID     JavaLibrary::ms_fidCombatEngineCombatantDataRadius = NULL;
+jfieldID     JavaLibrary::ms_fidCombatEngineCombatantDataIsCreature = NULL;
+jfieldID     JavaLibrary::ms_fidCombatEngineCombatantDataPosture = NULL;
+jfieldID     JavaLibrary::ms_fidCombatEngineCombatantDataLocomotion = NULL;
+jfieldID     JavaLibrary::ms_fidCombatEngineCombatantDataScriptMod = NULL;
+jclass       JavaLibrary::ms_clsCombatEngineAttackerData = NULL;
+jfieldID     JavaLibrary::ms_fidCombatEngineAttackerDataWeaponSkill = NULL;
+jfieldID     JavaLibrary::ms_fidCombatEngineAttackerDataAims = NULL;
+jclass       JavaLibrary::ms_clsCombatEngineDefenderData = NULL;
+jfieldID     JavaLibrary::ms_fidCombatEngineDefenderDataCombatSkeleton = NULL;
+jfieldID     JavaLibrary::ms_fidCombatEngineDefenderDataCover = NULL;
+jfieldID     JavaLibrary::ms_fidCombatEngineDefenderDataHitLocationChances = NULL;
+jclass       JavaLibrary::ms_clsCombatEngineWeaponData = NULL;
+jfieldID     JavaLibrary::ms_fidCombatEngineWeaponDataId = NULL;
+jfieldID     JavaLibrary::ms_fidCombatEngineWeaponDataMinDamage = NULL;
+jfieldID     JavaLibrary::ms_fidCombatEngineWeaponDataMaxDamage = NULL;
+jfieldID     JavaLibrary::ms_fidCombatEngineWeaponDataWeaponType = NULL;
+jfieldID     JavaLibrary::ms_fidCombatEngineWeaponDataAttackType = NULL;
+jfieldID     JavaLibrary::ms_fidCombatEngineWeaponDataDamageType = NULL;
+jfieldID     JavaLibrary::ms_fidCombatEngineWeaponDataElementalType = NULL;
+jfieldID     JavaLibrary::ms_fidCombatEngineWeaponDataElementalValue = NULL;
+jfieldID     JavaLibrary::ms_fidCombatEngineWeaponDataAttackSpeed = NULL;
+jfieldID     JavaLibrary::ms_fidCombatEngineWeaponDataWoundChance = NULL;
+jfieldID     JavaLibrary::ms_fidCombatEngineWeaponDataAccuracy = NULL;
+jfieldID     JavaLibrary::ms_fidCombatEngineWeaponDataMinRange = NULL;
+jfieldID     JavaLibrary::ms_fidCombatEngineWeaponDataMaxRange = NULL;
+jfieldID     JavaLibrary::ms_fidCombatEngineWeaponDataDamageRadius = NULL;
+jfieldID     JavaLibrary::ms_fidCombatEngineWeaponDataAttackCost = NULL;
+jfieldID     JavaLibrary::ms_fidCombatEngineWeaponDataIsDisabled = NULL;
 jclass       JavaLibrary::ms_clsCombatEngineHitResult;
 jfieldID     JavaLibrary::ms_fidCombatEngineHitResultSuccess;
 jfieldID     JavaLibrary::ms_fidCombatEngineHitResultCritical;
@@ -693,40 +693,40 @@ jfieldID     JavaLibrary::ms_fidCombatEngineHitResultCritDamage;
 jfieldID     JavaLibrary::ms_fidCombatEngineHitResultBlockedDamage;
 jfieldID     JavaLibrary::ms_fidCombatEngineHitResultBlockingArmor;
 jfieldID     JavaLibrary::ms_fidCombatEngineHitResultBleedingChance;
-jclass       JavaLibrary::ms_clsTransform = nullptr;
-jclass       JavaLibrary::ms_clsTransformArray = nullptr;
-jmethodID    JavaLibrary::ms_midTransform = nullptr;
-jfieldID     JavaLibrary::ms_fidTransformMatrix = nullptr;
-jclass       JavaLibrary::ms_clsVector = nullptr;
-jclass       JavaLibrary::ms_clsVectorArray = nullptr;
-jfieldID     JavaLibrary::ms_fidVectorX = nullptr;
-jfieldID     JavaLibrary::ms_fidVectorY = nullptr;
-jfieldID     JavaLibrary::ms_fidVectorZ = nullptr;
-jclass       JavaLibrary::ms_clsResourceDensity = nullptr;
-jfieldID     JavaLibrary::ms_fidResourceDensityResourceType = nullptr;
-jfieldID     JavaLibrary::ms_fidResourceDensityDensity = nullptr;
-jclass       JavaLibrary::ms_clsResourceAttribute = nullptr;
-jfieldID     JavaLibrary::ms_fidResourceAttributeName = nullptr;
-jfieldID     JavaLibrary::ms_fidResourceAttributeValue = nullptr;
-jclass	     JavaLibrary::ms_clsLibrarySpaceTransition = nullptr;
-jmethodID    JavaLibrary::ms_midLibrarySpaceTransitionSetPlayerOvert = nullptr;
-jmethodID    JavaLibrary::ms_midLibrarySpaceTransitionClearOvertStatus = nullptr;
+jclass       JavaLibrary::ms_clsTransform = NULL;
+jclass       JavaLibrary::ms_clsTransformArray = NULL;
+jmethodID    JavaLibrary::ms_midTransform = NULL;
+jfieldID     JavaLibrary::ms_fidTransformMatrix = NULL;
+jclass       JavaLibrary::ms_clsVector = NULL;
+jclass       JavaLibrary::ms_clsVectorArray = NULL;
+jfieldID     JavaLibrary::ms_fidVectorX = NULL;
+jfieldID     JavaLibrary::ms_fidVectorY = NULL;
+jfieldID     JavaLibrary::ms_fidVectorZ = NULL;
+jclass       JavaLibrary::ms_clsResourceDensity = NULL;
+jfieldID     JavaLibrary::ms_fidResourceDensityResourceType = NULL;
+jfieldID     JavaLibrary::ms_fidResourceDensityDensity = NULL;
+jclass       JavaLibrary::ms_clsResourceAttribute = NULL;
+jfieldID     JavaLibrary::ms_fidResourceAttributeName = NULL;
+jfieldID     JavaLibrary::ms_fidResourceAttributeValue = NULL;
+jclass	     JavaLibrary::ms_clsLibrarySpaceTransition = NULL;
+jmethodID    JavaLibrary::ms_midLibrarySpaceTransitionSetPlayerOvert = NULL;
+jmethodID    JavaLibrary::ms_midLibrarySpaceTransitionClearOvertStatus = NULL;
 
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 // CS handlers
-jclass       JavaLibrary::ms_clsLibraryDump = nullptr;
-jmethodID    JavaLibrary::ms_midLibraryDumpDumpTargetInfo = nullptr;
+jclass       JavaLibrary::ms_clsLibraryDump = NULL;
+jmethodID    JavaLibrary::ms_midLibraryDumpDumpTargetInfo = NULL;
 
-jclass	     JavaLibrary::ms_clsLibraryGMLib = nullptr;
-jmethodID    JavaLibrary::ms_midLibraryGMLibFreeze = nullptr;
-jmethodID    JavaLibrary::ms_midLibraryGMLibUnfreeze = nullptr;
+jclass	     JavaLibrary::ms_clsLibraryGMLib = NULL;
+jmethodID    JavaLibrary::ms_midLibraryGMLibFreeze = NULL;
+jmethodID    JavaLibrary::ms_midLibraryGMLibUnfreeze = NULL;
 
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 
 int          JavaLibrary::ms_loaded = 0;
-Semaphore *  JavaLibrary::ms_shutdownJava = nullptr;
+Semaphore *  JavaLibrary::ms_shutdownJava = NULL;
 
 int     JavaLibrary::GlobalInstances::ms_stringIdIndex = 0;
 int     JavaLibrary::GlobalInstances::ms_attribModIndex = 0;
@@ -765,7 +765,7 @@ void JavaLibrary::throwScriptException(char const * const format, ...)
 
 void JavaLibrary::throwScriptException(char const * const format, va_list va)
 {
-	DEBUG_FATAL(!ms_env, ("JavaLibrary::throwScriptException: ms_env is nullptr"));
+	DEBUG_FATAL(!ms_env, ("JavaLibrary::throwScriptException: ms_env is NULL"));
 	if (ms_env)
 	{
 		char buffer[1024];
@@ -805,28 +805,28 @@ void JavaLibrary::fatalHandler(int signum)
 		// it turns out that in some java crashes we don't even have 2 return
 		// addresses, so check 0 and 1 just to make sure
 		bool result2 = false;
-		void *crashAddress2a = nullptr;
-		void *crashAddress2b = nullptr;
-		void *crashAddress2c = nullptr;
-		void *frameAddressA = nullptr;
-		void *frameAddressB = nullptr;
+		void *crashAddress2a = NULL;
+		void *crashAddress2b = NULL;
+		void *crashAddress2c = NULL;
+		void *frameAddressA = NULL;
+		void *frameAddressB = NULL;
 		uint32 frameAddressHigh = (reinterpret_cast<uint32>(frameAddress) >> 16);
 		crashAddress2a = __builtin_return_address(0);
-		if (crashAddress2a != nullptr)
+		if (crashAddress2a != NULL)
 		{
 			frameAddressA = __builtin_frame_address(1);
-			if (frameAddressA != nullptr && 
+			if (frameAddressA != NULL && 
 				(reinterpret_cast<uint32>(frameAddressA) >> 16 == frameAddressHigh))
 			{
 				crashAddress2b = __builtin_return_address(1);
-				if (crashAddress2b != nullptr)
+				if (crashAddress2b != NULL)
 				{
 					frameAddressB = __builtin_frame_address(2);
-					if (frameAddressB != nullptr && 
+					if (frameAddressB != NULL && 
 						(reinterpret_cast<uint32>(frameAddressB) >> 16 == frameAddressHigh))
 					{
 						crashAddress2c = __builtin_return_address(2);
-						if (crashAddress2c != nullptr)
+						if (crashAddress2c != NULL)
 						{
 							result2 = DebugHelp::lookupAddress(reinterpret_cast<uint32>(
 								crashAddress2c), lib2, file2, BUFLEN, line2);
@@ -837,7 +837,7 @@ void JavaLibrary::fatalHandler(int signum)
 		}
 
 		bool javaCrash = true;
-		if ((result1 || result2) && strstr(lib1, "libjvm.so") == nullptr && strstr(lib2, "libjvm.so") == nullptr)
+		if ((result1 || result2) && strstr(lib1, "libjvm.so") == NULL && strstr(lib2, "libjvm.so") == NULL)
 		{
 			if (result1 && result2)
 			{
@@ -860,7 +860,7 @@ void JavaLibrary::fatalHandler(int signum)
 		if (javaCrash)
 		{
 			fprintf(stderr, "I think I crashed in Java, calling the Java segfault hanlder.\n");
-			IGNORE_RETURN(sigaction(SIGSEGV, &JavaSa, nullptr));
+			IGNORE_RETURN(sigaction(SIGSEGV, &JavaSa, NULL));
 			IGNORE_RETURN(pthread_kill(pthread_self(), SIGSEGV));
 		}
 		else
@@ -868,11 +868,11 @@ void JavaLibrary::fatalHandler(int signum)
 			// destroy Java threads
 			// this pthread method is not in later versions of glibc as the kernel should handle the kill
 			//pthread_kill_other_threads_np();
-			ms_instance = nullptr;
-			ms_env = nullptr;
-			ms_jvm = nullptr;
+			ms_instance = NULL;
+			ms_env = NULL;
+			ms_jvm = NULL;
 			// restore original signal handler and rethrow signal
-			IGNORE_RETURN(sigaction(SIGSEGV, &OrgSa, nullptr));
+			IGNORE_RETURN(sigaction(SIGSEGV, &OrgSa, NULL));
 			IGNORE_RETURN(pthread_kill(pthread_self(), SIGSEGV));
 		}
 	}
@@ -888,7 +888,7 @@ JavaLibrary::JavaLibrary(void)
 {
 int i;
 
-	if (ms_instance != nullptr || ms_loaded != 0)
+	if (ms_instance != NULL || ms_loaded != 0)
 		return;
 
 	ms_shutdownJava = new Semaphore();
@@ -938,7 +938,7 @@ JavaLibrary::~JavaLibrary()
 {
 	disconnectFromJava();	
 
-	if (ms_shutdownJava != nullptr)
+	if (ms_shutdownJava != NULL)
 	{
 		// tell the initialize thread to shut down
 		if (ms_loaded > 0)
@@ -948,10 +948,10 @@ JavaLibrary::~JavaLibrary()
 				Os::sleep(100);
 		}
 		delete ms_shutdownJava;
-		ms_shutdownJava = nullptr;
+		ms_shutdownJava = NULL;
 	}
 
-	ms_instance = nullptr;
+	ms_instance = NULL;
 }	// JavaLibrary::~JavaLibrary
 
 //----------------------------------------------------------------------
@@ -961,12 +961,12 @@ JavaLibrary::~JavaLibrary()
  */
 void JavaLibrary::install(void)
 {
-	if (ms_instance == nullptr)
+	if (ms_instance == NULL)
 	{
 		JavaLibrary *lib = new JavaLibrary;
 		if (lib != ms_instance)
 		{
-			if (ms_instance == nullptr)
+			if (ms_instance == NULL)
 			{
 				delete lib;
 				if (ms_javaVmType != JV_none)
@@ -985,10 +985,10 @@ void JavaLibrary::install(void)
  */
 void JavaLibrary::remove(void)
 {
-	if (ms_instance != nullptr)
+	if (ms_instance != NULL)
 	{
 		JavaLibrary * temp = ms_instance;
-		ms_instance = nullptr;
+		ms_instance = NULL;
 		delete temp;
 		s_profileSections.clear();
 	}
@@ -1010,7 +1010,7 @@ void JavaLibrary::initializeJavaThread()
 	}
 
 	const char *javaVMName = ConfigServerGame::getJavaVMName();
-	if (javaVMName == nullptr || (
+	if (javaVMName == NULL || (
 		strcmp(javaVMName, "none") != 0 &&
 		strcmp(javaVMName, "ibm") != 0 &&
 		strcmp(javaVMName, "sun") != 0 &&
@@ -1038,21 +1038,21 @@ void JavaLibrary::initializeJavaThread()
 #ifdef linux
 
 	// get the default signal handler
-	IGNORE_RETURN(sigaction(SIGSEGV, nullptr, &OrgSa));
+	IGNORE_RETURN(sigaction(SIGSEGV, NULL, &OrgSa));
 
 	if (ms_javaVmType == JV_ibm)
 	{
 		// check PATH to make sure that it has /usr/bin/java
 		const char * env = getenv("PATH");
-		const char * bin = nullptr;
+		const char * bin = NULL;
 		int envlen = 0;
-		if (env != nullptr)
+		if (env != NULL)
 		{
 			bin = strstr(env, "/usr/java/bin");
 			envlen = strlen(env);
 		}
 
-		if (bin == nullptr)
+		if (bin == NULL)
 		{
 			WARNING(true, ("/usr/java/bin not found in PATH which is needed for IBM Java VM.  Adding it now"));
 			char * tmpbuffer = new char[envlen + 128];
@@ -1065,18 +1065,18 @@ void JavaLibrary::initializeJavaThread()
 
 		// check LD_LIBRARY_PATH for /usr/java/jre/bin and /usr/java/jre/bin/classic
 		env = getenv("LD_LIBRARY_PATH");
-		bin = nullptr;
+		bin = NULL;
 		envlen = 0;
-		const char * classic = nullptr;
-		if (env != nullptr)
+		const char * classic = NULL;
+		if (env != NULL)
 		{
 			bin = strstr(env, "/usr/java/jre/bin");
 			classic = strstr(env, "/usr/java/jre/bin/classic");
-			if (bin == classic && bin != nullptr)
+			if (bin == classic && bin != NULL)
 				bin = strstr(classic + 1, "/usr/java/jre/bin");
 			envlen = strlen(env);
 		}
-		if (bin == nullptr || classic == nullptr)
+		if (bin == NULL || classic == NULL)
 		{
 			WARNING(true, ("/usr/java/jre/bin or /usr/java/jre/bin/classic not found "
 				"in LD_LIBRARY_PATH, needed for IBM Java VM. Adding them both now."));
@@ -1093,12 +1093,12 @@ void JavaLibrary::initializeJavaThread()
 #endif	// linux
 
 	// dynamically load the jni dll and JNI_CreateJavaVM
-	void * libHandle = nullptr;
+	void * libHandle = NULL;
 	JNI_CREATEJAVAVMPROC JNI_CreateJavaVMProc;
 #if defined(WIN32)
 	std::string dllPath = ConfigServerGame::getJavaLibPath();
 	HINSTANCE hVm = LoadLibrary(dllPath.c_str());
-	if (hVm == nullptr)
+	if (hVm == NULL)
 	{
 		FATAL(true, ("jvm open fail error: could not open %s", dllPath.c_str()));
 		ms_loaded = -1;
@@ -1108,10 +1108,10 @@ void JavaLibrary::initializeJavaThread()
 	JNI_CreateJavaVMProc =
 		(JNI_CREATEJAVAVMPROC)GetProcAddress(hVm, "JNI_CreateJavaVM");		//lint !e1924 C-style cast
 #else
-	void *libVM = nullptr;
+	void *libVM = NULL;
 	std::string dllPath = ConfigServerGame::getJavaLibPath();
 	libVM = dlopen(dllPath.c_str(), RTLD_LAZY);
-	if (libVM == nullptr)
+	if (libVM == NULL)
 	{
 		FATAL(true, ("jvm open fail! error: %s", dlerror()));
 		ms_loaded = -1;
@@ -1121,7 +1121,7 @@ void JavaLibrary::initializeJavaThread()
 	JNI_CreateJavaVMProc =
 		(JNI_CREATEJAVAVMPROC)dlsym(libVM, "JNI_CreateJavaVM");
 #endif
-	if (JNI_CreateJavaVMProc == nullptr)
+	if (JNI_CreateJavaVMProc == NULL)
 	{
 		FATAL(true, ("Error getting JNI_CreateJavaVM from jvm shared library"));
 		ms_loaded = -1;
@@ -1137,9 +1137,9 @@ void JavaLibrary::initializeJavaThread()
 	classPath += ConfigServerGame::getScriptPath();
 
 	JavaVMInitArgs vm_args;
-	JavaVMOption tempOption = {nullptr, nullptr};
+	JavaVMOption tempOption = {NULL, NULL};
 	std::vector<JavaVMOption> options;
-	char *jdwpBuffer = nullptr;
+	char *jdwpBuffer = NULL;
 
 	UNREF(jdwpBuffer);
 
@@ -1206,7 +1206,7 @@ void JavaLibrary::initializeJavaThread()
 		}
 
 #ifdef REMOTE_DEBUG_ON
-		char *jdwpBuffer = nullptr;
+		char *jdwpBuffer = NULL;
 		if (ConfigServerGame::getUseRemoteDebugJava())
 		{
 			if (ms_javaVmType == JV_ibm)
@@ -1305,14 +1305,14 @@ void JavaLibrary::initializeJavaThread()
 	vm_args.ignoreUnrecognized = JNI_TRUE;
 
 	// create the JVM
-	JNIEnv * env = nullptr;
+	JNIEnv * env = NULL;
 	jint result = (*JNI_CreateJavaVMProc)(&ms_jvm, reinterpret_cast<void**>(&env), &vm_args);	
 
 #ifdef REMOTE_DEBUG_ON
-	if (jdwpBuffer != nullptr)
+	if (jdwpBuffer != NULL)
 	{
 		delete[] jdwpBuffer;
-		jdwpBuffer = nullptr;
+		jdwpBuffer = NULL;
 	}
 #endif
 
@@ -1329,7 +1329,7 @@ void JavaLibrary::initializeJavaThread()
 
 	// clean up
 	IGNORE_RETURN(ms_jvm->DestroyJavaVM());
-	ms_jvm = nullptr;
+	ms_jvm = NULL;
 
 
 #if defined(_WIN32)
@@ -1356,7 +1356,7 @@ bool JavaLibrary::connectToJava()
 		return false;
 
 	// attach our thread to the VM
-	jint result = ms_jvm->AttachCurrentThread(reinterpret_cast<void**>(&ms_env), nullptr);
+	jint result = ms_jvm->AttachCurrentThread(reinterpret_cast<void**>(&ms_env), NULL);
 	if (result != 0)
 	{
 		FATAL(true, ("Failed to attach to the Java VM! Error code returned = %d", result));
@@ -1927,7 +1927,7 @@ bool JavaLibrary::connectToJava()
 
 	for (i = 0; i < MAX_STRING_ID_PARAMS; ++i)
 	{
-		localInstance = createNewObject(ms_clsStringId, ms_midStringId, nullptr, -1);
+		localInstance = createNewObject(ms_clsStringId, ms_midStringId, NULL, -1);
 		if (ms_env->ExceptionCheck())
 		{
 			ms_env->ExceptionDescribe();
@@ -1945,7 +1945,7 @@ bool JavaLibrary::connectToJava()
 	for (i = 0; i < MAX_MODIFIABLE_STRING_ID_PARAMS; ++i)
 	{
 		localInstance = createNewObject(ms_clsModifiableStringId, constructor,
-			nullptr, -1);
+			NULL, -1);
 		if (ms_env->ExceptionCheck())
 		{
 			ms_env->ExceptionDescribe();
@@ -2100,7 +2100,7 @@ bool JavaLibrary::registerNatives(const JNINativeMethod natives[], int count)
 	{
 		if (!natives[i].signature)
 		{
-			DEBUG_REPORT_LOG(true, ("RegisterNatives failed: %s - nullptr signature\n", natives[i].name));
+			DEBUG_REPORT_LOG(true, ("RegisterNatives failed: %s - NULL signature\n", natives[i].name));
 			result = 1;
 			continue;
 		}
@@ -2208,11 +2208,11 @@ int i;
 	FREE_CLASS(ms_clsLibraryDump);
 	FREE_CLASS(ms_clsLibraryGMLib);
 
-	if (ms_scriptEntry != nullptr)
+	if (ms_scriptEntry != NULL)
 	{
 		if (ms_env)
 			ms_env->DeleteGlobalRef(ms_scriptEntry);
-		ms_scriptEntry = nullptr;
+		ms_scriptEntry = NULL;
 	}
 
 	for (i = 0; i < MAX_RECURSION_COUNT; ++i)
@@ -2235,7 +2235,7 @@ int i;
 	GlobalInstances::ms_menuInfo = GlobalRef::cms_nullPtr;
 
 	IGNORE_RETURN(ms_jvm->DetachCurrentThread());
-	ms_env = nullptr;
+	ms_env = NULL;
 }	// JavaLibrary::disconnectFromJava
 
 //----------------------------------------------------------------------
@@ -2272,7 +2272,7 @@ void JavaLibrary::resetJavaConnection()
  */
 bool JavaLibrary::queryScriptFunctions(const std::string & scriptName)
 {
-	if (ms_instance == nullptr)
+	if (ms_instance == NULL)
 		return false;
 
 	JavaString scriptClassName(("script." + scriptName).c_str());
@@ -2326,7 +2326,7 @@ bool JavaLibrary::queryScriptFunctions(const std::string & scriptName)
  */
 jlong JavaLibrary::getFreeJavaMemory()
 {
-	if (ms_instance == nullptr || ms_env == nullptr)
+	if (ms_instance == NULL || ms_env == NULL)
 		return 0;
 	
 	return ms_env->CallStaticLongMethod(ms_clsScriptEntry, ms_midScriptEntryGetFreeMem);
@@ -2347,7 +2347,7 @@ void JavaLibrary::printJavaStack()
  */
 void JavaLibrary::enableLogging(bool enable) const
 {
-	if (ms_instance == nullptr || ms_env == nullptr)
+	if (ms_instance == NULL || ms_env == NULL)
 		return;	
 
 	ms_env->CallStaticVoidMethod(ms_clsScriptEntry,
@@ -2361,7 +2361,7 @@ void JavaLibrary::enableLogging(bool enable) const
  */
 void JavaLibrary::enableNewJediTracking(bool enableTracking)
 {
-	if (ms_instance == nullptr || ms_env == nullptr)
+	if (ms_instance == NULL || ms_env == NULL)
 		return;	
 
 	ms_env->CallStaticVoidMethod(ms_clsScriptEntry,
@@ -2401,7 +2401,7 @@ LocalRefPtr JavaLibrary::getObjId(const NetworkId::NetworkIdType & id)
  */
 LocalRefPtr JavaLibrary::getObjId(const NetworkId & id)
 {
-	if (ms_env != nullptr && ms_instance != nullptr)
+	if (ms_env != NULL && ms_instance != NULL)
 		return callStaticObjectMethod(ms_clsObjId, ms_midObjIdGetObjId, id.getValue());
 	return LocalRef::cms_nullPtr;
 }	// JavaLibrary::getObjId(const CachedNetworkId &)
@@ -2490,7 +2490,7 @@ LocalRefPtr JavaLibrary::getVector(Vector const & vector)
  */
 void JavaLibrary::removeJavaId(const NetworkId & id)
 {
-	if (ms_env == nullptr || ms_clsObjId == nullptr || ms_midObjIdClearObjId == nullptr)
+	if (ms_env == NULL || ms_clsObjId == NULL || ms_midObjIdClearObjId == NULL)
 	{
 		return;
 	}
@@ -2508,7 +2508,7 @@ void JavaLibrary::removeJavaId(const NetworkId & id)
  */
 void JavaLibrary::flagDestroyed(const NetworkId & id)
 {
-	if (ms_env == nullptr || ms_clsObjId == nullptr || ms_midObjIdFlagDestroyed == nullptr)
+	if (ms_env == NULL || ms_clsObjId == NULL || ms_midObjIdFlagDestroyed == NULL)
 	{
 		return;
 	}
@@ -2527,7 +2527,7 @@ void JavaLibrary::flagDestroyed(const NetworkId & id)
  */
 void JavaLibrary::setObjIdAuthoritative(const NetworkId & object, bool authoritative, uint32 pid)
 {
-	if (ms_env == nullptr || ms_midObjIdSetAuthoritative == nullptr)
+	if (ms_env == NULL || ms_midObjIdSetAuthoritative == NULL)
 	{
 		return;
 	}
@@ -2550,7 +2550,7 @@ void JavaLibrary::setObjIdAuthoritative(const NetworkId & object, bool authorita
  */
 void JavaLibrary::setObjIdLoaded(const NetworkId &object)
 {
-	if (ms_env == nullptr || ms_midObjIdSetLoaded == nullptr)
+	if (ms_env == NULL || ms_midObjIdSetLoaded == NULL)
 	{
 		return;
 	}
@@ -2572,7 +2572,7 @@ void JavaLibrary::setObjIdLoaded(const NetworkId &object)
  */
 void JavaLibrary::setObjIdInitialized(const NetworkId &object)
 {
-	if (ms_env == nullptr || ms_midObjIdSetInitialized == nullptr)
+	if (ms_env == NULL || ms_midObjIdSetInitialized == NULL)
 	{
 		return;
 	}
@@ -2594,7 +2594,7 @@ void JavaLibrary::setObjIdInitialized(const NetworkId &object)
  */
 void JavaLibrary::setObjIdLoggedIn(const NetworkId & object, bool loggedIn)
 {
-	if (ms_env == nullptr || ms_midObjIdSetLoggedIn == nullptr)
+	if (ms_env == NULL || ms_midObjIdSetLoggedIn == NULL)
 	{
 		return;
 	}
@@ -2617,7 +2617,7 @@ void JavaLibrary::setObjIdLoggedIn(const NetworkId & object, bool loggedIn)
 void JavaLibrary::attachScriptToObjId(const NetworkId &object,
 	const std::string & script)
 {
-	if (ms_env != nullptr)
+	if (ms_env != NULL)
 	{
 		LocalRefPtr obj_id = getObjId(object);
 		if (obj_id == LocalRef::cms_nullPtr)
@@ -2638,7 +2638,7 @@ void JavaLibrary::attachScriptToObjId(const NetworkId &object,
 void JavaLibrary::attachScriptsToObjId(const NetworkId &object,
 	const ScriptList & scripts)
 {
-	if (scripts.size() == 0 || ms_env == nullptr)
+	if (scripts.size() == 0 || ms_env == NULL)
 		return;
 
 	LocalRefPtr obj_id = getObjId(object);
@@ -2684,7 +2684,7 @@ void JavaLibrary::attachScriptsToObjId(const NetworkId &object,
 void JavaLibrary::detachScriptFromObjId(const NetworkId &object,
 	const std::string & script)
 {
-	if (ms_env != nullptr)
+	if (ms_env != NULL)
 	{
 		LocalRefPtr obj_id = getObjId(object);
 		if (obj_id == LocalRef::cms_nullPtr)
@@ -2703,7 +2703,7 @@ void JavaLibrary::detachScriptFromObjId(const NetworkId &object,
  */
 void JavaLibrary::detachAllScriptsFromObjId(const NetworkId &object)
 {
-	if (ms_env != nullptr)
+	if (ms_env != NULL)
 	{
 		LocalRefPtr obj_id = getObjId(object);
 		if (obj_id == LocalRef::cms_nullPtr)
@@ -2766,7 +2766,7 @@ jint JavaLibrary::handleScriptEntryCleanup(jint result)
 		if (ConfigServerGame::getTrapScriptCrashes())
 		{
 			// the script threw an error or exception, restore our segfault handler
-			IGNORE_RETURN(sigaction(SIGSEGV, &OurSa, nullptr));
+			IGNORE_RETURN(sigaction(SIGSEGV, &OurSa, NULL));
 		}
 #endif
 	}
@@ -2786,20 +2786,20 @@ jint JavaLibrary::handleScriptEntryCleanup(jint result)
 jint JavaLibrary::callScriptEntry(const JavaStringParam & script,
 	const JavaStringParam & method, jobjectArray params)
 {
-	if (ms_env == nullptr || ms_clsScriptEntry == nullptr || ms_midRunOne == nullptr)
+	if (ms_env == NULL || ms_clsScriptEntry == NULL || ms_midRunOne == NULL)
 	{
-		LOG("ScriptInvestigation", ("callScriptEntry failed because something was nullptr"));
+		LOG("ScriptInvestigation", ("callScriptEntry failed because something was null"));
 		if (!ms_env)
 		{
-			LOG("ScriptInvestigation", ("callScriptEntry failed because ms_env was nullptr"));
+			LOG("ScriptInvestigation", ("callScriptEntry failed because ms_env was null"));
 		}
 		if (!ms_clsScriptEntry)
 		{
-			LOG("ScriptInvestigation", ("callScriptEntry failed because scriptEntry was nullptr"));
+			LOG("ScriptInvestigation", ("callScriptEntry failed because scriptEntry was null"));
 		}
 		if (!ms_midRunOne)
 		{
-			LOG("ScriptInvestigation", ("callScriptEntry failed because runOne was nullptr"));
+			LOG("ScriptInvestigation", ("callScriptEntry failed because runOne was null"));
 		}
 		
 		return SCRIPT_OVERRIDE;
@@ -2837,20 +2837,20 @@ jint JavaLibrary::callScriptEntry(const JavaStringParam & script,
  */
 jint JavaLibrary::callScriptEntry(const JavaStringParam & method, jobjectArray params)
 {
-	if (ms_env == nullptr || ms_clsScriptEntry == nullptr || ms_midRunAll == nullptr)
+	if (ms_env == NULL || ms_clsScriptEntry == NULL || ms_midRunAll == NULL)
 	{
-		LOG("ScriptInvestigation", ("callScriptEntry2 failed because something was nullptr"));
+		LOG("ScriptInvestigation", ("callScriptEntry2 failed because something was null"));
 		if (!ms_env)
 		{
-			LOG("ScriptInvestigation", ("callScriptEntry2 failed because ms_env was nullptr"));
+			LOG("ScriptInvestigation", ("callScriptEntry2 failed because ms_env was null"));
 		}
 		if (!ms_clsScriptEntry)
 		{
-			LOG("ScriptInvestigation", ("callScriptEntry2 failed because scriptEntry was nullptr"));
+			LOG("ScriptInvestigation", ("callScriptEntry2 failed because scriptEntry was null"));
 		}
 		if (!ms_midRunOne)
 		{
-			LOG("ScriptInvestigation", ("callScriptEntry2 failed because runOne was nullptr"));
+			LOG("ScriptInvestigation", ("callScriptEntry2 failed because runOne was null"));
 		}
 		return SCRIPT_OVERRIDE;
 	}
@@ -2886,20 +2886,20 @@ jint JavaLibrary::callScriptEntry(const JavaStringParam & method, jobjectArray p
  */
 jstring JavaLibrary::callScriptConsoleHandlerEntry(const JavaStringParam & script, const JavaStringParam & method, jobjectArray params)
 {
-	if (ms_env == nullptr || ms_clsScriptEntry == nullptr || ms_midRunConsoleHandler == nullptr)
+	if (ms_env == NULL || ms_clsScriptEntry == NULL || ms_midRunConsoleHandler == NULL)
 	{
-		LOG("ScriptInvestigation", ("callScriptConsoleHandlerEntry failed because something was nullptr"));
+		LOG("ScriptInvestigation", ("callScriptConsoleHandlerEntry failed because something was null"));
 		if (!ms_env)
 		{
-			LOG("ScriptInvestigation", ("callScriptConsoleHandlerEntry failed because ms_env was nullptr"));
+			LOG("ScriptInvestigation", ("callScriptConsoleHandlerEntry failed because ms_env was null"));
 		}
 		if (!ms_clsScriptEntry)
 		{
-			LOG("ScriptInvestigation", ("callScriptConsoleHandlerEntry failed because scriptEntry was nullptr"));
+			LOG("ScriptInvestigation", ("callScriptConsoleHandlerEntry failed because scriptEntry was null"));
 		}
 		if (!ms_midRunConsoleHandler)
 		{
-			LOG("ScriptInvestigation", ("callScriptConsoleHandlerEntry failed because runConsoleHandler was nullptr"));
+			LOG("ScriptInvestigation", ("callScriptConsoleHandlerEntry failed because runConsoleHandler was null"));
 		}
 		
 		return 0;
@@ -2938,7 +2938,7 @@ void JavaLibrary::convert(const ScriptParams & params, JavaDictionaryPtr & dicti
 {
 	dictionary.reset();
 
-	if (ms_env == nullptr)
+	if (ms_env == NULL)
 		return;
 
 	// create the dictionary
@@ -3132,7 +3132,7 @@ void JavaLibrary::convert(const ScriptParams & params, JavaDictionaryPtr & dicti
 						for (int j = 0; j < count; ++j)
 						{
 							const std::vector<NetworkId> * inner = objIds[j];
-							if (inner != nullptr)
+							if (inner != NULL)
 							{
 								LocalObjectArrayRefPtr innerArray = createNewObjectArray(inner->size(), ms_clsObjId);
 								if (innerArray != LocalObjectArrayRef::cms_nullPtr)
@@ -3235,7 +3235,7 @@ void JavaLibrary::convert(const ScriptParams & params, JavaDictionaryPtr & dicti
  */
 LocalObjectArrayRefPtr JavaLibrary::convert(const NetworkId & self, const std::string& argList, const ScriptParams &args)
 {
-	if (ms_env == nullptr)
+	if (ms_env == NULL)
 		return LocalObjectArrayRef::cms_nullPtr;
 
 	// convert the params to jobjects
@@ -3272,7 +3272,7 @@ LocalObjectArrayRefPtr JavaLibrary::convert(const NetworkId & self, const std::s
  */
 LocalObjectArrayRefPtr JavaLibrary::convert(const std::string& argList, const ScriptParams &args)
 {
-	if (ms_env == nullptr)
+	if (ms_env == NULL)
 		return LocalObjectArrayRef::cms_nullPtr;
 
 	// convert the params to jobjects
@@ -3301,7 +3301,7 @@ LocalObjectArrayRefPtr JavaLibrary::convert(const std::string& argList, const Sc
  */
 bool JavaLibrary::convert(LocalObjectArrayRefPtr & javaParams, int startIndex, const std::string& argList, const ScriptParams &args)
 {
-	if (ms_env == nullptr)
+	if (ms_env == NULL)
 		return 0;
 
 	GlobalInstances globals;
@@ -3536,7 +3536,7 @@ bool JavaLibrary::convert(LocalObjectArrayRefPtr & javaParams, int startIndex, c
 					for (i = 0, iter = strings.begin(); iter != strings.end();
 						++i, ++iter)
 					{
-						if (*iter != nullptr)
+						if (*iter != NULL)
 						{
 							JavaString newString(**iter);
 							setObjectArrayElement(*localInstance, i, newString);
@@ -3767,7 +3767,7 @@ bool JavaLibrary::convert(LocalObjectArrayRefPtr & javaParams, int startIndex, c
 							++paramCount;
 						}
 					}
-					// fill in the rest of ms_attribModList with nullptr
+					// fill in the rest of ms_attribModList with null
 					for (; paramCount < MAX_ATTRIB_MOD_PARAMS; ++paramCount)
 					{
 						setObjectArrayElement(*ms_attribModList[ms_currentRecursionCount], static_cast<jsize>(paramCount), *LocalRefParam::cms_nullPtr);
@@ -3846,7 +3846,7 @@ bool JavaLibrary::convert(LocalObjectArrayRefPtr & javaParams, int startIndex, c
 							++paramCount;
 						}
 					}
-					// fill in the rest of ms_mentalStateModList with nullptr
+					// fill in the rest of ms_mentalStateModList with null
 					for (; paramCount < MAX_MENTAL_STATE_MOD_PARAMS; ++paramCount)
 					{
 						setObjectArrayElement(
@@ -3932,7 +3932,7 @@ bool JavaLibrary::convert(LocalObjectArrayRefPtr & javaParams, int startIndex, c
 					static_cast<unsigned>(argType)));		//lint !e571 suspicious cast
 				return 0;
 		}
-		if (arg.get() == nullptr || arg == LocalRef::cms_nullPtr)
+		if (arg.get() == NULL || arg == LocalRef::cms_nullPtr)
 		{
 			DEBUG_REPORT_LOG(true, ("bad parameter, %c%s%d%s\n", argType,
 							modifiable ? "*" : "",
@@ -3967,7 +3967,7 @@ bool JavaLibrary::convert(LocalObjectArrayRefPtr & javaParams, int startIndex, c
 void JavaLibrary::alterScriptParams(jobjectArray jparams, const std::string& argList,
 	ScriptParams &args)
 {
-	if (ms_env == nullptr)
+	if (ms_env == NULL)
 		return;
 
 	PROFILER_AUTO_BLOCK_CHECK_DEFINE("JavaLibrary::alterScriptParams");
@@ -4003,7 +4003,7 @@ void JavaLibrary::alterScriptParams(jobjectArray jparams, const std::string& arg
 						{
 							int count = getArrayLength(*arg);
 							std::vector<int> * values = new std::vector<int>(count, 0);
-							jint * jvalues = static_cast<jint *>(ms_env->GetPrimitiveArrayCritical(static_cast<jintArray>(arg->getValue()), nullptr));
+							jint * jvalues = static_cast<jint *>(ms_env->GetPrimitiveArrayCritical(static_cast<jintArray>(arg->getValue()), NULL));
 							for (int j = 0; j < count; ++j)
 							{
 								values->at(j) = static_cast<int>(jvalues[j]);
@@ -4035,7 +4035,7 @@ void JavaLibrary::alterScriptParams(jobjectArray jparams, const std::string& arg
 						{
 							int count = getArrayLength(*arg);
 							std::vector<unsigned char> * values = new std::vector<unsigned char>(count, 0);
-							jbyte * jvalues = static_cast<jbyte *>(ms_env->GetPrimitiveArrayCritical(static_cast<jbyteArray>(arg->getValue()), nullptr));
+							jbyte * jvalues = static_cast<jbyte *>(ms_env->GetPrimitiveArrayCritical(static_cast<jbyteArray>(arg->getValue()), NULL));
 							for (int j = 0; j < count; ++j)
 							{
 								values->at(j) = static_cast<unsigned char>(jvalues[j]);
@@ -4121,7 +4121,7 @@ void JavaLibrary::alterScriptParams(jobjectArray jparams, const std::string& arg
 						std::string localString;
 						convert(*table, localString);
 						value->setTable(localString);
-						// get the string id text, if it is not nullptr/empty, use it
+						// get the string id text, if it is not NULL/empty, use it
 						localString.clear();
 						JavaStringPtr text = getStringField(*arg, ms_fidStringIdAsciiId);
 						if (text != JavaString::cms_nullPtr)
@@ -4197,18 +4197,18 @@ int JavaLibrary::runScripts(const NetworkId & caller,
 		"JavaLibrary::runScripts enter, self = %s, method = %s\n",
 		caller.getValueString().c_str(), method.c_str()));
 
-	if (ms_env == nullptr || ms_clsObject == nullptr)
+	if (ms_env == NULL || ms_clsObject == NULL)
  	{
 		DEBUG_REPORT_LOG(ConfigServerGame::getJavaConsoleDebugMessages(), (
 			"JavaLibrary::runScripts exit, self = %s, method = %s\n",
 			caller.getValueString().c_str(), method.c_str()));
 		if (!ms_env)
 		{
-			LOG("ScriptInvestigation", ("runSCripts failed because env was nullptr"));
+			LOG("ScriptInvestigation", ("runSCripts failed because env was null"));
 		}
 		else
 		{
-			LOG("ScriptInvestigation", ("runSCripts failed because clsObject was nullptr"));
+			LOG("ScriptInvestigation", ("runSCripts failed because clsObject was null"));
 		}
 		return SCRIPT_OVERRIDE;
 	}
@@ -4335,19 +4335,19 @@ int JavaLibrary::runScript(const NetworkId & caller, const std::string& script,
 		"JavaLibrary::runScript %s enter, self = %s, method = %s\n",
 		script.c_str(), caller.getValueString().c_str(), method.c_str()));
 
-	if (ms_env == nullptr || ms_midRunOne == nullptr || ms_clsObject == nullptr)
+	if (ms_env == NULL || ms_midRunOne == NULL || ms_clsObject == NULL)
  	{
 		if (!ms_env)
 		{
-			LOG("ScriptInvestigation", ("runSCripts2 failed because env was nullptr"));
+			LOG("ScriptInvestigation", ("runSCripts2 failed because env was null"));
 		}
 		else if (!ms_midRunOne)
 		{
-			LOG("ScriptInvestigation", ("runSCripts2 failed because midRunOne was nullptr"));
+			LOG("ScriptInvestigation", ("runSCripts2 failed because midRunOne was null"));
 		}
 		else
 		{
-			LOG("ScriptInvestigation", ("runSCripts2 failed because clsObject was nullptr"));
+			LOG("ScriptInvestigation", ("runSCripts2 failed because clsObject was null"));
 		}
 				
 		return SCRIPT_OVERRIDE;
@@ -4455,19 +4455,19 @@ int JavaLibrary::runScript(const NetworkId & caller, const std::string& script,
 	DEBUG_REPORT_LOG(true, ("JavaLibrary::runScript %s enter, method = %s\n",
 		script.c_str(),	method.c_str()));
 
-	if (ms_env == nullptr || ms_midRunOne == nullptr || ms_clsObject == nullptr)
+	if (ms_env == NULL || ms_midRunOne == NULL || ms_clsObject == NULL)
 	{
 		if (!ms_env)
 		{
-			LOG("ScriptInvestigation", ("runSCripts3 failed because env was nullptr"));
+			LOG("ScriptInvestigation", ("runSCripts3 failed because env was null"));
 		}
 		else if (!ms_midRunOne)
 		{
-			LOG("ScriptInvestigation", ("runSCripts3 failed because midRunOne was nullptr"));
+			LOG("ScriptInvestigation", ("runSCripts3 failed because midRunOne was null"));
 		}
 		else
 		{
-			LOG("ScriptInvestigation", ("runSCripts3 failed because clsObject was nullptr"));
+			LOG("ScriptInvestigation", ("runSCripts3 failed because clsObject was null"));
 		}
 		return SCRIPT_OVERRIDE;
 	}
@@ -4582,19 +4582,19 @@ int JavaLibrary::runScript(const NetworkId & caller, const std::string& script,
 	DEBUG_REPORT_LOG(true, ("JavaLibrary::runScript %s enter, method = %s\n", script.c_str(),
 		method.c_str()));
 
-	if (ms_env == nullptr || ms_midRunOne == nullptr || ms_clsObject == nullptr)
+	if (ms_env == NULL || ms_midRunOne == NULL || ms_clsObject == NULL)
 	{
 		if (!ms_env)
 		{
-			LOG("ScriptInvestigation", ("runSCripts4 failed because env was nullptr"));
+			LOG("ScriptInvestigation", ("runSCripts4 failed because env was null"));
 		}
 		else if (!ms_midRunOne)
 		{
-			LOG("ScriptInvestigation", ("runSCripts4 failed because midRunOne was nullptr"));
+			LOG("ScriptInvestigation", ("runSCripts4 failed because midRunOne was null"));
 		}
 		else
 		{
-			LOG("ScriptInvestigation", ("runSCripts4 failed because clsObject was nullptr"));
+			LOG("ScriptInvestigation", ("runSCripts4 failed because clsObject was null"));
 		}
 				
 		return SCRIPT_OVERRIDE;
@@ -4775,19 +4775,19 @@ static const std::string errorReturnString;
 		"JavaLibrary::runScript %s enter, method = %s\n", script.c_str(), 
 		method.c_str()));
 
-	if (ms_env == nullptr || ms_midRunConsoleHandler == nullptr || ms_clsObject == nullptr)
+	if (ms_env == NULL || ms_midRunConsoleHandler == NULL || ms_clsObject == NULL)
  	{
 		if (!ms_env)
 		{
-			LOG("ScriptInvestigation", ("runSCripts2 failed because env was nullptr"));
+			LOG("ScriptInvestigation", ("runSCripts2 failed because env was null"));
 		}
 		else if (!ms_midRunConsoleHandler)
 		{
-			LOG("ScriptInvestigation", ("runSCripts2 failed because midRunConsoleHandler was nullptr"));
+			LOG("ScriptInvestigation", ("runSCripts2 failed because midRunConsoleHandler was null"));
 		}
 		else
 		{
-			LOG("ScriptInvestigation", ("runSCripts2 failed because clsObject was nullptr"));
+			LOG("ScriptInvestigation", ("runSCripts2 failed because clsObject was null"));
 		}
 				
 		return errorReturnString;
@@ -4877,7 +4877,7 @@ static const std::string errorReturnString;
  */
 bool JavaLibrary::reloadScript(const std::string& scriptName)
 {
-	if (ms_env == nullptr || ms_clsScriptEntry == nullptr || ms_midUnload == nullptr)
+	if (ms_env == NULL || ms_clsScriptEntry == NULL || ms_midUnload == NULL)
 		return false;
 
 	// convert the script name to jstring
@@ -4919,22 +4919,22 @@ int JavaLibrary::callMessages(const NetworkId & caller, const std::string & meth
 
 	int result = SCRIPT_CONTINUE;
 
-	if (ms_env == nullptr || ms_midRunOne == nullptr || ms_clsObject == nullptr)
+	if (ms_env == NULL || ms_midRunOne == NULL || ms_clsObject == NULL)
 	{
 		DEBUG_REPORT_LOG(ConfigServerGame::getJavaConsoleDebugMessages(), (
 			"JavaLibrary::callMessages exit, self = %s, method = %s\n",
 			caller.getValueString().c_str(), method.c_str()));
 		if (!ms_env)
 		{
-			LOG("ScriptInvestigation", ("callMessages failed because env was nullptr"));
+			LOG("ScriptInvestigation", ("callMessages failed because env was null"));
 		}
 		else if (!ms_midRunOne)
 		{
-			LOG("ScriptInvestigation", ("callMessages failed because midRunOne was nullptr"));
+			LOG("ScriptInvestigation", ("callMessages failed because midRunOne was null"));
 		}
 		else
 		{
-			LOG("ScriptInvestigation", ("callMessages failed because clsObject was nullptr"));
+			LOG("ScriptInvestigation", ("callMessages failed because clsObject was null"));
 		}
 				
 		return SCRIPT_OVERRIDE;
@@ -4951,7 +4951,7 @@ int JavaLibrary::callMessages(const NetworkId & caller, const std::string & meth
 
 	const JavaDictionary * dictionary = safe_cast<const JavaDictionary *>(data.get());
 	jobject jdictionary = 0;
-	if (dictionary != nullptr)
+	if (dictionary != NULL)
 		jdictionary = dictionary->getValue();
 
 	// convert the method string to jstrings
@@ -5013,22 +5013,22 @@ int JavaLibrary::callMessage(const NetworkId & caller, const std::string & scrip
 		"JavaLibrary::callMessage %s enter, self = %s, method = %s\n",
 		script.c_str(), caller.getValueString().c_str(), method.c_str()));
 
-	if (ms_env == nullptr || ms_midRunOne == nullptr || ms_clsObject == nullptr)
+	if (ms_env == NULL || ms_midRunOne == NULL || ms_clsObject == NULL)
 	{
 		DEBUG_REPORT_LOG(ConfigServerGame::getJavaConsoleDebugMessages(), (
 			"JavaLibrary::callMessage %s exit, self = %s, method = %s\n",
 			script.c_str(), caller.getValueString().c_str(), method.c_str()));
 		if (!ms_env)
 		{
-			LOG("ScriptInvestigation", ("callMessage failed because env was nullptr"));
+			LOG("ScriptInvestigation", ("callMessage failed because env was null"));
 		}
 		else if (!ms_midRunOne)
 		{
-			LOG("ScriptInvestigation", ("callMessage failed because midRunOne was nullptr"));
+			LOG("ScriptInvestigation", ("callMessage failed because midRunOne was null"));
 		}
 		else
 		{
-			LOG("ScriptInvestigation", ("callMessage failed because clsObject was nullptr"));
+			LOG("ScriptInvestigation", ("callMessage failed because clsObject was null"));
 		}
 
 		return SCRIPT_OVERRIDE;
@@ -5044,7 +5044,7 @@ int JavaLibrary::callMessage(const NetworkId & caller, const std::string & scrip
 	}	
 
 	const JavaDictionary * dictionary = dynamic_cast<const JavaDictionary *>(&data);
-	if (dictionary == nullptr)
+	if (dictionary == NULL)
 	{
 		DEBUG_REPORT_LOG(ConfigServerGame::getJavaConsoleDebugMessages(), (
 			"JavaLibrary::callMessage %s exit, self = %s, method = %s\n",
@@ -5218,7 +5218,7 @@ void JavaLibrary::packDictionary(const ScriptDictionary & dictionary,
 bool JavaLibrary::unpackDictionary(const std::vector<int8> & packedData,
 	ScriptDictionaryPtr & dictionary)
 {
-	if (ms_env == nullptr)
+	if (ms_env == NULL)
 		return false;
 
 	dictionary = JavaDictionary::cms_nullPtr;
@@ -5259,7 +5259,7 @@ bool JavaLibrary::unpackDictionary(const std::vector<int8> & packedData,
 			}
 		}
 		*/
-		if (data != nullptr && *data != '\0')
+		if (data != NULL && *data != '\0')
 		{
 			LocalByteArrayRefPtr jdata = createNewByteArray(dataLen);
 			if (jdata != LocalByteArrayRef::cms_nullPtr)
@@ -5335,7 +5335,7 @@ const bool JavaLibrary::convert(const JavaStringParam & source, Unicode::String 
 const bool JavaLibrary::convert(const JavaDictionary & source, std::vector<int8> & target)
 {
 	bool result = false;
-	if (ms_env != nullptr)
+	if (ms_env != NULL)
 	{
 		if (source.getValue() != 0)
 		{
@@ -5463,7 +5463,7 @@ const bool convert(const std::vector<const Unicode::String *> & source, LocalObj
 			result = true;
 			for (int i = 0; i < count; ++i)
 			{
-				if (source[i] != nullptr)
+				if (source[i] != NULL)
 				{
 				JavaString targetElement(*source[i]);
 				setObjectArrayElement(*target, i, targetElement);
@@ -6160,7 +6160,7 @@ const bool convert(const LocalRefParam & source, const Region * & target)
 const bool convert(const jobject & source, const Region * &target)
 {
 	JNIEnv * env = JavaLibrary::getEnv();
-	if (env == nullptr || source == nullptr)
+	if (env == NULL || source == NULL)
 		return false;
 	if (!env->IsInstanceOf(source, JavaLibrary::ms_clsRegion))
 		return false;
@@ -6384,7 +6384,7 @@ const bool convert(const LocalRefParam & sourceVector, Vector & target)
 const bool convert(const AttribMod::AttribMod & source, LocalRefPtr & target)
 {
 	JNIEnv * env = JavaLibrary::getEnv();
-	if (env == nullptr)
+	if (env == NULL)
 		return false;
 
 	target = allocObject(JavaLibrary::ms_clsAttribMod);
@@ -6418,7 +6418,7 @@ const bool convert(const AttribMod::AttribMod & source, LocalRefPtr & target)
 const bool convert(const jobject & source, AttribMod::AttribMod & target)
 {
 	JNIEnv * env = JavaLibrary::getEnv();
-	if (env == nullptr)
+	if (env == NULL)
 		return false;
 
 	if (source == 0 || env->IsInstanceOf(source, JavaLibrary::ms_clsAttribMod) == JNI_FALSE)
@@ -6477,7 +6477,7 @@ const bool convert(const LocalRefParam & source, AttribMod::AttribMod & target)
 const bool convert(const std::vector<AttribMod::AttribMod> & source, LocalObjectArrayRefPtr & target)
 {
 	JNIEnv * env = JavaLibrary::getEnv();
-	if (env == nullptr)
+	if (env == NULL)
 		return false;
 
 	int count = source.size();
@@ -6504,7 +6504,7 @@ const bool convert(const std::vector<AttribMod::AttribMod> & source, LocalObject
 const bool convert(const jobjectArray & source, std::vector<AttribMod::AttribMod> & target)
 {
 	JNIEnv * env = JavaLibrary::getEnv();
-	if (env == nullptr)
+	if (env == NULL)
 		return false;
 
 	if (source == 0)
@@ -6529,7 +6529,7 @@ const bool convert(const jobjectArray & source, std::vector<AttribMod::AttribMod
 const bool convert(const jbyteArray & source, std::vector<int8> & target)
 {
 	JNIEnv * env = JavaLibrary::getEnv();
-	if (env == nullptr)
+	if (env == NULL)
 		return false;
 
 	if (source == 0)
@@ -6545,7 +6545,7 @@ const bool convert(const jbyteArray & source, std::vector<int8> & target)
 const bool convert(const LocalByteArrayRef & source, std::vector<int8> & target)
 {
 	JNIEnv * env = JavaLibrary::getEnv();
-	if (env == nullptr)
+	if (env == NULL)
 		return false;
 
 	if (source.getValue() == 0)
@@ -6561,7 +6561,7 @@ const bool convert(const LocalByteArrayRef & source, std::vector<int8> & target)
 const bool convert(const std::vector<int8> & source, LocalByteArrayRefPtr & target)
 {
 	JNIEnv * env = JavaLibrary::getEnv();
-	if (env == nullptr)
+	if (env == NULL)
 		return false;
 
 	int count = source.size();
@@ -6593,10 +6593,10 @@ CreatureObject *JavaLibrary::getCreatureThrow(JNIEnv *env, jlong objId, char con
 	
 	if (!objId)
 	{
-		IGNORE_RETURN(snprintf(buffer, sizeof(buffer) - 1, "%s: nullptr object id from script.", errorDescription));
+		IGNORE_RETURN(snprintf(buffer, sizeof(buffer) - 1, "%s: null object id from script.", errorDescription));
 		buffer[sizeof(buffer) - 1] = '\0';
 		throwInternalScriptError(buffer);
-		return nullptr;
+		return NULL;
 	}
 	else
 	{
@@ -6606,7 +6606,7 @@ CreatureObject *JavaLibrary::getCreatureThrow(JNIEnv *env, jlong objId, char con
 			IGNORE_RETURN(snprintf(buffer, sizeof(buffer) - 1, "%s: invalid or non-convertable network id [%s].", errorDescription, networkId.getValueString().c_str()));
 			buffer[sizeof(buffer) - 1] = '\0';
 			throwInternalScriptError(buffer);
-			return nullptr;
+			return NULL;
 		}
 		else
 		{
@@ -6616,19 +6616,19 @@ CreatureObject *JavaLibrary::getCreatureThrow(JNIEnv *env, jlong objId, char con
 				if (!throwIfNotOnServer)
 				{
 					// The specified object is not on this server.  It might not even be a real object.
-					// Since the caller does not want this to throw, simply return nullptr.
-					return nullptr;
+					// Since the caller does not want this to throw, simply return NULL.
+					return NULL;
 				}
 
 				IGNORE_RETURN(snprintf(buffer, sizeof(buffer) - 1, "%s: object for network id [%s] not on this server.", errorDescription, networkId.getValueString().c_str()));
 				buffer[sizeof(buffer) - 1] = '\0';
 				throwInternalScriptError(buffer);
-				return nullptr;
+				return NULL;
 			}
 			else
 			{
 				ServerObject   *const serverObject   = object->asServerObject();
-				CreatureObject *const creatureObject = serverObject ? serverObject->asCreatureObject() : nullptr;
+				CreatureObject *const creatureObject = serverObject ? serverObject->asCreatureObject() : NULL;
 
 				if (creatureObject)
 					return creatureObject;
@@ -6637,7 +6637,7 @@ CreatureObject *JavaLibrary::getCreatureThrow(JNIEnv *env, jlong objId, char con
 					IGNORE_RETURN(snprintf(buffer, sizeof(buffer) - 1, "%s: object id=[%s], template=[%s] is not a CreatureObject.", errorDescription, networkId.getValueString().c_str(), object->getObjectTemplateName()));
 					buffer[sizeof(buffer) - 1] = '\0';
 					throwInternalScriptError(buffer);
-					return nullptr;
+					return NULL;
 				}
 			}
 		}
@@ -6654,10 +6654,10 @@ ShipObject *JavaLibrary::getShipThrow(JNIEnv *env, jlong objId, char const *erro
 	
 	if (objId == 0)
 	{
-		IGNORE_RETURN(snprintf(buffer, sizeof(buffer) - 1, "%s: nullptr object id from script.", errorDescription));
+		IGNORE_RETURN(snprintf(buffer, sizeof(buffer) - 1, "%s: null object id from script.", errorDescription));
 		buffer[sizeof(buffer) - 1] = '\0';
 		throwInternalScriptError(buffer);
-		return nullptr;
+		return NULL;
 	}
 	else
 	{
@@ -6667,7 +6667,7 @@ ShipObject *JavaLibrary::getShipThrow(JNIEnv *env, jlong objId, char const *erro
 			IGNORE_RETURN(snprintf(buffer, sizeof(buffer) - 1, "%s: invalid or non-convertable network id [%s].", errorDescription, networkId.getValueString().c_str()));
 			buffer[sizeof(buffer) - 1] = '\0';
 			throwInternalScriptError(buffer);
-			return nullptr;
+			return NULL;
 		}
 		else
 		{
@@ -6677,19 +6677,19 @@ ShipObject *JavaLibrary::getShipThrow(JNIEnv *env, jlong objId, char const *erro
 				if (!throwIfNotOnServer)
 				{
 					// The specified object is not on this server.  It might not even be a real object.
-					// Since the caller does not want this to throw, simply return nullptr.
-					return nullptr;
+					// Since the caller does not want this to throw, simply return NULL.
+					return NULL;
 				}
 
 				IGNORE_RETURN(snprintf(buffer, sizeof(buffer) - 1, "%s: object for network id [%s] not on this server.", errorDescription, networkId.getValueString().c_str()));
 				buffer[sizeof(buffer) - 1] = '\0';
 				throwInternalScriptError(buffer);
-				return nullptr;
+				return NULL;
 			}
 			else
 			{
 				ServerObject   *const serverObject   = object->asServerObject();
-				ShipObject     *const shipObject     = serverObject ? serverObject->asShipObject() : nullptr;
+				ShipObject     *const shipObject     = serverObject ? serverObject->asShipObject() : NULL;
 
 				if (shipObject)
 					return shipObject;
@@ -6698,7 +6698,7 @@ ShipObject *JavaLibrary::getShipThrow(JNIEnv *env, jlong objId, char const *erro
 					IGNORE_RETURN(snprintf(buffer, sizeof(buffer) - 1, "%s: object id=[%s], template=[%s] is not a ShipObject.", errorDescription, networkId.getValueString().c_str(), object->getObjectTemplateName()));
 					buffer[sizeof(buffer) - 1] = '\0';
 					throwInternalScriptError(buffer);
-					return nullptr;
+					return NULL;
 				}
 			}
 		}
@@ -6714,7 +6714,7 @@ ShipObject *JavaLibrary::getShipThrow(JNIEnv *env, jlong objId, char const *erro
  */
 void JavaLibrary::throwInternalScriptError(const char * message)
 {
-	if (ms_env != nullptr && message != nullptr)
+	if (ms_env != NULL && message != NULL)
 	{
 		ms_env->ThrowNew(ms_clsInternalScriptError, message);
 	}

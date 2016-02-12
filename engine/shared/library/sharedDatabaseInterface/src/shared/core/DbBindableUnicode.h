@@ -143,7 +143,7 @@ namespace DB
 
 	  private:
 
-		char   m_value[S+1]; // column of size S, plus one byte for a trailing nullptr
+		char   m_value[S+1]; // column of size S, plus one byte for a trailing null
 	};
 
 // ======================================================================

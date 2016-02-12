@@ -581,7 +581,7 @@ unsigned RoomSummary::getRoomMaxSize() const
 
 ChatRoom::ChatRoom()
 {
-	m_core = nullptr;
+	m_core = NULL;
 }
 
 ChatRoom::ChatRoom(ChatRoomCore *core)

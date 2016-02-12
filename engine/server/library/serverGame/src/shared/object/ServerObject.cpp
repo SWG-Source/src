@@ -507,7 +507,7 @@ using namespace ServerObjectNamespace;
 
 // ======================================================================
 
-const SharedObjectTemplate * ServerObject::m_defaultSharedTemplate = nullptr;
+const SharedObjectTemplate * ServerObject::m_defaultSharedTemplate = NULL;
 float ServerObject::ms_buildingUpdateRadiusMultiplier = 0;
 
 // ======================================================================
@@ -691,7 +691,7 @@ void ServerObject::ObserversCountCallback::modified(ServerObject &target, int ol
 ServerObject::ServerObject(const ServerObjectTemplate* newTemplate, const ObjectNotification &notification, bool const hyperspaceOnCreate) :
 Object                        (newTemplate, NetworkId::cms_invalid),
 m_oldPosition                 (),
-m_sharedTemplate              (nullptr),
+m_sharedTemplate              (NULL),
 m_client                      (0),
 m_observers                   (),
 m_localFlags                  (0),
@@ -732,7 +732,7 @@ m_serverPackage               (),
 m_serverPackage_np            (),
 m_sharedPackage               (),
 m_sharedPackage_np            (),
-m_networkUpdateFar            (nullptr),
+m_networkUpdateFar            (NULL),
 m_triggerVolumes              (),
 m_attributesAttained          (),
 m_attributesInterested        (),
@@ -765,13 +765,13 @@ m_loadCTSPackedHouses(false)
 
 	const std::string & sharedTemplateName = newTemplate->getSharedTemplate();
 	m_sharedTemplate = dynamic_cast<const SharedObjectTemplate *>(ObjectTemplateList::fetch(sharedTemplateName));
-	if (m_sharedTemplate == nullptr)
+	if (m_sharedTemplate == NULL)
 	{
 		WARNING_STRICT_FATAL(!sharedTemplateName.empty(), ("Template %s has an invalid shared template %s. We will use the default shared template for now.",
 			newTemplate->getName(), sharedTemplateName.c_str()));
 	}
 
-	if (getSharedTemplate() != nullptr)
+	if (getSharedTemplate() != NULL)
 	{
 		m_nameStringId = getSharedTemplate()->getObjectName();
 		m_descriptionStringId = getSharedTemplate()->getDetailedDescription();
@@ -779,7 +779,7 @@ m_loadCTSPackedHouses(false)
 
 	m_scriptObject->setOwner(this);
 
-	ContainedByProperty *containedBy = new ContainedByProperty(*this, nullptr);
+	ContainedByProperty *containedBy = new ContainedByProperty(*this, NULL);
 	addProperty(*containedBy);
 
 	//-- create the SlottedContainment property
@@ -787,7 +787,7 @@ m_loadCTSPackedHouses(false)
 	addProperty(*slottedProperty);
 
 	//-- get ArrangementDescriptor if specified
-	if (getSharedTemplate() != nullptr)
+	if (getSharedTemplate() != NULL)
 	{
 		const ArrangementDescriptor *const arrangementDescriptor = getSharedTemplate()->getArrangementDescriptor();
 		if (arrangementDescriptor)
@@ -801,7 +801,7 @@ m_loadCTSPackedHouses(false)
 	}
 
 	//set up containers on this object if it has any
-	if (getSharedTemplate() != nullptr)
+	if (getSharedTemplate() != NULL)
 	{
 		SharedObjectTemplate::ContainerType const containerType = getSharedTemplate()->getContainerType();
 
@@ -883,7 +883,7 @@ m_loadCTSPackedHouses(false)
 
 
 	// add the portal property if one is requested
-	if (getSharedTemplate() != nullptr)
+	if (getSharedTemplate() != NULL)
 	{
 		const std::string &portalLayoutFileName = getSharedTemplate()->getPortalLayoutFilename();
 		if (!portalLayoutFileName.empty())
@@ -952,10 +952,10 @@ ServerObject::~ServerObject()
 	destroyTriggerVolumes();
 	}
 
-	if (m_sharedTemplate != nullptr)
+	if (m_sharedTemplate != NULL)
 	{
 		m_sharedTemplate->releaseReference();
-		m_sharedTemplate = nullptr;
+		m_sharedTemplate = NULL;
 	}
 
 	if (getClient())
@@ -982,7 +982,7 @@ ServerObject::~ServerObject()
 	PROFILER_AUTO_BLOCK_DEFINE("ServerObject::~ServerObject delete script object");
 		delete m_scriptObject;
 	}
-	m_scriptObject = nullptr;
+	m_scriptObject = NULL;
 
 	gs_objectCount--;
 
@@ -1038,14 +1038,14 @@ ServerObject * ServerObject::getServerObject(NetworkId const & networkId)
 
 ServerObject * ServerObject::asServerObject(Object * const object)
 {
-	return (object != nullptr) ? object->asServerObject() : nullptr;
+	return (object != NULL) ? object->asServerObject() : NULL;
 }
 
 //-----------------------------------------------------------------------
 
 ServerObject const * ServerObject::asServerObject(Object const * const object)
 {
-	return (object != nullptr) ? object->asServerObject() : nullptr;
+	return (object != NULL) ? object->asServerObject() : NULL;
 }
 
 //-----------------------------------------------------------------------
@@ -1255,12 +1255,12 @@ const SharedObjectTemplate * ServerObject::getDefaultSharedTemplate(void) const
 {
 static const ConstCharCrcLowerString templateName("object/object/base/shared_object_default.iff");
 
-	if (m_defaultSharedTemplate == nullptr)
+	if (m_defaultSharedTemplate == NULL)
 	{
 		m_defaultSharedTemplate = safe_cast<const SharedObjectTemplate *>(
 			ObjectTemplateList::fetch(templateName));
-		WARNING_STRICT_FATAL(m_defaultSharedTemplate == nullptr, ("Cannot create default shared object template %s", templateName.getString()));
-		if (m_defaultSharedTemplate != nullptr)
+		WARNING_STRICT_FATAL(m_defaultSharedTemplate == NULL, ("Cannot create default shared object template %s", templateName.getString()));
+		if (m_defaultSharedTemplate != NULL)
 			ExitChain::add (removeDefaultTemplate, "ServerObject::removeDefaultTemplate");
 	}
 	return m_defaultSharedTemplate;
@@ -1280,10 +1280,10 @@ const unsigned long ServerObject::getObjectCount()
  */
 void ServerObject::removeDefaultTemplate(void)
 {
-	if (m_defaultSharedTemplate != nullptr)
+	if (m_defaultSharedTemplate != NULL)
 	{
 		m_defaultSharedTemplate->releaseReference();
-		m_defaultSharedTemplate = nullptr;
+		m_defaultSharedTemplate = NULL;
 	}
 }	// ServerObject::removeDefaultTemplate
 
@@ -1570,7 +1570,7 @@ bool ServerObject::isInBazaarOrVendor() const
 {
 	bool inBazaarOrVendor = false;
 	const ServerObject *parent = safe_cast<const ServerObject*>(ContainerInterface::getFirstParentInWorld(*this));
-	const ServerObject *grandParent = nullptr;
+	const ServerObject *grandParent = NULL;
 	if( parent )
 	{
 		grandParent = safe_cast<const ServerObject*>(ContainerInterface::getFirstParentInWorld(*parent));
@@ -1821,7 +1821,7 @@ void ServerObject::addTriggerVolume(TriggerVolume * t)
 {
 	if (!t)
 	{
-		WARNING_STRICT_FATAL(true, ("Cannot add nullptr volume"));
+		WARNING_STRICT_FATAL(true, ("Cannot add null volume"));
 		return;
 	}
 	m_triggerVolumes.insert(std::make_pair(t->getName(), t));
@@ -1917,7 +1917,7 @@ void ServerObject::serverObjectEndBaselines(bool fromDatabase)
 		onLoadedFromDatabase();
 
 	updateWorldSphere();
-	if (getScriptObject() != nullptr)
+	if (getScriptObject() != NULL)
 	{
 		endBaselinesInitializeScript(*this, true);
 		// If the object was created authoritative, trigger if needed
@@ -2059,7 +2059,7 @@ void ServerObject::endBaselines()
 		// and that buildout id got changed to some other object, like a rock
 		if (isPlayerControlled() && isAuthoritative() && (immediateContainer->getNetworkId().getValue() < static_cast<NetworkId::NetworkIdType>(0)))
 		{
-			if (immediateContainer->asCellObject() != nullptr || ContainerInterface::getCell(*immediateContainer) != nullptr)
+			if (immediateContainer->asCellObject() != NULL || ContainerInterface::getCell(*immediateContainer) != NULL)
 				ObserveTracker::onObjectContainerChanged(*this);
 			else
 			{
@@ -2149,7 +2149,7 @@ bool ServerObject::handlePlayerInInteriorSetup(ContainedByProperty *containedBy)
 					containedBy->setContainedBy(NetworkId::cms_invalid);
 
 					fixOk = portal->fixupObject(*this, saveTransform);
-					containerHandleUpdateProxies(nullptr, safe_cast<ServerObject*>(ContainerInterface::getContainedByObject(*this)));
+					containerHandleUpdateProxies(NULL, safe_cast<ServerObject*>(ContainerInterface::getContainedByObject(*this)));
 
 					if (building)
 						building->gainedPlayer(*this);
@@ -2306,8 +2306,8 @@ const int ServerObject::getCacheVersion() const
 
 const char * ServerObject::getSharedTemplateName() const
 {
-	if (getSharedTemplate() == nullptr)
-		return nullptr;
+	if (getSharedTemplate() == NULL)
+		return NULL;
 	return getSharedTemplate()->ObjectTemplate::getName();
 }
 
@@ -2535,7 +2535,7 @@ bool ServerObject::serverObjectInitializeFirstTimeObject(ServerObject *cell, Tra
 	if (cell)
 	{
 		Container::ContainerErrorCode tmp = Container::CEC_Success;
-		if (!ContainerInterface::transferItemToCell(*cell, *this, transform, nullptr, tmp))
+		if (!ContainerInterface::transferItemToCell(*cell, *this, transform, NULL, tmp))
 		{
 			WARNING(true, ("ServerWorld::createNewObjectIntermediate tried to create a new object in a cell, but it failed."));
 			return false;
@@ -2587,7 +2587,7 @@ void ServerObject::initializeFirstTimeObject()
 		//Don't move this declaration of contents out of the loop or you will leak a ref.
 		ServerObjectTemplate::Contents contents;
 		newTemplate->getContents(contents, i);
-		if (contents.content == nullptr)
+		if (contents.content == NULL)
 		{
 			DEBUG_WARNING(true, ("No template for contents item %d", i));
 			continue;
@@ -2600,7 +2600,7 @@ void ServerObject::initializeFirstTimeObject()
 			{
 				//We'll persist the contents automatically if the parent object is persisted.
 				ServerObject * newObject = ServerWorld::createNewObject(*(safe_cast<const ServerObjectTemplate*>(contents.content)), *this,slotId, false);
-				if (newObject == nullptr)
+				if (newObject == NULL)
 				{
 					DEBUG_WARNING(true, ("Can't create object from template %s",contents.content->getName()));
 				}
@@ -2615,7 +2615,7 @@ void ServerObject::initializeFirstTimeObject()
 			// get the object (which we assume is a volume container) in the
 			// desired slot
 			SlottedContainer * const container = ContainerInterface::getSlottedContainer(*this);
-			if (container != nullptr)
+			if (container != NULL)
 			{
 				Container::ContainerErrorCode tmp = Container::CEC_Success;
 				CachedNetworkId equippedObjectId = container->getObjectInSlot(SlotIdManager::findSlotId(CrcLowerString(contents.slotName.c_str())), tmp);
@@ -2623,12 +2623,12 @@ void ServerObject::initializeFirstTimeObject()
 				{
 					// put the contents in the volume container
 					ServerObject * equippedObject = safe_cast<ServerObject *>(equippedObjectId.getObject());
-					if (equippedObject != nullptr)
+					if (equippedObject != NULL)
 					{
 
 						//We'll persist the contents automatically if the parent object is persisted.
 						ServerObject * newObject = ServerWorld::createNewObject(*(safe_cast<const ServerObjectTemplate*>(contents.content)), *equippedObject,false);
-						if (newObject == nullptr)
+						if (newObject == NULL)
 						{
 							DEBUG_WARNING(true, ("Can't create object from template %s", contents.content->getName()));
 						}
@@ -2714,7 +2714,7 @@ void ServerObject::addToWorld()
 	Object::addToWorld();
 	updateTriggerVolumes();
 
-	if (getScriptObject() != nullptr)
+	if (getScriptObject() != NULL)
 		getScriptObject()->setOwnerIsLoaded();
 
 	onAddedToWorld();
@@ -3012,8 +3012,8 @@ void ServerObject::onContainerTransferComplete(ServerObject *oldContainer, Serve
 
 void ServerObject::containerDepersistContents(ServerObject * oldParent, ServerObject * newParent)
 {
-	Container * const oldContainer = oldParent ? ContainerInterface::getContainer(*oldParent) : nullptr;
-	Container * const newContainer = newParent ? ContainerInterface::getContainer(*newParent) : nullptr;
+	Container * const oldContainer = oldParent ? ContainerInterface::getContainer(*oldParent) : NULL;
+	Container * const newContainer = newParent ? ContainerInterface::getContainer(*newParent) : NULL;
 
 	if (oldContainer)
 		oldContainer->internalItemRemoved(*this);
@@ -3410,7 +3410,7 @@ void ServerObject::sendToClientsInUpdateRange(const GameNetworkMessage & message
 
 			ServerObject * const obj = c->getCharacterObject();
 
-			if (obj != nullptr)
+			if (obj != NULL)
 			{
 				if (   (ConfigServerGame::getSkipUnreliableTransformsForOtherCells() && obj->getAttachedTo() != getAttachedTo())
 					|| (obj->getPosition_w().magnitudeBetweenSquared(getPosition_w()) > minDistanceSquared)
@@ -3447,7 +3447,7 @@ void ServerObject::sendToSpecifiedClients(const GameNetworkMessage & message, bo
 	for (std::vector<NetworkId>::const_iterator i = clients.begin(); i != clients.end(); ++i)
 	{
 		ServerObject * o = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(*i));
-		if (o != nullptr && o->getClient() != nullptr)
+		if (o != NULL && o->getClient() != NULL)
 			o->getClient()->send(message, reliable);
 	}
 }
@@ -3685,8 +3685,8 @@ void ServerObject::setParentCell(CellProperty * newCell)
 
 	CellProperty * oldCell = getParentCell();
 
-	if(oldCell == nullptr) oldCell = CellProperty::getWorldCellProperty();
-	if(newCell == nullptr) newCell = CellProperty::getWorldCellProperty();
+	if(oldCell == NULL) oldCell = CellProperty::getWorldCellProperty();
+	if(newCell == NULL) newCell = CellProperty::getWorldCellProperty();
 
 	// ----------
 
@@ -3707,7 +3707,7 @@ void ServerObject::setParentCell(CellProperty * newCell)
 		newTransform.multiply(oldCellTransform,oldTransform);
 
 		Container::ContainerErrorCode tmp = Container::CEC_Success;
-		result = ContainerInterface::transferItemToWorld(*this, newTransform, nullptr, tmp);
+		result = ContainerInterface::transferItemToWorld(*this, newTransform, NULL, tmp);
 
 		DEBUG_REPORT_LOG(!result, ("Object %s (id=%s) transfer to world was denied via ContainerInterface::transferItemToWorld()\n", getObjectTemplateName(), getNetworkId().getValueString().c_str()));
 	}
@@ -3720,7 +3720,7 @@ void ServerObject::setParentCell(CellProperty * newCell)
 		ServerObject * newCellServerObject = safe_cast<ServerObject*>(newCellObject);
 
 		Container::ContainerErrorCode tmp = Container::CEC_Success;
-		result = ContainerInterface::transferItemToCell(*newCellServerObject, *this, nullptr, tmp);
+		result = ContainerInterface::transferItemToCell(*newCellServerObject, *this, NULL, tmp);
 
 		DEBUG_REPORT_LOG(!result, ("Object %s (id=%s) transfer to cell (id=%s) was denied via ContainerInterface::transferItemToCell()\n", getObjectTemplateName(), getNetworkId().getValueString().c_str(), newCellObject->getNetworkId().getValueString().c_str()));
 	}
@@ -4024,11 +4024,11 @@ void ServerObject::hearText(ServerObject const &source, MessageQueueSpatialChat 
 
 			CreatureObject * const creatureObject = asCreatureObject();
 
-			if (creatureObject != nullptr)
+			if (creatureObject != NULL)
 			{
 				PlayerObject * const playerObject = PlayerCreatureController::getPlayerObject(creatureObject);
 
-				if (playerObject != nullptr)
+				if (playerObject != NULL)
 				{
 					ChatAvatarId playerChatAvatarId(Chat::constructChatAvatarId(source));
 					Unicode::String playerName(Unicode::narrowToWide(playerChatAvatarId.getFullName()));
@@ -4104,7 +4104,7 @@ void ServerObject::performSocial (const MessageQueueSocial & socialMsg)
 	// allow scripts to prevent the player from performing the emote
 	ScriptParams params;
 
-	if (getScriptObject() != nullptr)
+	if (getScriptObject() != NULL)
 	{
 		params.addParam(unicodeSocialTypeName);
 		if (getScriptObject()->trigAllScripts(Scripting::TRIG_PERFORM_EMOTE, params) != SCRIPT_CONTINUE)
@@ -4159,7 +4159,7 @@ void ServerObject::performCombatSpam (const MessageQueueCombatSpam & spamMsg, bo
 				target->seeCombatSpam (spamMsg);
 			}
 		} else {
-			WARNING_STRICT_FATAL (!sendToSelf && !sendToBystanders, ("nullptr target_obj in commandFuncCombatSpam, when sendToTarget was set true"));
+			WARNING_STRICT_FATAL (!sendToSelf && !sendToBystanders, ("null target_obj in commandFuncCombatSpam, when sendToTarget was set true"));
 		}
 	}
 
@@ -4217,10 +4217,10 @@ void ServerObject::teleportObject(Vector const &position_w, NetworkId const &tar
 		{
 			PortalProperty *portalProp = targetContainerObject->getPortalProperty();
 			targetContainerObject = 0; // clear in case we have a building that doesn't have the cell
-			if (portalProp != nullptr)
+			if (portalProp != NULL)
 			{
 				CellProperty *cellProp = portalProp->getCell(targetCellName.c_str());
-				if (cellProp != nullptr)
+				if (cellProp != NULL)
 					targetContainerObject = safe_cast<ServerObject *>(&(cellProp->getOwner()));
 			}
 			if (!targetContainerObject)
@@ -4312,7 +4312,7 @@ void ServerObject::teleportObject(Vector const &position_w, NetworkId const &tar
 		// Moves the object.  If the new area is on a different server, the PlanetServer will change our authority.
 
 		// What we really want to check here is whether we want to use the ServerController's teleport
-		// if a player has logged out, but we still have them loaded in game, their client will be nullptr, 
+		// if a player has logged out, but we still have them loaded in game, their client will be null, 
 		// but we still want to use the ServerController's teleport method
 		// so, we check against the player creature controller and player ship controller as well
 		ServerController * controller = safe_cast<ServerController *>(getController());
@@ -4383,7 +4383,7 @@ void ServerObject::updatePlanetServerInternal(bool) const
 /**
 * Attempts to create a synchronized ui object.  If the synchronized ui object
 * does not exist, its creation is attempted via createSynchronizedUi.  The default implementation
-* of createSynchronizedUi returns nullptr, and renders this method a no-op.
+* of createSynchronizedUi returns null, and renders this method a no-op.
 */
 void ServerObject::addSynchronizedUi(const std::vector<NetworkId> & clients)
 {
@@ -4396,9 +4396,9 @@ void ServerObject::addSynchronizedUi(const std::vector<NetworkId> & clients)
 		{
 			ServerObject * client = safe_cast<ServerObject *>(
 				NetworkIdManager::getObjectById(*i));
-			if (client != nullptr)
+			if (client != NULL)
 			{
-				if (client->getClient() != nullptr)
+				if (client->getClient() != NULL)
 					m_synchronizedUi->addClientObject (*client);
 				else
 				{
@@ -4420,7 +4420,7 @@ void ServerObject::addSynchronizedUi(const std::vector<NetworkId> & clients)
 /**
 * Attempts to add a client to the synchronized ui object.  If the synchronized ui object
 * does not exist, its creation is attempted via createSynchronizedUi.  The default implementation
-* of createSynchronizedUi returns nullptr, and renders this method a no-op.
+* of createSynchronizedUi returns null, and renders this method a no-op.
 *
 */
 void ServerObject::addSynchronizedUiClient(ServerObject & client)
@@ -4466,7 +4466,7 @@ void ServerObject::removeSynchronizedUiClient(const NetworkId & clientId)
 
 /**
 * Subclasses implement this if they have an appropriate synchronized ui object.
-* Base class implementation returns nullptr.
+* Base class implementation returns null.
 */
 ServerSynchronizedUi * ServerObject::createSynchronizedUi ()
 {
@@ -4483,13 +4483,13 @@ ServerSynchronizedUi * ServerObject::createSynchronizedUi ()
  */
 void ServerObject::addPendingSynchronizedUi(const ServerObject & uiObject)
 {
-	if (getClient() != nullptr)
+	if (getClient() != NULL)
 	{
 		WARNING(true, ("ServerObject::addPendingSynchronizedUi called on object %s that already has a client", getNetworkId().getValueString().c_str()));
 		return;
 	}
 
-	if (m_pendingSyncUi == nullptr)
+	if (m_pendingSyncUi == NULL)
 		m_pendingSyncUi = new std::vector<NetworkId>;
 	m_pendingSyncUi->push_back(uiObject.getNetworkId());
 }
@@ -5057,7 +5057,7 @@ std::string ServerObject::debugGetMessageToList() const
 {
 	unsigned long const now = ServerClock::getInstance().getGameTimeSeconds();
 	std::string result;
-	time_t const timeNow = ::time(nullptr);
+	time_t const timeNow = ::time(NULL);
 	for (Archive::AutoDeltaMap<std::pair<std::pair<unsigned long, uint64>, MessageToId>, MessageToPayload>::const_iterator i=m_messageTos.begin(); i!=m_messageTos.end(); ++i)
 	{
 		char temp[256];
@@ -5126,7 +5126,7 @@ unsigned long ServerObject::processQueuedMessageTos(unsigned long effectiveMessa
 
 			// if the message is going to be recurring, create a
 			// new messageTo to reschedule the recurring message
-			MessageToPayload * copyOfRecurringMessage = nullptr;
+			MessageToPayload * copyOfRecurringMessage = NULL;
 			if (message->second.getRecurringTime() > 0)
 			{
 				copyOfRecurringMessage = new MessageToPayload(
@@ -5331,7 +5331,7 @@ void ServerObject::handleCMessageTo(const MessageToPayload &message)
 				{
 					//handle unstick
 					static MessageDispatch::Emitter e;
-					Chat::sendSystemMessageSimple(*this, SharedStringIds::unstick_request_complete, nullptr);
+					Chat::sendSystemMessageSimple(*this, SharedStringIds::unstick_request_complete, NULL);
 					RequestUnstick r;
 					r.setClientId(getNetworkId());
 					e.emitMessage(r);
@@ -5587,7 +5587,7 @@ bool ServerObject::handleTeleportFixup(bool force)
 				}
 				else if (destContainer != NetworkId::cms_invalid && !force)
 				{
-					LOG("TeleportFixup", ("Failing teleport fixup because object %s is in a nullptr dest container and force was passed in\n", getNetworkId().getValueString().c_str()));
+					LOG("TeleportFixup", ("Failing teleport fixup because object %s is in a null dest container and force was passed in\n", getNetworkId().getValueString().c_str()));
 					return false; // going to a container and it wasn't loaded, defer
 				}
 			}
@@ -5626,15 +5626,15 @@ void ServerObject::customize(const std::string & customName, int value)
 	if(isAuthoritative())
 	{
 		CustomizationDataProperty *const cdProperty = safe_cast<CustomizationDataProperty*>(getProperty(CustomizationDataProperty::getClassPropertyId()));
-		if (cdProperty != nullptr)
+		if (cdProperty != NULL)
 		{
 			CustomizationData *const customizationData = cdProperty->fetchCustomizationData();
-			if (customizationData != nullptr)
+			if (customizationData != NULL)
 			{
 				RangedIntCustomizationVariable * variable = dynamic_cast<
 					RangedIntCustomizationVariable*>(customizationData->findVariable(
 					customName));
-				if (variable != nullptr)
+				if (variable != NULL)
 					variable->setValue(value);
 				else
 				{
@@ -5646,7 +5646,7 @@ void ServerObject::customize(const std::string & customName, int value)
 			else
 			{
 				// this shouldn't happen
-				DEBUG_WARNING(true, ("CustomizationDataProperty returned nullptr CustomizationData on fetch."));
+				DEBUG_WARNING(true, ("CustomizationDataProperty returned NULL CustomizationData on fetch."));
 			}
 		}
 		else
@@ -5725,7 +5725,7 @@ bool ServerObject::permanentlyDestroy(DeleteReasons::Enumerator reason)
 	const bool houseDestroyedByScript = (reason == DeleteReasons::Script && buildingObject && buildingObject->isPlayerPlaced());
 
 	// tell scripts we want to destroy the object
-	if (getScriptObject() != nullptr && !m_calledTriggerDestroy)
+	if (getScriptObject() != NULL && !m_calledTriggerDestroy)
 	{
 		m_calledTriggerDestroy = true;
 		ScriptParams params;
@@ -5739,7 +5739,7 @@ bool ServerObject::permanentlyDestroy(DeleteReasons::Enumerator reason)
 		}
 	}
 
-	if (isAuthoritative() && (getScriptObject() != nullptr) && !m_calledTriggerRemovingFromWorld)
+	if (isAuthoritative() && (getScriptObject() != NULL) && !m_calledTriggerRemovingFromWorld)
 	{
 		ScriptParams params;
 		m_calledTriggerRemovingFromWorld = true;
@@ -6517,8 +6517,8 @@ void ServerObject::onAllContentsLoaded()
 
 			if (isAuthoritative())
 			{
-				ServerObject *player = nullptr;
-				if ((player = getServerObject(playerId)) != nullptr)
+				ServerObject *player = NULL;
+				if ((player = getServerObject(playerId)) != NULL)
 				{
 					//Tell scripts we are loaded
 					ScriptParams params;
@@ -6588,7 +6588,7 @@ void ServerObject::handleDisconnect(bool immediate)
 	{
 		// client has disconnected, log pertinent information about the play session
 		CreatureObject * const creatureObject = asCreatureObject();
-		PlayerObject * playerObject = nullptr;
+		PlayerObject * playerObject = NULL;
 		if (creatureObject)
 		{
 			playerObject = PlayerCreatureController::getPlayerObject(creatureObject);
@@ -6927,13 +6927,13 @@ ServerObject * ServerObject::combineResourceContainers(ServerObject &item)
 	{
 		ResourceContainerObject *resourceContainerObject = safe_cast<ResourceContainerObject *>(&item);
 
-		if (resourceContainerObject != nullptr)
+		if (resourceContainerObject != NULL)
 		{
 			// If this is a container, see if it contains another resource container of the same type
 
 			Container *container = ContainerInterface::getContainer(*this);
 
-			if (container != nullptr)
+			if (container != NULL)
 			{
 				ContainerIterator iterContainer = container->begin();
 
@@ -6945,12 +6945,12 @@ ServerObject * ServerObject::combineResourceContainers(ServerObject &item)
 					// the item is a resource container
 
 					if ((containedObject != &item) &&
-					    (containedObject != nullptr) &&
+					    (containedObject != NULL) &&
 					    (containedObject->getObjectType() == ServerResourceContainerObjectTemplate::ServerResourceContainerObjectTemplate_tag))
 					{
 						ResourceContainerObject *containedResourceContainerObject = safe_cast<ResourceContainerObject *>(containedObject);
 
-						if ((containedResourceContainerObject != nullptr) &&
+						if ((containedResourceContainerObject != NULL) &&
 						    (resourceContainerObject->getResourceType() == containedResourceContainerObject->getResourceType()))
 						{
 							// This is a container of similar type, if it is not full, save it to the list
@@ -7064,7 +7064,7 @@ bool ServerObject::isContainedBy(const ServerObject & container, bool includeCon
 		// our container is the desired container
 		return true;
 	}
-	else if (test != nullptr && test != this && includeContents)
+	else if (test != NULL && test != this && includeContents)
 	{
 		// our container isn't the desired container, see if it is contained
 		return safe_cast<const ServerObject *>(test)->isContainedBy(container, true);
@@ -7564,7 +7564,7 @@ void ServerObject::sendDirtyObjectMenuNotification()
 
 	Controller * const controller = getController();
 	if (controller)
-		controller->appendMessage(CM_objectMenuDirty, 0, nullptr, GameControllerMessageFlags::SEND | GameControllerMessageFlags::RELIABLE | GameControllerMessageFlags::DEST_ALL_CLIENT);
+		controller->appendMessage(CM_objectMenuDirty, 0, NULL, GameControllerMessageFlags::SEND | GameControllerMessageFlags::RELIABLE | GameControllerMessageFlags::DEST_ALL_CLIENT);
 }
 
 // ----------------------------------------------------------------------
@@ -7577,7 +7577,7 @@ void ServerObject::sendDirtyAttributesNotification()
 
 	Controller * const controller = getController();
 	if (controller)
-		controller->appendMessage(CM_attributesDirty, 0, nullptr, GameControllerMessageFlags::SEND | GameControllerMessageFlags::RELIABLE | GameControllerMessageFlags::DEST_ALL_CLIENT);
+		controller->appendMessage(CM_attributesDirty, 0, NULL, GameControllerMessageFlags::SEND | GameControllerMessageFlags::RELIABLE | GameControllerMessageFlags::DEST_ALL_CLIENT);
 }
 
 //------------------------------------------------------------------------------------------
@@ -7615,15 +7615,15 @@ void ServerObject::triggerMadeAuthoritative()
 
 void ServerObject::setLayer(TerrainGenerator::Layer* layer)
 {
-	LayerProperty * layerProperty = nullptr;
+	LayerProperty * layerProperty = NULL;
 	Property * property = getProperty(LayerProperty::getClassPropertyId());
-	if (property != nullptr)
+	if (property != NULL)
 		layerProperty = safe_cast<LayerProperty *>(property);
 	else
 		layerProperty = new LayerProperty(*this);
 
 	layerProperty->setLayer(layer);
-	if (property == nullptr)
+	if (property == NULL)
 	{
 		addProperty(*layerProperty, true);
 		ObjectTracker::addRunTimeRule();
@@ -7636,12 +7636,12 @@ void ServerObject::setLayer(TerrainGenerator::Layer* layer)
 TerrainGenerator::Layer* ServerObject::getLayer() const
 {
 	const Property * property = getProperty(LayerProperty::getClassPropertyId());
-	if (property != nullptr)
+	if (property != NULL)
 	{
 		const LayerProperty * layerProperty = safe_cast<const LayerProperty *>(property);
 		return layerProperty->getLayer();
 	}
-	return nullptr;
+	return NULL;
 }
 
 //------------------------------------------------------------------------------------------
@@ -7853,7 +7853,7 @@ void ServerObject::setPatrolPathRoot(const ServerObject & root)
 
 	// make sure we aren't already a root node
 	Property * p = getProperty(PatrolPathRootProperty::getClassPropertyId());
-	if (p != nullptr)
+	if (p != NULL)
 	{
 		if (root.getNetworkId() != getNetworkId())
 		{
@@ -7873,7 +7873,7 @@ void ServerObject::setPatrolPathRoot(const ServerObject & root)
 	{
 		// add the root node to our node list
 		p = getProperty(PatrolPathNodeProperty::getClassPropertyId());
-		if (p == nullptr)
+		if (p == NULL)
 		{
 			p = new PatrolPathNodeProperty(*this);
 			addProperty(*p, true);
@@ -7893,15 +7893,15 @@ void ServerObject::setPatrolPathRoot(const ServerObject & root)
 
 	// we need to add any players in range to our path observer count
 	TriggerVolume * triggerVolume = getNetworkTriggerVolume();
-	if (triggerVolume != nullptr)
+	if (triggerVolume != NULL)
 	{
 		TriggerVolume::ContentsSet const & contents = triggerVolume->getContents();
 		for (TriggerVolume::ContentsSet::const_iterator i = contents.begin(); i != contents.end(); ++i)
 		{
-			if (*i != nullptr)
+			if (*i != NULL)
 			{
 				Client * client = (*i)->getClient();
-				if (client != nullptr)
+				if (client != NULL)
 				{
 					if (!ObserveTracker::isObserving(*client, *this))
 						ObserveTracker::onClientEnteredNetworkTriggerVolume(*client, *triggerVolume);
@@ -7922,14 +7922,14 @@ void ServerObject::setPatrolPathRoot(const ServerObject & root)
 /**
  * Returns the root node for a patrol path node.
  *
- * @return the root node, or nullptr if this isn't a patrol path node
+ * @return the root node, or NULL if this isn't a patrol path node
  */
 const std::set<CachedNetworkId> & ServerObject::getPatrolPathRoots() const
 {
 static const std::set<CachedNetworkId> noRoots;
 
 	const Property * p = getProperty(PatrolPathNodeProperty::getClassPropertyId());
-	if (p != nullptr)
+	if (p != NULL)
 	{
 		return safe_cast<const PatrolPathNodeProperty *>(p)->getRoots();
 	}
@@ -7957,7 +7957,7 @@ void ServerObject::addPatrolPathingObject(const ServerObject & ai)
 	}
 
 	Property * p = getProperty(PatrolPathRootProperty::getClassPropertyId());
-	if (p != nullptr)
+	if (p != NULL)
 	{
 		safe_cast<PatrolPathRootProperty *>(p)->addPatrollingObject(ai);
 		DEBUG_REPORT_LOG(true, ("[patrolpath] add patrol ai %s to root %s\n", 
@@ -7974,7 +7974,7 @@ void ServerObject::addPatrolPathingObject(const ServerObject & ai)
 		if (roots.size() == 1)
 		{
 			ServerObject * root = safe_cast<ServerObject *>(roots.begin()->getObject());
-			if (root != nullptr)
+			if (root != NULL)
 				root->addPatrolPathingObject(ai);
 		}
 		else
@@ -8004,7 +8004,7 @@ void ServerObject::removePatrolPathingObject(const ServerObject & ai)
 	}
 
 	Property * p = getProperty(PatrolPathRootProperty::getClassPropertyId());
-	if (p != nullptr)
+	if (p != NULL)
 	{
 		safe_cast<PatrolPathRootProperty *>(p)->removePatrollingObject(ai);
 		DEBUG_REPORT_LOG(true, ("[patrolpath] remove patrol ai %s from root %s\n", 
@@ -8019,7 +8019,7 @@ void ServerObject::removePatrolPathingObject(const ServerObject & ai)
 		if (roots.size() == 1)
 		{
 			ServerObject * root = safe_cast<ServerObject *>(roots.begin()->getObject());
-			if (root != nullptr)
+			if (root != NULL)
 				root->removePatrolPathingObject(ai);
 		}
 		else
@@ -8049,7 +8049,7 @@ void ServerObject::addPatrolPathObserver()
 
 	// if we are a root node, increment our observer count
 	Property * p = getProperty(PatrolPathRootProperty::getClassPropertyId());
-	if (p != nullptr)
+	if (p != NULL)
 	{
 		PatrolPathRootProperty * pprp = safe_cast<PatrolPathRootProperty *>(p);
 		pprp->incrementObserverCount();
@@ -8061,10 +8061,10 @@ void ServerObject::addPatrolPathObserver()
 			const std::set<ConstWatcher<ServerObject> > & ai = pprp->getPatrollingObjects();
 			for (std::set<ConstWatcher<ServerObject> >::const_iterator i = ai.begin(); i != ai.end(); ++i)
 			{
-				if (*i != nullptr)
+				if (*i != NULL)
 				{
 					const ServerObject * ai = *i;
-					if (ai->getController()->asCreatureController() != nullptr)
+					if (ai->getController()->asCreatureController() != NULL)
 					{
 						const CreatureController * controller = ai->getController()->asCreatureController();
 						if (controller->getHibernate())
@@ -8086,7 +8086,7 @@ void ServerObject::addPatrolPathObserver()
 		for (std::set<CachedNetworkId>::const_iterator i = roots.begin(); i != roots.end(); ++i)
 		{
 			ServerObject * root = safe_cast<ServerObject *>(i->getObject());
-			if (root != nullptr)
+			if (root != NULL)
 			{
 				root->addPatrolPathObserver();
 			}
@@ -8112,7 +8112,7 @@ void ServerObject::removePatrolPathObserver()
 
 	// if we are a root node, decrement our observer count
 	Property * p = getProperty(PatrolPathRootProperty::getClassPropertyId());
-	if (p != nullptr)
+	if (p != NULL)
 	{
 		PatrolPathRootProperty * pprp = safe_cast<PatrolPathRootProperty *>(p);
 		pprp->decrementObserverCount();
@@ -8131,7 +8131,7 @@ void ServerObject::removePatrolPathObserver()
 		for (std::set<CachedNetworkId>::const_iterator i = roots.begin(); i != roots.end(); ++i)
 		{
 			ServerObject * root = safe_cast<ServerObject *>(i->getObject());
-			if (root != nullptr)
+			if (root != NULL)
 			{
 				root->removePatrolPathObserver();
 			}
@@ -8152,7 +8152,7 @@ int ServerObject::getPatrolPathObservers() const
 	int observers = 0;
 
 	const Property * p = getProperty(PatrolPathRootProperty::getClassPropertyId());
-	if (p != nullptr)
+	if (p != NULL)
 	{
 		observers = safe_cast<const PatrolPathRootProperty *>(p)->getObserverCount();
 	}
@@ -8162,7 +8162,7 @@ int ServerObject::getPatrolPathObservers() const
 		for (std::set<CachedNetworkId>::const_iterator i = roots.begin(); i != roots.end(); ++i)
 		{
 			const ServerObject * root = safe_cast<const ServerObject *>(i->getObject());
-			if (root != nullptr && root->isPatrolPathRoot())
+			if (root != NULL && root->isPatrolPathRoot())
 			{
 				observers += root->getPatrolPathObservers();
 			}
@@ -8175,14 +8175,14 @@ int ServerObject::getPatrolPathObservers() const
 
 bool ServerObject::isPatrolPathNode() const
 {
-	return (getProperty(PatrolPathNodeProperty::getClassPropertyId()) != nullptr) || isPatrolPathRoot();
+	return (getProperty(PatrolPathNodeProperty::getClassPropertyId()) != NULL) || isPatrolPathRoot();
 }
 
 // ----------------------------------------------------------------------
 
 bool ServerObject::isPatrolPathRoot() const
 {
-	return getProperty(PatrolPathRootProperty::getClassPropertyId()) != nullptr;
+	return getProperty(PatrolPathRootProperty::getClassPropertyId()) != NULL;
 }
 
 // ----------------------------------------------------------------------

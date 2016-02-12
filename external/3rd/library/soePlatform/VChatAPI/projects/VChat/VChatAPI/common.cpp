@@ -171,37 +171,37 @@ namespace VChatSystem
 		token = strtok((char*)tmpTokenee.c_str(), seps );
 
 
-		if( token != nullptr )
+		if( token != NULL )
 		{
 			game = token;
 
 			/* Get next token: */
-			token = strtok( nullptr, seps );
+			token = strtok( NULL, seps );
 		}
 
-		if( token != nullptr )
+		if( token != NULL )
 		{
 			server = token;
 
 			/* Get next token: */
-			token = strtok( nullptr, seps );
+			token = strtok( NULL, seps );
 		}
 
-		if( token != nullptr )
+		if( token != NULL )
 		{
 			name = token;
 
 			/* Get next token: */
-			token = strtok( nullptr, seps );
+			token = strtok( NULL, seps );
 		}
 
-		while ( token != nullptr )
+		while ( token != NULL )
 		{
 			name += ".";
 			name += token;
 
 			/* Get next token: */
-			token = strtok( nullptr, seps );
+			token = strtok( NULL, seps );
 		}
 	}
 
@@ -216,29 +216,29 @@ namespace VChatSystem
 		std::string tmpTokenee = userName;
 		token = strtok((char*)tmpTokenee.c_str(), seps );
 
-		if( token != nullptr )
+		if( token != NULL )
 		{
 			server = token;
 
 			/* Get next token: */
-			token = strtok( nullptr, seps );
+			token = strtok( NULL, seps );
 		}
 
-		if( token != nullptr )
+		if( token != NULL )
 		{
 			name = token;
 
 			/* Get next token: */
-			token = strtok( nullptr, seps );
+			token = strtok( NULL, seps );
 		}
 
-		while ( token != nullptr )
+		while ( token != NULL )
 		{
 			name += ".";
 			name += token;
 
 			/* Get next token: */
-			token = strtok( nullptr, seps );
+			token = strtok( NULL, seps );
 		}
 	}
 

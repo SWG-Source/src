@@ -66,7 +66,7 @@ AiShipBehaviorDock::AiShipBehaviorDock(ShipController & shipController, ShipObje
  , m_goalPosition_w()
  , m_wingsOpenedBeforeDock(m_shipController.getShipOwner()->hasWings() && m_shipController.getShipOwner()->wingsOpened())
 {
-	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "debug_ai", ("AiShipBehaviorDock: [1/6] unit(%s) dockTarget(%s) secondsAtDock(%.2f) landingHardPoint(%s)", (shipController.getOwner() != nullptr) ? shipController.getOwner()->getNetworkId().getValueString().c_str() : "nullptr owner", dockTarget.getNetworkId().getValueString().c_str(), secondsAtDock, m_hasLandingHardPoint ? "yes" : "no"));
+	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "debug_ai", ("AiShipBehaviorDock: [1/6] unit(%s) dockTarget(%s) secondsAtDock(%.2f) landingHardPoint(%s)", (shipController.getOwner() != NULL) ? shipController.getOwner()->getNetworkId().getValueString().c_str() : "NULL owner", dockTarget.getNetworkId().getValueString().c_str(), secondsAtDock, m_hasLandingHardPoint ? "yes" : "no"));
 
 	if (m_shipController.isBeingDocked())
 	{
@@ -119,7 +119,7 @@ AiShipBehaviorDock::AiShipBehaviorDock(ShipController & shipController, ShipObje
 
 		ShipController * const dockTargetShipController = dockTarget.getController()->asShipController();
 
-		if (dockTargetShipController != nullptr)
+		if (dockTargetShipController != NULL)
 		{
 			dockTargetShipController->addDockedBy(*shipController.getOwner());
 		}
@@ -146,7 +146,7 @@ AiShipBehaviorDock::AiShipBehaviorDock(ShipController & shipController, ShipObje
 
 	m_initialApproachHardPointCount = static_cast<int>(m_approachHardPointList->size());
 
-	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "debug_ai", ("AiShipBehaviorDock() unit(%s) dockTarget(%s) approachHardPointCount(%u) exitHardPointCount(%u)", (shipController.getOwner() != nullptr) ? shipController.getOwner()->getNetworkId().getValueString().c_str() : "nullptr owner", dockTarget.getNetworkId().getValueString().c_str(), m_approachHardPointList->size(), m_exitHardPointList->size()));
+	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "debug_ai", ("AiShipBehaviorDock() unit(%s) dockTarget(%s) approachHardPointCount(%u) exitHardPointCount(%u)", (shipController.getOwner() != NULL) ? shipController.getOwner()->getNetworkId().getValueString().c_str() : "NULL owner", dockTarget.getNetworkId().getValueString().c_str(), m_approachHardPointList->size(), m_exitHardPointList->size()));
 }
 
 // ----------------------------------------------------------------------
@@ -156,7 +156,7 @@ AiShipBehaviorDock::~AiShipBehaviorDock()
 
 	// Open the wings
 
-	if (   (ownerShipObject != nullptr)
+	if (   (ownerShipObject != NULL)
 	    && m_wingsOpenedBeforeDock)
 	{
 		m_shipController.getShipOwner()->openWings();
@@ -168,7 +168,7 @@ AiShipBehaviorDock::~AiShipBehaviorDock()
 	{
 		CollisionCallbackManager::removeIgnoreIntersect(m_shipController.getOwner()->getNetworkId(), m_dockTarget);
 		
-		if (    (ownerShipObject != nullptr)
+		if (    (ownerShipObject != NULL)
 		     && ownerShipObject->isPlayerShip())
 		{
 			m_shipController.appendMessage(CM_removeIgnoreIntersect, 0.0f, new MessageQueueGenericValueType<NetworkId>(m_dockTarget), GameControllerMessageFlags::SEND | GameControllerMessageFlags::RELIABLE | GameControllerMessageFlags::DEST_AUTH_CLIENT);
@@ -179,11 +179,11 @@ AiShipBehaviorDock::~AiShipBehaviorDock()
 
 	Object * const dockTarget = m_dockTarget.getObject();
 
-	if (dockTarget != nullptr)
+	if (dockTarget != NULL)
 	{
 		ShipController * const dockTargetShipController = dockTarget->getController()->asShipController();
 
-		if (dockTargetShipController != nullptr)
+		if (dockTargetShipController != NULL)
 		{
 			dockTargetShipController->removeDockedBy(*m_shipController.getOwner());
 		}
@@ -200,7 +200,7 @@ void AiShipBehaviorDock::alter(float deltaSeconds)
 
 	bool abortDocking = false;
 
-	if (m_dockTarget.getObject() == nullptr)
+	if (m_dockTarget.getObject() == NULL)
 	{
 		// If we lose the dock target, fail the docking procedure.
 
@@ -213,7 +213,7 @@ void AiShipBehaviorDock::alter(float deltaSeconds)
 
 		AiShipController * const dockTargetAiShipController = AiShipController::asAiShipController(m_dockTarget.getObject()->getController());
 
-		if (   (dockTargetAiShipController != nullptr)
+		if (   (dockTargetAiShipController != NULL)
 			&& dockTargetAiShipController->isAttacking())
 		{
 			LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "debug_ai", ("AiShipBehaviorDock::alter() unit(%s) dockTarget(%s) DOCK TARGET IS ATTACKING...UNDOCKING", m_shipController.getOwner()->getDebugInformation().c_str(), m_dockTarget.getValueString().c_str()));
@@ -478,7 +478,7 @@ void AiShipBehaviorDock::triggerDocked()
 
 	GameScriptObject * const gameScriptObject = GameScriptObject::asGameScriptObject(m_shipController.getOwner());
 
-	if(gameScriptObject != nullptr)
+	if(gameScriptObject != NULL)
 	{
 		ScriptParams scriptParams;
 		scriptParams.addParam(m_dockTarget);
@@ -499,7 +499,7 @@ void AiShipBehaviorDock::triggerStartUnDock()
 
 	GameScriptObject * const gameScriptObject = GameScriptObject::asGameScriptObject(m_shipController.getOwner());
 
-	if(gameScriptObject != nullptr)
+	if(gameScriptObject != NULL)
 	{
 		ScriptParams scriptParams;
 		scriptParams.addParam(m_dockTarget);
@@ -520,7 +520,7 @@ void AiShipBehaviorDock::triggerUnDockWithSuccess()
 
 	GameScriptObject * const gameScriptObject = GameScriptObject::asGameScriptObject(m_shipController.getOwner());
 
-	if(gameScriptObject != nullptr)
+	if(gameScriptObject != NULL)
 	{
 		ScriptParams scriptParams;
 		scriptParams.addParam(m_dockTarget);
@@ -542,7 +542,7 @@ void AiShipBehaviorDock::triggerUnDockWithFailure()
 
 	GameScriptObject * const gameScriptObject = GameScriptObject::asGameScriptObject(m_shipController.getOwner());
 
-	if(gameScriptObject != nullptr)
+	if(gameScriptObject != NULL)
 	{
 		ScriptParams scriptParams;
 		scriptParams.addParam(m_dockTarget);
@@ -622,7 +622,7 @@ float AiShipBehaviorDock::getMaxTractorBeamSpeed() const
 	float const shipActualSpeedMaximum = m_shipController.getShipOwner()->getShipActualSpeedMaximum();
 	AiShipController * const aiShipController = m_shipController.asAiShipController();
 
-	return (aiShipController != nullptr) ? (shipActualSpeedMaximum * aiShipController->getPilotData()->m_nonCombatMaxSpeedPercent) : shipActualSpeedMaximum;
+	return (aiShipController != NULL) ? (shipActualSpeedMaximum * aiShipController->getPilotData()->m_nonCombatMaxSpeedPercent) : shipActualSpeedMaximum;
 }
 
 // ----------------------------------------------------------------------
@@ -676,7 +676,7 @@ void AiShipBehaviorDock::addDebug(AiDebugString & aiDebugString)
 
 	aiDebugString.addLineToPosition(m_goalPosition_w, PackedRgb::solidCyan);
 
-	if (m_dockTarget.getObject() != nullptr)
+	if (m_dockTarget.getObject() != NULL)
 	{
 		Transform transform;
 		transform.multiply(m_dockTarget.getObject()->getTransform_o2w(), m_dockHardPoint);

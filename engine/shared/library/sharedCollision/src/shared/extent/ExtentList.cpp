@@ -44,7 +44,7 @@ Extent * ExtentList::nullFactory ( Iff & iff )
 
 	IGNORE_RETURN( iff.goForward() );
 
-	return nullptr;
+	return NULL;
 }
 
 // ======================================================================
@@ -110,7 +110,7 @@ void ExtentList::remove(void)
 
 void ExtentList::assignBinding(Tag tag, CreateFunction createFunction)
 {
-	DEBUG_FATAL(!createFunction, ("createFunction may not be nullptr"));
+	DEBUG_FATAL(!createFunction, ("createFunction may not be NULL"));
 
 	(*ms_bindImpl.m_map) [tag] = createFunction;
 }
@@ -133,7 +133,7 @@ void ExtentList::removeBinding(Tag tag)
 /**
  * Fetch an Extent.
  * 
- * This routine may be passed nullptr.
+ * This routine may be passed NULL.
  * 
  * This routine will increase the reference count of the specified extent.
  * 
@@ -165,7 +165,7 @@ Extent * ExtentList::create(Iff & iff)
 
 	// handle no extents
 	if (iff.atEndOfForm())
-		return nullptr;
+		return NULL;
 
 	const Tag tag = iff.getCurrentName();
 
@@ -201,7 +201,7 @@ const Extent *ExtentList::fetch(Iff & iff)
 /**
  * Release an Extent.
  * 
- * This routine may be passed nullptr.
+ * This routine may be passed NULL.
  * 
  * This routine will decrement the reference count of the Extent.  When
  * the reference count becomes 0, the Extent will be deleted.

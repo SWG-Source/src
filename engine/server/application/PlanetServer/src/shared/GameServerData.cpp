@@ -27,7 +27,7 @@ GameServerData::GameServerData(GameServerConnection *connection) :
 // ----------------------------------------------------------------------
 
 GameServerData::GameServerData(const GameServerData &rhs) :
-		m_connection(nullptr),  // connection pointer is not copied when we copy GameServerDatas
+		m_connection(NULL),  // connection pointer is not copied when we copy GameServerDatas
 		m_objectCount(rhs.m_objectCount),
 		m_interestObjectCount(rhs.m_interestObjectCount),
 		m_interestCreatureObjectCount(rhs.m_interestCreatureObjectCount),
@@ -38,7 +38,7 @@ GameServerData::GameServerData(const GameServerData &rhs) :
 // ----------------------------------------------------------------------
 
 GameServerData::GameServerData() :
-		m_connection(nullptr), 
+		m_connection(NULL), 
 		m_objectCount(0),
 		m_interestObjectCount(0),
 		m_interestCreatureObjectCount(0),
@@ -53,7 +53,7 @@ GameServerData &GameServerData::operator=(const GameServerData &rhs)
 	if (&rhs == this)
 		return *this;
 
-	m_connection=nullptr;  // connection pointer is not copied when we copy GameServerDatas
+	m_connection=NULL;  // connection pointer is not copied when we copy GameServerDatas
 	m_objectCount=rhs.m_objectCount;
 	m_interestObjectCount=rhs.m_interestObjectCount;
 	m_interestCreatureObjectCount=rhs.m_interestCreatureObjectCount;

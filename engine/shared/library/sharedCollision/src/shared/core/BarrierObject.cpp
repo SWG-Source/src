@@ -38,14 +38,14 @@ public:
 
 	virtual bool canCollideWith ( CollisionProperty const * otherCollision ) const
 	{
-		if(otherCollision == nullptr)
+		if(otherCollision == NULL)
 		{
 			return false;
 		}
 
 		BarrierObject const * barrier = safe_cast<BarrierObject const *>(&getOwner());
 
-		if(barrier == nullptr)
+		if(barrier == NULL)
 		{
 			return false;
 		}
@@ -180,7 +180,7 @@ void BarrierObject::createAppearance ( void )
 
 	Appearance * appearance = CellProperty::createPortalBarrier(verts,gs_barrierColor);
 
-	if(appearance != nullptr)
+	if(appearance != NULL)
 	{
 		setAppearance( appearance );
 

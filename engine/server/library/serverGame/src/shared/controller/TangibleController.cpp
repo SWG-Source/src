@@ -222,7 +222,7 @@ void TangibleController::handleMessage (const int message, const float value, co
 	case CM_addHate:
 		{
 			const MessageQueueGenericValueType<std::pair<NetworkId, float> > * const msg = safe_cast<const MessageQueueGenericValueType<std::pair<NetworkId, float> > *>(data);
-			WARNING((msg == nullptr), ("TangibleController::handleMessage(CM_addHate) The message data should never be nullptr"));
+			WARNING((msg == NULL), ("TangibleController::handleMessage(CM_addHate) The message data should never be NULL"));
 
 			if(msg)
 			{
@@ -233,7 +233,7 @@ void TangibleController::handleMessage (const int message, const float value, co
 	case CM_setHate:
 		{
 			const MessageQueueGenericValueType<std::pair<NetworkId, float> > * const msg = safe_cast<const MessageQueueGenericValueType<std::pair<NetworkId, float> > *>(data);
-			WARNING((msg == nullptr), ("TangibleController::handleMessage(CM_setHate) The message data should never be nullptr"));
+			WARNING((msg == NULL), ("TangibleController::handleMessage(CM_setHate) The message data should never be NULL"));
 
 			if(msg)
 			{
@@ -244,7 +244,7 @@ void TangibleController::handleMessage (const int message, const float value, co
 	case CM_removeHateTarget:
 		{
 			const MessageQueueGenericValueType<NetworkId> * const msg = safe_cast<const MessageQueueGenericValueType<NetworkId> *>(data);
-			WARNING((msg == nullptr), ("TangibleController::handleMessage(CM_removeHateTarget) The message data should never be nullptr"));
+			WARNING((msg == NULL), ("TangibleController::handleMessage(CM_removeHateTarget) The message data should never be NULL"));
 
 			if(msg)
 			{
@@ -265,7 +265,7 @@ void TangibleController::handleMessage (const int message, const float value, co
 	case CM_forceHateTarget:
 		{
 			const MessageQueueGenericValueType<NetworkId> * const msg = safe_cast<const MessageQueueGenericValueType<NetworkId> *>(data);
-			WARNING((msg == nullptr), ("TangibleController::handleMessage(CM_removeHateTarget) The message data should never be nullptr"));
+			WARNING((msg == NULL), ("TangibleController::handleMessage(CM_removeHateTarget) The message data should never be NULL"));
 
 			if(msg)
 			{
@@ -276,9 +276,9 @@ void TangibleController::handleMessage (const int message, const float value, co
 	case CM_autoExpireHateListTargetEnabled:
 		{
 			const MessageQueueGenericValueType<bool> * const msg = safe_cast<const MessageQueueGenericValueType<bool> *>(data);
-			WARNING((msg == nullptr), ("TangibleController::handleMessage(CM_setHateListExpireTargetEnabled) The message data should never be nullptr"));
+			WARNING((msg == NULL), ("TangibleController::handleMessage(CM_setHateListExpireTargetEnabled) The message data should never be NULL"));
 
-			if (msg != nullptr)
+			if (msg != NULL)
 			{
 				owner->setHateListAutoExpireTargetEnabled(msg->getValue());
 			}
@@ -315,7 +315,7 @@ void TangibleController::handleMessage (const int message, const float value, co
 				if(object)
 				{
 					ServerObject * transferer = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(msg->getValue().second));
-					// transferer is allowed to be nullptr
+					// transferer is allowed to be null
 					owner->addObjectToOutputSlot(*object, transferer);
 				}
 			}
@@ -576,7 +576,7 @@ void TangibleController::handleMessage (const int message, const float value, co
 	case CM_addUserToAccessList:
 		{
 			MessageQueueGenericValueType<std::pair<int, NetworkId> > const *msg = safe_cast<MessageQueueGenericValueType<std::pair<int, NetworkId> > const *>(data);
-			WARNING((msg == nullptr), ("TangibleController::handleMessage(CM_addUserToAccessList) The message data should never be nullptr"));
+			WARNING((msg == NULL), ("TangibleController::handleMessage(CM_addUserToAccessList) The message data should never be NULL"));
 
 			if(msg)
 			{
@@ -590,7 +590,7 @@ void TangibleController::handleMessage (const int message, const float value, co
 	case CM_removeUserFromAccessList:
 		{
 			MessageQueueGenericValueType<std::pair<int, NetworkId> > const *msg = safe_cast<MessageQueueGenericValueType<std::pair<int, NetworkId> > const *>(data);
-			WARNING((msg == nullptr), ("TangibleController::handleMessage(CM_removeUserFromAccessList) The message data should never be nullptr"));
+			WARNING((msg == NULL), ("TangibleController::handleMessage(CM_removeUserFromAccessList) The message data should never be NULL"));
 
 			if(msg)
 			{
@@ -722,14 +722,14 @@ TangibleController const * TangibleController::asTangibleController() const
 
 AiTurretController * TangibleController::asAiTurretController()
 {
-	return nullptr;
+	return NULL;
 }
 
 //----------------------------------------------------------------------
 
 AiTurretController const * TangibleController::asAiTurretController() const
 {
-	return nullptr;
+	return NULL;
 }
 
 //========================================================================

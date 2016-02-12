@@ -149,7 +149,7 @@ bool ObjectTemplateCustomizationDataWriter::writeToFile(const std::string &pathN
 	if (!allowOverwrite)
 	{
 		FILE *const testFile = fopen(pathName.c_str(), "r");
-		if (testFile != nullptr)
+		if (testFile != NULL)
 		{
 			fclose(testFile);
 			DEBUG_REPORT_LOG(true, ("writeToFile(): overwrite attempt: skipped writing [%s] because it already exists and allowOverwrite == false.\n", pathName.c_str()));

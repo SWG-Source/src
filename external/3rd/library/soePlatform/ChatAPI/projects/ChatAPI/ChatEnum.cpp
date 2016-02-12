@@ -43,7 +43,7 @@ ChatUnicodeString::ChatUnicodeString(const std::string& nSrc)
 
 ChatUnicodeString::ChatUnicodeString(const char *nStrSrc)
 {
-	if (nStrSrc==nullptr) 
+	if (nStrSrc==NULL) 
 	{
 		m_wideString = getEmptyString();
 		m_cString = wideToNarrow(m_wideString);

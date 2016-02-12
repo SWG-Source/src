@@ -20,12 +20,12 @@ MEMORY_BLOCK_MANAGER_IMPLEMENTATION_WITH_INSTALL(ScheduleData, true, 0, 0, 0);
 
 ScheduleData::ScheduleData(AlterScheduler::ScheduleTime initialMostRecentAlterTime):
 	m_mostRecentAlterTime(initialMostRecentAlterTime),
-	m_alterNowNext(nullptr),
-	m_alterNowPrevious(nullptr),
-	m_alterNextFrameNext(nullptr),
-	m_alterNextFramePrevious(nullptr),
-	m_concludeNext(nullptr),
-	m_concludePrevious(nullptr),
+	m_alterNowNext(NULL),
+	m_alterNowPrevious(NULL),
+	m_alterNextFrameNext(NULL),
+	m_alterNextFramePrevious(NULL),
+	m_concludeNext(NULL),
+	m_concludePrevious(NULL),
 	m_scheduleTimeMapIterator(),
 	m_schedulePhase(0)
 {

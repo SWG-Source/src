@@ -69,7 +69,7 @@ protected:
 		
 		std::string name;
 		EntryType type;
-		CentralCSHandlerFunc func; // will be nullptr unless it's of TYPE_CENTRAL.
+		CentralCSHandlerFunc func; // will be null unless it's of TYPE_CENTRAL.
 		
 		
 	};

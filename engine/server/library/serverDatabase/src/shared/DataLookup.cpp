@@ -30,7 +30,7 @@
 
 //-----------------------------------------------------------------------
 
-DataLookup *DataLookup::ms_theInstance = nullptr;
+DataLookup *DataLookup::ms_theInstance = NULL;
 
 //-----------------------------------------------------------------------
 
@@ -524,7 +524,7 @@ void DataLookup::deleteReservationList(uint32 stationId)
 	reservationList * rl = rlIter->second;
 	if (!rl)
 	{
-		WARNING_STRICT_FATAL(true, ("Reservation list for stationID %lu is nullptr", stationId));
+		WARNING_STRICT_FATAL(true, ("Reservation list for stationID %lu is NULL", stationId));
 		return;
 	}
 	reservationList::iterator i;

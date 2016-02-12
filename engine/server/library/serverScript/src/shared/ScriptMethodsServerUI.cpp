@@ -83,14 +83,14 @@ jint JNICALL ScriptMethodsServerUINamespace::createSuiPage(JNIEnv *env, jobject 
 	JavaStringParam localPageName(pageName);
 
 	jint failureCode = -1;
-	ServerObject* owner = nullptr;
+	ServerObject* owner = NULL;
 	if(!JavaLibrary::getObject(ownerobject, owner))
 	{
 		WARNING(true, ("SUI: couldn't get owner ServerObject*, can't create a page"));
 		return failureCode;
 	}
 
-	ServerObject* so = nullptr;
+	ServerObject* so = NULL;
 	if(!JavaLibrary::getObject(client, so))
 		return failureCode;
 
@@ -296,7 +296,7 @@ jboolean     JNICALL ScriptMethodsServerUINamespace::subscribeToSuiEvent(JNIEnv 
 	}
 
 	std::string     ewn;
-	if (eventWidgetName != nullptr)
+	if (eventWidgetName != NULL)
 	{
 		JavaStringParam localEventWidgetName(eventWidgetName);
 		JavaLibrary::convert(localEventWidgetName, ewn);
@@ -323,7 +323,7 @@ jboolean     JNICALL ScriptMethodsServerUINamespace::subscribeToSuiPropertyForEv
 	}
 
 	std::string     ewn;
-	if (eventWidgetName != nullptr)
+	if (eventWidgetName != NULL)
 	{
 		JavaStringParam localEventWidgetName(eventWidgetName);
 		JavaLibrary::convert(localEventWidgetName, ewn);
@@ -411,7 +411,7 @@ jboolean     JNICALL ScriptMethodsServerUINamespace::setSuiAssociatedLocation(JN
 		return JNI_FALSE;
 	}
 
-	ServerObject* associatedObject = nullptr;
+	ServerObject* associatedObject = NULL;
 	if(!JavaLibrary::getObject(j_associatedObjectId, associatedObject))
 	{
 		DEBUG_WARNING(true, ("could not find object for associatedObjectid"));
@@ -441,12 +441,12 @@ jboolean     JNICALL ScriptMethodsServerUINamespace::setSuiMaxRangeToObject(JNIE
 
 jboolean JNICALL ScriptMethodsServerUINamespace::clientMinigameOpen(JNIEnv *env, jobject self, jlong player, jobject data)
 {
-	ServerObject* playerServerObject = nullptr;
+	ServerObject* playerServerObject = NULL;
 	if(!JavaLibrary::getObject(player, playerServerObject))
 		return JNI_FALSE;
 
 	CreatureObject * creatureObject = playerServerObject->asCreatureObject();
-	if(creatureObject != nullptr)
+	if(creatureObject != NULL)
 	{
 		ValueDictionary gameData;
 		JavaLibrary::convert(data, gameData);
@@ -462,12 +462,12 @@ jboolean JNICALL ScriptMethodsServerUINamespace::clientMinigameOpen(JNIEnv *env,
 
 jboolean JNICALL ScriptMethodsServerUINamespace::clientMinigameClose(JNIEnv *env, jobject self, jlong player, jobject data)
 {
-	ServerObject* playerServerObject = nullptr;
+	ServerObject* playerServerObject = NULL;
 	if(!JavaLibrary::getObject(player, playerServerObject))
 		return JNI_FALSE;
 
 	CreatureObject * creatureObject = playerServerObject->asCreatureObject();
-	if(creatureObject != nullptr)
+	if(creatureObject != NULL)
 	{
 		ValueDictionary gameData;
 		JavaLibrary::convert(data, gameData);

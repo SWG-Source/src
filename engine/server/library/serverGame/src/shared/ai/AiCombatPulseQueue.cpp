@@ -45,7 +45,7 @@ void AiCombatPulseQueue::remove()
 
 void AiCombatPulseQueue::schedule(TangibleObject * const object, int waitTimeMs, unsigned long currentFrameTimeMs)
 {
-	if (object == nullptr)
+	if (object == NULL)
 		return;
 
 	unsigned long desiredTime = Clock::getFrameStartTimeMs() + currentFrameTimeMs + waitTimeMs;
@@ -97,7 +97,7 @@ void AiCombatPulseQueue::alter(real time)
 
 		TangibleObject * const object = (j->second)->first;
 
-		if (object != nullptr && object->isInCombat())
+		if (object != NULL && object->isInCombat())
 		{
 			NetworkId const & id = object->getNetworkId();
 
@@ -107,7 +107,7 @@ void AiCombatPulseQueue::alter(real time)
 
 				GameScriptObject * const gameScriptObject = GameScriptObject::asGameScriptObject(object);
 
-				if (gameScriptObject != nullptr)
+				if (gameScriptObject != NULL)
 				{
 					ScriptParams scriptParams;
 					IGNORE_RETURN(gameScriptObject->trigAllScripts(Scripting::TRIG_AI_COMBAT_FRAME, scriptParams));

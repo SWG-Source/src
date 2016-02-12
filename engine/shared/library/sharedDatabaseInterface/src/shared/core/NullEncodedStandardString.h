@@ -15,7 +15,7 @@
 // ======================================================================
 
 /**
- * A unicode-string-compatible class that encodes a nullptr value as a single space
+ * A unicode-string-compatible class that encodes a null value as a single space
  */
 class NullEncodedStandardString
 {

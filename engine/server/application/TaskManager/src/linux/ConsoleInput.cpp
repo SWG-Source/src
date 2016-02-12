@@ -22,7 +22,7 @@ struct SetBufferMode
 
 SetBufferMode::SetBufferMode()
 {
-	setvbuf(stdin, nullptr, _IONBF, 0);
+	setvbuf(stdin, NULL, _IONBF, 0);
 }
 
 //-----------------------------------------------------------------------

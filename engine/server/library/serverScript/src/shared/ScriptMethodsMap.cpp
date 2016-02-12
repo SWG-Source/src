@@ -253,7 +253,7 @@ jobjectArray JNICALL ScriptMethodsMapNamespace::getPlanetaryMapLocations(
 		if(!JavaLibrary::convert(localCategory, categoryName))
 		{
 			DEBUG_WARNING(true, ("[script bug] invalid category passed to getPlanetaryMapLocations"));
-			return nullptr;
+			return NULL;
 		}
 	}
 
@@ -264,7 +264,7 @@ jobjectArray JNICALL ScriptMethodsMapNamespace::getPlanetaryMapLocations(
 		if(!JavaLibrary::convert(localSubCategory, subCategoryName))
 		{
 			DEBUG_WARNING(true, ("[script bug] invalid SubCategory passed to getPlanetaryMapLocations"));
-			return nullptr;
+			return NULL;
 		}
 	}
 
@@ -282,12 +282,12 @@ jobjectArray JNICALL ScriptMethodsMapNamespace::getPlanetaryMapLocations(
 
 		jlong jLocationId = mapLocation.getLocationId().getValue();
 		if (!jLocationId)
-			return nullptr;
+			return NULL;
 
 		JavaString jNameString(mapLocation.getLocationName());
 
 		if (jNameString.getValue() == 0)
-			return nullptr;
+			return NULL;
 
 		LocalRefPtr jMapLocation = createNewObject(JavaLibrary::getClsMapLocation(),
 			JavaLibrary::getMidMapLocation(),
@@ -299,7 +299,7 @@ jobjectArray JNICALL ScriptMethodsMapNamespace::getPlanetaryMapLocations(
 			static_cast<jbyte> (mapLocation.getFlags()));
 
 		if (jMapLocation == LocalRef::cms_nullPtr)
-			return nullptr;
+			return NULL;
 
 		setObjectArrayElement(*jlocs, index, *jMapLocation);
 	}
@@ -318,7 +318,7 @@ jobjectArray JNICALL ScriptMethodsMapNamespace::getPlanetaryMapCategories   (JNI
 		if(!JavaLibrary::convert(localCategory, categoryName))
 		{
 			DEBUG_WARNING(true, ("[script bug] invalid category passed to getPlanetaryMapCategories"));
-			return nullptr;
+			return NULL;
 		}
 	}
 
@@ -350,14 +350,14 @@ jobject      JNICALL ScriptMethodsMapNamespace::getPlanetaryMapLocation     (JNI
 	if (id == NetworkId::cms_invalid)
 	{
 		DEBUG_WARNING(true, ("[script bug] invalid locationId passed to getPlanetaryMapCategories"));
-		return nullptr;
+		return NULL;
 	}
 
 	int mlt = 0;
 	const MapLocation * const mapLocation = PlanetMapManagerServer::getLocation (id, mlt);
 
 	if (!mapLocation)
-		return nullptr;
+		return NULL;
 
 	const JavaString jLocName            (mapLocation->m_locationName);
 	const JavaString jLocCategoryName    (PlanetMapManager::findCategoryName (mapLocation->m_category));

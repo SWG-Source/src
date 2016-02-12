@@ -194,7 +194,7 @@ bool SpaceSquadManager::setSquadId(NetworkId const & unit, int const newSquadId)
 	bool result = false;
 	AiShipController * const aiShipController = AiShipController::getAiShipController(unit);
 
-	if (aiShipController != nullptr)
+	if (aiShipController != NULL)
 	{
 		result = true;
 
@@ -239,7 +239,7 @@ bool SpaceSquadManager::setSquadId(NetworkId const & unit, int const newSquadId)
 // ----------------------------------------------------------------------
 SpaceSquad * SpaceSquadManager::getSquad(int const squadId)
 {
-	SpaceSquad * result = nullptr;
+	SpaceSquad * result = NULL;
 	SquadList::const_iterator iterSpaceSquadList = s_squadList.find(squadId);
 
 	if (iterSpaceSquadList != s_squadList.end())

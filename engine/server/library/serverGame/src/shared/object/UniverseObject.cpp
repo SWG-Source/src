@@ -20,7 +20,7 @@
 // objvars for dynamic regions
 const static std::string OBJVAR_DYNAMIC_REGION("dynamic_region");
 
-const SharedObjectTemplate * UniverseObject::m_defaultSharedTemplate = nullptr;
+const SharedObjectTemplate * UniverseObject::m_defaultSharedTemplate = NULL;
 
 
 // ======================================================================
@@ -56,13 +56,13 @@ const SharedObjectTemplate * UniverseObject::getDefaultSharedTemplate(void) cons
 {
 static const ConstCharCrcLowerString templateName("object/universe/base/shared_universe_default.iff");
 
-	if (m_defaultSharedTemplate == nullptr)
+	if (m_defaultSharedTemplate == NULL)
 	{
 		m_defaultSharedTemplate = safe_cast<const SharedObjectTemplate *>(
 			ObjectTemplateList::fetch(templateName));
-		WARNING_STRICT_FATAL(m_defaultSharedTemplate == nullptr, ("Cannot create "
+		WARNING_STRICT_FATAL(m_defaultSharedTemplate == NULL, ("Cannot create "
 			"default shared object template %s", templateName.getString()));
-		if (m_defaultSharedTemplate != nullptr)
+		if (m_defaultSharedTemplate != NULL)
 			ExitChain::add (removeDefaultTemplate, "UniverseObject::removeDefaultTemplate");
 	}
 	return m_defaultSharedTemplate;
@@ -75,10 +75,10 @@ static const ConstCharCrcLowerString templateName("object/universe/base/shared_u
  */
 void UniverseObject::removeDefaultTemplate(void)
 {
-	if (m_defaultSharedTemplate != nullptr)
+	if (m_defaultSharedTemplate != NULL)
 	{
 		m_defaultSharedTemplate->releaseReference();
-		m_defaultSharedTemplate = nullptr;
+		m_defaultSharedTemplate = NULL;
 	}
 }	// UniverseObject::removeDefaultTemplate
 

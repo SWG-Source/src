@@ -122,7 +122,7 @@ bool PlayerCreationManagerServer::setupPlayer(CreatureObject & obj, const std::s
 			else
 			{
 				//Attach insurance variables here:
-				if (item->asTangibleObject() != nullptr)
+				if (item->asTangibleObject() != NULL)
 					item->asTangibleObject()->setUninsurable(true);
 			}
 		}
@@ -204,7 +204,7 @@ bool PlayerCreationManagerServer::setupPlayer(CreatureObject & obj, const std::s
 			for (size_t i = 0; i < numSkills; ++i)
 			{
 				const SkillObject * skill = SkillManager::getInstance().getSkill(bounty_skills[i]);
-				if (skill != nullptr)
+				if (skill != NULL)
 					obj.grantSkill(*skill);
 			}
 		}

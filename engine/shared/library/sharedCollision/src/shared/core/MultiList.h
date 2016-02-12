@@ -168,12 +168,12 @@ public:
         if(m_node)
             return safe_cast<T const *>(m_node->getObject(m_valueColor));
         else
-            return nullptr;
+            return NULL;
     }
 
     operator bool ( void ) const
     {
-        return m_node != nullptr;
+        return m_node != NULL;
     }
 
     void operator ++ ( void )
@@ -212,12 +212,12 @@ public:
         if(m_node)
             return safe_cast<T *>(m_node->getObject(m_valueColor));
         else
-            return nullptr;
+            return NULL;
     }
 
     operator bool ( void ) const
     {
-        return m_node != nullptr;
+        return m_node != NULL;
     }
 
     void operator ++ ( void )
@@ -246,7 +246,7 @@ public:
 
 	MultiListConstDataIterator( void )
 	{
-		m_node = nullptr;
+		m_node = NULL;
 		m_color = -1;
 	}
 
@@ -281,12 +281,12 @@ public:
         if(m_node)
             return safe_cast<T const *>(m_node->getData());
         else
-            return nullptr;
+            return NULL;
     }
 
     operator bool ( void ) const
     {
-        return m_node != nullptr;
+        return m_node != NULL;
     }
 
     void operator ++ ( void )
@@ -310,7 +310,7 @@ public:
 
 	MultiListDataIterator( void )
 	{
-		m_node = nullptr;
+		m_node = NULL;
 		m_color = -1;
 	}
 
@@ -345,12 +345,12 @@ public:
         if(m_node)
             return safe_cast<T *>(m_node->getData());
         else
-            return nullptr;
+            return NULL;
     }
 
     operator bool ( void ) const
     {
-        return m_node != nullptr;
+        return m_node != NULL;
     }
 
     void operator ++ ( void )

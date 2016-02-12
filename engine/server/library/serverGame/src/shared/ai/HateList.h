@@ -99,7 +99,7 @@ private:
 
 inline bool HateList::isOwnerPlayer() const
 {
-	return (m_playerObject != nullptr);
+	return (m_playerObject != NULL);
 }
 
 // ======================================================================

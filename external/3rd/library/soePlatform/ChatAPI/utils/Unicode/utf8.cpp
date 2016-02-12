@@ -87,7 +87,7 @@ int UTF8_convertCharToUTF16( char * ptr , UTF16 * ret )
 int UTF8_convertToUTF16( char * ptr , UTF16 * ret, int limit )
 {
 	int len = 0;
-    while (( *ptr != 0 ) && ( len < ( limit - 1 ) ))//we use limit -1 to leave room for the nullptr terminator
+    while (( *ptr != 0 ) && ( len < ( limit - 1 ) ))//we use limit -1 to leave room for the null terminator
     {
         int clen = UTF8_convertCharToUTF16( ptr, ret );
         ptr += clen;

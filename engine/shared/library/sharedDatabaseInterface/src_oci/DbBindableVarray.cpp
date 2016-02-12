@@ -22,9 +22,9 @@ using namespace DB;
 
 BindableVarray::BindableVarray() :
 		m_initialized(false),
-		m_tdo (nullptr),
-		m_data (nullptr),
-		m_session (nullptr)
+		m_tdo (NULL),
+		m_data (NULL),
+		m_session (NULL)
 {
 }
 
@@ -52,7 +52,7 @@ bool BindableVarray::create(DB::Session *session, const std::string &name, const
 					 schema.length(),
 					 reinterpret_cast<OraText*>(const_cast<char*>(name.c_str())),
 					 name.length(),
-					 nullptr,
+					 NULL,
 					 0,
 					 OCI_DURATION_SESSION,
 					 OCI_TYPEGET_HEADER,
@@ -64,7 +64,7 @@ bool BindableVarray::create(DB::Session *session, const std::string &name, const
 						localSession->errhp,
 						localSession->svchp,
 						OCI_TYPECODE_VARRAY,
-						m_tdo, nullptr,
+						m_tdo, NULL,
 						OCI_DURATION_DEFAULT,
 						true,
 						reinterpret_cast<void**>(&m_data)))))
@@ -86,9 +86,9 @@ void BindableVarray::free()
 						OCIObjectFree (localSession->envhp,
 						localSession->errhp, m_data, 0)));
 	m_initialized = false;
-	m_tdo=nullptr;
-	m_data=nullptr;
-	m_session=nullptr;
+	m_tdo=NULL;
+	m_data=NULL;
+	m_session=NULL;
 }
 
 // ----------------------------------------------------------------------
@@ -354,7 +354,7 @@ std::string BindableVarrayNumber::outputValue() const
 			if (exists)
 			{
 				if (*indicator == OCI_IND_NULL)
-					result += "nullptr";
+					result += "NULL";
 				else
 				{
 					double value;
@@ -400,7 +400,7 @@ bool BindableVarrayString::push_back(const Unicode::String &value)
 
 bool BindableVarrayString::push_back(const std::string &value)
 {
-	OCIString *buffer = nullptr;
+	OCIString *buffer = NULL;
 	OCIInd buffer_indicator (OCI_IND_NOTNULL);
 	OCISession *localSession = safe_cast<OCISession*>(m_session);
 
@@ -437,7 +437,7 @@ bool BindableVarrayString::push_back(bool bvalue)
 	else
 		value = "N";
 	
-	OCIString *buffer = nullptr;
+	OCIString *buffer = NULL;
 	OCIInd buffer_indicator (OCI_IND_NOTNULL);
 	OCISession *localSession = safe_cast<OCISession*>(m_session);
 
@@ -469,7 +469,7 @@ bool BindableVarrayString::push_back(bool IsNULL, const Unicode::String &value)
 
 bool BindableVarrayString::push_back(bool IsNULL, const std::string &value)
 {
-	OCIString *buffer = nullptr;
+	OCIString *buffer = NULL;
 	OCIInd buffer_indicator;
 	if ( IsNULL )
 	{
@@ -515,7 +515,7 @@ bool BindableVarrayString::push_back(bool IsNULL, bool bvalue)
 	else
 		value = "N";
 	
-	OCIString *buffer = nullptr;
+	OCIString *buffer = NULL;
 	OCIInd buffer_indicator;
 	if ( IsNULL )
 	{
@@ -568,14 +568,14 @@ std::string BindableVarrayString::outputValue() const
 			if (exists)
 			{
 				if (*indicator == OCI_IND_NULL)
-					result += "nullptr";
+					result += "NULL";
 				else
 				{
 					OraText * text = OCIStringPtr(localSession->envhp, *element);
 					if (text)
 						result += '"' + std::string(reinterpret_cast<char*>(text)) + '"';
 					else
-						result += "nullptr";
+						result += "NULL";
 				}
 			}
 			else

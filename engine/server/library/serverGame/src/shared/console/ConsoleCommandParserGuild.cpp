@@ -1218,17 +1218,17 @@ bool ConsoleCommandParserGuild::performParsing (const NetworkId & userId, const 
 				{
 					// new guild leader is not a guild member, so make a guild member first, then make guild leader
 					ServerObject const* o = dynamic_cast<ServerObject const*>(ServerWorld::findObjectByNetworkId(leaderOid));
-					CreatureObject const* c = (o ? o->asCreatureObject() : nullptr);
-					PlayerObject const* p = (c ? PlayerCreatureController::getPlayerObject(c) : nullptr);
-					if (o == nullptr)
+					CreatureObject const* c = (o ? o->asCreatureObject() : NULL);
+					PlayerObject const* p = (c ? PlayerCreatureController::getPlayerObject(c) : NULL);
+					if (o == NULL)
 					{
 						result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 					}
-					else if (c == nullptr)
+					else if (c == NULL)
 					{
 						result += Unicode::narrowToWide("specified object is not a creature object\n");
 					}
-					else if (p == nullptr)
+					else if (p == NULL)
 					{
 						result += Unicode::narrowToWide("specified object is not a character object\n");
 					}

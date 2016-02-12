@@ -19,7 +19,7 @@
 class MxCifQuadTreeBounds
 {
 public:
-	MxCifQuadTreeBounds(float minX, float minY, float maxX, float maxY, void * data = nullptr);
+	MxCifQuadTreeBounds(float minX, float minY, float maxX, float maxY, void * data = NULL);
 	virtual ~MxCifQuadTreeBounds(){};
 
 	const float getMinX(void) const;
@@ -87,7 +87,7 @@ inline void * MxCifQuadTreeBounds::getData(void) const
 class MxCifQuadTreeCircleBounds : public MxCifQuadTreeBounds
 {
 public:
-	MxCifQuadTreeCircleBounds(float centerX, float centerY, float radius, void * data = nullptr);
+	MxCifQuadTreeCircleBounds(float centerX, float centerY, float radius, void * data = NULL);
 
 	float getCenterX() const;
 	float getCenterY() const;

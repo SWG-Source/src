@@ -206,7 +206,7 @@ private:
 /**
  * Get the AppearanceTemplate for this Appearance.
  *
- * The AppearanceTemplate may be nullptr.
+ * The AppearanceTemplate may be NULL.
  *
  * AppearanceTemplates may be shared by multiple Appearances.
  *

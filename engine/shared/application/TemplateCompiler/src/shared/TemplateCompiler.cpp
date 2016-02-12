@@ -46,7 +46,7 @@ static const int SUBMIT_NO_FILE_ERR = 17;	// need to add file before submitting
 //  virtual ~MyPerforceUser() {}
 //	virtual void HandleError( Error *err )
 //	{
-//		if (err != nullptr && err->Test())
+//		if (err != NULL && err->Test())
 //		{
 //			m_errorOccurred = true;
 //			m_lastError = err->GetGeneric();
@@ -154,7 +154,7 @@ int generateTemplate(File &definitionFp, File &templateFp)
 
 	// we now need to move down the template definition heiarchy and write the
 	// parameters of the base class
-	Filename basename(nullptr, definitionFp.getFilename().getPath().c_str(),
+	Filename basename(NULL, definitionFp.getFilename().getPath().c_str(),
 		TemplateDefinitionFile.getBaseFilename().c_str(), TEMPLATE_DEFINITION_EXTENSION);
 	if (basename.getName().size() == 0)
 		return 0;
@@ -185,8 +185,8 @@ int generateTemplate(File &definitionFp, File &templateFp)
 int generateTemplate(const char *definitionFile, const char *templateFile)
 {
 	// check filename extensions
-	Filename defFile(nullptr, nullptr, definitionFile, TEMPLATE_DEFINITION_EXTENSION);
-	Filename temFile(nullptr, nullptr, templateFile, TEMPLATE_EXTENSION);
+	Filename defFile(NULL, NULL, definitionFile, TEMPLATE_DEFINITION_EXTENSION);
+	Filename temFile(NULL, NULL, templateFile, TEMPLATE_EXTENSION);
 
 	File definitionFp;
 	int i = 0;
@@ -231,8 +231,8 @@ int generateTemplate(const char *definitionFile, const char *templateFile)
 int deriveTemplate(const char *baseFile, const char *templateFile)
 {
 	// check filename extensions
-	Filename basFile(nullptr, nullptr, baseFile, TEMPLATE_EXTENSION);
-	Filename temFile(nullptr, nullptr, templateFile, TEMPLATE_EXTENSION);
+	Filename basFile(NULL, NULL, baseFile, TEMPLATE_EXTENSION);
+	Filename temFile(NULL, NULL, templateFile, TEMPLATE_EXTENSION);
 
 	File basFp;
 	if (!basFp.open(basFile, "rt"))
@@ -263,7 +263,7 @@ int compileTemplate(const char *filename)
 {
 TpfFile templateFile;
 
-	Filename templateFileName(nullptr, nullptr, filename, TEMPLATE_EXTENSION);
+	Filename templateFileName(NULL, NULL, filename, TEMPLATE_EXTENSION);
 	return templateFile.makeIffFiles(templateFileName);
 }	// compileTemplate
 
@@ -279,7 +279,7 @@ int verifyTemplate(const char *filename)
 TpfFile templateFile;
 
 	printf("Verifying %s: ", filename);
-	Filename templateFileName(nullptr, nullptr, filename, TEMPLATE_EXTENSION);
+	Filename templateFileName(NULL, NULL, filename, TEMPLATE_EXTENSION);
 	int result = templateFile.loadTemplate(templateFileName);
 	if (result == 0)
 		printf("file ok");
@@ -299,7 +299,7 @@ int updateTemplate(const char *filename)
 {
 TpfFile templateFile;
 
-	Filename templateFileName(nullptr, nullptr, filename, TEMPLATE_EXTENSION);
+	Filename templateFileName(NULL, NULL, filename, TEMPLATE_EXTENSION);
 	return templateFile.updateTemplate(templateFileName);
 }	// updateTemplate
 */
@@ -317,7 +317,7 @@ TpfFile templateFile;
 //Error e;
 //
 //	// check filename extensions
-//	Filename templateFileName(nullptr, nullptr, filename, TEMPLATE_EXTENSION);
+//	Filename templateFileName(NULL, NULL, filename, TEMPLATE_EXTENSION);
 //	Filename iffFileName = templateFileName;
 //	iffFileName.setExtension(IFF_EXTENSION);
 //
@@ -345,7 +345,7 @@ TpfFile templateFile;
 //	IGNORE_RETURN(templateFile.loadTemplate(templateFileName));
 //
 //	// check out the client template iff file
-//	Filename iffName(nullptr, templateFile.getIffPath().c_str(), iffFileName, IFF_EXTENSION);
+//	Filename iffName(NULL, templateFile.getIffPath().c_str(), iffFileName, IFF_EXTENSION);
 //	commands[1] = iffName;
 //	client.SetArgv( 1, const_cast<char **>(&commands[1]) );
 //	client.Run( commands[0], &ui );
@@ -370,7 +370,7 @@ TpfFile templateFile;
 //Error e;
 //
 //	// check filename extensions
-//	Filename templateFileName(nullptr, nullptr, filename, TEMPLATE_EXTENSION);
+//	Filename templateFileName(NULL, NULL, filename, TEMPLATE_EXTENSION);
 //	Filename iffFileName = templateFileName;
 //	iffFileName.setExtension(IFF_EXTENSION);
 //
@@ -424,7 +424,7 @@ TpfFile templateFile;
 //			return -1;
 //
 //		// add the client iff file
-//		Filename iffName(nullptr, templateFile.getIffPath().c_str(), iffFileName, nullptr);
+//		Filename iffName(NULL, templateFile.getIffPath().c_str(), iffFileName, NULL);
 //		commands[1] = iffName;
 //		client.SetArgv( 1, const_cast<char **>(&commands[1]) );
 //		client.Run( commands[0], &ui );
@@ -591,7 +591,7 @@ int main(int argc, char *argv[ ])
 		SetupSharedFoundation::Data data(SetupSharedFoundation::Data::D_console);
 #ifdef WIN32
 		char buffer[1024];
-		GetModuleFileName(GetModuleHandle(nullptr), buffer, 1024);
+		GetModuleFileName(GetModuleHandle(NULL), buffer, 1024);
 		Filename configName;
 		configName.setName(buffer);
 		configName.setName("templateCompiler.cfg");
@@ -607,7 +607,7 @@ int main(int argc, char *argv[ ])
 
 	// setup the random number generator
 	// @todo need a better seed
-	SetupSharedRandom::install(static_cast<uint32>(time(nullptr)));
+	SetupSharedRandom::install(static_cast<uint32>(time(NULL)));
 
 	// install templates
 	SetupSharedTemplate::install();

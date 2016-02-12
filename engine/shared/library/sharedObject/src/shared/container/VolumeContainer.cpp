@@ -36,7 +36,7 @@ namespace VolumeContainerNamespace
 				return parent->getVolumeContainerProperty();
 			}
 		}
-		return nullptr;
+		return NULL;
 	}
 
 	const VolumeContainer* getVolumeContainerParent(const VolumeContainer& self)
@@ -51,7 +51,7 @@ namespace VolumeContainerNamespace
 				return parent->getVolumeContainerProperty();
 			}
 		}
-		return nullptr;
+		return NULL;
 	}
 
 	const unsigned int serverHolocronCrc = CrcLowerString::calculateCrc("object/player_quest/pgc_quest_holocron.iff");

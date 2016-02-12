@@ -56,7 +56,7 @@ ServerCreatureObjectTemplate::~ServerCreatureObjectTemplate()
 		for (iter = m_attribMods.begin(); iter != m_attribMods.end(); ++iter)
 		{
 			delete *iter;
-			*iter = nullptr;
+			*iter = NULL;
 		}
 		m_attribMods.clear();
 	}
@@ -108,10 +108,10 @@ Tag ServerCreatureObjectTemplate::getTemplateVersion(void) const
  */
 Tag ServerCreatureObjectTemplate::getHighestTemplateVersion(void) const
 {
-	if (m_baseData == nullptr)
+	if (m_baseData == NULL)
 		return m_templateVersion;
 	const ServerCreatureObjectTemplate * base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
-	if (base == nullptr)
+	if (base == NULL)
 		return m_templateVersion;
 	return std::max(m_templateVersion, base->getHighestTemplateVersion());
 } // ServerCreatureObjectTemplate::getHighestTemplateVersion
@@ -129,32 +129,32 @@ Object * ServerCreatureObjectTemplate::createObject(void) const
 //@BEGIN TFD
 const ServerWeaponObjectTemplate * ServerCreatureObjectTemplate::getDefaultWeapon() const
 {
-	const ServerCreatureObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerCreatureObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 	}
 
 	if (!m_defaultWeapon.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter defaultWeapon in template %s", DataResource::getName()));
-			return nullptr;
+			return NULL;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter defaultWeapon has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter defaultWeapon has not been defined in template %s!", DataResource::getName()));
 			return base->getDefaultWeapon();
 		}
 	}
 
-	const ServerWeaponObjectTemplate * returnValue = nullptr;
+	const ServerWeaponObjectTemplate * returnValue = NULL;
 	const std::string & templateName = m_defaultWeapon.getValue();
 	if (!templateName.empty())
 	{
 		returnValue = dynamic_cast<const ServerWeaponObjectTemplate *>(ObjectTemplateList::fetch(templateName));
-		if (returnValue == nullptr)
+		if (returnValue == NULL)
 			WARNING_STRICT_FATAL(true, ("Error loading template %s",templateName.c_str()));
 	}
 	return returnValue;
@@ -162,8 +162,8 @@ const ServerWeaponObjectTemplate * ServerCreatureObjectTemplate::getDefaultWeapo
 
 int ServerCreatureObjectTemplate::getAttributes(Attributes index) const
 {
-	const ServerCreatureObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerCreatureObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 	}
@@ -171,14 +171,14 @@ int ServerCreatureObjectTemplate::getAttributes(Attributes index) const
 	DEBUG_FATAL(static_cast<int>(index) < 0 || static_cast<int>(index) >= 6, ("template param static_cast<int>(index) <out of range"));
 	if (!m_attributes[index].isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter attributes in template %s", DataResource::getName()));
 			return 0;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter attributes has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter attributes has not been defined in template %s!", DataResource::getName()));
 			return base->getAttributes(index);
 		}
 	}
@@ -188,9 +188,9 @@ int ServerCreatureObjectTemplate::getAttributes(Attributes index) const
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		int baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getAttributes(index);
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -211,8 +211,8 @@ int ServerCreatureObjectTemplate::getAttributes(Attributes index) const
 
 int ServerCreatureObjectTemplate::getAttributesMin(Attributes index) const
 {
-	const ServerCreatureObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerCreatureObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 	}
@@ -220,14 +220,14 @@ int ServerCreatureObjectTemplate::getAttributesMin(Attributes index) const
 	DEBUG_FATAL(static_cast<int>(index) < 0 || static_cast<int>(index) >= 6, ("template param static_cast<int>(index) <out of range"));
 	if (!m_attributes[index].isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter attributes in template %s", DataResource::getName()));
 			return 0;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter attributes has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter attributes has not been defined in template %s!", DataResource::getName()));
 			return base->getAttributesMin(index);
 		}
 	}
@@ -237,9 +237,9 @@ int ServerCreatureObjectTemplate::getAttributesMin(Attributes index) const
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		int baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getAttributesMin(index);
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -260,8 +260,8 @@ int ServerCreatureObjectTemplate::getAttributesMin(Attributes index) const
 
 int ServerCreatureObjectTemplate::getAttributesMax(Attributes index) const
 {
-	const ServerCreatureObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerCreatureObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 	}
@@ -269,14 +269,14 @@ int ServerCreatureObjectTemplate::getAttributesMax(Attributes index) const
 	DEBUG_FATAL(static_cast<int>(index) < 0 || static_cast<int>(index) >= 6, ("template param static_cast<int>(index) <out of range"));
 	if (!m_attributes[index].isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter attributes in template %s", DataResource::getName()));
 			return 0;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter attributes has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter attributes has not been defined in template %s!", DataResource::getName()));
 			return base->getAttributesMax(index);
 		}
 	}
@@ -286,9 +286,9 @@ int ServerCreatureObjectTemplate::getAttributesMax(Attributes index) const
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		int baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getAttributesMax(index);
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -309,8 +309,8 @@ int ServerCreatureObjectTemplate::getAttributesMax(Attributes index) const
 
 int ServerCreatureObjectTemplate::getMinAttributes(Attributes index) const
 {
-	const ServerCreatureObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerCreatureObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 	}
@@ -318,14 +318,14 @@ int ServerCreatureObjectTemplate::getMinAttributes(Attributes index) const
 	DEBUG_FATAL(static_cast<int>(index) < 0 || static_cast<int>(index) >= 6, ("template param static_cast<int>(index) <out of range"));
 	if (!m_minAttributes[index].isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter minAttributes in template %s", DataResource::getName()));
 			return 0;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter minAttributes has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter minAttributes has not been defined in template %s!", DataResource::getName()));
 			return base->getMinAttributes(index);
 		}
 	}
@@ -335,9 +335,9 @@ int ServerCreatureObjectTemplate::getMinAttributes(Attributes index) const
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		int baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getMinAttributes(index);
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -358,8 +358,8 @@ int ServerCreatureObjectTemplate::getMinAttributes(Attributes index) const
 
 int ServerCreatureObjectTemplate::getMinAttributesMin(Attributes index) const
 {
-	const ServerCreatureObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerCreatureObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 	}
@@ -367,14 +367,14 @@ int ServerCreatureObjectTemplate::getMinAttributesMin(Attributes index) const
 	DEBUG_FATAL(static_cast<int>(index) < 0 || static_cast<int>(index) >= 6, ("template param static_cast<int>(index) <out of range"));
 	if (!m_minAttributes[index].isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter minAttributes in template %s", DataResource::getName()));
 			return 0;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter minAttributes has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter minAttributes has not been defined in template %s!", DataResource::getName()));
 			return base->getMinAttributesMin(index);
 		}
 	}
@@ -384,9 +384,9 @@ int ServerCreatureObjectTemplate::getMinAttributesMin(Attributes index) const
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		int baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getMinAttributesMin(index);
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -407,8 +407,8 @@ int ServerCreatureObjectTemplate::getMinAttributesMin(Attributes index) const
 
 int ServerCreatureObjectTemplate::getMinAttributesMax(Attributes index) const
 {
-	const ServerCreatureObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerCreatureObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 	}
@@ -416,14 +416,14 @@ int ServerCreatureObjectTemplate::getMinAttributesMax(Attributes index) const
 	DEBUG_FATAL(static_cast<int>(index) < 0 || static_cast<int>(index) >= 6, ("template param static_cast<int>(index) <out of range"));
 	if (!m_minAttributes[index].isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter minAttributes in template %s", DataResource::getName()));
 			return 0;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter minAttributes has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter minAttributes has not been defined in template %s!", DataResource::getName()));
 			return base->getMinAttributesMax(index);
 		}
 	}
@@ -433,9 +433,9 @@ int ServerCreatureObjectTemplate::getMinAttributesMax(Attributes index) const
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		int baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getMinAttributesMax(index);
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -456,8 +456,8 @@ int ServerCreatureObjectTemplate::getMinAttributesMax(Attributes index) const
 
 int ServerCreatureObjectTemplate::getMaxAttributes(Attributes index) const
 {
-	const ServerCreatureObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerCreatureObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 	}
@@ -465,14 +465,14 @@ int ServerCreatureObjectTemplate::getMaxAttributes(Attributes index) const
 	DEBUG_FATAL(static_cast<int>(index) < 0 || static_cast<int>(index) >= 6, ("template param static_cast<int>(index) <out of range"));
 	if (!m_maxAttributes[index].isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter maxAttributes in template %s", DataResource::getName()));
 			return 0;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter maxAttributes has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter maxAttributes has not been defined in template %s!", DataResource::getName()));
 			return base->getMaxAttributes(index);
 		}
 	}
@@ -482,9 +482,9 @@ int ServerCreatureObjectTemplate::getMaxAttributes(Attributes index) const
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		int baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getMaxAttributes(index);
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -505,8 +505,8 @@ int ServerCreatureObjectTemplate::getMaxAttributes(Attributes index) const
 
 int ServerCreatureObjectTemplate::getMaxAttributesMin(Attributes index) const
 {
-	const ServerCreatureObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerCreatureObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 	}
@@ -514,14 +514,14 @@ int ServerCreatureObjectTemplate::getMaxAttributesMin(Attributes index) const
 	DEBUG_FATAL(static_cast<int>(index) < 0 || static_cast<int>(index) >= 6, ("template param static_cast<int>(index) <out of range"));
 	if (!m_maxAttributes[index].isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter maxAttributes in template %s", DataResource::getName()));
 			return 0;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter maxAttributes has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter maxAttributes has not been defined in template %s!", DataResource::getName()));
 			return base->getMaxAttributesMin(index);
 		}
 	}
@@ -531,9 +531,9 @@ int ServerCreatureObjectTemplate::getMaxAttributesMin(Attributes index) const
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		int baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getMaxAttributesMin(index);
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -554,8 +554,8 @@ int ServerCreatureObjectTemplate::getMaxAttributesMin(Attributes index) const
 
 int ServerCreatureObjectTemplate::getMaxAttributesMax(Attributes index) const
 {
-	const ServerCreatureObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerCreatureObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 	}
@@ -563,14 +563,14 @@ int ServerCreatureObjectTemplate::getMaxAttributesMax(Attributes index) const
 	DEBUG_FATAL(static_cast<int>(index) < 0 || static_cast<int>(index) >= 6, ("template param static_cast<int>(index) <out of range"));
 	if (!m_maxAttributes[index].isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter maxAttributes in template %s", DataResource::getName()));
 			return 0;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter maxAttributes has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter maxAttributes has not been defined in template %s!", DataResource::getName()));
 			return base->getMaxAttributesMax(index);
 		}
 	}
@@ -580,9 +580,9 @@ int ServerCreatureObjectTemplate::getMaxAttributesMax(Attributes index) const
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		int baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getMaxAttributesMax(index);
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -609,26 +609,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const ServerCreatureObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerCreatureObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getMinDrainModifier(true);
 #endif
 	}
 
 	if (!m_minDrainModifier.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter minDrainModifier in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter minDrainModifier has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter minDrainModifier has not been defined in template %s!", DataResource::getName()));
 			return base->getMinDrainModifier();
 		}
 	}
@@ -638,9 +638,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getMinDrainModifier();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -657,7 +657,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -673,26 +673,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const ServerCreatureObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerCreatureObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getMinDrainModifierMin(true);
 #endif
 	}
 
 	if (!m_minDrainModifier.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter minDrainModifier in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter minDrainModifier has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter minDrainModifier has not been defined in template %s!", DataResource::getName()));
 			return base->getMinDrainModifierMin();
 		}
 	}
@@ -702,9 +702,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getMinDrainModifierMin();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -721,7 +721,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -737,26 +737,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const ServerCreatureObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerCreatureObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getMinDrainModifierMax(true);
 #endif
 	}
 
 	if (!m_minDrainModifier.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter minDrainModifier in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter minDrainModifier has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter minDrainModifier has not been defined in template %s!", DataResource::getName()));
 			return base->getMinDrainModifierMax();
 		}
 	}
@@ -766,9 +766,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getMinDrainModifierMax();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -785,7 +785,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -801,26 +801,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const ServerCreatureObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerCreatureObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getMaxDrainModifier(true);
 #endif
 	}
 
 	if (!m_maxDrainModifier.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter maxDrainModifier in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter maxDrainModifier has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter maxDrainModifier has not been defined in template %s!", DataResource::getName()));
 			return base->getMaxDrainModifier();
 		}
 	}
@@ -830,9 +830,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getMaxDrainModifier();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -849,7 +849,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -865,26 +865,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const ServerCreatureObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerCreatureObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getMaxDrainModifierMin(true);
 #endif
 	}
 
 	if (!m_maxDrainModifier.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter maxDrainModifier in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter maxDrainModifier has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter maxDrainModifier has not been defined in template %s!", DataResource::getName()));
 			return base->getMaxDrainModifierMin();
 		}
 	}
@@ -894,9 +894,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getMaxDrainModifierMin();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -913,7 +913,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -929,26 +929,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const ServerCreatureObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerCreatureObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getMaxDrainModifierMax(true);
 #endif
 	}
 
 	if (!m_maxDrainModifier.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter maxDrainModifier in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter maxDrainModifier has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter maxDrainModifier has not been defined in template %s!", DataResource::getName()));
 			return base->getMaxDrainModifierMax();
 		}
 	}
@@ -958,9 +958,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getMaxDrainModifierMax();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -977,7 +977,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -993,26 +993,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const ServerCreatureObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerCreatureObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getMinFaucetModifier(true);
 #endif
 	}
 
 	if (!m_minFaucetModifier.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter minFaucetModifier in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter minFaucetModifier has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter minFaucetModifier has not been defined in template %s!", DataResource::getName()));
 			return base->getMinFaucetModifier();
 		}
 	}
@@ -1022,9 +1022,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getMinFaucetModifier();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -1041,7 +1041,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -1057,26 +1057,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const ServerCreatureObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerCreatureObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getMinFaucetModifierMin(true);
 #endif
 	}
 
 	if (!m_minFaucetModifier.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter minFaucetModifier in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter minFaucetModifier has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter minFaucetModifier has not been defined in template %s!", DataResource::getName()));
 			return base->getMinFaucetModifierMin();
 		}
 	}
@@ -1086,9 +1086,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getMinFaucetModifierMin();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -1105,7 +1105,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -1121,26 +1121,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const ServerCreatureObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerCreatureObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getMinFaucetModifierMax(true);
 #endif
 	}
 
 	if (!m_minFaucetModifier.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter minFaucetModifier in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter minFaucetModifier has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter minFaucetModifier has not been defined in template %s!", DataResource::getName()));
 			return base->getMinFaucetModifierMax();
 		}
 	}
@@ -1150,9 +1150,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getMinFaucetModifierMax();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -1169,7 +1169,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -1185,26 +1185,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const ServerCreatureObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerCreatureObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getMaxFaucetModifier(true);
 #endif
 	}
 
 	if (!m_maxFaucetModifier.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter maxFaucetModifier in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter maxFaucetModifier has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter maxFaucetModifier has not been defined in template %s!", DataResource::getName()));
 			return base->getMaxFaucetModifier();
 		}
 	}
@@ -1214,9 +1214,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getMaxFaucetModifier();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -1233,7 +1233,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -1249,26 +1249,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const ServerCreatureObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerCreatureObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getMaxFaucetModifierMin(true);
 #endif
 	}
 
 	if (!m_maxFaucetModifier.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter maxFaucetModifier in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter maxFaucetModifier has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter maxFaucetModifier has not been defined in template %s!", DataResource::getName()));
 			return base->getMaxFaucetModifierMin();
 		}
 	}
@@ -1278,9 +1278,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getMaxFaucetModifierMin();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -1297,7 +1297,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -1313,26 +1313,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const ServerCreatureObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerCreatureObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getMaxFaucetModifierMax(true);
 #endif
 	}
 
 	if (!m_maxFaucetModifier.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter maxFaucetModifier in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter maxFaucetModifier has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter maxFaucetModifier has not been defined in template %s!", DataResource::getName()));
 			return base->getMaxFaucetModifierMax();
 		}
 	}
@@ -1342,9 +1342,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getMaxFaucetModifierMax();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -1361,7 +1361,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -1371,28 +1371,28 @@ UNREF(testData);
 
 void ServerCreatureObjectTemplate::getAttribMods(AttribMod &data, int index) const
 {
-	const ServerCreatureObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerCreatureObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 	}
 
 	if (!m_attribModsLoaded)
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter attribMods in template %s", DataResource::getName()));
 			return ;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter attribMods has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter attribMods has not been defined in template %s!", DataResource::getName()));
 			base->getAttribMods(data, index);
 			return;
 		}
 	}
 
-	if (m_attribModsAppend && base != nullptr)
+	if (m_attribModsAppend && base != NULL)
 	{
 		int baseCount = base->getAttribModsCount();
 		if (static_cast<int>(index) < baseCount)
@@ -1417,28 +1417,28 @@ void ServerCreatureObjectTemplate::getAttribMods(AttribMod &data, int index) con
 
 void ServerCreatureObjectTemplate::getAttribModsMin(AttribMod &data, int index) const
 {
-	const ServerCreatureObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerCreatureObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 	}
 
 	if (!m_attribModsLoaded)
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter attribMods in template %s", DataResource::getName()));
 			return ;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter attribMods has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter attribMods has not been defined in template %s!", DataResource::getName()));
 			base->getAttribModsMin(data, index);
 			return;
 		}
 	}
 
-	if (m_attribModsAppend && base != nullptr)
+	if (m_attribModsAppend && base != NULL)
 	{
 		int baseCount = base->getAttribModsCount();
 		if (static_cast<int>(index) < baseCount)
@@ -1463,28 +1463,28 @@ void ServerCreatureObjectTemplate::getAttribModsMin(AttribMod &data, int index) 
 
 void ServerCreatureObjectTemplate::getAttribModsMax(AttribMod &data, int index) const
 {
-	const ServerCreatureObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerCreatureObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 	}
 
 	if (!m_attribModsLoaded)
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter attribMods in template %s", DataResource::getName()));
 			return ;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter attribMods has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter attribMods has not been defined in template %s!", DataResource::getName()));
 			base->getAttribModsMax(data, index);
 			return;
 		}
 	}
 
-	if (m_attribModsAppend && base != nullptr)
+	if (m_attribModsAppend && base != NULL)
 	{
 		int baseCount = base->getAttribModsCount();
 		if (static_cast<int>(index) < baseCount)
@@ -1511,20 +1511,20 @@ size_t ServerCreatureObjectTemplate::getAttribModsCount(void) const
 {
 	if (!m_attribModsLoaded)
 	{
-		if (m_baseData == nullptr)
+		if (m_baseData == NULL)
 			return 0;
 		const ServerCreatureObjectTemplate * base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
-		DEBUG_FATAL(base == nullptr, ("base template wrong type"));
+		DEBUG_FATAL(base == NULL, ("base template wrong type"));
 		return base->getAttribModsCount();
 	}
 
 	size_t count = m_attribMods.size();
 
 	// if we are extending our base template, add it's count
-	if (m_attribModsAppend && m_baseData != nullptr)
+	if (m_attribModsAppend && m_baseData != NULL)
 	{
 		const ServerCreatureObjectTemplate * base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
-		if (base != nullptr)
+		if (base != NULL)
 			count += base->getAttribModsCount();
 	}
 
@@ -1539,26 +1539,26 @@ int testDataValue = 0;
 UNREF(testData);
 #endif
 
-	const ServerCreatureObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerCreatureObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getShockWounds(true);
 #endif
 	}
 
 	if (!m_shockWounds.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter shockWounds in template %s", DataResource::getName()));
 			return 0;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter shockWounds has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter shockWounds has not been defined in template %s!", DataResource::getName()));
 			return base->getShockWounds();
 		}
 	}
@@ -1568,9 +1568,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		int baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getShockWounds();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -1587,7 +1587,7 @@ UNREF(testData);
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -1603,26 +1603,26 @@ int testDataValue = 0;
 UNREF(testData);
 #endif
 
-	const ServerCreatureObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerCreatureObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getShockWoundsMin(true);
 #endif
 	}
 
 	if (!m_shockWounds.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter shockWounds in template %s", DataResource::getName()));
 			return 0;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter shockWounds has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter shockWounds has not been defined in template %s!", DataResource::getName()));
 			return base->getShockWoundsMin();
 		}
 	}
@@ -1632,9 +1632,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		int baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getShockWoundsMin();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -1651,7 +1651,7 @@ UNREF(testData);
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -1667,26 +1667,26 @@ int testDataValue = 0;
 UNREF(testData);
 #endif
 
-	const ServerCreatureObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerCreatureObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getShockWoundsMax(true);
 #endif
 	}
 
 	if (!m_shockWounds.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter shockWounds in template %s", DataResource::getName()));
 			return 0;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter shockWounds has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter shockWounds has not been defined in template %s!", DataResource::getName()));
 			return base->getShockWoundsMax();
 		}
 	}
@@ -1696,9 +1696,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		int baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getShockWoundsMax();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -1715,7 +1715,7 @@ UNREF(testData);
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -1731,33 +1731,33 @@ bool testDataValue = false;
 UNREF(testData);
 #endif
 
-	const ServerCreatureObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerCreatureObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getCanCreateAvatar(true);
 #endif
 	}
 
 	if (!m_canCreateAvatar.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter canCreateAvatar in template %s", DataResource::getName()));
 			return false;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter canCreateAvatar has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter canCreateAvatar has not been defined in template %s!", DataResource::getName()));
 			return base->getCanCreateAvatar();
 		}
 	}
 
 	bool value = m_canCreateAvatar.getValue();
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -1773,33 +1773,33 @@ std::string testDataValue = DefaultString;
 UNREF(testData);
 #endif
 
-	const ServerCreatureObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerCreatureObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getNameGeneratorType(true);
 #endif
 	}
 
 	if (!m_nameGeneratorType.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter nameGeneratorType in template %s", DataResource::getName()));
 			return DefaultString;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter nameGeneratorType has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter nameGeneratorType has not been defined in template %s!", DataResource::getName()));
 			return base->getNameGeneratorType();
 		}
 	}
 
 	const std::string & value = m_nameGeneratorType.getValue();
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -1815,26 +1815,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const ServerCreatureObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerCreatureObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getApproachTriggerRange(true);
 #endif
 	}
 
 	if (!m_approachTriggerRange.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter approachTriggerRange in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter approachTriggerRange has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter approachTriggerRange has not been defined in template %s!", DataResource::getName()));
 			return base->getApproachTriggerRange();
 		}
 	}
@@ -1844,9 +1844,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getApproachTriggerRange();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -1863,7 +1863,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -1879,26 +1879,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const ServerCreatureObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerCreatureObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getApproachTriggerRangeMin(true);
 #endif
 	}
 
 	if (!m_approachTriggerRange.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter approachTriggerRange in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter approachTriggerRange has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter approachTriggerRange has not been defined in template %s!", DataResource::getName()));
 			return base->getApproachTriggerRangeMin();
 		}
 	}
@@ -1908,9 +1908,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getApproachTriggerRangeMin();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -1927,7 +1927,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -1943,26 +1943,26 @@ float testDataValue = 0.0f;
 UNREF(testData);
 #endif
 
-	const ServerCreatureObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerCreatureObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != nullptr)
+		if (testData && base != NULL)
 			testDataValue = base->getApproachTriggerRangeMax(true);
 #endif
 	}
 
 	if (!m_approachTriggerRange.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter approachTriggerRange in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter approachTriggerRange has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter approachTriggerRange has not been defined in template %s!", DataResource::getName()));
 			return base->getApproachTriggerRangeMax();
 		}
 	}
@@ -1972,9 +1972,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getApproachTriggerRangeMax();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -1991,7 +1991,7 @@ UNREF(testData);
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != nullptr)
+	if (testData && base != NULL)
 	{
 	}
 #endif
@@ -2001,8 +2001,8 @@ UNREF(testData);
 
 float ServerCreatureObjectTemplate::getMaxMentalStates(MentalStates index) const
 {
-	const ServerCreatureObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerCreatureObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 	}
@@ -2010,14 +2010,14 @@ float ServerCreatureObjectTemplate::getMaxMentalStates(MentalStates index) const
 	DEBUG_FATAL(static_cast<int>(index) < 0 || static_cast<int>(index) >= 4, ("template param static_cast<int>(index) <out of range"));
 	if (!m_maxMentalStates[index].isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter maxMentalStates in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter maxMentalStates has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter maxMentalStates has not been defined in template %s!", DataResource::getName()));
 			return base->getMaxMentalStates(index);
 		}
 	}
@@ -2027,9 +2027,9 @@ float ServerCreatureObjectTemplate::getMaxMentalStates(MentalStates index) const
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getMaxMentalStates(index);
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -2050,8 +2050,8 @@ float ServerCreatureObjectTemplate::getMaxMentalStates(MentalStates index) const
 
 float ServerCreatureObjectTemplate::getMaxMentalStatesMin(MentalStates index) const
 {
-	const ServerCreatureObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerCreatureObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 	}
@@ -2059,14 +2059,14 @@ float ServerCreatureObjectTemplate::getMaxMentalStatesMin(MentalStates index) co
 	DEBUG_FATAL(static_cast<int>(index) < 0 || static_cast<int>(index) >= 4, ("template param static_cast<int>(index) <out of range"));
 	if (!m_maxMentalStates[index].isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter maxMentalStates in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter maxMentalStates has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter maxMentalStates has not been defined in template %s!", DataResource::getName()));
 			return base->getMaxMentalStatesMin(index);
 		}
 	}
@@ -2076,9 +2076,9 @@ float ServerCreatureObjectTemplate::getMaxMentalStatesMin(MentalStates index) co
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getMaxMentalStatesMin(index);
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -2099,8 +2099,8 @@ float ServerCreatureObjectTemplate::getMaxMentalStatesMin(MentalStates index) co
 
 float ServerCreatureObjectTemplate::getMaxMentalStatesMax(MentalStates index) const
 {
-	const ServerCreatureObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerCreatureObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 	}
@@ -2108,14 +2108,14 @@ float ServerCreatureObjectTemplate::getMaxMentalStatesMax(MentalStates index) co
 	DEBUG_FATAL(static_cast<int>(index) < 0 || static_cast<int>(index) >= 4, ("template param static_cast<int>(index) <out of range"));
 	if (!m_maxMentalStates[index].isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter maxMentalStates in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter maxMentalStates has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter maxMentalStates has not been defined in template %s!", DataResource::getName()));
 			return base->getMaxMentalStatesMax(index);
 		}
 	}
@@ -2125,9 +2125,9 @@ float ServerCreatureObjectTemplate::getMaxMentalStatesMax(MentalStates index) co
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getMaxMentalStatesMax(index);
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -2148,8 +2148,8 @@ float ServerCreatureObjectTemplate::getMaxMentalStatesMax(MentalStates index) co
 
 float ServerCreatureObjectTemplate::getMentalStatesDecay(MentalStates index) const
 {
-	const ServerCreatureObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerCreatureObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 	}
@@ -2157,14 +2157,14 @@ float ServerCreatureObjectTemplate::getMentalStatesDecay(MentalStates index) con
 	DEBUG_FATAL(static_cast<int>(index) < 0 || static_cast<int>(index) >= 4, ("template param static_cast<int>(index) <out of range"));
 	if (!m_mentalStatesDecay[index].isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter mentalStatesDecay in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter mentalStatesDecay has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter mentalStatesDecay has not been defined in template %s!", DataResource::getName()));
 			return base->getMentalStatesDecay(index);
 		}
 	}
@@ -2174,9 +2174,9 @@ float ServerCreatureObjectTemplate::getMentalStatesDecay(MentalStates index) con
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getMentalStatesDecay(index);
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -2197,8 +2197,8 @@ float ServerCreatureObjectTemplate::getMentalStatesDecay(MentalStates index) con
 
 float ServerCreatureObjectTemplate::getMentalStatesDecayMin(MentalStates index) const
 {
-	const ServerCreatureObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerCreatureObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 	}
@@ -2206,14 +2206,14 @@ float ServerCreatureObjectTemplate::getMentalStatesDecayMin(MentalStates index) 
 	DEBUG_FATAL(static_cast<int>(index) < 0 || static_cast<int>(index) >= 4, ("template param static_cast<int>(index) <out of range"));
 	if (!m_mentalStatesDecay[index].isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter mentalStatesDecay in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter mentalStatesDecay has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter mentalStatesDecay has not been defined in template %s!", DataResource::getName()));
 			return base->getMentalStatesDecayMin(index);
 		}
 	}
@@ -2223,9 +2223,9 @@ float ServerCreatureObjectTemplate::getMentalStatesDecayMin(MentalStates index) 
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getMentalStatesDecayMin(index);
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -2246,8 +2246,8 @@ float ServerCreatureObjectTemplate::getMentalStatesDecayMin(MentalStates index) 
 
 float ServerCreatureObjectTemplate::getMentalStatesDecayMax(MentalStates index) const
 {
-	const ServerCreatureObjectTemplate * base = nullptr;
-	if (m_baseData != nullptr)
+	const ServerCreatureObjectTemplate * base = NULL;
+	if (m_baseData != NULL)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
 	}
@@ -2255,14 +2255,14 @@ float ServerCreatureObjectTemplate::getMentalStatesDecayMax(MentalStates index) 
 	DEBUG_FATAL(static_cast<int>(index) < 0 || static_cast<int>(index) >= 4, ("template param static_cast<int>(index) <out of range"));
 	if (!m_mentalStatesDecay[index].isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter mentalStatesDecay in template %s", DataResource::getName()));
 			return 0.0f;
 		}
 		else
 		{
-			DEBUG_FATAL(base == nullptr, ("Template parameter mentalStatesDecay has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == NULL, ("Template parameter mentalStatesDecay has not been defined in template %s!", DataResource::getName()));
 			return base->getMentalStatesDecayMax(index);
 		}
 	}
@@ -2272,9 +2272,9 @@ float ServerCreatureObjectTemplate::getMentalStatesDecayMax(MentalStates index) 
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		float baseValue = 0;
-		if (m_baseData != nullptr)
+		if (m_baseData != NULL)
 		{
-			if (base != nullptr)
+			if (base != NULL)
 				baseValue = base->getMentalStatesDecayMax(index);
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -2344,12 +2344,12 @@ char paramName[MAX_NAME_SIZE];
 		file.read_string(baseFilename);
 		file.exitChunk();
 		const ObjectTemplate *base = ObjectTemplateList::fetch(baseFilename);
-		DEBUG_WARNING(base == nullptr, ("was unable to load base template %s", baseFilename.c_str()));
-		if (m_baseData == base && base != nullptr)
+		DEBUG_WARNING(base == NULL, ("was unable to load base template %s", baseFilename.c_str()));
+		if (m_baseData == base && base != NULL)
 			base->releaseReference();
 		else
 		{
-			if (m_baseData != nullptr)
+			if (m_baseData != NULL)
 				m_baseData->releaseReference();
 			m_baseData = base;
 		}
@@ -2430,7 +2430,7 @@ char paramName[MAX_NAME_SIZE];
 			for (iter = m_attribMods.begin(); iter != m_attribMods.end(); ++iter)
 			{
 				delete *iter;
-				*iter = nullptr;
+				*iter = NULL;
 			}
 			m_attribMods.clear();
 			m_attribModsAppend = file.read_bool8();

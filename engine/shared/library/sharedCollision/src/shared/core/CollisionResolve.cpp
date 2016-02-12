@@ -87,7 +87,7 @@ namespace CollisionResolveNamespace
 
 	FloorContactList ms_floorContactList;
 
-	Floor const * ms_ignoreFloor = nullptr;
+	Floor const * ms_ignoreFloor = NULL;
 	int ms_ignoreTriId = -1;
 	int ms_ignoreEdge = -1;
 	Vector ms_ignoreNormal = Vector::zero;
@@ -312,7 +312,7 @@ ResolutionResult CollisionResolve::resolveCollisions(CollisionProperty * collide
 
 	if(result == RR_Resolved)
 	{
-		colliderA->hitBy(nullptr);
+		colliderA->hitBy(NULL);
 		colliderA->setExtentsDirty(true);
 
 		Vector resetPos = moveSeg.getBegin(moveSeg.m_cellB);
@@ -339,7 +339,7 @@ ResolutionResult CollisionResolve::resolveCollisions ( CellProperty const * cell
 
 	const int iterationCount = 8;
 
-	ms_ignoreFloor = nullptr;
+	ms_ignoreFloor = NULL;
 	ms_ignoreTriId = -1;
 	ms_ignoreEdge = -1;
 	ms_ignoreTime = REAL_MAX;
@@ -484,12 +484,12 @@ ResolutionResult CollisionResolve::resolveCollisions ( CellProperty const * cell
 		// ----------
 		// Remove the hit obstacle from the extent list
 
-		if(obstacleList->at(minIndex).m_extent != nullptr)
+		if(obstacleList->at(minIndex).m_extent != NULL)
 		{
 			obstacleList->at(minIndex) = obstacleList->back();
 			obstacleList->resize(obstacleList->size()-1);
 
-			ms_ignoreFloor = nullptr;
+			ms_ignoreFloor = NULL;
 			ms_ignoreTriId = -1;
 			ms_ignoreEdge = -1;
 			ms_ignoreTime = REAL_MAX;
@@ -561,13 +561,13 @@ void CollisionResolve::explodeExtent ( CellProperty const * cell, BaseExtent con
 
 void CollisionResolve::explodeFootprint ( Footprint * foot, ObstacleList & obstacleList, FloorContactList & floorContacts )
 {
-	if(foot == nullptr) return;
+	if(foot == NULL) return;
 
 	for(ContactIterator it(foot->getFloorList()); it; ++it)
 	{
 		FloorContactShape * contact = (*it);
 
-		if(contact == nullptr) 
+		if(contact == NULL) 
 			continue;
 
 		obstacleList.push_back( ObstacleInfo(contact->m_contact.getCell(),contact) );
@@ -594,7 +594,7 @@ void CollisionResolve::explodeCollider(CollisionProperty * colliderA, ColliderLi
 	{
 		CollisionProperty const * const colliderB = *ii;
 
-		if(colliderB == nullptr) continue;
+		if(colliderB == NULL) continue;
 
 		BaseExtent const * const extentB = colliderB->getExtent_p();
 
@@ -613,7 +613,7 @@ void CollisionResolve::explodeCollider(CollisionProperty * colliderA, ColliderLi
 		{
 			FloorContactShape * const contact = (*it);
 
-			if(contact == nullptr) continue;
+			if(contact == NULL) continue;
 
 			ms_floorContactList.push_back(contact);
 		}
@@ -713,7 +713,7 @@ Contact CollisionResolve::findContactWithFloor ( FloorContactShape * floorContac
 
 	Floor const * floor = loc.getFloor();
 
-	if(floor == nullptr) return Contact::noContact;
+	if(floor == NULL) return Contact::noContact;
 
 	CellProperty const * floorCell = loc.getCell();
 
@@ -740,7 +740,7 @@ Contact CollisionResolve::findContactWithFloor ( FloorContactShape * floorContac
 			return Contact::noContact;
 	}
 
-	if((ms_ignoreFloor == nullptr) || (floor != ms_ignoreFloor))
+	if((ms_ignoreFloor == NULL) || (floor != ms_ignoreFloor))
 	{
 		walkResult = floor->canMove(loc,delta,-1,-1,result);
 	}
@@ -776,7 +776,7 @@ Contact CollisionResolve::findContactWithFloor ( FloorContactShape * floorContac
 					tempContact.m_surfaceId2 = result.getHitEdgeId();
 
 					tempContact.m_cell       = floorCell;
-					tempContact.m_extent     = nullptr;
+					tempContact.m_extent     = NULL;
 					tempContact.m_surface    = result.getFloor();
 				}
 			}

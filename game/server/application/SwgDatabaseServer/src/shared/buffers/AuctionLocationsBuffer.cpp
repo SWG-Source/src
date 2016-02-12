@@ -30,7 +30,7 @@ AuctionLocationsBuffer::~AuctionLocationsBuffer(void)
 	for (IndexType::iterator i=m_rows.begin(); i!=m_rows.end(); ++i)
 	{
 		delete i->second;
-		i->second=nullptr;
+		i->second=NULL;
 	}
 }
 
@@ -56,7 +56,7 @@ void AuctionLocationsBuffer::removeAuctionLocations(const NetworkId &locationId)
 	if (i!=m_rows.end())
 	{
 		delete i->second;
-		i->second=nullptr;
+		i->second=NULL;
 		m_rows.erase(i);
 	}
 }
