@@ -153,7 +153,7 @@ class UdpConnection : public UdpGuardedRefCount, public PriorityQueueMember, pub
         int ConnectionAge() const;
 
             // returns the UdpManager object that is managing this connection
-            // will return NULL if the connection has been disconnected for some reason (because disconnecting severes the link to UdpManager)
+            // will return nullptr if the connection has been disconnected for some reason (because disconnecting severes the link to UdpManager)
         UdpManager *GetUdpManager() const;
 
             // returns the 32-bit encryption-code that was negotiated as part of the connection-establishment process.
@@ -234,9 +234,9 @@ class UdpConnection : public UdpGuardedRefCount, public PriorityQueueMember, pub
         friend class UdpManager;
         friend class UdpReliableChannel;
 
-            // note: if connectPacket is NULL, that means this connection object is being created to establish
+            // note: if connectPacket is nullptr, that means this connection object is being created to establish
             // a new connection to the specified ip/port (ie. the connection starts out in cStatusNegotiating mode)
-            // if connectPacket is non-NULL, that menas this connection object is being created to handle an
+            // if connectPacket is non-nullptr, that menas this connection object is being created to handle an
             // incoming connect request and it will start out in cStatusConnected mode.
         UdpConnection(UdpManager *udpManager, UdpPlatformAddress destIp, int destPort, int timeout);    // starts connection-establishment protocol
         UdpConnection(UdpManager *udpManager, const UdpManager::PacketHistoryEntry *e);                // starts already connected, replying to connection request
@@ -281,7 +281,7 @@ class UdpConnection : public UdpGuardedRefCount, public PriorityQueueMember, pub
         void RawSend(const udp_uchar *data, int dataLen);                // nothing happens to the data here, it is given to the udpmanager and sent out the port
         void PhysicalSend(const udp_uchar *data, int dataLen, bool appendAllowed);        // sends a physical packet (encrypts and adds crc bytes)
         udp_uchar *BufferedSend(const udp_uchar *data, int dataLen, const udp_uchar *data2, int dataLen2, bool appendAllowed);        // buffers logical packets waiting til we have more data (makes multi-packets)
-        bool InternalSend(UdpChannel channel, const udp_uchar *data, int dataLen, const udp_uchar *data2 = NULL, int dataLen2 = 0);
+        bool InternalSend(UdpChannel channel, const udp_uchar *data, int dataLen, const udp_uchar *data2 = nullptr, int dataLen2 = 0);
 
         void InternalGiveTime();
         void InternalDisconnect(int flushTimeout, DisconnectReason reason);
@@ -527,7 +527,7 @@ inline void UdpConnection::ScheduleTimeNow()
         // prevents us from reprioritizing to 0, only to shortly thereafter be reprioritized to where we actually belong.
     if (!mGettingTime)
     {
-        if (mUdpManager != NULL)
+        if (mUdpManager != nullptr)
             mUdpManager->SetPriority(this, 0);
     }
 }
@@ -575,7 +575,7 @@ inline int UdpConnection::LastReceive(UdpClockStamp useStamp) const
 inline int UdpConnection::LastReceive() const
 {
     UdpGuard guard(&mGuard);
-    if (mUdpManager == NULL)
+    if (mUdpManager == nullptr)
         return(0);
     return(mUdpManager->CachedClockElapsed(mLastReceiveTime));
 }
@@ -583,7 +583,7 @@ inline int UdpConnection::LastReceive() const
 inline int UdpConnection::ConnectionAge() const
 {
     UdpGuard guard(&mGuard);
-    if (mUdpManager == NULL)
+    if (mUdpManager == nullptr)
         return(0);
     return(mUdpManager->CachedClockElapsed(mConnectionCreateTime));
 }
@@ -591,7 +591,7 @@ inline int UdpConnection::ConnectionAge() const
 inline int UdpConnection::LastSend() const
 {
     UdpGuard guard(&mGuard);
-    if (mUdpManager == NULL)
+    if (mUdpManager == nullptr)
         return(0);
     return(mUdpManager->CachedClockElapsed(mLastSendTime));
 }
@@ -599,7 +599,7 @@ inline int UdpConnection::LastSend() const
 inline udp_ushort UdpConnection::ServerSyncStampShort() const
 {
     UdpGuard guard(&mGuard);
-    if (mUdpManager == NULL)
+    if (mUdpManager == nullptr)
         return(0);
     return((udp_ushort)(mUdpManager->LocalSyncStampShort() + (mSyncTimeDelta & 0xffff)));
 }
@@ -607,7 +607,7 @@ inline udp_ushort UdpConnection::ServerSyncStampShort() const
 inline udp_uint UdpConnection::ServerSyncStampLong() const
 {
     UdpGuard guard(&mGuard);
-    if (mUdpManager == NULL)
+    if (mUdpManager == nullptr)
         return(0);
     return(mUdpManager->LocalSyncStampLong() + mSyncTimeDelta);
 }
@@ -649,7 +649,7 @@ inline UdpConnection::DisconnectReason UdpConnection::GetOtherSideDisconnectReas
 inline int UdpConnection::OutgoingBytesLastSecond()
 {
     UdpGuard guard(&mGuard);
-    if (mUdpManager == NULL)
+    if (mUdpManager == nullptr)
         return(0);
 
     ExpireSendBin();
@@ -659,7 +659,7 @@ inline int UdpConnection::OutgoingBytesLastSecond()
 inline int UdpConnection::IncomingBytesLastSecond()
 {
     UdpGuard guard(&mGuard);
-    if (mUdpManager == NULL)
+    if (mUdpManager == nullptr)
         return(0);
 
     ExpireReceiveBin();

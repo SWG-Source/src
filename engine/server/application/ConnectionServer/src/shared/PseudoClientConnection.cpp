@@ -246,9 +246,9 @@ void PseudoClientConnection::receiveMessage(const Archive::ByteStream & message)
 				characterId = m_transferCharacterData.getDestinationCharacterId();
 			}
 			std::vector<std::pair<NetworkId, std::string> > static const emptyStringVector;
-			NewClient m(characterId, "TransferServer", NetworkHandler::getHostName(), true, false, stationId, NULL, 0, 0, 0, 0, 0, 0, 0, emptyStringVector, emptyStringVector, m_transferCharacterData.getCSToolId() != 0, true);
+			NewClient m(characterId, "TransferServer", NetworkHandler::getHostName(), true, false, stationId, nullptr, 0, 0, 0, 0, 0, 0, 0, emptyStringVector, emptyStringVector, m_transferCharacterData.getCSToolId() != 0, true);
 			m_gameConnection->send(m, true);
-			LOG("CustomerService", ("CharacterTransfer: Sent NewClient(%s, \"TransferServer\", \"%s\", true, false, %d, NULL, 0, 0)\n", characterId.getValueString().c_str(), NetworkHandler::getHostName().c_str(), stationId));
+			LOG("CustomerService", ("CharacterTransfer: Sent NewClient(%s, \"TransferServer\", \"%s\", true, false, %d, nullptr, 0, 0)\n", characterId.getValueString().c_str(), NetworkHandler::getHostName().c_str(), stationId));
 		}
 	}
 	else if(msg.isType("TransferLoginCharacterToSourceServer"))

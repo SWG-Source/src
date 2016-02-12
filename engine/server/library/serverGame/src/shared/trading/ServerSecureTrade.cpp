@@ -385,7 +385,7 @@ void ServerSecureTrade::completeTrade()
 		}
 		if (dynamic_cast<TangibleObject*>(item))
 		{
-			if (!ContainerInterface::canTransferTo(recipientInventory, *item, NULL, errorCode))
+			if (!ContainerInterface::canTransferTo(recipientInventory, *item, nullptr, errorCode))
 			{
 				ContainerInterface::sendContainerMessageToClient(*m_initiator, errorCode);
 				ContainerInterface::sendContainerMessageToClient(*m_recipient, errorCode);
@@ -397,7 +397,7 @@ void ServerSecureTrade::completeTrade()
 		}
 		else
 		{
-			if (!ContainerInterface::canTransferTo(recipientDatapad, *item, NULL, errorCode))
+			if (!ContainerInterface::canTransferTo(recipientDatapad, *item, nullptr, errorCode))
 			{
 				ContainerInterface::sendContainerMessageToClient(*m_initiator, errorCode);
 				ContainerInterface::sendContainerMessageToClient(*m_recipient, errorCode);
@@ -423,7 +423,7 @@ void ServerSecureTrade::completeTrade()
 		}
 		if (dynamic_cast<TangibleObject*>(item))
 		{
-			if (!ContainerInterface::canTransferTo(initiatorInventory, *item, NULL, errorCode))
+			if (!ContainerInterface::canTransferTo(initiatorInventory, *item, nullptr, errorCode))
 			{
 				ContainerInterface::sendContainerMessageToClient(*m_initiator, errorCode);
 				ContainerInterface::sendContainerMessageToClient(*m_recipient, errorCode);
@@ -434,7 +434,7 @@ void ServerSecureTrade::completeTrade()
 		}
 		else
 		{
-			if (!ContainerInterface::canTransferTo(initiatorDatapad, *item, NULL, errorCode))
+			if (!ContainerInterface::canTransferTo(initiatorDatapad, *item, nullptr, errorCode))
 			{
 				ContainerInterface::sendContainerMessageToClient(*m_initiator, errorCode);
 				ContainerInterface::sendContainerMessageToClient(*m_recipient, errorCode);
@@ -516,7 +516,7 @@ void ServerSecureTrade::completeTrade()
 		NOT_NULL(item);
 		if (dynamic_cast<TangibleObject*>(item))
 		{
-			if (!ContainerInterface::transferItemToVolumeContainer(*recipientInventory, *item, NULL, errorCode))
+			if (!ContainerInterface::transferItemToVolumeContainer(*recipientInventory, *item, nullptr, errorCode))
 			{
 				DEBUG_FATAL(true, ("Secure trade transfer failure in initiator transfer!!\n"));
 				LOG("CustomerService", ("Trade:%s FAILED TO receive %s from %s", PlayerObject::getAccountDescription(m_recipient->getNetworkId()).c_str(), ServerObject::getLogDescription(item).c_str(), PlayerObject::getAccountDescription(m_initiator->getNetworkId()).c_str()));
@@ -529,7 +529,7 @@ void ServerSecureTrade::completeTrade()
 		}
 		else
 		{
-			if (!ContainerInterface::transferItemToVolumeContainer(*recipientDatapad, *item, NULL, errorCode))
+			if (!ContainerInterface::transferItemToVolumeContainer(*recipientDatapad, *item, nullptr, errorCode))
 			{
 				DEBUG_FATAL(true, ("Secure trade transfer failure in initiator transfer!!\n"));
 				LOG("CustomerService", ("Trade:%s FAILED TO receive %s from %s", PlayerObject::getAccountDescription(m_recipient->getNetworkId()).c_str(), ServerObject::getLogDescription(item).c_str(), PlayerObject::getAccountDescription(m_initiator->getNetworkId()).c_str()));
@@ -550,7 +550,7 @@ void ServerSecureTrade::completeTrade()
 		NOT_NULL(item);
 		if (dynamic_cast<TangibleObject*>(item))
 		{
-			if (!ContainerInterface::transferItemToVolumeContainer(*initiatorInventory, *item, NULL, errorCode))
+			if (!ContainerInterface::transferItemToVolumeContainer(*initiatorInventory, *item, nullptr, errorCode))
 			{
 				DEBUG_FATAL(true, ("Secure trade transfer failure in recipient transfer!!\n"));
 				LOG("CustomerService", ("Trade:%s FAILED TO receive %s from %s", PlayerObject::getAccountDescription(m_initiator->getNetworkId()).c_str(), ServerObject::getLogDescription(item).c_str(), PlayerObject::getAccountDescription(m_recipient->getNetworkId()).c_str()));
@@ -564,7 +564,7 @@ void ServerSecureTrade::completeTrade()
 		}
 		else
 		{
-			if (!ContainerInterface::transferItemToVolumeContainer(*initiatorDatapad, *item, NULL, errorCode))
+			if (!ContainerInterface::transferItemToVolumeContainer(*initiatorDatapad, *item, nullptr, errorCode))
 			{
 				DEBUG_FATAL(true, ("Secure trade transfer failure in recipient transfer!!\n"));
 				LOG("CustomerService", ("Trade:%s FAILED TO receive %s from %s", PlayerObject::getAccountDescription(m_initiator->getNetworkId()).c_str(), ServerObject::getLogDescription(item).c_str(), PlayerObject::getAccountDescription(m_recipient->getNetworkId()).c_str()));
@@ -602,12 +602,12 @@ void ServerSecureTrade::logTradeitemContents(const CreatureObject & to,
 	const ServerObject & item, const CreatureObject & from) const
 {
 	const Container * container = ContainerInterface::getContainer(item);
-	if (container != NULL)
+	if (container != nullptr)
 	{
 		for (ContainerConstIterator i = container->begin(); i != container->end(); ++i)
 		{
 			const Object * o = (*i).getObject();
-			if (o != NULL)
+			if (o != nullptr)
 			{
 				const ServerObject * content = safe_cast<const ServerObject *>(o);
 				LOG("CustomerService", ("Trade:%s received %s contained in %s from %s", 

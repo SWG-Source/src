@@ -53,7 +53,7 @@ ShipComponentData::~ShipComponentData ()
 
 void ShipComponentData::printDebugString      (Unicode::String & result, Unicode::String const & padding) const
 {
-	if (m_descriptor == NULL)
+	if (m_descriptor == nullptr)
 		return;
 
 	char buf [2048];

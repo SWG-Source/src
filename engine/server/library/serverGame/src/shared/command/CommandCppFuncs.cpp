@@ -145,13 +145,13 @@ namespace CommandCppFuncsNamespace
 	void internalSetBoosterOnOff(NetworkId const & actor, bool onOff)
 	{
 		ServerObject * const actorServerObj = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(actor));
-		CreatureObject * const actorCreature = actorServerObj != NULL ? actorServerObj->asCreatureObject() : NULL;
+		CreatureObject * const actorCreature = actorServerObj != nullptr ? actorServerObj->asCreatureObject() : nullptr;
 		
-		if (actorCreature == NULL)
+		if (actorCreature == nullptr)
 			return;
 		
 		ShipObject * const shipObject = actorCreature->getPilotedShip();
-		if (shipObject == NULL)
+		if (shipObject == nullptr)
 			return;
 		
 		if (!shipObject->isSlotInstalled(ShipChassisSlotType::SCST_booster))
@@ -212,22 +212,22 @@ namespace CommandCppFuncsNamespace
 
 	CreatureObject * findAndResolveCreatureByNetworkId(NetworkId const & targetId)
 	{
-		CreatureObject * targetCreatureObject = NULL;
+		CreatureObject * targetCreatureObject = nullptr;
 
 		{
 			// find the target.  the target could be either a creature or ship
 			ServerObject * const serverObject = ServerWorld::findObjectByNetworkId(targetId);
-			targetCreatureObject = (serverObject != NULL) ? serverObject->asCreatureObject() : NULL;
+			targetCreatureObject = (serverObject != nullptr) ? serverObject->asCreatureObject() : nullptr;
 
-			if (targetCreatureObject == NULL)
+			if (targetCreatureObject == nullptr)
 			{
-				ShipObject * const shipObject = (serverObject != NULL) ? serverObject->asShipObject() : NULL;
+				ShipObject * const shipObject = (serverObject != nullptr) ? serverObject->asShipObject() : nullptr;
 
-				if (shipObject != NULL)
+				if (shipObject != nullptr)
 				{
 					targetCreatureObject = shipObject->getPilot();
 
-					if (targetCreatureObject == NULL)
+					if (targetCreatureObject == nullptr)
 					{
 						// this means that it is a POB ship that doesn't have a pilot
 						// in this case we find the owner
@@ -237,7 +237,7 @@ namespace CommandCppFuncsNamespace
 						std::vector<CreatureObject *>::const_iterator ii = passengers.begin();
 						std::vector<CreatureObject *>::const_iterator iiEnd = passengers.end();
 
-						for (; ii != iiEnd && targetCreatureObject == NULL; ++ii)
+						for (; ii != iiEnd && targetCreatureObject == nullptr; ++ii)
 						{
 							if ((*ii)->getNetworkId() == shipObject->getOwnerId())
 							{
@@ -290,7 +290,7 @@ namespace CommandCppFuncsNamespace
 		Container::ContainerErrorCode errorCode = Container::CEC_Success;
 		for (std::vector<std::pair<ServerObject *, SlotId> >::const_iterator i = oldItems.begin(); i != oldItems.end(); ++i)
 		{
-			IGNORE_RETURN(ContainerInterface::transferItemToSlottedContainer(destination, *((*i).first), (*i).second, NULL, errorCode));
+			IGNORE_RETURN(ContainerInterface::transferItemToSlottedContainer(destination, *((*i).first), (*i).second, nullptr, errorCode));
 		}
 	}
 
@@ -411,7 +411,7 @@ void CommandCppFuncsNamespace::triggerSpaceEjectPlayerFromShip(CreatureObject * 
 {
 	if (creatureObject == 0)
 	{
-		WARNING(true, ("CommandCppFuncsNamespace::triggerSpaceEjectPlayerFromShip: NULL CreatureObject."));
+		WARNING(true, ("CommandCppFuncsNamespace::triggerSpaceEjectPlayerFromShip: nullptr CreatureObject."));
 		return;
 	}
 
@@ -424,7 +424,7 @@ void CommandCppFuncsNamespace::triggerSpaceEjectPlayerFromShip(CreatureObject * 
 	}
 	else
 	{
-		WARNING(true, ("CommandCppFuncsNamespace::triggerSpaceEjectPlayerFromShip: NULL ScriptObject."));
+		WARNING(true, ("CommandCppFuncsNamespace::triggerSpaceEjectPlayerFromShip: nullptr ScriptObject."));
 	}
 }
 
@@ -432,7 +432,7 @@ void CommandCppFuncsNamespace::triggerSpaceEjectPlayerFromShip(CreatureObject * 
 
 TravelPoint const * CommandCppFuncsNamespace::GroupHelpers::getNearestTravelPoint(std::string const & planetName, Vector const & location, std::vector<int> const & cityBanList, uint32 faction, bool starPortAndShuttleportOnly)
 {
-	TravelPoint const * nearestTravelPoint = NULL;
+	TravelPoint const * nearestTravelPoint = nullptr;
 	PlanetObject const * const planetObject = ServerUniverse::getInstance().getPlanetByName(planetName);
 	if (planetObject)
 	{
@@ -537,7 +537,7 @@ static NetworkId nextOidParm(Unicode::String const &str, size_t &curpos)
 
 static float nextFloatParm(Unicode::String const &str, size_t &curpos)
 {
-	return static_cast<float>(strtod(nextStringParm(str, curpos).c_str(), NULL));
+	return static_cast<float>(strtod(nextStringParm(str, curpos).c_str(), nullptr));
 }
 
 
@@ -821,7 +821,7 @@ static void commandFuncLocateStructure(Command const &, NetworkId const &actor, 
 			ownerId = actor;
 	}
 
-	int const timeNow = static_cast<int>(::time(NULL));
+	int const timeNow = static_cast<int>(::time(nullptr));
 	if (!isGod && actorObj->getObjVars().hasItem("timeNextLocateStructureCommandAllowed") && (actorObj->getObjVars().getType("timeNextLocateStructureCommandAllowed") == DynamicVariable::INT))
 	{
 		int timeNextLocateStructureCommandAllowed = 0;
@@ -889,7 +889,7 @@ static void commandFuncLocateVendor(Command const &, NetworkId const &actor, Net
 			ownerId = actor;
 	}
 
-	int const timeNow = static_cast<int>(::time(NULL));
+	int const timeNow = static_cast<int>(::time(nullptr));
 	if (!isGod && actorObj->getObjVars().hasItem("timeNextLocateVendorCommandAllowed") && (actorObj->getObjVars().getType("timeNextLocateVendorCommandAllowed") == DynamicVariable::INT))
 	{
 		int timeNextLocateVendorCommandAllowed = 0;
@@ -956,7 +956,7 @@ static void commandFuncShowCtsHistory(Command const &, NetworkId const &actor, N
 	if (target != actor)
 	{
 		targetObj = dynamic_cast<CreatureObject const*>(ServerWorld::findObjectByNetworkId(target));
-		targetPlayerObj = (targetObj ? PlayerCreatureController::getPlayerObject(targetObj) : NULL);
+		targetPlayerObj = (targetObj ? PlayerCreatureController::getPlayerObject(targetObj) : nullptr);
 		if (!targetPlayerObj)
 		{
 			ConsoleMgr::broadcastString(FormattedString<1024>().sprintf("%s is not a valid or nearby player character.", target.getValueString().c_str()), clientObj);
@@ -980,7 +980,7 @@ static void commandFuncShowCtsHistory(Command const &, NetworkId const &actor, N
 		if (i.getValue(ctsTransactionDetail))
 		{
 			Unicode::UnicodeStringVector tokens;
-			if (Unicode::tokenize(ctsTransactionDetail, tokens, NULL, NULL) && (tokens.size() >= 4))
+			if (Unicode::tokenize(ctsTransactionDetail, tokens, nullptr, nullptr) && (tokens.size() >= 4))
 			{
 				Unicode::String characterName;
 				for (size_t i = 3, j = tokens.size(); i < j; ++i)
@@ -1196,7 +1196,7 @@ static void commandFuncAdminEditBank(Command const &cmd, NetworkId const &actor,
 	CreatureObject * targetCreature = safe_cast<CreatureObject*>(ServerWorld::findObjectByNetworkId(target));
 	if (!targetCreature || !actorCreature)
 	{
-		DEBUG_REPORT_LOG(true, ("Received open command for null player or target.\n"));
+		DEBUG_REPORT_LOG(true, ("Received open command for nullptr player or target.\n"));
 		return;
 	}
 
@@ -1241,14 +1241,14 @@ static void commandFuncAdminEditStats(Command const &, NetworkId const &actor, N
 	CreatureObject* const creatureActor = dynamic_cast<CreatureObject *>(NetworkIdManager::getObjectById (actor));
 	if (!creatureActor)
 	{
-		WARNING (true, ("commandFuncAdminEditStats: null actor"));
+		WARNING (true, ("commandFuncAdminEditStats: nullptr actor"));
 		return;
 	}
 
 	CreatureObject* const creatureTarget = dynamic_cast<CreatureObject *>(NetworkIdManager::getObjectById (target));
 	if (!creatureTarget)
 	{
-		WARNING (true, ("commandFuncAdminEditStats: null target"));
+		WARNING (true, ("commandFuncAdminEditStats: nullptr target"));
 		return;
 	}
 
@@ -1265,14 +1265,14 @@ static void commandFuncAdminEditAppearance(Command const &, NetworkId const &act
 	CreatureObject* const creatureActor = dynamic_cast<CreatureObject *>(NetworkIdManager::getObjectById (actor));
 	if (!creatureActor)
 	{
-		WARNING (true, ("commandFuncAdminEditAppearance: null actor"));
+		WARNING (true, ("commandFuncAdminEditAppearance: nullptr actor"));
 		return;
 	}
 
 	CreatureObject* const creatureTarget = dynamic_cast<CreatureObject *>(NetworkIdManager::getObjectById (target));
 	if (!creatureTarget)
 	{
-		WARNING (true, ("commandFuncAdminEditAppearance: null target"));
+		WARNING (true, ("commandFuncAdminEditAppearance: nullptr target"));
 		return;
 	}
 
@@ -1819,7 +1819,7 @@ static void commandFuncSpatialChatInternal(Command const &, NetworkId const &act
 				else if (!squelched && (ConfigServerGame::getChatSpamNotifyPlayerWhenLimitedIntervalSeconds() > 0) && obj->getClient())
 				{
 					// send message telling character he can no longer talk
-					const int timeNow = static_cast<int>(::time(NULL));
+					const int timeNow = static_cast<int>(::time(nullptr));
 					const int chatSpamTimeEndInterval = playerObject->getChatSpamTimeEndInterval();
 					if ((chatSpamTimeEndInterval > timeNow) && (timeNow >= playerObject->getChatSpamNextTimeToNotifyPlayerWhenLimited()))
 					{
@@ -1837,7 +1837,7 @@ static void commandFuncSpatialChatInternal(Command const &, NetworkId const &act
 // ----------------------------------------------------------------------
 
 /**
-* Parameters: <target> <chatType name> <mood name> <text...>[null terminator + oob]
+* Parameters: <target> <chatType name> <mood name> <text...>[nullptr terminator + oob]
 * All parameters are strings
 */
 
@@ -1957,7 +1957,7 @@ static void commandFuncSpatialChat(Command const &, NetworkId const &actor, Netw
 				else if (!squelched && (ConfigServerGame::getChatSpamNotifyPlayerWhenLimitedIntervalSeconds() > 0) && obj->getClient())
 				{
 					// send message telling character he can no longer talk
-					const int timeNow = static_cast<int>(::time(NULL));
+					const int timeNow = static_cast<int>(::time(nullptr));
 					const int chatSpamTimeEndInterval = playerObject->getChatSpamTimeEndInterval();
 					if ((chatSpamTimeEndInterval > timeNow) && (timeNow >= playerObject->getChatSpamNextTimeToNotifyPlayerWhenLimited()))
 					{
@@ -1992,7 +1992,7 @@ static void commandFuncCombatSpam (Command const &, NetworkId const &actor, Netw
 	ServerObject * const obj = safe_cast<ServerObject *>(actorId.getObject ());
 	if (!obj)
 	{
-		WARNING (true, ("null actor in commandFuncCombatSpam"));
+		WARNING (true, ("nullptr actor in commandFuncCombatSpam"));
 		return;
 	}
 
@@ -2213,10 +2213,10 @@ static void commandFuncSetWaypointName(Command const &, NetworkId const & actor,
 static void commandSetPosture(Command const &command, NetworkId const &actor, NetworkId const &, Unicode::String const &)
 {
 	CachedNetworkId actorId(actor);
-	if (actorId.getObject() != NULL)
+	if (actorId.getObject() != nullptr)
 	{
 		CreatureController * const controller = dynamic_cast<CreatureController *>(actorId.getObject()->getController());
-		if (controller != NULL)
+		if (controller != nullptr)
 		{
 			CreatureObject * const creature    = safe_cast<CreatureObject*>(actorId.getObject());
 			NOT_NULL (creature);
@@ -2247,15 +2247,15 @@ static void commandSetPosture(Command const &command, NetworkId const &actor, Ne
 static void commandFuncJumpServer(Command const &command, NetworkId const &actor, NetworkId const &, Unicode::String const &)
 {
 	CachedNetworkId actorId(actor);
-	if (actorId.getObject() != NULL)
+	if (actorId.getObject() != nullptr)
 	{
 		CreatureController * const controller = dynamic_cast<CreatureController *>(actorId.getObject()->getController());
-		if (controller != NULL)
+		if (controller != nullptr)
 		{
 			controller->appendMessage(
 				CM_jump,
 				0.0f,
-				NULL,
+				nullptr,
 				GameControllerMessageFlags::SEND |
 				GameControllerMessageFlags::RELIABLE |
 				GameControllerMessageFlags::DEST_ALL_CLIENT
@@ -2621,7 +2621,7 @@ static void commandFuncEndDuel(Command const &, NetworkId const &actor, NetworkI
 						params.addParam(targetObj->getNetworkId(), "target");
 						ScriptDictionaryPtr dictionary;
 						GameScriptObject::makeScriptDictionary(params, dictionary);
-						if (dictionary.get() != NULL)
+						if (dictionary.get() != nullptr)
 						{
 							dictionary->serialize();
 							MessageToQueue::getInstance().sendMessageToJava(actorFlagObj->getNetworkId(), 
@@ -2634,7 +2634,7 @@ static void commandFuncEndDuel(Command const &, NetworkId const &actor, NetworkI
 							params.addParam(actorFlagObj->getNetworkId(), "target");
 							ScriptDictionaryPtr dictionary;
 							GameScriptObject::makeScriptDictionary(params, dictionary);
-							if (dictionary.get() != NULL)
+							if (dictionary.get() != nullptr)
 							{
 								dictionary->serialize();
 								MessageToQueue::getInstance().sendMessageToJava(targetObj->getNetworkId(), 
@@ -2867,7 +2867,7 @@ static void commandFuncFactoryCrateSplit(Command const &, NetworkId const &actor
 	const int amount = nextIntParm(params,pos);
 	const CachedNetworkId destContainerId (nextOidParm(params,pos));
 	ServerObject * destContainer = safe_cast<ServerObject *>(destContainerId.getObject());
-	if (destContainer == NULL || ContainerInterface::getVolumeContainer(*destContainer) == NULL)
+	if (destContainer == nullptr || ContainerInterface::getVolumeContainer(*destContainer) == nullptr)
 	{
 		ContainerInterface::sendContainerMessageToClient(*player, Container::CEC_NotFound);
 		return;
@@ -2878,7 +2878,7 @@ static void commandFuncFactoryCrateSplit(Command const &, NetworkId const &actor
 	{
 		ContainerInterface::sendContainerMessageToClient(*player, error, sourceObj);
 	}
-	else if (sourceObj->makeCopy(*destContainer, amount) == NULL)
+	else if (sourceObj->makeCopy(*destContainer, amount) == nullptr)
 	{
 		ContainerInterface::sendContainerMessageToClient(*player, Container::CEC_Full,
 			destContainer);
@@ -2952,7 +2952,7 @@ static void commandFuncTransferItem(Command const &, NetworkId const &actor, Net
 
 	if (!playerSo || !item)
 	{
-		DEBUG_REPORT_LOG(true, ("Received transfer item command for null player or target.\n"));
+		DEBUG_REPORT_LOG(true, ("Received transfer item command for nullptr player or target.\n"));
 		return;
 	}
 
@@ -3185,7 +3185,7 @@ static void commandFuncTransferItem(Command const &, NetworkId const &actor, Net
 				retval = false;
 
 			}
-			else if (destination == player->getAppearanceInventory() && ContainerInterface::getContainer(*item) != NULL)
+			else if (destination == player->getAppearanceInventory() && ContainerInterface::getContainer(*item) != nullptr)
 			{
 				const Container * itemContainer = ContainerInterface::getContainer(*item);
 				if(itemContainer && itemContainer->getNumberOfItems() == 0)
@@ -3215,7 +3215,7 @@ static void commandFuncTransferItem(Command const &, NetworkId const &actor, Net
 					const SlottedContainer * equipment = ContainerInterface::getSlottedContainer(*player);
 					const SlottedContainmentProperty * itemContainmentProperty = ContainerInterface::getSlottedContainmentProperty(*item);
 
-					if (inventory != NULL && equipment != NULL && itemContainmentProperty != NULL)
+					if (inventory != nullptr && equipment != nullptr && itemContainmentProperty != nullptr)
 					{
 						std::vector<std::pair<ServerObject *, SlotId> > oldItems;
 						retval = true;
@@ -3225,7 +3225,7 @@ static void commandFuncTransferItem(Command const &, NetworkId const &actor, Net
 							SlotId slot = itemContainmentProperty->getSlotId(arrangement, i);
 							const Container::ContainedItem & currentWeaponId = equipment->getObjectInSlot(slot, errorCode);
 							ServerObject * oldItem = safe_cast<ServerObject *>(currentWeaponId.getObject());
-							if (oldItem != NULL)
+							if (oldItem != nullptr)
 							{
 								if (ContainerInterface::transferItemToVolumeContainer(*inventory, *oldItem, player, errorCode, true))
 								{
@@ -3280,7 +3280,7 @@ static void commandFuncTransferItem(Command const &, NetworkId const &actor, Net
 				SlotId slot = itemContainmentProperty->getSlotId(arrangement, i);
 				const Container::ContainedItem & currentWeaponId = equipment->getObjectInSlot(slot, errorCode);
 				ServerObject * oldItem = safe_cast<ServerObject *>(currentWeaponId.getObject());
-				if (oldItem != NULL)
+				if (oldItem != nullptr)
 				{
 					if( std::find(objectsToSend.begin(), objectsToSend.end(), oldItem) == objectsToSend.end() )
 						objectsToSend.push_back(oldItem);
@@ -3291,7 +3291,7 @@ static void commandFuncTransferItem(Command const &, NetworkId const &actor, Net
 			for(; iter != objectsToSend.end(); ++iter)
 			{
 				// No idea how this could happen, but just incase.
-				if((*iter) == NULL)
+				if((*iter) == nullptr)
 					continue;
 
 				StringId const code("container_error_message", "container32_prose");
@@ -3411,7 +3411,7 @@ static void commandFuncOpenContainer(Command const & cmd, NetworkId const &actor
 	CreatureObject * player = safe_cast<CreatureObject*>(ServerWorld::findObjectByNetworkId(actor));
 	if (!container || !player)
 	{
-		DEBUG_REPORT_LOG(true, ("Received open command for null player or target.\n"));
+		DEBUG_REPORT_LOG(true, ("Received open command for nullptr player or target.\n"));
 		return;
 	}
 	//@todo check permissions
@@ -3428,14 +3428,14 @@ static void commandFuncOpenContainer(Command const & cmd, NetworkId const &actor
 	//-- if they are opening a crafting station, what they really want is the hopper
 	//-- but only if the object is not a volume container
 	if (container->getGameObjectType () == SharedObjectTemplate::GOT_misc_crafting_station
-		&& (NULL == ContainerInterface::getVolumeContainer (*container)))
+		&& (nullptr == ContainerInterface::getVolumeContainer (*container)))
 	{	
 		static const SlotId inputHopperId(SlotIdManager::findSlotId(CrcLowerString("ingredient_hopper")));
 
 		ServerObject const * const station = container;
-		ServerObject * hopper = NULL;
+		ServerObject * hopper = nullptr;
 		const SlottedContainer * stationContainer = ContainerInterface::getSlottedContainer (*station);
-		if (stationContainer != NULL)
+		if (stationContainer != nullptr)
 		{
 			Container::ContainerErrorCode tmp = Container::CEC_Success;
 			Object* tmpHopperObj = (stationContainer->getObjectInSlot (inputHopperId, tmp)).getObject();
@@ -3526,7 +3526,7 @@ static void commandFuncCloseContainer(Command const &, NetworkId const &actor, N
 	ServerObject * const player = ServerWorld::findObjectByNetworkId(actor);
 	if (!container || !player)
 	{
-		DEBUG_REPORT_LOG(true, ("Received close command for null player or target.\n"));
+		DEBUG_REPORT_LOG(true, ("Received close command for nullptr player or target.\n"));
 		return;
 	}
 
@@ -3615,7 +3615,7 @@ static void commandFuncGiveItem(Command const &, NetworkId const &actor, Network
 	ServerObject * const player = ServerWorld::findObjectByNetworkId(actor);
 	if (!player || !item)
 	{
-		DEBUG_REPORT_LOG(true, ("Received give item command for null player or target.\n"));
+		DEBUG_REPORT_LOG(true, ("Received give item command for nullptr player or target.\n"));
 		return;
 	}
 	size_t curpos = 0;
@@ -3669,10 +3669,10 @@ static void commandFuncGiveItem(Command const &, NetworkId const &actor, Network
 
 	// check and see if this is a gem->socket operation, which is handled by our code
 	TangibleObject * const socket = dynamic_cast<TangibleObject *>(destination);
-	if (socket != NULL)
+	if (socket != nullptr)
 	{
 		TangibleObject * const gem = dynamic_cast<TangibleObject *>(item);
-		if (gem != NULL)
+		if (gem != nullptr)
 		{
 			const int destGot                                      = socket->getGameObjectType();
 			const SharedTangibleObjectTemplate * const gemTemplate = safe_cast<const SharedTangibleObjectTemplate *>(gem->getSharedTemplate());
@@ -3692,13 +3692,13 @@ static void commandFuncGiveItem(Command const &, NetworkId const &actor, Network
 					}
 
 					// if the socketed item is equipped, unequip it temporarily
-					CreatureObject * owner = NULL;
+					CreatureObject * owner = nullptr;
 					Object * container = ContainerInterface::getContainedByObject(*socket);
-					if (container != NULL && container->asServerObject()->asCreatureObject() != NULL)
+					if (container != nullptr && container->asServerObject()->asCreatureObject() != nullptr)
 					{
 						owner = container->asServerObject()->asCreatureObject();
 						// fake unequipping the item
-						owner->onContainerLostItem(NULL, *socket, NULL);
+						owner->onContainerLostItem(nullptr, *socket, nullptr);
 					}
 
 					std::vector<std::pair<std::string, int> > skillModBonuses;
@@ -3713,10 +3713,10 @@ static void commandFuncGiveItem(Command const &, NetworkId const &actor, Network
 						// tell the player they can't use the gem
 						Chat::sendSystemMessage(*player, SharedStringIds::gem_not_inserted, Unicode::emptyString);
 					}
-					if (owner != NULL)
+					if (owner != nullptr)
 					{
 						// "re-equip" the item
-						owner->onContainerGainItem(*socket, NULL, NULL);
+						owner->onContainerGainItem(*socket, nullptr, nullptr);
 					}
 					return;
 				}
@@ -4138,7 +4138,7 @@ static void commandFuncGroupDisband(Command const &, NetworkId const &actor, Net
 							{
 								GroupMemberParam const & leader = *ii;
 
-								// create the new POB groups.  notice NULL is passed in for the
+								// create the new POB groups.  notice nullptr is passed in for the
 								// groupToRemoveFrom because the original group has already had
 								// all of the members removed
 
@@ -4389,7 +4389,7 @@ static void commandFuncCreateGroupPickup(Command const &, NetworkId const &actor
 	}
 
 	// create the group pickup point
-	time_t const timeNow = ::time(NULL);
+	time_t const timeNow = ::time(nullptr);
 	groupObj->setGroupPickupTimer(timeNow, timeNow + static_cast<time_t>(ConfigServerGame::getGroupPickupPointTimeLimitSeconds()));
 	groupObj->setGroupPickupLocation(currentScene, currentWorldLocation);
 
@@ -4682,7 +4682,7 @@ static void commandFuncGroupPickRandomGroupMember(Command const &, NetworkId con
 	if (!client)
 		return;
 
-	int const timeNow = static_cast<int>(::time(NULL));
+	int const timeNow = static_cast<int>(::time(nullptr));
 	if (!client->isGod() && targetObj->getObjVars().hasItem("timeNextGroupPickRandomGroupMemberCommandAllowed") && (targetObj->getObjVars().getType("timeNextGroupPickRandomGroupMemberCommandAllowed") == DynamicVariable::INT))
 	{
 		int timeNextGroupPickRandomGroupMemberCommandAllowed = 0;
@@ -4703,7 +4703,7 @@ static void commandFuncGroupPickRandomGroupMember(Command const &, NetworkId con
 	if (!params.empty())
 	{
 		Unicode::UnicodeStringVector tokens;
-		if (Unicode::tokenize(Unicode::toLower(params), tokens, NULL, NULL) && !tokens.empty())
+		if (Unicode::tokenize(Unicode::toLower(params), tokens, nullptr, nullptr) && !tokens.empty())
 		{
 			static Unicode::String const paramsPoint1 = Unicode::narrowToWide("-point");
 			static Unicode::String const paramsPoint2 = Unicode::narrowToWide("point");
@@ -4805,7 +4805,7 @@ static void commandFuncGroupTextChatRoomRejoin(Command const &, NetworkId const 
 	if (!client)
 		return;
 
-	int const timeNow = static_cast<int>(::time(NULL));
+	int const timeNow = static_cast<int>(::time(nullptr));
 	if (!client->isGod() && targetObj->getObjVars().hasItem("timeNextGroupTextChatRoomRejoinCommandAllowed") && (targetObj->getObjVars().getType("timeNextGroupTextChatRoomRejoinCommandAllowed") == DynamicVariable::INT))
 	{
 		int timeNextGroupTextChatRoomRejoinCommandAllowed = 0;
@@ -4868,7 +4868,7 @@ static void commandFuncGuildTextChatRoomRejoin(Command const &, NetworkId const 
 	if (!client)
 		return;
 
-	int const timeNow = static_cast<int>(::time(NULL));
+	int const timeNow = static_cast<int>(::time(nullptr));
 	if (!client->isGod() && targetObj->getObjVars().hasItem("timeNextGuildTextChatRoomRejoinCommandAllowed") && (targetObj->getObjVars().getType("timeNextGuildTextChatRoomRejoinCommandAllowed") == DynamicVariable::INT))
 	{
 		int timeNextGuildTextChatRoomRejoinCommandAllowed = 0;
@@ -4913,7 +4913,7 @@ static void commandFuncGuildPickRandomGuildMember(Command const &, NetworkId con
 	if (!client)
 		return;
 
-	int const timeNow = static_cast<int>(::time(NULL));
+	int const timeNow = static_cast<int>(::time(nullptr));
 	if (!client->isGod() && targetObj->getObjVars().hasItem("timeNextGuildPickRandomGuildMemberCommandAllowed") && (targetObj->getObjVars().getType("timeNextGuildPickRandomGuildMemberCommandAllowed") == DynamicVariable::INT))
 	{
 		int timeNextGuildPickRandomGuildMemberCommandAllowed = 0;
@@ -4935,7 +4935,7 @@ static void commandFuncGuildPickRandomGuildMember(Command const &, NetworkId con
 	if (!params.empty())
 	{
 		Unicode::UnicodeStringVector tokens;
-		if (Unicode::tokenize(Unicode::toLower(params), tokens, NULL, NULL) && !tokens.empty())
+		if (Unicode::tokenize(Unicode::toLower(params), tokens, nullptr, nullptr) && !tokens.empty())
 		{
 			static Unicode::String const paramsOnline1 = Unicode::narrowToWide("-online");
 			static Unicode::String const paramsOnline2 = Unicode::narrowToWide("online");
@@ -5074,7 +5074,7 @@ static void commandFuncCityTextChatRoomRejoin(Command const &, NetworkId const &
 	if (!client)
 		return;
 
-	int const timeNow = static_cast<int>(::time(NULL));
+	int const timeNow = static_cast<int>(::time(nullptr));
 	if (!client->isGod() && targetObj->getObjVars().hasItem("timeNextCityTextChatRoomRejoinCommandAllowed") && (targetObj->getObjVars().getType("timeNextCityTextChatRoomRejoinCommandAllowed") == DynamicVariable::INT))
 	{
 		int timeNextCityTextChatRoomRejoinCommandAllowed = 0;
@@ -5120,7 +5120,7 @@ static void commandFuncCityPickRandomCitizen(Command const &, NetworkId const &a
 	if (!client)
 		return;
 
-	int const timeNow = static_cast<int>(::time(NULL));
+	int const timeNow = static_cast<int>(::time(nullptr));
 	if (!client->isGod() && targetObj->getObjVars().hasItem("timeNextCityPickRandomCitizenCommandAllowed") && (targetObj->getObjVars().getType("timeNextCityPickRandomCitizenCommandAllowed") == DynamicVariable::INT))
 	{
 		int timeNextCityPickRandomCitizenCommandAllowed = 0;
@@ -5142,7 +5142,7 @@ static void commandFuncCityPickRandomCitizen(Command const &, NetworkId const &a
 	if (!params.empty())
 	{
 		Unicode::UnicodeStringVector tokens;
-		if (Unicode::tokenize(Unicode::toLower(params), tokens, NULL, NULL) && !tokens.empty())
+		if (Unicode::tokenize(Unicode::toLower(params), tokens, nullptr, nullptr) && !tokens.empty())
 		{
 			static Unicode::String const paramsOnline1 = Unicode::narrowToWide("-online");
 			static Unicode::String const paramsOnline2 = Unicode::narrowToWide("online");
@@ -5272,7 +5272,7 @@ static void commandFuncPlaceStructure (const Command& /*command*/, const Network
 	Object* const object = NetworkIdManager::getObjectById (actor);
 	if (!object)
 	{
-		DEBUG_WARNING (true, ("commandFuncPlaceStructure: PB null actor\n"));
+		DEBUG_WARNING (true, ("commandFuncPlaceStructure: PB nullptr actor\n"));
 		return;
 	}
 
@@ -5478,9 +5478,9 @@ static void commandFuncPurchaseTicket (const Command& /*command*/, const Network
 static void commandFuncRequestResourceWeights(const Command& , const NetworkId& actor, const NetworkId& , const Unicode::String& params)
 {
 	CreatureObject* const creature = CreatureObject::getCreatureObject(actor);
-	if (creature == NULL)
+	if (creature == nullptr)
 	{
-		WARNING (true, ("commandFuncRequestResourceWeights: PB null actor"));
+		WARNING (true, ("commandFuncRequestResourceWeights: PB nullptr actor"));
 		return;
 	}
 
@@ -5494,9 +5494,9 @@ static void commandFuncRequestResourceWeights(const Command& , const NetworkId& 
 static void commandFuncRequestResourceWeightsBatch(const Command& , const NetworkId& actor, const NetworkId& , const Unicode::String& params)
 {
 	CreatureObject* const creature = dynamic_cast<CreatureObject *>(NetworkIdManager::getObjectById (actor));
-	if (creature == NULL)
+	if (creature == nullptr)
 	{
-		WARNING (true, ("commandFuncRequestResourceWeightsBatch: PB null actor"));
+		WARNING (true, ("commandFuncRequestResourceWeightsBatch: PB nullptr actor"));
 		return;
 	}
 
@@ -5516,14 +5516,14 @@ static void commandFuncRequestResourceWeightsBatch(const Command& , const Networ
 static void commandFuncRequestDraftSlots (const Command& , const NetworkId& actor, const NetworkId& , const Unicode::String& params)
 {
 	CreatureObject* const creature = CreatureObject::getCreatureObject(actor);
-	if (creature == NULL)
+	if (creature == nullptr)
 	{
-		WARNING (true, ("commandFuncRequestDraftSlots: PB null actor"));
+		WARNING (true, ("commandFuncRequestDraftSlots: PB nullptr actor"));
 		return;
 	}
 
 	PlayerObject * const player = PlayerCreatureController::getPlayerObject(creature);
-	if (player == NULL)
+	if (player == nullptr)
 	{
 		WARNING (true, ("commandFuncRequestDraftSlots: no player object for actor ""%s", actor.getValueString().c_str()));
 		return;
@@ -5533,7 +5533,7 @@ static void commandFuncRequestDraftSlots (const Command& , const NetworkId& acto
 	sscanf(Unicode::wideToNarrow(params).c_str(), "%lu %lu", &serverCrc, &sharedCrc);
 
 	MessageQueueDraftSlotsQueryResponse * const message = new MessageQueueDraftSlotsQueryResponse(std::make_pair(serverCrc, sharedCrc));
-	if (!player->requestDraftSlots(serverCrc, NULL, message))
+	if (!player->requestDraftSlots(serverCrc, nullptr, message))
 	{
 		WARNING (true, ("commandFuncRequestDraftSlots failed to request draft slots for %u", serverCrc));
 		delete message;
@@ -5545,14 +5545,14 @@ static void commandFuncRequestDraftSlots (const Command& , const NetworkId& acto
 static void commandFuncRequestDraftSlotsBatch (const Command& , const NetworkId& actor, const NetworkId& , const Unicode::String& params)
 {
 	CreatureObject* const creature = CreatureObject::getCreatureObject(actor);
-	if (creature == NULL)
+	if (creature == nullptr)
 	{
-		WARNING (true, ("commandFuncRequestDraftSlotsBatch: PB null actor"));
+		WARNING (true, ("commandFuncRequestDraftSlotsBatch: PB nullptr actor"));
 		return;
 	}
 
 	PlayerObject * const player = PlayerCreatureController::getPlayerObject(creature);
-	if (player == NULL)
+	if (player == nullptr)
 	{
 		WARNING (true, ("commandFuncRequestDraftSlotsBatch: no player object for actor ""%s", actor.getValueString().c_str()));
 		return;
@@ -5575,7 +5575,7 @@ static void commandFuncRequestDraftSlotsBatch (const Command& , const NetworkId&
 	while(uServerCrc != 0 && uSharedCrc != 0 && !done)
 	{
 		MessageQueueDraftSlotsQueryResponse * const message = new MessageQueueDraftSlotsQueryResponse(std::make_pair(uServerCrc, uSharedCrc));
-		if (!player->requestDraftSlots(uServerCrc, NULL, message))
+		if (!player->requestDraftSlots(uServerCrc, nullptr, message))
 		{
 			WARNING (true, ("commandFuncRequestDraftSlotsBatch failed to request draft slots for %lu", uServerCrc));
 			delete message;
@@ -5596,15 +5596,15 @@ static void commandFuncRequestDraftSlotsBatch (const Command& , const NetworkId&
 static void commandFuncRequestManfSchematicSlots (const Command& , const NetworkId& actor, const NetworkId& target, const Unicode::String& params)
 {
 	CreatureObject* const creature = CreatureObject::getCreatureObject(actor);
-	if (creature == NULL)
+	if (creature == nullptr)
 	{
-		WARNING (true, ("commandFuncRequestDraftSlots: PB null actor"));
+		WARNING (true, ("commandFuncRequestDraftSlots: PB nullptr actor"));
 		return;
 	}
 
 	const ManufactureSchematicObject * schematic = dynamic_cast<
 		const ManufactureSchematicObject *>(NetworkIdManager::getObjectById(target));
-	if (schematic != NULL)
+	if (schematic != nullptr)
 	{
 		schematic->requestSlots(*creature);
 	}
@@ -5615,14 +5615,14 @@ static void commandFuncRequestManfSchematicSlots (const Command& , const Network
 static void commandFuncRequestCraftingSession (const Command& , const NetworkId& actor, const NetworkId& target, const Unicode::String& params)
 {
 	CreatureObject* const creature = CreatureObject::getCreatureObject(actor);
-	if (creature == NULL)
+	if (creature == nullptr)
 	{
-		WARNING (true, ("commandFuncRequestCraftingSession: PB null actor"));
+		WARNING (true, ("commandFuncRequestCraftingSession: PB nullptr actor"));
 		return;
 	}
 
 	PlayerObject * player = PlayerCreatureController::getPlayerObject(creature);
-	if (player == NULL)
+	if (player == nullptr)
 	{
 		WARNING (true, ("commandFuncRequestCraftingSession: no player object for actor "
 			"%s", actor.getValueString().c_str()));
@@ -5668,14 +5668,14 @@ static void commandFuncRequestCraftingSessionFail(Command const &, NetworkId con
 static void commandFuncSelectDraftSchematic (const Command& , const NetworkId& actor, const NetworkId& , const Unicode::String& params)
 {
 	CreatureObject* const creature = CreatureObject::getCreatureObject(actor);
-	if (creature == NULL)
+	if (creature == nullptr)
 	{
-		WARNING (true, ("commandFuncSelectDraftSchematic: PB null actor"));
+		WARNING (true, ("commandFuncSelectDraftSchematic: PB nullptr actor"));
 		return;
 	}
 
 	PlayerObject * player = PlayerCreatureController::getPlayerObject(creature);
-	if (player == NULL)
+	if (player == nullptr)
 	{
 		WARNING (true, ("commandFuncSelectDraftSchematic: no player object for actor "
 			"%s", actor.getValueString().c_str()));
@@ -5692,14 +5692,14 @@ static void commandFuncSelectDraftSchematic (const Command& , const NetworkId& a
 static void commandFuncNextCraftingStage(const Command& , const NetworkId& actor, const NetworkId& , const Unicode::String& params)
 {
 	CreatureObject* const creature = CreatureObject::getCreatureObject(actor);
-	if (creature == NULL)
+	if (creature == nullptr)
 	{
-		WARNING (true, ("commandFuncNextCraftingStage: PB null actor"));
+		WARNING (true, ("commandFuncNextCraftingStage: PB nullptr actor"));
 		return;
 	}
 
 	PlayerObject * player = PlayerCreatureController::getPlayerObject(creature);
-	if (player == NULL)
+	if (player == nullptr)
 	{
 		WARNING (true, ("commandFuncNextCraftingStage: no player object for actor "
 			"%s", actor.getValueString().c_str()));
@@ -5722,14 +5722,14 @@ static void commandFuncNextCraftingStage(const Command& , const NetworkId& actor
 static void commandFuncCreatePrototype(const Command& , const NetworkId& actor, const NetworkId& , const Unicode::String& params)
 {
 	CreatureObject* const creature = CreatureObject::getCreatureObject(actor);
-	if (creature == NULL)
+	if (creature == nullptr)
 	{
-		WARNING (true, ("commandFuncCreatePrototype: PB null actor"));
+		WARNING (true, ("commandFuncCreatePrototype: PB nullptr actor"));
 		return;
 	}
 
 	PlayerObject * const player = PlayerCreatureController::getPlayerObject(creature);
-	if (player == NULL)
+	if (player == nullptr)
 	{
 		WARNING (true, ("commandFuncCreatePrototype: no player object for actor %s", actor.getValueString().c_str()));
 		return;
@@ -5756,14 +5756,14 @@ static void commandFuncCreatePrototype(const Command& , const NetworkId& actor, 
 static void commandFuncCreateManfSchematic(const Command& , const NetworkId& actor, const NetworkId& , const Unicode::String& params)
 {
 	CreatureObject* const creature = CreatureObject::getCreatureObject(actor);
-	if (creature == NULL)
+	if (creature == nullptr)
 	{
-		WARNING (true, ("commandFuncCreateManfSchematic: PB null actor"));
+		WARNING (true, ("commandFuncCreateManfSchematic: PB nullptr actor"));
 		return;
 	}
 
 	PlayerObject * const player = PlayerCreatureController::getPlayerObject(creature);
-	if (player == NULL)
+	if (player == nullptr)
 	{
 		WARNING (true, ("commandFuncCreateManfSchematic: no player object for actor %s", actor.getValueString().c_str()));
 		return;
@@ -5788,14 +5788,14 @@ static void commandFuncCreateManfSchematic(const Command& , const NetworkId& act
 static void commandFuncCancelCraftingSession(const Command& , const NetworkId& actor, const NetworkId& , const Unicode::String& params)
 {
 	CreatureObject* const creature = CreatureObject::getCreatureObject(actor);
-	if (creature == NULL)
+	if (creature == nullptr)
 	{
-		WARNING (true, ("commandFuncCancelCraftingSession: PB null actor"));
+		WARNING (true, ("commandFuncCancelCraftingSession: PB nullptr actor"));
 		return;
 	}
 
 	PlayerObject * player = PlayerCreatureController::getPlayerObject(creature);
-	if (player == NULL)
+	if (player == nullptr)
 	{
 		WARNING (true, ("commandFuncCancelCraftingSession: no player object for actor "
 			"%s", actor.getValueString().c_str()));
@@ -5810,14 +5810,14 @@ static void commandFuncCancelCraftingSession(const Command& , const NetworkId& a
 static void commandFuncStopCraftingSession(const Command& , const NetworkId& actor, const NetworkId& , const Unicode::String& params)
 {
 	CreatureObject* const creature = CreatureObject::getCreatureObject(actor);
-	if (creature == NULL)
+	if (creature == nullptr)
 	{
-		WARNING (true, ("commandFuncStopCraftingSession: PB null actor"));
+		WARNING (true, ("commandFuncStopCraftingSession: PB nullptr actor"));
 		return;
 	}
 
 	PlayerObject * player = PlayerCreatureController::getPlayerObject(creature);
-	if (player == NULL)
+	if (player == nullptr)
 	{
 		WARNING (true, ("commandFuncStopCraftingSession: no player object for actor "
 			"%s", actor.getValueString().c_str()));
@@ -5832,14 +5832,14 @@ static void commandFuncStopCraftingSession(const Command& , const NetworkId& act
 static void commandFuncRestartCraftingSession(const Command& , const NetworkId& actor, const NetworkId& , const Unicode::String& params)
 {
 	CreatureObject* const creature = CreatureObject::getCreatureObject(actor);
-	if (creature == NULL)
+	if (creature == nullptr)
 	{
-		WARNING (true, ("commandFuncRestartCraftingSession: PB null actor"));
+		WARNING (true, ("commandFuncRestartCraftingSession: PB nullptr actor"));
 		return;
 	}
 
 	PlayerObject * player = PlayerCreatureController::getPlayerObject(creature);
-	if (player == NULL)
+	if (player == nullptr)
 	{
 		WARNING (true, ("commandFuncRestartCraftingSession: no player object for actor "
 			"%s", actor.getValueString().c_str()));
@@ -5866,7 +5866,7 @@ static void commandFuncSetMatchMakingPersonalId(Command const &, NetworkId const
 
 	PlayerObject * const playerObject = PlayerCreatureController::getPlayerObject(CreatureObject::getCreatureObject(actor));
 
-	if (playerObject != NULL)
+	if (playerObject != nullptr)
 	{
 		MatchMakingId matchMakingId;
 		matchMakingId.unPackIntString(Unicode::wideToNarrow(params));
@@ -5885,7 +5885,7 @@ static void commandFuncSetMatchMakingCharacterId(Command const &, NetworkId cons
 
 	PlayerObject * const playerObject = PlayerCreatureController::getPlayerObject(CreatureObject::getCreatureObject(actor));
 
-	if (playerObject != NULL)
+	if (playerObject != nullptr)
 	{
 		MatchMakingId matchMakingId;
 		matchMakingId.unPackIntString(Unicode::wideToNarrow(params));
@@ -5902,7 +5902,7 @@ static void commandFuncAddFriend(Command const &, NetworkId const &actor, Networ
 {
 	ServerObject * const serverObject = ServerObject::getServerObject(actor);
 
-	if (serverObject != NULL)
+	if (serverObject != nullptr)
 	{
 		size_t pos = 0;
 		std::string name(nextStringParm(params, pos));
@@ -5924,7 +5924,7 @@ static void commandFuncRemoveFriend(Command const &, NetworkId const &actor, Net
 {
 	ServerObject * const serverObject = ServerObject::getServerObject(actor);
 
-	if (serverObject != NULL)
+	if (serverObject != nullptr)
 	{
 		size_t pos = 0;
 		std::string name(nextStringParm(params, pos));
@@ -5946,7 +5946,7 @@ static void commandFuncGetFriendList(Command const &, NetworkId const &actor, Ne
 {
 	ServerObject * const serverObject = ServerObject::getServerObject(actor);
 
-	if (serverObject != NULL)
+	if (serverObject != nullptr)
 	{
 		std::string player(Chat::constructChatAvatarId(*serverObject).getFullName());
 
@@ -5962,7 +5962,7 @@ static void commandFuncAddIgnore(Command const &, NetworkId const &actor, Networ
 {
 	ServerObject * const serverObject = ServerObject::getServerObject(actor);
 
-	if (serverObject != NULL)
+	if (serverObject != nullptr)
 	{
 		size_t pos = 0;
 		std::string name(nextStringParm(params, pos));
@@ -5984,7 +5984,7 @@ static void commandFuncRemoveIgnore(Command const &, NetworkId const &actor, Net
 {
 	ServerObject * const serverObject = ServerObject::getServerObject(actor);
 
-	if (serverObject != NULL)
+	if (serverObject != nullptr)
 	{
 		size_t pos = 0;
 		std::string name(nextStringParm(params, pos));
@@ -6006,7 +6006,7 @@ static void commandFuncGetIgnoreList(Command const &, NetworkId const &actor, Ne
 {
 	ServerObject * const serverObject = ServerObject::getServerObject(actor);
 
-	if (serverObject != NULL)
+	if (serverObject != nullptr)
 	{
 		std::string player(Chat::constructChatAvatarId(*serverObject).getFullName());
 
@@ -6022,7 +6022,7 @@ static void commandFuncRequestBiography(Command const &, NetworkId const &actor,
 {
 	CreatureObject * const creatureObject = CreatureObject::getCreatureObject(actor);
 
-	if (creatureObject != NULL)
+	if (creatureObject != nullptr)
 	{
 		BiographyManager::requestBiography(target, creatureObject);
 	}
@@ -6069,9 +6069,9 @@ static void commandFuncSetBiography(Command const &, NetworkId const & actor, Ne
 static void commandFuncRequestCharacterSheetInfo(Command const &, NetworkId const &actor, NetworkId const &, Unicode::String const &)
 {
 	const CreatureObject* const creatureActor = CreatureObject::getCreatureObject(actor);
-	if (creatureActor == NULL)
+	if (creatureActor == nullptr)
 	{
-		WARNING (true, ("commandFuncRequestCharacterSheetInfo: null actor"));
+		WARNING (true, ("commandFuncRequestCharacterSheetInfo: nullptr actor"));
 		return;
 	}
 
@@ -6090,7 +6090,7 @@ static void commandFuncRequestCharacterSheetInfo(Command const &, NetworkId cons
 	if(bindId != NetworkId::cms_invalid)
 	{
 		const ServerObject* const bindObject = ServerObject::getServerObject(bindId);
-		if (bindObject != NULL)
+		if (bindObject != nullptr)
 		{
 			bindLoc    = bindObject->getPosition_w();
 			bindPlanet = bindObject->getSceneId();
@@ -6142,7 +6142,7 @@ static void commandFuncRequestCharacterSheetInfo(Command const &, NetworkId cons
 		houseNetworkId = cityHallOfMayorCity;
 
 	const ServerObject* const resObject = ServerObject::getServerObject(houseNetworkId);
-	if (resObject != NULL)
+	if (resObject != nullptr)
 	{
 		resLoc    = resObject->getPosition_w();
 		resPlanet = ServerWorld::getSceneId();
@@ -6201,13 +6201,13 @@ static void commandFuncRequestCharacterMatch(Command const &, NetworkId const &a
 static void commandFuncExtractObject(Command const &, NetworkId const &actor, NetworkId const & target, Unicode::String const &params)
 {
 	CreatureObject* const creature = CreatureObject::getCreatureObject(actor);
-	if (creature == NULL)
+	if (creature == nullptr)
 	{
-		WARNING (true, ("commandFuncExtractObject: PB null actor"));
+		WARNING (true, ("commandFuncExtractObject: PB nullptr actor"));
 		return;
 	}
 
-	if (creature->getInventory() == NULL)
+	if (creature->getInventory() == nullptr)
 	{
 		WARNING (true, ("commandFuncExtractObject: actor %s has no inventory",
 			actor.getValueString().c_str()));
@@ -6215,9 +6215,9 @@ static void commandFuncExtractObject(Command const &, NetworkId const &actor, Ne
 	}
 
 	FactoryObject* const factory = dynamic_cast<FactoryObject *>(NetworkIdManager::getObjectById (target));
-	if (factory == NULL)
+	if (factory == nullptr)
 	{
-		WARNING (true, ("commandFuncExtractObject: PB null target"));
+		WARNING (true, ("commandFuncExtractObject: PB nullptr target"));
 		return;
 	}
 
@@ -6233,16 +6233,16 @@ static void commandFuncExtractObject(Command const &, NetworkId const &actor, Ne
 static void commandFuncRevokeSkill(Command const &, NetworkId const &actor, NetworkId const & target, Unicode::String const &params)
 {
 	CreatureObject * const creature = CreatureObject::getCreatureObject(actor);
-	if (creature == NULL)
+	if (creature == nullptr)
 	{
-		WARNING (true, ("commandFuncRevokeSkill: PB null actor"));
+		WARNING (true, ("commandFuncRevokeSkill: PB nullptr actor"));
 		return;
 	}
 
 	size_t pos = 0;
 	std::string skillName = nextStringParm(params, pos);
 	const SkillObject * skill = SkillManager::getInstance ().getSkill (skillName);
-	if (skill == NULL)
+	if (skill == nullptr)
 	{
 		WARNING (true, ("commandFuncRevokeSkill: can't revoke bad skill"));
 	}
@@ -6261,7 +6261,7 @@ static void commandFuncSetCurrentSkillTitle(Command const &, NetworkId const &ac
 	CreatureObject * const creatureObject = CreatureObject::getCreatureObject(actor);
 	PlayerObject * const playerObject = PlayerCreatureController::getPlayerObject(creatureObject);
 
-	if (playerObject != NULL)
+	if (playerObject != nullptr)
 	{
 		size_t pos = 0;
 		std::string const &title = nextStringParm(params, pos);
@@ -6378,7 +6378,7 @@ static void commandFuncSetCurrentSkillTitle(Command const &, NetworkId const &ac
 				{
 					SkillObject const *skillObject = (*iterSkillList);
 
-					if (   (skillObject != NULL)
+					if (   (skillObject != nullptr)
 							&& skillObject->isTitle()
 						&& (skillObject->getSkillName() == title))
 					{
@@ -6402,16 +6402,16 @@ static void commandFuncSetCurrentSkillTitle(Command const &, NetworkId const &ac
 static void commandFuncRepair(Command const &, NetworkId const &actor, NetworkId const & target, Unicode::String const &params)
 {
 	CreatureObject* const creature = dynamic_cast<CreatureObject *>(NetworkIdManager::getObjectById (actor));
-	if (creature == NULL)
+	if (creature == nullptr)
 	{
-		WARNING (true, ("commandFuncRepair: PB null actor"));
+		WARNING (true, ("commandFuncRepair: PB nullptr actor"));
 		return;
 	}
 
 	TangibleObject* const object = dynamic_cast<TangibleObject *>(NetworkIdManager::getObjectById (target));
-	if (object == NULL)
+	if (object == nullptr)
 	{
-		WARNING (true, ("commandFuncRepair: PB null target"));
+		WARNING (true, ("commandFuncRepair: PB nullptr target"));
 		return;
 	}
 }
@@ -6424,7 +6424,7 @@ static void commandFuncToggleSearchableByCtsSourceGalaxy(Command const &, Networ
 
 	PlayerObject * const playerObject = PlayerCreatureController::getPlayerObject(CreatureObject::getCreatureObject(actor));
 
-	if (playerObject != NULL)
+	if (playerObject != nullptr)
 	{
 		playerObject->toggleSearchableByCtsSourceGalaxy();
 	}
@@ -6438,7 +6438,7 @@ static void commandFuncToggleDisplayLocationInSearchResults(Command const &, Net
 
 	PlayerObject * const playerObject = PlayerCreatureController::getPlayerObject(CreatureObject::getCreatureObject(actor));
 
-	if (playerObject != NULL)
+	if (playerObject != nullptr)
 	{
 		playerObject->toggleDisplayLocationInSearchResults();
 	}
@@ -6452,7 +6452,7 @@ static void commandFuncToggleAnonymous(Command const &, NetworkId const &actor, 
 
 	PlayerObject * const playerObject = PlayerCreatureController::getPlayerObject(CreatureObject::getCreatureObject(actor));
 
-	if (playerObject != NULL)
+	if (playerObject != nullptr)
 	{
 		playerObject->toggleAnonymous();
 	}
@@ -6466,7 +6466,7 @@ static void commandFuncToggleHelper(Command const &, NetworkId const &actor, Net
 
 	PlayerObject * const playerObject = PlayerCreatureController::getPlayerObject(CreatureObject::getCreatureObject(actor));
 
-	if (playerObject != NULL)
+	if (playerObject != nullptr)
 	{
 		playerObject->toggleHelper();
 	}
@@ -6480,7 +6480,7 @@ static void commandFuncToggleRolePlay(Command const &, NetworkId const &actor, N
 
 	PlayerObject * const playerObject = PlayerCreatureController::getPlayerObject(CreatureObject::getCreatureObject(actor));
 
-	if (playerObject != NULL)
+	if (playerObject != nullptr)
 	{
 		playerObject->toggleRolePlay();
 	}
@@ -6493,7 +6493,7 @@ static void commandFuncToggleOutOfCharacter(Command const &, NetworkId const &ac
 {
 	PlayerObject * const playerObject = PlayerCreatureController::getPlayerObject(CreatureObject::getCreatureObject(actor));
 
-	if (playerObject != NULL)
+	if (playerObject != nullptr)
 	{
 		playerObject->toggleOutOfCharacter();
 	}
@@ -6505,7 +6505,7 @@ static void commandFuncToggleLookingForWork(Command const &, NetworkId const &ac
 {
 	PlayerObject * const playerObject = PlayerCreatureController::getPlayerObject(CreatureObject::getCreatureObject(actor));
 
-	if (playerObject != NULL)
+	if (playerObject != nullptr)
 	{
 		playerObject->toggleLookingForWork();
 	}
@@ -6520,7 +6520,7 @@ static void commandFuncToggleLookingForGroup(Command const &, NetworkId const &a
 
 	PlayerObject * const playerObject = PlayerCreatureController::getPlayerObject(CreatureObject::getCreatureObject(actor));
 
-	if (playerObject != NULL)
+	if (playerObject != nullptr)
 	{
 		playerObject->toggleLookingForGroup();
 	}
@@ -6534,7 +6534,7 @@ static void commandFuncToggleAwayFromKeyBoard(Command const &, NetworkId const &
 
 	PlayerObject * const playerObject = PlayerCreatureController::getPlayerObject(CreatureObject::getCreatureObject(actor));
 
-	if (playerObject != NULL)
+	if (playerObject != nullptr)
 	{
 		playerObject->toggleAwayFromKeyBoard();
 	}
@@ -6546,7 +6546,7 @@ static void commandFuncToggleDisplayingFactionRank(Command const &, NetworkId co
 {
 	PlayerObject * const playerObject = PlayerCreatureController::getPlayerObject(CreatureObject::getCreatureObject(actor));
 
-	if (playerObject != NULL)
+	if (playerObject != nullptr)
 	{
 		playerObject->toggleDisplayingFactionRank();
 	}
@@ -6558,7 +6558,7 @@ static void commandFuncReport(Command const &, NetworkId const &actor, NetworkId
 {
 	CreatureObject const * const reportingCreatureObject = CreatureObject::getCreatureObject(actor);
 
-	if (reportingCreatureObject != NULL)
+	if (reportingCreatureObject != nullptr)
 	{
 		if (ReportManager::isThrottled(actor))
 		{
@@ -6635,16 +6635,16 @@ static void commandFuncReport(Command const &, NetworkId const &actor, NetworkId
 static void commandFuncNpcConversationStart(Command const &, NetworkId const &actor, NetworkId const & target, Unicode::String const &params)
 {
 	ServerObject * const actorObject = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(actor));
-	CreatureObject * const player = actorObject != NULL ? actorObject->asCreatureObject() : NULL;
-	if (player == NULL)
+	CreatureObject * const player = actorObject != nullptr ? actorObject->asCreatureObject() : nullptr;
+	if (player == nullptr)
 	{
 		DEBUG_WARNING(true, ("commandFuncNpcConversationStart: couldn't find actor"));
 		return;
 	}
 
 	ServerObject * const npcObject = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(target));
-	TangibleObject * const npc = npcObject != NULL ? npcObject->asTangibleObject() : NULL;
-	if (npc == NULL)
+	TangibleObject * const npc = npcObject != nullptr ? npcObject->asTangibleObject() : nullptr;
+	if (npc == nullptr)
 	{
 		DEBUG_WARNING(true, ("commandFuncNpcConversationStart: Couldn't find npc to converse with"));
 		return;
@@ -6678,8 +6678,8 @@ static void commandFuncNpcConversationStart(Command const &, NetworkId const &ac
 static void commandFuncNpcConversationStop(Command const &, NetworkId const &actor, NetworkId const & target, Unicode::String const &params)
 {
 	ServerObject * const actorObject = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(actor));
-	TangibleObject * const player = actorObject !=  NULL ? actorObject->asTangibleObject(): NULL;
-	if (player == NULL)
+	TangibleObject * const player = actorObject !=  nullptr ? actorObject->asTangibleObject(): nullptr;
+	if (player == nullptr)
 	{
 		DEBUG_WARNING(true, ("commandFuncNpcConversationStop: couldn't find actor"));
 		return;
@@ -6693,7 +6693,7 @@ static void commandFuncNpcConversationSelect(Command const &, NetworkId const &a
 {
 	Object * const actorObject = NetworkIdManager::getObjectById(actor);
 	CreatureObject * const player = dynamic_cast<CreatureObject * const>(actorObject);
-	if (player == NULL)
+	if (player == nullptr)
 	{
 		DEBUG_WARNING(true, ("commandFuncNpcConversationStop: couldn't find actor"));
 		return;
@@ -6709,7 +6709,7 @@ static void commandFuncNpcConversationSelect(Command const &, NetworkId const &a
 static void commandFuncServerDestroyObject (Command const &, NetworkId const & actor, NetworkId const & target, Unicode::String const & params)
 {
 	CreatureObject * const player = dynamic_cast<CreatureObject * const> (NetworkIdManager::getObjectById (actor));
-	if (player == NULL)
+	if (player == nullptr)
 	{
 		DEBUG_WARNING (true, ("commandFuncServerDestroyObject: couldn't find actor"));
 		return;
@@ -6792,11 +6792,11 @@ static void commandFuncSetSpokenLanguage(Command const &, NetworkId const &actor
 	Object * const object = NetworkIdManager::getObjectById(actor);
 	CreatureObject * const creatureObject = dynamic_cast<CreatureObject * const>(object);
 
-	if (creatureObject != NULL)
+	if (creatureObject != nullptr)
 	{
 		PlayerObject *playerObject = PlayerCreatureController::getPlayerObject(creatureObject);
 
-		if (playerObject != NULL)
+		if (playerObject != nullptr)
 		{
 			size_t pos = 0;
 			int const languageId = nextIntParm(params, pos);
@@ -6831,14 +6831,14 @@ static void commandFuncUnstick(Command const &, NetworkId const &actor, NetworkI
 {
 	Object * const object = NetworkIdManager::getObjectById(actor);
 	CreatureObject * const creatureObject = dynamic_cast<CreatureObject * const>(object);
-	if (creatureObject != NULL)
+	if (creatureObject != nullptr)
 	{
 		if (!ShipObject::getContainingShipObject(creatureObject)) // no unsticking in ships
 		{
 			PlayerObject * const playerObject = PlayerCreatureController::getPlayerObject(creatureObject);
 			if (playerObject)
 			{
-				Chat::sendSystemMessageSimple(*creatureObject, SharedStringIds::unstick_in_progress, NULL);
+				Chat::sendSystemMessageSimple(*creatureObject, SharedStringIds::unstick_in_progress, nullptr);
 				if (!playerObject->getIsUnsticking())
 				{
 					Vector position = creatureObject->getPosition_p();
@@ -7324,8 +7324,8 @@ static void commandFuncInstallShipComponents(Command const &, NetworkId const & 
 	//params for installShipComponent are "<shipId> <slotnumber> <objId>"
 	
 	Object const * const actorObj = NetworkIdManager::getObjectById(actor);
-	ServerObject const * const actorServerObj = actorObj ? actorObj->asServerObject() : NULL;
-	CreatureObject const * const actorCreature = actorServerObj ? actorServerObj->asCreatureObject() : NULL;
+	ServerObject const * const actorServerObj = actorObj ? actorObj->asServerObject() : nullptr;
+	CreatureObject const * const actorCreature = actorServerObj ? actorServerObj->asCreatureObject() : nullptr;
 	if(!actorCreature)
 	{
 		return;
@@ -7338,7 +7338,7 @@ static void commandFuncInstallShipComponents(Command const &, NetworkId const & 
 	if(!client->isGod())
 	{
 		Object * const targetObj = NetworkIdManager::getObjectById(target);
-		ServerObject * const targetServerObj = targetObj ? targetObj->asServerObject() : NULL;
+		ServerObject * const targetServerObj = targetObj ? targetObj->asServerObject() : nullptr;
 		if( !targetServerObj || ((targetServerObj->getGameObjectType() != SharedObjectTemplate::GOT_terminal_space) &&
 			                     (targetServerObj->getGameObjectType() != SharedObjectTemplate::GOT_terminal_space_npe)) )
 			return;
@@ -7351,16 +7351,16 @@ static void commandFuncInstallShipComponents(Command const &, NetworkId const & 
 	size_t pos = 0;
 	NetworkId const & shipId = nextOidParm(params, pos);
 	Object * const shipObj = NetworkIdManager::getObjectById(shipId);
-	ServerObject * const shipServerObj = shipObj ? shipObj->asServerObject() : NULL;
-	ShipObject * const ship = shipServerObj ? shipServerObj->asShipObject() : NULL;
+	ServerObject * const shipServerObj = shipObj ? shipObj->asServerObject() : nullptr;
+	ShipObject * const ship = shipServerObj ? shipServerObj->asShipObject() : nullptr;
 	if(!ship)
 		return;
 
 	ShipChassisSlotType::Type const slotType = static_cast<ShipChassisSlotType::Type const>(nextIntParm(params, pos));
 	NetworkId const & componentId = nextOidParm(params, pos);
 	Object * const componentObj = NetworkIdManager::getObjectById(componentId);
-	ServerObject * const componentServerObj = componentObj ? componentObj->asServerObject() : NULL;
-	TangibleObject * const component = componentServerObj ? componentServerObj->asTangibleObject() : NULL;
+	ServerObject * const componentServerObj = componentObj ? componentObj->asServerObject() : nullptr;
+	TangibleObject * const component = componentServerObj ? componentServerObj->asTangibleObject() : nullptr;
 	if(!component)
 	{
 		return;
@@ -7409,8 +7409,8 @@ static void commandFuncUninstallShipComponents(Command const &, NetworkId const 
 	//params for uninstallShipComponent are "<shipId> <slotnumber>"
 
 	Object * const actorObj = NetworkIdManager::getObjectById(actor);
-	ServerObject * const actorServerObj = actorObj ? actorObj->asServerObject() : NULL;
-	CreatureObject * const actorCreature = actorServerObj ? actorServerObj->asCreatureObject() : NULL;
+	ServerObject * const actorServerObj = actorObj ? actorObj->asServerObject() : nullptr;
+	CreatureObject * const actorCreature = actorServerObj ? actorServerObj->asCreatureObject() : nullptr;
 	if(!actorCreature)
 		return;
 	ServerObject * const actorInv = actorCreature->getInventory();
@@ -7424,7 +7424,7 @@ static void commandFuncUninstallShipComponents(Command const &, NetworkId const 
 	if(!client->isGod())
 	{
 		Object * const targetObj = NetworkIdManager::getObjectById(target);
-		ServerObject * const targetServerObj = targetObj ? targetObj->asServerObject() : NULL;
+		ServerObject * const targetServerObj = targetObj ? targetObj->asServerObject() : nullptr;
 		if(!targetServerObj ||
 			 ((targetServerObj->getGameObjectType() != SharedObjectTemplate::GOT_terminal_space)
 			   && (targetServerObj->getGameObjectType() != SharedObjectTemplate::GOT_terminal_space_npe)) )
@@ -7456,8 +7456,8 @@ static void commandFuncUninstallShipComponents(Command const &, NetworkId const 
 	size_t pos = 0;
 	NetworkId const & shipId = nextOidParm(params, pos);
 	Object * const shipObj = NetworkIdManager::getObjectById(shipId);
-	ServerObject * const shipServerObj = shipObj ? shipObj->asServerObject() : NULL;
-	ShipObject * const ship = shipServerObj ? shipServerObj->asShipObject() : NULL;
+	ServerObject * const shipServerObj = shipObj ? shipObj->asServerObject() : nullptr;
+	ShipObject * const ship = shipServerObj ? shipServerObj->asShipObject() : nullptr;
 	if(!ship)
 		return;
 
@@ -7474,8 +7474,8 @@ static void commandFuncInsertItemIntoShipComponentSlot(Command const &, NetworkI
 	//params for insertItemIntoShipComponentSlot are "<shipId> <slotnumber> <objid>"
 
 	Object * const actorObj = NetworkIdManager::getObjectById(actor);
-	ServerObject * const actorServerObj = actorObj ? actorObj->asServerObject() : NULL;
-	CreatureObject * const actorCreature = actorServerObj ? actorServerObj->asCreatureObject() : NULL;
+	ServerObject * const actorServerObj = actorObj ? actorObj->asServerObject() : nullptr;
+	CreatureObject * const actorCreature = actorServerObj ? actorServerObj->asCreatureObject() : nullptr;
 	if(!actorCreature)
 		return;
 
@@ -7486,7 +7486,7 @@ static void commandFuncInsertItemIntoShipComponentSlot(Command const &, NetworkI
 	if(!client->isGod())
 	{
 		Object * const targetObj = NetworkIdManager::getObjectById(target);
-		ServerObject * const targetServerObj = targetObj ? targetObj->asServerObject() : NULL;
+		ServerObject * const targetServerObj = targetObj ? targetObj->asServerObject() : nullptr;
 		if(!targetServerObj || ((targetServerObj->getGameObjectType() != SharedObjectTemplate::GOT_terminal_space) &&
 			                    (targetServerObj->getGameObjectType() != SharedObjectTemplate::GOT_terminal_space_npe)) )
 			return;
@@ -7499,8 +7499,8 @@ static void commandFuncInsertItemIntoShipComponentSlot(Command const &, NetworkI
 	size_t pos = 0;
 	NetworkId const & shipId = nextOidParm(params, pos);
 	Object * const shipObj = NetworkIdManager::getObjectById(shipId);
-	ServerObject * const shipServerObj = shipObj ? shipObj->asServerObject() : NULL;
-	ShipObject * const ship = shipServerObj ? shipServerObj->asShipObject() : NULL;
+	ServerObject * const shipServerObj = shipObj ? shipObj->asServerObject() : nullptr;
+	ShipObject * const ship = shipServerObj ? shipServerObj->asShipObject() : nullptr;
 	if(!ship)
 		return;
 
@@ -7527,8 +7527,8 @@ static void commandFuncAssociateDroidControlDeviceWithShip(Command const &, Netw
 	//params for associateDroidControlDeviceWithShip are "<shipId> <droidControlDeviceId>"
 
 	Object const * const actorObj = NetworkIdManager::getObjectById(actor);
-	ServerObject const * const actorServerObj = actorObj ? actorObj->asServerObject() : NULL;
-	CreatureObject const * const actorCreature = actorServerObj ? actorServerObj->asCreatureObject() : NULL;
+	ServerObject const * const actorServerObj = actorObj ? actorObj->asServerObject() : nullptr;
+	CreatureObject const * const actorCreature = actorServerObj ? actorServerObj->asCreatureObject() : nullptr;
 	if (!actorCreature)
 		return;
 
@@ -7539,7 +7539,7 @@ static void commandFuncAssociateDroidControlDeviceWithShip(Command const &, Netw
 	if(!client->isGod())
 	{
 		Object * const targetObj = NetworkIdManager::getObjectById(target);
-		ServerObject * const targetServerObj = targetObj ? targetObj->asServerObject() : NULL;
+		ServerObject * const targetServerObj = targetObj ? targetObj->asServerObject() : nullptr;
 		if(!targetServerObj || ((targetServerObj->getGameObjectType() != SharedObjectTemplate::GOT_terminal_space) &&
 			                    (targetServerObj->getGameObjectType() != SharedObjectTemplate::GOT_terminal_space_npe)) )
 			return;
@@ -7552,8 +7552,8 @@ static void commandFuncAssociateDroidControlDeviceWithShip(Command const &, Netw
 	size_t pos = 0;
 	NetworkId const & shipId = nextOidParm(params, pos);
 	Object * const shipObj = NetworkIdManager::getObjectById(shipId);
-	ServerObject * const shipServerObj = shipObj ? shipObj->asServerObject() : NULL;
-	ShipObject * const ship = shipServerObj ? shipServerObj->asShipObject() : NULL;
+	ServerObject * const shipServerObj = shipObj ? shipObj->asServerObject() : nullptr;
+	ShipObject * const ship = shipServerObj ? shipServerObj->asShipObject() : nullptr;
 	if(!ship)
 		return;
 
@@ -7581,8 +7581,8 @@ static void commandFuncAssociateDroidControlDeviceWithShip(Command const &, Netw
 static void commandFuncServerAsteroidDataListen(Command const &, NetworkId const & actor, NetworkId const & , Unicode::String const & )
 {
 	Object const * const actorObj = NetworkIdManager::getObjectById(actor);
-	ServerObject const * const actorServerObj = actorObj ? actorObj->asServerObject() : NULL;
-	CreatureObject const * const actorCreature = actorServerObj ? actorServerObj->asCreatureObject() : NULL;
+	ServerObject const * const actorServerObj = actorObj ? actorObj->asServerObject() : nullptr;
+	CreatureObject const * const actorCreature = actorServerObj ? actorServerObj->asCreatureObject() : nullptr;
 	if(!actorCreature)
 		return;
 
@@ -7594,8 +7594,8 @@ static void commandFuncServerAsteroidDataListen(Command const &, NetworkId const
 static void commandFuncServerAsteroidDataStopListening(Command const &, NetworkId const & actor, NetworkId const & , Unicode::String const & )
 {
 	Object const * const actorObj = NetworkIdManager::getObjectById(actor);
-	ServerObject const * const actorServerObj = actorObj ? actorObj->asServerObject() : NULL;
-	CreatureObject const * const actorCreature = actorServerObj ? actorServerObj->asCreatureObject() : NULL;
+	ServerObject const * const actorServerObj = actorObj ? actorObj->asServerObject() : nullptr;
+	CreatureObject const * const actorCreature = actorServerObj ? actorServerObj->asCreatureObject() : nullptr;
 	if(!actorCreature)
 		return;
 
@@ -7621,8 +7621,8 @@ static void commandFuncBoosterOff(Command const &, NetworkId const & actor, Netw
 static void commandFuncSetFormation(Command const &, NetworkId const & actor, NetworkId const &, Unicode::String const & params)
 {
 	Object * const o = NetworkIdManager::getObjectById(actor);
-	ServerObject * const so = o ? o->asServerObject() : NULL;
-	CreatureObject * const actorCreature = so ? so->asCreatureObject() : NULL;
+	ServerObject * const so = o ? o->asServerObject() : nullptr;
+	CreatureObject * const actorCreature = so ? so->asCreatureObject() : nullptr;
 	if(actorCreature)
 	{
 		GroupObject * const group = actorCreature->getGroup();
@@ -7676,15 +7676,15 @@ static void commandFuncUnDock(Command const &, NetworkId const & actor, NetworkI
 {
 	Object * const object = NetworkIdManager::getObjectById(actor);
 
-	if (object != NULL)
+	if (object != nullptr)
 	{
 		ShipObject * const shipObject = ShipObject::getContainingShipObject(object->asServerObject());
 
-		if (shipObject != NULL)
+		if (shipObject != nullptr)
 		{
 			ShipController * const shipController = dynamic_cast<ShipController *>(shipObject->getController());
 
-			if (shipController != NULL)
+			if (shipController != nullptr)
 			{
 				shipController->unDock();
 			}
@@ -7695,12 +7695,12 @@ static void commandFuncUnDock(Command const &, NetworkId const & actor, NetworkI
 		}
 		else
 		{
-			WARNING(true, ("commandFuncUnDock() Undock requested on an object(%s) contained by a NULL ShipObject.", object->getDebugInformation().c_str()));
+			WARNING(true, ("commandFuncUnDock() Undock requested on an object(%s) contained by a nullptr ShipObject.", object->getDebugInformation().c_str()));
 		}
 	}
 	else
 	{
-		WARNING(true, ("commandFuncUnDock() Undock requested on a NULL object(%s).", actor.getValueString().c_str()));
+		WARNING(true, ("commandFuncUnDock() Undock requested on a nullptr object(%s).", actor.getValueString().c_str()));
 	}
 }
 	
@@ -7709,7 +7709,7 @@ static void commandFuncUnDock(Command const &, NetworkId const & actor, NetworkI
 static void commandFuncLaunchIntoSpace(Command const &, NetworkId const & actor, NetworkId const & target, Unicode::String const & params)
 {
 	ServerObject * const actorServerObj = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(actor));
-	CreatureObject * const actorCreature = actorServerObj != NULL ? actorServerObj->asCreatureObject() : NULL;
+	CreatureObject * const actorCreature = actorServerObj != nullptr ? actorServerObj->asCreatureObject() : nullptr;
 	if(!actorCreature)
 	{
 		WARNING(true, ("No actorCreature in commandFuncLaunchIntoSpace"));
@@ -7725,7 +7725,7 @@ static void commandFuncLaunchIntoSpace(Command const &, NetworkId const & actor,
 
 	//target must be a space terminal
 	Object const * const o = NetworkIdManager::getObjectById(target);
-	ServerObject const * const so = o ? o->asServerObject() : NULL;
+	ServerObject const * const so = o ? o->asServerObject() : nullptr;
 	if(!so)
 	{
 		StringId invalidTargetId("player_utility", "target_not_server_object");
@@ -7759,7 +7759,7 @@ static void commandFuncLaunchIntoSpace(Command const &, NetworkId const & actor,
 		return;
 	}
 	Object * const terminalO = NetworkIdManager::getObjectById(target);
-	ServerObject * const terminalSO = terminalO ? terminalO->asServerObject() : NULL;
+	ServerObject * const terminalSO = terminalO ? terminalO->asServerObject() : nullptr;
 	if(terminalSO)
 	{
 		std::vector<NetworkId> networkIds;
@@ -7824,7 +7824,7 @@ static void commandFuncLaunchIntoSpace(Command const &, NetworkId const & actor,
 static void commandFuncAcceptQuest(Command const &, NetworkId const & actor, NetworkId const & target, Unicode::String const & params)
 {
 	ServerObject * const actorServerObj = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(actor));
-	CreatureObject * const actorCreature = actorServerObj != NULL ? actorServerObj->asCreatureObject() : NULL;
+	CreatureObject * const actorCreature = actorServerObj != nullptr ? actorServerObj->asCreatureObject() : nullptr;
 	if(!actorCreature)
 	{
 		WARNING(true, ("No actorCreature in commandFuncAcceptQuest"));
@@ -7851,7 +7851,7 @@ static void commandFuncAcceptQuest(Command const &, NetworkId const & actor, Net
 static void commandFuncReceiveReward(Command const &, NetworkId const & actor, NetworkId const & target, Unicode::String const & params)
 {
 	ServerObject * const actorServerObj = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(actor));
-	CreatureObject * const actorCreature = actorServerObj != NULL ? actorServerObj->asCreatureObject() : NULL;
+	CreatureObject * const actorCreature = actorServerObj != nullptr ? actorServerObj->asCreatureObject() : nullptr;
 	if(!actorCreature)
 	{
 		WARNING(true, ("No actorCreature in commandFuncReceiveReward"));
@@ -7895,7 +7895,7 @@ static void commandFuncAbandonQuest(Command const &, NetworkId const & actor, Ne
 	if(QuestManager::isQuestAbandonable(questName))
 	{
 		ServerObject * const actorServerObj = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(actor));
-		CreatureObject * const actorCreature = actorServerObj != NULL ? actorServerObj->asCreatureObject() : NULL;
+		CreatureObject * const actorCreature = actorServerObj != nullptr ? actorServerObj->asCreatureObject() : nullptr;
 		if(actorCreature)
 		{
 			PlayerObject * playerObject = PlayerCreatureController::getPlayerObject(actorCreature);
@@ -7922,7 +7922,7 @@ static void commandFuncAbandonQuest(Command const &, NetworkId const & actor, Ne
 static void commandFuncExchangeListCredits(Command const &, NetworkId const &actor, NetworkId const &target, Unicode::String const &params)
 {
 	ServerObject * const actorServerObj = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(actor));
-	CreatureObject * const actorCreature = actorServerObj != NULL ? actorServerObj->asCreatureObject() : NULL;
+	CreatureObject * const actorCreature = actorServerObj != nullptr ? actorServerObj->asCreatureObject() : nullptr;
 	if(!actorCreature)
 	{
 		WARNING(true, ("No actorCreature in commandFuncReceiveReward"));
@@ -8680,7 +8680,7 @@ static void commandFuncOccupyUnlockedSlot(Command const &, NetworkId const &acto
 			}
 
 			// check to see if there is a cooldown is in effect for the command
-			int const timeNow = static_cast<int>(::time(NULL));
+			int const timeNow = static_cast<int>(::time(nullptr));
 			if (!gmClient->isGod() && gm->getObjVars().hasItem("timeNextOccupyVacateUnlockedSlotCommandAllowed") && (gm->getObjVars().getType("timeNextOccupyVacateUnlockedSlotCommandAllowed") == DynamicVariable::INT))
 			{
 				int timeNextOccupyVacateUnlockedSlotCommandAllowed = 0;
@@ -8746,7 +8746,7 @@ static void commandFuncVacateUnlockedSlot(Command const &, NetworkId const &acto
 			}
 
 			// check to see if there is a cooldown is in effect for the command
-			int const timeNow = static_cast<int>(::time(NULL));
+			int const timeNow = static_cast<int>(::time(nullptr));
 			if (!gmClient->isGod() && gm->getObjVars().hasItem("timeNextOccupyVacateUnlockedSlotCommandAllowed") && (gm->getObjVars().getType("timeNextOccupyVacateUnlockedSlotCommandAllowed") == DynamicVariable::INT))
 			{
 				int timeNextOccupyVacateUnlockedSlotCommandAllowed = 0;
@@ -8834,7 +8834,7 @@ static void commandFuncSwapUnlockedSlot(Command const &, NetworkId const &actor,
 			}
 
 			// check to see if there is a cooldown is in effect for the command
-			int const timeNow = static_cast<int>(::time(NULL));
+			int const timeNow = static_cast<int>(::time(nullptr));
 			if (!gmClient->isGod() && gm->getObjVars().hasItem("timeNextOccupyVacateUnlockedSlotCommandAllowed") && (gm->getObjVars().getType("timeNextOccupyVacateUnlockedSlotCommandAllowed") == DynamicVariable::INT))
 			{
 				int timeNextOccupyVacateUnlockedSlotCommandAllowed = 0;
@@ -8902,7 +8902,7 @@ static void commandFuncPickupAllRoomItemsIntoInventory(Command const &, NetworkI
 		return;
 
 	// don't allow multiple /pickupAllRoomItemsIntoInventory and/or /dropAllInventoryItemsIntoRoom
-	int const timeNow = static_cast<int>(::time(NULL));
+	int const timeNow = static_cast<int>(::time(nullptr));
 	int pickupDropAllItemsOperationTimeout = 0;
 	if (targetObj->getObjVars().getItem("pickupDropAllItemsOperation.timeout", pickupDropAllItemsOperationTimeout) && (pickupDropAllItemsOperationTimeout > timeNow))
 	{
@@ -9051,7 +9051,7 @@ static void commandFuncDropAllInventoryItemsIntoRoom(Command const &, NetworkId 
 		return;
 
 	// don't allow multiple /pickupAllRoomItemsIntoInventory and/or /dropAllInventoryItemsIntoRoom
-	int const timeNow = static_cast<int>(::time(NULL));
+	int const timeNow = static_cast<int>(::time(nullptr));
 	int pickupDropAllItemsOperationTimeout = 0;
 	if (targetObj->getObjVars().getItem("pickupDropAllItemsOperation.timeout", pickupDropAllItemsOperationTimeout) && (pickupDropAllItemsOperationTimeout > timeNow))
 	{
@@ -9255,7 +9255,7 @@ static void commandFuncRestoreDecorationLayout(Command const &, NetworkId const 
 	}
 
 	// don't allow another restore on the pob while one is still in progress
-	int const timeNow = static_cast<int>(::time(NULL));
+	int const timeNow = static_cast<int>(::time(nullptr));
 	int restoreDecorationOperationTimeout = 0;
 	if (targetObj->getObjVars().getItem("restoreDecorationOperation.timeout", restoreDecorationOperationTimeout) && (restoreDecorationOperationTimeout > timeNow))
 	{
@@ -9330,7 +9330,7 @@ static void commandFuncAreaPickRandomPlayer(Command const &, NetworkId const &ac
 	if (!client)
 		return;
 
-	int const timeNow = static_cast<int>(::time(NULL));
+	int const timeNow = static_cast<int>(::time(nullptr));
 	if (!client->isGod() && targetObj->getObjVars().hasItem("timeNextAreaPickRandomPlayerCommandAllowed") && (targetObj->getObjVars().getType("timeNextAreaPickRandomPlayerCommandAllowed") == DynamicVariable::INT))
 	{
 		int timeNextAreaPickRandomPlayerCommandAllowed = 0;
@@ -9352,7 +9352,7 @@ static void commandFuncAreaPickRandomPlayer(Command const &, NetworkId const &ac
 	if (!params.empty())
 	{
 		Unicode::UnicodeStringVector tokens;
-		if (Unicode::tokenize(Unicode::toLower(params), tokens, NULL, NULL) && !tokens.empty())
+		if (Unicode::tokenize(Unicode::toLower(params), tokens, nullptr, nullptr) && !tokens.empty())
 		{
 			static Unicode::String const paramsPoint1 = Unicode::narrowToWide("-point");
 			static Unicode::String const paramsPoint2 = Unicode::narrowToWide("point");
@@ -9477,7 +9477,7 @@ static void commandFuncRoomPickRandomPlayer(Command const &, NetworkId const &ac
 	if (!client)
 		return;
 
-	int const timeNow = static_cast<int>(::time(NULL));
+	int const timeNow = static_cast<int>(::time(nullptr));
 	if (!client->isGod() && targetObj->getObjVars().hasItem("timeNextRoomPickRandomPlayerCommandAllowed") && (targetObj->getObjVars().getType("timeNextRoomPickRandomPlayerCommandAllowed") == DynamicVariable::INT))
 	{
 		int timeNextRoomPickRandomPlayerCommandAllowed = 0;
@@ -9498,7 +9498,7 @@ static void commandFuncRoomPickRandomPlayer(Command const &, NetworkId const &ac
 	if (!params.empty())
 	{
 		Unicode::UnicodeStringVector tokens;
-		if (Unicode::tokenize(Unicode::toLower(params), tokens, NULL, NULL) && !tokens.empty())
+		if (Unicode::tokenize(Unicode::toLower(params), tokens, nullptr, nullptr) && !tokens.empty())
 		{
 			static Unicode::String const paramsPoint1 = Unicode::narrowToWide("-point");
 			static Unicode::String const paramsPoint2 = Unicode::narrowToWide("point");

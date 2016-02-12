@@ -35,7 +35,7 @@ AiShipBehaviorWaypoint::AiShipBehaviorWaypoint(AiShipController & aiShipControll
  , m_cyclic(cyclic)
  , m_moveToCompleteTriggerSent(false)
 {
-	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("AiShipBehaviorWaypoint::AiShipBehaviorWaypoint() unit(%s) cyclic(%s)", (aiShipController.getOwner() != NULL) ? aiShipController.getOwner()->getNetworkId().getValueString().c_str() : "NULL owner", cyclic ? "yes" : "no"));
+	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("AiShipBehaviorWaypoint::AiShipBehaviorWaypoint() unit(%s) cyclic(%s)", (aiShipController.getOwner() != nullptr) ? aiShipController.getOwner()->getNetworkId().getValueString().c_str() : "nullptr owner", cyclic ? "yes" : "no"));
 }
 
 // ----------------------------------------------------------------------
@@ -61,7 +61,7 @@ void AiShipBehaviorWaypoint::alter(float deltaSeconds)
 	{
 		SpacePath const * const path = m_aiShipController.getPath();
 
-		if (   (path != NULL)
+		if (   (path != nullptr)
 			&& !m_cyclic
 			&& (m_aiShipController.getCurrentPathIndex() == (path->getTransformList().size() - 1)))
 		{
@@ -76,7 +76,7 @@ void AiShipBehaviorWaypoint::alter(float deltaSeconds)
 
 				GameScriptObject * const gameScriptObject = GameScriptObject::asGameScriptObject(m_aiShipController.getOwner());
 
-				if(gameScriptObject != NULL)
+				if(gameScriptObject != nullptr)
 				{
 					ScriptParams scriptParams;
 					IGNORE_RETURN(gameScriptObject->trigAllScripts(Scripting::TRIG_SPACE_UNIT_MOVE_TO_COMPLETE, scriptParams));
@@ -104,13 +104,13 @@ bool AiShipBehaviorWaypoint::getNextPosition_w(Vector & position_w)
 
 	SpacePath * const path = m_aiShipController.getPath();
 
-	if (   (path != NULL)
+	if (   (path != nullptr)
 	    && !path->isEmpty()
 	    && (m_aiShipController.getCurrentPathIndex() < path->getTransformList().size()))
 	{
 		ShipObject const * const shipObject = m_aiShipController.getShipOwner();
 
-		if (shipObject != NULL)
+		if (shipObject != nullptr)
 		{
 			SpacePath::TransformList const & transformList = path->getTransformList();
 			Vector const & nextPosition = getGoalPosition_w();
@@ -166,7 +166,7 @@ Vector AiShipBehaviorWaypoint::getGoalPosition_w() const
 
 	SpacePath * const path = m_aiShipController.getPath();
 
-	if (   (path != NULL)
+	if (   (path != nullptr)
 	    && !path->isEmpty())
 	{
 		SpacePath::TransformList const & transformList = path->getTransformList();
@@ -245,7 +245,7 @@ void AiShipBehaviorWaypoint::addDebug(AiDebugString & aiDebugString)
 	{
 		SpacePath const * const path = m_aiShipController.getPath();
 
-		if (path != NULL)
+		if (path != nullptr)
 		{
 			aiDebugString.addLineToPosition(m_aiShipController.getMoveToGoalPosition_w(), PackedRgb::solidGreen);
 			aiDebugString.addCircle(m_aiShipController.getMoveToGoalPosition_w(), m_aiShipController.getLargestTurnRadius(), PackedRgb::solidGreen);

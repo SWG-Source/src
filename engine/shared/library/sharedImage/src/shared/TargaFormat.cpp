@@ -224,7 +224,7 @@ bool TargaFormat::loadImage(const char *filename, Image **image) const
 
 	if (!image)
 	{
-		REPORT_LOG(true, ("TargaFormat::loadImage(): null image pointer\n"));
+		REPORT_LOG(true, ("TargaFormat::loadImage(): nullptr image pointer\n"));
 		return false;
 	}
 	*image            = 0;
@@ -257,7 +257,7 @@ bool TargaFormat::loadImageReformat(const char *filename, Image **image, Image::
 
 	if (!image)
 	{
-		REPORT_LOG(true, ("TargaFormat::loadImage(): null image pointer\n"));
+		REPORT_LOG(true, ("TargaFormat::loadImage(): nullptr image pointer\n"));
 		return false;
 	}
 	*image            = 0;

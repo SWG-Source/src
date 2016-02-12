@@ -18,7 +18,7 @@
 namespace DB {
 
 /** Represents a bool in C++, bound to a CHAR(1) column.  The column can have the values 'Y' or 'N'.
- * TODO: use a boolean type in the database, if we can find one that allows NULL's and is fairly
+ * TODO: use a boolean type in the database, if we can find one that allows nullptr's and is fairly
  * portable. (May not exist -- according to the docs, Oracle does not have a boolean datatype.)
  */
 	class BindableBool : public Bindable

@@ -99,7 +99,7 @@ void CSAssistReceiver::OnTerminated(TcpConnection *con)
 				break;
 
 			case CONNECT_BACKEND_CONNECTED_AND_AUTHED:
-				m_api->m_api->OnDisconnectCSAssist(0, CSASSIST_RESULT_SERVER_DISCONNECT, NULL);
+				m_api->m_api->OnDisconnectCSAssist(0, CSASSIST_RESULT_SERVER_DISCONNECT, nullptr);
 			case CONNECT_BACKEND_CONNECTED:
 				m_api->GetLBHost();
 			case CONNECT_BACKEND_NEGOTIATING: m_api->m_connectState = CONNECT_BACKEND_DISCONNECTED; break;
@@ -110,7 +110,7 @@ void CSAssistReceiver::OnTerminated(TcpConnection *con)
 	else
 	{
 		if (m_api->m_connectState == CONNECT_BACKEND_CONNECTED_AND_AUTHED)
-			m_api->m_api->OnDisconnectCSAssist(0, CSASSIST_RESULT_SERVER_DISCONNECT, NULL);
+			m_api->m_api->OnDisconnectCSAssist(0, CSASSIST_RESULT_SERVER_DISCONNECT, nullptr);
 		m_api->m_connectState = CONNECT_BACKEND_DISCONNECTED;
 		m_api->GetLBHost();
 	}
@@ -156,7 +156,7 @@ void CSAssistReceiver::OnRoutePacket(TcpConnection *con, const uchar *data, int 
 	{
 		res = m_api->getPending(track);
 	}
-	if(res != NULL)
+	if(res != nullptr)
 	{
 		res->init(type, track, result);
 		res->decode(iter);

@@ -74,7 +74,7 @@ void CommodityServerMetricsData::updateData()
 						buffer[sizeof(buffer)-1] = '\0';
 					}
 
-					m_mapAuctionsCountByGameObjectTypeIndex[iterGameObjectType->first] = addMetric(buffer, 0, NULL, false, false);
+					m_mapAuctionsCountByGameObjectTypeIndex[iterGameObjectType->first] = addMetric(buffer, 0, nullptr, false, false);
 				}
 			}
 		}

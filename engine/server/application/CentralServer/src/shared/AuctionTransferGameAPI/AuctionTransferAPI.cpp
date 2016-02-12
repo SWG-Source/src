@@ -25,9 +25,9 @@ AuctionTransferAPI::AuctionTransferAPI(const char *hostNames, const char *identi
 	std::vector<short> portArray;
 	char hostConfig[4096];
 	char identifierConfig[4096];
-	if (hostNames == NULL) 
+	if (hostNames == nullptr) 
 		hostNames = DEFAULT_HOST;
-	if(identifiers == NULL)
+	if(identifiers == nullptr)
 		identifiers = DEFAULT_IDENTIFIER;
 
 	// parse the hosts and ports out :
@@ -52,7 +52,7 @@ AuctionTransferAPI::AuctionTransferAPI(const char *hostNames, const char *identi
 				portArray.push_back(port);
 			}
 		}
-		while ((ptr = strtok(NULL, " ")) != NULL);
+		while ((ptr = strtok(nullptr, " ")) != nullptr);
 	}
 
 	strncpy(identifierConfig, identifiers, 4096); identifierConfig[4095] = 0;
@@ -67,7 +67,7 @@ AuctionTransferAPI::AuctionTransferAPI(const char *hostNames, const char *identi
 				identifierArray.push_back(identifier);
 			}
 		}
-		while ((ptr = strtok(NULL, ";")) != NULL);
+		while ((ptr = strtok(nullptr, ";")) != nullptr);
 	}
 
 	if (hostArray.empty())
@@ -134,7 +134,7 @@ unsigned AuctionTransferAPI::sendCommitTransaction(long long transactionID, void
 unsigned AuctionTransferAPI::sendPrepareTransaction(const char *serverIdentifier, long long transactionID, unsigned stationID, unsigned characterID, long long assetID, const char *xmlAsset, void *user, bool compress)
 {
 	RequestTypes requestEnum = GAME_REQUEST_SEND_PREPARE_TRANSACTION;
-	GenericRequest *req = NULL;
+	GenericRequest *req = nullptr;
 	if( compress )
 	{
 		requestEnum = GAME_REQUEST_SEND_PREPARE_TRANSACTION_COMPRESSED;

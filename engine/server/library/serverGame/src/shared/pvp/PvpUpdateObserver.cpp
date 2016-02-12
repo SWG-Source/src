@@ -81,7 +81,7 @@ PvpUpdateObserver::PvpUpdateObserver(TangibleObject const *who, Archive::AutoDel
 	m_pvpFaction = who->getPvpFaction();
 
 	// get client visible status for everyone observing this object (including itself)
-	if ((s_objectsProcessedThisFrame.count(who->getNetworkId()) == 0) && satisfyPvpSyncCondition(who->isNonPvpObject(), who->hasCondition(ServerTangibleObjectTemplate::C_invulnerable), (who->asCreatureObject() != NULL), who->getPvpFaction()))
+	if ((s_objectsProcessedThisFrame.count(who->getNetworkId()) == 0) && satisfyPvpSyncCondition(who->isNonPvpObject(), who->hasCondition(ServerTangibleObjectTemplate::C_invulnerable), (who->asCreatureObject() != nullptr), who->getPvpFaction()))
 	{
 		std::set<Client *> const &clients = who->getObservers();
 		for (std::set<Client *>::const_iterator i = clients.begin(); i != clients.end(); ++i)
@@ -146,8 +146,8 @@ PvpUpdateObserver::~PvpUpdateObserver()
 			PvpData::isRebelFactionId(m_obj->getPvpFaction()))
 		{
 			// did the object's "pvp sync" status change because of the faction change?
-			bool const wasPvpSync = PvpUpdateObserver::satisfyPvpSyncCondition(m_obj->isNonPvpObject(), m_obj->hasCondition(ServerTangibleObjectTemplate::C_invulnerable), (m_obj->asCreatureObject() != NULL), m_pvpFaction);
-			bool const isPvpSync = PvpUpdateObserver::satisfyPvpSyncCondition(m_obj->isNonPvpObject(), m_obj->hasCondition(ServerTangibleObjectTemplate::C_invulnerable), (m_obj->asCreatureObject() != NULL), m_obj->getPvpFaction());
+			bool const wasPvpSync = PvpUpdateObserver::satisfyPvpSyncCondition(m_obj->isNonPvpObject(), m_obj->hasCondition(ServerTangibleObjectTemplate::C_invulnerable), (m_obj->asCreatureObject() != nullptr), m_pvpFaction);
+			bool const isPvpSync = PvpUpdateObserver::satisfyPvpSyncCondition(m_obj->isNonPvpObject(), m_obj->hasCondition(ServerTangibleObjectTemplate::C_invulnerable), (m_obj->asCreatureObject() != nullptr), m_obj->getPvpFaction());
 
 			if (wasPvpSync != isPvpSync)
 			{
@@ -173,7 +173,7 @@ PvpUpdateObserver::~PvpUpdateObserver()
 
 void PvpUpdateObserver::updatePvpStatusCache(Client const *client, TangibleObject const &who, uint32 flags, uint32 factionId)
 {
-	if (!client || !who.getNetworkId().isValid() || !PvpUpdateObserver::satisfyPvpSyncCondition(who.isNonPvpObject(), who.hasCondition(ServerTangibleObjectTemplate::C_invulnerable), (who.asCreatureObject() != NULL), who.getPvpFaction()))
+	if (!client || !who.getNetworkId().isValid() || !PvpUpdateObserver::satisfyPvpSyncCondition(who.isNonPvpObject(), who.hasCondition(ServerTangibleObjectTemplate::C_invulnerable), (who.asCreatureObject() != nullptr), who.getPvpFaction()))
 		return;
 
 	s_pvpUpdateObserverCache[client][who.getNetworkId()] = std::make_pair(flags, factionId);

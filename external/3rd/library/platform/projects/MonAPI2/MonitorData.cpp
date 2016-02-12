@@ -58,7 +58,7 @@ CMonitorData::CMonitorData()
 {
 
 	m_sequence	= 1;
-	m_buffer	= NULL;
+	m_buffer	= nullptr;
 	m_nbuffer	= 0;
 	m_count		= 0;
 	m_max		= ELEMENT_MAX_START;
@@ -103,7 +103,7 @@ void CMonitorData::resize_buffer(int new_size)
 {
 char *temp;
 
-	if( m_buffer != NULL )
+	if( m_buffer != nullptr )
 	{
 		temp = m_buffer;
 		m_buffer = new char[ new_size];
@@ -331,7 +331,7 @@ char *p;
 			if( get_bit(mark,x) == 0 )
 			{
 				set_bit( mark, x );
-                if( m_data[x].discription != NULL )
+                if( m_data[x].discription != nullptr )
                 {
 					sprintf(tmp,"%d,%s|",m_data[x].id, m_data[x].discription);
     				size += (int)strlen(tmp);
@@ -360,7 +360,7 @@ char *p;
 				{
 					flag = 2;
    					set_bit(mark,x);					
-					if( m_data[x].discription != NULL )
+					if( m_data[x].discription != nullptr )
                     {
 						sprintf(tmp,"%d,%s|",m_data[x].id, m_data[x].discription);
 					    size += (int)strlen(tmp);
@@ -412,7 +412,7 @@ int x;
 			
 			//*******  Discription ******
 			delete [] m_data[x].discription;
-			m_data[x].discription = NULL;
+			m_data[x].discription = nullptr;
 			if( des )
 			{
 				m_data[x].discription = new char [strlen(des)+1];
@@ -459,10 +459,10 @@ int x;
 	{
 		if( Id == m_data[x].id )
 		{
-			if( Description == NULL )
+			if( Description == nullptr )
 			{
 				delete [] m_data[x].discription;
-				m_data[x].discription = NULL;
+				m_data[x].discription = nullptr;
 				mode = 0;				
 				return x;
 			}
@@ -510,7 +510,7 @@ int high, i, low;
    if ( high < m_count &&  Id==m_data[high].id )  
    {
 	   if (m_data[high].ChangedTime == 0 || m_data[high].value != value) {
-		   m_data[high].ChangedTime = (long)time(NULL);
+		   m_data[high].ChangedTime = (long)time(nullptr);
 		   m_data[high].value = value;
 	   }
    }
@@ -560,7 +560,7 @@ int CMonitorData::parseList( char **list, char *data, char tok , int max )
 int count;
 int cnt;
 
-	if( data == NULL )
+	if( data == nullptr )
 		return 0;
 
    list[0] = data;

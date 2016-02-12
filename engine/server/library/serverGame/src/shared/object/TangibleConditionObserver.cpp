@@ -27,10 +27,10 @@ TangibleConditionObserver::TangibleConditionObserver(TangibleObject const *who, 
 
 TangibleConditionObserver::~TangibleConditionObserver()
 {
-	if (m_tangibleObject != NULL)
+	if (m_tangibleObject != nullptr)
 	{
 		const CreatureObject * creature = m_tangibleObject->asCreatureObject();
-		if (creature != NULL)
+		if (creature != nullptr)
 		{
 			int currentCondition = creature->getCondition();
 			if ((m_oldCondition & TangibleObject::C_hibernating) != 0 && (currentCondition & TangibleObject::C_hibernating) == 0)
@@ -50,8 +50,8 @@ TangibleConditionObserver::~TangibleConditionObserver()
 		if ((wasInvulnerable != isInvulnerable) && !m_tangibleObject->getObservers().empty())
 		{
 			// did the object's "pvp sync" status change because of the invulnerability change?
-			bool const wasPvpSync = PvpUpdateObserver::satisfyPvpSyncCondition(m_tangibleObject->isNonPvpObject(), wasInvulnerable, (m_tangibleObject->asCreatureObject() != NULL), m_tangibleObject->getPvpFaction());
-			bool const isPvpSync = PvpUpdateObserver::satisfyPvpSyncCondition(m_tangibleObject->isNonPvpObject(), isInvulnerable, (m_tangibleObject->asCreatureObject() != NULL), m_tangibleObject->getPvpFaction());
+			bool const wasPvpSync = PvpUpdateObserver::satisfyPvpSyncCondition(m_tangibleObject->isNonPvpObject(), wasInvulnerable, (m_tangibleObject->asCreatureObject() != nullptr), m_tangibleObject->getPvpFaction());
+			bool const isPvpSync = PvpUpdateObserver::satisfyPvpSyncCondition(m_tangibleObject->isNonPvpObject(), isInvulnerable, (m_tangibleObject->asCreatureObject() != nullptr), m_tangibleObject->getPvpFaction());
 
 			if (wasPvpSync != isPvpSync)
 			{

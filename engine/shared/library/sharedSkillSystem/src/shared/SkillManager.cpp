@@ -18,7 +18,7 @@
 #include <unordered_map>
 #include <string>
 
-SkillManager      *SkillManager::ms_instance = NULL;
+SkillManager      *SkillManager::ms_instance = nullptr;
 const std::string &SkillManager::cms_skillsDatatableName = "datatables/skill/skills.iff";
 
 //-----------------------------------------------------------------
@@ -92,7 +92,7 @@ void SkillManager::remove()
 {
 	DEBUG_FATAL (!ms_instance, ("SkillManager not installed"));
 	delete ms_instance;
-	ms_instance = NULL;
+	ms_instance = nullptr;
 }
 
 //----------------------------------------------------------------------
@@ -170,7 +170,7 @@ const SkillObject * SkillManager::loadSkill(const std::string & skillName)
 
 uint32 SkillManager::getDefaultXpLimit(const std::string & experienceType)
 {
-	if (m_xpLimitMap != NULL)
+	if (m_xpLimitMap != nullptr)
 	{
 		XpLimitMap::const_iterator result = m_xpLimitMap->find(experienceType);
 		if (result != m_xpLimitMap->end())
@@ -183,13 +183,13 @@ uint32 SkillManager::getDefaultXpLimit(const std::string & experienceType)
 
 void SkillManager::initXpLimits()
 {
-	if (m_xpLimitTable == NULL)
+	if (m_xpLimitTable == nullptr)
 	{
 		WARNING(true, ("SkillManager::initXpLimits, m_xpLimitTable not initialized"));
 		return;
 	}
 
-	if (m_xpLimitMap == NULL)
+	if (m_xpLimitMap == nullptr)
 	{
 		WARNING(true, ("SkillManager::initXpLimits, m_xpLimitMap not initialized"));
 		return;

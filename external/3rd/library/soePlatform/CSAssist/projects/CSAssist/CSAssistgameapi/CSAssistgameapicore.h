@@ -166,11 +166,11 @@ private:
 	void GetLBHost();
 	void OnConnectLB(unsigned track, unsigned result, std::string serverName, unsigned serverPort, Request *, Response *);
 #ifdef USE_UDP_LIBRARY
-	inline bool actuallyConnected()		{ return (bool)((m_connection != NULL) && (m_connection->GetStatus() == UdpConnection::cStatusConnected)); }
+	inline bool actuallyConnected()		{ return (bool)((m_connection != nullptr) && (m_connection->GetStatus() == UdpConnection::cStatusConnected)); }
 	UdpManager				*m_conManager;
 	UdpConnection			*m_connection;
 #else
-	inline bool actuallyConnected()		{ return (bool)((m_connection != NULL) && (m_connection->GetStatus() == TcpConnection::StatusConnected)); }
+	inline bool actuallyConnected()		{ return (bool)((m_connection != nullptr) && (m_connection->GetStatus() == TcpConnection::StatusConnected)); }
 	TcpManager				*m_conManager;
 	TcpConnection			*m_connection;
 #endif

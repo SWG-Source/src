@@ -136,9 +136,9 @@ void AiCreatureCombatProfileNamespace::loadCombatProfileTable(DataTable const & 
 		for (int i = 0; i < serverObjectCount; ++i)
 		{
 			ServerObject * const serverObject = ServerWorld::getObject(i);
-			CreatureObject * const creatureObject = (serverObject != NULL) ? serverObject->asCreatureObject() : NULL;
+			CreatureObject * const creatureObject = (serverObject != nullptr) ? serverObject->asCreatureObject() : nullptr;
 
-			if (   (creatureObject != NULL)
+			if (   (creatureObject != nullptr)
 			    && !creatureObject->isPlayerControlled())
 			{
 				creatureObject->makeDead(NetworkId::cms_invalid, NetworkId::cms_invalid);
@@ -228,7 +228,7 @@ void AiCreatureCombatProfileNamespace::grantActions(CreatureObject & owner, AiCr
 
 // ----------------------------------------------------------------------
 AiCreatureCombatProfile::AiCreatureCombatProfile()
- : m_profileId(NULL)
+ : m_profileId(nullptr)
  , m_singleUseActionList()
  , m_delayRepeatActionList()
  , m_instantRepeatActionList()
@@ -247,7 +247,7 @@ void AiCreatureCombatProfile::install()
 		bool const openIfNotFound = true;
 		DataTable * const dataTable = DataTableManager::getTable(s_combatProfileTable, openIfNotFound);
 
-		if (dataTable != NULL)
+		if (dataTable != nullptr)
 		{
 #ifdef _DEBUG
 			DataTableManager::addReloadCallback(s_combatProfileTable, &loadCombatProfileTable);
@@ -267,7 +267,7 @@ void AiCreatureCombatProfile::install()
 // ----------------------------------------------------------------------
 AiCreatureCombatProfile const * AiCreatureCombatProfile::getCombatProfile(CrcString const & profileName)
 {
-	AiCreatureCombatProfile const * result = NULL;
+	AiCreatureCombatProfile const * result = nullptr;
 	CombatProfileMap::const_iterator iterCombatProfileMap = s_combatProfileMap.find(PersistentCrcString(profileName));
 
 	if (iterCombatProfileMap != s_combatProfileMap.end())

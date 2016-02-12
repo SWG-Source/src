@@ -18,7 +18,7 @@
 class AdjustAccountFeatureIdResponse : public GameNetworkMessage
 {
 public:
-	AdjustAccountFeatureIdResponse  (NetworkId const & requestingPlayer, uint32 gameServer, NetworkId const & targetPlayer, std::string const & targetPlayerDescription, StationId targetStationId, NetworkId const & targetItem, std::string const & targetItemDescription, uint32 gameCode, uint32 featureId, int oldValue, int newValue, unsigned int resultCode, bool resultCameFromSession, const char * sessionResultString = NULL, const char * sessionResultText = NULL);
+	AdjustAccountFeatureIdResponse  (NetworkId const & requestingPlayer, uint32 gameServer, NetworkId const & targetPlayer, std::string const & targetPlayerDescription, StationId targetStationId, NetworkId const & targetItem, std::string const & targetItemDescription, uint32 gameCode, uint32 featureId, int oldValue, int newValue, unsigned int resultCode, bool resultCameFromSession, const char * sessionResultString = nullptr, const char * sessionResultText = nullptr);
 	AdjustAccountFeatureIdResponse  (Archive::ReadIterator & source);
 	virtual ~AdjustAccountFeatureIdResponse ();
 
@@ -37,7 +37,7 @@ public:
 	bool getResultCameFromSession() const;
 	std::string const & getSessionResultString() const;
 	std::string const & getSessionResultText() const;
-	void setSessionResultCode(unsigned int resultCode, const char * sessionResultString = NULL, const char * sessionResultText = NULL);
+	void setSessionResultCode(unsigned int resultCode, const char * sessionResultString = nullptr, const char * sessionResultText = nullptr);
 
 private:
 	Archive::AutoVariable<NetworkId> m_requestingPlayer;
@@ -169,7 +169,7 @@ inline std::string const & AdjustAccountFeatureIdResponse::getSessionResultText(
 
 // ----------------------------------------------------------------------
 
-inline void AdjustAccountFeatureIdResponse::setSessionResultCode(unsigned int resultCode, const char * sessionResultString /*= NULL*/, const char * sessionResultText /*= NULL*/)
+inline void AdjustAccountFeatureIdResponse::setSessionResultCode(unsigned int resultCode, const char * sessionResultString /*= nullptr*/, const char * sessionResultText /*= nullptr*/)
 {
 	m_resultCode.set(resultCode);
 

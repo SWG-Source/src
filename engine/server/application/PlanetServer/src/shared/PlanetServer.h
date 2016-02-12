@@ -146,7 +146,7 @@ inline int PlanetServer::getNumberOfGameServers() const
 
 inline void PlanetServer::onCentralConnected(CentralServerConnection *connection)
 {
-	m_pendingCentralServerConnection=NULL;
+	m_pendingCentralServerConnection=nullptr;
 	m_centralServerConnection=connection;
 }
 

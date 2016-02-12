@@ -162,8 +162,8 @@ jboolean JNICALL ScriptMethodsBuffBuilderNamespace::buffBuilderValidated(JNIEnv 
 		WARNING(true, ("index keys and values arrays are of diffent sizes"));
 		return JNI_FALSE;
 	}
-	jint * const buffComponentsValuesArray = env->GetIntArrayElements(jbuffComponentValues, NULL);
-	if (buffComponentsValuesArray == NULL)
+	jint * const buffComponentsValuesArray = env->GetIntArrayElements(jbuffComponentValues, nullptr);
+	if (buffComponentsValuesArray == nullptr)
 	{
 		return JNI_FALSE;
 	}
@@ -194,7 +194,7 @@ jboolean JNICALL ScriptMethodsBuffBuilderNamespace::buffBuilderValidated(JNIEnv 
 	{
 		//send the final change message to the buffer to indicate acceptance
 		
-		Controller * const bufferController = bufferObj ? bufferObj->getController() : NULL;
+		Controller * const bufferController = bufferObj ? bufferObj->getController() : nullptr;
 		if(bufferController)
 		{
 			BuffBuilderChangeMessage * outMsg = new BuffBuilderChangeMessage();

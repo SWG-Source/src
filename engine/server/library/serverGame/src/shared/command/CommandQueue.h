@@ -218,7 +218,7 @@ public:
 	void resetCooldowns();
 
 	// debug diagnostic
-	void spew(std::string * output = NULL);
+	void spew(std::string * output = nullptr);
 
 private:
 	CommandQueue(CommandQueue const &);

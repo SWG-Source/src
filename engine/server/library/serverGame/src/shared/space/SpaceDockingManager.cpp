@@ -78,7 +78,7 @@ namespace SpaceDockingManagerNamespace
 		explicit DockableShip(Object const & object)
 		 : m_dockPadList()
 		{
-			if (object.getAppearance() != NULL)
+			if (object.getAppearance() != nullptr)
 			{
 				// What dock pads do we have, and what are their radii
 
@@ -176,7 +176,7 @@ float SpaceDockingManagerNamespace::getCollisionRadius(Object const & object)
 	CollisionProperty const * const collisionProperty = object.getCollisionProperty();
 	float radius = 0.0f;
 
-	if (collisionProperty != NULL)
+	if (collisionProperty != nullptr)
 	{
 		radius = collisionProperty->getBoundingSphere_l().getRadius();
 	}
@@ -257,7 +257,7 @@ bool SpaceDockingManagerNamespace::getHardPoints(Object const & object, char con
 
 	hardPointList.clear();
 
-	if (object.getAppearance() != NULL)
+	if (object.getAppearance() != nullptr)
 	{
 		int hardPointIndex = 1;
 		bool done = false;

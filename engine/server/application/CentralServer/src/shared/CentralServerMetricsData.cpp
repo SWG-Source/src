@@ -148,7 +148,7 @@ void CentralServerMetricsData::updateData()
 		// appear yellow to draw attention) for some amount of time
 		// after detecting a system time mismatch issue
 #ifndef WIN32
-		if ((lastTimeSystemTimeMismatchNotification + ConfigCentralServer::getSystemTimeMismatchAlertIntervalSeconds()) > ::time(NULL))
+		if ((lastTimeSystemTimeMismatchNotification + ConfigCentralServer::getSystemTimeMismatchAlertIntervalSeconds()) > ::time(nullptr))
 			m_data[m_systemTimeMismatch].m_value = STATUS_LOADING;
 		else
 			m_data[m_systemTimeMismatch].m_value = 1;
@@ -202,7 +202,7 @@ void CentralServerMetricsData::updateData()
 					std::string label("population.");
 					label += iter->first;
 
-					m_mapPopulationStatisticsIndex[iter->first] = addMetric(label.c_str(), 0, NULL, false, false);
+					m_mapPopulationStatisticsIndex[iter->first] = addMetric(label.c_str(), 0, nullptr, false, false);
 				}
 			}
 		}
@@ -235,7 +235,7 @@ void CentralServerMetricsData::updateData()
 			}
 			else
 			{
-				gcwScoreStatisticsIndex = addMetric(iter->first.c_str(), 0, NULL, false, false);
+				gcwScoreStatisticsIndex = addMetric(iter->first.c_str(), 0, nullptr, false, false);
 				IGNORE_RETURN(m_mapGcwScoreStatisticsIndex.insert(std::make_pair(iter->first, gcwScoreStatisticsIndex)));
 			}
 
@@ -263,7 +263,7 @@ void CentralServerMetricsData::updateData()
 					std::string label("population.");
 					label += secondIter.first;
 
-					m_mapLastLoginTimeStatisticsIndex[secondIter.first] = addMetric(label.c_str(), 0, NULL, false, false);
+					m_mapLastLoginTimeStatisticsIndex[secondIter.first] = addMetric(label.c_str(), 0, nullptr, false, false);
 				}
 			}
 		}
@@ -288,7 +288,7 @@ void CentralServerMetricsData::updateData()
 					std::string label("population.");
 					label += iter->second.first;
 
-					m_mapCreateTimeStatisticsIndex[iter->second.first] = addMetric(label.c_str(), 0, NULL, false, false);
+					m_mapCreateTimeStatisticsIndex[iter->second.first] = addMetric(label.c_str(), 0, nullptr, false, false);
 				}
 			}
 		}

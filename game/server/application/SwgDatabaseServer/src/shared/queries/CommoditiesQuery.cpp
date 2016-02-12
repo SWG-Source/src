@@ -90,7 +90,7 @@ bool AuctionLocationsQuery::setupData(DB::Session *session)
 bool AuctionLocationsQuery::addData(const DB::Row *_data)
 {
 	const AuctionLocationsRow *myData=dynamic_cast<const AuctionLocationsRow*>(_data);
-	FATAL(myData == NULL, ("Adding NULL data into AuctionLocations"));
+	FATAL(myData == nullptr, ("Adding nullptr data into AuctionLocations"));
 	switch(mode)
 	{
 		case mode_UPDATE:
@@ -413,7 +413,7 @@ bool MarketAuctionsQuery::addData(const DB::Row *_data)
 		case mode_UPDATE:
 			{
 				const MarketAuctionsRowUpdate *myData=dynamic_cast<const MarketAuctionsRowUpdate*>(_data);
-				FATAL(myData == NULL, ("Adding NULL data into MarketAuctions for mode_UPDATE"));
+				FATAL(myData == nullptr, ("Adding nullptr data into MarketAuctions for mode_UPDATE"));
 
 				if (!m_item_ids.push_back(myData->item_id.getValueASCII())) return false;
 				if (!m_owner_ids.push_back(myData->owner_id.getValueASCII())) return false;
@@ -424,7 +424,7 @@ bool MarketAuctionsQuery::addData(const DB::Row *_data)
 		case mode_INSERT:
 			{
 				const MarketAuctionsRow *myData=dynamic_cast<const MarketAuctionsRow*>(_data);
-				FATAL(myData == NULL, ("Adding NULL data into MarketAuctions for mode_INSERT"));
+				FATAL(myData == nullptr, ("Adding nullptr data into MarketAuctions for mode_INSERT"));
 
 				if (!m_item_ids.push_back(myData->item_id.getValueASCII())) return false;
 				if (!m_owner_ids.push_back(myData->owner_id.getValueASCII())) return false;
@@ -450,7 +450,7 @@ bool MarketAuctionsQuery::addData(const DB::Row *_data)
 		case mode_DELETE:
 			{
 				const MarketAuctionsRowDelete *myData=dynamic_cast<const MarketAuctionsRowDelete*>(_data);
-				FATAL(myData == NULL, ("Adding NULL data into MarketAuctions for mode_DELETE"));
+				FATAL(myData == nullptr, ("Adding nullptr data into MarketAuctions for mode_DELETE"));
 
 				if (!m_item_ids.push_back(myData->item_id.getValueASCII())) return false;
 				break;
@@ -716,7 +716,7 @@ bool MarketAuctionBidsQuery::addData(const DB::Row *_data)
 {
 	const MarketAuctionBidsRow *myData=dynamic_cast<const MarketAuctionBidsRow*>(_data);
 	
-	FATAL(myData == NULL, ("Adding NULL data into MarketAuctionBids"));
+	FATAL(myData == nullptr, ("Adding nullptr data into MarketAuctionBids"));
 
 	switch(mode)
 	{

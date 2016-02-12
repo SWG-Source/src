@@ -309,11 +309,11 @@ void CommandQueue::executeCommandQueue()
 	{
 		CommandQueueEntry &entry = *(m_queue.begin());
 
-		// try to recover from having a null command
+		// try to recover from having a nullptr command
 		// maybe this should result in a fatal error?
 		if ( entry.m_command == 0 )
 		{
-			WARNING( true, ( "executeCommandQueue: entry.m_command was NULL! WTF?\n" ) );
+			WARNING( true, ( "executeCommandQueue: entry.m_command was nullptr! WTF?\n" ) );
 			m_queue.pop();
 			m_state = State_Waiting;
 			m_nextEventTime = 0.f;
@@ -387,7 +387,7 @@ void CommandQueue::executeCommandQueue()
 
 				// switch state might have removed elements from the queue and invalidated entry
 				// so we can't assume that we're still safe
-				if(!m_queue.empty() && (&(*(m_queue.begin())) == &entry) && m_queue.begin()->m_command != NULL)
+				if(!m_queue.empty() && (&(*(m_queue.begin())) == &entry) && m_queue.begin()->m_command != nullptr)
 				{
 					handleEntryRemoved(*(m_queue.begin()), true);
 					m_queue.pop();
@@ -458,7 +458,7 @@ void CommandQueue::updateClient(TimerClass timerClass )
 {
 	CreatureObject * const creatureOwner = getServerOwner().asCreatureObject();
 
-	if (   (creatureOwner == NULL)
+	if (   (creatureOwner == nullptr)
 	    || !creatureOwner->getClient())
 	{
 		return;
@@ -475,7 +475,7 @@ void CommandQueue::updateClient(TimerClass timerClass )
 
 	if ( entry.m_command == 0 ) // woah that's bad news!
 	{
-		WARNING( true, ( "CommandQueue::updateClient(): command was NULL!\n" ) );
+		WARNING( true, ( "CommandQueue::updateClient(): command was nullptr!\n" ) );
 		return;
 	}
 
@@ -539,7 +539,7 @@ void CommandQueue::notifyClient()
 {
 	CreatureObject * const creatureOwner = getServerOwner().asCreatureObject();
 
-	if (   (creatureOwner == NULL)
+	if (   (creatureOwner == nullptr)
 	    || !creatureOwner->getClient())
 	{
 		return;
@@ -555,7 +555,7 @@ void CommandQueue::notifyClient()
 
 	if ( entry.m_command == 0 )
 	{
-		WARNING( true, ( "CommandQueue::notifyClient(): command was NULL!\n" ) );
+		WARNING( true, ( "CommandQueue::notifyClient(): command was nullptr!\n" ) );
 		return;
 	}
 
@@ -612,7 +612,7 @@ bool CommandQueue::doWarmupTrigger(const CommandQueueEntry &entry )
 
 	CreatureObject * const creatureOwner = getServerOwner().asCreatureObject();
 	
-	if (creatureOwner != NULL)
+	if (creatureOwner != nullptr)
 	{
 		creatureOwner->doWarmupChecks( *entry.m_command, entry.m_targetId, entry.m_params, m_status, m_statusDetail );
 	
@@ -620,7 +620,7 @@ bool CommandQueue::doWarmupTrigger(const CommandQueueEntry &entry )
 			
 		if ( m_status == Command::CEC_Success )
 		{
-			FATAL( entry.m_command == 0, ( "entry had a null command\n" ) );
+			FATAL( entry.m_command == 0, ( "entry had a nullptr command\n" ) );
 		
 			std::vector<float> timeValues;
 			timeValues.push_back( entry.m_command->m_warmTime );
@@ -659,7 +659,7 @@ uint32 CommandQueue::getCurrentCommand() const
 	
 	if ( entry.m_command == 0 )
 	{
-		WARNING( true, ( "CommandQueue::getCurrentCommand(): command was NULL!\n" ) );
+		WARNING( true, ( "CommandQueue::getCurrentCommand(): command was nullptr!\n" ) );
 		return 0;
 	}
 
@@ -680,7 +680,7 @@ void CommandQueue::switchState()
 
 	if ( entry.m_command == 0 )
 	{
-		WARNING( true, ( "CommandQueue::switchState(): command was NULL!\n" ) );
+		WARNING( true, ( "CommandQueue::switchState(): command was nullptr!\n" ) );
 		return;
 	}
 
@@ -726,7 +726,7 @@ void CommandQueue::switchState()
 							bool const targetIsAuthoritative = target && target->isAuthoritative();
 
 							REPORT_LOG(true, ("CommandQueue::switchState():QUEUE_ENTRY_COMMAND: commandName=[%s] commandHash=[%lu] owner=[%s][%s][%s] target=[%s][%s][%s] sequenceId=[%lu] params=[%s] clearable=[%s] priority=[%d]\n",
-								entryCopy.m_command ? entryCopy.m_command->m_commandName.c_str() : "NULL",
+								entryCopy.m_command ? entryCopy.m_command->m_commandName.c_str() : "nullptr",
 								entryCopy.m_command ? entryCopy.m_command->m_commandHash : 0,
 								NameManager::getInstance().getPlayerName(getOwner().getNetworkId()).c_str(),
 								getOwner().getNetworkId().getValueString().c_str(),
@@ -746,7 +746,7 @@ void CommandQueue::switchState()
 
 							for (; itEntry != m_queue.end(); ++itEntry)
 							{
-								REPORT_LOG(true, ("CommandQueue::switchState():QUEUE_ENTRY_QUEUE: commandName=[%s]\n", itEntry->m_command ? itEntry->m_command->m_commandName.c_str() : "NULL"));
+								REPORT_LOG(true, ("CommandQueue::switchState():QUEUE_ENTRY_QUEUE: commandName=[%s]\n", itEntry->m_command ? itEntry->m_command->m_commandName.c_str() : "nullptr"));
 							}
 						}
 #endif
@@ -838,7 +838,7 @@ void CommandQueue::switchState()
 						bool const targetIsAuthoritative = target && target->isAuthoritative();
 
 						REPORT_LOG(true, ("CommandQueue::switchState():QUEUE_ENTRY_COMMAND: commandName=[%s] commandHash=[%lu] owner=[%s][%s][%s] target=[%s][%s][%s] sequenceId=[%lu] params=[%s] clearable=[%s] priority=[%d]\n",
-							entryCopy.m_command ? entryCopy.m_command->m_commandName.c_str() : "NULL",
+							entryCopy.m_command ? entryCopy.m_command->m_commandName.c_str() : "nullptr",
 							entryCopy.m_command ? entryCopy.m_command->m_commandHash : 0,
 							NameManager::getInstance().getPlayerName(getOwner().getNetworkId()).c_str(),
 							getOwner().getNetworkId().getValueString().c_str(),
@@ -858,7 +858,7 @@ void CommandQueue::switchState()
 
 						for (; itEntry != m_queue.end(); ++itEntry)
 						{
-							REPORT_LOG(true, ("CommandQueue::switchState():QUEUE_ENTRY_QUEUE: commandName=[%s]\n", itEntry->m_command ? itEntry->m_command->m_commandName.c_str() : "NULL"));
+							REPORT_LOG(true, ("CommandQueue::switchState():QUEUE_ENTRY_QUEUE: commandName=[%s]\n", itEntry->m_command ? itEntry->m_command->m_commandName.c_str() : "nullptr"));
 						}
 					}
 #endif
@@ -1160,7 +1160,7 @@ void CommandQueue::notifyClientOfCommandRemoval(uint32 sequenceId, float waitTim
 
 	CreatureObject * const creatureOwner = getServerOwner().asCreatureObject();
 
-	if (   (creatureOwner != NULL)
+	if (   (creatureOwner != nullptr)
 	    && creatureOwner->getClient()
 	    && (sequenceId != 0))
 	{
@@ -1359,7 +1359,7 @@ void CommandQueue::executeCommand(Command const &command, NetworkId const &targe
 
 	CreatureObject * const creatureOwner = getServerOwner().asCreatureObject();
 
-	if (creatureOwner != NULL)
+	if (creatureOwner != nullptr)
 	{
 		CreatureController * const creatureController = creatureOwner->getCreatureController();
 		if (creatureController && creatureController->getSecureTrade())
@@ -1399,7 +1399,7 @@ void CommandQueue::executeCommand(Command const &command, NetworkId const &targe
 
 	TangibleObject * const tangibleOwner = getServerOwner().asTangibleObject();
 
-	if (tangibleOwner != NULL)
+	if (tangibleOwner != nullptr)
 	{
 		// Really execute the command - swap targets if necessary, and call
 		// forceExecuteCommand (which will handle messaging if not authoritative)
@@ -1440,7 +1440,7 @@ CommandQueue * CommandQueue::getCommandQueue(Object & object)
 {
 	Property * const property = object.getProperty(getClassPropertyId());
 
-	return (property != NULL) ? (static_cast<CommandQueue *>(property)) : NULL;
+	return (property != nullptr) ? (static_cast<CommandQueue *>(property)) : nullptr;
 }
 
 // ----------------------------------------------------------------------

@@ -89,7 +89,7 @@ void NebulaManagerServer::update(float elapsedTime)
 void NebulaManagerServer::enqueueLightning(NebulaLightningData const & nebulaLightningData)
 {
 	Nebula const * const nebula = NebulaManager::getNebulaById(nebulaLightningData.nebulaId);
-	if (nebula == NULL)
+	if (nebula == nullptr)
 	{
 		WARNING(true, ("NebulaManagerServer::enqueueLightning invalid nebula [%d]", nebulaLightningData.nebulaId));
 		return;
@@ -164,7 +164,7 @@ void NebulaManagerServer::handleEnqueuedLightningEvents()
 		NebulaLightningData const & nebulaLightningData = (*it);
 		
 		Nebula const * const nebula = NebulaManager::getNebulaById(nebulaLightningData.nebulaId);
-		if (nebula == NULL)
+		if (nebula == nullptr)
 		{
 			it = s_lightningDataVector.erase(it);
 			continue;
@@ -203,7 +203,7 @@ void NebulaManagerServer::handleEnqueuedLightningEvents()
 					ServerObject const * const serverHitObject = hitObject->asServerObject();
 					ShipObject const * const shipHitObject = serverHitObject->asShipObject();
 					
-					if (shipHitObject != NULL)
+					if (shipHitObject != nullptr)
 					{
 						NetworkIdTimeMap::const_iterator const oit = s_objectsRecentlyHitByLightning.find(CachedNetworkId(*hitObject));
 						if (oit == s_objectsRecentlyHitByLightning.end() || (*oit).second < clockTimeMs)
@@ -304,7 +304,7 @@ void NebulaManagerServer::generateLightningEvents(float elapsedTime)
 void NebulaManagerServer::handleEnvironmentalDamage(ServerObject & victim, int nebulaId)
 {
 	Nebula const * const nebula = NebulaManager::getNebulaById(nebulaId);
-	if (nebula == NULL)
+	if (nebula == nullptr)
 		return;
 	
 	float const environmentalDamageFrequency = nebula->getEnvironmentalDamageFrequency();

@@ -317,7 +317,7 @@ public:
 // Can this object manipulate other objects.  CreatureObject overrides.  Base class returns false.
 	// generally an object is allowed to manipulate another object if it is container or "nearby".
 public:
-	virtual bool                 canManipulateObject(ServerObject const &target, bool movingObject, bool checkPermission, bool checkPermissionOnParent, float maxDistance, Container::ContainerErrorCode&, bool skipNoTradeCheck = false, bool * allowedByGodMode = NULL) const;
+	virtual bool                 canManipulateObject(ServerObject const &target, bool movingObject, bool checkPermission, bool checkPermissionOnParent, float maxDistance, Container::ContainerErrorCode&, bool skipNoTradeCheck = false, bool * allowedByGodMode = nullptr) const;
 
 //-----------------------------------------------------------------------
 // container support
@@ -738,7 +738,7 @@ private:
 	static float ms_buildingUpdateRadiusMultiplier;
 	static void setBuildingUpdateRadiusMultiplier(float m);
 
-	/** If this object is being controlled by a client, this pointer will be set.  NULL otherwise
+	/** If this object is being controlled by a client, this pointer will be set.  nullptr otherwise
 	 */
 	Client *              m_client;
 	std::set<Client *>    m_observers;
@@ -871,7 +871,7 @@ inline Client * ServerObject::getClient(void) const
 
 inline const SharedObjectTemplate * ServerObject::getSharedTemplate() const
 {
-	if (m_sharedTemplate != NULL)
+	if (m_sharedTemplate != nullptr)
 		return m_sharedTemplate;
 	return getDefaultSharedTemplate();
 }
@@ -936,7 +936,7 @@ inline ServerObject::TriggerVolumeMap & ServerObject::getTriggerVolumeMap()
 
 inline const std::set<TriggerVolume *> * ServerObject::getTriggerVolumeEntered() const
 {
-	return NULL;
+	return nullptr;
 }
 
 //-----------------------------------------------------------------------

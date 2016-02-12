@@ -77,7 +77,7 @@ PlanetProxyObject *Scene::findObjectByID(const NetworkId &objectID) const
 {
 	ObjectMapType::const_iterator i=m_objects.find(objectID);
 	if (i==m_objects.end())
-		return NULL;
+		return nullptr;
 	else
 		return ((*i).second);
 }
@@ -94,7 +94,7 @@ bool Scene::isObjectLoaded(const NetworkId &networkId) const
 void Scene::receiveMessage(const MessageDispatch::Emitter & source, const MessageDispatch::MessageBase & message)
 {
 	const GameServerConnection *gameServer=dynamic_cast<const GameServerConnection*>(&source);
-	WARNING_DEBUG_FATAL(gameServer==0,("Source was NULL or source was not a GameServerConnection."));
+	WARNING_DEBUG_FATAL(gameServer==0,("Source was nullptr or source was not a GameServerConnection."));
 
 	if (message.isType("GameConnectionClosed"))
 	{
@@ -216,7 +216,7 @@ Node *Scene::findNodeByPosition(int x, int z)
 
 /**
  * Given coordinates, return a const pointer to the node that encloses
- * those coordinates.  Will not create new nodes, so it may return NULL.
+ * those coordinates.  Will not create new nodes, so it may return nullptr.
  */
 const Node *Scene::findNodeByPositionConst(int x, int z) const
 {
@@ -245,7 +245,7 @@ Node *Scene::findNodeByRoundedPosition(int x, int z)
 
 /**
  * Given coordinates that are known to be a node boundary, return a const pointer
- * to the node.  Does not create new nodes, so may return NULL.
+ * to the node.  Does not create new nodes, so may return nullptr.
  */
 const Node *Scene::findNodeByRoundedPositionConst(int x, int z) const
 {
@@ -254,7 +254,7 @@ const Node *Scene::findNodeByRoundedPositionConst(int x, int z) const
 	if (i!=m_nodeMap.end())
 		return (*i).second;
 	else
-		return NULL;
+		return nullptr;
 }
 
 // ----------------------------------------------------------------------

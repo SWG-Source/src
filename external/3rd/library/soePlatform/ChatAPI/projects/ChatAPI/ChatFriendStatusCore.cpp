@@ -7,7 +7,7 @@ namespace ChatSystem
 using namespace Base;
 using namespace Plat_Unicode;
 ChatFriendStatusCore::ChatFriendStatusCore()
-: m_interface(NULL),
+: m_interface(nullptr),
   m_status(0)
 {
 }
@@ -31,7 +31,7 @@ ChatFriendStatusCore::~ChatFriendStatusCore()
 }
 
 ChatFriendStatus::ChatFriendStatus()
-: m_core(NULL)
+: m_core(nullptr)
 {
 }
 

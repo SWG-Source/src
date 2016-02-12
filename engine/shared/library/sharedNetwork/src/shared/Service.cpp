@@ -186,8 +186,8 @@ Service::~Service()
 	delete m_callback;
 
 	connections.clear();
-	connectionAllocator = NULL;
-	m_callback = NULL;
+	connectionAllocator = nullptr;
+	m_callback = nullptr;
 	delete m_tcpServer;
 }
 

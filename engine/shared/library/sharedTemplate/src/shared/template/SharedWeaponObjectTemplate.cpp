@@ -86,10 +86,10 @@ Tag SharedWeaponObjectTemplate::getTemplateVersion(void) const
  */
 Tag SharedWeaponObjectTemplate::getHighestTemplateVersion(void) const
 {
-	if (m_baseData == NULL)
+	if (m_baseData == nullptr)
 		return m_templateVersion;
 	const SharedWeaponObjectTemplate * base = dynamic_cast<const SharedWeaponObjectTemplate *>(m_baseData);
-	if (base == NULL)
+	if (base == nullptr)
 		return m_templateVersion;
 	return std::max(m_templateVersion, base->getHighestTemplateVersion());
 } // SharedWeaponObjectTemplate::getHighestTemplateVersion
@@ -103,9 +103,9 @@ CompilerIntegerParam * SharedWeaponObjectTemplate::getCompilerIntegerParam(const
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_weaponEffectIndex;
 		}
@@ -117,9 +117,9 @@ CompilerIntegerParam * SharedWeaponObjectTemplate::getCompilerIntegerParam(const
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_attackType;
 		}
@@ -127,7 +127,7 @@ CompilerIntegerParam * SharedWeaponObjectTemplate::getCompilerIntegerParam(const
 	}
 	else
 		return SharedTangibleObjectTemplate::getCompilerIntegerParam(name, deepCheck, index);
-	return NULL;
+	return nullptr;
 }	//SharedWeaponObjectTemplate::getCompilerIntegerParam
 
 FloatParam * SharedWeaponObjectTemplate::getFloatParam(const char *name, bool deepCheck, int index)
@@ -148,9 +148,9 @@ StringParam * SharedWeaponObjectTemplate::getStringParam(const char *name, bool 
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getStringParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_weaponEffect;
 		}
@@ -158,7 +158,7 @@ StringParam * SharedWeaponObjectTemplate::getStringParam(const char *name, bool 
 	}
 	else
 		return SharedTangibleObjectTemplate::getStringParam(name, deepCheck, index);
-	return NULL;
+	return nullptr;
 }	//SharedWeaponObjectTemplate::getStringParam
 
 StringIdParam * SharedWeaponObjectTemplate::getStringIdParam(const char *name, bool deepCheck, int index)
@@ -241,12 +241,12 @@ char paramName[MAX_NAME_SIZE];
 		file.read_string(baseFilename);
 		file.exitChunk();
 		const ObjectTemplate *base = ObjectTemplateList::fetch(baseFilename);
-		DEBUG_WARNING(base == NULL, ("was unable to load base template %s", baseFilename.c_str()));
-		if (m_baseData == base && base != NULL)
+		DEBUG_WARNING(base == nullptr, ("was unable to load base template %s", baseFilename.c_str()));
+		if (m_baseData == base && base != nullptr)
 			base->releaseReference();
 		else
 		{
-			if (m_baseData != NULL)
+			if (m_baseData != nullptr)
 				m_baseData->releaseReference();
 			m_baseData = base;
 		}

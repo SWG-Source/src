@@ -60,7 +60,7 @@ AiMovementPatrol::AiMovementPatrol( AICreatureController * controller, std::vect
 	m_patrolPointIndex(startPoint)
 {
 	ServerObject * owner = safe_cast<ServerObject *>(controller->getOwner());
-	if (owner != NULL)
+	if (owner != nullptr)
 	{
 		DEBUG_REPORT_LOG(ConfigServerGame::isAiLoggingEnabled(), ("AiMovementPatrol creating named path for %s\n", owner->getNetworkId().getValueString().c_str()));
 
@@ -98,7 +98,7 @@ AiMovementPatrol::AiMovementPatrol( AICreatureController * controller, std::vect
 			{
 				const Unicode::String & pointName = *i;
 				const CityPathNode * node = CityPathGraphManager::getNamedNodeFor(*owner, pointName);
-				if (node != NULL)
+				if (node != nullptr)
 				{
 					m_patrolPath.push_back(AiLocation(node->getSourceId()));
 				}
@@ -118,16 +118,16 @@ AiMovementPatrol::AiMovementPatrol( AICreatureController * controller, std::vect
 				// try an find a node on the path that is a previous root node, or isn't 
 				// being used in any other path
 				std::vector<AiLocation>::iterator i;
-				const ServerObject * node = NULL;
-				const ServerObject * root = NULL;
+				const ServerObject * node = nullptr;
+				const ServerObject * root = nullptr;
 				for (i = m_patrolPath.begin(); i != m_patrolPath.end(); ++i)
 				{
 					node = safe_cast<const ServerObject *>(i->getObject());
-					if (node != NULL)
+					if (node != nullptr)
 					{
 						if (node->isPatrolPathRoot())
 						{
-							if (root == NULL || !root->isPatrolPathRoot())
+							if (root == nullptr || !root->isPatrolPathRoot())
 							{
 								// if we already have a set up root node, use that
 								root = node;
@@ -135,18 +135,18 @@ AiMovementPatrol::AiMovementPatrol( AICreatureController * controller, std::vect
 							else
 							{
 								// we've got two previous root nodes, we can't connect them
-								root = NULL;
+								root = nullptr;
 								break;
 							}
 						}
-						else if (!node->isPatrolPathNode() && root == NULL)
+						else if (!node->isPatrolPathNode() && root == nullptr)
 						{
 							// found a free node
 							root = node;
 						}
 					}
 				}
-				if (root != NULL)
+				if (root != nullptr)
 				{
 					// set up the root node
 					if (!root->isPatrolPathRoot())
@@ -156,7 +156,7 @@ AiMovementPatrol::AiMovementPatrol( AICreatureController * controller, std::vect
 					for (i = m_patrolPath.begin(); i != m_patrolPath.end(); ++i)
 					{
 						node = safe_cast<const ServerObject *>(i->getObject());
-						if (node != NULL && node != root)
+						if (node != nullptr && node != root)
 							const_cast<ServerObject *>(node)->setPatrolPathRoot(*root);
 					}
 					const_cast<ServerObject *>(root)->addPatrolPathingObject(*owner);
@@ -167,7 +167,7 @@ AiMovementPatrol::AiMovementPatrol( AICreatureController * controller, std::vect
 					for (i = m_patrolPath.begin(); i != m_patrolPath.end(); ++i)
 					{
 						node = safe_cast<const ServerObject *>(i->getObject());
-						if (node != NULL)
+						if (node != nullptr)
 							nodes += node->getNetworkId().getValueString() + " ";
 					}
 					WARNING(true, ("AiMovementPatrol unable to find root node for path: %s", nodes.c_str()));
@@ -266,15 +266,15 @@ void AiMovementPatrol::getDebugInfo ( std::string & outString ) const
 
 void AiMovementPatrol::endBehavior()
 {
-	if (!m_patrolPath.empty() && m_controller != NULL)
+	if (!m_patrolPath.empty() && m_controller != nullptr)
 	{
 		const ServerObject * owner = safe_cast<const ServerObject *>(m_controller->getOwner());
-		if (owner != NULL)
+		if (owner != nullptr)
 		{
 			for (std::vector<AiLocation>::iterator i = m_patrolPath.begin(); i != m_patrolPath.end(); ++i)
 			{
 				const ServerObject * node = safe_cast<const ServerObject *>(i->getObject());
-				if (node != NULL && node->isPatrolPathRoot())
+				if (node != nullptr && node->isPatrolPathRoot())
 				{
 					const_cast<ServerObject *>(node)->removePatrolPathingObject(*owner);
 					break;
@@ -304,7 +304,7 @@ bool AiMovementPatrol::getHibernateOk() const
 	if (!m_patrolPath.empty())
 	{
 		const ServerObject * node = safe_cast<const ServerObject *>(m_patrolPath.front().getObject());
-		if (node != NULL)
+		if (node != nullptr)
 		{
 			return node->getPatrolPathObservers() == 0;
 		}

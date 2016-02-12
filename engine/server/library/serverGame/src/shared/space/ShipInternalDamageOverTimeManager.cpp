@@ -39,7 +39,7 @@ namespace ShipInternalDamageOverTimeManagerNamespace
 	{
 		GameScriptObject * const gameScriptObject = ship.getScriptObject();
 		
-		if (gameScriptObject != NULL)
+		if (gameScriptObject != nullptr)
 		{
 			ScriptParams p;
 			p.addParam(idot.getChassisSlot());
@@ -56,7 +56,7 @@ namespace ShipInternalDamageOverTimeManagerNamespace
 	{
 		GameScriptObject * const gameScriptObject = ship.getScriptObject();
 		
-		if (gameScriptObject != NULL)
+		if (gameScriptObject != nullptr)
 		{
 			ScriptParams p;
 			p.addParam(idot.getChassisSlot());
@@ -128,7 +128,7 @@ void ShipInternalDamageOverTimeManager::update(float elapsedTime)
 
 			ShipObject * const shipObject = idot.getShipObject();
 
-			if (NULL != shipObject)
+			if (nullptr != shipObject)
 				notifyIdotDamage(*shipObject, idot, damageApplied);
 		}
 	}
@@ -150,7 +150,7 @@ void ShipInternalDamageOverTimeManager::update(float elapsedTime)
 				ShipInternalDamageOverTime const & expiredIdot = *it;
 				ShipObject * const shipObject = expiredIdot.getShipObject();
 				
-				if (shipObject != NULL)
+				if (shipObject != nullptr)
 					notifyIdotRemoval(*shipObject, expiredIdot);
 			}
 		}
@@ -219,7 +219,7 @@ bool ShipInternalDamageOverTimeManager::removeEntry(ShipObject const & ship, int
 	IGNORE_RETURN(s_idotVector.erase(lowerBound));
 
 	ShipObject * const shipObject = lowerBoundIdot.getShipObject();
-	if (shipObject != NULL)
+	if (shipObject != nullptr)
 		notifyIdotRemoval(*shipObject, lowerBoundIdot);
 
 	return true;
@@ -235,13 +235,13 @@ ShipInternalDamageOverTime const * const ShipInternalDamageOverTimeManager::find
 
 	//-- there is no lower bound, the idot is not in the vector
 	if (lowerBound == s_idotVector.end())
-		return NULL;
+		return nullptr;
 
 	ShipInternalDamageOverTime & lowerBoundIdot = *lowerBound;
 
 	//-- the lower bound sorts greater than the new idot, therefore this is a new insertion
 	if (idot < lowerBoundIdot)
-		return NULL;
+		return nullptr;
 
 	return &lowerBoundIdot;
 }

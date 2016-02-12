@@ -55,7 +55,7 @@ const byte *FilterWithBufferedInput::BlockQueue::GetBlock()
 		return ptr;
 	}
 	else
-		return NULL;
+		return nullptr;
 }
 
 const byte *FilterWithBufferedInput::BlockQueue::GetContigousBlocks(unsigned int &numberOfBlocks)
@@ -175,7 +175,7 @@ void FilterWithBufferedInput::Put(const byte *inString, unsigned int length)
 void FilterWithBufferedInput::MessageEnd(int propagation)
 {
 	if (!m_firstInputDone && m_firstSize==0)
-		FirstPut(NULL);
+		FirstPut(nullptr);
 
 	SecByteBlock temp(m_queue.CurrentSize());
 	m_queue.GetAll(temp);
@@ -200,7 +200,7 @@ void FilterWithBufferedInput::ForceNextPut()
 // *************************************************************
 
 ProxyFilter::ProxyFilter(Filter *filter, unsigned int firstSize, unsigned int lastSize, BufferedTransformation *outQ)
-	: FilterWithBufferedInput(firstSize, 1, lastSize, outQ), m_filter(filter), m_proxy(NULL)
+	: FilterWithBufferedInput(firstSize, 1, lastSize, outQ), m_filter(filter), m_proxy(nullptr)
 {
 	if (m_filter.get())
 		m_filter->Attach(m_proxy = new OutputProxy(*this, false));
@@ -229,7 +229,7 @@ void ProxyFilter::SetFilter(Filter *filter)
 		m_filter->Attach(temp.release());
 	}
 	else
-		m_proxy=NULL;
+		m_proxy=nullptr;
 }
 
 void ProxyFilter::NextPut(const byte *s, unsigned int len) 

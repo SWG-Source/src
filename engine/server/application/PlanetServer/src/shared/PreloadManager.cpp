@@ -119,7 +119,7 @@ void PreloadManager::handlePreloadList()
 		if (PlanetServer::getInstance().getEnablePreload())
 		{
 			DataTable * data = DataTableManager::getTable(ConfigPlanetServer::getPreloadDataTableName(),true);
-			FATAL(data==NULL,("Could not find data table %s, needed for preload",ConfigPlanetServer::getPreloadDataTableName()));
+			FATAL(data==nullptr,("Could not find data table %s, needed for preload",ConfigPlanetServer::getPreloadDataTableName()));
 			
 			int numRows = data->getNumRows();
 			for (int row=0; row<numRows; ++row)

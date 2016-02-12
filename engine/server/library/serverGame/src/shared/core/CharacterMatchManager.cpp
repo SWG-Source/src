@@ -55,7 +55,7 @@ namespace CharacterMatchManagerNamespace
 	// used when invoking LfgDataTable::LfgNode::internalAttributeMatchFunction
 	struct LfgInternalAttributeMatchFunctionParams
 	{
-		LfgInternalAttributeMatchFunctionParams() : param1(NULL), param2(NULL), param3(NULL), param4(NULL), param5(NULL) {}
+		LfgInternalAttributeMatchFunctionParams() : param1(nullptr), param2(nullptr), param3(nullptr), param4(nullptr), param5(nullptr) {}
 
 		void const * param1;
 		void const * param2;
@@ -151,8 +151,8 @@ bool CharacterMatchManagerNamespace::isMatch(std::map<LfgDataTable::LfgNode cons
 		std::string guildName(lfgCharacterData.guildName);
 		std::transform(guildName.begin(), guildName.end(), guildName.begin(), tolower);
 
-		if ((strstr(playerName.c_str(), searchSubstring.c_str()) == NULL) &&
-			(strstr(guildName.c_str(), searchSubstring.c_str()) == NULL))
+		if ((strstr(playerName.c_str(), searchSubstring.c_str()) == nullptr) &&
+			(strstr(guildName.c_str(), searchSubstring.c_str()) == nullptr))
 		{
 			// fail because couldn't match substring
 			matchingAttributes.clear();
@@ -176,9 +176,9 @@ void CharacterMatchManager::requestMatch(NetworkId const &networkId, MatchMaking
 	++ms_numberOfCharacterMatchRequests;
 
 	ServerObject * const requestServerObject = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(networkId));
-	Client * const requestClient = (requestServerObject ? requestServerObject->getClient() : NULL);
-	CreatureObject * const requestCreatureObject = (requestServerObject ? requestServerObject->asCreatureObject() : NULL);
-	PlayerObject * const requestPlayerObject = (requestCreatureObject ? PlayerCreatureController::getPlayerObject(requestCreatureObject) : NULL);
+	Client * const requestClient = (requestServerObject ? requestServerObject->getClient() : nullptr);
+	CreatureObject * const requestCreatureObject = (requestServerObject ? requestServerObject->asCreatureObject() : nullptr);
+	PlayerObject * const requestPlayerObject = (requestCreatureObject ? PlayerCreatureController::getPlayerObject(requestCreatureObject) : nullptr);
 
 	if (requestCreatureObject && requestPlayerObject && requestClient)
 	{
@@ -210,10 +210,10 @@ void CharacterMatchManager::requestMatch(NetworkId const &networkId, MatchMaking
 		}
 
 		// if "friend" is one of the search criteria, this will contain the requester's friends list
-		PlayerObject::StringVector const * requestPlayerObjectSortedLowercaseFriendList = NULL;
+		PlayerObject::StringVector const * requestPlayerObjectSortedLowercaseFriendList = nullptr;
 
 		// if "cts_source_galaxy" is one of the search criteria, this will contain the requester's CTS source galaxy list
-		std::set<std::string> const * requestPlayerObjectCtsSourceGalaxy = NULL;
+		std::set<std::string> const * requestPlayerObjectCtsSourceGalaxy = nullptr;
 
 		// if "in_same_guild" is one of the search criteria, this will contain the requester's guild abbrev
 		bool inSameGuildSearch = false;
@@ -224,7 +224,7 @@ void CharacterMatchManager::requestMatch(NetworkId const &networkId, MatchMaking
 		std::string requestPlayerObjectCitizenOfCity;
 
 		// if "cts_source_galaxy" is one of the search criteria, this will contain the list of matching CTS source galaxy
-		std::vector<std::string> * matchingCtsSourceGalaxy = NULL;
+		std::vector<std::string> * matchingCtsSourceGalaxy = nullptr;
 
 		// allows search of characters marked anonymous
 		bool bypassAnonymous = false;
@@ -271,7 +271,7 @@ void CharacterMatchManager::requestMatch(NetworkId const &networkId, MatchMaking
 					// special handling for "friend" search attribute
 					if (iterLeafNode->second->name == "friend")
 					{
-						if (requestPlayerObjectSortedLowercaseFriendList == NULL)
+						if (requestPlayerObjectSortedLowercaseFriendList == nullptr)
 						{
 							requestPlayerObjectSortedLowercaseFriendList = &(requestPlayerObject->getSortedLowercaseFriendList());
 						}
@@ -284,7 +284,7 @@ void CharacterMatchManager::requestMatch(NetworkId const &networkId, MatchMaking
 					// special handling for "cts_source_galaxy" search attribute
 					else if (iterLeafNode->second->name == "cts_source_galaxy")
 					{
-						if (requestPlayerObjectCtsSourceGalaxy == NULL)
+						if (requestPlayerObjectCtsSourceGalaxy == nullptr)
 						{
 							std::map<NetworkId, LfgCharacterData> const & connectedCharacterLfgData = ServerUniverse::getConnectedCharacterLfgData();
 							std::map<NetworkId, LfgCharacterData>::const_iterator iterFindLfg = connectedCharacterLfgData.find(networkId);
@@ -292,7 +292,7 @@ void CharacterMatchManager::requestMatch(NetworkId const &networkId, MatchMaking
 								requestPlayerObjectCtsSourceGalaxy = &(iterFindLfg->second.ctsSourceGalaxy);
 						}
 
-						if (matchingCtsSourceGalaxy == NULL)
+						if (matchingCtsSourceGalaxy == nullptr)
 							matchingCtsSourceGalaxy = new std::vector<std::string>;
 
 						LfgInternalAttributeMatchFunctionParams params;
@@ -421,7 +421,7 @@ void CharacterMatchManager::requestMatch(NetworkId const &networkId, MatchMaking
 				}
 				else
 				{
-					ConsoleMgr::broadcastString("(NULL) (All)", requestClient);
+					ConsoleMgr::broadcastString("(nullptr) (All)", requestClient);
 				}
 
 				for (std::vector<std::pair<LfgDataTable::LfgNode const *, LfgInternalAttributeMatchFunctionParams> >::const_iterator iterSearchAttribute = iterAnyAllParentNode->second.begin(); iterSearchAttribute != iterAnyAllParentNode->second.end(); ++iterSearchAttribute)
@@ -544,7 +544,7 @@ void CharacterMatchManager::requestMatch(NetworkId const &networkId, MatchMaking
 				if (lfgCharacterData.groupId.isValid() && (mmcr.m_matchingCharacterGroup.count(lfgCharacterData.groupId) == 0))
 				{
 					ServerObject const * const soGroupObject = safe_cast<ServerObject const *>(NetworkIdManager::getObjectById(lfgCharacterData.groupId));
-					GroupObject const * const groupObject = (soGroupObject ? soGroupObject->asGroupObject() : NULL);
+					GroupObject const * const groupObject = (soGroupObject ? soGroupObject->asGroupObject() : nullptr);
 					if (groupObject)
 					{
 						std::vector<MatchMakingCharacterResult::MatchMakingCharacterGroupMemberInfo> & groupInfo = mmcr.m_matchingCharacterGroup[lfgCharacterData.groupId];

@@ -25,7 +25,7 @@
 //-----------------------------------------------------------------------------
 
 TemplateDataIterator::TemplateDataIterator()
-: m_templateDataToIterate(NULL),
+: m_templateDataToIterate(nullptr),
   m_numItems(0),
   m_noMoreData(true)
 {
@@ -34,7 +34,7 @@ TemplateDataIterator::TemplateDataIterator()
 //-----------------------------------------------------------------------------
 
 TemplateDataIterator::TemplateDataIterator(const TemplateData& templateData)
-: m_templateDataToIterate(NULL),
+: m_templateDataToIterate(nullptr),
   m_numItems(0),
   m_noMoreData(true)
 {
@@ -45,7 +45,7 @@ TemplateDataIterator::TemplateDataIterator(const TemplateData& templateData)
 
 TemplateDataIterator::~TemplateDataIterator()
 {
-	m_templateDataToIterate = NULL;
+	m_templateDataToIterate = nullptr;
 }
 
 //-----------------------------------------------------------------------------
@@ -62,7 +62,7 @@ TemplateDataIterator::setTo(const TemplateData &templateData)
 	// .. end at the child TDF's.
 	const ParameterList* parameterListToAdd;
 
-	while(m_templateDataToIterate != NULL)
+	while(m_templateDataToIterate != nullptr)
 	{
 		parameterListToAdd = &(m_templateDataToIterate->m_parameters);
 		m_numItems += parameterListToAdd->size();
@@ -75,23 +75,23 @@ TemplateDataIterator::setTo(const TemplateData &templateData)
 		}
 
 		// Get the template data from the parent TDF
-		if(m_templateDataToIterate->m_fileParent != NULL)
+		if(m_templateDataToIterate->m_fileParent != nullptr)
 		{
 			const TemplateDefinitionFile* parentFile = 
 				m_templateDataToIterate->m_fileParent->getBaseDefinitionFile();
 
-			if(parentFile != NULL)
+			if(parentFile != nullptr)
 			{
 				m_templateDataToIterate = parentFile->getTemplateData(parentFile->getHighestVersion());
 			}
 			else
 			{
-				m_templateDataToIterate = NULL;
+				m_templateDataToIterate = nullptr;
 			}
 		}
 		else
 		{
-			m_templateDataToIterate = NULL;
+			m_templateDataToIterate = nullptr;
 		}
 
 	}
@@ -164,7 +164,7 @@ TemplateDataIterator::operator *() const
 {
 	if(this->end())
 	{
-		return NULL;
+		return nullptr;
 	}
 	else
 	{

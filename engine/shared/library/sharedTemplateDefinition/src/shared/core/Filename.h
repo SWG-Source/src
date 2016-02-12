@@ -57,13 +57,13 @@ inline Filename::Filename(void)
 
 inline Filename::Filename(const char *drive, const char *path, const char *name, const char *extension)
 {
-	if (drive != NULL)
+	if (drive != nullptr)
 		setDrive(drive);
-	if (path != NULL)
+	if (path != nullptr)
 		setPath(path);
-	if (name != NULL)
+	if (name != nullptr)
 		setName(name);
-	if (extension != NULL)
+	if (extension != nullptr)
 		setExtension(extension);
 }	// Filename::Filename
 
@@ -115,7 +115,7 @@ inline void Filename::makeFullPath(void)
 
 //========================================================================
 
-const Filename NEXT_HIGHER_PATH(NULL, "..", NULL, NULL);
+const Filename NEXT_HIGHER_PATH(nullptr, "..", nullptr, nullptr);
 
 
 #endif	// _INCLUDED_Filename_H

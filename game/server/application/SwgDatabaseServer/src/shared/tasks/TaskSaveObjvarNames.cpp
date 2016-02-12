@@ -24,7 +24,7 @@ TaskSaveObjvarNames::TaskSaveObjvarNames(const NameList &names) :
 TaskSaveObjvarNames::~TaskSaveObjvarNames()
 {
 	delete m_objvarNames;
-	m_objvarNames=NULL;
+	m_objvarNames=nullptr;
 }
 
 // ----------------------------------------------------------------------

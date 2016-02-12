@@ -24,7 +24,7 @@ TaskSetBiography::TaskSetBiography(const NetworkId &owner, const Unicode::String
 TaskSetBiography::~TaskSetBiography()
 {
 	delete m_bio;
-	m_bio=NULL;
+	m_bio=nullptr;
 }
 
 // ----------------------------------------------------------------------

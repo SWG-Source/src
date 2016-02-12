@@ -42,7 +42,7 @@ void*
 RotaryCache::add(const CrcLowerString& keyString, void* valuePtr)
 {
 	CacheListEntry	listEntry;
-	void*			returnVal = NULL;
+	void*			returnVal = nullptr;
 
 	listEntry.key = keyString;
 	listEntry.value = valuePtr;
@@ -93,7 +93,7 @@ RotaryCache::fetch(const CrcLowerString& keyString)
 		return entryList.value;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 void* 
@@ -103,7 +103,7 @@ RotaryCache::remove(const CrcLowerString& keyString)
 
 	if(iterFind != mMap.end())
 	{
-		void*	retVal = NULL;
+		void*	retVal = nullptr;
 		CacheMapEntry&	entryFind = (*iterFind).second;
 
 		RotaryList::iterator	iterList = entryFind.iter;
@@ -119,7 +119,7 @@ RotaryCache::remove(const CrcLowerString& keyString)
 		return retVal;
 	}
 
-	return NULL;
+	return nullptr;
 
 }
 
@@ -143,7 +143,7 @@ RotaryCache::getNext()
 		return retVal;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 void 

@@ -57,15 +57,15 @@ int strip(char *buffer)
  *						the size of buffer
  *
  * @return the next non-whitespace character in the string after the token, or
- * NULL if the end of line has been reached
+ * nullptr if the end of line has been reached
  */
 const char *getNextWhitespaceToken(const char *buffer, char *token)
 {
 	NOT_NULL(token);
 
 	*token = '\0';
-	if (buffer == NULL)
-		return NULL;
+	if (buffer == nullptr)
+		return nullptr;
 
 	const char *from = buffer;
 	char *to = token;
@@ -74,7 +74,7 @@ const char *getNextWhitespaceToken(const char *buffer, char *token)
 	while (isspace(*from) && *from != '\0')
 		++from;
 	if (*from == '\0')
-		return NULL;
+		return nullptr;
 
 	// copy the token
 	while (!isspace(*from) && *from != '\0')
@@ -85,7 +85,7 @@ const char *getNextWhitespaceToken(const char *buffer, char *token)
 	while (isspace(*from) && *from != '\0')
 		++from;
 	if (*from == '\0')
-		return NULL;
+		return nullptr;
 	return from;
 }	// getNextWhitespaceToken
 
@@ -97,20 +97,20 @@ const char *getNextWhitespaceToken(const char *buffer, char *token)
  *						the size of buffer
  *
  * @return the next token, defined by the 1st non-whitespace character in buffer:
- *      if it is '/' and the next character is '/', NULL
+ *      if it is '/' and the next character is '/', nullptr
  *      if it is a double-quote, the text until the next double quote (not including \")
  *		if it is a symbol, the symbol
  *		if it is a number, the next characters that make a valid integer or float
  *		if it is a character, the text until the next whitespace or symbol, not including _
- *		if it is NULL, NULL
+ *		if it is nullptr, nullptr
  */
 const char *getNextToken(const char *buffer, char *token)
 {
 	NOT_NULL(token);
 
 	*token = '\0';
-	if (buffer == NULL)
-		return NULL;
+	if (buffer == nullptr)
+		return nullptr;
 
 	const char *from = buffer;
 	char *to = token;
@@ -119,12 +119,12 @@ const char *getNextToken(const char *buffer, char *token)
 	while (isspace(*from) && *from != '\0')
 		++from;
 	if (*from == '\0')
-		return NULL;
+		return nullptr;
 
 	if (*from == '/' && *(from+1) == '/')
 	{
 		// comment
-		return NULL;
+		return nullptr;
 	}
 	else if (isdigit(*from) || 
 		((*from == '+' || *from == '-') && isdigit(*(from + 1)))
@@ -173,7 +173,7 @@ const char *getNextToken(const char *buffer, char *token)
 	while (isspace(*from) && *from != '\0')
 		++from;
 	if (*from == '\0')
-		return NULL;
+		return nullptr;
 	return from;
 }	// getNextToken
 
@@ -247,9 +247,9 @@ std::string filenameUpperToLower(const std::string & filename)
 std::string concatPaths(const char *path1, const char *path2)
 {
 	// test for missing path
-	if (path1 == NULL || *path1 == '\0')
+	if (path1 == nullptr || *path1 == '\0')
 		return path2;
-	if (path2 == NULL || *path2 == '\0')
+	if (path2 == nullptr || *path2 == '\0')
 		return path1;
 
 #ifdef WIN32
@@ -286,7 +286,7 @@ std::string getNextHighestPath(const char *path)
 
 	// find the two highest path separators
 	const char *separator1 = strrchr(path, PATH_SEPARATOR);
-	if (separator1 == NULL)
+	if (separator1 == nullptr)
 	{
 #ifdef WIN32
 		if (isalpha(*path) && *(path + 1) == ':')
@@ -304,7 +304,7 @@ std::string getNextHighestPath(const char *path)
 		return std::string(path, 3);
 #endif
 	const char *separator2 = strrchr(separator1 - 1, PATH_SEPARATOR);
-	if (separator2 == NULL)
+	if (separator2 == nullptr)
 		return std::string(path, separator1 - path);
 
 	return std::string(path, separator2 - path);

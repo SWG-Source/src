@@ -110,8 +110,8 @@ void JNICALL ScriptMethodsAuctionNamespace::createVendorMarket(JNIEnv *env, jobj
 
 void JNICALL ScriptMethodsAuctionNamespace::auctionCreatePermanent(JNIEnv *env, jobject script, jstring jownerName, jlong jitem, jlong jauctionContainer, jint jprice, jstring juserDescription)
 {
-	TangibleObject *itemObject = NULL;
-	ServerObject *containerObj = NULL;
+	TangibleObject *itemObject = nullptr;
+	ServerObject *containerObj = nullptr;
 
 	if (!JavaLibrary::getObject(jitem, itemObject))
 	{
@@ -194,7 +194,7 @@ void JNICALL ScriptMethodsAuctionNamespace::setSalesTax(JNIEnv *env, jobject scr
 
 void JNICALL ScriptMethodsAuctionNamespace::requestVendorItemCount(JNIEnv *env, jobject script, jlong vendor)
 {
-	ServerObject* vendorObject = NULL;
+	ServerObject* vendorObject = nullptr;
 	if( !JavaLibrary::getObject(vendor, vendorObject) )
 	{
 		WARNING(true, ("[designer bug] requestVendorItemLimit() vendor is invalid."));
@@ -206,7 +206,7 @@ void JNICALL ScriptMethodsAuctionNamespace::requestVendorItemCount(JNIEnv *env, 
 
 void JNICALL ScriptMethodsAuctionNamespace::requestPlayerVendorCount(JNIEnv *env, jobject script, jlong player)
 {
-	ServerObject* playerObject = NULL;
+	ServerObject* playerObject = nullptr;
 	if( !JavaLibrary::getObject(player, playerObject) )
 	{
 		WARNING(true, ("[designer bug] requestPlayerVendorCount() player is invalid."));
@@ -218,7 +218,7 @@ void JNICALL ScriptMethodsAuctionNamespace::requestPlayerVendorCount(JNIEnv *env
 
 void JNICALL ScriptMethodsAuctionNamespace::updateVendorSearchOption(JNIEnv *env, jobject script, jlong vendor, jboolean enable)
 {
-	ServerObject* vendorObject = NULL;
+	ServerObject* vendorObject = nullptr;
 	bool enabled;
 	if( !JavaLibrary::getObject(vendor, vendorObject) )
 	{
@@ -235,7 +235,7 @@ void JNICALL ScriptMethodsAuctionNamespace::updateVendorSearchOption(JNIEnv *env
 
 void JNICALL ScriptMethodsAuctionNamespace::setEntranceCharge(JNIEnv *env, jobject script, jlong vendor, jint entranceCharge)
 {
-	ServerObject* vendorObject = NULL;
+	ServerObject* vendorObject = nullptr;
 	if( !JavaLibrary::getObject(vendor, vendorObject) )
 	{
 		WARNING(true, ("[designer bug] setEntranceCharge() vendor is invalid."));
@@ -247,7 +247,7 @@ void JNICALL ScriptMethodsAuctionNamespace::setEntranceCharge(JNIEnv *env, jobje
 
 void JNICALL ScriptMethodsAuctionNamespace::removeAllAuctions(JNIEnv *env, jobject script, jlong jvendor)
 {
-	ServerObject* vendorObject = NULL;
+	ServerObject* vendorObject = nullptr;
 	if( !JavaLibrary::getObject(jvendor, vendorObject) )
 	{
 		WARNING(true, ("[designer bug] removeAllAuctions() vendor is invalid."));
@@ -259,21 +259,21 @@ void JNICALL ScriptMethodsAuctionNamespace::removeAllAuctions(JNIEnv *env, jobje
 
 void JNICALL ScriptMethodsAuctionNamespace::reinitializeVendor(JNIEnv *env, jobject script, jlong vendor, jlong player)
 {
-	ServerObject* vendorObject = NULL;
+	ServerObject* vendorObject = nullptr;
 	if( !JavaLibrary::getObject(vendor, vendorObject) )
 	{
 		WARNING(true, ("[designer bug] reinitializeVendor() vendor is invalid.")); 
 		return;
 	}
 	ServerObject* auctionContainer = vendorObject->getBazaarContainer();
-	if ( auctionContainer == NULL )
+	if ( auctionContainer == nullptr )
 	{
 		WARNING(true, ("[designer bug] reinitializeVendor() vendor doesn't have an auction container.")); 
 		return;
 	}
 	
 
-	ServerObject* playerObject = NULL;
+	ServerObject* playerObject = nullptr;
 	if ( !JavaLibrary::getObject(player, playerObject) )
 	{
 		WARNING(true, ("[designer bug] reinitializeVendor() player is invalid.")); 
@@ -292,7 +292,7 @@ void JNICALL ScriptMethodsAuctionNamespace::reinitializeVendor(JNIEnv *env, jobj
 
 void JNICALL ScriptMethodsAuctionNamespace::updateVendorStatus(JNIEnv *env, jobject script, jlong vendor, jint status)
 {
-	ServerObject const * vendorObject = NULL;
+	ServerObject const * vendorObject = nullptr;
 
 	if (!JavaLibrary::getObject(vendor, vendorObject))
 	{

@@ -164,7 +164,7 @@ void ShipComponentAttachmentManager::load()
 			ShipComponentDescriptor const * const shipComponentDescriptor = 
 				ShipComponentDescriptor::findShipComponentDescriptorByName (TemporaryCrcString (componentName.c_str (), true));
 
-			if (shipComponentDescriptor == NULL)
+			if (shipComponentDescriptor == nullptr)
 			{
 				WARNING (true, ("ShipComponentAttachmentManager chassis [%s] specified invalid component [%s] at row [%d] in file [%s]", name.getString (), componentName.c_str (), row, chassis_filename.c_str()));
 				continue;
@@ -266,7 +266,7 @@ bool ShipComponentAttachmentManager::save(std::string const & dsrcPath, std::str
 bool ShipComponentAttachmentManager::saveChassisInfo(std::string const & chassisName, std::string const & filenameTab, std::string const & filenameIff)
 {
 	ShipChassis const * const chassis = ShipChassis::findShipChassisByName(ConstCharCrcString(chassisName.c_str()));
-	if (NULL == chassis)
+	if (nullptr == chassis)
 		return false;
 
 	uint32 const chassisCrc = chassis->getCrc();
@@ -283,7 +283,7 @@ bool ShipComponentAttachmentManager::saveChassisInfo(std::string const & chassis
 			std::string const & componentName = *it;
 			ShipComponentDescriptor const * const shipComponentDescriptor = ShipComponentDescriptor::findShipComponentDescriptorByName(ConstCharCrcString(componentName.c_str()));
 
-			if (NULL == shipComponentDescriptor)
+			if (nullptr == shipComponentDescriptor)
 				return false;
 		
 			uint32 const componentCrc = shipComponentDescriptor->getCrc();
@@ -333,7 +333,7 @@ bool ShipComponentAttachmentManager::saveChassisInfo(std::string const & chassis
 		std::string const & componentName = *it;
 		ShipComponentDescriptor const * const shipComponentDescriptor = ShipComponentDescriptor::findShipComponentDescriptorByName(ConstCharCrcString(componentName.c_str()));
 
-		if (NULL == shipComponentDescriptor)
+		if (nullptr == shipComponentDescriptor)
 			return false;
 		
 		uint32 const componentCrc = shipComponentDescriptor->getCrc();
@@ -427,7 +427,7 @@ bool ShipComponentAttachmentManager::saveChassisInfo(std::string const & chassis
 
 	StdioFileFactory sff;
 	AbstractFile * const af = sff.createFile(filenameTab.c_str(), "wb");
-	if (NULL != af && af->isOpen())
+	if (nullptr != af && af->isOpen())
 	{
 		int const bytesWritten = af->write(static_cast<int>(tabStr.size()), tabStr.c_str());
 		retval = (bytesWritten == static_cast<int>(tabStr.size()));
@@ -484,7 +484,7 @@ bool ShipComponentAttachmentManager::getAttachmentsForShip(uint32 chassisCrc, ui
 			TemplateHardpointPairVector const & thpv = (*it).second;
 			if (thpv.empty())
 			{
-				thpVectors[i] = NULL;
+				thpVectors[i] = nullptr;
 			}
 			else
 			{
@@ -493,7 +493,7 @@ bool ShipComponentAttachmentManager::getAttachmentsForShip(uint32 chassisCrc, ui
 			}
 		}
 		else
-			thpVectors[i] = NULL;
+			thpVectors[i] = nullptr;
 	}
 
 	return found;

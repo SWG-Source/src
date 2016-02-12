@@ -42,7 +42,7 @@ void TestClient::process()
 		{
 			m_con->SetHandler(this);
 			m_conState = CON_NEGOTIATE;
-			m_conTimeout = time(NULL) + 20;//m_reconnectTimeout;
+			m_conTimeout = time(nullptr) + 20;//m_reconnectTimeout;
 		}
 		break;
 	case CON_NEGOTIATE:
@@ -51,10 +51,10 @@ void TestClient::process()
 			m_conState = CON_CONNECT;
 			printf("callback here.... connected\n");
 		}
-		else if(time(NULL) > 20)
+		else if(time(nullptr) > 20)
 		{
 			m_con->Release();
-			m_con = NULL;
+			m_con = nullptr;
 			m_conState = CON_DISCONNECT;
 		}
 		break;
@@ -63,7 +63,7 @@ void TestClient::process()
 	default:
 		m_conState = CON_DISCONNECT;
 		m_con->Release();
-		m_con = NULL;
+		m_con = nullptr;
 	}
 	m_manager->GiveTime();
 }
@@ -95,7 +95,7 @@ void TestClient::OnTerminated(TcpConnection *con)
     if (m_con)
     {
         m_con->Release();
-        m_con = NULL;
+        m_con = nullptr;
     }
     m_conState = CON_DISCONNECT;
 }

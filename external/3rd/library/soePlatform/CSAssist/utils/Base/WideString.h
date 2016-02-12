@@ -94,12 +94,12 @@ namespace ucs2
     }
 
 	////////////////////////////////////////
-	//	target string is a null-terminated C string
+	//	target string is a nullptr-terminated C string
     inline string::string(const char * copy) :
         mLength(0),
         mData(8,0)
     {
-		//	(1) protect from null pointer
+		//	(1) protect from nullptr pointer
 		if (!copy)
 		{
 			return;
@@ -111,12 +111,12 @@ namespace ucs2
 			reserve(mLength+1);
 			mData[mLength++] = *copy++;
 		}
-		//	(3) ensure null termination
+		//	(3) ensure nullptr termination
 		mData[mLength]=0;
     }
 
 	////////////////////////////////////////
-	//	target string is a C string that may or may not include null characters
+	//	target string is a C string that may or may not include nullptr characters
     inline string::string(const std::string & copy) :
         mLength(copy.length()),
         mData(8,0)
@@ -126,17 +126,17 @@ namespace ucs2
 		//	(2) perform transform to copy the narrow string to our
 		//		wide string
 		std::transform(copy.begin(), copy.end(), mData.begin(), NarrowToWide);
-		//	(3) ensure null termination
+		//	(3) ensure nullptr termination
 		mData[mLength] = 0;
 	}
 
 	////////////////////////////////////////
-	//	target string is a wide null-terminated C string
+	//	target string is a wide nullptr-terminated C string
     inline string::string(const char_type * copy) :
         mLength(0),
         mData(8,0)
     {
-		//	(1) protect from null pointer
+		//	(1) protect from nullptr pointer
 		if (!copy)
 		{
 			return;
@@ -148,7 +148,7 @@ namespace ucs2
 			reserve(mLength+1);
 			mData[mLength++] = *copy++;
 		}
-		//	(3) ensure null termination
+		//	(3) ensure nullptr termination
 		mData[mLength]=0;
     }
 
@@ -169,7 +169,7 @@ namespace ucs2
     inline string & string::operator=(const char * rhs)
 	{
 		mLength = 0;
-		//	(1) protect from null pointer
+		//	(1) protect from nullptr pointer
 		if (!rhs)
 		{
 			mData[0] = 0;
@@ -182,7 +182,7 @@ namespace ucs2
 			reserve(mLength+1);
 			mData[mLength++] = *rhs++;
 		}
-		//	(3) ensure null termination
+		//	(3) ensure nullptr termination
 		mData[mLength]=0;
 		return *this;
 	}
@@ -195,7 +195,7 @@ namespace ucs2
 		//	(2) perform transform to copy the narrow string to our
 		//		wide string
 		std::transform(rhs.begin(), rhs.end(), mData.begin(), NarrowToWide);
-		//	(3) ensure null termination
+		//	(3) ensure nullptr termination
 		mData[mLength] = 0;
 		return *this;
 	}
@@ -203,7 +203,7 @@ namespace ucs2
     inline string & string::operator=(const char_type * rhs)
 	{
 		mLength = 0;
-		//	(1) protect from null pointer
+		//	(1) protect from nullptr pointer
 		if (!rhs)
 		{
 			mData[0] = 0;
@@ -216,7 +216,7 @@ namespace ucs2
 			reserve(mLength+1);
 			mData[mLength++] = *rhs++;
 		}
-		//	(3) ensure null termination
+		//	(3) ensure nullptr termination
 		mData[mLength]=0;
 		return *this;
 	}
@@ -235,7 +235,7 @@ namespace ucs2
 
     inline string & string::operator+=(const char * rhs)
 	{
-		//	(1) protect from null pointer
+		//	(1) protect from nullptr pointer
 		if (!rhs)
 		{
 			return *this;
@@ -247,7 +247,7 @@ namespace ucs2
 			reserve(mLength+1);
 			mData[mLength++] = *rhs++;
 		}
-		//	(3) ensure null termination
+		//	(3) ensure nullptr termination
 		mData[mLength]=0;
 		return *this;
 	}
@@ -259,7 +259,7 @@ namespace ucs2
 		//	(2) perform transform to copy the narrow string to our
 		//		wide string
 		std::transform(rhs.begin(), rhs.end(), mData.begin()+mLength, NarrowToWide);
-		//	(3) ensure null termination
+		//	(3) ensure nullptr termination
 		mLength += rhs.length();
 		mData[mLength] = 0;
 		return *this;
@@ -267,7 +267,7 @@ namespace ucs2
 
     inline string & string::operator+=(const char_type * rhs)
 	{
-		//	(1) protect from null pointer
+		//	(1) protect from nullptr pointer
 		if (!rhs)
 		{
 			return *this;
@@ -279,7 +279,7 @@ namespace ucs2
 			reserve(mLength+1);
 			mData[mLength++] = *rhs++;
 		}
-		//	(3) ensure null termination
+		//	(3) ensure nullptr termination
 		mData[mLength]=0;
 		return *this;
 	}
@@ -388,7 +388,7 @@ namespace ucs2
     inline string & string::assign(const char_type * rhs)
     {
 		mLength = 0;
-		//	(1) protect from null pointer
+		//	(1) protect from nullptr pointer
 		if (!rhs)
 		{
 			mData[0] = 0;
@@ -401,7 +401,7 @@ namespace ucs2
 			reserve(mLength+1);
 			mData[mLength++] = *rhs++;
 		}
-		//	(3) ensure null termination
+		//	(3) ensure nullptr termination
 		mData[mLength]=0;
 		return *this;
     }
@@ -409,7 +409,7 @@ namespace ucs2
     inline string & string::assign(const char_type * rhs, size_type count)
     {
 		mLength = 0;
-		//	(1) protect from null pointer
+		//	(1) protect from nullptr pointer
 		if (!rhs)
 		{
 			mData[0] = 0;
@@ -422,7 +422,7 @@ namespace ucs2
 			reserve(mLength+1);
 			mData[mLength++] = *rhs++;
 		}
-		//	(3) ensure null termination
+		//	(3) ensure nullptr termination
 		mData[mLength]=0;
 		return *this;
     }
@@ -463,7 +463,7 @@ namespace ucs2
     inline string & string::assign(const char_type * first, const char_type * last)
     {
 		mLength = 0;
-		//	(1) protect from null pointer
+		//	(1) protect from nullptr pointer
 		if (!first || !last)
 		{
 			mData[0] = 0;
@@ -476,14 +476,14 @@ namespace ucs2
 			reserve(mLength+1);
 			mData[mLength++] = *first++;
 		}
-		//	(3) ensure null termination
+		//	(3) ensure nullptr termination
 		mData[mLength]=0;
 		return *this;
     }
 
     inline string & string::append(const char_type * rhs)
     {
-		//	(1) protect from null pointer
+		//	(1) protect from nullptr pointer
 		if (!rhs)
 		{
 			return *this;
@@ -495,14 +495,14 @@ namespace ucs2
 			reserve(mLength+1);
 			mData[mLength++] = *rhs++;
 		}
-		//	(3) ensure null termination
+		//	(3) ensure nullptr termination
 		mData[mLength]=0;
 		return *this;
     }
 
     inline string & string::append(const char_type * rhs, size_type count)
     {
-		//	(1) protect from null pointer
+		//	(1) protect from nullptr pointer
 		if (!rhs)
 		{
 			return *this;
@@ -514,7 +514,7 @@ namespace ucs2
 			reserve(mLength+1);
 			mData[mLength++] = *rhs++;
 		}
-		//	(3) ensure null termination
+		//	(3) ensure nullptr termination
 		mData[mLength]=0;
 		return *this;
     }
@@ -558,7 +558,7 @@ namespace ucs2
 
     inline string & string::append(const char_type * first, const char_type * last)
     {
-		//	(1) protect from null pointer
+		//	(1) protect from nullptr pointer
 		if (!first || !last)
 		{
 			return *this;
@@ -570,7 +570,7 @@ namespace ucs2
 			reserve(mLength+1);
 			mData[mLength++] = *first++;
 		}
-		//	(3) ensure null termination
+		//	(3) ensure nullptr termination
 		mData[mLength]=0;
 		return *this;
     }

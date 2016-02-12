@@ -92,7 +92,7 @@ static bool epsilonEqual( float value, float target, float epsilon )
 Footprint::Footprint	( Vector const & position, float radius, CollisionProperty * parent, const float swimHeight )
 : BaseClass(),
   m_parent(parent),
-  m_cellObject(NULL),
+  m_cellObject(nullptr),
   m_position_p(Vector::zero),
   m_position_w(Vector::zero),
   m_radius(radius),
@@ -112,9 +112,9 @@ Footprint::Footprint	( Vector const & position, float radius, CollisionProperty 
 #ifdef _DEBUG
   ,
   m_backupPosition_p(position),
-  m_backupCell(NULL),
+  m_backupCell(nullptr),
   m_backupObjectPosition_p(position),
-  m_backupObjectCell(NULL),
+  m_backupObjectCell(nullptr),
   m_lineHitTime( -1.0f ),
   m_lineOrigin( Vector(0.0f,1.5f,0.0f) ),
   m_lineDelta( Vector(0.0f,0.0f,10.0f) ),
@@ -137,8 +137,8 @@ Footprint::~Footprint()
 {
 	detach();
 
-	m_parent = NULL;
-	m_cellObject = NULL;
+	m_parent = nullptr;
+	m_cellObject = nullptr;
 }
 
 // ======================================================================
@@ -334,7 +334,7 @@ Object * Footprint::getOwner ( void )
 
 void Footprint::addContact ( FloorLocator const & loc )
 {
-	if(loc.getFloor() == NULL)
+	if(loc.getFloor() == nullptr)
 	{
 		FLOOR_LOG("Footprint::addContact - loc isn't attached to a floor\n");
 	}
@@ -445,7 +445,7 @@ void Footprint::setSwimHeight ( float swimHeight )
 
 Vector const & Footprint::getPosition_p ( void ) const
 {
-	if(m_cellObject.getPointer() == NULL)
+	if(m_cellObject.getPointer() == nullptr)
 	{
 		WARNING(true,("Footprint::getPosition_p - Footprint's parent cell has disappeared"));
 		
@@ -525,7 +525,7 @@ void Footprint::setPosition ( CellProperty * pNewCell, Vector const & pos )
 {
 	NAN_CHECK(pos);
 
-	if(pNewCell == NULL) pNewCell = CellProperty::getWorldCellProperty();
+	if(pNewCell == nullptr) pNewCell = CellProperty::getWorldCellProperty();
 
 	m_cellObject = &(pNewCell->getOwner());
 	m_position_p = pos;
@@ -808,13 +808,13 @@ void Footprint::runDebugTests ( void )
 		IGNORE_RETURN(CollisionWorld::calcBubble(getCell(),getPosition_p(),20.0f,m_bubbleSize));
 		*/
 
-		Object const * hitObject = NULL;
+		Object const * hitObject = nullptr;
 
 		QueryInteractionResult result = CollisionWorld::queryInteraction(objCell,
 		                                                                 objPos + m_lineOrigin,
 		                                                                 objCell,
 		                                                                 objPos + m_lineOrigin + delta,
-		                                                                 NULL,
+		                                                                 nullptr,
 		                                                                 !ConfigSharedCollision::getIgnoreTerrainLos(),
 		                                                                 ConfigSharedCollision::getGenerateTerrainLos(),
 		                                                                 ConfigSharedCollision::getTerrainLOSMinDistance(),
@@ -843,14 +843,14 @@ FloorLocator const * Footprint::getAnyContact ( void ) const
 		if(contact->m_contact.isAttached()) return &contact->m_contact;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 // ----------
 
 FloorLocator const * Footprint::getSolidContact ( void ) const
 {
-	FloorLocator const * temp = NULL;
+	FloorLocator const * temp = nullptr;
 
 	float maxHeight = -REAL_MAX;
 
@@ -883,11 +883,11 @@ Object const * Footprint::getStandingOn ( void ) const
 {
 	FloorLocator const * contact = getSolidContact();
 
-	if(contact == NULL) return NULL;
+	if(contact == nullptr) return nullptr;
 
 	Floor const * floor = contact->getFloor();
 
-	if(floor == NULL) return NULL;
+	if(floor == nullptr) return nullptr;
 
 	return floor->getOwner();
 }
@@ -921,9 +921,9 @@ bool Footprint::snapToCellFloor ( void )
 
 bool Footprint::isAttachedTo ( Floor const * floor ) const
 {
-	if(floor == NULL) return false;
+	if(floor == nullptr) return false;
 	
-	return getFloorList().find( floor->getFootList() ) != NULL;
+	return getFloorList().find( floor->getFootList() ) != nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -1114,7 +1114,7 @@ void Footprint::updateOffsets ( void )
 
 bool Footprint::attachTo ( Floor const * floor, bool fromObject )
 {
-	if(floor == NULL) return false;
+	if(floor == nullptr) return false;
 
 	if(isAttachedTo(floor)) return false;
 
@@ -1240,7 +1240,7 @@ int Footprint::elevatorMove ( int nFloors, Transform & outTransform )
 	// ----------
 	// Find the contact that's on the cell's floor
 	
-	FloorContactShape const * cellContact = NULL;
+	FloorContactShape const * cellContact = nullptr;
 
 	for(ConstContactIterator it(getFloorList()); it; ++it)
 	{
@@ -1261,7 +1261,7 @@ int Footprint::elevatorMove ( int nFloors, Transform & outTransform )
 		}
 	}
 
-	if(cellContact == NULL) 
+	if(cellContact == nullptr) 
 	{
 		return 0;
 	}
@@ -1328,7 +1328,7 @@ void Footprint::drawDebugShapes ( DebugShapeRenderer * renderer ) const
 
 #ifdef _DEBUG
 
-	if(renderer == NULL) return;
+	if(renderer == nullptr) return;
 
 	if(ConfigSharedCollision::getDrawFootprints())
 	{
@@ -1525,7 +1525,7 @@ void Footprint::alignToGroundNoFloat ( void )
 		if (owner)
 			DEBUG_WARNING(true, ("Footprint::alignToGroundNoFloat(): called on object id=[%s],template=[%s] when no ground could be found.", owner->getNetworkId().getValueString().c_str(), owner->getObjectTemplateName()));
 		else
-			DEBUG_WARNING(true, ("Footprint::alignToGroundNoFloat(): called on object id=[<NULL owner>],template=[<NULL owner>] when no ground could be found."));
+			DEBUG_WARNING(true, ("Footprint::alignToGroundNoFloat(): called on object id=[<nullptr owner>],template=[<nullptr owner>] when no ground could be found."));
 	}
 #endif
 }

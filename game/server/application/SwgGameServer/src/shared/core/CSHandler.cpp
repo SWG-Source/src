@@ -767,7 +767,7 @@ CS_CMD( create_crafted_object )
 	if( !( target && target->isAuthoritative() ) )
 		return;
 	ServerObject *inventory = target->getInventory();
-	if( inventory == NULL )
+	if( inventory == nullptr )
 		return;
 	DEBUG_REPORT_LOG( true, ( "Trying to make %s\n", args[ 1 ].c_str()));
 	GameScriptObject * script = target->getScriptObject();
@@ -1116,7 +1116,7 @@ CS_CMD( delete_object )
 	const NetworkId oid (args[0]);
 	ServerObject *object = ServerObject::getServerObject( oid );
 
-	if (object == NULL)
+	if (object == nullptr)
 	{
 		return;
 	}
@@ -1174,7 +1174,7 @@ CS_CMD( rename_player )
 	}
 	if( player_id.isValid() )
 	{
-		// null id to pass to the playercreationmanager.
+		// nullptr id to pass to the playercreationmanager.
 		NetworkId source( "0" );
 
 		DEBUG_REPORT_LOG( true, ( "Attempting to rename %s.", args[ 0 ].c_str() ) );
@@ -1213,7 +1213,7 @@ CS_CMD( set_bank_credits )
 		CreatureObject* creatureActor = CreatureObject::getCreatureObject(player_id);
 		PlayerObject const * const player = PlayerCreatureController::getPlayerObject(creatureActor);
 
-		if( ( player != NULL ) && ( player->isAuthoritative() ) )
+		if( ( player != nullptr ) && ( player->isAuthoritative() ) )
 		{
 			amount -= creatureActor->getBankBalance();
 			DEBUG_REPORT_LOG( true, ( "Amount to modify by: %d (%d current balance)\n", amount, creatureActor->getBankBalance() ) );
@@ -1270,7 +1270,7 @@ CS_CMD( get_pc_info )
 		if(bindId != NetworkId::cms_invalid)
 		{
 			const ServerObject* const bindObject = ServerObject::getServerObject(bindId);
-			if (bindObject != NULL)
+			if (bindObject != nullptr)
 			{
 				bindLoc    = bindObject->getPosition_w();
 				snprintf( stringbuffer, sizeof( stringbuffer ) -1, "%02f %02f %02f", bindLoc.x, bindLoc.y, bindLoc.z );
@@ -1380,11 +1380,11 @@ CS_CMD( get_pc_info )
 
 		// residence info
 		PlayerObject const * const player = PlayerCreatureController::getPlayerObject(creatureActor);
-		if (player != NULL)
+		if (player != nullptr)
 		{
 			NetworkId houseNetworkId = creatureActor->getHouse();
 			const ServerObject* const resObject = ServerObject::getServerObject(houseNetworkId);
-			if (resObject != NULL)
+			if (resObject != nullptr)
 			{
 				resLoc    = resObject->getPosition_w();
 				snprintf( stringbuffer, sizeof( stringbuffer ) - 1 , "%02f %02f %02f", resLoc.x, resLoc.y, resLoc.z );

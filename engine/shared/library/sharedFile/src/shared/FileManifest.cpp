@@ -73,8 +73,8 @@ void FileManifest::install()
 	s_accessThreshold = ConfigFile::getKeyInt("SharedFile", "fileManifestAccessThreshold", -1, s_accessThreshold);
 
 	// if we are developing, and want to update the manifest, read in the tab file as well
-	const char * manifestFile = ConfigFile::getKeyString("SharedFile", "updateFileManifest", 0, NULL);
-	if (manifestFile != NULL)
+	const char * manifestFile = ConfigFile::getKeyString("SharedFile", "updateFileManifest", 0, nullptr);
+	if (manifestFile != nullptr)
 	{
 		s_updateManifest = true;
 
@@ -183,8 +183,8 @@ void FileManifest::remove()
 
 #if PRODUCTION == 0
 	// dump out the new manifest if requested
-	const char * manifestFile = ConfigFile::getKeyString("SharedFile", "updateFileManifest", 0, NULL);
-	if (manifestFile != NULL)
+	const char * manifestFile = ConfigFile::getKeyString("SharedFile", "updateFileManifest", 0, nullptr);
+	if (manifestFile != nullptr)
 	{
 		StdioFile outputFile(manifestFile,"w");
 		DEBUG_FATAL(!outputFile.isOpen(), ("FileManifest::remove(): Could not open %s for writing.", manifestFile));
@@ -201,7 +201,7 @@ void FileManifest::remove()
 		{
 			if (!i->second)
 			{
-				DEBUG_WARNING(true, ("FileManifest::remove(): Found a null pointer in the fileManifest map!\n"));
+				DEBUG_WARNING(true, ("FileManifest::remove(): Found a nullptr pointer in the fileManifest map!\n"));
 				continue;
 			}
 

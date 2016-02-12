@@ -306,7 +306,7 @@ jobject JNICALL ScriptMethodsWaypointNamespace::getWaypointRegion(JNIEnv * env, 
 		if(w.isValid())
 		{
 			const Region * region = RegionMaster::getSmallestVisibleRegionAtPoint(w.getLocation().getSceneId(), w.getLocation().getCoordinates().x, w.getLocation().getCoordinates().z);
-			if (region != NULL)
+			if (region != nullptr)
 			{
 				LocalRefPtr result;
 				if (ScriptConversion::convert(*region, result))

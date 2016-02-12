@@ -459,7 +459,7 @@ jstring JNICALL ScriptMethodsResourceNamespace::getResourceContainerForType(JNIE
 {
 	ResourceTypeObject const * const typeObj = ServerUniverse::getInstance().getResourceTypeById(NetworkId(resourceType));
 	if (!typeObj)
-		return NULL;
+		return nullptr;
 
 	std::string templateName;
 	typeObj->getCrateTemplate(templateName);
@@ -473,7 +473,7 @@ jstring JNICALL ScriptMethodsResourceNamespace::getResourceName(JNIEnv * /*env*/
 {
 	if (resourceType == 0)
 	{
-		WARNING(true, ("JavaLibrary::getResourceName passed null resource type"));
+		WARNING(true, ("JavaLibrary::getResourceName passed nullptr resource type"));
 		return 0;
 	}
 
@@ -494,7 +494,7 @@ jobjectArray JNICALL ScriptMethodsResourceNamespace::getResourceNames(JNIEnv *en
 {
 	if (resourceTypes == 0)
 	{
-		WARNING(true, ("JavaLibrary::getResourceNames passed null resource types"));
+		WARNING(true, ("JavaLibrary::getResourceNames passed nullptr resource types"));
 		return 0;
 	}
 
@@ -517,7 +517,7 @@ jstring JNICALL ScriptMethodsResourceNamespace::getResourceClassName(JNIEnv *env
 {
 	if (resourceClass == 0)
 	{
-		WARNING(true, ("JavaLibrary::getResourceClassName passed null resource class"));
+		WARNING(true, ("JavaLibrary::getResourceClassName passed nullptr resource class"));
 		return 0;
 	}
 
@@ -531,7 +531,7 @@ jstring JNICALL ScriptMethodsResourceNamespace::getResourceClassName(JNIEnv *env
 
 	const ServerResourceClassObject * resClass = safe_cast<const ServerResourceClassObject *>(
 		ServerUniverse::getInstance().getResourceClassByName(resourceClassName));
-	if (resClass == NULL)
+	if (resClass == nullptr)
 	{
 		WARNING(true, ("JavaLibrary::getResourceClassName cannot find resource class for %s", resourceClassName.c_str()));
 		return 0;
@@ -547,7 +547,7 @@ jobjectArray JNICALL ScriptMethodsResourceNamespace::getResourceClassNames(JNIEn
 {
 	if (resourceClasses == 0)
 	{
-		WARNING(true, ("JavaLibrary::getResourceClassNames passed null resource classes"));
+		WARNING(true, ("JavaLibrary::getResourceClassNames passed nullptr resource classes"));
 		return 0;
 	}
 
@@ -569,7 +569,7 @@ jlongArray JNICALL ScriptMethodsResourceNamespace::getResourceTypes(JNIEnv * env
 {
 	if (resourceClass == 0)
 	{
-		WARNING(true, ("JavaLibrary::getResourceTypes passed null resource class"));
+		WARNING(true, ("JavaLibrary::getResourceTypes passed nullptr resource class"));
 		return 0;
 	}
 
@@ -583,7 +583,7 @@ jlongArray JNICALL ScriptMethodsResourceNamespace::getResourceTypes(JNIEnv * env
 
 	const ServerResourceClassObject * resClass = safe_cast<const ServerResourceClassObject *>(
 		ServerUniverse::getInstance().getResourceClassByName(resourceClassName));
-	if (resClass == NULL)
+	if (resClass == nullptr)
 	{
 		WARNING(true, ("JavaLibrary::getResourceTypes cannot find resource class for %s", resourceClassName.c_str()));
 		return 0;
@@ -604,7 +604,7 @@ jlongArray JNICALL ScriptMethodsResourceNamespace::getResourceTypes(JNIEnv * env
 	jlong jlongTmp;
 	for (size_t i = 0; i < count; ++i)
 	{
-		if (types[i] != NULL)
+		if (types[i] != nullptr)
 		{
 			jlongTmp = (types[i]->getNetworkId()).getValue();
 			setLongArrayRegion(*jtypes, i, 1, &jlongTmp);
@@ -619,7 +619,7 @@ jstring JNICALL ScriptMethodsResourceNamespace::getResourceClass(JNIEnv * /*env*
 {
 	if (resourceType == 0)
 	{
-		WARNING(true, ("JavaLibrary::getResourceClass passed null resource type"));
+		WARNING(true, ("JavaLibrary::getResourceClass passed nullptr resource type"));
 		return 0;
 	}
 
@@ -642,7 +642,7 @@ jstring JNICALL ScriptMethodsResourceNamespace::getResourceParentClass(JNIEnv * 
 {
 	if (resourceClass == 0)
 	{
-		WARNING(true, ("JavaLibrary::getResourceParentClass passed null resource class"));
+		WARNING(true, ("JavaLibrary::getResourceParentClass passed nullptr resource class"));
 		return 0;
 	}
 
@@ -655,14 +655,14 @@ jstring JNICALL ScriptMethodsResourceNamespace::getResourceParentClass(JNIEnv * 
 	}
 
 	const ResourceClassObject * resClass = ServerUniverse::getInstance().getResourceClassByName(resourceClassName);
-	if (resClass == NULL)
+	if (resClass == nullptr)
 	{
 		WARNING(true, ("JavaLibrary::getResourceParentClass cannot find resource class for %s", resourceClassName.c_str()));
 		return 0;
 	}
 
 	const ResourceClassObject * parentClass = resClass->getParent();
-	if (parentClass == NULL)
+	if (parentClass == nullptr)
 		return 0;
 
 	JavaString parentClassName(parentClass->getResourceClassName());
@@ -675,7 +675,7 @@ jobjectArray JNICALL ScriptMethodsResourceNamespace::getResourceChildClasses(JNI
 {
 	if (resourceClass == 0)
 	{
-		WARNING(true, ("JavaLibrary::getResourceChildClasses passed null resource class"));
+		WARNING(true, ("JavaLibrary::getResourceChildClasses passed nullptr resource class"));
 		return 0;
 	}
 
@@ -688,7 +688,7 @@ jobjectArray JNICALL ScriptMethodsResourceNamespace::getResourceChildClasses(JNI
 	}
 
 	const ResourceClassObject * resClass = ServerUniverse::getInstance().getResourceClassByName(resourceClassName);
-	if (resClass == NULL)
+	if (resClass == nullptr)
 	{
 		WARNING(true, ("JavaLibrary::getResourceChildClasses cannot find resource class for %s", resourceClassName.c_str()));
 		return 0;
@@ -701,7 +701,7 @@ jobjectArray JNICALL ScriptMethodsResourceNamespace::getResourceChildClasses(JNI
 	LocalObjectArrayRefPtr childrenArray = createNewObjectArray(static_cast<int>(count), JavaLibrary::getClsString());
 	for (size_t i = 0; i < count; ++i)
 	{
-		if (children[i] != NULL)
+		if (children[i] != nullptr)
 		{
 			JavaString name(children[i]->getResourceClassName());
 			setObjectArrayElement(*childrenArray, static_cast<int>(i), name);
@@ -716,7 +716,7 @@ jobjectArray JNICALL ScriptMethodsResourceNamespace::getImmediateResourceChildCl
 {
 	if (resourceClass == 0)
 	{
-		WARNING(true, ("JavaLibrary::getImmediateResourceChildClasses passed null resource class"));
+		WARNING(true, ("JavaLibrary::getImmediateResourceChildClasses passed nullptr resource class"));
 		return 0;
 	}
 
@@ -729,7 +729,7 @@ jobjectArray JNICALL ScriptMethodsResourceNamespace::getImmediateResourceChildCl
 	}
 
 	const ResourceClassObject * resClass = ServerUniverse::getInstance().getResourceClassByName(resourceClassName);
-	if (resClass == NULL)
+	if (resClass == nullptr)
 	{
 		WARNING(true, ("JavaLibrary::getImmediateResourceChildClasses cannot find resource class for %s", resourceClassName.c_str()));
 		return 0;
@@ -742,7 +742,7 @@ jobjectArray JNICALL ScriptMethodsResourceNamespace::getImmediateResourceChildCl
 	LocalObjectArrayRefPtr childrenArray = createNewObjectArray(count, JavaLibrary::getClsString());
 	for (int i = 0; i < count; ++i)
 	{
-		if (children[i] != NULL)
+		if (children[i] != nullptr)
 		{
 			JavaString name(children[i]->getResourceClassName());
 			setObjectArrayElement(*childrenArray, i, name);
@@ -757,7 +757,7 @@ jobjectArray JNICALL ScriptMethodsResourceNamespace::getLeafResourceChildClasses
 {
 	if (resourceClass == 0)
 	{
-		WARNING(true, ("JavaLibrary::getLeafResourceChildClasses passed null resource class"));
+		WARNING(true, ("JavaLibrary::getLeafResourceChildClasses passed nullptr resource class"));
 		return 0;
 	}
 
@@ -770,7 +770,7 @@ jobjectArray JNICALL ScriptMethodsResourceNamespace::getLeafResourceChildClasses
 	}
 
 	const ResourceClassObject * resClass = ServerUniverse::getInstance().getResourceClassByName(resourceClassName);
-	if (resClass == NULL)
+	if (resClass == nullptr)
 	{
 		WARNING(true, ("JavaLibrary::getLeafResourceChildClasses cannot find resource class for %s", resourceClassName.c_str()));
 		return 0;
@@ -783,7 +783,7 @@ jobjectArray JNICALL ScriptMethodsResourceNamespace::getLeafResourceChildClasses
 	LocalObjectArrayRefPtr childrenArray = createNewObjectArray(count, JavaLibrary::getClsString());
 	for (int i = 0; i < count; ++i)
 	{
-		if (children[i] != NULL)
+		if (children[i] != nullptr)
 		{
 			JavaString name(children[i]->getResourceClassName());
 			setObjectArrayElement(*childrenArray, i, name);
@@ -798,7 +798,7 @@ jboolean JNICALL ScriptMethodsResourceNamespace::hasResourceType(JNIEnv *env, jo
 {
 	if (resourceClass == 0)
 	{
-		WARNING(true, ("JavaLibrary::hasResourceType passed null resource class"));
+		WARNING(true, ("JavaLibrary::hasResourceType passed nullptr resource class"));
 		return JNI_FALSE;
 	}
 
@@ -811,7 +811,7 @@ jboolean JNICALL ScriptMethodsResourceNamespace::hasResourceType(JNIEnv *env, jo
 	}
 
 	ServerResourceClassObject const * const resClass = safe_cast<ServerResourceClassObject const *>(ServerUniverse::getInstance().getResourceClassByName(resourceClassName));
-	if (resClass == NULL)
+	if (resClass == nullptr)
 	{
 		WARNING(true, ("JavaLibrary::hasResourceType cannot find resource class for %s", resourceClassName.c_str()));
 		return JNI_FALSE;
@@ -826,13 +826,13 @@ jlong JNICALL ScriptMethodsResourceNamespace::createResourceCrate(JNIEnv * /*env
 {
 	if (resourceType == 0)
 	{
-		WARNING(true, ("JavaLibrary::createResourceCrate passed null resource type"));
+		WARNING(true, ("JavaLibrary::createResourceCrate passed nullptr resource type"));
 		return 0;
 	}
 
 	if (destination == 0)
 	{
-		WARNING(true, ("JavaLibrary::createResourceCrate passed null destination"));
+		WARNING(true, ("JavaLibrary::createResourceCrate passed nullptr destination"));
 		return 0;
 	}
 
@@ -849,7 +849,7 @@ jlong JNICALL ScriptMethodsResourceNamespace::createResourceCrate(JNIEnv * /*env
 		return 0;
 	}
 
-	ServerObject * container = NULL;
+	ServerObject * container = nullptr;
 	if (!JavaLibrary::getObject(destination, container))
 	{
 		WARNING(true, ("JavaLibrary::createResourceCrate cannot find destination object"));
@@ -860,14 +860,14 @@ jlong JNICALL ScriptMethodsResourceNamespace::createResourceCrate(JNIEnv * /*env
 	rt->getCrateTemplate(crateTemplateName);
 
 	ServerObject * object = ServerWorld::createNewObject(crateTemplateName, *container, true);
-	if (object == NULL)
+	if (object == nullptr)
 	{
 		WARNING(true, ("JavaLibrary::createResourceCrate cannot create crate from template %s", crateTemplateName.c_str()));
 		return 0;
 	}
 
 	ResourceContainerObject * crate = dynamic_cast<ResourceContainerObject *>(object);
-	if (crate == NULL)
+	if (crate == nullptr)
 	{
 		IGNORE_RETURN(object->permanentlyDestroy(DeleteReasons::SetupFailed));
 		WARNING(true, ("JavaLibrary::createResourceCrate crate %s is not a resource container", crateTemplateName.c_str()));
@@ -888,13 +888,13 @@ jobjectArray JNICALL ScriptMethodsResourceNamespace::requestResourceList(JNIEnv 
 {
 	if (loc == 0)
 	{
-		WARNING(true, ("JavaLibrary::requestResourceList passed null location"));
+		WARNING(true, ("JavaLibrary::requestResourceList passed nullptr location"));
 		return 0;
 	}
 
 	if (resourceClass == 0)
 	{
-		WARNING(true, ("JavaLibrary::requestResourceList passed null resource class"));
+		WARNING(true, ("JavaLibrary::requestResourceList passed nullptr resource class"));
 		return 0;
 	}
 
@@ -921,7 +921,7 @@ jobjectArray JNICALL ScriptMethodsResourceNamespace::requestResourceList(JNIEnv 
 	const Vector & locationPos = location.getCoordinates();
 
 	const PlanetObject * planet = ServerUniverse::getInstance().getPlanetByName(location.getSceneId());
-	if (planet == NULL)
+	if (planet == nullptr)
 	{
 		WARNING(true, ("JavaLibrary::requestResourceList cannot find planet %s", location.getSceneId()));
 		return 0;
@@ -929,7 +929,7 @@ jobjectArray JNICALL ScriptMethodsResourceNamespace::requestResourceList(JNIEnv 
 
 	// get the resource class and all its children
 	ServerResourceClassObject const * const resClass = safe_cast<ServerResourceClassObject const *>(ServerUniverse::getInstance().getResourceClassByName(resourceClassName));
-	if (resClass == NULL)
+	if (resClass == nullptr)
 	{
 		WARNING(true, ("JavaLibrary::requestResourceList cannot find resource class %s", resourceClassName.c_str()));
 		return 0;
@@ -951,7 +951,7 @@ jobjectArray JNICALL ScriptMethodsResourceNamespace::requestResourceList(JNIEnv 
 		if (!(*i)->isDepleted())
 		{
 			ResourcePoolObject const * const pool = (*i)->getPoolForPlanet(*planet);
-			if (pool != NULL)
+			if (pool != nullptr)
 			{
 				float density = pool->getEfficiencyAtLocation(locationPos.x, locationPos.z);
 				if (density >= minDensity && density <= maxDensity)
@@ -1049,7 +1049,7 @@ jobjectArray JNICALL ScriptMethodsResourceNamespace::getScaledResourceAttributes
 		return 0;
 	}
 	ServerResourceClassObject const * const resClass = safe_cast<ServerResourceClassObject const *>(ServerUniverse::getInstance().getResourceClassByName(resourceClassName));
-	if (resClass == NULL)
+	if (resClass == nullptr)
 	{
 		WARNING(true, ("JavaLibrary::getScaledResourceAttributes cannot find resource class %s", resourceClassName.c_str()));
 		return 0;
@@ -1152,7 +1152,7 @@ jint JNICALL ScriptMethodsResourceNamespace::getResourceAttribute(JNIEnv * /*env
 
 	if (resourceType == 0)
 	{
-		WARNING(true, ("JavaLibrary::getResourceAttribute passed null resource type"));
+		WARNING(true, ("JavaLibrary::getResourceAttribute passed nullptr resource type"));
 		return -1;
 	}
 
@@ -1171,7 +1171,7 @@ jint JNICALL ScriptMethodsResourceNamespace::getResourceAttribute(JNIEnv * /*env
 jlong JNICALL ScriptMethodsResourceNamespace::getRecycledVersionOfResourceType(JNIEnv * /*env*/, jobject /*self*/, jlong resourceType)
 {
 	ResourceTypeObject const * const resourceTypeObject = ServerUniverse::getInstance().getResourceTypeById(NetworkId(resourceType));
-	ResourceTypeObject const * const recycledTypeObject = resourceTypeObject ? resourceTypeObject->getRecycledVersion() : NULL;
+	ResourceTypeObject const * const recycledTypeObject = resourceTypeObject ? resourceTypeObject->getRecycledVersion() : nullptr;
 	if (recycledTypeObject)
 		return (recycledTypeObject->getNetworkId()).getValue();
 	else

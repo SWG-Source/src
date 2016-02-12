@@ -91,7 +91,7 @@ jboolean JNICALL ScriptMethodsClientEffectNamespace::playClientEventObj(JNIEnv *
 {
 	JavaStringParam localEventType(eventType);
 
-	ServerObject* so = NULL;
+	ServerObject* so = nullptr;
 	if(!JavaLibrary::getObject(client, so))
 		return JNI_FALSE;
 	Client* c = so->getClient();
@@ -100,7 +100,7 @@ jboolean JNICALL ScriptMethodsClientEffectNamespace::playClientEventObj(JNIEnv *
 	if (!objectToPlayEventOn)
 		return JNI_FALSE;
 
-	ServerObject* target = NULL;
+	ServerObject* target = nullptr;
 	if(!JavaLibrary::getObject(objectToPlayEventOn, target))
 		return JNI_FALSE;
 	if(!target)
@@ -114,7 +114,7 @@ jboolean JNICALL ScriptMethodsClientEffectNamespace::playClientEventObj(JNIEnv *
 
 	//get the hardpoint
 	std::string hp;
-	if (NULL != jHardpoint)
+	if (nullptr != jHardpoint)
 	{
 		JavaStringParam localHardpoint(jHardpoint);
 		JavaLibrary::convert(localHardpoint, hp);
@@ -122,7 +122,7 @@ jboolean JNICALL ScriptMethodsClientEffectNamespace::playClientEventObj(JNIEnv *
 
 	//get the transform
 	Transform transform;
-	if (NULL != jTransform)
+	if (nullptr != jTransform)
 	{
 		ScriptConversion::convert(jTransform, transform);
 	}
@@ -158,7 +158,7 @@ jboolean JNICALL ScriptMethodsClientEffectNamespace::playClientEventObjLimited(J
 	if (!objectToPlayEventOn)
 		return JNI_FALSE;
 
-	ServerObject* target = NULL;
+	ServerObject* target = nullptr;
 	if(!JavaLibrary::getObject(objectToPlayEventOn, target))
 		return JNI_FALSE;
 	if(!target)
@@ -172,7 +172,7 @@ jboolean JNICALL ScriptMethodsClientEffectNamespace::playClientEventObjLimited(J
 
 	//get the hardpoint
 	std::string hp;
-	if (NULL != jHardpoint)
+	if (nullptr != jHardpoint)
 	{
 		JavaStringParam localHardpoint(jHardpoint);
 		JavaLibrary::convert(localHardpoint, hp);
@@ -180,7 +180,7 @@ jboolean JNICALL ScriptMethodsClientEffectNamespace::playClientEventObjLimited(J
 
 	//get the transform
 	Transform transform;
-	if (NULL != jTransform)
+	if (nullptr != jTransform)
 	{
 		ScriptConversion::convert(jTransform, transform);
 	}
@@ -210,7 +210,7 @@ jboolean JNICALL ScriptMethodsClientEffectNamespace::playClientEventLoc(JNIEnv *
 	JavaStringParam localEventSourceType(eventSourceType);
 	JavaStringParam localEventDestType(eventDestType);
 
-	ServerObject* so = NULL;
+	ServerObject* so = nullptr;
 	if(!JavaLibrary::getObject(client, so))
 		return JNI_FALSE;
 	Client* c = so->getClient();
@@ -281,7 +281,7 @@ jboolean JNICALL ScriptMethodsClientEffectNamespace::playClientEffectObj(JNIEnv 
 {
 	JavaStringParam localEffectName(effectName);
 
-	ServerObject* so = NULL;
+	ServerObject* so = nullptr;
 	if(!JavaLibrary::getObject(objectToPlayEffectOn, so))
 		return JNI_FALSE;
 	/* TPERRY - This isn't used
@@ -293,7 +293,7 @@ jboolean JNICALL ScriptMethodsClientEffectNamespace::playClientEffectObj(JNIEnv 
 	if (!objectToPlayEffectOn)
 		return JNI_FALSE;
 
-	ServerObject* target = NULL;
+	ServerObject* target = nullptr;
 	if(!JavaLibrary::getObject(objectToPlayEffectOn, target))
 		return JNI_FALSE;
 	if(!target)
@@ -307,7 +307,7 @@ jboolean JNICALL ScriptMethodsClientEffectNamespace::playClientEffectObj(JNIEnv 
 
 	//get the hardpoint
 	std::string hp;
-	if (NULL != jHardpoint)
+	if (nullptr != jHardpoint)
 	{
 		JavaStringParam localHardpoint(jHardpoint);
 		JavaLibrary::convert(localHardpoint, hp);
@@ -315,14 +315,14 @@ jboolean JNICALL ScriptMethodsClientEffectNamespace::playClientEffectObj(JNIEnv 
 
 	//get the transform
 	Transform transform;
-	if (NULL != jTransform)
+	if (nullptr != jTransform)
 	{
 		ScriptConversion::convert(jTransform, transform);
 	}
 
 	//get the optional labelName
 	std::string strLabelName;
-	if (NULL != labelName)
+	if (nullptr != labelName)
 	{
 		JavaStringParam localLabel(labelName);
 		JavaLibrary::convert(localLabel, strLabelName);
@@ -360,7 +360,7 @@ jboolean JNICALL ScriptMethodsClientEffectNamespace::playClientEffectObjLimited(
 	if (!objectToPlayEffectOn)
 		return JNI_FALSE;
 
-	ServerObject* target = NULL;
+	ServerObject* target = nullptr;
 	if(!JavaLibrary::getObject(objectToPlayEffectOn, target))
 		return JNI_FALSE;
 	if(!target)
@@ -374,7 +374,7 @@ jboolean JNICALL ScriptMethodsClientEffectNamespace::playClientEffectObjLimited(
 
 	//get the hardpoint
 	std::string hp;
-	if (NULL != jHardpoint)
+	if (nullptr != jHardpoint)
 	{
 		JavaStringParam localHardpoint(jHardpoint);
 		JavaLibrary::convert(localHardpoint, hp);
@@ -382,14 +382,14 @@ jboolean JNICALL ScriptMethodsClientEffectNamespace::playClientEffectObjLimited(
 
 	//get the transform
 	Transform transform;
-	if (NULL != jTransform)
+	if (nullptr != jTransform)
 	{
 		ScriptConversion::convert(jTransform, transform);
 	}
 
 	//get the optional labelName
 	std::string strLabelName;
-	if (NULL != labelName)
+	if (nullptr != labelName)
 	{
 		JavaStringParam localLabel(labelName);
 		JavaLibrary::convert(localLabel, strLabelName);
@@ -419,7 +419,7 @@ jboolean JNICALL ScriptMethodsClientEffectNamespace::playClientEffectLoc(JNIEnv 
 {
 	JavaStringParam localEffectName(effectName);
 
-	ServerObject* so = NULL;
+	ServerObject* so = nullptr;
 	if(!JavaLibrary::getObject(client, so))
 		return JNI_FALSE;
 
@@ -444,7 +444,7 @@ jboolean JNICALL ScriptMethodsClientEffectNamespace::playClientEffectLoc(JNIEnv 
 
 	//get the optional labelName
 	std::string strLabelName;
-	if (NULL != labelName)
+	if (nullptr != labelName)
 	{
 		JavaStringParam localLabel(labelName);
 		JavaLibrary::convert(localLabel, strLabelName);
@@ -482,7 +482,7 @@ jboolean JNICALL ScriptMethodsClientEffectNamespace::playClientEffectLocLimited(
 
 	//get the optional labelName
 	std::string strLabelName;
-	if (NULL != labelName)
+	if (nullptr != labelName)
 	{
 		JavaStringParam localLabel(labelName);
 		JavaLibrary::convert(localLabel, strLabelName);
@@ -501,7 +501,7 @@ jboolean JNICALL ScriptMethodsClientEffectNamespace::playUiEffect(JNIEnv * /*env
 {
 	JavaStringParam localUiEffectString(uiEffectString);
 
-	ServerObject* so = NULL;
+	ServerObject* so = nullptr;
 	if(!JavaLibrary::getObject(client, so))
 	{
 		NetworkId const networkId(client);
@@ -531,7 +531,7 @@ jboolean JNICALL ScriptMethodsClientEffectNamespace::stopClientEffectObjByLabel(
 {
 	JavaStringParam localLabel(labelName);
 
-	ServerObject* so = NULL;
+	ServerObject* so = nullptr;
 	if(!JavaLibrary::getObject(objectEffectIsOn, so))
 		return JNI_FALSE;
 
@@ -545,7 +545,7 @@ jboolean JNICALL ScriptMethodsClientEffectNamespace::stopClientEffectObjByLabel(
 	if (!objectEffectIsOn)
 		return JNI_FALSE;
 
-	ServerObject* target = NULL;
+	ServerObject* target = nullptr;
 	if(!JavaLibrary::getObject(objectEffectIsOn, target))
 		return JNI_FALSE;
 	if(!target)
@@ -578,7 +578,7 @@ jboolean JNICALL ScriptMethodsClientEffectNamespace::stopClientEffectObjByLabelL
 	if (!objectEffectIsOn)
 		return JNI_FALSE;
 
-	ServerObject* target = NULL;
+	ServerObject* target = nullptr;
 	if(!JavaLibrary::getObject(objectEffectIsOn, target))
 		return JNI_FALSE;
 	if(!target)
@@ -604,7 +604,7 @@ jboolean JNICALL ScriptMethodsClientEffectNamespace::play2dNonLoopingMusic(JNIEn
 {
 	JavaStringParam localMusicName(musicName);
 
-	ServerObject* so = NULL;
+	ServerObject* so = nullptr;
 	if (!JavaLibrary::getObject(client, so))
 		return JNI_FALSE;
 	Client* c = so->getClient();
@@ -628,7 +628,7 @@ jboolean JNICALL ScriptMethodsClientEffectNamespace::play2dNonLoopingSound(JNIEn
 {
 	JavaStringParam localMusicName(musicName);
 
-	ServerObject* so = NULL;
+	ServerObject* so = nullptr;
 	if (!JavaLibrary::getObject(client, so))
 		return JNI_FALSE;
 	Client* c = so->getClient();
@@ -652,7 +652,7 @@ jboolean JNICALL ScriptMethodsClientEffectNamespace::playMusicWithParms(JNIEnv *
 {
 	JavaStringParam localMusicName(musicName);
 
-	ServerObject* so = NULL;
+	ServerObject* so = nullptr;
 	if (!JavaLibrary::getObject(client, so))
 		return JNI_FALSE;
 	Client* c = so->getClient();
@@ -676,7 +676,7 @@ jboolean JNICALL ScriptMethodsClientEffectNamespace::createClientProjectile(JNIE
 {
 	JavaStringParam localWeaponObjectTemplateName(weaponObjectTemplateName);
 
-	ServerObject* so = NULL;
+	ServerObject* so = nullptr;
 	if (!JavaLibrary::getObject(client, so))
 		return JNI_FALSE;
 
@@ -718,7 +718,7 @@ jboolean JNICALL ScriptMethodsClientEffectNamespace::createClientProjectileObjec
 {
 	JavaStringParam localWeaponObjectTemplateName(weaponObjectTemplateName);
 
-	ServerObject* so = NULL;
+	ServerObject* so = nullptr;
 	if (!JavaLibrary::getObject(client, so))
 		return JNI_FALSE;
 
@@ -734,14 +734,14 @@ jboolean JNICALL ScriptMethodsClientEffectNamespace::createClientProjectileObjec
 		return JNI_FALSE;
 
 	// Get our source object
-	ServerObject* sourceObject = NULL;
+	ServerObject* sourceObject = nullptr;
 	if (!JavaLibrary::getObject(source, sourceObject))
 		return JNI_FALSE;
 
 	NetworkId sourceId = sourceObject->getNetworkId();
 
 	// The target of our effect
-	ServerObject* targetObject = NULL;
+	ServerObject* targetObject = nullptr;
 	if (!JavaLibrary::getObject(target, targetObject))
 		return JNI_FALSE;
 
@@ -759,8 +759,8 @@ jboolean JNICALL ScriptMethodsClientEffectNamespace::createClientProjectileObjec
 
 	// Source's Cell ID
 	CellProperty const * const cellProperty = sourceObject->getParentCell();
-	Object const * const cellObject = (cellProperty != NULL) ? &cellProperty->getOwner() : NULL;
-	NetworkId const & networkIdForCellOrWorld = (cellObject != NULL) ? cellObject->getNetworkId() : NetworkId::cms_invalid;
+	Object const * const cellObject = (cellProperty != nullptr) ? &cellProperty->getOwner() : nullptr;
+	NetworkId const & networkIdForCellOrWorld = (cellObject != nullptr) ? cellObject->getNetworkId() : NetworkId::cms_invalid;
 
 	CreateClientProjectileObjectToObjectMessage const ccpmoto(weaponObjectTemplateNameString, sourceId, sourceHardpointString, networkIdForCellOrWorld, targetId, targetHardpointString,
 		speed, expiration, trail, PackedArgb(static_cast<uint8>(a), static_cast<uint8>(r), static_cast<uint8>(g), static_cast<uint8>(b)).getArgb());
@@ -776,7 +776,7 @@ jboolean JNICALL  ScriptMethodsClientEffectNamespace::createClientProjectileObje
 {
 	JavaStringParam localWeaponObjectTemplateName(weaponObjectTemplateName);
 
-	ServerObject* so = NULL;
+	ServerObject* so = nullptr;
 	if (!JavaLibrary::getObject(client, so))
 		return JNI_FALSE;
 
@@ -792,7 +792,7 @@ jboolean JNICALL  ScriptMethodsClientEffectNamespace::createClientProjectileObje
 		return JNI_FALSE;
 
 	// Get our source object
-	ServerObject* sourceObject = NULL;
+	ServerObject* sourceObject = nullptr;
 	if (!JavaLibrary::getObject(source, sourceObject))
 		return JNI_FALSE;
 
@@ -812,8 +812,8 @@ jboolean JNICALL  ScriptMethodsClientEffectNamespace::createClientProjectileObje
 
 	// Source's Cell ID
 	CellProperty const * const cellProperty = sourceObject->getParentCell();
-	Object const * const cellObject = (cellProperty != NULL) ? &cellProperty->getOwner() : NULL;
-	NetworkId const & networkIdForCellOrWorld = (cellObject != NULL) ? cellObject->getNetworkId() : NetworkId::cms_invalid;
+	Object const * const cellObject = (cellProperty != nullptr) ? &cellProperty->getOwner() : nullptr;
+	NetworkId const & networkIdForCellOrWorld = (cellObject != nullptr) ? cellObject->getNetworkId() : NetworkId::cms_invalid;
 
 	CreateClientProjectileObjectToLocationMessage const ccpmotl(weaponObjectTemplateNameString, sourceId, sourceHardpointString, networkIdForCellOrWorld, targetLocationVec,
 		speed, expiration, trail, PackedArgb(static_cast<uint8>(a), static_cast<uint8>(r), static_cast<uint8>(g), static_cast<uint8>(b)).getArgb());
@@ -829,7 +829,7 @@ jboolean JNICALL ScriptMethodsClientEffectNamespace::createClientProjectileLocat
 {
 	JavaStringParam localWeaponObjectTemplateName(weaponObjectTemplateName);
 
-	ServerObject* so = NULL;
+	ServerObject* so = nullptr;
 	if (!JavaLibrary::getObject(client, so))
 		return JNI_FALSE;
 
@@ -845,7 +845,7 @@ jboolean JNICALL ScriptMethodsClientEffectNamespace::createClientProjectileLocat
 		return JNI_FALSE;
 
 	// Get our target object
-	ServerObject* targetObject = NULL;
+	ServerObject* targetObject = nullptr;
 	if (!JavaLibrary::getObject(target, targetObject))
 		return JNI_FALSE;
 
@@ -865,8 +865,8 @@ jboolean JNICALL ScriptMethodsClientEffectNamespace::createClientProjectileLocat
 
 	// Target's Cell ID
 	CellProperty const * const cellProperty = targetObject->getParentCell();
-	Object const * const cellObject = (cellProperty != NULL) ? &cellProperty->getOwner() : NULL;
-	NetworkId const & networkIdForCellOrWorld = (cellObject != NULL) ? cellObject->getNetworkId() : NetworkId::cms_invalid;
+	Object const * const cellObject = (cellProperty != nullptr) ? &cellProperty->getOwner() : nullptr;
+	NetworkId const & networkIdForCellOrWorld = (cellObject != nullptr) ? cellObject->getNetworkId() : NetworkId::cms_invalid;
 
 	CreateClientProjectileLocationToObjectMessage const ccpmlto(weaponObjectTemplateNameString, sourceLocationVec,  networkIdForCellOrWorld, targetId, targetHardpointString,
 		speed, expiration, trail, PackedArgb(static_cast<uint8>(a), static_cast<uint8>(r), static_cast<uint8>(g), static_cast<uint8>(b)).getArgb());
@@ -878,7 +878,7 @@ jboolean JNICALL ScriptMethodsClientEffectNamespace::createClientProjectileLocat
 
 void JNICALL ScriptMethodsClientEffectNamespace::addObjectEffect(JNIEnv * env, jobject self, jlong obj, jstring filename, jstring hardpoint, jobject offset, jfloat scale, jstring label)
 {
-	ServerObject* so = NULL;
+	ServerObject* so = nullptr;
 	if (!JavaLibrary::getObject(obj, so))
 		return;
 
@@ -909,7 +909,7 @@ void JNICALL ScriptMethodsClientEffectNamespace::addObjectEffect(JNIEnv * env, j
 }
 void JNICALL ScriptMethodsClientEffectNamespace::removeObjectEffect(JNIEnv * env, jobject self, jlong obj, jstring label)
 {
-	ServerObject* so = NULL;
+	ServerObject* so = nullptr;
 	if (!JavaLibrary::getObject(obj, so))
 		return;
 
@@ -929,7 +929,7 @@ void JNICALL ScriptMethodsClientEffectNamespace::removeObjectEffect(JNIEnv * env
 
 void JNICALL ScriptMethodsClientEffectNamespace::removeAllObjectEffects(JNIEnv * env, jobject self, jlong obj)
 {
-	ServerObject* so = NULL;
+	ServerObject* so = nullptr;
 	if (!JavaLibrary::getObject(obj, so))
 		return;
 
@@ -942,7 +942,7 @@ void JNICALL ScriptMethodsClientEffectNamespace::removeAllObjectEffects(JNIEnv *
 
 jboolean JNICALL ScriptMethodsClientEffectNamespace::hasObjectEffect(JNIEnv * env, jobject self, jlong obj, jstring label)
 {
-	ServerObject* so = NULL;
+	ServerObject* so = nullptr;
 	if (!JavaLibrary::getObject(obj, so))
 		return JNI_FALSE;
 

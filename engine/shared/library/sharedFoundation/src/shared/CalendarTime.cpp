@@ -17,11 +17,11 @@ std::string CalendarTime::convertEpochToTimeStringGMT(time_t epoch)
 	std::string result;
 
 	struct tm * timeinfo = ::gmtime(&epoch);
-	if (timeinfo == NULL)
+	if (timeinfo == nullptr)
 		return result;
 
 	char * asciiTime = ::asctime(timeinfo);
-	if (asciiTime == NULL)
+	if (asciiTime == nullptr)
 		return result;
 
 	static char resultBuffer[512];
@@ -48,7 +48,7 @@ std::string CalendarTime::convertEpochToTimeStringGMT_YYYYMMDDHHMMSS(time_t epoc
 	std::string result;
 
 	struct tm * timeinfo = ::gmtime(&epoch);
-	if (timeinfo == NULL)
+	if (timeinfo == nullptr)
 		return result;
 
 	static char resultBuffer[512];
@@ -64,11 +64,11 @@ std::string CalendarTime::convertEpochToTimeStringLocal(time_t epoch)
 	std::string result;
 
 	struct tm * timeinfo = ::localtime(&epoch);
-	if (timeinfo == NULL)
+	if (timeinfo == nullptr)
 		return result;
 
 	char * asciiTime = ::asctime(timeinfo);
-	if (asciiTime == NULL)
+	if (asciiTime == nullptr)
 		return result;
 
 	static char resultBuffer[512];
@@ -105,7 +105,7 @@ std::string CalendarTime::convertEpochToTimeStringLocal_YYYYMMDDHHMMSS(time_t ep
 	std::string result;
 
 	struct tm * timeinfo = ::localtime(&epoch);
-	if (timeinfo == NULL)
+	if (timeinfo == nullptr)
 		return result;
 
 	static char resultBuffer[512];
@@ -218,7 +218,7 @@ time_t CalendarTime::getNextGMTTimeOcurrence(time_t const startTime, int const d
 	// the year, month, day, day of week, hour, minute, second
 	// in GMT time
 	struct tm * timeinfo = ::gmtime(&startTime);
-	if (timeinfo == NULL)
+	if (timeinfo == nullptr)
 		return -1;
 
 	// get number of days until the specified day of week to search for
@@ -333,7 +333,7 @@ time_t CalendarTime::getNextGMTTimeOcurrence(time_t const startTime, int const m
 	// the year, month, day, day of week, hour, minute, second
 	// in GMT time
 	struct tm * timeinfo = ::gmtime(&startTime);
-	if (timeinfo == NULL)
+	if (timeinfo == nullptr)
 		return -1;
 
 	// calculate the Epoch GMT time for the specified start time
@@ -358,7 +358,7 @@ time_t CalendarTime::getNextGMTTimeOcurrence(time_t const startTime, int const m
 		startTimeAtSpecifiedHourMinuteSecond += (60 * 60 * 24);
 
 		timeinfo = ::gmtime(&startTimeAtSpecifiedHourMinuteSecond);
-		if (timeinfo == NULL)
+		if (timeinfo == nullptr)
 			return -1;
 
 		if (++sentinel > maxIterations)

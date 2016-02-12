@@ -88,7 +88,7 @@ MessageQueue::Data* Controller::peekHeldMessage( int message, float *value, uint
 {
 	HeldMessageMap::iterator iter = m_heldMessages.find( message );
 	if ( iter == m_heldMessages.end() )
-		return NULL;
+		return nullptr;
 	if ( value )
 		*value = iter->second.value;
 	if ( flags )
@@ -216,42 +216,42 @@ MessageQueue * Controller::getMessageQueue()
 
 TangibleController * Controller::asTangibleController()
 {
-	return NULL;
+	return nullptr;
 }
 
 //----------------------------------------------------------------------
 
 TangibleController const * Controller::asTangibleController() const
 {
-	return NULL;
+	return nullptr;
 }
 
 //----------------------------------------------------------------------
 
 CreatureController * Controller::asCreatureController()
 {
-	return NULL;
+	return nullptr;
 }
 
 //----------------------------------------------------------------------
 
 CreatureController const * Controller::asCreatureController() const
 {
-	return NULL;
+	return nullptr;
 }
 
 //----------------------------------------------------------------------
 
 ShipController * Controller::asShipController()
 {
-	return NULL;
+	return nullptr;
 }
 
 //----------------------------------------------------------------------
 
 ShipController const * Controller::asShipController() const
 {
-	return NULL;
+	return nullptr;
 }
 
 // ======================================================================

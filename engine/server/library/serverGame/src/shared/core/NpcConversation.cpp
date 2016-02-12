@@ -81,7 +81,7 @@ NpcConversation::NpcConversation(TangibleObject & player, TangibleObject & npc, 
 NpcConversation::~NpcConversation()
 {
 	TangibleObject * const player = safe_cast<TangibleObject *>(m_player.getObject());
-	if (player != NULL)
+	if (player != nullptr)
 	{
 		MessageQueueStopNpcConversation * const message = new MessageQueueStopNpcConversation;
 
@@ -110,13 +110,13 @@ void NpcConversation::sendMessage(const Response & npcMessage, const Unicode::St
 	TangibleObject * const player = safe_cast<TangibleObject *>(m_player.getObject());
 	TangibleObject * const npc    = safe_cast<TangibleObject *>(m_npc.getObject());
 
-	if (player == NULL)
+	if (player == nullptr)
 	{
-		if (npc != NULL)
+		if (npc != nullptr)
 			npc->removeConversation(m_player);
 		return;
 	}
-	if (npc == NULL)
+	if (npc == nullptr)
 	{
 		player->endNpcConversation();
 		return;
@@ -216,13 +216,13 @@ void NpcConversation::sendResponses()
 
 	const int count = static_cast<int>(m_responses->size());
 
-	if (player == NULL)
+	if (player == nullptr)
 	{
-		if (npc != NULL)
+		if (npc != nullptr)
 			npc->removeConversation(m_player);
 		return;
 	}
-	if (npc == NULL)
+	if (npc == nullptr)
 	{
 		player->endNpcConversation();
 		return;

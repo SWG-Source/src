@@ -75,7 +75,7 @@ void CollisionNotification::purgeQueue ( void )
 
 		Object * object = entry.m_object;
 
-		if(object == NULL) continue;
+		if(object == nullptr) continue;
 
 		if(entry.m_added)
 		{

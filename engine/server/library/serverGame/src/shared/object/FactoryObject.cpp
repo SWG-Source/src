@@ -58,7 +58,7 @@ static const StringId STRING_ID_CANT_SPLIT("system_msg", "cant_split_crate");
 
 //----------------------------------------------------------------------
 
-const SharedObjectTemplate * FactoryObject::m_defaultSharedTemplate = NULL;
+const SharedObjectTemplate * FactoryObject::m_defaultSharedTemplate = nullptr;
 
 
 //-----------------------------------------------------------------------
@@ -176,7 +176,7 @@ void FactoryObject::onLoadedFromDatabase()
 	if (getLoadContents() && getCount() > 0)
 	{
 		// verify that we have a contained object
-		if (getContainedObject() == NULL)
+		if (getContainedObject() == nullptr)
 		{
 			WARNING_STRICT_FATAL(true, ("Factory object %s has a count of %d, "
 				"but no contained object! We are setting the count to 0.", 
@@ -197,11 +197,11 @@ const SharedObjectTemplate * FactoryObject::getDefaultSharedTemplate() const
 {
 	static const ConstCharCrcLowerString templateName("object/factory/base/shared_factory_default.iff");
 
-	if (m_defaultSharedTemplate == NULL)
+	if (m_defaultSharedTemplate == nullptr)
 	{
 		m_defaultSharedTemplate = safe_cast<const SharedObjectTemplate *>(ObjectTemplateList::fetch(templateName));
-		WARNING_STRICT_FATAL(m_defaultSharedTemplate == NULL, ("Cannot create default shared object template %s", templateName.getString()));
-		if (m_defaultSharedTemplate != NULL)
+		WARNING_STRICT_FATAL(m_defaultSharedTemplate == nullptr, ("Cannot create default shared object template %s", templateName.getString()));
+		if (m_defaultSharedTemplate != nullptr)
 			ExitChain::add (removeDefaultTemplate, "FactoryObject::removeDefaultTemplate");
 	}
 	return m_defaultSharedTemplate;
@@ -214,10 +214,10 @@ const SharedObjectTemplate * FactoryObject::getDefaultSharedTemplate() const
  */
 void FactoryObject::removeDefaultTemplate()
 {
-	if (m_defaultSharedTemplate != NULL)
+	if (m_defaultSharedTemplate != nullptr)
 	{
 		m_defaultSharedTemplate->releaseReference();
-		m_defaultSharedTemplate = NULL;
+		m_defaultSharedTemplate = nullptr;
 	}
 }	// FactoryObject::removeDefaultTemplate
 
@@ -288,10 +288,10 @@ bool FactoryObject::isFactoryOk() const
 		char errBuffer[BUFSIZE];
 		const DraftSchematicObject * draft = DraftSchematicObject::getSchematic(
 			getDraftSchematic());
-		if (draft != NULL)
+		if (draft != nullptr)
 		{
 			// make sure we have an object instance defined
-			if (getCount() > 0 && getContainedObject() == NULL)
+			if (getCount() > 0 && getContainedObject() == nullptr)
 			{
 				sprintf(errBuffer, "not having a contained object instance");
 				factoryOk = false;
@@ -307,16 +307,16 @@ bool FactoryObject::isFactoryOk() const
 		{
 			// send out logs/emails
 			m_badFactoryLogged = true;
-			const ServerObject * owner = NULL;
+			const ServerObject * owner = nullptr;
 			const Object * object = NetworkIdManager::getObjectById(getOwnerId());
-			if (object != NULL)
+			if (object != nullptr)
 				owner = object->asServerObject();
 
 			// log that the schematic can't be used
 			LOG("CustomerService", ("Crafting: factory crate object %s "
 				"owned by %s is unuseable due to %s", getNetworkId().getValueString().c_str(), 
 				PlayerObject::getAccountDescription(owner).c_str(), errBuffer));
-			if (owner != NULL)
+			if (owner != nullptr)
 			{
 				// send mail to the owner telling them their schematic can't be used
 				const static StringId message("system_msg", "crate_unuseable");
@@ -351,7 +351,7 @@ bool FactoryObject::canDestroy() const
 			OutOfBandPackager::pack(pp, -1, oob);
 		}
 		const Object * const owner = NetworkIdManager::getObjectById(getOwnerId());
-		if (owner != NULL)
+		if (owner != nullptr)
 		{
 			Chat::sendSystemMessage(*(owner->asServerObject()), Unicode::emptyString, oob);
 		}
@@ -367,14 +367,14 @@ bool FactoryObject::canDestroy() const
 void FactoryObject::onContainerTransfer(ServerObject * destination,
 	ServerObject* transferer)
 {
-	if (inCraftingSession() && destination != NULL &&
+	if (inCraftingSession() && destination != nullptr &&
 		destination->getNetworkId() != m_craftingSchematic.get())
 	{
 		if (!isFactoryOk())
 			return;
 
 		Object * schematic = m_craftingSchematic.get().getObject();
-		if (schematic == NULL)
+		if (schematic == nullptr)
 		{
 			WARNING(true, ("FactoryObject::onContainerTransfer: could not get the schematic for factory %s", getNetworkId().getValueString().c_str()));
 			return;
@@ -387,13 +387,13 @@ void FactoryObject::onContainerTransfer(ServerObject * destination,
 			// our components to reference
 			if (m_craftingCount.get() != 0)
 			{
-				FactoryObject * newFactory = NULL;
+				FactoryObject * newFactory = nullptr;
 				if (getCount() > 1)
 				{
 					// make a new factory in the manf schematic
 					newFactory = makeCopy(*(m_craftingSchematic.get().getObject()->
 						asServerObject()), 1);
-					if (newFactory != NULL)
+					if (newFactory != nullptr)
 					{
 						// NOTE: potential dupe here, but the player shouldn't be able to
 						// remove the new factory without decreasing the component count
@@ -403,26 +403,26 @@ void FactoryObject::onContainerTransfer(ServerObject * destination,
 						// swap the contained item instances so that any current references
 						// will point to a local object
 						TangibleObject * myObject = const_cast<TangibleObject *>(getContainedObject());
-						if (myObject == NULL)
+						if (myObject == nullptr)
 						{
-							WARNING(true, ("FactoryObject::onContainerTransfer: getContainedObject for %s returned NULL", getNetworkId().getValueString().c_str()));
+							WARNING(true, ("FactoryObject::onContainerTransfer: getContainedObject for %s returned nullptr", getNetworkId().getValueString().c_str()));
 							return;
 						}
 						TangibleObject * newObject = const_cast<TangibleObject *>(newFactory->getContainedObject());
-						if (newObject == NULL)
+						if (newObject == nullptr)
 						{
-							WARNING(true, ("FactoryObject::onContainerTransfer: getContainedObject for %s returned NULL", newFactory->getNetworkId().getValueString().c_str()));
+							WARNING(true, ("FactoryObject::onContainerTransfer: getContainedObject for %s returned nullptr", newFactory->getNetworkId().getValueString().c_str()));
 							newFactory->permanentlyDestroy(DeleteReasons::SetupFailed);
 							return;
 						}
 						Container::ContainerErrorCode error;
-						if (!ContainerInterface::transferItemToVolumeContainer (*newFactory, *myObject, NULL, error))
+						if (!ContainerInterface::transferItemToVolumeContainer (*newFactory, *myObject, nullptr, error))
 						{
 							WARNING(true, ("FactoryObject::onContainerTransfer: could not transfer factory %s to container %s", newFactory->getNetworkId().getValueString().c_str(), myObject->getNetworkId().getValueString().c_str()));
 							newFactory->permanentlyDestroy(DeleteReasons::SetupFailed);
 							return;
 						}
-						if (!ContainerInterface::transferItemToVolumeContainer (*this, *newObject, NULL, error))
+						if (!ContainerInterface::transferItemToVolumeContainer (*this, *newObject, nullptr, error))
 						{
 							WARNING(true, ("FactoryObject::onContainerTransfer: could not transfer factory %s to container %s", getNetworkId().getValueString().c_str(), newObject->getNetworkId().getValueString().c_str()));
 							return;
@@ -434,7 +434,7 @@ void FactoryObject::onContainerTransfer(ServerObject * destination,
 					// make a new factory with one item, but don't destroy ourself
 					newFactory = makeCopy(*(m_craftingSchematic.get().getObject()->
 						asServerObject()), 1, false);
-					if (newFactory == NULL)
+					if (newFactory == nullptr)
 					{
 						WARNING(true, ("FactoryObject::onContainerTransfer: could not make a copy of factory %s", getNetworkId().getValueString().c_str()));
 						return;
@@ -448,9 +448,9 @@ void FactoryObject::onContainerTransfer(ServerObject * destination,
 				// update the crafting status of ourself and the new factory
 				ManufactureSchematicObject * schematic = safe_cast<ManufactureSchematicObject *>(
 					m_craftingSchematic.get().getObject());
-				if (schematic != NULL)
+				if (schematic != nullptr)
 				{
-					if (newFactory != NULL)
+					if (newFactory != nullptr)
 					{
 						// set up the new factory to have the same crafting info
 						// that we do
@@ -525,7 +525,7 @@ bool FactoryObject::inCraftingSession() const
 		return false;
 
 	// make sure the crafting schematic id is a valid object
-	if (m_craftingSchematic.get().getObject() == NULL)
+	if (m_craftingSchematic.get().getObject() == nullptr)
 	{
 		WARNING_STRICT_FATAL(true, ("FactoryObject %s has a schematic id of %s "
 			"that isn't a valid object!!!", getNetworkId().getValueString().c_str(),
@@ -598,7 +598,7 @@ bool FactoryObject::addObject()
 		if (getCount() == 0)
 		{
 			TangibleObject * object = manufactureObject();
-			if (object != NULL)
+			if (object != nullptr)
 			{
 				setObjectName(object->getObjectName());
 				setComplexity(object->getComplexity());
@@ -615,7 +615,7 @@ bool FactoryObject::addObject()
 		}
 		
 		const ServerObject * parent = safe_cast<const ServerObject *>(ContainerInterface::getFirstParentInWorld(*this));
-		if (parent != NULL)
+		if (parent != nullptr)
 			LOG("CustomerService", ("Crafting:incrementing count of crate %s (owner %s) to %d", getNetworkId().getValueString().c_str(), PlayerObject::getAccountDescription(parent->getOwnerId()).c_str(), getCount()));
 		else
 			LOG("CustomerService", ("Crafting:incrementing count of crate %s to %d", getNetworkId().getValueString().c_str(), getCount()));
@@ -645,7 +645,7 @@ bool FactoryObject::removeObject(ServerObject & destination)
 	if (!isFactoryOk())
 		return false;
 
-	if (getCount() > 0 && ContainerInterface::getVolumeContainer(destination) != NULL)
+	if (getCount() > 0 && ContainerInterface::getVolumeContainer(destination) != nullptr)
 	{
 		if (!getLoadContents())
 		{
@@ -665,7 +665,7 @@ bool FactoryObject::removeObject(ServerObject & destination)
 		else
 		{
 			// new style factory
-			TangibleObject * object = NULL;
+			TangibleObject * object = nullptr;
 			if (getCount() > 1)
 			{
 				object = manufactureObject();
@@ -686,7 +686,7 @@ bool FactoryObject::removeObject(ServerObject & destination)
 					}
 					const CachedNetworkId & id = *(container->begin());
 					Object * obj = id.getObject();
-					if (obj != NULL && obj->asServerObject()->asTangibleObject() != NULL)
+					if (obj != nullptr && obj->asServerObject()->asTangibleObject() != nullptr)
 					{
 						object = obj->asServerObject()->asTangibleObject();
 					}
@@ -706,15 +706,15 @@ bool FactoryObject::removeObject(ServerObject & destination)
 					object = manufactureObject();
 				}
 			}
-			if (object != NULL)
+			if (object != nullptr)
 			{
 				Container::ContainerErrorCode error;
-				if (ContainerInterface::transferItemToVolumeContainer(destination, *object, NULL, error))
+				if (ContainerInterface::transferItemToVolumeContainer(destination, *object, nullptr, error))
 				{
 					incrementCount(-1);
 
 					const ServerObject * parent = safe_cast<const ServerObject *>(ContainerInterface::getFirstParentInWorld(destination));
-					if (parent != NULL)
+					if (parent != nullptr)
 						LOG("CustomerService", ("Crafting:removed object %s from crate %s to container %s of player %s. Crate count = %d", object->getNetworkId().getValueString().c_str(), getNetworkId().getValueString().c_str(), destination.getNetworkId().getValueString().c_str(), PlayerObject::getAccountDescription(parent->getNetworkId()).c_str(), getCount()));
 					else
 						LOG("CustomerService", ("Crafting:removed object %s from crate %s to container %s. Crate count = %d", object->getNetworkId().getValueString().c_str(), getNetworkId().getValueString().c_str(), destination.getNetworkId().getValueString().c_str(), getCount()));
@@ -828,14 +828,14 @@ void FactoryObject::onContainedObjectLoaded(const NetworkId &oid)
 
 	// check if the object is on our pending list
 	ServerObject * destination = removeIdFromPendingList(oid);
-	if (destination != NULL)
+	if (destination != nullptr)
 	{
 		TangibleObject * item = safe_cast<TangibleObject *>(NetworkIdManager::getObjectById(
 			oid));
-		if (item != NULL)
+		if (item != nullptr)
 		{
 			Container::ContainerErrorCode error = Container::CEC_Success;
-			if (ContainerInterface::transferItemToVolumeContainer(*destination, *item, NULL, error))
+			if (ContainerInterface::transferItemToVolumeContainer(*destination, *item, nullptr, error))
 			{
 				// if that was the last item of ours, delete ourself
 				if (getCount() == 0 && getPendingListCount() == 0)
@@ -849,7 +849,7 @@ void FactoryObject::onContainedObjectLoaded(const NetworkId &oid)
 				item->unload();
 				// tell the owner something went wrong
 				Object * owner = NetworkIdManager::getObjectById(getOwnerId());
-				if (owner != NULL)
+				if (owner != nullptr)
 				{
 					ContainerInterface::sendContainerMessageToClient(*safe_cast<ServerObject*>(owner), error);
 				}
@@ -873,35 +873,35 @@ void FactoryObject::onContainedObjectLoaded(const NetworkId &oid)
  * functionality of ManufactureSchematicObject::manufactureObject; if that
  * function changes, this one should too.
  *
- * @return the new object, or NULL on error
+ * @return the new object, or nullptr on error
  */
 TangibleObject * FactoryObject::manufactureObject()
 {
 	if (!isFactoryOk())
-		return NULL;
+		return nullptr;
 
 	const DraftSchematicObject * draftSchematic = DraftSchematicObject::getSchematic(getDraftSchematic());
 
-	if (draftSchematic == NULL)
+	if (draftSchematic == nullptr)
 	{
-		return NULL;
+		return nullptr;
 	}
-	if (draftSchematic->getCraftedObjectTemplate() == NULL)
+	if (draftSchematic->getCraftedObjectTemplate() == nullptr)
 	{
 		DEBUG_WARNING(true, ("Draft schematic %s does not have a craftable object template!\n", draftSchematic->getTemplateName()));
-		return NULL;
+		return nullptr;
 	}
 
 	// create the item
 	TangibleObject * const object = dynamic_cast<TangibleObject *>(
 		ServerWorld::createNewObject(*draftSchematic->getCraftedObjectTemplate(),
 		*this, false));
-	if (object == NULL)
+	if (object == nullptr)
 	{
 		DEBUG_WARNING(true, ("Player %s failed to create object for template "
 			"%s.\n", getOwnerId().getValueString().c_str(),
 			draftSchematic->getCraftedObjectTemplate()->getName()));
-		return NULL;
+		return nullptr;
 	}
 
 	if (!getAssignedObjectName().empty())
@@ -928,7 +928,7 @@ TangibleObject * FactoryObject::manufactureObject()
 	// set the creator xp type from the schematic template
 	const ServerObjectTemplate * schematicTemplate = safe_cast<const
 		ServerObjectTemplate *>(draftSchematic->getObjectTemplate());
-	if (schematicTemplate != NULL && schematicTemplate->getXpPointsCount() > 0)
+	if (schematicTemplate != nullptr && schematicTemplate->getXpPointsCount() > 0)
 	{
 		ServerObjectTemplate::Xp xpData;
 		schematicTemplate->getXpPoints(xpData, 0);
@@ -948,7 +948,7 @@ TangibleObject * FactoryObject::manufactureObject()
 	if (result == SCRIPT_OVERRIDE)
 	{
 		object->permanentlyDestroy(DeleteReasons::Script);
-		return NULL;
+		return nullptr;
 	}
 
 	return object;
@@ -968,10 +968,10 @@ const char * FactoryObject::getContainedTemplateName() const
 		const VolumeContainer * container = ContainerInterface::getVolumeContainer(*this);
 		const CachedNetworkId & id = *(container->begin());
 		const Object * obj = id.getObject();
-		if (obj != NULL && obj->asServerObject() != NULL)
+		if (obj != nullptr && obj->asServerObject() != nullptr)
 			return obj->asServerObject()->getTemplateName();
 	}
-	return NULL;
+	return nullptr;
 }	// FactoryObject::getContainedTemplateName
 
 // ----------------------------------------------------------------------
@@ -997,10 +997,10 @@ static std::string sharedTemplateName;
 		const VolumeContainer * container = ContainerInterface::getVolumeContainer(*this);
 		const CachedNetworkId & id = *(container->begin());
 		const Object * obj = id.getObject();
-		if (obj != NULL && obj->asServerObject() != NULL)
+		if (obj != nullptr && obj->asServerObject() != nullptr)
 			return obj->asServerObject()->getSharedTemplateName();
 	}
-	return NULL;
+	return nullptr;
 }	// FactoryObject::getContainedSharedTemplateName
 
 // ----------------------------------------------------------------------
@@ -1017,10 +1017,10 @@ const ObjectTemplate * FactoryObject::getContainedObjectTemplate() const
 		const VolumeContainer * container = ContainerInterface::getVolumeContainer(*this);
 		const CachedNetworkId & id = *(container->begin());
 		const Object * obj = id.getObject();
-		if (obj != NULL && obj->asServerObject() != NULL)
+		if (obj != nullptr && obj->asServerObject() != nullptr)
 			return obj->asServerObject()->getObjectTemplate();
 	}
-	return NULL;
+	return nullptr;
 }	// FactoryObject::getContainedObjectTemplate
 
 // ----------------------------------------------------------------------
@@ -1037,12 +1037,12 @@ const TangibleObject * FactoryObject::getContainedObject() const
 		const VolumeContainer * container = ContainerInterface::getVolumeContainer(*this);
 		const CachedNetworkId & id = *(container->begin());
 		const Object * obj = id.getObject();
-		if (obj != NULL && obj->asServerObject() != NULL)
+		if (obj != nullptr && obj->asServerObject() != nullptr)
 		{
 			return obj->asServerObject()->asTangibleObject();
 		}
 	}
-	return NULL;
+	return nullptr;
 }	// FactoryObject::getContainedObject
 
 // ----------------------------------------------------------------------
@@ -1109,7 +1109,7 @@ ServerObject * FactoryObject::removeIdFromPendingList(const NetworkId & id)
 
 	NetworkId objectId;
 	if (!pendingList.getItem(idString,objectId))
-		return NULL;
+		return nullptr;
 
 	ServerObject * const object = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(objectId));
 	removeObjVarItem(pendingList.getContextName() + idString);
@@ -1415,7 +1415,7 @@ FactoryObject * FactoryObject::makeCopy(ServerObject & destination, int count,
 	bool destroySource)
 {
 	if (!isFactoryOk())
-		return NULL;
+		return nullptr;
 
 	// don't allow making a copy if we are an old crate
 	if (!getLoadContents())
@@ -1428,52 +1428,52 @@ FactoryObject * FactoryObject::makeCopy(ServerObject & destination, int count,
 			OutOfBandPackager::pack(pp, -1, oob);
 		}
 		const Object * const owner = NetworkIdManager::getObjectById(getOwnerId());
-		if (owner != NULL)
+		if (owner != nullptr)
 		{
 			Chat::sendSystemMessage(*(owner->asServerObject()), Unicode::emptyString, oob);
 		}
-		return NULL;
+		return nullptr;
 	}
 
 	if (count <= 0)
 	{
 		WARNING_STRICT_FATAL(true, ("FactoryObject::makeCopy %s passed invalid "
 			"count %d", getNetworkId().getValueString().c_str(), count));
-		return NULL;
+		return nullptr;
 	}
 	if (count > getCount())
 	{
 		WARNING_STRICT_FATAL(true, ("FactoryObject::makeCopy %s given count %d "
 			"that is > than our count %d", getNetworkId().getValueString().c_str(),
 			count, getCount()));
-		return NULL;
+		return nullptr;
 	}
 
 	VolumeContainer *destVolumeContainer = ContainerInterface::getVolumeContainer(destination);
 	
-	if (destVolumeContainer == NULL)
+	if (destVolumeContainer == nullptr)
 	{
 		WARNING_STRICT_FATAL(true, ("FactoryObject::makeCopy %s passed "
 			"destination %s that is not a volume container",
 			getNetworkId().getValueString().c_str(),
 			destination.getNetworkId().getValueString().c_str()));
-		return NULL;
+		return nullptr;
 	}
 
 	// create the new factory
-	if (safe_cast<const ServerObjectTemplate *>(getObjectTemplate()) == NULL)
+	if (safe_cast<const ServerObjectTemplate *>(getObjectTemplate()) == nullptr)
 	{
 		WARNING_STRICT_FATAL(true, ("FactoryObject::makeCopy: %s has no object template!", getNetworkId().getValueString().c_str()));
-		return NULL;
+		return nullptr;
 	}
 	FactoryObject * newFactory = safe_cast<FactoryObject *>(ServerWorld::createNewObject(
 		*safe_cast<const ServerObjectTemplate *>(getObjectTemplate()), destination,
 		false));
-	if (newFactory == NULL)
+	if (newFactory == nullptr)
 	{
 		WARNING_STRICT_FATAL(true, ("FactoryObject::makeCopy %s could not create "
 			"the new factory", getNetworkId().getValueString().c_str()));
-		return NULL;
+		return nullptr;
 	}
 
 	// copy our objvars and scripts to the new factory
@@ -1523,11 +1523,11 @@ FactoryObject * FactoryObject::makeCopy(ServerObject & destination, int count,
 		// move our contained object to the new factory, and delete ourself if
 		// we aren't already being deleted
 		const TangibleObject * object = FactoryObject::getContainedObject();
-		if (object != NULL)
+		if (object != nullptr)
 		{
 			Container::ContainerErrorCode error;
 			ContainerInterface::transferItemToVolumeContainer(*newFactory,
-				*const_cast<TangibleObject *>(object), NULL, error);
+				*const_cast<TangibleObject *>(object), nullptr, error);
 			newFactory->setCount(count);
 			setCount(0);
 			if (destroySource && !isBeingDestroyed())
@@ -1545,7 +1545,7 @@ FactoryObject * FactoryObject::makeCopy(ServerObject & destination, int count,
 		else
 		{
 			newFactory->permanentlyDestroy(DeleteReasons::SetupFailed);
-			newFactory = NULL;
+			newFactory = nullptr;
 		}
 	}
 	return newFactory;
@@ -1575,7 +1575,7 @@ void FactoryObject::getAttributes(AttributeVector & data) const
 	{
 		// new-style crate
 		const ServerObject * const storedObject = getContainedObject();
-		if (storedObject != NULL)
+		if (storedObject != nullptr)
 		{
 			data.reserve (data.size () + 2);
 

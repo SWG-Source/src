@@ -63,7 +63,7 @@ void CitizenRankDataTable::install()
 		FATAL((columnRankSlotId < 0), ("column \"rankSlotId\" not found in %s", cs_citizenRankDataTableName));
 		FATAL((columnTitle < 0), ("column \"title\" not found in %s", cs_citizenRankDataTableName));
 
-		CitizenRankDataTable::CitizenRank const * currentRank = NULL;
+		CitizenRankDataTable::CitizenRank const * currentRank = nullptr;
 
 		int const numRows = table->getNumRows();
 		std::string rankName, alternateTitle;
@@ -199,7 +199,7 @@ CitizenRankDataTable::CitizenRank const * CitizenRankDataTable::getRank(std::str
 	if (iterFind != s_allCitizenRanksByName.end())
 		return iterFind->second;
 
-	return NULL;
+	return nullptr;
 }
 
 //----------------------------------------------------------------------
@@ -210,7 +210,7 @@ CitizenRankDataTable::CitizenRank const * CitizenRankDataTable::isARankTitle(std
 	if (iterFind != s_allCitizenRanksByTitle.end())
 		return iterFind->second;
 
-	return NULL;
+	return nullptr;
 }
 
 // ======================================================================

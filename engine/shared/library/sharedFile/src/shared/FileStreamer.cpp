@@ -109,11 +109,11 @@ int FileStreamer::getFileSize(const char *fileName)
 FileStreamer::File *FileStreamer::open(const char *fileName, bool randomAccess)
 {
 	DEBUG_FATAL(!ms_installed, ("not installed"));
-	DEBUG_FATAL(!fileName, ("file name null"));
+	DEBUG_FATAL(!fileName, ("file name nullptr"));
 
 	OsFile *osFile = OsFile::open(fileName, randomAccess);
 	if (!osFile)
-		return NULL;
+		return nullptr;
 
 #if PRODUCTION
 	// Stop checking the fileName if one of these returns true
@@ -150,7 +150,7 @@ void FileStreamer::File::install(bool useThread)
 void FileStreamer::File::remove()
 {
 	delete ms_memoryBlockManager;
-	ms_memoryBlockManager = NULL;
+	ms_memoryBlockManager = nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -192,7 +192,7 @@ FileStreamer::File::~File()
 
 bool FileStreamer::File::isOpen() const
 {
-	return m_osFile != NULL;
+	return m_osFile != nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -249,7 +249,7 @@ void FileStreamer::File::close()
 	if (isOpen())
 	{
 		delete m_osFile;
-		m_osFile = NULL;
+		m_osFile = nullptr;
 	}
 }
 

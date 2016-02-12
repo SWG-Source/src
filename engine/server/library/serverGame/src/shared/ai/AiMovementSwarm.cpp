@@ -104,10 +104,10 @@ void AiMovementSwarm::alter ( float time )
 	}
 
 	// update the offset from our target we want to go to
-	if (m_target.getObject() != NULL)
+	if (m_target.getObject() != nullptr)
 	{
 		const CreatureObject * owner = m_controller->getCreature();
-		if (owner != NULL)
+		if (owner != nullptr)
 		{
 			offsetMap::const_iterator found = s_offsetMap.find(CachedNetworkId(*owner));
 			if (found != s_offsetMap.end())
@@ -179,7 +179,7 @@ AiStateResult AiMovementSwarm::triggerWaiting()
 {
 	// note: don't use the m_target position function, because it includes the offset position
 	const Object * target = m_target.getObject();
-	if (target != NULL)
+	if (target != nullptr)
 		m_controller->turnToward(target->getParentCell(), target->getPosition_p());
 	return AiMovementFollow::triggerWaiting();
 }
@@ -196,7 +196,7 @@ void AiMovementSwarm::init()
 
 	const CreatureObject * creatureOwner = m_controller->getCreature();
 	const CreatureObject * creatureTarget = CreatureObject::asCreatureObject(m_target.getObject());
-	if (creatureOwner != NULL && creatureTarget != NULL)
+	if (creatureOwner != nullptr && creatureTarget != nullptr)
 	{
 		CreatureWatcher watchedCreature(creatureOwner);
 		targetMap::iterator found = s_swarmMap.find(CachedNetworkId(*creatureTarget));
@@ -226,7 +226,7 @@ void AiMovementSwarm::cleanup()
 	// note: using static_cast instead of safe_cast because the owner may be in the process of being destructed
 	const CreatureObject * owner = static_cast<const CreatureObject *>(m_controller->getOwner());
 	const CreatureObject * target = static_cast<const CreatureObject *>(m_target.getObject());
-	if (owner != NULL && target != NULL)
+	if (owner != nullptr && target != nullptr)
 	{
 		targetMap::iterator found = s_swarmMap.find(CachedNetworkId(*target));
 		if (found != s_swarmMap.end())
@@ -258,7 +258,7 @@ void AiMovementSwarm::computeGoals()
 	for (targetMap::iterator i = s_swarmMap.begin(); i != s_swarmMap.end();)
 	{
 		const CreatureObject * target = CreatureObject::asCreatureObject((*i).first.getObject());
-		if (target != NULL && !target->isDead())
+		if (target != nullptr && !target->isDead())
 		{
 			computeGoals(*target, (*i).second);
 			if ((*i).second.empty())
@@ -294,16 +294,16 @@ void AiMovementSwarm::computeGoals(const CreatureObject & target, std::vector<Cr
 	{
 		// determine movement to target
 		const CreatureObject * mover = movers[i];
-		const AICreatureController * controller = NULL;
-		const AiMovementSwarm * swarmMovement = NULL;
-		if (mover != NULL)
+		const AICreatureController * controller = nullptr;
+		const AiMovementSwarm * swarmMovement = nullptr;
+		if (mover != nullptr)
 		{
 			controller = AICreatureController::asAiCreatureController(mover->getController());
-			if (controller != NULL)
+			if (controller != nullptr)
 				swarmMovement = dynamic_cast<const AiMovementSwarm *>(controller->getCurrentMovement());
 		}
 
-		if (mover == NULL || mover->isDead())
+		if (mover == nullptr || mover->isDead())
 		{
 			// dump the mover from our list
 			--count;
@@ -314,7 +314,7 @@ void AiMovementSwarm::computeGoals(const CreatureObject & target, std::vector<Cr
 			--i;
 			continue;
 		}
-		if (swarmMovement == NULL)
+		if (swarmMovement == nullptr)
 		{
 			// there are legitimate cases where a creature is in a swarm list but doesn't
 			// have its movement as AiMovementSwarm, such as when the movement is 
@@ -337,7 +337,7 @@ void AiMovementSwarm::computeGoals(const CreatureObject & target, std::vector<Cr
 		for (int j = i + 1; j < count; ++j)
 		{
 			const CreatureObject * blocker = movers[j];
-			if (blocker == NULL || blocker->isDead())
+			if (blocker == nullptr || blocker->isDead())
 			{
 				continue;
 			}
@@ -361,7 +361,7 @@ void AiMovementSwarm::computeGoals(const CreatureObject & target, std::vector<Cr
 	// update the desired destinations of all the movers for when they are altered
 	for (i = 0; i < count; ++i)
 	{
-		if (movers[i] != NULL)
+		if (movers[i] != nullptr)
 			s_offsetMap[CachedNetworkId(*movers[i])] = movement[i];
 	}
 }

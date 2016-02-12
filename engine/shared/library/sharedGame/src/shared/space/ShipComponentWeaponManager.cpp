@@ -76,7 +76,7 @@ void ShipComponentWeaponManager::install()
 	
 	DataTable * const dt = DataTableManager::getTable(filename, true);
 
-	if (dt == NULL)
+	if (dt == nullptr)
 	{
 		WARNING(true, ("ShipComponentWeaponManager no such datatable [%s]", filename.c_str()));
 		return;
@@ -90,7 +90,7 @@ void ShipComponentWeaponManager::install()
 		ShipComponentDescriptor const * const shipComponentDescriptor = 
 			ShipComponentDescriptor::findShipComponentDescriptorByName(TemporaryCrcString(componentName.c_str(), true));
 		
-		if (shipComponentDescriptor == NULL)
+		if (shipComponentDescriptor == nullptr)
 		{
 			WARNING(true, ("getComponentType datatable specified invalid component [%s]", componentName.c_str()));
 			continue;

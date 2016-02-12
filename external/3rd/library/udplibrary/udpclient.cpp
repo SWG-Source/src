@@ -106,7 +106,7 @@ int main(int argc, char **argv)
 	printf("Connecting to: %s,%d.", connectIp, connectPort);
 	UdpConnection *myConnection = myUdpManager->EstablishConnection(connectIp, connectPort);
 	myConnection->SetHandler(&myConnectionHandler);
-	assert(myConnection != NULL);
+	assert(myConnection != nullptr);
 	int count = 0;
 	while (myConnection->GetStatus() == UdpConnection::cStatusNegotiating)
 	{
@@ -181,7 +181,7 @@ int main(int argc, char **argv)
 		if (myConnection->TotalPendingBytes() == 0)
 		{
 				// send another packet
-			SimpleLogicalPacket *lp = new SimpleLogicalPacket(NULL, 30000000);
+			SimpleLogicalPacket *lp = new SimpleLogicalPacket(nullptr, 30000000);
 			int dlen = lp->GetDataLen();
 			char *ptr = (char *)lp->GetDataPtr();
 

@@ -83,13 +83,13 @@ void PixCounterNamespace::remove()
 {
 #ifdef _WIN32
 	FreeLibrary(ms_pixDll);
-	ms_pixDll = NULL;
+	ms_pixDll = nullptr;
 #endif
 
-	ms_setCounterFloat = NULL;
-	ms_setCounterInt = NULL;
-	ms_setCounterInt64 = NULL;
-	ms_setCounterString = NULL;
+	ms_setCounterFloat = nullptr;
+	ms_setCounterInt = nullptr;
+	ms_setCounterInt64 = nullptr;
+	ms_setCounterString = nullptr;
 
 	// Make sure the counter memory gets freed at this point
 	Counters().swap(ms_counters);
@@ -379,7 +379,7 @@ PixCounter::String::String()
 : Counter(),
 	m_enabled(false),
 	m_lastFrameValue(),
-	m_lastFrameValuePointer(NULL),
+	m_lastFrameValuePointer(nullptr),
 	m_currentValue()
 {
 }

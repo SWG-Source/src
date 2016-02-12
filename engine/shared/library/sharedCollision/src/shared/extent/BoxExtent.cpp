@@ -394,7 +394,7 @@ void BoxExtent::drawDebugShapes ( DebugShapeRenderer * renderer ) const
 
 #ifdef _DEBUG
 
-	if(renderer == NULL) return;
+	if(renderer == nullptr) return;
 
 	renderer->setColor( VectorArgb::solidBlue );
 	renderer->drawBox(m_box);

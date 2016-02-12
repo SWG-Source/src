@@ -23,7 +23,7 @@ unsigned VChatClient::GetAccountEx(const std::string &avatarName,
 {
 
 	Reset();
-	VChatAPI::GetAccount(avatarName, game, world, userID, avatarID, NULL);
+	VChatAPI::GetAccount(avatarName, game, world, userID, avatarID, nullptr);
 
 	while(!IsDone() && !HasFailed())
 	{
@@ -69,7 +69,7 @@ unsigned VChatClient::DeactivateVoiceAccount(const std::string &avatarName,
 {
 
 	Reset();
-	VChatAPI::DeactivateVoiceAccount(avatarName, game, world, NULL);
+	VChatAPI::DeactivateVoiceAccount(avatarName, game, world, nullptr);
 
 	while(!IsDone() && !HasFailed())
 	{
@@ -99,7 +99,7 @@ unsigned VChatClient::GetChannelEx( const std::string &channelName,
 									bool persistent)
 {
 	Reset();
-	VChatAPI::GetChannel(channelName, game, server, description, password, limit, persistent, NULL);
+	VChatAPI::GetChannel(channelName, game, server, description, password, limit, persistent, nullptr);
 
 	while(!IsDone() && !HasFailed())
 	{
@@ -146,7 +146,7 @@ unsigned VChatClient::GetProximityChannelEx(const std::string &channelName,
 											unsigned distModel)
 {
 	Reset();
-	VChatAPI::GetProximityChannel(channelName, game, server, description, password, limit, persistent, maxRange, clamping, rollOff, maxGain, distModel, NULL);
+	VChatAPI::GetProximityChannel(channelName, game, server, description, password, limit, persistent, maxRange, clamping, rollOff, maxGain, distModel, nullptr);
 
 	while(!IsDone() && !HasFailed())
 	{
@@ -183,7 +183,7 @@ unsigned VChatClient::ChannelCommandEx( const std::string &srcUserName,
 										unsigned banTimeout)
 {
 	Reset();
-	VChatAPI::ChannelCommand(srcUserName, destUserName, destChannelAddress, command, banTimeout, NULL);
+	VChatAPI::ChannelCommand(srcUserName, destUserName, destChannelAddress, command, banTimeout, nullptr);
 
 	while(!IsDone() && !HasFailed())
 	{
@@ -211,7 +211,7 @@ unsigned VChatClient::ChangePasswordEx(const std::string &channelName,
 									   const std::string &password)
 {
 	Reset();
-	VChatAPI::ChangePassword(channelName, game, server, password, NULL);
+	VChatAPI::ChangePassword(channelName, game, server, password, nullptr);
 
 	while(!IsDone() && !HasFailed())
 	{
@@ -236,7 +236,7 @@ void VChatClient::OnChangePassword( unsigned track,
 unsigned VChatClient::GetAllChannelsEx()
 {
 	Reset();
-	VChatAPI::GetAllChannels(NULL);
+	VChatAPI::GetAllChannels(nullptr);
 
 	while(!IsDone() && !HasFailed())
 	{
@@ -274,7 +274,7 @@ unsigned VChatClient::DeleteChannelEx(const std::string &channelName,
 									  const std::string &server)
 {
 	Reset();
-	VChatAPI::DeleteChannel(channelName, game, server, NULL);
+	VChatAPI::DeleteChannel(channelName, game, server, nullptr);
 
 	while(!IsDone() && !HasFailed())
 	{
@@ -301,7 +301,7 @@ unsigned VChatClient::SetBanStatusEx(unsigned userID,
 									 unsigned banStatus)
 {
 	Reset();
-	VChatAPI::SetBanStatus(userID, banStatus, NULL);
+	VChatAPI::SetBanStatus(userID, banStatus, nullptr);
 
 	while(!IsDone() && !HasFailed())
 	{
@@ -328,7 +328,7 @@ unsigned VChatClient::GetChannelInfoEx( const std::string &channelName,
 										const std::string &server)
 {
 	Reset();
-	VChatAPI::GetChannelInfo(channelName, game, server, NULL);
+	VChatAPI::GetChannelInfo(channelName, game, server, nullptr);
 
 	while(!IsDone() && !HasFailed())
 	{
@@ -369,7 +369,7 @@ unsigned VChatClient::GetChannelV2Ex(const std::string &channelName,
 								     bool persistent)
 {
 	Reset();
-	VChatAPI::GetChannelV2(channelName, game, server, description, password, limit, persistent, NULL);
+	VChatAPI::GetChannelV2(channelName, game, server, description, password, limit, persistent, nullptr);
 
 	while(!IsDone() && !HasFailed())
 	{
@@ -419,7 +419,7 @@ unsigned VChatClient::AddCharacterChannelEx(const unsigned stationID,
 	Reset();
 	VChatAPI::AddCharacterChannel(stationID, avatarID, characterName, worldName, 
 								  gameCode, channelType, channelDescription, 
-								  password, channelAddress, locale, NULL);
+								  password, channelAddress, locale, nullptr);
 
 	while(!IsDone() && !HasFailed())
 	{
@@ -449,7 +449,7 @@ unsigned VChatClient::RemoveCharacterChannelEx( const unsigned stationID,
 {
 	Reset();
 	VChatAPI::RemoveCharacterChannel(stationID, avatarID, characterName, worldName, 
-									gameCode, channelType, NULL);
+									gameCode, channelType, nullptr);
 
 	while(!IsDone() && !HasFailed())
 	{
@@ -477,7 +477,7 @@ unsigned VChatClient::GetCharacterChannelEx(const unsigned stationID,
 										const std::string &gameCode)
 {
 	Reset();
-	VChatAPI::GetCharacterChannel(stationID, characterName, worldName, gameCode, NULL);
+	VChatAPI::GetCharacterChannel(stationID, characterName, worldName, gameCode, nullptr);
 
 	while(!IsDone() && !HasFailed())
 	{

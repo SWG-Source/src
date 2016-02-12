@@ -86,10 +86,10 @@ Tag ServerVehicleObjectTemplate::getTemplateVersion(void) const
  */
 Tag ServerVehicleObjectTemplate::getHighestTemplateVersion(void) const
 {
-	if (m_baseData == NULL)
+	if (m_baseData == nullptr)
 		return m_templateVersion;
 	const ServerVehicleObjectTemplate * base = dynamic_cast<const ServerVehicleObjectTemplate *>(m_baseData);
-	if (base == NULL)
+	if (base == nullptr)
 		return m_templateVersion;
 	return std::max(m_templateVersion, base->getHighestTemplateVersion());
 } // ServerVehicleObjectTemplate::getHighestTemplateVersion
@@ -108,9 +108,9 @@ FloatParam * ServerVehicleObjectTemplate::getFloatParam(const char *name, bool d
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getFloatParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_currentFuel;
 		}
@@ -122,9 +122,9 @@ FloatParam * ServerVehicleObjectTemplate::getFloatParam(const char *name, bool d
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getFloatParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_maxFuel;
 		}
@@ -136,9 +136,9 @@ FloatParam * ServerVehicleObjectTemplate::getFloatParam(const char *name, bool d
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getFloatParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_consumpsion;
 		}
@@ -146,7 +146,7 @@ FloatParam * ServerVehicleObjectTemplate::getFloatParam(const char *name, bool d
 	}
 	else
 		return ServerTangibleObjectTemplate::getFloatParam(name, deepCheck, index);
-	return NULL;
+	return nullptr;
 }	//ServerVehicleObjectTemplate::getFloatParam
 
 BoolParam * ServerVehicleObjectTemplate::getBoolParam(const char *name, bool deepCheck, int index)
@@ -162,9 +162,9 @@ StringParam * ServerVehicleObjectTemplate::getStringParam(const char *name, bool
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getStringParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_fuelType;
 		}
@@ -172,7 +172,7 @@ StringParam * ServerVehicleObjectTemplate::getStringParam(const char *name, bool
 	}
 	else
 		return ServerTangibleObjectTemplate::getStringParam(name, deepCheck, index);
-	return NULL;
+	return nullptr;
 }	//ServerVehicleObjectTemplate::getStringParam
 
 StringIdParam * ServerVehicleObjectTemplate::getStringIdParam(const char *name, bool deepCheck, int index)
@@ -255,12 +255,12 @@ char paramName[MAX_NAME_SIZE];
 		file.read_string(baseFilename);
 		file.exitChunk();
 		const ObjectTemplate *base = ObjectTemplateList::fetch(baseFilename);
-		DEBUG_WARNING(base == NULL, ("was unable to load base template %s", baseFilename.c_str()));
-		if (m_baseData == base && base != NULL)
+		DEBUG_WARNING(base == nullptr, ("was unable to load base template %s", baseFilename.c_str()));
+		if (m_baseData == base && base != nullptr)
 			base->releaseReference();
 		else
 		{
-			if (m_baseData != NULL)
+			if (m_baseData != nullptr)
 				m_baseData->releaseReference();
 			m_baseData = base;
 		}

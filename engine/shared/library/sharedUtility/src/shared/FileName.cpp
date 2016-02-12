@@ -52,14 +52,14 @@ FileName::FileName (FileName::Path path, const char* filename, const char* ext)
 
 	// see if the filename already begins with the path
 	const char *prePath = pathTable [path].path;
-	if (prePath != NULL && *prePath != '\0')
+	if (prePath != nullptr && *prePath != '\0')
 	{
 		if (strncmp(filename, prePath, strlen(prePath)) == 0)
 			prePath = "";
 	}
 
 	// see if the filename already ends in the extension
-	if (ext != NULL && *ext != '\0')
+	if (ext != nullptr && *ext != '\0')
 	{
 		int extLen = strlen(ext);
 		int filenameLen = strlen(filename);

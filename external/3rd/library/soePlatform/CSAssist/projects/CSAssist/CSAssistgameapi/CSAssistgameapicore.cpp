@@ -32,7 +32,7 @@ using namespace Plat_Unicode;
 
 //--------------------------------------
 CSAssistGameAPIcore::CSAssistGameAPIcore(CSAssistGameAPI *api, const char *host, const unsigned port, const unsigned timeout, const unsigned flags)
-: m_connection(NULL),
+: m_connection(nullptr),
   m_port(port),
   m_oldPort(port),
   m_connectedPort(0),
@@ -91,7 +91,7 @@ CSAssistGameAPIcore::CSAssistGameAPIcore(CSAssistGameAPI *api, const char *host,
 }
 
 CSAssistGameAPIcore::CSAssistGameAPIcore(CSAssistGameAPI *api, const char *serverList, const unsigned timeout, const unsigned flags)
-: m_connection(NULL),
+: m_connection(nullptr),
   m_connectedPort(0),
   m_api(api),
   m_currTrack(1),
@@ -121,10 +121,10 @@ CSAssistGameAPIcore::CSAssistGameAPIcore(CSAssistGameAPI *api, const char *serve
 
 	if (!serverList || (size <= 0))
 	{
-		fprintf(stderr, "CSASsistGameAPIcore()::serverList==NULL! aborting...\n");
+		fprintf(stderr, "CSASsistGameAPIcore()::serverList==nullptr! aborting...\n");
 		abort();
 	}
-	char *p2 = NULL;
+	char *p2 = nullptr;
 	char *buf = new char[size+1];
 	char delims[] = " ,";
 	char *host = new char[size];
@@ -136,7 +136,7 @@ CSAssistGameAPIcore::CSAssistGameAPIcore(CSAssistGameAPI *api, const char *serve
 	while (p2)
 	{
 		servers.push_back(p2);
-		p2 = strtok(NULL, delims);
+		p2 = strtok(nullptr, delims);
 	}
 	for (list<string>::iterator iter = servers.begin(); iter != servers.end(); iter++)
 	{
@@ -147,7 +147,7 @@ CSAssistGameAPIcore::CSAssistGameAPIcore(CSAssistGameAPI *api, const char *serve
 		memset(host, 0, size);
 		sprintf(host, "%s", strtok(p, ":"));
 		int res(1);
-		char *pc = strtok(NULL, ":");
+		char *pc = strtok(nullptr, ":");
 		if (pc) { port = atoi(pc);res++; }
 		//if (res == 2)
 		{
@@ -212,7 +212,7 @@ CSAssistGameAPIcore::~CSAssistGameAPIcore()
 		m_connection->Disconnect(false);
 #endif
 		m_connection->Release();
-		m_connection = NULL;
+		m_connection = nullptr;
 	}
 	m_conManager->Release();
 	delete m_receiver;
@@ -298,13 +298,13 @@ void CSAssistGameAPIcore::SubmitRequest(Request *req, Response *res)
 {
 	if (req->getType() != CSASSIST_CALL_CONNECTLB) 
 	{
-		m_timeout.push(new timeout(res->getTrack(), time(NULL) + m_userTimeout));
-		req->setTimeout(time(NULL) + m_userTimeout);	
+		m_timeout.push(new timeout(res->getTrack(), time(nullptr) + m_userTimeout));
+		req->setTimeout(time(nullptr) + m_userTimeout);	
 	}
 	else
 	{
-		m_timeout.push(new timeout(res->getTrack(), time(NULL) + CONNECTLB_TIMEOUT));
-		req->setTimeout(time(NULL) + CONNECTLB_TIMEOUT);	
+		m_timeout.push(new timeout(res->getTrack(), time(nullptr) + CONNECTLB_TIMEOUT));
+		req->setTimeout(time(nullptr) + CONNECTLB_TIMEOUT);	
 	}
 	m_outQueue.push(req);
 	m_pending.insert(pair<CSAssistGameAPITrack, Response *>(res->getTrack(), res));
@@ -316,13 +316,13 @@ void CSAssistGameAPIcore::SubmitRequestInt(Request *req, Response *res)
 {
 	if (req->getType() != CSASSIST_CALL_CONNECTLB) 
 	{
-		m_timeoutInt.push(new timeout(res->getTrack(), time(NULL) + m_userTimeout));
-		req->setTimeout(time(NULL) + m_userTimeout);	
+		m_timeoutInt.push(new timeout(res->getTrack(), time(nullptr) + m_userTimeout));
+		req->setTimeout(time(nullptr) + m_userTimeout);	
 	}
 	else
 	{
-		m_timeoutInt.push(new timeout(res->getTrack(), time(NULL) + CONNECTLB_TIMEOUT));
-		req->setTimeout(time(NULL) + CONNECTLB_TIMEOUT);	
+		m_timeoutInt.push(new timeout(res->getTrack(), time(nullptr) + CONNECTLB_TIMEOUT));
+		req->setTimeout(time(nullptr) + CONNECTLB_TIMEOUT);	
 	}
 	m_outQueueInt.push(req);
 	m_pendingInt.insert(pair<CSAssistGameAPITrack, Response *>(res->getTrack(), res));
@@ -390,14 +390,14 @@ void CSAssistGameAPIcore::CSAssistGameCallback(Response *response)
 				if (!m_receiver->m_firstConnection)
 					m_api->OnConnectCSAssist(track, result, userData);			// normal application layer connect
 				else
-					m_api->OnConnectCSAssist(0, result, NULL);					// internal re-connect
+					m_api->OnConnectCSAssist(0, result, nullptr);					// internal re-connect
 
 				m_receiver->m_firstConnection = true;
 			}
 			else
 			{
 				if (m_receiver->m_firstConnection)
-					m_api->OnConnectRejectedCSAssist(0, result, NULL);
+					m_api->OnConnectRejectedCSAssist(0, result, nullptr);
 				else
 					m_api->OnConnectRejectedCSAssist(track, result, userData);
 
@@ -413,7 +413,7 @@ void CSAssistGameAPIcore::CSAssistGameCallback(Response *response)
 						m_connection->Disconnect(false);
 #endif
 						m_connection->Release();
-						m_connection = NULL;
+						m_connection = nullptr;
 					}
 					GetLBHost();
 					m_receiver->m_firstConnection = true;
@@ -436,7 +436,7 @@ void CSAssistGameAPIcore::CSAssistGameCallback(Response *response)
 					m_connection->Disconnect(false);
 #endif
 					m_connection->Release();
-					m_connection = NULL;
+					m_connection = nullptr;
 				}
 				m_api->OnDisconnectCSAssist(track, result, userData);
 			}
@@ -624,7 +624,7 @@ Response * CSAssistGameAPIcore::getPending(CSAssistGameAPITrack track)
 	map<CSAssistGameAPITrack, Response *>::iterator iter;
 	iter = m_pending.find(track);
 	if (iter == m_pending.end())
-		return NULL;
+		return nullptr;
 	return (*iter).second;
 }
 
@@ -635,7 +635,7 @@ Response * CSAssistGameAPIcore::getPendingInt(CSAssistGameAPITrack track)
 	map<CSAssistGameAPITrack, Response *>::iterator iter;
 	iter = m_pendingInt.find(track);
 	if (iter == m_pendingInt.end())
-		return NULL;
+		return nullptr;
 	return (*iter).second;
 }
 
@@ -681,22 +681,22 @@ void CSAssistGameAPIcore::Update()
 
 
 	// ----- Process timeout queue, send timeout messages when appropriate -----
-	while((m_timeout.size() > 0) && ((t = m_timeout.front())->time <= time(NULL)))
+	while((m_timeout.size() > 0) && ((t = m_timeout.front())->time <= time(nullptr)))
 	{
 		Response *Res = getPending(t->track);
 		//fprintf(stderr, "processing timeouts: track(%u) response(%p)\n", t->track, Res);
-		if(Res != NULL)
+		if(Res != nullptr)
 		{
 			CSAssistGameCallback(Res);
 		}
 		m_timeout.pop();
 		delete t;
 	}
-	while((m_timeoutInt.size() > 0) && ((t = m_timeoutInt.front())->time <= time(NULL)))
+	while((m_timeoutInt.size() > 0) && ((t = m_timeoutInt.front())->time <= time(nullptr)))
 	{
 		Response *Res = getPendingInt(t->track);
 		//fprintf(stderr, "processing internal timeouts: track(%u) response(%p)\n", t->track, Res);
-		if(Res != NULL)
+		if(Res != nullptr)
 		{
 			CSAssistGameCallback(Res);
 		}
@@ -705,14 +705,14 @@ void CSAssistGameAPIcore::Update()
 	}
 
 	// ----- process timeouts for requests -----
-	while ((m_outQueue.size() > 0) && (m_outQueue.front()->getTimeout() <= (unsigned)time(NULL)))
+	while ((m_outQueue.size() > 0) && (m_outQueue.front()->getTimeout() <= (unsigned)time(nullptr)))
 	{
 		Request *R = m_outQueue.front();
 		//fprintf(stderr, "processing request timeouts: track(%u) request(%u)\n", R->getTrack(), R->getType());
 		m_outQueue.pop();
 		delete R;
 	}
-	while ((m_outQueueInt.size() > 0) && (m_outQueueInt.front()->getTimeout() <= (unsigned)time(NULL)))
+	while ((m_outQueueInt.size() > 0) && (m_outQueueInt.front()->getTimeout() <= (unsigned)time(nullptr)))
 	{
 		Request *R = m_outQueueInt.front();
 		//fprintf(stderr, "processing internal request timeouts: track(%u) request(%u)\n", R->getTrack(), R->getType());
@@ -724,18 +724,18 @@ void CSAssistGameAPIcore::Update()
 	{
 		// API does not have a connection, begin connection handshake process
 		//fprintf(stderr, "Going to connect to %s:%d\n", m_ip.c_str(), m_port);
-		m_reconnectTimeout = time(NULL) + 5;
+		m_reconnectTimeout = time(nullptr) + 5;
 		m_connection = m_conManager->EstablishConnection(m_ip.c_str(), m_port);
 
 		// set connected host/port before changing with GetLBHost.
 		m_connectedIP = m_ip.c_str();
 		m_connectedPort = m_port;
 
-		if (m_connection != NULL)
+		if (m_connection != nullptr)
 			m_connection->SetHandler(m_receiver);
 		else
 		{
-			m_api->OnConnectRejectedCSAssist(0, CSASSIST_RESULT_FAIL, NULL);
+			m_api->OnConnectRejectedCSAssist(0, CSASSIST_RESULT_FAIL, nullptr);
 			// Connection failed. Try getting a new host.
 			GetLBHost();
 		}
@@ -777,7 +777,7 @@ void CSAssistGameAPIcore::Update()
 				else
 				{
 					//fprintf(stderr,"Update(1): timing out response(%p) for track(%u)\n", Res, t->track);
-					if(Res != NULL)
+					if(Res != nullptr)
 					{
 						CSAssistGameCallback(Res);
 					}
@@ -795,18 +795,18 @@ void CSAssistGameAPIcore::Update()
 		//fprintf(stderr, "Update(2) enter\n");
 #ifdef USE_UDP_LIBRARY
 		if((m_connection->GetStatus() == UdpConnection::cStatusDisconnected) ||
-		   (m_connection->GetStatus() == UdpConnection::cStatusNegotiating && m_reconnectTimeout < time(NULL)))
+		   (m_connection->GetStatus() == UdpConnection::cStatusNegotiating && m_reconnectTimeout < time(nullptr)))
 		{
 			m_connection->Disconnect();
 #else
 		if((m_connection->GetStatus() == TcpConnection::StatusDisconnected) ||
-		   (m_connection->GetStatus() == TcpConnection::StatusNegotiating && m_reconnectTimeout < time(NULL)))
+		   (m_connection->GetStatus() == TcpConnection::StatusNegotiating && m_reconnectTimeout < time(nullptr)))
 		{
 			m_connection->Disconnect(false);
 #endif
 
 			m_connection->Release();
-			m_connection = NULL;
+			m_connection = nullptr;
 			//fprintf(stderr, "Update(2): Disconnected!! m_connectState=%u\n", m_connectState);
 
 			switch(m_connectState)
@@ -835,7 +835,7 @@ void CSAssistGameAPIcore::Update()
 									//if (t->
 									Response *Res = getPendingInt(t->track);
 									//fprintf(stderr, "Update(2) timing out connect: track(%u) response(%p)\n", t->track, Res);
-									if(Res != NULL)
+									if(Res != nullptr)
 									{
 										Res->setResult(CSASSIST_RESULT_FAIL);
 										CSAssistGameCallback(Res);
@@ -964,7 +964,7 @@ void CSAssistGameAPIcore::Update()
 Response *CSAssistGameAPIcore::createServerResponse(short msgtype)
 //-------------------------------------------------------------
 {
-	Response *res = NULL;
+	Response *res = nullptr;
 
 	switch (msgtype)
 	{

@@ -70,7 +70,7 @@
 
 // ======================================================================
 
-Persister *Persister::ms_instance=NULL;
+Persister *Persister::ms_instance=nullptr;
 
 // ======================================================================
 
@@ -88,7 +88,7 @@ void Persister::remove()
 {
 	NOT_NULL(ms_instance);
 	delete ms_instance;
-	ms_instance = NULL;
+	ms_instance = nullptr;
 }
 
 //-----------------------------------------------------------------------
@@ -108,9 +108,9 @@ Persister::Persister() :
 		m_charactersToDeleteThisSaveCycle(new CharactersToDeleteType),
 		m_charactersToDeleteNextSaveCycle(new CharactersToDeleteType),
 		m_timeSinceLastSave(0),
-		m_messageSnapshot(NULL),
-		m_commoditiesSnapshot(NULL),
-		m_arbitraryGameDataSnapshot(NULL),
+		m_messageSnapshot(nullptr),
+		m_commoditiesSnapshot(nullptr),
+		m_arbitraryGameDataSnapshot(nullptr),
 		m_saveStartTime(0),
 		m_totalSaveTime(0),
 		m_maxSaveTime(0),
@@ -181,15 +181,15 @@ Persister::~Persister()
 	m_currentSnapshots.clear();
 	m_newObjectSnapshots.clear();
 	m_objectSnapshotMap.clear();
-	m_messageSnapshot = NULL;
-	m_commoditiesSnapshot = NULL;
-	m_arbitraryGameDataSnapshot = NULL;
+	m_messageSnapshot = nullptr;
+	m_commoditiesSnapshot = nullptr;
+	m_arbitraryGameDataSnapshot = nullptr;
 
 	delete m_charactersToDeleteThisSaveCycle;
-	m_charactersToDeleteThisSaveCycle = NULL;
+	m_charactersToDeleteThisSaveCycle = nullptr;
 
 	delete m_charactersToDeleteNextSaveCycle;
-	m_charactersToDeleteNextSaveCycle = NULL;
+	m_charactersToDeleteNextSaveCycle = nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -283,7 +283,7 @@ void Persister::onFrameBarrierReached()
 /**
  * Moves the current & new object snapshots onto the queue to be saved.
  *
- * Does nothing if these snapshots are null.
+ * Does nothing if these snapshots are nullptr.
  */
 
 void Persister::startSave(void)
@@ -351,9 +351,9 @@ void Persister::startSave(void)
 	m_currentSnapshots.clear();
 	m_newObjectSnapshots.clear();
 	m_objectSnapshotMap.clear();
-	m_messageSnapshot = NULL;
-	m_commoditiesSnapshot = NULL;
-	m_arbitraryGameDataSnapshot = NULL;
+	m_messageSnapshot = nullptr;
+	m_commoditiesSnapshot = nullptr;
+	m_arbitraryGameDataSnapshot = nullptr;
 
 	// prepare the list of characters to delete during the next save cycle
 	if (m_charactersToDeleteNextSaveCycle && m_charactersToDeleteThisSaveCycle)
@@ -515,7 +515,7 @@ void Persister::newObject(uint32 serverId, const NetworkId &objectId, int templa
 		return;
 	}
 
-	Snapshot *snap=NULL;
+	Snapshot *snap=nullptr;
 
 	PendingCharactersType::iterator chardata=m_pendingCharacters.find(objectId);
 	if (chardata!=m_pendingCharacters.end())
@@ -543,7 +543,7 @@ void Persister::newObject(uint32 serverId, const NetworkId &objectId, int templa
 	else
 	{
 		// Add the object to the appropriate snapshot
-		snap=NULL;
+		snap=nullptr;
 		{
 			ObjectSnapshotMap::const_iterator j=m_objectSnapshotMap.find(container);
 			if (j!=m_objectSnapshotMap.end() && j->second->getMode() == DB::ModeQuery::mode_INSERT)
@@ -728,7 +728,7 @@ void Persister::receiveMessage(const MessageDispatch::Emitter & source, const Me
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		RenameCharacterMessageEx msg(ri);
 
-		renameCharacter(sourceGameServer, static_cast<int8>(msg.getRenameCharacterMessageSource()), msg.getStationId(), msg.getCharacterId(), msg.getNewName(), msg.getOldName(), msg.getLastNameChangeOnly(), msg.getRequestedBy(), NULL);
+		renameCharacter(sourceGameServer, static_cast<int8>(msg.getRenameCharacterMessageSource()), msg.getStationId(), msg.getCharacterId(), msg.getNewName(), msg.getOldName(), msg.getLastNameChangeOnly(), msg.getRequestedBy(), nullptr);
 	}
 	else if (message.isType("UnloadedPlayerMessage"))
 	{

@@ -83,7 +83,7 @@ namespace AiCreatureControllerNamespace
 	bool s_installed = false;
 	typedef std::set<Client *> ObserverList;
 
-	PersistentCrcString * s_defaultCreatureName = NULL;
+	PersistentCrcString * s_defaultCreatureName = nullptr;
 
 	void remove();
 	Location getLocation(ServerObject const & serverObject);
@@ -97,7 +97,7 @@ void AiCreatureControllerNamespace::remove()
 	DEBUG_FATAL(!s_installed, ("Not installed."));
 
 	delete s_defaultCreatureName;
-	s_defaultCreatureName = NULL;
+	s_defaultCreatureName = nullptr;
 
 	s_installed = false;
 }
@@ -106,9 +106,9 @@ void AiCreatureControllerNamespace::remove()
 Location AiCreatureControllerNamespace::getLocation(ServerObject const & serverObject)
 {
 	CellProperty const * const cellProperty = serverObject.getParentCell();
-	Object const * const cellObject = (cellProperty != NULL) ? &cellProperty->getOwner() : NULL;
-	Vector const & positionRelativeToCellOrWorld = (cellObject != NULL) ? serverObject.getPosition_c() : serverObject.getPosition_w();
-	NetworkId const & networkIdForCellOrWorld = (cellObject != NULL) ? cellObject->getNetworkId() : NetworkId::cms_invalid;
+	Object const * const cellObject = (cellProperty != nullptr) ? &cellProperty->getOwner() : nullptr;
+	Vector const & positionRelativeToCellOrWorld = (cellObject != nullptr) ? serverObject.getPosition_c() : serverObject.getPosition_w();
+	NetworkId const & networkIdForCellOrWorld = (cellObject != nullptr) ? cellObject->getNetworkId() : NetworkId::cms_invalid;
 
 	return Location(positionRelativeToCellOrWorld, networkIdForCellOrWorld, Location::getCrcBySceneName(serverObject.getSceneId()));
 }
@@ -164,10 +164,10 @@ AICreatureController::~AICreatureController()
 
 	Object * const owner = getOwner();
 
-	if (owner != NULL && owner->isAuthoritative() && !getHibernate() && m_hibernationDelay.get() > 0 && m_hibernationTimer.get() > 0)
+	if (owner != nullptr && owner->isAuthoritative() && !getHibernate() && m_hibernationDelay.get() > 0 && m_hibernationTimer.get() > 0)
 		ObjectTracker::removeDelayedHibernatingAI();
 
-	if (   (owner != NULL)
+	if (   (owner != nullptr)
 	    && AiLogManager::isLogging(owner->getNetworkId()))
 	{
 		AiLogManager::setLogging(owner->getNetworkId(), false);
@@ -205,9 +205,9 @@ void AICreatureController::CreatureNameChangedCallback::modified(AICreatureContr
 void AICreatureController::handleMessage (int message, float value, const MessageQueue::Data* const data, uint32 flags)
 {
 	CreatureObject * const owner = static_cast<CreatureObject*>(getOwner());
-	if (owner == NULL)
+	if (owner == nullptr)
 	{
-		DEBUG_FATAL(true, ("Owner is NULL in AiCreatureController::handleMessage\n"));
+		DEBUG_FATAL(true, ("Owner is nullptr in AiCreatureController::handleMessage\n"));
 		return;
 	}
 
@@ -219,7 +219,7 @@ void AICreatureController::handleMessage (int message, float value, const Messag
 
 				AiMovementMessage const * const msg = safe_cast<const AiMovementMessage *>(data);
 
-				if (msg != NULL)
+				if (msg != nullptr)
 				{
 					if (owner->isAuthoritative())
 					{
@@ -256,7 +256,7 @@ void AICreatureController::handleMessage (int message, float value, const Messag
 				LOGC(AiLogManager::isLogging(getOwner()->getNetworkId()), "debug_ai", ("AICreatureController::handleMessage(CM_aiSetCreatureName) owner(%s)", getDebugInformation().c_str()));
 				MessageQueueGenericValueType<std::string> const * const msg = safe_cast<MessageQueueGenericValueType<std::string> const *>(data);
 
-				if (msg != NULL)
+				if (msg != nullptr)
 				{
 					setCreatureName(msg->getValue());
 				}
@@ -267,7 +267,7 @@ void AICreatureController::handleMessage (int message, float value, const Messag
 				LOGC(AiLogManager::isLogging(getOwner()->getNetworkId()), "debug_ai", ("AICreatureController::handleMessage(CM_aiSetHomeLocation) owner(%s)", getDebugInformation().c_str()));
 				MessageQueueGenericValueType<Location> const * const msg = safe_cast<MessageQueueGenericValueType<Location> const *>(data);
 
-				if (msg != NULL)
+				if (msg != nullptr)
 				{
 					setHomeLocation(msg->getValue());
 				}
@@ -278,7 +278,7 @@ void AICreatureController::handleMessage (int message, float value, const Messag
 				LOGC(AiLogManager::isLogging(getOwner()->getNetworkId()), "debug_ai", ("AICreatureController::handleMessage(CM_aiSetFrozen) owner(%s)", getDebugInformation().c_str()));
 				MessageQueueGenericValueType<bool> const * const msg = safe_cast<MessageQueueGenericValueType<bool> const *>(data);
 
-				if (msg != NULL)
+				if (msg != nullptr)
 				{
 					setFrozen(msg->getValue());
 				}
@@ -289,7 +289,7 @@ void AICreatureController::handleMessage (int message, float value, const Messag
 				LOGC(AiLogManager::isLogging(getOwner()->getNetworkId()), "debug_ai", ("AICreatureController::handleMessage(CM_aiSetRetreating) owner(%s)", getDebugInformation().c_str()));
 				MessageQueueGenericValueType<bool> const * const msg = safe_cast<MessageQueueGenericValueType<bool> const *>(data);
 
-				if (msg != NULL)
+				if (msg != nullptr)
 				{
 					setRetreating(msg->getValue());
 				}
@@ -300,7 +300,7 @@ void AICreatureController::handleMessage (int message, float value, const Messag
 				LOGC(AiLogManager::isLogging(getOwner()->getNetworkId()), "debug_ai", ("AICreatureController::handleMessage(CM_aiSetLogging) owner(%s)", getDebugInformation().c_str()));
 				MessageQueueGenericValueType<bool> const * const msg = safe_cast<MessageQueueGenericValueType<bool> const *>(data);
 
-				if (msg != NULL)
+				if (msg != nullptr)
 				{
 					setLogging(msg->getValue());
 				}
@@ -333,7 +333,7 @@ void AICreatureController::handleMessage (int message, float value, const Messag
 		case CM_setHibernationDelay:
 			{
 				MessageQueueGenericValueType<float> const * const msg = safe_cast<MessageQueueGenericValueType<float> const *>(data);
-				if (msg != NULL)
+				if (msg != nullptr)
 					setHibernationDelay(msg->getValue());
 			}
 			break;
@@ -469,7 +469,7 @@ float AICreatureController::realAlter(float time)
 	CreatureObject * const creatureOwner = getCreature();
 
 #ifdef _DEBUG
-	AiDebugString * aiDebugString = NULL;
+	AiDebugString * aiDebugString = nullptr;
 	if (!creatureOwner->getObservers().empty())
 	{
 		aiDebugString = new AiDebugString;
@@ -508,7 +508,7 @@ float AICreatureController::realAlter(float time)
 	if (!creatureOwner->isInWorld() || getHibernate())
 	{
 #ifdef _DEBUG
-		if (aiDebugString != NULL)
+		if (aiDebugString != nullptr)
 		{
 			sendDebugAiToClients(*aiDebugString);
 			delete aiDebugString;
@@ -522,8 +522,8 @@ float AICreatureController::realAlter(float time)
 	// check floating
 	{
 		CollisionProperty const * const collision = creatureOwner->getCollisionProperty();
-		Footprint const * const foot = (collision != NULL) ? collision->getFootprint() : NULL;
-		bool floating = (foot != NULL) ? foot->isFloating() : false;
+		Footprint const * const foot = (collision != nullptr) ? collision->getFootprint() : nullptr;
+		bool floating = (foot != nullptr) ? foot->isFloating() : false;
 
 		if (floating)
 		{
@@ -547,7 +547,7 @@ float AICreatureController::realAlter(float time)
 
 		// Update our inPathfindingRegion flag whenever the behavior changes
 		CityPathGraph const * graph = CityPathGraphManager::getCityGraphFor(creatureOwner);
-		m_inPathfindingRegion = (graph != NULL);
+		m_inPathfindingRegion = (graph != nullptr);
 		applyMovementChange();
 	}
 
@@ -589,10 +589,10 @@ float AICreatureController::realAlter(float time)
 				bool resetHateTimer = false;
 				CachedNetworkId const & hateTarget = creatureOwner->getHateTarget();
 				CreatureObject * const hateTargetCreatureObject = CreatureObject::asCreatureObject(hateTarget.getObject());
-				CreatureController const * const hateTargetCreatureController = (hateTargetCreatureObject != NULL) ? CreatureController::asCreatureController(hateTargetCreatureObject->getController()) : NULL;
+				CreatureController const * const hateTargetCreatureController = (hateTargetCreatureObject != nullptr) ? CreatureController::asCreatureController(hateTargetCreatureObject->getController()) : nullptr;
 
-				if (   (hateTargetCreatureObject != NULL)
-					&& (hateTargetCreatureController != NULL))
+				if (   (hateTargetCreatureObject != nullptr)
+					&& (hateTargetCreatureController != nullptr))
 				{
 					float const hateTargetMovementSpeedSquared = hateTargetCreatureController->getCurrentVelocity().magnitudeSquared();
 					float const hateTargetWalkSpeedSquared = sqr(hateTargetCreatureObject->getWalkSpeed());
@@ -605,7 +605,7 @@ float AICreatureController::realAlter(float time)
 					{
 						Object * const combatStartLocationCell = NetworkIdManager::getObjectById(m_combatStartLocation.get().getCell());
 						Vector const & combatStartPosition_c = m_combatStartLocation.get().getCoordinates();
-						Vector const & combatStartPosition_w = (combatStartLocationCell != NULL) ? combatStartLocationCell->rotateTranslate_o2w(combatStartPosition_c) : combatStartPosition_c;
+						Vector const & combatStartPosition_w = (combatStartLocationCell != nullptr) ? combatStartLocationCell->rotateTranslate_o2w(combatStartPosition_c) : combatStartPosition_c;
 						float const distanceToCombatStartLocationSquared = creatureOwner->getPosition_w().magnitudeBetweenSquared(combatStartPosition_w);
 						float const aggroRadius = getAggroRadius();
 
@@ -621,7 +621,7 @@ float AICreatureController::realAlter(float time)
 						hateTargetCreatureObject->resetHateTimer();
 					}
 				}
-				else if (hateTarget.getObject() != NULL)
+				else if (hateTarget.getObject() != nullptr)
 				{
 					// AI don't need to lose interest in stationary AI
 
@@ -662,7 +662,7 @@ float AICreatureController::realAlter(float time)
 				}
 
 #ifdef _DEBUG
-				if (aiDebugString != NULL)
+				if (aiDebugString != nullptr)
 				{
 					m_movement->addDebug(*aiDebugString);
 				}
@@ -697,7 +697,7 @@ float AICreatureController::realAlter(float time)
 	updateMovementType();
 
 #ifdef _DEBUG
-	if (aiDebugString != NULL)
+	if (aiDebugString != nullptr)
 	{
 		sendDebugAiToClients(*aiDebugString);
 		delete aiDebugString;
@@ -711,7 +711,7 @@ float AICreatureController::realAlter(float time)
 //----------------------------------------------------------------------
 void AICreatureController::changeMovement(AiMovementBasePtr newMovement)
 {
-	LOGC(AiLogManager::isLogging(getOwner()->getNetworkId()), "debug_ai", ("AICreatureController::changeMovement() movement(%s)", (newMovement != AiMovementBaseNullPtr) ? AiMovementBase::getMovementString(newMovement->getType()) : "NULL"));
+	LOGC(AiLogManager::isLogging(getOwner()->getNetworkId()), "debug_ai", ("AICreatureController::changeMovement() movement(%s)", (newMovement != AiMovementBaseNullPtr) ? AiMovementBase::getMovementString(newMovement->getType()) : "nullptr"));
 
 	if (getOwner()->isAuthoritative())
 	{
@@ -876,11 +876,11 @@ void AICreatureController::loiter(CellProperty const * homeCell, Vector const & 
 {
 	if (isRetreating())
 	{
-		WARNING(true, ("AICreatureController::loiter() owner(%s) cell(%s) home(%.0f, %.0f, %.0f) distance[%.2f...%.2f] delay[%.0f...%.0f] Trying to loiter while retreating, failing request.", getDebugInformation().c_str(), ((homeCell != NULL) ? homeCell->getCellName() : "NULL"), home_p.x, home_p.y, home_p.z, minDistance, maxDistance, minDelay, maxDelay));
+		WARNING(true, ("AICreatureController::loiter() owner(%s) cell(%s) home(%.0f, %.0f, %.0f) distance[%.2f...%.2f] delay[%.0f...%.0f] Trying to loiter while retreating, failing request.", getDebugInformation().c_str(), ((homeCell != nullptr) ? homeCell->getCellName() : "nullptr"), home_p.x, home_p.y, home_p.z, minDistance, maxDistance, minDelay, maxDelay));
 		return;
 	}
 
-	LOGC(AiLogManager::isLogging(getOwner()->getNetworkId()), "debug_ai", ("AICreatureController::loiter() owner(%s) cell(%s) home(%.0f, %.0f, %.0f) distance[%.2f...%.2f] delay[%.0f...%.0f]", getDebugInformation().c_str(), ((homeCell != NULL) ? homeCell->getCellName() : "NULL"), home_p.x, home_p.y, home_p.z, minDistance, maxDistance, minDelay, maxDelay));
+	LOGC(AiLogManager::isLogging(getOwner()->getNetworkId()), "debug_ai", ("AICreatureController::loiter() owner(%s) cell(%s) home(%.0f, %.0f, %.0f) distance[%.2f...%.2f] delay[%.0f...%.0f]", getDebugInformation().c_str(), ((homeCell != nullptr) ? homeCell->getCellName() : "nullptr"), home_p.x, home_p.y, home_p.z, minDistance, maxDistance, minDelay, maxDelay));
 
 	AiMovementBasePtr movement(new AiMovementLoiter(this, homeCell, home_p, minDistance, maxDistance, minDelay, maxDelay));
 
@@ -910,7 +910,7 @@ void AICreatureController::moveTo(CellProperty const * cell, Vector const & targ
 {
 	if (isRetreating())
 	{
-		WARNING(true, ("AICreatureController::moveTo() owner(%s) cell(%s) position(%.0f, %.0f, %.0f) radius(%.2f) Trying to moveTo while retreating, failing request.", getDebugInformation().c_str(), ((cell != NULL) ? cell->getCellName() : "NULL"), target_p.x, target_p.y, target_p.z, radius));
+		WARNING(true, ("AICreatureController::moveTo() owner(%s) cell(%s) position(%.0f, %.0f, %.0f) radius(%.2f) Trying to moveTo while retreating, failing request.", getDebugInformation().c_str(), ((cell != nullptr) ? cell->getCellName() : "nullptr"), target_p.x, target_p.y, target_p.z, radius));
 		return;
 	}
 
@@ -918,9 +918,9 @@ void AICreatureController::moveTo(CellProperty const * cell, Vector const & targ
 
 	if (getMovementType() == AMT_move)
 	{
-		AiMovementMove * const aiMovementMove = (m_movement != AiMovementBaseNullPtr) ? m_movement->asAiMovementMove() : NULL;
+		AiMovementMove * const aiMovementMove = (m_movement != AiMovementBaseNullPtr) ? m_movement->asAiMovementMove() : nullptr;
 
-		if (aiMovementMove != NULL)
+		if (aiMovementMove != nullptr)
 		{
 			AiLocation const & target = aiMovementMove->getTarget();
 
@@ -935,7 +935,7 @@ void AICreatureController::moveTo(CellProperty const * cell, Vector const & targ
 
 	if (!duplicateMovement)
 	{
-		LOGC(AiLogManager::isLogging(getOwner()->getNetworkId()), "debug_ai", ("AICreatureController::moveTo() owner(%s) cell(%s) position(%.0f, %.0f, %.0f) radius(%.2f)", getDebugInformation().c_str(), ((cell != NULL) ? cell->getCellName() : "NULL"), target_p.x, target_p.y, target_p.z, radius));
+		LOGC(AiLogManager::isLogging(getOwner()->getNetworkId()), "debug_ai", ("AICreatureController::moveTo() owner(%s) cell(%s) position(%.0f, %.0f, %.0f) radius(%.2f)", getDebugInformation().c_str(), ((cell != nullptr) ? cell->getCellName() : "nullptr"), target_p.x, target_p.y, target_p.z, radius));
 
 		AiMovementBasePtr movement(new AiMovementMove(this, cell, target_p, radius));
 
@@ -957,9 +957,9 @@ void AICreatureController::moveTo(Unicode::String const & targetName)
 
 	if (getMovementType() == AMT_move)
 	{
-		AiMovementMove * const aiMovementMove = (m_movement != AiMovementBaseNullPtr) ? m_movement->asAiMovementMove() : NULL;
+		AiMovementMove * const aiMovementMove = (m_movement != AiMovementBaseNullPtr) ? m_movement->asAiMovementMove() : nullptr;
 
-		if (aiMovementMove != NULL)
+		if (aiMovementMove != nullptr)
 		{
 			if (aiMovementMove->getTargetName() == targetName)
 			{
@@ -992,8 +992,8 @@ void AICreatureController::patrol( std::vector<Location> const & locations, bool
 
 	if (getMovementType() == AMT_patrol)
 	{
-		AiMovementPatrol * const aiMovementPatrol = (m_movement != AiMovementBaseNullPtr) ? m_movement->asAiMovementPatrol() : NULL;
-		if (aiMovementPatrol != NULL)
+		AiMovementPatrol * const aiMovementPatrol = (m_movement != AiMovementBaseNullPtr) ? m_movement->asAiMovementPatrol() : nullptr;
+		if (aiMovementPatrol != nullptr)
 		{
 //			if ()
 //			{
@@ -1026,8 +1026,8 @@ void AICreatureController::patrol( std::vector<Unicode::String> const & location
 
 	if (getMovementType() == AMT_patrol)
 	{
-		AiMovementPatrol * const aiMovementPatrol = (m_movement != AiMovementBaseNullPtr) ? m_movement->asAiMovementPatrol() : NULL;
-		if (aiMovementPatrol != NULL)
+		AiMovementPatrol * const aiMovementPatrol = (m_movement != AiMovementBaseNullPtr) ? m_movement->asAiMovementPatrol() : nullptr;
+		if (aiMovementPatrol != nullptr)
 		{
 //			if ()
 //			{
@@ -1071,7 +1071,7 @@ bool AICreatureController::faceTo(CellProperty const * targetCell, Vector const 
 {
 	if (isRetreating())
 	{
-		WARNING(true, ("AICreatureController::faceTo() owner(%s) cell(%s) position(%.0f, %.0f, %.0f) Trying to faceTo while retreating, failing faceTo request.", getDebugInformation().c_str(), ((targetCell != NULL) ? targetCell->getCellName() : "NULL"), target_p.x, target_p.y, target_p.z));
+		WARNING(true, ("AICreatureController::faceTo() owner(%s) cell(%s) position(%.0f, %.0f, %.0f) Trying to faceTo while retreating, failing faceTo request.", getDebugInformation().c_str(), ((targetCell != nullptr) ? targetCell->getCellName() : "nullptr"), target_p.x, target_p.y, target_p.z));
 		return false;
 	}
 
@@ -1079,9 +1079,9 @@ bool AICreatureController::faceTo(CellProperty const * targetCell, Vector const 
 
 	if (getMovementType() == AMT_face)
 	{
-		AiMovementFace * const aiMovementFace = (m_movement != AiMovementBaseNullPtr) ? m_movement->asAiMovementFace() : NULL;
+		AiMovementFace * const aiMovementFace = (m_movement != AiMovementBaseNullPtr) ? m_movement->asAiMovementFace() : nullptr;
 
-		if (aiMovementFace != NULL)
+		if (aiMovementFace != nullptr)
 		{
 			AiLocation const & target = aiMovementFace->getTarget();
 
@@ -1095,7 +1095,7 @@ bool AICreatureController::faceTo(CellProperty const * targetCell, Vector const 
 
 	if (!duplicateMovement)
 	{
-		LOGC(AiLogManager::isLogging(getOwner()->getNetworkId()), "debug_ai", ("AICreatureController::faceTo() owner(%s) cell(%s) position(%.0f, %.0f, %.0f)", getDebugInformation().c_str(), ((targetCell != NULL) ? targetCell->getCellName() : "NULL"), target_p.x, target_p.y, target_p.z));
+		LOGC(AiLogManager::isLogging(getOwner()->getNetworkId()), "debug_ai", ("AICreatureController::faceTo() owner(%s) cell(%s) position(%.0f, %.0f, %.0f)", getDebugInformation().c_str(), ((targetCell != nullptr) ? targetCell->getCellName() : "nullptr"), target_p.x, target_p.y, target_p.z));
 
 		AiMovementBasePtr behavior(new AiMovementFace(this, targetCell, target_p));
 
@@ -1126,9 +1126,9 @@ bool AICreatureController::faceTo( NetworkId const & targetId )
 
 	if (getMovementType() == AMT_face)
 	{
-		AiMovementFace * const aiMovementFace = (m_movement != AiMovementBaseNullPtr) ? m_movement->asAiMovementFace() : NULL;
+		AiMovementFace * const aiMovementFace = (m_movement != AiMovementBaseNullPtr) ? m_movement->asAiMovementFace() : nullptr;
 
-		if (aiMovementFace != NULL)
+		if (aiMovementFace != nullptr)
 		{
 			AiLocation const & target = aiMovementFace->getTarget();
 
@@ -1171,9 +1171,9 @@ bool AICreatureController::follow( NetworkId const & targetId, float minDistance
 
 	if (getMovementType() == AMT_follow)
 	{
-		AiMovementFollow * const aiMovementFollow = (m_movement != AiMovementBaseNullPtr) ? m_movement->asAiMovementFollow() : NULL;
+		AiMovementFollow * const aiMovementFollow = (m_movement != AiMovementBaseNullPtr) ? m_movement->asAiMovementFollow() : nullptr;
 
-		if (aiMovementFollow != NULL)
+		if (aiMovementFollow != nullptr)
 		{
 			AiLocation const & target = aiMovementFollow->getTarget();
 
@@ -1219,9 +1219,9 @@ bool AICreatureController::follow( NetworkId const & targetId, Vector const & of
 
 	if (getMovementType() == AMT_follow)
 	{
-		AiMovementFollow * const aiMovementFollow = (m_movement != AiMovementBaseNullPtr) ? m_movement->asAiMovementFollow() : NULL;
+		AiMovementFollow * const aiMovementFollow = (m_movement != AiMovementBaseNullPtr) ? m_movement->asAiMovementFollow() : nullptr;
 
-		if (aiMovementFollow != NULL)
+		if (aiMovementFollow != nullptr)
 		{
 			AiLocation const & offsetTarget = aiMovementFollow->getOffsetTarget();
 
@@ -1403,9 +1403,9 @@ void AICreatureController::moveCreature( CellProperty const * newCell, Vector co
 
 	CellProperty * currentCell = getOwner()->getParentCell();
 
-	CellObject * newCellObject = NULL;
+	CellObject * newCellObject = nullptr;
 
-	if( (newCell != NULL) && (newCell != CellProperty::getWorldCellProperty()) )
+	if( (newCell != nullptr) && (newCell != CellProperty::getWorldCellProperty()) )
 	{
 		newCellObject = const_cast<CellObject*>(safe_cast<CellObject const *>(&newCell->getOwner()));
 	}
@@ -1422,12 +1422,12 @@ void AICreatureController::moveCreature( CellProperty const * newCell, Vector co
 
 		CellProperty const * destCell = getCreatureCell()->getDestinationCell(oldPosition+offset,newPosition+offset,dummy);
 
-		if((destCell != NULL) && (destCell != newCell))
+		if((destCell != nullptr) && (destCell != newCell))
 		{
 			newPosition = CollisionUtils::transformToCell(newCell,newPosition,destCell);
 			newCell = destCell;
 
-			newCellObject = NULL;
+			newCellObject = nullptr;
 
 			if(newCell != CellProperty::getWorldCellProperty())
 			{
@@ -1820,15 +1820,15 @@ AICreatureController * AICreatureController::getAiCreatureController(NetworkId c
 {
 	Object * const object = NetworkIdManager::getObjectById(networkId);
 
-	return (object != NULL) ? AICreatureController::asAiCreatureController(object->getController()) : NULL;
+	return (object != nullptr) ? AICreatureController::asAiCreatureController(object->getController()) : nullptr;
 }
 
 // ----------------------------------------------------------------------
 
 AICreatureController * AICreatureController::asAiCreatureController(Controller * controller)
 {
-	CreatureController * const creatureController = (controller != NULL) ? controller->asCreatureController() : NULL;
-	AICreatureController * const aiCreatureController = (creatureController != NULL) ? creatureController->asAiCreatureController() : NULL;
+	CreatureController * const creatureController = (controller != nullptr) ? controller->asCreatureController() : nullptr;
+	AICreatureController * const aiCreatureController = (creatureController != nullptr) ? creatureController->asAiCreatureController() : nullptr;
 
 	return aiCreatureController;
 }
@@ -1837,8 +1837,8 @@ AICreatureController * AICreatureController::asAiCreatureController(Controller *
 
 AICreatureController const * AICreatureController::asAiCreatureController(Controller const * controller)
 {
-	CreatureController const * const creatureController = (controller != NULL) ? controller->asCreatureController() : NULL;
-	AICreatureController const * const aiCreatureController = (creatureController != NULL) ? creatureController->asAiCreatureController() : NULL;
+	CreatureController const * const creatureController = (controller != nullptr) ? controller->asCreatureController() : nullptr;
+	AICreatureController const * const aiCreatureController = (creatureController != nullptr) ? creatureController->asAiCreatureController() : nullptr;
 
 	return aiCreatureController;
 }
@@ -1880,7 +1880,7 @@ float AICreatureController::getRespectRadius(NetworkId const & target) const
 
 	CreatureObject const * respectCreatureObject = CreatureObject::getCreatureObject(target);
 
-	if (respectCreatureObject != NULL)
+	if (respectCreatureObject != nullptr)
 	{
 		// If the target has a master, then use the master's level for the respect calculation
 
@@ -1893,7 +1893,7 @@ float AICreatureController::getRespectRadius(NetworkId const & target) const
 
 		// Respect is only towards players
 
-		if (   (respectCreatureObject != NULL)
+		if (   (respectCreatureObject != nullptr)
 		    && respectCreatureObject->isPlayerControlled())
 		{
 			CreatureObject const * const creatureOwner = getCreature();
@@ -1906,7 +1906,7 @@ float AICreatureController::getRespectRadius(NetworkId const & target) const
 		}
 		else
 		{
-			WARNING(true, ("AICreatureController::getRespectRadius() owner(%s) master(%s) The owner has a master who is not a player. Why does this happen?", getDebugInformation().c_str(), (respectCreatureObject != NULL) ? respectCreatureObject->getDebugInformation().c_str() : masterId.getValueString().c_str()));
+			WARNING(true, ("AICreatureController::getRespectRadius() owner(%s) master(%s) The owner has a master who is not a player. Why does this happen?", getDebugInformation().c_str(), (respectCreatureObject != nullptr) ? respectCreatureObject->getDebugInformation().c_str() : masterId.getValueString().c_str()));
 		}
 	}
 
@@ -1942,7 +1942,7 @@ void AICreatureController::sendDebugAiToClients(AiDebugString & aiDebugString)
 
 		// Display the name and level
 		{
-			aiDebugString.addText(fs.sprintf("%d %s\n", creatureOwner->getLevel(), (getCreatureName().isEmpty() ? "NULL" : getCreatureName().getString())), PackedRgb::solidWhite);
+			aiDebugString.addText(fs.sprintf("%d %s\n", creatureOwner->getLevel(), (getCreatureName().isEmpty() ? "nullptr" : getCreatureName().getString())), PackedRgb::solidWhite);
 		}
 
 		// Display the look at target
@@ -1990,7 +1990,7 @@ void AICreatureController::sendDebugAiToClients(AiDebugString & aiDebugString)
 			{
 				Floor const * const floor = CollisionWorld::getFloorStandingOn(*creatureOwner);
 
-				aiDebugString.addText(fs.sprintf("floor (%s)\n", (floor == NULL) ? "none" : floor->getId().getValueString().c_str()), PackedRgb::solidWhite);
+				aiDebugString.addText(fs.sprintf("floor (%s)\n", (floor == nullptr) ? "none" : floor->getId().getValueString().c_str()), PackedRgb::solidWhite);
 			}
 
 			// Display the AI movement speed
@@ -2008,15 +2008,15 @@ void AICreatureController::sendDebugAiToClients(AiDebugString & aiDebugString)
 				// Primary Weapon
 				{
 					ServerObject const * const primaryServerObject = ServerObject::getServerObject(getPrimaryWeapon());
-					WeaponObject const * const primaryWeaponObject = (primaryServerObject != NULL) ? primaryServerObject->asWeaponObject() : NULL;
+					WeaponObject const * const primaryWeaponObject = (primaryServerObject != nullptr) ? primaryServerObject->asWeaponObject() : nullptr;
 
-					if (primaryWeaponObject != NULL)
+					if (primaryWeaponObject != nullptr)
 					{
 						aiDebugString.addText(fs.sprintf("%s pri(%s) [%.0f...%.0f] sp(%s)\n", (usingPrimaryWeapon() ? "->" : ""), FileNameUtils::get(primaryWeaponObject->getObjectTemplateName(), FileNameUtils::fileName).c_str(), primaryWeaponObject->getMinRange(), primaryWeaponObject->getMaxRange(), m_aiCreatureData->m_primarySpecials.isEmpty() ? "none" : m_aiCreatureData->m_primarySpecials.getString()), PackedRgb::solidWhite);
 					}
 					else
 					{
-						aiDebugString.addText(fs.sprintf("pri(NULL:ERROR)\n"), PackedRgb::solidWhite);
+						aiDebugString.addText(fs.sprintf("pri(nullptr:ERROR)\n"), PackedRgb::solidWhite);
 					}
 
 					//if (usingPrimaryWeapon())
@@ -2040,9 +2040,9 @@ void AICreatureController::sendDebugAiToClients(AiDebugString & aiDebugString)
 				// Secondary Weapon
 				{
 					ServerObject const * const secondaryServerObject = ServerObject::getServerObject(getSecondaryWeapon());
-					WeaponObject const * const secondaryWeaponObject = (secondaryServerObject != NULL) ? secondaryServerObject->asWeaponObject() : NULL;
+					WeaponObject const * const secondaryWeaponObject = (secondaryServerObject != nullptr) ? secondaryServerObject->asWeaponObject() : nullptr;
 
-					if (secondaryWeaponObject != NULL)
+					if (secondaryWeaponObject != nullptr)
 					{
 						aiDebugString.addText(fs.sprintf("%s sec (%s) [%.0f...%.0f] sp(%s)\n", (usingSecondaryWeapon() ? "->" : ""), FileNameUtils::get(secondaryWeaponObject->getObjectTemplateName(), FileNameUtils::fileName).c_str(), secondaryWeaponObject->getMinRange(), secondaryWeaponObject->getMaxRange(), m_aiCreatureData->m_secondarySpecials.isEmpty() ? "none" : m_aiCreatureData->m_secondarySpecials.getString()), PackedRgb::solidWhite);
 					}
@@ -2113,13 +2113,13 @@ void AICreatureController::sendDebugAiToClients(AiDebugString & aiDebugString)
 							TangibleObject const * const hateTargetTangibleObject = TangibleObject::asTangibleObject(hateTarget.getObject());
 							float const hate = iterHateList->second;
 							std::string hateTargetName;
-							if (hateTargetTangibleObject != NULL)
+							if (hateTargetTangibleObject != nullptr)
 							{
 								hateTargetName = Unicode::wideToNarrow(hateTargetTangibleObject->getEncodedObjectName()).c_str();
 							}
 							else
 							{
-								hateTargetName = "NULL";
+								hateTargetName = "nullptr";
 							}
 
 							aiDebugString.addText(fs.sprintf("%s:%s(%.1f)\n", hateTargetName.c_str(), hateTarget.getValueString().c_str(), hate), (iterHateList == hateList.begin()) ? PackedRgb::solidGreen : PackedRgb::solidRed);
@@ -2174,7 +2174,7 @@ void AICreatureController::sendDebugAiToClients(AiDebugString & aiDebugString)
 				// Only send to the client if the objvar is set
 
 				int temp = 0;
-				if (   (characterObject != NULL)
+				if (   (characterObject != nullptr)
 				    && characterObject->getObjVars().getItem("ai_debug_string", temp))
 				{
 					if (temp > 0)
@@ -2196,7 +2196,7 @@ void AICreatureController::setHomeLocation(Location const & location)
 {
 	if (getOwner()->isAuthoritative())
 	{
-		LOGC(AiLogManager::isLogging(getOwner()->getNetworkId()), "debug_ai", ("AICreatureController::setHomeLocation() owner(%s) sceneId(%u:%s) cell(%s) coordinates(%.2f, %.2f, %.2f)", getDebugInformation().c_str(), location.getSceneIdCrc(), (location.getSceneId() != NULL) ? location.getSceneId() : "NULL", location.getCell().getValueString().c_str(), location.getCoordinates().x, location.getCoordinates().y, location.getCoordinates().z));
+		LOGC(AiLogManager::isLogging(getOwner()->getNetworkId()), "debug_ai", ("AICreatureController::setHomeLocation() owner(%s) sceneId(%u:%s) cell(%s) coordinates(%.2f, %.2f, %.2f)", getDebugInformation().c_str(), location.getSceneIdCrc(), (location.getSceneId() != nullptr) ? location.getSceneId() : "nullptr", location.getCell().getValueString().c_str(), location.getCoordinates().x, location.getCoordinates().y, location.getCoordinates().z));
 
 		m_homeLocation = location;
 	}
@@ -2221,7 +2221,7 @@ void AICreatureController::markCombatStartLocation()
 	{
 		m_combatStartLocation = getLocation(*creatureOwner);
 
-		LOGC(AiLogManager::isLogging(creatureOwner->getNetworkId()), "debug_ai", ("AICreatureController::markCombatStartLocation() owner(%s) sceneId(%u:%s) cell(%s) coordinates(%.2f, %.2f, %.2f)", getDebugInformation().c_str(), m_combatStartLocation.get().getSceneIdCrc(), (m_combatStartLocation.get().getSceneId() != NULL) ? m_combatStartLocation.get().getSceneId() : "NULL", m_combatStartLocation.get().getCell().getValueString().c_str(), m_combatStartLocation.get().getCoordinates().x, m_combatStartLocation.get().getCoordinates().y, m_combatStartLocation.get().getCoordinates().z));
+		LOGC(AiLogManager::isLogging(creatureOwner->getNetworkId()), "debug_ai", ("AICreatureController::markCombatStartLocation() owner(%s) sceneId(%u:%s) cell(%s) coordinates(%.2f, %.2f, %.2f)", getDebugInformation().c_str(), m_combatStartLocation.get().getSceneIdCrc(), (m_combatStartLocation.get().getSceneId() != nullptr) ? m_combatStartLocation.get().getSceneId() : "nullptr", m_combatStartLocation.get().getCell().getValueString().c_str(), m_combatStartLocation.get().getCoordinates().x, m_combatStartLocation.get().getCoordinates().y, m_combatStartLocation.get().getCoordinates().z));
 
 		m_primaryWeaponActions.reset();
 		m_secondaryWeaponActions.reset();
@@ -2279,14 +2279,14 @@ void AICreatureController::onCreatureNameChanged(std::string const & creatureNam
 
 	AiCreatureCombatProfile const * const primaryWeaponCombatProfile = AiCreatureCombatProfile::getCombatProfile(m_aiCreatureData->m_primarySpecials);
 
-	if (primaryWeaponCombatProfile != NULL)
+	if (primaryWeaponCombatProfile != nullptr)
 	{
 		m_primaryWeaponActions.setCombatProfile(*creatureOwner, *primaryWeaponCombatProfile);
 	}
 	
 	AiCreatureCombatProfile const * const secondaryWeaponCombatProfile = AiCreatureCombatProfile::getCombatProfile(m_aiCreatureData->m_secondarySpecials);
 
-	if (secondaryWeaponCombatProfile != NULL)
+	if (secondaryWeaponCombatProfile != nullptr)
 	{
 		m_secondaryWeaponActions.setCombatProfile(*creatureOwner, *secondaryWeaponCombatProfile);
 	}
@@ -2326,7 +2326,7 @@ void AICreatureController::destroyPrimaryWeapon()
 {
 	WeaponObject * const primaryWeapon = WeaponObject::getWeaponObject(getPrimaryWeapon());
 
-	if (primaryWeapon != NULL)
+	if (primaryWeapon != nullptr)
 	{
 		unEquipWeapons();
 		primaryWeapon->permanentlyDestroy(DeleteReasons::God);
@@ -2361,7 +2361,7 @@ void AICreatureController::destroySecondaryWeapon()
 {
 	WeaponObject * const secondaryWeapon = WeaponObject::getWeaponObject(getSecondaryWeapon());
 
-	if (secondaryWeapon != NULL)
+	if (secondaryWeapon != nullptr)
 	{
 		unEquipWeapons();
 		secondaryWeapon->permanentlyDestroy(DeleteReasons::God);
@@ -2372,7 +2372,7 @@ void AICreatureController::destroySecondaryWeapon()
 
 PersistentCrcString const & AICreatureController::getCreatureName() const
 {
-	if (m_aiCreatureData->m_name == NULL)
+	if (m_aiCreatureData->m_name == nullptr)
 	{
 		return *s_defaultCreatureName;
 	}
@@ -2401,7 +2401,7 @@ NetworkId AICreatureController::createWeapon(char const * const functionName, Cr
 	CreatureObject * const creatureOwner = getCreature();
 	ServerObject * const inventory = creatureOwner->getInventory();
 
-	if (inventory == NULL)
+	if (inventory == nullptr)
 	{
 		WARNING(true, ("AICreatureController::%s() Unable to find inventory for (%s) to place a weapon(%s)", functionName, getDebugInformation().c_str(), weaponName.getString()));
 	}
@@ -2440,7 +2440,7 @@ NetworkId AICreatureController::createWeapon(char const * const functionName, Cr
 						bool const persisted = false;
 						ServerObject * const newObject = ServerWorld::createNewObject(weaponCrcName.getCrc(), *inventory, persisted);
 
-						if (newObject != NULL)
+						if (newObject != nullptr)
 						{
 							result = newObject->getNetworkId();
 						}
@@ -2464,7 +2464,7 @@ NetworkId AICreatureController::getUnarmedWeapon()
 	CreatureObject * const creatureOwner = getCreature();
 	WeaponObject * const defaultWeapon = creatureOwner->getDefaultWeapon();
 
-	if (defaultWeapon != NULL)
+	if (defaultWeapon != nullptr)
 	{
 		result = defaultWeapon->getNetworkId();
 	}
@@ -2492,9 +2492,9 @@ void AICreatureController::equipPrimaryWeapon()
 		if (!usingPrimaryWeapon())
 		{
 			ServerObject * const primaryWeaponServerObject = ServerObject::getServerObject(getPrimaryWeapon());
-			WeaponObject * const primaryWeaponObject = (primaryWeaponServerObject != NULL) ? primaryWeaponServerObject->asWeaponObject() : NULL;
+			WeaponObject * const primaryWeaponObject = (primaryWeaponServerObject != nullptr) ? primaryWeaponServerObject->asWeaponObject() : nullptr;
 
-			if (primaryWeaponObject != NULL)
+			if (primaryWeaponObject != nullptr)
 			{
 				unEquipWeapons();
 
@@ -2508,7 +2508,7 @@ void AICreatureController::equipPrimaryWeapon()
 				{
 					Container::ContainerErrorCode errorCode;
 
-					if (ContainerInterface::transferItemToGeneralContainer(*creatureOwner, *primaryWeaponServerObject, NULL, errorCode))
+					if (ContainerInterface::transferItemToGeneralContainer(*creatureOwner, *primaryWeaponServerObject, nullptr, errorCode))
 					{
 						LOGC(AiLogManager::isLogging(getOwner()->getNetworkId()), "debug_ai", ("AICreatureController::equipPrimaryWeapon() owner(%s) primaryWeapon(%s)\n", getDebugInformation().c_str(), primaryWeaponServerObject->getDebugInformation().c_str()));
 
@@ -2516,7 +2516,7 @@ void AICreatureController::equipPrimaryWeapon()
 
 						GameScriptObject * const gameScriptObject = GameScriptObject::asGameScriptObject(creatureOwner);
 
-						if (gameScriptObject != NULL)
+						if (gameScriptObject != nullptr)
 						{
 							ScriptParams scriptParams;
 							scriptParams.addParam(primaryWeaponObject->getNetworkId());
@@ -2557,9 +2557,9 @@ void AICreatureController::equipSecondaryWeapon()
 		if (!usingSecondaryWeapon())
 		{
 			ServerObject * const secondaryWeaponServerObject = ServerObject::getServerObject(getSecondaryWeapon());
-			WeaponObject * const secondaryWeaponObject = (secondaryWeaponServerObject != NULL) ? secondaryWeaponServerObject->asWeaponObject() : NULL;
+			WeaponObject * const secondaryWeaponObject = (secondaryWeaponServerObject != nullptr) ? secondaryWeaponServerObject->asWeaponObject() : nullptr;
 
-			if (secondaryWeaponObject != NULL)
+			if (secondaryWeaponObject != nullptr)
 			{
 				unEquipWeapons();
 
@@ -2573,7 +2573,7 @@ void AICreatureController::equipSecondaryWeapon()
 				{
 					Container::ContainerErrorCode errorCode;
 
-					if (ContainerInterface::transferItemToGeneralContainer(*creatureOwner, *secondaryWeaponServerObject, NULL, errorCode))
+					if (ContainerInterface::transferItemToGeneralContainer(*creatureOwner, *secondaryWeaponServerObject, nullptr, errorCode))
 					{
 						LOGC(AiLogManager::isLogging(getOwner()->getNetworkId()), "debug_ai", ("AICreatureController::equipSecondaryWeapon() owner(%s) secondaryWeapon(%s) errorCode(%d)\n", getDebugInformation().c_str(), secondaryWeaponServerObject->getDebugInformation().c_str()));
 
@@ -2581,7 +2581,7 @@ void AICreatureController::equipSecondaryWeapon()
 
 						GameScriptObject * const gameScriptObject = GameScriptObject::asGameScriptObject(creatureOwner);
 
-						if (gameScriptObject != NULL)
+						if (gameScriptObject != nullptr)
 						{
 							ScriptParams scriptParams;
 							scriptParams.addParam(secondaryWeaponObject->getNetworkId());
@@ -2631,7 +2631,7 @@ void AICreatureController::unEquipWeapons()
 			{
 				ServerObject * const inventory = creatureOwner->getInventory();
 
-				if (inventory != NULL)
+				if (inventory != nullptr)
 				{
 					Container::ContainerErrorCode error;
 
@@ -2648,13 +2648,13 @@ void AICreatureController::unEquipWeapons()
 
 			// Equip the default weapon
 			{
-				if (defaultWeapon != NULL)
+				if (defaultWeapon != nullptr)
 				{
 					creatureOwner->setCurrentWeapon(*defaultWeapon);
 				}
 				else
 				{
-					WARNING(true, ("AICreatureController::unEquipWeapons() owner(%s) NULL default weapon", getDebugInformation().c_str()));
+					WARNING(true, ("AICreatureController::unEquipWeapons() owner(%s) nullptr default weapon", getDebugInformation().c_str()));
 				}
 			}
 		}
@@ -2690,7 +2690,7 @@ bool AICreatureController::usingPrimaryWeapon()
 	{
 		WeaponObject const * const currentWeaponObject = getCreature()->getCurrentWeapon();
 
-		if (currentWeaponObject != NULL)
+		if (currentWeaponObject != nullptr)
 		{
 			result = (getPrimaryWeapon() == currentWeaponObject->getNetworkId());
 		}
@@ -2708,7 +2708,7 @@ bool AICreatureController::usingSecondaryWeapon()
 	{
 		WeaponObject const * const currentWeaponObject = getCreature()->getCurrentWeapon();
 
-		if (currentWeaponObject != NULL)
+		if (currentWeaponObject != nullptr)
 		{
 			result = (getSecondaryWeapon() == currentWeaponObject->getNetworkId());
 		}
@@ -2815,7 +2815,7 @@ void AICreatureController::setRetreating(bool const retreating)
 			{
 				CellObject const * const cellObject = CellObject::getCellObject(cellId);
 
-				if (cellObject != NULL)
+				if (cellObject != nullptr)
 				{
 					CellProperty const * const cellProperty = cellObject->getCellProperty();
 
@@ -2965,7 +2965,7 @@ time_t AICreatureController::getKnockDownRecoveryTime() const
 {
 	AiCreatureCombatProfile const * const combatProfile = AiCreatureCombatProfile::getCombatProfile(m_aiCreatureData->m_primarySpecials);
 
-	return (combatProfile != NULL) ? combatProfile->m_knockDownRecoveryTime : 0;
+	return (combatProfile != nullptr) ? combatProfile->m_knockDownRecoveryTime : 0;
 }
 //-----------------------------------------------------------------------
 std::string const AICreatureController::getCombatActionsString()
@@ -2979,7 +2979,7 @@ std::string const AICreatureController::getCombatActionsString()
 	{
 		WeaponObject const * const primaryWeaponObject = WeaponObject::getWeaponObject(getPrimaryWeapon());
 
-		if (primaryWeaponObject != NULL)
+		if (primaryWeaponObject != nullptr)
 		{
 			result += fs.sprintf("PRIMARY WEAPON >>> %s range[%.0f...%.0f] %s\n", FileNameUtils::get(primaryWeaponObject->getObjectTemplateName(), FileNameUtils::fileName).c_str(), primaryWeaponObject->getMinRange(), primaryWeaponObject->getMaxRange(), usingPrimaryWeapon() ? "(active)" : "");
 		}
@@ -2989,7 +2989,7 @@ std::string const AICreatureController::getCombatActionsString()
 		}
 
 		AiCreatureCombatProfile const * const primaryWeaponCombatProfile = AiCreatureCombatProfile::getCombatProfile(m_aiCreatureData->m_primarySpecials);
-		if (primaryWeaponCombatProfile != NULL)
+		if (primaryWeaponCombatProfile != nullptr)
 		{
 			result += primaryWeaponCombatProfile->toString();
 		}
@@ -3003,7 +3003,7 @@ std::string const AICreatureController::getCombatActionsString()
 	{
 		WeaponObject const * const secondaryWeaponObject = WeaponObject::getWeaponObject(getSecondaryWeapon());
 
-		if (secondaryWeaponObject != NULL)
+		if (secondaryWeaponObject != nullptr)
 		{
 			result += fs.sprintf("SECONDARY WEAPON >>> %s range[%.0f...%.0f] %s\n", FileNameUtils::get(secondaryWeaponObject->getObjectTemplateName(), FileNameUtils::fileName).c_str(), secondaryWeaponObject->getMinRange(), secondaryWeaponObject->getMaxRange(), usingSecondaryWeapon() ? "(active)" : "");
 		}
@@ -3014,7 +3014,7 @@ std::string const AICreatureController::getCombatActionsString()
 
 		AiCreatureCombatProfile const * const secondaryWeaponCombatProfile = AiCreatureCombatProfile::getCombatProfile(m_aiCreatureData->m_secondarySpecials);
 
-		if (secondaryWeaponCombatProfile != NULL)
+		if (secondaryWeaponCombatProfile != nullptr)
 		{
 			result += secondaryWeaponCombatProfile->toString();
 		}

@@ -277,13 +277,13 @@ void AlterSchedulerNamespace::reportPrint()
 
 // ----------------------------------------------------------------------
 /**
- * NULL objects are not considered valid by this function.  Do not call this on a NULL
+ * nullptr objects are not considered valid by this function.  Do not call this on a nullptr
  * object if that happens to be valid in the context in which this function is used.
  */
 
 void AlterSchedulerNamespace::validateObject(Object const *object)
 {
-	FATAL(!object, ("validateObject(): alter scheduler found NULL object."));
+	FATAL(!object, ("validateObject(): alter scheduler found nullptr object."));
 	
 	DO_ON_VALIDATE_OBJECTS(bool isInvalid = false);
 
@@ -331,7 +331,7 @@ void AlterSchedulerNamespace::validateObject(Object const *object)
 	if (isInvalid)
 	{
 		//-- Print out object info for the invalid object if we have it.
-		ObjectInfo *objectInfo = NULL;
+		ObjectInfo *objectInfo = nullptr;
 		if (s_trackObjectInfo)
 		{
 			ObjectInfoMap::iterator findIt = s_objectInfoMap.find(const_cast<Object*>(object));
@@ -352,7 +352,7 @@ void AlterSchedulerNamespace::validateObject(Object const *object)
 
 // ----------------------------------------------------------------------
 /**
- * Return true if two strings are the same (or are both NULL); otherwise, return false.
+ * Return true if two strings are the same (or are both nullptr); otherwise, return false.
  */
 
 static bool SafeStringEqual(char const *string1, char const *string2)
@@ -682,7 +682,7 @@ void AlterScheduler::alter(float elapsedTime)
 	DO_ON_DEBUG(if (s_suspendExecution) return);
 
 	PROFILER_AUTO_BLOCK_DEFINE("AlterScheduler::alter");
-	doAlterAndConcludeForAllObjects(elapsedTime, CS_none, NULL);
+	doAlterAndConcludeForAllObjects(elapsedTime, CS_none, nullptr);
 }
 
 // ----------------------------------------------------------------------
@@ -702,7 +702,7 @@ void AlterScheduler::alterAndConclude(float elapsedTime)
 	DO_ON_DEBUG(if (s_suspendExecution) return);
 
 	PROFILER_AUTO_BLOCK_DEFINE("AlterScheduler::alterAndConclude");
-	doAlterAndConcludeForAllObjects(elapsedTime, CS_all, NULL);
+	doAlterAndConcludeForAllObjects(elapsedTime, CS_all, nullptr);
 }
 
 // ----------------------------------------------------------------------
@@ -724,7 +724,7 @@ void AlterScheduler::initializeScheduleTimeMapIterator(Object &object)
 
 bool AlterScheduler::isIteratorInScheduleTimeMap(void const *iterator)
 {
-	DEBUG_FATAL(!iterator, ("AlterScheduler::isIteratorInScheduleTimeMap(): iterator pointer is NULL."));
+	DEBUG_FATAL(!iterator, ("AlterScheduler::isIteratorInScheduleTimeMap(): iterator pointer is nullptr."));
 	return (*static_cast<ScheduleTimeMap::iterator const*>(iterator) != s_scheduleMap.end());
 }
 
@@ -734,7 +734,7 @@ bool AlterScheduler::findObjectInAlterNowList(Object const *object)
 {
 	DO_ON_HARDCORE_VALIDATION(validateAlterNowList());
 
-	for (Object *searchObject = s_alterNowListFirst->getNextFromAlterNowList(); searchObject != NULL; searchObject = searchObject->getNextFromAlterNowList())
+	for (Object *searchObject = s_alterNowListFirst->getNextFromAlterNowList(); searchObject != nullptr; searchObject = searchObject->getNextFromAlterNowList())
 	{
 		if (searchObject == object)
 			return true;
@@ -751,7 +751,7 @@ bool AlterScheduler::findObjectInAlterNextFrameLists(Object const *object)
 
 	for (int phaseIndex = 0; phaseIndex < AS_MAX_SCHEDULE_PHASE_COUNT; ++phaseIndex)
 	{
-		for (Object *searchObject = s_alterNextFrameListFirst[phaseIndex]->getNextFromAlterNextFrameList(); searchObject != NULL; searchObject = searchObject->getNextFromAlterNextFrameList())
+		for (Object *searchObject = s_alterNextFrameListFirst[phaseIndex]->getNextFromAlterNextFrameList(); searchObject != nullptr; searchObject = searchObject->getNextFromAlterNextFrameList())
 		{
 			if (searchObject == object)
 				return true;
@@ -767,7 +767,7 @@ bool AlterScheduler::findObjectInConcludeList(Object const *object)
 {
 	DO_ON_HARDCORE_VALIDATION(validateConcludeList());
 
-	for (Object *searchObject = s_concludeListFirst->getNextFromConcludeList(); searchObject != NULL; searchObject = searchObject->getNextFromConcludeList())
+	for (Object *searchObject = s_concludeListFirst->getNextFromConcludeList(); searchObject != nullptr; searchObject = searchObject->getNextFromConcludeList())
 	{
 		if (searchObject == object)
 			return true;
@@ -817,7 +817,7 @@ void AlterScheduler::validateAlterNowList()
 
 	//-- Add each object to the set and list.
 	{
-		for (Object *object = s_alterNowListFirst->getNextFromAlterNowList(); object != NULL; object = object->getNextFromAlterNowList())
+		for (Object *object = s_alterNowListFirst->getNextFromAlterNowList(); object != nullptr; object = object->getNextFromAlterNowList())
 		{
 			DO_ON_VALIDATE_OBJECTS(validateObject(object));
 
@@ -836,7 +836,7 @@ void AlterScheduler::validateAlterNowList()
 	{
 		ObjectList::iterator const endIt = objectList.end();
 		Object *object = s_alterNowListFirst->getNextFromAlterNowList();
-		for (ObjectList::iterator it = objectList.begin(); (it != endIt) && (object != NULL); object = object->getNextFromAlterNowList(), ++it)
+		for (ObjectList::iterator it = objectList.begin(); (it != endIt) && (object != nullptr); object = object->getNextFromAlterNowList(), ++it)
 		{
 			lastObject = object;
 			DEBUG_WARNING(object != *it, ("validateAlterNowList(): forward linkage check failed, stl list: pointer=[%p], object id=[%s], object template=[%s].", *it, (*it)->getNetworkId().getValueString().c_str(), (*it)->getObjectTemplateName()));
@@ -848,7 +848,7 @@ void AlterScheduler::validateAlterNowList()
 	{
 		ObjectList::reverse_iterator const endIt = objectList.rend();
 		Object *object = lastObject;
-		for (ObjectList::reverse_iterator it = objectList.rbegin(); (it != endIt) && (object != NULL); object = object->getPreviousFromAlterNowList(), ++it)
+		for (ObjectList::reverse_iterator it = objectList.rbegin(); (it != endIt) && (object != nullptr); object = object->getPreviousFromAlterNowList(), ++it)
 		{
 			DEBUG_WARNING(object != *it, ("validateAlterNowList(): reverse linkage check failed, stl list: pointer=[%p], object id=[%s], object template=[%s].", *it, (*it)->getNetworkId().getValueString().c_str(), (*it)->getObjectTemplateName()));
 			DEBUG_FATAL(object != *it, ("validateAlterNowList(): reverse linkage check failed, alter scheduler list: pointer=[%p], object id=[%s], object template=[%s].", object, object->getNetworkId().getValueString().c_str(), object->getObjectTemplateName()));
@@ -867,7 +867,7 @@ void AlterScheduler::validateAlterNextFrameLists()
 	{
 		//-- Add each object to the set and list.
 		{
-			for (Object *object = s_alterNextFrameListFirst[phaseIndex]->getNextFromAlterNextFrameList(); object != NULL; object = object->getNextFromAlterNextFrameList())
+			for (Object *object = s_alterNextFrameListFirst[phaseIndex]->getNextFromAlterNextFrameList(); object != nullptr; object = object->getNextFromAlterNextFrameList())
 			{
 				DO_ON_VALIDATE_OBJECTS(validateObject(object));
 
@@ -886,7 +886,7 @@ void AlterScheduler::validateAlterNextFrameLists()
 		{
 			ObjectList::iterator const endIt = objectList.end();
 			Object *object = s_alterNextFrameListFirst[phaseIndex]->getNextFromAlterNextFrameList();
-			for (ObjectList::iterator it = objectList.begin(); (it != endIt) && (object != NULL); object = object->getNextFromAlterNextFrameList(), ++it)
+			for (ObjectList::iterator it = objectList.begin(); (it != endIt) && (object != nullptr); object = object->getNextFromAlterNextFrameList(), ++it)
 			{
 				lastObject = object;
 				DEBUG_WARNING(object != *it, ("validateAlterNextFrameList(): forward linkage check failed, stl list: pointer=[%p], object id=[%s], object template=[%s].", *it, (*it)->getNetworkId().getValueString().c_str(), (*it)->getObjectTemplateName()));
@@ -898,7 +898,7 @@ void AlterScheduler::validateAlterNextFrameLists()
 		{
 			ObjectList::reverse_iterator const endIt = objectList.rend();
 			Object *object = lastObject;
-			for (ObjectList::reverse_iterator it = objectList.rbegin(); (it != endIt) && (object != NULL); object = object->getPreviousFromAlterNextFrameList(), ++it)
+			for (ObjectList::reverse_iterator it = objectList.rbegin(); (it != endIt) && (object != nullptr); object = object->getPreviousFromAlterNextFrameList(), ++it)
 			{
 				DEBUG_WARNING(object != *it, ("validateAlterNextFrameList(): reverse linkage check failed, stl list: pointer=[%p], object id=[%s], object template=[%s].", *it, (*it)->getNetworkId().getValueString().c_str(), (*it)->getObjectTemplateName()));
 				DEBUG_FATAL(object != *it, ("validateAlterNextFrameList(): reverse linkage check failed, alter scheduler list: pointer=[%p], object id=[%s], object template=[%s].", object, object->getNetworkId().getValueString().c_str(), object->getObjectTemplateName()));
@@ -919,7 +919,7 @@ void AlterScheduler::validateConcludeList()
 
 	//-- Add each object to the set and list.
 	{
-		for (Object *object = s_concludeListFirst->getNextFromConcludeList(); object != NULL; object = object->getNextFromConcludeList())
+		for (Object *object = s_concludeListFirst->getNextFromConcludeList(); object != nullptr; object = object->getNextFromConcludeList())
 		{
 			DO_ON_VALIDATE_OBJECTS(validateObject(object));
 
@@ -938,7 +938,7 @@ void AlterScheduler::validateConcludeList()
 	{
 		ObjectList::iterator const endIt = objectList.end();
 		Object *object = s_concludeListFirst->getNextFromConcludeList();
-		for (ObjectList::iterator it = objectList.begin(); (it != endIt) && (object != NULL); object = object->getNextFromConcludeList(), ++it)
+		for (ObjectList::iterator it = objectList.begin(); (it != endIt) && (object != nullptr); object = object->getNextFromConcludeList(), ++it)
 		{
 			lastObject = object;
 			DEBUG_WARNING(object != *it, ("validateConcludeList(): forward linkage check failed, stl list: pointer=[%p], object id=[%s], object template=[%s].", *it, (*it)->getNetworkId().getValueString().c_str(), (*it)->getObjectTemplateName()));
@@ -950,7 +950,7 @@ void AlterScheduler::validateConcludeList()
 	{
 		ObjectList::reverse_iterator const endIt = objectList.rend();
 		Object *object = lastObject;
-		for (ObjectList::reverse_iterator it = objectList.rbegin(); (it != endIt) && (object != NULL); object = object->getPreviousFromConcludeList(), ++it)
+		for (ObjectList::reverse_iterator it = objectList.rbegin(); (it != endIt) && (object != nullptr); object = object->getPreviousFromConcludeList(), ++it)
 		{
 			DEBUG_WARNING(object != *it, ("validateConcludeList(): reverse linkage check failed, stl list: pointer=[%p], object id=[%s], object template=[%s].", *it, (*it)->getNetworkId().getValueString().c_str(), (*it)->getObjectTemplateName()));
 			DEBUG_FATAL(object != *it, ("validateConcludeList(): reverse linkage check failed, alter scheduler list: pointer=[%p], object id=[%s], object template=[%s].", object, object->getNetworkId().getValueString().c_str(), object->getObjectTemplateName()));
@@ -1184,8 +1184,8 @@ void AlterScheduler::moveObjectsFromAlterNextFrameListToAlterNowList(int schedul
 	{
 		PROFILER_AUTO_BLOCK_DEFINE("copy next frame");
 
-		//if (s_alterNextFrameListFirst != NULL) {
-			for (Object *object = s_alterNextFrameListFirst[schedulePhaseIndex]->getNextFromAlterNextFrameList(); object != NULL; )
+		//if (s_alterNextFrameListFirst != nullptr) {
+			for (Object *object = s_alterNextFrameListFirst[schedulePhaseIndex]->getNextFromAlterNextFrameList(); object != nullptr; )
 			{
 				//-- Add object to alter now list.  This removes the object from the alter next frame list.
 				DO_ON_VALIDATE_OBJECTS(validateObject(object));
@@ -1222,7 +1222,7 @@ void AlterScheduler::alterSingleObject(Object *object, ConcludeStyle concludeSty
 	DO_ON_DEBUG(s_currentlyAlteringObject = object);
 
 #if defined(_WIN32) && defined(_DEBUG)
-	char const * const typeName = s_profileAlterByType ? typeid(*object).name() : NULL;
+	char const * const typeName = s_profileAlterByType ? typeid(*object).name() : nullptr;
 	PROFILER_BLOCK_DEFINE(profilerBlock, typeName);
 	if (typeName)
 		PROFILER_BLOCK_ENTER(profilerBlock);
@@ -1245,7 +1245,7 @@ void AlterScheduler::alterSingleObject(Object *object, ConcludeStyle concludeSty
 			PROFILER_BLOCK_LEAVE(profilerBlock);
 #endif
 
-		DO_ON_DEBUG(s_currentlyAlteringObject = NULL);
+		DO_ON_DEBUG(s_currentlyAlteringObject = nullptr);
 		DO_ON_VALIDATE_OBJECTS(validateObject(object));
 	}
 
@@ -1254,7 +1254,7 @@ void AlterScheduler::alterSingleObject(Object *object, ConcludeStyle concludeSty
 	nextObject = object->getNextFromAlterNowList();
 
 #if VALIDATE_OBJECTS
-	if (nextObject != NULL)
+	if (nextObject != nullptr)
 	{
 		DO_ON_HARDCORE_VALIDATION(DEBUG_FATAL(!findObjectInAlterNowList(nextObject), ("didn't find object in alter now list, unexpected.")));
 		validateObject(nextObject);
@@ -1343,7 +1343,7 @@ void AlterScheduler::alterSingleObject(Object *object, ConcludeStyle concludeSty
 				ScheduleTime const absoluteScheduleTime = s_currentTime + dt;
 
 				// Add it to the schedule list for the specified scheduler time.
-				// If this object is NULL, it means it returned an AlterResult that indicated it should still be alive but it somehow got killed.
+				// If this object is nullptr, it means it returned an AlterResult that indicated it should still be alive but it somehow got killed.
 //DEBUG_REPORT_LOG(object->getNetworkId() != NetworkId::cms_invalid, ("[aitest] scheduling %s to alter at %lu (%lu + %lu)\n", 
 //	object->getNetworkId().getValueString().c_str(), 
 //	static_cast<unsigned long>(absoluteScheduleTime),
@@ -1363,7 +1363,7 @@ void AlterScheduler::concludeAndRemoveAllConcludeEntries()
 	PROFILER_AUTO_BLOCK_DEFINE("conclude");
 
 	Object *nextObject;
-	for (Object *object = s_concludeListFirst->getNextFromConcludeList(); object != NULL; object = nextObject)
+	for (Object *object = s_concludeListFirst->getNextFromConcludeList(); object != nullptr; object = nextObject)
 	{
 		//-- Conclude the object.
 		DO_ON_VALIDATE_OBJECTS(validateObject(object));
@@ -1400,7 +1400,7 @@ void AlterScheduler::doAlterAndConcludeForAllObjects(float schedulerElapsedTime,
 			DO_ON_HARDCORE_VALIDATION(validateAllContainers());
 
 			Object *nextObject;
-			for (Object *object = s_alterNowListFirst->getNextFromAlterNowList(); object != NULL; object = nextObject)
+			for (Object *object = s_alterNowListFirst->getNextFromAlterNowList(); object != nullptr; object = nextObject)
 				alterSingleObject(object, concludeStyle, nextObject);
 		}
 

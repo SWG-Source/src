@@ -21,13 +21,13 @@
 // ======================================================================
 //Lint suppressions.
 
-//lint -esym(613,  ContainerIterator::m_iterator) // (Warning -- Possible use of null pointer 'ContainerIterator::m_iterator' ) // This is an opaque data type to us.  We can only check against a container::end().
+//lint -esym(613,  ContainerIterator::m_iterator) // (Warning -- Possible use of nullptr pointer 'ContainerIterator::m_iterator' ) // This is an opaque data type to us.  We can only check against a container::end().
 //lint -esym(1540, ContainerIterator::m_iterator) // (Warning -- Pointer member 'ContainerIterator::m_iterator' neither freed nor zero'ed by destructor -- Effective C++ #6) // It's okay, the iterator type is opaque to us, we have no idea it's a pointer.
 //lint -esym(1554, ContainerIterator::m_iterator) // (Warning -- Direct copy of pointer 'ContainerIterator::m_iterator'. // It's okay, the iterator type is opaque to us, we have no idea it's a pointer.
 //lint -esym(1555, ContainerIterator::m_iterator) // (Warning -- Direct pointer copy of member 'ContainerIterator::m_iterator' within copy assignment operator: 'ContainerIterator::operator=(const ContainerIterator &) // Opaque type, we don't know its a pointer.
 //lint -esym(1555, ContainerIterator::m_owner)    // (Warning -- Direct pointer copy of member 'ContainerIterator::m_owner' within copy assignment operator: 'ContainerIterator::operator=(const ContainerIterator &)    // We do not own this memory, so it's okay to overwrite the pointer.  We can't leak it.
 
-//lint -esym(613,  ContainerConstIterator::m_iterator) // (Warning -- Possible use of null pointer 'ContainerConstIterator::m_iterator' ) // This is an opaque data type to us.  We can only check against a container::end().
+//lint -esym(613,  ContainerConstIterator::m_iterator) // (Warning -- Possible use of nullptr pointer 'ContainerConstIterator::m_iterator' ) // This is an opaque data type to us.  We can only check against a container::end().
 //lint -esym(1540, ContainerConstIterator::m_iterator) // (Warning -- Pointer member 'ContainerConstIterator::m_iterator' neither freed nor zero'ed by destructor -- Effective C++ #6) // It's okay, the iterator type is opaque to us, we have no idea it's a pointer.
 //lint -esym(1554, ContainerConstIterator::m_iterator) // (Warning -- Direct copy of pointer 'ContainerConstIterator::m_iterator'. // It's okay, the iterator type is opaque to us, we have no idea it's a pointer.
 //lint -esym(1555, ContainerConstIterator::m_iterator) // (Warning -- Direct pointer copy of member 'ContainerConstIterator::m_iterator' within copy assignment operator: 'ContainerConstIterator::operator=(const ContainerConstIterator &) // Opaque type, we don't know its a pointer.
@@ -108,7 +108,7 @@ ContainerIterator & ContainerIterator::operator= (const ContainerIterator & rhs)
 CachedNetworkId & ContainerIterator::operator*()
 {
 	// @todo fix this interface -- it is broken.  It is possible to
-	// construct a ContainerIterator with a NULL m_iterator, but there is
+	// construct a ContainerIterator with a nullptr m_iterator, but there is
 	// no way to gracefully exit from this function since it requires a non-const
 	// reference.  Otherwise I would return CachedNetworkId::cms_cachedIvalid.
 	NOT_NULL(m_owner);
@@ -197,7 +197,7 @@ ContainerConstIterator & ContainerConstIterator::operator= (const ContainerConst
 const CachedNetworkId & ContainerConstIterator::operator*() const
 {
 	// @todo fix this interface -- it is broken.  It is possible to
-	// construct a ContainerIterator with a NULL m_iterator, but there is
+	// construct a ContainerIterator with a nullptr m_iterator, but there is
 	// no way to gracefully exit from this function since it requires a non-const
 	// reference.  Otherwise I would return CachedNetworkId::cms_cachedIvalid.
 	NOT_NULL(m_owner);
@@ -677,7 +677,7 @@ void Container::debugPrint(std::string &buffer) const
 		{
 			Object const *const object = it->getObject();
 
-			sprintf(tempBuffer, "\tindex [%d]: object id [%s], template [%s]\n", index, it->getValueString().c_str(), object ? object->getObjectTemplateName() : "<getObject() reported NULL object>");
+			sprintf(tempBuffer, "\tindex [%d]: object id [%s], template [%s]\n", index, it->getValueString().c_str(), object ? object->getObjectTemplateName() : "<getObject() reported nullptr object>");
 			buffer += tempBuffer;
 		}
 
@@ -699,7 +699,7 @@ void Container::debugLog() const
 		for (Contents::const_iterator it = m_contents.begin(); it != endIt; ++it, ++index)
 		{
 			Object const *const object = it->getObject();
-			DEBUG_REPORT_LOG(true, ("\tindex [%d]: object id [%s], template [%s]\n", index, it->getValueString().c_str(), object ? object->getObjectTemplateName() : "<getObject() reported NULL object>"));
+			DEBUG_REPORT_LOG(true, ("\tindex [%d]: object id [%s], template [%s]\n", index, it->getValueString().c_str(), object ? object->getObjectTemplateName() : "<getObject() reported nullptr object>"));
 		}
 
 	DEBUG_REPORT_LOG(true, ("====[END:   container]====\n"));

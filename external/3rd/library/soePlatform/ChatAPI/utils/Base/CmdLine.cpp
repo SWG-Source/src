@@ -135,7 +135,7 @@ int CCmdLine::SplitLine(int argc, char **argv)
 
 bool CCmdLine::IsSwitch(const char *pParam)
 {
-   if (pParam==NULL)
+   if (pParam==nullptr)
       return false;
 
    // switches must non-empty
@@ -204,7 +204,7 @@ StringType CCmdLine::GetSafeArgument(const char *pSwitch, int iIdx, const char *
 {
    StringType sRet;
    
-   if (pDefault!=NULL)
+   if (pDefault!=nullptr)
       sRet = pDefault;
 
    try

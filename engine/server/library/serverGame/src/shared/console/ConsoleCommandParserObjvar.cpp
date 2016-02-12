@@ -100,7 +100,7 @@ bool ConsoleCommandParserObjvar::performParsing (const NetworkId & userId, const
 	{
 		NetworkId oid (Unicode::wideToNarrow (argv[1]));
 		ServerObject* object = ServerWorld::findObjectByNetworkId(oid);
-		if (object == NULL)
+		if (object == nullptr)
 		{
 			result += getErrorMessage (argv [0], ERR_INVALID_OBJECT);
 			return true;
@@ -224,7 +224,7 @@ bool ConsoleCommandParserObjvar::performParsing (const NetworkId & userId, const
 		// This is now a no-op, but left in to avoid breaking the god client
 // 		NetworkId oid (Unicode::wideToNarrow (argv[1]));
 // 		ServerObject* object = ServerWorld::findObjectByNetworkId(oid);
-// 		if (object == NULL)
+// 		if (object == nullptr)
 // 		{
 // 			result += getErrorMessage (argv [0], ERR_INVALID_OBJECT);
 // 			return true;
@@ -241,7 +241,7 @@ bool ConsoleCommandParserObjvar::performParsing (const NetworkId & userId, const
 	{
 		NetworkId oid (Unicode::wideToNarrow(argv[1]));
 		ServerObject* object = ServerWorld::findObjectByNetworkId(oid);
-		if (object == NULL)
+		if (object == nullptr)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
@@ -317,7 +317,7 @@ bool ConsoleCommandParserObjvar::performParsing (const NetworkId & userId, const
 	{
 		ServerObject * const userServerObject = ServerWorld::findObjectByNetworkId(userId);
 
-		if (userServerObject != NULL)
+		if (userServerObject != nullptr)
 		{
 			NetworkId specifiedNetworkId;
 
@@ -329,7 +329,7 @@ bool ConsoleCommandParserObjvar::performParsing (const NetworkId & userId, const
 			{
 				CreatureObject * const userCreatureObject = CreatureObject::asCreatureObject(userServerObject);
 
-				if (userCreatureObject != NULL)
+				if (userCreatureObject != nullptr)
 				{
 					specifiedNetworkId = userCreatureObject->getLookAtTarget();
 				}
@@ -337,7 +337,7 @@ bool ConsoleCommandParserObjvar::performParsing (const NetworkId & userId, const
 
 			ServerObject * const specifiedServerObject = ServerWorld::findObjectByNetworkId(specifiedNetworkId);
 
-			if (specifiedServerObject != NULL)
+			if (specifiedServerObject != nullptr)
 			{
 				DynamicVariableList const & objVarList = specifiedServerObject->getObjVars();
 				FormattedString<1024> fs;
@@ -357,7 +357,7 @@ bool ConsoleCommandParserObjvar::performParsing (const NetworkId & userId, const
 	{
 		NetworkId oid = NetworkId(Unicode::wideToNarrow(argv[1]));
 		ServerObject* object = ServerWorld::findObjectByNetworkId(oid);
-		if (object == NULL)
+		if (object == nullptr)
 		{
 			result += getErrorMessage (argv [0], ERR_INVALID_OBJECT);
 			return true;
@@ -376,7 +376,7 @@ bool ConsoleCommandParserObjvar::performParsing (const NetworkId & userId, const
 	{
 		NetworkId oid = NetworkId(Unicode::wideToNarrow(argv[1]));
 		ServerObject* object = ServerWorld::findObjectByNetworkId(oid);
-		if (object == NULL)
+		if (object == nullptr)
 		{
 			result += getErrorMessage (argv [0], ERR_INVALID_OBJECT);
 			return true;

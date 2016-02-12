@@ -358,7 +358,7 @@ bool SharedImageDesignerManager::isSessionValid(SharedImageDesignerManager::Sess
 			if(customizationDataHair)
 				customizationDataForThisCustomization = customizationDataHair;
 			else
-				customizationDataForThisCustomization = NULL;
+				customizationDataForThisCustomization = nullptr;
 		}
 
 		if(customizationDataForThisCustomization)

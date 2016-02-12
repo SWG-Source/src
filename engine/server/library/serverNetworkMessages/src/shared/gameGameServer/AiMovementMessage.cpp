@@ -61,7 +61,7 @@ void AiMovementMessage::pack(const MessageQueue::Data* const data, Archive::Byte
 	const AiMovementMessage * const msg = safe_cast<const AiMovementMessage *> (data);
 	if (msg)
 	{
-		if (GameServerMessageInterface::getInstance() != NULL)
+		if (GameServerMessageInterface::getInstance() != nullptr)
 			GameServerMessageInterface::getInstance()->pack(target, *msg);
 	}
 }
@@ -72,7 +72,7 @@ MessageQueue::Data* AiMovementMessage::unpack(Archive::ReadIterator & source)
 {
 	AiMovementMessage * msg = new AiMovementMessage();
 
-	if (GameServerMessageInterface::getInstance() != NULL)
+	if (GameServerMessageInterface::getInstance() != nullptr)
 		GameServerMessageInterface::getInstance()->unpack(source, *msg);
 
 	return msg;

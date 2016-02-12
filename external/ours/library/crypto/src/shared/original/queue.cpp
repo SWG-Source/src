@@ -152,7 +152,7 @@ void ByteQueue::CopyFrom(const ByteQueue &copy)
 		m_tail = m_tail->next;
 	}
 
-	m_tail->next = NULL;
+	m_tail->next = nullptr;
 
 	Put(copy.m_lazyString, copy.m_lazyLength);
 }

@@ -57,9 +57,9 @@ PropertyId PortalProperty::getClassPropertyId()
 
 PortalProperty::PortalProperty(Object &owner, const char *fileName)
 : Container(getClassPropertyId(), owner),
-	m_template(NULL),
+	m_template(nullptr),
 	m_cellList(new CellList),
-	m_fixupList(NULL),
+	m_fixupList(nullptr),
 	m_hasPassablePortalToParentCell(false)
 {
 #ifdef _DEBUG
@@ -67,7 +67,7 @@ PortalProperty::PortalProperty(Object &owner, const char *fileName)
 #endif // _DEBUG
 
 	m_template = PortalPropertyTemplateList::fetch(CrcLowerString(fileName));
-	m_cellList->resize(static_cast<CellList::size_type>(m_template->getNumberOfCells()), NULL);
+	m_cellList->resize(static_cast<CellList::size_type>(m_template->getNumberOfCells()), nullptr);
 
 #ifdef _DEBUG
 	DataLint::popAsset();
@@ -139,7 +139,7 @@ void PortalProperty::addToWorld()
 		int unloaded = 0;
 		int const numberOfCells = static_cast<int>(m_cellList->size());
 		for (int i = 1; i < numberOfCells; ++i)
-			if ((*m_cellList)[static_cast<CellList::size_type>(i)] == NULL)
+			if ((*m_cellList)[static_cast<CellList::size_type>(i)] == nullptr)
 			{
 				WARNING(true, ("cell %d/%d not loaded", i, numberOfCells));
 				++unloaded;
@@ -215,7 +215,7 @@ bool PortalProperty::serverEndBaselines(int serverObjectCrc, std::vector<Object*
 		uint const numberOfCells = m_cellList->size();
 		for (uint i = 1; i < numberOfCells; ++i)
 		{
-			if ((*m_cellList)[i] == NULL)
+			if ((*m_cellList)[i] == nullptr)
 			{
 				Object *object = ms_beginCreateObjectFunction(static_cast<int>(i));
 				IGNORE_RETURN(addToContents(*object, tmp));
@@ -460,7 +460,7 @@ void PortalProperty::debugPrint(std::string &buffer) const
 void PortalProperty::createAppearance()
 {
 	Appearance * const appearance = AppearanceTemplateList::createAppearance(m_template->getExteriorAppearanceName());
-	if (appearance != NULL) {
+	if (appearance != nullptr) {
 		appearance->setShadowBlobAllowed();
 		getOwner().setAppearance(appearance);
 	} else {
@@ -563,7 +563,7 @@ CellProperty *PortalProperty::getCell(const char *desiredCellName)
 			return (*m_cellList)[static_cast<CellList::size_type>(i)];
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 // ----------------------------------------------------------------------

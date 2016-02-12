@@ -279,8 +279,8 @@ bool CollisionCallbackManager::intersectAndReflectWithTerrain(Object * const obj
 
 void CollisionCallbackManagerNamespace::noCollisionDetectionThisFrame(Object * const object)
 {
-	FATAL(!ms_convertObjectToIndex, ("CollisionCallbackManagerNamespace::noCollisionDetectionThisFrame: ms_convertObjectToIndex == NULL."));
-	FATAL(!object, ("CollisionCallbackManagerNamespace::noCollisionDetectionThisFrame: object == NULL."));
+	FATAL(!ms_convertObjectToIndex, ("CollisionCallbackManagerNamespace::noCollisionDetectionThisFrame: ms_convertObjectToIndex == nullptr."));
+	FATAL(!object, ("CollisionCallbackManagerNamespace::noCollisionDetectionThisFrame: object == nullptr."));
 
 	int const index = ms_convertObjectToIndex(object);
 
@@ -298,9 +298,9 @@ void CollisionCallbackManagerNamespace::noCollisionDetectionThisFrame(Object * c
 
 bool CollisionCallbackManagerNamespace::collisionDetectionOnHit(Object * const object, Object * const wasHitByThisObject)
 {
-	FATAL(!ms_convertObjectToIndex, ("CollisionCallbackManagerNamespace::collisionDetectionOnHit: ms_convertObjectToIndex == NULL."));
-	FATAL(!object, ("CollisionCallbackManagerNamespace::collisionDetectionOnHit: object == NULL."));
-	FATAL(!wasHitByThisObject, ("CollisionCallbackManagerNamespace::collisionDetectionOnHit: wasHitByThisObject == NULL."));
+	FATAL(!ms_convertObjectToIndex, ("CollisionCallbackManagerNamespace::collisionDetectionOnHit: ms_convertObjectToIndex == nullptr."));
+	FATAL(!object, ("CollisionCallbackManagerNamespace::collisionDetectionOnHit: object == nullptr."));
+	FATAL(!wasHitByThisObject, ("CollisionCallbackManagerNamespace::collisionDetectionOnHit: wasHitByThisObject == nullptr."));
 
 	CollisionCallbackManager::OnHitByObjectFunction function = 0;
 

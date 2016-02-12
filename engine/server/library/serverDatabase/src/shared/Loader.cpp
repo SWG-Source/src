@@ -55,7 +55,7 @@
 
 // ======================================================================
 
-Loader *Loader::ms_instance = NULL;
+Loader *Loader::ms_instance = nullptr;
 
 // ======================================================================
 
@@ -72,7 +72,7 @@ void Loader::remove()
 {
 	NOT_NULL(ms_instance);
 	delete ms_instance;
-	ms_instance = NULL;
+	ms_instance = nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -442,7 +442,7 @@ void Loader::receiveMessage(const MessageDispatch::Emitter & source, const Messa
 	{
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		ValidateCharacterForLoginMessage msg(ri);
-		verifyCharacter(msg.getSuid(), msg.getCharacterId(), NULL);
+		verifyCharacter(msg.getSuid(), msg.getCharacterId(), nullptr);
 	}
 	else if(message.isType("TransferGetLoginLocationData"))
 	{
@@ -647,7 +647,7 @@ void Loader::checkVersionNumber(int expectedVersion, bool fatalOnMismatch)
 void Loader::requestChunk(uint32 processId,int nodeX, int nodeZ, const std::string &sceneId)
 {
 	ObjectLocator * const regularLocator=new ChunkLocator(nodeX, nodeZ, sceneId, processId, true);
-	ObjectLocator * goldLocator=NULL;
+	ObjectLocator * goldLocator=nullptr;
 	if (ConfigServerDatabase::getEnableGoldDatabase())
 		goldLocator = new ChunkLocator(nodeX, nodeZ, sceneId, processId, false);
 	addLocatorsForServer(processId, regularLocator, goldLocator);
@@ -671,7 +671,7 @@ void Loader::requestCharacter(const NetworkId &characterId, uint32 gameServerId)
 			i=m_multipleLoginLock.find(characterId);
 			if (i==m_multipleLoginLock.end())
 			{
-				addLocatorsForServer(gameServerId, new CharacterLocator(characterId), NULL);
+				addLocatorsForServer(gameServerId, new CharacterLocator(characterId), nullptr);
 
 				DEBUG_REPORT_LOG(true,("Adding multipleLoginLock for %s\n",characterId.getValueString().c_str()));
 				m_multipleLoginLock[characterId] = gameServerId;
@@ -684,7 +684,7 @@ void Loader::requestCharacter(const NetworkId &characterId, uint32 gameServerId)
 		}
 	}
 	else
-		addLocatorsForServer(gameServerId, new CharacterLocator(characterId), NULL);
+		addLocatorsForServer(gameServerId, new CharacterLocator(characterId), nullptr);
 }
 
 // ----------------------------------------------------------------------
@@ -692,7 +692,7 @@ void Loader::requestCharacter(const NetworkId &characterId, uint32 gameServerId)
 void Loader::loadContainedObject(const NetworkId &containerId, const NetworkId &objectId, uint32 gameServerId)
 {
 	LOG("AuctionRetrieval", ("Loader::received loadContainedObject for loading object %s for retrieval", objectId.getValueString().c_str()));
-	addLocatorsForServer(gameServerId, new ContainedObjectLocator(containerId,objectId), NULL);
+	addLocatorsForServer(gameServerId, new ContainedObjectLocator(containerId,objectId), nullptr);
 }
 
 
@@ -700,7 +700,7 @@ void Loader::loadContainedObject(const NetworkId &containerId, const NetworkId &
 
 void Loader::loadContents(const NetworkId &containerId, uint32 gameServerId)
 {
-	addLocatorsForServer(gameServerId, new ContentsLocator(containerId), NULL);
+	addLocatorsForServer(gameServerId, new ContentsLocator(containerId), nullptr);
 }
 
 // ----------------------------------------------------------------------
@@ -820,7 +820,7 @@ void Loader::removeLoadLock(const NetworkId &characterId)
 	if (i->second!=0)
 	{
 		DEBUG_REPORT_LOG(true,("Now handling delayed login request for character %s\n",characterId.getValueString().c_str()));
-		addLocatorsForServer(i->second, new CharacterLocator(characterId), NULL);
+		addLocatorsForServer(i->second, new CharacterLocator(characterId), nullptr);
 	}
 
 	m_loadLock.erase(i);

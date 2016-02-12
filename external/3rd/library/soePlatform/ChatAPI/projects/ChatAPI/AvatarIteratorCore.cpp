@@ -9,7 +9,7 @@ namespace ChatSystem
 // AVATAR ITERATOR CORE
 
 AvatarIteratorCore::AvatarIteratorCore()
-: m_map(NULL)
+: m_map(nullptr)
 {
 }
 
@@ -33,7 +33,7 @@ AvatarIteratorCore &AvatarIteratorCore::operator=(const AvatarIteratorCore& rhs)
 
 ChatAvatar *AvatarIteratorCore::getCurAvatar()
 {
-	ChatAvatar *returnVal = NULL;
+	ChatAvatar *returnVal = nullptr;
 	
 	if (!outOfBounds())
 	{
@@ -87,7 +87,7 @@ bool AvatarIteratorCore::outOfBounds()
 // MODERATOR ITERATOR CORE
 
 ModeratorIteratorCore::ModeratorIteratorCore()
-: m_set(NULL)
+: m_set(nullptr)
 {
 }
 
@@ -111,7 +111,7 @@ ModeratorIteratorCore &ModeratorIteratorCore::operator=(const ModeratorIteratorC
 
 ChatAvatar *ModeratorIteratorCore::getCurAvatar()
 {
-	ChatAvatar *returnVal = NULL;
+	ChatAvatar *returnVal = nullptr;
 	
 	if (!outOfBounds())
 	{
@@ -165,7 +165,7 @@ bool ModeratorIteratorCore::outOfBounds()
 // TEMPORARY MODERATOR ITERATOR CORE
 
 TemporaryModeratorIteratorCore::TemporaryModeratorIteratorCore()
-: m_set(NULL)
+: m_set(nullptr)
 {
 }
 
@@ -189,7 +189,7 @@ TemporaryModeratorIteratorCore &TemporaryModeratorIteratorCore::operator=(const 
 
 ChatAvatar *TemporaryModeratorIteratorCore::getCurAvatar()
 {
-	ChatAvatar *returnVal = NULL;
+	ChatAvatar *returnVal = nullptr;
 	
 	if (!outOfBounds())
 	{
@@ -243,7 +243,7 @@ bool TemporaryModeratorIteratorCore::outOfBounds()
 // VOICE ITERATOR CORE
 
 VoiceIteratorCore::VoiceIteratorCore()
-: m_set(NULL)
+: m_set(nullptr)
 {
 }
 
@@ -267,7 +267,7 @@ VoiceIteratorCore &VoiceIteratorCore::operator=(const VoiceIteratorCore& rhs)
 
 ChatAvatar *VoiceIteratorCore::getCurAvatar()
 {
-	ChatAvatar *returnVal = NULL;
+	ChatAvatar *returnVal = nullptr;
 	
 	if (!outOfBounds())
 	{
@@ -321,7 +321,7 @@ bool VoiceIteratorCore::outOfBounds()
 // INVITE ITERATOR CORE
 
 InviteIteratorCore::InviteIteratorCore()
-: m_set(NULL)
+: m_set(nullptr)
 {
 }
 
@@ -345,7 +345,7 @@ InviteIteratorCore &InviteIteratorCore::operator=(const InviteIteratorCore& rhs)
 
 ChatAvatar *InviteIteratorCore::getCurAvatar()
 {
-	ChatAvatar *returnVal = NULL;
+	ChatAvatar *returnVal = nullptr;
 	
 	if (!outOfBounds())
 	{
@@ -399,7 +399,7 @@ bool InviteIteratorCore::outOfBounds()
 // BAN ITERATOR CORE
 
 BanIteratorCore::BanIteratorCore()
-: m_set(NULL)
+: m_set(nullptr)
 {
 }
 
@@ -423,7 +423,7 @@ BanIteratorCore &BanIteratorCore::operator=(const BanIteratorCore& rhs)
 
 ChatAvatar *BanIteratorCore::getCurAvatar()
 {
-	ChatAvatar *returnVal = NULL;
+	ChatAvatar *returnVal = nullptr;
 	
 	if (!outOfBounds())
 	{

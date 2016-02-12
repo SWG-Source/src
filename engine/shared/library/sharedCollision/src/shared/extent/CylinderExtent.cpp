@@ -146,7 +146,7 @@ void CylinderExtent::drawDebugShapes ( DebugShapeRenderer * renderer ) const
 
 #ifdef _DEBUG
 
-	if(renderer == NULL) return;
+	if(renderer == nullptr) return;
 
 	renderer->setColor( VectorArgb::solidGreen );
 	renderer->drawCylinder(m_cylinder);

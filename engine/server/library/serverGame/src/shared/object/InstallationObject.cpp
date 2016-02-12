@@ -45,7 +45,7 @@
 
 static const std::string OBJVAR_ACCUMULATED_TIME("_installation.acclTime");
 
-const SharedObjectTemplate * InstallationObject::m_defaultSharedTemplate = NULL;
+const SharedObjectTemplate * InstallationObject::m_defaultSharedTemplate = nullptr;
 
 namespace InstallationObjectNamespace
 {
@@ -93,13 +93,13 @@ const SharedObjectTemplate * InstallationObject::getDefaultSharedTemplate(void) 
 {
 static const ConstCharCrcLowerString templateName("object/installation/base/shared_installation_default.iff");
 
-	if (m_defaultSharedTemplate == NULL)
+	if (m_defaultSharedTemplate == nullptr)
 	{
 		m_defaultSharedTemplate = safe_cast<const SharedObjectTemplate *>(
 			ObjectTemplateList::fetch(templateName));
-		WARNING_STRICT_FATAL(m_defaultSharedTemplate == NULL, ("Cannot create "
+		WARNING_STRICT_FATAL(m_defaultSharedTemplate == nullptr, ("Cannot create "
 			"default shared object template %s", templateName.getString()));
-		if (m_defaultSharedTemplate != NULL)
+		if (m_defaultSharedTemplate != nullptr)
 			ExitChain::add (removeDefaultTemplate, "InstallationObject::removeDefaultTemplate");
 	}
 	return m_defaultSharedTemplate;
@@ -112,10 +112,10 @@ static const ConstCharCrcLowerString templateName("object/installation/base/shar
  */
 void InstallationObject::removeDefaultTemplate(void)
 {
-	if (m_defaultSharedTemplate != NULL)
+	if (m_defaultSharedTemplate != nullptr)
 	{
 		m_defaultSharedTemplate->releaseReference();
-		m_defaultSharedTemplate = NULL;
+		m_defaultSharedTemplate = nullptr;
 	}
 }	// InstallationObject::removeDefaultTemplate
 

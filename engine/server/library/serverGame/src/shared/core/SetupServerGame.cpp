@@ -65,8 +65,8 @@ void SetupServerGame::install()
 	PositionUpdateTracker::install();
 	LogoutTracker::install();
 	AuthTransferTracker::install();
-	NonCriticalTaskQueue::install(static_cast<NonCriticalTaskQueue*>(NULL));
-	SurveySystem::install(static_cast<SurveySystem*>(NULL));
+	NonCriticalTaskQueue::install(static_cast<NonCriticalTaskQueue*>(nullptr));
+	SurveySystem::install(static_cast<SurveySystem*>(nullptr));
 	CreatureObject::install();
 	NameManager::install();
 	MessageToQueue::install();

@@ -87,7 +87,7 @@ class ConfigServerGame
 		int             scriptWatcherInterruptTime; // time in ms (after scriptWatcherWarnTime) before we abort a script
 		int             scriptStackErrorLimit;      // depth of stack error we assume to be a legit error
 		int             scriptStackErrorLevel;      // how we handle a stack error: 0=recover, 1=javacore, 2=fatal
-		bool            disableObjvarNullCheck;     // flag to disable the check for a null object when get/setting objvars
+		bool            disableObjvarNullCheck;     // flag to disable the check for a nullptr object when get/setting objvars
 
 		// throttle to limit how universe data is sent from
 		// the universe game server to the other game servers;

@@ -31,11 +31,11 @@ CompositeExtent::~CompositeExtent()
 	{
 		delete m_extents->at(i);
 
-		m_extents->at(i) = NULL;
+		m_extents->at(i) = nullptr;
 	}
 
 	delete m_extents;
-	m_extents = NULL;
+	m_extents = nullptr;
 
 }
 
@@ -116,7 +116,7 @@ void CompositeExtent::drawDebugShapes ( DebugShapeRenderer * renderer ) const
 
 #ifdef _DEBUG
 
-	if(renderer == NULL) return;
+	if(renderer == nullptr) return;
 
 	for(int i = 0; i < getExtentCount(); i++)
 	{

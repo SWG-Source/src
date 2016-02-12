@@ -81,7 +81,7 @@ const JNINativeMethod NATIVES[] = {
 jobjectArray JNICALL ScriptMethodsVeteranNamespace::veteranGetTriggeredEvents(JNIEnv * /*env*/, jobject /*self*/, jlong player)
 {
 	ServerObject const * const so = safe_cast<ServerObject const *>(NetworkIdManager::getObjectById(NetworkId(player)));
-	CreatureObject const * const playerCreature = so ? so->asCreatureObject() : NULL;
+	CreatureObject const * const playerCreature = so ? so->asCreatureObject() : nullptr;
 
 	if (playerCreature)
 	{
@@ -89,7 +89,7 @@ jobjectArray JNICALL ScriptMethodsVeteranNamespace::veteranGetTriggeredEvents(JN
 		VeteranRewardManager::getTriggeredEventsIds(*playerCreature, eventsIds);
 
 		if (eventsIds.empty())
-			return NULL;
+			return nullptr;
 
 		int i = 0;
 		LocalObjectArrayRefPtr valueArray = createNewObjectArray(eventsIds.size(), JavaLibrary::getClsString());
@@ -102,7 +102,7 @@ jobjectArray JNICALL ScriptMethodsVeteranNamespace::veteranGetTriggeredEvents(JN
 		return valueArray->getReturnValue();
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -110,7 +110,7 @@ jobjectArray JNICALL ScriptMethodsVeteranNamespace::veteranGetTriggeredEvents(JN
 jboolean JNICALL ScriptMethodsVeteranNamespace::veteranAccountFeatureIdRequest(JNIEnv * /*env*/, jobject /*self*/, jlong player)
 {
 	ServerObject * const so = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(NetworkId(player)));
-	CreatureObject * const playerCreature = so ? so->asCreatureObject() : NULL;
+	CreatureObject * const playerCreature = so ? so->asCreatureObject() : nullptr;
 
 	if (playerCreature)
 	{
@@ -131,7 +131,7 @@ jboolean JNICALL ScriptMethodsVeteranNamespace::veteranAccountFeatureIdRequest(J
 jobjectArray JNICALL ScriptMethodsVeteranNamespace::veteranGetRewardChoicesDescriptions(JNIEnv * /*env*/, jobject /*self*/, jlong player, jstring event)
 {
 	ServerObject const * const so = safe_cast<ServerObject const *>(NetworkIdManager::getObjectById(NetworkId(player)));
-	CreatureObject const * const playerCreature = so ? so->asCreatureObject() : NULL;
+	CreatureObject const * const playerCreature = so ? so->asCreatureObject() : nullptr;
 
 	if (playerCreature)
 	{
@@ -152,7 +152,7 @@ jobjectArray JNICALL ScriptMethodsVeteranNamespace::veteranGetRewardChoicesDescr
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -160,7 +160,7 @@ jobjectArray JNICALL ScriptMethodsVeteranNamespace::veteranGetRewardChoicesDescr
 jobjectArray JNICALL ScriptMethodsVeteranNamespace::veteranGetRewardChoicesTags(JNIEnv * /*env*/, jobject /*self*/, jlong player, jstring event)
 {
 	ServerObject const * const so = safe_cast<ServerObject const *>(NetworkIdManager::getObjectById(NetworkId(player)));
-	CreatureObject const * const playerCreature = so ? so->asCreatureObject() : NULL;
+	CreatureObject const * const playerCreature = so ? so->asCreatureObject() : nullptr;
 
 	if (playerCreature)
 	{
@@ -181,7 +181,7 @@ jobjectArray JNICALL ScriptMethodsVeteranNamespace::veteranGetRewardChoicesTags(
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -189,7 +189,7 @@ jobjectArray JNICALL ScriptMethodsVeteranNamespace::veteranGetRewardChoicesTags(
 jboolean JNICALL ScriptMethodsVeteranNamespace::veteranClaimReward(JNIEnv * /*env*/, jobject /*self*/, jlong player, jstring event, jstring rewardTag)
 {
 	ServerObject const * const so = safe_cast<ServerObject const *>(NetworkIdManager::getObjectById(NetworkId(player)));
-	CreatureObject const * const playerCreature = so ? so->asCreatureObject() : NULL;
+	CreatureObject const * const playerCreature = so ? so->asCreatureObject() : nullptr;
 
 	if (playerCreature)
 	{
@@ -227,7 +227,7 @@ jstring JNICALL ScriptMethodsVeteranNamespace::veteranGetEventAnnouncement(JNIEn
 			return eventAnnouncement.getReturnValue();
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -245,7 +245,7 @@ jstring JNICALL ScriptMethodsVeteranNamespace::veteranGetEventDescription(JNIEnv
 			return eventDescription.getReturnValue();
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -263,7 +263,7 @@ jstring JNICALL ScriptMethodsVeteranNamespace::veteranGetEventUrl(JNIEnv * /*env
 			return temp2.getReturnValue();
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -313,7 +313,7 @@ jboolean JNICALL ScriptMethodsVeteranNamespace::veteranIsItemAccountUniqueFeatur
 void JNICALL ScriptMethodsVeteranNamespace::veteranWriteAccountDataToObjvars(JNIEnv * /*env*/, jobject /*self*/, jlong player)
 {
 	ServerObject * const so = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(NetworkId(player)));
-	CreatureObject * const playerCreature = so ? so->asCreatureObject() : NULL;
+	CreatureObject * const playerCreature = so ? so->asCreatureObject() : nullptr;
 
 	if (playerCreature)
 		VeteranRewardManager::writeAccountDataToObjvars(*playerCreature);
@@ -323,11 +323,11 @@ void JNICALL ScriptMethodsVeteranNamespace::veteranWriteAccountDataToObjvars(JNI
 
 jboolean JNICALL ScriptMethodsVeteranNamespace::veteranCanTradeInReward(JNIEnv *env, jobject self, jlong player, jlong item)
 {
-	CreatureObject const * playerCreature = NULL;
+	CreatureObject const * playerCreature = nullptr;
 	if (!JavaLibrary::getObject(player, playerCreature) || !playerCreature)
 		return JNI_FALSE;
 
-	ServerObject * itemObject = NULL;
+	ServerObject * itemObject = nullptr;
 	if (!JavaLibrary::getObject(item, itemObject) || !itemObject)
 		return JNI_FALSE;
 
@@ -339,11 +339,11 @@ jboolean JNICALL ScriptMethodsVeteranNamespace::veteranCanTradeInReward(JNIEnv *
 
 void JNICALL ScriptMethodsVeteranNamespace::veteranTradeInReward(JNIEnv *env, jobject self, jlong player, jlong item)
 {
-	CreatureObject const * playerCreature = NULL;
+	CreatureObject const * playerCreature = nullptr;
 	if (!JavaLibrary::getObject(player, playerCreature) || !playerCreature)
 		return;
 
-	ServerObject * itemObject = NULL;
+	ServerObject * itemObject = nullptr;
 	if (!JavaLibrary::getObject(item, itemObject) || !itemObject)
 		return;
 
@@ -355,11 +355,11 @@ void JNICALL ScriptMethodsVeteranNamespace::veteranTradeInReward(JNIEnv *env, jo
 
 void JNICALL ScriptMethodsVeteranNamespace::adjustSwgTcgAccountFeatureId(JNIEnv *env, jobject self, jlong player, jlong item, jint featureId, jint adjustment)
 {
-	CreatureObject const * playerCreature = NULL;
+	CreatureObject const * playerCreature = nullptr;
 	if (!JavaLibrary::getObject(player, playerCreature) || !playerCreature)
 		return;
 
-	ServerObject * itemObject = NULL;
+	ServerObject * itemObject = nullptr;
 	if (!JavaLibrary::getObject(item, itemObject) || !itemObject)
 		return;
 

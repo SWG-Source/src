@@ -24,7 +24,7 @@ namespace AttribModNameManagerNamespace
 	std::set<uint32> unknownCrcs;
 }
 
-AttribModNameManager * AttribModNameManager::ms_attribModNameManager = NULL;
+AttribModNameManager * AttribModNameManager::ms_attribModNameManager = nullptr;
 
 
 //========================================================================
@@ -65,8 +65,8 @@ AttribModNameManager::~AttribModNameManager()
 {
 	delete m_names;
 	delete m_crcMap;
-	m_names = NULL;
-	m_crcMap = NULL;
+	m_names = nullptr;
+	m_crcMap = nullptr;
 }	// AttribModNameManager::~AttribModNameManager
 
 // ----------------------------------------------------------------------
@@ -76,7 +76,7 @@ AttribModNameManager::~AttribModNameManager()
  */
 void AttribModNameManager::install()
 {
-	if (ms_attribModNameManager == NULL)
+	if (ms_attribModNameManager == nullptr)
 	{
 		ms_attribModNameManager = new AttribModNameManager;
 		ExitChain::add(AttribModNameManager::remove, "AttribModNameManager::remove");
@@ -90,10 +90,10 @@ void AttribModNameManager::install()
  */
 void AttribModNameManager::remove()
 {
-	if (ms_attribModNameManager != NULL)
+	if (ms_attribModNameManager != nullptr)
 	{
 		delete ms_attribModNameManager;
-		ms_attribModNameManager = NULL;
+		ms_attribModNameManager = nullptr;
 	}
 }	// AttribModNameManager::remove
 
@@ -263,7 +263,7 @@ void AttribModNameManager::sendAllNamesToServer(std::vector<uint32> const & serv
  *
  * @param crc		the crc value to look up
  *
- * @return the attrib mod name, or NULL if there was no name for the crc
+ * @return the attrib mod name, or nullptr if there was no name for the crc
  */
 const char * AttribModNameManager::getAttribModName(uint32 crc) const
 {
@@ -277,7 +277,7 @@ const char * AttribModNameManager::getAttribModName(uint32 crc) const
 			ServerClock::getInstance().getServerFrame()));
 		AttribModNameManagerNamespace::unknownCrcs.insert(crc);
 	}
-	return NULL;
+	return nullptr;
 }	// AttribModNameManager::getAttribModName
 
 // ----------------------------------------------------------------------
@@ -350,7 +350,7 @@ void AttribModNameManager::getAttribModNamesFromBase(uint32 base,
 	std::vector<const char *> & names) const
 {
 	const char * baseName = getAttribModName(base);
-	if (baseName != NULL)
+	if (baseName != nullptr)
 		getAttribModNamesFromBase(baseName, names);
 }	// AttribModNameManager::getAttribModNamesFromBase
 
@@ -366,7 +366,7 @@ void AttribModNameManager::getAttribModCrcsFromBase(uint32 base,
 	std::vector<uint32> & crcs) const
 {
 	const char * baseName = getAttribModName(base);
-	if (baseName != NULL)
+	if (baseName != nullptr)
 		getAttribModCrcsFromBase(baseName, crcs);
 }	// AttribModNameManager::getAttribModCrcsFromBase
 

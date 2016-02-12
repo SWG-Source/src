@@ -136,7 +136,7 @@ const JNINativeMethod NATIVES[] = {
 jint JNICALL ScriptMethodsContainersNamespace::getContainerType(JNIEnv *env, jobject self, jlong container)
 {
 	//@todo use enum
-	ServerObject * containerOwner = NULL;
+	ServerObject * containerOwner = nullptr;
 	if (!JavaLibrary::getObject(container, containerOwner))
 		return 0;
 
@@ -151,7 +151,7 @@ jint JNICALL ScriptMethodsContainersNamespace::getContainerType(JNIEnv *env, job
 
 jlongArray JNICALL ScriptMethodsContainersNamespace::getContents(JNIEnv *env, jobject self, jlong containerObj)
 {
-	ServerObject * containerOwner = NULL;
+	ServerObject * containerOwner = nullptr;
 	if (!JavaLibrary::getObject(containerObj, containerOwner))
 		return 0;
 
@@ -190,7 +190,7 @@ jlongArray JNICALL ScriptMethodsContainersNamespace::getContents(JNIEnv *env, jo
 
 jlong JNICALL ScriptMethodsContainersNamespace::getContainedBy(JNIEnv *env, jobject self, jlong item)
 {
-	ServerObject * itemObj = NULL;
+	ServerObject * itemObj = nullptr;
 	if (!JavaLibrary::getObject(item, itemObj))
 		return 0;
 
@@ -211,7 +211,7 @@ jboolean JNICALL ScriptMethodsContainersNamespace::contains(JNIEnv *env, jobject
 	if (container_id.getValue() == 0)
 		return JNI_FALSE;
 
-	ServerObject * itemObj = NULL;
+	ServerObject * itemObj = nullptr;
 	if (!JavaLibrary::getObject(item, itemObj))
 		return JNI_FALSE;
 
@@ -226,11 +226,11 @@ jboolean JNICALL ScriptMethodsContainersNamespace::contains(JNIEnv *env, jobject
 jint JNICALL ScriptMethodsContainersNamespace::canPutIn(JNIEnv *env, jobject self, jlong target, jlong jcontainer)
 {
 	const int unknownError = static_cast<int>(Container::CEC_Unknown);
-	ServerObject * containerOwner = NULL;
+	ServerObject * containerOwner = nullptr;
 	if (!JavaLibrary::getObject(jcontainer, containerOwner))
 		return unknownError;
 
-	ServerObject * item = NULL;
+	ServerObject * item = nullptr;
 	if (!JavaLibrary::getObject(target, item))
 		return unknownError;
 
@@ -248,11 +248,11 @@ jint JNICALL ScriptMethodsContainersNamespace::canPutIn(JNIEnv *env, jobject sel
 jint JNICALL ScriptMethodsContainersNamespace::canPutInSlot(JNIEnv *env, jobject self, jlong target, jlong jcontainer, jstring slot)
 {
 	const int unknownError = static_cast<int>(Container::CEC_Unknown);
-	ServerObject * containerOwner = NULL;
+	ServerObject * containerOwner = nullptr;
 	if (!JavaLibrary::getObject(jcontainer, containerOwner))
 		return unknownError;
 
-	ServerObject * item = NULL;
+	ServerObject * item = nullptr;
 	if (!JavaLibrary::getObject(target, item))
 		return unknownError;
 
@@ -268,7 +268,7 @@ jint JNICALL ScriptMethodsContainersNamespace::canPutInSlot(JNIEnv *env, jobject
 	if (slotId == SlotId::invalid)
 		return static_cast<int>(Container::CEC_NoSlot);
 
-	IGNORE_RETURN(ContainerInterface::canTransferToSlot(*containerOwner, *item, slotId, NULL, tmp));
+	IGNORE_RETURN(ContainerInterface::canTransferToSlot(*containerOwner, *item, slotId, nullptr, tmp));
 
 	return static_cast<int>(tmp);
 }
@@ -279,7 +279,7 @@ jlong JNICALL ScriptMethodsContainersNamespace::getObjectInSlot(JNIEnv *env, job
 {
 	JavaStringParam localSlot(slot);
 
-	ServerObject * containerOwner = NULL;
+	ServerObject * containerOwner = nullptr;
 	if (!JavaLibrary::getObject(container, containerOwner))
 		return 0;
 
@@ -301,7 +301,7 @@ jlong JNICALL ScriptMethodsContainersNamespace::getObjectInSlot(JNIEnv *env, job
 
 jlong JNICALL ScriptMethodsContainersNamespace::getFirstParentInWorld(JNIEnv *env, jobject self, jlong item)
 {
-	ServerObject * itemObj = NULL;
+	ServerObject * itemObj = nullptr;
 	if (!JavaLibrary::getObject(item, itemObj))
 		return 0;
 
@@ -316,7 +316,7 @@ jlong JNICALL ScriptMethodsContainersNamespace::getFirstParentInWorld(JNIEnv *en
 
 jlong JNICALL ScriptMethodsContainersNamespace::getTopMostContainer(JNIEnv *env, jobject self, jlong item)
 {
-	ServerObject * itemObj = NULL;
+	ServerObject * itemObj = nullptr;
 	if (!JavaLibrary::getObject(item, itemObj))
 		return 0;
 
@@ -331,7 +331,7 @@ jlong JNICALL ScriptMethodsContainersNamespace::getTopMostContainer(JNIEnv *env,
 
 jint JNICALL ScriptMethodsContainersNamespace::getNumItemsIn(JNIEnv *env, jobject self, jlong container)
 {
-	ServerObject * containerOwner = NULL;
+	ServerObject * containerOwner = nullptr;
 	if (!JavaLibrary::getObject(container, containerOwner))
 		return 0;
 
@@ -347,7 +347,7 @@ jint JNICALL ScriptMethodsContainersNamespace::getNumItemsIn(JNIEnv *env, jobjec
 void JNICALL ScriptMethodsContainersNamespace::destroyContents(JNIEnv *env, jobject self, jlong container)
 {
 #if 0 //@todo implement
-	ServerObject * containerOwner = NULL;
+	ServerObject * containerOwner = nullptr;
 	if (!JavaLibrary::getObject(container, containerOwner))
 		return;
 
@@ -359,11 +359,11 @@ void JNICALL ScriptMethodsContainersNamespace::destroyContents(JNIEnv *env, jobj
 
 jint JNICALL ScriptMethodsContainersNamespace::moveContents(JNIEnv *env, jobject self, jlong containerA, jlong containerB)
 {
-	ServerObject * containerOwner = NULL;
+	ServerObject * containerOwner = nullptr;
 	if (!JavaLibrary::getObject(containerA, containerOwner))
 		return 0;
 
-	ServerObject * targetContainer = NULL;
+	ServerObject * targetContainer = nullptr;
 	if (!JavaLibrary::getObject(containerB, targetContainer))
 		return 0;
 
@@ -377,7 +377,7 @@ jint JNICALL ScriptMethodsContainersNamespace::moveContents(JNIEnv *env, jobject
 	for (; iter != container->end(); ++iter)
 	{
 		ServerObject* item = safe_cast<ServerObject*>((*iter).getObject());
-		if (item && ContainerInterface::transferItemToGeneralContainer(*targetContainer, *item, NULL, tmp))
+		if (item && ContainerInterface::transferItemToGeneralContainer(*targetContainer, *item, nullptr, tmp))
 		{
 			++count;
 		}
@@ -389,20 +389,20 @@ jint JNICALL ScriptMethodsContainersNamespace::moveContents(JNIEnv *env, jobject
 
 jint JNICALL ScriptMethodsContainersNamespace::moveObjects(JNIEnv *env, jobject self, jlongArray targets, jlong container)
 {
-	ServerObject * containerOwner = NULL;
+	ServerObject * containerOwner = nullptr;
 	if (!JavaLibrary::getObject(container, containerOwner))
 		return 0;
 
 	int count = 0;
 	for (int i = 0; i < env->GetArrayLength(targets); ++i)
 	{
-		ServerObject * itemObj = NULL;
+		ServerObject * itemObj = nullptr;
 		jlong jlongTmp;
 		env->GetLongArrayRegion(targets, i, 1, &jlongTmp);
 		if (JavaLibrary::getObject(jlongTmp, itemObj))
 		{
 			Container::ContainerErrorCode tmp = Container::CEC_Success;
-			if (ContainerInterface::transferItemToGeneralContainer(*containerOwner, *itemObj, NULL, tmp))
+			if (ContainerInterface::transferItemToGeneralContainer(*containerOwner, *itemObj, nullptr, tmp))
 			{
 				++count;
 			}
@@ -417,15 +417,15 @@ jint JNICALL ScriptMethodsContainersNamespace::moveObjects(JNIEnv *env, jobject 
 
 jboolean JNICALL ScriptMethodsContainersNamespace::putIn(JNIEnv *env, jobject self, jlong item, jlong container)
 {
-	ServerObject * containerOwner = NULL;
+	ServerObject * containerOwner = nullptr;
 	if (!JavaLibrary::getObject(container, containerOwner))
 		return JNI_FALSE;
 
-	ServerObject * itemObj = NULL;
+	ServerObject * itemObj = nullptr;
 	if (!JavaLibrary::getObject(item, itemObj))
 		return JNI_FALSE;
 	Container::ContainerErrorCode tmp = Container::CEC_Success;
-	return ContainerInterface::transferItemToGeneralContainer(*containerOwner, *itemObj, NULL, tmp);
+	return ContainerInterface::transferItemToGeneralContainer(*containerOwner, *itemObj, nullptr, tmp);
 
 }
 
@@ -434,11 +434,11 @@ jboolean JNICALL ScriptMethodsContainersNamespace::putIn(JNIEnv *env, jobject se
 
 jboolean JNICALL ScriptMethodsContainersNamespace::putInPosition(JNIEnv *env, jobject self, jlong item, jlong container, jobject pos)
 {
-	ServerObject * containerOwner = NULL;
+	ServerObject * containerOwner = nullptr;
 	if (!JavaLibrary::getObject(container, containerOwner))
 		return JNI_FALSE;
 
-	ServerObject * itemObj = NULL;
+	ServerObject * itemObj = nullptr;
 	if (!JavaLibrary::getObject(item, itemObj))
 		return JNI_FALSE;
 
@@ -451,7 +451,7 @@ jboolean JNICALL ScriptMethodsContainersNamespace::putInPosition(JNIEnv *env, jo
 	tr.setPosition_p(newPos);
 
 	Container::ContainerErrorCode tmp = Container::CEC_Success;
-	return ContainerInterface::transferItemToCell(*containerOwner, *itemObj, tr, NULL, tmp);
+	return ContainerInterface::transferItemToCell(*containerOwner, *itemObj, tr, nullptr, tmp);
 }
 
 //--------------------------------------------------------------------------------------
@@ -459,20 +459,20 @@ jboolean JNICALL ScriptMethodsContainersNamespace::putInPosition(JNIEnv *env, jo
 
 jboolean JNICALL ScriptMethodsContainersNamespace::putInAndSendError(JNIEnv *env, jobject self, jlong item, jlong container, jlong player)
 {
-	ServerObject * containerOwner = NULL;
+	ServerObject * containerOwner = nullptr;
 	if (!JavaLibrary::getObject(container, containerOwner))
 		return JNI_FALSE;
 
-	ServerObject * itemObj = NULL;
+	ServerObject * itemObj = nullptr;
 	if (!JavaLibrary::getObject(item, itemObj))
 		return JNI_FALSE;
 
 
 	Container::ContainerErrorCode tmp = Container::CEC_Success;
-	bool retval = ContainerInterface::transferItemToGeneralContainer(*containerOwner, *itemObj, NULL, tmp);
+	bool retval = ContainerInterface::transferItemToGeneralContainer(*containerOwner, *itemObj, nullptr, tmp);
 	if (!retval)
 	{
-		ServerObject * playerObj = NULL;
+		ServerObject * playerObj = nullptr;
 		if (!JavaLibrary::getObject(player, playerObj))
 			return JNI_FALSE;
 		ContainerInterface::sendContainerMessageToClient(*playerObj, tmp);
@@ -483,11 +483,11 @@ jboolean JNICALL ScriptMethodsContainersNamespace::putInAndSendError(JNIEnv *env
 //--------------------------------------------------------------------------------------
 jboolean JNICALL ScriptMethodsContainersNamespace::putInOverloaded(JNIEnv *env, jobject self, jlong item, jlong container)
 {
-	ServerObject * containerOwner = NULL;
+	ServerObject * containerOwner = nullptr;
 	if (!JavaLibrary::getObject(container, containerOwner))
 		return JNI_FALSE;
 
-	ServerObject * itemObj = NULL;
+	ServerObject * itemObj = nullptr;
 	if (!JavaLibrary::getObject(item, itemObj))
 		return JNI_FALSE;
 
@@ -500,7 +500,7 @@ jboolean JNICALL ScriptMethodsContainersNamespace::putInOverloaded(JNIEnv *env, 
 	}
 	else
 	{
-		retval =  ContainerInterface::transferItemToVolumeContainer(*containerOwner, *itemObj, NULL, tmp, true);
+		retval =  ContainerInterface::transferItemToVolumeContainer(*containerOwner, *itemObj, nullptr, tmp, true);
 	}
 
 	return retval;
@@ -509,11 +509,11 @@ jboolean JNICALL ScriptMethodsContainersNamespace::putInOverloaded(JNIEnv *env, 
 //--------------------------------------------------------------------------------------
 jboolean JNICALL ScriptMethodsContainersNamespace::equip(JNIEnv *env, jobject self, jlong item, jlong container)
 {
-	ServerObject * containerOwner = NULL;
+	ServerObject * containerOwner = nullptr;
 	if (!JavaLibrary::getObject(container, containerOwner))
 		return JNI_FALSE;
 
-	ServerObject * itemObj = NULL;
+	ServerObject * itemObj = nullptr;
 	if (!JavaLibrary::getObject(item, itemObj))
 		return JNI_FALSE;
 
@@ -521,7 +521,7 @@ jboolean JNICALL ScriptMethodsContainersNamespace::equip(JNIEnv *env, jobject se
 	if (!test)
 		return JNI_FALSE;
 	Container::ContainerErrorCode tmp = Container::CEC_Success;
-	return ContainerInterface::transferItemToGeneralContainer(*containerOwner, *itemObj, NULL, tmp);
+	return ContainerInterface::transferItemToGeneralContainer(*containerOwner, *itemObj, nullptr, tmp);
 
 }
 
@@ -532,11 +532,11 @@ jboolean JNICALL ScriptMethodsContainersNamespace::equipIn(JNIEnv *env, jobject 
 	JavaStringParam localSlot(slot);
 
 	//@todo better error checking for invalid slot name.  Do it above too.
-	ServerObject * containerOwner = NULL;
+	ServerObject * containerOwner = nullptr;
 	if (!JavaLibrary::getObject(container, containerOwner))
 		return JNI_FALSE;
 
-	ServerObject * itemObj = NULL;
+	ServerObject * itemObj = nullptr;
 	if (!JavaLibrary::getObject(item, itemObj))
 		return JNI_FALSE;
 
@@ -554,7 +554,7 @@ jboolean JNICALL ScriptMethodsContainersNamespace::equipIn(JNIEnv *env, jobject 
 	Container::ContainerErrorCode tmp = Container::CEC_Success;
 	int arrangement = slotted ? slotted->getBestArrangementForSlot(slotName) : -1;
 
-	return ContainerInterface::transferItemToSlottedContainer(*containerOwner, *itemObj, arrangement, NULL, tmp);
+	return ContainerInterface::transferItemToSlottedContainer(*containerOwner, *itemObj, arrangement, nullptr, tmp);
 
 }
 
@@ -565,14 +565,14 @@ jboolean  JNICALL ScriptMethodsContainersNamespace::equipOverride(JNIEnv *env, j
 	//This function will equip and object into the first valid arrangement, deleting objects if necessary.
 	//Before it deletes things, it looks for a valid unoccupied arrangement.
 
-	ServerObject * containerOwner = NULL;
+	ServerObject * containerOwner = nullptr;
 	if (!JavaLibrary::getObject(container, containerOwner))
 	{
 		DEBUG_WARNING(true, ("JNI: EquipOverride param container could not be found"));
 		return JNI_FALSE;
 	}
 
-	ServerObject * itemObj = NULL;
+	ServerObject * itemObj = nullptr;
 	if (!JavaLibrary::getObject(item, itemObj))
 	{
 		DEBUG_WARNING(true, ("JNI: EquipOverride param item could not be found"));
@@ -592,7 +592,7 @@ jboolean  JNICALL ScriptMethodsContainersNamespace::equipOverride(JNIEnv *env, j
 	if (slotContainer->getFirstUnoccupiedArrangement(*itemObj, arrangement, tmp))
 	{
 		//Found one
-		return ContainerInterface::transferItemToSlottedContainer(*containerOwner, *itemObj, arrangement, NULL, tmp);
+		return ContainerInterface::transferItemToSlottedContainer(*containerOwner, *itemObj, arrangement, nullptr, tmp);
 	}
 
 	//Couldn't find an unoccupied arrangement, so it's time to delete objects to make room for this one
@@ -634,14 +634,14 @@ jboolean  JNICALL ScriptMethodsContainersNamespace::equipOverride(JNIEnv *env, j
 		}
 	}
 
-	return ContainerInterface::transferItemToSlottedContainer(*containerOwner, *itemObj, arrangement, NULL, tmp);
+	return ContainerInterface::transferItemToSlottedContainer(*containerOwner, *itemObj, arrangement, nullptr, tmp);
 
 }
 
 //--------------------------------------------------------------------------------------
 jint JNICALL ScriptMethodsContainersNamespace::getFilledVolume(JNIEnv *env, jobject self, jlong container)
 {
-	ServerObject * containerOwner = NULL;
+	ServerObject * containerOwner = nullptr;
 	if (!JavaLibrary::getObject(container, containerOwner))
 		return 0;
 
@@ -656,7 +656,7 @@ jint JNICALL ScriptMethodsContainersNamespace::getFilledVolume(JNIEnv *env, jobj
 
 jint JNICALL ScriptMethodsContainersNamespace::getTotalVolume(JNIEnv *env, jobject self, jlong container)
 {
-	ServerObject * containerOwner = NULL;
+	ServerObject * containerOwner = nullptr;
 	if (!JavaLibrary::getObject(container, containerOwner))
 		return 0;
 
@@ -672,7 +672,7 @@ jint JNICALL ScriptMethodsContainersNamespace::getTotalVolume(JNIEnv *env, jobje
 
 jint JNICALL ScriptMethodsContainersNamespace::getVolumeFree(JNIEnv *env, jobject self, jlong container)
 {
-	ServerObject * containerOwner = NULL;
+	ServerObject * containerOwner = nullptr;
 	if (!JavaLibrary::getObject(container, containerOwner))
 		return 0;
 
@@ -691,7 +691,7 @@ void JNICALL ScriptMethodsContainersNamespace::sendContainerErrorToClient(JNIEnv
 	if (errorCode == 0)
 		return;
 
-	ServerObject * playerObject = NULL;
+	ServerObject * playerObject = nullptr;
 	if (!JavaLibrary::getObject(player, playerObject))
 	{
 		DEBUG_WARNING(true, ("Player object not found in sendContainerErrorToClient"));
@@ -767,7 +767,7 @@ void JNICALL ScriptMethodsContainersNamespace::moveToOfflinePlayerDatapadAndUnlo
 
 jboolean JNICALL ScriptMethodsContainersNamespace::isInSecureTrade(JNIEnv *env, jobject self, jlong item)
 {
-	ServerObject * itemObj = NULL;
+	ServerObject * itemObj = nullptr;
 	if (!JavaLibrary::getObject(item, itemObj))
 		return JNI_FALSE;
 
@@ -807,7 +807,7 @@ void JNICALL ScriptMethodsContainersNamespace::fixLoadWith(JNIEnv *env, jobject 
 
 jboolean JNICALL ScriptMethodsContainersNamespace::addUserToAccessList(JNIEnv *env, jobject self, jlong object, jlong user)
 {
-	ServerObject * itemObj = NULL;
+	ServerObject * itemObj = nullptr;
 	if (!JavaLibrary::getObject(object, itemObj))
 		return JNI_FALSE;
 	
@@ -829,7 +829,7 @@ jboolean JNICALL ScriptMethodsContainersNamespace::addUserToAccessList(JNIEnv *e
 
 jboolean JNICALL ScriptMethodsContainersNamespace::removeUserFromAccessList(JNIEnv * env, jobject self, jlong object, jlong user)
 {
-	ServerObject * itemObj = NULL;
+	ServerObject * itemObj = nullptr;
 	if (!JavaLibrary::getObject(object, itemObj))
 		return JNI_FALSE;
 
@@ -851,7 +851,7 @@ jboolean JNICALL ScriptMethodsContainersNamespace::removeUserFromAccessList(JNIE
 
 jboolean JNICALL ScriptMethodsContainersNamespace::clearUserAccessList(JNIEnv * env, jobject self, jlong object)
 {
-	ServerObject * itemObj = NULL;
+	ServerObject * itemObj = nullptr;
 	if (!JavaLibrary::getObject(object, itemObj))
 		return JNI_FALSE;
 
@@ -871,7 +871,7 @@ jboolean JNICALL ScriptMethodsContainersNamespace::clearUserAccessList(JNIEnv * 
 
 jboolean JNICALL ScriptMethodsContainersNamespace::addGuildToAccessList(JNIEnv *env, jobject self, jlong object, jint guild)
 {
-	ServerObject * itemObj = NULL;
+	ServerObject * itemObj = nullptr;
 	if (!JavaLibrary::getObject(object, itemObj))
 		return JNI_FALSE;
 
@@ -891,7 +891,7 @@ jboolean JNICALL ScriptMethodsContainersNamespace::addGuildToAccessList(JNIEnv *
 
 jboolean JNICALL ScriptMethodsContainersNamespace::removeGuildFromAccessList(JNIEnv * env, jobject self, jlong object, jint guild)
 {
-	ServerObject * itemObj = NULL;
+	ServerObject * itemObj = nullptr;
 	if (!JavaLibrary::getObject(object, itemObj))
 		return JNI_FALSE;
 
@@ -911,7 +911,7 @@ jboolean JNICALL ScriptMethodsContainersNamespace::removeGuildFromAccessList(JNI
 
 jboolean JNICALL ScriptMethodsContainersNamespace::clearGuildAccessList(JNIEnv * env, jobject self, jlong object)
 {
-	ServerObject * itemObj = NULL;
+	ServerObject * itemObj = nullptr;
 	if (!JavaLibrary::getObject(object, itemObj))
 		return JNI_FALSE;
 
@@ -931,7 +931,7 @@ jboolean JNICALL ScriptMethodsContainersNamespace::clearGuildAccessList(JNIEnv *
 
 jlongArray JNICALL ScriptMethodsContainersNamespace::getUserAccessList(JNIEnv * env, jobject self, jlong object)
 {
-	ServerObject * itemObj = NULL;
+	ServerObject * itemObj = nullptr;
 	if (!JavaLibrary::getObject(object, itemObj))
 		return JNI_FALSE;
 
@@ -970,7 +970,7 @@ jlongArray JNICALL ScriptMethodsContainersNamespace::getUserAccessList(JNIEnv * 
 
 jintArray JNICALL ScriptMethodsContainersNamespace::getGuildAccessList(JNIEnv * env, jobject self, jlong object)
 {
-	ServerObject * itemObj = NULL;
+	ServerObject * itemObj = nullptr;
 	if (!JavaLibrary::getObject(object, itemObj))
 		return JNI_FALSE;
 

@@ -189,7 +189,7 @@ ChatRoomCore::~ChatRoomCore()
 
 ChatAvatarCore *ChatRoomCore::getAvatarCore(unsigned avatarID)
 {
-	ChatAvatarCore *returnAvatar = NULL;
+	ChatAvatarCore *returnAvatar = nullptr;
 
 	map<unsigned, ChatAvatarCore *>::iterator iterCore = m_inroomAvatarsCore.find(avatarID);
 
@@ -202,7 +202,7 @@ ChatAvatarCore *ChatRoomCore::getAvatarCore(unsigned avatarID)
 
 ChatAvatar *ChatRoomCore::getAvatar(unsigned avatarID)
 {
-	ChatAvatar *returnAvatar = NULL;
+	ChatAvatar *returnAvatar = nullptr;
 
 	map<unsigned, ChatAvatar *>::iterator iter = m_inroomAvatars.find(avatarID);
 
@@ -215,7 +215,7 @@ ChatAvatar *ChatRoomCore::getAvatar(unsigned avatarID)
 
 ChatAvatarCore *ChatRoomCore::getModeratorCore(const Plat_Unicode::String &name, const Plat_Unicode::String &address)
 {
-	ChatAvatarCore *returnAvatar = NULL;
+	ChatAvatarCore *returnAvatar = nullptr;
 
 	set<ChatAvatarCore *>::iterator iterCore = m_moderatorAvatarsCore.begin();
 
@@ -238,7 +238,7 @@ ChatAvatarCore *ChatRoomCore::getModeratorCore(const Plat_Unicode::String &name,
 
 ChatAvatar *ChatRoomCore::getModerator(const Plat_Unicode::String &name, const Plat_Unicode::String &address)
 {
-	ChatAvatar *returnAvatar = NULL;
+	ChatAvatar *returnAvatar = nullptr;
 
 	set<ChatAvatar *>::iterator iter = m_moderatorAvatars.begin();
 
@@ -263,7 +263,7 @@ ChatAvatar *ChatRoomCore::getModerator(const Plat_Unicode::String &name, const P
 
 ChatAvatarCore *ChatRoomCore::getBannedCore(const Plat_Unicode::String &name, const Plat_Unicode::String &address)
 {
-	ChatAvatarCore *returnAvatar = NULL;
+	ChatAvatarCore *returnAvatar = nullptr;
 
 	set<ChatAvatarCore *>::iterator iterCore = m_banAvatarsCore.begin();
 
@@ -286,7 +286,7 @@ ChatAvatarCore *ChatRoomCore::getBannedCore(const Plat_Unicode::String &name, co
 
 ChatAvatar *ChatRoomCore::getBanned(const Plat_Unicode::String &name, const Plat_Unicode::String &address)
 {
-	ChatAvatar *returnAvatar = NULL;
+	ChatAvatar *returnAvatar = nullptr;
 
 	set<ChatAvatar *>::iterator iter = m_banAvatars.begin();
 
@@ -311,7 +311,7 @@ ChatAvatar *ChatRoomCore::getBanned(const Plat_Unicode::String &name, const Plat
 
 ChatAvatarCore *ChatRoomCore::getInvitedCore(const Plat_Unicode::String &name, const Plat_Unicode::String &address)
 {
-	ChatAvatarCore *returnAvatar = NULL;
+	ChatAvatarCore *returnAvatar = nullptr;
 
 	set<ChatAvatarCore *>::iterator iterCore = m_inviteAvatarsCore.begin();
 
@@ -334,7 +334,7 @@ ChatAvatarCore *ChatRoomCore::getInvitedCore(const Plat_Unicode::String &name, c
 
 ChatAvatar *ChatRoomCore::getInvited(const Plat_Unicode::String &name, const Plat_Unicode::String &address)
 {
-	ChatAvatar *returnAvatar = NULL;
+	ChatAvatar *returnAvatar = nullptr;
 
 	set<ChatAvatar *>::iterator iter = m_inviteAvatars.begin();
 
@@ -359,7 +359,7 @@ ChatAvatar *ChatRoomCore::getInvited(const Plat_Unicode::String &name, const Pla
 
 ChatAvatarCore *ChatRoomCore::addAvatar(ChatAvatarCore *newAvatar, bool local)
 {
-	ChatAvatarCore *returnAvatar = NULL;
+	ChatAvatarCore *returnAvatar = nullptr;
 
 	if(newAvatar)
 	{
@@ -394,7 +394,7 @@ void ChatRoomCore::addLocalAvatar(unsigned avatarID)
 
 ChatAvatarCore *ChatRoomCore::removeAvatar(unsigned avatarID)
 {
-	ChatAvatarCore *returnAvatar = NULL;
+	ChatAvatarCore *returnAvatar = nullptr;
 
 	map<unsigned, ChatAvatarCore *>::iterator iterCore = m_inroomAvatarsCore.find(avatarID);
 
@@ -422,7 +422,7 @@ ChatAvatarCore *ChatRoomCore::removeAvatar(unsigned avatarID)
 
 ChatAvatarCore *ChatRoomCore::addBan(ChatAvatarCore *newAvatar)
 {
-	ChatAvatarCore *returnAvatar = NULL;
+	ChatAvatarCore *returnAvatar = nullptr;
 
 	if(newAvatar)
 	{
@@ -446,7 +446,7 @@ ChatAvatarCore *ChatRoomCore::addBan(ChatAvatarCore *newAvatar)
 
 ChatAvatarCore *ChatRoomCore::removeBan(const Plat_Unicode::String &name, const Plat_Unicode::String &address)
 {
-	ChatAvatarCore *returnAvatar = NULL;
+	ChatAvatarCore *returnAvatar = nullptr;
 
 	set<ChatAvatarCore *>::iterator iterCore = m_banAvatarsCore.begin();
 
@@ -494,7 +494,7 @@ ChatAvatarCore *ChatRoomCore::removeBan(const Plat_Unicode::String &name, const 
 
 ChatAvatarCore *ChatRoomCore::addAdministrator(ChatAvatarCore *newAvatar)
 {
-	ChatAvatarCore *returnAvatar = NULL;
+	ChatAvatarCore *returnAvatar = nullptr;
 
 	if(newAvatar)
 	{
@@ -518,7 +518,7 @@ ChatAvatarCore *ChatRoomCore::addAdministrator(ChatAvatarCore *newAvatar)
 
 ChatAvatarCore *ChatRoomCore::removeAdministrator(unsigned avatarID)
 {
-	ChatAvatarCore *returnAvatar = NULL;
+	ChatAvatarCore *returnAvatar = nullptr;
 
 	map<unsigned, ChatAvatarCore *>::iterator iterCore = m_adminAvatarsCore.find(avatarID);
 
@@ -541,7 +541,7 @@ ChatAvatarCore *ChatRoomCore::removeAdministrator(unsigned avatarID)
 
 ChatAvatarCore *ChatRoomCore::addModerator(ChatAvatarCore *newAvatar)
 {
-	ChatAvatarCore *returnAvatar = NULL;
+	ChatAvatarCore *returnAvatar = nullptr;
 
 	if(newAvatar)
 	{
@@ -565,7 +565,7 @@ ChatAvatarCore *ChatRoomCore::addModerator(ChatAvatarCore *newAvatar)
 
 ChatAvatarCore *ChatRoomCore::removeModerator(const Plat_Unicode::String &name, const Plat_Unicode::String &address)
 {
-	ChatAvatarCore *returnAvatar = NULL;
+	ChatAvatarCore *returnAvatar = nullptr;
 
 	set<ChatAvatarCore *>::iterator iterCore = m_moderatorAvatarsCore.begin();
 
@@ -613,7 +613,7 @@ ChatAvatarCore *ChatRoomCore::removeModerator(const Plat_Unicode::String &name, 
 
 ChatAvatarCore *ChatRoomCore::addTempModerator(ChatAvatarCore *newAvatar)
 {
-	ChatAvatarCore *returnAvatar = NULL;
+	ChatAvatarCore *returnAvatar = nullptr;
 
 	if(newAvatar)
 	{
@@ -637,7 +637,7 @@ ChatAvatarCore *ChatRoomCore::addTempModerator(ChatAvatarCore *newAvatar)
 
 ChatAvatarCore *ChatRoomCore::removeTempModerator(const Plat_Unicode::String &name, const Plat_Unicode::String &address)
 {
-	ChatAvatarCore *returnAvatar = NULL;
+	ChatAvatarCore *returnAvatar = nullptr;
 
 	set<ChatAvatarCore *>::iterator iterCore = m_tempModeratorAvatarsCore.begin();
 
@@ -685,7 +685,7 @@ ChatAvatarCore *ChatRoomCore::removeTempModerator(const Plat_Unicode::String &na
 
 ChatAvatarCore *ChatRoomCore::addInvite(ChatAvatarCore* newAvatar)
 {
-	ChatAvatarCore *returnAvatar = NULL;
+	ChatAvatarCore *returnAvatar = nullptr;
 
 	if(newAvatar)
 	{
@@ -709,7 +709,7 @@ ChatAvatarCore *ChatRoomCore::addInvite(ChatAvatarCore* newAvatar)
 
 ChatAvatarCore *ChatRoomCore::removeInvite(const Plat_Unicode::String &name, const Plat_Unicode::String &address)
 {
-	ChatAvatarCore *returnAvatar = NULL;
+	ChatAvatarCore *returnAvatar = nullptr;
 
 	set<ChatAvatarCore *>::iterator iterCore = m_inviteAvatarsCore.begin();
 
@@ -757,7 +757,7 @@ ChatAvatarCore *ChatRoomCore::removeInvite(const Plat_Unicode::String &name, con
 
 ChatAvatarCore *ChatRoomCore::addVoice(ChatAvatarCore* newAvatar)
 {
-	ChatAvatarCore *returnAvatar = NULL;
+	ChatAvatarCore *returnAvatar = nullptr;
 
 	if(newAvatar)
 	{
@@ -781,7 +781,7 @@ ChatAvatarCore *ChatRoomCore::addVoice(ChatAvatarCore* newAvatar)
 
 ChatAvatarCore *ChatRoomCore::removeVoice(const Plat_Unicode::String &name, const Plat_Unicode::String &address)
 {
-	ChatAvatarCore *returnAvatar = NULL;
+	ChatAvatarCore *returnAvatar = nullptr;
 
 	set<ChatAvatarCore *>::iterator iterCore = m_voiceAvatarsCore.begin();
 
@@ -1053,7 +1053,7 @@ void ChatRoomCore::serializeWithLocalAvatarsOnly(Base::ByteStream &msg)
 	for (avatarIter = m_inroomAvatarsCore.begin(); avatarIter != m_inroomAvatarsCore.end(); ++avatarIter)
 	{
 		// include only the avatars that are on this API
-		if ( this->getAvatar((*avatarIter).second->getAvatarID()) != NULL )
+		if ( this->getAvatar((*avatarIter).second->getAvatarID()) != nullptr )
 		{
 			avatarsToSend.insert((*avatarIter).second);
 		}

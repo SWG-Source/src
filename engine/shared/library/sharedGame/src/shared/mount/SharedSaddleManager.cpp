@@ -433,7 +433,7 @@ int SharedSaddleManagerNamespace::TemporaryRiderPoseMapEntry::getRiderSeatIndex(
 
 CrcString const *SharedSaddleManagerNamespace::TemporaryRiderPoseMapEntry::getRiderPoseName() const
 {
-	return NULL;
+	return nullptr;
 }
 
 // ======================================================================

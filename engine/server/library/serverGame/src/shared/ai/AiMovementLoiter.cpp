@@ -67,9 +67,9 @@ Vector AiMovementLoiterNamespace::getRandomLoiterPosition_p(Vector const anchorP
 bool AiMovementLoiterNamespace::isPositionOnFloor(Floor const * const floor, Vector const & position_p, float const radius, Vector & floorPosition_p)
 {
 	bool result = false;
-	FloorMesh const * const floorMesh = (floor != NULL) ? floor->getFloorMesh() : NULL;
+	FloorMesh const * const floorMesh = (floor != nullptr) ? floor->getFloorMesh() : nullptr;
 
-	if (floorMesh != NULL)
+	if (floorMesh != nullptr)
 	{
 		// See if the circle fits entirely on the floor
 		{
@@ -199,7 +199,7 @@ AiMovementLoiter::AiMovementLoiter( AICreatureController * controller, Archive::
 AiMovementLoiter::~AiMovementLoiter()
 {
 	delete m_cachedAiLocations;
-	m_cachedAiLocations = NULL;
+	m_cachedAiLocations = nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -420,7 +420,7 @@ bool AiMovementLoiter::generateWaypoint()
 
 			Floor const * const ownerFloor = CollisionWorld::getFloorStandingOn(*creatureOwner);
 
-			if (ownerFloor != NULL)
+			if (ownerFloor != nullptr)
 			{
 				// The owner is standing on a floor
 
@@ -476,7 +476,7 @@ bool AiMovementLoiter::generateWaypoint()
 
 				TerrainObject const * const terrainObject = TerrainObject::getConstInstance();
 
-				if (   (terrainObject != NULL)
+				if (   (terrainObject != nullptr)
 				    && terrainObject->isPassable(randomPosition_p))
 				{
 					// Snap the random position to the terrain
@@ -518,7 +518,7 @@ bool AiMovementLoiter::generateWaypoint()
 									{
 										BaseExtent const * const extent = collisionProperty->getExtent_l();
 
-										if (extent != NULL)
+										if (extent != nullptr)
 										{
 											Vector const begin_o(object.rotateTranslate_w2o(m_anchor.getPosition_p()));
 											Vector const end_o(object.rotateTranslate_w2o(randomPosition_p));
@@ -580,7 +580,7 @@ void AiMovementLoiter::addDebug(AiDebugString & aiDebugString)
 	AiMovementWaypoint::addDebug(aiDebugString);
 
 	FormattedString<512> fs;
-	aiDebugString.addText(fs.sprintf("LOITER %s\n%s\ndist[%.0f...%.0f]\ndelay[%.1f...%.1f]\n", (m_anchor.getObject() != NULL) ? "TARGET" : "POSITION", m_stateName.c_str(), m_minDistance, m_maxDistance, m_minDelay, m_maxDelay), PackedRgb::solidCyan);
+	aiDebugString.addText(fs.sprintf("LOITER %s\n%s\ndist[%.0f...%.0f]\ndelay[%.1f...%.1f]\n", (m_anchor.getObject() != nullptr) ? "TARGET" : "POSITION", m_stateName.c_str(), m_minDistance, m_maxDistance, m_minDelay, m_maxDelay), PackedRgb::solidCyan);
 
 	//if (m_bubbleCheckResult == BCR_invalid)
 	//{
@@ -599,7 +599,7 @@ void AiMovementLoiter::addDebug(AiDebugString & aiDebugString)
 	{
 		Object const * const anchorObject = m_anchor.getObject();
 
-		if (anchorObject != NULL)
+		if (anchorObject != nullptr)
 		{
 			// We are anchored to a moving target
 
@@ -659,7 +659,7 @@ bool AiMovementLoiter::isAnchorValid() const
 	{
 		TangibleObject const * const tangibleObject = TangibleObject::asTangibleObject(m_anchor.getObject());
 
-		if (tangibleObject != NULL)
+		if (tangibleObject != nullptr)
 		{
 			if (tangibleObject->isInCombat())
 			{

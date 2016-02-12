@@ -208,7 +208,7 @@ namespace AuctionNamespace
 			if (iterAttr != searchableAttributeString->end())
 			{
 				applicableSearchCondition = true;
-				return (NULL != strstr(iterAttr->second.c_str(), searchCondition.stringValue.c_str())); // lowercase is assumed (and required)
+				return (nullptr != strstr(iterAttr->second.c_str(), searchCondition.stringValue.c_str())); // lowercase is assumed (and required)
 			}
 		}
 
@@ -242,7 +242,7 @@ namespace AuctionNamespace
 			if (iterAttr != searchableAttributeString->end())
 			{
 				applicableSearchCondition = true;
-				return (NULL == strstr(iterAttr->second.c_str(), searchCondition.stringValue.c_str())); // lowercase is assumed (and required)
+				return (nullptr == strstr(iterAttr->second.c_str(), searchCondition.stringValue.c_str())); // lowercase is assumed (and required)
 			}
 		}
 
@@ -293,10 +293,10 @@ m_userDescription(userDescription),
 m_oobLength(oobLength),
 m_oobData(oobData),
 m_attributes(),
-m_searchableAttributeInt(NULL),
-m_searchableAttributeFloat(NULL),
-m_searchableAttributeString(NULL),
-m_highBid(NULL),
+m_searchableAttributeInt(nullptr),
+m_searchableAttributeFloat(nullptr),
+m_searchableAttributeString(nullptr),
+m_highBid(nullptr),
 m_item(new AuctionItem(itemId, itemType, itemTemplateId, itemTimer, itemNameLength, itemName, creatorId, itemSize)),
 m_sold(false),
 m_active(true),
@@ -395,10 +395,10 @@ m_userDescription(userDescription),
 m_oobLength(oobLength),
 m_oobData(oobData),
 m_attributes(),
-m_searchableAttributeInt(NULL),
-m_searchableAttributeFloat(NULL),
-m_searchableAttributeString(NULL),
-m_highBid(NULL),
+m_searchableAttributeInt(nullptr),
+m_searchableAttributeFloat(nullptr),
+m_searchableAttributeString(nullptr),
+m_highBid(nullptr),
 m_item(new AuctionItem(itemId, itemType, itemTemplateId, itemTimer, itemNameLength, itemName, creatorId, itemSize)),
 m_sold(isSold),
 m_active(isActive),
@@ -488,7 +488,7 @@ void Auction::Initialization()
 #ifdef _DEBUG
 	for (int i = 0; i < static_cast<int>(AuctionQueryHeadersMessage::SCC_LAST); ++i)
 	{
-		s_searchConditionComparisonFn[i] = NULL;
+		s_searchConditionComparisonFn[i] = nullptr;
 	}
 #endif
 
@@ -502,7 +502,7 @@ void Auction::Initialization()
 #ifdef _DEBUG
 	for (int j = 0; j < static_cast<int>(AuctionQueryHeadersMessage::SCC_LAST); ++j)
 	{
-		DEBUG_FATAL((s_searchConditionComparisonFn[j] == NULL), ("s_searchConditionComparisonFn array is NULL at index (%d)", j));
+		DEBUG_FATAL((s_searchConditionComparisonFn[j] == nullptr), ("s_searchConditionComparisonFn array is nullptr at index (%d)", j));
 	}
 #endif
 
@@ -659,7 +659,7 @@ const AuctionBid *Auction::GetPreviousBid() const
 {
 	if (m_bids.size() <= 1)
 	{
-		return NULL;
+		return nullptr;
 	}
 	else
 	{
@@ -677,9 +677,9 @@ const AuctionBid *Auction::GetPreviousBid() const
  */
 int Auction::GetActualBid(AuctionBid *bid)
 {
-	assert(bid != NULL);
+	assert(bid != nullptr);
 	int bidNeeded = std::max(m_minBid, bid->GetBid());
-	if (m_highBid != NULL)
+	if (m_highBid != nullptr)
 	{
 		bidNeeded = m_highBid->GetBid();
 		if (*bid > *m_highBid)
@@ -765,7 +765,7 @@ AuctionResultCode Auction::AddBid(
 
 	AuctionBid *auctionBid = new AuctionBid(bidderId, bid, maxProxyBid);
 	int newBidForHighBidder = GetActualBid(auctionBid);
-	if (m_highBid != NULL)
+	if (m_highBid != nullptr)
 	{
 		if (*auctionBid <= *m_highBid)
 		{
@@ -810,7 +810,7 @@ const AuctionBid *Auction::GetPlayerBid(const NetworkId & playerId) const
 		}
 		++iter;
 	}
-	return NULL;
+	return nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -826,7 +826,7 @@ bool Auction::Update(int gameTime)
 		//immediate sale
 		DEBUG_REPORT_LOG(true, ("[Commodities Server Auction::Update] : Expiring immediate sale - Auction is active and sold.\n"));
 
-		if ((m_trackId != -1) && (CommodityServer::getInstance().getGameServer(m_trackId) != NULL))
+		if ((m_trackId != -1) && (CommodityServer::getInstance().getGameServer(m_trackId) != nullptr))
 		{
 			Expire(true, false, m_trackId);
 			m_trackId = -1;
@@ -840,14 +840,14 @@ bool Auction::Update(int gameTime)
 	{
 		DEBUG_REPORT_LOG(true, ("[Commodities Server Auction::Update] : Auction expiring based on timer.\n"));
 
-		if ((m_trackId != -1) && (CommodityServer::getInstance().getGameServer(m_trackId) != NULL))
+		if ((m_trackId != -1) && (CommodityServer::getInstance().getGameServer(m_trackId) != nullptr))
 		{
-			Expire(m_highBid != NULL, true, m_trackId);
+			Expire(m_highBid != nullptr, true, m_trackId);
 			m_trackId = -1;
 		}
 		else
 		{
-			Expire(m_highBid != NULL, true);
+			Expire(m_highBid != nullptr, true);
 		}
 	}
 
@@ -862,7 +862,7 @@ void Auction::Expire(bool sold, bool expiredBasedOnTimer, int track_id)
 
 	m_auctionTimer = 0;
 	m_active = false;
-	if (sold && m_highBid != NULL)
+	if (sold && m_highBid != nullptr)
 	{
 		m_sold = true;
 	}
@@ -934,7 +934,7 @@ void Auction::Expire(bool sold, bool expiredBasedOnTimer, int track_id)
 					m_location.SetVendorFirstTimerExpiredAuctionDate(time(0));
 			}
 
-			DEBUG_REPORT_LOG(true, ("[Commodities Server Auction::Expire] : Sending OnAuctionExpired for non-sold auction and null high bid obj .\n"));
+			DEBUG_REPORT_LOG(true, ("[Commodities Server Auction::Expire] : Sending OnAuctionExpired for non-sold auction and nullptr high bid obj .\n"));
 			AuctionMarket::getInstance().OnAuctionExpired(
 				GetCreatorId(), m_sold, m_flags,
 				NetworkId::cms_invalid, 0, m_item->GetItemId(), 0,
@@ -1107,8 +1107,8 @@ void Auction::BuildSearchableAttributeList()
 	std::map<std::string, std::string> const & saAlias = CommoditiesAdvancedSearchAttribute::getSearchAttributeNameAliasesForGameObjectType(m_item->GetCategory());
 
 	// for factory crates, also include the attributes of the item inside the crate
-	std::map<std::string, CommoditiesAdvancedSearchAttribute::SearchAttribute const *> const * saItemInsideFactoryCrate = NULL;
-	std::map<std::string, std::string> const * saAliasItemInsideFactoryCrate = NULL;
+	std::map<std::string, CommoditiesAdvancedSearchAttribute::SearchAttribute const *> const * saItemInsideFactoryCrate = nullptr;
+	std::map<std::string, std::string> const * saAliasItemInsideFactoryCrate = nullptr;
 	int gotItemInsideFactoryCrate = 0;
 
 	if (m_item->GetCategory() == SharedObjectTemplate::GOT_misc_factory_crate)
@@ -1134,10 +1134,10 @@ void Auction::BuildSearchableAttributeList()
 						saAliasItemInsideFactoryCrate = &(CommoditiesAdvancedSearchAttribute::getSearchAttributeNameAliasesForGameObjectType(gotItemInsideFactoryCrate));
 
 						if (saItemInsideFactoryCrate->empty())
-							saItemInsideFactoryCrate = NULL;
+							saItemInsideFactoryCrate = nullptr;
 
 						if (saAliasItemInsideFactoryCrate->empty())
-							saAliasItemInsideFactoryCrate = NULL;
+							saAliasItemInsideFactoryCrate = nullptr;
 					}
 				}
 

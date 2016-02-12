@@ -48,14 +48,14 @@ Region const * PathAutoGenerator::findPathRegion(Vector const & pos_w)
 	for (RegionMaster::RegionVector::const_iterator it = rv.begin(); it != rv.end(); ++it)
 	{
 		Region const * const r = *it;
-		if (NULL != r)
+		if (nullptr != r)
 		{
 			if (r->getGeography() == RegionNamespace::RG_pathfind)
 				return r;
 		}
 	}
 	
-	return NULL;
+	return nullptr;
 }
 
 //----------------------------------------------------------------------
@@ -63,7 +63,7 @@ Region const * PathAutoGenerator::findPathRegion(Vector const & pos_w)
 void PathAutoGenerator::pathAutoGenerate(Vector const & pos_w, float nodeDistance, float obstacleDistance, Unicode::String & result)
 {
 	Region const * region = findPathRegion(pos_w);
-	if (NULL == region)
+	if (nullptr == region)
 	{
 		result += Unicode::narrowToWide("No pathfinding region at position");
 		return;
@@ -144,7 +144,7 @@ void PathAutoGenerator::pathAutoGenerate(Vector const & pos_w, float nodeDistanc
 				++obstacleNearbySkipped;
 
 #if USE_OBSTACLE_TEMPLATE
-				if (NULL != PathAutoGeneratorNamespace::s_pathObstacleTemplate)
+				if (nullptr != PathAutoGeneratorNamespace::s_pathObstacleTemplate)
 				{
 					Transform transform_w;
 					transform_w.setPosition_p(testPos_w);
@@ -164,7 +164,7 @@ void PathAutoGenerator::pathAutoGenerate(Vector const & pos_w, float nodeDistanc
 			transform_w.setPosition_p(testPos_w);
 			ServerObject * newObject = ServerWorld::createNewObject(s_pathWaypointTemplate, transform_w, 0, false);
 			
-			if (NULL != newObject)
+			if (nullptr != newObject)
 			{
 				newObject->addToWorld();
 				newObject->persist();
@@ -189,7 +189,7 @@ void PathAutoGenerator::pathAutoGenerate(Vector const & pos_w, float nodeDistanc
 void PathAutoGenerator::pathAutoCleanup(Vector const & pos_w, Unicode::String & result)
 {
 	Region const * region = findPathRegion(pos_w);
-	if (NULL == region)
+	if (nullptr == region)
 	{
 		result += Unicode::narrowToWide("No pathfinding region at position");
 		return;
@@ -236,7 +236,7 @@ void PathAutoGenerator::pathAutoCleanup(Vector const & pos_w, Unicode::String & 
 			}
 
 #if USE_OBSTACLE_TEMPLATE
-			if (NULL != s_pathObstacleTemplate && !strcmp(so->getTemplateName(), s_pathObstacleTemplate))
+			if (nullptr != s_pathObstacleTemplate && !strcmp(so->getTemplateName(), s_pathObstacleTemplate))
 			{
 				so->permanentlyDestroy(DeleteReasons::Script);
 				++obstacleDestroyCount;

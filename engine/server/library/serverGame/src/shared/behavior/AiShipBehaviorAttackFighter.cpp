@@ -145,7 +145,7 @@ Vector const AiShipBehaviorAttackFighter::calculateEvadePositionWithinLeashDista
 
 AiShipBehaviorAttackFighter::AiShipBehaviorAttackFighter(AiShipController & aiShipController)
  : AiShipBehaviorAttack(aiShipController)
- , m_currentManeuver(NULL)
+ , m_currentManeuver(nullptr)
  , m_timeDelta(0.0f)
  , m_projectileTimer()
  , m_missileLockOnTimer()
@@ -165,7 +165,7 @@ AiShipBehaviorAttackFighter::AiShipBehaviorAttackFighter(AiShipController & aiSh
  , m_shotErrorPosition_l()
  , m_nextShotPosition_w()
 {
-	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("AiShipBehaviorAttackFighter::AiShipBehaviorAttackFighter() unit(%s)", (aiShipController.getOwner() != NULL) ? aiShipController.getOwner()->getNetworkId().getValueString().c_str() : "NULL owner"));
+	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("AiShipBehaviorAttackFighter::AiShipBehaviorAttackFighter() unit(%s)", (aiShipController.getOwner() != nullptr) ? aiShipController.getOwner()->getNetworkId().getValueString().c_str() : "nullptr owner"));
 	initializeTimers();
 	calculateEvadeHealthPercent();
 	calculateNextProjectileShotPerfect();
@@ -178,7 +178,7 @@ AiShipBehaviorAttackFighter::AiShipBehaviorAttackFighter(AiShipController & aiSh
 
 AiShipBehaviorAttackFighter::AiShipBehaviorAttackFighter(AiShipBehaviorAttack const & sourceBehavior)
  : AiShipBehaviorAttack(sourceBehavior)
- , m_currentManeuver(NULL)
+ , m_currentManeuver(nullptr)
  , m_timeDelta(0.0f)
  , m_projectileTimer()
  , m_missileLockOnTimer()
@@ -198,7 +198,7 @@ AiShipBehaviorAttackFighter::AiShipBehaviorAttackFighter(AiShipBehaviorAttack co
  , m_shotErrorPosition_l()
  , m_nextShotPosition_w()
 {
-	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("AiShipBehaviorAttackFighter::AiShipBehaviorAttackFighter() unit(%s)", (getAiShipController().getOwner() != NULL) ? getAiShipController().getOwner()->getNetworkId().getValueString().c_str() : "NULL owner"));
+	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("AiShipBehaviorAttackFighter::AiShipBehaviorAttackFighter() unit(%s)", (getAiShipController().getOwner() != nullptr) ? getAiShipController().getOwner()->getNetworkId().getValueString().c_str() : "nullptr owner"));
 	initializeTimers();
 	calculateEvadeHealthPercent();
 	calculateNextProjectileShotPerfect();
@@ -214,7 +214,7 @@ AiShipBehaviorAttackFighter::~AiShipBehaviorAttackFighter()
 	delete m_targetInfo;
 
 	delete m_currentManeuver;
-	m_currentManeuver = NULL;
+	m_currentManeuver = nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -265,7 +265,7 @@ void AiShipBehaviorAttackFighter::alterManeuver()
 		}
 		else
 		{
-			LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("AiShipBehaviorAttackFighter::alterManeuver() owner(%s) Why does this ship in the attack state with a NULL attack target?", getAiShipController().getOwner()->getNetworkId().getValueString().c_str()));
+			LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("AiShipBehaviorAttackFighter::alterManeuver() owner(%s) Why does this ship in the attack state with a nullptr attack target?", getAiShipController().getOwner()->getNetworkId().getValueString().c_str()));
 		}
 
 		if (overallHealthPercent > m_lastEvadeHealthPercent)
@@ -347,7 +347,7 @@ void AiShipBehaviorAttackFighter::alterWeapons()
 
 	if (!targetShipObject)
 	{
-		DEBUG_WARNING(true, ("debug_ai: unit(%s) ERROR: Why is the primary attack target NULL?", getAiShipController().getShipOwner()->getDebugInformation().c_str()));
+		DEBUG_WARNING(true, ("debug_ai: unit(%s) ERROR: Why is the primary attack target nullptr?", getAiShipController().getShipOwner()->getDebugInformation().c_str()));
 		return;
 	}
 
@@ -584,7 +584,7 @@ void AiShipBehaviorAttackFighter::alterTargetInformation()
 	ShipObject & ownerShipObject = *NON_NULL(getAiShipController().getShipOwner());
 	ShipObject const * const targetShipObject = getAiShipController().getPrimaryAttackTargetShipObject();
 
-	if (targetShipObject != NULL)
+	if (targetShipObject != nullptr)
 	{
 		//-- Set pilot data here.
 		AiShipPilotData const * pilotData = NON_NULL(getAiShipController().getPilotData());
@@ -600,7 +600,7 @@ void AiShipBehaviorAttackFighter::alterTargetInformation()
 
 		CreatureObject const * const targetPilot = targetShipObject->getPilot();
 
-		m_targetInfo->m_playerControlled = (targetPilot != NULL) ? targetPilot->isPlayerControlled() : false;
+		m_targetInfo->m_playerControlled = (targetPilot != nullptr) ? targetPilot->isPlayerControlled() : false;
 
 		// Cached target info.
 		bool const includeMissiles = true;
@@ -707,7 +707,7 @@ void AiShipBehaviorAttackFighter::alterTargetInformation()
 	}
 	else
 	{
-		DEBUG_WARNING(true, ("debug_ai: unit(%s) ERROR: The primary attack target is NULL.", ownerShipObject.getDebugInformation().c_str()));
+		DEBUG_WARNING(true, ("debug_ai: unit(%s) ERROR: The primary attack target is nullptr.", ownerShipObject.getDebugInformation().c_str()));
 	}
 }
 
@@ -956,7 +956,7 @@ void AiShipBehaviorAttackFighter::calculateNextShotPosition_w()
 
 	if (!targetShipObject)
 	{
-		DEBUG_WARNING(true, ("debug_ai: unit(%s) ERROR: Why is the primary attack target NULL?", getAiShipController().getShipOwner()->getDebugInformation().c_str()));
+		DEBUG_WARNING(true, ("debug_ai: unit(%s) ERROR: Why is the primary attack target nullptr?", getAiShipController().getShipOwner()->getDebugInformation().c_str()));
 		return;
 	}
 
@@ -1014,7 +1014,7 @@ void AiShipBehaviorAttackFighter::addDebug(AiDebugString & aiDebugString)
 	AiShipBehaviorAttackFighter::Maneuver::Path const * path = m_currentManeuver->getCurrentPath();
 
 	char pathSizeText[256];
-	if (path != NULL)
+	if (path != nullptr)
 	{
 		snprintf(pathSizeText, sizeof(pathSizeText) - 1, "PATH(%d)", path->getLength());
 	}
@@ -1027,7 +1027,7 @@ void AiShipBehaviorAttackFighter::addDebug(AiDebugString & aiDebugString)
 	// Show the current maneuver
 
 	{
-		char const * const text = FormattedString<512>().sprintf("attack[%s%s%s] %d %s\n", AiDebugString::getColorCode(PackedRgb::solidWhite).c_str(), (m_currentManeuver != NULL) ? m_currentManeuver->getFighterManeuverString() : "NULL", AiDebugString::getResetColorCode(), (m_currentManeuver != NULL) ? m_currentManeuver->getSequenceId() : -1, pathSizeText);
+		char const * const text = FormattedString<512>().sprintf("attack[%s%s%s] %d %s\n", AiDebugString::getColorCode(PackedRgb::solidWhite).c_str(), (m_currentManeuver != nullptr) ? m_currentManeuver->getFighterManeuverString() : "nullptr", AiDebugString::getResetColorCode(), (m_currentManeuver != nullptr) ? m_currentManeuver->getSequenceId() : -1, pathSizeText);
 		aiDebugString.addText(text, PackedRgb::solidCyan);
 	}
 
@@ -1060,7 +1060,7 @@ void AiShipBehaviorAttackFighter::addDebug(AiDebugString & aiDebugString)
 
 	// Show the maneuver path
 
-	if (   (path != NULL)
+	if (   (path != nullptr)
 	    && !path->isEmpty())
 	{
 		AiDebugString::TransformList transformList;

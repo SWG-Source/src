@@ -56,7 +56,7 @@ const JNINativeMethod NATIVES[] = {
  * @param self		    class calling this function
  * @param id			the stringId to find
  *
- * @return the string, or null on error
+ * @return the string, or nullptr on error
  */
 jstring JNICALL ScriptMethodsStringNamespace::getString(JNIEnv *env, jobject self, jobject id)
 {
@@ -64,7 +64,7 @@ jstring JNICALL ScriptMethodsStringNamespace::getString(JNIEnv *env, jobject sel
 
 	if (id == 0)
 	{
-		WARNING(true, ("JavaLibrary::log getString is NULL."));
+		WARNING(true, ("JavaLibrary::log getString is nullptr."));
 		return 0;
 	}
 
@@ -116,7 +116,7 @@ jstring JNICALL ScriptMethodsStringNamespace::getString(JNIEnv *env, jobject sel
  * @param self		    class calling this function
  * @param ids			array of stringIds to find
  *
- * @return an array of strings, or null on error
+ * @return an array of strings, or nullptr on error
  */
 jobjectArray JNICALL ScriptMethodsStringNamespace::getStrings(JNIEnv *env, jobject self, jobjectArray ids)
 {

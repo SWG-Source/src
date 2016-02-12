@@ -46,7 +46,7 @@ namespace AiCreatureDataNamespace
 
 	CreatureDataMap s_creatureDataMap;
 	WeaponDataMap s_weaponDataMap;
-	AiCreatureData const * s_defaultCreatureData = NULL;
+	AiCreatureData const * s_defaultCreatureData = nullptr;
 	int s_creatureErrorCount = 0;
 	int s_weaponErrorCount = 0;
 
@@ -154,7 +154,7 @@ void AiCreatureDataNamespace::verifySecondaryWeapon(CrcString const & creatureNa
 void AiCreatureDataNamespace::verifyPrimarySpecials(CrcString const & creatureName, CrcString & primarySpecials)
 {
 	if (   !primarySpecials.isEmpty()
-	    && (AiCreatureCombatProfile::getCombatProfile(primarySpecials) == NULL))
+	    && (AiCreatureCombatProfile::getCombatProfile(primarySpecials) == nullptr))
 	{
 		++s_creatureErrorCount;
 		WARNING(true, ("AiCreatureData::verifyPrimarySpecials() Creature(%s) has invalid primary_weapon_specials(%s)", creatureName.getString(), primarySpecials.getString()));
@@ -165,7 +165,7 @@ void AiCreatureDataNamespace::verifyPrimarySpecials(CrcString const & creatureNa
 void AiCreatureDataNamespace::verifySecondarySpecials(CrcString const & creatureName, CrcString & secondarySpecials)
 {
 	if (   !secondarySpecials.isEmpty()
-	    && (AiCreatureCombatProfile::getCombatProfile(secondarySpecials) == NULL))
+	    && (AiCreatureCombatProfile::getCombatProfile(secondarySpecials) == nullptr))
 	{
 		++s_creatureErrorCount;
 		WARNING(true, ("AiCreatureData::verifySecondarySpecials() Creature(%s) has invalid secondary_weapon_specials(%s)", creatureName.getString(), secondarySpecials.getString()));
@@ -320,7 +320,7 @@ void AiCreatureDataNamespace::loadWeaponColumn(WeaponList & weaponList, std::str
 
 // ----------------------------------------------------------------------
 AiCreatureData::AiCreatureData()
- : m_name(NULL)
+ : m_name(nullptr)
  , m_movementSpeedPercent(1.0f)
  , m_primaryWeapon()
  , m_secondaryWeapon()
@@ -348,7 +348,7 @@ void AiCreatureData::install()
 		bool const openIfNotFound = true;
 		DataTable * const dataTable = DataTableManager::getTable(s_weaponDataTable, openIfNotFound);
 
-		if (dataTable != NULL)
+		if (dataTable != nullptr)
 		{
 			DataTableManager::addReloadCallback(s_weaponDataTable, &loadWeaponData);
 			loadWeaponData(*dataTable);
@@ -366,7 +366,7 @@ void AiCreatureData::install()
 		bool const openIfNotFound = true;
 		DataTable * const dataTable = DataTableManager::getTable(s_creaureDataTable, openIfNotFound);
 
-		if (dataTable != NULL)
+		if (dataTable != nullptr)
 		{
 			DataTableManager::addReloadCallback(s_creaureDataTable, &loadCreatureData);
 			loadCreatureData(*dataTable);

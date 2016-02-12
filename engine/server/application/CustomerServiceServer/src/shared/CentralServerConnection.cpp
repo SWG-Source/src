@@ -49,7 +49,7 @@ void CentralServerConnection::onConnectionOpened()
 		
 		Service *chatServerService = CustomerServiceServer::getInstance().getChatServerService();
 
-		if (chatServerService != NULL)
+		if (chatServerService != nullptr)
 		{
 			const std::string address(chatServerService->getBindAddress());
 			const int port = chatServerService->getBindPort();
@@ -62,7 +62,7 @@ void CentralServerConnection::onConnectionOpened()
 		}
 		else
 		{
-			LOG("CentralServerConnection", ("onConnectionOpened() ERROR: ChatServerService is NULL"));
+			LOG("CentralServerConnection", ("onConnectionOpened() ERROR: ChatServerService is nullptr"));
 		}
 	}
 
@@ -71,7 +71,7 @@ void CentralServerConnection::onConnectionOpened()
 		
 		Service *gameServerService = CustomerServiceServer::getInstance().getGameServerService();
 
-		if (gameServerService != NULL)
+		if (gameServerService != nullptr)
 		{
 			const std::string address(gameServerService->getBindAddress());
 			const int port = gameServerService->getBindPort();
@@ -84,7 +84,7 @@ void CentralServerConnection::onConnectionOpened()
 		}
 		else
 		{
-			LOG("CentralServerConnection", ("onConnectionOpened() ERROR: GameServerService is NULL"));
+			LOG("CentralServerConnection", ("onConnectionOpened() ERROR: GameServerService is nullptr"));
 		}
 	}
 }

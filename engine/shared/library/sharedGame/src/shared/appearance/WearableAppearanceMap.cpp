@@ -155,9 +155,9 @@ WearableAppearanceMapNamespace::PersistentMapEntry::PersistentMapEntry(char cons
 	MapEntry(),
 	m_sourceWearableAppearanceName(sourceWearableAppearanceName, true),
 	m_wearerAppearanceName(wearerAppearanceName, true),
-	m_mappedWearableAppearanceName(NULL)
+	m_mappedWearableAppearanceName(nullptr)
 {
-	if (mappedWearableAppearanceName != NULL)
+	if (mappedWearableAppearanceName != nullptr)
 		m_mappedWearableAppearanceName = new PersistentCrcString(mappedWearableAppearanceName, true);
 }
 
@@ -218,7 +218,7 @@ CrcString const &WearableAppearanceMapNamespace::TemporaryMapEntry::getWearerApp
 
 CrcString const *WearableAppearanceMapNamespace::TemporaryMapEntry::getMappedWearableAppearanceName() const
 {
-	return NULL;
+	return nullptr;
 }
 
 // ======================================================================
@@ -297,7 +297,7 @@ void WearableAppearanceMapNamespace::loadTableData(char const *filename)
 		std::string const &mappedWearableAppearanceName = table->getStringValue(mappedWearableAppearanceNameColumnNumber, rowIndex);
 
 		//-- Create map entry, add to vector.
-		s_mapEntries.push_back(new PersistentMapEntry(sourceWearableAppearanceName.c_str(), wearerAppearanceName.c_str(), (mappedWearableAppearanceName == cs_forbiddenWearableCellContents) ? NULL : mappedWearableAppearanceName.c_str()));
+		s_mapEntries.push_back(new PersistentMapEntry(sourceWearableAppearanceName.c_str(), wearerAppearanceName.c_str(), (mappedWearableAppearanceName == cs_forbiddenWearableCellContents) ? nullptr : mappedWearableAppearanceName.c_str()));
 	}
 
 	DataTableManager::close(filename);
@@ -388,7 +388,7 @@ WearableAppearanceMap::MapResult WearableAppearanceMap::getMapResultForWearableA
 	if (findResult.first == findResult.second)
 	{
 		// We have no mapping for this entry.  That implies the source wearable appearance name can be used as is.
-		return MapResult(false, false, NULL);
+		return MapResult(false, false, nullptr);
 	}
 	else
 	{
@@ -398,7 +398,7 @@ WearableAppearanceMap::MapResult WearableAppearanceMap::getMapResultForWearableA
 
 		// We have a mapping.  Return it.
 		CrcString const *const mappedWearableAppearanceName = mapEntry->getMappedWearableAppearanceName();
-		return MapResult(true, mappedWearableAppearanceName == NULL, mappedWearableAppearanceName);
+		return MapResult(true, mappedWearableAppearanceName == nullptr, mappedWearableAppearanceName);
 	}
 }
 

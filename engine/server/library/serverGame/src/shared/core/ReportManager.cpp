@@ -247,7 +247,7 @@ void ReportManager::handleMessage(ChatOnRequestLog const &chatOnRequestLog)
 		CreatureObject * const reportingCreatureObject = CreatureObject::asCreatureObject(NetworkIdManager::getObjectById(reportData.m_reportingNetworkId));
 		PlayerObject * const reportingPlayerObject = PlayerCreatureController::getPlayerObject(reportingCreatureObject);
 		
-		if (reportingPlayerObject != NULL)
+		if (reportingPlayerObject != nullptr)
 		{
 			// Make sure the chat log does not have any extra data in it
 
@@ -297,7 +297,7 @@ void ReportManager::handleMessage(ChatOnRequestLog const &chatOnRequestLog)
 		}
 
 		if (   !foundHarassingPlayer
-		    && (reportingCreatureObject != NULL))
+		    && (reportingCreatureObject != nullptr))
 		{
 			// No harassing player match
 			
@@ -345,7 +345,7 @@ void ReportManager::handleMessage(ChatOnRequestLog const &chatOnRequestLog)
 		target.str = reportData.m_harassingName;
 		prosePackage.target = target;
 		
-		if (reportingCreatureObject != NULL)
+		if (reportingCreatureObject != nullptr)
 		{
 			Chat::sendSystemMessage(*reportingCreatureObject, prosePackage);
 		}

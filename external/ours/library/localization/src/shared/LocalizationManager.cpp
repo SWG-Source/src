@@ -77,8 +77,8 @@ using namespace LocalizationManagerNamespace;
 //----------------------------------------------------------------------
 
 bool                    LocalizationManager::ms_installed = 0;
-LocalizationManager::LocalizationManagerHashMap * LocalizationManager::ms_singletonHashMap = NULL;
-Unicode::NarrowString * LocalizationManager::ms_firstLocaleLoaded = NULL;
+LocalizationManager::LocalizationManagerHashMap * LocalizationManager::ms_singletonHashMap = nullptr;
+Unicode::NarrowString * LocalizationManager::ms_firstLocaleLoaded = nullptr;
 
 //-----------------------------------------------------------------
 
@@ -103,7 +103,7 @@ m_displayBadStringIds (displayBadStringIds)
 		m_usingEnglishLocale = false;
 	}
 
-	assert (m_fileFactory != NULL);//lint !e1924 // c-style cast.  MSVC bug
+	assert (m_fileFactory != nullptr);//lint !e1924 // c-style cast.  MSVC bug
 }
 
 //-----------------------------------------------------------------
@@ -181,23 +181,23 @@ void LocalizationManager::install (AbstractFileFactory * fileFactory, Unicode::U
 void LocalizationManager::remove  ()
 {
 	assert (ms_installed);//lint !e1924 // c-style cast.  MSVC bug
-	assert (ms_singletonHashMap != NULL);//lint !e1924 // c-style cast.  MSVC bug
-	assert (ms_firstLocaleLoaded != NULL);
+	assert (ms_singletonHashMap != nullptr);//lint !e1924 // c-style cast.  MSVC bug
+	assert (ms_firstLocaleLoaded != nullptr);
 
 	LocalizationManagerHashMap::iterator end = ms_singletonHashMap->end();
 	for (LocalizationManagerHashMap::iterator it = ms_singletonHashMap->begin(); it != end; ++it)
 	{
 		LocalizationManager * current = (*it).second;
-		(*it).second = NULL;
+		(*it).second = nullptr;
 		delete current;
 	}
 
 	ms_singletonHashMap->clear();
 	delete ms_singletonHashMap;
-	ms_singletonHashMap = NULL;
+	ms_singletonHashMap = nullptr;
 
 	delete ms_firstLocaleLoaded;
-	ms_firstLocaleLoaded = NULL;
+	ms_firstLocaleLoaded = nullptr;
 
 	ms_installed = false;
 }
@@ -277,7 +277,7 @@ LocalizedStringTable * LocalizationManager::fetchStringTable(const Unicode::Narr
 	if(find_iter != stmap.end ())
 	{
 		TimedStringTable & tst = (*find_iter).second;
-		//-- this can be null
+		//-- this can be nullptr
 		table     = tst.second;
 		tst.first = time(0);
 	}

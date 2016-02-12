@@ -105,7 +105,7 @@ namespace ChatSystem
 		//    will be connected to, as well as the hostname and port of the Registrar
 		//    ChatServer (which will automatically reroute the ChatAPI connection to 
 		//    a hotspare ChatServer if the provided choice is unavailable).
-		//    NULL pointers are NOT valid input.
+		//    nullptr pointers are NOT valid input.
 		ChatAPI(const char *registrar_host, short registrar_port, const char *server_host, short server_port);
 		virtual ~ChatAPI();
 
@@ -209,7 +209,7 @@ namespace ChatSystem
 		// getAvatar
 		//    Requests immediate return of a ChatAvatar object that this API
 		//    has cached due to a RequestLoginAvatar.  Request does not go 
-		//    to ChatServer.  Returns NULL if API does not have object locally.
+		//    to ChatServer.  Returns nullptr if API does not have object locally.
 		ChatAvatar *getAvatar(const ChatUnicodeString &avatarName, const ChatUnicodeString &avatarAddress);
 		ChatAvatar *getAvatar(unsigned avatarID);
 
@@ -286,7 +286,7 @@ namespace ChatSystem
 		//    Requests immediate return of a ChatRoom object that this API
 		//    has cached due to a RequestGetRoom, RequestCreateRoom, or 
 		//    RequestEnterRoom.  Request does not go to ChatServer.  Returns 
-		//    NULL if API does not have object locally.
+		//    nullptr if API does not have object locally.
 		ChatRoom *getRoom(const ChatUnicodeString &roomAddress);
 		ChatRoom *getRoom(unsigned roomID);
 
@@ -298,13 +298,13 @@ namespace ChatSystem
 		
 		// getDefaultRoomParams
 		//    Requests the ChatAPI's current default RoomParams object. Used for
-		//    the EnterRoom call. If NULL, EnterRoom will not do passive room
+		//    the EnterRoom call. If nullptr, EnterRoom will not do passive room
 		//    creation if the room to enter does not yet exist. Initial value
-		//    is NULL (no RoomParams object defined).
+		//    is nullptr (no RoomParams object defined).
 		const RoomParams *getDefaultRoomParams(void);
 
 		// setDefaultRoomParams
-		//    Sets the ChatAPI's current default RoomParams object. Passing a NULL
+		//    Sets the ChatAPI's current default RoomParams object. Passing a nullptr
 		//    pointer will cause the default params not to be used by EnterRoom.
 		void setDefaultRoomParams(RoomParams *roomParams);
 		

@@ -101,7 +101,7 @@ void FormManagerServer::handleCreateObjectData(NetworkId const & actor, std::str
 		Transform tr;
 		tr.setPosition_p(position);
 		ServerObject * const newObject = ServerWorld::createNewObject(crc, tr, cell, false);
-		if (newObject == NULL)
+		if (newObject == nullptr)
 			return;
 
 		if (cellId == NetworkId::cms_invalid)
@@ -114,7 +114,7 @@ void FormManagerServer::handleCreateObjectData(NetworkId const & actor, std::str
 	{
 		//tell script to create the object in it's own special manner (since the datatable requests that)
 		Object * const obj = NetworkIdManager::getObjectById(actor);
-		ServerObject * const serverObj = obj ? obj->asServerObject() : NULL;
+		ServerObject * const serverObj = obj ? obj->asServerObject() : nullptr;
 		if(serverObj)
 		{
 			std::vector<char const *> keys;
@@ -151,11 +151,11 @@ void FormManagerServer::handleEditObjectData(NetworkId const & actor, NetworkId 
 		return;
 
 	Object * const actorObj = NetworkIdManager::getObjectById(actor);
-	ServerObject * const actorServerObj = actorObj ? actorObj->asServerObject() : NULL;
+	ServerObject * const actorServerObj = actorObj ? actorObj->asServerObject() : nullptr;
 	if(actorServerObj)
 	{
 		Object * const objectToEditObj = NetworkIdManager::getObjectById(objectToEdit);
-		ServerObject * const objectToEditServerObj = objectToEditObj ? objectToEditObj->asServerObject() : NULL;
+		ServerObject * const objectToEditServerObj = objectToEditObj ? objectToEditObj->asServerObject() : nullptr;
 		if(objectToEditServerObj)
 		{
 			//get matching form
@@ -207,11 +207,11 @@ void FormManagerServer::handleEditObjectData(NetworkId const & actor, NetworkId 
 void FormManagerServer::requestEditObjectDataForClient(NetworkId const & actor, NetworkId const & objectToEdit)
 {
 	Object * const actorObj = NetworkIdManager::getObjectById(actor);
-	ServerObject * const actorServerObj = actorObj ? actorObj->asServerObject() : NULL;
+	ServerObject * const actorServerObj = actorObj ? actorObj->asServerObject() : nullptr;
 	if(actorServerObj)
 	{
 		Object * const objectToEditObj = NetworkIdManager::getObjectById(objectToEdit);
-		ServerObject * const objectToEditServerObj = objectToEditObj ? objectToEditObj->asServerObject() : NULL;
+		ServerObject * const objectToEditServerObj = objectToEditObj ? objectToEditObj->asServerObject() : nullptr;
 		if(objectToEditServerObj)
 		{
 			//get matching form
@@ -277,8 +277,8 @@ void FormManagerServer::sendEditObjectDataToClient(NetworkId const & client, Net
 		return;
 
 	Object * const playerObject = NetworkIdManager::getObjectById(client);
-	ServerObject * const playerServer = playerObject ? playerObject->asServerObject() : NULL;
-	CreatureObject * const playerCreature = playerServer ? playerServer->asCreatureObject() : NULL;
+	ServerObject * const playerServer = playerObject ? playerObject->asServerObject() : nullptr;
+	CreatureObject * const playerCreature = playerServer ? playerServer->asCreatureObject() : nullptr;
 
 	if(playerCreature)
 	{

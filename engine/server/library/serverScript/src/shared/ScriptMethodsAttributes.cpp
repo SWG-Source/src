@@ -549,12 +549,12 @@ jboolean JNICALL ScriptMethodsAttributesNamespace::hasAttribModifier(JNIEnv *env
 	if (!JavaLibrary::convert(jmodName, name))
 		return JNI_FALSE;
 
-	const CreatureObject * creature = NULL;
+	const CreatureObject * creature = nullptr;
 	if (!JavaLibrary::getObject(target, creature))
 		return JNI_FALSE;
 
 	const AttribMod::AttribMod * mod = creature->getAttributeModifier(name);
-	if (mod != NULL && AttribMod::isAttribMod(*mod))
+	if (mod != nullptr && AttribMod::isAttribMod(*mod))
 		return JNI_TRUE;
 
 	return JNI_FALSE;
@@ -582,12 +582,12 @@ jboolean JNICALL ScriptMethodsAttributesNamespace::hasSkillModModifier(JNIEnv *e
 	if (!JavaLibrary::convert(jmodName, name))
 		return JNI_FALSE;
 
-	const CreatureObject * creature = NULL;
+	const CreatureObject * creature = nullptr;
 	if (!JavaLibrary::getObject(target, creature))
 		return JNI_FALSE;
 
 	const AttribMod::AttribMod * mod = creature->getAttributeModifier(name);
-	if (mod != NULL && AttribMod::isSkillMod(*mod))
+	if (mod != nullptr && AttribMod::isSkillMod(*mod))
 		return JNI_TRUE;
 
 	return JNI_FALSE;
@@ -601,7 +601,7 @@ jboolean JNICALL ScriptMethodsAttributesNamespace::hasSkillModModifier(JNIEnv *e
  * @param target	    id of creature to access
  * @param attrib		attribute we are interested in
  *
- * @return the attribute modifiers for the creature, or null if it has none
+ * @return the attribute modifiers for the creature, or nullptr if it has none
  */
 jobjectArray JNICALL ScriptMethodsAttributesNamespace::getAttribModifiers(JNIEnv *env, jobject self, jlong target, jint attrib)
 {
@@ -642,7 +642,7 @@ jobjectArray JNICALL ScriptMethodsAttributesNamespace::getAttribModifiers(JNIEnv
  * @param self		    class calling this function
  * @param target	    id of creature to access
  *
- * @return the attribute modifiers for the creature, or null if it has none
+ * @return the attribute modifiers for the creature, or nullptr if it has none
  */
 jobjectArray JNICALL ScriptMethodsAttributesNamespace::getAllAttribModifiers(JNIEnv *env, jobject self, jlong target)
 {
@@ -692,7 +692,7 @@ jboolean JNICALL ScriptMethodsAttributesNamespace::removeAttribModifier(JNIEnv *
 	if (!JavaLibrary::convert(jmodName, name))
 		return JNI_FALSE;
 
-	CreatureObject * creature = NULL;
+	CreatureObject * creature = nullptr;
 	if (!JavaLibrary::getObject(target, creature))
 		return JNI_FALSE;
 
@@ -1084,12 +1084,12 @@ jint JNICALL ScriptMethodsAttributesNamespace::getHitpoints(JNIEnv *env, jobject
 {
 	UNREF(self);
 
-	const TangibleObject * object = NULL;
+	const TangibleObject * object = nullptr;
 	if (!JavaLibrary::getObject(target, object))
 		return ATTRIB_ERROR;
 
 	// make sure the object isn't a creature or is a vehicle
-	if (object->asCreatureObject () != NULL &&
+	if (object->asCreatureObject () != nullptr &&
 		!GameObjectTypes::isTypeOf (object->getGameObjectType (), SharedObjectTemplate::GOT_vehicle))
 		return ATTRIB_ERROR;
 
@@ -1111,12 +1111,12 @@ jint JNICALL ScriptMethodsAttributesNamespace::getMaxHitpoints(JNIEnv *env, jobj
 {
 	UNREF(self);
 
-	const TangibleObject * object = NULL;
+	const TangibleObject * object = nullptr;
 	if (!JavaLibrary::getObject(target, object))
 		return ATTRIB_ERROR;
 
 	// make sure the object isn't a creature or is a vehicle
-	if (object->asCreatureObject () != NULL &&
+	if (object->asCreatureObject () != nullptr &&
 		!GameObjectTypes::isTypeOf (object->getGameObjectType (), SharedObjectTemplate::GOT_vehicle))
 		return ATTRIB_ERROR;
 
@@ -1136,13 +1136,13 @@ jint JNICALL ScriptMethodsAttributesNamespace::getTotalHitpoints(JNIEnv *env, jo
 {
 	UNREF(self);
 
-	const TangibleObject * object = NULL;
+	const TangibleObject * object = nullptr;
 	if (!JavaLibrary::getObject(target, object))
 		return ATTRIB_ERROR;
 
 	// make sure the object isn't a creature
 	// make sure the object isn't a creature or is a vehicle
-	if (object->asCreatureObject () != NULL &&
+	if (object->asCreatureObject () != nullptr &&
 		!GameObjectTypes::isTypeOf (object->getGameObjectType (), SharedObjectTemplate::GOT_vehicle))
 		return ATTRIB_ERROR;
 
@@ -1164,12 +1164,12 @@ jboolean JNICALL ScriptMethodsAttributesNamespace::setHitpoints(JNIEnv *env, job
 {
 	UNREF(self);
 
-	TangibleObject * object = NULL;
+	TangibleObject * object = nullptr;
 	if (!JavaLibrary::getObject(target, object))
 		return JNI_FALSE;
 
 	// make sure the object isn't a creature or is a vehicle
-	if (object->asCreatureObject () != NULL &&
+	if (object->asCreatureObject () != nullptr &&
 		!GameObjectTypes::isTypeOf (object->getGameObjectType (), SharedObjectTemplate::GOT_vehicle))
 		return JNI_FALSE;
 
@@ -1209,12 +1209,12 @@ jboolean JNICALL ScriptMethodsAttributesNamespace::setMaxHitpoints(JNIEnv *env, 
 {
 	UNREF(self);
 
-	TangibleObject * object = NULL;
+	TangibleObject * object = nullptr;
 	if (!JavaLibrary::getObject(target, object))
 		return JNI_FALSE;
 
 	// make sure the object isn't a creature or is a vehicle
-	if (object->asCreatureObject () != NULL &&
+	if (object->asCreatureObject () != nullptr &&
 		!GameObjectTypes::isTypeOf (object->getGameObjectType (), SharedObjectTemplate::GOT_vehicle))
 		return JNI_FALSE;
 
@@ -1237,12 +1237,12 @@ jboolean JNICALL ScriptMethodsAttributesNamespace::setInvulnerableHitpoints(JNIE
 {
 	UNREF(self);
 
-	TangibleObject * object = NULL;
+	TangibleObject * object = nullptr;
 	if (!JavaLibrary::getObject(target, object))
 		return JNI_FALSE;
 
 	// make sure the object isn't a creature or is a vehicle
-	if (object->asCreatureObject () != NULL &&
+	if (object->asCreatureObject () != nullptr &&
 		!GameObjectTypes::isTypeOf (object->getGameObjectType (), SharedObjectTemplate::GOT_vehicle))
 		return JNI_FALSE;
 
@@ -1280,7 +1280,7 @@ jboolean JNICALL ScriptMethodsAttributesNamespace::setInvulnerableHitpoints(JNIE
  */
 jint JNICALL ScriptMethodsAttributesNamespace::getShockWound(JNIEnv *env, jobject self, jlong target)
 {
-	const CreatureObject * creature = NULL;
+	const CreatureObject * creature = nullptr;
 	if (!JavaLibrary::getObject(target, creature))
 		return ATTRIB_ERROR;
 
@@ -1299,7 +1299,7 @@ jint JNICALL ScriptMethodsAttributesNamespace::getShockWound(JNIEnv *env, jobjec
  */
 jboolean JNICALL ScriptMethodsAttributesNamespace::setShockWound(JNIEnv *env, jobject self, jlong target, jint wound)
 {
-	CreatureObject * creature = NULL;
+	CreatureObject * creature = nullptr;
 	if (!JavaLibrary::getObject(target, creature))
 		return JNI_FALSE;
 
@@ -1319,7 +1319,7 @@ jboolean JNICALL ScriptMethodsAttributesNamespace::setShockWound(JNIEnv *env, jo
  */
 jboolean JNICALL ScriptMethodsAttributesNamespace::addShockWound(JNIEnv *env, jobject self, jlong target, jint wound)
 {
-	CreatureObject * creature = NULL;
+	CreatureObject * creature = nullptr;
 	if (!JavaLibrary::getObject(target, creature))
 		return JNI_FALSE;
 
@@ -1339,7 +1339,7 @@ jboolean JNICALL ScriptMethodsAttributesNamespace::addShockWound(JNIEnv *env, jo
  */
 jboolean JNICALL ScriptMethodsAttributesNamespace::healShockWound(JNIEnv *env, jobject self, jlong target, jint value)
 {
-	CreatureObject * creature = NULL;
+	CreatureObject * creature = nullptr;
 	if (!JavaLibrary::getObject(target, creature))
 		return JNI_FALSE;
 

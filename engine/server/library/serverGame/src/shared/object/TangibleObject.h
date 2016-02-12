@@ -777,7 +777,7 @@ inline uint32 TangibleObject::getSourceDraftSchematic() const
 
 inline void TangibleObject::createCombatData()
 {
-	if (m_combatData == NULL)
+	if (m_combatData == nullptr)
 	{
 		m_combatData = new CombatEngineData::CombatData;
 	}

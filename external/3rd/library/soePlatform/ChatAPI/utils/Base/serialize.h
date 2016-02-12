@@ -501,8 +501,8 @@ namespace soe
         }
         else
         {
-            //find null terminator, if don't find it before maxLen, then err
-            const unsigned char *strEnd = NULL;
+            //find nullptr terminator, if don't find it before maxLen, then err
+            const unsigned char *strEnd = nullptr;
             unsigned strLen = 0;
             for (;strLen<maxLen && strLen < size;strLen++)
             {
@@ -513,7 +513,7 @@ namespace soe
                     break;
                 }
             }
-            if (strEnd == NULL)
+            if (strEnd == nullptr)
                 return 0;
 
             data.assign((const char *)stream, (const char *)strEnd);

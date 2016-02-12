@@ -28,15 +28,15 @@ namespace Archive
 #ifdef _DEBUG
 		Object * const object = NetworkIdManager::getObjectById(target.m_networkId);
 
-		if (object == NULL)
+		if (object == nullptr)
 		{
 			WARNING(true, ("AiCreatureStateArchive::get() Unable to resolve networkId(%s) to an Object", target.m_networkId.getValueString().c_str()));
 			return;
 		}
 
-		AICreatureController * const controller = (object != NULL) ? AICreatureController::asAiCreatureController(object->getController()) : NULL;
+		AICreatureController * const controller = (object != nullptr) ? AICreatureController::asAiCreatureController(object->getController()) : nullptr;
 
-		if (controller == NULL)
+		if (controller == nullptr)
 		{
 			WARNING(true, ("AiCreatureStateArchive::get() Message to object(%s) that does not have an AICreatureController", object->getDebugInformation().c_str()));
 			return;

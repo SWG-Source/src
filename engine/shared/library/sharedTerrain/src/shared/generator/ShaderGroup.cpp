@@ -671,7 +671,7 @@ void ShaderGroup::load_0000 (Iff& iff)
 				//-- add family
 				Family* family = new Family (familyId);
 
-				family->setName ("null");
+				family->setName ("nullptr");
 
 				PackedRgb color;
 				color.r = 255;
