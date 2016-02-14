@@ -1258,12 +1258,17 @@ void JavaLibrary::initializeJavaThread()
 // the below is ok but could use the dynamic function call too if we want someday 
 #ifdef JNI_VERSION_1_9
         vm_args.version = JNI_VERSION_1_9;
+
+        tempOption.optionString = "-XX:MetaspaceSize=128m";
+        options.push_back(tempOption);
 #define JAVAVERSET = 1
 #endif
 
 #ifndef JAVAVERSET
 #ifdef JNI_VERSION_1_8
 	vm_args.version = JNI_VERSION_1_8;
+        tempOption.optionString = "-XX:MetaspaceSize=128m";
+        options.push_back(tempOption);
 #define JAVAVERSET = 1 
 #endif
 #endif
