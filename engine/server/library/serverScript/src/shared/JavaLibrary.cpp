@@ -1155,8 +1155,6 @@ void JavaLibrary::initializeJavaThread()
 	}
 	else
 	{
-		// use options derived from config file settings
-
 		// set up memory requirements
 		tempOption.optionString = "-Xms128m";
 		options.push_back(tempOption);
@@ -1165,30 +1163,43 @@ void JavaLibrary::initializeJavaThread()
 		tempOption.optionString = "-Xss768k";
 		options.push_back(tempOption);
 
-		if (ms_javaVmType == JV_ibm)
+		if (ms_javaVmType == JV_sun)
 		{
-			tempOption.optionString = "-Xoss768k";
+
+// java 1.8 and higher uses metaspace...which is apparently unlimited by default
+#if defined(JNI_VERSION_1_8) || defined(JNI_VERSION_1_9)
+		        tempOption.optionString = "-XX:MetaspaceSize=128m";
+		        options.push_back(tempOption);
+#endif
+
+// these don't seem to play nice with java >= 7
+#if !defined(JNI_VERSION_1_9) && !defined(JNI_VERSION_1_8) && !defined(JNI_VERSION_1_7)
+			tempOption.optionString = "-Xrs";
 			options.push_back(tempOption);
 			tempOption.optionString = "-Xcheck:jni";
 			options.push_back(tempOption);
-			tempOption.optionString = "-Xcheck:nabounds";
-			options.push_back(tempOption);
-			tempOption.optionString = "-Xrs";
-			options.push_back(tempOption);
-#ifndef WIN32
-			tempOption.optionString = "-Xgcpolicy:optavgpause";
-			options.push_back(tempOption);
 #endif
-		}
-		else
-		{
 			if (ConfigServerGame::getCompileScripts())
 			{
 				tempOption.optionString = "-Xint";
 				options.push_back(tempOption);
 			}
-			options.push_back(tempOption);
 		}
+		else
+		{
+                        tempOption.optionString = "-Xoss768k";
+                        options.push_back(tempOption);
+                        tempOption.optionString = "-Xcheck:jni";
+                        options.push_back(tempOption);
+                        tempOption.optionString = "-Xcheck:nabounds";
+                        options.push_back(tempOption);
+                        tempOption.optionString = "-Xrs";
+                        options.push_back(tempOption);
+#ifndef WIN32
+                        tempOption.optionString = "-Xgcpolicy:optavgpause";
+                        options.push_back(tempOption);
+#endif
+                }
 
 		if (ConfigServerGame::getUseVerboseJava())
 		{
@@ -1199,6 +1210,7 @@ void JavaLibrary::initializeJavaThread()
 			tempOption.optionString = "-verbose:class";
 			options.push_back(tempOption);
 		}
+
 		if (ConfigServerGame::getLogJavaGc())
 		{
 			tempOption.optionString = "-Xloggc:javagc.log";
@@ -1255,59 +1267,47 @@ void JavaLibrary::initializeJavaThread()
 	tempOption.optionString = const_cast<char *>(classPath.c_str());
 	options.push_back(tempOption);
 
-// the below is ok but could use the dynamic function call too if we want someday 
+// TODO: this really sucks as the jvm won't start without the param
+// there's a dynamic method but requires the jvm to already be running, wtf?
 #ifdef JNI_VERSION_1_9
         vm_args.version = JNI_VERSION_1_9;
-
-        tempOption.optionString = "-XX:MetaspaceSize=128m";
-        options.push_back(tempOption);
 #define JAVAVERSET = 1
 #endif
 
-#ifndef JAVAVERSET
-#ifdef JNI_VERSION_1_8
+#if !defined(JAVAVERSET) && defined(JNI_VERSION_1_8)
 	vm_args.version = JNI_VERSION_1_8;
-        tempOption.optionString = "-XX:MetaspaceSize=128m";
-        options.push_back(tempOption);
 #define JAVAVERSET = 1 
 #endif
-#endif
 
-#ifndef JAVAVERSET
-#ifdef JNI_VERSION_1_7
+#if !defined(JAVAVERSET) && defined(JNI_VERSION_1_7)
         vm_args.version = JNI_VERSION_1_7;
 #define JAVAVERSET = 1
 #endif
-#endif
 
-#ifndef JAVAVERSET
-#ifdef JNI_VERSION_1_6
+#if !defined(JAVAVERSET) && defined(JNI_VERSION_1_6)
         vm_args.version = JNI_VERSION_1_6;
 #define JAVAVERSET = 1
 #endif
-#endif
 
-#ifndef JAVAVERSET
-#ifdef JNI_VERSION_1_5
+#if !defined(JAVAVERSET) && defined(JNI_VERSION_1_5)
         vm_args.version = JNI_VERSION_1_5;
 #define JAVAVERSET = 1
 #endif
-#endif
 
-#ifndef JAVAVERSET
-#ifdef JNI_VERSION_1_4
+#if !defined(JAVAVERSET) && defined(JNI_VERSION_1_4)
         vm_args.version = JNI_VERSION_1_4;
 #define JAVAVERSET = 1
-#endif
 #endif
 
 #ifdef JAVAVERSET
 #undef JAVAVERSET
+#else
+#error JNI version not found/set!
 #endif
 
 	vm_args.options = &options[0];
 	vm_args.nOptions = options.size();
-	vm_args.ignoreUnrecognized = JNI_TRUE;
+	vm_args.ignoreUnrecognized = JNI_TRUE; // ok let's ignore whatever isn't understood instead of crashing like a loser
 
 	// create the JVM
 	JNIEnv * env = nullptr;
@@ -1329,12 +1329,32 @@ void JavaLibrary::initializeJavaThread()
 	}
 	ms_loaded = 1;
 
+#if !defined(JNI_VERSION_1_9) && !defined(JNI_VERSION_1_8) && !defined(JNI_VERSION_1_7) && defined(linux)
+	if (ConfigServerGame::getTrapScriptCrashes())
+	{	
+		//set up signal handler for fatals in linux
+		OurSa.sa_handler = fatalHandler;
+		sigemptyset(&OurSa.sa_mask);
+		OurSa.sa_flags = 0;
+		IGNORE_RETURN(sigaction(SIGSEGV, &OurSa, &JavaSa));
+	}
+#endif
+
 	// wait until the main thread tells us to shutdown
 	ms_shutdownJava->wait();
 
 	// clean up
 	IGNORE_RETURN(ms_jvm->DestroyJavaVM());
 	ms_jvm = nullptr;
+
+#if !defined(JNI_VERSION_1_9) && !defined(JNI_VERSION_1_8) && !defined(JNI_VERSION_1_7) && defined(linux)
+	if (ConfigServerGame::getTrapScriptCrashes())
+	{
+		// restore the default signal handler
+		IGNORE_RETURN(sigaction(SIGSEGV, &OrgSa, NULL));
+	}
+#endif
+
 
 
 #if defined(_WIN32)
