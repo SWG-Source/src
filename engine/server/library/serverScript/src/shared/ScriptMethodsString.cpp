@@ -101,7 +101,8 @@ jstring JNICALL ScriptMethodsStringNamespace::getString(JNIEnv *env, jobject sel
 		return result.getReturnValue();
 	}
 
-	DEBUG_WARNING(true, ("JavaLibrary::log failed to localize the stringId(%s, %s)", table.c_str(), asciiId.c_str()));
+	//TODO? this warning is annoying and likely just a remnant of the japanese language version of the game
+	//DEBUG_WARNING(true, ("JavaLibrary::log failed to localize the stringId(%s, %s)", table.c_str(), asciiId.c_str()));
 	
 	return 0;
 
