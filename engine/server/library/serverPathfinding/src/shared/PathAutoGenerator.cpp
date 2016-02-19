@@ -30,8 +30,6 @@
 namespace PathAutoGeneratorNamespace
 {
 	char const * const s_pathWaypointTemplate = "object/path_waypoint/path_waypoint.iff";
-	char const * const s_pathObstacleTemplate = "object/resource_container/energy_solid_lg.iff";
-
 }
 
 using namespace PathAutoGeneratorNamespace;

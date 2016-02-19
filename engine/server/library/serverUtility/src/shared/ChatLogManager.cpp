@@ -92,7 +92,6 @@ namespace ChatLogManagerNamespace
 	time_t s_purgeTime = 0;
 	int s_currentIndex = 0;
 	time_t s_chatLogMemoryTimer = 0;
-	time_t const s_chatLogMemoryTime = 30;
 	int s_cacheHits = 0;
 	int s_cacheMisses = 0;
 	

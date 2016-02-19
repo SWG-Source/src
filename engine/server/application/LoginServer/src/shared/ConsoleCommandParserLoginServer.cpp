@@ -22,12 +22,6 @@ namespace CommandNames
 #undef MAKE_COMMAND
 }
 
-const CommandParser::CmdInfo cmds[] =
-{
-	{"runState", 0, "", "Return the running state of the CentralServer. It should always return 'running'"},
-	{"", 0, "", ""} // this must be last
-};
-
 //-----------------------------------------------------------------------
 
 ConsoleCommandParserLoginServer::ConsoleCommandParserLoginServer() :

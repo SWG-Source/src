@@ -18,10 +18,6 @@ class TaskUpdatePurgeAccountList : public DB::TaskRequest
 	TaskUpdatePurgeAccountList();
 	virtual bool process    (DB::Session *session);
 	virtual void onComplete ();
-
-  private:	
-	StationId m_account;
-	int m_purgePhase;
 };
 
 // ======================================================================

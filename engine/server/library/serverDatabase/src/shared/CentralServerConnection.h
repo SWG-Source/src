@@ -26,7 +26,7 @@ public:
 	void                          onReceive               (const Archive::ByteStream & message);
 	void                          receiveMessage          (const MessageDispatch::Emitter & source, const MessageDispatch::MessageBase & message);
 private:
-	CentralServerConnection(CentralServerConnection&);
+	CentralServerConnection(const CentralServerConnection&);
 	CentralServerConnection& operator=(CentralServerConnection&);
 };
 

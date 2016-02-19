@@ -140,7 +140,7 @@ private:
 	void load_0005(const PortalPropertyTemplate &portalPropertyTemplate, int cellIndex, Iff &iff);
 
 	// disabled
-	PortalPropertyTemplateCell(PortalPropertyTemplateCell &);
+	PortalPropertyTemplateCell(const PortalPropertyTemplateCell &);
 	PortalPropertyTemplateCell &operator =(PortalPropertyTemplateCell &);
 
 private:

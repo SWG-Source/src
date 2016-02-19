@@ -31,7 +31,7 @@ private:
 	ChunkCompleteQueueType * const m_chunkCompleteQueue;
 	
 private:
-	GameServerConnection(GameServerConnection&);
+	GameServerConnection(const GameServerConnection&);
 	GameServerConnection& operator=(GameServerConnection&);
 };
 

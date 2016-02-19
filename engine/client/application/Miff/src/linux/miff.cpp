@@ -53,8 +53,6 @@
 #include <stdlib.h>					// for tolower()
 
 //================================================= static vars assignment ==
-const int	entryPointVersion = 1;				// constantly check DataEntryPoint.h to see if this value has changed
-
 OutputFileHandler   *outfileHandler = nullptr;
 const int   bufferSize = 16 * 1024 * 1024;
 const int   maxStringSize = 256;

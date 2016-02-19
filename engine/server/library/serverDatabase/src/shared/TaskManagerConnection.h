@@ -20,7 +20,7 @@ public:
 	void                          onConnectionOpened      ();
 
 private:
-	TaskManagerConnection(TaskManagerConnection&);
+	TaskManagerConnection(const TaskManagerConnection&);
 	TaskManagerConnection& operator=(TaskManagerConnection&);
 };
 
