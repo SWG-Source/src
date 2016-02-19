@@ -130,7 +130,7 @@ public:
 // ********************************************************
 
 ByteQueue::ByteQueue(unsigned int m_nodeSize)
-	: m_nodeSize(m_nodeSize), m_lazyLength(0)
+	: m_nodeSize(0), m_lazyLength(0)
 {
 	m_head = m_tail = new ByteQueueNode(m_nodeSize);
 }
