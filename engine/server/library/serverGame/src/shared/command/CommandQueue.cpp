@@ -46,12 +46,6 @@ namespace CommandQueueNamespace
 #endif
 
 	/**
-	 * @brief used to assign sequence Ids to server-generated commands
-	 * that need to be replicated on the client.
-	 */
-	const uint32       cs_sequenceStart           = 0x40000000;
-	
-	/**
 	 * @brief the maximum number of combat commands that are allowed in
 	 * the queue at any given time.
 	 */

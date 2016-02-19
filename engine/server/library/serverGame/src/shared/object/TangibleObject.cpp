@@ -124,14 +124,6 @@
 namespace TangibleObjectNamespace
 {
 	int const s_minCombatDuration = 4;
-	const int NUM_DAMAGE_TYPES = 9;
-
-	const int s_ignoreDamageTypes =
-		static_cast<int>(ServerArmorTemplate::DT_environmental_heat) |
-		static_cast<int>(ServerArmorTemplate::DT_environmental_cold) |
-		static_cast<int>(ServerArmorTemplate::DT_environmental_acid) |
-		static_cast<int>(ServerArmorTemplate::DT_environmental_electrical);
-
 	bool isEmpty(const ServerObject& obj)
 	{
 		const Container* container = obj.getContainerProperty();

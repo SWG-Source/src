@@ -22,13 +22,13 @@
 const char WIN32_PATH_SEPARATOR = '\\';
 const char LINUX_PATH_SEPARATOR = '/';
 
-//#if defined(WIN32)
-//const char PATH_SEPARATOR = WIN32_PATH_SEPARATOR;
-//#elif defined(linux)
+#if defined(WIN32)
+const char PATH_SEPARATOR = WIN32_PATH_SEPARATOR;
+#elif defined(linux)
 const char PATH_SEPARATOR = LINUX_PATH_SEPARATOR;
-//#else
-//#error unknown OS
-//#endif
+#else
+#error unknown OS
+#endif
 
 
 /**

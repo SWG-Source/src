@@ -191,7 +191,7 @@ class Persister : public MessageDispatch::Receiver
 	static void installDerived(Persister *derivedInstance);
 
   private:
-	Persister(Persister&); //disable
+	Persister(const Persister&); //disable
 	Persister &operator=(const Persister&); //disable
 	
   private:

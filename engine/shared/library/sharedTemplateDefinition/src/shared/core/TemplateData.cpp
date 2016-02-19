@@ -176,36 +176,6 @@ static const char * const DefaultDataReturnValue[] =
 	"DefaultString"
 };
 
-// map enum ParamType to string equivalent
-static const char * const EnumTypeNames[] =
-{
-	"TYPE_NONE",
-	"TYPE_COMMENT",
-	"TYPE_INTEGER",
-	"TYPE_FLOAT",
-	"TYPE_BOOL",
-	"TYPE_STRING",
-	"TYPE_STRINGID",
-	"TYPE_VECTOR",
-	"TYPE_DYNAMIC_VAR",
-	"TYPE_TEMPLATE",
-	"TYPE_ENUM",
-	"TYPE_STRUCT",
-	"TYPE_TRIGGER_VOLUME",
-	"TYPE_FILENAME",
-	"NUM_PARAM_TYPES"
-};
-
-// map enum TemplateLocation to string equivalent
-static const char * const EnumLocationNames[] =
-{
-	"LOC_NONE",
-	"LOC_CLIENT",
-	"LOC_SERVER",
-	"LOC_SHARED"
-};
-
-
 //==============================================================================
 // class methods
 

@@ -2684,7 +2684,6 @@ namespace
 
 	// custom_var TypeId definitions
 	const jint CVT_UNKNOWN      = static_cast<jint>(0);
-	const jint CVT_CONST_STRING = static_cast<jint>(1);
 	const jint CVT_RANGED_INT   = static_cast<jint>(2);
 	const jint CVT_PALCOLOR     = static_cast<jint>(3);
 

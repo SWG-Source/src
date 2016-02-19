@@ -100,7 +100,7 @@ void SetupSharedFoundation::callbackWithExceptionHandling( void (*callback)(void
 		{
 			callback();
 		}
-		catch (__exception * mathException)
+		catch (const __exception * mathException)
 		{
 			FATAL(true, ("Math Exception: %s\n", mathException->name));
 		}

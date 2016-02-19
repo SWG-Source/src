@@ -16,7 +16,7 @@ namespace Base
         mMutex->Lock();
     }
 
-    CScopeLock::CScopeLock(CScopeLock& lock) :
+    CScopeLock::CScopeLock(const CScopeLock& lock) :
         mMutex(lock.mMutex)
     {
         mMutex->Lock();
