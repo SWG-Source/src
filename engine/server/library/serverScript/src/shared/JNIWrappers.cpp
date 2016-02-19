@@ -902,9 +902,11 @@ LocalRef::LocalRef(jobject src) :
 
 LocalRef::~LocalRef()
 {
-	if (m_ref != 0 && JavaLibrary::getEnv() != nullptr)
+	if (m_ref > 0 && JavaLibrary::getEnv() != nullptr) 
+	{
 		JavaLibrary::getEnv()->DeleteLocalRef(m_ref);
-	m_ref = 0;
+		m_ref = 0;
+	}
 }
 
 
@@ -917,9 +919,11 @@ LocalArrayRef::LocalArrayRef(jarray src) :
 
 LocalArrayRef::~LocalArrayRef()
 {
-	if (m_ref != 0 && JavaLibrary::getEnv() != nullptr)
+	if (m_ref > 0 && JavaLibrary::getEnv() != nullptr)
+	{
 		JavaLibrary::getEnv()->DeleteLocalRef(m_ref);
-	m_ref = 0;
+		m_ref = 0;
+	}
 }
 
 
@@ -932,9 +936,11 @@ LocalObjectArrayRef::LocalObjectArrayRef(jobjectArray src) :
 
 LocalObjectArrayRef::~LocalObjectArrayRef()
 {
-	if (m_ref != 0 && JavaLibrary::getEnv() != nullptr)
+	if (m_ref > 0 && JavaLibrary::getEnv() != nullptr)
+	{
 		JavaLibrary::getEnv()->DeleteLocalRef(m_ref);
-	m_ref = 0;
+		m_ref = 0;
+	}
 }
 
 
@@ -1008,9 +1014,11 @@ GlobalRef::GlobalRef(const LocalRefParam & src) :
 
 GlobalRef::~GlobalRef()
 {
-	if (m_ref != 0 && JavaLibrary::getEnv() != nullptr)
+	if (m_ref > 0 && JavaLibrary::getEnv() != nullptr)
+	{
 		JavaLibrary::getEnv()->DeleteGlobalRef(m_ref);
-	m_ref = 0;
+		m_ref = 0;
+	}
 }
 
 
@@ -1025,9 +1033,11 @@ GlobalArrayRef::GlobalArrayRef(const LocalObjectArrayRefParam & src) :
 
 GlobalArrayRef::~GlobalArrayRef()
 {
-	if (m_ref != 0 && JavaLibrary::getEnv() != nullptr)
+	if (m_ref > 0 && JavaLibrary::getEnv() != nullptr)
+	{
 		JavaLibrary::getEnv()->DeleteGlobalRef(m_ref);
-	m_ref = 0;
+		m_ref = 0;
+	}
 }
 
 //========================================================================
@@ -1048,7 +1058,7 @@ JavaStringParam::~JavaStringParam()
 
 int JavaStringParam::fillBuffer(char * buffer, int size) const
 {
-	if (m_ref != 0 && buffer != nullptr && JavaLibrary::getEnv() != nullptr)
+	if (m_ref > 0 && buffer != nullptr && JavaLibrary::getEnv() != nullptr)
 	{
 		// Get the number of storage bytes required to convert this Java string into a UTF-8 string.
 		// Include the terminating nullptr byte in the required buffer size.
@@ -1093,9 +1103,11 @@ JavaString::JavaString(const Unicode::String & src) :
 
 JavaString::~JavaString()
 {
-	if (m_ref > 0 && JavaLibrary::getEnv() != nullptr)
+	if (m_ref > 0 && JavaLibrary::getEnv() != nullptr) 
+	{
 		JavaLibrary::getEnv()->DeleteLocalRef(m_ref);
-	m_ref = 0;
+		m_ref = 0;
+	}
 }
 
 
