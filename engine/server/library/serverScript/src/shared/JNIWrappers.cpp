@@ -1093,7 +1093,7 @@ JavaString::JavaString(const Unicode::String & src) :
 
 JavaString::~JavaString()
 {
-	if (m_ref != 0 && JavaLibrary::getEnv() != nullptr)
+	if (m_ref > 0 && JavaLibrary::getEnv() != nullptr)
 		JavaLibrary::getEnv()->DeleteLocalRef(m_ref);
 	m_ref = 0;
 }

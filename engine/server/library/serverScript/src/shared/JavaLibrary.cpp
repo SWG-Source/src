@@ -1172,13 +1172,11 @@ void JavaLibrary::initializeJavaThread()
 		        options.push_back(tempOption);
 #endif
 
-// these don't seem to play nice with java >= 7
-#if !defined(JNI_VERSION_1_9) && !defined(JNI_VERSION_1_8) && !defined(JNI_VERSION_1_7)
 			tempOption.optionString = "-Xrs";
 			options.push_back(tempOption);
-			tempOption.optionString = "-Xcheck:jni";
-			options.push_back(tempOption);
-#endif
+//			tempOption.optionString = "-Xcheck:jni";
+//			options.push_back(tempOption);
+
 			if (ConfigServerGame::getCompileScripts())
 			{
 				tempOption.optionString = "-Xint";
@@ -1271,36 +1269,36 @@ void JavaLibrary::initializeJavaThread()
 // there's a dynamic method but requires the jvm to already be running, wtf?
 #ifdef JNI_VERSION_1_9
         vm_args.version = JNI_VERSION_1_9;
-#define JAVAVERSET = 1
+#define JNIVERSET = 1
 #endif
 
-#if !defined(JAVAVERSET) && defined(JNI_VERSION_1_8)
+#if !defined(JNIVERSET) && defined(JNI_VERSION_1_8)
 	vm_args.version = JNI_VERSION_1_8;
-#define JAVAVERSET = 1 
+#define JNIVERSET = 1 
 #endif
 
-#if !defined(JAVAVERSET) && defined(JNI_VERSION_1_7)
+#if !defined(JNIVERSET) && defined(JNI_VERSION_1_7)
         vm_args.version = JNI_VERSION_1_7;
-#define JAVAVERSET = 1
+#define JNIVERSET = 1
 #endif
 
-#if !defined(JAVAVERSET) && defined(JNI_VERSION_1_6)
+#if !defined(JNIVERSET) && defined(JNI_VERSION_1_6)
         vm_args.version = JNI_VERSION_1_6;
-#define JAVAVERSET = 1
+#define JNIVERSET = 1
 #endif
 
-#if !defined(JAVAVERSET) && defined(JNI_VERSION_1_5)
+#if !defined(JNIVERSET) && defined(JNI_VERSION_1_5)
         vm_args.version = JNI_VERSION_1_5;
-#define JAVAVERSET = 1
+#define JNIVERSET = 1
 #endif
 
-#if !defined(JAVAVERSET) && defined(JNI_VERSION_1_4)
+#if !defined(JNIVERSET) && defined(JNI_VERSION_1_4)
         vm_args.version = JNI_VERSION_1_4;
-#define JAVAVERSET = 1
+#define JNIVERSET = 1
 #endif
 
-#ifdef JAVAVERSET
-#undef JAVAVERSET
+#ifdef JNIVERSET
+#undef JNIVERSET
 #else
 #error JNI version not found/set!
 #endif
@@ -1329,7 +1327,7 @@ void JavaLibrary::initializeJavaThread()
 	}
 	ms_loaded = 1;
 
-#if !defined(JNI_VERSION_1_9) && !defined(JNI_VERSION_1_8) && !defined(JNI_VERSION_1_7) && defined(linux)
+//#if !defined(JNI_VERSION_1_9) && !defined(JNI_VERSION_1_8) && !defined(JNI_VERSION_1_7) && defined(linux)
 	if (ConfigServerGame::getTrapScriptCrashes())
 	{	
 		//set up signal handler for fatals in linux
@@ -1338,7 +1336,7 @@ void JavaLibrary::initializeJavaThread()
 		OurSa.sa_flags = 0;
 		IGNORE_RETURN(sigaction(SIGSEGV, &OurSa, &JavaSa));
 	}
-#endif
+//#endif
 
 	// wait until the main thread tells us to shutdown
 	ms_shutdownJava->wait();
@@ -1347,13 +1345,13 @@ void JavaLibrary::initializeJavaThread()
 	IGNORE_RETURN(ms_jvm->DestroyJavaVM());
 	ms_jvm = nullptr;
 
-#if !defined(JNI_VERSION_1_9) && !defined(JNI_VERSION_1_8) && !defined(JNI_VERSION_1_7) && defined(linux)
+//#if !defined(JNI_VERSION_1_9) && !defined(JNI_VERSION_1_8) && !defined(JNI_VERSION_1_7) && defined(linux)
 	if (ConfigServerGame::getTrapScriptCrashes())
 	{
 		// restore the default signal handler
 		IGNORE_RETURN(sigaction(SIGSEGV, &OrgSa, NULL));
 	}
-#endif
+//#endif
 
 
 
@@ -5251,10 +5249,10 @@ bool JavaLibrary::unpackDictionary(const std::vector<int8> & packedData,
 	if (!packedData.empty())
 	{
 		// get the crc from the data
-//		uint32 crc = 0;
+		uint32 crc = 0;
 		int dataLen = packedData.size();
 		const int8 * data = &packedData[0];
-		/*
+		
 		std::vector<int8>::const_iterator result = std::find(packedData.begin(), 
 			packedData.end(), '*');
 		if (result != packedData.end())
@@ -5283,7 +5281,7 @@ bool JavaLibrary::unpackDictionary(const std::vector<int8> & packedData,
 				}
 			}
 		}
-		*/
+		
 		if (data != nullptr && *data != '\0')
 		{
 			LocalByteArrayRefPtr jdata = createNewByteArray(dataLen);
