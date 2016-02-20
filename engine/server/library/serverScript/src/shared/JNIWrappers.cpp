@@ -903,10 +903,8 @@ LocalRef::LocalRef(jobject src) :
 LocalRef::~LocalRef()
 {
 	if (m_ref > 0 && JavaLibrary::getEnv() != nullptr) 
-	{
 		JavaLibrary::getEnv()->DeleteLocalRef(m_ref);
-		m_ref = 0;
-	}
+	m_ref = 0;
 }
 
 
@@ -920,10 +918,8 @@ LocalArrayRef::LocalArrayRef(jarray src) :
 LocalArrayRef::~LocalArrayRef()
 {
 	if (m_ref > 0 && JavaLibrary::getEnv() != nullptr)
-	{
 		JavaLibrary::getEnv()->DeleteLocalRef(m_ref);
-		m_ref = 0;
-	}
+	m_ref = 0;
 }
 
 
@@ -937,10 +933,8 @@ LocalObjectArrayRef::LocalObjectArrayRef(jobjectArray src) :
 LocalObjectArrayRef::~LocalObjectArrayRef()
 {
 	if (m_ref > 0 && JavaLibrary::getEnv() != nullptr)
-	{
 		JavaLibrary::getEnv()->DeleteLocalRef(m_ref);
-		m_ref = 0;
-	}
+	m_ref = 0;
 }
 
 
@@ -1015,10 +1009,8 @@ GlobalRef::GlobalRef(const LocalRefParam & src) :
 GlobalRef::~GlobalRef()
 {
 	if (m_ref > 0 && JavaLibrary::getEnv() != nullptr)
-	{
 		JavaLibrary::getEnv()->DeleteGlobalRef(m_ref);
-		m_ref = 0;
-	}
+	m_ref = 0;
 }
 
 
@@ -1034,10 +1026,8 @@ GlobalArrayRef::GlobalArrayRef(const LocalObjectArrayRefParam & src) :
 GlobalArrayRef::~GlobalArrayRef()
 {
 	if (m_ref > 0 && JavaLibrary::getEnv() != nullptr)
-	{
 		JavaLibrary::getEnv()->DeleteGlobalRef(m_ref);
-		m_ref = 0;
-	}
+	m_ref = 0;
 }
 
 //========================================================================
@@ -1104,10 +1094,8 @@ JavaString::JavaString(const Unicode::String & src) :
 JavaString::~JavaString()
 {
 	if (m_ref > 0 && JavaLibrary::getEnv() != nullptr) 
-	{
 		JavaLibrary::getEnv()->DeleteLocalRef(m_ref);
-		m_ref = 0;
-	}
+	m_ref = 0;
 }
 
 
