@@ -103,6 +103,7 @@ void ConfigServerGame::install(void)
 	KEY_INT     (jediUpdateLocationTimeSeconds, 60 * 5);
 	KEY_STRING  (planetObjectTemplate, "object/planet/planet.iff");
 	KEY_BOOL    (javaConsoleDebugMessages, false);
+	KEY_BOOL    (javaUseXcheck, false);	 
 	KEY_BOOL    (useVerboseJava, false);
 	KEY_BOOL    (logJavaGc, false);
 	KEY_INT     (javaLocalRefLimit, 16);

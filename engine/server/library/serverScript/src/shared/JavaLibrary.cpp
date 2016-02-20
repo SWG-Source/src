@@ -1168,17 +1168,18 @@ void JavaLibrary::initializeJavaThread()
 
 // java 1.8 and higher uses metaspace...which is apparently unlimited by default
 #if defined(JNI_VERSION_1_8) || defined(JNI_VERSION_1_9)
-		        tempOption.optionString = "-XX:MetaspaceSize=512m";
+		        tempOption.optionString = "-XX:MetaspaceSize=128m";
 		        options.push_back(tempOption);
 #endif
 
-// these don't seem to play nice with java/JNI >= 7
-#if !defined(JNI_VERSION_1_9) && !defined(JNI_VERSION_1_8) && !defined(JNI_VERSION_1_7)
 			tempOption.optionString = "-Xrs";
 			options.push_back(tempOption);
-			tempOption.optionString = "-Xcheck:jni";
-			options.push_back(tempOption);
-#endif
+
+			if (ConfigServerGame::getUseJavaXcheck())
+			{
+				tempOption.optionString = "-Xcheck:jni";
+				options.push_back(tempOption);
+			}
 
 			if (ConfigServerGame::getCompileScripts())
 			{

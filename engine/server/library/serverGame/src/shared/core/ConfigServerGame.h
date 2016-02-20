@@ -110,6 +110,7 @@ class ConfigServerGame
 		int             universeCheckFrequencySeconds; // how often to scan the resource tree for things that need to be spawned
 
 		bool            javaConsoleDebugMessages;
+		bool		javaUseXcheck;
 		bool            useVerboseJava;
 		bool            logJavaGc;
 		int             javaLocalRefLimit;
@@ -670,6 +671,7 @@ class ConfigServerGame
 	static const int        getUniverseCheckFrequencySeconds(void);
 
 	static const bool       getJavaConsoleDebugMessages (void);
+	static const bool	getUseJavaXcheck	    (void);
 	static const bool       getUseVerboseJava           (void);
 	static const bool       getLogJavaGc                (void);
 
@@ -1472,6 +1474,13 @@ inline int ConfigServerGame::getJediUpdateLocationTimeSeconds(void)
 inline const bool ConfigServerGame::getJavaConsoleDebugMessages()
 {
 	return data->javaConsoleDebugMessages;
+}
+
+//-----------------------------------------------------------------------
+
+inline const bool ConfigServerGame::getUseJavaXcheck()
+{
+        return data->javaUseXcheck;
 }
 
 //-----------------------------------------------------------------------
