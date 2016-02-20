@@ -1331,7 +1331,6 @@ void JavaLibrary::initializeJavaThread()
 	}
 	ms_loaded = 1;
 
-#if !defined(JNI_VERSION_1_9) && !defined(JNI_VERSION_1_8) && !defined(JNI_VERSION_1_7) && defined(linux)
 	if (ConfigServerGame::getTrapScriptCrashes())
 	{	
 		//set up signal handler for fatals in linux
@@ -1340,7 +1339,6 @@ void JavaLibrary::initializeJavaThread()
 		OurSa.sa_flags = 0;
 		IGNORE_RETURN(sigaction(SIGSEGV, &OurSa, &JavaSa));
 	}
-#endif
 
 	// wait until the main thread tells us to shutdown
 	ms_shutdownJava->wait();
@@ -1349,15 +1347,11 @@ void JavaLibrary::initializeJavaThread()
 	IGNORE_RETURN(ms_jvm->DestroyJavaVM());
 	ms_jvm = nullptr;
 
-#if !defined(JNI_VERSION_1_9) && !defined(JNI_VERSION_1_8) && !defined(JNI_VERSION_1_7) && defined(linux)
 	if (ConfigServerGame::getTrapScriptCrashes())
 	{
 		// restore the default signal handler
 		IGNORE_RETURN(sigaction(SIGSEGV, &OrgSa, NULL));
 	}
-#endif
-
-
 
 #if defined(_WIN32)
 	IGNORE_RETURN(FreeLibrary(static_cast<HMODULE>(libHandle)));
