@@ -63,16 +63,16 @@
 		#define DO_TRACK             1
 		#define DO_SCALAR            1
 		#define DO_GUARDS            1
-		#define DO_INITIALIZE_FILLS  1
-		#define DO_FREE_FILLS        1
+		#define DO_INITIALIZE_FILLS  0
+		#define DO_FREE_FILLS        0
 
 	#elif DEBUG_LEVEL == DEBUG_LEVEL_OPTIMIZED
 
 		#define DO_TRACK             1
 		#define DO_SCALAR            1
 		#define DO_GUARDS            1
-		#define DO_INITIALIZE_FILLS  1
-		#define DO_FREE_FILLS        1
+		#define DO_INITIALIZE_FILLS  0
+		#define DO_FREE_FILLS        0
 
 	#elif DEBUG_LEVEL == DEBUG_LEVEL_RELEASE
 
