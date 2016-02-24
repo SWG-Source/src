@@ -121,7 +121,7 @@ namespace MemoryManagerNamespace
 		bool           m_array:1;
 #endif
 #if DO_TRACK
-		bool           m_leakTest:1;
+		bool           m_leakTest:0;
 #endif
 #if DO_TRACK || DO_GUARDS
 		unsigned int   m_requestedSize:cms_requestedSizeBits;
@@ -223,6 +223,11 @@ namespace MemoryManagerNamespace
 	int                   ms_numberOfSystemAllocations;
 	int                   ms_systemMemoryAllocatedMegabytes;
 	bool                  ms_reportAllocations;
+
+	PixCounter::ResetInteger ms_allocationsPerFrame;
+	PixCounter::ResetInteger ms_bytesAllocatedPerFrame;
+	PixCounter::ResetInteger ms_freesPerFrame;
+	PixCounter::ResetInteger ms_bytesFreedPerFrame;
 
 #ifdef _DEBUG
 	bool                  ms_debugReportFlag;
