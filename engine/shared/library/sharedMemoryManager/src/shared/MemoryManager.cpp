@@ -224,12 +224,12 @@ namespace MemoryManagerNamespace
 	int                   ms_systemMemoryAllocatedMegabytes;
 	bool                  ms_reportAllocations;
 
-	PixCounter::ResetInteger ms_allocationsPerFrame;
-	PixCounter::ResetInteger ms_bytesAllocatedPerFrame;
-	PixCounter::ResetInteger ms_freesPerFrame;
-	PixCounter::ResetInteger ms_bytesFreedPerFrame;
-
 #ifdef _DEBUG
+        PixCounter::ResetInteger ms_allocationsPerFrame;
+        PixCounter::ResetInteger ms_bytesAllocatedPerFrame;
+        PixCounter::ResetInteger ms_freesPerFrame;
+        PixCounter::ResetInteger ms_bytesFreedPerFrame;
+
 	bool                  ms_debugReportFlag;
 	bool                  ms_debugReportMapFlag;
 	bool                  ms_debugReportAllocations;
