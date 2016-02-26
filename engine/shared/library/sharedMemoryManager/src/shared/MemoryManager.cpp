@@ -2039,7 +2039,7 @@ void  MemoryManager::setLimit(int, bool, bool)
 
 int MemoryManager::getLimit()
 {
-	return 768;
+	return 2048;
 }
 
 // ----------------------------------------------------------------------
