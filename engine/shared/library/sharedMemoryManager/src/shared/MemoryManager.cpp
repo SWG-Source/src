@@ -36,7 +36,7 @@
 
 // the below seems to bare minimum cause the DB process to segfault
 // too bad, if we weren't using an omnibus mem manager we could potentially maximize usage
-#define DISABLE_MEMORY_MANAGER 0
+#define DISABLE_MEMORY_MANAGER 1
 
 //lint -e826 // Suspicious pointer-to-pointer conversion (area too small)
 
