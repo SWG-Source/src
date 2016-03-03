@@ -2470,7 +2470,7 @@ NetworkId AICreatureController::getUnarmedWeapon()
 	}
 	else
 	{
-		WARNING(true, ("AICreatureController::getUnarmedWeapon() Unable to find a default weapon for (%s)", getDebugInformation().c_str()));
+		DEBUG_WARNING(true, ("AICreatureController::getUnarmedWeapon() Unable to find a default weapon for (%s)", getDebugInformation().c_str()));
 	}
 
 	return result;
