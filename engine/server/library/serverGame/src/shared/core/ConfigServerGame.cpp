@@ -67,7 +67,7 @@ void ConfigServerGame::install(void)
 	KEY_BOOL    (profileScripts, false);
 	KEY_BOOL    (crashOnScriptError, false);
 	KEY_BOOL    (compileScripts, false);
-	KEY_BOOL    (trapScriptCrashes, true);
+	KEY_BOOL    (trapScriptCrashes, false); //this seems to horrifyingly crash java 7/8 sometimes if not always
 	KEY_INT     (scriptWatcherWarnTime, 5000);
 	KEY_INT     (scriptWatcherInterruptTime, 5000);
 	KEY_INT     (scriptStackErrorLimit, 35);
@@ -103,6 +103,7 @@ void ConfigServerGame::install(void)
 	KEY_INT     (jediUpdateLocationTimeSeconds, 60 * 5);
 	KEY_STRING  (planetObjectTemplate, "object/planet/planet.iff");
 	KEY_BOOL    (javaConsoleDebugMessages, false);
+	KEY_BOOL    (javaUseXcheck, false);	 
 	KEY_BOOL    (useVerboseJava, false);
 	KEY_BOOL    (logJavaGc, false);
 	KEY_INT     (javaLocalRefLimit, 16);

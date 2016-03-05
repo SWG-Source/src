@@ -74,7 +74,7 @@ void ConfigServerDatabase::install(void)
 	KEY_BOOL    (enableLoadLocks, true);
 	KEY_INT     (databaseReconnectTime, 0);
 	KEY_BOOL    (logChunkLoading,false);
-	KEY_BOOL    (useMemoryManagerForOCI,true);
+	KEY_BOOL    (useMemoryManagerForOCI,false);
 	KEY_INT     (maxCharactersPerLoadRequest,10);
 	KEY_INT     (maxChunksPerLoadRequest,200);
 	KEY_FLOAT   (maxLoadStartDelay,300.0f);

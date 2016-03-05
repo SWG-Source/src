@@ -492,7 +492,7 @@ void LoginServer::receiveMessage(const MessageDispatch::Emitter & source, const 
 		{
 			if (msg.getFinished())
 			{
-				DEBUG_REPORT_LOG(true, ("Cluster %s is ready for players.\n",cle->m_clusterName.c_str()));
+				REPORT_LOG(true, ("Cluster %s is ready for players.\n",cle->m_clusterName.c_str()));
 				if (!cle->m_readyForPlayers)
 				{
 					cle->m_readyForPlayers = true;
@@ -501,7 +501,7 @@ void LoginServer::receiveMessage(const MessageDispatch::Emitter & source, const 
 			}
 			else
 			{
-				DEBUG_REPORT_LOG(true, ("Cluster %s is not ready for players.\n",cle->m_clusterName.c_str()));
+				REPORT_LOG(true, ("Cluster %s is not ready for players.\n",cle->m_clusterName.c_str()));
 				if (cle->m_readyForPlayers)
 				{
 					cle->m_readyForPlayers = false;

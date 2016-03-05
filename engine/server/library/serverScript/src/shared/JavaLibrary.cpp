@@ -50,27 +50,14 @@ using namespace JNIWrappersNamespace;
 #error Unsupported platform
 #endif
 
-#if !defined(JNI_IBM_JAVA) && defined(WIN32)
-//-- Justin Randall [1/21/2003 4:43:15 PM] --
-// The scripting system simply will not work properly with
-// our linux servers running the ibm java vm if the win32
-// server is not also using that vm. There are serialization
-// issues that render the game useless. Please do not
-// change this until the broken interaction between various 
-// VM's has been rectified!
-//#error Unsupported Java VM
-#endif//JNI_IBM_JAVA
-
-//#undef JNI_IBM_JAVA
-
 #ifdef linux
 // shared library includes
 #include <dlfcn.h>
 #include <signal.h>
 #endif
 
-#ifndef JNI_VERSION_1_2
-#error JNI version 1.2 or better only!
+#ifndef JNI_VERSION_1_4
+#error JNI version 1.4 or better only!
 #endif
 
 //========================================================================
@@ -771,7 +758,7 @@ void JavaLibrary::throwScriptException(char const * const format, ...)
 	va_list va;
 	va_start(va, format);
 
-		throwScriptException(format, va);
+	throwScriptException(format, va);
 
 	va_end(va);
 }
@@ -879,7 +866,7 @@ void JavaLibrary::fatalHandler(int signum)
 		else
 		{
 			// destroy Java threads
-			// @note apathy - this pthread method is not in later versions of glibc
+			// this pthread method is not in later versions of glibc as the kernel should handle the kill
 			//pthread_kill_other_threads_np();
 			ms_instance = nullptr;
 			ms_env = nullptr;
@@ -1026,16 +1013,17 @@ void JavaLibrary::initializeJavaThread()
 	if (javaVMName == nullptr || (
 		strcmp(javaVMName, "none") != 0 &&
 		strcmp(javaVMName, "ibm") != 0 &&
-		strcmp(javaVMName, "sun") != 0))
+		strcmp(javaVMName, "sun") != 0 &&
+		strcmp(javaVMName, "oracle") != 0))
 	{
 		FATAL(true, ("[ServerGame] javaVMName not defined. Valid values are: "
-			"none, ibm, or sun"));
+			"none, ibm, oracle, or sun"));
 	}
 	else if (strcmp(javaVMName, "ibm") == 0)
 	{
 		ms_javaVmType = JV_ibm;
 	}
-	else if (strcmp(javaVMName, "sun") == 0)
+	else if (strcmp(javaVMName, "sun") == 0 || strcmp(javaVMName, "oracle") == 0)
 	{
 		ms_javaVmType = JV_sun;
 	}
@@ -1146,10 +1134,7 @@ void JavaLibrary::initializeJavaThread()
 
 	// set up the args to initialize the jvm
 	std::string classPath = "-Djava.class.path=";
-//	classPath += PATH_SEPARATOR;
 	classPath += ConfigServerGame::getScriptPath();
-
-//	DEBUG_REPORT_LOG(true, ("Java class path = %s\n", classPath.c_str()));
 
 	JavaVMInitArgs vm_args;
 	JavaVMOption tempOption = {nullptr, nullptr};
@@ -1157,11 +1142,6 @@ void JavaLibrary::initializeJavaThread()
 	char *jdwpBuffer = nullptr;
 
 	UNREF(jdwpBuffer);
-
-//	classPath += PATH_SEPARATOR;
-//	classPath += "/home/sjakab/temp/OptimizeitSuiteDemo/lib/optit.jar";
-//	tempOption.optionString = "-Xnoclassgc";
-//	options.push_back(tempOption);
 
 	if (ConfigServerScript::hasJavaOptions())
 	{
@@ -1175,44 +1155,53 @@ void JavaLibrary::initializeJavaThread()
 	}
 	else
 	{
-		// use options derived from config file settings
-
 		// set up memory requirements
 		tempOption.optionString = "-Xms128m";
 		options.push_back(tempOption);
 		tempOption.optionString = "-Xmx512m";
 		options.push_back(tempOption);
 		tempOption.optionString = "-Xss768k";
-			options.push_back(tempOption);
-		if (ms_javaVmType == JV_ibm)
-		{
-			tempOption.optionString = "-Xoss768k";
-			options.push_back(tempOption);
-		}
+		options.push_back(tempOption);
 
-		if (ms_javaVmType == JV_ibm)
+		if (ms_javaVmType == JV_sun)
 		{
-			tempOption.optionString = "-Xcheck:jni";
-			options.push_back(tempOption);
-			tempOption.optionString = "-Xcheck:nabounds";
-			options.push_back(tempOption);
+
+// java 1.8 and higher uses metaspace...which is apparently unlimited by default
+#if defined(JNI_VERSION_1_8) || defined(JNI_VERSION_1_9)
+		        tempOption.optionString = "-XX:MetaspaceSize=64m";
+		        options.push_back(tempOption);
+#endif
+
 			tempOption.optionString = "-Xrs";
 			options.push_back(tempOption);
-#ifndef WIN32
-			tempOption.optionString = "-Xgcpolicy:optavgpause";
-			options.push_back(tempOption);
-#endif
-		}
-		else
-		{
+
+			if (ConfigServerGame::getUseJavaXcheck())
+			{
+				tempOption.optionString = "-Xcheck:jni";
+				options.push_back(tempOption);
+			}
+
 			if (ConfigServerGame::getCompileScripts())
 			{
 				tempOption.optionString = "-Xint";
 				options.push_back(tempOption);
 			}
-			tempOption.optionString = "-Xincgc";
-			options.push_back(tempOption);
 		}
+		else
+		{
+                        tempOption.optionString = "-Xoss768k";
+                        options.push_back(tempOption);
+                        tempOption.optionString = "-Xcheck:jni";
+                        options.push_back(tempOption);
+                        tempOption.optionString = "-Xcheck:nabounds";
+                        options.push_back(tempOption);
+                        tempOption.optionString = "-Xrs";
+                        options.push_back(tempOption);
+#ifndef WIN32
+                        tempOption.optionString = "-Xgcpolicy:optavgpause";
+                        options.push_back(tempOption);
+#endif
+                }
 
 		if (ConfigServerGame::getUseVerboseJava())
 		{
@@ -1224,21 +1213,11 @@ void JavaLibrary::initializeJavaThread()
 			options.push_back(tempOption);
 		}
 
-#ifdef JNI_VERSION_1_4
-		if ((!ms_javaVmType) == JV_ibm)
-		{
-			tempOption.optionString = "-Xrs";
-			options.push_back(tempOption);
-			tempOption.optionString = "-Xcheck:jni";
-			options.push_back(tempOption);
-		}
 		if (ConfigServerGame::getLogJavaGc())
 		{
 			tempOption.optionString = "-Xloggc:javagc.log";
 			options.push_back(tempOption);
 		}
-
-#endif
 
 #ifdef REMOTE_DEBUG_ON
 		char *jdwpBuffer = nullptr;
@@ -1253,11 +1232,13 @@ void JavaLibrary::initializeJavaThread()
 			}
 			tempOption.optionString = "-Xdebug";
 			options.push_back(tempOption);
+
 			// we need to copy the -Xrunjdwp parameter into a char buffer due to a bug
 			// in the Java VM
 			const char * jdwpString = "-Xrunjdwp:transport=dt_socket,server=y,suspend=n";
 			jdwpBuffer = new char[strlen(jdwpString) + 32];
 			strcpy(jdwpBuffer, jdwpString);
+
 			if (ConfigServerGame::getJavaDebugPort()[0] == '\0')
 			{
 				strcat(jdwpBuffer, ",address=");
@@ -1288,14 +1269,47 @@ void JavaLibrary::initializeJavaThread()
 	tempOption.optionString = const_cast<char *>(classPath.c_str());
 	options.push_back(tempOption);
 
-#ifdef JNI_VERSION_1_4
-	vm_args.version = JNI_VERSION_1_4;
-#else
-	vm_args.version = JNI_VERSION_1_2;
+// TODO: this really sucks as the jvm won't start without the param
+// there's a dynamic method but requires the jvm to already be running, wtf?
+#ifdef JNI_VERSION_1_9
+        vm_args.version = JNI_VERSION_1_9;
+#define JNIVERSET = 1
 #endif
+
+#if !defined(JNIVERSET) && defined(JNI_VERSION_1_8)
+	vm_args.version = JNI_VERSION_1_8;
+#define JNIVERSET = 1 
+#endif
+
+#if !defined(JNIVERSET) && defined(JNI_VERSION_1_7)
+        vm_args.version = JNI_VERSION_1_7;
+#define JNIVERSET = 1
+#endif
+
+#if !defined(JNIVERSET) && defined(JNI_VERSION_1_6)
+        vm_args.version = JNI_VERSION_1_6;
+#define JNIVERSET = 1
+#endif
+
+#if !defined(JNIVERSET) && defined(JNI_VERSION_1_5)
+        vm_args.version = JNI_VERSION_1_5;
+#define JNIVERSET = 1
+#endif
+
+#if !defined(JNIVERSET) && defined(JNI_VERSION_1_4)
+        vm_args.version = JNI_VERSION_1_4;
+#define JNIVERSET = 1
+#endif
+
+#ifdef JNIVERSET
+#undef JNIVERSET
+#else
+#error JNI version not found/set!
+#endif
+
 	vm_args.options = &options[0];
 	vm_args.nOptions = options.size();
-	vm_args.ignoreUnrecognized = JNI_FALSE;
+	vm_args.ignoreUnrecognized = JNI_TRUE; // ok let's ignore whatever isn't understood instead of crashing like a loser
 
 	// create the JVM
 	JNIEnv * env = nullptr;
@@ -1317,16 +1331,14 @@ void JavaLibrary::initializeJavaThread()
 	}
 	ms_loaded = 1;
 
-#ifdef linux
 	if (ConfigServerGame::getTrapScriptCrashes())
-	{
+	{	
 		//set up signal handler for fatals in linux
 		OurSa.sa_handler = fatalHandler;
 		sigemptyset(&OurSa.sa_mask);
 		OurSa.sa_flags = 0;
 		IGNORE_RETURN(sigaction(SIGSEGV, &OurSa, &JavaSa));
 	}
-#endif
 
 	// wait until the main thread tells us to shutdown
 	ms_shutdownJava->wait();
@@ -1335,13 +1347,11 @@ void JavaLibrary::initializeJavaThread()
 	IGNORE_RETURN(ms_jvm->DestroyJavaVM());
 	ms_jvm = nullptr;
 
-#ifdef linux
 	if (ConfigServerGame::getTrapScriptCrashes())
 	{
 		// restore the default signal handler
 		IGNORE_RETURN(sigaction(SIGSEGV, &OrgSa, NULL));
 	}
-#endif
 
 #if defined(_WIN32)
 	IGNORE_RETURN(FreeLibrary(static_cast<HMODULE>(libHandle)));
@@ -5237,10 +5247,10 @@ bool JavaLibrary::unpackDictionary(const std::vector<int8> & packedData,
 	if (!packedData.empty())
 	{
 		// get the crc from the data
-//		uint32 crc = 0;
+		uint32 crc = 0;
 		int dataLen = packedData.size();
 		const int8 * data = &packedData[0];
-		/*
+		
 		std::vector<int8>::const_iterator result = std::find(packedData.begin(), 
 			packedData.end(), '*');
 		if (result != packedData.end())
@@ -5269,7 +5279,7 @@ bool JavaLibrary::unpackDictionary(const std::vector<int8> & packedData,
 				}
 			}
 		}
-		*/
+		
 		if (data != nullptr && *data != '\0')
 		{
 			LocalByteArrayRefPtr jdata = createNewByteArray(dataLen);

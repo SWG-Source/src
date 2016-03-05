@@ -34,66 +34,28 @@
 #include <fcntl.h>
 #include <new>
 
-#ifdef _WIN32
-#define DISABLE_MEMORY_MANAGER 0
-#else
-#define DISABLE_MEMORY_MANAGER 0
-#endif
+// the below seems to bare minimum cause the DB process to segfault
+// too bad, if we weren't using an omnibus mem manager we could potentially maximize usage
+#define DISABLE_MEMORY_MANAGER 1
 
 //lint -e826 // Suspicious pointer-to-pointer conversion (area too small)
 
 #if !DISABLE_MEMORY_MANAGER
 
 // ======================================================================
-// 
+
+// this flag is different than above, as it doesn't fully disable the manager, only a few pieces
+// including the destructor for some reason
 #define DISABLED                0
 
-#if PRODUCTION
-
-	#define DO_TRACK               0
-	#define DO_SCALAR              0
-	#define DO_GUARDS              0
-	#define DO_INITIALIZE_FILLS    0
-	#define DO_FREE_FILLS          0
-
-#else
-
-	#if DEBUG_LEVEL == DEBUG_LEVEL_DEBUG
-
-		#define DO_TRACK             1
-		#define DO_SCALAR            1
-		#define DO_GUARDS            1
-		#define DO_INITIALIZE_FILLS  1
-		#define DO_FREE_FILLS        1
-
-	#elif DEBUG_LEVEL == DEBUG_LEVEL_OPTIMIZED
-
-		#define DO_TRACK             1
-		#define DO_SCALAR            1
-		#define DO_GUARDS            1
-		#define DO_INITIALIZE_FILLS  1
-		#define DO_FREE_FILLS        1
-
-	#elif DEBUG_LEVEL == DEBUG_LEVEL_RELEASE
-
-		#define DO_TRACK             0
-		#define DO_SCALAR            0
-		#define DO_GUARDS            0
-		#define DO_INITIALIZE_FILLS  0
-		#define DO_FREE_FILLS        0
-
-	#else
-
-		#error unknown DEBUG_LEVEL
-
-	#endif
-
-#endif
-
-#ifdef PLATFORM_LINUX
-	#undef DO_TRACK
-	#define DO_TRACK 5
-#endif
+// removed all the debug cases for these as these seem to cause problems
+// recent modifications force the mem manager to always behave in production mode
+// other areas will remain unaffected
+#define DO_TRACK               0
+#define DO_SCALAR              0
+#define DO_GUARDS              0
+#define DO_INITIALIZE_FILLS    0
+#define DO_FREE_FILLS          0
 
 // ======================================================================
 
@@ -159,7 +121,7 @@ namespace MemoryManagerNamespace
 		bool           m_array:1;
 #endif
 #if DO_TRACK
-		bool           m_leakTest:1;
+		bool           m_leakTest:0;
 #endif
 #if DO_TRACK || DO_GUARDS
 		unsigned int   m_requestedSize:cms_requestedSizeBits;
@@ -261,16 +223,13 @@ namespace MemoryManagerNamespace
 	int                   ms_numberOfSystemAllocations;
 	int                   ms_systemMemoryAllocatedMegabytes;
 	bool                  ms_reportAllocations;
-//	bool                  ms_logEachAlloc;
-
-#if PRODUCTION == 0
-	PixCounter::ResetInteger ms_allocationsPerFrame;
-	PixCounter::ResetInteger ms_bytesAllocatedPerFrame;
-	PixCounter::ResetInteger ms_freesPerFrame;
-	PixCounter::ResetInteger ms_bytesFreedPerFrame;
-#endif
 
 #ifdef _DEBUG
+        PixCounter::ResetInteger ms_allocationsPerFrame;
+        PixCounter::ResetInteger ms_bytesAllocatedPerFrame;
+        PixCounter::ResetInteger ms_freesPerFrame;
+        PixCounter::ResetInteger ms_bytesFreedPerFrame;
+
 	bool                  ms_debugReportFlag;
 	bool                  ms_debugReportMapFlag;
 	bool                  ms_debugReportAllocations;
@@ -663,13 +622,6 @@ MemoryManager::~MemoryManager()
 	return;
 #else
 
-#if PRODUCTION == 0
-	ms_allocationsPerFrame.disable();
-	ms_bytesAllocatedPerFrame.disable();
-	ms_freesPerFrame.disable();
-	ms_bytesFreedPerFrame.disable();
-#endif
-
 	DEBUG_FATAL(!ms_installed, ("not installed"));
 
 	ms_criticalSection->enter();
@@ -817,13 +769,6 @@ void MemoryManager::setReportAllocations(bool reportAllocations)
 
 void MemoryManager::registerDebugFlags()
 {
-#if PRODUCTION == 0
-	ms_allocationsPerFrame.bindToCounter("MemoryManagerAllocateCount");
-	ms_bytesAllocatedPerFrame.bindToCounter("MemoryManagerAllocateBytes");
-	ms_freesPerFrame.bindToCounter("MemoryManagerFreeCount");
-	ms_bytesFreedPerFrame.bindToCounter("MemoryManagerFreeBytes");
-#endif
-
 #ifdef _DEBUG
 	DebugFlags::registerFlag(ms_debugReportFlag,                       "SharedMemoryManager", "reportMemory",                     debugReport);
 	DebugFlags::registerFlag(ms_debugReportMapFlag,                    "SharedMemoryManager", "reportMemoryMap",                  debugReportMap);
@@ -1206,11 +1151,6 @@ void * MemoryManager::allocate(size_t size, uint32 owner, bool array, bool leakT
 
 	DEBUG_FATAL(!ms_installed, ("not installed"));
 
-#if PRODUCTION == 0
-	++ms_allocationsPerFrame;
-	ms_bytesAllocatedPerFrame += size;
-#endif
-
 #ifdef _DEBUG
 	if (ms_debugProfileAllocate)
 		PROFILER_BLOCK_ENTER(ms_allocateProfilerBlock);
@@ -1476,11 +1416,8 @@ void MemoryManager::free(void * userPointer, bool array)
 		DEBUG_FATAL(allocatedBlock->isFree(),                                                                        ("Freeing already free block %p", userPointer));
 #endif
 
-#if PRODUCTION == 0
-		++ms_freesPerFrame;
 #if DO_TRACK
 		ms_bytesFreedPerFrame += allocatedBlock->getRequestedSize();
-#endif
 #endif
 
 #if DO_GUARDS
@@ -2102,7 +2039,7 @@ void  MemoryManager::setLimit(int, bool, bool)
 
 int MemoryManager::getLimit()
 {
-	return 768;
+	return 3072;
 }
 
 // ----------------------------------------------------------------------
