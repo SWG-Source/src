@@ -28,7 +28,6 @@ void SetupSharedMath::install()
 	PaletteArgb::install();
 	PaletteArgbList::install();
 
-	// @todo don't bother installing this on the servers; it's unnecessary.
 	CompressedQuaternion::install();
 	Transform::install();
 }
