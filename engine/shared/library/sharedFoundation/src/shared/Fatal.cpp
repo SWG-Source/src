@@ -80,13 +80,13 @@ static void formatMessage(char *buffer, int bufferLength, int stackDepth, const 
 		char file[4 * 1024] = { '\0' };
 		int line = 0;
 		if (ConfigSharedFoundation::getLookUpCallStackNames() && DebugHelp::lookupAddress(callStack[callStackOffset], lib, file, sizeof(file), line))
-			snprintf(buffer, bufferLength, "%s(%d) : %s %08x: ", file, line, type, static_cast<int>(Crc::calculate(format)));
+			snprintf(buffer, bufferLength, "%s(%d) : %s %08x: \n", file, line, type, static_cast<int>(Crc::calculate(format)));
 		else
-			snprintf(buffer, bufferLength, "unknown(0x%08X) : %s %08x: ", static_cast<int>(callStack[callStackOffset]), type, static_cast<int>(Crc::calculate(format)));
+			snprintf(buffer, bufferLength, "(0x%08X) : %s %08x: \n", static_cast<int>(callStack[callStackOffset]), type, static_cast<int>(Crc::calculate(format)));
 	}
 	else
 	{
-		snprintf(buffer, bufferLength, "unknown location : %s %08x: ", type, static_cast<int>(Crc::calculate(format)));
+		snprintf(buffer, bufferLength, "    (%08x): ", static_cast<int>(Crc::calculate(format)));
 	}
 
 	{
@@ -124,9 +124,9 @@ static void formatMessage(char *buffer, int bufferLength, int stackDepth, const 
 				int line = 0;
 
 				if (ConfigSharedFoundation::getLookUpCallStackNames() && DebugHelp::lookupAddress(callStack[i], lib, file, sizeof(file), line))
-					snprintf(buffer, bufferLength, "  %s(%d) : caller %d\n", file, line, i-callStackOffset);
+					snprintf(buffer, bufferLength, "   %s(%d) : caller %d\n", file, line, i-callStackOffset);
 				else
-					snprintf(buffer, bufferLength, "  unknown(0x%08X) : caller %d\n", static_cast<int>(callStack[i]), i-callStackOffset);
+					snprintf(buffer, bufferLength, "   (0x%08X) : caller %d\n", static_cast<int>(callStack[i]), i-callStackOffset);
 
 				const int length = strlen(buffer);
 				buffer += length;
