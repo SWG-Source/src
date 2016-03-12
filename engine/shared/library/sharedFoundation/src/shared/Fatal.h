@@ -41,7 +41,7 @@ void SetWarningCallback(WarningCallback);
 
 #define FATAL(a, b) ((a) ? LINEINFO("FATAL"), Fatal b : NOP)
 #ifdef _DEBUG
-	#define DEBUG_FATAL(a, b)   ((a) ? LINEINFO("FATAL"), DebugFatal b : NOP)
+	#define DEBUG_FATAL(a, b)   ((a) ? LINEINFO("DEBUG FATAL"), DebugFatal b : NOP)
 #else
 	#define DEBUG_FATAL(a, b)   NOP
 #endif
@@ -67,7 +67,7 @@ void SetWarningCallback(WarningCallback);
 	#define WARNING_DEBUG_FATAL(a, b)   WARNING(a, b)
 #endif
 
-#define WARNING_STRICT_FATAL(a, b) ((a) ? LINEINFO("FATAL"), WarningStrictFatal b : NOP)
+#define WARNING_STRICT_FATAL(a, b) ((a) ? LINEINFO("WARNING STRICT FATAL"), WarningStrictFatal b : NOP)
 
 #ifdef _DEBUG
 
