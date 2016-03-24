@@ -110,16 +110,6 @@ public:
 		int             int2;
 		char            char1;
 		const char     *charp1;
-
-#if 0		
-		// if this node's parent is branch head, this variable is ignored.
-		// if this node's parent is list head, if node is required, at least one instance of this node must be present.
-		bool        nodeRequired;
-
-		// if this node is a list head, this variable is ignored.
-		// if this node is a branch head, false = 0 or 1 child may be present, true = one child must be present.
-		bool        childrenRequired;
-#endif
 	};
 
 	enum ArgumentPolicy

@@ -524,26 +524,6 @@ const CellProperty *PortalProperty::getCell(int index) const
 
 // ----------------------------------------------------------------------
 
-#if 0
-
-int PortalProperty::getNumberOfLights(int cellIndex) const
-{
-	DEBUG_FATAL(cellIndex < 0 || cellIndex >= static_cast<int>(m_cellList->size()), ("cell index out of range"));
-	return (*m_cellDataList)[cellIndex]->getNumberOfLights();
-}
-
-// ----------------------------------------------------------------------
-
-const PortalProperty::LightData &PortalProperty::getLightData(int cellIndex, int lightIndex) const
-{
-	DEBUG_FATAL(cellIndex < 0 || cellIndex >= static_cast<int>(m_cellList->size()), ("cell index out of range"));
-	return (*m_cellDataList)[cellIndex]->getLightData(lightIndex);
-}
-
-#endif
-
-// ----------------------------------------------------------------------
-
 const PortalProperty::CellNameList &PortalProperty::getCellNames() const
 {
 	return m_template->getCellNames();

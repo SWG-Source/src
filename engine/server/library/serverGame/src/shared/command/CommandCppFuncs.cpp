@@ -1463,26 +1463,6 @@ static void commandFuncAuctionAccept(Command const &, NetworkId const &actor, Ne
 
 static void commandFuncAuctionQuery(Command const &, NetworkId const &actor, NetworkId const &, Unicode::String const &params)
 {
-#if 0
-	size_t pos = 0;
-	NetworkId auctionContainerId(nextOidParm(params, pos));
-	int requestId = nextIntParm(params, pos);
-	int type = nextIntParm(params, pos);
-	int category = nextIntParm(params, pos);
-
-	CreatureObject *actorCreature = dynamic_cast<CreatureObject *>(NetworkIdManager::getObjectById(actor));
-	ServerObject *auctionContainer = dynamic_cast<ServerObject *>(NetworkIdManager::getObjectById(auctionContainerId));
-
-	if (actorCreature && auctionContainer)
-	{
-		CommoditiesMarket::auctionQuery(
-			*actorCreature,
-			requestId,
-			type,
-			category,
-			*auctionContainer);
-	}
-#endif
 }
 
 // ----------------------------------------------------------------------

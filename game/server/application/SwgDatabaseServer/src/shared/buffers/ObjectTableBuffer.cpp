@@ -253,11 +253,7 @@ bool ObjectTableBuffer::save(DB::Session *session)
 			++deletes;
 
 		
-		if (getMode()==DB::ModeQuery::mode_INSERT && !i->second->deleted.isNull() && i->second->deleted.getValue()!=0)
-		{
-//			DEBUG_REPORT_LOG(true,("Skipped saving deleted object %s\n",i->second->object_id.getValue().getValueString().c_str()));
-		}
-		else
+		if (!(getMode()==DB::ModeQuery::mode_INSERT && !i->second->deleted.isNull() && i->second->deleted.getValue()!=0))
 		{
 			++updates;
 			qry.setData(*(i->second));
