@@ -112,22 +112,14 @@ Object * ServerVehicleObjectTemplate::createObject(void) const
 }	// ServerVehicleObjectTemplate::createObject
 
 //@BEGIN TFD
-const std::string & ServerVehicleObjectTemplate::getFuelType(bool testData) const
+const std::string & ServerVehicleObjectTemplate::getFuelType() const
 {
-#ifdef _DEBUG
-std::string testDataValue = DefaultString;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerVehicleObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getFuelType(true);
-#endif
 	}
 
 	if (!m_fuelType.isLoaded())
@@ -145,31 +137,18 @@ UNREF(testData);
 	}
 
 	const std::string & value = m_fuelType.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerVehicleObjectTemplate::getFuelType
 
-float ServerVehicleObjectTemplate::getCurrentFuel(bool testData) const
+float ServerVehicleObjectTemplate::getCurrentFuel() const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerVehicleObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getCurrentFuel(true);
-#endif
 	}
 
 	if (!m_currentFuel.isLoaded())
@@ -209,31 +188,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerVehicleObjectTemplate::getCurrentFuel
 
-float ServerVehicleObjectTemplate::getCurrentFuelMin(bool testData) const
+float ServerVehicleObjectTemplate::getCurrentFuelMin() const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerVehicleObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getCurrentFuelMin(true);
-#endif
 	}
 
 	if (!m_currentFuel.isLoaded())
@@ -273,31 +239,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerVehicleObjectTemplate::getCurrentFuelMin
 
-float ServerVehicleObjectTemplate::getCurrentFuelMax(bool testData) const
+float ServerVehicleObjectTemplate::getCurrentFuelMax() const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerVehicleObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getCurrentFuelMax(true);
-#endif
 	}
 
 	if (!m_currentFuel.isLoaded())
@@ -337,31 +290,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerVehicleObjectTemplate::getCurrentFuelMax
 
-float ServerVehicleObjectTemplate::getMaxFuel(bool testData) const
+float ServerVehicleObjectTemplate::getMaxFuel() const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerVehicleObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getMaxFuel(true);
-#endif
 	}
 
 	if (!m_maxFuel.isLoaded())
@@ -401,31 +341,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerVehicleObjectTemplate::getMaxFuel
 
-float ServerVehicleObjectTemplate::getMaxFuelMin(bool testData) const
+float ServerVehicleObjectTemplate::getMaxFuelMin() const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerVehicleObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getMaxFuelMin(true);
-#endif
 	}
 
 	if (!m_maxFuel.isLoaded())
@@ -465,31 +392,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerVehicleObjectTemplate::getMaxFuelMin
 
-float ServerVehicleObjectTemplate::getMaxFuelMax(bool testData) const
+float ServerVehicleObjectTemplate::getMaxFuelMax() const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerVehicleObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getMaxFuelMax(true);
-#endif
 	}
 
 	if (!m_maxFuel.isLoaded())
@@ -529,31 +443,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerVehicleObjectTemplate::getMaxFuelMax
 
-float ServerVehicleObjectTemplate::getConsumpsion(bool testData) const
+float ServerVehicleObjectTemplate::getConsumpsion() const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerVehicleObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getConsumpsion(true);
-#endif
 	}
 
 	if (!m_consumpsion.isLoaded())
@@ -593,31 +494,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerVehicleObjectTemplate::getConsumpsion
 
-float ServerVehicleObjectTemplate::getConsumpsionMin(bool testData) const
+float ServerVehicleObjectTemplate::getConsumpsionMin() const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerVehicleObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getConsumpsionMin(true);
-#endif
 	}
 
 	if (!m_consumpsion.isLoaded())
@@ -657,31 +545,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerVehicleObjectTemplate::getConsumpsionMin
 
-float ServerVehicleObjectTemplate::getConsumpsionMax(bool testData) const
+float ServerVehicleObjectTemplate::getConsumpsionMax() const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerVehicleObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getConsumpsionMax(true);
-#endif
 	}
 
 	if (!m_consumpsion.isLoaded())
@@ -721,31 +596,10 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerVehicleObjectTemplate::getConsumpsionMax
 
-#ifdef _DEBUG
-/**
- * Special function used by datalint. Checks for duplicate values in base and derived templates.
- */
-void ServerVehicleObjectTemplate::testValues(void) const
-{
-	IGNORE_RETURN(getFuelType(true));
-	IGNORE_RETURN(getCurrentFuelMin(true));
-	IGNORE_RETURN(getCurrentFuelMax(true));
-	IGNORE_RETURN(getMaxFuelMin(true));
-	IGNORE_RETURN(getMaxFuelMax(true));
-	IGNORE_RETURN(getConsumpsionMin(true));
-	IGNORE_RETURN(getConsumpsionMax(true));
-	ServerTangibleObjectTemplate::testValues();
-}	// ServerVehicleObjectTemplate::testValues
-#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form
@@ -788,8 +642,8 @@ char paramName[MAX_NAME_SIZE];
 	}
 	if (getHighestTemplateVersion() != TAG(0,0,0,0))
 	{
-		if (DataLint::isEnabled())
-			DEBUG_WARNING(true, ("template %s version out of date", file.getFileName()));
+		
+			
 		m_versionOk = false;
 	}
 

@@ -96,17 +96,12 @@ protected:
 	virtual Tag getId(void) const;
 
 public:
-	const StringId         getName(bool versionOk, bool testData = false) const;
-	const std::string &    getIngredient(bool versionOk, bool testData = false) const;
-	int                    getCount(bool versionOk, bool testData = false) const;
-	int                    getCountMin(bool versionOk, bool testData = false) const;
-	int                    getCountMax(bool versionOk, bool testData = false) const;
+	const StringId         getName(bool versionOk) const;
+	const std::string &    getIngredient(bool versionOk) const;
+	int                    getCount(bool versionOk) const;
+	int                    getCountMin(bool versionOk) const;
+	int                    getCountMax(bool versionOk) const;
 
-#ifdef _DEBUG
-public:
-	// special code used by datalint
-	virtual void testValues(void) const;
-#endif
 
 protected:
 	virtual void load(Iff &file);
@@ -140,21 +135,16 @@ private:
 	virtual Tag getId(void) const;
 
 public:
-	IngredientType     getIngredientType(bool versionOk, bool testData = false) const;
+	IngredientType     getIngredientType(bool versionOk) const;
 	void              getIngredients(SimpleIngredient &data, int index, bool versionOk) const;
 	void              getIngredientsMin(SimpleIngredient &data, int index, bool versionOk) const;
 	void              getIngredientsMax(SimpleIngredient &data, int index, bool versionOk) const;
 	size_t            getIngredientsCount(void) const;
-	float                  getComplexity(bool versionOk, bool testData = false) const;
-	float                  getComplexityMin(bool versionOk, bool testData = false) const;
-	float                  getComplexityMax(bool versionOk, bool testData = false) const;
-	const std::string &    getSkillCommand(bool versionOk, bool testData = false) const;
+	float                  getComplexity(bool versionOk) const;
+	float                  getComplexityMin(bool versionOk) const;
+	float                  getComplexityMax(bool versionOk) const;
+	const std::string &    getSkillCommand(bool versionOk) const;
 
-#ifdef _DEBUG
-public:
-	// special code used by datalint
-	virtual void testValues(void) const;
-#endif
 
 protected:
 	virtual void load(Iff &file);
@@ -191,16 +181,11 @@ private:
 	virtual Tag getId(void) const;
 
 public:
-	const StringId         getName(bool versionOk, bool testData = false) const;
-	int                    getValue(bool versionOk, bool testData = false) const;
-	int                    getValueMin(bool versionOk, bool testData = false) const;
-	int                    getValueMax(bool versionOk, bool testData = false) const;
+	const StringId         getName(bool versionOk) const;
+	int                    getValue(bool versionOk) const;
+	int                    getValueMin(bool versionOk) const;
+	int                    getValueMax(bool versionOk) const;
 
-#ifdef _DEBUG
-public:
-	// special code used by datalint
-	virtual void testValues(void) const;
-#endif
 
 protected:
 	virtual void load(Iff &file);
@@ -218,15 +203,10 @@ private:
 	friend class ServerIntangibleObjectTemplate::_SchematicAttribute;
 
 public:
-	int                    getCount(bool testData = false) const;
-	int                    getCountMin(bool testData = false) const;
-	int                    getCountMax(bool testData = false) const;
+	int                    getCount() const;
+	int                    getCountMin() const;
+	int                    getCountMax() const;
 
-#ifdef _DEBUG
-public:
-	// special code used by datalint
-	virtual void testValues(void) const;
-#endif
 
 protected:
 	virtual void load(Iff &file);

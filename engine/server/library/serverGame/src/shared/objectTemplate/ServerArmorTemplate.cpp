@@ -114,22 +114,14 @@ Tag ServerArmorTemplate::getHighestTemplateVersion(void) const
 } // ServerArmorTemplate::getHighestTemplateVersion
 
 //@BEGIN TFD
-ServerArmorTemplate::ArmorRating ServerArmorTemplate::getRating(bool testData) const
+ServerArmorTemplate::ArmorRating ServerArmorTemplate::getRating() const
 {
-#ifdef _DEBUG
-ServerArmorTemplate::ArmorRating testDataValue = static_cast<ServerArmorTemplate::ArmorRating>(0);
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerArmorTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerArmorTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getRating(true);
-#endif
 	}
 
 	if (!m_rating.isLoaded())
@@ -147,31 +139,18 @@ UNREF(testData);
 	}
 
 	ArmorRating value = static_cast<ArmorRating>(m_rating.getValue());
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerArmorTemplate::getRating
 
-int ServerArmorTemplate::getIntegrity(bool testData) const
+int ServerArmorTemplate::getIntegrity() const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerArmorTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerArmorTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getIntegrity(true);
-#endif
 	}
 
 	if (!m_integrity.isLoaded())
@@ -211,31 +190,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerArmorTemplate::getIntegrity
 
-int ServerArmorTemplate::getIntegrityMin(bool testData) const
+int ServerArmorTemplate::getIntegrityMin() const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerArmorTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerArmorTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getIntegrityMin(true);
-#endif
 	}
 
 	if (!m_integrity.isLoaded())
@@ -275,31 +241,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerArmorTemplate::getIntegrityMin
 
-int ServerArmorTemplate::getIntegrityMax(bool testData) const
+int ServerArmorTemplate::getIntegrityMax() const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerArmorTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerArmorTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getIntegrityMax(true);
-#endif
 	}
 
 	if (!m_integrity.isLoaded())
@@ -339,31 +292,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerArmorTemplate::getIntegrityMax
 
-int ServerArmorTemplate::getEffectiveness(bool testData) const
+int ServerArmorTemplate::getEffectiveness() const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerArmorTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerArmorTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getEffectiveness(true);
-#endif
 	}
 
 	if (!m_effectiveness.isLoaded())
@@ -403,31 +343,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerArmorTemplate::getEffectiveness
 
-int ServerArmorTemplate::getEffectivenessMin(bool testData) const
+int ServerArmorTemplate::getEffectivenessMin() const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerArmorTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerArmorTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getEffectivenessMin(true);
-#endif
 	}
 
 	if (!m_effectiveness.isLoaded())
@@ -467,31 +394,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerArmorTemplate::getEffectivenessMin
 
-int ServerArmorTemplate::getEffectivenessMax(bool testData) const
+int ServerArmorTemplate::getEffectivenessMax() const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerArmorTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerArmorTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getEffectivenessMax(true);
-#endif
 	}
 
 	if (!m_effectiveness.isLoaded())
@@ -531,11 +445,6 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerArmorTemplate::getEffectivenessMax
@@ -693,22 +602,14 @@ size_t ServerArmorTemplate::getSpecialProtectionCount(void) const
 	return count;
 }	// ServerArmorTemplate::getSpecialProtectionCount
 
-int ServerArmorTemplate::getVulnerability(bool testData) const
+int ServerArmorTemplate::getVulnerability() const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerArmorTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerArmorTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getVulnerability(true);
-#endif
 	}
 
 	if (!m_vulnerability.isLoaded())
@@ -748,31 +649,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerArmorTemplate::getVulnerability
 
-int ServerArmorTemplate::getVulnerabilityMin(bool testData) const
+int ServerArmorTemplate::getVulnerabilityMin() const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerArmorTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerArmorTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getVulnerabilityMin(true);
-#endif
 	}
 
 	if (!m_vulnerability.isLoaded())
@@ -812,31 +700,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerArmorTemplate::getVulnerabilityMin
 
-int ServerArmorTemplate::getVulnerabilityMax(bool testData) const
+int ServerArmorTemplate::getVulnerabilityMax() const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerArmorTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerArmorTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getVulnerabilityMax(true);
-#endif
 	}
 
 	if (!m_vulnerability.isLoaded())
@@ -876,11 +751,6 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerArmorTemplate::getVulnerabilityMax
@@ -1032,21 +902,6 @@ int ServerArmorTemplate::getEncumbranceMax(int index) const
 	return value;
 }	// ServerArmorTemplate::getEncumbranceMax
 
-#ifdef _DEBUG
-/**
- * Special function used by datalint. Checks for duplicate values in base and derived templates.
- */
-void ServerArmorTemplate::testValues(void) const
-{
-	IGNORE_RETURN(getRating(true));
-	IGNORE_RETURN(getIntegrityMin(true));
-	IGNORE_RETURN(getIntegrityMax(true));
-	IGNORE_RETURN(getEffectivenessMin(true));
-	IGNORE_RETURN(getEffectivenessMax(true));
-	IGNORE_RETURN(getVulnerabilityMin(true));
-	IGNORE_RETURN(getVulnerabilityMax(true));
-}	// ServerArmorTemplate::testValues
-#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form
@@ -1088,8 +943,8 @@ char paramName[MAX_NAME_SIZE];
 	}
 	if (getHighestTemplateVersion() != TAG(0,0,0,1))
 	{
-		if (DataLint::isEnabled())
-			DEBUG_WARNING(true, ("template %s version out of date", file.getFileName()));
+		
+			
 		m_versionOk = false;
 	}
 
@@ -1197,22 +1052,14 @@ Tag ServerArmorTemplate::_SpecialProtection::getId(void) const
 	return _SpecialProtection_tag;
 }	// ServerArmorTemplate::_SpecialProtection::getId
 
-ServerArmorTemplate::DamageType ServerArmorTemplate::_SpecialProtection::getType(bool versionOk, bool testData) const
+ServerArmorTemplate::DamageType ServerArmorTemplate::_SpecialProtection::getType(bool versionOk) const
 {
-#ifdef _DEBUG
-ServerArmorTemplate::DamageType testDataValue = static_cast<ServerArmorTemplate::DamageType>(0);
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerArmorTemplate::_SpecialProtection * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerArmorTemplate::_SpecialProtection *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getType(true);
-#endif
 	}
 
 	if (!m_type.isLoaded())
@@ -1230,31 +1077,18 @@ UNREF(testData);
 	}
 
 	DamageType value = static_cast<DamageType>(m_type.getValue());
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerArmorTemplate::_SpecialProtection::getType
 
-int ServerArmorTemplate::_SpecialProtection::getEffectiveness(bool versionOk, bool testData) const
+int ServerArmorTemplate::_SpecialProtection::getEffectiveness(bool versionOk) const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerArmorTemplate::_SpecialProtection * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerArmorTemplate::_SpecialProtection *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getEffectiveness(true);
-#endif
 	}
 
 	if (!m_effectiveness.isLoaded())
@@ -1294,31 +1128,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerArmorTemplate::_SpecialProtection::getEffectiveness
 
-int ServerArmorTemplate::_SpecialProtection::getEffectivenessMin(bool versionOk, bool testData) const
+int ServerArmorTemplate::_SpecialProtection::getEffectivenessMin(bool versionOk) const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerArmorTemplate::_SpecialProtection * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerArmorTemplate::_SpecialProtection *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getEffectivenessMin(true);
-#endif
 	}
 
 	if (!m_effectiveness.isLoaded())
@@ -1358,31 +1179,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerArmorTemplate::_SpecialProtection::getEffectivenessMin
 
-int ServerArmorTemplate::_SpecialProtection::getEffectivenessMax(bool versionOk, bool testData) const
+int ServerArmorTemplate::_SpecialProtection::getEffectivenessMax(bool versionOk) const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerArmorTemplate::_SpecialProtection * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerArmorTemplate::_SpecialProtection *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getEffectivenessMax(true);
-#endif
 	}
 
 	if (!m_effectiveness.isLoaded())
@@ -1422,26 +1230,10 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerArmorTemplate::_SpecialProtection::getEffectivenessMax
 
-#ifdef _DEBUG
-/**
- * Special function used by datalint. Checks for duplicate values in base and derived templates.
- */
-void ServerArmorTemplate::_SpecialProtection::testValues(void) const
-{
-	IGNORE_RETURN(getType(true));
-	IGNORE_RETURN(getEffectivenessMin(true));
-	IGNORE_RETURN(getEffectivenessMax(true));
-}	// ServerArmorTemplate::_SpecialProtection::testValues
-#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form

@@ -112,22 +112,14 @@ Object * ServerStaticObjectTemplate::createObject(void) const
 }	// ServerStaticObjectTemplate::createObject
 
 //@BEGIN TFD
-bool ServerStaticObjectTemplate::getClientOnlyBuildout(bool testData) const
+bool ServerStaticObjectTemplate::getClientOnlyBuildout() const
 {
-#ifdef _DEBUG
-bool testDataValue = false;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerStaticObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerStaticObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getClientOnlyBuildout(true);
-#endif
 	}
 
 	if (!m_clientOnlyBuildout.isLoaded())
@@ -145,25 +137,10 @@ UNREF(testData);
 	}
 
 	bool value = m_clientOnlyBuildout.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerStaticObjectTemplate::getClientOnlyBuildout
 
-#ifdef _DEBUG
-/**
- * Special function used by datalint. Checks for duplicate values in base and derived templates.
- */
-void ServerStaticObjectTemplate::testValues(void) const
-{
-	IGNORE_RETURN(getClientOnlyBuildout(true));
-	ServerObjectTemplate::testValues();
-}	// ServerStaticObjectTemplate::testValues
-#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form
@@ -206,8 +183,8 @@ char paramName[MAX_NAME_SIZE];
 	}
 	if (getHighestTemplateVersion() != TAG(0,0,0,1))
 	{
-		if (DataLint::isEnabled())
-			DEBUG_WARNING(true, ("template %s version out of date", file.getFileName()));
+		
+			
 		m_versionOk = false;
 	}
 

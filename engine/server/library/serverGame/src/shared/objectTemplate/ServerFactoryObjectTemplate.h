@@ -45,11 +45,6 @@ public:
 //@BEGIN TFD
 public:
 
-#ifdef _DEBUG
-public:
-	// special code used by datalint
-	virtual void testValues(void) const;
-#endif
 
 protected:
 	virtual void load(Iff &file);

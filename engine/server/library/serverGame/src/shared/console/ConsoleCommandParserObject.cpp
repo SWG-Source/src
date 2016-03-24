@@ -656,7 +656,7 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 		{
 			if (ConfigServerGame::getStripNonFreeAssetsFromPlayersInTutorial() && NewbieTutorial::isInTutorialArea(userObject))
 			{
-				std::string sharedTemplate = ot->getSharedTemplate(false);
+				std::string sharedTemplate = ot->getSharedTemplate();
 
 				if (!FileManifest::contains(sharedTemplate.c_str()))
 				{
@@ -739,7 +739,7 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 		{
 			if (ConfigServerGame::getStripNonFreeAssetsFromPlayersInTutorial() && NewbieTutorial::isInTutorialArea(userObject))
 			{
-				std::string sharedTemplate = ot->getSharedTemplate(false);
+				std::string sharedTemplate = ot->getSharedTemplate();
 
 				if (!FileManifest::contains(sharedTemplate.c_str()))
 				{
@@ -809,7 +809,7 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 
 		if (ConfigServerGame::getStripNonFreeAssetsFromPlayersInTutorial() && NewbieTutorial::isInTutorialArea(userObject))
 		{
-			std::string sharedTemplate = ot->getSharedTemplate(false);
+			std::string sharedTemplate = ot->getSharedTemplate();
 
 			if (!FileManifest::contains(sharedTemplate.c_str()))
 			{
@@ -886,7 +886,7 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 		{
 			if (ConfigServerGame::getStripNonFreeAssetsFromPlayersInTutorial() && NewbieTutorial::isInTutorialArea(userObject))
 			{
-				std::string sharedTemplate = ot->getSharedTemplate(false);
+				std::string sharedTemplate = ot->getSharedTemplate();
 
 				if (!FileManifest::contains(sharedTemplate.c_str()))
 				{
@@ -953,7 +953,7 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 		{
 			if (ConfigServerGame::getStripNonFreeAssetsFromPlayersInTutorial() && NewbieTutorial::isInTutorialArea(userObject))
 			{
-				std::string sharedTemplate = ot->getSharedTemplate(false);
+				std::string sharedTemplate = ot->getSharedTemplate();
 
 				if (!FileManifest::contains(sharedTemplate.c_str()))
 				{
@@ -1021,7 +1021,7 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 		{
 			if (ConfigServerGame::getStripNonFreeAssetsFromPlayersInTutorial() && NewbieTutorial::isInTutorialArea(userObject))
 			{
-				std::string sharedTemplate = ot->getSharedTemplate(false);
+				std::string sharedTemplate = ot->getSharedTemplate();
 
 				if (!FileManifest::contains(sharedTemplate.c_str()))
 				{
@@ -1093,7 +1093,7 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 		{
 			if (ConfigServerGame::getStripNonFreeAssetsFromPlayersInTutorial() && NewbieTutorial::isInTutorialArea(userObject))
 			{
-				std::string sharedTemplate = ot->getSharedTemplate(false);
+				std::string sharedTemplate = ot->getSharedTemplate();
 
 				if (!FileManifest::contains(sharedTemplate.c_str()))
 				{

@@ -44,22 +44,17 @@ public:
 
 //@BEGIN TFD
 public:
-	const std::string &    getFuelType(bool testData = false) const;
-	float                  getCurrentFuel(bool testData = false) const;
-	float                  getCurrentFuelMin(bool testData = false) const;
-	float                  getCurrentFuelMax(bool testData = false) const;
-	float                  getMaxFuel(bool testData = false) const;
-	float                  getMaxFuelMin(bool testData = false) const;
-	float                  getMaxFuelMax(bool testData = false) const;
-	float                  getConsumpsion(bool testData = false) const;
-	float                  getConsumpsionMin(bool testData = false) const;
-	float                  getConsumpsionMax(bool testData = false) const;
+	const std::string &    getFuelType() const;
+	float                  getCurrentFuel() const;
+	float                  getCurrentFuelMin() const;
+	float                  getCurrentFuelMax() const;
+	float                  getMaxFuel() const;
+	float                  getMaxFuelMin() const;
+	float                  getMaxFuelMax() const;
+	float                  getConsumpsion() const;
+	float                  getConsumpsionMin() const;
+	float                  getConsumpsionMax() const;
 
-#ifdef _DEBUG
-public:
-	// special code used by datalint
-	virtual void testValues(void) const;
-#endif
 
 protected:
 	virtual void load(Iff &file);

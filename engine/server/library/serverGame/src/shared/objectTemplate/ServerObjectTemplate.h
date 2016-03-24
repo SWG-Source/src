@@ -317,25 +317,20 @@ protected:
 	virtual Tag getId(void) const;
 
 public:
-	Attributes     getTarget(bool versionOk, bool testData = false) const;
-	int                    getValue(bool versionOk, bool testData = false) const;
-	int                    getValueMin(bool versionOk, bool testData = false) const;
-	int                    getValueMax(bool versionOk, bool testData = false) const;
-	float                  getTime(bool versionOk, bool testData = false) const;
-	float                  getTimeMin(bool versionOk, bool testData = false) const;
-	float                  getTimeMax(bool versionOk, bool testData = false) const;
-	float                  getTimeAtValue(bool versionOk, bool testData = false) const;
-	float                  getTimeAtValueMin(bool versionOk, bool testData = false) const;
-	float                  getTimeAtValueMax(bool versionOk, bool testData = false) const;
-	float                  getDecay(bool versionOk, bool testData = false) const;
-	float                  getDecayMin(bool versionOk, bool testData = false) const;
-	float                  getDecayMax(bool versionOk, bool testData = false) const;
+	Attributes     getTarget(bool versionOk) const;
+	int                    getValue(bool versionOk) const;
+	int                    getValueMin(bool versionOk) const;
+	int                    getValueMax(bool versionOk) const;
+	float                  getTime(bool versionOk) const;
+	float                  getTimeMin(bool versionOk) const;
+	float                  getTimeMax(bool versionOk) const;
+	float                  getTimeAtValue(bool versionOk) const;
+	float                  getTimeAtValueMin(bool versionOk) const;
+	float                  getTimeAtValueMax(bool versionOk) const;
+	float                  getDecay(bool versionOk) const;
+	float                  getDecayMin(bool versionOk) const;
+	float                  getDecayMax(bool versionOk) const;
 
-#ifdef _DEBUG
-public:
-	// special code used by datalint
-	virtual void testValues(void) const;
-#endif
 
 protected:
 	virtual void load(Iff &file);
@@ -371,25 +366,20 @@ private:
 	virtual Tag getId(void) const;
 
 public:
-	MentalStates     getTarget(bool versionOk, bool testData = false) const;
-	float                  getValue(bool versionOk, bool testData = false) const;
-	float                  getValueMin(bool versionOk, bool testData = false) const;
-	float                  getValueMax(bool versionOk, bool testData = false) const;
-	float                  getTime(bool versionOk, bool testData = false) const;
-	float                  getTimeMin(bool versionOk, bool testData = false) const;
-	float                  getTimeMax(bool versionOk, bool testData = false) const;
-	float                  getTimeAtValue(bool versionOk, bool testData = false) const;
-	float                  getTimeAtValueMin(bool versionOk, bool testData = false) const;
-	float                  getTimeAtValueMax(bool versionOk, bool testData = false) const;
-	float                  getDecay(bool versionOk, bool testData = false) const;
-	float                  getDecayMin(bool versionOk, bool testData = false) const;
-	float                  getDecayMax(bool versionOk, bool testData = false) const;
+	MentalStates     getTarget(bool versionOk) const;
+	float                  getValue(bool versionOk) const;
+	float                  getValueMin(bool versionOk) const;
+	float                  getValueMax(bool versionOk) const;
+	float                  getTime(bool versionOk) const;
+	float                  getTimeMin(bool versionOk) const;
+	float                  getTimeMax(bool versionOk) const;
+	float                  getTimeAtValue(bool versionOk) const;
+	float                  getTimeAtValueMin(bool versionOk) const;
+	float                  getTimeAtValueMax(bool versionOk) const;
+	float                  getDecay(bool versionOk) const;
+	float                  getDecayMin(bool versionOk) const;
+	float                  getDecayMax(bool versionOk) const;
 
-#ifdef _DEBUG
-public:
-	// special code used by datalint
-	virtual void testValues(void) const;
-#endif
 
 protected:
 	virtual void load(Iff &file);
@@ -425,15 +415,10 @@ private:
 	virtual Tag getId(void) const;
 
 public:
-	const std::string &    getSlotName(bool versionOk, bool testData = false) const;
-	bool                   getEquipObject(bool versionOk, bool testData = false) const;
+	const std::string &    getSlotName(bool versionOk) const;
+	bool                   getEquipObject(bool versionOk) const;
 	const ServerObjectTemplate * getContent(bool versionOk) const;
 
-#ifdef _DEBUG
-public:
-	// special code used by datalint
-	virtual void testValues(void) const;
-#endif
 
 protected:
 	virtual void load(Iff &file);
@@ -467,19 +452,14 @@ private:
 	virtual Tag getId(void) const;
 
 public:
-	XpTypes     getType(bool versionOk, bool testData = false) const;
-	int                    getLevel(bool versionOk, bool testData = false) const;
-	int                    getLevelMin(bool versionOk, bool testData = false) const;
-	int                    getLevelMax(bool versionOk, bool testData = false) const;
-	int                    getValue(bool versionOk, bool testData = false) const;
-	int                    getValueMin(bool versionOk, bool testData = false) const;
-	int                    getValueMax(bool versionOk, bool testData = false) const;
+	XpTypes     getType(bool versionOk) const;
+	int                    getLevel(bool versionOk) const;
+	int                    getLevelMin(bool versionOk) const;
+	int                    getLevelMax(bool versionOk) const;
+	int                    getValue(bool versionOk) const;
+	int                    getValueMin(bool versionOk) const;
+	int                    getValueMax(bool versionOk) const;
 
-#ifdef _DEBUG
-public:
-	// special code used by datalint
-	virtual void testValues(void) const;
-#endif
 
 protected:
 	virtual void load(Iff &file);
@@ -498,26 +478,26 @@ private:
 	friend class ServerObjectTemplate::_Xp;
 
 public:
-	const std::string &    getSharedTemplate(bool testData = false) const;
+	const std::string &    getSharedTemplate() const;
 	const std::string &    getScripts(int index) const;
 	size_t            getScriptsCount(void) const;
 	void                   getObjvars(DynamicVariableList &list) const;
-	int                    getVolume(bool testData = false) const;
-	int                    getVolumeMin(bool testData = false) const;
-	int                    getVolumeMax(bool testData = false) const;
+	int                    getVolume() const;
+	int                    getVolumeMin() const;
+	int                    getVolumeMax() const;
 	VisibleFlags     getVisibleFlags(int index) const;
 	size_t            getVisibleFlagsCount(void) const;
 	DeleteFlags     getDeleteFlags(int index) const;
 	size_t            getDeleteFlagsCount(void) const;
 	MoveFlags     getMoveFlags(int index) const;
 	size_t            getMoveFlagsCount(void) const;
-	bool                   getInvulnerable(bool testData = false) const;
-	float                  getComplexity(bool testData = false) const;
-	float                  getComplexityMin(bool testData = false) const;
-	float                  getComplexityMax(bool testData = false) const;
-	int                    getTintIndex(bool testData = false) const;
-	int                    getTintIndexMin(bool testData = false) const;
-	int                    getTintIndexMax(bool testData = false) const;
+	bool                   getInvulnerable() const;
+	float                  getComplexity() const;
+	float                  getComplexityMin() const;
+	float                  getComplexityMax() const;
+	int                    getTintIndex() const;
+	int                    getTintIndexMin() const;
+	int                    getTintIndexMax() const;
 	float                  getUpdateRanges(UpdateRanges index) const;
 	float                  getUpdateRangesMin(UpdateRanges index) const;
 	float                  getUpdateRangesMax(UpdateRanges index) const;
@@ -529,14 +509,9 @@ public:
 	void              getXpPointsMin(Xp &data, int index) const;
 	void              getXpPointsMax(Xp &data, int index) const;
 	size_t            getXpPointsCount(void) const;
-	bool                   getPersistByDefault(bool testData = false) const;
-	bool                   getPersistContents(bool testData = false) const;
+	bool                   getPersistByDefault() const;
+	bool                   getPersistContents() const;
 
-#ifdef _DEBUG
-public:
-	// special code used by datalint
-	virtual void testValues(void) const;
-#endif
 
 protected:
 	virtual void load(Iff &file);

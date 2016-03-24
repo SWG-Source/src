@@ -70,30 +70,30 @@ public:
 	int                    getMaxAttributes(Attributes index) const;
 	int                    getMaxAttributesMin(Attributes index) const;
 	int                    getMaxAttributesMax(Attributes index) const;
-	float                  getMinDrainModifier(bool testData = false) const;
-	float                  getMinDrainModifierMin(bool testData = false) const;
-	float                  getMinDrainModifierMax(bool testData = false) const;
-	float                  getMaxDrainModifier(bool testData = false) const;
-	float                  getMaxDrainModifierMin(bool testData = false) const;
-	float                  getMaxDrainModifierMax(bool testData = false) const;
-	float                  getMinFaucetModifier(bool testData = false) const;
-	float                  getMinFaucetModifierMin(bool testData = false) const;
-	float                  getMinFaucetModifierMax(bool testData = false) const;
-	float                  getMaxFaucetModifier(bool testData = false) const;
-	float                  getMaxFaucetModifierMin(bool testData = false) const;
-	float                  getMaxFaucetModifierMax(bool testData = false) const;
+	float                  getMinDrainModifier() const;
+	float                  getMinDrainModifierMin() const;
+	float                  getMinDrainModifierMax() const;
+	float                  getMaxDrainModifier() const;
+	float                  getMaxDrainModifierMin() const;
+	float                  getMaxDrainModifierMax() const;
+	float                  getMinFaucetModifier() const;
+	float                  getMinFaucetModifierMin() const;
+	float                  getMinFaucetModifierMax() const;
+	float                  getMaxFaucetModifier() const;
+	float                  getMaxFaucetModifierMin() const;
+	float                  getMaxFaucetModifierMax() const;
 	void              getAttribMods(AttribMod &data, int index) const;
 	void              getAttribModsMin(AttribMod &data, int index) const;
 	void              getAttribModsMax(AttribMod &data, int index) const;
 	size_t            getAttribModsCount(void) const;
-	int                    getShockWounds(bool testData = false) const;
-	int                    getShockWoundsMin(bool testData = false) const;
-	int                    getShockWoundsMax(bool testData = false) const;
-	bool                   getCanCreateAvatar(bool testData = false) const;
-	const std::string &    getNameGeneratorType(bool testData = false) const;
-	float                  getApproachTriggerRange(bool testData = false) const;
-	float                  getApproachTriggerRangeMin(bool testData = false) const;
-	float                  getApproachTriggerRangeMax(bool testData = false) const;
+	int                    getShockWounds() const;
+	int                    getShockWoundsMin() const;
+	int                    getShockWoundsMax() const;
+	bool                   getCanCreateAvatar() const;
+	const std::string &    getNameGeneratorType() const;
+	float                  getApproachTriggerRange() const;
+	float                  getApproachTriggerRangeMin() const;
+	float                  getApproachTriggerRangeMax() const;
 	float                  getMaxMentalStates(MentalStates index) const;
 	float                  getMaxMentalStatesMin(MentalStates index) const;
 	float                  getMaxMentalStatesMax(MentalStates index) const;
@@ -101,11 +101,6 @@ public:
 	float                  getMentalStatesDecayMin(MentalStates index) const;
 	float                  getMentalStatesDecayMax(MentalStates index) const;
 
-#ifdef _DEBUG
-public:
-	// special code used by datalint
-	virtual void testValues(void) const;
-#endif
 
 protected:
 	virtual void load(Iff &file);

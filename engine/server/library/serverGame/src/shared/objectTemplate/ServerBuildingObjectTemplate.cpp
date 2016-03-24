@@ -112,22 +112,14 @@ Object * ServerBuildingObjectTemplate::createObject(void) const
 }	// ServerBuildingObjectTemplate::createObject
 
 //@BEGIN TFD
-int ServerBuildingObjectTemplate::getMaintenanceCost(bool testData) const
+int ServerBuildingObjectTemplate::getMaintenanceCost() const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerBuildingObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerBuildingObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getMaintenanceCost(true);
-#endif
 	}
 
 	if (!m_maintenanceCost.isLoaded())
@@ -167,31 +159,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerBuildingObjectTemplate::getMaintenanceCost
 
-int ServerBuildingObjectTemplate::getMaintenanceCostMin(bool testData) const
+int ServerBuildingObjectTemplate::getMaintenanceCostMin() const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerBuildingObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerBuildingObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getMaintenanceCostMin(true);
-#endif
 	}
 
 	if (!m_maintenanceCost.isLoaded())
@@ -231,31 +210,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerBuildingObjectTemplate::getMaintenanceCostMin
 
-int ServerBuildingObjectTemplate::getMaintenanceCostMax(bool testData) const
+int ServerBuildingObjectTemplate::getMaintenanceCostMax() const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerBuildingObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerBuildingObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getMaintenanceCostMax(true);
-#endif
 	}
 
 	if (!m_maintenanceCost.isLoaded())
@@ -295,31 +261,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerBuildingObjectTemplate::getMaintenanceCostMax
 
-bool ServerBuildingObjectTemplate::getIsPublic(bool testData) const
+bool ServerBuildingObjectTemplate::getIsPublic() const
 {
-#ifdef _DEBUG
-bool testDataValue = false;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerBuildingObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerBuildingObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getIsPublic(true);
-#endif
 	}
 
 	if (!m_isPublic.isLoaded())
@@ -337,27 +290,10 @@ UNREF(testData);
 	}
 
 	bool value = m_isPublic.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerBuildingObjectTemplate::getIsPublic
 
-#ifdef _DEBUG
-/**
- * Special function used by datalint. Checks for duplicate values in base and derived templates.
- */
-void ServerBuildingObjectTemplate::testValues(void) const
-{
-	IGNORE_RETURN(getMaintenanceCostMin(true));
-	IGNORE_RETURN(getMaintenanceCostMax(true));
-	IGNORE_RETURN(getIsPublic(true));
-	ServerTangibleObjectTemplate::testValues();
-}	// ServerBuildingObjectTemplate::testValues
-#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form
@@ -400,8 +336,8 @@ char paramName[MAX_NAME_SIZE];
 	}
 	if (getHighestTemplateVersion() != TAG(0,0,0,1))
 	{
-		if (DataLint::isEnabled())
-			DEBUG_WARNING(true, ("template %s version out of date", file.getFileName()));
+		
+			
 		m_versionOk = false;
 	}
 

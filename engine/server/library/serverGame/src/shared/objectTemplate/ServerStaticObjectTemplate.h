@@ -44,13 +44,8 @@ public:
 
 //@BEGIN TFD
 public:
-	bool                   getClientOnlyBuildout(bool testData = false) const;
+	bool                   getClientOnlyBuildout() const;
 
-#ifdef _DEBUG
-public:
-	// special code used by datalint
-	virtual void testValues(void) const;
-#endif
 
 protected:
 	virtual void load(Iff &file);

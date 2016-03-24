@@ -44,16 +44,11 @@ public:
 
 //@BEGIN TFD
 public:
-	int                    getMaintenanceCost(bool testData = false) const;
-	int                    getMaintenanceCostMin(bool testData = false) const;
-	int                    getMaintenanceCostMax(bool testData = false) const;
-	bool                   getIsPublic(bool testData = false) const;
+	int                    getMaintenanceCost() const;
+	int                    getMaintenanceCostMin() const;
+	int                    getMaintenanceCostMax() const;
+	bool                   getIsPublic() const;
 
-#ifdef _DEBUG
-public:
-	// special code used by datalint
-	virtual void testValues(void) const;
-#endif
 
 protected:
 	virtual void load(Iff &file);

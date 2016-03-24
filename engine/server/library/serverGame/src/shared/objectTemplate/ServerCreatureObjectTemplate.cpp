@@ -601,22 +601,14 @@ int ServerCreatureObjectTemplate::getMaxAttributesMax(Attributes index) const
 	return value;
 }	// ServerCreatureObjectTemplate::getMaxAttributesMax
 
-float ServerCreatureObjectTemplate::getMinDrainModifier(bool testData) const
+float ServerCreatureObjectTemplate::getMinDrainModifier() const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getMinDrainModifier(true);
-#endif
 	}
 
 	if (!m_minDrainModifier.isLoaded())
@@ -656,31 +648,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerCreatureObjectTemplate::getMinDrainModifier
 
-float ServerCreatureObjectTemplate::getMinDrainModifierMin(bool testData) const
+float ServerCreatureObjectTemplate::getMinDrainModifierMin() const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getMinDrainModifierMin(true);
-#endif
 	}
 
 	if (!m_minDrainModifier.isLoaded())
@@ -720,31 +699,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerCreatureObjectTemplate::getMinDrainModifierMin
 
-float ServerCreatureObjectTemplate::getMinDrainModifierMax(bool testData) const
+float ServerCreatureObjectTemplate::getMinDrainModifierMax() const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getMinDrainModifierMax(true);
-#endif
 	}
 
 	if (!m_minDrainModifier.isLoaded())
@@ -784,31 +750,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerCreatureObjectTemplate::getMinDrainModifierMax
 
-float ServerCreatureObjectTemplate::getMaxDrainModifier(bool testData) const
+float ServerCreatureObjectTemplate::getMaxDrainModifier() const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getMaxDrainModifier(true);
-#endif
 	}
 
 	if (!m_maxDrainModifier.isLoaded())
@@ -848,31 +801,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerCreatureObjectTemplate::getMaxDrainModifier
 
-float ServerCreatureObjectTemplate::getMaxDrainModifierMin(bool testData) const
+float ServerCreatureObjectTemplate::getMaxDrainModifierMin() const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getMaxDrainModifierMin(true);
-#endif
 	}
 
 	if (!m_maxDrainModifier.isLoaded())
@@ -912,31 +852,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerCreatureObjectTemplate::getMaxDrainModifierMin
 
-float ServerCreatureObjectTemplate::getMaxDrainModifierMax(bool testData) const
+float ServerCreatureObjectTemplate::getMaxDrainModifierMax() const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getMaxDrainModifierMax(true);
-#endif
 	}
 
 	if (!m_maxDrainModifier.isLoaded())
@@ -976,31 +903,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerCreatureObjectTemplate::getMaxDrainModifierMax
 
-float ServerCreatureObjectTemplate::getMinFaucetModifier(bool testData) const
+float ServerCreatureObjectTemplate::getMinFaucetModifier() const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getMinFaucetModifier(true);
-#endif
 	}
 
 	if (!m_minFaucetModifier.isLoaded())
@@ -1040,31 +954,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerCreatureObjectTemplate::getMinFaucetModifier
 
-float ServerCreatureObjectTemplate::getMinFaucetModifierMin(bool testData) const
+float ServerCreatureObjectTemplate::getMinFaucetModifierMin() const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getMinFaucetModifierMin(true);
-#endif
 	}
 
 	if (!m_minFaucetModifier.isLoaded())
@@ -1104,31 +1005,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerCreatureObjectTemplate::getMinFaucetModifierMin
 
-float ServerCreatureObjectTemplate::getMinFaucetModifierMax(bool testData) const
+float ServerCreatureObjectTemplate::getMinFaucetModifierMax() const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getMinFaucetModifierMax(true);
-#endif
 	}
 
 	if (!m_minFaucetModifier.isLoaded())
@@ -1168,31 +1056,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerCreatureObjectTemplate::getMinFaucetModifierMax
 
-float ServerCreatureObjectTemplate::getMaxFaucetModifier(bool testData) const
+float ServerCreatureObjectTemplate::getMaxFaucetModifier() const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getMaxFaucetModifier(true);
-#endif
 	}
 
 	if (!m_maxFaucetModifier.isLoaded())
@@ -1232,31 +1107,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerCreatureObjectTemplate::getMaxFaucetModifier
 
-float ServerCreatureObjectTemplate::getMaxFaucetModifierMin(bool testData) const
+float ServerCreatureObjectTemplate::getMaxFaucetModifierMin() const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getMaxFaucetModifierMin(true);
-#endif
 	}
 
 	if (!m_maxFaucetModifier.isLoaded())
@@ -1296,31 +1158,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerCreatureObjectTemplate::getMaxFaucetModifierMin
 
-float ServerCreatureObjectTemplate::getMaxFaucetModifierMax(bool testData) const
+float ServerCreatureObjectTemplate::getMaxFaucetModifierMax() const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getMaxFaucetModifierMax(true);
-#endif
 	}
 
 	if (!m_maxFaucetModifier.isLoaded())
@@ -1360,11 +1209,6 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerCreatureObjectTemplate::getMaxFaucetModifierMax
@@ -1531,22 +1375,14 @@ size_t ServerCreatureObjectTemplate::getAttribModsCount(void) const
 	return count;
 }	// ServerCreatureObjectTemplate::getAttribModsCount
 
-int ServerCreatureObjectTemplate::getShockWounds(bool testData) const
+int ServerCreatureObjectTemplate::getShockWounds() const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getShockWounds(true);
-#endif
 	}
 
 	if (!m_shockWounds.isLoaded())
@@ -1586,31 +1422,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerCreatureObjectTemplate::getShockWounds
 
-int ServerCreatureObjectTemplate::getShockWoundsMin(bool testData) const
+int ServerCreatureObjectTemplate::getShockWoundsMin() const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getShockWoundsMin(true);
-#endif
 	}
 
 	if (!m_shockWounds.isLoaded())
@@ -1650,31 +1473,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerCreatureObjectTemplate::getShockWoundsMin
 
-int ServerCreatureObjectTemplate::getShockWoundsMax(bool testData) const
+int ServerCreatureObjectTemplate::getShockWoundsMax() const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getShockWoundsMax(true);
-#endif
 	}
 
 	if (!m_shockWounds.isLoaded())
@@ -1714,31 +1524,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerCreatureObjectTemplate::getShockWoundsMax
 
-bool ServerCreatureObjectTemplate::getCanCreateAvatar(bool testData) const
+bool ServerCreatureObjectTemplate::getCanCreateAvatar() const
 {
-#ifdef _DEBUG
-bool testDataValue = false;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getCanCreateAvatar(true);
-#endif
 	}
 
 	if (!m_canCreateAvatar.isLoaded())
@@ -1756,31 +1553,18 @@ UNREF(testData);
 	}
 
 	bool value = m_canCreateAvatar.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerCreatureObjectTemplate::getCanCreateAvatar
 
-const std::string & ServerCreatureObjectTemplate::getNameGeneratorType(bool testData) const
+const std::string & ServerCreatureObjectTemplate::getNameGeneratorType() const
 {
-#ifdef _DEBUG
-std::string testDataValue = DefaultString;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getNameGeneratorType(true);
-#endif
 	}
 
 	if (!m_nameGeneratorType.isLoaded())
@@ -1798,31 +1582,18 @@ UNREF(testData);
 	}
 
 	const std::string & value = m_nameGeneratorType.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerCreatureObjectTemplate::getNameGeneratorType
 
-float ServerCreatureObjectTemplate::getApproachTriggerRange(bool testData) const
+float ServerCreatureObjectTemplate::getApproachTriggerRange() const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getApproachTriggerRange(true);
-#endif
 	}
 
 	if (!m_approachTriggerRange.isLoaded())
@@ -1862,31 +1633,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerCreatureObjectTemplate::getApproachTriggerRange
 
-float ServerCreatureObjectTemplate::getApproachTriggerRangeMin(bool testData) const
+float ServerCreatureObjectTemplate::getApproachTriggerRangeMin() const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getApproachTriggerRangeMin(true);
-#endif
 	}
 
 	if (!m_approachTriggerRange.isLoaded())
@@ -1926,31 +1684,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerCreatureObjectTemplate::getApproachTriggerRangeMin
 
-float ServerCreatureObjectTemplate::getApproachTriggerRangeMax(bool testData) const
+float ServerCreatureObjectTemplate::getApproachTriggerRangeMax() const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerCreatureObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getApproachTriggerRangeMax(true);
-#endif
 	}
 
 	if (!m_approachTriggerRange.isLoaded())
@@ -1990,11 +1735,6 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerCreatureObjectTemplate::getApproachTriggerRangeMax
@@ -2293,29 +2033,6 @@ float ServerCreatureObjectTemplate::getMentalStatesDecayMax(MentalStates index) 
 	return value;
 }	// ServerCreatureObjectTemplate::getMentalStatesDecayMax
 
-#ifdef _DEBUG
-/**
- * Special function used by datalint. Checks for duplicate values in base and derived templates.
- */
-void ServerCreatureObjectTemplate::testValues(void) const
-{
-	IGNORE_RETURN(getMinDrainModifierMin(true));
-	IGNORE_RETURN(getMinDrainModifierMax(true));
-	IGNORE_RETURN(getMaxDrainModifierMin(true));
-	IGNORE_RETURN(getMaxDrainModifierMax(true));
-	IGNORE_RETURN(getMinFaucetModifierMin(true));
-	IGNORE_RETURN(getMinFaucetModifierMax(true));
-	IGNORE_RETURN(getMaxFaucetModifierMin(true));
-	IGNORE_RETURN(getMaxFaucetModifierMax(true));
-	IGNORE_RETURN(getShockWoundsMin(true));
-	IGNORE_RETURN(getShockWoundsMax(true));
-	IGNORE_RETURN(getCanCreateAvatar(true));
-	IGNORE_RETURN(getNameGeneratorType(true));
-	IGNORE_RETURN(getApproachTriggerRangeMin(true));
-	IGNORE_RETURN(getApproachTriggerRangeMax(true));
-	ServerTangibleObjectTemplate::testValues();
-}	// ServerCreatureObjectTemplate::testValues
-#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form
@@ -2358,8 +2075,8 @@ char paramName[MAX_NAME_SIZE];
 	}
 	if (getHighestTemplateVersion() != TAG(0,0,0,5))
 	{
-		if (DataLint::isEnabled())
-			DEBUG_WARNING(true, ("template %s version out of date", file.getFileName()));
+		
+			
 		m_versionOk = false;
 	}
 

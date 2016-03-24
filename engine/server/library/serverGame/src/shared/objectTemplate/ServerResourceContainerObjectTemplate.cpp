@@ -112,22 +112,14 @@ Object * ServerResourceContainerObjectTemplate::createObject(void) const
 }	// ServerResourceContainerObjectTemplate::createObject
 
 //@BEGIN TFD
-int ServerResourceContainerObjectTemplate::getMaxResources(bool testData) const
+int ServerResourceContainerObjectTemplate::getMaxResources() const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerResourceContainerObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerResourceContainerObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getMaxResources(true);
-#endif
 	}
 
 	if (!m_maxResources.isLoaded())
@@ -167,31 +159,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerResourceContainerObjectTemplate::getMaxResources
 
-int ServerResourceContainerObjectTemplate::getMaxResourcesMin(bool testData) const
+int ServerResourceContainerObjectTemplate::getMaxResourcesMin() const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerResourceContainerObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerResourceContainerObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getMaxResourcesMin(true);
-#endif
 	}
 
 	if (!m_maxResources.isLoaded())
@@ -231,31 +210,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerResourceContainerObjectTemplate::getMaxResourcesMin
 
-int ServerResourceContainerObjectTemplate::getMaxResourcesMax(bool testData) const
+int ServerResourceContainerObjectTemplate::getMaxResourcesMax() const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerResourceContainerObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerResourceContainerObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getMaxResourcesMax(true);
-#endif
 	}
 
 	if (!m_maxResources.isLoaded())
@@ -295,26 +261,10 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerResourceContainerObjectTemplate::getMaxResourcesMax
 
-#ifdef _DEBUG
-/**
- * Special function used by datalint. Checks for duplicate values in base and derived templates.
- */
-void ServerResourceContainerObjectTemplate::testValues(void) const
-{
-	IGNORE_RETURN(getMaxResourcesMin(true));
-	IGNORE_RETURN(getMaxResourcesMax(true));
-	ServerTangibleObjectTemplate::testValues();
-}	// ServerResourceContainerObjectTemplate::testValues
-#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form
@@ -357,8 +307,8 @@ char paramName[MAX_NAME_SIZE];
 	}
 	if (getHighestTemplateVersion() != TAG(0,0,0,0))
 	{
-		if (DataLint::isEnabled())
-			DEBUG_WARNING(true, ("template %s version out of date", file.getFileName()));
+		
+			
 		m_versionOk = false;
 	}
 

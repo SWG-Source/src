@@ -13,7 +13,7 @@
 #include "serverGame/FirstServerGame.h"
 #include "ServerShipObjectTemplate.h"
 #include "serverGame/ShipObject.h"
-#include "sharedDebug/DataLint.h"
+
 #include "sharedFile/Iff.h"
 #include "sharedObject/ObjectTemplate.h"
 #include "sharedObject/ObjectTemplateList.h"
@@ -113,22 +113,14 @@ Object * ServerShipObjectTemplate::createObject(void) const
 }	// ServerShipObjectTemplate::createObject
 
 //@BEGIN TFD
-const std::string & ServerShipObjectTemplate::getShipType(bool testData) const
+const std::string & ServerShipObjectTemplate::getShipType() const
 {
-#ifdef _DEBUG
-std::string testDataValue = DefaultString;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerShipObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerShipObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getShipType(true);
-#endif
 	}
 
 	if (!m_shipType.isLoaded())
@@ -146,25 +138,10 @@ UNREF(testData);
 	}
 
 	const std::string & value = m_shipType.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerShipObjectTemplate::getShipType
 
-#ifdef _DEBUG
-/**
- * Special function used by datalint. Checks for duplicate values in base and derived templates.
- */
-void ServerShipObjectTemplate::testValues(void) const
-{
-	IGNORE_RETURN(getShipType(true));
-	ServerTangibleObjectTemplate::testValues();
-}	// ServerShipObjectTemplate::testValues
-#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form
@@ -207,8 +184,8 @@ char paramName[MAX_NAME_SIZE];
 	}
 	if (getHighestTemplateVersion() != TAG(0,0,0,1))
 	{
-		if (DataLint::isEnabled())
-			DEBUG_WARNING(true, ("template %s version out of date", file.getFileName()));
+		
+			
 		m_versionOk = false;
 	}
 

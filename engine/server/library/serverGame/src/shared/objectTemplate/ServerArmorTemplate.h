@@ -98,16 +98,11 @@ protected:
 	virtual Tag getId(void) const;
 
 public:
-	DamageType     getType(bool versionOk, bool testData = false) const;
-	int                    getEffectiveness(bool versionOk, bool testData = false) const;
-	int                    getEffectivenessMin(bool versionOk, bool testData = false) const;
-	int                    getEffectivenessMax(bool versionOk, bool testData = false) const;
+	DamageType     getType(bool versionOk) const;
+	int                    getEffectiveness(bool versionOk) const;
+	int                    getEffectivenessMin(bool versionOk) const;
+	int                    getEffectivenessMax(bool versionOk) const;
 
-#ifdef _DEBUG
-public:
-	// special code used by datalint
-	virtual void testValues(void) const;
-#endif
 
 protected:
 	virtual void load(Iff &file);
@@ -125,29 +120,24 @@ private:
 	friend class ServerArmorTemplate::_SpecialProtection;
 
 public:
-	ArmorRating     getRating(bool testData = false) const;
-	int                    getIntegrity(bool testData = false) const;
-	int                    getIntegrityMin(bool testData = false) const;
-	int                    getIntegrityMax(bool testData = false) const;
-	int                    getEffectiveness(bool testData = false) const;
-	int                    getEffectivenessMin(bool testData = false) const;
-	int                    getEffectivenessMax(bool testData = false) const;
+	ArmorRating     getRating() const;
+	int                    getIntegrity() const;
+	int                    getIntegrityMin() const;
+	int                    getIntegrityMax() const;
+	int                    getEffectiveness() const;
+	int                    getEffectivenessMin() const;
+	int                    getEffectivenessMax() const;
 	void              getSpecialProtection(SpecialProtection &data, int index) const;
 	void              getSpecialProtectionMin(SpecialProtection &data, int index) const;
 	void              getSpecialProtectionMax(SpecialProtection &data, int index) const;
 	size_t            getSpecialProtectionCount(void) const;
-	int                    getVulnerability(bool testData = false) const;
-	int                    getVulnerabilityMin(bool testData = false) const;
-	int                    getVulnerabilityMax(bool testData = false) const;
+	int                    getVulnerability() const;
+	int                    getVulnerabilityMin() const;
+	int                    getVulnerabilityMax() const;
 	int                    getEncumbrance(int index) const;
 	int                    getEncumbranceMin(int index) const;
 	int                    getEncumbranceMax(int index) const;
 
-#ifdef _DEBUG
-public:
-	// special code used by datalint
-	virtual void testValues(void) const;
-#endif
 
 protected:
 	virtual void load(Iff &file);

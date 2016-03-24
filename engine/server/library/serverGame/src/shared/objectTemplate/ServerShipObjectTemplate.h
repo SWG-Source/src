@@ -44,13 +44,8 @@ public:
 
 //@BEGIN TFD
 public:
-	const std::string &    getShipType(bool testData = false) const;
+	const std::string &    getShipType() const;
 
-#ifdef _DEBUG
-public:
-	// special code used by datalint
-	virtual void testValues(void) const;
-#endif
 
 protected:
 	virtual void load(Iff &file);

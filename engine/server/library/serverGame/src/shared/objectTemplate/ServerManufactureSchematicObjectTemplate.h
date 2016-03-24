@@ -68,16 +68,11 @@ protected:
 	virtual Tag getId(void) const;
 
 public:
-	const StringId         getName(bool versionOk, bool testData = false) const;
+	const StringId         getName(bool versionOk) const;
 	void              getIngredient(Ingredient &data, bool versionOk) const;
 	void              getIngredientMin(Ingredient &data, bool versionOk) const;
 	void              getIngredientMax(Ingredient &data, bool versionOk) const;
 
-#ifdef _DEBUG
-public:
-	// special code used by datalint
-	virtual void testValues(void) const;
-#endif
 
 protected:
 	virtual void load(Iff &file);
@@ -95,25 +90,20 @@ private:
 	friend class ServerManufactureSchematicObjectTemplate::_IngredientSlot;
 
 public:
-	const std::string &    getDraftSchematic(bool testData = false) const;
-	const std::string &    getCreator(bool testData = false) const;
+	const std::string &    getDraftSchematic() const;
+	const std::string &    getCreator() const;
 	void              getIngredients(IngredientSlot &data, int index) const;
 	void              getIngredientsMin(IngredientSlot &data, int index) const;
 	void              getIngredientsMax(IngredientSlot &data, int index) const;
 	size_t            getIngredientsCount(void) const;
-	int                    getItemCount(bool testData = false) const;
-	int                    getItemCountMin(bool testData = false) const;
-	int                    getItemCountMax(bool testData = false) const;
+	int                    getItemCount() const;
+	int                    getItemCountMin() const;
+	int                    getItemCountMax() const;
 	void              getAttributes(SchematicAttribute &data, int index) const;
 	void              getAttributesMin(SchematicAttribute &data, int index) const;
 	void              getAttributesMax(SchematicAttribute &data, int index) const;
 	size_t            getAttributesCount(void) const;
 
-#ifdef _DEBUG
-public:
-	// special code used by datalint
-	virtual void testValues(void) const;
-#endif
 
 protected:
 	virtual void load(Iff &file);

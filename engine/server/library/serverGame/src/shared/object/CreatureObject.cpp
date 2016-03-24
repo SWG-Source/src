@@ -4434,7 +4434,6 @@ void CreatureObject::removeAttributeModifier (const std::string & modName)
 			{
 				sendCancelTimedMod(m.mod.tag);
 			}
-			const char * type = "attrib";
 			if (AttribMod::isSkillMod(m.mod))
 			{
 				const char * skillModName = AttribModNameManager::getInstance().getAttribModName(m.mod.skill);
@@ -4447,11 +4446,8 @@ void CreatureObject::removeAttributeModifier (const std::string & modName)
 						PlayerObject::getAccountDescription(this).c_str(),
 						m.mod.tag, m.mod.skill, m.mod.value, m.mod.sustain, m.mod.flags));
 				}
-				type = "skill";
 			}
 			m_attributeModList.erase(f);
-//			LOG("CustomerService", ("Attribs: Removed named %s mod %s from %s",
-//				type, modName.c_str(), PlayerObject::getAccountDescription(this).c_str()));
 		}
 	}
 }	// CreatureObject::removeAttributeModifier
@@ -5185,7 +5181,6 @@ void CreatureObject::decayAttributes(float time)
 
 	// regenerate attributes
 	int i;
-	bool attribRegen = false;
 	float regenerationRate[3] = {0,0,0};
 	m_regenerationTime += time;
 	for (i = 0; i < 3; ++i)
@@ -5195,7 +5190,6 @@ void CreatureObject::decayAttributes(float time)
  		int currentAttrib = getAttribute(poolAttrib);
  		if (currentAttrib < maxAttrib)
 		{
-			attribRegen = true;
 			regenerationRate[i] = getRegenRate(poolAttrib);
 			m_regeneration[poolAttrib] += regenerationRate[i] * time;
 		}
@@ -7109,7 +7103,6 @@ void CreatureObject::onContainerGainItem(ServerObject& item, ServerObject* sourc
 	{
 		Object const * inventory = 0;
 		Object const * datapad = 0;
-		Object const * appearance = 0;
 
 		SlottedContainer const * const myContainer = ContainerInterface::getSlottedContainer(*this);
 
@@ -7132,7 +7125,6 @@ void CreatureObject::onContainerGainItem(ServerObject& item, ServerObject* sourc
 			if (appearanceInvSlot != SlotId::invalid)
 			{
 				Container::ContainedItem itemId = myContainer->getObjectInSlot(appearanceInvSlot, tmp);
-				appearance = itemId.getObject();
 			}
 		}
 

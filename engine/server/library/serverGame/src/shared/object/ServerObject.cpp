@@ -351,7 +351,6 @@ namespace ServerObjectNamespace
 		if (!dest || !transferer)
 			return true;
 
-		bool isBankTransfer = false;
 		const CreatureObject * const creature = transferer->asCreatureObject();
 		if (creature && dest == creature->getBankContainer())
 		{
@@ -370,7 +369,6 @@ namespace ServerObjectNamespace
 					const TangibleObject * const bankTerminal = safe_cast<TangibleObject *>(NetworkIdManager::getObjectById(bankTerminalId));
 					if (bankTerminal)
 					{
-						isBankTransfer = true;
 						Unicode::String bankName;
 						if (bankTerminal->getObjVars().getItem(OBJVAR_BANK_NAME_ID, bankName))
 						{

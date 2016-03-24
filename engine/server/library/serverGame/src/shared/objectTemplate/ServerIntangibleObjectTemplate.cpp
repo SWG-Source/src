@@ -112,22 +112,14 @@ Object * ServerIntangibleObjectTemplate::createObject(void) const
 }	// ServerIntangibleObjectTemplate::createObject
 
 //@BEGIN TFD
-int ServerIntangibleObjectTemplate::getCount(bool testData) const
+int ServerIntangibleObjectTemplate::getCount() const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerIntangibleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerIntangibleObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getCount(true);
-#endif
 	}
 
 	if (!m_count.isLoaded())
@@ -167,31 +159,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerIntangibleObjectTemplate::getCount
 
-int ServerIntangibleObjectTemplate::getCountMin(bool testData) const
+int ServerIntangibleObjectTemplate::getCountMin() const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerIntangibleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerIntangibleObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getCountMin(true);
-#endif
 	}
 
 	if (!m_count.isLoaded())
@@ -231,31 +210,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerIntangibleObjectTemplate::getCountMin
 
-int ServerIntangibleObjectTemplate::getCountMax(bool testData) const
+int ServerIntangibleObjectTemplate::getCountMax() const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerIntangibleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerIntangibleObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getCountMax(true);
-#endif
 	}
 
 	if (!m_count.isLoaded())
@@ -295,26 +261,10 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerIntangibleObjectTemplate::getCountMax
 
-#ifdef _DEBUG
-/**
- * Special function used by datalint. Checks for duplicate values in base and derived templates.
- */
-void ServerIntangibleObjectTemplate::testValues(void) const
-{
-	IGNORE_RETURN(getCountMin(true));
-	IGNORE_RETURN(getCountMax(true));
-	ServerObjectTemplate::testValues();
-}	// ServerIntangibleObjectTemplate::testValues
-#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form
@@ -357,8 +307,8 @@ char paramName[MAX_NAME_SIZE];
 	}
 	if (getHighestTemplateVersion() != TAG(0,0,0,1))
 	{
-		if (DataLint::isEnabled())
-			DEBUG_WARNING(true, ("template %s version out of date", file.getFileName()));
+		
+			
 		m_versionOk = false;
 	}
 
@@ -440,22 +390,14 @@ Tag ServerIntangibleObjectTemplate::_Ingredient::getId(void) const
 	return _Ingredient_tag;
 }	// ServerIntangibleObjectTemplate::_Ingredient::getId
 
-ServerIntangibleObjectTemplate::IngredientType ServerIntangibleObjectTemplate::_Ingredient::getIngredientType(bool versionOk, bool testData) const
+ServerIntangibleObjectTemplate::IngredientType ServerIntangibleObjectTemplate::_Ingredient::getIngredientType(bool versionOk) const
 {
-#ifdef _DEBUG
-ServerIntangibleObjectTemplate::IngredientType testDataValue = static_cast<ServerIntangibleObjectTemplate::IngredientType>(0);
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerIntangibleObjectTemplate::_Ingredient * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerIntangibleObjectTemplate::_Ingredient *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getIngredientType(true);
-#endif
 	}
 
 	if (!m_ingredientType.isLoaded())
@@ -473,11 +415,6 @@ UNREF(testData);
 	}
 
 	IngredientType value = static_cast<IngredientType>(m_ingredientType.getValue());
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerIntangibleObjectTemplate::_Ingredient::getIngredientType
@@ -638,22 +575,14 @@ size_t ServerIntangibleObjectTemplate::_Ingredient::getIngredientsCount(void) co
 	return count;
 }	// ServerIntangibleObjectTemplate::_Ingredient::getIngredientsCount
 
-float ServerIntangibleObjectTemplate::_Ingredient::getComplexity(bool versionOk, bool testData) const
+float ServerIntangibleObjectTemplate::_Ingredient::getComplexity(bool versionOk) const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerIntangibleObjectTemplate::_Ingredient * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerIntangibleObjectTemplate::_Ingredient *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getComplexity(true);
-#endif
 	}
 
 	if (!m_complexity.isLoaded())
@@ -693,31 +622,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerIntangibleObjectTemplate::_Ingredient::getComplexity
 
-float ServerIntangibleObjectTemplate::_Ingredient::getComplexityMin(bool versionOk, bool testData) const
+float ServerIntangibleObjectTemplate::_Ingredient::getComplexityMin(bool versionOk) const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerIntangibleObjectTemplate::_Ingredient * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerIntangibleObjectTemplate::_Ingredient *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getComplexityMin(true);
-#endif
 	}
 
 	if (!m_complexity.isLoaded())
@@ -757,31 +673,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerIntangibleObjectTemplate::_Ingredient::getComplexityMin
 
-float ServerIntangibleObjectTemplate::_Ingredient::getComplexityMax(bool versionOk, bool testData) const
+float ServerIntangibleObjectTemplate::_Ingredient::getComplexityMax(bool versionOk) const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerIntangibleObjectTemplate::_Ingredient * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerIntangibleObjectTemplate::_Ingredient *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getComplexityMax(true);
-#endif
 	}
 
 	if (!m_complexity.isLoaded())
@@ -821,31 +724,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerIntangibleObjectTemplate::_Ingredient::getComplexityMax
 
-const std::string & ServerIntangibleObjectTemplate::_Ingredient::getSkillCommand(bool versionOk, bool testData) const
+const std::string & ServerIntangibleObjectTemplate::_Ingredient::getSkillCommand(bool versionOk) const
 {
-#ifdef _DEBUG
-std::string testDataValue = DefaultString;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerIntangibleObjectTemplate::_Ingredient * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerIntangibleObjectTemplate::_Ingredient *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getSkillCommand(true);
-#endif
 	}
 
 	if (!m_skillCommand.isLoaded())
@@ -863,27 +753,10 @@ UNREF(testData);
 	}
 
 	const std::string & value = m_skillCommand.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerIntangibleObjectTemplate::_Ingredient::getSkillCommand
 
-#ifdef _DEBUG
-/**
- * Special function used by datalint. Checks for duplicate values in base and derived templates.
- */
-void ServerIntangibleObjectTemplate::_Ingredient::testValues(void) const
-{
-	IGNORE_RETURN(getIngredientType(true));
-	IGNORE_RETURN(getComplexityMin(true));
-	IGNORE_RETURN(getComplexityMax(true));
-	IGNORE_RETURN(getSkillCommand(true));
-}	// ServerIntangibleObjectTemplate::_Ingredient::testValues
-#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form
@@ -984,22 +857,14 @@ Tag ServerIntangibleObjectTemplate::_SchematicAttribute::getId(void) const
 	return _SchematicAttribute_tag;
 }	// ServerIntangibleObjectTemplate::_SchematicAttribute::getId
 
-const StringId ServerIntangibleObjectTemplate::_SchematicAttribute::getName(bool versionOk, bool testData) const
+const StringId ServerIntangibleObjectTemplate::_SchematicAttribute::getName(bool versionOk) const
 {
-#ifdef _DEBUG
-StringId testDataValue = DefaultStringId;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerIntangibleObjectTemplate::_SchematicAttribute * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerIntangibleObjectTemplate::_SchematicAttribute *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getName(true);
-#endif
 	}
 
 	if (!m_name.isLoaded())
@@ -1017,31 +882,18 @@ UNREF(testData);
 	}
 
 	const StringId value = m_name.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerIntangibleObjectTemplate::_SchematicAttribute::getName
 
-int ServerIntangibleObjectTemplate::_SchematicAttribute::getValue(bool versionOk, bool testData) const
+int ServerIntangibleObjectTemplate::_SchematicAttribute::getValue(bool versionOk) const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerIntangibleObjectTemplate::_SchematicAttribute * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerIntangibleObjectTemplate::_SchematicAttribute *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getValue(true);
-#endif
 	}
 
 	if (!m_value.isLoaded())
@@ -1081,31 +933,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerIntangibleObjectTemplate::_SchematicAttribute::getValue
 
-int ServerIntangibleObjectTemplate::_SchematicAttribute::getValueMin(bool versionOk, bool testData) const
+int ServerIntangibleObjectTemplate::_SchematicAttribute::getValueMin(bool versionOk) const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerIntangibleObjectTemplate::_SchematicAttribute * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerIntangibleObjectTemplate::_SchematicAttribute *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getValueMin(true);
-#endif
 	}
 
 	if (!m_value.isLoaded())
@@ -1145,31 +984,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerIntangibleObjectTemplate::_SchematicAttribute::getValueMin
 
-int ServerIntangibleObjectTemplate::_SchematicAttribute::getValueMax(bool versionOk, bool testData) const
+int ServerIntangibleObjectTemplate::_SchematicAttribute::getValueMax(bool versionOk) const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerIntangibleObjectTemplate::_SchematicAttribute * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerIntangibleObjectTemplate::_SchematicAttribute *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getValueMax(true);
-#endif
 	}
 
 	if (!m_value.isLoaded())
@@ -1209,26 +1035,10 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerIntangibleObjectTemplate::_SchematicAttribute::getValueMax
 
-#ifdef _DEBUG
-/**
- * Special function used by datalint. Checks for duplicate values in base and derived templates.
- */
-void ServerIntangibleObjectTemplate::_SchematicAttribute::testValues(void) const
-{
-	IGNORE_RETURN(getName(true));
-	IGNORE_RETURN(getValueMin(true));
-	IGNORE_RETURN(getValueMax(true));
-}	// ServerIntangibleObjectTemplate::_SchematicAttribute::testValues
-#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form
@@ -1308,22 +1118,14 @@ Tag ServerIntangibleObjectTemplate::_SimpleIngredient::getId(void) const
 	return _SimpleIngredient_tag;
 }	// ServerIntangibleObjectTemplate::_SimpleIngredient::getId
 
-const StringId ServerIntangibleObjectTemplate::_SimpleIngredient::getName(bool versionOk, bool testData) const
+const StringId ServerIntangibleObjectTemplate::_SimpleIngredient::getName(bool versionOk) const
 {
-#ifdef _DEBUG
-StringId testDataValue = DefaultStringId;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerIntangibleObjectTemplate::_SimpleIngredient * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerIntangibleObjectTemplate::_SimpleIngredient *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getName(true);
-#endif
 	}
 
 	if (!m_name.isLoaded())
@@ -1341,31 +1143,18 @@ UNREF(testData);
 	}
 
 	const StringId value = m_name.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerIntangibleObjectTemplate::_SimpleIngredient::getName
 
-const std::string & ServerIntangibleObjectTemplate::_SimpleIngredient::getIngredient(bool versionOk, bool testData) const
+const std::string & ServerIntangibleObjectTemplate::_SimpleIngredient::getIngredient(bool versionOk) const
 {
-#ifdef _DEBUG
-std::string testDataValue = DefaultString;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerIntangibleObjectTemplate::_SimpleIngredient * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerIntangibleObjectTemplate::_SimpleIngredient *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getIngredient(true);
-#endif
 	}
 
 	if (!m_ingredient.isLoaded())
@@ -1383,31 +1172,18 @@ UNREF(testData);
 	}
 
 	const std::string & value = m_ingredient.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerIntangibleObjectTemplate::_SimpleIngredient::getIngredient
 
-int ServerIntangibleObjectTemplate::_SimpleIngredient::getCount(bool versionOk, bool testData) const
+int ServerIntangibleObjectTemplate::_SimpleIngredient::getCount(bool versionOk) const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerIntangibleObjectTemplate::_SimpleIngredient * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerIntangibleObjectTemplate::_SimpleIngredient *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getCount(true);
-#endif
 	}
 
 	if (!m_count.isLoaded())
@@ -1447,31 +1223,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerIntangibleObjectTemplate::_SimpleIngredient::getCount
 
-int ServerIntangibleObjectTemplate::_SimpleIngredient::getCountMin(bool versionOk, bool testData) const
+int ServerIntangibleObjectTemplate::_SimpleIngredient::getCountMin(bool versionOk) const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerIntangibleObjectTemplate::_SimpleIngredient * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerIntangibleObjectTemplate::_SimpleIngredient *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getCountMin(true);
-#endif
 	}
 
 	if (!m_count.isLoaded())
@@ -1511,31 +1274,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerIntangibleObjectTemplate::_SimpleIngredient::getCountMin
 
-int ServerIntangibleObjectTemplate::_SimpleIngredient::getCountMax(bool versionOk, bool testData) const
+int ServerIntangibleObjectTemplate::_SimpleIngredient::getCountMax(bool versionOk) const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerIntangibleObjectTemplate::_SimpleIngredient * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerIntangibleObjectTemplate::_SimpleIngredient *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getCountMax(true);
-#endif
 	}
 
 	if (!m_count.isLoaded())
@@ -1575,27 +1325,10 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerIntangibleObjectTemplate::_SimpleIngredient::getCountMax
 
-#ifdef _DEBUG
-/**
- * Special function used by datalint. Checks for duplicate values in base and derived templates.
- */
-void ServerIntangibleObjectTemplate::_SimpleIngredient::testValues(void) const
-{
-	IGNORE_RETURN(getName(true));
-	IGNORE_RETURN(getIngredient(true));
-	IGNORE_RETURN(getCountMin(true));
-	IGNORE_RETURN(getCountMax(true));
-}	// ServerIntangibleObjectTemplate::_SimpleIngredient::testValues
-#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form

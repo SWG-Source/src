@@ -363,22 +363,14 @@ const std::string & ServerObjectTemplate::getArmorRatingString (ArmorRating type
 //----------------------------------------------------------------------
 
 //@BEGIN TFD
-const std::string & ServerObjectTemplate::getSharedTemplate(bool testData) const
+const std::string & ServerObjectTemplate::getSharedTemplate() const
 {
-#ifdef _DEBUG
-std::string testDataValue = DefaultString;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getSharedTemplate(true);
-#endif
 	}
 
 	if (!m_sharedTemplate.isLoaded())
@@ -396,11 +388,6 @@ UNREF(testData);
 	}
 
 	const std::string & value = m_sharedTemplate.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerObjectTemplate::getSharedTemplate
@@ -492,22 +479,14 @@ void ServerObjectTemplate::getObjvars(DynamicVariableList &list) const
 	m_objvars.getDynamicVariableList(list);
 }	// ServerObjectTemplate::getObjvars
 
-int ServerObjectTemplate::getVolume(bool testData) const
+int ServerObjectTemplate::getVolume() const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getVolume(true);
-#endif
 	}
 
 	if (!m_volume.isLoaded())
@@ -547,31 +526,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerObjectTemplate::getVolume
 
-int ServerObjectTemplate::getVolumeMin(bool testData) const
+int ServerObjectTemplate::getVolumeMin() const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getVolumeMin(true);
-#endif
 	}
 
 	if (!m_volume.isLoaded())
@@ -611,31 +577,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerObjectTemplate::getVolumeMin
 
-int ServerObjectTemplate::getVolumeMax(bool testData) const
+int ServerObjectTemplate::getVolumeMax() const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getVolumeMax(true);
-#endif
 	}
 
 	if (!m_volume.isLoaded())
@@ -675,11 +628,6 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerObjectTemplate::getVolumeMax
@@ -858,22 +806,14 @@ size_t ServerObjectTemplate::getMoveFlagsCount(void) const
 	return count;
 }	// ServerObjectTemplate::getMoveFlagsCount
 
-bool ServerObjectTemplate::getInvulnerable(bool testData) const
+bool ServerObjectTemplate::getInvulnerable() const
 {
-#ifdef _DEBUG
-bool testDataValue = false;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getInvulnerable(true);
-#endif
 	}
 
 	if (!m_invulnerable.isLoaded())
@@ -891,31 +831,18 @@ UNREF(testData);
 	}
 
 	bool value = m_invulnerable.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerObjectTemplate::getInvulnerable
 
-float ServerObjectTemplate::getComplexity(bool testData) const
+float ServerObjectTemplate::getComplexity() const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getComplexity(true);
-#endif
 	}
 
 	if (!m_complexity.isLoaded())
@@ -955,31 +882,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerObjectTemplate::getComplexity
 
-float ServerObjectTemplate::getComplexityMin(bool testData) const
+float ServerObjectTemplate::getComplexityMin() const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getComplexityMin(true);
-#endif
 	}
 
 	if (!m_complexity.isLoaded())
@@ -1019,31 +933,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerObjectTemplate::getComplexityMin
 
-float ServerObjectTemplate::getComplexityMax(bool testData) const
+float ServerObjectTemplate::getComplexityMax() const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getComplexityMax(true);
-#endif
 	}
 
 	if (!m_complexity.isLoaded())
@@ -1083,31 +984,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerObjectTemplate::getComplexityMax
 
-int ServerObjectTemplate::getTintIndex(bool testData) const
+int ServerObjectTemplate::getTintIndex() const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getTintIndex(true);
-#endif
 	}
 
 	if (!m_tintIndex.isLoaded())
@@ -1147,31 +1035,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerObjectTemplate::getTintIndex
 
-int ServerObjectTemplate::getTintIndexMin(bool testData) const
+int ServerObjectTemplate::getTintIndexMin() const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getTintIndexMin(true);
-#endif
 	}
 
 	if (!m_tintIndex.isLoaded())
@@ -1211,31 +1086,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerObjectTemplate::getTintIndexMin
 
-int ServerObjectTemplate::getTintIndexMax(bool testData) const
+int ServerObjectTemplate::getTintIndexMax() const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getTintIndexMax(true);
-#endif
 	}
 
 	if (!m_tintIndex.isLoaded())
@@ -1275,11 +1137,6 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerObjectTemplate::getTintIndexMax
@@ -1743,22 +1600,14 @@ size_t ServerObjectTemplate::getXpPointsCount(void) const
 	return count;
 }	// ServerObjectTemplate::getXpPointsCount
 
-bool ServerObjectTemplate::getPersistByDefault(bool testData) const
+bool ServerObjectTemplate::getPersistByDefault() const
 {
-#ifdef _DEBUG
-bool testDataValue = false;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getPersistByDefault(true);
-#endif
 	}
 
 	if (!m_persistByDefault.isLoaded())
@@ -1776,31 +1625,18 @@ UNREF(testData);
 	}
 
 	bool value = m_persistByDefault.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerObjectTemplate::getPersistByDefault
 
-bool ServerObjectTemplate::getPersistContents(bool testData) const
+bool ServerObjectTemplate::getPersistContents() const
 {
-#ifdef _DEBUG
-bool testDataValue = false;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getPersistContents(true);
-#endif
 	}
 
 	if (!m_persistContents.isLoaded())
@@ -1818,33 +1654,10 @@ UNREF(testData);
 	}
 
 	bool value = m_persistContents.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerObjectTemplate::getPersistContents
 
-#ifdef _DEBUG
-/**
- * Special function used by datalint. Checks for duplicate values in base and derived templates.
- */
-void ServerObjectTemplate::testValues(void) const
-{
-	IGNORE_RETURN(getSharedTemplate(true));
-	IGNORE_RETURN(getVolumeMin(true));
-	IGNORE_RETURN(getVolumeMax(true));
-	IGNORE_RETURN(getInvulnerable(true));
-	IGNORE_RETURN(getComplexityMin(true));
-	IGNORE_RETURN(getComplexityMax(true));
-	IGNORE_RETURN(getTintIndexMin(true));
-	IGNORE_RETURN(getTintIndexMax(true));
-	IGNORE_RETURN(getPersistByDefault(true));
-	IGNORE_RETURN(getPersistContents(true));
-}	// ServerObjectTemplate::testValues
-#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form
@@ -1886,8 +1699,8 @@ char paramName[MAX_NAME_SIZE];
 	}
 	if (getHighestTemplateVersion() != TAG(0,0,1,1))
 	{
-		if (DataLint::isEnabled())
-			DEBUG_WARNING(true, ("template %s version out of date", file.getFileName()));
+		
+			
 		m_versionOk = false;
 	}
 
@@ -2098,22 +1911,14 @@ Tag ServerObjectTemplate::_AttribMod::getId(void) const
 	return _AttribMod_tag;
 }	// ServerObjectTemplate::_AttribMod::getId
 
-ServerObjectTemplate::Attributes ServerObjectTemplate::_AttribMod::getTarget(bool versionOk, bool testData) const
+ServerObjectTemplate::Attributes ServerObjectTemplate::_AttribMod::getTarget(bool versionOk) const
 {
-#ifdef _DEBUG
-ServerObjectTemplate::Attributes testDataValue = static_cast<ServerObjectTemplate::Attributes>(0);
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerObjectTemplate::_AttribMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerObjectTemplate::_AttribMod *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getTarget(true);
-#endif
 	}
 
 	if (!m_target.isLoaded())
@@ -2131,31 +1936,18 @@ UNREF(testData);
 	}
 
 	Attributes value = static_cast<Attributes>(m_target.getValue());
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerObjectTemplate::_AttribMod::getTarget
 
-int ServerObjectTemplate::_AttribMod::getValue(bool versionOk, bool testData) const
+int ServerObjectTemplate::_AttribMod::getValue(bool versionOk) const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerObjectTemplate::_AttribMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerObjectTemplate::_AttribMod *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getValue(true);
-#endif
 	}
 
 	if (!m_value.isLoaded())
@@ -2195,31 +1987,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerObjectTemplate::_AttribMod::getValue
 
-int ServerObjectTemplate::_AttribMod::getValueMin(bool versionOk, bool testData) const
+int ServerObjectTemplate::_AttribMod::getValueMin(bool versionOk) const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerObjectTemplate::_AttribMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerObjectTemplate::_AttribMod *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getValueMin(true);
-#endif
 	}
 
 	if (!m_value.isLoaded())
@@ -2259,31 +2038,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerObjectTemplate::_AttribMod::getValueMin
 
-int ServerObjectTemplate::_AttribMod::getValueMax(bool versionOk, bool testData) const
+int ServerObjectTemplate::_AttribMod::getValueMax(bool versionOk) const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerObjectTemplate::_AttribMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerObjectTemplate::_AttribMod *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getValueMax(true);
-#endif
 	}
 
 	if (!m_value.isLoaded())
@@ -2323,31 +2089,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerObjectTemplate::_AttribMod::getValueMax
 
-float ServerObjectTemplate::_AttribMod::getTime(bool versionOk, bool testData) const
+float ServerObjectTemplate::_AttribMod::getTime(bool versionOk) const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerObjectTemplate::_AttribMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerObjectTemplate::_AttribMod *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getTime(true);
-#endif
 	}
 
 	if (!m_time.isLoaded())
@@ -2387,31 +2140,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerObjectTemplate::_AttribMod::getTime
 
-float ServerObjectTemplate::_AttribMod::getTimeMin(bool versionOk, bool testData) const
+float ServerObjectTemplate::_AttribMod::getTimeMin(bool versionOk) const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerObjectTemplate::_AttribMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerObjectTemplate::_AttribMod *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getTimeMin(true);
-#endif
 	}
 
 	if (!m_time.isLoaded())
@@ -2451,31 +2191,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerObjectTemplate::_AttribMod::getTimeMin
 
-float ServerObjectTemplate::_AttribMod::getTimeMax(bool versionOk, bool testData) const
+float ServerObjectTemplate::_AttribMod::getTimeMax(bool versionOk) const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerObjectTemplate::_AttribMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerObjectTemplate::_AttribMod *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getTimeMax(true);
-#endif
 	}
 
 	if (!m_time.isLoaded())
@@ -2515,31 +2242,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerObjectTemplate::_AttribMod::getTimeMax
 
-float ServerObjectTemplate::_AttribMod::getTimeAtValue(bool versionOk, bool testData) const
+float ServerObjectTemplate::_AttribMod::getTimeAtValue(bool versionOk) const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerObjectTemplate::_AttribMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerObjectTemplate::_AttribMod *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getTimeAtValue(true);
-#endif
 	}
 
 	if (!m_timeAtValue.isLoaded())
@@ -2579,31 +2293,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerObjectTemplate::_AttribMod::getTimeAtValue
 
-float ServerObjectTemplate::_AttribMod::getTimeAtValueMin(bool versionOk, bool testData) const
+float ServerObjectTemplate::_AttribMod::getTimeAtValueMin(bool versionOk) const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerObjectTemplate::_AttribMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerObjectTemplate::_AttribMod *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getTimeAtValueMin(true);
-#endif
 	}
 
 	if (!m_timeAtValue.isLoaded())
@@ -2643,31 +2344,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerObjectTemplate::_AttribMod::getTimeAtValueMin
 
-float ServerObjectTemplate::_AttribMod::getTimeAtValueMax(bool versionOk, bool testData) const
+float ServerObjectTemplate::_AttribMod::getTimeAtValueMax(bool versionOk) const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerObjectTemplate::_AttribMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerObjectTemplate::_AttribMod *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getTimeAtValueMax(true);
-#endif
 	}
 
 	if (!m_timeAtValue.isLoaded())
@@ -2707,31 +2395,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerObjectTemplate::_AttribMod::getTimeAtValueMax
 
-float ServerObjectTemplate::_AttribMod::getDecay(bool versionOk, bool testData) const
+float ServerObjectTemplate::_AttribMod::getDecay(bool versionOk) const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerObjectTemplate::_AttribMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerObjectTemplate::_AttribMod *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getDecay(true);
-#endif
 	}
 
 	if (!m_decay.isLoaded())
@@ -2771,31 +2446,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerObjectTemplate::_AttribMod::getDecay
 
-float ServerObjectTemplate::_AttribMod::getDecayMin(bool versionOk, bool testData) const
+float ServerObjectTemplate::_AttribMod::getDecayMin(bool versionOk) const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerObjectTemplate::_AttribMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerObjectTemplate::_AttribMod *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getDecayMin(true);
-#endif
 	}
 
 	if (!m_decay.isLoaded())
@@ -2835,31 +2497,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerObjectTemplate::_AttribMod::getDecayMin
 
-float ServerObjectTemplate::_AttribMod::getDecayMax(bool versionOk, bool testData) const
+float ServerObjectTemplate::_AttribMod::getDecayMax(bool versionOk) const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerObjectTemplate::_AttribMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerObjectTemplate::_AttribMod *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getDecayMax(true);
-#endif
 	}
 
 	if (!m_decay.isLoaded())
@@ -2899,32 +2548,10 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerObjectTemplate::_AttribMod::getDecayMax
 
-#ifdef _DEBUG
-/**
- * Special function used by datalint. Checks for duplicate values in base and derived templates.
- */
-void ServerObjectTemplate::_AttribMod::testValues(void) const
-{
-	IGNORE_RETURN(getTarget(true));
-	IGNORE_RETURN(getValueMin(true));
-	IGNORE_RETURN(getValueMax(true));
-	IGNORE_RETURN(getTimeMin(true));
-	IGNORE_RETURN(getTimeMax(true));
-	IGNORE_RETURN(getTimeAtValueMin(true));
-	IGNORE_RETURN(getTimeAtValueMax(true));
-	IGNORE_RETURN(getDecayMin(true));
-	IGNORE_RETURN(getDecayMax(true));
-}	// ServerObjectTemplate::_AttribMod::testValues
-#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form
@@ -3057,22 +2684,14 @@ Tag ServerObjectTemplate::_Contents::getId(void) const
 	return _Contents_tag;
 }	// ServerObjectTemplate::_Contents::getId
 
-const std::string & ServerObjectTemplate::_Contents::getSlotName(bool versionOk, bool testData) const
+const std::string & ServerObjectTemplate::_Contents::getSlotName(bool versionOk) const
 {
-#ifdef _DEBUG
-std::string testDataValue = DefaultString;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerObjectTemplate::_Contents * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerObjectTemplate::_Contents *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getSlotName(true);
-#endif
 	}
 
 	if (!m_slotName.isLoaded())
@@ -3090,31 +2709,18 @@ UNREF(testData);
 	}
 
 	const std::string & value = m_slotName.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerObjectTemplate::_Contents::getSlotName
 
-bool ServerObjectTemplate::_Contents::getEquipObject(bool versionOk, bool testData) const
+bool ServerObjectTemplate::_Contents::getEquipObject(bool versionOk) const
 {
-#ifdef _DEBUG
-bool testDataValue = false;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerObjectTemplate::_Contents * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerObjectTemplate::_Contents *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getEquipObject(true);
-#endif
 	}
 
 	if (!m_equipObject.isLoaded())
@@ -3132,11 +2738,6 @@ UNREF(testData);
 	}
 
 	bool value = m_equipObject.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerObjectTemplate::_Contents::getEquipObject
@@ -3174,16 +2775,6 @@ const ServerObjectTemplate * ServerObjectTemplate::_Contents::getContent(bool ve
 	return returnValue;
 }	// ServerObjectTemplate::_Contents::getContent
 
-#ifdef _DEBUG
-/**
- * Special function used by datalint. Checks for duplicate values in base and derived templates.
- */
-void ServerObjectTemplate::_Contents::testValues(void) const
-{
-	IGNORE_RETURN(getSlotName(true));
-	IGNORE_RETURN(getEquipObject(true));
-}	// ServerObjectTemplate::_Contents::testValues
-#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form
@@ -3265,22 +2856,14 @@ Tag ServerObjectTemplate::_MentalStateMod::getId(void) const
 	return _MentalStateMod_tag;
 }	// ServerObjectTemplate::_MentalStateMod::getId
 
-ServerObjectTemplate::MentalStates ServerObjectTemplate::_MentalStateMod::getTarget(bool versionOk, bool testData) const
+ServerObjectTemplate::MentalStates ServerObjectTemplate::_MentalStateMod::getTarget(bool versionOk) const
 {
-#ifdef _DEBUG
-ServerObjectTemplate::MentalStates testDataValue = static_cast<ServerObjectTemplate::MentalStates>(0);
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerObjectTemplate::_MentalStateMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerObjectTemplate::_MentalStateMod *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getTarget(true);
-#endif
 	}
 
 	if (!m_target.isLoaded())
@@ -3298,31 +2881,18 @@ UNREF(testData);
 	}
 
 	MentalStates value = static_cast<MentalStates>(m_target.getValue());
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerObjectTemplate::_MentalStateMod::getTarget
 
-float ServerObjectTemplate::_MentalStateMod::getValue(bool versionOk, bool testData) const
+float ServerObjectTemplate::_MentalStateMod::getValue(bool versionOk) const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerObjectTemplate::_MentalStateMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerObjectTemplate::_MentalStateMod *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getValue(true);
-#endif
 	}
 
 	if (!m_value.isLoaded())
@@ -3362,31 +2932,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerObjectTemplate::_MentalStateMod::getValue
 
-float ServerObjectTemplate::_MentalStateMod::getValueMin(bool versionOk, bool testData) const
+float ServerObjectTemplate::_MentalStateMod::getValueMin(bool versionOk) const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerObjectTemplate::_MentalStateMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerObjectTemplate::_MentalStateMod *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getValueMin(true);
-#endif
 	}
 
 	if (!m_value.isLoaded())
@@ -3426,31 +2983,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerObjectTemplate::_MentalStateMod::getValueMin
 
-float ServerObjectTemplate::_MentalStateMod::getValueMax(bool versionOk, bool testData) const
+float ServerObjectTemplate::_MentalStateMod::getValueMax(bool versionOk) const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerObjectTemplate::_MentalStateMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerObjectTemplate::_MentalStateMod *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getValueMax(true);
-#endif
 	}
 
 	if (!m_value.isLoaded())
@@ -3490,31 +3034,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerObjectTemplate::_MentalStateMod::getValueMax
 
-float ServerObjectTemplate::_MentalStateMod::getTime(bool versionOk, bool testData) const
+float ServerObjectTemplate::_MentalStateMod::getTime(bool versionOk) const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerObjectTemplate::_MentalStateMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerObjectTemplate::_MentalStateMod *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getTime(true);
-#endif
 	}
 
 	if (!m_time.isLoaded())
@@ -3554,31 +3085,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerObjectTemplate::_MentalStateMod::getTime
 
-float ServerObjectTemplate::_MentalStateMod::getTimeMin(bool versionOk, bool testData) const
+float ServerObjectTemplate::_MentalStateMod::getTimeMin(bool versionOk) const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerObjectTemplate::_MentalStateMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerObjectTemplate::_MentalStateMod *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getTimeMin(true);
-#endif
 	}
 
 	if (!m_time.isLoaded())
@@ -3618,31 +3136,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerObjectTemplate::_MentalStateMod::getTimeMin
 
-float ServerObjectTemplate::_MentalStateMod::getTimeMax(bool versionOk, bool testData) const
+float ServerObjectTemplate::_MentalStateMod::getTimeMax(bool versionOk) const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerObjectTemplate::_MentalStateMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerObjectTemplate::_MentalStateMod *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getTimeMax(true);
-#endif
 	}
 
 	if (!m_time.isLoaded())
@@ -3682,31 +3187,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerObjectTemplate::_MentalStateMod::getTimeMax
 
-float ServerObjectTemplate::_MentalStateMod::getTimeAtValue(bool versionOk, bool testData) const
+float ServerObjectTemplate::_MentalStateMod::getTimeAtValue(bool versionOk) const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerObjectTemplate::_MentalStateMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerObjectTemplate::_MentalStateMod *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getTimeAtValue(true);
-#endif
 	}
 
 	if (!m_timeAtValue.isLoaded())
@@ -3746,31 +3238,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerObjectTemplate::_MentalStateMod::getTimeAtValue
 
-float ServerObjectTemplate::_MentalStateMod::getTimeAtValueMin(bool versionOk, bool testData) const
+float ServerObjectTemplate::_MentalStateMod::getTimeAtValueMin(bool versionOk) const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerObjectTemplate::_MentalStateMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerObjectTemplate::_MentalStateMod *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getTimeAtValueMin(true);
-#endif
 	}
 
 	if (!m_timeAtValue.isLoaded())
@@ -3810,31 +3289,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerObjectTemplate::_MentalStateMod::getTimeAtValueMin
 
-float ServerObjectTemplate::_MentalStateMod::getTimeAtValueMax(bool versionOk, bool testData) const
+float ServerObjectTemplate::_MentalStateMod::getTimeAtValueMax(bool versionOk) const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerObjectTemplate::_MentalStateMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerObjectTemplate::_MentalStateMod *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getTimeAtValueMax(true);
-#endif
 	}
 
 	if (!m_timeAtValue.isLoaded())
@@ -3874,31 +3340,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerObjectTemplate::_MentalStateMod::getTimeAtValueMax
 
-float ServerObjectTemplate::_MentalStateMod::getDecay(bool versionOk, bool testData) const
+float ServerObjectTemplate::_MentalStateMod::getDecay(bool versionOk) const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerObjectTemplate::_MentalStateMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerObjectTemplate::_MentalStateMod *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getDecay(true);
-#endif
 	}
 
 	if (!m_decay.isLoaded())
@@ -3938,31 +3391,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerObjectTemplate::_MentalStateMod::getDecay
 
-float ServerObjectTemplate::_MentalStateMod::getDecayMin(bool versionOk, bool testData) const
+float ServerObjectTemplate::_MentalStateMod::getDecayMin(bool versionOk) const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerObjectTemplate::_MentalStateMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerObjectTemplate::_MentalStateMod *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getDecayMin(true);
-#endif
 	}
 
 	if (!m_decay.isLoaded())
@@ -4002,31 +3442,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerObjectTemplate::_MentalStateMod::getDecayMin
 
-float ServerObjectTemplate::_MentalStateMod::getDecayMax(bool versionOk, bool testData) const
+float ServerObjectTemplate::_MentalStateMod::getDecayMax(bool versionOk) const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerObjectTemplate::_MentalStateMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerObjectTemplate::_MentalStateMod *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getDecayMax(true);
-#endif
 	}
 
 	if (!m_decay.isLoaded())
@@ -4066,32 +3493,10 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerObjectTemplate::_MentalStateMod::getDecayMax
 
-#ifdef _DEBUG
-/**
- * Special function used by datalint. Checks for duplicate values in base and derived templates.
- */
-void ServerObjectTemplate::_MentalStateMod::testValues(void) const
-{
-	IGNORE_RETURN(getTarget(true));
-	IGNORE_RETURN(getValueMin(true));
-	IGNORE_RETURN(getValueMax(true));
-	IGNORE_RETURN(getTimeMin(true));
-	IGNORE_RETURN(getTimeMax(true));
-	IGNORE_RETURN(getTimeAtValueMin(true));
-	IGNORE_RETURN(getTimeAtValueMax(true));
-	IGNORE_RETURN(getDecayMin(true));
-	IGNORE_RETURN(getDecayMax(true));
-}	// ServerObjectTemplate::_MentalStateMod::testValues
-#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form
@@ -4177,22 +3582,14 @@ Tag ServerObjectTemplate::_Xp::getId(void) const
 	return _Xp_tag;
 }	// ServerObjectTemplate::_Xp::getId
 
-ServerObjectTemplate::XpTypes ServerObjectTemplate::_Xp::getType(bool versionOk, bool testData) const
+ServerObjectTemplate::XpTypes ServerObjectTemplate::_Xp::getType(bool versionOk) const
 {
-#ifdef _DEBUG
-ServerObjectTemplate::XpTypes testDataValue = static_cast<ServerObjectTemplate::XpTypes>(0);
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerObjectTemplate::_Xp * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerObjectTemplate::_Xp *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getType(true);
-#endif
 	}
 
 	if (!m_type.isLoaded())
@@ -4210,31 +3607,18 @@ UNREF(testData);
 	}
 
 	XpTypes value = static_cast<XpTypes>(m_type.getValue());
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerObjectTemplate::_Xp::getType
 
-int ServerObjectTemplate::_Xp::getLevel(bool versionOk, bool testData) const
+int ServerObjectTemplate::_Xp::getLevel(bool versionOk) const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerObjectTemplate::_Xp * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerObjectTemplate::_Xp *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getLevel(true);
-#endif
 	}
 
 	if (!m_level.isLoaded())
@@ -4274,31 +3658,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerObjectTemplate::_Xp::getLevel
 
-int ServerObjectTemplate::_Xp::getLevelMin(bool versionOk, bool testData) const
+int ServerObjectTemplate::_Xp::getLevelMin(bool versionOk) const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerObjectTemplate::_Xp * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerObjectTemplate::_Xp *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getLevelMin(true);
-#endif
 	}
 
 	if (!m_level.isLoaded())
@@ -4338,31 +3709,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerObjectTemplate::_Xp::getLevelMin
 
-int ServerObjectTemplate::_Xp::getLevelMax(bool versionOk, bool testData) const
+int ServerObjectTemplate::_Xp::getLevelMax(bool versionOk) const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerObjectTemplate::_Xp * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerObjectTemplate::_Xp *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getLevelMax(true);
-#endif
 	}
 
 	if (!m_level.isLoaded())
@@ -4402,31 +3760,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerObjectTemplate::_Xp::getLevelMax
 
-int ServerObjectTemplate::_Xp::getValue(bool versionOk, bool testData) const
+int ServerObjectTemplate::_Xp::getValue(bool versionOk) const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerObjectTemplate::_Xp * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerObjectTemplate::_Xp *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getValue(true);
-#endif
 	}
 
 	if (!m_value.isLoaded())
@@ -4466,31 +3811,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerObjectTemplate::_Xp::getValue
 
-int ServerObjectTemplate::_Xp::getValueMin(bool versionOk, bool testData) const
+int ServerObjectTemplate::_Xp::getValueMin(bool versionOk) const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerObjectTemplate::_Xp * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerObjectTemplate::_Xp *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getValueMin(true);
-#endif
 	}
 
 	if (!m_value.isLoaded())
@@ -4530,31 +3862,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerObjectTemplate::_Xp::getValueMin
 
-int ServerObjectTemplate::_Xp::getValueMax(bool versionOk, bool testData) const
+int ServerObjectTemplate::_Xp::getValueMax(bool versionOk) const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerObjectTemplate::_Xp * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerObjectTemplate::_Xp *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getValueMax(true);
-#endif
 	}
 
 	if (!m_value.isLoaded())
@@ -4594,28 +3913,10 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerObjectTemplate::_Xp::getValueMax
 
-#ifdef _DEBUG
-/**
- * Special function used by datalint. Checks for duplicate values in base and derived templates.
- */
-void ServerObjectTemplate::_Xp::testValues(void) const
-{
-	IGNORE_RETURN(getType(true));
-	IGNORE_RETURN(getLevelMin(true));
-	IGNORE_RETURN(getLevelMax(true));
-	IGNORE_RETURN(getValueMin(true));
-	IGNORE_RETURN(getValueMax(true));
-}	// ServerObjectTemplate::_Xp::testValues
-#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form

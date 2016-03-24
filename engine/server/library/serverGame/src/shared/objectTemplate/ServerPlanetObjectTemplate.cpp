@@ -112,22 +112,14 @@ Object * ServerPlanetObjectTemplate::createObject(void) const
 }	// ServerPlanetObjectTemplate::createObject
 
 //@BEGIN TFD
-const std::string & ServerPlanetObjectTemplate::getPlanetName(bool testData) const
+const std::string & ServerPlanetObjectTemplate::getPlanetName() const
 {
-#ifdef _DEBUG
-std::string testDataValue = DefaultString;
-#else
-UNREF(testData);
-#endif
+
 
 	const ServerPlanetObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerPlanetObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getPlanetName(true);
-#endif
 	}
 
 	if (!m_planetName.isLoaded())
@@ -145,25 +137,10 @@ UNREF(testData);
 	}
 
 	const std::string & value = m_planetName.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// ServerPlanetObjectTemplate::getPlanetName
 
-#ifdef _DEBUG
-/**
- * Special function used by datalint. Checks for duplicate values in base and derived templates.
- */
-void ServerPlanetObjectTemplate::testValues(void) const
-{
-	IGNORE_RETURN(getPlanetName(true));
-	ServerUniverseObjectTemplate::testValues();
-}	// ServerPlanetObjectTemplate::testValues
-#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form
@@ -206,8 +183,8 @@ char paramName[MAX_NAME_SIZE];
 	}
 	if (getHighestTemplateVersion() != TAG(0,0,0,0))
 	{
-		if (DataLint::isEnabled())
-			DEBUG_WARNING(true, ("template %s version out of date", file.getFileName()));
+		
+			
 		m_versionOk = false;
 	}
 

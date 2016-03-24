@@ -86,27 +86,22 @@ public:
 public:
 	const TriggerVolumeData getTriggerVolumes(int index) const;
 	size_t            getTriggerVolumesCount(void) const;
-	CombatSkeleton     getCombatSkeleton(bool testData = false) const;
-	int                    getMaxHitPoints(bool testData = false) const;
-	int                    getMaxHitPointsMin(bool testData = false) const;
-	int                    getMaxHitPointsMax(bool testData = false) const;
+	CombatSkeleton     getCombatSkeleton() const;
+	int                    getMaxHitPoints() const;
+	int                    getMaxHitPointsMin() const;
+	int                    getMaxHitPointsMax() const;
 	const ServerArmorTemplate * getArmor() const;
-	int                    getInterestRadius(bool testData = false) const;
-	int                    getInterestRadiusMin(bool testData = false) const;
-	int                    getInterestRadiusMax(bool testData = false) const;
-	int                    getCount(bool testData = false) const;
-	int                    getCountMin(bool testData = false) const;
-	int                    getCountMax(bool testData = false) const;
-	int                    getCondition(bool testData = false) const;
-	int                    getConditionMin(bool testData = false) const;
-	int                    getConditionMax(bool testData = false) const;
-	bool                   getWantSawAttackTriggers(bool testData = false) const;
+	int                    getInterestRadius() const;
+	int                    getInterestRadiusMin() const;
+	int                    getInterestRadiusMax() const;
+	int                    getCount() const;
+	int                    getCountMin() const;
+	int                    getCountMax() const;
+	int                    getCondition() const;
+	int                    getConditionMin() const;
+	int                    getConditionMax() const;
+	bool                   getWantSawAttackTriggers() const;
 
-#ifdef _DEBUG
-public:
-	// special code used by datalint
-	virtual void testValues(void) const;
-#endif
 
 protected:
 	virtual void load(Iff &file);

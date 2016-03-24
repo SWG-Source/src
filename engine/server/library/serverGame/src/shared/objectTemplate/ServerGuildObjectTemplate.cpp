@@ -114,15 +114,6 @@ Object * ServerGuildObjectTemplate::createObject(void) const
 }	// ServerGuildObjectTemplate::createObject
 
 //@BEGIN TFD
-#ifdef _DEBUG
-/**
- * Special function used by datalint. Checks for duplicate values in base and derived templates.
- */
-void ServerGuildObjectTemplate::testValues(void) const
-{
-	ServerUniverseObjectTemplate::testValues();
-}	// ServerGuildObjectTemplate::testValues
-#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form
@@ -165,8 +156,8 @@ char paramName[MAX_NAME_SIZE];
 	}
 	if (getHighestTemplateVersion() != TAG(0,0,0,0))
 	{
-		if (DataLint::isEnabled())
-			DEBUG_WARNING(true, ("template %s version out of date", file.getFileName()));
+		
+			
 		m_versionOk = false;
 	}
 

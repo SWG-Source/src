@@ -44,22 +44,17 @@ public:
 
 //@BEGIN TFD
 public:
-	int                    getMaxExtractionRate(bool testData = false) const;
-	int                    getMaxExtractionRateMin(bool testData = false) const;
-	int                    getMaxExtractionRateMax(bool testData = false) const;
-	int                    getCurrentExtractionRate(bool testData = false) const;
-	int                    getCurrentExtractionRateMin(bool testData = false) const;
-	int                    getCurrentExtractionRateMax(bool testData = false) const;
-	int                    getMaxHopperSize(bool testData = false) const;
-	int                    getMaxHopperSizeMin(bool testData = false) const;
-	int                    getMaxHopperSizeMax(bool testData = false) const;
-	const std::string &    getMasterClassName(bool testData = false) const;
+	int                    getMaxExtractionRate() const;
+	int                    getMaxExtractionRateMin() const;
+	int                    getMaxExtractionRateMax() const;
+	int                    getCurrentExtractionRate() const;
+	int                    getCurrentExtractionRateMin() const;
+	int                    getCurrentExtractionRateMax() const;
+	int                    getMaxHopperSize() const;
+	int                    getMaxHopperSizeMin() const;
+	int                    getMaxHopperSizeMax() const;
+	const std::string &    getMasterClassName() const;
 
-#ifdef _DEBUG
-public:
-	// special code used by datalint
-	virtual void testValues(void) const;
-#endif
 
 protected:
 	virtual void load(Iff &file);

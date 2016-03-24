@@ -44,15 +44,10 @@ public:
 
 //@BEGIN TFD
 public:
-	int                    getMaxResources(bool testData = false) const;
-	int                    getMaxResourcesMin(bool testData = false) const;
-	int                    getMaxResourcesMax(bool testData = false) const;
+	int                    getMaxResources() const;
+	int                    getMaxResourcesMin() const;
+	int                    getMaxResourcesMax() const;
 
-#ifdef _DEBUG
-public:
-	// special code used by datalint
-	virtual void testValues(void) const;
-#endif
 
 protected:
 	virtual void load(Iff &file);
