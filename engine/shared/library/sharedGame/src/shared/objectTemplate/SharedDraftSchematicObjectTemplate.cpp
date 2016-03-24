@@ -615,7 +615,7 @@ Tag SharedDraftSchematicObjectTemplate::_IngredientSlot::getId(void) const
 	return _IngredientSlot_tag;
 }	// SharedDraftSchematicObjectTemplate::_IngredientSlot::getId
 
-const StringId SharedDraftSchematicObjectTemplate::_IngredientSlot::getName(bool versionOk, ) const
+const StringId SharedDraftSchematicObjectTemplate::_IngredientSlot::getName(bool versionOk) const
 {
 
 
@@ -644,7 +644,7 @@ const StringId SharedDraftSchematicObjectTemplate::_IngredientSlot::getName(bool
 	return value;
 }	// SharedDraftSchematicObjectTemplate::_IngredientSlot::getName
 
-const std::string & SharedDraftSchematicObjectTemplate::_IngredientSlot::getHardpoint(bool versionOk, ) const
+const std::string & SharedDraftSchematicObjectTemplate::_IngredientSlot::getHardpoint(bool versionOk) const
 {
 
 
@@ -752,7 +752,7 @@ Tag SharedDraftSchematicObjectTemplate::_SchematicAttribute::getId(void) const
 	return _SchematicAttribute_tag;
 }	// SharedDraftSchematicObjectTemplate::_SchematicAttribute::getId
 
-const StringId SharedDraftSchematicObjectTemplate::_SchematicAttribute::getName(bool versionOk, ) const
+const StringId SharedDraftSchematicObjectTemplate::_SchematicAttribute::getName(bool versionOk) const
 {
 
 
@@ -781,7 +781,7 @@ const StringId SharedDraftSchematicObjectTemplate::_SchematicAttribute::getName(
 	return value;
 }	// SharedDraftSchematicObjectTemplate::_SchematicAttribute::getName
 
-const StringId SharedDraftSchematicObjectTemplate::_SchematicAttribute::getExperiment(bool versionOk, ) const
+const StringId SharedDraftSchematicObjectTemplate::_SchematicAttribute::getExperiment(bool versionOk) const
 {
 
 
@@ -810,7 +810,7 @@ const StringId SharedDraftSchematicObjectTemplate::_SchematicAttribute::getExper
 	return value;
 }	// SharedDraftSchematicObjectTemplate::_SchematicAttribute::getExperiment
 
-int SharedDraftSchematicObjectTemplate::_SchematicAttribute::getValue(bool versionOk, ) const
+int SharedDraftSchematicObjectTemplate::_SchematicAttribute::getValue(bool versionOk) const
 {
 
 
@@ -861,7 +861,7 @@ int SharedDraftSchematicObjectTemplate::_SchematicAttribute::getValue(bool versi
 	return value;
 }	// SharedDraftSchematicObjectTemplate::_SchematicAttribute::getValue
 
-int SharedDraftSchematicObjectTemplate::_SchematicAttribute::getValueMin(bool versionOk, ) const
+int SharedDraftSchematicObjectTemplate::_SchematicAttribute::getValueMin(bool versionOk) const
 {
 
 
@@ -912,7 +912,7 @@ int SharedDraftSchematicObjectTemplate::_SchematicAttribute::getValueMin(bool ve
 	return value;
 }	// SharedDraftSchematicObjectTemplate::_SchematicAttribute::getValueMin
 
-int SharedDraftSchematicObjectTemplate::_SchematicAttribute::getValueMax(bool versionOk, ) const
+int SharedDraftSchematicObjectTemplate::_SchematicAttribute::getValueMax(bool versionOk) const
 {
 
 

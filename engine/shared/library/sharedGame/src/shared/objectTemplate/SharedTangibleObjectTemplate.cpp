@@ -1431,7 +1431,7 @@ Tag SharedTangibleObjectTemplate::_ConstStringCustomizationVariable::getId(void)
 	return _ConstStringCustomizationVariable_tag;
 }	// SharedTangibleObjectTemplate::_ConstStringCustomizationVariable::getId
 
-const std::string & SharedTangibleObjectTemplate::_ConstStringCustomizationVariable::getVariableName(bool versionOk, ) const
+const std::string & SharedTangibleObjectTemplate::_ConstStringCustomizationVariable::getVariableName(bool versionOk) const
 {
 
 
@@ -1460,7 +1460,7 @@ const std::string & SharedTangibleObjectTemplate::_ConstStringCustomizationVaria
 	return value;
 }	// SharedTangibleObjectTemplate::_ConstStringCustomizationVariable::getVariableName
 
-const std::string & SharedTangibleObjectTemplate::_ConstStringCustomizationVariable::getConstValue(bool versionOk, ) const
+const std::string & SharedTangibleObjectTemplate::_ConstStringCustomizationVariable::getConstValue(bool versionOk) const
 {
 
 
@@ -1568,7 +1568,7 @@ Tag SharedTangibleObjectTemplate::_CustomizationVariableMapping::getId(void) con
 	return _CustomizationVariableMapping_tag;
 }	// SharedTangibleObjectTemplate::_CustomizationVariableMapping::getId
 
-const std::string & SharedTangibleObjectTemplate::_CustomizationVariableMapping::getSourceVariable(bool versionOk, ) const
+const std::string & SharedTangibleObjectTemplate::_CustomizationVariableMapping::getSourceVariable(bool versionOk) const
 {
 
 
@@ -1597,7 +1597,7 @@ const std::string & SharedTangibleObjectTemplate::_CustomizationVariableMapping:
 	return value;
 }	// SharedTangibleObjectTemplate::_CustomizationVariableMapping::getSourceVariable
 
-const std::string & SharedTangibleObjectTemplate::_CustomizationVariableMapping::getDependentVariable(bool versionOk, ) const
+const std::string & SharedTangibleObjectTemplate::_CustomizationVariableMapping::getDependentVariable(bool versionOk) const
 {
 
 
@@ -1705,7 +1705,7 @@ Tag SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getId(void
 	return _PaletteColorCustomizationVariable_tag;
 }	// SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getId
 
-const std::string & SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getVariableName(bool versionOk, ) const
+const std::string & SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getVariableName(bool versionOk) const
 {
 
 
@@ -1734,7 +1734,7 @@ const std::string & SharedTangibleObjectTemplate::_PaletteColorCustomizationVari
 	return value;
 }	// SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getVariableName
 
-const std::string & SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getPalettePathName(bool versionOk, ) const
+const std::string & SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getPalettePathName(bool versionOk) const
 {
 
 
@@ -1763,7 +1763,7 @@ const std::string & SharedTangibleObjectTemplate::_PaletteColorCustomizationVari
 	return value;
 }	// SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getPalettePathName
 
-int SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getDefaultPaletteIndex(bool versionOk, ) const
+int SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getDefaultPaletteIndex(bool versionOk) const
 {
 
 
@@ -1814,7 +1814,7 @@ int SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getDefault
 	return value;
 }	// SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getDefaultPaletteIndex
 
-int SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getDefaultPaletteIndexMin(bool versionOk, ) const
+int SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getDefaultPaletteIndexMin(bool versionOk) const
 {
 
 
@@ -1865,7 +1865,7 @@ int SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getDefault
 	return value;
 }	// SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getDefaultPaletteIndexMin
 
-int SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getDefaultPaletteIndexMax(bool versionOk, ) const
+int SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getDefaultPaletteIndexMax(bool versionOk) const
 {
 
 
@@ -1997,7 +1997,7 @@ Tag SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getId(void) c
 	return _RangedIntCustomizationVariable_tag;
 }	// SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getId
 
-const std::string & SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getVariableName(bool versionOk, ) const
+const std::string & SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getVariableName(bool versionOk) const
 {
 
 
@@ -2026,7 +2026,7 @@ const std::string & SharedTangibleObjectTemplate::_RangedIntCustomizationVariabl
 	return value;
 }	// SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getVariableName
 
-int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMinValueInclusive(bool versionOk, ) const
+int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMinValueInclusive(bool versionOk) const
 {
 
 
@@ -2077,7 +2077,7 @@ int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMinValueIn
 	return value;
 }	// SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMinValueInclusive
 
-int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMinValueInclusiveMin(bool versionOk, ) const
+int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMinValueInclusiveMin(bool versionOk) const
 {
 
 
@@ -2128,7 +2128,7 @@ int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMinValueIn
 	return value;
 }	// SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMinValueInclusiveMin
 
-int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMinValueInclusiveMax(bool versionOk, ) const
+int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMinValueInclusiveMax(bool versionOk) const
 {
 
 
@@ -2179,7 +2179,7 @@ int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMinValueIn
 	return value;
 }	// SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMinValueInclusiveMax
 
-int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getDefaultValue(bool versionOk, ) const
+int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getDefaultValue(bool versionOk) const
 {
 
 
@@ -2230,7 +2230,7 @@ int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getDefaultVal
 	return value;
 }	// SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getDefaultValue
 
-int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getDefaultValueMin(bool versionOk, ) const
+int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getDefaultValueMin(bool versionOk) const
 {
 
 
@@ -2281,7 +2281,7 @@ int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getDefaultVal
 	return value;
 }	// SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getDefaultValueMin
 
-int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getDefaultValueMax(bool versionOk, ) const
+int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getDefaultValueMax(bool versionOk) const
 {
 
 
@@ -2332,7 +2332,7 @@ int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getDefaultVal
 	return value;
 }	// SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getDefaultValueMax
 
-int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMaxValueExclusive(bool versionOk, ) const
+int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMaxValueExclusive(bool versionOk) const
 {
 
 
@@ -2383,7 +2383,7 @@ int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMaxValueEx
 	return value;
 }	// SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMaxValueExclusive
 
-int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMaxValueExclusiveMin(bool versionOk, ) const
+int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMaxValueExclusiveMin(bool versionOk) const
 {
 
 
@@ -2434,7 +2434,7 @@ int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMaxValueEx
 	return value;
 }	// SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMaxValueExclusiveMin
 
-int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMaxValueExclusiveMax(bool versionOk, ) const
+int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMaxValueExclusiveMax(bool versionOk) const
 {
 
 
