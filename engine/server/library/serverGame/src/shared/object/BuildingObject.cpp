@@ -611,8 +611,7 @@ bool BuildingObject::isAllowed(CreatureObject const &who) const
 		// allow vendor-creatures to be placed in the building
 		if (who.hasCondition(static_cast<int>(ServerTangibleObjectTemplate::C_vendor)))
 			return true;
-		// JU_TODO: test
-#if 1
+
 		// allow non-player-controlled creatures in private buildings if the *creature* has no owner
 		if (!who.isPlayerControlled() 
 			&& who.getMasterId() == NetworkId::cms_invalid 
@@ -621,8 +620,7 @@ bool BuildingObject::isAllowed(CreatureObject const &who) const
 		{
 			return true;
 		}
-#endif
-		// JU_TODO: end test
+
 		return CellPermissions::isOnList(m_allowed.get(), who);
 	}
 }

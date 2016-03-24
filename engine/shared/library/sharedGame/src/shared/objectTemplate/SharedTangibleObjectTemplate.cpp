@@ -236,7 +236,6 @@ const StructureFootprint* SharedTangibleObjectTemplate::getStructureFootprint ()
  */
 void SharedTangibleObjectTemplate::createCustomizationDataPropertyAsNeeded(Object &object, bool /* forceCreation */) const
 {
-#if 1
 	//-- Properties cannot be added while an object is in the world.  Some callers may be in the world, 
 	//   so temporarily remove the object from the world if necessary.
 	bool shouldBeInWorld = object.isInWorld();
@@ -266,80 +265,6 @@ void SharedTangibleObjectTemplate::createCustomizationDataPropertyAsNeeded(Objec
 		//-- release local reference to the CustomizationData instance
 		customizationData->release();
 	}
-
-#else
-	// @todo -TRF- remove this code as soon as asset customization manager is working properly.
-	const size_t paletteColorCount = getPaletteColorCustomizationVariablesCount();
-	const size_t rangedIntCount    = getRangedIntCustomizationVariablesCount();
-
-	//-- Return if caller isn't forcing customization data creation and no customization variables are declared for the ObjectTemplate.
-	const bool makeCustomizationData = forceCreation || (paletteColorCount > 0) || (rangedIntCount > 0);
-	if (!makeCustomizationData)
-		return;
-
-	//-- Properties cannot be added while an object is in the world.  Some callers may be in the world, 
-	//   so temporarily remove the object from the world if necessary.
-	bool shouldBeInWorld = object.isInWorld();
-	if (shouldBeInWorld)
-		object.removeFromWorld();
-
-	//-- create the CustomizationDataProperty, add to Object property collection
-	CustomizationDataProperty *const cdProperty = new CustomizationDataProperty(object);
-	object.addProperty(*cdProperty);
-
-	//-- Put object back in world if it was originally there.
-	if (shouldBeInWorld)
-		object.addToWorld();
-
-	//-- fetch the CustomizationData instance
-	CustomizationData *const customizationData = cdProperty->fetchCustomizationData();
-
-	//-- create PaletteColorCustomizationVariable variables as specified
-	{
-		SharedTangibleObjectTemplate::PaletteColorCustomizationVariable  variableData;
-
-		for (int i = 0; i < static_cast<int>(paletteColorCount); ++i)
-		{
-			//-- get the palette variable data
-			getPaletteColorCustomizationVariables(variableData, i);
-
-			//-- fetch the palette
-			const PaletteArgb *const palette = PaletteArgbList::fetch(TemporaryCrcString(variableData.palettePathName.c_str(), true));
-			if (!palette)
-			{
-				DEBUG_WARNING(true, ("failed to retrieve color palette [%s] for [%s], skipping variable [%s].\n", variableData.palettePathName.c_str(), getName (), variableData.variableName.c_str()));
-				continue;
-			}
-
-			//-- create the variable, add to CustomizationData
-			::PaletteColorCustomizationVariable * const palColorVar = new ::PaletteColorCustomizationVariable(palette, variableData.defaultPaletteIndex);
-
-			if (variableData.defaultPaletteIndex != palColorVar->getValue ())
-				DEBUG_WARNING (true, ("Error loading PaletteColorCustomizationVariable [%s] for [%s]", variableData.variableName.c_str(), getName ()));
-
-			customizationData->addVariableTakeOwnership(variableData.variableName, palColorVar);
-
-			//-- release local palette reference
-			palette->release();
-		}
-	}
-
-	//-- create BasicRangedIntCustomizationVariable variables as specified
-	{
-		SharedTangibleObjectTemplate::RangedIntCustomizationVariable  variableData;
-
-		for (int i = 0; i < static_cast<int>(rangedIntCount); ++i)
-		{
-			//-- get the palette variable data
-			getRangedIntCustomizationVariables(variableData, i);
-
-			//-- create the variable, add to CustomizationData
-			customizationData->addVariableTakeOwnership(variableData.variableName, new ::BasicRangedIntCustomizationVariable(variableData.minValueInclusive, variableData.defaultValue, variableData.maxValueExclusive));
-		}
-	}
-	//-- release local reference to the CustomizationData instance
-	customizationData->release();
-#endif
 }
 
 //@BEGIN TFD

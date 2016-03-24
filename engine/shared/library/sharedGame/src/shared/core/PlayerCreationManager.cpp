@@ -121,7 +121,6 @@ namespace PlayerCreationManagerNamespace
 
 		for (; iff.enterForm (Tags::PTMP, true); ++ptmp_count)
 		{
-#if 1
 			std::string playerTemplateStr;
 			if (iff.enterChunk (TAG_NAME, true))
 			{
@@ -148,7 +147,6 @@ namespace PlayerCreationManagerNamespace
 			}
 			
 			eq.insert (std::make_pair (playerTemplateStr, v));
-#endif
 			iff.exitForm (true);
 		}
 

@@ -100,17 +100,14 @@ bool HeightData::Segment::find (const Vector2d& oposition, float& result) const
 {
 	Vector2d position = oposition;
 
-#if 1
 	{
 		const float x0 = std::min (m_pointList.begin ()->x, m_pointList.back ().x);
 		const float z0 = std::min (m_pointList.begin ()->z, m_pointList.back ().z);
 		const float x1 = std::max (m_pointList.begin ()->x, m_pointList.back ().x);
 		const float z1 = std::max (m_pointList.begin ()->z, m_pointList.back ().z);
-//		DEBUG_FATAL (position.x < x0 || position.x > x1 || position.y < z0 || position.y > z1, ("position out of range"));
 		position.x = clamp (x0, position.x, x1);
 		position.y = clamp (z0, position.y, z1);
 	}
-#endif
 
 	const float width  = m_pointList.back ().x - m_pointList.begin ()->x;
 	const float height = m_pointList.back ().z - m_pointList.begin ()->z;

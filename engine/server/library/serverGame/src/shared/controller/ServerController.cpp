@@ -562,12 +562,12 @@ void ServerController::handleNetUpdateTransformWithParent(const MessageQueueData
 	if(!cellObject)
 	{
 		WARNING_STRICT_FATAL(true, ("WARNING: db or authoritative player says to depersist %s into a cell %s but we cannot because cell does not exist.", getOwner()->getNetworkId().getValueString().c_str(), cellNetworkId.getValueString().c_str()));
+
 		//@todo big demo hack.  If depersisting into a cell, set the transform to start lcoation
-#if 1
 		Transform start = Transform::identity;
 		start.setPosition_p(ConfigServerGame::getStartingPosition());
 		setGoal( start, nullptr );
-#endif
+
 		return;
 	}
 	setGoal( message.getTransform(), serverCellObject );

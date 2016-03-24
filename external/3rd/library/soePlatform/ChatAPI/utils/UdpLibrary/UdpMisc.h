@@ -21,20 +21,6 @@ class UdpMisc
         // they are stuck into this class so as to avoid conflicts with the application
         ////////////////////////////////////////////////////////////////////////////////////////////
     public:
-
-
-#if 1           // DEPRECATED (here for backwards compatibility only.  Not used by UdpLibrary, it uses the UdpPlatformDriver version)
-                // Internally these create a static UdpPlatformDriver and chain the call through.  If you have a UdpManager, I recommend
-                // simply call UdpManager::Clock and UdpManager::ClockElapsed, which chain on through to the driver created by the UdpManager
-                // values returned by this clock function should not be compared to values return from the UdpManager clock function as
-                // they go through two different drivers to get the answer and may not return the same number (though in practice it
-                // likely always will).
-        typedef UdpClockStamp ClockStamp;
-        static ClockStamp Clock();                                        // returns a timestamp (most likely in milliseconds)
-        static int ClockElapsed(ClockStamp stamp);                        // returns a elapsed time since stamp in milliseconds (if elapsed is over 23 days, it returns 23 days)
-#endif
-
-
         static int ClockDiff(UdpClockStamp start, UdpClockStamp stop);    // returns a time difference in milliseconds (if difference is over 23 days, it returns 23 days)
 		static unsigned long int Crc32(const void *buffer, int bufferLen, int encryptValue = 0);                // calculate a 32-bit crc for a buffer (encrypt value simple scrambles the crc at the beginning so the same packet doesn't produce the same crc on different connections)
         static int Random(int *seed);                                // random number generator
@@ -95,20 +81,7 @@ class UdpMisc
     // inline implementations
     ////////////////////////////////////////////////////////////////////////////
 
-        // UdpMisc
-#if 1       // DEPRECATED (see declaration)
-    inline UdpMisc::ClockStamp UdpMisc::Clock()
-    {
-        static UdpPlatformDriver sClockDriver;
-        return(sClockDriver.Clock());
-    }
-
-    inline int UdpMisc::ClockElapsed(ClockStamp stamp)
-    {
-        return(UdpMisc::ClockDiff(stamp, Clock()));
-    }
-#endif
-
+       // UdpMisc
 inline int UdpMisc::ClockDiff(UdpClockStamp start, UdpClockStamp stop)
 {
     UdpClockStamp t = (stop - start);

@@ -115,7 +115,6 @@ void DebugMonitor::install(void)
 		return;
 	}
 
-#if 1
 	// NOTE: -TRF- I would not expect this chunk of termios setup
 	//       code to be necessary.  My expectation is that it should
 	//       be handled by the curs_inopts (see man page) options I have
@@ -152,7 +151,6 @@ void DebugMonitor::install(void)
 		fclose(s_ttyInputFile);
 		return;
 	}
-#endif
 	
 	//-- Create a curses screen to represent the DebugMonitor output tty.
 	//   NOTE: for now the curses input is hooked up to the application's
