@@ -1066,58 +1066,11 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		// Forward this message to the dbProcess
 		sendToGameServer(m_dbProcessServerProcessId, t, true);
 	}
-	else if(message.isType("ChunkObjectListMessage"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		ChunkObjectListMessage t(ri);
-
-		DEBUG_FATAL(true,("Got ChunkObjectListMessage.  Thought it was deprecated.\n"));
-		//		handleChunkList(t.getProcess(), t.getIds());
-	}
 	else if(message.isType("LocateStructureMessage"))
 	{
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		LocateStructureMessage t(ri);
 		sendToPlanetServer(t.getSceneId(), t, true);
-	}
-	else if(message.isType("RequestObjectMessage"))
-	{
-		DEBUG_FATAL(true,("Got RequestObjectMessage.  Thought this went away."));
-
-		// 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		// 		RequestObjectMessage t(ri);
-		// 		// tell the authoritative object to create a proxy
-		// 		const GameServerConnection *gameServer = getGameServer(t.getProcess());
-		// 		NOT_NULL(gameServer);
-		// 		uint32 authId = sendToAuthoritativeServer(t.getId(),
-		// 												  LoadObjectMessage(t.getId(), t.getProcess(), gameServer->getGameServiceAddress(), gameServer->getGameServicePort(), false),
-		// 												  true);
-		// 		// if we sent the message to the database process, mark it as being
-		// 		// authoritative for this object
-		// 		if (authId == m_dbProcessServerProcessId)
-		// 		{
-		//             addObjectToMap(t.getId(), authId, gameServer->getSceneId(), true);
-		// 			m_pendingLoadingObjects[t.getId()] = t.getProcess();
-		// 		}
-	}
-	else if(message.isType("CreateNewObjectMessage"))
-	{
-		DEBUG_FATAL(true,("Ain't this supposed to be deprecated or something?"));
-	}
-	else if(message.isType("SetObjectPositionMessage"))
-	{
-		//@todo remove this message from the library
-		DEBUG_FATAL(true,("Got SetObjectPositionMessage. Thought this went away"));
-	}
-	else if(message.isType("FailedToLoadObjectMessage"))
-	{
-		//@todo remove this message from the library
-		DEBUG_FATAL(true,("Received Failed To Load Object Message.  Thought it was depricated\n"));
-	}
-	else if(message.isType("ReleaseAuthoritativeMessage"))
-	{
-		//@todo remove this message from the library
-		DEBUG_FATAL(true, ("Received ReleaseAuthoritative for.  Thought it was deprecated."));
 	}
 	else if(message.isType("ForceUnloadObjectMessage"))
 	{
@@ -1128,7 +1081,7 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		ForceUnloadObjectMessage t(ri);
 
 		//@todo: figure out some way to handle this (such as forwarding to PlanetServers), or remove every case where it's sent
-		//		forceUnload(t.getId(),t.getPermaDelete());
+		//forceUnload(t.getId(),t.getPermaDelete());
 	}
 	//Character Creation Messages
 	else if(message.isType("ConnectionCreateCharacter"))
