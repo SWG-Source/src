@@ -2345,12 +2345,10 @@ void ChatInterface::OnAddInvite(unsigned track, unsigned result, const ChatAvata
 
 	AvatarIdSequencePair *pair = (AvatarIdSequencePair *)user;
 
-	unsigned sequence = 0;
 	ChatAvatarId destId;
 	if (pair)
 	{
 		destId = pair->avatar;
-		sequence = pair->sequence;
 
 		delete pair;
 		pair = nullptr;
@@ -2645,12 +2643,10 @@ void ChatInterface::OnKickAvatar(unsigned track, unsigned result, const ChatAvat
 
 	AvatarIdSequencePair *pair = (AvatarIdSequencePair *)user;
 
-	unsigned sequence = 0;
 	ChatAvatarId kickedId;
 	if (pair)
 	{
 		kickedId = pair->avatar;
-		sequence = pair->sequence;
 
 		delete pair;
 		pair = nullptr;
