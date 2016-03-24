@@ -680,7 +680,6 @@ void CombatEngine::alter(TangibleObject & object)
 	if (object.isAuthoritative())
 	{
 		// if the object is a creature, get it's attributes
-		Attributes::Value currentAttribs[Attributes::NumberOfAttributes];
 		CreatureObject * const critter = object.asCreatureObject ();
 		if (critter != nullptr)
 		{
