@@ -608,18 +608,10 @@ bool BuildingObject::isAllowed(CreatureObject const &who) const
 		// allow non-player-controlled creatures in private buildings with no owner
 		if (!who.isPlayerControlled() && getOwnerId() == NetworkId::cms_invalid)
 			return true;
+
 		// allow vendor-creatures to be placed in the building
 		if (who.hasCondition(static_cast<int>(ServerTangibleObjectTemplate::C_vendor)))
 			return true;
-
-		// allow non-player-controlled creatures in private buildings if the *creature* has no owner
-		if (!who.isPlayerControlled() 
-			&& who.getMasterId() == NetworkId::cms_invalid 
-			&& who.getLevel() < 10 // temp change to < 0 after testing holo item
-			)
-		{
-			return true;
-		}
 
 		return CellPermissions::isOnList(m_allowed.get(), who);
 	}
