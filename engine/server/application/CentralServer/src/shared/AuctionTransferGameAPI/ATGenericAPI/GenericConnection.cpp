@@ -28,7 +28,6 @@ GenericConnection::GenericConnection(const char *host, short port, GenericAPICor
   m_con(nullptr),
   m_host(host), 
   m_port(port),
-  m_lastTrack(123455), //random choice != 1
   m_conState(CON_DISCONNECT),
   m_reconnectTimeout(reconnectTimeout)
 {
@@ -94,22 +93,6 @@ void GenericConnection::OnRoutePacket(TcpConnection *, const unsigned char *data
 	get(iter, type);
 	get(iter, track);
 	GenericResponse *res = nullptr;
-
-	// the following if block is a temporary fix that prevents
-	// a crash with a game team in which they occasionally find
-	// themselves receiving a dupe track in consecutive calls to
-	// OnRoutePacket (which then leads to a callback being called
-	// twice and data being invalid on the second call -> crash!).
-	// TODO: resolve this BK
-/*	if (track != 0 &&
-		track == m_lastTrack)
-	{
-		printf("!!! ERROR !!! Got a duplicate track ID %u\n", track);
-		return;
-	}
-	m_lastTrack = track;
-*/
-	// end temporary fix.
 
 	if(track == 0)		// notification message from the server, not as a response to a request from this API
 	{
