@@ -112,36 +112,12 @@ void GroupWaypointBuilderNamespace::updateGroupWaypoints(PlayerObject &playerObj
 
 void GroupWaypointBuilder::updateGroupWaypoints(GroupObject const &groupObject)
 {
-#if 0
-	PlayerObject::WaypointMap groupWaypoints;
-	buildGroupWaypoints(groupObject, groupWaypoints);
-	GroupWaypointBuilderNamespace::updateGroupWaypoints(groupObject, groupWaypoints);
-#endif
 }
 
 // ----------------------------------------------------------------------
 
 void GroupWaypointBuilder::updateGroupWaypoints(PlayerObject &playerObject, bool const updateGroup)
 {
-#if 0
-	CreatureObject const * const creatureObject = playerObject.getCreatureObject();
-	if (creatureObject)
-	{
-		GroupObject const * const groupObject = creatureObject->getGroup();
-		if (groupObject && updateGroup)
-		{
-			PlayerObject::WaypointMap groupWaypoints;
-			buildGroupWaypoints(*groupObject, groupWaypoints);
-			GroupWaypointBuilderNamespace::updateGroupWaypoints(*groupObject, groupWaypoints);
-		}
-		else
-		{
-			PlayerObject::WaypointMap groupWaypoints;
-			buildGroupWaypoints(playerObject, groupWaypoints);
-			GroupWaypointBuilderNamespace::updateGroupWaypoints(playerObject, groupWaypoints);
-		}
-	}
-#endif
 }
 
 // ======================================================================

@@ -164,31 +164,4 @@ bool CustomizationData::RemoteDirectory::isLocalDirectory() const
 	return false;
 }
 
-// ----------------------------------------------------------------------
-
-#if 0
-
-std::string CustomizationData::RemoteDirectory::writeLocalDirectoryToString() const
-{
-	WARNING(true, ("writeLocalDirectoryToString(): operation makes no sense on RemoteDirectory instances.\n"));
-	return "";
-}
-
-#endif
-
-// ----------------------------------------------------------------------
-
-#if 0
-
-void CustomizationData::RemoteDirectory::loadLocalDirectoryFromString(int version, const std::string &string, int startIndex)
-{
-	UNREF(version);
-	UNREF(string);
-	UNREF(startIndex);
-
-	WARNING(true, ("loadLocalDirectoryFromString(): operation makes no sense on RemoteDirectory instances."));
-}
-
-#endif
-
 // ======================================================================

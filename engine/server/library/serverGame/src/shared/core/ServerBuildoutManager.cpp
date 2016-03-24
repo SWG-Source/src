@@ -549,16 +549,6 @@ void ServerBuildoutManagerNamespace::buildObjectsToSave(std::vector<ServerObject
 
 bool ServerBuildoutManagerNamespace::isNotObjectForBuildout(ServerObject const *obj)
 {
-#if 0
-	DEBUG_REPORT_LOG_PRINT( true, ( "isNotObjectForBuildout: %s [%d] ver=%d isPersisted=%d isPlayerController=%d includeInBuildout=%d\n" ,
-		Unicode::wideToNarrow( obj->getObjectName() ).c_str(),
-		(int)obj->getNetworkId().getValue(),
-		obj->getCacheVersion(),
-		obj->isPersisted(),
-		obj->isPlayerControlled(),
-		obj->getIncludeInBuildout() ) );
-#endif
-
 	const ServerObject * const containingObject = safe_cast<const ServerObject  *>(ContainerInterface::getContainedByObject(*obj));
 
 	// make sure that cells that should be included in the buildout have all their
@@ -750,12 +740,6 @@ void ServerBuildoutManagerNamespace::loadArea(AreaInfo &areaInfo)
 
 				FATAL( isPob && ( cellIndex != 0 || containerId != 0 ), ( "tried to add a pob to a cell or other container. %s (objId=%d cellIndex=%d containerId=%d)",
 					serverTemplateBase->getName(), objId, cellIndex,containerId ) );
-#if 0
-				DEBUG_REPORT_LOG_PRINT( true, ( "SERVER --------- objId=%016I64x container=%016I64x\n",
-					objId,
-					containerId));
-
-#endif 
 
 				Quaternion const q(
 					areaBuildoutTable.getFloatValue(qwColumn, buildoutRow),

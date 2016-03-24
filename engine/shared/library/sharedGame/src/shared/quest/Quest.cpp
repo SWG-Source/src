@@ -485,15 +485,6 @@ int Quest::getMoneyRewardCredits() const
 
 // ----------------------------------------------------------------------
 
-#if 0
-std::vector<QuestTask *> const & Quest::getTasks() const
-{
-	return *m_tasks;
-}
-#endif
-
-// ----------------------------------------------------------------------
-
 /**
  * Conversts a comma-delimited list of strings into a vector or the CRCs
  * of those strings.

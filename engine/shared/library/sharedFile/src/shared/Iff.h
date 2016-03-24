@@ -248,10 +248,6 @@ public:
 
 	void            read_string(Unicode::String &str);
 	Unicode::String read_unicodeString();
-
-#if 0
-	real *read_float (int count, real   *array=nullptr);
-#endif
 };
 
 // ----------------------------------------------------------------------

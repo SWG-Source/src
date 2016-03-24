@@ -9,23 +9,8 @@
 #include <sys/bitypes.h>
 #endif
 
-#if 0
-#   pragma warning (disable: 4251)
-
-#	ifndef DECLSPEC
-#		if defined (IMPORT_DLL)
-#			define DECLSPEC __declspec(dllimport)
-#		elif defined (EXPORT_DLL)
-#			define DECLSPEC __declspec(dllexport)
-#		else
-#			define DECLSPEC
-#		endif
-#	endif
-#	define DECLIMPORT __declspec(dllimport)
-#else
-#	define DECLSPEC
-#	define DECLIMPORT extern
-#endif
+#define DECLSPEC
+#define DECLIMPORT extern
 
 #ifdef WIN32
 #	define FILENAME (strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__)

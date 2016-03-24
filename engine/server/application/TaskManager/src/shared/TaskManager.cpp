@@ -831,15 +831,6 @@ void TaskManager::update()
 		lastTime = currentTime;
 	}
 
-#if 0
-	instance().m_sysInfoSource->update();
-	if (ms_doUpdate)
-	{
-		Locator::updateAllLoads();
-		ms_doUpdate = false;
-	}
-#endif//0
-
 	// get process status
 	std::set<std::pair<std::string, unsigned long> >::iterator i;
 	for(i = instance().m_localServers.begin(); i != instance().m_localServers.end();)

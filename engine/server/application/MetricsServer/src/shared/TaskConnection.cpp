@@ -72,10 +72,6 @@ void TaskConnection::onConnectionOpened()
 void TaskConnection::onReceive(const Archive::ByteStream & message)
 {
 	UNREF(message);
-#if 0
-	Archive::ReadIterator r(message);
-	GameNetworkMessage m(r);
-#endif
 }
 
 //-----------------------------------------------------------------------

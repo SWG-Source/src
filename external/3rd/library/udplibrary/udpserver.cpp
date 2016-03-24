@@ -97,14 +97,6 @@ int main(int argc, char **argv)
 	params.pooledPacketMax = 5000;
 	params.pooledPacketSize = 512;
 
-#if 0
-	params.simulateIncomingByteRate = 2000;
-	params.simulateIncomingLossPercent = 0;
-	params.simulateOutgoingByteRate = 2000;
-	params.simulateOutgoingLossPercent = 0;
-	params.simulateDestinationOverloadLevel = 8000;
-	params.simulateOutgoingOverloadLevel = 8000;
-#endif
 	params.reliable[0].maxInstandingPackets = 500;
 	params.reliable[0].maxOutstandingBytes = 200000;
 	params.reliable[0].maxOutstandingPackets = 500;
@@ -197,11 +189,6 @@ void Player::OnRoutePacket(UdpConnection * /*con*/, const uchar *data, int dataL
 
 	char hold[256];
 	printf("FROM=%s,%d  LEN=%d    \n", mConnection->GetDestinationIp().GetAddress(hold), mConnection->GetDestinationPort(), dataLen);
-
-#if 0
-		// reflect exact packet back to client
-	mConnection->Send(cUdpChannelReliable1, data, dataLen);
-#endif
 }
 
 

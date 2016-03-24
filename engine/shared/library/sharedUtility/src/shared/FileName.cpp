@@ -278,12 +278,3 @@ void FileName::stripSpecificPathAndExt (Path path, char* nameBuffer, int nameBuf
 }
 
 //-------------------------------------------------------------------
-
-#if 0
-
-	DEBUG_REPORT_LOG_PRINT (true, ("%s\n", FileName (FileName::P_none, "test")));
-	DEBUG_REPORT_LOG_PRINT (true, ("%s\n", FileName (FileName::P_none, "test", "iff")));
-	DEBUG_REPORT_LOG_PRINT (true, ("%s\n", FileName (FileName::P_sound, "test")));
-	DEBUG_REPORT_LOG_PRINT (true, ("%s\n", FileName (FileName::P_sound, "test", "iff")));
-
-#endif

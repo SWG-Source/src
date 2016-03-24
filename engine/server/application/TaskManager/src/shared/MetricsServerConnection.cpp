@@ -77,10 +77,6 @@ void MetricsServerConnection::onProcessKilled(const ProcessKilled & k)
 
 void MetricsServerConnection::receive(const Archive::ByteStream & )
 {
-#if 0
-	Archive::ReadIterator r(message);
-	GameNetworkMessage m(r);
-#endif
 }
 
 //-----------------------------------------------------------------------

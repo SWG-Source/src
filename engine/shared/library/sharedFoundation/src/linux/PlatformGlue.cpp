@@ -179,13 +179,6 @@ DWORD GetFileSize(FILE* hFile, DWORD* lpHighSize)
     endPos = ftell(hFile);
     fseek(hFile, curPos, SEEK_SET);
     return endPos;
-
-#if 0
-//This is what I want to do, but I have no file des number
-    struct stat buf;
-    fstat(hFile, &buf);
-    return buf->st_size;
-#endif
 }
 
 BOOL FileExists(const char* filename)

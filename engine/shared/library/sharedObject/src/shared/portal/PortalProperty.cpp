@@ -229,7 +229,7 @@ bool PortalProperty::serverEndBaselines(int serverObjectCrc, std::vector<Object*
 		//-- fixupObject() causes the fixedup object to get added to the world before its parent has been
 		//-- for now, we won't queue anything for fixup
 
-#if 0
+#if 0	//TODO: see above
 		// go through the cells and remove objects 
 		for (size_t cell=1 ; cell< numberOfCells; ++cell)
 		{

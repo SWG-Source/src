@@ -115,26 +115,14 @@ void FloatingPointUnit::update(void)
 
 WORD FloatingPointUnit::getControlWord(void)
 {
-  //TODO wtf is this asm statement?
-#if 0
-	WORD controlWord = 0;
-	__asm fnstcw controlWord;
-	return controlWord;
-#else
 	return status;
-#endif
 }
 
 // ----------------------------------------------------------------------
 
 void FloatingPointUnit::setControlWord(WORD controlWord)
 {
-  //TODO see above?
-	
 	UNREF(controlWord);
-#if 0
-	__asm fldcw controlWord;
-#endif
 }
 
 // ----------------------------------------------------------------------

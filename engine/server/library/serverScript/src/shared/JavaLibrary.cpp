@@ -4705,20 +4705,6 @@ int JavaLibrary::runScript(const NetworkId & caller, const std::string& script,
 					}
 				}
 				break;
-#if 0
-			case 'S':
-				{
-					arg = globals.getNextStringId();
-					if (arg == 0)
-					{
-						return SCRIPT_OVERRIDE;
-					}
-					// @todo: fix this when we get real string ids
-//					int param = atoi(stringArg);
-//					ms_env->SetIntField(arg, ms_fidStringIdData, static_cast<jint>(param));
-				}
-				break;
-#endif
 			default:
 				DEBUG_REPORT_LOG(true, ("unknown parameter type %c(%#x)\n", argList[i],
 					static_cast<unsigned>(argList[i])));		//lint !e571 suspicious cast

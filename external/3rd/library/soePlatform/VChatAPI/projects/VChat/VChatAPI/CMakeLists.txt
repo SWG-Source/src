@@ -87,14 +87,10 @@ add_library(VChatAPI
 	../../../utils2.0/utils/TcpLibrary/TcpConnection.cpp
 	../../../utils2.0/utils/TcpLibrary/TcpConnection.h
 	../../../utils2.0/utils/TcpLibrary/TcpHandlers.h
-	../../../utils2.0/utils/TcpLibrary/TcpListener.cpp
-	../../../utils2.0/utils/TcpLibrary/TcpListener.h
 	../../../utils2.0/utils/TcpLibrary/TcpManager.cpp
 	../../../utils2.0/utils/TcpLibrary/TcpManager.h
 
 	../../../utils2.0/utils/UdpLibrary/UdpHandler.hpp
 	../../../utils2.0/utils/UdpLibrary/UdpLibrary.cpp
 	../../../utils2.0/utils/UdpLibrary/UdpLibrary.hpp
-	../../../utils2.0/utils/UdpLibrary/UdpListener.cpp
-	../../../utils2.0/utils/UdpLibrary/UdpListener.h
 )

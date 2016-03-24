@@ -417,10 +417,6 @@ void DebugMonitor::flushOutput()
 	const int input = wgetch(s_outputWindow);
 	if (input != ERR)
 	{
-#if 0
-		DEBUG_REPORT_LOG(true, ("DebugMonitor: received key [index=%d].\n", input));
-#endif
-										 
 		//-- Handle input.
 		switch (input)
 		{

@@ -321,16 +321,6 @@ WearableAppearanceMap::MapResult::MapResult(MapResult const &rhs) :
 
 // ----------------------------------------------------------------------
 
-#if 0
-
-WearableAppearanceMap::MapResult &WearableAppearanceMap::MapResult::operator =(MapResult const &rhs)
-{
-}
-
-#endif
-
-// ----------------------------------------------------------------------
-
 bool WearableAppearanceMap::MapResult::hasMapping() const
 {
 	return m_hasMapping;

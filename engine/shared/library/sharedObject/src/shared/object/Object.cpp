@@ -1390,10 +1390,6 @@ void Object::setParentCell(CellProperty *cellProperty)
 	if (getParentCell() == cellProperty)
 		return;
 
-#if 0
-	DEBUG_FATAL(isChildObject(), ("Object::setParentCell called on child object [id=%s template=%s] with parent object [id=%s template=%s]", getNetworkId().getValueString().c_str(), getObjectTemplateName(), m_attachedToObject->getNetworkId().getValueString().c_str(), m_attachedToObject->getObjectTemplateName()));
-#endif
-
 	// if we were in another cell, detach us.  This will leave out object in world space.
 	if (!isInWorldCell())
 		detachFromObject(DF_world);

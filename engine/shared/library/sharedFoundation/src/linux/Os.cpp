@@ -88,11 +88,6 @@ void Os::installCommon(void)
 
 	ExitChain::add(Os::remove, "Os::remove", 0, true);
 
-#if 0 //TODO For now we won't screw with the priority of the process
-	HANDLE threadHandle = GetCurrentThread();
-	DEBUG_FATAL(!SetThreadPriority(threadHandle, THREAD_PRIORITY_ABOVE_NORMAL), ("Failed to set game thread priority"));
-#endif
-
 	numberOfUpdates = 0;
 	mainThreadId = pthread_self();
 
@@ -298,19 +293,6 @@ bool Os::update(void)
     FloatingPointUnit::update();
 
     ++numberOfUpdates;
-
-#if 0
-#ifdef _DEBUG
-
-    if (DEBUG_FLAG_PLATFORM(validateHeap))
-    {
-        PROFILER_START("validate heap");
-        MemoryManager::validate();
-        PROFILER_STOP("validate heap");
-    }
-
-#endif
-#endif
 
     Clock::update();
 

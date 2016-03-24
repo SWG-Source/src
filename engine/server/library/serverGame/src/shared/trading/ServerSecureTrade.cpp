@@ -733,63 +733,6 @@ void ServerSecureTrade::removeItem(const CreatureObject & trader, const ServerOb
 	//-- CS requested that removing an item cancels the trade to prevent scamming
 	UNREF (item);
 	cancelTrade (trader);
-
-#if 0
-	if (m_tradeState != TS_Trading)
-	{
-		DEBUG_REPORT_LOG(true, ("Secure Trade: received an remove item in non-trade state\n"));
-		beginTrading();
-	}
-
-	if (&trader == m_initiator)
-	{
-		std::vector<ServerObject *>::iterator i = std::find(m_initiatorContents->begin(), m_initiatorContents->end(), &item);
-		if (i != m_initiatorContents->end())
-		{
-			m_initiatorContents->erase(i);
-
-			Client * const recipientClient = m_recipient->getClient();
-			if (recipientClient)
-			{
-				RemoveItemMessage const m(item.getNetworkId());
-				recipientClient->send(m, true);
-			}
-		}
-		else
-		{
-			//@todo need an error message
-		}
-
-	}
-	else if (& trader == m_recipient)
-	{
-		std::vector<ServerObject *>::iterator i = std::find(m_recipientContents->begin(), m_recipientContents->end(), &item);
-		if (i != m_recipientContents->end())
-		{
-			m_recipientContents->erase(i);
-
-			Client * const initiatorClient = m_initiator->getClient();
-			if (initiatorClient)
-			{
-				RemoveItemMessage const m(item.getNetworkId());
-				initiatorClient->send(m, true);
-			}
-		}
-		else
-		{
-			//@todo need an error message for not found.
-		}
-
-	}
-	else
-	{
-		WARNING_STRICT_FATAL(true, ("Secure Trade: received a remove Item from non participant\n"));
-		return;
-	}
-	unacceptOffer(*m_initiator);
-	unacceptOffer(*m_recipient);
-#endif
-
 }
 
 // ----------------------------------------------------------------------

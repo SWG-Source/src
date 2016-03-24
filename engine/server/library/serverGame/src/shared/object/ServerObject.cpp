@@ -2411,13 +2411,6 @@ int ServerObject::getVolume(void) const
 {
 	const VolumeContainmentProperty* volumeProperty = ContainerInterface::getVolumeContainmentProperty(*this);
 	return volumeProperty ? volumeProperty->getVolume() : 1;
-#if 0
-	const VolumeContainer * container = ContainerInterface::getVolumeContainer(*this);
-	if (container)
-		return m_volume.get()+container->getCurrentVolume();
-	else
-		return m_volume.get();
-#endif
 }
 
 //-----------------------------------------------------------------------

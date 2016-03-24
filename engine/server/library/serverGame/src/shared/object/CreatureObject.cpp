@@ -2821,12 +2821,6 @@ float CreatureObject::alter(float time)
 		}
 
 		//check timer and migrate stats if necessary
-
-//disable self stat migration
-#if 0
-		migrateStats(time);
-#endif
-
 		if (isPlayerControlled())
 		{
 			PROFILER_AUTO_BLOCK_DEFINE("CreatureObject::alter auth player stuff");

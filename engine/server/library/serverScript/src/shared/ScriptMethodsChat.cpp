@@ -181,29 +181,6 @@ jstring JNICALL ScriptMethodsChatNamespace::chatPackOutOfBandToken(JNIEnv * env,
 
 	JavaString result("JavaLibrary::chatPackOutOfBandToken - FAILED Token archive not implemented");
 	return result.getReturnValue();
-
-#if 0
-	JavaStringParam jt(target);
-	Unicode::String t;
-	if(! JavaLibrary::convert(jt, t))
-		return 0;
-
-	if(! source)
-		return 0;
-
-	Token * token = 0;
-	if(!JavaLibrary::getObject(source, token))
-		return 0;
-
-	Archive::ByteStream bs;
-	Archive::put(bs, std::string(token->getObjectTemplateName()));
-	Archive::put(bs, *token);
-
-	OutOfBandPackager::pack(bs, gs_Object, position, t);
-
-	JavaString result(t);
-	return result.getReturnValue();
-#endif
 }
 
 //----------------------------------------------------------------------

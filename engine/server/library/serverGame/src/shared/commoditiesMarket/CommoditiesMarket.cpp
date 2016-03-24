@@ -246,15 +246,6 @@ namespace CommoditiesMarketNamespace
 			errorCode = ar_ITEM_EQUIPPED;
 		}
 
-#if 0
-		const VolumeContainer *vol = ContainerInterface::getVolumeContainer(item);
-		if (vol && vol->getCurrentVolume() > 0)
-		{
-			errorCode = ar_NOT_EMPTY;
-		}
-
-#endif
-
 		if ((errorCode == ar_OK) && auctionContainer.isVendor() && !auctionContainer.isBazaarTerminal())
 		{
 			// check to make sure the vendor isn't restricted from accepting this item
@@ -1772,67 +1763,9 @@ void CommoditiesMarket::auctionCreateImmediate(CreatureObject &owner, ServerObje
 
 void CommoditiesMarket::auctionCreatePermanent(const std::string &, const ServerObject &, const ServerObject &, BidAmount , const Unicode::String &, bool )
 {
-	if (!ConfigServerGame::getCommoditiesMarketEnabled())
-		return;
-
 	DEBUG_WARNING(true, ("auctionCreatePermanent has been depricated and shouldn't be used.  If you see this WARNING, add a line to catch cheaters in the command in CommandCppFuncs.cpp"));
 
 	return;
-	
-#if 0 //what the hell is this?
-	
-	const NetworkId & itemId = item.getNetworkId();
-	int flags = AUCTION_ALWAYS_PRESENT;
-	if (premium)
-	{
-		flags |= AUCTION_PREMIUM_AUCTION;
-	}
-	const TangibleObject *tangibleObject = item.asTangibleObject();
-	if (tangibleObject && tangibleObject->hasCondition(ServerTangibleObjectTemplate::C_magicItem))
-	{
-		flags |= AUCTION_MAGIC_ITEM;
-	}
-
-	const Unicode::String objectName = Auction::getItemAuctionName(&item);
-
-	const AuctionToken & token = AuctionTokenServer::createTokenFor(item);
-	Unicode::String oobData;			
-	OutOfBandPackager::pack(token, 0, oobData);
-
-	ServerObject::AttributeVector attributes;
-
-	//-- I don't know why this cast is necessary, but MSDEV is apparently confused otherwise
-	static_cast<const ServerObject &>(item).getAttributes(NetworkId::cms_invalid, attributes);
-	OutOfBandPackager::pack(attributes, 1, oobData);
-
-	OutOfBandPackager::pack(item.getTemplateName(), 2, oobData);
-
-	if (s_market)
-	{	
-		s_market->AddImmediateAuction(
-		-1,
-		ownerName,
-		price,
-		1,
-		itemId,
-		objectName.size(), objectName.data(),
-		item.getGameObjectType(),
-		ConfigServerGame::getUnclaimedAuctionItemDestroyTimeSec(),
-		auctionContainer.getNetworkId(),
-		getLocationString(auctionContainer),
-		flags,
-		userDescription.size(), userDescription.data(),
-		oobData.size(),
-		oobData);
-	}
-	else
-	{
-
-		DEBUG_WARNING(true, ("[Commodities API] : No commodities server connection to send AddImmediateAuction."));
-		
-		getCommoditiesServerConnection(); //attempt to reconnect to commodities server
-	}
-#endif
 }
 
 // ----------------------------------------------------------------------

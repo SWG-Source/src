@@ -722,14 +722,6 @@ CellProperty *CellProperty::getDestinationCell(const Vector &startPosition, cons
 	CellProperty *cellProperty = 0;
 	closestPortalT = FLT_MAX;
 
-#if 0
-	if ((startPosition - endPosition).magnitude() > 2.0f)
-	{
-		static volatile int debug = 0;
-		++debug;
-	}
-#endif
-
 	const PortalObjectList::const_iterator iEnd = m_portalObjectList->end();
 	for (PortalObjectList::const_iterator i = m_portalObjectList->begin(); i != iEnd; ++i)
 	{

@@ -498,23 +498,6 @@ void DatabaseProcess::receiveMessage(const MessageDispatch::Emitter & source, co
 		Loader::getInstance().checkVersionNumber(ConfigServerDatabase::getExpectedDBVersion(), ConfigServerDatabase::isCorrectDBVersionRequired());
 		Loader::getInstance().loadClock();
 	}
-	else if(message.isType("LoadObjectMessage"))
-	{
-#if 0 
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		LoadObjectMessage lom(ri);
-		connectToGameServer(lom.getAddress().c_str(),lom.getPort(),lom.getProcess());
-#endif		
-	}
-	else if (message.isType("LoadUniverseMessage"))
-	{
-#if 0 
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		LoadUniverseMessage lom(ri);
-		connectToGameServer(lom.getAddress().c_str(),lom.getPort(),lom.getProcess());
-#endif		
-	}
-
 	else if(message.isType("GameSetProcessId") || message.isType("GameGameServerConnect"))
 	{
 		GameServerConnection * g = const_cast<GameServerConnection *>(static_cast<const GameServerConnection *>(&source));

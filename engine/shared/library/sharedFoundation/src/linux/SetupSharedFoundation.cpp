@@ -44,12 +44,6 @@ void SetupSharedFoundation::install(const Data &data)
 	if (data.argc)
 		CommandLine::absorbStrings(const_cast<const char**>(data.argv+1), data.argc-1);
 
-#if 0
-	//currently there's a problem that we cannot override the defaults here.
-	if (data.configFile)
-		IGNORE_RETURN(ConfigFile::loadFile(data.configFile));
-#endif
-
 	// get the post command-line text for the ConfigFile (key-value pairs)
 	const char *configString = CommandLine::getPostCommandLineString();
 	if (configString)

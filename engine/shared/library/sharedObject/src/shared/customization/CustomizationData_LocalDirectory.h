@@ -49,11 +49,6 @@ public:
 	virtual void                         deleteLinksTo(const CustomizationData &customizationData);
 
 	virtual bool                         isLocalDirectory() const;
-#if 0	
-	virtual std::string                  writeLocalDirectoryToString() const;
-
-	virtual void                         loadLocalDirectoryFromString(int version, const std::string &string, int startIndex);
-#endif
 	
 private:
 
@@ -61,11 +56,6 @@ private:
 	typedef stdmap<const CrcLowerString, CustomizationVariable*>::fwd  CustomizationVariableMap;
 
 private:
-
-#if 0	
-	void                                 loadLocalDirectoryFromString_0002(const std::string &string, int startIndex);
-#endif
-	
 	// Disabled.
 	LocalDirectory();
 	LocalDirectory(const LocalDirectory&);

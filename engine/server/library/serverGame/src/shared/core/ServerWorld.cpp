@@ -2524,18 +2524,6 @@ void ServerWorld::remove()
 	delete m_sceneId;
 	m_sceneId = 0;
 
-#if 0 //removed pending objects
-	ObjectMap::iterator objIter;
-	while (m_pendingObjects->size() > 0)
-	{
-		objIter = m_pendingObjects->begin();
-		object = (*objIter).second;
-		m_pendingObjects->erase(objIter);
-		delete object;
-	}
-	delete m_pendingObjects;
-	m_pendingObjects = 0;
-#endif
 	delete g_objectSphereTree;
 	g_objectSphereTree = 0;
 	delete g_triggerSphereTree;

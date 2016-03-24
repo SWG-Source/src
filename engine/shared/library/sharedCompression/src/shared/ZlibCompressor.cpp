@@ -43,9 +43,6 @@ voidpf ZlibCompressorNamespace::allocateWrapper(voidpf opaque, uInt items, uInt 
 	UNREF(opaque);
 		void *result = 0;
 
-#if 0
-	result = operator new(items * size);
-#else
 	int totalSize = items * size;
 	if (totalSize > cms_poolElementThreshold)
 	{
@@ -67,7 +64,6 @@ voidpf ZlibCompressorNamespace::allocateWrapper(voidpf opaque, uInt items, uInt 
 
 		ms_mutex.leave();
 	}
-#endif
 
 	return result;
 }
@@ -78,9 +74,6 @@ void ZlibCompressorNamespace::freeWrapper(voidpf opaque, voidpf address)
 {
 	UNREF(opaque);
 
-#if 0
-	operator delete(address);
-#else
 	if (address < ms_memoryBottom || address >= ms_memoryTop)
 		operator delete(address);
 	else
@@ -89,7 +82,6 @@ void ZlibCompressorNamespace::freeWrapper(voidpf opaque, voidpf address)
 			ms_memoryPool.push_back(address);
 		ms_mutex.leave();
 	}
-#endif
 }
 
 // ======================================================================
