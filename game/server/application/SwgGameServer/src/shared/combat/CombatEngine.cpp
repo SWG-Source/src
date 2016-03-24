@@ -679,18 +679,6 @@ void CombatEngine::alter(TangibleObject & object)
 
 	if (object.isAuthoritative())
 	{
-		// if the object is a creature, get it's attributes
-		Attributes::Value currentAttribs[Attributes::NumberOfAttributes];
-		CreatureObject * const critter = object.asCreatureObject ();
-		if (critter != nullptr)
-		{
-			for (int i = 0; i < Attributes::NumberOfAttributes; ++i)
-				currentAttribs[i] = critter->getAttribute(i);
-		}
-		else
-		{
-			// @todo: handle damage to objects
-		}
 		// update the object
 		// to guard against the list changing while we are iterating over it,
 		// we will iterate using index rather than iterator
@@ -705,7 +693,7 @@ void CombatEngine::alter(TangibleObject & object)
 				object.applyDamage(damageData[i]);
 			}
 		}
-	}//lint !e550  Symbol 'currentAttribs' (line 2653) not accessed // yes it is
+	}
 	else
 	{
 		TangibleController * const tangibleController = object.getController()->asTangibleController();
