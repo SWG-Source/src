@@ -670,7 +670,7 @@ void ServerBuildoutManagerNamespace::loadArea(AreaInfo &areaInfo)
 				unsigned int const cellIndex = areaBuildoutTable.getIntValue(cellIndexColumn, buildoutRow);
 
 				ObjectTemplate const * const serverTemplateBase = ObjectTemplateList::fetch(serverTemplateCrc);
-				FATAL(!serverTemplateBase, ("Nonexistant server template 0x%08x in buildout table %s, row %d (line %d)", serverTemplateCrc, areaInfo.buildoutArea.areaName.c_str(), buildoutRow, buildoutRow + 3));
+				FATAL(!serverTemplateBase, ("Nonexistant server template 0x%08x in buildout table %s, row %d (line %d) - rebuild your templates and reimport them into the database!", serverTemplateCrc, areaInfo.buildoutArea.areaName.c_str(), buildoutRow, buildoutRow + 3));
 
 				ServerObjectTemplate const * const serverTemplate = serverTemplateBase->asServerObjectTemplate();
 				FATAL(!serverTemplate, ("Bad server template 0x%08x [%s] in buildout table %s, row %d (line %d)", serverTemplateCrc, serverTemplateBase->getName(), areaInfo.buildoutArea.areaName.c_str(), buildoutRow, buildoutRow + 3));
