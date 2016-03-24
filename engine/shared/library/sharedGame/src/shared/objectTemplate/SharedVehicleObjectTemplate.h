@@ -58,30 +58,25 @@ public:
 	float                  getSpeed(MovementTypes index) const;
 	float                  getSpeedMin(MovementTypes index) const;
 	float                  getSpeedMax(MovementTypes index) const;
-	float                  getSlopeAversion(bool testData = false) const;
-	float                  getSlopeAversionMin(bool testData = false) const;
-	float                  getSlopeAversionMax(bool testData = false) const;
-	float                  getHoverValue(bool testData = false) const;
-	float                  getHoverValueMin(bool testData = false) const;
-	float                  getHoverValueMax(bool testData = false) const;
-	float                  getTurnRate(bool testData = false) const;
-	float                  getTurnRateMin(bool testData = false) const;
-	float                  getTurnRateMax(bool testData = false) const;
-	float                  getMaxVelocity(bool testData = false) const;
-	float                  getMaxVelocityMin(bool testData = false) const;
-	float                  getMaxVelocityMax(bool testData = false) const;
-	float                  getAcceleration(bool testData = false) const;
-	float                  getAccelerationMin(bool testData = false) const;
-	float                  getAccelerationMax(bool testData = false) const;
-	float                  getBraking(bool testData = false) const;
-	float                  getBrakingMin(bool testData = false) const;
-	float                  getBrakingMax(bool testData = false) const;
+	float                  getSlopeAversion() const;
+	float                  getSlopeAversionMin() const;
+	float                  getSlopeAversionMax() const;
+	float                  getHoverValue() const;
+	float                  getHoverValueMin() const;
+	float                  getHoverValueMax() const;
+	float                  getTurnRate() const;
+	float                  getTurnRateMin() const;
+	float                  getTurnRateMax() const;
+	float                  getMaxVelocity() const;
+	float                  getMaxVelocityMin() const;
+	float                  getMaxVelocityMax() const;
+	float                  getAcceleration() const;
+	float                  getAccelerationMin() const;
+	float                  getAccelerationMax() const;
+	float                  getBraking() const;
+	float                  getBrakingMin() const;
+	float                  getBrakingMax() const;
 
-#ifdef _DEBUG
-public:
-	// special code used by datalint
-	virtual void testValues(void) const;
-#endif
 
 protected:
 	virtual void load(Iff &file);

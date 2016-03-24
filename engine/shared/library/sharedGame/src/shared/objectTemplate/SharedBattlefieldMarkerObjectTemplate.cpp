@@ -12,7 +12,7 @@
 
 #include "sharedGame/FirstSharedGame.h"
 #include "SharedBattlefieldMarkerObjectTemplate.h"
-#include "sharedDebug/DataLint.h"
+
 #include "sharedFile/Iff.h"
 #include "sharedMath/Vector.h"
 #include "sharedObject/ObjectTemplate.h"
@@ -104,22 +104,14 @@ Tag SharedBattlefieldMarkerObjectTemplate::getHighestTemplateVersion(void) const
 } // SharedBattlefieldMarkerObjectTemplate::getHighestTemplateVersion
 
 //@BEGIN TFD
-int SharedBattlefieldMarkerObjectTemplate::getNumberOfPoles(bool testData) const
+int SharedBattlefieldMarkerObjectTemplate::getNumberOfPoles() const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedBattlefieldMarkerObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedBattlefieldMarkerObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getNumberOfPoles(true);
-#endif
 	}
 
 	if (!m_numberOfPoles.isLoaded())
@@ -159,31 +151,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedBattlefieldMarkerObjectTemplate::getNumberOfPoles
 
-int SharedBattlefieldMarkerObjectTemplate::getNumberOfPolesMin(bool testData) const
+int SharedBattlefieldMarkerObjectTemplate::getNumberOfPolesMin() const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedBattlefieldMarkerObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedBattlefieldMarkerObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getNumberOfPolesMin(true);
-#endif
 	}
 
 	if (!m_numberOfPoles.isLoaded())
@@ -223,31 +202,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedBattlefieldMarkerObjectTemplate::getNumberOfPolesMin
 
-int SharedBattlefieldMarkerObjectTemplate::getNumberOfPolesMax(bool testData) const
+int SharedBattlefieldMarkerObjectTemplate::getNumberOfPolesMax() const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedBattlefieldMarkerObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedBattlefieldMarkerObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getNumberOfPolesMax(true);
-#endif
 	}
 
 	if (!m_numberOfPoles.isLoaded())
@@ -287,31 +253,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedBattlefieldMarkerObjectTemplate::getNumberOfPolesMax
 
-float SharedBattlefieldMarkerObjectTemplate::getRadius(bool testData) const
+float SharedBattlefieldMarkerObjectTemplate::getRadius() const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedBattlefieldMarkerObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedBattlefieldMarkerObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getRadius(true);
-#endif
 	}
 
 	if (!m_radius.isLoaded())
@@ -351,31 +304,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedBattlefieldMarkerObjectTemplate::getRadius
 
-float SharedBattlefieldMarkerObjectTemplate::getRadiusMin(bool testData) const
+float SharedBattlefieldMarkerObjectTemplate::getRadiusMin() const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedBattlefieldMarkerObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedBattlefieldMarkerObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getRadiusMin(true);
-#endif
 	}
 
 	if (!m_radius.isLoaded())
@@ -415,31 +355,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedBattlefieldMarkerObjectTemplate::getRadiusMin
 
-float SharedBattlefieldMarkerObjectTemplate::getRadiusMax(bool testData) const
+float SharedBattlefieldMarkerObjectTemplate::getRadiusMax() const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedBattlefieldMarkerObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedBattlefieldMarkerObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getRadiusMax(true);
-#endif
 	}
 
 	if (!m_radius.isLoaded())
@@ -479,28 +406,10 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedBattlefieldMarkerObjectTemplate::getRadiusMax
 
-#ifdef _DEBUG
-/**
- * Special function used by datalint. Checks for duplicate values in base and derived templates.
- */
-void SharedBattlefieldMarkerObjectTemplate::testValues(void) const
-{
-	IGNORE_RETURN(getNumberOfPolesMin(true));
-	IGNORE_RETURN(getNumberOfPolesMax(true));
-	IGNORE_RETURN(getRadiusMin(true));
-	IGNORE_RETURN(getRadiusMax(true));
-	SharedTangibleObjectTemplate::testValues();
-}	// SharedBattlefieldMarkerObjectTemplate::testValues
-#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form
@@ -543,8 +452,8 @@ char paramName[MAX_NAME_SIZE];
 	}
 	if (getHighestTemplateVersion() != TAG(0,0,0,1))
 	{
-		if (DataLint::isEnabled())
-			DEBUG_WARNING(true, ("template %s version out of date", file.getFileName()));
+		
+			
 		m_versionOk = false;
 	}
 

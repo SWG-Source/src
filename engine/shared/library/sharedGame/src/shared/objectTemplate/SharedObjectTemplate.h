@@ -339,46 +339,41 @@ public:
 	};
 
 public:
-	const StringId         getObjectName(bool testData = false) const;
-	const StringId         getDetailedDescription(bool testData = false) const;
-	const StringId         getLookAtText(bool testData = false) const;
-	bool                   getSnapToTerrain(bool testData = false) const;
-	ContainerType     getContainerType(bool testData = false) const;
-	int                    getContainerVolumeLimit(bool testData = false) const;
-	int                    getContainerVolumeLimitMin(bool testData = false) const;
-	int                    getContainerVolumeLimitMax(bool testData = false) const;
-	const std::string &    getTintPalette(bool testData = false) const;
-	const std::string &    getSlotDescriptorFilename(bool testData = false) const;
-	const std::string &    getArrangementDescriptorFilename(bool testData = false) const;
-	const std::string &    getAppearanceFilename(bool testData = false) const;
-	const std::string &    getPortalLayoutFilename(bool testData = false) const;
-	const std::string &    getClientDataFile(bool testData = false) const;
-	float                  getScale(bool testData = false) const;
-	float                  getScaleMin(bool testData = false) const;
-	float                  getScaleMax(bool testData = false) const;
-	GameObjectType     getGameObjectType(bool testData = false) const;
-	bool                   getSendToClient(bool testData = false) const;
-	float                  getScaleThresholdBeforeExtentTest(bool testData = false) const;
-	float                  getScaleThresholdBeforeExtentTestMin(bool testData = false) const;
-	float                  getScaleThresholdBeforeExtentTestMax(bool testData = false) const;
-	float                  getClearFloraRadius(bool testData = false) const;
-	float                  getClearFloraRadiusMin(bool testData = false) const;
-	float                  getClearFloraRadiusMax(bool testData = false) const;
-	SurfaceType     getSurfaceType(bool testData = false) const;
-	float                  getNoBuildRadius(bool testData = false) const;
-	float                  getNoBuildRadiusMin(bool testData = false) const;
-	float                  getNoBuildRadiusMax(bool testData = false) const;
-	bool                   getOnlyVisibleInTools(bool testData = false) const;
-	float                  getLocationReservationRadius(bool testData = false) const;
-	float                  getLocationReservationRadiusMin(bool testData = false) const;
-	float                  getLocationReservationRadiusMax(bool testData = false) const;
-	bool                   getForceNoCollision(bool testData = false) const;
+	const StringId         getObjectName() const;
+	const StringId         getDetailedDescription() const;
+	const StringId         getLookAtText() const;
+	bool                   getSnapToTerrain() const;
+	ContainerType     getContainerType() const;
+	int                    getContainerVolumeLimit() const;
+	int                    getContainerVolumeLimitMin() const;
+	int                    getContainerVolumeLimitMax() const;
+	const std::string &    getTintPalette() const;
+	const std::string &    getSlotDescriptorFilename() const;
+	const std::string &    getArrangementDescriptorFilename() const;
+	const std::string &    getAppearanceFilename() const;
+	const std::string &    getPortalLayoutFilename() const;
+	const std::string &    getClientDataFile() const;
+	float                  getScale() const;
+	float                  getScaleMin() const;
+	float                  getScaleMax() const;
+	GameObjectType     getGameObjectType() const;
+	bool                   getSendToClient() const;
+	float                  getScaleThresholdBeforeExtentTest() const;
+	float                  getScaleThresholdBeforeExtentTestMin() const;
+	float                  getScaleThresholdBeforeExtentTestMax() const;
+	float                  getClearFloraRadius() const;
+	float                  getClearFloraRadiusMin() const;
+	float                  getClearFloraRadiusMax() const;
+	SurfaceType     getSurfaceType() const;
+	float                  getNoBuildRadius() const;
+	float                  getNoBuildRadiusMin() const;
+	float                  getNoBuildRadiusMax() const;
+	bool                   getOnlyVisibleInTools() const;
+	float                  getLocationReservationRadius() const;
+	float                  getLocationReservationRadiusMin() const;
+	float                  getLocationReservationRadiusMax() const;
+	bool                   getForceNoCollision() const;
 
-#ifdef _DEBUG
-public:
-	// special code used by datalint
-	virtual void testValues(void) const;
-#endif
 
 protected:
 	virtual void load(Iff &file);

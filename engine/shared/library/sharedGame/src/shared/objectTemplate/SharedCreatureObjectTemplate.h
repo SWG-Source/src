@@ -361,10 +361,10 @@ public:
 	};
 
 public:
-	Gender     getGender(bool testData = false) const;
-	Niche     getNiche(bool testData = false) const;
-	Species     getSpecies(bool testData = false) const;
-	Race     getRace(bool testData = false) const;
+	Gender     getGender() const;
+	Niche     getNiche() const;
+	Species     getSpecies() const;
+	Race     getRace() const;
 	float                  getAcceleration(MovementTypes index) const;
 	float                  getAccelerationMin(MovementTypes index) const;
 	float                  getAccelerationMax(MovementTypes index) const;
@@ -374,51 +374,46 @@ public:
 	float                  getTurnRate(MovementTypes index) const;
 	float                  getTurnRateMin(MovementTypes index) const;
 	float                  getTurnRateMax(MovementTypes index) const;
-	const std::string &    getAnimationMapFilename(bool testData = false) const;
-	float                  getSlopeModAngle(bool testData = false) const;
-	float                  getSlopeModAngleMin(bool testData = false) const;
-	float                  getSlopeModAngleMax(bool testData = false) const;
-	float                  getSlopeModPercent(bool testData = false) const;
-	float                  getSlopeModPercentMin(bool testData = false) const;
-	float                  getSlopeModPercentMax(bool testData = false) const;
-	float                  getWaterModPercent(bool testData = false) const;
-	float                  getWaterModPercentMin(bool testData = false) const;
-	float                  getWaterModPercentMax(bool testData = false) const;
-	float                  getStepHeight(bool testData = false) const;
-	float                  getStepHeightMin(bool testData = false) const;
-	float                  getStepHeightMax(bool testData = false) const;
-	float                  getCollisionHeight(bool testData = false) const;
-	float                  getCollisionHeightMin(bool testData = false) const;
-	float                  getCollisionHeightMax(bool testData = false) const;
-	float                  getCollisionRadius(bool testData = false) const;
-	float                  getCollisionRadiusMin(bool testData = false) const;
-	float                  getCollisionRadiusMax(bool testData = false) const;
-	const std::string &    getMovementDatatable(bool testData = false) const;
+	const std::string &    getAnimationMapFilename() const;
+	float                  getSlopeModAngle() const;
+	float                  getSlopeModAngleMin() const;
+	float                  getSlopeModAngleMax() const;
+	float                  getSlopeModPercent() const;
+	float                  getSlopeModPercentMin() const;
+	float                  getSlopeModPercentMax() const;
+	float                  getWaterModPercent() const;
+	float                  getWaterModPercentMin() const;
+	float                  getWaterModPercentMax() const;
+	float                  getStepHeight() const;
+	float                  getStepHeightMin() const;
+	float                  getStepHeightMax() const;
+	float                  getCollisionHeight() const;
+	float                  getCollisionHeightMin() const;
+	float                  getCollisionHeightMax() const;
+	float                  getCollisionRadius() const;
+	float                  getCollisionRadiusMin() const;
+	float                  getCollisionRadiusMax() const;
+	const std::string &    getMovementDatatable() const;
 	bool                   getPostureAlignToTerrain(Postures index) const;
-	float                  getSwimHeight(bool testData = false) const;
-	float                  getSwimHeightMin(bool testData = false) const;
-	float                  getSwimHeightMax(bool testData = false) const;
-	float                  getWarpTolerance(bool testData = false) const;
-	float                  getWarpToleranceMin(bool testData = false) const;
-	float                  getWarpToleranceMax(bool testData = false) const;
-	float                  getCollisionOffsetX(bool testData = false) const;
-	float                  getCollisionOffsetXMin(bool testData = false) const;
-	float                  getCollisionOffsetXMax(bool testData = false) const;
-	float                  getCollisionOffsetZ(bool testData = false) const;
-	float                  getCollisionOffsetZMin(bool testData = false) const;
-	float                  getCollisionOffsetZMax(bool testData = false) const;
-	float                  getCollisionLength(bool testData = false) const;
-	float                  getCollisionLengthMin(bool testData = false) const;
-	float                  getCollisionLengthMax(bool testData = false) const;
-	float                  getCameraHeight(bool testData = false) const;
-	float                  getCameraHeightMin(bool testData = false) const;
-	float                  getCameraHeightMax(bool testData = false) const;
+	float                  getSwimHeight() const;
+	float                  getSwimHeightMin() const;
+	float                  getSwimHeightMax() const;
+	float                  getWarpTolerance() const;
+	float                  getWarpToleranceMin() const;
+	float                  getWarpToleranceMax() const;
+	float                  getCollisionOffsetX() const;
+	float                  getCollisionOffsetXMin() const;
+	float                  getCollisionOffsetXMax() const;
+	float                  getCollisionOffsetZ() const;
+	float                  getCollisionOffsetZMin() const;
+	float                  getCollisionOffsetZMax() const;
+	float                  getCollisionLength() const;
+	float                  getCollisionLengthMin() const;
+	float                  getCollisionLengthMax() const;
+	float                  getCameraHeight() const;
+	float                  getCameraHeightMin() const;
+	float                  getCameraHeightMax() const;
 
-#ifdef _DEBUG
-public:
-	// special code used by datalint
-	virtual void testValues(void) const;
-#endif
 
 protected:
 	virtual void load(Iff &file);

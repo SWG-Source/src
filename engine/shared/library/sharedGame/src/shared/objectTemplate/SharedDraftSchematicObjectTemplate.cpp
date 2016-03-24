@@ -434,22 +434,14 @@ size_t SharedDraftSchematicObjectTemplate::getAttributesCount(void) const
 	return count;
 }	// SharedDraftSchematicObjectTemplate::getAttributesCount
 
-const std::string & SharedDraftSchematicObjectTemplate::getCraftedSharedTemplate(bool testData) const
+const std::string & SharedDraftSchematicObjectTemplate::getCraftedSharedTemplate() const
 {
-#ifdef _DEBUG
-std::string testDataValue = DefaultString;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedDraftSchematicObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedDraftSchematicObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getCraftedSharedTemplate(true);
-#endif
 	}
 
 	if (!m_craftedSharedTemplate.isLoaded())
@@ -467,25 +459,10 @@ UNREF(testData);
 	}
 
 	const std::string & value = m_craftedSharedTemplate.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedDraftSchematicObjectTemplate::getCraftedSharedTemplate
 
-#ifdef _DEBUG
-/**
- * Special function used by datalint. Checks for duplicate values in base and derived templates.
- */
-void SharedDraftSchematicObjectTemplate::testValues(void) const
-{
-	IGNORE_RETURN(getCraftedSharedTemplate(true));
-	SharedIntangibleObjectTemplate::testValues();
-}	// SharedDraftSchematicObjectTemplate::testValues
-#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form
@@ -528,8 +505,8 @@ char paramName[MAX_NAME_SIZE];
 	}
 	if (getHighestTemplateVersion() != TAG(0,0,0,3))
 	{
-		if (DataLint::isEnabled())
-			DEBUG_WARNING(true, ("template %s version out of date", file.getFileName()));
+		
+			
 		m_versionOk = false;
 	}
 
@@ -638,22 +615,14 @@ Tag SharedDraftSchematicObjectTemplate::_IngredientSlot::getId(void) const
 	return _IngredientSlot_tag;
 }	// SharedDraftSchematicObjectTemplate::_IngredientSlot::getId
 
-const StringId SharedDraftSchematicObjectTemplate::_IngredientSlot::getName(bool versionOk, bool testData) const
+const StringId SharedDraftSchematicObjectTemplate::_IngredientSlot::getName(bool versionOk, ) const
 {
-#ifdef _DEBUG
-StringId testDataValue = DefaultStringId;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedDraftSchematicObjectTemplate::_IngredientSlot * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedDraftSchematicObjectTemplate::_IngredientSlot *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getName(true);
-#endif
 	}
 
 	if (!m_name.isLoaded())
@@ -671,31 +640,18 @@ UNREF(testData);
 	}
 
 	const StringId value = m_name.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedDraftSchematicObjectTemplate::_IngredientSlot::getName
 
-const std::string & SharedDraftSchematicObjectTemplate::_IngredientSlot::getHardpoint(bool versionOk, bool testData) const
+const std::string & SharedDraftSchematicObjectTemplate::_IngredientSlot::getHardpoint(bool versionOk, ) const
 {
-#ifdef _DEBUG
-std::string testDataValue = DefaultString;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedDraftSchematicObjectTemplate::_IngredientSlot * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedDraftSchematicObjectTemplate::_IngredientSlot *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getHardpoint(true);
-#endif
 	}
 
 	if (!m_hardpoint.isLoaded())
@@ -713,25 +669,10 @@ UNREF(testData);
 	}
 
 	const std::string & value = m_hardpoint.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedDraftSchematicObjectTemplate::_IngredientSlot::getHardpoint
 
-#ifdef _DEBUG
-/**
- * Special function used by datalint. Checks for duplicate values in base and derived templates.
- */
-void SharedDraftSchematicObjectTemplate::_IngredientSlot::testValues(void) const
-{
-	IGNORE_RETURN(getName(true));
-	IGNORE_RETURN(getHardpoint(true));
-}	// SharedDraftSchematicObjectTemplate::_IngredientSlot::testValues
-#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form
@@ -811,22 +752,14 @@ Tag SharedDraftSchematicObjectTemplate::_SchematicAttribute::getId(void) const
 	return _SchematicAttribute_tag;
 }	// SharedDraftSchematicObjectTemplate::_SchematicAttribute::getId
 
-const StringId SharedDraftSchematicObjectTemplate::_SchematicAttribute::getName(bool versionOk, bool testData) const
+const StringId SharedDraftSchematicObjectTemplate::_SchematicAttribute::getName(bool versionOk, ) const
 {
-#ifdef _DEBUG
-StringId testDataValue = DefaultStringId;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedDraftSchematicObjectTemplate::_SchematicAttribute * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedDraftSchematicObjectTemplate::_SchematicAttribute *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getName(true);
-#endif
 	}
 
 	if (!m_name.isLoaded())
@@ -844,31 +777,18 @@ UNREF(testData);
 	}
 
 	const StringId value = m_name.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedDraftSchematicObjectTemplate::_SchematicAttribute::getName
 
-const StringId SharedDraftSchematicObjectTemplate::_SchematicAttribute::getExperiment(bool versionOk, bool testData) const
+const StringId SharedDraftSchematicObjectTemplate::_SchematicAttribute::getExperiment(bool versionOk, ) const
 {
-#ifdef _DEBUG
-StringId testDataValue = DefaultStringId;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedDraftSchematicObjectTemplate::_SchematicAttribute * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedDraftSchematicObjectTemplate::_SchematicAttribute *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getExperiment(true);
-#endif
 	}
 
 	if (!m_experiment.isLoaded())
@@ -886,31 +806,18 @@ UNREF(testData);
 	}
 
 	const StringId value = m_experiment.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedDraftSchematicObjectTemplate::_SchematicAttribute::getExperiment
 
-int SharedDraftSchematicObjectTemplate::_SchematicAttribute::getValue(bool versionOk, bool testData) const
+int SharedDraftSchematicObjectTemplate::_SchematicAttribute::getValue(bool versionOk, ) const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedDraftSchematicObjectTemplate::_SchematicAttribute * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedDraftSchematicObjectTemplate::_SchematicAttribute *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getValue(true);
-#endif
 	}
 
 	if (!m_value.isLoaded())
@@ -950,31 +857,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedDraftSchematicObjectTemplate::_SchematicAttribute::getValue
 
-int SharedDraftSchematicObjectTemplate::_SchematicAttribute::getValueMin(bool versionOk, bool testData) const
+int SharedDraftSchematicObjectTemplate::_SchematicAttribute::getValueMin(bool versionOk, ) const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedDraftSchematicObjectTemplate::_SchematicAttribute * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedDraftSchematicObjectTemplate::_SchematicAttribute *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getValueMin(true);
-#endif
 	}
 
 	if (!m_value.isLoaded())
@@ -1014,31 +908,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedDraftSchematicObjectTemplate::_SchematicAttribute::getValueMin
 
-int SharedDraftSchematicObjectTemplate::_SchematicAttribute::getValueMax(bool versionOk, bool testData) const
+int SharedDraftSchematicObjectTemplate::_SchematicAttribute::getValueMax(bool versionOk, ) const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedDraftSchematicObjectTemplate::_SchematicAttribute * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedDraftSchematicObjectTemplate::_SchematicAttribute *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getValueMax(true);
-#endif
 	}
 
 	if (!m_value.isLoaded())
@@ -1078,27 +959,10 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedDraftSchematicObjectTemplate::_SchematicAttribute::getValueMax
 
-#ifdef _DEBUG
-/**
- * Special function used by datalint. Checks for duplicate values in base and derived templates.
- */
-void SharedDraftSchematicObjectTemplate::_SchematicAttribute::testValues(void) const
-{
-	IGNORE_RETURN(getName(true));
-	IGNORE_RETURN(getExperiment(true));
-	IGNORE_RETURN(getValueMin(true));
-	IGNORE_RETURN(getValueMax(true));
-}	// SharedDraftSchematicObjectTemplate::_SchematicAttribute::testValues
-#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form

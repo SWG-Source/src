@@ -13,7 +13,7 @@
 #include "sharedGame/FirstSharedGame.h"
 #include "sharedGame/SharedShipObjectTemplate.h"
 
-#include "sharedDebug/DataLint.h"
+
 #include "sharedFile/Iff.h"
 #include "sharedGame/AssetCustomizationManager.h"
 #include "sharedMath/Vector.h"
@@ -147,22 +147,14 @@ void SharedShipObjectTemplate::createCustomizationDataPropertyAsNeeded(Object &o
 }
 
 //@BEGIN TFD
-const std::string & SharedShipObjectTemplate::getCockpitFilename(bool testData) const
+const std::string & SharedShipObjectTemplate::getCockpitFilename() const
 {
-#ifdef _DEBUG
-std::string testDataValue = DefaultString;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedShipObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedShipObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getCockpitFilename(true);
-#endif
 	}
 
 	if (!m_cockpitFilename.isLoaded())
@@ -180,31 +172,18 @@ UNREF(testData);
 	}
 
 	const std::string & value = m_cockpitFilename.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedShipObjectTemplate::getCockpitFilename
 
-bool SharedShipObjectTemplate::getHasWings(bool testData) const
+bool SharedShipObjectTemplate::getHasWings() const
 {
-#ifdef _DEBUG
-bool testDataValue = false;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedShipObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedShipObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getHasWings(true);
-#endif
 	}
 
 	if (!m_hasWings.isLoaded())
@@ -222,31 +201,18 @@ UNREF(testData);
 	}
 
 	bool value = m_hasWings.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedShipObjectTemplate::getHasWings
 
-bool SharedShipObjectTemplate::getPlayerControlled(bool testData) const
+bool SharedShipObjectTemplate::getPlayerControlled() const
 {
-#ifdef _DEBUG
-bool testDataValue = false;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedShipObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedShipObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getPlayerControlled(true);
-#endif
 	}
 
 	if (!m_playerControlled.isLoaded())
@@ -264,31 +230,18 @@ UNREF(testData);
 	}
 
 	bool value = m_playerControlled.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedShipObjectTemplate::getPlayerControlled
 
-const std::string & SharedShipObjectTemplate::getInteriorLayoutFileName(bool testData) const
+const std::string & SharedShipObjectTemplate::getInteriorLayoutFileName() const
 {
-#ifdef _DEBUG
-std::string testDataValue = DefaultString;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedShipObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedShipObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getInteriorLayoutFileName(true);
-#endif
 	}
 
 	if (!m_interiorLayoutFileName.isLoaded())
@@ -306,28 +259,10 @@ UNREF(testData);
 	}
 
 	const std::string & value = m_interiorLayoutFileName.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedShipObjectTemplate::getInteriorLayoutFileName
 
-#ifdef _DEBUG
-/**
- * Special function used by datalint. Checks for duplicate values in base and derived templates.
- */
-void SharedShipObjectTemplate::testValues(void) const
-{
-	IGNORE_RETURN(getCockpitFilename(true));
-	IGNORE_RETURN(getHasWings(true));
-	IGNORE_RETURN(getPlayerControlled(true));
-	IGNORE_RETURN(getInteriorLayoutFileName(true));
-	SharedTangibleObjectTemplate::testValues();
-}	// SharedShipObjectTemplate::testValues
-#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form
@@ -370,8 +305,8 @@ char paramName[MAX_NAME_SIZE];
 	}
 	if (getHighestTemplateVersion() != TAG(0,0,0,4))
 	{
-		if (DataLint::isEnabled())
-			DEBUG_WARNING(true, ("template %s version out of date", file.getFileName()));
+		
+			
 		m_versionOk = false;
 	}
 

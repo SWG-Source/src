@@ -103,22 +103,14 @@ Tag SharedBuildingObjectTemplate::getHighestTemplateVersion(void) const
 } // SharedBuildingObjectTemplate::getHighestTemplateVersion
 
 //@BEGIN TFD
-const std::string & SharedBuildingObjectTemplate::getTerrainModificationFileName(bool testData) const
+const std::string & SharedBuildingObjectTemplate::getTerrainModificationFileName() const
 {
-#ifdef _DEBUG
-std::string testDataValue = DefaultString;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedBuildingObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedBuildingObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getTerrainModificationFileName(true);
-#endif
 	}
 
 	if (!m_terrainModificationFileName.isLoaded())
@@ -136,31 +128,18 @@ UNREF(testData);
 	}
 
 	const std::string & value = m_terrainModificationFileName.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedBuildingObjectTemplate::getTerrainModificationFileName
 
-const std::string & SharedBuildingObjectTemplate::getInteriorLayoutFileName(bool testData) const
+const std::string & SharedBuildingObjectTemplate::getInteriorLayoutFileName() const
 {
-#ifdef _DEBUG
-std::string testDataValue = DefaultString;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedBuildingObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedBuildingObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getInteriorLayoutFileName(true);
-#endif
 	}
 
 	if (!m_interiorLayoutFileName.isLoaded())
@@ -178,26 +157,10 @@ UNREF(testData);
 	}
 
 	const std::string & value = m_interiorLayoutFileName.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedBuildingObjectTemplate::getInteriorLayoutFileName
 
-#ifdef _DEBUG
-/**
- * Special function used by datalint. Checks for duplicate values in base and derived templates.
- */
-void SharedBuildingObjectTemplate::testValues(void) const
-{
-	IGNORE_RETURN(getTerrainModificationFileName(true));
-	IGNORE_RETURN(getInteriorLayoutFileName(true));
-	SharedTangibleObjectTemplate::testValues();
-}	// SharedBuildingObjectTemplate::testValues
-#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form
@@ -240,8 +203,8 @@ char paramName[MAX_NAME_SIZE];
 	}
 	if (getHighestTemplateVersion() != TAG(0,0,0,1))
 	{
-		if (DataLint::isEnabled())
-			DEBUG_WARNING(true, ("template %s version out of date", file.getFileName()));
+		
+			
 		m_versionOk = false;
 	}
 

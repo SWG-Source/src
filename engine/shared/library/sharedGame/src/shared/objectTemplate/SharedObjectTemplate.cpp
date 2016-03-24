@@ -266,22 +266,14 @@ void SharedObjectTemplate::postLoad(void)
 }	// SharedObjectTemplate::postLoad
 
 //@BEGIN TFD
-const StringId SharedObjectTemplate::getObjectName(bool testData) const
+const StringId SharedObjectTemplate::getObjectName() const
 {
-#ifdef _DEBUG
-StringId testDataValue = DefaultStringId;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getObjectName(true);
-#endif
 	}
 
 	if (!m_objectName.isLoaded())
@@ -299,31 +291,18 @@ UNREF(testData);
 	}
 
 	const StringId value = m_objectName.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedObjectTemplate::getObjectName
 
-const StringId SharedObjectTemplate::getDetailedDescription(bool testData) const
+const StringId SharedObjectTemplate::getDetailedDescription() const
 {
-#ifdef _DEBUG
-StringId testDataValue = DefaultStringId;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getDetailedDescription(true);
-#endif
 	}
 
 	if (!m_detailedDescription.isLoaded())
@@ -341,31 +320,18 @@ UNREF(testData);
 	}
 
 	const StringId value = m_detailedDescription.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedObjectTemplate::getDetailedDescription
 
-const StringId SharedObjectTemplate::getLookAtText(bool testData) const
+const StringId SharedObjectTemplate::getLookAtText() const
 {
-#ifdef _DEBUG
-StringId testDataValue = DefaultStringId;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getLookAtText(true);
-#endif
 	}
 
 	if (!m_lookAtText.isLoaded())
@@ -383,31 +349,18 @@ UNREF(testData);
 	}
 
 	const StringId value = m_lookAtText.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedObjectTemplate::getLookAtText
 
-bool SharedObjectTemplate::getSnapToTerrain(bool testData) const
+bool SharedObjectTemplate::getSnapToTerrain() const
 {
-#ifdef _DEBUG
-bool testDataValue = false;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getSnapToTerrain(true);
-#endif
 	}
 
 	if (!m_snapToTerrain.isLoaded())
@@ -425,31 +378,18 @@ UNREF(testData);
 	}
 
 	bool value = m_snapToTerrain.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedObjectTemplate::getSnapToTerrain
 
-SharedObjectTemplate::ContainerType SharedObjectTemplate::getContainerType(bool testData) const
+SharedObjectTemplate::ContainerType SharedObjectTemplate::getContainerType() const
 {
-#ifdef _DEBUG
-SharedObjectTemplate::ContainerType testDataValue = static_cast<SharedObjectTemplate::ContainerType>(0);
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getContainerType(true);
-#endif
 	}
 
 	if (!m_containerType.isLoaded())
@@ -467,31 +407,18 @@ UNREF(testData);
 	}
 
 	ContainerType value = static_cast<ContainerType>(m_containerType.getValue());
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedObjectTemplate::getContainerType
 
-int SharedObjectTemplate::getContainerVolumeLimit(bool testData) const
+int SharedObjectTemplate::getContainerVolumeLimit() const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getContainerVolumeLimit(true);
-#endif
 	}
 
 	if (!m_containerVolumeLimit.isLoaded())
@@ -531,31 +458,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedObjectTemplate::getContainerVolumeLimit
 
-int SharedObjectTemplate::getContainerVolumeLimitMin(bool testData) const
+int SharedObjectTemplate::getContainerVolumeLimitMin() const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getContainerVolumeLimitMin(true);
-#endif
 	}
 
 	if (!m_containerVolumeLimit.isLoaded())
@@ -595,31 +509,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedObjectTemplate::getContainerVolumeLimitMin
 
-int SharedObjectTemplate::getContainerVolumeLimitMax(bool testData) const
+int SharedObjectTemplate::getContainerVolumeLimitMax() const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getContainerVolumeLimitMax(true);
-#endif
 	}
 
 	if (!m_containerVolumeLimit.isLoaded())
@@ -659,31 +560,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedObjectTemplate::getContainerVolumeLimitMax
 
-const std::string & SharedObjectTemplate::getTintPalette(bool testData) const
+const std::string & SharedObjectTemplate::getTintPalette() const
 {
-#ifdef _DEBUG
-std::string testDataValue = DefaultString;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getTintPalette(true);
-#endif
 	}
 
 	if (!m_tintPalette.isLoaded())
@@ -701,31 +589,18 @@ UNREF(testData);
 	}
 
 	const std::string & value = m_tintPalette.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedObjectTemplate::getTintPalette
 
-const std::string & SharedObjectTemplate::getSlotDescriptorFilename(bool testData) const
+const std::string & SharedObjectTemplate::getSlotDescriptorFilename() const
 {
-#ifdef _DEBUG
-std::string testDataValue = DefaultString;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getSlotDescriptorFilename(true);
-#endif
 	}
 
 	if (!m_slotDescriptorFilename.isLoaded())
@@ -743,31 +618,18 @@ UNREF(testData);
 	}
 
 	const std::string & value = m_slotDescriptorFilename.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedObjectTemplate::getSlotDescriptorFilename
 
-const std::string & SharedObjectTemplate::getArrangementDescriptorFilename(bool testData) const
+const std::string & SharedObjectTemplate::getArrangementDescriptorFilename() const
 {
-#ifdef _DEBUG
-std::string testDataValue = DefaultString;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getArrangementDescriptorFilename(true);
-#endif
 	}
 
 	if (!m_arrangementDescriptorFilename.isLoaded())
@@ -785,31 +647,18 @@ UNREF(testData);
 	}
 
 	const std::string & value = m_arrangementDescriptorFilename.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedObjectTemplate::getArrangementDescriptorFilename
 
-const std::string & SharedObjectTemplate::getAppearanceFilename(bool testData) const
+const std::string & SharedObjectTemplate::getAppearanceFilename() const
 {
-#ifdef _DEBUG
-std::string testDataValue = DefaultString;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getAppearanceFilename(true);
-#endif
 	}
 
 	if (!m_appearanceFilename.isLoaded())
@@ -827,31 +676,18 @@ UNREF(testData);
 	}
 
 	const std::string & value = m_appearanceFilename.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedObjectTemplate::getAppearanceFilename
 
-const std::string & SharedObjectTemplate::getPortalLayoutFilename(bool testData) const
+const std::string & SharedObjectTemplate::getPortalLayoutFilename() const
 {
-#ifdef _DEBUG
-std::string testDataValue = DefaultString;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getPortalLayoutFilename(true);
-#endif
 	}
 
 	if (!m_portalLayoutFilename.isLoaded())
@@ -869,31 +705,18 @@ UNREF(testData);
 	}
 
 	const std::string & value = m_portalLayoutFilename.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedObjectTemplate::getPortalLayoutFilename
 
-const std::string & SharedObjectTemplate::getClientDataFile(bool testData) const
+const std::string & SharedObjectTemplate::getClientDataFile() const
 {
-#ifdef _DEBUG
-std::string testDataValue = DefaultString;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getClientDataFile(true);
-#endif
 	}
 
 	if (!m_clientDataFile.isLoaded())
@@ -911,31 +734,18 @@ UNREF(testData);
 	}
 
 	const std::string & value = m_clientDataFile.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedObjectTemplate::getClientDataFile
 
-float SharedObjectTemplate::getScale(bool testData) const
+float SharedObjectTemplate::getScale() const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getScale(true);
-#endif
 	}
 
 	if (!m_scale.isLoaded())
@@ -975,31 +785,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedObjectTemplate::getScale
 
-float SharedObjectTemplate::getScaleMin(bool testData) const
+float SharedObjectTemplate::getScaleMin() const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getScaleMin(true);
-#endif
 	}
 
 	if (!m_scale.isLoaded())
@@ -1039,31 +836,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedObjectTemplate::getScaleMin
 
-float SharedObjectTemplate::getScaleMax(bool testData) const
+float SharedObjectTemplate::getScaleMax() const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getScaleMax(true);
-#endif
 	}
 
 	if (!m_scale.isLoaded())
@@ -1103,31 +887,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedObjectTemplate::getScaleMax
 
-SharedObjectTemplate::GameObjectType SharedObjectTemplate::getGameObjectType(bool testData) const
+SharedObjectTemplate::GameObjectType SharedObjectTemplate::getGameObjectType() const
 {
-#ifdef _DEBUG
-SharedObjectTemplate::GameObjectType testDataValue = static_cast<SharedObjectTemplate::GameObjectType>(0);
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getGameObjectType(true);
-#endif
 	}
 
 	if (!m_gameObjectType.isLoaded())
@@ -1145,31 +916,18 @@ UNREF(testData);
 	}
 
 	GameObjectType value = static_cast<GameObjectType>(m_gameObjectType.getValue());
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedObjectTemplate::getGameObjectType
 
-bool SharedObjectTemplate::getSendToClient(bool testData) const
+bool SharedObjectTemplate::getSendToClient() const
 {
-#ifdef _DEBUG
-bool testDataValue = false;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getSendToClient(true);
-#endif
 	}
 
 	if (!m_sendToClient.isLoaded())
@@ -1187,31 +945,18 @@ UNREF(testData);
 	}
 
 	bool value = m_sendToClient.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedObjectTemplate::getSendToClient
 
-float SharedObjectTemplate::getScaleThresholdBeforeExtentTest(bool testData) const
+float SharedObjectTemplate::getScaleThresholdBeforeExtentTest() const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getScaleThresholdBeforeExtentTest(true);
-#endif
 	}
 
 	if (!m_scaleThresholdBeforeExtentTest.isLoaded())
@@ -1251,31 +996,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedObjectTemplate::getScaleThresholdBeforeExtentTest
 
-float SharedObjectTemplate::getScaleThresholdBeforeExtentTestMin(bool testData) const
+float SharedObjectTemplate::getScaleThresholdBeforeExtentTestMin() const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getScaleThresholdBeforeExtentTestMin(true);
-#endif
 	}
 
 	if (!m_scaleThresholdBeforeExtentTest.isLoaded())
@@ -1315,31 +1047,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedObjectTemplate::getScaleThresholdBeforeExtentTestMin
 
-float SharedObjectTemplate::getScaleThresholdBeforeExtentTestMax(bool testData) const
+float SharedObjectTemplate::getScaleThresholdBeforeExtentTestMax() const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getScaleThresholdBeforeExtentTestMax(true);
-#endif
 	}
 
 	if (!m_scaleThresholdBeforeExtentTest.isLoaded())
@@ -1379,31 +1098,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedObjectTemplate::getScaleThresholdBeforeExtentTestMax
 
-float SharedObjectTemplate::getClearFloraRadius(bool testData) const
+float SharedObjectTemplate::getClearFloraRadius() const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getClearFloraRadius(true);
-#endif
 	}
 
 	if (!m_clearFloraRadius.isLoaded())
@@ -1443,31 +1149,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedObjectTemplate::getClearFloraRadius
 
-float SharedObjectTemplate::getClearFloraRadiusMin(bool testData) const
+float SharedObjectTemplate::getClearFloraRadiusMin() const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getClearFloraRadiusMin(true);
-#endif
 	}
 
 	if (!m_clearFloraRadius.isLoaded())
@@ -1507,31 +1200,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedObjectTemplate::getClearFloraRadiusMin
 
-float SharedObjectTemplate::getClearFloraRadiusMax(bool testData) const
+float SharedObjectTemplate::getClearFloraRadiusMax() const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getClearFloraRadiusMax(true);
-#endif
 	}
 
 	if (!m_clearFloraRadius.isLoaded())
@@ -1571,31 +1251,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedObjectTemplate::getClearFloraRadiusMax
 
-SharedObjectTemplate::SurfaceType SharedObjectTemplate::getSurfaceType(bool testData) const
+SharedObjectTemplate::SurfaceType SharedObjectTemplate::getSurfaceType() const
 {
-#ifdef _DEBUG
-SharedObjectTemplate::SurfaceType testDataValue = static_cast<SharedObjectTemplate::SurfaceType>(0);
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getSurfaceType(true);
-#endif
 	}
 
 	if (!m_surfaceType.isLoaded())
@@ -1613,31 +1280,18 @@ UNREF(testData);
 	}
 
 	SurfaceType value = static_cast<SurfaceType>(m_surfaceType.getValue());
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedObjectTemplate::getSurfaceType
 
-float SharedObjectTemplate::getNoBuildRadius(bool testData) const
+float SharedObjectTemplate::getNoBuildRadius() const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getNoBuildRadius(true);
-#endif
 	}
 
 	if (!m_noBuildRadius.isLoaded())
@@ -1677,31 +1331,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedObjectTemplate::getNoBuildRadius
 
-float SharedObjectTemplate::getNoBuildRadiusMin(bool testData) const
+float SharedObjectTemplate::getNoBuildRadiusMin() const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getNoBuildRadiusMin(true);
-#endif
 	}
 
 	if (!m_noBuildRadius.isLoaded())
@@ -1741,31 +1382,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedObjectTemplate::getNoBuildRadiusMin
 
-float SharedObjectTemplate::getNoBuildRadiusMax(bool testData) const
+float SharedObjectTemplate::getNoBuildRadiusMax() const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getNoBuildRadiusMax(true);
-#endif
 	}
 
 	if (!m_noBuildRadius.isLoaded())
@@ -1805,31 +1433,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedObjectTemplate::getNoBuildRadiusMax
 
-bool SharedObjectTemplate::getOnlyVisibleInTools(bool testData) const
+bool SharedObjectTemplate::getOnlyVisibleInTools() const
 {
-#ifdef _DEBUG
-bool testDataValue = false;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getOnlyVisibleInTools(true);
-#endif
 	}
 
 	if (!m_onlyVisibleInTools.isLoaded())
@@ -1847,31 +1462,18 @@ UNREF(testData);
 	}
 
 	bool value = m_onlyVisibleInTools.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedObjectTemplate::getOnlyVisibleInTools
 
-float SharedObjectTemplate::getLocationReservationRadius(bool testData) const
+float SharedObjectTemplate::getLocationReservationRadius() const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getLocationReservationRadius(true);
-#endif
 	}
 
 	if (!m_locationReservationRadius.isLoaded())
@@ -1911,31 +1513,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedObjectTemplate::getLocationReservationRadius
 
-float SharedObjectTemplate::getLocationReservationRadiusMin(bool testData) const
+float SharedObjectTemplate::getLocationReservationRadiusMin() const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getLocationReservationRadiusMin(true);
-#endif
 	}
 
 	if (!m_locationReservationRadius.isLoaded())
@@ -1975,31 +1564,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedObjectTemplate::getLocationReservationRadiusMin
 
-float SharedObjectTemplate::getLocationReservationRadiusMax(bool testData) const
+float SharedObjectTemplate::getLocationReservationRadiusMax() const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getLocationReservationRadiusMax(true);
-#endif
 	}
 
 	if (!m_locationReservationRadius.isLoaded())
@@ -2039,31 +1615,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedObjectTemplate::getLocationReservationRadiusMax
 
-bool SharedObjectTemplate::getForceNoCollision(bool testData) const
+bool SharedObjectTemplate::getForceNoCollision() const
 {
-#ifdef _DEBUG
-bool testDataValue = false;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getForceNoCollision(true);
-#endif
 	}
 
 	if (!m_forceNoCollision.isLoaded())
@@ -2081,51 +1644,10 @@ UNREF(testData);
 	}
 
 	bool value = m_forceNoCollision.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedObjectTemplate::getForceNoCollision
 
-#ifdef _DEBUG
-/**
- * Special function used by datalint. Checks for duplicate values in base and derived templates.
- */
-void SharedObjectTemplate::testValues(void) const
-{
-	IGNORE_RETURN(getObjectName(true));
-	IGNORE_RETURN(getDetailedDescription(true));
-	IGNORE_RETURN(getLookAtText(true));
-	IGNORE_RETURN(getSnapToTerrain(true));
-	IGNORE_RETURN(getContainerType(true));
-	IGNORE_RETURN(getContainerVolumeLimitMin(true));
-	IGNORE_RETURN(getContainerVolumeLimitMax(true));
-	IGNORE_RETURN(getTintPalette(true));
-	IGNORE_RETURN(getSlotDescriptorFilename(true));
-	IGNORE_RETURN(getArrangementDescriptorFilename(true));
-	IGNORE_RETURN(getAppearanceFilename(true));
-	IGNORE_RETURN(getPortalLayoutFilename(true));
-	IGNORE_RETURN(getClientDataFile(true));
-	IGNORE_RETURN(getScaleMin(true));
-	IGNORE_RETURN(getScaleMax(true));
-	IGNORE_RETURN(getGameObjectType(true));
-	IGNORE_RETURN(getSendToClient(true));
-	IGNORE_RETURN(getScaleThresholdBeforeExtentTestMin(true));
-	IGNORE_RETURN(getScaleThresholdBeforeExtentTestMax(true));
-	IGNORE_RETURN(getClearFloraRadiusMin(true));
-	IGNORE_RETURN(getClearFloraRadiusMax(true));
-	IGNORE_RETURN(getSurfaceType(true));
-	IGNORE_RETURN(getNoBuildRadiusMin(true));
-	IGNORE_RETURN(getNoBuildRadiusMax(true));
-	IGNORE_RETURN(getOnlyVisibleInTools(true));
-	IGNORE_RETURN(getLocationReservationRadiusMin(true));
-	IGNORE_RETURN(getLocationReservationRadiusMax(true));
-	IGNORE_RETURN(getForceNoCollision(true));
-}	// SharedObjectTemplate::testValues
-#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form
@@ -2167,8 +1689,8 @@ char paramName[MAX_NAME_SIZE];
 	}
 	if (getHighestTemplateVersion() != TAG(0,0,1,0))
 	{
-		if (DataLint::isEnabled())
-			DEBUG_WARNING(true, ("template %s version out of date", file.getFileName()));
+		
+			
 		m_versionOk = false;
 	}
 

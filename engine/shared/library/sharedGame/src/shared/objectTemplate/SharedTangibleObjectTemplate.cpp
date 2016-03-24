@@ -262,16 +262,6 @@ void SharedTangibleObjectTemplate::createCustomizationDataPropertyAsNeeded(Objec
 		AssetCustomizationManager::addCustomizationVariablesForAsset(TemporaryCrcString(getAppearanceFilename().c_str(), true), *customizationData, skipSharedOwnerVariables);
 
 		
-#ifdef _DEBUG
-		//-- set up mappings for any variables which need dependent mappings
- 		int numVariableMappings = getCustomizationVariableMappingCount();
-		if(numVariableMappings != 0)
-		{
-			//If the object is a wearable, then the dependent variable, which is probably shared, will not exist at the moment the dependency
-			//is set up.  For this reason, make sure that you're really doing what you want.
-			DEBUG_WARNING(true, ("Generally, CustomizationVariableMapping should not be set on Wearables or other non-Creature tangibles."));
-		}
-#endif
 
 		//-- release local reference to the CustomizationData instance
 		customizationData->release();
@@ -879,22 +869,14 @@ size_t SharedTangibleObjectTemplate::getSocketDestinationsCount(void) const
 	return count;
 }	// SharedTangibleObjectTemplate::getSocketDestinationsCount
 
-const std::string & SharedTangibleObjectTemplate::getStructureFootprintFileName(bool testData) const
+const std::string & SharedTangibleObjectTemplate::getStructureFootprintFileName() const
 {
-#ifdef _DEBUG
-std::string testDataValue = DefaultString;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedTangibleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedTangibleObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getStructureFootprintFileName(true);
-#endif
 	}
 
 	if (!m_structureFootprintFileName.isLoaded())
@@ -912,31 +894,18 @@ UNREF(testData);
 	}
 
 	const std::string & value = m_structureFootprintFileName.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedTangibleObjectTemplate::getStructureFootprintFileName
 
-bool SharedTangibleObjectTemplate::getUseStructureFootprintOutline(bool testData) const
+bool SharedTangibleObjectTemplate::getUseStructureFootprintOutline() const
 {
-#ifdef _DEBUG
-bool testDataValue = false;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedTangibleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedTangibleObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getUseStructureFootprintOutline(true);
-#endif
 	}
 
 	if (!m_useStructureFootprintOutline.isLoaded())
@@ -954,31 +923,18 @@ UNREF(testData);
 	}
 
 	bool value = m_useStructureFootprintOutline.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedTangibleObjectTemplate::getUseStructureFootprintOutline
 
-bool SharedTangibleObjectTemplate::getTargetable(bool testData) const
+bool SharedTangibleObjectTemplate::getTargetable() const
 {
-#ifdef _DEBUG
-bool testDataValue = false;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedTangibleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedTangibleObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getTargetable(true);
-#endif
 	}
 
 	if (!m_targetable.isLoaded())
@@ -996,11 +952,6 @@ UNREF(testData);
 	}
 
 	bool value = m_targetable.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedTangibleObjectTemplate::getTargetable
@@ -1217,22 +1168,14 @@ size_t SharedTangibleObjectTemplate::getCustomizationVariableMappingCount(void) 
 	return count;
 }	// SharedTangibleObjectTemplate::getCustomizationVariableMappingCount
 
-SharedTangibleObjectTemplate::ClientVisabilityFlags SharedTangibleObjectTemplate::getClientVisabilityFlag(bool testData) const
+SharedTangibleObjectTemplate::ClientVisabilityFlags SharedTangibleObjectTemplate::getClientVisabilityFlag() const
 {
-#ifdef _DEBUG
-SharedTangibleObjectTemplate::ClientVisabilityFlags testDataValue = static_cast<SharedTangibleObjectTemplate::ClientVisabilityFlags>(0);
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedTangibleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedTangibleObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getClientVisabilityFlag(true);
-#endif
 	}
 
 	if (!m_clientVisabilityFlag.isLoaded())
@@ -1250,28 +1193,10 @@ UNREF(testData);
 	}
 
 	ClientVisabilityFlags value = static_cast<ClientVisabilityFlags>(m_clientVisabilityFlag.getValue());
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedTangibleObjectTemplate::getClientVisabilityFlag
 
-#ifdef _DEBUG
-/**
- * Special function used by datalint. Checks for duplicate values in base and derived templates.
- */
-void SharedTangibleObjectTemplate::testValues(void) const
-{
-	IGNORE_RETURN(getStructureFootprintFileName(true));
-	IGNORE_RETURN(getUseStructureFootprintOutline(true));
-	IGNORE_RETURN(getTargetable(true));
-	IGNORE_RETURN(getClientVisabilityFlag(true));
-	SharedObjectTemplate::testValues();
-}	// SharedTangibleObjectTemplate::testValues
-#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form
@@ -1314,8 +1239,8 @@ char paramName[MAX_NAME_SIZE];
 	}
 	if (getHighestTemplateVersion() != TAG(0,0,1,0))
 	{
-		if (DataLint::isEnabled())
-			DEBUG_WARNING(true, ("template %s version out of date", file.getFileName()));
+		
+			
 		m_versionOk = false;
 	}
 
@@ -1506,22 +1431,14 @@ Tag SharedTangibleObjectTemplate::_ConstStringCustomizationVariable::getId(void)
 	return _ConstStringCustomizationVariable_tag;
 }	// SharedTangibleObjectTemplate::_ConstStringCustomizationVariable::getId
 
-const std::string & SharedTangibleObjectTemplate::_ConstStringCustomizationVariable::getVariableName(bool versionOk, bool testData) const
+const std::string & SharedTangibleObjectTemplate::_ConstStringCustomizationVariable::getVariableName(bool versionOk, ) const
 {
-#ifdef _DEBUG
-std::string testDataValue = DefaultString;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedTangibleObjectTemplate::_ConstStringCustomizationVariable * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedTangibleObjectTemplate::_ConstStringCustomizationVariable *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getVariableName(true);
-#endif
 	}
 
 	if (!m_variableName.isLoaded())
@@ -1539,31 +1456,18 @@ UNREF(testData);
 	}
 
 	const std::string & value = m_variableName.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedTangibleObjectTemplate::_ConstStringCustomizationVariable::getVariableName
 
-const std::string & SharedTangibleObjectTemplate::_ConstStringCustomizationVariable::getConstValue(bool versionOk, bool testData) const
+const std::string & SharedTangibleObjectTemplate::_ConstStringCustomizationVariable::getConstValue(bool versionOk, ) const
 {
-#ifdef _DEBUG
-std::string testDataValue = DefaultString;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedTangibleObjectTemplate::_ConstStringCustomizationVariable * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedTangibleObjectTemplate::_ConstStringCustomizationVariable *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getConstValue(true);
-#endif
 	}
 
 	if (!m_constValue.isLoaded())
@@ -1581,25 +1485,10 @@ UNREF(testData);
 	}
 
 	const std::string & value = m_constValue.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedTangibleObjectTemplate::_ConstStringCustomizationVariable::getConstValue
 
-#ifdef _DEBUG
-/**
- * Special function used by datalint. Checks for duplicate values in base and derived templates.
- */
-void SharedTangibleObjectTemplate::_ConstStringCustomizationVariable::testValues(void) const
-{
-	IGNORE_RETURN(getVariableName(true));
-	IGNORE_RETURN(getConstValue(true));
-}	// SharedTangibleObjectTemplate::_ConstStringCustomizationVariable::testValues
-#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form
@@ -1679,22 +1568,14 @@ Tag SharedTangibleObjectTemplate::_CustomizationVariableMapping::getId(void) con
 	return _CustomizationVariableMapping_tag;
 }	// SharedTangibleObjectTemplate::_CustomizationVariableMapping::getId
 
-const std::string & SharedTangibleObjectTemplate::_CustomizationVariableMapping::getSourceVariable(bool versionOk, bool testData) const
+const std::string & SharedTangibleObjectTemplate::_CustomizationVariableMapping::getSourceVariable(bool versionOk, ) const
 {
-#ifdef _DEBUG
-std::string testDataValue = DefaultString;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedTangibleObjectTemplate::_CustomizationVariableMapping * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedTangibleObjectTemplate::_CustomizationVariableMapping *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getSourceVariable(true);
-#endif
 	}
 
 	if (!m_sourceVariable.isLoaded())
@@ -1712,31 +1593,18 @@ UNREF(testData);
 	}
 
 	const std::string & value = m_sourceVariable.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedTangibleObjectTemplate::_CustomizationVariableMapping::getSourceVariable
 
-const std::string & SharedTangibleObjectTemplate::_CustomizationVariableMapping::getDependentVariable(bool versionOk, bool testData) const
+const std::string & SharedTangibleObjectTemplate::_CustomizationVariableMapping::getDependentVariable(bool versionOk, ) const
 {
-#ifdef _DEBUG
-std::string testDataValue = DefaultString;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedTangibleObjectTemplate::_CustomizationVariableMapping * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedTangibleObjectTemplate::_CustomizationVariableMapping *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getDependentVariable(true);
-#endif
 	}
 
 	if (!m_dependentVariable.isLoaded())
@@ -1754,25 +1622,10 @@ UNREF(testData);
 	}
 
 	const std::string & value = m_dependentVariable.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedTangibleObjectTemplate::_CustomizationVariableMapping::getDependentVariable
 
-#ifdef _DEBUG
-/**
- * Special function used by datalint. Checks for duplicate values in base and derived templates.
- */
-void SharedTangibleObjectTemplate::_CustomizationVariableMapping::testValues(void) const
-{
-	IGNORE_RETURN(getSourceVariable(true));
-	IGNORE_RETURN(getDependentVariable(true));
-}	// SharedTangibleObjectTemplate::_CustomizationVariableMapping::testValues
-#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form
@@ -1852,22 +1705,14 @@ Tag SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getId(void
 	return _PaletteColorCustomizationVariable_tag;
 }	// SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getId
 
-const std::string & SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getVariableName(bool versionOk, bool testData) const
+const std::string & SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getVariableName(bool versionOk, ) const
 {
-#ifdef _DEBUG
-std::string testDataValue = DefaultString;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getVariableName(true);
-#endif
 	}
 
 	if (!m_variableName.isLoaded())
@@ -1885,31 +1730,18 @@ UNREF(testData);
 	}
 
 	const std::string & value = m_variableName.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getVariableName
 
-const std::string & SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getPalettePathName(bool versionOk, bool testData) const
+const std::string & SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getPalettePathName(bool versionOk, ) const
 {
-#ifdef _DEBUG
-std::string testDataValue = DefaultString;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getPalettePathName(true);
-#endif
 	}
 
 	if (!m_palettePathName.isLoaded())
@@ -1927,31 +1759,18 @@ UNREF(testData);
 	}
 
 	const std::string & value = m_palettePathName.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getPalettePathName
 
-int SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getDefaultPaletteIndex(bool versionOk, bool testData) const
+int SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getDefaultPaletteIndex(bool versionOk, ) const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getDefaultPaletteIndex(true);
-#endif
 	}
 
 	if (!m_defaultPaletteIndex.isLoaded())
@@ -1991,31 +1810,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getDefaultPaletteIndex
 
-int SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getDefaultPaletteIndexMin(bool versionOk, bool testData) const
+int SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getDefaultPaletteIndexMin(bool versionOk, ) const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getDefaultPaletteIndexMin(true);
-#endif
 	}
 
 	if (!m_defaultPaletteIndex.isLoaded())
@@ -2055,31 +1861,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getDefaultPaletteIndexMin
 
-int SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getDefaultPaletteIndexMax(bool versionOk, bool testData) const
+int SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getDefaultPaletteIndexMax(bool versionOk, ) const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getDefaultPaletteIndexMax(true);
-#endif
 	}
 
 	if (!m_defaultPaletteIndex.isLoaded())
@@ -2119,27 +1912,10 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getDefaultPaletteIndexMax
 
-#ifdef _DEBUG
-/**
- * Special function used by datalint. Checks for duplicate values in base and derived templates.
- */
-void SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::testValues(void) const
-{
-	IGNORE_RETURN(getVariableName(true));
-	IGNORE_RETURN(getPalettePathName(true));
-	IGNORE_RETURN(getDefaultPaletteIndexMin(true));
-	IGNORE_RETURN(getDefaultPaletteIndexMax(true));
-}	// SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::testValues
-#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form
@@ -2221,22 +1997,14 @@ Tag SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getId(void) c
 	return _RangedIntCustomizationVariable_tag;
 }	// SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getId
 
-const std::string & SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getVariableName(bool versionOk, bool testData) const
+const std::string & SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getVariableName(bool versionOk, ) const
 {
-#ifdef _DEBUG
-std::string testDataValue = DefaultString;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedTangibleObjectTemplate::_RangedIntCustomizationVariable * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedTangibleObjectTemplate::_RangedIntCustomizationVariable *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getVariableName(true);
-#endif
 	}
 
 	if (!m_variableName.isLoaded())
@@ -2254,31 +2022,18 @@ UNREF(testData);
 	}
 
 	const std::string & value = m_variableName.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getVariableName
 
-int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMinValueInclusive(bool versionOk, bool testData) const
+int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMinValueInclusive(bool versionOk, ) const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedTangibleObjectTemplate::_RangedIntCustomizationVariable * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedTangibleObjectTemplate::_RangedIntCustomizationVariable *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getMinValueInclusive(true);
-#endif
 	}
 
 	if (!m_minValueInclusive.isLoaded())
@@ -2318,31 +2073,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMinValueInclusive
 
-int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMinValueInclusiveMin(bool versionOk, bool testData) const
+int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMinValueInclusiveMin(bool versionOk, ) const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedTangibleObjectTemplate::_RangedIntCustomizationVariable * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedTangibleObjectTemplate::_RangedIntCustomizationVariable *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getMinValueInclusiveMin(true);
-#endif
 	}
 
 	if (!m_minValueInclusive.isLoaded())
@@ -2382,31 +2124,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMinValueInclusiveMin
 
-int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMinValueInclusiveMax(bool versionOk, bool testData) const
+int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMinValueInclusiveMax(bool versionOk, ) const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedTangibleObjectTemplate::_RangedIntCustomizationVariable * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedTangibleObjectTemplate::_RangedIntCustomizationVariable *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getMinValueInclusiveMax(true);
-#endif
 	}
 
 	if (!m_minValueInclusive.isLoaded())
@@ -2446,31 +2175,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMinValueInclusiveMax
 
-int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getDefaultValue(bool versionOk, bool testData) const
+int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getDefaultValue(bool versionOk, ) const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedTangibleObjectTemplate::_RangedIntCustomizationVariable * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedTangibleObjectTemplate::_RangedIntCustomizationVariable *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getDefaultValue(true);
-#endif
 	}
 
 	if (!m_defaultValue.isLoaded())
@@ -2510,31 +2226,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getDefaultValue
 
-int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getDefaultValueMin(bool versionOk, bool testData) const
+int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getDefaultValueMin(bool versionOk, ) const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedTangibleObjectTemplate::_RangedIntCustomizationVariable * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedTangibleObjectTemplate::_RangedIntCustomizationVariable *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getDefaultValueMin(true);
-#endif
 	}
 
 	if (!m_defaultValue.isLoaded())
@@ -2574,31 +2277,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getDefaultValueMin
 
-int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getDefaultValueMax(bool versionOk, bool testData) const
+int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getDefaultValueMax(bool versionOk, ) const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedTangibleObjectTemplate::_RangedIntCustomizationVariable * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedTangibleObjectTemplate::_RangedIntCustomizationVariable *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getDefaultValueMax(true);
-#endif
 	}
 
 	if (!m_defaultValue.isLoaded())
@@ -2638,31 +2328,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getDefaultValueMax
 
-int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMaxValueExclusive(bool versionOk, bool testData) const
+int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMaxValueExclusive(bool versionOk, ) const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedTangibleObjectTemplate::_RangedIntCustomizationVariable * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedTangibleObjectTemplate::_RangedIntCustomizationVariable *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getMaxValueExclusive(true);
-#endif
 	}
 
 	if (!m_maxValueExclusive.isLoaded())
@@ -2702,31 +2379,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMaxValueExclusive
 
-int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMaxValueExclusiveMin(bool versionOk, bool testData) const
+int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMaxValueExclusiveMin(bool versionOk, ) const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedTangibleObjectTemplate::_RangedIntCustomizationVariable * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedTangibleObjectTemplate::_RangedIntCustomizationVariable *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getMaxValueExclusiveMin(true);
-#endif
 	}
 
 	if (!m_maxValueExclusive.isLoaded())
@@ -2766,31 +2430,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMaxValueExclusiveMin
 
-int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMaxValueExclusiveMax(bool versionOk, bool testData) const
+int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMaxValueExclusiveMax(bool versionOk, ) const
 {
-#ifdef _DEBUG
-int testDataValue = 0;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedTangibleObjectTemplate::_RangedIntCustomizationVariable * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedTangibleObjectTemplate::_RangedIntCustomizationVariable *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getMaxValueExclusiveMax(true);
-#endif
 	}
 
 	if (!m_maxValueExclusive.isLoaded())
@@ -2830,30 +2481,10 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-	}
-#endif
 
 	return value;
 }	// SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMaxValueExclusiveMax
 
-#ifdef _DEBUG
-/**
- * Special function used by datalint. Checks for duplicate values in base and derived templates.
- */
-void SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::testValues(void) const
-{
-	IGNORE_RETURN(getVariableName(true));
-	IGNORE_RETURN(getMinValueInclusiveMin(true));
-	IGNORE_RETURN(getMinValueInclusiveMax(true));
-	IGNORE_RETURN(getDefaultValueMin(true));
-	IGNORE_RETURN(getDefaultValueMax(true));
-	IGNORE_RETURN(getMaxValueExclusiveMin(true));
-	IGNORE_RETURN(getMaxValueExclusiveMax(true));
-}	// SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::testValues
-#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form

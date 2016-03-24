@@ -12,7 +12,7 @@
 
 #include "sharedGame/FirstSharedGame.h"
 #include "SharedTerrainSurfaceObjectTemplate.h"
-#include "sharedDebug/DataLint.h"
+
 #include "sharedFile/Iff.h"
 #include "sharedMath/Vector.h"
 #include "sharedObject/ObjectTemplateList.h"
@@ -103,22 +103,14 @@ Tag SharedTerrainSurfaceObjectTemplate::getHighestTemplateVersion(void) const
 } // SharedTerrainSurfaceObjectTemplate::getHighestTemplateVersion
 
 //@BEGIN TFD
-float SharedTerrainSurfaceObjectTemplate::getCover(bool testData) const
+float SharedTerrainSurfaceObjectTemplate::getCover() const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedTerrainSurfaceObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedTerrainSurfaceObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getCover(true);
-#endif
 	}
 
 	if (!m_cover.isLoaded())
@@ -158,33 +150,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-		if (testDataValue == value)
-			DEBUG_WARNING(true, ("Template %s, parameter cover is returning same value as base template.", DataResource::getName()));
-	}
-#endif
 
 	return value;
 }	// SharedTerrainSurfaceObjectTemplate::getCover
 
-float SharedTerrainSurfaceObjectTemplate::getCoverMin(bool testData) const
+float SharedTerrainSurfaceObjectTemplate::getCoverMin() const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedTerrainSurfaceObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedTerrainSurfaceObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getCoverMin(true);
-#endif
 	}
 
 	if (!m_cover.isLoaded())
@@ -224,33 +201,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-		if (testDataValue == value)
-			DEBUG_WARNING(true, ("Template %s, parameter cover is returning same value as base template.", DataResource::getName()));
-	}
-#endif
 
 	return value;
 }	// SharedTerrainSurfaceObjectTemplate::getCoverMin
 
-float SharedTerrainSurfaceObjectTemplate::getCoverMax(bool testData) const
+float SharedTerrainSurfaceObjectTemplate::getCoverMax() const
 {
-#ifdef _DEBUG
-float testDataValue = 0.0f;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedTerrainSurfaceObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedTerrainSurfaceObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getCoverMax(true);
-#endif
 	}
 
 	if (!m_cover.isLoaded())
@@ -290,33 +252,18 @@ UNREF(testData);
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-		if (testDataValue == value)
-			DEBUG_WARNING(true, ("Template %s, parameter cover is returning same value as base template.", DataResource::getName()));
-	}
-#endif
 
 	return value;
 }	// SharedTerrainSurfaceObjectTemplate::getCoverMax
 
-const std::string & SharedTerrainSurfaceObjectTemplate::getSurfaceType(bool testData) const
+const std::string & SharedTerrainSurfaceObjectTemplate::getSurfaceType() const
 {
-#ifdef _DEBUG
-std::string testDataValue = DefaultString;
-#else
-UNREF(testData);
-#endif
+
 
 	const SharedTerrainSurfaceObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedTerrainSurfaceObjectTemplate *>(m_baseData);
-#ifdef _DEBUG
-		if (testData && base != nullptr)
-			testDataValue = base->getSurfaceType(true);
-#endif
 	}
 
 	if (!m_surfaceType.isLoaded())
@@ -334,28 +281,10 @@ UNREF(testData);
 	}
 
 	const std::string & value = m_surfaceType.getValue();
-#ifdef _DEBUG
-	if (testData && base != nullptr)
-	{
-		if (testDataValue == value)
-			DEBUG_WARNING(true, ("Template %s, parameter surfaceType is returning same value as base template.", DataResource::getName()));
-	}
-#endif
 
 	return value;
 }	// SharedTerrainSurfaceObjectTemplate::getSurfaceType
 
-#ifdef _DEBUG
-/**
- * Special function used by datalint. Checks for duplicate values in base and derived templates.
- */
-void SharedTerrainSurfaceObjectTemplate::testValues(void) const
-{
-	IGNORE_RETURN(getCoverMin(true));
-	IGNORE_RETURN(getCoverMax(true));
-	IGNORE_RETURN(getSurfaceType(true));
-}	// SharedTerrainSurfaceObjectTemplate::testValues
-#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form
@@ -397,8 +326,8 @@ char paramName[MAX_NAME_SIZE];
 	}
 	if (getHighestTemplateVersion() != TAG(0,0,0,0))
 	{
-		if (DataLint::isEnabled())
-			DEBUG_WARNING(true, ("template %s version out of date", file.getFileName()));
+		
+			
 		m_versionOk = false;
 	}
 

@@ -12,7 +12,7 @@
 
 #include "sharedGame/FirstSharedGame.h"
 #include "SharedUniverseObjectTemplate.h"
-#include "sharedDebug/DataLint.h"
+
 #include "sharedFile/Iff.h"
 #include "sharedMath/Vector.h"
 #include "sharedObject/ObjectTemplate.h"
@@ -104,15 +104,6 @@ Tag SharedUniverseObjectTemplate::getHighestTemplateVersion(void) const
 } // SharedUniverseObjectTemplate::getHighestTemplateVersion
 
 //@BEGIN TFD
-#ifdef _DEBUG
-/**
- * Special function used by datalint. Checks for duplicate values in base and derived templates.
- */
-void SharedUniverseObjectTemplate::testValues(void) const
-{
-	SharedObjectTemplate::testValues();
-}	// SharedUniverseObjectTemplate::testValues
-#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form
@@ -155,8 +146,8 @@ char paramName[MAX_NAME_SIZE];
 	}
 	if (getHighestTemplateVersion() != TAG(0,0,0,0))
 	{
-		if (DataLint::isEnabled())
-			DEBUG_WARNING(true, ("template %s version out of date", file.getFileName()));
+		
+			
 		m_versionOk = false;
 	}
 
