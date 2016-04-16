@@ -3276,12 +3276,9 @@ void ServerObject::removeTriggerVolume(const std::string & name)
 void ServerObject::sendControllerMessageToAuthServer(enum GameControllerMessage cm, MessageQueue::Data * msg, float value)
 {
 #ifdef _DEBUG
-	// debug stuff done this way so it is easy to break on
-	if (!isInitialized() || isInEndBaselines())
-	{
-		WARNING(isInEndBaselines(), ("sendControllerMessageToAuthServer while ending baselines: message id=(%d) from object id=[%s], template=[%s], on server id=[%d]", static_cast<int>(cm), getNetworkId().getValueString().c_str(), getObjectTemplateName(), static_cast<int>(GameServer::getInstance().getProcessId())));
-		WARNING(!isInitialized(), ("sendControllerMessageToAuthServer while uninitialized: message id=(%d) from object id=[%s], template=[%s], on server id=[%d]", static_cast<int>(cm), getNetworkId().getValueString().c_str(), getObjectTemplateName(), static_cast<int>(GameServer::getInstance().getProcessId())));
-	}
+	WARNING(isInEndBaselines(), ("sendControllerMessageToAuthServer while ending baselines: message id=(%d) from object id=[%s], template=[%s], on server id=[%d]", static_cast<int>(cm), getNetworkId().getValueString().c_str(), getObjectTemplateName(), static_cast<int>(GameServer::getInstance().getProcessId())));
+
+	WARNING(!isInitialized(), ("sendControllerMessageToAuthServer while uninitialized: message id=(%d) from object id=[%s], template=[%s], on server id=[%d]", static_cast<int>(cm), getNetworkId().getValueString().c_str(), getObjectTemplateName(), static_cast<int>(GameServer::getInstance().getProcessId())));
 #endif
 
 	Controller * controller = getController();
