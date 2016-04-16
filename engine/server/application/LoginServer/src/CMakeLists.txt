@@ -101,7 +101,7 @@ include_directories(
     ${SWG_ENGINE_SOURCE_DIR}/server/library/serverKeyShare/include/public
     ${SWG_ENGINE_SOURCE_DIR}/server/library/serverNetworkMessages/include/public
     ${SWG_ENGINE_SOURCE_DIR}/server/library/serverUtility/include/public
-	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/archive/include
+    ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/archive/include
     ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/localization/include
     ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/localizationArchive/include/public
     ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/singleton/include
@@ -110,6 +110,7 @@ include_directories(
     ${SWG_EXTERNALS_SOURCE_DIR}/3rd/library/platform/projects
     ${SWG_EXTERNALS_SOURCE_DIR}/3rd/library/platform/utils
     ${SWG_EXTERNALS_SOURCE_DIR}/3rd/library/udplibrary
+    ${CURL_INCLUDE_DIRS}
 )
 
 add_executable(LoginServer
@@ -150,5 +151,6 @@ target_link_libraries(LoginServer
     CommonAPI
     LoginAPI
     MonAPI2
+    ${CURL_LIBRARIES}
     ${CMAKE_DL_LIBS}
 )

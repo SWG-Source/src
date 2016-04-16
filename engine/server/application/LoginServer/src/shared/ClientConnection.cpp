@@ -24,6 +24,7 @@
 #include "sharedNetworkMessages/LoginEnumCluster.h"
 
 #include <algorithm>
+#include <curl/curl.h>
 
 //-----------------------------------------------------------------------
 
@@ -168,6 +169,14 @@ void ClientConnection::onReceive(const Archive::ByteStream & message)
 }
 
 //-----------------------------------------------------------------------
+
+static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp)
+{
+	((std::string*)userp)->append((char*)contents, size * nmemb);
+	return size * nmemb;
+}
+
+
 //-----------------------------------------------------------------------
 // Stub routine for station API account validation.
 // Grab a challenge key from the list and send it back to the client.
@@ -202,7 +211,45 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 		
 		LOG("LoginClientConnection", ("validateClient() for stationId (%lu) at IP (%s), id (%s) key (%s), skipping validating session", m_stationId, getRemoteAddress().c_str(), id.c_str(), key.c_str()));
 
-		LoginServer::getInstance().onValidateClient(suid, id, this, true, nullptr, 0xFFFFFFFF, 0xFFFFFFFF);
+		if (ConfigLoginServer::getUseExternalAuth() == true) 
+		{
+			CURL *curl;
+			std::string readBuffer;
+
+			curl = curl_easy_init();
+			if (curl)
+			{
+				std::string username(curl_easy_escape(curl, id.c_str(), id.length()));
+				std::string password(curl_easy_escape(curl, key.c_str(), key.length()));
+
+				curl_easy_setopt(curl, CURLOPT_URL, ("phpauthurl" + username + "&pw=" + password).c_str());
+				curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+				curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+
+				curl_easy_cleanup(curl);
+				curl_global_cleanup();
+
+				// where possible we'll use http status codes - later this will become json and this nonsense isn't necessary
+				if (readBuffer == "1") 
+				{				
+					LoginServer::getInstance().onValidateClient(suid, id, this, true, NULL, 0xFFFFFFFF, 0xFFFFFFFF);
+				}
+				else if (readBuffer == "2")
+				{				
+					ErrorMessage err("Login Failed", "You have been banned.");
+					this->send(err, true);
+				}
+				else
+				{
+					ErrorMessage err("Login Failed", "Invalid username or password.");
+					this->send(err, true);
+				}
+			}
+		}
+		else
+		{
+			LoginServer::getInstance().onValidateClient(suid, id, this, true, NULL, 0xFFFFFFFF, 0xFFFFFFFF);
+		}
 	}
 }
 
