@@ -169,7 +169,7 @@ void ClientConnection::onReceive(const Archive::ByteStream & message)
 }
 
 //-----------------------------------------------------------------------
-
+// This is used by curl; arguably would be better placed elsewhere?
 static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp)
 {
 	((std::string*)userp)->append((char*)contents, size * nmemb);
@@ -227,7 +227,6 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 				curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
 
 				curl_easy_cleanup(curl);
-				curl_global_cleanup();
 
 				// where possible we'll use http status codes - later this will become json and this nonsense isn't necessary
 				if (readBuffer == "1") 
