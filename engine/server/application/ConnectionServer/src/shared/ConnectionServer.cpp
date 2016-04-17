@@ -119,12 +119,6 @@ m_recoveringClientList()
 
 	Address a("", ConfigConnectionServer::getPingPort());
 	IGNORE_RETURN(pingSocket->bind (a));
-
-	if (ConfigConnectionServer::getValidateStationKey())
-	{
-		installSessionValidation();
-	}
-
 }
 
 //-----------------------------------------------------------------------
