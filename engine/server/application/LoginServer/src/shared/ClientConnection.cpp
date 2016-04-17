@@ -210,7 +210,8 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 			std::string password(curl_easy_escape(curl, key.c_str(), 0));
 			std::string ip(curl_easy_escape(curl, getRemoteAddress().c_str(), 0));
 
-			curl_easy_setopt(curl, CURLOPT_URL, (authURL + "?user_name=" + username + "&user_password=" + password + "&user_ip=" + ip));
+			curl_easy_setopt(curl, CURLOPT_URL, authURL);
+			curl_easy_setopt(curl, CURLOPT_POSTFIELDS, "user_name=" + username + "&user_password=" + password + "&user_ip=" + ip);
 			curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
 			curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
 			
