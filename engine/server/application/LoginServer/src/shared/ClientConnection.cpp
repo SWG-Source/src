@@ -257,7 +257,6 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 	}
 	else
 	{
-		WARNING(true, ("wtf"));
 		LoginServer::getInstance().onValidateClient(suid, id, this, true, NULL, 0xFFFFFFFF, 0xFFFFFFFF);
 	}
 }
