@@ -196,7 +196,7 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 
 	const char * authURL = ConfigLoginServer::getExternalAuthUrl();
 
-	if (authURL != NULL && authURL != '\0') 
+	if (authURL != NULL && strcmp(authURL, "") != 0) 
 	{
 		CURL *curl;
 		CURLcode res;
