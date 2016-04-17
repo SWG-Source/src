@@ -25,7 +25,9 @@
 
 #include <algorithm>
 #include <curl/curl.h>
+#include <json.hpp>
 
+using json = nlohmann::json;
 //-----------------------------------------------------------------------
 
 ClientConnection::ClientConnection(UdpConnectionMT * u, TcpClient * t) :
@@ -211,38 +213,49 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 		
 		LOG("LoginClientConnection", ("validateClient() for stationId (%lu) at IP (%s), id (%s) key (%s), skipping validating session", m_stationId, getRemoteAddress().c_str(), id.c_str(), key.c_str()));
 
-		if (ConfigLoginServer::getUseExternalAuth() == true) 
+		std::string authURL = std::string(ConfigLoginServer::getExternalAuthUrl());
+
+		if (ConfigLoginServer::getUseExternalAuth() == true && !(authURL.empty())) 
 		{
 			CURL *curl;
+			CURLcode res;
 			std::string readBuffer;
 
 			curl = curl_easy_init();
+
 			if (curl)
 			{
 				std::string username(curl_easy_escape(curl, id.c_str(), id.length()));
 				std::string password(curl_easy_escape(curl, key.c_str(), key.length()));
 
-				curl_easy_setopt(curl, CURLOPT_URL, ("phpauthurl" + username + "&pw=" + password).c_str());
+				curl_easy_setopt(curl, CURLOPT_URL, (authURL + username + "&pw=" + password).c_str());
 				curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
 				curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+			
+				res = curl_easy_perform(curl);
+				
+				if (res == CURLE_OK && !(readBuffer.empty()))
+				{
+					json j = json::parse(readBuffer);
 
-				curl_easy_cleanup(curl);
+					if (j["status"] == "success")
+					{
+						LoginServer::getInstance().onValidateClient(suid, id, this, true, NULL, 0xFFFFFFFF, 0xFFFFFFFF);
+					}
+					else
+                                        {
+                                                ErrorMessage err("Login Failed", j["userMessage"]);
+                                                this->send(err, true);
+                                        }
 
-				// where possible we'll use http status codes - later this will become json and this nonsense isn't necessary
-				if (readBuffer == "1") 
-				{				
-					LoginServer::getInstance().onValidateClient(suid, id, this, true, NULL, 0xFFFFFFFF, 0xFFFFFFFF);
-				}
-				else if (readBuffer == "2")
-				{				
-					ErrorMessage err("Login Failed", "You have been banned.");
-					this->send(err, true);
 				}
 				else
 				{
-					ErrorMessage err("Login Failed", "Invalid username or password.");
+					ErrorMessage err("Login Failed", "Error connecting to authentication service.");
 					this->send(err, true);
 				}
+
+				curl_easy_cleanup(curl);
 			}
 		}
 		else

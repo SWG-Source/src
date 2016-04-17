@@ -115,6 +115,7 @@ void ConfigLoginServer::install(void)
 	KEY_INT (csToolPort, 10666);
 	KEY_BOOL(requireSecureLoginForCsTool, true);
 	KEY_BOOL(useExternalAuth, false);
+	KEY_STRING(externalAuthURL, "");
 
 	int index = 0;
 	char const * result = 0;
