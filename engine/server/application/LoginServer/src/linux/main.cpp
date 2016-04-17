@@ -42,7 +42,8 @@ int main(int argc, char ** argv)
 	ConfigLoginServer::install();
         
 	//-- run game
-	SetupSharedFoundation::callbackWithExceptionHandling(LoginServer::run);
+	LoginServer::run();
+	//SetupSharedFoundation::callbackWithExceptionHandling(LoginServer::run);
 	SetupSharedFoundation::remove();
 
 	return 0;

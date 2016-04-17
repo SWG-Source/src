@@ -194,9 +194,9 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 	
 	LOG("LoginClientConnection", ("validateClient() for stationId (%lu) at IP (%s), id (%s) key (%s), skipping validating session", m_stationId, getRemoteAddress().c_str(), id.c_str(), key.c_str()));
 
-	std::string authURL = std::string(ConfigLoginServer::getExternalAuthUrl());
+	const char * authURL = ConfigLoginServer::getExternalAuthUrl();
 
-	if (ConfigLoginServer::getUseExternalAuth() == true && !(authURL.empty())) 
+	if (authURL != NULL && authURL != '\0') 
 	{
 		CURL *curl;
 		CURLcode res;
@@ -206,42 +206,48 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 
 		if (curl)
 		{
-			std::string username(curl_easy_escape(curl, id.c_str(), 0));
-			std::string password(curl_easy_escape(curl, key.c_str(), 0));
-			std::string ip(curl_easy_escape(curl, getRemoteAddress().c_str(), 0));
+			std::string postData = "user_name=" + id + "&user_password=" + key;
 
 			curl_easy_setopt(curl, CURLOPT_URL, authURL);
-			curl_easy_setopt(curl, CURLOPT_POSTFIELDS, "user_name=" + username + "&user_password=" + password + "&user_ip=" + ip);
+			curl_easy_setopt(curl, CURLOPT_POSTFIELDS, postData.c_str());
 			curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
 			curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
 			
 			res = curl_easy_perform(curl);
-				
+	
 			if (res == CURLE_OK && !(readBuffer.empty()))
 			{
 				json j = json::parse(readBuffer);
+				std::string errMsg = "Message not provided by authentication service.";
 
-				if (j["status"] == "success")
+				if (j.count("status") != 0) 
 				{
-					LoginServer::getInstance().onValidateClient(suid, id, this, true, NULL, 0xFFFFFFFF, 0xFFFFFFFF);
+					std::string status = j["status"].get<std::string>();
+
+					if (status == "success")
+					{
+						LoginServer::getInstance().onValidateClient(suid, id, this, true, NULL, 0xFFFFFFFF, 0xFFFFFFFF);
+					}
+					else
+					{
+						if (j.count("message") != 0)
+						{
+							errMsg = j["message"].get<std::string>();
+						}
+
+						ErrorMessage err("Login Failed", errMsg);
+						this->send(err, true);
+					}
 				}
 				else
 				{
-					std::string errMsg = j["userMessage"];
-						
-					if (errMsg.empty()) //prevent stupid mistakes
-					{
-						errMsg = "Error: authentication service provided no user message.";
-					}
-
 					ErrorMessage err("Login Failed", errMsg);
 					this->send(err, true);
 				}
-
 			}
 			else
 			{
-				ErrorMessage err("Login Failed", "Error connecting to authentication service.");
+				ErrorMessage err("Login Failed", "Could not connect to authentication service.");
 				this->send(err, true);
 			}
 
@@ -251,6 +257,7 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 	}
 	else
 	{
+		WARNING(true, ("wtf"));
 		LoginServer::getInstance().onValidateClient(suid, id, this, true, NULL, 0xFFFFFFFF, 0xFFFFFFFF);
 	}
 }
