@@ -139,7 +139,6 @@ private:
 	typedef std::map<int, ClientConnection *> ActiveClientsType;
 	
 private:
-	void                           installSessionValidation();
 	ClusterListEntry *             findClusterById             (uint32 clusterId);     
 	ClusterListEntry *             findClusterByName           (const std::string & clusterName);
 	ClusterListEntry *             findClusterByConnection     (const CentralServerConnection *connection);

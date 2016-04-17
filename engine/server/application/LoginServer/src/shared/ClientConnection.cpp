@@ -184,91 +184,73 @@ static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *use
 // Grab a challenge key from the list and send it back to the client.
 void ClientConnection::validateClient(const std::string & id, const std::string & key)
 {
+	StationId suid = atoi(id.c_str());
 
-	if (ConfigLoginServer::getValidateStationKey())
+	if (suid==0)
 	{
-		m_requestedAdminSuid = atoi(id.c_str()); // for normal logins, this will be set to 0
-		
-		SessionApiClient * sessionApiClient = LoginServer::getInstance().getSessionApiClient();
-		DEBUG_FATAL(!sessionApiClient, ("Config file says to validate with session, but no session api is installed"));
-		if(sessionApiClient) //lint !e774 //(Boolean within 'if' always evaluates to True) the previous DEBUG_FATAL probably causes this warning
-			sessionApiClient->validateClient(this, key); 
+		std::hash<std::string> h;
+		suid = h(id); //lint !e603 // Symbol 'h' not initialized (it's a functor)
 	}
-	else if (ConfigLoginServer::getDoSessionLogin())
+	
+	LOG("LoginClientConnection", ("validateClient() for stationId (%lu) at IP (%s), id (%s) key (%s), skipping validating session", m_stationId, getRemoteAddress().c_str(), id.c_str(), key.c_str()));
+
+	std::string authURL = std::string(ConfigLoginServer::getExternalAuthUrl());
+
+	if (ConfigLoginServer::getUseExternalAuth() == true && !(authURL.empty())) 
 	{
-		SessionApiClient * sessionApiClient = LoginServer::getInstance().getSessionApiClient();
-		DEBUG_FATAL(!sessionApiClient, ("Config file says to do session login, but no session api is installed"));
-		if(sessionApiClient) //lint !e774 //(Boolean within 'if' always evaluates to True) the previous DEBUG_FATAL probably causes this warning
-			sessionApiClient->loginClient(this, id, key); 
-	}
-	else
-	{
-		StationId suid = atoi(id.c_str());
+		CURL *curl;
+		CURLcode res;
+		std::string readBuffer;
 
-		if (suid==0)
+		curl = curl_easy_init();
+
+		if (curl)
 		{
-			std::hash<std::string> h;
-			suid = h(id); //lint !e603 // Symbol 'h' not initialized (it's a functor)
-		}
-		
-		LOG("LoginClientConnection", ("validateClient() for stationId (%lu) at IP (%s), id (%s) key (%s), skipping validating session", m_stationId, getRemoteAddress().c_str(), id.c_str(), key.c_str()));
+			std::string username(curl_easy_escape(curl, id.c_str(), 0));
+			std::string password(curl_easy_escape(curl, key.c_str(), 0));
+			std::string ip(curl_easy_escape(curl, getRemoteAddress().c_str(), 0));
 
-		std::string authURL = std::string(ConfigLoginServer::getExternalAuthUrl());
-
-		if (ConfigLoginServer::getUseExternalAuth() == true && !(authURL.empty())) 
-		{
-			CURL *curl;
-			CURLcode res;
-			std::string readBuffer;
-
-			curl = curl_easy_init();
-
-			if (curl)
-			{
-				std::string username(curl_easy_escape(curl, id.c_str(), id.length()));
-				std::string password(curl_easy_escape(curl, key.c_str(), key.length()));
-
-				curl_easy_setopt(curl, CURLOPT_URL, (authURL + username + "&pw=" + password).c_str());
-				curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
-				curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+			curl_easy_setopt(curl, CURLOPT_URL, (authURL + username + "&pw=" + password + "&ip=" + ip));
+			curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+			curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
 			
-				res = curl_easy_perform(curl);
+			res = curl_easy_perform(curl);
 				
-				if (res == CURLE_OK && !(readBuffer.empty()))
+			if (res == CURLE_OK && !(readBuffer.empty()))
+			{
+				json j = json::parse(readBuffer);
+
+				if (j["status"] == "success")
 				{
-					json j = json::parse(readBuffer);
-
-					if (j["status"] == "success")
-					{
-						LoginServer::getInstance().onValidateClient(suid, id, this, true, NULL, 0xFFFFFFFF, 0xFFFFFFFF);
-					}
-					else
-                                        {
-						std::string errMsg = j["userMessage"];
-						
-						if (errMsg.empty()) //prevent stupid mistakes
-						{
-							errMsg = "Error: authentication service provided no user message.";
-						}
-
-                                                ErrorMessage err("Login Failed", errMsg);
-                                                this->send(err, true);
-                                        }
-
+					LoginServer::getInstance().onValidateClient(suid, id, this, true, NULL, 0xFFFFFFFF, 0xFFFFFFFF);
 				}
 				else
 				{
-					ErrorMessage err("Login Failed", "Error connecting to authentication service.");
+					std::string errMsg = j["userMessage"];
+						
+					if (errMsg.empty()) //prevent stupid mistakes
+					{
+						errMsg = "Error: authentication service provided no user message.";
+					}
+
+					ErrorMessage err("Login Failed", errMsg);
 					this->send(err, true);
 				}
 
-				curl_easy_cleanup(curl);
 			}
+			else
+			{
+				ErrorMessage err("Login Failed", "Error connecting to authentication service.");
+				this->send(err, true);
+			}
+
+			curl_easy_cleanup(curl);
+
 		}
-		else
-		{
-			LoginServer::getInstance().onValidateClient(suid, id, this, true, NULL, 0xFFFFFFFF, 0xFFFFFFFF);
-		}
+	}
+	else
+	{
+		LoginServer::getInstance().onValidateClient(suid, id, this, true, NULL, 0xFFFFFFFF, 0xFFFFFFFF);
 	}
 }
 
