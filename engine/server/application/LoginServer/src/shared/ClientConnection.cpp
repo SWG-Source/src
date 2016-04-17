@@ -206,7 +206,7 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 
 		if (curl)
 		{
-			std::string postData = "user_name=" + id + "&user_password=" + key;
+			std::string postData = "user_name=" + id + "&user_password=" + key + "&stationID=" + std::to_string(atoi(id.c_str())) + "&ip=" + getRemoteAddress();
 
 			curl_easy_setopt(curl, CURLOPT_URL, authURL);
 			curl_easy_setopt(curl, CURLOPT_POSTFIELDS, postData.c_str());
