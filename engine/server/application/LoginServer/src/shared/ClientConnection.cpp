@@ -244,7 +244,14 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 					}
 					else
                                         {
-                                                ErrorMessage err("Login Failed", j["userMessage"]);
+						std::string errMsg = j["userMessage"];
+						
+						if (errMsg.empty()) //prevent stupid mistakes
+						{
+							errMsg = "Error: authentication service provided no user message.";
+						}
+
+                                                ErrorMessage err("Login Failed", errMsg);
                                                 this->send(err, true);
                                         }
 
