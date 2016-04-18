@@ -216,7 +216,7 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 			{
 				json j = json::parse(readBuffer);
 
-				if (j.count("status") != 0 && j["status"].get<std::string>() == "success") 
+				if (j.count("status") && j["status"].get<std::string>() == "success") 
 				{
 					LoginServer::getInstance().onValidateClient(suid, id, this, true, NULL, 0xFFFFFFFF, 0xFFFFFFFF);
 				}
@@ -224,7 +224,7 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 				{
 					std::string errMsg;
 
-					if (j.count("message") != 0)
+					if (j.count("message"))
 					{
 						errMsg = j["message"].get<std::string>();
 					}
