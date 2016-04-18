@@ -330,7 +330,15 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg& msg)
 		Archive::ReadIterator ri(t);
 		KeyShare::Token	token(ri);
 
-		result = ConnectionServer::decryptToken(token, sessionId, m_requestedSuid);
+		if (!ConfigConnectionServer::getValidateStationKey())
+		{
+			// get SUID from token
+			result = ConnectionServer::decryptToken(token, m_suid, m_isSecure, m_accountName);
+		}
+		else
+		{
+			result = ConnectionServer::decryptToken(token, sessionId, m_requestedSuid);
+		}
 
 		static const std::string loginTrace("TRACE_LOGIN");
 		LOG(loginTrace, ("ClientConnection SUID = %d", m_suid));
@@ -370,13 +378,30 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg& msg)
 			return;
 		}
 
-		m_suid = atoi(m_accountName.c_str());
-		if (m_suid == 0)
+		if (ConfigConnectionServer::getValidateStationKey())
 		{
-			std::hash<std::string> h;
-			m_suid = h(m_accountName.c_str());
+			SessionApiClient * session = ConnectionServer::getSessionApiClient();
+			NOT_NULL(session);
+			if(session)
+			{
+				session->validateClient(this, sessionId);
+			}
+			else
+			{
+				ConnectionServer::dropClient(this, "SessionApiClient is not available!");
+				disconnect();
+			}
 		}
-		onValidateClient(m_suid, m_accountName, m_isSecure, nullptr, ConfigConnectionServer::getDefaultGameFeatures(), ConfigConnectionServer::getDefaultSubscriptionFeatures(), 0, 0, 0, 0, ConfigConnectionServer::getFakeBuddyPoints());
+		else
+		{
+			m_suid = atoi(m_accountName.c_str());
+			if (m_suid == 0)
+			{
+				std::hash<std::string> h;
+				m_suid = h(m_accountName.c_str());
+			}
+			onValidateClient(m_suid, m_accountName, m_isSecure, nullptr, ConfigConnectionServer::getDefaultGameFeatures(), ConfigConnectionServer::getDefaultSubscriptionFeatures(), 0, 0, 0, 0, ConfigConnectionServer::getFakeBuddyPoints());
+		}
 	}
 	else
 	{

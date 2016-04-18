@@ -104,6 +104,7 @@ public:
 	static const int           getClientHashTableSize        ();
 	static const int           getLagReportThreshold         ();
 
+	static bool           getValidateStationKey();
 	static const char *   getSessionServers();
 	static const int      getSessionType();
 	static bool           getDisableSessionLogout();
@@ -347,6 +348,15 @@ inline const int ConfigConnectionServer::getLagReportThreshold()
 }
 
 // ----------------------------------------------------------------------
+
+//------------------------------------------------------------------------------------------
+
+inline bool ConfigConnectionServer::getValidateStationKey()
+{
+	return data->validateStationKey;
+}
+
+//------------------------------------------------------------------------------------------
 
 inline const char * ConfigConnectionServer::getSessionServers()
 {
