@@ -193,6 +193,11 @@ m_soeMonitor(0)
 	connectToMessage("FeatureIdTransactionRequest");
 	connectToMessage("FeatureIdTransactionSyncUpdate");
 	keyServer = new KeyServer;
+
+	if (ConfigLoginServer::getValidateStationKey() || ConfigLoginServer::getDoSessionLogin())
+	{
+		installSessionValidation();
+	}
 }
 
 //-----------------------------------------------------------------------
@@ -250,6 +255,30 @@ void LoginServer::removeClient (int clientId)
 		}
 		IGNORE_RETURN(m_clientMap.erase(clientId));
 	}
+}
+
+//-----------------------------------------------------------------------
+
+void LoginServer::installSessionValidation()
+{
+	int i = 0;
+	std::vector<const char* > sessionServers;
+
+	int numberOfSessionServers = ConfigLoginServer::getNumberOfSessionServers();
+	for (i = 0; i < numberOfSessionServers; ++i)
+	{
+		char const * const p = ConfigLoginServer::getSessionServer(i);
+		if(p)
+		{
+			REPORT_LOG(true, ("Using session server %s\n", p));
+			sessionServers.push_back(p);
+		}
+	}
+
+	// if there were none specified, use defaults
+	FATAL(i == 0, ("No session servers specified for session API"));
+
+	m_sessionApiClient = new SessionApiClient(&sessionServers[0], i);
 }
 
 //-----------------------------------------------------------------------
@@ -1345,12 +1374,33 @@ void LoginServer::onValidateClient(StationId suid, const std::string & username,
 
 	IGNORE_RETURN(memset(keyBuffer, 0, len));
 
-	// If we aren't validating sessions, pack username, security status, and username to connectionserver
-	memcpy(keyBufferPointer, &suid, sizeof(uint32)); //lint !e64 !e119 !e534 (lint isn't resolving memcpy properly)
-	keyBufferPointer += sizeof(uint32);
-	memcpy(keyBufferPointer, &isSecure, sizeof(bool)); //lint !e64 !e119 !e534
-	keyBufferPointer += sizeof(bool);
-	memcpy(keyBufferPointer, username.c_str(), MAX_ACCOUNT_NAME_LENGTH); //lint !e64 !e119 !e534
+	if (ConfigLoginServer::getDoConsumption() || ConfigLoginServer::getDoSessionLogin())
+	{
+		// pass the sessionkey
+		len = apiSessionIdWidth + sizeof(StationId);
+		memcpy(keyBufferPointer, sessionKey, apiSessionIdWidth);
+		keyBufferPointer += apiSessionIdWidth;
+		memcpy(keyBufferPointer, &suid, sizeof(StationId));
+
+		// if LoginServer did session login, send the session key back to the client;
+		// the client normally gets the session key from the LaunchPad, but in this mode
+		// where the LoginServer does the session login, it will get it from the LoginServer
+		if (ConfigLoginServer::getDoSessionLogin())
+		{
+			std::string const strSessionKey(sessionKey, apiSessionIdWidth);
+			GenericValueTypeMessage<std::string> const msg("SetSessionKey", strSessionKey);
+			conn->send(msg, true);
+		}
+	}
+	else
+	{
+		// If we aren't validating sessions, pack username, security status, and username to connectionserver
+		memcpy(keyBufferPointer, &suid, sizeof(uint32)); //lint !e64 !e119 !e534 (lint isn't resolving memcpy properly)
+		keyBufferPointer += sizeof(uint32);
+		memcpy(keyBufferPointer, &isSecure, sizeof(bool)); //lint !e64 !e119 !e534
+		keyBufferPointer += sizeof(bool);
+		memcpy(keyBufferPointer, username.c_str(), MAX_ACCOUNT_NAME_LENGTH); //lint !e64 !e119 !e534
+	}
 
 	KeyShare::Token token = LoginServer::getInstance().makeToken(keyBuffer, len);
 	Archive::ByteStream a;

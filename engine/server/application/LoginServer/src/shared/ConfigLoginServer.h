@@ -19,6 +19,8 @@ class ConfigLoginServer
 		int             pingServicePort;
 		int		httpServicePort;
 		bool            validateClientVersion;
+		bool            validateStationKey;
+		bool            doSessionLogin;
 		bool            doConsumption; 
 		const char *    sessionServers;
 		int             sessionType;
@@ -75,6 +77,8 @@ class ConfigLoginServer
 	static const uint16 getPingServicePort();
 	static const uint16 getHttpServicePort();
 	static const bool   getValidateClientVersion();
+	static const bool   getValidateStationKey();
+	static const bool   getDoSessionLogin();
 	static const bool   getDoConsumption();
 	static const char * getSessionServers();
 	static const int    getSessionType();
@@ -199,6 +203,20 @@ inline const uint16 ConfigLoginServer::getPingServicePort()
 inline const bool ConfigLoginServer::getValidateClientVersion()
 {
 	return (data->validateClientVersion);
+}
+
+// ----------------------------------------------------------------------
+
+inline const bool ConfigLoginServer::getValidateStationKey()
+{
+	return (data->validateStationKey);
+}
+
+// ----------------------------------------------------------------------
+
+inline const bool ConfigLoginServer::getDoSessionLogin()
+{
+	return (data->doSessionLogin);
 }
 
 // ----------------------------------------------------------------------

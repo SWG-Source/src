@@ -120,7 +120,10 @@ void PurgeManager::onGetAccountForPurge(StationId account, int purgePhase)
 		PurgeRecord record(account, static_cast<PurgePhase>(purgePhase));
 		m_purgeRecords.insert(std::make_pair(account,record));
 	
-		onCheckStatusForPurge(account, false);
+		if (ConfigLoginServer::getValidateStationKey())
+			NON_NULL(LoginServer::getInstance().getSessionApiClient())->checkStatusForPurge(account);
+		else
+			onCheckStatusForPurge(account, false);
 	}
 }
 

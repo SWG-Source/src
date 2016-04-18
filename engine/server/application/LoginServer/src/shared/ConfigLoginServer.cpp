@@ -86,6 +86,8 @@ void ConfigLoginServer::install(void)
 	KEY_INT (maxCharactersPerCluster, 10000);
 	KEY_INT (maxCharactersPerAccount, 20);
 	KEY_BOOL (validateClientVersion, true);
+	KEY_BOOL (validateStationKey, false);
+	KEY_BOOL (doSessionLogin, false);
 	KEY_BOOL (doConsumption, false);
 	KEY_STRING (sessionServers, "localhost:3004");
 	KEY_INT (sessionType, SESSION_TYPE_STARWARS);
