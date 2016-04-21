@@ -198,14 +198,11 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 
 	if (authURL != NULL && strcmp(authURL, "") != 0) 
 	{
-		CURL *curl;
-		CURLcode res;
-		std::string readBuffer;
-
-		curl = curl_easy_init();
+		CURL *curl = curl_easy_init();
 
 		if (curl)
 		{
+			std::string readBuffer;
 			std::string postData = "user_name=" + id + "&user_password=" + key + "&stationID=" + std::to_string(atoi(id.c_str())) + "&ip=" + getRemoteAddress();
 
 			curl_easy_setopt(curl, CURLOPT_URL, authURL);
@@ -213,34 +210,29 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 			curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
 			curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
 			
-			res = curl_easy_perform(curl);
+			CURLcode res = curl_easy_perform(curl);
 	
 			if (res == CURLE_OK && !(readBuffer.empty()))
 			{
 				json j = json::parse(readBuffer);
-				std::string errMsg = "Message not provided by authentication service.";
 
-				if (j.count("status") != 0) 
+				if (j.count("status") && j["status"].get<std::string>() == "success") 
 				{
-					std::string status = j["status"].get<std::string>();
-
-					if (status == "success")
-					{
-						LoginServer::getInstance().onValidateClient(suid, id, this, true, NULL, 0xFFFFFFFF, 0xFFFFFFFF);
-					}
-					else
-					{
-						if (j.count("message") != 0)
-						{
-							errMsg = j["message"].get<std::string>();
-						}
-
-						ErrorMessage err("Login Failed", errMsg);
-						this->send(err, true);
-					}
+					LoginServer::getInstance().onValidateClient(suid, id, this, true, NULL, 0xFFFFFFFF, 0xFFFFFFFF);
 				}
 				else
 				{
+					std::string errMsg;
+
+					if (j.count("message"))
+					{
+						errMsg = j["message"].get<std::string>();
+					}
+					else
+					{
+						errMsg = "Message not provided by authentication service.";
+					}
+
 					ErrorMessage err("Login Failed", errMsg);
 					this->send(err, true);
 				}
@@ -250,9 +242,7 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 				ErrorMessage err("Login Failed", "Could not connect to authentication service.");
 				this->send(err, true);
 			}
-
 			curl_easy_cleanup(curl);
-
 		}
 	}
 	else
