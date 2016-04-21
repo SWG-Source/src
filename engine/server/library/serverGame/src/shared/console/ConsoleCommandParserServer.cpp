@@ -21,6 +21,7 @@
 #include "serverGame/GuildObject.h"
 #include "serverGame/MessageToQueue.h"
 #include "serverGame/NameManager.h"
+#include "serverGame/ObjectTracker.h"
 #include "serverGame/PlanetObject.h"
 #include "serverGame/PlayerCreatureController.h"
 #include "serverGame/PlayerObject.h"
@@ -195,6 +196,7 @@ static const CommandParser::CmdInfo cmds[] =
 	{"setCompletedTutorial",      1, "<oid>",                             "Mark the account belonging to the specified character (character does not have to be logged in) as having completed the tutorial, so that the skip tutorial option will be available during character creation for that account"},
 #ifdef _DEBUG
 	{"setExtraDelayPerFrameMs",   1, "<ms>",                              "Do an intentional sleep each frame, to emulate long loop time"},
+	{"serverinfo",   0, "",                              "Serverinformation"},
 #endif
 	{"", 0, "", ""} // this must be last
 };
@@ -3450,6 +3452,81 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		result += Unicode::narrowToWide(FormattedString<512>().sprintf("Setting extra sleep time per frame to %dms.\n", ms));
 		GameServer::setExtraDelayPerFrameMs(ms);
 	}
+	else if (isAbbrev(argv[0], "serverinfo"))
+		{
+			char numBuf[64] = {"\0"};
+			static const Unicode::String unl(Unicode::narrowToWide(std::string("\n")));
+
+
+			result += Unicode::narrowToWide("PID: ");
+			snprintf(numBuf, sizeof(numBuf), "%lu", GameServer::getInstance().getProcessId());
+			result += Unicode::narrowToWide(std::string(numBuf)) + unl;
+
+			result += Unicode::narrowToWide("Scene: ") + Unicode::narrowToWide(ConfigServerGame::getSceneID()) + unl;
+
+			snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumObjects());
+			result += Unicode::narrowToWide(std::string("Number of Objects: ") + std::string(numBuf)) + unl;
+
+			snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumAI());
+			result += Unicode::narrowToWide(std::string("Number of AI: ") + std::string(numBuf)) + unl;
+
+			snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumBuildings());
+			result += Unicode::narrowToWide(std::string("Number of Buildings: ") + std::string(numBuf)) + unl;
+			
+			snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumInstallations());
+			result += Unicode::narrowToWide(std::string("Number of Installations: ") + std::string(numBuf)) + unl;
+
+			snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumCreatures());
+			result += Unicode::narrowToWide(std::string("Number of Creatures: ") + std::string(numBuf)) + unl;
+
+			snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumPlayers());
+			result += Unicode::narrowToWide(std::string("Number of Players: ") + std::string(numBuf)) + unl;
+
+			snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumTangibles());
+			result += Unicode::narrowToWide(std::string("Number of Tangibles: ") + std::string(numBuf)) + unl;
+
+			snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumUniverseObjects());
+			result += Unicode::narrowToWide(std::string("Number of UniverseObjects: ") + std::string(numBuf)) + unl;
+
+			snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumDynamicAI());
+			result += Unicode::narrowToWide(std::string("Number of Dynamic AI: ") + std::string(numBuf)) + unl;
+
+			snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumStaticAI());
+			result += Unicode::narrowToWide(std::string("Number of Static AI: ") + std::string(numBuf)) + unl;
+						
+			snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumCombatAI());
+			result += Unicode::narrowToWide(std::string("Number of Combat AI: ") + std::string(numBuf)) + unl;
+			
+			snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumHibernatingAI());
+			result += Unicode::narrowToWide(std::string("Number of Hibernating AI: ") + std::string(numBuf)) + unl;
+
+			snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumDelayedHibernatingAI());
+			result += Unicode::narrowToWide(std::string("Number of Delayed Hibernating AI: ") + std::string(numBuf)) + unl;			
+			
+			snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumIntangibles());
+			result += Unicode::narrowToWide(std::string("Number of Intangibles: ") + std::string(numBuf)) + unl;
+
+			snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumMissionDatas());
+			result += Unicode::narrowToWide(std::string("Number of MissionDatas: ") + std::string(numBuf)) + unl;
+
+			snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumMissionObjects());
+			result += Unicode::narrowToWide(std::string("Number of MissionObjects: ") + std::string(numBuf)) + unl;
+
+			snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumRunTimeRules());
+			result += Unicode::narrowToWide(std::string("Number of Runtime Rules: ") + std::string(numBuf)) + unl;
+
+			snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumGroupObjects());
+			result += Unicode::narrowToWide(std::string("Number of GroupObjects: ") + std::string(numBuf)) + unl;
+
+			snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumMissionListEntries());
+			result += Unicode::narrowToWide(std::string("Number of MissionListEntries: ") + std::string(numBuf)) + unl;
+
+			snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumWaypoints());
+			result += Unicode::narrowToWide(std::string("Number of Waypoints: ") + std::string(numBuf)) + unl;
+
+			snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumPlayerQuestObjects());
+			result += Unicode::narrowToWide(std::string("Number of PlayerQuestObjects: ") + std::string(numBuf)) + unl;
+		}
 #endif
 	else
 	{
