@@ -231,11 +231,7 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 
 					if (j.count("message"))
 					{
-						// fuuuu hack here - .get<cstd::string>() is returning an array and not a string, wtf?
-						errMsg = j["message"].dump();
-						errMsg.erase(std::remove(errMsg.begin(), errMsg.end(), '"'), errMsg.end());
-						errMsg.erase(std::remove(errMsg.begin(), errMsg.end(), ']'), errMsg.end());
-						errMsg.erase(std::remove(errMsg.begin(), errMsg.end(), '['), errMsg.end());
+						errMsg = j["message"][0].get<std::string>();
 					}
 					else
 					{
