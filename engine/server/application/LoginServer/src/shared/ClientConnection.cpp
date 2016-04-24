@@ -184,7 +184,8 @@ static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *use
 // Grab a challenge key from the list and send it back to the client.
 void ClientConnection::validateClient(const std::string & id, const std::string & key)
 {
-	StationId suid = atoi(id.c_str());
+
+	StationId suid = atoi(id.c_str()); 
 
 	if (suid==0)
 	{
@@ -202,8 +203,12 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 
 		if (curl)
 		{
+			std::ostringstream postBuf;
 			std::string readBuffer;
-			std::string postData = "user_name=" + id + "&user_password=" + key + "&stationID=" + std::to_string(m_stationId) + "&ip=" + getRemoteAddress();
+			std::string postData;
+
+			postBuf << "user_name=" << id << "&user_password=" << key << "&stationID=" << suid << "&ip=" << getRemoteAddress();
+			postData = std::string(postBuf.str());
 
 			curl_easy_setopt(curl, CURLOPT_URL, authURL);
 			curl_easy_setopt(curl, CURLOPT_POSTFIELDS, postData.c_str());
@@ -211,7 +216,7 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 			curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
 			
 			CURLcode res = curl_easy_perform(curl);
-	
+
 			if (res == CURLE_OK && !(readBuffer.empty()))
 			{
 				json j = json::parse(readBuffer);
