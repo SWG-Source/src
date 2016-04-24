@@ -231,7 +231,7 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 
 					if (j.count("message"))
 					{
-						errMsg = j["message"][0].get<std::string>();
+						errMsg = j["message"].get<std::string>();
 					}
 					else
 					{
