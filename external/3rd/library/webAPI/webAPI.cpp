@@ -10,7 +10,7 @@ std::string simplePost(std::string endpoint, std::string data, std::string slotN
 
 	if (response.count("status") && response["status"].get<std::string>() == "success")
 	{
-		if (slotName && response.count(slotName))
+		if (slotName != "" && response.count(slotName))
 		{
 			output = response[slotName].get<std::string>();
 		}
@@ -27,7 +27,7 @@ std::string simplePost(std::string endpoint, std::string data, std::string slotN
 		}
 		else
 		{
-			output = "Message not provided by authentication service.";
+			output = "Message not provided by remote.";
 		}
 	}
 
