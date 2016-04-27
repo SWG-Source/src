@@ -23,11 +23,9 @@
 #include "sharedNetworkMessages/GenericValueTypeMessage.h"
 #include "sharedNetworkMessages/LoginEnumCluster.h"
 
+#include <webAPI.h>
 #include <algorithm>
-#include <curl/curl.h>
-#include <json.hpp>
 
-using json = nlohmann::json;
 //-----------------------------------------------------------------------
 
 ClientConnection::ClientConnection(UdpConnectionMT * u, TcpClient * t) :
@@ -171,89 +169,60 @@ void ClientConnection::onReceive(const Archive::ByteStream & message)
 }
 
 //-----------------------------------------------------------------------
-// This is used by curl; arguably would be better placed elsewhere?
-static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp)
-{
-	((std::string*)userp)->append((char*)contents, size * nmemb);
-	return size * nmemb;
-}
-
-
-//-----------------------------------------------------------------------
-// Stub routine for station API account validation.
-// Grab a challenge key from the list and send it back to the client.
+// originally was used to validate station API credentials, now uses our custom api
 void ClientConnection::validateClient(const std::string & id, const std::string & key)
 {
-
 	StationId suid = atoi(id.c_str()); 
+	int authOK = 0;
 
-	if (suid==0)
+	if (suid == 0)
 	{
 		std::hash<std::string> h;
 		suid = h(id); //lint !e603 // Symbol 'h' not initialized (it's a functor)
 	}
 	
-	LOG("LoginClientConnection", ("validateClient() for stationId (%lu) at IP (%s), id (%s) key (%s), skipping validating session", m_stationId, getRemoteAddress().c_str(), id.c_str(), key.c_str()));
+	LOG("LoginClientConnection", ("validateClient() for stationId (%lu) at IP (%s), id (%s)", m_stationId, getRemoteAddress().c_str(), id.c_str()));
 
-	const char * authURL = ConfigLoginServer::getExternalAuthUrl();
+	std::string authURL(ConfigLoginServer::getExternalAuthUrl());
 
-	if (authURL != NULL && strcmp(authURL, "") != 0) 
+	if (!authURL.empty()) 
 	{
-		CURL *curl = curl_easy_init();
+		std::ostringstream postBuf;
+		std::string postData;
 
-		if (curl)
+		postBuf << "user_name=" << id << "&user_password=" << key << "&stationID=" << suid << "&ip=" << getRemoteAddress();
+		postData = std::string(postBuf.str());
+
+		std::string response = webAPI::simplePost(authURL, postData, nullptr);
+
+		if (!response.empty())
 		{
-			std::ostringstream postBuf;
-			std::string readBuffer;
-			std::string postData;
-
-			postBuf << "user_name=" << id << "&user_password=" << key << "&stationID=" << suid << "&ip=" << getRemoteAddress();
-			postData = std::string(postBuf.str());
-
-			curl_easy_setopt(curl, CURLOPT_URL, authURL);
-			curl_easy_setopt(curl, CURLOPT_POSTFIELDS, postData.c_str());
-			curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
-			curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
-			
-			CURLcode res = curl_easy_perform(curl);
-
-			if (res == CURLE_OK && !(readBuffer.empty()))
+			if (response == "success")
 			{
-				json j = json::parse(readBuffer);
-
-				if (j.count("status") && j["status"].get<std::string>() == "success") 
-				{
-					LoginServer::getInstance().onValidateClient(suid, id, this, true, NULL, 0xFFFFFFFF, 0xFFFFFFFF);
-				}
-				else
-				{
-					std::string errMsg;
-
-					if (j.count("message"))
-					{
-						errMsg = j["message"].get<std::string>();
-					}
-					else
-					{
-						errMsg = "Message not provided by authentication service.";
-					}
-
-					ErrorMessage err("Login Failed", errMsg);
-					this->send(err, true);
-				}
+				authOK = 1;
 			}
 			else
 			{
-				ErrorMessage err("Login Failed", "Could not connect to authentication service.");
+				ErrorMessage err("Login Failed", response);
 				this->send(err, true);
 			}
-			curl_easy_cleanup(curl);
+		}
+		else
+		{
+			ErrorMessage err("Login Failed", "Error connecting to authentication provider.");
+			this->send(err, true);
 		}
 	}
 	else
 	{
+		authOK = 1;
+	}
+
+	if (authOK) 
+	{
 		LoginServer::getInstance().onValidateClient(suid, id, this, true, NULL, 0xFFFFFFFF, 0xFFFFFFFF);
 	}
+	// else this case will never be reached, noop
 }
 
 // ----------------------------------------------------------------------------

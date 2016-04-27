@@ -7,5 +7,3 @@ add_subdirectory(serverNetworkMessages)
 add_subdirectory(serverPathfinding)
 add_subdirectory(serverScript)
 add_subdirectory(serverUtility)
-
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/json)

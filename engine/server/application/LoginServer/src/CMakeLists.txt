@@ -81,7 +81,6 @@ endif()
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/shared
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedCommandParser/include/public
-    ${SWG_ENGINE_SOURCE_DIR}/server/library/json
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedCompression/include/public
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedDatabaseInterface/include/public
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedDebug/include/public
@@ -111,7 +110,7 @@ include_directories(
     ${SWG_EXTERNALS_SOURCE_DIR}/3rd/library/platform/projects
     ${SWG_EXTERNALS_SOURCE_DIR}/3rd/library/platform/utils
     ${SWG_EXTERNALS_SOURCE_DIR}/3rd/library/udplibrary
-    ${CURL_INCLUDE_DIRS}
+    ${SWG_EXTERNALS_SOURCE_DIR}/3rd/library/webAPI
 )
 
 add_executable(LoginServer
@@ -120,6 +119,7 @@ add_executable(LoginServer
 )
 
 target_link_libraries(LoginServer
+    webAPI
     sharedCommandParser
     sharedCompression
     sharedDatabaseInterface
@@ -152,6 +152,5 @@ target_link_libraries(LoginServer
     CommonAPI
     LoginAPI
     MonAPI2
-    ${CURL_LIBRARIES}
     ${CMAKE_DL_LIBS}
 )
