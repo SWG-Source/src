@@ -1,3 +1,17 @@
+/*
+This code is just a simple wrapper around nlohmann's wonderful json lib
+(https://github.com/nlohmann/json) and libcurl. While originally included directly,
+we have come to realize that we may require web API functionality elsewhere in the future.
+
+As such, and in an effort to keep the code clean, we've broken it out into this simple little
+namespace/lib that is easy to include. Just make sure to link against curl when including, and
+make all the cmake modifications required to properly use it.
+
+(c) stellabellum/swgilluminati (combined crews), written by DA with help from DC
+
+License: what's a license? we're a bunch of dirty pirates!
+*/
+
 #ifndef webAPI_H
 #define webAPI_H
 
