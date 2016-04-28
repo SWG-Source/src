@@ -84,34 +84,7 @@ void SetupSharedFoundation::install(const Data &data)
 
 void SetupSharedFoundation::callbackWithExceptionHandling( void (*callback)(void) )   // Routine to call with exception handling
 {
-	if (ConfigSharedFoundation::getNoExceptionHandling())
-	{
-		callback();
-	}
-	else
-	{
-		try
-		{
-			callback();
-		}
-		catch (const __exception * mathException)
-		{
-			FATAL(true, ("Math Exception: %s\n", mathException->name));
-		}
-		catch (const char* message)
-		{
-			FATAL(true, ("Character Exception: %s\n", message));
-		}
-		catch(std::exception & m)
-		{
-			const char * c = m.what();
-			FATAL(true, ("Std::exception: %s\n", c));
-		}
-		catch(...)
-		{
-			FATAL(true, ("Unknown exception\n"));
-		}
-	}
+	callback();
 }
 
 // ----------------------------------------------------------------------
