@@ -8,6 +8,7 @@ namespace/lib that is easy to include. Just make sure to link against curl when 
 make all the cmake modifications required to properly use it.
 
 (c) stellabellum/swgilluminati (combined crews), written by DA with help from DC
+based on the original prototype by parz1val
 
 License: what's a license? we're a bunch of dirty pirates!
 */
