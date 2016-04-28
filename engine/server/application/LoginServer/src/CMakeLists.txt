@@ -118,8 +118,9 @@ add_executable(LoginServer
 	${PLATFORM_SOURCES}
 )
 
+link_directories(${SWG_EXTERNALS_SOURCE_DIR}/3rd/library/webAPI)
+
 target_link_libraries(LoginServer
-    webAPI
     sharedCommandParser
     sharedCompression
     sharedDatabaseInterface
@@ -152,5 +153,6 @@ target_link_libraries(LoginServer
     CommonAPI
     LoginAPI
     MonAPI2
+    webAPI
     ${CMAKE_DL_LIBS}
 )

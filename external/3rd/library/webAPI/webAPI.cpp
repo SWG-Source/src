@@ -1,6 +1,9 @@
 
 #include "webAPI.h"
 
+namespace webAPI 
+{
+
 // if status == success, returns "success", or slotName's contents if specified...
 // otherwise returns the "message" if no success
 std::string simplePost(std::string endpoint, std::string data, std::string slotName)
@@ -21,9 +24,9 @@ std::string simplePost(std::string endpoint, std::string data, std::string slotN
 	}
 	else
 	{
-		if (j.count("message"))
+		if (response.count("message"))
 		{
-			output = j["message"].get<std::string>();
+			output = response["message"].get<std::string>();
 		}
 		else
 		{
@@ -59,7 +62,7 @@ nlohmann::json request(std::string endpoint, std::string data, int reqType, ...)
 
 			if (res == CURLE_OK && !(readBuffer.empty()))
 			{
-                        	response = json::parse(readBuffer);
+                        	response = nlohmann::json::parse(readBuffer);
 			}
 			curl_easy_cleanup(curl); 
 		}
@@ -84,3 +87,4 @@ size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp)
         ((std::string*)userp)->append((char*)contents, size * nmemb);
         return size * nmemb;
 }
+};
