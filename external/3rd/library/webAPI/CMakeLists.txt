@@ -8,7 +8,6 @@ add_library(webAPI
 	webAPI.h
 	webAPI.cpp
 	json.hpp
-	${CURL_LIBRARIES}
 )
 
 include_directories(
