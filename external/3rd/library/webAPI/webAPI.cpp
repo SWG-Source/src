@@ -83,6 +83,11 @@ nlohmann::json webAPI::request(std::string endpoint, std::string data, int reqTy
 			{
                         	response = nlohmann::json::parse(readBuffer);
 			}
+			else
+			{
+				response["message"] = "Error fetching data from remote.";
+				response["status"] = "failure";
+			}
 			curl_easy_cleanup(curl); // always wipe our butt
 		}
 		else //default err messages below
