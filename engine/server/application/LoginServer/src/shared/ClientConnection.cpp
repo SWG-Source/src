@@ -193,7 +193,7 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 		postBuf << "user_name=" << id << "&user_password=" << key << "&stationID=" << suid << "&ip=" << getRemoteAddress();
 		postData = std::string(postBuf.str());
 
-		std::string response = webAPI::simplePost(authURL, postData, nullptr);
+		std::string response = webAPI::simplePost(authURL, postData, "");
 
 		if (!response.empty())
 		{
