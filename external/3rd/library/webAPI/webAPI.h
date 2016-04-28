@@ -12,7 +12,7 @@ namespace webAPI
 	//nlohmann::json get(char* endpoint, char* data);
 	
 	nlohmann::json request(std::string endpoint, std::string data, int reqType); // 1 for post, 0 for get
-	size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp);
+	size_t writeCallback(void *contents, size_t size, size_t nmemb, void *userp);
 };
 
 #endif

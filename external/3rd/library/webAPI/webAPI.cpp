@@ -1,12 +1,9 @@
 
 #include "webAPI.h"
 
-namespace webAPI 
-{
-
 // if status == success, returns "success", or slotName's contents if specified...
 // otherwise returns the "message" if no success
-std::string simplePost(std::string endpoint, std::string data, std::string slotName)
+std::string webAPI::simplePost(std::string endpoint, std::string data, std::string slotName)
 {
 	nlohmann::json response = request(endpoint, data, 1);
 	std::string output;
@@ -37,7 +34,7 @@ std::string simplePost(std::string endpoint, std::string data, std::string slotN
 	return output;				
 }
 
-nlohmann::json request(std::string endpoint, std::string data, int reqType, ...)
+nlohmann::json webAPI::request(std::string endpoint, std::string data, int reqType)
 {
 	nlohmann::json response;
 
@@ -50,7 +47,7 @@ nlohmann::json request(std::string endpoint, std::string data, int reqType, ...)
                         std::string readBuffer;
 
                         curl_easy_setopt(curl, CURLOPT_URL, endpoint.c_str());
-                        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+                        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeCallback);
                         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);			
 
 			if (reqType == 1)
@@ -82,9 +79,9 @@ nlohmann::json request(std::string endpoint, std::string data, int reqType, ...)
 }
 
 // This is used by curl to grab the response and put it into a var
-size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp)
+size_t webAPI::writeCallback(void *contents, size_t size, size_t nmemb, void *userp)
 {
         ((std::string*)userp)->append((char*)contents, size * nmemb);
         return size * nmemb;
 }
-};
+
