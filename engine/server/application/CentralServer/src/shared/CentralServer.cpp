@@ -2847,7 +2847,7 @@ void CentralServer::sendPopulationUpdateToLoginServer()
 	if (!(updateURL.empty()))
 	{
 		std::ostringstream postBuf;
-		postBuf << "totalPlayerCount=" << m_totalPlayerCount << "&totalEmptySceneCount=" << m_gameServers.size() - 1 << "&totalFreeTrialCount=" << m_totalFreeTrialCount << "&totalTutorialSceneCount=" << m_totalTutorialSceneCount << "&totalFalconSceneCount=" << m_totalFalconSceneCount;
+		postBuf << "totalPlayerCount=" << m_totalPlayerCount << "&totalGameServers=" << m_gameServers.size() - 1 << "&totalPlanetServers=" << m_planetServers.size() << "&isPublic=" << getIsClusterPublic() << "&isLocked=" << getIsClusterLocked() << "&isSecret=" << getIsClusterSecret() << "&preloadFinished=" << getClusterStartupTime() << "&databasebacklogged=" << isDatabaseBacklogged() << "&totalTutorialSceneCount=" << m_totalTutorialSceneCount << "&totalFalconSceneCount=" << m_totalFalconSceneCount;
 
 		webAPI::simplePost(updateURL, std::string(postBuf.str()), "");
 	}
