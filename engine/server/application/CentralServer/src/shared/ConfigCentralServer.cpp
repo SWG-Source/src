@@ -127,6 +127,7 @@ void ConfigCentralServer::install(void)
 	KEY_BOOL   (disconnectDuplicateConnectionsOnOtherGalaxies, false);
 	KEY_BOOL   (requestDbSaveOnPlanetServerCrash, true);
 	KEY_INT    (maxTimeToWaitForPlanetServerStartSeconds, 5*60); // seconds
+	KEY_STRING (metricsDataURL, "");
 
 	int index = 0;
 	char const * result = 0;

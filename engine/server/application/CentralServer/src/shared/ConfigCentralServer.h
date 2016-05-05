@@ -71,6 +71,7 @@ public:
 		bool          requestDbSaveOnPlanetServerCrash;
 
 		int           maxTimeToWaitForPlanetServerStartSeconds;
+		const char *  metricsDataURL;
 	};
 
 	static const unsigned short  getChatServicePort     ();
@@ -140,7 +141,7 @@ public:
 	static bool          getRequestDbSaveOnPlanetServerCrash();
 
 	static int           getMaxTimeToWaitForPlanetServerStartSeconds();
-
+	static const char *  getMetricsDataURL();
 private:
 	static Data *	data;
 };
@@ -508,6 +509,11 @@ inline bool ConfigCentralServer::getRequestDbSaveOnPlanetServerCrash()
 inline int ConfigCentralServer::getMaxTimeToWaitForPlanetServerStartSeconds()
 {
 	return data->maxTimeToWaitForPlanetServerStartSeconds;
+}
+
+inline const char * ConfigCentralServer::getMetricsDataURL()
+{
+	return data->metricsDataURL;
 }
 
 // ======================================================================

@@ -2771,12 +2771,6 @@ void CentralServer::update()
 	static int loopCount=0;
 	m_curTime = static_cast<uint32>(time(0));
 	
-	// stella: Adding those for sending regular updates through WebAPI to the webserver
-	std::string updateURL = "http://webdev/test/asdf/asdf"; //todo: add config vars to CentralServer config header and cpp
-	
-	std::ostringstream postBuf;
-	postBuf << "population=" << CentralServer::getInstance().getPlayerCount();
-
 	// Tell the LoginServers if necessary
 	if ((++loopCount > ConfigCentralServer::getUpdatePlayerCountFrequency()))
 	{
@@ -2784,7 +2778,6 @@ void CentralServer::update()
 
 		// Update the population on the server
 		sendPopulationUpdateToLoginServer();
-		webAPI::simplePost(updateURL, std::string(postBuf.str()), "");
 	}
 
 	if ( ConfigCentralServer::getAuctionEnabled() ) // allow auctions?
@@ -2846,6 +2839,17 @@ void CentralServer::sendPopulationUpdateToLoginServer()
 	bool loadedRecently=false;
 	if (!isPreloadFinished() || (time(0)-m_lastLoadingStateTime < static_cast<time_t>(ConfigCentralServer::getRecentLoadingStateSeconds())))
 		loadedRecently=true;
+
+	// stella: Adding those for sending regular updates through WebAPI to the webserver
+	std::string updateURL = std::string(ConfigCentralServer::getMetricsDataURL());
+
+	if (!(updateURL.empty()))
+	{
+		std::ostringstream postBuf;
+		postBuf << "totalPlayerCount=" << m_totalPlayerCount << "&totalEmptySceneCount=" << m_totalEmptySceneCount << "&totalFreeTrialCount=" << m_totalFreeTrialCount << "&totalTutorialSceneCount=" << m_totalTutorialSceneCount << "&totalFalconSceneCount=" << m_totalFalconSceneCount;
+
+		webAPI::simplePost(updateURL, std::string(postBuf.str()), "");
+	}
 
 	UpdatePlayerCountMessage upm(loadedRecently, m_totalPlayerCount, m_totalFreeTrialCount, m_totalEmptySceneCount, m_totalTutorialSceneCount, m_totalFalconSceneCount);
 	sendToAllLoginServers(upm);
