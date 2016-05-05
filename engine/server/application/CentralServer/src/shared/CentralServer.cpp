@@ -2823,6 +2823,7 @@ void CentralServer::sendPopulationUpdateToLoginServer()
 	m_totalTutorialSceneCount = 0;
 	m_totalFalconSceneCount   = 0;
 
+	
 	ConnectionServerConnectionList::const_iterator i;
 	for (i=m_connectionServerConnections.begin(); i!=m_connectionServerConnections.end(); ++i)
 	{
@@ -2846,7 +2847,7 @@ void CentralServer::sendPopulationUpdateToLoginServer()
 	if (!(updateURL.empty()))
 	{
 		std::ostringstream postBuf;
-		postBuf << "totalPlayerCount=" << m_totalPlayerCount << "&totalEmptySceneCount=" << m_totalEmptySceneCount << "&totalFreeTrialCount=" << m_totalFreeTrialCount << "&totalTutorialSceneCount=" << m_totalTutorialSceneCount << "&totalFalconSceneCount=" << m_totalFalconSceneCount;
+		postBuf << "totalPlayerCount=" << m_totalPlayerCount << "&totalEmptySceneCount=" << m_gameServers.size() - 1 << "&totalFreeTrialCount=" << m_totalFreeTrialCount << "&totalTutorialSceneCount=" << m_totalTutorialSceneCount << "&totalFalconSceneCount=" << m_totalFalconSceneCount;
 
 		webAPI::simplePost(updateURL, std::string(postBuf.str()), "");
 	}
