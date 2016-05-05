@@ -587,7 +587,7 @@ void CentralServer::getReadyGameServers(std::vector<uint32> &theList)
 GameServerConnection * CentralServer::getRandomGameServer(void)
 {
 	if (m_gameServerConnectionsList.empty())
-		return NULL;
+		return nullptr;
 
 	// m_gameServerConnectionsList ***DOES NOT*** contain the DB server so
 	// we don't have to worry about checking for and excluding the DB server
@@ -611,7 +611,7 @@ GameServerConnection * CentralServer::getRandomGameServer(void)
 			indexNextGameServer = 0;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 //-----------------------------------------------------------------------
@@ -696,7 +696,7 @@ void CentralServer::launchStartingProcesses() const
 	if (!m_taskManager || !m_taskManager->isConnected() || (m_clusterId == 0))
 	{
 		if (!m_taskManager)
-			REPORT_LOG(true, ("CentralServer not launching starting processes because m_taskManager is NULL\n"));
+			REPORT_LOG(true, ("CentralServer not launching starting processes because m_taskManager is nullptr\n"));
 		else if (!m_taskManager->isConnected())
 			REPORT_LOG(true, ("CentralServer not launching starting processes because m_taskManager->isConnected() is false\n"));
 
@@ -820,7 +820,7 @@ void CentralServer::launchStartingPlanetServers()
 		char const * const p = ConfigCentralServer::getStartPlanet(i);
 		if (p)
 		{
-			FATAL(!*p, ("CentralServer::launchStartingPlanetServers: ConfigCentralServer::getStartPlanet(%d) specified a non-null but empty planet name", i));
+			FATAL(!*p, ("CentralServer::launchStartingPlanetServers: ConfigCentralServer::getStartPlanet(%d) specified a non-nullptr but empty planet name", i));
 
 			std::string planetName;
 			std::string hostName;
@@ -1066,58 +1066,11 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		// Forward this message to the dbProcess
 		sendToGameServer(m_dbProcessServerProcessId, t, true);
 	}
-	else if(message.isType("ChunkObjectListMessage"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		ChunkObjectListMessage t(ri);
-
-		DEBUG_FATAL(true,("Got ChunkObjectListMessage.  Thought it was deprecated.\n"));
-		//		handleChunkList(t.getProcess(), t.getIds());
-	}
 	else if(message.isType("LocateStructureMessage"))
 	{
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		LocateStructureMessage t(ri);
 		sendToPlanetServer(t.getSceneId(), t, true);
-	}
-	else if(message.isType("RequestObjectMessage"))
-	{
-		DEBUG_FATAL(true,("Got RequestObjectMessage.  Thought this went away."));
-
-		// 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		// 		RequestObjectMessage t(ri);
-		// 		// tell the authoritative object to create a proxy
-		// 		const GameServerConnection *gameServer = getGameServer(t.getProcess());
-		// 		NOT_NULL(gameServer);
-		// 		uint32 authId = sendToAuthoritativeServer(t.getId(),
-		// 												  LoadObjectMessage(t.getId(), t.getProcess(), gameServer->getGameServiceAddress(), gameServer->getGameServicePort(), false),
-		// 												  true);
-		// 		// if we sent the message to the database process, mark it as being
-		// 		// authoritative for this object
-		// 		if (authId == m_dbProcessServerProcessId)
-		// 		{
-		//             addObjectToMap(t.getId(), authId, gameServer->getSceneId(), true);
-		// 			m_pendingLoadingObjects[t.getId()] = t.getProcess();
-		// 		}
-	}
-	else if(message.isType("CreateNewObjectMessage"))
-	{
-		DEBUG_FATAL(true,("Ain't this supposed to be deprecated or something?"));
-	}
-	else if(message.isType("SetObjectPositionMessage"))
-	{
-		//@todo remove this message from the library
-		DEBUG_FATAL(true,("Got SetObjectPositionMessage. Thought this went away"));
-	}
-	else if(message.isType("FailedToLoadObjectMessage"))
-	{
-		//@todo remove this message from the library
-		DEBUG_FATAL(true,("Received Failed To Load Object Message.  Thought it was depricated\n"));
-	}
-	else if(message.isType("ReleaseAuthoritativeMessage"))
-	{
-		//@todo remove this message from the library
-		DEBUG_FATAL(true, ("Received ReleaseAuthoritative for.  Thought it was deprecated."));
 	}
 	else if(message.isType("ForceUnloadObjectMessage"))
 	{
@@ -1128,7 +1081,7 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		ForceUnloadObjectMessage t(ri);
 
 		//@todo: figure out some way to handle this (such as forwarding to PlanetServers), or remove every case where it's sent
-		//		forceUnload(t.getId(),t.getPermaDelete());
+		//forceUnload(t.getId(),t.getPermaDelete());
 	}
 	//Character Creation Messages
 	else if(message.isType("ConnectionCreateCharacter"))
@@ -1495,7 +1448,7 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		{
 			ConnectionServerConnection * c = (*ci);
 
-			if (   (c != NULL)
+			if (   (c != nullptr)
 			    && !c->getChatServiceAddress().empty()
 			    && (c->getChatServicePort() != 0))
 			{
@@ -1537,13 +1490,13 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		{
 			ChatServerConnection *connection = (*iterChatServerConnections);
 
-			if (connection != NULL)
+			if (connection != nullptr)
 			{
 				connection->send(address, true);
 			}
 			else
 			{
-				REPORT_LOG(true, ("Trying to send the customer service server: chat server service address to a NULL chat server\n"));
+				REPORT_LOG(true, ("Trying to send the customer service server: chat server service address to a nullptr chat server\n"));
 			}
 		}
 	}
@@ -1556,7 +1509,7 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		{
 			ConnectionServerConnection * c = (*ci);
 
-			if (   (c != NULL)
+			if (   (c != nullptr)
 			    && !c->getCustomerServiceAddress().empty()
 			    && (c->getCustomerServicePort() != 0))
 			{
@@ -1631,7 +1584,7 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		const RequestGameServerForLoginMessage msg(ri);
 
-		time_t const timeNow = ::time(NULL);
+		time_t const timeNow = ::time(nullptr);
 		PlayerSceneMapType::const_iterator i = m_playerSceneMap.find(msg.getCharacterId());
 		if ((i != m_playerSceneMap.end()) && (i->second.second > timeNow))
 		{
@@ -1892,14 +1845,14 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 			}
 			else
 			{
-				if(getInstance().m_transferServerConnection != NULL)
+				if(getInstance().m_transferServerConnection != nullptr)
 				{
 					getInstance().m_transferServerConnection->disconnect();
 					getInstance().m_transferServerConnection = 0;
 					s_retryTransferServerConnection = false;
 				}
 				
-				if(getInstance().m_stationPlayersCollectorConnection != NULL)
+				if(getInstance().m_stationPlayersCollectorConnection != nullptr)
 				{
 					getInstance().m_stationPlayersCollectorConnection->disconnect();
 					getInstance().m_stationPlayersCollectorConnection = 0;
@@ -1947,11 +1900,11 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		if (iterFind != s_pendingRenameCharacter.end())
 		{
 			++(iterFind->second.second);
-			iterFind->second.first = ::time(NULL) + 3600; // 1 hour timeout
+			iterFind->second.first = ::time(nullptr) + 3600; // 1 hour timeout
 		}
 		else
 		{
-			s_pendingRenameCharacter.insert(std::make_pair(msg.getValue().second.first, std::make_pair((::time(NULL) + 3600), 1))); // 1 hour timeout
+			s_pendingRenameCharacter.insert(std::make_pair(msg.getValue().second.first, std::make_pair((::time(nullptr) + 3600), 1))); // 1 hour timeout
 		}
 
 		// tell the chat server to destroy any avatar with the new name, but only if the first name changed
@@ -2099,11 +2052,11 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 			{
 				i->second.first = ssfp.getValue().second.first;
 				if (ssfp.getValue().second.second)
-					i->second.second = ::time(NULL) + static_cast<time_t>(ConfigCentralServer::getCtsDenyLoginThresholdSeconds());
+					i->second.second = ::time(nullptr) + static_cast<time_t>(ConfigCentralServer::getCtsDenyLoginThresholdSeconds());
 			}
 			else
 			{
-				m_playerSceneMap[ssfp.getValue().first]=std::make_pair(ssfp.getValue().second.first, (ssfp.getValue().second.second ? (::time(NULL) + static_cast<time_t>(ConfigCentralServer::getCtsDenyLoginThresholdSeconds())) : 0));
+				m_playerSceneMap[ssfp.getValue().first]=std::make_pair(ssfp.getValue().second.first, (ssfp.getValue().second.second ? (::time(nullptr) + static_cast<time_t>(ConfigCentralServer::getCtsDenyLoginThresholdSeconds())) : 0));
 			}
 		}
 	}
@@ -2250,7 +2203,7 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		GenericValueTypeMessage<std::map<std::string, int> > const msg(ri);
 
-		m_timePopulationStatisticsRefresh = ::time(NULL);
+		m_timePopulationStatisticsRefresh = ::time(nullptr);
 		m_populationStatistics = msg.getValue();
 	}
 	else if (message.isType("GcwScoreStatRsp"))
@@ -2258,7 +2211,7 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		GenericValueTypeMessage<std::pair<std::map<std::string, int>, std::pair<std::map<std::string, std::pair<int64, int64> >, std::map<std::string, std::pair<int64, int64> > > > > const msg(ri);
 
-		m_timeGcwScoreStatisticsRefresh = ::time(NULL);
+		m_timeGcwScoreStatisticsRefresh = ::time(nullptr);
 		std::string const timeGcwScoreStatisticsRefreshStr = CalendarTime::convertEpochToTimeStringLocal(m_timeGcwScoreStatisticsRefresh);
 
 		std::map<std::string, int> const & gcwImperialScorePercentile = msg.getValue().first;
@@ -2330,7 +2283,7 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		GenericValueTypeMessage<std::pair<std::map<int, std::pair<std::string, int> >, std::map<int, std::pair<std::string, int> > > > const msg(ri);
 
-		m_timeLastLoginTimeStatisticsRefresh = ::time(NULL);
+		m_timeLastLoginTimeStatisticsRefresh = ::time(nullptr);
 		m_lastLoginTimeStatistics = msg.getValue().first;
 		m_createTimeStatistics = msg.getValue().second;
 	}
@@ -2606,7 +2559,7 @@ void CentralServer::removeGameServer(GameServerConnection const *gameServer)
 	}
 	else 
 	{
-		DEBUG_WARNING(true, ("A game server crashed but our process ID ptr is null."));
+		DEBUG_WARNING(true, ("A game server crashed but our process ID ptr is nullptr."));
 	}
 }
 
@@ -2828,7 +2781,7 @@ void CentralServer::update()
 
 	if ( ConfigCentralServer::getAuctionEnabled() ) // allow auctions?
 	{
-		if ( m_pAuctionTransferClient == NULL )
+		if ( m_pAuctionTransferClient == nullptr )
 		{
                		const char* hostName[1] = { ConfigCentralServer::getAuctionServer() };
                		const short port[1] = { (short)ConfigCentralServer::getAuctionPort() };
@@ -2975,7 +2928,7 @@ void CentralServer::sendToPlanetServer(const std::string &sceneId, const GameNet
 
 // ----------------------------------------------------------------------
 
-void CentralServer::sendToAllConnectionServers(const GameNetworkMessage & message, const bool reliable,  Connection const * exclude /*= NULL*/)
+void CentralServer::sendToAllConnectionServers(const GameNetworkMessage & message, const bool reliable,  Connection const * exclude /*= nullptr*/)
 {
 	// send to all connection servers
 	for (ConnectionServerConnectionList::const_iterator i = m_connectionServerConnections.begin(); i != m_connectionServerConnections.end(); ++i)
@@ -3005,7 +2958,7 @@ void CentralServer::sendToDBProcess(const GameNetworkMessage & message, const bo
 bool CentralServer::hasDBConnection() const
 {
 	const GameServerConnection * g = getGameServer(getDbProcessServerProcessId());
-	return (g != NULL);
+	return (g != nullptr);
 }
 
 //-----------------------------------------------------------------------
@@ -3110,7 +3063,7 @@ void CentralServer::startPlanetServer(const std::string & host, const std::strin
 			
 			TaskSpawnProcess spawn(host.empty() ? std::string("any") : host, "PlanetServer", options, spawnDelay);
 			CentralServer::getInstance().sendTaskMessage(spawn);
-			m_pendingPlanetServers[sceneId] = std::make_pair(std::make_pair(host, options), ::time(NULL));
+			m_pendingPlanetServers[sceneId] = std::make_pair(std::make_pair(host, options), ::time(nullptr));
 			IGNORE_RETURN(m_planetsWaitingForPreload.insert(sceneId));
 
 			bool const preloadFinished = isPreloadFinished();
@@ -3119,14 +3072,14 @@ void CentralServer::startPlanetServer(const std::string & host, const std::strin
 			else if (m_timeClusterWentIntoLoadingState <= 0)
 				m_timeClusterWentIntoLoadingState = time(0);
 
-			if(getInstance().m_transferServerConnection != NULL && !preloadFinished)
+			if(getInstance().m_transferServerConnection != nullptr && !preloadFinished)
 			{
 				getInstance().m_transferServerConnection->disconnect();
 				getInstance().m_transferServerConnection = 0;
 				s_retryTransferServerConnection = false;
 			}
 			
-			if(getInstance().m_stationPlayersCollectorConnection != NULL && ! isPreloadFinished())
+			if(getInstance().m_stationPlayersCollectorConnection != nullptr && ! isPreloadFinished())
 			{
 				getInstance().m_stationPlayersCollectorConnection->disconnect();
 				getInstance().m_stationPlayersCollectorConnection = 0;
@@ -3263,7 +3216,7 @@ void CentralServer::handleGameServerForLoginMessage(const GameServerForLoginMess
 void CentralServer::handleExchangeListCreditsMessage(const ExchangeListCreditsMessage &msg)
 {
 	LOG("Exchange", ("Central Server got exchange list credits %d.",msg.getCredits()));
-	if ( m_pAuctionTransferClient == NULL )
+	if ( m_pAuctionTransferClient == nullptr )
 	{
 		// send failure packet
 	}
@@ -3299,7 +3252,7 @@ ConnectionServerConnection * CentralServer::getAnyConnectionServer()
 
 ConnectionServerConnection * CentralServer::getConnectionServerForAccount(StationId suid)
 {
-	ConnectionServerConnection * result = NULL;
+	ConnectionServerConnection * result = nullptr;
 	ConnectionServerSUIDMap::iterator i=m_accountConnectionMap.find(suid);
 	if (i!=m_accountConnectionMap.end())
 	{
@@ -3707,7 +3660,7 @@ void CentralServer::checkShutdownProcess()
 						{
 							// if it's been "awhile" since we requested to restart the PlanetServer,
 							// then assume that something has gone wrong, and try the restart again
-							time_t const timeNow = ::time(NULL);
+							time_t const timeNow = ::time(nullptr);
 
 							if ((iterPendingPlanetServer->second.second + static_cast<time_t>(ConfigCentralServer::getMaxTimeToWaitForPlanetServerStartSeconds())) < timeNow)
 							{
@@ -3982,7 +3935,7 @@ int CentralServer::getSecondsClusterHasBeenInLoadingState() const
 const std::map<std::string, int> & CentralServer::getPopulationStatistics(time_t & refreshTime)
 {
 	// periodically request updated statistics from the game server
-	time_t const timeNow = ::time(NULL);
+	time_t const timeNow = ::time(nullptr);
 	if (m_timePopulationStatisticsNextRefresh <= timeNow)
 	{
 		GameServerConnection * universeGameServerConnection = getGameServer(UniverseManager::getInstance().getUniverseProcess());
@@ -4004,7 +3957,7 @@ const std::map<std::string, int> & CentralServer::getPopulationStatistics(time_t
 const std::map<std::string, std::pair<int, std::pair<std::string, std::string> > > & CentralServer::getGcwScoreStatistics(time_t & refreshTime)
 {
 	// periodically request updated statistics from the game server
-	time_t const timeNow = ::time(NULL);
+	time_t const timeNow = ::time(nullptr);
 	if (m_timeGcwScoreStatisticsNextRefresh <= timeNow)
 	{
 		GameServerConnection * universeGameServerConnection = getGameServer(UniverseManager::getInstance().getUniverseProcess());
@@ -4026,7 +3979,7 @@ const std::map<std::string, std::pair<int, std::pair<std::string, std::string> >
 std::pair<std::map<int, std::pair<std::string, int> > const *, std::map<int, std::pair<std::string, int> > const *> CentralServer::getLastLoginTimeStatistics(time_t & refreshTime)
 {
 	// periodically request updated statistics from the game server
-	time_t const timeNow = ::time(NULL);
+	time_t const timeNow = ::time(nullptr);
 	if (m_timeLastLoginTimeStatisticsNextRefresh <= timeNow)
 	{
 		GameServerConnection * universeGameServerConnection = getGameServer(UniverseManager::getInstance().getUniverseProcess());
@@ -4049,7 +4002,7 @@ std::pair<std::map<int, std::pair<std::string, int> > const *, std::map<int, std
 void CentralServer::getCharacterMatchStatistics(int & numberOfCharacterMatchRequests, int & numberOfCharacterMatchResultsPerRequest, int & timeSpentPerCharacterMatchRequestMs)
 {
 	// periodically request updated statistics from the game server
-	time_t const timeNow = ::time(NULL);
+	time_t const timeNow = ::time(nullptr);
 	if (m_timeCharacterMatchStatisticsNextRefresh <= timeNow)
 	{
 		const GenericValueTypeMessage<uint8> characterMatchStatisticsRequest("LfgStatReq", 0);
