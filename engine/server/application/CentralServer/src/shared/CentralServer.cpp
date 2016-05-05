@@ -2772,17 +2772,11 @@ void CentralServer::update()
 	m_curTime = static_cast<uint32>(time(0));
 	
 	// stella: Adding those for sending regular updates through WebAPI to the webserver
+	std::string updateURL = "http://webdev/test/asdf/asdf"; //todo: add config vars to CentralServer config header and cpp
 	
-	static int population=0;
-	population = CentralServer::getInstance().getPlayerCount();
-	std::string authURL(ConfigLoginServer::getExternalAuthUrl());
-	
-	postBuf << "population=" << population;
-	postData = std::string(postBuf.str());
+	std::ostringstream postBuf;
+	postBuf << "population=" << CentralServer::getInstance().getPlayerCount();
 
-	
-	
-	
 	// Tell the LoginServers if necessary
 	if ((++loopCount > ConfigCentralServer::getUpdatePlayerCountFrequency()))
 	{
@@ -2790,10 +2784,8 @@ void CentralServer::update()
 
 		// Update the population on the server
 		sendPopulationUpdateToLoginServer();
-		webAPI::simplePost(authURL, postData, "");
+		webAPI::simplePost(updateURL, std::string(postBuf.str()), "");
 	}
-
-
 
 	if ( ConfigCentralServer::getAuctionEnabled() ) // allow auctions?
 	{
@@ -2817,8 +2809,6 @@ void CentralServer::update()
 		delete( m_pAuctionTransferClient );
 		m_pAuctionTransferClient = 0;
 	}
-
-
 
 	// check every 5th frame (one second roughly?)
 	if( loopCount%5 )
