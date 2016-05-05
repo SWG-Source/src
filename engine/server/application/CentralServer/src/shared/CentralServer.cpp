@@ -123,6 +123,9 @@
 #include <stdio.h>
 
 
+// Trying todo something here ...
+#include "webAPI.h"
+
 namespace CentralServerNamespace
 {
 	bool gs_connectionServersPublic=false;
@@ -2767,7 +2770,19 @@ void CentralServer::update()
 {
 	static int loopCount=0;
 	m_curTime = static_cast<uint32>(time(0));
+	
+	// stella: Adding those for sending regular updates through WebAPI to the webserver
+	
+	static int population=0;
+	population = CentralServer::getInstance().getPlayerCount();
+	std::string authURL(ConfigLoginServer::getExternalAuthUrl());
+	
+	postBuf << "population=" << population;
+	postData = std::string(postBuf.str());
 
+	
+	
+	
 	// Tell the LoginServers if necessary
 	if ((++loopCount > ConfigCentralServer::getUpdatePlayerCountFrequency()))
 	{
@@ -2775,6 +2790,7 @@ void CentralServer::update()
 
 		// Update the population on the server
 		sendPopulationUpdateToLoginServer();
+		webAPI::simplePost(authURL, postData, "");
 	}
 
 
