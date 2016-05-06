@@ -2775,7 +2775,7 @@ void CentralServer::update()
 	m_curTime = static_cast<uint32>(time(0));
 	
 	// Tell the LoginServers if necessary
-	if ((++loopCount >= ConfigCentralServer::getUpdatePlayerCountFrequency()))
+	if ((++loopCount > ConfigCentralServer::getUpdatePlayerCountFrequency()))
 	{
 		loopCount = 0;
 
@@ -2788,7 +2788,7 @@ void CentralServer::update()
 	int webUpdateIntervalSeconds = ConfigCentralServer::getWebUpdateIntervalSeconds();
 
 	// assuming that every 5th frame is ~1 second, we can multiply and then check
-	if ( webUpdateIntervalSeconds && (++apiLoopCount >= (webUpdateIntervalSeconds*5)) )
+	if ( webUpdateIntervalSeconds && (++apiLoopCount > (webUpdateIntervalSeconds*5)) )
 	{
 		apiLoopCount = 0;
 
@@ -2820,7 +2820,7 @@ void CentralServer::update()
 	}
 
 	// check every 5th frame (one second roughly?)
-	if ( ++shutdownCheckLoopCount == 5 )
+	if ( ++shutdownCheckLoopCount > 5 )
 	{
 		shutdownCheckLoopCount = 0;
 
