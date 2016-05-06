@@ -2768,13 +2768,16 @@ void CentralServer::run(void)
  */
 void CentralServer::update()
 {
-	static int loopCount=0;
+	static int loopCount = 0;
+	static int apiLoopCount = 0;
+	static int shutdownCheckLoopCount = 0;
+
 	m_curTime = static_cast<uint32>(time(0));
 	
 	// Tell the LoginServers if necessary
-	if ((++loopCount > ConfigCentralServer::getUpdatePlayerCountFrequency()))
+	if ((++loopCount >= ConfigCentralServer::getUpdatePlayerCountFrequency()))
 	{
-		loopCount=0;
+		loopCount = 0;
 
 		// Update the population on the server
 		sendPopulationUpdateToLoginServer();
@@ -2782,12 +2785,14 @@ void CentralServer::update()
 
 
 	// update the webAPI if specified
-	// in theory the variables should be set unless this fires at a really early frame
 	int webUpdateIntervalSeconds = ConfigCentralServer::getWebUpdateIntervalSeconds();
 
-	// assuming that every 5th frame is ~1 second, we can multiply and then mod
-	if ( webUpdateIntervalSeconds && (loopCount%(webUpdateIntervalSeconds*5) == 0))
+	// assuming that every 5th frame is ~1 second, we can multiply and then check
+	if ( webUpdateIntervalSeconds && (++apiLoopCount >= (webUpdateIntervalSeconds*5)) )
 	{
+		apiLoopCount = 0;
+
+		// update the web api
 		sendMetricsToWebAPI();
 	}
 
@@ -2815,9 +2820,10 @@ void CentralServer::update()
 	}
 
 	// check every 5th frame (one second roughly?)
-	// mod returns 0 if no remainder - meaning the below would return true every frame except every 5th, without == 0, wtf?
-	if( loopCount % 5 == 0 )
+	if ( ++shutdownCheckLoopCount == 5 )
 	{
+		shutdownCheckLoopCount = 0;
+
 		checkShutdownProcess();
 	}
 
