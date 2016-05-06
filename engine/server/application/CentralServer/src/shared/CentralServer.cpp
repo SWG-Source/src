@@ -2786,7 +2786,7 @@ void CentralServer::update()
 	int webUpdateIntervalSeconds = ConfigCentralServer::getWebUpdateIntervalSeconds();
 
 	// assuming that every 5th frame is ~1 second, we can multiply and then mod
-	if ( webUpdateIntervalSeconds > 0 && (loopCount%(webUpdateIntervalSeconds*5) == 0))
+	if ( webUpdateIntervalSeconds && (loopCount%(webUpdateIntervalSeconds*5) == 0))
 	{
 		sendMetricsToWebAPI();
 	}
