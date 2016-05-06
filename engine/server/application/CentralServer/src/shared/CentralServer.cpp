@@ -2788,7 +2788,7 @@ void CentralServer::update()
 	int webUpdateIntervalSeconds = ConfigCentralServer::getWebUpdateIntervalSeconds();
 
 	// assuming that every 5th frame is ~1 second, we can multiply and then check
-	if ( webUpdateIntervalSeconds && (++apiLoopCount > (webUpdateIntervalSeconds*5)) )
+	if ( webUpdateIntervalSeconds && (++apiLoopCount > (webUpdateIntervalSeconds*1000)) )
 	{
 		apiLoopCount = 0;
 
