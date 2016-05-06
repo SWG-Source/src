@@ -71,7 +71,9 @@ public:
 		bool          requestDbSaveOnPlanetServerCrash;
 
 		int           maxTimeToWaitForPlanetServerStartSeconds;
+
 		const char *  metricsDataURL;
+		int	      webUpdateIntervalSeconds;
 	};
 
 	static const unsigned short  getChatServicePort     ();
@@ -141,7 +143,9 @@ public:
 	static bool          getRequestDbSaveOnPlanetServerCrash();
 
 	static int           getMaxTimeToWaitForPlanetServerStartSeconds();
+
 	static const char *  getMetricsDataURL();
+	static int	     getWebUpdateIntervalSeconds();
 private:
 	static Data *	data;
 };
@@ -511,9 +515,18 @@ inline int ConfigCentralServer::getMaxTimeToWaitForPlanetServerStartSeconds()
 	return data->maxTimeToWaitForPlanetServerStartSeconds;
 }
 
+// ----------------------------------------------------------------------
+
 inline const char * ConfigCentralServer::getMetricsDataURL()
 {
 	return data->metricsDataURL;
+}
+
+// ----------------------------------------------------------------------
+
+inline int ConfigCentralServer::getWebUpdateIntervalSeconds()
+{
+	return data->webUpdateIntervalSeconds;
 }
 
 // ======================================================================

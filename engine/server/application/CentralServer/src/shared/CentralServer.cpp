@@ -2780,6 +2780,17 @@ void CentralServer::update()
 		sendPopulationUpdateToLoginServer();
 	}
 
+
+	// update the webAPI if specified
+	// in theory the variables should be set unless this fires at a really early frame
+	int webUpdateIntervalSeconds = ConfigCentralServer::getWebUpdateIntervalSeconds();
+
+	// assuming that every 5th frame is ~1 second, we can multiply and then mod
+	if ( webUpdateIntervalSeconds > 0 && (loopCount%(webUpdateIntervalSeconds*5) == 0))
+	{
+		sendMetricsToWebAPI();
+	}
+
 	if ( ConfigCentralServer::getAuctionEnabled() ) // allow auctions?
 	{
 		if ( m_pAuctionTransferClient == nullptr )
@@ -2804,7 +2815,8 @@ void CentralServer::update()
 	}
 
 	// check every 5th frame (one second roughly?)
-	if( loopCount%5 )
+	// mod returns 0 if no remainder - meaning the below would return true without == 0, wtf?
+	if( loopCount % 5 == 0 )
 	{
 		checkShutdownProcess();
 	}
@@ -2841,19 +2853,22 @@ void CentralServer::sendPopulationUpdateToLoginServer()
 	if (!isPreloadFinished() || (time(0)-m_lastLoadingStateTime < static_cast<time_t>(ConfigCentralServer::getRecentLoadingStateSeconds())))
 		loadedRecently=true;
 
-	// stella: Adding those for sending regular updates through WebAPI to the webserver
-	std::string updateURL = std::string(ConfigCentralServer::getMetricsDataURL());
-
-	if (!(updateURL.empty()))
-	{
-		std::ostringstream postBuf;
-		postBuf << "totalPlayerCount=" << m_totalPlayerCount << "&totalGameServers=" << m_gameServers.size() - 1 << "&totalPlanetServers=" << m_planetServers.size() << "&isPublic=" << getIsClusterPublic() << "&isLocked=" << getIsClusterLocked() << "&isSecret=" << getIsClusterSecret() << "&preloadFinished=" << getClusterStartupTime() << "&databasebacklogged=" << isDatabaseBacklogged() << "&totalTutorialSceneCount=" << m_totalTutorialSceneCount << "&totalFalconSceneCount=" << m_totalFalconSceneCount;
-
-		webAPI::simplePost(updateURL, std::string(postBuf.str()), "");
-	}
-
 	UpdatePlayerCountMessage upm(loadedRecently, m_totalPlayerCount, m_totalFreeTrialCount, m_totalEmptySceneCount, m_totalTutorialSceneCount, m_totalFalconSceneCount);
 	sendToAllLoginServers(upm);
+}
+
+void CentralServer::sendMetricsToWebAPI()
+{
+        std::string updateURL = std::string(ConfigCentralServer::getMetricsDataURL());
+
+        if (!(updateURL.empty()))
+        {
+                std::ostringstream postBuf;
+		
+		postBuf << "totalPlayerCount=" << m_totalPlayerCount << "&totalGameServers=" << m_gameServers.size() - 1 << "&totalPlanetServers=" << m_planetServers.size() << "&isPublic=" << getIsClusterPublic() << "&isLocked=" << getIsClusterLocked() << "&isSecret=" << getIsClusterSecret() << "&preloadFinished=" << getClusterStartupTime() << "&databasebacklogged=" << isDatabaseBacklogged() << "&totalTutorialSceneCount=" << m_totalTutorialSceneCount << "&totalFalconSceneCount=" << m_totalFalconSceneCount;
+
+                webAPI::simplePost(updateURL, std::string(postBuf.str()), "");
+        }
 }
 
 //-----------------------------------------------------------------------
