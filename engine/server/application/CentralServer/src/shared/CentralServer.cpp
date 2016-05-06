@@ -2815,7 +2815,7 @@ void CentralServer::update()
 	}
 
 	// check every 5th frame (one second roughly?)
-	// mod returns 0 if no remainder - meaning the below would return true without == 0, wtf?
+	// mod returns 0 if no remainder - meaning the below would return true every frame except every 5th, without == 0, wtf?
 	if( loopCount % 5 == 0 )
 	{
 		checkShutdownProcess();
