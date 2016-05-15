@@ -1170,10 +1170,7 @@ void CommoditiesMarket::giveTime()
 	else
 	{
 		if (Clock::timeSeconds() - ConfigServerGame::getCommoditiesServerReconnectIntervalSec() > reconnectTime)
-		{
-
-			DEBUG_WARNING(true, ("[Commodities API] : No commodities server connection to send GiveTime."));
-			
+		{			
 			getCommoditiesServerConnection(); //attempt to reconnect to commodities server
 			reconnectTime = Clock::timeSeconds();
 		}
