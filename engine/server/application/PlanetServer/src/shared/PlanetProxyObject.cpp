@@ -93,7 +93,7 @@ void PlanetProxyObject::update(int x, int y, int z, NetworkId containedBy, uint3
 		static unsigned long authTransferSanityCheckTimeMs = ConfigPlanetServer::getAuthTransferSanityCheckTimeMs();
 		if (Clock::timeMs()-m_authTransferTimeMs > authTransferSanityCheckTimeMs)
 		{
-			WARNING(true, ("Resending auth transfer for %s to %lu due to receiving a stale position update.", m_objectId.getValueString().c_str(), authoritativeServer));
+			DEBUG_WARNING(true, ("Resending auth transfer for %s to %lu due to receiving a stale position update.", m_objectId.getValueString().c_str(), authoritativeServer));
 			sendAuthorityChange(authoritativeServer, m_authoritativeServer, false);
 			return;
 		}

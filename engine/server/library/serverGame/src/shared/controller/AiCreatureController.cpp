@@ -223,7 +223,7 @@ void AICreatureController::handleMessage (int message, float value, const Messag
 				{
 					if (owner->isAuthoritative())
 					{
-						WARNING(true, ("AICreatureController::handleMessage() owner(%s) Received CM_aiSetMovement(%d) for an authoritative object. Only proxied objects should receive this controller message.", getDebugInformation().c_str(), static_cast<int>(msg->getMovementType())));
+						DEBUG_WARNING(true, ("AICreatureController::handleMessage() owner(%s) Received CM_aiSetMovement(%d) for an authoritative object. Only proxied objects should receive this controller message.", getDebugInformation().c_str(), static_cast<int>(msg->getMovementType())));
 					}
 					else
 					{
