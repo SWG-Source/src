@@ -2303,7 +2303,7 @@ void AICreatureController::setPrimaryWeapon(CrcString const & objectTemplate)
 
 	if (newPrimaryWeapon == NetworkId::cms_invalid)
 	{
-		WARNING(true, ("AICreatureController::setPrimaryWeapon() owner(%s) Unable to create the requested primary weapon(%s)", getDebugInformation().c_str(), objectTemplate.getString()));
+		DEBUG_WARNING(true, ("AICreatureController::setPrimaryWeapon() owner(%s) Unable to create the requested primary weapon(%s)", getDebugInformation().c_str(), objectTemplate.getString()));
 	}
 	else
 	{
