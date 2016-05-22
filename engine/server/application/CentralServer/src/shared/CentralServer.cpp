@@ -2786,14 +2786,15 @@ void CentralServer::update()
 
 	// update the webAPI if specified
 	int webUpdateIntervalSeconds = ConfigCentralServer::getWebUpdateIntervalSeconds();
+        std::string updateURL = std::string(ConfigCentralServer::getMetricsDataURL());
 
 	// assuming that every 5th frame is ~1 second, we can multiply and then check
-	if ( webUpdateIntervalSeconds && (++apiLoopCount > (webUpdateIntervalSeconds*1000)) )
+	if ( !(updateURL.empty()) && webUpdateIntervalSeconds && (++apiLoopCount > (webUpdateIntervalSeconds*1000)) )
 	{
 		apiLoopCount = 0;
 
 		// update the web api
-		sendMetricsToWebAPI();
+		sendMetricsToWebAPI(updateURL);
 	}
 
 	if ( ConfigCentralServer::getAuctionEnabled() ) // allow auctions?
@@ -2863,18 +2864,14 @@ void CentralServer::sendPopulationUpdateToLoginServer()
 	sendToAllLoginServers(upm);
 }
 
-void CentralServer::sendMetricsToWebAPI()
+void CentralServer::sendMetricsToWebAPI(std::string updateURL)
 {
-        std::string updateURL = std::string(ConfigCentralServer::getMetricsDataURL());
+	std::ostringstream postBuf;
 
-        if (!(updateURL.empty()))
-        {
-                std::ostringstream postBuf;
-		
-		postBuf << "totalPlayerCount=" << m_totalPlayerCount << "&totalGameServers=" << m_gameServers.size() - 1 << "&totalPlanetServers=" << m_planetServers.size() << "&isPublic=" << getIsClusterPublic() << "&isLocked=" << getIsClusterLocked() << "&isSecret=" << getIsClusterSecret() << "&preloadFinished=" << getClusterStartupTime() << "&databasebacklogged=" << isDatabaseBacklogged() << "&totalTutorialSceneCount=" << m_totalTutorialSceneCount << "&totalFalconSceneCount=" << m_totalFalconSceneCount;
+	postBuf << "totalPlayerCount=" << m_totalPlayerCount << "&totalGameServers=" << m_gameServers.size() - 1 << "&totalPlanetServers=" << m_planetServers.size() << "&isPublic=" << getIsClusterPublic() << "&isLocked=" << getIsClusterLocked() << "&isSecret=" << getIsClusterSecret() << "&preloadFinished=" << getClusterStartupTime() << "&databasebacklogged=" << isDatabaseBacklogged() << "&totalTutorialSceneCount=" << m_totalTutorialSceneCount << "&totalFalconSceneCount=" << m_totalFalconSceneCount;
 
-                webAPI::simplePost(updateURL, std::string(postBuf.str()), "");
-        }
+	std::string response = webAPI::simplePost(updateURL, std::string(postBuf.str()), "");
+	WARNING((response != "success"), ("Error sending stats: %s", response.c_str()));
 }
 
 //-----------------------------------------------------------------------

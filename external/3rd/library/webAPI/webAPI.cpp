@@ -81,7 +81,15 @@ nlohmann::json webAPI::request(std::string endpoint, std::string data, int reqTy
 
 			if (res == CURLE_OK && http_code == 200 && !(readBuffer.empty())) // check it all out and parse
 			{
-                        	response = nlohmann::json::parse(readBuffer);
+				try {
+				    response = nlohmann::json::parse(readBuffer);
+				} catch (std::string e) {
+				    response["message"] = e;
+				    response["status"] = "failure";
+				} catch (...) {
+				    response["message"] = "JSON parse error for endpoint.";
+				    response["status"] = "failure";
+				}
 			}
 			else
 			{

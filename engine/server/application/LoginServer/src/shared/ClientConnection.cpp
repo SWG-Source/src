@@ -192,23 +192,16 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 
 		std::string response = webAPI::simplePost(authURL, std::string(postBuf.str()), "");
 
-		if (!response.empty())
+		if (response == "success")
 		{
-			if (response == "success")
-			{
-				authOK = 1;
-			}
-			else
-			{
-				ErrorMessage err("Login Failed", response);
-				this->send(err, true);
-			}
+			authOK = 1;
 		}
 		else
 		{
-			ErrorMessage err("Login Failed", "Error connecting to authentication provider.");
+			ErrorMessage err("Login Failed", response);
 			this->send(err, true);
 		}
+		
 	}
 	else
 	{
