@@ -58,7 +58,7 @@ void ConfigTaskManager::install(void)
 	KEY_BOOL    (autoStart, true);
 	KEY_STRING  (clusterName, "devcluster");
 	KEY_BOOL    (verifyClusterName, false);
-	KEY_INT     (gameServerTimeout, 600);
+	KEY_INT     (gameServerTimeout, 1200);
 	KEY_STRING  (gameServiceBindInterface, "");
 	KEY_INT     (gameServicePort, 60001);
 	KEY_INT     (consoleConnectionPort, 60000);
