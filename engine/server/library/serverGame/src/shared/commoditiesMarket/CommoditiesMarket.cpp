@@ -1103,7 +1103,7 @@ void CommoditiesMarket::install()
 	}
 	else
 	{
-		DEBUG_WARNING(true, ("[Commodities API] : No commodities server connection to send SetGameTime."));
+		//DEBUG_WARNING(true, ("[Commodities API] : No commodities server connection to send SetGameTime."));
 		
 		getCommoditiesServerConnection(); //attempt to reconnect to commodities server
 	}
