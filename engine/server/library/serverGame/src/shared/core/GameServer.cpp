@@ -888,7 +888,7 @@ void GameServer::receiveMessage(const MessageDispatch::Emitter & source, const M
 	{
 		if(Clock::timeMs() - s_lastTaskKeepaliveTime > 60000)
 		{
-			DEBUG_WARNING(true, ("Sending keepalive message to taskmanager for process %i", Os::getProcessID()));
+			DEBUG_WARNING(true, ("Sending keepalive message to taskmanager for process %i", Os::getProcessId()));
 			static const GenericValueTypeMessage<unsigned long> gameServerTaskManagerKeepAlive("GameServerTaskManagerKeepAlive", Os::getProcessId());
 			getInstance().m_taskManagerConnection->send(gameServerTaskManagerKeepAlive, true);
 			s_lastTaskKeepaliveTime = Clock::timeMs();
