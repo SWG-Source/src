@@ -3277,7 +3277,7 @@ void ServerObject::sendControllerMessageToAuthServer(enum GameControllerMessage 
 {
 	DEBUG_WARNING(isInEndBaselines(), ("sendControllerMessageToAuthServer while ending baselines: message id=(%d) from object id=[%s], template=[%s], on server id=[%d]", static_cast<int>(cm), getNetworkId().getValueString().c_str(), getObjectTemplateName(), static_cast<int>(GameServer::getInstance().getProcessId())));
 
-	DEBUG_WARNING(!isInitialized(), ("sendControllerMessageToAuthServer while uninitialized: message id=(%d) from object id=[%s], template=[%s], on server id=[%d]", static_cast<int>(cm), getNetworkId().getValueString().c_str(), getObjectTemplateName(), static_cast<int>(GameServer::getInstance().getProcessId())));
+	//DEBUG_WARNING(!isInitialized(), ("sendControllerMessageToAuthServer while uninitialized: message id=(%d) from object id=[%s], template=[%s], on server id=[%d]", static_cast<int>(cm), getNetworkId().getValueString().c_str(), getObjectTemplateName(), static_cast<int>(GameServer::getInstance().getProcessId())));
 
 	Controller * controller = getController();
 	if(controller)
