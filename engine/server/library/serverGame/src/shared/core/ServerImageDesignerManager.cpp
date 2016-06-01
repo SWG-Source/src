@@ -457,7 +457,7 @@ void ServerImageDesignerManager::updateGradualCustomizations(CreatureObject * ta
 	std::pair<std::multimap<NetworkId, GradualCustomizationData>::iterator, std::multimap<NetworkId, GradualCustomizationData>::iterator> p = ms_gradualCustomizationMap.equal_range(target->getNetworkId());
 	if(p.first != ms_gradualCustomizationMap.end())
 	{
-		for(std::multimap<NetworkId, GradualCustomizationData>::iterator i = p.first; i != p.second; ++i)
+		for(std::multimap<NetworkId, GradualCustomizationData>::iterator i = p.first; i != p.second;)
 		{
 			if(!--(i->second.countdown))
 			{
@@ -490,7 +490,11 @@ void ServerImageDesignerManager::updateGradualCustomizations(CreatureObject * ta
 						DEBUG_WARNING(true, ("Could not create hair %s\n", i->second.templateName.c_str()));
 					}
 				}
-				ms_gradualCustomizationMap.erase(i);
+				i = ms_gradualCustomizationMap.erase(i);
+			}
+			else
+			{
+				++i;
 			}
 		}
 	}
