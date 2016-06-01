@@ -15,13 +15,15 @@ License: what's a license? we're a bunch of dirty pirates!
 
 #include "webAPI.h"
 
+using namespace std;
+
 // if status == success, returns "success", or slotName's contents if specified...
 // otherwise returns the "message" if no success
-std::string webAPI::simplePost(std::string endpoint, std::string data, std::string slotName)
+string webAPI::simplePost(string endpoint, string data, string slotName)
 {
 	// declare our output and go ahead and attempt to get data from remote
 	nlohmann::json response = request(endpoint, data, 1);
-	std::string output;
+	string output;
 
 	// if we got data back...
 	if (response.count("status") && response["status"].get<std::string>() == "success")
@@ -53,7 +55,7 @@ std::string webAPI::simplePost(std::string endpoint, std::string data, std::stri
 
 // this can be broken out to separate the json bits later if we need raw or other http type requests
 // all it does is fetch via get or post, and if the status is 200 returns the json, else error json
-nlohmann::json webAPI::request(std::string endpoint, std::string data, int reqType)
+nlohmann::json webAPI::request(string endpoint, string data, int reqType)
 {
 	nlohmann::json response;
 
@@ -63,7 +65,7 @@ nlohmann::json webAPI::request(std::string endpoint, std::string data, int reqTy
 
                 if (curl)
                 {
-                        std::string readBuffer; // container for the remote response
+                        string readBuffer; // container for the remote response
 			long http_code = 0; // we get this after performing the get or post
 
                         curl_easy_setopt(curl, CURLOPT_URL, endpoint.c_str()); // endpoint is always specified by caller
@@ -83,7 +85,7 @@ nlohmann::json webAPI::request(std::string endpoint, std::string data, int reqTy
 			{
 				try {
 				    response = nlohmann::json::parse(readBuffer);
-				} catch (std::string e) {
+				} catch (string e) {
 				    response["message"] = e;
 				    response["status"] = "failure";
 				} catch (...) {
@@ -116,7 +118,6 @@ nlohmann::json webAPI::request(std::string endpoint, std::string data, int reqTy
 // This is used by curl to grab the response and put it into a var
 size_t webAPI::writeCallback(void *contents, size_t size, size_t nmemb, void *userp)
 {
-        ((std::string*)userp)->append((char*)contents, size * nmemb);
+        ((string*)userp)->append((char*)contents, size * nmemb);
         return size * nmemb;
 }
-

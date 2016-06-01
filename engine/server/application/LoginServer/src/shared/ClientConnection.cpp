@@ -172,23 +172,27 @@ void ClientConnection::onReceive(const Archive::ByteStream & message)
 // originally was used to validate station API credentials, now uses our custom api
 void ClientConnection::validateClient(const std::string & id, const std::string & key)
 {
-	StationId suid = atoi(id.c_str()); 
+	// to avoid having to re-type this stupid var all over the place
+	// ideally we wouldn't copy this here, but it would be a huge pain
+	const std::string trimmedId = trim(id);
+  
+	StationId suid = atoi(trimmedId.c_str()); 
 	int authOK = 0;
 
 	if (suid == 0)
 	{
 		std::hash<std::string> h;
-		suid = h(id); //lint !e603 // Symbol 'h' not initialized (it's a functor)
+		suid = h(trimmedId); //lint !e603 // Symbol 'h' not initialized (it's a functor)
 	}
 	
-	LOG("LoginClientConnection", ("validateClient() for stationId (%lu) at IP (%s), id (%s)", m_stationId, getRemoteAddress().c_str(), id.c_str()));
+	LOG("LoginClientConnection", ("validateClient() for stationId (%lu) at IP (%s), id (%s)", m_stationId, getRemoteAddress().c_str(), trimmedId.c_str()));
 
 	std::string authURL(ConfigLoginServer::getExternalAuthUrl());
 
 	if (!authURL.empty()) 
 	{
 		std::ostringstream postBuf;
-		postBuf << "user_name=" << id << "&user_password=" << key << "&stationID=" << suid << "&ip=" << getRemoteAddress();
+		postBuf << "user_name=" << trimmedId << "&user_password=" << key << "&stationID=" << suid << "&ip=" << getRemoteAddress();
 
 		std::string response = webAPI::simplePost(authURL, std::string(postBuf.str()), "");
 
@@ -210,7 +214,7 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 
 	if (authOK) 
 	{
-		LoginServer::getInstance().onValidateClient(suid, id, this, true, NULL, 0xFFFFFFFF, 0xFFFFFFFF);
+		LoginServer::getInstance().onValidateClient(suid, trimmedId, this, true, NULL, 0xFFFFFFFF, 0xFFFFFFFF);
 	}
 	// else this case will never be reached, noop
 }
