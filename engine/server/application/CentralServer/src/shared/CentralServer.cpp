@@ -3006,12 +3006,12 @@ void CentralServer::setTaskManager(TaskConnection * newTaskManager)
 
 void CentralServer::removePlanetServer(const PlanetServerConnection * p)
 {
-	for (std::map<std::string, PlanetServerConnection *>::iterator i = m_planetServers.begin(); i != m_planetServers.end(); ++i)
+	for (std::map<std::string, PlanetServerConnection *>::iterator i = m_planetServers.begin(); i != m_planetServers.end();)
 	{
 		if ((*i).second == p)
 		{
 			DEBUG_REPORT_LOG(true,("Central lost connection to Planet Server %s\n",p->getSceneId().c_str()));
-			m_planetServers.erase(i);
+			i = m_planetServers.erase(i);
 
 			if (isPreloadFinished())
 				m_timeClusterWentIntoLoadingState = 0;
@@ -3019,6 +3019,10 @@ void CentralServer::removePlanetServer(const PlanetServerConnection * p)
 				m_timeClusterWentIntoLoadingState = time(0);
 
 			return;
+		}
+		else
+		{
+			++i;
 		}
 	}
 }
