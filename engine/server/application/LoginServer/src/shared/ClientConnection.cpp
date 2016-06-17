@@ -175,8 +175,15 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 	// to avoid having to re-type this stupid var all over the place
 	// ideally we wouldn't copy this here, but it would be a huge pain
 	const std::string trimmedId = trim(id);
-  
-	StationId suid = atoi(trimmedId.c_str()); 
+
+	// and to avoid funny business with atoi and casing
+	// make it a separate var than the one we send the auth server
+	std::string lcaseId;
+	lcaseId.resize(trimmedId.size());
+
+  	std::transform(trimmedId.begin(),trimmedId.end(),lcaseId.begin(),::tolower);
+
+	StationId suid = atoi(lcaseId.c_str()); 
 	int authOK = 0;
 
 	if (suid == 0)
