@@ -189,7 +189,7 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 	if (suid == 0)
 	{
 		std::hash<std::string> h;
-		suid = h(trimmedId); //lint !e603 // Symbol 'h' not initialized (it's a functor)
+		suid = h(lcaseId.c_str()); //lint !e603 // Symbol 'h' not initialized (it's a functor)
 	}
 	
 	LOG("LoginClientConnection", ("validateClient() for stationId (%lu) at IP (%s), id (%s)", m_stationId, getRemoteAddress().c_str(), trimmedId.c_str()));
