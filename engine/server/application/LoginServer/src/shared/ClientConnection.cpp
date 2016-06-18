@@ -175,6 +175,7 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 	// to avoid having to re-type this stupid var all over the place
 	// ideally we wouldn't copy this here, but it would be a huge pain
 	const std::string trimmedId = trim(id);
+	const std::string trimmedKey = trim(key);
 
 	// and to avoid funny business with atoi and casing
 	// make it a separate var than the one we send the auth server
@@ -199,7 +200,7 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 	if (!authURL.empty()) 
 	{
 		std::ostringstream postBuf;
-		postBuf << "user_name=" << trimmedId << "&user_password=" << key << "&stationID=" << suid << "&ip=" << getRemoteAddress();
+		postBuf << "user_name=" << trimmedId << "&user_password=" << trimmedKey << "&stationID=" << suid << "&ip=" << getRemoteAddress();
 
 		std::string response = webAPI::simplePost(authURL, std::string(postBuf.str()), "");
 
