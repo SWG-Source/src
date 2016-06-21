@@ -1167,8 +1167,9 @@ void JavaLibrary::initializeJavaThread()
 		{
 
 // java 1.8 and higher uses metaspace...which is apparently unlimited by default
+// and turn off perf counters as they crap up the tmp dir
 #if defined(JNI_VERSION_1_8) || defined(JNI_VERSION_1_9)
-		        tempOption.optionString = "-XX:MetaspaceSize=64m";
+		        tempOption.optionString = "-XX:MetaspaceSize=64m --XX:-UsePerfData";
 		        options.push_back(tempOption);
 #endif
 
