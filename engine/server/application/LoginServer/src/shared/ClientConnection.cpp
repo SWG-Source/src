@@ -193,7 +193,7 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 		suid = h(lcaseId.c_str()); //lint !e603 // Symbol 'h' not initialized (it's a functor)
 	}
 	
-	LOG("LoginClientConnection", ("validateClient() for stationId (%lu) at IP (%s), id (%s)", m_stationId, getRemoteAddress().c_str(), trimmedId.c_str()));
+	LOG("LoginClientConnection", ("validateClient() for stationId (%lu) at IP (%s), id (%s)", m_stationId, getRemoteAddress().c_str(), lcaseId.c_str()));
 
 	std::string authURL(ConfigLoginServer::getExternalAuthUrl());
 
@@ -222,7 +222,7 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 
 	if (authOK) 
 	{
-		LoginServer::getInstance().onValidateClient(suid, trimmedId, this, true, NULL, 0xFFFFFFFF, 0xFFFFFFFF);
+		LoginServer::getInstance().onValidateClient(suid, lcaseId, this, true, NULL, 0xFFFFFFFF, 0xFFFFFFFF);
 	}
 	// else this case will never be reached, noop
 }
