@@ -1440,7 +1440,7 @@ void LoginServer::onValidateClient(StationId suid, const std::string & username,
 
 	//Send off request for the avatar list from the database.
 	DatabaseConnection::getInstance().requestAvatarListForAccount(suid, 0);
-	DEBUG_REPORT_LOG(true, ("Client connected.  Station Id:  %lu, Username: %s\n", suid, username.c_str()));
+	REPORT_LOG(true, ("Client connected.  Station Id:  %lu, Username: %s\n", suid, username.c_str()));
 	LOG("LoginClientConnection", ("onValidateClient() for stationId (%lu) at IP (%s), id (%s), requesting avatar list for account", suid, conn->getRemoteAddress().c_str(), username.c_str()));
 
 	//Set up the connection as being validated with this suid.
