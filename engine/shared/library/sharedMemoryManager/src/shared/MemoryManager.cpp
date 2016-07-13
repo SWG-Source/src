@@ -46,7 +46,7 @@
 
 // this flag is different than above, as it doesn't fully disable the manager, only a few pieces
 // including the destructor for some reason
-#define DISABLED                0
+#define DISABLED                1
 
 // removed all the debug cases for these as these seem to cause problems
 // recent modifications force the mem manager to always behave in production mode
@@ -1935,9 +1935,11 @@ unsigned long MemoryManager::getCurrentNumberOfBytesAllocated(const int processI
 	static time_t seconds = 0;
 	    
 	unsigned long retVal = 0;
-	
+
+#if !DISABLED	
 	ms_criticalSection->enter();
-	
+#endif	
+
 	if (processId) 
 	{		
 		if ((time (0) - seconds) > 60 )
@@ -1975,9 +1977,11 @@ unsigned long MemoryManager::getCurrentNumberOfBytesAllocated(const int processI
 			retVal = static_cast<unsigned long>(s_statm.tpsr) * static_cast<unsigned long>(s_pagesize);
 		}
 	}
-	
+
+#if !DISABLED	
 	ms_criticalSection->leave();
-	
+#endif	
+
 	return retVal;	
 #endif			
 }
