@@ -52,7 +52,7 @@ elseif(UNIX)
 	find_package(Curses REQUIRED)
 
 	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG -DDEBUG_LEVEL=2 -DPRODUCTION=0 -g3 -pipe -O0 -Wall -Wno-overloaded-virtual -Wno-missing-braces -Wno-format -Wno-write-strings -Wno-unknown-pragmas -Wno-uninitialized -Wno-reorder")
-	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DDEBUG_LEVEL=0 -DPRODUCTION=1 -pipe -march=native -mtune=native -O2 -Wno-overloaded-virtual -Wno-missing-braces -Wno-format -Wno-write-strings -Wno-unknown-pragmas -Wno-uninitialized -Wno-reorder")
+	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DDEBUG_LEVEL=0 -DPRODUCTION=1 -pipe -Ofast -march=native -mtune=native -Wno-overloaded-virtual -Wno-missing-braces -Wno-format -Wno-write-strings -Wno-unknown-pragmas -Wno-uninitialized -Wno-reorder")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -D_GLIBCXX_USE_CXX11_ABI=0")
 
 	add_definitions(-DLINUX -D_REENTRANT -Dlinux -D_USING_STL -D__STL_NO_BAD_ALLOC -D_GNU_SOURCE -D_XOPEN_SOURCE=500)
