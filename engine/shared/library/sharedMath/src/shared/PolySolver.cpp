@@ -282,7 +282,7 @@ int PolySolver::solveQuartic( const double c[5], double s[4] )
 	}
 
 	static const double nan = sqrt(-1.0f);
-	if (isnan(D))
+	if (std::isnan(D))
 	{
 		s[0] = nan;
 		s[1] = nan;
@@ -293,7 +293,7 @@ int PolySolver::solveQuartic( const double c[5], double s[4] )
 		s[1] = (-1.0/4.0)*a3 + (1.0/2.0)*R - (1.0/2.0)*D;
 	}
 
-	if (isnan(E))
+	if (std::isnan(E))
 	{
 		s[2] = nan;
 		s[3] = nan;

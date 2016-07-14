@@ -46,7 +46,7 @@ inline void get(ReadIterator & source, Quaternion & target)
 #ifdef _WIN32
 	if (_isnan(static_cast<double>(target.w)) || _isnan(static_cast<double>(target.x)) || _isnan(static_cast<double>(target.y)) || _isnan(static_cast<double>(target.z)))
 #else
-	if (isnan(target.w) || isnan(target.x) || isnan(target.y) || isnan(target.z))
+	if (std::isnan(target.w) || std::isnan(target.x) || std::isnan(target.y) || std::isnan(target.z))
 #endif
 	{
 		target.w = 1.0f;

@@ -1574,10 +1574,10 @@ inline bool SphereTreeNode<ObjectType, ExtentAccessor>::isValidSphere(Sphere con
 	Vector const & center = sphere.getCenter();
 	float radius = sphere.getRadius();
 
-	if(isnan(center.x)) return false;
-	if(isnan(center.y)) return false;
-	if(isnan(center.z)) return false;
-	if(isnan(radius)) return false;
+	if(std::isnan(center.x)) return false;
+	if(std::isnan(center.y)) return false;
+	if(std::isnan(center.z)) return false;
+	if(std::isnan(radius)) return false;
 
 	if(!finite(center.x)) return false;
 	if(!finite(center.y)) return false;

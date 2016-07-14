@@ -842,7 +842,7 @@ bool Transform::isNaN() const
 				return true;
 			}
 #else
-			if(isnan(matrix[i][j]))
+			if(std::isnan(matrix[i][j]))
 			{
 				DEBUG_FATAL(true, ("nan"));
 				return true;
