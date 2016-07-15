@@ -12,8 +12,8 @@
 typedef unsigned short int WORD;
 typedef unsigned long int DWORD;
 typedef bool BOOL;
-typedef long long       int64; //lint !e13 !e19 // Error: 13 (Bad type), Error: 19 (Useless declaration) // -TRF- Lint preprocessor discrepency, @todo look into this.
-typedef int64         LARGE_INTEGER;
+typedef long long     __int64; //lint !e13 !e19 // Error: 13 (Bad type), Error: 19 (Useless declaration) // -TRF- Lint preprocessor discrepency, @todo look into this.
+typedef __int64         LARGE_INTEGER;
 
 const BOOL FALSE = 0;
 const BOOL TRUE = 1;
