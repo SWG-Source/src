@@ -1061,10 +1061,8 @@ void JavaLibrary::initializeJavaThread()
 
 	UNREF(jdwpBuffer);
 
-	// always run java in server mode
-	tempOption.optionString = "-server";
-	options.push_back(tempOption);
-
+	// append any config file specified options...our defaults below will override them
+	// as after testing i see them as sane defaults -darth
 	if (ConfigServerScript::hasJavaOptions())
 	{
 		int const numberOfJavaOptions = ConfigServerScript::getNumberOfJavaOptions();
@@ -1076,35 +1074,44 @@ void JavaLibrary::initializeJavaThread()
 		}
 	}
 
-	// set up memory requirements
+	// initial and minimum jvm allocation size
 	tempOption.optionString = "-Xms128m";
 	options.push_back(tempOption);
 
+	// maximum jvm allocation - max 512m on 32-bit
 	tempOption.optionString = "-Xmx512m";
 	options.push_back(tempOption);
 
+	// thread stack size, that is, size per thread
 	tempOption.optionString = "-Xss768k";
 	options.push_back(tempOption);
 
 	// java 1.8 and higher uses metaspace...which is apparently unlimited by default
-        tempOption.optionString = "-XX:MetaspaceSize=64m";
+	// we have to consider it with our 512m max above so 96 on 32-bit is as high as we go
+        tempOption.optionString = "-XX:MaxMetaspaceSize=96m";
         options.push_back(tempOption);
 
-	tempOption.optionString = "-Xrs -XX:-UsePerfData -XX:+AllowUserSignalHandlers -XX:UseSSE=3 -XX+DoEscapeAnalysis -XX:AutoBoxCacheMax=1000 -XX:+OptimizeStringConcat -XX:+OptimizeFill -XX:+EliminateAutoBox -XX:+UseCompressedStrings -XX:UseCompressedOops -XX:+EliminateLocks -XX:UseFastAccessorMethods -XX:+UseStringCache";
+	// rice options!!!!1! yay - actually after much trial and error these are a good mix for speed and efficiency
+	// i should split these someday into separate optionStrings...or not
+	// some may be default, not needed, or ignored by whatever version we're using -darth
+	tempOption.optionString = "-Xrs -XX:-UsePerfData -XX:-AllowUserSignalHandlers -XX:UseSSE=3 -XX+DoEscapeAnalysis -XX:AutoBoxCacheMax:2000 -XX:+OptimizeStringConcat -XX:+OptimizeFill -XX:+EliminateAutoBox -XX:+UseCompressedStrings -XX:+UseCompressedOops -XX:+EliminateLocks -XX:UseFastAccessorMethods -XX:+UseStringCache -XgcPrio:throughput -XXkeepAreaRatio:1 -XXlazyUnlocking -XXcallProfiling -XXcompactRatio:1";
 	options.push_back(tempOption);
 
+	// left over from SOE, below...probably won't use these most of the time
 	if (ConfigServerGame::getUseJavaXcheck())
 	{
 		tempOption.optionString = "-Xcheck:jni";
 		options.push_back(tempOption);
 	}
 
+	// if at all
 	if (ConfigServerGame::getCompileScripts())
 	{
 		tempOption.optionString = "-Xint";
 		options.push_back(tempOption);
 	}
 
+	// ...
 	if (ConfigServerGame::getUseVerboseJava())
 	{
 		tempOption.optionString = "-verbose:jni";
@@ -1115,12 +1122,14 @@ void JavaLibrary::initializeJavaThread()
 		options.push_back(tempOption);
 	}
 
+	// not sure how logging GC runs is even useful personally
 	if (ConfigServerGame::getLogJavaGc())
 	{
 		tempOption.optionString = "-Xloggc:javagc.log";
 		options.push_back(tempOption);
 	}
 
+// never used it but this is actually a cool feature, if the crusty turd still works
 #ifdef REMOTE_DEBUG_ON
 	char *jdwpBuffer = nullptr;
 	if (ConfigServerGame::getUseRemoteDebugJava())
@@ -1149,6 +1158,7 @@ void JavaLibrary::initializeJavaThread()
 
 // TODO: this really sucks as the jvm won't start without the param
 // there's a dynamic method but requires the jvm to already be running, wtf?
+// so we'll support the dev and stable versions
 #ifdef JNI_VERSION_1_9
         vm_args.version = JNI_VERSION_1_9;
 #define JNIVERSET = 1
@@ -1189,6 +1199,7 @@ void JavaLibrary::initializeJavaThread()
 	}
 	ms_loaded = 1;
 
+	// i don't think this bit functions anymore with new java?
 	if (ConfigServerGame::getTrapScriptCrashes())
 	{	
 		//set up signal handler for fatals in linux
@@ -1202,7 +1213,7 @@ void JavaLibrary::initializeJavaThread()
 	ms_shutdownJava->wait();
 
 	// clean up
-	IGNORE_RETURN(ms_jvm->DestroyJavaVM());
+	IGNORE_RETURN(ms_jvm->DestroyJavaVM()); // yeah, screw it, l
 	ms_jvm = nullptr;
 
 	if (ConfigServerGame::getTrapScriptCrashes())
