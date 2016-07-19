@@ -56,10 +56,6 @@ using namespace JNIWrappersNamespace;
 #include <signal.h>
 #endif
 
-#ifndef JNI_VERSION_1_4
-#error JNI version 1.4 or better only!
-#endif
-
 //========================================================================
 // macros
 //========================================================================
@@ -1009,87 +1005,9 @@ void JavaLibrary::initializeJavaThread()
 		return;
 	}
 
-	const char *javaVMName = ConfigServerGame::getJavaVMName();
-	if (javaVMName == nullptr || (
-		strcmp(javaVMName, "none") != 0 &&
-		strcmp(javaVMName, "ibm") != 0 &&
-		strcmp(javaVMName, "sun") != 0 &&
-		strcmp(javaVMName, "oracle") != 0))
-	{
-		FATAL(true, ("[ServerGame] javaVMName not defined. Valid values are: "
-			"none, ibm, oracle, or sun"));
-	}
-	else if (strcmp(javaVMName, "ibm") == 0)
-	{
-		ms_javaVmType = JV_ibm;
-	}
-	else if (strcmp(javaVMName, "sun") == 0 || strcmp(javaVMName, "oracle") == 0)
-	{
-		ms_javaVmType = JV_sun;
-	}
-
-	if (ms_javaVmType == JV_none)
-	{
-		DEBUG_REPORT_LOG(true, ("Scripting is disabled.\n"));
-		ms_loaded = -1;
-		return;
-	}
-
 #ifdef linux
-
 	// get the default signal handler
 	IGNORE_RETURN(sigaction(SIGSEGV, nullptr, &OrgSa));
-
-	if (ms_javaVmType == JV_ibm)
-	{
-		// check PATH to make sure that it has /usr/bin/java
-		const char * env = getenv("PATH");
-		const char * bin = nullptr;
-		int envlen = 0;
-		if (env != nullptr)
-		{
-			bin = strstr(env, "/usr/java/bin");
-			envlen = strlen(env);
-		}
-
-		if (bin == nullptr)
-		{
-			WARNING(true, ("/usr/java/bin not found in PATH which is needed for IBM Java VM.  Adding it now"));
-			char * tmpbuffer = new char[envlen + 128];
-			if (env)
-				strcpy(tmpbuffer, env);
-			strcat(tmpbuffer, ":/usr/java/bin");
-			setenv("PATH", tmpbuffer, 1);
-			delete [] tmpbuffer;
-		}
-
-		// check LD_LIBRARY_PATH for /usr/java/jre/bin and /usr/java/jre/bin/classic
-		env = getenv("LD_LIBRARY_PATH");
-		bin = nullptr;
-		envlen = 0;
-		const char * classic = nullptr;
-		if (env != nullptr)
-		{
-			bin = strstr(env, "/usr/java/jre/bin");
-			classic = strstr(env, "/usr/java/jre/bin/classic");
-			if (bin == classic && bin != nullptr)
-				bin = strstr(classic + 1, "/usr/java/jre/bin");
-			envlen = strlen(env);
-		}
-		if (bin == nullptr || classic == nullptr)
-		{
-			WARNING(true, ("/usr/java/jre/bin or /usr/java/jre/bin/classic not found "
-				"in LD_LIBRARY_PATH, needed for IBM Java VM. Adding them both now."));
-			char * tmpbuffer = new char[envlen + 256];
-			memset(tmpbuffer, 0, envlen + 256);
-			if (env)
-				strcpy(tmpbuffer, env);
-			strcat(tmpbuffer, ":/usr/java/jre/bin");
-			strcat(tmpbuffer, ":/usr/java/jre/bin/classic");
-			setenv("LD_LIBRARY_PATH", tmpbuffer, 1);
-			delete [] tmpbuffer;
-		}
-	}
 #endif	// linux
 
 	// dynamically load the jni dll and JNI_CreateJavaVM
@@ -1143,6 +1061,10 @@ void JavaLibrary::initializeJavaThread()
 
 	UNREF(jdwpBuffer);
 
+	// always run java in server mode
+	tempOption.optionString = "-server";
+	options.push_back(tempOption);
+
 	if (ConfigServerScript::hasJavaOptions())
 	{
 		int const numberOfJavaOptions = ConfigServerScript::getNumberOfJavaOptions();
@@ -1153,119 +1075,74 @@ void JavaLibrary::initializeJavaThread()
 			options.push_back(tempOption);
 		}
 	}
-	else
+
+	// set up memory requirements
+	tempOption.optionString = "-Xms128m";
+	options.push_back(tempOption);
+
+	tempOption.optionString = "-Xmx512m";
+	options.push_back(tempOption);
+
+	tempOption.optionString = "-Xss768k";
+	options.push_back(tempOption);
+
+	// java 1.8 and higher uses metaspace...which is apparently unlimited by default
+        tempOption.optionString = "-XX:MetaspaceSize=64m";
+        options.push_back(tempOption);
+
+	tempOption.optionString = "-Xrs -XX:-UsePerfData -XX:+AllowUserSignalHandlers -XX:UseSSE=3 -XX+DoEscapeAnalysis -XX:AutoBoxCacheMax=1000 -XX:+OptimizeStringConcat -XX:+OptimizeFill -XX:+EliminateAutoBox -XX:+UseCompressedStrings -XX:UseCompressedOops -XX:+EliminateLocks -XX:UseFastAccessorMethods -XX:+UseStringCache";
+	options.push_back(tempOption);
+
+	if (ConfigServerGame::getUseJavaXcheck())
 	{
-		// set up memory requirements
-		tempOption.optionString = "-Xms128m";
+		tempOption.optionString = "-Xcheck:jni";
 		options.push_back(tempOption);
-		tempOption.optionString = "-Xmx512m";
+	}
+
+	if (ConfigServerGame::getCompileScripts())
+	{
+		tempOption.optionString = "-Xint";
 		options.push_back(tempOption);
-		tempOption.optionString = "-Xss768k";
+	}
+
+	if (ConfigServerGame::getUseVerboseJava())
+	{
+		tempOption.optionString = "-verbose:jni";
 		options.push_back(tempOption);
+		tempOption.optionString = "-verbose:gc";
+		options.push_back(tempOption);
+		tempOption.optionString = "-verbose:class";
+		options.push_back(tempOption);
+	}
 
-		if (ms_javaVmType == JV_sun)
-		{
-
-// java 1.8 and higher uses metaspace...which is apparently unlimited by default
-// and turn off perf counters as they crap up the tmp dir
-#if defined(JNI_VERSION_1_8) || defined(JNI_VERSION_1_9)
-		        tempOption.optionString = "-XX:MetaspaceSize=64m --XX:-UsePerfData";
-		        options.push_back(tempOption);
-#endif
-
-			tempOption.optionString = "-Xrs";
-			options.push_back(tempOption);
-
-			if (ConfigServerGame::getUseJavaXcheck())
-			{
-				tempOption.optionString = "-Xcheck:jni";
-				options.push_back(tempOption);
-			}
-
-			if (ConfigServerGame::getCompileScripts())
-			{
-				tempOption.optionString = "-Xint";
-				options.push_back(tempOption);
-			}
-		}
-		else
-		{
-                        tempOption.optionString = "-Xoss768k";
-                        options.push_back(tempOption);
-                        tempOption.optionString = "-Xcheck:jni";
-                        options.push_back(tempOption);
-                        tempOption.optionString = "-Xcheck:nabounds";
-                        options.push_back(tempOption);
-                        tempOption.optionString = "-Xrs";
-                        options.push_back(tempOption);
-#ifndef WIN32
-                        tempOption.optionString = "-Xgcpolicy:optavgpause";
-                        options.push_back(tempOption);
-#endif
-                }
-
-		if (ConfigServerGame::getUseVerboseJava())
-		{
-			tempOption.optionString = "-verbose:jni";
-			options.push_back(tempOption);
-			tempOption.optionString = "-verbose:gc";
-			options.push_back(tempOption);
-			tempOption.optionString = "-verbose:class";
-			options.push_back(tempOption);
-		}
-
-		if (ConfigServerGame::getLogJavaGc())
-		{
-			tempOption.optionString = "-Xloggc:javagc.log";
-			options.push_back(tempOption);
-		}
+	if (ConfigServerGame::getLogJavaGc())
+	{
+		tempOption.optionString = "-Xloggc:javagc.log";
+		options.push_back(tempOption);
+	}
 
 #ifdef REMOTE_DEBUG_ON
-		char *jdwpBuffer = nullptr;
-		if (ConfigServerGame::getUseRemoteDebugJava())
+	char *jdwpBuffer = nullptr;
+	if (ConfigServerGame::getUseRemoteDebugJava())
+	{
+		tempOption.optionString = "-Xdebug";
+		options.push_back(tempOption);
+
+		// we need to copy the -Xrunjdwp parameter into a char buffer due to a bug
+		// in the Java VM
+		const char * jdwpString = "-Xrunjdwp:transport=dt_socket,server=y,suspend=n";
+		jdwpBuffer = new char[strlen(jdwpString) + 32];
+		strcpy(jdwpBuffer, jdwpString);
+
+		if (ConfigServerGame::getJavaDebugPort()[0] == '\0')
 		{
-			if (ms_javaVmType == JV_ibm)
-			{
-				tempOption.optionString = "-Xnoagent";
-				options.push_back(tempOption);
-				tempOption.optionString = "-Djava.compiler=NONE";
-				options.push_back(tempOption);
-			}
-			tempOption.optionString = "-Xdebug";
-			options.push_back(tempOption);
-
-			// we need to copy the -Xrunjdwp parameter into a char buffer due to a bug
-			// in the Java VM
-			const char * jdwpString = "-Xrunjdwp:transport=dt_socket,server=y,suspend=n";
-			jdwpBuffer = new char[strlen(jdwpString) + 32];
-			strcpy(jdwpBuffer, jdwpString);
-
-			if (ConfigServerGame::getJavaDebugPort()[0] == '\0')
-			{
-				strcat(jdwpBuffer, ",address=");
-				strcat(jdwpBuffer, ConfigServerGame::getJavaDebugPort());
-			}
-			tempOption.optionString = jdwpBuffer;
-			options.push_back(tempOption);
+			strcat(jdwpBuffer, ",address=");
+			strcat(jdwpBuffer, ConfigServerGame::getJavaDebugPort());
 		}
-#endif	// REMOTE_DEBUG_ON
-
-		if (ConfigServerGame::getProfileScripts())
-		{
-			if (ms_javaVmType == JV_ibm)
-			{
-				char profileBuffer[128];
-				strcpy(profileBuffer,"-Xrunhprof:cpu=times");
-				tempOption.optionString = profileBuffer;
-				options.push_back(tempOption);
-			}
-			else
-			{
-				WARNING(true, ("profileScripts option enabled using Sun JVM. This option "
-					"is only supported using the IBM JVM."));
-			}
-		}
+		tempOption.optionString = jdwpBuffer;
+		options.push_back(tempOption);
 	}
+#endif	// REMOTE_DEBUG_ON
 
 	tempOption.optionString = const_cast<char *>(classPath.c_str());
 	options.push_back(tempOption);
@@ -1280,26 +1157,6 @@ void JavaLibrary::initializeJavaThread()
 #if !defined(JNIVERSET) && defined(JNI_VERSION_1_8)
 	vm_args.version = JNI_VERSION_1_8;
 #define JNIVERSET = 1 
-#endif
-
-#if !defined(JNIVERSET) && defined(JNI_VERSION_1_7)
-        vm_args.version = JNI_VERSION_1_7;
-#define JNIVERSET = 1
-#endif
-
-#if !defined(JNIVERSET) && defined(JNI_VERSION_1_6)
-        vm_args.version = JNI_VERSION_1_6;
-#define JNIVERSET = 1
-#endif
-
-#if !defined(JNIVERSET) && defined(JNI_VERSION_1_5)
-        vm_args.version = JNI_VERSION_1_5;
-#define JNIVERSET = 1
-#endif
-
-#if !defined(JNIVERSET) && defined(JNI_VERSION_1_4)
-        vm_args.version = JNI_VERSION_1_4;
-#define JNIVERSET = 1
 #endif
 
 #ifdef JNIVERSET

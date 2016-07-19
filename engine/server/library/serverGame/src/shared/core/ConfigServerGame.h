@@ -74,7 +74,6 @@ class ConfigServerGame
 		int             jediUpdateLocationTimeSeconds; // how long we wait before updating a Jedi's location in the Jedi manager
 
 		// script data
-		const char *    javaVMName;                 // the type of vm we are using
 		const char *    scriptPath;                 // location of scripts
 		const char *    javaLibPath;                // location of jvm files
 		const char *    javaDebugPort;              // ip port we connect to for remote debugging
@@ -1209,13 +1208,6 @@ inline float ConfigServerGame::getInteriorTargetDurationFactor(void)
 	return data->interiorTargetDurationFactor;
 }
 
-
-//-----------------------------------------------------------------------
-
-inline const char * ConfigServerGame::getJavaVMName(void)
-{
-	return data->javaVMName;
-}
 
 //-----------------------------------------------------------------------
 
