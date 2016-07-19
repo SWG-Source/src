@@ -181,6 +181,7 @@ set(JAVA_AWT_INCLUDE_DIRECTORIES
   /usr/lib/jvm/java-8-oracle/include
   /usr/lib/jvm/java-7-oracle/include
   /usr/lib/jvm/java-6-oracle/include
+  /opt/java/include
   )
 
 foreach(JAVA_PROG "${JAVA_RUNTIME}" "${JAVA_COMPILE}" "${JAVA_ARCHIVE}")
