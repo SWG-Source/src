@@ -255,8 +255,8 @@ void ConfigServerGame::install(void)
 	KEY_INT     (maxGalacticReserveDepositBillion, 3); // 3 billion
 	KEY_INT     (maxMoneyTransfer,  100000000); // 100 million
 	KEY_INT     (maxFreeTrialMoney, 50000); //50k credits limited to demo customers
-	KEY_BOOL    (enablePreload, true);
-	KEY_BOOL    (buildPreloadLists, true);
+	KEY_BOOL    (enablePreload, false);
+	KEY_BOOL    (buildPreloadLists, false);
 	KEY_BOOL    (logAuthTransfer, false);
 
 	KEY_INT     (overrideUpdateRadius, 0);
