@@ -1046,10 +1046,6 @@ void JavaLibrary::initializeJavaThread()
 		return;
 	}
 
-#if defined(_DEBUG) //&& defined(linux)
-#define REMOTE_DEBUG_ON
-#endif
-
 	// set up the args to initialize the jvm
 	std::string classPath = "-Djava.class.path=";
 	classPath += ConfigServerGame::getScriptPath();
@@ -1129,30 +1125,6 @@ void JavaLibrary::initializeJavaThread()
 		options.push_back(tempOption);
 	}
 
-// never used it but this is actually a cool feature, if the crusty turd still works
-#ifdef REMOTE_DEBUG_ON
-	char *jdwpBuffer = nullptr;
-	if (ConfigServerGame::getUseRemoteDebugJava())
-	{
-		tempOption.optionString = "-Xdebug";
-		options.push_back(tempOption);
-
-		// we need to copy the -Xrunjdwp parameter into a char buffer due to a bug
-		// in the Java VM
-		const char * jdwpString = "-Xrunjdwp:transport=dt_socket,server=y,suspend=n";
-		jdwpBuffer = new char[strlen(jdwpString) + 32];
-		strcpy(jdwpBuffer, jdwpString);
-
-		if (ConfigServerGame::getJavaDebugPort()[0] == '\0')
-		{
-			strcat(jdwpBuffer, ",address=");
-			strcat(jdwpBuffer, ConfigServerGame::getJavaDebugPort());
-		}
-		tempOption.optionString = jdwpBuffer;
-		options.push_back(tempOption);
-	}
-#endif	// REMOTE_DEBUG_ON
-
 	tempOption.optionString = const_cast<char *>(classPath.c_str());
 	options.push_back(tempOption);
 
@@ -1183,14 +1155,6 @@ void JavaLibrary::initializeJavaThread()
 	JNIEnv * env = nullptr;
 	jint result = (*JNI_CreateJavaVMProc)(&ms_jvm, reinterpret_cast<void**>(&env), &vm_args);	
 
-#ifdef REMOTE_DEBUG_ON
-	if (jdwpBuffer != nullptr)
-	{
-		delete[] jdwpBuffer;
-		jdwpBuffer = nullptr;
-	}
-#endif
-
 	if (result != 0)
 	{
 		FATAL (true, ("Failed to CreateJavaVMProc: %d", result));
@@ -1213,7 +1177,8 @@ void JavaLibrary::initializeJavaThread()
 	ms_shutdownJava->wait();
 
 	// clean up
-	IGNORE_RETURN(ms_jvm->DestroyJavaVM()); // yeah, screw it, l
+	ms_jvm->DestroyJavaVM();
+	Os::sleep(1000); // give java a chance to end it's miserable existence
 	ms_jvm = nullptr;
 
 	if (ConfigServerGame::getTrapScriptCrashes())
