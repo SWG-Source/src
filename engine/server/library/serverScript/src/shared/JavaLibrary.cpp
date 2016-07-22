@@ -1178,7 +1178,7 @@ void JavaLibrary::initializeJavaThread()
 
 	// clean up
 	ms_jvm->DestroyJavaVM();
-	Os::sleep(1000); // give java a chance to end it's miserable existence
+	Os::sleep(2000); // give java a chance to end it's miserable existence
 	ms_jvm = nullptr;
 
 	if (ConfigServerGame::getTrapScriptCrashes())
