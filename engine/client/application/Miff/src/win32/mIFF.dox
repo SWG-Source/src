@@ -1,0 +1,62 @@
+// NOTE: this makes it more convinient for me to make the help screen fancier...
+// blah... not that anybody cares...
+
+printf("\
+Usage:\n\
+  mIFF {-%c <filename>|--%s=<filename>}\n\
+       [{-%c <filename>|--%s=<filename>} | {-%c|--%s}]\n\
+       [{-%c|--%s}] [{-%c|--%s}] [{-%c|--%s}]\n\n", 
+       SNAME_INPUT_FILE, LNAME_INPUT_FILE,
+       SNAME_OUTPUT_FILE, LNAME_OUTPUT_FILE,
+       SNAME_PRAGMA_TARGET, LNAME_PRAGMA_TARGET,
+       SNAME_CCCP, LNAME_CCCP, 
+       SNAME_VERBOSE, LNAME_VERBOSE, 
+       SNAME_DEBUG, LNAME_DEBUG);
+printf("\
+  mIFF {-%c|--%s}\n\n", SNAME_HELP, LNAME_HELP);
+
+printf("\
+Parameters:\n\
+    -%c <filename>,--%s=<filename>\n\
+                [required] specifies the input path for IFF source file.\n", SNAME_INPUT_FILE, LNAME_INPUT_FILE);
+printf("\
+    -%c <filename>,--%s=<filename>\n\
+                [optional] specifies the pathname for the generated          \n\
+                IFF data file.  Note that if neither this nor the following  \n\
+                option are specified, a default output filename of the source\n\
+                file's base name with extension \".iff\" will be used.\n", SNAME_OUTPUT_FILE, LNAME_OUTPUT_FILE);
+printf("\
+    -%c,--%s\n\
+                [optional] specifies the generated output filename should be \n\
+                taken from the #pragma options within the source file.       \n\
+                Allowable #pragma options are:                               \n\
+                    #pragma drive     \"<drive letter>:\"\n\
+                    #pragma directory \"<directory name>\"\n\
+                    #pragma filename  \"<filename>\"\n\
+                    #pragma extension \"<extension>\"\n", SNAME_PRAGMA_TARGET, LNAME_PRAGMA_TARGET);
+printf("\
+    -%c,--%s\n\
+                [optional] use CCCP rather than CPP.\n", SNAME_CCCP, LNAME_CCCP);
+printf("\
+    -%c,--%s\n\
+                [optional] display more information during execution.\n", SNAME_VERBOSE, LNAME_VERBOSE);
+printf("\
+    -%c,--%s\n\
+                [optional] enable debug mode (save intermediate files).\n", SNAME_DEBUG, LNAME_DEBUG);
+printf("\
+    -%c,--%s\n\
+                [very optional] this help screen.\n", SNAME_HELP, LNAME_HELP);
+printf("\
+Examples:\n\
+    mIFF -%c foo.bar\n\
+        this will generate an iff file foo.iff (default if no parm specified)\n\
+        in the current working directory. Even if foo.bar contains #pragma,  \n\
+        it will create foo.iff because -%c was not specified.\n", SNAME_INPUT_FILE, SNAME_PRAGMA_TARGET);
+printf("\
+    mIFF -%c \"C:\\my project\\myData\\foo.iff\" --%s=foo.bar\n\
+        notice that if you have space in your dirname, use \" to encapsulate \n\
+        it.\n", SNAME_OUTPUT_FILE, LNAME_INPUT_FILE);
+printf("\
+    mIFF -%c foo.bar --%s\n\
+        will generate output file specified by #pragma statements            \n\
+        within file foo.bar.\n", SNAME_INPUT_FILE, LNAME_PRAGMA_TARGET);
