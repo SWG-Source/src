@@ -284,7 +284,7 @@ bool CMonitorData::processElementsRequest(
 	{
 		id = atoi(list[x]);
 
-		for (y = 0; y < m_count; y++)
+		for (int y = 0; y < m_count; y++)
 			if (m_data[y].id == id)
 			{
 				sprintf(tmp, "%d %x|", m_data[y].id, m_data[y].value);
