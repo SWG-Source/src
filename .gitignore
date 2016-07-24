@@ -1,3 +1,5 @@
+*.cfg
+*.cmd
 .project
 *.kdev4
 latex

@@ -11,8 +11,26 @@
 
 
 #ifdef WIN32
+
+//fucks up use of std::min std::max
+#define NOMINMAX 
+
+#include <windows.h>
+
+#ifndef __wtypes_h__
+#include <wtypes.h>
+#endif
+
+#ifndef __WINDEF_
+#include <windef.h>
+#endif
+
 #include <WinNT.h>
-#include <WinDef.h>
+
+//laziness
+#include <stdio.h>
+#include <cstdlib>
+
 #endif
 
 // ======================================================================
