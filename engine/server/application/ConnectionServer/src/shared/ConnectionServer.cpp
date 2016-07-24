@@ -1,7 +1,5 @@
-
 // ConnectionServer.cpp
 // copyright 2001 Verant Interactive
-
 
 //-----------------------------------------------------------------------
 
@@ -59,10 +57,10 @@
 // ======================================================================
 namespace ConnectionServerNamespace
 {
-	ConnectionServer * s_connectionServer   = 0;
+	ConnectionServer * s_connectionServer = 0;
 	NetworkSetupData * s_clientServiceSetup = 0;
 
-	const std::string SCENE_NAME_TUTORIAL      = "tutorial";
+	const std::string SCENE_NAME_TUTORIAL = "tutorial";
 	const std::string SCENE_NAME_FALCON_PREFIX = "space_npe_falcon";
 };
 
@@ -78,39 +76,39 @@ ConnectionServer & ConnectionServer::instance()
 //-----------------------------------------------------------------------
 
 ConnectionServer::ConnectionServer() :
-MessageDispatch::Receiver(),
-chatService(0),
-customerService(0),
-clientServicePrivate(0),
-clientServicePublic(0),
-gameService(0),
-loginServerKeys(0),
-done(false),
-m_id(0),
-m_metricsData(0),
-centralConnection(0),
-chatServers(),
-customerServiceServers(),
-clientMap(),
-connectedMap(),
-gameServerMap(),
-freeTrials(),
-networkBarrier(0),
-pingSocket (new UdpSock),
-m_recoverTime(0),
-m_sessionApiClient(0),
-m_pingTrafficNumBytes(0),
-m_recoveringClientList()
+	MessageDispatch::Receiver(),
+	chatService(0),
+	customerService(0),
+	clientServicePrivate(0),
+	clientServicePublic(0),
+	gameService(0),
+	loginServerKeys(0),
+	done(false),
+	m_id(0),
+	m_metricsData(0),
+	centralConnection(0),
+	chatServers(),
+	customerServiceServers(),
+	clientMap(),
+	connectedMap(),
+	gameServerMap(),
+	freeTrials(),
+	networkBarrier(0),
+	pingSocket(new UdpSock),
+	m_recoverTime(0),
+	m_sessionApiClient(0),
+	m_pingTrafficNumBytes(0),
+	m_recoveringClientList()
 {
-	if(s_clientServiceSetup == 0)
+	if (s_clientServiceSetup == 0)
 		s_clientServiceSetup = new NetworkSetupData;
-	
+
 	s_clientServiceSetup->maxOutstandingPackets = ConfigConnectionServer::getClientMaxOutstandingPackets();
 	s_clientServiceSetup->maxRawPacketSize = ConfigConnectionServer::getClientMaxRawPacketSize();
 	s_clientServiceSetup->maxConnections = ConfigConnectionServer::getClientMaxConnections();
 	s_clientServiceSetup->fragmentSize = ConfigConnectionServer::getClientFragmentSize();
 	s_clientServiceSetup->maxDataHoldTime = ConfigConnectionServer::getClientMaxDataHoldTime();
-	s_clientServiceSetup->hashTableSize=ConfigConnectionServer::getClientHashTableSize();
+	s_clientServiceSetup->hashTableSize = ConfigConnectionServer::getClientHashTableSize();
 	s_clientServiceSetup->port = ConfigConnectionServer::getClientServicePortPublic();
 	s_clientServiceSetup->compress = ConfigConnectionServer::getCompressClientNetworkTraffic();
 	s_clientServiceSetup->useTcp = false;
@@ -118,13 +116,12 @@ m_recoveringClientList()
 	loginServerKeys = new KeyServer(20);
 
 	Address a("", ConfigConnectionServer::getPingPort());
-	IGNORE_RETURN(pingSocket->bind (a));
+	IGNORE_RETURN(pingSocket->bind(a));
 
 	if (ConfigConnectionServer::getValidateStationKey())
 	{
 		installSessionValidation();
 	}
-
 }
 
 //-----------------------------------------------------------------------
@@ -137,7 +134,7 @@ ConnectionServer::~ConnectionServer()
 	delete loginServerKeys;
 	loginServerKeys = 0;
 
-	centralConnection=0;
+	centralConnection = 0;
 
 	chatServers.clear();
 
@@ -157,9 +154,9 @@ ConnectionServer::~ConnectionServer()
 
 //-----------------------------------------------------------------------
 
-const CustomerServiceConnection * ConnectionServer::getCustomerServiceConnection  ()
+const CustomerServiceConnection * ConnectionServer::getCustomerServiceConnection()
 {
-	if(! instance().customerServiceServers.empty())
+	if (!instance().customerServiceServers.empty())
 	{
 		return (*(instance().customerServiceServers.begin()));
 	}
@@ -180,10 +177,10 @@ void ConnectionServer::addGameConnection(unsigned long gameServerId, GameConnect
 	cs.gameServerMap[gameServerId] = gc;//@todo check for dupe
 	// find characters pending for THIS gameserver
 	SuidMap::iterator i;
-	for(i = cs.connectedMap.begin(); i != cs.connectedMap.end(); ++i)
+	for (i = cs.connectedMap.begin(); i != cs.connectedMap.end(); ++i)
 	{
 		ClientConnection * c = (*i).second;
-		if(!c->getHasBeenSentToGameServer())
+		if (!c->getHasBeenSentToGameServer())
 			IGNORE_RETURN(c->sendToGameServer());
 	}
 }
@@ -199,16 +196,15 @@ bool ConnectionServer::decryptToken(const KeyShare::Token & token, uint32 & stat
 	unsigned char * keyBuffer = new unsigned char[len];
 	unsigned char * keyBufferPointer = keyBuffer;
 	memset(keyBuffer, 0, len);
-	
-	
-	bool retval =  cs.loginServerKeys->decipherToken(token,  keyBuffer, len);
 
-	if (! retval)
+	bool retval = cs.loginServerKeys->decipherToken(token, keyBuffer, len);
+
+	if (!retval)
 		return retval;
 
 	char *tmpBuffer = new char[MAX_ACCOUNT_NAME_LENGTH + 1];
 	memset(tmpBuffer, 0, MAX_ACCOUNT_NAME_LENGTH + 1);
-	
+
 	memcpy(&stationUserId, keyBufferPointer, sizeof(uint32));
 	keyBufferPointer += sizeof(uint32);
 	memcpy(&secure, keyBufferPointer, sizeof(bool));
@@ -216,32 +212,30 @@ bool ConnectionServer::decryptToken(const KeyShare::Token & token, uint32 & stat
 	memcpy(tmpBuffer, keyBufferPointer, MAX_ACCOUNT_NAME_LENGTH);
 	accountName = tmpBuffer;
 	delete[] tmpBuffer;
-	delete [] keyBuffer;
+	delete[] keyBuffer;
 	return retval;
-}	
+}
 
 bool ConnectionServer::decryptToken(const KeyShare::Token & token, char* sessionKey, StationId & stationId)
 {
 	static ConnectionServer & cs = instance();
-	
+
 	uint32 len = apiSessionIdWidth + sizeof(StationId);
 	unsigned char * keyBuffer = new unsigned char[len + 1];
 	unsigned char * keyBufferPointer = keyBuffer;
-	memset(keyBuffer, 0, sizeof(*keyBuffer));
-	
-	
-	bool retval =  cs.loginServerKeys->decipherToken(token,  keyBuffer, len);
+	memset(keyBuffer, 0, len);
 
-	if (! retval)
+	bool retval = cs.loginServerKeys->decipherToken(token, keyBuffer, len);
+
+	if (!retval)
 		return retval;
 
-	memcpy(sessionKey, keyBufferPointer, sizeof(*keyBuffer));
+	memcpy(sessionKey, keyBufferPointer, len);
 	keyBufferPointer += apiSessionIdWidth;
 	memcpy(&stationId, keyBufferPointer, sizeof(StationId));
-	delete [] keyBuffer;
+	delete[] keyBuffer;
 	return retval;
 }
-
 
 //-----------------------------------------------------------------------
 
@@ -297,21 +291,21 @@ void ConnectionServer::addNewClient(ClientConnection* cconn, const NetworkId &oi
 {
 	static ConnectionServer & cs = instance();
 	ClientMap::iterator i = cs.clientMap.find(oid);
-	if(i != cs.clientMap.end())
+	if (i != cs.clientMap.end())
 	{
-			if(cconn->getClient())
-			{
-				WARNING_STRICT_FATAL(true, ("Client already connected, attempting to drop old one\n"));
-				dropClient(cconn, "Duplicate Login");
-				return;
-			}
-			else
-			{
-				// stale connection in map
-				cs.removeFromClientMap(oid);
-			}
+		if (cconn->getClient())
+		{
+			WARNING_STRICT_FATAL(true, ("Client already connected, attempting to drop old one\n"));
+			dropClient(cconn, "Duplicate Login");
+			return;
+		}
+		else
+		{
+			// stale connection in map
+			cs.removeFromClientMap(oid);
+		}
 	}
-	
+
 	// Create a new entry in the client map
 	cs.addToClientMap(oid, cconn);
 
@@ -322,51 +316,51 @@ void ConnectionServer::addNewClient(ClientConnection* cconn, const NetworkId &oi
 	// select a chat server connection for the client
 	// if non exists, then the client will be notified when
 	// one starts
-	if(! cs.chatServers.empty())
+	if (!cs.chatServers.empty())
 	{
 		//ChatServerConnection * c = (*chatServers.begin());
 		// find chat server with least load
 		size_t max = 0xFFFFFFFF;
 		ChatServerConnection * candidate = 0;
 		std::set<ChatServerConnection *>::const_iterator iter;
-		for(iter = cs.chatServers.begin(); iter != cs.chatServers.end(); ++iter)
+		for (iter = cs.chatServers.begin(); iter != cs.chatServers.end(); ++iter)
 		{
-			if((*iter)->getClients().size() <= max)
+			if ((*iter)->getClients().size() <= max)
 			{
 				candidate = (*iter);
 				max = (*iter)->getClients().size();
 			}
 		}
-		if(candidate)
+		if (candidate)
 			newClient->setChatConnection(candidate);
 	}
 
 	// select a cs server connection for the client
 	// if non exists, then the client will be notified when
 	// one starts
-	if(! cs.customerServiceServers.empty())
+	if (!cs.customerServiceServers.empty())
 	{
 		//ChatServerConnection * c = (*chatServers.begin());
 		// find chat server with least load
 		size_t max = 0xFFFFFFFF;
 		CustomerServiceConnection * candidate = 0;
 		std::set<CustomerServiceConnection *>::const_iterator iter;
-		for(iter = cs.customerServiceServers.begin(); iter != cs.customerServiceServers.end(); ++iter)
+		for (iter = cs.customerServiceServers.begin(); iter != cs.customerServiceServers.end(); ++iter)
 		{
-			if((*iter)->getClients().size() <= max)
+			if ((*iter)->getClients().size() <= max)
 			{
 				candidate = (*iter);
 				max = (*iter)->getClients().size();
 			}
 		}
-		if(candidate)
+		if (candidate)
 			newClient->setCustomerServiceConnection(candidate);
 	}
-	
+
 	//send the game server a message about this client.
 	static const std::string loginTrace("TRACE_LOGIN");
 	LOG(loginTrace, ("NewClient(%d, %s, %s)", cconn->getSUID(), oid.getValueString().c_str(), cconn->getAccountName().c_str()));
-	NewClient m(oid, cconn->getAccountName(), cconn->getRemoteAddress(), cconn->getIsSecure(), false, cconn->getSUID(), nullptr, cconn->getGameFeatures(), cconn->getSubscriptionFeatures(), cconn->getEntitlementTotalTime(), cconn->getEntitlementEntitledTime(), cconn->getEntitlementTotalTimeSinceLastLogin(), cconn->getEntitlementEntitledTimeSinceLastLogin(), cconn->getBuddyPoints(), cconn->getConsumedRewardEvents(), cconn->getClaimedRewardItems(), cconn->isUsingAdminLogin(), cconn->getCanSkipTutorial(), sendToStarport );
+	NewClient m(oid, cconn->getAccountName(), cconn->getRemoteAddress(), cconn->getIsSecure(), false, cconn->getSUID(), nullptr, cconn->getGameFeatures(), cconn->getSubscriptionFeatures(), cconn->getEntitlementTotalTime(), cconn->getEntitlementEntitledTime(), cconn->getEntitlementTotalTimeSinceLastLogin(), cconn->getEntitlementEntitledTimeSinceLastLogin(), cconn->getBuddyPoints(), cconn->getConsumedRewardEvents(), cconn->getClaimedRewardItems(), cconn->isUsingAdminLogin(), cconn->getCanSkipTutorial(), sendToStarport);
 	gconn->send(m, true);
 	//@todo move this to ClientConnection.cpp
 }
@@ -378,7 +372,7 @@ void ConnectionServer::dropClient(ClientConnection * conn, const std::string& de
 	DEBUG_FATAL(!conn, ("Cannot call dropClient with nullptr connection"));
 	if (!conn) //lint !e774 // boolean within 'if' always evaluates to False //suppresed because this is only relevant in DEBUG builds
 		return;
-	
+
 	static ConnectionServer & cs = instance();
 	//Client dropped.  Tell game server if they've logged in.
 	LOG("ClientDisconnect", ("Dropping client for SUID %d\n", conn->getSUID()));
@@ -415,7 +409,7 @@ void ConnectionServer::dropClient(ClientConnection * conn, const std::string& de
 // void ConnectionServer::addPendingCharacter(uint32 suid, ClientConnection* conn)
 // {
 //     if (pendingMap.find(suid) == pendingMap.end())
-//         pendingMap[suid] = conn; 
+//         pendingMap[suid] = conn;
 //     else
 //     {
 //         WARNING_STRICT_FATAL(true, ("Attepting to add duplicate pending chatacter"));
@@ -438,7 +432,7 @@ ClientConnection* ConnectionServer::getClientConnection(const uint32 suid)
 	static ConnectionServer & cs = instance();
 	ClientConnection * result = 0;
 	SuidMap::const_iterator i = cs.connectedMap.find(suid);
-	if(i != cs.connectedMap.end())
+	if (i != cs.connectedMap.end())
 	{
 		result = (*i).second;
 	}
@@ -459,7 +453,7 @@ GameConnection* ConnectionServer::getGameConnection(const std::string &sceneName
 {
 	static ConnectionServer & cs = instance();
 	GameServerMap::iterator i = cs.gameServerMap.begin();
-	for(; i != cs.gameServerMap.end(); ++i)
+	for (; i != cs.gameServerMap.end(); ++i)
 	{
 		if (sceneName == (*i).second->getSceneName())
 		{
@@ -483,13 +477,13 @@ void ConnectionServer::handleConnectionServerIdMessage(const ConnectionServerId 
 	FATAL(g == nullptr, ("No game service is active!"));
 	const Service * const c = getChatService();
 	const Service * const cs = getCustomerService();
-	const uint16   pingPort = getPingPort ();
+	const uint16   pingPort = getPingPort();
 
-	if((servicePrivate != nullptr || servicePublic != nullptr) && g != nullptr) //lint !e774 // always evaluates to false // suppresed because the FATAL macro triggers this lint warning
+	if ((servicePrivate != nullptr || servicePublic != nullptr) && g != nullptr) //lint !e774 // always evaluates to false // suppresed because the FATAL macro triggers this lint warning
 	{
 		uint16 chatPort = 0;
 		uint16 csPort = 0;
-		if(c)
+		if (c)
 			chatPort = c->getBindPort();
 
 		if (cs)
@@ -498,18 +492,18 @@ void ConnectionServer::handleConnectionServerIdMessage(const ConnectionServerId 
 		}
 
 		uint16 publicPort = 0;
-		if(servicePublic)
+		if (servicePublic)
 			publicPort = servicePublic->getBindPort();
 		uint16 privatePort = 0;
-		if(servicePrivate)
+		if (servicePrivate)
 			privatePort = servicePrivate->getBindPort();
 
 		std::string clientServicePublicBindAddress = NetworkHandler::getHostName();
-		
+
 		NOT_NULL(gameService);
 		NOT_NULL(chatService);
 		NOT_NULL(customerService);
-		
+
 		const NewCentralConnectionServer ncs(gameService->getBindAddress(), clientServicePublicBindAddress, chatService->getBindAddress(), customerService->getBindAddress(), privatePort, publicPort, g->getBindPort(), chatPort, csPort, pingPort, ConfigConnectionServer::getConnectionServerNumber());
 		sendToCentralProcess(ncs);
 	}
@@ -524,9 +518,9 @@ void ConnectionServer::receiveMessage(const MessageDispatch::Emitter & source, c
 	// it's reasonably safe to cast, message type verified
 	// determine message type
 
-	if(message.isType("GameConnectionOpened"))
+	if (message.isType("GameConnectionOpened"))
 	{
-		DEBUG_REPORT_LOG(true,("Game Connection opened\n"));
+		DEBUG_REPORT_LOG(true, ("Game Connection opened\n"));
 	}
 	else if (message.isType("GameConnectionClosed"))
 	{
@@ -535,9 +529,9 @@ void ConnectionServer::receiveMessage(const MessageDispatch::Emitter & source, c
 		const GameConnection & downConnection = static_cast<const GameConnection &>(source);
 		DEBUG_REPORT_LOG(true, ("Game Server connection went down.  Dropping clients.\n"));
 		//remove Game Conection from list
-		
+
 		PseudoClientConnection::gameConnectionClosed(&downConnection);
-		
+
 		GameServerMap::iterator j = gameServerMap.find(downConnection.getGameServerId());
 		if (j != gameServerMap.end())
 		{
@@ -545,46 +539,45 @@ void ConnectionServer::receiveMessage(const MessageDispatch::Emitter & source, c
 		}
 	}
 
-	else if(message.isType("CentralConnectionOpened"))
+	else if (message.isType("CentralConnectionOpened"))
 	{
-		DEBUG_REPORT_LOG(true,("Opened connection with central\n"));
-		centralConnection = const_cast<CentralConnection *>(static_cast<const CentralConnection *>(&source));//lint !e826 // info: Suspiscious pointer-to-pointer conversion (area too small) 
-		if(s_clientServiceSetup == 0)
+		DEBUG_REPORT_LOG(true, ("Opened connection with central\n"));
+		centralConnection = const_cast<CentralConnection *>(static_cast<const CentralConnection *>(&source));//lint !e826 // info: Suspiscious pointer-to-pointer conversion (area too small)
+		if (s_clientServiceSetup == 0)
 			s_clientServiceSetup = new NetworkSetupData;
 
 		s_clientServiceSetup->useTcp = false;
-		if(ConfigConnectionServer::getStartPublicServer())
+		if (ConfigConnectionServer::getStartPublicServer())
 			clientServicePublic = new Service(ConnectionAllocator<ClientConnection>(), *s_clientServiceSetup);
 		s_clientServiceSetup->port = ConfigConnectionServer::getClientServicePortPrivate();
 		clientServicePrivate = new Service(ConnectionAllocator<ClientConnection>(), *s_clientServiceSetup);
 		s_clientServiceSetup->port = ConfigConnectionServer::getClientServicePortPublic();
-		
+
 		connectToMessage("ClientConnectionOpened");
 		connectToMessage("ClientConnectionClosed");
-
 	}
 	else if (message.isType("CentralConnectionClosed"))
 	{
-		centralConnection = const_cast<CentralConnection *>(static_cast<const CentralConnection *>(&source));//lint !e826 // info: Suspiscious pointer-to-pointer conversion (area too small) 
+		centralConnection = const_cast<CentralConnection *>(static_cast<const CentralConnection *>(&source));//lint !e826 // info: Suspiscious pointer-to-pointer conversion (area too small)
 		setDone("CentralConnectionClosed: %s", centralConnection ? centralConnection->getDisconnectReason().c_str() : "");
 		centralConnection = 0;
 		DEBUG_REPORT_LOG(true, ("CentralDied.  So we will too\n"));
 		//@todo Drop all pending clients.
 	}
-	else if(message.isType("ClientConnectionOpened"))
+	else if (message.isType("ClientConnectionOpened"))
 	{
 		DEBUG_REPORT_LOG(true, ("Opened connection with client\n"));
 	}
 	else if (message.isType("ClientConnectionClosed"))
 	{
 		DEBUG_REPORT_LOG(true, ("Client is Dropping connection\n"));
-		ClientConnection * cconn = const_cast<ClientConnection *>(static_cast<const ClientConnection*>(&source));//lint !e826 // info: Suspiscious pointer-to-pointer conversion (area too small) 
+		ClientConnection * cconn = const_cast<ClientConnection *>(static_cast<const ClientConnection*>(&source));//lint !e826 // info: Suspiscious pointer-to-pointer conversion (area too small)
 
 		//tell CentralServer
 		if (centralConnection)
 		{
 			GenericValueTypeMessage<StationId> const msg("ClientConnectionClosed", cconn->getSUID());
-			centralConnection->send(msg,true);
+			centralConnection->send(msg, true);
 		}
 
 		//Client dropped.  Tell game server if they've logged in.
@@ -613,14 +606,14 @@ void ConnectionServer::receiveMessage(const MessageDispatch::Emitter & source, c
 		ConnectionServerId m(ri);
 		handleConnectionServerIdMessage(m);
 	}
-	
+
 	else if (message.isType("ConnectionKeyPush"))
 	{
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		ConnectionKeyPush pk(ri);
 		loginServerKeys->pushKey(pk.getKey());
 	}
-	
+
 	else if (message.isType("LoginKeyPush"))
 	{
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
@@ -631,7 +624,7 @@ void ConnectionServer::receiveMessage(const MessageDispatch::Emitter & source, c
 	{
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		const CharacterListMessage msg(ri);
-		WARNING_STRICT_FATAL(true,("CharacterListMessage is deprecated on the ConnectionServer -- fix whoever is sending it.\n"));
+		WARNING_STRICT_FATAL(true, ("CharacterListMessage is deprecated on the ConnectionServer -- fix whoever is sending it.\n"));
 	}
 	else if (message.isType("ConnectionCreateCharacterSuccess"))
 	{
@@ -641,7 +634,7 @@ void ConnectionServer::receiveMessage(const MessageDispatch::Emitter & source, c
 		ClientConnection* const client = getClientConnection(msg.getStationId());
 		if (client)
 		{
-			const ClientCreateCharacterSuccess m (msg.getNetworkId ());
+			const ClientCreateCharacterSuccess m(msg.getNetworkId());
 			client->send(m, true);
 		}
 		else
@@ -697,7 +690,7 @@ void ConnectionServer::receiveMessage(const MessageDispatch::Emitter & source, c
 		VerifyAndLockNameResponse connMsg(ri);
 
 		ClientConnection* cconn = getClientConnection(connMsg.getStationId());
- 		ClientVerifyAndLockNameResponse cvalnr(connMsg.getCharacterName(), connMsg.getErrorMessage());
+		ClientVerifyAndLockNameResponse cvalnr(connMsg.getCharacterName(), connMsg.getErrorMessage());
 		if (cconn)
 			cconn->send(cvalnr, true);
 	}
@@ -710,26 +703,26 @@ void ConnectionServer::receiveMessage(const MessageDispatch::Emitter & source, c
 	{
 		ChatServerConnection * c = const_cast<ChatServerConnection *>(static_cast<const ChatServerConnection *>(&source));//lint !e826 suspiscious pointer-to-pointer conversion // suppressed, you bet it is
 		std::set<ChatServerConnection *>::iterator f = chatServers.find(c);
-		if(f != chatServers.end())
+		if (f != chatServers.end())
 		{
 			// migrate players that were on this chat server
 			// to another chat server
 
 			// now remove the server from the set
 			chatServers.erase(f);
-			if(!chatServers.empty())
+			if (!chatServers.empty())
 			{
 				std::set<ChatServerConnection *>::iterator ic = chatServers.begin();
 
 				const std::set<Client *> & clients = c->getClients();
 				std::set<Client *>::const_iterator i;
-				for(i = clients.begin(); i != clients.end(); ++ i)
+				for (i = clients.begin(); i != clients.end(); ++i)
 				{
 					ChatServerConnection * newConn = (*ic);
 					Client * cl = (*i);
 					cl->setChatConnection(newConn);
 					++ic;
-					if(ic == chatServers.end())
+					if (ic == chatServers.end())
 						ic = chatServers.begin();
 				}
 			}
@@ -737,7 +730,7 @@ void ConnectionServer::receiveMessage(const MessageDispatch::Emitter & source, c
 			{
 				const std::set<Client *> & clients = c->getClients();
 				std::set<Client *>::const_iterator i;
-				for(i = clients.begin(); i != clients.end(); ++ i)
+				for (i = clients.begin(); i != clients.end(); ++i)
 				{
 					(*i)->setChatConnection(nullptr);
 				}
@@ -753,26 +746,26 @@ void ConnectionServer::receiveMessage(const MessageDispatch::Emitter & source, c
 	{
 		CustomerServiceConnection * c = const_cast<CustomerServiceConnection *>(static_cast<const CustomerServiceConnection *>(&source));//lint !e826 suspiscious pointer-to-pointer conversion // suppressed, you bet it is
 		std::set<CustomerServiceConnection *>::iterator f = customerServiceServers.find(c);
-		if(f != customerServiceServers.end())
+		if (f != customerServiceServers.end())
 		{
 			// migrate players that were on this chat server
 			// to another chat server
 
 			// now remove the server from the set
 			customerServiceServers.erase(f);
-			if(!customerServiceServers.empty())
+			if (!customerServiceServers.empty())
 			{
 				std::set<CustomerServiceConnection *>::iterator ic = customerServiceServers.begin();
 
 				const std::set<Client *> & clients = c->getClients();
 				std::set<Client *>::const_iterator i;
-				for(i = clients.begin(); i != clients.end(); ++ i)
+				for (i = clients.begin(); i != clients.end(); ++i)
 				{
 					CustomerServiceConnection * newConn = (*ic);
 					Client * cl = (*i);
 					cl->setCustomerServiceConnection(newConn);
 					++ic;
-					if(ic == customerServiceServers.end())
+					if (ic == customerServiceServers.end())
 						ic = customerServiceServers.begin();
 				}
 			}
@@ -780,12 +773,11 @@ void ConnectionServer::receiveMessage(const MessageDispatch::Emitter & source, c
 			{
 				const std::set<Client *> & clients = c->getClients();
 				std::set<Client *>::const_iterator i;
-				for(i = clients.begin(); i != clients.end(); ++ i)
+				for (i = clients.begin(); i != clients.end(); ++i)
 				{
 					(*i)->setCustomerServiceConnection(nullptr);
 				}
 			}
-
 		}
 	}
 	else if (message.isType("GameServerForLoginMessage"))
@@ -794,18 +786,18 @@ void ConnectionServer::receiveMessage(const MessageDispatch::Emitter & source, c
 		const GameServerForLoginMessage msg(ri);
 
 		ClientConnection* client = getClientConnection(msg.getStationId());
-		
+
 		// see if the client is for the same character as the login message.
 		// this is required to prevent admin login via the CS Tool from
 		// disconnecting other characters logged in from the same account
 		// (but not the same character) as the character we're administratively
 		// logging in.
 		bool clientIsForSameCharacterId = false;
-		if(client)
+		if (client)
 		{
 			clientIsForSameCharacterId = client->getCharacterId() == msg.getCharacterId();
 		}
-		
+
 		bool handledByPseudoClient = false;
 		// if the character id in the message doesn't match the character id for
 		// the existing client, it may be for a pseudoclient.  Check, and if so,
@@ -815,13 +807,13 @@ void ConnectionServer::receiveMessage(const MessageDispatch::Emitter & source, c
 			PseudoClientConnection * pcc = PseudoClientConnection::getPseudoClientConnection(msg.getCharacterId());
 			// hand off to the PCC only if we do have a pseudoclient, and either we don't have a client, or
 			// the pseudoclient has a tool id, telling us that it's for cs tool login.
-			if(pcc && ((!client) || (pcc->getTransferCharacterData().getCSToolId() > 0)))
+			if (pcc && ((!client) || (pcc->getTransferCharacterData().getCSToolId() > 0)))
 			{
 				handledByPseudoClient = true;
 				bool result;
 				result = PseudoClientConnection::tryToDeliverMessageTo(msg.getStationId(), static_cast<const GameNetworkMessage &>(message).getByteStream());
 				UNREF(result);
-				DEBUG_REPORT_LOG(! result,("Received GameServerForLoginMessage for %lu, who was not connected.\n",msg.getStationId()));
+				DEBUG_REPORT_LOG(!result, ("Received GameServerForLoginMessage for %lu, who was not connected.\n", msg.getStationId()));
 			}
 		}
 
@@ -839,10 +831,10 @@ void ConnectionServer::receiveMessage(const MessageDispatch::Emitter & source, c
 
 		ClientConnection* cconn = getClientConnection(msg.getSuid());
 		if (!cconn)
-			DEBUG_REPORT_LOG(true, ("Received ValidateCharacterForLoginReplyMessage for account %lu, which is no longer connected.\n",msg.getSuid()));
+			DEBUG_REPORT_LOG(true, ("Received ValidateCharacterForLoginReplyMessage for account %lu, which is no longer connected.\n", msg.getSuid()));
 		else
 		{
-			cconn->onCharacterValidated(msg.getApproved(),msg.getCharacterId(), Unicode::wideToNarrow(msg.getCharacterName()), msg.getContainerId(), msg.getScene(), msg.getCoordinates());
+			cconn->onCharacterValidated(msg.getApproved(), msg.getCharacterId(), Unicode::wideToNarrow(msg.getCharacterName()), msg.getContainerId(), msg.getScene(), msg.getCoordinates());
 		}
 	}
 	else if (message.isType("ValidateAccountReplyMessage"))
@@ -852,21 +844,21 @@ void ConnectionServer::receiveMessage(const MessageDispatch::Emitter & source, c
 
 		ClientConnection* cconn = getClientConnection(msg.getStationId());
 		if (!cconn)
-			DEBUG_REPORT_LOG(true, ("Received ValidateAccountReplyMessage for account %lu, which is no longer connected.\n",msg.getStationId()));
+			DEBUG_REPORT_LOG(true, ("Received ValidateAccountReplyMessage for account %lu, which is no longer connected.\n", msg.getStationId()));
 		else
 		{
-			cconn->onIdValidated(msg.getCanLogin(),msg.getCanCreateRegular(),msg.getCanCreateJedi(),msg.getCanSkipTutorial(),msg.getConsumedRewardEvents(),msg.getClaimedRewardItems());
+			cconn->onIdValidated(msg.getCanLogin(), msg.getCanCreateRegular(), msg.getCanCreateJedi(), msg.getCanSkipTutorial(), msg.getConsumedRewardEvents(), msg.getClaimedRewardItems());
 		}
 	}
-	else if(message.isType("SetConnectionServerPublic"))
+	else if (message.isType("SetConnectionServerPublic"))
 	{
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		SetConnectionServerPublic p(ri);//lint !e40 !e522 !e10 // Undeclared identifier 'SetConnectionServerPublic' // suppressed because it IS declared
 		bool statusChanged = false;
 		DEBUG_REPORT_LOG(true, ("Conn Server: attempting to chang status\n"));
-		if(p.getIsPublic())//lint !e40 !e1013 !e10 // Undeclared identifier 'p' // suppressed because it IS declared
+		if (p.getIsPublic())//lint !e40 !e1013 !e10 // Undeclared identifier 'p' // suppressed because it IS declared
 		{
-			if(! clientServicePublic)
+			if (!clientServicePublic)
 			{
 				statusChanged = true;
 			}
@@ -878,19 +870,19 @@ void ConnectionServer::receiveMessage(const MessageDispatch::Emitter & source, c
 			statusChanged = true;
 		}
 
-		if(statusChanged && centralConnection)
+		if (statusChanged && centralConnection)
 		{
 			const Service * publicService = getClientServicePublic();
 			const Service * privateService = getClientServicePrivate();
-			if(publicService || privateService)
+			if (publicService || privateService)
 			{
 				uint16 publicServicePort = 0;
 				uint16 privateServicePort = 0;
-				if(publicService)
+				if (publicService)
 				{
 					publicServicePort = publicService->getBindPort();
 				}
-				if(privateService)
+				if (privateService)
 				{
 					privateServicePort = privateService->getBindPort();
 				}
@@ -899,7 +891,7 @@ void ConnectionServer::receiveMessage(const MessageDispatch::Emitter & source, c
 			}
 		}
 	}//lint !e529 // Symbol 'ri' not subsequently referenced // suppressed because it IS referenced. I think lint is very confused for some reason.
-	else if(message.isType("ProfilerOperationMessage"))
+	else if (message.isType("ProfilerOperationMessage"))
 	{
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		ProfilerOperationMessage msg(ri);
@@ -912,17 +904,17 @@ void ConnectionServer::receiveMessage(const MessageDispatch::Emitter & source, c
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		ExcommunicateGameServerMessage msg(ri);
 
-		LOG("GameGameConnect",("Told to drop connection to %lu by Central",msg.getServerId()));
-		
-		GameConnection *conn =getGameConnection(msg.getServerId());
+		LOG("GameGameConnect", ("Told to drop connection to %lu by Central", msg.getServerId()));
+
+		GameConnection *conn = getGameConnection(msg.getServerId());
 		if (conn)
 			conn->disconnect();
-	}		
+	}
 	else if (message.isType("CntrlSrvDropDupeConns"))
 	{
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		GenericValueTypeMessage<std::pair<uint32, std::string> > const msg(ri);
-		
+
 		ClientConnection* client = getClientConnection(msg.getValue().first);
 		if (client && !client->isUsingAdminLogin() && !client->getIsSecure())
 		{
@@ -940,12 +932,12 @@ void ConnectionServer::install()
 {
 	s_connectionServer = new ConnectionServer;
 
-	char tmp[128] = {"\0"};
-	IGNORE_RETURN(snprintf(tmp, sizeof(tmp), "ConnectionServer:%d", Os::getProcessId())); 
+	char tmp[128] = { "\0" };
+	IGNORE_RETURN(snprintf(tmp, sizeof(tmp), "ConnectionServer:%d", Os::getProcessId()));
 	SetupSharedLog::install(tmp);
 	s_connectionServer->setupConnections();
 	s_connectionServer->m_metricsData = new ConnectionServerMetricsData;
-	MetricsManager::install(s_connectionServer->m_metricsData, true, "ConnectionServer" , "", ConfigConnectionServer::getConnectionServerNumber());
+	MetricsManager::install(s_connectionServer->m_metricsData, true, "ConnectionServer", "", ConfigConnectionServer::getConnectionServerNumber());
 	DataTableManager::install();
 	AdminAccountManager::install(ConfigConnectionServer::getAdminAccountDataTable());
 }
@@ -958,30 +950,29 @@ void ConnectionServer::remove()
 	delete s_connectionServer->m_metricsData;
 	s_connectionServer->m_metricsData = 0;
 
-	// explicitly delete all connections that were setup from setupConnections rather than letting 
+	// explicitly delete all connections that were setup from setupConnections rather than letting
 	// Connection::remove do it.  There are connections that require a valid s_connectionServer which is deleted
 	// and set to nullptr.
 	s_connectionServer->unsetupConnections();
-	
+
 	SetupSharedLog::remove();
-	
+
 	delete s_connectionServer;
 	s_connectionServer = 0;
 }
 
 //-----------------------------------------------------------------------
 
-
 void ConnectionServer::run(void)
 {
 	static const bool shouldSleep = ConfigConnectionServer::getShouldSleep();
 	static ConnectionServer & cserver = instance();
-	DEBUG_FATAL (!cserver.m_metricsData, ("Connection server not installed properly"));
+	DEBUG_FATAL(!cserver.m_metricsData, ("Connection server not installed properly"));
 
 	unsigned long startTime = Clock::timeMs();
 	Clock::setFrameRateLimit(50.0f);
 
-	LOG("ServerStartup",("ConnectionServer starting on %s", NetworkHandler::getHostName().c_str()));  
+	LOG("ServerStartup", ("ConnectionServer starting on %s", NetworkHandler::getHostName().c_str()));
 	while (!cserver.done)
 	{
 		PROFILER_AUTO_BLOCK_DEFINE("main loop");
@@ -1004,10 +995,10 @@ void ConnectionServer::run(void)
 			{
 				GenericValueTypeMessage<std::pair<uint16, uint32> > const syncStampMessage("SetSyncStamp", std::make_pair(static_cast<uint16>(UdpMisc::LocalSyncStampShort()), static_cast<uint32>(UdpMisc::LocalSyncStampLong())));
 				GameServerMap::iterator end = cserver.gameServerMap.end();
-				for(GameServerMap::iterator iter = cserver.gameServerMap.begin(); iter != end; ++iter)
+				for (GameServerMap::iterator iter = cserver.gameServerMap.begin(); iter != end; ++iter)
 					iter->second->send(syncStampMessage, true);
 			}
-			
+
 			{
 				PROFILER_AUTO_BLOCK_DEFINE("NetworkHandler::dispatch");
 				NetworkHandler::dispatch();
@@ -1030,23 +1021,21 @@ void ConnectionServer::run(void)
 				startTime = curTime;
 			}
 
-
 			if (shouldSleep)
 			{
 				PROFILER_AUTO_BLOCK_DEFINE("Os::sleep");
 				Os::sleep(1);
 			}
-
 		} while (!cserver.done);
 
 		NetworkHandler::clearBytesThisFrame();
-			
+
 		cserver.updateRecoveringClientList(static_cast<uint>(Clock::frameTime()*1000.0f));
 	}
 }
 
 // ----------------------------------------------------------------------
-/** 
+/**
  * Invoked every frame to do whatever updates are needed
  */
 void ConnectionServer::update()
@@ -1054,7 +1043,7 @@ void ConnectionServer::update()
 	if (centralConnection)
 	{
 		static Timer t(5.0f);
-		if(t.updateZero(Clock::frameTime()))
+		if (t.updateZero(Clock::frameTime()))
 		{
 			// Update the population on the central server
 			updatePopulationOnCentralServer();
@@ -1074,16 +1063,16 @@ void ConnectionServer::update()
 
 	static const int ping_throttle_max = 1024;
 
-	static char buffer [4];
+	static char buffer[4];
 
-	for (int throttle = 0; pingSocket->canRecv () && throttle < ping_throttle_max; ++throttle)
+	for (int throttle = 0; pingSocket->canRecv() && throttle < ping_throttle_max; ++throttle)
 	{
 		Address addr;
-		const uint32 count = pingSocket->recvFrom  (addr, buffer, 4);
+		const uint32 count = pingSocket->recvFrom(addr, buffer, 4);
 		m_pingTrafficNumBytes += static_cast<int>(count);
 		if (m_pingTrafficNumBytes < 0)
 			m_pingTrafficNumBytes = 0;
-		IGNORE_RETURN(pingSocket->sendTo (addr, buffer, count));
+		IGNORE_RETURN(pingSocket->sendTo(addr, buffer, count));
 	}
 }
 
@@ -1102,7 +1091,7 @@ void ConnectionServer::updateRecoveringClientList(uint elapsedTime)
 		m_recoverTime += elapsedTime;
 
 		static std::set<NetworkId> listPlayersDropped;
-		for (RecoveringClientListType::iterator i=m_recoveringClientList.begin(); i!=m_recoveringClientList.end();)
+		for (RecoveringClientListType::iterator i = m_recoveringClientList.begin(); i != m_recoveringClientList.end();)
 		{
 			if (m_recoverTime > i->first)
 			{
@@ -1110,16 +1099,16 @@ void ConnectionServer::updateRecoveringClientList(uint elapsedTime)
 				if (client)
 				{
 					if (client->getGameConnection())
-						DEBUG_REPORT_LOG(true,("Player %s recovered from a server crash and will not be dropped.\n",i->second.getValueString().c_str()));
+						DEBUG_REPORT_LOG(true, ("Player %s recovered from a server crash and will not be dropped.\n", i->second.getValueString().c_str()));
 					else
 					{
-						LOG("Network", ("Dropping player %s because game server crashed and no other server took authority.\n",i->second.getValueString().c_str()));
+						LOG("Network", ("Dropping player %s because game server crashed and no other server took authority.\n", i->second.getValueString().c_str()));
 						dropClient(client->getClientConnection(), "Game Server Crash");
 
 						IGNORE_RETURN(listPlayersDropped.insert(i->second));
 					}
 				}
-				i=m_recoveringClientList.erase(i);
+				i = m_recoveringClientList.erase(i);
 			}
 			else
 				++i;
@@ -1141,7 +1130,7 @@ void ConnectionServer::updateRecoveringClientList(uint elapsedTime)
 		}
 
 		if (m_recoveringClientList.empty())
-			m_recoverTime = 0; // prevent rollover and other problems I don't want to worry about 
+			m_recoverTime = 0; // prevent rollover and other problems I don't want to worry about
 	}
 }
 
@@ -1158,15 +1147,15 @@ void ConnectionServer::unsetupConnections()
 {
 	// remove all ClientConnection objects so when Connection::remove() is called we don't crash since
 	// ConnectionServer no longer exists
-	while( !instance().connectedMap.empty() )
+	while (!instance().connectedMap.empty())
 	{
 		SuidMap::iterator i = instance().connectedMap.begin();
-		if( i != instance().connectedMap.end() )
+		if (i != instance().connectedMap.end())
 		{
 			ClientConnection * c = (*i).second;
 			uint32 suid = (*i).first;
 			IGNORE_RETURN(instance().connectedMap.erase(suid));
-			if( c )
+			if (c)
 			{
 				ConnectionServer::dropClient(c, "ConnectionServer shutting down.");
 				delete c;
@@ -1174,30 +1163,29 @@ void ConnectionServer::unsetupConnections()
 		}
 	}
 
-	if( customerService )
+	if (customerService)
 	{
 		delete customerService;
 		customerService = 0;
 	}
 
-	if( chatService )
+	if (chatService)
 	{
 		delete chatService;
 		chatService = 0;
 	}
 
-	if( centralConnection )
+	if (centralConnection)
 	{
 		delete centralConnection;
 		centralConnection = 0;
 	}
 
-	if( gameService )
+	if (gameService)
 	{
 		delete gameService;
 		gameService = 0;
 	}
-
 }
 //-----------------------------------------------------------------------
 
@@ -1239,7 +1227,7 @@ void ConnectionServer::setupConnections()
 	connectToMessage("ConnectionKeyPush");
 	connectToMessage("LoginKeyPush");
 	connectToMessage("CharacterListMessage");
-	
+
 	//Create Characters Messages
 	connectToMessage("ClientCreateCharacter");
 	connectToMessage("ConnectionCreateCharacterSuccess");
@@ -1250,7 +1238,7 @@ void ConnectionServer::setupConnections()
 	// name query messages
 	connectToMessage("ClientRandomNameRequest"); // from client
 	connectToMessage("RandomNameResponse"); // from game server
-	
+
 	connectToMessage("ClientVerifyAndLockNameRequest"); // from client
 	connectToMessage("VerifyAndLockNameResponse"); // from game server
 
@@ -1283,10 +1271,10 @@ void ConnectionServer::setupConnections()
 
 //----------------------------------------------------------------------
 
-uint16 ConnectionServer::getPingPort         ()
+uint16 ConnectionServer::getPingPort()
 {
 	static ConnectionServer & cs = instance();
-	return cs.pingSocket->getBindAddress ().getHostPort ();
+	return cs.pingSocket->getBindAddress().getHostPort();
 }
 
 //-----------------------------------------------------------------------
@@ -1315,7 +1303,7 @@ GameConnection* ConnectionServer::getGameConnection(uint32 gameServerId)
 	const GameServerMap::const_iterator i = cs.gameServerMap.find(gameServerId);
 	if (i != cs.gameServerMap.end())
 		return (*i).second;
-	
+
 	return nullptr;
 }
 
@@ -1448,11 +1436,11 @@ void ConnectionServer::addToConnectedMap(uint32 suid, ClientConnection* cconn)
 		connectedMap[suid] = cconn;
 	}
 
-	if (   ((cconn->getSubscriptionFeatures() & ClientSubscriptionFeature::FreeTrial) != 0)
-	    && ((cconn->getSubscriptionFeatures() & ClientSubscriptionFeature::Base)      == 0))
+	if (((cconn->getSubscriptionFeatures() & ClientSubscriptionFeature::FreeTrial) != 0)
+		&& ((cconn->getSubscriptionFeatures() & ClientSubscriptionFeature::Base) == 0))
 	{
 		freeTrials.insert(suid);
-	}	
+	}
 
 	// Update the population on the CentralServer immediately
 	// since we are trying to avoid people "rushing" the server
@@ -1468,7 +1456,7 @@ void ConnectionServer::removeFromConnectedMap(uint32 suid)
 	{
 		connectedMap.erase(i);
 	}
-	
+
 	FreeTrialsSet::iterator j = freeTrials.find(suid);
 	if (j != freeTrials.end())
 	{
@@ -1487,20 +1475,20 @@ void ConnectionServer::updatePopulationOnCentralServer()
 	if (centralConnection)
 	{
 		// Total number of clients and how many of those are free trials
-		const int numPlayers   = getNumberOfClients();
+		const int numPlayers = getNumberOfClients();
 		const int numFreeTrial = getNumberOfFreeTrials();
 
 		// We are concerned about too many people piling up at the beginning
 		// of the tutorial, so count how many players could be a problem
-		int numPlayersEmptyScene    = 0;
+		int numPlayersEmptyScene = 0;
 		int numPlayersTutorialScene = 0;
-		int numPlayersFalconScene   = 0;
+		int numPlayersFalconScene = 0;
 
 		// Walk through the clients and evaluate what scene they are in
 		SuidMap::const_iterator i;
-		for(i = connectedMap.begin(); i != connectedMap.end(); ++i)
+		for (i = connectedMap.begin(); i != connectedMap.end(); ++i)
 		{
-			const ClientConnection * const conn   = (*i).second;
+			const ClientConnection * const conn = (*i).second;
 			const Client * const           client = conn->getClient();
 
 			if (client && client->getGameConnection())
@@ -1527,10 +1515,9 @@ void ConnectionServer::updatePopulationOnCentralServer()
 		}
 
 		const UpdatePlayerCountMessage msg(false, numPlayers, numFreeTrial, numPlayersEmptyScene, numPlayersTutorialScene, numPlayersFalconScene);
-		centralConnection->send(msg,true);
+		centralConnection->send(msg, true);
 	}
 }
-
 
 // ----------------------------------------------------------------------
 
@@ -1538,7 +1525,7 @@ SessionApiClient* ConnectionServer::getSessionApiClient()
 {
 	// this is causing crashes when ConnectionServer is shutdown and something calls this function
 	// because instance() returns 0.
-	if( s_connectionServer )
+	if (s_connectionServer)
 	{
 		return instance().m_sessionApiClient;
 	}
@@ -1558,7 +1545,7 @@ void ConnectionServer::setDone(char const *reasonfmt, ...)
 		va_list ap;
 		va_start(ap, reasonfmt);
 		IGNORE_RETURN(_vsnprintf(reason, sizeof(reason), reasonfmt, ap));//lint !e530 Symbol 'ap' not initialized
-		reason[sizeof(reason)-1] = '\0';
+		reason[sizeof(reason) - 1] = '\0';
 
 		LOG(
 			"ServerShutdown",
@@ -1580,4 +1567,3 @@ void ConnectionServer::setDone(char const *reasonfmt, ...)
 }
 
 // ======================================================================
-
