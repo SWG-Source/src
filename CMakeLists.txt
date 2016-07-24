@@ -31,7 +31,11 @@ find_package(PCRE REQUIRED)
 find_package(Perl REQUIRED)
 find_package(Threads)
 find_package(ZLIB REQUIRED)
-find_package(CURL REQUIRED)
+
+if(UNIX)
+	# Maybe use the nuGet version instead? possibly can do the same for many of the other libs...
+	find_package(CURL REQUIRED)
+endif()
 
 if(WIN32)
 	find_package(Iconv REQUIRED)
