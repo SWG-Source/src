@@ -9,7 +9,7 @@
 #ifndef INCLUDED_AiMovementBase_H
 #define INCLUDED_AiMovementBase_H
 
-#include "boost/smart_ptr.hpp"
+#include <memory>
 
 class AICreatureController;
 class AiDebugString;
@@ -136,7 +136,7 @@ protected:
 //-----------------------------------------------------------------------
 
 // define shared pointer template for AiMovementBase
-typedef boost::shared_ptr<AiMovementBase> AiMovementBasePtr;
+typedef std::shared_ptr<AiMovementBase> AiMovementBasePtr;
 
 #define AiMovementBaseNullPtr AiMovementBasePtr()
 
