@@ -223,7 +223,7 @@ void SharedBuildoutAreaManager::install()
 			int const areaCount = areaListTable.getNumRows();
 			for (int areaRow = 0; areaRow < areaCount; ++areaRow)
 			{
-				areasForScene.push_back(BuildoutArea());
+				areasForScene.emplace_back(BuildoutArea());
 				BuildoutArea &buildoutArea = areasForScene.back();
 				buildoutArea.areaIndex = i*100+areaRow;
 				buildoutArea.areaName = areaListTable.getStringValue("area", areaRow);
