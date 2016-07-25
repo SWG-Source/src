@@ -133,7 +133,7 @@ template <class DataType, class ReturnType>
 inline TemplateBase<DataType, ReturnType>::TemplateBase(void) :
 	m_dataType(NONE),
 	m_loaded(false),
-	m_data(nullptr)
+	m_data()
 {
 }	// TemplateBase::TemplateBase(void)
 

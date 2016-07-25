@@ -2115,12 +2115,12 @@ namespace ChatSystem
 			ChatAvatar *destAvatar = M.getDestAvatar()->getNewChatAvatar();
 			ChatAvatar *srcAvatar = M.getSrcAvatar()->getNewChatAvatar();
 
-			if (destRoomCore && !destRoomCore->addBan(M.getDestAvatar()))
+			if (destRoomCore && (!destRoomCore->addBan(M.getDestAvatar())))
 			{
 				delete M.getSrcAvatar();
 			}
 
-			if (destRoomCore && !destRoomCore || !destRoom)
+			if (destRoomCore && (!destRoomCore || !destRoom))
 			{
 				_chatdebug_("ChatAPI:BadData: MESSAGE_ADDBANAVATAR: destRoom=%p, destRoomCore=%p\n", destRoom, destRoomCore);
 				delete srcAvatar;

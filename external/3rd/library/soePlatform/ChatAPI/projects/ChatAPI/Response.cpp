@@ -1162,8 +1162,7 @@ namespace ChatSystem
 		m_srcAvatarID(srcAvatarID),
 		m_listLength(0),
 		m_headers(nullptr),
-		m_cores(nullptr),
-		m_listLength(0)
+		m_cores(nullptr)
 	{
 	}
 
