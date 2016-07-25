@@ -15,6 +15,8 @@
 #include "serverGame/RegionSphere.h"
 #include "serverScript/ScriptParameters.h"
 
+#include <algorithm>
+
 using namespace JNIWrappersNamespace;
 
 
