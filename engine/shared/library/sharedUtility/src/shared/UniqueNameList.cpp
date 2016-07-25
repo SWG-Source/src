@@ -8,10 +8,10 @@
 #include "sharedUtility/FirstSharedUtility.h"
 #include "sharedUtility/UniqueNameList.h"
 
-#include "boost/smart_ptr.hpp"
 #include "sharedFoundation/CrcLowerString.h"
 
 #include <algorithm>
+#include <memory>
 #include <utility>
 #include <vector>
 
@@ -31,24 +31,24 @@ public:
 
 	struct LessNameComparator
 	{
-		bool operator ()(const boost::shared_ptr<NameInfo> &lhs, const boost::shared_ptr<NameInfo> &rhs) const;
+		bool operator ()(const std::shared_ptr<NameInfo> &lhs, const std::shared_ptr<NameInfo> &rhs) const;
 
-		bool operator ()(const boost::shared_ptr<CrcLowerString> &lhs, const boost::shared_ptr<NameInfo> &rhs) const;
-		bool operator ()(const boost::shared_ptr<NameInfo> &lhs, const boost::shared_ptr<CrcLowerString> &rhs) const;
+		bool operator ()(const std::shared_ptr<CrcLowerString> &lhs, const std::shared_ptr<NameInfo> &rhs) const;
+		bool operator ()(const std::shared_ptr<NameInfo> &lhs, const std::shared_ptr<CrcLowerString> &rhs) const;
 
-		bool operator ()(const boost::shared_ptr<NameInfo> &lhs, const CrcLowerString &rhs) const;
-		bool operator ()(const CrcLowerString &lhs, const boost::shared_ptr<NameInfo> &rhs) const;
+		bool operator ()(const std::shared_ptr<NameInfo> &lhs, const CrcLowerString &rhs) const;
+		bool operator ()(const CrcLowerString &lhs, const std::shared_ptr<NameInfo> &rhs) const;
 	};
 
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 public:
 
-	NameInfo(const boost::shared_ptr<CrcLowerString> &name, int index);
+	NameInfo(const std::shared_ptr<CrcLowerString> &name, int index);
 
 public:
 
-	boost::shared_ptr<CrcLowerString>  m_name;
+	std::shared_ptr<CrcLowerString>  m_name;
 	int                                m_index;
 
 private:
@@ -62,35 +62,35 @@ private:
 
 //lint -esym(1714, LessNameComparator::operator*) // not referenced // wrong, in STL functions
 
-inline bool UniqueNameList::NameInfo::LessNameComparator::operator ()(const boost::shared_ptr<NameInfo> &lhs, const boost::shared_ptr<NameInfo> &rhs) const
+inline bool UniqueNameList::NameInfo::LessNameComparator::operator ()(const std::shared_ptr<NameInfo> &lhs, const std::shared_ptr<NameInfo> &rhs) const
 {
 	return *(lhs->m_name.get()) < *(rhs->m_name.get());
 }
 
 // ----------------------------------------------------------------------
 
-inline bool UniqueNameList::NameInfo::LessNameComparator::operator ()(const boost::shared_ptr<CrcLowerString> &lhs, const boost::shared_ptr<NameInfo> &rhs) const
+inline bool UniqueNameList::NameInfo::LessNameComparator::operator ()(const std::shared_ptr<CrcLowerString> &lhs, const std::shared_ptr<NameInfo> &rhs) const
 {
 	return *(lhs.get()) < *(rhs->m_name.get());
 }
 
 // ----------------------------------------------------------------------
 
-inline bool UniqueNameList::NameInfo::LessNameComparator::operator ()(const boost::shared_ptr<NameInfo> &lhs, const boost::shared_ptr<CrcLowerString> &rhs) const
+inline bool UniqueNameList::NameInfo::LessNameComparator::operator ()(const std::shared_ptr<NameInfo> &lhs, const std::shared_ptr<CrcLowerString> &rhs) const
 {
 	return *(lhs->m_name.get()) < *(rhs.get());
 }
 
 // ----------------------------------------------------------------------
 
-inline bool UniqueNameList::NameInfo::LessNameComparator::operator ()(const boost::shared_ptr<NameInfo> &lhs, const CrcLowerString &rhs) const
+inline bool UniqueNameList::NameInfo::LessNameComparator::operator ()(const std::shared_ptr<NameInfo> &lhs, const CrcLowerString &rhs) const
 {
 	return *(lhs->m_name.get()) < rhs;
 }
 
 // ----------------------------------------------------------------------
 
-inline bool UniqueNameList::NameInfo::LessNameComparator::operator ()(const CrcLowerString &lhs, const boost::shared_ptr<NameInfo> &rhs) const
+inline bool UniqueNameList::NameInfo::LessNameComparator::operator ()(const CrcLowerString &lhs, const std::shared_ptr<NameInfo> &rhs) const
 {
 	return lhs < *(rhs->m_name.get());
 }
@@ -99,7 +99,7 @@ inline bool UniqueNameList::NameInfo::LessNameComparator::operator ()(const CrcL
 // class UniqueNameList::NameInfo
 // ======================================================================
 
-UniqueNameList::NameInfo::NameInfo(const boost::shared_ptr<CrcLowerString> &name, int index)
+UniqueNameList::NameInfo::NameInfo(const std::shared_ptr<CrcLowerString> &name, int index)
 :	m_name(name),
 	m_index(index)
 {
@@ -144,7 +144,7 @@ int UniqueNameList::submitName(const SharedCrcLowerString &name)
 		//-- create it
 		const int newIndex = static_cast<int>(m_nameInfoByName->size());
 		
-		boost::shared_ptr<NameInfo>  newNameInfo(new NameInfo(name, newIndex));
+		std::shared_ptr<NameInfo>  newNameInfo = std::make_shared<NameInfo>(name, newIndex);
 
 		//-- add to lists
 		IGNORE_RETURN(m_nameInfoByName->insert(result.first, newNameInfo));

@@ -13,7 +13,7 @@
 
 class CrcLowerString;
 
-namespace boost
+namespace std
 {
 	template <typename T>
 	class shared_ptr;
@@ -37,7 +37,7 @@ class UniqueNameList
 {
 public:
 
-	typedef boost::shared_ptr<CrcLowerString>  SharedCrcLowerString;
+	typedef std::shared_ptr<CrcLowerString>  SharedCrcLowerString;
 
 public:
 
@@ -56,7 +56,7 @@ private:
 
 	struct NameInfo;
 
-	typedef stdvector<boost::shared_ptr<NameInfo> >::fwd  NameInfoVector;
+	typedef stdvector<std::shared_ptr<NameInfo> >::fwd  NameInfoVector;
 
 private:
 
