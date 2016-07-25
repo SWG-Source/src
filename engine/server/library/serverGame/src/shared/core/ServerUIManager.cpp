@@ -6,7 +6,6 @@
 #include "serverGame/FirstServerGame.h"
 #include "ServerUIManager.h"
 
-#include "boost/smart_ptr.hpp"
 #include "serverGame/Client.h"
 #include "serverGame/GameServer.h"
 #include "serverGame/ServerMessageForwarding.h"
@@ -29,6 +28,7 @@
 #include "sharedNetworkMessages/SuiUpdatePageMessage.h"
 #include <algorithm>
 #include <map>
+#include <memory>
 
 //----------------------------------------------------------------------
 
