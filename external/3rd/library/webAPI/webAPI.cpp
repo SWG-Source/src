@@ -19,7 +19,7 @@ using namespace std;
 
 // if status == success, returns "success", or slotName's contents if specified...
 // otherwise returns the "message" if no success
-string webAPI::simplePost(string endpoint, string data, string slotName)
+string webAPI::simplePost(const string &endpoint, const string &data, const string &slotName)
 {
 	// declare our output and go ahead and attempt to get data from remote
 	nlohmann::json response = request(endpoint, data, 1);
@@ -37,7 +37,7 @@ string webAPI::simplePost(string endpoint, string data, string slotName)
 		{
 			output = "success";
 		}
-	} 
+	}
 	else //default message is an error, the other end always assumes "success" or the specified slot
 	{
 		if (response.count("message"))
@@ -50,12 +50,12 @@ string webAPI::simplePost(string endpoint, string data, string slotName)
 		}
 	}
 
-	return output;				
+	return output;
 }
 
 // this can be broken out to separate the json bits later if we need raw or other http type requests
 // all it does is fetch via get or post, and if the status is 200 returns the json, else error json
-nlohmann::json webAPI::request(string endpoint, string data, int reqType)
+nlohmann::json webAPI::request(const string &endpoint, const string &data, const int &reqType)
 {
 	nlohmann::json response;
 
@@ -63,34 +63,36 @@ nlohmann::json webAPI::request(string endpoint, string data, int reqType)
 	{
 		CURL *curl = curl_easy_init(); // start up curl
 
-                if (curl)
-                {
-                        string readBuffer; // container for the remote response
+		if (curl)
+		{
+			string readBuffer; // container for the remote response
 			long http_code = 0; // we get this after performing the get or post
 
-                        curl_easy_setopt(curl, CURLOPT_URL, endpoint.c_str()); // endpoint is always specified by caller
-                        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeCallback); // place the data into readBuffer using writeCallback
-                        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer); // specify readBuffer as the container for data
+			curl_easy_setopt(curl, CURLOPT_URL, endpoint.c_str()); // endpoint is always specified by caller
+			curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeCallback); // place the data into readBuffer using writeCallback
+			curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer); // specify readBuffer as the container for data
 
 			if (reqType == 1)
 			{
 				curl_easy_setopt(curl, CURLOPT_POSTFIELDS, data.c_str());
-			}
+			} //todo - get request? etc
 
 			CURLcode res = curl_easy_perform(curl); // make the request!
-			
-			curl_easy_getinfo (curl, CURLINFO_RESPONSE_CODE, &http_code); //get status code
+
+			curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code); //get status code
 
 			if (res == CURLE_OK && http_code == 200 && !(readBuffer.empty())) // check it all out and parse
 			{
 				try {
-				    response = nlohmann::json::parse(readBuffer);
-				} catch (string e) {
-				    response["message"] = e;
-				    response["status"] = "failure";
-				} catch (...) {
-				    response["message"] = "JSON parse error for endpoint.";
-				    response["status"] = "failure";
+					response = nlohmann::json::parse(readBuffer);
+				}
+				catch (string &e) {
+					response["message"] = e;
+					response["status"] = "failure";
+				}
+				catch (...) {
+					response["message"] = "JSON parse error for endpoint.";
+					response["status"] = "failure";
 				}
 			}
 			else
@@ -102,14 +104,14 @@ nlohmann::json webAPI::request(string endpoint, string data, int reqType)
 		}
 		else //default err messages below
 		{
-        		response["message"] = "Failed to initialize cURL.";
-        		response["status"] = "failure";
+			response["message"] = "Failed to initialize cURL.";
+			response["status"] = "failure";
 		}
 	}
 	else
 	{
-        	response["message"] = "Invalid endpoint URL.";
-        	response["status"] = "failure";
+		response["message"] = "Invalid endpoint URL.";
+		response["status"] = "failure";
 	}
 
 	return response;
@@ -118,6 +120,6 @@ nlohmann::json webAPI::request(string endpoint, string data, int reqType)
 // This is used by curl to grab the response and put it into a var
 size_t webAPI::writeCallback(void *contents, size_t size, size_t nmemb, void *userp)
 {
-        ((string*)userp)->append((char*)contents, size * nmemb);
-        return size * nmemb;
+	((string*)userp)->append((char*)contents, size * nmemb);
+	return size * nmemb;
 }

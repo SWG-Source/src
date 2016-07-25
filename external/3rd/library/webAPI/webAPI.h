@@ -17,18 +17,19 @@ License: what's a license? we're a bunch of dirty pirates!
 #define webAPI_H
 
 #include "json.hpp"
+
+#ifdef WIN32
+#include <curl.h>
+#else
 #include <curl/curl.h>
+#endif
 
 namespace webAPI
 {
 	using namespace std;
-	
-	string simplePost(string endpoint, string data, string slotName);
-	//std::string simpleGet(char* endpoint, char* data);
-	//nlohmann::json post(char* endpoint, char* data);
-	//nlohmann::json get(char* endpoint, char* data);
-	
-	nlohmann::json request(string endpoint, string data, int reqType); // 1 for post, 0 for get
+
+	string simplePost(const string &endpoint, const string &data, const string &slotName);
+	nlohmann::json request(const string &endpoint, const string &data, const int &reqType); // 1 for post, 0 for get
 	size_t writeCallback(void *contents, size_t size, size_t nmemb, void *userp);
 };
 
