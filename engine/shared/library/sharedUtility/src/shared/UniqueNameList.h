@@ -28,7 +28,7 @@ namespace std
  * (1) unique name to a stable integer index, and (2) integer index
  * mapped back to unique name.  Names are lower case, case insensitive.
  *
- * This class makes use of boost::shared_ptr to minimize the number of
+ * This class makes use of shared_ptr to minimize the number of
  * memory allocations associated with using a CrcLowerString.  It also
  * makes use of sorted vectors for storage.
  */

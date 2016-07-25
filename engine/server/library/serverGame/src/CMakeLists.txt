@@ -752,7 +752,6 @@ include_directories(
 	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicode/include
 	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicodeArchive/include/public
 	${SWG_EXTERNALS_SOURCE_DIR}/3rd/library/platform/projects
-	${Boost_INCLUDE_DIR}
 	${JNI_INCLUDE_DIRS}
 	${PCRE_INCLUDE_DIR}
 )

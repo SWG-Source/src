@@ -22,7 +22,6 @@ include_directories(/usr/include/i386-linux-gnu)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin)
 
 find_package(BISON REQUIRED)
-find_package(Boost REQUIRED)
 find_package(FLEX REQUIRED)
 find_package(JNI REQUIRED)
 find_package(LibXml2 REQUIRED)
