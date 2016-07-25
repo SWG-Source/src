@@ -407,7 +407,7 @@ jboolean JNICALL ScriptMethodsPlayerAccountNamespace::setCompletedTutorial(JNIEn
 	const unsigned int stationId = playerObject->getClient()->getStationId();
 
 	LOG("CustomerService", ("Setting tutorial bit to %s for stationId %i\n", (value) ? "true" : "false", stationId));
-	GenericValueTypeMessage< std::pair<unsigned int, bool> > const updateTutorial("LoginToggleCompletedTutorial", std::pair<unsigned int, bool>(stationId, value));
+	GenericValueTypeMessage< std::pair<unsigned int, bool> > const updateTutorial("LoginToggleCompletedTutorial", std::pair<unsigned int, bool>(stationId, (bool)value));
 	GameServer::getInstance().sendToCentralServer(updateTutorial);
 	return true;
 }

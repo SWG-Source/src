@@ -330,7 +330,7 @@ void JNICALL ScriptMethodsNewbieTutorialNamespace::newbieTutorialSendStartingLoc
 
 	typedef std::pair<std::string, bool> Payload;
 	typedef MessageQueueGenericValueType<Payload> MessageType;
-	MessageType * const message = new MessageType (Payload (name, result));
+	MessageType * const message = new MessageType (Payload (name, (bool)result));
 	sendMessageToPlayer (*player, message, CM_startingLocationSelectionResult);
 }
 
