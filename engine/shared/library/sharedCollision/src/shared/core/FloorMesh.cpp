@@ -95,8 +95,7 @@ FloorMesh::FloorMesh(const std::string & filename)
 	m_pathGraph(nullptr),
 	m_appearance(nullptr),
 	m_triMarkCounter(1000),    // just some random number
-	m_objectFloor(false),
-	m_pathLines()
+	m_objectFloor(false)
 {
 #ifdef _DEBUG
 
