@@ -1,8 +1,6 @@
 // ConnectionServerConnection.cpp
 // copyright 2001 Verant Interactive
 
-
-
 //-----------------------------------------------------------------------
 
 #include "FirstCentralServer.h"
@@ -40,48 +38,50 @@ struct OnConnectionServerConnectionClosed {};
 //-----------------------------------------------------------------------
 
 ConnectionServerConnection::ConnectionServerConnection(const std::string & a, const uint16 p) :
-ServerConnection            (a, p, NetworkSetupData()),
-m_chatServicePort           (0),
-m_csServicePort             (0),
-m_clientServicePortPrivate  (0),
-m_clientServicePortPublic   (0),
-m_gameServicePort           (0),
-m_id                        (0),
-m_pingPort                  (0),
-m_connectionServerNumber    (0),
-m_gameServiceAddress        (),
-m_playerCount               (0),
-m_freeTrialCount            (0),
-m_emptySceneCount           (0),
-m_tutorialSceneCount        (0),
-m_falconSceneCount          (0),
-m_clientServiceAddress      (),
-m_chatServiceAddress        (),
-m_customerServiceAddress    ()
+	ServerConnection(a, p, NetworkSetupData()),
+	m_chatServicePort(0),
+	m_csServicePort(0),
+	m_clientServicePortPrivate(0),
+	m_clientServicePortPublic(0),
+	m_gameServicePort(0),
+	m_id(0),
+	m_pingPort(0),
+	m_connectionServerNumber(0),
+	m_gameServiceAddress(),
+	m_playerCount(0),
+	m_freeTrialCount(0),
+	m_emptySceneCount(0),
+	m_tutorialSceneCount(0),
+	m_falconSceneCount(0),
+	m_clientServiceAddress(),
+	m_chatServiceAddress(),
+	m_customerServiceAddress(),
+	m_voiceChatServicePort(0)
 {
 }
 
 //-----------------------------------------------------------------------
 
 ConnectionServerConnection::ConnectionServerConnection(UdpConnectionMT * u, TcpClient * t) :
-ServerConnection            (u, t),
-m_chatServicePort           (0),
-m_csServicePort             (0),
-m_clientServicePortPrivate  (0),
-m_clientServicePortPublic   (0),
-m_gameServicePort           (0),
-m_id                        (0),
-m_pingPort                  (0),
-m_connectionServerNumber    (0),
-m_gameServiceAddress        (),
-m_playerCount               (0),
-m_freeTrialCount            (0),
-m_emptySceneCount           (0),
-m_tutorialSceneCount        (0),
-m_falconSceneCount          (0),
-m_clientServiceAddress      (),
-m_chatServiceAddress        (),
-m_customerServiceAddress    ()
+	ServerConnection(u, t),
+	m_chatServicePort(0),
+	m_csServicePort(0),
+	m_clientServicePortPrivate(0),
+	m_clientServicePortPublic(0),
+	m_gameServicePort(0),
+	m_id(0),
+	m_pingPort(0),
+	m_connectionServerNumber(0),
+	m_gameServiceAddress(),
+	m_playerCount(0),
+	m_freeTrialCount(0),
+	m_emptySceneCount(0),
+	m_tutorialSceneCount(0),
+	m_falconSceneCount(0),
+	m_clientServiceAddress(),
+	m_chatServiceAddress(),
+	m_customerServiceAddress(),
+	m_voiceChatServicePort(0)
 {
 }
 
@@ -89,12 +89,12 @@ m_customerServiceAddress    ()
 
 ConnectionServerConnection::~ConnectionServerConnection()
 {
-	// remove ConnectionServerConnection *'s from the 
+	// remove ConnectionServerConnection *'s from the
 	// s_pseudoClientConnectionMap
 	std::map<unsigned int, std::pair<TransferRequestMoveValidation::TransferRequestSource, ConnectionServerConnection *> >::iterator i;
-	for(i = s_pseudoClientConnectionMap.begin(); i != s_pseudoClientConnectionMap.end();)
+	for (i = s_pseudoClientConnectionMap.begin(); i != s_pseudoClientConnectionMap.end();)
 	{
-		if(i->second.second == this)
+		if (i->second.second == this)
 		{
 			if (i->second.first == TransferRequestMoveValidation::TRS_transfer_server)
 			{
@@ -121,7 +121,7 @@ bool ConnectionServerConnection::sendToPseudoClientConnection(unsigned int stati
 {
 	bool result = false;
 	std::map<unsigned int, std::pair<TransferRequestMoveValidation::TransferRequestSource, ConnectionServerConnection *> >::iterator f = s_pseudoClientConnectionMap.find(stationId);
-	if(f != s_pseudoClientConnectionMap.end())
+	if (f != s_pseudoClientConnectionMap.end())
 	{
 		result = true;
 		f->second.second->send(message, true);
@@ -166,9 +166,9 @@ void ConnectionServerConnection::onReceive(const Archive::ByteStream & message)
 {
 	Archive::ReadIterator ri = message.begin();
 	GameNetworkMessage m(ri);
-	ri = message.begin(); 
+	ri = message.begin();
 
-	if(m.isType("NewCentralConnectionServer"))
+	if (m.isType("NewCentralConnectionServer"))
 	{
 		const NewCentralConnectionServer ncs(ri);
 
@@ -178,7 +178,7 @@ void ConnectionServerConnection::onReceive(const Archive::ByteStream & message)
 		m_clientServicePortPrivate = ncs.getClientServicePortPrivate();
 		m_clientServicePortPublic = ncs.getClientServicePortPublic();
 		m_gameServicePort = ncs.getGameServicePort();
-		m_pingPort = ncs.getPingPort ();
+		m_pingPort = ncs.getPingPort();
 		m_connectionServerNumber = ncs.getConnectionServerNumber();
 		m_gameServiceAddress = ncs.getGameServiceAddress();
 		m_clientServiceAddress = ncs.getClientServiceAddress();
@@ -207,8 +207,8 @@ void ConnectionServerConnection::onReceive(const Archive::ByteStream & message)
 		//Send to CS servers
 		const EnumerateServers e2(true, getCustomerServiceAddress(), getCustomerServicePort(), ct);
 
-		if (   !getCustomerServiceAddress().empty()
-		    && (getCustomerServicePort() != 0))
+		if (!getCustomerServiceAddress().empty()
+			&& (getCustomerServicePort() != 0))
 		{
 			CentralServer::getInstance().broadcastToCustomerServiceServers(e2);
 		}
@@ -218,10 +218,10 @@ void ConnectionServerConnection::onReceive(const Archive::ByteStream & message)
 		}
 
 		//Send to login Servers
-		if ( (getClientServicePortPrivate() != 0) || (getClientServicePortPublic() != 0) )
+		if ((getClientServicePortPrivate() != 0) || (getClientServicePortPublic() != 0))
 		{
 			const LoginConnectionServerAddress csa(m_id, getClientServiceAddress(), getClientServicePortPrivate(),
-				getClientServicePortPublic(), getPlayerCount(), getPingPort ());
+				getClientServicePortPublic(), getPlayerCount(), getPingPort());
 			CentralServer::getInstance().sendToAllLoginServers(csa);
 		}
 	}
@@ -235,12 +235,12 @@ void ConnectionServerConnection::onReceive(const Archive::ByteStream & message)
 		CentralServer::getInstance().sendToAllLoginServers(ulc);
 	}
 
-	else if(m.isType("TaskSpawnProcess"))
+	else if (m.isType("TaskSpawnProcess"))
 	{
 		const TaskSpawnProcess spawn(ri);
 		CentralServer::getInstance().sendTaskMessage(spawn);
 	}
-	else if(m.isType("NewPseudoClientConnection"))
+	else if (m.isType("NewPseudoClientConnection"))
 	{
 		const GenericValueTypeMessage<std::pair<unsigned int, int8> > info(ri);
 		s_pseudoClientConnectionMap[info.getValue().first] = std::make_pair(static_cast<TransferRequestMoveValidation::TransferRequestSource>(info.getValue().second), this);
@@ -248,20 +248,20 @@ void ConnectionServerConnection::onReceive(const Archive::ByteStream & message)
 		// remove corresponding "non pseudo client connection"
 		CentralServer::getInstance().removeFromAccountConnectionMap(static_cast<StationId>(info.getValue().first));
 	}
-	else if(m.isType("DestroyPseudoClientConnection"))
+	else if (m.isType("DestroyPseudoClientConnection"))
 	{
 		const GenericValueTypeMessage<unsigned int> info(ri);
 		std::map<unsigned int, std::pair<TransferRequestMoveValidation::TransferRequestSource, ConnectionServerConnection *> >::iterator f = s_pseudoClientConnectionMap.find(info.getValue());
-		if(f != s_pseudoClientConnectionMap.end())
+		if (f != s_pseudoClientConnectionMap.end())
 		{
 			s_pseudoClientConnectionMap.erase(f);
 		}
 	}
-	else if(m.isType("TransferReceiveDataFromGameServer"))
+	else if (m.isType("TransferReceiveDataFromGameServer"))
 	{
 		const GenericValueTypeMessage<TransferCharacterData> transferReply(ri);
 
-		if(transferReply.getValue().getTransferRequestSource() == TransferRequestMoveValidation::TRS_transfer_server)
+		if (transferReply.getValue().getTransferRequestSource() == TransferRequestMoveValidation::TRS_transfer_server)
 		{
 			CentralServer::getInstance().sendToTransferServer(transferReply);
 		}
@@ -275,7 +275,7 @@ void ConnectionServerConnection::onReceive(const Archive::ByteStream & message)
 			LOG("CustomerService", ("CharacterTransfer: Sending TransferLoginCharacterToDestinationServer to CentralServer (via LoginServer) (%s) for (%s)", transferReply.getValue().getDestinationGalaxy().c_str(), login.getValue().toString().c_str()));
 		}
 	}
-	else if(m.isType("ApplyTransferDataSuccess"))
+	else if (m.isType("ApplyTransferDataSuccess"))
 	{
 		const GenericValueTypeMessage<TransferCharacterData> success(ri);
 
@@ -290,7 +290,7 @@ void ConnectionServerConnection::onReceive(const Archive::ByteStream & message)
 		// send the message back to the transfer server, which then
 		// sends a disable login request to the source central server,
 		// "removing" the account on the source galaxy.
-		if(success.getValue().getTransferRequestSource() == TransferRequestMoveValidation::TRS_transfer_server)
+		if (success.getValue().getTransferRequestSource() == TransferRequestMoveValidation::TRS_transfer_server)
 		{
 			CentralServer::getInstance().sendToTransferServer(success);
 		}
@@ -303,14 +303,14 @@ void ConnectionServerConnection::onReceive(const Archive::ByteStream & message)
 			IGNORE_RETURN(CentralServer::getInstance().sendToArbitraryLoginServer(toggleLoginStatus));
 		}
 	}
-	else if(m.isType("ApplyTransferDataFail"))
+	else if (m.isType("ApplyTransferDataFail"))
 	{
 		const GenericValueTypeMessage<TransferCharacterData> fail(ri);
-		
+
 		// send the message back to the transfer server, which then
 		// sends a delete request to the destination central server,
 		// "removing" the account on the destination galaxy.
-		if(fail.getValue().getTransferRequestSource() == TransferRequestMoveValidation::TRS_transfer_server)
+		if (fail.getValue().getTransferRequestSource() == TransferRequestMoveValidation::TRS_transfer_server)
 		{
 			CentralServer::getInstance().sendToTransferServer(fail);
 		}
@@ -329,11 +329,11 @@ void ConnectionServerConnection::onReceive(const Archive::ByteStream & message)
 			IGNORE_RETURN(CentralServer::getInstance().sendToArbitraryLoginServer(closeRequestTarget));
 		}
 	}
-	else if(m.isType("TransferCreateCharacterFailed"))
+	else if (m.isType("TransferCreateCharacterFailed"))
 	{
 		const GenericValueTypeMessage<TransferCharacterData> fail(ri);
 
-		if(fail.getValue().getTransferRequestSource() == TransferRequestMoveValidation::TRS_transfer_server)
+		if (fail.getValue().getTransferRequestSource() == TransferRequestMoveValidation::TRS_transfer_server)
 		{
 			CentralServer::getInstance().sendToTransferServer(fail);
 		}
@@ -348,11 +348,11 @@ void ConnectionServerConnection::onReceive(const Archive::ByteStream & message)
 			IGNORE_RETURN(CentralServer::getInstance().sendToArbitraryLoginServer(closeRequestTarget));
 		}
 	}
-	else if(m.isType("ReplyTransferDataFail"))
+	else if (m.isType("ReplyTransferDataFail"))
 	{
 		const GenericValueTypeMessage<TransferCharacterData> reply(ri);
 
-		if(reply.getValue().getTransferRequestSource() == TransferRequestMoveValidation::TRS_transfer_server)
+		if (reply.getValue().getTransferRequestSource() == TransferRequestMoveValidation::TRS_transfer_server)
 		{
 			CentralServer::getInstance().sendToTransferServer(reply);
 		}
@@ -367,11 +367,11 @@ void ConnectionServerConnection::onReceive(const Archive::ByteStream & message)
 			IGNORE_RETURN(CentralServer::getInstance().sendToArbitraryLoginServer(closeRequestTarget));
 		}
 	}
-	else if(m.isType("TransferFailGameServerClosedConnectionWithConnectionServer"))
+	else if (m.isType("TransferFailGameServerClosedConnectionWithConnectionServer"))
 	{
 		const GenericValueTypeMessage<TransferCharacterData> fail(ri);
 
-		if(fail.getValue().getTransferRequestSource() == TransferRequestMoveValidation::TRS_transfer_server)
+		if (fail.getValue().getTransferRequestSource() == TransferRequestMoveValidation::TRS_transfer_server)
 		{
 			CentralServer::getInstance().sendToTransferServer(fail);
 		}
@@ -386,12 +386,12 @@ void ConnectionServerConnection::onReceive(const Archive::ByteStream & message)
 			IGNORE_RETURN(CentralServer::getInstance().sendToArbitraryLoginServer(closeRequestTarget));
 		}
 	}
-	else if(m.isType("AccountFeatureIdRequest"))
+	else if (m.isType("AccountFeatureIdRequest"))
 	{
 		const AccountFeatureIdRequest msg(ri);
 		CentralServer::getInstance().sendToArbitraryLoginServer(msg);
 	}
-	else if(m.isType("AdjustAccountFeatureIdRequest"))
+	else if (m.isType("AdjustAccountFeatureIdRequest"))
 	{
 		const AdjustAccountFeatureIdRequest msg(ri);
 		CentralServer::getInstance().sendToArbitraryLoginServer(msg);
@@ -408,7 +408,7 @@ ConnectionServerConnection * ConnectionServerConnection::getConnectionForAccount
 {
 	ConnectionServerConnection * result = 0;
 	std::map<unsigned int, std::pair<TransferRequestMoveValidation::TransferRequestSource, ConnectionServerConnection *> >::iterator f = s_pseudoClientConnectionMap.find(stationId);
-	if(f != s_pseudoClientConnectionMap.end())
+	if (f != s_pseudoClientConnectionMap.end())
 	{
 		result = f->second.second;
 	}

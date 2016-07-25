@@ -223,7 +223,7 @@ bool ConnectionServer::decryptToken(const KeyShare::Token & token, char* session
 	uint32 len = apiSessionIdWidth + sizeof(StationId);
 	unsigned char * keyBuffer = new unsigned char[len + 1];
 	unsigned char * keyBufferPointer = keyBuffer;
-	memset(keyBuffer, 0, len);
+	memset(keyBuffer, 0, sizeof(*keyBuffer));
 
 	bool retval = cs.loginServerKeys->decipherToken(token, keyBuffer, len);
 
