@@ -2,7 +2,6 @@
 // copyright 2000 Verant Interactive
 // Author: Justin Randall
 
-
 //-----------------------------------------------------------------------
 
 #include "serverKeyShare/FirstServerKeyShare.h"
@@ -13,13 +12,13 @@
 
 //-----------------------------------------------------------------------
 
-KeyShare::Token::Token(const unsigned char * const newCipherData, 
-					   const uint32 newDataLen, 
-					   const unsigned char newDigest[KeyShareConstants::keyLength], 
-					   const uint32 newCipherDataLen) :
-cipherData(0),
-cipherDataLen(newCipherDataLen),
-dataLen(newDataLen)
+KeyShare::Token::Token(const unsigned char * const newCipherData,
+	const uint32 newDataLen,
+	const unsigned char newDigest[KeyShareConstants::keyLength],
+	const uint32 newCipherDataLen) :
+	cipherData(0),
+	cipherDataLen(newCipherDataLen),
+	dataLen(newDataLen)
 {
 	cipherData = new unsigned char[cipherDataLen];
 	memcpy(cipherData, newCipherData, cipherDataLen);
@@ -29,9 +28,9 @@ dataLen(newDataLen)
 //-----------------------------------------------------------------------
 
 KeyShare::Token::Token(const Token & source) :
-cipherData(0),
-cipherDataLen(source.cipherDataLen),
-dataLen(source.dataLen)
+	cipherData(0),
+	cipherDataLen(source.cipherDataLen),
+	dataLen(source.dataLen)
 {
 	cipherData = new unsigned char[cipherDataLen];
 	memcpy(cipherData, source.cipherData, cipherDataLen);
@@ -39,25 +38,25 @@ dataLen(source.dataLen)
 }
 
 //-----------------------------------------------------------------------
-   
+
 KeyShare::Token::Token(Archive::ReadIterator & source) :
-cipherData(0),
-cipherDataLen(0),
-dataLen(0)
+	cipherData(0),
+	cipherDataLen(0),
+	dataLen(0)
 {
 	Archive::get(source, cipherDataLen);
 
 	// if the cipher data has been tampered with, don't unpack it. The vaidation will fail
-	if(cipherDataLen < 64)
+	if (cipherDataLen < 64)
 	{
 		Archive::get(source, dataLen);
 		cipherData = new unsigned char[cipherDataLen];
 		unsigned int i;
-		for(i = 0; i < cipherDataLen; i ++)
+		for (i = 0; i < cipherDataLen; i++)
 		{
 			Archive::get(source, cipherData[i]);
 		}
-		for(i = 0; i < KeyShareConstants::keyLength; i ++)
+		for (i = 0; i < KeyShareConstants::keyLength; i++)
 		{
 			Archive::get(source, digest[i]);
 		}
@@ -112,11 +111,11 @@ void KeyShare::Token::pack(Archive::ByteStream & target) const
 	Archive::put(target, cipherDataLen);
 	Archive::put(target, dataLen);
 	unsigned int i;
-	for(i = 0; i < cipherDataLen; i ++)
+	for (i = 0; i < cipherDataLen; i++)
 	{
 		Archive::put(target, cipherData[i]);
 	}
-	for(i = 0; i < KeyShareConstants::keyLength; i ++)
+	for (i = 0; i < KeyShareConstants::keyLength; i++)
 	{
 		Archive::put(target, digest[i]);
 	}
@@ -125,17 +124,17 @@ void KeyShare::Token::pack(Archive::ByteStream & target) const
 //-----------------------------------------------------------------------
 
 KeyShare::KeyShare(const unsigned int newKeyCount) :
-decryptors(0),
-encryptors(0),
-hasher(0),
-keyCount(newKeyCount),
-keys(0)
+	decryptors(0),
+	encryptors(0),
+	hasher(0),
+	keyCount(newKeyCount),
+	keys(0)
 {
 	keys = new Key[keyCount];
 	decryptors = new Crypto::TwofishDecryptor *[keyCount];
 	encryptors = new Crypto::TwofishEncryptor *[keyCount];
 
-	for(unsigned int i = 0; i < keyCount; i ++)
+	for (unsigned int i = 0; i < keyCount; i++)
 	{
 		decryptors[i] = 0;
 		encryptors[i] = 0;
@@ -148,7 +147,7 @@ keys(0)
 KeyShare::~KeyShare()
 {
 	delete[] keys;
-	for(unsigned int i = 0; i < keyCount; i ++)
+	for (unsigned int i = 0; i < keyCount; i++)
 	{
 		delete decryptors[i];
 		delete encryptors[i];
@@ -164,7 +163,7 @@ KeyShare::~KeyShare()
 bool KeyShare::decipherToken(const KeyShare::Token & token, unsigned char * clearTextData, uint32 & dataLen) const
 {
 	bool result = false;
-	if(dataLen < token.getDataLen())
+	if (dataLen < token.getDataLen())
 	{
 		dataLen = token.getDataLen();
 	}
@@ -175,10 +174,10 @@ bool KeyShare::decipherToken(const KeyShare::Token & token, unsigned char * clea
 		unsigned char * clearText = new unsigned char[cipherDataLen];
 
 		memcpy(cipherText, token.getData(), cipherDataLen);
-		for(unsigned int i = 0; i < keyCount; i ++)
+		for (unsigned int i = 0; i < keyCount; i++)
 		{
 			DEBUG_REPORT_LOG(true, ("Decrypting with key: "));
-			for(uint32 j = 0; j < 16; j ++)
+			for (uint32 j = 0; j < 16; j++)
 			{
 				DEBUG_REPORT_LOG(true, ("[%3i] ", keys[i].value[j]));
 			}
@@ -193,10 +192,10 @@ bool KeyShare::decipherToken(const KeyShare::Token & token, unsigned char * clea
 			NOT_NULL(hasher);
 
 			result = hasher->verify(digest, clearTextData, dataLen);
-			if(result)
+			if (result)
 			{
 				DEBUG_REPORT_LOG(true, ("succeeded\n"));
-				
+
 				break;
 			}
 			else
@@ -215,14 +214,14 @@ bool KeyShare::decipherToken(const KeyShare::Token & token, unsigned char * clea
 void KeyShare::decrypt(const unsigned char * const sourceBuffer, const uint32 sourceBufferSize, unsigned char * resultBuffer, const uint32 keyIndex) const
 {
 	const uint32 blockSize = decryptors[0]->getBlockSize();
-	unsigned char * inBlock = new unsigned char [blockSize];
-	unsigned char * outBlock = new unsigned char [blockSize];
+	unsigned char * inBlock = new unsigned char[blockSize];
+	unsigned char * outBlock = new unsigned char[blockSize];
 
 	memset(resultBuffer, 0, sourceBufferSize);
 
-	for(uint32 i = 0; i < sourceBufferSize; i += blockSize)
+	for (uint32 i = 0; i < sourceBufferSize; i += blockSize)
 	{
-		if(i + blockSize > sourceBufferSize)
+		if (i + blockSize > sourceBufferSize)
 			memcpy(inBlock, &sourceBuffer[i], sourceBufferSize - i);
 		else
 			memcpy(inBlock, &sourceBuffer[i], blockSize);
@@ -241,7 +240,7 @@ const uint32 KeyShare::encrypt(const unsigned char * const sourceData, const uin
 	const uint32 blockSize = encryptors[0]->getBlockSize();
 
 	// calculate the size of the encrypted result buffer
-	if(sourceDataSize % blockSize)
+	if (sourceDataSize % blockSize)
 	{
 		// if it's larger than some multiple of the cipher block size ....
 		i = static_cast<uint32>((sourceDataSize / blockSize) + 1) * blockSize;
@@ -251,22 +250,22 @@ const uint32 KeyShare::encrypt(const unsigned char * const sourceData, const uin
 		// it's already aligned on the cipher block byte boundary
 		i = sourceDataSize;
 	}
-	*resultBuffer = new unsigned char [i];
+	*resultBuffer = new unsigned char[i];
 
 	DEBUG_REPORT_LOG(true, ("Encrypting with key: "));
-	for(i = 0; i < 16; i ++)
+	for (i = 0; i < 16; i++)
 	{
 		DEBUG_REPORT_LOG(true, ("[%3i] ", keys[0].value[i]));
 	}
 	DEBUG_REPORT_LOG(true, ("\n"));
-		
-	unsigned char * inBlock = new unsigned char [blockSize];
-	unsigned char * outBlock = new unsigned char [blockSize];
 
-	for(i = 0; i < sourceDataSize; i += 16)
+	unsigned char * inBlock = new unsigned char[blockSize];
+	unsigned char * outBlock = new unsigned char[blockSize];
+
+	for (i = 0; i < sourceDataSize; i += 16)
 	{
 		memset(inBlock, 0, KeyShareConstants::keyLength);
-		if(i + blockSize > sourceDataSize)
+		if (i + blockSize > sourceDataSize)
 			memcpy(inBlock, &sourceData[i], sourceDataSize - i);
 		else
 			memcpy(inBlock, &sourceData[i], KeyShareConstants::keyLength);
@@ -283,10 +282,9 @@ const uint32 KeyShare::encrypt(const unsigned char * const sourceData, const uin
 
 bool KeyShare::hasKey(const Key & source)
 {
-	for(unsigned int i = 0; i < getKeyCount(); i ++)
+	for (unsigned int i = 0; i < getKeyCount(); i++)
 	{
-
-		if(memcmp(source.value, keys[i].value, KeyShareConstants::keyLength) == 0)
+		if (memcmp(source.value, keys[i].value, KeyShareConstants::keyLength) == 0)
 			return true;
 	}
 	return false;
@@ -306,7 +304,7 @@ KeyShare::Token KeyShare::makeToken(const unsigned char * const data, const uint
 	// encrypt the digest
 	unsigned char * cipherDigest;
 	IGNORE_RETURN(encrypt(digest, KeyShareConstants::keyLength, &cipherDigest)); ///@todo error checking
-	
+
 	// encrypt the cleartext data
 	unsigned char * cipherData = 0;
 	uint32 cipherDataLen = encrypt(data, dataLen, &cipherData);
@@ -314,7 +312,7 @@ KeyShare::Token KeyShare::makeToken(const unsigned char * const data, const uint
 	// build a token using the ciphertext data and digest
 	Token	token(cipherData, dataLen, cipherDigest, cipherDataLen);
 
-	// clean up allocation for cipher text, 
+	// clean up allocation for cipher text,
 	// it was deep copied in the token
 	delete[] cipherData;
 	delete[] cipherDigest;
@@ -347,7 +345,7 @@ void KeyShare::setKey(const Key & newKey, const unsigned int index)
 void KeyShare::shift(void)
 {
 	// shift key array
-	for(unsigned int i = getKeyCount() - 1; i > 0; i --)
+	for (unsigned int i = getKeyCount() - 1; i > 0; i--)
 	{
 		setKey(getKey(i - 1), i);
 	}
@@ -356,14 +354,15 @@ void KeyShare::shift(void)
 //-----------------------------------------------------------------------
 
 AutoVariableKeyShare::AutoVariableKeyShare() :
-AutoVariableBase()
+	AutoVariableBase(),
+	value()
 {
 }
 
 //-----------------------------------------------------------------------
 
 AutoVariableKeyShare::AutoVariableKeyShare(const KeyShare::Key & source) :
-AutoVariableBase()
+	AutoVariableBase()
 {
 	value = source;
 }
@@ -400,16 +399,15 @@ AutoVariableKeyShare::operator const KeyShare::Key & () const
 
 void AutoVariableKeyShare::pack(Archive::ByteStream & target) const
 {
-	for(unsigned int i = 0; i < KeyShareConstants::keyLength; ++i)
+	for (unsigned int i = 0; i < KeyShareConstants::keyLength; ++i)
 		Archive::put(target, value.value[i]);
-		
 }
 
 //-----------------------------------------------------------------------
 
-void AutoVariableKeyShare::unpack(Archive::ReadIterator & source) 
+void AutoVariableKeyShare::unpack(Archive::ReadIterator & source)
 {
-	for(unsigned int i = 0; i < KeyShareConstants::keyLength; ++i)
+	for (unsigned int i = 0; i < KeyShareConstants::keyLength; ++i)
 		Archive::get(source, value.value[i]);
 }
 

@@ -14,7 +14,7 @@
 #include "serverGame/CellObject.h"
 #include "serverGame/CollisionCallbacks.h"
 #include "serverGame/CombatTracker.h"
-#include "serverGame/ConfigServerGame.h" 
+#include "serverGame/ConfigServerGame.h"
 #include "serverGame/ConnectionServerConnection.h"
 #include "serverGame/ContainerInterface.h"
 #include "serverGame/ContainmentMessageManager.h"
@@ -154,9 +154,6 @@
 #include "unicodeArchive/UnicodeArchive.h"
 #include "sharedLog/Log.h"
 
-
-
-
 Object const *getContainingPobForObjectInWorld(Object const &object)
 {
 	Object const * const containingObject = ContainerInterface::getContainedByObject(object);
@@ -174,81 +171,72 @@ Object const *getContainingPobForObjectInWorld(Object const &object)
 	return 0;
 }
 
-
-
-
-void compare_results_int( std::set<TriggerVolume *> &results, const std::set<TriggerVolume *> &results2, ServerObject* object )
+void compare_results_int(std::set<TriggerVolume *> &results, const std::set<TriggerVolume *> &results2, ServerObject* object)
 {
-	if ( results.empty() && results2.empty() )    // nothing to say........
+	if (results.empty() && results2.empty())    // nothing to say........
 		return;
 
-	Vector v=object->getPosition_w();
+	Vector v = object->getPosition_w();
 	const Object* p = getContainingPobForObjectInWorld(*object);
 
-	if ( results == results2 )
+	if (results == results2)
 	{
 		return;
 	}
 
-	LOG("SphereGrid", ("---- Results differ for object at (%f %f %f)  %p --------", v.x, v.y, v.z, p ));
+	LOG("SphereGrid", ("---- Results differ for object at (%f %f %f)  %p --------", v.x, v.y, v.z, p));
 
 	std::set<TriggerVolume*>::iterator iter;
 
-	LOG("SphereGrid", ("=============== Tree Results %d =================",results.size()));
-	for ( iter = results.begin(); iter != results.end(); ++iter )
+	LOG("SphereGrid", ("=============== Tree Results %d =================", results.size()));
+	for (iter = results.begin(); iter != results.end(); ++iter)
 	{
 		TriggerVolume* volume = *iter;
 		ServerObject const &volumeOwner = volume->getOwner();
 		const Object* pob = getContainingPobForObjectInWorld(volume->getOwner());
 		Sphere const &localSphere = volumeOwner.getLocalSphere();
 		Sphere world(volumeOwner.getTransform_o2w().rotateTranslate_l2p(localSphere.getCenter()), volume->getRadius());
-		Vector c=world.getCenter();
-		LOG("SphereGrid",(" (%f %f %f) %f POB = %p  DIST=%f",c.x,c.y,c.z,world.getRadius(),pob, c.magnitudeBetween(v) ));
-
+		Vector c = world.getCenter();
+		LOG("SphereGrid", (" (%f %f %f) %f POB = %p  DIST=%f", c.x, c.y, c.z, world.getRadius(), pob, c.magnitudeBetween(v)));
 	}
-	LOG("SphereGrid", ("------------------ Grid Results %d ------------------",results2.size()));
-	for ( iter = results2.begin(); iter != results2.end(); ++iter )
+	LOG("SphereGrid", ("------------------ Grid Results %d ------------------", results2.size()));
+	for (iter = results2.begin(); iter != results2.end(); ++iter)
 	{
 		TriggerVolume* volume = *iter;
 		ServerObject const &volumeOwner = volume->getOwner();
 		const Object* pob = getContainingPobForObjectInWorld(volume->getOwner());
 		Sphere const &localSphere = volumeOwner.getLocalSphere();
 		Sphere world(volumeOwner.getTransform_o2w().rotateTranslate_l2p(localSphere.getCenter()), volume->getRadius());   // o2p or o2w
-		Vector c=world.getCenter();
-		LOG("SphereGrid",(" (%f %f %f) %f POB = %p  DIST=%f",c.x,c.y,c.z,world.getRadius(),pob, c.magnitudeBetween(v) ));
-
+		Vector c = world.getCenter();
+		LOG("SphereGrid", (" (%f %f %f) %f POB = %p  DIST=%f", c.x, c.y, c.z, world.getRadius(), pob, c.magnitudeBetween(v)));
 	}
-	DEBUG_FATAL(true,("FATAL: SphereGrid failed to match SphereTree result set."));
+	DEBUG_FATAL(true, ("FATAL: SphereGrid failed to match SphereTree result set."));
 }
 
-
-
-
-void compare_results( Capsule const &test, std::vector<TriggerVolume *> &results_in, const std::set<TriggerVolume *> &results2, ServerObject* object )
+void compare_results(Capsule const &test, std::vector<TriggerVolume *> &results_in, const std::set<TriggerVolume *> &results2, ServerObject* object)
 {
 	size_t i;
 	std::set<TriggerVolume*> results;
-	for ( i = 0; i < results_in.size(); ++i )
+	for (i = 0; i < results_in.size(); ++i)
 	{
 		TriggerVolume* volume = results_in[i];
 		ServerObject const &volumeOwner = volume->getOwner();
 		Sphere const &localSphere = volumeOwner.getLocalSphere();
 		Sphere world(volumeOwner.getTransform_o2w().rotateTranslate_l2p(localSphere.getCenter()), volume->getRadius());   // o2p or o2w
 
-		if ( test.intersectsSphere( world ) )
+		if (test.intersectsSphere(world))
 		{
-			results.insert( results_in[ i ] );
+			results.insert(results_in[i]);
 		}
 	}
-	compare_results_int( results, results2, object );
+	compare_results_int(results, results2, object);
 }
 
-
-void compare_results( Vector const &center_w, float radius, std::vector<TriggerVolume *> &results_in, const std::set<TriggerVolume *> &results2, ServerObject* object )
+void compare_results(Vector const &center_w, float radius, std::vector<TriggerVolume *> &results_in, const std::set<TriggerVolume *> &results2, ServerObject* object)
 {
 	size_t i;
 	std::set<TriggerVolume*> results;
-	for ( i = 0; i < results_in.size(); ++i )
+	for (i = 0; i < results_in.size(); ++i)
 	{
 		TriggerVolume* volume = results_in[i];
 		ServerObject const &volumeOwner = volume->getOwner();
@@ -256,16 +244,13 @@ void compare_results( Vector const &center_w, float radius, std::vector<TriggerV
 		Sphere world(volumeOwner.getTransform_o2w().rotateTranslate_l2p(localSphere.getCenter()), volume->getRadius());   // o2p or o2w
 
 		Sphere test(center_w, radius);
-		if ( test.intersectsSphere( world ) )
+		if (test.intersectsSphere(world))
 		{
-			results.insert( results_in[ i ] );
+			results.insert(results_in[i]);
 		}
 	}
-	compare_results_int( results, results2, object );
+	compare_results_int(results, results2, object);
 }
-
-
-
 
 // ======================================================================
 
@@ -273,7 +258,7 @@ namespace ServerWorldNamespace
 {
 	std::vector<const TangibleObject *> s_loadBeaconEntries;
 	bool ms_logTriggerStats = false;
-	
+
 	std::vector<Object *>	  gs_pendingConcludeVector;
 	std::vector<std::pair<int, ServerObject *> >    gs_pendingConcludeOpsVector;
 	bool			   gs_pendingConcludeLock = false;
@@ -319,9 +304,9 @@ bool ServerWorldNamespace::isPlayerHouseHook(Object const *object)
 	if (object && object->getPortalProperty())
 	{
 		ServerObject const * const serverObject = object->asServerObject();
-		if (   serverObject
-		    && (   serverObject->asShipObject()
-			|| serverObject->getObjVars().hasItem("player_structure")))
+		if (serverObject
+			&& (serverObject->asShipObject()
+				|| serverObject->getObjVars().hasItem("player_structure")))
 			return true;
 	}
 	return false;
@@ -335,20 +320,20 @@ void ServerWorldNamespace::issueCollisionNearWarpWarning(Object const &object, V
 
 	//-- Only issue these for authoritative server objects.  Proxy server objects will hit this condition after an intra-planet teleport.
 	// @todo allow proxies to know about a teleport and inform CollisionWorld so that we can always report these.
-	WARNING(!serverObject || serverObject->isAuthoritative(), 
+	WARNING(!serverObject || serverObject->isAuthoritative(),
 		("CollisionWorld::update() had %d segments for object id=[%s], template=[%s], authority=[%s], game sever id=[%d], start position=[%.2f,%.2f,%.2f], end position=[%.2f,%.2f,%.2f], object probably should have warped but collision system is not warping it.",
-		segmentCount, 
-		object.getNetworkId().getValueString().c_str(), 
-		object.getObjectTemplateName(),
-		serverObject ? (serverObject->isAuthoritative() ? "authoritative" : "proxy") : "<not ServerObject-derived>",
-		static_cast<int>(GameServer::getInstance().getProcessId()),
-		oldPosition_w.x,
-		oldPosition_w.y,
-		oldPosition_w.z,
-		newPosition_w.x,
-		newPosition_w.y,
-		newPosition_w.z
-		));
+			segmentCount,
+			object.getNetworkId().getValueString().c_str(),
+			object.getObjectTemplateName(),
+			serverObject ? (serverObject->isAuthoritative() ? "authoritative" : "proxy") : "<not ServerObject-derived>",
+			static_cast<int>(GameServer::getInstance().getProcessId()),
+			oldPosition_w.x,
+			oldPosition_w.y,
+			oldPosition_w.z,
+			newPosition_w.x,
+			newPosition_w.y,
+			newPosition_w.z
+			));
 }
 
 // ----------------------------------------------------------------------
@@ -359,20 +344,20 @@ void ServerWorldNamespace::issueCollisionFarWarpWarning(Object const &object, Ve
 
 	//-- Only issue these for authoritative server objects.  Proxy server objects will hit this condition after an intra-planet teleport.
 	// @todo allow proxies to know about a teleport and inform CollisionWorld so that we can always report these.
-	WARNING(!serverObject || serverObject->isAuthoritative(), 
+	WARNING(!serverObject || serverObject->isAuthoritative(),
 		("CollisionWorld::update() had %d segments for object id=[%s], template=[%s], authority=[%s], game sever id=[%d], start position=[%.2f,%.2f,%.2f], end position=[%.2f,%.2f,%.2f], collision system will consider this a warp and adjust accordingly.",
-		segmentCount, 
-		object.getNetworkId().getValueString().c_str(), 
-		object.getObjectTemplateName(),
-		serverObject ? (serverObject->isAuthoritative() ? "authoritative" : "proxy") : "<not ServerObject-derived>",
-		static_cast<int>(GameServer::getInstance().getProcessId()),
-		oldPosition_w.x,
-		oldPosition_w.y,
-		oldPosition_w.z,
-		newPosition_w.x,
-		newPosition_w.y,
-		newPosition_w.z
-		));
+			segmentCount,
+			object.getNetworkId().getValueString().c_str(),
+			object.getObjectTemplateName(),
+			serverObject ? (serverObject->isAuthoritative() ? "authoritative" : "proxy") : "<not ServerObject-derived>",
+			static_cast<int>(GameServer::getInstance().getProcessId()),
+			oldPosition_w.x,
+			oldPosition_w.y,
+			oldPosition_w.z,
+			newPosition_w.x,
+			newPosition_w.y,
+			newPosition_w.z
+			));
 }
 
 // ----------------------------------------------------------------------
@@ -382,10 +367,9 @@ bool isRelevantToTriggerVolumes(Object const &object)
 	return object.getObjectTemplate()->getId() == ServerCreatureObjectTemplate::ServerCreatureObjectTemplate_tag;
 }
 
-
 // ----------------------------------------------------------------------
 
-class PlayerShipFilter: public SpatialSubdivisionFilter<ServerObject *>
+class PlayerShipFilter : public SpatialSubdivisionFilter<ServerObject *>
 {
 public:
 	PlayerShipFilter(ServerObject const *excludeObject) :
@@ -402,23 +386,25 @@ private:
 	ServerObject const *m_excludeObject;
 };
 
-class CreatureFilter: public SpatialSubdivisionFilter<ServerObject *>
+class CreatureFilter : public SpatialSubdivisionFilter<ServerObject *>
 {
 public:
 	CreatureFilter() {}
 	bool operator() (ServerObject * const &object) const {
-		return (object->getObjectTemplate()->getId() == ServerCreatureObjectTemplate::ServerCreatureObjectTemplate_tag); }
+		return (object->getObjectTemplate()->getId() == ServerCreatureObjectTemplate::ServerCreatureObjectTemplate_tag);
+	}
 };
 
-class AuthoritativeNonPlayerCreatureFilter: public SpatialSubdivisionFilter<ServerObject *>
+class AuthoritativeNonPlayerCreatureFilter : public SpatialSubdivisionFilter<ServerObject *>
 {
 public:
 	AuthoritativeNonPlayerCreatureFilter() {}
 	bool operator() (ServerObject * const &object) const {
-		return (object->isAuthoritative() && object->asCreatureObject() != nullptr && !object->isPlayerControlled()); }
+		return (object->isAuthoritative() && object->asCreatureObject() != nullptr && !object->isPlayerControlled());
+	}
 };
 
-class TriggerVolumeFilter: public SpatialSubdivisionFilter<ServerObject *>
+class TriggerVolumeFilter : public SpatialSubdivisionFilter<ServerObject *>
 {
 public:
 	TriggerVolumeFilter() {}
@@ -428,7 +414,7 @@ public:
 	}
 };
 
-class TriggerVolumeFilterWithIgnoredObject: public SpatialSubdivisionFilter<ServerObject *>
+class TriggerVolumeFilterWithIgnoredObject : public SpatialSubdivisionFilter<ServerObject *>
 {
 public:
 	TriggerVolumeFilterWithIgnoredObject(ServerObject const &ignoredObject) :
@@ -449,7 +435,7 @@ private:
 	ServerObject const &m_ignoredObject;
 };
 
-class ServerObjectSphereExtentAccessor: public PortallizedSphereTreeAccessor<ServerObject *, ServerObjectSphereExtentAccessor>
+class ServerObjectSphereExtentAccessor : public PortallizedSphereTreeAccessor<ServerObject *, ServerObjectSphereExtentAccessor>
 {
 public:
 
@@ -464,12 +450,11 @@ public:
 	{
 		return getContainingPobForObjectInWorld(*NON_NULL(object));
 	}
-
 };
 
 //-----------------------------------------------------------------------
 
-class TriggerVolumeSphereExtentAccessor: public PortallizedSphereTreeAccessor<TriggerVolume *, TriggerVolumeSphereExtentAccessor>
+class TriggerVolumeSphereExtentAccessor : public PortallizedSphereTreeAccessor<TriggerVolume *, TriggerVolumeSphereExtentAccessor>
 {
 public:
 
@@ -486,12 +471,11 @@ public:
 		NOT_NULL(t);
 		return getContainingPobForObjectInWorld(t->getOwner());
 	}
-
 };
 
 //-----------------------------------------------------------------------
 
-class TriggerVolumeSphereExtentAccessor_Grid: public PortallizedSphereTreeAccessor<TriggerVolume *, TriggerVolumeSphereExtentAccessor_Grid>
+class TriggerVolumeSphereExtentAccessor_Grid : public PortallizedSphereTreeAccessor<TriggerVolume *, TriggerVolumeSphereExtentAccessor_Grid>
 {
 public:
 
@@ -508,14 +492,13 @@ public:
 		NOT_NULL(t);
 		return getContainingPobForObjectInWorld(t->getOwner());
 	}
-
 };
 
 //----------------------------------------------------------------------
 
-bool			   ServerWorld::m_installed	= false;
-Timer *			ServerWorld::m_idleTimer	= 0;
-std::string *		  ServerWorld::m_sceneId	  = 0;
+bool			   ServerWorld::m_installed = false;
+Timer *			ServerWorld::m_idleTimer = 0;
+std::string *		  ServerWorld::m_sceneId = 0;
 SynchronizedWeatherGenerator * ServerWorld::m_weatherGenerator = 0;
 
 //-----------------------------------------------------------------------
@@ -525,14 +508,11 @@ SynchronizedWeatherGenerator * ServerWorld::m_weatherGenerator = 0;
 // sphere extents.
 //
 // g_triggerSphereTree has a many to one relationship between trigger volumes
-// and their owner objects. 
+// and their owner objects.
 PortallizedSphereTree<ServerObject *, ServerObjectSphereExtentAccessor> *g_objectSphereTree = 0;
 
 PortallizedSphereTree<TriggerVolume *, TriggerVolumeSphereExtentAccessor> *g_triggerSphereTree = 0;
 DoubleSphereGrid<TriggerVolume *, TriggerVolumeSphereExtentAccessor_Grid> *g_triggerSphereGrid = 0;
-
-
-
 
 // ----------------------------------------------------------------------
 
@@ -546,16 +526,16 @@ void ServerWorld::addIntangibleObject(Object * object)
 void ServerWorld::removeIntangibleObject(Object * object)
 {
 	PROFILER_AUTO_BLOCK_DEFINE("ServerWorld::removeIntangibleObject");
-	IGNORE_RETURN( World::removeObject(object, static_cast<int>(WOL_Intangible)) );
+	IGNORE_RETURN(World::removeObject(object, static_cast<int>(WOL_Intangible)));
 }
 
 //-----------------------------------------------------------------------
 
 void ServerWorld::addObjectToConcludeList(ServerObject * object)
 {
-	if(! gs_pendingConcludeLock)
+	if (!gs_pendingConcludeLock)
 	{
-		if(object)
+		if (object)
 		{
 			gs_pendingConcludeVector.push_back(object);
 		}
@@ -570,18 +550,18 @@ void ServerWorld::addObjectToConcludeList(ServerObject * object)
 
 void ServerWorld::addTangibleObject(ServerObject * object)
 {
-	if(object)
+	if (object)
 	{
 		DEBUG_FATAL(object->isBeingDestroyed(), ("Destroyed objects should no longer be added back to the world, they should have Object::scheduleForAlter() called on them."));
-		
+
 		DEBUG_FATAL(!object->getObjectType(), ("Attempt to add unknown object to world, aborting add, continuing to run (FIXME!)"));
 #ifdef _DEBUG
 		if (object->getPosition_w() == Vector::zero && (!dynamic_cast<UniverseObject*>(object)))
 		{
 			DEBUG_WARNING(true, ("Adding object to origin, probably an error.  server id=[%d], object id=[%s], object template name=[%s]",
-													 static_cast<int>(GameServer::getInstance().getProcessId()),
-													 object->getNetworkId().getValueString().c_str(),
-													 object->getObjectTemplateName()));
+				static_cast<int>(GameServer::getInstance().getProcessId()),
+				object->getNetworkId().getValueString().c_str(),
+				object->getObjectTemplateName()));
 		}
 #endif
 		if (object->getObjectType())
@@ -594,8 +574,9 @@ void ServerWorld::addTangibleObject(ServerObject * object)
 				Sphere s = object->getSphereExtent();
 				float r = s.getRadius();
 				WARNING_STRICT_FATAL(r != r, ("Someone is adding object %s:%s to the world that has a sphere extent radius that is Not a Number!", object->getObjectTemplateName(), object->getNetworkId().getValueString().c_str()));
-			
-				if((r == r) && (s.getCenter() == s.getCenter())) // check for NaN in radius
+
+				//what the fuck?
+				if ((r == r) && (s.getCenter() == s.getCenter())) // check for NaN in radius
 				{
 					//First put in object sphere tree
 					g_objectSphereTree->onObjectAdded(object);
@@ -608,30 +589,30 @@ void ServerWorld::addTangibleObject(ServerObject * object)
 
 						int system = ConfigServerGame::getTriggerVolumeSystem();  // 0 = old, 1 = compare, 2 = new
 
-						if ( system <= 1 )
+						if (system <= 1)
 						{
 							PROFILER_AUTO_BLOCK_DEFINE("sphere_tree_find");
 							g_triggerSphereTree->findInRange(s.getCenter(), s.getRadius(), results);
 						}
 
-						if ( system >= 1 )
+						if (system >= 1)
 						{
 							PROFILER_AUTO_BLOCK_DEFINE("sphere_grid_find");
-							g_triggerSphereGrid->findInRange(  s.getCenter(), s.getRadius(), results2);
+							g_triggerSphereGrid->findInRange(s.getCenter(), s.getRadius(), results2);
 						}
 
-						if ( system == 1 )
+						if (system == 1)
 						{
-							compare_results( s.getCenter(), s.getRadius(), results,results2,object);
+							compare_results(s.getCenter(), s.getRadius(), results, results2, object);
 						}
-						
+
 						// potential add to trigger volumes
-						if ( system != 2 )
+						if (system != 2)
 						{
 							for (std::vector<TriggerVolume *>::const_iterator i = results.begin(); i != results.end(); ++i)
 								(*i)->addObject(*object);
 						}
-						else if ( system == 2 )
+						else if (system == 2)
 						{
 							for (std::set<TriggerVolume *>::const_iterator i = results2.begin(); i != results2.end(); ++i)
 								(*i)->addObject(*object);
@@ -663,7 +644,7 @@ void ServerWorld::addUniverseObject(UniverseObject * object)
 
 void ServerWorld::removeUniverseObject(UniverseObject * object)
 {
-	IGNORE_RETURN( World::removeObject(object, static_cast<int>(WOL_Intangible)) );
+	IGNORE_RETURN(World::removeObject(object, static_cast<int>(WOL_Intangible)));
 }
 
 //-----------------------------------------------------------------------
@@ -671,19 +652,19 @@ void ServerWorld::removeUniverseObject(UniverseObject * object)
 void ServerWorld::addObjectTriggerVolume(TriggerVolume * triggerVolume)
 {
 	int system = ConfigServerGame::getTriggerVolumeSystem();  // 0 = old, 1 = compare, 2 = new
-	if ( system <= 1 )
+	if (system <= 1)
 	{
 		PROFILER_AUTO_BLOCK_DEFINE("sphere_tree_add");
 		g_triggerSphereTree->onObjectAdded(triggerVolume);
 	}
 
-	if ( system >= 1 )
+	if (system >= 1)
 	{
 		PROFILER_AUTO_BLOCK_DEFINE("sphere_grid_add");
 		g_triggerSphereGrid->onObjectAdded(triggerVolume);
 	}
 
-	// query the object sphere tree for objects that will be added to 
+	// query the object sphere tree for objects that will be added to
 	// the trigger volume now that it has been added
 	std::vector<ServerObject *> results;
 	// This is filtered as appropriate for things which should be in trigger volumes
@@ -696,7 +677,7 @@ void ServerWorld::addObjectTriggerVolume(TriggerVolume * triggerVolume)
 
 /**
  * Creates a new authoritative object. The object will be added to the world
- * when we have received a signal that it has been persisted. 
+ * when we have received a signal that it has been persisted.
  * NOTE: createNewObjectEnd must be called to complete the creation process.
  *
  * @param templateName    template to create the object from
@@ -724,7 +705,7 @@ ServerObject *ServerWorld::createNewObject(std::string const &templateName, Tran
 
 /**
  * Creates a new authoritative object. The object will be added to the world
- * when we have received a signal that it has been persisted. 
+ * when we have received a signal that it has been persisted.
  * NOTE: createNewObjectEnd must be called to complete the creation process.
  *
  * @param templateCrc     template to create the object from
@@ -752,7 +733,7 @@ ServerObject *ServerWorld::createNewObject(uint32 templateCrc, Transform const &
 
 /**
  * Creates a new authoritative object. The object will be added to the world
- * when we have received a signal that it has been persisted. 
+ * when we have received a signal that it has been persisted.
  * NOTE: createNewObjectEnd must be called to complete the creation process.
  *
  * @param objectTemplate  template to create the object from
@@ -826,7 +807,7 @@ ServerObject *ServerWorld::createNewObject(uint32 templateCrc, ServerObject &con
 //-----------------------------------------------------------------------
 
 /**
- * Creates a new authoritative object in a conatiner. 
+ * Creates a new authoritative object in a conatiner.
  * NOTE: createNewObjectEnd must be called to complete the creation process.
  *
  * @param objectTemplate  template to create the object from
@@ -842,7 +823,7 @@ ServerObject *ServerWorld::createNewObject(ServerObjectTemplate const &objectTem
 	ServerObject * const newObject = createObjectFromTemplate(objectTemplate, NetworkId::cms_invalid);
 	if (!newObject)
 		return 0;
-	
+
 	return createNewObjectIntermediate(newObject, container, persisted, allowOverload);
 }
 
@@ -855,7 +836,7 @@ ServerObject *ServerWorld::createNewObject(ServerObjectTemplate const &objectTem
 	ServerObject * const newObject = createObjectFromTemplate(objectTemplate, NetworkId::cms_invalid);
 	if (!newObject)
 		return 0;
-	
+
 	return createNewObjectIntermediate(newObject, container, slotId, persisted);
 }
 
@@ -880,8 +861,8 @@ ServerObject *ServerWorld::createNewObject(uint32 templateCrc, ServerObject &con
 	PROFILER_AUTO_BLOCK_DEFINE("createNewObject6crc");
 
 	ServerObject * const newObject = createObjectFromTemplate(templateCrc, NetworkId::cms_invalid);
-    if (!newObject)
-	return 0;
+	if (!newObject)
+		return 0;
 
 	return createNewObjectIntermediate(newObject, container, slotId, persisted);
 }
@@ -900,14 +881,14 @@ ServerObject *ServerWorld::createNewObject(uint32 templateCrc, ServerObject &con
  *
  * @return the newly created schematic
  */
-ManufactureSchematicObject* ServerWorld::createNewManufacturingSchematic (
-	const CachedNetworkId & creator, ServerObject & container, const SlotId & slotId, 
+ManufactureSchematicObject* ServerWorld::createNewManufacturingSchematic(
+	const CachedNetworkId & creator, ServerObject & container, const SlotId & slotId,
 	bool persisted)
 {
 	CreatureObject * const creature = dynamic_cast<CreatureObject *>(creator.getObject());
 	if (creature == nullptr)
 		return nullptr;
-	
+
 	PlayerObject * player = PlayerCreatureController::getPlayerObject(creature);
 	if (player == nullptr)
 		return nullptr;
@@ -920,7 +901,7 @@ ManufactureSchematicObject* ServerWorld::createNewManufacturingSchematic (
 	if (manfSchematic == nullptr)
 		return nullptr;
 
-	if (createNewObjectIntermediate(manfSchematic, container, slotId, 
+	if (createNewObjectIntermediate(manfSchematic, container, slotId,
 		persisted) == nullptr)
 	{
 		delete manfSchematic;
@@ -943,10 +924,10 @@ ManufactureSchematicObject* ServerWorld::createNewManufacturingSchematic (
  *
  * @return the newly created schematic
  */
-ManufactureSchematicObject* ServerWorld::createNewManufacturingSchematic (
+ManufactureSchematicObject* ServerWorld::createNewManufacturingSchematic(
 	const DraftSchematicObject & source, const Vector & position, bool persisted)
 {
-	ManufactureSchematicObject * const manfSchematic = 
+	ManufactureSchematicObject * const manfSchematic =
 		source.createManufactureSchematic(CachedNetworkId::cms_cachedInvalid);
 	if (manfSchematic == nullptr)
 		return nullptr;
@@ -975,10 +956,10 @@ ManufactureSchematicObject* ServerWorld::createNewManufacturingSchematic (
  *
  * @return the newly created schematic
  */
-ManufactureSchematicObject* ServerWorld::createNewManufacturingSchematic (
+ManufactureSchematicObject* ServerWorld::createNewManufacturingSchematic(
 	const DraftSchematicObject & source, ServerObject & container, bool persisted)
 {
-	ManufactureSchematicObject * const manfSchematic = 
+	ManufactureSchematicObject * const manfSchematic =
 		source.createManufactureSchematic(CachedNetworkId::cms_cachedInvalid);
 	if (manfSchematic == nullptr)
 		return nullptr;
@@ -991,7 +972,7 @@ ManufactureSchematicObject* ServerWorld::createNewManufacturingSchematic (
 //-----------------------------------------------------------------------
 
 /**
- * Called by the two above createNewObjectStart functions.  Done to provide a 
+ * Called by the two above createNewObjectStart functions.  Done to provide a
  * function for common code.
  *
  * @param newObject			the new object being created
@@ -1010,7 +991,7 @@ ServerObject* ServerWorld::createNewObjectIntermediate(ServerObject *newObject, 
 		WARNING_STRICT_FATAL(true, ("Tried to create an object with network id 0."));
 		return nullptr;
 	}
-	
+
 	NetworkController *objectController = dynamic_cast<NetworkController *>(newObject->getController());
 	if (objectController == nullptr)
 		objectController = dynamic_cast<NetworkController *>(newObject->createDefaultController());
@@ -1034,14 +1015,14 @@ ServerObject* ServerWorld::createNewObjectIntermediate(ServerObject *newObject, 
 	{
 		newObject->persist();
 	}
-	
+
 	return newObject;
 }
 
 //-----------------------------------------------------------------------
 
 /**
- * Called by the two above createNewObjectStart in container functions. Done to 
+ * Called by the two above createNewObjectStart in container functions. Done to
  * provide a function for common code.
  *
  * @param newObject			the new object being created
@@ -1059,7 +1040,7 @@ ServerObject* ServerWorld::createNewObjectIntermediate(ServerObject* newObject, 
 		WARNING_STRICT_FATAL(true, ("Tried to create an object with network id 0."));
 		return nullptr;
 	}
-	
+
 	NetworkController *objectController = dynamic_cast<NetworkController *>(newObject->getController());
 	if (objectController == nullptr)
 		objectController = dynamic_cast<NetworkController *>(newObject->createDefaultController());
@@ -1072,7 +1053,7 @@ ServerObject* ServerWorld::createNewObjectIntermediate(ServerObject* newObject, 
 
 	// prevent initial object data from being re-sent as deltas
 	newObject->clearDeltas();
-	Container::ContainerErrorCode tmp = Container::CEC_Success;		
+	Container::ContainerErrorCode tmp = Container::CEC_Success;
 	if (!ContainerInterface::transferItemToGeneralContainer(container, *newObject, nullptr, tmp, allowOverload))
 	{
 		IGNORE_RETURN(newObject->permanentlyDestroy(DeleteReasons::BadContainerTransfer));
@@ -1141,7 +1122,7 @@ ServerObject* ServerWorld::createNewObjectIntermediate(ServerObject* newObject, 
 			PROFILER_AUTO_BLOCK_DEFINE("successTransfer");
 			const ServerObjectTemplate * objectTemplate = safe_cast<
 				const ServerObjectTemplate *>(newObject->getObjectTemplate());
-			
+
 			if (persisted || objectTemplate->getPersistByDefault())
 			{
 				newObject->persist();
@@ -1186,13 +1167,13 @@ ServerObject* ServerWorld::createProxyObject(uint32 templateCrc, const NetworkId
 
 	ServerObject *newObject = createObjectFromTemplate(templateCrc, id);
 	DEBUG_WARNING(newObject == 0, ("Failed to load object from template [%s]", ObjectTemplateList::lookUp(templateCrc).getString()));
-	if(newObject)
+	if (newObject)
 	{
 		ServerController *objectController = dynamic_cast<ServerController *>(newObject->getController());
 		if (objectController == nullptr)
 			objectController = dynamic_cast<ServerController *>(newObject->createDefaultController());
 		NOT_NULL(objectController);
-	
+
 		// initialize the object
 		if (createAuthoritative)
 			newObject->setAuthority();
@@ -1204,7 +1185,7 @@ ServerObject* ServerWorld::createProxyObject(uint32 templateCrc, const NetworkId
 
 //-----------------------------------------------------------------------
 
-void ServerWorld::debugDump ()
+void ServerWorld::debugDump()
 {
 	World::debugReport();
 }
@@ -1230,9 +1211,9 @@ ServerObject * ServerWorld::findObjectByNetworkId(const NetworkId& id, bool sear
 	UNREF(searchQueuedList);
 	if (id.getValue() == 0)
 		return 0;
- 
+
 	ServerObject * object = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(id));
-	if (object && ( !object->isInitialized() || object->isBeingDestroyed()) )
+	if (object && (!object->isInitialized() || object->isBeingDestroyed()))
 		return 0;
 	return object;
 }
@@ -1246,7 +1227,7 @@ ServerObject * ServerWorld::findUninitializedObjectByNetworkId(const NetworkId& 
 		DEBUG_REPORT_LOG(true, ("ERROR - Tried to invoke ServerWorld::findUninitializedObjectByNetworkId with id %s\n", id.getValueString().c_str()));
 		return 0;
 	}
- 
+
 	ServerObject * object = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(id));
 	if (object && object->isInitialized())
 	{
@@ -1265,12 +1246,12 @@ void ServerWorld::findObjectsInRange(const Vector & location, const float distan
 
 //-----------------------------------------------------------------------
 
-class StaticCollidableObjectFilter: public SpatialSubdivisionFilter<ServerObject *>
+class StaticCollidableObjectFilter : public SpatialSubdivisionFilter<ServerObject *>
 {
 public:
 	StaticCollidableObjectFilter() {}
-	bool operator() (ServerObject * const &object) const 
-	{ 
+	bool operator() (ServerObject * const &object) const
+	{
 		CollisionProperty const * collision = object->getCollisionProperty();
 		if (!collision)
 			return false;
@@ -1286,7 +1267,6 @@ void ServerWorld::findStaticCollidableObjectsInRange(const Vector & location, co
 
 //-----------------------------------------------------------------------
 
-
 void ServerWorld::findCreaturesInRange(const Vector & location, const float distance, std::vector<ServerObject *> & results)
 {
 	g_objectSphereTree->findInRange(location, distance, CreatureFilter(), results);
@@ -1301,13 +1281,13 @@ void ServerWorld::findAuthoritativeNonPlayerCreaturesInRange(const Vector & loca
 
 //-----------------------------------------------------------------------
 
-class CreatureNicheFilter: public SpatialSubdivisionFilter<ServerObject *>
+class CreatureNicheFilter : public SpatialSubdivisionFilter<ServerObject *>
 {
 public:
-	explicit CreatureNicheFilter(int i_type, int i_mask): type(i_type), mask(i_mask) { type &= mask; }
-	bool operator() (ServerObject * const &object) const 
-	{ 
-		CreatureObject * creature = dynamic_cast<CreatureObject *>(object); 
+	explicit CreatureNicheFilter(int i_type, int i_mask) : type(i_type), mask(i_mask) { type &= mask; }
+	bool operator() (ServerObject * const &object) const
+	{
+		CreatureObject * creature = dynamic_cast<CreatureObject *>(object);
 		if (!creature)
 			return false;
 		return (creature->getNiche() & mask) == type;
@@ -1327,12 +1307,12 @@ void ServerWorld::findCreaturesOfNicheInRange(const Vector & location, const flo
 
 //-----------------------------------------------------------------------
 
-class CreatureSpeciesFilter: public SpatialSubdivisionFilter<ServerObject *>
+class CreatureSpeciesFilter : public SpatialSubdivisionFilter<ServerObject *>
 {
 public:
-	explicit CreatureSpeciesFilter(int i_species): species(i_species) {}
-	bool operator() (ServerObject * const &object) const 
-	{ 
+	explicit CreatureSpeciesFilter(int i_species) : species(i_species) {}
+	bool operator() (ServerObject * const &object) const
+	{
 		CreatureObject * creature = object->asCreatureObject();
 		if (!creature)
 			return false;
@@ -1353,12 +1333,12 @@ void ServerWorld::findCreaturesOfSpeciesInRange(const Vector & location, const f
 
 //-----------------------------------------------------------------------
 
-class CreatureRaceFilter: public SpatialSubdivisionFilter<ServerObject *>
+class CreatureRaceFilter : public SpatialSubdivisionFilter<ServerObject *>
 {
 public:
-	explicit CreatureRaceFilter(int i_species, int i_race): species(i_species), race(i_race) {}
-	bool operator() (ServerObject * const &object) const 
-	{ 
+	explicit CreatureRaceFilter(int i_species, int i_race) : species(i_species), race(i_race) {}
+	bool operator() (ServerObject * const &object) const
+	{
 		CreatureObject * creature = dynamic_cast<CreatureObject *>(object);
 		if (!creature)
 			return false;
@@ -1379,12 +1359,12 @@ void ServerWorld::findCreaturesOfRaceInRange(const Vector & location, const floa
 
 //-----------------------------------------------------------------------
 
-class NPCFilter: public SpatialSubdivisionFilter<ServerObject *>
+class NPCFilter : public SpatialSubdivisionFilter<ServerObject *>
 {
 public:
 	bool operator() (ServerObject * const &object) const
 	{
-		CreatureObject *c=dynamic_cast<CreatureObject *>(object);
+		CreatureObject *c = dynamic_cast<CreatureObject *>(object);
 		if (c)
 			return !(c->isPlayerControlled());
 		else
@@ -1402,12 +1382,12 @@ void ServerWorld::findNPCsInRange(const Vector & location, const float distance,
 
 //-----------------------------------------------------------------------
 
-class PlayerFilter: public SpatialSubdivisionFilter<ServerObject *>
+class PlayerFilter : public SpatialSubdivisionFilter<ServerObject *>
 {
 public:
 	bool operator() (ServerObject * const &object) const
 	{
-		CreatureObject *c=dynamic_cast<CreatureObject *>(object);
+		CreatureObject *c = dynamic_cast<CreatureObject *>(object);
 		if (c)
 			return (c->isPlayerControlled());
 		else
@@ -1489,9 +1469,9 @@ static bool _isObjectInConeLoop(const Object & coneCenterObject, const Object & 
 
 	//-- return true if angle between forward and position_o is smaller than the cone angle
 
-	const float dotProduct   = coneAxisVector.dot(testOrientation);
-	const bool  withinCone   = (dotProduct >= cosAngle);
-	
+	const float dotProduct = coneAxisVector.dot(testOrientation);
+	const bool  withinCone = (dotProduct >= cosAngle);
+
 	return withinCone;
 }
 
@@ -1505,8 +1485,8 @@ static bool _isObjectInConeLoop(const Object & coneCenterObject, const Object & 
  * @param angle					cone angle in radians
  * @param results				vector to store the found objects in
  */
-void ServerWorld::findObjectsInCone(const Object & coneCenterObject, 
-	const Object & coneDirectionObject, float distance, 
+void ServerWorld::findObjectsInCone(const Object & coneCenterObject,
+	const Object & coneDirectionObject, float distance,
 	float angle, std::vector<ServerObject *> & results)
 {
 	std::vector<ServerObject *> rangeResults;
@@ -1543,8 +1523,8 @@ void ServerWorld::findObjectsInCone(const Object & coneCenterObject,
  * @param angle				cone angle in radians
  * @param results			vector to store the found objects in
  */
-void ServerWorld::findObjectsInCone(const Object & coneCenterObject, 
-	const Location & coneDirection, float distance, 
+void ServerWorld::findObjectsInCone(const Object & coneCenterObject,
+	const Location & coneDirection, float distance,
 	float angle, std::vector<ServerObject *> & results)
 {
 	std::vector<ServerObject *> rangeResults;
@@ -1580,7 +1560,7 @@ void ServerWorld::findObjectsInCone(const Object & coneCenterObject,
  * @param angle					cone angle in radians
  * @param results				vector to store the found objects in
  */
-void ServerWorld::findCreaturesInCone(const Object & coneCenterObject, 
+void ServerWorld::findCreaturesInCone(const Object & coneCenterObject,
 	const Object & coneDirectionObject, float distance,
 	float angle, std::vector<ServerObject *> & results)
 {
@@ -1618,7 +1598,7 @@ void ServerWorld::findCreaturesInCone(const Object & coneCenterObject,
  * @param angle				cone angle in radians
  * @param results			vector to store the found objects in
  */
-void ServerWorld::findCreaturesInCone(const Object & coneCenterObject, 
+void ServerWorld::findCreaturesInCone(const Object & coneCenterObject,
 	const Location & coneDirection, float distance,
 	float angle, std::vector<ServerObject *> & results)
 {
@@ -1655,7 +1635,7 @@ void ServerWorld::findCreaturesInCone(const Object & coneCenterObject,
  * @param angle			cone angle in radians
  * @param results		vector to store the found objects in
  */
-void ServerWorld::findAuthoritativeNonPlayerCreaturesInCone(const Object & coneCenterObject, 
+void ServerWorld::findAuthoritativeNonPlayerCreaturesInCone(const Object & coneCenterObject,
 	const Object & coneDirectionObject, float distance,
 	float angle, std::vector<ServerObject *> & results)
 {
@@ -1692,8 +1672,8 @@ void ServerWorld::findAuthoritativeNonPlayerCreaturesInCone(const Object & coneC
  * @param angle			cone angle in radians
  * @param results		vector to store the found objects in
  */
-void ServerWorld::findCreaturesOfNicheInCone(const Object & coneCenterObject, 
-	const Object & coneDirectionObject, float distance, float angle, int niche, 
+void ServerWorld::findCreaturesOfNicheInCone(const Object & coneCenterObject,
+	const Object & coneDirectionObject, float distance, float angle, int niche,
 	int mask, std::vector<ServerObject *> & results)
 {
 	std::vector<ServerObject *> rangeResults;
@@ -1728,7 +1708,7 @@ void ServerWorld::findCreaturesOfNicheInCone(const Object & coneCenterObject,
  * @param angle			cone angle in radians
  * @param results		vector to store the found objects in
  */
-void ServerWorld::findCreaturesOfSpeciesInCone(const Object & coneCenterObject, 
+void ServerWorld::findCreaturesOfSpeciesInCone(const Object & coneCenterObject,
 	const Object & coneDirectionObject, float distance,
 	float angle, int species, std::vector<ServerObject *> & results)
 {
@@ -1764,8 +1744,8 @@ void ServerWorld::findCreaturesOfSpeciesInCone(const Object & coneCenterObject,
  * @param angle			cone angle in radians
  * @param results		vector to store the found objects in
  */
-void ServerWorld::findCreaturesOfRaceInCone(const Object & coneCenterObject, 
-	const Object & coneDirectionObject, float distance, 
+void ServerWorld::findCreaturesOfRaceInCone(const Object & coneCenterObject,
+	const Object & coneDirectionObject, float distance,
 	float angle, int species, int race, std::vector<ServerObject *> & results)
 {
 	std::vector<ServerObject *> rangeResults;
@@ -1800,8 +1780,8 @@ void ServerWorld::findCreaturesOfRaceInCone(const Object & coneCenterObject,
  * @param angle			cone angle in radians
  * @param results		vector to store the found objects in
  */
-void ServerWorld::findNonCreaturesInCone(const Object & coneCenterObject, 
-	const Object & coneDirectionObject, float distance, float angle, 
+void ServerWorld::findNonCreaturesInCone(const Object & coneCenterObject,
+	const Object & coneDirectionObject, float distance, float angle,
 	std::vector<ServerObject *> & results)
 {
 	std::vector<ServerObject *> rangeResults;
@@ -1836,8 +1816,8 @@ void ServerWorld::findNonCreaturesInCone(const Object & coneCenterObject,
  * @param angle			cone angle in radians
  * @param results		vector to store the found objects in
  */
-void ServerWorld::findNPCsInCone(const Object & coneCenterObject, 
-	const Object & coneDirectionObject, float distance, 
+void ServerWorld::findNPCsInCone(const Object & coneCenterObject,
+	const Object & coneDirectionObject, float distance,
 	float angle, std::vector<ServerObject *> & results)
 {
 	std::vector<ServerObject *> rangeResults;
@@ -1872,8 +1852,8 @@ void ServerWorld::findNPCsInCone(const Object & coneCenterObject,
  * @param angle			cone angle in radians
  * @param results		vector to store the found objects in
  */
-void ServerWorld::findPlayerCreaturesInCone(const Object & coneCenterObject, 
-	const Object & coneDirectionObject, float distance, 
+void ServerWorld::findPlayerCreaturesInCone(const Object & coneCenterObject,
+	const Object & coneDirectionObject, float distance,
 	float angle, std::vector<ServerObject *> & results)
 {
 	std::vector<ServerObject *> rangeResults;
@@ -1931,15 +1911,12 @@ ServerObject *ServerWorld::findClosestPlayer(const Vector & location, float dist
 	return findClosestObjectInList(location, candidates);
 }
 
-
-
-
-class PobFilter: public SpatialSubdivisionFilter<ServerObject *>
+class PobFilter : public SpatialSubdivisionFilter<ServerObject *>
 {
 public:
 	PobFilter() {}
-	bool operator() (ServerObject * const &object) const 
-	{ 
+	bool operator() (ServerObject * const &object) const
+	{
 		PortalProperty const * portal = object->getPortalProperty();
 		if (!portal)
 			return false;
@@ -1947,21 +1924,18 @@ public:
 	}
 };
 
-
 ServerObject *ServerWorld::findPobAtLocation(const Vector & location_w)
 {
 	std::vector<ServerObject*> candidates;
 	g_objectSphereTree->findInRange(location_w, 0.1f, PobFilter(), candidates);
 
 	return findClosestObjectInList(location_w, candidates);
-
 }
-
 
 CellProperty const * ServerWorld::findCellAtLocation(const Vector & location_w)
 {
 	CellProperty const * cell = CellProperty::getWorldCellProperty();
-	
+
 	ServerObject const * const pob = findPobAtLocation(location_w);
 	if (pob)
 	{
@@ -1985,19 +1959,19 @@ CellProperty const * ServerWorld::findCellAtLocation(const Vector & location_w)
 ServerObject *ServerWorld::findClosestObjectInList(const Vector &location, const std::vector<ServerObject*> &candidates)
 {
 	if (candidates.empty()) return nullptr;
-	
+
 	typedef std::vector<ServerObject *> CandidatesType;
-	
-	CandidatesType::const_iterator closest=candidates.begin(); 
-	float minDistance =(*closest)->getPosition_w().magnitudeBetweenSquared(location);
-	
-	for (CandidatesType::const_iterator i=closest+1; i != candidates.end(); ++i)
+
+	CandidatesType::const_iterator closest = candidates.begin();
+	float minDistance = (*closest)->getPosition_w().magnitudeBetweenSquared(location);
+
+	for (CandidatesType::const_iterator i = closest + 1; i != candidates.end(); ++i)
 	{
 		float distance = (*i)->getPosition_w().magnitudeBetweenSquared(location);
 		if (distance < minDistance)
 		{
 			minDistance = distance;
-			closest=i;
+			closest = i;
 		}
 	}
 
@@ -2006,7 +1980,7 @@ ServerObject *ServerWorld::findClosestObjectInList(const Vector &location, const
 
 //-----------------------------------------------------------------------
 
-class NonCreatureFilter: public SpatialSubdivisionFilter<ServerObject *>
+class NonCreatureFilter : public SpatialSubdivisionFilter<ServerObject *>
 {
 public:
 	bool operator() (ServerObject * const &object) const { return dynamic_cast<CreatureObject *>(object) == 0; }
@@ -2064,7 +2038,7 @@ static void endCreateServerCellObject(Object *newObject)
 	}
 
 	cellObject->setLoadWith(portalObject->getNetworkId());
-	
+
 	if (portalObject->isPersisted())
 		cellObject->persist();
 }
@@ -2075,13 +2049,13 @@ void ServerWorld::install()
 {
 	DEBUG_FATAL(m_installed, ("Trying to reinstall ServerWorld"));
 
-	DebugFlags::registerFlag (ms_logTriggerStats, "ServerGame", "logTriggerStats");
+	DebugFlags::registerFlag(ms_logTriggerStats, "ServerGame", "logTriggerStats");
 
-	m_idleTimer	   = new Timer;
-	g_objectSphereTree    = new PortallizedSphereTree<ServerObject *, ServerObjectSphereExtentAccessor>;
+	m_idleTimer = new Timer;
+	g_objectSphereTree = new PortallizedSphereTree<ServerObject *, ServerObjectSphereExtentAccessor>;
 
-	g_triggerSphereTree   = new PortallizedSphereTree<TriggerVolume *, TriggerVolumeSphereExtentAccessor>;
-	g_triggerSphereGrid   = new DoubleSphereGrid<TriggerVolume *, TriggerVolumeSphereExtentAccessor_Grid>;
+	g_triggerSphereTree = new PortallizedSphereTree<TriggerVolume *, TriggerVolumeSphereExtentAccessor>;
+	g_triggerSphereGrid = new DoubleSphereGrid<TriggerVolume *, TriggerVolumeSphereExtentAccessor_Grid>;
 
 	s_numMoveLists = ConfigServerGame::getNumberOfMoveObjectLists();
 	for (int i = 0; i < s_numMoveLists; ++i)
@@ -2089,7 +2063,7 @@ void ServerWorld::install()
 		s_moveObjectList.push_back(new MoveObjectMap);
 	}
 	s_moveObjectListValid = true;
-	
+
 	PortalProperty::install(beginCreateServerCellObject, endCreateServerCellObject);
 
 	{
@@ -2110,13 +2084,13 @@ void ServerWorld::install()
 		CollisionWorld::setNearWarpWarningCallback(issueCollisionNearWarpWarning);
 		CollisionWorld::setFarWarpWarningCallback(issueCollisionFarWarpWarning);
 	}
-	
+
 	Region3dMaster::install();
 	RegionMaster::install();
 	Pvp::install(); // must be done after RegionMaster::install()
 	GameServerMessageArchive::install();
 	AiCombatPulseQueue::install();
-	
+
 	// install the object templates
 	ServerArmorTemplate::install(true);
 	ServerBattlefieldMarkerObjectTemplate::install(true);
@@ -2180,7 +2154,7 @@ void ServerWorld::install()
 	FormManagerServer::install();
 
 	// install the world
-	World::install ();
+	World::install();
 
 	m_idleTimer->setExpireTime(1.0f);
 	m_installed = true;
@@ -2213,16 +2187,16 @@ void ServerWorld::updateTriggerDatabase(ServerObject & movingObject)
 	for (ServerObject::TriggerVolumeMap::const_iterator v = volumes.begin(); v != volumes.end(); ++v)
 	{
 		int system = ConfigServerGame::getTriggerVolumeSystem();  // 0 = old, 1 = compare, 2 = new
-		if ( system <= 1 )
+		if (system <= 1)
 		{
 			PROFILER_AUTO_BLOCK_DEFINE("sphere_tree_move");
 			g_triggerSphereTree->onObjectMoved((*v).second);
 		}
 
-		if ( system >= 1 )
+		if (system >= 1)
 		{
 			PROFILER_AUTO_BLOCK_DEFINE("sphere_grid_move");
-			g_triggerSphereGrid->onObjectMoved((*v).second );
+			g_triggerSphereGrid->onObjectMoved((*v).second);
 		}
 	}
 }
@@ -2250,31 +2224,29 @@ void ServerWorld::triggerMovingObjects(ServerObject &movingObject, Vector const 
 			static std::vector<TriggerVolume *> results;
 			static std::set<TriggerVolume *> results2;
 
-
 			int system = ConfigServerGame::getTriggerVolumeSystem();  // 0 = old, 1 = compare, 2 = new
 
-			if (system <= 1 )
+			if (system <= 1)
 				g_triggerSphereTree->findInRange(pob, Vector::zero, 16384.f, results);
-			if ( system >= 1 )
+			if (system >= 1)
 				g_triggerSphereGrid->findInRange(pob, Vector::zero, 16384.f, results2);
 
-			if ( system == 1 )
+			if (system == 1)
 			{
 				DEBUG_FATAL(results.size() != results2.size(), ("SphereGrid failed (%d vs. %d).", results.size(), results2.size()));
 			}
 
-			if ( system != 2)
+			if (system != 2)
 			{
 				for (std::vector<TriggerVolume *>::const_iterator i = results.begin(); i != results.end(); ++i)
 					if ((*i) && &(*i)->getOwner() != &movingObject)
 						(*i)->objectMoved(movingObject);
 			}
-			else if ( system == 2 )
+			else if (system == 2)
 			{
 				for (std::set<TriggerVolume *>::const_iterator i = results2.begin(); i != results2.end(); ++i)
 					if ((*i) && &(*i)->getOwner() != &movingObject)
 						(*i)->objectMoved(movingObject);
-
 			}
 
 			results.clear();
@@ -2295,21 +2267,21 @@ void ServerWorld::triggerMovingObjects(ServerObject &movingObject, Vector const 
 		{
 			Capsule const queryCapsule(start, end, extentSphereRadius);
 			{
-				if (system <= 1 )
+				if (system <= 1)
 				{
 					PROFILER_AUTO_BLOCK_DEFINE("sphere_tree_find");
 					g_triggerSphereTree->findInRange(queryCapsule, results);
 				}
 
-				if ( system >= 1 )
+				if (system >= 1)
 				{
 					PROFILER_AUTO_BLOCK_DEFINE("sphere_grid_find");
-					g_triggerSphereGrid->findInRange( queryCapsule, results2);
+					g_triggerSphereGrid->findInRange(queryCapsule, results2);
 				}
 
-				if ( system == 1 )
+				if (system == 1)
 				{
-					compare_results(queryCapsule, results,results2,&movingObject);
+					compare_results(queryCapsule, results, results2, &movingObject);
 				}
 			}
 		}
@@ -2318,32 +2290,32 @@ void ServerWorld::triggerMovingObjects(ServerObject &movingObject, Vector const 
 			PROFILER_AUTO_BLOCK_DEFINE("ServerWorld::triggerMovingObject::findInRange (teleport)");
 
 			// We moved really far, so consider this a warp
-			if ( system <= 1 )
+			if (system <= 1)
 			{
 				PROFILER_AUTO_BLOCK_DEFINE("sphere_tree_find");
 				g_triggerSphereTree->findInRange(end, extentSphereRadius, results);
 			}
 
-			if ( system >= 1 )
+			if (system >= 1)
 			{
 				PROFILER_AUTO_BLOCK_DEFINE("sphere_grid_find");
-				g_triggerSphereGrid->findInRange(  end, extentSphereRadius, results2);
+				g_triggerSphereGrid->findInRange(end, extentSphereRadius, results2);
 			}
 
-			if ( system == 1 )
+			if (system == 1)
 			{
-				compare_results( end, extentSphereRadius, results,results2,&movingObject);
+				compare_results(end, extentSphereRadius, results, results2, &movingObject);
 			}
 		}
 
-		if ( system != 2 )
+		if (system != 2)
 		{
 			PROFILER_AUTO_BLOCK_DEFINE("ServerWorld::triggerMovingObject::loop");
 			for (std::vector<TriggerVolume *>::const_iterator i = results.begin(); i != results.end(); ++i)
 				if ((*i) && &(*i)->getOwner() != &movingObject)
 					(*i)->moveObject(movingObject, start, end);
 		}
-		else if ( system == 2 )
+		else if (system == 2)
 		{
 			PROFILER_AUTO_BLOCK_DEFINE("ServerWorld::triggerMovingObject::loop");
 			for (std::set<TriggerVolume *>::const_iterator i = results2.begin(); i != results2.end(); ++i)
@@ -2419,7 +2391,7 @@ void ServerWorld::triggerMovingTriggers(ServerObject &movingObject, Vector const
 						if (object->getClient())
 							clcount++;
 					}
-				
+
 					if (object != nullptr)
 						t->moveTriggerVolume(*object, start, end);
 				}
@@ -2465,12 +2437,12 @@ void ServerWorld::moveObject(ServerObject & movingObject, const Vector & start, 
 void ServerWorld::updateMoveObjectList()
 {
 	DEBUG_FATAL(!s_moveObjectListValid, ("Cannot operate on uninitialized object list"));
-	
+
 	if (s_numMoveLists <= 0 || !s_moveObjectListValid)
 		return;
 
 	static int frameCounter = 0;
-	
+
 	s_moveObjectListLock = true;
 	if (++frameCounter >= s_numMoveLists)
 		frameCounter = 0;
@@ -2486,20 +2458,19 @@ void ServerWorld::updateMoveObjectList()
 	s_moveObjectListLock = false;
 }
 
-
 //-----------------------------------------------------------------------
 
 void ServerWorld::internalMoveObject(ServerObject & movingObject, const Vector & start, const Vector & end)
 {
 	PROFILER_AUTO_BLOCK_DEFINE("ServerWorld::moveObject");
-	
-	// check for NaN 
-	if(start == start && end == end && movingObject.getSphereExtent().getRadius() == movingObject.getSphereExtent().getRadius())
+
+	// check for NaN
+	if (start == start && end == end && movingObject.getSphereExtent().getRadius() == movingObject.getSphereExtent().getRadius())
 	{
 		updateObjectDatabase(movingObject);
 		updateTriggerDatabase(movingObject);
-		triggerMovingObjects(movingObject,start,end);
-		triggerMovingTriggers(movingObject,start,end);
+		triggerMovingObjects(movingObject, start, end);
+		triggerMovingTriggers(movingObject, start, end);
 	}
 	else
 	{
@@ -2508,7 +2479,6 @@ void ServerWorld::internalMoveObject(ServerObject & movingObject, const Vector &
 		DEBUG_FATAL(start != start, ("Object %s:%s is moving from an invalid start position (NaN)", movingObject.getObjectTemplateName(), movingObject.getNetworkId().getValueString().c_str()));
 		DEBUG_FATAL(movingObject.getSphereExtent().getRadius() != movingObject.getSphereExtent().getRadius(), ("Object %s:%s has an invalid sphere extent radius %f", movingObject.getNetworkId().getValueString().c_str(), movingObject.getSphereExtent().getRadius()));
 	}
-	
 }
 
 //------------------------------------------------------------------------------------------
@@ -2517,9 +2487,9 @@ void ServerWorld::remove()
 {
 	DEBUG_FATAL(!m_installed, ("Trying to reremove ServerWorld"));
 
-	DebugFlags::unregisterFlag (ms_logTriggerStats);
-	
-	World::remove ();
+	DebugFlags::unregisterFlag(ms_logTriggerStats);
+
+	World::remove();
 
 	delete m_sceneId;
 	m_sceneId = 0;
@@ -2533,7 +2503,7 @@ void ServerWorld::remove()
 	g_triggerSphereGrid = 0;
 
 	delete m_idleTimer;
-	m_idleTimer =0;
+	m_idleTimer = 0;
 
 	delete m_weatherGenerator;
 	m_weatherGenerator = 0;
@@ -2560,13 +2530,13 @@ void ServerWorld::remove()
 void ServerWorld::removeObjectTriggerVolume(TriggerVolume * triggerVolume)
 {
 	int system = ConfigServerGame::getTriggerVolumeSystem();  // 0 = old, 1 = compare, 2 = new
-	if ( system <= 1 )
+	if (system <= 1)
 	{
 		PROFILER_AUTO_BLOCK_DEFINE("sphere_tree_remove");
 		g_triggerSphereTree->onObjectRemoved(triggerVolume);
 	}
 
-	if ( system >= 1 )
+	if (system >= 1)
 	{
 		PROFILER_AUTO_BLOCK_DEFINE("sphere_grid_remove");
 		g_triggerSphereGrid->onObjectRemoved(triggerVolume);
@@ -2581,7 +2551,7 @@ void ServerWorld::removeObjectFromGame(const ServerObject& object)
 	PROFILER_AUTO_BLOCK_DEFINE("ServerWorld::removeObjectFromGame");
 	FATAL(gs_pendingConcludeLock, ("Attempt to delete an object DURING CONCLUDE"));
 	std::vector<Object *>::iterator vf = std::find(gs_pendingConcludeVector.begin(), gs_pendingConcludeVector.end(), const_cast<ServerObject *>(&object));
-	if(vf != gs_pendingConcludeVector.end())
+	if (vf != gs_pendingConcludeVector.end())
 	{
 		*vf = gs_pendingConcludeVector.back();
 		gs_pendingConcludeVector.pop_back();
@@ -2621,7 +2591,7 @@ void ServerWorld::removeTangibleObject(ServerObject *object)
 
 	if (!object)
 		return;
-	
+
 	if (!object->isInWorld())
 	{
 		WARNING_STRICT_FATAL(!object->isInWorld(), ("Tried to remove an object that was not in the world!"));
@@ -2681,12 +2651,12 @@ void ServerWorld::removeTangibleObject(ServerObject *object)
 			for (TriggerVolume::ContentsSet::const_iterator objectIterator = contents.begin(); objectIterator != contents.end(); ++objectIterator)
 				t->removeObject(**objectIterator);
 			// Now remove the actual trigger volume
-			removeObjectTriggerVolume( t );
+			removeObjectTriggerVolume(t);
 		}
 		// remove the object sphere
 		g_objectSphereTree->onObjectRemoved(object);
 	}
-	
+
 	{
 		PROFILER_AUTO_BLOCK_DEFINE("removeTangibleObject - World::removeObject 2");
 		IGNORE_RETURN(World::removeObject(object, static_cast<int>(WOL_Tangible)));
@@ -2695,7 +2665,7 @@ void ServerWorld::removeTangibleObject(ServerObject *object)
 	//If the object is a ref obejct, remove it.
 	{
 		PROFILER_AUTO_BLOCK_DEFINE("removeTangibleObject - removeReferenceObject");
-		TerrainObject * const terrain = TerrainObject::getInstance ();
+		TerrainObject * const terrain = TerrainObject::getInstance();
 		if (terrain && terrain->isReferenceObject(object))
 			terrain->removeReferenceObject(object);
 	}
@@ -2706,7 +2676,7 @@ void ServerWorld::removeTangibleObject(ServerObject *object)
 void ServerWorld::update(real time)
 {
 	DEBUG_FATAL(!m_installed, ("ServerWorld is NOT installed!"));
-	
+
 	//-- update network
 	{
 		PROFILER_AUTO_BLOCK_DEFINE("NetworkHandler::dispatch()");
@@ -2714,7 +2684,7 @@ void ServerWorld::update(real time)
 	}
 
 	// scheduler code
-	World::beginFrame ();
+	World::beginFrame();
 	{
 		{
 			PROFILER_AUTO_BLOCK_DEFINE("Alter");
@@ -2730,7 +2700,7 @@ void ServerWorld::update(real time)
 			PROFILER_AUTO_BLOCK_DEFINE("CreatureObject::updateMissionRequestQueue");
 			CreatureObject::updateMissionRequestQueue();
 		}
-		
+
 		{
 			PROFILER_AUTO_BLOCK_DEFINE("CreatureObject::runMissionCreationQueue");
 			CreatureObject::runMissionCreationQueue();
@@ -2868,10 +2838,10 @@ void ServerWorld::update(real time)
 			PROFILER_AUTO_BLOCK_DEFINE("AiCombatPulseQueue::alter");
 			AiCombatPulseQueue::alter(time);
 		}
-		
-		{		
+
+		{
 			PROFILER_AUTO_BLOCK_DEFINE("ServerWorld::conclude");
-			
+
 			ServerObject::concludeScriptVars();
 			static std::vector<ServerObject *> deferredConcludes; // for objects not initialized
 			deferredConcludes.clear();
@@ -2879,10 +2849,10 @@ void ServerWorld::update(real time)
 			if (!gs_pendingConcludeVector.empty())
 			{
 				{
-					PROFILER_AUTO_BLOCK_DEFINE("ServerWorld::emptyPending");				
+					PROFILER_AUTO_BLOCK_DEFINE("ServerWorld::emptyPending");
 					std::vector<Object *>::iterator concludeIter;
 					gs_pendingConcludeLock = true;
-					for(concludeIter = gs_pendingConcludeVector.begin(); concludeIter != gs_pendingConcludeVector.end(); ++concludeIter)
+					for (concludeIter = gs_pendingConcludeVector.begin(); concludeIter != gs_pendingConcludeVector.end(); ++concludeIter)
 					{
 						ServerObject *o = (*concludeIter)->asServerObject();
 						WARNING_STRICT_FATAL(!o, ("nullptr object in conclude list!"));
@@ -2898,28 +2868,28 @@ void ServerWorld::update(real time)
 					gs_pendingConcludeLock = false;
 				}
 				{
-					PROFILER_AUTO_BLOCK_DEFINE("ServerWorld::pendingConcludeOps");				
+					PROFILER_AUTO_BLOCK_DEFINE("ServerWorld::pendingConcludeOps");
 					std::vector<std::pair<int, ServerObject *> >::iterator po;
-					for(po = gs_pendingConcludeOpsVector.begin(); po != gs_pendingConcludeOpsVector.end(); ++po)
+					for (po = gs_pendingConcludeOpsVector.begin(); po != gs_pendingConcludeOpsVector.end(); ++po)
 					{
-						switch((*po).first)
+						switch ((*po).first)
 						{
-							case 0:
-								addObjectToConcludeList((*po).second);
-								break;
-							case 1:
-								removeObjectFromGame(*(*po).second);
-								break;
-							default:
-								break;
+						case 0:
+							addObjectToConcludeList((*po).second);
+							break;
+						case 1:
+							removeObjectFromGame(*(*po).second);
+							break;
+						default:
+							break;
 						}
 					}
 					gs_pendingConcludeOpsVector.clear();
 				}
 				{
-					PROFILER_AUTO_BLOCK_DEFINE("ServerWorld::addDeferredConclude");				
+					PROFILER_AUTO_BLOCK_DEFINE("ServerWorld::addDeferredConclude");
 					std::vector<ServerObject *>::iterator i;
-					for(i = deferredConcludes.begin(); i != deferredConcludes.end(); ++i)
+					for (i = deferredConcludes.begin(); i != deferredConcludes.end(); ++i)
 					{
 						addObjectToConcludeList(*i);
 					}
@@ -2945,16 +2915,16 @@ void ServerWorld::update(real time)
 			weatherFrameCount = 10;
 			std::string buffer;
 			getWeather().debugPrint(buffer);
-			DEBUG_REPORT_LOG(true,("Weather data is %s\n",buffer.c_str()));
-		}
-#endif	   
+			DEBUG_REPORT_LOG(true, ("Weather data is %s\n", buffer.c_str()));
 	}
+#endif
+}
 
 	updatePlanetServer();
 
 	LineOfSightCache::update();
 
-	World::endFrame ();
+	World::endFrame();
 }
 
 //-----------------------------------------------------------------------
@@ -2969,28 +2939,28 @@ const std::string &ServerWorld::getSceneId()
 
 const ObjectNotification &ServerWorld::getTangibleNotification()
 {
-	return ServerWorldTangibleNotification::getInstance ();
+	return ServerWorldTangibleNotification::getInstance();
 }
 
 //-----------------------------------------------------------------------
 
 const ObjectNotification &ServerWorld::getTerrainObjectNotification()
 {
-	return ServerWorldTerrainObjectNotification::getInstance ();
+	return ServerWorldTerrainObjectNotification::getInstance();
 }
 
 //-----------------------------------------------------------------------
 
 const ObjectNotification &ServerWorld::getIntangibleNotification()
 {
-	return ServerWorldIntangibleNotification::getInstance ();
+	return ServerWorldIntangibleNotification::getInstance();
 }
 
 //-----------------------------------------------------------------------
 
 const ObjectNotification &ServerWorld::getUniverseNotification()
 {
-	return ServerWorldUniverseNotification::getInstance ();
+	return ServerWorldUniverseNotification::getInstance();
 }
 
 //-------------------------------------------------------------------
@@ -3022,12 +2992,12 @@ void ServerWorld::removeLoadBeacon(const TangibleObject * loadBeacon)
 bool ServerWorld::isInLoadBeaconRange(const Vector & worldPosition)
 {
 	std::vector<const TangibleObject *>::const_iterator i;
-	for(i = ServerWorldNamespace::s_loadBeaconEntries.begin(); i != ServerWorldNamespace::s_loadBeaconEntries.end(); ++i)
+	for (i = ServerWorldNamespace::s_loadBeaconEntries.begin(); i != ServerWorldNamespace::s_loadBeaconEntries.end(); ++i)
 	{
 		float radius = static_cast<float>((*i)->getInterestRadius()) + 300.0f;
 		radius = radius * radius * 2;
 		Vector beaconPosition = (*i)->getTransform_o2w().getPosition_p();
-		if(beaconPosition.magnitudeBetweenSquared(worldPosition) < radius)
+		if (beaconPosition.magnitudeBetweenSquared(worldPosition) < radius)
 			return true;
 	}
 	return false;
@@ -3036,7 +3006,7 @@ bool ServerWorld::isInLoadBeaconRange(const Vector & worldPosition)
 //-----------------------------------------------------------------------
 
 /**
- * Finds a "good" location in the world where we can place an object. Good is 
+ * Finds a "good" location in the world where we can place an object. Good is
  * defined as a resonably flat area, not in water, where the object being placed
  * won't intersect other objects. The caller may disable the slope or water check
  * if they want.
@@ -3048,69 +3018,69 @@ bool ServerWorld::isInLoadBeaconRange(const Vector & worldPosition)
  * @param dontCheckWater		  flag to skip the underwater check
  * @param dontCheckSlope		  flag to skip the slope check
  *
- * @return a position in the world where the object can be placed, or 0 0 0 if 
+ * @return a position in the world where the object can be placed, or 0 0 0 if
  * there is no valid position
  */
-Vector ServerWorld::getGoodLocation(float areaSizeX, float areaSizeZ, 
-	const Vector & searchRectLowerLeftLocation, 
-	const Vector & searchRectUpperRightLocation, 
+Vector ServerWorld::getGoodLocation(float areaSizeX, float areaSizeZ,
+	const Vector & searchRectLowerLeftLocation,
+	const Vector & searchRectUpperRightLocation,
 	bool dontCheckWater, bool dontCheckSlope)
 {
 	PROFILER_AUTO_BLOCK_DEFINE("ServerWorld::getGoodLocation");
 
 	Vector goodLocation;
 
-	TerrainObject const * const terrainObject = TerrainObject::getInstance ();
+	TerrainObject const * const terrainObject = TerrainObject::getInstance();
 	if (!terrainObject)
 	{
-		DEBUG_WARNING (true, ("getGoodLocation (): PB there is no terrain system"));
+		DEBUG_WARNING(true, ("getGoodLocation (): PB there is no terrain system"));
 		return goodLocation;
 	}
 
-	LotManager const * const lotManager = ServerWorld::getConstLotManager ();
+	LotManager const * const lotManager = ServerWorld::getConstLotManager();
 	if (!lotManager)
 	{
-		DEBUG_WARNING (true, ("getGoodLocation (): PB there is no lot system"));
+		DEBUG_WARNING(true, ("getGoodLocation (): PB there is no lot system"));
 		return goodLocation;
 	}
 
 	//build searching rectangles from the given locations
 	const float minimum = -8192.f + 512.f;
-	const float maximum =  8192.f - 512.f;
+	const float maximum = 8192.f - 512.f;
 
 	Rectangle2d searchRect;
 	searchRect.x0 = searchRectLowerLeftLocation.x;
-	searchRect.x0 = clamp (minimum, searchRectLowerLeftLocation.x, maximum);
+	searchRect.x0 = clamp(minimum, searchRectLowerLeftLocation.x, maximum);
 	searchRect.y0 = searchRectLowerLeftLocation.z;
-	searchRect.y0 = clamp (minimum, searchRectLowerLeftLocation.z, maximum);
+	searchRect.y0 = clamp(minimum, searchRectLowerLeftLocation.z, maximum);
 	searchRect.x1 = searchRectUpperRightLocation.x;
-	searchRect.x1 = clamp (minimum, searchRectUpperRightLocation.x, maximum);
+	searchRect.x1 = clamp(minimum, searchRectUpperRightLocation.x, maximum);
 	searchRect.y1 = searchRectUpperRightLocation.z;
-	searchRect.y1 = clamp (minimum, searchRectUpperRightLocation.z, maximum);
+	searchRect.y1 = clamp(minimum, searchRectUpperRightLocation.z, maximum);
 
 	//validate scripter-input rectangle areas > 0
 	if (searchRect.x0 > searchRect.x1)
 	{
-		DEBUG_WARNING (true, ("getGoodLocation (): DB searchRect.x0 (%1.2f) > searchRect.x1 (%1.2f)", searchRect.x0, searchRect.x1));
+		DEBUG_WARNING(true, ("getGoodLocation (): DB searchRect.x0 (%1.2f) > searchRect.x1 (%1.2f)", searchRect.x0, searchRect.x1));
 		return goodLocation;
 	}
 
 	if (searchRect.y0 > searchRect.y1)
 	{
-		DEBUG_WARNING (true, ("getGoodLocation (): DB searchRect.z0 (%1.2f) > searchRect.z1 (%1.2f)", searchRect.y0, searchRect.y1));
+		DEBUG_WARNING(true, ("getGoodLocation (): DB searchRect.z0 (%1.2f) > searchRect.z1 (%1.2f)", searchRect.y0, searchRect.y1));
 		return goodLocation;
 	}
 
 	//validate that the area we want to find is smaller than our search area
 	if (areaSizeX > searchRect.getWidth())
 	{
-		DEBUG_WARNING (true, ("getGoodLocation (): DB goal rectangle x (%1.2f) is larger than our search rectangle width (%1.2f)", areaSizeX, searchRect.getWidth()));
+		DEBUG_WARNING(true, ("getGoodLocation (): DB goal rectangle x (%1.2f) is larger than our search rectangle width (%1.2f)", areaSizeX, searchRect.getWidth()));
 		return goodLocation;
 	}
 
 	if (areaSizeZ > searchRect.getHeight())
 	{
-		DEBUG_WARNING (true, ("getGoodLocation (): DB goal rectangle y (%1.2f) is larger than our search rectangle height (%1.2f)", areaSizeZ, searchRect.getHeight()));
+		DEBUG_WARNING(true, ("getGoodLocation (): DB goal rectangle y (%1.2f) is larger than our search rectangle height (%1.2f)", areaSizeZ, searchRect.getHeight()));
 		return goodLocation;
 	}
 
@@ -3127,9 +3097,9 @@ Vector ServerWorld::getGoodLocation(float areaSizeX, float areaSizeZ,
 	static std::vector<int> yRange;
 	xRange.clear();
 	yRange.clear();
-	for(int i = 0; i < numRows; ++i)
+	for (int i = 0; i < numRows; ++i)
 		xRange.push_back(i);
-	for(int j = 0; j < numCols; ++j)
+	for (int j = 0; j < numCols; ++j)
 		yRange.push_back(j);
 
 	std::random_shuffle(xRange.begin(), xRange.end());
@@ -3138,9 +3108,9 @@ Vector ServerWorld::getGoodLocation(float areaSizeX, float areaSizeZ,
 	Rectangle2d successRect;
 	bool success = false;
 	Rectangle2d currentRect;
-	for(std::vector<int>::iterator it_x = xRange.begin(); it_x != xRange.end()  && !success; ++it_x)
+	for (std::vector<int>::iterator it_x = xRange.begin(); it_x != xRange.end() && !success; ++it_x)
 	{
-		for(std::vector<int>::iterator it_y = yRange.begin(); it_y != yRange.end() && !success; ++it_y)
+		for (std::vector<int>::iterator it_y = yRange.begin(); it_y != yRange.end() && !success; ++it_y)
 		{
 			currentRect = startingRect;
 
@@ -3148,13 +3118,13 @@ Vector ServerWorld::getGoodLocation(float areaSizeX, float areaSizeZ,
 			currentRect.translate(*it_x * areaSizeX, *it_y * areaSizeZ);
 
 			//the rectangle is a "good location" if it has neither water nor a steep slope
-			if (!dontCheckWater && terrainObject->getWater (currentRect))
+			if (!dontCheckWater && terrainObject->getWater(currentRect))
 				continue;
 
-			if (!dontCheckSlope && terrainObject->getSlope (currentRect))
+			if (!dontCheckSlope && terrainObject->getSlope(currentRect))
 				continue;
 
-			if (!lotManager->canPlace (currentRect))
+			if (!lotManager->canPlace(currentRect))
 				continue;
 
 			success = true;
@@ -3168,7 +3138,7 @@ Vector ServerWorld::getGoodLocation(float areaSizeX, float areaSizeZ,
 	//validate that our success point lies within the search area (debugging tests)
 	if (successRect.x0 < searchRect.x0 || successRect.x1 > searchRect.x1 || successRect.y0 < searchRect.y0 || successRect.y1 > searchRect.y1)
 	{
-		DEBUG_WARNING (true, ("getGoodLocation (): PB result does not fit within the search location"));
+		DEBUG_WARNING(true, ("getGoodLocation (): PB result does not fit within the search location"));
 		return goodLocation;
 	}
 
@@ -3178,7 +3148,7 @@ Vector ServerWorld::getGoodLocation(float areaSizeX, float areaSizeZ,
 	//conver that point into a location-friendly 3d point
 	goodLocation = Vector(successLoc2d.x, 0.f, successLoc2d.y);
 
-	IGNORE_RETURN( terrainObject->getHeightForceChunkCreation(goodLocation, goodLocation.y) );
+	IGNORE_RETURN(terrainObject->getHeightForceChunkCreation(goodLocation, goodLocation.y));
 
 	return goodLocation;
 }	// ServerWorld::getGoodLocation
@@ -3186,7 +3156,7 @@ Vector ServerWorld::getGoodLocation(float areaSizeX, float areaSizeZ,
 //-----------------------------------------------------------------------
 
 /**
-* Finds a "good" location in the world where we can place an object. Good is 
+* Finds a "good" location in the world where we can place an object. Good is
 * defined as a resonably flat area, not in water, where the object being placed
 * won't intersect other objects. The caller may disable the slope or water check
 * if they want. This function checks for nearby collidable static objects as well.
@@ -3199,69 +3169,69 @@ Vector ServerWorld::getGoodLocation(float areaSizeX, float areaSizeZ,
 * @param dontCheckSlope		  flag to skip the slope check
 * @param minStaticObjDistance the minimum distance a static object must be away from a "good" location
 *
-* @return a position in the world where the object can be placed, or 0 0 0 if 
+* @return a position in the world where the object can be placed, or 0 0 0 if
 * there is no valid position
 */
-Vector ServerWorld::getGoodLocationAvoidCollidables(float areaSizeX, float areaSizeZ, 
-									const Vector & searchRectLowerLeftLocation, 
-									const Vector & searchRectUpperRightLocation, 
-									bool dontCheckWater, bool dontCheckSlope, float minStaticObjDistance)
+Vector ServerWorld::getGoodLocationAvoidCollidables(float areaSizeX, float areaSizeZ,
+	const Vector & searchRectLowerLeftLocation,
+	const Vector & searchRectUpperRightLocation,
+	bool dontCheckWater, bool dontCheckSlope, float minStaticObjDistance)
 {
 	PROFILER_AUTO_BLOCK_DEFINE("ServerWorld::getGoodLocation");
 
 	Vector goodLocation;
 
-	TerrainObject const * const terrainObject = TerrainObject::getInstance ();
+	TerrainObject const * const terrainObject = TerrainObject::getInstance();
 	if (!terrainObject)
 	{
-		DEBUG_WARNING (true, ("getGoodLocation (): PB there is no terrain system"));
+		DEBUG_WARNING(true, ("getGoodLocation (): PB there is no terrain system"));
 		return goodLocation;
 	}
 
-	LotManager const * const lotManager = ServerWorld::getConstLotManager ();
+	LotManager const * const lotManager = ServerWorld::getConstLotManager();
 	if (!lotManager)
 	{
-		DEBUG_WARNING (true, ("getGoodLocation (): PB there is no lot system"));
+		DEBUG_WARNING(true, ("getGoodLocation (): PB there is no lot system"));
 		return goodLocation;
 	}
 
 	//build searching rectangles from the given locations
 	const float minimum = -8192.f + 512.f;
-	const float maximum =  8192.f - 512.f;
+	const float maximum = 8192.f - 512.f;
 
 	Rectangle2d searchRect;
 	searchRect.x0 = searchRectLowerLeftLocation.x;
-	searchRect.x0 = clamp (minimum, searchRectLowerLeftLocation.x, maximum);
+	searchRect.x0 = clamp(minimum, searchRectLowerLeftLocation.x, maximum);
 	searchRect.y0 = searchRectLowerLeftLocation.z;
-	searchRect.y0 = clamp (minimum, searchRectLowerLeftLocation.z, maximum);
+	searchRect.y0 = clamp(minimum, searchRectLowerLeftLocation.z, maximum);
 	searchRect.x1 = searchRectUpperRightLocation.x;
-	searchRect.x1 = clamp (minimum, searchRectUpperRightLocation.x, maximum);
+	searchRect.x1 = clamp(minimum, searchRectUpperRightLocation.x, maximum);
 	searchRect.y1 = searchRectUpperRightLocation.z;
-	searchRect.y1 = clamp (minimum, searchRectUpperRightLocation.z, maximum);
+	searchRect.y1 = clamp(minimum, searchRectUpperRightLocation.z, maximum);
 
 	//validate scripter-input rectangle areas > 0
 	if (searchRect.x0 > searchRect.x1)
 	{
-		DEBUG_WARNING (true, ("getGoodLocation (): DB searchRect.x0 (%1.2f) > searchRect.x1 (%1.2f)", searchRect.x0, searchRect.x1));
+		DEBUG_WARNING(true, ("getGoodLocation (): DB searchRect.x0 (%1.2f) > searchRect.x1 (%1.2f)", searchRect.x0, searchRect.x1));
 		return goodLocation;
 	}
 
 	if (searchRect.y0 > searchRect.y1)
 	{
-		DEBUG_WARNING (true, ("getGoodLocation (): DB searchRect.z0 (%1.2f) > searchRect.z1 (%1.2f)", searchRect.y0, searchRect.y1));
+		DEBUG_WARNING(true, ("getGoodLocation (): DB searchRect.z0 (%1.2f) > searchRect.z1 (%1.2f)", searchRect.y0, searchRect.y1));
 		return goodLocation;
 	}
 
 	//validate that the area we want to find is smaller than our search area
 	if (areaSizeX > searchRect.getWidth())
 	{
-		DEBUG_WARNING (true, ("getGoodLocation (): DB goal rectangle x (%1.2f) is larger than our search rectangle width (%1.2f)", areaSizeX, searchRect.getWidth()));
+		DEBUG_WARNING(true, ("getGoodLocation (): DB goal rectangle x (%1.2f) is larger than our search rectangle width (%1.2f)", areaSizeX, searchRect.getWidth()));
 		return goodLocation;
 	}
 
 	if (areaSizeZ > searchRect.getHeight())
 	{
-		DEBUG_WARNING (true, ("getGoodLocation (): DB goal rectangle y (%1.2f) is larger than our search rectangle height (%1.2f)", areaSizeZ, searchRect.getHeight()));
+		DEBUG_WARNING(true, ("getGoodLocation (): DB goal rectangle y (%1.2f) is larger than our search rectangle height (%1.2f)", areaSizeZ, searchRect.getHeight()));
 		return goodLocation;
 	}
 
@@ -3278,9 +3248,9 @@ Vector ServerWorld::getGoodLocationAvoidCollidables(float areaSizeX, float areaS
 	static std::vector<int> yRange;
 	xRange.clear();
 	yRange.clear();
-	for(int i = 0; i < numRows; ++i)
+	for (int i = 0; i < numRows; ++i)
 		xRange.push_back(i);
-	for(int j = 0; j < numCols; ++j)
+	for (int j = 0; j < numCols; ++j)
 		yRange.push_back(j);
 
 	std::random_shuffle(xRange.begin(), xRange.end());
@@ -3289,9 +3259,9 @@ Vector ServerWorld::getGoodLocationAvoidCollidables(float areaSizeX, float areaS
 	Rectangle2d successRect;
 	bool success = false;
 	Rectangle2d currentRect;
-	for(std::vector<int>::iterator it_x = xRange.begin(); it_x != xRange.end()  && !success; ++it_x)
+	for (std::vector<int>::iterator it_x = xRange.begin(); it_x != xRange.end() && !success; ++it_x)
 	{
-		for(std::vector<int>::iterator it_y = yRange.begin(); it_y != yRange.end() && !success; ++it_y)
+		for (std::vector<int>::iterator it_y = yRange.begin(); it_y != yRange.end() && !success; ++it_y)
 		{
 			currentRect = startingRect;
 
@@ -3299,15 +3269,15 @@ Vector ServerWorld::getGoodLocationAvoidCollidables(float areaSizeX, float areaS
 			currentRect.translate(*it_x * areaSizeX, *it_y * areaSizeZ);
 
 			//the rectangle is a "good location" if it has neither water nor a steep slope
-			if (!dontCheckWater && terrainObject->getWater (currentRect))
+			if (!dontCheckWater && terrainObject->getWater(currentRect))
 				continue;
 
-			if (!dontCheckSlope && terrainObject->getSlope (currentRect))
+			if (!dontCheckSlope && terrainObject->getSlope(currentRect))
 				continue;
 
-			if (!lotManager->canPlace (currentRect))
+			if (!lotManager->canPlace(currentRect))
 				continue;
-			
+
 			// Look for nearby static collidable objects.
 			std::vector<ServerObject*> collidables;
 			Vector2d Loc2d = currentRect.getCenter();
@@ -3315,7 +3285,7 @@ Vector ServerWorld::getGoodLocationAvoidCollidables(float areaSizeX, float areaS
 
 			ServerWorld::findStaticCollidableObjectsInRange(checkLoc, minStaticObjDistance, collidables);
 
-			if(!collidables.empty())
+			if (!collidables.empty())
 				continue;
 
 			success = true;
@@ -3329,7 +3299,7 @@ Vector ServerWorld::getGoodLocationAvoidCollidables(float areaSizeX, float areaS
 	//validate that our success point lies within the search area (debugging tests)
 	if (successRect.x0 < searchRect.x0 || successRect.x1 > searchRect.x1 || successRect.y0 < searchRect.y0 || successRect.y1 > searchRect.y1)
 	{
-		DEBUG_WARNING (true, ("getGoodLocation (): PB result does not fit within the search location"));
+		DEBUG_WARNING(true, ("getGoodLocation (): PB result does not fit within the search location"));
 		return goodLocation;
 	}
 
@@ -3339,7 +3309,7 @@ Vector ServerWorld::getGoodLocationAvoidCollidables(float areaSizeX, float areaS
 	//convert that point into a location-friendly 3d point
 	goodLocation = Vector(successLoc2d.x, 0.f, successLoc2d.y);
 
-	IGNORE_RETURN( terrainObject->getHeightForceChunkCreation(goodLocation, goodLocation.y) );
+	IGNORE_RETURN(terrainObject->getHeightForceChunkCreation(goodLocation, goodLocation.y));
 
 	return goodLocation;
 }	// ServerWorld::getGoodLocationAvoidCollidables
@@ -3386,8 +3356,8 @@ bool ServerWorld::isSpaceScene()
 {
 	if (!s_checkedForSpaceScene)
 	{
-		s_spaceScene=(strncmp("space_",getSceneId().c_str(),6)==0);
-		s_checkedForSpaceScene=true;
+		s_spaceScene = (strncmp("space_", getSceneId().c_str(), 6) == 0);
+		s_checkedForSpaceScene = true;
 	}
 
 	return s_spaceScene;
@@ -3578,4 +3548,3 @@ void ServerWorldNamespace::updatePlanetServer()
 }
 
 // ======================================================================
-

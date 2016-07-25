@@ -60,7 +60,6 @@ using namespace JNIWrappersNamespace;
 // macros
 //========================================================================
 
-
 #define GET_CLASS(var, name) tempClass = ms_env->FindClass(name); if (ms_env->ExceptionCheck()) { ms_env->ExceptionDescribe(); WARNING(true, ("Unable to find Java class "#name)); return false; } var = static_cast<jclass>(ms_env->NewGlobalRef(tempClass)); ms_env->DeleteLocalRef(tempClass); if (var == 0) { DEBUG_WARNING(true, ("Unable to create global reference for JavaLibrary " #var )); return false; }
 #define GET_FIELD(var, clazz, name, sig) var = ms_env->GetFieldID(clazz, name, sig); if (ms_env->ExceptionCheck()) { ms_env->ExceptionDescribe(); WARNING(true, ("Unable to find Java field "#name" for class "#clazz)); return false; }
 #define GET_METHOD(var, clazz, name, sig) var = ms_env->GetMethodID(clazz, name, sig); if (ms_env->ExceptionCheck()) { ms_env->ExceptionDescribe(); WARNING(true, ("Unable to find Java method "#name" for class "#clazz)); return false; }
@@ -71,7 +70,6 @@ using namespace JNIWrappersNamespace;
 //========================================================================
 // local constants
 //========================================================================
-
 
 // set path to jvm
 #if defined(WIN32)
@@ -84,13 +82,12 @@ const char *JNI_DLL_PATH = "libjvm.so";
 #endif
 
 extern "C" {
-typedef jint (JNICALL *JNI_CREATEJAVAVMPROC)(JavaVM**, void**, void*);
+	typedef jint(JNICALL *JNI_CREATEJAVAVMPROC)(JavaVM**, void**, void*);
 }
 
 //========================================================================
 // JNI native function namespaces
 //========================================================================
-
 
 namespace ScriptMethodsActionStatesNamespace
 {
@@ -721,7 +718,7 @@ jmethodID    JavaLibrary::ms_midLibraryGMLibUnfreeze = nullptr;
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 
-int          JavaLibrary::ms_loaded = 0;
+volatile int          JavaLibrary::ms_loaded = 0;
 Semaphore *  JavaLibrary::ms_shutdownJava = nullptr;
 
 int     JavaLibrary::GlobalInstances::ms_stringIdIndex = 0;
@@ -739,7 +736,6 @@ GlobalRefPtr JavaLibrary::GlobalInstances::ms_modifiableStringIds[MAX_MODIFIABLE
 GlobalRefPtr JavaLibrary::GlobalInstances::ms_menuInfo;
 GlobalArrayRefPtr JavaLibrary::ms_attribModList[MAX_RECURSION_COUNT];
 GlobalArrayRefPtr JavaLibrary::ms_mentalStateModList[MAX_RECURSION_COUNT];
-
 
 // ======================================================================
 
@@ -783,7 +779,6 @@ void JavaLibrary::fatalHandler(int signum)
 	fprintf(stderr, "In JavaLibrary::fatalHandler, signal %d: ", signum);
 	if (signum == SIGSEGV && ms_jvm)
 	{
-
 		// try to see if our call stack came from C or Java
 		void *frameAddress = __builtin_frame_address(0);
 		// the address that generated the segfault is stored at an offset of 0x44 from
@@ -811,14 +806,14 @@ void JavaLibrary::fatalHandler(int signum)
 		if (crashAddress2a != nullptr)
 		{
 			frameAddressA = __builtin_frame_address(1);
-			if (frameAddressA != nullptr && 
+			if (frameAddressA != nullptr &&
 				(reinterpret_cast<uint32>(frameAddressA) >> 16 == frameAddressHigh))
 			{
 				crashAddress2b = __builtin_return_address(1);
 				if (crashAddress2b != nullptr)
 				{
 					frameAddressB = __builtin_frame_address(2);
-					if (frameAddressB != nullptr && 
+					if (frameAddressB != nullptr &&
 						(reinterpret_cast<uint32>(frameAddressB) >> 16 == frameAddressHigh))
 					{
 						crashAddress2c = __builtin_return_address(2);
@@ -882,7 +877,7 @@ void JavaLibrary::fatalHandler(int signum)
  */
 JavaLibrary::JavaLibrary(void)
 {
-int i;
+	int i;
 
 	if (ms_instance != nullptr || ms_loaded != 0)
 		return;
@@ -908,7 +903,6 @@ int i;
 	for (i = 0; i < MAX_MODIFIABLE_STRING_ID_PARAMS; ++i)
 		GlobalInstances::ms_modifiableStringIds[i] = GlobalRef::cms_nullPtr;
 
-
 	m_initializerThread = new MemberFunctionThreadZero<JavaLibrary>("JavaLibrary", *this, &JavaLibrary::initializeJavaThread);
 	ThreadHandle tempThreadHandle(m_initializerThread); // for some obscure reason, the thread doesn't run unless you create a handle, but we don't need the handle for anything
 	UNREF(tempThreadHandle);
@@ -932,7 +926,7 @@ int i;
  */
 JavaLibrary::~JavaLibrary()
 {
-	disconnectFromJava();	
+	disconnectFromJava();
 
 	if (ms_shutdownJava != nullptr)
 	{
@@ -966,7 +960,7 @@ void JavaLibrary::install(void)
 			{
 				delete lib;
 				if (ms_javaVmType != JV_none)
-					FATAL (true, ("Unable to initialize Java"));
+					FATAL(true, ("Unable to initialize Java"));
 			}
 		}
 	}
@@ -1051,7 +1045,7 @@ void JavaLibrary::initializeJavaThread()
 	classPath += ConfigServerGame::getScriptPath();
 
 	JavaVMInitArgs vm_args;
-	JavaVMOption tempOption = {nullptr, nullptr};
+	JavaVMOption tempOption = { nullptr, nullptr };
 	std::vector<JavaVMOption> options;
 	char *jdwpBuffer = nullptr;
 
@@ -1084,8 +1078,8 @@ void JavaLibrary::initializeJavaThread()
 
 	// java 1.8 and higher uses metaspace...which is apparently unlimited by default
 	// we have to consider it with our 512m max above so 96 on 32-bit is as high as we go
-        tempOption.optionString = "-XX:MaxMetaspaceSize=96m";
-        options.push_back(tempOption);
+	tempOption.optionString = "-XX:MaxMetaspaceSize=96m";
+	options.push_back(tempOption);
 
 	// rice options!!!!1! yay - actually after much trial and error these are a good mix for speed and efficiency
 	// i should split these someday into separate optionStrings...or not
@@ -1128,17 +1122,17 @@ void JavaLibrary::initializeJavaThread()
 	tempOption.optionString = const_cast<char *>(classPath.c_str());
 	options.push_back(tempOption);
 
-// TODO: this really sucks as the jvm won't start without the param
-// there's a dynamic method but requires the jvm to already be running, wtf?
-// so we'll support the dev and stable versions
+	// TODO: this really sucks as the jvm won't start without the param
+	// there's a dynamic method but requires the jvm to already be running, wtf?
+	// so we'll support the dev and stable versions
 #ifdef JNI_VERSION_1_9
-        vm_args.version = JNI_VERSION_1_9;
+	vm_args.version = JNI_VERSION_1_9;
 #define JNIVERSET = 1
 #endif
 
 #if !defined(JNIVERSET) && defined(JNI_VERSION_1_8)
 	vm_args.version = JNI_VERSION_1_8;
-#define JNIVERSET = 1 
+#define JNIVERSET = 1
 #endif
 
 #ifdef JNIVERSET
@@ -1153,11 +1147,11 @@ void JavaLibrary::initializeJavaThread()
 
 	// create the JVM
 	JNIEnv * env = nullptr;
-	jint result = (*JNI_CreateJavaVMProc)(&ms_jvm, reinterpret_cast<void**>(&env), &vm_args);	
+	jint result = (*JNI_CreateJavaVMProc)(&ms_jvm, reinterpret_cast<void**>(&env), &vm_args);
 
 	if (result != 0)
 	{
-		FATAL (true, ("Failed to CreateJavaVMProc: %d", result));
+		FATAL(true, ("Failed to CreateJavaVMProc: %d", result));
 		ms_loaded = -1;
 		return;
 	}
@@ -1165,7 +1159,7 @@ void JavaLibrary::initializeJavaThread()
 
 	// i don't think this bit functions anymore with new java?
 	if (ConfigServerGame::getTrapScriptCrashes())
-	{	
+	{
 		//set up signal handler for fatals in linux
 		OurSa.sa_handler = fatalHandler;
 		sigemptyset(&OurSa.sa_mask);
@@ -1199,10 +1193,10 @@ void JavaLibrary::initializeJavaThread()
 //----------------------------------------------------------------------
 
 /**
- * Connects this thread to the Java VM and initializes our member vars that 
+ * Connects this thread to the Java VM and initializes our member vars that
  * reference Java objects.
  *
- * @return true on success, false if we were unable to connect to Java or 
+ * @return true on success, false if we were unable to connect to Java or
  * initialize our members
  */
 bool JavaLibrary::connectToJava()
@@ -1250,10 +1244,10 @@ bool JavaLibrary::connectToJava()
 		ms_env->ExceptionDescribe();
 		return false;
 	}
-	jobject localEntry = ms_env->NewObject(ms_clsScriptEntry, constructor, 
+	jobject localEntry = ms_env->NewObject(ms_clsScriptEntry, constructor,
 		scriptPath.getValue(),
 		ConfigServerGame::getJavaConsoleDebugMessages(),
-		ConfigServerGame::getCrashOnScriptError(), 
+		ConfigServerGame::getCrashOnScriptError(),
 		ConfigServerGame::getScriptWatcherWarnTime(),
 		ConfigServerGame::getScriptWatcherInterruptTime(),
 		ConfigServerGame::getScriptStackErrorLimit(),
@@ -1267,7 +1261,7 @@ bool JavaLibrary::connectToJava()
 	ms_env->DeleteLocalRef(localEntry);
 
 	// get the methodIDs for the runScript() and the unloadClass() methods
-	GET_STATIC_METHOD(ms_midRunOne,ms_clsScriptEntry, "runScript", "(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)I");
+	GET_STATIC_METHOD(ms_midRunOne, ms_clsScriptEntry, "runScript", "(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)I");
 	GET_STATIC_METHOD(ms_midRunAll, ms_clsScriptEntry, "runScripts", "(Ljava/lang/String;[Ljava/lang/Object;)I");
 	GET_STATIC_METHOD(ms_midCallMessages, ms_clsScriptEntry, "callMessageHandlers", "(Ljava/lang/String;JLscript/dictionary;)I");
 	GET_STATIC_METHOD(ms_midRunConsoleHandler, ms_clsScriptEntry, "runConsoleHandler", "(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;");
@@ -1713,7 +1707,7 @@ bool JavaLibrary::connectToJava()
 	GET_FIELD(ms_fidCombatEngineCombatantDataPosture, ms_clsCombatEngineCombatantData, "posture", "I");
 	GET_FIELD(ms_fidCombatEngineCombatantDataLocomotion, ms_clsCombatEngineCombatantData, "locomotion", "I");
 	GET_FIELD(ms_fidCombatEngineCombatantDataScriptMod, ms_clsCombatEngineCombatantData, "scriptMod", "I");
-	
+
 	GET_CLASS(ms_clsCombatEngineAttackerData, "script/combat_engine$attacker_data");
 	GET_FIELD(ms_fidCombatEngineAttackerDataWeaponSkill, ms_clsCombatEngineAttackerData, "weaponSkillMod", "I");
 	GET_FIELD(ms_fidCombatEngineAttackerDataAims, ms_clsCombatEngineAttackerData, "aims", "I");
@@ -1734,7 +1728,7 @@ bool JavaLibrary::connectToJava()
 	GET_FIELD(ms_fidCombatEngineWeaponDataElementalValue, ms_clsCombatEngineWeaponData, "elementalValue", "I");
 	GET_FIELD(ms_fidCombatEngineWeaponDataAttackSpeed, ms_clsCombatEngineWeaponData, "attackSpeed", "F");
 	GET_FIELD(ms_fidCombatEngineWeaponDataWoundChance, ms_clsCombatEngineWeaponData, "woundChance", "F");
-    GET_FIELD(ms_fidCombatEngineWeaponDataAccuracy, ms_clsCombatEngineWeaponData, "accuracy", "I");
+	GET_FIELD(ms_fidCombatEngineWeaponDataAccuracy, ms_clsCombatEngineWeaponData, "accuracy", "I");
 	GET_FIELD(ms_fidCombatEngineWeaponDataMinRange, ms_clsCombatEngineWeaponData, "minRange", "F");
 	GET_FIELD(ms_fidCombatEngineWeaponDataMaxRange, ms_clsCombatEngineWeaponData, "maxRange", "F");
 	GET_FIELD(ms_fidCombatEngineWeaponDataDamageRadius, ms_clsCombatEngineWeaponData, "damageRadius", "F");
@@ -1838,23 +1832,20 @@ bool JavaLibrary::connectToJava()
 	GET_CLASS(ms_clsLibrarySpaceTransition, "script/library/space_transition");
 	GET_STATIC_METHOD(ms_midLibrarySpaceTransitionSetPlayerOvert, ms_clsLibrarySpaceTransition, "setPlayerOvert", "(J)V");
 	GET_STATIC_METHOD(ms_midLibrarySpaceTransitionClearOvertStatus, ms_clsLibrarySpaceTransition, "clearOvertStatus", "(J)V");
-	
+
 	///////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////
-	
+
 	// get class and field info needed by the CS Handler stuff.  These may not have been
 	// written specifically for the CS Handler.
-	
-	
-	
-	GET_CLASS( ms_clsLibraryDump, "script/library/dump" );
-	GET_STATIC_METHOD( ms_midLibraryDumpDumpTargetInfo, ms_clsLibraryDump, "getTargetInfoStringByLong", "(J)Ljava/lang/String;" );
-	
-	GET_CLASS( ms_clsLibraryGMLib, "script/library/gmlib" );
-	GET_STATIC_METHOD( ms_midLibraryGMLibFreeze, ms_clsLibraryGMLib, "freezePlayer", "(J)Ljava/lang/String;" );
-	GET_STATIC_METHOD( ms_midLibraryGMLibUnfreeze, ms_clsLibraryGMLib, "unFreezePlayer", "(J)V" );
 
-	
+	GET_CLASS(ms_clsLibraryDump, "script/library/dump");
+	GET_STATIC_METHOD(ms_midLibraryDumpDumpTargetInfo, ms_clsLibraryDump, "getTargetInfoStringByLong", "(J)Ljava/lang/String;");
+
+	GET_CLASS(ms_clsLibraryGMLib, "script/library/gmlib");
+	GET_STATIC_METHOD(ms_midLibraryGMLibFreeze, ms_clsLibraryGMLib, "freezePlayer", "(J)Ljava/lang/String;");
+	GET_STATIC_METHOD(ms_midLibraryGMLibUnfreeze, ms_clsLibraryGMLib, "unFreezePlayer", "(J)V");
+
 	/////////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////////////////////////////////////
 	// register our native methods
@@ -1967,7 +1958,7 @@ bool JavaLibrary::registerNatives(const JNINativeMethod natives[], int count)
 			result = lresult;
 		}
 	}
-	
+
 	ms_env->DeleteLocalRef(baseClass);
 	if (ms_env->ExceptionCheck())
 	{
@@ -1985,12 +1976,12 @@ bool JavaLibrary::registerNatives(const JNINativeMethod natives[], int count)
 //----------------------------------------------------------------------
 
 /**
- * Disconnects this thread from the Java VM. Any vars that reference Java objects 
+ * Disconnects this thread from the Java VM. Any vars that reference Java objects
  * will be invalid after this call.
  */
 void JavaLibrary::disconnectFromJava()
 {
-int i;
+	int i;
 
 	if (ms_jvm == 0 || ms_env == 0)
 		return;
@@ -2145,9 +2136,9 @@ bool JavaLibrary::queryScriptFunctions(const std::string & scriptName)
 		scriptName);
 	functionList.clear();
 
-//	DEBUG_REPORT_LOG(true, ("Querying script %s methods:\n", scriptName.c_str()));
+	//	DEBUG_REPORT_LOG(true, ("Querying script %s methods:\n", scriptName.c_str()));
 
-	// get the name of each method
+		// get the name of each method
 	bool result = true;
 	int count = getArrayLength(*scriptMethods);
 	for (int i = 0; i < count; ++i)
@@ -2168,7 +2159,7 @@ bool JavaLibrary::queryScriptFunctions(const std::string & scriptName)
 		// convert the method name to a C string and store it
 		std::string localName;
 		convert(*methodName, localName);
-//		DEBUG_REPORT_LOG(true, ("\t%s\n", localName));
+		//		DEBUG_REPORT_LOG(true, ("\t%s\n", localName));
 		functionList.insert(localName);
 	}
 	return result;
@@ -2183,7 +2174,7 @@ jlong JavaLibrary::getFreeJavaMemory()
 {
 	if (ms_instance == nullptr || ms_env == nullptr)
 		return 0;
-	
+
 	return ms_env->CallStaticLongMethod(ms_clsScriptEntry, ms_midScriptEntryGetFreeMem);
 }	// JavaLibrary::getFreeJavaMemory
 
@@ -2203,7 +2194,7 @@ void JavaLibrary::printJavaStack()
 void JavaLibrary::enableLogging(bool enable) const
 {
 	if (ms_instance == nullptr || ms_env == nullptr)
-		return;	
+		return;
 
 	ms_env->CallStaticVoidMethod(ms_clsScriptEntry,
 		ms_midScriptEntryEnableLogging, enable);
@@ -2217,7 +2208,7 @@ void JavaLibrary::enableLogging(bool enable) const
 void JavaLibrary::enableNewJediTracking(bool enableTracking)
 {
 	if (ms_instance == nullptr || ms_env == nullptr)
-		return;	
+		return;
 
 	ms_env->CallStaticVoidMethod(ms_clsScriptEntry,
 		ms_midScriptEntryEnableNewJediTracking, enableTracking);
@@ -2271,30 +2262,29 @@ void JavaLibrary::spaceClearOvert(const NetworkId & ship)
 	callStaticVoidMethod(ms_clsLibrarySpaceTransition, ms_midLibrarySpaceTransitionClearOvertStatus, ship.getValue());
 }
 
-std::string JavaLibrary::getObjectDumpInfo( NetworkId id )
+std::string JavaLibrary::getObjectDumpInfo(NetworkId id)
 {
-	
-	JavaStringPtr s = callStaticStringMethod(ms_clsLibraryDump, ms_midLibraryDumpDumpTargetInfo, id.getValue() );
+	JavaStringPtr s = callStaticStringMethod(ms_clsLibraryDump, ms_midLibraryDumpDumpTargetInfo, id.getValue());
 
 	std::string retval;
-	convert( *s, retval );
-	
+	convert(*s, retval);
+
 	return retval;
 }
 
-void JavaLibrary::freezePlayer( const NetworkId & id )
+void JavaLibrary::freezePlayer(const NetworkId & id)
 {
-	DEBUG_REPORT_LOG( true, ( "calling freeze code in script" ) );
-	JavaStringPtr s = callStaticStringMethod( ms_clsLibraryGMLib, ms_midLibraryGMLibFreeze, id.getValue() );
-	DEBUG_REPORT_LOG( true, ( "done with script" ) );
+	DEBUG_REPORT_LOG(true, ("calling freeze code in script"));
+	JavaStringPtr s = callStaticStringMethod(ms_clsLibraryGMLib, ms_midLibraryGMLibFreeze, id.getValue());
+	DEBUG_REPORT_LOG(true, ("done with script"));
 	std::string retval;
-	convert( *s, retval );
-	DEBUG_REPORT_LOG( true, ("Got back %s", retval.c_str() ) );
+	convert(*s, retval);
+	DEBUG_REPORT_LOG(true, ("Got back %s", retval.c_str()));
 }
 
-void JavaLibrary::unFreezePlayer( const NetworkId & id )
+void JavaLibrary::unFreezePlayer(const NetworkId & id)
 {
-	callStaticVoidMethod( ms_clsLibraryGMLib, ms_midLibraryGMLibUnfreeze, id.getValue() );
+	callStaticVoidMethod(ms_clsLibraryGMLib, ms_midLibraryGMLibUnfreeze, id.getValue());
 }
 
 /**
@@ -2420,7 +2410,7 @@ void JavaLibrary::setObjIdLoaded(const NetworkId &object)
 }	// JavaLibrary::setObjIdLoaded
 
 /**
- * Sets the initialized flag of an obj_id. You cannot uninitialize an object, 
+ * Sets the initialized flag of an obj_id. You cannot uninitialize an object,
  * it is marked uninitialized when it is deleted.
  *
  * @param object		the object we want to flag as initialized
@@ -2476,9 +2466,9 @@ void JavaLibrary::attachScriptToObjId(const NetworkId &object,
 	{
 		LocalRefPtr obj_id = getObjId(object);
 		if (obj_id == LocalRef::cms_nullPtr)
-		return;
+			return;
 
-	JavaString jscript(script.c_str());
+		JavaString jscript(script.c_str());
 
 		callVoidMethod(*obj_id, ms_midObjIdAttachScript, jscript.getValue());
 	}
@@ -2543,9 +2533,9 @@ void JavaLibrary::detachScriptFromObjId(const NetworkId &object,
 	{
 		LocalRefPtr obj_id = getObjId(object);
 		if (obj_id == LocalRef::cms_nullPtr)
-		return;
+			return;
 
-	JavaString jscript(script.c_str());
+		JavaString jscript(script.c_str());
 
 		callVoidMethod(*obj_id, ms_midObjIdDetachScript, jscript.getValue());
 	}
@@ -2562,7 +2552,7 @@ void JavaLibrary::detachAllScriptsFromObjId(const NetworkId &object)
 	{
 		LocalRefPtr obj_id = getObjId(object);
 		if (obj_id == LocalRef::cms_nullPtr)
-		return;
+			return;
 
 		callVoidMethod(*obj_id, ms_midObjIdDetachAllScripts);
 	}
@@ -2656,7 +2646,7 @@ jint JavaLibrary::callScriptEntry(const JavaStringParam & script,
 		{
 			LOG("ScriptInvestigation", ("callScriptEntry failed because runOne was nullptr"));
 		}
-		
+
 		return SCRIPT_OVERRIDE;
 	}
 
@@ -2668,9 +2658,9 @@ jint JavaLibrary::callScriptEntry(const JavaStringParam & script,
 	{
 		LOG("ScriptRecursion", ("callScriptEntry1 recursion %d", ms_currentRecursionCount));
 	}
-  	jint result = ms_env->CallStaticIntMethod(ms_clsScriptEntry, ms_midRunOne,
+	jint result = ms_env->CallStaticIntMethod(ms_clsScriptEntry, ms_midRunOne,
 		script.getValue(), method.getValue(), params);
-  	--ms_currentRecursionCount;
+	--ms_currentRecursionCount;
 
 	result = handleScriptEntryCleanup(result);
 
@@ -2718,9 +2708,9 @@ jint JavaLibrary::callScriptEntry(const JavaStringParam & method, jobjectArray p
 	{
 		LOG("ScriptRecursion", ("callScriptEntry2 recursion %d", ms_currentRecursionCount));
 	}
-  	jint result = ms_env->CallStaticIntMethod(ms_clsScriptEntry, ms_midRunAll,
+	jint result = ms_env->CallStaticIntMethod(ms_clsScriptEntry, ms_midRunAll,
 		method.getValue(), params);
-  	--ms_currentRecursionCount;
+	--ms_currentRecursionCount;
 
 	result = handleScriptEntryCleanup(result);
 
@@ -2756,7 +2746,7 @@ jstring JavaLibrary::callScriptConsoleHandlerEntry(const JavaStringParam & scrip
 		{
 			LOG("ScriptInvestigation", ("callScriptConsoleHandlerEntry failed because runConsoleHandler was nullptr"));
 		}
-		
+
 		return 0;
 	}
 
@@ -2768,9 +2758,9 @@ jstring JavaLibrary::callScriptConsoleHandlerEntry(const JavaStringParam & scrip
 	{
 		LOG("ScriptRecursion", ("callScriptConsoleHandlerEntry recursion %d", ms_currentRecursionCount));
 	}
-  	jstring result = static_cast<jstring>(ms_env->CallStaticObjectMethod(
+	jstring result = static_cast<jstring>(ms_env->CallStaticObjectMethod(
 		ms_clsScriptEntry, ms_midRunConsoleHandler, script.getValue(), method.getValue(), params));
-  	--ms_currentRecursionCount;
+	--ms_currentRecursionCount;
 
 	IGNORE_RETURN(handleScriptEntryCleanup(SCRIPT_CONTINUE));
 
@@ -2806,270 +2796,270 @@ void JavaLibrary::convert(const ScriptParams & params, JavaDictionaryPtr & dicti
 		JavaString paramName(params.getParamName(i).c_str());
 		switch (params.getParamType(i))
 		{
-			case Param::BOOL:
+		case Param::BOOL:
+		{
+			callObjectMethod(*localDictionary,
+				ms_midDictionaryPutBool, paramName.getValue(),
+				params.getBoolParam(i));
+		}
+		break;
+		case Param::BOOL_ARRAY:
+		{
+			const std::deque<bool> & boolArray = params.getBoolArrayParam(i);
+			LocalBooleanArrayRefPtr array = createNewBooleanArray(boolArray.size());
+			if (array != LocalBooleanArrayRef::cms_nullPtr)
+			{
+				if (boolArray.size() > 0)
 				{
-					callObjectMethod(*localDictionary,
-						ms_midDictionaryPutBool, paramName.getValue(),
-						params.getBoolParam(i));
-				}
-				break;
-			case Param::BOOL_ARRAY:
-				{
-					const std::deque<bool> & boolArray = params.getBoolArrayParam(i);
-					LocalBooleanArrayRefPtr array = createNewBooleanArray(boolArray.size());
-					if (array != LocalBooleanArrayRef::cms_nullPtr)
-					{
-						if (boolArray.size() > 0)
-						{
-							// we need the array of bool to be contiguous in order to 
-							// "memcopy" it into the Java return buffer; a deque<bool>
-							// does not store the array of bool contiguously; neither
-							// does a vector<bool>; in fact, if you find an stl container
-							// of bool that stores the array of bool contiguously, you
-							// should  change this code to use it; for now, we allocate
-							// a temporary bool array and copy the deque's bool array
-							// into it, and  pass that to the JNI call to do the "memcopy"
-							bool * tempBoolArray = new bool[boolArray.size()];
-							int indexBoolArray = 0;
-							for (std::deque<bool>::const_iterator iter = boolArray.begin(); iter != boolArray.end(); ++iter, ++indexBoolArray)
-								tempBoolArray[indexBoolArray] = *iter;
+					// we need the array of bool to be contiguous in order to
+					// "memcopy" it into the Java return buffer; a deque<bool>
+					// does not store the array of bool contiguously; neither
+					// does a vector<bool>; in fact, if you find an stl container
+					// of bool that stores the array of bool contiguously, you
+					// should  change this code to use it; for now, we allocate
+					// a temporary bool array and copy the deque's bool array
+					// into it, and  pass that to the JNI call to do the "memcopy"
+					bool * tempBoolArray = new bool[boolArray.size()];
+					int indexBoolArray = 0;
+					for (std::deque<bool>::const_iterator iter = boolArray.begin(); iter != boolArray.end(); ++iter, ++indexBoolArray)
+						tempBoolArray[indexBoolArray] = *iter;
 
-							setBooleanArrayRegion(*array, 0, boolArray.size(), 
-								const_cast<jboolean *>(reinterpret_cast<const jboolean *>(&tempBoolArray[0])));
+					setBooleanArrayRegion(*array, 0, boolArray.size(),
+						const_cast<jboolean *>(reinterpret_cast<const jboolean *>(&tempBoolArray[0])));
 
-							delete [] tempBoolArray;
-						}
+					delete[] tempBoolArray;
+				}
 
-						callObjectMethod(*localDictionary,
-							ms_midDictionaryPut, paramName.getValue(), array->getValue()
-							);
-					}
-				}
-				break;
-			case Param::INT:
+				callObjectMethod(*localDictionary,
+					ms_midDictionaryPut, paramName.getValue(), array->getValue()
+				);
+			}
+		}
+		break;
+		case Param::INT:
+		{
+			callObjectMethod(*localDictionary,
+				ms_midDictionaryPutInt, paramName.getValue(),
+				params.getIntParam(i));
+		}
+		break;
+		case Param::INT_ARRAY:
+		{
+			const std::vector<int> & intArray = params.getIntArrayParam(i);
+			LocalIntArrayRefPtr array = createNewIntArray(intArray.size());
+			if (array != LocalIntArrayRef::cms_nullPtr)
+			{
+				if (intArray.size() > 0)
 				{
-					callObjectMethod(*localDictionary,
-						ms_midDictionaryPutInt, paramName.getValue(),
-						params.getIntParam(i));
-				}
-				break;
-			case Param::INT_ARRAY:
-				{
-					const std::vector<int> & intArray = params.getIntArrayParam(i);
-					LocalIntArrayRefPtr array = createNewIntArray(intArray.size());
-					if (array != LocalIntArrayRef::cms_nullPtr)
-					{
-						if (intArray.size() > 0)
-						{
 #if INT_MAX == LONG_MAX
-							setIntArrayRegion(*array, 0, intArray.size(), const_cast<jint *>(
-								reinterpret_cast<const jint *>(&intArray[0])));
+					setIntArrayRegion(*array, 0, intArray.size(), const_cast<jint *>(
+						reinterpret_cast<const jint *>(&intArray[0])));
 #else
-							std::vector<jint> intArray2(intArray.begin(), intArray.end());
-							setIntArrayRegion(*array, 0, intArray.size(), const_cast<jint *>(&intArray2[0]));
+					std::vector<jint> intArray2(intArray.begin(), intArray.end());
+					setIntArrayRegion(*array, 0, intArray.size(), const_cast<jint *>(&intArray2[0]));
 #endif
-						}
+				}
 
-						callObjectMethod(*localDictionary,
-							ms_midDictionaryPut, paramName.getValue(), array->getValue()
-							);
+				callObjectMethod(*localDictionary,
+					ms_midDictionaryPut, paramName.getValue(), array->getValue()
+				);
+			}
+		}
+		break;
+		case Param::FLOAT:
+		{
+			callObjectMethod(*localDictionary,
+				ms_midDictionaryPutFloat, paramName.getValue(),
+				params.getFloatParam(i));
+		}
+		break;
+		case Param::STRING:
+		{
+			JavaString value(params.getStringParam(i));
+			callObjectMethod(*localDictionary,
+				ms_midDictionaryPut, paramName.getValue(), value.getValue());
+		}
+		break;
+		case Param::STRING_ARRAY:
+		{
+			LocalObjectArrayRefPtr value;
+			ScriptConversion::convert(params.getStringArrayParam(i), value);
+			callObjectMethod(*localDictionary,
+				ms_midDictionaryPut, paramName.getValue(), value->getValue());
+		}
+		break;
+		case Param::UNICODE:
+		{
+			JavaString value(params.getUnicodeParam(i));
+			callObjectMethod(*localDictionary,
+				ms_midDictionaryPut, paramName.getValue(), value.getValue());
+		}
+		break;
+		case Param::UNICODE_ARRAY:
+		{
+			LocalObjectArrayRefPtr value;
+			ScriptConversion::convert(params.getUnicodeArrayParam(i), value);
+			callObjectMethod(*localDictionary,
+				ms_midDictionaryPut, paramName.getValue(), value->getValue());
+		}
+		break;
+		case Param::OBJECT_ID:
+		{
+			LocalRefPtr arg = getObjId(params.getObjIdParam(i));
+			if (arg == LocalRef::cms_nullPtr)
+				return;
+			callObjectMethod(*localDictionary,
+				ms_midDictionaryPut, paramName.getValue(), arg->getValue());
+		}
+		break;
+		case Param::OBJECT_ID_ARRAY:
+		{
+			const std::vector<NetworkId> & objIds =
+				params.getObjIdArrayParam(i);
+			LocalObjectArrayRefPtr array = createNewObjectArray(objIds.size(), ms_clsObjId);
+			if (array != LocalObjectArrayRef::cms_nullPtr)
+			{
+				int count = objIds.size();
+				for (int j = 0; j < count; ++j)
+				{
+					LocalRefPtr id = getObjId(objIds[j]);
+					if (id != LocalRef::cms_nullPtr)
+					{
+						setObjectArrayElement(*array, j, *id);
 					}
 				}
-				break;
-			case Param::FLOAT:
+				callObjectMethod(*localDictionary,
+					ms_midDictionaryPut, paramName.getValue(), array->getValue());
+			}
+			else
+			{
+				if (ms_env->ExceptionCheck())
+					ms_env->ExceptionDescribe();
+				return;
+			}
+		}
+		break;
+		case Param::CACHED_OBJECT_ID_ARRAY:
+		{
+			const std::vector<CachedNetworkId> & objIds =
+				params.getCachedObjIdArrayParam(i);
+			LocalObjectArrayRefPtr array = createNewObjectArray(objIds.size(), ms_clsObjId);
+			if (array != LocalObjectArrayRef::cms_nullPtr)
+			{
+				int count = objIds.size();
+				for (int j = 0; j < count; ++j)
 				{
-					callObjectMethod(*localDictionary,
-						ms_midDictionaryPutFloat, paramName.getValue(),
-						params.getFloatParam(i));
-				}
-				break;
-			case Param::STRING:
-				{
-					JavaString value(params.getStringParam(i));
-					callObjectMethod(*localDictionary,
-						ms_midDictionaryPut, paramName.getValue(), value.getValue());
-				}
-				break;
-			case Param::STRING_ARRAY:
-				{
-					LocalObjectArrayRefPtr value;
-					ScriptConversion::convert(params.getStringArrayParam(i), value);
-					callObjectMethod(*localDictionary,
-						ms_midDictionaryPut, paramName.getValue(), value->getValue());
-				}
-				break;
-			case Param::UNICODE:
-				{
-					JavaString value(params.getUnicodeParam(i));
-					callObjectMethod(*localDictionary,
-						ms_midDictionaryPut, paramName.getValue(), value.getValue());
-				}
-				break;
-			case Param::UNICODE_ARRAY:
-				{
-					LocalObjectArrayRefPtr value;
-					ScriptConversion::convert(params.getUnicodeArrayParam(i), value);
-					callObjectMethod(*localDictionary,
-						ms_midDictionaryPut, paramName.getValue(), value->getValue());
-				}
-				break;
-			case Param::OBJECT_ID:
-				{
-					LocalRefPtr arg = getObjId(params.getObjIdParam(i));
-					if (arg == LocalRef::cms_nullPtr)
-						return;
-					callObjectMethod(*localDictionary,
-						ms_midDictionaryPut, paramName.getValue(), arg->getValue());
-				}
-				break;
-			case Param::OBJECT_ID_ARRAY:
-				{
-					const std::vector<NetworkId> & objIds =
-						params.getObjIdArrayParam(i);
-					LocalObjectArrayRefPtr array = createNewObjectArray(objIds.size(), ms_clsObjId);
-					if (array != LocalObjectArrayRef::cms_nullPtr)
+					LocalRefPtr id = getObjId(objIds[j]);
+					if (id != LocalRef::cms_nullPtr)
 					{
-						int count = objIds.size();
-						for (int j = 0; j < count; ++j)
+						setObjectArrayElement(*array, j, *id);
+					}
+				}
+				callObjectMethod(*localDictionary,
+					ms_midDictionaryPut, paramName.getValue(), array->getValue());
+			}
+			else
+			{
+				if (ms_env->ExceptionCheck())
+					ms_env->ExceptionDescribe();
+				return;
+			}
+		}
+		break;
+		case Param::OBJECT_ID_ARRAY_ARRAY:
+		{
+			const std::vector<const std::vector<NetworkId> *> & objIds =
+				params.getObjIdArrayArrayParam(i);
+			LocalObjectArrayRefPtr array = createNewObjectArray(objIds.size(), ms_clsObjIdArray);
+			if (array != LocalObjectArrayRef::cms_nullPtr)
+			{
+				int count = objIds.size();
+				for (int j = 0; j < count; ++j)
+				{
+					const std::vector<NetworkId> * inner = objIds[j];
+					if (inner != nullptr)
+					{
+						LocalObjectArrayRefPtr innerArray = createNewObjectArray(inner->size(), ms_clsObjId);
+						if (innerArray != LocalObjectArrayRef::cms_nullPtr)
 						{
-							LocalRefPtr id = getObjId(objIds[j]);
-							if (id != LocalRef::cms_nullPtr)
+							int innerCount = inner->size();
+							for (int k = 0; k < innerCount; ++k)
 							{
-								setObjectArrayElement(*array, j, *id);
-							}
-						}
-						callObjectMethod(*localDictionary,
-							ms_midDictionaryPut, paramName.getValue(), array->getValue());
-					}
-					else
-					{
-						if (ms_env->ExceptionCheck())
-							ms_env->ExceptionDescribe();
-						return;
-					}
-				}
-				break;
-			case Param::CACHED_OBJECT_ID_ARRAY:
-				{
-					const std::vector<CachedNetworkId> & objIds =
-						params.getCachedObjIdArrayParam(i);
-					LocalObjectArrayRefPtr array = createNewObjectArray(objIds.size(), ms_clsObjId);
-					if (array != LocalObjectArrayRef::cms_nullPtr)
-					{
-						int count = objIds.size();
-						for (int j = 0; j < count; ++j)
-						{
-							LocalRefPtr id = getObjId(objIds[j]);
-							if (id != LocalRef::cms_nullPtr)
-							{
-								setObjectArrayElement(*array, j, *id);
-							}
-						}
-						callObjectMethod(*localDictionary,
-							ms_midDictionaryPut, paramName.getValue(), array->getValue());
-					}
-					else
-					{
-						if (ms_env->ExceptionCheck())
-							ms_env->ExceptionDescribe();
-						return;
-					}
-				}
-				break;
-			case Param::OBJECT_ID_ARRAY_ARRAY:
-				{
-					const std::vector<const std::vector<NetworkId> *> & objIds =
-						params.getObjIdArrayArrayParam(i);
-					LocalObjectArrayRefPtr array = createNewObjectArray(objIds.size(), ms_clsObjIdArray);
-					if (array != LocalObjectArrayRef::cms_nullPtr)
-					{
-						int count = objIds.size();
-						for (int j = 0; j < count; ++j)
-						{
-							const std::vector<NetworkId> * inner = objIds[j];
-							if (inner != nullptr)
-							{
-								LocalObjectArrayRefPtr innerArray = createNewObjectArray(inner->size(), ms_clsObjId);
-								if (innerArray != LocalObjectArrayRef::cms_nullPtr)
+								LocalRefPtr id = getObjId(inner->at(k));
+								if (id != LocalRef::cms_nullPtr)
 								{
-									int innerCount = inner->size();
-									for (int k = 0; k < innerCount; ++k)
-									{
-										LocalRefPtr id = getObjId(inner->at(k));
-										if (id != LocalRef::cms_nullPtr)
-										{
-											setObjectArrayElement(*innerArray, k, *id);
-										}
-									}
-									setObjectArrayElement(*array, j, *innerArray);
-								}
-								else
-								{
-									if (ms_env->ExceptionCheck())
-										ms_env->ExceptionDescribe();
-									return;
+									setObjectArrayElement(*innerArray, k, *id);
 								}
 							}
-							else
-							{
-								setObjectArrayElement(*array, j, *LocalRef::cms_nullPtr);
+							setObjectArrayElement(*array, j, *innerArray);
 						}
+						else
+						{
+							if (ms_env->ExceptionCheck())
+								ms_env->ExceptionDescribe();
+							return;
 						}
-						callObjectMethod(*localDictionary,
-							ms_midDictionaryPut, paramName.getValue(), array->getValue());
 					}
 					else
 					{
-						if (ms_env->ExceptionCheck())
-							ms_env->ExceptionDescribe();
-						return;
+						setObjectArrayElement(*array, j, *LocalRef::cms_nullPtr);
 					}
 				}
-				break;
-			case Param::LOCATION:
-				{
-					LocalRefPtr location;
-					if (ScriptConversion::convert(params.getLocationParam(i), "", NetworkId::cms_invalid, location))
-					{
-						callObjectMethod(*localDictionary,
-							ms_midDictionaryPut, paramName.getValue(), location->getValue());
-					}
-				}
-				break;
-			case Param::LOCATION_ARRAY:
-				{
-					LocalObjectArrayRefPtr locations;
-					if (ScriptConversion::convert(params.getLocationArrayParam(i), locations))
-					{
-						callObjectMethod(*localDictionary,
-							ms_midDictionaryPut, paramName.getValue(), locations->getValue());
-					}
-				}
-				break;
-			case Param::DICTIONARY:
-				{
-					LocalRefPtr dictionaryArg = convert(params.getValueDictionaryParam(i));
-					if (dictionaryArg != LocalRef::cms_nullPtr)
-					{
-						callObjectMethod(*localDictionary,
-							ms_midDictionaryPut, paramName.getValue(), dictionaryArg->getValue());
-					}
-					else
-					{
-						if (ms_env->ExceptionCheck())
-							ms_env->ExceptionDescribe();
-						return;
-					}		
-				}
-				break;
-			default:
-				{
-					DEBUG_REPORT_LOG(true, ("Unknown/unhandled parameter type "
-						"%d while parsing ScriptParameters\n", static_cast<int>(
-						params.getParamType(i))));
-					return;
-				}
-				break;
+				callObjectMethod(*localDictionary,
+					ms_midDictionaryPut, paramName.getValue(), array->getValue());
+			}
+			else
+			{
+				if (ms_env->ExceptionCheck())
+					ms_env->ExceptionDescribe();
+				return;
+			}
+		}
+		break;
+		case Param::LOCATION:
+		{
+			LocalRefPtr location;
+			if (ScriptConversion::convert(params.getLocationParam(i), "", NetworkId::cms_invalid, location))
+			{
+				callObjectMethod(*localDictionary,
+					ms_midDictionaryPut, paramName.getValue(), location->getValue());
+			}
+		}
+		break;
+		case Param::LOCATION_ARRAY:
+		{
+			LocalObjectArrayRefPtr locations;
+			if (ScriptConversion::convert(params.getLocationArrayParam(i), locations))
+			{
+				callObjectMethod(*localDictionary,
+					ms_midDictionaryPut, paramName.getValue(), locations->getValue());
+			}
+		}
+		break;
+		case Param::DICTIONARY:
+		{
+			LocalRefPtr dictionaryArg = convert(params.getValueDictionaryParam(i));
+			if (dictionaryArg != LocalRef::cms_nullPtr)
+			{
+				callObjectMethod(*localDictionary,
+					ms_midDictionaryPut, paramName.getValue(), dictionaryArg->getValue());
+			}
+			else
+			{
+				if (ms_env->ExceptionCheck())
+					ms_env->ExceptionDescribe();
+				return;
+			}
+		}
+		break;
+		default:
+		{
+			DEBUG_REPORT_LOG(true, ("Unknown/unhandled parameter type "
+				"%d while parsing ScriptParameters\n", static_cast<int>(
+					params.getParamType(i))));
+			return;
+		}
+		break;
 		}
 	}
 
@@ -3113,7 +3103,7 @@ LocalObjectArrayRefPtr JavaLibrary::convert(const NetworkId & self, const std::s
 
 	if (convert(jparams, 1, argList, args))
 		return jparams;
-	
+
 	return LocalObjectArrayRef::cms_nullPtr;
 }	// JavaLibrary::convert
 
@@ -3178,7 +3168,7 @@ bool JavaLibrary::convert(LocalObjectArrayRefPtr & javaParams, int startIndex, c
 			else if (argList[i] != '[')
 				break;
 			else
-				 ++dimensions;
+				++dimensions;
 		}
 
 		if (paramIndex >= args.getParamCount())
@@ -3189,610 +3179,610 @@ bool JavaLibrary::convert(LocalObjectArrayRefPtr & javaParams, int startIndex, c
 		LocalRefParamPtr arg = LocalRefParam::cms_nullPtr;
 		switch (argType)
 		{
-			case 'b':
-				if (dimensions == 0)
+		case 'b':
+			if (dimensions == 0)
+			{
+				if (args.getParamType(paramIndex) != Param::BOOL)
+					break;
+				jboolean param = args.getBoolParam(paramIndex);
+				arg = createNewObject(ms_clsBoolean, ms_midBoolean, param);
+			}
+			else
+			{
+				if (args.getParamType(paramIndex) != Param::BOOL_ARRAY)
+					break;
+				const std::deque<bool> & param = args.getBoolArrayParam(paramIndex);
+				int count = param.size();
+				LocalBooleanArrayRefPtr localInstance = createNewBooleanArray(count);
+
+				if (count > 0)
 				{
-					if (args.getParamType(paramIndex) != Param::BOOL)
+					// we need the array of bool to be contiguous in order to
+					// "memcopy" it into the Java return buffer; a deque<bool>
+					// does not store the array of bool contiguously; neither
+					// does a vector<bool>; in fact, if you find an stl container
+					// of bool that stores the array of bool contiguously, you
+					// should  change this code to use it; for now, we allocate
+					// a temporary bool array and copy the deque's bool array
+					// into it, and  pass that to the JNI call to do the "memcopy"
+					bool * tempBoolArray = new bool[count];
+					int indexBoolArray = 0;
+					for (std::deque<bool>::const_iterator iter = param.begin(); iter != param.end(); ++iter, ++indexBoolArray)
+						tempBoolArray[indexBoolArray] = *iter;
+
+					setBooleanArrayRegion(*localInstance, 0, count,
+						const_cast<jboolean *>(reinterpret_cast<const jboolean *>(&tempBoolArray[0])));
+
+					delete[] tempBoolArray;
+				}
+
+				if (ms_env->ExceptionCheck())
+				{
+					ms_env->ExceptionDescribe();
+					return 0;
+				}
+				arg = localInstance;
+			}
+			break;
+		case 'i':
+			if (dimensions == 0)
+			{
+				if (args.getParamType(paramIndex) != Param::INT)
+					break;
+				if (modifiable)
+				{
+					arg = globals.getNextModifiableInt();
+					if (arg == GlobalRef::cms_nullPtr)
 						break;
-					jboolean param = args.getBoolParam(paramIndex);
-					arg = createNewObject(ms_clsBoolean, ms_midBoolean, param);
+					jint param = args.getIntParam(paramIndex);
+					setIntField(*arg, ms_fidModifiableIntData, param);
 				}
 				else
 				{
-					if (args.getParamType(paramIndex) != Param::BOOL_ARRAY)
-						break;
-					const std::deque<bool> & param = args.getBoolArrayParam(paramIndex);
-					int count = param.size();
-					LocalBooleanArrayRefPtr localInstance = createNewBooleanArray(count);
-
-					if (count > 0)
-					{
-						// we need the array of bool to be contiguous in order to 
-						// "memcopy" it into the Java return buffer; a deque<bool>
-						// does not store the array of bool contiguously; neither
-						// does a vector<bool>; in fact, if you find an stl container
-						// of bool that stores the array of bool contiguously, you
-						// should  change this code to use it; for now, we allocate
-						// a temporary bool array and copy the deque's bool array
-						// into it, and  pass that to the JNI call to do the "memcopy"
-						bool * tempBoolArray = new bool[count];
-						int indexBoolArray = 0;
-						for (std::deque<bool>::const_iterator iter = param.begin(); iter != param.end(); ++iter, ++indexBoolArray)
-							tempBoolArray[indexBoolArray] = *iter;
-
-						setBooleanArrayRegion(*localInstance, 0, count,
-							const_cast<jboolean *>(reinterpret_cast<const jboolean *>(&tempBoolArray[0])));
-
-						delete [] tempBoolArray;
-					}
-
-					if (ms_env->ExceptionCheck())
-					{
-						ms_env->ExceptionDescribe();
-						return 0;
-					}
-					arg = localInstance;
+					jint param = args.getIntParam(paramIndex);
+					arg = createNewObject(ms_clsInteger, ms_midInteger, param);
 				}
-				break;
-			case 'i':
-				if (dimensions == 0)
+			}
+			else
+			{
+				if (args.getParamType(paramIndex) != Param::INT_ARRAY)
+					break;
+				const std::vector<int> & param = args.getIntArrayParam(paramIndex);
+				int count = param.size();
+				LocalIntArrayRefPtr localInstance = createNewIntArray(count);
+				jint * destination = ms_env->GetIntArrayElements(localInstance->getValue(), 0);
+				if (destination)
 				{
-					if (args.getParamType(paramIndex) != Param::INT)
+					int i;
+					for (i = 0; i < count; ++i)
+					{
+						destination[i] = param[i];
+					}
+					ms_env->ReleaseIntArrayElements(localInstance->getValue(), destination, 0);
+				}
+				if (ms_env->ExceptionCheck())
+				{
+					ms_env->ExceptionDescribe();
+					return 0;
+				}
+				arg = localInstance;
+			}
+			break;
+		case 'U':
+		{
+			if (dimensions != 0)
+			{
+				if (args.getParamType(paramIndex) != Param::BYTE_ARRAY)
+					break;
+				const std::vector<unsigned char> & param = args.getByteArrayParam(paramIndex);
+				int count = param.size();
+				LocalByteArrayRefPtr localInstance = createNewByteArray(count);
+				jbyte * destination = ms_env->GetByteArrayElements(localInstance->getValue(), 0);
+				if (destination)
+				{
+					int i;
+					for (i = 0; i < count; ++i)
+					{
+						destination[i] = param[i];
+					}
+					ms_env->ReleaseByteArrayElements(localInstance->getValue(), destination, 0);
+				}
+				if (ms_env->ExceptionCheck())
+				{
+					ms_env->ExceptionDescribe();
+					return 0;
+				}
+				arg = localInstance;
+			}
+		}
+		break;
+		case 'f':
+			if (dimensions == 0)
+			{
+				if (args.getParamType(paramIndex) != Param::FLOAT)
+					break;
+				if (modifiable)
+				{
+					arg = globals.getNextModifiableFloat();
+					if (arg == GlobalRef::cms_nullPtr)
 						break;
-					if (modifiable)
-					{
-						arg = globals.getNextModifiableInt();
-						if (arg == GlobalRef::cms_nullPtr)
-							break;
-						jint param = args.getIntParam(paramIndex);
-						setIntField(*arg, ms_fidModifiableIntData, param);
-					}
-					else
-					{
-						jint param = args.getIntParam(paramIndex);
-						arg = createNewObject(ms_clsInteger, ms_midInteger, param);
-					}
+					jfloat param = args.getFloatParam(paramIndex);
+					setFloatField(*arg, ms_fidModifiableFloatData, param);
 				}
 				else
 				{
-					if (args.getParamType(paramIndex) != Param::INT_ARRAY)
-						break;
-					const std::vector<int> & param = args.getIntArrayParam(paramIndex);
-					int count = param.size();
-					LocalIntArrayRefPtr localInstance = createNewIntArray(count);
-					jint * destination = ms_env->GetIntArrayElements(localInstance->getValue(), 0);
-					if (destination)
-					{
-						int i;
-						for (i=0; i<count; ++i)
-						{
-							destination[i] = param[i];
-						}
-						ms_env->ReleaseIntArrayElements(localInstance->getValue(), destination, 0);
-					}
-					if (ms_env->ExceptionCheck())
-					{
-						ms_env->ExceptionDescribe();
-						return 0;
-					}
-					arg = localInstance;
+					jfloat param = args.getFloatParam(paramIndex);
+					arg = createNewObject(ms_clsFloat, ms_midFloat, param);
 				}
-				break;
-			case 'U':
+			}
+			else
+			{
+				if (args.getParamType(paramIndex) != Param::FLOAT_ARRAY)
+					break;
+				const std::vector<float> & floats = args.getFloatArrayParam(paramIndex);
+				LocalFloatArrayRefPtr farray = createNewFloatArray(floats.size());
+				if (farray != LocalFloatArrayRef::cms_nullPtr)
 				{
-					if (dimensions != 0)
+					if (floats.size() > 0)
+						setFloatArrayRegion(*farray, 0, floats.size(), const_cast<float *>(&floats[0]));
+					arg = farray;
+				}
+			}
+			break;
+		case 's':
+			if (dimensions == 0)
+			{
+				if (args.getParamType(paramIndex) != Param::STRING)
+					break;
+				arg = createNewString(args.getStringParam(paramIndex));
+			}
+			else
+			{
+				if (args.getParamType(paramIndex) != Param::STRING_ARRAY)
+					break;
+
+				const std::vector<const char *> & strings =
+					args.getStringArrayParam(paramIndex);
+				LocalObjectArrayRefPtr localInstance = createNewObjectArray(strings.size(), ms_clsString);
+				int i;
+				std::vector<const char *>::const_iterator iter;
+				for (i = 0, iter = strings.begin(); iter != strings.end();
+					++i, ++iter)
+				{
+					if (*iter)
 					{
-						if (args.getParamType(paramIndex) != Param::BYTE_ARRAY)
+						JavaString newString(*iter);
+						setObjectArrayElement(*localInstance, i, newString);
+					}
+				}
+				arg = localInstance;
+			}
+			break;
+		case 'u':
+			if (dimensions == 0)
+			{
+				if (args.getParamType(paramIndex) != Param::UNICODE)
+					break;
+				if (modifiable)
+					break;
+				const String_t &param = args.getUnicodeParam(paramIndex);
+				arg = createNewString(param.c_str(), static_cast<jsize>(param.size()));
+			}
+			else
+			{
+				if (args.getParamType(paramIndex) != Param::UNICODE_ARRAY)
+					break;
+
+				const std::vector<const Unicode::String *> & strings =
+					args.getUnicodeArrayParam(paramIndex);
+				LocalObjectArrayRefPtr localInstance = createNewObjectArray(strings.size(), ms_clsString);
+				int i;
+				std::vector<const Unicode::String *>::const_iterator iter;
+				for (i = 0, iter = strings.begin(); iter != strings.end();
+					++i, ++iter)
+				{
+					if (*iter != nullptr)
+					{
+						JavaString newString(**iter);
+						setObjectArrayElement(*localInstance, i, newString);
+					}
+				}
+				arg = localInstance;
+			}
+			break;
+		case 'L':
+			if (dimensions == 0)
+			{
+				if (args.getParamType(paramIndex) != Param::LOCATION)
+					break;
+				NetworkId cell;
+				LocalRefPtr target;
+				if (!ScriptConversion::convert(args.getLocationParam(paramIndex), cell, target))
+					break;
+				arg = target;
+			}
+			else
+			{
+				if (args.getParamType(paramIndex) != Param::LOCATION_ARRAY)
+					break;
+				const std::vector<const Vector *> & locations = args.getLocationArrayParam(paramIndex);
+				LocalObjectArrayRefPtr target;
+				if (!ScriptConversion::convert(locations, target))
+					break;
+				arg = target;
+			}
+			break;
+		case 'O':
+		{
+			if (modifiable || dimensions > 1)
+				break;
+			if (dimensions == 1)
+			{
+				// obj_id array
+				if (args.getParamType(paramIndex) == Param::OBJECT_ID_ARRAY)
+				{
+					const std::vector<NetworkId> & param = args.getObjIdArrayParam(paramIndex);
+					int count = param.size();
+					int paramCount = 0;
+					LocalObjectArrayRefPtr localInstance = createNewObjectArray(count, ms_clsObjId);
+					for (int j = 0; j < count; ++j)
+					{
+						LocalRefPtr id = getObjId(param[j]);
+						if (id == LocalRef::cms_nullPtr)
 							break;
-						const std::vector<unsigned char> & param = args.getByteArrayParam(paramIndex);
-						int count = param.size();
-						LocalByteArrayRefPtr localInstance = createNewByteArray(count);
-						jbyte * destination = ms_env->GetByteArrayElements(localInstance->getValue(), 0);
-						if (destination)
-						{
-							int i;
-							for (i=0; i<count; ++i)
-							{
-								destination[i] = param[i];
-							}
-							ms_env->ReleaseByteArrayElements(localInstance->getValue(), destination, 0);
-						}
+						setObjectArrayElement(*localInstance, static_cast<jsize>(paramCount), *id);
 						if (ms_env->ExceptionCheck())
 						{
 							ms_env->ExceptionDescribe();
 							return 0;
 						}
-						arg = localInstance;
+						++paramCount;
 					}
+					arg = localInstance;
 				}
-				break;
-			case 'f':
-				if (dimensions == 0)
+				else if (args.getParamType(paramIndex) == Param::CACHED_OBJECT_ID_ARRAY)
 				{
-					if (args.getParamType(paramIndex) != Param::FLOAT)
-						break;
-					if (modifiable)
+					const std::vector<CachedNetworkId> & param = args.getCachedObjIdArrayParam(paramIndex);
+					int count = param.size();
+					int paramCount = 0;
+					LocalObjectArrayRefPtr localInstance = createNewObjectArray(count, ms_clsObjId);
+					for (int j = 0; j < count; ++j)
 					{
-						arg = globals.getNextModifiableFloat();
-						if (arg == GlobalRef::cms_nullPtr)
+						LocalRefPtr id = getObjId(param[j]);
+						if (id == LocalRef::cms_nullPtr)
 							break;
-						jfloat param = args.getFloatParam(paramIndex);
-						setFloatField(*arg, ms_fidModifiableFloatData, param);
-					}
-					else
-					{
-						jfloat param = args.getFloatParam(paramIndex);
-						arg = createNewObject(ms_clsFloat, ms_midFloat, param);
-					}
-				}
-				else
-				{
-					if (args.getParamType(paramIndex) != Param::FLOAT_ARRAY)
-						break;
-					const std::vector<float> & floats = args.getFloatArrayParam(paramIndex);
-					LocalFloatArrayRefPtr farray = createNewFloatArray(floats.size());
-					if (farray != LocalFloatArrayRef::cms_nullPtr)
-					{
-						if (floats.size() > 0)
-							setFloatArrayRegion(*farray, 0, floats.size(), const_cast<float *>(&floats[0]));
-						arg = farray;
-					}
-				}
-				break;
-			case 's':
-				if (dimensions == 0)
-				{
-					if (args.getParamType(paramIndex) != Param::STRING)
-						break;
-					arg = createNewString(args.getStringParam(paramIndex));
-				}
-				else
-				{
-					if (args.getParamType(paramIndex) != Param::STRING_ARRAY)
-						break;
-
-					const std::vector<const char *> & strings =
-						args.getStringArrayParam(paramIndex);
-					LocalObjectArrayRefPtr localInstance = createNewObjectArray(strings.size(), ms_clsString);
-					int i;
-					std::vector<const char *>::const_iterator iter;
-					for (i = 0, iter = strings.begin(); iter != strings.end();
-						++i, ++iter)
-					{
-						if (*iter)
+						setObjectArrayElement(*localInstance, static_cast<jsize>(paramCount), *id);
+						if (ms_env->ExceptionCheck())
 						{
-							JavaString newString(*iter);
-							setObjectArrayElement(*localInstance, i, newString);
+							ms_env->ExceptionDescribe();
+							return 0;
 						}
+						++paramCount;
 					}
 					arg = localInstance;
 				}
-				break;
-			case 'u':
-				if (dimensions == 0)
-				{
-					if (args.getParamType(paramIndex) != Param::UNICODE)
-						break;
-					if (modifiable)
-						break;
-					const String_t &param = args.getUnicodeParam(paramIndex);
-					arg = createNewString(param.c_str(), static_cast<jsize>(param.size()));
-				}
-				else
-				{
-					if (args.getParamType(paramIndex) != Param::UNICODE_ARRAY)
-						break;
-
-					const std::vector<const Unicode::String *> & strings =
-						args.getUnicodeArrayParam(paramIndex);
-					LocalObjectArrayRefPtr localInstance = createNewObjectArray(strings.size(), ms_clsString);
-					int i;
-					std::vector<const Unicode::String *>::const_iterator iter;
-					for (i = 0, iter = strings.begin(); iter != strings.end();
-						++i, ++iter)
-					{
-						if (*iter != nullptr)
-						{
-							JavaString newString(**iter);
-							setObjectArrayElement(*localInstance, i, newString);
-						}
-					}
-					arg = localInstance;
-				}
-				break;
-			case 'L':
-				if (dimensions == 0)
-				{
-					if (args.getParamType(paramIndex) != Param::LOCATION)
-						break;
-					NetworkId cell;
-					LocalRefPtr target;
-					if (!ScriptConversion::convert(args.getLocationParam(paramIndex), cell, target))
-						break;
-					arg = target;
-				}
-				else
-				{
-					if (args.getParamType(paramIndex) != Param::LOCATION_ARRAY)
-						break;
-					const std::vector<const Vector *> & locations = args.getLocationArrayParam(paramIndex);
-					LocalObjectArrayRefPtr target;
-					if (!ScriptConversion::convert(locations, target))
-						break;
-					arg = target;
-				}
-				break;
-			case 'O':
+			}
+			else
 			{
-					if (modifiable || dimensions > 1)
-						 break;
-					if (dimensions == 1)
+				if (args.getParamType(paramIndex) != Param::OBJECT_ID)
+					break;
+				arg = getObjId(args.getObjIdParam(paramIndex));
+			}
+		}
+		break;
+
+		//----------------------------------------------------------------------
+		//-- menu info
+
+		case 'm':
+		{
+			if (dimensions != 0)
+				break;
+
+			if (args.getParamType(paramIndex) != Param::OBJECT_MENU_INFO)
+				break;
+
+			const MenuDataVector & menuVector = args.getObjectMenuRequestDataArrayParam(paramIndex);
+
+			arg = globals.getMenuInfo();
+
+			if (!convert(menuVector, arg))
+			{
+				return 0;
+			}
+		}
+		break;
+
+		//----------------------------------------------------------------------
+
+		case 'S':
+			if (dimensions == 0)
+			{
+				if (args.getParamType(paramIndex) != Param::STRING_ID)
+					break;
+				if (modifiable)
+					arg = globals.getNextModifiableStringId();
+				else
+					arg = globals.getNextStringId();
+				if (arg == GlobalArrayRef::cms_nullPtr)
+					break;
+				const StringId & param = args.getStringIdParam(paramIndex);
+				JavaString text(param.getTable().c_str());
+				setObjectField(*arg, ms_fidStringIdTable, text);
+				if (param.getText().empty())
+				{
+					setIntField(*arg, ms_fidStringIdIndexId,
+						static_cast<jint>(param.getTextIndex()));
+					JavaString text("");
+					setObjectField(*arg, ms_fidStringIdAsciiId, text);
+				}
+				else
+				{
+					JavaString text(param.getText().c_str());
+					setObjectField(*arg, ms_fidStringIdAsciiId, text);
+				}
+			}
+			else
+			{
+				if (args.getParamType(paramIndex) != Param::STRING_ID_ARRAY)
+					break;
+				if (modifiable)
+					break;
+
+				const std::vector<const StringId *> & strings = args.getStringIdArrayParam(paramIndex);
+				LocalObjectArrayRefPtr localInstance = createNewObjectArray(strings.size(), ms_clsStringId);
+
+				int i;
+				std::vector<const StringId *>::const_iterator iter;
+				for (i = 0, iter = strings.begin(); iter != strings.end(); ++i, ++iter)
+				{
+					const StringId * param = *iter;
+					// get the next available stringId from the pool
+					GlobalRefPtr stringIdObject = globals.getNextStringId();
+					if (stringIdObject == GlobalRef::cms_nullPtr)
+						break;
+					// set the stringId elements
+					JavaString text(param->getTable().c_str());
+					setObjectField(*stringIdObject, ms_fidStringIdTable, text);
+					if (param->getText().empty())
 					{
-						 // obj_id array
-					if (args.getParamType(paramIndex) == Param::OBJECT_ID_ARRAY)
-					{
-						const std::vector<NetworkId> & param = args.getObjIdArrayParam(paramIndex);
-						 int count = param.size();
-						 int paramCount = 0;
-						LocalObjectArrayRefPtr localInstance = createNewObjectArray(count, ms_clsObjId);
-						 for (int j = 0; j < count; ++j)
-						 {
-							LocalRefPtr id = getObjId(param[j]);
-							if (id == LocalRef::cms_nullPtr)
-								break;
-							setObjectArrayElement(*localInstance, static_cast<jsize>(paramCount), *id);
-							if (ms_env->ExceptionCheck())
-							{	
-								ms_env->ExceptionDescribe();
-								return 0;
-							}
-							++paramCount;
-						}
-						arg = localInstance;
-							}
-					else if (args.getParamType(paramIndex) == Param::CACHED_OBJECT_ID_ARRAY)
-					{
-						const std::vector<CachedNetworkId> & param = args.getCachedObjIdArrayParam(paramIndex);
-						int count = param.size();
-						int paramCount = 0;
-						LocalObjectArrayRefPtr localInstance = createNewObjectArray(count, ms_clsObjId);
-						for (int j = 0; j < count; ++j)
-							{
-							LocalRefPtr id = getObjId(param[j]);
-							if (id == LocalRef::cms_nullPtr)
-									 break;
-							setObjectArrayElement(*localInstance, static_cast<jsize>(paramCount), *id);
-							if (ms_env->ExceptionCheck())
-							{
-								ms_env->ExceptionDescribe();
-								return 0;
-							}
-							++paramCount;
-						 }
-						 arg = localInstance;
-					}
+						setIntField(*stringIdObject, ms_fidStringIdIndexId,
+							static_cast<jint>(param->getTextIndex()));
+						JavaString text("");
+						setObjectField(*stringIdObject, ms_fidStringIdAsciiId, text);
 					}
 					else
 					{
-						if (args.getParamType(paramIndex) != Param::OBJECT_ID)
-							break;
-					arg = getObjId(args.getObjIdParam(paramIndex));
+						JavaString text(param->getText().c_str());
+						setObjectField(*stringIdObject, ms_fidStringIdAsciiId, text);
 					}
+					// add the string id to the array
+					setObjectArrayElement(*localInstance, i, *stringIdObject);
+				}
+				arg = localInstance;
 			}
 			break;
-
-			//----------------------------------------------------------------------
-			//-- menu info
-
-			case 'm':
-				{
-					if (dimensions != 0)
-						break;
-
-					if (args.getParamType(paramIndex) != Param::OBJECT_MENU_INFO)
-						break;
-
-					const MenuDataVector & menuVector = args.getObjectMenuRequestDataArrayParam (paramIndex);
-
-					arg = globals.getMenuInfo ();
-
-					if (!convert (menuVector, arg))
-					{
-						return 0;
-					}
-				}
+		case 'E':
+			//@todo: implement this
+			break;
+		case 'A':
+			if (modifiable || dimensions > 1)
 				break;
-
-			//----------------------------------------------------------------------
-
-			 case 'S':
-				if (dimensions == 0)
+			if (dimensions == 1)
+			{
+				// attribMod array
+				if (args.getParamType(paramIndex) != Param::ATTRIB_MOD_ARRAY)
+					break;
+				const std::vector<AttribMod::AttribMod> & param = args.getAttribModArrayParam(paramIndex);
+				int count = param.size();
+				int paramCount = 0;
+				for (int j = 0; j < count; ++j)
 				{
-					if (args.getParamType(paramIndex) != Param::STRING_ID)
-						break;
-					if (modifiable)
-						 arg = globals.getNextModifiableStringId();
-					else
-						 arg = globals.getNextStringId();
-					if (arg == GlobalArrayRef::cms_nullPtr)
-						break;
-					const StringId & param = args.getStringIdParam(paramIndex);
-					JavaString text(param.getTable().c_str());
-					setObjectField(*arg, ms_fidStringIdTable, text);
-					if (param.getText().empty())
+					// only send attribMods that actually do something
+					if (param[j].value != 0)
 					{
-						setIntField(*arg, ms_fidStringIdIndexId,
-							static_cast<jint>(param.getTextIndex()));
-						JavaString text("");
-						setObjectField(*arg, ms_fidStringIdAsciiId, text);
-					}
-					else
-					{
-						JavaString text(param.getText().c_str());
-						setObjectField(*arg, ms_fidStringIdAsciiId, text);
-					}
-				}
-				else
-				{
-					if (args.getParamType(paramIndex) != Param::STRING_ID_ARRAY)
-						break;
-					if (modifiable)
-						break;
+						arg = globals.getNextAttribMod();
+						if (arg == GlobalRef::cms_nullPtr)
+							return 0;
 
-					const std::vector<const StringId *> & strings = args.getStringIdArrayParam(paramIndex);
-					LocalObjectArrayRefPtr localInstance = createNewObjectArray(strings.size(), ms_clsStringId);
-
-					int i;
-					std::vector<const StringId *>::const_iterator iter;
-					for (i = 0, iter = strings.begin(); iter != strings.end(); ++i, ++iter)
-					{
-						const StringId * param = *iter;
-						// get the next available stringId from the pool
-						GlobalRefPtr stringIdObject = globals.getNextStringId();
-						if (stringIdObject == GlobalRef::cms_nullPtr)
-							break;
-						// set the stringId elements
-						JavaString text(param->getTable().c_str());
-						setObjectField(*stringIdObject, ms_fidStringIdTable, text);
-						if (param->getText().empty())
+						JavaString name(AttribModNameManager::getInstance(
+						).getAttribModName(param[j].tag));
+						setObjectField(*arg, ms_fidAttribModName, name);
+						if (!AttribMod::isSkillMod(param[j]))
 						{
-							setIntField(*stringIdObject, ms_fidStringIdIndexId,
-								static_cast<jint>(param->getTextIndex()));
-							JavaString text("");
-							setObjectField(*stringIdObject, ms_fidStringIdAsciiId, text);
+							setIntField(*arg, ms_fidAttribModType, static_cast<jint>(param[j].attrib));
 						}
 						else
 						{
-							JavaString text(param->getText().c_str());
-							setObjectField(*stringIdObject, ms_fidStringIdAsciiId, text);
+							JavaString skill(AttribModNameManager::getInstance(
+							).getAttribModName(param[j].skill));
+							setObjectField(*arg, ms_fidAttribModSkill, skill);
 						}
-						// add the string id to the array
-						setObjectArrayElement(*localInstance, i, *stringIdObject);
+						setIntField(*arg, ms_fidAttribModValue, param[j].value);
+						setFloatField(*arg, ms_fidAttribModTime, param[j].sustain);
+						setFloatField(*arg, ms_fidAttribModAttack, param[j].attack);
+						setFloatField(*arg, ms_fidAttribModDecay, param[j].decay);
+						setIntField(*arg, ms_fidAttribModFlags, param[j].flags);
+						setObjectArrayElement(*ms_attribModList[ms_currentRecursionCount], static_cast<jsize>(paramCount), *arg);
+						if (ms_env->ExceptionCheck())
+						{
+							ms_env->ExceptionDescribe();
+							return 0;
+						}
+						++paramCount;
+					}
+				}
+				// fill in the rest of ms_attribModList with nullptr
+				for (; paramCount < MAX_ATTRIB_MOD_PARAMS; ++paramCount)
+				{
+					setObjectArrayElement(*ms_attribModList[ms_currentRecursionCount], static_cast<jsize>(paramCount), *LocalRefParam::cms_nullPtr);
+					if (ms_env->ExceptionCheck())
+					{
+						ms_env->ExceptionDescribe();
+						return 0;
+					}
+				}
+				arg = ms_attribModList[ms_currentRecursionCount];
+			}
+			else
+			{
+				// single attribMod
+				if (args.getParamType(paramIndex) != Param::ATTRIB_MOD)
+					break;
+				const AttribMod::AttribMod &param = args.getAttribModParam(paramIndex);
+				arg = globals.getNextAttribMod();
+				if (arg == GlobalRef::cms_nullPtr)
+					return 0;
+
+				JavaString name(AttribModNameManager::getInstance(
+				).getAttribModName(param.tag));
+				setObjectField(*arg, ms_fidAttribModName, name);
+				if (!AttribMod::isSkillMod(param))
+				{
+					setIntField(*arg, ms_fidAttribModType, param.attrib);
+				}
+				else
+				{
+					JavaString skill(AttribModNameManager::getInstance(
+					).getAttribModName(param.skill));
+					setObjectField(*arg, ms_fidAttribModSkill, skill);
+				}
+				setIntField(*arg, ms_fidAttribModValue, param.value);
+				setFloatField(*arg, ms_fidAttribModTime, param.sustain);
+				setFloatField(*arg, ms_fidAttribModAttack, param.attack);
+				setFloatField(*arg, ms_fidAttribModDecay, param.decay);
+				setIntField(*arg, ms_fidAttribModFlags, param.flags);
+			}
+			break;
+
+		case 'M':
+			if (modifiable || dimensions > 1)
+				break;
+			if (dimensions == 1)
+			{
+				// mental_state_mod array
+				if (args.getParamType(paramIndex) != Param::MENTAL_STATE_MOD_ARRAY)
+					break;
+				const std::vector<ServerObjectTemplate::MentalStateMod> & param = args.getMentalStateModArrayParam(paramIndex);
+				int count = param.size();
+				int paramCount = 0;
+				for (int j = 0; j < count; ++j)
+				{
+					// only send mental_state_mods that actually do something
+					if (param[j].value != 0)
+					{
+						arg = globals.getNextMentalStateMod();
+						if (arg == GlobalRef::cms_nullPtr)
+							return 0;
+
+						setIntField(*arg, ms_fidMentalStateModType, param[j].target);
+						setFloatField(*arg, ms_fidMentalStateModValue, param[j].value);
+						setFloatField(*arg, ms_fidMentalStateModTime, param[j].timeAtValue);
+						setFloatField(*arg, ms_fidMentalStateModAttack, param[j].time);
+						setFloatField(*arg, ms_fidMentalStateModDecay, param[j].decay);
+						setObjectArrayElement(
+							*ms_mentalStateModList[ms_currentRecursionCount],
+							static_cast<jsize>(paramCount), *arg);
+						if (ms_env->ExceptionCheck())
+						{
+							ms_env->ExceptionDescribe();
+							return 0;
+						}
+						++paramCount;
+					}
+				}
+				// fill in the rest of ms_mentalStateModList with nullptr
+				for (; paramCount < MAX_MENTAL_STATE_MOD_PARAMS; ++paramCount)
+				{
+					setObjectArrayElement(
+						*ms_mentalStateModList[ms_currentRecursionCount],
+						static_cast<jsize>(paramCount), *LocalRefParam::cms_nullPtr);
+					if (ms_env->ExceptionCheck())
+					{
+						ms_env->ExceptionDescribe();
+						return 0;
+					}
+				}
+				arg = ms_mentalStateModList[ms_currentRecursionCount];
+			}
+			else
+			{
+				// single mental_state_mod
+				if (args.getParamType(paramIndex) != Param::MENTAL_STATE_MOD)
+					break;
+				const ServerObjectTemplate::MentalStateMod &param = args.getMentalStateModParam(paramIndex);
+				arg = globals.getNextMentalStateMod();
+				if (arg == GlobalRef::cms_nullPtr)
+					return 0;
+
+				setIntField(*arg, ms_fidMentalStateModType, param.target);
+				setFloatField(*arg, ms_fidMentalStateModValue, param.value);
+				setFloatField(*arg, ms_fidMentalStateModTime, param.timeAtValue);
+				setFloatField(*arg, ms_fidMentalStateModAttack, param.time);
+				setFloatField(*arg, ms_fidMentalStateModDecay, param.decay);
+			}
+			break;
+
+		case 'D':
+			if (!modifiable && dimensions == 0)
+			{
+				const ManufactureObjectInterface & schematic = args.getManufactureSchematicParam(paramIndex);
+				arg = convert(schematic);
+			}
+			break;
+
+		case 'I':
+			if (!modifiable && dimensions == 0)
+			{
+				const Crafting::IngredientSlot & slot = args.getIngredientSlotParam(paramIndex);
+				const ManufactureObjectInterface & schematic = args.getIngredientSlotParamSchematic(paramIndex);
+				int amountRequired = args.getIngredientSlotParamAmountRequired(paramIndex);
+				const std::string & appearance = args.getIngredientSlotParamAppearance(paramIndex);
+				arg = convert(schematic, slot, amountRequired, appearance, "");
+			}
+			break;
+
+		case 'V':
+			if (!modifiable)
+			{
+				if (dimensions == 0)
+				{
+					const ValueDictionary & dictionary = args.getValueDictionaryParam(paramIndex);
+					arg = convert(dictionary);
+				}
+				else if (dimensions == 1)
+				{
+					const std::vector<ValueDictionary> & param = args.getValueDictionaryArrayParam(paramIndex);
+					LocalObjectArrayRefPtr localInstance = createNewObjectArray(param.size(), ms_clsDictionary);
+
+					int paramCount = 0;
+					std::vector<ValueDictionary>::const_iterator iter;
+					for (iter = param.begin(); iter != param.end(); ++iter)
+					{
+						setObjectArrayElement(*localInstance, static_cast<jsize>(paramCount++), *convert(*iter));
+
+						if (ms_env->ExceptionCheck())
+						{
+							ms_env->ExceptionDescribe();
+							return 0;
+						}
 					}
 					arg = localInstance;
 				}
-				break;
-			case 'E':
-				//@todo: implement this
-				break;
-			case 'A':
-				 if (modifiable || dimensions > 1)
-						break;
-				if (dimensions == 1)
-				{
-					// attribMod array
-					if (args.getParamType(paramIndex) != Param::ATTRIB_MOD_ARRAY)
-						break;
-					const std::vector<AttribMod::AttribMod> & param = args.getAttribModArrayParam(paramIndex);
-					int count = param.size();
-					int paramCount = 0;
-					for (int j = 0; j < count; ++j)
-					{
-						// only send attribMods that actually do something
-						if (param[j].value != 0)
-						{
-							arg = globals.getNextAttribMod();
-							if (arg == GlobalRef::cms_nullPtr)
-								return 0;
+			}
+			break;
 
-							JavaString name(AttribModNameManager::getInstance(
-								).getAttribModName(param[j].tag));
-							setObjectField(*arg, ms_fidAttribModName, name);
-							if (!AttribMod::isSkillMod(param[j]))
-							{
-								setIntField(*arg, ms_fidAttribModType, static_cast<jint>(param[j].attrib));
-							}
-							else
-							{
-								JavaString skill(AttribModNameManager::getInstance(
-									).getAttribModName(param[j].skill));
-								setObjectField(*arg, ms_fidAttribModSkill, skill);
-							}
-							setIntField(*arg, ms_fidAttribModValue, param[j].value);
-							setFloatField(*arg, ms_fidAttribModTime, param[j].sustain);
-							setFloatField(*arg, ms_fidAttribModAttack, param[j].attack);
-							setFloatField(*arg, ms_fidAttribModDecay, param[j].decay);
-							setIntField(*arg, ms_fidAttribModFlags, param[j].flags);
-							setObjectArrayElement(*ms_attribModList[ms_currentRecursionCount], static_cast<jsize>(paramCount), *arg);
-							if (ms_env->ExceptionCheck())
-							{
-								ms_env->ExceptionDescribe();
-								return 0;
-							}
-							++paramCount;
-						}
-					}
-					// fill in the rest of ms_attribModList with nullptr
-					for (; paramCount < MAX_ATTRIB_MOD_PARAMS; ++paramCount)
-					{
-						setObjectArrayElement(*ms_attribModList[ms_currentRecursionCount], static_cast<jsize>(paramCount), *LocalRefParam::cms_nullPtr);
-						if (ms_env->ExceptionCheck())
-						{
-							ms_env->ExceptionDescribe();
-							return 0;
-						}
-					}
-					arg = ms_attribModList[ms_currentRecursionCount];
-				}
-				else
-				{
-					// single attribMod
-					if (args.getParamType(paramIndex) != Param::ATTRIB_MOD)
-						break;
-					const AttribMod::AttribMod &param = args.getAttribModParam(paramIndex);
-					arg = globals.getNextAttribMod();
-					if (arg == GlobalRef::cms_nullPtr)
-						return 0;
-
-					JavaString name(AttribModNameManager::getInstance(
-						).getAttribModName(param.tag));
-					setObjectField(*arg, ms_fidAttribModName, name);
-					if (!AttribMod::isSkillMod(param))
-					{
-						setIntField(*arg, ms_fidAttribModType, param.attrib);
-					}
-					else
-					{
-						JavaString skill(AttribModNameManager::getInstance(
-							).getAttribModName(param.skill));
-						setObjectField(*arg, ms_fidAttribModSkill, skill);
-					}
-					setIntField(*arg, ms_fidAttribModValue, param.value);
-					setFloatField(*arg, ms_fidAttribModTime, param.sustain);
-					setFloatField(*arg, ms_fidAttribModAttack, param.attack);
-					setFloatField(*arg, ms_fidAttribModDecay, param.decay);
-					setIntField(*arg, ms_fidAttribModFlags, param.flags);
-				}
-				break;
-
-			case 'M':
-				if (modifiable || dimensions > 1)
-					break;
-				if (dimensions == 1)
-				{
-					// mental_state_mod array
-					if (args.getParamType(paramIndex) != Param::MENTAL_STATE_MOD_ARRAY)
-						break;
-					const std::vector<ServerObjectTemplate::MentalStateMod> & param = args.getMentalStateModArrayParam(paramIndex);
-					int count = param.size();
-					int paramCount = 0;
-					for (int j = 0; j < count; ++j)
-					{
-						// only send mental_state_mods that actually do something
-						if (param[j].value != 0)
-						{
-							arg = globals.getNextMentalStateMod();
-							if (arg == GlobalRef::cms_nullPtr)
-								return 0;
-
-							setIntField(*arg, ms_fidMentalStateModType, param[j].target);
-							setFloatField(*arg, ms_fidMentalStateModValue, param[j].value);
-							setFloatField(*arg, ms_fidMentalStateModTime, param[j].timeAtValue);
-							setFloatField(*arg, ms_fidMentalStateModAttack, param[j].time);
-							setFloatField(*arg, ms_fidMentalStateModDecay, param[j].decay);
-							setObjectArrayElement(
-								*ms_mentalStateModList[ms_currentRecursionCount],
-								static_cast<jsize>(paramCount), *arg);
-							if (ms_env->ExceptionCheck())
-							{
-								ms_env->ExceptionDescribe();
-								return 0;
-							}
-							++paramCount;
-						}
-					}
-					// fill in the rest of ms_mentalStateModList with nullptr
-					for (; paramCount < MAX_MENTAL_STATE_MOD_PARAMS; ++paramCount)
-					{
-						setObjectArrayElement(
-							*ms_mentalStateModList[ms_currentRecursionCount],
-							static_cast<jsize>(paramCount), *LocalRefParam::cms_nullPtr);
-						if (ms_env->ExceptionCheck())
-						{
-							ms_env->ExceptionDescribe();
-							return 0;
-						}
-					}
-					arg = ms_mentalStateModList[ms_currentRecursionCount];
-				}
-				else
-				{
-					// single mental_state_mod
-					if (args.getParamType(paramIndex) != Param::MENTAL_STATE_MOD)
-						break;
-					const ServerObjectTemplate::MentalStateMod &param = args.getMentalStateModParam(paramIndex);
-					arg = globals.getNextMentalStateMod();
-					if (arg == GlobalRef::cms_nullPtr)
-						return 0;
-
-					setIntField(*arg, ms_fidMentalStateModType, param.target);
-					setFloatField(*arg, ms_fidMentalStateModValue, param.value);
-					setFloatField(*arg, ms_fidMentalStateModTime, param.timeAtValue);
-					setFloatField(*arg, ms_fidMentalStateModAttack, param.time);
-					setFloatField(*arg, ms_fidMentalStateModDecay, param.decay);
-				}
-				break;
-
-			case 'D':
-				if (!modifiable && dimensions == 0)
-				{
-					const ManufactureObjectInterface & schematic = args.getManufactureSchematicParam(paramIndex);
-					arg = convert(schematic);
-				}
-				break;
-
-			case 'I':
-				if (!modifiable && dimensions == 0)
-				{
-					const Crafting::IngredientSlot & slot = args.getIngredientSlotParam(paramIndex);
-					const ManufactureObjectInterface & schematic = args.getIngredientSlotParamSchematic(paramIndex);
-					int amountRequired = args.getIngredientSlotParamAmountRequired(paramIndex);
-					const std::string & appearance = args.getIngredientSlotParamAppearance(paramIndex);
-					arg = convert(schematic, slot, amountRequired, appearance, "");
-				}
-				break;
-
-			case 'V':
-				if (!modifiable)
-				{
-					if (dimensions == 0)
-					{
-						const ValueDictionary & dictionary = args.getValueDictionaryParam(paramIndex);
-						arg = convert(dictionary);
-					}
-					else if (dimensions == 1)
-					{
-						const std::vector<ValueDictionary> & param = args.getValueDictionaryArrayParam(paramIndex);
-						LocalObjectArrayRefPtr localInstance = createNewObjectArray(param.size(), ms_clsDictionary);
-
-						int paramCount = 0;
-						std::vector<ValueDictionary>::const_iterator iter;
-						for (iter = param.begin(); iter != param.end(); ++iter)
-						{
-							setObjectArrayElement(*localInstance, static_cast<jsize>(paramCount++), *convert(*iter));
-
-							if (ms_env->ExceptionCheck())
-							{
-								ms_env->ExceptionDescribe();
-								return 0;
-							}
-						}
-						arg = localInstance;
-					}
-				}
-				break;
-
-			default:
-				DEBUG_REPORT_LOG(true, ("unknown parameter type %c(%#x)\n", argType,
-					static_cast<unsigned>(argType)));		//lint !e571 suspicious cast
-				return 0;
+		default:
+			DEBUG_REPORT_LOG(true, ("unknown parameter type %c(%#x)\n", argType,
+				static_cast<unsigned>(argType)));		//lint !e571 suspicious cast
+			return 0;
 		}
 		if (arg.get() == nullptr || arg == LocalRef::cms_nullPtr)
 		{
 			DEBUG_REPORT_LOG(true, ("bad parameter, %c%s%d%s\n", argType,
-							modifiable ? "*" : "",
-							dimensions,
-							dimensions > 0 ? " dimensions" : ""
+				modifiable ? "*" : "",
+				dimensions,
+				dimensions > 0 ? " dimensions" : ""
 				));
 			return 0;
 		}
@@ -3832,197 +3822,196 @@ void JavaLibrary::alterScriptParams(jobjectArray jparams, const std::string& arg
 	{
 		switch (argList[i])
 		{
-			case 'i':
-				if (i < argList.size() - 1 && argList[i+1] == '*')
+		case 'i':
+			if (i < argList.size() - 1 && argList[i + 1] == '*')
+			{
+				++i;
+				if (i == argList.size() || argList[i + 1] != '[')
 				{
-					++i;
-					if (i == argList.size() || argList[i+1] != '[')
-					{
-						LocalRefPtr arg = getObjectArrayElement(LocalObjectArrayRefParam(jparams), paramIndex + 1);
-						if (arg != LocalRef::cms_nullPtr)
-						{
-							int value = getIntField(*arg, ms_fidModifiableIntData);
-							args.changeParam(paramIndex, value);
-						}
-						else
-						{
-							WARNING_STRICT_FATAL(true, ("Error getting back integer param on script return paramIndex=%d, i=%d", paramIndex, i));
-						}
-					}
-					else if (i < argList.size() - 1 && argList[i+1] == '[')
-					{
-						++i;
-
-						LocalArrayRefPtr arg = getArrayArrayElement(LocalObjectArrayRefParam(jparams), paramIndex + 1);
-						if (arg != LocalArrayRef::cms_nullPtr)
-						{
-							int count = getArrayLength(*arg);
-							std::vector<int> * values = new std::vector<int>(count, 0);
-							jint * jvalues = static_cast<jint *>(ms_env->GetPrimitiveArrayCritical(static_cast<jintArray>(arg->getValue()), nullptr));
-							for (int j = 0; j < count; ++j)
-							{
-								values->at(j) = static_cast<int>(jvalues[j]);
-							}
-							ms_env->ReleasePrimitiveArrayCritical(static_cast<jintArray>(arg->getValue()), jvalues, JNI_ABORT);
-							args.changeParam(paramIndex, *values, true);
-						}
-						else
-						{
-							WARNING_STRICT_FATAL(true, ("Error getting back integer array param on script return"));
-						}
-					}
-				}
-				break;
-			case 'U':
-				if (i < argList.size() - 1 && argList[i+1] == '*')
-				{
-					++i;
-					if (i == argList.size() || argList[i+1] != '[')
-					{
-						WARNING_STRICT_FATAL(true, ("Error getting back vector<unsigned char> param on script return paramIndex=%d, i=%d", paramIndex, i));
-					}
-					else if (i < argList.size() - 1 && argList[i+1] == '[')
-					{
-						++i;
-
-						LocalArrayRefPtr arg = getArrayArrayElement(LocalObjectArrayRefParam(jparams), paramIndex + 1);
-						if (arg != LocalArrayRef::cms_nullPtr)
-						{
-							int count = getArrayLength(*arg);
-							std::vector<unsigned char> * values = new std::vector<unsigned char>(count, 0);
-							jbyte * jvalues = static_cast<jbyte *>(ms_env->GetPrimitiveArrayCritical(static_cast<jbyteArray>(arg->getValue()), nullptr));
-							for (int j = 0; j < count; ++j)
-							{
-								values->at(j) = static_cast<unsigned char>(jvalues[j]);
-							}
-							ms_env->ReleasePrimitiveArrayCritical(static_cast<jbyteArray>(arg->getValue()), jvalues, JNI_ABORT);
-							args.changeParam(paramIndex, *values, true);
-						}
-						else
-						{
-							WARNING_STRICT_FATAL(true, ("Error getting back integer array param on script return"));
-						}
-					}
-				}
-				break;
-				
-			case 'f':
-				if (i < argList.size() - 1 && argList[i+1] == '*')
-				{
-					++i;
 					LocalRefPtr arg = getObjectArrayElement(LocalObjectArrayRefParam(jparams), paramIndex + 1);
 					if (arg != LocalRef::cms_nullPtr)
 					{
-						args.changeParam(paramIndex, getFloatField(*arg, ms_fidModifiableFloatData));
+						int value = getIntField(*arg, ms_fidModifiableIntData);
+						args.changeParam(paramIndex, value);
 					}
 					else
 					{
-						WARNING_STRICT_FATAL(true, ("Error getting back float param on script return"));
+						WARNING_STRICT_FATAL(true, ("Error getting back integer param on script return paramIndex=%d, i=%d", paramIndex, i));
 					}
 				}
-				break;
-			case 's':
-				if (i < argList.size() - 1 && argList[i+1] == '*')
+				else if (i < argList.size() - 1 && argList[i + 1] == '[')
 				{
 					++i;
-					if (i < argList.size() - 1 && argList[i+1] == '[')
-					{
-						++i;
-						LocalObjectArrayRefPtr arg = getObjectArrayArrayElement(LocalObjectArrayRefParam(jparams), paramIndex + 1);
-						if (arg != LocalObjectArrayRef::cms_nullPtr)
-						{
-							std::vector<const char *> * strings = new std::vector<const char *>();
-							getStringArray(*arg, *strings);
-							args.changeParam(paramIndex, *strings, true);
-						}
-						else
-						{
-							WARNING_STRICT_FATAL(true, ("Error getting back string array param on script return"));
-						}
-					}
-				}
-				break;
-			case 'u':
-				if (i < argList.size() - 1 && argList[i+1] == '*')
-				{
-					++i;
-					if (i < argList.size() - 1 && argList[i+1] == '[')
-					{
-						++i;
-						LocalObjectArrayRefPtr arg = getObjectArrayArrayElement(LocalObjectArrayRefParam(jparams), paramIndex + 1);
-						if (arg != LocalObjectArrayRef::cms_nullPtr)
-						{
-							std::vector<const Unicode::String *> * strings = new std::vector<const Unicode::String *>();
-							getStringArray(*arg, *strings);
-							args.changeParam(paramIndex, *strings, true);
-						}
-						else
-						{
-							WARNING_STRICT_FATAL(true, ("Error getting back string array param on script return"));
-						}
-					}
-				}
-				break;
-			case 'S':
-				if (i < argList.size() - 1 && argList[i+1] == '*')
-				{
-					++i;
-					StringId * value = new StringId();
-					LocalRefPtr arg = getObjectArrayElement(LocalObjectArrayRefParam(jparams), paramIndex + 1);
-					if (arg != LocalRef::cms_nullPtr)
-					{
-						// get the string id table
-						JavaStringPtr table = getStringField(*arg, ms_fidStringIdTable);
-						std::string localString;
-						convert(*table, localString);
-						value->setTable(localString);
-						// get the string id text, if it is not nullptr/empty, use it
-						localString.clear();
-						JavaStringPtr text = getStringField(*arg, ms_fidStringIdAsciiId);
-						if (text != JavaString::cms_nullPtr)
-							convert(*text, localString);
-						if (localString[0] != '\0')
-							value->setText(localString);
-						else
-						{
-							// use the textIndex field instead
-							jint textIndex = getIntField(*arg, ms_fidStringIdIndexId);
-							value->setTextIndex(textIndex);
-						}
-						args.changeParam(paramIndex, *value, true);
-					}
-					else
-					{
-						WARNING_STRICT_FATAL(true, ("Error getting back string id param on script return"));
-					}
-				}
-				break;
 
+					LocalArrayRefPtr arg = getArrayArrayElement(LocalObjectArrayRefParam(jparams), paramIndex + 1);
+					if (arg != LocalArrayRef::cms_nullPtr)
+					{
+						int count = getArrayLength(*arg);
+						std::vector<int> * values = new std::vector<int>(count, 0);
+						jint * jvalues = static_cast<jint *>(ms_env->GetPrimitiveArrayCritical(static_cast<jintArray>(arg->getValue()), nullptr));
+						for (int j = 0; j < count; ++j)
+						{
+							values->at(j) = static_cast<int>(jvalues[j]);
+						}
+						ms_env->ReleasePrimitiveArrayCritical(static_cast<jintArray>(arg->getValue()), jvalues, JNI_ABORT);
+						args.changeParam(paramIndex, *values, true);
+					}
+					else
+					{
+						WARNING_STRICT_FATAL(true, ("Error getting back integer array param on script return"));
+					}
+				}
+			}
+			break;
+		case 'U':
+			if (i < argList.size() - 1 && argList[i + 1] == '*')
+			{
+				++i;
+				if (i == argList.size() || argList[i + 1] != '[')
+				{
+					WARNING_STRICT_FATAL(true, ("Error getting back vector<unsigned char> param on script return paramIndex=%d, i=%d", paramIndex, i));
+				}
+				else if (i < argList.size() - 1 && argList[i + 1] == '[')
+				{
+					++i;
+
+					LocalArrayRefPtr arg = getArrayArrayElement(LocalObjectArrayRefParam(jparams), paramIndex + 1);
+					if (arg != LocalArrayRef::cms_nullPtr)
+					{
+						int count = getArrayLength(*arg);
+						std::vector<unsigned char> * values = new std::vector<unsigned char>(count, 0);
+						jbyte * jvalues = static_cast<jbyte *>(ms_env->GetPrimitiveArrayCritical(static_cast<jbyteArray>(arg->getValue()), nullptr));
+						for (int j = 0; j < count; ++j)
+						{
+							values->at(j) = static_cast<unsigned char>(jvalues[j]);
+						}
+						ms_env->ReleasePrimitiveArrayCritical(static_cast<jbyteArray>(arg->getValue()), jvalues, JNI_ABORT);
+						args.changeParam(paramIndex, *values, true);
+					}
+					else
+					{
+						WARNING_STRICT_FATAL(true, ("Error getting back integer array param on script return"));
+					}
+				}
+			}
+			break;
+
+		case 'f':
+			if (i < argList.size() - 1 && argList[i + 1] == '*')
+			{
+				++i;
+				LocalRefPtr arg = getObjectArrayElement(LocalObjectArrayRefParam(jparams), paramIndex + 1);
+				if (arg != LocalRef::cms_nullPtr)
+				{
+					args.changeParam(paramIndex, getFloatField(*arg, ms_fidModifiableFloatData));
+				}
+				else
+				{
+					WARNING_STRICT_FATAL(true, ("Error getting back float param on script return"));
+				}
+			}
+			break;
+		case 's':
+			if (i < argList.size() - 1 && argList[i + 1] == '*')
+			{
+				++i;
+				if (i < argList.size() - 1 && argList[i + 1] == '[')
+				{
+					++i;
+					LocalObjectArrayRefPtr arg = getObjectArrayArrayElement(LocalObjectArrayRefParam(jparams), paramIndex + 1);
+					if (arg != LocalObjectArrayRef::cms_nullPtr)
+					{
+						std::vector<const char *> * strings = new std::vector<const char *>();
+						getStringArray(*arg, *strings);
+						args.changeParam(paramIndex, *strings, true);
+					}
+					else
+					{
+						WARNING_STRICT_FATAL(true, ("Error getting back string array param on script return"));
+					}
+				}
+			}
+			break;
+		case 'u':
+			if (i < argList.size() - 1 && argList[i + 1] == '*')
+			{
+				++i;
+				if (i < argList.size() - 1 && argList[i + 1] == '[')
+				{
+					++i;
+					LocalObjectArrayRefPtr arg = getObjectArrayArrayElement(LocalObjectArrayRefParam(jparams), paramIndex + 1);
+					if (arg != LocalObjectArrayRef::cms_nullPtr)
+					{
+						std::vector<const Unicode::String *> * strings = new std::vector<const Unicode::String *>();
+						getStringArray(*arg, *strings);
+						args.changeParam(paramIndex, *strings, true);
+					}
+					else
+					{
+						WARNING_STRICT_FATAL(true, ("Error getting back string array param on script return"));
+					}
+				}
+			}
+			break;
+		case 'S':
+			if (i < argList.size() - 1 && argList[i + 1] == '*')
+			{
+				++i;
+				StringId * value = new StringId();
+				LocalRefPtr arg = getObjectArrayElement(LocalObjectArrayRefParam(jparams), paramIndex + 1);
+				if (arg != LocalRef::cms_nullPtr)
+				{
+					// get the string id table
+					JavaStringPtr table = getStringField(*arg, ms_fidStringIdTable);
+					std::string localString;
+					convert(*table, localString);
+					value->setTable(localString);
+					// get the string id text, if it is not nullptr/empty, use it
+					localString.clear();
+					JavaStringPtr text = getStringField(*arg, ms_fidStringIdAsciiId);
+					if (text != JavaString::cms_nullPtr)
+						convert(*text, localString);
+					if (localString[0] != '\0')
+						value->setText(localString);
+					else
+					{
+						// use the textIndex field instead
+						jint textIndex = getIntField(*arg, ms_fidStringIdIndexId);
+						value->setTextIndex(textIndex);
+					}
+					args.changeParam(paramIndex, *value, true);
+				}
+				else
+				{
+					WARNING_STRICT_FATAL(true, ("Error getting back string id param on script return"));
+				}
+			}
+			break;
 
 			//----------------------------------------------------------------------
 			//-- menu info
 
-			case 'm':
-				if (i < argList.size() - 1 && argList[i+1] == '*')
-				{
-					++i;
+		case 'm':
+			if (i < argList.size() - 1 && argList[i + 1] == '*')
+			{
+				++i;
 
-					LocalRefPtr arg = getObjectArrayElement(LocalObjectArrayRefParam(jparams), paramIndex + 1);
-					MenuDataVector * menuVector = new MenuDataVector;
-					convert(arg, *menuVector);
-					args.changeParam (paramIndex, *menuVector, true);
-				}
-				break;
+				LocalRefPtr arg = getObjectArrayElement(LocalObjectArrayRefParam(jparams), paramIndex + 1);
+				MenuDataVector * menuVector = new MenuDataVector;
+				convert(arg, *menuVector);
+				args.changeParam(paramIndex, *menuVector, true);
+			}
+			break;
 
 			//----------------------------------------------------------------------
 
-			default:
-				break;
+		default:
+			break;
 		}
 		// skip extra characters in the arglist
 		if (i < argList.size() - 1)
 		{
-			if (argList[i+1] == '[' || argList[i+1] == '*')
+			if (argList[i + 1] == '[' || argList[i + 1] == '*')
 				++i;
 		}
 	}
@@ -4053,7 +4042,7 @@ int JavaLibrary::runScripts(const NetworkId & caller,
 		caller.getValueString().c_str(), method.c_str()));
 
 	if (ms_env == nullptr || ms_clsObject == nullptr)
- 	{
+	{
 		DEBUG_REPORT_LOG(ConfigServerGame::getJavaConsoleDebugMessages(), (
 			"JavaLibrary::runScripts exit, self = %s, method = %s\n",
 			caller.getValueString().c_str(), method.c_str()));
@@ -4071,9 +4060,9 @@ int JavaLibrary::runScripts(const NetworkId & caller,
 	if (ms_currentRecursionCount >= MAX_RECURSION_COUNT)
 	{
 		DEBUG_REPORT_LOG(true, ("JavaLibrary::runScripts (C version) max recursion "
-			"count reached, method = %s, object id = %s, dumping script!\n", 
+			"count reached, method = %s, object id = %s, dumping script!\n",
 			method.c_str(), caller.getValueString().c_str()));
-		LOG("ScriptInvestigation", ("runSCripts failed because max recursion count reached"));		
+		LOG("ScriptInvestigation", ("runSCripts failed because max recursion count reached"));
 		return SCRIPT_OVERRIDE;
 	}
 
@@ -4097,7 +4086,7 @@ int JavaLibrary::runScripts(const NetworkId & caller,
 		DEBUG_REPORT_LOG(ConfigServerGame::getJavaConsoleDebugMessages(), (
 			"JavaLibrary::runScripts exit, self = %s, method = %s\n",
 			caller.getValueString().c_str(), method.c_str()));
-		LOG("ScriptInvestigation", ("runSCripts failed because could not convert params"));		
+		LOG("ScriptInvestigation", ("runSCripts failed because could not convert params"));
 		return SCRIPT_OVERRIDE;
 	}
 
@@ -4105,7 +4094,7 @@ int JavaLibrary::runScripts(const NetworkId & caller,
 	jint result = callScriptEntry(jmethod, jparams->getValue());
 
 	//==========================================================================
-	// !!IMPORTANT after this point our env pointer may have changed, we can't 
+	// !!IMPORTANT after this point our env pointer may have changed, we can't
 	// call any JNI functions on objects created with the old pointer!!
 	//==========================================================================
 
@@ -4131,7 +4120,7 @@ int JavaLibrary::runScripts(const NetworkId & caller,
 			DEBUG_REPORT_LOG(ConfigServerGame::getJavaConsoleDebugMessages(), (
 				"JavaLibrary::runScripts exit, self = %s, method = %s\n",
 				caller.getValueString().c_str(), method.c_str()));
-			LOG("ScriptInvestigation", ("runSCripts failed because exception after delete"));		
+			LOG("ScriptInvestigation", ("runSCripts failed because exception after delete"));
 			return SCRIPT_OVERRIDE;
 		}
 	}
@@ -4157,7 +4146,7 @@ int JavaLibrary::runScripts(const NetworkId & caller,
  *
  * @return SCRIPT_CONTINUE or SCRIPT_OVERRIDE
  */
-int JavaLibrary::runScripts(const NetworkId & caller, 
+int JavaLibrary::runScripts(const NetworkId & caller,
 	const std::string& method, const std::string& argList, const StringVector_t &args)
 {
 	DEBUG_WARNING(true, ("Running scripts from the console not currently supported"));
@@ -4191,7 +4180,7 @@ int JavaLibrary::runScript(const NetworkId & caller, const std::string& script,
 		script.c_str(), caller.getValueString().c_str(), method.c_str()));
 
 	if (ms_env == nullptr || ms_midRunOne == nullptr || ms_clsObject == nullptr)
- 	{
+	{
 		if (!ms_env)
 		{
 			LOG("ScriptInvestigation", ("runSCripts2 failed because env was nullptr"));
@@ -4204,7 +4193,7 @@ int JavaLibrary::runScript(const NetworkId & caller, const std::string& script,
 		{
 			LOG("ScriptInvestigation", ("runSCripts2 failed because clsObject was nullptr"));
 		}
-				
+
 		return SCRIPT_OVERRIDE;
 	}
 
@@ -4213,7 +4202,7 @@ int JavaLibrary::runScript(const NetworkId & caller, const std::string& script,
 		DEBUG_REPORT_LOG(true, ("JavaLibrary::runScript (C version) max recursion "
 			"count reached, script = %s, method = %s, object id = %s, dumping "
 			"script!\n", script.c_str(), method.c_str(), caller.getValueString().c_str()));
-		LOG("ScriptInvestigation", ("runSCripts2 failed because max recursion count reached"));		
+		LOG("ScriptInvestigation", ("runSCripts2 failed because max recursion count reached"));
 		return SCRIPT_OVERRIDE;
 	}
 
@@ -4222,14 +4211,14 @@ int JavaLibrary::runScript(const NetworkId & caller, const std::string& script,
 	if (ms_env->ExceptionCheck())
 	{
 		ms_env->ExceptionDescribe();
-		LOG("ScriptInvestigation", ("runSCripts2 failed because of exception"));		
+		LOG("ScriptInvestigation", ("runSCripts2 failed because of exception"));
 		return SCRIPT_OVERRIDE;
 	}
 	JavaString jmethod(method.c_str());
 	if (ms_env->ExceptionCheck())
 	{
 		ms_env->ExceptionDescribe();
-		LOG("ScriptInvestigation", ("runSCripts2 failed because of exception2"));		
+		LOG("ScriptInvestigation", ("runSCripts2 failed because of exception2"));
 		return SCRIPT_OVERRIDE;
 	}
 
@@ -4238,15 +4227,15 @@ int JavaLibrary::runScript(const NetworkId & caller, const std::string& script,
 	if (jparams == LocalObjectArrayRef::cms_nullPtr)
 	{
 		ms_env->ExceptionDescribe();
-		LOG("ScriptInvestigation", ("runSCripts2 failed because of exception3"));		
+		LOG("ScriptInvestigation", ("runSCripts2 failed because of exception3"));
 		return SCRIPT_OVERRIDE;
 	}
 
 	// invoke the script method
 	jint result = callScriptEntry(jscript, jmethod, jparams->getValue());
-	
+
 	//==========================================================================
-	// !!IMPORTANT after this point our env pointer may have changed, we can't 
+	// !!IMPORTANT after this point our env pointer may have changed, we can't
 	// call any JNI functions on objects created with the old pointer!!
 	//==========================================================================
 
@@ -4271,7 +4260,7 @@ int JavaLibrary::runScript(const NetworkId & caller, const std::string& script,
 		if (ms_env->ExceptionCheck())
 		{
 			ms_env->ExceptionDescribe();
-			LOG("ScriptInvestigation", ("runScript failed because of exception4"));		
+			LOG("ScriptInvestigation", ("runScript failed because of exception4"));
 			return SCRIPT_OVERRIDE;
 		}
 	}
@@ -4308,7 +4297,7 @@ int JavaLibrary::runScript(const NetworkId & caller, const std::string& script,
 	PROFILER_AUTO_BLOCK_CHECK_DEFINE("JavaLibrary::runScript");
 
 	DEBUG_REPORT_LOG(true, ("JavaLibrary::runScript %s enter, method = %s\n",
-		script.c_str(),	method.c_str()));
+		script.c_str(), method.c_str()));
 
 	if (ms_env == nullptr || ms_midRunOne == nullptr || ms_clsObject == nullptr)
 	{
@@ -4331,9 +4320,9 @@ int JavaLibrary::runScript(const NetworkId & caller, const std::string& script,
 	{
 		DEBUG_REPORT_LOG(true, ("JavaLibrary::runScript (Java version) max "
 			"recursion count reached, script = %s, method = %s, object id = %s, "
-			"dumping script!\n", script.c_str(), method.c_str(), 
+			"dumping script!\n", script.c_str(), method.c_str(),
 			caller.getValueString().c_str()));
-		LOG("ScriptInvestigation", ("runSCripts3 failed because of max recursion count"));		
+		LOG("ScriptInvestigation", ("runSCripts3 failed because of max recursion count"));
 		return SCRIPT_OVERRIDE;
 	}
 
@@ -4342,14 +4331,14 @@ int JavaLibrary::runScript(const NetworkId & caller, const std::string& script,
 	if (ms_env->ExceptionCheck())
 	{
 		ms_env->ExceptionDescribe();
-		LOG("ScriptInvestigation", ("runSCripts3 failed because of exception"));		
+		LOG("ScriptInvestigation", ("runSCripts3 failed because of exception"));
 		return SCRIPT_OVERRIDE;
 	}
 	JavaString jmethod(method.c_str());
 	if (ms_env->ExceptionCheck())
 	{
 		ms_env->ExceptionDescribe();
-		LOG("ScriptInvestigation", ("runSCripts3 failed because of exception2"));		
+		LOG("ScriptInvestigation", ("runSCripts3 failed because of exception2"));
 		return SCRIPT_OVERRIDE;
 	}
 
@@ -4362,7 +4351,7 @@ int JavaLibrary::runScript(const NetworkId & caller, const std::string& script,
 	if (ms_env->ExceptionCheck())
 	{
 		ms_env->ExceptionDescribe();
-		LOG("ScriptInvestigation", ("runSCripts3 failed because of exception3"));		
+		LOG("ScriptInvestigation", ("runSCripts3 failed because of exception3"));
 		return SCRIPT_OVERRIDE;
 	}
 	for (int i = 1; i < argsCount; ++i)
@@ -4377,7 +4366,7 @@ int JavaLibrary::runScript(const NetworkId & caller, const std::string& script,
 	if (ms_env->ExceptionCheck())
 	{
 		ms_env->ExceptionDescribe();
-		LOG("ScriptInvestigation", ("runSCripts3 failed because of exception4"));		
+		LOG("ScriptInvestigation", ("runSCripts3 failed because of exception4"));
 		return SCRIPT_OVERRIDE;
 	}
 
@@ -4385,7 +4374,7 @@ int JavaLibrary::runScript(const NetworkId & caller, const std::string& script,
 	jint result = callScriptEntry(jscript, jmethod, jparams->getValue());
 
 	//==========================================================================
-	// !!IMPORTANT after this point our env pointer may have changed, we can't 
+	// !!IMPORTANT after this point our env pointer may have changed, we can't
 	// call any JNI functions on objects created with the old pointer!!
 	//==========================================================================
 
@@ -4394,7 +4383,7 @@ int JavaLibrary::runScript(const NetworkId & caller, const std::string& script,
 		if (ms_env->ExceptionCheck())
 		{
 			ms_env->ExceptionDescribe();
-			LOG("ScriptInvestigation", ("runSCripts3 failed because of exception5"));		
+			LOG("ScriptInvestigation", ("runSCripts3 failed because of exception5"));
 			return SCRIPT_OVERRIDE;
 		}
 	}
@@ -4408,7 +4397,7 @@ int JavaLibrary::runScript(const NetworkId & caller, const std::string& script,
 	}
 
 	DEBUG_REPORT_LOG(true, ("JavaLibrary::runScript %s exit, method = %s\n",
-		script.c_str(),	method.c_str()));
+		script.c_str(), method.c_str()));
 
 	return result;
 }	// JavaLibrary::runScript(jobjectArray args)
@@ -4451,7 +4440,7 @@ int JavaLibrary::runScript(const NetworkId & caller, const std::string& script,
 		{
 			LOG("ScriptInvestigation", ("runSCripts4 failed because clsObject was nullptr"));
 		}
-				
+
 		return SCRIPT_OVERRIDE;
 	}
 
@@ -4459,9 +4448,9 @@ int JavaLibrary::runScript(const NetworkId & caller, const std::string& script,
 	{
 		DEBUG_REPORT_LOG(true, ("JavaLibrary::runScript (console version) max "
 			"recursion count reached, script = %s, method = %s, object id = %s, "
-			"dumping script!\n", script.c_str(), method.c_str(), 
+			"dumping script!\n", script.c_str(), method.c_str(),
 			caller.getValueString().c_str()));
-		LOG("ScriptInvestigation", ("runSCripts4 failed because of max recursion count"));		
+		LOG("ScriptInvestigation", ("runSCripts4 failed because of max recursion count"));
 		return SCRIPT_OVERRIDE;
 	}
 
@@ -4470,13 +4459,13 @@ int JavaLibrary::runScript(const NetworkId & caller, const std::string& script,
 	if (ms_env->ExceptionCheck())
 	{
 		ms_env->ExceptionDescribe();
-		LOG("ScriptInvestigation", ("runSCripts4 failed because of exception"));		
+		LOG("ScriptInvestigation", ("runSCripts4 failed because of exception"));
 		return SCRIPT_OVERRIDE;
 	}
 	JavaString jmethod(method.c_str());
 	if (ms_env->ExceptionCheck())
 	{
-		LOG("ScriptInvestigation", ("runSCripts4 failed because of exception2"));		
+		LOG("ScriptInvestigation", ("runSCripts4 failed because of exception2"));
 		ms_env->ExceptionDescribe();
 		return SCRIPT_OVERRIDE;
 	}
@@ -4487,7 +4476,7 @@ int JavaLibrary::runScript(const NetworkId & caller, const std::string& script,
 	if (ms_env->ExceptionCheck())
 	{
 		ms_env->ExceptionDescribe();
-		LOG("ScriptInvestigation", ("runSCripts4 failed because of exception3"));		
+		LOG("ScriptInvestigation", ("runSCripts4 failed because of exception3"));
 		return SCRIPT_OVERRIDE;
 	}
 	// add the "self" parameter
@@ -4496,7 +4485,7 @@ int JavaLibrary::runScript(const NetworkId & caller, const std::string& script,
 	if (ms_env->ExceptionCheck())
 	{
 		ms_env->ExceptionDescribe();
-		LOG("ScriptInvestigation", ("runSCripts4 failed because of exception4"));		
+		LOG("ScriptInvestigation", ("runSCripts4 failed because of exception4"));
 		return SCRIPT_OVERRIDE;
 	}
 
@@ -4507,55 +4496,55 @@ int JavaLibrary::runScript(const NetworkId & caller, const std::string& script,
 		const char *stringArg = Unicode::wideToNarrow(args[i]).c_str();
 		switch (argList[i])
 		{
-			case 'i':
-				{
-					jint param = atoi(stringArg);
-					arg = createNewObject(ms_clsInteger, ms_midInteger, param);
-				}
-				break;
-			case 'f':
-				{
-					jfloat param = static_cast<jfloat>(atof(stringArg));
-					arg = createNewObject(ms_clsFloat, ms_midFloat, param);
-				}
-				break;
-			case 's':
-				{
-					arg = createNewString(stringArg);
-				}
-				break;
-			case 'u':
-				{
-					arg = createNewString(args[i].c_str(), static_cast<jsize>(args[i].size()));
-				}
-				break;
-			case 'O':
-				{
-					arg = getObjId(NetworkId(stringArg));
-					if (arg == LocalRef::cms_nullPtr)
-					{
-						LOG("ScriptInvestigation", ("runSCripts4 failed because of bad objid"));		
-						return SCRIPT_OVERRIDE;
-					}
-				}
-				break;
-			default:
-				DEBUG_REPORT_LOG(true, ("unknown parameter type %c(%#x)\n", argList[i],
-					static_cast<unsigned>(argList[i])));		//lint !e571 suspicious cast
-				LOG("ScriptInvestigation", ("runSCripts4 failed because of param"));		
+		case 'i':
+		{
+			jint param = atoi(stringArg);
+			arg = createNewObject(ms_clsInteger, ms_midInteger, param);
+		}
+		break;
+		case 'f':
+		{
+			jfloat param = static_cast<jfloat>(atof(stringArg));
+			arg = createNewObject(ms_clsFloat, ms_midFloat, param);
+		}
+		break;
+		case 's':
+		{
+			arg = createNewString(stringArg);
+		}
+		break;
+		case 'u':
+		{
+			arg = createNewString(args[i].c_str(), static_cast<jsize>(args[i].size()));
+		}
+		break;
+		case 'O':
+		{
+			arg = getObjId(NetworkId(stringArg));
+			if (arg == LocalRef::cms_nullPtr)
+			{
+				LOG("ScriptInvestigation", ("runSCripts4 failed because of bad objid"));
 				return SCRIPT_OVERRIDE;
+			}
+		}
+		break;
+		default:
+			DEBUG_REPORT_LOG(true, ("unknown parameter type %c(%#x)\n", argList[i],
+				static_cast<unsigned>(argList[i])));		//lint !e571 suspicious cast
+			LOG("ScriptInvestigation", ("runSCripts4 failed because of param"));
+			return SCRIPT_OVERRIDE;
 		}
 		if (ms_env->ExceptionCheck())
 		{
 			ms_env->ExceptionDescribe();
-			LOG("ScriptInvestigation", ("runSCripts4 failed because of exception5"));		
+			LOG("ScriptInvestigation", ("runSCripts4 failed because of exception5"));
 			return SCRIPT_OVERRIDE;
 		}
 		setObjectArrayElement(*jparams, static_cast<jsize>(i + 1), *arg);
 		if (ms_env->ExceptionCheck())
 		{
 			ms_env->ExceptionDescribe();
-			LOG("ScriptInvestigation", ("runSCripts4 failed because of exception6"));		
+			LOG("ScriptInvestigation", ("runSCripts4 failed because of exception6"));
 			return SCRIPT_OVERRIDE;
 		}
 	}
@@ -4564,7 +4553,7 @@ int JavaLibrary::runScript(const NetworkId & caller, const std::string& script,
 	jint result = callScriptEntry(jscript, jmethod, jparams->getValue());
 
 	//==========================================================================
-	// !!IMPORTANT after this point our env pointer may have changed, we can't 
+	// !!IMPORTANT after this point our env pointer may have changed, we can't
 	// call any JNI functions on objects created with the old pointer!!
 	//==========================================================================
 
@@ -4573,7 +4562,7 @@ int JavaLibrary::runScript(const NetworkId & caller, const std::string& script,
 		if (ms_env->ExceptionCheck())
 		{
 			ms_env->ExceptionDescribe();
-			LOG("ScriptInvestigation", ("runSCripts4 failed because of exception7"));		
+			LOG("ScriptInvestigation", ("runSCripts4 failed because of exception7"));
 			return SCRIPT_OVERRIDE;
 		}
 	}
@@ -4590,7 +4579,7 @@ int JavaLibrary::runScript(const NetworkId & caller, const std::string& script,
 }	// JavaLibrary::runScript(StringVector_t args)
 
 /**
- * Calls a special function on a script that returns a string instead of an 
+ * Calls a special function on a script that returns a string instead of an
  * integer. The script function has no "self" associated with it.
  *
  * @param script		the name of the script to call
@@ -4600,10 +4589,10 @@ int JavaLibrary::runScript(const NetworkId & caller, const std::string& script,
  *
  * @return the string returned from the script function
  */
-std::string JavaLibrary::callScriptConsoleHandler(const std::string & script, 
+std::string JavaLibrary::callScriptConsoleHandler(const std::string & script,
 	const std::string & method, const std::string & argList, ScriptParams & args)
 {
-static const std::string errorReturnString;
+	static const std::string errorReturnString;
 
 	// get the current env count, in case we reset our Java connection
 	int currentEnvCount = ms_envCount;
@@ -4613,11 +4602,11 @@ static const std::string errorReturnString;
 	GlobalInstances globals;
 
 	DEBUG_REPORT_LOG(ConfigServerGame::getJavaConsoleDebugMessages(), (
-		"JavaLibrary::runScript %s enter, method = %s\n", script.c_str(), 
+		"JavaLibrary::runScript %s enter, method = %s\n", script.c_str(),
 		method.c_str()));
 
 	if (ms_env == nullptr || ms_midRunConsoleHandler == nullptr || ms_clsObject == nullptr)
- 	{
+	{
 		if (!ms_env)
 		{
 			LOG("ScriptInvestigation", ("runSCripts2 failed because env was nullptr"));
@@ -4630,7 +4619,7 @@ static const std::string errorReturnString;
 		{
 			LOG("ScriptInvestigation", ("runSCripts2 failed because clsObject was nullptr"));
 		}
-				
+
 		return errorReturnString;
 	}
 
@@ -4648,14 +4637,14 @@ static const std::string errorReturnString;
 	if (ms_env->ExceptionCheck())
 	{
 		ms_env->ExceptionDescribe();
-		LOG("ScriptInvestigation", ("callScriptConsoleHandler failed because of exception"));		
+		LOG("ScriptInvestigation", ("callScriptConsoleHandler failed because of exception"));
 		return errorReturnString;
 	}
 	JavaString jmethod(method.c_str());
 	if (ms_env->ExceptionCheck())
 	{
 		ms_env->ExceptionDescribe();
-		LOG("ScriptInvestigation", ("callScriptConsoleHandler failed because of exception2"));		
+		LOG("ScriptInvestigation", ("callScriptConsoleHandler failed because of exception2"));
 		return errorReturnString;
 	}
 
@@ -4664,7 +4653,7 @@ static const std::string errorReturnString;
 	if (jparams == LocalObjectArrayRef::cms_nullPtr)
 	{
 		ms_env->ExceptionDescribe();
-		LOG("ScriptInvestigation", ("callScriptConsoleHandler failed because of exception3"));		
+		LOG("ScriptInvestigation", ("callScriptConsoleHandler failed because of exception3"));
 		return errorReturnString;
 	}
 
@@ -4672,7 +4661,7 @@ static const std::string errorReturnString;
 	jstring result = callScriptConsoleHandlerEntry(jscript, jmethod, jparams->getValue());
 
 	//==========================================================================
-	// !!IMPORTANT after this point our env pointer may have changed, we can't 
+	// !!IMPORTANT after this point our env pointer may have changed, we can't
 	// call any JNI functions on objects created with the old pointer!!
 	//==========================================================================
 
@@ -4777,7 +4766,7 @@ int JavaLibrary::callMessages(const NetworkId & caller, const std::string & meth
 		{
 			LOG("ScriptInvestigation", ("callMessages failed because clsObject was nullptr"));
 		}
-				
+
 		return SCRIPT_OVERRIDE;
 	}
 
@@ -4812,13 +4801,13 @@ int JavaLibrary::callMessages(const NetworkId & caller, const std::string & meth
 	{
 		LOG("ScriptRecursion", ("callMessages recursion %d", ms_currentRecursionCount));
 	}
-  	result = ms_env->CallStaticIntMethod(ms_clsScriptEntry, ms_midCallMessages, jmethod.getValue(), caller.getValue(), jdictionary);
-  	--ms_currentRecursionCount;
+	result = ms_env->CallStaticIntMethod(ms_clsScriptEntry, ms_midCallMessages, jmethod.getValue(), caller.getValue(), jdictionary);
+	--ms_currentRecursionCount;
 
 	result = handleScriptEntryCleanup(result);
 
 	//==========================================================================
-	// !!IMPORTANT after this point our env pointer may have changed, we can't 
+	// !!IMPORTANT after this point our env pointer may have changed, we can't
 	// call any JNI functions on objects created with the old pointer!!
 	//==========================================================================
 
@@ -4882,7 +4871,7 @@ int JavaLibrary::callMessage(const NetworkId & caller, const std::string & scrip
 			script.c_str(), method.c_str(), caller.getValueString().c_str()));
 		LOG("ScriptInvestigation", ("callMessage failed because max recursion count"));
 		return SCRIPT_OVERRIDE;
-	}	
+	}
 
 	const JavaDictionary * dictionary = dynamic_cast<const JavaDictionary *>(&data);
 	if (dictionary == nullptr)
@@ -4955,7 +4944,7 @@ int JavaLibrary::callMessage(const NetworkId & caller, const std::string & scrip
 	int result = callScriptEntry(jscript, jmethod, jparams->getValue());
 
 	//==========================================================================
-	// !!IMPORTANT after this point our env pointer may have changed, we can't 
+	// !!IMPORTANT after this point our env pointer may have changed, we can't
 	// call any JNI functions on objects created with the old pointer!!
 	//==========================================================================
 
@@ -4991,7 +4980,7 @@ int JavaLibrary::callMessage(const NetworkId & caller, const std::string & scrip
 const bool JavaLibrary::getClassName(const jclass & sourceClass, std::string & target)
 {
 	bool result = false;
-	if(ms_env)
+	if (ms_env)
 	{
 		const LocalRefParamPtr classPtr(new LocalRefParam(sourceClass));
 		JavaStringPtr s = callStringMethod(*classPtr, JavaLibrary::ms_midClassGetName);
@@ -5070,12 +5059,12 @@ bool JavaLibrary::unpackDictionary(const std::vector<int8> & packedData,
 		uint32 crc = 0;
 		int dataLen = packedData.size();
 		const int8 * data = &packedData[0];
-		
-		std::vector<int8>::const_iterator result = std::find(packedData.begin(), 
+
+		std::vector<int8>::const_iterator result = std::find(packedData.begin(),
 			packedData.end(), '*');
 		if (result != packedData.end())
 		{
-			// double-check: verify all the characters before the marker are 
+			// double-check: verify all the characters before the marker are
 			// digits
 			int i;
 			int markerPos = packedData.end() - result;
@@ -5087,7 +5076,7 @@ bool JavaLibrary::unpackDictionary(const std::vector<int8> & packedData,
 			}
 			if (i == markerPos)
 			{
-				data = &data[markerPos+1];
+				data = &data[markerPos + 1];
 				// verify the crc
 				dataLen -= markerPos + 1;
 				uint32 dataCrc = Crc::calculate(data, dataLen);
@@ -5099,7 +5088,7 @@ bool JavaLibrary::unpackDictionary(const std::vector<int8> & packedData,
 				}
 			}
 		}
-		
+
 		if (data != nullptr && *data != '\0')
 		{
 			LocalByteArrayRefPtr jdata = createNewByteArray(dataLen);
@@ -5133,7 +5122,7 @@ const bool JavaLibrary::convert(const JavaStringParam & source, std::string & ta
 		{
 			jboolean isCopy(false);
 			const char * temp = ms_env->GetStringUTFChars(source.getValue(), &isCopy);
-			if(temp)
+			if (temp)
 			{
 				target = temp;
 				ms_env->ReleaseStringUTFChars(source.getValue(), temp);
@@ -5200,14 +5189,13 @@ const bool JavaLibrary::convert(const JavaDictionary & source, std::vector<int8>
 	return result;
 }	// JavaLibrary::convert(const JavaDictionary &, std::string &)
 
-
 //=======================================================================
 
 const bool JavaLibrary::convert(const std::map<std::string, int> & source, JavaDictionaryPtr & target)
 {
 	std::vector<std::pair<std::string, int> > sourceData;
-	std::map<std::string, int>:: const_iterator i;
-	for(i = source.begin(); i != source.end(); ++i)
+	std::map<std::string, int>::const_iterator i;
+	for (i = source.begin(); i != source.end(); ++i)
 	{
 		sourceData.push_back(*i);
 	}
@@ -5226,7 +5214,7 @@ const bool JavaLibrary::convert(const std::vector<std::pair<std::string, int> > 
 		return false;
 
 	std::vector<std::pair<std::string, int> >::const_iterator i;
-	for(i = source.begin(); i != source.end(); ++i)
+	for (i = source.begin(); i != source.end(); ++i)
 	{
 		int value = (*i).second;
 		JavaString name((*i).first.c_str());
@@ -5247,7 +5235,7 @@ const bool JavaLibrary::convert(const std::vector<std::pair<std::string, std::pa
 		return false;
 
 	std::vector<std::pair<std::string, std::pair<int, int> > >::const_iterator i;
-	for(i = source.begin(); i != source.end(); ++i)
+	for (i = source.begin(); i != source.end(); ++i)
 	{
 		int value = (*i).second.first;
 		JavaString name((*i).first.c_str());
@@ -5268,8 +5256,8 @@ const bool JavaLibrary::convert(const std::vector<std::pair<std::string, bool> >
 		return false;
 
 	std::vector<std::pair<std::string, bool> >::const_iterator i;
-	for(i = source.begin(); i != source.end(); ++i)
-{
+	for (i = source.begin(); i != source.end(); ++i)
+	{
 		JavaString name((*i).first.c_str());
 		bool value = (*i).second;
 		callObjectMethod(*target, ms_midDictionaryPutBool, name.getValue(), value);
@@ -5280,288 +5268,287 @@ const bool JavaLibrary::convert(const std::vector<std::pair<std::string, bool> >
 //=======================================================================
 
 namespace ScriptConversion {
-
-const bool convert(const jobject & source, Vector & target, NetworkId & targetCell, const Vector & i_default)
-{
-	if (!convert(source, target, targetCell))
+	const bool convert(const jobject & source, Vector & target, NetworkId & targetCell, const Vector & i_default)
 	{
-		target = i_default;
-		targetCell = NetworkId::cms_invalid;
+		if (!convert(source, target, targetCell))
+		{
+			target = i_default;
+			targetCell = NetworkId::cms_invalid;
+		}
+		return true;
 	}
-	return true;
-}
 
-const bool convert(const std::vector<const Unicode::String *> & source, LocalObjectArrayRefPtr & target)
-{
-	if (!JavaLibrary::getEnv())
-		return false;
+	const bool convert(const std::vector<const Unicode::String *> & source, LocalObjectArrayRefPtr & target)
+	{
+		if (!JavaLibrary::getEnv())
+			return false;
 
-	bool result = false;
+		bool result = false;
 		int count = source.size();
-	target = createNewObjectArray(count, JavaLibrary::ms_clsString);
-	if (target != LocalObjectArrayRef::cms_nullPtr)
+		target = createNewObjectArray(count, JavaLibrary::ms_clsString);
+		if (target != LocalObjectArrayRef::cms_nullPtr)
 		{
 			result = true;
 			for (int i = 0; i < count; ++i)
 			{
 				if (source[i] != nullptr)
 				{
-				JavaString targetElement(*source[i]);
-				setObjectArrayElement(*target, i, targetElement);
+					JavaString targetElement(*source[i]);
+					setObjectArrayElement(*target, i, targetElement);
+				}
 			}
 		}
-	}
-	return result;
-}
-
-const bool convert(const jobject source, StringId & target)
-{
-	if (source == 0)
-		return false;
-
-	JNIEnv * env = JavaLibrary::getEnv();
-	if (!env)
-		return false;
-
-	if (env->IsInstanceOf(source, JavaLibrary::ms_clsStringId) == JNI_FALSE)
-		return false;
-
-	// @todo: it would be nice if we had a known max length for the table
-	// name and text in order to use buffers to get the strings
-
-	// get the table
-	{
-		JavaStringPtr tempString = getStringField(LocalRefParam(source), JavaLibrary::ms_fidStringIdTable);
-		std::string localString;
-		JavaLibrary::convert(*tempString, localString);
-		target.setTable(localString);
+		return result;
 	}
 
-	// get the text
+	const bool convert(const jobject source, StringId & target)
 	{
-		JavaStringPtr tempString = getStringField(LocalRefParam(source), JavaLibrary::ms_fidStringIdAsciiId);
-		if (tempString != JavaString::cms_nullPtr && getStringLength(*tempString) > 0)
+		if (source == 0)
+			return false;
+
+		JNIEnv * env = JavaLibrary::getEnv();
+		if (!env)
+			return false;
+
+		if (env->IsInstanceOf(source, JavaLibrary::ms_clsStringId) == JNI_FALSE)
+			return false;
+
+		// @todo: it would be nice if we had a known max length for the table
+		// name and text in order to use buffers to get the strings
+
+		// get the table
 		{
+			JavaStringPtr tempString = getStringField(LocalRefParam(source), JavaLibrary::ms_fidStringIdTable);
 			std::string localString;
 			JavaLibrary::convert(*tempString, localString);
-			target.setText(localString);
+			target.setTable(localString);
 		}
-		else
+
+		// get the text
 		{
-			// get the text index
-			jint textIndex = env->GetIntField(source, JavaLibrary::ms_fidStringIdIndexId);
-			target.setTextIndex(textIndex);
+			JavaStringPtr tempString = getStringField(LocalRefParam(source), JavaLibrary::ms_fidStringIdAsciiId);
+			if (tempString != JavaString::cms_nullPtr && getStringLength(*tempString) > 0)
+			{
+				std::string localString;
+				JavaLibrary::convert(*tempString, localString);
+				target.setText(localString);
+			}
+			else
+			{
+				// get the text index
+				jint textIndex = env->GetIntField(source, JavaLibrary::ms_fidStringIdIndexId);
+				target.setTextIndex(textIndex);
+			}
 		}
+
+		return true;
 	}
 
-	return true;
-}
-
-const bool convert(const LocalRefParam & source, StringId & target)
-{
-	return convert(source.getValue(), target);
-}
-
-const bool convert(const StringId & source, LocalRefPtr & target)
-{
-	if (!JavaLibrary::getEnv())
-		return false;
-
-	target = allocObject(JavaLibrary::ms_clsStringId);
-	if (target == LocalRef::cms_nullPtr)
-		return false;
-
-	// convert the table
+	const bool convert(const LocalRefParam & source, StringId & target)
 	{
-		JavaString tempString(source.getTable().c_str());
-		setObjectField(*target, JavaLibrary::ms_fidStringIdTable, tempString);
+		return convert(source.getValue(), target);
 	}
 
-	// convert the text
+	const bool convert(const StringId & source, LocalRefPtr & target)
 	{
-		JavaString tempString(source.getText().c_str());
-		setObjectField(*target, JavaLibrary::ms_fidStringIdAsciiId, tempString);
+		if (!JavaLibrary::getEnv())
+			return false;
+
+		target = allocObject(JavaLibrary::ms_clsStringId);
+		if (target == LocalRef::cms_nullPtr)
+			return false;
+
+		// convert the table
+		{
+			JavaString tempString(source.getTable().c_str());
+			setObjectField(*target, JavaLibrary::ms_fidStringIdTable, tempString);
+		}
+
+		// convert the text
+		{
+			JavaString tempString(source.getText().c_str());
+			setObjectField(*target, JavaLibrary::ms_fidStringIdAsciiId, tempString);
+		}
+
+		// convert the index
+		setIntField(*target, JavaLibrary::ms_fidStringIdIndexId, source.getTextIndex());
+		return true;
 	}
 
-	// convert the index
-	setIntField(*target, JavaLibrary::ms_fidStringIdIndexId, source.getTextIndex());
-	return true;
-}
-
-const bool convert(const std::vector<std::string> & source, LocalObjectArrayRefPtr & strArray)
-{
-	JNIEnv * env = JavaLibrary::getEnv();
-	if (!env)
-		return false;
-
-	if (env->ExceptionCheck())
+	const bool convert(const std::vector<std::string> & source, LocalObjectArrayRefPtr & strArray)
 	{
-		env->ExceptionDescribe();
-		return false;
-	}
+		JNIEnv * env = JavaLibrary::getEnv();
+		if (!env)
+			return false;
 
-	strArray = createNewObjectArray(static_cast<jsize>(source.size()), JavaLibrary::ms_clsString);
-	std::vector<std::string>::const_iterator i;
-	int index = 0;
-	for(i = source.begin(); i != source.end(); ++i)
-	{
-		const char * s = (*i).c_str();
-		JavaString js(s);
 		if (env->ExceptionCheck())
 		{
 			env->ExceptionDescribe();
 			return false;
 		}
-		setObjectArrayElement(*strArray, index, js);
+
+		strArray = createNewObjectArray(static_cast<jsize>(source.size()), JavaLibrary::ms_clsString);
+		std::vector<std::string>::const_iterator i;
+		int index = 0;
+		for (i = source.begin(); i != source.end(); ++i)
+		{
+			const char * s = (*i).c_str();
+			JavaString js(s);
+			if (env->ExceptionCheck())
+			{
+				env->ExceptionDescribe();
+				return false;
+			}
+			setObjectArrayElement(*strArray, index, js);
+			if (env->ExceptionCheck())
+			{
+				env->ExceptionDescribe();
+				return false;
+			}
+			++index;
+		}
+		return true;
+	}
+
+	const bool convert(const std::vector<const char *> & source, LocalObjectArrayRefPtr & strArray)
+	{
+		JNIEnv * env = JavaLibrary::getEnv();
+		if (!env)
+			return false;
+
 		if (env->ExceptionCheck())
 		{
 			env->ExceptionDescribe();
 			return false;
 		}
-		++index;
+
+		strArray = createNewObjectArray(static_cast<jsize>(source.size()), JavaLibrary::ms_clsString);
+		std::vector<const char *>::const_iterator i;
+		int index = 0;
+		for (i = source.begin(); i != source.end(); ++i)
+		{
+			JavaString js(*i);
+			if (env->ExceptionCheck())
+			{
+				env->ExceptionDescribe();
+				return false;
+			}
+			setObjectArrayElement(*strArray, index, js);
+			if (env->ExceptionCheck())
+			{
+				env->ExceptionDescribe();
+				return false;
+			}
+			++index;
+		}
+		return true;
 	}
-	return true;
-}
 
-const bool convert(const std::vector<const char *> & source, LocalObjectArrayRefPtr & strArray)
-{
-	JNIEnv * env = JavaLibrary::getEnv();
-	if (!env)
-		return false;
-
-	if (env->ExceptionCheck())
+	const bool convert(const std::set<CellPermissions::PermissionObject> & source, LocalObjectArrayRefPtr & strArray)
 	{
-		env->ExceptionDescribe();
-		return false;
-	}
+		JNIEnv * env = JavaLibrary::getEnv();
+		if (!env)
+			return false;
 
-	strArray = createNewObjectArray(static_cast<jsize>(source.size()), JavaLibrary::ms_clsString);
-	std::vector<const char *>::const_iterator i;
-	int index = 0;
-	for(i = source.begin(); i != source.end(); ++i)
-	{
-		JavaString js(*i);
 		if (env->ExceptionCheck())
 		{
 			env->ExceptionDescribe();
 			return false;
 		}
-		setObjectArrayElement(*strArray, index, js);
-		if (env->ExceptionCheck())
+
+		strArray = createNewObjectArray(static_cast<jsize>(source.size()), JavaLibrary::ms_clsString);
+		std::set<CellPermissions::PermissionObject>::const_iterator i;
+		int index = 0;
+		for (i = source.begin(); i != source.end(); ++i)
 		{
-			env->ExceptionDescribe();
-			return false;
+			const std::string  name = (*i).getName();
+			const char * const s = name.c_str();
+
+			JavaString js(s);
+			if (env->ExceptionCheck())
+			{
+				env->ExceptionDescribe();
+				return false;
+			}
+			setObjectArrayElement(*strArray, index, js);
+			if (env->ExceptionCheck())
+			{
+				env->ExceptionDescribe();
+				return false;
+			}
+			++index;
 		}
-		++index;
-	}
-	return true;
-}
 
-const bool convert(const std::set<CellPermissions::PermissionObject> & source, LocalObjectArrayRefPtr & strArray)
-{
-	JNIEnv * env = JavaLibrary::getEnv();
-	if (!env)
-		return false;
-
-	if (env->ExceptionCheck())
-	{
-		env->ExceptionDescribe();
-		return false;
+		return true;
 	}
 
-	strArray = createNewObjectArray(static_cast<jsize>(source.size()), JavaLibrary::ms_clsString);
-	std::set<CellPermissions::PermissionObject>::const_iterator i;
-	int index = 0;
-	for(i = source.begin(); i != source.end(); ++i)
+	const bool convert(const jobjectArray & source, stdvector<std::string>::fwd & target)
 	{
-		const std::string  name = (*i).getName();
-		const char * const s    = name.c_str();
+		JNIEnv * env = JavaLibrary::getEnv();
+		if (!env || !source)
+			return false;
 
-		JavaString js(s);
-		if (env->ExceptionCheck())
+		int count = env->GetArrayLength(source);
+		target.resize(count, "");
+
+		std::string tempString;
+		for (int i = 0; i < count; ++i)
 		{
-			env->ExceptionDescribe();
-			return false;
+			JavaStringPtr s = getStringArrayElement(LocalObjectArrayRefParam(source), i);
+			if (s != JavaString::cms_nullPtr)
+			{
+				if (JavaLibrary::convert(*s, tempString))
+					target[i] = tempString;
+			}
 		}
-		setObjectArrayElement(*strArray, index, js);
-		if (env->ExceptionCheck())
-		{
-			env->ExceptionDescribe();
-			return false;
-		}
-		++index;
+		return true;
 	}
 
-	return true;
-}
-
-const bool convert(const jobjectArray & source, stdvector<std::string>::fwd & target)
-{
-	JNIEnv * env = JavaLibrary::getEnv();
-	if (!env || !source)
-		return false;
-
-	int count = env->GetArrayLength(source);
-	target.resize(count, "");
-
-	std::string tempString;
-	for (int i = 0; i < count; ++i)
+	const bool convert(const jlongArray & source, std::vector<NetworkId> &results)
 	{
-		JavaStringPtr s = getStringArrayElement(LocalObjectArrayRefParam(source), i);
-		if (s != JavaString::cms_nullPtr)
-{
-			if (JavaLibrary::convert(*s, tempString))
-				target[i] = tempString;
-	}
-	}
-	return true;
-}
-
-const bool convert(const jlongArray & source, std::vector<NetworkId> &results)
-{
-	bool result = false;
-	JNIEnv * env = JavaLibrary::getEnv();
-	if (!env || !source)
-		return false;
+		bool result = false;
+		JNIEnv * env = JavaLibrary::getEnv();
+		if (!env || !source)
+			return false;
 
 		jsize count = env->GetArrayLength(source);
 		jsize i;
 		result = true;
-	jlong jlongTmp;
-		for (i=0; i<count; ++i)
+		jlong jlongTmp;
+		for (i = 0; i < count; ++i)
 		{
-		 env->GetLongArrayRegion(source, i, 1, &jlongTmp);
-		 NetworkId nid(jlongTmp);
-			 if (!nid)
-			 {
+			env->GetLongArrayRegion(source, i, 1, &jlongTmp);
+			NetworkId nid(jlongTmp);
+			if (!nid)
+			{
 				result = false;
-			 }
-			 else
-			 {
+			}
+			else
+			{
 				results.push_back(nid);
-			 }
+			}
 		}
 
-	return result;
-}
+		return result;
+	}
 
-const bool convert(const jlongArray & source, std::vector<ServerObject *> &results)
-{
-	 JNIEnv * env = JavaLibrary::getEnv();
-	 if (!env || !source)
+	const bool convert(const jlongArray & source, std::vector<ServerObject *> &results)
+	{
+		JNIEnv * env = JavaLibrary::getEnv();
+		if (!env || !source)
 			return false;
 
-	bool result = false;
+		bool result = false;
 
 		jsize count = env->GetArrayLength(source);
 		jsize i;
 		result = true;
-		for (i=0; i<count; ++i)
+		for (i = 0; i < count; ++i)
 		{
-		jlong id;
-		env->GetLongArrayRegion(source, i, 1, &id);
+			jlong id;
+			env->GetLongArrayRegion(source, i, 1, &id);
 			ServerObject * object = 0;
-		if (!JavaLibrary::getObject(id, object))
+			if (!JavaLibrary::getObject(id, object))
 			{
 				result = false;
 			}
@@ -5571,855 +5558,852 @@ const bool convert(const jlongArray & source, std::vector<ServerObject *> &resul
 			}
 		}
 
-	return result;
-}
+		return result;
+	}
 
-const bool convert(const std::vector<ServerObject *> &source, LocalLongArrayRefPtr & result)
-{
-	 JNIEnv * env = JavaLibrary::getEnv();
-	 if (!env)
+	const bool convert(const std::vector<ServerObject *> &source, LocalLongArrayRefPtr & result)
+	{
+		JNIEnv * env = JavaLibrary::getEnv();
+		if (!env)
 			return false;
 
-	int count = source.size();
-	bool rv = true;
-	int resultCount = 0;
-	for (int i = 0; i < count; ++i)
-	{
-		if (source[i])
+		int count = source.size();
+		bool rv = true;
+		int resultCount = 0;
+		for (int i = 0; i < count; ++i)
 		{
-			resultCount++;
-		}
-	}
-	result = createNewLongArray(resultCount);
-	for (int j = 0; j < count; ++j)
-	{
-		if (source[j])
-		{
-			jlong arg = (source[j]->getNetworkId()).getValue();
-			if (arg == 0)
+			if (source[i])
 			{
-				rv = false;
-				break;
+				resultCount++;
 			}
-			setLongArrayRegion(*result, static_cast<jsize>(--resultCount), 1, &arg);
 		}
-	}
-	if (env->ExceptionCheck())
-	{
-		 env->ExceptionDescribe();
-		 rv = false;
-	}
-	return rv;
-}
-
-const bool convert(const std::vector<NetworkId> &source, LocalLongArrayRefPtr & result)
-{
-	JNIEnv * env = JavaLibrary::getEnv();
-	if (!env)
-		return false;
-
-	int count = source.size();
-	bool rv = true;
-	int i;
-	int resultCount = 0;
-	for (i = 0; i < count; ++i)
-	{
-		if (source[i].isValid())
+		result = createNewLongArray(resultCount);
+		for (int j = 0; j < count; ++j)
 		{
-			resultCount++;
-		}
-	}
-	result = createNewLongArray(resultCount);
-	jlong jlongTmp;
-	for (int j = 0; j < count; ++j)
-	{
-		if (source[j].isValid())
-		{
-			jlongTmp = source[j].getValue();
-
-			setLongArrayRegion(*result, static_cast<jsize>(--resultCount), 1, &jlongTmp);
+			if (source[j])
+			{
+				jlong arg = (source[j]->getNetworkId()).getValue();
+				if (arg == 0)
+				{
+					rv = false;
+					break;
+				}
+				setLongArrayRegion(*result, static_cast<jsize>(--resultCount), 1, &arg);
 			}
-		else
+		}
+		if (env->ExceptionCheck())
 		{
+			env->ExceptionDescribe();
 			rv = false;
 		}
+		return rv;
 	}
-	if (env->ExceptionCheck())
+
+	const bool convert(const std::vector<NetworkId> &source, LocalLongArrayRefPtr & result)
 	{
-		env->ExceptionDescribe();
-		rv = false;
-	}
-	return rv;
-}
+		JNIEnv * env = JavaLibrary::getEnv();
+		if (!env)
+			return false;
 
-const bool convert(const jobject & source, Vector &target, NetworkId & targetCell)
-{
-	JNIEnv * env = JavaLibrary::getEnv();
-	if (!env)
-		return false;
-
-	if (!source)
-		return false;
-
-	ServerObject * object = 0;
-
-	if (env->IsInstanceOf(source, JavaLibrary::ms_clsLocation))
-	{
-		target.x = env->GetFloatField(source, JavaLibrary::ms_fidLocationX);
-		target.y = env->GetFloatField(source, JavaLibrary::ms_fidLocationY);
-		target.z = env->GetFloatField(source, JavaLibrary::ms_fidLocationZ);
-
-		LocalRefPtr cell = getObjectField(LocalRefParam(source), JavaLibrary::ms_fidLocationCell);
-		targetCell = JavaLibrary::getNetworkId(*cell);
-		return true;
-	}
-	else if (JavaLibrary::getObject(source, object))
-	{
-		target = object->getPosition_p();
-		const Object * cell = ContainerInterface::getContainedByObject(*object);
-		targetCell = (cell) ? cell->getNetworkId() : NetworkId::cms_invalid;
-		return true;
-	}
-	return false;
-}
-
-const bool convertWorld(const jobject & source, Vector &target)
-{
-	JNIEnv * env = JavaLibrary::getEnv();
-	if (!env)
-		return false;
-
-	if (!source)
-		return false;
-
-	ServerObject * object = 0;
-
-	if (env->IsInstanceOf(source, JavaLibrary::ms_clsLocation))
-	{
-		target.x = env->GetFloatField(source, JavaLibrary::ms_fidLocationX);
-		target.y = env->GetFloatField(source, JavaLibrary::ms_fidLocationY);
-		target.z = env->GetFloatField(source, JavaLibrary::ms_fidLocationZ);
-
-		LocalRefPtr cell = getObjectField(LocalRefParam(source), JavaLibrary::ms_fidLocationCell);
-		Object * cellObject = 0;
-		if (JavaLibrary::getObject(*cell, cellObject))
+		int count = source.size();
+		bool rv = true;
+		int i;
+		int resultCount = 0;
+		for (i = 0; i < count; ++i)
 		{
-			target = cellObject->rotateTranslate_o2w(target);
+			if (source[i].isValid())
+			{
+				resultCount++;
+			}
+		}
+		result = createNewLongArray(resultCount);
+		jlong jlongTmp;
+		for (int j = 0; j < count; ++j)
+		{
+			if (source[j].isValid())
+			{
+				jlongTmp = source[j].getValue();
+
+				setLongArrayRegion(*result, static_cast<jsize>(--resultCount), 1, &jlongTmp);
+			}
+			else
+			{
+				rv = false;
+			}
+		}
+		if (env->ExceptionCheck())
+		{
+			env->ExceptionDescribe();
+			rv = false;
+		}
+		return rv;
+	}
+
+	const bool convert(const jobject & source, Vector &target, NetworkId & targetCell)
+	{
+		JNIEnv * env = JavaLibrary::getEnv();
+		if (!env)
+			return false;
+
+		if (!source)
+			return false;
+
+		ServerObject * object = 0;
+
+		if (env->IsInstanceOf(source, JavaLibrary::ms_clsLocation))
+		{
+			target.x = env->GetFloatField(source, JavaLibrary::ms_fidLocationX);
+			target.y = env->GetFloatField(source, JavaLibrary::ms_fidLocationY);
+			target.z = env->GetFloatField(source, JavaLibrary::ms_fidLocationZ);
+
+			LocalRefPtr cell = getObjectField(LocalRefParam(source), JavaLibrary::ms_fidLocationCell);
+			targetCell = JavaLibrary::getNetworkId(*cell);
+			return true;
+		}
+		else if (JavaLibrary::getObject(source, object))
+		{
+			target = object->getPosition_p();
+			const Object * cell = ContainerInterface::getContainedByObject(*object);
+			targetCell = (cell) ? cell->getNetworkId() : NetworkId::cms_invalid;
+			return true;
+		}
+		return false;
+	}
+
+	const bool convertWorld(const jobject & source, Vector &target)
+	{
+		JNIEnv * env = JavaLibrary::getEnv();
+		if (!env)
+			return false;
+
+		if (!source)
+			return false;
+
+		ServerObject * object = 0;
+
+		if (env->IsInstanceOf(source, JavaLibrary::ms_clsLocation))
+		{
+			target.x = env->GetFloatField(source, JavaLibrary::ms_fidLocationX);
+			target.y = env->GetFloatField(source, JavaLibrary::ms_fidLocationY);
+			target.z = env->GetFloatField(source, JavaLibrary::ms_fidLocationZ);
+
+			LocalRefPtr cell = getObjectField(LocalRefParam(source), JavaLibrary::ms_fidLocationCell);
+			Object * cellObject = 0;
+			if (JavaLibrary::getObject(*cell, cellObject))
+			{
+				target = cellObject->rotateTranslate_o2w(target);
+			}
+			return true;
+		}
+		else if (JavaLibrary::getObject(source, object))
+		{
+			target = object->getPosition_w();
+			return true;
+		}
+		return false;
+	}
+
+	const bool convertWorld(const jlong & source, Vector &target)
+	{
+		JNIEnv * env = JavaLibrary::getEnv();
+		if (!env)
+			return false;
+
+		if (source == 0)
+			return false;
+
+		ServerObject * object = 0;
+
+		if (JavaLibrary::getObject(source, object))
+		{
+			target = object->getPosition_w();
+			return true;
+		}
+		return false;
+	}
+
+	const bool convertWorld(const LocalRefParam & source, Vector &target)
+	{
+		return convertWorld(source.getValue(), target);
+	}
+
+	const bool convert(const Vector & source, const NetworkId & sourceCell, LocalRefPtr & target)
+	{
+		return convert(source, ServerWorld::getSceneId(), sourceCell, target);
+	}
+
+	const bool convert(const jobject & source, Vector & targetLoc, std::string & targetSceneId, NetworkId & targetCell)
+	{
+		JNIEnv * env = JavaLibrary::getEnv();
+		if (!env)
+			return false;
+
+		if (!source)
+			return false;
+
+		Object * object = 0;
+
+		if (env->IsInstanceOf(source, JavaLibrary::ms_clsLocation))
+		{
+			// get the xyz coords
+			targetLoc.x = env->GetFloatField(source, JavaLibrary::ms_fidLocationX);
+			targetLoc.y = env->GetFloatField(source, JavaLibrary::ms_fidLocationY);
+			targetLoc.z = env->GetFloatField(source, JavaLibrary::ms_fidLocationZ);
+
+			// get the scene
+			//@todo EAS what's the right answer here?
+			JavaStringPtr sceneId = getStringField(LocalRefParam(source), JavaLibrary::ms_fidLocationArea);
+			if (sceneId == JavaString::cms_nullPtr)
+			{
+				targetSceneId.clear();
+				return false;
+			}
+			JavaLibrary::convert(*sceneId, targetSceneId);
+
+			// get the cell
+			LocalRefPtr cell = getObjectField(LocalRefParam(source), JavaLibrary::ms_fidLocationCell);
+			targetCell = JavaLibrary::getNetworkId(*cell);
+			return true;
+		}
+		else if (JavaLibrary::getObject(source, object))
+		{
+			targetLoc = object->getPosition_p();
+			targetSceneId = ServerWorld::getSceneId();
+			const Object * cell = ContainerInterface::getContainedByObject(*object);
+			targetCell = (cell) ? cell->getNetworkId() : NetworkId::cms_invalid;
+			return true;
+		}
+		return false;
+	}
+
+	const bool convertWorld(const jobject & source, Vector & targetLoc, std::string & targetSceneId)
+	{
+		JNIEnv * env = JavaLibrary::getEnv();
+		if (!env)
+			return false;
+
+		if (!source)
+			return false;
+
+		Object * object = 0;
+
+		if (env->IsInstanceOf(source, JavaLibrary::ms_clsLocation))
+		{
+			// get the xyz coords
+			targetLoc.x = env->GetFloatField(source, JavaLibrary::ms_fidLocationX);
+			targetLoc.y = env->GetFloatField(source, JavaLibrary::ms_fidLocationY);
+			targetLoc.z = env->GetFloatField(source, JavaLibrary::ms_fidLocationZ);
+
+			// get the scene
+			//@todo EAS what's the right answer here?
+			JavaStringPtr sceneId = getStringField(LocalRefParam(source), JavaLibrary::ms_fidLocationArea);
+			if (sceneId == JavaString::cms_nullPtr)
+			{
+				targetSceneId.clear();
+				return false;
+			}
+			JavaLibrary::convert(*sceneId, targetSceneId);
+
+			// get the cell
+			LocalRefPtr cell = getObjectField(LocalRefParam(source), JavaLibrary::ms_fidLocationCell);
+			Object * cellObject = 0;
+			if (JavaLibrary::getObject(*cell, cellObject))
+			{
+				targetLoc = cellObject->rotateTranslate_o2w(targetLoc);
+			}
+			return true;
+		}
+		else if (JavaLibrary::getObject(source, object))
+		{
+			targetLoc = object->getPosition_w();
+			targetSceneId = ServerWorld::getSceneId();
+			return true;
+		}
+		return false;
+	}
+
+	const bool convert(const Location & sourceLoc, LocalRefPtr  & target)
+	{
+		JNIEnv * env = JavaLibrary::getEnv();
+		if (!env)
+			return false;
+
+		target = allocObject(JavaLibrary::ms_clsLocation);
+		if (target == LocalRef::cms_nullPtr)
+			return false;
+
+		// set xyz
+		setFloatField(*target, JavaLibrary::ms_fidLocationX, sourceLoc.getCoordinates().x);
+		setFloatField(*target, JavaLibrary::ms_fidLocationY, sourceLoc.getCoordinates().y);
+		setFloatField(*target, JavaLibrary::ms_fidLocationZ, sourceLoc.getCoordinates().z);
+		// set scene id
+		JavaString area(sourceLoc.getSceneId()); //ServerWorld::getSceneId().c_str());
+		setObjectField(*target, JavaLibrary::ms_fidLocationArea, area);
+		// set cell
+		LocalRefPtr cell = JavaLibrary::getObjId(sourceLoc.getCell());
+		setObjectField(*target, JavaLibrary::ms_fidLocationCell, *cell);
+		return true;
+	}
+
+	const bool convert(const LocalRefParam & sourceLoc, Location & target)
+	{
+		JNIEnv * env = JavaLibrary::getEnv();
+		if (!env)
+			return false;
+
+		if (sourceLoc.getValue() == 0)
+			return false;
+
+		float x = getFloatField(sourceLoc, JavaLibrary::ms_fidLocationX);
+		float y = getFloatField(sourceLoc, JavaLibrary::ms_fidLocationY);
+		float z = getFloatField(sourceLoc, JavaLibrary::ms_fidLocationZ);
+
+		std::string planetName;
+		JavaStringPtr jplanetName = getStringField(sourceLoc, JavaLibrary::ms_fidLocationArea);
+		if (!JavaLibrary::convert(*jplanetName, planetName))
+			return false;
+
+		LocalRefPtr cell = getObjectField(sourceLoc, JavaLibrary::ms_fidLocationCell);
+		NetworkId targetCell = JavaLibrary::getNetworkId(*cell);
+
+		target.setCoordinates(Vector(x, y, z));
+		target.setSceneId(planetName.c_str());
+		target.setCell(targetCell);
+		return true;
+	}
+
+	const bool convert(const LocalObjectArrayRefParam & sourceLoc, std::vector<Location> & target)
+	{
+		JNIEnv * env = JavaLibrary::getEnv();
+		if (!env)
+			return false;
+
+		if (sourceLoc.getValue() == 0)
+			return false;
+
+		jsize count = getArrayLength(sourceLoc);
+		target.resize(count);
+		for (int i = 0; i < count; ++i)
+		{
+			LocalRefPtr location(getObjectArrayElement(sourceLoc, i));
+			if (location == LocalRef::cms_nullPtr || !convert(*location, target.at(i)))
+				return false;
 		}
 		return true;
 	}
-	else if (JavaLibrary::getObject(source, object))
+
+	const bool convert(const Vector & sourceLoc, const std::string & sourceSceneId, const NetworkId & sourceCell, LocalRefPtr & target)
 	{
-		target = object->getPosition_w();
-		return true;
-	}
-	return false;
-}
-
-const bool convertWorld(const jlong & source, Vector &target)
-{
-	JNIEnv * env = JavaLibrary::getEnv();
-	if (!env)
-		return false;
-
-	if (source == 0)
-		return false;
-
-	ServerObject * object = 0;
-
-	if (JavaLibrary::getObject(source, object))
-	{
-		target = object->getPosition_w();
-		return true;
-	}
-	return false;
-}
-
-const bool convertWorld(const LocalRefParam & source, Vector &target)
-{
-	return convertWorld(source.getValue(), target);
-}
-
-const bool convert(const Vector & source, const NetworkId & sourceCell, LocalRefPtr & target)
-{
-	return convert(source, ServerWorld::getSceneId(), sourceCell, target);
-}
-
-const bool convert(const jobject & source, Vector & targetLoc, std::string & targetSceneId, NetworkId & targetCell)
-{
-	 JNIEnv * env = JavaLibrary::getEnv();
-	 if (!env)
+		JNIEnv * env = JavaLibrary::getEnv();
+		if (!env)
 			return false;
 
-	if (!source)
-		return false;
+		target = allocObject(JavaLibrary::ms_clsLocation);
+		if (target == LocalRef::cms_nullPtr)
+			return false;
 
-	Object * object = 0;
+		// set xyz
+		setFloatField(*target, JavaLibrary::ms_fidLocationX, sourceLoc.x);
+		setFloatField(*target, JavaLibrary::ms_fidLocationY, sourceLoc.y);
+		setFloatField(*target, JavaLibrary::ms_fidLocationZ, sourceLoc.z);
+		// set scene id
+		JavaString area(sourceSceneId.c_str()); //ServerWorld::getSceneId().c_str());
+		setObjectField(*target, JavaLibrary::ms_fidLocationArea, area);
+		// set cell
+		LocalRefPtr cell = JavaLibrary::getObjId(sourceCell);
+		setObjectField(*target, JavaLibrary::ms_fidLocationCell, *cell);
+		return true;
+	}
 
-	if (env->IsInstanceOf(source, JavaLibrary::ms_clsLocation))
+	const bool convertWorld(const jobjectArray & source, std::vector<Vector> &target)
 	{
-		// get the xyz coords
-		targetLoc.x = env->GetFloatField(source, JavaLibrary::ms_fidLocationX);
-		targetLoc.y = env->GetFloatField(source, JavaLibrary::ms_fidLocationY);
-		targetLoc.z = env->GetFloatField(source, JavaLibrary::ms_fidLocationZ);
+		JNIEnv * env = JavaLibrary::getEnv();
+		if (!env)
+			return false;
 
-		// get the scene
-		//@todo EAS what's the right answer here?
-		JavaStringPtr sceneId = getStringField(LocalRefParam(source), JavaLibrary::ms_fidLocationArea);
-		if (sceneId == JavaString::cms_nullPtr)
+		if (!source || !env->IsInstanceOf(source, JavaLibrary::ms_clsLocationArray)) return false;
+
+		jsize count = env->GetArrayLength(source);
+		jsize i;
+		Vector v;
+		NetworkId cell;
+		bool result = true;
+		for (i = 0; i < count; ++i)
 		{
-			targetSceneId.clear();
-			return false;
+			LocalRefPtr element = getObjectArrayElement(LocalObjectArrayRefParam(source), i);
+			if (convertWorld(*element, v))
+			{
+				target.push_back(v);
+			}
+			else
+			{
+				result = false;
+			}
 		}
-		JavaLibrary::convert(*sceneId, targetSceneId);
 
-		// get the cell
-		LocalRefPtr cell = getObjectField(LocalRefParam(source), JavaLibrary::ms_fidLocationCell);
-		targetCell = JavaLibrary::getNetworkId(*cell);
-		return true;
+		return result && !target.empty();
 	}
-	else if (JavaLibrary::getObject(source, object))
+
+	const bool convert(const std::vector<const Vector *> & source, LocalObjectArrayRefPtr & target)
 	{
-		targetLoc = object->getPosition_p();
-		targetSceneId = ServerWorld::getSceneId();
-		const Object * cell = ContainerInterface::getContainedByObject(*object);
-		targetCell = (cell) ? cell->getNetworkId() : NetworkId::cms_invalid;
-		return true;
-	}
-	return false;
-}
-
-const bool convertWorld(const jobject & source, Vector & targetLoc, std::string & targetSceneId)
-{
-	 JNIEnv * env = JavaLibrary::getEnv();
-	 if (!env)
+		JNIEnv * env = JavaLibrary::getEnv();
+		if (!env)
 			return false;
 
-	if (!source)
-		return false;
-
-	Object * object = 0;
-
-	if (env->IsInstanceOf(source, JavaLibrary::ms_clsLocation))
-	{
-		// get the xyz coords
-		targetLoc.x = env->GetFloatField(source, JavaLibrary::ms_fidLocationX);
-		targetLoc.y = env->GetFloatField(source, JavaLibrary::ms_fidLocationY);
-		targetLoc.z = env->GetFloatField(source, JavaLibrary::ms_fidLocationZ);
-
-		// get the scene
-		//@todo EAS what's the right answer here?
-		JavaStringPtr sceneId = getStringField(LocalRefParam(source), JavaLibrary::ms_fidLocationArea);
-		if (sceneId == JavaString::cms_nullPtr)
-		{
-			targetSceneId.clear();
+		if (source.empty())
 			return false;
-		}
-		JavaLibrary::convert(*sceneId, targetSceneId);
 
-		// get the cell
-		LocalRefPtr cell = getObjectField(LocalRefParam(source), JavaLibrary::ms_fidLocationCell);
-		Object * cellObject = 0;
-		if (JavaLibrary::getObject(*cell, cellObject))
+		int count = source.size();
+		int i;
+
+		target = createNewObjectArray(source.size(), JavaLibrary::ms_clsLocation);
+		if (target == LocalObjectArrayRef::cms_nullPtr)
+			return false;
+
+		NetworkId cell(NetworkId::cms_invalid);
+		bool result = true;
+		for (i = 0; i < count; ++i)
 		{
-			targetLoc = cellObject->rotateTranslate_o2w(targetLoc);
+			LocalRefPtr element;
+			if (convert(*source[i], cell, element))
+			{
+				setObjectArrayElement(*target, i, *element);
+			}
+			else
+			{
+				result = false;
+			}
 		}
+
+		return result;
+	}
+
+	const bool convert(const LocalRefParam & source, const Region * & target)
+	{
+		return convert(source.getValue(), target);
+	}
+
+	/** This method converts a java script.region class into a C++ Region class
+	 */
+	const bool convert(const jobject & source, const Region * &target)
+	{
+		JNIEnv * env = JavaLibrary::getEnv();
+		if (env == nullptr || source == nullptr)
+			return false;
+		if (!env->IsInstanceOf(source, JavaLibrary::ms_clsRegion))
+			return false;
+
+		std::string planetName;
+		JavaStringPtr jplanetName = getStringField(LocalRefParam(source), JavaLibrary::ms_fidRegionPlanet);
+		if (!JavaLibrary::convert(*jplanetName, planetName))
+			return false;
+
+		Unicode::String regionName;
+		JavaStringPtr jregionName = getStringField(LocalRefParam(source), JavaLibrary::ms_fidRegionName);
+		if (!JavaLibrary::convert(*jregionName, regionName))
+			return false;
+
+		target = RegionMaster::getRegionByName(planetName, regionName);
+		return target != 0;
+	}
+
+	/** This method converts a C++ RegionObject class into a Java script.region class
+	 */
+	const bool convert(const Region & source, LocalRefPtr & target)
+	{
+		JNIEnv * env = JavaLibrary::getEnv();
+		if (!env)
+			return false;
+
+		int pvp = source.getPvp();
+		int mun = source.getMunicipal();
+		int build = source.getBuildable();
+		int geo = source.getGeography();
+		int minDiff = source.getMinDifficulty();
+		int maxDiff = source.getMaxDifficulty();
+		int spawn = source.getSpawn();
+		int mission = source.getMission();
+
+		const Unicode::String name(source.getName());
+		JavaString jname(name);
+
+		const std::string planetName(source.getPlanet());
+		JavaString jplanetName(planetName);
+
+		target = createNewObject(JavaLibrary::ms_clsRegion, JavaLibrary::ms_midRegion,
+			jname.getValue(), pvp, build, mun, geo, minDiff, maxDiff, spawn, mission, jplanetName.getValue());
+		return (target != LocalRef::cms_nullPtr);
+	}
+
+	// ----------------------------------------------------------------------
+
+	const bool convert(Transform const &sourceTransform, LocalRefPtr &target)
+	{
+		JNIEnv * const env = JavaLibrary::getEnv();
+		if (!env)
+			return false;
+
+		Vector const i(sourceTransform.getLocalFrameI_p());
+		Vector const j(sourceTransform.getLocalFrameJ_p());
+		Vector const k(sourceTransform.getLocalFrameK_p());
+		Vector const p(sourceTransform.getPosition_p());
+		target = createNewObject(JavaLibrary::ms_clsTransform, JavaLibrary::ms_midTransform,
+			i.x, j.x, k.x, p.x,
+			i.y, j.y, k.y, p.y,
+			i.z, j.z, k.z, p.z);
+		return (target != LocalRef::cms_nullPtr);
+	}
+
+	// ----------------------------------------------------------------------
+
+	const bool convert(const jobject &sourceTransform, Transform &target)
+	{
+		JNIEnv * const env = JavaLibrary::getEnv();
+		if (!env || !sourceTransform)
+			return false;
+		if (!env->IsInstanceOf(sourceTransform, JavaLibrary::ms_clsTransform))
+			return false;
+
+		LocalObjectArrayRefPtr matrix = getArrayObjectField(LocalRefParam(sourceTransform), JavaLibrary::ms_fidTransformMatrix);
+		LocalFloatArrayRefPtr row0 = getFloatArrayArrayElement(*matrix, 0);
+		LocalFloatArrayRefPtr row1 = getFloatArrayArrayElement(*matrix, 1);
+		LocalFloatArrayRefPtr row2 = getFloatArrayArrayElement(*matrix, 2);
+
+		float * const row0Elements = env->GetFloatArrayElements(row0->getValue(), 0);
+		float * const row1Elements = env->GetFloatArrayElements(row1->getValue(), 0);
+		float * const row2Elements = env->GetFloatArrayElements(row2->getValue(), 0);
+
+		target.setLocalFrameIJK_p(
+			Vector(row0Elements[0], row1Elements[0], row2Elements[0]),
+			Vector(row0Elements[1], row1Elements[1], row2Elements[1]),
+			Vector(row0Elements[2], row1Elements[2], row2Elements[2]));
+		target.setPosition_p(row0Elements[3], row1Elements[3], row2Elements[3]);
+
+		env->ReleaseFloatArrayElements(row2->getValue(), row2Elements, JNI_ABORT);
+		env->ReleaseFloatArrayElements(row1->getValue(), row1Elements, JNI_ABORT);
+		env->ReleaseFloatArrayElements(row0->getValue(), row0Elements, JNI_ABORT);
+
 		return true;
 	}
-	else if (JavaLibrary::getObject(source, object))
+
+	// ----------------------------------------------------------------------
+
+	const bool convert(const LocalRefParam &sourceTransform, Transform &target)
 	{
-		targetLoc = object->getPosition_w();
-		targetSceneId = ServerWorld::getSceneId();
-		return true;
+		return convert(sourceTransform.getValue(), target);
 	}
-	return false;
-}
 
-const bool convert(const Location & sourceLoc, LocalRefPtr  & target)
-{
-	JNIEnv * env = JavaLibrary::getEnv();
-	if (!env)
-		return false;
+	// ----------------------------------------------------------------------
 
-	target = allocObject(JavaLibrary::ms_clsLocation);
-	if (target == LocalRef::cms_nullPtr)
-		return false;
-
-	// set xyz
-	setFloatField(*target, JavaLibrary::ms_fidLocationX, sourceLoc.getCoordinates().x);
-	setFloatField(*target, JavaLibrary::ms_fidLocationY, sourceLoc.getCoordinates().y);
-	setFloatField(*target, JavaLibrary::ms_fidLocationZ, sourceLoc.getCoordinates().z);
-	// set scene id
-	JavaString area(sourceLoc.getSceneId()); //ServerWorld::getSceneId().c_str());
-	setObjectField(*target, JavaLibrary::ms_fidLocationArea, area);
-	// set cell
-	LocalRefPtr cell = JavaLibrary::getObjId(sourceLoc.getCell());
-	setObjectField(*target, JavaLibrary::ms_fidLocationCell, *cell);
-	return true;
-}
-
-const bool convert(const LocalRefParam & sourceLoc, Location & target)
-{
-	JNIEnv * env = JavaLibrary::getEnv();
-	if (!env)
-		return false;
-
-	if (sourceLoc.getValue() == 0)
-		return false;
-
-	float x =  getFloatField(sourceLoc, JavaLibrary::ms_fidLocationX);
-	float y =  getFloatField(sourceLoc, JavaLibrary::ms_fidLocationY);
-	float z =  getFloatField(sourceLoc, JavaLibrary::ms_fidLocationZ);
-
-	std::string planetName;
-	JavaStringPtr jplanetName = getStringField(sourceLoc, JavaLibrary::ms_fidLocationArea);
-	if (!JavaLibrary::convert(*jplanetName, planetName))
-		return false;
-	
-	LocalRefPtr cell = getObjectField(sourceLoc, JavaLibrary::ms_fidLocationCell);
-	NetworkId targetCell = JavaLibrary::getNetworkId(*cell);
-
-	target.setCoordinates(Vector(x, y, z));
-	target.setSceneId(planetName.c_str());
-	target.setCell(targetCell);
-	return true;
-}
-
-const bool convert(const LocalObjectArrayRefParam & sourceLoc, std::vector<Location> & target)
-{
-	JNIEnv * env = JavaLibrary::getEnv();
-	if (!env)
-		return false;
-
-	if (sourceLoc.getValue() == 0)
-		return false;
-
-	jsize count = getArrayLength(sourceLoc);
-	target.resize(count);
-	for (int i = 0; i < count; ++i)
+	const bool convert(const jobjectArray & source, std::vector<Transform> &target)
 	{
-		LocalRefPtr location(getObjectArrayElement(sourceLoc, i));
-		if (location == LocalRef::cms_nullPtr || !convert(*location, target.at(i)))
+		JNIEnv * const env = JavaLibrary::getEnv();
+		if (!env)
 			return false;
-	}
-	return true;
-}
 
-const bool convert(const Vector & sourceLoc, const std::string & sourceSceneId, const NetworkId & sourceCell, LocalRefPtr & target)
-{
-	JNIEnv * env = JavaLibrary::getEnv();
-	if (!env)
-		return false;
+		if (!source || !env->IsInstanceOf(source, JavaLibrary::ms_clsTransformArray)) return false;
 
-	target = allocObject(JavaLibrary::ms_clsLocation);
-	if (target == LocalRef::cms_nullPtr)
-		return false;
-
-	// set xyz
-	setFloatField(*target, JavaLibrary::ms_fidLocationX, sourceLoc.x);
-	setFloatField(*target, JavaLibrary::ms_fidLocationY, sourceLoc.y);
-	setFloatField(*target, JavaLibrary::ms_fidLocationZ, sourceLoc.z);
-	// set scene id
-	JavaString area(sourceSceneId.c_str()); //ServerWorld::getSceneId().c_str());
-	setObjectField(*target, JavaLibrary::ms_fidLocationArea, area);
-	// set cell
-	LocalRefPtr cell = JavaLibrary::getObjId(sourceCell);
-	setObjectField(*target, JavaLibrary::ms_fidLocationCell, *cell);
-	return true;
-}
-
-const bool convertWorld(const jobjectArray & source, std::vector<Vector> &target)
-{
-	JNIEnv * env = JavaLibrary::getEnv();
-	if (!env)
-		return false;
-
-	if (!source || !env->IsInstanceOf(source, JavaLibrary::ms_clsLocationArray)) return false;
-
-	jsize count = env->GetArrayLength(source);
-	jsize i;
-	Vector v;
-	NetworkId cell;
-	bool result = true;
-	for (i=0; i<count; ++i)
-	{
-		LocalRefPtr element = getObjectArrayElement(LocalObjectArrayRefParam(source), i);
-		if (convertWorld(*element, v))
+		jsize const count = env->GetArrayLength(source);
+		bool result = true;
+		for (jsize i = 0; i < count; ++i)
 		{
-			target.push_back(v);
+			LocalRefPtr element = getObjectArrayElement(LocalObjectArrayRefParam(source), i);
+
+			Transform t;
+			if (convert(*element, t))
+			{
+				target.push_back(t);
+			}
+			else
+			{
+				result = false;
+			}
 		}
-		else
+
+		return result && !target.empty();
+	}
+
+	// ----------------------------------------------------------------------
+
+	const bool convert(const std::vector<Transform> &source, LocalObjectArrayRefPtr & target)
+	{
+		JNIEnv * const env = JavaLibrary::getEnv();
+		if (!env)
+			return false;
+
+		int const count = source.size();
+
+		bool result = true;
+
+		target = createNewObjectArray(count, JavaLibrary::ms_clsObjId);
+
+		for (int i = 0; i < count; ++i)
 		{
+			LocalRefPtr temp;
+			if (convert(source[i], temp))
+			{
+				setObjectArrayElement(*target, i, *temp);
+			}
+			else
+			{
+				result = false;
+				target = LocalObjectArrayRef::cms_nullPtr;
+				break;
+			}
+		}
+
+		if (env->ExceptionCheck())
+		{
+			env->ExceptionDescribe();
 			result = false;
 		}
+
+		return result;
 	}
 
-	return result && !target.empty();
-}
+	// ----------------------------------------------------------------------
 
-const bool convert(const std::vector<const Vector *> & source, LocalObjectArrayRefPtr & target)
-{
-	JNIEnv * env = JavaLibrary::getEnv();
-	if (!env)
-		return false;
-
-	if (source.empty())
-		return false;
-
-	int count = source.size();
-	int i;
-
-	target = createNewObjectArray(source.size(), JavaLibrary::ms_clsLocation);
-	if (target == LocalObjectArrayRef::cms_nullPtr)
-		return false;
-
-	NetworkId cell(NetworkId::cms_invalid);
-	bool result = true;
-	for (i=0; i < count; ++i)
+	const bool convert(const Vector &sourceVector, LocalRefPtr &target)
 	{
-		LocalRefPtr element;
-		if (convert(*source[i], cell, element))
-		{
-			 setObjectArrayElement(*target, i, *element);
-		}
-		else
-		{
-			 result = false;
-		}
+		JNIEnv *env = JavaLibrary::getEnv();
+		if (!env)
+			return false;
+
+		target = allocObject(JavaLibrary::ms_clsVector);
+		if (target == LocalRef::cms_nullPtr)
+			return false;
+
+		setFloatField(*target, JavaLibrary::ms_fidVectorX, sourceVector.x);
+		setFloatField(*target, JavaLibrary::ms_fidVectorY, sourceVector.y);
+		setFloatField(*target, JavaLibrary::ms_fidVectorZ, sourceVector.z);
+		return true;
 	}
 
-	return result;
-}
+	// ----------------------------------------------------------------------
 
-const bool convert(const LocalRefParam & source, const Region * & target)
-{
-	return convert(source.getValue(), target);
-}
-
-/** This method converts a java script.region class into a C++ Region class
- */
-const bool convert(const jobject & source, const Region * &target)
-{
-	JNIEnv * env = JavaLibrary::getEnv();
-	if (env == nullptr || source == nullptr)
-		return false;
-	if (!env->IsInstanceOf(source, JavaLibrary::ms_clsRegion))
-		return false;
-
-	std::string planetName;
-	JavaStringPtr jplanetName = getStringField(LocalRefParam(source), JavaLibrary::ms_fidRegionPlanet);
-	if (!JavaLibrary::convert(*jplanetName, planetName))
-		return false;
-
-	Unicode::String regionName;
-	JavaStringPtr jregionName = getStringField(LocalRefParam(source), JavaLibrary::ms_fidRegionName);
-	if (!JavaLibrary::convert(*jregionName, regionName))
-		return false;
-
-	target = RegionMaster::getRegionByName(planetName, regionName);
-	return target != 0;
-}
-
-/** This method converts a C++ RegionObject class into a Java script.region class
- */
-const bool convert(const Region & source, LocalRefPtr & target)
-{
-	JNIEnv * env = JavaLibrary::getEnv();
-	if (!env)
-		return false;
-
-	int pvp         = source.getPvp();
-	int mun         = source.getMunicipal();
-	int build       = source.getBuildable();
-	int geo         = source.getGeography();
-	int minDiff     = source.getMinDifficulty();
-	int maxDiff     = source.getMaxDifficulty();
-	int spawn       = source.getSpawn();
-	int mission     = source.getMission();
-
-	const Unicode::String name(source.getName());
-	JavaString jname(name);
-
-	const std::string planetName(source.getPlanet());
-	JavaString jplanetName(planetName);
-
-	target = createNewObject(JavaLibrary::ms_clsRegion, JavaLibrary::ms_midRegion,
-		jname.getValue(), pvp, build, mun, geo, minDiff, maxDiff, spawn, mission, jplanetName.getValue());
-	return (target != LocalRef::cms_nullPtr);
-}
-
-// ----------------------------------------------------------------------
-
-const bool convert(Transform const &sourceTransform, LocalRefPtr &target)
-{
-	JNIEnv * const env = JavaLibrary::getEnv();
-	if (!env)
-		return false;
-
-	Vector const i(sourceTransform.getLocalFrameI_p());
-	Vector const j(sourceTransform.getLocalFrameJ_p());
-	Vector const k(sourceTransform.getLocalFrameK_p());
-	Vector const p(sourceTransform.getPosition_p());
-	target = createNewObject(JavaLibrary::ms_clsTransform, JavaLibrary::ms_midTransform,
-		i.x, j.x, k.x, p.x,
-		i.y, j.y, k.y, p.y,
-		i.z, j.z, k.z, p.z);
-	return (target != LocalRef::cms_nullPtr);
-}
-
-// ----------------------------------------------------------------------
-
-const bool convert(const jobject &sourceTransform, Transform &target)
-{
-	JNIEnv * const env = JavaLibrary::getEnv();
-	if (!env || !sourceTransform)
-		return false;
-	if (!env->IsInstanceOf(sourceTransform, JavaLibrary::ms_clsTransform))
-		return false;
-
-	LocalObjectArrayRefPtr matrix = getArrayObjectField(LocalRefParam(sourceTransform), JavaLibrary::ms_fidTransformMatrix);
-	LocalFloatArrayRefPtr row0 = getFloatArrayArrayElement(*matrix, 0);
-	LocalFloatArrayRefPtr row1 = getFloatArrayArrayElement(*matrix, 1);
-	LocalFloatArrayRefPtr row2 = getFloatArrayArrayElement(*matrix, 2);
-
-	float * const row0Elements = env->GetFloatArrayElements(row0->getValue(), 0);
-	float * const row1Elements = env->GetFloatArrayElements(row1->getValue(), 0);
-	float * const row2Elements = env->GetFloatArrayElements(row2->getValue(), 0);
-
-	target.setLocalFrameIJK_p(
-		Vector(row0Elements[0], row1Elements[0], row2Elements[0]),
-		Vector(row0Elements[1], row1Elements[1], row2Elements[1]),
-		Vector(row0Elements[2], row1Elements[2], row2Elements[2]));
-	target.setPosition_p(row0Elements[3], row1Elements[3], row2Elements[3]);
-
-	env->ReleaseFloatArrayElements(row2->getValue(), row2Elements, JNI_ABORT);
-	env->ReleaseFloatArrayElements(row1->getValue(), row1Elements, JNI_ABORT);
-	env->ReleaseFloatArrayElements(row0->getValue(), row0Elements, JNI_ABORT);
-
-	return true;
-}
-
-// ----------------------------------------------------------------------
-
-const bool convert(const LocalRefParam &sourceTransform, Transform &target)
-{
-	return convert(sourceTransform.getValue(), target);
-}
-
-// ----------------------------------------------------------------------
-
-const bool convert(const jobjectArray & source, std::vector<Transform> &target)
-{
-	JNIEnv * const env = JavaLibrary::getEnv();
-	if (!env)
-		return false;
-
-	if (!source || !env->IsInstanceOf(source, JavaLibrary::ms_clsTransformArray)) return false;
-
-	jsize const count = env->GetArrayLength(source);
-	bool result = true;
-	for (jsize i = 0; i < count; ++i)
+	const bool convert(const jobject & sourceVector, Vector & target)
 	{
-		LocalRefPtr element = getObjectArrayElement(LocalObjectArrayRefParam(source), i);
+		JNIEnv *env = JavaLibrary::getEnv();
+		if (!env || !sourceVector)
+			return false;
+		if (!env->IsInstanceOf(sourceVector, JavaLibrary::ms_clsVector))
+			return false;
 
-		Transform t;
-		if (convert(*element, t))
-		{
-			target.push_back(t);
-		}
-		else
+		target.x = env->GetFloatField(sourceVector, JavaLibrary::ms_fidVectorX);
+		target.y = env->GetFloatField(sourceVector, JavaLibrary::ms_fidVectorY);
+		target.z = env->GetFloatField(sourceVector, JavaLibrary::ms_fidVectorZ);
+		return true;
+	}
+
+	// ----------------------------------------------------------------------
+
+	const bool convert(const LocalRefParam & sourceVector, Vector & target)
 	{
-			result = false;
-		}
+		return convert(sourceVector.getValue(), target);
 	}
 
-	return result && !target.empty();
-	}
+	// ----------------------------------------------------------------------
 
-// ----------------------------------------------------------------------
-
-const bool convert(const std::vector<Transform> &source, LocalObjectArrayRefPtr & target)
-{
-	JNIEnv * const env = JavaLibrary::getEnv();
-	if (!env)
-		return false;
-
-	int const count = source.size();
-
-	bool result = true;
-	
-	target = createNewObjectArray(count, JavaLibrary::ms_clsObjId);
-
-	for (int i = 0; i < count; ++i)
+	/**
+	 * Convert a C++ AttribMod to a Java attrib_mod.
+	 */
+	const bool convert(const AttribMod::AttribMod & source, LocalRefPtr & target)
 	{
-		LocalRefPtr temp;
-		if (convert(source[i],temp))
-		{
-			setObjectArrayElement(*target, i, *temp);
-		}
-		else
-		{
-			result = false;
-			target = LocalObjectArrayRef::cms_nullPtr;
-			break;
-		}
-	}
-	
-	if (env->ExceptionCheck())
-	{
-		env->ExceptionDescribe();
-		result = false;
-	}
+		JNIEnv * env = JavaLibrary::getEnv();
+		if (env == nullptr)
+			return false;
 
-	return result;
-}
+		target = allocObject(JavaLibrary::ms_clsAttribMod);
+		if (target == LocalRef::cms_nullPtr)
+			return false;
 
-
-
-// ----------------------------------------------------------------------
-
-const bool convert(const Vector &sourceVector, LocalRefPtr &target)
-{
-	JNIEnv *env = JavaLibrary::getEnv();
-	if (!env)
-		return false;
-
-	target = allocObject(JavaLibrary::ms_clsVector);
-	if (target == LocalRef::cms_nullPtr)
-		return false;
-
-	setFloatField(*target, JavaLibrary::ms_fidVectorX, sourceVector.x);
-	setFloatField(*target, JavaLibrary::ms_fidVectorY, sourceVector.y);
-	setFloatField(*target, JavaLibrary::ms_fidVectorZ, sourceVector.z);
-	return true;
-}
-
-// ----------------------------------------------------------------------
-
-const bool convert(const jobject & sourceVector, Vector & target)
-{
-	JNIEnv *env = JavaLibrary::getEnv();
-	if (!env || !sourceVector)
-		return false;
-	if (!env->IsInstanceOf(sourceVector, JavaLibrary::ms_clsVector))
-		return false;
-
-	target.x = env->GetFloatField(sourceVector, JavaLibrary::ms_fidVectorX);
-	target.y = env->GetFloatField(sourceVector, JavaLibrary::ms_fidVectorY);
-	target.z = env->GetFloatField(sourceVector, JavaLibrary::ms_fidVectorZ);
-	return true;
-}
-
-// ----------------------------------------------------------------------
-
-const bool convert(const LocalRefParam & sourceVector, Vector & target)
-{
-	return convert(sourceVector.getValue(), target);
-}
-
-// ----------------------------------------------------------------------
-
-/**
- * Convert a C++ AttribMod to a Java attrib_mod.
- */
-const bool convert(const AttribMod::AttribMod & source, LocalRefPtr & target)
-{
-	JNIEnv * env = JavaLibrary::getEnv();
-	if (env == nullptr)
-		return false;
-
-	target = allocObject(JavaLibrary::ms_clsAttribMod);
-	if (target == LocalRef::cms_nullPtr)
-		return false;
-
-	JavaString name(AttribModNameManager::getInstance(
+		JavaString name(AttribModNameManager::getInstance(
 		).getAttribModName(source.tag));
-	setObjectField(*target, JavaLibrary::ms_fidAttribModName, name);
-	if (!AttribMod::isSkillMod(source))
-	{
-		setIntField(*target, JavaLibrary::ms_fidAttribModType, source.attrib);
-	}
-	else
-	{
-		JavaString skill(AttribModNameManager::getInstance(
+		setObjectField(*target, JavaLibrary::ms_fidAttribModName, name);
+		if (!AttribMod::isSkillMod(source))
+		{
+			setIntField(*target, JavaLibrary::ms_fidAttribModType, source.attrib);
+		}
+		else
+		{
+			JavaString skill(AttribModNameManager::getInstance(
 			).getAttribModName(source.skill));
-		setObjectField(*target, JavaLibrary::ms_fidAttribModSkill, skill);
-	}
-	setIntField(*target, JavaLibrary::ms_fidAttribModValue,	source.value);
-	setFloatField(*target, JavaLibrary::ms_fidAttribModTime, source.sustain);
-	setFloatField(*target, JavaLibrary::ms_fidAttribModAttack, source.attack);
-	setFloatField(*target, JavaLibrary::ms_fidAttribModDecay, source.decay);
-	setIntField(*target, JavaLibrary::ms_fidAttribModFlags,	source.flags);
-	return true;
-}
-
-/**
- * Convert a Java attrib_mod to a C++ AttribMod.
- */
-const bool convert(const jobject & source, AttribMod::AttribMod & target)
-{
-	JNIEnv * env = JavaLibrary::getEnv();
-	if (env == nullptr)
-		return false;
-
-	if (source == 0 || env->IsInstanceOf(source, JavaLibrary::ms_clsAttribMod) == JNI_FALSE)
-		return false;
-
-	std::string modName;
-	JavaStringPtr name = getStringField(LocalRefParam(source), JavaLibrary::ms_fidAttribModName);
-	if (name != JavaString::cms_nullPtr)
-	{
-		if (!JavaLibrary::convert(*name, modName))
-			return false;
-		
-		target.tag = Crc::calculate(modName.c_str());
-		AttribModNameManager::getInstance().addAttribModName(modName.c_str());
-	}
-	else
-		target.tag = 0;
-	
-	target.flags = env->GetIntField(source, JavaLibrary::ms_fidAttribModFlags);
-	if (!AttribMod::isSkillMod(target))
-	{
-		target.attrib = env->GetIntField(source, JavaLibrary::ms_fidAttribModType);
-	}
-	else
-	{
-		std::string skillModName;
-		JavaStringPtr skillName = getStringField(LocalRefParam(source), JavaLibrary::ms_fidAttribModSkill);
-		
-		// a skillmod mod must have a skillmod name
-		if (skillName == JavaString::cms_nullPtr)
-			return false;
-		if (!JavaLibrary::convert(*skillName, skillModName))
-			return false;
-		
-		target.skill = Crc::calculate(skillModName.c_str());
-		AttribModNameManager::getInstance().addAttribModName(skillModName.c_str());
-	}
-	target.value = env->GetIntField(source, JavaLibrary::ms_fidAttribModValue);
-	target.sustain = env->GetFloatField(source, JavaLibrary::ms_fidAttribModTime);
-	target.attack = env->GetFloatField(source, JavaLibrary::ms_fidAttribModAttack);
-	target.decay = env->GetFloatField(source, JavaLibrary::ms_fidAttribModDecay);
-	return true;
-}
-
-/**
- * Convert a Java attrib_mod to a C++ AttribMod.
- */
-const bool convert(const LocalRefParam & source, AttribMod::AttribMod & target)
-{
-	return convert(source.getValue(), target);
-}
-
-/**
- * Convert a C++ AttribMod vector to a Java attrib_mod[].
- */
-const bool convert(const std::vector<AttribMod::AttribMod> & source, LocalObjectArrayRefPtr & target)
-{
-	JNIEnv * env = JavaLibrary::getEnv();
-	if (env == nullptr)
-		return false;
-
-	int count = source.size();
-	target = createNewObjectArray(count, JavaLibrary::ms_clsAttribMod);
-	if (target == LocalObjectArrayRef::cms_nullPtr)
-		return false;
-
-	LocalRefPtr mod;
-	for (int i = 0; i < count; ++i)
-	{
-		if (!convert(source[i], mod))
-		{
-			target = LocalObjectArrayRef::cms_nullPtr;
-			return false;
+			setObjectField(*target, JavaLibrary::ms_fidAttribModSkill, skill);
 		}
-		setObjectArrayElement(*target, i, *mod);
+		setIntField(*target, JavaLibrary::ms_fidAttribModValue, source.value);
+		setFloatField(*target, JavaLibrary::ms_fidAttribModTime, source.sustain);
+		setFloatField(*target, JavaLibrary::ms_fidAttribModAttack, source.attack);
+		setFloatField(*target, JavaLibrary::ms_fidAttribModDecay, source.decay);
+		setIntField(*target, JavaLibrary::ms_fidAttribModFlags, source.flags);
+		return true;
 	}
-	return true;
-}
 
-/**
- * Convert a Java attrib_mod[] to a C++ AttribMod vector.
- */
-const bool convert(const jobjectArray & source, std::vector<AttribMod::AttribMod> & target)
-{
-	JNIEnv * env = JavaLibrary::getEnv();
-	if (env == nullptr)
-		return false;
-
-	if (source == 0)
-		return false;
-
-	AttribMod::AttribMod mod;
-	int count = env->GetArrayLength(source);
-	for (int i = 0; i < count; ++i)
+	/**
+	 * Convert a Java attrib_mod to a C++ AttribMod.
+	 */
+	const bool convert(const jobject & source, AttribMod::AttribMod & target)
 	{
-		LocalRefPtr element = getObjectArrayElement(LocalObjectArrayRefParam(source), i);
-		bool result = convert(*element, mod);
-		if (!result)
-		{
-			target.clear();
+		JNIEnv * env = JavaLibrary::getEnv();
+		if (env == nullptr)
 			return false;
+
+		if (source == 0 || env->IsInstanceOf(source, JavaLibrary::ms_clsAttribMod) == JNI_FALSE)
+			return false;
+
+		std::string modName;
+		JavaStringPtr name = getStringField(LocalRefParam(source), JavaLibrary::ms_fidAttribModName);
+		if (name != JavaString::cms_nullPtr)
+		{
+			if (!JavaLibrary::convert(*name, modName))
+				return false;
+
+			target.tag = Crc::calculate(modName.c_str());
+			AttribModNameManager::getInstance().addAttribModName(modName.c_str());
 		}
-		target.push_back(mod);
+		else
+			target.tag = 0;
+
+		target.flags = env->GetIntField(source, JavaLibrary::ms_fidAttribModFlags);
+		if (!AttribMod::isSkillMod(target))
+		{
+			target.attrib = env->GetIntField(source, JavaLibrary::ms_fidAttribModType);
+		}
+		else
+		{
+			std::string skillModName;
+			JavaStringPtr skillName = getStringField(LocalRefParam(source), JavaLibrary::ms_fidAttribModSkill);
+
+			// a skillmod mod must have a skillmod name
+			if (skillName == JavaString::cms_nullPtr)
+				return false;
+			if (!JavaLibrary::convert(*skillName, skillModName))
+				return false;
+
+			target.skill = Crc::calculate(skillModName.c_str());
+			AttribModNameManager::getInstance().addAttribModName(skillModName.c_str());
+		}
+		target.value = env->GetIntField(source, JavaLibrary::ms_fidAttribModValue);
+		target.sustain = env->GetFloatField(source, JavaLibrary::ms_fidAttribModTime);
+		target.attack = env->GetFloatField(source, JavaLibrary::ms_fidAttribModAttack);
+		target.decay = env->GetFloatField(source, JavaLibrary::ms_fidAttribModDecay);
+		return true;
 	}
-	return true;
-}
 
-const bool convert(const jbyteArray & source, std::vector<int8> & target)
-{
-	JNIEnv * env = JavaLibrary::getEnv();
-	if (env == nullptr)
-		return false;
+	/**
+	 * Convert a Java attrib_mod to a C++ AttribMod.
+	 */
+	const bool convert(const LocalRefParam & source, AttribMod::AttribMod & target)
+	{
+		return convert(source.getValue(), target);
+	}
 
-	if (source == 0)
-		return false;
+	/**
+	 * Convert a C++ AttribMod vector to a Java attrib_mod[].
+	 */
+	const bool convert(const std::vector<AttribMod::AttribMod> & source, LocalObjectArrayRefPtr & target)
+	{
+		JNIEnv * env = JavaLibrary::getEnv();
+		if (env == nullptr)
+			return false;
 
-	int size = env->GetArrayLength(source);
-	target.reserve(size);
-	target.resize(size);
-	env->GetByteArrayRegion(source, 0, size, &target[0]);
-	return true;
-}
+		int count = source.size();
+		target = createNewObjectArray(count, JavaLibrary::ms_clsAttribMod);
+		if (target == LocalObjectArrayRef::cms_nullPtr)
+			return false;
 
-const bool convert(const LocalByteArrayRef & source, std::vector<int8> & target)
-{
-	JNIEnv * env = JavaLibrary::getEnv();
-	if (env == nullptr)
-		return false;
+		LocalRefPtr mod;
+		for (int i = 0; i < count; ++i)
+		{
+			if (!convert(source[i], mod))
+			{
+				target = LocalObjectArrayRef::cms_nullPtr;
+				return false;
+			}
+			setObjectArrayElement(*target, i, *mod);
+		}
+		return true;
+	}
 
-	if (source.getValue() == 0)
-		return false;
+	/**
+	 * Convert a Java attrib_mod[] to a C++ AttribMod vector.
+	 */
+	const bool convert(const jobjectArray & source, std::vector<AttribMod::AttribMod> & target)
+	{
+		JNIEnv * env = JavaLibrary::getEnv();
+		if (env == nullptr)
+			return false;
 
-	int size = getArrayLength(source);
-	target.reserve(size);
-	target.resize(size);
-	getByteArrayRegion(source, 0, size, &target[0]);
-	return true;
-}
+		if (source == 0)
+			return false;
 
-const bool convert(const std::vector<int8> & source, LocalByteArrayRefPtr & target)
-{
-	JNIEnv * env = JavaLibrary::getEnv();
-	if (env == nullptr)
-		return false;
+		AttribMod::AttribMod mod;
+		int count = env->GetArrayLength(source);
+		for (int i = 0; i < count; ++i)
+		{
+			LocalRefPtr element = getObjectArrayElement(LocalObjectArrayRefParam(source), i);
+			bool result = convert(*element, mod);
+			if (!result)
+			{
+				target.clear();
+				return false;
+			}
+			target.push_back(mod);
+		}
+		return true;
+	}
 
-	int count = source.size();
-	target = createNewByteArray(count);
-	if (target == LocalByteArrayRef::cms_nullPtr)
-		return false;
-	
-	if (count > 0)
-		setByteArrayRegion(*target, 0, count, const_cast<int8 *>(&source[0]));
-	return true;
-}
+	const bool convert(const jbyteArray & source, std::vector<int8> & target)
+	{
+		JNIEnv * env = JavaLibrary::getEnv();
+		if (env == nullptr)
+			return false;
 
+		if (source == 0)
+			return false;
+
+		int size = env->GetArrayLength(source);
+		target.reserve(size);
+		target.resize(size);
+		env->GetByteArrayRegion(source, 0, size, &target[0]);
+		return true;
+	}
+
+	const bool convert(const LocalByteArrayRef & source, std::vector<int8> & target)
+	{
+		JNIEnv * env = JavaLibrary::getEnv();
+		if (env == nullptr)
+			return false;
+
+		if (source.getValue() == 0)
+			return false;
+
+		int size = getArrayLength(source);
+		target.reserve(size);
+		target.resize(size);
+		getByteArrayRegion(source, 0, size, &target[0]);
+		return true;
+	}
+
+	const bool convert(const std::vector<int8> & source, LocalByteArrayRefPtr & target)
+	{
+		JNIEnv * env = JavaLibrary::getEnv();
+		if (env == nullptr)
+			return false;
+
+		int count = source.size();
+		target = createNewByteArray(count);
+		if (target == LocalByteArrayRef::cms_nullPtr)
+			return false;
+
+		if (count > 0)
+			setByteArrayRegion(*target, 0, count, const_cast<int8 *>(&source[0]));
+		return true;
+	}
 }//namespace ScriptConversion
 
 //----------------------------------------------------------------------
 
-ServerObject *  JavaLibrary::findObjectByNetworkId (const NetworkId & id)
+ServerObject *  JavaLibrary::findObjectByNetworkId(const NetworkId & id)
 {
 	return ServerWorld::findObjectByNetworkId(id);
 }
@@ -6429,9 +6413,9 @@ ServerObject *  JavaLibrary::findObjectByNetworkId (const NetworkId & id)
 CreatureObject *JavaLibrary::getCreatureThrow(JNIEnv *env, jlong objId, char const *errorDescription, bool throwIfNotOnServer)
 {
 	NOT_NULL(env);
-	
+
 	char buffer[512];
-	
+
 	if (!objId)
 	{
 		IGNORE_RETURN(snprintf(buffer, sizeof(buffer) - 1, "%s: nullptr object id from script.", errorDescription));
@@ -6468,7 +6452,7 @@ CreatureObject *JavaLibrary::getCreatureThrow(JNIEnv *env, jlong objId, char con
 			}
 			else
 			{
-				ServerObject   *const serverObject   = object->asServerObject();
+				ServerObject   *const serverObject = object->asServerObject();
 				CreatureObject *const creatureObject = serverObject ? serverObject->asCreatureObject() : nullptr;
 
 				if (creatureObject)
@@ -6490,9 +6474,9 @@ CreatureObject *JavaLibrary::getCreatureThrow(JNIEnv *env, jlong objId, char con
 ShipObject *JavaLibrary::getShipThrow(JNIEnv *env, jlong objId, char const *errorDescription, bool throwIfNotOnServer)
 {
 	NOT_NULL(env);
-	
+
 	char buffer[512];
-	
+
 	if (objId == 0)
 	{
 		IGNORE_RETURN(snprintf(buffer, sizeof(buffer) - 1, "%s: nullptr object id from script.", errorDescription));
@@ -6529,8 +6513,8 @@ ShipObject *JavaLibrary::getShipThrow(JNIEnv *env, jlong objId, char const *erro
 			}
 			else
 			{
-				ServerObject   *const serverObject   = object->asServerObject();
-				ShipObject     *const shipObject     = serverObject ? serverObject->asShipObject() : nullptr;
+				ServerObject   *const serverObject = object->asServerObject();
+				ShipObject     *const shipObject = serverObject ? serverObject->asShipObject() : nullptr;
 
 				if (shipObject)
 					return shipObject;
