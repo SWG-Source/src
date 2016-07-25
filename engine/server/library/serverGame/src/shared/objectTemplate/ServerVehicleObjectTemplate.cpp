@@ -22,11 +22,10 @@
 
 const std::string DefaultString("");
 const StringId DefaultStringId("", 0);
-const Vector DefaultVector(0,0,0);
+const Vector DefaultVector(0, 0, 0);
 const TriggerVolumeData DefaultTriggerVolumeData;
 
 bool ServerVehicleObjectTemplate::ms_allowDefaultTemplateParams = true;
-
 
 /**
  * Class constructor.
@@ -34,8 +33,9 @@ bool ServerVehicleObjectTemplate::ms_allowDefaultTemplateParams = true;
 ServerVehicleObjectTemplate::ServerVehicleObjectTemplate(const std::string & filename)
 //@BEGIN TFD INIT
 	: ServerTangibleObjectTemplate(filename)
-	,m_versionOk(true)
-//@END TFD INIT
+	, m_versionOk(true)
+	, m_templateVersion(0)
+	//@END TFD INIT
 {
 }	// ServerVehicleObjectTemplate::ServerVehicleObjectTemplate
 
@@ -44,8 +44,8 @@ ServerVehicleObjectTemplate::ServerVehicleObjectTemplate(const std::string & fil
  */
 ServerVehicleObjectTemplate::~ServerVehicleObjectTemplate()
 {
-//@BEGIN TFD CLEANUP
-//@END TFD CLEANUP
+	//@BEGIN TFD CLEANUP
+	//@END TFD CLEANUP
 }	// ServerVehicleObjectTemplate::~ServerVehicleObjectTemplate
 
 /**
@@ -114,8 +114,6 @@ Object * ServerVehicleObjectTemplate::createObject(void) const
 //@BEGIN TFD
 const std::string & ServerVehicleObjectTemplate::getFuelType() const
 {
-
-
 	const ServerVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -143,8 +141,6 @@ const std::string & ServerVehicleObjectTemplate::getFuelType() const
 
 float ServerVehicleObjectTemplate::getCurrentFuel() const
 {
-
-
 	const ServerVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -194,8 +190,6 @@ float ServerVehicleObjectTemplate::getCurrentFuel() const
 
 float ServerVehicleObjectTemplate::getCurrentFuelMin() const
 {
-
-
 	const ServerVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -245,8 +239,6 @@ float ServerVehicleObjectTemplate::getCurrentFuelMin() const
 
 float ServerVehicleObjectTemplate::getCurrentFuelMax() const
 {
-
-
 	const ServerVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -296,8 +288,6 @@ float ServerVehicleObjectTemplate::getCurrentFuelMax() const
 
 float ServerVehicleObjectTemplate::getMaxFuel() const
 {
-
-
 	const ServerVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -347,8 +337,6 @@ float ServerVehicleObjectTemplate::getMaxFuel() const
 
 float ServerVehicleObjectTemplate::getMaxFuelMin() const
 {
-
-
 	const ServerVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -398,8 +386,6 @@ float ServerVehicleObjectTemplate::getMaxFuelMin() const
 
 float ServerVehicleObjectTemplate::getMaxFuelMax() const
 {
-
-
 	const ServerVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -449,8 +435,6 @@ float ServerVehicleObjectTemplate::getMaxFuelMax() const
 
 float ServerVehicleObjectTemplate::getConsumpsion() const
 {
-
-
 	const ServerVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -500,8 +484,6 @@ float ServerVehicleObjectTemplate::getConsumpsion() const
 
 float ServerVehicleObjectTemplate::getConsumpsionMin() const
 {
-
-
 	const ServerVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -551,8 +533,6 @@ float ServerVehicleObjectTemplate::getConsumpsionMin() const
 
 float ServerVehicleObjectTemplate::getConsumpsionMax() const
 {
-
-
 	const ServerVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -600,7 +580,6 @@ float ServerVehicleObjectTemplate::getConsumpsionMax() const
 	return value;
 }	// ServerVehicleObjectTemplate::getConsumpsionMax
 
-
 /**
  * Loads the template data from an iff file. We should already be in the form
  * for this template.
@@ -609,8 +588,8 @@ float ServerVehicleObjectTemplate::getConsumpsionMax() const
  */
 void ServerVehicleObjectTemplate::load(Iff &file)
 {
-static const int MAX_NAME_SIZE = 256;
-char paramName[MAX_NAME_SIZE];
+	static const int MAX_NAME_SIZE = 256;
+	char paramName[MAX_NAME_SIZE];
 
 	if (file.getCurrentName() != ServerVehicleObjectTemplate_tag)
 	{
@@ -620,7 +599,7 @@ char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 	m_templateVersion = file.getCurrentName();
-	if (m_templateVersion == TAG(D,E,R,V))
+	if (m_templateVersion == TAG(D, E, R, V))
 	{
 		file.enterForm();
 		file.enterChunk();
@@ -640,10 +619,8 @@ char paramName[MAX_NAME_SIZE];
 		file.exitForm();
 		m_templateVersion = file.getCurrentName();
 	}
-	if (getHighestTemplateVersion() != TAG(0,0,0,0))
+	if (getHighestTemplateVersion() != TAG(0, 0, 0, 0))
 	{
-		
-			
 		m_versionOk = false;
 	}
 

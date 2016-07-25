@@ -22,11 +22,10 @@
 
 const std::string DefaultString("");
 const StringId DefaultStringId("", 0);
-const Vector DefaultVector(0,0,0);
+const Vector DefaultVector(0, 0, 0);
 const TriggerVolumeData DefaultTriggerVolumeData;
 
 bool ServerResourceContainerObjectTemplate::ms_allowDefaultTemplateParams = true;
-
 
 /**
  * Class constructor.
@@ -34,8 +33,9 @@ bool ServerResourceContainerObjectTemplate::ms_allowDefaultTemplateParams = true
 ServerResourceContainerObjectTemplate::ServerResourceContainerObjectTemplate(const std::string & filename)
 //@BEGIN TFD INIT
 	: ServerTangibleObjectTemplate(filename)
-	,m_versionOk(true)
-//@END TFD INIT
+	, m_versionOk(true)
+	, m_templateVersion(0)
+	//@END TFD INIT
 {
 }	// ServerResourceContainerObjectTemplate::ServerResourceContainerObjectTemplate
 
@@ -44,8 +44,8 @@ ServerResourceContainerObjectTemplate::ServerResourceContainerObjectTemplate(con
  */
 ServerResourceContainerObjectTemplate::~ServerResourceContainerObjectTemplate()
 {
-//@BEGIN TFD CLEANUP
-//@END TFD CLEANUP
+	//@BEGIN TFD CLEANUP
+	//@END TFD CLEANUP
 }	// ServerResourceContainerObjectTemplate::~ServerResourceContainerObjectTemplate
 
 /**
@@ -114,8 +114,6 @@ Object * ServerResourceContainerObjectTemplate::createObject(void) const
 //@BEGIN TFD
 int ServerResourceContainerObjectTemplate::getMaxResources() const
 {
-
-
 	const ServerResourceContainerObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -165,8 +163,6 @@ int ServerResourceContainerObjectTemplate::getMaxResources() const
 
 int ServerResourceContainerObjectTemplate::getMaxResourcesMin() const
 {
-
-
 	const ServerResourceContainerObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -216,8 +212,6 @@ int ServerResourceContainerObjectTemplate::getMaxResourcesMin() const
 
 int ServerResourceContainerObjectTemplate::getMaxResourcesMax() const
 {
-
-
 	const ServerResourceContainerObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -265,7 +259,6 @@ int ServerResourceContainerObjectTemplate::getMaxResourcesMax() const
 	return value;
 }	// ServerResourceContainerObjectTemplate::getMaxResourcesMax
 
-
 /**
  * Loads the template data from an iff file. We should already be in the form
  * for this template.
@@ -274,8 +267,8 @@ int ServerResourceContainerObjectTemplate::getMaxResourcesMax() const
  */
 void ServerResourceContainerObjectTemplate::load(Iff &file)
 {
-static const int MAX_NAME_SIZE = 256;
-char paramName[MAX_NAME_SIZE];
+	static const int MAX_NAME_SIZE = 256;
+	char paramName[MAX_NAME_SIZE];
 
 	if (file.getCurrentName() != ServerResourceContainerObjectTemplate_tag)
 	{
@@ -285,7 +278,7 @@ char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 	m_templateVersion = file.getCurrentName();
-	if (m_templateVersion == TAG(D,E,R,V))
+	if (m_templateVersion == TAG(D, E, R, V))
 	{
 		file.enterForm();
 		file.enterChunk();
@@ -305,10 +298,8 @@ char paramName[MAX_NAME_SIZE];
 		file.exitForm();
 		m_templateVersion = file.getCurrentName();
 	}
-	if (getHighestTemplateVersion() != TAG(0,0,0,0))
+	if (getHighestTemplateVersion() != TAG(0, 0, 0, 0))
 	{
-		
-			
 		m_versionOk = false;
 	}
 

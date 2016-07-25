@@ -146,20 +146,20 @@ namespace CommandCppFuncsNamespace
 	{
 		ServerObject * const actorServerObj = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(actor));
 		CreatureObject * const actorCreature = actorServerObj != nullptr ? actorServerObj->asCreatureObject() : nullptr;
-		
+
 		if (actorCreature == nullptr)
 			return;
-		
+
 		ShipObject * const shipObject = actorCreature->getPilotedShip();
 		if (shipObject == nullptr)
 			return;
-		
+
 		if (!shipObject->isSlotInstalled(ShipChassisSlotType::SCST_booster))
 		{
 			Chat::sendSystemMessage(*actorCreature, SharedStringIds::no_booster, Unicode::emptyString);
 			return;
 		}
-		
+
 		if (!shipObject->isComponentFunctional(ShipChassisSlotType::SCST_booster))
 		{
 			Chat::sendSystemMessage(*actorCreature, SharedStringIds::booster_disabled, Unicode::emptyString);
@@ -167,7 +167,7 @@ namespace CommandCppFuncsNamespace
 		}
 
 		if (onOff && shipObject->getBoosterEnergyCurrent() < shipObject->getBoosterEnergyRechargeRate())
-		{		
+		{
 			Chat::sendSystemMessage(*actorCreature, SharedStringIds::booster_low_energy, Unicode::emptyString);
 			return;
 		}
@@ -196,16 +196,15 @@ namespace CommandCppFuncsNamespace
 		return o;
 	}
 
-
 	ShipObject *getAttachedShip(CreatureObject *creature)
 	{
 		// The "attached" ship is the ship which must move along with the creature.
 		// This means if the creature is piloting, the ship is is piloting,
 		// or the containing ship if the creature is the ship's owner.
 		ShipObject * const ship = ShipObject::getContainingShipObject(creature);
-		if (   ship
-		    && (   ship->getOwnerId() == creature->getNetworkId()
-		        || creature->getPilotedShip() == ship))
+		if (ship
+			&& (ship->getOwnerId() == creature->getNetworkId()
+				|| creature->getPilotedShip() == ship))
 			return ship;
 		return 0;
 	}
@@ -263,9 +262,9 @@ namespace CommandCppFuncsNamespace
 				for (ContainerConstIterator i = container->begin(); i != container->end(); ++i)
 				{
 					ServerObject const * const content = safe_cast<ServerObject const *>((*i).getObject());
-					if (   content
-					    && content->getGameObjectType() == SharedObjectTemplate::GOT_data_ship_control_device
-					    && !content->isBeingDestroyed())
+					if (content
+						&& content->getGameObjectType() == SharedObjectTemplate::GOT_data_ship_control_device
+						&& !content->isBeingDestroyed())
 					{
 						Container const * const scdContainer = ContainerInterface::getContainer(*content);
 						if (scdContainer)
@@ -310,20 +309,20 @@ namespace CommandCppFuncsNamespace
 	{
 		bool creatureIsContainedInPOBShip(CreatureObject const * creatureObject);
 		void removeFromGroupAndCreatePOBGroup(GroupObject * groupToRemoveFrom,
-												GroupMemberParam const & leader,
-												GroupObject::GroupMemberParamVector & membersInsidePOB);
+			GroupMemberParam const & leader,
+			GroupObject::GroupMemberParamVector & membersInsidePOB);
 		// The owner of the POB ship is not included in the inside POB member lists
 		void separateGroupBasedOffofPOBShip(GroupObject * groupObj,
-											NetworkId const & ownerOfThePOBShipId,
-											NetworkId const & POBShipId,
-											GroupObject::GroupMemberParamVector & membersInsidePOB,
-											GroupObject::GroupMemberParamVector & membersOutsidePOB);
+			NetworkId const & ownerOfThePOBShipId,
+			NetworkId const & POBShipId,
+			GroupObject::GroupMemberParamVector & membersInsidePOB,
+			GroupObject::GroupMemberParamVector & membersOutsidePOB);
 
 		TravelPoint const * getNearestTravelPoint(std::string const & planetName, Vector const & location, std::vector<int> const & cityBanList, uint32 faction, bool starPortAndShuttleportOnly);
 	}
 
 	void triggerSpaceEjectPlayerFromShip(CreatureObject * creatureObject);
-	
+
 	int const cs_spaceSpeechMultiple = 10;
 }
 
@@ -340,8 +339,8 @@ bool CommandCppFuncsNamespace::GroupHelpers::creatureIsContainedInPOBShip(Creatu
 // ----------------------------------------------------------------------
 
 void CommandCppFuncsNamespace::GroupHelpers::removeFromGroupAndCreatePOBGroup(GroupObject * const groupToRemoveFrom,
-													GroupMemberParam const & leader,
-													GroupObject::GroupMemberParamVector & membersInsidePOB)
+	GroupMemberParam const & leader,
+	GroupObject::GroupMemberParamVector & membersInsidePOB)
 {
 	if (groupToRemoveFrom != 0)
 	{
@@ -372,10 +371,10 @@ void CommandCppFuncsNamespace::GroupHelpers::removeFromGroupAndCreatePOBGroup(Gr
 
 // The owner of the POB ship is not included in the inside POB member lists
 void CommandCppFuncsNamespace::GroupHelpers::separateGroupBasedOffofPOBShip(GroupObject * const groupObj,
-													NetworkId const & ownerOfThePOBShipId,
-													NetworkId const & POBShipId,
-													GroupObject::GroupMemberParamVector & membersInsidePOB,
-													GroupObject::GroupMemberParamVector & membersOutsidePOB)
+	NetworkId const & ownerOfThePOBShipId,
+	NetworkId const & POBShipId,
+	GroupObject::GroupMemberParamVector & membersInsidePOB,
+	GroupObject::GroupMemberParamVector & membersOutsidePOB)
 {
 	NOT_NULL(groupObj);
 
@@ -417,7 +416,7 @@ void CommandCppFuncsNamespace::triggerSpaceEjectPlayerFromShip(CreatureObject * 
 
 	GameScriptObject * gameScriptObject = creatureObject->getScriptObject();
 
-	if(gameScriptObject != 0)
+	if (gameScriptObject != 0)
 	{
 		ScriptParams scriptParams;
 		IGNORE_RETURN(gameScriptObject->trigAllScripts(Scripting::TRIG_SPACE_EJECT_PLAYER_FROM_SHIP, scriptParams));
@@ -484,7 +483,7 @@ static const std::string OBJVAR_PLAYERS_CAN_ACCESS_CONTAINER("players_can_access
 
 static void sendProseMessage(const CreatureObject &actor, const ServerObject * const target, StringId const &stringId)
 {
-	Chat::sendSystemMessageSimple (actor, stringId, target);
+	Chat::sendSystemMessageSimple(actor, stringId, target);
 }
 
 // ======================================================================
@@ -504,7 +503,7 @@ static std::string nextStringParm(Unicode::String const &str, size_t &curpos)
 	size_t endpos = 0;
 	Unicode::String token;
 	if (!Unicode::getFirstToken(str, curpos, endpos, token))
-		return std::string ();
+		return std::string();
 	curpos = endpos;
 	return Unicode::wideToNarrow(token);
 }
@@ -540,7 +539,6 @@ static float nextFloatParm(Unicode::String const &str, size_t &curpos)
 	return static_cast<float>(strtod(nextStringParm(str, curpos).c_str(), nullptr));
 }
 
-
 // ----------------------------------------------------------------------
 
 static bool nextBoolParm(Unicode::String const &str, size_t &curpos)
@@ -552,11 +550,11 @@ static bool nextBoolParm(Unicode::String const &str, size_t &curpos)
 
 static Vector nextVectorParm(Unicode::String const &str, size_t &curpos)
 {
-	float x=nextFloatParm(str,curpos);
-	float y=nextFloatParm(str,curpos);
-	float z=nextFloatParm(str,curpos);
+	float x = nextFloatParm(str, curpos);
+	float y = nextFloatParm(str, curpos);
+	float z = nextFloatParm(str, curpos);
 
-	return Vector(x,y,z);
+	return Vector(x, y, z);
 }
 
 // ======================================================================
@@ -574,7 +572,7 @@ static void commandFuncConsoleAll(Command const &command, NetworkId const &actor
 			Client *client = obj->getClient();
 			if (client && client->isGod())
 			{
-				LOG("CustomerService",("Avatar:%s executing command: %s", PlayerObject::getAccountDescription(client->getCharacterObjectId()).c_str(), Unicode::wideToNarrow(params).c_str()));
+				LOG("CustomerService", ("Avatar:%s executing command: %s", PlayerObject::getAccountDescription(client->getCharacterObjectId()).c_str(), Unicode::wideToNarrow(params).c_str()));
 				ConsoleMgr::processString(Unicode::wideToNarrow(params), client, 0);
 			}
 		}
@@ -736,7 +734,7 @@ static void commandFuncAdminSetGodMode(Command const &, NetworkId const &actor,
 // ----------------------------------------------------------------------
 
 static void commandFuncResetCooldowns(Command const &, NetworkId const &actor,
-									   NetworkId const &, Unicode::String const &params)
+	NetworkId const &, Unicode::String const &params)
 {
 	CreatureObject *actorObj = dynamic_cast<CreatureObject *>(NetworkIdManager::getObjectById(actor));
 	if (actorObj)
@@ -748,7 +746,7 @@ static void commandFuncResetCooldowns(Command const &, NetworkId const &actor,
 // ----------------------------------------------------------------------
 
 static void commandFuncSpewCommandQueue(Command const &, NetworkId const &actor,
-									   NetworkId const &, Unicode::String const &params)
+	NetworkId const &, Unicode::String const &params)
 {
 	CreatureObject *actorObj = dynamic_cast<CreatureObject *>(NetworkIdManager::getObjectById(actor));
 	if (actorObj)
@@ -780,14 +778,14 @@ static void commandFuncAdminKick(Command const &, NetworkId const &actor,
 			// If the target is a ship, kick all the people in the ship
 			std::vector<CreatureObject *> passengers;
 			shipObject->findAllPassengers(passengers, true);
-			for (std::vector<CreatureObject *>::const_iterator i=passengers.begin(); i!=passengers.end(); ++i)
+			for (std::vector<CreatureObject *>::const_iterator i = passengers.begin(); i != passengers.end(); ++i)
 			{
 				KickPlayer const kickMessage((*i)->getNetworkId(), "Admin Kick");
 				GameServer::getInstance().sendToConnectionServers(kickMessage);
 			}
 		}
 		else
-		{		
+		{
 			KickPlayer const kickMessage(who, "Admin Kick");
 			GameServer::getInstance().sendToConnectionServers(kickMessage);
 		}
@@ -998,7 +996,7 @@ static void commandFuncShowCtsHistory(Command const &, NetworkId const &actor, N
 
 	if (orderedCtsHistory.empty())
 	{
-		ConsoleMgr::broadcastString("No CTS history found.", clientObj);	
+		ConsoleMgr::broadcastString("No CTS history found.", clientObj);
 	}
 	else
 	{
@@ -1086,10 +1084,10 @@ static void commandFuncAdminTeleport(Command const &, NetworkId const &actor, Ne
 			if (actorClient)
 			{
 				char buffer[512];
-				snprintf(buffer, sizeof(buffer)-1, "specified coordinate (%.2f,%.2f,%.2f) (%.2f,%.2f,%.2f) is out of range",
+				snprintf(buffer, sizeof(buffer) - 1, "specified coordinate (%.2f,%.2f,%.2f) (%.2f,%.2f,%.2f) is out of range",
 					position_w.x, position_w.y, position_w.z,
 					position_p.x, position_p.y, position_p.z);
-				buffer[sizeof(buffer)-1] = '\0';
+				buffer[sizeof(buffer) - 1] = '\0';
 
 				ConsoleMgr::broadcastString(buffer, actorClient);
 			}
@@ -1192,7 +1190,7 @@ static void commandFuncAdminListGuilds(Command const &, NetworkId const &actor, 
 
 static void commandFuncAdminEditBank(Command const &cmd, NetworkId const &actor, NetworkId const &target, Unicode::String const &params)
 {
-	CreatureObject * actorCreature  = safe_cast<CreatureObject*>(ServerWorld::findObjectByNetworkId(actor));
+	CreatureObject * actorCreature = safe_cast<CreatureObject*>(ServerWorld::findObjectByNetworkId(actor));
 	CreatureObject * targetCreature = safe_cast<CreatureObject*>(ServerWorld::findObjectByNetworkId(target));
 	if (!targetCreature || !actorCreature)
 	{
@@ -1201,7 +1199,7 @@ static void commandFuncAdminEditBank(Command const &cmd, NetworkId const &actor,
 	}
 
 	ServerObject * targetBank = targetCreature->getBankContainer();
-	if(!targetBank)
+	if (!targetBank)
 	{
 		DEBUG_REPORT_LOG(true, ("Couldn't get bank for player %s.\n", target.getValueString().c_str()));
 		return;
@@ -1238,17 +1236,17 @@ static void commandFuncAdminEditBank(Command const &cmd, NetworkId const &actor,
 
 static void commandFuncAdminEditStats(Command const &, NetworkId const &actor, NetworkId const &target, Unicode::String const &)
 {
-	CreatureObject* const creatureActor = dynamic_cast<CreatureObject *>(NetworkIdManager::getObjectById (actor));
+	CreatureObject* const creatureActor = dynamic_cast<CreatureObject *>(NetworkIdManager::getObjectById(actor));
 	if (!creatureActor)
 	{
-		WARNING (true, ("commandFuncAdminEditStats: nullptr actor"));
+		WARNING(true, ("commandFuncAdminEditStats: nullptr actor"));
 		return;
 	}
 
-	CreatureObject* const creatureTarget = dynamic_cast<CreatureObject *>(NetworkIdManager::getObjectById (target));
+	CreatureObject* const creatureTarget = dynamic_cast<CreatureObject *>(NetworkIdManager::getObjectById(target));
 	if (!creatureTarget)
 	{
-		WARNING (true, ("commandFuncAdminEditStats: nullptr target"));
+		WARNING(true, ("commandFuncAdminEditStats: nullptr target"));
 		return;
 	}
 
@@ -1262,17 +1260,17 @@ static void commandFuncAdminEditStats(Command const &, NetworkId const &actor, N
 
 static void commandFuncAdminEditAppearance(Command const &, NetworkId const &actor, NetworkId const &target, Unicode::String const &)
 {
-	CreatureObject* const creatureActor = dynamic_cast<CreatureObject *>(NetworkIdManager::getObjectById (actor));
+	CreatureObject* const creatureActor = dynamic_cast<CreatureObject *>(NetworkIdManager::getObjectById(actor));
 	if (!creatureActor)
 	{
-		WARNING (true, ("commandFuncAdminEditAppearance: nullptr actor"));
+		WARNING(true, ("commandFuncAdminEditAppearance: nullptr actor"));
 		return;
 	}
 
-	CreatureObject* const creatureTarget = dynamic_cast<CreatureObject *>(NetworkIdManager::getObjectById (target));
+	CreatureObject* const creatureTarget = dynamic_cast<CreatureObject *>(NetworkIdManager::getObjectById(target));
 	if (!creatureTarget)
 	{
-		WARNING (true, ("commandFuncAdminEditAppearance: nullptr target"));
+		WARNING(true, ("commandFuncAdminEditAppearance: nullptr target"));
 		return;
 	}
 
@@ -1296,7 +1294,7 @@ static void commandFuncAdminCredits(Command const &, NetworkId const &, NetworkI
 
 // ----------------------------------------------------------------------
 
-static void commandFuncAdminGetStationName(Command const &, NetworkId const & actor, NetworkId const & target , Unicode::String const & params)
+static void commandFuncAdminGetStationName(Command const &, NetworkId const & actor, NetworkId const & target, Unicode::String const & params)
 {
 	const Object * const actorObj = NetworkIdManager::getObjectById(actor);
 	if (actorObj && actorObj->asServerObject())
@@ -1304,25 +1302,25 @@ static void commandFuncAdminGetStationName(Command const &, NetworkId const & ac
 		Client * const actorClient = actorObj->asServerObject()->getClient();
 		if (actorClient)
 		{
-			const CreatureObject* creatureTarget = dynamic_cast<CreatureObject *>(NetworkIdManager::getObjectById (target));
+			const CreatureObject* creatureTarget = dynamic_cast<CreatureObject *>(NetworkIdManager::getObjectById(target));
 			if (!creatureTarget)
 			{
 				size_t pos = 0;
 				NetworkId targetId(nextOidParm(params, pos));
-				creatureTarget = dynamic_cast<CreatureObject *>(NetworkIdManager::getObjectById (targetId));
+				creatureTarget = dynamic_cast<CreatureObject *>(NetworkIdManager::getObjectById(targetId));
 			}
 
-			if(!creatureTarget)
+			if (!creatureTarget)
 			{
 				ConsoleMgr::broadcastString("Could not resolve target passed to getStationName", actorClient);
 				return;
 			}
 
 			const Client * const clientTarget = creatureTarget->getClient();
-			if(clientTarget)
+			if (clientTarget)
 			{
 				const std::string & stationName = clientTarget->getAccountName();
-				char buf [512];
+				char buf[512];
 				snprintf(buf, 511, "Station name is: %s.", stationName.c_str());
 				ConsoleMgr::broadcastString(buf, actorClient);
 			}
@@ -1340,7 +1338,6 @@ static void commandFuncAdminGetStationName(Command const &, NetworkId const & ac
 
 static void commandFuncAuctionCreate(Command const &, NetworkId const &actor, NetworkId const &, Unicode::String const &params)
 {
-
 	/*printf("!!!!AUCTION: process = %i\n", (int)GameServer::getInstance().getProcessId());
 	printf("!!!!PID = %i\n", (int)getpid());
 
@@ -1385,8 +1382,6 @@ static void commandFuncAuctionCreateImmediate(Command const &, NetworkId const &
 
 	CreatureObject *actorCreature = dynamic_cast<CreatureObject *>(NetworkIdManager::getObjectById(actor));
 
-
-
 	TangibleObject *itemTangible = dynamic_cast<TangibleObject *>(NetworkIdManager::getObjectById(itemId));
 	ServerObject *auctionContainer = dynamic_cast<ServerObject *>(NetworkIdManager::getObjectById(auctionContainerId));
 
@@ -1413,10 +1408,10 @@ static void commandFuncAuctionBid(Command const &, NetworkId const &actor, Netwo
 	int maxProxyBid = nextIntParm(params, pos);
 	CreatureObject *actorCreature = dynamic_cast<CreatureObject *>(NetworkIdManager::getObjectById(actor));
 
-	CommoditiesMarket::getAuctionDetails(*actorCreature, auctionId);
-
 	if (actorCreature)
 	{
+		CommoditiesMarket::getAuctionDetails(*actorCreature, auctionId);
+
 		CommoditiesMarket::auctionBid(
 			*actorCreature,
 			auctionId.getValue(),
@@ -1498,29 +1493,29 @@ static void commandFuncSocial(Command const &command, NetworkId const &actor, Ne
 		if (obj)
 		{
 			Unicode::UnicodeStringVector sv;
-			Unicode::tokenize (params, sv);
+			Unicode::tokenize(params, sv);
 
-			if (sv.empty ())
+			if (sv.empty())
 			{
-				WARNING (true, ("commandFuncSocial no params"));
+				WARNING(true, ("commandFuncSocial no params"));
 				return;
 			}
 
-			const std::string & socialName = Unicode::wideToNarrow (sv [0]);
-			const uint32 socialType        = SocialsManager::getSocialTypeByName (socialName);
+			const std::string & socialName = Unicode::wideToNarrow(sv[0]);
+			const uint32 socialType = SocialsManager::getSocialTypeByName(socialName);
 
 			if (!socialType)
-				WARNING (true, ("commandFuncSocial Bad social type specified: [%s]", socialName.c_str ()));
+				WARNING(true, ("commandFuncSocial Bad social type specified: [%s]", socialName.c_str()));
 			else
 			{
 				bool animationOk = true;
-				bool textOk      = true;
-				if (sv.size () > 1)
-					animationOk = !sv [1].empty () && sv [1][0] == '1';
-				if (sv.size () > 2)
-					textOk      = !sv [2].empty () && sv [2][0] == '1';
+				bool textOk = true;
+				if (sv.size() > 1)
+					animationOk = !sv[1].empty() && sv[1][0] == '1';
+				if (sv.size() > 2)
+					textOk = !sv[2].empty() && sv[2][0] == '1';
 
-				obj->performSocial (target, socialType, animationOk, textOk);
+				obj->performSocial(target, socialType, animationOk, textOk);
 			}
 		}
 	}
@@ -1528,7 +1523,7 @@ static void commandFuncSocial(Command const &command, NetworkId const &actor, Ne
 
 // ----------------------------------------------------------------------
 
-static void commandFuncSocialInternal (Command const &command, NetworkId const &actor, NetworkId const &, Unicode::String const &params)
+static void commandFuncSocialInternal(Command const &command, NetworkId const &actor, NetworkId const &, Unicode::String const &params)
 {
 	UNREF(command);
 	if (actor != NetworkId::cms_invalid)
@@ -1537,29 +1532,29 @@ static void commandFuncSocialInternal (Command const &command, NetworkId const &
 		if (obj)
 		{
 			Unicode::UnicodeStringVector sv;
-			Unicode::tokenize (params, sv);
+			Unicode::tokenize(params, sv);
 
-			if (sv.size () < 2)
+			if (sv.size() < 2)
 			{
-				WARNING (true, ("commandFuncSocial not enough params"));
+				WARNING(true, ("commandFuncSocial not enough params"));
 				return;
 			}
 
-			const NetworkId targetId          (Unicode::wideToNarrow (sv [0]));
-			const uint32    socialType = atoi (Unicode::wideToNarrow (sv [1]).c_str());
+			const NetworkId targetId(Unicode::wideToNarrow(sv[0]));
+			const uint32    socialType = atoi(Unicode::wideToNarrow(sv[1]).c_str());
 
 			if (!socialType)
-				WARNING (true, ("commandFuncSocialInternal Bad social type specified: '%d'", socialType));
+				WARNING(true, ("commandFuncSocialInternal Bad social type specified: '%d'", socialType));
 			else
 			{
 				bool animationOk = true;
-				bool textOk      = true;
-				if (sv.size () > 3)
+				bool textOk = true;
+				if (sv.size() > 3)
 				{
-					animationOk = !sv [2].empty () && sv [2][0] == '1';
-					textOk      = !sv [3].empty () && sv [3][0] == '1';
+					animationOk = !sv[2].empty() && sv[2][0] == '1';
+					textOk = !sv[3].empty() && sv[3][0] == '1';
 				}
-				obj->performSocial (targetId, socialType, animationOk, textOk);
+				obj->performSocial(targetId, socialType, animationOk, textOk);
 			}
 		}
 	}
@@ -1567,7 +1562,7 @@ static void commandFuncSocialInternal (Command const &command, NetworkId const &
 
 //----------------------------------------------------------------------
 
-static void commandFuncSetMood (Command const &command, NetworkId const &actor, NetworkId const &, Unicode::String const & params)
+static void commandFuncSetMood(Command const &command, NetworkId const &actor, NetworkId const &, Unicode::String const & params)
 {
 	UNREF(command);
 	if (actor != NetworkId::cms_invalid)
@@ -1575,17 +1570,17 @@ static void commandFuncSetMood (Command const &command, NetworkId const &actor, 
 		CreatureObject * const obj = dynamic_cast<CreatureObject *>(NetworkIdManager::getObjectById(actor));
 		if (obj)
 		{
-			const std::string moodName = Unicode::wideToNarrow (params);
+			const std::string moodName = Unicode::wideToNarrow(params);
 
 			if (moodName == "none")
 			{
-				obj->setMood (0);
+				obj->setMood(0);
 			}
 			else
 			{
-				const uint32 moodType = MoodManager::getMoodByCanonicalName (moodName);
+				const uint32 moodType = MoodManager::getMoodByCanonicalName(moodName);
 				if (moodType)
-					obj->setMood (moodType);
+					obj->setMood(moodType);
 			}
 		}
 	}
@@ -1593,7 +1588,7 @@ static void commandFuncSetMood (Command const &command, NetworkId const &actor, 
 
 // ----------------------------------------------------------------------
 
-static void commandFuncSetMoodInternal (Command const &command, NetworkId const &actor,
+static void commandFuncSetMoodInternal(Command const &command, NetworkId const &actor,
 	NetworkId const &, Unicode::String const &params)
 {
 	UNREF(command);
@@ -1603,14 +1598,14 @@ static void commandFuncSetMoodInternal (Command const &command, NetworkId const 
 		if (obj)
 		{
 			const uint32 moodType = atoi(Unicode::wideToNarrow(params).c_str());
-			obj->setMood (moodType);
+			obj->setMood(moodType);
 		}
 	}
 }
 
 //----------------------------------------------------------------------
 
-static void commandFuncRequestWaypointAtPosition (Command const &command, NetworkId const &actor,
+static void commandFuncRequestWaypointAtPosition(Command const &command, NetworkId const &actor,
 	NetworkId const &, Unicode::String const &params)
 {
 	UNREF(command);
@@ -1619,15 +1614,15 @@ static void commandFuncRequestWaypointAtPosition (Command const &command, Networ
 		CreatureObject * const obj = dynamic_cast<CreatureObject *>(NetworkIdManager::getObjectById(actor));
 		if (obj)
 		{
-			if(obj->isPlayerControlled())
+			if (obj->isPlayerControlled())
 			{
 				PlayerObject * playerObject = PlayerCreatureController::getPlayerObject(obj);
-				if(playerObject)
+				if (playerObject)
 				{
 					size_t curpos = 0;
 
 					uint8 color = static_cast<uint8>(Waypoint::Blue);
-					std::string planet         = nextStringParm            (params, curpos);
+					std::string planet = nextStringParm(params, curpos);
 
 					// the first parameter may be the name of the planet or an unsigned
 					// int specifying the color of the waypoint, in which case the
@@ -1636,8 +1631,8 @@ static void commandFuncRequestWaypointAtPosition (Command const &command, Networ
 					// obfuscation to prevent player from manually entering the
 					// requestWaypointAtPosition command and specifying the waypoint color
 					char buffer[256];
-					snprintf(buffer, sizeof(buffer)-1, "(^-,=+_)color_%s(,+-=_^)=", actor.getValueString().c_str());
-					buffer[sizeof(buffer)-1] = '\0';
+					snprintf(buffer, sizeof(buffer) - 1, "(^-,=+_)color_%s(,+-=_^)=", actor.getValueString().c_str());
+					buffer[sizeof(buffer) - 1] = '\0';
 
 					if (planet.find(buffer) == 0)
 					{
@@ -1654,18 +1649,18 @@ static void commandFuncRequestWaypointAtPosition (Command const &command, Networ
 						planet = nextStringParm(params, curpos);
 					}
 
-					const float x              = nextFloatParm             (params, curpos);
-					const float y              = nextFloatParm             (params, curpos);
-					const float z              = nextFloatParm             (params, curpos);
-					curpos                     = Unicode::skipWhitespace (params, curpos);
+					const float x = nextFloatParm(params, curpos);
+					const float y = nextFloatParm(params, curpos);
+					const float z = nextFloatParm(params, curpos);
+					curpos = Unicode::skipWhitespace(params, curpos);
 
 					const std::string& sceneId = ServerWorld::getSceneId();
 					StringId s("planet_n", sceneId);
 
-					const Unicode::String & name = ((curpos != Unicode::String::npos) ? (params.substr (curpos)) : (Unicode::narrowToWide("@" + s.getCanonicalRepresentation())));
+					const Unicode::String & name = ((curpos != Unicode::String::npos) ? (params.substr(curpos)) : (Unicode::narrowToWide("@" + s.getCanonicalRepresentation())));
 
 					// get player object
-					Waypoint waypoint(playerObject->createWaypoint(Location(Vector(x, y, z), NetworkId::cms_invalid, Location::getCrcBySceneName(planet)),false));
+					Waypoint waypoint(playerObject->createWaypoint(Location(Vector(x, y, z), NetworkId::cms_invalid, Location::getCrcBySceneName(planet)), false));
 					if (waypoint.isValid())
 					{
 						waypoint.setName(name); // Waypoints are a bit like smart pointers, so this is changing the data on the PlayerObject, not just on a local variable
@@ -1695,14 +1690,13 @@ static void commandFuncSpatialChatInternal(Command const &, NetworkId const &act
 		ServerObject * const obj = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(actor));
 		if (obj)
 		{
-
 			size_t curpos = 0;
 
-			const NetworkId targetId (nextStringParm (params, curpos));
-			const int chatType  = nextIntParm (params, curpos);
-			const int mood      = nextIntParm (params, curpos);
-			int flags           = nextIntParm (params, curpos);
-			int language        = nextIntParm (params, curpos);
+			const NetworkId targetId(nextStringParm(params, curpos));
+			const int chatType = nextIntParm(params, curpos);
+			const int mood = nextIntParm(params, curpos);
+			int flags = nextIntParm(params, curpos);
+			int language = nextIntParm(params, curpos);
 
 			// Verify the language parameter
 
@@ -1711,29 +1705,29 @@ static void commandFuncSpatialChatInternal(Command const &, NetworkId const &act
 				language = GameLanguageManager::getBasicLanguageId();
 			}
 
-			curpos              = Unicode::skipWhitespace  (params, curpos);
+			curpos = Unicode::skipWhitespace(params, curpos);
 
 			if (curpos == Unicode::String::npos)
 			{
-				DEBUG_WARNING (true, ("empty string in spatial chat"));
+				DEBUG_WARNING(true, ("empty string in spatial chat"));
 				return;
 			}
 
-			const size_t nullpos = params.find (static_cast<unsigned short>(0), curpos);
+			const size_t nullpos = params.find(static_cast<unsigned short>(0), curpos);
 
 			Unicode::String text;
 			Unicode::String oob;
 
 			if (nullpos != Unicode::String::npos)
 			{
-				text = params.substr (curpos, nullpos - curpos);
-				oob  = params.substr (nullpos + 1);
+				text = params.substr(curpos, nullpos - curpos);
+				oob = params.substr(nullpos + 1);
 			}
 			else
 			{
 				// Strip any color codes the user may have entered
 
-				text = TextIterator(params.substr (curpos)).getPrintableText();
+				text = TextIterator(params.substr(curpos)).getPrintableText();
 			}
 
 			if (text.empty())
@@ -1741,19 +1735,19 @@ static void commandFuncSpatialChatInternal(Command const &, NetworkId const &act
 				return;
 			}
 
-			const bool isPrivate = SpatialChatManager::isPrivate (chatType);
+			const bool isPrivate = SpatialChatManager::isPrivate(chatType);
 
 			if (isPrivate)
 				flags |= MessageQueueSpatialChat::F_isPrivate;
 
 			if (chatType != -1 && mood != -1 && flags != -1 && curpos != Unicode::String::npos)
 			{
-				uint16 volume    = SpatialChatManager::getVolume (chatType);
+				uint16 volume = SpatialChatManager::getVolume(chatType);
 
 				CreatureObject * const creatureActor = obj->asCreatureObject();
 
 				//speak cs_spaceSpeechMultiple times when piloting a ship
-				if(creatureActor && creatureActor->getPilotedShip())
+				if (creatureActor && creatureActor->getPilotedShip())
 					volume *= cs_spaceSpeechMultiple;
 
 				// track amount of spatial chat for the character
@@ -1786,15 +1780,15 @@ static void commandFuncSpatialChatInternal(Command const &, NetworkId const &act
 					// character allowed to talk
 					obj->speakText(
 						MessageQueueSpatialChat(
-						CachedNetworkId(actor),
-						CachedNetworkId(targetId),
-						text,
-						volume,
-						static_cast<uint16>(chatType),
-						static_cast<uint16>(mood),
-						flags,
-						language,
-						oob));
+							CachedNetworkId(actor),
+							CachedNetworkId(targetId),
+							text,
+							volume,
+							static_cast<uint16>(chatType),
+							static_cast<uint16>(mood),
+							flags,
+							language,
+							oob));
 				}
 				else if (!squelched && (ConfigServerGame::getChatSpamNotifyPlayerWhenLimitedIntervalSeconds() > 0) && obj->getClient())
 				{
@@ -1834,65 +1828,64 @@ static void commandFuncSpatialChat(Command const &, NetworkId const &actor, Netw
 			Unicode::String moodTypeName;
 			Unicode::String flagsString;
 
-			if (!Unicode::getFirstToken (params, curpos, curpos, chatTypeName) || curpos == Unicode::String::npos)
+			if (!Unicode::getFirstToken(params, curpos, curpos, chatTypeName) || curpos == Unicode::String::npos)
 			{
-				WARNING (true, ("Not enough arguments to commandFuncSpatialChat (no chat type)"));
+				WARNING(true, ("Not enough arguments to commandFuncSpatialChat (no chat type)"));
 				return;
 			}
 
-			if (!Unicode::getFirstToken (params, ++curpos, curpos, moodTypeName) || curpos == Unicode::String::npos)
+			if (!Unicode::getFirstToken(params, ++curpos, curpos, moodTypeName) || curpos == Unicode::String::npos)
 			{
-				WARNING (true, ("Not enough arguments to commandFuncSpatialChat (no mood type)"));
+				WARNING(true, ("Not enough arguments to commandFuncSpatialChat (no mood type)"));
 				return;
 			}
 
-			if (!Unicode::getFirstToken (params, ++curpos, curpos, flagsString) || curpos == Unicode::String::npos)
+			if (!Unicode::getFirstToken(params, ++curpos, curpos, flagsString) || curpos == Unicode::String::npos)
 			{
-				WARNING (true, ("Not enough arguments to commandFuncSpatialChat (no flags)"));
+				WARNING(true, ("Not enough arguments to commandFuncSpatialChat (no flags)"));
 				return;
 			}
 
 			curpos = Unicode::skipWhitespace(params, ++curpos);
 
-			const std::string & narrow_chatTypeName = Unicode::wideToNarrow (chatTypeName);
-			const std::string & narrow_moodTypeName = Unicode::wideToNarrow (moodTypeName);
+			const std::string & narrow_chatTypeName = Unicode::wideToNarrow(chatTypeName);
+			const std::string & narrow_moodTypeName = Unicode::wideToNarrow(moodTypeName);
 
-			const uint32 chatType = SpatialChatManager::getChatTypeByName (narrow_chatTypeName);
+			const uint32 chatType = SpatialChatManager::getChatTypeByName(narrow_chatTypeName);
 
-			curpos = Unicode::skipWhitespace  (params, curpos);
+			curpos = Unicode::skipWhitespace(params, curpos);
 
 			if (curpos == Unicode::String::npos)
 			{
-				DEBUG_WARNING (true, ("empty string in spatial chat"));
+				DEBUG_WARNING(true, ("empty string in spatial chat"));
 				return;
 			}
 
-			size_t nullpos = params.find (static_cast<unsigned short>(0), curpos);
+			size_t nullpos = params.find(static_cast<unsigned short>(0), curpos);
 
 			Unicode::String text;
 			Unicode::String oob;
 
 			if (nullpos != Unicode::String::npos)
 			{
-				text = params.substr (curpos, nullpos - curpos);
-				oob  = params.substr (nullpos + 1);
+				text = params.substr(curpos, nullpos - curpos);
+				oob = params.substr(nullpos + 1);
 			}
 			else
 			{
-				text = params.substr (curpos);
-
+				text = params.substr(curpos);
 			}
 
 			if (curpos != Unicode::String::npos)
 			{
-				const uint32 moodType = MoodManager::getMoodByCanonicalName   (narrow_moodTypeName);
-				const bool isPrivate  = SpatialChatManager::isPrivate (chatType);
+				const uint32 moodType = MoodManager::getMoodByCanonicalName(narrow_moodTypeName);
+				const bool isPrivate = SpatialChatManager::isPrivate(chatType);
 
-				uint32 flags = atoi (Unicode::wideToNarrow (flagsString).c_str ());
+				uint32 flags = atoi(Unicode::wideToNarrow(flagsString).c_str());
 				if (isPrivate)
 					flags |= MessageQueueSpatialChat::F_isPrivate;
 
-				const uint16 volume    = SpatialChatManager::getVolume (chatType);
+				const uint16 volume = SpatialChatManager::getVolume(chatType);
 
 				// track amount of spatial chat for the character
 				bool allowToSpeak = true;
@@ -1924,15 +1917,15 @@ static void commandFuncSpatialChat(Command const &, NetworkId const &actor, Netw
 					// character allowed to talk
 					obj->speakText(
 						MessageQueueSpatialChat(
-						CachedNetworkId(actor),
-						CachedNetworkId(targetId),
-						text,
-						volume,
-						static_cast<uint16>(chatType),
-						static_cast<uint16>(moodType),
-						flags,
-						0,
-						oob));
+							CachedNetworkId(actor),
+							CachedNetworkId(targetId),
+							text,
+							volume,
+							static_cast<uint16>(chatType),
+							static_cast<uint16>(moodType),
+							flags,
+							0,
+							oob));
 				}
 				else if (!squelched && (ConfigServerGame::getChatSpamNotifyPlayerWhenLimitedIntervalSeconds() > 0) && obj->getClient())
 				{
@@ -1949,7 +1942,7 @@ static void commandFuncSpatialChat(Command const &, NetworkId const &actor, Netw
 				}
 			}
 			else
-				WARNING (true, ("Invalid empty output string in commandFuncSpatialChat"));
+				WARNING(true, ("Invalid empty output string in commandFuncSpatialChat"));
 		}
 	}
 }
@@ -2071,31 +2064,31 @@ static void commandFuncSystemMessage(Command const &, NetworkId const &, Network
 	Unicode::String targetTypeStr;
 	Unicode::String targetIdStr;
 
-	if (!Unicode::getFirstToken (params, curpos, curpos, targetTypeStr) || curpos == Unicode::String::npos)
+	if (!Unicode::getFirstToken(params, curpos, curpos, targetTypeStr) || curpos == Unicode::String::npos)
 	{
-		WARNING (true, ("Not enough arguments to commandFuncSystemMessage (missing int value)"));
+		WARNING(true, ("Not enough arguments to commandFuncSystemMessage (missing int value)"));
 		return;
 	}
 
-	if (!Unicode::getFirstToken (params, ++curpos, curpos, targetIdStr) || curpos == Unicode::String::npos)
+	if (!Unicode::getFirstToken(params, ++curpos, curpos, targetIdStr) || curpos == Unicode::String::npos)
 	{
-		WARNING (true, ("Not enough arguments to commandFuncSystemMessage (missing bitflags)"));
+		WARNING(true, ("Not enough arguments to commandFuncSystemMessage (missing bitflags)"));
 		return;
 	}
 
 	if (curpos == Unicode::String::npos)
 	{
-		WARNING (true, ("Not enough arguments to commandFuncSystemMessage (missing msg)"));
+		WARNING(true, ("Not enough arguments to commandFuncSystemMessage (missing msg)"));
 		return;
 	}
 
 	curpos = Unicode::skipWhitespace(params, ++curpos);
 
-	Unicode::String output = params.substr (curpos);
+	Unicode::String output = params.substr(curpos);
 
-	if (output.empty ())
+	if (output.empty())
 	{
-		WARNING (true, ("Not enough arguments to commandFuncSystemMessage (missing msg)"));
+		WARNING(true, ("Not enough arguments to commandFuncSystemMessage (missing msg)"));
 		return;
 	}
 
@@ -2103,11 +2096,11 @@ static void commandFuncSystemMessage(Command const &, NetworkId const &, Network
 	std::string targetId = Unicode::wideToNarrow(targetIdStr);
 	static const Unicode::String oob;
 
-	if(targetType == "Player")
+	if (targetType == "Player")
 	{
 		Chat::sendInstantMessage("SYSTEM", targetId, output, oob);
 	}
-	else if(targetType == "ChatChannel")
+	else if (targetType == "ChatChannel")
 	{
 		Chat::sendToRoom("SYSTEM", targetId, output, oob);
 	}
@@ -2118,32 +2111,32 @@ static void commandFuncSystemMessage(Command const &, NetworkId const &, Network
 static void commandFuncSetWaypointActiveStatus(Command const &, NetworkId const & actor, NetworkId const & target, Unicode::String const &params)
 {
 	CachedNetworkId actorId(actor);
-	WARNING(! actorId.getObject(), ("commandSetWaypointActiveStatus: Could not get an object for actor id %s\n", actor.getValueString().c_str()));
-	if(actorId.getObject())
+	WARNING(!actorId.getObject(), ("commandSetWaypointActiveStatus: Could not get an object for actor id %s\n", actor.getValueString().c_str()));
+	if (actorId.getObject())
 	{
 		CreatureObject * creature = dynamic_cast<CreatureObject *>(actorId.getObject());
-		if(creature)
+		if (creature)
 		{
-			if(creature->isPlayerControlled())
+			if (creature->isPlayerControlled())
 			{
 				PlayerObject * playerObject = PlayerCreatureController::getPlayerObject(creature);
-				if(playerObject)
+				if (playerObject)
 				{
 					Waypoint w = playerObject->getWaypoint(target);
 					if (w.isValid())
 					{
 						Unicode::String status;
 						size_t curpos = 0;
-						if (!Unicode::getFirstToken (params, curpos, curpos, status))
+						if (!Unicode::getFirstToken(params, curpos, curpos, status))
 						{
-							WARNING (true, ("Not enough arguments to commandFuncSystemMessage (missing int value)"));
+							WARNING(true, ("Not enough arguments to commandFuncSystemMessage (missing int value)"));
 							return;
 						}
-						if(status == Unicode::narrowToWide("on"))
+						if (status == Unicode::narrowToWide("on"))
 						{
 							w.setActive(true);
 						}
-						else if(status == Unicode::narrowToWide("off"))
+						else if (status == Unicode::narrowToWide("off"))
 						{
 							w.setActive(false);
 						}
@@ -2159,25 +2152,25 @@ static void commandFuncSetWaypointActiveStatus(Command const &, NetworkId const 
 static void commandFuncSetWaypointName(Command const &, NetworkId const & actor, NetworkId const & target, Unicode::String const &params)
 {
 	CachedNetworkId actorId(actor);
-	WARNING(! actorId.getObject(), ("commandFuncSetWaypointName: Could not get an object for actor id %s\n", actor.getValueString().c_str()));
-	if(actorId.getObject())
+	WARNING(!actorId.getObject(), ("commandFuncSetWaypointName: Could not get an object for actor id %s\n", actor.getValueString().c_str()));
+	if (actorId.getObject())
 	{
 		CreatureObject * creature = dynamic_cast<CreatureObject *>(actorId.getObject());
-		if(creature)
+		if (creature)
 		{
-			if(creature->isPlayerControlled())
+			if (creature->isPlayerControlled())
 			{
 				PlayerObject * playerObject = PlayerCreatureController::getPlayerObject(creature);
-				if(playerObject)
+				if (playerObject)
 				{
 					Waypoint w = playerObject->getWaypoint(target);
 					if (w.isValid())
 					{
 						Unicode::String name;
 						size_t curpos = 0;
-						if (!Unicode::getFirstToken (params, curpos, curpos, name))
+						if (!Unicode::getFirstToken(params, curpos, curpos, name))
 						{
-							WARNING (true, ("Not enough arguments to commandFuncSystemMessage (missing text value)"));
+							WARNING(true, ("Not enough arguments to commandFuncSystemMessage (missing text value)"));
 							return;
 						}
 						w.setName(params);
@@ -2198,8 +2191,8 @@ static void commandSetPosture(Command const &command, NetworkId const &actor, Ne
 		CreatureController * const controller = dynamic_cast<CreatureController *>(actorId.getObject()->getController());
 		if (controller != nullptr)
 		{
-			CreatureObject * const creature    = safe_cast<CreatureObject*>(actorId.getObject());
-			NOT_NULL (creature);
+			CreatureObject * const creature = safe_cast<CreatureObject*>(actorId.getObject());
+			NOT_NULL(creature);
 			Postures::Enumerator const posture = creature->getPosture();
 
 			// send the creature's posture to it
@@ -2211,7 +2204,7 @@ static void commandSetPosture(Command const &command, NetworkId const &actor, Ne
 				GameControllerMessageFlags::SEND |
 				GameControllerMessageFlags::RELIABLE |
 				GameControllerMessageFlags::DEST_ALL_CLIENT
-				);
+			);
 
 			// Ensure the chair sitting state is off if the player is not sitting.
 			if (posture != Postures::Sitting)
@@ -2239,7 +2232,7 @@ static void commandFuncJumpServer(Command const &command, NetworkId const &actor
 				GameControllerMessageFlags::SEND |
 				GameControllerMessageFlags::RELIABLE |
 				GameControllerMessageFlags::DEST_ALL_CLIENT
-				);
+			);
 		}
 	}
 }
@@ -2414,9 +2407,9 @@ static void resolveDuelParticipants(CreatureObject &actor, TangibleObject &targe
 		// Dueling a ship
 		// actorFlagObj is the containing ship of the actor if he owns it
 		ShipObject * const actorShip = ShipObject::getContainingShipObject(&actor);
-		if (   actorShip
-		    && actorShip->isPlayerShip()
-		    && actor.getNetworkId() == actorShip->getOwnerId())
+		if (actorShip
+			&& actorShip->isPlayerShip()
+			&& actor.getNetworkId() == actorShip->getOwnerId())
 			actorFlagObj = actorShip;
 		// targetMessageObj is the owner of the target ship
 		if (targetShip->isPlayerShip())
@@ -2481,7 +2474,7 @@ static void commandFuncDuel(Command const &, NetworkId const &actor, NetworkId c
 					return;
 				}
 
-				if(targetObj->getObjVars().hasItem("hologram_performer"))
+				if (targetObj->getObjVars().hasItem("hologram_performer"))
 				{
 					sendProseMessage(*actorObj, targetMessageObj, CommandStringId::SID_DUEL_NOT_HOLOGRAM);
 				}
@@ -2505,58 +2498,56 @@ static void commandFuncDuel(Command const &, NetworkId const &actor, NetworkId c
 
 					// Call their Script Triggers
 					ServerObject* serverActor = actorObj->asServerObject();
-					if(serverActor)
+					if (serverActor)
 					{
 						ScriptParams params;
 						params.addParam(actor);
 						params.addParam(target);
-						if(serverActor->getScriptObject())
+						if (serverActor->getScriptObject())
 						{
 							IGNORE_RETURN(serverActor->getScriptObject()->trigAllScripts(Scripting::TRIG_ON_DUEL_START, params));
-							
 						}
 					}
 
 					ServerObject* serverTarget = targetObj->asServerObject();
-					if(serverTarget)
+					if (serverTarget)
 					{
 						ScriptParams params;
 						params.addParam(actor);
 						params.addParam(target);
-						if(serverTarget->getScriptObject())
+						if (serverTarget->getScriptObject())
 						{
-							IGNORE_RETURN( serverTarget->getScriptObject()->trigAllScripts(Scripting::TRIG_ON_DUEL_START, params));
+							IGNORE_RETURN(serverTarget->getScriptObject()->trigAllScripts(Scripting::TRIG_ON_DUEL_START, params));
 						}
 					}
 					/// End script triggers.
-
 				}
 				else
 				{
 					// Duel Request
 					// Call their Script Triggers
 					ServerObject* serverActor = actorObj->asServerObject();
-					if(serverActor)
+					if (serverActor)
 					{
 						ScriptParams params;
 						params.addParam(actor);
 						params.addParam(target);
-						if(serverActor->getScriptObject())
+						if (serverActor->getScriptObject())
 						{
-							if( serverActor->getScriptObject()->trigAllScripts(Scripting::TRIG_ON_DUEL_REQUEST, params) == SCRIPT_OVERRIDE )
+							if (serverActor->getScriptObject()->trigAllScripts(Scripting::TRIG_ON_DUEL_REQUEST, params) == SCRIPT_OVERRIDE)
 								return;
 						}
 					}
 
 					ServerObject* serverTarget = targetObj->asServerObject();
-					if(serverTarget)
+					if (serverTarget)
 					{
 						ScriptParams params;
 						params.addParam(actor);
 						params.addParam(target);
-						if(serverTarget->getScriptObject())
+						if (serverTarget->getScriptObject())
 						{
-							if( serverTarget->getScriptObject()->trigAllScripts(Scripting::TRIG_ON_DUEL_REQUEST, params) == SCRIPT_OVERRIDE )
+							if (serverTarget->getScriptObject()->trigAllScripts(Scripting::TRIG_ON_DUEL_REQUEST, params) == SCRIPT_OVERRIDE)
 								return;
 						}
 					}
@@ -2597,16 +2588,16 @@ static void commandFuncEndDuel(Command const &, NetworkId const &actor, NetworkI
 
 						// notify script that the duel has ended because of the EndDuel command
 						{
-						ScriptParams params;
-						params.addParam(targetObj->getNetworkId(), "target");
-						ScriptDictionaryPtr dictionary;
-						GameScriptObject::makeScriptDictionary(params, dictionary);
-						if (dictionary.get() != nullptr)
-						{
-							dictionary->serialize();
-							MessageToQueue::getInstance().sendMessageToJava(actorFlagObj->getNetworkId(), 
-								"endDuelCommandNotification", dictionary->getSerializedData(), 0, false);
-						}
+							ScriptParams params;
+							params.addParam(targetObj->getNetworkId(), "target");
+							ScriptDictionaryPtr dictionary;
+							GameScriptObject::makeScriptDictionary(params, dictionary);
+							if (dictionary.get() != nullptr)
+							{
+								dictionary->serialize();
+								MessageToQueue::getInstance().sendMessageToJava(actorFlagObj->getNetworkId(),
+									"endDuelCommandNotification", dictionary->getSerializedData(), 0, false);
+							}
 						}
 
 						{
@@ -2617,7 +2608,7 @@ static void commandFuncEndDuel(Command const &, NetworkId const &actor, NetworkI
 							if (dictionary.get() != nullptr)
 							{
 								dictionary->serialize();
-								MessageToQueue::getInstance().sendMessageToJava(targetObj->getNetworkId(), 
+								MessageToQueue::getInstance().sendMessageToJava(targetObj->getNetworkId(),
 									"endDuelCommandNotification", dictionary->getSerializedData(), 0, false);
 							}
 						}
@@ -2650,7 +2641,7 @@ static void commandFuncHarvesterActivate(Command const &, NetworkId const &actor
 	CreatureObject *actorObj = dynamic_cast<CreatureObject*>(NetworkIdManager::getObjectById(actor));
 	HarvesterInstallationObject *targetObj = dynamic_cast<HarvesterInstallationObject*>(NetworkIdManager::getObjectById(target));
 	if (targetObj && actorObj && targetObj->isOnAdminList(*actorObj))
-			targetObj->activate(actor);
+		targetObj->activate(actor);
 }
 
 // ----------------------------------------------------------------------
@@ -2660,8 +2651,7 @@ static void commandFuncHarvesterDeactivate(Command const &, NetworkId const &act
 	CreatureObject *actorObj = dynamic_cast<CreatureObject*>(NetworkIdManager::getObjectById(actor));
 	HarvesterInstallationObject *targetObj = dynamic_cast<HarvesterInstallationObject*>(NetworkIdManager::getObjectById(target));
 	if (targetObj && actorObj &&targetObj->isOnAdminList(*actorObj))
-			targetObj->deactivate();
-
+		targetObj->deactivate();
 }
 
 // ----------------------------------------------------------------------
@@ -2671,7 +2661,7 @@ static void commandFuncHarvesterHarvest(Command const &, NetworkId const &actor,
 	CreatureObject *actorObj = dynamic_cast<CreatureObject*>(NetworkIdManager::getObjectById(actor));
 	HarvesterInstallationObject *targetObj = dynamic_cast<HarvesterInstallationObject*>(NetworkIdManager::getObjectById(target));
 	if (targetObj && actorObj && targetObj->isOnAdminList(*actorObj))
-			targetObj->harvest();
+		targetObj->harvest();
 }
 
 // ----------------------------------------------------------------------
@@ -2701,14 +2691,14 @@ static void commandFuncHarvesterMakeCrate(Command const &, NetworkId const &acto
 {
 	CreatureObject *actorObj = dynamic_cast<CreatureObject*>(NetworkIdManager::getObjectById(actor));
 	HarvesterInstallationObject *targetObj = dynamic_cast<HarvesterInstallationObject*>(NetworkIdManager::getObjectById(target));
-	size_t pos=0;
-	const NetworkId resourceId = nextOidParm(params,pos);
-	const int amount = nextIntParm(params,pos);
-	const bool discard = nextBoolParm(params,pos);
-	const uint8 sequenceId = static_cast<uint8>(nextIntParm(params,pos));
+	size_t pos = 0;
+	const NetworkId resourceId = nextOidParm(params, pos);
+	const int amount = nextIntParm(params, pos);
+	const bool discard = nextBoolParm(params, pos);
+	const uint8 sequenceId = static_cast<uint8>(nextIntParm(params, pos));
 
 	if (targetObj && actorObj && targetObj->isOnAdminList(*actorObj))
-		targetObj->emptyHopper(actor,resourceId,amount,discard,sequenceId);
+		targetObj->emptyHopper(actor, resourceId, amount, discard, sequenceId);
 }
 
 // ----------------------------------------------------------------------
@@ -2727,14 +2717,13 @@ static void commandFuncResourceContainerTransfer(Command const &, NetworkId cons
 	CreatureObject * const player = safe_cast<CreatureObject*>(ServerWorld::findObjectByNetworkId(actor));
 	if (!player)
 		return;
-	
+
 	ResourceContainerObject *sourceObj = dynamic_cast<ResourceContainerObject*>(NetworkIdManager::getObjectById(target));
 	size_t pos = 0;
-	NetworkId destId = nextOidParm(params,pos);
+	NetworkId destId = nextOidParm(params, pos);
 	ResourceContainerObject *destObj = dynamic_cast<ResourceContainerObject*>(NetworkIdManager::getObjectById(destId));
-	int amount = nextIntParm(params,pos); 
+	int amount = nextIntParm(params, pos);
 
-	
 	if (!sourceObj || !destObj || amount <= 0)
 		return;
 
@@ -2749,7 +2738,7 @@ static void commandFuncResourceContainerTransfer(Command const &, NetworkId cons
 		ContainerInterface::sendContainerMessageToClient(*player, error, destObj);
 		return;
 	}
-	
+
 	sourceObj->transferTo(*destObj, amount);
 }
 
@@ -2768,7 +2757,7 @@ static void commandFuncRequestSurvey(Command const &, NetworkId const &actor, Ne
 	if (actorObj && actorObj->getClient())
 	{
 		size_t curpos = 0;
-		Unicode::String resourceName = Unicode::narrowToWide(nextStringParm (params, curpos));
+		Unicode::String resourceName = Unicode::narrowToWide(nextStringParm(params, curpos));
 
 		ScriptParams params;
 		params.addParam(actor);
@@ -2789,7 +2778,7 @@ static void commandFuncRequestCoreSample(Command const &, NetworkId const &actor
 	if (actorObj && actorObj->getClient())
 	{
 		size_t curpos = 0;
-		Unicode::String resourceName = Unicode::narrowToWide(nextStringParm (params, curpos));
+		Unicode::String resourceName = Unicode::narrowToWide(nextStringParm(params, curpos));
 
 		ScriptParams params;
 		params.addParam(actor);
@@ -2815,19 +2804,19 @@ static void commandFuncResourceContainerSplit(Command const &, NetworkId const &
 		return;
 
 	size_t pos = 0;
-	const int amount           = nextIntParm(params,pos);
-	const CachedNetworkId destContainer (nextOidParm(params,pos));
-	const int arrangementId    = nextIntParm(params,pos);
-	const Vector & newLocation = nextVectorParm(params,pos);
+	const int amount = nextIntParm(params, pos);
+	const CachedNetworkId destContainer(nextOidParm(params, pos));
+	const int arrangementId = nextIntParm(params, pos);
+	const Vector & newLocation = nextVectorParm(params, pos);
 
 	Container::ContainerErrorCode error = Container::CEC_Success;
 	if (!player->canManipulateObject(*sourceObj, true, true, true, 10.0f, error))
 	{
 		ContainerInterface::sendContainerMessageToClient(*player, error, sourceObj);
 	}
-	else if (!sourceObj->splitContainer(amount,destContainer,arrangementId,newLocation, safe_cast<ServerObject*>(NetworkIdManager::getObjectById(actor))))
+	else if (!sourceObj->splitContainer(amount, destContainer, arrangementId, newLocation, safe_cast<ServerObject*>(NetworkIdManager::getObjectById(actor))))
 	{
-		ContainerInterface::sendContainerMessageToClient(*player, Container::CEC_Full, safe_cast<ServerObject *>(destContainer.getObject ()));
+		ContainerInterface::sendContainerMessageToClient(*player, Container::CEC_Full, safe_cast<ServerObject *>(destContainer.getObject()));
 	}
 }
 
@@ -2844,8 +2833,8 @@ static void commandFuncFactoryCrateSplit(Command const &, NetworkId const &actor
 		return;
 
 	size_t pos = 0;
-	const int amount = nextIntParm(params,pos);
-	const CachedNetworkId destContainerId (nextOidParm(params,pos));
+	const int amount = nextIntParm(params, pos);
+	const CachedNetworkId destContainerId(nextOidParm(params, pos));
 	ServerObject * destContainer = safe_cast<ServerObject *>(destContainerId.getObject());
 	if (destContainer == nullptr || ContainerInterface::getVolumeContainer(*destContainer) == nullptr)
 	{
@@ -2873,9 +2862,9 @@ static void commandFuncPermissionListModify(Command const &, NetworkId const &ac
 	if (actorObj && actorObj->getClient())
 	{
 		size_t curpos = 0;
-		const Unicode::String & playerName = Unicode::narrowToWide(nextStringParm (params, curpos));
-		const Unicode::String & listName   = Unicode::narrowToWide(nextStringParm (params, curpos));
-		const Unicode::String & action     = Unicode::narrowToWide(nextStringParm (params, curpos));
+		const Unicode::String & playerName = Unicode::narrowToWide(nextStringParm(params, curpos));
+		const Unicode::String & listName = Unicode::narrowToWide(nextStringParm(params, curpos));
+		const Unicode::String & action = Unicode::narrowToWide(nextStringParm(params, curpos));
 
 		ScriptParams params;
 		params.addParam(actor);
@@ -2927,8 +2916,8 @@ static void commandFuncHarvesterGetResourceData(Command const &, NetworkId const
 //------------------------------------------------------------------------------------------
 static void commandFuncTransferItem(Command const &, NetworkId const &actor, NetworkId const &target, Unicode::String const & params)
 {
-	ServerObject * const item        = ServerWorld::findObjectByNetworkId(target);
-	ServerObject * const playerSo      = ServerWorld::findObjectByNetworkId(actor);
+	ServerObject * const item = ServerWorld::findObjectByNetworkId(target);
+	ServerObject * const playerSo = ServerWorld::findObjectByNetworkId(actor);
 
 	if (!playerSo || !item)
 	{
@@ -2945,7 +2934,7 @@ static void commandFuncTransferItem(Command const &, NetworkId const &actor, Net
 
 	size_t curpos = 0;
 	const NetworkId & destId = nextOidParm(params, curpos);
-	const int arrangement  = nextIntParm(params, curpos);
+	const int arrangement = nextIntParm(params, curpos);
 	const Vector & pos = nextVectorParm(params, curpos);
 	Transform t;
 	t.setPosition_p(pos);
@@ -2999,10 +2988,10 @@ static void commandFuncTransferItem(Command const &, NetworkId const &actor, Net
 
 	if (!canManipulateTarget)
 	{
-		if(errorCode == Container::CEC_NoPermission)
+		if (errorCode == Container::CEC_NoPermission)
 		{
 			Object * parentObject = ContainerInterface::getContainedByObject(*item);
-			if(parentObject && parentObject->asServerObject() && parentObject->asServerObject()->asTangibleObject()
+			if (parentObject && parentObject->asServerObject() && parentObject->asServerObject()->asTangibleObject()
 				&& parentObject->asServerObject()->asTangibleObject()->isLocked())
 			{
 				ContainerInterface::sendContainerMessageToClient(*player, errorCode, parentObject->asServerObject());
@@ -3015,50 +3004,48 @@ static void commandFuncTransferItem(Command const &, NetworkId const &actor, Net
 
 	//-- don't transfer from/to factory crates
 	{
-		if (destination && destination->getGameObjectType () == SharedObjectTemplate::GOT_misc_factory_crate)
+		if (destination && destination->getGameObjectType() == SharedObjectTemplate::GOT_misc_factory_crate)
 			return;
 
-		const ServerObject * const containedBy = safe_cast<const ServerObject *>(ContainerInterface::getContainedByObject (*item));
+		const ServerObject * const containedBy = safe_cast<const ServerObject *>(ContainerInterface::getContainedByObject(*item));
 
-		if (containedBy && containedBy->getGameObjectType () == SharedObjectTemplate::GOT_misc_factory_crate)
+		if (containedBy && containedBy->getGameObjectType() == SharedObjectTemplate::GOT_misc_factory_crate)
 			return;
 	}
 
 	// If our destination is a locked container, make sure we can access it.
 	bool lockedDestContainer = false;
 	{
-		if(destination && destination->asTangibleObject() && destination->asTangibleObject()->isLocked())
+		if (destination && destination->asTangibleObject() && destination->asTangibleObject()->isLocked())
 		{
 			lockedDestContainer = true;
 			TangibleObject * destTangible = destination->asTangibleObject();
-			if(!destTangible->isUserOnAccessList(player->getNetworkId()) && !destTangible->isGuildOnAccessList(player->getGuildId()) 
+			if (!destTangible->isUserOnAccessList(player->getNetworkId()) && !destTangible->isGuildOnAccessList(player->getGuildId())
 				&& player->getClient() && !player->getClient()->isGod())
 			{
 				ContainerInterface::sendContainerMessageToClient(*player, Container::CEC_NoPermission, destination);
 				return;
 			}
 		}
-
 	}
 
 	{
 		// No Drag and Drop while using Loot rules (especially random).
 		const ServerObject *  source = getFirstCreatureContainer(item);
 
-		if(source && source->asCreatureObject() && source->asCreatureObject()->isDead() && destination)
+		if (source && source->asCreatureObject() && source->asCreatureObject()->isDead() && destination)
 		{
 			const ServerObject* dest = getFirstCreatureContainer(destination);
-			if(dest && dest->asCreatureObject() && dest->asCreatureObject()->getGroup())
+			if (dest && dest->asCreatureObject() && dest->asCreatureObject()->getGroup())
 			{
 				int lootRule = dest->asCreatureObject()->getGroup()->getLootRule();
 				// Random/Lotto Loot Rule, no drag and drop allowed!
-				if(lootRule == 3 || lootRule == 2)
+				if (lootRule == 3 || lootRule == 2)
 				{
 					return;
 				}
 			}
 		}
-
 	}
 
 	if (!item->isAuthoritative())
@@ -3107,8 +3094,8 @@ static void commandFuncTransferItem(Command const &, NetworkId const &actor, Net
 		}
 
 		//Don't allow people to put things in unowned containers. Locked containers are allowed since they enforce their own list.
-		if (!destination->getObjVars().hasItem(OBJVAR_PLAYERS_CAN_ACCESS_CONTAINER) && !lockedDestContainer && 
-			player->getClient() && !player->getClient()->isGod() && 
+		if (!destination->getObjVars().hasItem(OBJVAR_PLAYERS_CAN_ACCESS_CONTAINER) && !lockedDestContainer &&
+			player->getClient() && !player->getClient()->isGod() &&
 			destination->getOwnerId() == NetworkId::cms_invalid)
 		{
 			errorCode = Container::CEC_NoPermission;
@@ -3143,32 +3130,31 @@ static void commandFuncTransferItem(Command const &, NetworkId const &actor, Net
 				{
 					int oldCap = volContainer->debugDoNotUseSetCapacity(allowedOverload);
 					retval = ContainerInterface::transferItemToVolumeContainer(*destination, *item, player, errorCode, true);
-					IGNORE_RETURN( volContainer->debugDoNotUseSetCapacity(oldCap) );
+					IGNORE_RETURN(volContainer->debugDoNotUseSetCapacity(oldCap));
 				}
 			}
 		}
 		else
 		{
 			const Object * destParent = ContainerInterface::getContainedByObject(*destination);
-			if(destParent && destParent == player->getAppearanceInventory())
+			if (destParent && destParent == player->getAppearanceInventory())
 			{
 				// Trying to transfer to a container currently in our Appearance inventory. Not allowed.
 				StringId const code("container_error_message", "container34_prose");
 
 				ProsePackage pp;
 				pp.stringId = code;
-				pp.actor.id        = player->getNetworkId ();
+				pp.actor.id = player->getNetworkId();
 
 				// Send to the player.
-				Chat::sendSystemMessage (*player, pp);
+				Chat::sendSystemMessage(*player, pp);
 
 				retval = false;
-
 			}
 			else if (destination == player->getAppearanceInventory() && ContainerInterface::getContainer(*item) != nullptr)
 			{
 				const Container * itemContainer = ContainerInterface::getContainer(*item);
-				if(itemContainer && itemContainer->getNumberOfItems() == 0)
+				if (itemContainer && itemContainer->getNumberOfItems() == 0)
 				{
 					retval = ContainerInterface::transferItemToUnknownContainer(*destination, *item, arrangement, t, player, errorCode);
 				}
@@ -3178,16 +3164,16 @@ static void commandFuncTransferItem(Command const &, NetworkId const &actor, Net
 
 					ProsePackage pp;
 					pp.stringId = code;
-					pp.actor.id        = player->getNetworkId ();
+					pp.actor.id = player->getNetworkId();
 
 					// Send to the player.
-					Chat::sendSystemMessage (*player, pp);
+					Chat::sendSystemMessage(*player, pp);
 				}
 			}
 			else
 			{
 				retval = ContainerInterface::transferItemToUnknownContainer(*destination, *item, arrangement, t, player, errorCode);
-				
+
 				// if we are equipping an object to a filled slot, move the equipped item(s) to our inventory
 				if (!retval && errorCode == Container::CEC_SlotOccupied && destination->getNetworkId() == player->getNetworkId())
 				{
@@ -3223,7 +3209,6 @@ static void commandFuncTransferItem(Command const &, NetworkId const &actor, Net
 								reequipItems(*destination, oldItems);
 								retval = false;
 							}
-
 						}
 						else
 						{
@@ -3239,14 +3224,14 @@ static void commandFuncTransferItem(Command const &, NetworkId const &actor, Net
 
 	if (!retval && player)
 	{
-		if(errorCode == Container::CEC_SlotOccupied && destination == player->getAppearanceInventory())
+		if (errorCode == Container::CEC_SlotOccupied && destination == player->getAppearanceInventory())
 		{
 			// Failed to place an object in our appearance inventory. Let's flush out some more information.
 			ServerObject * appearanceInv = player->getAppearanceInventory();
 			const SlottedContainer * equipment = ContainerInterface::getSlottedContainer(*appearanceInv);
 			const SlottedContainmentProperty * itemContainmentProperty = ContainerInterface::getSlottedContainmentProperty(*item);
 
-			if(!itemContainmentProperty || !equipment || arrangement < 0)
+			if (!itemContainmentProperty || !equipment || arrangement < 0)
 			{
 				// This should never happen, but if it does - just send our normal bland error message.
 				ContainerInterface::sendContainerMessageToClient(*player, errorCode);
@@ -3262,16 +3247,16 @@ static void commandFuncTransferItem(Command const &, NetworkId const &actor, Net
 				ServerObject * oldItem = safe_cast<ServerObject *>(currentWeaponId.getObject());
 				if (oldItem != nullptr)
 				{
-					if( std::find(objectsToSend.begin(), objectsToSend.end(), oldItem) == objectsToSend.end() )
+					if (std::find(objectsToSend.begin(), objectsToSend.end(), oldItem) == objectsToSend.end())
 						objectsToSend.push_back(oldItem);
 				}
 			}
-			
+
 			std::vector<ServerObject *>::iterator iter = objectsToSend.begin();
-			for(; iter != objectsToSend.end(); ++iter)
+			for (; iter != objectsToSend.end(); ++iter)
 			{
 				// No idea how this could happen, but just incase.
-				if((*iter) == nullptr)
+				if ((*iter) == nullptr)
 					continue;
 
 				StringId const code("container_error_message", "container32_prose");
@@ -3280,22 +3265,22 @@ static void commandFuncTransferItem(Command const &, NetworkId const &actor, Net
 				ProsePackage pp;
 				pp.stringId = code;
 
-				pp.target.id       = (*iter)->getNetworkId ();
-				pp.target.str      = (*iter)->getAssignedObjectName ();
-				if (pp.target.str.empty ())
-					pp.target.stringId = (*iter)->getObjectNameStringId ();
+				pp.target.id = (*iter)->getNetworkId();
+				pp.target.str = (*iter)->getAssignedObjectName();
+				if (pp.target.str.empty())
+					pp.target.stringId = (*iter)->getObjectNameStringId();
 
-				pp.other.id        = item->getNetworkId();
-				pp.other.str       = item->getAssignedObjectName();
+				pp.other.id = item->getNetworkId();
+				pp.other.str = item->getAssignedObjectName();
 				if (pp.other.str.empty())
 					pp.other.stringId = item->getObjectNameStringId();
 
-				pp.actor.id        = player->getNetworkId ();
+				pp.actor.id = player->getNetworkId();
 
 				// Send to the player.
-				Chat::sendSystemMessage (*player, pp);
+				Chat::sendSystemMessage(*player, pp);
 			}
-			
+
 			return;
 		}
 
@@ -3340,14 +3325,13 @@ static void commandFuncTransferWeapon(Command const & c, NetworkId const &actor,
 
 	size_t curpos = 0;
 	const NetworkId & destId = nextOidParm(params, curpos);
-	const int arrangement  = nextIntParm(params, curpos);
+	const int arrangement = nextIntParm(params, curpos);
 	UNREF(destId);
-	
+
 	if (item && actorObject && isGoingInWeaponSlot(*item, arrangement))
 	{
 		commandFuncTransferItem(c, actor, target, params);
 	}
-	
 }
 
 //------------------------------------------------------------------------------------------
@@ -3367,14 +3351,14 @@ void CommandCppFuncs::commandFuncTransferMisc(Command const & c, NetworkId const
 {
 	ServerObject * item = ServerWorld::findObjectByNetworkId(target);
 	CreatureObject * actorObject = safe_cast<CreatureObject*>(ServerWorld::findObjectByNetworkId(actor));
-	
+
 	size_t curpos = 0;
 	const NetworkId & destId = nextOidParm(params, curpos);
-	const int arrangement  = nextIntParm(params, curpos);
+	const int arrangement = nextIntParm(params, curpos);
 
 	//This command can only be used to transfer non-weapon objects not contained directly by the player unless it is not armor
 	if (item && actorObject && !isGoingInWeaponSlot(*item, arrangement) &&
-		( destId != actor || !GameObjectTypes::isTypeOf(item->getGameObjectType(), SharedObjectTemplate::GOT_armor)) )
+		(destId != actor || !GameObjectTypes::isTypeOf(item->getGameObjectType(), SharedObjectTemplate::GOT_armor)))
 	{
 		commandFuncTransferItem(c, actor, target, params);
 	}
@@ -3402,23 +3386,23 @@ static void commandFuncOpenContainer(Command const & cmd, NetworkId const &actor
 	}
 
 	//-- don't open factory crates
-	if (container->getGameObjectType () == SharedObjectTemplate::GOT_misc_factory_crate)
+	if (container->getGameObjectType() == SharedObjectTemplate::GOT_misc_factory_crate)
 		return;
 
 	//-- if they are opening a crafting station, what they really want is the hopper
 	//-- but only if the object is not a volume container
-	if (container->getGameObjectType () == SharedObjectTemplate::GOT_misc_crafting_station
-		&& (nullptr == ContainerInterface::getVolumeContainer (*container)))
-	{	
+	if (container->getGameObjectType() == SharedObjectTemplate::GOT_misc_crafting_station
+		&& (nullptr == ContainerInterface::getVolumeContainer(*container)))
+	{
 		static const SlotId inputHopperId(SlotIdManager::findSlotId(CrcLowerString("ingredient_hopper")));
 
 		ServerObject const * const station = container;
 		ServerObject * hopper = nullptr;
-		const SlottedContainer * stationContainer = ContainerInterface::getSlottedContainer (*station);
+		const SlottedContainer * stationContainer = ContainerInterface::getSlottedContainer(*station);
 		if (stationContainer != nullptr)
 		{
 			Container::ContainerErrorCode tmp = Container::CEC_Success;
-			Object* tmpHopperObj = (stationContainer->getObjectInSlot (inputHopperId, tmp)).getObject();
+			Object* tmpHopperObj = (stationContainer->getObjectInSlot(inputHopperId, tmp)).getObject();
 			if (tmp == Container::CEC_Success && tmpHopperObj)
 			{
 				hopper = tmpHopperObj->asServerObject();
@@ -3439,18 +3423,18 @@ static void commandFuncOpenContainer(Command const & cmd, NetworkId const &actor
 	size_t curpos = 0;
 
 	std::string slotName;
-	int sequence = nextIntParm    (params, curpos);
+	int sequence = nextIntParm(params, curpos);
 	if (curpos != std::string::npos)
 	{
 		++curpos;
-		slotName = nextStringParm (params, curpos);
+		slotName = nextStringParm(params, curpos);
 	}
 
 	if (container->isAuthoritative())
 	{
 		Container::ContainerErrorCode code = Container::CEC_Success;
 
-		bool const isPublicContainer = container->getGameObjectType () == SharedObjectTemplate::GOT_misc_container_public;
+		bool const isPublicContainer = container->getGameObjectType() == SharedObjectTemplate::GOT_misc_container_public;
 
 		if (isPublicContainer && player->getClient())
 			ObserveTracker::onClientAboutToOpenPublicContainer(*player->getClient(), *container);
@@ -3461,10 +3445,10 @@ static void commandFuncOpenContainer(Command const & cmd, NetworkId const &actor
 		if (player->canManipulateObject(*container, false, doPermissionCheckOnItem, doPermissionCheckOnParents, 6.0f, code))
 		{
 			// Additional check for Locked containers.
-			if(container->asTangibleObject() && container->asTangibleObject()->isLocked())
+			if (container->asTangibleObject() && container->asTangibleObject()->isLocked())
 			{
 				TangibleObject * tangibleTarget = container->asTangibleObject();
-				if(!tangibleTarget->isUserOnAccessList(player->getNetworkId()) && !tangibleTarget->isGuildOnAccessList(player->getGuildId()))
+				if (!tangibleTarget->isUserOnAccessList(player->getNetworkId()) && !tangibleTarget->isGuildOnAccessList(player->getGuildId()))
 				{
 					// Player is NOT on the admin list or guild list, they cannot open the container.
 					ContainerInterface::sendContainerMessageToClient(*player, Container::CEC_NoPermission, container);
@@ -3532,7 +3516,6 @@ static void commandFuncCloseContainer(Command const &, NetworkId const &actor, N
 		//@todo the player is trying to access a container not on this server.  Somehow get it here
 		//Then do the check
 	}
-
 }
 
 //------------------------------------------------------------------------------------------
@@ -3591,7 +3574,7 @@ static void commandFuncCloseLotteryContainer(Command const & cmd, NetworkId cons
 */
 static void commandFuncGiveItem(Command const &, NetworkId const &actor, NetworkId const &target, Unicode::String const & params)
 {
-	ServerObject * const item   = ServerWorld::findObjectByNetworkId(target);
+	ServerObject * const item = ServerWorld::findObjectByNetworkId(target);
 	ServerObject * const player = ServerWorld::findObjectByNetworkId(actor);
 	if (!player || !item)
 	{
@@ -3654,14 +3637,14 @@ static void commandFuncGiveItem(Command const &, NetworkId const &actor, Network
 		TangibleObject * const gem = dynamic_cast<TangibleObject *>(item);
 		if (gem != nullptr)
 		{
-			const int destGot                                      = socket->getGameObjectType();
+			const int destGot = socket->getGameObjectType();
 			const SharedTangibleObjectTemplate * const gemTemplate = safe_cast<const SharedTangibleObjectTemplate *>(gem->getSharedTemplate());
-			const int count                                        = gemTemplate->getSocketDestinationsCount();
+			const int count = gemTemplate->getSocketDestinationsCount();
 
 			for (int i = 0; i < count; ++i)
 			{
 				const int gemSocketGot = gemTemplate->getSocketDestinations(i);
-				if (destGot == gemSocketGot || GameObjectTypes::isTypeOf (destGot, gemSocketGot))
+				if (destGot == gemSocketGot || GameObjectTypes::isTypeOf(destGot, gemSocketGot))
 				{
 					// make sure the gem and socket are both in the player's inventory
 					if (!socket->isContainedBy(*player, true) ||
@@ -3706,14 +3689,13 @@ static void commandFuncGiveItem(Command const &, NetworkId const &actor, Network
 
 	// nope, pass it on to scripts
 	ScriptParams scriptParameters;
-	scriptParameters.addParam (target);
-	scriptParameters.addParam (actor);
+	scriptParameters.addParam(target);
+	scriptParameters.addParam(actor);
 
 	if (destination->getScriptObject()->trigAllScripts(Scripting::TRIG_GIVE_ITEM, scriptParameters) == SCRIPT_OVERRIDE)
 	{
 		item->permanentlyDestroy(DeleteReasons::BadContainerTransfer);
 	}
-
 }
 
 // ----------------------------------------------------------------------
@@ -3776,8 +3758,8 @@ static void commandFuncGroupInvite(Command const & command, NetworkId const &act
 
 	// send a messageTo to the target to invite to group
 	char buffer[1024];
-	snprintf(buffer, sizeof(buffer)-1, "%s|%s|%s|%s", actor.getValueString().c_str(), (actorShipObject ? actorShipObject->getNetworkId().getValueString().c_str() : "0"), (groupObj ? groupObj->getNetworkId().getValueString().c_str() : "0"), Unicode::wideToNarrow(actorObj->getAssignedObjectName()).c_str());
-	buffer[sizeof(buffer)-1] = '\0';
+	snprintf(buffer, sizeof(buffer) - 1, "%s|%s|%s|%s", actor.getValueString().c_str(), (actorShipObject ? actorShipObject->getNetworkId().getValueString().c_str() : "0"), (groupObj ? groupObj->getNetworkId().getValueString().c_str() : "0"), Unicode::wideToNarrow(actorObj->getAssignedObjectName()).c_str());
+	buffer[sizeof(buffer) - 1] = '\0';
 
 	MessageToQueue::getInstance().sendMessageToC(parsedNetworkId,
 		"C++InviteToGroupReq",
@@ -3823,8 +3805,8 @@ static void commandFuncGroupUninvite(Command const &, NetworkId const &actor, Ne
 
 	// send a messageTo to the target to uninvite
 	char buffer[1024];
-	snprintf(buffer, sizeof(buffer)-1, "%s|%s", actor.getValueString().c_str(), Unicode::wideToNarrow(actorObj->getAssignedObjectName()).c_str());
-	buffer[sizeof(buffer)-1] = '\0';
+	snprintf(buffer, sizeof(buffer) - 1, "%s|%s", actor.getValueString().c_str(), Unicode::wideToNarrow(actorObj->getAssignedObjectName()).c_str());
+	buffer[sizeof(buffer) - 1] = '\0';
 
 	MessageToQueue::getInstance().sendMessageToC(parsedNetworkId,
 		"C++UninviteFromGroupReq",
@@ -3944,10 +3926,10 @@ static void commandFuncGroupDisband(Command const &, NetworkId const &actor, Net
 					GroupObject::GroupMemberParamVector membersOutsidePOB;
 
 					GroupHelpers::separateGroupBasedOffofPOBShip(groupObj,
-																actor,
-																POBShipId,
-																membersInsidePOB,
-																membersOutsidePOB);
+						actor,
+						POBShipId,
+						membersInsidePOB,
+						membersOutsidePOB);
 
 					// if there are no members outside, then the group only consisted of
 					// the people in the POB.  If that's the case, then don't destroy the
@@ -4025,10 +4007,10 @@ static void commandFuncGroupDisband(Command const &, NetworkId const &actor, Net
 							NetworkId const & POBShipId = (*ii).m_memberShipId;
 
 							GroupHelpers::separateGroupBasedOffofPOBShip(groupObj,
-																		memberId,
-																		POBShipId,
-																		membersInsidePOB[memberId],
-																		membersOutsidePOB[memberId]);
+								memberId,
+								POBShipId,
+								membersInsidePOB[memberId],
+								membersOutsidePOB[memberId]);
 						}
 					}
 
@@ -4150,7 +4132,7 @@ static void commandFuncGroupDisband(Command const &, NetworkId const &actor, Net
 
 static void commandFuncKickFromShip(Command const &, NetworkId const & actor, NetworkId const & target, Unicode::String const &params)
 {
- 	CreatureObject const * const actorObject = dynamic_cast<CreatureObject*>(ServerWorld::findObjectByNetworkId(actor));
+	CreatureObject const * const actorObject = dynamic_cast<CreatureObject*>(ServerWorld::findObjectByNetworkId(actor));
 	if (actorObject != 0)
 	{
 		CreatureObject * const targetObject = dynamic_cast<CreatureObject*>(ServerWorld::findObjectByNetworkId(target));
@@ -4209,7 +4191,6 @@ static void commandFuncAuctionChat(Command const &, NetworkId const &actor, Netw
 
 		const std::string channelName = "SWG." + GameServer::getInstance().getClusterName() + "." + ServerWorld::getSceneId() + ".named.Auction";
 		Chat::sendToRoom(firstName, channelName, params, Unicode::String());
-
 	}
 }
 
@@ -4357,8 +4338,8 @@ static void commandFuncCreateGroupPickup(Command const &, NetworkId const &actor
 		if ((iterGroupMember->first != actor) && groupObj->isMemberPC(iterGroupMember->first))
 		{
 			char buffer[1024];
-			snprintf(buffer, sizeof(buffer)-1, "%s|%d|%d|%d|%s", currentScene.c_str(), static_cast<int>(currentWorldLocation.x), static_cast<int>(currentWorldLocation.y), static_cast<int>(currentWorldLocation.z), actorName.c_str());
-			buffer[sizeof(buffer)-1] = '\0';
+			snprintf(buffer, sizeof(buffer) - 1, "%s|%d|%d|%d|%s", currentScene.c_str(), static_cast<int>(currentWorldLocation.x), static_cast<int>(currentWorldLocation.y), static_cast<int>(currentWorldLocation.z), actorName.c_str());
+			buffer[sizeof(buffer) - 1] = '\0';
 
 			MessageToQueue::getInstance().sendMessageToC(iterGroupMember->first,
 				"C++GroupPickupPointCreated",
@@ -4558,7 +4539,7 @@ static void commandFuncUseGroupPickup(Command const &, NetworkId const &actor, N
 		return;
 	}
 
-	// if nearest travel point and current planet is the same, and the nearest travel point to the 
+	// if nearest travel point and current planet is the same, and the nearest travel point to the
 	// group pickup point is farther away than the current location to the group pickup point, then
 	// fail, as there is no need to travel as the player is currently closer to the group pickup point
 	if ((sceneIdOfNearestTravelPoint == currentScene) && (sceneIdOfNearestTravelPoint == groupPickupLocation.first) && (groupPickupLocation.second.magnitudeBetweenSquared(nearestTravelPoint->getPosition_w()) > groupPickupLocation.second.magnitudeBetweenSquared(currentWorldLocation)))
@@ -4613,8 +4594,8 @@ static void commandFuncUseGroupPickup(Command const &, NetworkId const &actor, N
 	if (cityHallAtNearestTravelPoint.isValid() && (cityShareOfCost > 0))
 	{
 		char buffer[64];
-		snprintf(buffer, sizeof(buffer)-1, "%d", cityShareOfCost);
-		buffer[sizeof(buffer)-1] = '\0';
+		snprintf(buffer, sizeof(buffer) - 1, "%d", cityShareOfCost);
+		buffer[sizeof(buffer) - 1] = '\0';
 
 		MessageToQueue::getInstance().sendMessageToC(cityHallAtNearestTravelPoint,
 			"C++CityShareGroupPickupPointTravelCost",
@@ -5247,37 +5228,37 @@ static void commandFuncShowMusicianVisuals(Command const &, NetworkId const &act
 
 // ----------------------------------------------------------------------
 
-static void commandFuncPlaceStructure (const Command& /*command*/, const NetworkId& actor, const NetworkId& /*target*/, const Unicode::String& parameters)
+static void commandFuncPlaceStructure(const Command& /*command*/, const NetworkId& actor, const NetworkId& /*target*/, const Unicode::String& parameters)
 {
-	Object* const object = NetworkIdManager::getObjectById (actor);
+	Object* const object = NetworkIdManager::getObjectById(actor);
 	if (!object)
 	{
-		DEBUG_WARNING (true, ("commandFuncPlaceStructure: PB nullptr actor\n"));
+		DEBUG_WARNING(true, ("commandFuncPlaceStructure: PB nullptr actor\n"));
 		return;
 	}
 
 	ServerObject* const serverObject = dynamic_cast<ServerObject*> (object);
 	if (!serverObject)
 	{
-		DEBUG_WARNING (true, ("commandFuncPlaceStructure: object is not a server object\n"));
+		DEBUG_WARNING(true, ("commandFuncPlaceStructure: object is not a server object\n"));
 		return;
 	}
 
 	size_t pos = 0;
-	const NetworkId deedNetworkId = nextOidParm (parameters, pos);
-	const float x = nextFloatParm (parameters, pos);
-	const float z = nextFloatParm (parameters, pos);
-	const Vector position (x, 0.f, z);
-	const int rotation = nextIntParm (parameters, pos);
+	const NetworkId deedNetworkId = nextOidParm(parameters, pos);
+	const float x = nextFloatParm(parameters, pos);
+	const float z = nextFloatParm(parameters, pos);
+	const Vector position(x, 0.f, z);
+	const int rotation = nextIntParm(parameters, pos);
 
 	ScriptParams scriptParameters;
-	scriptParameters.addParam (actor);
-	scriptParameters.addParam (deedNetworkId);
-	scriptParameters.addParam (position);
-	scriptParameters.addParam (rotation);
+	scriptParameters.addParam(actor);
+	scriptParameters.addParam(deedNetworkId);
+	scriptParameters.addParam(position);
+	scriptParameters.addParam(rotation);
 
-	if (serverObject->getScriptObject ()->trigAllScripts (Scripting::TRIG_PLACE_STRUCTURE, scriptParameters) != SCRIPT_CONTINUE)
-		DEBUG_REPORT_LOG (true, ("commandFuncPlaceStructure: did not return SCRIPT_CONTINUE\n"));
+	if (serverObject->getScriptObject()->trigAllScripts(Scripting::TRIG_PLACE_STRUCTURE, scriptParameters) != SCRIPT_CONTINUE)
+		DEBUG_REPORT_LOG(true, ("commandFuncPlaceStructure: did not return SCRIPT_CONTINUE\n"));
 }
 
 // ----------------------------------------------------------------------
@@ -5336,14 +5317,14 @@ static void commandFuncSitServer(const Command& /*command*/, const NetworkId& ac
 	if (!sittingOnChair)
 	{
 		// Trying to sit on the ground.
-		const TerrainObject* const     terrainObject     = TerrainObject::getConstInstance();
-		const CollisionProperty* const collisionProperty = actorObject->getCollisionProperty ();
-		const bool                     isOnSolidFloor    = collisionProperty && collisionProperty->getFootprint() && collisionProperty->getFootprint()->isOnSolidFloor();
+		const TerrainObject* const     terrainObject = TerrainObject::getConstInstance();
+		const CollisionProperty* const collisionProperty = actorObject->getCollisionProperty();
+		const bool                     isOnSolidFloor = collisionProperty && collisionProperty->getFootprint() && collisionProperty->getFootprint()->isOnSolidFloor();
 
 		Vector normal = Vector::unitY;
 		if (terrainObject && actorObject->isInWorldCell() && !isOnSolidFloor)
 		{
-			const Vector position = actorObject->getPosition_w ();
+			const Vector position = actorObject->getPosition_w();
 
 			float terrainHeight;
 			if (terrainObject->getHeight(position, terrainHeight, normal))
@@ -5352,10 +5333,10 @@ static void commandFuncSitServer(const Command& /*command*/, const NetworkId& ac
 				float waterHeight;
 				if (terrainObject->getWaterHeight(position, waterHeight))
 				{
-					if (waterHeight >terrainHeight)
+					if (waterHeight > terrainHeight)
 					{
 						// Client is in the water, abort the command.
-						Chat::sendSystemMessage (*creatureActorObject, SharedStringIds::no_sitting_in_water, Unicode::emptyString);
+						Chat::sendSystemMessage(*creatureActorObject, SharedStringIds::no_sitting_in_water, Unicode::emptyString);
 						return;
 					}
 				}
@@ -5382,7 +5363,6 @@ static void commandFuncSitServer(const Command& /*command*/, const NetworkId& ac
 		//-- Send a SitOnObject message with the chair coordinates.
 		const_cast<CreatureObject*>(creatureActorObject)->sitOnObject(chairCellId, chairPosition_p);
 	}
-
 }
 
 // ----------------------------------------------------------------------
@@ -5397,11 +5377,11 @@ static void commandFuncGetAttributes(Command const &, NetworkId const &actor, Ne
 
 // ----------------------------------------------------------------------
 
-static void commandFuncGetAttributesBatch(Command const &, NetworkId const &actor, NetworkId const & , Unicode::String const & params)
+static void commandFuncGetAttributesBatch(Command const &, NetworkId const &actor, NetworkId const &, Unicode::String const & params)
 {
 	size_t curpos = 0;
 	NetworkId obj = nextOidParm(params, curpos);
-	while(obj != NetworkId::cms_invalid)
+	while (obj != NetworkId::cms_invalid)
 	{
 		int const clientRevision = nextIntParm(params, curpos);
 		TaskGetAttributes * const task = new TaskGetAttributes(actor, obj, clientRevision);
@@ -5412,55 +5392,55 @@ static void commandFuncGetAttributesBatch(Command const &, NetworkId const &acto
 
 // ----------------------------------------------------------------------
 
-static std::string underscoreToSpace (const std::string& source)
+static std::string underscoreToSpace(const std::string& source)
 {
 	std::string result = source;
-	std::replace (result.begin (), result.end (), '_', ' ');
+	std::replace(result.begin(), result.end(), '_', ' ');
 
 	return result;
 }
 
 // ----------------------------------------------------------------------
 
-static void commandFuncPurchaseTicket (const Command& /*command*/, const NetworkId& actor, const NetworkId& /*target*/, const Unicode::String& parameters)
+static void commandFuncPurchaseTicket(const Command& /*command*/, const NetworkId& actor, const NetworkId& /*target*/, const Unicode::String& parameters)
 {
 	ServerObject* const serverObject = ServerObject::getServerObject(actor);
 	if (!serverObject)
 	{
-		DEBUG_WARNING (true, ("commandFuncPurchaseTicket: object is not a server object"));
+		DEBUG_WARNING(true, ("commandFuncPurchaseTicket: object is not a server object"));
 		return;
 	}
 
 	size_t pos = 0;
-	const Unicode::String planetName1  = Unicode::narrowToWide (nextStringParm (parameters, pos));
-	const Unicode::String travelPoint1 = Unicode::narrowToWide (underscoreToSpace (nextStringParm (parameters, pos)));
-	const Unicode::String planetName2  = Unicode::narrowToWide (nextStringParm (parameters, pos));
-	const Unicode::String travelPoint2 = Unicode::narrowToWide (underscoreToSpace (nextStringParm (parameters, pos)));
-	const bool roundTrip = nextBoolParm (parameters, pos);
-	const bool instantTravel = nextBoolParm (parameters, pos);
+	const Unicode::String planetName1 = Unicode::narrowToWide(nextStringParm(parameters, pos));
+	const Unicode::String travelPoint1 = Unicode::narrowToWide(underscoreToSpace(nextStringParm(parameters, pos)));
+	const Unicode::String planetName2 = Unicode::narrowToWide(nextStringParm(parameters, pos));
+	const Unicode::String travelPoint2 = Unicode::narrowToWide(underscoreToSpace(nextStringParm(parameters, pos)));
+	const bool roundTrip = nextBoolParm(parameters, pos);
+	const bool instantTravel = nextBoolParm(parameters, pos);
 
 	ScriptParams scriptParameters;
-	scriptParameters.addParam (actor);
-	scriptParameters.addParam (planetName1);
-	scriptParameters.addParam (travelPoint1);
-	scriptParameters.addParam (planetName2);
-	scriptParameters.addParam (travelPoint2);
-	scriptParameters.addParam (roundTrip);
+	scriptParameters.addParam(actor);
+	scriptParameters.addParam(planetName1);
+	scriptParameters.addParam(travelPoint1);
+	scriptParameters.addParam(planetName2);
+	scriptParameters.addParam(travelPoint2);
+	scriptParameters.addParam(roundTrip);
 
 	Scripting::TrigId id = instantTravel ? Scripting::TRIG_PURCHASE_TICKET_INSTANT_TRAVEL : Scripting::TRIG_PURCHASE_TICKET;
 
-	if (serverObject->getScriptObject ()->trigAllScripts (id, scriptParameters) != SCRIPT_CONTINUE)
-		DEBUG_REPORT_LOG (true, ("commandFuncPurchaseTicket: did not return SCRIPT_CONTINUE\n"));
+	if (serverObject->getScriptObject()->trigAllScripts(id, scriptParameters) != SCRIPT_CONTINUE)
+		DEBUG_REPORT_LOG(true, ("commandFuncPurchaseTicket: did not return SCRIPT_CONTINUE\n"));
 }
 
 //----------------------------------------------------------------------
 
-static void commandFuncRequestResourceWeights(const Command& , const NetworkId& actor, const NetworkId& , const Unicode::String& params)
+static void commandFuncRequestResourceWeights(const Command&, const NetworkId& actor, const NetworkId&, const Unicode::String& params)
 {
 	CreatureObject* const creature = CreatureObject::getCreatureObject(actor);
 	if (creature == nullptr)
 	{
-		WARNING (true, ("commandFuncRequestResourceWeights: PB nullptr actor"));
+		WARNING(true, ("commandFuncRequestResourceWeights: PB nullptr actor"));
 		return;
 	}
 
@@ -5471,12 +5451,12 @@ static void commandFuncRequestResourceWeights(const Command& , const NetworkId& 
 
 //----------------------------------------------------------------------
 
-static void commandFuncRequestResourceWeightsBatch(const Command& , const NetworkId& actor, const NetworkId& , const Unicode::String& params)
+static void commandFuncRequestResourceWeightsBatch(const Command&, const NetworkId& actor, const NetworkId&, const Unicode::String& params)
 {
-	CreatureObject* const creature = dynamic_cast<CreatureObject *>(NetworkIdManager::getObjectById (actor));
+	CreatureObject* const creature = dynamic_cast<CreatureObject *>(NetworkIdManager::getObjectById(actor));
 	if (creature == nullptr)
 	{
-		WARNING (true, ("commandFuncRequestResourceWeightsBatch: PB nullptr actor"));
+		WARNING(true, ("commandFuncRequestResourceWeightsBatch: PB nullptr actor"));
 		return;
 	}
 
@@ -5484,7 +5464,7 @@ static void commandFuncRequestResourceWeightsBatch(const Command& , const Networ
 
 	size_t curpos = 0;
 	schematicCrc = nextIntParm(params, curpos);
-	while(schematicCrc != -1)
+	while (schematicCrc != -1)
 	{
 		DraftSchematicObject::requestResourceWeights(*creature, static_cast<uint32>(schematicCrc));
 		schematicCrc = nextIntParm(params, curpos);
@@ -5493,19 +5473,19 @@ static void commandFuncRequestResourceWeightsBatch(const Command& , const Networ
 
 //----------------------------------------------------------------------
 
-static void commandFuncRequestDraftSlots (const Command& , const NetworkId& actor, const NetworkId& , const Unicode::String& params)
+static void commandFuncRequestDraftSlots(const Command&, const NetworkId& actor, const NetworkId&, const Unicode::String& params)
 {
 	CreatureObject* const creature = CreatureObject::getCreatureObject(actor);
 	if (creature == nullptr)
 	{
-		WARNING (true, ("commandFuncRequestDraftSlots: PB nullptr actor"));
+		WARNING(true, ("commandFuncRequestDraftSlots: PB nullptr actor"));
 		return;
 	}
 
 	PlayerObject * const player = PlayerCreatureController::getPlayerObject(creature);
 	if (player == nullptr)
 	{
-		WARNING (true, ("commandFuncRequestDraftSlots: no player object for actor ""%s", actor.getValueString().c_str()));
+		WARNING(true, ("commandFuncRequestDraftSlots: no player object for actor ""%s", actor.getValueString().c_str()));
 		return;
 	}
 
@@ -5515,26 +5495,26 @@ static void commandFuncRequestDraftSlots (const Command& , const NetworkId& acto
 	MessageQueueDraftSlotsQueryResponse * const message = new MessageQueueDraftSlotsQueryResponse(std::make_pair(serverCrc, sharedCrc));
 	if (!player->requestDraftSlots(serverCrc, nullptr, message))
 	{
-		WARNING (true, ("commandFuncRequestDraftSlots failed to request draft slots for %u", serverCrc));
+		WARNING(true, ("commandFuncRequestDraftSlots failed to request draft slots for %u", serverCrc));
 		delete message;
 	}
 }
 
 // ----------------------------------------------------------------------
 
-static void commandFuncRequestDraftSlotsBatch (const Command& , const NetworkId& actor, const NetworkId& , const Unicode::String& params)
+static void commandFuncRequestDraftSlotsBatch(const Command&, const NetworkId& actor, const NetworkId&, const Unicode::String& params)
 {
 	CreatureObject* const creature = CreatureObject::getCreatureObject(actor);
 	if (creature == nullptr)
 	{
-		WARNING (true, ("commandFuncRequestDraftSlotsBatch: PB nullptr actor"));
+		WARNING(true, ("commandFuncRequestDraftSlotsBatch: PB nullptr actor"));
 		return;
 	}
 
 	PlayerObject * const player = PlayerCreatureController::getPlayerObject(creature);
 	if (player == nullptr)
 	{
-		WARNING (true, ("commandFuncRequestDraftSlotsBatch: no player object for actor ""%s", actor.getValueString().c_str()));
+		WARNING(true, ("commandFuncRequestDraftSlotsBatch: no player object for actor ""%s", actor.getValueString().c_str()));
 		return;
 	}
 
@@ -5543,29 +5523,29 @@ static void commandFuncRequestDraftSlotsBatch (const Command& , const NetworkId&
 	size_t curpos = 0;
 
 	std::string serverCrcString = nextStringParm(params, curpos);
-	if(serverCrcString.empty())
+	if (serverCrcString.empty())
 		return;
 	sscanf(serverCrcString.c_str(), "%lu", &uServerCrc);
 	std::string sharedCrcString = nextStringParm(params, curpos);
-	if(sharedCrcString.empty())
+	if (sharedCrcString.empty())
 		return;
 	sscanf(sharedCrcString.c_str(), "%lu", &uSharedCrc);
 
 	bool done = false;
-	while(uServerCrc != 0 && uSharedCrc != 0 && !done)
+	while (uServerCrc != 0 && uSharedCrc != 0 && !done)
 	{
 		MessageQueueDraftSlotsQueryResponse * const message = new MessageQueueDraftSlotsQueryResponse(std::make_pair(uServerCrc, uSharedCrc));
 		if (!player->requestDraftSlots(uServerCrc, nullptr, message))
 		{
-			WARNING (true, ("commandFuncRequestDraftSlotsBatch failed to request draft slots for %lu", uServerCrc));
+			WARNING(true, ("commandFuncRequestDraftSlotsBatch failed to request draft slots for %lu", uServerCrc));
 			delete message;
 		}
 		serverCrcString = nextStringParm(params, curpos);
-		if(serverCrcString.empty())
+		if (serverCrcString.empty())
 			done = true;
 		sscanf(serverCrcString.c_str(), "%lu", &uServerCrc);
 		sharedCrcString = nextStringParm(params, curpos);
-		if(sharedCrcString.empty())
+		if (sharedCrcString.empty())
 			done = true;
 		sscanf(sharedCrcString.c_str(), "%lu", &uSharedCrc);
 	}
@@ -5573,12 +5553,12 @@ static void commandFuncRequestDraftSlotsBatch (const Command& , const NetworkId&
 
 // ----------------------------------------------------------------------
 
-static void commandFuncRequestManfSchematicSlots (const Command& , const NetworkId& actor, const NetworkId& target, const Unicode::String& params)
+static void commandFuncRequestManfSchematicSlots(const Command&, const NetworkId& actor, const NetworkId& target, const Unicode::String& params)
 {
 	CreatureObject* const creature = CreatureObject::getCreatureObject(actor);
 	if (creature == nullptr)
 	{
-		WARNING (true, ("commandFuncRequestDraftSlots: PB nullptr actor"));
+		WARNING(true, ("commandFuncRequestDraftSlots: PB nullptr actor"));
 		return;
 	}
 
@@ -5592,19 +5572,19 @@ static void commandFuncRequestManfSchematicSlots (const Command& , const Network
 
 // ----------------------------------------------------------------------
 
-static void commandFuncRequestCraftingSession (const Command& , const NetworkId& actor, const NetworkId& target, const Unicode::String& params)
+static void commandFuncRequestCraftingSession(const Command&, const NetworkId& actor, const NetworkId& target, const Unicode::String& params)
 {
 	CreatureObject* const creature = CreatureObject::getCreatureObject(actor);
 	if (creature == nullptr)
 	{
-		WARNING (true, ("commandFuncRequestCraftingSession: PB nullptr actor"));
+		WARNING(true, ("commandFuncRequestCraftingSession: PB nullptr actor"));
 		return;
 	}
 
 	PlayerObject * player = PlayerCreatureController::getPlayerObject(creature);
 	if (player == nullptr)
 	{
-		WARNING (true, ("commandFuncRequestCraftingSession: no player object for actor "
+		WARNING(true, ("commandFuncRequestCraftingSession: no player object for actor "
 			"%s", actor.getValueString().c_str()));
 		return;
 	}
@@ -5617,7 +5597,7 @@ static void commandFuncRequestCraftingSession (const Command& , const NetworkId&
 		// 1 means this request was made on a crafting station versus a crafting tool.
 		uint8 const sequenceId = static_cast<uint8>(craftingObject && craftingObject->isCraftingStation() ? 1 : 0);
 
-		MessageQueueGenericIntResponse * response = new MessageQueueGenericIntResponse (
+		MessageQueueGenericIntResponse * response = new MessageQueueGenericIntResponse(
 			CM_requestCraftingSession, false, sequenceId);
 		creature->getController()->appendMessage(CM_craftingResult, 0.0f, response,
 			GameControllerMessageFlags::SEND |
@@ -5645,19 +5625,19 @@ static void commandFuncRequestCraftingSessionFail(Command const &, NetworkId con
 
 // ----------------------------------------------------------------------
 
-static void commandFuncSelectDraftSchematic (const Command& , const NetworkId& actor, const NetworkId& , const Unicode::String& params)
+static void commandFuncSelectDraftSchematic(const Command&, const NetworkId& actor, const NetworkId&, const Unicode::String& params)
 {
 	CreatureObject* const creature = CreatureObject::getCreatureObject(actor);
 	if (creature == nullptr)
 	{
-		WARNING (true, ("commandFuncSelectDraftSchematic: PB nullptr actor"));
+		WARNING(true, ("commandFuncSelectDraftSchematic: PB nullptr actor"));
 		return;
 	}
 
 	PlayerObject * player = PlayerCreatureController::getPlayerObject(creature);
 	if (player == nullptr)
 	{
-		WARNING (true, ("commandFuncSelectDraftSchematic: no player object for actor "
+		WARNING(true, ("commandFuncSelectDraftSchematic: no player object for actor "
 			"%s", actor.getValueString().c_str()));
 		return;
 	}
@@ -5669,19 +5649,19 @@ static void commandFuncSelectDraftSchematic (const Command& , const NetworkId& a
 
 // ----------------------------------------------------------------------
 
-static void commandFuncNextCraftingStage(const Command& , const NetworkId& actor, const NetworkId& , const Unicode::String& params)
+static void commandFuncNextCraftingStage(const Command&, const NetworkId& actor, const NetworkId&, const Unicode::String& params)
 {
 	CreatureObject* const creature = CreatureObject::getCreatureObject(actor);
 	if (creature == nullptr)
 	{
-		WARNING (true, ("commandFuncNextCraftingStage: PB nullptr actor"));
+		WARNING(true, ("commandFuncNextCraftingStage: PB nullptr actor"));
 		return;
 	}
 
 	PlayerObject * player = PlayerCreatureController::getPlayerObject(creature);
 	if (player == nullptr)
 	{
-		WARNING (true, ("commandFuncNextCraftingStage: no player object for actor "
+		WARNING(true, ("commandFuncNextCraftingStage: no player object for actor "
 			"%s", actor.getValueString().c_str()));
 		return;
 	}
@@ -5689,7 +5669,7 @@ static void commandFuncNextCraftingStage(const Command& , const NetworkId& actor
 	uint8 sequenceId = static_cast<uint8>(atoi(Unicode::wideToNarrow(params).c_str()));
 	int result = player->goToNextCraftingStage();
 
-	MessageQueueGenericIntResponse * response = new MessageQueueGenericIntResponse (
+	MessageQueueGenericIntResponse * response = new MessageQueueGenericIntResponse(
 		CM_nextCraftingStage, result, sequenceId);
 	creature->getController()->appendMessage(CM_nextCraftingStageResult, 0.0f, response,
 		GameControllerMessageFlags::SEND |
@@ -5699,19 +5679,19 @@ static void commandFuncNextCraftingStage(const Command& , const NetworkId& actor
 
 // ----------------------------------------------------------------------
 
-static void commandFuncCreatePrototype(const Command& , const NetworkId& actor, const NetworkId& , const Unicode::String& params)
+static void commandFuncCreatePrototype(const Command&, const NetworkId& actor, const NetworkId&, const Unicode::String& params)
 {
 	CreatureObject* const creature = CreatureObject::getCreatureObject(actor);
 	if (creature == nullptr)
 	{
-		WARNING (true, ("commandFuncCreatePrototype: PB nullptr actor"));
+		WARNING(true, ("commandFuncCreatePrototype: PB nullptr actor"));
 		return;
 	}
 
 	PlayerObject * const player = PlayerCreatureController::getPlayerObject(creature);
 	if (player == nullptr)
 	{
-		WARNING (true, ("commandFuncCreatePrototype: no player object for actor %s", actor.getValueString().c_str()));
+		WARNING(true, ("commandFuncCreatePrototype: no player object for actor %s", actor.getValueString().c_str()));
 		return;
 	}
 
@@ -5721,7 +5701,7 @@ static void commandFuncCreatePrototype(const Command& , const NetworkId& actor, 
 
 	const bool result = player->createPrototype(realPrototype);
 
-	MessageQueueGenericIntResponse * const response = new MessageQueueGenericIntResponse (CM_createPrototype, result, sequenceId);
+	MessageQueueGenericIntResponse * const response = new MessageQueueGenericIntResponse(CM_createPrototype, result, sequenceId);
 	creature->getController()->appendMessage(CM_craftingResult, 0.0f, response,
 		GameControllerMessageFlags::SEND |
 		GameControllerMessageFlags::RELIABLE |
@@ -5733,19 +5713,19 @@ static void commandFuncCreatePrototype(const Command& , const NetworkId& actor, 
 
 // ----------------------------------------------------------------------
 
-static void commandFuncCreateManfSchematic(const Command& , const NetworkId& actor, const NetworkId& , const Unicode::String& params)
+static void commandFuncCreateManfSchematic(const Command&, const NetworkId& actor, const NetworkId&, const Unicode::String& params)
 {
 	CreatureObject* const creature = CreatureObject::getCreatureObject(actor);
 	if (creature == nullptr)
 	{
-		WARNING (true, ("commandFuncCreateManfSchematic: PB nullptr actor"));
+		WARNING(true, ("commandFuncCreateManfSchematic: PB nullptr actor"));
 		return;
 	}
 
 	PlayerObject * const player = PlayerCreatureController::getPlayerObject(creature);
 	if (player == nullptr)
 	{
-		WARNING (true, ("commandFuncCreateManfSchematic: no player object for actor %s", actor.getValueString().c_str()));
+		WARNING(true, ("commandFuncCreateManfSchematic: no player object for actor %s", actor.getValueString().c_str()));
 		return;
 	}
 
@@ -5753,7 +5733,7 @@ static void commandFuncCreateManfSchematic(const Command& , const NetworkId& act
 
 	const bool result = player->createManufacturingSchematic();
 
-	MessageQueueGenericIntResponse * const response = new MessageQueueGenericIntResponse (CM_createManfSchematic, result, sequenceId);
+	MessageQueueGenericIntResponse * const response = new MessageQueueGenericIntResponse(CM_createManfSchematic, result, sequenceId);
 	creature->getController()->appendMessage(CM_craftingResult, 0.0f, response,
 		GameControllerMessageFlags::SEND |
 		GameControllerMessageFlags::RELIABLE |
@@ -5765,19 +5745,19 @@ static void commandFuncCreateManfSchematic(const Command& , const NetworkId& act
 
 // ----------------------------------------------------------------------
 
-static void commandFuncCancelCraftingSession(const Command& , const NetworkId& actor, const NetworkId& , const Unicode::String& params)
+static void commandFuncCancelCraftingSession(const Command&, const NetworkId& actor, const NetworkId&, const Unicode::String& params)
 {
 	CreatureObject* const creature = CreatureObject::getCreatureObject(actor);
 	if (creature == nullptr)
 	{
-		WARNING (true, ("commandFuncCancelCraftingSession: PB nullptr actor"));
+		WARNING(true, ("commandFuncCancelCraftingSession: PB nullptr actor"));
 		return;
 	}
 
 	PlayerObject * player = PlayerCreatureController::getPlayerObject(creature);
 	if (player == nullptr)
 	{
-		WARNING (true, ("commandFuncCancelCraftingSession: no player object for actor "
+		WARNING(true, ("commandFuncCancelCraftingSession: no player object for actor "
 			"%s", actor.getValueString().c_str()));
 		return;
 	}
@@ -5787,19 +5767,19 @@ static void commandFuncCancelCraftingSession(const Command& , const NetworkId& a
 
 // ----------------------------------------------------------------------
 
-static void commandFuncStopCraftingSession(const Command& , const NetworkId& actor, const NetworkId& , const Unicode::String& params)
+static void commandFuncStopCraftingSession(const Command&, const NetworkId& actor, const NetworkId&, const Unicode::String& params)
 {
 	CreatureObject* const creature = CreatureObject::getCreatureObject(actor);
 	if (creature == nullptr)
 	{
-		WARNING (true, ("commandFuncStopCraftingSession: PB nullptr actor"));
+		WARNING(true, ("commandFuncStopCraftingSession: PB nullptr actor"));
 		return;
 	}
 
 	PlayerObject * player = PlayerCreatureController::getPlayerObject(creature);
 	if (player == nullptr)
 	{
-		WARNING (true, ("commandFuncStopCraftingSession: no player object for actor "
+		WARNING(true, ("commandFuncStopCraftingSession: no player object for actor "
 			"%s", actor.getValueString().c_str()));
 		return;
 	}
@@ -5809,19 +5789,19 @@ static void commandFuncStopCraftingSession(const Command& , const NetworkId& act
 
 // ----------------------------------------------------------------------
 
-static void commandFuncRestartCraftingSession(const Command& , const NetworkId& actor, const NetworkId& , const Unicode::String& params)
+static void commandFuncRestartCraftingSession(const Command&, const NetworkId& actor, const NetworkId&, const Unicode::String& params)
 {
 	CreatureObject* const creature = CreatureObject::getCreatureObject(actor);
 	if (creature == nullptr)
 	{
-		WARNING (true, ("commandFuncRestartCraftingSession: PB nullptr actor"));
+		WARNING(true, ("commandFuncRestartCraftingSession: PB nullptr actor"));
 		return;
 	}
 
 	PlayerObject * player = PlayerCreatureController::getPlayerObject(creature);
 	if (player == nullptr)
 	{
-		WARNING (true, ("commandFuncRestartCraftingSession: no player object for actor "
+		WARNING(true, ("commandFuncRestartCraftingSession: no player object for actor "
 			"%s", actor.getValueString().c_str()));
 		return;
 	}
@@ -5830,7 +5810,7 @@ static void commandFuncRestartCraftingSession(const Command& , const NetworkId& 
 
 	const bool success = player->restartCrafting();
 
-	MessageQueueGenericIntResponse * response = new MessageQueueGenericIntResponse (
+	MessageQueueGenericIntResponse * response = new MessageQueueGenericIntResponse(
 		CM_restartCraftingSession, success, sequenceId);
 	creature->getController()->appendMessage(CM_craftingResult, 0.0f, response,
 		GameControllerMessageFlags::SEND |
@@ -6018,18 +5998,18 @@ static void commandFuncSetBiography(Command const &, NetworkId const & actor, Ne
 		CreatureObject * const creatureActor = CreatureObject::getCreatureObject(actor);
 		if (!creatureActor)
 		{
-			WARNING (true, ("commandFuncSetBiography: bad actor"));
+			WARNING(true, ("commandFuncSetBiography: bad actor"));
 			return;
 		}
 
 		Client * const clientActor = creatureActor->getClient();
-		if(!clientActor)
+		if (!clientActor)
 		{
 			WARNING(true, ("no Client in commandFuncSetBiography"));
 			return;
 		}
 
-		if(!clientActor->isGod())
+		if (!clientActor->isGod())
 		{
 			LOG("CustomerService", ("CheatChannel:%s attempted to set biography data on %s, but is not a God", PlayerObject::getAccountDescription(actor).c_str(), PlayerObject::getAccountDescription(target).c_str()));
 		}
@@ -6051,13 +6031,13 @@ static void commandFuncRequestCharacterSheetInfo(Command const &, NetworkId cons
 	const CreatureObject* const creatureActor = CreatureObject::getCreatureObject(actor);
 	if (creatureActor == nullptr)
 	{
-		WARNING (true, ("commandFuncRequestCharacterSheetInfo: nullptr actor"));
+		WARNING(true, ("commandFuncRequestCharacterSheetInfo: nullptr actor"));
 		return;
 	}
 
 	//TODO get the born and played times (once they're in the DB)
-	int born                   = 0;
-	int played                 = 0;
+	int born = 0;
+	int played = 0;
 
 	//get the bind location
 	Vector bindLoc;
@@ -6067,12 +6047,12 @@ static void commandFuncRequestCharacterSheetInfo(Command const &, NetworkId cons
 	{
 		creatureActor->getObjVars().getItem("bind.facility", bindId);
 	}
-	if(bindId != NetworkId::cms_invalid)
+	if (bindId != NetworkId::cms_invalid)
 	{
 		const ServerObject* const bindObject = ServerObject::getServerObject(bindId);
 		if (bindObject != nullptr)
 		{
-			bindLoc    = bindObject->getPosition_w();
+			bindLoc = bindObject->getPosition_w();
 			bindPlanet = bindObject->getSceneId();
 		}
 	}
@@ -6124,7 +6104,7 @@ static void commandFuncRequestCharacterSheetInfo(Command const &, NetworkId cons
 	const ServerObject* const resObject = ServerObject::getServerObject(houseNetworkId);
 	if (resObject != nullptr)
 	{
-		resLoc    = resObject->getPosition_w();
+		resLoc = resObject->getPosition_w();
 		resPlanet = ServerWorld::getSceneId();
 	}
 	else if (houseNetworkId.isValid() && MessageToQueue::isInstalled())
@@ -6148,7 +6128,7 @@ static void commandFuncRequestCharacterSheetInfo(Command const &, NetworkId cons
 	int lots = creatureActor->getMaxNumberOfLots();
 
 	PlayerObject const * const player = PlayerCreatureController::getPlayerObject(creatureActor);
-	if(player)
+	if (player)
 	{
 		int lotsUsed = player->getAccountNumLots();
 		lots -= lotsUsed;
@@ -6183,21 +6163,21 @@ static void commandFuncExtractObject(Command const &, NetworkId const &actor, Ne
 	CreatureObject* const creature = CreatureObject::getCreatureObject(actor);
 	if (creature == nullptr)
 	{
-		WARNING (true, ("commandFuncExtractObject: PB nullptr actor"));
+		WARNING(true, ("commandFuncExtractObject: PB nullptr actor"));
 		return;
 	}
 
 	if (creature->getInventory() == nullptr)
 	{
-		WARNING (true, ("commandFuncExtractObject: actor %s has no inventory",
+		WARNING(true, ("commandFuncExtractObject: actor %s has no inventory",
 			actor.getValueString().c_str()));
 		return;
 	}
 
-	FactoryObject* const factory = dynamic_cast<FactoryObject *>(NetworkIdManager::getObjectById (target));
+	FactoryObject* const factory = dynamic_cast<FactoryObject *>(NetworkIdManager::getObjectById(target));
 	if (factory == nullptr)
 	{
-		WARNING (true, ("commandFuncExtractObject: PB nullptr target"));
+		WARNING(true, ("commandFuncExtractObject: PB nullptr target"));
 		return;
 	}
 
@@ -6215,22 +6195,22 @@ static void commandFuncRevokeSkill(Command const &, NetworkId const &actor, Netw
 	CreatureObject * const creature = CreatureObject::getCreatureObject(actor);
 	if (creature == nullptr)
 	{
-		WARNING (true, ("commandFuncRevokeSkill: PB nullptr actor"));
+		WARNING(true, ("commandFuncRevokeSkill: PB nullptr actor"));
 		return;
 	}
 
 	size_t pos = 0;
 	std::string skillName = nextStringParm(params, pos);
-	const SkillObject * skill = SkillManager::getInstance ().getSkill (skillName);
+	const SkillObject * skill = SkillManager::getInstance().getSkill(skillName);
 	if (skill == nullptr)
 	{
-		WARNING (true, ("commandFuncRevokeSkill: can't revoke bad skill"));
+		WARNING(true, ("commandFuncRevokeSkill: can't revoke bad skill"));
 	}
 	else
 	{
 		LOG("CustomerService", ("Skill: God (via cmdfunc) has requested the revocation of skill %s from character %s.",
 			skillName.c_str(), creature->getNetworkId().getValueString().c_str()));
-		creature->revokeSkill (*skill);
+		creature->revokeSkill(*skill);
 	}
 }
 
@@ -6358,8 +6338,8 @@ static void commandFuncSetCurrentSkillTitle(Command const &, NetworkId const &ac
 				{
 					SkillObject const *skillObject = (*iterSkillList);
 
-					if (   (skillObject != nullptr)
-							&& skillObject->isTitle()
+					if ((skillObject != nullptr)
+						&& skillObject->isTitle()
 						&& (skillObject->getSkillName() == title))
 					{
 						playerObject->setTitle(title);
@@ -6381,17 +6361,17 @@ static void commandFuncSetCurrentSkillTitle(Command const &, NetworkId const &ac
 
 static void commandFuncRepair(Command const &, NetworkId const &actor, NetworkId const & target, Unicode::String const &params)
 {
-	CreatureObject* const creature = dynamic_cast<CreatureObject *>(NetworkIdManager::getObjectById (actor));
+	CreatureObject* const creature = dynamic_cast<CreatureObject *>(NetworkIdManager::getObjectById(actor));
 	if (creature == nullptr)
 	{
-		WARNING (true, ("commandFuncRepair: PB nullptr actor"));
+		WARNING(true, ("commandFuncRepair: PB nullptr actor"));
 		return;
 	}
 
-	TangibleObject* const object = dynamic_cast<TangibleObject *>(NetworkIdManager::getObjectById (target));
+	TangibleObject* const object = dynamic_cast<TangibleObject *>(NetworkIdManager::getObjectById(target));
 	if (object == nullptr)
 	{
-		WARNING (true, ("commandFuncRepair: PB nullptr target"));
+		WARNING(true, ("commandFuncRepair: PB nullptr target"));
 		return;
 	}
 }
@@ -6466,7 +6446,6 @@ static void commandFuncToggleRolePlay(Command const &, NetworkId const &actor, N
 	}
 }
 
-
 // ----------------------------------------------------------------------
 
 static void commandFuncToggleOutOfCharacter(Command const &, NetworkId const &actor, NetworkId const & target, Unicode::String const &params)
@@ -6490,7 +6469,6 @@ static void commandFuncToggleLookingForWork(Command const &, NetworkId const &ac
 		playerObject->toggleLookingForWork();
 	}
 }
-
 
 // ----------------------------------------------------------------------
 
@@ -6564,14 +6542,14 @@ static void commandFuncReport(Command const &, NetworkId const &actor, NetworkId
 			Unicode::String const delimiter = Unicode::narrowToWide("|");
 
 			Unicode::UnicodeStringVector tokens;
-			if(Unicode::tokenize(params, tokens, &delimiter) && tokens.size() > 1)
+			if (Unicode::tokenize(params, tokens, &delimiter) && tokens.size() > 1)
 			{
 				harassingPlayerName = tokens[0];
 				Unicode::String rest;
 				uint32 numTokens = tokens.size();
-				for(uint32 i = 1; i < numTokens; ++i)
+				for (uint32 i = 1; i < numTokens; ++i)
 				{
-					if(i != 1)
+					if (i != 1)
 					{
 						rest.append(delimiter);
 					}
@@ -6588,7 +6566,6 @@ static void commandFuncReport(Command const &, NetworkId const &actor, NetworkId
 
 				Chat::sendSystemMessage(*reportingCreatureObject, StringId("system_msg", "report_no_name"), Unicode::emptyString);
 			}
-			
 
 			//if (Unicode::getFirstToken(name, curpos, endpos, harassingPlayerName))
 			//{
@@ -6639,7 +6616,7 @@ static void commandFuncNpcConversationStart(Command const &, NetworkId const &ac
 			return;
 		}
 	}
-	
+
 	std::string const & realParams = Unicode::wideToNarrow(params);
 	if (realParams.size() < 2)
 	{
@@ -6650,7 +6627,7 @@ static void commandFuncNpcConversationStart(Command const &, NetworkId const &ac
 	const char * const conversationName = &realParams[2];
 	NpcConversationData::ConversationStarter const starter = static_cast<NpcConversationData::ConversationStarter>(atoi(realParams.c_str()));
 
-	player->startNpcConversation (*npc, conversationName, starter, 0);
+	player->startNpcConversation(*npc, conversationName, starter, 0);
 }
 
 //----------------------------------------------------------------------
@@ -6658,7 +6635,7 @@ static void commandFuncNpcConversationStart(Command const &, NetworkId const &ac
 static void commandFuncNpcConversationStop(Command const &, NetworkId const &actor, NetworkId const & target, Unicode::String const &params)
 {
 	ServerObject * const actorObject = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(actor));
-	TangibleObject * const player = actorObject !=  nullptr ? actorObject->asTangibleObject(): nullptr;
+	TangibleObject * const player = actorObject != nullptr ? actorObject->asTangibleObject() : nullptr;
 	if (player == nullptr)
 	{
 		DEBUG_WARNING(true, ("commandFuncNpcConversationStop: couldn't find actor"));
@@ -6686,27 +6663,27 @@ static void commandFuncNpcConversationSelect(Command const &, NetworkId const &a
 
 //----------------------------------------------------------------------
 
-static void commandFuncServerDestroyObject (Command const &, NetworkId const & actor, NetworkId const & target, Unicode::String const & params)
+static void commandFuncServerDestroyObject(Command const &, NetworkId const & actor, NetworkId const & target, Unicode::String const & params)
 {
-	CreatureObject * const player = dynamic_cast<CreatureObject * const> (NetworkIdManager::getObjectById (actor));
+	CreatureObject * const player = dynamic_cast<CreatureObject * const> (NetworkIdManager::getObjectById(actor));
 	if (player == nullptr)
 	{
-		DEBUG_WARNING (true, ("commandFuncServerDestroyObject: couldn't find actor"));
+		DEBUG_WARNING(true, ("commandFuncServerDestroyObject: couldn't find actor"));
 		return;
 	}
 
-	ServerObject * const targetObject = safe_cast<ServerObject *>(NetworkIdManager::getObjectById (target));
+	ServerObject * const targetObject = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(target));
 	if (!targetObject)
 	{
 		PlayerObject * p = PlayerCreatureController::getPlayerObject(player);
-		if(p)
+		if (p)
 		{
 			p->destroyWaypoint(target);
 			return;
 		}
 		else
 		{
-			DEBUG_WARNING (true, ("commandFuncServerDestroyObject: couldn't find target"));
+			DEBUG_WARNING(true, ("commandFuncServerDestroyObject: couldn't find target"));
 			return;
 		}
 	}
@@ -6714,18 +6691,18 @@ static void commandFuncServerDestroyObject (Command const &, NetworkId const & a
 	ServerObject const * const topMost = getFirstParentInWorldOrPlayer(targetObject);
 	if (!topMost || topMost->getNetworkId() != actor)
 	{
-		DEBUG_WARNING (true, ("player tried to delete something not in their inventory"));
+		DEBUG_WARNING(true, ("player tried to delete something not in their inventory"));
 		return;
 	}
 
 	ProsePackage pp;
-	const bool sendResponse = !params.empty ();
+	const bool sendResponse = !params.empty();
 
-	int const got = targetObject->getGameObjectType ();
+	int const got = targetObject->getGameObjectType();
 	if (sendResponse)
 	{
-		ProsePackageManagerServer::createSimpleProsePackage (*targetObject, SharedStringIds::rsp_object_deleted_prose, pp);
-		pp.other.stringId = GameObjectTypes::getStringId (got);
+		ProsePackageManagerServer::createSimpleProsePackage(*targetObject, SharedStringIds::rsp_object_deleted_prose, pp);
+		pp.other.stringId = GameObjectTypes::getStringId(got);
 	}
 
 	// Cannot destroy an empty ship pcd while contained by a ship you own
@@ -6749,7 +6726,7 @@ static void commandFuncServerDestroyObject (Command const &, NetworkId const & a
 		return;
 
 	Object const * const currentContainer = ContainerInterface::getContainedByObject(*targetObject);
-	if(currentContainer && currentContainer->asServerObject() && ( currentContainer->asServerObject()->getGameObjectType() == SharedObjectTemplate::GOT_chronicles_quest_holocron || currentContainer->asServerObject()->getGameObjectType() == SharedObjectTemplate::GOT_chronicles_quest_holocron_recipe ) )
+	if (currentContainer && currentContainer->asServerObject() && (currentContainer->asServerObject()->getGameObjectType() == SharedObjectTemplate::GOT_chronicles_quest_holocron || currentContainer->asServerObject()->getGameObjectType() == SharedObjectTemplate::GOT_chronicles_quest_holocron_recipe))
 	{
 		// Give the player a warning here?
 		return;
@@ -6759,10 +6736,10 @@ static void commandFuncServerDestroyObject (Command const &, NetworkId const & a
 	{
 		LOG("CustomerService", ("Deletion:%s is deleting object %s", PlayerObject::getAccountDescription(actor).c_str(), ServerObject::getLogDescription(targetObject).c_str()));
 		if (sendResponse)
-			Chat::sendSystemMessage (*player, pp);
+			Chat::sendSystemMessage(*player, pp);
 	}
 	else
-		WARNING (true, ("commandFuncServerDestroyObject: Error encountered while deleting object %s", target.getValueString ().c_str ()));
+		WARNING(true, ("commandFuncServerDestroyObject: Error encountered while deleting object %s", target.getValueString().c_str()));
 }
 
 // ----------------------------------------------------------------------
@@ -6855,10 +6832,10 @@ static void commandFuncUnstick(Command const &, NetworkId const &actor, NetworkI
 static void commandFuncGetAccountInfo(Command const &, NetworkId const &actor, NetworkId const & target, Unicode::String const &params)
 {
 	const CreatureObject * gm = dynamic_cast<CreatureObject *>(NetworkIdManager::getObjectById(actor));
-	if(gm)
+	if (gm)
 	{
 		const Client * gmClient = gm->getClient();
-		if(gmClient)
+		if (gmClient)
 		{
 			bool foundAsPilot = false;
 			const CreatureObject * player = dynamic_cast<CreatureObject *>(NetworkIdManager::getObjectById(target));
@@ -6872,23 +6849,23 @@ static void commandFuncGetAccountInfo(Command const &, NetworkId const &actor, N
 				}
 			}
 			std::string result;
-			if(player)
+			if (player)
 			{
 				const Client * client = player->getClient();
-				if(client)
+				if (client)
 				{
 					if (foundAsPilot)
-						result =  "Pilot Character Name   : ";
+						result = "Pilot Character Name   : ";
 					else
-						result =  "Character Name         : ";
+						result = "Character Name         : ";
 
 					result += Unicode::wideToNarrow(player->getAssignedObjectName());
 					result += "\nAccount Name           : ";
 					result += client->getAccountName();
 					result += "\nStation Id             : ";
 					char buf[32];
-					IGNORE_RETURN(snprintf(buf, sizeof(buf)-1, "%d", client->getStationId()));
-					buf[sizeof(buf)-1] = '\0';
+					IGNORE_RETURN(snprintf(buf, sizeof(buf) - 1, "%d", client->getStationId()));
+					buf[sizeof(buf) - 1] = '\0';
 					result += buf;
 					result += "\nGame Features          : ";
 					result += ClientGameFeature::getDescription(client->getGameFeatures());
@@ -6916,7 +6893,7 @@ static void commandFuncGetAccountInfo(Command const &, NetworkId const &actor, N
 					result += "\nIP Address             : ";
 					result += client->getIpAddress();
 					result += "\nGod Mode               : ";
-					if(client->isGod())
+					if (client->isGod())
 						result += "true";
 					else
 						result += "false";
@@ -6938,28 +6915,28 @@ static void commandFuncGetAccountInfo(Command const &, NetworkId const &actor, N
 
 // ----------------------------------------------------------------------
 
-static void commandFuncApplyPowerup (Command const &, NetworkId const &actor, NetworkId const & target, Unicode::String const &params)
+static void commandFuncApplyPowerup(Command const &, NetworkId const &actor, NetworkId const & target, Unicode::String const &params)
 {
-	const NetworkId & powerupId     = target;
-	const NetworkId targetOfApplyId (Unicode::wideToNarrow (params));
-	ServerObject * const powerup = safe_cast<ServerObject *>(NetworkIdManager::getObjectById (powerupId));
+	const NetworkId & powerupId = target;
+	const NetworkId targetOfApplyId(Unicode::wideToNarrow(params));
+	ServerObject * const powerup = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(powerupId));
 	if (powerup)
 	{
-		const ServerObject * const targetOfApply = safe_cast<ServerObject *>(NetworkIdManager::getObjectById (targetOfApplyId));
+		const ServerObject * const targetOfApply = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(targetOfApplyId));
 
 		if (targetOfApply)
 		{
-			const int got_targetOfApply = targetOfApply->getGameObjectType ();
-			const int got_powerup       = powerup->getGameObjectType       ();
+			const int got_targetOfApply = targetOfApply->getGameObjectType();
+			const int got_powerup = powerup->getGameObjectType();
 
-			if (GameObjectTypes::doesPowerupApply (got_powerup, got_targetOfApply))
+			if (GameObjectTypes::doesPowerupApply(got_powerup, got_targetOfApply))
 			{
 				GameScriptObject * const gso = powerup->getScriptObject();
 				if (gso)
 				{
 					ScriptParams scriptParams;
-					scriptParams.addParam (actor);
-					scriptParams.addParam (targetOfApplyId);
+					scriptParams.addParam(actor);
+					scriptParams.addParam(targetOfApplyId);
 					gso->trigAllScripts(Scripting::TRIG_APPLY_POWERUP, scriptParams);
 				}
 			}
@@ -6969,20 +6946,20 @@ static void commandFuncApplyPowerup (Command const &, NetworkId const &actor, Ne
 
 // ----------------------------------------------------------------------
 
-static void commandFuncLag (Command const &, NetworkId const &actor, NetworkId const & target, Unicode::String const &params)
+static void commandFuncLag(Command const &, NetworkId const &actor, NetworkId const & target, Unicode::String const &params)
 {
 #if 0
 	ServerObject * a = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(actor));
 	ServerObject * t = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(target));
-	if(! t)
+	if (!t)
 	{
 		t = a;
 	}
-	if(t != 0)
+	if (t != 0)
 	{
-		if(t->getClient())
+		if (t->getClient())
 		{
-			if(a && a->getClient())
+			if (a && a->getClient())
 			{
 				GameNetworkMessage const request("LagRequest");
 				t->getClient()->send(request, true);
@@ -7001,7 +6978,7 @@ static void commandFuncLag (Command const &, NetworkId const &actor, NetworkId c
 
 // ----------------------------------------------------------------------
 
-static void commandExecuteKnowledgeBaseMessage (Command const &, NetworkId const &actor, NetworkId const & , Unicode::String const &params)
+static void commandExecuteKnowledgeBaseMessage(Command const &, NetworkId const &actor, NetworkId const &, Unicode::String const &params)
 {
 	UNREF(actor);
 	UNREF(params);
@@ -7030,7 +7007,7 @@ static void commandFuncSetPlayerAppearance(Command const &, NetworkId const &act
 	std::string  objectTemplateName;
 
 	bool    useTarget = false;
-	size_t  pos       = 0;
+	size_t  pos = 0;
 
 	do
 	{
@@ -7042,15 +7019,15 @@ static void commandFuncSetPlayerAppearance(Command const &, NetworkId const &act
 	} while (!token.empty());
 
 	//-- Log attempt.
-	NetworkId subjectNetworkId = useTarget ? target: actor;
+	NetworkId subjectNetworkId = useTarget ? target : actor;
 
-	LOG("setPlayerAppearance", 
+	LOG("setPlayerAppearance",
 		("commandFuncSetPlayerAppearance(): command called by actor id=[%s]: attempting to change appearance for player id=[%s], using appearance info from object template=[%s], subject=[%s]",
-		actor.getValueString().c_str(),
-		subjectNetworkId.getValueString().c_str(),
-		objectTemplateName.c_str(),
-		useTarget ? "target" : "self"
-		));
+			actor.getValueString().c_str(),
+			subjectNetworkId.getValueString().c_str(),
+			objectTemplateName.c_str(),
+			useTarget ? "target" : "self"
+			));
 
 	//-- Validate parameters.
 	if (subjectNetworkId == NetworkId::cms_invalid)
@@ -7076,11 +7053,11 @@ static void commandFuncSetPlayerAppearance(Command const &, NetworkId const &act
 		// Ensure non-default object template name refers to an existing file.
 		if (!TreeFile::exists(objectTemplateName.c_str()))
 		{
-			WARNING(true, 
+			WARNING(true,
 				("commandFuncSetPlayerAppearance(): could not change id=[%s] to non-default object template name=[%s]: object template does not exist",
-				subjectNetworkId.getValueString().c_str(),
-				objectTemplateName.c_str()
-				));
+					subjectNetworkId.getValueString().c_str(),
+					objectTemplateName.c_str()
+					));
 			return;
 		}
 	}
@@ -7104,7 +7081,7 @@ static void commandFuncRevertPlayerAppearance(Command const &, NetworkId const &
 	std::string  objectTemplateName;
 
 	bool    useTarget = false;
-	size_t  pos       = 0;
+	size_t  pos = 0;
 
 	do
 	{
@@ -7116,15 +7093,15 @@ static void commandFuncRevertPlayerAppearance(Command const &, NetworkId const &
 	} while (!token.empty());
 
 	//-- Log attempt.
-	NetworkId subjectNetworkId = useTarget ? target: actor;
+	NetworkId subjectNetworkId = useTarget ? target : actor;
 
-	LOG("setPlayerAppearance", 
+	LOG("setPlayerAppearance",
 		("commandFuncRevertPlayerAppearance(): command called by actor id=[%s]: attempting to change appearance for player id=[%s], using appearance info from object template=[%s], subject=[%s]",
-		actor.getValueString().c_str(),
-		subjectNetworkId.getValueString().c_str(),
-		objectTemplateName.c_str(),
-		useTarget ? "target" : "self"
-		));
+			actor.getValueString().c_str(),
+			subjectNetworkId.getValueString().c_str(),
+			objectTemplateName.c_str(),
+			useTarget ? "target" : "self"
+			));
 
 	//-- Validate parameters.
 	if (subjectNetworkId == NetworkId::cms_invalid)
@@ -7155,7 +7132,7 @@ static void commandFuncRevertPlayerAppearance(Command const &, NetworkId const &
 
 //-----------------------------------------------------------------------
 
-static void commandFuncReconnectToTransferServer(Command const &, NetworkId const &, NetworkId const & , Unicode::String const &)
+static void commandFuncReconnectToTransferServer(Command const &, NetworkId const &, NetworkId const &, Unicode::String const &)
 {
 	GameNetworkMessage const msg("ReconnectToTransferServer");
 	GameServer::getInstance().sendToCentralServer(msg);
@@ -7163,17 +7140,17 @@ static void commandFuncReconnectToTransferServer(Command const &, NetworkId cons
 
 //-----------------------------------------------------------------------
 
-static void commandFuncFindFriend(Command const &, NetworkId const &actor, NetworkId const & , Unicode::String const &params)
+static void commandFuncFindFriend(Command const &, NetworkId const &actor, NetworkId const &, Unicode::String const &params)
 {
 	ServerObject * a = safe_cast<CreatureObject *>(NetworkIdManager::getObjectById(actor));
-	if(a && a->getClient())
+	if (a && a->getClient())
 	{
 		size_t pos = 0;
-		const std::string playerName = nextStringParm (params, pos);
+		const std::string playerName = nextStringParm(params, pos);
 		CreatureObject * creatureObject = a->asCreatureObject();
-		if(creatureObject)
+		if (creatureObject)
 		{
-			if(! playerName.empty())
+			if (!playerName.empty())
 			{
 				// break the name down into its subcomponents
 				ChatAvatarId const cav(NameManager::normalizeName(playerName));
@@ -7190,7 +7167,7 @@ static void commandFuncFindFriend(Command const &, NetworkId const &actor, Netwo
 				else
 				{
 					PlayerObject * playerObject = PlayerCreatureController::getPlayerObject(creatureObject);
-					if(playerObject)
+					if (playerObject)
 					{
 						playerObject->findFriend(cav.name);
 					}
@@ -7200,7 +7177,7 @@ static void commandFuncFindFriend(Command const &, NetworkId const &actor, Netwo
 			{
 				// playerName is empty, send an error to requesting client
 				StringId stringId = StringId("ui_cmnty", "friend_location_failed_usage");
-				Chat::sendSystemMessage(*creatureObject, stringId, Unicode::emptyString);			
+				Chat::sendSystemMessage(*creatureObject, stringId, Unicode::emptyString);
 			}
 		}
 	}
@@ -7213,87 +7190,87 @@ static void commandFuncFormCommand(Command const &, NetworkId const & actor, Net
 	UNREF(target);
 
 	Unicode::UnicodeStringVector tokens;
-	IGNORE_RETURN(Unicode::tokenize (params, tokens));
+	IGNORE_RETURN(Unicode::tokenize(params, tokens));
 
-	if(tokens.size() == 0)
+	if (tokens.size() == 0)
 		return;
 
 	std::string const commandStr = Unicode::wideToNarrow(tokens[0]);
 	FormManager::Command const command = static_cast<FormManager::Command>(atoi(commandStr.c_str()));
 
-	switch(command)
+	switch (command)
 	{
-		case FormManager::CREATE_OBJECT:
+	case FormManager::CREATE_OBJECT:
+	{
+		if (tokens.size() < 5)
+			return;
+
+		std::string const templateName = Unicode::wideToNarrow(tokens[1]);
+
+		std::string const & xStr = Unicode::wideToNarrow(tokens[2]);
+		std::string const & yStr = Unicode::wideToNarrow(tokens[3]);
+		std::string const & zStr = Unicode::wideToNarrow(tokens[4]);
+		std::string const & cellStr = Unicode::wideToNarrow(tokens[5]);
+		NetworkId const cellId(cellStr);
+
+		float const x = static_cast<float>(atof(xStr.c_str()));
+		float const y = static_cast<float>(atof(yStr.c_str()));
+		float const z = static_cast<float>(atof(zStr.c_str()));
+
+		//we must have an odd number of tokens left (so that the datamap has a full key->value mapping)
+		if (tokens.size() % 2 != 0)
+			return;
+
+		//TODO centralize pack/unpack
+		FormManager::UnpackedFormData dataMap;
+		std::vector<std::string> values;
+		for (int i = 6; i < static_cast<int>(tokens.size()) - 1; i += 2)
 		{
-			if(tokens.size() < 5)
-				return;
-
-			std::string const templateName = Unicode::wideToNarrow(tokens[1]);
-
-			std::string const & xStr = Unicode::wideToNarrow(tokens[2]);
-			std::string const & yStr = Unicode::wideToNarrow(tokens[3]);
-			std::string const & zStr = Unicode::wideToNarrow(tokens[4]);
-			std::string const & cellStr = Unicode::wideToNarrow(tokens[5]);
-			NetworkId const cellId(cellStr);
-
-			float const x = static_cast<float>(atof(xStr.c_str()));
-			float const y = static_cast<float>(atof(yStr.c_str()));
-			float const z = static_cast<float>(atof(zStr.c_str()));
-
-			//we must have an odd number of tokens left (so that the datamap has a full key->value mapping)
-			if(tokens.size() % 2 != 0)
-				return;
-
-			//TODO centralize pack/unpack
-			FormManager::UnpackedFormData dataMap;
-			std::vector<std::string> values;
-			for(int i = 6; i < static_cast<int>(tokens.size()) - 1; i += 2)
-			{
-				std::string const & key   = Unicode::wideToNarrow(tokens[static_cast<size_t>(i)]);
-				std::string const & value = Unicode::wideToNarrow(tokens[static_cast<size_t>(i + 1)]);
-				values.clear();
-				values.push_back(value);
-				dataMap[key] = values;
-			}
-
-			FormManagerServer::handleCreateObjectData(actor, templateName, Vector(x, y, z), cellId, dataMap);
-			break;
+			std::string const & key = Unicode::wideToNarrow(tokens[static_cast<size_t>(i)]);
+			std::string const & value = Unicode::wideToNarrow(tokens[static_cast<size_t>(i + 1)]);
+			values.clear();
+			values.push_back(value);
+			dataMap[key] = values;
 		}
 
-		case FormManager::EDIT_OBJECT:
+		FormManagerServer::handleCreateObjectData(actor, templateName, Vector(x, y, z), cellId, dataMap);
+		break;
+	}
+
+	case FormManager::EDIT_OBJECT:
+	{
+		if (tokens.size() < 1)
+			return;
+
+		//we must have an even number of tokens left (so that the datamap has a full key->value mapping)
+		if (tokens.size() % 2 != 1)
+			return;
+
+		//TODO centralize pack/unpack
+		FormManager::UnpackedFormData dataMap;
+		std::vector<std::string> values;
+		for (int i = 1; i < static_cast<int>(tokens.size()) - 1; i += 2)
 		{
-			if(tokens.size() < 1)
-				return;
-
-			//we must have an even number of tokens left (so that the datamap has a full key->value mapping)
-			if(tokens.size() % 2 != 1)
-				return;
-
-			//TODO centralize pack/unpack
-			FormManager::UnpackedFormData dataMap;
-			std::vector<std::string> values;
-			for(int i = 1; i < static_cast<int>(tokens.size()) - 1; i += 2)
-			{
-				std::string const & key   = Unicode::wideToNarrow(tokens[static_cast<size_t>(i)]);
-				std::string const & value = Unicode::wideToNarrow(tokens[static_cast<size_t>(i + 1)]);
-				values.clear();
-				values.push_back(value);
-				dataMap[key] = values;
-			}
-			
-			FormManagerServer::handleEditObjectData(actor, target, dataMap);
-			break;
+			std::string const & key = Unicode::wideToNarrow(tokens[static_cast<size_t>(i)]);
+			std::string const & value = Unicode::wideToNarrow(tokens[static_cast<size_t>(i + 1)]);
+			values.clear();
+			values.push_back(value);
+			dataMap[key] = values;
 		}
 
-		case FormManager::REQUEST_EDIT_OBJECT:
-		{
-			FormManagerServer::requestEditObjectDataForClient(actor, target);
-			break;
-		}
+		FormManagerServer::handleEditObjectData(actor, target, dataMap);
+		break;
+	}
 
-		default:
-			DEBUG_FATAL(true, ("Unknown command in commandFuncFormCommand"));
-			break;
+	case FormManager::REQUEST_EDIT_OBJECT:
+	{
+		FormManagerServer::requestEditObjectDataForClient(actor, target);
+		break;
+	}
+
+	default:
+		DEBUG_FATAL(true, ("Unknown command in commandFuncFormCommand"));
+		break;
 	}
 }
 
@@ -7302,25 +7279,25 @@ static void commandFuncFormCommand(Command const &, NetworkId const & actor, Net
 static void commandFuncInstallShipComponents(Command const &, NetworkId const & actor, NetworkId const & target, Unicode::String const & params)
 {
 	//params for installShipComponent are "<shipId> <slotnumber> <objId>"
-	
+
 	Object const * const actorObj = NetworkIdManager::getObjectById(actor);
 	ServerObject const * const actorServerObj = actorObj ? actorObj->asServerObject() : nullptr;
 	CreatureObject const * const actorCreature = actorServerObj ? actorServerObj->asCreatureObject() : nullptr;
-	if(!actorCreature)
+	if (!actorCreature)
 	{
 		return;
 	}
 
 	//they must be near a space terminal (if not a god)
 	Client const * const client = actorCreature->getClient();
-	if(!client)
+	if (!client)
 		return;
-	if(!client->isGod())
+	if (!client->isGod())
 	{
 		Object * const targetObj = NetworkIdManager::getObjectById(target);
 		ServerObject * const targetServerObj = targetObj ? targetObj->asServerObject() : nullptr;
-		if( !targetServerObj || ((targetServerObj->getGameObjectType() != SharedObjectTemplate::GOT_terminal_space) &&
-			                     (targetServerObj->getGameObjectType() != SharedObjectTemplate::GOT_terminal_space_npe)) )
+		if (!targetServerObj || ((targetServerObj->getGameObjectType() != SharedObjectTemplate::GOT_terminal_space) &&
+			(targetServerObj->getGameObjectType() != SharedObjectTemplate::GOT_terminal_space_npe)))
 			return;
 	}
 	else
@@ -7333,7 +7310,7 @@ static void commandFuncInstallShipComponents(Command const &, NetworkId const & 
 	Object * const shipObj = NetworkIdManager::getObjectById(shipId);
 	ServerObject * const shipServerObj = shipObj ? shipObj->asServerObject() : nullptr;
 	ShipObject * const ship = shipServerObj ? shipServerObj->asShipObject() : nullptr;
-	if(!ship)
+	if (!ship)
 		return;
 
 	ShipChassisSlotType::Type const slotType = static_cast<ShipChassisSlotType::Type const>(nextIntParm(params, pos));
@@ -7341,7 +7318,7 @@ static void commandFuncInstallShipComponents(Command const &, NetworkId const & 
 	Object * const componentObj = NetworkIdManager::getObjectById(componentId);
 	ServerObject * const componentServerObj = componentObj ? componentObj->asServerObject() : nullptr;
 	TangibleObject * const component = componentServerObj ? componentServerObj->asTangibleObject() : nullptr;
-	if(!component)
+	if (!component)
 	{
 		return;
 	}
@@ -7363,14 +7340,14 @@ static void commandFuncInstallShipComponents(Command const &, NetworkId const & 
 		if (containedByObject)
 		{
 			SlottedContainer const * const slottedContainer = ContainerInterface::getSlottedContainer(*containedByObject);
-			if(slottedContainer)
+			if (slottedContainer)
 			{
 				SlotId const & slotId = slottedContainer->findFirstSlotIdForObject(component->getNetworkId());
-				if(slotId != SlotId::invalid)
+				if (slotId != SlotId::invalid)
 				{
-					if(!ContainerInterface::canPlayerManipulateSlot(slotId))
+					if (!ContainerInterface::canPlayerManipulateSlot(slotId))
 					{
-						StringId cantManipulateId("player_utility", "cannot_manipulate_slot");		
+						StringId cantManipulateId("player_utility", "cannot_manipulate_slot");
 						Chat::sendSystemMessage(*actorCreature, cantManipulateId, Unicode::emptyString);
 						return;
 					}
@@ -7391,23 +7368,23 @@ static void commandFuncUninstallShipComponents(Command const &, NetworkId const 
 	Object * const actorObj = NetworkIdManager::getObjectById(actor);
 	ServerObject * const actorServerObj = actorObj ? actorObj->asServerObject() : nullptr;
 	CreatureObject * const actorCreature = actorServerObj ? actorServerObj->asCreatureObject() : nullptr;
-	if(!actorCreature)
+	if (!actorCreature)
 		return;
 	ServerObject * const actorInv = actorCreature->getInventory();
-	if(!actorInv)
+	if (!actorInv)
 		return;
 
 	//they must be near a space terminal (if not a god)
 	Client const * const client = actorCreature->getClient();
-	if(!client)
+	if (!client)
 		return;
-	if(!client->isGod())
+	if (!client->isGod())
 	{
 		Object * const targetObj = NetworkIdManager::getObjectById(target);
 		ServerObject * const targetServerObj = targetObj ? targetObj->asServerObject() : nullptr;
-		if(!targetServerObj ||
-			 ((targetServerObj->getGameObjectType() != SharedObjectTemplate::GOT_terminal_space)
-			   && (targetServerObj->getGameObjectType() != SharedObjectTemplate::GOT_terminal_space_npe)) )
+		if (!targetServerObj ||
+			((targetServerObj->getGameObjectType() != SharedObjectTemplate::GOT_terminal_space)
+				&& (targetServerObj->getGameObjectType() != SharedObjectTemplate::GOT_terminal_space_npe)))
 			return;
 	}
 	else
@@ -7416,13 +7393,13 @@ static void commandFuncUninstallShipComponents(Command const &, NetworkId const 
 	}
 
 	ServerObject const * const actorInventoryObject = actorCreature->getInventory();
-	if(!actorInventoryObject)
+	if (!actorInventoryObject)
 	{
 		Chat::sendSystemMessage(*actorCreature, SharedStringIds::shipcomponentinstall_noinventory, Unicode::emptyString);
 		return;
 	}
 	VolumeContainer const * const inventoryContainer = ContainerInterface::getVolumeContainer(*actorInventoryObject);
-	if(!inventoryContainer)
+	if (!inventoryContainer)
 	{
 		Chat::sendSystemMessage(*actorCreature, SharedStringIds::shipcomponentinstall_noinventorycontainer, Unicode::emptyString);
 		return;
@@ -7438,14 +7415,13 @@ static void commandFuncUninstallShipComponents(Command const &, NetworkId const 
 	Object * const shipObj = NetworkIdManager::getObjectById(shipId);
 	ServerObject * const shipServerObj = shipObj ? shipObj->asServerObject() : nullptr;
 	ShipObject * const ship = shipServerObj ? shipServerObj->asShipObject() : nullptr;
-	if(!ship)
+	if (!ship)
 		return;
 
 	ShipChassisSlotType::Type const slotType = static_cast<ShipChassisSlotType::Type const>(nextIntParm(params, pos));
 
 	IGNORE_RETURN(ship->uninstallComponent(actor, slotType, *actorInv));
 }
-
 
 // ----------------------------------------------------------------------
 
@@ -7456,19 +7432,19 @@ static void commandFuncInsertItemIntoShipComponentSlot(Command const &, NetworkI
 	Object * const actorObj = NetworkIdManager::getObjectById(actor);
 	ServerObject * const actorServerObj = actorObj ? actorObj->asServerObject() : nullptr;
 	CreatureObject * const actorCreature = actorServerObj ? actorServerObj->asCreatureObject() : nullptr;
-	if(!actorCreature)
+	if (!actorCreature)
 		return;
 
 	//they must be near a space terminal (if not a god)
 	Client const * const client = actorCreature->getClient();
-	if(!client)
+	if (!client)
 		return;
-	if(!client->isGod())
+	if (!client->isGod())
 	{
 		Object * const targetObj = NetworkIdManager::getObjectById(target);
 		ServerObject * const targetServerObj = targetObj ? targetObj->asServerObject() : nullptr;
-		if(!targetServerObj || ((targetServerObj->getGameObjectType() != SharedObjectTemplate::GOT_terminal_space) &&
-			                    (targetServerObj->getGameObjectType() != SharedObjectTemplate::GOT_terminal_space_npe)) )
+		if (!targetServerObj || ((targetServerObj->getGameObjectType() != SharedObjectTemplate::GOT_terminal_space) &&
+			(targetServerObj->getGameObjectType() != SharedObjectTemplate::GOT_terminal_space_npe)))
 			return;
 	}
 	else
@@ -7481,12 +7457,12 @@ static void commandFuncInsertItemIntoShipComponentSlot(Command const &, NetworkI
 	Object * const shipObj = NetworkIdManager::getObjectById(shipId);
 	ServerObject * const shipServerObj = shipObj ? shipObj->asServerObject() : nullptr;
 	ShipObject * const ship = shipServerObj ? shipServerObj->asShipObject() : nullptr;
-	if(!ship)
+	if (!ship)
 		return;
 
 	ShipChassisSlotType::Type const slotType = static_cast<ShipChassisSlotType::Type const>(nextIntParm(params, pos));
 
-	if(!ship->isSlotInstalled(slotType))
+	if (!ship->isSlotInstalled(slotType))
 		return;
 
 	NetworkId const componentId = nextOidParm(params, pos);
@@ -7514,14 +7490,14 @@ static void commandFuncAssociateDroidControlDeviceWithShip(Command const &, Netw
 
 	//they must be near a space terminal (if not a god)
 	Client const * const client = actorCreature->getClient();
-	if(!client)
+	if (!client)
 		return;
-	if(!client->isGod())
+	if (!client->isGod())
 	{
 		Object * const targetObj = NetworkIdManager::getObjectById(target);
 		ServerObject * const targetServerObj = targetObj ? targetObj->asServerObject() : nullptr;
-		if(!targetServerObj || ((targetServerObj->getGameObjectType() != SharedObjectTemplate::GOT_terminal_space) &&
-			                    (targetServerObj->getGameObjectType() != SharedObjectTemplate::GOT_terminal_space_npe)) )
+		if (!targetServerObj || ((targetServerObj->getGameObjectType() != SharedObjectTemplate::GOT_terminal_space) &&
+			(targetServerObj->getGameObjectType() != SharedObjectTemplate::GOT_terminal_space_npe)))
 			return;
 	}
 	else
@@ -7534,7 +7510,7 @@ static void commandFuncAssociateDroidControlDeviceWithShip(Command const &, Netw
 	Object * const shipObj = NetworkIdManager::getObjectById(shipId);
 	ServerObject * const shipServerObj = shipObj ? shipObj->asServerObject() : nullptr;
 	ShipObject * const ship = shipServerObj ? shipServerObj->asShipObject() : nullptr;
-	if(!ship)
+	if (!ship)
 		return;
 
 	NetworkId const droidControlDeviceId = nextOidParm(params, pos);
@@ -7558,12 +7534,12 @@ static void commandFuncAssociateDroidControlDeviceWithShip(Command const &, Netw
 
 // ----------------------------------------------------------------------
 
-static void commandFuncServerAsteroidDataListen(Command const &, NetworkId const & actor, NetworkId const & , Unicode::String const & )
+static void commandFuncServerAsteroidDataListen(Command const &, NetworkId const & actor, NetworkId const &, Unicode::String const &)
 {
 	Object const * const actorObj = NetworkIdManager::getObjectById(actor);
 	ServerObject const * const actorServerObj = actorObj ? actorObj->asServerObject() : nullptr;
 	CreatureObject const * const actorCreature = actorServerObj ? actorServerObj->asCreatureObject() : nullptr;
-	if(!actorCreature)
+	if (!actorCreature)
 		return;
 
 	ServerAsteroidManager::listenforServerAsteroidDebugData(actor);
@@ -7571,12 +7547,12 @@ static void commandFuncServerAsteroidDataListen(Command const &, NetworkId const
 
 // ----------------------------------------------------------------------
 
-static void commandFuncServerAsteroidDataStopListening(Command const &, NetworkId const & actor, NetworkId const & , Unicode::String const & )
+static void commandFuncServerAsteroidDataStopListening(Command const &, NetworkId const & actor, NetworkId const &, Unicode::String const &)
 {
 	Object const * const actorObj = NetworkIdManager::getObjectById(actor);
 	ServerObject const * const actorServerObj = actorObj ? actorObj->asServerObject() : nullptr;
 	CreatureObject const * const actorCreature = actorServerObj ? actorServerObj->asCreatureObject() : nullptr;
-	if(!actorCreature)
+	if (!actorCreature)
 		return;
 
 	ServerAsteroidManager::endListenforServerAsteroidDebugData(actor);
@@ -7603,21 +7579,21 @@ static void commandFuncSetFormation(Command const &, NetworkId const & actor, Ne
 	Object * const o = NetworkIdManager::getObjectById(actor);
 	ServerObject * const so = o ? o->asServerObject() : nullptr;
 	CreatureObject * const actorCreature = so ? so->asCreatureObject() : nullptr;
-	if(actorCreature)
+	if (actorCreature)
 	{
 		GroupObject * const group = actorCreature->getGroup();
-		if(group)
+		if (group)
 		{
-			if(group->getGroupLeaderId() == actor)
+			if (group->getGroupLeaderId() == actor)
 			{
 				std::string paramsNarrow = Unicode::wideToNarrow(params);
-				if(paramsNarrow == "none")
+				if (paramsNarrow == "none")
 				{
 					group->setFormationNameCrc(Crc::crcNull);
 				}
 				else
 				{
-					if(PlayerFormationManager::isValidFormationName(paramsNarrow))
+					if (PlayerFormationManager::isValidFormationName(paramsNarrow))
 						group->setFormationNameCrc(Crc::normalizeAndCalculate(paramsNarrow.c_str()));
 				}
 			}
@@ -7683,20 +7659,20 @@ static void commandFuncUnDock(Command const &, NetworkId const & actor, NetworkI
 		WARNING(true, ("commandFuncUnDock() Undock requested on a nullptr object(%s).", actor.getValueString().c_str()));
 	}
 }
-	
+
 //----------------------------------------------------------------------
 
 static void commandFuncLaunchIntoSpace(Command const &, NetworkId const & actor, NetworkId const & target, Unicode::String const & params)
 {
 	ServerObject * const actorServerObj = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(actor));
 	CreatureObject * const actorCreature = actorServerObj != nullptr ? actorServerObj->asCreatureObject() : nullptr;
-	if(!actorCreature)
+	if (!actorCreature)
 	{
 		WARNING(true, ("No actorCreature in commandFuncLaunchIntoSpace"));
 		return;
 	}
 
-	if(!target.isValid())
+	if (!target.isValid())
 	{
 		StringId invalidTargetId("player_utility", "invalid_target");
 		Chat::sendSystemMessage(*actorCreature, invalidTargetId, Unicode::emptyString);
@@ -7706,13 +7682,13 @@ static void commandFuncLaunchIntoSpace(Command const &, NetworkId const & actor,
 	//target must be a space terminal
 	Object const * const o = NetworkIdManager::getObjectById(target);
 	ServerObject const * const so = o ? o->asServerObject() : nullptr;
-	if(!so)
+	if (!so)
 	{
 		StringId invalidTargetId("player_utility", "target_not_server_object");
 		Chat::sendSystemMessage(*actorCreature, invalidTargetId, Unicode::emptyString);
 		return;
 	}
-	if(so->getGameObjectType() != SharedObjectTemplate::GOT_terminal_space)
+	if (so->getGameObjectType() != SharedObjectTemplate::GOT_terminal_space)
 	{
 		ProsePackage p;
 		p.stringId = StringId("player_utility", "not_space_terminal");
@@ -7724,35 +7700,35 @@ static void commandFuncLaunchIntoSpace(Command const &, NetworkId const & actor,
 	}
 
 	Unicode::UnicodeStringVector tokens;
-	Unicode::tokenize (params, tokens);
-	
-	if(tokens.empty())
+	Unicode::tokenize(params, tokens);
+
+	if (tokens.empty())
 	{
 		Chat::sendSystemMessage(*actorCreature, Unicode::narrowToWide("(unlocalized) No parameters."), Unicode::emptyString);
 		return;
 	}
 
 	NetworkId const shipPCDId(Unicode::wideToNarrow(tokens[0]).c_str());
-	if(!shipPCDId.isValid())
+	if (!shipPCDId.isValid())
 	{
 		Chat::sendSystemMessage(*actorCreature, Unicode::narrowToWide("(unlocalized) Invalid ship."), Unicode::emptyString);
 		return;
 	}
 	Object * const terminalO = NetworkIdManager::getObjectById(target);
 	ServerObject * const terminalSO = terminalO ? terminalO->asServerObject() : nullptr;
-	if(terminalSO)
+	if (terminalSO)
 	{
 		std::vector<NetworkId> networkIds;
 
 		unsigned int tokenIndex = 1;
 
-		if(tokens.size() > tokenIndex)
+		if (tokens.size() > tokenIndex)
 		{
 			int const numberOfNetworkIds = atoi(Unicode::wideToNarrow(tokens[tokenIndex]).c_str());
 			for (int i = 0; i < numberOfNetworkIds; ++i)
 			{
 				++tokenIndex;
-				if(tokens.size() > tokenIndex)
+				if (tokens.size() > tokenIndex)
 				{
 					NetworkId const Id(Unicode::wideToNarrow(tokens[tokenIndex]));
 					if (Id.isValid())
@@ -7761,13 +7737,13 @@ static void commandFuncLaunchIntoSpace(Command const &, NetworkId const & actor,
 					}
 				}
 			}
-		}		
+		}
 
 		++tokenIndex;
 
 		//adding an empty string is fine (it means they aren't traveling to another ground starport)
 		std::string strPointPlanetResult;
-		if(tokens.size() > tokenIndex)
+		if (tokens.size() > tokenIndex)
 		{
 			strPointPlanetResult = Unicode::wideToNarrow(tokens[tokenIndex]);
 		}
@@ -7776,10 +7752,10 @@ static void commandFuncLaunchIntoSpace(Command const &, NetworkId const & actor,
 
 		//adding an empty string is fine (it means they aren't traveling to another ground starport)
 		std::string strPointLocationResult;
-		if(tokens.size() > tokenIndex)
+		if (tokens.size() > tokenIndex)
 		{
 			strPointLocationResult = Unicode::wideToNarrow(tokens[tokenIndex]);
-			std::replace (strPointLocationResult.begin (), strPointLocationResult.end (), '_', ' ');
+			std::replace(strPointLocationResult.begin(), strPointLocationResult.end(), '_', ' ');
 		}
 
 		ScriptParams params;
@@ -7805,20 +7781,20 @@ static void commandFuncAcceptQuest(Command const &, NetworkId const & actor, Net
 {
 	ServerObject * const actorServerObj = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(actor));
 	CreatureObject * const actorCreature = actorServerObj != nullptr ? actorServerObj->asCreatureObject() : nullptr;
-	if(!actorCreature)
+	if (!actorCreature)
 	{
 		WARNING(true, ("No actorCreature in commandFuncAcceptQuest"));
 		return;
 	}
 	PlayerObject * playerObject = PlayerCreatureController::getPlayerObject(actorCreature);
-	if(!playerObject)
+	if (!playerObject)
 	{
 		WARNING(true, ("No playerObject in commandFuncAcceptQuest"));
 		return;
 	}
 
 	uint32 const questCrc = atoi(Unicode::wideToNarrow(params).c_str());
-	if(playerObject->getPendingRequestQuestCrc() == questCrc)
+	if (playerObject->getPendingRequestQuestCrc() == questCrc)
 	{
 		NetworkId const & questGiver = playerObject->getPendingRequestQuestGiver();
 		playerObject->questActivateQuest(questCrc, questGiver);
@@ -7832,29 +7808,29 @@ static void commandFuncReceiveReward(Command const &, NetworkId const & actor, N
 {
 	ServerObject * const actorServerObj = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(actor));
 	CreatureObject * const actorCreature = actorServerObj != nullptr ? actorServerObj->asCreatureObject() : nullptr;
-	if(!actorCreature)
+	if (!actorCreature)
 	{
 		WARNING(true, ("No actorCreature in commandFuncReceiveReward"));
 		return;
 	}
 	PlayerObject * playerObject = PlayerCreatureController::getPlayerObject(actorCreature);
-	if(!playerObject)
+	if (!playerObject)
 	{
 		WARNING(true, ("No playerObject in commandFuncReceiveReward"));
 		return;
 	}
 
 	Unicode::UnicodeStringVector sv;
-	Unicode::tokenize (params, sv);
-	
-	if(sv.empty())
+	Unicode::tokenize(params, sv);
+
+	if (sv.empty())
 		return;
 	uint32 const questCrc = atoi(Unicode::wideToNarrow(sv[0]).c_str());
 	std::string selectedReward;
-	if(sv.size() > 1)
+	if (sv.size() > 1)
 		selectedReward = Unicode::wideToNarrow(sv[1]);
 
-	if((playerObject->getPendingRequestQuestCrc() == questCrc) || playerObject->questPlayerCanClaimRewardFor(questCrc))
+	if ((playerObject->getPendingRequestQuestCrc() == questCrc) || playerObject->questPlayerCanClaimRewardFor(questCrc))
 	{
 		playerObject->questGrantQuestReward(questCrc, selectedReward);
 		playerObject->setPendingRequestQuestInformation(0, NetworkId::cms_invalid);
@@ -7863,26 +7839,26 @@ static void commandFuncReceiveReward(Command const &, NetworkId const & actor, N
 
 //----------------------------------------------------------------------
 
-static void commandFuncAbandonQuest(Command const &, NetworkId const & actor, NetworkId const & , Unicode::String const & params)
+static void commandFuncAbandonQuest(Command const &, NetworkId const & actor, NetworkId const &, Unicode::String const & params)
 {
 	size_t pos = 0;
-	
+
 	//not currently used, but can distinguish between different quest types
 	int const questSystemType = nextIntParm(params, pos);
 	UNREF(questSystemType);
 	std::string const & questName = nextStringParm(params, pos);
 
-	if(QuestManager::isQuestAbandonable(questName))
+	if (QuestManager::isQuestAbandonable(questName))
 	{
 		ServerObject * const actorServerObj = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(actor));
 		CreatureObject * const actorCreature = actorServerObj != nullptr ? actorServerObj->asCreatureObject() : nullptr;
-		if(actorCreature)
+		if (actorCreature)
 		{
 			PlayerObject * playerObject = PlayerCreatureController::getPlayerObject(actorCreature);
-			if(playerObject)
+			if (playerObject)
 			{
 				Quest const * const q = QuestManager::getQuest(questName);
-				if(q && playerObject->questHasActiveQuest(q->getId()) && !playerObject->questHasCompletedQuest(q->getId()))
+				if (q && playerObject->questHasActiveQuest(q->getId()) && !playerObject->questHasCompletedQuest(q->getId()))
 				{
 					LOG("Quest", ("Abandon:%s abandoned quest [%s] with status [0x%08X].\n",
 						PlayerObject::getAccountDescription(actorServerObj->getClient()->getCharacterObjectId()).c_str(),
@@ -7895,43 +7871,39 @@ static void commandFuncAbandonQuest(Command const &, NetworkId const & actor, Ne
 	}
 }
 
-
-
 // ----------------------------------------------------------------------
 
 static void commandFuncExchangeListCredits(Command const &, NetworkId const &actor, NetworkId const &target, Unicode::String const &params)
 {
 	ServerObject * const actorServerObj = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(actor));
 	CreatureObject * const actorCreature = actorServerObj != nullptr ? actorServerObj->asCreatureObject() : nullptr;
-	if(!actorCreature)
+	if (!actorCreature)
 	{
 		WARNING(true, ("No actorCreature in commandFuncReceiveReward"));
 		return;
 	}
 	PlayerObject * playerObject = PlayerCreatureController::getPlayerObject(actorCreature);
-	if(!playerObject)
+	if (!playerObject)
 	{
 		WARNING(true, ("No playerObject in commandFuncReceiveReward"));
 		return;
 	}
 
 	Unicode::UnicodeStringVector sv;
-	Unicode::tokenize (params, sv);
-	
-	if(sv.empty())
+	Unicode::tokenize(params, sv);
+
+	if (sv.empty())
 		return;
 	uint32 const credits = (uint32)atoi(Unicode::wideToNarrow(sv[0]).c_str());
-	if ( credits <= 0 )
+	if (credits <= 0)
 		return;
 
-
 	char message[512];
-	sprintf(message,"Listing %ld credits on station exchange.", credits);
+	sprintf(message, "Listing %ld credits on station exchange.", credits);
 	Chat::sendSystemMessage(*actorCreature, Unicode::narrowToWide(message), Unicode::emptyString);
 
-
 	ExchangeListCreditsMessage const msg(actor, credits, GameServer::getInstance().getProcessId());
-        GameServer::getInstance().sendToCentralServer(msg);
+	GameServer::getInstance().sendToCentralServer(msg);
 }
 
 //-----------------------------------------------------------------------
@@ -7955,8 +7927,8 @@ static void commandFuncSquelch(Command const &, NetworkId const &actor, NetworkI
 				ServerObject * so = dynamic_cast<ServerObject *>(NetworkIdManager::getObjectById(target));
 				if (!so)
 				{
-					snprintf(buffer, sizeof(buffer)-1, "Error! Cannot find object for %s", target.getValueString().c_str());
-					buffer[sizeof(buffer)-1] = '\0';
+					snprintf(buffer, sizeof(buffer) - 1, "Error! Cannot find object for %s", target.getValueString().c_str());
+					buffer[sizeof(buffer) - 1] = '\0';
 					ConGenericMessage const msg(buffer, 0);
 					gmClient->send(msg, true);
 				}
@@ -7965,8 +7937,8 @@ static void commandFuncSquelch(Command const &, NetworkId const &actor, NetworkI
 					CreatureObject * c = so->asCreatureObject();
 					if (!c)
 					{
-						snprintf(buffer, sizeof(buffer)-1, "Error! %s (%s) is not a creature object", target.getValueString().c_str(), Unicode::wideToNarrow(so->getAssignedObjectName()).c_str());
-						buffer[sizeof(buffer)-1] = '\0';
+						snprintf(buffer, sizeof(buffer) - 1, "Error! %s (%s) is not a creature object", target.getValueString().c_str(), Unicode::wideToNarrow(so->getAssignedObjectName()).c_str());
+						buffer[sizeof(buffer) - 1] = '\0';
 						ConGenericMessage const msg(buffer, 0);
 						gmClient->send(msg, true);
 					}
@@ -7975,22 +7947,22 @@ static void commandFuncSquelch(Command const &, NetworkId const &actor, NetworkI
 						PlayerObject * p = PlayerCreatureController::getPlayerObject(c);
 						if (!p)
 						{
-							snprintf(buffer, sizeof(buffer)-1, "Error! %s (%s) is not a player object", target.getValueString().c_str(), Unicode::wideToNarrow(so->getAssignedObjectName()).c_str());
-							buffer[sizeof(buffer)-1] = '\0';
+							snprintf(buffer, sizeof(buffer) - 1, "Error! %s (%s) is not a player object", target.getValueString().c_str(), Unicode::wideToNarrow(so->getAssignedObjectName()).c_str());
+							buffer[sizeof(buffer) - 1] = '\0';
 							ConGenericMessage const msg(buffer, 0);
 							gmClient->send(msg, true);
 						}
 						else if (p->getSecondsUntilUnsquelched() < 0)
 						{
-							snprintf(buffer, sizeof(buffer)-1, "Error! %s (%s) is already squelched", target.getValueString().c_str(), Unicode::wideToNarrow(so->getAssignedObjectName()).c_str());
-							buffer[sizeof(buffer)-1] = '\0';
+							snprintf(buffer, sizeof(buffer) - 1, "Error! %s (%s) is already squelched", target.getValueString().c_str(), Unicode::wideToNarrow(so->getAssignedObjectName()).c_str());
+							buffer[sizeof(buffer) - 1] = '\0';
 							ConGenericMessage const msg(buffer, 0);
 							gmClient->send(msg, true);
 						}
 						else
 						{
-							snprintf(buffer, sizeof(buffer)-1, "Squelching %s (%s)", target.getValueString().c_str(), Unicode::wideToNarrow(so->getAssignedObjectName()).c_str());
-							buffer[sizeof(buffer)-1] = '\0';
+							snprintf(buffer, sizeof(buffer) - 1, "Squelching %s (%s)", target.getValueString().c_str(), Unicode::wideToNarrow(so->getAssignedObjectName()).c_str());
+							buffer[sizeof(buffer) - 1] = '\0';
 							ConGenericMessage const msg(buffer, 0);
 							gmClient->send(msg, true);
 
@@ -8024,8 +7996,8 @@ static void commandFuncUnsquelch(Command const &, NetworkId const &actor, Networ
 				ServerObject * so = dynamic_cast<ServerObject *>(NetworkIdManager::getObjectById(target));
 				if (!so)
 				{
-					snprintf(buffer, sizeof(buffer)-1, "Error! Cannot find object for %s", target.getValueString().c_str());
-					buffer[sizeof(buffer)-1] = '\0';
+					snprintf(buffer, sizeof(buffer) - 1, "Error! Cannot find object for %s", target.getValueString().c_str());
+					buffer[sizeof(buffer) - 1] = '\0';
 					ConGenericMessage const msg(buffer, 0);
 					gmClient->send(msg, true);
 				}
@@ -8034,8 +8006,8 @@ static void commandFuncUnsquelch(Command const &, NetworkId const &actor, Networ
 					CreatureObject * c = so->asCreatureObject();
 					if (!c)
 					{
-						snprintf(buffer, sizeof(buffer)-1, "Error! %s (%s) is not a creature object", target.getValueString().c_str(), Unicode::wideToNarrow(so->getAssignedObjectName()).c_str());
-						buffer[sizeof(buffer)-1] = '\0';
+						snprintf(buffer, sizeof(buffer) - 1, "Error! %s (%s) is not a creature object", target.getValueString().c_str(), Unicode::wideToNarrow(so->getAssignedObjectName()).c_str());
+						buffer[sizeof(buffer) - 1] = '\0';
 						ConGenericMessage const msg(buffer, 0);
 						gmClient->send(msg, true);
 					}
@@ -8044,22 +8016,22 @@ static void commandFuncUnsquelch(Command const &, NetworkId const &actor, Networ
 						PlayerObject * p = PlayerCreatureController::getPlayerObject(c);
 						if (!p)
 						{
-							snprintf(buffer, sizeof(buffer)-1, "Error! %s (%s) is not a player object", target.getValueString().c_str(), Unicode::wideToNarrow(so->getAssignedObjectName()).c_str());
-							buffer[sizeof(buffer)-1] = '\0';
+							snprintf(buffer, sizeof(buffer) - 1, "Error! %s (%s) is not a player object", target.getValueString().c_str(), Unicode::wideToNarrow(so->getAssignedObjectName()).c_str());
+							buffer[sizeof(buffer) - 1] = '\0';
 							ConGenericMessage const msg(buffer, 0);
 							gmClient->send(msg, true);
 						}
 						else if (p->getSecondsUntilUnsquelched() == 0)
 						{
-							snprintf(buffer, sizeof(buffer)-1, "Error! %s (%s) is not currently squelched", target.getValueString().c_str(), Unicode::wideToNarrow(so->getAssignedObjectName()).c_str());
-							buffer[sizeof(buffer)-1] = '\0';
+							snprintf(buffer, sizeof(buffer) - 1, "Error! %s (%s) is not currently squelched", target.getValueString().c_str(), Unicode::wideToNarrow(so->getAssignedObjectName()).c_str());
+							buffer[sizeof(buffer) - 1] = '\0';
 							ConGenericMessage const msg(buffer, 0);
 							gmClient->send(msg, true);
 						}
 						else
 						{
-							snprintf(buffer, sizeof(buffer)-1, "Unsquelching %s (%s)", target.getValueString().c_str(), Unicode::wideToNarrow(so->getAssignedObjectName()).c_str());
-							buffer[sizeof(buffer)-1] = '\0';
+							snprintf(buffer, sizeof(buffer) - 1, "Unsquelching %s (%s)", target.getValueString().c_str(), Unicode::wideToNarrow(so->getAssignedObjectName()).c_str());
+							buffer[sizeof(buffer) - 1] = '\0';
 							ConGenericMessage const msg(buffer, 0);
 							gmClient->send(msg, true);
 
@@ -8093,8 +8065,8 @@ static void commandFuncGrantWarden(Command const &, NetworkId const &actor, Netw
 				ServerObject * so = dynamic_cast<ServerObject *>(NetworkIdManager::getObjectById(target));
 				if (!so)
 				{
-					snprintf(buffer, sizeof(buffer)-1, "Error! Cannot find object for %s", target.getValueString().c_str());
-					buffer[sizeof(buffer)-1] = '\0';
+					snprintf(buffer, sizeof(buffer) - 1, "Error! Cannot find object for %s", target.getValueString().c_str());
+					buffer[sizeof(buffer) - 1] = '\0';
 					ConGenericMessage const msg(buffer, 0);
 					gmClient->send(msg, true);
 				}
@@ -8103,8 +8075,8 @@ static void commandFuncGrantWarden(Command const &, NetworkId const &actor, Netw
 					CreatureObject * c = so->asCreatureObject();
 					if (!c)
 					{
-						snprintf(buffer, sizeof(buffer)-1, "Error! %s (%s) is not a creature object", target.getValueString().c_str(), Unicode::wideToNarrow(so->getAssignedObjectName()).c_str());
-						buffer[sizeof(buffer)-1] = '\0';
+						snprintf(buffer, sizeof(buffer) - 1, "Error! %s (%s) is not a creature object", target.getValueString().c_str(), Unicode::wideToNarrow(so->getAssignedObjectName()).c_str());
+						buffer[sizeof(buffer) - 1] = '\0';
 						ConGenericMessage const msg(buffer, 0);
 						gmClient->send(msg, true);
 					}
@@ -8113,22 +8085,22 @@ static void commandFuncGrantWarden(Command const &, NetworkId const &actor, Netw
 						PlayerObject * p = PlayerCreatureController::getPlayerObject(c);
 						if (!p)
 						{
-							snprintf(buffer, sizeof(buffer)-1, "Error! %s (%s) is not a player object", target.getValueString().c_str(), Unicode::wideToNarrow(so->getAssignedObjectName()).c_str());
-							buffer[sizeof(buffer)-1] = '\0';
+							snprintf(buffer, sizeof(buffer) - 1, "Error! %s (%s) is not a player object", target.getValueString().c_str(), Unicode::wideToNarrow(so->getAssignedObjectName()).c_str());
+							buffer[sizeof(buffer) - 1] = '\0';
 							ConGenericMessage const msg(buffer, 0);
 							gmClient->send(msg, true);
 						}
 						else if (p->isWarden())
 						{
-							snprintf(buffer, sizeof(buffer)-1, "Error! %s (%s) is already a warden", target.getValueString().c_str(), Unicode::wideToNarrow(so->getAssignedObjectName()).c_str());
-							buffer[sizeof(buffer)-1] = '\0';
+							snprintf(buffer, sizeof(buffer) - 1, "Error! %s (%s) is already a warden", target.getValueString().c_str(), Unicode::wideToNarrow(so->getAssignedObjectName()).c_str());
+							buffer[sizeof(buffer) - 1] = '\0';
 							ConGenericMessage const msg(buffer, 0);
 							gmClient->send(msg, true);
 						}
 						else
 						{
-							snprintf(buffer, sizeof(buffer)-1, "Granting warden to %s (%s)", target.getValueString().c_str(), Unicode::wideToNarrow(so->getAssignedObjectName()).c_str());
-							buffer[sizeof(buffer)-1] = '\0';
+							snprintf(buffer, sizeof(buffer) - 1, "Granting warden to %s (%s)", target.getValueString().c_str(), Unicode::wideToNarrow(so->getAssignedObjectName()).c_str());
+							buffer[sizeof(buffer) - 1] = '\0';
 							ConGenericMessage const msg(buffer, 0);
 							gmClient->send(msg, true);
 
@@ -8164,8 +8136,8 @@ static void commandFuncRevokeWarden(Command const &, NetworkId const &actor, Net
 				ServerObject * so = dynamic_cast<ServerObject *>(NetworkIdManager::getObjectById(target));
 				if (!so)
 				{
-					snprintf(buffer, sizeof(buffer)-1, "Error! Cannot find object for %s", target.getValueString().c_str());
-					buffer[sizeof(buffer)-1] = '\0';
+					snprintf(buffer, sizeof(buffer) - 1, "Error! Cannot find object for %s", target.getValueString().c_str());
+					buffer[sizeof(buffer) - 1] = '\0';
 					ConGenericMessage const msg(buffer, 0);
 					gmClient->send(msg, true);
 				}
@@ -8174,8 +8146,8 @@ static void commandFuncRevokeWarden(Command const &, NetworkId const &actor, Net
 					CreatureObject * c = so->asCreatureObject();
 					if (!c)
 					{
-						snprintf(buffer, sizeof(buffer)-1, "Error! %s (%s) is not a creature object", target.getValueString().c_str(), Unicode::wideToNarrow(so->getAssignedObjectName()).c_str());
-						buffer[sizeof(buffer)-1] = '\0';
+						snprintf(buffer, sizeof(buffer) - 1, "Error! %s (%s) is not a creature object", target.getValueString().c_str(), Unicode::wideToNarrow(so->getAssignedObjectName()).c_str());
+						buffer[sizeof(buffer) - 1] = '\0';
 						ConGenericMessage const msg(buffer, 0);
 						gmClient->send(msg, true);
 					}
@@ -8184,22 +8156,22 @@ static void commandFuncRevokeWarden(Command const &, NetworkId const &actor, Net
 						PlayerObject * p = PlayerCreatureController::getPlayerObject(c);
 						if (!p)
 						{
-							snprintf(buffer, sizeof(buffer)-1, "Error! %s (%s) is not a player object", target.getValueString().c_str(), Unicode::wideToNarrow(so->getAssignedObjectName()).c_str());
-							buffer[sizeof(buffer)-1] = '\0';
+							snprintf(buffer, sizeof(buffer) - 1, "Error! %s (%s) is not a player object", target.getValueString().c_str(), Unicode::wideToNarrow(so->getAssignedObjectName()).c_str());
+							buffer[sizeof(buffer) - 1] = '\0';
 							ConGenericMessage const msg(buffer, 0);
 							gmClient->send(msg, true);
 						}
 						else if (!p->isWarden())
 						{
-							snprintf(buffer, sizeof(buffer)-1, "Error! %s (%s) is not a warden", target.getValueString().c_str(), Unicode::wideToNarrow(so->getAssignedObjectName()).c_str());
-							buffer[sizeof(buffer)-1] = '\0';
+							snprintf(buffer, sizeof(buffer) - 1, "Error! %s (%s) is not a warden", target.getValueString().c_str(), Unicode::wideToNarrow(so->getAssignedObjectName()).c_str());
+							buffer[sizeof(buffer) - 1] = '\0';
 							ConGenericMessage const msg(buffer, 0);
 							gmClient->send(msg, true);
 						}
 						else
 						{
-							snprintf(buffer, sizeof(buffer)-1, "Revoking warden from %s (%s)", target.getValueString().c_str(), Unicode::wideToNarrow(so->getAssignedObjectName()).c_str());
-							buffer[sizeof(buffer)-1] = '\0';
+							snprintf(buffer, sizeof(buffer) - 1, "Revoking warden from %s (%s)", target.getValueString().c_str(), Unicode::wideToNarrow(so->getAssignedObjectName()).c_str());
+							buffer[sizeof(buffer) - 1] = '\0';
 							ConGenericMessage const msg(buffer, 0);
 							gmClient->send(msg, true);
 
@@ -8273,8 +8245,8 @@ static void commandFuncSpammer(Command const &, NetworkId const &actor, NetworkI
 				{
 					// send a messageTo to the target to do apply the /spammer operation
 					char buffer[1024];
-					snprintf(buffer, sizeof(buffer)-1, "%s %s", actor.getValueString().c_str(), Unicode::wideToNarrow(gm->getAssignedObjectName()).c_str());
-					buffer[sizeof(buffer)-1] = '\0';
+					snprintf(buffer, sizeof(buffer) - 1, "%s %s", actor.getValueString().c_str(), Unicode::wideToNarrow(gm->getAssignedObjectName()).c_str());
+					buffer[sizeof(buffer) - 1] = '\0';
 
 					MessageToQueue::getInstance().sendMessageToC(parsedNetworkId,
 						"C++SpammerReq",
@@ -8534,8 +8506,8 @@ static void commandFuncDeputizeWarden(Command const &, NetworkId const &actor, N
 
 			// send a messageTo to the target to complete the deputize process
 			char buffer[1024];
-			snprintf(buffer, sizeof(buffer)-1, "%s|%lu", gm->getNetworkId().getValueString().c_str(), gmPlayerObject->getStationId());
-			buffer[sizeof(buffer)-1] = '\0';
+			snprintf(buffer, sizeof(buffer) - 1, "%s|%lu", gm->getNetworkId().getValueString().c_str(), gmPlayerObject->getStationId());
+			buffer[sizeof(buffer) - 1] = '\0';
 
 			MessageToQueue::getInstance().sendMessageToC(parsedNetworkId,
 				"C++DeputizeWardenReq",
@@ -8597,8 +8569,8 @@ static void commandFuncUndeputizeWarden(Command const &, NetworkId const &actor,
 
 			// send a messageTo to the target to complete the undeputize process
 			char buffer[1024];
-			snprintf(buffer, sizeof(buffer)-1, "%s|%lu", gm->getNetworkId().getValueString().c_str(), gmPlayerObject->getStationId());
-			buffer[sizeof(buffer)-1] = '\0';
+			snprintf(buffer, sizeof(buffer) - 1, "%s|%lu", gm->getNetworkId().getValueString().c_str(), gmPlayerObject->getStationId());
+			buffer[sizeof(buffer) - 1] = '\0';
 
 			MessageToQueue::getInstance().sendMessageToC(parsedNetworkId,
 				"C++UndeputizeWardenReq",
@@ -8613,7 +8585,7 @@ static void commandFuncUndeputizeWarden(Command const &, NetworkId const &actor,
 
 //-----------------------------------------------------------------------
 
-static void commandFuncRemoveBuff(Command const &, NetworkId const &actor, NetworkId const & , Unicode::String const &params)
+static void commandFuncRemoveBuff(Command const &, NetworkId const &actor, NetworkId const &, Unicode::String const &params)
 {
 	CreatureObject * player = dynamic_cast<CreatureObject *>(NetworkIdManager::getObjectById(actor));
 	if (player)
@@ -8679,7 +8651,7 @@ static void commandFuncOccupyUnlockedSlot(Command const &, NetworkId const &acto
 			}
 
 			// CS log the request
-			LOG("CustomerService",("JediUnlockedSlot:%s requesting OccupyUnlockedSlot", PlayerObject::getAccountDescription(gm).c_str()));
+			LOG("CustomerService", ("JediUnlockedSlot:%s requesting OccupyUnlockedSlot", PlayerObject::getAccountDescription(gm).c_str()));
 
 			// send off request to LoginServer to make this character occupy the unlocked slot
 			GenericValueTypeMessage<std::pair<std::pair<uint32, NetworkId>, uint32> > const occupyUnlockedSlotReq("OccupyUnlockedSlotReq", std::make_pair(std::make_pair(static_cast<uint32>(gmPlayerObject->getStationId()), actor), GameServer::getInstance().getProcessId()));
@@ -8745,7 +8717,7 @@ static void commandFuncVacateUnlockedSlot(Command const &, NetworkId const &acto
 			}
 
 			// CS log the request
-			LOG("CustomerService",("JediUnlockedSlot:%s requesting VacateUnlockedSlot", PlayerObject::getAccountDescription(gm).c_str()));
+			LOG("CustomerService", ("JediUnlockedSlot:%s requesting VacateUnlockedSlot", PlayerObject::getAccountDescription(gm).c_str()));
 
 			// send off request to LoginServer to make this character vacate the unlocked slot
 			GenericValueTypeMessage<std::pair<std::pair<uint32, NetworkId>, uint32> > const vacateUnlockedSlotReq("VacateUnlockedSlotReq", std::make_pair(std::make_pair(static_cast<uint32>(gmPlayerObject->getStationId()), actor), GameServer::getInstance().getProcessId()));
@@ -8833,7 +8805,7 @@ static void commandFuncSwapUnlockedSlot(Command const &, NetworkId const &actor,
 			}
 
 			// CS log the request
-			LOG("CustomerService",("JediUnlockedSlot:%s requesting SwapUnlockedSlot with %s (%s)", PlayerObject::getAccountDescription(gm).c_str(), parsedNetworkId.getValueString().c_str(), NameManager::getInstance().getPlayerFullName(parsedNetworkId).c_str()));
+			LOG("CustomerService", ("JediUnlockedSlot:%s requesting SwapUnlockedSlot with %s (%s)", PlayerObject::getAccountDescription(gm).c_str(), parsedNetworkId.getValueString().c_str(), NameManager::getInstance().getPlayerFullName(parsedNetworkId).c_str()));
 
 			// send off request to LoginServer to make this character normal and the target characer unlocked
 			GenericValueTypeMessage<std::pair<std::pair<uint32, NetworkId>, std::pair<uint32, NetworkId> > > const swapUnlockedSlotReq("SwapUnlockedSlotReq", std::make_pair(std::make_pair(static_cast<uint32>(gmPlayerObject->getStationId()), actor), std::make_pair(GameServer::getInstance().getProcessId(), parsedNetworkId)));
@@ -9580,114 +9552,114 @@ static void commandFuncRoomPickRandomPlayer(Command const &, NetworkId const &ac
 void CommandCppFuncs::install()
 {
 	// console style commands
-	CommandTable::addCppFunction("console_all",          commandFuncConsoleAll);
-	CommandTable::addCppFunction("console_combat",       commandFuncConsoleCombat);
-	CommandTable::addCppFunction("console_craft",        commandFuncConsoleCraft);
-	CommandTable::addCppFunction("console_database",     commandFuncConsoleDatabase);
-	CommandTable::addCppFunction("console_manufacture",  commandFuncConsoleManufacture);
-	CommandTable::addCppFunction("console_money",        commandFuncConsoleMoney);
-	CommandTable::addCppFunction("console_npc",          commandFuncConsoleNpc);
-	CommandTable::addCppFunction("console_object",       commandFuncConsoleObject);
-	CommandTable::addCppFunction("console_objvar",       commandFuncConsoleObjvar);
-	CommandTable::addCppFunction("console_resource",     commandFuncConsoleResource);
-	CommandTable::addCppFunction("console_script",       commandFuncConsoleScript);
-	CommandTable::addCppFunction("console_server",       commandFuncConsoleServer);
-	CommandTable::addCppFunction("console_skill",        commandFuncConsoleSkill);
+	CommandTable::addCppFunction("console_all", commandFuncConsoleAll);
+	CommandTable::addCppFunction("console_combat", commandFuncConsoleCombat);
+	CommandTable::addCppFunction("console_craft", commandFuncConsoleCraft);
+	CommandTable::addCppFunction("console_database", commandFuncConsoleDatabase);
+	CommandTable::addCppFunction("console_manufacture", commandFuncConsoleManufacture);
+	CommandTable::addCppFunction("console_money", commandFuncConsoleMoney);
+	CommandTable::addCppFunction("console_npc", commandFuncConsoleNpc);
+	CommandTable::addCppFunction("console_object", commandFuncConsoleObject);
+	CommandTable::addCppFunction("console_objvar", commandFuncConsoleObjvar);
+	CommandTable::addCppFunction("console_resource", commandFuncConsoleResource);
+	CommandTable::addCppFunction("console_script", commandFuncConsoleScript);
+	CommandTable::addCppFunction("console_server", commandFuncConsoleServer);
+	CommandTable::addCppFunction("console_skill", commandFuncConsoleSkill);
 
 	// communication commands
-	CommandTable::addCppFunction("social",               commandFuncSocial);
-	CommandTable::addCppFunction("socialInternal",       commandFuncSocialInternal);
-	CommandTable::addCppFunction("spatialChat",          commandFuncSpatialChat);
-	CommandTable::addCppFunction("spatialChatInternal",  commandFuncSpatialChatInternal);
-	CommandTable::addCppFunction("setMood",              commandFuncSetMood);
-	CommandTable::addCppFunction("setMoodInternal",      commandFuncSetMoodInternal);
-	CommandTable::addCppFunction("systemMessage",        commandFuncSystemMessage);
-//	CommandTable::addCppFunction("combatSpam",           commandFuncCombatSpam);
+	CommandTable::addCppFunction("social", commandFuncSocial);
+	CommandTable::addCppFunction("socialInternal", commandFuncSocialInternal);
+	CommandTable::addCppFunction("spatialChat", commandFuncSpatialChat);
+	CommandTable::addCppFunction("spatialChatInternal", commandFuncSpatialChatInternal);
+	CommandTable::addCppFunction("setMood", commandFuncSetMood);
+	CommandTable::addCppFunction("setMoodInternal", commandFuncSetMoodInternal);
+	CommandTable::addCppFunction("systemMessage", commandFuncSystemMessage);
+	//	CommandTable::addCppFunction("combatSpam",           commandFuncCombatSpam);
 
-	// admin commands
-	CommandTable::addCppFunction("admin_setGodMode",     commandFuncAdminSetGodMode);
-	CommandTable::addCppFunction("admin_kick",           commandFuncAdminKick);
-	CommandTable::addCppFunction("admin_planetwarp",     commandFuncAdminPlanetwarp);
-	CommandTable::addCppFunction("admin_teleport",       commandFuncAdminTeleport);
-	CommandTable::addCppFunction("admin_teleportTo",     commandFuncAdminTeleportTo);
-	CommandTable::addCppFunction("admin_listGuilds",     commandFuncAdminListGuilds);
-	CommandTable::addCppFunction("editBank",             commandFuncAdminEditBank);
-	CommandTable::addCppFunction("editStats",            commandFuncAdminEditStats);
-	CommandTable::addCppFunction("editAppearance",       commandFuncAdminEditAppearance);
-	CommandTable::addCppFunction("grantTitle",           commandFuncAdminGrantTitle);
-	CommandTable::addCppFunction("credits",              commandFuncAdminCredits);
-	CommandTable::addCppFunction("getStationName",       commandFuncAdminGetStationName);
-	CommandTable::addCppFunction("emptyMailTarget",      commandFuncEmptyMailTarget);
-	CommandTable::addCppFunction("setPlayerAppearance",  commandFuncSetPlayerAppearance);
+		// admin commands
+	CommandTable::addCppFunction("admin_setGodMode", commandFuncAdminSetGodMode);
+	CommandTable::addCppFunction("admin_kick", commandFuncAdminKick);
+	CommandTable::addCppFunction("admin_planetwarp", commandFuncAdminPlanetwarp);
+	CommandTable::addCppFunction("admin_teleport", commandFuncAdminTeleport);
+	CommandTable::addCppFunction("admin_teleportTo", commandFuncAdminTeleportTo);
+	CommandTable::addCppFunction("admin_listGuilds", commandFuncAdminListGuilds);
+	CommandTable::addCppFunction("editBank", commandFuncAdminEditBank);
+	CommandTable::addCppFunction("editStats", commandFuncAdminEditStats);
+	CommandTable::addCppFunction("editAppearance", commandFuncAdminEditAppearance);
+	CommandTable::addCppFunction("grantTitle", commandFuncAdminGrantTitle);
+	CommandTable::addCppFunction("credits", commandFuncAdminCredits);
+	CommandTable::addCppFunction("getStationName", commandFuncAdminGetStationName);
+	CommandTable::addCppFunction("emptyMailTarget", commandFuncEmptyMailTarget);
+	CommandTable::addCppFunction("setPlayerAppearance", commandFuncSetPlayerAppearance);
 	CommandTable::addCppFunction("revertPlayerAppearance", commandFuncRevertPlayerAppearance);
 
 	// auction commands
-	CommandTable::addCppFunction("auction_create",       commandFuncAuctionCreate);
-	CommandTable::addCppFunction("auction_create_immediate",       commandFuncAuctionCreateImmediate);
-	CommandTable::addCppFunction("auction_bid",          commandFuncAuctionBid);
-	CommandTable::addCppFunction("auction_cancel",       commandFuncAuctionCancel);
-	CommandTable::addCppFunction("auction_accept",       commandFuncAuctionAccept);
-	CommandTable::addCppFunction("auction_query",        commandFuncAuctionQuery);
-	CommandTable::addCppFunction("auction_retrieve",     commandFuncAuctionRetrieve);
+	CommandTable::addCppFunction("auction_create", commandFuncAuctionCreate);
+	CommandTable::addCppFunction("auction_create_immediate", commandFuncAuctionCreateImmediate);
+	CommandTable::addCppFunction("auction_bid", commandFuncAuctionBid);
+	CommandTable::addCppFunction("auction_cancel", commandFuncAuctionCancel);
+	CommandTable::addCppFunction("auction_accept", commandFuncAuctionAccept);
+	CommandTable::addCppFunction("auction_query", commandFuncAuctionQuery);
+	CommandTable::addCppFunction("auction_retrieve", commandFuncAuctionRetrieve);
 
 	// cell/building permissions commands
-	CommandTable::addCppFunction("addBannedPlayer",      commandFuncAddBannedPlayer);
-	CommandTable::addCppFunction("removeBannedPlayer",   commandFuncRemoveBannedPlayer);
-	CommandTable::addCppFunction("addAllowedPlayer",     commandFuncAddAllowedPlayer);
-	CommandTable::addCppFunction("removeAllowedPlayer",  commandFuncRemoveAllowedPlayer);
-	CommandTable::addCppFunction("setPublicState",       commandFuncSetPublicState);
-	CommandTable::addCppFunction("setOwner",             commandFuncSetOwner);
+	CommandTable::addCppFunction("addBannedPlayer", commandFuncAddBannedPlayer);
+	CommandTable::addCppFunction("removeBannedPlayer", commandFuncRemoveBannedPlayer);
+	CommandTable::addCppFunction("addAllowedPlayer", commandFuncAddAllowedPlayer);
+	CommandTable::addCppFunction("removeAllowedPlayer", commandFuncRemoveAllowedPlayer);
+	CommandTable::addCppFunction("setPublicState", commandFuncSetPublicState);
+	CommandTable::addCppFunction("setOwner", commandFuncSetOwner);
 
-	CommandTable::addCppFunction("setPosture",           commandSetPosture);
-	CommandTable::addCppFunction("duel",                 commandFuncDuel);
-	CommandTable::addCppFunction("endDuel",              commandFuncEndDuel);
+	CommandTable::addCppFunction("setPosture", commandSetPosture);
+	CommandTable::addCppFunction("duel", commandFuncDuel);
+	CommandTable::addCppFunction("endDuel", commandFuncEndDuel);
 
 	// ui
 	CommandTable::addCppFunction("setWaypointActiveStatus", commandFuncSetWaypointActiveStatus);
-	CommandTable::addCppFunction("setWaypointName",         commandFuncSetWaypointName);
+	CommandTable::addCppFunction("setWaypointName", commandFuncSetWaypointName);
 
 	// harvester
-	CommandTable::addCppFunction("harvesterActivate",         commandFuncHarvesterActivate);
-	CommandTable::addCppFunction("harvesterDeactivate",       commandFuncHarvesterDeactivate);
-	CommandTable::addCppFunction("harvesterHarvest",          commandFuncHarvesterHarvest);
-	CommandTable::addCppFunction("harvesterSelectResource",   commandFuncHarvesterSelectResource);
-	CommandTable::addCppFunction("harvesterDiscardHopper",    commandFuncHarvesterDiscardHopper);
-	CommandTable::addCppFunction("harvesterMakeCrate",        commandFuncHarvesterMakeCrate);
-	CommandTable::addCppFunction("harvesterGetResourceData",  commandFuncHarvesterGetResourceData);
+	CommandTable::addCppFunction("harvesterActivate", commandFuncHarvesterActivate);
+	CommandTable::addCppFunction("harvesterDeactivate", commandFuncHarvesterDeactivate);
+	CommandTable::addCppFunction("harvesterHarvest", commandFuncHarvesterHarvest);
+	CommandTable::addCppFunction("harvesterSelectResource", commandFuncHarvesterSelectResource);
+	CommandTable::addCppFunction("harvesterDiscardHopper", commandFuncHarvesterDiscardHopper);
+	CommandTable::addCppFunction("harvesterMakeCrate", commandFuncHarvesterMakeCrate);
+	CommandTable::addCppFunction("harvesterGetResourceData", commandFuncHarvesterGetResourceData);
 
 	// syncronized ui
-	CommandTable::addCppFunction("synchronizedUiListen"   ,        commandFuncSynchronizedUiListen);
-	CommandTable::addCppFunction("synchronizedUiStopListening",    commandFuncSynchronizedUiStopListening);
+	CommandTable::addCppFunction("synchronizedUiListen", commandFuncSynchronizedUiListen);
+	CommandTable::addCppFunction("synchronizedUiStopListening", commandFuncSynchronizedUiStopListening);
 
 	// resource
-	CommandTable::addCppFunction("resourceSetName",           commandFuncResourceSetName);
+	CommandTable::addCppFunction("resourceSetName", commandFuncResourceSetName);
 
 	// resource container
 	CommandTable::addCppFunction("resourceContainerTransfer", commandFuncResourceContainerTransfer);
-	CommandTable::addCppFunction("resourceContainerSplit",    commandFuncResourceContainerSplit);
+	CommandTable::addCppFunction("resourceContainerSplit", commandFuncResourceContainerSplit);
 
 	// survey
-	CommandTable::addCppFunction("makeSurvey",                commandFuncMakeSurvey);
-	CommandTable::addCppFunction("requestSurvey",             commandFuncRequestSurvey);
-	CommandTable::addCppFunction("requestCoreSample",         commandFuncRequestCoreSample);
+	CommandTable::addCppFunction("makeSurvey", commandFuncMakeSurvey);
+	CommandTable::addCppFunction("requestSurvey", commandFuncRequestSurvey);
+	CommandTable::addCppFunction("requestCoreSample", commandFuncRequestCoreSample);
 
-	CommandTable::addCppFunction("transferItemWeapon",        commandFuncTransferWeapon);
-	CommandTable::addCppFunction("transferItemArmor",         commandFuncTransferArmor);
-	CommandTable::addCppFunction("transferItemMisc",          commandFuncTransferMisc);
-	CommandTable::addCppFunction("openContainer",             commandFuncOpenContainer);
-	CommandTable::addCppFunction("closeContainer",            commandFuncCloseContainer);
-	CommandTable::addCppFunction("openLotteryContainer",  commandFuncOpenLotteryContainer);
+	CommandTable::addCppFunction("transferItemWeapon", commandFuncTransferWeapon);
+	CommandTable::addCppFunction("transferItemArmor", commandFuncTransferArmor);
+	CommandTable::addCppFunction("transferItemMisc", commandFuncTransferMisc);
+	CommandTable::addCppFunction("openContainer", commandFuncOpenContainer);
+	CommandTable::addCppFunction("closeContainer", commandFuncCloseContainer);
+	CommandTable::addCppFunction("openLotteryContainer", commandFuncOpenLotteryContainer);
 	CommandTable::addCppFunction("closeLotteryContainer", commandFuncCloseLotteryContainer);
-	CommandTable::addCppFunction("giveItem",              commandFuncGiveItem);
+	CommandTable::addCppFunction("giveItem", commandFuncGiveItem);
 
 	// grouping
-	CommandTable::addCppFunction("groupInvite",     commandFuncGroupInvite);
-	CommandTable::addCppFunction("groupUninvite",   commandFuncGroupUninvite);
-	CommandTable::addCppFunction("groupJoin",       commandFuncGroupJoin);
-	CommandTable::addCppFunction("groupDecline",    commandFuncGroupDecline);
-	CommandTable::addCppFunction("groupDisband",    commandFuncGroupDisband);
-	CommandTable::addCppFunction("kickFromShip",    commandFuncKickFromShip);
-	CommandTable::addCppFunction("groupChat",       commandFuncGroupChat);
+	CommandTable::addCppFunction("groupInvite", commandFuncGroupInvite);
+	CommandTable::addCppFunction("groupUninvite", commandFuncGroupUninvite);
+	CommandTable::addCppFunction("groupJoin", commandFuncGroupJoin);
+	CommandTable::addCppFunction("groupDecline", commandFuncGroupDecline);
+	CommandTable::addCppFunction("groupDisband", commandFuncGroupDisband);
+	CommandTable::addCppFunction("kickFromShip", commandFuncKickFromShip);
+	CommandTable::addCppFunction("groupChat", commandFuncGroupChat);
 	CommandTable::addCppFunction("groupMakeLeader", commandFuncGroupMakeLeader);
 	CommandTable::addCppFunction("groupMakeMasterLooter", commandFuncGroupMakeMasterLooter);
 	CommandTable::addCppFunction("createGroupPickup", commandFuncCreateGroupPickup);
@@ -9696,102 +9668,102 @@ void CommandCppFuncs::install()
 	CommandTable::addCppFunction("groupPickRandomGroupMember", commandFuncGroupPickRandomGroupMember);
 
 	// guilds
-	CommandTable::addCppFunction("guildChat",       commandFuncGuildChat);
+	CommandTable::addCppFunction("guildChat", commandFuncGuildChat);
 	CommandTable::addCppFunction("guildTextChatRoomRejoin", commandFuncGuildTextChatRoomRejoin);
 	CommandTable::addCppFunction("guildPickRandomGuildMember", commandFuncGuildPickRandomGuildMember);
 
 	// city
-	CommandTable::addCppFunction("cityChat",        commandFuncCityChat);
+	CommandTable::addCppFunction("cityChat", commandFuncCityChat);
 	CommandTable::addCppFunction("cityTextChatRoomRejoin", commandFuncCityTextChatRoomRejoin);
 	CommandTable::addCppFunction("cityPickRandomCitizen", commandFuncCityPickRandomCitizen);
 
 	//chat
-	CommandTable::addCppFunction("auctionChat",       commandFuncAuctionChat);
-	CommandTable::addCppFunction("planetChat",       commandFuncPlanetChat);
-	
+	CommandTable::addCppFunction("auctionChat", commandFuncAuctionChat);
+	CommandTable::addCppFunction("planetChat", commandFuncPlanetChat);
+
 	// crafting
-	CommandTable::addCppFunction("requestResourceWeights",      commandFuncRequestResourceWeights);
+	CommandTable::addCppFunction("requestResourceWeights", commandFuncRequestResourceWeights);
 	CommandTable::addCppFunction("requestResourceWeightsBatch", commandFuncRequestResourceWeightsBatch);
-	CommandTable::addCppFunction("requestDraftSlots",         commandFuncRequestDraftSlots);
-	CommandTable::addCppFunction("requestDraftSlotsBatch",    commandFuncRequestDraftSlotsBatch);
+	CommandTable::addCppFunction("requestDraftSlots", commandFuncRequestDraftSlots);
+	CommandTable::addCppFunction("requestDraftSlotsBatch", commandFuncRequestDraftSlotsBatch);
 	CommandTable::addCppFunction("requestManfSchematicSlots", commandFuncRequestManfSchematicSlots);
-	CommandTable::addCppFunction("requestCraftingSession",    commandFuncRequestCraftingSession);
-	CommandTable::addCppFunction("requestCraftingSessionFail",commandFuncRequestCraftingSessionFail);
-	CommandTable::addCppFunction("selectDraftSchematic",      commandFuncSelectDraftSchematic);
-	CommandTable::addCppFunction("nextCraftingStage",         commandFuncNextCraftingStage);
-	CommandTable::addCppFunction("createPrototype",           commandFuncCreatePrototype);
-	CommandTable::addCppFunction("createManfSchematic",       commandFuncCreateManfSchematic);
-	CommandTable::addCppFunction("cancelCraftingSession",     commandFuncCancelCraftingSession);
-	CommandTable::addCppFunction("stopCraftingSession",       commandFuncStopCraftingSession);
-	CommandTable::addCppFunction("restartCraftingSession",    commandFuncRestartCraftingSession);
-	CommandTable::addCppFunction("extractObject",             commandFuncExtractObject);
-	CommandTable::addCppFunction("repair",                    commandFuncRepair);
-	CommandTable::addCppFunction("factoryCrateSplit",         commandFuncFactoryCrateSplit);
+	CommandTable::addCppFunction("requestCraftingSession", commandFuncRequestCraftingSession);
+	CommandTable::addCppFunction("requestCraftingSessionFail", commandFuncRequestCraftingSessionFail);
+	CommandTable::addCppFunction("selectDraftSchematic", commandFuncSelectDraftSchematic);
+	CommandTable::addCppFunction("nextCraftingStage", commandFuncNextCraftingStage);
+	CommandTable::addCppFunction("createPrototype", commandFuncCreatePrototype);
+	CommandTable::addCppFunction("createManfSchematic", commandFuncCreateManfSchematic);
+	CommandTable::addCppFunction("cancelCraftingSession", commandFuncCancelCraftingSession);
+	CommandTable::addCppFunction("stopCraftingSession", commandFuncStopCraftingSession);
+	CommandTable::addCppFunction("restartCraftingSession", commandFuncRestartCraftingSession);
+	CommandTable::addCppFunction("extractObject", commandFuncExtractObject);
+	CommandTable::addCppFunction("repair", commandFuncRepair);
+	CommandTable::addCppFunction("factoryCrateSplit", commandFuncFactoryCrateSplit);
 
 	// misc
-	CommandTable::addCppFunction("showDanceVisuals",          commandFuncShowDanceVisuals);
-	CommandTable::addCppFunction("showMusicianVisuals",       commandFuncShowMusicianVisuals);
-	CommandTable::addCppFunction("placeStructure",            commandFuncPlaceStructure);
-	CommandTable::addCppFunction("getAttributes",             commandFuncGetAttributes);
-	CommandTable::addCppFunction("getAttributesBatch",        commandFuncGetAttributesBatch);
-	CommandTable::addCppFunction("sitServer",                 commandFuncSitServer);
-	CommandTable::addCppFunction("jumpServer",                commandFuncJumpServer);
-	CommandTable::addCppFunction("purchaseTicket",            commandFuncPurchaseTicket);
-	CommandTable::addCppFunction("addFriend",                 commandFuncAddFriend);
-	CommandTable::addCppFunction("removeFriend",              commandFuncRemoveFriend);
-	CommandTable::addCppFunction("getFriendList",             commandFuncGetFriendList);
-	CommandTable::addCppFunction("addIgnore",                 commandFuncAddIgnore);
-	CommandTable::addCppFunction("removeIgnore",              commandFuncRemoveIgnore);
-	CommandTable::addCppFunction("getIgnoreList",             commandFuncGetIgnoreList);
-	CommandTable::addCppFunction("requestBiography",          commandFuncRequestBiography);
-	CommandTable::addCppFunction("setBiography",              commandFuncSetBiography);
+	CommandTable::addCppFunction("showDanceVisuals", commandFuncShowDanceVisuals);
+	CommandTable::addCppFunction("showMusicianVisuals", commandFuncShowMusicianVisuals);
+	CommandTable::addCppFunction("placeStructure", commandFuncPlaceStructure);
+	CommandTable::addCppFunction("getAttributes", commandFuncGetAttributes);
+	CommandTable::addCppFunction("getAttributesBatch", commandFuncGetAttributesBatch);
+	CommandTable::addCppFunction("sitServer", commandFuncSitServer);
+	CommandTable::addCppFunction("jumpServer", commandFuncJumpServer);
+	CommandTable::addCppFunction("purchaseTicket", commandFuncPurchaseTicket);
+	CommandTable::addCppFunction("addFriend", commandFuncAddFriend);
+	CommandTable::addCppFunction("removeFriend", commandFuncRemoveFriend);
+	CommandTable::addCppFunction("getFriendList", commandFuncGetFriendList);
+	CommandTable::addCppFunction("addIgnore", commandFuncAddIgnore);
+	CommandTable::addCppFunction("removeIgnore", commandFuncRemoveIgnore);
+	CommandTable::addCppFunction("getIgnoreList", commandFuncGetIgnoreList);
+	CommandTable::addCppFunction("requestBiography", commandFuncRequestBiography);
+	CommandTable::addCppFunction("setBiography", commandFuncSetBiography);
 	CommandTable::addCppFunction("requestWaypointAtPosition", commandFuncRequestWaypointAtPosition);
-	CommandTable::addCppFunction("serverDestroyObject",       commandFuncServerDestroyObject);
-	CommandTable::addCppFunction("setSpokenLanguage",         commandFuncSetSpokenLanguage);
-	CommandTable::addCppFunction("applyPowerup",              commandFuncApplyPowerup);
-	CommandTable::addCppFunction("report",                    commandFuncReport);
-	CommandTable::addCppFunction("resetCooldowns",            commandFuncResetCooldowns);
-	CommandTable::addCppFunction("spewCommandQueue",          commandFuncSpewCommandQueue);
-	CommandTable::addCppFunction("locateStructure",           commandFuncLocateStructure);
-	CommandTable::addCppFunction("locateVendor",              commandFuncLocateVendor);
-	CommandTable::addCppFunction("showCtsHistory",            commandFuncShowCtsHistory);
+	CommandTable::addCppFunction("serverDestroyObject", commandFuncServerDestroyObject);
+	CommandTable::addCppFunction("setSpokenLanguage", commandFuncSetSpokenLanguage);
+	CommandTable::addCppFunction("applyPowerup", commandFuncApplyPowerup);
+	CommandTable::addCppFunction("report", commandFuncReport);
+	CommandTable::addCppFunction("resetCooldowns", commandFuncResetCooldowns);
+	CommandTable::addCppFunction("spewCommandQueue", commandFuncSpewCommandQueue);
+	CommandTable::addCppFunction("locateStructure", commandFuncLocateStructure);
+	CommandTable::addCppFunction("locateVendor", commandFuncLocateVendor);
+	CommandTable::addCppFunction("showCtsHistory", commandFuncShowCtsHistory);
 	CommandTable::addCppFunction("pickupAllRoomItemsIntoInventory", commandFuncPickupAllRoomItemsIntoInventory);
 	CommandTable::addCppFunction("dropAllInventoryItemsIntoRoom", commandFuncDropAllInventoryItemsIntoRoom);
-	CommandTable::addCppFunction("saveDecorationLayout",      commandFuncSaveDecorationLayout);
-	CommandTable::addCppFunction("restoreDecorationLayout",   commandFuncRestoreDecorationLayout);
-	CommandTable::addCppFunction("areaPickRandomPlayer",      commandFuncAreaPickRandomPlayer);
-	CommandTable::addCppFunction("roomPickRandomPlayer",      commandFuncRoomPickRandomPlayer);
+	CommandTable::addCppFunction("saveDecorationLayout", commandFuncSaveDecorationLayout);
+	CommandTable::addCppFunction("restoreDecorationLayout", commandFuncRestoreDecorationLayout);
+	CommandTable::addCppFunction("areaPickRandomPlayer", commandFuncAreaPickRandomPlayer);
+	CommandTable::addCppFunction("roomPickRandomPlayer", commandFuncRoomPickRandomPlayer);
 
 	// match making
-	CommandTable::addCppFunction("setMatchMakingPersonalId",  commandFuncSetMatchMakingPersonalId);
+	CommandTable::addCppFunction("setMatchMakingPersonalId", commandFuncSetMatchMakingPersonalId);
 	CommandTable::addCppFunction("setMatchMakingCharacterId", commandFuncSetMatchMakingCharacterId);
-	CommandTable::addCppFunction("requestCharacterMatch",     commandFuncRequestCharacterMatch);
+	CommandTable::addCppFunction("requestCharacterMatch", commandFuncRequestCharacterMatch);
 	CommandTable::addCppFunction("toggleSearchableByCtsSourceGalaxy", commandFuncToggleSearchableByCtsSourceGalaxy);
 	CommandTable::addCppFunction("toggleDisplayLocationInSearchResults", commandFuncToggleDisplayLocationInSearchResults);
-	CommandTable::addCppFunction("toggleAnonymous",           commandFuncToggleAnonymous);
-	CommandTable::addCppFunction("toggleHelper",              commandFuncToggleHelper);
-	CommandTable::addCppFunction("toggleRolePlay",            commandFuncToggleRolePlay);
-	CommandTable::addCppFunction("toggleLookingForGroup",     commandFuncToggleLookingForGroup);
-	CommandTable::addCppFunction("toggleAwayFromKeyBoard",    commandFuncToggleAwayFromKeyBoard);
+	CommandTable::addCppFunction("toggleAnonymous", commandFuncToggleAnonymous);
+	CommandTable::addCppFunction("toggleHelper", commandFuncToggleHelper);
+	CommandTable::addCppFunction("toggleRolePlay", commandFuncToggleRolePlay);
+	CommandTable::addCppFunction("toggleLookingForGroup", commandFuncToggleLookingForGroup);
+	CommandTable::addCppFunction("toggleAwayFromKeyBoard", commandFuncToggleAwayFromKeyBoard);
 	CommandTable::addCppFunction("toggleDisplayingFactionRank", commandFuncToggleDisplayingFactionRank);
-	CommandTable::addCppFunction("toggleOutOfCharacter",      commandFuncToggleOutOfCharacter);
-	CommandTable::addCppFunction("toggleLookingForWork",      commandFuncToggleLookingForWork);
+	CommandTable::addCppFunction("toggleOutOfCharacter", commandFuncToggleOutOfCharacter);
+	CommandTable::addCppFunction("toggleLookingForWork", commandFuncToggleLookingForWork);
 
 	//skill
-	CommandTable::addCppFunction("revokeSkill",                 commandFuncRevokeSkill);
-	CommandTable::addCppFunction("setCurrentSkillTitle",        commandFuncSetCurrentSkillTitle);
+	CommandTable::addCppFunction("revokeSkill", commandFuncRevokeSkill);
+	CommandTable::addCppFunction("setCurrentSkillTitle", commandFuncSetCurrentSkillTitle);
 
 	//misc ui
-	CommandTable::addCppFunction("permissionListModify",        commandFuncPermissionListModify);
-	CommandTable::addCppFunction("requestCharacterSheetInfo",   commandFuncRequestCharacterSheetInfo);
-	CommandTable::addCppFunction("removeBuff",					commandFuncRemoveBuff);
+	CommandTable::addCppFunction("permissionListModify", commandFuncPermissionListModify);
+	CommandTable::addCppFunction("requestCharacterSheetInfo", commandFuncRequestCharacterSheetInfo);
+	CommandTable::addCppFunction("removeBuff", commandFuncRemoveBuff);
 
 	// npc conversation
-	CommandTable::addCppFunction("npcConversationStart",  commandFuncNpcConversationStart);
-	CommandTable::addCppFunction("npcConversationStop",   commandFuncNpcConversationStop);
+	CommandTable::addCppFunction("npcConversationStart", commandFuncNpcConversationStart);
+	CommandTable::addCppFunction("npcConversationStop", commandFuncNpcConversationStop);
 	CommandTable::addCppFunction("npcConversationSelect", commandFuncNpcConversationSelect);
-	CommandTable::addCppFunction("handleUnstick",               commandFuncUnstick);
-	CommandTable::addCppFunction("getAccountInfo",        commandFuncGetAccountInfo);
+	CommandTable::addCppFunction("handleUnstick", commandFuncUnstick);
+	CommandTable::addCppFunction("getAccountInfo", commandFuncGetAccountInfo);
 	CommandTable::addCppFunction("lag", commandFuncLag);
 
 	//knowledgebase (i.e. holocron)
@@ -9809,8 +9781,8 @@ void CommandCppFuncs::install()
 	CommandTable::addCppFunction("associateDroidControlDeviceWithShip", commandFuncAssociateDroidControlDeviceWithShip);
 	CommandTable::addCppFunction("unassociateDroidControlDeviceWithShip", commandFuncAssociateDroidControlDeviceWithShip);
 
-	CommandTable::addCppFunction("serverAsteroidDataListen"   ,        commandFuncServerAsteroidDataListen);
-	CommandTable::addCppFunction("serverAsteroidDataStopListening",    commandFuncServerAsteroidDataStopListening);
+	CommandTable::addCppFunction("serverAsteroidDataListen", commandFuncServerAsteroidDataListen);
+	CommandTable::addCppFunction("serverAsteroidDataStopListening", commandFuncServerAsteroidDataStopListening);
 
 	CommandTable::addCppFunction("boosterOn", commandFuncBoosterOn);
 	CommandTable::addCppFunction("boosterOff", commandFuncBoosterOff);
@@ -9824,7 +9796,7 @@ void CommandCppFuncs::install()
 	CommandTable::addCppFunction("abandonQuest", commandFuncAbandonQuest);
 
 	// exchange
-	CommandTable::addCppFunction("exchangeListCredits",   commandFuncExchangeListCredits);
+	CommandTable::addCppFunction("exchangeListCredits", commandFuncExchangeListCredits);
 
 	// squelch
 	CommandTable::addCppFunction("squelch", commandFuncSquelch);

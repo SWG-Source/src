@@ -22,11 +22,10 @@
 
 const std::string DefaultString("");
 const StringId DefaultStringId("", 0);
-const Vector DefaultVector(0,0,0);
+const Vector DefaultVector(0, 0, 0);
 const TriggerVolumeData DefaultTriggerVolumeData;
 
 bool ServerHarvesterInstallationObjectTemplate::ms_allowDefaultTemplateParams = true;
-
 
 /**
  * Class constructor.
@@ -34,8 +33,9 @@ bool ServerHarvesterInstallationObjectTemplate::ms_allowDefaultTemplateParams = 
 ServerHarvesterInstallationObjectTemplate::ServerHarvesterInstallationObjectTemplate(const std::string & filename)
 //@BEGIN TFD INIT
 	: ServerInstallationObjectTemplate(filename)
-	,m_versionOk(true)
-//@END TFD INIT
+	, m_versionOk(true)
+	, m_templateVersion(0)
+	//@END TFD INIT
 {
 }	// ServerHarvesterInstallationObjectTemplate::ServerHarvesterInstallationObjectTemplate
 
@@ -44,8 +44,8 @@ ServerHarvesterInstallationObjectTemplate::ServerHarvesterInstallationObjectTemp
  */
 ServerHarvesterInstallationObjectTemplate::~ServerHarvesterInstallationObjectTemplate()
 {
-//@BEGIN TFD CLEANUP
-//@END TFD CLEANUP
+	//@BEGIN TFD CLEANUP
+	//@END TFD CLEANUP
 }	// ServerHarvesterInstallationObjectTemplate::~ServerHarvesterInstallationObjectTemplate
 
 /**
@@ -114,8 +114,6 @@ Object * ServerHarvesterInstallationObjectTemplate::createObject(void) const
 //@BEGIN TFD
 int ServerHarvesterInstallationObjectTemplate::getMaxExtractionRate() const
 {
-
-
 	const ServerHarvesterInstallationObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -165,8 +163,6 @@ int ServerHarvesterInstallationObjectTemplate::getMaxExtractionRate() const
 
 int ServerHarvesterInstallationObjectTemplate::getMaxExtractionRateMin() const
 {
-
-
 	const ServerHarvesterInstallationObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -216,8 +212,6 @@ int ServerHarvesterInstallationObjectTemplate::getMaxExtractionRateMin() const
 
 int ServerHarvesterInstallationObjectTemplate::getMaxExtractionRateMax() const
 {
-
-
 	const ServerHarvesterInstallationObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -267,8 +261,6 @@ int ServerHarvesterInstallationObjectTemplate::getMaxExtractionRateMax() const
 
 int ServerHarvesterInstallationObjectTemplate::getCurrentExtractionRate() const
 {
-
-
 	const ServerHarvesterInstallationObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -318,8 +310,6 @@ int ServerHarvesterInstallationObjectTemplate::getCurrentExtractionRate() const
 
 int ServerHarvesterInstallationObjectTemplate::getCurrentExtractionRateMin() const
 {
-
-
 	const ServerHarvesterInstallationObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -369,8 +359,6 @@ int ServerHarvesterInstallationObjectTemplate::getCurrentExtractionRateMin() con
 
 int ServerHarvesterInstallationObjectTemplate::getCurrentExtractionRateMax() const
 {
-
-
 	const ServerHarvesterInstallationObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -420,8 +408,6 @@ int ServerHarvesterInstallationObjectTemplate::getCurrentExtractionRateMax() con
 
 int ServerHarvesterInstallationObjectTemplate::getMaxHopperSize() const
 {
-
-
 	const ServerHarvesterInstallationObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -471,8 +457,6 @@ int ServerHarvesterInstallationObjectTemplate::getMaxHopperSize() const
 
 int ServerHarvesterInstallationObjectTemplate::getMaxHopperSizeMin() const
 {
-
-
 	const ServerHarvesterInstallationObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -522,8 +506,6 @@ int ServerHarvesterInstallationObjectTemplate::getMaxHopperSizeMin() const
 
 int ServerHarvesterInstallationObjectTemplate::getMaxHopperSizeMax() const
 {
-
-
 	const ServerHarvesterInstallationObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -573,8 +555,6 @@ int ServerHarvesterInstallationObjectTemplate::getMaxHopperSizeMax() const
 
 const std::string & ServerHarvesterInstallationObjectTemplate::getMasterClassName() const
 {
-
-
 	const ServerHarvesterInstallationObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -600,7 +580,6 @@ const std::string & ServerHarvesterInstallationObjectTemplate::getMasterClassNam
 	return value;
 }	// ServerHarvesterInstallationObjectTemplate::getMasterClassName
 
-
 /**
  * Loads the template data from an iff file. We should already be in the form
  * for this template.
@@ -609,8 +588,8 @@ const std::string & ServerHarvesterInstallationObjectTemplate::getMasterClassNam
  */
 void ServerHarvesterInstallationObjectTemplate::load(Iff &file)
 {
-static const int MAX_NAME_SIZE = 256;
-char paramName[MAX_NAME_SIZE];
+	static const int MAX_NAME_SIZE = 256;
+	char paramName[MAX_NAME_SIZE];
 
 	if (file.getCurrentName() != ServerHarvesterInstallationObjectTemplate_tag)
 	{
@@ -620,7 +599,7 @@ char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 	m_templateVersion = file.getCurrentName();
-	if (m_templateVersion == TAG(D,E,R,V))
+	if (m_templateVersion == TAG(D, E, R, V))
 	{
 		file.enterForm();
 		file.enterChunk();
@@ -640,10 +619,8 @@ char paramName[MAX_NAME_SIZE];
 		file.exitForm();
 		m_templateVersion = file.getCurrentName();
 	}
-	if (getHighestTemplateVersion() != TAG(0,0,0,0))
+	if (getHighestTemplateVersion() != TAG(0, 0, 0, 0))
 	{
-		
-			
 		m_versionOk = false;
 	}
 

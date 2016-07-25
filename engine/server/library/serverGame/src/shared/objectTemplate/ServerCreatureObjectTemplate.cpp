@@ -26,11 +26,10 @@
 
 const std::string DefaultString("");
 const StringId DefaultStringId("", 0);
-const Vector DefaultVector(0,0,0);
+const Vector DefaultVector(0, 0, 0);
 const TriggerVolumeData DefaultTriggerVolumeData;
 
 bool ServerCreatureObjectTemplate::ms_allowDefaultTemplateParams = true;
-
 
 /**
  * Class constructor.
@@ -38,10 +37,11 @@ bool ServerCreatureObjectTemplate::ms_allowDefaultTemplateParams = true;
 ServerCreatureObjectTemplate::ServerCreatureObjectTemplate(const std::string & filename)
 //@BEGIN TFD INIT
 	: ServerTangibleObjectTemplate(filename)
-	,m_attribModsLoaded(false)
-	,m_attribModsAppend(false)
-	,m_versionOk(true)
-//@END TFD INIT
+	, m_attribModsLoaded(false)
+	, m_attribModsAppend(false)
+	, m_versionOk(true)
+	, m_templateVersion(0)
+	//@END TFD INIT
 {
 }	// ServerCreatureObjectTemplate::ServerCreatureObjectTemplate
 
@@ -50,7 +50,7 @@ ServerCreatureObjectTemplate::ServerCreatureObjectTemplate(const std::string & f
  */
 ServerCreatureObjectTemplate::~ServerCreatureObjectTemplate()
 {
-//@BEGIN TFD CLEANUP
+	//@BEGIN TFD CLEANUP
 	{
 		std::vector<StructParamOT *>::iterator iter;
 		for (iter = m_attribMods.begin(); iter != m_attribMods.end(); ++iter)
@@ -60,7 +60,7 @@ ServerCreatureObjectTemplate::~ServerCreatureObjectTemplate()
 		}
 		m_attribMods.clear();
 	}
-//@END TFD CLEANUP
+	//@END TFD CLEANUP
 }	// ServerCreatureObjectTemplate::~ServerCreatureObjectTemplate
 
 /**
@@ -155,7 +155,7 @@ const ServerWeaponObjectTemplate * ServerCreatureObjectTemplate::getDefaultWeapo
 	{
 		returnValue = dynamic_cast<const ServerWeaponObjectTemplate *>(ObjectTemplateList::fetch(templateName));
 		if (returnValue == nullptr)
-			WARNING_STRICT_FATAL(true, ("Error loading template %s",templateName.c_str()));
+			WARNING_STRICT_FATAL(true, ("Error loading template %s", templateName.c_str()));
 	}
 	return returnValue;
 }	// ServerCreatureObjectTemplate::getDefaultWeapon
@@ -603,8 +603,6 @@ int ServerCreatureObjectTemplate::getMaxAttributesMax(Attributes index) const
 
 float ServerCreatureObjectTemplate::getMinDrainModifier() const
 {
-
-
 	const ServerCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -654,8 +652,6 @@ float ServerCreatureObjectTemplate::getMinDrainModifier() const
 
 float ServerCreatureObjectTemplate::getMinDrainModifierMin() const
 {
-
-
 	const ServerCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -705,8 +701,6 @@ float ServerCreatureObjectTemplate::getMinDrainModifierMin() const
 
 float ServerCreatureObjectTemplate::getMinDrainModifierMax() const
 {
-
-
 	const ServerCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -756,8 +750,6 @@ float ServerCreatureObjectTemplate::getMinDrainModifierMax() const
 
 float ServerCreatureObjectTemplate::getMaxDrainModifier() const
 {
-
-
 	const ServerCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -807,8 +799,6 @@ float ServerCreatureObjectTemplate::getMaxDrainModifier() const
 
 float ServerCreatureObjectTemplate::getMaxDrainModifierMin() const
 {
-
-
 	const ServerCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -858,8 +848,6 @@ float ServerCreatureObjectTemplate::getMaxDrainModifierMin() const
 
 float ServerCreatureObjectTemplate::getMaxDrainModifierMax() const
 {
-
-
 	const ServerCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -909,8 +897,6 @@ float ServerCreatureObjectTemplate::getMaxDrainModifierMax() const
 
 float ServerCreatureObjectTemplate::getMinFaucetModifier() const
 {
-
-
 	const ServerCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -960,8 +946,6 @@ float ServerCreatureObjectTemplate::getMinFaucetModifier() const
 
 float ServerCreatureObjectTemplate::getMinFaucetModifierMin() const
 {
-
-
 	const ServerCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1011,8 +995,6 @@ float ServerCreatureObjectTemplate::getMinFaucetModifierMin() const
 
 float ServerCreatureObjectTemplate::getMinFaucetModifierMax() const
 {
-
-
 	const ServerCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1062,8 +1044,6 @@ float ServerCreatureObjectTemplate::getMinFaucetModifierMax() const
 
 float ServerCreatureObjectTemplate::getMaxFaucetModifier() const
 {
-
-
 	const ServerCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1113,8 +1093,6 @@ float ServerCreatureObjectTemplate::getMaxFaucetModifier() const
 
 float ServerCreatureObjectTemplate::getMaxFaucetModifierMin() const
 {
-
-
 	const ServerCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1164,8 +1142,6 @@ float ServerCreatureObjectTemplate::getMaxFaucetModifierMin() const
 
 float ServerCreatureObjectTemplate::getMaxFaucetModifierMax() const
 {
-
-
 	const ServerCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1226,7 +1202,7 @@ void ServerCreatureObjectTemplate::getAttribMods(AttribMod &data, int index) con
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter attribMods in template %s", DataResource::getName()));
-			return ;
+			return;
 		}
 		else
 		{
@@ -1240,10 +1216,10 @@ void ServerCreatureObjectTemplate::getAttribMods(AttribMod &data, int index) con
 	{
 		int baseCount = base->getAttribModsCount();
 		if (static_cast<int>(index) < baseCount)
-			{
-				base->getAttribMods(data, index);
-				return;
-			}
+		{
+			base->getAttribMods(data, index);
+			return;
+		}
 		index -= baseCount;
 	}
 
@@ -1272,7 +1248,7 @@ void ServerCreatureObjectTemplate::getAttribModsMin(AttribMod &data, int index) 
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter attribMods in template %s", DataResource::getName()));
-			return ;
+			return;
 		}
 		else
 		{
@@ -1286,10 +1262,10 @@ void ServerCreatureObjectTemplate::getAttribModsMin(AttribMod &data, int index) 
 	{
 		int baseCount = base->getAttribModsCount();
 		if (static_cast<int>(index) < baseCount)
-			{
-				base->getAttribModsMin(data, index);
-				return;
-			}
+		{
+			base->getAttribModsMin(data, index);
+			return;
+		}
 		index -= baseCount;
 	}
 
@@ -1318,7 +1294,7 @@ void ServerCreatureObjectTemplate::getAttribModsMax(AttribMod &data, int index) 
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter attribMods in template %s", DataResource::getName()));
-			return ;
+			return;
 		}
 		else
 		{
@@ -1332,10 +1308,10 @@ void ServerCreatureObjectTemplate::getAttribModsMax(AttribMod &data, int index) 
 	{
 		int baseCount = base->getAttribModsCount();
 		if (static_cast<int>(index) < baseCount)
-			{
-				base->getAttribModsMax(data, index);
-				return;
-			}
+		{
+			base->getAttribModsMax(data, index);
+			return;
+		}
 		index -= baseCount;
 	}
 
@@ -1377,8 +1353,6 @@ size_t ServerCreatureObjectTemplate::getAttribModsCount(void) const
 
 int ServerCreatureObjectTemplate::getShockWounds() const
 {
-
-
 	const ServerCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1428,8 +1402,6 @@ int ServerCreatureObjectTemplate::getShockWounds() const
 
 int ServerCreatureObjectTemplate::getShockWoundsMin() const
 {
-
-
 	const ServerCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1479,8 +1451,6 @@ int ServerCreatureObjectTemplate::getShockWoundsMin() const
 
 int ServerCreatureObjectTemplate::getShockWoundsMax() const
 {
-
-
 	const ServerCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1530,8 +1500,6 @@ int ServerCreatureObjectTemplate::getShockWoundsMax() const
 
 bool ServerCreatureObjectTemplate::getCanCreateAvatar() const
 {
-
-
 	const ServerCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1559,8 +1527,6 @@ bool ServerCreatureObjectTemplate::getCanCreateAvatar() const
 
 const std::string & ServerCreatureObjectTemplate::getNameGeneratorType() const
 {
-
-
 	const ServerCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1588,8 +1554,6 @@ const std::string & ServerCreatureObjectTemplate::getNameGeneratorType() const
 
 float ServerCreatureObjectTemplate::getApproachTriggerRange() const
 {
-
-
 	const ServerCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1639,8 +1603,6 @@ float ServerCreatureObjectTemplate::getApproachTriggerRange() const
 
 float ServerCreatureObjectTemplate::getApproachTriggerRangeMin() const
 {
-
-
 	const ServerCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1690,8 +1652,6 @@ float ServerCreatureObjectTemplate::getApproachTriggerRangeMin() const
 
 float ServerCreatureObjectTemplate::getApproachTriggerRangeMax() const
 {
-
-
 	const ServerCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -2033,7 +1993,6 @@ float ServerCreatureObjectTemplate::getMentalStatesDecayMax(MentalStates index) 
 	return value;
 }	// ServerCreatureObjectTemplate::getMentalStatesDecayMax
 
-
 /**
  * Loads the template data from an iff file. We should already be in the form
  * for this template.
@@ -2042,8 +2001,8 @@ float ServerCreatureObjectTemplate::getMentalStatesDecayMax(MentalStates index) 
  */
 void ServerCreatureObjectTemplate::load(Iff &file)
 {
-static const int MAX_NAME_SIZE = 256;
-char paramName[MAX_NAME_SIZE];
+	static const int MAX_NAME_SIZE = 256;
+	char paramName[MAX_NAME_SIZE];
 
 	if (file.getCurrentName() != ServerCreatureObjectTemplate_tag)
 	{
@@ -2053,7 +2012,7 @@ char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 	m_templateVersion = file.getCurrentName();
-	if (m_templateVersion == TAG(D,E,R,V))
+	if (m_templateVersion == TAG(D, E, R, V))
 	{
 		file.enterForm();
 		file.enterChunk();
@@ -2073,10 +2032,8 @@ char paramName[MAX_NAME_SIZE];
 		file.exitForm();
 		m_templateVersion = file.getCurrentName();
 	}
-	if (getHighestTemplateVersion() != TAG(0,0,0,5))
+	if (getHighestTemplateVersion() != TAG(0, 0, 0, 5))
 	{
-		
-			
 		m_versionOk = false;
 	}
 

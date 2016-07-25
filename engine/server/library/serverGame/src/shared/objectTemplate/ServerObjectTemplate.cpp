@@ -26,14 +26,13 @@
 
 const std::string DefaultString("");
 const StringId DefaultStringId("", 0);
-const Vector DefaultVector(0,0,0);
+const Vector DefaultVector(0, 0, 0);
 const TriggerVolumeData DefaultTriggerVolumeData;
 
 bool ServerObjectTemplate::ms_allowDefaultTemplateParams = true;
 
-typedef std::unordered_map<ServerObjectTemplate::XpTypes, std::string, std::hash<int> > XP_MAP; 
+typedef std::unordered_map<ServerObjectTemplate::XpTypes, std::string, std::hash<int> > XP_MAP;
 static XP_MAP * XpMap = nullptr;
-
 
 /**
  * Class constructor.
@@ -41,20 +40,21 @@ static XP_MAP * XpMap = nullptr;
 ServerObjectTemplate::ServerObjectTemplate(const std::string & filename)
 //@BEGIN TFD INIT
 	: ObjectTemplate(filename)
-	,m_scriptsLoaded(false)
-	,m_scriptsAppend(false)
-	,m_visibleFlagsLoaded(false)
-	,m_visibleFlagsAppend(false)
-	,m_deleteFlagsLoaded(false)
-	,m_deleteFlagsAppend(false)
-	,m_moveFlagsLoaded(false)
-	,m_moveFlagsAppend(false)
-	,m_contentsLoaded(false)
-	,m_contentsAppend(false)
-	,m_xpPointsLoaded(false)
-	,m_xpPointsAppend(false)
-	,m_versionOk(true)
-//@END TFD INIT
+	, m_scriptsLoaded(false)
+	, m_scriptsAppend(false)
+	, m_visibleFlagsLoaded(false)
+	, m_visibleFlagsAppend(false)
+	, m_deleteFlagsLoaded(false)
+	, m_deleteFlagsAppend(false)
+	, m_moveFlagsLoaded(false)
+	, m_moveFlagsAppend(false)
+	, m_contentsLoaded(false)
+	, m_contentsAppend(false)
+	, m_xpPointsLoaded(false)
+	, m_xpPointsAppend(false)
+	, m_versionOk(true)
+	, m_templateVersion(0)
+	//@END TFD INIT
 {
 }	// ServerObjectTemplate::ServerObjectTemplate
 
@@ -66,9 +66,9 @@ ServerObjectTemplate::~ServerObjectTemplate()
 	if (m_baseData)
 	{
 		m_baseData->releaseReference();
-		m_baseData=0;
+		m_baseData = 0;
 	}
-//@BEGIN TFD CLEANUP
+	//@BEGIN TFD CLEANUP
 	{
 		std::vector<StringParam *>::iterator iter;
 		for (iter = m_scripts.begin(); iter != m_scripts.end(); ++iter)
@@ -123,7 +123,7 @@ ServerObjectTemplate::~ServerObjectTemplate()
 		}
 		m_xpPoints.clear();
 	}
-//@END TFD CLEANUP
+	//@END TFD CLEANUP
 }	// ServerObjectTemplate::~ServerObjectTemplate
 
 /**
@@ -299,11 +299,11 @@ const std::string & ServerObjectTemplate::getXpString(XpTypes type)
 
 //----------------------------------------------------------------------
 
-const std::string & ServerObjectTemplate::getDamageTypeString  (DamageType type)
+const std::string & ServerObjectTemplate::getDamageTypeString(DamageType type)
 {
 	static const std::string emptyString;
 
-	static const std::string DAMAGE_TYPE_NAMES[] = 
+	static const std::string DAMAGE_TYPE_NAMES[] =
 	{
 		"kinetic",
 		"energy",
@@ -329,7 +329,7 @@ const std::string & ServerObjectTemplate::getDamageTypeString  (DamageType type)
 		for (int index = 0; index < DAMAGE_TYPE_NAMES_SIZE; ++index)
 		{
 			if ((i_damage & (1 << index)) != 0)
-				return DAMAGE_TYPE_NAMES [index];
+				return DAMAGE_TYPE_NAMES[index];
 		}
 	}
 
@@ -338,11 +338,11 @@ const std::string & ServerObjectTemplate::getDamageTypeString  (DamageType type)
 
 //----------------------------------------------------------------------
 
-const std::string & ServerObjectTemplate::getArmorRatingString (ArmorRating type)
+const std::string & ServerObjectTemplate::getArmorRatingString(ArmorRating type)
 {
 	static const std::string emptyString;
 
-	static const std::string ARMOR_RATING_NAMES[] = 
+	static const std::string ARMOR_RATING_NAMES[] =
 	{
 		"none",
 		"light",
@@ -357,7 +357,7 @@ const std::string & ServerObjectTemplate::getArmorRatingString (ArmorRating type
 	if (i_type < 0 || i_type >= ARMOR_RATING_NAMES_SIZE)
 		return emptyString;
 
-	return ARMOR_RATING_NAMES [i_type];
+	return ARMOR_RATING_NAMES[i_type];
 }
 
 //----------------------------------------------------------------------
@@ -365,8 +365,6 @@ const std::string & ServerObjectTemplate::getArmorRatingString (ArmorRating type
 //@BEGIN TFD
 const std::string & ServerObjectTemplate::getSharedTemplate() const
 {
-
-
 	const ServerObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -464,7 +462,7 @@ void ServerObjectTemplate::getObjvars(DynamicVariableList &list) const
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter objvars in template %s", DataResource::getName()));
-			return ;
+			return;
 		}
 		else
 		{
@@ -481,8 +479,6 @@ void ServerObjectTemplate::getObjvars(DynamicVariableList &list) const
 
 int ServerObjectTemplate::getVolume() const
 {
-
-
 	const ServerObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -532,8 +528,6 @@ int ServerObjectTemplate::getVolume() const
 
 int ServerObjectTemplate::getVolumeMin() const
 {
-
-
 	const ServerObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -583,8 +577,6 @@ int ServerObjectTemplate::getVolumeMin() const
 
 int ServerObjectTemplate::getVolumeMax() const
 {
-
-
 	const ServerObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -808,8 +800,6 @@ size_t ServerObjectTemplate::getMoveFlagsCount(void) const
 
 bool ServerObjectTemplate::getInvulnerable() const
 {
-
-
 	const ServerObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -837,8 +827,6 @@ bool ServerObjectTemplate::getInvulnerable() const
 
 float ServerObjectTemplate::getComplexity() const
 {
-
-
 	const ServerObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -888,8 +876,6 @@ float ServerObjectTemplate::getComplexity() const
 
 float ServerObjectTemplate::getComplexityMin() const
 {
-
-
 	const ServerObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -939,8 +925,6 @@ float ServerObjectTemplate::getComplexityMin() const
 
 float ServerObjectTemplate::getComplexityMax() const
 {
-
-
 	const ServerObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -990,8 +974,6 @@ float ServerObjectTemplate::getComplexityMax() const
 
 int ServerObjectTemplate::getTintIndex() const
 {
-
-
 	const ServerObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1041,8 +1023,6 @@ int ServerObjectTemplate::getTintIndex() const
 
 int ServerObjectTemplate::getTintIndexMin() const
 {
-
-
 	const ServerObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1092,8 +1072,6 @@ int ServerObjectTemplate::getTintIndexMin() const
 
 int ServerObjectTemplate::getTintIndexMax() const
 {
-
-
 	const ServerObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1301,7 +1279,7 @@ void ServerObjectTemplate::getContents(Contents &data, int index) const
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter contents in template %s", DataResource::getName()));
-			return ;
+			return;
 		}
 		else
 		{
@@ -1315,10 +1293,10 @@ void ServerObjectTemplate::getContents(Contents &data, int index) const
 	{
 		int baseCount = base->getContentsCount();
 		if (index < baseCount)
-			{
-				base->getContents(data, index);
-				return;
-			}
+		{
+			base->getContents(data, index);
+			return;
+		}
 		index -= baseCount;
 	}
 
@@ -1345,7 +1323,7 @@ void ServerObjectTemplate::getContentsMin(Contents &data, int index) const
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter contents in template %s", DataResource::getName()));
-			return ;
+			return;
 		}
 		else
 		{
@@ -1359,10 +1337,10 @@ void ServerObjectTemplate::getContentsMin(Contents &data, int index) const
 	{
 		int baseCount = base->getContentsCount();
 		if (index < baseCount)
-			{
-				base->getContentsMin(data, index);
-				return;
-			}
+		{
+			base->getContentsMin(data, index);
+			return;
+		}
 		index -= baseCount;
 	}
 
@@ -1389,7 +1367,7 @@ void ServerObjectTemplate::getContentsMax(Contents &data, int index) const
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter contents in template %s", DataResource::getName()));
-			return ;
+			return;
 		}
 		else
 		{
@@ -1403,10 +1381,10 @@ void ServerObjectTemplate::getContentsMax(Contents &data, int index) const
 	{
 		int baseCount = base->getContentsCount();
 		if (index < baseCount)
-			{
-				base->getContentsMax(data, index);
-				return;
-			}
+		{
+			base->getContentsMax(data, index);
+			return;
+		}
 		index -= baseCount;
 	}
 
@@ -1457,7 +1435,7 @@ void ServerObjectTemplate::getXpPoints(Xp &data, int index) const
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter xpPoints in template %s", DataResource::getName()));
-			return ;
+			return;
 		}
 		else
 		{
@@ -1471,10 +1449,10 @@ void ServerObjectTemplate::getXpPoints(Xp &data, int index) const
 	{
 		int baseCount = base->getXpPointsCount();
 		if (index < baseCount)
-			{
-				base->getXpPoints(data, index);
-				return;
-			}
+		{
+			base->getXpPoints(data, index);
+			return;
+		}
 		index -= baseCount;
 	}
 
@@ -1501,7 +1479,7 @@ void ServerObjectTemplate::getXpPointsMin(Xp &data, int index) const
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter xpPoints in template %s", DataResource::getName()));
-			return ;
+			return;
 		}
 		else
 		{
@@ -1515,10 +1493,10 @@ void ServerObjectTemplate::getXpPointsMin(Xp &data, int index) const
 	{
 		int baseCount = base->getXpPointsCount();
 		if (index < baseCount)
-			{
-				base->getXpPointsMin(data, index);
-				return;
-			}
+		{
+			base->getXpPointsMin(data, index);
+			return;
+		}
 		index -= baseCount;
 	}
 
@@ -1545,7 +1523,7 @@ void ServerObjectTemplate::getXpPointsMax(Xp &data, int index) const
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter xpPoints in template %s", DataResource::getName()));
-			return ;
+			return;
 		}
 		else
 		{
@@ -1559,10 +1537,10 @@ void ServerObjectTemplate::getXpPointsMax(Xp &data, int index) const
 	{
 		int baseCount = base->getXpPointsCount();
 		if (index < baseCount)
-			{
-				base->getXpPointsMax(data, index);
-				return;
-			}
+		{
+			base->getXpPointsMax(data, index);
+			return;
+		}
 		index -= baseCount;
 	}
 
@@ -1602,8 +1580,6 @@ size_t ServerObjectTemplate::getXpPointsCount(void) const
 
 bool ServerObjectTemplate::getPersistByDefault() const
 {
-
-
 	const ServerObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1631,8 +1607,6 @@ bool ServerObjectTemplate::getPersistByDefault() const
 
 bool ServerObjectTemplate::getPersistContents() const
 {
-
-
 	const ServerObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1658,7 +1632,6 @@ bool ServerObjectTemplate::getPersistContents() const
 	return value;
 }	// ServerObjectTemplate::getPersistContents
 
-
 /**
  * Loads the template data from an iff file. We should already be in the form
  * for this template.
@@ -1667,8 +1640,8 @@ bool ServerObjectTemplate::getPersistContents() const
  */
 void ServerObjectTemplate::load(Iff &file)
 {
-static const int MAX_NAME_SIZE = 256;
-char paramName[MAX_NAME_SIZE];
+	static const int MAX_NAME_SIZE = 256;
+	char paramName[MAX_NAME_SIZE];
 
 	if (file.getCurrentName() != ServerObjectTemplate_tag)
 	{
@@ -1677,7 +1650,7 @@ char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 	m_templateVersion = file.getCurrentName();
-	if (m_templateVersion == TAG(D,E,R,V))
+	if (m_templateVersion == TAG(D, E, R, V))
 	{
 		file.enterForm();
 		file.enterChunk();
@@ -1697,10 +1670,8 @@ char paramName[MAX_NAME_SIZE];
 		file.exitForm();
 		m_templateVersion = file.getCurrentName();
 	}
-	if (getHighestTemplateVersion() != TAG(0,0,1,1))
+	if (getHighestTemplateVersion() != TAG(0, 0, 1, 1))
 	{
-		
-			
 		m_versionOk = false;
 	}
 
@@ -1864,7 +1835,6 @@ char paramName[MAX_NAME_SIZE];
 	return;
 }	// ServerObjectTemplate::load
 
-
 //=============================================================================
 // class ServerObjectTemplate::_AttribMod
 
@@ -1913,8 +1883,6 @@ Tag ServerObjectTemplate::_AttribMod::getId(void) const
 
 ServerObjectTemplate::Attributes ServerObjectTemplate::_AttribMod::getTarget(bool versionOk) const
 {
-
-
 	const ServerObjectTemplate::_AttribMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1942,8 +1910,6 @@ ServerObjectTemplate::Attributes ServerObjectTemplate::_AttribMod::getTarget(boo
 
 int ServerObjectTemplate::_AttribMod::getValue(bool versionOk) const
 {
-
-
 	const ServerObjectTemplate::_AttribMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1993,8 +1959,6 @@ int ServerObjectTemplate::_AttribMod::getValue(bool versionOk) const
 
 int ServerObjectTemplate::_AttribMod::getValueMin(bool versionOk) const
 {
-
-
 	const ServerObjectTemplate::_AttribMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -2044,8 +2008,6 @@ int ServerObjectTemplate::_AttribMod::getValueMin(bool versionOk) const
 
 int ServerObjectTemplate::_AttribMod::getValueMax(bool versionOk) const
 {
-
-
 	const ServerObjectTemplate::_AttribMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -2095,8 +2057,6 @@ int ServerObjectTemplate::_AttribMod::getValueMax(bool versionOk) const
 
 float ServerObjectTemplate::_AttribMod::getTime(bool versionOk) const
 {
-
-
 	const ServerObjectTemplate::_AttribMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -2146,8 +2106,6 @@ float ServerObjectTemplate::_AttribMod::getTime(bool versionOk) const
 
 float ServerObjectTemplate::_AttribMod::getTimeMin(bool versionOk) const
 {
-
-
 	const ServerObjectTemplate::_AttribMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -2197,8 +2155,6 @@ float ServerObjectTemplate::_AttribMod::getTimeMin(bool versionOk) const
 
 float ServerObjectTemplate::_AttribMod::getTimeMax(bool versionOk) const
 {
-
-
 	const ServerObjectTemplate::_AttribMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -2248,8 +2204,6 @@ float ServerObjectTemplate::_AttribMod::getTimeMax(bool versionOk) const
 
 float ServerObjectTemplate::_AttribMod::getTimeAtValue(bool versionOk) const
 {
-
-
 	const ServerObjectTemplate::_AttribMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -2299,8 +2253,6 @@ float ServerObjectTemplate::_AttribMod::getTimeAtValue(bool versionOk) const
 
 float ServerObjectTemplate::_AttribMod::getTimeAtValueMin(bool versionOk) const
 {
-
-
 	const ServerObjectTemplate::_AttribMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -2350,8 +2302,6 @@ float ServerObjectTemplate::_AttribMod::getTimeAtValueMin(bool versionOk) const
 
 float ServerObjectTemplate::_AttribMod::getTimeAtValueMax(bool versionOk) const
 {
-
-
 	const ServerObjectTemplate::_AttribMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -2401,8 +2351,6 @@ float ServerObjectTemplate::_AttribMod::getTimeAtValueMax(bool versionOk) const
 
 float ServerObjectTemplate::_AttribMod::getDecay(bool versionOk) const
 {
-
-
 	const ServerObjectTemplate::_AttribMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -2452,8 +2400,6 @@ float ServerObjectTemplate::_AttribMod::getDecay(bool versionOk) const
 
 float ServerObjectTemplate::_AttribMod::getDecayMin(bool versionOk) const
 {
-
-
 	const ServerObjectTemplate::_AttribMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -2503,8 +2449,6 @@ float ServerObjectTemplate::_AttribMod::getDecayMin(bool versionOk) const
 
 float ServerObjectTemplate::_AttribMod::getDecayMax(bool versionOk) const
 {
-
-
 	const ServerObjectTemplate::_AttribMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -2552,7 +2496,6 @@ float ServerObjectTemplate::_AttribMod::getDecayMax(bool versionOk) const
 	return value;
 }	// ServerObjectTemplate::_AttribMod::getDecayMax
 
-
 /**
  * Loads the template data from an iff file. We should already be in the form
  * for this template.
@@ -2561,8 +2504,8 @@ float ServerObjectTemplate::_AttribMod::getDecayMax(bool versionOk) const
  */
 void ServerObjectTemplate::_AttribMod::load(Iff &file)
 {
-static const int MAX_NAME_SIZE = 256;
-char paramName[MAX_NAME_SIZE];
+	static const int MAX_NAME_SIZE = 256;
+	char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 
@@ -2589,7 +2532,6 @@ char paramName[MAX_NAME_SIZE];
 	file.exitForm();
 	UNREF(file);
 }	// ServerObjectTemplate::_AttribMod::load
-
 
 //=============================================================================
 // struct ServerObjectTemplate::Contents
@@ -2636,7 +2578,6 @@ ServerObjectTemplate::Contents & ServerObjectTemplate::Contents::operator =(cons
 	return *this;
 } // ServerObjectTemplate::Contents::operator =
 #endif
-
 
 //=============================================================================
 // class ServerObjectTemplate::_Contents
@@ -2686,8 +2627,6 @@ Tag ServerObjectTemplate::_Contents::getId(void) const
 
 const std::string & ServerObjectTemplate::_Contents::getSlotName(bool versionOk) const
 {
-
-
 	const ServerObjectTemplate::_Contents * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -2715,8 +2654,6 @@ const std::string & ServerObjectTemplate::_Contents::getSlotName(bool versionOk)
 
 bool ServerObjectTemplate::_Contents::getEquipObject(bool versionOk) const
 {
-
-
 	const ServerObjectTemplate::_Contents * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -2770,11 +2707,10 @@ const ServerObjectTemplate * ServerObjectTemplate::_Contents::getContent(bool ve
 	{
 		returnValue = dynamic_cast<const ServerObjectTemplate *>(ObjectTemplateList::fetch(templateName));
 		if (returnValue == nullptr)
-			WARNING_STRICT_FATAL(true, ("Error loading template %s",templateName.c_str()));
+			WARNING_STRICT_FATAL(true, ("Error loading template %s", templateName.c_str()));
 	}
 	return returnValue;
 }	// ServerObjectTemplate::_Contents::getContent
-
 
 /**
  * Loads the template data from an iff file. We should already be in the form
@@ -2784,8 +2720,8 @@ const ServerObjectTemplate * ServerObjectTemplate::_Contents::getContent(bool ve
  */
 void ServerObjectTemplate::_Contents::load(Iff &file)
 {
-static const int MAX_NAME_SIZE = 256;
-char paramName[MAX_NAME_SIZE];
+	static const int MAX_NAME_SIZE = 256;
+	char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 
@@ -2808,7 +2744,6 @@ char paramName[MAX_NAME_SIZE];
 	file.exitForm();
 	UNREF(file);
 }	// ServerObjectTemplate::_Contents::load
-
 
 //=============================================================================
 // class ServerObjectTemplate::_MentalStateMod
@@ -2858,8 +2793,6 @@ Tag ServerObjectTemplate::_MentalStateMod::getId(void) const
 
 ServerObjectTemplate::MentalStates ServerObjectTemplate::_MentalStateMod::getTarget(bool versionOk) const
 {
-
-
 	const ServerObjectTemplate::_MentalStateMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -2887,8 +2820,6 @@ ServerObjectTemplate::MentalStates ServerObjectTemplate::_MentalStateMod::getTar
 
 float ServerObjectTemplate::_MentalStateMod::getValue(bool versionOk) const
 {
-
-
 	const ServerObjectTemplate::_MentalStateMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -2938,8 +2869,6 @@ float ServerObjectTemplate::_MentalStateMod::getValue(bool versionOk) const
 
 float ServerObjectTemplate::_MentalStateMod::getValueMin(bool versionOk) const
 {
-
-
 	const ServerObjectTemplate::_MentalStateMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -2989,8 +2918,6 @@ float ServerObjectTemplate::_MentalStateMod::getValueMin(bool versionOk) const
 
 float ServerObjectTemplate::_MentalStateMod::getValueMax(bool versionOk) const
 {
-
-
 	const ServerObjectTemplate::_MentalStateMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -3040,8 +2967,6 @@ float ServerObjectTemplate::_MentalStateMod::getValueMax(bool versionOk) const
 
 float ServerObjectTemplate::_MentalStateMod::getTime(bool versionOk) const
 {
-
-
 	const ServerObjectTemplate::_MentalStateMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -3091,8 +3016,6 @@ float ServerObjectTemplate::_MentalStateMod::getTime(bool versionOk) const
 
 float ServerObjectTemplate::_MentalStateMod::getTimeMin(bool versionOk) const
 {
-
-
 	const ServerObjectTemplate::_MentalStateMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -3142,8 +3065,6 @@ float ServerObjectTemplate::_MentalStateMod::getTimeMin(bool versionOk) const
 
 float ServerObjectTemplate::_MentalStateMod::getTimeMax(bool versionOk) const
 {
-
-
 	const ServerObjectTemplate::_MentalStateMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -3193,8 +3114,6 @@ float ServerObjectTemplate::_MentalStateMod::getTimeMax(bool versionOk) const
 
 float ServerObjectTemplate::_MentalStateMod::getTimeAtValue(bool versionOk) const
 {
-
-
 	const ServerObjectTemplate::_MentalStateMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -3244,8 +3163,6 @@ float ServerObjectTemplate::_MentalStateMod::getTimeAtValue(bool versionOk) cons
 
 float ServerObjectTemplate::_MentalStateMod::getTimeAtValueMin(bool versionOk) const
 {
-
-
 	const ServerObjectTemplate::_MentalStateMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -3295,8 +3212,6 @@ float ServerObjectTemplate::_MentalStateMod::getTimeAtValueMin(bool versionOk) c
 
 float ServerObjectTemplate::_MentalStateMod::getTimeAtValueMax(bool versionOk) const
 {
-
-
 	const ServerObjectTemplate::_MentalStateMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -3346,8 +3261,6 @@ float ServerObjectTemplate::_MentalStateMod::getTimeAtValueMax(bool versionOk) c
 
 float ServerObjectTemplate::_MentalStateMod::getDecay(bool versionOk) const
 {
-
-
 	const ServerObjectTemplate::_MentalStateMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -3397,8 +3310,6 @@ float ServerObjectTemplate::_MentalStateMod::getDecay(bool versionOk) const
 
 float ServerObjectTemplate::_MentalStateMod::getDecayMin(bool versionOk) const
 {
-
-
 	const ServerObjectTemplate::_MentalStateMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -3448,8 +3359,6 @@ float ServerObjectTemplate::_MentalStateMod::getDecayMin(bool versionOk) const
 
 float ServerObjectTemplate::_MentalStateMod::getDecayMax(bool versionOk) const
 {
-
-
 	const ServerObjectTemplate::_MentalStateMod * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -3497,7 +3406,6 @@ float ServerObjectTemplate::_MentalStateMod::getDecayMax(bool versionOk) const
 	return value;
 }	// ServerObjectTemplate::_MentalStateMod::getDecayMax
 
-
 /**
  * Loads the template data from an iff file. We should already be in the form
  * for this template.
@@ -3506,8 +3414,8 @@ float ServerObjectTemplate::_MentalStateMod::getDecayMax(bool versionOk) const
  */
 void ServerObjectTemplate::_MentalStateMod::load(Iff &file)
 {
-static const int MAX_NAME_SIZE = 256;
-char paramName[MAX_NAME_SIZE];
+	static const int MAX_NAME_SIZE = 256;
+	char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 
@@ -3534,7 +3442,6 @@ char paramName[MAX_NAME_SIZE];
 	file.exitForm();
 	UNREF(file);
 }	// ServerObjectTemplate::_MentalStateMod::load
-
 
 //=============================================================================
 // class ServerObjectTemplate::_Xp
@@ -3584,8 +3491,6 @@ Tag ServerObjectTemplate::_Xp::getId(void) const
 
 ServerObjectTemplate::XpTypes ServerObjectTemplate::_Xp::getType(bool versionOk) const
 {
-
-
 	const ServerObjectTemplate::_Xp * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -3613,8 +3518,6 @@ ServerObjectTemplate::XpTypes ServerObjectTemplate::_Xp::getType(bool versionOk)
 
 int ServerObjectTemplate::_Xp::getLevel(bool versionOk) const
 {
-
-
 	const ServerObjectTemplate::_Xp * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -3664,8 +3567,6 @@ int ServerObjectTemplate::_Xp::getLevel(bool versionOk) const
 
 int ServerObjectTemplate::_Xp::getLevelMin(bool versionOk) const
 {
-
-
 	const ServerObjectTemplate::_Xp * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -3715,8 +3616,6 @@ int ServerObjectTemplate::_Xp::getLevelMin(bool versionOk) const
 
 int ServerObjectTemplate::_Xp::getLevelMax(bool versionOk) const
 {
-
-
 	const ServerObjectTemplate::_Xp * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -3766,8 +3665,6 @@ int ServerObjectTemplate::_Xp::getLevelMax(bool versionOk) const
 
 int ServerObjectTemplate::_Xp::getValue(bool versionOk) const
 {
-
-
 	const ServerObjectTemplate::_Xp * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -3817,8 +3714,6 @@ int ServerObjectTemplate::_Xp::getValue(bool versionOk) const
 
 int ServerObjectTemplate::_Xp::getValueMin(bool versionOk) const
 {
-
-
 	const ServerObjectTemplate::_Xp * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -3868,8 +3763,6 @@ int ServerObjectTemplate::_Xp::getValueMin(bool versionOk) const
 
 int ServerObjectTemplate::_Xp::getValueMax(bool versionOk) const
 {
-
-
 	const ServerObjectTemplate::_Xp * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -3917,7 +3810,6 @@ int ServerObjectTemplate::_Xp::getValueMax(bool versionOk) const
 	return value;
 }	// ServerObjectTemplate::_Xp::getValueMax
 
-
 /**
  * Loads the template data from an iff file. We should already be in the form
  * for this template.
@@ -3926,8 +3818,8 @@ int ServerObjectTemplate::_Xp::getValueMax(bool versionOk) const
  */
 void ServerObjectTemplate::_Xp::load(Iff &file)
 {
-static const int MAX_NAME_SIZE = 256;
-char paramName[MAX_NAME_SIZE];
+	static const int MAX_NAME_SIZE = 256;
+	char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 

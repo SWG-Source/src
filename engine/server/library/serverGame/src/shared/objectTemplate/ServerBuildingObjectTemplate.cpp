@@ -22,11 +22,10 @@
 
 const std::string DefaultString("");
 const StringId DefaultStringId("", 0);
-const Vector DefaultVector(0,0,0);
+const Vector DefaultVector(0, 0, 0);
 const TriggerVolumeData DefaultTriggerVolumeData;
 
 bool ServerBuildingObjectTemplate::ms_allowDefaultTemplateParams = true;
-
 
 /**
  * Class constructor.
@@ -34,8 +33,9 @@ bool ServerBuildingObjectTemplate::ms_allowDefaultTemplateParams = true;
 ServerBuildingObjectTemplate::ServerBuildingObjectTemplate(const std::string & filename)
 //@BEGIN TFD INIT
 	: ServerTangibleObjectTemplate(filename)
-	,m_versionOk(true)
-//@END TFD INIT
+	, m_versionOk(true)
+	, m_templateVersion(0)
+	//@END TFD INIT
 {
 }	// ServerBuildingObjectTemplate::ServerBuildingObjectTemplate
 
@@ -44,8 +44,8 @@ ServerBuildingObjectTemplate::ServerBuildingObjectTemplate(const std::string & f
  */
 ServerBuildingObjectTemplate::~ServerBuildingObjectTemplate()
 {
-//@BEGIN TFD CLEANUP
-//@END TFD CLEANUP
+	//@BEGIN TFD CLEANUP
+	//@END TFD CLEANUP
 }	// ServerBuildingObjectTemplate::~ServerBuildingObjectTemplate
 
 /**
@@ -114,8 +114,6 @@ Object * ServerBuildingObjectTemplate::createObject(void) const
 //@BEGIN TFD
 int ServerBuildingObjectTemplate::getMaintenanceCost() const
 {
-
-
 	const ServerBuildingObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -165,8 +163,6 @@ int ServerBuildingObjectTemplate::getMaintenanceCost() const
 
 int ServerBuildingObjectTemplate::getMaintenanceCostMin() const
 {
-
-
 	const ServerBuildingObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -216,8 +212,6 @@ int ServerBuildingObjectTemplate::getMaintenanceCostMin() const
 
 int ServerBuildingObjectTemplate::getMaintenanceCostMax() const
 {
-
-
 	const ServerBuildingObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -267,8 +261,6 @@ int ServerBuildingObjectTemplate::getMaintenanceCostMax() const
 
 bool ServerBuildingObjectTemplate::getIsPublic() const
 {
-
-
 	const ServerBuildingObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -294,7 +286,6 @@ bool ServerBuildingObjectTemplate::getIsPublic() const
 	return value;
 }	// ServerBuildingObjectTemplate::getIsPublic
 
-
 /**
  * Loads the template data from an iff file. We should already be in the form
  * for this template.
@@ -303,8 +294,8 @@ bool ServerBuildingObjectTemplate::getIsPublic() const
  */
 void ServerBuildingObjectTemplate::load(Iff &file)
 {
-static const int MAX_NAME_SIZE = 256;
-char paramName[MAX_NAME_SIZE];
+	static const int MAX_NAME_SIZE = 256;
+	char paramName[MAX_NAME_SIZE];
 
 	if (file.getCurrentName() != ServerBuildingObjectTemplate_tag)
 	{
@@ -314,7 +305,7 @@ char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 	m_templateVersion = file.getCurrentName();
-	if (m_templateVersion == TAG(D,E,R,V))
+	if (m_templateVersion == TAG(D, E, R, V))
 	{
 		file.enterForm();
 		file.enterChunk();
@@ -334,10 +325,8 @@ char paramName[MAX_NAME_SIZE];
 		file.exitForm();
 		m_templateVersion = file.getCurrentName();
 	}
-	if (getHighestTemplateVersion() != TAG(0,0,0,1))
+	if (getHighestTemplateVersion() != TAG(0, 0, 0, 1))
 	{
-		
-			
 		m_versionOk = false;
 	}
 

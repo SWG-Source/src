@@ -22,11 +22,10 @@
 
 const std::string DefaultString("");
 const StringId DefaultStringId("", 0);
-const Vector DefaultVector(0,0,0);
+const Vector DefaultVector(0, 0, 0);
 const TriggerVolumeData DefaultTriggerVolumeData;
 
 bool ServerIntangibleObjectTemplate::ms_allowDefaultTemplateParams = true;
-
 
 /**
  * Class constructor.
@@ -34,8 +33,9 @@ bool ServerIntangibleObjectTemplate::ms_allowDefaultTemplateParams = true;
 ServerIntangibleObjectTemplate::ServerIntangibleObjectTemplate(const std::string & filename)
 //@BEGIN TFD INIT
 	: ServerObjectTemplate(filename)
-	,m_versionOk(true)
-//@END TFD INIT
+	, m_versionOk(true)
+	, m_templateVersion(0)
+	//@END TFD INIT
 {
 }	// ServerIntangibleObjectTemplate::ServerIntangibleObjectTemplate
 
@@ -44,8 +44,8 @@ ServerIntangibleObjectTemplate::ServerIntangibleObjectTemplate(const std::string
  */
 ServerIntangibleObjectTemplate::~ServerIntangibleObjectTemplate()
 {
-//@BEGIN TFD CLEANUP
-//@END TFD CLEANUP
+	//@BEGIN TFD CLEANUP
+	//@END TFD CLEANUP
 }	// ServerIntangibleObjectTemplate::~ServerIntangibleObjectTemplate
 
 /**
@@ -114,8 +114,6 @@ Object * ServerIntangibleObjectTemplate::createObject(void) const
 //@BEGIN TFD
 int ServerIntangibleObjectTemplate::getCount() const
 {
-
-
 	const ServerIntangibleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -165,8 +163,6 @@ int ServerIntangibleObjectTemplate::getCount() const
 
 int ServerIntangibleObjectTemplate::getCountMin() const
 {
-
-
 	const ServerIntangibleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -216,8 +212,6 @@ int ServerIntangibleObjectTemplate::getCountMin() const
 
 int ServerIntangibleObjectTemplate::getCountMax() const
 {
-
-
 	const ServerIntangibleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -265,7 +259,6 @@ int ServerIntangibleObjectTemplate::getCountMax() const
 	return value;
 }	// ServerIntangibleObjectTemplate::getCountMax
 
-
 /**
  * Loads the template data from an iff file. We should already be in the form
  * for this template.
@@ -274,8 +267,8 @@ int ServerIntangibleObjectTemplate::getCountMax() const
  */
 void ServerIntangibleObjectTemplate::load(Iff &file)
 {
-static const int MAX_NAME_SIZE = 256;
-char paramName[MAX_NAME_SIZE];
+	static const int MAX_NAME_SIZE = 256;
+	char paramName[MAX_NAME_SIZE];
 
 	if (file.getCurrentName() != ServerIntangibleObjectTemplate_tag)
 	{
@@ -285,7 +278,7 @@ char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 	m_templateVersion = file.getCurrentName();
-	if (m_templateVersion == TAG(D,E,R,V))
+	if (m_templateVersion == TAG(D, E, R, V))
 	{
 		file.enterForm();
 		file.enterChunk();
@@ -305,10 +298,8 @@ char paramName[MAX_NAME_SIZE];
 		file.exitForm();
 		m_templateVersion = file.getCurrentName();
 	}
-	if (getHighestTemplateVersion() != TAG(0,0,0,1))
+	if (getHighestTemplateVersion() != TAG(0, 0, 0, 1))
 	{
-		
-			
 		m_versionOk = false;
 	}
 
@@ -332,7 +323,6 @@ char paramName[MAX_NAME_SIZE];
 	return;
 }	// ServerIntangibleObjectTemplate::load
 
-
 //=============================================================================
 // class ServerIntangibleObjectTemplate::_Ingredient
 
@@ -341,8 +331,8 @@ char paramName[MAX_NAME_SIZE];
  */
 ServerIntangibleObjectTemplate::_Ingredient::_Ingredient(const std::string & filename)
 	: ObjectTemplate(filename)
-	,m_ingredientsLoaded(false)
-	,m_ingredientsAppend(false)
+	, m_ingredientsLoaded(false)
+	, m_ingredientsAppend(false)
 {
 }	// ServerIntangibleObjectTemplate::_Ingredient::_Ingredient
 
@@ -392,8 +382,6 @@ Tag ServerIntangibleObjectTemplate::_Ingredient::getId(void) const
 
 ServerIntangibleObjectTemplate::IngredientType ServerIntangibleObjectTemplate::_Ingredient::getIngredientType(bool versionOk) const
 {
-
-
 	const ServerIntangibleObjectTemplate::_Ingredient * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -432,7 +420,7 @@ void ServerIntangibleObjectTemplate::_Ingredient::getIngredients(SimpleIngredien
 		if (ms_allowDefaultTemplateParams && /*!versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter ingredients in template %s", DataResource::getName()));
-			return ;
+			return;
 		}
 		else
 		{
@@ -446,10 +434,10 @@ void ServerIntangibleObjectTemplate::_Ingredient::getIngredients(SimpleIngredien
 	{
 		int baseCount = base->getIngredientsCount();
 		if (index < baseCount)
-			{
-				base->getIngredients(data, index, versionOk);
-				return;
-			}
+		{
+			base->getIngredients(data, index, versionOk);
+			return;
+		}
 		index -= baseCount;
 	}
 
@@ -476,7 +464,7 @@ void ServerIntangibleObjectTemplate::_Ingredient::getIngredientsMin(SimpleIngred
 		if (ms_allowDefaultTemplateParams && /*!versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter ingredients in template %s", DataResource::getName()));
-			return ;
+			return;
 		}
 		else
 		{
@@ -490,10 +478,10 @@ void ServerIntangibleObjectTemplate::_Ingredient::getIngredientsMin(SimpleIngred
 	{
 		int baseCount = base->getIngredientsCount();
 		if (index < baseCount)
-			{
-				base->getIngredientsMin(data, index, versionOk);
-				return;
-			}
+		{
+			base->getIngredientsMin(data, index, versionOk);
+			return;
+		}
 		index -= baseCount;
 	}
 
@@ -520,7 +508,7 @@ void ServerIntangibleObjectTemplate::_Ingredient::getIngredientsMax(SimpleIngred
 		if (ms_allowDefaultTemplateParams && /*!versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter ingredients in template %s", DataResource::getName()));
-			return ;
+			return;
 		}
 		else
 		{
@@ -534,10 +522,10 @@ void ServerIntangibleObjectTemplate::_Ingredient::getIngredientsMax(SimpleIngred
 	{
 		int baseCount = base->getIngredientsCount();
 		if (index < baseCount)
-			{
-				base->getIngredientsMax(data, index, versionOk);
-				return;
-			}
+		{
+			base->getIngredientsMax(data, index, versionOk);
+			return;
+		}
 		index -= baseCount;
 	}
 
@@ -577,8 +565,6 @@ size_t ServerIntangibleObjectTemplate::_Ingredient::getIngredientsCount(void) co
 
 float ServerIntangibleObjectTemplate::_Ingredient::getComplexity(bool versionOk) const
 {
-
-
 	const ServerIntangibleObjectTemplate::_Ingredient * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -628,8 +614,6 @@ float ServerIntangibleObjectTemplate::_Ingredient::getComplexity(bool versionOk)
 
 float ServerIntangibleObjectTemplate::_Ingredient::getComplexityMin(bool versionOk) const
 {
-
-
 	const ServerIntangibleObjectTemplate::_Ingredient * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -679,8 +663,6 @@ float ServerIntangibleObjectTemplate::_Ingredient::getComplexityMin(bool version
 
 float ServerIntangibleObjectTemplate::_Ingredient::getComplexityMax(bool versionOk) const
 {
-
-
 	const ServerIntangibleObjectTemplate::_Ingredient * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -730,8 +712,6 @@ float ServerIntangibleObjectTemplate::_Ingredient::getComplexityMax(bool version
 
 const std::string & ServerIntangibleObjectTemplate::_Ingredient::getSkillCommand(bool versionOk) const
 {
-
-
 	const ServerIntangibleObjectTemplate::_Ingredient * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -757,7 +737,6 @@ const std::string & ServerIntangibleObjectTemplate::_Ingredient::getSkillCommand
 	return value;
 }	// ServerIntangibleObjectTemplate::_Ingredient::getSkillCommand
 
-
 /**
  * Loads the template data from an iff file. We should already be in the form
  * for this template.
@@ -766,8 +745,8 @@ const std::string & ServerIntangibleObjectTemplate::_Ingredient::getSkillCommand
  */
 void ServerIntangibleObjectTemplate::_Ingredient::load(Iff &file)
 {
-static const int MAX_NAME_SIZE = 256;
-char paramName[MAX_NAME_SIZE];
+	static const int MAX_NAME_SIZE = 256;
+	char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 
@@ -809,7 +788,6 @@ char paramName[MAX_NAME_SIZE];
 	file.exitForm();
 	UNREF(file);
 }	// ServerIntangibleObjectTemplate::_Ingredient::load
-
 
 //=============================================================================
 // class ServerIntangibleObjectTemplate::_SchematicAttribute
@@ -859,8 +837,6 @@ Tag ServerIntangibleObjectTemplate::_SchematicAttribute::getId(void) const
 
 const StringId ServerIntangibleObjectTemplate::_SchematicAttribute::getName(bool versionOk) const
 {
-
-
 	const ServerIntangibleObjectTemplate::_SchematicAttribute * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -888,8 +864,6 @@ const StringId ServerIntangibleObjectTemplate::_SchematicAttribute::getName(bool
 
 int ServerIntangibleObjectTemplate::_SchematicAttribute::getValue(bool versionOk) const
 {
-
-
 	const ServerIntangibleObjectTemplate::_SchematicAttribute * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -939,8 +913,6 @@ int ServerIntangibleObjectTemplate::_SchematicAttribute::getValue(bool versionOk
 
 int ServerIntangibleObjectTemplate::_SchematicAttribute::getValueMin(bool versionOk) const
 {
-
-
 	const ServerIntangibleObjectTemplate::_SchematicAttribute * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -990,8 +962,6 @@ int ServerIntangibleObjectTemplate::_SchematicAttribute::getValueMin(bool versio
 
 int ServerIntangibleObjectTemplate::_SchematicAttribute::getValueMax(bool versionOk) const
 {
-
-
 	const ServerIntangibleObjectTemplate::_SchematicAttribute * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1039,7 +1009,6 @@ int ServerIntangibleObjectTemplate::_SchematicAttribute::getValueMax(bool versio
 	return value;
 }	// ServerIntangibleObjectTemplate::_SchematicAttribute::getValueMax
 
-
 /**
  * Loads the template data from an iff file. We should already be in the form
  * for this template.
@@ -1048,8 +1017,8 @@ int ServerIntangibleObjectTemplate::_SchematicAttribute::getValueMax(bool versio
  */
 void ServerIntangibleObjectTemplate::_SchematicAttribute::load(Iff &file)
 {
-static const int MAX_NAME_SIZE = 256;
-char paramName[MAX_NAME_SIZE];
+	static const int MAX_NAME_SIZE = 256;
+	char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 
@@ -1070,7 +1039,6 @@ char paramName[MAX_NAME_SIZE];
 	file.exitForm();
 	UNREF(file);
 }	// ServerIntangibleObjectTemplate::_SchematicAttribute::load
-
 
 //=============================================================================
 // class ServerIntangibleObjectTemplate::_SimpleIngredient
@@ -1120,8 +1088,6 @@ Tag ServerIntangibleObjectTemplate::_SimpleIngredient::getId(void) const
 
 const StringId ServerIntangibleObjectTemplate::_SimpleIngredient::getName(bool versionOk) const
 {
-
-
 	const ServerIntangibleObjectTemplate::_SimpleIngredient * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1149,8 +1115,6 @@ const StringId ServerIntangibleObjectTemplate::_SimpleIngredient::getName(bool v
 
 const std::string & ServerIntangibleObjectTemplate::_SimpleIngredient::getIngredient(bool versionOk) const
 {
-
-
 	const ServerIntangibleObjectTemplate::_SimpleIngredient * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1178,8 +1142,6 @@ const std::string & ServerIntangibleObjectTemplate::_SimpleIngredient::getIngred
 
 int ServerIntangibleObjectTemplate::_SimpleIngredient::getCount(bool versionOk) const
 {
-
-
 	const ServerIntangibleObjectTemplate::_SimpleIngredient * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1229,8 +1191,6 @@ int ServerIntangibleObjectTemplate::_SimpleIngredient::getCount(bool versionOk) 
 
 int ServerIntangibleObjectTemplate::_SimpleIngredient::getCountMin(bool versionOk) const
 {
-
-
 	const ServerIntangibleObjectTemplate::_SimpleIngredient * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1280,8 +1240,6 @@ int ServerIntangibleObjectTemplate::_SimpleIngredient::getCountMin(bool versionO
 
 int ServerIntangibleObjectTemplate::_SimpleIngredient::getCountMax(bool versionOk) const
 {
-
-
 	const ServerIntangibleObjectTemplate::_SimpleIngredient * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1329,7 +1287,6 @@ int ServerIntangibleObjectTemplate::_SimpleIngredient::getCountMax(bool versionO
 	return value;
 }	// ServerIntangibleObjectTemplate::_SimpleIngredient::getCountMax
 
-
 /**
  * Loads the template data from an iff file. We should already be in the form
  * for this template.
@@ -1338,8 +1295,8 @@ int ServerIntangibleObjectTemplate::_SimpleIngredient::getCountMax(bool versionO
  */
 void ServerIntangibleObjectTemplate::_SimpleIngredient::load(Iff &file)
 {
-static const int MAX_NAME_SIZE = 256;
-char paramName[MAX_NAME_SIZE];
+	static const int MAX_NAME_SIZE = 256;
+	char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 

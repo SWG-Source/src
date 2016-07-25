@@ -23,11 +23,10 @@
 
 const std::string DefaultString("");
 const StringId DefaultStringId("", 0);
-const Vector DefaultVector(0,0,0);
+const Vector DefaultVector(0, 0, 0);
 const TriggerVolumeData DefaultTriggerVolumeData;
 
 bool ServerArmorTemplate::ms_allowDefaultTemplateParams = true;
-
 
 /**
  * Class constructor.
@@ -35,10 +34,11 @@ bool ServerArmorTemplate::ms_allowDefaultTemplateParams = true;
 ServerArmorTemplate::ServerArmorTemplate(const std::string & filename)
 //@BEGIN TFD INIT
 	: ObjectTemplate(filename)
-	,m_specialProtectionLoaded(false)
-	,m_specialProtectionAppend(false)
-	,m_versionOk(true)
-//@END TFD INIT
+	, m_specialProtectionLoaded(false)
+	, m_specialProtectionAppend(false)
+	, m_versionOk(true)
+	, m_templateVersion(0)
+	//@END TFD INIT
 {
 }	// ServerArmorTemplate::ServerArmorTemplate
 
@@ -47,7 +47,7 @@ ServerArmorTemplate::ServerArmorTemplate(const std::string & filename)
  */
 ServerArmorTemplate::~ServerArmorTemplate()
 {
-//@BEGIN TFD CLEANUP
+	//@BEGIN TFD CLEANUP
 	{
 		std::vector<StructParamOT *>::iterator iter;
 		for (iter = m_specialProtection.begin(); iter != m_specialProtection.end(); ++iter)
@@ -57,7 +57,7 @@ ServerArmorTemplate::~ServerArmorTemplate()
 		}
 		m_specialProtection.clear();
 	}
-//@END TFD CLEANUP
+	//@END TFD CLEANUP
 }	// ServerArmorTemplate::~ServerArmorTemplate
 
 /**
@@ -116,8 +116,6 @@ Tag ServerArmorTemplate::getHighestTemplateVersion(void) const
 //@BEGIN TFD
 ServerArmorTemplate::ArmorRating ServerArmorTemplate::getRating() const
 {
-
-
 	const ServerArmorTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -145,8 +143,6 @@ ServerArmorTemplate::ArmorRating ServerArmorTemplate::getRating() const
 
 int ServerArmorTemplate::getIntegrity() const
 {
-
-
 	const ServerArmorTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -196,8 +192,6 @@ int ServerArmorTemplate::getIntegrity() const
 
 int ServerArmorTemplate::getIntegrityMin() const
 {
-
-
 	const ServerArmorTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -247,8 +241,6 @@ int ServerArmorTemplate::getIntegrityMin() const
 
 int ServerArmorTemplate::getIntegrityMax() const
 {
-
-
 	const ServerArmorTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -298,8 +290,6 @@ int ServerArmorTemplate::getIntegrityMax() const
 
 int ServerArmorTemplate::getEffectiveness() const
 {
-
-
 	const ServerArmorTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -349,8 +339,6 @@ int ServerArmorTemplate::getEffectiveness() const
 
 int ServerArmorTemplate::getEffectivenessMin() const
 {
-
-
 	const ServerArmorTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -400,8 +388,6 @@ int ServerArmorTemplate::getEffectivenessMin() const
 
 int ServerArmorTemplate::getEffectivenessMax() const
 {
-
-
 	const ServerArmorTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -462,7 +448,7 @@ void ServerArmorTemplate::getSpecialProtection(SpecialProtection &data, int inde
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter specialProtection in template %s", DataResource::getName()));
-			return ;
+			return;
 		}
 		else
 		{
@@ -476,10 +462,10 @@ void ServerArmorTemplate::getSpecialProtection(SpecialProtection &data, int inde
 	{
 		int baseCount = base->getSpecialProtectionCount();
 		if (index < baseCount)
-			{
-				base->getSpecialProtection(data, index);
-				return;
-			}
+		{
+			base->getSpecialProtection(data, index);
+			return;
+		}
 		index -= baseCount;
 	}
 
@@ -505,7 +491,7 @@ void ServerArmorTemplate::getSpecialProtectionMin(SpecialProtection &data, int i
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter specialProtection in template %s", DataResource::getName()));
-			return ;
+			return;
 		}
 		else
 		{
@@ -519,10 +505,10 @@ void ServerArmorTemplate::getSpecialProtectionMin(SpecialProtection &data, int i
 	{
 		int baseCount = base->getSpecialProtectionCount();
 		if (index < baseCount)
-			{
-				base->getSpecialProtectionMin(data, index);
-				return;
-			}
+		{
+			base->getSpecialProtectionMin(data, index);
+			return;
+		}
 		index -= baseCount;
 	}
 
@@ -548,7 +534,7 @@ void ServerArmorTemplate::getSpecialProtectionMax(SpecialProtection &data, int i
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter specialProtection in template %s", DataResource::getName()));
-			return ;
+			return;
 		}
 		else
 		{
@@ -562,10 +548,10 @@ void ServerArmorTemplate::getSpecialProtectionMax(SpecialProtection &data, int i
 	{
 		int baseCount = base->getSpecialProtectionCount();
 		if (index < baseCount)
-			{
-				base->getSpecialProtectionMax(data, index);
-				return;
-			}
+		{
+			base->getSpecialProtectionMax(data, index);
+			return;
+		}
 		index -= baseCount;
 	}
 
@@ -604,8 +590,6 @@ size_t ServerArmorTemplate::getSpecialProtectionCount(void) const
 
 int ServerArmorTemplate::getVulnerability() const
 {
-
-
 	const ServerArmorTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -655,8 +639,6 @@ int ServerArmorTemplate::getVulnerability() const
 
 int ServerArmorTemplate::getVulnerabilityMin() const
 {
-
-
 	const ServerArmorTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -706,8 +688,6 @@ int ServerArmorTemplate::getVulnerabilityMin() const
 
 int ServerArmorTemplate::getVulnerabilityMax() const
 {
-
-
 	const ServerArmorTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -902,7 +882,6 @@ int ServerArmorTemplate::getEncumbranceMax(int index) const
 	return value;
 }	// ServerArmorTemplate::getEncumbranceMax
 
-
 /**
  * Loads the template data from an iff file. We should already be in the form
  * for this template.
@@ -911,8 +890,8 @@ int ServerArmorTemplate::getEncumbranceMax(int index) const
  */
 void ServerArmorTemplate::load(Iff &file)
 {
-static const int MAX_NAME_SIZE = 256;
-char paramName[MAX_NAME_SIZE];
+	static const int MAX_NAME_SIZE = 256;
+	char paramName[MAX_NAME_SIZE];
 
 	if (file.getCurrentName() != ServerArmorTemplate_tag)
 	{
@@ -921,7 +900,7 @@ char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 	m_templateVersion = file.getCurrentName();
-	if (m_templateVersion == TAG(D,E,R,V))
+	if (m_templateVersion == TAG(D, E, R, V))
 	{
 		file.enterForm();
 		file.enterChunk();
@@ -941,10 +920,8 @@ char paramName[MAX_NAME_SIZE];
 		file.exitForm();
 		m_templateVersion = file.getCurrentName();
 	}
-	if (getHighestTemplateVersion() != TAG(0,0,0,1))
+	if (getHighestTemplateVersion() != TAG(0, 0, 0, 1))
 	{
-		
-			
 		m_versionOk = false;
 	}
 
@@ -1005,7 +982,6 @@ char paramName[MAX_NAME_SIZE];
 	return;
 }	// ServerArmorTemplate::load
 
-
 //=============================================================================
 // class ServerArmorTemplate::_SpecialProtection
 
@@ -1054,8 +1030,6 @@ Tag ServerArmorTemplate::_SpecialProtection::getId(void) const
 
 ServerArmorTemplate::DamageType ServerArmorTemplate::_SpecialProtection::getType(bool versionOk) const
 {
-
-
 	const ServerArmorTemplate::_SpecialProtection * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1083,8 +1057,6 @@ ServerArmorTemplate::DamageType ServerArmorTemplate::_SpecialProtection::getType
 
 int ServerArmorTemplate::_SpecialProtection::getEffectiveness(bool versionOk) const
 {
-
-
 	const ServerArmorTemplate::_SpecialProtection * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1134,8 +1106,6 @@ int ServerArmorTemplate::_SpecialProtection::getEffectiveness(bool versionOk) co
 
 int ServerArmorTemplate::_SpecialProtection::getEffectivenessMin(bool versionOk) const
 {
-
-
 	const ServerArmorTemplate::_SpecialProtection * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1185,8 +1155,6 @@ int ServerArmorTemplate::_SpecialProtection::getEffectivenessMin(bool versionOk)
 
 int ServerArmorTemplate::_SpecialProtection::getEffectivenessMax(bool versionOk) const
 {
-
-
 	const ServerArmorTemplate::_SpecialProtection * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1234,7 +1202,6 @@ int ServerArmorTemplate::_SpecialProtection::getEffectivenessMax(bool versionOk)
 	return value;
 }	// ServerArmorTemplate::_SpecialProtection::getEffectivenessMax
 
-
 /**
  * Loads the template data from an iff file. We should already be in the form
  * for this template.
@@ -1243,8 +1210,8 @@ int ServerArmorTemplate::_SpecialProtection::getEffectivenessMax(bool versionOk)
  */
 void ServerArmorTemplate::_SpecialProtection::load(Iff &file)
 {
-static const int MAX_NAME_SIZE = 256;
-char paramName[MAX_NAME_SIZE];
+	static const int MAX_NAME_SIZE = 256;
+	char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 

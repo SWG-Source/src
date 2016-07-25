@@ -24,11 +24,10 @@
 
 const std::string DefaultString("");
 const StringId DefaultStringId("", 0);
-const Vector DefaultVector(0,0,0);
+const Vector DefaultVector(0, 0, 0);
 const TriggerVolumeData DefaultTriggerVolumeData;
 
 bool ServerPlayerObjectTemplate::ms_allowDefaultTemplateParams = true;
-
 
 /**
  * Class constructor.
@@ -36,8 +35,9 @@ bool ServerPlayerObjectTemplate::ms_allowDefaultTemplateParams = true;
 ServerPlayerObjectTemplate::ServerPlayerObjectTemplate(const std::string & filename)
 //@BEGIN TFD INIT
 	: ServerIntangibleObjectTemplate(filename)
-	,m_versionOk(true)
-//@END TFD INIT
+	, m_versionOk(true)
+	, m_templateVersion(0)
+	//@END TFD INIT
 {
 }	// ServerPlayerObjectTemplate::ServerPlayerObjectTemplate
 
@@ -46,8 +46,8 @@ ServerPlayerObjectTemplate::ServerPlayerObjectTemplate(const std::string & filen
  */
 ServerPlayerObjectTemplate::~ServerPlayerObjectTemplate()
 {
-//@BEGIN TFD CLEANUP
-//@END TFD CLEANUP
+	//@BEGIN TFD CLEANUP
+	//@END TFD CLEANUP
 }	// ServerPlayerObjectTemplate::~ServerPlayerObjectTemplate
 
 /**
@@ -123,8 +123,8 @@ Object * ServerPlayerObjectTemplate::createObject(void) const
  */
 void ServerPlayerObjectTemplate::load(Iff &file)
 {
-static const int MAX_NAME_SIZE = 256;
-char paramName[MAX_NAME_SIZE];
+	static const int MAX_NAME_SIZE = 256;
+	char paramName[MAX_NAME_SIZE];
 
 	if (file.getCurrentName() != ServerPlayerObjectTemplate_tag)
 	{
@@ -134,7 +134,7 @@ char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 	m_templateVersion = file.getCurrentName();
-	if (m_templateVersion == TAG(D,E,R,V))
+	if (m_templateVersion == TAG(D, E, R, V))
 	{
 		file.enterForm();
 		file.enterChunk();
@@ -154,10 +154,8 @@ char paramName[MAX_NAME_SIZE];
 		file.exitForm();
 		m_templateVersion = file.getCurrentName();
 	}
-	if (getHighestTemplateVersion() != TAG(0,0,0,0))
+	if (getHighestTemplateVersion() != TAG(0, 0, 0, 0))
 	{
-		
-			
 		m_versionOk = false;
 	}
 

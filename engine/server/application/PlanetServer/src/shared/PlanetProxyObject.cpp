@@ -32,42 +32,43 @@ MemoryBlockManager* PlanetProxyObject::memoryBlockManager;
 
 // ======================================================================
 
-PlanetProxyObject::PlanetProxyObject (const NetworkId &objectId) :
-		m_objectId(objectId),
-		m_containedBy(NetworkId::cms_invalid),
-		m_x(0),
-		m_y(0),
-		m_z(0),
-		m_authoritativeServer(0),
-		m_lastReportedServer(0),
-		m_interestRadius(0),
-		m_quadtreeNode(nullptr),
-		m_authTransferTimeMs(Clock::timeMs()),
-		m_contents(nullptr),
-		m_level(0),
-		m_hibernating(false),
-		m_templateCrc(0),
-		m_aiActivity(-1),
-		m_creationType(-1)
+PlanetProxyObject::PlanetProxyObject(const NetworkId &objectId) :
+	m_objectId(objectId),
+	m_containedBy(NetworkId::cms_invalid),
+	m_x(0),
+	m_y(0),
+	m_z(0),
+	m_authoritativeServer(0),
+	m_lastReportedServer(0),
+	m_interestRadius(0),
+	m_quadtreeNode(nullptr),
+	m_authTransferTimeMs(Clock::timeMs()),
+	m_contents(nullptr),
+	m_level(0),
+	m_hibernating(false),
+	m_templateCrc(0),
+	m_aiActivity(-1),
+	m_creationType(-1),
+	m_objectTypeTag(0)
 {
 }
 
 // ----------------------------------------------------------------------
 
-PlanetProxyObject::~PlanetProxyObject ()
+PlanetProxyObject::~PlanetProxyObject()
 {
 	if (PlanetServer::getInstance().isWatcherPresent())
 	{
 		outputStatusToAll(true);
 	}
-	m_quadtreeNode=0;
+	m_quadtreeNode = 0;
 
 	if (m_contents)
 	{
-		for (std::vector<NetworkId>::const_iterator i=m_contents->begin(); i!=m_contents->end(); ++i)
-			WARNING(true,("Object %s was deleted without removing contained object %s first",m_objectId.getValueString().c_str(), i->getValueString().c_str()));
+		for (std::vector<NetworkId>::const_iterator i = m_contents->begin(); i != m_contents->end(); ++i)
+			WARNING(true, ("Object %s was deleted without removing contained object %s first", m_objectId.getValueString().c_str(), i->getValueString().c_str()));
 		delete m_contents;
-		m_contents=0;
+		m_contents = 0;
 	}
 }
 
@@ -79,7 +80,7 @@ PlanetProxyObject::~PlanetProxyObject ()
  */
 void PlanetProxyObject::update(int x, int y, int z, NetworkId containedBy, uint32 authoritativeServer, int interestRadius, int objectTypeTag, int const level, bool const hibernating, uint32 const templateCrc, int const aiActivity, int const creationType)
 {
-	WARNING_DEBUG_FATAL(m_objectId==NetworkId::cms_invalid,("Object ID was 0."));
+	WARNING_DEBUG_FATAL(m_objectId == NetworkId::cms_invalid, ("Object ID was 0."));
 	bool watcherUpdateNeeded = false;
 
 	m_level = level;
@@ -88,64 +89,64 @@ void PlanetProxyObject::update(int x, int y, int z, NetworkId containedBy, uint3
 	m_aiActivity = aiActivity;
 	m_creationType = creationType;
 
-	if ((m_authoritativeServer != 0 ) && (authoritativeServer != m_authoritativeServer) && (containedBy == NetworkId::cms_invalid))
+	if ((m_authoritativeServer != 0) && (authoritativeServer != m_authoritativeServer) && (containedBy == NetworkId::cms_invalid))
 	{
 		static unsigned long authTransferSanityCheckTimeMs = ConfigPlanetServer::getAuthTransferSanityCheckTimeMs();
-		if (Clock::timeMs()-m_authTransferTimeMs > authTransferSanityCheckTimeMs)
+		if (Clock::timeMs() - m_authTransferTimeMs > authTransferSanityCheckTimeMs)
 		{
 			DEBUG_WARNING(true, ("Resending auth transfer for %s to %lu due to receiving a stale position update.", m_objectId.getValueString().c_str(), authoritativeServer));
 			sendAuthorityChange(authoritativeServer, m_authoritativeServer, false);
 			return;
 		}
 		if (ConfigPlanetServer::getLogObjectLoading())
-			LOG("ObjectLoading",("Ignoring update for %s from %lu because server was not authoritative.",m_objectId.getValueString().c_str(),authoritativeServer));
+			LOG("ObjectLoading", ("Ignoring update for %s from %lu because server was not authoritative.", m_objectId.getValueString().c_str(), authoritativeServer));
 		return;
 	}
-	
-	if (interestRadius>ConfigPlanetServer::getMaxInterestRadius())
+
+	if (interestRadius > ConfigPlanetServer::getMaxInterestRadius())
 		interestRadius = ConfigPlanetServer::getMaxInterestRadius();
-	
-	if (interestRadius>0 && PlanetServer::getInstance().isInTutorialMode())
+
+	if (interestRadius > 0 && PlanetServer::getInstance().isInTutorialMode())
 		interestRadius = 1;
 
-	if (containedBy!=NetworkId::cms_invalid)
+	if (containedBy != NetworkId::cms_invalid)
 	{
 		// get coordinates from container
 		PlanetProxyObject *container = Scene::getInstance().findObjectByID(containedBy);
 		if (container)
 		{
-			x=container->getX();
-			y=container->getY();
-			z=container->getZ();
+			x = container->getX();
+			y = container->getY();
+			z = container->getZ();
 		}
 		else
 		{
-			LOG("PlanetUpdate",("Game server said object %s was contained by object %s, but we could not find the container.",m_objectId.getValueString().c_str(),containedBy.getValueString().c_str()));
+			LOG("PlanetUpdate", ("Game server said object %s was contained by object %s, but we could not find the container.", m_objectId.getValueString().c_str(), containedBy.getValueString().c_str()));
 			containedBy = NetworkId::cms_invalid; // so that we'll try again when the object moves again, in case we just got objects out-of-order from the game server
 		}
 	}
-	
+
 	std::vector<uint32> oldProxyList;
 
-	Node *newNode=Scene::getInstance().findNodeByPosition(x,z);
+	Node *newNode = Scene::getInstance().findNodeByPosition(x, z);
 	NOT_NULL(newNode);
-	if (newNode!=m_quadtreeNode || m_interestRadius != interestRadius || m_authoritativeServer != authoritativeServer || m_containedBy != containedBy)
+	if (newNode != m_quadtreeNode || m_interestRadius != interestRadius || m_authoritativeServer != authoritativeServer || m_containedBy != containedBy)
 	{
 		watcherUpdateNeeded = true;
 
 		// For debugging, update the contents of the containers
-		if (ConfigPlanetServer::getEnableContentsChecking() && (m_containedBy!=containedBy))
+		if (ConfigPlanetServer::getEnableContentsChecking() && (m_containedBy != containedBy))
 			updateContentsTracking(containedBy);
-		
+
 		bool const firstUpdate = (m_quadtreeNode == nullptr);
 
-		if (m_quadtreeNode!=nullptr) // if this is the first update for this object, m_quadtreeNode will be nullptr because it hasn't been placed anywhere yet
+		if (m_quadtreeNode != nullptr) // if this is the first update for this object, m_quadtreeNode will be nullptr because it hasn't been placed anywhere yet
 		{
 			removeServerStatistics();
 
 			// remember old list of proxies
 			getServers(oldProxyList);
-			
+
 			// remove from the old location
 			m_quadtreeNode->removeObject(this);
 
@@ -153,34 +154,34 @@ void PlanetProxyObject::update(int x, int y, int z, NetworkId containedBy, uint3
 				LOG("ObjectLoading", ("unsubscribing nodes for object id=[%s]", m_objectId.getValueString().c_str()));
 			unsubscribeSurroundingNodes(false);
 		}
-		
+
 		// update data
-		m_quadtreeNode=newNode;
-		m_x=x;
-		m_y=y;
-		m_z=z;
-		m_interestRadius=interestRadius;
+		m_quadtreeNode = newNode;
+		m_x = x;
+		m_y = y;
+		m_z = z;
+		m_interestRadius = interestRadius;
 		m_objectTypeTag = objectTypeTag;
-		m_authoritativeServer=authoritativeServer;
-		m_containedBy=containedBy;
+		m_authoritativeServer = authoritativeServer;
+		m_containedBy = containedBy;
 
 		// make sure the destination is loaded
 		if (!newNode->isLoaded())
 		{
 			if (ConfigPlanetServer::getLogObjectLoading())
-				LOG("ObjectLoading",("Loading node %s because object %s entered it.",newNode->getDebugNodeString().c_str(), m_objectId.getValueString().c_str()));
+				LOG("ObjectLoading", ("Loading node %s because object %s entered it.", newNode->getDebugNodeString().c_str(), m_objectId.getValueString().c_str()));
 			newNode->load();
 		}
-			
+
 		// check if we're on the right server
 		if (!isAuthorityOk())
 		{
 			uint32 preferredServer = m_quadtreeNode->getPreferredServer();
-			if (m_containedBy==NetworkId::cms_invalid)
+			if (m_containedBy == NetworkId::cms_invalid)
 			{
 				if (ConfigPlanetServer::getLogObjectLoading())
-					LOG("ObjectLoading",("Changing authority for object %s from %lu to %lu because node %s is authoritative on that server.",
-										 m_objectId.getValueString().c_str(),m_authoritativeServer,preferredServer,m_quadtreeNode->getDebugNodeString().c_str()));
+					LOG("ObjectLoading", ("Changing authority for object %s from %lu to %lu because node %s is authoritative on that server.",
+						m_objectId.getValueString().c_str(), m_authoritativeServer, preferredServer, m_quadtreeNode->getDebugNodeString().c_str()));
 				changeAuthority(preferredServer, false, false); // changes m_authoritativeServer and sends message
 
 				// we received the object for the first time, and we had to
@@ -192,8 +193,8 @@ void PlanetProxyObject::update(int x, int y, int z, NetworkId containedBy, uint3
 			}
 			else
 			{
-				WARNING(true,("Programmer bug:  Object %s is in container %s, which is node %s.  The object should be authoritative on server %i but it is authoritative on server %i.",
-							  m_objectId.getValueString().c_str(),m_containedBy.getValueString().c_str(),m_quadtreeNode->getDebugNodeString().c_str(), m_authoritativeServer, preferredServer));
+				WARNING(true, ("Programmer bug:  Object %s is in container %s, which is node %s.  The object should be authoritative on server %i but it is authoritative on server %i.",
+					m_objectId.getValueString().c_str(), m_containedBy.getValueString().c_str(), m_quadtreeNode->getDebugNodeString().c_str(), m_authoritativeServer, preferredServer));
 			}
 		}
 
@@ -204,30 +205,30 @@ void PlanetProxyObject::update(int x, int y, int z, NetworkId containedBy, uint3
 		{
 			if (ConfigPlanetServer::getLogObjectLoading())
 				LOG("ObjectLoading", ("subscribing nodes for object id=[%s]", m_objectId.getValueString().c_str()));
-			subscribeSurroundingNodes();		
+			subscribeSurroundingNodes();
 		}
-		
+
 		// check against new interested servers, and send proxy/unproxy as needed
-		if (m_containedBy==NetworkId::cms_invalid) // we don't manage proxies for containers
+		if (m_containedBy == NetworkId::cms_invalid) // we don't manage proxies for containers
 		{
 			std::vector<uint32> newProxyList;
 			getServers(newProxyList);
-			changeProxies(oldProxyList,newProxyList);
+			changeProxies(oldProxyList, newProxyList);
 		}
-		
+
 		addServerStatistics();
-	}  
+	}
 	else
 	{
 		if (m_interestRadius > 0 || (abs(m_x - x) > 25) || (abs(m_z - z) > 25))
 			watcherUpdateNeeded = true;
 	}
-		
+
 	if (PlanetServer::getInstance().isWatcherPresent() && watcherUpdateNeeded)
 	{
-		m_x=x;
-		m_y=y;
-		m_z=z;
+		m_x = x;
+		m_y = y;
+		m_z = z;
 		m_objectTypeTag = objectTypeTag;
 
 		outputStatusToAll(false);
@@ -240,11 +241,11 @@ void PlanetProxyObject::unsubscribeSurroundingNodes(bool clearZeroSubscriptions)
 {
 	if (m_interestRadius <= 0)
 		return;
-	
+
 	Scene::NodeListType nodelist;
-	Scene::getInstance().findIntersection(nodelist,m_x,m_z,m_interestRadius);
-	
-	for (Scene::NodeListType::iterator i=nodelist.begin(); i!=nodelist.end(); ++i)
+	Scene::getInstance().findIntersection(nodelist, m_x, m_z, m_interestRadius);
+
+	for (Scene::NodeListType::iterator i = nodelist.begin(); i != nodelist.end(); ++i)
 	{
 		(*i)->unsubscribeServer(m_authoritativeServer, 1, clearZeroSubscriptions);
 	}
@@ -253,20 +254,20 @@ void PlanetProxyObject::unsubscribeSurroundingNodes(bool clearZeroSubscriptions)
 // ----------------------------------------------------------------------
 
 void PlanetProxyObject::subscribeSurroundingNodes()
-{	
+{
 	if (m_interestRadius <= 0)
 		return;
 
 	NOT_NULL(m_quadtreeNode);
 	Scene::NodeListType nodelist;
-	Scene::getInstance().findIntersection(nodelist,m_x,m_z,m_interestRadius);
-	
-	for (Scene::NodeListType::iterator i=nodelist.begin(); i!=nodelist.end(); ++i)
+	Scene::getInstance().findIntersection(nodelist, m_x, m_z, m_interestRadius);
+
+	for (Scene::NodeListType::iterator i = nodelist.begin(); i != nodelist.end(); ++i)
 	{
 		(*i)->subscribeServer(m_authoritativeServer, 1);
 		uint32 serverId = (*i)->getPreferredServer();
 		if (serverId != m_authoritativeServer)
-			m_quadtreeNode->subscribeServer(serverId,0); // make sure if we can see them, they can see us
+			m_quadtreeNode->subscribeServer(serverId, 0); // make sure if we can see them, they can see us
 	}
 }
 
@@ -332,22 +333,22 @@ void PlanetProxyObject::unload(bool tellGameServer)
 	if (m_quadtreeNode)
 		m_quadtreeNode->removeObject(this);
 
-	Scene::getInstance().removeObjectFromMap(m_objectId,tellGameServer);
+	Scene::getInstance().removeObjectFromMap(m_objectId, tellGameServer);
 
 	if (tellGameServer)
 	{
-		PlanetServer::getInstance().unloadObject(m_objectId,m_authoritativeServer);
+		PlanetServer::getInstance().unloadObject(m_objectId, m_authoritativeServer);
 	}
 
 	removeServerStatistics();
 
-	if (ConfigPlanetServer::getEnableContentsChecking() && m_containedBy!=NetworkId::cms_invalid)
+	if (ConfigPlanetServer::getEnableContentsChecking() && m_containedBy != NetworkId::cms_invalid)
 	{
 		PlanetProxyObject *container = Scene::getInstance().findObjectByID(m_containedBy);
 		if (container)
 			container->removeContainedObject(m_objectId);
 		else
-			WARNING(true,("Unloading object %s in container %s, but the container could not be found.",m_objectId.getValueString().c_str(), m_containedBy.getValueString().c_str()));
+			WARNING(true, ("Unloading object %s in container %s, but the container could not be found.", m_objectId.getValueString().c_str(), m_containedBy.getValueString().c_str()));
 	}
 }
 
@@ -368,7 +369,7 @@ void PlanetProxyObject::outputStatus(WatcherConnection &conn, bool deleteObject)
 void PlanetProxyObject::outputStatusToAll(bool deleteObject) const
 {
 	const PlanetServer::WatcherList &connections = PlanetServer::getInstance().getWatchers();
-	for (PlanetServer::WatcherList::const_iterator i= connections.begin(); i!=connections.end(); ++i)
+	for (PlanetServer::WatcherList::const_iterator i = connections.begin(); i != connections.end(); ++i)
 	{
 		outputStatus(**i, deleteObject);
 	}
@@ -376,21 +377,21 @@ void PlanetProxyObject::outputStatusToAll(bool deleteObject) const
 
 // ----------------------------------------------------------------------
 
-/** 
+/**
  * Update the GameServerData with statistics about this object.
  */
 void PlanetProxyObject::addServerStatistics() const
 {
-	GameServerData *data=PlanetServer::getInstance().getGameServerData(m_authoritativeServer);
+	GameServerData *data = PlanetServer::getInstance().getGameServerData(m_authoritativeServer);
 	if (data)
 	{
 		data->adjustObjectCount(1);
-		if (m_interestRadius!=0)
+		if (m_interestRadius != 0)
 		{
 			data->adjustInterestObjectCount(1);
 			if (isCreature())
 				data->adjustInterestCreatureObjectCount(1);
-		}		
+		}
 	}
 }
 
@@ -402,15 +403,15 @@ void PlanetProxyObject::addServerStatistics() const
  */
 void PlanetProxyObject::removeServerStatistics() const
 {
-	GameServerData *data=PlanetServer::getInstance().getGameServerData(m_authoritativeServer);
+	GameServerData *data = PlanetServer::getInstance().getGameServerData(m_authoritativeServer);
 	if (data)
 	{
 		data->adjustObjectCount(-1);
-		if (m_interestRadius!=0)
+		if (m_interestRadius != 0)
 		{
 			data->adjustInterestObjectCount(-1);
 			if (isCreature())
-				data->adjustInterestCreatureObjectCount(-1);				
+				data->adjustInterestCreatureObjectCount(-1);
 		}
 	}
 }
@@ -423,7 +424,7 @@ void PlanetProxyObject::removeServerStatistics() const
 void PlanetProxyObject::install()
 {
 	memoryBlockManager = new MemoryBlockManager("PlanetProxyObject::memoryBlockManager", true, sizeof(PlanetProxyObject), 0, 0, 0);
-	ExitChain::add(&remove, "PlanetProxyObject::remove");	
+	ExitChain::add(&remove, "PlanetProxyObject::remove");
 }
 
 // ----------------------------------------------------------------------
@@ -461,7 +462,7 @@ void PlanetProxyObject::operator delete(void* pointer)
 
 void PlanetProxyObject::sendAuthorityChange(uint32 currentAuthServer, uint32 newAuthServer, bool handlingCrash)
 {
-	DEBUG_WARNING(!isAuthorityClean(), ("Object %s attempted to change authority before previous authority change was complete.",getObjectId().getValueString().c_str()));
+	DEBUG_WARNING(!isAuthorityClean(), ("Object %s attempted to change authority before previous authority change was complete.", getObjectId().getValueString().c_str()));
 
 	SetAuthoritativeMessage const auth(getObjectId(), newAuthServer, false, handlingCrash, NetworkId::cms_invalid, Transform::identity, false);
 	PlanetServer::getInstance().sendToGameServer(currentAuthServer, auth);
@@ -473,7 +474,7 @@ void PlanetProxyObject::sendAuthorityChange(uint32 currentAuthServer, uint32 new
 void PlanetProxyObject::sendAddProxy(uint32 proxyServer)
 {
 	if (ConfigPlanetServer::getLogObjectLoading())
-		LOG("ObjectLoading",("Gameserver %lu needs a proxy of object %s",proxyServer,m_objectId.getValueString().c_str()));
+		LOG("ObjectLoading", ("Gameserver %lu needs a proxy of object %s", proxyServer, m_objectId.getValueString().c_str()));
 	if (isAuthorityClean())
 	{
 		LoadObjectMessage const loadMsg(getObjectId(), proxyServer);
@@ -491,15 +492,15 @@ void PlanetProxyObject::sendAddProxy(uint32 proxyServer)
 void PlanetProxyObject::sendRemoveProxy(uint32 proxyServer)
 {
 	if (ConfigPlanetServer::getLogObjectLoading())
-		LOG("ObjectLoading",("Gameserver %lu no longer needs a proxy of object %s",proxyServer,m_objectId.getValueString().c_str()));
+		LOG("ObjectLoading", ("Gameserver %lu no longer needs a proxy of object %s", proxyServer, m_objectId.getValueString().c_str()));
 	if (isAuthorityClean())
 	{
-		UnloadProxyMessage msg(getObjectId(),proxyServer);
+		UnloadProxyMessage msg(getObjectId(), proxyServer);
 		PlanetServer::getInstance().sendToGameServer(m_authoritativeServer, msg);
 	}
 	else
 	{
-		UnloadProxyMessage *msg = new UnloadProxyMessage(getObjectId(),proxyServer);
+		UnloadProxyMessage *msg = new UnloadProxyMessage(getObjectId(), proxyServer);
 		PlanetServer::getInstance().queueMessageForObject(getObjectId(), msg);
 	}
 }
@@ -516,7 +517,7 @@ void PlanetProxyObject::onReceivedMessageFromServer(uint32 server)
 	if (m_lastReportedServer != m_authoritativeServer && server == m_authoritativeServer)
 		// we've received a message from the new authoritative server.  Send queued messages:
 		PlanetServer::getInstance().sendQueuedMessagesForObject(*this);
-			
+
 	m_lastReportedServer = server;
 }
 
@@ -534,8 +535,8 @@ void PlanetProxyObject::getServers(std::vector<uint32> &serverList) const
 	}
 	else
 	{
-		PlanetProxyObject *container=Scene::getInstance().findObjectByID(m_containedBy);
-		WARNING_STRICT_FATAL(!container,("Object %s is in container %s, which couldn't be found",m_objectId.getValueString().c_str(),m_containedBy.getValueString().c_str()));
+		PlanetProxyObject *container = Scene::getInstance().findObjectByID(m_containedBy);
+		WARNING_STRICT_FATAL(!container, ("Object %s is in container %s, which couldn't be found", m_objectId.getValueString().c_str(), m_containedBy.getValueString().c_str()));
 		if (container)
 			effectiveNode = container->getNode();
 		else
@@ -557,12 +558,12 @@ void PlanetProxyObject::getServers(std::vector<uint32> &serverList) const
 void PlanetProxyObject::changeProxies(const std::vector<uint32> &oldServers, const std::vector<uint32> &newServers)
 {
 	{
-		for (std::vector<uint32>::const_iterator i=oldServers.begin(); i!=oldServers.end(); ++i)
+		for (std::vector<uint32>::const_iterator i = oldServers.begin(); i != oldServers.end(); ++i)
 		{
 			if (*i != m_authoritativeServer)
 			{
 				bool removeNeeded = true;
-				for (std::vector<uint32>::const_iterator j=newServers.begin(); j!=newServers.end(); ++j)
+				for (std::vector<uint32>::const_iterator j = newServers.begin(); j != newServers.end(); ++j)
 				{
 					if (*i == *j)
 					{
@@ -576,12 +577,12 @@ void PlanetProxyObject::changeProxies(const std::vector<uint32> &oldServers, con
 		}
 	}
 	{
-		for (std::vector<uint32>::const_iterator i=newServers.begin(); i!=newServers.end(); ++i)
+		for (std::vector<uint32>::const_iterator i = newServers.begin(); i != newServers.end(); ++i)
 		{
 			if (*i != m_authoritativeServer)
 			{
 				bool addNeeded = true;
-				for (std::vector<uint32>::const_iterator j=oldServers.begin(); j!=oldServers.end(); ++j)
+				for (std::vector<uint32>::const_iterator j = oldServers.begin(); j != oldServers.end(); ++j)
 				{
 					if (*i == *j)
 					{
@@ -638,10 +639,10 @@ void PlanetProxyObject::addContainedObject(const NetworkId &theObject)
 	{
 		m_contents = new std::vector<NetworkId>;
 	}
-	for (std::vector<NetworkId>::const_iterator i=m_contents->begin(); i!=m_contents->end(); ++i)
+	for (std::vector<NetworkId>::const_iterator i = m_contents->begin(); i != m_contents->end(); ++i)
 	{
-		if (*i==theObject)
-			WARNING(true,("Object %s was placed in container %s twice.", theObject.getValueString().c_str(), m_objectId.getValueString().c_str()));
+		if (*i == theObject)
+			WARNING(true, ("Object %s was placed in container %s twice.", theObject.getValueString().c_str(), m_objectId.getValueString().c_str()));
 	}
 	m_contents->push_back(theObject);
 }
@@ -652,13 +653,13 @@ void PlanetProxyObject::removeContainedObject(const NetworkId &theObject)
 {
 	if (!m_contents)
 	{
-		WARNING(true,("Attempted to remove object %s from object %s, but that object has no contents.", theObject.getValueString().c_str(), m_objectId.getValueString().c_str()));
+		WARNING(true, ("Attempted to remove object %s from object %s, but that object has no contents.", theObject.getValueString().c_str(), m_objectId.getValueString().c_str()));
 		return;
 	}
-	std::vector<NetworkId>::iterator newEnd=std::remove(m_contents->begin(), m_contents->end(), theObject);
-	if (newEnd==m_contents->end())
+	std::vector<NetworkId>::iterator newEnd = std::remove(m_contents->begin(), m_contents->end(), theObject);
+	if (newEnd == m_contents->end())
 	{
-		WARNING(true,("Attempted to remove object %s from object %s, but it was not in the container.", theObject.getValueString().c_str(), m_objectId.getValueString().c_str()));
+		WARNING(true, ("Attempted to remove object %s from object %s, but it was not in the container.", theObject.getValueString().c_str(), m_objectId.getValueString().c_str()));
 		return;
 	}
 	m_contents->erase(newEnd, m_contents->end());
@@ -672,22 +673,22 @@ void PlanetProxyObject::removeContainedObject(const NetworkId &theObject)
  */
 void PlanetProxyObject::updateContentsTracking(const NetworkId &newContainedBy)
 {
-	if (m_containedBy!=NetworkId::cms_invalid)
+	if (m_containedBy != NetworkId::cms_invalid)
 	{
 		PlanetProxyObject *container = Scene::getInstance().findObjectByID(m_containedBy);
 		if (container)
 			container->removeContainedObject(m_objectId);
 		else
-			WARNING(true,("Removing object %s from container %s, but the container could not be found.",m_objectId.getValueString().c_str(), m_containedBy.getValueString().c_str()));
+			WARNING(true, ("Removing object %s from container %s, but the container could not be found.", m_objectId.getValueString().c_str(), m_containedBy.getValueString().c_str()));
 	}
 
-	if (newContainedBy!=NetworkId::cms_invalid)
+	if (newContainedBy != NetworkId::cms_invalid)
 	{
 		PlanetProxyObject *container = Scene::getInstance().findObjectByID(newContainedBy);
 		if (container)
 			container->addContainedObject(m_objectId);
 		else
-			WARNING(true,("Adding object %s to container %s, but the container could not be found.",m_objectId.getValueString().c_str(), newContainedBy.getValueString().c_str()));
+			WARNING(true, ("Adding object %s to container %s, but the container could not be found.", m_objectId.getValueString().c_str(), newContainedBy.getValueString().c_str()));
 	}
 }
 
@@ -695,7 +696,7 @@ void PlanetProxyObject::updateContentsTracking(const NetworkId &newContainedBy)
 
 bool PlanetProxyObject::isCreature() const
 {
-	return m_objectTypeTag==TAG(C,R,E,O);
+	return m_objectTypeTag == TAG(C, R, E, O);
 }
 
 // ======================================================================

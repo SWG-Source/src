@@ -7,7 +7,6 @@
 //
 //========================================================================
 
-
 #ifndef INCLUDED_MessageQueueDraftSlots_H
 #define INCLUDED_MessageQueueDraftSlots_H
 
@@ -40,17 +39,17 @@ public:
 	const Slot  &      getSlot(int index) const;
 
 	typedef stdvector<Slot>::fwd SlotVector;
-	const SlotVector & getSlots () const;
-	void               setSlots (const SlotVector & sv);
+	const SlotVector & getSlots() const;
+	void               setSlots(const SlotVector & sv);
 
-	void               setManfSchemId (const NetworkId & id);
-	const NetworkId &  getManfSchemId () const;
+	void               setManfSchemId(const NetworkId & id);
+	const NetworkId &  getManfSchemId() const;
 
-	void               setPrototypeId (const NetworkId & id);
-	const NetworkId &  getPrototypeId () const;
+	void               setPrototypeId(const NetworkId & id);
+	const NetworkId &  getPrototypeId() const;
 
-	void               setVolume (int volume);
-	int                getVolume () const;
+	void               setVolume(int volume);
+	int                getVolume() const;
 
 	void               setCanManufacture(bool canManufacture);
 	bool               canManufacture() const;
@@ -64,15 +63,15 @@ private:
 	bool               m_canManufacture;
 };
 
-
 //----------------------------------------------------------------------
 
 inline MessageQueueDraftSlots::MessageQueueDraftSlots(const NetworkId & toolId, const NetworkId & manfSchemId) :
-m_slots       (),
-m_toolId      (toolId),
-m_manfSchemId (manfSchemId),
-m_prototypeId (),
-m_volume      (1)
+	m_slots(),
+	m_toolId(toolId),
+	m_manfSchemId(manfSchemId),
+	m_prototypeId(),
+	m_volume(1),
+	m_canManufacture()
 {
 }
 
@@ -107,56 +106,56 @@ inline const MessageQueueDraftSlots::Slot & MessageQueueDraftSlots::getSlot(int 
 
 //----------------------------------------------------------------------
 
-inline void MessageQueueDraftSlots::setSlots (const SlotVector & sv)
+inline void MessageQueueDraftSlots::setSlots(const SlotVector & sv)
 {
 	m_slots = sv;
 }
 
 //----------------------------------------------------------------------
 
-inline const MessageQueueDraftSlots::SlotVector & MessageQueueDraftSlots::getSlots () const
+inline const MessageQueueDraftSlots::SlotVector & MessageQueueDraftSlots::getSlots() const
 {
 	return m_slots;
 }
 
 //----------------------------------------------------------------------
 
-inline void MessageQueueDraftSlots::setManfSchemId (const NetworkId & id)
+inline void MessageQueueDraftSlots::setManfSchemId(const NetworkId & id)
 {
 	m_manfSchemId = id;
 }
 
 //----------------------------------------------------------------------
 
-inline const NetworkId &  MessageQueueDraftSlots::getManfSchemId () const
+inline const NetworkId &  MessageQueueDraftSlots::getManfSchemId() const
 {
 	return m_manfSchemId;
 }
 
 //----------------------------------------------------------------------
 
-inline void MessageQueueDraftSlots::setPrototypeId (const NetworkId & id)
+inline void MessageQueueDraftSlots::setPrototypeId(const NetworkId & id)
 {
 	m_prototypeId = id;
 }
 
 //----------------------------------------------------------------------
 
-inline const NetworkId &  MessageQueueDraftSlots::getPrototypeId () const
+inline const NetworkId &  MessageQueueDraftSlots::getPrototypeId() const
 {
 	return m_prototypeId;
 }
 
 //----------------------------------------------------------------------
 
-inline void MessageQueueDraftSlots::setVolume (int volume)
+inline void MessageQueueDraftSlots::setVolume(int volume)
 {
 	m_volume = volume;
 }
 
 //----------------------------------------------------------------------
 
-inline int MessageQueueDraftSlots::getVolume () const
+inline int MessageQueueDraftSlots::getVolume() const
 {
 	return m_volume;
 }
@@ -176,6 +175,5 @@ inline bool MessageQueueDraftSlots::canManufacture() const
 }
 
 //----------------------------------------------------------------------
-
 
 #endif	// INCLUDED_MessageQueueDraftSlots_H

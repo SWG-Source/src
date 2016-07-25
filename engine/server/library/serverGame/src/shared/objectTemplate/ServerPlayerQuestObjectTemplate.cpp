@@ -24,11 +24,10 @@
 
 const std::string DefaultString("");
 const StringId DefaultStringId("", 0);
-const Vector DefaultVector(0,0,0);
+const Vector DefaultVector(0, 0, 0);
 const TriggerVolumeData DefaultTriggerVolumeData;
 
 bool ServerPlayerQuestObjectTemplate::ms_allowDefaultTemplateParams = true;
-
 
 /**
  * Class constructor.
@@ -36,8 +35,9 @@ bool ServerPlayerQuestObjectTemplate::ms_allowDefaultTemplateParams = true;
 ServerPlayerQuestObjectTemplate::ServerPlayerQuestObjectTemplate(const std::string & filename)
 //@BEGIN TFD INIT
 	: ServerTangibleObjectTemplate(filename)
-	,m_versionOk(true)
-//@END TFD INIT
+	, m_versionOk(true)
+	, m_templateVersion(0)
+	//@END TFD INIT
 {
 }	// ServerPlayerQuestObjectTemplate::ServerPlayerQuestObjectTemplate
 
@@ -46,8 +46,8 @@ ServerPlayerQuestObjectTemplate::ServerPlayerQuestObjectTemplate(const std::stri
  */
 ServerPlayerQuestObjectTemplate::~ServerPlayerQuestObjectTemplate()
 {
-//@BEGIN TFD CLEANUP
-//@END TFD CLEANUP
+	//@BEGIN TFD CLEANUP
+	//@END TFD CLEANUP
 }	// ServerPlayerQuestObjectTemplate::~ServerPlayerQuestObjectTemplate
 
 /**
@@ -113,7 +113,6 @@ Object * ServerPlayerQuestObjectTemplate::createObject(void) const
 	return new PlayerQuestObject(this);
 }	// ServerMissionObjectTemplate::createObject
 
-
 //@BEGIN TFD
 
 /**
@@ -124,8 +123,8 @@ Object * ServerPlayerQuestObjectTemplate::createObject(void) const
  */
 void ServerPlayerQuestObjectTemplate::load(Iff &file)
 {
-static const int MAX_NAME_SIZE = 256;
-char paramName[MAX_NAME_SIZE];
+	static const int MAX_NAME_SIZE = 256;
+	char paramName[MAX_NAME_SIZE];
 
 	if (file.getCurrentName() != ServerPlayerQuestObjectTemplate_tag)
 	{
@@ -135,7 +134,7 @@ char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 	m_templateVersion = file.getCurrentName();
-	if (m_templateVersion == TAG(D,E,R,V))
+	if (m_templateVersion == TAG(D, E, R, V))
 	{
 		file.enterForm();
 		file.enterChunk();
@@ -155,10 +154,8 @@ char paramName[MAX_NAME_SIZE];
 		file.exitForm();
 		m_templateVersion = file.getCurrentName();
 	}
-	if (getHighestTemplateVersion() != TAG(0,0,0,0))
+	if (getHighestTemplateVersion() != TAG(0, 0, 0, 0))
 	{
-		
-			
 		m_versionOk = false;
 	}
 

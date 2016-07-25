@@ -45,7 +45,6 @@
 
 namespace ServerBuildoutManagerNamespace
 {
-
 	const int cs_buildingObjIdOffset = 2000;
 
 	// ----------------------------------------------------------------------
@@ -80,23 +79,21 @@ namespace ServerBuildoutManagerNamespace
 
 	struct ServerEventAreaInfo
 	{
-		ServerEventAreaInfo():
-		buildOut(nullptr),
-		loadedObject(nullptr)
+		ServerEventAreaInfo() :
+			buildOut(nullptr),
+			loadedObject(nullptr)
 		{
-
 		}
-		ServerEventAreaInfo(BuildoutRow const * _buildOut, ServerObject* _loadedObject):
-		buildOut(_buildOut),
-		loadedObject(_loadedObject)
+		ServerEventAreaInfo(BuildoutRow const * _buildOut, ServerObject* _loadedObject) :
+			buildOut(_buildOut),
+			loadedObject(_loadedObject)
 		{
-			
 		}
 
 		BuildoutRow const * buildOut;
 		ServerObject* loadedObject;
 	};
-	
+
 	typedef std::map< std::string, std::list< ServerEventAreaInfo > > ServerEventMap;
 	// ----------------------------------------------------------------------
 
@@ -120,7 +117,6 @@ namespace ServerBuildoutManagerNamespace
 #else
 	const int64 cs_dataBitStripMask = 0x80000000ffffffffLL;
 #endif
-
 }
 using namespace ServerBuildoutManagerNamespace;
 
@@ -152,10 +148,10 @@ void ServerBuildoutManager::onChunkComplete(int nodeX, int nodeZ)
 	for (std::vector<AreaInfo>::iterator i = s_areas.begin(); i != s_areas.end(); ++i)
 	{
 		AreaInfo &areaInfo = *i;
-		if (   nodeX < areaInfo.buildoutArea.rect.x1
-		    && nodeX+100 > areaInfo.buildoutArea.rect.x0
-		    && nodeZ < areaInfo.buildoutArea.rect.y1
-		    && nodeZ+100 > areaInfo.buildoutArea.rect.y0)
+		if (nodeX < areaInfo.buildoutArea.rect.x1
+			&& nodeX + 100 > areaInfo.buildoutArea.rect.x0
+			&& nodeZ < areaInfo.buildoutArea.rect.y1
+			&& nodeZ + 100 > areaInfo.buildoutArea.rect.y0)
 		{
 			if (!areaInfo.loaded)
 				loadArea(areaInfo);
@@ -168,7 +164,7 @@ void ServerBuildoutManager::onChunkComplete(int nodeX, int nodeZ)
 
 void ServerBuildoutManager::saveArea(std::string const &serverFileName, std::string const &clientFileName, float x1, float z1, float x2, float z2)
 {
-	FATAL( true, ( "ServerBuildoutManager::saveArea\n" ) );
+	FATAL(true, ("ServerBuildoutManager::saveArea\n"));
 
 	if (!ConfigServerGame::getBuildoutAreaEditingEnabled())
 	{
@@ -214,12 +210,12 @@ void ServerBuildoutManager::saveArea(std::string const &serverFileName, std::str
 		{
 			ConstCharCrcString const &serverTemplateName = ObjectTemplateList::lookUp((*i).serverTemplateCrc);
 			char buf[512];
-			IGNORE_RETURN(snprintf(buf, sizeof(buf)-1, "%s\t%d\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t",
+			IGNORE_RETURN(snprintf(buf, sizeof(buf) - 1, "%s\t%d\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t",
 				serverTemplateName.getString(),
 				(*i).cellIndex,
 				(*i).position.x, (*i).position.y, (*i).position.z,
 				(*i).orientation.w, (*i).orientation.x, (*i).orientation.y, (*i).orientation.z));
-			buf[sizeof(buf)-1] = '\0';
+			buf[sizeof(buf) - 1] = '\0';
 			serverOutputFile.write(strlen(buf), buf);
 			serverOutputFile.write((*i).scripts.length(), (*i).scripts.c_str());
 			serverOutputFile.write(1, "\t");
@@ -234,14 +230,14 @@ void ServerBuildoutManager::saveArea(std::string const &serverFileName, std::str
 		{
 			ConstCharCrcString const &sharedTemplateName = ObjectTemplateList::lookUp((*i).sharedTemplateCrc);
 			char buf[512];
-			IGNORE_RETURN(snprintf(buf, sizeof(buf)-1, "%s\t%d\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%d\n",
+			IGNORE_RETURN(snprintf(buf, sizeof(buf) - 1, "%s\t%d\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%g\t%d\n",
 				sharedTemplateName.getString(),
 				(*i).cellIndex,
 				(*i).position.x, (*i).position.y, (*i).position.z,
 				(*i).orientation.w, (*i).orientation.x, (*i).orientation.y, (*i).orientation.z,
 				(*i).radius,
 				static_cast<int>((*i).portalLayoutCrc)));
-			buf[sizeof(buf)-1] = '\0';
+			buf[sizeof(buf) - 1] = '\0';
 			clientOutputFile.write(strlen(buf), buf);
 		}
 	}
@@ -262,14 +258,13 @@ void ServerBuildoutManager::clientSaveArea(Client &client, std::string const &ar
 	std::vector<ClientBuildoutAreaRow> clientRows;
 	generateBuildoutData(x1, z1, x2, z2, serverRows, clientRows);
 
-
 	// pass them to the client
 	GenericValueTypeMessage<
 		std::pair<
-			std::pair<std::string, std::string>, // scene, area
-			std::pair<std::vector<ServerBuildoutAreaRow>, std::vector<ClientBuildoutAreaRow> > // serverRows, clientRows
-			>
-		> const message(
+		std::pair<std::string, std::string>, // scene, area
+		std::pair<std::vector<ServerBuildoutAreaRow>, std::vector<ClientBuildoutAreaRow> > // serverRows, clientRows
+		>
+	> const message(
 		"GodClientSaveBuildoutArea",
 		std::make_pair(
 			std::make_pair(std::string(ConfigServerGame::getSceneID()), areaName),
@@ -317,12 +312,12 @@ void ServerBuildoutManager::destroyPersistedDuplicates()
 			for (std::vector<ServerObject *>::const_iterator k = objectsToTest.begin(); k != objectsToTest.end(); ++k)
 			{
 				ServerObject * const so = *k;
-				if (   so
-				    && so->getNetworkId().getValue() != buildoutRow.m_id
-				    && so->isPersisted()
-				    && so->getTemplateCrc() == buildoutRow.m_serverTemplate->getCrcName().getCrc()
-				    && so->getPosition_p().magnitudeBetweenSquared(buildoutRow.m_transform_p.getPosition_p()) < 0.005f
-				    && ContainerInterface::getContainedByObject(*so) == container)
+				if (so
+					&& so->getNetworkId().getValue() != buildoutRow.m_id
+					&& so->isPersisted()
+					&& so->getTemplateCrc() == buildoutRow.m_serverTemplate->getCrcName().getCrc()
+					&& so->getPosition_p().magnitudeBetweenSquared(buildoutRow.m_transform_p.getPosition_p()) < 0.005f
+					&& ContainerInterface::getContainedByObject(*so) == container)
 					so->permanentlyDestroy(DeleteReasons::Replaced);
 			}
 		}
@@ -377,12 +372,12 @@ void ServerBuildoutManagerNamespace::remove()
 
 void ServerBuildoutManagerNamespace::generateBuildoutData(float x1, float z1, float x2, float z2, std::vector<ServerBuildoutAreaRow> &serverRows, std::vector<ClientBuildoutAreaRow> &clientRows)
 {
-//	int objIdBase         = -1;
+	//	int objIdBase         = -1;
 
-	typedef std::map<NetworkId::NetworkIdType,int> ObjIdMap;
+	typedef std::map<NetworkId::NetworkIdType, int> ObjIdMap;
 
 	ObjIdMap objIdMap;
-	
+
 	std::vector<ServerObject const *> objectsToSave;
 
 	// build vector of objects we need to save, in the appropriate order
@@ -408,9 +403,8 @@ void ServerBuildoutManagerNamespace::generateBuildoutData(float x1, float z1, fl
 		{
 			ServerObject const * const obj = *i;
 
-
 			// check for unexported gold data
-			if ( obj->getIncludeInBuildout() == false && obj->getNetworkId().getValue() < 10000000 )
+			if (obj->getIncludeInBuildout() == false && obj->getNetworkId().getValue() < 10000000)
 			{
 				continue;
 			}
@@ -427,7 +421,6 @@ void ServerBuildoutManagerNamespace::generateBuildoutData(float x1, float z1, fl
 					if (serverTemplate->getVisibleFlags(vfIndex) == ServerObjectTemplate::VF_player)
 						serverOnly = false;
 			}
-
 
 			Quaternion const q(obj->getTransform_o2p());
 			Vector p(obj->getPosition_p());
@@ -461,30 +454,29 @@ void ServerBuildoutManagerNamespace::generateBuildoutData(float x1, float z1, fl
 			serverRows.push_back(ServerBuildoutAreaRow());
 			ServerBuildoutAreaRow &serverRow = serverRows.back();
 
-			serverRow.id                = static_cast< int >( obj->getNetworkId().getValue() );
-			serverRow.container         = containingObject ? static_cast< int >( containingObject->getNetworkId().getValue() ) : 0;
+			serverRow.id = static_cast<int>(obj->getNetworkId().getValue());
+			serverRow.container = containingObject ? static_cast<int>(containingObject->getNetworkId().getValue()) : 0;
 			serverRow.serverTemplateCrc = obj->getTemplateCrc();
-			serverRow.cellIndex         = cellIndex;
-			serverRow.position          = p;
-			serverRow.orientation       = q;
-			serverRow.scripts           = packedScriptList;
-			serverRow.objvars           = obj->getPackedObjVars(std::string());
+			serverRow.cellIndex = cellIndex;
+			serverRow.position = p;
+			serverRow.orientation = q;
+			serverRow.scripts = packedScriptList;
+			serverRow.objvars = obj->getPackedObjVars(std::string());
 
-			
-			if ( serverRow.id >= 10000000 )
+			if (serverRow.id >= 10000000)
 			{
 				serverRow.id = Random::random() | 0x80000000; // generate a negative random number.
-				objIdMap[ obj->getNetworkId().getValue() ] = serverRow.id;
+				objIdMap[obj->getNetworkId().getValue()] = serverRow.id;
 			}
 			else
 			{
 				serverRow.id &= cs_dataBitStripMask; // strip data bits
 			}
 
-			if ( serverRow.container >= 10000000 )
+			if (serverRow.container >= 10000000)
 			{
-				ObjIdMap::const_iterator it = objIdMap.find( serverRow.container );
-				FATAL( it == objIdMap.end(), ( "Unable to find the container relative objid for object %d\n", serverRow.id ) );
+				ObjIdMap::const_iterator it = objIdMap.find(serverRow.container);
+				FATAL(it == objIdMap.end(), ("Unable to find the container relative objid for object %d\n", serverRow.id));
 				serverRow.container = it->second;
 			}
 			else
@@ -497,17 +489,17 @@ void ServerBuildoutManagerNamespace::generateBuildoutData(float x1, float z1, fl
 				clientRows.push_back(ClientBuildoutAreaRow());
 				ClientBuildoutAreaRow &clientRow = clientRows.back();
 
-				clientRow.id                = serverRow.id;
-				clientRow.container         = serverRow.container;
-				clientRow.type              = serverTemplate ? serverTemplate->getId() : 0;
+				clientRow.id = serverRow.id;
+				clientRow.container = serverRow.container;
+				clientRow.type = serverTemplate ? serverTemplate->getId() : 0;
 				clientRow.sharedTemplateCrc = ConstCharCrcString(obj->getSharedTemplateName()).getCrc();
-				clientRow.cellIndex         = cellIndex;
-				clientRow.position          = p;
-				clientRow.orientation       = q;
-				clientRow.radius            = serverTemplate->getUpdateRanges(ServerObjectTemplate::UR_far);
+				clientRow.cellIndex = cellIndex;
+				clientRow.position = p;
+				clientRow.orientation = q;
+				clientRow.radius = serverTemplate->getUpdateRanges(ServerObjectTemplate::UR_far);
 				int portalLayoutCrc = 0;
 				obj->getObjVars().getItem("portalProperty.crc", portalLayoutCrc);
-				clientRow.portalLayoutCrc   = static_cast<uint32>(portalLayoutCrc);
+				clientRow.portalLayoutCrc = static_cast<uint32>(portalLayoutCrc);
 			}
 		}
 	}
@@ -549,49 +541,50 @@ void ServerBuildoutManagerNamespace::buildObjectsToSave(std::vector<ServerObject
 
 bool ServerBuildoutManagerNamespace::isNotObjectForBuildout(ServerObject const *obj)
 {
-	const ServerObject * const containingObject = safe_cast<const ServerObject  *>(ContainerInterface::getContainedByObject(*obj));
-
-	// make sure that cells that should be included in the buildout have all their
-	// children included too!
-	if ( obj->getObjectTemplate()->getId() == ServerCellObjectTemplate::ServerCellObjectTemplate_tag && containingObject && containingObject->getIncludeInBuildout() )
+	if (obj)
 	{
-		ServerObject *tmpObj = const_cast< ServerObject * >( obj );
-		tmpObj->setIncludeInBuildout( true );
-	}
+		const ServerObject * const containingObject = safe_cast<const ServerObject  *>(ContainerInterface::getContainedByObject(*obj));
 
-	if ( !obj || !obj->isInWorld() ||  (!obj->isPersisted() && !obj->getIncludeInBuildout() ) || obj->isPlayerControlled() )
-	{
-		return true;
-	}
+		// make sure that cells that should be included in the buildout have all their
+		// children included too!
+		if (obj->getObjectTemplate()->getId() == ServerCellObjectTemplate::ServerCellObjectTemplate_tag && containingObject && containingObject->getIncludeInBuildout())
+		{
+			ServerObject *tmpObj = const_cast<ServerObject *>(obj);
+			tmpObj->setIncludeInBuildout(true);
+		}
 
+		if (!obj || !obj->isInWorld() || (!obj->isPersisted() && !obj->getIncludeInBuildout()) || obj->isPlayerControlled())
+		{
+			return true;
+		}
+	}
 	return false;
-
 }
 
 // ----------------------------------------------------------------------
 
 void ServerBuildoutManagerNamespace::loadArea(AreaInfo &areaInfo)
 {
-	int64 buildingObjId     = areaInfo.buildoutArea.getSharedBaseId();
-	int64 objIdBase         = buildingObjId + cs_buildingObjIdOffset;
-	int64 currentBuilding   = 0;
-	int64 currentCell       = 0;
+	int64 buildingObjId = areaInfo.buildoutArea.getSharedBaseId();
+	int64 objIdBase = buildingObjId + cs_buildingObjIdOffset;
+	int64 currentBuilding = 0;
+	int64 currentCell = 0;
 
-	int serverIdBase      = areaInfo.buildoutArea.getServerBaseId();
+	int serverIdBase = areaInfo.buildoutArea.getServerBaseId();
 
 	const bool isBuildoutEditingEnabled = ConfigServerGame::getBuildoutAreaEditingEnabled();
-	UNREF( isBuildoutEditingEnabled );
+	UNREF(isBuildoutEditingEnabled);
 
 	char filename[256];
-	snprintf(filename, sizeof(filename)-1, "datatables/buildout/%s/%s.iff", ConfigServerGame::getSceneID(), areaInfo.buildoutArea.areaName.c_str());
-	filename[sizeof(filename)-1] = '\0';
+	snprintf(filename, sizeof(filename) - 1, "datatables/buildout/%s/%s.iff", ConfigServerGame::getSceneID(), areaInfo.buildoutArea.areaName.c_str());
+	filename[sizeof(filename) - 1] = '\0';
 
 	std::string const & eventRequired = areaInfo.buildoutArea.getRequiredEventName();
 
-	if(!eventRequired.empty())
+	if (!eventRequired.empty())
 	{
 		ServerEventMap::iterator iter = s_eventObjects.find(eventRequired);
-		if(iter != s_eventObjects.end())
+		if (iter != s_eventObjects.end())
 		{
 			// Nothing to do here. We've already setup a list for this event.
 			//eventObjList = &(*iter).second;
@@ -600,11 +593,10 @@ void ServerBuildoutManagerNamespace::loadArea(AreaInfo &areaInfo)
 		{
 			s_eventObjects.insert(std::pair<std::string, std::list<ServerEventAreaInfo> >(eventRequired, std::list<ServerEventAreaInfo>()));
 		}
-
 	}
 
 	Iff iff;
-	if (!areaInfo.buildoutArea.areaName.empty() && iff.open(filename, true) && !iff.atEndOfForm() )
+	if (!areaInfo.buildoutArea.areaName.empty() && iff.open(filename, true) && !iff.atEndOfForm())
 	{
 		DataTable areaBuildoutTable;
 		areaBuildoutTable.load(iff);
@@ -614,19 +606,19 @@ void ServerBuildoutManagerNamespace::loadArea(AreaInfo &areaInfo)
 		{
 			areaInfo.buildoutRows.reserve(buildoutRowCount);
 
-			int const objIdColumn             = areaBuildoutTable.findColumnNumber( "objid" );
-			int const containerColumn         = areaBuildoutTable.findColumnNumber( "container" );
+			int const objIdColumn = areaBuildoutTable.findColumnNumber("objid");
+			int const containerColumn = areaBuildoutTable.findColumnNumber("container");
 			int const serverTemplateCrcColumn = areaBuildoutTable.findColumnNumber("server_template_crc");
-			int const cellIndexColumn         = areaBuildoutTable.findColumnNumber("cell_index");
-			int const pxColumn                = areaBuildoutTable.findColumnNumber("px");
-			int const pyColumn                = areaBuildoutTable.findColumnNumber("py");
-			int const pzColumn                = areaBuildoutTable.findColumnNumber("pz");
-			int const qwColumn                = areaBuildoutTable.findColumnNumber("qw");
-			int const qxColumn                = areaBuildoutTable.findColumnNumber("qx");
-			int const qyColumn                = areaBuildoutTable.findColumnNumber("qy");
-			int const qzColumn                = areaBuildoutTable.findColumnNumber("qz");
-			int const scriptsColumn           = areaBuildoutTable.findColumnNumber("scripts");
-			int const objvarsColumn           = areaBuildoutTable.findColumnNumber("objvars");
+			int const cellIndexColumn = areaBuildoutTable.findColumnNumber("cell_index");
+			int const pxColumn = areaBuildoutTable.findColumnNumber("px");
+			int const pyColumn = areaBuildoutTable.findColumnNumber("py");
+			int const pzColumn = areaBuildoutTable.findColumnNumber("pz");
+			int const qwColumn = areaBuildoutTable.findColumnNumber("qw");
+			int const qxColumn = areaBuildoutTable.findColumnNumber("qx");
+			int const qyColumn = areaBuildoutTable.findColumnNumber("qy");
+			int const qzColumn = areaBuildoutTable.findColumnNumber("qz");
+			int const scriptsColumn = areaBuildoutTable.findColumnNumber("scripts");
+			int const objvarsColumn = areaBuildoutTable.findColumnNumber("objvars");
 
 			FATAL(serverTemplateCrcColumn < 0, ("Unable to find serverTemplateCrcColumn in [%s]", filename));
 			FATAL(cellIndexColumn < 0, ("Unable to find cellIndexColumn in [%s]", filename));
@@ -642,19 +634,17 @@ void ServerBuildoutManagerNamespace::loadArea(AreaInfo &areaInfo)
 
 			int buildOutFileVersion = 1;
 
-			if ( objIdColumn != -1 )
+			if (objIdColumn != -1)
 			{
 				buildOutFileVersion = 2;
 			}
-			
+
 			std::set< int64 > objects;
 
 			for (int buildoutRow = 0; buildoutRow < buildoutRowCount; ++buildoutRow)
 			{
-
-				int64 objId       = 0;
+				int64 objId = 0;
 				int64 containerId = 0;
-
 
 				uint32 const serverTemplateCrc = static_cast<uint32>(areaBuildoutTable.getIntValue(serverTemplateCrcColumn, buildoutRow));
 				unsigned int const cellIndex = areaBuildoutTable.getIntValue(cellIndexColumn, buildoutRow);
@@ -673,7 +663,7 @@ void ServerBuildoutManagerNamespace::loadArea(AreaInfo &areaInfo)
 				FATAL(!sharedTemplate, ("Bad shared template [%s] for [%s] in buildout table %s, row %d (line %d)", sharedTemplateName.c_str(), serverTemplateBase->getName(), areaInfo.buildoutArea.areaName.c_str(), buildoutRow, buildoutRow + 3));
 				bool const isPob = !sharedTemplate->getPortalLayoutFilename().empty();
 				sharedTemplateBase->releaseReference();
-				
+
 				bool serverOnly = false;
 				if (!isPob && dynamic_cast<ServerTangibleObjectTemplate const *>(serverTemplate))
 				{
@@ -684,26 +674,25 @@ void ServerBuildoutManagerNamespace::loadArea(AreaInfo &areaInfo)
 							serverOnly = false;
 				}
 
-
-				if ( buildOutFileVersion == 1 )
+				if (buildOutFileVersion == 1)
 				{
-					if ( isPob ) // if ( is a building )
+					if (isPob) // if ( is a building )
 					{
 						objId = buildingObjId++;
 						currentBuilding = objId;
 					}
-					else if ( serverTemplate->getId() == ServerCellObjectTemplate::ServerCellObjectTemplate_tag ) // if ( is a cell )
+					else if (serverTemplate->getId() == ServerCellObjectTemplate::ServerCellObjectTemplate_tag) // if ( is a cell )
 					{
 						objId = buildingObjId++;
 						currentCell = objId;
 						containerId = currentBuilding;
 					}
-					else if ( cellIndex > 0 ) // if ( is an object in a cell )
+					else if (cellIndex > 0) // if ( is an object in a cell )
 					{
 						objId = objIdBase++;
 						containerId = currentCell;
 					}
-					else if ( serverOnly )
+					else if (serverOnly)
 					{
 						objId = serverIdBase++;
 					}
@@ -712,34 +701,32 @@ void ServerBuildoutManagerNamespace::loadArea(AreaInfo &areaInfo)
 						objId = objIdBase++;
 					}
 
-					FATAL( buildingObjId >= areaInfo.buildoutArea.getSharedBaseId() + cs_buildingObjIdOffset, ( "building object id overflow" ) );
+					FATAL(buildingObjId >= areaInfo.buildoutArea.getSharedBaseId() + cs_buildingObjIdOffset, ("building object id overflow"));
 				}
 				else
 				{
-					objId       = areaBuildoutTable.getIntValue(objIdColumn, buildoutRow);
+					objId = areaBuildoutTable.getIntValue(objIdColumn, buildoutRow);
 					containerId = areaBuildoutTable.getIntValue(containerColumn, buildoutRow);
-					
+
 					// with new buildout files, the object id is a random 31-bit negative value
 					// then we give the area index some bits in the upper part of the number
 					// by shifting the area index value left 48 bits.
 
 					const int64 areaIndex = areaInfo.buildoutArea.areaIndex + 1;
 
-					if ( objId < 0 )
+					if (objId < 0)
 					{
-
 						objId ^= areaIndex << 48;
 					}
 
-					if ( containerId < 0 )
+					if (containerId < 0)
 					{
 						containerId ^= areaIndex << 48;
 					}
-
 				}
 
-				FATAL( isPob && ( cellIndex != 0 || containerId != 0 ), ( "tried to add a pob to a cell or other container. %s (objId=%d cellIndex=%d containerId=%d)",
-					serverTemplateBase->getName(), objId, cellIndex,containerId ) );
+				FATAL(isPob && (cellIndex != 0 || containerId != 0), ("tried to add a pob to a cell or other container. %s (objId=%d cellIndex=%d containerId=%d)",
+					serverTemplateBase->getName(), objId, cellIndex, containerId));
 
 				Quaternion const q(
 					areaBuildoutTable.getFloatValue(qwColumn, buildoutRow),
@@ -751,7 +738,7 @@ void ServerBuildoutManagerNamespace::loadArea(AreaInfo &areaInfo)
 
 				q.getTransform(&transform_p);
 
-				if ( cellIndex == 0 )
+				if (cellIndex == 0)
 				{
 					transform_p.setPosition_p(
 						areaBuildoutTable.getFloatValue(pxColumn, buildoutRow) + areaInfo.buildoutArea.rect.x0,
@@ -766,7 +753,7 @@ void ServerBuildoutManagerNamespace::loadArea(AreaInfo &areaInfo)
 						areaBuildoutTable.getFloatValue(pzColumn, buildoutRow));
 				}
 
-				if ( containerId == 0 || objects.find ( containerId ) != objects.end() )
+				if (containerId == 0 || objects.find(containerId) != objects.end())
 				{
 					areaInfo.buildoutRows.push_back(
 						BuildoutRow(
@@ -780,7 +767,7 @@ void ServerBuildoutManagerNamespace::loadArea(AreaInfo &areaInfo)
 							eventRequired));
 				}
 
-				objects.insert( objId );
+				objects.insert(objId);
 
 				serverTemplateBase->releaseReference();
 			}
@@ -810,13 +797,12 @@ void ServerBuildoutManagerNamespace::instantiateAreaNode(AreaInfo const &areaInf
 	UNREF(nodeZ);
 	UNREF(nodeX);
 
-
 	std::vector<ServerObject *> newObjects;
 	int buildingId = 0;
 	int cellIndex = 0;
 	UNREF(cellIndex);
 
-	UNREF( buildingId );
+	UNREF(buildingId);
 
 	NetworkId controllerObjectId;
 
@@ -824,8 +810,8 @@ void ServerBuildoutManagerNamespace::instantiateAreaNode(AreaInfo const &areaInf
 
 	PlanetObject * const planetObject = ServerUniverse::getInstance().getTatooinePlanet();
 	std::vector<std::string> events;
-	
-	if(planetObject)
+
+	if (planetObject)
 		planetObject->parseCurrentEventsList(events);
 
 	for (std::vector<BuildoutRow>::const_iterator rowIter = areaInfo.buildoutRows.begin(); rowIter != areaInfo.buildoutRows.end(); ++rowIter)
@@ -836,7 +822,7 @@ void ServerBuildoutManagerNamespace::instantiateAreaNode(AreaInfo const &areaInf
 
 		int64 const containerId = buildoutRow.m_containerId;
 
-		if ( containerId && discardContainedObjects )
+		if (containerId && discardContainedObjects)
 		{
 			continue;
 		}
@@ -860,21 +846,21 @@ void ServerBuildoutManagerNamespace::instantiateAreaNode(AreaInfo const &areaInf
 		}
 
 		// reject object if it is out of bounds and is not the controller
-		if ( !containerId && objectId != controllerObjectId )
+		if (!containerId && objectId != controllerObjectId)
 		{
 			const Vector &position_w = buildoutRow.m_transform_p.getPosition_p();
 
-			if ( position_w.x < nodeX || position_w.x >= nodeX+100 || position_w.z < nodeZ || position_w.z >= nodeZ+100 )
+			if (position_w.x < nodeX || position_w.x >= nodeX + 100 || position_w.z < nodeZ || position_w.z >= nodeZ + 100)
 			{
 				discardContainedObjects = true;
 				continue;
 			}
 		}
 
-		if(!buildoutRow.m_eventRequired.empty())
+		if (!buildoutRow.m_eventRequired.empty())
 		{
 			ServerEventMap::iterator searchIter = s_eventObjects.find(buildoutRow.m_eventRequired);
-			if(searchIter != s_eventObjects.end())
+			if (searchIter != s_eventObjects.end())
 			{
 				ServerEventAreaInfo newEventObj(&buildoutRow, nullptr);
 				(*searchIter).second.push_back(newEventObj);
@@ -883,28 +869,27 @@ void ServerBuildoutManagerNamespace::instantiateAreaNode(AreaInfo const &areaInf
 			{
 				DEBUG_REPORT_LOG(true, ("ServerBuildoutManager: Tried to load an unknown event object. Event name: %s\n", buildoutRow.m_eventRequired.c_str()));
 			}
-			
-			if(planetObject) // We have a valid Tatooine Planet Object which keeps track of our universe wide events.
+
+			if (planetObject) // We have a valid Tatooine Planet Object which keeps track of our universe wide events.
 			{
 				bool eventCurrentlyRunning = false;
-				
+
 				std::vector<std::string>::size_type i = 0;
-				for(; i < events.size(); ++i)
+				for (; i < events.size(); ++i)
 				{
-					if(events[i] == buildoutRow.m_eventRequired) // Is our required event already running?
+					if (events[i] == buildoutRow.m_eventRequired) // Is our required event already running?
 						eventCurrentlyRunning = true;
 				}
 
-				if(!eventCurrentlyRunning)
+				if (!eventCurrentlyRunning)
 					continue; // We found an event object but their event isn't started yet. Hold off on Object creation.
 			}
 			else
 				continue; // No planet object. This should NEVER happen. Better hold off on any event object creation for now.
-
 		}
-		
+
 		ServerObject * const containingObject = containerId ? safe_cast<ServerObject *>(NetworkIdManager::getObjectById(NetworkId(static_cast<NetworkId::NetworkIdType>(containerId)))) : 0;
-		FATAL(containerId && !containingObject, ("could not find containing object obj=%d container=%d", (int)objectId.getValue(), containerId ));
+		FATAL(containerId && !containingObject, ("could not find containing object obj=%d container=%d", (int)objectId.getValue(), containerId));
 
 		//-- object has already been created
 		//-- this must be the controller object or one of its contents.
@@ -921,7 +906,7 @@ void ServerBuildoutManagerNamespace::instantiateAreaNode(AreaInfo const &areaInf
 
 		if (newCellObject)
 		{
-			newCellObject->setCell( buildoutRow.m_cellIndex );
+			newCellObject->setCell(buildoutRow.m_cellIndex);
 		}
 
 		if (!newObject->getController())
@@ -940,15 +925,15 @@ void ServerBuildoutManagerNamespace::instantiateAreaNode(AreaInfo const &areaInf
 		// to client-cache any objects otherwise we will not be able to
 		// move them around or delete them, etc.
 		//
-		
+
 		const bool isEditing = ConfigServerGame::getBuildoutAreaEditingEnabled();
-		
-		if ( isEditing == false )
+
+		if (isEditing == false)
 		{
 			//
 			// cells and their parents should NOT BE CLIENT CACHED
 			//
-			if ( newObject->asCellObject() )
+			if (newObject->asCellObject())
 			{
 				// by the time we get here the cache version on the POB has
 				// already been set to non-zero, so we need to reset it back
@@ -970,12 +955,12 @@ void ServerBuildoutManagerNamespace::instantiateAreaNode(AreaInfo const &areaInf
 				// them in god mode!!!
 				//
 				const int vfCount = buildoutRow.m_serverTemplate->getVisibleFlagsCount();
-				
-				for ( int index = 0; index < vfCount ; ++index )
+
+				for (int index = 0; index < vfCount; ++index)
 				{
-					const ServerObjectTemplate::VisibleFlags vf = buildoutRow.m_serverTemplate->getVisibleFlags( index );
-					
-					if ( vf == ServerObjectTemplate::VF_player && buildoutRow.m_eventRequired.empty()) // Event objects can never be client cached currently.
+					const ServerObjectTemplate::VisibleFlags vf = buildoutRow.m_serverTemplate->getVisibleFlags(index);
+
+					if (vf == ServerObjectTemplate::VF_player && buildoutRow.m_eventRequired.empty()) // Event objects can never be client cached currently.
 					{
 						newObject->setCacheVersion(s_buildoutCacheVersion);
 						break;
@@ -983,8 +968,7 @@ void ServerBuildoutManagerNamespace::instantiateAreaNode(AreaInfo const &areaInf
 				}
 			}
 		}
- 
-		
+
 		if (buildoutRow.m_transform_p != Transform::identity)
 		{
 			newObject->setTransform_o2p(buildoutRow.m_transform_p);
@@ -1005,7 +989,7 @@ void ServerBuildoutManagerNamespace::instantiateAreaNode(AreaInfo const &areaInf
 		{
 			newObject->setPackedObjVars(buildoutRow.m_objvars);
 		}
-		
+
 		int const count = buildoutRow.m_serverTemplate->getScriptsCount();
 
 		for (int j = 0; j < count; ++j)
@@ -1027,7 +1011,7 @@ void ServerBuildoutManagerNamespace::instantiateAreaNode(AreaInfo const &areaInf
 					while (scripts[pos] && scripts[pos] != ':')
 						++pos;
 
-					std::string const & scriptName = scripts.substr(oldPos, pos-oldPos);
+					std::string const & scriptName = scripts.substr(oldPos, pos - oldPos);
 					if (!gso->hasScript(scriptName))
 						IGNORE_RETURN(gso->attachScript(scriptName, false));
 
@@ -1038,10 +1022,10 @@ void ServerBuildoutManagerNamespace::instantiateAreaNode(AreaInfo const &areaInf
 		}
 		newObjects.push_back(newObject);
 
-		if(!buildoutRow.m_eventRequired.empty())
+		if (!buildoutRow.m_eventRequired.empty())
 		{
 			ServerEventMap::iterator searchIter = s_eventObjects.find(buildoutRow.m_eventRequired);
-			if(searchIter != s_eventObjects.end())
+			if (searchIter != s_eventObjects.end())
 			{
 				ServerEventAreaInfo & newEventObj = (*searchIter).second.back();
 				newEventObj.loadedObject = newObject;
@@ -1058,7 +1042,7 @@ void ServerBuildoutManagerNamespace::instantiateAreaNode(AreaInfo const &areaInf
 	}
 
 	// run through newly instantiated objects and notify the controller object
-	if ( controllerObjectId.isValid() )
+	if (controllerObjectId.isValid())
 	{
 		ServerObject * const controllerObject = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(controllerObjectId));
 		if (nullptr != controllerObject)
@@ -1070,12 +1054,12 @@ void ServerBuildoutManagerNamespace::instantiateAreaNode(AreaInfo const &areaInf
 				ServerObject * const obj = *it;
 				if (obj == controllerObject)
 					continue;
-				
+
 				int registerWithController = 0;
 				if (obj->getObjVars().getItem("registerWithController", registerWithController))
 				{
 					if (registerWithController)
-					{						
+					{
 						if (nullptr != script)
 						{
 							ScriptParams p;
@@ -1090,36 +1074,33 @@ void ServerBuildoutManagerNamespace::instantiateAreaNode(AreaInfo const &areaInf
 
 	// initialize any theaters
 	{
-
 		for (std::vector<ServerObject *>::reverse_iterator it = newObjects.rbegin(); it != newObjects.rend(); ++it)
 		{
 			ServerObject *obj = *it;
 
-			if ( obj  && obj->isAuthoritative() )
+			if (obj  && obj->isAuthoritative())
 			{
 				GameScriptObject *scripts = obj->getScriptObject();
-				
-				if ( scripts ) //&& scripts->hasScript( "poi.template.scene.base.base_theater" ) )
+
+				if (scripts) //&& scripts->hasScript( "poi.template.scene.base.base_theater" ) )
 				{
-					scripts->handleMessage( "startTheaterFromBuildout", std::vector<int8>() );
+					scripts->handleMessage("startTheaterFromBuildout", std::vector<int8>());
 				}
-	
 			}
 		}
 	}
-
 }
 
 // ----------------------------------------------------------------------
 
 ServerBuildoutManagerNamespace::BuildoutRow::BuildoutRow() :
-m_id(0),
-m_containerId(0),
-m_transform_p(),
-m_serverTemplate(0),
-m_scripts(),
-m_objvars(),
-m_cellIndex(0)
+	m_id(0),
+	m_containerId(0),
+	m_transform_p(),
+	m_serverTemplate(0),
+	m_scripts(),
+	m_objvars(),
+	m_cellIndex(0)
 {
 }
 
@@ -1190,12 +1171,12 @@ ServerBuildoutManagerNamespace::BuildoutRow &ServerBuildoutManagerNamespace::Bui
 
 void ServerBuildoutManager::onEventStarted(std::string const & eventName)
 {
-	if(s_eventObjects.empty())
+	if (s_eventObjects.empty())
 		return;
 
 	ServerEventMap::iterator iter = s_eventObjects.find(eventName);
-	
-	if(iter == s_eventObjects.end())
+
+	if (iter == s_eventObjects.end())
 		return; // Perhaps we should print a warning here? Would we ever have an event with no server side event objects?
 
 	std::list< ServerEventAreaInfo >* eventList = &(*iter).second;
@@ -1204,7 +1185,7 @@ void ServerBuildoutManager::onEventStarted(std::string const & eventName)
 	NetworkId controllerObjectId;
 
 	std::list< ServerEventAreaInfo >::iterator objIter = eventList->begin();
-	for(; objIter != eventList->end(); ++objIter)
+	for (; objIter != eventList->end(); ++objIter)
 	{
 		// Object Creation
 
@@ -1232,7 +1213,7 @@ void ServerBuildoutManager::onEventStarted(std::string const & eventName)
 		}
 
 		ServerObject * const containingObject = containerId ? safe_cast<ServerObject *>(NetworkIdManager::getObjectById(NetworkId(static_cast<NetworkId::NetworkIdType>(containerId)))) : 0;
-		FATAL(containerId && !containingObject, ("could not find containing object obj=%d container=%d", (int)objectId.getValue(), containerId ));
+		FATAL(containerId && !containingObject, ("could not find containing object obj=%d container=%d", (int)objectId.getValue(), containerId));
 
 		//-- object has already been created
 		//-- this must be the controller object or one of its contents.
@@ -1242,9 +1223,9 @@ void ServerBuildoutManager::onEventStarted(std::string const & eventName)
 		ServerObject * const newObject = safe_cast<ServerObject *>(buildoutRow.m_serverTemplate->createObject());
 		FATAL(!newObject, ("could not create buildout object"));
 
-		LOGC(ConfigServerGame::getLogEventObjectCreation(),"EventBuildout", ("Loading Object for Event [%s].\nTemplate Name[%s]\nNetwork ID[%s]\nCell[%d]\nPosition[%-4.3f %-4.3f %-4.3f]\n\n",
-			                                                              eventName.c_str(), buildoutRow.m_serverTemplate->getName(), objectId.getValueString().c_str(),buildoutRow.m_cellIndex,
-																		  buildoutRow.m_transform_p.getPosition_p().x, buildoutRow.m_transform_p.getPosition_p().y, buildoutRow.m_transform_p.getPosition_p().z));
+		LOGC(ConfigServerGame::getLogEventObjectCreation(), "EventBuildout", ("Loading Object for Event [%s].\nTemplate Name[%s]\nNetwork ID[%s]\nCell[%d]\nPosition[%-4.3f %-4.3f %-4.3f]\n\n",
+			eventName.c_str(), buildoutRow.m_serverTemplate->getName(), objectId.getValueString().c_str(), buildoutRow.m_cellIndex,
+			buildoutRow.m_transform_p.getPosition_p().x, buildoutRow.m_transform_p.getPosition_p().y, buildoutRow.m_transform_p.getPosition_p().z));
 
 		newObject->setNetworkId(objectId);
 		newObject->setIncludeInBuildout(true);
@@ -1253,7 +1234,7 @@ void ServerBuildoutManager::onEventStarted(std::string const & eventName)
 
 		if (newCellObject)
 		{
-			newCellObject->setCell( buildoutRow.m_cellIndex );
+			newCellObject->setCell(buildoutRow.m_cellIndex);
 		}
 
 		if (!newObject->getController())
@@ -1275,12 +1256,12 @@ void ServerBuildoutManager::onEventStarted(std::string const & eventName)
 
 		const bool isEditing = ConfigServerGame::getBuildoutAreaEditingEnabled();
 
-		if ( isEditing == false )
+		if (isEditing == false)
 		{
 			//
 			// cells and their parents should NOT BE CLIENT CACHED
 			//
-			if ( newObject->asCellObject() )
+			if (newObject->asCellObject())
 			{
 				// by the time we get here the cache version on the POB has
 				// already been set to non-zero, so we need to reset it back
@@ -1303,11 +1284,11 @@ void ServerBuildoutManager::onEventStarted(std::string const & eventName)
 				//
 				const int vfCount = buildoutRow.m_serverTemplate->getVisibleFlagsCount();
 
-				for ( int index = 0; index < vfCount ; ++index )
+				for (int index = 0; index < vfCount; ++index)
 				{
-					const ServerObjectTemplate::VisibleFlags vf = buildoutRow.m_serverTemplate->getVisibleFlags( index );
+					const ServerObjectTemplate::VisibleFlags vf = buildoutRow.m_serverTemplate->getVisibleFlags(index);
 
-					if ( vf == ServerObjectTemplate::VF_player )
+					if (vf == ServerObjectTemplate::VF_player)
 					{
 						// Removing this code temporarily since we don't have a proper way to do client side, cached event build out objects.
 						// All event objects are objects that are streamed down from the server. Until we have a way for the client to know
@@ -1319,7 +1300,6 @@ void ServerBuildoutManager::onEventStarted(std::string const & eventName)
 				}
 			}
 		}
-
 
 		if (buildoutRow.m_transform_p != Transform::identity)
 		{
@@ -1363,7 +1343,7 @@ void ServerBuildoutManager::onEventStarted(std::string const & eventName)
 					while (scripts[pos] && scripts[pos] != ':')
 						++pos;
 
-					std::string const & scriptName = scripts.substr(oldPos, pos-oldPos);
+					std::string const & scriptName = scripts.substr(oldPos, pos - oldPos);
 					if (!gso->hasScript(scriptName))
 						IGNORE_RETURN(gso->attachScript(scriptName, false));
 
@@ -1373,11 +1353,10 @@ void ServerBuildoutManager::onEventStarted(std::string const & eventName)
 			}
 		}
 
-	    (*objIter).loadedObject = newObject;
+		(*objIter).loadedObject = newObject;
 
 		newObjects.push_back(newObject);
 	}
-
 
 	// run through newly instantiated objects and initialize them
 	{
@@ -1388,7 +1367,7 @@ void ServerBuildoutManager::onEventStarted(std::string const & eventName)
 	}
 
 	// run through newly instantiated objects and notify the controller object
-	if ( controllerObjectId.isValid() )
+	if (controllerObjectId.isValid())
 	{
 		ServerObject * const controllerObject = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(controllerObjectId));
 		if (nullptr != controllerObject)
@@ -1405,7 +1384,7 @@ void ServerBuildoutManager::onEventStarted(std::string const & eventName)
 				if (obj->getObjVars().getItem("registerWithController", registerWithController))
 				{
 					if (registerWithController)
-					{						
+					{
 						if (nullptr != script)
 						{
 							ScriptParams p;
@@ -1420,20 +1399,18 @@ void ServerBuildoutManager::onEventStarted(std::string const & eventName)
 
 	// initialize any theaters
 	{
-
 		for (std::vector<ServerObject *>::reverse_iterator it = newObjects.rbegin(); it != newObjects.rend(); ++it)
 		{
 			ServerObject *obj = *it;
 
-			if ( obj  && obj->isAuthoritative() )
+			if (obj  && obj->isAuthoritative())
 			{
 				GameScriptObject *scripts = obj->getScriptObject();
 
-				if ( scripts ) //&& scripts->hasScript( "poi.template.scene.base.base_theater" ) )
+				if (scripts) //&& scripts->hasScript( "poi.template.scene.base.base_theater" ) )
 				{
-					scripts->handleMessage( "startTheaterFromBuildout", std::vector<int8>() );
+					scripts->handleMessage("startTheaterFromBuildout", std::vector<int8>());
 				}
-
 			}
 		}
 	}
@@ -1443,33 +1420,32 @@ void ServerBuildoutManager::onEventStarted(std::string const & eventName)
 
 void ServerBuildoutManager::onEventStopped(std::string const & eventName)
 {
-	if(s_eventObjects.empty())
+	if (s_eventObjects.empty())
 		return;
 
 	ServerEventMap::iterator iter = s_eventObjects.find(eventName);
 
-	if(iter == s_eventObjects.end())
+	if (iter == s_eventObjects.end())
 		return; // We stopped an event with no objects? Warning?
 
 	std::list< ServerEventAreaInfo >* eventList = &(*iter).second;
 
 	std::list< ServerEventAreaInfo >::iterator objIter = eventList->begin();
-	for(; objIter != eventList->end(); ++objIter)
+	for (; objIter != eventList->end(); ++objIter)
 	{
 		// Object clean up.
-		if((*objIter).loadedObject)
+		if ((*objIter).loadedObject)
 		{
 			ServerObject* object = (*objIter).loadedObject;
-			
+
 			LOGC(ConfigServerGame::getLogEventObjectDestruction(), "EventBuildout", ("Unloading Object for Event [%s].\nTemplate Name[%s]\nNetwork ID[%s]\nPosition[%-4.3f %-4.3f %-4.3f]\n\n",
 				eventName.c_str(), object->getTemplateName(), object->getNetworkId().getValueString().c_str(),
 				object->getTransform_o2p().getPosition_p().x, object->getTransform_o2p().getPosition_p().y, object->getTransform_o2p().getPosition_p().z));
-			
+
 			object->unload();
-			
+
 			(*objIter).loadedObject = nullptr;
 		}
 	}
 }
 // ======================================================================
-

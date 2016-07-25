@@ -136,7 +136,7 @@ AiShipController * AiShipController::asAiShipController(Controller * const contr
 {
 	ShipController * const shipController = (controller != nullptr) ? controller->asShipController() : nullptr;
 	AiShipController * const aiShipController = (shipController != nullptr) ? shipController->asAiShipController() : nullptr;
-	
+
 	return aiShipController;
 }
 
@@ -146,7 +146,7 @@ AiShipController const * AiShipController::asAiShipController(Controller const *
 {
 	ShipController const * const shipController = (controller != nullptr) ? controller->asShipController() : nullptr;
 	AiShipController const * const aiShipController = (shipController != nullptr) ? shipController->asAiShipController() : nullptr;
-	
+
 	return aiShipController;
 }
 
@@ -253,8 +253,8 @@ float AiShipController::realAlter(float const elapsedTime)
 #ifdef _DEBUG
 
 	AiDebugString * aiDebugString = nullptr;
-	if (   s_spaceAiClientDebugEnabled
-	    && !getShipOwner()->getObservers().empty())
+	if (s_spaceAiClientDebugEnabled
+		&& !getShipOwner()->getObservers().empty())
 	{
 		aiDebugString = new AiDebugString;
 	}
@@ -277,8 +277,8 @@ float AiShipController::realAlter(float const elapsedTime)
 		m_pendingDockingBehavior = nullptr;
 	}
 
-	if (   (m_dockingBehavior != nullptr)
-	    && (m_dockingBehavior->isDockFinished()))
+	if ((m_dockingBehavior != nullptr)
+		&& (m_dockingBehavior->isDockFinished()))
 	{
 		delete m_dockingBehavior;
 		m_dockingBehavior = nullptr;
@@ -319,8 +319,8 @@ float AiShipController::realAlter(float const elapsedTime)
 				m_dockingBehavior->unDock();
 			}
 
-			if (   isAttackSquadLeader()
-			    || !getAttackSquad().isInFormation())
+			if (isAttackSquadLeader()
+				|| !getAttackSquad().isInFormation())
 			{
 				m_attackBehavior->alter(elapsedTime);
 
@@ -394,8 +394,8 @@ float AiShipController::realAlter(float const elapsedTime)
 
 			// Check for enemies periodically
 
-			if (   !m_enemyCheckQueued
-			    && shouldCheckForEnemies())
+			if (!m_enemyCheckQueued
+				&& shouldCheckForEnemies())
 			{
 				m_enemyCheckQueued = true;
 				ShipAiEnemySearchManager::add(*shipOwner);
@@ -435,7 +435,7 @@ float AiShipController::realAlter(float const elapsedTime)
 					{
 						ShipController * const followedUnitShipController = squadLeader->getController()->asShipController();
 						AiShipController * const followedUnitAiShipController = (followedUnitShipController != nullptr) ? followedUnitShipController->asAiShipController() : nullptr;
-						
+
 						if (followedUnitAiShipController != nullptr)
 						{
 							followedUnitAiShipController->requestSlowDown();
@@ -485,8 +485,8 @@ float AiShipController::realAlter(float const elapsedTime)
 	if (isSquadLeader())
 	{
 		PROFILER_AUTO_BLOCK_DEFINE("check squadLeader");
-		if (   isAttacking()
-		    || !hasFunctionalEngines())
+		if (isAttacking()
+			|| !hasFunctionalEngines())
 		{
 			getSquad().assignNewLeader();
 		}
@@ -508,28 +508,28 @@ float AiShipController::realAlter(float const elapsedTime)
 		PROFILER_AUTO_BLOCK_DEFINE("Manage countermeasures");
 		switch (m_countermeasureState)
 		{
-			case CS_reacting:
-				if (m_reactToMissileTimer->updateZero(elapsedTime))
-					m_countermeasureState = CS_launching;
-				break;
+		case CS_reacting:
+			if (m_reactToMissileTimer->updateZero(elapsedTime))
+				m_countermeasureState = CS_launching;
+			break;
 
-			case CS_launching:
-				if (MissileManager::getInstance().isTargetedByMissile(getOwner()->getNetworkId()))
+		case CS_launching:
+			if (MissileManager::getInstance().isTargetedByMissile(getOwner()->getNetworkId()))
+			{
+				for (int weaponIndex = 0; weaponIndex < ShipChassisSlotType::cms_numWeaponIndices; ++weaponIndex)
 				{
-					for (int weaponIndex = 0; weaponIndex < ShipChassisSlotType::cms_numWeaponIndices; ++weaponIndex)
-					{
-						PROFILER_AUTO_BLOCK_DEFINE("countermeasures missile loop");
-						if (NON_NULL(getShipOwner())->isCountermeasure(weaponIndex))
-							getShipOwner()->fireShotNonTurretServer(weaponIndex, NetworkId::cms_invalid, ShipChassisSlotType::SCST_invalid);
-					}
+					PROFILER_AUTO_BLOCK_DEFINE("countermeasures missile loop");
+					if (NON_NULL(getShipOwner())->isCountermeasure(weaponIndex))
+						getShipOwner()->fireShotNonTurretServer(weaponIndex, NetworkId::cms_invalid, ShipChassisSlotType::SCST_invalid);
 				}
-				else
-					m_countermeasureState = CS_none;
-				break;
-				
-			case CS_none:
-			default:
-				break;
+			}
+			else
+				m_countermeasureState = CS_none;
+			break;
+
+		case CS_none:
+		default:
+			break;
 		}
 	}
 
@@ -551,8 +551,8 @@ float AiShipController::realAlter(float const elapsedTime)
 	}
 
 #ifdef _DEBUG
-	if (   (m_attackBehavior != nullptr)
-	    && (aiDebugString != nullptr))
+	if ((m_attackBehavior != nullptr)
+		&& (aiDebugString != nullptr))
 	{
 		PROFILER_AUTO_BLOCK_DEFINE("sendDebugAiToClients");
 		sendDebugAiToClients(*aiDebugString);
@@ -574,9 +574,9 @@ void AiShipController::moveTo(Vector const & position_w, float const throttle, f
 
 	// If we are not following a unit, see if we need to slow down for someone
 
-	if (   (m_nonAttackBehavior != nullptr)
-	    && (m_nonAttackBehavior->getBehaviorType() != ASBT_follow)
-	    && m_requestedSlowDown
+	if ((m_nonAttackBehavior != nullptr)
+		&& (m_nonAttackBehavior->getBehaviorType() != ASBT_follow)
+		&& m_requestedSlowDown
 		&& !isAttacking())
 	{
 		slowDown = true;
@@ -599,7 +599,7 @@ void AiShipController::moveTo(Vector const & position_w, float const throttle, f
 
 	Vector resultAvoidancePosition_w;
 	Vector const & shipVelocity = getShipOwner()->getCurrentVelocity_p();
-	
+
 	if (SpaceAvoidanceManager::getAvoidancePosition(*getOwner(), shipVelocity, position_w, resultAvoidancePosition_w))
 	{
 		IGNORE_RETURN(face(resultAvoidancePosition_w, deltaTime));
@@ -649,7 +649,7 @@ bool AiShipController::addDamageTaken(NetworkId const & attackingUnit, float con
 			{
 				CreatureObject const * const attackingPilotCreatureObject = attackingShipObject->getPilot();
 
-				if (   (attackingPilotCreatureObject != nullptr)
+				if ((attackingPilotCreatureObject != nullptr)
 					&& attackingPilotCreatureObject->isPlayerControlled())
 				{
 					GroupObject * const groupObject = attackingPilotCreatureObject->getGroup();
@@ -760,7 +760,7 @@ void AiShipController::follow(NetworkId const & followedUnit, Vector const & dir
 
 		CollisionProperty const * const ownerCollisionProperty = getOwner()->getCollisionProperty();
 		CollisionProperty const * const followedObjectCollisionProperty = followedObject->getCollisionProperty();
-		
+
 		if (ownerCollisionProperty != nullptr)
 		{
 			appearanceRadius += ownerCollisionProperty->getBoundingSphere_l().getRadius();
@@ -768,7 +768,7 @@ void AiShipController::follow(NetworkId const & followedUnit, Vector const & dir
 
 		if (followedObjectCollisionProperty != nullptr)
 		{
-			appearanceRadius += followedObjectCollisionProperty ->getBoundingSphere_l().getRadius();
+			appearanceRadius += followedObjectCollisionProperty->getBoundingSphere_l().getRadius();
 		}
 	}
 
@@ -790,7 +790,7 @@ int AiShipController::getBehaviorType() const
 	{
 		result = m_nonAttackBehavior->getBehaviorType();
 	}
-	
+
 	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "debug_ai", ("AiShipController::getBehaviorType() owner(%s) behavior(%s)", getOwner()->getNetworkId().getValueString().c_str(), AiShipBehaviorBase::getBehaviorString(static_cast<AiShipBehaviorType>(result))));
 
 	return static_cast<int>(result);
@@ -831,7 +831,7 @@ void AiShipController::track(Object const & target)
 void AiShipController::moveTo(SpacePath * const path)
 {
 	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "debug_ai", ("AiShipController::moveTo() owner(%s) path(0x%p)", getOwner()->getNetworkId().getValueString().c_str(), path));
-	
+
 	if (path != m_path)
 	{
 		SpacePathManager::release(m_path, getOwner());
@@ -959,7 +959,7 @@ void AiShipController::setPilotType(std::string const & pilotType)
 
 	if (pilotType.empty())
 	{
-		DEBUG_WARNING(true, ("AiShipController::setPilotType empty pilotType for ship [%s]", 
+		DEBUG_WARNING(true, ("AiShipController::setPilotType empty pilotType for ship [%s]",
 			shipObject ? shipObject->getDebugInformation().c_str() : "NONE"));
 		return;
 	}
@@ -992,23 +992,23 @@ void AiShipController::setPilotType(std::string const & pilotType)
 
 	switch (m_shipClass)
 	{
-		case ShipAiReactionManager::SC_invalid: 
-		default: { FATAL(true, ("Invalid ship name(%s)", m_shipName.getString())); }
-		case ShipAiReactionManager::SC_fighter: { m_attackBehavior = new AiShipBehaviorAttackFighter(*this); } break;
-		case ShipAiReactionManager::SC_bomber: { m_attackBehavior = new AiShipBehaviorAttackBomber(*this); } break;
-		case ShipAiReactionManager::SC_capitalShip: { m_attackBehavior = new AiShipBehaviorAttackCapitalShip(*this); } break;
-		case ShipAiReactionManager::SC_transport: { m_attackBehavior = new AiShipBehaviorAttackFighter(*this); } break;
+	case ShipAiReactionManager::SC_invalid:
+	default: { FATAL(true, ("Invalid ship name(%s)", m_shipName.getString())); }
+	case ShipAiReactionManager::SC_fighter: { m_attackBehavior = new AiShipBehaviorAttackFighter(*this); } break;
+	case ShipAiReactionManager::SC_bomber: { m_attackBehavior = new AiShipBehaviorAttackBomber(*this); } break;
+	case ShipAiReactionManager::SC_capitalShip: { m_attackBehavior = new AiShipBehaviorAttackCapitalShip(*this); } break;
+	case ShipAiReactionManager::SC_transport: { m_attackBehavior = new AiShipBehaviorAttackFighter(*this); } break;
 	}
 
 	// Create the turreting target system, if appropriate
-	
+
 	if (shipObject && shipObject->hasTurrets())
 		addTurretTargetingSystem(new AiShipTurretTargetingSystem(*this));
 
 	// Set the default aggro distance
 
 	setAggroRadius(m_pilotData->m_aggroRadius);
-		
+
 	FATAL((m_attackBehavior == nullptr), ("The attack behavior can not be nullptr."));
 }
 
@@ -1097,8 +1097,8 @@ void AiShipController::setSquad(SpaceSquad * const squad)
 	{
 		// Remove the unit from its previous squad
 
-		if (   (m_squad != nullptr)
-		    && !m_squad->isEmpty())
+		if ((m_squad != nullptr)
+			&& !m_squad->isEmpty())
 		{
 			m_squad->removeUnit(getOwner()->getNetworkId());
 		}
@@ -1209,7 +1209,7 @@ float AiShipController::getShipRadius() const
 	float result = 1.0f;
 	ShipObject const * const shipObject = getShipOwner();
 	CollisionProperty const * const shipCollision = shipObject->getCollisionProperty();
-	
+
 	if (shipCollision != nullptr)
 	{
 		result = shipCollision->getBoundingSphere_l().getRadius();
@@ -1280,7 +1280,7 @@ bool AiShipController::shouldCheckForEnemies() const
 			}
 		}
 	}
-	
+
 	return result;
 }
 
@@ -1290,8 +1290,8 @@ void AiShipController::setCurrentPathIndex(unsigned int const index)
 {
 	//LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "debug_ai", ("AiShipController::setCurrentPathIndex() unit(%s) pathIndex(%u) pathSize(%u)", getOwner()->getNetworkId().getValueString().c_str(), index, (m_path != nullptr) ? m_path->getTransformList().size() : 0));
 
-	if (   (m_path != nullptr)
-	    && !m_path->isEmpty())
+	if ((m_path != nullptr)
+		&& !m_path->isEmpty())
 	{
 		m_currentPathIndex = index;
 	}
@@ -1314,21 +1314,21 @@ unsigned int AiShipController::getCurrentPathIndex() const
 float AiShipController::calculateThrottleToPosition_w(Vector const & position_w, float const slowDownDistance) const
 {
 	float result = 0.0f;
-	
+
 	Object const * const object = getOwner();
 
 	if (object != nullptr)
 	{
 		float const distanceToGoalSquared = object->getPosition_w().magnitudeBetweenSquared(position_w);
 
-		if (   (distanceToGoalSquared < sqr(slowDownDistance))
+		if ((distanceToGoalSquared < sqr(slowDownDistance))
 			&& (slowDownDistance > 0.0f))
 		{
 			static float scale = 0.5f;
 			float const distanceToGoal = sqrt(distanceToGoalSquared);
 			result = clamp(0.0f, (distanceToGoal / slowDownDistance) * scale, 1.0f);
 
-			if (   (result < 0.5f)
+			if ((result < 0.5f)
 				&& (distanceToGoal < getGoalStopDistance()))
 			{
 				result = 0.0f;
@@ -1397,7 +1397,7 @@ float AiShipController::getPilotAggression() const
  */
 void AiShipController::switchToFighterAttack()
 {
-	DEBUG_FATAL(dynamic_cast<AiShipBehaviorAttackFighter*>(m_attackBehavior),("Programmer bug:  called switchToFighterAttack() when already using a fighter attack"));
+	DEBUG_FATAL(dynamic_cast<AiShipBehaviorAttackFighter*>(m_attackBehavior), ("Programmer bug:  called switchToFighterAttack() when already using a fighter attack"));
 	delete m_pendingAttackBehavior; // in case we tried to switch twice
 	m_pendingAttackBehavior = new AiShipBehaviorAttackFighter(*NON_NULL(m_attackBehavior));
 }
@@ -1410,7 +1410,7 @@ void AiShipController::switchToFighterAttack()
  */
 void AiShipController::switchToBomberAttack()
 {
-	DEBUG_FATAL(dynamic_cast<AiShipBehaviorAttackBomber*>(m_attackBehavior),("Programmer bug:  called switchToBomberAttack() when already using a bomber attack"));
+	DEBUG_FATAL(dynamic_cast<AiShipBehaviorAttackBomber*>(m_attackBehavior), ("Programmer bug:  called switchToBomberAttack() when already using a bomber attack"));
 	delete m_pendingAttackBehavior; // in case we tried to switch twice
 	m_pendingAttackBehavior = new AiShipBehaviorAttackBomber(*NON_NULL(m_attackBehavior));
 }
@@ -1496,8 +1496,8 @@ void AiShipController::onAttackTargetListEmpty()
 
 	SpaceSquad::SpaceSquadList const & guardedByList = getSquad().getGuardedByList();
 
-	if (   !guardedByList.empty()
-	    && getSquad().isAttackTargetListEmpty())
+	if (!guardedByList.empty()
+		&& getSquad().isAttackTargetListEmpty())
 	{
 		SpaceSquad::SpaceSquadList::const_iterator iterGuardedByList = guardedByList.begin();
 
@@ -1561,7 +1561,7 @@ void AiShipController::sendDebugAiToClients(AiDebugString & aiDebugString)
 		//
 		//	aiDebugString.addText(guardString, PackedRgb::solidYellow);
 		//}
-		
+
 		// Are my engines functional?
 
 		if (!shipOwner->isComponentFunctional(ShipChassisSlotType::SCST_engine))
@@ -1651,14 +1651,14 @@ void AiShipController::sendDebugAiToClients(AiDebugString & aiDebugString)
 				aiDebugString.addText(formattedString.sprintf("turret miss(%.0f%% @ %.0f)\n", turretMissChance, turretMissAngleDegrees));
 			}
 		}
-		
+
 		//int ammoCurrent = 0;
 		//int ammoMax = 0;
 		//
 		//for (int chassisSlot = ShipChassisSlotType::SCST_weapon_first; chassisSlot < ShipChassisSlotType::SCST_weapon_last; ++chassisSlot)
 		//{
 		//	int const weaponIndex = ShipChassisSlotType::getWeaponIndex(chassisSlot);
-		//	
+		//
 		//	if (parentShipObject->isMissile(weaponIndex))
 		//	{
 		//		ammoCurrent += parentShipObject->getWeaponAmmoCurrent(static_cast<int>(chassisSlot));
@@ -1687,14 +1687,14 @@ void AiShipController::sendDebugAiToClients(AiDebugString & aiDebugString)
 				// Only send to the client if the objvar is set
 
 				int temp = 0;
-				if (   (characterObject != nullptr)
-				    && characterObject->getObjVars().getItem("ai_debug_string", temp))
+				if ((characterObject != nullptr)
+					&& characterObject->getObjVars().getItem("ai_debug_string", temp))
 				{
 					if (temp > 0)
 					{
 						bool const reliable = true;
 						GenericValueTypeMessage<std::pair<NetworkId, std::string> > message("AiDebugString", std::make_pair(getOwner()->getNetworkId(), finalString));
-					
+
 						client->send(message, reliable);
 					}
 				}
@@ -1714,7 +1714,7 @@ bool AiShipController::debug_forceFighterAttackManeuver(int const maneuverType)
 	{
 		aiFighterBehavior->debug_forceManeuver(maneuverType);
 		success = true;
-	}	
+	}
 
 	return success;
 }
@@ -1741,11 +1741,11 @@ char const * AiShipController::getAttackOrdersString(AttackOrders const attackOr
 {
 	switch (attackOrders)
 	{
-		case AO_holdFire: { return "HOLD FIRE"; }
-		case AO_returnFire: { return "RETURN FIRE"; }
-		case AO_attackFreely: { return "ATTACK FREELY"; }
-		case AO_count:
-		default: break;
+	case AO_holdFire: { return "HOLD FIRE"; }
+	case AO_returnFire: { return "RETURN FIRE"; }
+	case AO_attackFreely: { return "ATTACK FREELY"; }
+	case AO_count:
+	default: break;
 	}
 
 	return "INVALID ATTACK ORDER";
@@ -1771,8 +1771,8 @@ void AiShipController::addExclusiveAggro(NetworkId const & unit)
 		ServerObject * const unitServerObject = (unitObject != nullptr) ? unitObject->asServerObject() : nullptr;
 		CreatureObject * const unitCreatureObject = (unitServerObject != nullptr) ? unitServerObject->asCreatureObject() : nullptr;
 
-		if (   !unitCreatureObject
-		    || !unitCreatureObject->isPlayerControlled())
+		if (!unitCreatureObject
+			|| !unitCreatureObject->isPlayerControlled())
 		{
 			DEBUG_WARNING(true, ("debug_ai: AiShipController::addExclusiveAggro() owner(%s) ERROR: The unit(%s) must be a player.", getOwner()->getDebugInformation().c_str(), unit.getValueString().c_str()));
 			return;

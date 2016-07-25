@@ -17,16 +17,16 @@ public:
 		next = 0;
 	}
 
-	inline unsigned int MaxSize() const {return buf.size;}
+	inline unsigned int MaxSize() const { return buf.size; }
 
 	inline unsigned int CurrentSize() const
 	{
-		return m_tail-m_head;
+		return m_tail - m_head;
 	}
 
 	inline bool UsedUp() const
 	{
-		return (m_head==MaxSize());
+		return (m_head == MaxSize());
 	}
 
 	inline void Clear()
@@ -36,48 +36,48 @@ public:
 
 	inline unsigned int Put(byte inByte)
 	{
-		if (MaxSize()==m_tail)
+		if (MaxSize() == m_tail)
 			return 0;
 
-		buf[m_tail++]=inByte;
+		buf[m_tail++] = inByte;
 		return 1;
 	}
 
 	inline unsigned int Put(const byte *inString, unsigned int length)
 	{
-		unsigned int l = STDMIN(length, MaxSize()-m_tail);
-		memcpy(buf+m_tail, inString, l);
+		unsigned int l = STDMIN(length, MaxSize() - m_tail);
+		memcpy(buf + m_tail, inString, l);
 		m_tail += l;
 		return l;
 	}
 
 	inline unsigned int Peek(byte &outByte) const
 	{
-		if (m_tail==m_head)
+		if (m_tail == m_head)
 			return 0;
 
-		outByte=buf[m_head];
+		outByte = buf[m_head];
 		return 1;
 	}
 
 	inline unsigned int Peek(byte *target, unsigned int copyMax) const
 	{
-		unsigned int len = STDMIN(copyMax, m_tail-m_head);
-		memcpy(target, buf+m_head, len);
+		unsigned int len = STDMIN(copyMax, m_tail - m_head);
+		memcpy(target, buf + m_head, len);
 		return len;
 	}
 
 	inline unsigned int CopyTo(BufferedTransformation &target) const
 	{
-		unsigned int len = m_tail-m_head;
-		target.Put(buf+m_head, len);
+		unsigned int len = m_tail - m_head;
+		target.Put(buf + m_head, len);
 		return len;
 	}
 
 	inline unsigned int CopyTo(BufferedTransformation &target, unsigned int copyMax) const
 	{
-		unsigned int len = STDMIN(copyMax, m_tail-m_head);
-		target.Put(buf+m_head, len);
+		unsigned int len = STDMIN(copyMax, m_tail - m_head);
+		target.Put(buf + m_head, len);
 		return len;
 	}
 
@@ -111,14 +111,14 @@ public:
 
 	inline unsigned int Skip(unsigned int skipMax)
 	{
-		unsigned int len = STDMIN(skipMax, m_tail-m_head);
+		unsigned int len = STDMIN(skipMax, m_tail - m_head);
 		m_head += len;
 		return len;
 	}
 
 	inline byte operator[](unsigned int i) const
 	{
-		return buf[m_head+i];
+		return buf[m_head + i];
 	}
 
 	ByteQueueNode *next;
@@ -130,7 +130,7 @@ public:
 // ********************************************************
 
 ByteQueue::ByteQueue(unsigned int m_nodeSize)
-	: m_nodeSize(0), m_lazyLength(0)
+	: m_nodeSize(0), m_lazyLength(0), m_lazyString(nullptr)
 {
 	m_head = m_tail = new ByteQueueNode(m_nodeSize);
 }
@@ -146,7 +146,7 @@ void ByteQueue::CopyFrom(const ByteQueue &copy)
 	m_nodeSize = copy.m_nodeSize;
 	m_head = m_tail = new ByteQueueNode(*copy.m_head);
 
-	for (ByteQueueNode *current=copy.m_head->next; current; current=current->next)
+	for (ByteQueueNode *current = copy.m_head->next; current; current = current->next)
 	{
 		m_tail->next = new ByteQueueNode(*current);
 		m_tail = m_tail->next;
@@ -166,18 +166,18 @@ void ByteQueue::Destroy()
 {
 	ByteQueueNode *next;
 
-	for (ByteQueueNode *current=m_head; current; current=next)
+	for (ByteQueueNode *current = m_head; current; current = next)
 	{
-		next=current->next;
+		next = current->next;
 		delete current;
 	}
 }
 
 unsigned long ByteQueue::CurrentSize() const
 {
-	unsigned long size=0;
+	unsigned long size = 0;
 
-	for (ByteQueueNode *current=m_head; current; current=current->next)
+	for (ByteQueueNode *current = m_head; current; current = current->next)
 		size += current->CurrentSize();
 
 	return size + m_lazyLength;
@@ -185,7 +185,7 @@ unsigned long ByteQueue::CurrentSize() const
 
 bool ByteQueue::IsEmpty() const
 {
-	return m_head==m_tail && m_head->CurrentSize()==0 && m_lazyLength==0;
+	return m_head == m_tail && m_head->CurrentSize() == 0 && m_lazyLength == 0;
 }
 
 void ByteQueue::Clear()
@@ -214,7 +214,7 @@ void ByteQueue::Put(const byte *inString, unsigned int length)
 		FinalizeLazyPut();
 
 	unsigned int len;
-	while ((len=m_tail->Put(inString, length)) < length)
+	while ((len = m_tail->Put(inString, length)) < length)
 	{
 		m_tail->next = new ByteQueueNode(m_nodeSize);
 		m_tail = m_tail->next;
@@ -227,8 +227,8 @@ void ByteQueue::CleanupUsedNodes()
 {
 	while (m_head != m_tail && m_head->UsedUp())
 	{
-		ByteQueueNode *temp=m_head;
-		m_head=m_head->next;
+		ByteQueueNode *temp = m_head;
+		m_head = m_head->next;
 		delete temp;
 	}
 
@@ -302,7 +302,7 @@ unsigned long ByteQueue::Skip(unsigned long skipMax)
 unsigned long ByteQueue::TransferTo(BufferedTransformation &target, unsigned long transferMax)
 {
 	unsigned long bytesLeft = transferMax;
-	for (ByteQueueNode *current=m_head; bytesLeft && current; current=current->next)
+	for (ByteQueueNode *current = m_head; bytesLeft && current; current = current->next)
 		bytesLeft -= current->TransferTo(target, bytesLeft);
 	CleanupUsedNodes();
 
@@ -320,7 +320,7 @@ unsigned long ByteQueue::TransferTo(BufferedTransformation &target, unsigned lon
 unsigned long ByteQueue::CopyTo(BufferedTransformation &target, unsigned long copyMax) const
 {
 	unsigned long bytesLeft = copyMax;
-	for (ByteQueueNode *current=m_head; bytesLeft && current; current=current->next)
+	for (ByteQueueNode *current = m_head; bytesLeft && current; current = current->next)
 		bytesLeft -= current->CopyTo(target, bytesLeft);
 	if (bytesLeft && m_lazyLength)
 	{
@@ -409,11 +409,11 @@ bool ByteQueue::operator==(const ByteQueue &rhs) const
 
 byte ByteQueue::operator[](unsigned long i) const
 {
-	for (ByteQueueNode *current=m_head; current; current=current->next)
+	for (ByteQueueNode *current = m_head; current; current = current->next)
 	{
 		if (i < current->CurrentSize())
 			return (*current)[i];
-		
+
 		i -= current->CurrentSize();
 	}
 
@@ -461,8 +461,8 @@ unsigned long ByteQueue::Walker::TransferTo(BufferedTransformation &target, unsi
 	unsigned long bytesLeft = transferMax;
 	while (m_node)
 	{
-		unsigned int len = STDMIN(bytesLeft, (unsigned long)m_node->CurrentSize()-m_offset);
-		target.Put(m_node->buf+m_node->m_head+m_offset, len);
+		unsigned int len = STDMIN(bytesLeft, (unsigned long)m_node->CurrentSize() - m_offset);
+		target.Put(m_node->buf + m_node->m_head + m_offset, len);
 		m_position += len;
 		bytesLeft -= len;
 

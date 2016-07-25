@@ -56,7 +56,7 @@ void LineOfSightCache::update()
 	while (!s_lineOfSightCacheExpireQueue.empty())
 	{
 		LineOfSightCacheExpireQueueEntry const &entry = s_lineOfSightCacheExpireQueue.front();
-		if (static_cast<int>(entry.second-frameStartTime) > 0)
+		if (static_cast<int>(entry.second - frameStartTime) > 0)
 			break;
 		IGNORE_RETURN(s_lineOfSightCacheMap.erase(entry.first));
 		s_lineOfSightCacheExpireQueue.pop();
@@ -64,7 +64,7 @@ void LineOfSightCache::update()
 	while (!s_lineOfSightLocationCacheExpireQueue.empty())
 	{
 		LineOfSightLocationCacheExpireQueueEntry const &entry = s_lineOfSightLocationCacheExpireQueue.front();
-		if (static_cast<int>(entry.second-frameStartTime) > 0)
+		if (static_cast<int>(entry.second - frameStartTime) > 0)
 			break;
 		IGNORE_RETURN(s_lineOfSightLocationCacheMap.erase(entry.first));
 		s_lineOfSightLocationCacheExpireQueue.pop();
@@ -436,4 +436,3 @@ bool LineOfSightCache::checkLOS(Object const &a, Location const &b)
 }
 
 // ======================================================================
-

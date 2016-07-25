@@ -22,11 +22,10 @@
 
 const std::string DefaultString("");
 const StringId DefaultStringId("", 0);
-const Vector DefaultVector(0,0,0);
+const Vector DefaultVector(0, 0, 0);
 const TriggerVolumeData DefaultTriggerVolumeData;
 
 bool ServerStaticObjectTemplate::ms_allowDefaultTemplateParams = true;
-
 
 /**
  * Class constructor.
@@ -34,8 +33,9 @@ bool ServerStaticObjectTemplate::ms_allowDefaultTemplateParams = true;
 ServerStaticObjectTemplate::ServerStaticObjectTemplate(const std::string & filename)
 //@BEGIN TFD INIT
 	: ServerObjectTemplate(filename)
-	,m_versionOk(true)
-//@END TFD INIT
+	, m_versionOk(true)
+	, m_templateVersion(0)
+	//@END TFD INIT
 {
 }	// ServerStaticObjectTemplate::ServerStaticObjectTemplate
 
@@ -44,8 +44,8 @@ ServerStaticObjectTemplate::ServerStaticObjectTemplate(const std::string & filen
  */
 ServerStaticObjectTemplate::~ServerStaticObjectTemplate()
 {
-//@BEGIN TFD CLEANUP
-//@END TFD CLEANUP
+	//@BEGIN TFD CLEANUP
+	//@END TFD CLEANUP
 }	// ServerStaticObjectTemplate::~ServerStaticObjectTemplate
 
 /**
@@ -114,8 +114,6 @@ Object * ServerStaticObjectTemplate::createObject(void) const
 //@BEGIN TFD
 bool ServerStaticObjectTemplate::getClientOnlyBuildout() const
 {
-
-
 	const ServerStaticObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -141,7 +139,6 @@ bool ServerStaticObjectTemplate::getClientOnlyBuildout() const
 	return value;
 }	// ServerStaticObjectTemplate::getClientOnlyBuildout
 
-
 /**
  * Loads the template data from an iff file. We should already be in the form
  * for this template.
@@ -150,8 +147,8 @@ bool ServerStaticObjectTemplate::getClientOnlyBuildout() const
  */
 void ServerStaticObjectTemplate::load(Iff &file)
 {
-static const int MAX_NAME_SIZE = 256;
-char paramName[MAX_NAME_SIZE];
+	static const int MAX_NAME_SIZE = 256;
+	char paramName[MAX_NAME_SIZE];
 
 	if (file.getCurrentName() != ServerStaticObjectTemplate_tag)
 	{
@@ -161,7 +158,7 @@ char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 	m_templateVersion = file.getCurrentName();
-	if (m_templateVersion == TAG(D,E,R,V))
+	if (m_templateVersion == TAG(D, E, R, V))
 	{
 		file.enterForm();
 		file.enterChunk();
@@ -181,10 +178,8 @@ char paramName[MAX_NAME_SIZE];
 		file.exitForm();
 		m_templateVersion = file.getCurrentName();
 	}
-	if (getHighestTemplateVersion() != TAG(0,0,0,1))
+	if (getHighestTemplateVersion() != TAG(0, 0, 0, 1))
 	{
-		
-			
 		m_versionOk = false;
 	}
 

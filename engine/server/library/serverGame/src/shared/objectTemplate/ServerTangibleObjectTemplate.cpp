@@ -23,11 +23,10 @@
 
 const std::string DefaultString("");
 const StringId DefaultStringId("", 0);
-const Vector DefaultVector(0,0,0);
+const Vector DefaultVector(0, 0, 0);
 const TriggerVolumeData DefaultTriggerVolumeData;
 
 bool ServerTangibleObjectTemplate::ms_allowDefaultTemplateParams = true;
-
 
 /**
  * Class constructor.
@@ -35,10 +34,11 @@ bool ServerTangibleObjectTemplate::ms_allowDefaultTemplateParams = true;
 ServerTangibleObjectTemplate::ServerTangibleObjectTemplate(const std::string & filename)
 //@BEGIN TFD INIT
 	: ServerObjectTemplate(filename)
-	,m_triggerVolumesLoaded(false)
-	,m_triggerVolumesAppend(false)
-	,m_versionOk(true)
-//@END TFD INIT
+	, m_triggerVolumesLoaded(false)
+	, m_triggerVolumesAppend(false)
+	, m_versionOk(true)
+	, m_templateVersion(0)
+	//@END TFD INIT
 {
 }	// ServerTangibleObjectTemplate::ServerTangibleObjectTemplate
 
@@ -47,7 +47,7 @@ ServerTangibleObjectTemplate::ServerTangibleObjectTemplate(const std::string & f
  */
 ServerTangibleObjectTemplate::~ServerTangibleObjectTemplate()
 {
-//@BEGIN TFD CLEANUP
+	//@BEGIN TFD CLEANUP
 	{
 		std::vector<TriggerVolumeParam *>::iterator iter;
 		for (iter = m_triggerVolumes.begin(); iter != m_triggerVolumes.end(); ++iter)
@@ -57,7 +57,7 @@ ServerTangibleObjectTemplate::~ServerTangibleObjectTemplate()
 		}
 		m_triggerVolumes.clear();
 	}
-//@END TFD CLEANUP
+	//@END TFD CLEANUP
 }	// ServerTangibleObjectTemplate::~ServerTangibleObjectTemplate
 
 /**
@@ -186,8 +186,6 @@ size_t ServerTangibleObjectTemplate::getTriggerVolumesCount(void) const
 
 ServerTangibleObjectTemplate::CombatSkeleton ServerTangibleObjectTemplate::getCombatSkeleton() const
 {
-
-
 	const ServerTangibleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -215,8 +213,6 @@ ServerTangibleObjectTemplate::CombatSkeleton ServerTangibleObjectTemplate::getCo
 
 int ServerTangibleObjectTemplate::getMaxHitPoints() const
 {
-
-
 	const ServerTangibleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -266,8 +262,6 @@ int ServerTangibleObjectTemplate::getMaxHitPoints() const
 
 int ServerTangibleObjectTemplate::getMaxHitPointsMin() const
 {
-
-
 	const ServerTangibleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -317,8 +311,6 @@ int ServerTangibleObjectTemplate::getMaxHitPointsMin() const
 
 int ServerTangibleObjectTemplate::getMaxHitPointsMax() const
 {
-
-
 	const ServerTangibleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -394,15 +386,13 @@ const ServerArmorTemplate * ServerTangibleObjectTemplate::getArmor() const
 	{
 		returnValue = dynamic_cast<const ServerArmorTemplate *>(ObjectTemplateList::fetch(templateName));
 		if (returnValue == nullptr)
-			WARNING_STRICT_FATAL(true, ("Error loading template %s",templateName.c_str()));
+			WARNING_STRICT_FATAL(true, ("Error loading template %s", templateName.c_str()));
 	}
 	return returnValue;
 }	// ServerTangibleObjectTemplate::getArmor
 
 int ServerTangibleObjectTemplate::getInterestRadius() const
 {
-
-
 	const ServerTangibleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -452,8 +442,6 @@ int ServerTangibleObjectTemplate::getInterestRadius() const
 
 int ServerTangibleObjectTemplate::getInterestRadiusMin() const
 {
-
-
 	const ServerTangibleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -503,8 +491,6 @@ int ServerTangibleObjectTemplate::getInterestRadiusMin() const
 
 int ServerTangibleObjectTemplate::getInterestRadiusMax() const
 {
-
-
 	const ServerTangibleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -554,8 +540,6 @@ int ServerTangibleObjectTemplate::getInterestRadiusMax() const
 
 int ServerTangibleObjectTemplate::getCount() const
 {
-
-
 	const ServerTangibleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -605,8 +589,6 @@ int ServerTangibleObjectTemplate::getCount() const
 
 int ServerTangibleObjectTemplate::getCountMin() const
 {
-
-
 	const ServerTangibleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -656,8 +638,6 @@ int ServerTangibleObjectTemplate::getCountMin() const
 
 int ServerTangibleObjectTemplate::getCountMax() const
 {
-
-
 	const ServerTangibleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -707,8 +687,6 @@ int ServerTangibleObjectTemplate::getCountMax() const
 
 int ServerTangibleObjectTemplate::getCondition() const
 {
-
-
 	const ServerTangibleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -758,8 +736,6 @@ int ServerTangibleObjectTemplate::getCondition() const
 
 int ServerTangibleObjectTemplate::getConditionMin() const
 {
-
-
 	const ServerTangibleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -809,8 +785,6 @@ int ServerTangibleObjectTemplate::getConditionMin() const
 
 int ServerTangibleObjectTemplate::getConditionMax() const
 {
-
-
 	const ServerTangibleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -860,8 +834,6 @@ int ServerTangibleObjectTemplate::getConditionMax() const
 
 bool ServerTangibleObjectTemplate::getWantSawAttackTriggers() const
 {
-
-
 	const ServerTangibleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -887,7 +859,6 @@ bool ServerTangibleObjectTemplate::getWantSawAttackTriggers() const
 	return value;
 }	// ServerTangibleObjectTemplate::getWantSawAttackTriggers
 
-
 /**
  * Loads the template data from an iff file. We should already be in the form
  * for this template.
@@ -896,8 +867,8 @@ bool ServerTangibleObjectTemplate::getWantSawAttackTriggers() const
  */
 void ServerTangibleObjectTemplate::load(Iff &file)
 {
-static const int MAX_NAME_SIZE = 256;
-char paramName[MAX_NAME_SIZE];
+	static const int MAX_NAME_SIZE = 256;
+	char paramName[MAX_NAME_SIZE];
 
 	if (file.getCurrentName() != ServerTangibleObjectTemplate_tag)
 	{
@@ -907,7 +878,7 @@ char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 	m_templateVersion = file.getCurrentName();
-	if (m_templateVersion == TAG(D,E,R,V))
+	if (m_templateVersion == TAG(D, E, R, V))
 	{
 		file.enterForm();
 		file.enterChunk();
@@ -927,10 +898,8 @@ char paramName[MAX_NAME_SIZE];
 		file.exitForm();
 		m_templateVersion = file.getCurrentName();
 	}
-	if (getHighestTemplateVersion() != TAG(0,0,0,4))
+	if (getHighestTemplateVersion() != TAG(0, 0, 0, 4))
 	{
-		
-			
 		m_versionOk = false;
 	}
 

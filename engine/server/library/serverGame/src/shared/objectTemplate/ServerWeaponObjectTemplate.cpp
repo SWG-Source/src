@@ -22,11 +22,10 @@
 
 const std::string DefaultString("");
 const StringId DefaultStringId("", 0);
-const Vector DefaultVector(0,0,0);
+const Vector DefaultVector(0, 0, 0);
 const TriggerVolumeData DefaultTriggerVolumeData;
 
 bool ServerWeaponObjectTemplate::ms_allowDefaultTemplateParams = true;
-
 
 /**
  * Class constructor.
@@ -34,8 +33,9 @@ bool ServerWeaponObjectTemplate::ms_allowDefaultTemplateParams = true;
 ServerWeaponObjectTemplate::ServerWeaponObjectTemplate(const std::string & filename)
 //@BEGIN TFD INIT
 	: ServerTangibleObjectTemplate(filename)
-	,m_versionOk(true)
-//@END TFD INIT
+	, m_versionOk(true)
+	, m_templateVersion(0)
+	//@END TFD INIT
 {
 }	// ServerWeaponObjectTemplate::ServerWeaponObjectTemplate
 
@@ -44,8 +44,8 @@ ServerWeaponObjectTemplate::ServerWeaponObjectTemplate(const std::string & filen
  */
 ServerWeaponObjectTemplate::~ServerWeaponObjectTemplate()
 {
-//@BEGIN TFD CLEANUP
-//@END TFD CLEANUP
+	//@BEGIN TFD CLEANUP
+	//@END TFD CLEANUP
 }	// ServerWeaponObjectTemplate::~ServerWeaponObjectTemplate
 
 /**
@@ -114,8 +114,6 @@ Object * ServerWeaponObjectTemplate::createObject(void) const
 //@BEGIN TFD
 ServerWeaponObjectTemplate::WeaponType ServerWeaponObjectTemplate::getWeaponType() const
 {
-
-
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -143,8 +141,6 @@ ServerWeaponObjectTemplate::WeaponType ServerWeaponObjectTemplate::getWeaponType
 
 ServerWeaponObjectTemplate::AttackType ServerWeaponObjectTemplate::getAttackType() const
 {
-
-
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -172,8 +168,6 @@ ServerWeaponObjectTemplate::AttackType ServerWeaponObjectTemplate::getAttackType
 
 ServerWeaponObjectTemplate::DamageType ServerWeaponObjectTemplate::getDamageType() const
 {
-
-
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -201,8 +195,6 @@ ServerWeaponObjectTemplate::DamageType ServerWeaponObjectTemplate::getDamageType
 
 ServerWeaponObjectTemplate::DamageType ServerWeaponObjectTemplate::getElementalType() const
 {
-
-
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -230,8 +222,6 @@ ServerWeaponObjectTemplate::DamageType ServerWeaponObjectTemplate::getElementalT
 
 int ServerWeaponObjectTemplate::getElementalValue() const
 {
-
-
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -281,8 +271,6 @@ int ServerWeaponObjectTemplate::getElementalValue() const
 
 int ServerWeaponObjectTemplate::getElementalValueMin() const
 {
-
-
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -332,8 +320,6 @@ int ServerWeaponObjectTemplate::getElementalValueMin() const
 
 int ServerWeaponObjectTemplate::getElementalValueMax() const
 {
-
-
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -383,8 +369,6 @@ int ServerWeaponObjectTemplate::getElementalValueMax() const
 
 int ServerWeaponObjectTemplate::getMinDamageAmount() const
 {
-
-
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -434,8 +418,6 @@ int ServerWeaponObjectTemplate::getMinDamageAmount() const
 
 int ServerWeaponObjectTemplate::getMinDamageAmountMin() const
 {
-
-
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -485,8 +467,6 @@ int ServerWeaponObjectTemplate::getMinDamageAmountMin() const
 
 int ServerWeaponObjectTemplate::getMinDamageAmountMax() const
 {
-
-
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -536,8 +516,6 @@ int ServerWeaponObjectTemplate::getMinDamageAmountMax() const
 
 int ServerWeaponObjectTemplate::getMaxDamageAmount() const
 {
-
-
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -587,8 +565,6 @@ int ServerWeaponObjectTemplate::getMaxDamageAmount() const
 
 int ServerWeaponObjectTemplate::getMaxDamageAmountMin() const
 {
-
-
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -638,8 +614,6 @@ int ServerWeaponObjectTemplate::getMaxDamageAmountMin() const
 
 int ServerWeaponObjectTemplate::getMaxDamageAmountMax() const
 {
-
-
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -689,8 +663,6 @@ int ServerWeaponObjectTemplate::getMaxDamageAmountMax() const
 
 float ServerWeaponObjectTemplate::getAttackSpeed() const
 {
-
-
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -740,8 +712,6 @@ float ServerWeaponObjectTemplate::getAttackSpeed() const
 
 float ServerWeaponObjectTemplate::getAttackSpeedMin() const
 {
-
-
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -791,8 +761,6 @@ float ServerWeaponObjectTemplate::getAttackSpeedMin() const
 
 float ServerWeaponObjectTemplate::getAttackSpeedMax() const
 {
-
-
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -842,8 +810,6 @@ float ServerWeaponObjectTemplate::getAttackSpeedMax() const
 
 float ServerWeaponObjectTemplate::getAudibleRange() const
 {
-
-
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -893,8 +859,6 @@ float ServerWeaponObjectTemplate::getAudibleRange() const
 
 float ServerWeaponObjectTemplate::getAudibleRangeMin() const
 {
-
-
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -944,8 +908,6 @@ float ServerWeaponObjectTemplate::getAudibleRangeMin() const
 
 float ServerWeaponObjectTemplate::getAudibleRangeMax() const
 {
-
-
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -995,8 +957,6 @@ float ServerWeaponObjectTemplate::getAudibleRangeMax() const
 
 float ServerWeaponObjectTemplate::getMinRange() const
 {
-
-
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1046,8 +1006,6 @@ float ServerWeaponObjectTemplate::getMinRange() const
 
 float ServerWeaponObjectTemplate::getMinRangeMin() const
 {
-
-
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1097,8 +1055,6 @@ float ServerWeaponObjectTemplate::getMinRangeMin() const
 
 float ServerWeaponObjectTemplate::getMinRangeMax() const
 {
-
-
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1148,8 +1104,6 @@ float ServerWeaponObjectTemplate::getMinRangeMax() const
 
 float ServerWeaponObjectTemplate::getMaxRange() const
 {
-
-
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1199,8 +1153,6 @@ float ServerWeaponObjectTemplate::getMaxRange() const
 
 float ServerWeaponObjectTemplate::getMaxRangeMin() const
 {
-
-
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1250,8 +1202,6 @@ float ServerWeaponObjectTemplate::getMaxRangeMin() const
 
 float ServerWeaponObjectTemplate::getMaxRangeMax() const
 {
-
-
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1301,8 +1251,6 @@ float ServerWeaponObjectTemplate::getMaxRangeMax() const
 
 float ServerWeaponObjectTemplate::getDamageRadius() const
 {
-
-
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1352,8 +1300,6 @@ float ServerWeaponObjectTemplate::getDamageRadius() const
 
 float ServerWeaponObjectTemplate::getDamageRadiusMin() const
 {
-
-
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1403,8 +1349,6 @@ float ServerWeaponObjectTemplate::getDamageRadiusMin() const
 
 float ServerWeaponObjectTemplate::getDamageRadiusMax() const
 {
-
-
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1454,8 +1398,6 @@ float ServerWeaponObjectTemplate::getDamageRadiusMax() const
 
 float ServerWeaponObjectTemplate::getWoundChance() const
 {
-
-
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1505,8 +1447,6 @@ float ServerWeaponObjectTemplate::getWoundChance() const
 
 float ServerWeaponObjectTemplate::getWoundChanceMin() const
 {
-
-
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1556,8 +1496,6 @@ float ServerWeaponObjectTemplate::getWoundChanceMin() const
 
 float ServerWeaponObjectTemplate::getWoundChanceMax() const
 {
-
-
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1607,8 +1545,6 @@ float ServerWeaponObjectTemplate::getWoundChanceMax() const
 
 int ServerWeaponObjectTemplate::getAttackCost() const
 {
-
-
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1658,8 +1594,6 @@ int ServerWeaponObjectTemplate::getAttackCost() const
 
 int ServerWeaponObjectTemplate::getAttackCostMin() const
 {
-
-
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1709,8 +1643,6 @@ int ServerWeaponObjectTemplate::getAttackCostMin() const
 
 int ServerWeaponObjectTemplate::getAttackCostMax() const
 {
-
-
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1760,8 +1692,6 @@ int ServerWeaponObjectTemplate::getAttackCostMax() const
 
 int ServerWeaponObjectTemplate::getAccuracy() const
 {
-
-
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1811,8 +1741,6 @@ int ServerWeaponObjectTemplate::getAccuracy() const
 
 int ServerWeaponObjectTemplate::getAccuracyMin() const
 {
-
-
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1862,8 +1790,6 @@ int ServerWeaponObjectTemplate::getAccuracyMin() const
 
 int ServerWeaponObjectTemplate::getAccuracyMax() const
 {
-
-
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1911,7 +1837,6 @@ int ServerWeaponObjectTemplate::getAccuracyMax() const
 	return value;
 }	// ServerWeaponObjectTemplate::getAccuracyMax
 
-
 /**
  * Loads the template data from an iff file. We should already be in the form
  * for this template.
@@ -1920,8 +1845,8 @@ int ServerWeaponObjectTemplate::getAccuracyMax() const
  */
 void ServerWeaponObjectTemplate::load(Iff &file)
 {
-static const int MAX_NAME_SIZE = 256;
-char paramName[MAX_NAME_SIZE];
+	static const int MAX_NAME_SIZE = 256;
+	char paramName[MAX_NAME_SIZE];
 
 	if (file.getCurrentName() != ServerWeaponObjectTemplate_tag)
 	{
@@ -1931,7 +1856,7 @@ char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 	m_templateVersion = file.getCurrentName();
-	if (m_templateVersion == TAG(D,E,R,V))
+	if (m_templateVersion == TAG(D, E, R, V))
 	{
 		file.enterForm();
 		file.enterChunk();
@@ -1951,10 +1876,8 @@ char paramName[MAX_NAME_SIZE];
 		file.exitForm();
 		m_templateVersion = file.getCurrentName();
 	}
-	if (getHighestTemplateVersion() != TAG(0,0,1,1))
+	if (getHighestTemplateVersion() != TAG(0, 0, 1, 1))
 	{
-		
-			
 		m_versionOk = false;
 	}
 

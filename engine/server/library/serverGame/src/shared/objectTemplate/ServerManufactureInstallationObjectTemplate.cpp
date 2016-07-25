@@ -22,11 +22,10 @@
 
 const std::string DefaultString("");
 const StringId DefaultStringId("", 0);
-const Vector DefaultVector(0,0,0);
+const Vector DefaultVector(0, 0, 0);
 const TriggerVolumeData DefaultTriggerVolumeData;
 
 bool ServerManufactureInstallationObjectTemplate::ms_allowDefaultTemplateParams = true;
-
 
 /**
  * Class constructor.
@@ -34,8 +33,9 @@ bool ServerManufactureInstallationObjectTemplate::ms_allowDefaultTemplateParams 
 ServerManufactureInstallationObjectTemplate::ServerManufactureInstallationObjectTemplate(const std::string & filename)
 //@BEGIN TFD INIT
 	: ServerInstallationObjectTemplate(filename)
-	,m_versionOk(true)
-//@END TFD INIT
+	, m_versionOk(true)
+	, m_templateVersion(0)
+	//@END TFD INIT
 {
 }	// ServerManufactureInstallationObjectTemplate::ServerManufactureInstallationObjectTemplate
 
@@ -44,8 +44,8 @@ ServerManufactureInstallationObjectTemplate::ServerManufactureInstallationObject
  */
 ServerManufactureInstallationObjectTemplate::~ServerManufactureInstallationObjectTemplate()
 {
-//@BEGIN TFD CLEANUP
-//@END TFD CLEANUP
+	//@BEGIN TFD CLEANUP
+	//@END TFD CLEANUP
 }	// ServerManufactureInstallationObjectTemplate::~ServerManufactureInstallationObjectTemplate
 
 /**
@@ -121,8 +121,8 @@ Object * ServerManufactureInstallationObjectTemplate::createObject(void) const
  */
 void ServerManufactureInstallationObjectTemplate::load(Iff &file)
 {
-static const int MAX_NAME_SIZE = 256;
-char paramName[MAX_NAME_SIZE];
+	static const int MAX_NAME_SIZE = 256;
+	char paramName[MAX_NAME_SIZE];
 
 	if (file.getCurrentName() != ServerManufactureInstallationObjectTemplate_tag)
 	{
@@ -132,7 +132,7 @@ char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 	m_templateVersion = file.getCurrentName();
-	if (m_templateVersion == TAG(D,E,R,V))
+	if (m_templateVersion == TAG(D, E, R, V))
 	{
 		file.enterForm();
 		file.enterChunk();
@@ -152,10 +152,8 @@ char paramName[MAX_NAME_SIZE];
 		file.exitForm();
 		m_templateVersion = file.getCurrentName();
 	}
-	if (getHighestTemplateVersion() != TAG(0,0,0,0))
+	if (getHighestTemplateVersion() != TAG(0, 0, 0, 0))
 	{
-		
-			
 		m_versionOk = false;
 	}
 
