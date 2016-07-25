@@ -10,8 +10,9 @@
 #define INCLUDED_CraftingData_H
 
 #include "sharedFoundation/NetworkId.h"
-#include "boost/smart_ptr.hpp"
 #include "StringId.h"
+
+#include <memory>
 #include <vector>
 
 class CreatureObject;
@@ -210,7 +211,7 @@ namespace Crafting
 
 	//------------------------------------------------------------------------------
 
-	typedef boost::shared_ptr<SimpleIngredient> SimpleIngredientPtr;
+	typedef std::shared_ptr<SimpleIngredient> SimpleIngredientPtr;
 	typedef std::vector<SimpleIngredientPtr> Ingredients;
 
 	//------------------------------------------------------------------------------
