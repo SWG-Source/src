@@ -23,11 +23,10 @@
 
 const std::string DefaultString("");
 const StringId DefaultStringId("", 0);
-const Vector DefaultVector(0,0,0);
+const Vector DefaultVector(0, 0, 0);
 const TriggerVolumeData DefaultTriggerVolumeData;
 
 bool SharedVehicleObjectTemplate::ms_allowDefaultTemplateParams = true;
-
 
 /**
  * Class constructor.
@@ -35,8 +34,9 @@ bool SharedVehicleObjectTemplate::ms_allowDefaultTemplateParams = true;
 SharedVehicleObjectTemplate::SharedVehicleObjectTemplate(const std::string & filename)
 //@BEGIN TFD INIT
 	: SharedTangibleObjectTemplate(filename)
-	,m_versionOk(true)
-//@END TFD INIT
+	, m_versionOk(true)
+	, m_templateVersion(0)
+	//@END TFD INIT
 {
 }	// SharedVehicleObjectTemplate::SharedVehicleObjectTemplate
 
@@ -45,8 +45,8 @@ SharedVehicleObjectTemplate::SharedVehicleObjectTemplate(const std::string & fil
  */
 SharedVehicleObjectTemplate::~SharedVehicleObjectTemplate()
 {
-//@BEGIN TFD CLEANUP
-//@END TFD CLEANUP
+	//@BEGIN TFD CLEANUP
+	//@END TFD CLEANUP
 }	// SharedVehicleObjectTemplate::~SharedVehicleObjectTemplate
 
 /**
@@ -252,8 +252,6 @@ float SharedVehicleObjectTemplate::getSpeedMax(MovementTypes index) const
 
 float SharedVehicleObjectTemplate::getSlopeAversion() const
 {
-
-
 	const SharedVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -303,8 +301,6 @@ float SharedVehicleObjectTemplate::getSlopeAversion() const
 
 float SharedVehicleObjectTemplate::getSlopeAversionMin() const
 {
-
-
 	const SharedVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -354,8 +350,6 @@ float SharedVehicleObjectTemplate::getSlopeAversionMin() const
 
 float SharedVehicleObjectTemplate::getSlopeAversionMax() const
 {
-
-
 	const SharedVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -405,8 +399,6 @@ float SharedVehicleObjectTemplate::getSlopeAversionMax() const
 
 float SharedVehicleObjectTemplate::getHoverValue() const
 {
-
-
 	const SharedVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -456,8 +448,6 @@ float SharedVehicleObjectTemplate::getHoverValue() const
 
 float SharedVehicleObjectTemplate::getHoverValueMin() const
 {
-
-
 	const SharedVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -507,8 +497,6 @@ float SharedVehicleObjectTemplate::getHoverValueMin() const
 
 float SharedVehicleObjectTemplate::getHoverValueMax() const
 {
-
-
 	const SharedVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -558,8 +546,6 @@ float SharedVehicleObjectTemplate::getHoverValueMax() const
 
 float SharedVehicleObjectTemplate::getTurnRate() const
 {
-
-
 	const SharedVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -609,8 +595,6 @@ float SharedVehicleObjectTemplate::getTurnRate() const
 
 float SharedVehicleObjectTemplate::getTurnRateMin() const
 {
-
-
 	const SharedVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -660,8 +644,6 @@ float SharedVehicleObjectTemplate::getTurnRateMin() const
 
 float SharedVehicleObjectTemplate::getTurnRateMax() const
 {
-
-
 	const SharedVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -711,8 +693,6 @@ float SharedVehicleObjectTemplate::getTurnRateMax() const
 
 float SharedVehicleObjectTemplate::getMaxVelocity() const
 {
-
-
 	const SharedVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -762,8 +742,6 @@ float SharedVehicleObjectTemplate::getMaxVelocity() const
 
 float SharedVehicleObjectTemplate::getMaxVelocityMin() const
 {
-
-
 	const SharedVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -813,8 +791,6 @@ float SharedVehicleObjectTemplate::getMaxVelocityMin() const
 
 float SharedVehicleObjectTemplate::getMaxVelocityMax() const
 {
-
-
 	const SharedVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -864,8 +840,6 @@ float SharedVehicleObjectTemplate::getMaxVelocityMax() const
 
 float SharedVehicleObjectTemplate::getAcceleration() const
 {
-
-
 	const SharedVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -915,8 +889,6 @@ float SharedVehicleObjectTemplate::getAcceleration() const
 
 float SharedVehicleObjectTemplate::getAccelerationMin() const
 {
-
-
 	const SharedVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -966,8 +938,6 @@ float SharedVehicleObjectTemplate::getAccelerationMin() const
 
 float SharedVehicleObjectTemplate::getAccelerationMax() const
 {
-
-
 	const SharedVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1017,8 +987,6 @@ float SharedVehicleObjectTemplate::getAccelerationMax() const
 
 float SharedVehicleObjectTemplate::getBraking() const
 {
-
-
 	const SharedVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1068,8 +1036,6 @@ float SharedVehicleObjectTemplate::getBraking() const
 
 float SharedVehicleObjectTemplate::getBrakingMin() const
 {
-
-
 	const SharedVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1119,8 +1085,6 @@ float SharedVehicleObjectTemplate::getBrakingMin() const
 
 float SharedVehicleObjectTemplate::getBrakingMax() const
 {
-
-
 	const SharedVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1168,7 +1132,6 @@ float SharedVehicleObjectTemplate::getBrakingMax() const
 	return value;
 }	// SharedVehicleObjectTemplate::getBrakingMax
 
-
 /**
  * Loads the template data from an iff file. We should already be in the form
  * for this template.
@@ -1177,8 +1140,8 @@ float SharedVehicleObjectTemplate::getBrakingMax() const
  */
 void SharedVehicleObjectTemplate::load(Iff &file)
 {
-static const int MAX_NAME_SIZE = 256;
-char paramName[MAX_NAME_SIZE];
+	static const int MAX_NAME_SIZE = 256;
+	char paramName[MAX_NAME_SIZE];
 
 	if (file.getCurrentName() != SharedVehicleObjectTemplate_tag)
 	{
@@ -1188,7 +1151,7 @@ char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 	m_templateVersion = file.getCurrentName();
-	if (m_templateVersion == TAG(D,E,R,V))
+	if (m_templateVersion == TAG(D, E, R, V))
 	{
 		file.enterForm();
 		file.enterChunk();
@@ -1208,10 +1171,8 @@ char paramName[MAX_NAME_SIZE];
 		file.exitForm();
 		m_templateVersion = file.getCurrentName();
 	}
-	if (getHighestTemplateVersion() != TAG(0,0,0,0))
+	if (getHighestTemplateVersion() != TAG(0, 0, 0, 0))
 	{
-		
-			
 		m_versionOk = false;
 	}
 

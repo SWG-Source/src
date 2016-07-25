@@ -19,12 +19,15 @@
 // ======================================================================
 
 TaskLocateStructure::TaskLocateStructure(const NetworkId &itemId, const std::string &whoRequested) :
-		TaskRequest(),
-		m_itemId(itemId),
-		m_whoRequested(whoRequested)
+	TaskRequest(),
+	m_itemId(itemId),
+	m_whoRequested(whoRequested),
+	m_x(0),
+	m_z(0),
+	m_found(false)
 {
 }
-	
+
 //-----------------------------------------------------------------------
 
 TaskLocateStructure::~TaskLocateStructure()
@@ -38,7 +41,7 @@ bool TaskLocateStructure::process(DB::Session *session)
 	LocateStructureQuery query;
 	query.item_id = m_itemId;
 
-	if (! (session->exec(&query)))
+	if (!(session->exec(&query)))
 		return false;
 	query.done();
 
@@ -49,8 +52,8 @@ bool TaskLocateStructure::process(DB::Session *session)
 		m_z = query.z.getValue();
 		m_sceneId = query.sceneId.getValueASCII();
 	}
-	
-	LOG("CustomerService", ("playerStructure: Locate structure (%s): result %s", m_itemId.getValueString().c_str(), (m_found? "found": "not found")));
+
+	LOG("CustomerService", ("playerStructure: Locate structure (%s): result %s", m_itemId.getValueString().c_str(), (m_found ? "found" : "not found")));
 	return true;
 }
 
@@ -77,7 +80,7 @@ void TaskLocateStructure::onComplete()
 
 void TaskLocateStructure::LocateStructureQuery::getSQL(std::string &sql)
 {
-	sql=std::string("begin ") + DatabaseProcess::getInstance().getSchemaQualifier()+"loader.locate_structure(:item_id, :x, :z, :scene_id, :found); end;";
+	sql = std::string("begin ") + DatabaseProcess::getInstance().getSchemaQualifier() + "loader.locate_structure(:item_id, :x, :z, :scene_id, :found); end;";
 }
 
 // ----------------------------------------------------------------------
@@ -89,7 +92,7 @@ bool TaskLocateStructure::LocateStructureQuery::bindParameters()
 	if (!bindParameter(z)) return false;
 	if (!bindParameter(sceneId)) return false;
 	if (!bindParameter(found)) return false;
-	
+
 	return true;
 }
 

@@ -21,16 +21,17 @@
 #include <algorithm>
 #include <cstdio>
 
-
 /**
  * Class constructor.
  */
 ServerArmorTemplate::ServerArmorTemplate(const std::string & filename)
 //@BEGIN TFD INIT
 	: TpfTemplate(filename)
-	,m_specialProtectionLoaded(false)
-	,m_specialProtectionAppend(false)
-//@END TFD INIT
+	, m_specialProtectionLoaded(false)
+	, m_specialProtectionAppend(false)
+	, m_templateVersion(0)
+	, m_versionOk(false)
+	//@END TFD INIT
 {
 }	// ServerArmorTemplate::ServerArmorTemplate
 
@@ -39,7 +40,7 @@ ServerArmorTemplate::ServerArmorTemplate(const std::string & filename)
  */
 ServerArmorTemplate::~ServerArmorTemplate()
 {
-//@BEGIN TFD CLEANUP
+	//@BEGIN TFD CLEANUP
 	{
 		std::vector<StructParamOT *>::iterator iter;
 		for (iter = m_specialProtection.begin(); iter != m_specialProtection.end(); ++iter)
@@ -49,7 +50,7 @@ ServerArmorTemplate::~ServerArmorTemplate()
 		}
 		m_specialProtection.clear();
 	}
-//@END TFD CLEANUP
+	//@END TFD CLEANUP
 }	// ServerArmorTemplate::~ServerArmorTemplate
 
 /**
@@ -274,7 +275,6 @@ bool ServerArmorTemplate::isAppend(const char *name) const
 		return TpfTemplate::isAppend(name);
 }	// ServerArmorTemplate::isAppend
 
-
 int ServerArmorTemplate::getListLength(const char *name) const
 {
 	if (strcmp(name, "specialProtection") == 0)
@@ -297,8 +297,8 @@ int ServerArmorTemplate::getListLength(const char *name) const
  */
 void ServerArmorTemplate::load(Iff &file)
 {
-static const int MAX_NAME_SIZE = 256;
-char paramName[MAX_NAME_SIZE];
+	static const int MAX_NAME_SIZE = 256;
+	char paramName[MAX_NAME_SIZE];
 
 	if (file.getCurrentName() != ServerArmorTemplate_tag)
 	{
@@ -308,7 +308,7 @@ char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 	m_templateVersion = file.getCurrentName();
-	if (m_templateVersion == TAG(D,E,R,V))
+	if (m_templateVersion == TAG(D, E, R, V))
 	{
 		file.enterForm();
 		file.enterChunk();
@@ -328,7 +328,7 @@ char paramName[MAX_NAME_SIZE];
 		file.exitForm();
 		m_templateVersion = file.getCurrentName();
 	}
-	if (getHighestTemplateVersion() != TAG(0,0,0,1))
+	if (getHighestTemplateVersion() != TAG(0, 0, 0, 1))
 	{
 		if (DataLint::isEnabled())
 			DEBUG_WARNING(true, ("template %s version out of date", file.getFileName()));
@@ -401,18 +401,18 @@ char paramName[MAX_NAME_SIZE];
  */
 void ServerArmorTemplate::save(Iff &file)
 {
-int count;
+	int count;
 
 	file.insertForm(ServerArmorTemplate_tag);
 	if (m_baseTemplateName.size() != 0)
 	{
-		file.insertForm(TAG(D,E,R,V));
+		file.insertForm(TAG(D, E, R, V));
 		file.insertChunk(TAG(X, X, X, X));
 		file.insertChunkData(m_baseTemplateName.c_str(), m_baseTemplateName.size() + 1);
 		file.exitChunk();
 		file.exitForm();
 	}
-	file.insertForm(TAG(0,0,0,1));
+	file.insertForm(TAG(0, 0, 0, 1));
 	file.allowNonlinearFunctions();
 
 	int paramCount = 0;
@@ -447,7 +447,7 @@ int count;
 	count = m_specialProtection.size();
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < count; ++i)
-		m_specialProtection[i]->saveToIff(file);}
+		m_specialProtection[i]->saveToIff(file); }
 	file.exitChunk();
 	++paramCount;
 	// save vulnerability
@@ -462,7 +462,7 @@ int count;
 	count = 3;
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < 3; ++i)
-		m_encumbrance[i].saveToIff(file);}
+		m_encumbrance[i].saveToIff(file); }
 	file.exitChunk();
 	++paramCount;
 
@@ -476,7 +476,6 @@ int count;
 	TpfTemplate::save(file);
 	file.exitForm();
 }	// ServerArmorTemplate::save
-
 
 //=============================================================================
 // class ServerArmorTemplate::_SpecialProtection
@@ -621,7 +620,6 @@ bool ServerArmorTemplate::_SpecialProtection::isAppend(const char *name) const
 	return TpfTemplate::isAppend(name);
 }	// ServerArmorTemplate::_SpecialProtection::isAppend
 
-
 int ServerArmorTemplate::_SpecialProtection::getListLength(const char *name) const
 {
 	return TpfTemplate::getListLength(name);
@@ -635,8 +633,8 @@ int ServerArmorTemplate::_SpecialProtection::getListLength(const char *name) con
  */
 void ServerArmorTemplate::_SpecialProtection::load(Iff &file)
 {
-static const int MAX_NAME_SIZE = 256;
-char paramName[MAX_NAME_SIZE];
+	static const int MAX_NAME_SIZE = 256;
+	char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 
@@ -666,7 +664,7 @@ char paramName[MAX_NAME_SIZE];
  */
 void ServerArmorTemplate::_SpecialProtection::save(Iff &file)
 {
-int count;
+	int count;
 
 	file.insertForm(_SpecialProtection_tag);
 

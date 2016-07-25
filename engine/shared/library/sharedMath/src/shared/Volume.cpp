@@ -25,9 +25,9 @@
 // @param vertexList       Co-planar set of points describing the siloutte edges of the volume.
 
 Volume::Volume(const Vector &originPoint, const int numberOfVertices, const Vector * const vertexList)
-:
+	:
 	m_numberOfPlanes(numberOfVertices + 1),
-	m_plane(new Plane[ static_cast<uint>(m_numberOfPlanes) ])
+	m_plane(new Plane[static_cast<uint>(m_numberOfPlanes)])
 {
 	NOT_NULL(vertexList);
 	DEBUG_FATAL(numberOfVertices < 3, ("At least 3 vertices are necessary"));
@@ -37,58 +37,58 @@ Volume::Volume(const Vector &originPoint, const int numberOfVertices, const Vect
 
 	// build the sides
 	for (int i = 1; i < numberOfVertices; ++i)
-		m_plane[i].set(originPoint, vertexList[i-1], vertexList[i]);
-	m_plane[numberOfVertices].set(originPoint, vertexList[numberOfVertices-1], vertexList[0]);
+		m_plane[i].set(originPoint, vertexList[i - 1], vertexList[i]);
+	m_plane[numberOfVertices].set(originPoint, vertexList[numberOfVertices - 1], vertexList[0]);
 }
 
 // ----------------------------------------------------------------------
 /**
  * Create an undefined volume
- * 
+ *
  * This constructor creates a volume consisting of the specified number of planes,
  * but does not set up the plane data.
- * 
+ *
  * @param numberOfPlanes Number of planes in the volume.
  */
 
 Volume::Volume(const int numberOfPlanes)
-:
+	:
 	m_numberOfPlanes(numberOfPlanes),
-	m_plane(new Plane[ static_cast<uint>(m_numberOfPlanes) ])
+	m_plane(new Plane[static_cast<uint>(m_numberOfPlanes)])
 {
 }
 
 // ----------------------------------------------------------------------
 /**
  * Construct a new volume from another, transformed by the specified transformation.
- * 
+ *
  * @param other	The other volume
  * @param trans	The transform to be applied.
  */
 
-Volume::Volume (const Volume &rhs, const Transform &newTransform)
-:
+Volume::Volume(const Volume &rhs, const Transform &newTransform)
+	:
 	m_numberOfPlanes(rhs.m_numberOfPlanes),
-	m_plane(new Plane[ static_cast<uint>(m_numberOfPlanes) ])
+	m_plane(new Plane[static_cast<uint>(m_numberOfPlanes)])
 {
 	for (int i = 0; i < m_numberOfPlanes; ++i)
-		m_plane [i].set(rhs.m_plane[i], newTransform);
+		m_plane[i].set(rhs.m_plane[i], newTransform);
 }
 
 // ----------------------------------------------------------------------
 
 Volume::~Volume()
 {
-	delete [] m_plane;
+	delete[] m_plane;
 }
 
 // ----------------------------------------------------------------------
 /**
  * Set a specific plane in the volume
- * 
+ *
  * This routine can be used to build up a volume after having used the
  * constructor that takes a number of planes.
- * 
+ *
  * @param index The plane to modify.
  * @param plane The new value for the plane data.
  */
@@ -102,10 +102,10 @@ void Volume::setPlane(const int index, const Plane &plane)
 // ----------------------------------------------------------------------
 /**
  * Set a specific plane in the volume
- * 
+ *
  * This routine can be used to build up a volume after having used the
  * constructor that takes a number of planes.
- * 
+ *
  * @param index The plane to modify.
  * @param plane The new value for the plane data.
  */
@@ -119,7 +119,7 @@ const Plane &Volume::getPlane(const int index) const
 // ----------------------------------------------------------------------
 /**
  * Test a point against a volume
- * 
+ *
  * @param  point Point to test.
  * @return       True if the point is within the volume.
  */
@@ -136,7 +136,7 @@ bool Volume::contains(const Vector &point) const
 // ----------------------------------------------------------------------
 /**
  * See if the volume completely contains the sphere
- * 
+ *
  * @param  sphere The sphere to check.
  * @return        True if the entire sphere is within the volume, otherwise false.
  */
@@ -156,7 +156,7 @@ bool Volume::contains(const Sphere &sphere) const
 // ----------------------------------------------------------------------
 /**
  * Test a point cloud against a volume
- * 
+ *
  * @param  pointCloud     Point cloud to test.
  * @param  numberOfPoints Number of points in the point cloud.
  * @return                True if the point is within the volume.
@@ -168,7 +168,7 @@ bool Volume::contains(const Vector *pointCloud, int numberOfPoints) const
 	DEBUG_FATAL(numberOfPoints <= 0, ("numberOfPoints is less than 1"));
 
 	for (int i = 0; i < m_numberOfPlanes; ++i)
-		for (int j = 0; i < numberOfPoints; ++j)
+		for (int j = 0; j < numberOfPoints; ++j)
 			if (m_plane[i].computeDistanceTo(pointCloud[j]) > 0)
 				return false;
 
@@ -178,9 +178,9 @@ bool Volume::contains(const Vector *pointCloud, int numberOfPoints) const
 // ----------------------------------------------------------------------
 /**
  * See if the volume intersects a sphere.
- * 
+ *
  * The sphere is in the volume if any portion of it is within the volume.
- * 
+ *
  * @param  sphere The sphere to check.
  * @return        True if the any portion of the sphere is within the volume, otherwise false.
  */
@@ -200,9 +200,9 @@ bool Volume::intersects(const Sphere &sphere) const
 // ----------------------------------------------------------------------
 /**
  * See if the volume intersects the segment.
- * 
+ *
  * The segment is considered to be in the volume if both points test on the negative side of any plane
- * 
+ *
  * @param   start Start point of segment.
  * @param   end   End point of segment.
  * @return        False if any segment is on the negative side of any plane
@@ -223,12 +223,12 @@ bool Volume::intersects(Vector const & start, Vector const & end) const
 // ----------------------------------------------------------------------
 /**
  * Fast Conservative check of a point cloud against the volume
- * 
+ *
  * This routine will return true if the point could is completely outside any one
  * plane of the volume. If the routine returns true, the point cloud is definitely
  * outside the volume.  However, a false result does not guarentee that the point
  * cloud intersects the volume.
- * 
+ *
  * @param  pointCloud     Point cloud to test.
  * @param  numberOfPoints Number of points in the point cloud.
  * @return                See remarks for more information.
@@ -255,7 +255,7 @@ bool Volume::fastConservativeExcludes(const Vector *pointCloud, int numberOfPoin
 // ----------------------------------------------------------------------
 /**
  * Transform the volume by the specified transformation.
- * 
+ *
  * @param transform	The transform to be applied.
  */
 
@@ -268,7 +268,7 @@ void Volume::transform(const Transform &newTransform)
 // ----------------------------------------------------------------------
 /**
  * Transform the specified volume by the specified transformation.
- * 
+ *
  * @param source    The source volume to transform.
  * @param transform	The transform to be applied.
  */
@@ -277,9 +277,9 @@ void Volume::transform(const Volume &source, const Transform &newTransform)
 {
 	if (m_numberOfPlanes != source.m_numberOfPlanes)
 	{
-		delete [] m_plane;
+		delete[] m_plane;
 		m_numberOfPlanes = source.m_numberOfPlanes;
-		m_plane = new Plane[ static_cast<uint>(m_numberOfPlanes) ];
+		m_plane = new Plane[static_cast<uint>(m_numberOfPlanes)];
 	}
 
 	for (int i = 0; i < m_numberOfPlanes; ++i)

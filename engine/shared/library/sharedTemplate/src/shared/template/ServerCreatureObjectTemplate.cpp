@@ -20,17 +20,17 @@
 #include <algorithm>
 #include <cstdio>
 
-
-
 /**
  * Class constructor.
  */
 ServerCreatureObjectTemplate::ServerCreatureObjectTemplate(const std::string & filename)
 //@BEGIN TFD INIT
 	: ServerTangibleObjectTemplate(filename)
-	,m_attribModsLoaded(false)
-	,m_attribModsAppend(false)
-//@END TFD INIT
+	, m_attribModsLoaded(false)
+	, m_attribModsAppend(false)
+	, m_templateVersion(0)
+	, m_versionOk(false)
+	//@END TFD INIT
 {
 }	// ServerCreatureObjectTemplate::ServerCreatureObjectTemplate
 
@@ -39,7 +39,7 @@ ServerCreatureObjectTemplate::ServerCreatureObjectTemplate(const std::string & f
  */
 ServerCreatureObjectTemplate::~ServerCreatureObjectTemplate()
 {
-//@BEGIN TFD CLEANUP
+	//@BEGIN TFD CLEANUP
 	{
 		std::vector<StructParamOT *>::iterator iter;
 		for (iter = m_attribMods.begin(); iter != m_attribMods.end(); ++iter)
@@ -49,7 +49,7 @@ ServerCreatureObjectTemplate::~ServerCreatureObjectTemplate()
 		}
 		m_attribMods.clear();
 	}
-//@END TFD CLEANUP
+	//@END TFD CLEANUP
 }	// ServerCreatureObjectTemplate::~ServerCreatureObjectTemplate
 
 /**
@@ -406,7 +406,6 @@ bool ServerCreatureObjectTemplate::isAppend(const char *name) const
 		return ServerTangibleObjectTemplate::isAppend(name);
 }	// ServerCreatureObjectTemplate::isAppend
 
-
 int ServerCreatureObjectTemplate::getListLength(const char *name) const
 {
 	if (strcmp(name, "attributes") == 0)
@@ -445,8 +444,8 @@ int ServerCreatureObjectTemplate::getListLength(const char *name) const
  */
 void ServerCreatureObjectTemplate::load(Iff &file)
 {
-static const int MAX_NAME_SIZE = 256;
-char paramName[MAX_NAME_SIZE];
+	static const int MAX_NAME_SIZE = 256;
+	char paramName[MAX_NAME_SIZE];
 
 	if (file.getCurrentName() != ServerCreatureObjectTemplate_tag)
 	{
@@ -456,7 +455,7 @@ char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 	m_templateVersion = file.getCurrentName();
-	if (m_templateVersion == TAG(D,E,R,V))
+	if (m_templateVersion == TAG(D, E, R, V))
 	{
 		file.enterForm();
 		file.enterChunk();
@@ -476,7 +475,7 @@ char paramName[MAX_NAME_SIZE];
 		file.exitForm();
 		m_templateVersion = file.getCurrentName();
 	}
-	if (getHighestTemplateVersion() != TAG(0,0,0,5))
+	if (getHighestTemplateVersion() != TAG(0, 0, 0, 5))
 	{
 		if (DataLint::isEnabled())
 			DEBUG_WARNING(true, ("template %s version out of date", file.getFileName()));
@@ -615,18 +614,18 @@ char paramName[MAX_NAME_SIZE];
  */
 void ServerCreatureObjectTemplate::save(Iff &file)
 {
-int count;
+	int count;
 
 	file.insertForm(ServerCreatureObjectTemplate_tag);
 	if (m_baseTemplateName.size() != 0)
 	{
-		file.insertForm(TAG(D,E,R,V));
+		file.insertForm(TAG(D, E, R, V));
 		file.insertChunk(TAG(X, X, X, X));
 		file.insertChunkData(m_baseTemplateName.c_str(), m_baseTemplateName.size() + 1);
 		file.exitChunk();
 		file.exitForm();
 	}
-	file.insertForm(TAG(0,0,0,5));
+	file.insertForm(TAG(0, 0, 0, 5));
 	file.allowNonlinearFunctions();
 
 	int paramCount = 0;
@@ -643,7 +642,7 @@ int count;
 	count = 6;
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < 6; ++i)
-		m_attributes[i].saveToIff(file);}
+		m_attributes[i].saveToIff(file); }
 	file.exitChunk();
 	++paramCount;
 	// save minAttributes
@@ -652,7 +651,7 @@ int count;
 	count = 6;
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < 6; ++i)
-		m_minAttributes[i].saveToIff(file);}
+		m_minAttributes[i].saveToIff(file); }
 	file.exitChunk();
 	++paramCount;
 	// save maxAttributes
@@ -661,7 +660,7 @@ int count;
 	count = 6;
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < 6; ++i)
-		m_maxAttributes[i].saveToIff(file);}
+		m_maxAttributes[i].saveToIff(file); }
 	file.exitChunk();
 	++paramCount;
 	// save minDrainModifier
@@ -700,7 +699,7 @@ int count;
 	count = m_attribMods.size();
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < count; ++i)
-		m_attribMods[i]->saveToIff(file);}
+		m_attribMods[i]->saveToIff(file); }
 	file.exitChunk();
 	++paramCount;
 	// save shockWounds
@@ -733,7 +732,7 @@ int count;
 	count = 4;
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < 4; ++i)
-		m_maxMentalStates[i].saveToIff(file);}
+		m_maxMentalStates[i].saveToIff(file); }
 	file.exitChunk();
 	++paramCount;
 	// save mentalStatesDecay
@@ -742,7 +741,7 @@ int count;
 	count = 4;
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < 4; ++i)
-		m_mentalStatesDecay[i].saveToIff(file);}
+		m_mentalStatesDecay[i].saveToIff(file); }
 	file.exitChunk();
 	++paramCount;
 

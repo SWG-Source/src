@@ -23,11 +23,10 @@
 
 const std::string DefaultString("");
 const StringId DefaultStringId("", 0);
-const Vector DefaultVector(0,0,0);
+const Vector DefaultVector(0, 0, 0);
 const TriggerVolumeData DefaultTriggerVolumeData;
 
 bool SharedWeaponObjectTemplate::ms_allowDefaultTemplateParams = true;
-
 
 /**
  * Class constructor.
@@ -35,8 +34,9 @@ bool SharedWeaponObjectTemplate::ms_allowDefaultTemplateParams = true;
 SharedWeaponObjectTemplate::SharedWeaponObjectTemplate(const std::string & filename)
 //@BEGIN TFD INIT
 	: SharedTangibleObjectTemplate(filename)
-	,m_versionOk(true)
-//@END TFD INIT
+	, m_versionOk(true)
+	, m_templateVersion(0)
+	//@END TFD INIT
 {
 }	// SharedWeaponObjectTemplate::SharedWeaponObjectTemplate
 
@@ -45,8 +45,8 @@ SharedWeaponObjectTemplate::SharedWeaponObjectTemplate(const std::string & filen
  */
 SharedWeaponObjectTemplate::~SharedWeaponObjectTemplate()
 {
-//@BEGIN TFD CLEANUP
-//@END TFD CLEANUP
+	//@BEGIN TFD CLEANUP
+	//@END TFD CLEANUP
 }	// SharedWeaponObjectTemplate::~SharedWeaponObjectTemplate
 
 /**
@@ -105,8 +105,6 @@ Tag SharedWeaponObjectTemplate::getHighestTemplateVersion(void) const
 //@BEGIN TFD
 const std::string & SharedWeaponObjectTemplate::getWeaponEffect() const
 {
-
-
 	const SharedWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -134,8 +132,6 @@ const std::string & SharedWeaponObjectTemplate::getWeaponEffect() const
 
 int SharedWeaponObjectTemplate::getWeaponEffectIndex() const
 {
-
-
 	const SharedWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -185,8 +181,6 @@ int SharedWeaponObjectTemplate::getWeaponEffectIndex() const
 
 int SharedWeaponObjectTemplate::getWeaponEffectIndexMin() const
 {
-
-
 	const SharedWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -236,8 +230,6 @@ int SharedWeaponObjectTemplate::getWeaponEffectIndexMin() const
 
 int SharedWeaponObjectTemplate::getWeaponEffectIndexMax() const
 {
-
-
 	const SharedWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -287,8 +279,6 @@ int SharedWeaponObjectTemplate::getWeaponEffectIndexMax() const
 
 SharedWeaponObjectTemplate::AttackType SharedWeaponObjectTemplate::getAttackType() const
 {
-
-
 	const SharedWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -314,7 +304,6 @@ SharedWeaponObjectTemplate::AttackType SharedWeaponObjectTemplate::getAttackType
 	return value;
 }	// SharedWeaponObjectTemplate::getAttackType
 
-
 /**
  * Loads the template data from an iff file. We should already be in the form
  * for this template.
@@ -323,8 +312,8 @@ SharedWeaponObjectTemplate::AttackType SharedWeaponObjectTemplate::getAttackType
  */
 void SharedWeaponObjectTemplate::load(Iff &file)
 {
-static const int MAX_NAME_SIZE = 256;
-char paramName[MAX_NAME_SIZE];
+	static const int MAX_NAME_SIZE = 256;
+	char paramName[MAX_NAME_SIZE];
 
 	if (file.getCurrentName() != SharedWeaponObjectTemplate_tag)
 	{
@@ -334,7 +323,7 @@ char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 	m_templateVersion = file.getCurrentName();
-	if (m_templateVersion == TAG(D,E,R,V))
+	if (m_templateVersion == TAG(D, E, R, V))
 	{
 		file.enterForm();
 		file.enterChunk();
@@ -354,10 +343,8 @@ char paramName[MAX_NAME_SIZE];
 		file.exitForm();
 		m_templateVersion = file.getCurrentName();
 	}
-	if (getHighestTemplateVersion() != TAG(0,0,0,4))
+	if (getHighestTemplateVersion() != TAG(0, 0, 0, 4))
 	{
-		
-			
 		m_versionOk = false;
 	}
 

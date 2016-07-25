@@ -13,7 +13,6 @@
 #include "sharedGame/FirstSharedGame.h"
 #include "sharedGame/SharedShipObjectTemplate.h"
 
-
 #include "sharedFile/Iff.h"
 #include "sharedGame/AssetCustomizationManager.h"
 #include "sharedMath/Vector.h"
@@ -30,11 +29,10 @@
 
 const std::string DefaultString("");
 const StringId DefaultStringId("", 0);
-const Vector DefaultVector(0,0,0);
+const Vector DefaultVector(0, 0, 0);
 const TriggerVolumeData DefaultTriggerVolumeData;
 
 bool SharedShipObjectTemplate::ms_allowDefaultTemplateParams = true;
-
 
 /**
  * Class constructor.
@@ -42,8 +40,9 @@ bool SharedShipObjectTemplate::ms_allowDefaultTemplateParams = true;
 SharedShipObjectTemplate::SharedShipObjectTemplate(const std::string & filename)
 //@BEGIN TFD INIT
 	: SharedTangibleObjectTemplate(filename)
-	,m_versionOk(true)
-//@END TFD INIT
+	, m_versionOk(true)
+	, m_templateVersion(0)
+	//@END TFD INIT
 {
 }	// SharedShipObjectTemplate::SharedShipObjectTemplate
 
@@ -52,8 +51,8 @@ SharedShipObjectTemplate::SharedShipObjectTemplate(const std::string & filename)
  */
 SharedShipObjectTemplate::~SharedShipObjectTemplate()
 {
-//@BEGIN TFD CLEANUP
-//@END TFD CLEANUP
+	//@BEGIN TFD CLEANUP
+	//@END TFD CLEANUP
 }	// SharedShipObjectTemplate::~SharedShipObjectTemplate
 
 /**
@@ -129,16 +128,16 @@ void SharedShipObjectTemplate::createCustomizationDataPropertyAsNeeded(Object &o
 		//   variables since we are a creature.  The SharedTangibleObjectTemplate version of
 		//   this function sets it to true.
 		bool const skipSharedOwnerVariables = false;
-		const std::string & appearanceFilename =  getAppearanceFilename();
-		if(!appearanceFilename.empty())
-		{	
+		const std::string & appearanceFilename = getAppearanceFilename();
+		if (!appearanceFilename.empty())
+		{
 			AssetCustomizationManager::addCustomizationVariablesForAsset(TemporaryCrcString(appearanceFilename.c_str(), true), *customizationData, skipSharedOwnerVariables);
 		}
 		else
 		{
 			//Perhaps it's a POB ship, check the portalLayoutFilename
 			const std::string & portalLayoutFilename = getPortalLayoutFilename();
-			AssetCustomizationManager::addCustomizationVariablesForAsset(TemporaryCrcString(portalLayoutFilename.c_str(), true), *customizationData, skipSharedOwnerVariables);		
+			AssetCustomizationManager::addCustomizationVariablesForAsset(TemporaryCrcString(portalLayoutFilename.c_str(), true), *customizationData, skipSharedOwnerVariables);
 		}
 
 		//-- release local reference to the CustomizationData instance
@@ -149,8 +148,6 @@ void SharedShipObjectTemplate::createCustomizationDataPropertyAsNeeded(Object &o
 //@BEGIN TFD
 const std::string & SharedShipObjectTemplate::getCockpitFilename() const
 {
-
-
 	const SharedShipObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -178,8 +175,6 @@ const std::string & SharedShipObjectTemplate::getCockpitFilename() const
 
 bool SharedShipObjectTemplate::getHasWings() const
 {
-
-
 	const SharedShipObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -207,8 +202,6 @@ bool SharedShipObjectTemplate::getHasWings() const
 
 bool SharedShipObjectTemplate::getPlayerControlled() const
 {
-
-
 	const SharedShipObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -236,8 +229,6 @@ bool SharedShipObjectTemplate::getPlayerControlled() const
 
 const std::string & SharedShipObjectTemplate::getInteriorLayoutFileName() const
 {
-
-
 	const SharedShipObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -263,7 +254,6 @@ const std::string & SharedShipObjectTemplate::getInteriorLayoutFileName() const
 	return value;
 }	// SharedShipObjectTemplate::getInteriorLayoutFileName
 
-
 /**
  * Loads the template data from an iff file. We should already be in the form
  * for this template.
@@ -272,8 +262,8 @@ const std::string & SharedShipObjectTemplate::getInteriorLayoutFileName() const
  */
 void SharedShipObjectTemplate::load(Iff &file)
 {
-static const int MAX_NAME_SIZE = 256;
-char paramName[MAX_NAME_SIZE];
+	static const int MAX_NAME_SIZE = 256;
+	char paramName[MAX_NAME_SIZE];
 
 	if (file.getCurrentName() != SharedShipObjectTemplate_tag)
 	{
@@ -283,7 +273,7 @@ char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 	m_templateVersion = file.getCurrentName();
-	if (m_templateVersion == TAG(D,E,R,V))
+	if (m_templateVersion == TAG(D, E, R, V))
 	{
 		file.enterForm();
 		file.enterChunk();
@@ -303,10 +293,8 @@ char paramName[MAX_NAME_SIZE];
 		file.exitForm();
 		m_templateVersion = file.getCurrentName();
 	}
-	if (getHighestTemplateVersion() != TAG(0,0,0,4))
+	if (getHighestTemplateVersion() != TAG(0, 0, 0, 4))
 	{
-		
-			
 		m_versionOk = false;
 	}
 

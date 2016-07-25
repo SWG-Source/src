@@ -20,59 +20,59 @@
 #include <algorithm>
 #include <cstdio>
 
-
-
 /**
  * Class constructor.
  */
 ServerUberObjectTemplate::ServerUberObjectTemplate(const std::string & filename)
 //@BEGIN TFD INIT
 	: TpfTemplate(filename)
-	,m_intListSimpleLoaded(false)
-	,m_intListSimpleAppend(false)
-	,m_intListWeightedListLoaded(false)
-	,m_intListWeightedListAppend(false)
-	,m_intListRandomRangeLoaded(false)
-	,m_intListRandomRangeAppend(false)
-	,m_intListDiceRollLoaded(false)
-	,m_intListDiceRollAppend(false)
-	,m_floatListSimpleLoaded(false)
-	,m_floatListSimpleAppend(false)
-	,m_floatListWeightedListLoaded(false)
-	,m_floatListWeightedListAppend(false)
-	,m_floatListRandomRangeLoaded(false)
-	,m_floatListRandomRangeAppend(false)
-	,m_enumListIndexedLoaded(false)
-	,m_enumListIndexedAppend(false)
-	,m_enumListWeightedListLoaded(false)
-	,m_enumListWeightedListAppend(false)
-	,m_stringIdListSimpleLoaded(false)
-	,m_stringIdListSimpleAppend(false)
-	,m_stringIdListWeightedListLoaded(false)
-	,m_stringIdListWeightedListAppend(false)
-	,m_stringListSimpleLoaded(false)
-	,m_stringListSimpleAppend(false)
-	,m_stringListWeightedListLoaded(false)
-	,m_stringListWeightedListAppend(false)
-	,m_triggerVolumeListLoaded(false)
-	,m_triggerVolumeListAppend(false)
-	,m_triggerVolumesListWeightedListLoaded(false)
-	,m_triggerVolumesListWeightedListAppend(false)
-	,m_boolListDerivedLoaded(false)
-	,m_boolListDerivedAppend(false)
-	,m_boolListSimpleLoaded(false)
-	,m_boolListSimpleAppend(false)
-	,m_boolListWeightedListLoaded(false)
-	,m_boolListWeightedListAppend(false)
-	,m_vectorListSimpleLoaded(false)
-	,m_vectorListSimpleAppend(false)
-	,m_filenameListSimpleLoaded(false)
-	,m_filenameListSimpleAppend(false)
-	,m_templateListSimpleLoaded(false)
-	,m_templateListSimpleAppend(false)
-	,m_structListSimpleLoaded(false)
-	,m_structListSimpleAppend(false)
-//@END TFD INIT
+	, m_intListSimpleLoaded(false)
+	, m_intListSimpleAppend(false)
+	, m_intListWeightedListLoaded(false)
+	, m_intListWeightedListAppend(false)
+	, m_intListRandomRangeLoaded(false)
+	, m_intListRandomRangeAppend(false)
+	, m_intListDiceRollLoaded(false)
+	, m_intListDiceRollAppend(false)
+	, m_floatListSimpleLoaded(false)
+	, m_floatListSimpleAppend(false)
+	, m_floatListWeightedListLoaded(false)
+	, m_floatListWeightedListAppend(false)
+	, m_floatListRandomRangeLoaded(false)
+	, m_floatListRandomRangeAppend(false)
+	, m_enumListIndexedLoaded(false)
+	, m_enumListIndexedAppend(false)
+	, m_enumListWeightedListLoaded(false)
+	, m_enumListWeightedListAppend(false)
+	, m_stringIdListSimpleLoaded(false)
+	, m_stringIdListSimpleAppend(false)
+	, m_stringIdListWeightedListLoaded(false)
+	, m_stringIdListWeightedListAppend(false)
+	, m_stringListSimpleLoaded(false)
+	, m_stringListSimpleAppend(false)
+	, m_stringListWeightedListLoaded(false)
+	, m_stringListWeightedListAppend(false)
+	, m_triggerVolumeListLoaded(false)
+	, m_triggerVolumeListAppend(false)
+	, m_triggerVolumesListWeightedListLoaded(false)
+	, m_triggerVolumesListWeightedListAppend(false)
+	, m_boolListDerivedLoaded(false)
+	, m_boolListDerivedAppend(false)
+	, m_boolListSimpleLoaded(false)
+	, m_boolListSimpleAppend(false)
+	, m_boolListWeightedListLoaded(false)
+	, m_boolListWeightedListAppend(false)
+	, m_vectorListSimpleLoaded(false)
+	, m_vectorListSimpleAppend(false)
+	, m_filenameListSimpleLoaded(false)
+	, m_filenameListSimpleAppend(false)
+	, m_templateListSimpleLoaded(false)
+	, m_templateListSimpleAppend(false)
+	, m_structListSimpleLoaded(false)
+	, m_structListSimpleAppend(false)
+	, m_templateVersion(0)
+	, m_versionOk(false)
+	//@END TFD INIT
 {
 }	// ServerUberObjectTemplate::ServerUberObjectTemplate
 
@@ -81,7 +81,7 @@ ServerUberObjectTemplate::ServerUberObjectTemplate(const std::string & filename)
  */
 ServerUberObjectTemplate::~ServerUberObjectTemplate()
 {
-//@BEGIN TFD CLEANUP
+	//@BEGIN TFD CLEANUP
 	{
 		std::vector<CompilerIntegerParam *>::iterator iter;
 		for (iter = m_intListSimple.begin(); iter != m_intListSimple.end(); ++iter)
@@ -258,7 +258,7 @@ ServerUberObjectTemplate::~ServerUberObjectTemplate()
 			*iter = nullptr;
 		}
 	}
-//@END TFD CLEANUP
+	//@END TFD CLEANUP
 }	// ServerUberObjectTemplate::~ServerUberObjectTemplate
 
 /**
@@ -1772,7 +1772,6 @@ bool ServerUberObjectTemplate::isAppend(const char *name) const
 		return TpfTemplate::isAppend(name);
 }	// ServerUberObjectTemplate::isAppend
 
-
 int ServerUberObjectTemplate::getListLength(const char *name) const
 {
 	if (strcmp(name, "intListSimple") == 0)
@@ -1923,8 +1922,8 @@ int ServerUberObjectTemplate::getListLength(const char *name) const
  */
 void ServerUberObjectTemplate::load(Iff &file)
 {
-static const int MAX_NAME_SIZE = 256;
-char paramName[MAX_NAME_SIZE];
+	static const int MAX_NAME_SIZE = 256;
+	char paramName[MAX_NAME_SIZE];
 
 	if (file.getCurrentName() != ServerUberObjectTemplate_tag)
 	{
@@ -1934,7 +1933,7 @@ char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 	m_templateVersion = file.getCurrentName();
-	if (m_templateVersion == TAG(D,E,R,V))
+	if (m_templateVersion == TAG(D, E, R, V))
 	{
 		file.enterForm();
 		file.enterChunk();
@@ -1954,7 +1953,7 @@ char paramName[MAX_NAME_SIZE];
 		file.exitForm();
 		m_templateVersion = file.getCurrentName();
 	}
-	if (getHighestTemplateVersion() != TAG(0,0,0,0))
+	if (getHighestTemplateVersion() != TAG(0, 0, 0, 0))
 	{
 		if (DataLint::isEnabled())
 			DEBUG_WARNING(true, ("template %s version out of date", file.getFileName()));
@@ -2654,18 +2653,18 @@ char paramName[MAX_NAME_SIZE];
  */
 void ServerUberObjectTemplate::save(Iff &file)
 {
-int count;
+	int count;
 
 	file.insertForm(ServerUberObjectTemplate_tag);
 	if (m_baseTemplateName.size() != 0)
 	{
-		file.insertForm(TAG(D,E,R,V));
+		file.insertForm(TAG(D, E, R, V));
 		file.insertChunk(TAG(X, X, X, X));
 		file.insertChunkData(m_baseTemplateName.c_str(), m_baseTemplateName.size() + 1);
 		file.exitChunk();
 		file.exitForm();
 	}
-	file.insertForm(TAG(0,0,0,0));
+	file.insertForm(TAG(0, 0, 0, 0));
 	file.allowNonlinearFunctions();
 
 	int paramCount = 0;
@@ -2784,7 +2783,7 @@ int count;
 	count = m_intListSimple.size();
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < count; ++i)
-		m_intListSimple[i]->saveToIff(file);}
+		m_intListSimple[i]->saveToIff(file); }
 	file.exitChunk();
 	++paramCount;
 	if (!m_intListWeightedListLoaded)
@@ -2799,7 +2798,7 @@ int count;
 	count = m_intListWeightedList.size();
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < count; ++i)
-		m_intListWeightedList[i]->saveToIff(file);}
+		m_intListWeightedList[i]->saveToIff(file); }
 	file.exitChunk();
 	++paramCount;
 	if (!m_intListRandomRangeLoaded)
@@ -2814,7 +2813,7 @@ int count;
 	count = m_intListRandomRange.size();
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < count; ++i)
-		m_intListRandomRange[i]->saveToIff(file);}
+		m_intListRandomRange[i]->saveToIff(file); }
 	file.exitChunk();
 	++paramCount;
 	if (!m_intListDiceRollLoaded)
@@ -2829,7 +2828,7 @@ int count;
 	count = m_intListDiceRoll.size();
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < count; ++i)
-		m_intListDiceRoll[i]->saveToIff(file);}
+		m_intListDiceRoll[i]->saveToIff(file); }
 	file.exitChunk();
 	++paramCount;
 	// save floatAtDerived
@@ -2910,7 +2909,7 @@ int count;
 	count = m_floatListSimple.size();
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < count; ++i)
-		m_floatListSimple[i]->saveToIff(file);}
+		m_floatListSimple[i]->saveToIff(file); }
 	file.exitChunk();
 	++paramCount;
 	if (!m_floatListWeightedListLoaded)
@@ -2925,7 +2924,7 @@ int count;
 	count = m_floatListWeightedList.size();
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < count; ++i)
-		m_floatListWeightedList[i]->saveToIff(file);}
+		m_floatListWeightedList[i]->saveToIff(file); }
 	file.exitChunk();
 	++paramCount;
 	if (!m_floatListRandomRangeLoaded)
@@ -2940,7 +2939,7 @@ int count;
 	count = m_floatListRandomRange.size();
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < count; ++i)
-		m_floatListRandomRange[i]->saveToIff(file);}
+		m_floatListRandomRange[i]->saveToIff(file); }
 	file.exitChunk();
 	++paramCount;
 	// save enumIndexedByEnumSingle
@@ -2949,7 +2948,7 @@ int count;
 	count = 3;
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < 3; ++i)
-		m_enumIndexedByEnumSingle[i].saveToIff(file);}
+		m_enumIndexedByEnumSingle[i].saveToIff(file); }
 	file.exitChunk();
 	++paramCount;
 	// save enumIndexedByEnumWeightedList
@@ -2958,7 +2957,7 @@ int count;
 	count = 3;
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < 3; ++i)
-		m_enumIndexedByEnumWeightedList[i].saveToIff(file);}
+		m_enumIndexedByEnumWeightedList[i].saveToIff(file); }
 	file.exitChunk();
 	++paramCount;
 	if (!m_enumListIndexedLoaded)
@@ -2973,7 +2972,7 @@ int count;
 	count = m_enumListIndexed.size();
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < count; ++i)
-		m_enumListIndexed[i]->saveToIff(file);}
+		m_enumListIndexed[i]->saveToIff(file); }
 	file.exitChunk();
 	++paramCount;
 	if (!m_enumListWeightedListLoaded)
@@ -2988,7 +2987,7 @@ int count;
 	count = m_enumListWeightedList.size();
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < count; ++i)
-		m_enumListWeightedList[i]->saveToIff(file);}
+		m_enumListWeightedList[i]->saveToIff(file); }
 	file.exitChunk();
 	++paramCount;
 	// save stringIdDerived
@@ -3021,7 +3020,7 @@ int count;
 	count = m_stringIdListSimple.size();
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < count; ++i)
-		m_stringIdListSimple[i]->saveToIff(file);}
+		m_stringIdListSimple[i]->saveToIff(file); }
 	file.exitChunk();
 	++paramCount;
 	if (!m_stringIdListWeightedListLoaded)
@@ -3036,7 +3035,7 @@ int count;
 	count = m_stringIdListWeightedList.size();
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < count; ++i)
-		m_stringIdListWeightedList[i]->saveToIff(file);}
+		m_stringIdListWeightedList[i]->saveToIff(file); }
 	file.exitChunk();
 	++paramCount;
 	// save stringDerived
@@ -3069,7 +3068,7 @@ int count;
 	count = m_stringListSimple.size();
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < count; ++i)
-		m_stringListSimple[i]->saveToIff(file);}
+		m_stringListSimple[i]->saveToIff(file); }
 	file.exitChunk();
 	++paramCount;
 	if (!m_stringListWeightedListLoaded)
@@ -3084,7 +3083,7 @@ int count;
 	count = m_stringListWeightedList.size();
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < count; ++i)
-		m_stringListWeightedList[i]->saveToIff(file);}
+		m_stringListWeightedList[i]->saveToIff(file); }
 	file.exitChunk();
 	++paramCount;
 	// save triggerVolumeDerived
@@ -3117,7 +3116,7 @@ int count;
 	count = m_triggerVolumeList.size();
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < count; ++i)
-		m_triggerVolumeList[i]->saveToIff(file);}
+		m_triggerVolumeList[i]->saveToIff(file); }
 	file.exitChunk();
 	++paramCount;
 	if (!m_triggerVolumesListWeightedListLoaded)
@@ -3132,7 +3131,7 @@ int count;
 	count = m_triggerVolumesListWeightedList.size();
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < count; ++i)
-		m_triggerVolumesListWeightedList[i]->saveToIff(file);}
+		m_triggerVolumesListWeightedList[i]->saveToIff(file); }
 	file.exitChunk();
 	++paramCount;
 	// save boolDerived
@@ -3165,7 +3164,7 @@ int count;
 	count = m_boolListDerived.size();
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < count; ++i)
-		m_boolListDerived[i]->saveToIff(file);}
+		m_boolListDerived[i]->saveToIff(file); }
 	file.exitChunk();
 	++paramCount;
 	if (!m_boolListSimpleLoaded)
@@ -3180,7 +3179,7 @@ int count;
 	count = m_boolListSimple.size();
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < count; ++i)
-		m_boolListSimple[i]->saveToIff(file);}
+		m_boolListSimple[i]->saveToIff(file); }
 	file.exitChunk();
 	++paramCount;
 	if (!m_boolListWeightedListLoaded)
@@ -3195,7 +3194,7 @@ int count;
 	count = m_boolListWeightedList.size();
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < count; ++i)
-		m_boolListWeightedList[i]->saveToIff(file);}
+		m_boolListWeightedList[i]->saveToIff(file); }
 	file.exitChunk();
 	++paramCount;
 	// save vectorAtDerived
@@ -3222,7 +3221,7 @@ int count;
 	count = m_vectorListSimple.size();
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < count; ++i)
-		m_vectorListSimple[i]->saveToIff(file);}
+		m_vectorListSimple[i]->saveToIff(file); }
 	file.exitChunk();
 	++paramCount;
 	// save filenameAtDerived
@@ -3255,7 +3254,7 @@ int count;
 	count = m_filenameListSimple.size();
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < count; ++i)
-		m_filenameListSimple[i]->saveToIff(file);}
+		m_filenameListSimple[i]->saveToIff(file); }
 	file.exitChunk();
 	++paramCount;
 	// save objvarDerived
@@ -3300,7 +3299,7 @@ int count;
 	count = m_templateListSimple.size();
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < count; ++i)
-		m_templateListSimple[i]->saveToIff(file);}
+		m_templateListSimple[i]->saveToIff(file); }
 	file.exitChunk();
 	++paramCount;
 	// save structAtDerived
@@ -3327,7 +3326,7 @@ int count;
 	count = m_structListSimple.size();
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < count; ++i)
-		m_structListSimple[i]->saveToIff(file);}
+		m_structListSimple[i]->saveToIff(file); }
 	file.exitChunk();
 	++paramCount;
 	// save structArrayEnum
@@ -3336,7 +3335,7 @@ int count;
 	count = 3;
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < 3; ++i)
-		m_structArrayEnum[i].saveToIff(file);}
+		m_structArrayEnum[i].saveToIff(file); }
 	file.exitChunk();
 	++paramCount;
 	// save structArrayInteger
@@ -3345,7 +3344,7 @@ int count;
 	count = 2;
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < 2; ++i)
-		m_structArrayInteger[i].saveToIff(file);}
+		m_structArrayInteger[i].saveToIff(file); }
 	file.exitChunk();
 	++paramCount;
 	// save integerArray
@@ -3354,7 +3353,7 @@ int count;
 	count = 2;
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < 2; ++i)
-		m_integerArray[i].saveToIff(file);}
+		m_integerArray[i].saveToIff(file); }
 	file.exitChunk();
 	++paramCount;
 	// save floatArray
@@ -3363,7 +3362,7 @@ int count;
 	count = 2;
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < 2; ++i)
-		m_floatArray[i].saveToIff(file);}
+		m_floatArray[i].saveToIff(file); }
 	file.exitChunk();
 	++paramCount;
 	// save stringArray
@@ -3372,7 +3371,7 @@ int count;
 	count = 2;
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < 2; ++i)
-		m_stringArray[i].saveToIff(file);}
+		m_stringArray[i].saveToIff(file); }
 	file.exitChunk();
 	++paramCount;
 	// save boolArray
@@ -3381,7 +3380,7 @@ int count;
 	count = 2;
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < 2; ++i)
-		m_boolArray[i].saveToIff(file);}
+		m_boolArray[i].saveToIff(file); }
 	file.exitChunk();
 	++paramCount;
 	// save stringIdArray
@@ -3390,7 +3389,7 @@ int count;
 	count = 2;
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < 2; ++i)
-		m_stringIdArray[i].saveToIff(file);}
+		m_stringIdArray[i].saveToIff(file); }
 	file.exitChunk();
 	++paramCount;
 	// save triggerArray
@@ -3399,7 +3398,7 @@ int count;
 	count = 2;
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < 2; ++i)
-		m_triggerArray[i].saveToIff(file);}
+		m_triggerArray[i].saveToIff(file); }
 	file.exitChunk();
 	++paramCount;
 	// save vectorArray
@@ -3408,7 +3407,7 @@ int count;
 	count = 2;
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < 2; ++i)
-		m_vectorArray[i].saveToIff(file);}
+		m_vectorArray[i].saveToIff(file); }
 	file.exitChunk();
 	++paramCount;
 	// save fileNameArray
@@ -3417,7 +3416,7 @@ int count;
 	count = 2;
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < 2; ++i)
-		m_fileNameArray[i].saveToIff(file);}
+		m_fileNameArray[i].saveToIff(file); }
 	file.exitChunk();
 	++paramCount;
 
@@ -3431,7 +3430,6 @@ int count;
 	TpfTemplate::save(file);
 	file.exitForm();
 }	// ServerUberObjectTemplate::save
-
 
 //=============================================================================
 // class ServerUberObjectTemplate::_Foo
@@ -3594,7 +3592,6 @@ bool ServerUberObjectTemplate::_Foo::isAppend(const char *name) const
 	return TpfTemplate::isAppend(name);
 }	// ServerUberObjectTemplate::_Foo::isAppend
 
-
 int ServerUberObjectTemplate::_Foo::getListLength(const char *name) const
 {
 	return TpfTemplate::getListLength(name);
@@ -3608,8 +3605,8 @@ int ServerUberObjectTemplate::_Foo::getListLength(const char *name) const
  */
 void ServerUberObjectTemplate::_Foo::load(Iff &file)
 {
-static const int MAX_NAME_SIZE = 256;
-char paramName[MAX_NAME_SIZE];
+	static const int MAX_NAME_SIZE = 256;
+	char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 
@@ -3641,7 +3638,7 @@ char paramName[MAX_NAME_SIZE];
  */
 void ServerUberObjectTemplate::_Foo::save(Iff &file)
 {
-int count;
+	int count;
 
 	file.insertForm(_Foo_tag);
 

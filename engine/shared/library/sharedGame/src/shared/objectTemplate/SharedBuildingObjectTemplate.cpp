@@ -23,11 +23,10 @@
 
 const std::string DefaultString("");
 const StringId DefaultStringId("", 0);
-const Vector DefaultVector(0,0,0);
+const Vector DefaultVector(0, 0, 0);
 const TriggerVolumeData DefaultTriggerVolumeData;
 
 bool SharedBuildingObjectTemplate::ms_allowDefaultTemplateParams = true;
-
 
 /**
  * Class constructor.
@@ -35,8 +34,9 @@ bool SharedBuildingObjectTemplate::ms_allowDefaultTemplateParams = true;
 SharedBuildingObjectTemplate::SharedBuildingObjectTemplate(const std::string & filename)
 //@BEGIN TFD INIT
 	: SharedTangibleObjectTemplate(filename)
-	,m_versionOk(true)
-//@END TFD INIT
+	, m_versionOk(true)
+	, m_templateVersion(0)
+	//@END TFD INIT
 {
 }	// SharedBuildingObjectTemplate::SharedBuildingObjectTemplate
 
@@ -45,8 +45,8 @@ SharedBuildingObjectTemplate::SharedBuildingObjectTemplate(const std::string & f
  */
 SharedBuildingObjectTemplate::~SharedBuildingObjectTemplate()
 {
-//@BEGIN TFD CLEANUP
-//@END TFD CLEANUP
+	//@BEGIN TFD CLEANUP
+	//@END TFD CLEANUP
 }	// SharedBuildingObjectTemplate::~SharedBuildingObjectTemplate
 
 /**
@@ -105,8 +105,6 @@ Tag SharedBuildingObjectTemplate::getHighestTemplateVersion(void) const
 //@BEGIN TFD
 const std::string & SharedBuildingObjectTemplate::getTerrainModificationFileName() const
 {
-
-
 	const SharedBuildingObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -134,8 +132,6 @@ const std::string & SharedBuildingObjectTemplate::getTerrainModificationFileName
 
 const std::string & SharedBuildingObjectTemplate::getInteriorLayoutFileName() const
 {
-
-
 	const SharedBuildingObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -161,7 +157,6 @@ const std::string & SharedBuildingObjectTemplate::getInteriorLayoutFileName() co
 	return value;
 }	// SharedBuildingObjectTemplate::getInteriorLayoutFileName
 
-
 /**
  * Loads the template data from an iff file. We should already be in the form
  * for this template.
@@ -170,8 +165,8 @@ const std::string & SharedBuildingObjectTemplate::getInteriorLayoutFileName() co
  */
 void SharedBuildingObjectTemplate::load(Iff &file)
 {
-static const int MAX_NAME_SIZE = 256;
-char paramName[MAX_NAME_SIZE];
+	static const int MAX_NAME_SIZE = 256;
+	char paramName[MAX_NAME_SIZE];
 
 	if (file.getCurrentName() != SharedBuildingObjectTemplate_tag)
 	{
@@ -181,7 +176,7 @@ char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 	m_templateVersion = file.getCurrentName();
-	if (m_templateVersion == TAG(D,E,R,V))
+	if (m_templateVersion == TAG(D, E, R, V))
 	{
 		file.enterForm();
 		file.enterChunk();
@@ -201,10 +196,8 @@ char paramName[MAX_NAME_SIZE];
 		file.exitForm();
 		m_templateVersion = file.getCurrentName();
 	}
-	if (getHighestTemplateVersion() != TAG(0,0,0,1))
+	if (getHighestTemplateVersion() != TAG(0, 0, 0, 1))
 	{
-		
-			
 		m_versionOk = false;
 	}
 

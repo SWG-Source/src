@@ -67,7 +67,7 @@ namespace CollisionWorldNamespace
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 	int const cs_nearWarpCollisionSegmentCount = 20;
-	int const cs_farWarpCollisionSegmentCount  = 250;
+	int const cs_farWarpCollisionSegmentCount = 250;
 
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -81,13 +81,13 @@ namespace CollisionWorldNamespace
 	WarpWarningCallback  s_nearWarpWarningCallback;
 	WarpWarningCallback  s_farWarpWarningCallback;
 
-	char const * ms_sptatialDatabaseNames[] =   {
+	char const * ms_sptatialDatabaseNames[] = {
 													"None",
 													"Static",
 													"Dynamic",
 													"Barriers",
 													"Doors"
-												};
+	};
 
 	//----------------------------------------------------------------------
 
@@ -101,7 +101,7 @@ namespace CollisionWorldNamespace
 			Vector deltaNormal = delta;
 			deltaNormal.normalize();
 
-			for ( ; distanceTraversed < totalDistance; )
+			for (; distanceTraversed < totalDistance; )
 			{
 				float distance = std::min(distanceTraversed + 2.0f, totalDistance);
 				Vector const & endPos = startPos + (deltaNormal * distance);
@@ -136,7 +136,6 @@ namespace CollisionWorldNamespace
 		TerrainObject const *const terrainObject = TerrainObject::getConstInstance();
 		if (nullptr != terrainObject && terrainObject->hasPassableAffectors())
 		{
-
 			// pointA_w is *not* the previous world position, but actually the world
 			// position for the previous position in the cell, in respect to the
 			// current position of the previous cell.  This has the effect that a
@@ -184,7 +183,6 @@ namespace CollisionWorldNamespace
 	CollisionWorld::NoCollisionDetectionThisFrameFunction ms_noCollisionDetectionThisFrameFunction = 0;
 	CollisionWorld::CollisionDetectionOnHitFunction ms_collisionDetectionOnHitFunction = 0;
 	CollisionWorld::DoCollisionWithTerrainFunction ms_doCollisionWithTerrainFunction = 0;
-
 }
 
 using namespace CollisionWorldNamespace;
@@ -222,11 +220,11 @@ std::string ms_reportString;
 
 // ----------
 
-void terrainChangedCallback ( Rectangle2d const & rect )
+void terrainChangedCallback(Rectangle2d const & rect)
 {
-	AxialBox box( Vector(rect.x0,-2000.0f,rect.y0), Vector(rect.x1,2000.0f,rect.y1) );
+	AxialBox box(Vector(rect.x0, -2000.0f, rect.y0), Vector(rect.x1, 2000.0f, rect.y1));
 
-	CollisionWorld::environmentChanged( MultiShape(box) );
+	CollisionWorld::environmentChanged(MultiShape(box));
 }
 
 // ======================================================================
@@ -237,16 +235,16 @@ void CollisionWorldNamespace::defaultNearWarpWarning(Object const &object, Vecto
 {
 	WARNING(ConfigSharedCollision::getReportWarnings(),
 		("CollisionWorld::update() had %d segments for object id=[%s], template=[%s], start position=[%.2f,%.2f,%.2f], end position=[%.2f,%.2f,%.2f], object probably should have warped but collision system is not warping it.",
-		segmentCount,
-		object.getNetworkId().getValueString().c_str(),
-		object.getObjectTemplateName(),
-		oldPosition_w.x,
-		oldPosition_w.y,
-		oldPosition_w.z,
-		newPosition_w.x,
-		newPosition_w.y,
-		newPosition_w.z
-		));
+			segmentCount,
+			object.getNetworkId().getValueString().c_str(),
+			object.getObjectTemplateName(),
+			oldPosition_w.x,
+			oldPosition_w.y,
+			oldPosition_w.z,
+			newPosition_w.x,
+			newPosition_w.y,
+			newPosition_w.z
+			));
 }
 
 // ----------------------------------------------------------------------
@@ -255,16 +253,16 @@ void CollisionWorldNamespace::defaultFarWarpWarning(Object const &object, Vector
 {
 	WARNING(ConfigSharedCollision::getReportWarnings(),
 		("CollisionWorld::update() had %d segments for object id=[%s], template=[%s], start position=[%.2f,%.2f,%.2f], end position=[%.2f,%.2f,%.2f], collision system will consider this a warp and adjust accordingly.",
-		segmentCount,
-		object.getNetworkId().getValueString().c_str(),
-		object.getObjectTemplateName(),
-		oldPosition_w.x,
-		oldPosition_w.y,
-		oldPosition_w.z,
-		newPosition_w.x,
-		newPosition_w.y,
-		newPosition_w.z
-		));
+			segmentCount,
+			object.getNetworkId().getValueString().c_str(),
+			object.getObjectTemplateName(),
+			oldPosition_w.x,
+			oldPosition_w.y,
+			oldPosition_w.z,
+			newPosition_w.x,
+			newPosition_w.y,
+			newPosition_w.z
+			));
 }
 
 // ----------------------------------------------------------------------
@@ -318,10 +316,10 @@ bool CollisionWorldNamespace::testFloorCollision(FloorLocator const &startFloorL
 		// This most likely means that the pathWalkResult that was issued indicates a non-collision and should be caught in the
 		// if statement above.
 		WARNING(true,
-						("testFloorCollision(): floor collision occurred while checking for floor collisions for floor of object id [%s] but collision floor location has no associated floor.  Calling this a non-collision.  PathWalkResult was [%d].",
-						 floor->getOwner() ? floor->getOwner()->getNetworkId().getValueString().c_str() : "<nullptr floor owner>",
-						 static_cast<int>(pathWalkResult)
-						 ));
+			("testFloorCollision(): floor collision occurred while checking for floor collisions for floor of object id [%s] but collision floor location has no associated floor.  Calling this a non-collision.  PathWalkResult was [%d].",
+				floor->getOwner() ? floor->getOwner()->getNetworkId().getValueString().c_str() : "<nullptr floor owner>",
+				static_cast<int>(pathWalkResult)
+				));
 		return false;
 	}
 
@@ -335,7 +333,6 @@ bool CollisionWorldNamespace::testFloorCollision(FloorLocator const &startFloorL
 
 	return true;
 }
-
 
 // ----------------------------------------------------------------------
 
@@ -414,12 +411,12 @@ bool CollisionWorld::doCollisionWithTerrain(Object * const object)
 // class CollisionWorld: PUBLIC STATIC
 // ======================================================================
 
-void CollisionWorld::install ( bool serverSide )
+void CollisionWorld::install(bool serverSide)
 {
-	DEBUG_REPORT_LOG(true,("CollisionWorld::install()\n"));
+	DEBUG_REPORT_LOG(true, ("CollisionWorld::install()\n"));
 
 	s_nearWarpWarningCallback = defaultNearWarpWarning;
-	s_farWarpWarningCallback  = defaultFarWarpWarning;
+	s_farWarpWarningCallback = defaultFarWarpWarning;
 
 	ConfigSharedCollision::install();
 	FloorMesh::install();
@@ -428,21 +425,21 @@ void CollisionWorld::install ( bool serverSide )
 
 	ms_serverSide = serverSide;
 
-	if(!serverSide)
+	if (!serverSide)
 	{
-		TerrainObject::addTerrainChangedFunction( terrainChangedCallback );
+		TerrainObject::addTerrainChangedFunction(terrainChangedCallback);
 	}
 
 	ms_database = new SpatialDatabase();
 
-	ExitChain::add(CollisionWorld::remove,"CollisionWorld::remove()");
+	ExitChain::add(CollisionWorld::remove, "CollisionWorld::remove()");
 }
 
 // ----------
 
-void CollisionWorld::remove ( void )
+void CollisionWorld::remove(void)
 {
-	DEBUG_REPORT_LOG(true,("CollisionWorld::remove()\n"));
+	DEBUG_REPORT_LOG(true, ("CollisionWorld::remove()\n"));
 
 	CollisionResolve::remove();
 	FloorMesh::remove();
@@ -456,7 +453,7 @@ void CollisionWorld::remove ( void )
 
 // ----------------------------------------------------------------------
 
-void CollisionWorld::update ( float time )
+void CollisionWorld::update(float time)
 {
 	CollisionNotification::purgeQueue();
 
@@ -492,7 +489,7 @@ void CollisionWorld::update ( float time )
 
 	CollisionProperty * cursor = CollisionProperty::getActiveHead();
 
-	while(cursor)
+	while (cursor)
 	{
 		active.push_back(cursor);
 
@@ -501,12 +498,12 @@ void CollisionWorld::update ( float time )
 
 	CollisionPropertyVector::size_type const count = active.size();
 
-	if(count > 3000)
+	if (count > 3000)
 	{
-		WARNING(true,("CollisionWorld::update - Updating more than 3000 objects this frame - something's probably wrong\n"));
+		WARNING(true, ("CollisionWorld::update - Updating more than 3000 objects this frame - something's probably wrong\n"));
 	}
 
-	for(CollisionPropertyVector::size_type i = 0; i < count; i++)
+	for (CollisionPropertyVector::size_type i = 0; i < count; i++)
 	{
 		update(active[i], time);
 	}
@@ -514,7 +511,6 @@ void CollisionWorld::update ( float time )
 	footprintUpdateCounter = static_cast<int>(count);
 
 	// ----------
-
 
 #ifdef _MSC_VER
 
@@ -530,11 +526,11 @@ void CollisionWorld::update ( float time )
 
 	updateReportString();
 
-	if(totalCollisionTime >= 0.1f && ConfigSharedCollision::getLogLongFrames())
+	if (totalCollisionTime >= 0.1f && ConfigSharedCollision::getLogLongFrames())
 	{
 		// Collision took more than 100 milliseconds - log the report
 
-		LOG("Collision",(ms_reportString.c_str()));
+		LOG("Collision", (ms_reportString.c_str()));
 	}
 
 	ms_updating = false;
@@ -561,7 +557,7 @@ bool CollisionWorld::spatialSweepAndResolve(CollisionProperty * collider)
 
 		int const potentialCount = static_cast<int>(collidedWith.size());
 
-		for(int i = 0; i < potentialCount; ++i)
+		for (int i = 0; i < potentialCount; ++i)
 		{
 			CollisionProperty * const toTestCollision = collidedWith.at(static_cast<unsigned int>(i));
 
@@ -603,11 +599,11 @@ void CollisionWorld::update(CollisionProperty * collider, float time)
 
 	Footprint * foot = collider->getFootprint();
 
-	if(foot == nullptr)
+	if (foot == nullptr)
 	{
 		PROFILER_AUTO_BLOCK_DEFINE("CollisionWorld::update: foot == nullptr");
 
-		IGNORE_RETURN (CollisionWorld::spatialSweepAndResolve(collider));
+		IGNORE_RETURN(CollisionWorld::spatialSweepAndResolve(collider));
 		collider->storePosition();
 		collider->updateIdle();
 
@@ -638,11 +634,11 @@ void CollisionWorld::update(CollisionProperty * collider, float time)
 
 	int segments = static_cast<int>(ceil(moveLength / 2.0f));
 
-	if(segments <= 1)
+	if (segments <= 1)
 	{
 		PROFILER_AUTO_BLOCK_DEFINE("CollisionWorld::update: segments <= 1");
 
-		updateSegment(collider,time);
+		updateSegment(collider, time);
 	}
 	else
 	{
@@ -650,7 +646,7 @@ void CollisionWorld::update(CollisionProperty * collider, float time)
 
 		// Break the move into pieces and resolve each separately
 
-		if(segments > cs_nearWarpCollisionSegmentCount)
+		if (segments > cs_nearWarpCollisionSegmentCount)
 		{
 			PROFILER_AUTO_BLOCK_DEFINE("CollisionWorld::update: segments > cs_nearWarpCollisionSegmentCount");
 
@@ -659,7 +655,7 @@ void CollisionWorld::update(CollisionProperty * collider, float time)
 				(*s_nearWarpWarningCallback)(collider->getOwner(), pointA_w, pointB_w, segments);
 		}
 
-		if(segments > cs_farWarpCollisionSegmentCount)
+		if (segments > cs_farWarpCollisionSegmentCount)
 		{
 			PROFILER_AUTO_BLOCK_DEFINE("CollisionWorld::update: segments > cs_farWarpCollisionSegmentCount");
 
@@ -676,25 +672,25 @@ void CollisionWorld::update(CollisionProperty * collider, float time)
 
 		// This version just moves them, & hopefully they'll end up in the same cell as they were last frame
 
-		Vector pointA_B = CollisionUtils::transformFromWorld(pointA_w,cellB);
+		Vector pointA_B = CollisionUtils::transformFromWorld(pointA_w, cellB);
 
 		NAN_CHECK(pointA_B);
 
 		object->setPosition_p(pointA_B);
 
-		if(object->getParentCell() != cellA)
+		if (object->getParentCell() != cellA)
 		{
-			REPORT_LOG(ConfigSharedCollision::getReportMessages(),("CollisionWorld::update - Tried to move the object back to where it was last frame, but it ended up in a different cell\n"));
+			REPORT_LOG(ConfigSharedCollision::getReportMessages(), ("CollisionWorld::update - Tried to move the object back to where it was last frame, but it ended up in a different cell\n"));
 		}
 
 		// ----------
 
 		float segmentTime = time / static_cast<float>(segments);
-		Vector segmentDelta_w = (pointB_w-pointA_w) / static_cast<float>(segments);
+		Vector segmentDelta_w = (pointB_w - pointA_w) / static_cast<float>(segments);
 
-		for(int i = 0; i < segments; i++)
+		for (int i = 0; i < segments; i++)
 		{
-			Vector segmentDelta_p = CollisionUtils::rotateToCell(CellProperty::getWorldCellProperty(),segmentDelta_w,object->getParentCell());
+			Vector segmentDelta_p = CollisionUtils::rotateToCell(CellProperty::getWorldCellProperty(), segmentDelta_w, object->getParentCell());
 
 			Vector goal = object->getPosition_p() + segmentDelta_p;
 
@@ -702,7 +698,7 @@ void CollisionWorld::update(CollisionProperty * collider, float time)
 
 			object->setPosition_p(goal);
 
-			updateSegment(collider,segmentTime);
+			updateSegment(collider, segmentTime);
 		}
 	}
 
@@ -710,9 +706,9 @@ void CollisionWorld::update(CollisionProperty * collider, float time)
 
 	CellProperty const * finalCell = object->getParentCell();
 
-	if(finalCell && (finalCell != CellProperty::getWorldCellProperty()))
+	if (finalCell && (finalCell != CellProperty::getWorldCellProperty()))
 	{
-		if(!foot->isAttached())
+		if (!foot->isAttached())
 		{
 			PROFILER_AUTO_BLOCK_DEFINE("CollisionWorld::update: !foot->isAttached()");
 
@@ -723,7 +719,7 @@ void CollisionWorld::update(CollisionProperty * collider, float time)
 
 // ----------------------------------------------------------------------
 
-void CollisionWorld::updateSegment ( CollisionProperty * collider, float time )
+void CollisionWorld::updateSegment(CollisionProperty * collider, float time)
 {
 	PROFILER_AUTO_BLOCK_DEFINE("CollisionWorld::updateSegment");
 
@@ -738,18 +734,18 @@ void CollisionWorld::updateSegment ( CollisionProperty * collider, float time )
 
 	Vector delta = pointB_p - pointA_p;
 
-	if((delta.x != 0.0f) || (delta.y != 0.0f))
+	if ((delta.x != 0.0f) || (delta.y != 0.0f))
 	{
 		Vector footPos_p = foot->getPosition_p();
 		Vector groundNormal_p = foot->getGroundNormal_p();
 
-		if(groundNormal_p.y != 0.0f)
+		if (groundNormal_p.y != 0.0f)
 		{
 			float dx = pointB_p.x - footPos_p.x;
 			float dz = pointB_p.z - footPos_p.z;
 
-			float dydx = -(groundNormal_p.x/groundNormal_p.y);
-			float dydz = -(groundNormal_p.z/groundNormal_p.y);
+			float dydx = -(groundNormal_p.x / groundNormal_p.y);
+			float dydz = -(groundNormal_p.z / groundNormal_p.y);
 
 			float groundOffset = (dx * dydx) + (dz * dydz);
 
@@ -764,20 +760,20 @@ void CollisionWorld::updateSegment ( CollisionProperty * collider, float time )
 	// ----------
 	// do the actual collision resolution step
 
-	IGNORE_RETURN(updateStep(collider,time));
+	IGNORE_RETURN(updateStep(collider, time));
 
 	// and now repeatedly snap the object and re-run collision resolution until
 	// there's no collision or we give up
 
 	int j;
 
-	for(j = 0; j < 10; j++)
+	for (j = 0; j < 10; j++)
 	{
 		IGNORE_RETURN(foot->snapObjectToGround());
 
-		ResolutionResult result = updateStep(collider,0.0f);
+		ResolutionResult result = updateStep(collider, 0.0f);
 
-		if(result == RR_NoCollision)
+		if (result == RR_NoCollision)
 		{
 			break;
 		}
@@ -821,13 +817,12 @@ void CollisionWorld::shoveAway(CollisionProperty * const collisionProperty, Coll
 	NAN_CHECK(newPos);
 
 	obj->setPosition_p(newPos);
-
 }
 
 // ----------------------------------------------------------------------
 // returns true if any collisions were resolved
 
-ResolutionResult CollisionWorld::updateStep ( CollisionProperty * collider, float time )
+ResolutionResult CollisionWorld::updateStep(CollisionProperty * collider, float time)
 {
 	PROFILER_AUTO_BLOCK_DEFINE("CollisionWorld::updateStep");
 
@@ -837,7 +832,7 @@ ResolutionResult CollisionWorld::updateStep ( CollisionProperty * collider, floa
 
 	NOT_NULL(foot);
 
-	if(foot->isFloating())
+	if (foot->isFloating())
 	{
 		Vector newPos = foot->m_addToWorldPos;
 
@@ -849,7 +844,6 @@ ResolutionResult CollisionWorld::updateStep ( CollisionProperty * collider, floa
 
 		return RR_NoCollision;
 	}
-
 
 	//----------------------------------------------------------------------
 
@@ -867,7 +861,7 @@ ResolutionResult CollisionWorld::updateStep ( CollisionProperty * collider, floa
 		PROFILER_AUTO_BLOCK_DEFINE("update floor database");
 		timer.start();
 
-		ms_database->updateFloorCollision(collider,false);
+		ms_database->updateFloorCollision(collider, false);
 
 		timer.stop();
 		floorUpdateTime += timer.getElapsedTime();
@@ -926,27 +920,27 @@ ResolutionResult CollisionWorld::updateStep ( CollisionProperty * collider, floa
 
 // ----------------------------------------------------------------------
 
-bool CollisionWorld::isUpdating ( void )
+bool CollisionWorld::isUpdating(void)
 {
 	return ms_updating;
 }
 
 // ----------------------------------------------------------------------
 
-void CollisionWorld::updateReportString ( void )
+void CollisionWorld::updateReportString(void)
 {
 	ms_reportString.clear();
 
 	char buffer[256];
 
-	sprintf(buffer,"CollsionWorld::update -\n");
+	sprintf(buffer, "CollsionWorld::update -\n");
 	ms_reportString += buffer;
 
 	const int staticObjectCount = ms_database->getObjectCount(SpatialDatabase::Q_Static);
 	const int dynamicObjectCount = ms_database->getObjectCount(SpatialDatabase::Q_Dynamic);
 	const int floorCount = ms_database->getFloorCount();
 
-	sprintf(buffer,"Database : %d S / %d D / %d F\n",staticObjectCount,dynamicObjectCount,floorCount);
+	sprintf(buffer, "Database : %d S / %d D / %d F\n", staticObjectCount, dynamicObjectCount, floorCount);
 
 	ms_reportString += buffer;
 
@@ -955,7 +949,7 @@ void CollisionWorld::updateReportString ( void )
 	int collisionCount = CollisionResolve::getCollisionCount();
 	int bounceCount = CollisionResolve::getBounceCount();
 
-	sprintf(buffer,"Resolution : %d colliders, %d obstacles, %d collisions, %d bounces\n",colliderCount,obstacleCount,collisionCount,bounceCount);
+	sprintf(buffer, "Resolution : %d colliders, %d obstacles, %d collisions, %d bounces\n", colliderCount, obstacleCount, collisionCount, bounceCount);
 	ms_reportString += buffer;
 
 	ms_reportString += "C     E     F     P     L     T     O\n";
@@ -964,62 +958,62 @@ void CollisionWorld::updateReportString ( void )
 
 	float behaviorAverage = behaviorTotalTime / static_cast<float>(behaviorAlterCount);
 
-	sprintf(buffer,"Behavior             : %d, %1.3f total, %1.3f avg, %1.3f max\n",behaviorAlterCount,behaviorTotalTime * 1000.0f,behaviorAverage * 1000.0f,behaviorMaxTime * 1000.0f);
+	sprintf(buffer, "Behavior             : %d, %1.3f total, %1.3f avg, %1.3f max\n", behaviorAlterCount, behaviorTotalTime * 1000.0f, behaviorAverage * 1000.0f, behaviorMaxTime * 1000.0f);
 	ms_reportString += buffer;
 
 	float aiControllerAverage = aiControllerTotalTime / static_cast<float>(aiControllerAlterCount);
 
-	sprintf(buffer,"AiController         : %d, %1.3f total, %1.3f avg, %1.3f max\n",aiControllerAlterCount, aiControllerTotalTime * 1000.0f, aiControllerAverage * 1000.0f, aiControllerMaxTime * 1000.0f);
+	sprintf(buffer, "AiController         : %d, %1.3f total, %1.3f avg, %1.3f max\n", aiControllerAlterCount, aiControllerTotalTime * 1000.0f, aiControllerAverage * 1000.0f, aiControllerMaxTime * 1000.0f);
 	ms_reportString += buffer;
 
 	float canMoveAverage = canMoveTime / static_cast<float>(canMoveCount);
 
-	sprintf(buffer,"Can move             : %d, %1.3f total, %1.3f avg, %1.3f max\n",canMoveCount, canMoveTime * 1000.0f, canMoveAverage * 1000.0f, maxCanMoveTime * 1000.0f);
+	sprintf(buffer, "Can move             : %d, %1.3f total, %1.3f avg, %1.3f max\n", canMoveCount, canMoveTime * 1000.0f, canMoveAverage * 1000.0f, maxCanMoveTime * 1000.0f);
 	ms_reportString += buffer;
 
-	sprintf(buffer,"Extent updates       : %d\n",extentUpdateCount);
+	sprintf(buffer, "Extent updates       : %d\n", extentUpdateCount);
 	ms_reportString += buffer;
 
-	sprintf(buffer,"Path scrub time      : %1.3f msec\n",pathScrubTime * 1000.0f);
+	sprintf(buffer, "Path scrub time      : %1.3f msec\n", pathScrubTime * 1000.0f);
 	ms_reportString += buffer;
 
-	sprintf(buffer,"Pathfinding time     : %1.3f msec\n",pathfindingTime * 1000.0f);
+	sprintf(buffer, "Pathfinding time     : %1.3f msec\n", pathfindingTime * 1000.0f);
 	ms_reportString += buffer;
 
-	sprintf(buffer,"Path build time      : %1.3f msec\n",pathBuildTime * 1000.0f);
+	sprintf(buffer, "Path build time      : %1.3f msec\n", pathBuildTime * 1000.0f);
 	ms_reportString += buffer;
 
-	sprintf(buffer,"Path search time     : %1.3f msec\n",pathSearchTime * 1000.0f);
+	sprintf(buffer, "Path search time     : %1.3f msec\n", pathSearchTime * 1000.0f);
 	ms_reportString += buffer;
 
-	sprintf(buffer,"Path search alloc    : %d allocs\n",pathAllocations);
+	sprintf(buffer, "Path search alloc    : %d allocs\n", pathAllocations);
 	ms_reportString += buffer;
 
-	sprintf(buffer,"Footprint updates    : %d updates\n",footprintUpdateCounter);
+	sprintf(buffer, "Footprint updates    : %d updates\n", footprintUpdateCounter);
 	ms_reportString += buffer;
 
-	sprintf(buffer,"All collision        : %1.3f msec\n",totalCollisionTime * 1000.0f);
+	sprintf(buffer, "All collision        : %1.3f msec\n", totalCollisionTime * 1000.0f);
 	ms_reportString += buffer;
 
-	sprintf(buffer,"Floor update         : %1.3f msec\n",floorUpdateTime * 1000.0f);
+	sprintf(buffer, "Floor update         : %1.3f msec\n", floorUpdateTime * 1000.0f);
 	ms_reportString += buffer;
 
-	sprintf(buffer,"Footprint update     : %1.3f msec\n",footprintUpdateTime * 1000.0f);
+	sprintf(buffer, "Footprint update     : %1.3f msec\n", footprintUpdateTime * 1000.0f);
 	ms_reportString += buffer;
 
-	sprintf(buffer,"Collision detection  : %1.3f msec\n",collisionDetectTime * 1000.0f);
+	sprintf(buffer, "Collision detection  : %1.3f msec\n", collisionDetectTime * 1000.0f);
 	ms_reportString += buffer;
 
-	sprintf(buffer,"Collision resolution : %1.3f msec\n",resolveCollisionsTime * 1000.0f);
+	sprintf(buffer, "Collision resolution : %1.3f msec\n", resolveCollisionsTime * 1000.0f);
 	ms_reportString += buffer;
 
-	sprintf(buffer,"Terrain height       : %1.3f msec\n",terrainHeightTime * 1000.0f);
+	sprintf(buffer, "Terrain height       : %1.3f msec\n", terrainHeightTime * 1000.0f);
 	ms_reportString += buffer;
 
-	sprintf(buffer,"Get cell             : %1.3f msec\n",getCellTime * 1000.0f);
+	sprintf(buffer, "Get cell             : %1.3f msec\n", getCellTime * 1000.0f);
 	ms_reportString += buffer;
 
-	sprintf(buffer,"Post-update          : %1.3f msec\n",postUpdateTime * 1000.0f);
+	sprintf(buffer, "Post-update          : %1.3f msec\n", postUpdateTime * 1000.0f);
 	ms_reportString += buffer;
 
 	extentUpdateCount = 0;
@@ -1041,13 +1035,13 @@ void CollisionWorld::updateReportString ( void )
 
 // ----------------------------------------------------------------------
 
-void CollisionWorld::reportCallback( void )
+void CollisionWorld::reportCallback(void)
 {
 #if _DEBUG
 
-	if(!ConfigSharedCollision::getReportStatus()) return;
+	if (!ConfigSharedCollision::getReportStatus()) return;
 
-	DEBUG_REPORT_PRINT(true,(ms_reportString.c_str()));
+	DEBUG_REPORT_PRINT(true, (ms_reportString.c_str()));
 
 #endif
 }
@@ -1074,15 +1068,15 @@ void CollisionWorld::setFarWarpWarningCallback(WarpWarningCallback callback)
 
 // ----------------------------------------------------------------------
 
-void CollisionWorld::addObject ( Object * object )
+void CollisionWorld::addObject(Object * object)
 {
-	if(object == nullptr) return;
+	if (object == nullptr) return;
 
 	CollisionProperty * collision = object->getCollisionProperty();
 
-	if((collision == nullptr) || collision->getDisableCollisionWorldAddRemove()) return;
+	if ((collision == nullptr) || collision->getDisableCollisionWorldAddRemove()) return;
 
-	if(collision->isInCollisionWorld()) return;
+	if (collision->isInCollisionWorld()) return;
 
 	// ----------
 
@@ -1091,7 +1085,7 @@ void CollisionWorld::addObject ( Object * object )
 	SpatialDatabase::Query query = collision->getSpatialDatabaseStorageType();
 	bool added = false;
 
-	if(collision->isMobile())
+	if (collision->isMobile())
 	{
 		added = ms_database->addObject(query, object);
 	}
@@ -1099,12 +1093,12 @@ void CollisionWorld::addObject ( Object * object )
 	{
 		Floor * pFloor = collision->getFloor();
 
-		if(pFloor && !pFloor->isCellFloor())
+		if (pFloor && !pFloor->isCellFloor())
 		{
 			added = ms_database->addFloor(pFloor);
 		}
 
-		if(collision->getExtent_l())
+		if (collision->getExtent_l())
 		{
 			if (dynamic_cast<DoorObject const * const>(object) != 0)
 			{
@@ -1121,15 +1115,15 @@ void CollisionWorld::addObject ( Object * object )
 		environmentChanged(MultiShape(collision->getBoundingSphere_w()));
 	}
 
-	if(added)
+	if (added)
 	{
 		char const * name = object->getObjectTemplateName();
 
-		if(name == nullptr)
+		if (name == nullptr)
 		{
 			Appearance const * appearance = object->getAppearance();
 
-			if(appearance)
+			if (appearance)
 			{
 				name = appearance->getAppearanceTemplateName();
 			}
@@ -1138,43 +1132,43 @@ void CollisionWorld::addObject ( Object * object )
 		int index = 0;
 		switch (query)
 		{
-			case SpatialDatabase::Q_Static:
-				index = 1;
-				break;
-			case SpatialDatabase::Q_Dynamic:
-				index = 2;
-				break;
-			case SpatialDatabase::Q_Barriers:
-				index = 3;
-				break;
-			case SpatialDatabase::Q_Doors:
-				index = 4;
-				break;
-			default:
-				break;
+		case SpatialDatabase::Q_Static:
+			index = 1;
+			break;
+		case SpatialDatabase::Q_Dynamic:
+			index = 2;
+			break;
+		case SpatialDatabase::Q_Barriers:
+			index = 3;
+			break;
+		case SpatialDatabase::Q_Doors:
+			index = 4;
+			break;
+		default:
+			break;
 		}
 
-		DEBUG_REPORT_LOG(ConfigSharedCollision::getReportChanges(),("Added object %s to collision world [%s] at (%f,%f,%f)\n",name, ms_sptatialDatabaseNames[index], object->getPosition_w().x,object->getPosition_w().y,object->getPosition_w().z));
+		DEBUG_REPORT_LOG(ConfigSharedCollision::getReportChanges(), ("Added object %s to collision world [%s] at (%f,%f,%f)\n", name, ms_sptatialDatabaseNames[index], object->getPosition_w().x, object->getPosition_w().y, object->getPosition_w().z));
 	}
 }
 
 // ----------
 
-void CollisionWorld::removeObject ( Object * object )
+void CollisionWorld::removeObject(Object * object)
 {
-	if(object == nullptr) return;
+	if (object == nullptr) return;
 
 	CollisionProperty * collision = object->getCollisionProperty();
 
-	if((collision == nullptr) || collision->getDisableCollisionWorldAddRemove()) return;
+	if ((collision == nullptr) || collision->getDisableCollisionWorldAddRemove()) return;
 
-	if(!collision->isInCollisionWorld()) return;
+	if (!collision->isInCollisionWorld()) return;
 
 	// ----------
 
 	bool removed = false;
 
-	if(collision->isMobile())
+	if (collision->isMobile())
 	{
 		removed = ms_database->removeObject(SpatialDatabase::Q_Dynamic, object);
 	}
@@ -1182,12 +1176,12 @@ void CollisionWorld::removeObject ( Object * object )
 	{
 		Floor * pFloor = collision->getFloor();
 
-		if(pFloor && !pFloor->isCellFloor())
+		if (pFloor && !pFloor->isCellFloor())
 		{
 			removed = ms_database->removeFloor(pFloor);
 		}
 
-		if(collision->getExtent_l())
+		if (collision->getExtent_l())
 		{
 			SpatialDatabase::Query query = SpatialDatabase::Q_Static;
 
@@ -1206,9 +1200,9 @@ void CollisionWorld::removeObject ( Object * object )
 		environmentChanged(MultiShape(collision->getBoundingSphere_w()));
 	}
 
-	if(removed)
+	if (removed)
 	{
-		DEBUG_REPORT_LOG(ConfigSharedCollision::getReportChanges(),("Removed object %s from collision world\n",object->getObjectTemplateName()));
+		DEBUG_REPORT_LOG(ConfigSharedCollision::getReportChanges(), ("Removed object %s from collision world\n", object->getObjectTemplateName()));
 	}
 
 	collision->removeFromCollisionWorld();
@@ -1216,19 +1210,19 @@ void CollisionWorld::removeObject ( Object * object )
 
 // ----------
 
-void CollisionWorld::moveObject (Object * object)
+void CollisionWorld::moveObject(Object * object)
 {
-	if(object == nullptr) return;
+	if (object == nullptr) return;
 
 	CollisionProperty * collision = object->getCollisionProperty();
 
-	if(collision == nullptr) return;
+	if (collision == nullptr) return;
 
-	if(!collision->isInCollisionWorld()) return;
+	if (!collision->isInCollisionWorld()) return;
 
 	// ----------
 
-	if(object->getTransform_o2w() == collision->getLastTransform_w())
+	if (object->getTransform_o2w() == collision->getLastTransform_w())
 	{
 		return;
 	}
@@ -1238,7 +1232,7 @@ void CollisionWorld::moveObject (Object * object)
 
 	IGNORE_RETURN(ms_database->moveObject(collision));
 
-	if(!collision->isMobile())
+	if (!collision->isMobile())
 	{
 		environmentChanged(MultiShape(collision->getBoundingSphere_w()));
 	}
@@ -1246,15 +1240,15 @@ void CollisionWorld::moveObject (Object * object)
 
 // ----------
 
-void CollisionWorld::cellChanged ( Object * object )
+void CollisionWorld::cellChanged(Object * object)
 {
-	if(object == nullptr) return;
+	if (object == nullptr) return;
 
 	CollisionProperty * collision = object->getCollisionProperty();
 
-	if(collision == nullptr) return;
+	if (collision == nullptr) return;
 
-	if(!collision->isInCollisionWorld()) return;
+	if (!collision->isInCollisionWorld()) return;
 
 	// ----------
 
@@ -1264,19 +1258,19 @@ void CollisionWorld::cellChanged ( Object * object )
 
 // ----------
 
-void CollisionWorld::appearanceChanged ( Object * object )
+void CollisionWorld::appearanceChanged(Object * object)
 {
-	if(object == nullptr) return;
+	if (object == nullptr) return;
 
 	CollisionProperty * collision = object->getCollisionProperty();
 
-	if(collision == nullptr) return;
+	if (collision == nullptr) return;
 
-	if(!collision->isInCollisionWorld()) return;
+	if (!collision->isInCollisionWorld()) return;
 
 	// ----------
 
-	if(!collision->isMobile())
+	if (!collision->isMobile())
 	{
 		IGNORE_RETURN(ms_database->moveObject(collision));
 
@@ -1288,27 +1282,27 @@ void CollisionWorld::appearanceChanged ( Object * object )
 // Something about the environment (terrain, static objects) has changed.
 // Wake up all collision properties in the changed area.
 
-void CollisionWorld::environmentChanged ( MultiShape const & shape )
+void CollisionWorld::environmentChanged(MultiShape const & shape)
 {
 	static ObjectVec mobs;
 
 	mobs.clear();
 
-	IGNORE_RETURN(ms_database->queryDynamics(shape,&mobs));
+	IGNORE_RETURN(ms_database->queryDynamics(shape, &mobs));
 
 	ObjectVec::size_type const count = mobs.size();
 
-	if(count > 500)
+	if (count > 500)
 	{
 		Vector c = shape.getCenter();
 		float x = shape.getExtentX() * 2.0f;
 		float y = shape.getExtentY() * 2.0f;
 		float z = shape.getExtentZ() * 2.0f;
 
-		WARNING(true,("CollisionWorld::environmentChanged - Changing environment wakes up over 500 AIs. This is probably bad. (%f,%f,%f), (%f,%f,%f)\n",c.x,c.y,c.z,x,y,z));
+		WARNING(true, ("CollisionWorld::environmentChanged - Changing environment wakes up over 500 AIs. This is probably bad. (%f,%f,%f), (%f,%f,%f)\n", c.x, c.y, c.z, x, y, z));
 	}
 
-	for(ObjectVec::size_type i = 0; i < count; i++)
+	for (ObjectVec::size_type i = 0; i < count; i++)
 	{
 		Object * mob = mobs[i];
 
@@ -1324,21 +1318,21 @@ void CollisionWorld::environmentChanged ( MultiShape const & shape )
 
 // ----------------------------------------------------------------------
 
-SpatialDatabase * CollisionWorld::getDatabase ( void )
+SpatialDatabase * CollisionWorld::getDatabase(void)
 {
 	return ms_database;
 }
 
 // ----------------------------------------------------------------------
 
-void CollisionWorld::objectWarped ( Object * object )
+void CollisionWorld::objectWarped(Object * object)
 {
-	if(object == nullptr) return;
+	if (object == nullptr) return;
 
 	CollisionProperty * collision = object->getCollisionProperty();
 
 	// object does not have a CollisionProperty
-	if(collision == nullptr) return;
+	if (collision == nullptr) return;
 
 	// object is not in CollisionWorld
 	if (!collision->isInCollisionWorld()) return;
@@ -1356,37 +1350,37 @@ void CollisionWorld::objectWarped ( Object * object )
 // range of the 2 objects before terrain LOS is done (only valid
 // if useTerrainLos is true)
 
-QueryInteractionResult CollisionWorld::queryInteraction ( CellProperty const * cellA, Vector const & pointA,
-                                                          CellProperty const * cellB, Vector const & pointB,
-                                                          Object const * ignoreObject,
-                                                          bool const useTerrainLos,
-                                                          bool const generateTerrainLos,
-                                                          float const terrainLosMinDistance,
-                                                          float const terrainLosMaxDistance,
-                                                          float & outHitTime, Object const * & outHitObject )
+QueryInteractionResult CollisionWorld::queryInteraction(CellProperty const * cellA, Vector const & pointA,
+	CellProperty const * cellB, Vector const & pointB,
+	Object const * ignoreObject,
+	bool const useTerrainLos,
+	bool const generateTerrainLos,
+	float const terrainLosMinDistance,
+	float const terrainLosMaxDistance,
+	float & outHitTime, Object const * & outHitObject)
 {
 	PROFILER_AUTO_BLOCK_DEFINE("CollisionWorld::queryInteraction");
-	Vector localB = CollisionUtils::transformToCell(cellB,pointB,cellA);
+	Vector localB = CollisionUtils::transformToCell(cellB, pointB, cellA);
 
-	Segment3d inSeg(pointA,localB);
+	Segment3d inSeg(pointA, localB);
 
 	// ----------
 	// Test portals first. If the query line hits a portal, we'll ignore any collision after that hit.
 
 	float hitPortalTime = REAL_MAX;
 
-	CellProperty const * nextCell = cellA->getDestinationCell(pointA,localB,hitPortalTime);
+	CellProperty const * nextCell = cellA->getDestinationCell(pointA, localB, hitPortalTime);
 
 	// ----------
 	// Test all extents first
 
 	BaseExtent const * cellExtent = cellA->getCollisionExtent();
 
-	if(cellExtent)
+	if (cellExtent)
 	{
 		Range hitRange = cellExtent->rangedIntersect(inSeg);
 
-		if(!hitRange.isEmpty() && (hitRange.getMin() < hitPortalTime))
+		if (!hitRange.isEmpty() && (hitRange.getMin() < hitPortalTime))
 		{
 			outHitTime = hitRange.getMin();
 			outHitObject = &cellA->getOwner();
@@ -1401,9 +1395,9 @@ QueryInteractionResult CollisionWorld::queryInteraction ( CellProperty const * c
 	Object const * hitObject;
 	float hitTime = 0.0f;
 
-	if(ms_database->queryInteraction(cellA,inSeg,ignoreObject,hitObject,hitTime))
+	if (ms_database->queryInteraction(cellA, inSeg, ignoreObject, hitObject, hitTime))
 	{
-		if(hitTime < hitPortalTime)
+		if (hitTime < hitPortalTime)
 		{
 			outHitTime = hitTime;
 			outHitObject = hitObject;
@@ -1419,7 +1413,7 @@ QueryInteractionResult CollisionWorld::queryInteraction ( CellProperty const * c
 	{
 		if ((inSeg.getLength() >= terrainLosMinDistance) && (inSeg.getLength() <= terrainLosMaxDistance))
 		{
-			if(cellA == CellProperty::getWorldCellProperty())
+			if (cellA == CellProperty::getWorldCellProperty())
 			{
 				PROFILER_AUTO_BLOCK_DEFINE("CollisionWorld::queryInteraction::Terrain");
 
@@ -1434,12 +1428,12 @@ QueryInteractionResult CollisionWorld::queryInteraction ( CellProperty const * c
 					if (generateTerrainLos)
 					{
 						// do terrain LOS check, generating any missing terrain between the 2 points
-						terrainCollide = terrain->collideForceChunkCreation(pointA,localB,info);
+						terrainCollide = terrain->collideForceChunkCreation(pointA, localB, info);
 					}
 					else
 					{
 						// do terrain LOS check, using only the generated terrain between the 2 points
-						terrainCollide = terrain->collide(pointA,localB,info);
+						terrainCollide = terrain->collide(pointA, localB, info);
 					}
 				}
 
@@ -1453,9 +1447,9 @@ QueryInteractionResult CollisionWorld::queryInteraction ( CellProperty const * c
 
 					Vector delta = localB - pointA;
 
-					float hitTime = Collision3d::ComponentAlong(hitDelta,delta);
+					float hitTime = Collision3d::ComponentAlong(hitDelta, delta);
 
-					if(hitTime < hitPortalTime)
+					if (hitTime < hitPortalTime)
 					{
 						outHitTime = hitTime;
 						outHitObject = nullptr;
@@ -1467,14 +1461,13 @@ QueryInteractionResult CollisionWorld::queryInteraction ( CellProperty const * c
 		}
 	}
 
-
 	// ----------
 	// If we did not hit a portal, the query ends in this cell.
 	// If this cell is not the goal cell, then the query fails.
 
-	if(nextCell == nullptr)
+	if (nextCell == nullptr)
 	{
-		if(cellA != cellB)
+		if (cellA != cellB)
 		{
 			outHitTime = 1.0f;
 			outHitObject = nullptr;
@@ -1496,19 +1489,19 @@ QueryInteractionResult CollisionWorld::queryInteraction ( CellProperty const * c
 
 		// Don't bother recursing if the segment we'd test in the next cell is tiny
 
-		if(clipPoint.magnitudeBetween(localB) <= 0.01f)
+		if (clipPoint.magnitudeBetween(localB) <= 0.01f)
 		{
 			return QIR_None;
 		}
 
-		Vector nextPoint = CollisionUtils::transformToCell(cellA,clipPoint,nextCell);
+		Vector nextPoint = CollisionUtils::transformToCell(cellA, clipPoint, nextCell);
 
 		// ----------
 		// infinite recursion sentinel
 
 		static int recursed = 0;
 
-		if(recursed >= 10)
+		if (recursed >= 10)
 		{
 			return QIR_None;
 		}
@@ -1518,16 +1511,16 @@ QueryInteractionResult CollisionWorld::queryInteraction ( CellProperty const * c
 		recursed++;
 
 		QueryInteractionResult recurseResult = queryInteraction(nextCell,
-		                                                        nextPoint,
-		                                                        cellB,
-		                                                        pointB,
-		                                                        ignoreObject,
-		                                                        useTerrainLos,
-		                                                        generateTerrainLos,
-		                                                        terrainLosMinDistance,
-		                                                        terrainLosMaxDistance,
-		                                                        outHitTime,
-		                                                        outHitObject);
+			nextPoint,
+			cellB,
+			pointB,
+			ignoreObject,
+			useTerrainLos,
+			generateTerrainLos,
+			terrainLosMinDistance,
+			terrainLosMaxDistance,
+			outHitTime,
+			outHitObject);
 
 		recursed--;
 
@@ -1540,61 +1533,60 @@ QueryInteractionResult CollisionWorld::queryInteraction ( CellProperty const * c
 
 		return recurseResult;
 	}
-
 }
 
 // ----------------------------------------------------------------------
 
-bool CollisionWorld::query( Line3d const & line, ObjectVec * outList )
+bool CollisionWorld::query(Line3d const & line, ObjectVec * outList)
 {
-	return ms_database->queryStatics(line,outList);
+	return ms_database->queryStatics(line, outList);
 }
 
 // ----------
 
-bool CollisionWorld::query( Sphere const & sphere, ObjectVec * outList )
+bool CollisionWorld::query(Sphere const & sphere, ObjectVec * outList)
 {
-	return ms_database->queryStatics(sphere,outList);
+	return ms_database->queryStatics(sphere, outList);
 }
 
 // ----------------------------------------------------------------------
 // Given startLoc and goalLoc in the same cell, determine if startLoc
 // can reach goalLoc
 
-CanMoveResult CollisionWorld::canMoveInCell ( Object const * object,
-											  CellProperty const * startCell,
-											  FloorLocator const & startLoc,
-											  Vector const & goalPos,
-											  bool checkY,
-											  bool checkFlora,
-											  bool checkFauna,
-											  FloorLocator & outLoc,
-											  int & outHitPortalId )
+CanMoveResult CollisionWorld::canMoveInCell(Object const * object,
+	CellProperty const * startCell,
+	FloorLocator const & startLoc,
+	Vector const & goalPos,
+	bool checkY,
+	bool checkFlora,
+	bool checkFauna,
+	FloorLocator & outLoc,
+	int & outHitPortalId)
 {
 	FloorLocator goalLoc;
 
-	if(checkY)
+	if (checkY)
 	{
-		makeLocator(startCell,goalPos,goalLoc);
+		makeLocator(startCell, goalPos, goalLoc);
 	}
 	else
 	{
-		goalLoc.setFloor( startCell->getFloor() );
-		goalLoc.setPosition_p( goalPos );
+		goalLoc.setFloor(startCell->getFloor());
+		goalLoc.setPosition_p(goalPos);
 	}
 
-	return canMoveInCell(object, startCell,startLoc,goalLoc,checkY,checkFlora,checkFauna,outLoc,outHitPortalId );
+	return canMoveInCell(object, startCell, startLoc, goalLoc, checkY, checkFlora, checkFauna, outLoc, outHitPortalId);
 }
 
-CanMoveResult CollisionWorld::canMoveInCell ( Object const * object,
-											  CellProperty const * startCell,
-											  FloorLocator const & startLoc,
-											  FloorLocator const & goalLoc,
-											  bool checkY,
-											  bool checkFlora,
-											  bool checkFauna,
-											  FloorLocator & outLoc,
-											  int & outHitPortalId )
+CanMoveResult CollisionWorld::canMoveInCell(Object const * object,
+	CellProperty const * startCell,
+	FloorLocator const & startLoc,
+	FloorLocator const & goalLoc,
+	bool checkY,
+	bool checkFlora,
+	bool checkFauna,
+	FloorLocator & outLoc,
+	int & outHitPortalId)
 {
 	// ----------
 	// Test collision extents
@@ -1602,13 +1594,13 @@ CanMoveResult CollisionWorld::canMoveInCell ( Object const * object,
 	Vector startPos = startLoc.getPosition_p();
 	Vector goalPos = goalLoc.getPosition_p();
 
-	Segment3d querySeg(startPos,goalPos);
+	Segment3d querySeg(startPos, goalPos);
 
-	if(startCell == CellProperty::getWorldCellProperty())
+	if (startCell == CellProperty::getWorldCellProperty())
 	{
 		float radius = startLoc.getRadius();
 
-		Sphere sphere(startPos + Vector(0.0f,radius,0.0f),radius);
+		Sphere sphere(startPos + Vector(0.0f, radius, 0.0f), radius);
 		Vector delta = goalPos - startPos;
 		float collisionTime = 0.0f;
 
@@ -1618,11 +1610,11 @@ CanMoveResult CollisionWorld::canMoveInCell ( Object const * object,
 			return CMR_HitObstacle;
 		}
 
-		if(ms_database->queryMaterial(startCell,sphere,delta,MT_Solid,checkFlora,checkFauna,object,collisionTime))
+		if (ms_database && ms_database->queryMaterial(startCell, sphere, delta, MT_Solid, checkFlora, checkFauna, object, collisionTime))
 		{
 			float epsilon = 0.05f / delta.magnitude();
 
-			if(collisionTime > -epsilon)
+			if (collisionTime > -epsilon)
 			{
 				return CMR_HitObstacle;
 			}
@@ -1640,23 +1632,23 @@ CanMoveResult CollisionWorld::canMoveInCell ( Object const * object,
 
 	bool hasOutLoc = false;
 
-	if(startCell == CellProperty::getWorldCellProperty())
+	if (startCell == CellProperty::getWorldCellProperty())
 	{
-		if(ms_database)
+		if (ms_database)
 		{
 			FloorVec floors;
 
-			IGNORE_RETURN(ms_database->queryFloors(startCell,querySeg,&floors));
+			IGNORE_RETURN(ms_database->queryFloors(startCell, querySeg, &floors));
 
-			for(uint i = 0; i < floors.size(); i++)
+			for (uint i = 0; i < floors.size(); i++)
 			{
 				Floor const * floor = floors[i];
 
-				CanMoveResult result = canMoveOnFloor(object,startLoc,floor,goalLoc,checkY,checkFlora,checkFauna,outLoc,outHitPortalId);
+				CanMoveResult result = canMoveOnFloor(object, startLoc, floor, goalLoc, checkY, checkFlora, checkFauna, outLoc, outHitPortalId);
 
-				if(result == CMR_MoveOK)
+				if (result == CMR_MoveOK)
 				{
-					if(outHitPortalId != -1)
+					if (outHitPortalId != -1)
 					{
 						hasOutLoc = true;
 					}
@@ -1674,13 +1666,13 @@ CanMoveResult CollisionWorld::canMoveInCell ( Object const * object,
 
 	Floor const * cellFloor = startCell->getFloor();
 
-	if(cellFloor)
+	if (cellFloor)
 	{
-		return canMoveOnFloor(object,startLoc,cellFloor,goalLoc,checkY,checkFlora,checkFauna,outLoc,outHitPortalId);
+		return canMoveOnFloor(object, startLoc, cellFloor, goalLoc, checkY, checkFlora, checkFauna, outLoc, outHitPortalId);
 	}
 	else
 	{
-		if(!hasOutLoc)	outLoc = goalLoc;
+		if (!hasOutLoc)	outLoc = goalLoc;
 
 		return CMR_MoveOK;
 	}
@@ -1688,33 +1680,33 @@ CanMoveResult CollisionWorld::canMoveInCell ( Object const * object,
 
 // ----------------------------------------------------------------------
 
-CanMoveResult CollisionWorld::canMove ( CellProperty const * startCell,
-                               Vector const & startPos,
-                               Vector const & goalPos,
-                               float moveRadius,
-                               bool checkY,
-							   bool checkFlora,
-							   bool checkFauna )
+CanMoveResult CollisionWorld::canMove(CellProperty const * startCell,
+	Vector const & startPos,
+	Vector const & goalPos,
+	float moveRadius,
+	bool checkY,
+	bool checkFlora,
+	bool checkFauna)
 {
 	canMoveCount++;
 
-	FloorLocator startLoc(startPos,moveRadius);
+	FloorLocator startLoc(startPos, moveRadius);
 
 	FloorLocator dummy;
 
-	return canMove( nullptr, startCell, startLoc, goalPos, checkY, checkFlora, checkFauna, dummy );
+	return canMove(nullptr, startCell, startLoc, goalPos, checkY, checkFlora, checkFauna, dummy);
 }
 
 // ----------
 
-CanMoveResult CollisionWorld::canMove ( Object const * object,
-                               Vector const & goalPos,
-                               float moveRadius,
-                               bool checkY,
-							   bool checkFlora,
-							   bool checkFauna )
+CanMoveResult CollisionWorld::canMove(Object const * object,
+	Vector const & goalPos,
+	float moveRadius,
+	bool checkY,
+	bool checkFlora,
+	bool checkFauna)
 {
-	if(object == nullptr)
+	if (object == nullptr)
 	{
 		return CMR_Error;
 	}
@@ -1722,19 +1714,19 @@ CanMoveResult CollisionWorld::canMove ( Object const * object,
 	{
 		CollisionProperty const * collision = object->getCollisionProperty();
 
-		if(collision)
+		if (collision)
 		{
 			Footprint const * foot = collision->getFootprint();
 
-			if(foot && foot->isObjectInSync())
+			if (foot && foot->isObjectInSync())
 			{
 				FloorLocator const * footLoc = foot->getAnyContact();
 
-				if(footLoc && footLoc->isAttached())
+				if (footLoc && footLoc->isAttached())
 				{
 					FloorLocator objectLoc = *footLoc;
 
-					objectLoc.setPosition_p( object->getPosition_p() );
+					objectLoc.setPosition_p(object->getPosition_p());
 
 					objectLoc.setRadius(moveRadius);
 
@@ -1742,31 +1734,31 @@ CanMoveResult CollisionWorld::canMove ( Object const * object,
 
 					FloorLocator dummy;
 
-					return canMove( object, startCell, objectLoc, goalPos, checkY, checkFlora, checkFauna, dummy );
+					return canMove(object, startCell, objectLoc, goalPos, checkY, checkFlora, checkFauna, dummy);
 				}
 			}
 		}
 	}
 
-	FloorLocator startLoc(object->getPosition_p(),moveRadius);
+	FloorLocator startLoc(object->getPosition_p(), moveRadius);
 
 	FloorLocator dummy;
 
-	return canMove( object, object->getParentCell(), startLoc, goalPos, checkY, checkFlora, checkFauna, dummy );
+	return canMove(object, object->getParentCell(), startLoc, goalPos, checkY, checkFlora, checkFauna, dummy);
 }
 
 // ----------------------------------------------------------------------
 
-CanMoveResult CollisionWorld::canMove ( Object const * object,
-										CellProperty const * startCell,
-										FloorLocator const & startLoc,
-										Vector const & goalPos,
-										bool checkY,
-										bool checkFlora,
-										bool checkFauna,
-										FloorLocator & endLoc )
+CanMoveResult CollisionWorld::canMove(Object const * object,
+	CellProperty const * startCell,
+	FloorLocator const & startLoc,
+	Vector const & goalPos,
+	bool checkY,
+	bool checkFlora,
+	bool checkFauna,
+	FloorLocator & endLoc)
 {
-	if(startCell == nullptr)
+	if (startCell == nullptr)
 	{
 		startCell = CellProperty::getWorldCellProperty();
 	}
@@ -1775,16 +1767,16 @@ CanMoveResult CollisionWorld::canMove ( Object const * object,
 
 	int hitPortalId = -1;
 
-	CanMoveResult cellResult = canMoveInCell(object,startCell,startLoc,goalPos,checkY,checkFlora,checkFauna,endLoc,hitPortalId);
+	CanMoveResult cellResult = canMoveInCell(object, startCell, startLoc, goalPos, checkY, checkFlora, checkFauna, endLoc, hitPortalId);
 
-	if(cellResult != CMR_MoveOK)
+	if (cellResult != CMR_MoveOK)
 	{
 		// We hit something in this cell
 
 		return cellResult;
 	}
 
-	if(hitPortalId == -1)
+	if (hitPortalId == -1)
 	{
 		// We made it to the goal without hitting a portal - the move
 		// succeeds
@@ -1797,21 +1789,21 @@ CanMoveResult CollisionWorld::canMove ( Object const * object,
 
 	Floor const * floor = endLoc.getFloor();
 
-	if(!floor)
+	if (!floor)
 	{
 		return CMR_Error;
 	}
 
 	Object const * owner = floor->getOwner();
 
-	if(!owner)
+	if (!owner)
 	{
 		return CMR_Error;
 	}
 
-	CellProperty * newCell = startCell->getDestinationCell(owner,hitPortalId);
+	CellProperty * newCell = startCell->getDestinationCell(owner, hitPortalId);
 
-	if(!newCell)
+	if (!newCell)
 	{
 		return CMR_Error;
 	}
@@ -1821,15 +1813,15 @@ CanMoveResult CollisionWorld::canMove ( Object const * object,
 
 	Vector hitPortalPos = endLoc.getPosition_p();
 
-	Vector newStartPos = CollisionUtils::transformToCell(startCell,hitPortalPos,newCell);
+	Vector newStartPos = CollisionUtils::transformToCell(startCell, hitPortalPos, newCell);
 
-	FloorLocator newStartLoc(newStartPos,startLoc.getRadius());
+	FloorLocator newStartLoc(newStartPos, startLoc.getRadius());
 
-	Vector newGoalPos = CollisionUtils::transformToCell(startCell,goalPos,newCell);
+	Vector newGoalPos = CollisionUtils::transformToCell(startCell, goalPos, newCell);
 
 	float dist2 = newStartPos.magnitudeBetweenSquared(newGoalPos);
 
-	if(dist2 < 0.0000000001f)
+	if (dist2 < 0.0000000001f)
 	{
 		return CMR_MoveOK;
 	}
@@ -1837,11 +1829,11 @@ CanMoveResult CollisionWorld::canMove ( Object const * object,
 	{
 		static int recursionCounter = 0;
 
-		if(recursionCounter == 10)
+		if (recursionCounter == 10)
 		{
 			Vector s = startLoc.getPosition_w();
 
-			WARNING_STRICT_FATAL(ConfigSharedCollision::getReportWarnings(),("CollisionWorld::canMove - infinite recursion detected (%f,%f,%f)",s.x,s.y,s.z));
+			WARNING_STRICT_FATAL(ConfigSharedCollision::getReportWarnings(), ("CollisionWorld::canMove - infinite recursion detected (%f,%f,%f)", s.x, s.y, s.z));
 
 			endLoc = FloorLocator::invalid;
 			return CMR_Error;
@@ -1849,7 +1841,7 @@ CanMoveResult CollisionWorld::canMove ( Object const * object,
 
 		recursionCounter++;
 
-		CanMoveResult result = canMove(object,newCell,newStartLoc,newGoalPos,checkY,checkFlora,checkFauna,endLoc);
+		CanMoveResult result = canMove(object, newCell, newStartLoc, newGoalPos, checkY, checkFlora, checkFauna, endLoc);
 
 		recursionCounter--;
 
@@ -1860,27 +1852,27 @@ CanMoveResult CollisionWorld::canMove ( Object const * object,
 // ----------
 // A nullptr goal cell means we don't care what cell we end up in as long as we make it to the goal
 
-CanMoveResult CollisionWorld::canMove ( Object const * object,
-										CellProperty const * startCell,
-										FloorLocator const & startLoc,
-										CellProperty const * goalCell,
-										FloorLocator const & goalLoc,
-										bool checkY,
-										bool checkFlora,
-										bool checkFauna )
+CanMoveResult CollisionWorld::canMove(Object const * object,
+	CellProperty const * startCell,
+	FloorLocator const & startLoc,
+	CellProperty const * goalCell,
+	FloorLocator const & goalLoc,
+	bool checkY,
+	bool checkFlora,
+	bool checkFauna)
 {
 	// ----------
 
-	if(startCell == nullptr)
+	if (startCell == nullptr)
 	{
 		startCell = CellProperty::getWorldCellProperty();
 	}
 
-	if(goalCell == nullptr)
+	if (goalCell == nullptr)
 	{
 		FloorLocator dummy;
 
-		return canMove(object,startCell,startLoc,goalLoc.getPosition_p(),checkY,checkFlora,checkFauna,dummy);
+		return canMove(object, startCell, startLoc, goalLoc.getPosition_p(), checkY, checkFlora, checkFauna, dummy);
 	}
 
 	// ----------
@@ -1888,14 +1880,14 @@ CanMoveResult CollisionWorld::canMove ( Object const * object,
 	int hitPortalId = -1;
 	FloorLocator endLoc;
 
-	if(startCell == goalCell)
+	if (startCell == goalCell)
 	{
 		// We're in the right cell. The move succeeds if it makes it to the goal
 		// without hitting a portal on the way there.
 
-		CanMoveResult cellResult = canMoveInCell(object,startCell,startLoc,goalLoc,checkY,checkFlora,checkFauna,endLoc,hitPortalId);
+		CanMoveResult cellResult = canMoveInCell(object, startCell, startLoc, goalLoc, checkY, checkFlora, checkFauna, endLoc, hitPortalId);
 
-		if((cellResult == CMR_MoveOK) && (hitPortalId != -1))
+		if ((cellResult == CMR_MoveOK) && (hitPortalId != -1))
 		{
 			return CMR_MissedGoal;
 		}
@@ -1912,18 +1904,18 @@ CanMoveResult CollisionWorld::canMove ( Object const * object,
 
 	Vector const & goalPos = goalLoc.getPosition_p();
 
-	Vector localGoalPos = CollisionUtils::transformToCell(goalCell,goalPos,startCell);
+	Vector localGoalPos = CollisionUtils::transformToCell(goalCell, goalPos, startCell);
 
-	CanMoveResult cellResult = canMoveInCell(object,startCell,startLoc,localGoalPos,checkY,checkFlora,checkFauna,endLoc,hitPortalId);
+	CanMoveResult cellResult = canMoveInCell(object, startCell, startLoc, localGoalPos, checkY, checkFlora, checkFauna, endLoc, hitPortalId);
 
-	if(cellResult != CMR_MoveOK)
+	if (cellResult != CMR_MoveOK)
 	{
 		// We hit something while trying to get out of this cell - the move fails.
 
 		return cellResult;
 	}
 
-	if(hitPortalId == -1)
+	if (hitPortalId == -1)
 	{
 		// We can move towards the goal from the current cell, but we don't exit the cell via a portal-adjacent
 		// floor edge and we're not in the right goal cell - we can never get to the goal cell,
@@ -1936,52 +1928,52 @@ CanMoveResult CollisionWorld::canMove ( Object const * object,
 
 	Floor const * floor = endLoc.getFloor();
 
-	if(!floor)
+	if (!floor)
 	{
 		return CMR_Error;
 	}
 
 	Object const * owner = floor->getOwner();
 
-	if(!owner)
+	if (!owner)
 	{
 		return CMR_Error;
 	}
 
-	CellProperty * newCell = startCell->getDestinationCell(owner,hitPortalId);
+	CellProperty * newCell = startCell->getDestinationCell(owner, hitPortalId);
 
-	if(!newCell)
+	if (!newCell)
 	{
 		return CMR_Error;
 	}
 
 	Vector hitPortalPos = endLoc.getPosition_p();
 
-	Vector newStartPos = CollisionUtils::transformToCell(startCell,hitPortalPos,newCell);
+	Vector newStartPos = CollisionUtils::transformToCell(startCell, hitPortalPos, newCell);
 
-	FloorLocator newStartLoc(newStartPos,startLoc.getRadius());
+	FloorLocator newStartLoc(newStartPos, startLoc.getRadius());
 
 	newStartLoc.setRadius(startLoc.getRadius());
 
-	return canMove(object,newCell,newStartLoc,goalCell,goalLoc,checkY,checkFlora,checkFauna);
+	return canMove(object, newCell, newStartLoc, goalCell, goalLoc, checkY, checkFlora, checkFauna);
 }
 
 // ----------------------------------------------------------------------
 
-CanMoveResult CollisionWorld::canMoveOnFloor ( Object const * object,
-											   FloorLocator const & startLoc,
-											   Floor const * floor,
-											   FloorLocator const & goalLoc,
-											   bool checkY,
-											   bool checkFlora,
-											   bool checkFauna,
-											   FloorLocator & outLoc,
-											   int & outHitPortalId )
+CanMoveResult CollisionWorld::canMoveOnFloor(Object const * object,
+	FloorLocator const & startLoc,
+	Floor const * floor,
+	FloorLocator const & goalLoc,
+	bool checkY,
+	bool checkFlora,
+	bool checkFauna,
+	FloorLocator & outLoc,
+	int & outHitPortalId)
 {
 	FloorMesh const * floorMesh = floor->getFloorMesh();
 
-	Vector const & startPos = startLoc.getPosition_p() + Vector(0.0f,startLoc.getOffset(),0.0f);
-	Vector const & goalPos = goalLoc.getPosition_p() + Vector(0.0f,goalLoc.getOffset(),0.0f);
+	Vector const & startPos = startLoc.getPosition_p() + Vector(0.0f, startLoc.getOffset(), 0.0f);
+	Vector const & goalPos = goalLoc.getPosition_p() + Vector(0.0f, goalLoc.getOffset(), 0.0f);
 
 	Vector localGoalPos = goalPos;
 
@@ -1991,25 +1983,25 @@ CanMoveResult CollisionWorld::canMoveOnFloor ( Object const * object,
 
 	delta.y = 0.0f;
 
-	if(!startLoc.isAttachedTo(floor))
+	if (!startLoc.isAttachedTo(floor))
 	{
 		// Starting location isn't on this floor, run the canMoveOnFloor version that does an
 		// attachment test instead
 
-		return canMoveOnFloor(object,startPos,radius,floor,goalLoc,checkY,checkFlora,checkFauna,outLoc,outHitPortalId);
+		return canMoveOnFloor(object, startPos, radius, floor, goalLoc, checkY, checkFlora, checkFauna, outLoc, outHitPortalId);
 	}
 
 	// ----------
 
 	FloorLocator result;
 
-	PathWalkResult walkResult = floor->canMove(startLoc,delta,-1,-1,result);
+	PathWalkResult walkResult = floor->canMove(startLoc, delta, -1, -1, result);
 
 	outLoc = result;
 
 	outHitPortalId = -1;
 
-	if((result.getTriId() >= 0) && (result.getEdgeId() >= 0))
+	if ((result.getTriId() >= 0) && (result.getEdgeId() >= 0))
 	{
 		int const exitTriId = result.getTriId();
 
@@ -2018,7 +2010,6 @@ CanMoveResult CollisionWorld::canMoveOnFloor ( Object const * object,
 		outHitPortalId = exitTri.getPortalId(result.getEdgeId());
 	}
 
-
 	// ----------
 	// The move has clipped to a crossable edge of the floor.
 	// Check to see if the move re-enters this floor, and if it does
@@ -2026,15 +2017,15 @@ CanMoveResult CollisionWorld::canMoveOnFloor ( Object const * object,
 
 	// Since this is a recursive call, it'll catch an arbitrary number of reentrances
 
-	if(walkResult == PWR_HitPortalEdge)
+	if (walkResult == PWR_HitPortalEdge)
 	{
 		// Exiting the mesh along a portal-adjacent edge is always a successful move.
 
 		return CMR_MoveOK;
 	}
-	else if(walkResult == PWR_ExitedMesh)
+	else if (walkResult == PWR_ExitedMesh)
 	{
-		if(floor->isCellFloor())
+		if (floor->isCellFloor())
 		{
 			// Trying to walk off a ledge inside a cell isn't allowed at the moment.
 
@@ -2045,9 +2036,9 @@ CanMoveResult CollisionWorld::canMoveOnFloor ( Object const * object,
 
 		FloorLocator reenterLoc;
 
-		if(floor->findEntryPoint(result,reenterDelta,false,reenterLoc))
+		if (floor->findEntryPoint(result, reenterDelta, false, reenterLoc))
 		{
-			if(reenterLoc.getTime() > 0.0f)
+			if (reenterLoc.getTime() > 0.0f)
 			{
 				Vector reenterPos = reenterLoc.getPosition_p();
 
@@ -2057,18 +2048,18 @@ CanMoveResult CollisionWorld::canMoveOnFloor ( Object const * object,
 
 				static int recursionCounter = 0;
 
-				if(recursionCounter == 5)
+				if (recursionCounter == 5)
 				{
 					Vector s = startLoc.getPosition_w();
 
-					WARNING_STRICT_FATAL(ConfigSharedCollision::getReportWarnings(),("CollisionWorld::canMoveOnFloor - infinite recursion detected (%f,%f,%f)",s.x,s.y,s.z));
+					WARNING_STRICT_FATAL(ConfigSharedCollision::getReportWarnings(), ("CollisionWorld::canMoveOnFloor - infinite recursion detected (%f,%f,%f)", s.x, s.y, s.z));
 					outLoc = FloorLocator::invalid;
 					outHitPortalId = -1;
 					return CMR_Error;
 				}
 
 				recursionCounter++;
-				CanMoveResult floorResult = canMoveOnFloor(object,reenterLoc,floor,goalLoc,checkY,checkFlora,checkFauna,outLoc,outHitPortalId);
+				CanMoveResult floorResult = canMoveOnFloor(object, reenterLoc, floor, goalLoc, checkY, checkFlora, checkFauna, outLoc, outHitPortalId);
 
 				recursionCounter--;
 
@@ -2081,11 +2072,11 @@ CanMoveResult CollisionWorld::canMoveOnFloor ( Object const * object,
 
 		return CMR_MoveOK;
 	}
-	else if(walkResult == PWR_WalkOk)
+	else if (walkResult == PWR_WalkOk)
 	{
-		if((floor->getCell() == CellProperty::getWorldCellProperty()))
+		if ((floor->getCell() == CellProperty::getWorldCellProperty()))
 		{
-			if(result.isFallthrough())
+			if (result.isFallthrough())
 			{
 				return CMR_MoveOK;
 			}
@@ -2099,7 +2090,7 @@ CanMoveResult CollisionWorld::canMoveOnFloor ( Object const * object,
 			// The start and goal locs are on this floor - if the move didn't get to
 			// the goal tri, the move failed.
 
-			if(checkY && (goalLoc.getId() != -1) && (result.getId() != goalLoc.getId()))
+			if (checkY && (goalLoc.getId() != -1) && (result.getId() != goalLoc.getId()))
 			{
 				return CMR_MissedGoal;
 			}
@@ -2110,11 +2101,11 @@ CanMoveResult CollisionWorld::canMoveOnFloor ( Object const * object,
 		}
 		else
 		{
-			if(result.getFloor() == floor)
+			if (result.getFloor() == floor)
 			{
 				Vector resultPos = result.getPosition_p();
 
-				if((resultPos.y - goalPos.y) > 3.0f)
+				if ((resultPos.y - goalPos.y) > 3.0f)
 				{
 					return CMR_MissedGoal;
 				}
@@ -2137,29 +2128,29 @@ CanMoveResult CollisionWorld::canMoveOnFloor ( Object const * object,
 
 // ----------------------------------------------------------------------
 
-CanMoveResult CollisionWorld::canMoveOnFloor ( Object const * object,
-											   Vector const & inPos,
-											   float moveRadius,
-											   Floor const * floor,
-											   FloorLocator const & inGoalLoc,
-											   bool checkY,
-											   bool checkFlora,
-											   bool checkFauna,
-											   FloorLocator & outLoc,
-											   int & outHitPortalId )
+CanMoveResult CollisionWorld::canMoveOnFloor(Object const * object,
+	Vector const & inPos,
+	float moveRadius,
+	Floor const * floor,
+	FloorLocator const & inGoalLoc,
+	bool checkY,
+	bool checkFlora,
+	bool checkFauna,
+	FloorLocator & outLoc,
+	int & outHitPortalId)
 {
 	bool hasStartLoc = false;
 	FloorLocator startLoc;
 
 	FloorLocator goalLoc = inGoalLoc;
 
-	if(goalLoc.getFloor() != floor)
+	if (goalLoc.getFloor() != floor)
 	{
-		Vector goalPos_p = goalLoc.getPosition_p( floor->getCell() );
+		Vector goalPos_p = goalLoc.getPosition_p(floor->getCell());
 
 		FloorLocator tempLoc;
 
-		if(floor->dropTest( goalPos_p, tempLoc ))
+		if (floor->dropTest(goalPos_p, tempLoc))
 		{
 			goalLoc = tempLoc;
 		}
@@ -2172,7 +2163,7 @@ CanMoveResult CollisionWorld::canMoveOnFloor ( Object const * object,
 	// If the start point is already above the floor, the floor move will begin
 	// at the floor point under the start point
 
-	if(floor->dropTest(inPos,startLoc))
+	if (floor->dropTest(inPos, startLoc))
 	{
 		Vector startPos_w = startLoc.getPosition_w();
 
@@ -2187,13 +2178,13 @@ CanMoveResult CollisionWorld::canMoveOnFloor ( Object const * object,
 
 		Vector delta = goalLoc.getPosition_p() - inPos;
 
-		FloorLocator tempLoc(inPos,moveRadius);
+		FloorLocator tempLoc(inPos, moveRadius);
 
-		if(floor->findEntryPoint(tempLoc,delta,false,startLoc))
+		if (floor->findEntryPoint(tempLoc, delta, false, startLoc))
 		{
 			bool edgeCrossable = floor->getFloorMesh()->getFloorTri(startLoc.getId()).isCrossable(startLoc.getEdgeId());
 
-			if(!edgeCrossable)
+			if (!edgeCrossable)
 			{
 				return CMR_HitFloorEdge;
 			}
@@ -2205,11 +2196,11 @@ CanMoveResult CollisionWorld::canMoveOnFloor ( Object const * object,
 	// ----------
 	// If we found a starting point for the floor move, run the floor move
 
-	if(hasStartLoc)
+	if (hasStartLoc)
 	{
 		startLoc.setRadius(moveRadius);
 
-		return canMoveOnFloor(object,startLoc,floor,goalLoc,checkY,checkFlora,checkFauna,outLoc,outHitPortalId);
+		return canMoveOnFloor(object, startLoc, floor, goalLoc, checkY, checkFlora, checkFauna, outLoc, outHitPortalId);
 	}
 	else
 	{
@@ -2224,7 +2215,7 @@ CanMoveResult CollisionWorld::canMoveOnFloor ( Object const * object,
 // do a temporal collision test against each of them, return true if
 // the creature hit one and a pointer to the first one hit.
 
-bool CollisionWorld::findFirstObstacle ( Object const * creature, float creatureRadius, Vector const & testPos, Vector const & goalPos, bool testStatics, bool testCreatures, Object const * & outObject )
+bool CollisionWorld::findFirstObstacle(Object const * creature, float creatureRadius, Vector const & testPos, Vector const & goalPos, bool testStatics, bool testCreatures, Object const * & outObject)
 {
 	UNREF(goalPos);
 	UNREF(creatureRadius);
@@ -2233,21 +2224,21 @@ bool CollisionWorld::findFirstObstacle ( Object const * creature, float creature
 
 	Vector delta = testPos - startPos;
 
-	if(creature == nullptr) return false;
+	if (creature == nullptr) return false;
 
 	CollisionProperty const * collision = creature->getCollisionProperty();
 
-	if(collision == nullptr) return false;
+	if (collision == nullptr) return false;
 
 	BaseExtent const * baseExtent = collision->getExtent_p();
 
 	SimpleExtent const * simpleExtent = dynamic_cast<SimpleExtent const *>(baseExtent);
 
-	if(simpleExtent == nullptr) return false;
+	if (simpleExtent == nullptr) return false;
 
 	MultiShape const & shape = simpleExtent->getShape();
 
-	if(shape.getShapeType() != MultiShape::MST_Sphere) return false;
+	if (shape.getShapeType() != MultiShape::MST_Sphere) return false;
 
 	// ----------
 	// Test collision extents
@@ -2262,24 +2253,24 @@ bool CollisionWorld::findFirstObstacle ( Object const * creature, float creature
 	statics.clear();
 	creatures.clear();
 
-	if(ms_database->queryObjects(creature->getParentCell(), shape, delta, (testStatics ? &statics : nullptr), (testCreatures ? &creatures : nullptr)))
+	if (ms_database->queryObjects(creature->getParentCell(), shape, delta, (testStatics ? &statics : nullptr), (testCreatures ? &creatures : nullptr)))
 	{
 		ObjectVector::size_type const nStatics = statics.size();
 		ObjectVector::size_type i;
 
-		for(i = 0; i < nStatics; i++)
+		for (i = 0; i < nStatics; i++)
 		{
 			Object const * obstacle = statics[i];
 
-			if(obstacle == nullptr) continue;
+			if (obstacle == nullptr) continue;
 
-			if(obstacle == creature) continue;
+			if (obstacle == creature) continue;
 
-			if(Distance2d::Distance2(obstacle->getPosition_w(),goalPos) < 0.000001) continue;
+			if (Distance2d::Distance2(obstacle->getPosition_w(), goalPos) < 0.000001) continue;
 
-			DetectResult result = CollisionDetect::testObjects(creature,delta,obstacle);
+			DetectResult result = CollisionDetect::testObjects(creature, delta, obstacle);
 
-			if(result.collided && (result.collisionTime < minResult.collisionTime))
+			if (result.collided && (result.collisionTime < minResult.collisionTime))
 			{
 				minResult = result;
 				minObject = obstacle;
@@ -2288,19 +2279,19 @@ bool CollisionWorld::findFirstObstacle ( Object const * creature, float creature
 
 		ObjectVector::size_type const nCreatures = creatures.size();
 
-		for(i = 0; i < nCreatures; i++)
+		for (i = 0; i < nCreatures; i++)
 		{
 			Object const * obstacle = creatures[i];
 
-			if(obstacle == nullptr) continue;
+			if (obstacle == nullptr) continue;
 
-			if(obstacle == creature) continue;
+			if (obstacle == creature) continue;
 
-			if(Distance2d::Distance2(obstacle->getPosition_w(),goalPos) < 0.000001) continue;
+			if (Distance2d::Distance2(obstacle->getPosition_w(), goalPos) < 0.000001) continue;
 
-			DetectResult result = CollisionDetect::testObjects(creature,delta,obstacle);
+			DetectResult result = CollisionDetect::testObjects(creature, delta, obstacle);
 
-			if(result.collided && (result.collisionTime < minResult.collisionTime))
+			if (result.collided && (result.collisionTime < minResult.collisionTime))
 			{
 				minResult = result;
 				minObject = obstacle;
@@ -2323,7 +2314,7 @@ bool CollisionWorld::findFirstObstacle ( Object const * creature, float creature
 			// We collided with a floor.  Check if we collide with the floor sooner than anything else.
 			bool useFloorCollision;
 
-			if(!minResult.collided) // don't return a floor as a collision object if nothing was collided with earlier
+			if (!minResult.collided) // don't return a floor as a collision object if nothing was collided with earlier
 			{
 				useFloorCollision = false;
 			}
@@ -2332,7 +2323,7 @@ bool CollisionWorld::findFirstObstacle ( Object const * creature, float creature
 				// Figure out if collided object is closer than floor.   Collided object looks like its
 				// extent is assumed to be in the same parent space as creature.  That might be a bug.
 				float const minResultMagnitudeSquared = (creature->getPosition_p() - minResult.extentB->getCenter()).magnitudeSquared();
-				float const floorMagnitudeSquared     = (creature->getPosition_w() - collisionLocation_w).magnitudeSquared();
+				float const floorMagnitudeSquared = (creature->getPosition_w() - collisionLocation_w).magnitudeSquared();
 
 				useFloorCollision = floorMagnitudeSquared < minResultMagnitudeSquared;
 			}
@@ -2346,7 +2337,7 @@ bool CollisionWorld::findFirstObstacle ( Object const * creature, float creature
 		}
 	}
 
-	if(minResult.collided)
+	if (minResult.collided)
 	{
 		outObject = minObject;
 
@@ -2360,7 +2351,7 @@ bool CollisionWorld::findFirstObstacle ( Object const * creature, float creature
 
 // ----------------------------------------------------------------------
 
-bool CollisionWorld::findFirstObstacle ( Sphere const & sphere, Vector const & goalPos, bool testStatics, bool testCreatures, Object const * & outObject )
+bool CollisionWorld::findFirstObstacle(Sphere const & sphere, Vector const & goalPos, bool testStatics, bool testCreatures, Object const * & outObject)
 {
 	Vector startPos = sphere.getCenter();
 
@@ -2380,20 +2371,20 @@ bool CollisionWorld::findFirstObstacle ( Sphere const & sphere, Vector const & g
 	statics.clear();
 	creatures.clear();
 
-	if(ms_database->queryObjects(CellProperty::getWorldCellProperty(), shape, delta, (testStatics ? &statics : nullptr), (testCreatures ? &creatures : nullptr)))
+	if (ms_database->queryObjects(CellProperty::getWorldCellProperty(), shape, delta, (testStatics ? &statics : nullptr), (testCreatures ? &creatures : nullptr)))
 	{
 		size_t const nStatics = statics.size();
 		size_t i;
 
-		for(i = 0; i < nStatics; i++)
+		for (i = 0; i < nStatics; i++)
 		{
 			Object const * obstacle = statics[i];
 
-			if(obstacle == nullptr) continue;
+			if (obstacle == nullptr) continue;
 
-			DetectResult result = CollisionDetect::testSphereObject(sphere,delta,obstacle);
+			DetectResult result = CollisionDetect::testSphereObject(sphere, delta, obstacle);
 
-			if(result.collided && (result.collisionTime < minResult.collisionTime))
+			if (result.collided && (result.collisionTime < minResult.collisionTime))
 			{
 				minResult = result;
 				minObject = obstacle;
@@ -2402,17 +2393,17 @@ bool CollisionWorld::findFirstObstacle ( Sphere const & sphere, Vector const & g
 
 		size_t const nCreatures = creatures.size();
 
-		for(i = 0; i < nCreatures; i++)
+		for (i = 0; i < nCreatures; i++)
 		{
 			Object const * obstacle = creatures[i];
 
-			if(obstacle == nullptr) continue;
+			if (obstacle == nullptr) continue;
 
-			if(Distance2d::Distance2(obstacle->getPosition_w(),goalPos) < 0.000001) continue;
+			if (Distance2d::Distance2(obstacle->getPosition_w(), goalPos) < 0.000001) continue;
 
-			DetectResult result = CollisionDetect::testSphereObject(sphere,delta,obstacle);
+			DetectResult result = CollisionDetect::testSphereObject(sphere, delta, obstacle);
 
-			if(result.collided && (result.collisionTime < minResult.collisionTime))
+			if (result.collided && (result.collisionTime < minResult.collisionTime))
 			{
 				minResult = result;
 				minObject = obstacle;
@@ -2420,7 +2411,7 @@ bool CollisionWorld::findFirstObstacle ( Sphere const & sphere, Vector const & g
 		}
 	}
 
-	if(minResult.collided)
+	if (minResult.collided)
 	{
 		outObject = minObject;
 
@@ -2435,14 +2426,14 @@ bool CollisionWorld::findFirstObstacle ( Sphere const & sphere, Vector const & g
 // ----------------------------------------------------------------------
 // Compute the radius of the largest sphere that can fit around the given point without hitting anything
 
-bool CollisionWorld::calcBubble ( CellProperty const * cell, Vector const & point_p, float maxDistance, float & outRadius )
+bool CollisionWorld::calcBubble(CellProperty const * cell, Vector const & point_p, float maxDistance, float & outRadius)
 {
-	return calcBubble(cell,point_p,nullptr,maxDistance,outRadius);
+	return calcBubble(cell, point_p, nullptr, maxDistance, outRadius);
 }
 
-bool CollisionWorld::calcBubble ( CellProperty const * cell, Vector const & point_p, Object const * ignoreObject, float maxDistance, float & outRadius )
+bool CollisionWorld::calcBubble(CellProperty const * cell, Vector const & point_p, Object const * ignoreObject, float maxDistance, float & outRadius)
 {
-	Vector point_w = CollisionUtils::transformToWorld(cell,point_p);
+	Vector point_w = CollisionUtils::transformToWorld(cell, point_p);
 
 	float minDistance = maxDistance;
 
@@ -2451,17 +2442,17 @@ bool CollisionWorld::calcBubble ( CellProperty const * cell, Vector const & poin
 
 		results.clear();
 
-		if(ms_database->queryCloseStatics(point_w,minDistance,&results))
+		if (ms_database->queryCloseStatics(point_w, minDistance, &results))
 		{
 			ObjectVec::size_type const count = results.size();
 
-			for(ObjectVec::size_type i = 0; i < count; i++)
+			for (ObjectVec::size_type i = 0; i < count; i++)
 			{
 				Object const * object = results[i];
 
 				NOT_NULL(object);
 
-				if(object == ignoreObject) continue;
+				if (object == ignoreObject) continue;
 
 				CollisionProperty const * collision = object->getCollisionProperty();
 
@@ -2469,9 +2460,9 @@ bool CollisionWorld::calcBubble ( CellProperty const * cell, Vector const & poin
 
 				float distance = REAL_MAX;
 
-				if(collision->getDistance(point_w,minDistance,distance))
+				if (collision->getDistance(point_w, minDistance, distance))
 				{
-					if(distance < minDistance) minDistance = distance;
+					if (distance < minDistance) minDistance = distance;
 				}
 			}
 		}
@@ -2484,25 +2475,25 @@ bool CollisionWorld::calcBubble ( CellProperty const * cell, Vector const & poin
 
 		results.clear();
 
-		if(ms_database->queryCloseFloors(point_w,minDistance,&results))
+		if (ms_database->queryCloseFloors(point_w, minDistance, &results))
 		{
 			FloorVec::size_type const count = results.size();
 
-			for(FloorVec::size_type i = 0; i < count; i++)
+			for (FloorVec::size_type i = 0; i < count; i++)
 			{
 				Floor const * floor = results[i];
 
 				NOT_NULL(floor);
 
-				if(floor->getOwner() == ignoreObject) continue;
+				if (floor->getOwner() == ignoreObject) continue;
 
 				float distance = REAL_MAX;
 
 				FloorEdgeId dummyId;
 
-				if(floor->getDistanceUncrossable2d(point_w,minDistance,distance,dummyId))
+				if (floor->getDistanceUncrossable2d(point_w, minDistance, distance, dummyId))
 				{
-					if(distance < minDistance) minDistance = distance;
+					if (distance < minDistance) minDistance = distance;
 				}
 			}
 		}
@@ -2510,26 +2501,26 @@ bool CollisionWorld::calcBubble ( CellProperty const * cell, Vector const & poin
 
 	// ----------
 
-	if(cell && (cell != CellProperty::getWorldCellProperty()))
+	if (cell && (cell != CellProperty::getWorldCellProperty()))
 	{
 		Floor const * floor = cell->getFloor();
 
-		if(floor)
+		if (floor)
 		{
 			float distance = REAL_MAX;
 
 			FloorEdgeId dummyId;
 
-			if(floor->getDistanceUncrossable2d(point_w,minDistance,distance,dummyId))
+			if (floor->getDistanceUncrossable2d(point_w, minDistance, distance, dummyId))
 			{
-				if(distance < minDistance) minDistance = distance;
+				if (distance < minDistance) minDistance = distance;
 			}
 		}
 	}
 
 	// ----------
 
-	if(minDistance < maxDistance)
+	if (minDistance < maxDistance)
 	{
 		outRadius = minDistance;
 		return true;
@@ -2542,27 +2533,27 @@ bool CollisionWorld::calcBubble ( CellProperty const * cell, Vector const & poin
 
 // ----------------------------------------------------------------------
 
-bool CollisionWorld::testClear ( CellProperty const * cell, Sphere const & sphere_p )
+bool CollisionWorld::testClear(CellProperty const * cell, Sphere const & sphere_p)
 {
-	bool hitStatic = ms_database->queryMaterial(cell,sphere_p,MT_Solid);
+	bool hitStatic = ms_database->queryMaterial(cell, sphere_p, MT_Solid);
 
-	if(hitStatic) return false;
+	if (hitStatic) return false;
 
 	return true;
 }
 
 // ----------------------------------------------------------------------
 
-bool CollisionWorld::canMoveInSpace( Object const * object, Sphere const & sphere, Vector const & goalPos )
+bool CollisionWorld::canMoveInSpace(Object const * object, Sphere const & sphere, Vector const & goalPos)
 {
 	Vector delta = goalPos - sphere.getCenter();
 	float collisionTime = 0.0f;
 
-	if(ms_database->queryMaterial(CellProperty::getWorldCellProperty(),sphere,delta,MT_Solid,false,false,object,collisionTime))
+	if (ms_database->queryMaterial(CellProperty::getWorldCellProperty(), sphere, delta, MT_Solid, false, false, object, collisionTime))
 	{
 		float epsilon = 0.05f / delta.magnitude();
 
-		if(collisionTime > -epsilon)
+		if (collisionTime > -epsilon)
 		{
 			return false;
 		}
@@ -2573,20 +2564,20 @@ bool CollisionWorld::canMoveInSpace( Object const * object, Sphere const & spher
 
 // ----------------------------------------------------------------------
 
-bool CollisionWorld::findLocators ( CellProperty const * cell, Vector const & point, std::vector<FloorLocator> & outLocs )
+bool CollisionWorld::findLocators(CellProperty const * cell, Vector const & point, std::vector<FloorLocator> & outLocs)
 {
 	outLocs.clear();
 
 	// ----------
 	// If the point is in a cell, its only locator is the one on the cell floor
 
-	if(cell && (cell != CellProperty::getWorldCellProperty()))
+	if (cell && (cell != CellProperty::getWorldCellProperty()))
 	{
 		Floor const * floor = cell->getFloor();
 
 		FloorLocator tempLoc;
 
-		if( floor && floor->dropTest(point,tempLoc) )
+		if (floor && floor->dropTest(point, tempLoc))
 		{
 			outLocs.push_back(tempLoc);
 
@@ -2602,21 +2593,21 @@ bool CollisionWorld::findLocators ( CellProperty const * cell, Vector const & po
 		// ----------
 		// Otherwise we need to find all object floors and see if the point falls on any of them
 
-		if(ms_database)
+		if (ms_database)
 		{
 			FloorVec floors;
 
-			Segment3d querySeg( point, point - (Vector::unitY * 10.0f) );
+			Segment3d querySeg(point, point - (Vector::unitY * 10.0f));
 
-			IGNORE_RETURN(ms_database->queryFloors(cell,querySeg,&floors));
+			IGNORE_RETURN(ms_database->queryFloors(cell, querySeg, &floors));
 
-			for(uint i = 0; i < floors.size(); i++)
+			for (uint i = 0; i < floors.size(); i++)
 			{
 				Floor * floor = floors[i];
 
 				FloorLocator tempLoc;
 
-				if(floor && floor->dropTest(point,tempLoc))
+				if (floor && floor->dropTest(point, tempLoc))
 				{
 					outLocs.push_back(tempLoc);
 				}
@@ -2631,29 +2622,29 @@ bool CollisionWorld::findLocators ( CellProperty const * cell, Vector const & po
 // This should work OK, but if the point drops onto multiple floors it will make a locator for only
 // the topmost floor
 
-bool CollisionWorld::makeLocator ( CellProperty const * cell, Vector const & point, FloorLocator & outLoc )
+bool CollisionWorld::makeLocator(CellProperty const * cell, Vector const & point, FloorLocator & outLoc)
 {
 	static FloorLocatorVec tempLocs;
 
 	tempLocs.clear();
 
-	if(findLocators(cell,point,tempLocs))
+	if (findLocators(cell, point, tempLocs))
 	{
 		float maxHeight = -REAL_MAX;
 		int highestLoc = -1;
 
-		for(uint i = 0; i < tempLocs.size(); i++)
+		for (uint i = 0; i < tempLocs.size(); i++)
 		{
 			float height = tempLocs[i].getPosition_p().y;
 
-			if(height > maxHeight)
+			if (height > maxHeight)
 			{
 				maxHeight = height;
 				highestLoc = static_cast<int>(i);
 			}
 		}
 
-		if(highestLoc != -1)
+		if (highestLoc != -1)
 		{
 			outLoc = tempLocs[static_cast<uint>(highestLoc)];
 			return true;
@@ -2673,12 +2664,12 @@ bool CollisionWorld::makeLocator ( CellProperty const * cell, Vector const & poi
 
 // ----------------------------------------------------------------------
 
-bool CollisionWorld::isServerSide ( void )
+bool CollisionWorld::isServerSide(void)
 {
 	return ms_serverSide;
 }
 
-void CollisionWorld::setServerSide ( bool serverSide )
+void CollisionWorld::setServerSide(bool serverSide)
 {
 	ms_serverSide = serverSide;
 }
@@ -2711,22 +2702,22 @@ Floor const * CollisionWorld::getFloorStandingOn(Object const & object)
 	float resultDistanceBelowObject = 0.0f;
 	float dropTestHeight = std::numeric_limits<float>::min();
 
-	for(MultiListConstDataIterator<FloorContactShape> it(floorList); it; ++it)
+	for (MultiListConstDataIterator<FloorContactShape> it(floorList); it; ++it)
 	{
 		FloorContactShape const * const contact = *it;
 		FloorLocator const & loc = contact->m_contact;
 		Floor const * const f = loc.getFloor();
 
 		FloorLocator tempLoc;
-		if(f->dropTest(object.getPosition_p(),tempLoc))
+		if (f->dropTest(object.getPosition_p(), tempLoc))
 		{
 			//if we might be standing on it (it's below us), give 1/2 meter buffer space
-			if((tempLoc.getPosition_w().y - 0.5) <= objectHeight)
+			if ((tempLoc.getPosition_w().y - 0.5) <= objectHeight)
 			{
 				float const distanceBelowObject = std::max(0.0f, objectHeight - tempLoc.getPosition_w().y);
 
 				//if none found yet, use it
-				if(!resultFloor)
+				if (!resultFloor)
 				{
 					resultFloor = f;
 					resultDistanceBelowObject = distanceBelowObject;
@@ -2735,7 +2726,7 @@ Floor const * CollisionWorld::getFloorStandingOn(Object const & object)
 				else
 				{
 					//if it's less below us than the current, use it
-					if(distanceBelowObject < resultDistanceBelowObject)
+					if (distanceBelowObject < resultDistanceBelowObject)
 					{
 						resultFloor = f;
 						resultDistanceBelowObject = distanceBelowObject;
@@ -2753,7 +2744,7 @@ Floor const * CollisionWorld::getFloorStandingOn(Object const & object)
 		if (terrainObject != nullptr)
 		{
 			CellProperty const * const parentCell = object.getParentCell();
-			
+
 			if (parentCell->isWorldCell())
 			{
 				float terrainHeight;

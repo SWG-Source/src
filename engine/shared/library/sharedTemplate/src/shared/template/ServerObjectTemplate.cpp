@@ -20,27 +20,27 @@
 #include <algorithm>
 #include <cstdio>
 
-
-
 /**
  * Class constructor.
  */
 ServerObjectTemplate::ServerObjectTemplate(const std::string & filename)
 //@BEGIN TFD INIT
 	: TpfTemplate(filename)
-	,m_scriptsLoaded(false)
-	,m_scriptsAppend(false)
-	,m_visibleFlagsLoaded(false)
-	,m_visibleFlagsAppend(false)
-	,m_deleteFlagsLoaded(false)
-	,m_deleteFlagsAppend(false)
-	,m_moveFlagsLoaded(false)
-	,m_moveFlagsAppend(false)
-	,m_contentsLoaded(false)
-	,m_contentsAppend(false)
-	,m_xpPointsLoaded(false)
-	,m_xpPointsAppend(false)
-//@END TFD INIT
+	, m_scriptsLoaded(false)
+	, m_scriptsAppend(false)
+	, m_visibleFlagsLoaded(false)
+	, m_visibleFlagsAppend(false)
+	, m_deleteFlagsLoaded(false)
+	, m_deleteFlagsAppend(false)
+	, m_moveFlagsLoaded(false)
+	, m_moveFlagsAppend(false)
+	, m_contentsLoaded(false)
+	, m_contentsAppend(false)
+	, m_xpPointsLoaded(false)
+	, m_xpPointsAppend(false)
+	, m_templateVersion(0)
+	, m_versionOk(false)
+	//@END TFD INIT
 {
 }	// ServerObjectTemplate::ServerObjectTemplate
 
@@ -49,7 +49,7 @@ ServerObjectTemplate::ServerObjectTemplate(const std::string & filename)
  */
 ServerObjectTemplate::~ServerObjectTemplate()
 {
-//@BEGIN TFD CLEANUP
+	//@BEGIN TFD CLEANUP
 	{
 		std::vector<StringParam *>::iterator iter;
 		for (iter = m_scripts.begin(); iter != m_scripts.end(); ++iter)
@@ -104,7 +104,7 @@ ServerObjectTemplate::~ServerObjectTemplate()
 		}
 		m_xpPoints.clear();
 	}
-//@END TFD CLEANUP
+	//@END TFD CLEANUP
 }	// ServerObjectTemplate::~ServerObjectTemplate
 
 /**
@@ -500,7 +500,6 @@ bool ServerObjectTemplate::isAppend(const char *name) const
 		return TpfTemplate::isAppend(name);
 }	// ServerObjectTemplate::isAppend
 
-
 int ServerObjectTemplate::getListLength(const char *name) const
 {
 	if (strcmp(name, "scripts") == 0)
@@ -543,8 +542,8 @@ int ServerObjectTemplate::getListLength(const char *name) const
  */
 void ServerObjectTemplate::load(Iff &file)
 {
-static const int MAX_NAME_SIZE = 256;
-char paramName[MAX_NAME_SIZE];
+	static const int MAX_NAME_SIZE = 256;
+	char paramName[MAX_NAME_SIZE];
 
 	if (file.getCurrentName() != ServerObjectTemplate_tag)
 	{
@@ -554,7 +553,7 @@ char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 	m_templateVersion = file.getCurrentName();
-	if (m_templateVersion == TAG(D,E,R,V))
+	if (m_templateVersion == TAG(D, E, R, V))
 	{
 		file.enterForm();
 		file.enterChunk();
@@ -574,7 +573,7 @@ char paramName[MAX_NAME_SIZE];
 		file.exitForm();
 		m_templateVersion = file.getCurrentName();
 	}
-	if (getHighestTemplateVersion() != TAG(0,0,1,1))
+	if (getHighestTemplateVersion() != TAG(0, 0, 1, 1))
 	{
 		if (DataLint::isEnabled())
 			DEBUG_WARNING(true, ("template %s version out of date", file.getFileName()));
@@ -750,18 +749,18 @@ char paramName[MAX_NAME_SIZE];
  */
 void ServerObjectTemplate::save(Iff &file)
 {
-int count;
+	int count;
 
 	file.insertForm(ServerObjectTemplate_tag);
 	if (m_baseTemplateName.size() != 0)
 	{
-		file.insertForm(TAG(D,E,R,V));
+		file.insertForm(TAG(D, E, R, V));
 		file.insertChunk(TAG(X, X, X, X));
 		file.insertChunkData(m_baseTemplateName.c_str(), m_baseTemplateName.size() + 1);
 		file.exitChunk();
 		file.exitForm();
 	}
-	file.insertForm(TAG(0,0,1,1));
+	file.insertForm(TAG(0, 0, 1, 1));
 	file.allowNonlinearFunctions();
 
 	int paramCount = 0;
@@ -784,7 +783,7 @@ int count;
 	count = m_scripts.size();
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < count; ++i)
-		m_scripts[i]->saveToIff(file);}
+		m_scripts[i]->saveToIff(file); }
 	file.exitChunk();
 	++paramCount;
 	// save objvars
@@ -811,7 +810,7 @@ int count;
 	count = m_visibleFlags.size();
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < count; ++i)
-		m_visibleFlags[i]->saveToIff(file);}
+		m_visibleFlags[i]->saveToIff(file); }
 	file.exitChunk();
 	++paramCount;
 	if (!m_deleteFlagsLoaded)
@@ -826,7 +825,7 @@ int count;
 	count = m_deleteFlags.size();
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < count; ++i)
-		m_deleteFlags[i]->saveToIff(file);}
+		m_deleteFlags[i]->saveToIff(file); }
 	file.exitChunk();
 	++paramCount;
 	if (!m_moveFlagsLoaded)
@@ -841,7 +840,7 @@ int count;
 	count = m_moveFlags.size();
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < count; ++i)
-		m_moveFlags[i]->saveToIff(file);}
+		m_moveFlags[i]->saveToIff(file); }
 	file.exitChunk();
 	++paramCount;
 	// save invulnerable
@@ -868,7 +867,7 @@ int count;
 	count = 3;
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < 3; ++i)
-		m_updateRanges[i].saveToIff(file);}
+		m_updateRanges[i].saveToIff(file); }
 	file.exitChunk();
 	++paramCount;
 	if (!m_contentsLoaded)
@@ -883,7 +882,7 @@ int count;
 	count = m_contents.size();
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < count; ++i)
-		m_contents[i]->saveToIff(file);}
+		m_contents[i]->saveToIff(file); }
 	file.exitChunk();
 	++paramCount;
 	if (!m_xpPointsLoaded)
@@ -898,7 +897,7 @@ int count;
 	count = m_xpPoints.size();
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < count; ++i)
-		m_xpPoints[i]->saveToIff(file);}
+		m_xpPoints[i]->saveToIff(file); }
 	file.exitChunk();
 	++paramCount;
 	// save persistByDefault
@@ -924,7 +923,6 @@ int count;
 	TpfTemplate::save(file);
 	file.exitForm();
 }	// ServerObjectTemplate::save
-
 
 //=============================================================================
 // class ServerObjectTemplate::_AttribMod
@@ -1113,7 +1111,6 @@ bool ServerObjectTemplate::_AttribMod::isAppend(const char *name) const
 	return TpfTemplate::isAppend(name);
 }	// ServerObjectTemplate::_AttribMod::isAppend
 
-
 int ServerObjectTemplate::_AttribMod::getListLength(const char *name) const
 {
 	return TpfTemplate::getListLength(name);
@@ -1127,8 +1124,8 @@ int ServerObjectTemplate::_AttribMod::getListLength(const char *name) const
  */
 void ServerObjectTemplate::_AttribMod::load(Iff &file)
 {
-static const int MAX_NAME_SIZE = 256;
-char paramName[MAX_NAME_SIZE];
+	static const int MAX_NAME_SIZE = 256;
+	char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 
@@ -1164,7 +1161,7 @@ char paramName[MAX_NAME_SIZE];
  */
 void ServerObjectTemplate::_AttribMod::save(Iff &file)
 {
-int count;
+	int count;
 
 	file.insertForm(_AttribMod_tag);
 
@@ -1210,7 +1207,6 @@ int count;
 	file.exitForm(true);
 	UNREF(count);
 }	// ServerObjectTemplate::_AttribMod::save
-
 
 //=============================================================================
 // class ServerObjectTemplate::_Contents
@@ -1371,7 +1367,6 @@ bool ServerObjectTemplate::_Contents::isAppend(const char *name) const
 	return TpfTemplate::isAppend(name);
 }	// ServerObjectTemplate::_Contents::isAppend
 
-
 int ServerObjectTemplate::_Contents::getListLength(const char *name) const
 {
 	return TpfTemplate::getListLength(name);
@@ -1385,8 +1380,8 @@ int ServerObjectTemplate::_Contents::getListLength(const char *name) const
  */
 void ServerObjectTemplate::_Contents::load(Iff &file)
 {
-static const int MAX_NAME_SIZE = 256;
-char paramName[MAX_NAME_SIZE];
+	static const int MAX_NAME_SIZE = 256;
+	char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 
@@ -1418,7 +1413,7 @@ char paramName[MAX_NAME_SIZE];
  */
 void ServerObjectTemplate::_Contents::save(Iff &file)
 {
-int count;
+	int count;
 
 	file.insertForm(_Contents_tag);
 
@@ -1452,7 +1447,6 @@ int count;
 	file.exitForm(true);
 	UNREF(count);
 }	// ServerObjectTemplate::_Contents::save
-
 
 //=============================================================================
 // class ServerObjectTemplate::_MentalStateMod
@@ -1641,7 +1635,6 @@ bool ServerObjectTemplate::_MentalStateMod::isAppend(const char *name) const
 	return TpfTemplate::isAppend(name);
 }	// ServerObjectTemplate::_MentalStateMod::isAppend
 
-
 int ServerObjectTemplate::_MentalStateMod::getListLength(const char *name) const
 {
 	return TpfTemplate::getListLength(name);
@@ -1655,8 +1648,8 @@ int ServerObjectTemplate::_MentalStateMod::getListLength(const char *name) const
  */
 void ServerObjectTemplate::_MentalStateMod::load(Iff &file)
 {
-static const int MAX_NAME_SIZE = 256;
-char paramName[MAX_NAME_SIZE];
+	static const int MAX_NAME_SIZE = 256;
+	char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 
@@ -1692,7 +1685,7 @@ char paramName[MAX_NAME_SIZE];
  */
 void ServerObjectTemplate::_MentalStateMod::save(Iff &file)
 {
-int count;
+	int count;
 
 	file.insertForm(_MentalStateMod_tag);
 
@@ -1738,7 +1731,6 @@ int count;
 	file.exitForm(true);
 	UNREF(count);
 }	// ServerObjectTemplate::_MentalStateMod::save
-
 
 //=============================================================================
 // class ServerObjectTemplate::_Xp
@@ -1897,7 +1889,6 @@ bool ServerObjectTemplate::_Xp::isAppend(const char *name) const
 	return TpfTemplate::isAppend(name);
 }	// ServerObjectTemplate::_Xp::isAppend
 
-
 int ServerObjectTemplate::_Xp::getListLength(const char *name) const
 {
 	return TpfTemplate::getListLength(name);
@@ -1911,8 +1902,8 @@ int ServerObjectTemplate::_Xp::getListLength(const char *name) const
  */
 void ServerObjectTemplate::_Xp::load(Iff &file)
 {
-static const int MAX_NAME_SIZE = 256;
-char paramName[MAX_NAME_SIZE];
+	static const int MAX_NAME_SIZE = 256;
+	char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 
@@ -1944,7 +1935,7 @@ char paramName[MAX_NAME_SIZE];
  */
 void ServerObjectTemplate::_Xp::save(Iff &file)
 {
-int count;
+	int count;
 
 	file.insertForm(_Xp_tag);
 

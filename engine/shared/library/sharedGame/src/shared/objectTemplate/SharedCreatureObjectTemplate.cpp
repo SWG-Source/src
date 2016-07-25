@@ -29,7 +29,7 @@
 
 const std::string DefaultString("");
 const StringId DefaultStringId("", 0);
-const Vector DefaultVector(0,0,0);
+const Vector DefaultVector(0, 0, 0);
 const TriggerVolumeData DefaultTriggerVolumeData;
 
 bool SharedCreatureObjectTemplate::ms_allowDefaultTemplateParams = true;
@@ -42,8 +42,9 @@ typedef ::RangedIntCustomizationVariable GlobalRangedIntCustomizationVariableTyp
 SharedCreatureObjectTemplate::SharedCreatureObjectTemplate(const std::string & filename)
 //@BEGIN TFD INIT
 	: SharedTangibleObjectTemplate(filename)
-	,m_versionOk(true)
-//@END TFD INIT
+	, m_versionOk(true)
+	, m_templateVersion(0)
+	//@END TFD INIT
 {
 	m_movementTable = 0;
 }	// SharedCreatureObjectTemplate::SharedCreatureObjectTemplate
@@ -53,8 +54,8 @@ SharedCreatureObjectTemplate::SharedCreatureObjectTemplate(const std::string & f
  */
 SharedCreatureObjectTemplate::~SharedCreatureObjectTemplate()
 {
-//@BEGIN TFD CLEANUP
-//@END TFD CLEANUP
+	//@BEGIN TFD CLEANUP
+	//@END TFD CLEANUP
 	delete m_movementTable;
 	m_movementTable = 0;
 }	// SharedCreatureObjectTemplate::~SharedCreatureObjectTemplate
@@ -122,7 +123,7 @@ void SharedCreatureObjectTemplate::postLoad()
 
 void SharedCreatureObjectTemplate::createCustomizationDataPropertyAsNeeded(Object &object, bool /* forceCreation */) const
 {
-	//-- Properties cannot be added while an object is in the world.  Some callers may be in the world, 
+	//-- Properties cannot be added while an object is in the world.  Some callers may be in the world,
 	//   so temporarily remove the object from the world if necessary.
 	bool shouldBeInWorld = object.isInWorld();
 	if (shouldBeInWorld)
@@ -147,18 +148,18 @@ void SharedCreatureObjectTemplate::createCustomizationDataPropertyAsNeeded(Objec
 		AssetCustomizationManager::addCustomizationVariablesForAsset(TemporaryCrcString(getAppearanceFilename().c_str(), true), *customizationData, skipSharedOwnerVariables);
 
 		//-- set up mappings for any variables which need dependent mappings
- 		int numVariableMappings = getCustomizationVariableMappingCount();
+		int numVariableMappings = getCustomizationVariableMappingCount();
 		for (int i = 0; i < numVariableMappings; ++i)
 		{
 			CustomizationVariableMapping localVariableMapping;
- 			getCustomizationVariableMapping(localVariableMapping, i);
+			getCustomizationVariableMapping(localVariableMapping, i);
 			GlobalRangedIntCustomizationVariableType *source = safe_cast<GlobalRangedIntCustomizationVariableType *>(customizationData->findVariable(localVariableMapping.sourceVariable));
- 			if(source)
- 			{
- 				source->setDependentVariable(localVariableMapping.dependentVariable);
- 			} 			
- 		}
-		
+			if (source)
+			{
+				source->setDependentVariable(localVariableMapping.dependentVariable);
+			}
+		}
+
 		//-- release local reference to the CustomizationData instance
 		customizationData->release();
 	}
@@ -169,8 +170,6 @@ void SharedCreatureObjectTemplate::createCustomizationDataPropertyAsNeeded(Objec
 //@BEGIN TFD
 SharedCreatureObjectTemplate::Gender SharedCreatureObjectTemplate::getGender() const
 {
-
-
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -198,8 +197,6 @@ SharedCreatureObjectTemplate::Gender SharedCreatureObjectTemplate::getGender() c
 
 SharedCreatureObjectTemplate::Niche SharedCreatureObjectTemplate::getNiche() const
 {
-
-
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -227,8 +224,6 @@ SharedCreatureObjectTemplate::Niche SharedCreatureObjectTemplate::getNiche() con
 
 SharedCreatureObjectTemplate::Species SharedCreatureObjectTemplate::getSpecies() const
 {
-
-
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -256,8 +251,6 @@ SharedCreatureObjectTemplate::Species SharedCreatureObjectTemplate::getSpecies()
 
 SharedCreatureObjectTemplate::Race SharedCreatureObjectTemplate::getRace() const
 {
-
-
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -726,8 +719,6 @@ float SharedCreatureObjectTemplate::getTurnRateMax(MovementTypes index) const
 
 const std::string & SharedCreatureObjectTemplate::getAnimationMapFilename() const
 {
-
-
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -755,8 +746,6 @@ const std::string & SharedCreatureObjectTemplate::getAnimationMapFilename() cons
 
 float SharedCreatureObjectTemplate::getSlopeModAngle() const
 {
-
-
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -806,8 +795,6 @@ float SharedCreatureObjectTemplate::getSlopeModAngle() const
 
 float SharedCreatureObjectTemplate::getSlopeModAngleMin() const
 {
-
-
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -857,8 +844,6 @@ float SharedCreatureObjectTemplate::getSlopeModAngleMin() const
 
 float SharedCreatureObjectTemplate::getSlopeModAngleMax() const
 {
-
-
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -908,8 +893,6 @@ float SharedCreatureObjectTemplate::getSlopeModAngleMax() const
 
 float SharedCreatureObjectTemplate::getSlopeModPercent() const
 {
-
-
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -959,8 +942,6 @@ float SharedCreatureObjectTemplate::getSlopeModPercent() const
 
 float SharedCreatureObjectTemplate::getSlopeModPercentMin() const
 {
-
-
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1010,8 +991,6 @@ float SharedCreatureObjectTemplate::getSlopeModPercentMin() const
 
 float SharedCreatureObjectTemplate::getSlopeModPercentMax() const
 {
-
-
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1061,8 +1040,6 @@ float SharedCreatureObjectTemplate::getSlopeModPercentMax() const
 
 float SharedCreatureObjectTemplate::getWaterModPercent() const
 {
-
-
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1112,8 +1089,6 @@ float SharedCreatureObjectTemplate::getWaterModPercent() const
 
 float SharedCreatureObjectTemplate::getWaterModPercentMin() const
 {
-
-
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1163,8 +1138,6 @@ float SharedCreatureObjectTemplate::getWaterModPercentMin() const
 
 float SharedCreatureObjectTemplate::getWaterModPercentMax() const
 {
-
-
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1214,8 +1187,6 @@ float SharedCreatureObjectTemplate::getWaterModPercentMax() const
 
 float SharedCreatureObjectTemplate::getStepHeight() const
 {
-
-
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1265,8 +1236,6 @@ float SharedCreatureObjectTemplate::getStepHeight() const
 
 float SharedCreatureObjectTemplate::getStepHeightMin() const
 {
-
-
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1316,8 +1285,6 @@ float SharedCreatureObjectTemplate::getStepHeightMin() const
 
 float SharedCreatureObjectTemplate::getStepHeightMax() const
 {
-
-
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1367,8 +1334,6 @@ float SharedCreatureObjectTemplate::getStepHeightMax() const
 
 float SharedCreatureObjectTemplate::getCollisionHeight() const
 {
-
-
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1418,8 +1383,6 @@ float SharedCreatureObjectTemplate::getCollisionHeight() const
 
 float SharedCreatureObjectTemplate::getCollisionHeightMin() const
 {
-
-
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1469,8 +1432,6 @@ float SharedCreatureObjectTemplate::getCollisionHeightMin() const
 
 float SharedCreatureObjectTemplate::getCollisionHeightMax() const
 {
-
-
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1520,8 +1481,6 @@ float SharedCreatureObjectTemplate::getCollisionHeightMax() const
 
 float SharedCreatureObjectTemplate::getCollisionRadius() const
 {
-
-
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1571,8 +1530,6 @@ float SharedCreatureObjectTemplate::getCollisionRadius() const
 
 float SharedCreatureObjectTemplate::getCollisionRadiusMin() const
 {
-
-
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1622,8 +1579,6 @@ float SharedCreatureObjectTemplate::getCollisionRadiusMin() const
 
 float SharedCreatureObjectTemplate::getCollisionRadiusMax() const
 {
-
-
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1673,8 +1628,6 @@ float SharedCreatureObjectTemplate::getCollisionRadiusMax() const
 
 const std::string & SharedCreatureObjectTemplate::getMovementDatatable() const
 {
-
-
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1729,8 +1682,6 @@ bool SharedCreatureObjectTemplate::getPostureAlignToTerrain(Postures index) cons
 
 float SharedCreatureObjectTemplate::getSwimHeight() const
 {
-
-
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1780,8 +1731,6 @@ float SharedCreatureObjectTemplate::getSwimHeight() const
 
 float SharedCreatureObjectTemplate::getSwimHeightMin() const
 {
-
-
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1831,8 +1780,6 @@ float SharedCreatureObjectTemplate::getSwimHeightMin() const
 
 float SharedCreatureObjectTemplate::getSwimHeightMax() const
 {
-
-
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1882,8 +1829,6 @@ float SharedCreatureObjectTemplate::getSwimHeightMax() const
 
 float SharedCreatureObjectTemplate::getWarpTolerance() const
 {
-
-
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1933,8 +1878,6 @@ float SharedCreatureObjectTemplate::getWarpTolerance() const
 
 float SharedCreatureObjectTemplate::getWarpToleranceMin() const
 {
-
-
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1984,8 +1927,6 @@ float SharedCreatureObjectTemplate::getWarpToleranceMin() const
 
 float SharedCreatureObjectTemplate::getWarpToleranceMax() const
 {
-
-
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -2035,8 +1976,6 @@ float SharedCreatureObjectTemplate::getWarpToleranceMax() const
 
 float SharedCreatureObjectTemplate::getCollisionOffsetX() const
 {
-
-
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -2086,8 +2025,6 @@ float SharedCreatureObjectTemplate::getCollisionOffsetX() const
 
 float SharedCreatureObjectTemplate::getCollisionOffsetXMin() const
 {
-
-
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -2137,8 +2074,6 @@ float SharedCreatureObjectTemplate::getCollisionOffsetXMin() const
 
 float SharedCreatureObjectTemplate::getCollisionOffsetXMax() const
 {
-
-
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -2188,8 +2123,6 @@ float SharedCreatureObjectTemplate::getCollisionOffsetXMax() const
 
 float SharedCreatureObjectTemplate::getCollisionOffsetZ() const
 {
-
-
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -2239,8 +2172,6 @@ float SharedCreatureObjectTemplate::getCollisionOffsetZ() const
 
 float SharedCreatureObjectTemplate::getCollisionOffsetZMin() const
 {
-
-
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -2290,8 +2221,6 @@ float SharedCreatureObjectTemplate::getCollisionOffsetZMin() const
 
 float SharedCreatureObjectTemplate::getCollisionOffsetZMax() const
 {
-
-
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -2341,8 +2270,6 @@ float SharedCreatureObjectTemplate::getCollisionOffsetZMax() const
 
 float SharedCreatureObjectTemplate::getCollisionLength() const
 {
-
-
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -2392,8 +2319,6 @@ float SharedCreatureObjectTemplate::getCollisionLength() const
 
 float SharedCreatureObjectTemplate::getCollisionLengthMin() const
 {
-
-
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -2443,8 +2368,6 @@ float SharedCreatureObjectTemplate::getCollisionLengthMin() const
 
 float SharedCreatureObjectTemplate::getCollisionLengthMax() const
 {
-
-
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -2494,8 +2417,6 @@ float SharedCreatureObjectTemplate::getCollisionLengthMax() const
 
 float SharedCreatureObjectTemplate::getCameraHeight() const
 {
-
-
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -2545,8 +2466,6 @@ float SharedCreatureObjectTemplate::getCameraHeight() const
 
 float SharedCreatureObjectTemplate::getCameraHeightMin() const
 {
-
-
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -2596,8 +2515,6 @@ float SharedCreatureObjectTemplate::getCameraHeightMin() const
 
 float SharedCreatureObjectTemplate::getCameraHeightMax() const
 {
-
-
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -2645,7 +2562,6 @@ float SharedCreatureObjectTemplate::getCameraHeightMax() const
 	return value;
 }	// SharedCreatureObjectTemplate::getCameraHeightMax
 
-
 /**
  * Loads the template data from an iff file. We should already be in the form
  * for this template.
@@ -2654,8 +2570,8 @@ float SharedCreatureObjectTemplate::getCameraHeightMax() const
  */
 void SharedCreatureObjectTemplate::load(Iff &file)
 {
-static const int MAX_NAME_SIZE = 256;
-char paramName[MAX_NAME_SIZE];
+	static const int MAX_NAME_SIZE = 256;
+	char paramName[MAX_NAME_SIZE];
 
 	if (file.getCurrentName() != SharedCreatureObjectTemplate_tag)
 	{
@@ -2665,7 +2581,7 @@ char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 	m_templateVersion = file.getCurrentName();
-	if (m_templateVersion == TAG(D,E,R,V))
+	if (m_templateVersion == TAG(D, E, R, V))
 	{
 		file.enterForm();
 		file.enterChunk();
@@ -2685,10 +2601,8 @@ char paramName[MAX_NAME_SIZE];
 		file.exitForm();
 		m_templateVersion = file.getCurrentName();
 	}
-	if (getHighestTemplateVersion() != TAG(0,0,1,3))
+	if (getHighestTemplateVersion() != TAG(0, 0, 1, 3))
 	{
-		
-			
 		m_versionOk = false;
 	}
 
@@ -2803,4 +2717,3 @@ char paramName[MAX_NAME_SIZE];
 }	// SharedCreatureObjectTemplate::load
 
 //@END TFD
-

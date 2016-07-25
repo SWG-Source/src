@@ -32,11 +32,10 @@
 
 const std::string DefaultString("");
 const StringId DefaultStringId("", 0);
-const Vector DefaultVector(0,0,0);
+const Vector DefaultVector(0, 0, 0);
 const TriggerVolumeData DefaultTriggerVolumeData;
 
 bool SharedTangibleObjectTemplate::ms_allowDefaultTemplateParams = true;
-
 
 /**
  * Class constructor.
@@ -44,21 +43,22 @@ bool SharedTangibleObjectTemplate::ms_allowDefaultTemplateParams = true;
 SharedTangibleObjectTemplate::SharedTangibleObjectTemplate(const std::string & filename)
 //@BEGIN TFD INIT
 	: SharedObjectTemplate(filename)
-	,m_paletteColorCustomizationVariablesLoaded(false)
-	,m_paletteColorCustomizationVariablesAppend(false)
-	,m_rangedIntCustomizationVariablesLoaded(false)
-	,m_rangedIntCustomizationVariablesAppend(false)
-	,m_constStringCustomizationVariablesLoaded(false)
-	,m_constStringCustomizationVariablesAppend(false)
-	,m_socketDestinationsLoaded(false)
-	,m_socketDestinationsAppend(false)
-	,m_certificationsRequiredLoaded(false)
-	,m_certificationsRequiredAppend(false)
-	,m_customizationVariableMappingLoaded(false)
-	,m_customizationVariableMappingAppend(false)
-	,m_versionOk(true)
-//@END TFD INIT
-	,m_structureFootprint (0)
+	, m_paletteColorCustomizationVariablesLoaded(false)
+	, m_paletteColorCustomizationVariablesAppend(false)
+	, m_rangedIntCustomizationVariablesLoaded(false)
+	, m_rangedIntCustomizationVariablesAppend(false)
+	, m_constStringCustomizationVariablesLoaded(false)
+	, m_constStringCustomizationVariablesAppend(false)
+	, m_socketDestinationsLoaded(false)
+	, m_socketDestinationsAppend(false)
+	, m_certificationsRequiredLoaded(false)
+	, m_certificationsRequiredAppend(false)
+	, m_customizationVariableMappingLoaded(false)
+	, m_customizationVariableMappingAppend(false)
+	, m_versionOk(true)
+	, m_templateVersion(0)
+	//@END TFD INIT
+	, m_structureFootprint(0)
 {
 }	// SharedTangibleObjectTemplate::SharedTangibleObjectTemplate
 
@@ -67,7 +67,7 @@ SharedTangibleObjectTemplate::SharedTangibleObjectTemplate(const std::string & f
  */
 SharedTangibleObjectTemplate::~SharedTangibleObjectTemplate()
 {
-//@BEGIN TFD CLEANUP
+	//@BEGIN TFD CLEANUP
 	{
 		std::vector<StructParamOT *>::iterator iter;
 		for (iter = m_paletteColorCustomizationVariables.begin(); iter != m_paletteColorCustomizationVariables.end(); ++iter)
@@ -122,8 +122,8 @@ SharedTangibleObjectTemplate::~SharedTangibleObjectTemplate()
 		}
 		m_customizationVariableMapping.clear();
 	}
-//@END TFD CLEANUP
-	
+	//@END TFD CLEANUP
+
 	if (m_structureFootprint)
 	{
 		delete m_structureFootprint;
@@ -189,13 +189,13 @@ Tag SharedTangibleObjectTemplate::getHighestTemplateVersion(void) const
  */
 void SharedTangibleObjectTemplate::postLoad()
 {
-	SharedObjectTemplate::postLoad ();
+	SharedObjectTemplate::postLoad();
 
 	//-- load the structure footprint
-	if (getStructureFootprintFileName ().length () != 0)
+	if (getStructureFootprintFileName().length() != 0)
 	{
-		m_structureFootprint = new StructureFootprint ();
-		m_structureFootprint->load (getStructureFootprintFileName ().c_str ());
+		m_structureFootprint = new StructureFootprint();
+		m_structureFootprint->load(getStructureFootprintFileName().c_str());
 	}
 }
 
@@ -204,7 +204,7 @@ void SharedTangibleObjectTemplate::postLoad()
  *
  * @return the structure footprint
  */
-const StructureFootprint* SharedTangibleObjectTemplate::getStructureFootprint () const
+const StructureFootprint* SharedTangibleObjectTemplate::getStructureFootprint() const
 {
 	return m_structureFootprint;
 }
@@ -236,7 +236,7 @@ const StructureFootprint* SharedTangibleObjectTemplate::getStructureFootprint ()
  */
 void SharedTangibleObjectTemplate::createCustomizationDataPropertyAsNeeded(Object &object, bool /* forceCreation */) const
 {
-	//-- Properties cannot be added while an object is in the world.  Some callers may be in the world, 
+	//-- Properties cannot be added while an object is in the world.  Some callers may be in the world,
 	//   so temporarily remove the object from the world if necessary.
 	bool shouldBeInWorld = object.isInWorld();
 	if (shouldBeInWorld)
@@ -260,8 +260,6 @@ void SharedTangibleObjectTemplate::createCustomizationDataPropertyAsNeeded(Objec
 		bool const skipSharedOwnerVariables = true;
 		AssetCustomizationManager::addCustomizationVariablesForAsset(TemporaryCrcString(getAppearanceFilename().c_str(), true), *customizationData, skipSharedOwnerVariables);
 
-		
-
 		//-- release local reference to the CustomizationData instance
 		customizationData->release();
 	}
@@ -281,7 +279,7 @@ void SharedTangibleObjectTemplate::getPaletteColorCustomizationVariables(Palette
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter paletteColorCustomizationVariables in template %s", DataResource::getName()));
-			return ;
+			return;
 		}
 		else
 		{
@@ -295,10 +293,10 @@ void SharedTangibleObjectTemplate::getPaletteColorCustomizationVariables(Palette
 	{
 		int baseCount = base->getPaletteColorCustomizationVariablesCount();
 		if (index < baseCount)
-			{
-				base->getPaletteColorCustomizationVariables(data, index);
-				return;
-			}
+		{
+			base->getPaletteColorCustomizationVariables(data, index);
+			return;
+		}
 		index -= baseCount;
 	}
 
@@ -325,7 +323,7 @@ void SharedTangibleObjectTemplate::getPaletteColorCustomizationVariablesMin(Pale
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter paletteColorCustomizationVariables in template %s", DataResource::getName()));
-			return ;
+			return;
 		}
 		else
 		{
@@ -339,10 +337,10 @@ void SharedTangibleObjectTemplate::getPaletteColorCustomizationVariablesMin(Pale
 	{
 		int baseCount = base->getPaletteColorCustomizationVariablesCount();
 		if (index < baseCount)
-			{
-				base->getPaletteColorCustomizationVariablesMin(data, index);
-				return;
-			}
+		{
+			base->getPaletteColorCustomizationVariablesMin(data, index);
+			return;
+		}
 		index -= baseCount;
 	}
 
@@ -369,7 +367,7 @@ void SharedTangibleObjectTemplate::getPaletteColorCustomizationVariablesMax(Pale
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter paletteColorCustomizationVariables in template %s", DataResource::getName()));
-			return ;
+			return;
 		}
 		else
 		{
@@ -383,10 +381,10 @@ void SharedTangibleObjectTemplate::getPaletteColorCustomizationVariablesMax(Pale
 	{
 		int baseCount = base->getPaletteColorCustomizationVariablesCount();
 		if (index < baseCount)
-			{
-				base->getPaletteColorCustomizationVariablesMax(data, index);
-				return;
-			}
+		{
+			base->getPaletteColorCustomizationVariablesMax(data, index);
+			return;
+		}
 		index -= baseCount;
 	}
 
@@ -437,7 +435,7 @@ void SharedTangibleObjectTemplate::getRangedIntCustomizationVariables(RangedIntC
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter rangedIntCustomizationVariables in template %s", DataResource::getName()));
-			return ;
+			return;
 		}
 		else
 		{
@@ -451,10 +449,10 @@ void SharedTangibleObjectTemplate::getRangedIntCustomizationVariables(RangedIntC
 	{
 		int baseCount = base->getRangedIntCustomizationVariablesCount();
 		if (index < baseCount)
-			{
-				base->getRangedIntCustomizationVariables(data, index);
-				return;
-			}
+		{
+			base->getRangedIntCustomizationVariables(data, index);
+			return;
+		}
 		index -= baseCount;
 	}
 
@@ -482,7 +480,7 @@ void SharedTangibleObjectTemplate::getRangedIntCustomizationVariablesMin(RangedI
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter rangedIntCustomizationVariables in template %s", DataResource::getName()));
-			return ;
+			return;
 		}
 		else
 		{
@@ -496,10 +494,10 @@ void SharedTangibleObjectTemplate::getRangedIntCustomizationVariablesMin(RangedI
 	{
 		int baseCount = base->getRangedIntCustomizationVariablesCount();
 		if (index < baseCount)
-			{
-				base->getRangedIntCustomizationVariablesMin(data, index);
-				return;
-			}
+		{
+			base->getRangedIntCustomizationVariablesMin(data, index);
+			return;
+		}
 		index -= baseCount;
 	}
 
@@ -527,7 +525,7 @@ void SharedTangibleObjectTemplate::getRangedIntCustomizationVariablesMax(RangedI
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter rangedIntCustomizationVariables in template %s", DataResource::getName()));
-			return ;
+			return;
 		}
 		else
 		{
@@ -541,10 +539,10 @@ void SharedTangibleObjectTemplate::getRangedIntCustomizationVariablesMax(RangedI
 	{
 		int baseCount = base->getRangedIntCustomizationVariablesCount();
 		if (index < baseCount)
-			{
-				base->getRangedIntCustomizationVariablesMax(data, index);
-				return;
-			}
+		{
+			base->getRangedIntCustomizationVariablesMax(data, index);
+			return;
+		}
 		index -= baseCount;
 	}
 
@@ -596,7 +594,7 @@ void SharedTangibleObjectTemplate::getConstStringCustomizationVariables(ConstStr
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter constStringCustomizationVariables in template %s", DataResource::getName()));
-			return ;
+			return;
 		}
 		else
 		{
@@ -610,10 +608,10 @@ void SharedTangibleObjectTemplate::getConstStringCustomizationVariables(ConstStr
 	{
 		int baseCount = base->getConstStringCustomizationVariablesCount();
 		if (index < baseCount)
-			{
-				base->getConstStringCustomizationVariables(data, index);
-				return;
-			}
+		{
+			base->getConstStringCustomizationVariables(data, index);
+			return;
+		}
 		index -= baseCount;
 	}
 
@@ -639,7 +637,7 @@ void SharedTangibleObjectTemplate::getConstStringCustomizationVariablesMin(Const
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter constStringCustomizationVariables in template %s", DataResource::getName()));
-			return ;
+			return;
 		}
 		else
 		{
@@ -653,10 +651,10 @@ void SharedTangibleObjectTemplate::getConstStringCustomizationVariablesMin(Const
 	{
 		int baseCount = base->getConstStringCustomizationVariablesCount();
 		if (index < baseCount)
-			{
-				base->getConstStringCustomizationVariablesMin(data, index);
-				return;
-			}
+		{
+			base->getConstStringCustomizationVariablesMin(data, index);
+			return;
+		}
 		index -= baseCount;
 	}
 
@@ -682,7 +680,7 @@ void SharedTangibleObjectTemplate::getConstStringCustomizationVariablesMax(Const
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter constStringCustomizationVariables in template %s", DataResource::getName()));
-			return ;
+			return;
 		}
 		else
 		{
@@ -696,10 +694,10 @@ void SharedTangibleObjectTemplate::getConstStringCustomizationVariablesMax(Const
 	{
 		int baseCount = base->getConstStringCustomizationVariablesCount();
 		if (index < baseCount)
-			{
-				base->getConstStringCustomizationVariablesMax(data, index);
-				return;
-			}
+		{
+			base->getConstStringCustomizationVariablesMax(data, index);
+			return;
+		}
 		index -= baseCount;
 	}
 
@@ -796,8 +794,6 @@ size_t SharedTangibleObjectTemplate::getSocketDestinationsCount(void) const
 
 const std::string & SharedTangibleObjectTemplate::getStructureFootprintFileName() const
 {
-
-
 	const SharedTangibleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -825,8 +821,6 @@ const std::string & SharedTangibleObjectTemplate::getStructureFootprintFileName(
 
 bool SharedTangibleObjectTemplate::getUseStructureFootprintOutline() const
 {
-
-
 	const SharedTangibleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -854,8 +848,6 @@ bool SharedTangibleObjectTemplate::getUseStructureFootprintOutline() const
 
 bool SharedTangibleObjectTemplate::getTargetable() const
 {
-
-
 	const SharedTangibleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -953,7 +945,7 @@ void SharedTangibleObjectTemplate::getCustomizationVariableMapping(Customization
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter customizationVariableMapping in template %s", DataResource::getName()));
-			return ;
+			return;
 		}
 		else
 		{
@@ -967,10 +959,10 @@ void SharedTangibleObjectTemplate::getCustomizationVariableMapping(Customization
 	{
 		int baseCount = base->getCustomizationVariableMappingCount();
 		if (index < baseCount)
-			{
-				base->getCustomizationVariableMapping(data, index);
-				return;
-			}
+		{
+			base->getCustomizationVariableMapping(data, index);
+			return;
+		}
 		index -= baseCount;
 	}
 
@@ -996,7 +988,7 @@ void SharedTangibleObjectTemplate::getCustomizationVariableMappingMin(Customizat
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter customizationVariableMapping in template %s", DataResource::getName()));
-			return ;
+			return;
 		}
 		else
 		{
@@ -1010,10 +1002,10 @@ void SharedTangibleObjectTemplate::getCustomizationVariableMappingMin(Customizat
 	{
 		int baseCount = base->getCustomizationVariableMappingCount();
 		if (index < baseCount)
-			{
-				base->getCustomizationVariableMappingMin(data, index);
-				return;
-			}
+		{
+			base->getCustomizationVariableMappingMin(data, index);
+			return;
+		}
 		index -= baseCount;
 	}
 
@@ -1039,7 +1031,7 @@ void SharedTangibleObjectTemplate::getCustomizationVariableMappingMax(Customizat
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter customizationVariableMapping in template %s", DataResource::getName()));
-			return ;
+			return;
 		}
 		else
 		{
@@ -1053,10 +1045,10 @@ void SharedTangibleObjectTemplate::getCustomizationVariableMappingMax(Customizat
 	{
 		int baseCount = base->getCustomizationVariableMappingCount();
 		if (index < baseCount)
-			{
-				base->getCustomizationVariableMappingMax(data, index);
-				return;
-			}
+		{
+			base->getCustomizationVariableMappingMax(data, index);
+			return;
+		}
 		index -= baseCount;
 	}
 
@@ -1095,8 +1087,6 @@ size_t SharedTangibleObjectTemplate::getCustomizationVariableMappingCount(void) 
 
 SharedTangibleObjectTemplate::ClientVisabilityFlags SharedTangibleObjectTemplate::getClientVisabilityFlag() const
 {
-
-
 	const SharedTangibleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1122,7 +1112,6 @@ SharedTangibleObjectTemplate::ClientVisabilityFlags SharedTangibleObjectTemplate
 	return value;
 }	// SharedTangibleObjectTemplate::getClientVisabilityFlag
 
-
 /**
  * Loads the template data from an iff file. We should already be in the form
  * for this template.
@@ -1131,8 +1120,8 @@ SharedTangibleObjectTemplate::ClientVisabilityFlags SharedTangibleObjectTemplate
  */
 void SharedTangibleObjectTemplate::load(Iff &file)
 {
-static const int MAX_NAME_SIZE = 256;
-char paramName[MAX_NAME_SIZE];
+	static const int MAX_NAME_SIZE = 256;
+	char paramName[MAX_NAME_SIZE];
 
 	if (file.getCurrentName() != SharedTangibleObjectTemplate_tag)
 	{
@@ -1142,7 +1131,7 @@ char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 	m_templateVersion = file.getCurrentName();
-	if (m_templateVersion == TAG(D,E,R,V))
+	if (m_templateVersion == TAG(D, E, R, V))
 	{
 		file.enterForm();
 		file.enterChunk();
@@ -1162,10 +1151,8 @@ char paramName[MAX_NAME_SIZE];
 		file.exitForm();
 		m_templateVersion = file.getCurrentName();
 	}
-	if (getHighestTemplateVersion() != TAG(0,0,1,0))
+	if (getHighestTemplateVersion() != TAG(0, 0, 1, 0))
 	{
-		
-			
 		m_versionOk = false;
 	}
 
@@ -1309,7 +1296,6 @@ char paramName[MAX_NAME_SIZE];
 	return;
 }	// SharedTangibleObjectTemplate::load
 
-
 //=============================================================================
 // class SharedTangibleObjectTemplate::_ConstStringCustomizationVariable
 
@@ -1358,8 +1344,6 @@ Tag SharedTangibleObjectTemplate::_ConstStringCustomizationVariable::getId(void)
 
 const std::string & SharedTangibleObjectTemplate::_ConstStringCustomizationVariable::getVariableName(bool versionOk) const
 {
-
-
 	const SharedTangibleObjectTemplate::_ConstStringCustomizationVariable * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1387,8 +1371,6 @@ const std::string & SharedTangibleObjectTemplate::_ConstStringCustomizationVaria
 
 const std::string & SharedTangibleObjectTemplate::_ConstStringCustomizationVariable::getConstValue(bool versionOk) const
 {
-
-
 	const SharedTangibleObjectTemplate::_ConstStringCustomizationVariable * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1414,7 +1396,6 @@ const std::string & SharedTangibleObjectTemplate::_ConstStringCustomizationVaria
 	return value;
 }	// SharedTangibleObjectTemplate::_ConstStringCustomizationVariable::getConstValue
 
-
 /**
  * Loads the template data from an iff file. We should already be in the form
  * for this template.
@@ -1423,8 +1404,8 @@ const std::string & SharedTangibleObjectTemplate::_ConstStringCustomizationVaria
  */
 void SharedTangibleObjectTemplate::_ConstStringCustomizationVariable::load(Iff &file)
 {
-static const int MAX_NAME_SIZE = 256;
-char paramName[MAX_NAME_SIZE];
+	static const int MAX_NAME_SIZE = 256;
+	char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 
@@ -1445,7 +1426,6 @@ char paramName[MAX_NAME_SIZE];
 	file.exitForm();
 	UNREF(file);
 }	// SharedTangibleObjectTemplate::_ConstStringCustomizationVariable::load
-
 
 //=============================================================================
 // class SharedTangibleObjectTemplate::_CustomizationVariableMapping
@@ -1495,8 +1475,6 @@ Tag SharedTangibleObjectTemplate::_CustomizationVariableMapping::getId(void) con
 
 const std::string & SharedTangibleObjectTemplate::_CustomizationVariableMapping::getSourceVariable(bool versionOk) const
 {
-
-
 	const SharedTangibleObjectTemplate::_CustomizationVariableMapping * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1524,8 +1502,6 @@ const std::string & SharedTangibleObjectTemplate::_CustomizationVariableMapping:
 
 const std::string & SharedTangibleObjectTemplate::_CustomizationVariableMapping::getDependentVariable(bool versionOk) const
 {
-
-
 	const SharedTangibleObjectTemplate::_CustomizationVariableMapping * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1551,7 +1527,6 @@ const std::string & SharedTangibleObjectTemplate::_CustomizationVariableMapping:
 	return value;
 }	// SharedTangibleObjectTemplate::_CustomizationVariableMapping::getDependentVariable
 
-
 /**
  * Loads the template data from an iff file. We should already be in the form
  * for this template.
@@ -1560,8 +1535,8 @@ const std::string & SharedTangibleObjectTemplate::_CustomizationVariableMapping:
  */
 void SharedTangibleObjectTemplate::_CustomizationVariableMapping::load(Iff &file)
 {
-static const int MAX_NAME_SIZE = 256;
-char paramName[MAX_NAME_SIZE];
+	static const int MAX_NAME_SIZE = 256;
+	char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 
@@ -1582,7 +1557,6 @@ char paramName[MAX_NAME_SIZE];
 	file.exitForm();
 	UNREF(file);
 }	// SharedTangibleObjectTemplate::_CustomizationVariableMapping::load
-
 
 //=============================================================================
 // class SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable
@@ -1632,8 +1606,6 @@ Tag SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getId(void
 
 const std::string & SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getVariableName(bool versionOk) const
 {
-
-
 	const SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1661,8 +1633,6 @@ const std::string & SharedTangibleObjectTemplate::_PaletteColorCustomizationVari
 
 const std::string & SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getPalettePathName(bool versionOk) const
 {
-
-
 	const SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1690,8 +1660,6 @@ const std::string & SharedTangibleObjectTemplate::_PaletteColorCustomizationVari
 
 int SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getDefaultPaletteIndex(bool versionOk) const
 {
-
-
 	const SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1741,8 +1709,6 @@ int SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getDefault
 
 int SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getDefaultPaletteIndexMin(bool versionOk) const
 {
-
-
 	const SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1792,8 +1758,6 @@ int SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getDefault
 
 int SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getDefaultPaletteIndexMax(bool versionOk) const
 {
-
-
 	const SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1841,7 +1805,6 @@ int SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getDefault
 	return value;
 }	// SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getDefaultPaletteIndexMax
 
-
 /**
  * Loads the template data from an iff file. We should already be in the form
  * for this template.
@@ -1850,8 +1813,8 @@ int SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getDefault
  */
 void SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::load(Iff &file)
 {
-static const int MAX_NAME_SIZE = 256;
-char paramName[MAX_NAME_SIZE];
+	static const int MAX_NAME_SIZE = 256;
+	char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 
@@ -1874,7 +1837,6 @@ char paramName[MAX_NAME_SIZE];
 	file.exitForm();
 	UNREF(file);
 }	// SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::load
-
 
 //=============================================================================
 // class SharedTangibleObjectTemplate::_RangedIntCustomizationVariable
@@ -1924,8 +1886,6 @@ Tag SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getId(void) c
 
 const std::string & SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getVariableName(bool versionOk) const
 {
-
-
 	const SharedTangibleObjectTemplate::_RangedIntCustomizationVariable * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -1953,8 +1913,6 @@ const std::string & SharedTangibleObjectTemplate::_RangedIntCustomizationVariabl
 
 int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMinValueInclusive(bool versionOk) const
 {
-
-
 	const SharedTangibleObjectTemplate::_RangedIntCustomizationVariable * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -2004,8 +1962,6 @@ int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMinValueIn
 
 int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMinValueInclusiveMin(bool versionOk) const
 {
-
-
 	const SharedTangibleObjectTemplate::_RangedIntCustomizationVariable * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -2055,8 +2011,6 @@ int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMinValueIn
 
 int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMinValueInclusiveMax(bool versionOk) const
 {
-
-
 	const SharedTangibleObjectTemplate::_RangedIntCustomizationVariable * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -2106,8 +2060,6 @@ int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMinValueIn
 
 int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getDefaultValue(bool versionOk) const
 {
-
-
 	const SharedTangibleObjectTemplate::_RangedIntCustomizationVariable * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -2157,8 +2109,6 @@ int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getDefaultVal
 
 int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getDefaultValueMin(bool versionOk) const
 {
-
-
 	const SharedTangibleObjectTemplate::_RangedIntCustomizationVariable * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -2208,8 +2158,6 @@ int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getDefaultVal
 
 int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getDefaultValueMax(bool versionOk) const
 {
-
-
 	const SharedTangibleObjectTemplate::_RangedIntCustomizationVariable * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -2259,8 +2207,6 @@ int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getDefaultVal
 
 int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMaxValueExclusive(bool versionOk) const
 {
-
-
 	const SharedTangibleObjectTemplate::_RangedIntCustomizationVariable * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -2310,8 +2256,6 @@ int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMaxValueEx
 
 int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMaxValueExclusiveMin(bool versionOk) const
 {
-
-
 	const SharedTangibleObjectTemplate::_RangedIntCustomizationVariable * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -2361,8 +2305,6 @@ int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMaxValueEx
 
 int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMaxValueExclusiveMax(bool versionOk) const
 {
-
-
 	const SharedTangibleObjectTemplate::_RangedIntCustomizationVariable * base = nullptr;
 	if (m_baseData != nullptr)
 	{
@@ -2410,7 +2352,6 @@ int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMaxValueEx
 	return value;
 }	// SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMaxValueExclusiveMax
 
-
 /**
  * Loads the template data from an iff file. We should already be in the form
  * for this template.
@@ -2419,8 +2360,8 @@ int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getMaxValueEx
  */
 void SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::load(Iff &file)
 {
-static const int MAX_NAME_SIZE = 256;
-char paramName[MAX_NAME_SIZE];
+	static const int MAX_NAME_SIZE = 256;
+	char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 
