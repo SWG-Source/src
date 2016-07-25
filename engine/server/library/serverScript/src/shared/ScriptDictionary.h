@@ -42,7 +42,7 @@ private:
 	ScriptDictionary(const ScriptDictionary &);
 	ScriptDictionary & operator = (const ScriptDictionary &);
 };
-typedef boost::shared_ptr<ScriptDictionary> ScriptDictionaryPtr;
+typedef std::shared_ptr<ScriptDictionary> ScriptDictionaryPtr;
 
 
 inline ScriptDictionary::ScriptDictionary(void)

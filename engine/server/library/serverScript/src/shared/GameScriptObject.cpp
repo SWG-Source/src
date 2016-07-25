@@ -9,7 +9,6 @@
 #include "serverScript/FirstServerScript.h"
 #include "serverScript/GameScriptObject.h"
 
-#include "boost/smart_ptr.hpp"
 #include "ScriptMessage.h"
 #include "serverGame/ConfigServerGame.h"
 #include "serverGame/ServerController.h"

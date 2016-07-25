@@ -11,7 +11,6 @@
 #include "serverScript/JavaLibrary.h"
 
 #include "UnicodeUtils.h"
-#include "boost/smart_ptr.hpp"  // for boost::shared_ptr and friends
 #include "serverGame/ContainerInterface.h"
 #include "sharedDebug/Profiler.h"
 #include "serverGame/CreatureObject.h"

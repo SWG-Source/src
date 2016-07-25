@@ -11,6 +11,7 @@
 
 #include <jni.h>
 #include "serverScript/ScriptDictionary.h"
+#include <memory>
 
 namespace boost
 {
@@ -33,22 +34,22 @@ class GlobalArrayRef;
 class JavaStringParam;
 class JavaString;
 class JavaDictionary;
-typedef boost::shared_ptr<LocalRefParam>            LocalRefParamPtr;
-typedef boost::shared_ptr<LocalArrayRefParam>       LocalArrayRefParamPtr;
-typedef boost::shared_ptr<LocalObjectArrayRefParam> LocalObjectArrayRefParamPtr;
-typedef boost::shared_ptr<LocalRef>                 LocalRefPtr;
-typedef boost::shared_ptr<LocalArrayRef>            LocalArrayRefPtr;
-typedef boost::shared_ptr<LocalObjectArrayRef>      LocalObjectArrayRefPtr;
-typedef boost::shared_ptr<LocalByteArrayRef>        LocalByteArrayRefPtr;
-typedef boost::shared_ptr<LocalIntArrayRef>         LocalIntArrayRefPtr;
-typedef boost::shared_ptr<LocalFloatArrayRef>       LocalFloatArrayRefPtr;
-typedef boost::shared_ptr<LocalBooleanArrayRef>     LocalBooleanArrayRefPtr;
-typedef boost::shared_ptr<LocalLongArrayRef>        LocalLongArrayRefPtr;
-typedef boost::shared_ptr<GlobalRef>                GlobalRefPtr;
-typedef boost::shared_ptr<GlobalArrayRef>           GlobalArrayRefPtr;
-typedef boost::shared_ptr<JavaStringParam>          JavaStringParamPtr;
-typedef boost::shared_ptr<JavaString>               JavaStringPtr;
-typedef boost::shared_ptr<JavaDictionary>           JavaDictionaryPtr;
+typedef std::shared_ptr<LocalRefParam>            LocalRefParamPtr;
+typedef std::shared_ptr<LocalArrayRefParam>       LocalArrayRefParamPtr;
+typedef std::shared_ptr<LocalObjectArrayRefParam> LocalObjectArrayRefParamPtr;
+typedef std::shared_ptr<LocalRef>                 LocalRefPtr;
+typedef std::shared_ptr<LocalArrayRef>            LocalArrayRefPtr;
+typedef std::shared_ptr<LocalObjectArrayRef>      LocalObjectArrayRefPtr;
+typedef std::shared_ptr<LocalByteArrayRef>        LocalByteArrayRefPtr;
+typedef std::shared_ptr<LocalIntArrayRef>         LocalIntArrayRefPtr;
+typedef std::shared_ptr<LocalFloatArrayRef>       LocalFloatArrayRefPtr;
+typedef std::shared_ptr<LocalBooleanArrayRef>     LocalBooleanArrayRefPtr;
+typedef std::shared_ptr<LocalLongArrayRef>        LocalLongArrayRefPtr;
+typedef std::shared_ptr<GlobalRef>                GlobalRefPtr;
+typedef std::shared_ptr<GlobalArrayRef>           GlobalArrayRefPtr;
+typedef std::shared_ptr<JavaStringParam>          JavaStringParamPtr;
+typedef std::shared_ptr<JavaString>               JavaStringPtr;
+typedef std::shared_ptr<JavaDictionary>           JavaDictionaryPtr;
 
 
 //========================================================================
