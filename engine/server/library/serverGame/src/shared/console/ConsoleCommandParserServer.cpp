@@ -116,7 +116,7 @@ static const CommandParser::CmdInfo cmds[] =
 	{ms_testStructurePlacement,  1,  "<template name>",                   "Put the client into structure placement mode"},
 	{"setDebugFlag",             3, "<section> <name> <0 | 1>",           "Toggle a debugFlag on the server"},
 	{"validateWorld",            0, "",                                   "Run a sanity check on the world"},
-	{"setUniverseProcess",       1, "<int>",                              "Change universe authority to that process id"},                 
+	{"setUniverseProcess",       1, "<int>",                              "Change universe authority to that process id"},
 	{"getRegionsAt",             2, "<x> <z>",                            "List the regions at the given point"},
 	{"enableNewJedi",            1, "<true | false>",                     "Enable/disable tracking of players to see if they can become Jedi"},
 	{"setMessageToTimeLimit",    1, "<time limit in ms>",                 "Sets the time limit we will process messageTos in a frame. <= 0 means process all messages"},
@@ -203,59 +203,59 @@ static const CommandParser::CmdInfo cmds[] =
 
 //-----------------------------------------------------------------
 
-ConsoleCommandParserServer::ConsoleCommandParserServer (void) :
-CommandParser ("server", 0, "...", "Server related commands.", 0)
+ConsoleCommandParserServer::ConsoleCommandParserServer(void) :
+	CommandParser("server", 0, "...", "Server related commands.", 0)
 {
-	createDelegateCommands (cmds);
+	createDelegateCommands(cmds);
 }
 
 //-----------------------------------------------------------------
 
-bool ConsoleCommandParserServer::performParsing (const NetworkId & userId, const StringVector_t & argv, const String_t & originalCommand, String_t & result, const CommandParser * node)
+bool ConsoleCommandParserServer::performParsing(const NetworkId & userId, const StringVector_t & argv, const String_t & originalCommand, String_t & result, const CommandParser * node)
 {
-	NOT_NULL (node);
-	
+	NOT_NULL(node);
+
 	UNREF(originalCommand);
 
-	ServerObject * user = safe_cast<ServerObject *>(NetworkIdManager::getObjectById (userId));
+	ServerObject * user = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(userId));
 
 	//-----------------------------------------------------------------
 
-	if (isAbbrev (argv [0], ms_testStructurePlacement))
+	if (isAbbrev(argv[0], ms_testStructurePlacement))
 	{
 		//-- make sure the user is valid
 		if (!user)
 		{
-			result += Unicode::narrowToWide ("invalid user");
+			result += Unicode::narrowToWide("invalid user");
 			return true;
 		}
 
-		if (!user->getClient ())
+		if (!user->getClient())
 		{
-			result += Unicode::narrowToWide ("invalid client");
+			result += Unicode::narrowToWide("invalid client");
 			return true;
 		}
 
-		if (!user->getClient ()->isGod ())
+		if (!user->getClient()->isGod())
 		{
-			result += Unicode::narrowToWide ("user does not have admin privileges");
+			result += Unicode::narrowToWide("user does not have admin privileges");
 			return true;
 		}
 
-		const std::string serverObjectTemplateName = Unicode::wideToNarrow(argv [1]);
+		const std::string serverObjectTemplateName = Unicode::wideToNarrow(argv[1]);
 
 		//-- make sure the name is not empty
-		if (serverObjectTemplateName.empty ())
+		if (serverObjectTemplateName.empty())
 		{
-			result += Unicode::narrowToWide ("serverObjectTemplateName is empty");
+			result += Unicode::narrowToWide("serverObjectTemplateName is empty");
 			return true;
 		}
 
 		//-- fetch the object template
-		const ObjectTemplate* const objectTemplate = ObjectTemplateList::fetch (serverObjectTemplateName);
+		const ObjectTemplate* const objectTemplate = ObjectTemplateList::fetch(serverObjectTemplateName);
 		if (!objectTemplate)
 		{
-			result += Unicode::narrowToWide ("serverObjectTemplate does not exist");
+			result += Unicode::narrowToWide("serverObjectTemplate does not exist");
 			return true;
 		}
 
@@ -263,18 +263,18 @@ bool ConsoleCommandParserServer::performParsing (const NetworkId & userId, const
 		const ServerObjectTemplate* const serverObjectTemplate = dynamic_cast<const ServerObjectTemplate*> (objectTemplate);
 		if (!serverObjectTemplate)
 		{
-			objectTemplate->releaseReference ();
+			objectTemplate->releaseReference();
 
-			result += Unicode::narrowToWide ("serverObjectTemplate is not a server object template");
+			result += Unicode::narrowToWide("serverObjectTemplate is not a server object template");
 			return true;
 		}
 
 		//-- fetch the shared object template
-		const std::string sharedObjectTemplateName = serverObjectTemplate->getSharedTemplate ();
-		serverObjectTemplate->releaseReference ();
-		if (sharedObjectTemplateName.empty ())
+		const std::string sharedObjectTemplateName = serverObjectTemplate->getSharedTemplate();
+		serverObjectTemplate->releaseReference();
+		if (sharedObjectTemplateName.empty())
 		{
-			result += Unicode::narrowToWide ("serverObjectTemplate specifies no sharedObjectTemplateName");
+			result += Unicode::narrowToWide("serverObjectTemplate specifies no sharedObjectTemplateName");
 			return true;
 		}
 
@@ -287,31 +287,31 @@ bool ConsoleCommandParserServer::performParsing (const NetworkId & userId, const
 		//-- make sure the user is valid
 		if (!user)
 		{
-			result += Unicode::narrowToWide ("invalid user");
+			result += Unicode::narrowToWide("invalid user");
 			return true;
 		}
 
-		if (!user->getClient ())
+		if (!user->getClient())
 		{
-			result += Unicode::narrowToWide ("invalid client");
+			result += Unicode::narrowToWide("invalid client");
 			return true;
 		}
 
-		if (!user->getClient ()->isGod ())
+		if (!user->getClient()->isGod())
 		{
-			result += Unicode::narrowToWide ("user does not have admin privileges");
+			result += Unicode::narrowToWide("user does not have admin privileges");
 			return true;
 		}
 
 		unsigned long val = strtoul(Unicode::wideToNarrow(argv[1]).c_str(), nullptr, 10);
 		const bool isPublic = (val != 0);
 		SetConnectionServerPublic const p(isPublic);
-		
+
 		GameServer::getInstance().sendToCentralServer(p);
 		result += getErrorMessage(argv[0], ERR_SUCCESS);
 	}
-	else if( isAbbrev( argv[0], "abortShutdown"))
-	{	
+	else if (isAbbrev(argv[0], "abortShutdown"))
+	{
 		if (!user)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_USER);
@@ -330,10 +330,10 @@ bool ConsoleCommandParserServer::performParsing (const NetworkId & userId, const
 		}
 		AbortShutdown const msg;
 		GameServer::getInstance().sendToCentralServer(msg);
-		result += getErrorMessage (argv[0], ERR_SUCCESS);			
+		result += getErrorMessage(argv[0], ERR_SUCCESS);
 	}
-	else if( isAbbrev( argv[0], "shutdown"))
-	{	
+	else if (isAbbrev(argv[0], "shutdown"))
+	{
 		if (!user)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_USER);
@@ -350,26 +350,26 @@ bool ConsoleCommandParserServer::performParsing (const NetworkId & userId, const
 			result += Unicode::narrowToWide("User is not a god");
 			return true;
 		}
-		if( argv.size() < 4 )
+		if (argv.size() < 4)
 		{
 			result += Unicode::narrowToWide("Not enough parameters.  usage is \"shutdown [secsToWait] [maxSecs] [systemMessage]\"");
 			return true;
 		}
-	
+
 		unsigned long secsToWait = strtoul(Unicode::wideToNarrow(argv[1]).c_str(), nullptr, 10);
 		unsigned long maxSecs = strtoul(Unicode::wideToNarrow(argv[2]).c_str(), nullptr, 10);
 		Unicode::String systemMessage;
-		for( size_t i=3; i< argv.size(); ++i)
+		for (size_t i = 3; i < argv.size(); ++i)
 		{
 			systemMessage += argv[i] + Unicode::narrowToWide(" ");
 		}
 
 		ShutdownCluster const msg(secsToWait, maxSecs, systemMessage);
 		GameServer::getInstance().sendToCentralServer(msg);
-		result += getErrorMessage (argv[0], ERR_SUCCESS);			
+		result += getErrorMessage(argv[0], ERR_SUCCESS);
 	}
 	//-----------------------------------------------------------------
-	else if (isAbbrev( argv [0], "kill"))
+	else if (isAbbrev(argv[0], "kill"))
 	{
 		if (!user)
 		{
@@ -387,39 +387,39 @@ bool ConsoleCommandParserServer::performParsing (const NetworkId & userId, const
 			result += Unicode::narrowToWide("User is not a god");
 			return true;
 		}
-		
-		unsigned long val = strtoul(Unicode::wideToNarrow(argv[1]).c_str (), nullptr, 10);
+
+		unsigned long val = strtoul(Unicode::wideToNarrow(argv[1]).c_str(), nullptr, 10);
 		switch (val)
 		{
-			case 1:
-			{
-				ExcommunicateGameServerMessage exmsg(GameServer::getInstance().getProcessId(), 0, "");
-				GameServer::getInstance().sendToCentralServer(exmsg);
-				result += getErrorMessage (argv[0], ERR_SUCCESS);		
-				break;
-			}
-			case 2:
-			{
-				GenericValueTypeMessage<int> const msg("ShutdownMessage", 0); 
-				GameServer::getInstance().sendToPlanetServer(msg);
-				result += getErrorMessage (argv[0], ERR_SUCCESS);		
-				break;
-			}
-			case 3:
-			{
-				GenericValueTypeMessage<int> const msg("RequestClusterShutdown", 0);
-				GameServer::getInstance().sendToCentralServer(msg);
-				result += getErrorMessage (argv[0], ERR_SUCCESS);		
-				break;
-			}
-			default:
-				result += getErrorMessage (argv[0], ERR_SUCCESS);			
+		case 1:
+		{
+			ExcommunicateGameServerMessage exmsg(GameServer::getInstance().getProcessId(), 0, "");
+			GameServer::getInstance().sendToCentralServer(exmsg);
+			result += getErrorMessage(argv[0], ERR_SUCCESS);
+			break;
+		}
+		case 2:
+		{
+			GenericValueTypeMessage<int> const msg("ShutdownMessage", 0);
+			GameServer::getInstance().sendToPlanetServer(msg);
+			result += getErrorMessage(argv[0], ERR_SUCCESS);
+			break;
+		}
+		case 3:
+		{
+			GenericValueTypeMessage<int> const msg("RequestClusterShutdown", 0);
+			GameServer::getInstance().sendToCentralServer(msg);
+			result += getErrorMessage(argv[0], ERR_SUCCESS);
+			break;
+		}
+		default:
+			result += getErrorMessage(argv[0], ERR_SUCCESS);
 		}
 	}
 	//-----------------------------------------------------------------
-	else if (isAbbrev( argv[0], "error"))
+	else if (isAbbrev(argv[0], "error"))
 	{
-		if (user && user->getClient ())
+		if (user && user->getClient())
 		{
 			ErrorMessage const em("GameServer Console", Unicode::wideToNarrow(argv[1]).c_str());
 			user->getClient()->send(em, true);
@@ -428,31 +428,31 @@ bool ConsoleCommandParserServer::performParsing (const NetworkId & userId, const
 
 	//-----------------------------------------------------------------------
 
-	else if(isAbbrev(argv[0], "getPlanetId"))
+	else if (isAbbrev(argv[0], "getPlanetId"))
 	{
 		PlanetObject * p = ServerUniverse::getInstance().getCurrentPlanet();
 		if (argv.size() > 1)
 			p = ServerUniverse::getInstance().getPlanetByName(Unicode::wideToNarrow(argv[1]));
 
 		NetworkId pid;
-		if(p)
+		if (p)
 		{
 			pid = p->getNetworkId();
 		}
 		result += Unicode::narrowToWide(pid.getValueString());
 	}
-	
+
 	//-----------------------------------------------------------------
-	else if (isAbbrev( argv[0], "clock"))
+	else if (isAbbrev(argv[0], "clock"))
 	{
 		char text[128];
 		sprintf(text, "FPS: %f FrameTime: %f\n", Clock::framesPerSecond(), Clock::frameTime());
 		result += Unicode::narrowToWide(text);
-		result += getErrorMessage (argv[0], ERR_SUCCESS);
+		result += getErrorMessage(argv[0], ERR_SUCCESS);
 	}
-	
+
 	//-----------------------------------------------------------------
-	else if (isAbbrev( argv[0], "releaseAuth"))
+	else if (isAbbrev(argv[0], "releaseAuth"))
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		ServerObject* object = ServerWorld::findObjectByNetworkId(oid);
@@ -470,7 +470,7 @@ bool ConsoleCommandParserServer::performParsing (const NetworkId & userId, const
 		GameServer::getInstance().sendToCentralServer(msg);
 		result += getErrorMessage(argv[0], ERR_SUCCESS);
 	}
-	else if(isAbbrev( argv[0], "showObjectSpheres"))
+	else if (isAbbrev(argv[0], "showObjectSpheres"))
 	{
 		std::vector<std::pair<ServerObject *, Sphere> > results;
 		ServerWorld::dumpObjectSphereTree(results);
@@ -481,31 +481,31 @@ bool ConsoleCommandParserServer::performParsing (const NetworkId & userId, const
 		result += Unicode::narrowToWide(" object sphere tree nodes to client\n");
 
 		std::vector<std::pair<ServerObject *, Sphere> >::iterator i;
-		for(i = results.begin(); i != results.end(); ++i)
+		for (i = results.begin(); i != results.end(); ++i)
 		{
 			std::string name = "SPHERE NODE";
 			NetworkId id(NetworkId::cms_invalid);
 
-			if((*i).first)
+			if ((*i).first)
 			{
 				name = Unicode::wideToNarrow((*i).first->getObjectName());
 				id = (*i).first->getNetworkId();
 			}
 			sprintf(
-				count, 
-				"Sphere id=[%lu] origin=[%f, %f, %f] radius=[%f] OID=[%s] %s\n", 
-				std::distance(results.begin(), i),//reinterpret_cast<unsigned long>(i), 
-				(*i).second.getCenter().x, 
-				(*i).second.getCenter().y, 
-				(*i).second.getCenter().z, 
+				count,
+				"Sphere id=[%lu] origin=[%f, %f, %f] radius=[%f] OID=[%s] %s\n",
+				std::distance(results.begin(), i),//reinterpret_cast<unsigned long>(i),
+				(*i).second.getCenter().x,
+				(*i).second.getCenter().y,
+				(*i).second.getCenter().z,
 				(*i).second.getRadius(),
 				id.getValueString().c_str(),
 				name.c_str()
-				);
+			);
 			result += Unicode::narrowToWide(count);
 		}
 	}
-	else if(isAbbrev( argv[0], "showTriggerSpheres"))
+	else if (isAbbrev(argv[0], "showTriggerSpheres"))
 	{
 		std::vector<std::pair<TriggerVolume *, Sphere> > results;
 		ServerWorld::dumpTriggerSphereTree(results);
@@ -515,38 +515,37 @@ bool ConsoleCommandParserServer::performParsing (const NetworkId & userId, const
 		result += Unicode::narrowToWide(count);
 		result += Unicode::narrowToWide(" trigger sphere tree nodes to client\n");
 
-
 		std::vector<std::pair<TriggerVolume *, Sphere> >::iterator i;
-		for(i = results.begin(); i != results.end(); ++i)
+		for (i = results.begin(); i != results.end(); ++i)
 		{
 			std::string name = "SPHERE NODE";
 			NetworkId id(NetworkId::cms_invalid);
-			if((*i).first)
+			if ((*i).first)
 			{
 				name = Unicode::wideToNarrow((*i).first->getOwner().getObjectName());
 				id = (*i).first->getOwner().getNetworkId();
 			}
 
 			sprintf(
-				count, 
-				"Sphere id=[%lu] origin=[%f, %f, %f] radius=[%f] OID=[%s] %s\n", 
+				count,
+				"Sphere id=[%lu] origin=[%f, %f, %f] radius=[%f] OID=[%s] %s\n",
 				std::distance(results.begin(), i),
-				(*i).second.getCenter().x, 
-				(*i).second.getCenter().y, 
-				(*i).second.getCenter().z, 
+				(*i).second.getCenter().x,
+				(*i).second.getCenter().y,
+				(*i).second.getCenter().z,
 				(*i).second.getRadius(),
 				id.getValueString().c_str(),
 				name.c_str()
-				);
+			);
 			result += Unicode::narrowToWide(count);
 		}
 	}
-	else if (isAbbrev (argv[0], "snapAllObjectsToTerrain"))
+	else if (isAbbrev(argv[0], "snapAllObjectsToTerrain"))
 	{
-		ServerWorld::snapAllObjectsToTerrain ();
-		result += getErrorMessage (argv[0], ERR_SUCCESS);
+		ServerWorld::snapAllObjectsToTerrain();
+		result += getErrorMessage(argv[0], ERR_SUCCESS);
 	}
-	else if (isAbbrev (argv[0], "getSceneId"))
+	else if (isAbbrev(argv[0], "getSceneId"))
 	{
 		if (user == nullptr)
 		{
@@ -555,9 +554,9 @@ bool ConsoleCommandParserServer::performParsing (const NetworkId & userId, const
 		}
 		result += Unicode::narrowToWide(user->getSceneId());
 		result += Unicode::narrowToWide("\n");
-		result += getErrorMessage (argv[0], ERR_SUCCESS);
+		result += getErrorMessage(argv[0], ERR_SUCCESS);
 	}
-	else if (isAbbrev (argv[0], "setGodMode"))
+	else if (isAbbrev(argv[0], "setGodMode"))
 	{
 		if (!user)
 		{
@@ -570,17 +569,16 @@ bool ConsoleCommandParserServer::performParsing (const NetworkId & userId, const
 			return true;
 		}
 
-		unsigned long val = strtoul(Unicode::wideToNarrow(argv[1]).c_str (), nullptr, 10);
+		unsigned long val = strtoul(Unicode::wideToNarrow(argv[1]).c_str(), nullptr, 10);
 		if (user->getClient()->setGodMode(val != 0))
-			result += getErrorMessage (argv[0], ERR_SUCCESS);
+			result += getErrorMessage(argv[0], ERR_SUCCESS);
 		else
 			result += Unicode::narrowToWide("Cannot set god mode on unvalidated client\n");
-
 	}
 	else if (isAbbrev(argv[0], "reloadCommandTable"))
 	{
 		result += getErrorMessage(argv[0], ERR_SUCCESS);
-			
+
 		ServerCommandTable::load();
 
 		// send a message to other servers to reload the table
@@ -629,12 +627,12 @@ bool ConsoleCommandParserServer::performParsing (const NetworkId & userId, const
 	{
 		std::string tableName;
 		tableName = Unicode::wideToNarrow(argv[1]);
-		int col = atoi(Unicode::wideToNarrow(argv[2]).c_str ());
-		int row = atoi(Unicode::wideToNarrow(argv[3]).c_str ());
+		int col = atoi(Unicode::wideToNarrow(argv[2]).c_str());
+		int row = atoi(Unicode::wideToNarrow(argv[3]).c_str());
 		DataTable * dt = DataTableManager::getTable(tableName);
 		if (dt)
 		{
-			result +=  Unicode::narrowToWide(dt->getStringValue(col, row));
+			result += Unicode::narrowToWide(dt->getStringValue(col, row));
 		}
 		else
 			result += Unicode::narrowToWide("No such table");
@@ -644,12 +642,12 @@ bool ConsoleCommandParserServer::performParsing (const NetworkId & userId, const
 		GameServer::getInstance().loadTerrain();
 		result += getErrorMessage(argv[0], ERR_SUCCESS);
 	}
-	else if(isAbbrev(argv[0], "messageCount"))
+	else if (isAbbrev(argv[0], "messageCount"))
 	{
 		std::vector<std::pair<std::string, int> > messages = GameNetworkMessage::getMessageCount();
 		std::vector<std::pair<std::string, int> >::iterator i;
-		char buf[128] = {"\0"};
-		for(i = messages.begin(); i != messages.end(); ++i)
+		char buf[128] = { "\0" };
+		for (i = messages.begin(); i != messages.end(); ++i)
 		{
 			IGNORE_RETURN(snprintf(buf, sizeof(buf), "[%9d] - \"%s\"\n", (*i).second, (*i).first.c_str()));
 			result += Unicode::narrowToWide(buf);
@@ -659,7 +657,7 @@ bool ConsoleCommandParserServer::performParsing (const NetworkId & userId, const
 	else if (isAbbrev(argv[0], "listRegions"))
 	{
 		Client * client = user->getClient();
-		if(client)
+		if (client)
 		{
 			//get all the regions, and build messages, and sender to client (should be priveledged client, i.e. godclient user)
 			std::string planetName;
@@ -679,7 +677,7 @@ bool ConsoleCommandParserServer::performParsing (const NetworkId & userId, const
 			std::vector<const Region *> regions;
 			RegionMaster::getRegionsForPlanet(planetName, regions);
 
-			for (std::vector<const Region *>::const_iterator i = regions.begin();	i != regions.end(); ++i)
+			for (std::vector<const Region *>::const_iterator i = regions.begin(); i != regions.end(); ++i)
 			{
 				const RegionRectangle * ro = dynamic_cast<const RegionRectangle*>(*i);
 				if (ro != nullptr)
@@ -749,7 +747,7 @@ bool ConsoleCommandParserServer::performParsing (const NetworkId & userId, const
 	}
 	else if (isAbbrev(argv[0], "setFrameRateLimit"))
 	{
-		if(argv.size() > 1)
+		if (argv.size() > 1)
 		{
 			float newLimit = static_cast<float>(atof(Unicode::wideToNarrow(argv[1]).c_str()));
 
@@ -764,22 +762,22 @@ bool ConsoleCommandParserServer::performParsing (const NetworkId & userId, const
 	}
 	else if (isAbbrev(argv[0], "setDebugFlag"))
 	{
-		if (!user->getClient ()->isGod ())
+		if (!user->getClient()->isGod())
 		{
-			result += Unicode::narrowToWide ("user does not have admin privileges");
+			result += Unicode::narrowToWide("user does not have admin privileges");
 		}
-		else if(argv.size() > 3)
+		else if (argv.size() > 3)
 		{
 			const std::string section = Unicode::wideToNarrow(argv[1]);
 			const std::string name = Unicode::wideToNarrow(argv[2]);
 			const bool value = argv[3][0] != '0';
 
 			bool * const flag = DebugFlags::findFlag(section.c_str(), name.c_str());
-			if(flag)
+			if (flag)
 			{
 				*flag = value;
 				result += Unicode::narrowToWide("set flag " + section + "/" + name + " to ");
-				if(value)
+				if (value)
 				{
 					result += Unicode::narrowToWide("true");
 				}
@@ -787,7 +785,6 @@ bool ConsoleCommandParserServer::performParsing (const NetworkId & userId, const
 				{
 					result += Unicode::narrowToWide("false");
 				}
-												
 			}
 			else
 			{
@@ -799,7 +796,7 @@ bool ConsoleCommandParserServer::performParsing (const NetworkId & userId, const
 			result += getErrorMessage(argv[0], ERR_FAIL);
 		}
 	}
-	else if(isAbbrev(argv[0], "validateWorld"))
+	else if (isAbbrev(argv[0], "validateWorld"))
 	{
 		World::validate();
 
@@ -823,9 +820,9 @@ bool ConsoleCommandParserServer::performParsing (const NetworkId & userId, const
 
 		size_t resultCount = results.size();
 
-		if(resultCount)
+		if (resultCount)
 		{
-			for(size_t i = 0; i < resultCount; i++)
+			for (size_t i = 0; i < resultCount; i++)
 			{
 				result += results[i]->getName();
 				result += Unicode::narrowToWide("\n");
@@ -834,7 +831,7 @@ bool ConsoleCommandParserServer::performParsing (const NetworkId & userId, const
 		else
 		{
 			result += Unicode::narrowToWide("No regions at the given point\n");
-		}	
+		}
 
 		result += getErrorMessage(argv[0], ERR_SUCCESS);
 	}
@@ -860,7 +857,7 @@ bool ConsoleCommandParserServer::performParsing (const NetworkId & userId, const
 	}
 	else if (isAbbrev(argv[0], "startSave"))
 	{
-		GenericValueTypeMessage<NetworkId> const msg("StartSaveMessage", userId); 
+		GenericValueTypeMessage<NetworkId> const msg("StartSaveMessage", userId);
 		GameServer::getInstance().sendToDatabaseServer(msg);
 
 		result += Unicode::narrowToWide("Request sent.  Please wait for reply");
@@ -924,7 +921,7 @@ bool ConsoleCommandParserServer::performParsing (const NetworkId & userId, const
 
 			ServerMessageForwarding::beginBroadcast();
 
-			GenericValueTypeMessage<bool> const enablePlayerSanityCheckerMessage("EnablePlayerSanityCheckerMessage",enableFlag);
+			GenericValueTypeMessage<bool> const enablePlayerSanityCheckerMessage("EnablePlayerSanityCheckerMessage", enableFlag);
 			ServerMessageForwarding::send(enablePlayerSanityCheckerMessage);
 
 			ServerMessageForwarding::end();
@@ -998,11 +995,11 @@ bool ConsoleCommandParserServer::performParsing (const NetworkId & userId, const
 
 bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const StringVector_t & argv, const String_t & originalCommand, String_t & result, const CommandParser * node)
 {
-	NOT_NULL (node);
+	NOT_NULL(node);
 
 	UNREF(originalCommand);
 
-	ServerObject * user = safe_cast<ServerObject *>(NetworkIdManager::getObjectById (userId));
+	ServerObject * user = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(userId));
 
 	if (isAbbrev(argv[0], "destroyPersistedBuildoutAreaDuplicates"))
 	{
@@ -1023,7 +1020,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 			{
 				ExcommunicateGameServerMessage exmsg(serverId, 0, "");
 				GameServer::getInstance().sendToCentralServer(exmsg);
-				result += getErrorMessage (argv[0], ERR_SUCCESS);	
+				result += getErrorMessage(argv[0], ERR_SUCCESS);
 			}
 			else
 				result += Unicode::narrowToWide("Invalid server number");
@@ -1048,7 +1045,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 			std::string const &scene = Unicode::wideToNarrow(argv[1]);
 			int x = static_cast<int>(strtod(Unicode::wideToNarrow(argv[2]).c_str(), nullptr));
 			int z = static_cast<int>(strtod(Unicode::wideToNarrow(argv[3]).c_str(), nullptr));
-		
+
 			RestartServerMessage msg(scene, x, z);
 			if (scene == ConfigServerGame::getSceneID())
 				GameServer::getInstance().sendToPlanetServer(msg);
@@ -1064,22 +1061,22 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		{
 			std::string const &scene = Unicode::wideToNarrow(argv[1]);
 
-			GenericValueTypeMessage<std::string> msg("RestartPlanetMessage",scene);
+			GenericValueTypeMessage<std::string> msg("RestartPlanetMessage", scene);
 
 			if (scene == ConfigServerGame::getSceneID())
 			{
-				GenericValueTypeMessage<int> const msg("ShutdownMessage", 0); 
+				GenericValueTypeMessage<int> const msg("ShutdownMessage", 0);
 				GameServer::getInstance().sendToPlanetServer(msg);
 			}
 			else
 				GameServer::getInstance().sendToCentralServer(msg);
-		
+
 			result += getErrorMessage(argv[0], ERR_SUCCESS);
 		}
 		else
 			result += Unicode::narrowToWide("Syntax:  remote server restartPlanet <sceneId>");
 	}
-	else if (isAbbrev(argv [0], "dumpCreatures"))
+	else if (isAbbrev(argv[0], "dumpCreatures"))
 	{
 		// This is potentially an expensive command, so make sure that this can only be done in god mode
 		if (!user)
@@ -1245,15 +1242,15 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		char buffer[128];
 		std::vector<int> moveListSize;
 
-		snprintf(buffer, sizeof(buffer)-1, "%d move object lists\n", ServerWorld::getNumMoveLists(moveListSize));
-		buffer[sizeof(buffer)-1] = '\0';
+		snprintf(buffer, sizeof(buffer) - 1, "%d move object lists\n", ServerWorld::getNumMoveLists(moveListSize));
+		buffer[sizeof(buffer) - 1] = '\0';
 		result += Unicode::narrowToWide(buffer);
 
 		int moveListIndex = 1;
 		for (std::vector<int>::const_iterator i = moveListSize.begin(); i != moveListSize.end(); ++i)
 		{
-			snprintf(buffer, sizeof(buffer)-1, "list #%d size: %d\n", moveListIndex++, *i);
-			buffer[sizeof(buffer)-1] = '\0';
+			snprintf(buffer, sizeof(buffer) - 1, "list #%d size: %d\n", moveListIndex++, *i);
+			buffer[sizeof(buffer) - 1] = '\0';
 			result += Unicode::narrowToWide(buffer);
 		}
 
@@ -1266,8 +1263,8 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		ServerWorld::setNumMoveLists(numMoveLists);
 
 		char buffer[128];
-		snprintf(buffer, sizeof(buffer)-1, "setting the number of move object lists to %d\n", numMoveLists);
-		buffer[sizeof(buffer)-1] = '\0';
+		snprintf(buffer, sizeof(buffer) - 1, "setting the number of move object lists to %d\n", numMoveLists);
+		buffer[sizeof(buffer) - 1] = '\0';
 
 		result += Unicode::narrowToWide(buffer);
 		result += getErrorMessage(argv[0], ERR_SUCCESS);
@@ -1517,7 +1514,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 				if (!padding.empty())
 					result += Unicode::narrowToWide(padding);
 
-				result += Unicode::narrowToWide(FormattedString<512>().sprintf(": %4d\n", iterStatistics->second));	
+				result += Unicode::narrowToWide(FormattedString<512>().sprintf(": %4d\n", iterStatistics->second));
 			}
 		}
 	}
@@ -1563,7 +1560,6 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 					++groupMemberIndex;
 
 					IGNORE_RETURN(orderedMemberList.insert(std::make_pair(std::make_pair(Unicode::toUpper(iter->second), iter->first), groupMemberName)));
-
 				}
 
 				for (std::multimap<std::pair<std::string, NetworkId>, std::string>::const_iterator iter2 = orderedMemberList.begin(); iter2 != orderedMemberList.end(); ++iter2)
@@ -1641,41 +1637,26 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 				{
 					if (iter->second->getType() & TravelPoint::TPT_NPC_Starport)
 					{
-						if (tpType.empty())
-							tpType += ", ";
-
 						tpType = "TPT_NPC_Starport";
 					}
 
 					if (iter->second->getType() & TravelPoint::TPT_NPC_Shuttleport)
 					{
-						if (tpType.empty())
-							tpType += ", ";
-
 						tpType = "TPT_NPC_Shuttleport";
 					}
 
 					if (iter->second->getType() & TravelPoint::TPT_NPC_StaticBaseBeacon)
 					{
-						if (tpType.empty())
-							tpType += ", ";
-
 						tpType = "TPT_NPC_StaticBaseBeacon";
 					}
 
 					if (iter->second->getType() & TravelPoint::TPT_PC_Shuttleport)
 					{
-						if (tpType.empty())
-							tpType += ", ";
-
 						tpType = "TPT_PC_Shuttleport";
 					}
 
 					if (iter->second->getType() & TravelPoint::TPT_PC_CampShuttleBeacon)
 					{
-						if (tpType.empty())
-							tpType += ", ";
-
 						tpType = "TPT_PC_CampShuttleBeacon";
 					}
 				}
@@ -2971,7 +2952,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 			if (!user)
 			{
 				parseSuccess = false;
-				result += Unicode::narrowToWide ("invalid user\n");
+				result += Unicode::narrowToWide("invalid user\n");
 			}
 
 			if (parseSuccess)
@@ -2979,7 +2960,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 				if (!user->getClient())
 				{
 					parseSuccess = false;
-					result += Unicode::narrowToWide ("invalid client\n");
+					result += Unicode::narrowToWide("invalid client\n");
 				}
 			}
 
@@ -2989,7 +2970,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 				if (!playerObject)
 				{
 					parseSuccess = false;
-					result += Unicode::narrowToWide ("invalid player object\n");
+					result += Unicode::narrowToWide("invalid player object\n");
 				}
 				else
 				{
@@ -3027,14 +3008,14 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 				if (s_tenOriginalGroundPlanets.count(ServerWorld::getSceneId()) <= 0)
 				{
 					parseSuccess = false;
-					result += Unicode::narrowToWide ("you must be on one of the 10 original ground planets for character transfer\n");
+					result += Unicode::narrowToWide("you must be on one of the 10 original ground planets for character transfer\n");
 				}
 			}
 
 			if (parseSuccess)
 			{
 				result += Unicode::narrowToWide(FormattedString<1024>().sprintf("requesting transfer of this character [%u, %s, %s (%s)] to [%u, %s, %s]\n", sourceStationId, GameServer::getInstance().getClusterName().c_str(), Unicode::wideToNarrow(user->getAssignedObjectName()).c_str(), user->getNetworkId().getValueString().c_str(), destStationId, destGalaxy.c_str(), destCharacterName.c_str()));
-				result += Unicode::narrowToWide ("you will be disconnected once the transfer is validated and the transfer process begins.\n");
+				result += Unicode::narrowToWide("you will be disconnected once the transfer is validated and the transfer process begins.\n");
 
 				TransferRequestMoveValidation const trmv(TransferRequestMoveValidation::TRS_console_god_command, GameServer::getInstance().getProcessId(), sourceStationId, destStationId, GameServer::getInstance().getClusterName(), destGalaxy, Unicode::wideToNarrow(user->getAssignedObjectName()), user->getNetworkId(), user->getTemplateCrc(), destCharacterName, std::string("en"));
 				GameServer::getInstance().sendToCentralServer(trmv);
@@ -3089,7 +3070,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 			result += Unicode::narrowToWide(FormattedString<1024>().sprintf("(%s) is not a valid GCW score category.\n", category.c_str()));
 			result += Unicode::narrowToWide("\nThe GCW score categories are as follows:\n");
 
-			std::map<std::string, Pvp::GcwScoreCategory const *> const & allGcwScoreCategory = Pvp::getAllGcwScoreCategory(); 
+			std::map<std::string, Pvp::GcwScoreCategory const *> const & allGcwScoreCategory = Pvp::getAllGcwScoreCategory();
 			for (std::map<std::string, Pvp::GcwScoreCategory const *>::const_iterator iter = allGcwScoreCategory.begin(); iter != allGcwScoreCategory.end(); ++iter)
 			{
 				result += Unicode::narrowToWide(iter->first);
@@ -3112,7 +3093,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 			result += Unicode::narrowToWide(FormattedString<1024>().sprintf("(%s) is not a valid GCW score category.\n", category.c_str()));
 			result += Unicode::narrowToWide("\nThe GCW score categories are as follows:\n");
 
-			std::map<std::string, Pvp::GcwScoreCategory const *> const & allGcwScoreCategory = Pvp::getAllGcwScoreCategory(); 
+			std::map<std::string, Pvp::GcwScoreCategory const *> const & allGcwScoreCategory = Pvp::getAllGcwScoreCategory();
 			for (std::map<std::string, Pvp::GcwScoreCategory const *>::const_iterator iter = allGcwScoreCategory.begin(); iter != allGcwScoreCategory.end(); ++iter)
 			{
 				result += Unicode::narrowToWide(iter->first);
@@ -3134,7 +3115,7 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 			result += Unicode::narrowToWide(FormattedString<1024>().sprintf("(%s) is not a valid GCW score category.\n", category.c_str()));
 			result += Unicode::narrowToWide("\nThe GCW score categories are as follows:\n");
 
-			std::map<std::string, Pvp::GcwScoreCategory const *> const & allGcwScoreCategory = Pvp::getAllGcwScoreCategory(); 
+			std::map<std::string, Pvp::GcwScoreCategory const *> const & allGcwScoreCategory = Pvp::getAllGcwScoreCategory();
 			for (std::map<std::string, Pvp::GcwScoreCategory const *>::const_iterator iter = allGcwScoreCategory.begin(); iter != allGcwScoreCategory.end(); ++iter)
 			{
 				result += Unicode::narrowToWide(iter->first);
@@ -3453,80 +3434,79 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 		GameServer::setExtraDelayPerFrameMs(ms);
 	}
 	else if (isAbbrev(argv[0], "serverinfo"))
-		{
-			char numBuf[64] = {"\0"};
-			static const Unicode::String unl(Unicode::narrowToWide(std::string("\n")));
+	{
+		char numBuf[64] = { "\0" };
+		static const Unicode::String unl(Unicode::narrowToWide(std::string("\n")));
 
+		result += Unicode::narrowToWide("PID: ");
+		snprintf(numBuf, sizeof(numBuf), "%lu", GameServer::getInstance().getProcessId());
+		result += Unicode::narrowToWide(std::string(numBuf)) + unl;
 
-			result += Unicode::narrowToWide("PID: ");
-			snprintf(numBuf, sizeof(numBuf), "%lu", GameServer::getInstance().getProcessId());
-			result += Unicode::narrowToWide(std::string(numBuf)) + unl;
+		result += Unicode::narrowToWide("Scene: ") + Unicode::narrowToWide(ConfigServerGame::getSceneID()) + unl;
 
-			result += Unicode::narrowToWide("Scene: ") + Unicode::narrowToWide(ConfigServerGame::getSceneID()) + unl;
+		snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumObjects());
+		result += Unicode::narrowToWide(std::string("Number of Objects: ") + std::string(numBuf)) + unl;
 
-			snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumObjects());
-			result += Unicode::narrowToWide(std::string("Number of Objects: ") + std::string(numBuf)) + unl;
+		snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumAI());
+		result += Unicode::narrowToWide(std::string("Number of AI: ") + std::string(numBuf)) + unl;
 
-			snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumAI());
-			result += Unicode::narrowToWide(std::string("Number of AI: ") + std::string(numBuf)) + unl;
+		snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumBuildings());
+		result += Unicode::narrowToWide(std::string("Number of Buildings: ") + std::string(numBuf)) + unl;
 
-			snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumBuildings());
-			result += Unicode::narrowToWide(std::string("Number of Buildings: ") + std::string(numBuf)) + unl;
-			
-			snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumInstallations());
-			result += Unicode::narrowToWide(std::string("Number of Installations: ") + std::string(numBuf)) + unl;
+		snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumInstallations());
+		result += Unicode::narrowToWide(std::string("Number of Installations: ") + std::string(numBuf)) + unl;
 
-			snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumCreatures());
-			result += Unicode::narrowToWide(std::string("Number of Creatures: ") + std::string(numBuf)) + unl;
+		snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumCreatures());
+		result += Unicode::narrowToWide(std::string("Number of Creatures: ") + std::string(numBuf)) + unl;
 
-			snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumPlayers());
-			result += Unicode::narrowToWide(std::string("Number of Players: ") + std::string(numBuf)) + unl;
+		snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumPlayers());
+		result += Unicode::narrowToWide(std::string("Number of Players: ") + std::string(numBuf)) + unl;
 
-			snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumTangibles());
-			result += Unicode::narrowToWide(std::string("Number of Tangibles: ") + std::string(numBuf)) + unl;
+		snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumTangibles());
+		result += Unicode::narrowToWide(std::string("Number of Tangibles: ") + std::string(numBuf)) + unl;
 
-			snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumUniverseObjects());
-			result += Unicode::narrowToWide(std::string("Number of UniverseObjects: ") + std::string(numBuf)) + unl;
+		snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumUniverseObjects());
+		result += Unicode::narrowToWide(std::string("Number of UniverseObjects: ") + std::string(numBuf)) + unl;
 
-			snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumDynamicAI());
-			result += Unicode::narrowToWide(std::string("Number of Dynamic AI: ") + std::string(numBuf)) + unl;
+		snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumDynamicAI());
+		result += Unicode::narrowToWide(std::string("Number of Dynamic AI: ") + std::string(numBuf)) + unl;
 
-			snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumStaticAI());
-			result += Unicode::narrowToWide(std::string("Number of Static AI: ") + std::string(numBuf)) + unl;
-						
-			snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumCombatAI());
-			result += Unicode::narrowToWide(std::string("Number of Combat AI: ") + std::string(numBuf)) + unl;
-			
-			snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumHibernatingAI());
-			result += Unicode::narrowToWide(std::string("Number of Hibernating AI: ") + std::string(numBuf)) + unl;
+		snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumStaticAI());
+		result += Unicode::narrowToWide(std::string("Number of Static AI: ") + std::string(numBuf)) + unl;
 
-			snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumDelayedHibernatingAI());
-			result += Unicode::narrowToWide(std::string("Number of Delayed Hibernating AI: ") + std::string(numBuf)) + unl;			
-			
-			snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumIntangibles());
-			result += Unicode::narrowToWide(std::string("Number of Intangibles: ") + std::string(numBuf)) + unl;
+		snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumCombatAI());
+		result += Unicode::narrowToWide(std::string("Number of Combat AI: ") + std::string(numBuf)) + unl;
 
-			snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumMissionDatas());
-			result += Unicode::narrowToWide(std::string("Number of MissionDatas: ") + std::string(numBuf)) + unl;
+		snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumHibernatingAI());
+		result += Unicode::narrowToWide(std::string("Number of Hibernating AI: ") + std::string(numBuf)) + unl;
 
-			snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumMissionObjects());
-			result += Unicode::narrowToWide(std::string("Number of MissionObjects: ") + std::string(numBuf)) + unl;
+		snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumDelayedHibernatingAI());
+		result += Unicode::narrowToWide(std::string("Number of Delayed Hibernating AI: ") + std::string(numBuf)) + unl;
 
-			snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumRunTimeRules());
-			result += Unicode::narrowToWide(std::string("Number of Runtime Rules: ") + std::string(numBuf)) + unl;
+		snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumIntangibles());
+		result += Unicode::narrowToWide(std::string("Number of Intangibles: ") + std::string(numBuf)) + unl;
 
-			snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumGroupObjects());
-			result += Unicode::narrowToWide(std::string("Number of GroupObjects: ") + std::string(numBuf)) + unl;
+		snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumMissionDatas());
+		result += Unicode::narrowToWide(std::string("Number of MissionDatas: ") + std::string(numBuf)) + unl;
 
-			snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumMissionListEntries());
-			result += Unicode::narrowToWide(std::string("Number of MissionListEntries: ") + std::string(numBuf)) + unl;
+		snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumMissionObjects());
+		result += Unicode::narrowToWide(std::string("Number of MissionObjects: ") + std::string(numBuf)) + unl;
 
-			snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumWaypoints());
-			result += Unicode::narrowToWide(std::string("Number of Waypoints: ") + std::string(numBuf)) + unl;
+		snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumRunTimeRules());
+		result += Unicode::narrowToWide(std::string("Number of Runtime Rules: ") + std::string(numBuf)) + unl;
 
-			snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumPlayerQuestObjects());
-			result += Unicode::narrowToWide(std::string("Number of PlayerQuestObjects: ") + std::string(numBuf)) + unl;
-		}
+		snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumGroupObjects());
+		result += Unicode::narrowToWide(std::string("Number of GroupObjects: ") + std::string(numBuf)) + unl;
+
+		snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumMissionListEntries());
+		result += Unicode::narrowToWide(std::string("Number of MissionListEntries: ") + std::string(numBuf)) + unl;
+
+		snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumWaypoints());
+		result += Unicode::narrowToWide(std::string("Number of Waypoints: ") + std::string(numBuf)) + unl;
+
+		snprintf(numBuf, sizeof(numBuf), "%d", ObjectTracker::getNumPlayerQuestObjects());
+		result += Unicode::narrowToWide(std::string("Number of PlayerQuestObjects: ") + std::string(numBuf)) + unl;
+	}
 #endif
 	else
 	{
@@ -3534,6 +3514,6 @@ bool ConsoleCommandParserServer::performParsing2(const NetworkId & userId, const
 	}
 
 	return true;
-}
+		}
 
 // ======================================================================

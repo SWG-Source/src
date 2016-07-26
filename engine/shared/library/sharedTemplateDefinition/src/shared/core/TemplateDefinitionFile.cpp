@@ -99,7 +99,7 @@ void TemplateDefinitionFile::setWriteForCompiler(bool flag)
  */
 const std::string & TemplateDefinitionFile::getTemplateNameFilter(void) const
 {
-static const std::string wildcard = "*";
+	static const std::string wildcard = "*";
 
 	if (!m_templateNameFilter.empty())
 		return m_templateNameFilter;
@@ -127,7 +127,7 @@ bool TemplateDefinitionFile::isValidTemplateName(const Filename & name) const
 			return true;
 	}
 
-	int const maxCaptureCount       = 10;
+	int const maxCaptureCount = 10;
 	int const matchDataElementCount = maxCaptureCount * 3;
 	int       matchData[matchDataElementCount];
 
@@ -188,11 +188,11 @@ void TemplateDefinitionFile::writeClassHeaderBegin(File &fp) const
 		baseNamePath = "sharedObject/";
 		baseName = ROOT_TEMPLATE_NAME;
 	}
-	else if(_stricmp(baseName, "tpfTemplate") == 0)
+	else if (_stricmp(baseName, "tpfTemplate") == 0)
 	{
 		baseNamePath = "sharedTemplateDefinition/";
 	}
-	
+
 	fp.print("//========================================================================\n");
 	fp.print("//\n");
 	fp.print("// %s.h\n", name);
@@ -366,10 +366,10 @@ void TemplateDefinitionFile::writeClassSourceBegin(File &fp, const TemplateData 
 	fp.print(" * Class constructor.\n");
 	fp.print(" */\n");
 	fp.print("%s::%s(const std::string & filename)\n", name, name);
-//	if (sourceTemplate.hasList())
+	//	if (sourceTemplate.hasList())
 	sourceTemplate.writeSourceLoadedFlagInit(fp);
 	fp.print("{\n");
-//	fp.print("\tsetId(%s);\n", getTemplateId().tagString.c_str());
+	//	fp.print("\tsetId(%s);\n", getTemplateId().tagString.c_str());
 	fp.print("}	// %s::%s\n", name, name);
 	fp.print("\n");
 	fp.print("/**\n");
@@ -445,11 +445,11 @@ void TemplateDefinitionFile::writeClassSourceBegin(File &fp, const TemplateData 
  */
 int TemplateDefinitionFile::parse(File &fp)
 {
-static const int BUFFER_SIZE = 1024;
-int lineLen;
-char buffer[BUFFER_SIZE];
-char token[BUFFER_SIZE];
-TemplateData *currentTemplate = nullptr;
+	static const int BUFFER_SIZE = 1024;
+	int lineLen;
+	char buffer[BUFFER_SIZE];
+	char token[BUFFER_SIZE];
+	TemplateData *currentTemplate = nullptr;
 
 	cleanup();
 
@@ -490,8 +490,8 @@ TemplateData *currentTemplate = nullptr;
 				fp.printError("no compiler path defined");
 				return -1;
 			}
-//			if (m_baseName.size() == 0 && m_templateName != ROOT_TEMPLATE_NAME)
-//				m_baseName = ROOT_TEMPLATE_NAME;
+			//			if (m_baseName.size() == 0 && m_templateName != ROOT_TEMPLATE_NAME)
+			//				m_baseName = ROOT_TEMPLATE_NAME;
 			line = getNextWhitespaceToken(line, token);
 			int version = atoi(token);
 			if (version < 0 || version > 9999)
@@ -506,7 +506,7 @@ TemplateData *currentTemplate = nullptr;
 			}
 			if (version > m_highestVersion)
 				m_highestVersion = version;
-			
+
 			currentTemplate = new TemplateData(version, *this);
 			m_templateMap[version] = currentTemplate;
 		}
@@ -530,7 +530,7 @@ TemplateData *currentTemplate = nullptr;
 			}
 			line = getNextWhitespaceToken(line, token);
 			setBaseFilename(token);
-			
+
 			// load and parse the base template
 			Filename baseFileName = fp.getFilename();
 			baseFileName.setName(token);
@@ -585,8 +585,8 @@ TemplateData *currentTemplate = nullptr;
 			WARNING(m_filterCompiledRegex == nullptr, ("TemplateDefinitionFile::parse(): pcre_compile() failed, error=[%s], errorOffset=[%d], regex text=[%s].", errorString, errorOffset, m_templateNameFilter.c_str()));
 		}
 		else if (strcmp(token, "clientpath") == 0 ||
-		         strcmp(token, "serverpath") == 0 ||
-		         strcmp(token, "sharedpath") == 0)
+			strcmp(token, "serverpath") == 0 ||
+			strcmp(token, "sharedpath") == 0)
 		{
 			if (m_path.getPath().size() != 0)
 			{
@@ -595,14 +595,14 @@ TemplateData *currentTemplate = nullptr;
 			}
 			if (strcmp(token, "clientpath") == 0)
 				m_templateLocation = LOC_CLIENT;
-		    else if (strcmp(token, "serverpath") == 0)
+			else if (strcmp(token, "serverpath") == 0)
 				m_templateLocation = LOC_SERVER;
-		    else
+			else
 				m_templateLocation = LOC_SHARED;
 			line = getNextWhitespaceToken(line, token);
 			m_path.setPath(token);
 			m_path.prependPath(fp.getFilename());
-			// reset the template name to add the corrent prefix to the template 
+			// reset the template name to add the corrent prefix to the template
 			// name
 			setTemplateFilename(m_templateFilename);
 			if (!m_baseFilename.empty())
@@ -622,7 +622,7 @@ TemplateData *currentTemplate = nullptr;
 		else
 		{
 			char errbuf[2048];
-			sprintf(errbuf, "I don't know how to handle this line!: <%s>. "
+			snprintf(errbuf, 2048, "I don't know how to handle this line!: <%s>. "
 				"Barfed on token <%s>.", buffer, token);
 			fp.printError(errbuf);
 			return -1;

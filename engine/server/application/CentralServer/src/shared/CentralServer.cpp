@@ -122,15 +122,14 @@
 #include "unicodeArchive/UnicodeArchive.h"
 #include <stdio.h>
 
-
 // Trying todo something here ...
 #include "webAPI.h"
 
 namespace CentralServerNamespace
 {
-	bool gs_connectionServersPublic=false;
-	bool gs_clusterIsLocked=false;
-	bool gs_clusterIsSecret=false;
+	bool gs_connectionServersPublic = false;
+	bool gs_clusterIsLocked = false;
+	bool gs_clusterIsSecret = false;
 
 	std::map<std::string, std::string> ms_sceneToHostMap;
 
@@ -158,99 +157,97 @@ using namespace CentralServerNamespace;
 // ======================================================================
 
 CentralServer::CentralObject::CentralObject() :
-m_sceneId(),
-m_authoritativeProcess(0),
-m_proxyProcessList()
+	m_sceneId(),
+	m_authoritativeProcess(0),
+	m_proxyProcessList()
 {
-
 }
 
 //-----------------------------------------------------------------------
 
 CentralServer::CentralObject::CentralObject(const CentralServer::SceneId & sceneId, uint32 authProcess) :
-m_sceneId(sceneId),
-m_authoritativeProcess(authProcess),
-m_proxyProcessList()
+	m_sceneId(sceneId),
+	m_authoritativeProcess(authProcess),
+	m_proxyProcessList()
 {
-
 }
 
 //-----------------------------------------------------------------------
 
 CentralServer::CentralServer() :
-Singleton<CentralServer>(),
-MessageDispatch::Receiver(),
-m_connectionServerConnections(),
-m_chatServerConnections(),
-m_csServerConnections(),
-m_gameServers(),
-m_accountConnectionMap(),
-m_dbProcessServerProcessId(0),
-m_done(false),
-m_gameService(0),
-m_chatService(0),
-m_connService(0),
-m_csService(0),
-m_planetService(0),
-m_consoleService(0),
-m_transferServerConnection(0),
-m_stationPlayersCollectorConnection(0),
-m_gameServerConnections(),
-m_gameServerConnectionsList(),
-m_playerSceneMap(),
-m_loginServerConnectionMap(),
-m_loginServerKeys(0),
-m_loginService(0),
-m_pAuctionTransferClient(0),
-m_messagesWaitingForPlanetServer(),
-m_pendingLoadingObjects(),
-m_pendingNewObjects(),
-m_nextFreeProcessId(0),
-m_taskManager(0),
-m_taskService(0),
-m_commandLine(),
-m_pendingTransfers(),
-m_totalPlayerCount(0),
-m_totalFreeTrialCount(0),
-m_totalEmptySceneCount(0),
-m_totalTutorialSceneCount(0),
-m_totalFalconSceneCount(0),
-m_metricsData(0),
-m_pendingPlanetServers(),
-m_planetsWaitingForPreload(),
-m_planetServers(),
-m_nextPlanetWatcherPort(ConfigCentralServer::getFirstPlanetWatcherPort()),
-m_databaseBacklogged(false),
-m_lastLoadingStateTime(0),
-m_timeClusterStarted(time(0)),
-m_clusterStartupTime(-1),
-m_timeClusterWentIntoLoadingState(time(0)),
-m_clusterId(0),
-m_serverPings(),
-m_shutdownTotalTime(0),
-m_shutdownMaxTime(0),
-m_shutdownSystemMessage(Unicode::narrowToWide("")),
-m_shutdownPhase(0),
-m_shutdownHaveDatabaseSaveStart(false),
-m_shutdownHaveDatabaseComplete(false),
-m_curTime(0),
-m_lastTimeSystemTimeMismatchNotification(0),
-m_lastTimeSystemTimeMismatchNotificationDescription(),
-m_disconnectedTaskManagerList(),
-m_populationStatistics(),
-m_timePopulationStatisticsRefresh(0),
-m_timePopulationStatisticsNextRefresh(0),
-m_gcwScoreStatistics(),
-m_timeGcwScoreStatisticsRefresh(0),
-m_timeGcwScoreStatisticsNextRefresh(0),
-m_lastLoginTimeStatistics(),
-m_createTimeStatistics(),
-m_timeLastLoginTimeStatisticsRefresh(0),
-m_timeLastLoginTimeStatisticsNextRefresh(0),
-m_numberOfCharacterMatchRequests(0),
-m_numberOfCharacterMatchResults(0),
-m_timeSpentOnCharacterMatchRequestsMs(0),
-m_timeCharacterMatchStatisticsNextRefresh(0)
+	Singleton<CentralServer>(),
+	MessageDispatch::Receiver(),
+	m_connectionServerConnections(),
+	m_chatServerConnections(),
+	m_csServerConnections(),
+	m_gameServers(),
+	m_accountConnectionMap(),
+	m_dbProcessServerProcessId(0),
+	m_done(false),
+	m_gameService(0),
+	m_chatService(0),
+	m_connService(0),
+	m_csService(0),
+	m_planetService(0),
+	m_consoleService(0),
+	m_transferServerConnection(0),
+	m_stationPlayersCollectorConnection(0),
+	m_gameServerConnections(),
+	m_gameServerConnectionsList(),
+	m_playerSceneMap(),
+	m_loginServerConnectionMap(),
+	m_loginServerKeys(0),
+	m_loginService(0),
+	m_pAuctionTransferClient(0),
+	m_messagesWaitingForPlanetServer(),
+	m_pendingLoadingObjects(),
+	m_pendingNewObjects(),
+	m_nextFreeProcessId(0),
+	m_taskManager(0),
+	m_taskService(0),
+	m_commandLine(),
+	m_pendingTransfers(),
+	m_totalPlayerCount(0),
+	m_totalFreeTrialCount(0),
+	m_totalEmptySceneCount(0),
+	m_totalTutorialSceneCount(0),
+	m_totalFalconSceneCount(0),
+	m_metricsData(0),
+	m_pendingPlanetServers(),
+	m_planetsWaitingForPreload(),
+	m_planetServers(),
+	m_nextPlanetWatcherPort(ConfigCentralServer::getFirstPlanetWatcherPort()),
+	m_databaseBacklogged(false),
+	m_lastLoadingStateTime(0),
+	m_timeClusterStarted(time(0)),
+	m_clusterStartupTime(-1),
+	m_timeClusterWentIntoLoadingState(time(0)),
+	m_clusterId(0),
+	m_serverPings(),
+	m_shutdownTotalTime(0),
+	m_shutdownMaxTime(0),
+	m_shutdownSystemMessage(Unicode::narrowToWide("")),
+	m_shutdownPhase(0),
+	m_shutdownHaveDatabaseSaveStart(false),
+	m_shutdownHaveDatabaseComplete(false),
+	m_curTime(0),
+	m_lastTimeSystemTimeMismatchNotification(0),
+	m_lastTimeSystemTimeMismatchNotificationDescription(),
+	m_disconnectedTaskManagerList(),
+	m_populationStatistics(),
+	m_timePopulationStatisticsRefresh(0),
+	m_timePopulationStatisticsNextRefresh(0),
+	m_gcwScoreStatistics(),
+	m_timeGcwScoreStatisticsRefresh(0),
+	m_timeGcwScoreStatisticsNextRefresh(0),
+	m_lastLoginTimeStatistics(),
+	m_createTimeStatistics(),
+	m_timeLastLoginTimeStatisticsRefresh(0),
+	m_timeLastLoginTimeStatisticsNextRefresh(0),
+	m_numberOfCharacterMatchRequests(0),
+	m_numberOfCharacterMatchResults(0),
+	m_timeSpentOnCharacterMatchRequestsMs(0),
+	m_timeCharacterMatchStatisticsNextRefresh(0)
 {
 	m_curTime = static_cast<uint32>(time(0));
 	m_loginServerKeys = new KeyServer(20);
@@ -275,9 +272,9 @@ m_timeCharacterMatchStatisticsNextRefresh(0)
 	connectToMessage("TaskConnectionOpened");
 	connectToMessage("RandomNameRequest"); // from connection server
 	connectToMessage("RandomNameResponse"); // from game server
-	connectToMessage("VerifyAndLockNameRequest"); // from connection server	
-	connectToMessage("VerifyAndLockNameResponse"); // from game server	
-	
+	connectToMessage("VerifyAndLockNameRequest"); // from connection server
+	connectToMessage("VerifyAndLockNameResponse"); // from game server
+
 	//Object Messages
 	connectToMessage("RequestObjectMessage");
 	connectToMessage("RequestChunkMessage");
@@ -386,7 +383,7 @@ m_timeCharacterMatchStatisticsNextRefresh(0)
 	connectToMessage("RestartServerByRoleMessage");
 	connectToMessage("ExcommunicateGameServerMessage");
 	connectToMessage("RestartPlanetMessage");
-	
+
 	// Cluster state
 	connectToMessage("UpdateClusterLockedAndSecretState");
 
@@ -432,7 +429,7 @@ m_timeCharacterMatchStatisticsNextRefresh(0)
 CentralServer::~CentralServer()
 {
 	ConsoleManager::remove();
-	
+
 	CentralCSHandler::remove();
 
 	ms_sceneToHostMap.clear();
@@ -578,9 +575,9 @@ const std::string& CentralServer::getHostForScene(const std::string& scene) cons
 void CentralServer::getReadyGameServers(std::vector<uint32> &theList)
 {
 	std::map<uint32, GameServerConnection *>::const_iterator i;
-	for (i = m_gameServerConnections.begin(); i!=m_gameServerConnections.end(); ++i)
+	for (i = m_gameServerConnections.begin(); i != m_gameServerConnections.end(); ++i)
 	{
-		if ((*i).second->getProcessId()!=getDbProcessServerProcessId() && i->second->getReady())
+		if ((*i).second->getProcessId() != getDbProcessServerProcessId() && i->second->getReady())
 			theList.push_back(i->second->getProcessId());
 	}
 }
@@ -654,7 +651,7 @@ GameServerConnection * CentralServer::getGameServer(const uint32 processId) cons
 {
 	GameServerConnection * result = 0;
 	std::map<uint32, GameServerConnection *>::const_iterator i = m_gameServerConnections.find(processId);
-	if(i != m_gameServerConnections.end())
+	if (i != m_gameServerConnections.end())
 		result = (*i).second;
 	return result;
 }
@@ -679,7 +676,7 @@ void CentralServer::pushAllKeys(ConnectionServerConnection * targetConnectionSer
 {
 	DEBUG_FATAL(static_cast<int>(m_loginServerKeys->getKeyCount()) < 0, ("Invalid number of keys (uint overflow) in CentralServer.h"));
 
-	for(int i = static_cast<int>(m_loginServerKeys->getKeyCount()) - 1; i >= 0 ; i --)
+	for (int i = static_cast<int>(m_loginServerKeys->getKeyCount()) - 1; i >= 0; i--)
 	{
 		ConnectionKeyPush pk(m_loginServerKeys->getKey(static_cast<uint32>(i)));
 		targetConnectionServer->send(pk, true);
@@ -717,7 +714,7 @@ void CentralServer::launchStartingProcesses() const
 	launchStartingConnectionServers();
 
 	std::string options = "-s dbProcess centralServerAddress=";
-	if(getGameService())
+	if (getGameService())
 	{
 		options += getGameService()->getBindAddress();
 	}
@@ -730,7 +727,7 @@ void CentralServer::launchStartingProcesses() const
 	m_taskManager->send(pd, true);
 
 	options = "-s ChatServer centralServerAddress=";
-	if(getChatService())
+	if (getChatService())
 	{
 		options += getChatService()->getBindAddress();
 	}
@@ -744,7 +741,7 @@ void CentralServer::launchStartingProcesses() const
 	m_taskManager->send(pc, true);
 
 	options = "-s CustomerServiceServer centralServerAddress=";
-	if(getCustomerService())
+	if (getCustomerService())
 	{
 		options += getCustomerService()->getBindAddress();
 	}
@@ -775,17 +772,17 @@ void CentralServer::launchStartingConnectionServers() const
 		char const * const host = ConfigCentralServer::getStartingConnectionServer(i);
 		if (host)
 		{
-			char const * listenAddress = strchr(host,':');
+			char const * listenAddress = strchr(host, ':');
 			DEBUG_FATAL(!listenAddress, ("Could not start up connection server because string %s has no listen address", host));
 			std::string hostString(host, static_cast<unsigned long>(listenAddress - host));
 			++listenAddress;
 
-			char const * publicPort = strchr(listenAddress,':');
+			char const * publicPort = strchr(listenAddress, ':');
 			DEBUG_FATAL(!publicPort, ("Could not start up connection server because string %s has no public port", host));
 			std::string listenString(listenAddress, static_cast<unsigned long>(publicPort - listenAddress));
 			++publicPort;
 
-			char const * privatePort = strchr(publicPort,':');
+			char const * privatePort = strchr(publicPort, ':');
 			DEBUG_FATAL(!privatePort, ("Could not start up connection server because string %s has no private port", host));
 			std::string publicPortString(publicPort, static_cast<unsigned long>(privatePort - publicPort));
 			++privatePort;
@@ -800,13 +797,12 @@ void CentralServer::launchStartingConnectionServers() const
 	}
 
 	// if there were none specified, use defaults
-	if(i == 0)
+	if (i == 0)
 	{
 		// must update s_connectionServerHostList before calling startConnectionServer()
 		s_connectionServerHostList.push_back("node0");
 		startConnectionServer(s_connectionServerHostList.size(), NetworkHandler::getHostName(), 0, 0, 0);
 	}
-
 }
 
 //-----------------------------------------------------------------------
@@ -818,7 +814,7 @@ void CentralServer::launchStartingPlanetServers()
 	int i = 0;
 	int const numberOfStartPlanets = ConfigCentralServer::getNumberOfStartPlanets();
 
-	for (i = 0; i < numberOfStartPlanets ; ++i)
+	for (i = 0; i < numberOfStartPlanets; ++i)
 	{
 		char const * const p = ConfigCentralServer::getStartPlanet(i);
 		if (p)
@@ -829,11 +825,11 @@ void CentralServer::launchStartingPlanetServers()
 			std::string hostName;
 			char const * planet = p;
 			NOT_NULL(planet);
-			char const * host = strchr(planet,':');
+			char const * host = strchr(planet, ':');
 
 			if (host)
 			{
-				planetName = std::string(planet, static_cast<unsigned long>(host - planet) );
+				planetName = std::string(planet, static_cast<unsigned long>(host - planet));
 				++host;
 				hostName = host;
 			}
@@ -849,7 +845,7 @@ void CentralServer::launchStartingPlanetServers()
 
 	// if there were no planets specified, get the configfile default and
 	// start that planet
-	if(i == 0)
+	if (i == 0)
 	{
 		startPlanetServer("any", ConfigCentralServer::getStartPlanet(), 0);
 	}
@@ -868,7 +864,7 @@ void CentralServer::launchCommoditiesServer()
 
 void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, const MessageDispatch::MessageBase & message)
 {
-	if(message.isType("LoginKeyPush"))
+	if (message.isType("LoginKeyPush"))
 	{
 		// receiving another key
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
@@ -876,7 +872,7 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		m_loginServerKeys->pushKey(k.getKey());
 		DEBUG_REPORT_LOG(true, ("Received session key.\n"));
 		ConnectionServerConnectionList::iterator i = m_connectionServerConnections.begin();
-		for (;i != m_connectionServerConnections.end(); ++i)
+		for (; i != m_connectionServerConnections.end(); ++i)
 		{
 			(*i)->send(k, true);
 		}
@@ -898,7 +894,7 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 			m_accountConnectionMap.erase(i);
 		}
 	}
-	else if(message.isType("ConnectionOpened"))
+	else if (message.isType("ConnectionOpened"))
 	{
 		if (!dynamic_cast<const LoginServerConnection *>(&source))
 		{
@@ -909,13 +905,13 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 			newServer->send(pidMessage, true);
 		}
 	}
-	else if(message.isType("ConnectionServerConnectionClosed"))
+	else if (message.isType("ConnectionServerConnectionClosed"))
 	{
-		DEBUG_REPORT_LOG(true,("Handling connection server crash.\n"));
+		DEBUG_REPORT_LOG(true, ("Handling connection server crash.\n"));
 		ConnectionServerConnection const *c = safe_cast<ConnectionServerConnection const *>(&source);
 		removeFromAccountConnectionMap(c->getId());
 	}
-	else if(message.isType("GameConnectionClosed"))
+	else if (message.isType("GameConnectionClosed"))
 	{
 		DEBUG_REPORT_LOG(true, ("Game server closed connection\n"));
 		GameServerConnection const *g = safe_cast<GameServerConnection const *>(&source);
@@ -928,12 +924,12 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		m_loginServerConnectionMap[l->getProcessId()] = l;
 		//Send connection server data
 		ConnectionServerConnectionList::iterator i = m_connectionServerConnections.begin();
-		for(; i != m_connectionServerConnections.end(); ++i)
+		for (; i != m_connectionServerConnections.end(); ++i)
 		{
 			const ConnectionServerConnection * const csc = *i;
-			if ( (csc->getClientServicePortPrivate() != 0) || (csc->getClientServicePortPublic() != 0) )
+			if ((csc->getClientServicePortPrivate() != 0) || (csc->getClientServicePortPublic() != 0))
 			{
-				const LoginConnectionServerAddress csa(csc->getId(), csc->getClientServiceAddress(), csc->getClientServicePortPrivate(), csc->getClientServicePortPublic(), csc->getPlayerCount(), csc->getPingPort ());
+				const LoginConnectionServerAddress csa(csc->getId(), csc->getClientServiceAddress(), csc->getClientServicePortPrivate(), csc->getClientServicePortPublic(), csc->getPlayerCount(), csc->getPingPort());
 				l->send(csa, true);
 			}
 		}
@@ -945,11 +941,11 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		CharacterCreationTracker::getInstance().retryLoginServerCreates();
 	}
 
-	else if(message.isType("LoginConnectionClosed"))
+	else if (message.isType("LoginConnectionClosed"))
 	{
 		LoginServerConnection const *l = safe_cast<const LoginServerConnection *>(&source);
-		LoginServerConnectionMapType::iterator i=m_loginServerConnectionMap.find(l->getProcessId());
-		if (i!=m_loginServerConnectionMap.end())
+		LoginServerConnectionMapType::iterator i = m_loginServerConnectionMap.find(l->getProcessId());
+		if (i != m_loginServerConnectionMap.end())
 			m_loginServerConnectionMap.erase(i);
 
 		// In development mode, try to reconnect to the login server if we aren't shutting down
@@ -959,14 +955,14 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		CharacterCreationTracker::getInstance().onLoginServerDisconnect(l->getProcessId());
 	}
 
-	else if(message.isType("ClusterId"))
+	else if (message.isType("ClusterId"))
 	{
 		Archive::ReadIterator ri = static_cast<GameNetworkMessage const &>(message).getByteStream().begin();
 		GenericValueTypeMessage<uint32> const msg(ri);
 
 		if (m_clusterId == 0)
 		{
-			FATAL(((msg.getValue() < 1) || (msg.getValue() > 255)),("Cluster Id (%lu) must be between 1 and 255 inclusive", msg.getValue()));
+			FATAL(((msg.getValue() < 1) || (msg.getValue() > 255)), ("Cluster Id (%lu) must be between 1 and 255 inclusive", msg.getValue()));
 
 			m_clusterId = static_cast<uint8>(msg.getValue());
 
@@ -975,7 +971,7 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		}
 	}
 
-	else if(message.isType("CentralGameServerConnect"))
+	else if (message.isType("CentralGameServerConnect"))
 	{
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		CentralGameServerConnect c(ri);
@@ -983,10 +979,9 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		GameServerConnection *g = const_cast<GameServerConnection *>(safe_cast<GameServerConnection const *>(&source));
 
 		if (g != nullptr) {
-
 			FATAL(ConfigCentralServer::getValidateBuildVersionNumber() && strcmp(ApplicationVersion::getInternalVersion(), c.getBuildVersionNumber().c_str()),
 				("Build version number mismatch: central server (%s), remote server %s (%s)",
-				ApplicationVersion::getInternalVersion(), g->getRemoteAddress().c_str(), c.getBuildVersionNumber().c_str()));
+					ApplicationVersion::getInternalVersion(), g->getRemoteAddress().c_str(), c.getBuildVersionNumber().c_str()));
 
 			// a game server (or db process) has connected...
 			addGameServer(g);
@@ -1020,9 +1015,9 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 	{
 		GameServerConnection *g = const_cast<GameServerConnection *>(safe_cast<GameServerConnection const *>(&source));
 		std::set<ChatServerConnection *>::const_iterator chatIter;
-		for(chatIter = m_chatServerConnections.begin(); chatIter != m_chatServerConnections.end(); ++chatIter)
+		for (chatIter = m_chatServerConnections.begin(); chatIter != m_chatServerConnections.end(); ++chatIter)
 		{
-			if((*chatIter)->getGameServicePort())
+			if ((*chatIter)->getGameServicePort())
 			{
 				ChatServerOnline cso((*chatIter)->getRemoteAddress(), (*chatIter)->getGameServicePort());
 				g->send(cso, true);
@@ -1040,16 +1035,16 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 
 		broadcastToGameServers(address);
 	}
-	else if(message.isType("TaskConnectionClosed"))
+	else if (message.isType("TaskConnectionClosed"))
 	{
 		//		Net::getInstance().connect(Network::Address("127.0.0.1", ConfigCentralServer::getTaskManagerPort()), TaskConnection());
 	}
-	else if(message.isType("TaskConnectionOpened"))
+	else if (message.isType("TaskConnectionOpened"))
 	{
 		DEBUG_REPORT_LOG(true, ("Task manager connection opened\n"));
 	}
 
-	else if(message.isType("CentralGameServerDbProcessServerProcessId"))
+	else if (message.isType("CentralGameServerDbProcessServerProcessId"))
 	{
 		DEBUG_REPORT_LOG(true, ("dbProcess connected\n"));
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
@@ -1061,7 +1056,7 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		launchStartingPlanetServers();
 	}
 
-	else if(message.isType("RequestChunkMessage"))
+	else if (message.isType("RequestChunkMessage"))
 	{
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		RequestChunkMessage t(ri);
@@ -1069,13 +1064,13 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		// Forward this message to the dbProcess
 		sendToGameServer(m_dbProcessServerProcessId, t, true);
 	}
-	else if(message.isType("LocateStructureMessage"))
+	else if (message.isType("LocateStructureMessage"))
 	{
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		LocateStructureMessage t(ri);
 		sendToPlanetServer(t.getSceneId(), t, true);
 	}
-	else if(message.isType("ForceUnloadObjectMessage"))
+	else if (message.isType("ForceUnloadObjectMessage"))
 	{
 		//N.B.  This message can come from a game server or from the planet server.
 		DEBUG_WARNING(true, ("Received ForceUnloadObject.  Need to implement this\n"));
@@ -1087,7 +1082,7 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		//forceUnload(t.getId(),t.getPermaDelete());
 	}
 	//Character Creation Messages
-	else if(message.isType("ConnectionCreateCharacter"))
+	else if (message.isType("ConnectionCreateCharacter"))
 	{
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		ConnectionCreateCharacter c(ri);
@@ -1095,50 +1090,49 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		LOG("TraceCharacterCreation", ("%d received ConnectionCreateCharacter", c.getStationId()));
 		CharacterCreationTracker::getInstance().handleCreateNewCharacter(c);
 	}
-	else if(message.isType("GameCreateCharacterFailed"))
+	else if (message.isType("GameCreateCharacterFailed"))
 	{
 		DEBUG_REPORT_LOG(true, ("Game server advises central that character creation failed\n"));
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		GameCreateCharacterFailed f(ri);
 		CharacterCreationTracker::getInstance().handleGameCreateCharacterFailed(f.getStationId(), f.getName(), f.getErrorMessage(), f.getOptionalDetailedErrorMessage());
 	}
-	else if(message.isType("DatabaseCreateCharacterSuccess"))
+	else if (message.isType("DatabaseCreateCharacterSuccess"))
 	{
 		DEBUG_REPORT_LOG(true, ("Database Process advises central that character creation succeeded\n"));
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		DatabaseCreateCharacterSuccess s(ri);
 		CharacterCreationTracker::getInstance().handleDatabaseCreateCharacterSuccess(s.getStationId(), s.getCharacterName(), s.getObjectId(), s.getTemplateId(), s.getJedi());
 	}
-	else if(message.isType("LoginCreateCharacterAckMessage"))
+	else if (message.isType("LoginCreateCharacterAckMessage"))
 	{
 		DEBUG_REPORT_LOG(true, ("Login Server advises central that character creation succeeded\n"));
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		LoginCreateCharacterAckMessage s(ri);
 		CharacterCreationTracker::getInstance().handleLoginCreateCharacterAck(s.getStationId());
 	}
-	else if(message.isType("LoginRestoreCharacterMessage"))
+	else if (message.isType("LoginRestoreCharacterMessage"))
 	{
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		LoginRestoreCharacterMessage msg(ri);
 
 		IGNORE_RETURN(sendToArbitraryLoginServer(msg));
 	}
-	else if(message.isType("NewCharacterCreated"))
+	else if (message.isType("NewCharacterCreated"))
 	{
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		GenericValueTypeMessage<StationId> const ncc(ri);
 
 		CentralServer::getInstance().sendToAllConnectionServers(ncc, true);
 	}
-	else if(message.isType("DatabaseConsoleReplyMessage"))
+	else if (message.isType("DatabaseConsoleReplyMessage"))
 	{
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		GenericValueTypeMessage<std::pair<std::string, std::string> > msg(ri);
 
 		IGNORE_RETURN(sendToRandomGameServer(msg));
 	}
-	else if(message.isType("LoginUpgradeAccountMessage"))
+	else if (message.isType("LoginUpgradeAccountMessage"))
 	{
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		LoginUpgradeAccountMessage msg(ri);
@@ -1146,9 +1140,9 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		if (msg.getIsAck())
 		{
 			MessageToMessage const reply(
-				MessageToPayload(msg.getReplyToObject(), NetworkId::cms_invalid, msg.getReplyMessage(), msg.getPackedMessageData(), 0, false, MessageToPayload::DT_c,NetworkId::cms_invalid,std::string(), 0),
+				MessageToPayload(msg.getReplyToObject(), NetworkId::cms_invalid, msg.getReplyMessage(), msg.getPackedMessageData(), 0, false, MessageToPayload::DT_c, NetworkId::cms_invalid, std::string(), 0),
 				0);
-			sendToAllGameServers (reply,true);
+			sendToAllGameServers(reply, true);
 		}
 		else
 		{
@@ -1158,7 +1152,7 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 	else if (message.isType("RandomNameRequest"))
 	{
 		GameServerConnection * gameServer = getRandomGameServer();
-		if(gameServer)
+		if (gameServer)
 		{
 			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 			RandomNameRequest crnr(ri);
@@ -1176,13 +1170,13 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		}
 		else
 		{
-			DEBUG_REPORT_LOG(true,("Could not send name to client because unable to determine which connection server to use.\n"));
+			DEBUG_REPORT_LOG(true, ("Could not send name to client because unable to determine which connection server to use.\n"));
 		}
 	}
 	else if (message.isType("VerifyAndLockNameRequest"))
 	{
 		GameServerConnection * gameServer = getRandomGameServer();
-		if(gameServer)
+		if (gameServer)
 		{
 			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 			VerifyAndLockNameRequest valnr(ri);
@@ -1200,12 +1194,12 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		}
 		else
 		{
-			DEBUG_REPORT_LOG(true,("Could not send name lock response to client because unable to determine which connection server to use.\n"));
+			DEBUG_REPORT_LOG(true, ("Could not send name lock response to client because unable to determine which connection server to use.\n"));
 		}
-	}	
+	}
 	else if (message.isType("RequestOIDsMessage"))
 	{
-		DEBUG_REPORT_LOG(true,("Got RequestOIDsMessage.\n"));
+		DEBUG_REPORT_LOG(true, ("Got RequestOIDsMessage.\n"));
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		RequestOIDsMessage m(ri);
 
@@ -1216,7 +1210,7 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 	}
 	else if (message.isType("AddOIDBlockMessage"))
 	{
-		DEBUG_REPORT_LOG(true,("Got AddOIDBlockMessage.\n"));
+		DEBUG_REPORT_LOG(true, ("Got AddOIDBlockMessage.\n"));
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		AddOIDBlockMessage m(ri);
 
@@ -1228,7 +1222,7 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 	else if (message.isType("LoggedInMessage"))
 	{
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		LoggedInMessage m (ri);
+		LoggedInMessage m(ri);
 		DEBUG_REPORT_LOG(true, ("Pending character %lu is logging in or dropping\n", m.getAccountNumber()));
 
 		// Once they're logged in, Central doesn't need to know about them anymore:
@@ -1241,7 +1235,7 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		CharacterListMessage m(ri);
 
 		// Find the client connection and send the character to it.
-		DEBUG_REPORT_LOG(true,("Got CharacterListMessage for %lu.\n",m.getAccountNumber()));
+		DEBUG_REPORT_LOG(true, ("Got CharacterListMessage for %lu.\n", m.getAccountNumber()));
 		ConnectionServerConnection *conn = getConnectionServerForAccount(m.getAccountNumber());
 
 		if (conn)
@@ -1250,7 +1244,7 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		}
 		else
 		{
-			DEBUG_REPORT_LOG(true,("Warning:  received CharacterListMessage for client that is not connected."));
+			DEBUG_REPORT_LOG(true, ("Warning:  received CharacterListMessage for client that is not connected."));
 		}
 	}
 	else if (message.isType("ValidateCharacterForLoginMessage"))
@@ -1269,10 +1263,10 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		ValidateCharacterForLoginReplyMessage msg(ri);
 
 		ConnectionServerConnection *conn = getConnectionServerForAccount(msg.getSuid());
-		if(conn)
-			conn->send(msg,true);
+		if (conn)
+			conn->send(msg, true);
 		else
-			DEBUG_REPORT_LOG(true,("Trying to handle ValidateCharacterForLoginReplyMessage for account %lu, but could not determine which connection server to use.\n",msg.getSuid()));
+			DEBUG_REPORT_LOG(true, ("Trying to handle ValidateCharacterForLoginReplyMessage for account %lu, but could not determine which connection server to use.\n", msg.getSuid()));
 	}
 	else if (message.isType("EnableCharacterMessage"))
 	{
@@ -1306,19 +1300,19 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		GenericValueTypeMessage<std::pair<std::string, std::string> > reply("DatabaseConsoleReplyMessage", std::make_pair(msg.getValue().first, msg.getValue().second));
 		getRandomGameServer()->send(reply, true);
 	}
-	else if(message.isType("TransferReplyLoginLocationData"))
+	else if (message.isType("TransferReplyLoginLocationData"))
 	{
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		GenericValueTypeMessage<TransferCharacterData> reply(ri);
 		// If this request has a CS Tool Id associated with it, it is an admin request for the CSTool,
-		// and so we should send it directly to the connection server, and not depend on a 
+		// and so we should send it directly to the connection server, and not depend on a
 		// transfer server existing.
-		
-		if(reply.getValue().getCSToolId() > 0)
+
+		if (reply.getValue().getCSToolId() > 0)
 		{
 			GenericValueTypeMessage<TransferCharacterData> loginMessage("TransferLoginCharacterToSourceServer", reply.getValue());
 			ConnectionServerConnection * conn = getAnyConnectionServer();
-			if(conn)
+			if (conn)
 			{
 				conn->send(loginMessage, true);
 			}
@@ -1327,7 +1321,7 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 
 		LOG("CustomerService", ("CharacterTransfer: Received TransferReplyLoginLocationData from database for character %s\n", reply.getValue().getSourceCharacterName().c_str()));
 
-		if(reply.getValue().getTransferRequestSource() == TransferRequestMoveValidation::TRS_transfer_server)
+		if (reply.getValue().getTransferRequestSource() == TransferRequestMoveValidation::TRS_transfer_server)
 		{
 			CentralServer::getInstance().sendToTransferServer(reply);
 		}
@@ -1335,13 +1329,13 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		{
 			// send character to ConnectionServer for login to a game server
 			ConnectionServerConnection * connectionServer = CentralServer::getInstance().getAnyConnectionServer();
-			if(connectionServer)
+			if (connectionServer)
 			{
 				const GenericValueTypeMessage<TransferCharacterData> login("TransferLoginCharacterToSourceServer", reply.getValue());
 				connectionServer->send(login, true);
 
 				LOG("CustomerService", ("CharacterTransfer: Sending TransferLoginCharacterToSourceServer to ConnectionServer : %s", login.getValue().toString().c_str()));
-			}		
+			}
 		}
 	}
 	else if (message.isType("CentralPlanetServerConnect"))
@@ -1353,7 +1347,7 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		PlanetManager::addServer(msg.getSceneId(), g);
 
 		std::map<std::string, std::pair<std::pair<std::string, std::string>, time_t> >::iterator f = m_pendingPlanetServers.find(msg.getSceneId());
-		if(f != m_pendingPlanetServers.end())
+		if (f != m_pendingPlanetServers.end())
 			m_pendingPlanetServers.erase(f);
 
 		IGNORE_RETURN(m_planetServers.insert(std::make_pair(msg.getSceneId(), g)));
@@ -1365,12 +1359,12 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 
 		//  handle planet transfers and logins for planet server that aren't up yet
 		std::vector<Archive::ByteStream>::iterator t;
-		for(t = m_messagesWaitingForPlanetServer.begin(); t != m_messagesWaitingForPlanetServer.end();)
+		for (t = m_messagesWaitingForPlanetServer.begin(); t != m_messagesWaitingForPlanetServer.end();)
 		{
 			Archive::ReadIterator tri = t->begin();
 			const GameNetworkMessage gnm(tri);
 			tri = t->begin();
-			if(gnm.isType("RequestGameServerForLoginMessage"))
+			if (gnm.isType("RequestGameServerForLoginMessage"))
 			{
 				const RequestGameServerForLoginMessage loginMessage(tri);
 				if (loginMessage.getScene() == msg.getSceneId())
@@ -1379,7 +1373,7 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 					handleRequestGameServerForLoginMessage(loginMessage);
 				}
 			}
-			else if(gnm.isType("RequestSceneTransfer"))
+			else if (gnm.isType("RequestSceneTransfer"))
 			{
 				const RequestSceneTransfer sceneMessage(tri);
 				if (sceneMessage.getSceneName() == msg.getSceneId())
@@ -1398,14 +1392,14 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 	else if (message.isType("RequestSceneTransfer"))
 	{
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		const RequestSceneTransfer msg (ri);
+		const RequestSceneTransfer msg(ri);
 
 		handleRequestSceneTransfer(msg);
 	}
 	else if (message.isType("SceneTransferMessage"))
 	{
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		SceneTransferMessage msg (ri);
+		SceneTransferMessage msg(ri);
 
 		sendToGameServer(msg.getSourceGameServer(), msg, true);
 	}
@@ -1432,16 +1426,16 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		MessageToMessage msg(ri);
 
-		WARNING_STRICT_FATAL(true,("CentralServer receieved a messageTo.  These should not go to Central anymore.  Sender was server %u\n", safe_cast<GameServerConnection const *>(&source)->getProcessId()));
+		WARNING_STRICT_FATAL(true, ("CentralServer receieved a messageTo.  These should not go to Central anymore.  Sender was server %u\n", safe_cast<GameServerConnection const *>(&source)->getProcessId()));
 	}
 	else if (message.isType("MessageToAckMessage"))
 	{
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		MessageToAckMessage msg(ri);
 
-		WARNING_STRICT_FATAL(true,("CentralServer receieved a MessageToAckMessage.  These should not go to Central anymore.  Sender was server %u\n",safe_cast<GameServerConnection const *>(&source)->getProcessId()));
+		WARNING_STRICT_FATAL(true, ("CentralServer receieved a MessageToAckMessage.  These should not go to Central anymore.  Sender was server %u\n", safe_cast<GameServerConnection const *>(&source)->getProcessId()));
 	}
-	else if(message.isType("ChatServerConnectionOpened"))
+	else if (message.isType("ChatServerConnectionOpened"))
 	{
 		// enumerate servers
 		ChatServerConnection *chatServer = const_cast<ChatServerConnection *>(safe_cast<ChatServerConnection const *>(&source));
@@ -1451,9 +1445,9 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		{
 			ConnectionServerConnection * c = (*ci);
 
-			if (   (c != nullptr)
-			    && !c->getChatServiceAddress().empty()
-			    && (c->getChatServicePort() != 0))
+			if ((c != nullptr)
+				&& !c->getChatServiceAddress().empty()
+				&& (c->getChatServicePort() != 0))
 			{
 				EnumerateServers e(true, c->getChatServiceAddress(), c->getChatServicePort(), ct);
 				chatServer->send(e, true);
@@ -1512,9 +1506,9 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		{
 			ConnectionServerConnection * c = (*ci);
 
-			if (   (c != nullptr)
-			    && !c->getCustomerServiceAddress().empty()
-			    && (c->getCustomerServicePort() != 0))
+			if ((c != nullptr)
+				&& !c->getCustomerServiceAddress().empty()
+				&& (c->getCustomerServicePort() != 0))
 			{
 				EnumerateServers e(true, c->getCustomerServiceAddress(), c->getCustomerServicePort(), ct);
 				csServer->send(e, true);
@@ -1525,14 +1519,14 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 			}
 		}
 	}
-	else if(message.isType("ChatServerConnectionClosed"))
+	else if (message.isType("ChatServerConnectionClosed"))
 	{
 		ChatServerConnection *chatServer = const_cast<ChatServerConnection *>(safe_cast<ChatServerConnection const *>(&source));
 		IGNORE_RETURN(m_chatServerConnections.erase(chatServer));
 
 		// spawn a new chat server!
 		std::string options = "-s ChatServer centralServerAddress=";
-		if(CentralServer::getInstance().getChatService())
+		if (CentralServer::getInstance().getChatService())
 		{
 			options += CentralServer::getInstance().getChatService()->getBindAddress();
 		}
@@ -1545,7 +1539,6 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		options += ConfigCentralServer::getClusterName();
 		TaskSpawnProcess pc(ConfigCentralServer::getChatServerHost(), "ChatServer", options, ConfigCentralServer::getChatServerRestartDelayTimeSeconds());
 		CentralServer::getInstance().sendTaskMessage(pc);
-
 	}
 	else if (message.isType("CustomerServiceConnectionClosed"))
 	{
@@ -1554,7 +1547,7 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 
 		// spawn a new cs server!
 		std::string options = "-s CustomerServiceServer centralServerAddress=";
-		if(CentralServer::getInstance().getCustomerService())
+		if (CentralServer::getInstance().getCustomerService())
 		{
 			options += CentralServer::getInstance().getCustomerService()->getBindAddress();
 		}
@@ -1568,19 +1561,18 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		TaskSpawnProcess pc("any", "CustomerServiceServer", options);
 		CentralServer::getInstance().sendTaskMessage(pc);
 	}
-	else if(message.isType("ChatServerOnline"))
+	else if (message.isType("ChatServerOnline"))
 	{
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		ChatServerOnline cso (ri);
+		ChatServerOnline cso(ri);
 		ChatServerConnection *csc = const_cast<ChatServerConnection *>(safe_cast<ChatServerConnection const *>(&source));
 		csc->setGameServicePort(cso.getPort());
 		SceneGameMap::const_iterator iter;
-		for(iter = m_gameServers.begin(); iter != m_gameServers.end(); ++iter)
+		for (iter = m_gameServers.begin(); iter != m_gameServers.end(); ++iter)
 		{
 			GameServerConnection * conn = (*iter).second;
 			conn->send(cso, true);
 		}
-
 	}
 	else if (message.isType("RequestGameServerForLoginMessage"))
 	{
@@ -1618,8 +1610,6 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		handleGameServerForLoginMessage(msg);
 	}
 
-
-
 	else if (message.isType("ExchangeListCreditsMessage"))
 	{
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
@@ -1627,8 +1617,6 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 
 		handleExchangeListCreditsMessage(msg);
 	}
-
-
 
 	else if (message.isType("PlanetLoadCharacterMessage"))
 	{
@@ -1639,7 +1627,7 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		GenericValueTypeMessage<std::pair<NetworkId, uint32> > const aboutToLoadCharacterFromDB("AboutToLoadCharacterFromDB", std::make_pair(msg.getCharacterId(), msg.getGameServerId()));
 		sendToAllGameServersExceptDBProcess(aboutToLoadCharacterFromDB, true);
 
-		sendToDBProcess(msg,true);
+		sendToDBProcess(msg, true);
 	}
 	else if (message.isType("ConnSrvDropDupeConns"))
 	{
@@ -1697,7 +1685,7 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		if (hasDBConnection())
 		{
 			LOG("CustomerService", ("Player:deleted character %s for stationId %u", msg.getCharacterId().getValueString().c_str(), msg.getStationId()));
-			sendToDBProcess(msg,true);
+			sendToDBProcess(msg, true);
 
 			// let the game servers know that the character is being deleted
 			GenericValueTypeMessage<NetworkId> const msg2("DeleteCharacterNotificationMessage", msg.getCharacterId());
@@ -1728,12 +1716,12 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		}
 		else
 		{
-			WARNING_STRICT_FATAL(true,("Got UpdatePlayerCountMessage from something that wasn't a ConnectionServer.\n"));
+			WARNING_STRICT_FATAL(true, ("Got UpdatePlayerCountMessage from something that wasn't a ConnectionServer.\n"));
 		}
 	}
 	else if (message.isType("ValidateAccountMessage"))
 	{
-		DEBUG_REPORT_LOG(true,("ValidateAccountMessage\n"));
+		DEBUG_REPORT_LOG(true, ("ValidateAccountMessage\n"));
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		ValidateAccountMessage msg(ri);
 
@@ -1745,14 +1733,14 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 	}
 	else if (message.isType("ValidateAccountReplyMessage"))
 	{
-		DEBUG_REPORT_LOG(true,("ValidateAccountReplyMessage\n"));
+		DEBUG_REPORT_LOG(true, ("ValidateAccountReplyMessage\n"));
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		ValidateAccountReplyMessage msg(ri);
 
-		ConnectionServerConnection *conn=getConnectionServerForAccount(msg.getStationId());
+		ConnectionServerConnection *conn = getConnectionServerForAccount(msg.getStationId());
 		if (conn)
 		{
-			conn->send(msg,true);
+			conn->send(msg, true);
 		}
 	}
 	else if (message.isType("PreloadRequestCompleteMessage"))
@@ -1760,13 +1748,13 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		PreloadRequestCompleteMessage msg(ri);
 
-		sendToDBProcess(msg,true);
+		sendToDBProcess(msg, true);
 	}
 	else if (message.isType("ReconnectToTransferServer"))
 	{
-		if(ConfigCentralServer::getTransferServerPort())
+		if (ConfigCentralServer::getTransferServerPort())
 		{
-			if(! getInstance().m_transferServerConnection)
+			if (!getInstance().m_transferServerConnection)
 			{
 				getInstance().m_transferServerConnection = new TransferServerConnection(ConfigCentralServer::getTransferServerAddress(), ConfigCentralServer::getTransferServerPort());
 				s_retryTransferServerConnection = true;
@@ -1775,9 +1763,9 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 	}
 	else if (message.isType("ReconnectToStationPlayersCollector"))
 	{
-		if(ConfigCentralServer::getStationPlayersCollectorPort())
+		if (ConfigCentralServer::getStationPlayersCollectorPort())
 		{
-			if(! getInstance().m_stationPlayersCollectorConnection)
+			if (!getInstance().m_stationPlayersCollectorConnection)
 			{
 				getInstance().m_stationPlayersCollectorConnection = new StationPlayersCollectorConnection(ConfigCentralServer::getStationPlayersCollectorAddress(), ConfigCentralServer::getStationPlayersCollectorPort());
 				s_retryStationPlayersCollectorConnection = true;
@@ -1789,8 +1777,8 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		PreloadFinishedMessage msg(ri);
 
-		const PlanetServerConnection *conn=dynamic_cast<const PlanetServerConnection*>(&source);
-		WARNING_STRICT_FATAL(!conn,("Programmer bug:  got PreloadFinishedMessaage from something that wasn't a PlanetServer.\n"));
+		const PlanetServerConnection *conn = dynamic_cast<const PlanetServerConnection*>(&source);
+		WARNING_STRICT_FATAL(!conn, ("Programmer bug:  got PreloadFinishedMessaage from something that wasn't a PlanetServer.\n"));
 		if (conn)
 		{
 			if (msg.getFinished())
@@ -1800,7 +1788,7 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 				{
 					m_timeClusterWentIntoLoadingState = 0;
 
-					DEBUG_REPORT_LOG(true,("Preload finished on all planets.\n"));
+					DEBUG_REPORT_LOG(true, ("Preload finished on all planets.\n"));
 
 					// record how long it took the cluster to come up
 					if (m_clusterStartupTime == -1)
@@ -1820,21 +1808,21 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 
 					sendToAllLoginServers(msg);
 					sendTaskMessage(msg);
-					m_lastLoadingStateTime=time(0);
+					m_lastLoadingStateTime = time(0);
 					// connect to the character transfer server
-					if(ConfigCentralServer::getTransferServerPort())
+					if (ConfigCentralServer::getTransferServerPort())
 					{
-						if(! getInstance().m_transferServerConnection)
+						if (!getInstance().m_transferServerConnection)
 						{
 							getInstance().m_transferServerConnection = new TransferServerConnection(ConfigCentralServer::getTransferServerAddress(), ConfigCentralServer::getTransferServerPort());
 							s_retryTransferServerConnection = true;
 						}
 					}
-					
+
 					// connect to the station players collector
-					if(ConfigCentralServer::getStationPlayersCollectorPort())
+					if (ConfigCentralServer::getStationPlayersCollectorPort())
 					{
-						if(! getInstance().m_stationPlayersCollectorConnection)
+						if (!getInstance().m_stationPlayersCollectorConnection)
 						{
 							getInstance().m_stationPlayersCollectorConnection = new StationPlayersCollectorConnection(ConfigCentralServer::getStationPlayersCollectorAddress(), ConfigCentralServer::getStationPlayersCollectorPort());
 							s_retryStationPlayersCollectorConnection = true;
@@ -1848,20 +1836,19 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 			}
 			else
 			{
-				if(getInstance().m_transferServerConnection != nullptr)
+				if (getInstance().m_transferServerConnection != nullptr)
 				{
 					getInstance().m_transferServerConnection->disconnect();
 					getInstance().m_transferServerConnection = 0;
 					s_retryTransferServerConnection = false;
 				}
-				
-				if(getInstance().m_stationPlayersCollectorConnection != nullptr)
+
+				if (getInstance().m_stationPlayersCollectorConnection != nullptr)
 				{
 					getInstance().m_stationPlayersCollectorConnection->disconnect();
 					getInstance().m_stationPlayersCollectorConnection = 0;
 					s_retryStationPlayersCollectorConnection = false;
 				}
-
 
 				IGNORE_RETURN(m_planetsWaitingForPreload.insert(conn->getSceneId()));
 
@@ -1869,7 +1856,6 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 					m_timeClusterWentIntoLoadingState = 0;
 				else if (m_timeClusterWentIntoLoadingState <= 0)
 					m_timeClusterWentIntoLoadingState = time(0);
-
 
 				sendToAllLoginServers(msg);
 				sendTaskMessage(msg);
@@ -1932,18 +1918,18 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 				--(iterFind->second.second);
 		}
 	}
-	else if(message.isType("SetConnectionServerPublic"))
+	else if (message.isType("SetConnectionServerPublic"))
 	{
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		SetConnectionServerPublic msg(ri);
-		if(msg.getIsPublic())
+		if (msg.getIsPublic())
 			gs_connectionServersPublic = true;
 		else
 			gs_connectionServersPublic = false;
 
 		sendToAllConnectionServers(msg, true);
 	}
-	else if(message.isType("ProfilerOperationMessage"))
+	else if (message.isType("ProfilerOperationMessage"))
 	{
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		ProfilerOperationMessage msg(ri);
@@ -1961,7 +1947,7 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 	{
 		GameServerConnection const *g = safe_cast<GameServerConnection const *>(&source);
 		NOT_NULL(g);
-		LOG("CentralServerPings",("Got reply from %lu",g->getProcessId()));
+		LOG("CentralServerPings", ("Got reply from %lu", g->getProcessId()));
 		IGNORE_RETURN(m_serverPings.erase(g->getProcessId()));
 	}
 	else if (message.isType("DatabaseBackloggedMessage"))
@@ -1984,16 +1970,16 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 
 	else if (message.isType("DatabaseSaveStart"))
 	{
-		LOG("CentralServer",("Received DatabaseSaveStart network message."));
-		if( m_shutdownPhase == 4 )
+		LOG("CentralServer", ("Received DatabaseSaveStart network message."));
+		if (m_shutdownPhase == 4)
 		{
-			LOG("CentralServerShutdown",("Shutdown Phase %d: Setting indicator for receipt of DatabaseSaveStart.", m_shutdownPhase));
+			LOG("CentralServerShutdown", ("Shutdown Phase %d: Setting indicator for receipt of DatabaseSaveStart.", m_shutdownPhase));
 			m_shutdownHaveDatabaseSaveStart = true;
 			checkShutdownProcess();
 		}
-		else if( m_shutdownPhase == 5 && m_shutdownHaveDatabaseSaveStart)
+		else if (m_shutdownPhase == 5 && m_shutdownHaveDatabaseSaveStart)
 		{
-			LOG("CentralServerShutdown",("Shutdown Phase %d: Setting indicator that final database save cycle is complete.", m_shutdownPhase));
+			LOG("CentralServerShutdown", ("Shutdown Phase %d: Setting indicator that final database save cycle is complete.", m_shutdownPhase));
 			m_shutdownHaveDatabaseComplete = true;
 			checkShutdownProcess();
 		}
@@ -2002,15 +1988,15 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 	{
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		GenericValueTypeMessage<int> msg(ri);
-		LOG("CentralServer",("Received DatabaseSaveComplete network message."));
+		LOG("CentralServer", ("Received DatabaseSaveComplete network message."));
 
 		// tell all the Planet Servers that the save finished
-		sendToAllPlanetServers(msg,true);
+		sendToAllPlanetServers(msg, true);
 
 		// don't want to indicate this yet until we are at the beginning of a full cycle
-		if( m_shutdownPhase == 5 && m_shutdownHaveDatabaseSaveStart)
+		if (m_shutdownPhase == 5 && m_shutdownHaveDatabaseSaveStart)
 		{
-			LOG("CentralServerShutdown",("Shutdown Phase %d: Setting indicator that final database save cycle is complete.", m_shutdownPhase));
+			LOG("CentralServerShutdown", ("Shutdown Phase %d: Setting indicator that final database save cycle is complete.", m_shutdownPhase));
 			m_shutdownHaveDatabaseComplete = true;
 			checkShutdownProcess();
 		}
@@ -2020,21 +2006,20 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		GameNetworkMessage msg(ri);
 
-		sendToDBProcess(msg,true);
+		sendToDBProcess(msg, true);
 	}
 	else if (message.isType("ShutdownCluster"))
 	{
-		LOG("CentralServerShutdown",("Received ShutdownCluster network message."));
+		LOG("CentralServerShutdown", ("Received ShutdownCluster network message."));
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		ShutdownCluster m(ri);
 		startShutdownProcess(m.getTimeToShutdown(), m.getMaxTime(), m.getSystemMessage());
 	}
 	else if (message.isType("AbortShutdown"))
 	{
-		LOG("CentralServerShutdown",("Received AbortShutdown network message."));
+		LOG("CentralServerShutdown", ("Received AbortShutdown network message."));
 		abortShutdownProcess();
 	}
-
 
 	else if (message.isType("SetSceneForPlayer"))
 	{
@@ -2059,7 +2044,7 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 			}
 			else
 			{
-				m_playerSceneMap[ssfp.getValue().first]=std::make_pair(ssfp.getValue().second.first, (ssfp.getValue().second.second ? (::time(nullptr) + static_cast<time_t>(ConfigCentralServer::getCtsDenyLoginThresholdSeconds())) : 0));
+				m_playerSceneMap[ssfp.getValue().first] = std::make_pair(ssfp.getValue().second.first, (ssfp.getValue().second.second ? (::time(nullptr) + static_cast<time_t>(ConfigCentralServer::getCtsDenyLoginThresholdSeconds())) : 0));
 			}
 		}
 	}
@@ -2069,21 +2054,21 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		TaskProcessDiedMessage died(ri);
 		LOG("TaskProcessDied", ("received TaskProcessDied for %s:%i", died.getProcessName().c_str(), died.getProcessId()));;
-		if(died.getProcessName().find("SwgGameServer") != std::string::npos)
+		if (died.getProcessName().find("SwgGameServer") != std::string::npos)
 		{
 			LOG("TaskProcessDied", ("Dead process %i is a game server", died.getProcessId()));
 			// extract sceneId
 			size_t pos = died.getProcessName().find("sceneID=");
-			if(pos != std::string::npos)
+			if (pos != std::string::npos)
 			{
 				pos += std::string("sceneID=").length();
 				size_t end = died.getProcessName().find_first_of(' ', pos);
-				if(end != std::string::npos)
+				if (end != std::string::npos)
 				{
 					std::string scene = died.getProcessName().substr(pos, end - pos);
 					LOG("TaskProcessDied", ("Dead game server process %i was running sceneID %s, advising planet server", died.getProcessId(), scene.c_str()));
 					std::map<std::string, PlanetServerConnection *>::iterator f = m_planetServers.find(scene);
-					if(f != m_planetServers.end())
+					if (f != m_planetServers.end())
 					{
 						f->second->send(died, true);
 					}
@@ -2106,37 +2091,37 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 
 		m_disconnectedTaskManagerList = msg.getValue();
 	}
-	else if(message.isType("TransferServerConnectionClosed"))
+	else if (message.isType("TransferServerConnectionClosed"))
 	{
 		// connect to the character transfer server
-		if(ConfigCentralServer::getTransferServerPort())
+		if (ConfigCentralServer::getTransferServerPort())
 		{
-			if(s_retryTransferServerConnection)
+			if (s_retryTransferServerConnection)
 			{
 				getInstance().m_transferServerConnection = new TransferServerConnection(ConfigCentralServer::getTransferServerAddress(), ConfigCentralServer::getTransferServerPort());
 			}
 		}
 	}
-	else if(message.isType("StationPlayersCollectorConnectionClosed"))
+	else if (message.isType("StationPlayersCollectorConnectionClosed"))
 	{
 		// connect to the station players collector
-		if(ConfigCentralServer::getStationPlayersCollectorPort())
+		if (ConfigCentralServer::getStationPlayersCollectorPort())
 		{
-			if(s_retryStationPlayersCollectorConnection)
+			if (s_retryStationPlayersCollectorConnection)
 			{
 				getInstance().m_stationPlayersCollectorConnection = new StationPlayersCollectorConnection(ConfigCentralServer::getStationPlayersCollectorAddress(), ConfigCentralServer::getStationPlayersCollectorPort());
 			}
 		}
 	}
-	else if(message.isType("ClaimRewardsMessage"))
+	else if (message.isType("ClaimRewardsMessage"))
 	{
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		ClaimRewardsMessage msg(ri);
 		sendToArbitraryLoginServer(msg);
 	}
-	else if(message.isType("ClaimRewardsReplyMessage"))
+	else if (message.isType("ClaimRewardsReplyMessage"))
 	{
-		DEBUG_REPORT_LOG(true,("Central got ClaimRewardsReplyMessage\n"));
+		DEBUG_REPORT_LOG(true, ("Central got ClaimRewardsReplyMessage\n"));
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		ClaimRewardsReplyMessage msg(ri);
 		sendToGameServer(msg.getGameServer(), msg, true);
@@ -2148,7 +2133,7 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		LoginServerConnection const * l = dynamic_cast<LoginServerConnection const *>(&source);
 		if (l)
 		{
-			m_purgeAccountToLoginServerMap[msg.getValue()]= l->getProcessId(); // remember which login server is handling this purge
+			m_purgeAccountToLoginServerMap[msg.getValue()] = l->getProcessId(); // remember which login server is handling this purge
 			sendToDBProcess(msg, true);
 		}
 	}
@@ -2157,10 +2142,10 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		GenericValueTypeMessage<StationId> msg(ri);
 
-		std::map<StationId, uint32>::iterator i=m_purgeAccountToLoginServerMap.find(msg.getValue());
-		if (i!=m_purgeAccountToLoginServerMap.end())
+		std::map<StationId, uint32>::iterator i = m_purgeAccountToLoginServerMap.find(msg.getValue());
+		if (i != m_purgeAccountToLoginServerMap.end())
 		{
-			sendToLoginServer(i->second,msg);
+			sendToLoginServer(i->second, msg);
 			m_purgeAccountToLoginServerMap.erase(i);
 		}
 	}
@@ -2190,8 +2175,8 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		GenericValueTypeMessage<std::string> msg(ri);
 
-		GenericValueTypeMessage<int> const shutdownMsg("ShutdownMessage", 0); 
-		sendToPlanetServer(msg.getValue(),shutdownMsg, true);
+		GenericValueTypeMessage<int> const shutdownMsg("ShutdownMessage", 0);
+		sendToPlanetServer(msg.getValue(), shutdownMsg, true);
 	}
 	else if (message.isType("UpdateClusterLockedAndSecretState"))
 	{
@@ -2308,27 +2293,27 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		LoginUpgradeAccountMessage::OccupyUnlockedSlotResponse const response = static_cast<LoginUpgradeAccountMessage::OccupyUnlockedSlotResponse>(occupyUnlockedSlotRsp.getValue().first.first);
 		if (response == LoginUpgradeAccountMessage::OUSR_success)
 		{
-			LOG("CustomerService",("JediUnlockedSlot:Player %s OccupyUnlockedSlot request SUCCESS", occupyUnlockedSlotRsp.getValue().first.second.getValueString().c_str()));
+			LOG("CustomerService", ("JediUnlockedSlot:Player %s OccupyUnlockedSlot request SUCCESS", occupyUnlockedSlotRsp.getValue().first.second.getValueString().c_str()));
 		}
 		else if (response == LoginUpgradeAccountMessage::OUSR_db_error)
 		{
-			LOG("CustomerService",("JediUnlockedSlot:Player %s OccupyUnlockedSlot request FAILED - internal db error", occupyUnlockedSlotRsp.getValue().first.second.getValueString().c_str()));
+			LOG("CustomerService", ("JediUnlockedSlot:Player %s OccupyUnlockedSlot request FAILED - internal db error", occupyUnlockedSlotRsp.getValue().first.second.getValueString().c_str()));
 		}
 		else if (response == LoginUpgradeAccountMessage::OUSR_account_has_no_unlocked_slot)
 		{
-			LOG("CustomerService",("JediUnlockedSlot:Player %s OccupyUnlockedSlot request FAILED - account doesn't have an unlocked slot", occupyUnlockedSlotRsp.getValue().first.second.getValueString().c_str()));
+			LOG("CustomerService", ("JediUnlockedSlot:Player %s OccupyUnlockedSlot request FAILED - account doesn't have an unlocked slot", occupyUnlockedSlotRsp.getValue().first.second.getValueString().c_str()));
 		}
 		else if (response == LoginUpgradeAccountMessage::OUSR_account_has_no_unoccupied_unlocked_slot)
 		{
-			LOG("CustomerService",("JediUnlockedSlot:Player %s OccupyUnlockedSlot request FAILED - account has no unoccupied unlocked slot", occupyUnlockedSlotRsp.getValue().first.second.getValueString().c_str()));
+			LOG("CustomerService", ("JediUnlockedSlot:Player %s OccupyUnlockedSlot request FAILED - account has no unoccupied unlocked slot", occupyUnlockedSlotRsp.getValue().first.second.getValueString().c_str()));
 		}
 		else if (response == LoginUpgradeAccountMessage::OUSR_cluster_already_has_unlocked_slot_character)
 		{
-			LOG("CustomerService",("JediUnlockedSlot:Player %s OccupyUnlockedSlot request FAILED - cluster already has an unlocked slot character", occupyUnlockedSlotRsp.getValue().first.second.getValueString().c_str()));
+			LOG("CustomerService", ("JediUnlockedSlot:Player %s OccupyUnlockedSlot request FAILED - cluster already has an unlocked slot character", occupyUnlockedSlotRsp.getValue().first.second.getValueString().c_str()));
 		}
 		else
 		{
-			LOG("CustomerService",("JediUnlockedSlot:Player %s OccupyUnlockedSlot request FAILED - unknown result code (%d)", occupyUnlockedSlotRsp.getValue().first.second.getValueString().c_str(), occupyUnlockedSlotRsp.getValue().first.first));
+			LOG("CustomerService", ("JediUnlockedSlot:Player %s OccupyUnlockedSlot request FAILED - unknown result code (%d)", occupyUnlockedSlotRsp.getValue().first.second.getValueString().c_str(), occupyUnlockedSlotRsp.getValue().first.first));
 		}
 
 		GameServerConnection * gs = getGameServer(occupyUnlockedSlotRsp.getValue().second);
@@ -2347,7 +2332,7 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		LoginUpgradeAccountMessage::VacateUnlockedSlotResponse const response = static_cast<LoginUpgradeAccountMessage::VacateUnlockedSlotResponse>(vacateUnlockedSlotRsp.getValue().first.first);
 		if (response == LoginUpgradeAccountMessage::VUSR_success)
 		{
-			LOG("CustomerService",("JediUnlockedSlot:Player %s VacateUnlockedSlot request SUCCESS", vacateUnlockedSlotRsp.getValue().first.second.getValueString().c_str()));
+			LOG("CustomerService", ("JediUnlockedSlot:Player %s VacateUnlockedSlot request SUCCESS", vacateUnlockedSlotRsp.getValue().first.second.getValueString().c_str()));
 
 			// to safeguard against any sort of timing exploit to create another normal
 			// slot character while this one is being converted to normal, thus allowing
@@ -2361,23 +2346,23 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		}
 		else if (response == LoginUpgradeAccountMessage::VUSR_db_error)
 		{
-			LOG("CustomerService",("JediUnlockedSlot:Player %s VacateUnlockedSlot request FAILED - internal db error", vacateUnlockedSlotRsp.getValue().first.second.getValueString().c_str()));
+			LOG("CustomerService", ("JediUnlockedSlot:Player %s VacateUnlockedSlot request FAILED - internal db error", vacateUnlockedSlotRsp.getValue().first.second.getValueString().c_str()));
 		}
 		else if (response == LoginUpgradeAccountMessage::VUSR_account_has_no_unlocked_slot)
 		{
-			LOG("CustomerService",("JediUnlockedSlot:Player %s VacateUnlockedSlot request FAILED - account doesn't have an unlocked slot", vacateUnlockedSlotRsp.getValue().first.second.getValueString().c_str()));
+			LOG("CustomerService", ("JediUnlockedSlot:Player %s VacateUnlockedSlot request FAILED - account doesn't have an unlocked slot", vacateUnlockedSlotRsp.getValue().first.second.getValueString().c_str()));
 		}
 		else if (response == LoginUpgradeAccountMessage::VUSR_not_unlocked_slot_character)
 		{
-			LOG("CustomerService",("JediUnlockedSlot:Player %s VacateUnlockedSlot request FAILED - character is not an unlocked slot character", vacateUnlockedSlotRsp.getValue().first.second.getValueString().c_str()));
+			LOG("CustomerService", ("JediUnlockedSlot:Player %s VacateUnlockedSlot request FAILED - character is not an unlocked slot character", vacateUnlockedSlotRsp.getValue().first.second.getValueString().c_str()));
 		}
 		else if (response == LoginUpgradeAccountMessage::VUSR_no_available_normal_character_slot)
 		{
-			LOG("CustomerService",("JediUnlockedSlot:Player %s VacateUnlockedSlot request FAILED - no available normal character slot for the account on this galaxy", vacateUnlockedSlotRsp.getValue().first.second.getValueString().c_str()));
+			LOG("CustomerService", ("JediUnlockedSlot:Player %s VacateUnlockedSlot request FAILED - no available normal character slot for the account on this galaxy", vacateUnlockedSlotRsp.getValue().first.second.getValueString().c_str()));
 		}
 		else
 		{
-			LOG("CustomerService",("JediUnlockedSlot:Player %s VacateUnlockedSlot request FAILED - unknown result code (%d)", vacateUnlockedSlotRsp.getValue().first.second.getValueString().c_str(), vacateUnlockedSlotRsp.getValue().first.first));
+			LOG("CustomerService", ("JediUnlockedSlot:Player %s VacateUnlockedSlot request FAILED - unknown result code (%d)", vacateUnlockedSlotRsp.getValue().first.second.getValueString().c_str(), vacateUnlockedSlotRsp.getValue().first.first));
 		}
 
 		GameServerConnection * gs = getGameServer(vacateUnlockedSlotRsp.getValue().second.second);
@@ -2396,31 +2381,31 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		LoginUpgradeAccountMessage::SwapUnlockedSlotResponse const response = static_cast<LoginUpgradeAccountMessage::SwapUnlockedSlotResponse>(swapUnlockedSlotRsp.getValue().first.first);
 		if (response == LoginUpgradeAccountMessage::SUSR_success)
 		{
-			LOG("CustomerService",("JediUnlockedSlot:Player %s SwapUnlockedSlot with %s (%s) request SUCCESS", swapUnlockedSlotRsp.getValue().first.second.getValueString().c_str(), swapUnlockedSlotRsp.getValue().second.second.first.getValueString().c_str(), swapUnlockedSlotRsp.getValue().second.second.second.c_str()));
+			LOG("CustomerService", ("JediUnlockedSlot:Player %s SwapUnlockedSlot with %s (%s) request SUCCESS", swapUnlockedSlotRsp.getValue().first.second.getValueString().c_str(), swapUnlockedSlotRsp.getValue().second.second.first.getValueString().c_str(), swapUnlockedSlotRsp.getValue().second.second.second.c_str()));
 		}
 		else if (response == LoginUpgradeAccountMessage::SUSR_db_error)
 		{
-			LOG("CustomerService",("JediUnlockedSlot:Player %s SwapUnlockedSlot with %s request FAILED - internal db error", swapUnlockedSlotRsp.getValue().first.second.getValueString().c_str(), swapUnlockedSlotRsp.getValue().second.second.first.getValueString().c_str()));
+			LOG("CustomerService", ("JediUnlockedSlot:Player %s SwapUnlockedSlot with %s request FAILED - internal db error", swapUnlockedSlotRsp.getValue().first.second.getValueString().c_str(), swapUnlockedSlotRsp.getValue().second.second.first.getValueString().c_str()));
 		}
 		else if (response == LoginUpgradeAccountMessage::SUSR_account_has_no_unlocked_slot)
 		{
-			LOG("CustomerService",("JediUnlockedSlot:Player %s SwapUnlockedSlot with %s request FAILED - account doesn't have an unlocked slot", swapUnlockedSlotRsp.getValue().first.second.getValueString().c_str(), swapUnlockedSlotRsp.getValue().second.second.first.getValueString().c_str()));
+			LOG("CustomerService", ("JediUnlockedSlot:Player %s SwapUnlockedSlot with %s request FAILED - account doesn't have an unlocked slot", swapUnlockedSlotRsp.getValue().first.second.getValueString().c_str(), swapUnlockedSlotRsp.getValue().second.second.first.getValueString().c_str()));
 		}
 		else if (response == LoginUpgradeAccountMessage::SUSR_not_unlocked_slot_character)
 		{
-			LOG("CustomerService",("JediUnlockedSlot:Player %s SwapUnlockedSlot with %s request FAILED - source character is not an unlocked slot character", swapUnlockedSlotRsp.getValue().first.second.getValueString().c_str(), swapUnlockedSlotRsp.getValue().second.second.first.getValueString().c_str()));
+			LOG("CustomerService", ("JediUnlockedSlot:Player %s SwapUnlockedSlot with %s request FAILED - source character is not an unlocked slot character", swapUnlockedSlotRsp.getValue().first.second.getValueString().c_str(), swapUnlockedSlotRsp.getValue().second.second.first.getValueString().c_str()));
 		}
 		else if (response == LoginUpgradeAccountMessage::SUSR_invalid_target_character)
 		{
-			LOG("CustomerService",("JediUnlockedSlot:Player %s SwapUnlockedSlot with %s request FAILED - target character is either not valid, not on the same account, or not on this galaxy", swapUnlockedSlotRsp.getValue().first.second.getValueString().c_str(), swapUnlockedSlotRsp.getValue().second.second.first.getValueString().c_str()));
+			LOG("CustomerService", ("JediUnlockedSlot:Player %s SwapUnlockedSlot with %s request FAILED - target character is either not valid, not on the same account, or not on this galaxy", swapUnlockedSlotRsp.getValue().first.second.getValueString().c_str(), swapUnlockedSlotRsp.getValue().second.second.first.getValueString().c_str()));
 		}
 		else if (response == LoginUpgradeAccountMessage::SUSR_target_character_already_unlocked_slot_character)
 		{
-			LOG("CustomerService",("JediUnlockedSlot:Player %s SwapUnlockedSlot with %s request FAILED - target character is already an unlocked slot character", swapUnlockedSlotRsp.getValue().first.second.getValueString().c_str(), swapUnlockedSlotRsp.getValue().second.second.first.getValueString().c_str()));
+			LOG("CustomerService", ("JediUnlockedSlot:Player %s SwapUnlockedSlot with %s request FAILED - target character is already an unlocked slot character", swapUnlockedSlotRsp.getValue().first.second.getValueString().c_str(), swapUnlockedSlotRsp.getValue().second.second.first.getValueString().c_str()));
 		}
 		else
 		{
-			LOG("CustomerService",("JediUnlockedSlot:Player %s SwapUnlockedSlot with %s request FAILED - unknown result code (%d)", swapUnlockedSlotRsp.getValue().first.second.getValueString().c_str(), swapUnlockedSlotRsp.getValue().second.second.first.getValueString().c_str(), swapUnlockedSlotRsp.getValue().first.first));
+			LOG("CustomerService", ("JediUnlockedSlot:Player %s SwapUnlockedSlot with %s request FAILED - unknown result code (%d)", swapUnlockedSlotRsp.getValue().first.second.getValueString().c_str(), swapUnlockedSlotRsp.getValue().second.second.first.getValueString().c_str(), swapUnlockedSlotRsp.getValue().first.first));
 		}
 
 		GameServerConnection * gs = getGameServer(swapUnlockedSlotRsp.getValue().second.first);
@@ -2466,7 +2451,7 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		if (gs)
 			gs->send(msg, true);
 	}
-	else if(ClusterWideDataManagerList::handleMessage(source, message))
+	else if (ClusterWideDataManagerList::handleMessage(source, message))
 	{
 		// nothing else to do with the message since it was
 		// handled by the Cluster wide data manager
@@ -2480,13 +2465,13 @@ void CentralServer::removeConnectionServerConnection(const ConnectionServerConne
 	if (conn)
 	{
 		startConnectionServer(conn->getConnectionServerNumber(),
-							  conn->getGameServiceAddress(),
-							  conn->getClientServicePortPublic(),
-							  conn->getClientServicePortPrivate(), true,
-							  ConfigCentralServer::getConnectionServerRestartDelayTimeSeconds());
+			conn->getGameServiceAddress(),
+			conn->getClientServicePortPublic(),
+			conn->getClientServicePortPrivate(), true,
+			ConfigCentralServer::getConnectionServerRestartDelayTimeSeconds());
 
 		ConnectionServerConnectionList::iterator i = m_connectionServerConnections.begin();
-		for(;i != m_connectionServerConnections.end();++i)
+		for (; i != m_connectionServerConnections.end(); ++i)
 		{
 			if (conn->getId() == (*i)->getId())
 			{
@@ -2495,7 +2480,6 @@ void CentralServer::removeConnectionServerConnection(const ConnectionServerConne
 				IGNORE_RETURN(m_connectionServerConnections.erase(i));
 				return;
 			}
-
 		}
 
 		// Clean up all the account info for the connection
@@ -2560,7 +2544,7 @@ void CentralServer::removeGameServer(GameServerConnection const *gameServer)
 		ExcommunicateGameServerMessage const excommunicateMessage(pid, 0, "");
 		sendToAllGameServersExceptDBProcess(excommunicateMessage, true);
 	}
-	else 
+	else
 	{
 		DEBUG_WARNING(true, ("A game server crashed but our process ID ptr is nullptr."));
 	}
@@ -2579,7 +2563,7 @@ void CentralServer::run(void)
 {
 	SetupSharedLog::install("CentralServer");
 	SetupSharedUtility::Data utilityData;
-	SetupSharedUtility::install (utilityData);
+	SetupSharedUtility::install(utilityData);
 	SetupServerUtility::install();
 
 	gs_connectionServersPublic = ConfigCentralServer::getStartPublic();
@@ -2613,7 +2597,6 @@ void CentralServer::run(void)
 	setup.port = ConfigCentralServer::getConnectionServicePort();
 	setup.bindInterface = ConfigCentralServer::getConnectionServiceBindInterface();
 	Service * cons = new Service(ConnectionAllocator<ConnectionServerConnection>(), setup);
-	NOT_NULL(cons);
 	cserver.m_connService = cons;
 
 	setup.port = ConfigCentralServer::getConsoleServicePort();
@@ -2623,7 +2606,7 @@ void CentralServer::run(void)
 	setup.port = ConfigCentralServer::getCommodityServerServicePort();
 	setup.bindInterface = ConfigCentralServer::getCommodityServerServiceBindInterface();
 	s_commodityServerService = new Service(ConnectionAllocator<ServerConnection>(), setup);
-	
+
 	setup.port = ConfigCentralServer::getLoginServicePort();
 	if (ConfigCentralServer::getDevelopmentMode())
 		cserver.connectToLoginServer();
@@ -2635,33 +2618,33 @@ void CentralServer::run(void)
 
 	// connect to the task manager
 	cserver.m_taskManager = new TaskConnection("127.0.0.1", ConfigCentralServer::getTaskManagerPort());
-	
+
 	unsigned long startTime = Clock::timeMs();
-	unsigned long nextLoadingLogTime=0;
-	unsigned long nextPingTime=0;
+	unsigned long nextLoadingLogTime = 0;
+	unsigned long nextPingTime = 0;
 	unsigned long nextPopulationLogTime = 0;
 
-	LOG("ServerStartup",("CentralServer starting"));
+	LOG("ServerStartup", ("CentralServer starting"));
 #ifndef WIN32
-	if( FileExists( ".shutdown") )
+	if (FileExists(".shutdown"))
 	{
 		LOG("CentralServer", ("Removing stale .shutdown file."));
-		IGNORE_RETURN(::remove( ".shutdown" ));
+		IGNORE_RETURN(::remove(".shutdown"));
 	}
-	if( FileExists( ".abortshutdown" ) )
+	if (FileExists(".abortshutdown"))
 	{
 		LOG("CentralServer", ("Removing stale .abortshutdown file."));
-		IGNORE_RETURN(::remove( ".abortshutdown" ));
+		IGNORE_RETURN(::remove(".abortshutdown"));
 	}
-	if( FileExists( ".startanymissingplanet") )
+	if (FileExists(".startanymissingplanet"))
 	{
 		LOG("CentralServer", ("Removing stale .startanymissingplanet file."));
-		IGNORE_RETURN(::remove( ".startanymissingplanet" ));
+		IGNORE_RETURN(::remove(".startanymissingplanet"));
 	}
-	if( FileExists( ".startanymissinggameserver") )
+	if (FileExists(".startanymissinggameserver"))
 	{
 		LOG("CentralServer", ("Removing stale .startanymissinggameserver file."));
-		IGNORE_RETURN(::remove( ".startanymissinggameserver" ));
+		IGNORE_RETURN(::remove(".startanymissinggameserver"));
 	}
 #endif
 
@@ -2669,10 +2652,8 @@ void CentralServer::run(void)
 	{
 		unsigned long lastFrameTime = 0;
 		unsigned long frameStartTime = Clock::timeMs();
-		
-		PROFILER_AUTO_BLOCK_DEFINE("main loop");
 
-		bool barrierReached = true;
+		PROFILER_AUTO_BLOCK_DEFINE("main loop");
 
 		do
 		{
@@ -2698,8 +2679,7 @@ void CentralServer::run(void)
 				PROFILER_AUTO_BLOCK_DEFINE("Os::sleep");
 				Os::sleep(1);
 			}
-
-		} while (!barrierReached && !cserver.m_done);
+		} while (!cserver.m_done);
 
 		//@todo Central needs to run a clock so we can schedule re-tries with the login server.
 		{
@@ -2720,12 +2700,12 @@ void CentralServer::run(void)
 			if (curTime > nextLoadingLogTime)
 			{
 				nextLoadingLogTime = curTime + 10000;
-				for (std::set<std::string>::const_iterator i=getInstance().m_planetsWaitingForPreload.begin(); i!=getInstance().m_planetsWaitingForPreload.end(); ++i)
-					LOG("Preload",("Waiting for planet %s",i->c_str()));
+				for (std::set<std::string>::const_iterator i = getInstance().m_planetsWaitingForPreload.begin(); i != getInstance().m_planetsWaitingForPreload.end(); ++i)
+					LOG("Preload", ("Waiting for planet %s", i->c_str()));
 			}
 
 			//Perodically ping all the servers
-			if (ConfigCentralServer::getServerPingTimeout() != 0 && static_cast<int>(curTime-nextPingTime) > 0)
+			if (ConfigCentralServer::getServerPingTimeout() != 0 && static_cast<int>(curTime - nextPingTime) > 0)
 			{
 				nextPingTime = curTime + static_cast<uint32>(ConfigCentralServer::getServerPingTimeout() * 1000);
 				getInstance().doServerPings();
@@ -2739,24 +2719,21 @@ void CentralServer::run(void)
 			}
 		}
 
-
-
-
 		ServerClock::getInstance().incrementServerFrame();
-		if(ConfigCentralServer::getShutdown())
+		if (ConfigCentralServer::getShutdown())
 		{
 			cserver.done();
 		}
 
 		unsigned long currentTime = Clock::timeMs();
 		lastFrameTime = currentTime - frameStartTime;
-		if(lastFrameTime > 1000)
+		if (lastFrameTime > 1000)
 		{
 			LOG("profile", ("Long loop (%u ms):\n%s", lastFrameTime, PROFILER_GET_LAST_FRAME_DATA()));
 		}
 	}
 
-	LOG("ServerStartup",("CentralServer exiting"));
+	LOG("ServerStartup", ("CentralServer exiting"));
 
 	SetupSharedLog::remove();
 	CentralServer::remove();
@@ -2773,7 +2750,7 @@ void CentralServer::update()
 	static int shutdownCheckLoopCount = 0;
 
 	m_curTime = static_cast<uint32>(time(0));
-	
+
 	// Tell the LoginServers if necessary
 	if ((++loopCount > ConfigCentralServer::getUpdatePlayerCountFrequency()))
 	{
@@ -2783,13 +2760,12 @@ void CentralServer::update()
 		sendPopulationUpdateToLoginServer();
 	}
 
-
 	// update the webAPI if specified
 	int webUpdateIntervalSeconds = ConfigCentralServer::getWebUpdateIntervalSeconds();
-        std::string updateURL = std::string(ConfigCentralServer::getMetricsDataURL());
+	std::string updateURL = std::string(ConfigCentralServer::getMetricsDataURL());
 
 	// assuming that every 5th frame is ~1 second, we can multiply and then check
-	if ( !(updateURL.empty()) && webUpdateIntervalSeconds && (++apiLoopCount > (webUpdateIntervalSeconds*1000)) )
+	if (!(updateURL.empty()) && webUpdateIntervalSeconds && (++apiLoopCount > (webUpdateIntervalSeconds * 1000)))
 	{
 		apiLoopCount = 0;
 
@@ -2797,31 +2773,31 @@ void CentralServer::update()
 		sendMetricsToWebAPI(updateURL);
 	}
 
-	if ( ConfigCentralServer::getAuctionEnabled() ) // allow auctions?
+	if (ConfigCentralServer::getAuctionEnabled()) // allow auctions?
 	{
-		if ( m_pAuctionTransferClient == nullptr )
+		if (m_pAuctionTransferClient == nullptr)
 		{
-               		const char* hostName[1] = { ConfigCentralServer::getAuctionServer() };
-               		const short port[1] = { (short)ConfigCentralServer::getAuctionPort() };
+			const char* hostName[1] = { ConfigCentralServer::getAuctionServer() };
+			const short port[1] = { (short)ConfigCentralServer::getAuctionPort() };
 
-               		std::string s_id = ConfigCentralServer::getAuctionIDPrefix();
-			s_id += ConfigCentralServer::getClusterName(); 
+			std::string s_id = ConfigCentralServer::getAuctionIDPrefix();
+			s_id += ConfigCentralServer::getClusterName();
 
-       			const char *identifier[1];
-               		identifier[ 0 ] = s_id.c_str();
+			const char *identifier[1];
+			identifier[0] = s_id.c_str();
 
-               		m_pAuctionTransferClient = new AuctionTransferClient( hostName, port, 1, identifier, 1 );
+			m_pAuctionTransferClient = new AuctionTransferClient(hostName, port, 1, identifier, 1);
 		}
 		m_pAuctionTransferClient->process();
-  	}
-	else if ( m_pAuctionTransferClient )
+	}
+	else if (m_pAuctionTransferClient)
 	{
-		delete( m_pAuctionTransferClient );
+		delete(m_pAuctionTransferClient);
 		m_pAuctionTransferClient = 0;
 	}
 
 	// check every 5th frame (one second roughly?)
-	if ( ++shutdownCheckLoopCount > 5 )
+	if (++shutdownCheckLoopCount > 5)
 	{
 		shutdownCheckLoopCount = 0;
 
@@ -2836,35 +2812,34 @@ void CentralServer::update()
 void CentralServer::sendPopulationUpdateToLoginServer()
 {
 	// Add up all the population totals (these are referenced by the metrics data)
-	m_totalPlayerCount        = 0;
-	m_totalFreeTrialCount     = 0;
-	m_totalEmptySceneCount    = 0;
+	m_totalPlayerCount = 0;
+	m_totalFreeTrialCount = 0;
+	m_totalEmptySceneCount = 0;
 	m_totalTutorialSceneCount = 0;
-	m_totalFalconSceneCount   = 0;
+	m_totalFalconSceneCount = 0;
 
-	
 	ConnectionServerConnectionList::const_iterator i;
-	for (i=m_connectionServerConnections.begin(); i!=m_connectionServerConnections.end(); ++i)
+	for (i = m_connectionServerConnections.begin(); i != m_connectionServerConnections.end(); ++i)
 	{
 		if (*i)
 		{
-			m_totalPlayerCount        += (**i).getPlayerCount();
-			m_totalFreeTrialCount     += (**i).getFreeTrialCount();
-			m_totalEmptySceneCount    += (**i).getEmptySceneCount();
+			m_totalPlayerCount += (**i).getPlayerCount();
+			m_totalFreeTrialCount += (**i).getFreeTrialCount();
+			m_totalEmptySceneCount += (**i).getEmptySceneCount();
 			m_totalTutorialSceneCount += (**i).getTutorialSceneCount();
-			m_totalFalconSceneCount   += (**i).getFalconSceneCount();
+			m_totalFalconSceneCount += (**i).getFalconSceneCount();
 		}
 	}
 
-	bool loadedRecently=false;
-	if (!isPreloadFinished() || (time(0)-m_lastLoadingStateTime < static_cast<time_t>(ConfigCentralServer::getRecentLoadingStateSeconds())))
-		loadedRecently=true;
+	bool loadedRecently = false;
+	if (!isPreloadFinished() || (time(0) - m_lastLoadingStateTime < static_cast<time_t>(ConfigCentralServer::getRecentLoadingStateSeconds())))
+		loadedRecently = true;
 
 	UpdatePlayerCountMessage upm(loadedRecently, m_totalPlayerCount, m_totalFreeTrialCount, m_totalEmptySceneCount, m_totalTutorialSceneCount, m_totalFalconSceneCount);
 	sendToAllLoginServers(upm);
 }
 
-void CentralServer::sendMetricsToWebAPI(std::string updateURL)
+void CentralServer::sendMetricsToWebAPI(const std::string &updateURL)
 {
 	std::ostringstream postBuf;
 
@@ -2878,7 +2853,7 @@ void CentralServer::sendMetricsToWebAPI(std::string updateURL)
 
 void CentralServer::sendTaskMessage(const GameNetworkMessage & source)
 {
-	if(m_taskManager)
+	if (m_taskManager)
 		m_taskManager->send(source, true);
 	DEBUG_REPORT_LOG(!m_taskManager, ("There is no task manager connection, but app is attempting to send to one\n"));
 }
@@ -2888,13 +2863,13 @@ void CentralServer::sendTaskMessage(const GameNetworkMessage & source)
 void CentralServer::sendToGameServer(const uint32 gameServerProcessId, const GameNetworkMessage & message, const bool reliable) const
 {
 	GameServerConnection * g = getGameServer(gameServerProcessId);
-	if(g)
+	if (g)
 	{
 		g->send(message, reliable);
 	}
 	else
 	{
-		DEBUG_WARNING(true,("Attempted to send to game server %i, without connection.\n",gameServerProcessId));
+		DEBUG_WARNING(true, ("Attempted to send to game server %i, without connection.\n", gameServerProcessId));
 	}
 }
 
@@ -2902,16 +2877,16 @@ void CentralServer::sendToGameServer(const uint32 gameServerProcessId, const Gam
 
 void CentralServer::sendToLoginServer(uint32 loginServerId, const GameNetworkMessage &message)
 {
-	LoginServerConnectionMapType::iterator i=m_loginServerConnectionMap.find(loginServerId);
-	if (i!=m_loginServerConnectionMap.end() && i->second)
-		i->second->send(message,true);
+	LoginServerConnectionMapType::iterator i = m_loginServerConnectionMap.find(loginServerId);
+	if (i != m_loginServerConnectionMap.end() && i->second)
+		i->second->send(message, true);
 }
 
 // ----------------------------------------------------------------------
 
 void CentralServer::sendToAllGameServers(const GameNetworkMessage & message, const bool reliable)
 {
-	for (std::map<uint32, GameServerConnection *>::const_iterator i = m_gameServerConnections.begin(); i!=m_gameServerConnections.end(); ++i)
+	for (std::map<uint32, GameServerConnection *>::const_iterator i = m_gameServerConnections.begin(); i != m_gameServerConnections.end(); ++i)
 	{
 		(*i).second->send(message, reliable);
 	}
@@ -2921,7 +2896,7 @@ void CentralServer::sendToAllGameServers(const GameNetworkMessage & message, con
 
 void CentralServer::sendToAllGameServersExceptDBProcess(const GameNetworkMessage & message, const bool reliable)
 {
-	for (std::map<uint32, GameServerConnection *>::const_iterator i = m_gameServerConnections.begin(); i!=m_gameServerConnections.end(); ++i)
+	for (std::map<uint32, GameServerConnection *>::const_iterator i = m_gameServerConnections.begin(); i != m_gameServerConnections.end(); ++i)
 	{
 		if ((*i).first != getDbProcessServerProcessId())
 			(*i).second->send(message, reliable);
@@ -2957,7 +2932,7 @@ void CentralServer::sendToPlanetServer(const std::string &sceneId, const GameNet
 
 // ----------------------------------------------------------------------
 
-void CentralServer::sendToAllConnectionServers(const GameNetworkMessage & message, const bool reliable,  Connection const * exclude /*= nullptr*/)
+void CentralServer::sendToAllConnectionServers(const GameNetworkMessage & message, const bool reliable, Connection const * exclude /*= nullptr*/)
 {
 	// send to all connection servers
 	for (ConnectionServerConnectionList::const_iterator i = m_connectionServerConnections.begin(); i != m_connectionServerConnections.end(); ++i)
@@ -2972,13 +2947,13 @@ void CentralServer::sendToAllConnectionServers(const GameNetworkMessage & messag
 void CentralServer::sendToDBProcess(const GameNetworkMessage & message, const bool reliable) const
 {
 	GameServerConnection * g = getGameServer(getDbProcessServerProcessId());
-	if(g)
+	if (g)
 	{
 		g->send(message, reliable);
 	}
 	else
 	{
-		DEBUG_FATAL(!m_done,("Attempted to send message to DBProcess without connection (there should always be a connection to DBProcess)."));
+		DEBUG_FATAL(!m_done, ("Attempted to send message to DBProcess without connection (there should always be a connection to DBProcess)."));
 	}
 }
 
@@ -3010,7 +2985,7 @@ void CentralServer::removePlanetServer(const PlanetServerConnection * p)
 	{
 		if ((*i).second == p)
 		{
-			DEBUG_REPORT_LOG(true,("Central lost connection to Planet Server %s\n",p->getSceneId().c_str()));
+			DEBUG_REPORT_LOG(true, ("Central lost connection to Planet Server %s\n", p->getSceneId().c_str()));
 			i = m_planetServers.erase(i);
 
 			if (isPreloadFinished())
@@ -3045,14 +3020,14 @@ void CentralServer::setCommandLine(const std::string & c)
 
 const bool getStartLocation(const std::string & name, std::string & planetName, Vector & coordinates, NetworkId & cellId)
 {
-	const StartingLocationData * const sld = StartingLocationManager::findLocationByName (name);
+	const StartingLocationData * const sld = StartingLocationManager::findLocationByName(name);
 	if (sld)
 	{
-		planetName    = sld->planet;
+		planetName = sld->planet;
 		coordinates.x = sld->x;
 		coordinates.y = sld->y;
 		coordinates.z = sld->z;
-		cellId        = NetworkId (sld->cellId);
+		cellId = NetworkId(sld->cellId);
 		return true;
 	}
 
@@ -3066,13 +3041,13 @@ void CentralServer::startPlanetServer(const std::string & host, const std::strin
 {
 	FATAL(sceneId.empty(), ("CentralServer::startPlanetServer: empty sceneId, host='%s'", host.c_str()));
 	std::map<std::string, std::pair<std::pair<std::string, std::string>, time_t> >::const_iterator f = m_pendingPlanetServers.find(sceneId);
-	if(f == m_pendingPlanetServers.end())
+	if (f == m_pendingPlanetServers.end())
 	{
 		std::map<std::string, PlanetServerConnection *>::const_iterator pf = m_planetServers.find(sceneId);
-		if(pf == m_planetServers.end())
+		if (pf == m_planetServers.end())
 		{
 			std::string options = "-s PlanetServer centralServerAddress=";
-			if(m_planetService)
+			if (m_planetService)
 			{
 				options += m_planetService->getBindAddress();
 			}
@@ -3084,16 +3059,16 @@ void CentralServer::startPlanetServer(const std::string & host, const std::strin
 			options += sceneId;
 
 			char buffer[20];
-			IGNORE_RETURN(_itoa(m_nextPlanetWatcherPort++,buffer,10));
+			IGNORE_RETURN(_itoa(m_nextPlanetWatcherPort++, buffer, 10));
 			options += " watcherServicePort=";
 			options += buffer;
 
 			static unsigned int portBase = 0;
-			IGNORE_RETURN(_itoa(portBase,buffer,10));
+			IGNORE_RETURN(_itoa(portBase, buffer, 10));
 			portBase += 100;
 			options += " gameServerDebuggingPortBase=";
 			options += buffer;
-			
+
 			TaskSpawnProcess spawn(host.empty() ? std::string("any") : host, "PlanetServer", options, spawnDelay);
 			CentralServer::getInstance().sendTaskMessage(spawn);
 			m_pendingPlanetServers[sceneId] = std::make_pair(std::make_pair(host, options), ::time(nullptr));
@@ -3105,14 +3080,14 @@ void CentralServer::startPlanetServer(const std::string & host, const std::strin
 			else if (m_timeClusterWentIntoLoadingState <= 0)
 				m_timeClusterWentIntoLoadingState = time(0);
 
-			if(getInstance().m_transferServerConnection != nullptr && !preloadFinished)
+			if (getInstance().m_transferServerConnection != nullptr && !preloadFinished)
 			{
 				getInstance().m_transferServerConnection->disconnect();
 				getInstance().m_transferServerConnection = 0;
 				s_retryTransferServerConnection = false;
 			}
-			
-			if(getInstance().m_stationPlayersCollectorConnection != nullptr && ! isPreloadFinished())
+
+			if (getInstance().m_stationPlayersCollectorConnection != nullptr && !isPreloadFinished())
 			{
 				getInstance().m_stationPlayersCollectorConnection->disconnect();
 				getInstance().m_stationPlayersCollectorConnection = 0;
@@ -3134,14 +3109,14 @@ void CentralServer::handleRequestGameServerForLoginMessage(const RequestGameServ
 	static const std::string loginTrace("TRACE_LOGIN");
 
 	std::string effectiveScene;
-	PlayerSceneMapType::iterator i=m_playerSceneMap.find(msg.getCharacterId());
-	if (i!=m_playerSceneMap.end())
+	PlayerSceneMapType::iterator i = m_playerSceneMap.find(msg.getCharacterId());
+	if (i != m_playerSceneMap.end())
 	{
-		effectiveScene=i->second.first;
+		effectiveScene = i->second.first;
 		LOG(loginTrace, ("using sceneId (%s) from memory for character (%s)", effectiveScene.c_str(), msg.getCharacterId().getValueString().c_str()));
 	}
 	else
-		effectiveScene=msg.getScene(); // only use the DB scene if we don't have more recent information
+		effectiveScene = msg.getScene(); // only use the DB scene if we don't have more recent information
 
 	// for CTS, the source character must currently be on one of the 10 original ground planets
 	if (msg.getForCtsSourceCharacter())
@@ -3177,7 +3152,7 @@ void CentralServer::handleRequestGameServerForLoginMessage(const RequestGameServ
 	if (conn)
 	{
 		LOG(loginTrace, ("handling RequestGameServerForLoginMessage(%s)", msg.getCharacterId().getValueString().c_str()));
-		conn->send(msg,true);
+		conn->send(msg, true);
 	}
 	else
 	{
@@ -3185,12 +3160,12 @@ void CentralServer::handleRequestGameServerForLoginMessage(const RequestGameServ
 		bool allowDynamicStart = ConfigFile::getKeyBool("CentralServer", "startPlanetsDynamically", false);
 
 		std::map<std::string, std::string>::const_iterator f = ms_sceneToHostMap.find(msg.getScene());
-		if(f != ms_sceneToHostMap.end())
+		if (f != ms_sceneToHostMap.end())
 		{
 			isPlanetValid = true;
 		}
 
-		if(isPlanetValid || allowDynamicStart)
+		if (isPlanetValid || allowDynamicStart)
 		{
 			LOG(loginTrace, ("deferring RequestGameServerForLoginMessage(%s)", msg.getCharacterId().getValueString().c_str()));
 			DEBUG_REPORT_LOG(true, ("Starting planet server for login"));
@@ -3212,7 +3187,7 @@ void CentralServer::handleRequestSceneTransfer(const RequestSceneTransfer &msg)
 	PlanetServerConnection *conn = PlanetManager::getPlanetServerForScene(msg.getSceneName());
 	if (conn)
 	{
-		conn->send(msg,true);
+		conn->send(msg, true);
 	}
 	else
 	{
@@ -3233,13 +3208,13 @@ void CentralServer::handleGameServerForLoginMessage(const GameServerForLoginMess
 	ConnectionServerConnection *conn = getConnectionServerForAccount(msg.getStationId());
 	if (conn)
 	{
-		conn->send(msg,true);
+		conn->send(msg, true);
 	}
 	else
 	{
-		if(! ConnectionServerConnection::sendToPseudoClientConnection(msg.getStationId(), msg))
+		if (!ConnectionServerConnection::sendToPseudoClientConnection(msg.getStationId(), msg))
 		{
-			LOG("TRACE_LOGIN", ("Trying to log account %i in, but could not determine which connection server to use.",msg.getStationId()));
+			LOG("TRACE_LOGIN", ("Trying to log account %i in, but could not determine which connection server to use.", msg.getStationId()));
 		}
 	}
 }
@@ -3248,32 +3223,28 @@ void CentralServer::handleGameServerForLoginMessage(const GameServerForLoginMess
 
 void CentralServer::handleExchangeListCreditsMessage(const ExchangeListCreditsMessage &msg)
 {
-	LOG("Exchange", ("Central Server got exchange list credits %d.",msg.getCredits()));
-	if ( m_pAuctionTransferClient == nullptr )
+	LOG("Exchange", ("Central Server got exchange list credits %d.", msg.getCredits()));
+	if (m_pAuctionTransferClient == nullptr)
 	{
 		// send failure packet
 	}
 	//////////////////////m_pAuctionTransferClient->addCoinToAuction( msg );
 }
 
-
-
-
-
 ConnectionServerConnection * CentralServer::getAnyConnectionServer()
 {
 	ConnectionServerConnection * result = 0;
-	if(! m_connectionServerConnections.empty())
+	if (!m_connectionServerConnections.empty())
 	{
 		result = *(m_connectionServerConnections.begin());
-		if(result)
+		if (result)
 		{
 			int leastPlayers = result->getPlayerCount();
 
 			std::vector<ConnectionServerConnection *>::iterator i;
-			for(i = m_connectionServerConnections.begin(); i != m_connectionServerConnections.end();  ++i)
+			for (i = m_connectionServerConnections.begin(); i != m_connectionServerConnections.end(); ++i)
 			{
-				if((*i)->getPlayerCount() < leastPlayers)
+				if ((*i)->getPlayerCount() < leastPlayers)
 					result = *i;
 			}
 		}
@@ -3286,8 +3257,8 @@ ConnectionServerConnection * CentralServer::getAnyConnectionServer()
 ConnectionServerConnection * CentralServer::getConnectionServerForAccount(StationId suid)
 {
 	ConnectionServerConnection * result = nullptr;
-	ConnectionServerSUIDMap::iterator i=m_accountConnectionMap.find(suid);
-	if (i!=m_accountConnectionMap.end())
+	ConnectionServerSUIDMap::iterator i = m_accountConnectionMap.find(suid);
+	if (i != m_accountConnectionMap.end())
 	{
 		result = (*i).second;
 	}
@@ -3313,8 +3284,8 @@ void CentralServer::addToAccountConnectionMap(StationId suid, ConnectionServerCo
 
 void CentralServer::removeFromAccountConnectionMap(StationId suid)
 {
-	ConnectionServerSUIDMap::iterator i=m_accountConnectionMap.find(suid);
-	if (i!=m_accountConnectionMap.end())
+	ConnectionServerSUIDMap::iterator i = m_accountConnectionMap.find(suid);
+	if (i != m_accountConnectionMap.end())
 	{
 		// Erase the entry
 		m_accountConnectionMap.erase(i++);
@@ -3326,11 +3297,11 @@ void CentralServer::removeFromAccountConnectionMap(StationId suid)
 void CentralServer::removeFromAccountConnectionMap(int connectionServerConnectionId)
 {
 	ConnectionServerSUIDMap::iterator i;
-	for(i = m_accountConnectionMap.begin(); i != m_accountConnectionMap.end();)
+	for (i = m_accountConnectionMap.begin(); i != m_accountConnectionMap.end();)
 	{
 		const ConnectionServerConnection* cconn = (*i).second;
 
-		if(cconn && (cconn->getId() == connectionServerConnectionId))
+		if (cconn && (cconn->getId() == connectionServerConnectionId))
 		{
 			// Erase the entry
 			m_accountConnectionMap.erase(i++);
@@ -3383,7 +3354,7 @@ void CentralServer::startConnectionServer(int connectionServerNumber, const std:
 void CentralServer::startConnectionServer(int connectionServerNumber, const std::string& listenAddress, const std::string * publicPort, const std::string * internalPort, const SpawnDelaySeconds spawnDelay) const
 {
 	UNREF(listenAddress);  //once we add dual nic support, we can use this
-	if(!m_connService)
+	if (!m_connService)
 	{
 		DEBUG_WARNING(true, ("Could not start connection server because there was no service for it"));
 		return;
@@ -3415,7 +3386,7 @@ void CentralServer::startConnectionServer(int connectionServerNumber, const std:
 	std::string options = "-s ConnectionServer clusterName=";
 	options += ConfigCentralServer::getClusterName();
 
-	if(gs_connectionServersPublic)
+	if (gs_connectionServersPublic)
 		options += " startPublicServer=true";
 
 	options += " centralServerAddress=";
@@ -3441,7 +3412,7 @@ void CentralServer::startConnectionServer(int connectionServerNumber, const std:
 	options += _itoa(connectionServerNumber, servicePort, 10);
 
 	DEBUG_REPORT_LOG(true, ("Spawning Connection server with options %s\n", options.c_str()));
-	TaskSpawnProcess p(s_connectionServerHostList[connectionServerNumber-1], "ConnectionServer", options, spawnDelay);
+	TaskSpawnProcess p(s_connectionServerHostList[connectionServerNumber - 1], "ConnectionServer", options, spawnDelay);
 	CentralServer::getInstance().sendTaskMessage(p);
 }
 
@@ -3449,8 +3420,8 @@ void CentralServer::startConnectionServer(int connectionServerNumber, const std:
 
 void CentralServer::sendToAllLoginServers(const GameNetworkMessage &message)
 {
-	for (LoginServerConnectionMapType::iterator i=m_loginServerConnectionMap.begin(); i!=m_loginServerConnectionMap.end(); ++i)
-		i->second->send(message,true);
+	for (LoginServerConnectionMapType::iterator i = m_loginServerConnectionMap.begin(); i != m_loginServerConnectionMap.end(); ++i)
+		i->second->send(message, true);
 }
 
 // ----------------------------------------------------------------------
@@ -3466,7 +3437,7 @@ uint32 CentralServer::sendToArbitraryLoginServer(const GameNetworkMessage &messa
 
 	if (!roundRobin)
 	{
-		i->second->send(message,true);
+		i->second->send(message, true);
 		return i->second->getProcessId();
 	}
 
@@ -3476,7 +3447,7 @@ uint32 CentralServer::sendToArbitraryLoginServer(const GameNetworkMessage &messa
 
 	std::advance(i, nextServer);
 
-	i->second->send(message,true);
+	i->second->send(message, true);
 	return i->second->getProcessId();
 }
 
@@ -3512,7 +3483,7 @@ void CentralServer::remove()
 	delete cs.m_connService;
 	delete cs.m_planetService;
 	delete cs.m_loginService;
-	if(cs.m_taskManager)
+	if (cs.m_taskManager)
 	{
 		cs.m_taskManager->setDisconnectReason("CentralServer::remove");
 		cs.m_taskManager->disconnect();
@@ -3527,7 +3498,7 @@ std::vector<const GameServerConnection *> CentralServer::getGameServers() const
 {
 	std::vector<const GameServerConnection *> result;
 	std::map<uint32, GameServerConnection *>::const_iterator i;
-	for(i = m_gameServerConnections.begin(); i != m_gameServerConnections.end(); ++i)
+	for (i = m_gameServerConnections.begin(); i != m_gameServerConnections.end(); ++i)
 	{
 		result.push_back((*i).second);
 	}
@@ -3540,7 +3511,7 @@ void CentralServer::sendToConnectionServerForAccount(StationId account, const Ga
 {
 	ConnectionServerConnection *conn = getConnectionServerForAccount(account);
 	if (conn)
-		conn->send(message,reliable);
+		conn->send(message, reliable);
 }
 
 // ----------------------------------------------------------------------
@@ -3550,7 +3521,7 @@ uint32 CentralServer::sendToRandomGameServer(const GameNetworkMessage &message)
 	GameServerConnection *conn = getRandomGameServer();
 	if (conn)
 	{
-		conn->send(message,true);
+		conn->send(message, true);
 		return conn->getProcessId();
 	}
 	else
@@ -3561,10 +3532,10 @@ uint32 CentralServer::sendToRandomGameServer(const GameNetworkMessage &message)
 
 void CentralServer::doServerPings()
 {
-	for (std::set<uint32>::iterator i=m_serverPings.begin(); i!=m_serverPings.end(); ++i)
+	for (std::set<uint32>::iterator i = m_serverPings.begin(); i != m_serverPings.end(); ++i)
 	{
-		LOG("CentralServerPings",("Dropping server %lu because it hasn't responded to CentralPingMessage",*i));
-		GameServerConnection *conn=getGameServer(*i);
+		LOG("CentralServerPings", ("Dropping server %lu because it hasn't responded to CentralPingMessage", *i));
+		GameServerConnection *conn = getGameServer(*i);
 		if (conn)
 		{
 			// tell task manager to kill the offending process (in case it's hung)
@@ -3577,7 +3548,7 @@ void CentralServer::doServerPings()
 		}
 		else
 		{
-			LOG("CentralServerPings",("Didn't have connection to %lu to drop",*i));
+			LOG("CentralServerPings", ("Didn't have connection to %lu to drop", *i));
 			ExcommunicateGameServerMessage const excommunicateMessage(*i, 0, "");
 			excommunicateServer(excommunicateMessage); // haven't received a reply (see CentralPingMessage, above)
 		}
@@ -3585,13 +3556,13 @@ void CentralServer::doServerPings()
 	m_serverPings.clear();
 
 	CentralPingMessage ping;
-	for (std::map<uint32, GameServerConnection *>::iterator j=m_gameServerConnections.begin(); j!=m_gameServerConnections.end(); ++j)
+	for (std::map<uint32, GameServerConnection *>::iterator j = m_gameServerConnections.begin(); j != m_gameServerConnections.end(); ++j)
 	{
 		if (j->first != getDbProcessServerProcessId())
 		{
-			LOG("CentralServerPings",("Pinging  %lu",j->first));
+			LOG("CentralServerPings", ("Pinging  %lu", j->first));
 			IGNORE_RETURN(m_serverPings.insert(j->first));
-			j->second->send(ping,true);
+			j->second->send(ping, true);
 		}
 	}
 }
@@ -3603,36 +3574,36 @@ void CentralServer::doServerPings()
  */
 void CentralServer::excommunicateServer(const ExcommunicateGameServerMessage & msg)
 {
-	sendToAllGameServers(msg,true);
-	sendToAllPlanetServers(msg,true);
-	sendToAllConnectionServers(msg,true);
+	sendToAllGameServers(msg, true);
+	sendToAllPlanetServers(msg, true);
+	sendToAllConnectionServers(msg, true);
 }
 
 //-----------------------------------------------------------------------
 void CentralServer::startShutdownProcess(const uint32 timeToShutdown, const uint32 maxTime, const Unicode::String &systemMessage)
 {
 	// sanity checking
-	if ( m_shutdownPhase > 6)
+	if (m_shutdownPhase > 6)
 	{
 		WARNING("CentralServerShutdown", ("startShutdownProcess: invalid value in CentralServer::m_shutdownPhase.  Current value is %d. Resetting.", m_shutdownPhase));
 		m_shutdownPhase = 0;
 	}
 
 	// server already in the process of shutting down
-	if ( m_shutdownPhase > 0 )
+	if (m_shutdownPhase > 0)
 	{
 		LOG("CentralServerShutdown", ("startShutdownProcess: Server already in the process of shutting down.  Current shutdown phase is %d.", m_shutdownPhase));
 		return;
 	}
 
-	if( timeToShutdown>maxTime )
+	if (timeToShutdown > maxTime)
 	{
 		LOG("CentralServerShutdown", ("startShutdownProcess: time to shutdown is greater than max time."));
 		return;
 	}
 	m_shutdownPhase = 1;
-	LOG("CentralServerShutdown",("Shutdown Phase %d: Shutdown sequence starting now.", m_shutdownPhase));
-	LOG("CentralServerShutdown",("Shutdown Phase %d: time to shutdown=%dsec, max time to wait=%dsec, broadcast warning message=\"%s\".", m_shutdownPhase, timeToShutdown, maxTime, Unicode::wideToNarrow(systemMessage).c_str()));
+	LOG("CentralServerShutdown", ("Shutdown Phase %d: Shutdown sequence starting now.", m_shutdownPhase));
+	LOG("CentralServerShutdown", ("Shutdown Phase %d: time to shutdown=%dsec, max time to wait=%dsec, broadcast warning message=\"%s\".", m_shutdownPhase, timeToShutdown, maxTime, Unicode::wideToNarrow(systemMessage).c_str()));
 	// this is the time in the future that we need to start the shutdown process.
 	m_shutdownTotalTime = m_curTime + timeToShutdown;
 	m_shutdownMaxTime = m_curTime + maxTime;
@@ -3648,27 +3619,27 @@ void CentralServer::checkShutdownProcess()
 	static bool warn10 = false;
 	static bool warn0 = false;
 	static uint32 lastWarn = m_curTime;
-	static uint32 nextAbortCheck = m_curTime+1;
-	static uint32 nextShutdownCheck = m_curTime+30;
+	static uint32 nextAbortCheck = m_curTime + 1;
+	static uint32 nextShutdownCheck = m_curTime + 30;
 
-	if( !m_shutdownPhase )
+	if (!m_shutdownPhase)
 	{
 #ifndef WIN32
 		// check if a .shutdown file exists
-		if( m_curTime > nextShutdownCheck )
+		if (m_curTime > nextShutdownCheck)
 		{
 			nextShutdownCheck = m_curTime + 30;
-			if( FileExists(".shutdown") )
+			if (FileExists(".shutdown"))
 			{
 				StdioFile shutdownFile(".shutdown", "r");
-				if(shutdownFile.isOpen())
+				if (shutdownFile.isOpen())
 				{
-					char destBuffer[64] = {"\0"};
-					if(shutdownFile.read(destBuffer, sizeof(destBuffer)) > 0)
+					char destBuffer[64] = { "\0" };
+					if (shutdownFile.read(destBuffer, sizeof(destBuffer)) > 0)
 					{
 						destBuffer[sizeof(destBuffer) - 1] = 0;
 						int shutdownTime = atoi(destBuffer);
-						if(shutdownTime > 0)
+						if (shutdownTime > 0)
 						{
 							LOG("CentralServerShutdown", ("Detected a .shutdown file.  Initiating shutdown sequence."));
 							startShutdownProcess(shutdownTime, 7200, Unicode::narrowToWide("The server will be shutting down soon.  Please find a safe place to logout."));
@@ -3680,7 +3651,7 @@ void CentralServer::checkShutdownProcess()
 				return;
 			}
 
-			if( FileExists( ".startanymissingplanet") )
+			if (FileExists(".startanymissingplanet"))
 			{
 				LOG("CentralServer", ("Detected a .startanymissingplanet file.  Checking for any planets that are not started, and starting them."));
 
@@ -3714,18 +3685,18 @@ void CentralServer::checkShutdownProcess()
 					}
 				}
 
-				IGNORE_RETURN(::remove( ".startanymissingplanet" ));
+				IGNORE_RETURN(::remove(".startanymissingplanet"));
 				return;
 			}
 
-			if( FileExists( ".startanymissinggameserver") )
+			if (FileExists(".startanymissinggameserver"))
 			{
 				LOG("CentralServer", ("Detected a .startanymissinggameserver file.  Checking for any game servers that are not started, and starting them."));
 
 				const GenericValueTypeMessage<uint8> startAnyMissingGameServer("SAMGS", 0);
 				sendToAllPlanetServers(startAnyMissingGameServer, true);
 
-				IGNORE_RETURN(::remove( ".startanymissinggameserver" ));
+				IGNORE_RETURN(::remove(".startanymissinggameserver"));
 				return;
 			}
 		}
@@ -3734,13 +3705,12 @@ void CentralServer::checkShutdownProcess()
 	}
 
 	// should we abort?
-	if( m_curTime > nextAbortCheck )
+	if (m_curTime > nextAbortCheck)
 	{
 #ifndef WIN32
 		nextAbortCheck = m_curTime + 1;
-		if( FileExists(".abortshutdown") )
+		if (FileExists(".abortshutdown"))
 		{
-
 			IGNORE_RETURN(::remove(".abortshutdown"));
 			LOG("CentralServerShutdown", ("Shutdown Phase %d: Detected a .abortshutdown file.  Aborting shutdown sequence.", m_shutdownPhase));
 			abortShutdownProcess();
@@ -3750,94 +3720,91 @@ void CentralServer::checkShutdownProcess()
 	}
 
 	// Phase 1 is an immediate broadcast to players for the first shutdown warning
-	if( m_shutdownPhase == 1 )
+	if (m_shutdownPhase == 1)
 	{
 		char strTimeLeft[1024];
 		uint32 timeLeft = m_shutdownTotalTime - m_curTime;
-		if( timeLeft < 1 )
+		if (timeLeft < 1)
 		{
 			strTimeLeft[0] = '\0';
 		}
-		else if( timeLeft < 60 )
+		else if (timeLeft < 60)
 		{
 			sprintf(strTimeLeft, " ( %lusec left )", timeLeft);
 		}
 		else
 		{
-			sprintf(strTimeLeft, " ( %lumin left )", timeLeft/60);
+			sprintf(strTimeLeft, " ( %lumin left )", timeLeft / 60);
 		}
 
-		LOG("CentralServerShutdown",("Shutdown Phase %d: Broadcasting first shutdown message to players: \"%s %s\"", m_shutdownPhase, Unicode::wideToNarrow(m_shutdownSystemMessage).c_str(), strTimeLeft));
-		ConGenericMessage const msg("game any systemMessage " + Unicode::wideToNarrow(m_shutdownSystemMessage)+strTimeLeft, 0);
+		LOG("CentralServerShutdown", ("Shutdown Phase %d: Broadcasting first shutdown message to players: \"%s %s\"", m_shutdownPhase, Unicode::wideToNarrow(m_shutdownSystemMessage).c_str(), strTimeLeft));
+		ConGenericMessage const msg("game any systemMessage " + Unicode::wideToNarrow(m_shutdownSystemMessage) + strTimeLeft, 0);
 		IGNORE_RETURN(sendToRandomGameServer(msg));
 		m_shutdownPhase = 2;
 		lastWarn = m_curTime;
 	}
 	// Phase 2 is broadcasting a system message every 60sec while we wait for time to expire
-	else if( m_shutdownPhase == 2 )
+	else if (m_shutdownPhase == 2)
 	{
-		if(  m_curTime >= m_shutdownTotalTime)
+		if (m_curTime >= m_shutdownTotalTime)
 		{
-			LOG("CentralServerShutdown",("Shutdown Phase %d: Done broadcasting shutdown warning message to players . Advancing shutdown phase.", m_shutdownPhase));
+			LOG("CentralServerShutdown", ("Shutdown Phase %d: Done broadcasting shutdown warning message to players . Advancing shutdown phase.", m_shutdownPhase));
 			m_shutdownPhase = 3;
 			warn30 = false;
 			warn10 = false;
 			warn0 = false;
-
-
 		}
 		// broadcast warning message to players every 60sec.
-		else if( m_curTime >= lastWarn+60 )
+		else if (m_curTime >= lastWarn + 60)
 		{
 			char strTimeLeft[1024];
 			uint32 timeLeft = m_shutdownTotalTime - m_curTime;
-			if( timeLeft < 1 )
+			if (timeLeft < 1)
 			{
 				strTimeLeft[0] = '\0';
 			}
-			else if( timeLeft < 60 )
+			else if (timeLeft < 60)
 			{
 				sprintf(strTimeLeft, " ( %lusec left)", timeLeft);
 			}
 			else
 			{
-				sprintf(strTimeLeft, " ( %lumin left)", timeLeft/60);
+				sprintf(strTimeLeft, " ( %lumin left)", timeLeft / 60);
 			}
 
-			LOG("CentralServerShutdown",("Shutdown Phase %d: Broadcasting shutdown message to players: \"%s %s\"", m_shutdownPhase, Unicode::wideToNarrow(m_shutdownSystemMessage).c_str(), strTimeLeft));
-			ConGenericMessage const msg("game any systemMessage " + Unicode::wideToNarrow(m_shutdownSystemMessage)+strTimeLeft, 0);
+			LOG("CentralServerShutdown", ("Shutdown Phase %d: Broadcasting shutdown message to players: \"%s %s\"", m_shutdownPhase, Unicode::wideToNarrow(m_shutdownSystemMessage).c_str(), strTimeLeft));
+			ConGenericMessage const msg("game any systemMessage " + Unicode::wideToNarrow(m_shutdownSystemMessage) + strTimeLeft, 0);
 			IGNORE_RETURN(sendToRandomGameServer(msg));
 			lastWarn = m_curTime;
 		}
 	}
 	// warn the players they are about to be disconnected
-	else if( m_shutdownPhase == 3 )
+	else if (m_shutdownPhase == 3)
 	{
-		if( m_curTime>=m_shutdownTotalTime && !warn30 )
+		if (m_curTime >= m_shutdownTotalTime && !warn30)
 		{
-			LOG("CentralServerShutdown",("Shutdown Phase %d: Broadcasting 30sec disconnect warning message to players.", m_shutdownPhase));
+			LOG("CentralServerShutdown", ("Shutdown Phase %d: Broadcasting 30sec disconnect warning message to players.", m_shutdownPhase));
 			ConGenericMessage const msg("game any systemMessage You will be disconnected in 30sec so the server can perform a final save before shutting down.  Please find a safe place to logout now.", 0);
 			IGNORE_RETURN(sendToRandomGameServer(msg));
 			warn30 = true;
-
 		}
-		else if( m_curTime >= (m_shutdownTotalTime+20) && !warn10 )
+		else if (m_curTime >= (m_shutdownTotalTime + 20) && !warn10)
 		{
-			LOG("CentralServerShutdown",("Shutdown Phase %d: Broadcasting 10sec disconnect warning message to players.", m_shutdownPhase));
+			LOG("CentralServerShutdown", ("Shutdown Phase %d: Broadcasting 10sec disconnect warning message to players.", m_shutdownPhase));
 			ConGenericMessage const msg("game any systemMessage You will be disconnected in 10sec so the server can perform a final save before shutting down.  Please find a safe place to logout now.", 0);
 			IGNORE_RETURN(sendToRandomGameServer(msg));
 			warn10 = true;
 		}
-		else if( m_curTime >= (m_shutdownTotalTime+30) && !warn0 )
+		else if (m_curTime >= (m_shutdownTotalTime + 30) && !warn0)
 		{
-			LOG("CentralServerShutdown",("Shutdown Phase %d: Broadcasting final disconnect warning message to players.", m_shutdownPhase));
+			LOG("CentralServerShutdown", ("Shutdown Phase %d: Broadcasting final disconnect warning message to players.", m_shutdownPhase));
 			ConGenericMessage const msg("game any systemMessage You will now be disconnected so the server can perform a final save before shutting down.", 0);
 			IGNORE_RETURN(sendToRandomGameServer(msg));
 			warn0 = true;
 		}
-		else if( m_curTime >= (m_shutdownTotalTime+35) )
+		else if (m_curTime >= (m_shutdownTotalTime + 35))
 		{
-			LOG("CentralServerShutdown",("Shutdown Phase %d: Setting server to private, disconnecting the players and now waiting for next database save cycle to begin.", m_shutdownPhase));
+			LOG("CentralServerShutdown", ("Shutdown Phase %d: Setting server to private, disconnecting the players and now waiting for next database save cycle to begin.", m_shutdownPhase));
 			gs_connectionServersPublic = false;
 			SetConnectionServerPublic const msg(false);
 			sendToAllConnectionServers(msg, true);
@@ -3854,32 +3821,32 @@ void CentralServer::checkShutdownProcess()
 			sendToDBProcess(msg3, true);
 		}
 	}
-	else if( m_shutdownPhase == 4 )
+	else if (m_shutdownPhase == 4)
 	{
-		if( m_shutdownHaveDatabaseSaveStart )
+		if (m_shutdownHaveDatabaseSaveStart)
 		{
-			LOG("CentralServerShutdown",("Shutdown Phase %d: Starting final database save cycle. Advancing shutdown phase.", m_shutdownPhase));
+			LOG("CentralServerShutdown", ("Shutdown Phase %d: Starting final database save cycle. Advancing shutdown phase.", m_shutdownPhase));
 			m_shutdownPhase = 5;
 		}
 	}
-	else if( m_shutdownPhase == 5 )
+	else if (m_shutdownPhase == 5)
 	{
 		// we are done.  Shut it down.  Shut it down now!
-		if( m_shutdownHaveDatabaseComplete)
+		if (m_shutdownHaveDatabaseComplete)
 		{
-			LOG("CentralServerShutdown",("Shutdown Phase %d: Completed final database save cycle. Advancing shutdown phase.", m_shutdownPhase));
+			LOG("CentralServerShutdown", ("Shutdown Phase %d: Completed final database save cycle. Advancing shutdown phase.", m_shutdownPhase));
 			m_shutdownPhase = 6;
-			LOG("CentralServerShutdown",("Shutdown Phase %d: Instructing TaskManager to shutdown the cluster without restarting.", m_shutdownPhase));
+			LOG("CentralServerShutdown", ("Shutdown Phase %d: Instructing TaskManager to shutdown the cluster without restarting.", m_shutdownPhase));
 			ConGenericMessage const msg("stop", 0);
 			sendTaskMessage(msg);
 		}
 	}
 	// maximum amount of time to wait has expired.  Shut it down now without waiting for anything else.
-	else if( m_curTime >= m_shutdownMaxTime )
+	else if (m_curTime >= m_shutdownMaxTime)
 	{
-		LOG("CentralServerShutdown",("Shutdown Phase %d: Maximum time has gone by.  Forcing a shutdown now.", m_shutdownPhase));
+		LOG("CentralServerShutdown", ("Shutdown Phase %d: Maximum time has gone by.  Forcing a shutdown now.", m_shutdownPhase));
 		m_shutdownPhase = 6;
-		LOG("CentralServerShutdown",("Shutdown Phase %d: Instructing TaskManager to shutdown the cluster without restarting.", m_shutdownPhase));
+		LOG("CentralServerShutdown", ("Shutdown Phase %d: Instructing TaskManager to shutdown the cluster without restarting.", m_shutdownPhase));
 		ConGenericMessage const msg("stop", 0);
 		sendTaskMessage(msg);
 	}
@@ -3888,7 +3855,7 @@ void CentralServer::checkShutdownProcess()
 void CentralServer::abortShutdownProcess()
 {
 	LOG("CentralServerShutdown", ("Shutdown Phase %d: Aborting shutdown sequence.", m_shutdownPhase));
-	if( m_shutdownPhase > 0 )
+	if (m_shutdownPhase > 0)
 	{
 		ConGenericMessage const msg("game any systemMessage The server shutdown has been aborted.  The server is no longer shutting down.", 0);
 		IGNORE_RETURN(sendToRandomGameServer(msg));
@@ -3910,7 +3877,7 @@ void CentralServer::abortShutdownProcess()
 
 void CentralServer::sendToTransferServer(const GameNetworkMessage & msg) const
 {
-	if(getInstance().m_transferServerConnection)
+	if (getInstance().m_transferServerConnection)
 	{
 		getInstance().m_transferServerConnection->send(msg, true);
 	}
@@ -3922,7 +3889,7 @@ void CentralServer::sendToTransferServer(const GameNetworkMessage & msg) const
 
 void CentralServer::sendToStationPlayersCollector(const GameNetworkMessage & msg) const
 {
-	if(getInstance().m_stationPlayersCollectorConnection)
+	if (getInstance().m_stationPlayersCollectorConnection)
 	{
 		getInstance().m_stationPlayersCollectorConnection->send(msg, true);
 	}
@@ -4026,7 +3993,7 @@ std::pair<std::map<int, std::pair<std::string, int> > const *, std::map<int, std
 	}
 
 	refreshTime = m_timeLastLoginTimeStatisticsRefresh;
-	
+
 	return std::make_pair(&m_lastLoginTimeStatistics, &m_createTimeStatistics);
 }
 

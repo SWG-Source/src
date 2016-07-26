@@ -553,7 +553,7 @@ bool ServerBuildoutManagerNamespace::isNotObjectForBuildout(ServerObject const *
 			tmpObj->setIncludeInBuildout(true);
 		}
 
-		if (!obj || !obj->isInWorld() || (!obj->isPersisted() && !obj->getIncludeInBuildout()) || obj->isPlayerControlled())
+		if (!obj->isInWorld() || (!obj->isPersisted() && !obj->getIncludeInBuildout()) || obj->isPlayerControlled())
 		{
 			return true;
 		}

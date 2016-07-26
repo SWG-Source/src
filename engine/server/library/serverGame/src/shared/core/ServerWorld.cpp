@@ -2916,9 +2916,9 @@ void ServerWorld::update(real time)
 			std::string buffer;
 			getWeather().debugPrint(buffer);
 			DEBUG_REPORT_LOG(true, ("Weather data is %s\n", buffer.c_str()));
-	}
+		}
 #endif
-}
+	}
 
 	updatePlanetServer();
 

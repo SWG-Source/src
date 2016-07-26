@@ -50,7 +50,7 @@ public:
 	typedef unsigned int        SpawnDelaySeconds;
 	struct CentralObject
 	{
-		CentralObject(); 
+		CentralObject();
 		CentralObject(const SceneId & sceneId, uint32 authProcess);
 
 		SceneId             m_sceneId;
@@ -148,12 +148,12 @@ public:
 	static void                  run(void);
 	static void                  done();
 	static void                  remove();
-	
+
 	ConnectionServerConnection * getAnyConnectionServer();
 
-	GameServerConnection *       getGameServer       	(const uint32 processId) const;
-	GameServerConnection *       getGameServer        (const SceneId &scene) const;
-	const ServersList            getGameServers       (const SceneId &scene) const;
+	GameServerConnection *       getGameServer(const uint32 processId) const;
+	GameServerConnection *       getGameServer(const SceneId &scene) const;
+	const ServersList            getGameServers(const SceneId &scene) const;
 	std::vector<const GameServerConnection *>  getGameServers() const;
 
 	time_t                       getLastTimeSystemTimeMismatchNotification() const;
@@ -172,24 +172,23 @@ public:
 	void                         removeFromAccountConnectionMap(StationId suid);
 
 private:
-	void     handleRequestGameServerForLoginMessage (const RequestGameServerForLoginMessage & msg);
-	void     handleRequestSceneTransfer             (const RequestSceneTransfer & msg);
-	void     handleGameServerForLoginMessage        (const GameServerForLoginMessage & msg);
+	void     handleRequestGameServerForLoginMessage(const RequestGameServerForLoginMessage & msg);
+	void     handleRequestSceneTransfer(const RequestSceneTransfer & msg);
+	void     handleGameServerForLoginMessage(const GameServerForLoginMessage & msg);
 
+	void	handleExchangeListCreditsMessage(const ExchangeListCreditsMessage& msg);
 
-	void	handleExchangeListCreditsMessage	(const ExchangeListCreditsMessage& msg);
-
-	size_t                       getGameServerCount		(void) const;
+	size_t                       getGameServerCount(void) const;
 	void                         update();
 	void                         sendPopulationUpdateToLoginServer();
-	void			     sendMetricsToWebAPI(std::string updateURL);
+	void						 sendMetricsToWebAPI(const std::string &updateURL);
 	ConnectionServerConnection * getConnectionServerForAccount(StationId suid);
 	void                         addToAccountConnectionMap(StationId suid, ConnectionServerConnection * cconn, uint32 subscriptionBits);
 	void                         removeFromAccountConnectionMap(int connectionServerConnectionId);
 	void                         doServerPings();
 	void                         excommunicateServer(const ExcommunicateGameServerMessage &);
 
-protected: 
+protected:
 	friend class Singleton<CentralServer>;
 	CentralServer();
 
@@ -205,11 +204,11 @@ private:
 	SceneGameMap                                   m_gameServers;
 	ConnectionServerSUIDMap                        m_accountConnectionMap;
 
-//	Network::Address   clientService;
-	/**
-		The dbProcessServerProcessId is set by the DBProcess. The central server
-		refers to this process if there are no matching objects in any of its maps.
-	*/
+	//	Network::Address   clientService;
+		/**
+			The dbProcessServerProcessId is set by the DBProcess. The central server
+			refers to this process if there are no matching objects in any of its maps.
+		*/
 	uint32                        m_dbProcessServerProcessId;
 	bool                          m_done;
 	Service *                     m_gameService;
@@ -330,7 +329,7 @@ inline int CentralServer::getNumConnectionServers() const
 inline int CentralServer::getNumDatabaseServers() const
 {
 	GameServerConnection * g = getGameServer(getDbProcessServerProcessId());
-	if(g)
+	if (g)
 	{
 		return 1;
 	}

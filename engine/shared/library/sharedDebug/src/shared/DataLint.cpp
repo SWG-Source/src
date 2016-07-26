@@ -30,7 +30,7 @@ namespace DataLintNamespace
 	typedef stdvector<std::string>::fwd                               StringList;
 	typedef std::pair<std::string, std::pair<DataLint::AssetType, StringList> > WarningPair;
 	typedef stdvector<WarningPair>::fwd                               WarningList;
-	typedef bool (*AssetFunction)(char const *);
+	typedef bool(*AssetFunction)(char const *);
 
 	bool                       ms_installed = false;
 	DataLint::AssetType        m_currentAssetType = DataLint::AT_invalid;
@@ -80,7 +80,7 @@ void DataLint::install()
 	m_warningList = new WarningList();
 	m_warningList->reserve(4096);
 
-	m_assetStack = new StringList ();
+	m_assetStack = new StringList();
 
 	m_assetList = new StringPairList();
 	m_assetList->reserve(4096);
@@ -116,10 +116,10 @@ void DataLint::report()
 
 		// Server/client
 
-		FILE *assetErrorFileAll                   = fopen(dataLintErrorsAll.c_str(), "wt");
-		FILE *assetErrorFileAllFatal              = fopen(dataLintErrorsAllFatal.c_str(), "wt");
-		FILE *assetErrorFileAllWarning            = fopen(dataLintErrorsAllWarning.c_str(), "wt");
-		FILE *assetErrorFileObjectTemplate        = fopen(dataLintErrorsAllObjectTemplate.c_str(), "wt");
+		FILE *assetErrorFileAll = fopen(dataLintErrorsAll.c_str(), "wt");
+		FILE *assetErrorFileAllFatal = fopen(dataLintErrorsAllFatal.c_str(), "wt");
+		FILE *assetErrorFileAllWarning = fopen(dataLintErrorsAllWarning.c_str(), "wt");
+		FILE *assetErrorFileObjectTemplate = fopen(dataLintErrorsAllObjectTemplate.c_str(), "wt");
 
 		// Client only
 
@@ -137,17 +137,17 @@ void DataLint::report()
 
 		if (m_mode == M_client)
 		{
-			assetErrorFileAppearance            = fopen("DataLint_Errors_Appearance.txt", "wt");
+			assetErrorFileAppearance = fopen("DataLint_Errors_Appearance.txt", "wt");
 			assetErrorFileArrangementDescriptor = fopen("DataLint_Errors_ArrangementDescriptor.txt", "wt");
-			assetErrorFileLocalizedStringTable  = fopen("DataLint_Errors_LocalizedStringTable.txt", "wt");
-			assetErrorFilePortalProperty        = fopen("DataLint_Errors_PortalProperty.txt", "wt");
-			assetErrorFileShaderTemplate        = fopen("DataLint_Errors_ShaderTemplate.txt", "wt");
-			assetErrorFileSkyBox                = fopen("DataLint_Errors_SkyBox.txt", "wt");
-			assetErrorFileSlotDescriptor        = fopen("DataLint_Errors_SlotDescriptor.txt", "wt");
-			assetErrorFileSoundTemplate         = fopen("DataLint_Errors_SoundTemplate.txt", "wt");
-			assetErrorFileTerrain               = fopen("DataLint_Errors_Terrain.txt", "wt");
-			assetErrorFileTexture               = fopen("DataLint_Errors_Texture.txt", "wt");
-			assetErrorFileTextureRenderer       = fopen("DataLint_Errors_TextureRenderer.txt", "wt");
+			assetErrorFileLocalizedStringTable = fopen("DataLint_Errors_LocalizedStringTable.txt", "wt");
+			assetErrorFilePortalProperty = fopen("DataLint_Errors_PortalProperty.txt", "wt");
+			assetErrorFileShaderTemplate = fopen("DataLint_Errors_ShaderTemplate.txt", "wt");
+			assetErrorFileSkyBox = fopen("DataLint_Errors_SkyBox.txt", "wt");
+			assetErrorFileSlotDescriptor = fopen("DataLint_Errors_SlotDescriptor.txt", "wt");
+			assetErrorFileSoundTemplate = fopen("DataLint_Errors_SoundTemplate.txt", "wt");
+			assetErrorFileTerrain = fopen("DataLint_Errors_Terrain.txt", "wt");
+			assetErrorFileTexture = fopen("DataLint_Errors_Texture.txt", "wt");
+			assetErrorFileTextureRenderer = fopen("DataLint_Errors_TextureRenderer.txt", "wt");
 		}
 
 		// Might want to think of a better way to keep track of the number of errors for each specific asset type.
@@ -205,104 +205,104 @@ void DataLint::report()
 
 				switch (warningListIter->second.first)
 				{
-					case AT_appearance:
-						{
-							if (m_mode == M_client)
-							{
-								writeError(assetErrorFileAppearance, *warningListIter, totalErrorCountAppearance);
-							}
-						}
-						break;
-					case AT_arrangementDescriptor:
-						{
-							if (m_mode == M_client)
-							{
-								writeError(assetErrorFileArrangementDescriptor, *warningListIter, totalErrorCountArrangementDescriptor);
-							}
-						}
-						break;
-					case AT_localizedStringTable:
-						{
-							if (m_mode == M_client)
-							{
-								writeError(assetErrorFileLocalizedStringTable, *warningListIter, totalErrorCountLocalizedStringTable);
-							}
-						}
-						break;
-					case AT_objectTemplate:
-						{
-							writeError(assetErrorFileObjectTemplate, *warningListIter, totalErrorCountObjectTemplate);
-						}
-						break;
-					case AT_portalProperty:
-						{
-							if (m_mode == M_client)
-							{
-								writeError(assetErrorFilePortalProperty, *warningListIter, totalErrorCountPortalProperty);
-							}
-						}
-						break;
-					case AT_shaderTemplate:
-						{
-							if (m_mode == M_client)
-							{
-								writeError(assetErrorFileShaderTemplate, *warningListIter, totalErrorCountShaderTemplate);
-							}
-						}
-						break;
-					case AT_skyBox:
-						{
-							if (m_mode == M_client)
-							{
-								writeError(assetErrorFileSkyBox, *warningListIter, totalErrorCountSkyBox);
-							}
-						}
-						break;
-					case AT_slotDescriptor:
-						{
-							if (m_mode == M_client)
-							{
-								writeError(assetErrorFileSlotDescriptor, *warningListIter, totalErrorCountSlotDescriptor);
-							}
-						}
-						break;
-					case AT_soundTemplate:
-						{
-							if (m_mode == M_client)
-							{
-								writeError(assetErrorFileSoundTemplate, *warningListIter, totalErrorCountSoundTemplate);
-							}
-						}
-						break;
-					case AT_terrain:
-						{
-							if (m_mode == M_client)
-							{
-								writeError(assetErrorFileTerrain, *warningListIter, totalErrorCountTerrain);
-							}
-						}
-						break;
-					case AT_texture:
-						{
-							if (m_mode == M_client)
-							{
-								writeError(assetErrorFileTexture, *warningListIter, totalErrorCountTexture);
-							}
-						}
-						break;
-					case AT_textureRendererTemplate:
-						{
-							if (m_mode == M_client)
-							{
-								writeError(assetErrorFileTextureRenderer, *warningListIter, totalErrorCountTextureRenderer);
-							}
-						}
-						break;
-					default:
-						{
-							DEBUG_REPORT_LOG_PRINT(true, ("DataLint::remove() - Unsupported asset type: %s", warningListIter->first.c_str()));
-						}
-						break;
+				case AT_appearance:
+				{
+					if (m_mode == M_client)
+					{
+						writeError(assetErrorFileAppearance, *warningListIter, totalErrorCountAppearance);
+					}
+				}
+				break;
+				case AT_arrangementDescriptor:
+				{
+					if (m_mode == M_client)
+					{
+						writeError(assetErrorFileArrangementDescriptor, *warningListIter, totalErrorCountArrangementDescriptor);
+					}
+				}
+				break;
+				case AT_localizedStringTable:
+				{
+					if (m_mode == M_client)
+					{
+						writeError(assetErrorFileLocalizedStringTable, *warningListIter, totalErrorCountLocalizedStringTable);
+					}
+				}
+				break;
+				case AT_objectTemplate:
+				{
+					writeError(assetErrorFileObjectTemplate, *warningListIter, totalErrorCountObjectTemplate);
+				}
+				break;
+				case AT_portalProperty:
+				{
+					if (m_mode == M_client)
+					{
+						writeError(assetErrorFilePortalProperty, *warningListIter, totalErrorCountPortalProperty);
+					}
+				}
+				break;
+				case AT_shaderTemplate:
+				{
+					if (m_mode == M_client)
+					{
+						writeError(assetErrorFileShaderTemplate, *warningListIter, totalErrorCountShaderTemplate);
+					}
+				}
+				break;
+				case AT_skyBox:
+				{
+					if (m_mode == M_client)
+					{
+						writeError(assetErrorFileSkyBox, *warningListIter, totalErrorCountSkyBox);
+					}
+				}
+				break;
+				case AT_slotDescriptor:
+				{
+					if (m_mode == M_client)
+					{
+						writeError(assetErrorFileSlotDescriptor, *warningListIter, totalErrorCountSlotDescriptor);
+					}
+				}
+				break;
+				case AT_soundTemplate:
+				{
+					if (m_mode == M_client)
+					{
+						writeError(assetErrorFileSoundTemplate, *warningListIter, totalErrorCountSoundTemplate);
+					}
+				}
+				break;
+				case AT_terrain:
+				{
+					if (m_mode == M_client)
+					{
+						writeError(assetErrorFileTerrain, *warningListIter, totalErrorCountTerrain);
+					}
+				}
+				break;
+				case AT_texture:
+				{
+					if (m_mode == M_client)
+					{
+						writeError(assetErrorFileTexture, *warningListIter, totalErrorCountTexture);
+					}
+				}
+				break;
+				case AT_textureRendererTemplate:
+				{
+					if (m_mode == M_client)
+					{
+						writeError(assetErrorFileTextureRenderer, *warningListIter, totalErrorCountTextureRenderer);
+					}
+				}
+				break;
+				default:
+				{
+					DEBUG_REPORT_LOG_PRINT(true, ("DataLint::remove() - Unsupported asset type: %s", warningListIter->first.c_str()));
+				}
+				break;
 				}
 
 				// Write the error to the master error file
@@ -483,13 +483,13 @@ std::string DataLintNamespace::formatErrorMessage(WarningPair &warningPair, int 
 			}
 		}
 
-		sprintf(formatedError, "%3d Error:        %s\n", currentErrorCount, assetError);
+		snprintf(formatedError, 4096, "%3d Error:        %s\n", currentErrorCount, assetError);
 		result += formatedError;
 	}
 
 	if (lineOfCode)
 	{
-		sprintf(formatedError, "    Line of Code: %s\n", lineOfCode);
+		snprintf(formatedError, 4096, "    Line of Code: %s\n", lineOfCode);
 		result += formatedError;
 	}
 
@@ -499,10 +499,10 @@ std::string DataLintNamespace::formatErrorMessage(WarningPair &warningPair, int 
 	{
 		std::string stackString(*stringListIter);
 
-		sprintf(text, "    Loaded From:  %s\n", stackString.c_str());
+		snprintf(text, 4096, "    Loaded From:  %s\n", stackString.c_str());
 		fixUpSlashes(text);
 
-		sprintf(formatedError, "%s", text);
+		snprintf(formatedError, 4096, "%s", text);
 		result += formatedError;
 	}
 
@@ -731,17 +731,17 @@ bool DataLintNamespace::isAnUnSupportedAsset(char const *text)
 	bool const textureRendererTemplateAsset = isATextureRendererTemplateAsset(text);
 
 	bool const result = !(appearanceAsset ||
-	                      arrangementDescriptorAsset ||
-	                      localizedStringAsset ||
-	                      objectTemplateAsset ||
-	                      portalPropertyAsset ||
-	                      shaderTemplateAsset ||
-	                      skyBoxAsset ||
-	                      slotDescriptorAsset ||
-	                      soundAsset ||
-	                      terrainAsset ||
-	                      textureAsset ||
-	                      textureRendererTemplateAsset);
+		arrangementDescriptorAsset ||
+		localizedStringAsset ||
+		objectTemplateAsset ||
+		portalPropertyAsset ||
+		shaderTemplateAsset ||
+		skyBoxAsset ||
+		slotDescriptorAsset ||
+		soundAsset ||
+		terrainAsset ||
+		textureAsset ||
+		textureRendererTemplateAsset);
 
 	return result;
 }
@@ -777,75 +777,75 @@ DataLint::StringPairList DataLint::getList(AssetType const assetType)
 {
 	switch (assetType)
 	{
-		case AT_appearance:
-			{
-				return DataLintNamespace::getList(8192, isAnAppearanceAsset);
-			}
-			break;
-		case AT_arrangementDescriptor:
-			{
-				return DataLintNamespace::getList(1024, isAnArrangementDescriptorAsset);
-			}
-			break;
-		case AT_localizedStringTable:
-			{
-				return DataLintNamespace::getList(1024, isALocalizedStringAsset);
-			}
-			break;
-		case AT_objectTemplate:
-			{
-				return DataLintNamespace::getList(8192, isAnObjectTemplateAsset);
-			}
-			break;
-		case AT_portalProperty:
-			{
-				return DataLintNamespace::getList(512, isAPortalProprtyAsset);
-			}
-			break;
-		case AT_shaderTemplate:
-			{
-				return DataLintNamespace::getList(4096, isAShaderTemplateAsset);
-			}
-			break;
-		case AT_skyBox:
-			{
-				return DataLintNamespace::getList(256, isASkyBoxAsset);
-			}
-			break;
-		case AT_slotDescriptor:
-			{
-				return DataLintNamespace::getList(1024, isASlotDescriptorAsset);
-			}
-			break;
-		case AT_soundTemplate:
-			{
-				return DataLintNamespace::getList(4096, isASoundAsset);
-			}
-			break;
-		case AT_terrain:
-			{
-				return DataLintNamespace::getList(32, isATerrainAsset);
-			}
-			break;
-		case AT_texture:
-			{
-				return DataLintNamespace::getList(8192, isATextureAsset);
-			}
-			break;
-		case AT_textureRendererTemplate:
-			{
-				return DataLintNamespace::getList(512, isATextureRendererTemplateAsset);
-			}
-			break;
-		case AT_unSupported:
-			{
-				return DataLintNamespace::getList(4096, isAnUnSupportedAsset);
-			}
-			break;
-		default:
-			{
-				DEBUG_FATAL(true, ("DataLint::getList() - Unknown list type."));
-			}
+	case AT_appearance:
+	{
+		return DataLintNamespace::getList(8192, isAnAppearanceAsset);
+	}
+	break;
+	case AT_arrangementDescriptor:
+	{
+		return DataLintNamespace::getList(1024, isAnArrangementDescriptorAsset);
+	}
+	break;
+	case AT_localizedStringTable:
+	{
+		return DataLintNamespace::getList(1024, isALocalizedStringAsset);
+	}
+	break;
+	case AT_objectTemplate:
+	{
+		return DataLintNamespace::getList(8192, isAnObjectTemplateAsset);
+	}
+	break;
+	case AT_portalProperty:
+	{
+		return DataLintNamespace::getList(512, isAPortalProprtyAsset);
+	}
+	break;
+	case AT_shaderTemplate:
+	{
+		return DataLintNamespace::getList(4096, isAShaderTemplateAsset);
+	}
+	break;
+	case AT_skyBox:
+	{
+		return DataLintNamespace::getList(256, isASkyBoxAsset);
+	}
+	break;
+	case AT_slotDescriptor:
+	{
+		return DataLintNamespace::getList(1024, isASlotDescriptorAsset);
+	}
+	break;
+	case AT_soundTemplate:
+	{
+		return DataLintNamespace::getList(4096, isASoundAsset);
+	}
+	break;
+	case AT_terrain:
+	{
+		return DataLintNamespace::getList(32, isATerrainAsset);
+	}
+	break;
+	case AT_texture:
+	{
+		return DataLintNamespace::getList(8192, isATextureAsset);
+	}
+	break;
+	case AT_textureRendererTemplate:
+	{
+		return DataLintNamespace::getList(512, isATextureRendererTemplateAsset);
+	}
+	break;
+	case AT_unSupported:
+	{
+		return DataLintNamespace::getList(4096, isAnUnSupportedAsset);
+	}
+	break;
+	default:
+	{
+		DEBUG_FATAL(true, ("DataLint::getList() - Unknown list type."));
+	}
 	}
 
 	return StringPairList();

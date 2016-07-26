@@ -53,7 +53,6 @@ SharedObjectTemplate const *GroupObject::m_defaultSharedTemplate = 0;
 
 namespace GroupObjectNamespace
 {
-
 	// ----------------------------------------------------------------------
 
 	unsigned int const cs_maximumNumberInGroup = 8;
@@ -78,29 +77,27 @@ namespace GroupObjectNamespace
 	}
 
 	// ----------------------------------------------------------------------
-
-
 }
 using namespace GroupObjectNamespace;
 
 // ======================================================================
 
 GroupObject::GroupObject(ServerGroupObjectTemplate const *newTemplate)
-: UniverseObject(newTemplate),
-m_groupName(),
-m_groupMembers(),
-m_groupShipFormationMembers(),
-m_groupPOBShipAndOwners(),
-m_groupLevel(),
-m_groupMemberLevels(),
-m_groupMemberProfessions(),
-m_formationNameCrc(Crc::crcNull),
-m_allMembers(),
-m_nonPCMembers(),
-m_lootMaster(),
-m_lootRule(0),
-m_groupPickupTimer(std::make_pair(0, 0)),
-m_groupPickupLocation(std::make_pair("", Vector()))
+	: UniverseObject(newTemplate),
+	m_groupName(),
+	m_groupMembers(),
+	m_groupShipFormationMembers(),
+	m_groupPOBShipAndOwners(),
+	m_groupLevel(),
+	m_groupMemberLevels(),
+	m_groupMemberProfessions(),
+	m_formationNameCrc(Crc::crcNull),
+	m_allMembers(),
+	m_nonPCMembers(),
+	m_lootMaster(),
+	m_lootRule(0),
+	m_groupPickupTimer(std::make_pair(0, 0)),
+	m_groupPickupLocation(std::make_pair("", Vector()))
 {
 	m_groupMembers.setSourceObject(this);
 	m_groupShipFormationMembers.setSourceObject(this);
@@ -175,7 +172,7 @@ void GroupObject::removeDefaultTemplate()
 	if (!m_defaultSharedTemplate)
 	{
 		m_defaultSharedTemplate->releaseReference();
-		m_defaultSharedTemplate = 0;
+		m_defaultSharedTemplate = nullptr;
 	}
 }
 
@@ -448,7 +445,7 @@ void GroupObject::addGroupMember(GroupMemberParam const & member)
 		GroupUpdateObserver updater(this, Archive::ADOO_generic);
 
 		m_groupMembers.push_back(std::make_pair(member.m_memberId, member.m_memberName));
-		
+
 		m_allMembers.insert(member.m_memberId);
 		if (!member.m_memberIsPC)
 			m_nonPCMembers.insert(member.m_memberId);
@@ -467,7 +464,7 @@ void GroupObject::addGroupMember(GroupMemberParam const & member)
 					POBShipIsAdded = true;
 				}
 			}
-			
+
 			if (!POBShipIsAdded)
 			{
 				m_groupPOBShipAndOwners.push_back(std::make_pair(member.m_memberShipId, member.m_memberId));
@@ -546,7 +543,7 @@ void GroupObject::removeGroupMember(NetworkId const &memberId)
 						break;
 					}
 				}
-				
+
 				break;
 			}
 		}
@@ -655,7 +652,7 @@ void GroupObject::createGroupChatRoom() const
 		LOG("GroupChat", ("Creating group chat room %s (group id %s)", getChatRoomPath().c_str(), getNetworkId().getValueString().c_str()));
 
 	Chat::createRoom("System", false, getChatRoomPath(), getNetworkId().getValueString());
-	
+
 	//TODO: temporary separation of voice and text
 	Chat::requestGetChannel(getChatRoomPath(), getVoiceChatDisplayName());
 }
@@ -787,7 +784,7 @@ void GroupObject::onChatRoomCreate(std::string const &path) // static
 	if (!path.compare(0, prefix.length(), prefix))
 	{
 		// it's a group channel, so extract the networkId
-		NetworkId id(path.substr(prefix.length(), path.length()-prefix.length()-getChatRoomSuffix().length()));
+		NetworkId id(path.substr(prefix.length(), path.length() - prefix.length() - getChatRoomSuffix().length()));
 		Object *obj = NetworkIdManager::getObjectById(id);
 		if (obj)
 		{
@@ -1342,7 +1339,7 @@ void GroupObject::makeLootMaster(NetworkId const & newLootMasterId)
 	{
 		return;
 	}
-	
+
 	if (!isAuthoritative())
 	{
 		Controller *controller = getController();
@@ -1360,7 +1357,7 @@ void GroupObject::makeLootMaster(NetworkId const & newLootMasterId)
 	else
 	{
 		GroupUpdateObserver updater(this, Archive::ADOO_generic);
-	
+
 		int const numberOfGroupMembers = m_groupMembers.size();
 
 		for (int i = 0; i < numberOfGroupMembers; ++i)
