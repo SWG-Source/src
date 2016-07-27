@@ -699,7 +699,7 @@ void CentralServer::launchStartingProcesses() const
 	if (!m_taskManager || !m_taskManager->isConnected() || (m_clusterId == 0))
 	{
 		if (!m_taskManager)
-			REPORT_LOG(true, ("CentralServer not launching starting processes because m_taskManager is nullptr\n"));
+			REPORT_LOG(true, ("CentralServer not launching starting processes because m_taskManager is null\n"));
 		else if (!m_taskManager->isConnected())
 			REPORT_LOG(true, ("CentralServer not launching starting processes because m_taskManager->isConnected() is false\n"));
 
