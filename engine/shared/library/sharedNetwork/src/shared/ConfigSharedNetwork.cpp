@@ -556,7 +556,7 @@ void ConfigSharedNetwork::install(int newClockSyncDelay)
 	KEY_BOOL  (useTcp, true);
 	KEY_INT   (tcpMinimumFrame, 1000);
 	KEY_BOOL  (reportUdpDisconnects, false);
-	KEY_BOOL  (reportTcpDisconnects, true);
+	KEY_BOOL  (reportTcpDisconnects, false);
 	KEY_BOOL  (logConnectionConstructionDestruction, false);
 	KEY_BOOL  (logConnectionOpenedClosed, false);
 	KEY_BOOL  (logConnectionDeferredMessagesWarning, false);
