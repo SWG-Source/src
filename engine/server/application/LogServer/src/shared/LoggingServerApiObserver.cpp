@@ -58,7 +58,7 @@ void LoggingServerApiObserver::log(const LogMessage & msg)
 		IGNORE_RETURN(time(&now));
 		IGNORE_RETURN(gmtime_r(&now, &t));
 		char dirBuf[128] = { "\0" };
-		snprintf(dirBuf, sizeof(dirBuf), "%d/%d/%d/", t.tm_year + 1900, t.tm_mon + 1, t.tm_mday);
+		snprintf(dirBuf, 128, "%d/%d/%d/", t.tm_year + 1900, t.tm_mon + 1, t.tm_mday);
 		fileName = ConfigLogServer::getClusterName();
 		fileName += "/";
 		fileName += dirBuf;
