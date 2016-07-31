@@ -164,12 +164,11 @@ void LogManager::log(char const *format, ...)
 		{
 			va_list ap;
 			va_start(ap, format); //lint !e746 !e1055
-			size_t sizeOfText = sizeof(text);
 			size_t len = strlen(text);
-			IGNORE_RETURN( _vsnprintf(text, sizeOfText, format, ap) );
-			text[sizeOfText-1] = '\0';
+			IGNORE_RETURN( _vsnprintf(text, MaxLogMessageLen, format, ap) );
+			text[MaxLogMessageLen-1] = '\0';
 			// if string was truncated, stick a + on the end
-			if (len == (sizeOfText-1))
+			if (len == (MaxLogMessageLen-1))
 			  text[len-1] = '+';
 			va_end(ap);
 		}
@@ -194,9 +193,8 @@ void LogManager::log(char const *format, ...)
 			timestamp *= 100;
 			timestamp += static_cast<unsigned int>(t.tm_sec);
 		}
-
+		
 		observeLogMessage(LogMessage(timestamp, s_data->processIdentifier, s_data->channel, text, s_data->unicodeAttach));
-		--s_data->logging;
 	}
 
 	--s_data->logging;
@@ -208,8 +206,12 @@ void LogManager::log(char const *format, ...)
 void LogManager::observeLogMessage(LogMessage const &msg)
 {
 	for (ObserverList::iterator i = s_data->observers.begin(); i != s_data->observers.end(); ++i)
+	{
 		if (!(*i)->isFiltered(msg))
+		{
 			(*i)->log(msg);
+		}
+	}	
 }
 
 // ----------------------------------------------------------------------
