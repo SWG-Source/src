@@ -91,7 +91,7 @@ void FileLogObserver::log(LogMessage const &msg)
 	std::string uniAttach(Unicode::wideToNarrow(msg.getUnicodeAttach()));
 	char tsbuf[16]; // yyyymmddhhmmss (14)
 
-	IGNORE_RETURN( sprintf(tsbuf, UINT64_FORMAT_SPECIFIER, timestamp) );
+	IGNORE_RETURN( snprintf(tsbuf, 16, UINT64_FORMAT_SPECIFIER, timestamp) );
 	IGNORE_RETURN( m_file->write(14, tsbuf) );
 	IGNORE_RETURN( m_file->write(1, ":") );
 	IGNORE_RETURN( m_file->write(static_cast<int>(procId.length()), procId.c_str()) );

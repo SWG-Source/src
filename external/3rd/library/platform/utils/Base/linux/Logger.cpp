@@ -37,11 +37,11 @@ Logger::Logger(const char *prefix, int level, unsigned size, bool rollDate)
 	memcpy(&m_lastDateTime, &now, sizeof(tm));
 	if(m_rollDate)
 	{
-		sprintf(buf, "%s%c%2.2d-%2.2d-%2.2d", m_dirPrefix.c_str(), file_sep, (now.tm_mon + 1), now.tm_mday, (now.tm_year % 100));
+		snprintf(buf, 1024, "%s%c%2.2d-%2.2d-%2.2d", m_dirPrefix.c_str(), file_sep, (now.tm_mon + 1), now.tm_mday, (now.tm_year % 100));
 	}
 	else
 	{
-		sprintf(buf, "%s", m_dirPrefix.c_str());
+		snprintf(buf, 1024, "%s", m_dirPrefix.c_str());
 	}
 	logDir = fopen(buf, "r+");
 	if(errno == ENOENT)
@@ -309,7 +309,7 @@ void Logger::rollDate(time_t t)
 	tm now;
 	localtime_r(&t, &now);
 
-	sprintf(buf, "%s%c%2.2d-%2.2d-%2.2d", m_dirPrefix.c_str(), file_sep, (now.tm_mon + 1), now.tm_mday, (now.tm_year % 100));
+	snprintf(buf, 80, "%s%c%2.2d-%2.2d-%2.2d", m_dirPrefix.c_str(), file_sep, (now.tm_mon + 1), now.tm_mday, (now.tm_year % 100));
 	logDir = fopen(buf, "r+");
 
 	if(errno == ENOENT)

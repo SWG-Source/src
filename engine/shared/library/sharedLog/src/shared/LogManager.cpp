@@ -157,19 +157,20 @@ void LogManager::log(char const *format, ...)
 	if (!s_data)
 		return;
 	// if noone is observing log messages, no need to process them
-	if (s_data->observers.size() && s_data->logging == 1)
+	if (s_data->logging == 1 && s_data->observers.size())
 	{
 		++s_data->logging;
 		static char text[MaxLogMessageLen];
 		{
 			va_list ap;
 			va_start(ap, format); //lint !e746 !e1055
-			IGNORE_RETURN( _vsnprintf(text, sizeof(text), format, ap) );
-			text[sizeof(text)-1] = '\0';
+			size_t sizeOfText = sizeof(text);
 			size_t len = strlen(text);
+			IGNORE_RETURN( _vsnprintf(text, sizeOfText, format, ap) );
+			text[sizeOfText-1] = '\0';
 			// if string was truncated, stick a + on the end
-			if (len == sizeof(text)-1)
-				text[len-1] = '+';
+			if (len == (sizeOfText-1))
+			  text[len-1] = '+';
 			va_end(ap);
 		}
 
@@ -264,7 +265,7 @@ void LogManager::registerObserverType(std::string const &name, LogObserverCreate
 		for (int i = 0; i < 20; ++i)
 		{
 			char const * result = 0;
-			sprintf(key+9, "%d", i);
+			snprintf(key+9, 25, "%d", i);
 			int count = 0;
 			do
 			{

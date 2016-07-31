@@ -123,7 +123,7 @@ void TailFileLogObserver::log(LogMessage const &msg)
 	char tsbuf[16]; // yyyymmddhhmmss (14)
 
 	newLogMessage.clear();
-	IGNORE_RETURN( sprintf(tsbuf, UINT64_FORMAT_SPECIFIER, timestamp) );	
+	IGNORE_RETURN( snprintf(tsbuf, 16, UINT64_FORMAT_SPECIFIER, timestamp) );	
 	newLogMessage.append(tsbuf);
 	newLogMessage.append(":");
 	newLogMessage.append(procId);
