@@ -74,7 +74,7 @@ void ConfigCentralServer::install(void)
 
 	KEY_INT    (chatServicePort, 61232);
 	KEY_INT    (connectionServicePort, 0);
-	KEY_INT    (customerServicePort,   61242);
+	KEY_INT    (customerServicePort,   0);
 	KEY_INT    (gameServicePort, 44451);
 	KEY_STRING (loginServerAddress, "127.0.0.1");
 	KEY_INT    (loginServerPort, 44452);
