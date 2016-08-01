@@ -157,19 +157,19 @@ void LogManager::log(char const *format, ...)
 	if (!s_data)
 		return;
 	// if noone is observing log messages, no need to process them
-	if (s_data->logging == 1 && s_data->observers.size())
+	if (s_data->observers.size() && s_data->logging == 1)
 	{
 		++s_data->logging;
 		static char text[MaxLogMessageLen];
 		{
 			va_list ap;
 			va_start(ap, format); //lint !e746 !e1055
-			size_t len = strlen(text);
 			IGNORE_RETURN( _vsnprintf(text, MaxLogMessageLen, format, ap) );
-			text[MaxLogMessageLen-1] = '\0';
+			text[sizeof(text)-1] = '\0';
+			size_t len = strlen(text);
 			// if string was truncated, stick a + on the end
-			if (len == (MaxLogMessageLen-1))
-			  text[len-1] = '+';
+			if (len == sizeof(text)-1)
+				text[len-1] = '+';
 			va_end(ap);
 		}
 
@@ -193,8 +193,9 @@ void LogManager::log(char const *format, ...)
 			timestamp *= 100;
 			timestamp += static_cast<unsigned int>(t.tm_sec);
 		}
-		
+
 		observeLogMessage(LogMessage(timestamp, s_data->processIdentifier, s_data->channel, text, s_data->unicodeAttach));
+		--s_data->logging;
 	}
 
 	--s_data->logging;
@@ -206,12 +207,8 @@ void LogManager::log(char const *format, ...)
 void LogManager::observeLogMessage(LogMessage const &msg)
 {
 	for (ObserverList::iterator i = s_data->observers.begin(); i != s_data->observers.end(); ++i)
-	{
 		if (!(*i)->isFiltered(msg))
-		{
 			(*i)->log(msg);
-		}
-	}	
 }
 
 // ----------------------------------------------------------------------
@@ -244,7 +241,7 @@ void LogManager::registerObserverType(std::string const &name, LogObserverCreate
 	s_data->observerCreateMap[name] = func;
 
 	char buffer[256];
-	sprintf(buffer, "%s:", name.c_str());
+	snprintf(buffer, 256, "%s:", name.c_str());
 
 	// run through SharedLog keys looking for logTarget=name:
 	{

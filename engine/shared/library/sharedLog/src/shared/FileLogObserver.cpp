@@ -62,7 +62,7 @@ void FileLogObserver::prepareFile()
 		else
 		{
 			char buf[512];
-			IGNORE_RETURN( snprintf(buf, sizeof(buf), "%s-%d", m_filename.c_str(), m_fileIndex+1) );
+			IGNORE_RETURN( snprintf(buf, 512, "%s-%d", m_filename.c_str(), m_fileIndex+1) );
 			m_file = new StdioFile(buf, "a");
 		}
 		NOT_NULL(m_file);
@@ -91,7 +91,7 @@ void FileLogObserver::log(LogMessage const &msg)
 	std::string uniAttach(Unicode::wideToNarrow(msg.getUnicodeAttach()));
 	char tsbuf[16]; // yyyymmddhhmmss (14)
 
-	IGNORE_RETURN( snprintf(tsbuf, sizeof(tsbuf), UINT64_FORMAT_SPECIFIER, timestamp) );
+	IGNORE_RETURN( snprintf(tsbuf, 16, UINT64_FORMAT_SPECIFIER, timestamp) );
 	IGNORE_RETURN( m_file->write(14, tsbuf) );
 	IGNORE_RETURN( m_file->write(1, ":") );
 	IGNORE_RETURN( m_file->write(static_cast<int>(procId.length()), procId.c_str()) );
