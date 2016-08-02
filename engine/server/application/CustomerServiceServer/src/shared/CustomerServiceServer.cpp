@@ -103,7 +103,7 @@ m_pendingTicketList(new PendingTicketList)
 	m_callback->connect(*this, &CustomerServiceServer::onEnumerateServers);
 
 	char text[512];
-	snprintf(text, sizeof(text), "CustomerServiceServer() - ServerName(%s) ServerPort(%i) GameCode(%s)", ConfigCustomerServiceServer::getCustomerServiceServerAddress(), ConfigCustomerServiceServer::getCustomerServiceServerPort(), ConfigCustomerServiceServer::getGameCode());
+	snprintf(text, 512, "CustomerServiceServer() - ServerName(%s) ServerPort(%i) GameCode(%s)", ConfigCustomerServiceServer::getCustomerServiceServerAddress(), ConfigCustomerServiceServer::getCustomerServiceServerPort(), ConfigCustomerServiceServer::getGameCode());
 	REPORT_LOG(true, ("%s\n", text));
 	LOG("CSServer", ("%s", text));
 
