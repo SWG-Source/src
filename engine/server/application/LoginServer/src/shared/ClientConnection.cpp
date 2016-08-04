@@ -174,7 +174,10 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 {
 	// to avoid having to re-type this stupid var all over the place
 	// ideally we wouldn't copy this here, but it would be a huge pain
-	const std::string trimmedId = trim(id);
+	std::string tmp = trim(id);
+	tmp.resize(MAX_ACCOUNT_NAME_LENGTH); // truncate name after the trim
+
+	const std::string trimmedId = tmp;
 	const std::string trimmedKey = trim(key);
 
 	// and to avoid funny business with atoi and casing
