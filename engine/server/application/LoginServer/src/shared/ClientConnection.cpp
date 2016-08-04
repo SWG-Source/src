@@ -200,16 +200,16 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 		// test mode
 		authOK = 1;
 		uname = id;
-
-		if (uname.length() > MAX_ACCOUNT_NAME_LENGTH) {
-			uname.resize(MAX_ACCOUNT_NAME_LENGTH);
-		}
 	}
 
 	if (authOK) 
 	{
 		if (suid == 0) 
 		{
+			if (uname.length() > MAX_ACCOUNT_NAME_LENGTH) {
+				uname.resize(MAX_ACCOUNT_NAME_LENGTH);
+			}
+
 			std::hash<std::string> h;
 			suid = h(uname.c_str());	
 		}
