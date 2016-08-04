@@ -28,7 +28,7 @@ namespace webAPI
 {
 	using namespace std;
 
-	string simplePost(const string &endpoint, const string &data, const string &slotName);
+	string simplePost(const string &endpoint, const string &data, const string &slotName, const string &messageSlot);
 	nlohmann::json request(const string &endpoint, const string &data, const int &reqType); // 1 for post, 0 for get
 	size_t writeCallback(void *contents, size_t size, size_t nmemb, void *userp);
 };

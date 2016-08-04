@@ -172,63 +172,50 @@ void ClientConnection::onReceive(const Archive::ByteStream & message)
 // originally was used to validate station API credentials, now uses our custom api
 void ClientConnection::validateClient(const std::string & id, const std::string & key)
 {
-	// to avoid having to re-type this stupid var all over the place
-	// ideally we wouldn't copy this here, but it would be a huge pain
-	std::string tmp = trim(id);
-
-	if (tmp.length() > MAX_ACCOUNT_NAME_LENGTH) {
-	    tmp.resize(MAX_ACCOUNT_NAME_LENGTH); // truncate name after the trim
-	}
-
-	const std::string trimmedId = tmp;
-	const std::string trimmedKey = trim(key);
-
-	// and to avoid funny business with atoi and casing
-	// make it a separate var than the one we send the auth server
-	std::string lcaseId;
-	lcaseId.resize(trimmedId.size());
-
-  	std::transform(trimmedId.begin(),trimmedId.end(),lcaseId.begin(),::tolower);
-
-	StationId suid = atoi(lcaseId.c_str()); 
 	int authOK = 0;
-
-	if (suid == 0)
-	{
-		std::hash<std::string> h;
-		suid = h(lcaseId.c_str()); //lint !e603 // Symbol 'h' not initialized (it's a functor)
-	}
-	
-	LOG("LoginClientConnection", ("validateClient() for stationId (%lu) at IP (%s), id (%s)", m_stationId, getRemoteAddress().c_str(), lcaseId.c_str()));
+	StationId suid = atoi(id.c_str());	
+	std::string uname;
 
 	std::string authURL(ConfigLoginServer::getExternalAuthUrl());
-
 	if (!authURL.empty()) 
 	{
 		std::ostringstream postBuf;
-		postBuf << "user_name=" << trimmedId << "&user_password=" << trimmedKey << "&stationID=" << suid << "&ip=" << getRemoteAddress();
+		postBuf << "user_name=" << id << "&user_password=" << key << "&ip=" << getRemoteAddress();
 
-		std::string response = webAPI::simplePost(authURL, std::string(postBuf.str()), "");
+		const std::string response = webAPI::simplePost(authURL, std::string(postBuf.str()), "username", "message");
 
-		if (response == "success")
+		if (!response.empty())
 		{
 			authOK = 1;
+			uname = response;
 		}
 		else
 		{
 			ErrorMessage err("Login Failed", response);
 			this->send(err, true);
 		}
-		
 	}
 	else
 	{
+		// test mode
 		authOK = 1;
+		uname = id;
+
+		if (uname.length() > MAX_ACCOUNT_NAME_LENGTH) {
+			uname.resize(MAX_ACCOUNT_NAME_LENGTH);
+		}
 	}
 
 	if (authOK) 
 	{
-		LoginServer::getInstance().onValidateClient(suid, lcaseId, this, true, NULL, 0xFFFFFFFF, 0xFFFFFFFF);
+		if (suid == 0) 
+		{
+			std::hash<std::string> h;
+			suid = h(uname.c_str());	
+		}
+
+		LOG("LoginClientConnection", ("validateClient() for stationId (%lu) at IP (%s), id (%s)", m_stationId, getRemoteAddress().c_str(), uname.c_str()));
+		LoginServer::getInstance().onValidateClient(suid, uname, this, true, NULL, 0xFFFFFFFF, 0xFFFFFFFF);
 	}
 	// else this case will never be reached, noop
 }

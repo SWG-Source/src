@@ -2864,13 +2864,14 @@ void CentralServer::sendPopulationUpdateToLoginServer()
 	sendToAllLoginServers(upm);
 }
 
+// TODO: make this togglable on/off in a config setting
 void CentralServer::sendMetricsToWebAPI(std::string updateURL)
 {
 	std::ostringstream postBuf;
 
 	postBuf << "totalPlayerCount=" << m_totalPlayerCount << "&totalGameServers=" << m_gameServers.size() - 1 << "&totalPlanetServers=" << m_planetServers.size() << "&isPublic=" << getIsClusterPublic() << "&isLocked=" << getIsClusterLocked() << "&isSecret=" << getIsClusterSecret() << "&preloadFinished=" << getClusterStartupTime() << "&databasebacklogged=" << isDatabaseBacklogged() << "&totalTutorialSceneCount=" << m_totalTutorialSceneCount << "&totalFalconSceneCount=" << m_totalFalconSceneCount;
 
-	std::string response = webAPI::simplePost(updateURL, std::string(postBuf.str()), "");
+	std::string response = webAPI::simplePost(updateURL, std::string(postBuf.str()), "status", "message");
 	WARNING((response != "success"), ("Error sending stats: %s", response.c_str()));
 }
 
