@@ -2871,8 +2871,8 @@ void CentralServer::sendMetricsToWebAPI(std::string updateURL)
 
 	postBuf << "totalPlayerCount=" << m_totalPlayerCount << "&totalGameServers=" << m_gameServers.size() - 1 << "&totalPlanetServers=" << m_planetServers.size() << "&isPublic=" << getIsClusterPublic() << "&isLocked=" << getIsClusterLocked() << "&isSecret=" << getIsClusterSecret() << "&preloadFinished=" << getClusterStartupTime() << "&databasebacklogged=" << isDatabaseBacklogged() << "&totalTutorialSceneCount=" << m_totalTutorialSceneCount << "&totalFalconSceneCount=" << m_totalFalconSceneCount;
 
-	std::string response = webAPI::simplePost(updateURL, std::string(postBuf.str()), "status", "message");
-	WARNING((response != "success"), ("Error sending stats: %s", response.c_str()));
+	webAPI::statusMessage response = webAPI::simplePost(updateURL, std::string(postBuf.str()), "status", "message", "status", "success");
+	WARNING(response.status, ("Error sending stats: %s", response.message.c_str()));
 }
 
 //-----------------------------------------------------------------------

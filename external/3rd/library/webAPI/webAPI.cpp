@@ -17,27 +17,33 @@ License: what's a license? we're a bunch of dirty pirates!
 
 using namespace std;
 
-// if there is a response contained in slotName, it is returned
-string webAPI::simplePost(const string &endpoint, const string &data, const string &slotName, const string &messageSlot)
+/*
+endpoint: URI
+data: get/post
+messageSlot: key for fetching a verbose user friendly message
+statusSlot: slot containing the success/fail value
+statusVal: the expected value in the case of success
+*/
+webAPI::statusMessage webAPI::simplePost(const string &endpoint, const string &data, const string &slotName, const string &messageSlot, const string &statusSlot, const string &statusVal)
 {
 	// declare our output and go ahead and attempt to get data from remote
 	nlohmann::json response = request(endpoint, data, 1);
-	string output;
 
 	// if we got data back...
-	if (response.count(slotName))
+	if (response.count(statusSlot) && response[statusSlot].get<std::string>() == statusVal && response.count(slotName))
 	{
-		return response[slotName].get<std::string>();
+		return {true, response[slotName].get<std::string>()};
+		
 	}
 	else //default message is an error, the other end always assumes "success" or the specified slot
 	{
 		if (response.count(messageSlot))
 		{
-			return response[messageSlot].get<std::string>();
+			return {false, response[messageSlot].get<std::string>()};
 		}
 	}
 
-	return "Message not provided by remote.";
+	return {false, "Message not provided by remote."};
 }
 
 // this can be broken out to separate the json bits later if we need raw or other http type requests

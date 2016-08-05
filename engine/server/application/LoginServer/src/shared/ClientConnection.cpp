@@ -182,16 +182,16 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 		std::ostringstream postBuf;
 		postBuf << "user_name=" << id << "&user_password=" << key << "&ip=" << getRemoteAddress();
 
-		const std::string response = webAPI::simplePost(authURL, std::string(postBuf.str()), "username", "message");
+		const webAPI::statusMessage response = webAPI::simplePost(authURL, std::string(postBuf.str()), "username", "message", "status", "success");
 
-		if (!response.empty())
+		if (response.status && !response.message.empty())
 		{
 			authOK = 1;
-			uname = response;
+			uname = response.message;
 		}
 		else
 		{
-			ErrorMessage err("Login Failed", response);
+			ErrorMessage err("Login Failed", response.message);
 			this->send(err, true);
 		}
 	}
