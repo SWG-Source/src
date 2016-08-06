@@ -2864,14 +2864,14 @@ void CentralServer::sendPopulationUpdateToLoginServer()
 	sendToAllLoginServers(upm);
 }
 
-// TODO: make this togglable on/off in a config setting
+// TODO: for sending metrics and such, would it make more sense to pass an object instead of a huge assed string as below?
 void CentralServer::sendMetricsToWebAPI(std::string updateURL)
 {
 	std::ostringstream postBuf;
 
 	postBuf << "totalPlayerCount=" << m_totalPlayerCount << "&totalGameServers=" << m_gameServers.size() - 1 << "&totalPlanetServers=" << m_planetServers.size() << "&isPublic=" << getIsClusterPublic() << "&isLocked=" << getIsClusterLocked() << "&isSecret=" << getIsClusterSecret() << "&preloadFinished=" << getClusterStartupTime() << "&databasebacklogged=" << isDatabaseBacklogged() << "&totalTutorialSceneCount=" << m_totalTutorialSceneCount << "&totalFalconSceneCount=" << m_totalFalconSceneCount;
 
-	webAPI::statusMessage response = webAPI::simplePost(updateURL, std::string(postBuf.str()), "status", "message", "status", "success");
+	webAPI::statusMessage response = webAPI::simplePost(updateURL, std::string(postBuf.str()));
 	WARNING(response.status, ("Error sending stats: %s", response.message.c_str()));
 }
 

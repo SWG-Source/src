@@ -182,7 +182,7 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 		std::ostringstream postBuf;
 		postBuf << "user_name=" << id << "&user_password=" << key << "&ip=" << getRemoteAddress();
 
-		const webAPI::statusMessage response = webAPI::simplePost(authURL, std::string(postBuf.str()), "username", "message", "status", "success");
+		const webAPI::statusMessage response = webAPI::simplePost(authURL, std::string(postBuf.str()), "username");
 
 		if (response.status && !response.message.empty())
 		{
@@ -215,6 +215,7 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 		}
 
 		LOG("LoginClientConnection", ("validateClient() for stationId (%lu) at IP (%s), id (%s)", m_stationId, getRemoteAddress().c_str(), uname.c_str()));
+		
 		LoginServer::getInstance().onValidateClient(suid, uname, this, true, NULL, 0xFFFFFFFF, 0xFFFFFFFF);
 	}
 	// else this case will never be reached, noop
