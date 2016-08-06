@@ -174,7 +174,7 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 {
 	bool authOK = false;
 	StationId suid = atoi(id.c_str());
-	std::string authURL(ConfigLoginServer::getExternalAuthUrl());
+	static const std::string authURL(ConfigLoginServer::getExternalAuthUrl());
 	std::string uname;
 		
 	if (!authURL.empty()) 
