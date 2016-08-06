@@ -27,7 +27,7 @@ statusVal: the expected value in the case of success
 webAPI::statusMessage webAPI::simplePost(const string &endpoint, const string &data, const string &slotName, const string &messageSlot, const string &statusSlot, const string &statusVal)
 {
 	// declare our output and go ahead and attempt to get data from remote
-	nlohmann::json response = request(endpoint, data, 1);
+	nlohmann::json response = request(endpoint, data);
 
 	// if we got data back...
 	if (response.count(statusSlot) && response[statusSlot].get<std::string>() == statusVal && response.count(slotName))
@@ -61,29 +61,43 @@ nlohmann::json webAPI::request(const string &endpoint, const string &data, const
 			string readBuffer; // container for the remote response
 			long http_code = 0; // we get this after performing the get or post
 
-			curl_easy_setopt(curl, CURLOPT_URL, endpoint.c_str()); // endpoint is always specified by caller
 			curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeCallback); // place the data into readBuffer using writeCallback
 			curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer); // specify readBuffer as the container for data
 
-			if (reqType == 1)
+			switch (reqType)
 			{
-				curl_easy_setopt(curl, CURLOPT_POSTFIELDS, data.c_str());
-			} //todo - get request? etc
+			  case 1:
+			    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, data.c_str());
+			    curl_easy_setopt(curl, CURLOPT_URL, endpoint.c_str());
+			    break;
+			  case 2:
+			    std::string getURI = endpoint + "?" + data;
+			    curl_easy_setopt(curl, CURLOPT_URL, getURI.c_str());
+			    break;
+			  // want to do a put, or whatever other type? feel free to add here
+			}
 
 			CURLcode res = curl_easy_perform(curl); // make the request!
-
+			char *contentType;
+			
 			curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code); //get status code
+			curl_easy_getinfo(curl, CURLINFO_CONTENT_TYPE, &contentType);
 
 			if (res == CURLE_OK && http_code == 200 && !(readBuffer.empty())) // check it all out and parse
 			{
-				try {
+				// if we ever use anything other than json we can break the stuff below output
+				// into a separate function...
+				try 
+				{
 					response = nlohmann::json::parse(readBuffer);
 				}
-				catch (string &e) {
+				catch (string &e) 
+				{
 					response["message"] = e;
 					response["status"] = "failure";
 				}
-				catch (...) {
+				catch (...) 
+				{
 					response["message"] = "JSON parse error for endpoint.";
 					response["status"] = "failure";
 				}

@@ -30,13 +30,13 @@ namespace webAPI
 	struct statusMessage
 	{
 		bool status;
-		std::string message;
+		std::string retVal;
 	};
 
 	using namespace std;
 
 	statusMessage simplePost(const string &endpoint, const string &data, const string &slotName = "success", const string &messageSlot ="message", const string &statusSlot = "status", const string &statusVal = "success");
-	nlohmann::json request(const string &endpoint, const string &data, const int &reqType); // 1 for post, 0 for get
+	nlohmann::json request(const string &endpoint, const string &data, const int &reqType = 1); // 1 for post, 0 for get
 	size_t writeCallback(void *contents, size_t size, size_t nmemb, void *userp);
 };
 

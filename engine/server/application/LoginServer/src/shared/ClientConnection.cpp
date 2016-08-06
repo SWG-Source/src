@@ -172,33 +172,33 @@ void ClientConnection::onReceive(const Archive::ByteStream & message)
 // originally was used to validate station API credentials, now uses our custom api
 void ClientConnection::validateClient(const std::string & id, const std::string & key)
 {
-	int authOK = 0;
-	StationId suid = atoi(id.c_str());	
-	std::string uname;
-
+	bool authOK = false;
+	StationId suid = atoi(id.c_str());
 	std::string authURL(ConfigLoginServer::getExternalAuthUrl());
+	std::string uname;
+		
 	if (!authURL.empty()) 
 	{
 		std::ostringstream postBuf;
 		postBuf << "user_name=" << id << "&user_password=" << key << "&ip=" << getRemoteAddress();
-
+		
 		const webAPI::statusMessage response = webAPI::simplePost(authURL, std::string(postBuf.str()), "username");
-
-		if (response.status && !response.message.empty())
+		
+		if (response.status && !response.retVal.empty())
 		{
-			authOK = 1;
-			uname = response.message;
+			authOK = true;
+			uname = response.retVal;
 		}
 		else
 		{
-			ErrorMessage err("Login Failed", response.message);
+			ErrorMessage err("Login Failed", response.retVal);
 			this->send(err, true);
 		}
 	}
 	else
 	{
 		// test mode
-		authOK = 1;
+		authOK = true;
 		uname = id;
 	}
 
