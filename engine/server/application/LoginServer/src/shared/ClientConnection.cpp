@@ -184,7 +184,10 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 		
 		const webAPI::statusMessage response = webAPI::simplePost(authURL, std::string(postBuf.str()), "username");
 		
-		if (response.status && !response.retVal.empty())
+		// true indicates that we logged in successfully via the api
+		// since both cases rely on response.retVal which will never be empty
+		// ...we needn't check if it's empty/not
+		if (response.status)
 		{
 			authOK = true;
 			uname = response.retVal;
