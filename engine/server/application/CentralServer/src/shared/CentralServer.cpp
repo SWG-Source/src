@@ -698,13 +698,9 @@ void CentralServer::launchStartingProcesses() const
 	// TaskManager *AND* have received our cluster id from the LoginServer
 	if (!m_taskManager || !m_taskManager->isConnected() || (m_clusterId == 0))
 	{
-		if (!m_taskManager)
-			REPORT_LOG(true, ("CentralServer not launching starting processes because m_taskManager is null\n"));
-		else if (!m_taskManager->isConnected())
-			REPORT_LOG(true, ("CentralServer not launching starting processes because m_taskManager->isConnected() is false\n"));
-
-		if (m_clusterId == 0)
-			REPORT_LOG(true, ("CentralServer not launching starting processes because m_clusterId is 0, meaning hasn't received the cluster Id from the LoginServer yet\n"));
+		REPORT_LOG(!m_taskManager, ("CentralServer not launching starting processes because m_taskManager is null\n"));
+		REPORT_LOG(!m_taskManager->isConnected(), ("CentralServer not launching starting processes because m_taskManager->isConnected() is false\n"));
+		REPORT_LOG((m_clusterId==0), ("CentralServer not launching starting processes because m_clusterId is 0 - not received from the LoginServer yet\n"));
 
 		return;
 	}
