@@ -30,7 +30,7 @@ namespace StellaBellum
 {
 	class webAPI
 	{
-	public:    
+	    public:    
 		// useragent
 		std::string userAgent;
 		
@@ -55,7 +55,7 @@ namespace StellaBellum
 		{ 
 			if (!key.empty())
 			{
-				requestData[key] = value;	
+				this->requestData[key] = value;	
 				return true;
 			}
 			
@@ -65,15 +65,15 @@ namespace StellaBellum
 		// get json response slot
 		template<typename T> T getRespValue(std::string slot) 
 		{ 
-			if (!responseData.is_null() && !slot.empty() && responseData.count(slot))
+			if (!this->responseData.is_null() && !slot.empty() && this->responseData.count(slot))
 			{
-				return responseData[slot].get<T>();
+				return this->responseData[slot].get<T>();
 			}
 			
-			return nullptr;
+			return T(); // empty value of T
 		}
 		
-	private:
+	    private:
 		// json request data - object is serialized before sending, used with above setter template
 		nlohmann::json requestData;
 		
@@ -98,7 +98,7 @@ namespace StellaBellum
 		// json processor - string to json
 		bool processJSON();
 		
-	protected:
+	    protected:
 		// http response code (200, 404, etc)	 
 		long statusCode;
 	};

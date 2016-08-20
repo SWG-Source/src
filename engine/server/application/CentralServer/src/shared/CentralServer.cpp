@@ -2863,7 +2863,7 @@ void CentralServer::sendPopulationUpdateToLoginServer()
 void CentralServer::sendMetricsToWebAPI()
 {
 	// create the object
-	webAPI api = webAPI::webAPI(std::string(ConfigCentralServer::getMetricsDataURL()));
+	webAPI api(std::string(ConfigCentralServer::getMetricsDataURL()));
 
 	// add our data
 	api.addJsonData<int>("totalPlayerCount", m_totalPlayerCount);

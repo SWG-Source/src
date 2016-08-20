@@ -183,7 +183,7 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 	if (!authURL.empty()) 
 	{
 		// create the object
-		webAPI api = webAPI::webAPI(authURL);
+		webAPI api(authURL);
 		
 		// add our data
 		api.addJsonData<std::string>("user_name", id);
