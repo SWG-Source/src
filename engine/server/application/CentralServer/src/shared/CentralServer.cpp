@@ -2873,13 +2873,7 @@ void CentralServer::sendMetricsToWebAPI()
 		api.addJsonData<int>("totalPlayerCount", m_totalPlayerCount);
 		api.addJsonData<int>("totalGameServers", (m_gameServers.size() - 1));
 		api.addJsonData<int>("totalPlanetServers", m_planetServers.size());
-		api.addJsonData<bool>("isPublic", getIsClusterPublic());
-		api.addJsonData<bool>("isLocked", getIsClusterLocked());
-		api.addJsonData<bool>("isSecret", getIsClusterSecret());
-		api.addJsonData<bool>("preloadFinished", getClusterStartupTime());
-		api.addJsonData<bool>("databasebacklogged", isDatabaseBacklogged());
-		api.addJsonData<int>("totalTutorialSceneCount", getClusterStartupTime());
-		api.addJsonData<int>("totalFalconSceneCount", isDatabaseBacklogged());
+		api.addJsonData<int>("totalTutorialSceneCount", m_totalTutorialSceneCount);
 		
 #ifdef _DEBUG
 		if (api.submit()) {
