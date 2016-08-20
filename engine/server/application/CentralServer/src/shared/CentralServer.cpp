@@ -2862,46 +2862,51 @@ void CentralServer::sendPopulationUpdateToLoginServer()
 
 void CentralServer::sendMetricsToWebAPI()
 {
-	// create the object
-	webAPI api(std::string(ConfigCentralServer::getMetricsDataURL()));
+	static const std::string metricsURL(ConfigCentralServer::getMetricsDataURL());
+	
+	if (!metricsURL.empty())
+	{
+		// create the object
+		webAPI api(metricsURL);
 
-	// add our data
-	api.addJsonData<int>("totalPlayerCount", m_totalPlayerCount);
-	api.addJsonData<int>("totalGameServers", (m_gameServers.size() - 1));
-	api.addJsonData<int>("totalPlanetServers", m_planetServers.size());
-	api.addJsonData<bool>("isPublic", getIsClusterPublic());
-	api.addJsonData<bool>("isLocked", getIsClusterLocked());
-	api.addJsonData<bool>("isSecret", getIsClusterSecret());
-	api.addJsonData<bool>("preloadFinished", getClusterStartupTime());
-	api.addJsonData<bool>("databasebacklogged", isDatabaseBacklogged());
-	api.addJsonData<int>("totalTutorialSceneCount", getClusterStartupTime());
-	api.addJsonData<int>("totalFalconSceneCount", isDatabaseBacklogged());
+		// add our data
+		api.addJsonData<int>("totalPlayerCount", m_totalPlayerCount);
+		api.addJsonData<int>("totalGameServers", (m_gameServers.size() - 1));
+		api.addJsonData<int>("totalPlanetServers", m_planetServers.size());
+		api.addJsonData<bool>("isPublic", getIsClusterPublic());
+		api.addJsonData<bool>("isLocked", getIsClusterLocked());
+		api.addJsonData<bool>("isSecret", getIsClusterSecret());
+		api.addJsonData<bool>("preloadFinished", getClusterStartupTime());
+		api.addJsonData<bool>("databasebacklogged", isDatabaseBacklogged());
+		api.addJsonData<int>("totalTutorialSceneCount", getClusterStartupTime());
+		api.addJsonData<int>("totalFalconSceneCount", isDatabaseBacklogged());
 		
 #ifdef _DEBUG
-	if (api.submit()) {
-		std::string status = api.getRespValue<std::string>("status");
-		
-		if (status.empty() || status != "success")
-		{
-			std::string message = api.getRespValue<std::string>("message");
+		if (api.submit()) {
+			std::string status = api.getRespValue<std::string>("status");
 			
-			if (message.empty())
+			if (status.empty() || status != "success")
 			{
-				message = "No message returned.";
+				std::string message = api.getRespValue<std::string>("message");
+				
+				if (message.empty())
+				{
+					message = "No message returned.";
+				}
+				
+				WARNING(true, ("Error sending stats: %s", message.c_str()));
 			}
 			
-			WARNING(true, ("Error sending stats: %s", message.c_str()));
+			WARNING(true, ("Success sending server stats to API."));
 		}
-		
-		WARNING(true, ("Success sending server stats to API."));
-	}
-	else
-	{
-		WARNING(true, ("Error sending stats."));
-	}
+		else
+		{
+			WARNING(true, ("Error sending stats."));
+		}
 #else
-	api.submit();
+		api.submit();
 #endif
+	}
 }
 
 //-----------------------------------------------------------------------
