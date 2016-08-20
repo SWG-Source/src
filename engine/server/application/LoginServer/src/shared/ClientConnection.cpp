@@ -23,8 +23,11 @@
 #include "sharedNetworkMessages/GenericValueTypeMessage.h"
 #include "sharedNetworkMessages/LoginEnumCluster.h"
 
-#include "webAPI.h"
 #include <algorithm>
+
+#include "webAPI.h"
+
+using namespace StellaBellum;
 
 //-----------------------------------------------------------------------
 
@@ -179,22 +182,38 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 		
 	if (!authURL.empty()) 
 	{
-		std::ostringstream postBuf;
-		postBuf << "user_name=" << id << "&user_password=" << key << "&ip=" << getRemoteAddress();
+		// create the object
+		webAPI api = webAPI::webAPI(authURL);
 		
-		const webAPI::statusMessage response = webAPI::simplePost(authURL, std::string(postBuf.str()), "username");
+		// add our data
+		api.addJsonData<std::string>("user_name", id);
+		api.addJsonData<std::string>("user_password", key);
+		api.addJsonData<std::string>("ip", getRemoteAddress());
 		
-		// true indicates that we logged in successfully via the api
-		// since both cases rely on response.retVal which will never be empty
-		// ...we needn't check if it's empty/not
-		if (response.status)
+		if (api.submit())
 		{
-			authOK = true;
-			uname = response.retVal;
+			std::string status = api.getRespValue<std::string>("status");
+			uname = api.getRespValue<std::string>("username");
+
+			if (!status.empty() && status == "success" && !uname.empty())
+			{
+				authOK = true;
+			}
+			else
+			{
+				std::string msg = api.getRespValue<std::string>("message");
+				if (msg.empty())
+				{
+					msg = "Invalid username or password.";
+				}
+				
+				ErrorMessage err("Login Failed", msg);
+				this->send(err, true);
+			}
 		}
 		else
 		{
-			ErrorMessage err("Login Failed", response.retVal);
+			ErrorMessage err("Login Failed", "Could not connect to remote.");
 			this->send(err, true);
 		}
 	}

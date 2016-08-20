@@ -182,7 +182,7 @@ private:
 	size_t                       getGameServerCount		(void) const;
 	void                         update();
 	void                         sendPopulationUpdateToLoginServer();
-	void			     sendMetricsToWebAPI(std::string updateURL);
+	void			     sendMetricsToWebAPI();
 	ConnectionServerConnection * getConnectionServerForAccount(StationId suid);
 	void                         addToAccountConnectionMap(StationId suid, ConnectionServerConnection * cconn, uint32 subscriptionBits);
 	void                         removeFromAccountConnectionMap(int connectionServerConnectionId);

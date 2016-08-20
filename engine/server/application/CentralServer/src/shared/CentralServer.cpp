@@ -123,8 +123,9 @@
 #include <stdio.h>
 
 
-// Trying todo something here ...
 #include "webAPI.h"
+
+using namespace StellaBellum;
 
 namespace CentralServerNamespace
 {
@@ -2782,15 +2783,14 @@ void CentralServer::update()
 
 	// update the webAPI if specified
 	int webUpdateIntervalSeconds = ConfigCentralServer::getWebUpdateIntervalSeconds();
-        std::string updateURL = std::string(ConfigCentralServer::getMetricsDataURL());
 
 	// assuming that every 5th frame is ~1 second, we can multiply and then check
-	if ( !(updateURL.empty()) && webUpdateIntervalSeconds && (++apiLoopCount > (webUpdateIntervalSeconds*1000)) )
+	if (webUpdateIntervalSeconds && (++apiLoopCount > (webUpdateIntervalSeconds*1000)) )
 	{
 		apiLoopCount = 0;
 
 		// update the web api
-		sendMetricsToWebAPI(updateURL);
+		sendMetricsToWebAPI();
 	}
 
 	if ( ConfigCentralServer::getAuctionEnabled() ) // allow auctions?
@@ -2860,15 +2860,48 @@ void CentralServer::sendPopulationUpdateToLoginServer()
 	sendToAllLoginServers(upm);
 }
 
-// TODO: for sending metrics and such, would it make more sense to pass an object instead of a huge assed string as below?
-void CentralServer::sendMetricsToWebAPI(std::string updateURL)
+void CentralServer::sendMetricsToWebAPI()
 {
-	std::ostringstream postBuf;
+	// create the object
+	webAPI api = webAPI::webAPI(std::string(ConfigCentralServer::getMetricsDataURL()));
 
-	postBuf << "totalPlayerCount=" << m_totalPlayerCount << "&totalGameServers=" << m_gameServers.size() - 1 << "&totalPlanetServers=" << m_planetServers.size() << "&isPublic=" << getIsClusterPublic() << "&isLocked=" << getIsClusterLocked() << "&isSecret=" << getIsClusterSecret() << "&preloadFinished=" << getClusterStartupTime() << "&databasebacklogged=" << isDatabaseBacklogged() << "&totalTutorialSceneCount=" << m_totalTutorialSceneCount << "&totalFalconSceneCount=" << m_totalFalconSceneCount;
-
-	webAPI::statusMessage response = webAPI::simplePost(updateURL, std::string(postBuf.str()));
-	WARNING(response.status, ("Error sending stats: %s", response.retVal.c_str()));
+	// add our data
+	api.addJsonData<int>("totalPlayerCount", m_totalPlayerCount);
+	api.addJsonData<int>("totalGameServers", (m_gameServers.size() - 1));
+	api.addJsonData<int>("totalPlanetServers", m_planetServers.size());
+	api.addJsonData<bool>("isPublic", getIsClusterPublic());
+	api.addJsonData<bool>("isLocked", getIsClusterLocked());
+	api.addJsonData<bool>("isSecret", getIsClusterSecret());
+	api.addJsonData<bool>("preloadFinished", getClusterStartupTime());
+	api.addJsonData<bool>("databasebacklogged", isDatabaseBacklogged());
+	api.addJsonData<int>("totalTutorialSceneCount", getClusterStartupTime());
+	api.addJsonData<int>("totalFalconSceneCount", isDatabaseBacklogged());
+		
+#ifdef _DEBUG
+	if (api.submit()) {
+		std::string status = api.getRespValue<std::string>("status");
+		
+		if (status.empty() || status != "success")
+		{
+			std::string message = api.getRespValue<std::string>("message");
+			
+			if (message.empty())
+			{
+				message = "No message returned.";
+			}
+			
+			WARNING(true, ("Error sending stats: %s", message.c_str()));
+		}
+		
+		WARNING(true, ("Success sending server stats to API."));
+	}
+	else
+	{
+		WARNING(true, ("Error sending stats."));
+	}
+#else
+	api.submit();
+#endif
 }
 
 //-----------------------------------------------------------------------
