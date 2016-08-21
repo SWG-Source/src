@@ -70,7 +70,7 @@ namespace StellaBellum
 				return this->responseData[slot].get<T>();
 			}
 
-			return T(); // empty value of T
+			return static_cast<T>(NULL);
 		}
 
 	private:
