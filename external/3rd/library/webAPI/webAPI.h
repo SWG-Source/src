@@ -52,11 +52,14 @@ namespace StellaBellum
 
 		// set a standard request string
 		bool setData(std::string &data); // all or nothing
+		
+		// get a string from a given slot
+		std::string getString(const std::string &slot);
 
 		// set json key and value for request
-		template<typename T> bool addJsonData(std::string key, T value)
+		template<typename T> bool addJsonData(const std::string &key, const T &value)
 		{
-			if (!key.empty())
+			if (!key.empty() && responseData.count(key) == 0) // only alow one of a given key for now, unless we support nesting later
 			{
 				this->requestData[key] = value;
 				return true;
@@ -66,14 +69,14 @@ namespace StellaBellum
 		}
 
 		// get json response slot
-		template<typename T> T getRespValue(std::string slot)
+		template<typename T> T getNullableValue(const std::string &slot)
 		{
-			if (!this->responseData.is_null() && !slot.empty() && !this->responseData[slot].is_null())
+			if (!this->responseData.empty() && !slot.empty() && responseData.count(slot))
 			{
 				return this->responseData[slot].get<T>();
 			}
-
-			return static_cast<T>(NULL);
+			
+			return 0;
 		}
 
 	private:

@@ -2877,11 +2877,11 @@ void CentralServer::sendMetricsToWebAPI()
 		
 #ifdef _DEBUG
 		if (api.submit()) {
-			bool status = api.getRespValue<bool>("status");
+			bool status = api.getNullableValue<bool>("status");
 			
 			if (status)
 			{
-				std::string message = api.getRespValue<std::string>("message");
+				std::string message = api.getString("message");
 				
 				if (message.empty())
 				{

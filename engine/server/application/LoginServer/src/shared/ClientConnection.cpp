@@ -192,8 +192,8 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 		
 		if (api.submit())
 		{
-			bool status = api.getRespValue<bool>("status");
-			uname = api.getRespValue<std::string>("username");
+			bool status = api.getNullableValue<bool>("status");
+			uname = api.getString("username");
 
 			if (status && !uname.empty())
 			{
@@ -201,7 +201,7 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 			}
 			else
 			{
-				std::string msg = api.getRespValue<std::string>("message");
+				std::string msg = api.getString("message");
 				if (msg.empty())
 				{
 					msg = "Invalid username or password.";

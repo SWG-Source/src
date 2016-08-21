@@ -50,6 +50,16 @@ bool webAPI::setData(std::string &data)
 	return false;
 }
 
+std::string webAPI::getString(const std::string &slot)
+{
+	if (!this->responseData.empty() && !slot.empty() && responseData.count(slot))
+	{
+		return this->responseData[slot].get<std::string>();
+	}
+	
+	return std::string("");
+}
+
 bool webAPI::submit(const int &reqType, const int &getPost, const int &respType)
 {
 	if (reqType == DTYPE::JSON) // json request
