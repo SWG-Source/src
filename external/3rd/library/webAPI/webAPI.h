@@ -28,6 +28,9 @@
 
 namespace StellaBellum
 {
+	enum HTTP { GET = 0, POST = 1 };
+	enum DTYPE { JSON = 0, RAW = 1 };
+	
 	class webAPI
 	{
 	public:
@@ -38,8 +41,8 @@ namespace StellaBellum
 		webAPI(std::string endpoint, std::string userAgent = "StellaBellum webAPI");
 		~webAPI();
 
-		// submits the request - respType 0 is json, else raw, get = 0 post = 1
-		bool submit(const int &reqType = 0, const int &getPost = 1, const int &respType = 0);
+		// submits the request
+		bool submit(const int &reqType = DTYPE::JSON, const int &getPost = HTTP::POST, const int &respType = DTYPE::JSON);
 
 		// set the endpoint after object creation...or change the target if needed
 		bool setEndpoint(const std::string endpoint);
@@ -65,7 +68,7 @@ namespace StellaBellum
 		// get json response slot
 		template<typename T> T getRespValue(std::string slot)
 		{
-			if (!this->responseData.is_null() && !slot.empty() && this->responseData.count(slot))
+			if (!this->responseData.is_null() && !slot.empty() && !this->responseData[slot].is_null())
 			{
 				return this->responseData[slot].get<T>();
 			}
@@ -89,8 +92,8 @@ namespace StellaBellum
 		// API endpoint
 		std::string uri;
 
-		// fetcher - returns raw response direct from remote - 0 for get, 1 for post, 0 for json mime, 1 for standard
-		bool fetch(const int &getPost = 1, const int &mimeType = 0);
+		// fetcher - returns raw response direct from remote
+		bool fetch(const int &getPost = HTTP::POST, const int &mimeType = DTYPE::JSON);
 
 		// cURL writeback callback
 		static size_t writeCallback(void *contents, size_t size, size_t nmemb, void *userp);

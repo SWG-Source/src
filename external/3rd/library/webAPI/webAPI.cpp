@@ -52,7 +52,7 @@ bool webAPI::setData(std::string &data)
 
 bool webAPI::submit(const int &reqType, const int &getPost, const int &respType)
 {
-	if (reqType == 0) // json request
+	if (reqType == DTYPE::JSON) // json request
 	{
 		if (!this->requestData.is_null())
 		{
@@ -92,7 +92,7 @@ bool webAPI::fetch(const int &getPost, const int &mimeType) // 0 for json 1 for 
 			struct curl_slist *slist = nullptr;
 
 			// set the content type
-			if (mimeType == 0)
+			if (mimeType == DTYPE::JSON)
 			{
 				slist = curl_slist_append(slist, "Accept: application/json");
 				slist = curl_slist_append(slist, "Content-Type: application/json");
@@ -111,10 +111,10 @@ bool webAPI::fetch(const int &getPost, const int &mimeType) // 0 for json 1 for 
 
 			switch (getPost)
 			{
-				case 0:
+				case HTTP::GET:
 					curl_easy_setopt(curl, CURLOPT_URL, std::string(this->uri + "?" + sRequest).c_str());
 					break;
-				case 1:
+				case HTTP::POST:
 					curl_easy_setopt(curl, CURLOPT_POSTFIELDS, this->sRequest.c_str());
 					curl_easy_setopt(curl, CURLOPT_URL, this->uri.c_str());
 					break;
