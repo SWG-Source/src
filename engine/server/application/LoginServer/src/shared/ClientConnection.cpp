@@ -192,10 +192,10 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 		
 		if (api.submit())
 		{
-			std::string status = api.getRespValue<std::string>("status");
+			bool status = api.getRespValue<bool>("status");
 			uname = api.getRespValue<std::string>("username");
 
-			if (!status.empty() && status == "success" && !uname.empty())
+			if (status && !uname.empty())
 			{
 				authOK = true;
 			}

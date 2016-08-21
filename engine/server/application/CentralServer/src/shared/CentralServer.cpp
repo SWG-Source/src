@@ -2877,9 +2877,9 @@ void CentralServer::sendMetricsToWebAPI()
 		
 #ifdef _DEBUG
 		if (api.submit()) {
-			std::string status = api.getRespValue<std::string>("status");
+			bool status = api.getRespValue<bool>("status");
 			
-			if (status.empty() || status != "success")
+			if (status)
 			{
 				std::string message = api.getRespValue<std::string>("message");
 				
