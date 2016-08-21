@@ -429,6 +429,7 @@ void LoadMessagesQuery::getSQL(std::string &sql)
 void LoadMessagesQuery::convertUTF8ToMessage(const std::string & utf8Data, std::vector<int8> & messageData) const
 {
 	auto tmp = base64_decode(utf8Data);
+	messageData.reserve(tmp.size());
 	messageData.insert(std::begin(messageData), std::begin(tmp), std::end(tmp));
 }
 
