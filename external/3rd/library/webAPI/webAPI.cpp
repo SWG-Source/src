@@ -52,7 +52,7 @@ bool webAPI::setData(std::string &data)
 
 std::string webAPI::getString(const std::string &slot)
 {
-	if (!this->responseData.empty() && !slot.empty() && responseData.count(slot))
+	if (!this->responseData.empty() && !slot.empty() && responseData.count(slot) && !this->responseData[slot].is_null())
 	{
 		return this->responseData[slot].get<std::string>();
 	}
