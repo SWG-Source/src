@@ -64,7 +64,7 @@ bool webAPI::submit(const int &reqType, const int &getPost, const int &respType)
 {
 	if (reqType == DTYPE::JSON) // json request
 	{
-		if (!this->requestData.is_null())
+		if (!this->requestData.empty())
 		{
 			// serialize our data into sRequest
 			this->sRequest = this->requestData.dump();
