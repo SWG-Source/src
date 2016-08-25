@@ -4,7 +4,6 @@
 include(CheckCXXSourceCompiles)
 set(BUILD_MULODI_LIB FALSE)
 
-
 set(find_mulodi_test_program
 "#include <stdint.h>
 #include <stdlib.h>

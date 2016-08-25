@@ -45,24 +45,25 @@ if(WIN32)
  	#Do-Build-PDB RELEASE build use the following (by either commenting---uncommenting the line as needed)
 	#set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DWIN32 -Dwin32 -DUDP_LIBRARY -DDEBUG_LEVEL=0 -DPRODUCTION=1 /Oi /Ot /Oy /O2 /GF /Gy /Zi /MT -D_USE_32BIT_TIME_T=1 -D_MBCS -DPLATFORM_BASE_SINGLE_THREAD -D_CRT_SECURE_NO_WARNINGS /MP /wd4244 /wd4996 /wd4018 /wd4351 /Zc:wchar_t- /Ob1 /FC")
  	#Dont-Build-PDB RELEASE build use the following (by either commenting---uncommenting the line as needed)
-	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DWIN32 -Dwin32 -DUDP_LIBRARY -DDEBUG_LEVEL=0 -DPRODUCTION=1 
-		/Oi /Ot /Oy /O2 /GF /Gy /MT -D_USE_32BIT_TIME_T=1 -D_MBCS -DPLATFORM_BASE_SINGLE_THREAD 
-		-D_CRT_SECURE_NO_WARNINGS /MP /wd4244 /wd4996 /wd4018 /wd4351 /Zc:wchar_t- /Ob1 /FC")
+	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DWIN32 -Dwin32 -DUDP_LIBRARY -DDEBUG_LEVEL=0 -DPRODUCTION=1 /Oi /Ot /Oy /O2 /GF /Gy /MT -D_USE_32BIT_TIME_T=1 -D_MBCS -DPLATFORM_BASE_SINGLE_THREAD -D_CRT_SECURE_NO_WARNINGS /MP /wd4244 /wd4996 /wd4018 /wd4351 /Zc:wchar_t- /Ob1 /FC")
  
 	####################################
 	#Standard DEBUG build use the following	(by either commenting---uncommenting the line as needed)
-	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DWIN32 -Dwin32 -D_DEBUG -DUDP_LIBRARY -DDEBUG_LEVEL=2 
-		-DPRODUCTION=0 /MTd -D_USE_32BIT_TIME_T=1 -D_MBCS -DPLATFORM_BASE_SINGLE_THREAD 
-		-D_CRT_SECURE_NO_WARNINGS /MP /wd4244 /wd4996 /wd4018 /wd4351 /Zc:wchar_t- /Ob1 /FC")
+	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DWIN32 -Dwin32 -D_DEBUG -DUDP_LIBRARY -DDEBUG_LEVEL=2 -DPRODUCTION=0 /MTd -D_USE_32BIT_TIME_T=1 -D_MBCS -DPLATFORM_BASE_SINGLE_THREAD -D_CRT_SECURE_NO_WARNINGS /MP /wd4244 /wd4996 /wd4018 /wd4351 /Zc:wchar_t- /Ob1 /FC")
  
 elseif(UNIX)
 	find_package(Curses REQUIRED)
 	
 	# linker flags
-	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-O1,--sort-common,--as-needed,-z,relro,-flto")
+	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-O1,--sort-common,--as-needed,-z,relro")
+	
+	# flto doesn't want to work
+	#if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+	#    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS},-flto")
+	#endif()
 	
 	# don't put anything too crazy in debug...and any common flags go into CMAKE_CXX_FLAGS 
-	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG -DDEBUG_LEVEL=2 -DPRODUCTION=0 -O0 -Wall")
+	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG -DDEBUG_LEVEL=2 -DPRODUCTION=0 -O0")
 	
 	# funroll loops and everything else potentially crazy for performance here
 	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DDEBUG_LEVEL=0 -DPRODUCTION=1 -O3 -funroll-loops")
@@ -74,13 +75,18 @@ elseif(UNIX)
 	# ============================================================================================
 	# -fstack-protector-all -Wstack-protector --param ssp-buffer-size=4 -fPIE -ftrapv
 	
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -D_GLIBCXX_USE_CXX11_ABI=0 
-		-m32 -pipe -march=native -mtune=native -flto
-		-D_FORTIFY_SOURCE=2 -Wformat -Wformat-security
-		-Wno-overloaded-virtual -Wno-missing-braces -Wno-format 
-		-Wno-write-strings -Wno-unknown-pragmas 
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -D_GLIBCXX_USE_CXX11_ABI=0 \
+		-m32 -pipe -march=native -mtune=native \
+		-D_FORTIFY_SOURCE=2 -Wformat \
+		-Wno-overloaded-virtual -Wno-missing-braces -Wno-format \
+		-Wno-write-strings -Wno-unknown-pragmas \
 		-Wno-uninitialized -Wno-reorder")
-
+	
+	# flto doesn't want to work
+	#if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+	#    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -flto")
+	#endif()
+		
 	add_definitions(-DLINUX -D_REENTRANT -Dlinux -D_USING_STL -D__STL_NO_BAD_ALLOC -D_GNU_SOURCE -D_XOPEN_SOURCE=500)
 endif()
 
