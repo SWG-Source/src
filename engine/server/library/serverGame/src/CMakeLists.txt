@@ -778,9 +778,17 @@ add_library(serverGame STATIC
 	${CMAKE_CURRENT_BINARY_DIR}/shared/generated/Packager.cpp
 )
 
+if(NOT WIN32 AND CMAKE_SIZEOF_VOID_P EQUAL 8)
+    target_link_libraries(mulodi)
+endif()
+
 target_link_libraries(serverGame
 	sharedCommandParser
 	sharedPathfinding
 	sharedSkillSystem
 	sharedTerrain
 )
+
+if(${BUILD_MULODI_LIB})
+    target_link_libraries(serverGame mulodi)
+endif()
