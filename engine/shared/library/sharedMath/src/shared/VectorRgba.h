@@ -104,7 +104,7 @@ inline bool VectorRgba::operator !=(VectorRgba const & rhs) const
 
 inline float VectorRgba::rgbIntensity() const
 {
-	return abs(r) * 0.30f + abs(g) * 0.59f + abs(b) * 0.11f;
+	return std::abs(r) * 0.30f + std::abs(g) * 0.59f + std::abs(b) * 0.11f;
 }
 
 // ----------------------------------------------------------------------
