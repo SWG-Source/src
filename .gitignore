@@ -1,3 +1,4 @@
+*.geany
 *.cfg
 *.cmd
 .project
