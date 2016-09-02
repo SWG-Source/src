@@ -484,7 +484,9 @@ void ConnectionServer::handleConnectionServerIdMessage(const ConnectionServerId 
 		uint16 chatPort = 0;
 		uint16 csPort = 0;
 		if (c)
+		{
 			chatPort = c->getBindPort();
+		}
 
 		if (cs)
 		{
@@ -493,12 +495,21 @@ void ConnectionServer::handleConnectionServerIdMessage(const ConnectionServerId 
 
 		uint16 publicPort = 0;
 		if (servicePublic)
+		{
 			publicPort = servicePublic->getBindPort();
+		}
+
 		uint16 privatePort = 0;
 		if (servicePrivate)
+		{
 			privatePort = servicePrivate->getBindPort();
+		}
 
-		std::string clientServicePublicBindAddress = NetworkHandler::getHostName();
+		std::string clientServicePublicBindAddress = ConfigConnectionServer::getPublicBindAddress();
+		if (clientServicePublicBindAddress.empty())
+		{
+			clientServicePublicBindAddress = NetworkHandler::getHostName();
+		}		
 
 		NOT_NULL(gameService);
 		NOT_NULL(chatService);
@@ -508,7 +519,9 @@ void ConnectionServer::handleConnectionServerIdMessage(const ConnectionServerId 
 		sendToCentralProcess(ncs);
 	}
 	else
+	{
 		FATAL(true, ("Error in connection server startup"));
+	}
 }
 
 // ----------------------------------------------------------------------

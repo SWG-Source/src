@@ -32,7 +32,7 @@ as
 		from default_char_limits;
 		
 		open result_cursor for
-			select id, name, address, port, secret, locked, not_recommended, maxCharacterPerAccount,
+			select id, name, address, altAddress, port, secret, locked, not_recommended, maxCharacterPerAccount,
 			online_player_limit,online_free_trial_limit,free_trial_can_create_char,online_tutorial_limit
 			from cluster_list
 			where group_id = p_group;

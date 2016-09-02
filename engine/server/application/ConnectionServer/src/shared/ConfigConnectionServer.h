@@ -68,6 +68,8 @@ public:
 
 		int           connectionServerNumber;
 		int           fakeBuddyPoints;
+
+		const char *  altPublicBindAddress;
 	};
 
 
@@ -133,6 +135,7 @@ public:
 	static int                 getConnectionServerNumber();
 	static int                 getFakeBuddyPoints();
 
+	static const char * 	   getPublicBindAddress();
 private:
 	static Data *	data;
 };

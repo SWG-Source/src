@@ -113,6 +113,8 @@ void ConfigConnectionServer::install(void)
 	KEY_INT     (connectionServerNumber, 0);
 	KEY_INT     (fakeBuddyPoints, 0);
 
+	KEY_STRING  (altPublicBindAddress, "");
+
 	int index = 0;
 	char const * result = 0;
 	do
@@ -161,6 +163,13 @@ bool ConfigConnectionServer::getDisconnectFreeTrialOnInactive()
 int ConfigConnectionServer::getFakeBuddyPoints()
 {
 	return data->fakeBuddyPoints;
+}
+
+// ----------------------------------------------------------------------
+
+const char * ConfigConnectionServer::getPublicBindAddress()
+{
+	return data->altPublicBindAddress;
 }
 
 // ======================================================================
