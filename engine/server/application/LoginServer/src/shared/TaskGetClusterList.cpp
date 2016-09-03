@@ -45,8 +45,6 @@ bool TaskGetClusterList::process(DB::Session *session)
 			qry.address.getValue(temp.m_address);
 		}		
 
-		DEBUG_WARNING(true, ("Customer facing cluster address is %s", temp.m_address.c_str()));
-
 		if (qry.port.isNull())
 		{
 			temp.m_port = ConfigLoginServer::getCentralServicePort();
@@ -66,6 +64,8 @@ bool TaskGetClusterList::process(DB::Session *session)
 		qry.online_free_trial_limit.getValue(temp.m_onlineFreeTrialLimit);
 		qry.free_trial_can_create_char.getValue(temp.m_freeTrialCanCreateChar);
 		qry.online_tutorial_limit.getValue(temp.m_onlineTutorialLimit);
+
+		DEBUG_WARNING(true, ("Customer facing cluster address for %s is %s", temp.m_clusterName.c_str(), temp.m_address.c_str()));
 
 		m_clusterData.push_back(temp);
 	}
