@@ -69,7 +69,7 @@ void ConfigLoginServer::install(void)
 	KEY_INT	(centralServicePort, 44452);
 	KEY_INT	(clientServicePort, 44453);
 	KEY_INT (clientOverflowLimit, 1024 * 8);
-	KEY_INT	(maxClients, 250);
+	KEY_INT	(maxClients, 3000);
 	KEY_INT (taskServicePort, 44459);
 	KEY_INT (pingServicePort, 44460);
 	KEY_INT (httpServicePort, 44490);
@@ -112,7 +112,7 @@ void ConfigLoginServer::install(void)
 	KEY_INT (populationHeavyThresholdPercent, 32);
 	KEY_INT (populationMediumThresholdPercent, 16);
 	KEY_INT (populationLightThresholdPercent, 8);
-	KEY_INT (csToolPort, 10666);
+	KEY_INT (csToolPort, 0); // use 10666 if you want to turn the tool on
 	KEY_BOOL(requireSecureLoginForCsTool, true);
 	KEY_BOOL(useExternalAuth, false);
 	KEY_STRING(externalAuthURL, "");

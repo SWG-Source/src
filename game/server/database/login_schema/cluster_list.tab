@@ -4,7 +4,6 @@ create table cluster_list --NO_IMPORT
 	name varchar2(255),
 	num_characters number,
 	address varchar2(255),
-	altAddress varchar2(255),
 	port number default 44463,
 	secret char(1),
 	locked char(1),

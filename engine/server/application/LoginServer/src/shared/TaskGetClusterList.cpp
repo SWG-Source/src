@@ -38,24 +38,13 @@ bool TaskGetClusterList::process(DB::Session *session)
 	
 	while ((rowsFetched = qry.fetch()) > 0)
 	{
-		qry.altAddress.getValue(temp.m_address);
-		
-		if (temp.m_address.empty())
-		{
-			qry.address.getValue(temp.m_address);
-		}		
-
-		if (qry.port.isNull())
-		{
-			temp.m_port = ConfigLoginServer::getCentralServicePort();
-		}
-		else
-		{
-			temp.m_port = static_cast<uint16>(qry.port.getValue());
-		}
-
 		qry.cluster_id.getValue(temp.m_clusterId);
 		qry.cluster_name.getValue(temp.m_clusterName);
+		qry.address.getValue(temp.m_address);
+		if (qry.port.isNull())
+			temp.m_port = ConfigLoginServer::getCentralServicePort();
+		else
+			temp.m_port = static_cast<uint16>(qry.port.getValue());
 		qry.secret.getValue(temp.m_secret);
 		qry.locked.getValue(temp.m_locked);
 		qry.not_recommended.getValue(temp.m_notRecommended);
@@ -88,7 +77,7 @@ void TaskGetClusterList::onComplete()
 void TaskGetClusterList::GetClustersQuery::getSQL(std::string &sql)
 {
   sql=std::string("begin :result := ")+DatabaseConnection::getInstance().getSchemaQualifier()+"login.get_cluster_list(:group_id); end;";
-  DEBUG_REPORT_LOG(true, ("TaskGetClusterList SQL: %s\n", sql.c_str()));
+  // DEBUG_REPORT_LOG(true, ("TaskGetClusterList SQL: %s\n", sql.c_str()));
 
 }
 
@@ -107,7 +96,6 @@ bool TaskGetClusterList::GetClustersQuery::bindColumns()
 	if (!bindCol(cluster_id)) return false;
 	if (!bindCol(cluster_name)) return false;
 	if (!bindCol(address)) return false;
-	if (!bindCol(altAddress)) return false;
 	if (!bindCol(port)) return false;
 	if (!bindCol(secret)) return false;
 	if (!bindCol(locked)) return false;
@@ -136,7 +124,6 @@ TaskGetClusterList::GetClustersQuery::GetClustersQuery() :
 		cluster_id(),
 		cluster_name(),
 		address(),
-		altAddress(),
 		port(),
 		secret(),
 		locked(),

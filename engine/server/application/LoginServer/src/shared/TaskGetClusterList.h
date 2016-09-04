@@ -36,7 +36,6 @@ class TaskGetClusterList : public DB::TaskRequest
 		DB::BindableLong cluster_id; //lint !e1925 // public data member
 		DB::BindableString<255> cluster_name; //lint !e1925 // public data member
 		DB::BindableString<255> address; //lint !e1925 // public data member
-		DB::BindableString<255> altAddress; //lint !e1925 // public data member
 		DB::BindableLong port; //lint !e1925 // public data member
 		DB::BindableBool secret; //lint !e1925 // public data member
 		DB::BindableBool locked; //lint !e1925 // public data member
@@ -64,7 +63,6 @@ class TaskGetClusterList : public DB::TaskRequest
 		uint32 m_clusterId;
 		std::string m_clusterName;
 		std::string m_address;
-		std::string m_altAddress;
 		uint16 m_port;
 		bool m_secret;
 		bool m_locked;

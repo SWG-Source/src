@@ -160,8 +160,12 @@ LoginServer::LoginServer() :
 		m_centralService = new Service(ConnectionAllocator<CentralServerConnection>(), setup);
 	}
 
+	// only start the customer tool connection listener if the port is set (defaults to 0)
 	setup.port = ConfigLoginServer::getCSToolPort();
-	m_CSService = new Service(ConnectionAllocator<CSToolConnection>(), setup);
+	if (setup.port) 
+	{
+		m_CSService = new Service(ConnectionAllocator<CSToolConnection>(), setup);
+	}
 
 	// set up message connections
 	connectToMessage("ClaimRewardsMessage");
@@ -387,12 +391,17 @@ void LoginServer::receiveMessage(const MessageDispatch::Emitter & source, const 
 			CentralServerConnection * connection = const_cast<CentralServerConnection*>(safe_cast<const CentralServerConnection *>(&source));
 			DEBUG_REPORT_LOG(true, ("Cluster connection %s opened\n", msg.getClusterName().c_str()));
 			ClusterListEntry *cle = nullptr;
-			if (ConfigLoginServer::getDevelopmentMode())
-			{
-				// in this mode, we trust the name sent by the cluster and we dynamically add clusters we don't know about
-				cle = findClusterByName(msg.getClusterName());
-				if (!cle)
-					cle = addCluster(msg.getClusterName());
+            if (ConfigLoginServer::getDevelopmentMode()) {
+                // in this mode, we trust the name sent by the cluster
+                cle = findClusterByName(msg.getClusterName());
+#ifdef _DEBUG
+                // if in debug mode, we dynamically add clusters we don't know about
+                // DO NOT USE ON PRODUCTION! This is where other servers are getting hijacked.
+                if (!cle)
+                {
+                    cle = addCluster(msg.getClusterName());
+                }
+#endif
 			}
 			else
 			{
@@ -407,7 +416,7 @@ void LoginServer::receiveMessage(const MessageDispatch::Emitter & source, const 
 						disconnectCluster(*cle, true, false);
 						cle = nullptr;
 					}
-			}
+			}		
 
 			if (cle)
 			{

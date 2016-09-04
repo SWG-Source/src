@@ -67,11 +67,11 @@ elseif(UNIX)
 	# not sure if needed or not - https://wiki.debian.org/Hardening
 	# ============================================================================================
 	# -fstack-protector-all -Wstack-protector --param ssp-buffer-size=4 -fPIE -ftrapv
+	# -D_FORTIFY_SOURCE=2 is generally considered safe but crashes datatabletool when built with gcc
 	
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -D_GLIBCXX_USE_CXX11_ABI=0 \
 		-m32 -pipe -march=native -mtune=native \
-		-Wformat \
-		-Wno-overloaded-virtual -Wno-missing-braces -Wno-format \
+		-Wformat -Wno-overloaded-virtual -Wno-missing-braces -Wno-format \
 		-Wno-write-strings -Wno-unknown-pragmas \
 		-Wno-uninitialized -Wno-reorder")
 
