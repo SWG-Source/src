@@ -57,13 +57,16 @@ ClientConnection::~ClientConnection()
 void ClientConnection::onConnectionClosed()
 {
 	// client has disconnected
-	DEBUG_REPORT_LOG(true, ("Client %lu disconnected\n", getStationId()));
-	LOG("LoginClientConnection", ("onConnectionClosed() for stationId (%lu) at IP (%s)", m_stationId, getRemoteAddress().c_str()));
-	LoginServer::getInstance().removeClient(m_clientId);
-	
-	if (!m_isValidated)
+	if (m_clientId)
 	{
-		SessionApiClient * session = LoginServer::getInstance().getSessionApiClient();
+		// if it is a 0 they are a dos faggot, most likely
+		DEBUG_REPORT_LOG(true, ("Client %lu disconnected\n", m_stationId));
+		LOG("LoginClientConnection", ("onConnectionClosed() for stationId (%lu) at IP (%s)", m_stationId, getRemoteAddress().c_str()));
+		LoginServer::getInstance().removeClient(m_clientId);
+	}
+
+	if (!m_isValidated) {
+		SessionApiClient *session = LoginServer::getInstance().getSessionApiClient();
 		if (session)
 			session->dropClient(this);
 	}

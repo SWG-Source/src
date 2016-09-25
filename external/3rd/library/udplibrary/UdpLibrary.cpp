@@ -992,9 +992,9 @@ void UdpManager::ProcessRawPacket(const PacketHistoryEntry *e)
 
 	if (con == nullptr)
 	{
-			// packet coming from an unknown ip/port
-			// if it is a connection request packet, then establish a new connection object to reply to it
-			// connection establish packet must always be at least 6 bytes long as we must have a version number, no matter how it changes
+		// packet coming from an unknown ip/port
+		// if it is a connection request packet, then establish a new connection object to reply to it
+		// connection establish packet must always be at least 6 bytes long as we must have a version number, no matter how it changes
 		if (e->mBuffer[0] == 0 && e->mBuffer[1] == UdpConnection::cUdpPacketConnect && e->mLen == UdpConnection::cUdpPacketConnectSize)
 		{
 			if (mConnectionListCount >= mParams.maxConnections)
@@ -1009,8 +1009,8 @@ void UdpManager::ProcessRawPacket(const PacketHistoryEntry *e)
 					mParams.handler->OnConnectRequest(newcon);
 					if (newcon->GetRefCount() == 1)
 					{
-							// we are going to end up destroying this connection when we release it on this next line
-							// so disconnect it first giving it a reason
+						// we are going to end up destroying this connection when we release it on this next line
+						// so disconnect it first giving it a reason
 						newcon->InternalDisconnect(0, UdpConnection::cDisconnectReasonConnectionRefused);
 					}
 					newcon->Release();
@@ -1023,9 +1023,9 @@ void UdpManager::ProcessRawPacket(const PacketHistoryEntry *e)
 			{
 				if (e->mBuffer[0] == 0 && e->mBuffer[1] == UdpConnection::cUdpPacketRequestRemap)
 				{
-						// ok, we got a packet from somebody, that we don't know who they are, but, it appears they are asking
-						// for their address/port to be remapped.  If we allow port (and/or address) remapping, then go ahead
-						// an honor their request if possible
+					// ok, we got a packet from somebody, that we don't know who they are, but, it appears they are asking
+					// for their address/port to be remapped.  If we allow port (and/or address) remapping, then go ahead
+					// an honor their request if possible
 					uchar *ptr = e->mBuffer + 2;
 					int connectCode = UdpMisc::GetValue32(ptr);
 					ptr += 4;
@@ -1036,10 +1036,10 @@ void UdpManager::ProcessRawPacket(const PacketHistoryEntry *e)
 					{
 						if (mParams.allowAddressRemapping || con->mIp == e->mIp)
 						{
-								// one final security check to ensure these are really the same connection, compare encryption codes
+							// one final security check to ensure these are really the same connection, compare encryption codes
 							if (con->mConnectionConfig.encryptCode == encryptCode)
 							{
-									// remapping is allowed, remap ourselves to the address of the incoming request
+								// remapping is allowed, remap ourselves to the address of the incoming request
 								mAddressHashTable->Remove(con, AddressHashValue(con->mIp, con->mPort));
 								con->mIp = e->mIp;
 								con->mPort = e->mPort;
@@ -1052,18 +1052,18 @@ void UdpManager::ProcessRawPacket(const PacketHistoryEntry *e)
 			}
 
 
-				// got a packet from somebody and we don't know who they are and the packet we got was not a connection request
-				// just in case they are a previous client who thinks they are still connected, we will send them an internal
-				// packet telling them that we don't know who they are
+			// got a packet from somebody and we don't know who they are and the packet we got was not a connection request
+			// just in case they are a previous client who thinks they are still connected, we will send them an internal
+			// packet telling them that we don't know who they are
 			if (mParams.replyUnreachableConnection)
 			{
-					// do not reply back with unreachable if the packet coming in is a terminate or unreachable packet itself
+				// do not reply back with unreachable if the packet coming in is a terminate or unreachable packet itself
 				if (e->mBuffer[0] != 0 || (e->mBuffer[0] == 0 && e->mBuffer[1] != UdpConnection::cUdpPacketUnreachableConnection && e->mBuffer[1] != UdpConnection::cUdpPacketTerminate))
 				{
-						// since we do not have a connection-object associated with this incoming packet, there is no way we could
-						// encrypt it or add CRC bytes to it, since we have no idea what the other end of the connection is expecting
-						// in this regard.  As such, the UnreachableConnection packet (like the connect and confirm packets) is one
-						// of those internal packet types that is designated as not being encrypted or CRC'ed.
+					// since we do not have a connection-object associated with this incoming packet, there is no way we could
+					// encrypt it or add CRC bytes to it, since we have no idea what the other end of the connection is expecting
+					// in this regard.  As such, the UnreachableConnection packet (like the connect and confirm packets) is one
+					// of those internal packet types that is designated as not being encrypted or CRC'ed.
 					unsigned char buf[8];
 					buf[0] = 0;
 					buf[1] = UdpConnection::cUdpPacketUnreachableConnection;
@@ -1389,10 +1389,10 @@ void UdpConnection::InternalDisconnect(int flushTimeout, DisconnectReason reason
 			return;
 		}
 
-			// send a termination packet to the other side
-			// do not send a termination packet if we are still negotiating (we are not allowed to send any packets while negotiating)
-			// if you attempt to send a packet while negotiating, then it will potentially attempt to encrypt it before an encryption
-			// method is determined, resulting in a function call through an invalid pointer
+		// send a termination packet to the other side
+		// do not send a termination packet if we are still negotiating (we are not allowed to send any packets while negotiating)
+		// if you attempt to send a packet while negotiating, then it will potentially attempt to encrypt it before an encryption
+		// method is determined, resulting in a function call through an invalid pointer
 		if (!mSilentDisconnect)
 		{
 			if (mStatus == cStatusConnected || mStatus == cStatusDisconnectPending)

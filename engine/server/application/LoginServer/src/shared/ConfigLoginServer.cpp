@@ -69,7 +69,7 @@ void ConfigLoginServer::install(void)
 	KEY_INT	(centralServicePort, 44452);
 	KEY_INT	(clientServicePort, 44453);
 	KEY_INT (clientOverflowLimit, 1024 * 8);
-	KEY_INT	(maxClients, 3000);
+	KEY_INT	(maxClients, 250);
 	KEY_INT (taskServicePort, 44459);
 	KEY_INT (pingServicePort, 44460);
 	KEY_INT (httpServicePort, 44490);
@@ -116,6 +116,7 @@ void ConfigLoginServer::install(void)
 	KEY_BOOL(requireSecureLoginForCsTool, true);
 	KEY_BOOL(useExternalAuth, false);
 	KEY_STRING(externalAuthURL, "");
+	KEY_INT(maxConnectionsPerIP, 2); // assuming 2 people playing in the same household
 
 	int index = 0;
 	char const * result = 0;

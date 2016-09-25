@@ -59,7 +59,7 @@ class Service : public NetworkHandler
 {
 public:
 	//Service(const ConnectionAllocatorBase & connectionAllocator, const unsigned short listenPort, const int maxConnections, const int keepAliveDelay = 1000, const std::string & interfaceAddress = std::string(""), const bool compress=false);
-	Service(const ConnectionAllocatorBase & connectionAllocator, const NetworkSetupData & setupData);
+	Service(const ConnectionAllocatorBase & connectionAllocator, const NetworkSetupData & setupData, const int maxConnectionsPerIP = 0);
 	virtual ~Service();
 
 	void         onConnectionOpened(TcpClient * t);
@@ -86,6 +86,7 @@ private:
 	const ConnectionAllocatorBase *  connectionAllocator;
 	std::set<Connection *>           connections;
 	int                              m_maxConnections;
+	int 							 m_maxConnectionsPerIP; // dos protection for ping and login servers
 	MessageDispatch::Callback *      m_callback;
 	TcpServer *                      m_tcpServer;
 };

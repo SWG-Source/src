@@ -146,11 +146,11 @@ LoginServer::LoginServer() :
 	setup.compress = ConfigLoginServer::getCompressClientNetworkTraffic();
 	setup.useTcp = false;
 
-	clientService = new Service(ConnectionAllocator<ClientConnection>(), setup);
+	clientService = new Service(ConnectionAllocator<ClientConnection>(), setup,  ConfigLoginServer::getMaxConnectionsPerIP());
 	setup.compress = false;
 
 	setup.port = ConfigLoginServer::getPingServicePort();
-	pingService = new Service(ConnectionAllocator<PingConnection>(), setup);
+	pingService = new Service(ConnectionAllocator<PingConnection>(), setup,  ConfigLoginServer::getMaxConnectionsPerIP());
 	setup.useTcp = true;
 
 	if (ConfigLoginServer::getDevelopmentMode())
@@ -246,16 +246,22 @@ ClientConnection* LoginServer::getUnvalidatedClient(int clientId)
 
 void LoginServer::removeClient(int clientId)
 {
-	WARNING_STRICT_FATAL(clientId == 0, ("Tried to remove a client with client id == 0"));
-	std::map<int, ClientConnection*>::iterator i = m_clientMap.find(clientId);
-	if (i != m_clientMap.end())
-	{
-		if (i->second->getIsValidated())
-		{
-			IGNORE_RETURN(m_validatedClientMap.erase(i->second->getStationId()));
-		}
-		IGNORE_RETURN(m_clientMap.erase(clientId));
-	}
+    if (clientId) // yeah why bother if it's 0 or null? i realize 0 is a valid int but since previously the warning below fired if it was 0....yeah, no
+    {
+        std::map<int, ClientConnection*>::iterator i = m_clientMap.find(clientId);
+        if (i != m_clientMap.end())
+        {
+            if (i->second->getIsValidated())
+            {
+                IGNORE_RETURN(m_validatedClientMap.erase(i->second->getStationId()));
+            }
+            IGNORE_RETURN(m_clientMap.erase(clientId));
+        }
+    }
+    else
+    {
+        WARNING_STRICT_FATAL(true, ("Tried to remove a client with client id == 0"));
+    }
 }
 
 //-----------------------------------------------------------------------

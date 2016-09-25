@@ -24,10 +24,11 @@ ConnectionAllocatorBase::~ConnectionAllocatorBase()
 //-----------------------------------------------------------------------
 
 //Service::Service(const ConnectionAllocatorBase & c, const unsigned short port, const int m, const int keepAliveDelay, const std::string & interfaceAddress, const bool compress) :
-Service::Service(const ConnectionAllocatorBase & c, const NetworkSetupData & setup) :
+Service::Service(const ConnectionAllocatorBase & c, const NetworkSetupData & setup, const int maxConnectionsPerIP) :
 connectionAllocator(c.clone()),
 m_callback(new MessageDispatch::Callback),
-m_tcpServer(0)
+m_tcpServer(0),
+m_maxConnectionsPerIP(maxConnectionsPerIP)
 {
 	std::string realAddress;
 	if(setup.bindInterface.length() > 0)
@@ -165,7 +166,7 @@ m_tcpServer(0)
 	m_maxConnections = setup.maxConnections;
 	newService(this);
 	
-	m_callback->connect(*this, &Service::onConnectionClosed);
+	`->connect(*this, &Service::onConnectionClosed);
 }
 
 //-----------------------------------------------------------------------
@@ -214,10 +215,38 @@ void Service::onConnectionOpened(Connection * c)
 {
 	if (c)
 	{
-		c->setService(this);
-		c->onConnectionOpened();
-		connections.insert(c);
-		WARNING((connections.size() >= static_cast<size_t>(m_maxConnections)), ("Service has reached it's maximum connection count %d", m_maxConnections));
+        if (connections.size() < static_cast<size_t>(m_maxConnections) || m_maxConnections == 0)
+        {
+            std::string remoteIP = c->getRemoteAddress();
+            int numConnections = 0;
+
+            // if we're trying to throttle dos attempts
+            if (m_maxConnectionsPerIP > 0)
+            {
+                // we have to recount each time so that we don't cut off legit users
+                for (auto i = connections.begin(); i != connections.end(); ++i) {
+                    if (remoteIP == (*i)->getRemoteAddress()) {
+                        numConnections++;
+                    }
+                }
+            }
+
+            if (m_maxConnectionsPerIP == 0 || (numConnections < m_maxConnectionsPerIP))
+            {
+                c->setService(this);
+                c->onConnectionOpened();
+                connections.insert(c);
+            }
+            else
+            {
+                WARNING(true, ("Client at IP %s has attempted more connections than allowed (%i). Potential DoS Attack?", remoteIP.c_str(), m_maxConnectionsPerIP));
+                removeConnection(c); // asshole (probably)
+            }
+		}
+        else
+        {
+            WARNING(true, ("Service has reached it's maximum connection count (%d).", m_maxConnections));
+        }
 	}
 }
 
@@ -260,6 +289,7 @@ int Service::flushAndConfirmAllData()
 		unsigned long startTime = Clock::timeMs();
 		bool needReport = false;
 		unsigned long stallReportDelay = ConfigSharedNetwork::getStallReportDelay();
+
 		do
 		{
 			if(stallReportDelay > 0)
