@@ -92,7 +92,7 @@ m_tcpServer(0)
 		p.icmpErrorRetryPeriod = setup.icmpErrorRetryPeriod;
 		p.maxDataHoldSize = setup.maxDataHoldSize;
 		p.allowPortRemapping = setup.allowPortRemapping;
-        p.maxConnectionsPerIP = setup.maxconnectionsPerIP;
+       		p.maxConnectionsPerIP = setup.maxConnectionsPerIP;
 			
         if (realAddress.length() > 0)
         {
@@ -165,7 +165,7 @@ m_tcpServer(0)
 	m_maxConnections = setup.maxConnections;
 	newService(this);
 	
-	`->connect(*this, &Service::onConnectionClosed);
+	m_callback->connect(*this, &Service::onConnectionClosed);
 }
 
 //-----------------------------------------------------------------------

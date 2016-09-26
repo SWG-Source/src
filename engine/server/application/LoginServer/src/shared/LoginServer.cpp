@@ -147,11 +147,11 @@ LoginServer::LoginServer() :
 	setup.compress = ConfigLoginServer::getCompressClientNetworkTraffic();
 	setup.useTcp = false;
 
-	clientService = new Service(ConnectionAllocator<ClientConnection>(), setup,  ConfigLoginServer::getMaxConnectionsPerIP());
+	clientService = new Service(ConnectionAllocator<ClientConnection>(), setup);
 	setup.compress = false;
 
 	setup.port = ConfigLoginServer::getPingServicePort();
-	pingService = new Service(ConnectionAllocator<PingConnection>(), setup,  ConfigLoginServer::getMaxConnectionsPerIP());
+	pingService = new Service(ConnectionAllocator<PingConnection>(), setup);
 	setup.useTcp = true;
 
 	if (ConfigLoginServer::getDevelopmentMode())

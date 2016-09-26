@@ -1014,7 +1014,7 @@ void UdpManager::ProcessRawPacket(const PacketHistoryEntry *e)
 
                 if (clientConnections >= mParams.maxConnectionsPerIP)
                 {
-                    printf("Possible DoS attempt? Client %i attempted more connections than the limit (%i). Dropping!", e->mIp, mParams.maxConnectionsPerIP);
+                    printf("Possible DoS attempt? Client %i attempted more connections than the limit (%i). Dropping!\n", e->mIp.GetAddress(), mParams.maxConnectionsPerIP);
                     return;
                 }
             }
