@@ -1007,16 +1007,23 @@ void UdpManager::ProcessRawPacket(const PacketHistoryEntry *e)
 		{
             if (mParams.maxConnectionsPerIP > 0)
             {
-                UdpConnection *alreadyExists;
-
                 int clientConnections = 0;
-                for (int i = 1; i != 65535; i++)
+		// and instead of counting up as previously
+		// we can count down from the top, as i think UDP (or SWG at least) usually uses higher outgoing ports?
+		// of course a flooder will use any port so that doesn't matter...
+                for (int i = 65535; i >= 1; --i)
                 {
-                    alreadyExists = AddressGetConnection(e->mIp, i);
-                    if (alreadyExists != nullptr)
+                    if (AddressGetConnection(e->mIp, i) != nullptr)
                     {
                         clientConnections++;
                     }
+
+		    // no need to keep looping/counting if and when we reach the limit
+		    // of course we'll still count all the way 
+		    if (clientConnections >= mParams.maxConnectionsPerIP)
+		    {
+		        break;
+		    }
                 }
 
                 if (clientConnections >= mParams.maxConnectionsPerIP)
