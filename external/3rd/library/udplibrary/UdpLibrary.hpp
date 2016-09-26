@@ -99,6 +99,7 @@ class UdpIpAddress
 	public:
 		UdpIpAddress(unsigned int ip = 0);
 		unsigned int GetAddress() const { return(mIp); }
+		char *GetV4Address() const; 
 		char *GetAddress(char *buffer) const;
 		bool operator==(const UdpIpAddress& e) const { return(mIp == e.mIp); }
 	protected:

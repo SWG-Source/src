@@ -152,6 +152,13 @@ char *UdpIpAddress::GetAddress(char *buffer) const
 	return(buffer);
 }
 
+char *UdpIpAddress::GetV4Address() const
+{
+	struct sockaddr_in addr_serverUDP;
+	addr_serverUDP.sin_addr.s_addr = mIp;
+	return inet_ntoa(addr_serverUDP.sin_addr);
+}
+
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
 	// UdpManager::Params initializations constructor (ie. default values)
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1014,7 +1021,7 @@ void UdpManager::ProcessRawPacket(const PacketHistoryEntry *e)
 
                 if (clientConnections >= mParams.maxConnectionsPerIP)
                 {
-                    printf("Possible DoS attempt? Client %i attempted more connections than the limit (%i). Dropping!\n", e->mIp.GetAddress(), mParams.maxConnectionsPerIP);
+		    printf("Possible DoS attempt? Client %s attempted more connections than the limit (%i). Dropping!\n", e->mIp.GetV4Address(), mParams.maxConnectionsPerIP);
                     return;
                 }
             }
