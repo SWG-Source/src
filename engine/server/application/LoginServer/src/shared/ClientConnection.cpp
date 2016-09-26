@@ -59,9 +59,13 @@ void ClientConnection::onConnectionClosed()
 	// client has disconnected
 	if (m_clientId)
 	{
-		// if it is a 0 they are a dos faggot, most likely
-		DEBUG_REPORT_LOG(true, ("Client %lu disconnected\n", m_stationId));
-		LOG("LoginClientConnection", ("onConnectionClosed() for stationId (%lu) at IP (%s)", m_stationId, getRemoteAddress().c_str()));
+		if (m_stationId)
+		{
+			DEBUG_REPORT_LOG(true, ("Client %lu disconnected\n", m_stationId));
+			LOG("LoginClientConnection",
+				("onConnectionClosed() for stationId (%lu) at IP (%s)", m_stationId, getRemoteAddress().c_str()));
+		}
+
 		LoginServer::getInstance().removeClient(m_clientId);
 	}
 
