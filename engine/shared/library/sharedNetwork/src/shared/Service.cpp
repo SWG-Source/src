@@ -24,11 +24,10 @@ ConnectionAllocatorBase::~ConnectionAllocatorBase()
 //-----------------------------------------------------------------------
 
 //Service::Service(const ConnectionAllocatorBase & c, const unsigned short port, const int m, const int keepAliveDelay, const std::string & interfaceAddress, const bool compress) :
-Service::Service(const ConnectionAllocatorBase & c, const NetworkSetupData & setup, const int maxConnectionsPerIP) :
+Service::Service(const ConnectionAllocatorBase & c, const NetworkSetupData & setup) :
 connectionAllocator(c.clone()),
 m_callback(new MessageDispatch::Callback),
-m_tcpServer(0),
-m_maxConnectionsPerIP(maxConnectionsPerIP)
+m_tcpServer(0)
 {
 	std::string realAddress;
 	if(setup.bindInterface.length() > 0)
@@ -93,12 +92,12 @@ m_maxConnectionsPerIP(maxConnectionsPerIP)
 		p.icmpErrorRetryPeriod = setup.icmpErrorRetryPeriod;
 		p.maxDataHoldSize = setup.maxDataHoldSize;
 		p.allowPortRemapping = setup.allowPortRemapping;
-		
+        p.maxConnectionsPerIP = setup.maxconnectionsPerIP;
 			
-			if(realAddress.length() > 0)
-			{
-				strncpy(p.bindIpAddress, realAddress.c_str(), sizeof(p.bindIpAddress));
-			}
+        if (realAddress.length() > 0)
+        {
+            strncpy(p.bindIpAddress, realAddress.c_str(), sizeof(p.bindIpAddress));
+        }
 
 		p.reliable[0].maxInstandingPackets = setup.maxInstandingPackets;
 		p.reliable[0].maxOutstandingBytes = setup.maxOutstandingBytes;
@@ -215,33 +214,11 @@ void Service::onConnectionOpened(Connection * c)
 {
 	if (c)
 	{
-        if (connections.size() < static_cast<size_t>(m_maxConnections) || m_maxConnections == 0)
+        if (connections.size() < static_cast<size_t>(m_maxConnections))
         {
-            std::string remoteIP = c->getRemoteAddress();
-            int numConnections = 0;
-
-            // if we're trying to throttle dos attempts
-            if (m_maxConnectionsPerIP > 0)
-            {
-                // we have to recount each time so that we don't cut off legit users
-                for (auto i = connections.begin(); i != connections.end(); ++i) {
-                    if (remoteIP == (*i)->getRemoteAddress()) {
-                        numConnections++;
-                    }
-                }
-            }
-
-            if (m_maxConnectionsPerIP == 0 || (numConnections < m_maxConnectionsPerIP))
-            {
-                c->setService(this);
-                c->onConnectionOpened();
-                connections.insert(c);
-            }
-            else
-            {
-                WARNING(true, ("Client at IP %s has attempted more connections than allowed (%i). Potential DoS Attack?", remoteIP.c_str(), m_maxConnectionsPerIP));
-                removeConnection(c); // asshole (probably)
-            }
+            c->setService(this);
+            c->onConnectionOpened();
+            connections.insert(c);
 		}
         else
         {

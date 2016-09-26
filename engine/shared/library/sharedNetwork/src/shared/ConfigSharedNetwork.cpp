@@ -30,6 +30,7 @@ namespace ConfigSharedNetworkNamespace
 	int   outgoingBufferSize;
 	int   clockSyncDelay;
 	int   maxConnections;
+	int	  maxConnectionsPerIP;
 	int   maxRawPacketSize;
 	int   maxInstandingPackets;
 	int   maxOutstandingBytes;
@@ -506,6 +507,11 @@ bool  ConfigSharedNetwork::getLogSendingTooMuchData()
 	return 	logSendingTooMuchData;
 }
 
+int ConfigSharedNetwork::getMaxConnectionsPerIP()
+{
+	return maxConnectionsPerIP;
+}
+
 //-----------------------------------------------------------------------
 
 void ConfigSharedNetwork::install(int newClockSyncDelay)
@@ -518,6 +524,7 @@ void ConfigSharedNetwork::install(int newClockSyncDelay)
 	KEY_INT   (incomingBufferSize, 4 * 1024 * 1024);
 	KEY_INT   (outgoingBufferSize, 4 * 1024 * 1024);
 	KEY_INT   (maxConnections, 1000);
+	KEY_INT   (maxConnectionsPerIP, 0); // unlimited
 	KEY_INT   (maxRawPacketSize, 496); 
 	KEY_INT   (maxInstandingPackets, 400);
 	KEY_INT   (maxOutstandingBytes, 200 * 1024);

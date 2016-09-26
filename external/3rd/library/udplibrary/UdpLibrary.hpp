@@ -482,7 +482,7 @@ class UdpManager
 					// is little harm in setting this number larger.
 					// default = 10
 			int maxConnections;
-
+            int maxConnectionsPerIP;
 					// this is the port number that this manager will use for all incoming and outgoing data. On the client side
 					// this is typically set to 0, which causes the manager object to randomly pick an available port.  On the server
 					// side, this port should be set to a specific value as it will represent the port number that clients will use

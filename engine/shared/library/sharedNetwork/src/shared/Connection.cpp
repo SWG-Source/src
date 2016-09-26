@@ -22,6 +22,7 @@
 #include "sharedNetwork/UdpLibraryMT.h"
 #include "TcpClient.h"
 #include "TcpServer.h"
+#include "../../../../../../external/3rd/library/udplibrary/UdpLibrary.hpp"
 
 #include <algorithm>
 
@@ -206,6 +207,7 @@ m_disconnectReason()
 				p.clockSyncDelay = setup.clockSyncDelay;
 				p.keepAliveDelay = setup.keepAliveDelay;
 				p.maxConnections = 1;
+				p.maxConnectionsPerIP = setup.maxConnectionsPerIP;
 				p.maxRawPacketSize = setup.maxRawPacketSize;
 				p.maxDataHoldSize = setup.maxDataHoldSize;
 				p.reliable[0].maxInstandingPackets = setup.maxInstandingPackets;

@@ -174,6 +174,7 @@ UdpManager::Params::Params()
 	portAliveDelay = 0;
 	noDataTimeout = 0;
 	maxConnections = 10;
+    maxConnectionsPerIP = 0;
 	port = 0;
 	portRange = 0;
 	pooledPacketMax = 1000;
@@ -997,8 +998,31 @@ void UdpManager::ProcessRawPacket(const PacketHistoryEntry *e)
 		// connection establish packet must always be at least 6 bytes long as we must have a version number, no matter how it changes
 		if (e->mBuffer[0] == 0 && e->mBuffer[1] == UdpConnection::cUdpPacketConnect && e->mLen == UdpConnection::cUdpPacketConnectSize)
 		{
+            if (mParams.maxConnectionsPerIP > 0)
+            {
+                UdpConnection *alreadyExists;
+
+                int clientConnections = 0;
+                for (int i = 1; i != 65535; i++)
+                {
+                    alreadyExists = AddressGetConnection(e->mIp, i);
+                    if (alreadyExists != nullptr)
+                    {
+                        clientConnections++;
+                    }
+                }
+
+                if (clientConnections >= mParams.maxConnectionsPerIP)
+                {
+                    printf("Possible DoS attempt? Client %i attempted more connections than the limit (%i). Dropping!", e->mIp, mParams.maxConnectionsPerIP);
+                    return;
+                }
+            }
+
 			if (mConnectionListCount >= mParams.maxConnections)
+			{
 				return;		// can't handle any more connections, so ignore this request entirely
+            }
 
 			int protocolVersion = UdpMisc::GetValue32(e->mBuffer + 2);
 			if (protocolVersion == cProtocolVersion)

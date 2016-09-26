@@ -142,6 +142,7 @@ LoginServer::LoginServer() :
 	NetworkSetupData setup;
 	setup.port = ConfigLoginServer::getClientServicePort();
 	setup.maxConnections = ConfigLoginServer::getMaxClients();
+	setup.maxConnectionsPerIP = ConfigLoginServer::getMaxConnectionsPerIP();
 	setup.keepAliveDelay = 45000;
 	setup.compress = ConfigLoginServer::getCompressClientNetworkTraffic();
 	setup.useTcp = false;
