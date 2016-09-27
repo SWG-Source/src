@@ -1041,7 +1041,7 @@ class UdpManager
 						// typically it is recommended that all UdpConnection objects be destroyed before destroying this manager object
 
 		int mRefCount;
-		unordered_map <unsigned int, int> mIpConnectionCount;
+		std::unordered_map<unsigned int, int> mIpConnectionCount;
 };
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////

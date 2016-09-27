@@ -404,7 +404,7 @@ UdpManager::~UdpManager()
 	TerminateOperatingSystem();
 
 	delete mAddressHashTable;
-    delete mIpConnectionCount;
+    	mIpConnectionCount.clear();
 	delete mConnectCodeHashTable;
 	delete mPriorityQueue;
 	for (int i = 0; i < mParams.packetHistoryMax; i++)
@@ -561,7 +561,17 @@ void UdpManager::RemoveConnection(UdpConnection *con)
 		mPriorityQueue->Remove(con);
 
 	mAddressHashTable->Remove(con, AddressHashValue(con->mIp, con->mPort));
-	mIpConnectionCount.erase(con->mIp);
+
+	unsigned int addy = con->mIp.GetAddress();
+	if (mIpConnectionCount[addy] > 1) 
+	{	
+		mIpConnectionCount[addy]--;
+	}
+	else
+	{
+		mIpConnectionCount.erase(addy);
+	}
+
 	mConnectCodeHashTable->Remove(con, con->mConnectCode);
 }
 
@@ -577,7 +587,7 @@ void UdpManager::AddConnection(UdpConnection *con)
 	mConnectionListCount++;
 
 	mAddressHashTable->Insert(con, AddressHashValue(con->mIp, con->mPort));
-	mIpConnectionCount[con->mIp]++;
+	mIpConnectionCount[con->mIp.GetAddress()]++;
 	mConnectCodeHashTable->Insert(con, con->mConnectCode);
 }
 
@@ -1008,19 +1018,19 @@ void UdpManager::ProcessRawPacket(const PacketHistoryEntry *e)
 		// connection establish packet must always be at least 6 bytes long as we must have a version number, no matter how it changes
 		if (e->mBuffer[0] == 0 && e->mBuffer[1] == UdpConnection::cUdpPacketConnect && e->mLen == UdpConnection::cUdpPacketConnectSize)
 		{
-            if (mParams.maxConnectionsPerIP > 0)
-            {
-                if (mIpConnectionCount[e->mIp] >= mParams.maxConnectionsPerIP)
-                {
-		            printf("Possible DoS attempt? Client %s attempted more connections than the limit (%i). Dropping!\n", e->mIp.GetV4Address(), mParams.maxConnectionsPerIP);
-                    return;
-                }
-            }
+			if (mParams.maxConnectionsPerIP > 0)
+			{
+				if (mIpConnectionCount[e->mIp.GetAddress()] >= mParams.maxConnectionsPerIP)
+				{
+					printf("Possible DoS attempt? Client %s attempted more connections than the limit (%i). Dropping!\n", e->mIp.GetV4Address(), mParams.maxConnectionsPerIP);
+ 					return;
+				}
+			}
 
 			if (mConnectionListCount >= mParams.maxConnections)
 			{
 				return;		// can't handle any more connections, so ignore this request entirely
-            }
+            		}
 
 			int protocolVersion = UdpMisc::GetValue32(e->mBuffer + 2);
 			if (protocolVersion == cProtocolVersion)
