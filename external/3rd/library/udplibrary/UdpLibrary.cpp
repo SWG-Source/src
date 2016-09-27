@@ -404,6 +404,7 @@ UdpManager::~UdpManager()
 	TerminateOperatingSystem();
 
 	delete mAddressHashTable;
+    delete mIpConnectionCount;
 	delete mConnectCodeHashTable;
 	delete mPriorityQueue;
 	for (int i = 0; i < mParams.packetHistoryMax; i++)
@@ -560,6 +561,7 @@ void UdpManager::RemoveConnection(UdpConnection *con)
 		mPriorityQueue->Remove(con);
 
 	mAddressHashTable->Remove(con, AddressHashValue(con->mIp, con->mPort));
+	mIpConnectionCount.erase(con->mIp);
 	mConnectCodeHashTable->Remove(con, con->mConnectCode);
 }
 
@@ -575,6 +577,7 @@ void UdpManager::AddConnection(UdpConnection *con)
 	mConnectionListCount++;
 
 	mAddressHashTable->Insert(con, AddressHashValue(con->mIp, con->mPort));
+	mIpConnectionCount[con->mIp]++;
 	mConnectCodeHashTable->Insert(con, con->mConnectCode);
 }
 
@@ -1007,28 +1010,9 @@ void UdpManager::ProcessRawPacket(const PacketHistoryEntry *e)
 		{
             if (mParams.maxConnectionsPerIP > 0)
             {
-                int clientConnections = 0;
-		// and instead of counting up as previously
-		// we can count down from the top, as i think UDP (or SWG at least) usually uses higher outgoing ports?
-		// of course a flooder will use any port so that doesn't matter...
-                for (int i = 65535; i >= 1; --i)
+                if (mIpConnectionCount[e->mIp] >= mParams.maxConnectionsPerIP)
                 {
-                    if (AddressGetConnection(e->mIp, i) != nullptr)
-                    {
-                        clientConnections++;
-                    }
-
-		    // no need to keep looping/counting if and when we reach the limit
-		    // of course we'll still count all the way 
-		    if (clientConnections >= mParams.maxConnectionsPerIP)
-		    {
-		        break;
-		    }
-                }
-
-                if (clientConnections >= mParams.maxConnectionsPerIP)
-                {
-		    printf("Possible DoS attempt? Client %s attempted more connections than the limit (%i). Dropping!\n", e->mIp.GetV4Address(), mParams.maxConnectionsPerIP);
+		            printf("Possible DoS attempt? Client %s attempted more connections than the limit (%i). Dropping!\n", e->mIp.GetV4Address(), mParams.maxConnectionsPerIP);
                     return;
                 }
             }

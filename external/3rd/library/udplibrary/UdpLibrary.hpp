@@ -2,6 +2,7 @@
 #define UDPLIBRARY_HPP
 
 #include <stdio.h>
+#include <unordered_map>
 #include "UdpHandler.hpp"
 #include "priority.hpp"
 #include "hashtable.hpp"
@@ -1040,6 +1041,7 @@ class UdpManager
 						// typically it is recommended that all UdpConnection objects be destroyed before destroying this manager object
 
 		int mRefCount;
+		unordered_map <unsigned int, int> mIpConnectionCount;
 };
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////
