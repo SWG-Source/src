@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <unordered_map>
+
 #include "UdpHandler.hpp"
 #include "priority.hpp"
 #include "hashtable.hpp"
@@ -925,6 +926,9 @@ class UdpManager
 			// to explicitly call this function.
 		LogicalPacket *CreatePacket(const void *data, int dataLen, const void *data2 = nullptr, int dataLen2 = 0);
 
+		// is the given unsigned int expressed ip blacklisted?
+		bool isBlacklisted(unsigned int);
+
 	protected:
 		friend class PooledLogicalPacket;
 		void PoolReturn(PooledLogicalPacket *packet);		// so pooled packets can add themselves back to the pool
@@ -1041,7 +1045,19 @@ class UdpManager
 						// typically it is recommended that all UdpConnection objects be destroyed before destroying this manager object
 
 		int mRefCount;
+
+		// number of strikes
+		static const int strikeOut = 3;
+
+		// actual count of connections for a given ip
 		std::unordered_map<unsigned int, int> mIpConnectionCount;
+
+
+		// count of strikes against a given ip - 3 successive DoS attempts and they are banned til next restart at best
+		std::unordered_map<unsigned int, int> blacklist;
+
+		// does what it says
+		void disconnectByIp (unsigned int);
 };
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1059,7 +1075,7 @@ class UdpConnection : public PriorityQueueMember, public AddressHashTableMember,
 							  , cDisconnectReasonNewConnectionAttempt, cDisconnectReasonConnectionRefused
 							  , cDisconnectReasonMutualConnectError, cDisconnectReasonConnectingToSelf
 							  , cDisconnectReasonReliableOverflow
-							  , cDisconnectReasonCount, cDisconnectDosAsshole };
+							  , cDisconnectReasonCount, cDisconnectReasonDosAttack };
 		
 			// standard AddRef/Release scheme
 		void AddRef();

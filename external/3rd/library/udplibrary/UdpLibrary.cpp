@@ -4,6 +4,10 @@
 #include <stdio.h>
 #include <string.h>
 
+#include <algorithm>
+#include <ios>
+#include <fstream>
+
 #include "UdpLibrary.hpp"
 
 #if defined(WIN32)
@@ -39,8 +43,6 @@
 	#include <sys/types.h>
 	#include <unistd.h>
 	#include <netinet/ip_icmp.h>		// needed by gcc 3.1 for linux
-#include <ios>
-#include <fstream>
 
 const int INVALID_SOCKET = 0xFFFFFFFF;
 	const int SOCKET_ERROR   = 0xFFFFFFFF;
@@ -408,8 +410,10 @@ UdpManager::~UdpManager()
 
 	delete mAddressHashTable;
     	mIpConnectionCount.clear();
+	blacklist.clear();
 	delete mConnectCodeHashTable;
 	delete mPriorityQueue;
+
 	for (int i = 0; i < mParams.packetHistoryMax; i++)
 	{
 		delete mPacketHistory[i];
@@ -818,15 +822,22 @@ UdpManager::PacketHistoryEntry *UdpManager::ActualReceive()
 
 	if (res != SOCKET_ERROR)
 	{
-		if (mParams.simulateIncomingLossPercent > 0 && ((rand() % 100) < mParams.simulateIncomingLossPercent))
-			return(nullptr);	// packet, what packet?
+		// no need in creating objects or processing anything if they are a DoS Attacker!
+		if (isBlacklisted(addr_from.sin_addr.s_addr))
+		{
+			return nullptr; // send them to the black hole
+		}
 
-		if (mParams.simulateIncomingByteRate > 0)
-			mSimulateNextIncomingTime = UdpMisc::Clock() + (res * 1000 / mParams.simulateIncomingByteRate);
+                if (mParams.simulateIncomingLossPercent > 0 && ((rand() % 100) < mParams.simulateIncomingLossPercent))
+                        return(nullptr);        // packet, what packet?
 
-		mLastReceiveTime = UdpMisc::Clock();
-		mPacketHistory[pos]->mLen = res;
+                if (mParams.simulateIncomingByteRate > 0)
+                        mSimulateNextIncomingTime = UdpMisc::Clock() + (res * 1000 / mParams.simulateIncomingByteRate);
+
+
+                mLastReceiveTime = UdpMisc::Clock();
 		mPacketHistory[pos]->mIp = UdpIpAddress(addr_from.sin_addr.s_addr);
+                mPacketHistory[pos]->mLen = res;
 		mPacketHistory[pos]->mPort = (int)ntohs(addr_from.sin_port);
 
 		mPacketHistoryPosition = (mPacketHistoryPosition + 1) % mParams.packetHistoryMax;
@@ -1023,23 +1034,33 @@ void UdpManager::ProcessRawPacket(const PacketHistoryEntry *e)
 		{
 			if (mParams.maxConnectionsPerIP > 0)
 			{
-				if (mIpConnectionCount[e->mIp.GetAddress()] >= mParams.maxConnectionsPerIP)
+				unsigned int clientAddr = e->mIp.GetAddress();
+
+				if (mIpConnectionCount[clientAddr] >= mParams.maxConnectionsPerIP)
 				{
-                    std::ofstream log_file("logs/udpDos.log", std::ios_base::out | std::ios_base::app );
-                    log_file << "UdpLibrary : Potential DoS Attack! Client at IP " << e->mIp.GetV4Address() << " tried to exceed maxConnectionsPerIP (" << mParams.maxConnectionsPerIP << "). Silently disconnecting.\n" << std::end;
+					if (!isBlacklisted(clientAddr))
+					{
+						// add a strike - if they hit strikeOut then they're banned til next restart
+						blacklist[clientAddr]++; 
 
-                    con->InternalDisconnect(0, UdpConnection::cDisconnectDosAsshole);
-                    con->SetSilentDisconnect(true); // screw you, jerk
-                    con->Release();
+						// log it - later parse this, cross reference, and block in iptables
+						extern const char *__progname;
+						const std::string prog(__progname);
+						static const std::string filename = "logs/udpDos-" + prog + ".log";
 
+						std::ofstream log_file(filename, std::ios_base::out | std::ios_base::app );
+						log_file << "Ignoring potential DoS attack from " << e->mIp.GetV4Address() << " (strike " << blacklist[clientAddr] << " of " << strikeOut << ")\n";
+						log_file.close();				
+					}
+	
  					return;
 				}
 			}
 
 			if (mConnectionListCount >= mParams.maxConnections)
-            {
-                return;        // can't handle any more connections, so ignore this request entirely
-            }
+			{
+				return; // can't handle any more connections, so ignore this request entirely
+			}
 
 			int protocolVersion = UdpMisc::GetValue32(e->mBuffer + 2);
 			if (protocolVersion == cProtocolVersion)
@@ -1118,6 +1139,24 @@ void UdpManager::ProcessRawPacket(const PacketHistoryEntry *e)
 	con->AddRef();
 	con->ProcessRawPacket(e);
 	con->Release();
+}
+
+bool UdpManager::isBlacklisted(unsigned int clientAddr)
+{
+	return (blacklist[clientAddr] == strikeOut);
+}
+
+void UdpManager::disconnectByIp(unsigned int clientAddr)
+{
+        while (mConnectionList != nullptr)
+        {
+		if (mConnectionList->mIp.GetAddress() == clientAddr)
+		{
+			mConnectionList->SetSilentDisconnect(true);
+        		mConnectionList->InternalDisconnect(0, UdpConnection::cDisconnectReasonDosAttack);
+				
+		}
+        }
 }
 
 UdpConnection *UdpManager::AddressGetConnection(UdpIpAddress ip, int port) const
@@ -2939,7 +2978,7 @@ const char *UdpConnection::DisconnectReasonText(DisconnectReason reason)
 		sDisconnectReason[cDisconnectReasonMutualConnectError] = "DisconnectReasonConnectError";
 		sDisconnectReason[cDisconnectReasonConnectingToSelf] = "DisconnectReasonConnectingToSelf";
 		sDisconnectReason[cDisconnectReasonReliableOverflow] = "DisconnectReasonReliableOverflow";
-        sDisconnectReason[cDisconnectDosAsshole] = "DisconnectAssholeDosAttempt";
+		sDisconnectReason[cDisconnectReasonDosAttack] = "DisconnectReasonDoSAttack";
 	}
 
 	return(sDisconnectReason[reason]);
