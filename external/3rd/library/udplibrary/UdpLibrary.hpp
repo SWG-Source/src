@@ -1059,7 +1059,7 @@ class UdpConnection : public PriorityQueueMember, public AddressHashTableMember,
 							  , cDisconnectReasonNewConnectionAttempt, cDisconnectReasonConnectionRefused
 							  , cDisconnectReasonMutualConnectError, cDisconnectReasonConnectingToSelf
 							  , cDisconnectReasonReliableOverflow
-							  , cDisconnectReasonCount };
+							  , cDisconnectReasonCount, cDisconnectDosAsshole };
 		
 			// standard AddRef/Release scheme
 		void AddRef();

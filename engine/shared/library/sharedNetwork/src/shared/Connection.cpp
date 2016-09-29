@@ -579,17 +579,28 @@ void Connection::onConnectionOverflowing(unsigned int totalBytes)
 
 void Connection::onConnectionClosed(Connection *)
 {
-	if (getService())
-		getService()->onConnectionClosed(this);
+    bool triggerOnConnectionClosed = true; // default - trigger the callback
 
 	if (udpConnection)
 	{
-		UdpConnection::DisconnectReason reason = udpConnection->GetDisconnectReason();
+        UdpConnection::DisconnectReason reason = udpConnection->GetDisconnectReason();
+
+        if (reason == UdpConnection::cDisconnectDosAsshole) {
+            triggerOnConnectionClosed = false; // no need - hopefully the destructor is just called
+        }
+
 		setDisconnectReason("Connection::onConnectionClosed (udplibrary:%s)", UdpConnection::DisconnectReasonText(reason));
 		FATAL(ConfigSharedNetwork::getFatalOnConnectionClosed(), ("Connection closed %s", UdpConnection::DisconnectReasonText(reason)));
 	}
 	else
-		setDisconnectReason("Connection::onConnectionClosed called");
+    {
+        setDisconnectReason("Connection::onConnectionClosed called");
+    }
+
+    if (triggerOnConnectionClosed && getService())
+    {
+        getService()->onConnectionClosed(this);
+    }
 
 	if (ConfigSharedNetwork::getLogConnectionOpenedClosed())
 	{

@@ -1022,15 +1022,18 @@ void UdpManager::ProcessRawPacket(const PacketHistoryEntry *e)
 			{
 				if (mIpConnectionCount[e->mIp.GetAddress()] >= mParams.maxConnectionsPerIP)
 				{
-					printf("Possible DoS attempt? Client %s attempted more connections than the limit (%i). Dropping!\n", e->mIp.GetV4Address(), mParams.maxConnectionsPerIP);
+                    con->InternalDisconnect(0, UdpConnection::cDisconnectDosAsshole);
+                    con->SetSilentDisconnect(true); // screw you, jerk
+                    con->Release();
+
  					return;
 				}
 			}
 
 			if (mConnectionListCount >= mParams.maxConnections)
-			{
-				return;		// can't handle any more connections, so ignore this request entirely
-            		}
+            {
+                return;        // can't handle any more connections, so ignore this request entirely
+            }
 
 			int protocolVersion = UdpMisc::GetValue32(e->mBuffer + 2);
 			if (protocolVersion == cProtocolVersion)
@@ -2930,6 +2933,7 @@ const char *UdpConnection::DisconnectReasonText(DisconnectReason reason)
 		sDisconnectReason[cDisconnectReasonMutualConnectError] = "DisconnectReasonConnectError";
 		sDisconnectReason[cDisconnectReasonConnectingToSelf] = "DisconnectReasonConnectingToSelf";
 		sDisconnectReason[cDisconnectReasonReliableOverflow] = "DisconnectReasonReliableOverflow";
+        sDisconnectReason[cDisconnectDosAsshole] = "DisconnectAssholeDosAttempt";
 	}
 
 	return(sDisconnectReason[reason]);
