@@ -1118,7 +1118,6 @@ void UdpManager::ProcessRawPacket(const PacketHistoryEntry *e)
 					ActualSend(buf, 2, e->mIp, e->mPort);
 				}
 			
-				// TODO: test the "random data" dos sometime...this gave me 3 strikes but didn't seem to blacklist me
 				// add a strike in case they're DoSsing junk data
 				addStrike(e->mIp, 2); //TODO: maybe expire the type 2 blacklist, if any, every 5-15 minutes?
 			}
@@ -1162,13 +1161,15 @@ void UdpManager::addStrike(UdpIpAddress clientIp, int type)
         static const std::string filename = "logs/udpDos-" + prog + ".log";
 	std::string reason;
 
-	if (type = 1)
+	switch (type)
 	{
-		reason = "repeat connect attempts";
-	}
-	else
-	{
-		reason = "junk data";
+		case 1:
+		default:
+			reason = "repeat connect attempts";
+			break;
+		case 2:
+			reason = "junk data";
+			break;
 	}
 
         std::ofstream log_file(filename, std::ios_base::out | std::ios_base::app );
