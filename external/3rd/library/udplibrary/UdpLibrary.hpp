@@ -1058,6 +1058,9 @@ class UdpManager
 
 		// does what it says
 		void disconnectByIp (unsigned int);
+
+		// add a strike
+		void addStrike(UdpIpAddress clientIp, int type);
 };
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////

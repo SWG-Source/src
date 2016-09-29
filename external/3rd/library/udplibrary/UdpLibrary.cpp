@@ -1034,25 +1034,11 @@ void UdpManager::ProcessRawPacket(const PacketHistoryEntry *e)
 		{
 			if (mParams.maxConnectionsPerIP > 0)
 			{
-				unsigned int clientAddr = e->mIp.GetAddress();
-
-				if (mIpConnectionCount[clientAddr] >= mParams.maxConnectionsPerIP)
+				if (mIpConnectionCount[e->mIp.GetAddress()] >= mParams.maxConnectionsPerIP)
 				{
-					if (!isBlacklisted(clientAddr))
-					{
-						// add a strike - if they hit strikeOut then they're banned til next restart
-						blacklist[clientAddr]++; 
+					// add a strike if they're over the count
+					addStrike(e->mIp, 1);
 
-						// log it - later parse this, cross reference, and block in iptables
-						extern const char *__progname;
-						const std::string prog(__progname);
-						static const std::string filename = "logs/udpDos-" + prog + ".log";
-
-						std::ofstream log_file(filename, std::ios_base::out | std::ios_base::app );
-						log_file << "Ignoring potential DoS attack from " << e->mIp.GetV4Address() << " (strike " << blacklist[clientAddr] << " of " << strikeOut << ")\n";
-						log_file.close();				
-					}
-	
  					return;
 				}
 			}
@@ -1131,6 +1117,10 @@ void UdpManager::ProcessRawPacket(const PacketHistoryEntry *e)
 					buf[1] = UdpConnection::cUdpPacketUnreachableConnection;
 					ActualSend(buf, 2, e->mIp, e->mPort);
 				}
+			
+				// TODO: test the "random data" dos sometime...this gave me 3 strikes but didn't seem to blacklist me
+				// add a strike in case they're DoSsing junk data
+				addStrike(e->mIp, 2); //TODO: maybe expire the type 2 blacklist, if any, every 5-15 minutes?
 			}
 		}
 		return;
@@ -1156,6 +1146,38 @@ void UdpManager::disconnectByIp(unsigned int clientAddr)
         		mConnectionList->InternalDisconnect(0, UdpConnection::cDisconnectReasonDosAttack);
 				
 		}
+        }
+}
+
+void UdpManager::addStrike(UdpIpAddress clientIp, int type)
+{
+	unsigned int clientAddr = clientIp.GetAddress();
+
+	// add a strike - if they hit strikeOut then they're banned til next restart
+        blacklist[clientAddr]++;
+
+        // log it - later parse this, cross reference, and block in iptables
+        extern const char *__progname;
+        const std::string prog(__progname);
+        static const std::string filename = "logs/udpDos-" + prog + ".log";
+	std::string reason;
+
+	if (type = 1)
+	{
+		reason = "repeat connect attempts";
+	}
+	else
+	{
+		reason = "junk data";
+	}
+
+        std::ofstream log_file(filename, std::ios_base::out | std::ios_base::app );
+        log_file << "Ignoring potential DoS attack (" << reason  << ") from " << clientIp.GetV4Address() << " (strike " << blacklist[clientAddr] << " of " << strikeOut << ")\n";
+	log_file.close();
+
+	if (blacklist[clientAddr] == strikeOut)
+        {
+        	disconnectByIp(clientAddr);
         }
 }
 
