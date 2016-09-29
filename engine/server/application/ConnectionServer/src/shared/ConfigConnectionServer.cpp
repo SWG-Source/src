@@ -88,6 +88,7 @@ void ConfigConnectionServer::install(void)
 	KEY_INT     (lagReportThreshold, 10000);
 	KEY_INT     (defaultGameFeatures, 0xFFFFFFFF);
 	KEY_INT     (defaultSubscriptionFeatures, 0xFFFFFFFF);
+	KEY_INT     (maxConnectionsPerIP, 6);
 
 	KEY_BOOL     (validateStationKey, false);
 	KEY_STRING   (sessionServers, "");

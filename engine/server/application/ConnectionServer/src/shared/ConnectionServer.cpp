@@ -110,6 +110,7 @@ ConnectionServer::ConnectionServer() :
 	s_clientServiceSetup->maxDataHoldTime = ConfigConnectionServer::getClientMaxDataHoldTime();
 	s_clientServiceSetup->hashTableSize = ConfigConnectionServer::getClientHashTableSize();
 	s_clientServiceSetup->port = ConfigConnectionServer::getClientServicePortPublic();
+	s_clientServiceSetup->maxConnectionsPerIP = ConfigConnectionServer::getMaxConnectionsPerIP();
 	s_clientServiceSetup->compress = ConfigConnectionServer::getCompressClientNetworkTraffic();
 	s_clientServiceSetup->useTcp = false;
 
@@ -556,15 +557,17 @@ void ConnectionServer::receiveMessage(const MessageDispatch::Emitter & source, c
 	{
 		DEBUG_REPORT_LOG(true, ("Opened connection with central\n"));
 		centralConnection = const_cast<CentralConnection *>(static_cast<const CentralConnection *>(&source));//lint !e826 // info: Suspiscious pointer-to-pointer conversion (area too small)
-		if (s_clientServiceSetup == 0)
-			s_clientServiceSetup = new NetworkSetupData;
 
-		s_clientServiceSetup->useTcp = false;
 		if (ConfigConnectionServer::getStartPublicServer())
+		{
+			s_clientServiceSetup->port = ConfigConnectionServer::getClientServicePortPublic();
+			s_clientServiceSetup->maxConnectionsPerIP = ConfigConnectionServer::getMaxConnectionsPerIP();
 			clientServicePublic = new Service(ConnectionAllocator<ClientConnection>(), *s_clientServiceSetup);
+		}
+
 		s_clientServiceSetup->port = ConfigConnectionServer::getClientServicePortPrivate();
+		s_clientServiceSetup->maxConnectionsPerIP = 0;
 		clientServicePrivate = new Service(ConnectionAllocator<ClientConnection>(), *s_clientServiceSetup);
-		s_clientServiceSetup->port = ConfigConnectionServer::getClientServicePortPublic();
 
 		connectToMessage("ClientConnectionOpened");
 		connectToMessage("ClientConnectionClosed");
@@ -608,8 +611,9 @@ void ConnectionServer::receiveMessage(const MessageDispatch::Emitter & source, c
 		}
 		else
 		{
+			// TODO: wtf is this? @Darth, fix it!
 			//If they aren't connected to the game yet, they're probably on the pending list.
-//            removePendingCharacter(cconn->getSUID());
+			//removePendingCharacter(cconn->getSUID());
 		}
 		removeFromConnectedMap(cconn->getSUID());
 	}
