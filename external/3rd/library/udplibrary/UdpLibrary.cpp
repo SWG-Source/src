@@ -5,6 +5,7 @@
 #include <string.h>
 
 #include "UdpLibrary.hpp"
+#include "sharedLog/Log.h"
 
 #if defined(WIN32)
 	#pragma warning(disable : 4710)
@@ -1022,6 +1023,8 @@ void UdpManager::ProcessRawPacket(const PacketHistoryEntry *e)
 			{
 				if (mIpConnectionCount[e->mIp.GetAddress()] >= mParams.maxConnectionsPerIP)
 				{
+                    LOG("UdpDosLog", ("Potential DoS Attack! Client at IP %s tried to exceed maxConnectionsPerIP (%i)", e->mIp.GetV4Address(), mParams.maxConnectionsPerIP));
+
                     con->InternalDisconnect(0, UdpConnection::cDisconnectDosAsshole);
                     con->SetSilentDisconnect(true); // screw you, jerk
                     con->Release();
