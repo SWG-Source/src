@@ -5,7 +5,6 @@
 #include <string.h>
 
 #include "UdpLibrary.hpp"
-#include "sharedLog/Log.h"
 
 #if defined(WIN32)
 	#pragma warning(disable : 4710)
@@ -40,7 +39,10 @@
 	#include <sys/types.h>
 	#include <unistd.h>
 	#include <netinet/ip_icmp.h>		// needed by gcc 3.1 for linux
-	const int INVALID_SOCKET = 0xFFFFFFFF;
+#include <ios>
+#include <fstream>
+
+const int INVALID_SOCKET = 0xFFFFFFFF;
 	const int SOCKET_ERROR   = 0xFFFFFFFF;
 #endif
 
@@ -1023,7 +1025,8 @@ void UdpManager::ProcessRawPacket(const PacketHistoryEntry *e)
 			{
 				if (mIpConnectionCount[e->mIp.GetAddress()] >= mParams.maxConnectionsPerIP)
 				{
-                    LOG("UdpDosLog", ("Potential DoS Attack! Client at IP %s tried to exceed maxConnectionsPerIP (%i)", e->mIp.GetV4Address(), mParams.maxConnectionsPerIP));
+                    std::ofstream log_file("logs/udpDos.log", std::ios_base::out | std::ios_base::app );
+                    log_file << "UdpLibrary : Potential DoS Attack! Client at IP " << e->mIp.GetV4Address() << " tried to exceed maxConnectionsPerIP (" << mParams.maxConnectionsPerIP << "). Silently disconnecting.\n" << std::end;
 
                     con->InternalDisconnect(0, UdpConnection::cDisconnectDosAsshole);
                     con->SetSilentDisconnect(true); // screw you, jerk
