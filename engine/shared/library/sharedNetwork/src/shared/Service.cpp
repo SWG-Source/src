@@ -192,7 +192,7 @@ Service::~Service()
 }
 
 //-----------------------------------------------------------------------
-
+	
 void Service::onConnectionClosed(Connection * c)
 {
 	if (c)
@@ -201,7 +201,9 @@ void Service::onConnectionClosed(Connection * c)
 		if (f != connections.end())
 		{
 			if (m_tcpServer)
+			{
 				m_tcpServer->onConnectionClosed(c->getTcpClient());
+			}
 			connections.erase(f);
 		}
 		c->setService(0);
@@ -214,16 +216,16 @@ void Service::onConnectionOpened(Connection * c)
 {
 	if (c)
 	{
-        if (connections.size() < static_cast<size_t>(m_maxConnections))
-        {
-            c->setService(this);
-            c->onConnectionOpened();
-            connections.insert(c);
+	        if (connections.size() < static_cast<size_t>(m_maxConnections))
+        	{
+			c->setService(this);
+			c->onConnectionOpened();
+			connections.insert(c);
 		}
-        else
-        {
-            WARNING(true, ("Service has reached it's maximum connection count (%d).", m_maxConnections));
-        }
+		else
+	     	{
+			WARNING(true, ("Service has reached it's maximum connection count (%d).", m_maxConnections));
+        	}
 	}
 }
 
