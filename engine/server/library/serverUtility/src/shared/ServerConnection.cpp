@@ -36,58 +36,58 @@ using namespace ServerConnectionNamespace;
 
 void ServerConnection::install() // static
 {
-	s_forwardableMessages.push_back(constcrc("AddGameServer");                    // startup
-	s_forwardableMessages.push_back(constcrc("DeltasMessage");                    // deltas
-	s_forwardableMessages.push_back(constcrc("SynchronizeScriptVarDeltasMessage");// deltas
-	s_forwardableMessages.push_back(constcrc("CreateObjectByCrcMessage");         // baselines
-	s_forwardableMessages.push_back(constcrc("UpdateObjectPositionMessage");      // baselines
-	s_forwardableMessages.push_back(constcrc("BaselinesMessage");                 // baselines
-	s_forwardableMessages.push_back(constcrc("SynchronizeScriptVarsMessage");     // baselines
-	s_forwardableMessages.push_back(constcrc("setDecayTime");                     // baselines
-	s_forwardableMessages.push_back(constcrc("AiCreatureStateMessage");           // baselines
-	s_forwardableMessages.push_back(constcrc("AiMovementMessage");                // baselines
-	s_forwardableMessages.push_back(constcrc("EndBaselinesMessage");              // baselines
-	s_forwardableMessages.push_back(constcrc("SlowDownEffectMessage");            // baselines
-	s_forwardableMessages.push_back(constcrc("AuthTransferClientMessage");        // auth transfer
-	s_forwardableMessages.push_back(constcrc("SetAuthoritativeMessage");          // auth transfer
-	s_forwardableMessages.push_back(constcrc("CreateSyncUiMessage");              // auth transfer
-	s_forwardableMessages.push_back(constcrc("PageChangeAuthority");              // auth transfer
-	s_forwardableMessages.push_back(constcrc("AuthTransferConfirmMessage");       // auth transfer
-	s_forwardableMessages.push_back(constcrc("PlayedTimeAccumMessage");           // auth transfer
-	s_forwardableMessages.push_back(constcrc("UnloadObjectMessage");              // container transfer
-	s_forwardableMessages.push_back(constcrc("UpdateContainmentMessage");         // container transfer
-	s_forwardableMessages.push_back(constcrc("ObjControllerMessage");             // controller messages
-	s_forwardableMessages.push_back(constcrc("TeleportMessage");                  // teleport
-	s_forwardableMessages.push_back(constcrc("PlayerSanityCheck");                // player sanity checker
-	s_forwardableMessages.push_back(constcrc("PlayerSanityCheckProxy");           // player sanity checker
-	s_forwardableMessages.push_back(constcrc("PlayerSanityCheckSuccess");         // player sanity checker
-	s_forwardableMessages.push_back(constcrc("PlayerSanityCheckProxyFail");       // player sanity checker
-	s_forwardableMessages.push_back(constcrc("UnloadPersistedCharacter");         // player sanity checker
-	s_forwardableMessages.push_back(constcrc("AddResourceTypeMessage");           // universe data
-	s_forwardableMessages.push_back(constcrc("AddImportedResourceType");          // universe data
-	s_forwardableMessages.push_back(constcrc("UniverseCompleteMessage");          // universe data
-	s_forwardableMessages.push_back(constcrc("SetTheaterMessage");                // universe data
-	s_forwardableMessages.push_back(constcrc("ClearTheaterMessage");              // universe data
-	s_forwardableMessages.push_back(constcrc("ManualDepleteResourceMessage");     // universe data
-	s_forwardableMessages.push_back(constcrc("AddAttribModName");                 // universe data
-	s_forwardableMessages.push_back(constcrc("AddAttribModNamesList");            // universe data
-	s_forwardableMessages.push_back(constcrc("CharacterNamesMessage");            // universe data
-	s_forwardableMessages.push_back(constcrc("MessageToMessage");                 // messageTos
-	s_forwardableMessages.push_back(constcrc("WhoHasMessage");                    // messageTos
-	s_forwardableMessages.push_back(constcrc("ObjectNotOnServerMessage");         // messageTos
-	s_forwardableMessages.push_back(constcrc("ObjectOnServerMessage");            // messageTos
-	s_forwardableMessages.push_back(constcrc("EnableNewJediTrackingMessage");     // console commands
-	s_forwardableMessages.push_back(constcrc("EnablePlayerSanityCheckerMessage"); // console commands
-	s_forwardableMessages.push_back(constcrc("ReloadAdminTableMessage");          // console commands
-	s_forwardableMessages.push_back(constcrc("ReloadCommandTableMessage");        // console commands
+	s_forwardableMessages.push_back(constcrc("AddGameServer"));                    // startup
+	s_forwardableMessages.push_back(constcrc("DeltasMessage"));                    // deltas
+	s_forwardableMessages.push_back(constcrc("SynchronizeScriptVarDeltasMessage"));// deltas
+	s_forwardableMessages.push_back(constcrc("CreateObjectByCrcMessage"));         // baselines
+	s_forwardableMessages.push_back(constcrc("UpdateObjectPositionMessage"));      // baselines
+	s_forwardableMessages.push_back(constcrc("BaselinesMessage"));                 // baselines
+	s_forwardableMessages.push_back(constcrc("SynchronizeScriptVarsMessage"));     // baselines
+	s_forwardableMessages.push_back(constcrc("setDecayTime"));                     // baselines
+	s_forwardableMessages.push_back(constcrc("AiCreatureStateMessage"));           // baselines
+	s_forwardableMessages.push_back(constcrc("AiMovementMessage"));                // baselines
+	s_forwardableMessages.push_back(constcrc("EndBaselinesMessage"));              // baselines
+	s_forwardableMessages.push_back(constcrc("SlowDownEffectMessage"));            // baselines
+	s_forwardableMessages.push_back(constcrc("AuthTransferClientMessage"));        // auth transfer
+	s_forwardableMessages.push_back(constcrc("SetAuthoritativeMessage"));          // auth transfer
+	s_forwardableMessages.push_back(constcrc("CreateSyncUiMessage"));              // auth transfer
+	s_forwardableMessages.push_back(constcrc("PageChangeAuthority"));              // auth transfer
+	s_forwardableMessages.push_back(constcrc("AuthTransferConfirmMessage"));       // auth transfer
+	s_forwardableMessages.push_back(constcrc("PlayedTimeAccumMessage"));           // auth transfer
+	s_forwardableMessages.push_back(constcrc("UnloadObjectMessage"));              // container transfer
+	s_forwardableMessages.push_back(constcrc("UpdateContainmentMessage"));         // container transfer
+	s_forwardableMessages.push_back(constcrc("ObjControllerMessage"));             // controller messages
+	s_forwardableMessages.push_back(constcrc("TeleportMessage"));                  // teleport
+	s_forwardableMessages.push_back(constcrc("PlayerSanityCheck"));                // player sanity checker
+	s_forwardableMessages.push_back(constcrc("PlayerSanityCheckProxy"));           // player sanity checker
+	s_forwardableMessages.push_back(constcrc("PlayerSanityCheckSuccess"));         // player sanity checker
+	s_forwardableMessages.push_back(constcrc("PlayerSanityCheckProxyFail"));       // player sanity checker
+	s_forwardableMessages.push_back(constcrc("UnloadPersistedCharacter"));         // player sanity checker
+	s_forwardableMessages.push_back(constcrc("AddResourceTypeMessage"));           // universe data
+	s_forwardableMessages.push_back(constcrc("AddImportedResourceType"));          // universe data
+	s_forwardableMessages.push_back(constcrc("UniverseCompleteMessage"));          // universe data
+	s_forwardableMessages.push_back(constcrc("SetTheaterMessage"));                // universe data
+	s_forwardableMessages.push_back(constcrc("ClearTheaterMessage"));              // universe data
+	s_forwardableMessages.push_back(constcrc("ManualDepleteResourceMessage"));     // universe data
+	s_forwardableMessages.push_back(constcrc("AddAttribModName"));                 // universe data
+	s_forwardableMessages.push_back(constcrc("AddAttribModNamesList"));            // universe data
+	s_forwardableMessages.push_back(constcrc("CharacterNamesMessage"));            // universe data
+	s_forwardableMessages.push_back(constcrc("MessageToMessage"));                 // messageTos
+	s_forwardableMessages.push_back(constcrc("WhoHasMessage"));                    // messageTos
+	s_forwardableMessages.push_back(constcrc("ObjectNotOnServerMessage"));         // messageTos
+	s_forwardableMessages.push_back(constcrc("ObjectOnServerMessage"));            // messageTos
+	s_forwardableMessages.push_back(constcrc("EnableNewJediTrackingMessage"));     // console commands
+	s_forwardableMessages.push_back(constcrc("EnablePlayerSanityCheckerMessage")); // console commands
+	s_forwardableMessages.push_back(constcrc("ReloadAdminTableMessage"));          // console commands
+	s_forwardableMessages.push_back(constcrc("ReloadCommandTableMessage"));        // console commands
 	s_forwardableMessages.push_back(Crc::calculate(ReloadDatatableMessage::ms_messageName)); // console commands
-	s_forwardableMessages.push_back(constcrc("ReloadScriptMessage");              // console commands
-	s_forwardableMessages.push_back(constcrc("ReloadTemplateMessage");            // console commands
-	s_forwardableMessages.push_back(constcrc("SetOverrideAccountAgeMessage");     // console commands
-	s_forwardableMessages.push_back(constcrc("ClaimRewardsReplyMessage");         // veteran reward system
-	s_forwardableMessages.push_back(constcrc("UnloadProxyMessage");               // object load
-	s_forwardableMessages.push_back(constcrc("CSRSLReq");                         // city (ClusterStartupResidenceStructureListRequest)
-	s_forwardableMessages.push_back(constcrc("CSRSLRsp");                         // city (ClusterStartupResidenceStructureListResponse)
+	s_forwardableMessages.push_back(constcrc("ReloadScriptMessage"));              // console commands
+	s_forwardableMessages.push_back(constcrc("ReloadTemplateMessage"));            // console commands
+	s_forwardableMessages.push_back(constcrc("SetOverrideAccountAgeMessage"));     // console commands
+	s_forwardableMessages.push_back(constcrc("ClaimRewardsReplyMessage"));         // veteran reward system
+	s_forwardableMessages.push_back(constcrc("UnloadProxyMessage"));               // object load
+	s_forwardableMessages.push_back(constcrc("CSRSLReq"));                         // city (ClusterStartupResidenceStructureListRequest)
+	s_forwardableMessages.push_back(constcrc("CSRSLRsp"));                         // city (ClusterStartupResidenceStructureListResponse)
 
 	std::sort(s_forwardableMessages.begin(), s_forwardableMessages.end());
 }
@@ -296,4 +296,3 @@ void ServerConnection::setProcessId(const uint32 newProcessId)
 }
 
 // ======================================================================
-
