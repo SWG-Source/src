@@ -65,7 +65,7 @@ void CentralServerConnection::onReceive(const Archive::ByteStream & message)
 
 	ri = message.begin();
 	
-	const uint32 messageType = message.getType();
+	const uint32 messageType = m.getType();
 
 	switch(messageType) {
 		case constcrc("EnumerateServers") :
@@ -83,7 +83,7 @@ void CentralServerConnection::onReceive(const Archive::ByteStream & message)
 			ChatServer::instance().connectToCustomerServiceServer(msg.getValue().first, msg.getValue().second);
 			break;
 		}
-		else if(m.isType("RequestChatTransferAvatar"))
+		case constcrc("RequestChatTransferAvatar") :
 		{
 			GenericValueTypeMessage<TransferCharacterData> request(ri);
 			LOG("CustomerService", ("CharacterTransfer: Received RequestChatTransferAvatar from CentralServer. Forwarding request to ChatAPI. %s", request.getValue().toString().c_str()));
