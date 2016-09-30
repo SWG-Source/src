@@ -19,6 +19,8 @@
 #include "sharedGame/PlatformFeatureBits.h"
 #include "sharedLog/Log.h"
 
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 #include <algorithm>
 #include <map>
 #include <vector>
@@ -308,14 +310,26 @@ void SessionApiClient::OnGetFeatures(const apiTrackingNumber trackingNumber,
 		AdjustAccountFeatureIdResponse * adjustAccountFeatureIdResponse = nullptr;
 		ClaimRewardsMessage * claimRewardsMessage = nullptr;
 
-		if (i->second->isType("AccountFeatureIdRequest"))
-			accountFeatureIdRequest = dynamic_cast<AccountFeatureIdRequest const *>(i->second);
-		else if (i->second->isType("AdjustAccountFeatureIdRequest"))
-			adjustAccountFeatureIdRequest = dynamic_cast<AdjustAccountFeatureIdRequest const *>(i->second);
-		else if (i->second->isType("AdjustAccountFeatureIdResponse"))
-			adjustAccountFeatureIdResponse = dynamic_cast<AdjustAccountFeatureIdResponse *>(i->second);
-		else if (i->second->isType("ClaimRewardsMessage"))
-			claimRewardsMessage = dynamic_cast<ClaimRewardsMessage *>(i->second);
+		const uint32 msgType = i->second->getType();
+		
+		switch(msgType) {
+			case constcrc("AccountFeatureIdRequest") : {
+				accountFeatureIdRequest = dynamic_cast<AccountFeatureIdRequest const *>(i->second);
+				break;
+			}
+			case constcrc("AdjustAccountFeatureIdRequest" : {
+				adjustAccountFeatureIdRequest = dynamic_cast<AdjustAccountFeatureIdRequest const *>(i->second);
+				break;
+			}
+			case constcrc("AdjustAccountFeatureIdResponse" : {
+				adjustAccountFeatureIdResponse = dynamic_cast<AdjustAccountFeatureIdResponse *>(i->second);
+				break;
+			}
+			case constcrc("ClaimRewardsMessage" : {
+				claimRewardsMessage = dynamic_cast<ClaimRewardsMessage *>(i->second);
+				break;
+			}
+		}
 
 		if (result == RESULT_SUCCESS)
 		{
