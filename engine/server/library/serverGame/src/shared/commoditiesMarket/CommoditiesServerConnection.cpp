@@ -74,6 +74,8 @@
 #include "serverNetworkMessages/OnQueryVendorItemCountReplyMessage.h"
 #include "serverNetworkMessages/OnUpdateVendorSearchOptionMessage.h"
 
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 // ======================================================================
 
 CommoditiesServerConnection::CommoditiesServerConnection(const std::string & a, const unsigned short p) :
@@ -117,470 +119,490 @@ void CommoditiesServerConnection::onReceive(const Archive::ByteStream & message)
 	ri = message.begin();
 
 
-	if(msg.isType("OnAddAuctionMessage"))
-	{
-		OnAddAuctionMessage oaa_message(ri);
-		DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received OnAddAuctionMessage.\n"));
-		listener.OnAddAuction(oaa_message.GetResponseId(), oaa_message.GetResultCode(), oaa_message.GetItemId(), oaa_message.GetOwnerId(), oaa_message.GetOwnerName(), oaa_message.GetItemId(), oaa_message.GetVendorId(), NameManager::getInstance().getPlayerFullName(oaa_message.GetVendorId()), oaa_message.GetLocation());
-		
-	}
-	else if(msg.isType("OnAddBidMessage"))
-	{
-		OnAddBidMessage oab_message(ri);
-		DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received OnAddBidMessage.\n"));
-		listener.OnAddBid(oab_message.GetResponseId(), oab_message.GetResultCode(), oab_message.GetOwnerId(), oab_message.GetItemId(), oab_message.GetBidderId(), oab_message.GetPreviousBidderId(), oab_message.GetBid(), oab_message.GetPreviousBid(), oab_message.GetMaxProxyBid(), oab_message.GetLocation(), NameManager::getInstance().getPlayerFullName(oab_message.GetOwnerId()), NameManager::getInstance().getPlayerFullName(oab_message.GetPreviousBidderId()), oab_message.GetItemNameLength(), oab_message.GetItemName(), oab_message.GetSalesTaxAmount(), oab_message.GetSalesTaxBankId());
-
-	}
-	else if(msg.isType("OnCancelAuctionMessage"))
-	{
-		OnCancelAuctionMessage oca_message(ri);
-		DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received OnCancelAuctionMessage.\n"));
-		listener.OnCancelAuction(oca_message.GetResponseId(), oca_message.GetResultCode(), oca_message.GetItemId(), oca_message.GetPlayerId(), oca_message.GetHighBidderId(), oca_message.GetHighBid(), oca_message.GetLocation());
-
-	}
-	else if(msg.isType("OnAcceptHighBidMessage"))
-	{
-		OnAcceptHighBidMessage oahb_message(ri);
-		DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received OnAcceptHighBidMessage.\n"));
-		listener.OnAcceptHighBid(oahb_message.GetResponseId(), oahb_message.GetResultCode(), oahb_message.GetItemId(), oahb_message.GetPlayerId());
-
-	}
-	else if(msg.isType("OnQueryAuctionHeadersMessage"))
-	{
-		OnQueryAuctionHeadersMessage oqah_message(ri);
-		DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received OnQueryAuctionHeadersMessage.\n"));
-		listener.OnQueryAuctionHeadersReply(oqah_message.GetResponseId(), oqah_message.GetResultCode(), oqah_message.GetPlayerId(), oqah_message.GetQueryType(), oqah_message.GetNumAuctions(), oqah_message.GetAuctionData(), oqah_message.GetQueryOffset(), oqah_message.HasMorePages());
-
-	}
-	else if(msg.isType("OnGetItemDetailsMessage"))
-	{
-		OnGetItemDetailsMessage ogid_message(ri);
-		DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API OnGetItemDetailsMessage] : Received OnGetItemDetailsMessage.\n"));
-		DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API OnGetItemDetailsMessage] : Result : %d.\n", ogid_message.GetResultCode()));	
-		DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API OnGetItemDetailsMessage] : ItemId : %s.\n", ogid_message.GetItemId().getValueString().c_str()));	
-		DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API OnGetItemDetailsMessage] : PlayerId : %s.\n", ogid_message.GetPlayerId().getValueString().c_str()));
-		DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API OnGetItemDetailsMessage] : UserDescriptionLength : %d.\n", ogid_message.GetUserDescriptionLength()));
-		DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API OnGetItemDetailsMessage] : UserDescription : %s.\n", Unicode::wideToNarrow(ogid_message.GetUserDescription()).c_str()));
-//		DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API OnGetItemDetailsMessage] : OobLength : %d.\n", ogid_message.GetOobLength()));
-//		DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API OnGetItemDetailsMessage] : OobActualLength : %d.\n", ogid_message.GetOobData().size()));
-//		DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API OnGetItemDetailsMessage] : OobData 	: %s.\n", Unicode::wideToNarrow(ogid_message.GetOobData()).c_str()));
-		DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API OnGetItemDetailsMessage] : ResponseId : %d.\n", ogid_message.GetResponseId()));	
-		listener.OnGetItemDetailsReply(ogid_message.GetResponseId(), ogid_message.GetResultCode(), ogid_message.GetPlayerId(), ogid_message.GetItemId(), ogid_message.GetUserDescriptionLength(), ogid_message.GetUserDescription(), ogid_message.GetOobLength(), ogid_message.GetOobData(), ogid_message.GetAttributes());
-
-	}
-	else if(msg.isType("OnAuctionExpiredMessage"))
-	{
-		OnAuctionExpiredMessage oae_message(ri);
-		DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received OnAuctionExpiredMessage.\n"));
-		DEBUG_REPORT_LOG(true, ("  -- OwnerId = %s, GetOwnerName = %s, BuyerId = %s, GetBuyerName = %s\n", oae_message.GetOwnerId().getValueString().c_str(),
-			NameManager::getInstance().getPlayerFullName(oae_message.GetOwnerId()).c_str(),
-			oae_message.GetBuyerId().getValueString().c_str(),
-			NameManager::getInstance().getPlayerFullName(oae_message.GetBuyerId()).c_str()));
-		listener.OnAuctionExpired(oae_message.GetItemId(), oae_message.GetOwnerId(), oae_message.IsSold(), oae_message.GetBuyerId(), oae_message.GetBid(), oae_message.GetItemId(), oae_message.GetMaxProxyBid(), oae_message.GetLocation(), oae_message.IsImmediate(), NameManager::getInstance().getPlayerFullName(oae_message.GetOwnerId()), NameManager::getInstance().getPlayerFullName(oae_message.GetBuyerId()), oae_message.GetItemNameLength(), oae_message.GetItemName(), oae_message.GetSendSellerMail());
-
-	}
-	else if(msg.isType("OnItemExpiredMessage"))
-	{
-		OnItemExpiredMessage oie_message(ri);
-		DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received OnItemExpiredMessage.\n"));
-		listener.OnItemExpired(oie_message.GetOwnerId(), oie_message.GetItemId(),
-			NameManager::getInstance().getPlayerFullName(oie_message.GetOwnerId()),
-			oie_message.GetItemNameLength(), oie_message.GetItemName(),
-			oie_message.GetLocationName(), oie_message.GetLocationId());
-
-	}
-	else if(msg.isType("OnGetItemMessage"))
-	{
-		OnGetItemMessage ogi_message(ri);
-		DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received OnGetItemMessage.\n"));
-		listener.OnGetItemReply(ogi_message.GetResponseId(), ogi_message.GetResultCode(), ogi_message.GetItemId(), ogi_message.GetPlayerId(), ogi_message.GetLocation());
-
-	}
-	else if(msg.isType("OnCreateVendorMarketMessage"))
-	{
-		OnCreateVendorMarketMessage ocvm_message(ri);
-		DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received OnCreateVendorMarketMessage.\n"));
-		listener.OnCreateVendorMarket(ocvm_message.GetResponseId(), ocvm_message.GetResultCode(), ocvm_message.GetOwnerId(), ocvm_message.GetLocation());
-
-	}
-	else if(msg.isType("OnVendorRefuseItemMessage"))
-	{
-		OnVendorRefuseItemMessage ovri_message(ri);
-		DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received OnVendorRefuseItemMessage.\n"));
-		listener.OnVendorRefuseItem(ovri_message.GetResponseId(), ovri_message.GetResultCode(), ovri_message.GetItemId(), ovri_message.GetVendorId(), ovri_message.GetItemOwnerId());
-
-	}
-	else if(msg.isType("OnGetVendorOwnerMessage"))
-	{
-		OnGetVendorOwnerMessage ogvo_message(ri);
-		DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received OnGetVendorOwnerMessage.\n"));
-		listener.OnGetVendorOwner(ogvo_message.GetResponseId(), ogvo_message.GetResultCode(), ogvo_message.GetOwnerId(),
-		NameManager::getInstance().getPlayerFullName(ogvo_message.GetOwnerId()),
-		ogvo_message.GetLocation(), ogvo_message.GetRequesterId());
-
-	}
-	else if(msg.isType("OnGetVendorValueMessage"))
-	{
-		OnGetVendorValueMessage ogvv_message(ri);
-		DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received OnGetVendorValueMessage.\n"));
-		listener.OnGetVendorValue(ogvv_message.GetResponseId(), ogvv_message.GetLocation(), ogvv_message.GetValue());
-
-	}
-	else if(msg.isType("OnPermanentAuctionPurchasedMessage"))
-	{
-		OnPermanentAuctionPurchasedMessage opa_message(ri);
-		DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received OnPermanentAuctionPurchasedMessage.\n"));
-		listener.OnPermanentAuctionPurchased(
-			opa_message.GetOwnerId(), opa_message.GetBuyerId(), opa_message.GetPrice(), opa_message.GetItemId(), opa_message.GetLocation(),
-			NameManager::getInstance().getPlayerFullName(opa_message.GetOwnerId()),
-			NameManager::getInstance().getPlayerFullName(opa_message.GetBuyerId()),
-			opa_message.GetItemNameLength(), opa_message.GetItemName(), opa_message.GetAttributes());
-
-	}
-	else if(msg.isType("OnCleanupInvalidItemRetrievalMessage"))
-	{
-		OnCleanupInvalidItemRetrievalMessage ociir_message(ri);
-		DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received OnCleanupInvalidItemRetrievalMessage.\n"));
-		listener.OnCleanupInvalidItemRetrieval(ociir_message.GetResponseId(), ociir_message.GetItemId(), ociir_message.GetPlayerId(), ociir_message.GetCreatorId(), ociir_message.GetReimburseAmt());
-
-	}
-	else if(msg.isType("OnGetPlayerVendorCountMessage"))
-	{
-		OnGetPlayerVendorCountMessage ogpvc_message(ri);
-		DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received OnGetPlayerVendorCountMessage.\n"));
-		CommoditiesMarket::playerVendorCountReply(ogpvc_message.GetPlayerId(), ogpvc_message.GetVendorCount(), ogpvc_message.GetVendorList());
-	}
-	else if (msg.isType("VendorStatusChangeMessage"))
-	{
-		VendorStatusChangeMessage vscMessage(ri);
-		static char * vendorStatus[] = {"Empty", "Not Empty", "Unaccessed", "Endangered", "Removed"};
-		DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received VendorStatusChangeMessage.\n"));
-		if (vscMessage.getStatus() >= ARC_VendorStatusEmpty && vscMessage.getStatus() <= ARC_VendorRemoved)
-		{
-			LOG("CustomerService", ("Vendor: Vendor %s status changed to %s", vscMessage.getVendorId().getValueString().c_str(), vendorStatus[vscMessage.getStatus() - ARC_VendorStatusEmpty]));
+	switch (msg.getType()) {
+		case constcrc("OnAddAuctionMessage"): {
+			OnAddAuctionMessage oaa_message(ri);
+			DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received OnAddAuctionMessage.\n"));
+			listener.OnAddAuction(oaa_message.GetResponseId(), oaa_message.GetResultCode(), oaa_message
+					.GetItemId(), oaa_message.GetOwnerId(), oaa_message.GetOwnerName(), oaa_message
+					.GetItemId(), oaa_message.GetVendorId(), NameManager::getInstance()
+					.getPlayerFullName(oaa_message.GetVendorId()), oaa_message.GetLocation());
+			break;
 		}
-		else
-		{
-			WARNING(true, ("[Commodities API] : Invalid vendor status %s %d.\n", vscMessage.getVendorId().getValueString().c_str(), vscMessage.getStatus()));
+		case constcrc("OnAddBidMessage"): {
+			OnAddBidMessage oab_message(ri);
+			DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received OnAddBidMessage.\n"));
+			listener.OnAddBid(oab_message.GetResponseId(), oab_message.GetResultCode(), oab_message
+					.GetOwnerId(), oab_message.GetItemId(), oab_message.GetBidderId(), oab_message
+					.GetPreviousBidderId(), oab_message.GetBid(), oab_message.GetPreviousBid(), oab_message
+					.GetMaxProxyBid(), oab_message.GetLocation(), NameManager::getInstance()
+					.getPlayerFullName(oab_message.GetOwnerId()), NameManager::getInstance()
+					.getPlayerFullName(oab_message.GetPreviousBidderId()), oab_message.GetItemNameLength(), oab_message
+					.GetItemName(), oab_message.GetSalesTaxAmount(), oab_message.GetSalesTaxBankId());
+			break;
 		}
-		CommoditiesMarket::vendorStatusChange(vscMessage.getVendorId(), vscMessage.getStatus());
-	}
-	else if (msg.isType("OnQueryVendorItemCountReplyMessage"))
-	{
-		OnQueryVendorItemCountReplyMessage qvMessage(ri);
-		DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received OnQueryVendorItemCountReplyMessage.\n"));
-		CommoditiesMarket::vendorItemCountReply(qvMessage.getVendorId(), qvMessage.getVendorItemCount(), qvMessage.getSearchEnabled());
-	}
-	else if (msg.isType("OnUpdateVendorSearchOptionMessage"))
-	{
-		OnUpdateVendorSearchOptionMessage uvsoMessage(ri);
-		DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received OnUpdateVendorSearchOptionMessage.\n"));
-		ServerObject *player = ServerWorld::findObjectByNetworkId(uvsoMessage.GetPlayerId());
-		if (player)
-		{
-			StringId const VENDOR_SEARCH_ENABLED("player_structure", "vendor_search_enabled");
-			StringId const VENDOR_SEARCH_DISABLED("player_structure", "vendor_search_disabled");
-			if (uvsoMessage.GetEnabled())
-				Chat::sendSystemMessageSimple(*player , VENDOR_SEARCH_ENABLED, 0);
-			else
-				Chat::sendSystemMessageSimple(*player , VENDOR_SEARCH_DISABLED, 0);
+		case constcrc("OnCancelAuctionMessage"): {
+			OnCancelAuctionMessage oca_message(ri);
+			DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received OnCancelAuctionMessage.\n"));
+			listener.OnCancelAuction(oca_message.GetResponseId(), oca_message.GetResultCode(), oca_message
+					.GetItemId(), oca_message.GetPlayerId(), oca_message.GetHighBidderId(), oca_message
+					.GetHighBid(), oca_message.GetLocation());
+			break;
 		}
-	}
-	else if(msg.isType("OnCommodityReplyMessage"))
-	{
-		ri = static_cast<const GameNetworkMessage &>(msg).getByteStream().begin();
-		GenericValueTypeMessage<std::pair<std::string, std::string> > message(ri);
-		DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received OnCommodityReplyMessage.\n"));
+		case constcrc("OnAcceptHighBidMessage"): {
+			OnAcceptHighBidMessage oahb_message(ri);
+			DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received OnAcceptHighBidMessage.\n"));
+			listener.OnAcceptHighBid(oahb_message.GetResponseId(), oahb_message.GetResultCode(), oahb_message
+					.GetItemId(), oahb_message.GetPlayerId());
+			break;
+		}
+		case constcrc("OnQueryAuctionHeadersMessage"): {
+			OnQueryAuctionHeadersMessage oqah_message(ri);
+			DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received OnQueryAuctionHeadersMessage.\n"));
+			listener.OnQueryAuctionHeadersReply(oqah_message.GetResponseId(), oqah_message.GetResultCode(), oqah_message
+					.GetPlayerId(), oqah_message.GetQueryType(), oqah_message.GetNumAuctions(), oqah_message
+					.GetAuctionData(), oqah_message.GetQueryOffset(), oqah_message.HasMorePages());
+			break;
+		}
+		case constcrc("OnGetItemDetailsMessage"): {
+			OnGetItemDetailsMessage ogid_message(ri);
+			DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API OnGetItemDetailsMessage] : Received OnGetItemDetailsMessage.\n"));
+			DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API OnGetItemDetailsMessage] : Result : %d.\n", ogid_message
+					.GetResultCode()));
+			DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API OnGetItemDetailsMessage] : ItemId : %s.\n", ogid_message
+					.GetItemId().getValueString().c_str()));
+			DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API OnGetItemDetailsMessage] : PlayerId : %s.\n", ogid_message
+					.GetPlayerId().getValueString().c_str()));
+			DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API OnGetItemDetailsMessage] : UserDescriptionLength : %d.\n", ogid_message
+					.GetUserDescriptionLength()));
+			DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API OnGetItemDetailsMessage] : UserDescription : %s.\n", Unicode::wideToNarrow(ogid_message
+					.GetUserDescription()).c_str()));
+			//		DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API OnGetItemDetailsMessage] : OobLength : %d.\n", ogid_message.GetOobLength()));
+			//		DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API OnGetItemDetailsMessage] : OobActualLength : %d.\n", ogid_message.GetOobData().size()));
+			//		DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API OnGetItemDetailsMessage] : OobData 	: %s.\n", Unicode::wideToNarrow(ogid_message.GetOobData()).c_str()));
+			DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API OnGetItemDetailsMessage] : ResponseId : %d.\n", ogid_message
+					.GetResponseId()));
+			listener.OnGetItemDetailsReply(ogid_message.GetResponseId(), ogid_message.GetResultCode(), ogid_message
+					.GetPlayerId(), ogid_message.GetItemId(), ogid_message.GetUserDescriptionLength(), ogid_message
+					.GetUserDescription(), ogid_message.GetOobLength(), ogid_message.GetOobData(), ogid_message
+					.GetAttributes());
+			break;
+		}
+		case constcrc("OnAuctionExpiredMessage"): {
+			OnAuctionExpiredMessage oae_message(ri);
+			DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received OnAuctionExpiredMessage.\n"));
+			DEBUG_REPORT_LOG(true, ("  -- OwnerId = %s, GetOwnerName = %s, BuyerId = %s, GetBuyerName = %s\n", oae_message
+					.GetOwnerId().getValueString().c_str(),
+					NameManager::getInstance().getPlayerFullName(oae_message.GetOwnerId()).c_str(),
+					oae_message.GetBuyerId().getValueString().c_str(),
+					NameManager::getInstance().getPlayerFullName(oae_message.GetBuyerId()).c_str()));
+			listener.OnAuctionExpired(oae_message.GetItemId(), oae_message.GetOwnerId(), oae_message
+					.IsSold(), oae_message.GetBuyerId(), oae_message.GetBid(), oae_message.GetItemId(), oae_message
+					.GetMaxProxyBid(), oae_message.GetLocation(), oae_message.IsImmediate(), NameManager::getInstance()
+					.getPlayerFullName(oae_message.GetOwnerId()), NameManager::getInstance()
+					.getPlayerFullName(oae_message.GetBuyerId()), oae_message.GetItemNameLength(), oae_message
+					.GetItemName(), oae_message.GetSendSellerMail());
+			break;
+		}
+		case constcrc("OnItemExpiredMessage"): {
+			OnItemExpiredMessage oie_message(ri);
+			DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received OnItemExpiredMessage.\n"));
+			listener.OnItemExpired(oie_message.GetOwnerId(), oie_message.GetItemId(),
+					NameManager::getInstance().getPlayerFullName(oie_message.GetOwnerId()),
+					oie_message.GetItemNameLength(), oie_message.GetItemName(),
+					oie_message.GetLocationName(), oie_message.GetLocationId());
+			break;
+		}
+		case constcrc("OnGetItemMessage"): {
+			OnGetItemMessage ogi_message(ri);
+			DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received OnGetItemMessage.\n"));
+			listener.OnGetItemReply(ogi_message.GetResponseId(), ogi_message.GetResultCode(), ogi_message
+					.GetItemId(), ogi_message.GetPlayerId(), ogi_message.GetLocation());
+			break;
+		}
+		case constcrc("OnCreateVendorMarketMessage"): {
+			OnCreateVendorMarketMessage ocvm_message(ri);
+			DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received OnCreateVendorMarketMessage.\n"));
+			listener.OnCreateVendorMarket(ocvm_message.GetResponseId(), ocvm_message.GetResultCode(), ocvm_message
+					.GetOwnerId(), ocvm_message.GetLocation());
+			break;
+		}
+		case constcrc("OnVendorRefuseItemMessage"): {
+			OnVendorRefuseItemMessage ovri_message(ri);
+			DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received OnVendorRefuseItemMessage.\n"));
+			listener.OnVendorRefuseItem(ovri_message.GetResponseId(), ovri_message.GetResultCode(), ovri_message
+					.GetItemId(), ovri_message.GetVendorId(), ovri_message.GetItemOwnerId());
+			break;
+		}
+		case constcrc("OnGetVendorOwnerMessage"): {
+			OnGetVendorOwnerMessage ogvo_message(ri);
+			DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received OnGetVendorOwnerMessage.\n"));
+			listener.OnGetVendorOwner(ogvo_message.GetResponseId(), ogvo_message.GetResultCode(), ogvo_message
+							.GetOwnerId(),
+					NameManager::getInstance().getPlayerFullName(ogvo_message.GetOwnerId()),
+					ogvo_message.GetLocation(), ogvo_message.GetRequesterId());
+			break;
+		}
+		case constcrc("OnGetVendorValueMessage"): {
+			OnGetVendorValueMessage ogvv_message(ri);
+			DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received OnGetVendorValueMessage.\n"));
+			listener.OnGetVendorValue(ogvv_message.GetResponseId(), ogvv_message.GetLocation(), ogvv_message
+					.GetValue());
+			break;
+		}
+		case constcrc("OnPermanentAuctionPurchasedMessage"): {
+			OnPermanentAuctionPurchasedMessage opa_message(ri);
+			DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received OnPermanentAuctionPurchasedMessage.\n"));
+			listener.OnPermanentAuctionPurchased(
+					opa_message.GetOwnerId(), opa_message.GetBuyerId(), opa_message.GetPrice(), opa_message
+							.GetItemId(), opa_message.GetLocation(),
+					NameManager::getInstance().getPlayerFullName(opa_message.GetOwnerId()),
+					NameManager::getInstance().getPlayerFullName(opa_message.GetBuyerId()),
+					opa_message.GetItemNameLength(), opa_message.GetItemName(), opa_message.GetAttributes());
+			break;
+		}
+		case constcrc("OnCleanupInvalidItemRetrievalMessage"): {
+			OnCleanupInvalidItemRetrievalMessage ociir_message(ri);
+			DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received OnCleanupInvalidItemRetrievalMessage.\n"));
+			listener.OnCleanupInvalidItemRetrieval(ociir_message.GetResponseId(), ociir_message
+					.GetItemId(), ociir_message.GetPlayerId(), ociir_message.GetCreatorId(), ociir_message
+					.GetReimburseAmt());
+			break;
+		}
+		case constcrc("OnGetPlayerVendorCountMessage"): {
+			OnGetPlayerVendorCountMessage ogpvc_message(ri);
+			DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received OnGetPlayerVendorCountMessage.\n"));
+			CommoditiesMarket::playerVendorCountReply(ogpvc_message.GetPlayerId(), ogpvc_message
+					.GetVendorCount(), ogpvc_message.GetVendorList());
+			break;
+		}
+		case constcrc("VendorStatusChangeMessage"): {
+			VendorStatusChangeMessage vscMessage(ri);
+			static char *vendorStatus[] = {"Empty", "Not Empty", "Unaccessed", "Endangered", "Removed"};
+			DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received VendorStatusChangeMessage.\n"));
+			if (vscMessage.getStatus() >= ARC_VendorStatusEmpty && vscMessage.getStatus() <= ARC_VendorRemoved) {
+				LOG("CustomerService", ("Vendor: Vendor %s status changed to %s", vscMessage.getVendorId()
+				                                                                            .getValueString()
+				                                                                            .c_str(), vendorStatus[
+						vscMessage.getStatus() - ARC_VendorStatusEmpty]));
+			}
+			else {
+				WARNING(true, ("[Commodities API] : Invalid vendor status %s %d.\n", vscMessage.getVendorId()
+				                                                                               .getValueString()
+				                                                                               .c_str(), vscMessage
+						.getStatus()));
+			}
+			CommoditiesMarket::vendorStatusChange(vscMessage.getVendorId(), vscMessage.getStatus());
+			break;
+		}
+		case constcrc("OnQueryVendorItemCountReplyMessage"): {
+			OnQueryVendorItemCountReplyMessage qvMessage(ri);
+			DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received OnQueryVendorItemCountReplyMessage.\n"));
+			CommoditiesMarket::vendorItemCountReply(qvMessage.getVendorId(), qvMessage.getVendorItemCount(), qvMessage
+					.getSearchEnabled());
+			break;
+		}
+		case constcrc("OnUpdateVendorSearchOptionMessage"): {
+			OnUpdateVendorSearchOptionMessage uvsoMessage(ri);
+			DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received OnUpdateVendorSearchOptionMessage.\n"));
+			ServerObject *player = ServerWorld::findObjectByNetworkId(uvsoMessage.GetPlayerId());
+			if (player) {
+				StringId const VENDOR_SEARCH_ENABLED("player_structure", "vendor_search_enabled");
+				StringId const VENDOR_SEARCH_DISABLED("player_structure", "vendor_search_disabled");
+				if (uvsoMessage.GetEnabled()) {
+					Chat::sendSystemMessageSimple(*player, VENDOR_SEARCH_ENABLED, 0);
+				}
+				else {
+					Chat::sendSystemMessageSimple(*player, VENDOR_SEARCH_DISABLED, 0);
+				}
+			}
+			break;
+		}
+		case constcrc("OnCommodityReplyMessage"): {
+			ri = static_cast<const GameNetworkMessage &>(msg).getByteStream().begin();
+			GenericValueTypeMessage <std::pair<std::string, std::string>> message(ri);
+			DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received OnCommodityReplyMessage.\n"));
 
-		Chat::sendSystemMessage(message.getValue().first, Unicode::narrowToWide(message.getValue().second), Unicode::String());
-	}
-	else if (msg.isType("CommoditiesItemTypeMap"))
-	{
-		GenericValueTypeMessage<std::pair<int, std::map<int, std::set<int> > > > msg(ri);
-		DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received CommoditiesItemTypeMap.\n"));
-		CommoditiesMarket::updateItemTypeMap(msg.getValue().first, msg.getValue().second);
-	}
-	else if (msg.isType("CommoditiesItemTypeAdded"))
-	{
-		GenericValueTypeMessage<std::pair<int, std::pair<int, int> > > msg(ri);
-		DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received CommoditiesItemTypeAdded.\n"));
-		CommoditiesMarket::updateItemTypeMap(msg.getValue().first, msg.getValue().second.first, msg.getValue().second.second);
-	}
-	else if (msg.isType("CommoditiesResourceTypeMap"))
-	{
-		GenericValueTypeMessage<std::pair<int, std::map<int, std::set<std::string> > > > msg(ri);
-		DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received CommoditiesResourceTypeMap.\n"));
-		CommoditiesMarket::updateResourceTypeMap(msg.getValue().first, msg.getValue().second);
-	}
-	else if (msg.isType("CommoditiesResourceTypeAdded"))
-	{
-		GenericValueTypeMessage<std::pair<int, std::pair<int, std::string> > > msg(ri);
-		DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received CommoditiesResourceTypeAdded.\n"));
-		CommoditiesMarket::updateResourceTypeMap(msg.getValue().first, msg.getValue().second.first, msg.getValue().second.second);
-	}
-	else if (msg.isType("RequestCommoditiesExcludedGotTypes"))
-	{
-		GenericValueTypeMessage<int> msg(ri);
-		UNREF(msg);
-		DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received RequestCommoditiesExcludedGotTypes.\n"));
+			Chat::sendSystemMessage(message.getValue().first, Unicode::narrowToWide(message.getValue()
+			                                                                               .second), Unicode::String());
+			break;
+		}
+		case constcrc("CommoditiesItemTypeMap"): {
+			GenericValueTypeMessage < std::pair < int, std::map < int, std::set < int > > > > msg(ri);
+			DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received CommoditiesItemTypeMap.\n"));
+			CommoditiesMarket::updateItemTypeMap(msg.getValue().first, msg.getValue().second);
+			break;
+		}
+		case constcrc("CommoditiesItemTypeAdded"): {
+			GenericValueTypeMessage < std::pair < int, std::pair < int, int > > > msg(ri);
+			DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received CommoditiesItemTypeAdded.\n"));
+			CommoditiesMarket::updateItemTypeMap(msg.getValue().first, msg.getValue().second.first, msg.getValue()
+			                                                                                           .second.second);
+			break;
+		}
+		case constcrc("CommoditiesResourceTypeMap"): {
+			GenericValueTypeMessage < std::pair < int, std::map < int, std::set < std::string > > > > msg(ri);
+			DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received CommoditiesResourceTypeMap.\n"));
+			CommoditiesMarket::updateResourceTypeMap(msg.getValue().first, msg.getValue().second);
+			break;
+		}
+		case constcrc("CommoditiesResourceTypeAdded"): {
+			GenericValueTypeMessage < std::pair < int, std::pair < int, std::string > > > msg(ri);
+			DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received CommoditiesResourceTypeAdded.\n"));
+			CommoditiesMarket::updateResourceTypeMap(msg.getValue().first, msg.getValue().second.first, msg.getValue()
+			                                                                                               .second
+			                                                                                               .second);
+			break;
+		}
+		case constcrc("RequestCommoditiesExcludedGotTypes"): {
+			GenericValueTypeMessage<int> msg(ri);
+			UNREF(msg);
+			DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received RequestCommoditiesExcludedGotTypes.\n"));
 
-		GenericValueTypeMessage<std::map<int, std::string> > reply("ResponseCommoditiesExcludedGotTypes", GameObjectTypes::getTypesExcludedFromCommodities());
-		send(reply, true);
-	}
-	else if (msg.isType("RequestCommoditiesExcludedResourceClasses"))
-	{
-		GenericValueTypeMessage<int> msg(ri);
-		UNREF(msg);
-		DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received RequestCommoditiesExcludedResourceClasses.\n"));
+			GenericValueTypeMessage <std::map<int, std::string>> reply("ResponseCommoditiesExcludedGotTypes", GameObjectTypes::getTypesExcludedFromCommodities());
+			send(reply, true);
+			break;
+		}
+		case constcrc("RequestCommoditiesExcludedResourceClasses"): {
+			GenericValueTypeMessage<int> msg(ri);
+			UNREF(msg);
+			DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received RequestCommoditiesExcludedResourceClasses.\n"));
 
-		GenericValueTypeMessage<std::set<std::string> > reply("ResponseCommoditiesExcludedResourceClasses", ResourceClassObject::getClassesExcludedFromCommodities());
-		send(reply, true);
-	}
-	else if (msg.isType("RequestResourceTreeHierarchy"))
-	{
-		GenericValueTypeMessage<int> msg(ri);
-		UNREF(msg);
-		DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received RequestResourceTreeHierarchy.\n"));
+			GenericValueTypeMessage <std::set<std::string>> reply("ResponseCommoditiesExcludedResourceClasses", ResourceClassObject::getClassesExcludedFromCommodities());
+			send(reply, true);
+			break;
+		}
+		case constcrc("RequestResourceTreeHierarchy"): {
+			GenericValueTypeMessage<int> msg(ri);
+			UNREF(msg);
+			DEBUG_REPORT_LOG(m_commoditiesShowAllDebugInfo, ("[Commodities API] : Received RequestResourceTreeHierarchy.\n"));
 
-		ResourceClassObject const * resourceTreeRoot = Universe::getInstance().getResourceTreeRoot();
-		if (resourceTreeRoot)
-		{
-			std::vector<ResourceClassObject const *> leafChildren;
-			resourceTreeRoot->getLeafChildren(leafChildren);
+			ResourceClassObject const *resourceTreeRoot = Universe::getInstance().getResourceTreeRoot();
+			if (resourceTreeRoot) {
+				std::vector < ResourceClassObject const * > leafChildren;
+				resourceTreeRoot->getLeafChildren(leafChildren);
 
-			std::map<int, std::set<int> > resourceTreeHierarchy;
-			ResourceClassObject const * parent;
-			for (std::vector<ResourceClassObject const *>::const_iterator iter = leafChildren.begin(); iter != leafChildren.end(); ++iter)
-			{
-				std::set<int> & parents = resourceTreeHierarchy[static_cast<int>(Crc::calculate((*iter)->getResourceClassName().c_str()))];
-				parent = (*iter)->getParent();
-				while (parent)
+				std::map<int, std::set<int> > resourceTreeHierarchy;
+				ResourceClassObject const *parent;
+				for (std::vector < ResourceClassObject const * > ::const_iterator
+				iter = leafChildren.begin();
+				iter != leafChildren.end();
+				++iter)
 				{
-					parents.insert(static_cast<int>(Crc::calculate(parent->getResourceClassName().c_str())));
+					std::set<int> &parents = resourceTreeHierarchy[static_cast<int>(Crc::calculate((*iter)
+							->getResourceClassName().c_str()))];
+					parent = (*iter)->getParent();
+					while (parent) {
+						parents.insert(static_cast<int>(Crc::calculate(parent->getResourceClassName().c_str())));
 
-					if (parent->isRoot())
-						break;
+						if (parent->isRoot()) {
+							break;
+						}
 
-					parent = parent->getParent();
+						parent = parent->getParent();
+					}
+				}
+
+				GenericValueTypeMessage < std::map < int, std::set < int > > >
+				                                          reply("ResponseResourceTreeHierarchy", resourceTreeHierarchy);
+				send(reply, true);
+			}
+			break;
+		}
+		case constcrc("GetItemAttributeDataRsp"): {
+			GenericValueTypeMessage < std::pair < std::pair < NetworkId, std::string >, std::string > >
+			const response(ri);
+
+			ServerObject *const requester = ServerWorld::findObjectByNetworkId(response.getValue().first.first);
+			if (requester && requester->getClient()) {
+				if (response.getValue().first.second == std::string("(~!@#$%^&*)system_mesage(*&^%$#@!~)")) {
+					ConsoleMgr::broadcastString(response.getValue().second, requester->getClient());
+				}
+				else {
+					GenericValueTypeMessage <std::pair<std::string, std::string>> const data("SaveTextOnClient", std::make_pair(response
+							.getValue().first.second, response.getValue().second));
+					requester->getClient()->send(data, true);
+				}
+			}
+			break;
+		}
+		case constcrc("DisplayStringForPlayer"): {
+			GenericValueTypeMessage <std::pair<NetworkId, std::string>> const response(ri);
+
+			ServerObject *const requester = ServerWorld::findObjectByNetworkId(response.getValue().first);
+			if (requester && requester->getClient()) {
+				ConsoleMgr::broadcastString(response.getValue().second, requester->getClient());
+			}
+			break;
+		}
+		case constcrc("GetVendorInfoForPlayerRsp"): {
+			GenericValueTypeMessage < std::pair < std::pair < NetworkId, std::string >, std::map < std::string,
+					std::vector < std::string > > > >
+			const response(ri);
+
+			std::vector<const char *> name;
+			std::vector<const char *> location;
+			std::vector<const char *> tax;
+			std::vector <std::string> taxCityTemp;
+			std::vector<const char *> taxCity;
+			std::vector<const char *> emptyDate;
+			std::vector<const char *> lastAccessDate;
+			std::vector<const char *> inactiveDate;
+			std::vector<const char *> status;
+			std::vector<const char *> searchable;
+			std::vector<const char *> entranceCharge;
+			std::vector<const char *> itemCount;
+			std::vector<const char *> offerCount;
+			std::vector<const char *> stockRoomCount;
+
+			std::map < std::string, std::vector < std::string > > ::const_iterator
+			iterFind = response.getValue().second.find("name");
+			if (iterFind != response.getValue().second.end()) {
+				for (std::vector<std::string>::const_iterator iter = iterFind->second.begin();
+						iter != iterFind->second.end(); ++iter) {
+					name.push_back(iter->c_str());
 				}
 			}
 
-			GenericValueTypeMessage<std::map<int, std::set<int> > > reply("ResponseResourceTreeHierarchy", resourceTreeHierarchy);
-			send(reply, true);
-		}
-	}
-	else if(msg.isType("GetItemAttributeDataRsp"))
-	{
-		GenericValueTypeMessage<std::pair<std::pair<NetworkId, std::string>, std::string> > const response(ri);
-
-		ServerObject * const requester = ServerWorld::findObjectByNetworkId(response.getValue().first.first);
-		if (requester && requester->getClient())
-		{
-			if (response.getValue().first.second == std::string("(~!@#$%^&*)system_mesage(*&^%$#@!~)"))
-			{
-				ConsoleMgr::broadcastString(response.getValue().second, requester->getClient());
+			iterFind = response.getValue().second.find("location");
+			if (iterFind != response.getValue().second.end()) {
+				for (std::vector<std::string>::const_iterator iter = iterFind->second.begin();
+						iter != iterFind->second.end(); ++iter) {
+					location.push_back(iter->c_str());
+				}
 			}
-			else
-			{
-				GenericValueTypeMessage<std::pair<std::string, std::string> > const data("SaveTextOnClient", std::make_pair(response.getValue().first.second, response.getValue().second));
-				requester->getClient()->send(data, true);
+
+			iterFind = response.getValue().second.find("tax");
+			if (iterFind != response.getValue().second.end()) {
+				for (std::vector<std::string>::const_iterator iter = iterFind->second.begin();
+						iter != iterFind->second.end(); ++iter) {
+					tax.push_back(iter->c_str());
+				}
 			}
-		}
-	}
-	else if(msg.isType("DisplayStringForPlayer"))
-	{
-		GenericValueTypeMessage<std::pair<NetworkId, std::string> > const response(ri);
 
-		ServerObject * const requester = ServerWorld::findObjectByNetworkId(response.getValue().first);
-		if (requester && requester->getClient())
-		{
-			ConsoleMgr::broadcastString(response.getValue().second, requester->getClient());
-		}
-	}
-	else if(msg.isType("GetVendorInfoForPlayerRsp"))
-	{
-		GenericValueTypeMessage<std::pair<std::pair<NetworkId, std::string>, std::map<std::string, std::vector<std::string> > > > const response(ri);
-
-		std::vector<const char *> name;
-		std::vector<const char *> location;
-		std::vector<const char *> tax;
-		std::vector<std::string>  taxCityTemp;
-		std::vector<const char *> taxCity;
-		std::vector<const char *> emptyDate;
-		std::vector<const char *> lastAccessDate;
-		std::vector<const char *> inactiveDate;
-		std::vector<const char *> status;
-		std::vector<const char *> searchable;
-		std::vector<const char *> entranceCharge;
-		std::vector<const char *> itemCount;
-		std::vector<const char *> offerCount;
-		std::vector<const char *> stockRoomCount;
-
-		std::map<std::string, std::vector<std::string> >::const_iterator iterFind = response.getValue().second.find("name");
-		if (iterFind != response.getValue().second.end())
-		{
-			for (std::vector<std::string>::const_iterator iter = iterFind->second.begin(); iter != iterFind->second.end(); ++iter)
-			{
-				name.push_back(iter->c_str());
-			}
-		}
-
-		iterFind = response.getValue().second.find("location");
-		if (iterFind != response.getValue().second.end())
-		{
-			for (std::vector<std::string>::const_iterator iter = iterFind->second.begin(); iter != iterFind->second.end(); ++iter)
-			{
-				location.push_back(iter->c_str());
-			}
-		}
-
-		iterFind = response.getValue().second.find("tax");
-		if (iterFind != response.getValue().second.end())
-		{
-			for (std::vector<std::string>::const_iterator iter = iterFind->second.begin(); iter != iterFind->second.end(); ++iter)
-			{
-				tax.push_back(iter->c_str());
-			}
-		}
-
-		iterFind = response.getValue().second.find("taxCity");
-		if (iterFind != response.getValue().second.end())
-		{
-			taxCityTemp = iterFind->second;
-			NetworkId cityHallId;
-			int cityId;
-			std::vector<std::string>::iterator iterTaxCity;
-			for (iterTaxCity = taxCityTemp.begin(); iterTaxCity != taxCityTemp.end(); ++iterTaxCity)
-			{
-				cityHallId = NetworkId(*iterTaxCity);
-				if (cityHallId.isValid())
-				{
-					cityId = CityInterface::findCityByCityHall(cityHallId);
-					if (cityId != 0)
-					{
-						*iterTaxCity = CityInterface::getCityInfo(cityId).getCityName();
+			iterFind = response.getValue().second.find("taxCity");
+			if (iterFind != response.getValue().second.end()) {
+				taxCityTemp = iterFind->second;
+				NetworkId cityHallId;
+				int cityId;
+				std::vector<std::string>::iterator iterTaxCity;
+				for (iterTaxCity = taxCityTemp.begin(); iterTaxCity != taxCityTemp.end(); ++iterTaxCity) {
+					cityHallId = NetworkId(*iterTaxCity);
+					if (cityHallId.isValid()) {
+						cityId = CityInterface::findCityByCityHall(cityHallId);
+						if (cityId != 0) {
+							*iterTaxCity = CityInterface::getCityInfo(cityId).getCityName();
+						}
+						else {
+							*iterTaxCity = "";
+						}
 					}
-					else
-					{
+					else {
 						*iterTaxCity = "";
 					}
 				}
-				else
-				{
-					*iterTaxCity = "";
+
+				for (iterTaxCity = taxCityTemp.begin(); iterTaxCity != taxCityTemp.end(); ++iterTaxCity) {
+					taxCity.push_back(iterTaxCity->c_str());
 				}
 			}
 
-			for (iterTaxCity = taxCityTemp.begin(); iterTaxCity != taxCityTemp.end(); ++iterTaxCity)
-			{
-				taxCity.push_back(iterTaxCity->c_str());
+			iterFind = response.getValue().second.find("emptyDate");
+			if (iterFind != response.getValue().second.end()) {
+				for (std::vector<std::string>::const_iterator iter = iterFind->second.begin();
+						iter != iterFind->second.end(); ++iter) {
+					emptyDate.push_back(iter->c_str());
+				}
 			}
-		}
 
-		iterFind = response.getValue().second.find("emptyDate");
-		if (iterFind != response.getValue().second.end())
-		{
-			for (std::vector<std::string>::const_iterator iter = iterFind->second.begin(); iter != iterFind->second.end(); ++iter)
-			{
-				emptyDate.push_back(iter->c_str());
+			iterFind = response.getValue().second.find("lastAccessDate");
+			if (iterFind != response.getValue().second.end()) {
+				for (std::vector<std::string>::const_iterator iter = iterFind->second.begin();
+						iter != iterFind->second.end(); ++iter) {
+					lastAccessDate.push_back(iter->c_str());
+				}
 			}
-		}
 
-		iterFind = response.getValue().second.find("lastAccessDate");
-		if (iterFind != response.getValue().second.end())
-		{
-			for (std::vector<std::string>::const_iterator iter = iterFind->second.begin(); iter != iterFind->second.end(); ++iter)
-			{
-				lastAccessDate.push_back(iter->c_str());
+			iterFind = response.getValue().second.find("inactiveDate");
+			if (iterFind != response.getValue().second.end()) {
+				for (std::vector<std::string>::const_iterator iter = iterFind->second.begin();
+						iter != iterFind->second.end(); ++iter) {
+					inactiveDate.push_back(iter->c_str());
+				}
 			}
-		}
 
-		iterFind = response.getValue().second.find("inactiveDate");
-		if (iterFind != response.getValue().second.end())
-		{
-			for (std::vector<std::string>::const_iterator iter = iterFind->second.begin(); iter != iterFind->second.end(); ++iter)
-			{
-				inactiveDate.push_back(iter->c_str());
+			iterFind = response.getValue().second.find("status");
+			if (iterFind != response.getValue().second.end()) {
+				for (std::vector<std::string>::const_iterator iter = iterFind->second.begin();
+						iter != iterFind->second.end(); ++iter) {
+					status.push_back(iter->c_str());
+				}
 			}
-		}
 
-		iterFind = response.getValue().second.find("status");
-		if (iterFind != response.getValue().second.end())
-		{
-			for (std::vector<std::string>::const_iterator iter = iterFind->second.begin(); iter != iterFind->second.end(); ++iter)
-			{
-				status.push_back(iter->c_str());
+			iterFind = response.getValue().second.find("searchable");
+			if (iterFind != response.getValue().second.end()) {
+				for (std::vector<std::string>::const_iterator iter = iterFind->second.begin();
+						iter != iterFind->second.end(); ++iter) {
+					searchable.push_back(iter->c_str());
+				}
 			}
-		}
 
-		iterFind = response.getValue().second.find("searchable");
-		if (iterFind != response.getValue().second.end())
-		{
-			for (std::vector<std::string>::const_iterator iter = iterFind->second.begin(); iter != iterFind->second.end(); ++iter)
-			{
-				searchable.push_back(iter->c_str());
+			iterFind = response.getValue().second.find("entranceCharge");
+			if (iterFind != response.getValue().second.end()) {
+				for (std::vector<std::string>::const_iterator iter = iterFind->second.begin();
+						iter != iterFind->second.end(); ++iter) {
+					entranceCharge.push_back(iter->c_str());
+				}
 			}
-		}
 
-		iterFind = response.getValue().second.find("entranceCharge");
-		if (iterFind != response.getValue().second.end())
-		{
-			for (std::vector<std::string>::const_iterator iter = iterFind->second.begin(); iter != iterFind->second.end(); ++iter)
-			{
-				entranceCharge.push_back(iter->c_str());
+			iterFind = response.getValue().second.find("itemCount");
+			if (iterFind != response.getValue().second.end()) {
+				for (std::vector<std::string>::const_iterator iter = iterFind->second.begin();
+						iter != iterFind->second.end(); ++iter) {
+					itemCount.push_back(iter->c_str());
+				}
 			}
-		}
 
-		iterFind = response.getValue().second.find("itemCount");
-		if (iterFind != response.getValue().second.end())
-		{
-			for (std::vector<std::string>::const_iterator iter = iterFind->second.begin(); iter != iterFind->second.end(); ++iter)
-			{
-				itemCount.push_back(iter->c_str());
+			iterFind = response.getValue().second.find("offerCount");
+			if (iterFind != response.getValue().second.end()) {
+				for (std::vector<std::string>::const_iterator iter = iterFind->second.begin();
+						iter != iterFind->second.end(); ++iter) {
+					offerCount.push_back(iter->c_str());
+				}
 			}
-		}
 
-		iterFind = response.getValue().second.find("offerCount");
-		if (iterFind != response.getValue().second.end())
-		{
-			for (std::vector<std::string>::const_iterator iter = iterFind->second.begin(); iter != iterFind->second.end(); ++iter)
-			{
-				offerCount.push_back(iter->c_str());
+			iterFind = response.getValue().second.find("stockRoomCount");
+			if (iterFind != response.getValue().second.end()) {
+				for (std::vector<std::string>::const_iterator iter = iterFind->second.begin();
+						iter != iterFind->second.end(); ++iter) {
+					stockRoomCount.push_back(iter->c_str());
+				}
 			}
-		}
 
-		iterFind = response.getValue().second.find("stockRoomCount");
-		if (iterFind != response.getValue().second.end())
-		{
-			for (std::vector<std::string>::const_iterator iter = iterFind->second.begin(); iter != iterFind->second.end(); ++iter)
-			{
-				stockRoomCount.push_back(iter->c_str());
+			ScriptParams params;
+			params.addParam(response.getValue().first.second.c_str(), "summary");
+			params.addParam(name, "name");
+			params.addParam(location, "location");
+			params.addParam(tax, "tax");
+			params.addParam(taxCity, "taxCity");
+			params.addParam(emptyDate, "emptyDate");
+			params.addParam(lastAccessDate, "lastAccessDate");
+			params.addParam(inactiveDate, "inactiveDate");
+			params.addParam(status, "status");
+			params.addParam(searchable, "searchable");
+			params.addParam(entranceCharge, "entranceCharge");
+			params.addParam(itemCount, "itemCount");
+			params.addParam(offerCount, "offerCount");
+			params.addParam(stockRoomCount, "stockRoomCount");
+
+			ScriptDictionaryPtr dictionary;
+			GameScriptObject::makeScriptDictionary(params, dictionary);
+			if (dictionary.get() != nullptr) {
+				dictionary->serialize();
+				MessageToQueue::getInstance().sendMessageToJava(response.getValue().first.first,
+						"getVendorInfoForPlayerRsp", dictionary->getSerializedData(), 0, false);
 			}
-		}
-
-		ScriptParams params;
-		params.addParam(response.getValue().first.second.c_str(), "summary");
-		params.addParam(name, "name");
-		params.addParam(location, "location");
-		params.addParam(tax, "tax");
-		params.addParam(taxCity, "taxCity");
-		params.addParam(emptyDate, "emptyDate");
-		params.addParam(lastAccessDate, "lastAccessDate");
-		params.addParam(inactiveDate, "inactiveDate");
-		params.addParam(status, "status");
-		params.addParam(searchable, "searchable");
-		params.addParam(entranceCharge, "entranceCharge");
-		params.addParam(itemCount, "itemCount");
-		params.addParam(offerCount, "offerCount");
-		params.addParam(stockRoomCount, "stockRoomCount");
-
-		ScriptDictionaryPtr dictionary;
-		GameScriptObject::makeScriptDictionary(params, dictionary);
-		if (dictionary.get() != nullptr)
-		{
-			dictionary->serialize();
-			MessageToQueue::getInstance().sendMessageToJava(response.getValue().first.first, 
-				"getVendorInfoForPlayerRsp", dictionary->getSerializedData(), 0, false);
+			break;
 		}
 	}
 }
