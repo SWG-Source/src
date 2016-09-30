@@ -29,6 +29,9 @@
 #include "sharedNetworkMessages/GenericValueTypeMessage.h"
 #include "sharedLog/Log.h"
 #include "sharedLog/SetupSharedLog.h"
+
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 #include <stdio.h>
 
 //-----------------------------------------------------------------------
@@ -68,7 +71,9 @@ CommodityServer::~CommodityServer()
 
 void CommodityServer::receiveMessage(const MessageDispatch::Emitter & source, const MessageDispatch::MessageBase & message)
 {
-	if(message.isType("CommoditiesLoadDone"))
+	const uint32 messageType = message.getType();
+	
+	if(messageType == constcrc("CommoditiesLoadDone"))
 	{
 		m_commoditiesServerLoadDone = 1;
 
@@ -76,7 +81,7 @@ void CommodityServer::receiveMessage(const MessageDispatch::Emitter & source, co
 		if (m_commoditiesServerLoadTime == -1)
 			m_commoditiesServerLoadTime = (time(0) - m_timeCommoditiesServerStarted) / 60;
 	}
-	else if (message.isType("DatabaseServerConnectionClosed"))
+	else if (messageType == constcrc("DatabaseServerConnectionClosed"))
 	{
 		WARNING(true, ("[Commodities Server] : No connection to the database server. Shutting down.\n"));
 		exit(0);

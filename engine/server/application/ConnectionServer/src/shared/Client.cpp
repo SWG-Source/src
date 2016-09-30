@@ -20,6 +20,8 @@
 #include "sharedNetworkMessages/DisconnectPlayerMessage.h"
 #include "sharedNetworkMessages/GenericValueTypeMessage.h"
 
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 //----------------------------------------------------------------------
 
 Client::Client(ClientConnection * cconn, const NetworkId& oid) :
@@ -157,7 +159,9 @@ void Client::leaveRoom(const unsigned int roomId)
 
 void Client::receiveMessage(const MessageDispatch::Emitter & source, const MessageDispatch::MessageBase & message)
 {
-	if(message.isType("GameConnectionClosed"))
+	const uint32 messageType = message.getType();
+	
+	if(messageType == constcrc("GameConnectionClosed"))
 	{
 		// Game server has crashed.  With luck, we'll get transferred to a new server shortly
 		// So, clear our connection and put us on a queue.  If we don't get transferred in a
@@ -166,12 +170,12 @@ void Client::receiveMessage(const MessageDispatch::Emitter & source, const Messa
 		m_gameConnection = 0;
 		ConnectionServer::addRecoveringClient(getNetworkId());
 	}
-	else if(message.isType("ChatServerConnectionOpened"))
+	else if(messageType == constcrc("ChatServerConnectionOpened"))
 	{
 		const ChatServerConnection & chatConnection = static_cast<const ChatServerConnection &>(source);
 		setChatConnection(const_cast<ChatServerConnection*>(&chatConnection));
 	}
-	else if(message.isType("CustomerServiceConnectionOpened"))
+	else if(messageType == constcrc("CustomerServiceConnectionOpened"))
 	{
 		const CustomerServiceConnection & customerServiceConnection = static_cast<const CustomerServiceConnection &>(source);
 		setCustomerServiceConnection(const_cast<CustomerServiceConnection*>(&customerServiceConnection));
