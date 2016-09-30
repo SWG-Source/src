@@ -23,6 +23,8 @@
 #include "sharedNetwork/NetworkSetupData.h"
 #include "sharedNetworkMessages/GenericValueTypeMessage.h"
 
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 //-----------------------------------------------------------------------
 
 namespace ConnectionServerConnectionNamespace
