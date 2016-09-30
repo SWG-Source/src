@@ -89,7 +89,7 @@ void LoginServerConnection::onReceive(const Archive::ByteStream & message)
 	GameNetworkMessage m(ri);
 	ri = message.begin();
 	
-	const uint32 messageType = message.getType();
+	const uint32 messageType = m.getType();
 	
 	switch (messageType) {
 		case constcrc("TransferReplyCharacterList") :
