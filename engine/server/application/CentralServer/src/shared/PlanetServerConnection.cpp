@@ -75,27 +75,33 @@ void PlanetServerConnection::onReceive(Archive::ByteStream const &message)
 
 	if (!m_forwardDestinationServers.empty())
 	{
-		switch (msgType) {
-			case constcrc("EndForward"): {
-				if (--m_forwardCounts.back() == 0) {
-					m_forwardCounts.pop_back();
-					m_forwardDestinationServers.pop_back();
+		if (isMessageForwardable(msgType))
+		{
+			m_forwardMessages.push_back(std::make_pair(message, m_forwardDestinationServers.back()));
+			return;
+		} else {
+			switch (msgType) {
+				case constcrc("EndForward"): {
+					if (--m_forwardCounts.back() == 0) {
+						m_forwardCounts.pop_back();
+						m_forwardDestinationServers.pop_back();
 
-					if (m_forwardDestinationServers.empty()) {
-						pushAndClearObjectForwarding();
+						if (m_forwardDestinationServers.empty()) {
+							pushAndClearObjectForwarding();
+						}
 					}
+					return;
 				}
-				return;
-			}
-			case constcrc("BeginForward") : {
-				GenericValueTypeMessage <std::vector<uint32>> const beginForwardMessage(ri);
-				if (beginForwardMessage.getValue() == m_forwardDestinationServers.back())
-					++m_forwardCounts.back();
-				else {
-					m_forwardCounts.push_back(1);
-					m_forwardDestinationServers.push_back(beginForwardMessage.getValue());
+				case constcrc("BeginForward") : {
+					GenericValueTypeMessage <std::vector<uint32>> const beginForwardMessage(ri);
+					if (beginForwardMessage.getValue() == m_forwardDestinationServers.back())
+						++m_forwardCounts.back();
+					else {
+						m_forwardCounts.push_back(1);
+						m_forwardDestinationServers.push_back(beginForwardMessage.getValue());
+					}
+					return;
 				}
-				return;
 			}
 		}
 	}

@@ -15,6 +15,8 @@
 #include "sharedLog/Log.h"
 #include "sharedNetworkMessages/GenericValueTypeMessage.h"
 
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 // ======================================================================
 
 GameServerConnection::GameServerConnection(UdpConnectionMT *u, TcpClient *t) :
@@ -62,39 +64,46 @@ void GameServerConnection::onReceive(Archive::ByteStream const &message)
 	GameNetworkMessage msg(ri);
 	ri = message.begin();
 
+	const uint32 messageType = msg.getType();
+
 	if (!m_forwardDestinationServers.empty())
 	{
-		if (isMessageForwardable(msg.getType()))
+		if (isMessageForwardable(messageType))
 		{
 			m_forwardMessages.push_back(std::make_pair(message, m_forwardDestinationServers.back()));
 			return;
 		}
-		else if (msg.isType("EndForward"))
+		else
 		{
-			if (--m_forwardCounts.back() == 0)
-			{
-				m_forwardCounts.pop_back();
-				m_forwardDestinationServers.pop_back();
-				if (m_forwardDestinationServers.empty())
-					pushAndClearObjectForwarding();
+			switch (msgType) {
+				case constcrc("EndForward") :
+				{
+					if (--m_forwardCounts.back() == 0)
+					{
+						m_forwardCounts.pop_back();
+						m_forwardDestinationServers.pop_back();
+						if (m_forwardDestinationServers.empty())
+							pushAndClearObjectForwarding();
+					}
+					return;
+				}
+				case constcrc("BeginForward") :
+				{
+					GenericValueTypeMessage<std::vector<uint32> > const beginForwardMessage(ri);
+					if (beginForwardMessage.getValue() == m_forwardDestinationServers.back())
+						++m_forwardCounts.back();
+					else
+					{
+						m_forwardCounts.push_back(1);
+						m_forwardDestinationServers.push_back(beginForwardMessage.getValue());
+					}
+					return;
+				}
 			}
-			return;
-		}
-		else if (msg.isType("BeginForward"))
-		{
-			GenericValueTypeMessage<std::vector<uint32> > const beginForwardMessage(ri);
-			if (beginForwardMessage.getValue() == m_forwardDestinationServers.back())
-				++m_forwardCounts.back();
-			else
-			{
-				m_forwardCounts.push_back(1);
-				m_forwardDestinationServers.push_back(beginForwardMessage.getValue());
-			}
-			return;
 		}
 	}
 
-	if (msg.isType("BeginForward"))
+	if (msgType == constcrc("BeginForward"))
 	{
 		GenericValueTypeMessage<std::vector<uint32> > const beginForwardMessage(ri);
 
