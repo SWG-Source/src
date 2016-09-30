@@ -25,6 +25,7 @@
 #include "SwgGameServer/SwgServerUniverse.h"
 #include "SwgGameServer/CSHandler.h"
 
+#include "sharedFoundation/CrcConstexpr.hpp"
 
 //#undef PROFILE_INDIVIDUAL_MESSAGES
 #define PROFILE_INDIVIDUAL_MESSAGES 1
@@ -100,7 +101,9 @@ void SwgGameServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 
 	PROFILER_AUTO_BLOCK_DEFINE("SwgGameServer::receiveMessage");
 
-	if (message.isType("BountyHunterTargetListMessage"))
+	const uint32 msgType = message.getType();
+	
+	if (msgType == constcrc("BountyHunterTargetListMessage"))
 	{
 		DEBUG_REPORT_LOG(true, ("SwgGameServer: got BountyHunterTargetListMessage\n"));
 		MESSAGE_PROFILER_BLOCK("BountyHunterTargetListMessage");
@@ -121,7 +124,7 @@ void SwgGameServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 			JediManagerObject::queueBountyHunterTargetListFromDB(msg);
 		}
 	}
-	else if (message.isType("DeleteCharacterNotificationMessage"))
+	else if (msgType == constcrc("DeleteCharacterNotificationMessage"))
 	{
 		ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		const GenericValueTypeMessage<NetworkId> msg(ri);

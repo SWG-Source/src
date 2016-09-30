@@ -39,6 +39,8 @@
 #include "SwgDatabaseServer/ObjectTableBuffer.h"
 #include "unicodeArchive/UnicodeArchive.h"
 
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 // ======================================================================
 
 /**
@@ -209,47 +211,57 @@ void CommoditiesSnapshot::newObject(NetworkId const & objectId, int templateId, 
 
 void CommoditiesSnapshot::handleCommoditiesDataMessage(const MessageDispatch::MessageBase & message)
 {
-	if (message.isType("CMCreateAuctionMessage"))
+	const uint32 messageType = message.getType();
+	
+	switch(messageType) {
+	case constcrc("CMCreateAuctionMessage") :
 	{
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		CMCreateAuctionMessage msg(ri);
 		handleCreateAuctionMessage(msg);
+		break;
 	}
-	else if (message.isType("CMCreateLocationMessage"))
+	case constcrc("CMCreateLocationMessage") :
 	{
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		CMCreateLocationMessage msg(ri);
 		handleCreateLocationMessage(msg);
+		break;
 	}
-	else if (message.isType("CMCreateAuctionBidMessage"))
+	case constcrc("CMCreateAuctionBidMessage") :
 	{
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		CMCreateAuctionBidMessage msg(ri);
 		handleCreateAuctionBidMessage(msg);
+		break;
 	}
-	else if (message.isType("CMUpdateAuctionMessage"))
+	case constcrc("CMUpdateAuctionMessage") :
 	{
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		CMUpdateAuctionMessage msg(ri);
 		handleUpdateAuctionMessage(msg);
+		break;
 	}
-	else if (message.isType("CMUpdateLocationMessage"))
+	case constcrc("CMUpdateLocationMessage") :
 	{
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		CMUpdateLocationMessage msg(ri);
 		handleUpdateLocationMessage(msg);
+		break;
 	}
-	else if (message.isType("CMDeleteAuctionMessage"))
+	case constcrc("CMDeleteAuctionMessage") :
 	{
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		CMDeleteAuctionMessage msg(ri);
 		handleDeleteAuctionMessage(msg);
+		break;
 	}
-	else if (message.isType("CMDeleteLocationMessage"))
+	case constcrc("CMDeleteLocationMessage") :
 	{
 		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		CMDeleteLocationMessage msg(ri);
 		handleDeleteLocationMessage(msg);
+		break;
 	}
 }
 
