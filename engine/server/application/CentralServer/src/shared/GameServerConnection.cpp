@@ -94,7 +94,7 @@ void GameServerConnection::onReceive(Archive::ByteStream const &message)
 	const uint32 messageType = m.getType();
 
 	switch(messageType) {
-		constcrc("CentralGameServerConnect") :
+		case constcrc("CentralGameServerConnect") :
 		{
 			CentralGameServerConnect const c(ri);
 			setClientServiceAddress(c.getClientServiceAddress());
