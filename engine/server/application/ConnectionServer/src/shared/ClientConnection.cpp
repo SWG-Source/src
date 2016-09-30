@@ -874,7 +874,62 @@ void ClientConnection::onReceive(const Archive::ByteStream & message)
 							v.clear();
 							v.push_back(m_client->getNetworkId());
 
-						//insert here	
+							// TODO: this shit could be made into a template
+							switch (messageType) {
+								case constcrc("ConnectPlayerMessage") : {
+									ConnectPlayerMessage message(ri);
+									message.setStationId(getSUID());
+
+									GameClientMessage gcm(v, true, message);
+									customerServiceConnection->send(gcm , true);
+									break;
+								}
+								case constcrc("CreateTicketMessage") : {
+									CreateTicketMessage message(ri);
+									message.setStationId(getSUID());
+
+									GameClientMessage gcm(v, true, message);
+									customerServiceConnection->send(gcm , true);																		
+									break;
+								}
+								case constcrc("AppendCommentMessage") : {
+									AppendCommentMessage message(ri);
+									message.setStationId(getSUID());
+
+									GameClientMessage gcm(v, true, message);
+									customerServiceConnection->send(gcm , true);
+									break;
+								}
+								case constcrc("CancelTicketMessage") : {
+									CancelTicketMessage message(ri);
+									message.setStationId(getSUID());
+
+									GameClientMessage gcm(v, true, message);
+									customerServiceConnection->send(gcm , true);
+									break;
+								}
+								case constcrc("GetTicketsMessage") : {
+									GetTicketsMessage message(ri);
+									message.setStationId(getSUID());
+
+									GameClientMessage gcm(v, true, message);
+									customerServiceConnection->send(gcm , true);																		
+									break;
+								}
+								case constcrc("NewTicketActivityMessage") : {
+									NewTicketActivityMessage message(ri);
+									message.setStationId(getSUID());
+
+									GameClientMessage gcm(v, true, message);
+									customerServiceConnection->send(gcm , true);
+									break;
+								}
+								default : {
+									GameClientMessage gcm(v, true, ri);
+									customerServiceConnection->send(gcm , true);
+									break;
+								}
+							}
 						}
 					}
 					else
