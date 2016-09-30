@@ -187,7 +187,8 @@ void Scene::receiveMessage(const MessageDispatch::Emitter & source, const Messag
 				static_cast<int>(msg.getValue().second.first.first),
 				static_cast<int>(msg.getValue().second.first.second),
 				static_cast<int>(msg.getValue().second.second.first),
-				static_cast<int>(msg.getValue().second.second.second
+				static_cast<int>(msg.getValue().second.second.second)
+			);
 				
 			break;
 		}
