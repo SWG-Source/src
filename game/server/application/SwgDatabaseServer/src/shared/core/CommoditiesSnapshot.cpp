@@ -214,54 +214,55 @@ void CommoditiesSnapshot::handleCommoditiesDataMessage(const MessageDispatch::Me
 	const uint32 messageType = message.getType();
 	
 	switch(messageType) {
-	case constcrc("CMCreateAuctionMessage") :
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		CMCreateAuctionMessage msg(ri);
-		handleCreateAuctionMessage(msg);
-		break;
-	}
-	case constcrc("CMCreateLocationMessage") :
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		CMCreateLocationMessage msg(ri);
-		handleCreateLocationMessage(msg);
-		break;
-	}
-	case constcrc("CMCreateAuctionBidMessage") :
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		CMCreateAuctionBidMessage msg(ri);
-		handleCreateAuctionBidMessage(msg);
-		break;
-	}
-	case constcrc("CMUpdateAuctionMessage") :
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		CMUpdateAuctionMessage msg(ri);
-		handleUpdateAuctionMessage(msg);
-		break;
-	}
-	case constcrc("CMUpdateLocationMessage") :
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		CMUpdateLocationMessage msg(ri);
-		handleUpdateLocationMessage(msg);
-		break;
-	}
-	case constcrc("CMDeleteAuctionMessage") :
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		CMDeleteAuctionMessage msg(ri);
-		handleDeleteAuctionMessage(msg);
-		break;
-	}
-	case constcrc("CMDeleteLocationMessage") :
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		CMDeleteLocationMessage msg(ri);
-		handleDeleteLocationMessage(msg);
-		break;
+		case constcrc("CMCreateAuctionMessage") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			CMCreateAuctionMessage msg(ri);
+			handleCreateAuctionMessage(msg);
+			break;
+		}
+		case constcrc("CMCreateLocationMessage") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			CMCreateLocationMessage msg(ri);
+			handleCreateLocationMessage(msg);
+			break;
+		}
+		case constcrc("CMCreateAuctionBidMessage") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			CMCreateAuctionBidMessage msg(ri);
+			handleCreateAuctionBidMessage(msg);
+			break;
+		}
+		case constcrc("CMUpdateAuctionMessage") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			CMUpdateAuctionMessage msg(ri);
+			handleUpdateAuctionMessage(msg);
+			break;
+		}
+		case constcrc("CMUpdateLocationMessage") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			CMUpdateLocationMessage msg(ri);
+			handleUpdateLocationMessage(msg);
+			break;
+		}
+		case constcrc("CMDeleteAuctionMessage") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			CMDeleteAuctionMessage msg(ri);
+			handleDeleteAuctionMessage(msg);
+			break;
+		}
+		case constcrc("CMDeleteLocationMessage") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			CMDeleteLocationMessage msg(ri);
+			handleDeleteLocationMessage(msg);
+			break;
+		}
 	}
 }
 
