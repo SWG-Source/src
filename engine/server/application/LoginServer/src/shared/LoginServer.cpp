@@ -1039,6 +1039,7 @@ void LoginServer::receiveMessage(const MessageDispatch::Emitter & source, const 
 			
 			break;
 		}
+	}
 }
 
 // ----------------------------------------------------------------------
