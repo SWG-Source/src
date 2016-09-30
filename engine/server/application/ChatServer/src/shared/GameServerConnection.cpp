@@ -34,8 +34,7 @@
 #include "sharedNetworkMessages/GenericValueTypeMessage.h"
 #include "UnicodeUtils.h"
 
-#include "sharedNetworkMessages/VoiceChatChannelInfo.h"
-#include "sharedNetworkMessages/VoiceChatMiscMessages.h"
+#include "sharedFoundation/CrcConstexpr.hpp"
 
 #include <list>
 #include <string>
@@ -109,22 +108,27 @@ void GameServerConnection::onReceive(const Archive::ByteStream & message)
 	//LOG("GameServerConnection", ("onReceive - %s", gameNetworkMessage.getCmdName().c_str()));
 	//DEBUG_REPORT_LOG(true, ("***ChatServ: GameServerConnection::onReceive() message(%s)\n", gameNetworkMessage.getCmdName().c_str()));
 
-	if(gameNetworkMessage.isType("ChatDeleteAllPersistentMessages"))
+	const uint32 messageType = gameNetworkMessage.getType();
+	
+	switch(messageType) {
+	case constcrc("ChatDeleteAllPersistentMessages") :
 	{
 		PROFILER_AUTO_BLOCK_DEFINE("GameServerConnection - ChatDeleteAllPersistentMessages");
 		ChatDeleteAllPersistentMessages chatDeleteAllPersistentMessages(ri);
 		ChatServer::deleteAllPersistentMessages(chatDeleteAllPersistentMessages.getSourceNetworkId(), chatDeleteAllPersistentMessages.getTargetNetworkId());
+		break;
 	}
-	else if(gameNetworkMessage.isType("ChatCreateRoom"))
+	case constcrc("ChatCreateRoom") :
 	{
 		PROFILER_AUTO_BLOCK_DEFINE("GameServerConnection - ChatCreateRoom");
-//printf("GameServerConnection -- ChatCreateRoom\n");
+		//printf("GameServerConnection -- ChatCreateRoom\n");
 		ChatCreateRoom chat(ri);
 		unsigned int sequence = chat.getSequence();
 		ChatServer::addGameServerConnection(sequence, this);
 		ChatServer::createRoom(NetworkId::cms_invalid, sequence, chat.getRoomName(), chat.getIsModerated(), chat.getIsPublic(), chat.getRoomTitle());
+		break;
 	}
-	else if(gameNetworkMessage.isType("ChatRequestLog"))
+	case constcrc("ChatRequestLog") :
 	{
 		PROFILER_AUTO_BLOCK_DEFINE("GameServerConnection - ChatRequestLog");
 		ChatRequestLog chatRequestLog(ri);
@@ -138,17 +142,19 @@ void GameServerConnection::onReceive(const Archive::ByteStream & message)
 		chatOnRequestLog.pack(a);
 
 		(static_cast<Connection *>(this))->send(a, true);
+		break;
 	}
-	else if(gameNetworkMessage.isType("ChatDestroyRoomByName"))
+	case constcrc("ChatDestroyRoomByName") :
 	{
 		PROFILER_AUTO_BLOCK_DEFINE("GameServerConnection - ChatDestroyRoomByName");
-//printf("GameServerConnection -- ChatDestroyRoomByName\n");
+		//printf("GameServerConnection -- ChatDestroyRoomByName\n");
 		ChatDestroyRoomByName chat(ri);
 		ChatServer::destroyRoom(chat.getRoomPath());
+		break;
 	}
-	else if(gameNetworkMessage.isType("ChatPutAvatarInRoom"))
+	case constcrc("ChatPutAvatarInRoom") :
 	{
-//printf("GameServerConnection -- ChatPutAvatarInRoom\n");
+		//printf("GameServerConnection -- ChatPutAvatarInRoom\n");
 		PROFILER_AUTO_BLOCK_DEFINE("GameServerConnection - ChatPutAvatarInRoom");
 		ChatPutAvatarInRoom chat(ri);
 		ChatAvatarId id;
@@ -159,12 +165,12 @@ void GameServerConnection::onReceive(const Archive::ByteStream & message)
 		if(pos != std::string::npos)
 			id.name = id.name.substr(0, pos);
 		ChatServer::enterRoom(id, chat.getRoomName(), chat.getForceCreate(), chat.getCreatePrivate());
-
+		break;
 	}
-	else if(gameNetworkMessage.isType("ChatInviteAvatarToRoom"))
+	case constcrc("ChatInviteAvatarToRoom") :
 	{
 		PROFILER_AUTO_BLOCK_DEFINE("GameServerConnection - ChatInviteAvatarToRoom");
-//printf("GameServerConnection -- ChatInviteAvatarToRoom\n");
+		//printf("GameServerConnection -- ChatInviteAvatarToRoom\n");
 		ChatInviteAvatarToRoom chat(ri);
 		ChatAvatarId characterName = chat.getAvatarId();
 		if(characterName.gameCode.empty())
@@ -172,18 +178,20 @@ void GameServerConnection::onReceive(const Archive::ByteStream & message)
 		if(characterName.cluster.empty())
 			characterName.cluster = ConfigChatServer::getClusterName();
 		ChatServer::invite(NetworkId::cms_invalid, characterName, chat.getRoomName());
+		break;
 	}
-	else if(gameNetworkMessage.isType("ChatInviteGroupMembersToRoom"))
+	case constcrc("ChatInviteGroupMembersToRoom") :
 	{
 		PROFILER_AUTO_BLOCK_DEFINE("GameServerConnection - ChatInviteGroupMembersToRoom");
-//printf("GameServerConnection -- ChatInviteGroupMembersToRoom\n");
+		//printf("GameServerConnection -- ChatInviteGroupMembersToRoom\n");
 		ChatInviteGroupMembersToRoom chat(ri);
 		ChatServer::inviteGroupMembers(chat.getInvitorNetworkId(), chat.getGroupLeaderId(), chat.getRoomName(), chat.getInvitedMembers());
+		break;
 	}
-	else if(gameNetworkMessage.isType("ChatUninviteFromRoom"))
+	case constcrc("ChatUninviteFromRoom") :
 	{
 		PROFILER_AUTO_BLOCK_DEFINE("GameServerConnection - ChatUninviteAvatarToRoom");
-//printf("GameServerConnection -- ChatUninviteAvatarFromRoom\n");
+		//printf("GameServerConnection -- ChatUninviteAvatarFromRoom\n");
 		ChatUninviteFromRoom chat(ri);
 		ChatAvatarId characterName = chat.getAvatar();
 		if(characterName.gameCode.empty())
@@ -191,11 +199,12 @@ void GameServerConnection::onReceive(const Archive::ByteStream & message)
 		if(characterName.cluster.empty())
 			characterName.cluster = ConfigChatServer::getClusterName();
 		ChatServer::uninvite(ChatServer::getNetworkIdByAvatarId(characterName), chat.getSequence(), characterName, chat.getRoomName());
+		break;
 	}
-	else if (gameNetworkMessage.isType("ChatChangeFriendStatus")) 
+	case constcrc("ChatChangeFriendStatus") :
 	{
 		PROFILER_AUTO_BLOCK_DEFINE("GameServerConnection - ChatChangeFriendStatus");
-//printf("GameServerConnection -- ChatChangeFriendStatus\n");
+		//printf("GameServerConnection -- ChatChangeFriendStatus\n");
 		ChatChangeFriendStatus chat(ri);
 
 		if (chat.getAdd()) 
@@ -210,20 +219,22 @@ void GameServerConnection::onReceive(const Archive::ByteStream & message)
 				ChatServer::getNetworkIdByAvatarId(chat.getCharacterName()),
 				chat.getSequence(), chat.getFriendName());
 		}
-
+		
+		break;
 	}
-	else if (gameNetworkMessage.isType("ChatGetFriendsList"))
+	case constcrc("ChatGetFriendsList") :
 	{
 		PROFILER_AUTO_BLOCK_DEFINE("GameServerConnection - ChatGetFriendsList");
-//printf("GameServerConnection -- ChatGetFriendsList\n");
+		//printf("GameServerConnection -- ChatGetFriendsList\n");
 		ChatGetFriendsList chat(ri);
 
 		ChatServer::getFriendsList(chat.getCharacterName());
+		break;
 	}
-	else if (gameNetworkMessage.isType("ChatChangeIgnoreStatus")) 
+	case constcrc("ChatChangeIgnoreStatus") :
 	{
 		PROFILER_AUTO_BLOCK_DEFINE("GameServerConnection - ChatChangeIgnoreStatus");
-//printf("GameServerConnection -- ChatChangeIgnoreStatus\n");
+		//printf("GameServerConnection -- ChatChangeIgnoreStatus\n");
 		ChatChangeIgnoreStatus chat(ri);
 
 		if (chat.getIgnore()) 
@@ -238,31 +249,33 @@ void GameServerConnection::onReceive(const Archive::ByteStream & message)
 				ChatServer::getNetworkIdByAvatarId(chat.getCharacterName()),
 				chat.getSequence(), chat.getIgnoreName());
 		}
-
+		break;
 	}
-	else if (gameNetworkMessage.isType("ChatGetIgnoreList"))
+	case constcrc("ChatGetIgnoreList") :
 	{
 		PROFILER_AUTO_BLOCK_DEFINE("GameServerConnection - ChatGetIgnoreList");
-//printf("GameServerConnection -- ChatGetIgnoreList\n");
+		//printf("GameServerConnection -- ChatGetIgnoreList\n");
 		ChatGetIgnoreList chat(ri);
 
 		ChatServer::getIgnoreList(chat.getCharacterName());
+		break;
 	}
-	else if(gameNetworkMessage.isType("ChatRemoveAvatarFromRoom"))
+	case constcrc("ChatRemoveAvatarFromRoom") :
 	{
 		PROFILER_AUTO_BLOCK_DEFINE("GameServerConnection - ChatRemoveAvatarFromRoom");
-//printf("GameServerConnection -- ChatRemoveAvatarFromRoom\n");
+		//printf("GameServerConnection -- ChatRemoveAvatarFromRoom\n");
 		ChatRemoveAvatarFromRoom chat(ri);
 		ChatAvatarId id = chat.getAvatarId();
 		size_t pos = id.name.find(" ");
 		if(pos != std::string::npos)
 			id.name = id.name.substr(0, pos);
 		ChatServer::removeAvatarFromRoom(id, chat.getRoomName());
+		break;
 	}
-	else if(gameNetworkMessage.isType("ChatMessageFromGame"))
+	case constcrc("ChatMessageFromGame") :
 	{
 		PROFILER_AUTO_BLOCK_DEFINE("GameServerConnection - ChatMessageFromGame");
-//printf("GameServerConnection -- ChatMessageFromGame\n");
+		//printf("GameServerConnection -- ChatMessageFromGame\n");
 		ChatMessageFromGame chat(ri);
 		std::string recipient = chat.getTo();
 		size_t pos = recipient.find(" ");
@@ -321,56 +334,27 @@ void GameServerConnection::onReceive(const Archive::ByteStream & message)
 			REPORT_LOG(true, ("Unkown Game Chat Message type\n"));
 			break;
 		}
+		break;
 	}
-	else if (gameNetworkMessage.isType("SetUnsquelchTime"))
+	case constcrc("SetUnsquelchTime") :
 	{
 		PROFILER_AUTO_BLOCK_DEFINE("GameServerConnection - SetUnsquelchTime");
-//printf("GameServerConnection -- SetUnsquelchTime\n");
+		//printf("GameServerConnection -- SetUnsquelchTime\n");
 		GenericValueTypeMessage<std::pair<NetworkId, int> > setUnsquelchTime(ri);
 
 		ChatServer::setUnsquelchTime(setUnsquelchTime.getValue().first, static_cast<time_t>(setUnsquelchTime.getValue().second));
+		break;
 	}
-	else if (gameNetworkMessage.isType("ChatStatisticsGS"))
+	case constcrc("ChatStatisticsGS") :
 	{
 		PROFILER_AUTO_BLOCK_DEFINE("GameServerConnection - ChatStatisticsGS");
-//printf("GameServerConnection -- ChatStatisticsGS\n");
+		//printf("GameServerConnection -- ChatStatisticsGS\n");
 		GenericValueTypeMessage<std::pair<std::pair<std::pair<NetworkId, int>, int>, std::pair<int, int> > > chatStatistics(ri);
 
 		ChatServer::handleChatStatisticsFromGameServer(chatStatistics.getValue().first.first.first, static_cast<time_t>(chatStatistics.getValue().first.first.second), static_cast<time_t>(chatStatistics.getValue().first.second), chatStatistics.getValue().second.first, chatStatistics.getValue().second.second);
+		break;
 	}
-	//it eats at my soul to participate in this elseif chain
-	else if (gameNetworkMessage.isType(VoiceChatGetChannel::cms_name))
-	{
-		Archive::ReadIterator ri = message.begin();
-		VoiceChatGetChannel createRoomMessage(ri);
-		std::list<std::string> mods;
-		ChatServer::instance().requestGetChannel(ReturnAddress(m_connectionId),createRoomMessage.getRoomName(), createRoomMessage.getIsPublic(), createRoomMessage.getIsPersistant(), createRoomMessage.getLimit(), mods);
-	}
-	else if (gameNetworkMessage.isType(VoiceChatDeleteChannel::cms_name))
-	{
-		Archive::ReadIterator ri = message.begin();
-		VoiceChatDeleteChannel destroyRoomMessage(ri);
-		ChatServer::instance().requestDeleteChannel(ReturnAddress(m_connectionId),destroyRoomMessage.getRoomName());
-	}
-	else if (gameNetworkMessage.isType(VoiceChatAddClientToChannel::cms_name))
-	{
-		Archive::ReadIterator ri = message.begin();
-		VoiceChatAddClientToChannel addMessage(ri);
-		ChatServer::instance().requestAddClientToChannel(addMessage.getClientId(), addMessage.getClientName(), addMessage.getChannelName(), addMessage.getForceShortlist());
-	}
-	else if (gameNetworkMessage.isType(VoiceChatRemoveClientFromChannel::cms_name))
-	{
-		Archive::ReadIterator ri = message.begin();
-		VoiceChatRemoveClientFromChannel msg(ri);
-		ChatServer::instance().requestRemoveClientFromChannel(msg.getClientId(), msg.getClientName(), msg.getChannelName());
-	}
-	else if (gameNetworkMessage.isType(VoiceChatChannelCommand::cms_name))
-	{
-		Archive::ReadIterator ri = message.begin();
-		VoiceChatChannelCommand msg(ri);
-		ChatServer::instance().requestChannelCommand(ReturnAddress(m_connectionId), msg.getSourceUserName(),msg.getTargetUserName(),msg.getChannelName(),msg.getCommandType(),msg.getBanTimeout());
-	}
-	else if (gameNetworkMessage.isType("BroadcastGlobalChannel"))
+	case constcrc("BroadcastGlobalChannel") :
 	{
 		Archive::ReadIterator ri = message.begin();
 
@@ -382,14 +366,16 @@ void GameServerConnection::onReceive(const Archive::ByteStream & message)
 		std::string const & messageText = payload.first.second;
 		bool const & isRemove = payload.second;
 
-		LOG("CustomerService", ("BroadcastVoiceChannel: ChatServer got BroadcastGlobalChannel on GameServerConnection chan(%s) text(%s) remove(%d)",
+		LOG("CustomerService", ("ChatServer got BroadcastGlobalChannel on GameServerConnection chan(%s) text(%s) remove(%d)",
 			channelName.c_str(), messageText.c_str(), (isRemove?1:0)));
 		ChatServer::requestBroadcastChannelMessage(channelName, messageText, isRemove);
+		break;
 	}
-	else if (gameNetworkMessage.isType("ChatDestroyAvatar"))
+	case constcrc("ChatDestroyAvatar") :
 	{
 		GenericValueTypeMessage<std::string> const msg(ri);
 		ChatServer::getChatInterface()->DestroyAvatar(msg.getValue());
+		break;
 	}
 }
 
