@@ -10,6 +10,8 @@
 #include "MonAPI2/MonitorAPI.h"
 #include "serverNetworkMessages/MetricsInitiationMessage.h"
 
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 #include <algorithm>
 
 //-----------------------------------------------------------------------
@@ -79,34 +81,42 @@ void MetricsGatheringConnection::onReceive(const Archive::ByteStream & message)
 	GameNetworkMessage m(ri);
 	ri = message.begin(); 
 
-	if(m.isType("ConnectionServerMetricsMessage"))
-	{
-		DEBUG_FATAL(true, ("This message has been depricated"));
-	}
-	else if (m.isType("MetricsInitiationMessage"))
-	{
-		WARNING_STRICT_FATAL(m_initialized, ("Received initialize metrics on initialized connection"));
-		//Get process name and secondary field (i.e. planet)
-		MetricsInitiationMessage mx(ri);
-		bool dynamic = mx.getIsDynamic();
-		std::string process = mx.getPrimaryName();
-		std::string planet = mx.getSecondaryName();
-		int index = mx.getIndex();
-		initialize(process, planet, dynamic, index);
-	}
-	else if (m.isType("MetricsDataMessage"))
-	{
-		if (!m_initialized)
+	const uint32 messageType = m.getType();
+	
+	switch(messageType) {
+		case constcrc("ConnectionServerMetricsMessage") :
 		{
-			//Received data on uninitialized connection.
-			return;
+			DEBUG_FATAL(true, ("This message has been depricated"));
+			break;
 		}
-		MetricsDataMessage metricsData(ri);
-		update(metricsData.getData());
-	}
-	else
-	{
-		ServerConnection::onReceive(message);
+		case constcrc("MetricsInitiationMessage") :
+		{
+			WARNING_STRICT_FATAL(m_initialized, ("Received initialize metrics on initialized connection"));
+			//Get process name and secondary field (i.e. planet)
+			MetricsInitiationMessage mx(ri);
+			bool dynamic = mx.getIsDynamic();
+			std::string process = mx.getPrimaryName();
+			std::string planet = mx.getSecondaryName();
+			int index = mx.getIndex();
+			initialize(process, planet, dynamic, index);
+			break;
+		}
+		case constcrc("MetricsDataMessage") :
+		{
+			if (!m_initialized)
+			{
+				//Received data on uninitialized connection.
+				return;
+			}
+			MetricsDataMessage metricsData(ri);
+			update(metricsData.getData());
+			break;
+		}
+		default :
+		{
+			ServerConnection::onReceive(message);
+			break;
+		}
 	}
 }
 
