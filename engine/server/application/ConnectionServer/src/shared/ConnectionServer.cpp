@@ -533,414 +533,445 @@ void ConnectionServer::receiveMessage(const MessageDispatch::Emitter & source, c
 {
 	// it's reasonably safe to cast, message type verified
 	// determine message type
+	
+	const uint32 messageType = message.getType();
 
-	if (message.isType("GameConnectionOpened"))
-	{
-		DEBUG_REPORT_LOG(true, ("Game Connection opened\n"));
-	}
-	else if (message.isType("GameConnectionClosed"))
-	{
-		//@todo handle case where game server drops and we have users connected to it.
-		//Drop all connected clients.
-		const GameConnection & downConnection = static_cast<const GameConnection &>(source);
-		DEBUG_REPORT_LOG(true, ("Game Server connection went down.  Dropping clients.\n"));
-		//remove Game Conection from list
-
-		PseudoClientConnection::gameConnectionClosed(&downConnection);
-
-		GameServerMap::iterator j = gameServerMap.find(downConnection.getGameServerId());
-		if (j != gameServerMap.end())
+	switch(messageType) {
+		case constcrc("GameConnectionOpened") :
 		{
-			gameServerMap.erase(j);
+			DEBUG_REPORT_LOG(true, ("Game Connection opened\n"));
+			break;
 		}
-	}
-
-	else if (message.isType("CentralConnectionOpened"))
-	{
-		DEBUG_REPORT_LOG(true, ("Opened connection with central\n"));
-		centralConnection = const_cast<CentralConnection *>(static_cast<const CentralConnection *>(&source));//lint !e826 // info: Suspiscious pointer-to-pointer conversion (area too small)
-
-		if (ConfigConnectionServer::getStartPublicServer())
+		case constcrc("GameConnectionClosed") :
 		{
-			s_clientServiceSetup->port = ConfigConnectionServer::getClientServicePortPublic();
-			s_clientServiceSetup->maxConnectionsPerIP = ConfigConnectionServer::getMaxConnectionsPerIP();
-			clientServicePublic = new Service(ConnectionAllocator<ClientConnection>(), *s_clientServiceSetup);
-		}
+			//@todo handle case where game server drops and we have users connected to it.
+			//Drop all connected clients.
+			const GameConnection & downConnection = static_cast<const GameConnection &>(source);
+			DEBUG_REPORT_LOG(true, ("Game Server connection went down.  Dropping clients.\n"));
+			//remove Game Conection from list
 
-		s_clientServiceSetup->port = ConfigConnectionServer::getClientServicePortPrivate();
-		s_clientServiceSetup->maxConnectionsPerIP = 0;
-		clientServicePrivate = new Service(ConnectionAllocator<ClientConnection>(), *s_clientServiceSetup);
+			PseudoClientConnection::gameConnectionClosed(&downConnection);
 
-		connectToMessage("ClientConnectionOpened");
-		connectToMessage("ClientConnectionClosed");
-	}
-	else if (message.isType("CentralConnectionClosed"))
-	{
-		centralConnection = const_cast<CentralConnection *>(static_cast<const CentralConnection *>(&source));//lint !e826 // info: Suspiscious pointer-to-pointer conversion (area too small)
-		setDone("CentralConnectionClosed: %s", centralConnection ? centralConnection->getDisconnectReason().c_str() : "");
-		centralConnection = 0;
-		DEBUG_REPORT_LOG(true, ("CentralDied.  So we will too\n"));
-		//@todo Drop all pending clients.
-	}
-	else if (message.isType("ClientConnectionOpened"))
-	{
-		DEBUG_REPORT_LOG(true, ("Opened connection with client\n"));
-	}
-	else if (message.isType("ClientConnectionClosed"))
-	{
-		DEBUG_REPORT_LOG(true, ("Client is Dropping connection\n"));
-		ClientConnection * cconn = const_cast<ClientConnection *>(static_cast<const ClientConnection*>(&source));//lint !e826 // info: Suspiscious pointer-to-pointer conversion (area too small)
-
-		//tell CentralServer
-		if (centralConnection)
-		{
-			GenericValueTypeMessage<StationId> const msg("ClientConnectionClosed", cconn->getSUID());
-			centralConnection->send(msg, true);
-		}
-
-		//Client dropped.  Tell game server if they've logged in.
-		Client *client = cconn->getClient();
-		if (client)
-		{
-			DropClient msg(client->getNetworkId());
-			GameConnection* gconn = client->getGameConnection();
-			//Don't worry about sending a message to a non-existant game server
-			if (gconn)
-				gconn->send(msg, true);
-
-			// Remove the entry from the client map
-			removeFromClientMap(client->getNetworkId());
-		}
-		else
-		{
-			// TODO: wtf is this? @Darth, fix it!
-			//If they aren't connected to the game yet, they're probably on the pending list.
-			//removePendingCharacter(cconn->getSUID());
-		}
-		removeFromConnectedMap(cconn->getSUID());
-	}
-	else if (message.isType("ConnectionServerId"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		ConnectionServerId m(ri);
-		handleConnectionServerIdMessage(m);
-	}
-
-	else if (message.isType("ConnectionKeyPush"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		ConnectionKeyPush pk(ri);
-		loginServerKeys->pushKey(pk.getKey());
-	}
-
-	else if (message.isType("LoginKeyPush"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		const LoginKeyPush k(ri);
-		loginServerKeys->pushKey(k.getKey());
-	}
-	else if (message.isType("CharacterListMessage"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		const CharacterListMessage msg(ri);
-		WARNING_STRICT_FATAL(true, ("CharacterListMessage is deprecated on the ConnectionServer -- fix whoever is sending it.\n"));
-	}
-	else if (message.isType("ConnectionCreateCharacterSuccess"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		const ConnectionCreateCharacterSuccess msg(ri);
-		LOG("TraceCharacterCreation", ("Received ConnectionCreateCharacterSuccess for %d", msg.getStationId()));
-		ClientConnection* const client = getClientConnection(msg.getStationId());
-		if (client)
-		{
-			const ClientCreateCharacterSuccess m(msg.getNetworkId());
-			client->send(m, true);
-		}
-		else
-		{
-			LOG("CustomerService", ("CharacterTransfer: Trying to deliver ConnectionCreateCharacterSuccess to PsuedoClientConnection(%d)", msg.getStationId()));
-			PseudoClientConnection::tryToDeliverMessageTo(static_cast<unsigned int>(msg.getStationId()), static_cast<const GameNetworkMessage &>(message).getByteStream());
-		}
-	}
-	else if (message.isType("ConnectionCreateCharacterFailed"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		const ConnectionCreateCharacterFailed msg(ri);
-		ClientConnection* client = getClientConnection(msg.getStationId());
-		if (client)
-		{
-			client->setHasRequestedCharacterCreate(false);
-
-			ClientCreateCharacterFailed m(msg.getName(), msg.getErrorMessage()); //lint !e1013 !e1055 !e746 (Symbol 'getErrorMessage' not a member of class 'const ConnectionCreateCharacterFailed') // supressed because it IS a member of that class. //lint !e1055 //lint !e746
-			client->send(m, true);
-		}
-		else
-		{
-			PseudoClientConnection::tryToDeliverMessageTo(static_cast<unsigned int>(msg.getStationId()), static_cast<const GameNetworkMessage &>(message).getByteStream());
-		}
-	}
-	else if (message.isType("NewCharacterCreated"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		GenericValueTypeMessage<StationId> const msg(ri);
-		ClientConnection* client = getClientConnection(msg.getValue());
-		if (client)
-		{
-			// don't allow this client to request another character create;
-			// this will forced the client to disconnect and reconnect at which time
-			// a check will be done (taking the newly created character into account)
-			// to see if the client is allowed to create another character on this account
-			client->setHasCreatedCharacter(true);
-		}
-	}
-	else if (message.isType("RandomNameResponse"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		RandomNameResponse connMsg(ri);
-
-		ClientConnection* cconn = getClientConnection(connMsg.getStationId());
-		ClientRandomNameResponse cnr(connMsg.getCreatureTemplate(), connMsg.getName(), connMsg.getErrorMessage());//lint !e1013 (Symbol 'getErrorMessage' not a member of class 'RandomNameResponse') // supressed because it IS a member of that class.
-		if (cconn)
-			cconn->send(cnr, true);
-	}
-	else if (message.isType("VerifyAndLockNameResponse"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		VerifyAndLockNameResponse connMsg(ri);
-
-		ClientConnection* cconn = getClientConnection(connMsg.getStationId());
-		ClientVerifyAndLockNameResponse cvalnr(connMsg.getCharacterName(), connMsg.getErrorMessage());
-		if (cconn)
-			cconn->send(cvalnr, true);
-	}
-	else if (message.isType("ChatServerConnectionOpened"))
-	{
-		ChatServerConnection * c = const_cast<ChatServerConnection *>(static_cast<const ChatServerConnection *>(&source));//lint !e826 suspiscious pointer-to-pointer conversion // suppressed, you bet it is
-		IGNORE_RETURN(chatServers.insert(c));
-	}
-	else if (message.isType("ChatServerConnectionClosed"))
-	{
-		ChatServerConnection * c = const_cast<ChatServerConnection *>(static_cast<const ChatServerConnection *>(&source));//lint !e826 suspiscious pointer-to-pointer conversion // suppressed, you bet it is
-		std::set<ChatServerConnection *>::iterator f = chatServers.find(c);
-		if (f != chatServers.end())
-		{
-			// migrate players that were on this chat server
-			// to another chat server
-
-			// now remove the server from the set
-			chatServers.erase(f);
-			if (!chatServers.empty())
+			GameServerMap::iterator j = gameServerMap.find(downConnection.getGameServerId());
+			if (j != gameServerMap.end())
 			{
-				std::set<ChatServerConnection *>::iterator ic = chatServers.begin();
+				gameServerMap.erase(j);
+			}
+			break;
+		}
+		case constcrc("CentralConnectionOpened") :
+		{
+			DEBUG_REPORT_LOG(true, ("Opened connection with central\n"));
+			centralConnection = const_cast<CentralConnection *>(static_cast<const CentralConnection *>(&source));//lint !e826 // info: Suspiscious pointer-to-pointer conversion (area too small)
 
-				const std::set<Client *> & clients = c->getClients();
-				std::set<Client *>::const_iterator i;
-				for (i = clients.begin(); i != clients.end(); ++i)
+			if (ConfigConnectionServer::getStartPublicServer())
+			{
+				s_clientServiceSetup->port = ConfigConnectionServer::getClientServicePortPublic();
+				s_clientServiceSetup->maxConnectionsPerIP = ConfigConnectionServer::getMaxConnectionsPerIP();
+				clientServicePublic = new Service(ConnectionAllocator<ClientConnection>(), *s_clientServiceSetup);
+			}
+
+			s_clientServiceSetup->port = ConfigConnectionServer::getClientServicePortPrivate();
+			s_clientServiceSetup->maxConnectionsPerIP = 0;
+			clientServicePrivate = new Service(ConnectionAllocator<ClientConnection>(), *s_clientServiceSetup);
+
+			connectToMessage("ClientConnectionOpened");
+			connectToMessage("ClientConnectionClosed");
+			break;
+		}
+		case constcrc("CentralConnectionClosed") :
+		{
+			centralConnection = const_cast<CentralConnection *>(static_cast<const CentralConnection *>(&source));//lint !e826 // info: Suspiscious pointer-to-pointer conversion (area too small)
+			setDone("CentralConnectionClosed: %s", centralConnection ? centralConnection->getDisconnectReason().c_str() : "");
+			centralConnection = 0;
+			DEBUG_REPORT_LOG(true, ("CentralDied.  So we will too\n"));
+			//@todo Drop all pending clients.
+			break;
+		}
+		case constcrc("ClientConnectionOpened") :
+		{
+			DEBUG_REPORT_LOG(true, ("Opened connection with client\n"));
+			break;
+		}
+		case constcrc("ClientConnectionClosed") :
+		{
+			DEBUG_REPORT_LOG(true, ("Client is Dropping connection\n"));
+			ClientConnection * cconn = const_cast<ClientConnection *>(static_cast<const ClientConnection*>(&source));//lint !e826 // info: Suspiscious pointer-to-pointer conversion (area too small)
+
+			//tell CentralServer
+			if (centralConnection)
+			{
+				GenericValueTypeMessage<StationId> const msg("ClientConnectionClosed", cconn->getSUID());
+				centralConnection->send(msg, true);
+			}
+
+			//Client dropped.  Tell game server if they've logged in.
+			Client *client = cconn->getClient();
+			if (client)
+			{
+				DropClient msg(client->getNetworkId());
+				GameConnection* gconn = client->getGameConnection();
+				//Don't worry about sending a message to a non-existant game server
+				if (gconn)
+					gconn->send(msg, true);
+
+				// Remove the entry from the client map
+				removeFromClientMap(client->getNetworkId());
+			}
+			else
+			{
+				// TODO: wtf is this? @Darth, fix it!
+				//If they aren't connected to the game yet, they're probably on the pending list.
+				//removePendingCharacter(cconn->getSUID());
+			}
+			removeFromConnectedMap(cconn->getSUID());
+			break;
+		}
+		case constcrc("ConnectionServerId") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			ConnectionServerId m(ri);
+			handleConnectionServerIdMessage(m);
+			break;
+		}
+		case constcrc("ConnectionKeyPush") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			ConnectionKeyPush pk(ri);
+			loginServerKeys->pushKey(pk.getKey());
+			break;
+		}
+		case constcrc("LoginKeyPush") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			const LoginKeyPush k(ri);
+			loginServerKeys->pushKey(k.getKey());
+			break;
+		}
+		case constcrc("CharacterListMessage") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			const CharacterListMessage msg(ri);
+			WARNING_STRICT_FATAL(true, ("CharacterListMessage is deprecated on the ConnectionServer -- fix whoever is sending it.\n"));
+			break;
+		}
+		case constcrc("ConnectionCreateCharacterSuccess") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			const ConnectionCreateCharacterSuccess msg(ri);
+			LOG("TraceCharacterCreation", ("Received ConnectionCreateCharacterSuccess for %d", msg.getStationId()));
+			ClientConnection* const client = getClientConnection(msg.getStationId());
+			if (client)
+			{
+				const ClientCreateCharacterSuccess m(msg.getNetworkId());
+				client->send(m, true);
+			}
+			else
+			{
+				LOG("CustomerService", ("CharacterTransfer: Trying to deliver ConnectionCreateCharacterSuccess to PsuedoClientConnection(%d)", msg.getStationId()));
+				PseudoClientConnection::tryToDeliverMessageTo(static_cast<unsigned int>(msg.getStationId()), static_cast<const GameNetworkMessage &>(message).getByteStream());
+			}
+			break;
+		}
+		case constcrc("ConnectionCreateCharacterFailed") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			const ConnectionCreateCharacterFailed msg(ri);
+			ClientConnection* client = getClientConnection(msg.getStationId());
+			if (client)
+			{
+				client->setHasRequestedCharacterCreate(false);
+
+				ClientCreateCharacterFailed m(msg.getName(), msg.getErrorMessage()); //lint !e1013 !e1055 !e746 (Symbol 'getErrorMessage' not a member of class 'const ConnectionCreateCharacterFailed') // supressed because it IS a member of that class. //lint !e1055 //lint !e746
+				client->send(m, true);
+			}
+			else
+			{
+				PseudoClientConnection::tryToDeliverMessageTo(static_cast<unsigned int>(msg.getStationId()), static_cast<const GameNetworkMessage &>(message).getByteStream());
+			}
+			break;
+		}
+		case constcrc("NewCharacterCreated") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			GenericValueTypeMessage<StationId> const msg(ri);
+			ClientConnection* client = getClientConnection(msg.getValue());
+			if (client)
+			{
+				// don't allow this client to request another character create;
+				// this will forced the client to disconnect and reconnect at which time
+				// a check will be done (taking the newly created character into account)
+				// to see if the client is allowed to create another character on this account
+				client->setHasCreatedCharacter(true);
+			}
+			break;
+		}
+		case constcrc("RandomNameResponse") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			RandomNameResponse connMsg(ri);
+
+			ClientConnection* cconn = getClientConnection(connMsg.getStationId());
+			ClientRandomNameResponse cnr(connMsg.getCreatureTemplate(), connMsg.getName(), connMsg.getErrorMessage());//lint !e1013 (Symbol 'getErrorMessage' not a member of class 'RandomNameResponse') // supressed because it IS a member of that class.
+			if (cconn)
+				cconn->send(cnr, true);
+			
+			break;
+		}
+		case constcrc("VerifyAndLockNameResponse") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			VerifyAndLockNameResponse connMsg(ri);
+
+			ClientConnection* cconn = getClientConnection(connMsg.getStationId());
+			ClientVerifyAndLockNameResponse cvalnr(connMsg.getCharacterName(), connMsg.getErrorMessage());
+			if (cconn)
+				cconn->send(cvalnr, true);
+			
+			break;
+		}
+		case constcrc("ChatServerConnectionOpened") :
+		{
+			ChatServerConnection * c = const_cast<ChatServerConnection *>(static_cast<const ChatServerConnection *>(&source));//lint !e826 suspiscious pointer-to-pointer conversion // suppressed, you bet it is
+			IGNORE_RETURN(chatServers.insert(c));
+			break;
+		}
+		case constcrc("ChatServerConnectionClosed") :
+		{
+			ChatServerConnection * c = const_cast<ChatServerConnection *>(static_cast<const ChatServerConnection *>(&source));//lint !e826 suspiscious pointer-to-pointer conversion // suppressed, you bet it is
+			std::set<ChatServerConnection *>::iterator f = chatServers.find(c);
+			if (f != chatServers.end())
+			{
+				// migrate players that were on this chat server
+				// to another chat server
+
+				// now remove the server from the set
+				chatServers.erase(f);
+				if (!chatServers.empty())
 				{
-					ChatServerConnection * newConn = (*ic);
-					Client * cl = (*i);
-					cl->setChatConnection(newConn);
-					++ic;
-					if (ic == chatServers.end())
-						ic = chatServers.begin();
+					std::set<ChatServerConnection *>::iterator ic = chatServers.begin();
+
+					const std::set<Client *> & clients = c->getClients();
+					std::set<Client *>::const_iterator i;
+					for (i = clients.begin(); i != clients.end(); ++i)
+					{
+						ChatServerConnection * newConn = (*ic);
+						Client * cl = (*i);
+						cl->setChatConnection(newConn);
+						++ic;
+						if (ic == chatServers.end())
+							ic = chatServers.begin();
+					}
+				}
+				else
+				{
+					const std::set<Client *> & clients = c->getClients();
+					std::set<Client *>::const_iterator i;
+					for (i = clients.begin(); i != clients.end(); ++i)
+					{
+						(*i)->setChatConnection(nullptr);
+					}
+				}
+			}
+			break;
+		}
+		case constcrc("CustomerServiceConnectionOpened") :
+		{
+			CustomerServiceConnection * c = const_cast<CustomerServiceConnection *>(static_cast<const CustomerServiceConnection *>(&source));//lint !e826 suspiscious pointer-to-pointer conversion // suppressed, you bet it is
+			IGNORE_RETURN(customerServiceServers.insert(c));
+			break;
+		}
+		case constcrc("CustomerServiceConnectionClosed") :
+		{
+			CustomerServiceConnection * c = const_cast<CustomerServiceConnection *>(static_cast<const CustomerServiceConnection *>(&source));//lint !e826 suspiscious pointer-to-pointer conversion // suppressed, you bet it is
+			std::set<CustomerServiceConnection *>::iterator f = customerServiceServers.find(c);
+			if (f != customerServiceServers.end())
+			{
+				// migrate players that were on this chat server
+				// to another chat server
+
+				// now remove the server from the set
+				customerServiceServers.erase(f);
+				if (!customerServiceServers.empty())
+				{
+					std::set<CustomerServiceConnection *>::iterator ic = customerServiceServers.begin();
+
+					const std::set<Client *> & clients = c->getClients();
+					std::set<Client *>::const_iterator i;
+					for (i = clients.begin(); i != clients.end(); ++i)
+					{
+						CustomerServiceConnection * newConn = (*ic);
+						Client * cl = (*i);
+						cl->setCustomerServiceConnection(newConn);
+						++ic;
+						if (ic == customerServiceServers.end())
+							ic = customerServiceServers.begin();
+					}
+				}
+				else
+				{
+					const std::set<Client *> & clients = c->getClients();
+					std::set<Client *>::const_iterator i;
+					for (i = clients.begin(); i != clients.end(); ++i)
+					{
+						(*i)->setCustomerServiceConnection(nullptr);
+					}
+				}
+			}
+			break;
+		}
+		case constcrc("GameServerForLoginMessage") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			const GameServerForLoginMessage msg(ri);
+
+			ClientConnection* client = getClientConnection(msg.getStationId());
+
+			// see if the client is for the same character as the login message.
+			// this is required to prevent admin login via the CS Tool from
+			// disconnecting other characters logged in from the same account
+			// (but not the same character) as the character we're administratively
+			// logging in.
+			bool clientIsForSameCharacterId = false;
+			if (client)
+			{
+				clientIsForSameCharacterId = client->getCharacterId() == msg.getCharacterId();
+			}
+
+			bool handledByPseudoClient = false;
+			// if the character id in the message doesn't match the character id for
+			// the existing client, it may be for a pseudoclient.  Check, and if so,
+			// handle there.
+			if (!clientIsForSameCharacterId)
+			{
+				PseudoClientConnection * pcc = PseudoClientConnection::getPseudoClientConnection(msg.getCharacterId());
+				// hand off to the PCC only if we do have a pseudoclient, and either we don't have a client, or
+				// the pseudoclient has a tool id, telling us that it's for cs tool login.
+				if (pcc && ((!client) || (pcc->getTransferCharacterData().getCSToolId() > 0)))
+				{
+					handledByPseudoClient = true;
+					bool result;
+					result = PseudoClientConnection::tryToDeliverMessageTo(msg.getStationId(), static_cast<const GameNetworkMessage &>(message).getByteStream());
+					UNREF(result);
+					DEBUG_REPORT_LOG(!result, ("Received GameServerForLoginMessage for %lu, who was not connected.\n", msg.getStationId()));
+				}
+			}
+
+			if (client && (!handledByPseudoClient))
+			{
+				static const std::string loginTrace("TRACE_LOGIN");
+				LOG(loginTrace, ("GameServerForLoginMessage(%d, %s)", client->getSUID(), client->getCharacterId().getValueString().c_str()));
+				client->handleGameServerForLoginMessage(msg.getServer());
+			}
+			break;
+		}
+		case constcrc("ValidateCharacterForLoginReplyMessage") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			const ValidateCharacterForLoginReplyMessage msg(ri);
+
+			ClientConnection* cconn = getClientConnection(msg.getSuid());
+			if (!cconn)
+				DEBUG_REPORT_LOG(true, ("Received ValidateCharacterForLoginReplyMessage for account %lu, which is no longer connected.\n", msg.getSuid()));
+			else
+			{
+				cconn->onCharacterValidated(msg.getApproved(), msg.getCharacterId(), Unicode::wideToNarrow(msg.getCharacterName()), msg.getContainerId(), msg.getScene(), msg.getCoordinates());
+			}
+			break;
+		}
+		case constcrc("ValidateAccountReplyMessage") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			const ValidateAccountReplyMessage msg(ri);
+
+			ClientConnection* cconn = getClientConnection(msg.getStationId());
+			if (!cconn)
+				DEBUG_REPORT_LOG(true, ("Received ValidateAccountReplyMessage for account %lu, which is no longer connected.\n", msg.getStationId()));
+			else
+			{
+				cconn->onIdValidated(msg.getCanLogin(), msg.getCanCreateRegular(), msg.getCanCreateJedi(), msg.getCanSkipTutorial(), msg.getConsumedRewardEvents(), msg.getClaimedRewardItems());
+			}
+			break;
+		}
+		case constcrc("SetConnectionServerPublic") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			SetConnectionServerPublic p(ri);//lint !e40 !e522 !e10 // Undeclared identifier 'SetConnectionServerPublic' // suppressed because it IS declared
+			bool statusChanged = false;
+			DEBUG_REPORT_LOG(true, ("Conn Server: attempting to chang status\n"));
+			if (p.getIsPublic())//lint !e40 !e1013 !e10 // Undeclared identifier 'p' // suppressed because it IS declared
+			{
+				if (!clientServicePublic)
+				{
+					statusChanged = true;
 				}
 			}
 			else
 			{
-				const std::set<Client *> & clients = c->getClients();
-				std::set<Client *>::const_iterator i;
-				for (i = clients.begin(); i != clients.end(); ++i)
-				{
-					(*i)->setChatConnection(nullptr);
-				}
-			}
-		}
-	}
-	else if (message.isType("CustomerServiceConnectionOpened"))
-	{
-		CustomerServiceConnection * c = const_cast<CustomerServiceConnection *>(static_cast<const CustomerServiceConnection *>(&source));//lint !e826 suspiscious pointer-to-pointer conversion // suppressed, you bet it is
-		IGNORE_RETURN(customerServiceServers.insert(c));
-	}
-	else if (message.isType("CustomerServiceConnectionClosed"))
-	{
-		CustomerServiceConnection * c = const_cast<CustomerServiceConnection *>(static_cast<const CustomerServiceConnection *>(&source));//lint !e826 suspiscious pointer-to-pointer conversion // suppressed, you bet it is
-		std::set<CustomerServiceConnection *>::iterator f = customerServiceServers.find(c);
-		if (f != customerServiceServers.end())
-		{
-			// migrate players that were on this chat server
-			// to another chat server
-
-			// now remove the server from the set
-			customerServiceServers.erase(f);
-			if (!customerServiceServers.empty())
-			{
-				std::set<CustomerServiceConnection *>::iterator ic = customerServiceServers.begin();
-
-				const std::set<Client *> & clients = c->getClients();
-				std::set<Client *>::const_iterator i;
-				for (i = clients.begin(); i != clients.end(); ++i)
-				{
-					CustomerServiceConnection * newConn = (*ic);
-					Client * cl = (*i);
-					cl->setCustomerServiceConnection(newConn);
-					++ic;
-					if (ic == customerServiceServers.end())
-						ic = customerServiceServers.begin();
-				}
-			}
-			else
-			{
-				const std::set<Client *> & clients = c->getClients();
-				std::set<Client *>::const_iterator i;
-				for (i = clients.begin(); i != clients.end(); ++i)
-				{
-					(*i)->setCustomerServiceConnection(nullptr);
-				}
-			}
-		}
-	}
-	else if (message.isType("GameServerForLoginMessage"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		const GameServerForLoginMessage msg(ri);
-
-		ClientConnection* client = getClientConnection(msg.getStationId());
-
-		// see if the client is for the same character as the login message.
-		// this is required to prevent admin login via the CS Tool from
-		// disconnecting other characters logged in from the same account
-		// (but not the same character) as the character we're administratively
-		// logging in.
-		bool clientIsForSameCharacterId = false;
-		if (client)
-		{
-			clientIsForSameCharacterId = client->getCharacterId() == msg.getCharacterId();
-		}
-
-		bool handledByPseudoClient = false;
-		// if the character id in the message doesn't match the character id for
-		// the existing client, it may be for a pseudoclient.  Check, and if so,
-		// handle there.
-		if (!clientIsForSameCharacterId)
-		{
-			PseudoClientConnection * pcc = PseudoClientConnection::getPseudoClientConnection(msg.getCharacterId());
-			// hand off to the PCC only if we do have a pseudoclient, and either we don't have a client, or
-			// the pseudoclient has a tool id, telling us that it's for cs tool login.
-			if (pcc && ((!client) || (pcc->getTransferCharacterData().getCSToolId() > 0)))
-			{
-				handledByPseudoClient = true;
-				bool result;
-				result = PseudoClientConnection::tryToDeliverMessageTo(msg.getStationId(), static_cast<const GameNetworkMessage &>(message).getByteStream());
-				UNREF(result);
-				DEBUG_REPORT_LOG(!result, ("Received GameServerForLoginMessage for %lu, who was not connected.\n", msg.getStationId()));
-			}
-		}
-
-		if (client && (!handledByPseudoClient))
-		{
-			static const std::string loginTrace("TRACE_LOGIN");
-			LOG(loginTrace, ("GameServerForLoginMessage(%d, %s)", client->getSUID(), client->getCharacterId().getValueString().c_str()));
-			client->handleGameServerForLoginMessage(msg.getServer());
-		}
-	}
-	else if (message.isType("ValidateCharacterForLoginReplyMessage"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		const ValidateCharacterForLoginReplyMessage msg(ri);
-
-		ClientConnection* cconn = getClientConnection(msg.getSuid());
-		if (!cconn)
-			DEBUG_REPORT_LOG(true, ("Received ValidateCharacterForLoginReplyMessage for account %lu, which is no longer connected.\n", msg.getSuid()));
-		else
-		{
-			cconn->onCharacterValidated(msg.getApproved(), msg.getCharacterId(), Unicode::wideToNarrow(msg.getCharacterName()), msg.getContainerId(), msg.getScene(), msg.getCoordinates());
-		}
-	}
-	else if (message.isType("ValidateAccountReplyMessage"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		const ValidateAccountReplyMessage msg(ri);
-
-		ClientConnection* cconn = getClientConnection(msg.getStationId());
-		if (!cconn)
-			DEBUG_REPORT_LOG(true, ("Received ValidateAccountReplyMessage for account %lu, which is no longer connected.\n", msg.getStationId()));
-		else
-		{
-			cconn->onIdValidated(msg.getCanLogin(), msg.getCanCreateRegular(), msg.getCanCreateJedi(), msg.getCanSkipTutorial(), msg.getConsumedRewardEvents(), msg.getClaimedRewardItems());
-		}
-	}
-	else if (message.isType("SetConnectionServerPublic"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		SetConnectionServerPublic p(ri);//lint !e40 !e522 !e10 // Undeclared identifier 'SetConnectionServerPublic' // suppressed because it IS declared
-		bool statusChanged = false;
-		DEBUG_REPORT_LOG(true, ("Conn Server: attempting to chang status\n"));
-		if (p.getIsPublic())//lint !e40 !e1013 !e10 // Undeclared identifier 'p' // suppressed because it IS declared
-		{
-			if (!clientServicePublic)
-			{
+				delete clientServicePublic;
+				clientServicePublic = 0;
 				statusChanged = true;
 			}
-		}
-		else
-		{
-			delete clientServicePublic;
-			clientServicePublic = 0;
-			statusChanged = true;
-		}
 
-		if (statusChanged && centralConnection)
-		{
-			const Service * publicService = getClientServicePublic();
-			const Service * privateService = getClientServicePrivate();
-			if (publicService || privateService)
+			if (statusChanged && centralConnection)
 			{
-				uint16 publicServicePort = 0;
-				uint16 privateServicePort = 0;
-				if (publicService)
+				const Service * publicService = getClientServicePublic();
+				const Service * privateService = getClientServicePrivate();
+				if (publicService || privateService)
 				{
-					publicServicePort = publicService->getBindPort();
+					uint16 publicServicePort = 0;
+					uint16 privateServicePort = 0;
+					if (publicService)
+					{
+						publicServicePort = publicService->getBindPort();
+					}
+					if (privateService)
+					{
+						privateServicePort = privateService->getBindPort();
+					}
+					const UpdateConnectionServerStatus ucs(publicServicePort, privateServicePort);
+					centralConnection->send(ucs, true);
 				}
-				if (privateService)
-				{
-					privateServicePort = privateService->getBindPort();
-				}
-				const UpdateConnectionServerStatus ucs(publicServicePort, privateServicePort);
-				centralConnection->send(ucs, true);
 			}
-		}
-	}//lint !e529 // Symbol 'ri' not subsequently referenced // suppressed because it IS referenced. I think lint is very confused for some reason.
-	else if (message.isType("ProfilerOperationMessage"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		ProfilerOperationMessage msg(ri);
-		unsigned int processId = msg.getProcessId();
-		if (!processId)
-			Profiler::handleOperation(msg.getOperation().c_str());
-	}
-	else if (message.isType("ExcommunicateGameServerMessage"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		ExcommunicateGameServerMessage msg(ri);
-
-		LOG("GameGameConnect", ("Told to drop connection to %lu by Central", msg.getServerId()));
-
-		GameConnection *conn = getGameConnection(msg.getServerId());
-		if (conn)
-			conn->disconnect();
-	}
-	else if (message.isType("CntrlSrvDropDupeConns"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		GenericValueTypeMessage<std::pair<uint32, std::string> > const msg(ri);
-
-		ClientConnection* client = getClientConnection(msg.getValue().first);
-		if (client && !client->isUsingAdminLogin() && !client->getIsSecure())
+			break;
+		}//lint !e529 // Symbol 'ri' not subsequently referenced // suppressed because it IS referenced. I think lint is very confused for some reason.
+		case constcrc("ProfilerOperationMessage") :
 		{
-			std::string s = "New Connection on galaxy ";
-			s += msg.getValue().second;
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			ProfilerOperationMessage msg(ri);
+			unsigned int processId = msg.getProcessId();
+			if (!processId)
+				Profiler::handleOperation(msg.getOperation().c_str());
+			
+			break;
+		}
+		case constcrc("ExcommunicateGameServerMessage") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			ExcommunicateGameServerMessage msg(ri);
 
-			dropClient(client, s);
+			LOG("GameGameConnect", ("Told to drop connection to %lu by Central", msg.getServerId()));
+
+			GameConnection *conn = getGameConnection(msg.getServerId());
+			if (conn)
+				conn->disconnect();
+			
+			break;
+		}
+		case constcrc("CntrlSrvDropDupeConns") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			GenericValueTypeMessage<std::pair<uint32, std::string> > const msg(ri);
+
+			ClientConnection* client = getClientConnection(msg.getValue().first);
+			if (client && !client->isUsingAdminLogin() && !client->getIsSecure())
+			{
+				std::string s = "New Connection on galaxy ";
+				s += msg.getValue().second;
+
+				dropClient(client, s);
+			}
+			break;
 		}
 	}
 }
