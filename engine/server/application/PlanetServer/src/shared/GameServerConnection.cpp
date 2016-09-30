@@ -75,7 +75,7 @@ void GameServerConnection::onReceive(Archive::ByteStream const &message)
 		}
 		else
 		{
-			switch (msgType) {
+			switch (messageType) {
 				case constcrc("EndForward") :
 				{
 					if (--m_forwardCounts.back() == 0)
@@ -103,7 +103,7 @@ void GameServerConnection::onReceive(Archive::ByteStream const &message)
 		}
 	}
 
-	if (msgType == constcrc("BeginForward"))
+	if (messageType == constcrc("BeginForward"))
 	{
 		GenericValueTypeMessage<std::vector<uint32> > const beginForwardMessage(ri);
 
