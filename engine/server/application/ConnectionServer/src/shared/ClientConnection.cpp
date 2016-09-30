@@ -50,6 +50,8 @@
 #include "Session/LoginAPI/Client.h"
 #include "UdpLibrary.h"
 
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 #include <algorithm>
 
 //-----------------------------------------------------------------------
@@ -629,7 +631,7 @@ void ClientConnection::onReceive(const Archive::ByteStream & message)
 		GameNetworkMessage m(ri);
 		ri = message.begin();
 		
-		const uint32 messageType = message.getType();
+		const uint32 messageType = m.getType();
 
 		//Clients with a selected character get routed to a game server.
 		//@todo check for filtering out bad messages.
@@ -690,7 +692,7 @@ void ClientConnection::onReceive(const Archive::ByteStream & message)
 				// only if that test pass do we forward the message on to the chat server to request
 				// to enter the room
 					case constcrc("ChatEnterRoom") :
-					case constcrc(("ChatEnterRoomById") :
+					case constcrc("ChatEnterRoomById") :
 					{
 						NOT_NULL(m_client);
 
@@ -698,7 +700,8 @@ void ClientConnection::onReceive(const Archive::ByteStream & message)
 						std::string roomName;
 
 						Archive::ReadIterator cri = message.begin();
-						if (msgType == constcrc(("ChatEnterRoom"))
+
+						if (messageType == constcrc("ChatEnterRoom"))
 						{
 							ChatEnterRoom const cer(cri);
 							sequence = cer.getSequence();
@@ -871,44 +874,7 @@ void ClientConnection::onReceive(const Archive::ByteStream & message)
 							v.clear();
 							v.push_back(m_client->getNetworkId());
 
-							// TODO: this shit could be made into a template
-							switch (messageType) {
-								case constcrc("ConnectPlayerMessage") :
-								{
-									ConnectPlayerMessage message(ri);
-									break;
-								}
-								case constcrc("CreateTicketMessage") :
-								{
-									CreateTicketMessage message(ri);
-									break;
-								}
-								case constcrc("AppendCommentMessage") :
-								{
-									AppendCommentMessage message(ri);
-									break;
-								}
-								case constcrc("CancelTicketMessage") :
-								{
-									CancelTicketMessage message(ri);
-									break;
-								}
-								case constcrc("GetTicketsMessage") :
-								{
-									GetTicketsMessage message(ri);
-									break;
-								}
-								case constcrc("NewTicketActivityMessage") :
-								{
-									NewTicketActivityMessage message(ri);
-									break;
-								}
-							}
-							
-							GameClientMessage gcm(v, true, ri);
-							message.setStationId(getSUID());
-							customerServiceConnection->send(gcm , true);
-							
+						//insert here	
 						}
 					}
 					else

@@ -74,10 +74,11 @@ void ChatServerConnection::onReceive(const Archive::ByteStream & message)
     GameNetworkMessage m(ri);
     ri = message.begin();
 	
-	if (message.getType() == constcrc("GameClientMessage")) {
+	if (m.getType() == constcrc("GameClientMessage")) {
 		//we're receiving a message to forward to the client.
 		//it is prefixed with NetworkId and reliable.
-        const GameClientMessage msg(ri);
+        	
+		const GameClientMessage msg(ri);
 		Archive::ReadIterator mri(msg.getByteStream());
 		GameNetworkMessage gnm(mri);
 		mri = msg.getByteStream().begin();
@@ -111,7 +112,7 @@ void ChatServerConnection::onReceive(const Archive::ByteStream & message)
 			DEBUG_REPORT_LOG(!client, ("Error, could not map %s to a client\n", (*i).getValueString().c_str()));
 			if (client)
 			{
-				if (messageType !== constcrc("ChatStatisticsCS")) {
+				if (messageType != constcrc("ChatStatisticsCS")) {
 					client->getClientConnection()->sendByteStream(msg.getByteStream(), msg.getReliable());
 				}
 				
