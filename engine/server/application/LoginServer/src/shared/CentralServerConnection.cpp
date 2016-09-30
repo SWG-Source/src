@@ -30,6 +30,8 @@
 #include "Unicode.h"
 #include "UnicodeUtils.h"
 
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 //-----------------------------------------------------------------------
 
 namespace CentralServerConnectionNamespace
@@ -101,194 +103,216 @@ void CentralServerConnection::onReceive(const Archive::ByteStream & message)
 	Archive::ReadIterator ri = message.begin();
 	GameNetworkMessage m(ri);
 	ri = message.begin();
-	// handle messages the connection object itself may be interested in
-	if(m.isType("LoginClusterName"))
-	{
-		const LoginClusterName c(ri);
-		ri = message.begin();
-		setClusterName(c.getClusterName());
-		LOG("CentralServerConnection", ("Galaxy [%s] connected", c.getClusterName().c_str()));
-	}
-	else if ( m.isType( "LoginClusterName2" ) )
-	{
-		const LoginClusterName2 c( ri );
-		ri = message.begin();
-		
-		const std::string &clusterName    = c.getClusterName();
-		const std::string &branch         = c.getBranch();
-		const int         changelist      = c.getChangelist();
-		const std::string &networkVersion = c.getNetworkVersion();
-		
-		DEBUG_REPORT_LOG( true, ( "!!!!!!!!!!!!!!!! name=%s branch=%s changelist=%d net=%s\n", clusterName.c_str(), branch.c_str(), changelist, networkVersion.c_str() ) );
-		
-		setClusterName( clusterName  );
-		setNetworkVersion( c.getNetworkVersion() );
-		LOG("CentralServerConnection", ("Galaxy [%s] connected", getClusterName().c_str()));
-		
-		LoginServer::getInstance().setClusterInfoByName( clusterName, branch, changelist, networkVersion );
-		
-	}
-	else if(m.isType("ToggleAvatarLoginStatus"))
-	{
-		const ToggleAvatarLoginStatus t(ri);
-		if(t.getEnabled())
-		{
-			LOG("CustomerService", ("CharacterTransfer: ToggleAvatarLoginStatus(%s, %d, %s, true)", t.getClusterName().c_str(), t.getStationId(), t.getCharacterId().getValueString().c_str()));
-		}
-		else
-		{
-			// send message to the cluster to drop connected clients for the
-			// station id in case the avatar being disabled is currently logged in
-			GenericValueTypeMessage<unsigned int> const closeRequest("TransferCloseClientConnection", t.getStationId());
-			LoginServer::getInstance().sendToCluster(LoginServer::getInstance().getClusterIDByName(t.getClusterName()), closeRequest);
-
-			LOG("CustomerService", ("CharacterTransfer: ToggleAvatarLoginStatus(%s, %d, %s, false)\n", t.getClusterName().c_str(), t.getStationId(), t.getCharacterId().getValueString().c_str()));
-		}
-		DatabaseConnection::getInstance().toggleDisableCharacter(LoginServer::getInstance().getClusterIDByName(t.getClusterName()), t.getCharacterId(), t.getStationId(), t.getEnabled());
-	}
-	else if(m.isType("CtsCompletedForcharacter"))
-	{
-		const GenericValueTypeMessage<std::pair<std::string, NetworkId> > msg(ri);
-		LoginServer::getInstance().sendToCluster(LoginServer::getInstance().getClusterIDByName(msg.getValue().first), msg);
-	}
-	else if(m.isType("TransferRequestCharacterList"))
-	{
-		const GenericValueTypeMessage<TransferCharacterData> request(ri);
-		const TransferCharacterData & d = request.getValue();
-		DatabaseConnection::getInstance().requestAvatarListForAccount(d.getSourceStationId(), &d);
-	}
-	else if(m.isType("TransferReplyLoginLocationData"))
-	{
-		const GenericValueTypeMessage<TransferCharacterData> reply(ri);
-		const TransferCharacterData & d = reply.getValue();
-		LOG("CustomerService", ("CharacterTransfer: Received login location data. %s", d.toString().c_str()));
-	}
-	else if(m.isType("TransferGetCharacterDataFromLoginServer"))
-	{
-		// the TransferServer sent a request to the central server
-		// to retrieve a character ID from the login database given
-		// a source station ID and a source character name. Retrieve
-		// this data from the login database.
-		const GenericValueTypeMessage<TransferCharacterData> request(ri);
-		TransferCharacterData d = request.getValue();
-		DatabaseConnection::getInstance().requestAvatarListForAccount(d.getSourceStationId(), &d);
-		LOG("CustomerService", ("CharacterTransfer: Received TransferGetCharactetrDataFromLoginServer from CentralServer. %s", d.toString().c_str()));
-	}
-	else if(m.isType("TransferRenameCharacterInLoginDatabase"))
-	{
-		const GenericValueTypeMessage<TransferCharacterData> request(ri);
-		LOG("CustomerService", ("CharacterTransfer: Received TransferRenameCharacterInLoginDatabase : %s", request.getValue().toString().c_str()));
-		const TransferCharacterData & requestData = request.getValue();
-		DatabaseConnection::getInstance().renameCharacter(getClusterId(), requestData.getCharacterId(), Unicode::narrowToWide(requestData.getDestinationCharacterName()), &requestData);
-	}
-	else if(m.isType("TransferKickConnectedClients"))
-	{
-		const GenericValueTypeMessage<unsigned int> kick(ri);
-		ClientConnection * clientConnection = LoginServer::getInstance().getValidatedClient(kick.getValue());
-		if(! clientConnection)
-		{
-			clientConnection = LoginServer::getInstance().getUnvalidatedClient(kick.getValue());
-		}
-
-		if(clientConnection)
-		{
-			clientConnection->disconnect();
-		}
-	}
-	else if(m.isType("TransferAccountRequestLoginServer"))
-	{
-		const GenericValueTypeMessage<TransferAccountData> request(ri);
-		LOG("CustomerService", ("CharacterTransfer: Received TransferAccountRequestLoginServer from station ID %d to from station ID %d", request.getValue().getSourceStationId(), request.getValue().getDestinationStationId()));
-		const TransferAccountData requestData = request.getValue();
-		DatabaseConnection::getInstance().requestAvatarListAccountTransfer(&requestData);
-	}
-	else if(m.isType("EnableCharacterMessage"))
-	{
-		const GenericValueTypeMessage<std::pair<std::pair<StationId, NetworkId>, std::string> > msg(ri);
-
-		LOG("LoginServer", ("EnableCharacter %d, %s request from %s\n", msg.getValue().first.first, msg.getValue().first.second.getValueString().c_str(), msg.getValue().second.c_str()));
-
-		DatabaseConnection::getInstance().enableCharacter(msg.getValue().first.first, msg.getValue().first.second, msg.getValue().second, true, m_clusterId);
-	}
-	else if(m.isType("DisableCharacterMessage"))
-	{
-		const GenericValueTypeMessage<std::pair<std::pair<StationId, NetworkId>, std::string> > msg(ri);
-
-		LOG("LoginServer", ("DisableCharacter %d, %s request from %s\n", msg.getValue().first.first, msg.getValue().first.second.getValueString().c_str(), msg.getValue().second.c_str()));
-
-		DatabaseConnection::getInstance().enableCharacter(msg.getValue().first.first, msg.getValue().first.second, msg.getValue().second, false, m_clusterId);
-	}
-	else if(m.isType("DeleteFailedTransfer"))
-	{
-		GenericValueTypeMessage<TransferCharacterData> deleteCharacter(ri);
-		LOG("CustomerService", ("CharacterTransfer: LoginServer received request to delete a character for a failed transfer. %s", deleteCharacter.getValue().toString().c_str()));
-		LoginServer::getInstance().deleteCharacter(m_clusterId, deleteCharacter.getValue().getDestinationCharacterId(), deleteCharacter.getValue().getDestinationStationId());
-	}
-	else if(m.isType("RequestTransferClosePseudoClientConnection"))
-	{
-		GenericValueTypeMessage<std::pair<std::string, unsigned int> > const request(ri);
-		GenericValueTypeMessage<unsigned int> const closeRequest("TransferClosePseudoClientConnection", request.getValue().second);
-		LoginServer::getInstance().sendToCluster(LoginServer::getInstance().getClusterIDByName(request.getValue().first), closeRequest);
-	}
-	else if(m.isType("CSToolResponse" ) )
-	{
-		CSToolResponse response(ri);
-		// find the connection, if it still exists
-		CSToolConnection * con = CSToolConnection::getCSToolConnectionByToolId( response.getToolId() );
-		
-		// send the response
-		if( con )
-		{
-			std::string message;
-			message = m_clusterName + ":" + response.getResult();
-			
-			if( message[ message.length() -1 ] == '\n' && message[ message.length() - 2 ] != '\r' )
-			{
-				message[ message.length() - 1 ] = '\r';
-				message += '\n';
-			}
-			
-			con->sendToTool( message );
-		}
-	}
-	else if(m.isType("ConGenericMessage"))
-	{
-		ConGenericMessage con(ri);
-		parseCommand(con.getMsg(), con.getMsgId());
-	}
-	else if(m.isType("LoginToggleCompletedTutorial"))
-	{
-		GenericValueTypeMessage< std::pair<unsigned int, bool> > const request(ri);
-		std::pair<unsigned int, bool> values = request.getValue();
-		DatabaseConnection::getInstance().toggleCompletedTutorial(values.first, values.second);
-	}
 	
-	else if(m.isType("AllCluserGlobalChannel"))
-	{
-		typedef std::pair<std::pair<std::string,std::string>, bool> PayloadType;
-		GenericValueTypeMessage<PayloadType> msg(ri);
+	const uint32 messageType = m.getType();
+	
+	// handle messages the connection object itself may be interested in
+	switch (messageType) {
+		case constcrc("LoginClusterName") :
+		{
+			const LoginClusterName c(ri);
+			ri = message.begin();
+			setClusterName(c.getClusterName());
+			LOG("CentralServerConnection", ("Galaxy [%s] connected", c.getClusterName().c_str()));
+			break;
+		}
+		case constcrc( "LoginClusterName2" ) :
+		{
+			const LoginClusterName2 c( ri );
+			ri = message.begin();
+			
+			const std::string &clusterName    = c.getClusterName();
+			const std::string &branch         = c.getBranch();
+			const int         changelist      = c.getChangelist();
+			const std::string &networkVersion = c.getNetworkVersion();
+			
+			DEBUG_REPORT_LOG( true, ( "!!!!!!!!!!!!!!!! name=%s branch=%s changelist=%d net=%s\n", clusterName.c_str(), branch.c_str(), changelist, networkVersion.c_str() ) );
+			
+			setClusterName( clusterName  );
+			setNetworkVersion( c.getNetworkVersion() );
+			LOG("CentralServerConnection", ("Galaxy [%s] connected", getClusterName().c_str()));
+			
+			LoginServer::getInstance().setClusterInfoByName( clusterName, branch, changelist, networkVersion );
+			
+			break;
+		}
+		case constcrc("ToggleAvatarLoginStatus") :
+		{
+			const ToggleAvatarLoginStatus t(ri);
+			if(t.getEnabled())
+			{
+				LOG("CustomerService", ("CharacterTransfer: ToggleAvatarLoginStatus(%s, %d, %s, true)", t.getClusterName().c_str(), t.getStationId(), t.getCharacterId().getValueString().c_str()));
+			}
+			else
+			{
+				// send message to the cluster to drop connected clients for the
+				// station id in case the avatar being disabled is currently logged in
+				GenericValueTypeMessage<unsigned int> const closeRequest("TransferCloseClientConnection", t.getStationId());
+				LoginServer::getInstance().sendToCluster(LoginServer::getInstance().getClusterIDByName(t.getClusterName()), closeRequest);
 
-		PayloadType const & payload = msg.getValue();
-		std::string const & channelName = payload.first.first;
-		std::string const & messageText = payload.first.second;
-		bool const & isRemove = payload.second;
+				LOG("CustomerService", ("CharacterTransfer: ToggleAvatarLoginStatus(%s, %d, %s, false)\n", t.getClusterName().c_str(), t.getStationId(), t.getCharacterId().getValueString().c_str()));
+			}
+			DatabaseConnection::getInstance().toggleDisableCharacter(LoginServer::getInstance().getClusterIDByName(t.getClusterName()), t.getCharacterId(), t.getStationId(), t.getEnabled());
+			break;
+		}
+		case constcrc("CtsCompletedForcharacter") :
+		{
+			const GenericValueTypeMessage<std::pair<std::string, NetworkId> > msg(ri);
+			LoginServer::getInstance().sendToCluster(LoginServer::getInstance().getClusterIDByName(msg.getValue().first), msg);
+			break;
+		}
+		case constcrc("TransferRequestCharacterList") :
+		{
+			const GenericValueTypeMessage<TransferCharacterData> request(ri);
+			const TransferCharacterData & d = request.getValue();
+			DatabaseConnection::getInstance().requestAvatarListForAccount(d.getSourceStationId(), &d);
+			break;
+		}
+		case constcrc("TransferReplyLoginLocationData") :
+		{
+			const GenericValueTypeMessage<TransferCharacterData> reply(ri);
+			const TransferCharacterData & d = reply.getValue();
+			LOG("CustomerService", ("CharacterTransfer: Received login location data. %s", d.toString().c_str()));
+			break;
+		}
+		case constcrc("TransferGetCharacterDataFromLoginServer") :
+		{
+			// the TransferServer sent a request to the central server
+			// to retrieve a character ID from the login database given
+			// a source station ID and a source character name. Retrieve
+			// this data from the login database.
+			const GenericValueTypeMessage<TransferCharacterData> request(ri);
+			TransferCharacterData d = request.getValue();
+			DatabaseConnection::getInstance().requestAvatarListForAccount(d.getSourceStationId(), &d);
+			LOG("CustomerService", ("CharacterTransfer: Received TransferGetCharactetrDataFromLoginServer from CentralServer. %s", d.toString().c_str()));
+			break;
+		}
+		case constcrc("TransferRenameCharacterInLoginDatabase") :
+		{
+			const GenericValueTypeMessage<TransferCharacterData> request(ri);
+			LOG("CustomerService", ("CharacterTransfer: Received TransferRenameCharacterInLoginDatabase : %s", request.getValue().toString().c_str()));
+			const TransferCharacterData & requestData = request.getValue();
+			DatabaseConnection::getInstance().renameCharacter(getClusterId(), requestData.getCharacterId(), Unicode::narrowToWide(requestData.getDestinationCharacterName()), &requestData);
+			break;
+		}
+		case constcrc("TransferKickConnectedClients") :
+		{
+			const GenericValueTypeMessage<unsigned int> kick(ri);
+			ClientConnection * clientConnection = LoginServer::getInstance().getValidatedClient(kick.getValue());
+			if(! clientConnection)
+			{
+				clientConnection = LoginServer::getInstance().getUnvalidatedClient(kick.getValue());
+			}
 
-		LOG("CustomerService", ("BroadcastVoiceChannel: LoginServer sending AllCluserGlobalChannel to all clusters chan(%s) text(%s) remove(%d)",
-			channelName.c_str(), messageText.c_str(), (isRemove?1:0) ));
+			if(clientConnection)
+			{
+				clientConnection->disconnect();
+			}
+			break;
+		}
+		case constcrc("TransferAccountRequestLoginServer") :
+		{
+			const GenericValueTypeMessage<TransferAccountData> request(ri);
+			LOG("CustomerService", ("CharacterTransfer: Received TransferAccountRequestLoginServer from station ID %d to from station ID %d", request.getValue().getSourceStationId(), request.getValue().getDestinationStationId()));
+			const TransferAccountData requestData = request.getValue();
+			DatabaseConnection::getInstance().requestAvatarListAccountTransfer(&requestData);
+			break;
+		}
+		case constcrc("EnableCharacterMessage") :
+		{
+			const GenericValueTypeMessage<std::pair<std::pair<StationId, NetworkId>, std::string> > msg(ri);
 
-		LoginServer::getInstance().sendToAllClusters(msg);
-	}
+			LOG("LoginServer", ("EnableCharacter %d, %s request from %s\n", msg.getValue().first.first, msg.getValue().first.second.getValueString().c_str(), msg.getValue().second.c_str()));
 
-	else if(m.isType("GcwScoreStatRaw"))
-	{
-		GenericValueTypeMessage<std::pair<std::string, std::pair<std::map<std::string, std::pair<int64, int64> >, std::map<std::string, std::pair<int64, int64> > > > > const msg(ri);
-		LoginServer::getInstance().sendToAllClusters(msg, nullptr, 0, msg.getValue().first.c_str());
-	}
+			DatabaseConnection::getInstance().enableCharacter(msg.getValue().first.first, msg.getValue().first.second, msg.getValue().second, true, m_clusterId);
+			break;
+		}
+		case constcrc("DisableCharacterMessage") :
+		{
+			const GenericValueTypeMessage<std::pair<std::pair<StationId, NetworkId>, std::string> > msg(ri);
 
-	else if(m.isType("GcwScoreStatPct"))
-	{
-		GenericValueTypeMessage<std::pair<std::string, std::pair<std::map<std::string, int>, std::map<std::string, int> > > > const msg(ri);
-		LoginServer::getInstance().sendToAllClusters(msg, nullptr, 0, msg.getValue().first.c_str());
+			LOG("LoginServer", ("DisableCharacter %d, %s request from %s\n", msg.getValue().first.first, msg.getValue().first.second.getValueString().c_str(), msg.getValue().second.c_str()));
+
+			DatabaseConnection::getInstance().enableCharacter(msg.getValue().first.first, msg.getValue().first.second, msg.getValue().second, false, m_clusterId);
+			break;
+		}
+		case constcrc("DeleteFailedTransfer") :
+		{
+			GenericValueTypeMessage<TransferCharacterData> deleteCharacter(ri);
+			LOG("CustomerService", ("CharacterTransfer: LoginServer received request to delete a character for a failed transfer. %s", deleteCharacter.getValue().toString().c_str()));
+			LoginServer::getInstance().deleteCharacter(m_clusterId, deleteCharacter.getValue().getDestinationCharacterId(), deleteCharacter.getValue().getDestinationStationId());
+			break;
+		}
+		case constcrc("RequestTransferClosePseudoClientConnection") :
+		{
+			GenericValueTypeMessage<std::pair<std::string, unsigned int> > const request(ri);
+			GenericValueTypeMessage<unsigned int> const closeRequest("TransferClosePseudoClientConnection", request.getValue().second);
+			LoginServer::getInstance().sendToCluster(LoginServer::getInstance().getClusterIDByName(request.getValue().first), closeRequest);
+			break;
+		}
+		case constcrc("CSToolResponse") :
+		{
+			CSToolResponse response(ri);
+			// find the connection, if it still exists
+			CSToolConnection * con = CSToolConnection::getCSToolConnectionByToolId( response.getToolId() );
+			
+			// send the response
+			if( con )
+			{
+				std::string message;
+				message = m_clusterName + ":" + response.getResult();
+				
+				if( message[ message.length() -1 ] == '\n' && message[ message.length() - 2 ] != '\r' )
+				{
+					message[ message.length() - 1 ] = '\r';
+					message += '\n';
+				}
+				
+				con->sendToTool( message );
+			}
+			break;
+		}
+		case constcrc("ConGenericMessage") :
+		{
+			ConGenericMessage con(ri);
+			parseCommand(con.getMsg(), con.getMsgId());
+			break;
+		}
+		case constcrc("LoginToggleCompletedTutorial") :
+		{
+			GenericValueTypeMessage< std::pair<unsigned int, bool> > const request(ri);
+			std::pair<unsigned int, bool> values = request.getValue();
+			DatabaseConnection::getInstance().toggleCompletedTutorial(values.first, values.second);
+			break;
+		}
+		case constcrc("AllCluserGlobalChannel") :
+		{
+			typedef std::pair<std::pair<std::string,std::string>, bool> PayloadType;
+			GenericValueTypeMessage<PayloadType> msg(ri);
+
+			PayloadType const & payload = msg.getValue();
+			std::string const & channelName = payload.first.first;
+			std::string const & messageText = payload.first.second;
+			bool const & isRemove = payload.second;
+
+			LOG("CustomerService", ("BroadcastVoiceChannel: LoginServer sending AllCluserGlobalChannel to all clusters chan(%s) text(%s) remove(%d)",
+				channelName.c_str(), messageText.c_str(), (isRemove?1:0) ));
+
+			LoginServer::getInstance().sendToAllClusters(msg);
+			break;
+		}
+		case constcrc("GcwScoreStatRaw") :
+		{
+			GenericValueTypeMessage<std::pair<std::string, std::pair<std::map<std::string, std::pair<int64, int64> >, std::map<std::string, std::pair<int64, int64> > > > > const msg(ri);
+			LoginServer::getInstance().sendToAllClusters(msg, nullptr, 0, msg.getValue().first.c_str());
+			break;
+		}
+		case constcrc("GcwScoreStatPct") :
+		{
+			GenericValueTypeMessage<std::pair<std::string, std::pair<std::map<std::string, int>, std::map<std::string, int> > > > const msg(ri);
+			LoginServer::getInstance().sendToAllClusters(msg, nullptr, 0, msg.getValue().first.c_str());
+			break;
+		}
 	}
 }
 
@@ -354,6 +378,7 @@ void CentralServerConnection::setClusterId(uint32 clusterId)
 
 void CentralServerConnection::parseCommand(const std::string & cmd, int track)
 {
+	//TODO: wtf is this crap?
 //	int i = s_track;
 //	s_resultsMap[i] = this;
 //	++s_track;

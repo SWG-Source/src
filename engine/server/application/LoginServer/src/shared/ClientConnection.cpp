@@ -23,6 +23,8 @@
 #include "sharedNetworkMessages/GenericValueTypeMessage.h"
 #include "sharedNetworkMessages/LoginEnumCluster.h"
 
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 #include <algorithm>
 
 #include "webAPI.h"
@@ -97,77 +99,80 @@ void ClientConnection::onReceive(const Archive::ByteStream & message)
 		GameNetworkMessage m(ri);
 		ri = message.begin();
 		
-		//Validation check
-		if (!getIsValidated() && !m.isType("LoginClientId"))
-		{
-			//Receiving message from unvalidated client.  Pitch it.
-			DEBUG_WARNING(true, ("Received %s message from unknown, unvalidated client", m.getCmdName().c_str()));
-			return;
-		}
+		const uint32 messageType = m.getType();
 		
-		if(m.isType("LoginClientId"))
-		{
-			// send the client the server "now" Epoch time so that the
-			// client has an idea of how much difference there is between
-			// the client's Epoch time and the server Epoch time
-			GenericValueTypeMessage<int32> const serverNowEpochTime(
-				"ServerNowEpochTime", static_cast<int32>(::time(nullptr)));
-			send(serverNowEpochTime, true);
-
-			LoginClientId id(ri); 
-			
-			// verify version
-#if PRODUCTION == 1
-
-			if(!ConfigLoginServer::getValidateClientVersion() || id.getVersion() == GameNetworkMessage::NetworkVersionId)
+		switch (messageType) {
+			case constcrc("LoginClientId") :
 			{
-				validateClient(id.getId(), id.getKey());
-			}
-			else
-			{
-				LOG("CustomerService", ("Login:LoginServer dropping client (stationId=[%lu], ip=[%s], id=[%s], key=[%s], version=[%s]) because of network version mismatch (required version=[%s])", m_stationId, getRemoteAddress().c_str(), id.getId().c_str(), id.getKey().c_str(), id.getVersion().c_str(), GameNetworkMessage::NetworkVersionId.c_str()));
-				// disconnect is handled on the client side, as soon as it recieves this message
-	#if _DEBUG
-				LoginIncorrectClientId incorrectId(GameNetworkMessage::NetworkVersionId, ApplicationVersion::getInternalVersion());
-	#else
-				LoginIncorrectClientId incorrectId("", "");
-	#endif // _DEBUG
-				send(incorrectId, true);
-			}
-			
-#else
-
-			validateClient( id.getId(), id.getKey() );
-		
-#endif // PRODUCTION == 1
-
-		}
-		else if ( m.isType( "RequestExtendedClusterInfo" ) )
-		{
-			LoginServer::getInstance().sendExtendedClusterInfo( *this );
-		}
-		else if (m.isType("DeleteCharacterMessage"))
-		{
-			DeleteCharacterMessage msg(ri);
-			std::vector<NetworkId>::const_iterator f = std::find(m_charactersPendingDeletion.begin(), m_charactersPendingDeletion.end(), msg.getCharacterId());			
-			if ((m_waitingForCharacterLoginDeletion || m_waitingForCharacterClusterDeletion) && f != m_charactersPendingDeletion.end())
-			{
-				DeleteCharacterReplyMessage reply(DeleteCharacterReplyMessage::rc_ALREADY_IN_PROGRESS);
-				send(reply,true);
-			}
-			else
-			{
-				if (LoginServer::getInstance().deleteCharacter(msg.getClusterId(), msg.getCharacterId(), getStationId()))
+				//Validation check
+				if (!getIsValidated() && messageType == constcrc("LoginClientId"))
 				{
-					m_waitingForCharacterLoginDeletion=true;
-					m_waitingForCharacterClusterDeletion=true;
-					m_charactersPendingDeletion.push_back(msg.getCharacterId());
+					//Receiving message from unvalidated client.  Pitch it.
+					DEBUG_WARNING(true, ("Received %s message from unknown, unvalidated client", m.getCmdName().c_str()));
+					return;
+				} else {
+					// send the client the server "now" Epoch time so that the
+					// client has an idea of how much difference there is between
+					// the client's Epoch time and the server Epoch time
+					GenericValueTypeMessage<int32> const serverNowEpochTime(
+						"ServerNowEpochTime", static_cast<int32>(::time(nullptr)));
+					send(serverNowEpochTime, true);
+
+					LoginClientId id(ri); 
+					
+					// verify version
+	#if PRODUCTION == 1
+					if(!ConfigLoginServer::getValidateClientVersion() || id.getVersion() == GameNetworkMessage::NetworkVersionId)
+					{
+						validateClient(id.getId(), id.getKey());
+					}
+					else
+					{
+						LOG("CustomerService", ("Login:LoginServer dropping client (stationId=[%lu], ip=[%s], id=[%s], key=[%s], version=[%s]) because of network version mismatch (required version=[%s])", m_stationId, getRemoteAddress().c_str(), id.getId().c_str(), id.getKey().c_str(), id.getVersion().c_str(), GameNetworkMessage::NetworkVersionId.c_str()));
+						// disconnect is handled on the client side, as soon as it recieves this message
+	#if _DEBUG
+						LoginIncorrectClientId incorrectId(GameNetworkMessage::NetworkVersionId, ApplicationVersion::getInternalVersion());
+	#else
+						LoginIncorrectClientId incorrectId("", "");
+	#endif // _DEBUG
+						send(incorrectId, true);
+					}	
+	#else
+					validateClient( id.getId(), id.getKey() );	
+	#endif // PRODUCTION == 1
+				}
+				
+				break;
+			}
+			case constcrc("RequestExtendedClusterInfo" ) :
+			{
+				LoginServer::getInstance().sendExtendedClusterInfo( *this );
+				break;
+			}
+			case constcrc("DeleteCharacterMessage") :
+			{
+				DeleteCharacterMessage msg(ri);
+				std::vector<NetworkId>::const_iterator f = std::find(m_charactersPendingDeletion.begin(), m_charactersPendingDeletion.end(), msg.getCharacterId());			
+				if ((m_waitingForCharacterLoginDeletion || m_waitingForCharacterClusterDeletion) && f != m_charactersPendingDeletion.end())
+				{
+					DeleteCharacterReplyMessage reply(DeleteCharacterReplyMessage::rc_ALREADY_IN_PROGRESS);
+					send(reply,true);
 				}
 				else
 				{
-					DeleteCharacterReplyMessage reply(DeleteCharacterReplyMessage::rc_CLUSTER_DOWN);
-					send(reply,true);
+					if (LoginServer::getInstance().deleteCharacter(msg.getClusterId(), msg.getCharacterId(), getStationId()))
+					{
+						m_waitingForCharacterLoginDeletion=true;
+						m_waitingForCharacterClusterDeletion=true;
+						m_charactersPendingDeletion.push_back(msg.getCharacterId());
+					}
+					else
+					{
+						DeleteCharacterReplyMessage reply(DeleteCharacterReplyMessage::rc_CLUSTER_DOWN);
+						send(reply,true);
+					}
 				}
+				break;
 			}
 		}
 	}

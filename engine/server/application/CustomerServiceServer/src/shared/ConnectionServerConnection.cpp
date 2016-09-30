@@ -24,6 +24,8 @@
 #include "sharedNetwork/NetworkSetupData.h"
 #include "UnicodeUtils.h"
 
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 //-----------------------------------------------------------------------
 
 ConnectionServerConnection::ConnectionServerConnection(const std::string & a, const unsigned short p) :
@@ -62,11 +64,13 @@ void ConnectionServerConnection::onReceive(const Archive::ByteStream & message)
 
 	ri = message.begin();
 
-	if (m.isType("GameClientMessage"))
+	if (m.getType() == constcrc("GameClientMessage"))
 	{
 		GameClientMessage c(ri);
 		Archive::ReadIterator cri = c.getByteStream().begin();
 		GameNetworkMessage cm(cri);
+		
+		const uint32 messageType = cm.getType();
 
 		std::vector<NetworkId>::const_iterator i;
 		for (i = c.getDistributionList().begin(); i != c.getDistributionList().end(); ++i)
@@ -75,68 +79,81 @@ void ConnectionServerConnection::onReceive(const Archive::ByteStream & message)
 
 			NetworkId const &networkId = (*i);
 
-			if (cm.isType("RequestCategoriesMessage"))
-			{
-				RequestCategoriesMessage message(cri);
-				CustomerServiceServer::getInstance().requestCategories(networkId, message.getLanguage());
-			}
-			else if (cm.isType("ConnectPlayerMessage"))
-			{
-				ConnectPlayerMessage message(cri);
-				CustomerServiceServer::getInstance().requestRegisterCharacter(networkId, this, message.getStationId());
-			}
-			else if (cm.isType("DisconnectPlayerMessage"))
-			{
-				CustomerServiceServer::getInstance().requestUnRegisterCharacter(networkId);
-			}
-			else if (cm.isType("CreateTicketMessage"))
-			{
-				CreateTicketMessage message(cri);
+			switch(messageType) {
+				case constcrc("RequestCategoriesMessage") :
+				{
+					RequestCategoriesMessage message(cri);
+					CustomerServiceServer::getInstance().requestCategories(networkId, message.getLanguage());
+					break;
+				}
+				case constcrc("ConnectPlayerMessage") :
+				{
+					ConnectPlayerMessage message(cri);
+					CustomerServiceServer::getInstance().requestRegisterCharacter(networkId, this, message.getStationId());
+					break;
+				}
+				case constcrc("DisconnectPlayerMessage") :
+				{
+					CustomerServiceServer::getInstance().requestUnRegisterCharacter(networkId);
+					break;
+				}
+				case constcrc("CreateTicketMessage") :
+				{
+					CreateTicketMessage message(cri);
 
-				CustomerServiceServer::getInstance().createTicket(networkId, 
-					message.getStationId(), message.getCharacterName(),
-					message.getCategory(), message.getSubCategory(),
-					message.getDetails(), message.getHiddenDetails(),
-					message.getHarassingPlayerName(),
-					message.getLanguage(), message.isBug()
-					);
-			}
-			else if (cm.isType("AppendCommentMessage"))
-			{
-				AppendCommentMessage message(cri);
-				CustomerServiceServer::getInstance().appendComment(networkId, message.getStationId(), message.getCharacterName(), message.getTicketId(), message.getComment());
-			}
-			else if (cm.isType("CancelTicketMessage"))
-			{
-				CancelTicketMessage message(cri);
-				CustomerServiceServer::getInstance().cancelTicket(networkId, message.getStationId(), message.getTicketId(), message.getComment());
-			}
-			else if (cm.isType("GetTicketsMessage"))
-			{
-				GetTicketsMessage message(cri);
-				CustomerServiceServer::getInstance().getTickets(networkId, message.getStationId());
-			}
-			else if (cm.isType("GetCommentsMessage"))
-			{
-				GetCommentsMessage message(cri);
-				CustomerServiceServer::getInstance().getComments(networkId, 
-					message.getTicketId());
-			}
-			else if (cm.isType("SearchKnowledgeBaseMessage"))
-			{
-				SearchKnowledgeBaseMessage message(cri);
-				CustomerServiceServer::getInstance().searchKnowledgeBase(networkId, message.getSearchString(), message.getLanguage());
-			}
-			else if (cm.isType("GetArticleMessage"))
-			{
-				GetArticleMessage message(cri);
-				CustomerServiceServer::getInstance().getArticle(networkId, message.getId(), message.getLanguage());
-			}
-			else if (cm.isType("NewTicketActivityMessage"))
-			{
-				NewTicketActivityMessage message(cri);
+					CustomerServiceServer::getInstance().createTicket(networkId, 
+						message.getStationId(), message.getCharacterName(),
+						message.getCategory(), message.getSubCategory(),
+						message.getDetails(), message.getHiddenDetails(),
+						message.getHarassingPlayerName(),
+						message.getLanguage(), message.isBug()
+						);
+					break;
+				}
+				case constcrc("AppendCommentMessage") :
+				{
+					AppendCommentMessage message(cri);
+					CustomerServiceServer::getInstance().appendComment(networkId, message.getStationId(), message.getCharacterName(), message.getTicketId(), message.getComment());
+					break;
+				}
+				case constcrc("CancelTicketMessage") :
+				{
+					CancelTicketMessage message(cri);
+					CustomerServiceServer::getInstance().cancelTicket(networkId, message.getStationId(), message.getTicketId(), message.getComment());
+					break;
+				}
+				case constcrc("GetTicketsMessage") :
+				{
+					GetTicketsMessage message(cri);
+					CustomerServiceServer::getInstance().getTickets(networkId, message.getStationId());
+					break;
+				}
+				case constcrc("GetCommentsMessage") :
+				{
+					GetCommentsMessage message(cri);
+					CustomerServiceServer::getInstance().getComments(networkId, 
+						message.getTicketId());
+					break;
+				}
+				case constcrc("SearchKnowledgeBaseMessage") :
+				{
+					SearchKnowledgeBaseMessage message(cri);
+					CustomerServiceServer::getInstance().searchKnowledgeBase(networkId, message.getSearchString(), message.getLanguage());
+					break;
+				}
+				case constcrc("GetArticleMessage") :
+				{
+					GetArticleMessage message(cri);
+					CustomerServiceServer::getInstance().getArticle(networkId, message.getId(), message.getLanguage());
+					break;
+				}
+				case constcrc("NewTicketActivityMessage") :
+				{
+					NewTicketActivityMessage message(cri);
 
-				CustomerServiceServer::getInstance().requestNewTicketActivity(networkId, message.getStationId());
+					CustomerServiceServer::getInstance().requestNewTicketActivity(networkId, message.getStationId());
+					break;
+				}
 			}
 		}
 	}
