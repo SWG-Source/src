@@ -1057,6 +1057,7 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 
 			launchCommoditiesServer();
 			launchStartingPlanetServers();
+			break;
 		}
 
 		case constcrc("RequestChunkMessage") : {
@@ -1082,6 +1083,7 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 
 			//@todo: figure out some way to handle this (such as forwarding to PlanetServers), or remove every case where it's sent
 			//forceUnload(t.getId(),t.getPermaDelete());
+			break;
 		}
 			//Character Creation Messages
 		case constcrc("ConnectionCreateCharacter") : {
@@ -1195,6 +1197,7 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 			else {
 				DEBUG_REPORT_LOG(true, ("Could not send name lock response to client because unable to determine which connection server to use.\n"));
 			}
+			break;
 		}
 		case constcrc("RequestOIDsMessage") : {
 			DEBUG_REPORT_LOG(true, ("Got RequestOIDsMessage.\n"));

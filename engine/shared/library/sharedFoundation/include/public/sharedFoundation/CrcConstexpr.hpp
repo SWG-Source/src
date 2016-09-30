@@ -50,19 +50,19 @@ constexpr static const uint32 crctable[256] =
 	0xAFB010B1, 0xAB710D06, 0xA6322BDF, 0xA2F33668, 0xBCB4666D, 0xB8757BDA, 0xB5365D03, 0xB1F740B4
 };
 
-// ======================================================================
+constexpr uint32 CRC_INIT = 0xFFFFFFFF;
 
 constexpr const uint32 constcrc(const char *string)
 {
-	uint32 crc = 0xFFFFFFFF;
+	uint32 crc = 0;
 
 	if (!string)
 		return 0;
 
-	for (; *string; ++string)
+	for (crc = CRC_INIT; *string; ++string)
 		crc = crctable[((crc>>24) ^ static_cast<byte>(*string)) & 0xFF] ^ (crc << 8);
 
-	return (crc ^ 0xFFFFFFFF);
+	return (crc ^ CRC_INIT);
 }
 
 // ======================================================================
