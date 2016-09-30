@@ -47,6 +47,8 @@
 #include "sharedUtility/DataTable.h"
 #include "sharedUtility/DataTableManager.h"
 
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 using namespace JNIWrappersNamespace;
 
 
@@ -54,7 +56,7 @@ using namespace JNIWrappersNamespace;
 // constants
 //========================================================================
 
-static const uint32 THEATER_DATATABLE_TAG = Crc::calculate("THEATER");
+static const uint32 THEATER_DATATABLE_TAG = constcrc("THEATER");
 static const std::string THEATER_TEMPLATE("object/intangible/theater/base_theater.iff");
 static const std::string THEATER_FLATTEN_LAYER("terrain/poi_small.lay");
 

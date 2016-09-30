@@ -30,7 +30,6 @@
 #include "serverUtility/ServerClock.h"
 #include "sharedFoundation/Clock.h"
 #include "sharedFoundation/ConstCharCrcLowerString.h"
-#include "sharedFoundation/Crc.h"
 #include "sharedGame/SharedObjectTemplate.h"
 #include "sharedLog/Log.h"
 #include "sharedNetworkMessages/GenericValueTypeMessage.h"
@@ -38,6 +37,8 @@
 #include "sharedTerrain/TerrainModificationHelper.h"
 #include "sharedUtility/DataTable.h"
 #include "sharedUtility/DataTableManager.h"
+
+#include "sharedFoundation/CrcConstexpr.hpp"
 
 #include <climits>
 
@@ -47,7 +48,7 @@ const SharedObjectTemplate * IntangibleObject::m_defaultSharedTemplate = nullptr
 uint32 IntangibleObject::ms_lastFrame = 0;
 uint32 IntangibleObject::ms_theaterTime = 0;
 
-static const uint32 THEATER_DATATABLE_TAG = Crc::calculate("THEATER");
+static const uint32 THEATER_DATATABLE_TAG = constcrc("THEATER");
 
 static const std::string THEATER_TEMPLATE("object/intangible/theater/base_theater.iff");
 static const std::string THEATER_FLATTEN_LAYER("terrain/poi_small.lay");

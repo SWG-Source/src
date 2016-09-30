@@ -27,6 +27,8 @@
 #include "sharedUtility/DataTable.h"
 #include "sharedUtility/DataTableManager.h"
 
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 #include <algorithm>
 
 // src/engine/client/library/clientGame/src/shared/core/AuctionManagerClient.cpp (s_maxBid)
@@ -1360,8 +1362,8 @@ void Auction::BuildSearchableAttributeList()
 			if (!m_searchableAttributeString)
 				m_searchableAttributeString = new std::map<uint32, std::string>;
 
-			static uint32 const shipCertAttributeCrc = Crc::calculate("ship_equipment_certification_search_attribute");
-			static uint32 const astromechCertAttributeCrc = Crc::calculate("astromech_certification_search_attribute");
+			static uint32 const shipCertAttributeCrc = constcrc("ship_equipment_certification_search_attribute");
+			static uint32 const astromechCertAttributeCrc = constcrc("astromech_certification_search_attribute");
 
 			if (itemIsShipComponentOrShipFlightComputer)
 			{

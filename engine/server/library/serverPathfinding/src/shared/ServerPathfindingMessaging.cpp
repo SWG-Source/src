@@ -31,6 +31,8 @@
 #include <map>
 #include <set>
 
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 ServerPathfindingMessaging * g_messaging = nullptr;
 
 // ======================================================================
@@ -195,7 +197,7 @@ void ServerPathfindingMessaging::receiveMessage(const MessageDispatch::Emitter &
 			{
 				// if there are no waypoints, use the /eject command
 				s->asCreatureObject()->commandQueueEnqueue(CommandTable::getCommand(
-					Crc::calculate("eject")), NetworkId::cms_invalid, Unicode::String());
+					constcrc("eject")), NetworkId::cms_invalid, Unicode::String());
 			}
 		}
 		else

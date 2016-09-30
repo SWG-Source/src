@@ -230,6 +230,8 @@
 #include "swgSharedUtility/SpeciesRestrictions.h"
 #include "unicodeArchive/UnicodeArchive.h"
 
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 #include <limits>
 
 //-----------------------------------------------------------------------
@@ -4935,7 +4937,7 @@ void GameServer::handleTeleportMessage(TeleportMessage const &message)
 		buf[sizeof(buf)-1] = '\0';
 
 		Command::ErrorCode status = Command::CEC_Success;
-		creature->forceExecuteCommand(CommandTable::getCommand(Crc::calculate("planetwarp")), NetworkId::cms_invalid, Unicode::narrowToWide(buf), status, false);
+		creature->forceExecuteCommand(CommandTable::getCommand(constcrc("planetwarp")), NetworkId::cms_invalid, Unicode::narrowToWide(buf), status, false);
 	}
 }
 
