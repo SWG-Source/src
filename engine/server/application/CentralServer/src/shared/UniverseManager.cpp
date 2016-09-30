@@ -49,7 +49,7 @@ UniverseManager::~UniverseManager()
 
 void UniverseManager::receiveMessage(const MessageDispatch::Emitter & source, const MessageDispatch::MessageBase & message)
 {
-	const uint32 messageType = mesage.getType();
+	const uint32 messageType = message.getType();
 	
 	switch(messageType) {
 		case constcrc("CentralGameServerDbProcessServerProcessId") :

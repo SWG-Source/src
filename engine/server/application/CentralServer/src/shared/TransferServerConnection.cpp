@@ -70,7 +70,7 @@ void TransferServerConnection::onReceive(const Archive::ByteStream & message)
 	
 	const uint32 messageType = msg.getType();
 
-	switch(msgType) {
+	switch(messageType) {
 		case constcrc("UploadCharacterMessage") :
 		{
 			const UploadCharacterMessage ucm(ri);
