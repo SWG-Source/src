@@ -54,6 +54,8 @@
 #include "sharedUtility/DataTableManager.h"
 #include <vector>
 
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 // ======================================================================
 namespace ConnectionServerNamespace
 {
