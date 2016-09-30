@@ -21,6 +21,8 @@
 #include "sharedUtility/StartingLocationData.h"
 #include "sharedUtility/StartingLocationManager.h"
 
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 //-----------------------------------------------------------------------
 
 namespace PseudoClientConnectionNamespace
@@ -231,170 +233,185 @@ void PseudoClientConnection::receiveMessage(const Archive::ByteStream & message)
 	const GameNetworkMessage msg(ri);
 	ri = message.begin();
 
-	if(msg.isType("GameServerForLoginMessage"))
-	{
-		const GameServerForLoginMessage gameServerForLogin(ri);
-		LOG("CustomerService", ("CharacterTransfer: *** ConnectionServer: Received GameServerForLoginMessage for %d, server=%d\n", gameServerForLogin.getStationId(), gameServerForLogin.getServer()));
-		m_gameConnection = ConnectionServer::getGameConnection(gameServerForLogin.getServer());
-		if(m_gameConnection)
+	const uint32 messageType = msg.getType();
+	
+	switch(messageType) {
+		case constcrc("GameServerForLoginMessage") :`
 		{
-			NetworkId characterId = m_transferCharacterData.getCharacterId();
-			unsigned int stationId = m_trackStationId;
-			if(m_transferCharacterData.getScriptDictionaryData().size())
+			const GameServerForLoginMessage gameServerForLogin(ri);
+			LOG("CustomerService", ("CharacterTransfer: *** ConnectionServer: Received GameServerForLoginMessage for %d, server=%d\n", gameServerForLogin.getStationId(), gameServerForLogin.getServer()));
+			m_gameConnection = ConnectionServer::getGameConnection(gameServerForLogin.getServer());
+			if(m_gameConnection)
 			{
-				LOG("CustomerService", ("CharacterTransfer: Setting up login for destination server"));
-				characterId = m_transferCharacterData.getDestinationCharacterId();
+				NetworkId characterId = m_transferCharacterData.getCharacterId();
+				unsigned int stationId = m_trackStationId;
+				if(m_transferCharacterData.getScriptDictionaryData().size())
+				{
+					LOG("CustomerService", ("CharacterTransfer: Setting up login for destination server"));
+					characterId = m_transferCharacterData.getDestinationCharacterId();
+				}
+				std::vector<std::pair<NetworkId, std::string> > static const emptyStringVector;
+				NewClient m(characterId, "TransferServer", NetworkHandler::getHostName(), true, false, stationId, nullptr, 0, 0, 0, 0, 0, 0, 0, emptyStringVector, emptyStringVector, m_transferCharacterData.getCSToolId() != 0, true);
+				m_gameConnection->send(m, true);
+				LOG("CustomerService", ("CharacterTransfer: Sent NewClient(%s, \"TransferServer\", \"%s\", true, false, %d, nullptr, 0, 0)\n", characterId.getValueString().c_str(), NetworkHandler::getHostName().c_str(), stationId));
 			}
-			std::vector<std::pair<NetworkId, std::string> > static const emptyStringVector;
-			NewClient m(characterId, "TransferServer", NetworkHandler::getHostName(), true, false, stationId, nullptr, 0, 0, 0, 0, 0, 0, 0, emptyStringVector, emptyStringVector, m_transferCharacterData.getCSToolId() != 0, true);
-			m_gameConnection->send(m, true);
-			LOG("CustomerService", ("CharacterTransfer: Sent NewClient(%s, \"TransferServer\", \"%s\", true, false, %d, nullptr, 0, 0)\n", characterId.getValueString().c_str(), NetworkHandler::getHostName().c_str(), stationId));
+			break;
 		}
-	}
-	else if(msg.isType("TransferLoginCharacterToSourceServer"))
-	{
-		// this is a message that will create a new pseudoclient connection
-		LOG("CustomerService", ("CharacterTransfer: requestGameServerForLogin()"));
-		GenericValueTypeMessage<TransferCharacterData> loginRequest(ri);
-		const NetworkId & requestCharacterId = loginRequest.getValue().getCharacterId(); 
-		if(requestCharacterId == NetworkId::cms_invalid || requestCharacterId != m_transferCharacterData.getCharacterId())
+		case constcrc("TransferLoginCharacterToSourceServer") :
 		{
-			LOG("CustomerService", ("CharacterTransfer: *** ERROR *** Received a request to login to source server for %s, but a transfer for %s is already in progress. Sending failure.", loginRequest.getValue().toString().c_str(), m_transferCharacterData.toString().c_str()));
+			// this is a message that will create a new pseudoclient connection
+			LOG("CustomerService", ("CharacterTransfer: requestGameServerForLogin()"));
+			GenericValueTypeMessage<TransferCharacterData> loginRequest(ri);
+			const NetworkId & requestCharacterId = loginRequest.getValue().getCharacterId(); 
+			if(requestCharacterId == NetworkId::cms_invalid || requestCharacterId != m_transferCharacterData.getCharacterId())
+			{
+				LOG("CustomerService", ("CharacterTransfer: *** ERROR *** Received a request to login to source server for %s, but a transfer for %s is already in progress. Sending failure.", loginRequest.getValue().toString().c_str(), m_transferCharacterData.toString().c_str()));
+				GenericValueTypeMessage<TransferCharacterData> fail("ReplyTransferDataFail", m_transferCharacterData);
+				ConnectionServer::sendToCentralProcess(fail);
+			}
+			else
+			{
+				requestGameServerForLogin();
+			}
+			break;
+		}
+		case constcrc("TransferLoginCharacterToDestinationServer") :
+		{
+			GenericValueTypeMessage<TransferCharacterData> loginRequest(ri);
+			const NetworkId & requestCharacterId = loginRequest.getValue().getCharacterId(); 
+			if(requestCharacterId == NetworkId::cms_invalid || requestCharacterId != m_transferCharacterData.getCharacterId())
+			{
+				LOG("CustomerService", ("CharacterTransfer: *** ERROR *** Received a request to login to destination server for %s, but a transfer for %s is already in progress. Sending failure.", loginRequest.getValue().toString().c_str(), m_transferCharacterData.toString().c_str()));
+				GenericValueTypeMessage<TransferCharacterData> fail("ReplyTransferDataFail", m_transferCharacterData);
+				ConnectionServer::sendToCentralProcess(fail);
+			}
+			else
+			{
+				// find a valid starting location
+				std::vector<StartingLocationData> startingLocations;
+				StartingLocationData bestLocation;
+				startingLocations = StartingLocationManager::getLocations();
+				if(! startingLocations.empty())
+				{
+					bestLocation = *(startingLocations.begin());
+				}
+				m_transferCharacterData.setScene(bestLocation.planet);
+				m_transferCharacterData.setStartingCoordinates(Vector(bestLocation.x, bestLocation.y, bestLocation.z));
+
+				// start character creation process
+				ConnectionCreateCharacter connectionCreate(
+					m_transferCharacterData.getDestinationStationId(),
+					Unicode::narrowToWide(m_transferCharacterData.getDestinationCharacterName()),
+					m_transferCharacterData.getObjectTemplateName(),
+					m_transferCharacterData.getScaleFactor(),
+					bestLocation.name,
+					m_transferCharacterData.getCustomizationData(),
+					m_transferCharacterData.getHairTemplateName(),
+					m_transferCharacterData.getHairAppearanceData(),
+					m_transferCharacterData.getProfession(),
+					false,
+					m_transferCharacterData.getBiography(),
+					false,
+					m_transferCharacterData.getSkillTemplate(),
+					m_transferCharacterData.getWorkingSkill(),
+					false,
+					true,
+					0xFFFFFFFF); // assume all feature bits set, so that character creation will not be blocked by account features
+				LOG("CustomerService", ("CharacterTransfer: Sending ConnectionCreateCharacter to CentralServer : %s", m_transferCharacterData.toString().c_str()));
+				ConnectionServer::sendToCentralProcess(connectionCreate);
+			}
+			break;
+		}
+		case constcrc("CtsSrcCharWrongPlanet") :
+		{
+			LOG("CustomerService", ("CharacterTransfer: *** ERROR *** Source character is not one of the 10 original ground planets. Sending failure for %s.", m_transferCharacterData.toString().c_str()));
 			GenericValueTypeMessage<TransferCharacterData> fail("ReplyTransferDataFail", m_transferCharacterData);
 			ConnectionServer::sendToCentralProcess(fail);
+			break;
 		}
-		else
+		case constcrc("ReplyTransferData") :
 		{
+			// the game server has responded with valid transfer information.
+			// upload the data to the transfer server (by way of the CentralServer)
+			// and disconnect the client since there's nothing more needed to be
+			// done here
+			GenericValueTypeMessage<TransferCharacterData> reply(ri);
+			m_transferCharacterData = reply.getValue();
+			LOG("CustomerService", ("CharacterTransfer: Received ReplyTransferData %s", m_transferCharacterData.toString().c_str()));
+
+			CentralConnection * centralServerConnection = ConnectionServer::getCentralConnection();
+			if(centralServerConnection)
+			{
+				const GenericValueTypeMessage<TransferCharacterData> transferReply("TransferReceiveDataFromGameServer", m_transferCharacterData);
+				centralServerConnection->send(transferReply, true);
+			}
+
+			DropClient dropMsg(m_transferCharacterData.getCharacterId());
+			if(m_gameConnection)
+			{
+				m_gameConnection->send(dropMsg, true);
+			}
+			delete this;
+			break;
+		}
+		case constcrc("ConnectionCreateCharacterSuccess") :
+		{
+			const ConnectionCreateCharacterSuccess success(ri);
+			// woohoo! character has been created on the server!
+			// Log the character back in, run the transfer scripts to
+			// apply data in the script dictionary associated with the character
+			LOG("CustomerService", ("CharacterTransfer: Received ConnectionCreateCharacterSuccess for %s", m_transferCharacterData.toString().c_str()));
+			m_transferCharacterData.setDestinationCharacterId(success.getNetworkId());
 			requestGameServerForLogin();
+			s_pseudoClientConnectionMapByCharacterId[m_transferCharacterData.getDestinationCharacterId()] = this;
+			break;
 		}
-	}
-	else if(msg.isType("TransferLoginCharacterToDestinationServer"))
-	{
-		GenericValueTypeMessage<TransferCharacterData> loginRequest(ri);
-		const NetworkId & requestCharacterId = loginRequest.getValue().getCharacterId(); 
-		if(requestCharacterId == NetworkId::cms_invalid || requestCharacterId != m_transferCharacterData.getCharacterId())
+		case constcrc("ConnectionCreateCharacterFailed") :
 		{
-			LOG("CustomerService", ("CharacterTransfer: *** ERROR *** Received a request to login to destination server for %s, but a transfer for %s is already in progress. Sending failure.", loginRequest.getValue().toString().c_str(), m_transferCharacterData.toString().c_str()));
-			GenericValueTypeMessage<TransferCharacterData> fail("ReplyTransferDataFail", m_transferCharacterData);
-			ConnectionServer::sendToCentralProcess(fail);
-		}
-		else
-		{
-			// find a valid starting location
-			std::vector<StartingLocationData> startingLocations;
-			StartingLocationData bestLocation;
-			startingLocations = StartingLocationManager::getLocations();
-			if(! startingLocations.empty())
+			const ConnectionCreateCharacterFailed failed(ri);
+			LOG("CustomerService", ("CharacterTransfer: Received ConnectionCreateCharacterFailed [%s, %s] for %s", failed.getErrorMessage().getDebugString().c_str(), failed.getOptionalDetailedErrorMessage().c_str(), m_transferCharacterData.toString().c_str()));
+			s_pseudoClientConnectionMapByCharacterId[m_transferCharacterData.getDestinationCharacterId()] = this;
+			GenericValueTypeMessage<TransferCharacterData> reply("TransferCreateCharacterFailed", m_transferCharacterData);
+			CentralConnection * centralServerConnection = ConnectionServer::getCentralConnection();
+			if(centralServerConnection)
 			{
-				bestLocation = *(startingLocations.begin());
+				centralServerConnection->send(reply, true);
 			}
-			m_transferCharacterData.setScene(bestLocation.planet);
-			m_transferCharacterData.setStartingCoordinates(Vector(bestLocation.x, bestLocation.y, bestLocation.z));
-
-			// start character creation process
-			ConnectionCreateCharacter connectionCreate(
-				m_transferCharacterData.getDestinationStationId(),
-				Unicode::narrowToWide(m_transferCharacterData.getDestinationCharacterName()),
-				m_transferCharacterData.getObjectTemplateName(),
-				m_transferCharacterData.getScaleFactor(),
-				bestLocation.name,
-				m_transferCharacterData.getCustomizationData(),
-				m_transferCharacterData.getHairTemplateName(),
-				m_transferCharacterData.getHairAppearanceData(),
-				m_transferCharacterData.getProfession(),
-				false,
-				m_transferCharacterData.getBiography(),
-				false,
-				m_transferCharacterData.getSkillTemplate(),
-				m_transferCharacterData.getWorkingSkill(),
-				false,
-				true,
-				0xFFFFFFFF); // assume all feature bits set, so that character creation will not be blocked by account features
-			LOG("CustomerService", ("CharacterTransfer: Sending ConnectionCreateCharacter to CentralServer : %s", m_transferCharacterData.toString().c_str()));
-			ConnectionServer::sendToCentralProcess(connectionCreate);
+			break;
 		}
-	}
-	else if(msg.isType("CtsSrcCharWrongPlanet"))
-	{
-		LOG("CustomerService", ("CharacterTransfer: *** ERROR *** Source character is not one of the 10 original ground planets. Sending failure for %s.", m_transferCharacterData.toString().c_str()));
-		GenericValueTypeMessage<TransferCharacterData> fail("ReplyTransferDataFail", m_transferCharacterData);
-		ConnectionServer::sendToCentralProcess(fail);
-	}
-	else if(msg.isType("ReplyTransferData"))
-	{
-		// the game server has responded with valid transfer information.
-		// upload the data to the transfer server (by way of the CentralServer)
-		// and disconnect the client since there's nothing more needed to be
-		// done here
-		GenericValueTypeMessage<TransferCharacterData> reply(ri);
-		m_transferCharacterData = reply.getValue();
-		LOG("CustomerService", ("CharacterTransfer: Received ReplyTransferData %s", m_transferCharacterData.toString().c_str()));
-
-		CentralConnection * centralServerConnection = ConnectionServer::getCentralConnection();
-		if(centralServerConnection)
+		case constcrc("ApplyTransferDataSuccess") :
 		{
-			const GenericValueTypeMessage<TransferCharacterData> transferReply("TransferReceiveDataFromGameServer", m_transferCharacterData);
-			centralServerConnection->send(transferReply, true);
+			GenericValueTypeMessage<TransferCharacterData> success(ri);
+			LOG("CustomerService", ("CharacterTransfer: Received ApplyTransferDataSuccess from GameServer! %s", success.getValue().toString().c_str()));
+			CentralConnection * centralServerConnection = ConnectionServer::getCentralConnection();
+			if(centralServerConnection)
+			{
+				centralServerConnection->send(success, true);
+			}
+			break;
 		}
-
-		DropClient dropMsg(m_transferCharacterData.getCharacterId());
-		if(m_gameConnection)
+		case constcrc("ApplyTransferDataFail") :
 		{
-			m_gameConnection->send(dropMsg, true);
+			GenericValueTypeMessage<TransferCharacterData> fail(ri);
+			LOG("CustomerService", ("CharacterTransfer: Received ApplyTransferDataFail from GameServer! %s", fail.getValue().toString().c_str()));
+			CentralConnection * centralServerConnection = ConnectionServer::getCentralConnection();
+			if(centralServerConnection)
+			{
+				centralServerConnection->send(fail, true);
+			}
+			break;
 		}
-		delete this;
-	}
-	else if(msg.isType("ConnectionCreateCharacterSuccess"))
-	{
-		const ConnectionCreateCharacterSuccess success(ri);
-		// woohoo! character has been created on the server!
-		// Log the character back in, run the transfer scripts to
-		// apply data in the script dictionary associated with the character
-		LOG("CustomerService", ("CharacterTransfer: Received ConnectionCreateCharacterSuccess for %s", m_transferCharacterData.toString().c_str()));
-		m_transferCharacterData.setDestinationCharacterId(success.getNetworkId());
-		requestGameServerForLogin();
-		s_pseudoClientConnectionMapByCharacterId[m_transferCharacterData.getDestinationCharacterId()] = this;
-	}
-	else if(msg.isType("ConnectionCreateCharacterFailed"))
-	{
-		const ConnectionCreateCharacterFailed failed(ri);
-		LOG("CustomerService", ("CharacterTransfer: Received ConnectionCreateCharacterFailed [%s, %s] for %s", failed.getErrorMessage().getDebugString().c_str(), failed.getOptionalDetailedErrorMessage().c_str(), m_transferCharacterData.toString().c_str()));
-		s_pseudoClientConnectionMapByCharacterId[m_transferCharacterData.getDestinationCharacterId()] = this;
-		GenericValueTypeMessage<TransferCharacterData> reply("TransferCreateCharacterFailed", m_transferCharacterData);
-		CentralConnection * centralServerConnection = ConnectionServer::getCentralConnection();
-		if(centralServerConnection)
+		case constcrc("ReplyBankCTSLoaded") :
 		{
-			centralServerConnection->send(reply, true);
+			LOG("CustomerService", ("CharacterTransfer: Received ReplyBankCTSLoaded from GameServer!"));
+			onBankLoaded();
+			break;
 		}
-	}
-	else if(msg.isType("ApplyTransferDataSuccess"))
-	{
-		GenericValueTypeMessage<TransferCharacterData> success(ri);
-		LOG("CustomerService", ("CharacterTransfer: Received ApplyTransferDataSuccess from GameServer! %s", success.getValue().toString().c_str()));
-		CentralConnection * centralServerConnection = ConnectionServer::getCentralConnection();
-		if(centralServerConnection)
+		case constcrc("PackedHousesLoaded") :
 		{
-			centralServerConnection->send(success, true);
+			onPackedHousesLoaded();
+			break;
 		}
-	}
-	else if(msg.isType("ApplyTransferDataFail"))
-	{
-		GenericValueTypeMessage<TransferCharacterData> fail(ri);
-		LOG("CustomerService", ("CharacterTransfer: Received ApplyTransferDataFail from GameServer! %s", fail.getValue().toString().c_str()));
-		CentralConnection * centralServerConnection = ConnectionServer::getCentralConnection();
-		if(centralServerConnection)
-		{
-			centralServerConnection->send(fail, true);
-		}
-	}
-	else if(msg.isType("ReplyBankCTSLoaded"))
-	{
-		LOG("CustomerService", ("CharacterTransfer: Received ReplyBankCTSLoaded from GameServer!"));
-		onBankLoaded();
-	}
-	else if(msg.isType("PackedHousesLoaded"))
-	{
-		onPackedHousesLoaded();
 	}
 }
 //-----------------------------------------------------------------------
@@ -433,7 +450,9 @@ bool PseudoClientConnection::tryToDeliverMessageTo(unsigned int stationId, const
 	ri = message.begin();
 
 	bool result = false;
-	if(msg.isType("TransferLoginCharacterToSourceServer") || msg.isType("TransferLoginCharacterToDestinationServer"))
+	const uint32 messageType = msg.getType();
+	
+	if(messageType == constcrc("TransferLoginCharacterToSourceServer") || messageType == constcrc("TransferLoginCharacterToDestinationServer"))
 	{
 		// this is a message that will create a new pseudoclient connection
 		const GenericValueTypeMessage<TransferCharacterData> login(ri);
