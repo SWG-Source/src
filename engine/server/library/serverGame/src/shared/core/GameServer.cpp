@@ -901,8 +901,7 @@ void GameServer::receiveMessage(const MessageDispatch::Emitter & source, const M
 
 	const uint32 messageType = message.getType();
 
-	select (messageType)
-	{
+	switch (messageType) {
 		case constcrc("CentralConnectionOpened") : {
 			MESSAGE_PROFILER_BLOCK("CentralConnectionOpened");
 			if (!m_centralServerConnection)
@@ -2124,7 +2123,7 @@ void GameServer::receiveMessage2(const MessageDispatch::Emitter & source, const 
 
 	const uint32 messageType = message.getType();
 
-	switch(messageType) {
+	switch (messageType) {
 		case constcrc("AuthTransferConfirmMessage") : {
 			MESSAGE_PROFILER_BLOCK("AuthTransferConfirmMessage");
 			ri = static_cast<GameNetworkMessage const &>(message).getByteStream().begin();
