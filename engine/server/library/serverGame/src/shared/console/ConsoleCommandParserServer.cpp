@@ -73,6 +73,8 @@
 #include "sharedUtility/DataTableManager.h"
 #include "serverUtility/FreeCtsDataTable.h"
 
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 #include <stdio.h>
 
 // ======================================================================
