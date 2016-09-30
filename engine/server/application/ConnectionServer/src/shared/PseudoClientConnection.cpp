@@ -236,7 +236,7 @@ void PseudoClientConnection::receiveMessage(const Archive::ByteStream & message)
 	const uint32 messageType = msg.getType();
 	
 	switch(messageType) {
-		case constcrc("GameServerForLoginMessage") :`
+		case constcrc("GameServerForLoginMessage") :
 		{
 			const GameServerForLoginMessage gameServerForLogin(ri);
 			LOG("CustomerService", ("CharacterTransfer: *** ConnectionServer: Received GameServerForLoginMessage for %d, server=%d\n", gameServerForLogin.getStationId(), gameServerForLogin.getServer()));
