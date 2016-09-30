@@ -317,15 +317,15 @@ void SessionApiClient::OnGetFeatures(const apiTrackingNumber trackingNumber,
 				accountFeatureIdRequest = dynamic_cast<AccountFeatureIdRequest const *>(i->second);
 				break;
 			}
-			case constcrc("AdjustAccountFeatureIdRequest" : {
+			case constcrc("AdjustAccountFeatureIdRequest") : {
 				adjustAccountFeatureIdRequest = dynamic_cast<AdjustAccountFeatureIdRequest const *>(i->second);
 				break;
 			}
-			case constcrc("AdjustAccountFeatureIdResponse" : {
+			case constcrc("AdjustAccountFeatureIdResponse") : {
 				adjustAccountFeatureIdResponse = dynamic_cast<AdjustAccountFeatureIdResponse *>(i->second);
 				break;
 			}
-			case constcrc("ClaimRewardsMessage" : {
+			case constcrc("ClaimRewardsMessage") : {
 				claimRewardsMessage = dynamic_cast<ClaimRewardsMessage *>(i->second);
 				break;
 			}
