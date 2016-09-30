@@ -1371,37 +1371,38 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 				m_timeClusterWentIntoLoadingState = time(0);
 			}
 
-				//  handle planet transfers and logins for planet server that aren't up yet
-				std::vector<Archive::ByteStream>::iterator t;
-				for(t = m_messagesWaitingForPlanetServer.begin(); t != m_messagesWaitingForPlanetServer.end();)
-				{
-					Archive::ReadIterator tri = t->begin();
-					const GameNetworkMessage gnm(tri);
-					tri = t->begin();
-					if(gnm.isType("RequestGameServerForLoginMessage"))
-					{
+			//  handle planet transfers and logins for planet server that aren't up yet
+			std::vector<Archive::ByteStream>::iterator t;
+			for (t = m_messagesWaitingForPlanetServer.begin(); t != m_messagesWaitingForPlanetServer.end();) {
+				Archive::ReadIterator tri = t->begin();
+				const GameNetworkMessage gnm(tri);
+				const uint32 mt = gnm.getType();
+
+				tri = t->begin();
+				switch (mt) {
+					case constcrc("RequestGameServerForLoginMessage") : {
 						const RequestGameServerForLoginMessage loginMessage(tri);
-						if (loginMessage.getScene() == msg.getSceneId())
-						{
+						if (loginMessage.getScene() == msg.getSceneId()) {
 							t = m_messagesWaitingForPlanetServer.erase(t);
 							handleRequestGameServerForLoginMessage(loginMessage);
 						}
+						break;
 					}
-					else if(gnm.isType("RequestSceneTransfer"))
-					{
+					case constcrc("RequestSceneTransfer") : {
 						const RequestSceneTransfer sceneMessage(tri);
-						if (sceneMessage.getSceneName() == msg.getSceneId())
-						{
+						if (sceneMessage.getSceneName() == msg.getSceneId()) {
 							t = m_messagesWaitingForPlanetServer.erase(t);
 							handleRequestSceneTransfer(sceneMessage);
 						}
+						break;
 					}
-					else
-					{
+					default : {
 						t = m_messagesWaitingForPlanetServer.erase(t);
 						WARNING_STRICT_FATAL(true, ("Unknown message type waiting for planet server"));
+						break;
 					}
 				}
+			}
 			break;
 		}
 		case constcrc("RequestSceneTransfer") : {
