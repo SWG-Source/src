@@ -100,7 +100,7 @@ void PlanetServerConnection::onReceive(Archive::ByteStream const &message)
 		}
 	}
 
-	if (constcrc("BeginForward"))
+	if (msgType == constcrc("BeginForward"))
 	{
 		GenericValueTypeMessage<std::vector<uint32> > const beginForwardMessage(ri);
 
