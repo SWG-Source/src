@@ -972,89 +972,6 @@ void Client::receiveClientMessage(const GameNetworkMessage & message)
 
 			//----------------------------------------------------------------------
 
-			case ObjectMenuSelectMessage::MESSAGE_TYPE :
-			{
-				Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-				const ObjectMenuSelectMessage m (ri);
-				ServerObject * const target           = safe_cast<ServerObject *>(NetworkIdManager::getObjectById (m.getNetworkId()));
-				GameScriptObject * const scriptObject = target ? target->getScriptObject() : 0;
-				Object * const targetContainedBy = target ? ContainerInterface::getContainedByObject(*target) : nullptr;
-				const int menuType                    = m.getSelectedItemId();
-
-				static int examineMenuType = RadialMenuManager::getMenuTypeByName("EXAMINE");
-				static int tradeMenuType   = RadialMenuManager::getMenuTypeByName("TRADE_START");
-
-				CreatureObject* cobj = dynamic_cast<CreatureObject*>(primaryControlledObject);
-				if (cobj && menuType != examineMenuType && menuType != tradeMenuType)
-				{
-					CreatureController* const controller = cobj->getCreatureController();
-					if (controller && controller->getSecureTrade())
-					{
-						controller->getSecureTrade()->cancelTrade(*cobj);
-						DEBUG_REPORT_LOG (true, ("Client ObjectMenuSelectMessage [%d] for [%s] canceling trade.\n", menuType, cobj->getNetworkId ().getValueString ().c_str ()));
-					}
-				}
-
-				if (!scriptObject)
-				{
-					DEBUG_REPORT_LOG (true, ("Received an object menu select message from player %s for object %s, which does not exist or lacks a GameScriptObject.", m_characterObjectId.getValueString().c_str(),m.getNetworkId().getValueString().c_str()));
-					return;
-				}
-
-				NOT_NULL(target);
-
-				float range = 0.0f;
-				if (RadialMenuManager::getRangeForMenuType(menuType, range))
-				{
-					Container::ContainerErrorCode errorCode = Container::CEC_Success;
-					if (!target->isAuthoritative())
-					{
-						GenericValueTypeMessage<std::pair<NetworkId, NetworkId> > const rssMessage(
-							"RequestSameServer",
-							std::make_pair(
-								ContainerInterface::getTopmostContainer(*primaryControlledObject)->getNetworkId(),
-								ContainerInterface::getTopmostContainer(*target)->getNetworkId()));
-						GameServer::getInstance().sendToPlanetServer(rssMessage);
-						errorCode = Container::CEC_TryAgain;
-					}
-					else if (menuType != examineMenuType && targetContainedBy && targetContainedBy->asServerObject() && ( targetContainedBy->asServerObject()->getGameObjectType() == SharedObjectTemplate::GOT_chronicles_quest_holocron || targetContainedBy->asServerObject()->getGameObjectType() == SharedObjectTemplate::GOT_chronicles_quest_holocron_recipe ) )
-					{
-						// Can only examine items that are contained in a holocron.
-						errorCode = Container::CEC_NoPermission;
-					}
-					else if (primaryControlledObject->canManipulateObject(*target, false, false, false, range, errorCode)
-						|| ClientNamespace::canManipulateObjectExceptionCheck(*target, menuType, errorCode))
-					{
-						ScriptParams params;
-						params.addParam (getCharacterObjectId());
-						params.addParam (menuType);
-
-						if (cobj && cobj->getObjVars().hasItem("cheater"))
-						{
-							std::string menuDesc = "unknown";
-							bool tmp;
-							IGNORE_RETURN(RadialMenuManager::getCommandForMenuType(menuType, menuDesc, tmp));
-							LOG("CustomerService",("SuspectedCheaterLog: %s has used a radial menu on object %s. Menu item %d (%s).",
-												   PlayerObject::getAccountDescription(cobj).c_str(),
-												   m.getNetworkId().getValueString().c_str(),
-												   menuType,
-												   menuDesc.c_str() ));
-						}
-
-						IGNORE_RETURN (scriptObject->trigAllScripts(Scripting::TRIG_OBJECT_MENU_SELECT, params));
-					}
-					if (errorCode != Container::CEC_Success)
-						ContainerInterface::sendContainerMessageToClient(*primaryControlledObject, errorCode);
-				}
-				else
-				{
-					DEBUG_REPORT_LOG(true, ("Received a message type %d that had no range in data (radial_menu.tab)\n", menuType));
-				}
-				break;
-			}
-
-			//----------------------------------------------------------------------
-
 			case constcrc("ConGenericMessage") :
 			{
 
@@ -1318,12 +1235,6 @@ void Client::receiveClientMessage(const GameNetworkMessage & message)
 				break;
 			}
 
-			case SuiEventNotification::MessageType :
-			{
-				ServerUIManager::receiveMessage(message);
-				break;
-			}
-
 			case constcrc("GuildRequestMessage") :
 			{
 				Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
@@ -1399,27 +1310,6 @@ void Client::receiveClientMessage(const GameNetworkMessage & message)
 
 					FactionResponseMessage const msg(rebel, imperial, criminal, factionNames, factionValues);
 					send(msg, true);
-				}
-				break;
-			}
-
-			//----------------------------------------------------------------------
-
-			case PlayerMoneyRequest::MessageType :
-			{
-				Archive::ReadIterator ri = (*NON_NULL (static_cast<const GameNetworkMessage *>(&message))).getByteStream().begin();
-				const PlayerMoneyRequest m (ri);
-
-				ServerObject * const playerObject = getCharacterObject();
-
-				WARNING (!playerObject, ("Got PlayerMoneyRequest for non-existant character (account=%s, networkid=%s)", m_accountName.c_str (), m_characterObjectId.getValueString ().c_str ()));
-
-				if (playerObject)
-				{
-					PlayerMoneyResponse resp;
-					resp.m_balanceCash.set (playerObject->getCashBalance ());
-					resp.m_balanceBank.set (playerObject->getBankBalance ());
-					send (resp, true);
 				}
 				break;
 			}
@@ -1732,66 +1622,6 @@ void Client::receiveClientMessage(const GameNetworkMessage & message)
 
 			//-----------------------------------------------------------------
 
-			case PlanetTravelPointListRequest::cms_name :
-			{
-				Archive::ReadIterator readIterator = static_cast<const GameNetworkMessage&> (message).getByteStream ().begin ();
-				const PlanetTravelPointListRequest requestMessage (readIterator);
-
-				const std::string & planetName = requestMessage.getPlanetName ();
-				const PlanetObject* const planetObject = ServerUniverse::getInstance ().getPlanetByName (requestMessage.getPlanetName ());
-				if (planetObject)
-				{
-					std::vector<std::string> names;
-					planetObject->getTravelPointNameList (names);
-
-					std::vector<Vector> points;
-					planetObject->getTravelPointPointList (points);
-
-					std::vector<int> costs;
-					planetObject->getTravelPointCostList (costs);
-
-					std::vector<bool> interplanetary;
-					planetObject->getTravelPointInterplanetaryList (interplanetary);
-
-					PlanetTravelPointListResponse const rsp(planetName, names, points, costs, interplanetary, requestMessage.getSequenceId ());
-					send(rsp, true);
-				}
-				else
-					DEBUG_WARNING (true, ("GameServer::receiveMessage: received request for travel point names from client [%s] for planet %s which does not exist", requestMessage.getPlanetName ().c_str (), requestMessage.getNetworkId ().getValueString ().c_str ()));
-				
-				break;
-			}
-
-			//-----------------------------------------------------------------
-
-			case NewbieTutorialResponse::cms_name :
-			{
-				Archive::ReadIterator readIterator = static_cast<const GameNetworkMessage&> (message).getByteStream ().begin ();
-				const NewbieTutorialResponse responseMessage (readIterator);
-
-				static const std::string clientReadyString("clientReady");
-
-				if (responseMessage.getResponse() == clientReadyString)
-				{
-					for (std::vector<ServerObject *>::iterator i = m_controlledObjects.begin(); i != m_controlledObjects.end(); ++i)
-					{
-						ServerObject * const so = *i;
-						if (so)
-							so->onLoadingScreenComplete();
-					}
-				}
-
-				ScriptParams scriptParameters;
-				scriptParameters.addParam (responseMessage.getResponse ().c_str ());
-
-				if (primaryControlledObject->getScriptObject ()->trigAllScripts (Scripting::TRIG_NEWBIE_TUTORIAL_RESPONSE, scriptParameters) != SCRIPT_CONTINUE)
-					DEBUG_REPORT_LOG (true, ("OnNewbieTutorialResponse: did not return SCRIPT_CONTINUE\n"));
-				
-				break;
-			}
-
-			//-----------------------------------------------------------------
-
 			case constcrc("AddMapLocationMessage") :
 			{
 				Archive::ReadIterator readIterator = static_cast<const GameNetworkMessage&> (message).getByteStream ().begin ();
@@ -1811,17 +1641,6 @@ void Client::receiveClientMessage(const GameNetworkMessage & message)
 				AddMapLocationResponseMessage responseMsg(msg.getLocationId());
 				send(responseMsg, true);
 				*/
-				break;
-			}
-
-			//-----------------------------------------------------------------
-
-			case GetMapLocationsMessage::MessageType :
-			{
-				Archive::ReadIterator readIterator = static_cast<const GameNetworkMessage&> (message).getByteStream ().begin ();
-				const GetMapLocationsMessage msg (readIterator);
-
-				PlanetMapManagerServer::handleClientRequest (*this, msg);
 				break;
 			}
 
@@ -2025,6 +1844,165 @@ void Client::receiveClientMessage(const GameNetworkMessage & message)
 				if (playerObject != nullptr)
 				{
 					playerObject->setSessionPlayTimeInfo(msgPlayTimeInfo.getValue().first, msgPlayTimeInfo.getValue().second.first, msgPlayTimeInfo.getValue().second.second);
+				}
+				break;
+			}
+			default :
+			{
+				// am too lazy to convert these to constexpr's
+				if (message.isType(ObjectMenuSelectMessage::MESSAGE_TYPE))
+				{
+					Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+					const ObjectMenuSelectMessage m (ri);
+					ServerObject * const target           = safe_cast<ServerObject *>(NetworkIdManager::getObjectById (m.getNetworkId()));
+					GameScriptObject * const scriptObject = target ? target->getScriptObject() : 0;
+					Object * const targetContainedBy = target ? ContainerInterface::getContainedByObject(*target) : nullptr;
+					const int menuType                    = m.getSelectedItemId();
+
+					static int examineMenuType = RadialMenuManager::getMenuTypeByName("EXAMINE");
+					static int tradeMenuType   = RadialMenuManager::getMenuTypeByName("TRADE_START");
+
+					CreatureObject* cobj = dynamic_cast<CreatureObject*>(primaryControlledObject);
+					if (cobj && menuType != examineMenuType && menuType != tradeMenuType)
+					{
+						CreatureController* const controller = cobj->getCreatureController();
+						if (controller && controller->getSecureTrade())
+						{
+							controller->getSecureTrade()->cancelTrade(*cobj);
+							DEBUG_REPORT_LOG (true, ("Client ObjectMenuSelectMessage [%d] for [%s] canceling trade.\n", menuType, cobj->getNetworkId ().getValueString ().c_str ()));
+						}
+					}
+
+					if (!scriptObject)
+					{
+						DEBUG_REPORT_LOG (true, ("Received an object menu select message from player %s for object %s, which does not exist or lacks a GameScriptObject.", m_characterObjectId.getValueString().c_str(),m.getNetworkId().getValueString().c_str()));
+						return;
+					}
+
+					NOT_NULL(target);
+
+					float range = 0.0f;
+					if (RadialMenuManager::getRangeForMenuType(menuType, range))
+					{
+						Container::ContainerErrorCode errorCode = Container::CEC_Success;
+						if (!target->isAuthoritative())
+						{
+							GenericValueTypeMessage<std::pair<NetworkId, NetworkId> > const rssMessage(
+								"RequestSameServer",
+								std::make_pair(
+									ContainerInterface::getTopmostContainer(*primaryControlledObject)->getNetworkId(),
+									ContainerInterface::getTopmostContainer(*target)->getNetworkId()));
+							GameServer::getInstance().sendToPlanetServer(rssMessage);
+							errorCode = Container::CEC_TryAgain;
+						}
+						else if (menuType != examineMenuType && targetContainedBy && targetContainedBy->asServerObject() && ( targetContainedBy->asServerObject()->getGameObjectType() == SharedObjectTemplate::GOT_chronicles_quest_holocron || targetContainedBy->asServerObject()->getGameObjectType() == SharedObjectTemplate::GOT_chronicles_quest_holocron_recipe ) )
+						{
+							// Can only examine items that are contained in a holocron.
+							errorCode = Container::CEC_NoPermission;
+						}
+						else if (primaryControlledObject->canManipulateObject(*target, false, false, false, range, errorCode)
+							|| ClientNamespace::canManipulateObjectExceptionCheck(*target, menuType, errorCode))
+						{
+							ScriptParams params;
+							params.addParam (getCharacterObjectId());
+							params.addParam (menuType);
+
+							if (cobj && cobj->getObjVars().hasItem("cheater"))
+							{
+								std::string menuDesc = "unknown";
+								bool tmp;
+								IGNORE_RETURN(RadialMenuManager::getCommandForMenuType(menuType, menuDesc, tmp));
+								LOG("CustomerService",("SuspectedCheaterLog: %s has used a radial menu on object %s. Menu item %d (%s).",
+													   PlayerObject::getAccountDescription(cobj).c_str(),
+													   m.getNetworkId().getValueString().c_str(),
+													   menuType,
+													   menuDesc.c_str() ));
+							}
+
+							IGNORE_RETURN (scriptObject->trigAllScripts(Scripting::TRIG_OBJECT_MENU_SELECT, params));
+						}
+						if (errorCode != Container::CEC_Success)
+							ContainerInterface::sendContainerMessageToClient(*primaryControlledObject, errorCode);
+					}
+					else
+					{
+						DEBUG_REPORT_LOG(true, ("Received a message type %d that had no range in data (radial_menu.tab)\n", menuType));
+					}
+				} else if (message.isType(SuiEventNotification::MessageType))
+				{
+					ServerUIManager::receiveMessage(message);
+				} else if (message.isType(PlayerMoneyRequest::MessageType))
+				{
+					Archive::ReadIterator ri = (*NON_NULL (static_cast<const GameNetworkMessage *>(&message))).getByteStream().begin();
+					const PlayerMoneyRequest m (ri);
+
+					ServerObject * const playerObject = getCharacterObject();
+
+					WARNING (!playerObject, ("Got PlayerMoneyRequest for non-existant character (account=%s, networkid=%s)", m_accountName.c_str (), m_characterObjectId.getValueString ().c_str ()));
+
+					if (playerObject)
+					{
+						PlayerMoneyResponse resp;
+						resp.m_balanceCash.set (playerObject->getCashBalance ());
+						resp.m_balanceBank.set (playerObject->getBankBalance ());
+						send (resp, true);
+					}
+				} else if (message.isType(PlanetTravelPointListRequest::cms_name))
+				{
+					Archive::ReadIterator readIterator = static_cast<const GameNetworkMessage&> (message).getByteStream ().begin ();
+					const PlanetTravelPointListRequest requestMessage (readIterator);
+
+					const std::string & planetName = requestMessage.getPlanetName ();
+					const PlanetObject* const planetObject = ServerUniverse::getInstance ().getPlanetByName (requestMessage.getPlanetName ());
+					if (planetObject)
+					{
+						std::vector<std::string> names;
+						planetObject->getTravelPointNameList (names);
+
+						std::vector<Vector> points;
+						planetObject->getTravelPointPointList (points);
+
+						std::vector<int> costs;
+						planetObject->getTravelPointCostList (costs);
+
+						std::vector<bool> interplanetary;
+						planetObject->getTravelPointInterplanetaryList (interplanetary);
+
+						PlanetTravelPointListResponse const rsp(planetName, names, points, costs, interplanetary, requestMessage.getSequenceId ());
+						send(rsp, true);
+					}
+					else
+						DEBUG_WARNING (true, ("GameServer::receiveMessage: received request for travel point names from client [%s] for planet %s which does not exist", requestMessage.getPlanetName ().c_str (), requestMessage.getNetworkId ().getValueString ().c_str ()));
+					
+				} else if (message.isType(NewbieTutorialResponse::cms_name))
+				{
+					Archive::ReadIterator readIterator = static_cast<const GameNetworkMessage&> (message).getByteStream ().begin ();
+					const NewbieTutorialResponse responseMessage (readIterator);
+
+					static const std::string clientReadyString("clientReady");
+
+					if (responseMessage.getResponse() == clientReadyString)
+					{
+						for (std::vector<ServerObject *>::iterator i = m_controlledObjects.begin(); i != m_controlledObjects.end(); ++i)
+						{
+							ServerObject * const so = *i;
+							if (so)
+								so->onLoadingScreenComplete();
+						}
+					}
+
+					ScriptParams scriptParameters;
+					scriptParameters.addParam (responseMessage.getResponse ().c_str ());
+
+					if (primaryControlledObject->getScriptObject ()->trigAllScripts (Scripting::TRIG_NEWBIE_TUTORIAL_RESPONSE, scriptParameters) != SCRIPT_CONTINUE)
+						DEBUG_REPORT_LOG (true, ("OnNewbieTutorialResponse: did not return SCRIPT_CONTINUE\n"));
+					
+				} else if (message.isType(GetMapLocationsMessage::MessageType))
+				{
+					Archive::ReadIterator readIterator = static_cast<const GameNetworkMessage&> (message).getByteStream ().begin ();
+					const GetMapLocationsMessage msg (readIterator);
+
+					PlanetMapManagerServer::handleClientRequest (*this, msg);
 				}
 				break;
 			}
