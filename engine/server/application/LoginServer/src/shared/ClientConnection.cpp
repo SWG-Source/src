@@ -100,47 +100,46 @@ void ClientConnection::onReceive(const Archive::ByteStream & message)
 		ri = message.begin();
 		
 		const uint32 messageType = m.getType();
-		
+
+		//Validation check
+		if (!getIsValidated() && messageType != constcrc("LoginClientId")) {
+                	//Receiving message from unvalidated client.  Pitch it.
+                        DEBUG_WARNING(true, ("Received %s message from unknown, unvalidated client", m.getCmdName().c_str()));
+			return;
+		}
+
 		switch (messageType) {
 			case constcrc("LoginClientId") :
 			{
-				//Validation check
-				if (!getIsValidated() && messageType == constcrc("LoginClientId"))
-				{
-					//Receiving message from unvalidated client.  Pitch it.
-					DEBUG_WARNING(true, ("Received %s message from unknown, unvalidated client", m.getCmdName().c_str()));
-					return;
-				} else {
-					// send the client the server "now" Epoch time so that the
-					// client has an idea of how much difference there is between
-					// the client's Epoch time and the server Epoch time
-					GenericValueTypeMessage<int32> const serverNowEpochTime(
-						"ServerNowEpochTime", static_cast<int32>(::time(nullptr)));
-					send(serverNowEpochTime, true);
+				// send the client the server "now" Epoch time so that the
+				// client has an idea of how much difference there is between
+				// the client's Epoch time and the server Epoch time
+				GenericValueTypeMessage<int32> const serverNowEpochTime(
+					"ServerNowEpochTime", static_cast<int32>(::time(nullptr)));
+				send(serverNowEpochTime, true);
 
-					LoginClientId id(ri); 
+				LoginClientId id(ri); 
 					
-					// verify version
+				// verify version
 	#if PRODUCTION == 1
-					if(!ConfigLoginServer::getValidateClientVersion() || id.getVersion() == GameNetworkMessage::NetworkVersionId)
-					{
-						validateClient(id.getId(), id.getKey());
-					}
-					else
-					{
-						LOG("CustomerService", ("Login:LoginServer dropping client (stationId=[%lu], ip=[%s], id=[%s], key=[%s], version=[%s]) because of network version mismatch (required version=[%s])", m_stationId, getRemoteAddress().c_str(), id.getId().c_str(), id.getKey().c_str(), id.getVersion().c_str(), GameNetworkMessage::NetworkVersionId.c_str()));
-						// disconnect is handled on the client side, as soon as it recieves this message
-	#if _DEBUG
-						LoginIncorrectClientId incorrectId(GameNetworkMessage::NetworkVersionId, ApplicationVersion::getInternalVersion());
-	#else
-						LoginIncorrectClientId incorrectId("", "");
-	#endif // _DEBUG
-						send(incorrectId, true);
-					}	
-	#else
-					validateClient( id.getId(), id.getKey() );	
-	#endif // PRODUCTION == 1
+				if(!ConfigLoginServer::getValidateClientVersion() || id.getVersion() == GameNetworkMessage::NetworkVersionId)
+				{
+					validateClient(id.getId(), id.getKey());
 				}
+				else
+				{
+					LOG("CustomerService", ("Login:LoginServer dropping client (stationId=[%lu], ip=[%s], id=[%s], key=[%s], version=[%s]) because of network version mismatch (required version=[%s])", m_stationId, getRemoteAddress().c_str(), id.getId().c_str(), id.getKey().c_str(), id.getVersion().c_str(), GameNetworkMessage::NetworkVersionId.c_str()));
+					// disconnect is handled on the client side, as soon as it recieves this message
+	#if _DEBUG
+					LoginIncorrectClientId incorrectId(GameNetworkMessage::NetworkVersionId, ApplicationVersion::getInternalVersion());
+	#else
+					LoginIncorrectClientId incorrectId("", "");
+	#endif // _DEBUG
+					send(incorrectId, true);
+				}	
+	#else
+				validateClient( id.getId(), id.getKey() );	
+	#endif // PRODUCTION == 1
 				
 				break;
 			}
