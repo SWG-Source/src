@@ -414,6 +414,7 @@ void Loader::receiveMessage(const MessageDispatch::Emitter & source, const Messa
 {
 	UNREF(source);
 	
+	const uint32 messageType = message.getType();
 	switch (messageType) {
 		case constcrc("LoadObjectMessage") :
 		{
@@ -565,20 +566,22 @@ void Loader::handleCSRequest( const DBCSRequestMessage & msg )
 {
 	DEBUG_REPORT_LOG( true, ( "Message:%s\n", msg.getCommand().c_str() ) );
 	
+	std::string cmd = msg.getCommand();
+
 	// TODO : maybe constexpr this one sometime
-	if(  == "get_characters" )
+	if(cmd == "get_characters" )
 	{
 		handleCSGetCharacters( msg );
 	}
-	else if( msg.getCommand() == "get_deleted_items" )
+	else if(cmd == "get_deleted_items" )
 	{
 		handleCSGetDeletedItems( msg );
 	}
-	else if( msg.getCommand() == "list_structures" )
+	else if(cmd == "list_structures" )
 	{
 		handleCSGetStructures( msg );
 	}
-	else if( msg.getCommand() == "get_player_id" )
+	else if(cmd == "get_player_id" )
 	{
 		handleCSGetPlayerId( msg );
 	}

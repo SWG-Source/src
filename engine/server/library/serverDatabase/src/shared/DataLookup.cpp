@@ -469,7 +469,7 @@ const Unicode::String DataLookup::normalizeName(const Unicode::String &name) con
 }
 
 //--------------------------------------------------------------------
-*/
+
 DataLookup::reservationList * DataLookup::getReservationList(uint32 stationId)
 {
 	std::map<uint32, reservationList *>::iterator i = m_reservations.find(stationId);
