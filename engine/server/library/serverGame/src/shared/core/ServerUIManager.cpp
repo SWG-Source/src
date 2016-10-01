@@ -26,6 +26,9 @@
 #include "sharedNetworkMessages/SuiCreatePageMessage.h"
 #include "sharedNetworkMessages/SuiEventNotification.h"
 #include "sharedNetworkMessages/SuiUpdatePageMessage.h"
+
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 #include <algorithm>
 #include <map>
 #include <memory>
@@ -268,6 +271,7 @@ bool ServerUIManager::removePage(int pageId)
 void ServerUIManager::receiveMessage(const MessageDispatch::MessageBase& message)
 {
 	Archive::ReadIterator ri = NON_NULL(dynamic_cast<const GameNetworkMessage *>(&message))->getByteStream().begin();
+		
 	if (message.isType(SuiEventNotification::MessageType))
 	{
 		SuiEventNotification const suiEventNotification(ri);
@@ -397,7 +401,7 @@ void ServerUIManager::receiveMessage(const MessageDispatch::MessageBase& message
 		if ((eventType == SuiEventType::SET_onClosedOk) || (eventType == SuiEventType::SET_onClosedCancel))
 			IGNORE_RETURN(removePage(pageId));
 	}
-	else if(message.isType("PageChangeAuthority"))
+	else if(message.getType() == constexpr("PageChangeAuthority"))
 	{
 		//DEBUG_WARNING(true, ("ServerUIManager: received PageChangeAuthority message"));
 		const GenericValueTypeMessage<std::pair<NetworkId, SuiPageDataServer> > pageChangeAuthority(ri);
