@@ -401,7 +401,7 @@ void ServerUIManager::receiveMessage(const MessageDispatch::MessageBase& message
 		if ((eventType == SuiEventType::SET_onClosedOk) || (eventType == SuiEventType::SET_onClosedCancel))
 			IGNORE_RETURN(removePage(pageId));
 	}
-	else if(message.getType() == constexpr("PageChangeAuthority"))
+	else if(message.getType() == constcrc("PageChangeAuthority"))
 	{
 		//DEBUG_WARNING(true, ("ServerUIManager: received PageChangeAuthority message"));
 		const GenericValueTypeMessage<std::pair<NetworkId, SuiPageDataServer> > pageChangeAuthority(ri);
