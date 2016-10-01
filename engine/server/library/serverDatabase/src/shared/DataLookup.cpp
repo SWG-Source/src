@@ -28,6 +28,8 @@
 #include "sharedNetworkMessages/NameErrors.h"
 #include "unicodeArchive/UnicodeArchive.h"
 
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 //-----------------------------------------------------------------------
 
 DataLookup *DataLookup::ms_theInstance = nullptr;
@@ -93,59 +95,71 @@ void DataLookup::receiveMessage(const MessageDispatch::Emitter &source, const Me
 {
 	UNREF(source);
 	
-	if (message.isType("VerifyNameRequest"))
-	{
-		const GameServerConnection * g = safe_cast<const GameServerConnection *>(&source);
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		VerifyNameRequest * vnr = new VerifyNameRequest(ri);
-		
-		LOG("TraceCharacterCreation", ("%d received VerifyNameRequest", vnr->getStationId()));
-		verifyName(g->getProcessId(), vnr);
-	}
-	else if (message.isType("ReleaseNameMessage"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		ReleaseNameMessage rnm(ri);
+	const uint32 messageType = message.getType();
+	
+	switch(messageType) {
+		case constcrc("VerifyNameRequest") :
+		{
+			const GameServerConnection * g = safe_cast<const GameServerConnection *>(&source);
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			VerifyNameRequest * vnr = new VerifyNameRequest(ri);
+			
+			LOG("TraceCharacterCreation", ("%d received VerifyNameRequest", vnr->getStationId()));
+			verifyName(g->getProcessId(), vnr);
+			break;
+		}
+		case constcrc("ReleaseNameMessage") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			ReleaseNameMessage rnm(ri);
 
-		LOG("TraceCharacterCreation", ("%d received ReleaseNameMessage", rnm.getStationId()));
+			LOG("TraceCharacterCreation", ("%d received ReleaseNameMessage", rnm.getStationId()));
 
-		releaseName(rnm.getStationId(), rnm.getCharacterId());
-	}
-	else if (message.isType("RequestBiographyMessage"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		RequestBiographyMessage msg(ri);
+			releaseName(rnm.getStationId(), rnm.getCharacterId());
+			break;
+		}
+		case constcrc("RequestBiographyMessage") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			RequestBiographyMessage msg(ri);
 
-		const GameServerConnection *conn = dynamic_cast<const GameServerConnection*>(&source);
-		if (conn)
-			getBiography(msg.getOwner(),conn->getProcessId());
-		else
-			DEBUG_WARNING(true,("Got RequestBiographyMessage from something that wasn't a GameServerConnection.\n"));
-	}
-	else if (message.isType("BiographyMessage"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		BiographyMessage msg(ri);
+			const GameServerConnection *conn = dynamic_cast<const GameServerConnection*>(&source);
+			if (conn)
+				getBiography(msg.getOwner(),conn->getProcessId());
+			else
+				DEBUG_WARNING(true,("Got RequestBiographyMessage from something that wasn't a GameServerConnection.\n"));
+			
+			break;
+		}
+		case constcrc("BiographyMessage") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			BiographyMessage msg(ri);
 
-		setBiography(msg.getOwner(),msg.getBio());
-	}
-	else if (message.isType("PurgeStructuresForAccountMessage"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		GenericValueTypeMessage<StationId> msg(ri);
+			setBiography(msg.getOwner(),msg.getBio());
+			break;
+		}
+		case constcrc("PurgeStructuresForAccountMessage") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			GenericValueTypeMessage<StationId> msg(ri);
 
-		getStructuresForPurge(msg.getValue(), false);
-	}
-	else if (message.isType("WarnStructuresAboutPurgeMessage"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		GenericValueTypeMessage<StationId> msg(ri);
+			getStructuresForPurge(msg.getValue(), false);
+			break;
+		}
+		case constcrc("WarnStructuresAboutPurgeMessage") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			GenericValueTypeMessage<StationId> msg(ri);
 
-		getStructuresForPurge(msg.getValue(), true);
-	}
-	else
-	{
-		DEBUG_REPORT_LOG(true,("Unrecognized message recieved by DataLookup.\n"));
+			getStructuresForPurge(msg.getValue(), true);
+			break;
+		}
+		default :
+		{
+			DEBUG_REPORT_LOG(true,("Unrecognized message recieved by DataLookup.\n"));
+			break;
+		}
 	}
 }
 
@@ -452,32 +466,6 @@ const Unicode::String DataLookup::normalizeName(const Unicode::String &name) con
 	result = Unicode::String(result, 0, result.find(' '));
 
 	return result;
-}
-
-//--------------------------------------------------------------------
-/*
-const std::string DataLookup::getNameByStationId(uint32 stationId) const
-{
-	std::map<uint32, reservation>::const_iterator i=m_reservations.find(stationId);
-	if (i == m_reservations.end())
-	{
-		WARNING_STRICT_FATAL(true, ("asked for name that wasn't in the reservation list"));
-		return std::string();
-	}
-	return Unicode::wideToNarrow(i->second.originalName);
-}
-
-//--------------------------------------------------------------------
-
-const std::string DataLookup::getNormalizedNameByStationId(uint32 stationId) const
-{
-	std::map<uint32, reservation>::const_iterator i=m_reservations.find(stationId);
-	if (i == m_reservations.end())
-	{
-		WARNING_STRICT_FATAL(true, ("asked for name that wasn't in the reservation list"));
-		return std::string();
-	}
-	return Unicode::wideToNarrow(i->second.name);
 }
 
 //--------------------------------------------------------------------

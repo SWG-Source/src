@@ -51,6 +51,8 @@
 #include "sharedNetworkMessages/GenericValueTypeMessage.h"
 #include "unicodeArchive/UnicodeArchive.h"
 
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 #include <algorithm>
 
 // ======================================================================
@@ -411,135 +413,160 @@ void Loader::queueOutgoingSnapshot(LoaderSnapshotGroup *outgoingSnapshot)
 void Loader::receiveMessage(const MessageDispatch::Emitter & source, const MessageDispatch::MessageBase & message)
 {
 	UNREF(source);
-	if(message.isType("LoadObjectMessage"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		LoadObjectMessage lom(ri);
-		DEBUG_FATAL(true,("LoadObjectMessage is deprecated on the database process.\n"));
-//		requestObject(lom.getId(),lom.getProcess());
-	}
-	else if(message.isType("RequestChunkMessage"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-        RequestChunkMessage m(ri);
-		
-		std::vector<RequestChunkMessage::Chunk> const & chunks = m.getChunks();
-		for (std::vector<RequestChunkMessage::Chunk>::const_iterator i=chunks.begin(); i!=chunks.end(); ++i)
-			requestChunk(i->m_process, i->m_nodeX, i->m_nodeZ, m.getSceneId());
-	}
-	else if(message.isType("RequestOIDsMessage"))
-	{
-//		DEBUG_REPORT_LOG(true,("Got RequestOIDsMessage.\n"));
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		RequestOIDsMessage m(ri);
+	
+	switch (messageType) {
+		case constcrc("LoadObjectMessage") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			LoadObjectMessage lom(ri);
+			DEBUG_FATAL(true,("LoadObjectMessage is deprecated on the database process.\n"));
+			//		requestObject(lom.getId(),lom.getProcess());
+			break;
+		}
+		case constcrc("RequestChunkMessage") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			RequestChunkMessage m(ri);
+			
+			std::vector<RequestChunkMessage::Chunk> const & chunks = m.getChunks();
+			for (std::vector<RequestChunkMessage::Chunk>::const_iterator i=chunks.begin(); i!=chunks.end(); ++i)
+				requestChunk(i->m_process, i->m_nodeX, i->m_nodeZ, m.getSceneId());
+			
+			break;
+		}
+		case constcrc("RequestOIDsMessage") :
+		{
+			//		DEBUG_REPORT_LOG(true,("Got RequestOIDsMessage.\n"));
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			RequestOIDsMessage m(ri);
 
-		if (m.getLogRequest())
-			LOG("ObjectIdManager", ("Received RequestOIDsMessage for %lu more object ids for pid %lu", m.getHowMany(), m.getServerId()));
+			if (m.getLogRequest())
+				LOG("ObjectIdManager", ("Received RequestOIDsMessage for %lu more object ids for pid %lu", m.getHowMany(), m.getServerId()));
 
-		getObjectIds(static_cast<int>(m.getServerId()),static_cast<int>(m.getHowMany()), m.getLogRequest());
-	}
-	else if(message.isType("ValidateCharacterForLoginMessage"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		ValidateCharacterForLoginMessage msg(ri);
-		verifyCharacter(msg.getSuid(), msg.getCharacterId(), nullptr);
-	}
-	else if(message.isType("TransferGetLoginLocationData"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		GenericValueTypeMessage<TransferCharacterData> request(ri);
-		TransferCharacterData * transferData = new TransferCharacterData(request.getValue());
-		verifyCharacter(transferData->getSourceStationId(), transferData->getCharacterId(), transferData);
-	}//lint !e429 not freed : suppressed because verifyCharacter will own this copy of the data
-	else if(message.isType("LoadUniverseMessage"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		LoadUniverseMessage m(ri);
-		DEBUG_REPORT_LOG(true,("Got LoadUniverseMessage\n"));
-		loadUniverse(m.getProcess());
-	}
-	else if(message.isType("PlanetLoadCharacterMessage"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		PlanetLoadCharacterMessage m(ri);
-		DEBUG_REPORT_LOG(true,("Got PlanetLoadCharacterMessage\n"));
-		requestCharacter(m.getCharacterId(), m.getGameServerId());
-	}
-	else if(message.isType("LoadContainedObjectMessage"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		LoadContainedObjectMessage msg(ri);
+			getObjectIds(static_cast<int>(m.getServerId()),static_cast<int>(m.getHowMany()), m.getLogRequest());
+			break;
+		}
+		case constcrc("ValidateCharacterForLoginMessage") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			ValidateCharacterForLoginMessage msg(ri);
+			verifyCharacter(msg.getSuid(), msg.getCharacterId(), nullptr);
+			break;
+		}
+		case constcrc("TransferGetLoginLocationData") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			GenericValueTypeMessage<TransferCharacterData> request(ri);
+			TransferCharacterData * transferData = new TransferCharacterData(request.getValue());
+			verifyCharacter(transferData->getSourceStationId(), transferData->getCharacterId(), transferData);
+			break;
+		}//lint !e429 not freed : suppressed because verifyCharacter will own this copy of the data
+		case constcrc("LoadUniverseMessage") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			LoadUniverseMessage m(ri);
+			DEBUG_REPORT_LOG(true,("Got LoadUniverseMessage\n"));
+			loadUniverse(m.getProcess());
+			break;
+		}
+		case constcrc("PlanetLoadCharacterMessage") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			PlanetLoadCharacterMessage m(ri);
+			DEBUG_REPORT_LOG(true,("Got PlanetLoadCharacterMessage\n"));
+			requestCharacter(m.getCharacterId(), m.getGameServerId());
+			break;
+		}
+		case constcrc("LoadContainedObjectMessage") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			LoadContainedObjectMessage msg(ri);
 
-		const GameServerConnection * g = dynamic_cast<const GameServerConnection *>(&source);
-		if (g)
-			loadContainedObject(msg.getContainerId(), msg.getObjectId(), g->getProcessId());
-		else
-			WARNING_STRICT_FATAL(true,("Got LoadContainedObjectMessage for %s, but sender was not a GameServerConnection.\n",msg.getObjectId().getValueString().c_str()));
-	}
-	else if(message.isType("LoadContentsMessage"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		LoadContentsMessage msg(ri);
+			const GameServerConnection * g = dynamic_cast<const GameServerConnection *>(&source);
+			if (g)
+				loadContainedObject(msg.getContainerId(), msg.getObjectId(), g->getProcessId());
+			else
+				WARNING_STRICT_FATAL(true,("Got LoadContainedObjectMessage for %s, but sender was not a GameServerConnection.\n",msg.getObjectId().getValueString().c_str()));
+			
+			break;
+		}
+		case constcrc("LoadContentsMessage") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			LoadContentsMessage msg(ri);
 
-		const GameServerConnection * g = dynamic_cast<const GameServerConnection *>(&source);
-		if (g)
-			loadContents(msg.getContainerId(), g->getProcessId());
-		else
-			WARNING_STRICT_FATAL(true,("Got LoadContentsMessage for container %s, but sender was not a GameServerConnection.\n",msg.getContainerId().getValueString().c_str()));
-	}
-	else if(message.isType("LocateStructureMessage"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		LocateStructureMessage msg(ri);
+			const GameServerConnection * g = dynamic_cast<const GameServerConnection *>(&source);
+			if (g)
+				loadContents(msg.getContainerId(), g->getProcessId());
+			else
+				WARNING_STRICT_FATAL(true,("Got LoadContentsMessage for container %s, but sender was not a GameServerConnection.\n",msg.getContainerId().getValueString().c_str()));
+			
+			break;
+		}
+		case constcrc("LocateStructureMessage") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			LocateStructureMessage msg(ri);
 
-		const GameServerConnection * g = dynamic_cast<const GameServerConnection *>(&source);
-		if (g)
-			locateStructure(msg.getStructureId(), msg.getWhoRequested());
-		else
-			WARNING_STRICT_FATAL(true,("Got LocateStructureMessage for %s, but sender was not a GameServerConnection.\n",msg.getStructureId().getValueString().c_str()));
-	}
-	else if(message.isType("PreloadRequestCompleteMessage"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		PreloadRequestCompleteMessage msg(ri);
+			const GameServerConnection * g = dynamic_cast<const GameServerConnection *>(&source);
+			if (g)
+				locateStructure(msg.getStructureId(), msg.getWhoRequested());
+			else
+				WARNING_STRICT_FATAL(true,("Got LocateStructureMessage for %s, but sender was not a GameServerConnection.\n",msg.getStructureId().getValueString().c_str()));
+			
+			break;
+		}
+		case constcrc("PreloadRequestCompleteMessage") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			PreloadRequestCompleteMessage msg(ri);
 
-		preloadRequestComplete(msg.getGameServerId(), msg.getPreloadAreaId());
-	}
-	else if(message.isType("LoadAckMessage"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		GenericValueTypeMessage<int> msg(ri);
-		const GameServerConnection * g = dynamic_cast<const GameServerConnection *>(&source);
-		if (g)
-			handleLoadAck(g->getProcessId(), msg.getValue());
-		else
-			WARNING_STRICT_FATAL(true,("Got LoadAckMessage, but sender was not a GameServerConnection."));
-	}
-	else if( message.isType("CSGetCharactersRequestMessage") )
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		CSGetCharactersRequestMessage const msg( ri );
-		handleCSGetCharacters( msg );				
-	}
-	else if( message.isType("CSGetDeletedItemsRequestMessage") )
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		CSGetDeletedItemsRequestMessage const msg( ri );
-		handleCSGetDeletedItems( msg );				
-		
-	}
-	else if( message.isType("DBCSRequestMessage" ) )
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		DBCSRequestMessage const msg( ri );
-		handleCSRequest( msg );
+			preloadRequestComplete(msg.getGameServerId(), msg.getPreloadAreaId());
+			
+			break;
+		}
+		case constcrc("LoadAckMessage") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			GenericValueTypeMessage<int> msg(ri);
+			const GameServerConnection * g = dynamic_cast<const GameServerConnection *>(&source);
+			if (g)
+				handleLoadAck(g->getProcessId(), msg.getValue());
+			else
+				WARNING_STRICT_FATAL(true,("Got LoadAckMessage, but sender was not a GameServerConnection."));
+			
+			break;
+		}
+		case constcrc("CSGetCharactersRequestMessage") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			CSGetCharactersRequestMessage const msg( ri );
+			handleCSGetCharacters( msg );	
+			break;
+		}
+		case constcrc("CSGetDeletedItemsRequestMessage") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			CSGetDeletedItemsRequestMessage const msg( ri );
+			handleCSGetDeletedItems( msg );
+			break;			
+		}
+		case constcrc("DBCSRequestMessage" ) :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			DBCSRequestMessage const msg( ri );
+			handleCSRequest( msg );
+			break;
+		}
 	}
 }
 
 void Loader::handleCSRequest( const DBCSRequestMessage & msg )
 {
 	DEBUG_REPORT_LOG( true, ( "Message:%s\n", msg.getCommand().c_str() ) );
-	if( msg.getCommand() == "get_characters" )
+	
+	// TODO : maybe constexpr this one sometime
+	if(  == "get_characters" )
 	{
 		handleCSGetCharacters( msg );
 	}

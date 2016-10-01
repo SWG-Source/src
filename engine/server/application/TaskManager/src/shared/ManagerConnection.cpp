@@ -24,6 +24,8 @@
 #include "TaskConnection.h"
 #include "TaskManager.h"
 
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 //-----------------------------------------------------------------------
 
 namespace ManagerConnectionNamespace
@@ -94,115 +96,126 @@ void ManagerConnection::onReceive(const Archive::ByteStream & message)
 {
 	Archive::ReadIterator r(message);
 	GameNetworkMessage m(r);
-
 	r = message.begin();
-	if (m.isType("SystemTimeCheck"))
-	{
-		long const currentTime = static_cast<long>(::time(nullptr));
-		GenericValueTypeMessage<std::pair<std::string, long > > msg(r);
-
-		if (TaskManager::getNodeLabel() == "node0")
+	
+	const uint32 messageType = m.getType();
+	
+	switch(messageType) {
+		case constcrc("SystemTimeCheck") :
 		{
-			if ((std::max(currentTime, msg.getValue().second) - std::min(currentTime, msg.getValue().second)) > ConfigTaskManager::getMaximumClockDriftToleranceSeconds())
+			long const currentTime = static_cast<long>(::time(nullptr));
+			GenericValueTypeMessage<std::pair<std::string, long > > msg(r);
+
+			if (TaskManager::getNodeLabel() == "node0")
 			{
-				LOG("CustomerService", ("system_clock_mismatch:System clock mismatch (%d seconds) by more than %d seconds: master TaskManager epoch (%ld), remote TaskManager %s (%s) epoch (%ld)", (std::max(currentTime, msg.getValue().second) - std::min(currentTime, msg.getValue().second)), ConfigTaskManager::getMaximumClockDriftToleranceSeconds(), currentTime, msg.getValue().first.c_str(), getRemoteAddress().c_str(), msg.getValue().second));
-
-				// tell CentralServer about the system clock mismatch so it can report an alert to SOEMon
-				GenericValueTypeMessage<std::string> systemTimeMismatchMessage("SystemTimeMismatchNotification",
-					FormattedString<1024>().sprintf("%s: %s (%s) is off by %ld seconds", CalendarTime::convertEpochToTimeStringLocal(static_cast<time_t>(currentTime)).c_str(), msg.getValue().first.c_str(), getRemoteAddress().c_str(), (std::max(currentTime, msg.getValue().second) - std::min(currentTime, msg.getValue().second))));
-				TaskManager::sendToCentralServer(systemTimeMismatchMessage);
-			}
-		}
-	}
-	else if (m.isType("TaskConnectionIdMessage"))
-	{
-		static long const clockDriftFatalTimePeriod = static_cast<long>(TaskManager::getStartTime()) + ConfigTaskManager::getClockDriftFatalIntervalSeconds();
-		long const currentTime = static_cast<long>(::time(nullptr));
-		TaskConnectionIdMessage t(r);
-		WARNING_STRICT_FATAL(t.getServerType() != TaskConnectionIdMessage::TaskManager,
-							 ("ManagerConnection received wrong type identifier"));
-		WARNING_STRICT_FATAL(m_nodeLabel, ("Received new taskconnectionIdMessage with an already named connection"));
-
-		FATAL((ConfigTaskManager::getVerifyClusterName() && (TaskManager::getNodeLabel() == "node0") && (t.getServerType() == TaskConnectionIdMessage::TaskManager) && (t.getClusterName() != std::string(ConfigTaskManager::getClusterName()))), ("Remote TaskManager %s (%s) reported cluster name (%s) that is different from my cluster name (%s)", t.getCommandLine().c_str(), getRemoteAddress().c_str(), t.getClusterName().c_str(), ConfigTaskManager::getClusterName()));
-
-		// don't allow cluster to start if the system clock across the boxes are out of sync
-		bool remoteSystemClockInSync = true;
-		if (TaskManager::getNodeLabel() == "node0")
-		{
-			if ((std::max(currentTime, t.getCurrentEpochTime()) - std::min(currentTime, t.getCurrentEpochTime())) > ConfigTaskManager::getMaximumClockDriftToleranceSeconds())
-			{
-				remoteSystemClockInSync = false;
-
-				// don't bring down the cluster if we lost a box and when the box is
-				// restarted, its system clock is out of sync; just ignore that
-				// TaskManager, and send it a message to terminate itself
-				if (currentTime <= clockDriftFatalTimePeriod)
+				if ((std::max(currentTime, msg.getValue().second) - std::min(currentTime, msg.getValue().second)) > ConfigTaskManager::getMaximumClockDriftToleranceSeconds())
 				{
-					FATAL(true, ("System clock mismatch (%d seconds) by more than %d seconds: master TaskManager epoch (%ld), remote TaskManager %s (%s) epoch (%ld)", (std::max(currentTime, t.getCurrentEpochTime()) - std::min(currentTime, t.getCurrentEpochTime())), ConfigTaskManager::getMaximumClockDriftToleranceSeconds(), currentTime, t.getCommandLine().c_str(), getRemoteAddress().c_str(), t.getCurrentEpochTime()));
-				}
-				else
-				{
-					LOG("CustomerService", ("system_clock_mismatch:System clock mismatch (%d seconds) by more than %d seconds: master TaskManager epoch (%ld), remote TaskManager %s (%s) epoch (%ld). Telling remote TaskManager to terminate.", (std::max(currentTime, t.getCurrentEpochTime()) - std::min(currentTime, t.getCurrentEpochTime())), ConfigTaskManager::getMaximumClockDriftToleranceSeconds(), currentTime, t.getCommandLine().c_str(), getRemoteAddress().c_str(), t.getCurrentEpochTime()));
+					LOG("CustomerService", ("system_clock_mismatch:System clock mismatch (%d seconds) by more than %d seconds: master TaskManager epoch (%ld), remote TaskManager %s (%s) epoch (%ld)", (std::max(currentTime, msg.getValue().second) - std::min(currentTime, msg.getValue().second)), ConfigTaskManager::getMaximumClockDriftToleranceSeconds(), currentTime, msg.getValue().first.c_str(), getRemoteAddress().c_str(), msg.getValue().second));
 
-					GenericValueTypeMessage<std::pair<std::string, std::pair<long, long> > > systemTimeMismatchMessage("SystemTimeMismatchMessage", std::make_pair(TaskManager::getNodeLabel(), std::make_pair(static_cast<long>(currentTime), t.getCurrentEpochTime())));
-					send(systemTimeMismatchMessage);
-				}
-			}
-		}
-
-		if (remoteSystemClockInSync)
-		{
-			m_nodeLabel = new std::string(t.getCommandLine());
-			Locator::opened(*m_nodeLabel, this);
-			TaskManager::resendUnacknowledgedSpawnRequests(this, *m_nodeLabel);
-		}
-	}
-	else if (m.isType("SystemTimeMismatchMessage"))
-	{
-		GenericValueTypeMessage<std::pair<std::string, std::pair<long, long> > > msg(r);
-		FATAL((msg.getValue().first == "node0"), ("System clock mismatch (%d seconds) by more than %d seconds: master TaskManager epoch (%ld), self epoch (%ld)", (std::max(msg.getValue().second.first, msg.getValue().second.second) - std::min(msg.getValue().second.first, msg.getValue().second.second)), ConfigTaskManager::getMaximumClockDriftToleranceSeconds(), msg.getValue().second.first, msg.getValue().second.second));
-	}
-	else if(m.isType("TaskSpawnProcess"))
-	{
-		TaskSpawnProcess s(r);
-		if (TaskManager::startServer(s.getProcessName(), s.getOptions(), s.getTargetHostAddress(), s.getSpawnDelay()) == 0)
-		{
-			DEBUG_REPORT_LOG(true, ("Failed to spawn %s on this node\n", s.getProcessName().c_str()));
-			//send fail message back
-		}
-		else
-		{
-			TaskSpawnProcessAck ack(s.getTransactionId());
-			send(ack);
-		}
-	}
-	else if(m.isType("TaskUtilization"))
-	{
-		TaskUtilization util(r);
-		switch(util.getUtilType())
-		{
-		case TaskUtilization::SYSTEM_AVG:
-			{
-				if (m_nodeLabel)
-				{
-					m_remoteUtilAvg = util.getUtilAmount();
-					Locator::updateServerLoad(*m_nodeLabel, m_remoteUtilAvg);
+					// tell CentralServer about the system clock mismatch so it can report an alert to SOEMon
+					GenericValueTypeMessage<std::string> systemTimeMismatchMessage("SystemTimeMismatchNotification",
+						FormattedString<1024>().sprintf("%s: %s (%s) is off by %ld seconds", CalendarTime::convertEpochToTimeStringLocal(static_cast<time_t>(currentTime)).c_str(), msg.getValue().first.c_str(), getRemoteAddress().c_str(), (std::max(currentTime, msg.getValue().second) - std::min(currentTime, msg.getValue().second))));
+					TaskManager::sendToCentralServer(systemTimeMismatchMessage);
 				}
 			}
 			break;
-		default:
+		}
+		case constcrc("TaskConnectionIdMessage") :
+		{
+			static long const clockDriftFatalTimePeriod = static_cast<long>(TaskManager::getStartTime()) + ConfigTaskManager::getClockDriftFatalIntervalSeconds();
+			long const currentTime = static_cast<long>(::time(nullptr));
+			TaskConnectionIdMessage t(r);
+			WARNING_STRICT_FATAL(t.getServerType() != TaskConnectionIdMessage::TaskManager,
+								 ("ManagerConnection received wrong type identifier"));
+			WARNING_STRICT_FATAL(m_nodeLabel, ("Received new taskconnectionIdMessage with an already named connection"));
+
+			FATAL((ConfigTaskManager::getVerifyClusterName() && (TaskManager::getNodeLabel() == "node0") && (t.getServerType() == TaskConnectionIdMessage::TaskManager) && (t.getClusterName() != std::string(ConfigTaskManager::getClusterName()))), ("Remote TaskManager %s (%s) reported cluster name (%s) that is different from my cluster name (%s)", t.getCommandLine().c_str(), getRemoteAddress().c_str(), t.getClusterName().c_str(), ConfigTaskManager::getClusterName()));
+
+			// don't allow cluster to start if the system clock across the boxes are out of sync
+			bool remoteSystemClockInSync = true;
+			if (TaskManager::getNodeLabel() == "node0")
+			{
+				if ((std::max(currentTime, t.getCurrentEpochTime()) - std::min(currentTime, t.getCurrentEpochTime())) > ConfigTaskManager::getMaximumClockDriftToleranceSeconds())
+				{
+					remoteSystemClockInSync = false;
+
+					// don't bring down the cluster if we lost a box and when the box is
+					// restarted, its system clock is out of sync; just ignore that
+					// TaskManager, and send it a message to terminate itself
+					if (currentTime <= clockDriftFatalTimePeriod)
+					{
+						FATAL(true, ("System clock mismatch (%d seconds) by more than %d seconds: master TaskManager epoch (%ld), remote TaskManager %s (%s) epoch (%ld)", (std::max(currentTime, t.getCurrentEpochTime()) - std::min(currentTime, t.getCurrentEpochTime())), ConfigTaskManager::getMaximumClockDriftToleranceSeconds(), currentTime, t.getCommandLine().c_str(), getRemoteAddress().c_str(), t.getCurrentEpochTime()));
+					}
+					else
+					{
+						LOG("CustomerService", ("system_clock_mismatch:System clock mismatch (%d seconds) by more than %d seconds: master TaskManager epoch (%ld), remote TaskManager %s (%s) epoch (%ld). Telling remote TaskManager to terminate.", (std::max(currentTime, t.getCurrentEpochTime()) - std::min(currentTime, t.getCurrentEpochTime())), ConfigTaskManager::getMaximumClockDriftToleranceSeconds(), currentTime, t.getCommandLine().c_str(), getRemoteAddress().c_str(), t.getCurrentEpochTime()));
+
+						GenericValueTypeMessage<std::pair<std::string, std::pair<long, long> > > systemTimeMismatchMessage("SystemTimeMismatchMessage", std::make_pair(TaskManager::getNodeLabel(), std::make_pair(static_cast<long>(currentTime), t.getCurrentEpochTime())));
+						send(systemTimeMismatchMessage);
+					}
+				}
+			}
+
+			if (remoteSystemClockInSync)
+			{
+				m_nodeLabel = new std::string(t.getCommandLine());
+				Locator::opened(*m_nodeLabel, this);
+				TaskManager::resendUnacknowledgedSpawnRequests(this, *m_nodeLabel);
+			}
 			break;
 		}
-	}
-	else if(m.isType("TaskProcessDiedMessage"))
-	{
-		TaskProcessDiedMessage died(r);
-		TaskManager::sendToCentralServer(died);
-	}
-	else if(m.isType("TaskSpawnProcessAck"))
-	{
-		TaskSpawnProcessAck ack(r);
-		TaskManager::removePendingSpawnProcessAck(ack.getTransactionId());
+		case constcrc("SystemTimeMismatchMessage") :
+		{
+			GenericValueTypeMessage<std::pair<std::string, std::pair<long, long> > > msg(r);
+			FATAL((msg.getValue().first == "node0"), ("System clock mismatch (%d seconds) by more than %d seconds: master TaskManager epoch (%ld), self epoch (%ld)", (std::max(msg.getValue().second.first, msg.getValue().second.second) - std::min(msg.getValue().second.first, msg.getValue().second.second)), ConfigTaskManager::getMaximumClockDriftToleranceSeconds(), msg.getValue().second.first, msg.getValue().second.second));
+			break;
+		}
+		case constcrc("TaskSpawnProcess") :
+		{
+			TaskSpawnProcess s(r);
+			if (TaskManager::startServer(s.getProcessName(), s.getOptions(), s.getTargetHostAddress(), s.getSpawnDelay()) == 0)
+			{
+				DEBUG_REPORT_LOG(true, ("Failed to spawn %s on this node\n", s.getProcessName().c_str()));
+				//send fail message back
+			}
+			else
+			{
+				TaskSpawnProcessAck ack(s.getTransactionId());
+				send(ack);
+			}
+			break;
+		}
+		case constcrc("TaskUtilization") :
+		{
+			TaskUtilization util(r);
+			switch(util.getUtilType())
+			{
+				case TaskUtilization::SYSTEM_AVG:
+					{
+						if (m_nodeLabel)
+						{
+							m_remoteUtilAvg = util.getUtilAmount();
+							Locator::updateServerLoad(*m_nodeLabel, m_remoteUtilAvg);
+						}
+					}
+					break;
+				default:
+					break;
+			}
+			break;
+		}
+		case constcrc("TaskProcessDiedMessage") :
+		{
+			TaskProcessDiedMessage died(r);
+			TaskManager::sendToCentralServer(died);
+			break;
+		}
+		case constcrc("TaskSpawnProcessAck") :
+		{
+			TaskSpawnProcessAck ack(r);
+			TaskManager::removePendingSpawnProcessAck(ack.getTransactionId());
+			break;
+		}
 	}
 }
 

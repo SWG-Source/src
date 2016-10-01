@@ -23,9 +23,6 @@ public:
 private:
 	ChatServerConnection & operator = (const ChatServerConnection & rhs);
 	ChatServerConnection(const ChatServerConnection & source);
-
-	void processVoiceChatOnGetChannel(const Archive::ByteStream & message);
-
 };
 
 //-----------------------------------------------------------------------

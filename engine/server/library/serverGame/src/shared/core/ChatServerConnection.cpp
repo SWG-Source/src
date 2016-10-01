@@ -25,7 +25,7 @@
 #include "sharedNetwork/NetworkSetupData.h"
 #include "sharedObject/NetworkIdManager.h"
 
-#include "sharedNetworkMessages/VoiceChatMiscMessages.h"
+#include "sharedFoundation/CrcConstexpr.hpp"
 
 //-----------------------------------------------------------------------
 
@@ -60,114 +60,106 @@ void ChatServerConnection::onReceive(const Archive::ByteStream &message)
 	GameNetworkMessage msg(ri);
 
 	Archive::ReadIterator cri = message.begin();
+	
+	const uint32 messageType = msg.getType();
 
-	if (msg.isType("ChatOnCreateRoom"))
-	{
-		ChatOnCreateRoom chat(cri);
-		GroupObject::onChatRoomCreate(chat.getRoomData().path);
-		GuildInterface::onChatRoomCreate(chat.getRoomData().path);
-		CityInterface::onChatRoomCreate(chat.getRoomData().path);
-	}
-	else if (msg.isType("ChatOnRequestLog"))
-	{
-		ChatOnRequestLog chatOnRequestLog(cri);
-
-		ReportManager::handleMessage(chatOnRequestLog);
-	}
-	else if (msg.isType("ChatAvatarConnected"))
-	{
-		GenericValueTypeMessage<NetworkId> m(cri);
-		Object *o = NetworkIdManager::getObjectById(m.getValue());
-		if (o)
+	switch(messageType) {
+		case constcrc("ChatOnCreateRoom") :
 		{
-			ServerObject *so = o->asServerObject();
-			if (so && so->isAuthoritative())
+			ChatOnCreateRoom chat(cri);
+			GroupObject::onChatRoomCreate(chat.getRoomData().path);
+			GuildInterface::onChatRoomCreate(chat.getRoomData().path);
+			CityInterface::onChatRoomCreate(chat.getRoomData().path);
+			break;
+		}
+		case constcrc("ChatOnRequestLog") :
+		{
+			ChatOnRequestLog chatOnRequestLog(cri);
+
+			ReportManager::handleMessage(chatOnRequestLog);
+			break;
+		}
+		case constcrc("ChatAvatarConnected") :
+		{
+			GenericValueTypeMessage<NetworkId> m(cri);
+			Object *o = NetworkIdManager::getObjectById(m.getValue());
+			if (o)
 			{
-				CreatureObject *co = so->asCreatureObject();
-				if (co)
+				ServerObject *so = o->asServerObject();
+				if (so && so->isAuthoritative())
 				{
-					if (co->getGuildId())
+					CreatureObject *co = so->asCreatureObject();
+					if (co)
 					{
-						GuildInterface::enterGuildChatRoom(*co);
-						GuildInterface::enterGuildVoiceChatRoom(*co);
+						if (co->getGuildId())
+						{
+							GuildInterface::enterGuildChatRoom(*co);
+							GuildInterface::enterGuildVoiceChatRoom(*co);
+						}
+
+						std::vector<int> const & cityIds = CityInterface::getCitizenOfCityId(co->getNetworkId());
+						if (!cityIds.empty())
+							CityInterface::enterCityChatRoom(cityIds.front(), *co);
+					}
+					GameScriptObject * gso = so->getScriptObject();
+					if(gso)
+					{
+						ScriptParams params;
+						gso->trigAllScripts(Scripting::TRIG_CHAT_ON_LOGIN, params);
+					}
+				}
+			}
+			break;
+		}
+		case constcrc("ChatAvatarRenamed") :
+		{
+			GenericValueTypeMessage<std::pair<std::string, std::string> > const m(cri);
+
+			// refresh the friends and/or ignore list of any character that
+			// has the renamed avatar in his friends and/or ignore list
+			std::string const oldName(NameManager::normalizeName(m.getValue().first));
+			std::string const newName(NameManager::normalizeName(m.getValue().second));
+
+			std::set<PlayerObject const *> const &players = PlayerObject::getAllPlayerObjects();
+			if (!players.empty())
+			{
+				std::set<PlayerObject const *>::const_iterator i;
+				for (i = players.begin(); i != players.end(); ++i)
+				{
+					PlayerObject const * const   playerObject   = *i;
+					if (!playerObject->isAuthoritative())
+						continue;
+
+					CreatureObject const * const creatureObject = playerObject->getCreatureObject();
+					if (!creatureObject || !creatureObject->isAuthoritative() || !creatureObject->getClient())
+						continue;
+
+					if (playerObject->isFriend(oldName))
+					{
+						// refresh friends list in 30 seconds
+						MessageToQueue::getInstance().sendMessageToC(playerObject->getNetworkId(),
+							"C++RequestChatFriendsList",
+							"",
+							30,
+							false);
+
+						Chat::sendSystemMessage(*creatureObject, Unicode::narrowToWide(FormattedString<2048>().sprintf("%s on your friends list has been renamed to %s.  If your friends list has not been updated with the new name in about 30 seconds, you can relog to refresh your friends list.", oldName.c_str(), newName.c_str())), Unicode::emptyString);
 					}
 
-					std::vector<int> const & cityIds = CityInterface::getCitizenOfCityId(co->getNetworkId());
-					if (!cityIds.empty())
-						CityInterface::enterCityChatRoom(cityIds.front(), *co);
-				}
-				GameScriptObject * gso = so->getScriptObject();
-				if(gso)
-				{
-					ScriptParams params;
-					gso->trigAllScripts(Scripting::TRIG_CHAT_ON_LOGIN, params);
-				}
-			}
-		}
-	}
-	else if (msg.isType("ChatAvatarRenamed"))
-	{
-		GenericValueTypeMessage<std::pair<std::string, std::string> > const m(cri);
+					if (playerObject->isIgnoring(oldName))
+					{
+						// refresh ignore list in 30 seconds
+						MessageToQueue::getInstance().sendMessageToC(playerObject->getNetworkId(),
+							"C++RequestChatIgnoreList",
+							"",
+							30,
+							false);
 
-		// refresh the friends and/or ignore list of any character that
-		// has the renamed avatar in his friends and/or ignore list
-		std::string const oldName(NameManager::normalizeName(m.getValue().first));
-		std::string const newName(NameManager::normalizeName(m.getValue().second));
-
-		std::set<PlayerObject const *> const &players = PlayerObject::getAllPlayerObjects();
-		if (!players.empty())
-		{
-			std::set<PlayerObject const *>::const_iterator i;
-			for (i = players.begin(); i != players.end(); ++i)
-			{
-				PlayerObject const * const   playerObject   = *i;
-				if (!playerObject->isAuthoritative())
-					continue;
-
-				CreatureObject const * const creatureObject = playerObject->getCreatureObject();
-				if (!creatureObject || !creatureObject->isAuthoritative() || !creatureObject->getClient())
-					continue;
-
-				if (playerObject->isFriend(oldName))
-				{
-					// refresh friends list in 30 seconds
-					MessageToQueue::getInstance().sendMessageToC(playerObject->getNetworkId(),
-						"C++RequestChatFriendsList",
-						"",
-						30,
-						false);
-
-					Chat::sendSystemMessage(*creatureObject, Unicode::narrowToWide(FormattedString<2048>().sprintf("%s on your friends list has been renamed to %s.  If your friends list has not been updated with the new name in about 30 seconds, you can relog to refresh your friends list.", oldName.c_str(), newName.c_str())), Unicode::emptyString);
-				}
-
-				if (playerObject->isIgnoring(oldName))
-				{
-					// refresh ignore list in 30 seconds
-					MessageToQueue::getInstance().sendMessageToC(playerObject->getNetworkId(),
-						"C++RequestChatIgnoreList",
-						"",
-						30,
-						false);
-
-					Chat::sendSystemMessage(*creatureObject, Unicode::narrowToWide(FormattedString<2048>().sprintf("%s on your ignore list has been renamed to %s.  If your ignore list has not been updated with the new name in about 30 seconds, you can relog to refresh your ignore list.", oldName.c_str(), newName.c_str())), Unicode::emptyString);
+						Chat::sendSystemMessage(*creatureObject, Unicode::narrowToWide(FormattedString<2048>().sprintf("%s on your ignore list has been renamed to %s.  If your ignore list has not been updated with the new name in about 30 seconds, you can relog to refresh your ignore list.", oldName.c_str(), newName.c_str())), Unicode::emptyString);
+					}
 				}
 			}
+			break;
 		}
 	}
-	else if (msg.isType(VoiceChatOnGetChannel::cms_name))
-	{
-		processVoiceChatOnGetChannel(message);
-	}
-}
-
-//-----------------------------------------------------------------------
-
-void ChatServerConnection::processVoiceChatOnGetChannel(const Archive::ByteStream & message)
-{
-	Archive::ReadIterator ri = message.begin();
-	VoiceChatOnGetChannel response(ri);
-
-	GroupObject::onVoiceChatRoomCreate(response.getRoomName());
-	GuildInterface::onVoiceChatRoomCreate(response.getRoomName());
-	//TODO: guild
 }

@@ -25,6 +25,8 @@
 #include "Unicode.h"
 #include "UnicodeUtils.h"
 
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 // ======================================================================
 
 CentralServerConnection::CentralServerConnection(const std::string & a, const unsigned short p) :
@@ -65,31 +67,39 @@ void CentralServerConnection::onReceive(const Archive::ByteStream & message)
 	const GameNetworkMessage msg(ri);
 	ri = message.begin();
 	
-	if(msg.isType("TransferRenameCharacter"))
-	{
-		const GenericValueTypeMessage<TransferCharacterData> request(ri);
-		const TransferCharacterData & requestData = request.getValue();
-		LOG("CustomerService", ("CharacterTransfer: Received TransferRenameCharacter, starting game database name change. %s", requestData.toString().c_str()));
-		Persister::getInstance().renameCharacter(0, static_cast<int8>(RenameCharacterMessageEx::RCMS_cts_rename), request.getValue().getSourceStationId(), request.getValue().getCharacterId(), Unicode::narrowToWide(request.getValue().getDestinationCharacterName()), Unicode::narrowToWide(request.getValue().getSourceCharacterName()), false, NetworkId::cms_invalid, &requestData);
-	}
-	else if(msg.isType("ConGenericMessage"))
-	{
-		const ConGenericMessage cm(ri);
-		std::string result;
-		ConsoleManager::processString(cm.getMsg(), cm.getMsgId(), result);
-		const ConGenericMessage response(result, cm.getMsgId());
-		send(response, true);
-	}
-	else if(msg.isType("TransferAccountRequestCentralDatabase"))
-	{
-		const GenericValueTypeMessage<TransferAccountData> request(ri);
-		const TransferAccountData & requestData = request.getValue();
-		LOG("CustomerService", ("CharacterTransfer: Received TransferAccountRequestCentralDatabase, starting game database change from station ID %d to station ID %d", request.getValue().getSourceStationId(), request.getValue().getDestinationStationId()));
-		Persister::getInstance().changeStationId(&requestData);
-	}
-	else
-	{
-		ServerConnection::onReceive(message);
+	const uint32 messageType = msg.getType();
+	
+	switch(messageType) {
+		case constcrc("TransferRenameCharacter") :
+		{
+			const GenericValueTypeMessage<TransferCharacterData> request(ri);
+			const TransferCharacterData & requestData = request.getValue();
+			LOG("CustomerService", ("CharacterTransfer: Received TransferRenameCharacter, starting game database name change. %s", requestData.toString().c_str()));
+			Persister::getInstance().renameCharacter(0, static_cast<int8>(RenameCharacterMessageEx::RCMS_cts_rename), request.getValue().getSourceStationId(), request.getValue().getCharacterId(), Unicode::narrowToWide(request.getValue().getDestinationCharacterName()), Unicode::narrowToWide(request.getValue().getSourceCharacterName()), false, NetworkId::cms_invalid, &requestData);
+			break;
+		}
+		case constcrc("ConGenericMessage") :
+		{
+			const ConGenericMessage cm(ri);
+			std::string result;
+			ConsoleManager::processString(cm.getMsg(), cm.getMsgId(), result);
+			const ConGenericMessage response(result, cm.getMsgId());
+			send(response, true);
+			break;
+		}
+		case constcrc("TransferAccountRequestCentralDatabase") :
+		{
+			const GenericValueTypeMessage<TransferAccountData> request(ri);
+			const TransferAccountData & requestData = request.getValue();
+			LOG("CustomerService", ("CharacterTransfer: Received TransferAccountRequestCentralDatabase, starting game database change from station ID %d to station ID %d", request.getValue().getSourceStationId(), request.getValue().getDestinationStationId()));
+			Persister::getInstance().changeStationId(&requestData);
+			break;
+		}
+		default :
+		{
+			ServerConnection::onReceive(message);
+			break;
+		}
 	}
 }
 

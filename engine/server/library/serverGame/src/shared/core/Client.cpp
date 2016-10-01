@@ -128,6 +128,8 @@
 #include "sharedSkillSystem/SkillManager.h"
 #include "unicodeArchive/UnicodeArchive.h"
 
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 namespace ClientNamespace
 {
 	// list of object types, radial menu action permission
@@ -679,422 +681,426 @@ void Client::receiveClientMessage(const GameNetworkMessage & message)
 
 		//-----------------------------------------------------------------
 
-		if (message.isType("ShipUpdateTransformMessage"))
-		{
-			Archive::ReadIterator readIterator = static_cast<GameNetworkMessage const &>(message).getByteStream().begin();
-			ShipUpdateTransformMessage const shipUpdateTransformMessage(readIterator);
-
-			for (std::vector<ServerObject *>::const_iterator i = m_controlledObjects.begin(); i != m_controlledObjects.end(); ++i)
+		const uint32 messageType = message.getType();
+		
+		switch(messageType) {
+			case constcrc("ShipUpdateTransformMessage") :
 			{
-				ShipObject * const ship = (*i)->asShipObject();
-				if (ship)
+				Archive::ReadIterator readIterator = static_cast<GameNetworkMessage const &>(message).getByteStream().begin();
+				ShipUpdateTransformMessage const shipUpdateTransformMessage(readIterator);
+
+				for (std::vector<ServerObject *>::const_iterator i = m_controlledObjects.begin(); i != m_controlledObjects.end(); ++i)
 				{
-					PlayerShipController * const playerShipController = safe_cast<PlayerShipController *>(ship->getController());
-					if (playerShipController)
-						playerShipController->receiveTransform(shipUpdateTransformMessage);
-				}
-			}
-		}
-
-		//----------------------------------------------------------------------
-
-		else if (message.isType("CreateProjectileMessage"))
-		{
-			Archive::ReadIterator readIterator = static_cast<GameNetworkMessage const &>(message).getByteStream().begin();
-			CreateProjectileMessage const createProjectileMessage(readIterator);
-
-			// pilots can fire from non-turrets, gunners can fire their turret
-			ServerObject * const characterObject = getCharacterObject();
-			if (characterObject)
-			{
-				ServerObject * const containedBy = safe_cast<ServerObject *>(ContainerInterface::getContainedByObject(*characterObject));
-				if (containedBy)
-				{
-					SlottedContainer const * const slottedContainer = ContainerInterface::getSlottedContainer(*containedBy);
-					ShipObject * const shipObject = ShipObject::getContainingShipObject(containedBy);
-
-					if (   (shipObject != nullptr)
-					    && (slottedContainer != nullptr)
-					    && !shipObject->hasCondition(TangibleObject::C_docking))
+					ShipObject * const ship = (*i)->asShipObject();
+					if (ship)
 					{
-						bool shotOk = false;
+						PlayerShipController * const playerShipController = safe_cast<PlayerShipController *>(ship->getController());
+						if (playerShipController)
+							playerShipController->receiveTransform(shipUpdateTransformMessage);
+					}
+				}
+				break;
+			}
 
-						int const weaponIndex = createProjectileMessage.getWeaponIndex();
-						if (weaponIndex >= 0 && weaponIndex < ShipChassisSlotType::cms_numWeaponIndices)
+			//----------------------------------------------------------------------
+
+			case constcrc("CreateProjectileMessage") :
+			{
+				Archive::ReadIterator readIterator = static_cast<GameNetworkMessage const &>(message).getByteStream().begin();
+				CreateProjectileMessage const createProjectileMessage(readIterator);
+
+				// pilots can fire from non-turrets, gunners can fire their turret
+				ServerObject * const characterObject = getCharacterObject();
+				if (characterObject)
+				{
+					ServerObject * const containedBy = safe_cast<ServerObject *>(ContainerInterface::getContainedByObject(*characterObject));
+					if (containedBy)
+					{
+						SlottedContainer const * const slottedContainer = ContainerInterface::getSlottedContainer(*containedBy);
+						ShipObject * const shipObject = ShipObject::getContainingShipObject(containedBy);
+
+						if (   (shipObject != nullptr)
+							&& (slottedContainer != nullptr)
+							&& !shipObject->hasCondition(TangibleObject::C_docking))
 						{
-							Container::ContainerErrorCode err = Container::CEC_Success;
-							if (shipObject->isTurret(weaponIndex))
+							bool shotOk = false;
+
+							int const weaponIndex = createProjectileMessage.getWeaponIndex();
+							if (weaponIndex >= 0 && weaponIndex < ShipChassisSlotType::cms_numWeaponIndices)
 							{
-								if (   slottedContainer->getObjectInSlot(ShipSlotIdManager::getPobShipGunnerSlotId(weaponIndex), err) == characterObject->getNetworkId()
-								    || slottedContainer->getObjectInSlot(ShipSlotIdManager::getShipGunnerSlotId(weaponIndex), err) == characterObject->getNetworkId())
-									shotOk = true; // gunner firing his turret
+								Container::ContainerErrorCode err = Container::CEC_Success;
+								if (shipObject->isTurret(weaponIndex))
+								{
+									if (   slottedContainer->getObjectInSlot(ShipSlotIdManager::getPobShipGunnerSlotId(weaponIndex), err) == characterObject->getNetworkId()
+										|| slottedContainer->getObjectInSlot(ShipSlotIdManager::getShipGunnerSlotId(weaponIndex), err) == characterObject->getNetworkId())
+										shotOk = true; // gunner firing his turret
+								}
+								else
+								{
+									if (   slottedContainer->getObjectInSlot(ShipSlotIdManager::getShipPilotSlotId(), err) == characterObject->getNetworkId()
+										|| slottedContainer->getObjectInSlot(ShipSlotIdManager::getPobShipPilotSlotId(), err) == characterObject->getNetworkId())
+										shotOk = true; // pilot firing non-turret
+								}
 							}
-							else
+
+							// only gods can fire while invulnerable
+							if (shipObject->isInvulnerable() && !isGod())
+								shotOk = false;
+
+							if (shotOk)
 							{
-								if (   slottedContainer->getObjectInSlot(ShipSlotIdManager::getShipPilotSlotId(), err) == characterObject->getNetworkId()
-								    || slottedContainer->getObjectInSlot(ShipSlotIdManager::getPobShipPilotSlotId(), err) == characterObject->getNetworkId())
-									shotOk = true; // pilot firing non-turret
+								shipObject->enqueueFireShotClient(
+									*this,
+									weaponIndex,
+									createProjectileMessage.getTransform_p(),
+									createProjectileMessage.getTargetedComponent(),
+									createProjectileMessage.getSyncStampLong());
 							}
 						}
+					}
+				}
+				break;
+			}
 
-						// only gods can fire while invulnerable
-						if (shipObject->isInvulnerable() && !isGod())
-							shotOk = false;
+			//----------------------------------------------------------------------
 
-						if (shotOk)
+			case constcrc("CmdSceneReady") :
+			{
+				m_isReady = true;
+				primaryControlledObject->onClientReady(this);
+				break;
+			}
+
+			//----------------------------------------------------------------------
+
+			case constcrc("SetCombatSpamFilter") :
+			{
+				Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+				GenericValueTypeMessage<int> const msg(ri);
+				m_combatSpamFilter = static_cast<CombatDataTable::CombatSpamFilterType>(msg.getValue());
+				break;
+			}
+
+			//----------------------------------------------------------------------
+
+			case constcrc("SetCombatSpamRangeFilter") :
+			{
+				Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+				GenericValueTypeMessage<int> const msg(ri);
+				m_combatSpamRangeSquaredFilter = sqr(msg.getValue());
+				break;
+			}
+
+			//----------------------------------------------------------------------
+
+			case constcrc("SetFurnitureRotationDegree") :
+			{
+				Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+				GenericValueTypeMessage<int> const msg(ri);
+				m_furnitureRotationDegree = msg.getValue();
+				break;
+			}
+
+			//----------------------------------------------------------------------
+
+			case constcrc("GcwRegionsReq") :
+			{
+				GenericValueTypeMessage<std::map<std::string, std::map<std::string, std::pair<std::pair<float, float>, float> > > > const rsp("GcwRegionsRsp", Pvp::getGcwScoreCategoryRegions());
+				send(rsp, true);
+
+				GenericValueTypeMessage<std::map<std::string, std::map<std::string, int> > > const rsp2("GcwGroupsRsp", Pvp::getGcwScoreCategoryGroups());
+				send(rsp2, true);
+				break;
+			}
+
+			//----------------------------------------------------------------------
+
+			case constcrc("SetJediSlotInfo") :
+			{
+				Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+				GenericValueTypeMessage<std::pair<bool, bool> > const msg(ri);
+
+				// this comes from the client (via the LoginServer) so should not be trusted;
+				// we cache them here to do preliminary checks to avoid unnecessarily sending
+				// commands to the LoginServer (assuming the values haven't been hacked on the
+				// client); when we do send the commands to the LoginServer, we'll check again there
+				m_hasUnoccupiedJediSlot = msg.getValue().first;
+				m_isJediSlotCharacter = msg.getValue().second;
+				break;
+			}
+
+			//----------------------------------------------------------------------
+
+			case constcrc("RotateFurnitureSetQuaternion") :
+			{
+				Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+				GenericValueTypeMessage<std::pair<NetworkId, std::pair<std::pair<float, float>, std::pair<float, float> > > > const msg(ri);
+				
+				CreatureObject * creatureOwner = safe_cast<CreatureObject*>(getCharacterObject());
+				if (creatureOwner && creatureOwner->isAuthoritative())
+				{
+					ServerObject const * target = ServerWorld::findObjectByNetworkId(msg.getValue().first);
+					if (target && target->isAuthoritative())
+					{
+						static uint32 const commandHash = Crc::normalizeAndCalculate("rotateFurniture");
+						const Command &command = CommandTable::getCommand(commandHash);
+						if (!command.isNull())
 						{
-							shipObject->enqueueFireShotClient(
-								*this,
-								weaponIndex,
-								createProjectileMessage.getTransform_p(),
-								createProjectileMessage.getTargetedComponent(),
-								createProjectileMessage.getSyncStampLong());
+							// for obfuscation so players won't manually send us this command
+							Unicode::String params = Unicode::narrowToWide(FormattedString<512>().sprintf("(^-,=+_)internal_use_only_%s_quaternion(,+-=_^) %.10f %.10f %.10f %.10f %s", creatureOwner->getNetworkId().getValueString().c_str(), msg.getValue().second.first.first, msg.getValue().second.first.second, msg.getValue().second.second.first, msg.getValue().second.second.second, msg.getValue().first.getValueString().c_str()));
+							creatureOwner->commandQueueEnqueue(command, target->getNetworkId(), params, 0, false, static_cast<Command::Priority>(Command::CP_Default), true);
 						}
 					}
 				}
+				break;
 			}
-		}
 
-		//----------------------------------------------------------------------
+			//----------------------------------------------------------------------
 
-		else if(message.isType("CmdSceneReady"))
-		{
-			m_isReady = true;
-			primaryControlledObject->onClientReady(this);
-		}
-
-		//----------------------------------------------------------------------
-
-		else if(message.isType("SetCombatSpamFilter"))
-		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-			GenericValueTypeMessage<int> const msg(ri);
-			m_combatSpamFilter = static_cast<CombatDataTable::CombatSpamFilterType>(msg.getValue());
-		}
-
-		//----------------------------------------------------------------------
-
-		else if(message.isType("SetCombatSpamRangeFilter"))
-		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-			GenericValueTypeMessage<int> const msg(ri);
-			m_combatSpamRangeSquaredFilter = sqr(msg.getValue());
-		}
-
-		//----------------------------------------------------------------------
-
-		else if(message.isType("SetFurnitureRotationDegree"))
-		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-			GenericValueTypeMessage<int> const msg(ri);
-			m_furnitureRotationDegree = msg.getValue();
-		}
-
-		//----------------------------------------------------------------------
-
-		else if(message.isType("GcwRegionsReq"))
-		{
-			GenericValueTypeMessage<std::map<std::string, std::map<std::string, std::pair<std::pair<float, float>, float> > > > const rsp("GcwRegionsRsp", Pvp::getGcwScoreCategoryRegions());
-			send(rsp, true);
-
-			GenericValueTypeMessage<std::map<std::string, std::map<std::string, int> > > const rsp2("GcwGroupsRsp", Pvp::getGcwScoreCategoryGroups());
-			send(rsp2, true);
-		}
-
-		//----------------------------------------------------------------------
-
-		else if(message.isType("SetJediSlotInfo"))
-		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-			GenericValueTypeMessage<std::pair<bool, bool> > const msg(ri);
-
-			// this comes from the client (via the LoginServer) so should not be trusted;
-			// we cache them here to do preliminary checks to avoid unnecessarily sending
-			// commands to the LoginServer (assuming the values haven't been hacked on the
-			// client); when we do send the commands to the LoginServer, we'll check again there
-			m_hasUnoccupiedJediSlot = msg.getValue().first;
-			m_isJediSlotCharacter = msg.getValue().second;
-		}
-
-		//----------------------------------------------------------------------
-
-		else if(message.isType("RotateFurnitureSetQuaternion"))
-		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-			GenericValueTypeMessage<std::pair<NetworkId, std::pair<std::pair<float, float>, std::pair<float, float> > > > const msg(ri);
-			
-			CreatureObject * creatureOwner = safe_cast<CreatureObject*>(getCharacterObject());
-			if (creatureOwner && creatureOwner->isAuthoritative())
+			case constcrc("SetLfgInterests") :
 			{
-				ServerObject const * target = ServerWorld::findObjectByNetworkId(msg.getValue().first);
-				if (target && target->isAuthoritative())
+				Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+				GenericValueTypeMessage<BitArray> const msg(ri);
+
+				PlayerObject const * const playerObject = PlayerCreatureController::getPlayerObject(safe_cast<CreatureObject const *>(getCharacterObject()));
+				if (playerObject)
 				{
-					static uint32 const commandHash = Crc::normalizeAndCalculate("rotateFurniture");
-					const Command &command = CommandTable::getCommand(commandHash);
-					if (!command.isNull())
+					std::map<NetworkId, LfgCharacterData> const & connectedCharacterLfgData = ServerUniverse::getConnectedCharacterLfgData();
+					std::map<NetworkId, LfgCharacterData>::const_iterator iterFind = connectedCharacterLfgData.find(getCharacterObjectId());
+					if (iterFind != connectedCharacterLfgData.end())
 					{
-						// for obfuscation so players won't manually send us this command
-						Unicode::String params = Unicode::narrowToWide(FormattedString<512>().sprintf("(^-,=+_)internal_use_only_%s_quaternion(,+-=_^) %.10f %.10f %.10f %.10f %s", creatureOwner->getNetworkId().getValueString().c_str(), msg.getValue().second.first.first, msg.getValue().second.first.second, msg.getValue().second.second.first, msg.getValue().second.second.second, msg.getValue().first.getValueString().c_str()));
-						creatureOwner->commandQueueEnqueue(command, target->getNetworkId(), params, 0, false, static_cast<Command::Priority>(Command::CP_Default), true);
+						BitArray lfgInterests = msg.getValue();
+
+						MatchMakingId const & id = playerObject->getMatchMakingCharacterProfileId();
+						if (id.isBitSet(MatchMakingId::B_lookingForGroup))
+							LfgDataTable::setBit("lfg", lfgInterests);
+						else
+							LfgDataTable::clearBit("lfg", lfgInterests);
+
+						if (id.isBitSet(MatchMakingId::B_helper))
+							LfgDataTable::setBit("helper", lfgInterests);
+						else
+							LfgDataTable::clearBit("helper", lfgInterests);
+
+						if (id.isBitSet(MatchMakingId::B_rolePlay))
+							LfgDataTable::setBit("rp", lfgInterests);
+						else
+							LfgDataTable::clearBit("rp", lfgInterests);
+
+						if (id.isBitSet(MatchMakingId::B_lookingForWork))
+							LfgDataTable::setBit("lfw", lfgInterests);
+						else
+							LfgDataTable::clearBit("lfw", lfgInterests);
+
+						ServerUniverse::setConnectedCharacterInterestsData(getCharacterObjectId(), lfgInterests);
 					}
 				}
+				break;
 			}
-		}
 
-		//----------------------------------------------------------------------
+			//----------------------------------------------------------------------
 
-		else if(message.isType("SetLfgInterests"))
-		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-			GenericValueTypeMessage<BitArray> const msg(ri);
-
-			PlayerObject const * const playerObject = PlayerCreatureController::getPlayerObject(safe_cast<CreatureObject const *>(getCharacterObject()));
-			if (playerObject)
+			case constcrc("RequestGroundObjectPlacement") :
 			{
-				std::map<NetworkId, LfgCharacterData> const & connectedCharacterLfgData = ServerUniverse::getConnectedCharacterLfgData();
-				std::map<NetworkId, LfgCharacterData>::const_iterator iterFind = connectedCharacterLfgData.find(getCharacterObjectId());
-				if (iterFind != connectedCharacterLfgData.end())
+				Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+				GenericValueTypeMessage<std::pair<NetworkId, std::pair<std::pair<int, float>, std::pair<float, float> > > > const msg(ri);
+
+				ServerObject * const target           = safe_cast<ServerObject *>(NetworkIdManager::getObjectById (msg.getValue().first));
+				GameScriptObject * const scriptObject = target ? target->getScriptObject() : 0;
+				
+				if (!scriptObject)
 				{
-					BitArray lfgInterests = msg.getValue();
-
-					MatchMakingId const & id = playerObject->getMatchMakingCharacterProfileId();
-					if (id.isBitSet(MatchMakingId::B_lookingForGroup))
-						LfgDataTable::setBit("lfg", lfgInterests);
-					else
-						LfgDataTable::clearBit("lfg", lfgInterests);
-
-					if (id.isBitSet(MatchMakingId::B_helper))
-						LfgDataTable::setBit("helper", lfgInterests);
-					else
-						LfgDataTable::clearBit("helper", lfgInterests);
-
-					if (id.isBitSet(MatchMakingId::B_rolePlay))
-						LfgDataTable::setBit("rp", lfgInterests);
-					else
-						LfgDataTable::clearBit("rp", lfgInterests);
-
-					if (id.isBitSet(MatchMakingId::B_lookingForWork))
-						LfgDataTable::setBit("lfw", lfgInterests);
-					else
-						LfgDataTable::clearBit("lfw", lfgInterests);
-
-					ServerUniverse::setConnectedCharacterInterestsData(getCharacterObjectId(), lfgInterests);
+					return;
 				}
+				
+				int menuType =  msg.getValue().second.first.first;
+				Vector loc(msg.getValue().second.first.second, msg.getValue().second.second.first, msg.getValue().second.second.second);
+				ScriptParams params;
+				params.addParam (getCharacterObjectId());
+				params.addParam (menuType);
+				params.addParam (loc.x);
+				params.addParam (loc.y);
+				params.addParam (loc.z);
+
+				IGNORE_RETURN (scriptObject->trigAllScripts(Scripting::TRIG_GROUND_TARGET_LOC, params));
+				break;
 			}
-		}
+			//----------------------------------------------------------------------
 
-		//----------------------------------------------------------------------
-
-		else if(message.isType("RequestGroundObjectPlacement"))
-		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-			GenericValueTypeMessage<std::pair<NetworkId, std::pair<std::pair<int, float>, std::pair<float, float> > > > const msg(ri);
-
-			ServerObject * const target           = safe_cast<ServerObject *>(NetworkIdManager::getObjectById (msg.getValue().first));
-			GameScriptObject * const scriptObject = target ? target->getScriptObject() : 0;
-			
-			if (!scriptObject)
+			case constcrc("ShowBackpack") :
 			{
-				return;
+				Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+				GenericValueTypeMessage<std::pair<NetworkId, bool > > const msg(ri);
+				PlayerObject * player			= dynamic_cast<PlayerObject *>(NetworkIdManager::getObjectById (msg.getValue().first));
+				
+				if(player)
+					player->modifyShowBackpack(msg.getValue().second);
+				
+				break;
 			}
-			
-			int menuType =  msg.getValue().second.first.first;
-			Vector loc(msg.getValue().second.first.second, msg.getValue().second.second.first, msg.getValue().second.second.second);
-			ScriptParams params;
-			params.addParam (getCharacterObjectId());
-			params.addParam (menuType);
-			params.addParam (loc.x);
-			params.addParam (loc.y);
-			params.addParam (loc.z);
+			//----------------------------------------------------------------------
 
-			IGNORE_RETURN (scriptObject->trigAllScripts(Scripting::TRIG_GROUND_TARGET_LOC, params));
-		}
-		//----------------------------------------------------------------------
-
-		else if(message.isType("ShowBackpack"))
-		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-			GenericValueTypeMessage<std::pair<NetworkId, bool > > const msg(ri);
-			PlayerObject * player			= dynamic_cast<PlayerObject *>(NetworkIdManager::getObjectById (msg.getValue().first));
-			
-			if(player)
-				player->modifyShowBackpack(msg.getValue().second);
-
-		}
-		//----------------------------------------------------------------------
-
-		else if(message.isType("ShowHelmet"))
-		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-			GenericValueTypeMessage<std::pair<NetworkId, bool > > const msg(ri);
-			PlayerObject * player			= dynamic_cast<PlayerObject *>(NetworkIdManager::getObjectById (msg.getValue().first));
-			
-			if(player)
-				player->modifyShowHelmet(msg.getValue().second);
-
-		}
-		//----------------------------------------------------------------------
-
-		else if(message.isType("SetWaypointColor"))
-		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-			GenericValueTypeMessage<std::pair<NetworkId, std::string> > const msg(ri);
-
-			if ((msg.getValue().second == "blue") || (msg.getValue().second == "green") || (msg.getValue().second == "orange") || (msg.getValue().second == "yellow") || (msg.getValue().second == "purple") || (msg.getValue().second == "white"))
+			case constcrc("ShowHelmet") :
 			{
-				Waypoint w = Waypoint::getWaypointById(msg.getValue().first);
-				if (w.isValid())
-				{
-					w.setColor(Waypoint::getColorIdByName(msg.getValue().second));
-				}
+				Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+				GenericValueTypeMessage<std::pair<NetworkId, bool > > const msg(ri);
+				PlayerObject * player			= dynamic_cast<PlayerObject *>(NetworkIdManager::getObjectById (msg.getValue().first));
+				
+				if(player)
+					player->modifyShowHelmet(msg.getValue().second);
+				
+				break;
 			}
-		}
+			//----------------------------------------------------------------------
 
-		//----------------------------------------------------------------------
-
-		else if (message.isType (ObjectMenuSelectMessage::MESSAGE_TYPE))
-		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-			const ObjectMenuSelectMessage m (ri);
-			ServerObject * const target           = safe_cast<ServerObject *>(NetworkIdManager::getObjectById (m.getNetworkId()));
-			GameScriptObject * const scriptObject = target ? target->getScriptObject() : 0;
-			Object * const targetContainedBy = target ? ContainerInterface::getContainedByObject(*target) : nullptr;
-			const int menuType                    = m.getSelectedItemId();
-
-			static int examineMenuType = RadialMenuManager::getMenuTypeByName("EXAMINE");
-			static int tradeMenuType   = RadialMenuManager::getMenuTypeByName("TRADE_START");
-
-			CreatureObject* cobj = dynamic_cast<CreatureObject*>(primaryControlledObject);
-			if (cobj && menuType != examineMenuType && menuType != tradeMenuType)
+			case constcrc("SetWaypointColor") :
 			{
-				CreatureController* const controller = cobj->getCreatureController();
-				if (controller && controller->getSecureTrade())
-				{
-					controller->getSecureTrade()->cancelTrade(*cobj);
-					DEBUG_REPORT_LOG (true, ("Client ObjectMenuSelectMessage [%d] for [%s] canceling trade.\n", menuType, cobj->getNetworkId ().getValueString ().c_str ()));
-				}
-			}
+				Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+				GenericValueTypeMessage<std::pair<NetworkId, std::string> > const msg(ri);
 
-			if (!scriptObject)
-			{
-				DEBUG_REPORT_LOG (true, ("Received an object menu select message from player %s for object %s, which does not exist or lacks a GameScriptObject.", m_characterObjectId.getValueString().c_str(),m.getNetworkId().getValueString().c_str()));
-				return;
-			}
-
-			NOT_NULL(target);
-
-			float range = 0.0f;
-			if (RadialMenuManager::getRangeForMenuType(menuType, range))
-			{
-				Container::ContainerErrorCode errorCode = Container::CEC_Success;
-				if (!target->isAuthoritative())
+				if ((msg.getValue().second == "blue") || (msg.getValue().second == "green") || (msg.getValue().second == "orange") || (msg.getValue().second == "yellow") || (msg.getValue().second == "purple") || (msg.getValue().second == "white"))
 				{
-					GenericValueTypeMessage<std::pair<NetworkId, NetworkId> > const rssMessage(
-						"RequestSameServer",
-						std::make_pair(
-							ContainerInterface::getTopmostContainer(*primaryControlledObject)->getNetworkId(),
-							ContainerInterface::getTopmostContainer(*target)->getNetworkId()));
-					GameServer::getInstance().sendToPlanetServer(rssMessage);
-					errorCode = Container::CEC_TryAgain;
-				}
-				else if (menuType != examineMenuType && targetContainedBy && targetContainedBy->asServerObject() && ( targetContainedBy->asServerObject()->getGameObjectType() == SharedObjectTemplate::GOT_chronicles_quest_holocron || targetContainedBy->asServerObject()->getGameObjectType() == SharedObjectTemplate::GOT_chronicles_quest_holocron_recipe ) )
-				{
-					// Can only examine items that are contained in a holocron.
-					errorCode = Container::CEC_NoPermission;
-				}
-				else if (primaryControlledObject->canManipulateObject(*target, false, false, false, range, errorCode)
-					|| ClientNamespace::canManipulateObjectExceptionCheck(*target, menuType, errorCode))
-				{
-					ScriptParams params;
-					params.addParam (getCharacterObjectId());
-					params.addParam (menuType);
-
-					if (cobj && cobj->getObjVars().hasItem("cheater"))
+					Waypoint w = Waypoint::getWaypointById(msg.getValue().first);
+					if (w.isValid())
 					{
-						std::string menuDesc = "unknown";
-						bool tmp;
-						IGNORE_RETURN(RadialMenuManager::getCommandForMenuType(menuType, menuDesc, tmp));
-						LOG("CustomerService",("SuspectedCheaterLog: %s has used a radial menu on object %s. Menu item %d (%s).",
-											   PlayerObject::getAccountDescription(cobj).c_str(),
-											   m.getNetworkId().getValueString().c_str(),
-											   menuType,
-											   menuDesc.c_str() ));
-					}
-
-					IGNORE_RETURN (scriptObject->trigAllScripts(Scripting::TRIG_OBJECT_MENU_SELECT, params));
-				}
-				if (errorCode != Container::CEC_Success)
-					ContainerInterface::sendContainerMessageToClient(*primaryControlledObject, errorCode);
-			}
-			else
-			{
-				DEBUG_REPORT_LOG(true, ("Received a message type %d that had no range in data (radial_menu.tab)\n", menuType));
-			}
-		}
-
-		//----------------------------------------------------------------------
-
-		else if(message.isType("ConGenericMessage"))
-		{
-
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-			ConGenericMessage	c(ri);
-			if (isGod())
-			{
-				LOG("CustomerService",("Avatar:%s executing command: %s", PlayerObject::getAccountDescription(getCharacterObjectId()).c_str(), c.getMsg().c_str()));
-				ConsoleMgr::processString(c.getMsg(), this, c.getMsgId());
-			}
-			else
-			{
-				//Non-god user tried to use a console command
-				if (m_primaryControlledObject.getObject())
-				{
-					LOG("CustomerService", ("CheatChannel:%s tried to execute a console command but they are not a god",
-						PlayerObject::getAccountDescription(m_primaryControlledObject.getObject()->getNetworkId()).c_str()));
-					ConsoleMgr::broadcastString("Only god users can execute console commands.", this, c.getMsgId());
-				}
-
-			}
-		}
-
-		//-----------------------------------------------------------------
-
-		else if(message.isType("ObjControllerMessage"))
-		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-			ObjControllerMessage o(ri);
-			bool appended = false;
-
-			// check to make sure the controller message is allowed from the client
-			bool allowFromClient = ControllerMessageFactory::allowFromClient(o.getMessage());
-
-			// log as a possible hack
-			if (!allowFromClient)
-				LOG("CustomerService", ("UnauthorizedControllerMessage: Player %s sent an unauthorized controller message %d for object %s.", PlayerObject::getAccountDescription(getCharacterObjectId()).c_str(), o.getMessage(), o.getNetworkId().getValueString().c_str()));
-
-			// do we allow the controller message to get executed?
-			if (allowFromClient || isGod() || !ConfigServerGame::getEnableClientControllerMessageCheck())
-			{
-				ServerObject * target = findControlledObject(o.getNetworkId());
-				if(target !=0)
-				{
-					// apply the controller message
-					ServerController * controller = dynamic_cast<ServerController *>(target->getController());
-					if (controller != nullptr)
-					{
-						uint32 flags = o.getFlags();
-						flags &= ~GameControllerMessageFlags::SOURCE_REMOTE;
-						flags |= GameControllerMessageFlags::SOURCE_REMOTE_CLIENT;
-						controller->appendMessage(o.getMessage(), o.getValue(), o.getData(), flags);
-						appended = true;
+						w.setColor(Waypoint::getColorIdByName(msg.getValue().second));
 					}
 				}
-				else if (isGod())
-				{
-					target = ServerWorld::findObjectByNetworkId(o.getNetworkId());
+				
+				break;
+			}
 
-					if (target)
+			//----------------------------------------------------------------------
+
+			case ObjectMenuSelectMessage::MESSAGE_TYPE :
+			{
+				Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+				const ObjectMenuSelectMessage m (ri);
+				ServerObject * const target           = safe_cast<ServerObject *>(NetworkIdManager::getObjectById (m.getNetworkId()));
+				GameScriptObject * const scriptObject = target ? target->getScriptObject() : 0;
+				Object * const targetContainedBy = target ? ContainerInterface::getContainedByObject(*target) : nullptr;
+				const int menuType                    = m.getSelectedItemId();
+
+				static int examineMenuType = RadialMenuManager::getMenuTypeByName("EXAMINE");
+				static int tradeMenuType   = RadialMenuManager::getMenuTypeByName("TRADE_START");
+
+				CreatureObject* cobj = dynamic_cast<CreatureObject*>(primaryControlledObject);
+				if (cobj && menuType != examineMenuType && menuType != tradeMenuType)
+				{
+					CreatureController* const controller = cobj->getCreatureController();
+					if (controller && controller->getSecureTrade())
 					{
+						controller->getSecureTrade()->cancelTrade(*cobj);
+						DEBUG_REPORT_LOG (true, ("Client ObjectMenuSelectMessage [%d] for [%s] canceling trade.\n", menuType, cobj->getNetworkId ().getValueString ().c_str ()));
+					}
+				}
+
+				if (!scriptObject)
+				{
+					DEBUG_REPORT_LOG (true, ("Received an object menu select message from player %s for object %s, which does not exist or lacks a GameScriptObject.", m_characterObjectId.getValueString().c_str(),m.getNetworkId().getValueString().c_str()));
+					return;
+				}
+
+				NOT_NULL(target);
+
+				float range = 0.0f;
+				if (RadialMenuManager::getRangeForMenuType(menuType, range))
+				{
+					Container::ContainerErrorCode errorCode = Container::CEC_Success;
+					if (!target->isAuthoritative())
+					{
+						GenericValueTypeMessage<std::pair<NetworkId, NetworkId> > const rssMessage(
+							"RequestSameServer",
+							std::make_pair(
+								ContainerInterface::getTopmostContainer(*primaryControlledObject)->getNetworkId(),
+								ContainerInterface::getTopmostContainer(*target)->getNetworkId()));
+						GameServer::getInstance().sendToPlanetServer(rssMessage);
+						errorCode = Container::CEC_TryAgain;
+					}
+					else if (menuType != examineMenuType && targetContainedBy && targetContainedBy->asServerObject() && ( targetContainedBy->asServerObject()->getGameObjectType() == SharedObjectTemplate::GOT_chronicles_quest_holocron || targetContainedBy->asServerObject()->getGameObjectType() == SharedObjectTemplate::GOT_chronicles_quest_holocron_recipe ) )
+					{
+						// Can only examine items that are contained in a holocron.
+						errorCode = Container::CEC_NoPermission;
+					}
+					else if (primaryControlledObject->canManipulateObject(*target, false, false, false, range, errorCode)
+						|| ClientNamespace::canManipulateObjectExceptionCheck(*target, menuType, errorCode))
+					{
+						ScriptParams params;
+						params.addParam (getCharacterObjectId());
+						params.addParam (menuType);
+
+						if (cobj && cobj->getObjVars().hasItem("cheater"))
+						{
+							std::string menuDesc = "unknown";
+							bool tmp;
+							IGNORE_RETURN(RadialMenuManager::getCommandForMenuType(menuType, menuDesc, tmp));
+							LOG("CustomerService",("SuspectedCheaterLog: %s has used a radial menu on object %s. Menu item %d (%s).",
+												   PlayerObject::getAccountDescription(cobj).c_str(),
+												   m.getNetworkId().getValueString().c_str(),
+												   menuType,
+												   menuDesc.c_str() ));
+						}
+
+						IGNORE_RETURN (scriptObject->trigAllScripts(Scripting::TRIG_OBJECT_MENU_SELECT, params));
+					}
+					if (errorCode != Container::CEC_Success)
+						ContainerInterface::sendContainerMessageToClient(*primaryControlledObject, errorCode);
+				}
+				else
+				{
+					DEBUG_REPORT_LOG(true, ("Received a message type %d that had no range in data (radial_menu.tab)\n", menuType));
+				}
+				break;
+			}
+
+			//----------------------------------------------------------------------
+
+			case constcrc("ConGenericMessage") :
+			{
+
+				Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+				ConGenericMessage	c(ri);
+				if (isGod())
+				{
+					LOG("CustomerService",("Avatar:%s executing command: %s", PlayerObject::getAccountDescription(getCharacterObjectId()).c_str(), c.getMsg().c_str()));
+					ConsoleMgr::processString(c.getMsg(), this, c.getMsgId());
+				}
+				else
+				{
+					//Non-god user tried to use a console command
+					if (m_primaryControlledObject.getObject())
+					{
+						LOG("CustomerService", ("CheatChannel:%s tried to execute a console command but they are not a god",
+							PlayerObject::getAccountDescription(m_primaryControlledObject.getObject()->getNetworkId()).c_str()));
+						ConsoleMgr::broadcastString("Only god users can execute console commands.", this, c.getMsgId());
+					}
+
+				}
+				break;
+			}
+
+			//-----------------------------------------------------------------
+
+			case constcrc("ObjControllerMessage") :
+			{
+				Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+				ObjControllerMessage o(ri);
+				bool appended = false;
+
+				// check to make sure the controller message is allowed from the client
+				bool allowFromClient = ControllerMessageFactory::allowFromClient(o.getMessage());
+
+				// log as a possible hack
+				if (!allowFromClient)
+					LOG("CustomerService", ("UnauthorizedControllerMessage: Player %s sent an unauthorized controller message %d for object %s.", PlayerObject::getAccountDescription(getCharacterObjectId()).c_str(), o.getMessage(), o.getNetworkId().getValueString().c_str()));
+
+				// do we allow the controller message to get executed?
+				if (allowFromClient || isGod() || !ConfigServerGame::getEnableClientControllerMessageCheck())
+				{
+					ServerObject * target = findControlledObject(o.getNetworkId());
+					if(target !=0)
+					{
+						// apply the controller message
 						ServerController * controller = dynamic_cast<ServerController *>(target->getController());
 						if (controller != nullptr)
 						{
@@ -1105,868 +1111,922 @@ void Client::receiveClientMessage(const GameNetworkMessage & message)
 							appended = true;
 						}
 					}
-				}
-			}
-			if (!appended)
-				delete o.getData();
-		}
-
-		//-----------------------------------------------------------------
-		//Secure Trade Messages
-		//-----------------------------------------------------------------
-		else if (message.isType("AddItemMessage"))
-		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-			AddItemMessage m(ri);
-
-
-			ServerObject * item = ServerWorld::findObjectByNetworkId(m.getNetworkId());
-			if (!item)
-				return;
-
-			CreatureObject * playerObject = safe_cast<CreatureObject*>(getCharacterObject());
-			DEBUG_FATAL(!playerObject, ("No controller for player!\n"));
-			if(playerObject) //lint !e774
-			{
-				PlayerCreatureController* playerController = dynamic_cast<PlayerCreatureController *>(playerObject->getController());
-				if (playerController && playerController->getSecureTrade())
-				{
-					playerController->getSecureTrade()->addItem(*playerObject, *item);
-				}
-			}
-			else
-			{
-				GameServer::getInstance().dropClient(m_characterObjectId);
-			}
-		}
-		else if (message.isType("RemoveItemMessage"))
-		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-			RemoveItemMessage m(ri);
-
-			ServerObject * item = ServerWorld::findObjectByNetworkId(m.getNetworkId());
-			if (!item)
-				return;
-
-			CreatureObject * playerObject = safe_cast<CreatureObject*>(getCharacterObject());
-			DEBUG_FATAL(!playerObject, ("No controller for player!\n"));
-			if(playerObject) //lint !e774
-			{
-				PlayerCreatureController* playerController = dynamic_cast<PlayerCreatureController *>(playerObject->getController());
-				if (playerController && playerController->getSecureTrade())
-				{
-					playerController->getSecureTrade()->removeItem(*playerObject, *item);
-				}
-			}
-			else
-			{
-				GameServer::getInstance().dropClient(m_characterObjectId);
-			}
-		}
-		else if (message.isType("GiveMoneyMessage"))
-		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-			GiveMoneyMessage m(ri);
-
-			CreatureObject * playerObject = safe_cast<CreatureObject*>(getCharacterObject());
-			DEBUG_FATAL(!playerObject, ("No controller for player!\n"));
-			if(playerObject) //lint !e774
-			{
-				PlayerCreatureController* playerController = dynamic_cast<PlayerCreatureController *>(playerObject->getController());
-				if (playerController && playerController->getSecureTrade())
-				{
-					playerController->getSecureTrade()->giveMoney(*playerObject, m.getAmount());
-				}
-			}
-			else
-			{
-				GameServer::getInstance().dropClient(m_characterObjectId);
-			}
-		}
-		else if (message.isType("AcceptTransactionMessage"))
-		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-			AcceptTransactionMessage m(ri);
-			CreatureObject * playerObject = safe_cast<CreatureObject*>(getCharacterObject());
-			DEBUG_FATAL(!playerObject, ("No controller for player!\n"));
-			if(playerObject) //lint !e774
-			{
-				PlayerCreatureController* playerController = dynamic_cast<PlayerCreatureController *>(playerObject->getController());
-				if (playerController && playerController->getSecureTrade())
-				{
-					playerController->getSecureTrade()->acceptOffer(*playerObject);
-				}
-
-				if (playerObject->getObjVars().hasItem("cheater"))
-				{
-					LOG("CustomerService", ("SuspectedCheaterChannel: %s has accepted a secure trade. (Check trade logs for more detail.", PlayerObject::getAccountDescription(playerObject).c_str()));
-				}
-
-
-			}
-			else
-			{
-				GameServer::getInstance().dropClient(m_characterObjectId);
-			}
-
-		}
-		else if (message.isType("UnAcceptTransactionMessage"))
-		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-			UnAcceptTransactionMessage m(ri);
-			CreatureObject * playerObject = safe_cast<CreatureObject*>(getCharacterObject());
-			DEBUG_FATAL(!playerObject, ("No controller for player!\n"));
-			if(playerObject) //lint !e774
-			{
-				PlayerCreatureController* playerController = dynamic_cast<PlayerCreatureController *>(playerObject->getController());
-				if (playerController && playerController->getSecureTrade())
-				{
-					playerController->getSecureTrade()->unacceptOffer(*playerObject);
-				}
-			}
-			else
-			{
-				GameServer::getInstance().dropClient(m_characterObjectId);
-			}
-
-		}
-		else if (message.isType("VerifyTradeMessage"))
-		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-			VerifyTradeMessage m(ri);
-			CreatureObject * playerObject = safe_cast<CreatureObject*>(getCharacterObject());
-			DEBUG_FATAL(!playerObject, ("No controller for player!\n"));
-			if(playerObject) //lint !e774
-			{
-				PlayerCreatureController* playerController = dynamic_cast<PlayerCreatureController *>(playerObject->getController());
-				if (playerController && playerController->getSecureTrade())
-				{
-					playerController->getSecureTrade()->verifyTrade(*playerObject);
-				}
-			}
-			else
-			{
-				GameServer::getInstance().dropClient(m_characterObjectId);
-			}
-		}
-		else if (message.isType("DenyTradeMessage"))
-		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-			DenyTradeMessage m(ri);
-			CreatureObject * playerObject = safe_cast<CreatureObject*>(getCharacterObject());
-			DEBUG_FATAL(!playerObject, ("No controller for player!\n"));
-			if(playerObject) //lint !e774
-			{
-				PlayerCreatureController* playerController = dynamic_cast<PlayerCreatureController *>(playerObject->getController());
-				if (playerController && playerController->getSecureTrade())
-				{
-					playerController->getSecureTrade()->rejectOffer(*playerObject);
-				}
-			}
-			else
-			{
-				GameServer::getInstance().dropClient(m_characterObjectId);
-			}
-
-		}
-		else if (message.isType("AbortTradeMessage"))
-		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-			AbortTradeMessage m(ri);
-			CreatureObject * playerObject = safe_cast<CreatureObject*>(getCharacterObject());
-			DEBUG_FATAL(!playerObject, ("No controller for player!\n"));
-			if(playerObject) //lint !e774
-			{
-				PlayerCreatureController* playerController = dynamic_cast<PlayerCreatureController *>(playerObject->getController());
-				if (playerController && playerController->getSecureTrade())
-				{
-					playerController->getSecureTrade()->cancelTrade(*playerObject);
-				}
-			}
-			else
-			{
-				GameServer::getInstance().dropClient(m_characterObjectId);
-			}
-
-		}
-
-		else if (message.isType(SuiEventNotification::MessageType))
-		{
-			ServerUIManager::receiveMessage(message);
-		}
-
-		else if (message.isType("GuildRequestMessage"))
-		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-			GuildRequestMessage const m(ri);
-
-			NetworkId const &id = m.getTargetId();
-			CreatureObject * const creatureObject = dynamic_cast<CreatureObject *>(NetworkIdManager::getObjectById(id));
-			if (creatureObject)
-			{
-				int const guildId = creatureObject->getGuildId();
-				GuildMemberInfo const * const info = GuildInterface::getGuildMemberInfo(guildId, id);
-				GuildResponseMessage const responseMessage(id, GuildInterface::getGuildName(guildId), info ? info->m_title : std::string());
-				send(responseMessage, true);
-			}
-		}
-
-		else if (message.isType("StomachRequestMessage"))
-		{
-			CreatureObject *creatureObject = dynamic_cast<CreatureObject*>(getCharacterObject());
-
-			if (creatureObject != nullptr)
-			{
-				GameScriptObject *gameScriptObject = creatureObject->getScriptObject();
-
-				if(gameScriptObject != nullptr)
-				{
-					ScriptParams scriptParams;
-					IGNORE_RETURN(gameScriptObject->trigAllScripts(Scripting::TRIG_STOMACH_UPDATE, scriptParams));
-				}
-			}
-		}
-
-		else if (message.isType("FactionRequestMessage"))
-		{
-			int rebel  = 0;
-			int imperial = 0;
-			int criminal  = 0;
-
-			CreatureObject * playerObject = dynamic_cast<CreatureObject*>(getCharacterObject());
-			if (playerObject)
-			{
-				float temp;
-				if (playerObject->getObjVars().getItem("faction.Rebel",temp))
-				{
-					rebel = static_cast<int>(temp);
-				}
-				if (playerObject->getObjVars().getItem("faction.Imperial",temp))
-				{
-					imperial = static_cast<int>(temp);
-				}
-				if (playerObject->getObjVars().getItem("faction.Hutt",temp))
-				{
-					criminal = static_cast<int>(temp);
-				}
-
-				std::vector<std::string> factionNames;
-				std::vector<float> factionValues;
-				std::string currentName;
-				float       currentValue;
-				DynamicVariableList::NestedList factionList(playerObject->getObjVars(),"faction");
-				for(DynamicVariableList::NestedList::const_iterator i = factionList.begin(); i != factionList.end(); ++i)
-				{
-					currentName = i.getName();
-					bool result = i.getValue(currentValue);
-					if(result)
+					else if (isGod())
 					{
-						factionNames.push_back(currentName);
-						factionValues.push_back(currentValue);
+						target = ServerWorld::findObjectByNetworkId(o.getNetworkId());
+
+						if (target)
+						{
+							ServerController * controller = dynamic_cast<ServerController *>(target->getController());
+							if (controller != nullptr)
+							{
+								uint32 flags = o.getFlags();
+								flags &= ~GameControllerMessageFlags::SOURCE_REMOTE;
+								flags |= GameControllerMessageFlags::SOURCE_REMOTE_CLIENT;
+								controller->appendMessage(o.getMessage(), o.getValue(), o.getData(), flags);
+								appended = true;
+							}
+						}
 					}
 				}
-
-				FactionResponseMessage const msg(rebel, imperial, criminal, factionNames, factionValues);
-				send(msg, true);
+				if (!appended)
+					delete o.getData();
+				
+				break;
 			}
-		}
 
-		//----------------------------------------------------------------------
-
-		else if (message.isType (PlayerMoneyRequest::MessageType))
-		{
-			Archive::ReadIterator ri = (*NON_NULL (static_cast<const GameNetworkMessage *>(&message))).getByteStream().begin();
-			const PlayerMoneyRequest m (ri);
-
-			ServerObject * const playerObject = getCharacterObject();
-
-			WARNING (!playerObject, ("Got PlayerMoneyRequest for non-existant character (account=%s, networkid=%s)", m_accountName.c_str (), m_characterObjectId.getValueString ().c_str ()));
-
-			if (playerObject)
+			//-----------------------------------------------------------------
+			//Secure Trade Messages
+			//-----------------------------------------------------------------
+			case constcrc("AddItemMessage") :
 			{
-				PlayerMoneyResponse resp;
-				resp.m_balanceCash.set (playerObject->getCashBalance ());
-				resp.m_balanceBank.set (playerObject->getBankBalance ());
-				send (resp, true);
-			}
-		}
+				Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+				AddItemMessage m(ri);
 
-		//-----------------------------------------------------------------
 
-		else if (message.isType("AcceptAuctionMessage"))
-		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-			AcceptAuctionMessage m(ri);
-			CreatureObject * playerObject = safe_cast<CreatureObject*>(getCharacterObject());
-			if (playerObject)
-			{
-				CommoditiesMarket::auctionAccept(*playerObject, m.getItemId().getValue());
-				if (playerObject->getObjVars().hasItem("cheater"))
+				ServerObject * item = ServerWorld::findObjectByNetworkId(m.getNetworkId());
+				if (!item)
+					return;
+
+				CreatureObject * playerObject = safe_cast<CreatureObject*>(getCharacterObject());
+				DEBUG_FATAL(!playerObject, ("No controller for player!\n"));
+				if(playerObject) //lint !e774
 				{
-					LOG("CustomerService", ("SuspectedCheaterChannel: %s has accepted an auction for item %s",
-											PlayerObject::getAccountDescription(playerObject).c_str(),
-											m.getItemId().getValueString().c_str()));
-				}
-			}
-			else
-			{
-				WARNING(true, ("AcceptAuctionMessage: the player was not found"));
-			}
-		}
-
-		else if (message.isType("BidAuctionMessage"))
-		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-			BidAuctionMessage m(ri);
-			CreatureObject * playerObject = safe_cast<CreatureObject*>(getCharacterObject());
-			if (playerObject)
-			{
-				if (playerObject->getObjVars().hasItem("cheater"))
-				{
-					LOG("CustomerService", ("SuspectedCheaterChannel: %s has bid on an auction for item %s, amount %d",
-											PlayerObject::getAccountDescription(playerObject).c_str(),
-											m.getItemId().getValueString().c_str(),
-											m.getBid()));
-				}
-
-				CommoditiesMarket::auctionBid(*playerObject, m.getItemId().getValue(), m.getBid(), m.getMaxProxyBid());
-			}
-			else
-			{
-				WARNING(true, ("BidAuctionMessage: the player was not found"));
-			}
-		}
-
-		else if (message.isType("CancelLiveAuctionMessage"))
-		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-			CancelLiveAuctionMessage m(ri);
-
-			CreatureObject * playerObject = safe_cast<CreatureObject*>(getCharacterObject());
-			if (playerObject)
-			{
-				CommoditiesMarket::auctionCancel(*playerObject, m.getItemId().getValue());
-				if (playerObject->getObjVars().hasItem("cheater"))
-				{
-					LOG("CustomerService", ("SuspectedCheaterChannel: %s has cancelled an auction for item %s",
-											PlayerObject::getAccountDescription(playerObject).c_str(),
-											m.getItemId().getValueString().c_str()));
-				}
-
-			}
-			else
-			{
-				WARNING(true, ("CancelLiveAuctionMessage: the player was not found"));
-			}
-		}
-
-		else if (message.isType("CreateAuctionMessage"))
-		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-			CreateAuctionMessage m(ri);
-			CreatureObject * playerObject = safe_cast<CreatureObject*>(getCharacterObject());
-			if (playerObject)
-			{
-				NetworkId itemId = m.getItemId();
-				NetworkId containerId = m.getContainerId();
-				CommoditiesMarket::auctionCreate(*playerObject, itemId, m.getItemLocalizedName(), containerId, m.getMinimumBid(), m.getAuctionLength(), m.getUserDescription(), m.isPremium());
-
-				if (playerObject->getObjVars().hasItem("cheater"))
-				{
-					LOG("CustomerService", ("SuspectedCheaterChannel: %s has created an auction for item %s on vendor %s",
-											PlayerObject::getAccountDescription(playerObject).c_str(),
-											m.getItemId().getValueString().c_str(),
-											containerId.getValueString().c_str()));
-				}
-			}
-			else
-			{
-				WARNING(true, ("CreateAuctionMessage: the player was not found"));
-			}
-		}
-
-		else if (message.isType("CreateImmediateAuctionMessage"))
-		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-			CreateImmediateAuctionMessage m(ri);
-			CreatureObject * playerObject = safe_cast<CreatureObject*>(getCharacterObject());
-			if (playerObject)
-			{
-				NetworkId itemId = m.getItemId();
-				NetworkId containerId = m.getContainerId();
-				if (m.isVendorTransfer())
-				{
-					CommoditiesMarket::transferVendorItemFromStockroom(*playerObject, itemId, m.getItemLocalizedName(), m.getPrice(), m.getAuctionLength(), m.getUserDescription());
+					PlayerCreatureController* playerController = dynamic_cast<PlayerCreatureController *>(playerObject->getController());
+					if (playerController && playerController->getSecureTrade())
+					{
+						playerController->getSecureTrade()->addItem(*playerObject, *item);
+					}
 				}
 				else
 				{
-					CommoditiesMarket::auctionCreateImmediate(*playerObject, itemId, m.getItemLocalizedName(), containerId, m.getPrice(), m.getAuctionLength(), m.getUserDescription(), m.isPremium());
+					GameServer::getInstance().dropClient(m_characterObjectId);
 				}
-				if (playerObject->getObjVars().hasItem("cheater"))
-				{
-					LOG("CustomerService", ("SuspectedCheaterChannel: %s has created an immediate auction for item %s on vendor %s",
-											PlayerObject::getAccountDescription(playerObject).c_str(),
-											m.getItemId().getValueString().c_str(),
-											containerId.getValueString().c_str()));
-				}
+				break;
 			}
-			else
+			case constcrc("RemoveItemMessage") :
 			{
-				WARNING(true, ("CreateImmediateAuctionMessage: the player was not found"));
-			}
-		}
+				Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+				RemoveItemMessage m(ri);
 
-		else if (message.isType("RelistItemsFromStockMessage"))
-		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-			GenericValueTypeMessage<std::pair<std::pair<std::vector<NetworkId>, std::vector<Unicode::String> >, int> > const m(ri);
-			CreatureObject * playerObject = safe_cast<CreatureObject*>(getCharacterObject());
-			if (playerObject)
-			{
-				std::vector<NetworkId> const & itemIds = m.getValue().first.first;
-				std::vector<Unicode::String> const & itemLocalizedNames = m.getValue().first.second;
-				int const timer = m.getValue().second;
-				NetworkId itemId;
-				std::vector<NetworkId>::const_iterator iterId = itemIds.begin();
-				std::vector<Unicode::String>::const_iterator iterName = itemLocalizedNames.begin();
-				for (; ((iterId != itemIds.end()) && (iterName != itemLocalizedNames.end())); ++iterId, ++iterName)
+				ServerObject * item = ServerWorld::findObjectByNetworkId(m.getNetworkId());
+				if (!item)
+					return;
+
+				CreatureObject * playerObject = safe_cast<CreatureObject*>(getCharacterObject());
+				DEBUG_FATAL(!playerObject, ("No controller for player!\n"));
+				if(playerObject) //lint !e774
 				{
-					itemId = *iterId;
-					CommoditiesMarket::transferVendorItemFromStockroom(*playerObject, itemId, *iterName, -1, timer, Unicode::String());
-					if (playerObject->getObjVars().hasItem("cheater"))
+					PlayerCreatureController* playerController = dynamic_cast<PlayerCreatureController *>(playerObject->getController());
+					if (playerController && playerController->getSecureTrade())
 					{
-						LOG("CustomerService", ("SuspectedCheaterChannel: %s has created an immediate auction (relist) for item %s",
-							PlayerObject::getAccountDescription(playerObject).c_str(),
-							itemId.getValueString().c_str()));
+						playerController->getSecureTrade()->removeItem(*playerObject, *item);
 					}
 				}
-			}
-			else
-			{
-				WARNING(true, ("RelistItemsFromStockMessage: the player was not found"));
-			}
-		}
-
-		else if (message.isType("RetrieveAuctionItemMessage"))
-		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-			RetrieveAuctionItemMessage m(ri);
-			CreatureObject * playerObject = safe_cast<CreatureObject*>(getCharacterObject());
-			if (playerObject)
-			{
-				NetworkId itemId = m.getItemId();
-				ServerObject *auctionContainer = dynamic_cast<ServerObject *>(NetworkIdManager::getObjectById(m.getContainerId()));
-				if (auctionContainer)
+				else
 				{
-					if (playerObject->isAuthoritative() && auctionContainer->isAuthoritative())
+					GameServer::getInstance().dropClient(m_characterObjectId);
+				}
+				break;
+			}
+			case constcrc("GiveMoneyMessage") :
+			{
+				Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+				GiveMoneyMessage m(ri);
+
+				CreatureObject * playerObject = safe_cast<CreatureObject*>(getCharacterObject());
+				DEBUG_FATAL(!playerObject, ("No controller for player!\n"));
+				if(playerObject) //lint !e774
+				{
+					PlayerCreatureController* playerController = dynamic_cast<PlayerCreatureController *>(playerObject->getController());
+					if (playerController && playerController->getSecureTrade())
 					{
-						CommoditiesMarket::auctionRetrieve(*playerObject, m.getItemId().getValue(), m.getItemId(), *auctionContainer);
+						playerController->getSecureTrade()->giveMoney(*playerObject, m.getAmount());
+					}
+				}
+				else
+				{
+					GameServer::getInstance().dropClient(m_characterObjectId);
+				}
+				break;
+			}
+			case constcrc("AcceptTransactionMessage") :
+			{
+				Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+				AcceptTransactionMessage m(ri);
+				CreatureObject * playerObject = safe_cast<CreatureObject*>(getCharacterObject());
+				DEBUG_FATAL(!playerObject, ("No controller for player!\n"));
+				if(playerObject) //lint !e774
+				{
+					PlayerCreatureController* playerController = dynamic_cast<PlayerCreatureController *>(playerObject->getController());
+					if (playerController && playerController->getSecureTrade())
+					{
+						playerController->getSecureTrade()->acceptOffer(*playerObject);
+					}
+
+					if (playerObject->getObjVars().hasItem("cheater"))
+					{
+						LOG("CustomerService", ("SuspectedCheaterChannel: %s has accepted a secure trade. (Check trade logs for more detail.", PlayerObject::getAccountDescription(playerObject).c_str()));
+					}
+
+
+				}
+				else
+				{
+					GameServer::getInstance().dropClient(m_characterObjectId);
+				}
+				break;
+			}
+			case constcrc("UnAcceptTransactionMessage") :
+			{
+				Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+				UnAcceptTransactionMessage m(ri);
+				CreatureObject * playerObject = safe_cast<CreatureObject*>(getCharacterObject());
+				DEBUG_FATAL(!playerObject, ("No controller for player!\n"));
+				if(playerObject) //lint !e774
+				{
+					PlayerCreatureController* playerController = dynamic_cast<PlayerCreatureController *>(playerObject->getController());
+					if (playerController && playerController->getSecureTrade())
+					{
+						playerController->getSecureTrade()->unacceptOffer(*playerObject);
+					}
+				}
+				else
+				{
+					GameServer::getInstance().dropClient(m_characterObjectId);
+				}
+				break;
+			}
+			case constcrc("VerifyTradeMessage") :
+			{
+				Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+				VerifyTradeMessage m(ri);
+				CreatureObject * playerObject = safe_cast<CreatureObject*>(getCharacterObject());
+				DEBUG_FATAL(!playerObject, ("No controller for player!\n"));
+				if(playerObject) //lint !e774
+				{
+					PlayerCreatureController* playerController = dynamic_cast<PlayerCreatureController *>(playerObject->getController());
+					if (playerController && playerController->getSecureTrade())
+					{
+						playerController->getSecureTrade()->verifyTrade(*playerObject);
+					}
+				}
+				else
+				{
+					GameServer::getInstance().dropClient(m_characterObjectId);
+				}
+				break;
+			}
+			case constcrc("DenyTradeMessage") :
+			{
+				Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+				DenyTradeMessage m(ri);
+				CreatureObject * playerObject = safe_cast<CreatureObject*>(getCharacterObject());
+				DEBUG_FATAL(!playerObject, ("No controller for player!\n"));
+				if(playerObject) //lint !e774
+				{
+					PlayerCreatureController* playerController = dynamic_cast<PlayerCreatureController *>(playerObject->getController());
+					if (playerController && playerController->getSecureTrade())
+					{
+						playerController->getSecureTrade()->rejectOffer(*playerObject);
+					}
+				}
+				else
+				{
+					GameServer::getInstance().dropClient(m_characterObjectId);
+				}
+				break;
+			}
+			case constcrc("AbortTradeMessage") :
+			{
+				Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+				AbortTradeMessage m(ri);
+				CreatureObject * playerObject = safe_cast<CreatureObject*>(getCharacterObject());
+				DEBUG_FATAL(!playerObject, ("No controller for player!\n"));
+				if(playerObject) //lint !e774
+				{
+					PlayerCreatureController* playerController = dynamic_cast<PlayerCreatureController *>(playerObject->getController());
+					if (playerController && playerController->getSecureTrade())
+					{
+						playerController->getSecureTrade()->cancelTrade(*playerObject);
+					}
+				}
+				else
+				{
+					GameServer::getInstance().dropClient(m_characterObjectId);
+				}
+				break;
+			}
+
+			case SuiEventNotification::MessageType :
+			{
+				ServerUIManager::receiveMessage(message);
+				break;
+			}
+
+			case constcrc("GuildRequestMessage") :
+			{
+				Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+				GuildRequestMessage const m(ri);
+
+				NetworkId const &id = m.getTargetId();
+				CreatureObject * const creatureObject = dynamic_cast<CreatureObject *>(NetworkIdManager::getObjectById(id));
+				if (creatureObject)
+				{
+					int const guildId = creatureObject->getGuildId();
+					GuildMemberInfo const * const info = GuildInterface::getGuildMemberInfo(guildId, id);
+					GuildResponseMessage const responseMessage(id, GuildInterface::getGuildName(guildId), info ? info->m_title : std::string());
+					send(responseMessage, true);
+				}
+				break;
+			}
+
+			case constcrc("StomachRequestMessage") :
+			{
+				CreatureObject *creatureObject = dynamic_cast<CreatureObject*>(getCharacterObject());
+
+				if (creatureObject != nullptr)
+				{
+					GameScriptObject *gameScriptObject = creatureObject->getScriptObject();
+
+					if(gameScriptObject != nullptr)
+					{
+						ScriptParams scriptParams;
+						IGNORE_RETURN(gameScriptObject->trigAllScripts(Scripting::TRIG_STOMACH_UPDATE, scriptParams));
+					}
+				}
+				break;
+			}
+
+			case constcrc("FactionRequestMessage") :
+			{
+				int rebel  = 0;
+				int imperial = 0;
+				int criminal  = 0;
+
+				CreatureObject * playerObject = dynamic_cast<CreatureObject*>(getCharacterObject());
+				if (playerObject)
+				{
+					float temp;
+					if (playerObject->getObjVars().getItem("faction.Rebel",temp))
+					{
+						rebel = static_cast<int>(temp);
+					}
+					if (playerObject->getObjVars().getItem("faction.Imperial",temp))
+					{
+						imperial = static_cast<int>(temp);
+					}
+					if (playerObject->getObjVars().getItem("faction.Hutt",temp))
+					{
+						criminal = static_cast<int>(temp);
+					}
+
+					std::vector<std::string> factionNames;
+					std::vector<float> factionValues;
+					std::string currentName;
+					float       currentValue;
+					DynamicVariableList::NestedList factionList(playerObject->getObjVars(),"faction");
+					for(DynamicVariableList::NestedList::const_iterator i = factionList.begin(); i != factionList.end(); ++i)
+					{
+						currentName = i.getName();
+						bool result = i.getValue(currentValue);
+						if(result)
+						{
+							factionNames.push_back(currentName);
+							factionValues.push_back(currentValue);
+						}
+					}
+
+					FactionResponseMessage const msg(rebel, imperial, criminal, factionNames, factionValues);
+					send(msg, true);
+				}
+				break;
+			}
+
+			//----------------------------------------------------------------------
+
+			case PlayerMoneyRequest::MessageType :
+			{
+				Archive::ReadIterator ri = (*NON_NULL (static_cast<const GameNetworkMessage *>(&message))).getByteStream().begin();
+				const PlayerMoneyRequest m (ri);
+
+				ServerObject * const playerObject = getCharacterObject();
+
+				WARNING (!playerObject, ("Got PlayerMoneyRequest for non-existant character (account=%s, networkid=%s)", m_accountName.c_str (), m_characterObjectId.getValueString ().c_str ()));
+
+				if (playerObject)
+				{
+					PlayerMoneyResponse resp;
+					resp.m_balanceCash.set (playerObject->getCashBalance ());
+					resp.m_balanceBank.set (playerObject->getBankBalance ());
+					send (resp, true);
+				}
+				break;
+			}
+
+			//-----------------------------------------------------------------
+
+			case constcrc("AcceptAuctionMessage") :
+			{
+				Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+				AcceptAuctionMessage m(ri);
+				CreatureObject * playerObject = safe_cast<CreatureObject*>(getCharacterObject());
+				if (playerObject)
+				{
+					CommoditiesMarket::auctionAccept(*playerObject, m.getItemId().getValue());
+					if (playerObject->getObjVars().hasItem("cheater"))
+					{
+						LOG("CustomerService", ("SuspectedCheaterChannel: %s has accepted an auction for item %s",
+												PlayerObject::getAccountDescription(playerObject).c_str(),
+												m.getItemId().getValueString().c_str()));
+					}
+				}
+				else
+				{
+					WARNING(true, ("AcceptAuctionMessage: the player was not found"));
+				}
+				break;
+			}
+
+			case constcrc("BidAuctionMessage") :
+			{
+				Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+				BidAuctionMessage m(ri);
+				CreatureObject * playerObject = safe_cast<CreatureObject*>(getCharacterObject());
+				if (playerObject)
+				{
+					if (playerObject->getObjVars().hasItem("cheater"))
+					{
+						LOG("CustomerService", ("SuspectedCheaterChannel: %s has bid on an auction for item %s, amount %d",
+												PlayerObject::getAccountDescription(playerObject).c_str(),
+												m.getItemId().getValueString().c_str(),
+												m.getBid()));
+					}
+
+					CommoditiesMarket::auctionBid(*playerObject, m.getItemId().getValue(), m.getBid(), m.getMaxProxyBid());
+				}
+				else
+				{
+					WARNING(true, ("BidAuctionMessage: the player was not found"));
+				}
+				break;
+			}
+
+			case constcrc("CancelLiveAuctionMessage") :
+			{
+				Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+				CancelLiveAuctionMessage m(ri);
+
+				CreatureObject * playerObject = safe_cast<CreatureObject*>(getCharacterObject());
+				if (playerObject)
+				{
+					CommoditiesMarket::auctionCancel(*playerObject, m.getItemId().getValue());
+					if (playerObject->getObjVars().hasItem("cheater"))
+					{
+						LOG("CustomerService", ("SuspectedCheaterChannel: %s has cancelled an auction for item %s",
+												PlayerObject::getAccountDescription(playerObject).c_str(),
+												m.getItemId().getValueString().c_str()));
+					}
+
+				}
+				else
+				{
+					WARNING(true, ("CancelLiveAuctionMessage: the player was not found"));
+				}
+				break;
+			}
+
+			case constcrc("CreateAuctionMessage") :
+			{
+				Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+				CreateAuctionMessage m(ri);
+				CreatureObject * playerObject = safe_cast<CreatureObject*>(getCharacterObject());
+				if (playerObject)
+				{
+					NetworkId itemId = m.getItemId();
+					NetworkId containerId = m.getContainerId();
+					CommoditiesMarket::auctionCreate(*playerObject, itemId, m.getItemLocalizedName(), containerId, m.getMinimumBid(), m.getAuctionLength(), m.getUserDescription(), m.isPremium());
+
+					if (playerObject->getObjVars().hasItem("cheater"))
+					{
+						LOG("CustomerService", ("SuspectedCheaterChannel: %s has created an auction for item %s on vendor %s",
+												PlayerObject::getAccountDescription(playerObject).c_str(),
+												m.getItemId().getValueString().c_str(),
+												containerId.getValueString().c_str()));
+					}
+				}
+				else
+				{
+					WARNING(true, ("CreateAuctionMessage: the player was not found"));
+				}
+				break;
+			}
+
+			case constcrc("CreateImmediateAuctionMessage") :
+			{
+				Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+				CreateImmediateAuctionMessage m(ri);
+				CreatureObject * playerObject = safe_cast<CreatureObject*>(getCharacterObject());
+				if (playerObject)
+				{
+					NetworkId itemId = m.getItemId();
+					NetworkId containerId = m.getContainerId();
+					if (m.isVendorTransfer())
+					{
+						CommoditiesMarket::transferVendorItemFromStockroom(*playerObject, itemId, m.getItemLocalizedName(), m.getPrice(), m.getAuctionLength(), m.getUserDescription());
+					}
+					else
+					{
+						CommoditiesMarket::auctionCreateImmediate(*playerObject, itemId, m.getItemLocalizedName(), containerId, m.getPrice(), m.getAuctionLength(), m.getUserDescription(), m.isPremium());
+					}
+					if (playerObject->getObjVars().hasItem("cheater"))
+					{
+						LOG("CustomerService", ("SuspectedCheaterChannel: %s has created an immediate auction for item %s on vendor %s",
+												PlayerObject::getAccountDescription(playerObject).c_str(),
+												m.getItemId().getValueString().c_str(),
+												containerId.getValueString().c_str()));
+					}
+				}
+				else
+				{
+					WARNING(true, ("CreateImmediateAuctionMessage: the player was not found"));
+				}
+				break;
+			}
+
+			case constcrc("RelistItemsFromStockMessage") :
+			{
+				Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+				GenericValueTypeMessage<std::pair<std::pair<std::vector<NetworkId>, std::vector<Unicode::String> >, int> > const m(ri);
+				CreatureObject * playerObject = safe_cast<CreatureObject*>(getCharacterObject());
+				if (playerObject)
+				{
+					std::vector<NetworkId> const & itemIds = m.getValue().first.first;
+					std::vector<Unicode::String> const & itemLocalizedNames = m.getValue().first.second;
+					int const timer = m.getValue().second;
+					NetworkId itemId;
+					std::vector<NetworkId>::const_iterator iterId = itemIds.begin();
+					std::vector<Unicode::String>::const_iterator iterName = itemLocalizedNames.begin();
+					for (; ((iterId != itemIds.end()) && (iterName != itemLocalizedNames.end())); ++iterId, ++iterName)
+					{
+						itemId = *iterId;
+						CommoditiesMarket::transferVendorItemFromStockroom(*playerObject, itemId, *iterName, -1, timer, Unicode::String());
 						if (playerObject->getObjVars().hasItem("cheater"))
 						{
-							LOG("CustomerService", ("SuspectedCheaterChannel: %s has retrieved an auction for item %s on vendor %s",
+							LOG("CustomerService", ("SuspectedCheaterChannel: %s has created an immediate auction (relist) for item %s",
 								PlayerObject::getAccountDescription(playerObject).c_str(),
-								m.getItemId().getValueString().c_str(),
-								auctionContainer->getNetworkId().getValueString().c_str()));
+								itemId.getValueString().c_str()));
 						}
 					}
 				}
 				else
 				{
-					LOG("CustomerService", ("Auction:Player %s attempted to retrieve an auction for container %Ld but failed.", PlayerObject::getAccountDescription(playerObject).c_str(), m.getContainerId().getValue()));
+					WARNING(true, ("RelistItemsFromStockMessage: the player was not found"));
+				}
+				break;
+			}
 
-					RetrieveAuctionItemResponseMessage const msg(itemId, ar_INVALID_CONTAINER_ID);;
-					Client *client = playerObject->getClient();
-					if (client)
+			case constcrc("RetrieveAuctionItemMessage") :
+			{
+				Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+				RetrieveAuctionItemMessage m(ri);
+				CreatureObject * playerObject = safe_cast<CreatureObject*>(getCharacterObject());
+				if (playerObject)
+				{
+					NetworkId itemId = m.getItemId();
+					ServerObject *auctionContainer = dynamic_cast<ServerObject *>(NetworkIdManager::getObjectById(m.getContainerId()));
+					if (auctionContainer)
 					{
-						client->send(msg, true);
+						if (playerObject->isAuthoritative() && auctionContainer->isAuthoritative())
+						{
+							CommoditiesMarket::auctionRetrieve(*playerObject, m.getItemId().getValue(), m.getItemId(), *auctionContainer);
+							if (playerObject->getObjVars().hasItem("cheater"))
+							{
+								LOG("CustomerService", ("SuspectedCheaterChannel: %s has retrieved an auction for item %s on vendor %s",
+									PlayerObject::getAccountDescription(playerObject).c_str(),
+									m.getItemId().getValueString().c_str(),
+									auctionContainer->getNetworkId().getValueString().c_str()));
+							}
+						}
+					}
+					else
+					{
+						LOG("CustomerService", ("Auction:Player %s attempted to retrieve an auction for container %Ld but failed.", PlayerObject::getAccountDescription(playerObject).c_str(), m.getContainerId().getValue()));
+
+						RetrieveAuctionItemResponseMessage const msg(itemId, ar_INVALID_CONTAINER_ID);;
+						Client *client = playerObject->getClient();
+						if (client)
+						{
+							client->send(msg, true);
+						}
 					}
 				}
+				else
+				{
+					WARNING(true, ("RetrieveAuctionMessage: the player was not found"));
+				}
+				break;
 			}
-			else
+			case constcrc("AuctionQueryHeadersMessage") :
 			{
-				WARNING(true, ("RetrieveAuctionMessage: the player was not found"));
+				Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+				AuctionQueryHeadersMessage m(ri);
+				CreatureObject * playerObject = safe_cast<CreatureObject*>(getCharacterObject());
+				if (playerObject)
+				{
+					CommoditiesMarket::auctionQueryHeaders(*playerObject,
+														 m.getRequestId(),
+														 m.getSearchType(),
+														 m.getItemType(),
+														 m.getItemTypeExactMatch(),
+														 m.getItemTemplateId(),
+														 m.getTextFilterAll(),
+														 m.getTextFilterAny(),
+														 m.getPriceFilterMin(),
+														 m.getPriceFilterMax(),
+														 m.getPriceFilterIncludesFee(),
+														 m.getAdvancedSearch(),
+														 m.getAdvancedSearchMatchAllAny(),
+														 m.getContainer(),
+														 m.getLocationSearchType(),
+														 m.getMyVendorsOnly(),
+														 m.getQueryOffset());
+				}
+				break;
 			}
-		}
-		else if (message.isType("AuctionQueryHeadersMessage"))
-		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-			AuctionQueryHeadersMessage m(ri);
-			CreatureObject * playerObject = safe_cast<CreatureObject*>(getCharacterObject());
-			if (playerObject)
+			case constcrc("GetAuctionDetails") :
 			{
-				CommoditiesMarket::auctionQueryHeaders(*playerObject,
-													 m.getRequestId(),
-													 m.getSearchType(),
-													 m.getItemType(),
-													 m.getItemTypeExactMatch(),
-													 m.getItemTemplateId(),
-													 m.getTextFilterAll(),
-													 m.getTextFilterAny(),
-													 m.getPriceFilterMin(),
-													 m.getPriceFilterMax(),
-													 m.getPriceFilterIncludesFee(),
-													 m.getAdvancedSearch(),
-													 m.getAdvancedSearchMatchAllAny(),
-													 m.getContainer(),
-													 m.getLocationSearchType(),
-													 m.getMyVendorsOnly(),
-													 m.getQueryOffset());
+				Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+				GetAuctionDetails m(ri);
+				CreatureObject * playerObject = safe_cast<CreatureObject*>(getCharacterObject());
+				if (playerObject)
+				{
+					CommoditiesMarket::getAuctionDetails(*playerObject,
+														 m.getItem());
+				}
+				break;
 			}
-		}
-		else if (message.isType("GetAuctionDetails"))
-		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-			GetAuctionDetails m(ri);
-			CreatureObject * playerObject = safe_cast<CreatureObject*>(getCharacterObject());
-			if (playerObject)
+			case constcrc("IsVendorOwnerMessage") :
 			{
-				CommoditiesMarket::getAuctionDetails(*playerObject,
-													 m.getItem());
+				Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+				IsVendorOwnerMessage m(ri);
+				CreatureObject * playerObject = safe_cast<CreatureObject*>(getCharacterObject());
+				if (playerObject)
+				{
+					CommoditiesMarket::isVendorOwner(*playerObject, m.getContainerId());
+				}
+				break;
 			}
-
-		}
-		else if (message.isType("IsVendorOwnerMessage"))
-		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-			IsVendorOwnerMessage m(ri);
-			CreatureObject * playerObject = safe_cast<CreatureObject*>(getCharacterObject());
-			if (playerObject)
+			case constcrc("CommoditiesItemTypeListRequest") :
 			{
-				CommoditiesMarket::isVendorOwner(*playerObject, m.getContainerId());
-			}
+				Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+				GenericValueTypeMessage<std::string> const m(ri);
 
-		}
-		else if (message.isType("CommoditiesItemTypeListRequest"))
-		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-			GenericValueTypeMessage<std::string> const m(ri);
-
-			static char buffer[128];
-			snprintf(buffer, sizeof(buffer)-1, "%s.%d", GameServer::getInstance().getClusterName().c_str(), CommoditiesMarket::getItemTypeMapVersionNumber());
-			buffer[sizeof(buffer)-1] = '\0';
-
-			if (m.getValue() != std::string(buffer))
-			{
-				GenericValueTypeMessage<std::pair<std::string, std::map<int, std::map<int, std::pair<int, StringId> > > > > const rsp("CommoditiesItemTypeListResponse", std::make_pair(std::string(buffer), CommoditiesMarket::getItemTypeMap()));
-				send(rsp, true);
-			}
-		}
-		else if (message.isType("CommoditiesResourceTypeListRequest"))
-		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-			GenericValueTypeMessage<std::string> const m(ri);
-
-			static char buffer[128];
-			snprintf(buffer, sizeof(buffer)-1, "%s.%d", GameServer::getInstance().getClusterName().c_str(), CommoditiesMarket::getResourceTypeMapVersionNumber());
-			buffer[sizeof(buffer)-1] = '\0';
-
-			if (m.getValue() != std::string(buffer))
-			{
-				GenericValueTypeMessage<std::pair<std::string, std::map<int, std::set<std::string> > > > const rsp("CommoditiesResourceTypeListResponse", std::make_pair(std::string(buffer), CommoditiesMarket::getResourceTypeMap()));
-				send(rsp, true);
-			}
-		}
-		else if (message.isType("CollectionServerFirstListRequest"))
-		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-			GenericValueTypeMessage<std::string> const m(ri);
-
-			PlanetObject const * const planetObject = ServerUniverse::getInstance().getTatooinePlanet();
-			if (planetObject)
-			{
 				static char buffer[128];
-				snprintf(buffer, sizeof(buffer)-1, "%s.%d", GameServer::getInstance().getClusterName().c_str(), planetObject->getCollectionServerFirstUpdateNumber());
+				snprintf(buffer, sizeof(buffer)-1, "%s.%d", GameServer::getInstance().getClusterName().c_str(), CommoditiesMarket::getItemTypeMapVersionNumber());
 				buffer[sizeof(buffer)-1] = '\0';
 
 				if (m.getValue() != std::string(buffer))
 				{
-					GenericValueTypeMessage<std::pair<std::string, std::set<std::pair<std::pair<int32, std::string>, std::pair<NetworkId, Unicode::String> > > > > const rsp("CollectionServerFirstListResponse", std::make_pair(std::string(buffer), planetObject->getCollectionServerFirst()));
+					GenericValueTypeMessage<std::pair<std::string, std::map<int, std::map<int, std::pair<int, StringId> > > > > const rsp("CommoditiesItemTypeListResponse", std::make_pair(std::string(buffer), CommoditiesMarket::getItemTypeMap()));
 					send(rsp, true);
 				}
+				break;
 			}
-		}
-
-		//-----------------------------------------------------------------
-
-		else if (message.isType (PlanetTravelPointListRequest::cms_name))
-		{
-			Archive::ReadIterator readIterator = static_cast<const GameNetworkMessage&> (message).getByteStream ().begin ();
-			const PlanetTravelPointListRequest requestMessage (readIterator);
-
-			const std::string & planetName = requestMessage.getPlanetName ();
-			const PlanetObject* const planetObject = ServerUniverse::getInstance ().getPlanetByName (requestMessage.getPlanetName ());
-			if (planetObject)
+			case constcrc("CommoditiesResourceTypeListRequest") :
 			{
-				std::vector<std::string> names;
-				planetObject->getTravelPointNameList (names);
+				Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+				GenericValueTypeMessage<std::string> const m(ri);
 
-				std::vector<Vector> points;
-				planetObject->getTravelPointPointList (points);
+				static char buffer[128];
+				snprintf(buffer, sizeof(buffer)-1, "%s.%d", GameServer::getInstance().getClusterName().c_str(), CommoditiesMarket::getResourceTypeMapVersionNumber());
+				buffer[sizeof(buffer)-1] = '\0';
 
-				std::vector<int> costs;
-				planetObject->getTravelPointCostList (costs);
-
-				std::vector<bool> interplanetary;
-				planetObject->getTravelPointInterplanetaryList (interplanetary);
-
-				PlanetTravelPointListResponse const rsp(planetName, names, points, costs, interplanetary, requestMessage.getSequenceId ());
-				send(rsp, true);
-			}
-			else
-				DEBUG_WARNING (true, ("GameServer::receiveMessage: received request for travel point names from client [%s] for planet %s which does not exist", requestMessage.getPlanetName ().c_str (), requestMessage.getNetworkId ().getValueString ().c_str ()));
-		}
-
-		//-----------------------------------------------------------------
-
-		else if (message.isType (NewbieTutorialResponse::cms_name))
-		{
-			Archive::ReadIterator readIterator = static_cast<const GameNetworkMessage&> (message).getByteStream ().begin ();
-			const NewbieTutorialResponse responseMessage (readIterator);
-
-			static const std::string clientReadyString("clientReady");
-
-			if (responseMessage.getResponse() == clientReadyString)
-			{
-				for (std::vector<ServerObject *>::iterator i = m_controlledObjects.begin(); i != m_controlledObjects.end(); ++i)
+				if (m.getValue() != std::string(buffer))
 				{
-					ServerObject * const so = *i;
-					if (so)
-						so->onLoadingScreenComplete();
+					GenericValueTypeMessage<std::pair<std::string, std::map<int, std::set<std::string> > > > const rsp("CommoditiesResourceTypeListResponse", std::make_pair(std::string(buffer), CommoditiesMarket::getResourceTypeMap()));
+					send(rsp, true);
 				}
+				break;
 			}
-
-			ScriptParams scriptParameters;
-			scriptParameters.addParam (responseMessage.getResponse ().c_str ());
-
-			if (primaryControlledObject->getScriptObject ()->trigAllScripts (Scripting::TRIG_NEWBIE_TUTORIAL_RESPONSE, scriptParameters) != SCRIPT_CONTINUE)
-				DEBUG_REPORT_LOG (true, ("OnNewbieTutorialResponse: did not return SCRIPT_CONTINUE\n"));
-		}
-
-		//-----------------------------------------------------------------
-
-		else if (message.isType("AddMapLocationMessage"))
-		{
-			Archive::ReadIterator readIterator = static_cast<const GameNetworkMessage&> (message).getByteStream ().begin ();
-			const AddMapLocationMessage msg (readIterator);
-			UNREF (msg);
-
-			/*
-			MapLocation mapLocation(msg.getLocationId(), msg.getLocationName(),
-									Vector2d(msg.getLocationX(), msg.getLocationY()),
-									msg.getCategory(), msg.getSubCategory());
-
-			PlanetObject *planetObject = ServerUniverse::getInstance ().getPlanetByName (msg.getPlanetName ());
-			if (planetObject)
+			case constcrc("CollectionServerFirstListRequest") :
 			{
-				planetObject->addMapLocation(mapLocation);
-			}
-			AddMapLocationResponseMessage responseMsg(msg.getLocationId());
-			send(responseMsg, true);
-			*/
-		}
+				Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+				GenericValueTypeMessage<std::string> const m(ri);
 
-		//-----------------------------------------------------------------
-
-		else if (message.isType(GetMapLocationsMessage::MessageType))
-		{
-			Archive::ReadIterator readIterator = static_cast<const GameNetworkMessage&> (message).getByteStream ().begin ();
-			const GetMapLocationsMessage msg (readIterator);
-
-			PlanetMapManagerServer::handleClientRequest (*this, msg);
-		}
-
-		else if (message.isType("GetSpecificMapLocationsMessage"))
-		{
-			Archive::ReadIterator readIterator = static_cast<const GameNetworkMessage&> (message).getByteStream ().begin ();
-			const GenericValueTypeMessage<std::set<std::pair<std::string, NetworkId> > > msg (readIterator);
-
-			PlanetMapManagerServer::handleClientRequestGetSpecificMapLocationsMessage (*this, msg.getValue());
-		}
-
-		else if (message.isType("ConsentResponseMessage"))
-		{
-			Archive::ReadIterator readIterator = static_cast<const GameNetworkMessage&> (message).getByteStream ().begin ();
-			ConsentResponseMessage const msg(readIterator);
-			ConsentManager::getInstance().handleResponse(msg);
-		}
-
-		else if (message.isType("RequestGalaxyLoopTimes"))
-		{
-			// obfuscate the information so it's not obvious on the client that this is the server loop time
-			unsigned long loopTime = static_cast<unsigned long>(Clock::frameTime() * 3193000.0f); // loop time (in ms) * 3193
-			GalaxyLoopTimesResponse const msg(loopTime, loopTime);
-			send(msg, true);
-		}
-		else if (message.isType("LagRequest"))
-		{
-			GameNetworkMessage const msg("GameServerLagResponse");
-			send(msg, true);
-		}
-		else if (message.isType("LagReport"))
-		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-			GenericValueTypeMessage<std::pair<int, int> > const report(ri);
-			m_connectionServerLag = report.getValue().first;
-			m_gameServerLag = report.getValue().second;
-		}
-		else if (message.isType("ChatInviteGroupToRoom"))
-		{
-			if (primaryControlledObject)
-			{
-				CreatureObject * const playerCreature = primaryControlledObject->asCreatureObject();
-				if (playerCreature)
+				PlanetObject const * const planetObject = ServerUniverse::getInstance().getTatooinePlanet();
+				if (planetObject)
 				{
-					Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-					ChatInviteGroupToRoom const chat(ri);
+					static char buffer[128];
+					snprintf(buffer, sizeof(buffer)-1, "%s.%d", GameServer::getInstance().getClusterName().c_str(), planetObject->getCollectionServerFirstUpdateNumber());
+					buffer[sizeof(buffer)-1] = '\0';
 
-					// We will need to notify the user if the group leader can not be found
-					bool foundGroupLeader = false;
-
-					// Get the name of the group leader being invited
-					ChatAvatarId const & groupLeaderChatAvatarId = chat.getAvatarId();
-
-					// Convert the name to a network ID
-					NetworkId const groupLeaderNetworkId = NameManager::getInstance().getPlayerId(NameManager::normalizeName(Unicode::wideToNarrow(groupLeaderChatAvatarId.getName())));
-
-					// Try to get a group object corresponding to the player network ID
-					ServerObject const * const groupServerObject = ServerWorld::findObjectByNetworkId(GroupObject::getGroupIdForLeader(groupLeaderNetworkId));
-					if (groupServerObject && groupServerObject->asGroupObject())
+					if (m.getValue() != std::string(buffer))
 					{
-						// We now know the player is a group leader of a group
-						GroupObject const * const groupLeaderGroupObject = groupServerObject->asGroupObject();
+						GenericValueTypeMessage<std::pair<std::string, std::set<std::pair<std::pair<int32, std::string>, std::pair<NetworkId, Unicode::String> > > > > const rsp("CollectionServerFirstListResponse", std::make_pair(std::string(buffer), planetObject->getCollectionServerFirst()));
+						send(rsp, true);
+					}
+				}
+				break;
+			}
 
-						// Make sure we have the correct player since we only searched by name
-						// (i.e. we may have been looking for a player with the same name but on a different cluster)
-						ChatAvatarId const playerChatAvatarId = Chat::constructChatAvatarId(NameManager::normalizeName(groupLeaderGroupObject->getGroupLeaderName()));
-						if (playerChatAvatarId == groupLeaderChatAvatarId)
+			//-----------------------------------------------------------------
+
+			case PlanetTravelPointListRequest::cms_name :
+			{
+				Archive::ReadIterator readIterator = static_cast<const GameNetworkMessage&> (message).getByteStream ().begin ();
+				const PlanetTravelPointListRequest requestMessage (readIterator);
+
+				const std::string & planetName = requestMessage.getPlanetName ();
+				const PlanetObject* const planetObject = ServerUniverse::getInstance ().getPlanetByName (requestMessage.getPlanetName ());
+				if (planetObject)
+				{
+					std::vector<std::string> names;
+					planetObject->getTravelPointNameList (names);
+
+					std::vector<Vector> points;
+					planetObject->getTravelPointPointList (points);
+
+					std::vector<int> costs;
+					planetObject->getTravelPointCostList (costs);
+
+					std::vector<bool> interplanetary;
+					planetObject->getTravelPointInterplanetaryList (interplanetary);
+
+					PlanetTravelPointListResponse const rsp(planetName, names, points, costs, interplanetary, requestMessage.getSequenceId ());
+					send(rsp, true);
+				}
+				else
+					DEBUG_WARNING (true, ("GameServer::receiveMessage: received request for travel point names from client [%s] for planet %s which does not exist", requestMessage.getPlanetName ().c_str (), requestMessage.getNetworkId ().getValueString ().c_str ()));
+				
+				break;
+			}
+
+			//-----------------------------------------------------------------
+
+			case NewbieTutorialResponse::cms_name :
+			{
+				Archive::ReadIterator readIterator = static_cast<const GameNetworkMessage&> (message).getByteStream ().begin ();
+				const NewbieTutorialResponse responseMessage (readIterator);
+
+				static const std::string clientReadyString("clientReady");
+
+				if (responseMessage.getResponse() == clientReadyString)
+				{
+					for (std::vector<ServerObject *>::iterator i = m_controlledObjects.begin(); i != m_controlledObjects.end(); ++i)
+					{
+						ServerObject * const so = *i;
+						if (so)
+							so->onLoadingScreenComplete();
+					}
+				}
+
+				ScriptParams scriptParameters;
+				scriptParameters.addParam (responseMessage.getResponse ().c_str ());
+
+				if (primaryControlledObject->getScriptObject ()->trigAllScripts (Scripting::TRIG_NEWBIE_TUTORIAL_RESPONSE, scriptParameters) != SCRIPT_CONTINUE)
+					DEBUG_REPORT_LOG (true, ("OnNewbieTutorialResponse: did not return SCRIPT_CONTINUE\n"));
+				
+				break;
+			}
+
+			//-----------------------------------------------------------------
+
+			case constcrc("AddMapLocationMessage") :
+			{
+				Archive::ReadIterator readIterator = static_cast<const GameNetworkMessage&> (message).getByteStream ().begin ();
+				const AddMapLocationMessage msg (readIterator);
+				UNREF (msg);
+
+				/*
+				MapLocation mapLocation(msg.getLocationId(), msg.getLocationName(),
+										Vector2d(msg.getLocationX(), msg.getLocationY()),
+										msg.getCategory(), msg.getSubCategory());
+
+				PlanetObject *planetObject = ServerUniverse::getInstance ().getPlanetByName (msg.getPlanetName ());
+				if (planetObject)
+				{
+					planetObject->addMapLocation(mapLocation);
+				}
+				AddMapLocationResponseMessage responseMsg(msg.getLocationId());
+				send(responseMsg, true);
+				*/
+				break;
+			}
+
+			//-----------------------------------------------------------------
+
+			case GetMapLocationsMessage::MessageType :
+			{
+				Archive::ReadIterator readIterator = static_cast<const GameNetworkMessage&> (message).getByteStream ().begin ();
+				const GetMapLocationsMessage msg (readIterator);
+
+				PlanetMapManagerServer::handleClientRequest (*this, msg);
+				break;
+			}
+
+			case constcrc("GetSpecificMapLocationsMessage") :
+			{
+				Archive::ReadIterator readIterator = static_cast<const GameNetworkMessage&> (message).getByteStream ().begin ();
+				const GenericValueTypeMessage<std::set<std::pair<std::string, NetworkId> > > msg (readIterator);
+
+				PlanetMapManagerServer::handleClientRequestGetSpecificMapLocationsMessage (*this, msg.getValue());
+				break;
+			}
+
+			case constcrc("ConsentResponseMessage") :
+			{
+				Archive::ReadIterator readIterator = static_cast<const GameNetworkMessage&> (message).getByteStream ().begin ();
+				ConsentResponseMessage const msg(readIterator);
+				ConsentManager::getInstance().handleResponse(msg);
+				break;
+			}
+
+			case constcrc("RequestGalaxyLoopTimes") :
+			{
+				// obfuscate the information so it's not obvious on the client that this is the server loop time
+				unsigned long loopTime = static_cast<unsigned long>(Clock::frameTime() * 3193000.0f); // loop time (in ms) * 3193
+				GalaxyLoopTimesResponse const msg(loopTime, loopTime);
+				send(msg, true);
+				break;
+			}
+			case constcrc("LagRequest") :
+			{
+				GameNetworkMessage const msg("GameServerLagResponse");
+				send(msg, true);
+				break;
+			}
+			case constcrc("LagReport") :
+			{
+				Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+				GenericValueTypeMessage<std::pair<int, int> > const report(ri);
+				m_connectionServerLag = report.getValue().first;
+				m_gameServerLag = report.getValue().second;
+				break;
+			}
+			case constcrc("ChatInviteGroupToRoom") :
+			{
+				if (primaryControlledObject)
+				{
+					CreatureObject * const playerCreature = primaryControlledObject->asCreatureObject();
+					if (playerCreature)
+					{
+						Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+						ChatInviteGroupToRoom const chat(ri);
+
+						// We will need to notify the user if the group leader can not be found
+						bool foundGroupLeader = false;
+
+						// Get the name of the group leader being invited
+						ChatAvatarId const & groupLeaderChatAvatarId = chat.getAvatarId();
+
+						// Convert the name to a network ID
+						NetworkId const groupLeaderNetworkId = NameManager::getInstance().getPlayerId(NameManager::normalizeName(Unicode::wideToNarrow(groupLeaderChatAvatarId.getName())));
+
+						// Try to get a group object corresponding to the player network ID
+						ServerObject const * const groupServerObject = ServerWorld::findObjectByNetworkId(GroupObject::getGroupIdForLeader(groupLeaderNetworkId));
+						if (groupServerObject && groupServerObject->asGroupObject())
 						{
-							// We found the group leader
-							foundGroupLeader = true;
+							// We now know the player is a group leader of a group
+							GroupObject const * const groupLeaderGroupObject = groupServerObject->asGroupObject();
 
-							// We need to get the network IDs for all the group members
-							std::vector<NetworkId> groupNetworkIds;
-
-							GroupObject::GroupMemberVector const & groupMemberVector = groupLeaderGroupObject->getGroupMembers();
-							for (unsigned i = 0; i < groupMemberVector.size(); ++i)
+							// Make sure we have the correct player since we only searched by name
+							// (i.e. we may have been looking for a player with the same name but on a different cluster)
+							ChatAvatarId const playerChatAvatarId = Chat::constructChatAvatarId(NameManager::normalizeName(groupLeaderGroupObject->getGroupLeaderName()));
+							if (playerChatAvatarId == groupLeaderChatAvatarId)
 							{
-								GroupObject::GroupMember const & groupMember = groupMemberVector[i];
+								// We found the group leader
+								foundGroupLeader = true;
 
-								groupNetworkIds.push_back(groupMember.first);
+								// We need to get the network IDs for all the group members
+								std::vector<NetworkId> groupNetworkIds;
+
+								GroupObject::GroupMemberVector const & groupMemberVector = groupLeaderGroupObject->getGroupMembers();
+								for (unsigned i = 0; i < groupMemberVector.size(); ++i)
+								{
+									GroupObject::GroupMember const & groupMember = groupMemberVector[i];
+
+									groupNetworkIds.push_back(groupMember.first);
+								}
+
+								// Pass the invitation to all the group members
+								Chat::inviteGroupMembers(m_primaryControlledObject, chat.getAvatarId(), chat.getRoomName(), groupNetworkIds);
 							}
-
-							// Pass the invitation to all the group members
-							Chat::inviteGroupMembers(m_primaryControlledObject, chat.getAvatarId(), chat.getRoomName(), groupNetworkIds);
 						}
-					}
 
-					// If we couldn't find the group leader, let the player know
-					if (!foundGroupLeader)
-					{
-						ChatAvatarId const inviteeId = Chat::constructChatAvatarId(*playerCreature);
-						ChatOnInviteGroupToRoom msg(ERR_DESTAVATARDOESNTEXIST, chat.getRoomName(), inviteeId, chat.getAvatarId());
-						send(msg, false);
+						// If we couldn't find the group leader, let the player know
+						if (!foundGroupLeader)
+						{
+							ChatAvatarId const inviteeId = Chat::constructChatAvatarId(*playerCreature);
+							ChatOnInviteGroupToRoom msg(ERR_DESTAVATARDOESNTEXIST, chat.getRoomName(), inviteeId, chat.getAvatarId());
+							send(msg, false);
+						}
 					}
 				}
+				break;
 			}
-		}
-		else if (message.isType("ChatPersistentMessageToServer"))
-		{
-			if (primaryControlledObject) //lint !e774
+			case constcrc("ChatPersistentMessageToServer") :
 			{
-				CreatureObject * const playerCreature = primaryControlledObject->asCreatureObject();
-				if (playerCreature)
+				if (primaryControlledObject) //lint !e774
 				{
-					Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-					ChatPersistentMessageToServer const chat(ri);
-					std::string const &toName = chat.getToCharacterName().name;
-					if (!_stricmp(toName.c_str(), "guild"))
+					CreatureObject * const playerCreature = primaryControlledObject->asCreatureObject();
+					if (playerCreature)
 					{
-						std::pair<int, std::pair<std::string, std::string> > const count = GuildInterface::mailToGuild(*playerCreature, chat.getSubject(), chat.getMessage(), chat.getOutOfBand());
-						if (count.first < 0)
+						Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+						ChatPersistentMessageToServer const chat(ri);
+						std::string const &toName = chat.getToCharacterName().name;
+						if (!_stricmp(toName.c_str(), "guild"))
 						{
-							Chat::sendSystemMessage(*playerCreature, Unicode::narrowToWide("You do not have sufficient permission to send mail to guild members."), Unicode::emptyString);
-						}
-						else
-						{
-							Chat::sendSystemMessage(*playerCreature, Unicode::narrowToWide(FormattedString<512>().sprintf("Your mail was sent to %d members of guild %s (%s).", count.first, count.second.first.c_str(), count.second.second.c_str())), Unicode::emptyString);
-						}
-					}
-					else if (!_strnicmp(toName.c_str(), "guild ", 6))
-					{
-						// see if it's a valid guild rank
-						GuildRankDataTable::GuildRank const * guildRank = GuildRankDataTable::getRankForDisplayRankName(toName);
-						if (guildRank)
-						{
-							std::pair<int, std::pair<std::string, std::string> > const count = GuildInterface::mailToGuildRank(*playerCreature, guildRank->slotId, chat.getSubject(), chat.getMessage(), chat.getOutOfBand());
+							std::pair<int, std::pair<std::string, std::string> > const count = GuildInterface::mailToGuild(*playerCreature, chat.getSubject(), chat.getMessage(), chat.getOutOfBand());
 							if (count.first < 0)
 							{
 								Chat::sendSystemMessage(*playerCreature, Unicode::narrowToWide("You do not have sufficient permission to send mail to guild members."), Unicode::emptyString);
 							}
 							else
 							{
-								Chat::sendSystemMessage(*playerCreature, Unicode::narrowToWide(FormattedString<512>().sprintf("Your mail was sent to %d members in rank %s of guild %s (%s).", count.first, guildRank->displayName.c_str(), count.second.first.c_str(), count.second.second.c_str())), Unicode::emptyString);
+								Chat::sendSystemMessage(*playerCreature, Unicode::narrowToWide(FormattedString<512>().sprintf("Your mail was sent to %d members of guild %s (%s).", count.first, count.second.first.c_str(), count.second.second.c_str())), Unicode::emptyString);
 							}
 						}
-						else
+						else if (!_strnicmp(toName.c_str(), "guild ", 6))
 						{
-							Chat::sendSystemMessage(*playerCreature, Unicode::narrowToWide(FormattedString<512>().sprintf("\"%s\" is not a valid name.", toName.c_str())), Unicode::emptyString);
+							// see if it's a valid guild rank
+							GuildRankDataTable::GuildRank const * guildRank = GuildRankDataTable::getRankForDisplayRankName(toName);
+							if (guildRank)
+							{
+								std::pair<int, std::pair<std::string, std::string> > const count = GuildInterface::mailToGuildRank(*playerCreature, guildRank->slotId, chat.getSubject(), chat.getMessage(), chat.getOutOfBand());
+								if (count.first < 0)
+								{
+									Chat::sendSystemMessage(*playerCreature, Unicode::narrowToWide("You do not have sufficient permission to send mail to guild members."), Unicode::emptyString);
+								}
+								else
+								{
+									Chat::sendSystemMessage(*playerCreature, Unicode::narrowToWide(FormattedString<512>().sprintf("Your mail was sent to %d members in rank %s of guild %s (%s).", count.first, guildRank->displayName.c_str(), count.second.first.c_str(), count.second.second.c_str())), Unicode::emptyString);
+								}
+							}
+							else
+							{
+								Chat::sendSystemMessage(*playerCreature, Unicode::narrowToWide(FormattedString<512>().sprintf("\"%s\" is not a valid name.", toName.c_str())), Unicode::emptyString);
+							}
 						}
-					}
-					else if (!_stricmp(toName.c_str(), "citizens"))
-					{
-						std::pair<int, std::string> const count = CityInterface::mailToCitizens(*playerCreature, chat.getSubject(), chat.getMessage(), chat.getOutOfBand());
-						if (count.first < 0)
+						else if (!_stricmp(toName.c_str(), "citizens"))
 						{
-							Chat::sendSystemMessage(*playerCreature, Unicode::narrowToWide("You do not have sufficient permission to send mail to citizens."), Unicode::emptyString);
+							std::pair<int, std::string> const count = CityInterface::mailToCitizens(*playerCreature, chat.getSubject(), chat.getMessage(), chat.getOutOfBand());
+							if (count.first < 0)
+							{
+								Chat::sendSystemMessage(*playerCreature, Unicode::narrowToWide("You do not have sufficient permission to send mail to citizens."), Unicode::emptyString);
+							}
+							else
+							{
+								Chat::sendSystemMessage(*playerCreature, Unicode::narrowToWide(FormattedString<512>().sprintf("Your mail was sent to %d citizens of city %s.", count.first, count.second.c_str())), Unicode::emptyString);
+							}
 						}
-						else
-						{
-							Chat::sendSystemMessage(*playerCreature, Unicode::narrowToWide(FormattedString<512>().sprintf("Your mail was sent to %d citizens of city %s.", count.first, count.second.c_str())), Unicode::emptyString);
-						}
-					}
 
-					if (playerCreature->getObjVars().hasItem("cheater"))
-					{
-						LOGU("CustomerService", ("SuspectedCheaterChannel: %s is broadcasting a %s message that says '%s'",
-												PlayerObject::getAccountDescription(playerCreature).c_str(),
-												toName.c_str()),
-												chat.getMessage());
+						if (playerCreature->getObjVars().hasItem("cheater"))
+						{
+							LOGU("CustomerService", ("SuspectedCheaterChannel: %s is broadcasting a %s message that says '%s'",
+													PlayerObject::getAccountDescription(playerCreature).c_str(),
+													toName.c_str()),
+													chat.getMessage());
+						}
 					}
 				}
+				break;
 			}
-		}
-		else if (message.isType("ExpertiseRequestMessage"))
-		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-			ExpertiseRequestMessage const m(ri);
-
-			std::vector<std::string> const & addExpertisesNamesList = m.getAddExpertisesList();
-			bool clearAllExpertisesFirst = m.getClearAllExpertisesFirst();
-			std::string addList;
-			std::vector<std::string>::const_iterator i;
-			for(i = addExpertisesNamesList.begin(); i != addExpertisesNamesList.end(); ++i)
+			case constcrc("ExpertiseRequestMessage") :
 			{
-				addList += " ";
-				addList += *i;
-			}
-			CreatureObject * playerObject = safe_cast<CreatureObject*>(getCharacterObject());
-			if (playerObject)
-			{				
-				LOG("CustomerService", ("ExpertiseRequestMessage: %s has requested to add expertises [%s] %s",
-					PlayerObject::getAccountDescription(playerObject).c_str(),
-					addList.c_str(), clearAllExpertisesFirst ? "(clearing first)" : ""));
-				playerObject->processExpertiseRequest(addExpertisesNamesList, clearAllExpertisesFirst);
-			}
-		}
-		else if (message.isType("UpdateSessionPlayTimeInfo"))
-		{
-			Archive::ReadIterator readIterator = static_cast<const GameNetworkMessage&> (message).getByteStream ().begin ();
-			GenericValueTypeMessage<std::pair<int32, std::pair<int32, unsigned long> > > const msgPlayTimeInfo(readIterator);
+				Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+				ExpertiseRequestMessage const m(ri);
 
-			PlayerObject * playerObject = PlayerCreatureController::getPlayerObject(safe_cast<CreatureObject*>(getCharacterObject()));
-			if (playerObject != nullptr)
+				std::vector<std::string> const & addExpertisesNamesList = m.getAddExpertisesList();
+				bool clearAllExpertisesFirst = m.getClearAllExpertisesFirst();
+				std::string addList;
+				std::vector<std::string>::const_iterator i;
+				for(i = addExpertisesNamesList.begin(); i != addExpertisesNamesList.end(); ++i)
+				{
+					addList += " ";
+					addList += *i;
+				}
+				CreatureObject * playerObject = safe_cast<CreatureObject*>(getCharacterObject());
+				if (playerObject)
+				{				
+					LOG("CustomerService", ("ExpertiseRequestMessage: %s has requested to add expertises [%s] %s",
+						PlayerObject::getAccountDescription(playerObject).c_str(),
+						addList.c_str(), clearAllExpertisesFirst ? "(clearing first)" : ""));
+					playerObject->processExpertiseRequest(addExpertisesNamesList, clearAllExpertisesFirst);
+				}
+				break;
+			}
+			case constcrc("UpdateSessionPlayTimeInfo") :
 			{
-				playerObject->setSessionPlayTimeInfo(msgPlayTimeInfo.getValue().first, msgPlayTimeInfo.getValue().second.first, msgPlayTimeInfo.getValue().second.second);
+				Archive::ReadIterator readIterator = static_cast<const GameNetworkMessage&> (message).getByteStream ().begin ();
+				GenericValueTypeMessage<std::pair<int32, std::pair<int32, unsigned long> > > const msgPlayTimeInfo(readIterator);
+
+				PlayerObject * playerObject = PlayerCreatureController::getPlayerObject(safe_cast<CreatureObject*>(getCharacterObject()));
+				if (playerObject != nullptr)
+				{
+					playerObject->setSessionPlayTimeInfo(msgPlayTimeInfo.getValue().first, msgPlayTimeInfo.getValue().second.first, msgPlayTimeInfo.getValue().second.second);
+				}
+				break;
 			}
 		}
 	}
@@ -1997,8 +2057,10 @@ void Client::receiveMessage(const MessageDispatch::Emitter & source, const Messa
 {
 	UNREF(source);
 
-	if (   message.isType("ConnectionServerConnectionClosed")
-	    || message.isType("ConnectionServerConnectionDestroyed"))
+	const uint32 messageType = message.getType();
+	
+	if (   messageType == constcrc("ConnectionServerConnectionClosed")
+	    || messageType == constcrc("ConnectionServerConnectionDestroyed"))
 	{
 		//Connection server crashed
 		DEBUG_REPORT_LOG(true, ("Connection Server crashed.  Client dropping.\n"));

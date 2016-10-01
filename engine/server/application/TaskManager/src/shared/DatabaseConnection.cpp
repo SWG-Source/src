@@ -10,6 +10,8 @@
 #include "serverNetworkMessages/GameTaskManagerMessages.h"
 #include "serverNetworkMessages/TaskSpawnProcess.h"
 
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 //-----------------------------------------------------------------------
 
 DatabaseConnection::DatabaseConnection() :
@@ -42,17 +44,23 @@ void DatabaseConnection::receive(const Archive::ByteStream & message)
 {
 	Archive::ReadIterator r(message);
 	GameNetworkMessage m(r);
-
 	r = message.begin();
-	if(m.isType("TaskSpawnProcess"))
-	{
-		TaskSpawnProcess s(r);
-		IGNORE_RETURN(TaskManager::startServer(s.getProcessName(), s.getOptions(), s.getTargetHostAddress(), s.getSpawnDelay()));
-	}
-	else if(m.isType("ServerIdleMessage"))
-	{
-		ServerIdleMessage msg(r);
-		TaskManager::onDatabaseIdle(msg.getIsIdle());
+	
+	const uint32 messageType = m.getType();
+	
+	switch(messageType) {
+		case constcrc("TaskSpawnProcess") :
+		{
+			TaskSpawnProcess s(r);
+			IGNORE_RETURN(TaskManager::startServer(s.getProcessName(), s.getOptions(), s.getTargetHostAddress(), s.getSpawnDelay()));
+			break;
+		}
+		case constcrc("ServerIdleMessage") :
+		{
+			ServerIdleMessage msg(r);
+			TaskManager::onDatabaseIdle(msg.getIsIdle());
+			break;
+		}
 	}
 }
 

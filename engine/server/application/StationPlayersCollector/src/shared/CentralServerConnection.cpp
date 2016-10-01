@@ -17,6 +17,8 @@
 #include "sharedNetwork/NetworkSetupData.h"
 #include "UnicodeUtils.h"
 
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 // ======================================================================
 
 namespace CentralServerConnectionNamespace
@@ -84,19 +86,16 @@ void CentralServerConnection::onReceive(const Archive::ByteStream & message)
     GameNetworkMessage msg(ri);
     ri = message.begin();
     
-    if (msg.isType("SPCharacterProfileMessage"))
+    if (msg.getType() == constcrc("SPCharacterProfileMessage"))
     {
-	DEBUG_REPORT_LOG(true,(" Got SPCharacterProfileMessage:"));
-	StationPlayersCollector::handleSPCharacterProfileData(msg);
+		DEBUG_REPORT_LOG(true,(" Got SPCharacterProfileMessage:"));
+		StationPlayersCollector::handleSPCharacterProfileData(msg);
     }
-    else if ( msg.isType("SomeOtherMessage") )
-    {
-	
-    }
+    // else if ( msg.isType("SomeOtherMessage") ) {} leaving this here just so i can ask, what the fuck sony? 
     else
     {
-	DEBUG_REPORT_LOG(true, ("Got (%s) handing off to ServerConnection::onReceive\n", msg.getCmdName().c_str()));
-	ServerConnection::onReceive(message);
+		DEBUG_REPORT_LOG(true, ("Got (%s) handing off to ServerConnection::onReceive\n", msg.getCmdName().c_str()));
+		ServerConnection::onReceive(message);
     }
 }
 

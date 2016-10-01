@@ -20,6 +20,8 @@
 #include "serverNetworkMessages/TaskKillProcess.h"
 #include "sharedNetwork/NetworkSetupData.h"
 
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 //-----------------------------------------------------------------------
 
 TaskConnection::TaskConnection(const std::string & a, const unsigned short p) :
@@ -94,70 +96,79 @@ void TaskConnection::onReceive(const Archive::ByteStream & message)
 
 	Archive::ReadIterator r(message);
 	GameNetworkMessage m(r);
-	if(m.isType("TaskConnectionIdMessage"))
-	{
-		r = message.begin();
-		TaskConnectionIdMessage t(r);
-
-		FATAL((ConfigTaskManager::getVerifyClusterName() && (TaskManager::getNodeLabel() == "node0") && (t.getServerType() == TaskConnectionIdMessage::TaskManager) && (t.getClusterName() != std::string(ConfigTaskManager::getClusterName()))), ("Remote TaskManager %s (%s) reported cluster name (%s) that is different from my cluster name (%s)", t.getCommandLine().c_str(), getRemoteAddress().c_str(), t.getClusterName().c_str(), ConfigTaskManager::getClusterName()));
-
-		Identified i = {this,  t.getServerType() };
-		identified.emitMessage(i);
-
-		switch(i.id)
+	
+	const uint32 messageType = m.getType();
+	
+	switch(messageType) {
+		case constcrc("TaskConnectionIdMessage") :
 		{
-		case TaskConnectionIdMessage::Central:
-			{
-				REPORT_LOG(true, ("New Central Server connection active\n"));
-				handler = new CentralConnection(this, t.getCommandLine());
-				TaskManager::setCentralConnection(this);
-			}
-			break;
-		case TaskConnectionIdMessage::Game:
-			{
-				REPORT_LOG(true, ("New Game Server connection active\n"));
-				handler = new GameConnection(this);
-			}
-			break;
-		case TaskConnectionIdMessage::Database:
-			{
-				REPORT_LOG(true, ("New Database Server connection active\n"));
-				handler = new DatabaseConnection();
-			}
-			break;
-		case TaskConnectionIdMessage::Metrics:
-			{
-				REPORT_LOG(true, ("New Metrics Server connection active\n"));
-				handler = new MetricsServerConnection(this, t.getCommandLine());
-			}
-			break;
-		case TaskConnectionIdMessage::Planet:
-			{
-				REPORT_LOG(true, ("New Planet Server connection active\n"));
-				handler = new PlanetConnection(this);
-			}
-			break;
+			r = message.begin();
+			TaskConnectionIdMessage t(r);
 
-		default:
-			WARNING_STRICT_FATAL(true, ("Unknown id (%d) received on task connection", i.id));
+			FATAL((ConfigTaskManager::getVerifyClusterName() && (TaskManager::getNodeLabel() == "node0") && (t.getServerType() == TaskConnectionIdMessage::TaskManager) && (t.getClusterName() != std::string(ConfigTaskManager::getClusterName()))), ("Remote TaskManager %s (%s) reported cluster name (%s) that is different from my cluster name (%s)", t.getCommandLine().c_str(), getRemoteAddress().c_str(), t.getClusterName().c_str(), ConfigTaskManager::getClusterName()));
+
+			Identified i = {this,  t.getServerType() };
+			identified.emitMessage(i);
+
+			switch(i.id)
+			{
+				case TaskConnectionIdMessage::Central:
+					{
+						REPORT_LOG(true, ("New Central Server connection active\n"));
+						handler = new CentralConnection(this, t.getCommandLine());
+						TaskManager::setCentralConnection(this);
+					}
+					break;
+				case TaskConnectionIdMessage::Game:
+					{
+						REPORT_LOG(true, ("New Game Server connection active\n"));
+						handler = new GameConnection(this);
+					}
+					break;
+				case TaskConnectionIdMessage::Database:
+					{
+						REPORT_LOG(true, ("New Database Server connection active\n"));
+						handler = new DatabaseConnection();
+					}
+					break;
+				case TaskConnectionIdMessage::Metrics:
+					{
+						REPORT_LOG(true, ("New Metrics Server connection active\n"));
+						handler = new MetricsServerConnection(this, t.getCommandLine());
+					}
+					break;
+				case TaskConnectionIdMessage::Planet:
+					{
+						REPORT_LOG(true, ("New Planet Server connection active\n"));
+						handler = new PlanetConnection(this);
+					}
+					break;
+
+				default:
+					WARNING_STRICT_FATAL(true, ("Unknown id (%d) received on task connection", i.id));
+					break;
+			}
 			break;
 		}
-	}
-	else if(m.isType("ExcommunicateGameServerMessage"))
-	{
-		r = message.begin();
-		ExcommunicateGameServerMessage ex(r);
-		TaskKillProcess k(ex.getHostName(), ex.getProcessId(), true);
-		TaskManager::killProcess(k);
-		
-		// broadcast to other task managers
-		Locator::sendToAllTaskManagers(k);
-	}
-	else if(m.isType("TaskKillProcess"))
-	{
-		r = message.begin();
-		TaskKillProcess k(r);
-		TaskManager::killProcess(k);
+		case constcrc("ExcommunicateGameServerMessage") :
+		{
+			r = message.begin();
+			ExcommunicateGameServerMessage ex(r);
+			TaskKillProcess k(ex.getHostName(), ex.getProcessId(), true);
+			TaskManager::killProcess(k);
+			
+			// broadcast to other task managers
+			Locator::sendToAllTaskManagers(k);
+			
+			break;
+		}
+		case constcrc("TaskKillProcess") :
+		{
+			r = message.begin();
+			TaskKillProcess k(r);
+			TaskManager::killProcess(k);
+			break;
+		}
 	}
 
 	msg.message = &message;

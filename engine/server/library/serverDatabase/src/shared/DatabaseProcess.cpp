@@ -44,6 +44,8 @@
 #include "sharedNetworkMessages/FrameEndMessage.h"
 #include "UnicodeUtils.h"
 
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 // ----------------------------------------------------------------------
 
 DatabaseProcess *DatabaseProcess::ms_theInstance = nullptr;
@@ -418,143 +420,162 @@ void DatabaseProcess::gameServerGoByeBye(uint32 processId)
 void DatabaseProcess::receiveMessage(const MessageDispatch::Emitter & source, const MessageDispatch::MessageBase & message)
 {
 	UNREF(source);
+	
+	const uint32 messageType = message.getType();
 
 	//---
 	// Connection info messages
 	//
-	if(message.isType("CentralConnectionOpened"))
-	{
-		DEBUG_REPORT_LOG(true, ("Connection with Central server opened\n"));
-		DEBUG_FATAL(centralServerConnection != &source,("Got CentralConnectionOpened from something other than our CentralServer connection.\n"));
-		
-		//TODO:  Make a DatabaseProcessConnect version of this message, perhaps ?
-		CentralGameServerConnect c("database", "127.0.0.1", 0, gameService->getBindAddress(), gameService->getBindPort()); 
-		centralServerConnection->send(c, true);
-
-	}
-	else if(message.isType("GameConnectionOpened"))
-	{
-		DEBUG_REPORT_LOG(true, ("Connection with Game server opened\n"));
-	}
-	else if(message.isType("TaskConnectionOpened"))
-	{
-		DEBUG_REPORT_LOG(true, ("Connection with Task manager opened\n"));
-
-		// get cluster name
-		std::string clusterName;
-		ConfigFile::Section const * const sec = ConfigFile::getSection("TaskManager");
-		if (sec)
+	switch(messageType) {
+		case constcrc("CentralConnectionOpened") :
 		{
-			ConfigFile::Key const * const ky = sec->findKey("clusterName");
-			if (ky)
+			DEBUG_REPORT_LOG(true, ("Connection with Central server opened\n"));
+			DEBUG_FATAL(centralServerConnection != &source,("Got CentralConnectionOpened from something other than our CentralServer connection.\n"));
+			
+			//TODO:  Make a DatabaseProcessConnect version of this message, perhaps ?
+			CentralGameServerConnect c("database", "127.0.0.1", 0, gameService->getBindAddress(), gameService->getBindPort()); 
+			centralServerConnection->send(c, true);
+			break;
+		}
+		case constcrc("GameConnectionOpened") :
+		{
+			DEBUG_REPORT_LOG(true, ("Connection with Game server opened\n"));
+			break;
+		}
+		case constcrc("TaskConnectionOpened") :
+		{
+			DEBUG_REPORT_LOG(true, ("Connection with Task manager opened\n"));
+
+			// get cluster name
+			std::string clusterName;
+			ConfigFile::Section const * const sec = ConfigFile::getSection("TaskManager");
+			if (sec)
 			{
-				clusterName = ky->getAsString(ky->getCount()-1, "");
+				ConfigFile::Key const * const ky = sec->findKey("clusterName");
+				if (ky)
+				{
+					clusterName = ky->getAsString(ky->getCount()-1, "");
+				}
 			}
+
+			TaskConnectionIdMessage tid(TaskConnectionIdMessage::Database, "", clusterName);
+			taskService->send(tid, true);
+			
+			break;
 		}
-
-		TaskConnectionIdMessage tid(TaskConnectionIdMessage::Database, "", clusterName);
-		taskService->send(tid, true);
-	}
-	else if(message.isType("CommoditiesConnectionOpened"))
-	{
-		DEBUG_REPORT_LOG(true, ("Connection with Commodities Server opened\n"));
-		CommoditiesServerConnection * con = const_cast<CommoditiesServerConnection *>(static_cast<const CommoditiesServerConnection *>(&source));
-		if (commoditiesConnection)
-			LOG("CommoditiesConnectionOpened",("Connection Opened while another connection already exists."));
-		commoditiesConnection = con;
-	}
-	else if(message.isType("CentralConnectionClosed"))
-	{
-		DEBUG_REPORT_LOG(true, ("Central server closed its connection, we must die a tragicly heroic death.\n"));
-		setDone("CentralConnectionClosed : %s", centralServerConnection->getDisconnectReason().c_str());
-		centralServerConnection = 0;
-		WARNING(true,("Database lost connection to central."));
-	}
-	else if(message.isType("GameConnectionClosed"))
-	{
-		DEBUG_REPORT_LOG(true, ("a Game server closed its connection\n"));
-	}
-	else if(message.isType("TaskConnectionClosed"))
-	{
-		DEBUG_REPORT_LOG(true, ("Task manager closed its connection\n"));
-		taskService=0;
-	}
-	else if(message.isType("CommoditiesConnectionClosed"))
-	{
-		DEBUG_REPORT_LOG(true, ("Commodities Server closed its connection\n"));
-		commoditiesService = 0;
-		commoditiesConnection = 0;
-	}
-	// end connection info messages
-	//---
-
-	else if(message.isType("CentralGameServerSetProcessId"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		CentralGameServerSetProcessId id(ri);
-		setProcessId(id.getProcessId());
-		clusterName = id.getClusterName();
-
-		Loader::getInstance().checkVersionNumber(ConfigServerDatabase::getExpectedDBVersion(), ConfigServerDatabase::isCorrectDBVersionRequired());
-		Loader::getInstance().loadClock();
-	}
-	else if(message.isType("GameSetProcessId") || message.isType("GameGameServerConnect"))
-	{
-		GameServerConnection * g = const_cast<GameServerConnection *>(static_cast<const GameServerConnection *>(&source));
-		gameServerConnections[g->getProcessId()] = g;
-
-		GameServerConnectAck reply;
-		g->send(reply,true);
-	}
-	else if(message.isType("ProfilerOperationMessage"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		ProfilerOperationMessage m(ri);
-		uint32 processId = m.getProcessId();
-		if (processId == 0 || processId == getProcessId())
-		Profiler::handleOperation(m.getOperation().c_str());
-	}
-	else if(message.isType("ChatServerOnline"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		ChatServerOnline cso(ri);
-
-		// establish a connection with the chat server if one doesn't already exist
-		if (!chatServerConnection)
+		case constcrc("CommoditiesConnectionOpened") :
 		{
-			REPORT_LOG(true, ("New chat server connection active\n"));
-			chatServerConnection = new ChatServerConnection(cso.getAddress(), cso.getPort());
+			DEBUG_REPORT_LOG(true, ("Connection with Commodities Server opened\n"));
+			CommoditiesServerConnection * con = const_cast<CommoditiesServerConnection *>(static_cast<const CommoditiesServerConnection *>(&source));
+			if (commoditiesConnection)
+				LOG("CommoditiesConnectionOpened",("Connection Opened while another connection already exists."));
+			commoditiesConnection = con;
+			break;
 		}
-	}
-	else if(message.isType("ChatServerConnectionClosed"))
-	{
-		REPORT_LOG(true, ("DatabaseProcess: Chat Server connection closed\n"));
-		chatServerConnection = 0;
-	}
-	else if(message.isType("FrameEndMessage"))
-	{
-		// TODO: handle this game server's frame ending
-	}
-	else if (message.isType("CentralPingMessage"))
-	{
-		CentralPingMessage reply;
-		sendToCentralServer(reply,true);
-	}
-	else if (message.isType("ExcommunicateGameServerMessage"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		ExcommunicateGameServerMessage msg(ri);
-
-		LOG("GameGameConnect",("Database Process was told to drop connection to %lu by Central",msg.getServerId()));
-		
-		FATAL (msg.getServerId() == getProcessId(),("Crashing because Central told us to (probably indicates we weren't responding to pings)"));
-		GameServerConnection *conn =getConnectionByProcess(msg.getServerId());
-		if (conn)
+		case constcrc("CentralConnectionClosed") :
 		{
-			conn->setDisconnectReason("Told to excommunicate by central");
-			conn->disconnect();
+			DEBUG_REPORT_LOG(true, ("Central server closed its connection, we must die a tragicly heroic death.\n"));
+			setDone("CentralConnectionClosed : %s", centralServerConnection->getDisconnectReason().c_str());
+			centralServerConnection = 0;
+			WARNING(true,("Database lost connection to central."));
+			break;
 		}
-	}		
+		case constcrc("GameConnectionClosed") :
+		{
+			DEBUG_REPORT_LOG(true, ("a Game server closed its connection\n"));
+			break;
+		}
+		case constcrc("TaskConnectionClosed") :
+		{
+			DEBUG_REPORT_LOG(true, ("Task manager closed its connection\n"));
+			taskService = 0;
+			break;
+		}
+		case constcrc("CommoditiesConnectionClosed") :
+		{
+			DEBUG_REPORT_LOG(true, ("Commodities Server closed its connection\n"));
+			commoditiesService = 0;
+			commoditiesConnection = 0;
+			break;
+		}
+		// end connection info messages
+		case constcrc("CentralGameServerSetProcessId") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			CentralGameServerSetProcessId id(ri);
+			setProcessId(id.getProcessId());
+			clusterName = id.getClusterName();
+
+			Loader::getInstance().checkVersionNumber(ConfigServerDatabase::getExpectedDBVersion(), ConfigServerDatabase::isCorrectDBVersionRequired());
+			Loader::getInstance().loadClock();
+			break;
+		}
+		case constcrc("GameSetProcessId") :
+		case constcrc("GameGameServerConnect") :
+		{
+			GameServerConnection * g = const_cast<GameServerConnection *>(static_cast<const GameServerConnection *>(&source));
+			gameServerConnections[g->getProcessId()] = g;
+
+			GameServerConnectAck reply;
+			g->send(reply,true);
+			break;
+		}
+		case constcrc("ProfilerOperationMessage") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			ProfilerOperationMessage m(ri);
+			uint32 processId = m.getProcessId();
+			if (processId == 0 || processId == getProcessId())
+			Profiler::handleOperation(m.getOperation().c_str());
+			break;
+		}
+		case constcrc("ChatServerOnline") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			ChatServerOnline cso(ri);
+
+			// establish a connection with the chat server if one doesn't already exist
+			if (!chatServerConnection)
+			{
+				REPORT_LOG(true, ("New chat server connection active\n"));
+				chatServerConnection = new ChatServerConnection(cso.getAddress(), cso.getPort());
+			}
+			break;
+		}
+		case constcrc("ChatServerConnectionClosed") :
+		{
+			REPORT_LOG(true, ("DatabaseProcess: Chat Server connection closed\n"));
+			chatServerConnection = 0;
+			break;
+		}
+		case constcrc("FrameEndMessage") :
+		{
+			// TODO: handle this game server's frame ending
+			break;
+		}
+		case constcrc("CentralPingMessage") :
+		{
+			CentralPingMessage reply;
+			sendToCentralServer(reply,true);
+			break;
+		}
+		case constcrc("ExcommunicateGameServerMessage") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			ExcommunicateGameServerMessage msg(ri);
+
+			LOG("GameGameConnect",("Database Process was told to drop connection to %lu by Central",msg.getServerId()));
+			
+			FATAL (msg.getServerId() == getProcessId(),("Crashing because Central told us to (probably indicates we weren't responding to pings)"));
+			GameServerConnection *conn =getConnectionByProcess(msg.getServerId());
+			if (conn)
+			{
+				conn->setDisconnectReason("Told to excommunicate by central");
+				conn->disconnect();
+			}
+			break;
+		}
+	}
 }
 
 // ----------------------------------------------------------------------
