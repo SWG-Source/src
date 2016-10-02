@@ -16,6 +16,7 @@
 #include "sharedFile/Iff.h"
 #include "sharedObject/ObjectTemplate.h"
 #include "sharedObject/ObjectTemplateList.h"
+#include "sharedMath/Vector.h"
 //@BEGIN TFD TEMPLATE REFS
 //@END TFD TEMPLATE REFS
 #include <stdio.h>
