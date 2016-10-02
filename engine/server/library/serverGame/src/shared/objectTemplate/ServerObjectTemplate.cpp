@@ -21,7 +21,7 @@
 //@END TFD TEMPLATE REFS
 #include <stdio.h>
 
-#include <hash_map>
+#include <unordered_map>
 
 const std::string DefaultString("");
 const StringId DefaultStringId("", 0);
@@ -30,7 +30,7 @@ const TriggerVolumeData DefaultTriggerVolumeData;
 
 bool ServerObjectTemplate::ms_allowDefaultTemplateParams = true;
 
-typedef std::hash_map<ServerObjectTemplate::XpTypes, std::string, std::hash<int> > XP_MAP; 
+typedef std::unordered_map<ServerObjectTemplate::XpTypes, std::string, std::hash<int> > XP_MAP; 
 static XP_MAP * XpMap = NULL;
 
 
