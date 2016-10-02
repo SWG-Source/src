@@ -44,9 +44,14 @@ public:
 
 //@BEGIN TFD
 public:
-	const std::string &    getTerrainModificationFileName() const;
-	const std::string &    getInteriorLayoutFileName() const;
+	const std::string &    getTerrainModificationFileName(bool testData = false) const;
+	const std::string &    getInteriorLayoutFileName(bool testData = false) const;
 
+#ifdef _DEBUG
+public:
+	// special code used by datalint
+	virtual void testValues(void) const;
+#endif
 
 protected:
 	virtual void load(Iff &file);

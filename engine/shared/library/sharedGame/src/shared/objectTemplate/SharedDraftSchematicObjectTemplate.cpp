@@ -23,10 +23,11 @@
 
 const std::string DefaultString("");
 const StringId DefaultStringId("", 0);
-const Vector DefaultVector(0, 0, 0);
+const Vector DefaultVector(0,0,0);
 const TriggerVolumeData DefaultTriggerVolumeData;
 
 bool SharedDraftSchematicObjectTemplate::ms_allowDefaultTemplateParams = true;
+
 
 /**
  * Class constructor.
@@ -34,13 +35,12 @@ bool SharedDraftSchematicObjectTemplate::ms_allowDefaultTemplateParams = true;
 SharedDraftSchematicObjectTemplate::SharedDraftSchematicObjectTemplate(const std::string & filename)
 //@BEGIN TFD INIT
 	: SharedIntangibleObjectTemplate(filename)
-	, m_slotsLoaded(false)
-	, m_slotsAppend(false)
-	, m_attributesLoaded(false)
-	, m_attributesAppend(false)
-	, m_versionOk(true)
-	, m_templateVersion(0)
-	//@END TFD INIT
+	,m_slotsLoaded(false)
+	,m_slotsAppend(false)
+	,m_attributesLoaded(false)
+	,m_attributesAppend(false)
+	,m_versionOk(true)
+//@END TFD INIT
 {
 }	// SharedDraftSchematicObjectTemplate::SharedDraftSchematicObjectTemplate
 
@@ -49,7 +49,7 @@ SharedDraftSchematicObjectTemplate::SharedDraftSchematicObjectTemplate(const std
  */
 SharedDraftSchematicObjectTemplate::~SharedDraftSchematicObjectTemplate()
 {
-	//@BEGIN TFD CLEANUP
+//@BEGIN TFD CLEANUP
 	{
 		std::vector<StructParamOT *>::iterator iter;
 		for (iter = m_slots.begin(); iter != m_slots.end(); ++iter)
@@ -68,7 +68,7 @@ SharedDraftSchematicObjectTemplate::~SharedDraftSchematicObjectTemplate()
 		}
 		m_attributes.clear();
 	}
-	//@END TFD CLEANUP
+//@END TFD CLEANUP
 }	// SharedDraftSchematicObjectTemplate::~SharedDraftSchematicObjectTemplate
 
 /**
@@ -138,7 +138,7 @@ void SharedDraftSchematicObjectTemplate::getSlots(IngredientSlot &data, int inde
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter slots in template %s", DataResource::getName()));
-			return;
+			return ;
 		}
 		else
 		{
@@ -152,10 +152,10 @@ void SharedDraftSchematicObjectTemplate::getSlots(IngredientSlot &data, int inde
 	{
 		int baseCount = base->getSlotsCount();
 		if (index < baseCount)
-		{
-			base->getSlots(data, index);
-			return;
-		}
+			{
+				base->getSlots(data, index);
+				return;
+			}
 		index -= baseCount;
 	}
 
@@ -181,7 +181,7 @@ void SharedDraftSchematicObjectTemplate::getSlotsMin(IngredientSlot &data, int i
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter slots in template %s", DataResource::getName()));
-			return;
+			return ;
 		}
 		else
 		{
@@ -195,10 +195,10 @@ void SharedDraftSchematicObjectTemplate::getSlotsMin(IngredientSlot &data, int i
 	{
 		int baseCount = base->getSlotsCount();
 		if (index < baseCount)
-		{
-			base->getSlotsMin(data, index);
-			return;
-		}
+			{
+				base->getSlotsMin(data, index);
+				return;
+			}
 		index -= baseCount;
 	}
 
@@ -224,7 +224,7 @@ void SharedDraftSchematicObjectTemplate::getSlotsMax(IngredientSlot &data, int i
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter slots in template %s", DataResource::getName()));
-			return;
+			return ;
 		}
 		else
 		{
@@ -238,10 +238,10 @@ void SharedDraftSchematicObjectTemplate::getSlotsMax(IngredientSlot &data, int i
 	{
 		int baseCount = base->getSlotsCount();
 		if (index < baseCount)
-		{
-			base->getSlotsMax(data, index);
-			return;
-		}
+			{
+				base->getSlotsMax(data, index);
+				return;
+			}
 		index -= baseCount;
 	}
 
@@ -291,7 +291,7 @@ void SharedDraftSchematicObjectTemplate::getAttributes(SchematicAttribute &data,
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter attributes in template %s", DataResource::getName()));
-			return;
+			return ;
 		}
 		else
 		{
@@ -305,10 +305,10 @@ void SharedDraftSchematicObjectTemplate::getAttributes(SchematicAttribute &data,
 	{
 		int baseCount = base->getAttributesCount();
 		if (index < baseCount)
-		{
-			base->getAttributes(data, index);
-			return;
-		}
+			{
+				base->getAttributes(data, index);
+				return;
+			}
 		index -= baseCount;
 	}
 
@@ -335,7 +335,7 @@ void SharedDraftSchematicObjectTemplate::getAttributesMin(SchematicAttribute &da
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter attributes in template %s", DataResource::getName()));
-			return;
+			return ;
 		}
 		else
 		{
@@ -349,10 +349,10 @@ void SharedDraftSchematicObjectTemplate::getAttributesMin(SchematicAttribute &da
 	{
 		int baseCount = base->getAttributesCount();
 		if (index < baseCount)
-		{
-			base->getAttributesMin(data, index);
-			return;
-		}
+			{
+				base->getAttributesMin(data, index);
+				return;
+			}
 		index -= baseCount;
 	}
 
@@ -379,7 +379,7 @@ void SharedDraftSchematicObjectTemplate::getAttributesMax(SchematicAttribute &da
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter attributes in template %s", DataResource::getName()));
-			return;
+			return ;
 		}
 		else
 		{
@@ -393,10 +393,10 @@ void SharedDraftSchematicObjectTemplate::getAttributesMax(SchematicAttribute &da
 	{
 		int baseCount = base->getAttributesCount();
 		if (index < baseCount)
-		{
-			base->getAttributesMax(data, index);
-			return;
-		}
+			{
+				base->getAttributesMax(data, index);
+				return;
+			}
 		index -= baseCount;
 	}
 
@@ -434,12 +434,22 @@ size_t SharedDraftSchematicObjectTemplate::getAttributesCount(void) const
 	return count;
 }	// SharedDraftSchematicObjectTemplate::getAttributesCount
 
-const std::string & SharedDraftSchematicObjectTemplate::getCraftedSharedTemplate() const
+const std::string & SharedDraftSchematicObjectTemplate::getCraftedSharedTemplate(bool testData) const
 {
+#ifdef _DEBUG
+std::string testDataValue = DefaultString;
+#else
+UNREF(testData);
+#endif
+
 	const SharedDraftSchematicObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedDraftSchematicObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getCraftedSharedTemplate(true);
+#endif
 	}
 
 	if (!m_craftedSharedTemplate.isLoaded())
@@ -457,9 +467,25 @@ const std::string & SharedDraftSchematicObjectTemplate::getCraftedSharedTemplate
 	}
 
 	const std::string & value = m_craftedSharedTemplate.getValue();
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedDraftSchematicObjectTemplate::getCraftedSharedTemplate
+
+#ifdef _DEBUG
+/**
+ * Special function used by datalint. Checks for duplicate values in base and derived templates.
+ */
+void SharedDraftSchematicObjectTemplate::testValues(void) const
+{
+	IGNORE_RETURN(getCraftedSharedTemplate(true));
+	SharedIntangibleObjectTemplate::testValues();
+}	// SharedDraftSchematicObjectTemplate::testValues
+#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form
@@ -469,8 +495,8 @@ const std::string & SharedDraftSchematicObjectTemplate::getCraftedSharedTemplate
  */
 void SharedDraftSchematicObjectTemplate::load(Iff &file)
 {
-	static const int MAX_NAME_SIZE = 256;
-	char paramName[MAX_NAME_SIZE];
+static const int MAX_NAME_SIZE = 256;
+char paramName[MAX_NAME_SIZE];
 
 	if (file.getCurrentName() != SharedDraftSchematicObjectTemplate_tag)
 	{
@@ -480,7 +506,7 @@ void SharedDraftSchematicObjectTemplate::load(Iff &file)
 
 	file.enterForm();
 	m_templateVersion = file.getCurrentName();
-	if (m_templateVersion == TAG(D, E, R, V))
+	if (m_templateVersion == TAG(D,E,R,V))
 	{
 		file.enterForm();
 		file.enterChunk();
@@ -500,8 +526,10 @@ void SharedDraftSchematicObjectTemplate::load(Iff &file)
 		file.exitForm();
 		m_templateVersion = file.getCurrentName();
 	}
-	if (getHighestTemplateVersion() != TAG(0, 0, 0, 3))
+	if (getHighestTemplateVersion() != TAG(0,0,0,3))
 	{
+		if (DataLint::isEnabled())
+			DEBUG_WARNING(true, ("template %s version out of date", file.getFileName()));
 		m_versionOk = false;
 	}
 
@@ -563,6 +591,7 @@ void SharedDraftSchematicObjectTemplate::load(Iff &file)
 	return;
 }	// SharedDraftSchematicObjectTemplate::load
 
+
 //=============================================================================
 // class SharedDraftSchematicObjectTemplate::_IngredientSlot
 
@@ -609,12 +638,22 @@ Tag SharedDraftSchematicObjectTemplate::_IngredientSlot::getId(void) const
 	return _IngredientSlot_tag;
 }	// SharedDraftSchematicObjectTemplate::_IngredientSlot::getId
 
-const StringId SharedDraftSchematicObjectTemplate::_IngredientSlot::getName(bool versionOk) const
+const StringId SharedDraftSchematicObjectTemplate::_IngredientSlot::getName(bool versionOk, bool testData) const
 {
+#ifdef _DEBUG
+StringId testDataValue = DefaultStringId;
+#else
+UNREF(testData);
+#endif
+
 	const SharedDraftSchematicObjectTemplate::_IngredientSlot * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedDraftSchematicObjectTemplate::_IngredientSlot *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getName(true);
+#endif
 	}
 
 	if (!m_name.isLoaded())
@@ -632,16 +671,31 @@ const StringId SharedDraftSchematicObjectTemplate::_IngredientSlot::getName(bool
 	}
 
 	const StringId value = m_name.getValue();
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedDraftSchematicObjectTemplate::_IngredientSlot::getName
 
-const std::string & SharedDraftSchematicObjectTemplate::_IngredientSlot::getHardpoint(bool versionOk) const
+const std::string & SharedDraftSchematicObjectTemplate::_IngredientSlot::getHardpoint(bool versionOk, bool testData) const
 {
+#ifdef _DEBUG
+std::string testDataValue = DefaultString;
+#else
+UNREF(testData);
+#endif
+
 	const SharedDraftSchematicObjectTemplate::_IngredientSlot * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedDraftSchematicObjectTemplate::_IngredientSlot *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getHardpoint(true);
+#endif
 	}
 
 	if (!m_hardpoint.isLoaded())
@@ -659,9 +713,25 @@ const std::string & SharedDraftSchematicObjectTemplate::_IngredientSlot::getHard
 	}
 
 	const std::string & value = m_hardpoint.getValue();
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedDraftSchematicObjectTemplate::_IngredientSlot::getHardpoint
+
+#ifdef _DEBUG
+/**
+ * Special function used by datalint. Checks for duplicate values in base and derived templates.
+ */
+void SharedDraftSchematicObjectTemplate::_IngredientSlot::testValues(void) const
+{
+	IGNORE_RETURN(getName(true));
+	IGNORE_RETURN(getHardpoint(true));
+}	// SharedDraftSchematicObjectTemplate::_IngredientSlot::testValues
+#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form
@@ -671,8 +741,8 @@ const std::string & SharedDraftSchematicObjectTemplate::_IngredientSlot::getHard
  */
 void SharedDraftSchematicObjectTemplate::_IngredientSlot::load(Iff &file)
 {
-	static const int MAX_NAME_SIZE = 256;
-	char paramName[MAX_NAME_SIZE];
+static const int MAX_NAME_SIZE = 256;
+char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 
@@ -693,6 +763,7 @@ void SharedDraftSchematicObjectTemplate::_IngredientSlot::load(Iff &file)
 	file.exitForm();
 	UNREF(file);
 }	// SharedDraftSchematicObjectTemplate::_IngredientSlot::load
+
 
 //=============================================================================
 // class SharedDraftSchematicObjectTemplate::_SchematicAttribute
@@ -740,12 +811,22 @@ Tag SharedDraftSchematicObjectTemplate::_SchematicAttribute::getId(void) const
 	return _SchematicAttribute_tag;
 }	// SharedDraftSchematicObjectTemplate::_SchematicAttribute::getId
 
-const StringId SharedDraftSchematicObjectTemplate::_SchematicAttribute::getName(bool versionOk) const
+const StringId SharedDraftSchematicObjectTemplate::_SchematicAttribute::getName(bool versionOk, bool testData) const
 {
+#ifdef _DEBUG
+StringId testDataValue = DefaultStringId;
+#else
+UNREF(testData);
+#endif
+
 	const SharedDraftSchematicObjectTemplate::_SchematicAttribute * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedDraftSchematicObjectTemplate::_SchematicAttribute *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getName(true);
+#endif
 	}
 
 	if (!m_name.isLoaded())
@@ -763,16 +844,31 @@ const StringId SharedDraftSchematicObjectTemplate::_SchematicAttribute::getName(
 	}
 
 	const StringId value = m_name.getValue();
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedDraftSchematicObjectTemplate::_SchematicAttribute::getName
 
-const StringId SharedDraftSchematicObjectTemplate::_SchematicAttribute::getExperiment(bool versionOk) const
+const StringId SharedDraftSchematicObjectTemplate::_SchematicAttribute::getExperiment(bool versionOk, bool testData) const
 {
+#ifdef _DEBUG
+StringId testDataValue = DefaultStringId;
+#else
+UNREF(testData);
+#endif
+
 	const SharedDraftSchematicObjectTemplate::_SchematicAttribute * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedDraftSchematicObjectTemplate::_SchematicAttribute *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getExperiment(true);
+#endif
 	}
 
 	if (!m_experiment.isLoaded())
@@ -790,16 +886,31 @@ const StringId SharedDraftSchematicObjectTemplate::_SchematicAttribute::getExper
 	}
 
 	const StringId value = m_experiment.getValue();
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedDraftSchematicObjectTemplate::_SchematicAttribute::getExperiment
 
-int SharedDraftSchematicObjectTemplate::_SchematicAttribute::getValue(bool versionOk) const
+int SharedDraftSchematicObjectTemplate::_SchematicAttribute::getValue(bool versionOk, bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const SharedDraftSchematicObjectTemplate::_SchematicAttribute * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedDraftSchematicObjectTemplate::_SchematicAttribute *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getValue(true);
+#endif
 	}
 
 	if (!m_value.isLoaded())
@@ -839,16 +950,31 @@ int SharedDraftSchematicObjectTemplate::_SchematicAttribute::getValue(bool versi
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedDraftSchematicObjectTemplate::_SchematicAttribute::getValue
 
-int SharedDraftSchematicObjectTemplate::_SchematicAttribute::getValueMin(bool versionOk) const
+int SharedDraftSchematicObjectTemplate::_SchematicAttribute::getValueMin(bool versionOk, bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const SharedDraftSchematicObjectTemplate::_SchematicAttribute * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedDraftSchematicObjectTemplate::_SchematicAttribute *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getValueMin(true);
+#endif
 	}
 
 	if (!m_value.isLoaded())
@@ -888,16 +1014,31 @@ int SharedDraftSchematicObjectTemplate::_SchematicAttribute::getValueMin(bool ve
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedDraftSchematicObjectTemplate::_SchematicAttribute::getValueMin
 
-int SharedDraftSchematicObjectTemplate::_SchematicAttribute::getValueMax(bool versionOk) const
+int SharedDraftSchematicObjectTemplate::_SchematicAttribute::getValueMax(bool versionOk, bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const SharedDraftSchematicObjectTemplate::_SchematicAttribute * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedDraftSchematicObjectTemplate::_SchematicAttribute *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getValueMax(true);
+#endif
 	}
 
 	if (!m_value.isLoaded())
@@ -937,9 +1078,27 @@ int SharedDraftSchematicObjectTemplate::_SchematicAttribute::getValueMax(bool ve
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedDraftSchematicObjectTemplate::_SchematicAttribute::getValueMax
+
+#ifdef _DEBUG
+/**
+ * Special function used by datalint. Checks for duplicate values in base and derived templates.
+ */
+void SharedDraftSchematicObjectTemplate::_SchematicAttribute::testValues(void) const
+{
+	IGNORE_RETURN(getName(true));
+	IGNORE_RETURN(getExperiment(true));
+	IGNORE_RETURN(getValueMin(true));
+	IGNORE_RETURN(getValueMax(true));
+}	// SharedDraftSchematicObjectTemplate::_SchematicAttribute::testValues
+#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form
@@ -949,8 +1108,8 @@ int SharedDraftSchematicObjectTemplate::_SchematicAttribute::getValueMax(bool ve
  */
 void SharedDraftSchematicObjectTemplate::_SchematicAttribute::load(Iff &file)
 {
-	static const int MAX_NAME_SIZE = 256;
-	char paramName[MAX_NAME_SIZE];
+static const int MAX_NAME_SIZE = 256;
+char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 
@@ -978,17 +1137,17 @@ void SharedDraftSchematicObjectTemplate::_SchematicAttribute::load(Iff &file)
 
 //----------------------------------------------------------------------
 
-const StringId SharedDraftSchematicObjectTemplate::getCraftedName() const
+const StringId SharedDraftSchematicObjectTemplate::getCraftedName                 () const
 {
-	StringId sid = getObjectName();
+	StringId sid = getObjectName ();
 
-	if (sid.isInvalid())
+	if (sid.isInvalid ())
 	{
-		const SharedObjectTemplate * const sot = fetchCraftedSharedObjectTemplate();
+		const SharedObjectTemplate * const sot = fetchCraftedSharedObjectTemplate ();
 		if (sot)
 		{
-			sid = sot->getObjectName();
-			sot->releaseReference();
+			sid = sot->getObjectName ();
+			sot->releaseReference ();
 		}
 	}
 
@@ -997,17 +1156,17 @@ const StringId SharedDraftSchematicObjectTemplate::getCraftedName() const
 
 //----------------------------------------------------------------------
 
-const StringId SharedDraftSchematicObjectTemplate::getCraftedDetailedDescription() const
+const StringId SharedDraftSchematicObjectTemplate::getCraftedDetailedDescription  () const
 {
-	StringId sid = getDetailedDescription();
+	StringId sid = getDetailedDescription ();
 
-	if (sid.isInvalid())
+	if (sid.isInvalid ())
 	{
-		const SharedObjectTemplate * const sot = fetchCraftedSharedObjectTemplate();
+		const SharedObjectTemplate * const sot = fetchCraftedSharedObjectTemplate ();
 		if (sot)
 		{
-			sid = sot->getDetailedDescription();
-			sot->releaseReference();
+			sid = sot->getDetailedDescription ();
+			sot->releaseReference ();
 		}
 	}
 
@@ -1016,17 +1175,17 @@ const StringId SharedDraftSchematicObjectTemplate::getCraftedDetailedDescription
 
 //----------------------------------------------------------------------
 
-const StringId SharedDraftSchematicObjectTemplate::getCraftedLookAtText() const
+const StringId SharedDraftSchematicObjectTemplate::getCraftedLookAtText           () const
 {
-	StringId sid = getLookAtText();
+	StringId sid = getLookAtText  ();
 
-	if (sid.isInvalid())
+	if (sid.isInvalid ())
 	{
-		const SharedObjectTemplate * const sot = fetchCraftedSharedObjectTemplate();
+		const SharedObjectTemplate * const sot = fetchCraftedSharedObjectTemplate ();
 		if (sot)
 		{
-			sid = sot->getLookAtText();
-			sot->releaseReference();
+			sid = sot->getLookAtText ();
+			sot->releaseReference ();
 		}
 	}
 
@@ -1035,17 +1194,17 @@ const StringId SharedDraftSchematicObjectTemplate::getCraftedLookAtText() const
 
 //----------------------------------------------------------------------
 
-const std::string SharedDraftSchematicObjectTemplate::getCraftedAppearanceFilename() const
+const std::string SharedDraftSchematicObjectTemplate::getCraftedAppearanceFilename   () const
 {
-	const std::string & app = getAppearanceFilename();
+	const std::string & app = getAppearanceFilename ();
 
-	if (app.empty())
+	if (app.empty ())
 	{
-		const SharedObjectTemplate * const sot = fetchCraftedSharedObjectTemplate();
+		const SharedObjectTemplate * const sot = fetchCraftedSharedObjectTemplate ();
 		if (sot)
 		{
-			const std::string capp = sot->getAppearanceFilename();
-			sot->releaseReference();
+			const std::string capp = sot->getAppearanceFilename ();
+			sot->releaseReference ();
 			return capp;
 		}
 	}
@@ -1055,18 +1214,19 @@ const std::string SharedDraftSchematicObjectTemplate::getCraftedAppearanceFilena
 
 //----------------------------------------------------------------------
 
-const SharedObjectTemplate * SharedDraftSchematicObjectTemplate::fetchCraftedSharedObjectTemplate() const
+const SharedObjectTemplate * SharedDraftSchematicObjectTemplate::fetchCraftedSharedObjectTemplate () const
 {
-	const std::string & sotName = getCraftedSharedTemplate();
-	const SharedObjectTemplate * const sot = safe_cast<const SharedObjectTemplate *>(ObjectTemplateList::fetch(sotName.c_str()));
+	const std::string & sotName = getCraftedSharedTemplate ();
+	const SharedObjectTemplate * const sot = safe_cast<const SharedObjectTemplate *>(ObjectTemplateList::fetch (sotName.c_str ()));
 
 	if (!sot)
 	{
-		const char * const draftName = this->DataResource::getName();
-		WARNING(true, ("SharedDraftSchematicObjectTemplate [%s] could not load craftedSharedTemplate [%s]", draftName ? draftName : "", sotName.c_str()));
+		const char * const draftName = this->DataResource::getName ();
+		WARNING (true, ("SharedDraftSchematicObjectTemplate [%s] could not load craftedSharedTemplate [%s]", draftName ? draftName : "", sotName.c_str ()));
 	}
 
 	return sot;
 }
 
 //----------------------------------------------------------------------
+

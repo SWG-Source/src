@@ -23,10 +23,11 @@
 
 const std::string DefaultString("");
 const StringId DefaultStringId("", 0);
-const Vector DefaultVector(0, 0, 0);
+const Vector DefaultVector(0,0,0);
 const TriggerVolumeData DefaultTriggerVolumeData;
 
 bool SharedWeaponObjectTemplate::ms_allowDefaultTemplateParams = true;
+
 
 /**
  * Class constructor.
@@ -34,9 +35,8 @@ bool SharedWeaponObjectTemplate::ms_allowDefaultTemplateParams = true;
 SharedWeaponObjectTemplate::SharedWeaponObjectTemplate(const std::string & filename)
 //@BEGIN TFD INIT
 	: SharedTangibleObjectTemplate(filename)
-	, m_versionOk(true)
-	, m_templateVersion(0)
-	//@END TFD INIT
+	,m_versionOk(true)
+//@END TFD INIT
 {
 }	// SharedWeaponObjectTemplate::SharedWeaponObjectTemplate
 
@@ -45,8 +45,8 @@ SharedWeaponObjectTemplate::SharedWeaponObjectTemplate(const std::string & filen
  */
 SharedWeaponObjectTemplate::~SharedWeaponObjectTemplate()
 {
-	//@BEGIN TFD CLEANUP
-	//@END TFD CLEANUP
+//@BEGIN TFD CLEANUP
+//@END TFD CLEANUP
 }	// SharedWeaponObjectTemplate::~SharedWeaponObjectTemplate
 
 /**
@@ -103,12 +103,22 @@ Tag SharedWeaponObjectTemplate::getHighestTemplateVersion(void) const
 } // SharedWeaponObjectTemplate::getHighestTemplateVersion
 
 //@BEGIN TFD
-const std::string & SharedWeaponObjectTemplate::getWeaponEffect() const
+const std::string & SharedWeaponObjectTemplate::getWeaponEffect(bool testData) const
 {
+#ifdef _DEBUG
+std::string testDataValue = DefaultString;
+#else
+UNREF(testData);
+#endif
+
 	const SharedWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedWeaponObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getWeaponEffect(true);
+#endif
 	}
 
 	if (!m_weaponEffect.isLoaded())
@@ -126,16 +136,31 @@ const std::string & SharedWeaponObjectTemplate::getWeaponEffect() const
 	}
 
 	const std::string & value = m_weaponEffect.getValue();
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedWeaponObjectTemplate::getWeaponEffect
 
-int SharedWeaponObjectTemplate::getWeaponEffectIndex() const
+int SharedWeaponObjectTemplate::getWeaponEffectIndex(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const SharedWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedWeaponObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getWeaponEffectIndex(true);
+#endif
 	}
 
 	if (!m_weaponEffectIndex.isLoaded())
@@ -175,16 +200,31 @@ int SharedWeaponObjectTemplate::getWeaponEffectIndex() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedWeaponObjectTemplate::getWeaponEffectIndex
 
-int SharedWeaponObjectTemplate::getWeaponEffectIndexMin() const
+int SharedWeaponObjectTemplate::getWeaponEffectIndexMin(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const SharedWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedWeaponObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getWeaponEffectIndexMin(true);
+#endif
 	}
 
 	if (!m_weaponEffectIndex.isLoaded())
@@ -224,16 +264,31 @@ int SharedWeaponObjectTemplate::getWeaponEffectIndexMin() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedWeaponObjectTemplate::getWeaponEffectIndexMin
 
-int SharedWeaponObjectTemplate::getWeaponEffectIndexMax() const
+int SharedWeaponObjectTemplate::getWeaponEffectIndexMax(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const SharedWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedWeaponObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getWeaponEffectIndexMax(true);
+#endif
 	}
 
 	if (!m_weaponEffectIndex.isLoaded())
@@ -273,16 +328,31 @@ int SharedWeaponObjectTemplate::getWeaponEffectIndexMax() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedWeaponObjectTemplate::getWeaponEffectIndexMax
 
-SharedWeaponObjectTemplate::AttackType SharedWeaponObjectTemplate::getAttackType() const
+SharedWeaponObjectTemplate::AttackType SharedWeaponObjectTemplate::getAttackType(bool testData) const
 {
+#ifdef _DEBUG
+SharedWeaponObjectTemplate::AttackType testDataValue = static_cast<SharedWeaponObjectTemplate::AttackType>(0);
+#else
+UNREF(testData);
+#endif
+
 	const SharedWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedWeaponObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getAttackType(true);
+#endif
 	}
 
 	if (!m_attackType.isLoaded())
@@ -300,9 +370,28 @@ SharedWeaponObjectTemplate::AttackType SharedWeaponObjectTemplate::getAttackType
 	}
 
 	AttackType value = static_cast<AttackType>(m_attackType.getValue());
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedWeaponObjectTemplate::getAttackType
+
+#ifdef _DEBUG
+/**
+ * Special function used by datalint. Checks for duplicate values in base and derived templates.
+ */
+void SharedWeaponObjectTemplate::testValues(void) const
+{
+	IGNORE_RETURN(getWeaponEffect(true));
+	IGNORE_RETURN(getWeaponEffectIndexMin(true));
+	IGNORE_RETURN(getWeaponEffectIndexMax(true));
+	IGNORE_RETURN(getAttackType(true));
+	SharedTangibleObjectTemplate::testValues();
+}	// SharedWeaponObjectTemplate::testValues
+#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form
@@ -312,8 +401,8 @@ SharedWeaponObjectTemplate::AttackType SharedWeaponObjectTemplate::getAttackType
  */
 void SharedWeaponObjectTemplate::load(Iff &file)
 {
-	static const int MAX_NAME_SIZE = 256;
-	char paramName[MAX_NAME_SIZE];
+static const int MAX_NAME_SIZE = 256;
+char paramName[MAX_NAME_SIZE];
 
 	if (file.getCurrentName() != SharedWeaponObjectTemplate_tag)
 	{
@@ -323,7 +412,7 @@ void SharedWeaponObjectTemplate::load(Iff &file)
 
 	file.enterForm();
 	m_templateVersion = file.getCurrentName();
-	if (m_templateVersion == TAG(D, E, R, V))
+	if (m_templateVersion == TAG(D,E,R,V))
 	{
 		file.enterForm();
 		file.enterChunk();
@@ -343,8 +432,10 @@ void SharedWeaponObjectTemplate::load(Iff &file)
 		file.exitForm();
 		m_templateVersion = file.getCurrentName();
 	}
-	if (getHighestTemplateVersion() != TAG(0, 0, 0, 4))
+	if (getHighestTemplateVersion() != TAG(0,0,0,4))
 	{
+		if (DataLint::isEnabled())
+			DEBUG_WARNING(true, ("template %s version out of date", file.getFileName()));
 		m_versionOk = false;
 	}
 

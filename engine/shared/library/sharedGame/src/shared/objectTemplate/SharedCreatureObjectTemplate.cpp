@@ -29,7 +29,7 @@
 
 const std::string DefaultString("");
 const StringId DefaultStringId("", 0);
-const Vector DefaultVector(0, 0, 0);
+const Vector DefaultVector(0,0,0);
 const TriggerVolumeData DefaultTriggerVolumeData;
 
 bool SharedCreatureObjectTemplate::ms_allowDefaultTemplateParams = true;
@@ -42,9 +42,8 @@ typedef ::RangedIntCustomizationVariable GlobalRangedIntCustomizationVariableTyp
 SharedCreatureObjectTemplate::SharedCreatureObjectTemplate(const std::string & filename)
 //@BEGIN TFD INIT
 	: SharedTangibleObjectTemplate(filename)
-	, m_versionOk(true)
-	, m_templateVersion(0)
-	//@END TFD INIT
+	,m_versionOk(true)
+//@END TFD INIT
 {
 	m_movementTable = 0;
 }	// SharedCreatureObjectTemplate::SharedCreatureObjectTemplate
@@ -54,8 +53,8 @@ SharedCreatureObjectTemplate::SharedCreatureObjectTemplate(const std::string & f
  */
 SharedCreatureObjectTemplate::~SharedCreatureObjectTemplate()
 {
-	//@BEGIN TFD CLEANUP
-	//@END TFD CLEANUP
+//@BEGIN TFD CLEANUP
+//@END TFD CLEANUP
 	delete m_movementTable;
 	m_movementTable = 0;
 }	// SharedCreatureObjectTemplate::~SharedCreatureObjectTemplate
@@ -123,7 +122,7 @@ void SharedCreatureObjectTemplate::postLoad()
 
 void SharedCreatureObjectTemplate::createCustomizationDataPropertyAsNeeded(Object &object, bool /* forceCreation */) const
 {
-	//-- Properties cannot be added while an object is in the world.  Some callers may be in the world,
+	//-- Properties cannot be added while an object is in the world.  Some callers may be in the world, 
 	//   so temporarily remove the object from the world if necessary.
 	bool shouldBeInWorld = object.isInWorld();
 	if (shouldBeInWorld)
@@ -148,18 +147,18 @@ void SharedCreatureObjectTemplate::createCustomizationDataPropertyAsNeeded(Objec
 		AssetCustomizationManager::addCustomizationVariablesForAsset(TemporaryCrcString(getAppearanceFilename().c_str(), true), *customizationData, skipSharedOwnerVariables);
 
 		//-- set up mappings for any variables which need dependent mappings
-		int numVariableMappings = getCustomizationVariableMappingCount();
+ 		int numVariableMappings = getCustomizationVariableMappingCount();
 		for (int i = 0; i < numVariableMappings; ++i)
 		{
 			CustomizationVariableMapping localVariableMapping;
-			getCustomizationVariableMapping(localVariableMapping, i);
+ 			getCustomizationVariableMapping(localVariableMapping, i);
 			GlobalRangedIntCustomizationVariableType *source = safe_cast<GlobalRangedIntCustomizationVariableType *>(customizationData->findVariable(localVariableMapping.sourceVariable));
-			if (source)
-			{
-				source->setDependentVariable(localVariableMapping.dependentVariable);
-			}
-		}
-
+ 			if(source)
+ 			{
+ 				source->setDependentVariable(localVariableMapping.dependentVariable);
+ 			} 			
+ 		}
+		
 		//-- release local reference to the CustomizationData instance
 		customizationData->release();
 	}
@@ -168,12 +167,22 @@ void SharedCreatureObjectTemplate::createCustomizationDataPropertyAsNeeded(Objec
 // ----------------------------------------------------------------------
 
 //@BEGIN TFD
-SharedCreatureObjectTemplate::Gender SharedCreatureObjectTemplate::getGender() const
+SharedCreatureObjectTemplate::Gender SharedCreatureObjectTemplate::getGender(bool testData) const
 {
+#ifdef _DEBUG
+SharedCreatureObjectTemplate::Gender testDataValue = static_cast<SharedCreatureObjectTemplate::Gender>(0);
+#else
+UNREF(testData);
+#endif
+
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getGender(true);
+#endif
 	}
 
 	if (!m_gender.isLoaded())
@@ -191,16 +200,31 @@ SharedCreatureObjectTemplate::Gender SharedCreatureObjectTemplate::getGender() c
 	}
 
 	Gender value = static_cast<Gender>(m_gender.getValue());
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedCreatureObjectTemplate::getGender
 
-SharedCreatureObjectTemplate::Niche SharedCreatureObjectTemplate::getNiche() const
+SharedCreatureObjectTemplate::Niche SharedCreatureObjectTemplate::getNiche(bool testData) const
 {
+#ifdef _DEBUG
+SharedCreatureObjectTemplate::Niche testDataValue = static_cast<SharedCreatureObjectTemplate::Niche>(0);
+#else
+UNREF(testData);
+#endif
+
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getNiche(true);
+#endif
 	}
 
 	if (!m_niche.isLoaded())
@@ -218,16 +242,31 @@ SharedCreatureObjectTemplate::Niche SharedCreatureObjectTemplate::getNiche() con
 	}
 
 	Niche value = static_cast<Niche>(m_niche.getValue());
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedCreatureObjectTemplate::getNiche
 
-SharedCreatureObjectTemplate::Species SharedCreatureObjectTemplate::getSpecies() const
+SharedCreatureObjectTemplate::Species SharedCreatureObjectTemplate::getSpecies(bool testData) const
 {
+#ifdef _DEBUG
+SharedCreatureObjectTemplate::Species testDataValue = static_cast<SharedCreatureObjectTemplate::Species>(0);
+#else
+UNREF(testData);
+#endif
+
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getSpecies(true);
+#endif
 	}
 
 	if (!m_species.isLoaded())
@@ -245,16 +284,31 @@ SharedCreatureObjectTemplate::Species SharedCreatureObjectTemplate::getSpecies()
 	}
 
 	Species value = static_cast<Species>(m_species.getValue());
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedCreatureObjectTemplate::getSpecies
 
-SharedCreatureObjectTemplate::Race SharedCreatureObjectTemplate::getRace() const
+SharedCreatureObjectTemplate::Race SharedCreatureObjectTemplate::getRace(bool testData) const
 {
+#ifdef _DEBUG
+SharedCreatureObjectTemplate::Race testDataValue = static_cast<SharedCreatureObjectTemplate::Race>(0);
+#else
+UNREF(testData);
+#endif
+
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getRace(true);
+#endif
 	}
 
 	if (!m_race.isLoaded())
@@ -272,6 +326,11 @@ SharedCreatureObjectTemplate::Race SharedCreatureObjectTemplate::getRace() const
 	}
 
 	Race value = static_cast<Race>(m_race.getValue());
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedCreatureObjectTemplate::getRace
@@ -717,12 +776,22 @@ float SharedCreatureObjectTemplate::getTurnRateMax(MovementTypes index) const
 	return value;
 }	// SharedCreatureObjectTemplate::getTurnRateMax
 
-const std::string & SharedCreatureObjectTemplate::getAnimationMapFilename() const
+const std::string & SharedCreatureObjectTemplate::getAnimationMapFilename(bool testData) const
 {
+#ifdef _DEBUG
+std::string testDataValue = DefaultString;
+#else
+UNREF(testData);
+#endif
+
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getAnimationMapFilename(true);
+#endif
 	}
 
 	if (!m_animationMapFilename.isLoaded())
@@ -740,16 +809,31 @@ const std::string & SharedCreatureObjectTemplate::getAnimationMapFilename() cons
 	}
 
 	const std::string & value = m_animationMapFilename.getValue();
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedCreatureObjectTemplate::getAnimationMapFilename
 
-float SharedCreatureObjectTemplate::getSlopeModAngle() const
+float SharedCreatureObjectTemplate::getSlopeModAngle(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getSlopeModAngle(true);
+#endif
 	}
 
 	if (!m_slopeModAngle.isLoaded())
@@ -789,16 +873,31 @@ float SharedCreatureObjectTemplate::getSlopeModAngle() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedCreatureObjectTemplate::getSlopeModAngle
 
-float SharedCreatureObjectTemplate::getSlopeModAngleMin() const
+float SharedCreatureObjectTemplate::getSlopeModAngleMin(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getSlopeModAngleMin(true);
+#endif
 	}
 
 	if (!m_slopeModAngle.isLoaded())
@@ -838,16 +937,31 @@ float SharedCreatureObjectTemplate::getSlopeModAngleMin() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedCreatureObjectTemplate::getSlopeModAngleMin
 
-float SharedCreatureObjectTemplate::getSlopeModAngleMax() const
+float SharedCreatureObjectTemplate::getSlopeModAngleMax(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getSlopeModAngleMax(true);
+#endif
 	}
 
 	if (!m_slopeModAngle.isLoaded())
@@ -887,16 +1001,31 @@ float SharedCreatureObjectTemplate::getSlopeModAngleMax() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedCreatureObjectTemplate::getSlopeModAngleMax
 
-float SharedCreatureObjectTemplate::getSlopeModPercent() const
+float SharedCreatureObjectTemplate::getSlopeModPercent(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getSlopeModPercent(true);
+#endif
 	}
 
 	if (!m_slopeModPercent.isLoaded())
@@ -936,16 +1065,31 @@ float SharedCreatureObjectTemplate::getSlopeModPercent() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedCreatureObjectTemplate::getSlopeModPercent
 
-float SharedCreatureObjectTemplate::getSlopeModPercentMin() const
+float SharedCreatureObjectTemplate::getSlopeModPercentMin(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getSlopeModPercentMin(true);
+#endif
 	}
 
 	if (!m_slopeModPercent.isLoaded())
@@ -985,16 +1129,31 @@ float SharedCreatureObjectTemplate::getSlopeModPercentMin() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedCreatureObjectTemplate::getSlopeModPercentMin
 
-float SharedCreatureObjectTemplate::getSlopeModPercentMax() const
+float SharedCreatureObjectTemplate::getSlopeModPercentMax(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getSlopeModPercentMax(true);
+#endif
 	}
 
 	if (!m_slopeModPercent.isLoaded())
@@ -1034,16 +1193,31 @@ float SharedCreatureObjectTemplate::getSlopeModPercentMax() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedCreatureObjectTemplate::getSlopeModPercentMax
 
-float SharedCreatureObjectTemplate::getWaterModPercent() const
+float SharedCreatureObjectTemplate::getWaterModPercent(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getWaterModPercent(true);
+#endif
 	}
 
 	if (!m_waterModPercent.isLoaded())
@@ -1083,16 +1257,31 @@ float SharedCreatureObjectTemplate::getWaterModPercent() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedCreatureObjectTemplate::getWaterModPercent
 
-float SharedCreatureObjectTemplate::getWaterModPercentMin() const
+float SharedCreatureObjectTemplate::getWaterModPercentMin(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getWaterModPercentMin(true);
+#endif
 	}
 
 	if (!m_waterModPercent.isLoaded())
@@ -1132,16 +1321,31 @@ float SharedCreatureObjectTemplate::getWaterModPercentMin() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedCreatureObjectTemplate::getWaterModPercentMin
 
-float SharedCreatureObjectTemplate::getWaterModPercentMax() const
+float SharedCreatureObjectTemplate::getWaterModPercentMax(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getWaterModPercentMax(true);
+#endif
 	}
 
 	if (!m_waterModPercent.isLoaded())
@@ -1181,16 +1385,31 @@ float SharedCreatureObjectTemplate::getWaterModPercentMax() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedCreatureObjectTemplate::getWaterModPercentMax
 
-float SharedCreatureObjectTemplate::getStepHeight() const
+float SharedCreatureObjectTemplate::getStepHeight(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getStepHeight(true);
+#endif
 	}
 
 	if (!m_stepHeight.isLoaded())
@@ -1230,16 +1449,31 @@ float SharedCreatureObjectTemplate::getStepHeight() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedCreatureObjectTemplate::getStepHeight
 
-float SharedCreatureObjectTemplate::getStepHeightMin() const
+float SharedCreatureObjectTemplate::getStepHeightMin(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getStepHeightMin(true);
+#endif
 	}
 
 	if (!m_stepHeight.isLoaded())
@@ -1279,16 +1513,31 @@ float SharedCreatureObjectTemplate::getStepHeightMin() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedCreatureObjectTemplate::getStepHeightMin
 
-float SharedCreatureObjectTemplate::getStepHeightMax() const
+float SharedCreatureObjectTemplate::getStepHeightMax(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getStepHeightMax(true);
+#endif
 	}
 
 	if (!m_stepHeight.isLoaded())
@@ -1328,16 +1577,31 @@ float SharedCreatureObjectTemplate::getStepHeightMax() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedCreatureObjectTemplate::getStepHeightMax
 
-float SharedCreatureObjectTemplate::getCollisionHeight() const
+float SharedCreatureObjectTemplate::getCollisionHeight(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getCollisionHeight(true);
+#endif
 	}
 
 	if (!m_collisionHeight.isLoaded())
@@ -1377,16 +1641,31 @@ float SharedCreatureObjectTemplate::getCollisionHeight() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedCreatureObjectTemplate::getCollisionHeight
 
-float SharedCreatureObjectTemplate::getCollisionHeightMin() const
+float SharedCreatureObjectTemplate::getCollisionHeightMin(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getCollisionHeightMin(true);
+#endif
 	}
 
 	if (!m_collisionHeight.isLoaded())
@@ -1426,16 +1705,31 @@ float SharedCreatureObjectTemplate::getCollisionHeightMin() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedCreatureObjectTemplate::getCollisionHeightMin
 
-float SharedCreatureObjectTemplate::getCollisionHeightMax() const
+float SharedCreatureObjectTemplate::getCollisionHeightMax(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getCollisionHeightMax(true);
+#endif
 	}
 
 	if (!m_collisionHeight.isLoaded())
@@ -1475,16 +1769,31 @@ float SharedCreatureObjectTemplate::getCollisionHeightMax() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedCreatureObjectTemplate::getCollisionHeightMax
 
-float SharedCreatureObjectTemplate::getCollisionRadius() const
+float SharedCreatureObjectTemplate::getCollisionRadius(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getCollisionRadius(true);
+#endif
 	}
 
 	if (!m_collisionRadius.isLoaded())
@@ -1524,16 +1833,31 @@ float SharedCreatureObjectTemplate::getCollisionRadius() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedCreatureObjectTemplate::getCollisionRadius
 
-float SharedCreatureObjectTemplate::getCollisionRadiusMin() const
+float SharedCreatureObjectTemplate::getCollisionRadiusMin(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getCollisionRadiusMin(true);
+#endif
 	}
 
 	if (!m_collisionRadius.isLoaded())
@@ -1573,16 +1897,31 @@ float SharedCreatureObjectTemplate::getCollisionRadiusMin() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedCreatureObjectTemplate::getCollisionRadiusMin
 
-float SharedCreatureObjectTemplate::getCollisionRadiusMax() const
+float SharedCreatureObjectTemplate::getCollisionRadiusMax(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getCollisionRadiusMax(true);
+#endif
 	}
 
 	if (!m_collisionRadius.isLoaded())
@@ -1622,16 +1961,31 @@ float SharedCreatureObjectTemplate::getCollisionRadiusMax() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedCreatureObjectTemplate::getCollisionRadiusMax
 
-const std::string & SharedCreatureObjectTemplate::getMovementDatatable() const
+const std::string & SharedCreatureObjectTemplate::getMovementDatatable(bool testData) const
 {
+#ifdef _DEBUG
+std::string testDataValue = DefaultString;
+#else
+UNREF(testData);
+#endif
+
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getMovementDatatable(true);
+#endif
 	}
 
 	if (!m_movementDatatable.isLoaded())
@@ -1649,6 +2003,11 @@ const std::string & SharedCreatureObjectTemplate::getMovementDatatable() const
 	}
 
 	const std::string & value = m_movementDatatable.getValue();
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedCreatureObjectTemplate::getMovementDatatable
@@ -1680,12 +2039,22 @@ bool SharedCreatureObjectTemplate::getPostureAlignToTerrain(Postures index) cons
 	return value;
 }	// SharedCreatureObjectTemplate::getPostureAlignToTerrain
 
-float SharedCreatureObjectTemplate::getSwimHeight() const
+float SharedCreatureObjectTemplate::getSwimHeight(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getSwimHeight(true);
+#endif
 	}
 
 	if (!m_swimHeight.isLoaded())
@@ -1725,16 +2094,31 @@ float SharedCreatureObjectTemplate::getSwimHeight() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedCreatureObjectTemplate::getSwimHeight
 
-float SharedCreatureObjectTemplate::getSwimHeightMin() const
+float SharedCreatureObjectTemplate::getSwimHeightMin(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getSwimHeightMin(true);
+#endif
 	}
 
 	if (!m_swimHeight.isLoaded())
@@ -1774,16 +2158,31 @@ float SharedCreatureObjectTemplate::getSwimHeightMin() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedCreatureObjectTemplate::getSwimHeightMin
 
-float SharedCreatureObjectTemplate::getSwimHeightMax() const
+float SharedCreatureObjectTemplate::getSwimHeightMax(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getSwimHeightMax(true);
+#endif
 	}
 
 	if (!m_swimHeight.isLoaded())
@@ -1823,16 +2222,31 @@ float SharedCreatureObjectTemplate::getSwimHeightMax() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedCreatureObjectTemplate::getSwimHeightMax
 
-float SharedCreatureObjectTemplate::getWarpTolerance() const
+float SharedCreatureObjectTemplate::getWarpTolerance(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getWarpTolerance(true);
+#endif
 	}
 
 	if (!m_warpTolerance.isLoaded())
@@ -1872,16 +2286,31 @@ float SharedCreatureObjectTemplate::getWarpTolerance() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedCreatureObjectTemplate::getWarpTolerance
 
-float SharedCreatureObjectTemplate::getWarpToleranceMin() const
+float SharedCreatureObjectTemplate::getWarpToleranceMin(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getWarpToleranceMin(true);
+#endif
 	}
 
 	if (!m_warpTolerance.isLoaded())
@@ -1921,16 +2350,31 @@ float SharedCreatureObjectTemplate::getWarpToleranceMin() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedCreatureObjectTemplate::getWarpToleranceMin
 
-float SharedCreatureObjectTemplate::getWarpToleranceMax() const
+float SharedCreatureObjectTemplate::getWarpToleranceMax(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getWarpToleranceMax(true);
+#endif
 	}
 
 	if (!m_warpTolerance.isLoaded())
@@ -1970,16 +2414,31 @@ float SharedCreatureObjectTemplate::getWarpToleranceMax() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedCreatureObjectTemplate::getWarpToleranceMax
 
-float SharedCreatureObjectTemplate::getCollisionOffsetX() const
+float SharedCreatureObjectTemplate::getCollisionOffsetX(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getCollisionOffsetX(true);
+#endif
 	}
 
 	if (!m_collisionOffsetX.isLoaded())
@@ -2019,16 +2478,31 @@ float SharedCreatureObjectTemplate::getCollisionOffsetX() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedCreatureObjectTemplate::getCollisionOffsetX
 
-float SharedCreatureObjectTemplate::getCollisionOffsetXMin() const
+float SharedCreatureObjectTemplate::getCollisionOffsetXMin(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getCollisionOffsetXMin(true);
+#endif
 	}
 
 	if (!m_collisionOffsetX.isLoaded())
@@ -2068,16 +2542,31 @@ float SharedCreatureObjectTemplate::getCollisionOffsetXMin() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedCreatureObjectTemplate::getCollisionOffsetXMin
 
-float SharedCreatureObjectTemplate::getCollisionOffsetXMax() const
+float SharedCreatureObjectTemplate::getCollisionOffsetXMax(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getCollisionOffsetXMax(true);
+#endif
 	}
 
 	if (!m_collisionOffsetX.isLoaded())
@@ -2117,16 +2606,31 @@ float SharedCreatureObjectTemplate::getCollisionOffsetXMax() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedCreatureObjectTemplate::getCollisionOffsetXMax
 
-float SharedCreatureObjectTemplate::getCollisionOffsetZ() const
+float SharedCreatureObjectTemplate::getCollisionOffsetZ(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getCollisionOffsetZ(true);
+#endif
 	}
 
 	if (!m_collisionOffsetZ.isLoaded())
@@ -2166,16 +2670,31 @@ float SharedCreatureObjectTemplate::getCollisionOffsetZ() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedCreatureObjectTemplate::getCollisionOffsetZ
 
-float SharedCreatureObjectTemplate::getCollisionOffsetZMin() const
+float SharedCreatureObjectTemplate::getCollisionOffsetZMin(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getCollisionOffsetZMin(true);
+#endif
 	}
 
 	if (!m_collisionOffsetZ.isLoaded())
@@ -2215,16 +2734,31 @@ float SharedCreatureObjectTemplate::getCollisionOffsetZMin() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedCreatureObjectTemplate::getCollisionOffsetZMin
 
-float SharedCreatureObjectTemplate::getCollisionOffsetZMax() const
+float SharedCreatureObjectTemplate::getCollisionOffsetZMax(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getCollisionOffsetZMax(true);
+#endif
 	}
 
 	if (!m_collisionOffsetZ.isLoaded())
@@ -2264,16 +2798,31 @@ float SharedCreatureObjectTemplate::getCollisionOffsetZMax() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedCreatureObjectTemplate::getCollisionOffsetZMax
 
-float SharedCreatureObjectTemplate::getCollisionLength() const
+float SharedCreatureObjectTemplate::getCollisionLength(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getCollisionLength(true);
+#endif
 	}
 
 	if (!m_collisionLength.isLoaded())
@@ -2313,16 +2862,31 @@ float SharedCreatureObjectTemplate::getCollisionLength() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedCreatureObjectTemplate::getCollisionLength
 
-float SharedCreatureObjectTemplate::getCollisionLengthMin() const
+float SharedCreatureObjectTemplate::getCollisionLengthMin(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getCollisionLengthMin(true);
+#endif
 	}
 
 	if (!m_collisionLength.isLoaded())
@@ -2362,16 +2926,31 @@ float SharedCreatureObjectTemplate::getCollisionLengthMin() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedCreatureObjectTemplate::getCollisionLengthMin
 
-float SharedCreatureObjectTemplate::getCollisionLengthMax() const
+float SharedCreatureObjectTemplate::getCollisionLengthMax(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getCollisionLengthMax(true);
+#endif
 	}
 
 	if (!m_collisionLength.isLoaded())
@@ -2411,16 +2990,31 @@ float SharedCreatureObjectTemplate::getCollisionLengthMax() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedCreatureObjectTemplate::getCollisionLengthMax
 
-float SharedCreatureObjectTemplate::getCameraHeight() const
+float SharedCreatureObjectTemplate::getCameraHeight(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getCameraHeight(true);
+#endif
 	}
 
 	if (!m_cameraHeight.isLoaded())
@@ -2460,16 +3054,31 @@ float SharedCreatureObjectTemplate::getCameraHeight() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedCreatureObjectTemplate::getCameraHeight
 
-float SharedCreatureObjectTemplate::getCameraHeightMin() const
+float SharedCreatureObjectTemplate::getCameraHeightMin(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getCameraHeightMin(true);
+#endif
 	}
 
 	if (!m_cameraHeight.isLoaded())
@@ -2509,16 +3118,31 @@ float SharedCreatureObjectTemplate::getCameraHeightMin() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedCreatureObjectTemplate::getCameraHeightMin
 
-float SharedCreatureObjectTemplate::getCameraHeightMax() const
+float SharedCreatureObjectTemplate::getCameraHeightMax(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedCreatureObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedCreatureObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getCameraHeightMax(true);
+#endif
 	}
 
 	if (!m_cameraHeight.isLoaded())
@@ -2558,9 +3182,54 @@ float SharedCreatureObjectTemplate::getCameraHeightMax() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedCreatureObjectTemplate::getCameraHeightMax
+
+#ifdef _DEBUG
+/**
+ * Special function used by datalint. Checks for duplicate values in base and derived templates.
+ */
+void SharedCreatureObjectTemplate::testValues(void) const
+{
+	IGNORE_RETURN(getGender(true));
+	IGNORE_RETURN(getNiche(true));
+	IGNORE_RETURN(getSpecies(true));
+	IGNORE_RETURN(getRace(true));
+	IGNORE_RETURN(getAnimationMapFilename(true));
+	IGNORE_RETURN(getSlopeModAngleMin(true));
+	IGNORE_RETURN(getSlopeModAngleMax(true));
+	IGNORE_RETURN(getSlopeModPercentMin(true));
+	IGNORE_RETURN(getSlopeModPercentMax(true));
+	IGNORE_RETURN(getWaterModPercentMin(true));
+	IGNORE_RETURN(getWaterModPercentMax(true));
+	IGNORE_RETURN(getStepHeightMin(true));
+	IGNORE_RETURN(getStepHeightMax(true));
+	IGNORE_RETURN(getCollisionHeightMin(true));
+	IGNORE_RETURN(getCollisionHeightMax(true));
+	IGNORE_RETURN(getCollisionRadiusMin(true));
+	IGNORE_RETURN(getCollisionRadiusMax(true));
+	IGNORE_RETURN(getMovementDatatable(true));
+	IGNORE_RETURN(getSwimHeightMin(true));
+	IGNORE_RETURN(getSwimHeightMax(true));
+	IGNORE_RETURN(getWarpToleranceMin(true));
+	IGNORE_RETURN(getWarpToleranceMax(true));
+	IGNORE_RETURN(getCollisionOffsetXMin(true));
+	IGNORE_RETURN(getCollisionOffsetXMax(true));
+	IGNORE_RETURN(getCollisionOffsetZMin(true));
+	IGNORE_RETURN(getCollisionOffsetZMax(true));
+	IGNORE_RETURN(getCollisionLengthMin(true));
+	IGNORE_RETURN(getCollisionLengthMax(true));
+	IGNORE_RETURN(getCameraHeightMin(true));
+	IGNORE_RETURN(getCameraHeightMax(true));
+	SharedTangibleObjectTemplate::testValues();
+}	// SharedCreatureObjectTemplate::testValues
+#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form
@@ -2570,8 +3239,8 @@ float SharedCreatureObjectTemplate::getCameraHeightMax() const
  */
 void SharedCreatureObjectTemplate::load(Iff &file)
 {
-	static const int MAX_NAME_SIZE = 256;
-	char paramName[MAX_NAME_SIZE];
+static const int MAX_NAME_SIZE = 256;
+char paramName[MAX_NAME_SIZE];
 
 	if (file.getCurrentName() != SharedCreatureObjectTemplate_tag)
 	{
@@ -2581,7 +3250,7 @@ void SharedCreatureObjectTemplate::load(Iff &file)
 
 	file.enterForm();
 	m_templateVersion = file.getCurrentName();
-	if (m_templateVersion == TAG(D, E, R, V))
+	if (m_templateVersion == TAG(D,E,R,V))
 	{
 		file.enterForm();
 		file.enterChunk();
@@ -2601,8 +3270,10 @@ void SharedCreatureObjectTemplate::load(Iff &file)
 		file.exitForm();
 		m_templateVersion = file.getCurrentName();
 	}
-	if (getHighestTemplateVersion() != TAG(0, 0, 1, 3))
+	if (getHighestTemplateVersion() != TAG(0,0,1,3))
 	{
+		if (DataLint::isEnabled())
+			DEBUG_WARNING(true, ("template %s version out of date", file.getFileName()));
 		m_versionOk = false;
 	}
 
@@ -2717,3 +3388,4 @@ void SharedCreatureObjectTemplate::load(Iff &file)
 }	// SharedCreatureObjectTemplate::load
 
 //@END TFD
+

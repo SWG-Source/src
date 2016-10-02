@@ -54,12 +54,17 @@ public:
 	};
 
 public:
-	const std::string &    getWeaponEffect() const;
-	int                    getWeaponEffectIndex() const;
-	int                    getWeaponEffectIndexMin() const;
-	int                    getWeaponEffectIndexMax() const;
-	AttackType     getAttackType() const;
+	const std::string &    getWeaponEffect(bool testData = false) const;
+	int                    getWeaponEffectIndex(bool testData = false) const;
+	int                    getWeaponEffectIndexMin(bool testData = false) const;
+	int                    getWeaponEffectIndexMax(bool testData = false) const;
+	AttackType     getAttackType(bool testData = false) const;
 
+#ifdef _DEBUG
+public:
+	// special code used by datalint
+	virtual void testValues(void) const;
+#endif
 
 protected:
 	virtual void load(Iff &file);
