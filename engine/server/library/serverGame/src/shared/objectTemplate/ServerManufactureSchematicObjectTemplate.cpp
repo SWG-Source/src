@@ -22,10 +22,11 @@
 
 const std::string DefaultString("");
 const StringId DefaultStringId("", 0);
-const Vector DefaultVector(0, 0, 0);
+const Vector DefaultVector(0,0,0);
 const TriggerVolumeData DefaultTriggerVolumeData;
 
 bool ServerManufactureSchematicObjectTemplate::ms_allowDefaultTemplateParams = true;
+
 
 /**
  * Class constructor.
@@ -33,13 +34,12 @@ bool ServerManufactureSchematicObjectTemplate::ms_allowDefaultTemplateParams = t
 ServerManufactureSchematicObjectTemplate::ServerManufactureSchematicObjectTemplate(const std::string & filename)
 //@BEGIN TFD INIT
 	: ServerIntangibleObjectTemplate(filename)
-	, m_ingredientsLoaded(false)
-	, m_ingredientsAppend(false)
-	, m_attributesLoaded(false)
-	, m_attributesAppend(false)
-	, m_versionOk(true)
-	, m_templateVersion(0)
-	//@END TFD INIT
+	,m_ingredientsLoaded(false)
+	,m_ingredientsAppend(false)
+	,m_attributesLoaded(false)
+	,m_attributesAppend(false)
+	,m_versionOk(true)
+//@END TFD INIT
 {
 }	// ServerManufactureSchematicObjectTemplate::ServerManufactureSchematicObjectTemplate
 
@@ -48,7 +48,7 @@ ServerManufactureSchematicObjectTemplate::ServerManufactureSchematicObjectTempla
  */
 ServerManufactureSchematicObjectTemplate::~ServerManufactureSchematicObjectTemplate()
 {
-	//@BEGIN TFD CLEANUP
+//@BEGIN TFD CLEANUP
 	{
 		std::vector<StructParamOT *>::iterator iter;
 		for (iter = m_ingredients.begin(); iter != m_ingredients.end(); ++iter)
@@ -67,7 +67,7 @@ ServerManufactureSchematicObjectTemplate::~ServerManufactureSchematicObjectTempl
 		}
 		m_attributes.clear();
 	}
-	//@END TFD CLEANUP
+//@END TFD CLEANUP
 }	// ServerManufactureSchematicObjectTemplate::~ServerManufactureSchematicObjectTemplate
 
 /**
@@ -115,24 +115,24 @@ Tag ServerManufactureSchematicObjectTemplate::getTemplateVersion(void) const
  */
 Tag ServerManufactureSchematicObjectTemplate::getHighestTemplateVersion(void) const
 {
-	if (m_baseData == nullptr)
+	if (m_baseData == NULL)
 		return m_templateVersion;
 	const ServerManufactureSchematicObjectTemplate * base = dynamic_cast<const ServerManufactureSchematicObjectTemplate *>(m_baseData);
-	if (base == nullptr)
+	if (base == NULL)
 		return m_templateVersion;
 	return std::max(m_templateVersion, base->getHighestTemplateVersion());
 } // ServerManufactureSchematicObjectTemplate::getHighestTemplateVersion
 
 /**
  * Called when the game tries to create a manf schematic via the default method.
- * Manf must be created via a draft schematic, so we always return nullptr;
+ * Manf must be created via a draft schematic, so we always return NULL;
  *
  * @return the object
  */
 Object * ServerManufactureSchematicObjectTemplate::createObject(void) const
 {
-	//	WARNING(true, ("Someone is trying to create a manf schematic without a "
-	//		"draft schematic source!"));
+//	WARNING(true, ("Someone is trying to create a manf schematic without a "
+//		"draft schematic source!"));
 	return new ManufactureSchematicObject(this);
 }	// ServerManufactureSchematicObjectTemplate::createObject
 
@@ -146,17 +146,17 @@ Object * ServerManufactureSchematicObjectTemplate::createObject(const char *cons
 	const ObjectTemplate *const objectTemplate = ObjectTemplateList::fetch(fileName);
 	if (objectTemplate)
 	{
-		Object * object = nullptr;
-		const ServerManufactureSchematicObjectTemplate * const manfTemplate =
+		Object * object = NULL;
+		const ServerManufactureSchematicObjectTemplate * const manfTemplate = 
 			dynamic_cast<const ServerManufactureSchematicObjectTemplate *const>(
-				objectTemplate);
-		if (manfTemplate != nullptr)
+			objectTemplate);
+		if (manfTemplate != NULL)
 			object = manfTemplate->createObject(schematic);
-		objectTemplate->releaseReference();
+		objectTemplate->releaseReference ();
 
 		return object;
 	}
-	return nullptr;
+	return NULL;
 }	// ServerManufactureSchematicObjectTemplate::createObject
 
 /**
@@ -170,12 +170,22 @@ Object * ServerManufactureSchematicObjectTemplate::createObject(const DraftSchem
 }	// ServerManufactureSchematicObjectTemplate::createObject
 
 //@BEGIN TFD
-const std::string & ServerManufactureSchematicObjectTemplate::getDraftSchematic() const
+const std::string & ServerManufactureSchematicObjectTemplate::getDraftSchematic(bool testData) const
 {
+#ifdef _DEBUG
+std::string testDataValue = DefaultString;
+#else
+UNREF(testData);
+#endif
+
 	const ServerManufactureSchematicObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerManufactureSchematicObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getDraftSchematic(true);
+#endif
 	}
 
 	if (!m_draftSchematic.isLoaded())
@@ -193,16 +203,31 @@ const std::string & ServerManufactureSchematicObjectTemplate::getDraftSchematic(
 	}
 
 	const std::string & value = m_draftSchematic.getValue();
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerManufactureSchematicObjectTemplate::getDraftSchematic
 
-const std::string & ServerManufactureSchematicObjectTemplate::getCreator() const
+const std::string & ServerManufactureSchematicObjectTemplate::getCreator(bool testData) const
 {
+#ifdef _DEBUG
+std::string testDataValue = DefaultString;
+#else
+UNREF(testData);
+#endif
+
 	const ServerManufactureSchematicObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerManufactureSchematicObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getCreator(true);
+#endif
 	}
 
 	if (!m_creator.isLoaded())
@@ -220,6 +245,11 @@ const std::string & ServerManufactureSchematicObjectTemplate::getCreator() const
 	}
 
 	const std::string & value = m_creator.getValue();
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerManufactureSchematicObjectTemplate::getCreator
@@ -237,7 +267,7 @@ void ServerManufactureSchematicObjectTemplate::getIngredients(IngredientSlot &da
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter ingredients in template %s", DataResource::getName()));
-			return;
+			return ;
 		}
 		else
 		{
@@ -251,10 +281,10 @@ void ServerManufactureSchematicObjectTemplate::getIngredients(IngredientSlot &da
 	{
 		int baseCount = base->getIngredientsCount();
 		if (index < baseCount)
-		{
-			base->getIngredients(data, index);
-			return;
-		}
+			{
+				base->getIngredients(data, index);
+				return;
+			}
 		index -= baseCount;
 	}
 
@@ -280,7 +310,7 @@ void ServerManufactureSchematicObjectTemplate::getIngredientsMin(IngredientSlot 
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter ingredients in template %s", DataResource::getName()));
-			return;
+			return ;
 		}
 		else
 		{
@@ -294,10 +324,10 @@ void ServerManufactureSchematicObjectTemplate::getIngredientsMin(IngredientSlot 
 	{
 		int baseCount = base->getIngredientsCount();
 		if (index < baseCount)
-		{
-			base->getIngredientsMin(data, index);
-			return;
-		}
+			{
+				base->getIngredientsMin(data, index);
+				return;
+			}
 		index -= baseCount;
 	}
 
@@ -323,7 +353,7 @@ void ServerManufactureSchematicObjectTemplate::getIngredientsMax(IngredientSlot 
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter ingredients in template %s", DataResource::getName()));
-			return;
+			return ;
 		}
 		else
 		{
@@ -337,10 +367,10 @@ void ServerManufactureSchematicObjectTemplate::getIngredientsMax(IngredientSlot 
 	{
 		int baseCount = base->getIngredientsCount();
 		if (index < baseCount)
-		{
-			base->getIngredientsMax(data, index);
-			return;
-		}
+			{
+				base->getIngredientsMax(data, index);
+				return;
+			}
 		index -= baseCount;
 	}
 
@@ -377,12 +407,22 @@ size_t ServerManufactureSchematicObjectTemplate::getIngredientsCount(void) const
 	return count;
 }	// ServerManufactureSchematicObjectTemplate::getIngredientsCount
 
-int ServerManufactureSchematicObjectTemplate::getItemCount() const
+int ServerManufactureSchematicObjectTemplate::getItemCount(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const ServerManufactureSchematicObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerManufactureSchematicObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getItemCount(true);
+#endif
 	}
 
 	if (!m_itemCount.isLoaded())
@@ -422,16 +462,31 @@ int ServerManufactureSchematicObjectTemplate::getItemCount() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerManufactureSchematicObjectTemplate::getItemCount
 
-int ServerManufactureSchematicObjectTemplate::getItemCountMin() const
+int ServerManufactureSchematicObjectTemplate::getItemCountMin(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const ServerManufactureSchematicObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerManufactureSchematicObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getItemCountMin(true);
+#endif
 	}
 
 	if (!m_itemCount.isLoaded())
@@ -471,16 +526,31 @@ int ServerManufactureSchematicObjectTemplate::getItemCountMin() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerManufactureSchematicObjectTemplate::getItemCountMin
 
-int ServerManufactureSchematicObjectTemplate::getItemCountMax() const
+int ServerManufactureSchematicObjectTemplate::getItemCountMax(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const ServerManufactureSchematicObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerManufactureSchematicObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getItemCountMax(true);
+#endif
 	}
 
 	if (!m_itemCount.isLoaded())
@@ -520,6 +590,11 @@ int ServerManufactureSchematicObjectTemplate::getItemCountMax() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerManufactureSchematicObjectTemplate::getItemCountMax
@@ -537,7 +612,7 @@ void ServerManufactureSchematicObjectTemplate::getAttributes(SchematicAttribute 
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter attributes in template %s", DataResource::getName()));
-			return;
+			return ;
 		}
 		else
 		{
@@ -551,10 +626,10 @@ void ServerManufactureSchematicObjectTemplate::getAttributes(SchematicAttribute 
 	{
 		int baseCount = base->getAttributesCount();
 		if (index < baseCount)
-		{
-			base->getAttributes(data, index);
-			return;
-		}
+			{
+				base->getAttributes(data, index);
+				return;
+			}
 		index -= baseCount;
 	}
 
@@ -580,7 +655,7 @@ void ServerManufactureSchematicObjectTemplate::getAttributesMin(SchematicAttribu
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter attributes in template %s", DataResource::getName()));
-			return;
+			return ;
 		}
 		else
 		{
@@ -594,10 +669,10 @@ void ServerManufactureSchematicObjectTemplate::getAttributesMin(SchematicAttribu
 	{
 		int baseCount = base->getAttributesCount();
 		if (index < baseCount)
-		{
-			base->getAttributesMin(data, index);
-			return;
-		}
+			{
+				base->getAttributesMin(data, index);
+				return;
+			}
 		index -= baseCount;
 	}
 
@@ -623,7 +698,7 @@ void ServerManufactureSchematicObjectTemplate::getAttributesMax(SchematicAttribu
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter attributes in template %s", DataResource::getName()));
-			return;
+			return ;
 		}
 		else
 		{
@@ -637,10 +712,10 @@ void ServerManufactureSchematicObjectTemplate::getAttributesMax(SchematicAttribu
 	{
 		int baseCount = base->getAttributesCount();
 		if (index < baseCount)
-		{
-			base->getAttributesMax(data, index);
-			return;
-		}
+			{
+				base->getAttributesMax(data, index);
+				return;
+			}
 		index -= baseCount;
 	}
 
@@ -677,6 +752,20 @@ size_t ServerManufactureSchematicObjectTemplate::getAttributesCount(void) const
 	return count;
 }	// ServerManufactureSchematicObjectTemplate::getAttributesCount
 
+#ifdef _DEBUG
+/**
+ * Special function used by datalint. Checks for duplicate values in base and derived templates.
+ */
+void ServerManufactureSchematicObjectTemplate::testValues(void) const
+{
+	IGNORE_RETURN(getDraftSchematic(true));
+	IGNORE_RETURN(getCreator(true));
+	IGNORE_RETURN(getItemCountMin(true));
+	IGNORE_RETURN(getItemCountMax(true));
+	ServerIntangibleObjectTemplate::testValues();
+}	// ServerManufactureSchematicObjectTemplate::testValues
+#endif
+
 /**
  * Loads the template data from an iff file. We should already be in the form
  * for this template.
@@ -685,8 +774,8 @@ size_t ServerManufactureSchematicObjectTemplate::getAttributesCount(void) const
  */
 void ServerManufactureSchematicObjectTemplate::load(Iff &file)
 {
-	static const int MAX_NAME_SIZE = 256;
-	char paramName[MAX_NAME_SIZE];
+static const int MAX_NAME_SIZE = 256;
+char paramName[MAX_NAME_SIZE];
 
 	if (file.getCurrentName() != ServerManufactureSchematicObjectTemplate_tag)
 	{
@@ -696,7 +785,7 @@ void ServerManufactureSchematicObjectTemplate::load(Iff &file)
 
 	file.enterForm();
 	m_templateVersion = file.getCurrentName();
-	if (m_templateVersion == TAG(D, E, R, V))
+	if (m_templateVersion == TAG(D,E,R,V))
 	{
 		file.enterForm();
 		file.enterChunk();
@@ -716,8 +805,10 @@ void ServerManufactureSchematicObjectTemplate::load(Iff &file)
 		file.exitForm();
 		m_templateVersion = file.getCurrentName();
 	}
-	if (getHighestTemplateVersion() != TAG(0, 0, 0, 0))
+	if (getHighestTemplateVersion() != TAG(0,0,0,0))
 	{
+		if (DataLint::isEnabled())
+			DEBUG_WARNING(true, ("template %s version out of date", file.getFileName()));
 		m_versionOk = false;
 	}
 
@@ -783,6 +874,7 @@ void ServerManufactureSchematicObjectTemplate::load(Iff &file)
 	return;
 }	// ServerManufactureSchematicObjectTemplate::load
 
+
 //=============================================================================
 // class ServerManufactureSchematicObjectTemplate::_IngredientSlot
 
@@ -829,12 +921,22 @@ Tag ServerManufactureSchematicObjectTemplate::_IngredientSlot::getId(void) const
 	return _IngredientSlot_tag;
 }	// ServerManufactureSchematicObjectTemplate::_IngredientSlot::getId
 
-const StringId ServerManufactureSchematicObjectTemplate::_IngredientSlot::getName(bool versionOk) const
+const StringId ServerManufactureSchematicObjectTemplate::_IngredientSlot::getName(bool versionOk, bool testData) const
 {
+#ifdef _DEBUG
+StringId testDataValue = DefaultStringId;
+#else
+UNREF(testData);
+#endif
+
 	const ServerManufactureSchematicObjectTemplate::_IngredientSlot * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerManufactureSchematicObjectTemplate::_IngredientSlot *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getName(true);
+#endif
 	}
 
 	if (!m_name.isLoaded())
@@ -852,6 +954,11 @@ const StringId ServerManufactureSchematicObjectTemplate::_IngredientSlot::getNam
 	}
 
 	const StringId value = m_name.getValue();
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerManufactureSchematicObjectTemplate::_IngredientSlot::getName
@@ -869,7 +976,7 @@ void ServerManufactureSchematicObjectTemplate::_IngredientSlot::getIngredient(In
 		if (ms_allowDefaultTemplateParams && /*!versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter ingredient in template %s", DataResource::getName()));
-			return;
+			return ;
 		}
 		else
 		{
@@ -908,7 +1015,7 @@ void ServerManufactureSchematicObjectTemplate::_IngredientSlot::getIngredientMin
 		if (ms_allowDefaultTemplateParams && /*!versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter ingredient in template %s", DataResource::getName()));
-			return;
+			return ;
 		}
 		else
 		{
@@ -947,7 +1054,7 @@ void ServerManufactureSchematicObjectTemplate::_IngredientSlot::getIngredientMax
 		if (ms_allowDefaultTemplateParams && /*!versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter ingredient in template %s", DataResource::getName()));
-			return;
+			return ;
 		}
 		else
 		{
@@ -973,6 +1080,16 @@ void ServerManufactureSchematicObjectTemplate::_IngredientSlot::getIngredientMax
 	data.skillCommand = param->getSkillCommand(versionOk);
 }	// ServerManufactureSchematicObjectTemplate::_IngredientSlot::getIngredientMax
 
+#ifdef _DEBUG
+/**
+ * Special function used by datalint. Checks for duplicate values in base and derived templates.
+ */
+void ServerManufactureSchematicObjectTemplate::_IngredientSlot::testValues(void) const
+{
+	IGNORE_RETURN(getName(true));
+}	// ServerManufactureSchematicObjectTemplate::_IngredientSlot::testValues
+#endif
+
 /**
  * Loads the template data from an iff file. We should already be in the form
  * for this template.
@@ -981,8 +1098,8 @@ void ServerManufactureSchematicObjectTemplate::_IngredientSlot::getIngredientMax
  */
 void ServerManufactureSchematicObjectTemplate::_IngredientSlot::load(Iff &file)
 {
-	static const int MAX_NAME_SIZE = 256;
-	char paramName[MAX_NAME_SIZE];
+static const int MAX_NAME_SIZE = 256;
+char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 

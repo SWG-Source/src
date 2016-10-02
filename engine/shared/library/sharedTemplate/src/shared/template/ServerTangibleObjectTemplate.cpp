@@ -17,8 +17,9 @@
 #include "sharedDebug/DataLint.h"
 #include "sharedFile/Iff.h"
 #include "sharedTemplateDefinition/ObjectTemplate.h"
-#include <algorithm>
-#include <cstdio>
+#include <stdio.h>
+
+
 
 /**
  * Class constructor.
@@ -26,11 +27,9 @@
 ServerTangibleObjectTemplate::ServerTangibleObjectTemplate(const std::string & filename)
 //@BEGIN TFD INIT
 	: ServerObjectTemplate(filename)
-	, m_triggerVolumesLoaded(false)
-	, m_triggerVolumesAppend(false)
-	, m_templateVersion(0)
-	, m_versionOk(false)
-	//@END TFD INIT
+	,m_triggerVolumesLoaded(false)
+	,m_triggerVolumesAppend(false)
+//@END TFD INIT
 {
 }	// ServerTangibleObjectTemplate::ServerTangibleObjectTemplate
 
@@ -39,7 +38,7 @@ ServerTangibleObjectTemplate::ServerTangibleObjectTemplate(const std::string & f
  */
 ServerTangibleObjectTemplate::~ServerTangibleObjectTemplate()
 {
-	//@BEGIN TFD CLEANUP
+//@BEGIN TFD CLEANUP
 	{
 		std::vector<TriggerVolumeParam *>::iterator iter;
 		for (iter = m_triggerVolumes.begin(); iter != m_triggerVolumes.end(); ++iter)
@@ -49,7 +48,7 @@ ServerTangibleObjectTemplate::~ServerTangibleObjectTemplate()
 		}
 		m_triggerVolumes.clear();
 	}
-	//@END TFD CLEANUP
+//@END TFD CLEANUP
 }	// ServerTangibleObjectTemplate::~ServerTangibleObjectTemplate
 
 /**
@@ -97,10 +96,10 @@ Tag ServerTangibleObjectTemplate::getTemplateVersion(void) const
  */
 Tag ServerTangibleObjectTemplate::getHighestTemplateVersion(void) const
 {
-	if (m_baseData == nullptr)
+	if (m_baseData == NULL)
 		return m_templateVersion;
 	const ServerTangibleObjectTemplate * base = dynamic_cast<const ServerTangibleObjectTemplate *>(m_baseData);
-	if (base == nullptr)
+	if (base == NULL)
 		return m_templateVersion;
 	return std::max(m_templateVersion, base->getHighestTemplateVersion());
 } // ServerTangibleObjectTemplate::getHighestTemplateVersion
@@ -303,6 +302,7 @@ bool ServerTangibleObjectTemplate::isAppend(const char *name) const
 		return ServerObjectTemplate::isAppend(name);
 }	// ServerTangibleObjectTemplate::isAppend
 
+
 int ServerTangibleObjectTemplate::getListLength(const char *name) const
 {
 	if (strcmp(name, "triggerVolumes") == 0)
@@ -321,8 +321,8 @@ int ServerTangibleObjectTemplate::getListLength(const char *name) const
  */
 void ServerTangibleObjectTemplate::load(Iff &file)
 {
-	static const int MAX_NAME_SIZE = 256;
-	char paramName[MAX_NAME_SIZE];
+static const int MAX_NAME_SIZE = 256;
+char paramName[MAX_NAME_SIZE];
 
 	if (file.getCurrentName() != ServerTangibleObjectTemplate_tag)
 	{
@@ -332,7 +332,7 @@ void ServerTangibleObjectTemplate::load(Iff &file)
 
 	file.enterForm();
 	m_templateVersion = file.getCurrentName();
-	if (m_templateVersion == TAG(D, E, R, V))
+	if (m_templateVersion == TAG(D,E,R,V))
 	{
 		file.enterForm();
 		file.enterChunk();
@@ -352,7 +352,7 @@ void ServerTangibleObjectTemplate::load(Iff &file)
 		file.exitForm();
 		m_templateVersion = file.getCurrentName();
 	}
-	if (getHighestTemplateVersion() != TAG(0, 0, 0, 4))
+	if (getHighestTemplateVersion() != TAG(0,0,0,4))
 	{
 		if (DataLint::isEnabled())
 			DEBUG_WARNING(true, ("template %s version out of date", file.getFileName()));
@@ -417,18 +417,18 @@ void ServerTangibleObjectTemplate::load(Iff &file)
  */
 void ServerTangibleObjectTemplate::save(Iff &file)
 {
-	int count;
+int count;
 
 	file.insertForm(ServerTangibleObjectTemplate_tag);
 	if (m_baseTemplateName.size() != 0)
 	{
-		file.insertForm(TAG(D, E, R, V));
+		file.insertForm(TAG(D,E,R,V));
 		file.insertChunk(TAG(X, X, X, X));
 		file.insertChunkData(m_baseTemplateName.c_str(), m_baseTemplateName.size() + 1);
 		file.exitChunk();
 		file.exitForm();
 	}
-	file.insertForm(TAG(0, 0, 0, 4));
+	file.insertForm(TAG(0,0,0,4));
 	file.allowNonlinearFunctions();
 
 	int paramCount = 0;
@@ -445,7 +445,7 @@ void ServerTangibleObjectTemplate::save(Iff &file)
 	count = m_triggerVolumes.size();
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < count; ++i)
-		m_triggerVolumes[i]->saveToIff(file); }
+		m_triggerVolumes[i]->saveToIff(file);}
 	file.exitChunk();
 	++paramCount;
 	// save combatSkeleton

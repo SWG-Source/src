@@ -22,10 +22,11 @@
 
 const std::string DefaultString("");
 const StringId DefaultStringId("", 0);
-const Vector DefaultVector(0, 0, 0);
+const Vector DefaultVector(0,0,0);
 const TriggerVolumeData DefaultTriggerVolumeData;
 
 bool ServerWeaponObjectTemplate::ms_allowDefaultTemplateParams = true;
+
 
 /**
  * Class constructor.
@@ -33,9 +34,8 @@ bool ServerWeaponObjectTemplate::ms_allowDefaultTemplateParams = true;
 ServerWeaponObjectTemplate::ServerWeaponObjectTemplate(const std::string & filename)
 //@BEGIN TFD INIT
 	: ServerTangibleObjectTemplate(filename)
-	, m_versionOk(true)
-	, m_templateVersion(0)
-	//@END TFD INIT
+	,m_versionOk(true)
+//@END TFD INIT
 {
 }	// ServerWeaponObjectTemplate::ServerWeaponObjectTemplate
 
@@ -44,8 +44,8 @@ ServerWeaponObjectTemplate::ServerWeaponObjectTemplate(const std::string & filen
  */
 ServerWeaponObjectTemplate::~ServerWeaponObjectTemplate()
 {
-	//@BEGIN TFD CLEANUP
-	//@END TFD CLEANUP
+//@BEGIN TFD CLEANUP
+//@END TFD CLEANUP
 }	// ServerWeaponObjectTemplate::~ServerWeaponObjectTemplate
 
 /**
@@ -93,10 +93,10 @@ Tag ServerWeaponObjectTemplate::getTemplateVersion(void) const
  */
 Tag ServerWeaponObjectTemplate::getHighestTemplateVersion(void) const
 {
-	if (m_baseData == nullptr)
+	if (m_baseData == NULL)
 		return m_templateVersion;
 	const ServerWeaponObjectTemplate * base = dynamic_cast<const ServerWeaponObjectTemplate *>(m_baseData);
-	if (base == nullptr)
+	if (base == NULL)
 		return m_templateVersion;
 	return std::max(m_templateVersion, base->getHighestTemplateVersion());
 } // ServerWeaponObjectTemplate::getHighestTemplateVersion
@@ -112,12 +112,22 @@ Object * ServerWeaponObjectTemplate::createObject(void) const
 }	// ServerWeaponObjectTemplate::createObject
 
 //@BEGIN TFD
-ServerWeaponObjectTemplate::WeaponType ServerWeaponObjectTemplate::getWeaponType() const
+ServerWeaponObjectTemplate::WeaponType ServerWeaponObjectTemplate::getWeaponType(bool testData) const
 {
+#ifdef _DEBUG
+ServerWeaponObjectTemplate::WeaponType testDataValue = static_cast<ServerWeaponObjectTemplate::WeaponType>(0);
+#else
+UNREF(testData);
+#endif
+
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerWeaponObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getWeaponType(true);
+#endif
 	}
 
 	if (!m_weaponType.isLoaded())
@@ -135,16 +145,31 @@ ServerWeaponObjectTemplate::WeaponType ServerWeaponObjectTemplate::getWeaponType
 	}
 
 	WeaponType value = static_cast<WeaponType>(m_weaponType.getValue());
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerWeaponObjectTemplate::getWeaponType
 
-ServerWeaponObjectTemplate::AttackType ServerWeaponObjectTemplate::getAttackType() const
+ServerWeaponObjectTemplate::AttackType ServerWeaponObjectTemplate::getAttackType(bool testData) const
 {
+#ifdef _DEBUG
+ServerWeaponObjectTemplate::AttackType testDataValue = static_cast<ServerWeaponObjectTemplate::AttackType>(0);
+#else
+UNREF(testData);
+#endif
+
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerWeaponObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getAttackType(true);
+#endif
 	}
 
 	if (!m_attackType.isLoaded())
@@ -162,16 +187,31 @@ ServerWeaponObjectTemplate::AttackType ServerWeaponObjectTemplate::getAttackType
 	}
 
 	AttackType value = static_cast<AttackType>(m_attackType.getValue());
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerWeaponObjectTemplate::getAttackType
 
-ServerWeaponObjectTemplate::DamageType ServerWeaponObjectTemplate::getDamageType() const
+ServerWeaponObjectTemplate::DamageType ServerWeaponObjectTemplate::getDamageType(bool testData) const
 {
+#ifdef _DEBUG
+ServerWeaponObjectTemplate::DamageType testDataValue = static_cast<ServerWeaponObjectTemplate::DamageType>(0);
+#else
+UNREF(testData);
+#endif
+
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerWeaponObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getDamageType(true);
+#endif
 	}
 
 	if (!m_damageType.isLoaded())
@@ -189,16 +229,31 @@ ServerWeaponObjectTemplate::DamageType ServerWeaponObjectTemplate::getDamageType
 	}
 
 	DamageType value = static_cast<DamageType>(m_damageType.getValue());
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerWeaponObjectTemplate::getDamageType
 
-ServerWeaponObjectTemplate::DamageType ServerWeaponObjectTemplate::getElementalType() const
+ServerWeaponObjectTemplate::DamageType ServerWeaponObjectTemplate::getElementalType(bool testData) const
 {
+#ifdef _DEBUG
+ServerWeaponObjectTemplate::DamageType testDataValue = static_cast<ServerWeaponObjectTemplate::DamageType>(0);
+#else
+UNREF(testData);
+#endif
+
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerWeaponObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getElementalType(true);
+#endif
 	}
 
 	if (!m_elementalType.isLoaded())
@@ -216,16 +271,31 @@ ServerWeaponObjectTemplate::DamageType ServerWeaponObjectTemplate::getElementalT
 	}
 
 	DamageType value = static_cast<DamageType>(m_elementalType.getValue());
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerWeaponObjectTemplate::getElementalType
 
-int ServerWeaponObjectTemplate::getElementalValue() const
+int ServerWeaponObjectTemplate::getElementalValue(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerWeaponObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getElementalValue(true);
+#endif
 	}
 
 	if (!m_elementalValue.isLoaded())
@@ -265,16 +335,31 @@ int ServerWeaponObjectTemplate::getElementalValue() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerWeaponObjectTemplate::getElementalValue
 
-int ServerWeaponObjectTemplate::getElementalValueMin() const
+int ServerWeaponObjectTemplate::getElementalValueMin(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerWeaponObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getElementalValueMin(true);
+#endif
 	}
 
 	if (!m_elementalValue.isLoaded())
@@ -314,16 +399,31 @@ int ServerWeaponObjectTemplate::getElementalValueMin() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerWeaponObjectTemplate::getElementalValueMin
 
-int ServerWeaponObjectTemplate::getElementalValueMax() const
+int ServerWeaponObjectTemplate::getElementalValueMax(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerWeaponObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getElementalValueMax(true);
+#endif
 	}
 
 	if (!m_elementalValue.isLoaded())
@@ -363,16 +463,31 @@ int ServerWeaponObjectTemplate::getElementalValueMax() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerWeaponObjectTemplate::getElementalValueMax
 
-int ServerWeaponObjectTemplate::getMinDamageAmount() const
+int ServerWeaponObjectTemplate::getMinDamageAmount(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerWeaponObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getMinDamageAmount(true);
+#endif
 	}
 
 	if (!m_minDamageAmount.isLoaded())
@@ -412,16 +527,31 @@ int ServerWeaponObjectTemplate::getMinDamageAmount() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerWeaponObjectTemplate::getMinDamageAmount
 
-int ServerWeaponObjectTemplate::getMinDamageAmountMin() const
+int ServerWeaponObjectTemplate::getMinDamageAmountMin(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerWeaponObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getMinDamageAmountMin(true);
+#endif
 	}
 
 	if (!m_minDamageAmount.isLoaded())
@@ -461,16 +591,31 @@ int ServerWeaponObjectTemplate::getMinDamageAmountMin() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerWeaponObjectTemplate::getMinDamageAmountMin
 
-int ServerWeaponObjectTemplate::getMinDamageAmountMax() const
+int ServerWeaponObjectTemplate::getMinDamageAmountMax(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerWeaponObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getMinDamageAmountMax(true);
+#endif
 	}
 
 	if (!m_minDamageAmount.isLoaded())
@@ -510,16 +655,31 @@ int ServerWeaponObjectTemplate::getMinDamageAmountMax() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerWeaponObjectTemplate::getMinDamageAmountMax
 
-int ServerWeaponObjectTemplate::getMaxDamageAmount() const
+int ServerWeaponObjectTemplate::getMaxDamageAmount(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerWeaponObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getMaxDamageAmount(true);
+#endif
 	}
 
 	if (!m_maxDamageAmount.isLoaded())
@@ -559,16 +719,31 @@ int ServerWeaponObjectTemplate::getMaxDamageAmount() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerWeaponObjectTemplate::getMaxDamageAmount
 
-int ServerWeaponObjectTemplate::getMaxDamageAmountMin() const
+int ServerWeaponObjectTemplate::getMaxDamageAmountMin(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerWeaponObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getMaxDamageAmountMin(true);
+#endif
 	}
 
 	if (!m_maxDamageAmount.isLoaded())
@@ -608,16 +783,31 @@ int ServerWeaponObjectTemplate::getMaxDamageAmountMin() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerWeaponObjectTemplate::getMaxDamageAmountMin
 
-int ServerWeaponObjectTemplate::getMaxDamageAmountMax() const
+int ServerWeaponObjectTemplate::getMaxDamageAmountMax(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerWeaponObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getMaxDamageAmountMax(true);
+#endif
 	}
 
 	if (!m_maxDamageAmount.isLoaded())
@@ -657,16 +847,31 @@ int ServerWeaponObjectTemplate::getMaxDamageAmountMax() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerWeaponObjectTemplate::getMaxDamageAmountMax
 
-float ServerWeaponObjectTemplate::getAttackSpeed() const
+float ServerWeaponObjectTemplate::getAttackSpeed(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerWeaponObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getAttackSpeed(true);
+#endif
 	}
 
 	if (!m_attackSpeed.isLoaded())
@@ -706,16 +911,31 @@ float ServerWeaponObjectTemplate::getAttackSpeed() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerWeaponObjectTemplate::getAttackSpeed
 
-float ServerWeaponObjectTemplate::getAttackSpeedMin() const
+float ServerWeaponObjectTemplate::getAttackSpeedMin(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerWeaponObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getAttackSpeedMin(true);
+#endif
 	}
 
 	if (!m_attackSpeed.isLoaded())
@@ -755,16 +975,31 @@ float ServerWeaponObjectTemplate::getAttackSpeedMin() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerWeaponObjectTemplate::getAttackSpeedMin
 
-float ServerWeaponObjectTemplate::getAttackSpeedMax() const
+float ServerWeaponObjectTemplate::getAttackSpeedMax(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerWeaponObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getAttackSpeedMax(true);
+#endif
 	}
 
 	if (!m_attackSpeed.isLoaded())
@@ -804,16 +1039,31 @@ float ServerWeaponObjectTemplate::getAttackSpeedMax() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerWeaponObjectTemplate::getAttackSpeedMax
 
-float ServerWeaponObjectTemplate::getAudibleRange() const
+float ServerWeaponObjectTemplate::getAudibleRange(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerWeaponObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getAudibleRange(true);
+#endif
 	}
 
 	if (!m_audibleRange.isLoaded())
@@ -853,16 +1103,31 @@ float ServerWeaponObjectTemplate::getAudibleRange() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerWeaponObjectTemplate::getAudibleRange
 
-float ServerWeaponObjectTemplate::getAudibleRangeMin() const
+float ServerWeaponObjectTemplate::getAudibleRangeMin(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerWeaponObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getAudibleRangeMin(true);
+#endif
 	}
 
 	if (!m_audibleRange.isLoaded())
@@ -902,16 +1167,31 @@ float ServerWeaponObjectTemplate::getAudibleRangeMin() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerWeaponObjectTemplate::getAudibleRangeMin
 
-float ServerWeaponObjectTemplate::getAudibleRangeMax() const
+float ServerWeaponObjectTemplate::getAudibleRangeMax(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerWeaponObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getAudibleRangeMax(true);
+#endif
 	}
 
 	if (!m_audibleRange.isLoaded())
@@ -951,16 +1231,31 @@ float ServerWeaponObjectTemplate::getAudibleRangeMax() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerWeaponObjectTemplate::getAudibleRangeMax
 
-float ServerWeaponObjectTemplate::getMinRange() const
+float ServerWeaponObjectTemplate::getMinRange(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerWeaponObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getMinRange(true);
+#endif
 	}
 
 	if (!m_minRange.isLoaded())
@@ -1000,16 +1295,31 @@ float ServerWeaponObjectTemplate::getMinRange() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerWeaponObjectTemplate::getMinRange
 
-float ServerWeaponObjectTemplate::getMinRangeMin() const
+float ServerWeaponObjectTemplate::getMinRangeMin(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerWeaponObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getMinRangeMin(true);
+#endif
 	}
 
 	if (!m_minRange.isLoaded())
@@ -1049,16 +1359,31 @@ float ServerWeaponObjectTemplate::getMinRangeMin() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerWeaponObjectTemplate::getMinRangeMin
 
-float ServerWeaponObjectTemplate::getMinRangeMax() const
+float ServerWeaponObjectTemplate::getMinRangeMax(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerWeaponObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getMinRangeMax(true);
+#endif
 	}
 
 	if (!m_minRange.isLoaded())
@@ -1098,16 +1423,31 @@ float ServerWeaponObjectTemplate::getMinRangeMax() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerWeaponObjectTemplate::getMinRangeMax
 
-float ServerWeaponObjectTemplate::getMaxRange() const
+float ServerWeaponObjectTemplate::getMaxRange(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerWeaponObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getMaxRange(true);
+#endif
 	}
 
 	if (!m_maxRange.isLoaded())
@@ -1147,16 +1487,31 @@ float ServerWeaponObjectTemplate::getMaxRange() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerWeaponObjectTemplate::getMaxRange
 
-float ServerWeaponObjectTemplate::getMaxRangeMin() const
+float ServerWeaponObjectTemplate::getMaxRangeMin(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerWeaponObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getMaxRangeMin(true);
+#endif
 	}
 
 	if (!m_maxRange.isLoaded())
@@ -1196,16 +1551,31 @@ float ServerWeaponObjectTemplate::getMaxRangeMin() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerWeaponObjectTemplate::getMaxRangeMin
 
-float ServerWeaponObjectTemplate::getMaxRangeMax() const
+float ServerWeaponObjectTemplate::getMaxRangeMax(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerWeaponObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getMaxRangeMax(true);
+#endif
 	}
 
 	if (!m_maxRange.isLoaded())
@@ -1245,16 +1615,31 @@ float ServerWeaponObjectTemplate::getMaxRangeMax() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerWeaponObjectTemplate::getMaxRangeMax
 
-float ServerWeaponObjectTemplate::getDamageRadius() const
+float ServerWeaponObjectTemplate::getDamageRadius(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerWeaponObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getDamageRadius(true);
+#endif
 	}
 
 	if (!m_damageRadius.isLoaded())
@@ -1294,16 +1679,31 @@ float ServerWeaponObjectTemplate::getDamageRadius() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerWeaponObjectTemplate::getDamageRadius
 
-float ServerWeaponObjectTemplate::getDamageRadiusMin() const
+float ServerWeaponObjectTemplate::getDamageRadiusMin(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerWeaponObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getDamageRadiusMin(true);
+#endif
 	}
 
 	if (!m_damageRadius.isLoaded())
@@ -1343,16 +1743,31 @@ float ServerWeaponObjectTemplate::getDamageRadiusMin() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerWeaponObjectTemplate::getDamageRadiusMin
 
-float ServerWeaponObjectTemplate::getDamageRadiusMax() const
+float ServerWeaponObjectTemplate::getDamageRadiusMax(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerWeaponObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getDamageRadiusMax(true);
+#endif
 	}
 
 	if (!m_damageRadius.isLoaded())
@@ -1392,16 +1807,31 @@ float ServerWeaponObjectTemplate::getDamageRadiusMax() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerWeaponObjectTemplate::getDamageRadiusMax
 
-float ServerWeaponObjectTemplate::getWoundChance() const
+float ServerWeaponObjectTemplate::getWoundChance(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerWeaponObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getWoundChance(true);
+#endif
 	}
 
 	if (!m_woundChance.isLoaded())
@@ -1441,16 +1871,31 @@ float ServerWeaponObjectTemplate::getWoundChance() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerWeaponObjectTemplate::getWoundChance
 
-float ServerWeaponObjectTemplate::getWoundChanceMin() const
+float ServerWeaponObjectTemplate::getWoundChanceMin(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerWeaponObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getWoundChanceMin(true);
+#endif
 	}
 
 	if (!m_woundChance.isLoaded())
@@ -1490,16 +1935,31 @@ float ServerWeaponObjectTemplate::getWoundChanceMin() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerWeaponObjectTemplate::getWoundChanceMin
 
-float ServerWeaponObjectTemplate::getWoundChanceMax() const
+float ServerWeaponObjectTemplate::getWoundChanceMax(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerWeaponObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getWoundChanceMax(true);
+#endif
 	}
 
 	if (!m_woundChance.isLoaded())
@@ -1539,16 +1999,31 @@ float ServerWeaponObjectTemplate::getWoundChanceMax() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerWeaponObjectTemplate::getWoundChanceMax
 
-int ServerWeaponObjectTemplate::getAttackCost() const
+int ServerWeaponObjectTemplate::getAttackCost(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerWeaponObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getAttackCost(true);
+#endif
 	}
 
 	if (!m_attackCost.isLoaded())
@@ -1588,16 +2063,31 @@ int ServerWeaponObjectTemplate::getAttackCost() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerWeaponObjectTemplate::getAttackCost
 
-int ServerWeaponObjectTemplate::getAttackCostMin() const
+int ServerWeaponObjectTemplate::getAttackCostMin(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerWeaponObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getAttackCostMin(true);
+#endif
 	}
 
 	if (!m_attackCost.isLoaded())
@@ -1637,16 +2127,31 @@ int ServerWeaponObjectTemplate::getAttackCostMin() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerWeaponObjectTemplate::getAttackCostMin
 
-int ServerWeaponObjectTemplate::getAttackCostMax() const
+int ServerWeaponObjectTemplate::getAttackCostMax(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerWeaponObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getAttackCostMax(true);
+#endif
 	}
 
 	if (!m_attackCost.isLoaded())
@@ -1686,16 +2191,31 @@ int ServerWeaponObjectTemplate::getAttackCostMax() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerWeaponObjectTemplate::getAttackCostMax
 
-int ServerWeaponObjectTemplate::getAccuracy() const
+int ServerWeaponObjectTemplate::getAccuracy(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerWeaponObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getAccuracy(true);
+#endif
 	}
 
 	if (!m_accuracy.isLoaded())
@@ -1735,16 +2255,31 @@ int ServerWeaponObjectTemplate::getAccuracy() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerWeaponObjectTemplate::getAccuracy
 
-int ServerWeaponObjectTemplate::getAccuracyMin() const
+int ServerWeaponObjectTemplate::getAccuracyMin(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerWeaponObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getAccuracyMin(true);
+#endif
 	}
 
 	if (!m_accuracy.isLoaded())
@@ -1784,16 +2319,31 @@ int ServerWeaponObjectTemplate::getAccuracyMin() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerWeaponObjectTemplate::getAccuracyMin
 
-int ServerWeaponObjectTemplate::getAccuracyMax() const
+int ServerWeaponObjectTemplate::getAccuracyMax(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const ServerWeaponObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerWeaponObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getAccuracyMax(true);
+#endif
 	}
 
 	if (!m_accuracy.isLoaded())
@@ -1833,9 +2383,50 @@ int ServerWeaponObjectTemplate::getAccuracyMax() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerWeaponObjectTemplate::getAccuracyMax
+
+#ifdef _DEBUG
+/**
+ * Special function used by datalint. Checks for duplicate values in base and derived templates.
+ */
+void ServerWeaponObjectTemplate::testValues(void) const
+{
+	IGNORE_RETURN(getWeaponType(true));
+	IGNORE_RETURN(getAttackType(true));
+	IGNORE_RETURN(getDamageType(true));
+	IGNORE_RETURN(getElementalType(true));
+	IGNORE_RETURN(getElementalValueMin(true));
+	IGNORE_RETURN(getElementalValueMax(true));
+	IGNORE_RETURN(getMinDamageAmountMin(true));
+	IGNORE_RETURN(getMinDamageAmountMax(true));
+	IGNORE_RETURN(getMaxDamageAmountMin(true));
+	IGNORE_RETURN(getMaxDamageAmountMax(true));
+	IGNORE_RETURN(getAttackSpeedMin(true));
+	IGNORE_RETURN(getAttackSpeedMax(true));
+	IGNORE_RETURN(getAudibleRangeMin(true));
+	IGNORE_RETURN(getAudibleRangeMax(true));
+	IGNORE_RETURN(getMinRangeMin(true));
+	IGNORE_RETURN(getMinRangeMax(true));
+	IGNORE_RETURN(getMaxRangeMin(true));
+	IGNORE_RETURN(getMaxRangeMax(true));
+	IGNORE_RETURN(getDamageRadiusMin(true));
+	IGNORE_RETURN(getDamageRadiusMax(true));
+	IGNORE_RETURN(getWoundChanceMin(true));
+	IGNORE_RETURN(getWoundChanceMax(true));
+	IGNORE_RETURN(getAttackCostMin(true));
+	IGNORE_RETURN(getAttackCostMax(true));
+	IGNORE_RETURN(getAccuracyMin(true));
+	IGNORE_RETURN(getAccuracyMax(true));
+	ServerTangibleObjectTemplate::testValues();
+}	// ServerWeaponObjectTemplate::testValues
+#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form
@@ -1845,8 +2436,8 @@ int ServerWeaponObjectTemplate::getAccuracyMax() const
  */
 void ServerWeaponObjectTemplate::load(Iff &file)
 {
-	static const int MAX_NAME_SIZE = 256;
-	char paramName[MAX_NAME_SIZE];
+static const int MAX_NAME_SIZE = 256;
+char paramName[MAX_NAME_SIZE];
 
 	if (file.getCurrentName() != ServerWeaponObjectTemplate_tag)
 	{
@@ -1856,7 +2447,7 @@ void ServerWeaponObjectTemplate::load(Iff &file)
 
 	file.enterForm();
 	m_templateVersion = file.getCurrentName();
-	if (m_templateVersion == TAG(D, E, R, V))
+	if (m_templateVersion == TAG(D,E,R,V))
 	{
 		file.enterForm();
 		file.enterChunk();
@@ -1876,8 +2467,10 @@ void ServerWeaponObjectTemplate::load(Iff &file)
 		file.exitForm();
 		m_templateVersion = file.getCurrentName();
 	}
-	if (getHighestTemplateVersion() != TAG(0, 0, 1, 1))
+	if (getHighestTemplateVersion() != TAG(0,0,1,1))
 	{
+		if (DataLint::isEnabled())
+			DEBUG_WARNING(true, ("template %s version out of date", file.getFileName()));
 		m_versionOk = false;
 	}
 

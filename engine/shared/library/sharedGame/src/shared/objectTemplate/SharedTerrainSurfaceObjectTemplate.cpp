@@ -161,8 +161,6 @@ UNREF(testData);
 #ifdef _DEBUG
 	if (testData && base != nullptr)
 	{
-		if (testDataValue == value)
-			DEBUG_WARNING(true, ("Template %s, parameter cover is returning same value as base template.", DataResource::getName()));
 	}
 #endif
 
@@ -227,8 +225,6 @@ UNREF(testData);
 #ifdef _DEBUG
 	if (testData && base != nullptr)
 	{
-		if (testDataValue == value)
-			DEBUG_WARNING(true, ("Template %s, parameter cover is returning same value as base template.", DataResource::getName()));
 	}
 #endif
 
@@ -293,8 +289,6 @@ UNREF(testData);
 #ifdef _DEBUG
 	if (testData && base != nullptr)
 	{
-		if (testDataValue == value)
-			DEBUG_WARNING(true, ("Template %s, parameter cover is returning same value as base template.", DataResource::getName()));
 	}
 #endif
 
@@ -337,8 +331,6 @@ UNREF(testData);
 #ifdef _DEBUG
 	if (testData && base != nullptr)
 	{
-		if (testDataValue == value)
-			DEBUG_WARNING(true, ("Template %s, parameter surfaceType is returning same value as base template.", DataResource::getName()));
 	}
 #endif
 

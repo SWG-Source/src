@@ -22,10 +22,11 @@
 
 const std::string DefaultString("");
 const StringId DefaultStringId("", 0);
-const Vector DefaultVector(0, 0, 0);
+const Vector DefaultVector(0,0,0);
 const TriggerVolumeData DefaultTriggerVolumeData;
 
 bool ServerManufactureInstallationObjectTemplate::ms_allowDefaultTemplateParams = true;
+
 
 /**
  * Class constructor.
@@ -33,9 +34,8 @@ bool ServerManufactureInstallationObjectTemplate::ms_allowDefaultTemplateParams 
 ServerManufactureInstallationObjectTemplate::ServerManufactureInstallationObjectTemplate(const std::string & filename)
 //@BEGIN TFD INIT
 	: ServerInstallationObjectTemplate(filename)
-	, m_versionOk(true)
-	, m_templateVersion(0)
-	//@END TFD INIT
+	,m_versionOk(true)
+//@END TFD INIT
 {
 }	// ServerManufactureInstallationObjectTemplate::ServerManufactureInstallationObjectTemplate
 
@@ -44,8 +44,8 @@ ServerManufactureInstallationObjectTemplate::ServerManufactureInstallationObject
  */
 ServerManufactureInstallationObjectTemplate::~ServerManufactureInstallationObjectTemplate()
 {
-	//@BEGIN TFD CLEANUP
-	//@END TFD CLEANUP
+//@BEGIN TFD CLEANUP
+//@END TFD CLEANUP
 }	// ServerManufactureInstallationObjectTemplate::~ServerManufactureInstallationObjectTemplate
 
 /**
@@ -93,10 +93,10 @@ Tag ServerManufactureInstallationObjectTemplate::getTemplateVersion(void) const
  */
 Tag ServerManufactureInstallationObjectTemplate::getHighestTemplateVersion(void) const
 {
-	if (m_baseData == nullptr)
+	if (m_baseData == NULL)
 		return m_templateVersion;
 	const ServerManufactureInstallationObjectTemplate * base = dynamic_cast<const ServerManufactureInstallationObjectTemplate *>(m_baseData);
-	if (base == nullptr)
+	if (base == NULL)
 		return m_templateVersion;
 	return std::max(m_templateVersion, base->getHighestTemplateVersion());
 } // ServerManufactureInstallationObjectTemplate::getHighestTemplateVersion
@@ -112,6 +112,15 @@ Object * ServerManufactureInstallationObjectTemplate::createObject(void) const
 }	// ServerManufactureInstallationObjectTemplate::createObject
 
 //@BEGIN TFD
+#ifdef _DEBUG
+/**
+ * Special function used by datalint. Checks for duplicate values in base and derived templates.
+ */
+void ServerManufactureInstallationObjectTemplate::testValues(void) const
+{
+	ServerInstallationObjectTemplate::testValues();
+}	// ServerManufactureInstallationObjectTemplate::testValues
+#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form
@@ -121,8 +130,8 @@ Object * ServerManufactureInstallationObjectTemplate::createObject(void) const
  */
 void ServerManufactureInstallationObjectTemplate::load(Iff &file)
 {
-	static const int MAX_NAME_SIZE = 256;
-	char paramName[MAX_NAME_SIZE];
+static const int MAX_NAME_SIZE = 256;
+char paramName[MAX_NAME_SIZE];
 
 	if (file.getCurrentName() != ServerManufactureInstallationObjectTemplate_tag)
 	{
@@ -132,7 +141,7 @@ void ServerManufactureInstallationObjectTemplate::load(Iff &file)
 
 	file.enterForm();
 	m_templateVersion = file.getCurrentName();
-	if (m_templateVersion == TAG(D, E, R, V))
+	if (m_templateVersion == TAG(D,E,R,V))
 	{
 		file.enterForm();
 		file.enterChunk();
@@ -152,8 +161,10 @@ void ServerManufactureInstallationObjectTemplate::load(Iff &file)
 		file.exitForm();
 		m_templateVersion = file.getCurrentName();
 	}
-	if (getHighestTemplateVersion() != TAG(0, 0, 0, 0))
+	if (getHighestTemplateVersion() != TAG(0,0,0,0))
 	{
+		if (DataLint::isEnabled())
+			DEBUG_WARNING(true, ("template %s version out of date", file.getFileName()));
 		m_versionOk = false;
 	}
 

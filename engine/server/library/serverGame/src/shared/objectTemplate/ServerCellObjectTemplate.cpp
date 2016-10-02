@@ -22,10 +22,11 @@
 
 const std::string DefaultString("");
 const StringId DefaultStringId("", 0);
-const Vector DefaultVector(0, 0, 0);
+const Vector DefaultVector(0,0,0);
 const TriggerVolumeData DefaultTriggerVolumeData;
 
 bool ServerCellObjectTemplate::ms_allowDefaultTemplateParams = true;
+
 
 /**
  * Class constructor.
@@ -33,9 +34,8 @@ bool ServerCellObjectTemplate::ms_allowDefaultTemplateParams = true;
 ServerCellObjectTemplate::ServerCellObjectTemplate(const std::string & filename)
 //@BEGIN TFD INIT
 	: ServerObjectTemplate(filename)
-	, m_versionOk(true)
-	, m_templateVersion(0)
-	//@END TFD INIT
+	,m_versionOk(true)
+//@END TFD INIT
 {
 }	// ServerCellObjectTemplate::ServerCellObjectTemplate
 
@@ -46,12 +46,12 @@ ServerCellObjectTemplate::~ServerCellObjectTemplate()
 {
 	if (m_baseData)
 	{
-		DEBUG_REPORT_LOG(true, ("Released m_baseData.\n"));
+		DEBUG_REPORT_LOG(true,("Released m_baseData.\n"));
 		m_baseData->releaseReference();
-		m_baseData = 0;
+		m_baseData=0;
 	}
-	//@BEGIN TFD CLEANUP
-	//@END TFD CLEANUP
+//@BEGIN TFD CLEANUP
+//@END TFD CLEANUP
 }	// ServerCellObjectTemplate::~ServerCellObjectTemplate
 
 /**
@@ -99,10 +99,10 @@ Tag ServerCellObjectTemplate::getTemplateVersion(void) const
  */
 Tag ServerCellObjectTemplate::getHighestTemplateVersion(void) const
 {
-	if (m_baseData == nullptr)
+	if (m_baseData == NULL)
 		return m_templateVersion;
 	const ServerCellObjectTemplate * base = dynamic_cast<const ServerCellObjectTemplate *>(m_baseData);
-	if (base == nullptr)
+	if (base == NULL)
 		return m_templateVersion;
 	return std::max(m_templateVersion, base->getHighestTemplateVersion());
 } // ServerCellObjectTemplate::getHighestTemplateVersion
@@ -118,6 +118,15 @@ Object * ServerCellObjectTemplate::createObject(void) const
 }	// ServerCellObjectTemplate::createObject
 
 //@BEGIN TFD
+#ifdef _DEBUG
+/**
+ * Special function used by datalint. Checks for duplicate values in base and derived templates.
+ */
+void ServerCellObjectTemplate::testValues(void) const
+{
+	ServerObjectTemplate::testValues();
+}	// ServerCellObjectTemplate::testValues
+#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form
@@ -127,8 +136,8 @@ Object * ServerCellObjectTemplate::createObject(void) const
  */
 void ServerCellObjectTemplate::load(Iff &file)
 {
-	static const int MAX_NAME_SIZE = 256;
-	char paramName[MAX_NAME_SIZE];
+static const int MAX_NAME_SIZE = 256;
+char paramName[MAX_NAME_SIZE];
 
 	if (file.getCurrentName() != ServerCellObjectTemplate_tag)
 	{
@@ -138,7 +147,7 @@ void ServerCellObjectTemplate::load(Iff &file)
 
 	file.enterForm();
 	m_templateVersion = file.getCurrentName();
-	if (m_templateVersion == TAG(D, E, R, V))
+	if (m_templateVersion == TAG(D,E,R,V))
 	{
 		file.enterForm();
 		file.enterChunk();
@@ -158,8 +167,10 @@ void ServerCellObjectTemplate::load(Iff &file)
 		file.exitForm();
 		m_templateVersion = file.getCurrentName();
 	}
-	if (getHighestTemplateVersion() != TAG(0, 0, 0, 0))
+	if (getHighestTemplateVersion() != TAG(0,0,0,0))
 	{
+		if (DataLint::isEnabled())
+			DEBUG_WARNING(true, ("template %s version out of date", file.getFileName()));
 		m_versionOk = false;
 	}
 

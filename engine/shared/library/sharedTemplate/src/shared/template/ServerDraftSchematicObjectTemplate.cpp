@@ -17,8 +17,9 @@
 #include "sharedDebug/DataLint.h"
 #include "sharedFile/Iff.h"
 #include "sharedTemplateDefinition/ObjectTemplate.h"
-#include <algorithm>
-#include <cstdio>
+#include <stdio.h>
+
+
 
 /**
  * Class constructor.
@@ -26,15 +27,13 @@
 ServerDraftSchematicObjectTemplate::ServerDraftSchematicObjectTemplate(const std::string & filename)
 //@BEGIN TFD INIT
 	: ServerIntangibleObjectTemplate(filename)
-	, m_slotsLoaded(false)
-	, m_slotsAppend(false)
-	, m_skillCommandsLoaded(false)
-	, m_skillCommandsAppend(false)
-	, m_manufactureScriptsLoaded(false)
-	, m_manufactureScriptsAppend(false)
-	, m_templateVersion(0)
-	, m_versionOk(false)
-	//@END TFD INIT
+	,m_slotsLoaded(false)
+	,m_slotsAppend(false)
+	,m_skillCommandsLoaded(false)
+	,m_skillCommandsAppend(false)
+	,m_manufactureScriptsLoaded(false)
+	,m_manufactureScriptsAppend(false)
+//@END TFD INIT
 {
 }	// ServerDraftSchematicObjectTemplate::ServerDraftSchematicObjectTemplate
 
@@ -43,7 +42,7 @@ ServerDraftSchematicObjectTemplate::ServerDraftSchematicObjectTemplate(const std
  */
 ServerDraftSchematicObjectTemplate::~ServerDraftSchematicObjectTemplate()
 {
-	//@BEGIN TFD CLEANUP
+//@BEGIN TFD CLEANUP
 	{
 		std::vector<StructParamOT *>::iterator iter;
 		for (iter = m_slots.begin(); iter != m_slots.end(); ++iter)
@@ -71,7 +70,7 @@ ServerDraftSchematicObjectTemplate::~ServerDraftSchematicObjectTemplate()
 		}
 		m_manufactureScripts.clear();
 	}
-	//@END TFD CLEANUP
+//@END TFD CLEANUP
 }	// ServerDraftSchematicObjectTemplate::~ServerDraftSchematicObjectTemplate
 
 /**
@@ -119,10 +118,10 @@ Tag ServerDraftSchematicObjectTemplate::getTemplateVersion(void) const
  */
 Tag ServerDraftSchematicObjectTemplate::getHighestTemplateVersion(void) const
 {
-	if (m_baseData == nullptr)
+	if (m_baseData == NULL)
 		return m_templateVersion;
 	const ServerDraftSchematicObjectTemplate * base = dynamic_cast<const ServerDraftSchematicObjectTemplate *>(m_baseData);
-	if (base == nullptr)
+	if (base == NULL)
 		return m_templateVersion;
 	return std::max(m_templateVersion, base->getHighestTemplateVersion());
 } // ServerDraftSchematicObjectTemplate::getHighestTemplateVersion
@@ -372,6 +371,7 @@ bool ServerDraftSchematicObjectTemplate::isAppend(const char *name) const
 		return ServerIntangibleObjectTemplate::isAppend(name);
 }	// ServerDraftSchematicObjectTemplate::isAppend
 
+
 int ServerDraftSchematicObjectTemplate::getListLength(const char *name) const
 {
 	if (strcmp(name, "slots") == 0)
@@ -398,8 +398,8 @@ int ServerDraftSchematicObjectTemplate::getListLength(const char *name) const
  */
 void ServerDraftSchematicObjectTemplate::load(Iff &file)
 {
-	static const int MAX_NAME_SIZE = 256;
-	char paramName[MAX_NAME_SIZE];
+static const int MAX_NAME_SIZE = 256;
+char paramName[MAX_NAME_SIZE];
 
 	if (file.getCurrentName() != ServerDraftSchematicObjectTemplate_tag)
 	{
@@ -409,7 +409,7 @@ void ServerDraftSchematicObjectTemplate::load(Iff &file)
 
 	file.enterForm();
 	m_templateVersion = file.getCurrentName();
-	if (m_templateVersion == TAG(D, E, R, V))
+	if (m_templateVersion == TAG(D,E,R,V))
 	{
 		file.enterForm();
 		file.enterChunk();
@@ -429,7 +429,7 @@ void ServerDraftSchematicObjectTemplate::load(Iff &file)
 		file.exitForm();
 		m_templateVersion = file.getCurrentName();
 	}
-	if (getHighestTemplateVersion() != TAG(0, 0, 0, 7))
+	if (getHighestTemplateVersion() != TAG(0,0,0,7))
 	{
 		if (DataLint::isEnabled())
 			DEBUG_WARNING(true, ("template %s version out of date", file.getFileName()));
@@ -532,18 +532,18 @@ void ServerDraftSchematicObjectTemplate::load(Iff &file)
  */
 void ServerDraftSchematicObjectTemplate::save(Iff &file)
 {
-	int count;
+int count;
 
 	file.insertForm(ServerDraftSchematicObjectTemplate_tag);
 	if (m_baseTemplateName.size() != 0)
 	{
-		file.insertForm(TAG(D, E, R, V));
+		file.insertForm(TAG(D,E,R,V));
 		file.insertChunk(TAG(X, X, X, X));
 		file.insertChunkData(m_baseTemplateName.c_str(), m_baseTemplateName.size() + 1);
 		file.exitChunk();
 		file.exitForm();
 	}
-	file.insertForm(TAG(0, 0, 0, 7));
+	file.insertForm(TAG(0,0,0,7));
 	file.allowNonlinearFunctions();
 
 	int paramCount = 0;
@@ -578,7 +578,7 @@ void ServerDraftSchematicObjectTemplate::save(Iff &file)
 	count = m_slots.size();
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < count; ++i)
-		m_slots[i]->saveToIff(file); }
+		m_slots[i]->saveToIff(file);}
 	file.exitChunk();
 	++paramCount;
 	if (!m_skillCommandsLoaded)
@@ -593,7 +593,7 @@ void ServerDraftSchematicObjectTemplate::save(Iff &file)
 	count = m_skillCommands.size();
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < count; ++i)
-		m_skillCommands[i]->saveToIff(file); }
+		m_skillCommands[i]->saveToIff(file);}
 	file.exitChunk();
 	++paramCount;
 	// save destroyIngredients
@@ -614,7 +614,7 @@ void ServerDraftSchematicObjectTemplate::save(Iff &file)
 	count = m_manufactureScripts.size();
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < count; ++i)
-		m_manufactureScripts[i]->saveToIff(file); }
+		m_manufactureScripts[i]->saveToIff(file);}
 	file.exitChunk();
 	++paramCount;
 	// save itemsPerContainer
@@ -647,6 +647,7 @@ void ServerDraftSchematicObjectTemplate::save(Iff &file)
 	file.exitForm();
 }	// ServerDraftSchematicObjectTemplate::save
 
+
 //=============================================================================
 // class ServerDraftSchematicObjectTemplate::_IngredientSlot
 
@@ -655,8 +656,8 @@ void ServerDraftSchematicObjectTemplate::save(Iff &file)
  */
 ServerDraftSchematicObjectTemplate::_IngredientSlot::_IngredientSlot(const std::string & filename)
 	: TpfTemplate(filename)
-	, m_optionsLoaded(false)
-	, m_optionsAppend(false)
+	,m_optionsLoaded(false)
+	,m_optionsAppend(false)
 {
 }	// ServerDraftSchematicObjectTemplate::_IngredientSlot::_IngredientSlot
 
@@ -878,6 +879,7 @@ bool ServerDraftSchematicObjectTemplate::_IngredientSlot::isAppend(const char *n
 		return TpfTemplate::isAppend(name);
 }	// ServerDraftSchematicObjectTemplate::_IngredientSlot::isAppend
 
+
 int ServerDraftSchematicObjectTemplate::_IngredientSlot::getListLength(const char *name) const
 {
 	if (strcmp(name, "options") == 0)
@@ -896,8 +898,8 @@ int ServerDraftSchematicObjectTemplate::_IngredientSlot::getListLength(const cha
  */
 void ServerDraftSchematicObjectTemplate::_IngredientSlot::load(Iff &file)
 {
-	static const int MAX_NAME_SIZE = 256;
-	char paramName[MAX_NAME_SIZE];
+static const int MAX_NAME_SIZE = 256;
+char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 
@@ -952,7 +954,7 @@ void ServerDraftSchematicObjectTemplate::_IngredientSlot::load(Iff &file)
  */
 void ServerDraftSchematicObjectTemplate::_IngredientSlot::save(Iff &file)
 {
-	int count;
+int count;
 
 	file.insertForm(_IngredientSlot_tag);
 
@@ -982,7 +984,7 @@ void ServerDraftSchematicObjectTemplate::_IngredientSlot::save(Iff &file)
 	count = m_options.size();
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < count; ++i)
-		m_options[i]->saveToIff(file); }
+		m_options[i]->saveToIff(file);}
 	file.exitChunk();
 	++paramCount;
 	// save optionalSkillCommand
