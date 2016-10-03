@@ -145,7 +145,7 @@ LoginServer::LoginServer() :
 	setup.port = ConfigLoginServer::getClientServicePort();
 	setup.maxConnections = ConfigLoginServer::getMaxClients();
 	setup.maxConnectionsPerIP = ConfigLoginServer::getMaxConnectionsPerIP();
-	setup.oldestUnacknowledgedTimeout = 10000;
+	setup.oldestUnacknowledgedTimeout = 30000;
 	setup.keepAliveDelay = 45000;
 	setup.compress = ConfigLoginServer::getCompressClientNetworkTraffic();
 	setup.useTcp = false;
