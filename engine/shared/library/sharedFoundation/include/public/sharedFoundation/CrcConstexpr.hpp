@@ -65,5 +65,41 @@ constexpr const uint32 constcrc(const char *string)
 	return (crc ^ CRC_INIT);
 }
 
+constexpr const uint32 constcrcnormalizecalc(const char *input)
+{
+	char* output = (char*) malloc( input + 1 );
+	bool previousIsSlash = true;
+	for ( ; *input; ++input)
+	{
+		const char c = *input;
+		if (c == '\\' || c == '/')
+		{
+			if (!previousIsSlash)
+			{
+				// convert all backslashes to forward slashes and disallow multiple slashes in a row
+				*(output++) = '/';
+				previousIsSlash = true;
+			}
+		}
+		else
+		if (c == '.')
+		{
+			// disallow dots after slashes.  this will also handle multiple dots, and slashes following the dots
+			if (!previousIsSlash)
+				*(output++) = '.';
+		}
+		else
+		{
+			// lowercase all other characters
+			*(output++) = static_cast<char>(tolower(c));
+			previousIsSlash = false;
+		}
+	}
+
+	*output = '\0';
+
+	return constcrc(output);
+}
+
 // ======================================================================
 
