@@ -1032,15 +1032,12 @@ void UdpManager::ProcessRawPacket(const PacketHistoryEntry *e)
 		// connection establish packet must always be at least 6 bytes long as we must have a version number, no matter how it changes
 		if (e->mBuffer[0] == 0 && e->mBuffer[1] == UdpConnection::cUdpPacketConnect && e->mLen == UdpConnection::cUdpPacketConnectSize)
 		{
-			if (mParams.maxConnectionsPerIP > 0)
+			if (mParams.maxConnectionsPerIP > 0 && (mIpConnectionCount[e->mIp.GetAddress()] >= mParams.maxConnectionsPerIP))
 			{
-				if (mIpConnectionCount[e->mIp.GetAddress()] >= mParams.maxConnectionsPerIP)
-				{
-					// add a strike if they're over the count
-					addStrike(e->mIp, 1);
+				// add a strike if they're over the count
+				addStrike(e->mIp, 1);
 
- 					return;
-				}
+				return;
 			}
 
 			if (mConnectionListCount >= mParams.maxConnections)

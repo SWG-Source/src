@@ -251,7 +251,8 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 		
 		LoginServer::getInstance().onValidateClient(suid, uname, this, true, NULL, 0xFFFFFFFF, 0xFFFFFFFF);
 	}
-	// else this case will never be reached, noop
+
+	disconnect(); // to remove from their connection count
 }
 
 // ----------------------------------------------------------------------------
