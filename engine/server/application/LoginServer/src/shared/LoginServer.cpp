@@ -145,6 +145,7 @@ LoginServer::LoginServer() :
 	setup.port = ConfigLoginServer::getClientServicePort();
 	setup.maxConnections = ConfigLoginServer::getMaxClients();
 	setup.maxConnectionsPerIP = ConfigLoginServer::getMaxConnectionsPerIP();
+	setup.oldestUnacknowledgedTimeout = 10000;
 	setup.keepAliveDelay = 45000;
 	setup.compress = ConfigLoginServer::getCompressClientNetworkTraffic();
 	setup.useTcp = false;
@@ -159,7 +160,7 @@ LoginServer::LoginServer() :
 	if (ConfigLoginServer::getDevelopmentMode())
 	{
 		setup.port = ConfigLoginServer::getCentralServicePort();
-		setup.maxConnections = 1000;
+		//setup.maxConnections = 1000;
 		m_centralService = new Service(ConnectionAllocator<CentralServerConnection>(), setup);
 	}
 
