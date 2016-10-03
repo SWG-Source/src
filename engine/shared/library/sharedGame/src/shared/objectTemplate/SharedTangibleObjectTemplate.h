@@ -97,17 +97,22 @@ protected:
 	virtual Tag getId(void) const;
 
 public:
-	const std::string &    getVariableName(bool versionOk) const;
-	int                    getMinValueInclusive(bool versionOk) const;
-	int                    getMinValueInclusiveMin(bool versionOk) const;
-	int                    getMinValueInclusiveMax(bool versionOk) const;
-	int                    getDefaultValue(bool versionOk) const;
-	int                    getDefaultValueMin(bool versionOk) const;
-	int                    getDefaultValueMax(bool versionOk) const;
-	int                    getMaxValueExclusive(bool versionOk) const;
-	int                    getMaxValueExclusiveMin(bool versionOk) const;
-	int                    getMaxValueExclusiveMax(bool versionOk) const;
+	const std::string &    getVariableName(bool versionOk, bool testData = false) const;
+	int                    getMinValueInclusive(bool versionOk, bool testData = false) const;
+	int                    getMinValueInclusiveMin(bool versionOk, bool testData = false) const;
+	int                    getMinValueInclusiveMax(bool versionOk, bool testData = false) const;
+	int                    getDefaultValue(bool versionOk, bool testData = false) const;
+	int                    getDefaultValueMin(bool versionOk, bool testData = false) const;
+	int                    getDefaultValueMax(bool versionOk, bool testData = false) const;
+	int                    getMaxValueExclusive(bool versionOk, bool testData = false) const;
+	int                    getMaxValueExclusiveMin(bool versionOk, bool testData = false) const;
+	int                    getMaxValueExclusiveMax(bool versionOk, bool testData = false) const;
 
+#ifdef _DEBUG
+public:
+	// special code used by datalint
+	virtual void testValues(void) const;
+#endif
 
 protected:
 	virtual void load(Iff &file);
@@ -142,12 +147,17 @@ private:
 	virtual Tag getId(void) const;
 
 public:
-	const std::string &    getVariableName(bool versionOk) const;
-	const std::string &    getPalettePathName(bool versionOk) const;
-	int                    getDefaultPaletteIndex(bool versionOk) const;
-	int                    getDefaultPaletteIndexMin(bool versionOk) const;
-	int                    getDefaultPaletteIndexMax(bool versionOk) const;
+	const std::string &    getVariableName(bool versionOk, bool testData = false) const;
+	const std::string &    getPalettePathName(bool versionOk, bool testData = false) const;
+	int                    getDefaultPaletteIndex(bool versionOk, bool testData = false) const;
+	int                    getDefaultPaletteIndexMin(bool versionOk, bool testData = false) const;
+	int                    getDefaultPaletteIndexMax(bool versionOk, bool testData = false) const;
 
+#ifdef _DEBUG
+public:
+	// special code used by datalint
+	virtual void testValues(void) const;
+#endif
 
 protected:
 	virtual void load(Iff &file);
@@ -181,9 +191,14 @@ private:
 	virtual Tag getId(void) const;
 
 public:
-	const std::string &    getVariableName(bool versionOk) const;
-	const std::string &    getConstValue(bool versionOk) const;
+	const std::string &    getVariableName(bool versionOk, bool testData = false) const;
+	const std::string &    getConstValue(bool versionOk, bool testData = false) const;
 
+#ifdef _DEBUG
+public:
+	// special code used by datalint
+	virtual void testValues(void) const;
+#endif
 
 protected:
 	virtual void load(Iff &file);
@@ -216,9 +231,14 @@ private:
 	virtual Tag getId(void) const;
 
 public:
-	const std::string &    getSourceVariable(bool versionOk) const;
-	const std::string &    getDependentVariable(bool versionOk) const;
+	const std::string &    getSourceVariable(bool versionOk, bool testData = false) const;
+	const std::string &    getDependentVariable(bool versionOk, bool testData = false) const;
 
+#ifdef _DEBUG
+public:
+	// special code used by datalint
+	virtual void testValues(void) const;
+#endif
 
 protected:
 	virtual void load(Iff &file);
@@ -250,17 +270,22 @@ public:
 	size_t            getConstStringCustomizationVariablesCount(void) const;
 	GameObjectType     getSocketDestinations(int index) const;
 	size_t            getSocketDestinationsCount(void) const;
-	const std::string &    getStructureFootprintFileName() const;
-	bool                   getUseStructureFootprintOutline() const;
-	bool                   getTargetable() const;
+	const std::string &    getStructureFootprintFileName(bool testData = false) const;
+	bool                   getUseStructureFootprintOutline(bool testData = false) const;
+	bool                   getTargetable(bool testData = false) const;
 	const std::string &    getCertificationsRequired(int index) const;
 	size_t            getCertificationsRequiredCount(void) const;
 	void              getCustomizationVariableMapping(CustomizationVariableMapping &data, int index) const;
 	void              getCustomizationVariableMappingMin(CustomizationVariableMapping &data, int index) const;
 	void              getCustomizationVariableMappingMax(CustomizationVariableMapping &data, int index) const;
 	size_t            getCustomizationVariableMappingCount(void) const;
-	ClientVisabilityFlags     getClientVisabilityFlag() const;
+	ClientVisabilityFlags     getClientVisabilityFlag(bool testData = false) const;
 
+#ifdef _DEBUG
+public:
+	// special code used by datalint
+	virtual void testValues(void) const;
+#endif
 
 protected:
 	virtual void load(Iff &file);

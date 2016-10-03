@@ -12,7 +12,7 @@
 
 #include "sharedGame/FirstSharedGame.h"
 #include "SharedBattlefieldMarkerObjectTemplate.h"
-
+#include "sharedDebug/DataLint.h"
 #include "sharedFile/Iff.h"
 #include "sharedMath/Vector.h"
 #include "sharedObject/ObjectTemplate.h"
@@ -24,10 +24,11 @@
 
 const std::string DefaultString("");
 const StringId DefaultStringId("", 0);
-const Vector DefaultVector(0, 0, 0);
+const Vector DefaultVector(0,0,0);
 const TriggerVolumeData DefaultTriggerVolumeData;
 
 bool SharedBattlefieldMarkerObjectTemplate::ms_allowDefaultTemplateParams = true;
+
 
 /**
  * Class constructor.
@@ -35,9 +36,8 @@ bool SharedBattlefieldMarkerObjectTemplate::ms_allowDefaultTemplateParams = true
 SharedBattlefieldMarkerObjectTemplate::SharedBattlefieldMarkerObjectTemplate(const std::string & filename)
 //@BEGIN TFD INIT
 	: SharedTangibleObjectTemplate(filename)
-	, m_versionOk(true)
-	, m_templateVersion(0)
-	//@END TFD INIT
+	,m_versionOk(true)
+//@END TFD INIT
 {
 }	// SharedBattlefieldMarkerObjectTemplate::SharedBattlefieldMarkerObjectTemplate
 
@@ -46,8 +46,8 @@ SharedBattlefieldMarkerObjectTemplate::SharedBattlefieldMarkerObjectTemplate(con
  */
 SharedBattlefieldMarkerObjectTemplate::~SharedBattlefieldMarkerObjectTemplate()
 {
-	//@BEGIN TFD CLEANUP
-	//@END TFD CLEANUP
+//@BEGIN TFD CLEANUP
+//@END TFD CLEANUP
 }	// SharedBattlefieldMarkerObjectTemplate::~SharedBattlefieldMarkerObjectTemplate
 
 /**
@@ -104,12 +104,22 @@ Tag SharedBattlefieldMarkerObjectTemplate::getHighestTemplateVersion(void) const
 } // SharedBattlefieldMarkerObjectTemplate::getHighestTemplateVersion
 
 //@BEGIN TFD
-int SharedBattlefieldMarkerObjectTemplate::getNumberOfPoles() const
+int SharedBattlefieldMarkerObjectTemplate::getNumberOfPoles(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const SharedBattlefieldMarkerObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedBattlefieldMarkerObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getNumberOfPoles(true);
+#endif
 	}
 
 	if (!m_numberOfPoles.isLoaded())
@@ -149,16 +159,31 @@ int SharedBattlefieldMarkerObjectTemplate::getNumberOfPoles() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedBattlefieldMarkerObjectTemplate::getNumberOfPoles
 
-int SharedBattlefieldMarkerObjectTemplate::getNumberOfPolesMin() const
+int SharedBattlefieldMarkerObjectTemplate::getNumberOfPolesMin(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const SharedBattlefieldMarkerObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedBattlefieldMarkerObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getNumberOfPolesMin(true);
+#endif
 	}
 
 	if (!m_numberOfPoles.isLoaded())
@@ -198,16 +223,31 @@ int SharedBattlefieldMarkerObjectTemplate::getNumberOfPolesMin() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedBattlefieldMarkerObjectTemplate::getNumberOfPolesMin
 
-int SharedBattlefieldMarkerObjectTemplate::getNumberOfPolesMax() const
+int SharedBattlefieldMarkerObjectTemplate::getNumberOfPolesMax(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const SharedBattlefieldMarkerObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedBattlefieldMarkerObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getNumberOfPolesMax(true);
+#endif
 	}
 
 	if (!m_numberOfPoles.isLoaded())
@@ -247,16 +287,31 @@ int SharedBattlefieldMarkerObjectTemplate::getNumberOfPolesMax() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedBattlefieldMarkerObjectTemplate::getNumberOfPolesMax
 
-float SharedBattlefieldMarkerObjectTemplate::getRadius() const
+float SharedBattlefieldMarkerObjectTemplate::getRadius(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedBattlefieldMarkerObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedBattlefieldMarkerObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getRadius(true);
+#endif
 	}
 
 	if (!m_radius.isLoaded())
@@ -296,16 +351,31 @@ float SharedBattlefieldMarkerObjectTemplate::getRadius() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedBattlefieldMarkerObjectTemplate::getRadius
 
-float SharedBattlefieldMarkerObjectTemplate::getRadiusMin() const
+float SharedBattlefieldMarkerObjectTemplate::getRadiusMin(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedBattlefieldMarkerObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedBattlefieldMarkerObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getRadiusMin(true);
+#endif
 	}
 
 	if (!m_radius.isLoaded())
@@ -345,16 +415,31 @@ float SharedBattlefieldMarkerObjectTemplate::getRadiusMin() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedBattlefieldMarkerObjectTemplate::getRadiusMin
 
-float SharedBattlefieldMarkerObjectTemplate::getRadiusMax() const
+float SharedBattlefieldMarkerObjectTemplate::getRadiusMax(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedBattlefieldMarkerObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedBattlefieldMarkerObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getRadiusMax(true);
+#endif
 	}
 
 	if (!m_radius.isLoaded())
@@ -394,9 +479,28 @@ float SharedBattlefieldMarkerObjectTemplate::getRadiusMax() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedBattlefieldMarkerObjectTemplate::getRadiusMax
+
+#ifdef _DEBUG
+/**
+ * Special function used by datalint. Checks for duplicate values in base and derived templates.
+ */
+void SharedBattlefieldMarkerObjectTemplate::testValues(void) const
+{
+	IGNORE_RETURN(getNumberOfPolesMin(true));
+	IGNORE_RETURN(getNumberOfPolesMax(true));
+	IGNORE_RETURN(getRadiusMin(true));
+	IGNORE_RETURN(getRadiusMax(true));
+	SharedTangibleObjectTemplate::testValues();
+}	// SharedBattlefieldMarkerObjectTemplate::testValues
+#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form
@@ -406,8 +510,8 @@ float SharedBattlefieldMarkerObjectTemplate::getRadiusMax() const
  */
 void SharedBattlefieldMarkerObjectTemplate::load(Iff &file)
 {
-	static const int MAX_NAME_SIZE = 256;
-	char paramName[MAX_NAME_SIZE];
+static const int MAX_NAME_SIZE = 256;
+char paramName[MAX_NAME_SIZE];
 
 	if (file.getCurrentName() != SharedBattlefieldMarkerObjectTemplate_tag)
 	{
@@ -417,7 +521,7 @@ void SharedBattlefieldMarkerObjectTemplate::load(Iff &file)
 
 	file.enterForm();
 	m_templateVersion = file.getCurrentName();
-	if (m_templateVersion == TAG(D, E, R, V))
+	if (m_templateVersion == TAG(D,E,R,V))
 	{
 		file.enterForm();
 		file.enterChunk();
@@ -437,8 +541,10 @@ void SharedBattlefieldMarkerObjectTemplate::load(Iff &file)
 		file.exitForm();
 		m_templateVersion = file.getCurrentName();
 	}
-	if (getHighestTemplateVersion() != TAG(0, 0, 0, 1))
+	if (getHighestTemplateVersion() != TAG(0,0,0,1))
 	{
+		if (DataLint::isEnabled())
+			DEBUG_WARNING(true, ("template %s version out of date", file.getFileName()));
 		m_versionOk = false;
 	}
 

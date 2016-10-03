@@ -73,18 +73,23 @@ protected:
 	virtual Tag getId(void) const;
 
 public:
-	bool                   getOptional(bool versionOk) const;
-	const StringId         getName(bool versionOk) const;
+	bool                   getOptional(bool versionOk, bool testData = false) const;
+	const StringId         getName(bool versionOk, bool testData = false) const;
 	void              getOptions(Ingredient &data, int index, bool versionOk) const;
 	void              getOptionsMin(Ingredient &data, int index, bool versionOk) const;
 	void              getOptionsMax(Ingredient &data, int index, bool versionOk) const;
 	size_t            getOptionsCount(void) const;
-	const std::string &    getOptionalSkillCommand(bool versionOk) const;
-	float                  getComplexity(bool versionOk) const;
-	float                  getComplexityMin(bool versionOk) const;
-	float                  getComplexityMax(bool versionOk) const;
-	const std::string &    getAppearance(bool versionOk) const;
+	const std::string &    getOptionalSkillCommand(bool versionOk, bool testData = false) const;
+	float                  getComplexity(bool versionOk, bool testData = false) const;
+	float                  getComplexityMin(bool versionOk, bool testData = false) const;
+	float                  getComplexityMax(bool versionOk, bool testData = false) const;
+	const std::string &    getAppearance(bool versionOk, bool testData = false) const;
 
+#ifdef _DEBUG
+public:
+	// special code used by datalint
+	virtual void testValues(void) const;
+#endif
 
 protected:
 	virtual void load(Iff &file);
@@ -108,7 +113,7 @@ private:
 	friend class ServerDraftSchematicObjectTemplate::_IngredientSlot;
 
 public:
-	CraftingType     getCategory() const;
+	CraftingType     getCategory(bool testData = false) const;
 	const ServerObjectTemplate * getCraftedObjectTemplate() const;
 	const ServerFactoryObjectTemplate * getCrateObjectTemplate() const;
 	void              getSlots(IngredientSlot &data, int index) const;
@@ -117,19 +122,24 @@ public:
 	size_t            getSlotsCount(void) const;
 	const std::string &    getSkillCommands(int index) const;
 	size_t            getSkillCommandsCount(void) const;
-	bool                   getDestroyIngredients() const;
+	bool                   getDestroyIngredients(bool testData = false) const;
 	const std::string &    getManufactureScripts(int index) const;
 	size_t            getManufactureScriptsCount(void) const;
-	int                    getItemsPerContainer() const;
-	int                    getItemsPerContainerMin() const;
-	int                    getItemsPerContainerMax() const;
-	float                  getManufactureTime() const;
-	float                  getManufactureTimeMin() const;
-	float                  getManufactureTimeMax() const;
-	float                  getPrototypeTime() const;
-	float                  getPrototypeTimeMin() const;
-	float                  getPrototypeTimeMax() const;
+	int                    getItemsPerContainer(bool testData = false) const;
+	int                    getItemsPerContainerMin(bool testData = false) const;
+	int                    getItemsPerContainerMax(bool testData = false) const;
+	float                  getManufactureTime(bool testData = false) const;
+	float                  getManufactureTimeMin(bool testData = false) const;
+	float                  getManufactureTimeMax(bool testData = false) const;
+	float                  getPrototypeTime(bool testData = false) const;
+	float                  getPrototypeTimeMin(bool testData = false) const;
+	float                  getPrototypeTimeMax(bool testData = false) const;
 
+#ifdef _DEBUG
+public:
+	// special code used by datalint
+	virtual void testValues(void) const;
+#endif
 
 protected:
 	virtual void load(Iff &file);

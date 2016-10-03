@@ -74,48 +74,55 @@ public:
 		WT_1handLightsaber,
 		WT_2handLightsaber,
 		WT_polearmLightsaber,
-		WeaponType_Last = WT_polearmLightsaber,
+		WT_groundTargetting,
+		WT_directionTargetting,
+		WeaponType_Last = WT_directionTargetting,
 	};
 
 public:
-	WeaponType     getWeaponType() const;
-	AttackType     getAttackType() const;
-	DamageType     getDamageType() const;
-	DamageType     getElementalType() const;
-	int                    getElementalValue() const;
-	int                    getElementalValueMin() const;
-	int                    getElementalValueMax() const;
-	int                    getMinDamageAmount() const;
-	int                    getMinDamageAmountMin() const;
-	int                    getMinDamageAmountMax() const;
-	int                    getMaxDamageAmount() const;
-	int                    getMaxDamageAmountMin() const;
-	int                    getMaxDamageAmountMax() const;
-	float                  getAttackSpeed() const;
-	float                  getAttackSpeedMin() const;
-	float                  getAttackSpeedMax() const;
-	float                  getAudibleRange() const;
-	float                  getAudibleRangeMin() const;
-	float                  getAudibleRangeMax() const;
-	float                  getMinRange() const;
-	float                  getMinRangeMin() const;
-	float                  getMinRangeMax() const;
-	float                  getMaxRange() const;
-	float                  getMaxRangeMin() const;
-	float                  getMaxRangeMax() const;
-	float                  getDamageRadius() const;
-	float                  getDamageRadiusMin() const;
-	float                  getDamageRadiusMax() const;
-	float                  getWoundChance() const;
-	float                  getWoundChanceMin() const;
-	float                  getWoundChanceMax() const;
-	int                    getAttackCost() const;
-	int                    getAttackCostMin() const;
-	int                    getAttackCostMax() const;
-	int                    getAccuracy() const;
-	int                    getAccuracyMin() const;
-	int                    getAccuracyMax() const;
+	WeaponType     getWeaponType(bool testData = false) const;
+	AttackType     getAttackType(bool testData = false) const;
+	DamageType     getDamageType(bool testData = false) const;
+	DamageType     getElementalType(bool testData = false) const;
+	int                    getElementalValue(bool testData = false) const;
+	int                    getElementalValueMin(bool testData = false) const;
+	int                    getElementalValueMax(bool testData = false) const;
+	int                    getMinDamageAmount(bool testData = false) const;
+	int                    getMinDamageAmountMin(bool testData = false) const;
+	int                    getMinDamageAmountMax(bool testData = false) const;
+	int                    getMaxDamageAmount(bool testData = false) const;
+	int                    getMaxDamageAmountMin(bool testData = false) const;
+	int                    getMaxDamageAmountMax(bool testData = false) const;
+	float                  getAttackSpeed(bool testData = false) const;
+	float                  getAttackSpeedMin(bool testData = false) const;
+	float                  getAttackSpeedMax(bool testData = false) const;
+	float                  getAudibleRange(bool testData = false) const;
+	float                  getAudibleRangeMin(bool testData = false) const;
+	float                  getAudibleRangeMax(bool testData = false) const;
+	float                  getMinRange(bool testData = false) const;
+	float                  getMinRangeMin(bool testData = false) const;
+	float                  getMinRangeMax(bool testData = false) const;
+	float                  getMaxRange(bool testData = false) const;
+	float                  getMaxRangeMin(bool testData = false) const;
+	float                  getMaxRangeMax(bool testData = false) const;
+	float                  getDamageRadius(bool testData = false) const;
+	float                  getDamageRadiusMin(bool testData = false) const;
+	float                  getDamageRadiusMax(bool testData = false) const;
+	float                  getWoundChance(bool testData = false) const;
+	float                  getWoundChanceMin(bool testData = false) const;
+	float                  getWoundChanceMax(bool testData = false) const;
+	int                    getAttackCost(bool testData = false) const;
+	int                    getAttackCostMin(bool testData = false) const;
+	int                    getAttackCostMax(bool testData = false) const;
+	int                    getAccuracy(bool testData = false) const;
+	int                    getAccuracyMin(bool testData = false) const;
+	int                    getAccuracyMax(bool testData = false) const;
 
+#ifdef _DEBUG
+public:
+	// special code used by datalint
+	virtual void testValues(void) const;
+#endif
 
 protected:
 	virtual void load(Iff &file);

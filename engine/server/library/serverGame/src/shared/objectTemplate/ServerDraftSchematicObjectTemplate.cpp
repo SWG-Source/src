@@ -24,10 +24,11 @@
 
 const std::string DefaultString("");
 const StringId DefaultStringId("", 0);
-const Vector DefaultVector(0, 0, 0);
+const Vector DefaultVector(0,0,0);
 const TriggerVolumeData DefaultTriggerVolumeData;
 
 bool ServerDraftSchematicObjectTemplate::ms_allowDefaultTemplateParams = true;
+
 
 /**
  * Class constructor.
@@ -35,15 +36,14 @@ bool ServerDraftSchematicObjectTemplate::ms_allowDefaultTemplateParams = true;
 ServerDraftSchematicObjectTemplate::ServerDraftSchematicObjectTemplate(const std::string & filename)
 //@BEGIN TFD INIT
 	: ServerIntangibleObjectTemplate(filename)
-	, m_slotsLoaded(false)
-	, m_slotsAppend(false)
-	, m_skillCommandsLoaded(false)
-	, m_skillCommandsAppend(false)
-	, m_manufactureScriptsLoaded(false)
-	, m_manufactureScriptsAppend(false)
-	, m_versionOk(true)
-	, m_templateVersion(0)
-	//@END TFD INIT
+	,m_slotsLoaded(false)
+	,m_slotsAppend(false)
+	,m_skillCommandsLoaded(false)
+	,m_skillCommandsAppend(false)
+	,m_manufactureScriptsLoaded(false)
+	,m_manufactureScriptsAppend(false)
+	,m_versionOk(true)
+//@END TFD INIT
 {
 }	// ServerDraftSchematicObjectTemplate::ServerDraftSchematicObjectTemplate
 
@@ -52,7 +52,7 @@ ServerDraftSchematicObjectTemplate::ServerDraftSchematicObjectTemplate(const std
  */
 ServerDraftSchematicObjectTemplate::~ServerDraftSchematicObjectTemplate()
 {
-	//@BEGIN TFD CLEANUP
+//@BEGIN TFD CLEANUP
 	{
 		std::vector<StructParamOT *>::iterator iter;
 		for (iter = m_slots.begin(); iter != m_slots.end(); ++iter)
@@ -80,7 +80,7 @@ ServerDraftSchematicObjectTemplate::~ServerDraftSchematicObjectTemplate()
 		}
 		m_manufactureScripts.clear();
 	}
-	//@END TFD CLEANUP
+//@END TFD CLEANUP
 }	// ServerDraftSchematicObjectTemplate::~ServerDraftSchematicObjectTemplate
 
 /**
@@ -128,10 +128,10 @@ Tag ServerDraftSchematicObjectTemplate::getTemplateVersion(void) const
  */
 Tag ServerDraftSchematicObjectTemplate::getHighestTemplateVersion(void) const
 {
-	if (m_baseData == nullptr)
+	if (m_baseData == NULL)
 		return m_templateVersion;
 	const ServerDraftSchematicObjectTemplate * base = dynamic_cast<const ServerDraftSchematicObjectTemplate *>(m_baseData);
-	if (base == nullptr)
+	if (base == NULL)
 		return m_templateVersion;
 	return std::max(m_templateVersion, base->getHighestTemplateVersion());
 } // ServerDraftSchematicObjectTemplate::getHighestTemplateVersion
@@ -143,26 +143,59 @@ Tag ServerDraftSchematicObjectTemplate::getHighestTemplateVersion(void) const
  */
 Object * ServerDraftSchematicObjectTemplate::createObject(void) const
 {
+#ifdef _DEBUG
+	if (DataLint::isEnabled())
+	{
+		return new DraftSchematicObject(this);
+	}
+#endif
+
 	WARNING(true, ("Trying to create a draft schematic %s outside the draft "
 		"schematic factory!\n", getName()));
-	return nullptr;
+	return NULL;
 }	// ServerDraftSchematicObjectTemplate::createObject
 
 /**
- * Called after the template data has been loaded. Verifies that the schematic has
+ * Called after the template data has been loaded. Verifies that the schematic has 
  * good data.
  */
 void ServerDraftSchematicObjectTemplate::postLoad()
 {
+#ifdef _DEBUG
+	// verify that all slot names are unique
+	std::set<std::string> slotNames;
+
+	IngredientSlot data;
+	int count = getSlotsCount();
+	for (int i = 0; i < count; ++i)
+	{
+		getSlots(data, i);
+		if (slotNames.insert(data.name.getText()).second == false)
+		{
+			WARNING(true, ("Draft schematic %s has duplicate slot name %s",
+				getName(), data.name.getText().c_str()));
+		}
+	}
+#endif
 }	// ServerDraftSchematicObjectTemplate::postLoad
 
 //@BEGIN TFD
-ServerDraftSchematicObjectTemplate::CraftingType ServerDraftSchematicObjectTemplate::getCategory() const
+ServerDraftSchematicObjectTemplate::CraftingType ServerDraftSchematicObjectTemplate::getCategory(bool testData) const
 {
+#ifdef _DEBUG
+ServerDraftSchematicObjectTemplate::CraftingType testDataValue = static_cast<ServerDraftSchematicObjectTemplate::CraftingType>(0);
+#else
+UNREF(testData);
+#endif
+
 	const ServerDraftSchematicObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerDraftSchematicObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getCategory(true);
+#endif
 	}
 
 	if (!m_category.isLoaded())
@@ -180,6 +213,11 @@ ServerDraftSchematicObjectTemplate::CraftingType ServerDraftSchematicObjectTempl
 	}
 
 	CraftingType value = static_cast<CraftingType>(m_category.getValue());
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerDraftSchematicObjectTemplate::getCategory
@@ -206,10 +244,14 @@ const ServerObjectTemplate * ServerDraftSchematicObjectTemplate::getCraftedObjec
 		}
 	}
 
+	const ServerObjectTemplate * returnValue = nullptr;
 	const std::string & templateName = m_craftedObjectTemplate.getValue();
-	const ServerObjectTemplate * returnValue = dynamic_cast<const ServerObjectTemplate *>(ObjectTemplateList::fetch(templateName));
-	if (returnValue == nullptr)
-		WARNING_STRICT_FATAL(true, ("Error loading template %s", templateName.c_str()));
+	if (!templateName.empty())
+	{
+		returnValue = dynamic_cast<const ServerObjectTemplate *>(ObjectTemplateList::fetch(templateName));
+		if (returnValue == nullptr)
+			WARNING_STRICT_FATAL(true, ("Error loading template %s",templateName.c_str()));
+	}
 	return returnValue;
 }	// ServerDraftSchematicObjectTemplate::getCraftedObjectTemplate
 
@@ -235,10 +277,14 @@ const ServerFactoryObjectTemplate * ServerDraftSchematicObjectTemplate::getCrate
 		}
 	}
 
+	const ServerFactoryObjectTemplate * returnValue = nullptr;
 	const std::string & templateName = m_crateObjectTemplate.getValue();
-	const ServerFactoryObjectTemplate * returnValue = dynamic_cast<const ServerFactoryObjectTemplate *>(ObjectTemplateList::fetch(templateName));
-	if (returnValue == nullptr)
-		WARNING_STRICT_FATAL(true, ("Error loading template %s", templateName.c_str()));
+	if (!templateName.empty())
+	{
+		returnValue = dynamic_cast<const ServerFactoryObjectTemplate *>(ObjectTemplateList::fetch(templateName));
+		if (returnValue == nullptr)
+			WARNING_STRICT_FATAL(true, ("Error loading template %s",templateName.c_str()));
+	}
 	return returnValue;
 }	// ServerDraftSchematicObjectTemplate::getCrateObjectTemplate
 
@@ -255,7 +301,7 @@ void ServerDraftSchematicObjectTemplate::getSlots(IngredientSlot &data, int inde
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter slots in template %s", DataResource::getName()));
-			return;
+			return ;
 		}
 		else
 		{
@@ -269,10 +315,10 @@ void ServerDraftSchematicObjectTemplate::getSlots(IngredientSlot &data, int inde
 	{
 		int baseCount = base->getSlotsCount();
 		if (index < baseCount)
-		{
-			base->getSlots(data, index);
-			return;
-		}
+			{
+				base->getSlots(data, index);
+				return;
+			}
 		index -= baseCount;
 	}
 
@@ -308,7 +354,7 @@ void ServerDraftSchematicObjectTemplate::getSlotsMin(IngredientSlot &data, int i
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter slots in template %s", DataResource::getName()));
-			return;
+			return ;
 		}
 		else
 		{
@@ -322,10 +368,10 @@ void ServerDraftSchematicObjectTemplate::getSlotsMin(IngredientSlot &data, int i
 	{
 		int baseCount = base->getSlotsCount();
 		if (index < baseCount)
-		{
-			base->getSlotsMin(data, index);
-			return;
-		}
+			{
+				base->getSlotsMin(data, index);
+				return;
+			}
 		index -= baseCount;
 	}
 
@@ -361,7 +407,7 @@ void ServerDraftSchematicObjectTemplate::getSlotsMax(IngredientSlot &data, int i
 		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter slots in template %s", DataResource::getName()));
-			return;
+			return ;
 		}
 		else
 		{
@@ -375,10 +421,10 @@ void ServerDraftSchematicObjectTemplate::getSlotsMax(IngredientSlot &data, int i
 	{
 		int baseCount = base->getSlotsCount();
 		if (index < baseCount)
-		{
-			base->getSlotsMax(data, index);
-			return;
-		}
+			{
+				base->getSlotsMax(data, index);
+				return;
+			}
 		index -= baseCount;
 	}
 
@@ -484,12 +530,22 @@ size_t ServerDraftSchematicObjectTemplate::getSkillCommandsCount(void) const
 	return count;
 }	// ServerDraftSchematicObjectTemplate::getSkillCommandsCount
 
-bool ServerDraftSchematicObjectTemplate::getDestroyIngredients() const
+bool ServerDraftSchematicObjectTemplate::getDestroyIngredients(bool testData) const
 {
+#ifdef _DEBUG
+bool testDataValue = false;
+#else
+UNREF(testData);
+#endif
+
 	const ServerDraftSchematicObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerDraftSchematicObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getDestroyIngredients(true);
+#endif
 	}
 
 	if (!m_destroyIngredients.isLoaded())
@@ -507,6 +563,11 @@ bool ServerDraftSchematicObjectTemplate::getDestroyIngredients() const
 	}
 
 	bool value = m_destroyIngredients.getValue();
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerDraftSchematicObjectTemplate::getDestroyIngredients
@@ -570,12 +631,22 @@ size_t ServerDraftSchematicObjectTemplate::getManufactureScriptsCount(void) cons
 	return count;
 }	// ServerDraftSchematicObjectTemplate::getManufactureScriptsCount
 
-int ServerDraftSchematicObjectTemplate::getItemsPerContainer() const
+int ServerDraftSchematicObjectTemplate::getItemsPerContainer(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const ServerDraftSchematicObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerDraftSchematicObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getItemsPerContainer(true);
+#endif
 	}
 
 	if (!m_itemsPerContainer.isLoaded())
@@ -615,16 +686,31 @@ int ServerDraftSchematicObjectTemplate::getItemsPerContainer() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerDraftSchematicObjectTemplate::getItemsPerContainer
 
-int ServerDraftSchematicObjectTemplate::getItemsPerContainerMin() const
+int ServerDraftSchematicObjectTemplate::getItemsPerContainerMin(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const ServerDraftSchematicObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerDraftSchematicObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getItemsPerContainerMin(true);
+#endif
 	}
 
 	if (!m_itemsPerContainer.isLoaded())
@@ -664,16 +750,31 @@ int ServerDraftSchematicObjectTemplate::getItemsPerContainerMin() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerDraftSchematicObjectTemplate::getItemsPerContainerMin
 
-int ServerDraftSchematicObjectTemplate::getItemsPerContainerMax() const
+int ServerDraftSchematicObjectTemplate::getItemsPerContainerMax(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const ServerDraftSchematicObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerDraftSchematicObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getItemsPerContainerMax(true);
+#endif
 	}
 
 	if (!m_itemsPerContainer.isLoaded())
@@ -713,16 +814,31 @@ int ServerDraftSchematicObjectTemplate::getItemsPerContainerMax() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerDraftSchematicObjectTemplate::getItemsPerContainerMax
 
-float ServerDraftSchematicObjectTemplate::getManufactureTime() const
+float ServerDraftSchematicObjectTemplate::getManufactureTime(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const ServerDraftSchematicObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerDraftSchematicObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getManufactureTime(true);
+#endif
 	}
 
 	if (!m_manufactureTime.isLoaded())
@@ -762,16 +878,31 @@ float ServerDraftSchematicObjectTemplate::getManufactureTime() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerDraftSchematicObjectTemplate::getManufactureTime
 
-float ServerDraftSchematicObjectTemplate::getManufactureTimeMin() const
+float ServerDraftSchematicObjectTemplate::getManufactureTimeMin(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const ServerDraftSchematicObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerDraftSchematicObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getManufactureTimeMin(true);
+#endif
 	}
 
 	if (!m_manufactureTime.isLoaded())
@@ -811,16 +942,31 @@ float ServerDraftSchematicObjectTemplate::getManufactureTimeMin() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerDraftSchematicObjectTemplate::getManufactureTimeMin
 
-float ServerDraftSchematicObjectTemplate::getManufactureTimeMax() const
+float ServerDraftSchematicObjectTemplate::getManufactureTimeMax(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const ServerDraftSchematicObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerDraftSchematicObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getManufactureTimeMax(true);
+#endif
 	}
 
 	if (!m_manufactureTime.isLoaded())
@@ -860,16 +1006,31 @@ float ServerDraftSchematicObjectTemplate::getManufactureTimeMax() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerDraftSchematicObjectTemplate::getManufactureTimeMax
 
-float ServerDraftSchematicObjectTemplate::getPrototypeTime() const
+float ServerDraftSchematicObjectTemplate::getPrototypeTime(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const ServerDraftSchematicObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerDraftSchematicObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getPrototypeTime(true);
+#endif
 	}
 
 	if (!m_prototypeTime.isLoaded())
@@ -909,16 +1070,31 @@ float ServerDraftSchematicObjectTemplate::getPrototypeTime() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerDraftSchematicObjectTemplate::getPrototypeTime
 
-float ServerDraftSchematicObjectTemplate::getPrototypeTimeMin() const
+float ServerDraftSchematicObjectTemplate::getPrototypeTimeMin(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const ServerDraftSchematicObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerDraftSchematicObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getPrototypeTimeMin(true);
+#endif
 	}
 
 	if (!m_prototypeTime.isLoaded())
@@ -958,16 +1134,31 @@ float ServerDraftSchematicObjectTemplate::getPrototypeTimeMin() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerDraftSchematicObjectTemplate::getPrototypeTimeMin
 
-float ServerDraftSchematicObjectTemplate::getPrototypeTimeMax() const
+float ServerDraftSchematicObjectTemplate::getPrototypeTimeMax(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const ServerDraftSchematicObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerDraftSchematicObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getPrototypeTimeMax(true);
+#endif
 	}
 
 	if (!m_prototypeTime.isLoaded())
@@ -1007,9 +1198,32 @@ float ServerDraftSchematicObjectTemplate::getPrototypeTimeMax() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerDraftSchematicObjectTemplate::getPrototypeTimeMax
+
+#ifdef _DEBUG
+/**
+ * Special function used by datalint. Checks for duplicate values in base and derived templates.
+ */
+void ServerDraftSchematicObjectTemplate::testValues(void) const
+{
+	IGNORE_RETURN(getCategory(true));
+	IGNORE_RETURN(getDestroyIngredients(true));
+	IGNORE_RETURN(getItemsPerContainerMin(true));
+	IGNORE_RETURN(getItemsPerContainerMax(true));
+	IGNORE_RETURN(getManufactureTimeMin(true));
+	IGNORE_RETURN(getManufactureTimeMax(true));
+	IGNORE_RETURN(getPrototypeTimeMin(true));
+	IGNORE_RETURN(getPrototypeTimeMax(true));
+	ServerIntangibleObjectTemplate::testValues();
+}	// ServerDraftSchematicObjectTemplate::testValues
+#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form
@@ -1019,8 +1233,8 @@ float ServerDraftSchematicObjectTemplate::getPrototypeTimeMax() const
  */
 void ServerDraftSchematicObjectTemplate::load(Iff &file)
 {
-	static const int MAX_NAME_SIZE = 256;
-	char paramName[MAX_NAME_SIZE];
+static const int MAX_NAME_SIZE = 256;
+char paramName[MAX_NAME_SIZE];
 
 	if (file.getCurrentName() != ServerDraftSchematicObjectTemplate_tag)
 	{
@@ -1030,7 +1244,7 @@ void ServerDraftSchematicObjectTemplate::load(Iff &file)
 
 	file.enterForm();
 	m_templateVersion = file.getCurrentName();
-	if (m_templateVersion == TAG(D, E, R, V))
+	if (m_templateVersion == TAG(D,E,R,V))
 	{
 		file.enterForm();
 		file.enterChunk();
@@ -1050,8 +1264,10 @@ void ServerDraftSchematicObjectTemplate::load(Iff &file)
 		file.exitForm();
 		m_templateVersion = file.getCurrentName();
 	}
-	if (getHighestTemplateVersion() != TAG(0, 0, 0, 7))
+	if (getHighestTemplateVersion() != TAG(0,0,0,7))
 	{
+		if (DataLint::isEnabled())
+			DEBUG_WARNING(true, ("template %s version out of date", file.getFileName()));
 		m_versionOk = false;
 	}
 
@@ -1144,6 +1360,7 @@ void ServerDraftSchematicObjectTemplate::load(Iff &file)
 	return;
 }	// ServerDraftSchematicObjectTemplate::load
 
+
 //=============================================================================
 // class ServerDraftSchematicObjectTemplate::_IngredientSlot
 
@@ -1152,8 +1369,8 @@ void ServerDraftSchematicObjectTemplate::load(Iff &file)
  */
 ServerDraftSchematicObjectTemplate::_IngredientSlot::_IngredientSlot(const std::string & filename)
 	: ObjectTemplate(filename)
-	, m_optionsLoaded(false)
-	, m_optionsAppend(false)
+	,m_optionsLoaded(false)
+	,m_optionsAppend(false)
 {
 }	// ServerDraftSchematicObjectTemplate::_IngredientSlot::_IngredientSlot
 
@@ -1201,12 +1418,22 @@ Tag ServerDraftSchematicObjectTemplate::_IngredientSlot::getId(void) const
 	return _IngredientSlot_tag;
 }	// ServerDraftSchematicObjectTemplate::_IngredientSlot::getId
 
-bool ServerDraftSchematicObjectTemplate::_IngredientSlot::getOptional(bool versionOk) const
+bool ServerDraftSchematicObjectTemplate::_IngredientSlot::getOptional(bool versionOk, bool testData) const
 {
+#ifdef _DEBUG
+bool testDataValue = false;
+#else
+UNREF(testData);
+#endif
+
 	const ServerDraftSchematicObjectTemplate::_IngredientSlot * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerDraftSchematicObjectTemplate::_IngredientSlot *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getOptional(true);
+#endif
 	}
 
 	if (!m_optional.isLoaded())
@@ -1224,16 +1451,31 @@ bool ServerDraftSchematicObjectTemplate::_IngredientSlot::getOptional(bool versi
 	}
 
 	bool value = m_optional.getValue();
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerDraftSchematicObjectTemplate::_IngredientSlot::getOptional
 
-const StringId ServerDraftSchematicObjectTemplate::_IngredientSlot::getName(bool versionOk) const
+const StringId ServerDraftSchematicObjectTemplate::_IngredientSlot::getName(bool versionOk, bool testData) const
 {
+#ifdef _DEBUG
+StringId testDataValue = DefaultStringId;
+#else
+UNREF(testData);
+#endif
+
 	const ServerDraftSchematicObjectTemplate::_IngredientSlot * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerDraftSchematicObjectTemplate::_IngredientSlot *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getName(true);
+#endif
 	}
 
 	if (!m_name.isLoaded())
@@ -1251,6 +1493,11 @@ const StringId ServerDraftSchematicObjectTemplate::_IngredientSlot::getName(bool
 	}
 
 	const StringId value = m_name.getValue();
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerDraftSchematicObjectTemplate::_IngredientSlot::getName
@@ -1268,7 +1515,7 @@ void ServerDraftSchematicObjectTemplate::_IngredientSlot::getOptions(Ingredient 
 		if (ms_allowDefaultTemplateParams && /*!versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter options in template %s", DataResource::getName()));
-			return;
+			return ;
 		}
 		else
 		{
@@ -1282,10 +1529,10 @@ void ServerDraftSchematicObjectTemplate::_IngredientSlot::getOptions(Ingredient 
 	{
 		int baseCount = base->getOptionsCount();
 		if (index < baseCount)
-		{
-			base->getOptions(data, index, versionOk);
-			return;
-		}
+			{
+				base->getOptions(data, index, versionOk);
+				return;
+			}
 		index -= baseCount;
 	}
 
@@ -1319,7 +1566,7 @@ void ServerDraftSchematicObjectTemplate::_IngredientSlot::getOptionsMin(Ingredie
 		if (ms_allowDefaultTemplateParams && /*!versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter options in template %s", DataResource::getName()));
-			return;
+			return ;
 		}
 		else
 		{
@@ -1333,10 +1580,10 @@ void ServerDraftSchematicObjectTemplate::_IngredientSlot::getOptionsMin(Ingredie
 	{
 		int baseCount = base->getOptionsCount();
 		if (index < baseCount)
-		{
-			base->getOptionsMin(data, index, versionOk);
-			return;
-		}
+			{
+				base->getOptionsMin(data, index, versionOk);
+				return;
+			}
 		index -= baseCount;
 	}
 
@@ -1370,7 +1617,7 @@ void ServerDraftSchematicObjectTemplate::_IngredientSlot::getOptionsMax(Ingredie
 		if (ms_allowDefaultTemplateParams && /*!versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter options in template %s", DataResource::getName()));
-			return;
+			return ;
 		}
 		else
 		{
@@ -1384,10 +1631,10 @@ void ServerDraftSchematicObjectTemplate::_IngredientSlot::getOptionsMax(Ingredie
 	{
 		int baseCount = base->getOptionsCount();
 		if (index < baseCount)
-		{
-			base->getOptionsMax(data, index, versionOk);
-			return;
-		}
+			{
+				base->getOptionsMax(data, index, versionOk);
+				return;
+			}
 		index -= baseCount;
 	}
 
@@ -1432,12 +1679,22 @@ size_t ServerDraftSchematicObjectTemplate::_IngredientSlot::getOptionsCount(void
 	return count;
 }	// ServerDraftSchematicObjectTemplate::_IngredientSlot::getOptionsCount
 
-const std::string & ServerDraftSchematicObjectTemplate::_IngredientSlot::getOptionalSkillCommand(bool versionOk) const
+const std::string & ServerDraftSchematicObjectTemplate::_IngredientSlot::getOptionalSkillCommand(bool versionOk, bool testData) const
 {
+#ifdef _DEBUG
+std::string testDataValue = DefaultString;
+#else
+UNREF(testData);
+#endif
+
 	const ServerDraftSchematicObjectTemplate::_IngredientSlot * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerDraftSchematicObjectTemplate::_IngredientSlot *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getOptionalSkillCommand(true);
+#endif
 	}
 
 	if (!m_optionalSkillCommand.isLoaded())
@@ -1455,16 +1712,31 @@ const std::string & ServerDraftSchematicObjectTemplate::_IngredientSlot::getOpti
 	}
 
 	const std::string & value = m_optionalSkillCommand.getValue();
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerDraftSchematicObjectTemplate::_IngredientSlot::getOptionalSkillCommand
 
-float ServerDraftSchematicObjectTemplate::_IngredientSlot::getComplexity(bool versionOk) const
+float ServerDraftSchematicObjectTemplate::_IngredientSlot::getComplexity(bool versionOk, bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const ServerDraftSchematicObjectTemplate::_IngredientSlot * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerDraftSchematicObjectTemplate::_IngredientSlot *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getComplexity(true);
+#endif
 	}
 
 	if (!m_complexity.isLoaded())
@@ -1504,16 +1776,31 @@ float ServerDraftSchematicObjectTemplate::_IngredientSlot::getComplexity(bool ve
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerDraftSchematicObjectTemplate::_IngredientSlot::getComplexity
 
-float ServerDraftSchematicObjectTemplate::_IngredientSlot::getComplexityMin(bool versionOk) const
+float ServerDraftSchematicObjectTemplate::_IngredientSlot::getComplexityMin(bool versionOk, bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const ServerDraftSchematicObjectTemplate::_IngredientSlot * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerDraftSchematicObjectTemplate::_IngredientSlot *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getComplexityMin(true);
+#endif
 	}
 
 	if (!m_complexity.isLoaded())
@@ -1553,16 +1840,31 @@ float ServerDraftSchematicObjectTemplate::_IngredientSlot::getComplexityMin(bool
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerDraftSchematicObjectTemplate::_IngredientSlot::getComplexityMin
 
-float ServerDraftSchematicObjectTemplate::_IngredientSlot::getComplexityMax(bool versionOk) const
+float ServerDraftSchematicObjectTemplate::_IngredientSlot::getComplexityMax(bool versionOk, bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const ServerDraftSchematicObjectTemplate::_IngredientSlot * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerDraftSchematicObjectTemplate::_IngredientSlot *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getComplexityMax(true);
+#endif
 	}
 
 	if (!m_complexity.isLoaded())
@@ -1602,16 +1904,31 @@ float ServerDraftSchematicObjectTemplate::_IngredientSlot::getComplexityMax(bool
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerDraftSchematicObjectTemplate::_IngredientSlot::getComplexityMax
 
-const std::string & ServerDraftSchematicObjectTemplate::_IngredientSlot::getAppearance(bool versionOk) const
+const std::string & ServerDraftSchematicObjectTemplate::_IngredientSlot::getAppearance(bool versionOk, bool testData) const
 {
+#ifdef _DEBUG
+std::string testDataValue = DefaultString;
+#else
+UNREF(testData);
+#endif
+
 	const ServerDraftSchematicObjectTemplate::_IngredientSlot * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerDraftSchematicObjectTemplate::_IngredientSlot *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getAppearance(true);
+#endif
 	}
 
 	if (!m_appearance.isLoaded())
@@ -1629,9 +1946,29 @@ const std::string & ServerDraftSchematicObjectTemplate::_IngredientSlot::getAppe
 	}
 
 	const std::string & value = m_appearance.getValue();
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerDraftSchematicObjectTemplate::_IngredientSlot::getAppearance
+
+#ifdef _DEBUG
+/**
+ * Special function used by datalint. Checks for duplicate values in base and derived templates.
+ */
+void ServerDraftSchematicObjectTemplate::_IngredientSlot::testValues(void) const
+{
+	IGNORE_RETURN(getOptional(true));
+	IGNORE_RETURN(getName(true));
+	IGNORE_RETURN(getOptionalSkillCommand(true));
+	IGNORE_RETURN(getComplexityMin(true));
+	IGNORE_RETURN(getComplexityMax(true));
+	IGNORE_RETURN(getAppearance(true));
+}	// ServerDraftSchematicObjectTemplate::_IngredientSlot::testValues
+#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form
@@ -1641,8 +1978,8 @@ const std::string & ServerDraftSchematicObjectTemplate::_IngredientSlot::getAppe
  */
 void ServerDraftSchematicObjectTemplate::_IngredientSlot::load(Iff &file)
 {
-	static const int MAX_NAME_SIZE = 256;
-	char paramName[MAX_NAME_SIZE];
+static const int MAX_NAME_SIZE = 256;
+char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 

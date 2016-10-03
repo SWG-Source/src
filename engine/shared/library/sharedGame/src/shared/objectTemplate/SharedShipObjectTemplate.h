@@ -45,11 +45,16 @@ public:
 
 //@BEGIN TFD
 public:
-	const std::string &    getCockpitFilename() const;
-	bool                   getHasWings() const;
-	bool                   getPlayerControlled() const;
-	const std::string &    getInteriorLayoutFileName() const;
+	const std::string &    getCockpitFilename(bool testData = false) const;
+	bool                   getHasWings(bool testData = false) const;
+	bool                   getPlayerControlled(bool testData = false) const;
+	const std::string &    getInteriorLayoutFileName(bool testData = false) const;
 
+#ifdef _DEBUG
+public:
+	// special code used by datalint
+	virtual void testValues(void) const;
+#endif
 
 protected:
 	virtual void load(Iff &file);

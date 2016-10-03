@@ -22,10 +22,11 @@
 
 const std::string DefaultString("");
 const StringId DefaultStringId("", 0);
-const Vector DefaultVector(0, 0, 0);
+const Vector DefaultVector(0,0,0);
 const TriggerVolumeData DefaultTriggerVolumeData;
 
 bool ServerHarvesterInstallationObjectTemplate::ms_allowDefaultTemplateParams = true;
+
 
 /**
  * Class constructor.
@@ -33,9 +34,8 @@ bool ServerHarvesterInstallationObjectTemplate::ms_allowDefaultTemplateParams = 
 ServerHarvesterInstallationObjectTemplate::ServerHarvesterInstallationObjectTemplate(const std::string & filename)
 //@BEGIN TFD INIT
 	: ServerInstallationObjectTemplate(filename)
-	, m_versionOk(true)
-	, m_templateVersion(0)
-	//@END TFD INIT
+	,m_versionOk(true)
+//@END TFD INIT
 {
 }	// ServerHarvesterInstallationObjectTemplate::ServerHarvesterInstallationObjectTemplate
 
@@ -44,8 +44,8 @@ ServerHarvesterInstallationObjectTemplate::ServerHarvesterInstallationObjectTemp
  */
 ServerHarvesterInstallationObjectTemplate::~ServerHarvesterInstallationObjectTemplate()
 {
-	//@BEGIN TFD CLEANUP
-	//@END TFD CLEANUP
+//@BEGIN TFD CLEANUP
+//@END TFD CLEANUP
 }	// ServerHarvesterInstallationObjectTemplate::~ServerHarvesterInstallationObjectTemplate
 
 /**
@@ -93,10 +93,10 @@ Tag ServerHarvesterInstallationObjectTemplate::getTemplateVersion(void) const
  */
 Tag ServerHarvesterInstallationObjectTemplate::getHighestTemplateVersion(void) const
 {
-	if (m_baseData == nullptr)
+	if (m_baseData == NULL)
 		return m_templateVersion;
 	const ServerHarvesterInstallationObjectTemplate * base = dynamic_cast<const ServerHarvesterInstallationObjectTemplate *>(m_baseData);
-	if (base == nullptr)
+	if (base == NULL)
 		return m_templateVersion;
 	return std::max(m_templateVersion, base->getHighestTemplateVersion());
 } // ServerHarvesterInstallationObjectTemplate::getHighestTemplateVersion
@@ -112,12 +112,22 @@ Object * ServerHarvesterInstallationObjectTemplate::createObject(void) const
 }	// ServerHarvesterInstallationObjectTemplate::createObject
 
 //@BEGIN TFD
-int ServerHarvesterInstallationObjectTemplate::getMaxExtractionRate() const
+int ServerHarvesterInstallationObjectTemplate::getMaxExtractionRate(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const ServerHarvesterInstallationObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerHarvesterInstallationObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getMaxExtractionRate(true);
+#endif
 	}
 
 	if (!m_maxExtractionRate.isLoaded())
@@ -157,16 +167,31 @@ int ServerHarvesterInstallationObjectTemplate::getMaxExtractionRate() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerHarvesterInstallationObjectTemplate::getMaxExtractionRate
 
-int ServerHarvesterInstallationObjectTemplate::getMaxExtractionRateMin() const
+int ServerHarvesterInstallationObjectTemplate::getMaxExtractionRateMin(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const ServerHarvesterInstallationObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerHarvesterInstallationObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getMaxExtractionRateMin(true);
+#endif
 	}
 
 	if (!m_maxExtractionRate.isLoaded())
@@ -206,16 +231,31 @@ int ServerHarvesterInstallationObjectTemplate::getMaxExtractionRateMin() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerHarvesterInstallationObjectTemplate::getMaxExtractionRateMin
 
-int ServerHarvesterInstallationObjectTemplate::getMaxExtractionRateMax() const
+int ServerHarvesterInstallationObjectTemplate::getMaxExtractionRateMax(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const ServerHarvesterInstallationObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerHarvesterInstallationObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getMaxExtractionRateMax(true);
+#endif
 	}
 
 	if (!m_maxExtractionRate.isLoaded())
@@ -255,16 +295,31 @@ int ServerHarvesterInstallationObjectTemplate::getMaxExtractionRateMax() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerHarvesterInstallationObjectTemplate::getMaxExtractionRateMax
 
-int ServerHarvesterInstallationObjectTemplate::getCurrentExtractionRate() const
+int ServerHarvesterInstallationObjectTemplate::getCurrentExtractionRate(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const ServerHarvesterInstallationObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerHarvesterInstallationObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getCurrentExtractionRate(true);
+#endif
 	}
 
 	if (!m_currentExtractionRate.isLoaded())
@@ -304,16 +359,31 @@ int ServerHarvesterInstallationObjectTemplate::getCurrentExtractionRate() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerHarvesterInstallationObjectTemplate::getCurrentExtractionRate
 
-int ServerHarvesterInstallationObjectTemplate::getCurrentExtractionRateMin() const
+int ServerHarvesterInstallationObjectTemplate::getCurrentExtractionRateMin(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const ServerHarvesterInstallationObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerHarvesterInstallationObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getCurrentExtractionRateMin(true);
+#endif
 	}
 
 	if (!m_currentExtractionRate.isLoaded())
@@ -353,16 +423,31 @@ int ServerHarvesterInstallationObjectTemplate::getCurrentExtractionRateMin() con
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerHarvesterInstallationObjectTemplate::getCurrentExtractionRateMin
 
-int ServerHarvesterInstallationObjectTemplate::getCurrentExtractionRateMax() const
+int ServerHarvesterInstallationObjectTemplate::getCurrentExtractionRateMax(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const ServerHarvesterInstallationObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerHarvesterInstallationObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getCurrentExtractionRateMax(true);
+#endif
 	}
 
 	if (!m_currentExtractionRate.isLoaded())
@@ -402,16 +487,31 @@ int ServerHarvesterInstallationObjectTemplate::getCurrentExtractionRateMax() con
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerHarvesterInstallationObjectTemplate::getCurrentExtractionRateMax
 
-int ServerHarvesterInstallationObjectTemplate::getMaxHopperSize() const
+int ServerHarvesterInstallationObjectTemplate::getMaxHopperSize(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const ServerHarvesterInstallationObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerHarvesterInstallationObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getMaxHopperSize(true);
+#endif
 	}
 
 	if (!m_maxHopperSize.isLoaded())
@@ -451,16 +551,31 @@ int ServerHarvesterInstallationObjectTemplate::getMaxHopperSize() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerHarvesterInstallationObjectTemplate::getMaxHopperSize
 
-int ServerHarvesterInstallationObjectTemplate::getMaxHopperSizeMin() const
+int ServerHarvesterInstallationObjectTemplate::getMaxHopperSizeMin(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const ServerHarvesterInstallationObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerHarvesterInstallationObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getMaxHopperSizeMin(true);
+#endif
 	}
 
 	if (!m_maxHopperSize.isLoaded())
@@ -500,16 +615,31 @@ int ServerHarvesterInstallationObjectTemplate::getMaxHopperSizeMin() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerHarvesterInstallationObjectTemplate::getMaxHopperSizeMin
 
-int ServerHarvesterInstallationObjectTemplate::getMaxHopperSizeMax() const
+int ServerHarvesterInstallationObjectTemplate::getMaxHopperSizeMax(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const ServerHarvesterInstallationObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerHarvesterInstallationObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getMaxHopperSizeMax(true);
+#endif
 	}
 
 	if (!m_maxHopperSize.isLoaded())
@@ -549,16 +679,31 @@ int ServerHarvesterInstallationObjectTemplate::getMaxHopperSizeMax() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerHarvesterInstallationObjectTemplate::getMaxHopperSizeMax
 
-const std::string & ServerHarvesterInstallationObjectTemplate::getMasterClassName() const
+const std::string & ServerHarvesterInstallationObjectTemplate::getMasterClassName(bool testData) const
 {
+#ifdef _DEBUG
+std::string testDataValue = DefaultString;
+#else
+UNREF(testData);
+#endif
+
 	const ServerHarvesterInstallationObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerHarvesterInstallationObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getMasterClassName(true);
+#endif
 	}
 
 	if (!m_masterClassName.isLoaded())
@@ -576,9 +721,31 @@ const std::string & ServerHarvesterInstallationObjectTemplate::getMasterClassNam
 	}
 
 	const std::string & value = m_masterClassName.getValue();
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerHarvesterInstallationObjectTemplate::getMasterClassName
+
+#ifdef _DEBUG
+/**
+ * Special function used by datalint. Checks for duplicate values in base and derived templates.
+ */
+void ServerHarvesterInstallationObjectTemplate::testValues(void) const
+{
+	IGNORE_RETURN(getMaxExtractionRateMin(true));
+	IGNORE_RETURN(getMaxExtractionRateMax(true));
+	IGNORE_RETURN(getCurrentExtractionRateMin(true));
+	IGNORE_RETURN(getCurrentExtractionRateMax(true));
+	IGNORE_RETURN(getMaxHopperSizeMin(true));
+	IGNORE_RETURN(getMaxHopperSizeMax(true));
+	IGNORE_RETURN(getMasterClassName(true));
+	ServerInstallationObjectTemplate::testValues();
+}	// ServerHarvesterInstallationObjectTemplate::testValues
+#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form
@@ -588,8 +755,8 @@ const std::string & ServerHarvesterInstallationObjectTemplate::getMasterClassNam
  */
 void ServerHarvesterInstallationObjectTemplate::load(Iff &file)
 {
-	static const int MAX_NAME_SIZE = 256;
-	char paramName[MAX_NAME_SIZE];
+static const int MAX_NAME_SIZE = 256;
+char paramName[MAX_NAME_SIZE];
 
 	if (file.getCurrentName() != ServerHarvesterInstallationObjectTemplate_tag)
 	{
@@ -599,7 +766,7 @@ void ServerHarvesterInstallationObjectTemplate::load(Iff &file)
 
 	file.enterForm();
 	m_templateVersion = file.getCurrentName();
-	if (m_templateVersion == TAG(D, E, R, V))
+	if (m_templateVersion == TAG(D,E,R,V))
 	{
 		file.enterForm();
 		file.enterChunk();
@@ -619,8 +786,10 @@ void ServerHarvesterInstallationObjectTemplate::load(Iff &file)
 		file.exitForm();
 		m_templateVersion = file.getCurrentName();
 	}
-	if (getHighestTemplateVersion() != TAG(0, 0, 0, 0))
+	if (getHighestTemplateVersion() != TAG(0,0,0,0))
 	{
+		if (DataLint::isEnabled())
+			DEBUG_WARNING(true, ("template %s version out of date", file.getFileName()));
 		m_versionOk = false;
 	}
 

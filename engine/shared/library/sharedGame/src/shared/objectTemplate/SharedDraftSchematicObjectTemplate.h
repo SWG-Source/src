@@ -61,7 +61,6 @@ public:
 
 	enum DamageType
 	{
-		DT_none = 0x00000000,
 		DT_kinetic = 0x00000001,
 		DT_energy = 0x00000002,
 		DT_blast = 0x00000004,
@@ -109,9 +108,14 @@ protected:
 	virtual Tag getId(void) const;
 
 public:
-	const StringId         getName(bool versionOk) const;
-	const std::string &    getHardpoint(bool versionOk) const;
+	const StringId         getName(bool versionOk, bool testData = false) const;
+	const std::string &    getHardpoint(bool versionOk, bool testData = false) const;
 
+#ifdef _DEBUG
+public:
+	// special code used by datalint
+	virtual void testValues(void) const;
+#endif
 
 protected:
 	virtual void load(Iff &file);
@@ -144,12 +148,17 @@ private:
 	virtual Tag getId(void) const;
 
 public:
-	const StringId         getName(bool versionOk) const;
-	const StringId         getExperiment(bool versionOk) const;
-	int                    getValue(bool versionOk) const;
-	int                    getValueMin(bool versionOk) const;
-	int                    getValueMax(bool versionOk) const;
+	const StringId         getName(bool versionOk, bool testData = false) const;
+	const StringId         getExperiment(bool versionOk, bool testData = false) const;
+	int                    getValue(bool versionOk, bool testData = false) const;
+	int                    getValueMin(bool versionOk, bool testData = false) const;
+	int                    getValueMax(bool versionOk, bool testData = false) const;
 
+#ifdef _DEBUG
+public:
+	// special code used by datalint
+	virtual void testValues(void) const;
+#endif
 
 protected:
 	virtual void load(Iff &file);
@@ -176,8 +185,13 @@ public:
 	void              getAttributesMin(SchematicAttribute &data, int index) const;
 	void              getAttributesMax(SchematicAttribute &data, int index) const;
 	size_t            getAttributesCount(void) const;
-	const std::string &    getCraftedSharedTemplate() const;
+	const std::string &    getCraftedSharedTemplate(bool testData = false) const;
 
+#ifdef _DEBUG
+public:
+	// special code used by datalint
+	virtual void testValues(void) const;
+#endif
 
 protected:
 	virtual void load(Iff &file);

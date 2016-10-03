@@ -23,10 +23,11 @@
 
 const std::string DefaultString("");
 const StringId DefaultStringId("", 0);
-const Vector DefaultVector(0, 0, 0);
+const Vector DefaultVector(0,0,0);
 const TriggerVolumeData DefaultTriggerVolumeData;
 
 bool SharedBuildingObjectTemplate::ms_allowDefaultTemplateParams = true;
+
 
 /**
  * Class constructor.
@@ -34,9 +35,8 @@ bool SharedBuildingObjectTemplate::ms_allowDefaultTemplateParams = true;
 SharedBuildingObjectTemplate::SharedBuildingObjectTemplate(const std::string & filename)
 //@BEGIN TFD INIT
 	: SharedTangibleObjectTemplate(filename)
-	, m_versionOk(true)
-	, m_templateVersion(0)
-	//@END TFD INIT
+	,m_versionOk(true)
+//@END TFD INIT
 {
 }	// SharedBuildingObjectTemplate::SharedBuildingObjectTemplate
 
@@ -45,8 +45,8 @@ SharedBuildingObjectTemplate::SharedBuildingObjectTemplate(const std::string & f
  */
 SharedBuildingObjectTemplate::~SharedBuildingObjectTemplate()
 {
-	//@BEGIN TFD CLEANUP
-	//@END TFD CLEANUP
+//@BEGIN TFD CLEANUP
+//@END TFD CLEANUP
 }	// SharedBuildingObjectTemplate::~SharedBuildingObjectTemplate
 
 /**
@@ -103,12 +103,22 @@ Tag SharedBuildingObjectTemplate::getHighestTemplateVersion(void) const
 } // SharedBuildingObjectTemplate::getHighestTemplateVersion
 
 //@BEGIN TFD
-const std::string & SharedBuildingObjectTemplate::getTerrainModificationFileName() const
+const std::string & SharedBuildingObjectTemplate::getTerrainModificationFileName(bool testData) const
 {
+#ifdef _DEBUG
+std::string testDataValue = DefaultString;
+#else
+UNREF(testData);
+#endif
+
 	const SharedBuildingObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedBuildingObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getTerrainModificationFileName(true);
+#endif
 	}
 
 	if (!m_terrainModificationFileName.isLoaded())
@@ -126,16 +136,31 @@ const std::string & SharedBuildingObjectTemplate::getTerrainModificationFileName
 	}
 
 	const std::string & value = m_terrainModificationFileName.getValue();
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedBuildingObjectTemplate::getTerrainModificationFileName
 
-const std::string & SharedBuildingObjectTemplate::getInteriorLayoutFileName() const
+const std::string & SharedBuildingObjectTemplate::getInteriorLayoutFileName(bool testData) const
 {
+#ifdef _DEBUG
+std::string testDataValue = DefaultString;
+#else
+UNREF(testData);
+#endif
+
 	const SharedBuildingObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedBuildingObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getInteriorLayoutFileName(true);
+#endif
 	}
 
 	if (!m_interiorLayoutFileName.isLoaded())
@@ -153,9 +178,26 @@ const std::string & SharedBuildingObjectTemplate::getInteriorLayoutFileName() co
 	}
 
 	const std::string & value = m_interiorLayoutFileName.getValue();
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedBuildingObjectTemplate::getInteriorLayoutFileName
+
+#ifdef _DEBUG
+/**
+ * Special function used by datalint. Checks for duplicate values in base and derived templates.
+ */
+void SharedBuildingObjectTemplate::testValues(void) const
+{
+	IGNORE_RETURN(getTerrainModificationFileName(true));
+	IGNORE_RETURN(getInteriorLayoutFileName(true));
+	SharedTangibleObjectTemplate::testValues();
+}	// SharedBuildingObjectTemplate::testValues
+#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form
@@ -165,8 +207,8 @@ const std::string & SharedBuildingObjectTemplate::getInteriorLayoutFileName() co
  */
 void SharedBuildingObjectTemplate::load(Iff &file)
 {
-	static const int MAX_NAME_SIZE = 256;
-	char paramName[MAX_NAME_SIZE];
+static const int MAX_NAME_SIZE = 256;
+char paramName[MAX_NAME_SIZE];
 
 	if (file.getCurrentName() != SharedBuildingObjectTemplate_tag)
 	{
@@ -176,7 +218,7 @@ void SharedBuildingObjectTemplate::load(Iff &file)
 
 	file.enterForm();
 	m_templateVersion = file.getCurrentName();
-	if (m_templateVersion == TAG(D, E, R, V))
+	if (m_templateVersion == TAG(D,E,R,V))
 	{
 		file.enterForm();
 		file.enterChunk();
@@ -196,8 +238,10 @@ void SharedBuildingObjectTemplate::load(Iff &file)
 		file.exitForm();
 		m_templateVersion = file.getCurrentName();
 	}
-	if (getHighestTemplateVersion() != TAG(0, 0, 0, 1))
+	if (getHighestTemplateVersion() != TAG(0,0,0,1))
 	{
+		if (DataLint::isEnabled())
+			DEBUG_WARNING(true, ("template %s version out of date", file.getFileName()));
 		m_versionOk = false;
 	}
 

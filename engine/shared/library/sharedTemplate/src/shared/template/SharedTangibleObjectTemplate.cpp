@@ -17,8 +17,9 @@
 #include "sharedDebug/DataLint.h"
 #include "sharedFile/Iff.h"
 #include "sharedTemplateDefinition/ObjectTemplate.h"
-#include <algorithm>
-#include <cstdio>
+#include <stdio.h>
+
+
 
 /**
  * Class constructor.
@@ -26,21 +27,19 @@
 SharedTangibleObjectTemplate::SharedTangibleObjectTemplate(const std::string & filename)
 //@BEGIN TFD INIT
 	: SharedObjectTemplate(filename)
-	, m_paletteColorCustomizationVariablesLoaded(false)
-	, m_paletteColorCustomizationVariablesAppend(false)
-	, m_rangedIntCustomizationVariablesLoaded(false)
-	, m_rangedIntCustomizationVariablesAppend(false)
-	, m_constStringCustomizationVariablesLoaded(false)
-	, m_constStringCustomizationVariablesAppend(false)
-	, m_socketDestinationsLoaded(false)
-	, m_socketDestinationsAppend(false)
-	, m_certificationsRequiredLoaded(false)
-	, m_certificationsRequiredAppend(false)
-	, m_customizationVariableMappingLoaded(false)
-	, m_customizationVariableMappingAppend(false)
-	, m_templateVersion(0)
-	, m_versionOk(false)
-	//@END TFD INIT
+	,m_paletteColorCustomizationVariablesLoaded(false)
+	,m_paletteColorCustomizationVariablesAppend(false)
+	,m_rangedIntCustomizationVariablesLoaded(false)
+	,m_rangedIntCustomizationVariablesAppend(false)
+	,m_constStringCustomizationVariablesLoaded(false)
+	,m_constStringCustomizationVariablesAppend(false)
+	,m_socketDestinationsLoaded(false)
+	,m_socketDestinationsAppend(false)
+	,m_certificationsRequiredLoaded(false)
+	,m_certificationsRequiredAppend(false)
+	,m_customizationVariableMappingLoaded(false)
+	,m_customizationVariableMappingAppend(false)
+//@END TFD INIT
 {
 }	// SharedTangibleObjectTemplate::SharedTangibleObjectTemplate
 
@@ -49,7 +48,7 @@ SharedTangibleObjectTemplate::SharedTangibleObjectTemplate(const std::string & f
  */
 SharedTangibleObjectTemplate::~SharedTangibleObjectTemplate()
 {
-	//@BEGIN TFD CLEANUP
+//@BEGIN TFD CLEANUP
 	{
 		std::vector<StructParamOT *>::iterator iter;
 		for (iter = m_paletteColorCustomizationVariables.begin(); iter != m_paletteColorCustomizationVariables.end(); ++iter)
@@ -104,7 +103,7 @@ SharedTangibleObjectTemplate::~SharedTangibleObjectTemplate()
 		}
 		m_customizationVariableMapping.clear();
 	}
-	//@END TFD CLEANUP
+//@END TFD CLEANUP
 }	// SharedTangibleObjectTemplate::~SharedTangibleObjectTemplate
 
 /**
@@ -152,10 +151,10 @@ Tag SharedTangibleObjectTemplate::getTemplateVersion(void) const
  */
 Tag SharedTangibleObjectTemplate::getHighestTemplateVersion(void) const
 {
-	if (m_baseData == nullptr)
+	if (m_baseData == NULL)
 		return m_templateVersion;
 	const SharedTangibleObjectTemplate * base = dynamic_cast<const SharedTangibleObjectTemplate *>(m_baseData);
-	if (base == nullptr)
+	if (base == NULL)
 		return m_templateVersion;
 	return std::max(m_templateVersion, base->getHighestTemplateVersion());
 } // SharedTangibleObjectTemplate::getHighestTemplateVersion
@@ -430,6 +429,7 @@ bool SharedTangibleObjectTemplate::isAppend(const char *name) const
 		return SharedObjectTemplate::isAppend(name);
 }	// SharedTangibleObjectTemplate::isAppend
 
+
 int SharedTangibleObjectTemplate::getListLength(const char *name) const
 {
 	if (strcmp(name, "paletteColorCustomizationVariables") == 0)
@@ -468,8 +468,8 @@ int SharedTangibleObjectTemplate::getListLength(const char *name) const
  */
 void SharedTangibleObjectTemplate::load(Iff &file)
 {
-	static const int MAX_NAME_SIZE = 256;
-	char paramName[MAX_NAME_SIZE];
+static const int MAX_NAME_SIZE = 256;
+char paramName[MAX_NAME_SIZE];
 
 	if (file.getCurrentName() != SharedTangibleObjectTemplate_tag)
 	{
@@ -479,7 +479,7 @@ void SharedTangibleObjectTemplate::load(Iff &file)
 
 	file.enterForm();
 	m_templateVersion = file.getCurrentName();
-	if (m_templateVersion == TAG(D, E, R, V))
+	if (m_templateVersion == TAG(D,E,R,V))
 	{
 		file.enterForm();
 		file.enterChunk();
@@ -499,7 +499,7 @@ void SharedTangibleObjectTemplate::load(Iff &file)
 		file.exitForm();
 		m_templateVersion = file.getCurrentName();
 	}
-	if (getHighestTemplateVersion() != TAG(0, 0, 1, 0))
+	if (getHighestTemplateVersion() != TAG(0,0,1,0))
 	{
 		if (DataLint::isEnabled())
 			DEBUG_WARNING(true, ("template %s version out of date", file.getFileName()));
@@ -653,18 +653,18 @@ void SharedTangibleObjectTemplate::load(Iff &file)
  */
 void SharedTangibleObjectTemplate::save(Iff &file)
 {
-	int count;
+int count;
 
 	file.insertForm(SharedTangibleObjectTemplate_tag);
 	if (m_baseTemplateName.size() != 0)
 	{
-		file.insertForm(TAG(D, E, R, V));
+		file.insertForm(TAG(D,E,R,V));
 		file.insertChunk(TAG(X, X, X, X));
 		file.insertChunkData(m_baseTemplateName.c_str(), m_baseTemplateName.size() + 1);
 		file.exitChunk();
 		file.exitForm();
 	}
-	file.insertForm(TAG(0, 0, 1, 0));
+	file.insertForm(TAG(0,0,1,0));
 	file.allowNonlinearFunctions();
 
 	int paramCount = 0;
@@ -681,7 +681,7 @@ void SharedTangibleObjectTemplate::save(Iff &file)
 	count = m_paletteColorCustomizationVariables.size();
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < count; ++i)
-		m_paletteColorCustomizationVariables[i]->saveToIff(file); }
+		m_paletteColorCustomizationVariables[i]->saveToIff(file);}
 	file.exitChunk();
 	++paramCount;
 	if (!m_rangedIntCustomizationVariablesLoaded)
@@ -696,7 +696,7 @@ void SharedTangibleObjectTemplate::save(Iff &file)
 	count = m_rangedIntCustomizationVariables.size();
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < count; ++i)
-		m_rangedIntCustomizationVariables[i]->saveToIff(file); }
+		m_rangedIntCustomizationVariables[i]->saveToIff(file);}
 	file.exitChunk();
 	++paramCount;
 	if (!m_constStringCustomizationVariablesLoaded)
@@ -711,7 +711,7 @@ void SharedTangibleObjectTemplate::save(Iff &file)
 	count = m_constStringCustomizationVariables.size();
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < count; ++i)
-		m_constStringCustomizationVariables[i]->saveToIff(file); }
+		m_constStringCustomizationVariables[i]->saveToIff(file);}
 	file.exitChunk();
 	++paramCount;
 	if (!m_socketDestinationsLoaded)
@@ -726,7 +726,7 @@ void SharedTangibleObjectTemplate::save(Iff &file)
 	count = m_socketDestinations.size();
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < count; ++i)
-		m_socketDestinations[i]->saveToIff(file); }
+		m_socketDestinations[i]->saveToIff(file);}
 	file.exitChunk();
 	++paramCount;
 	// save structureFootprintFileName
@@ -759,7 +759,7 @@ void SharedTangibleObjectTemplate::save(Iff &file)
 	count = m_certificationsRequired.size();
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < count; ++i)
-		m_certificationsRequired[i]->saveToIff(file); }
+		m_certificationsRequired[i]->saveToIff(file);}
 	file.exitChunk();
 	++paramCount;
 	if (!m_customizationVariableMappingLoaded)
@@ -774,7 +774,7 @@ void SharedTangibleObjectTemplate::save(Iff &file)
 	count = m_customizationVariableMapping.size();
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < count; ++i)
-		m_customizationVariableMapping[i]->saveToIff(file); }
+		m_customizationVariableMapping[i]->saveToIff(file);}
 	file.exitChunk();
 	++paramCount;
 	// save clientVisabilityFlag
@@ -794,6 +794,7 @@ void SharedTangibleObjectTemplate::save(Iff &file)
 	SharedObjectTemplate::save(file);
 	file.exitForm();
 }	// SharedTangibleObjectTemplate::save
+
 
 //=============================================================================
 // class SharedTangibleObjectTemplate::_ConstStringCustomizationVariable
@@ -938,6 +939,7 @@ bool SharedTangibleObjectTemplate::_ConstStringCustomizationVariable::isAppend(c
 	return TpfTemplate::isAppend(name);
 }	// SharedTangibleObjectTemplate::_ConstStringCustomizationVariable::isAppend
 
+
 int SharedTangibleObjectTemplate::_ConstStringCustomizationVariable::getListLength(const char *name) const
 {
 	return TpfTemplate::getListLength(name);
@@ -951,8 +953,8 @@ int SharedTangibleObjectTemplate::_ConstStringCustomizationVariable::getListLeng
  */
 void SharedTangibleObjectTemplate::_ConstStringCustomizationVariable::load(Iff &file)
 {
-	static const int MAX_NAME_SIZE = 256;
-	char paramName[MAX_NAME_SIZE];
+static const int MAX_NAME_SIZE = 256;
+char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 
@@ -982,7 +984,7 @@ void SharedTangibleObjectTemplate::_ConstStringCustomizationVariable::load(Iff &
  */
 void SharedTangibleObjectTemplate::_ConstStringCustomizationVariable::save(Iff &file)
 {
-	int count;
+int count;
 
 	file.insertForm(_ConstStringCustomizationVariable_tag);
 
@@ -1010,6 +1012,7 @@ void SharedTangibleObjectTemplate::_ConstStringCustomizationVariable::save(Iff &
 	file.exitForm(true);
 	UNREF(count);
 }	// SharedTangibleObjectTemplate::_ConstStringCustomizationVariable::save
+
 
 //=============================================================================
 // class SharedTangibleObjectTemplate::_CustomizationVariableMapping
@@ -1154,6 +1157,7 @@ bool SharedTangibleObjectTemplate::_CustomizationVariableMapping::isAppend(const
 	return TpfTemplate::isAppend(name);
 }	// SharedTangibleObjectTemplate::_CustomizationVariableMapping::isAppend
 
+
 int SharedTangibleObjectTemplate::_CustomizationVariableMapping::getListLength(const char *name) const
 {
 	return TpfTemplate::getListLength(name);
@@ -1167,8 +1171,8 @@ int SharedTangibleObjectTemplate::_CustomizationVariableMapping::getListLength(c
  */
 void SharedTangibleObjectTemplate::_CustomizationVariableMapping::load(Iff &file)
 {
-	static const int MAX_NAME_SIZE = 256;
-	char paramName[MAX_NAME_SIZE];
+static const int MAX_NAME_SIZE = 256;
+char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 
@@ -1198,7 +1202,7 @@ void SharedTangibleObjectTemplate::_CustomizationVariableMapping::load(Iff &file
  */
 void SharedTangibleObjectTemplate::_CustomizationVariableMapping::save(Iff &file)
 {
-	int count;
+int count;
 
 	file.insertForm(_CustomizationVariableMapping_tag);
 
@@ -1226,6 +1230,7 @@ void SharedTangibleObjectTemplate::_CustomizationVariableMapping::save(Iff &file
 	file.exitForm(true);
 	UNREF(count);
 }	// SharedTangibleObjectTemplate::_CustomizationVariableMapping::save
+
 
 //=============================================================================
 // class SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable
@@ -1386,6 +1391,7 @@ bool SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::isAppend(
 	return TpfTemplate::isAppend(name);
 }	// SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::isAppend
 
+
 int SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getListLength(const char *name) const
 {
 	return TpfTemplate::getListLength(name);
@@ -1399,8 +1405,8 @@ int SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::getListLen
  */
 void SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::load(Iff &file)
 {
-	static const int MAX_NAME_SIZE = 256;
-	char paramName[MAX_NAME_SIZE];
+static const int MAX_NAME_SIZE = 256;
+char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 
@@ -1432,7 +1438,7 @@ void SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::load(Iff 
  */
 void SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::save(Iff &file)
 {
-	int count;
+int count;
 
 	file.insertForm(_PaletteColorCustomizationVariable_tag);
 
@@ -1466,6 +1472,7 @@ void SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::save(Iff 
 	file.exitForm(true);
 	UNREF(count);
 }	// SharedTangibleObjectTemplate::_PaletteColorCustomizationVariable::save
+
 
 //=============================================================================
 // class SharedTangibleObjectTemplate::_RangedIntCustomizationVariable
@@ -1640,6 +1647,7 @@ bool SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::isAppend(con
 	return TpfTemplate::isAppend(name);
 }	// SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::isAppend
 
+
 int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getListLength(const char *name) const
 {
 	return TpfTemplate::getListLength(name);
@@ -1653,8 +1661,8 @@ int SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::getListLength
  */
 void SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::load(Iff &file)
 {
-	static const int MAX_NAME_SIZE = 256;
-	char paramName[MAX_NAME_SIZE];
+static const int MAX_NAME_SIZE = 256;
+char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 
@@ -1688,7 +1696,7 @@ void SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::load(Iff &fi
  */
 void SharedTangibleObjectTemplate::_RangedIntCustomizationVariable::save(Iff &file)
 {
-	int count;
+int count;
 
 	file.insertForm(_RangedIntCustomizationVariable_tag);
 

@@ -17,8 +17,7 @@
 #include "sharedDebug/DataLint.h"
 #include "sharedFile/Iff.h"
 #include "sharedTemplateDefinition/ObjectTemplate.h"
-#include <algorithm>
-#include <cstdio>
+#include <stdio.h>
 
 
 
@@ -86,10 +85,10 @@ Tag ServerGuildObjectTemplate::getTemplateVersion(void) const
  */
 Tag ServerGuildObjectTemplate::getHighestTemplateVersion(void) const
 {
-	if (m_baseData == nullptr)
+	if (m_baseData == NULL)
 		return m_templateVersion;
 	const ServerGuildObjectTemplate * base = dynamic_cast<const ServerGuildObjectTemplate *>(m_baseData);
-	if (base == nullptr)
+	if (base == NULL)
 		return m_templateVersion;
 	return std::max(m_templateVersion, base->getHighestTemplateVersion());
 } // ServerGuildObjectTemplate::getHighestTemplateVersion

@@ -44,11 +44,16 @@ public:
 
 //@BEGIN TFD
 public:
-	float                  getCover() const;
-	float                  getCoverMin() const;
-	float                  getCoverMax() const;
-	const std::string &    getSurfaceType() const;
+	float                  getCover(bool testData = false) const;
+	float                  getCoverMin(bool testData = false) const;
+	float                  getCoverMax(bool testData = false) const;
+	const std::string &    getSurfaceType(bool testData = false) const;
 
+#ifdef _DEBUG
+public:
+	// special code used by datalint
+	virtual void testValues(void) const;
+#endif
 
 protected:
 	virtual void load(Iff &file);

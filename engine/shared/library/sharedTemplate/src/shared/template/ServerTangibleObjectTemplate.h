@@ -77,7 +77,10 @@ public:
 		C_inflightTutorial = 0x00800000,
 		C_spaceCombatMusic = 0x01000000,		//   Set programmatically by the AI system.  Do not set this in the template.
 		C_encounterLocked = 0x02000000,
-		Conditions_Last = C_encounterLocked,
+		C_spawnedCreature = 0x04000000,
+		C_holidayInteresting = 0x08000000,
+		C_locked = 0x10000000,
+		Conditions_Last = C_locked,
 	};
 
 public:
@@ -101,8 +104,11 @@ protected:
 	virtual void save(Iff &file);
 
 private:
-	// these MUST be reflected in clientGame/TangibleObject.h
-	// these MUST be reflected in base_class.java
+	// these MUST be reflected in:
+	// //depot/swg/current/dsrc/sku.0/sys.server/compiled/game/object/tangible_object_template.tdf
+	// //depot/swg/current/dsrc/sku.0/sys.server/compiled/game/script/base_class.java
+	// //depot/swg/current/src/engine/client/library/clientGame/src/shared/object/TangibleObject.h
+	// //depot/swg/current/src/engine/server/library/serverGame/src/shared/object/TangibleObject.h
 	stdvector<TriggerVolumeParam *>::fwd m_triggerVolumes;		// trigger volume(s) attached to the object
 	bool m_triggerVolumesLoaded;
 	bool m_triggerVolumesAppend;

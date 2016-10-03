@@ -13,6 +13,7 @@
 #include "sharedGame/FirstSharedGame.h"
 #include "sharedGame/SharedShipObjectTemplate.h"
 
+#include "sharedDebug/DataLint.h"
 #include "sharedFile/Iff.h"
 #include "sharedGame/AssetCustomizationManager.h"
 #include "sharedMath/Vector.h"
@@ -29,10 +30,11 @@
 
 const std::string DefaultString("");
 const StringId DefaultStringId("", 0);
-const Vector DefaultVector(0, 0, 0);
+const Vector DefaultVector(0,0,0);
 const TriggerVolumeData DefaultTriggerVolumeData;
 
 bool SharedShipObjectTemplate::ms_allowDefaultTemplateParams = true;
+
 
 /**
  * Class constructor.
@@ -40,9 +42,8 @@ bool SharedShipObjectTemplate::ms_allowDefaultTemplateParams = true;
 SharedShipObjectTemplate::SharedShipObjectTemplate(const std::string & filename)
 //@BEGIN TFD INIT
 	: SharedTangibleObjectTemplate(filename)
-	, m_versionOk(true)
-	, m_templateVersion(0)
-	//@END TFD INIT
+	,m_versionOk(true)
+//@END TFD INIT
 {
 }	// SharedShipObjectTemplate::SharedShipObjectTemplate
 
@@ -51,8 +52,8 @@ SharedShipObjectTemplate::SharedShipObjectTemplate(const std::string & filename)
  */
 SharedShipObjectTemplate::~SharedShipObjectTemplate()
 {
-	//@BEGIN TFD CLEANUP
-	//@END TFD CLEANUP
+//@BEGIN TFD CLEANUP
+//@END TFD CLEANUP
 }	// SharedShipObjectTemplate::~SharedShipObjectTemplate
 
 /**
@@ -128,16 +129,16 @@ void SharedShipObjectTemplate::createCustomizationDataPropertyAsNeeded(Object &o
 		//   variables since we are a creature.  The SharedTangibleObjectTemplate version of
 		//   this function sets it to true.
 		bool const skipSharedOwnerVariables = false;
-		const std::string & appearanceFilename = getAppearanceFilename();
-		if (!appearanceFilename.empty())
-		{
+		const std::string & appearanceFilename =  getAppearanceFilename();
+		if(!appearanceFilename.empty())
+		{	
 			AssetCustomizationManager::addCustomizationVariablesForAsset(TemporaryCrcString(appearanceFilename.c_str(), true), *customizationData, skipSharedOwnerVariables);
 		}
 		else
 		{
 			//Perhaps it's a POB ship, check the portalLayoutFilename
 			const std::string & portalLayoutFilename = getPortalLayoutFilename();
-			AssetCustomizationManager::addCustomizationVariablesForAsset(TemporaryCrcString(portalLayoutFilename.c_str(), true), *customizationData, skipSharedOwnerVariables);
+			AssetCustomizationManager::addCustomizationVariablesForAsset(TemporaryCrcString(portalLayoutFilename.c_str(), true), *customizationData, skipSharedOwnerVariables);		
 		}
 
 		//-- release local reference to the CustomizationData instance
@@ -146,12 +147,22 @@ void SharedShipObjectTemplate::createCustomizationDataPropertyAsNeeded(Object &o
 }
 
 //@BEGIN TFD
-const std::string & SharedShipObjectTemplate::getCockpitFilename() const
+const std::string & SharedShipObjectTemplate::getCockpitFilename(bool testData) const
 {
+#ifdef _DEBUG
+std::string testDataValue = DefaultString;
+#else
+UNREF(testData);
+#endif
+
 	const SharedShipObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedShipObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getCockpitFilename(true);
+#endif
 	}
 
 	if (!m_cockpitFilename.isLoaded())
@@ -169,16 +180,31 @@ const std::string & SharedShipObjectTemplate::getCockpitFilename() const
 	}
 
 	const std::string & value = m_cockpitFilename.getValue();
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedShipObjectTemplate::getCockpitFilename
 
-bool SharedShipObjectTemplate::getHasWings() const
+bool SharedShipObjectTemplate::getHasWings(bool testData) const
 {
+#ifdef _DEBUG
+bool testDataValue = false;
+#else
+UNREF(testData);
+#endif
+
 	const SharedShipObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedShipObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getHasWings(true);
+#endif
 	}
 
 	if (!m_hasWings.isLoaded())
@@ -196,16 +222,31 @@ bool SharedShipObjectTemplate::getHasWings() const
 	}
 
 	bool value = m_hasWings.getValue();
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedShipObjectTemplate::getHasWings
 
-bool SharedShipObjectTemplate::getPlayerControlled() const
+bool SharedShipObjectTemplate::getPlayerControlled(bool testData) const
 {
+#ifdef _DEBUG
+bool testDataValue = false;
+#else
+UNREF(testData);
+#endif
+
 	const SharedShipObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedShipObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getPlayerControlled(true);
+#endif
 	}
 
 	if (!m_playerControlled.isLoaded())
@@ -223,16 +264,31 @@ bool SharedShipObjectTemplate::getPlayerControlled() const
 	}
 
 	bool value = m_playerControlled.getValue();
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedShipObjectTemplate::getPlayerControlled
 
-const std::string & SharedShipObjectTemplate::getInteriorLayoutFileName() const
+const std::string & SharedShipObjectTemplate::getInteriorLayoutFileName(bool testData) const
 {
+#ifdef _DEBUG
+std::string testDataValue = DefaultString;
+#else
+UNREF(testData);
+#endif
+
 	const SharedShipObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedShipObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getInteriorLayoutFileName(true);
+#endif
 	}
 
 	if (!m_interiorLayoutFileName.isLoaded())
@@ -250,9 +306,28 @@ const std::string & SharedShipObjectTemplate::getInteriorLayoutFileName() const
 	}
 
 	const std::string & value = m_interiorLayoutFileName.getValue();
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedShipObjectTemplate::getInteriorLayoutFileName
+
+#ifdef _DEBUG
+/**
+ * Special function used by datalint. Checks for duplicate values in base and derived templates.
+ */
+void SharedShipObjectTemplate::testValues(void) const
+{
+	IGNORE_RETURN(getCockpitFilename(true));
+	IGNORE_RETURN(getHasWings(true));
+	IGNORE_RETURN(getPlayerControlled(true));
+	IGNORE_RETURN(getInteriorLayoutFileName(true));
+	SharedTangibleObjectTemplate::testValues();
+}	// SharedShipObjectTemplate::testValues
+#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form
@@ -262,8 +337,8 @@ const std::string & SharedShipObjectTemplate::getInteriorLayoutFileName() const
  */
 void SharedShipObjectTemplate::load(Iff &file)
 {
-	static const int MAX_NAME_SIZE = 256;
-	char paramName[MAX_NAME_SIZE];
+static const int MAX_NAME_SIZE = 256;
+char paramName[MAX_NAME_SIZE];
 
 	if (file.getCurrentName() != SharedShipObjectTemplate_tag)
 	{
@@ -273,7 +348,7 @@ void SharedShipObjectTemplate::load(Iff &file)
 
 	file.enterForm();
 	m_templateVersion = file.getCurrentName();
-	if (m_templateVersion == TAG(D, E, R, V))
+	if (m_templateVersion == TAG(D,E,R,V))
 	{
 		file.enterForm();
 		file.enterChunk();
@@ -293,8 +368,10 @@ void SharedShipObjectTemplate::load(Iff &file)
 		file.exitForm();
 		m_templateVersion = file.getCurrentName();
 	}
-	if (getHighestTemplateVersion() != TAG(0, 0, 0, 4))
+	if (getHighestTemplateVersion() != TAG(0,0,0,4))
 	{
+		if (DataLint::isEnabled())
+			DEBUG_WARNING(true, ("template %s version out of date", file.getFileName()));
 		m_versionOk = false;
 	}
 

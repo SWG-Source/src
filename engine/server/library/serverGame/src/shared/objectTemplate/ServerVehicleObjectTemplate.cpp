@@ -22,10 +22,11 @@
 
 const std::string DefaultString("");
 const StringId DefaultStringId("", 0);
-const Vector DefaultVector(0, 0, 0);
+const Vector DefaultVector(0,0,0);
 const TriggerVolumeData DefaultTriggerVolumeData;
 
 bool ServerVehicleObjectTemplate::ms_allowDefaultTemplateParams = true;
+
 
 /**
  * Class constructor.
@@ -33,9 +34,8 @@ bool ServerVehicleObjectTemplate::ms_allowDefaultTemplateParams = true;
 ServerVehicleObjectTemplate::ServerVehicleObjectTemplate(const std::string & filename)
 //@BEGIN TFD INIT
 	: ServerTangibleObjectTemplate(filename)
-	, m_versionOk(true)
-	, m_templateVersion(0)
-	//@END TFD INIT
+	,m_versionOk(true)
+//@END TFD INIT
 {
 }	// ServerVehicleObjectTemplate::ServerVehicleObjectTemplate
 
@@ -44,8 +44,8 @@ ServerVehicleObjectTemplate::ServerVehicleObjectTemplate(const std::string & fil
  */
 ServerVehicleObjectTemplate::~ServerVehicleObjectTemplate()
 {
-	//@BEGIN TFD CLEANUP
-	//@END TFD CLEANUP
+//@BEGIN TFD CLEANUP
+//@END TFD CLEANUP
 }	// ServerVehicleObjectTemplate::~ServerVehicleObjectTemplate
 
 /**
@@ -93,10 +93,10 @@ Tag ServerVehicleObjectTemplate::getTemplateVersion(void) const
  */
 Tag ServerVehicleObjectTemplate::getHighestTemplateVersion(void) const
 {
-	if (m_baseData == nullptr)
+	if (m_baseData == NULL)
 		return m_templateVersion;
 	const ServerVehicleObjectTemplate * base = dynamic_cast<const ServerVehicleObjectTemplate *>(m_baseData);
-	if (base == nullptr)
+	if (base == NULL)
 		return m_templateVersion;
 	return std::max(m_templateVersion, base->getHighestTemplateVersion());
 } // ServerVehicleObjectTemplate::getHighestTemplateVersion
@@ -112,12 +112,22 @@ Object * ServerVehicleObjectTemplate::createObject(void) const
 }	// ServerVehicleObjectTemplate::createObject
 
 //@BEGIN TFD
-const std::string & ServerVehicleObjectTemplate::getFuelType() const
+const std::string & ServerVehicleObjectTemplate::getFuelType(bool testData) const
 {
+#ifdef _DEBUG
+std::string testDataValue = DefaultString;
+#else
+UNREF(testData);
+#endif
+
 	const ServerVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerVehicleObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getFuelType(true);
+#endif
 	}
 
 	if (!m_fuelType.isLoaded())
@@ -135,16 +145,31 @@ const std::string & ServerVehicleObjectTemplate::getFuelType() const
 	}
 
 	const std::string & value = m_fuelType.getValue();
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerVehicleObjectTemplate::getFuelType
 
-float ServerVehicleObjectTemplate::getCurrentFuel() const
+float ServerVehicleObjectTemplate::getCurrentFuel(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const ServerVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerVehicleObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getCurrentFuel(true);
+#endif
 	}
 
 	if (!m_currentFuel.isLoaded())
@@ -184,16 +209,31 @@ float ServerVehicleObjectTemplate::getCurrentFuel() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerVehicleObjectTemplate::getCurrentFuel
 
-float ServerVehicleObjectTemplate::getCurrentFuelMin() const
+float ServerVehicleObjectTemplate::getCurrentFuelMin(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const ServerVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerVehicleObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getCurrentFuelMin(true);
+#endif
 	}
 
 	if (!m_currentFuel.isLoaded())
@@ -233,16 +273,31 @@ float ServerVehicleObjectTemplate::getCurrentFuelMin() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerVehicleObjectTemplate::getCurrentFuelMin
 
-float ServerVehicleObjectTemplate::getCurrentFuelMax() const
+float ServerVehicleObjectTemplate::getCurrentFuelMax(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const ServerVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerVehicleObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getCurrentFuelMax(true);
+#endif
 	}
 
 	if (!m_currentFuel.isLoaded())
@@ -282,16 +337,31 @@ float ServerVehicleObjectTemplate::getCurrentFuelMax() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerVehicleObjectTemplate::getCurrentFuelMax
 
-float ServerVehicleObjectTemplate::getMaxFuel() const
+float ServerVehicleObjectTemplate::getMaxFuel(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const ServerVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerVehicleObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getMaxFuel(true);
+#endif
 	}
 
 	if (!m_maxFuel.isLoaded())
@@ -331,16 +401,31 @@ float ServerVehicleObjectTemplate::getMaxFuel() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerVehicleObjectTemplate::getMaxFuel
 
-float ServerVehicleObjectTemplate::getMaxFuelMin() const
+float ServerVehicleObjectTemplate::getMaxFuelMin(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const ServerVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerVehicleObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getMaxFuelMin(true);
+#endif
 	}
 
 	if (!m_maxFuel.isLoaded())
@@ -380,16 +465,31 @@ float ServerVehicleObjectTemplate::getMaxFuelMin() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerVehicleObjectTemplate::getMaxFuelMin
 
-float ServerVehicleObjectTemplate::getMaxFuelMax() const
+float ServerVehicleObjectTemplate::getMaxFuelMax(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const ServerVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerVehicleObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getMaxFuelMax(true);
+#endif
 	}
 
 	if (!m_maxFuel.isLoaded())
@@ -429,16 +529,31 @@ float ServerVehicleObjectTemplate::getMaxFuelMax() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerVehicleObjectTemplate::getMaxFuelMax
 
-float ServerVehicleObjectTemplate::getConsumpsion() const
+float ServerVehicleObjectTemplate::getConsumpsion(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const ServerVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerVehicleObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getConsumpsion(true);
+#endif
 	}
 
 	if (!m_consumpsion.isLoaded())
@@ -478,16 +593,31 @@ float ServerVehicleObjectTemplate::getConsumpsion() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerVehicleObjectTemplate::getConsumpsion
 
-float ServerVehicleObjectTemplate::getConsumpsionMin() const
+float ServerVehicleObjectTemplate::getConsumpsionMin(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const ServerVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerVehicleObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getConsumpsionMin(true);
+#endif
 	}
 
 	if (!m_consumpsion.isLoaded())
@@ -527,16 +657,31 @@ float ServerVehicleObjectTemplate::getConsumpsionMin() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerVehicleObjectTemplate::getConsumpsionMin
 
-float ServerVehicleObjectTemplate::getConsumpsionMax() const
+float ServerVehicleObjectTemplate::getConsumpsionMax(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const ServerVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerVehicleObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getConsumpsionMax(true);
+#endif
 	}
 
 	if (!m_consumpsion.isLoaded())
@@ -576,9 +721,31 @@ float ServerVehicleObjectTemplate::getConsumpsionMax() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerVehicleObjectTemplate::getConsumpsionMax
+
+#ifdef _DEBUG
+/**
+ * Special function used by datalint. Checks for duplicate values in base and derived templates.
+ */
+void ServerVehicleObjectTemplate::testValues(void) const
+{
+	IGNORE_RETURN(getFuelType(true));
+	IGNORE_RETURN(getCurrentFuelMin(true));
+	IGNORE_RETURN(getCurrentFuelMax(true));
+	IGNORE_RETURN(getMaxFuelMin(true));
+	IGNORE_RETURN(getMaxFuelMax(true));
+	IGNORE_RETURN(getConsumpsionMin(true));
+	IGNORE_RETURN(getConsumpsionMax(true));
+	ServerTangibleObjectTemplate::testValues();
+}	// ServerVehicleObjectTemplate::testValues
+#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form
@@ -588,8 +755,8 @@ float ServerVehicleObjectTemplate::getConsumpsionMax() const
  */
 void ServerVehicleObjectTemplate::load(Iff &file)
 {
-	static const int MAX_NAME_SIZE = 256;
-	char paramName[MAX_NAME_SIZE];
+static const int MAX_NAME_SIZE = 256;
+char paramName[MAX_NAME_SIZE];
 
 	if (file.getCurrentName() != ServerVehicleObjectTemplate_tag)
 	{
@@ -599,7 +766,7 @@ void ServerVehicleObjectTemplate::load(Iff &file)
 
 	file.enterForm();
 	m_templateVersion = file.getCurrentName();
-	if (m_templateVersion == TAG(D, E, R, V))
+	if (m_templateVersion == TAG(D,E,R,V))
 	{
 		file.enterForm();
 		file.enterChunk();
@@ -619,8 +786,10 @@ void ServerVehicleObjectTemplate::load(Iff &file)
 		file.exitForm();
 		m_templateVersion = file.getCurrentName();
 	}
-	if (getHighestTemplateVersion() != TAG(0, 0, 0, 0))
+	if (getHighestTemplateVersion() != TAG(0,0,0,0))
 	{
+		if (DataLint::isEnabled())
+			DEBUG_WARNING(true, ("template %s version out of date", file.getFileName()));
 		m_versionOk = false;
 	}
 

@@ -23,10 +23,11 @@
 
 const std::string DefaultString("");
 const StringId DefaultStringId("", 0);
-const Vector DefaultVector(0, 0, 0);
+const Vector DefaultVector(0,0,0);
 const TriggerVolumeData DefaultTriggerVolumeData;
 
 bool SharedManufactureSchematicObjectTemplate::ms_allowDefaultTemplateParams = true;
+
 
 /**
  * Class constructor.
@@ -34,9 +35,8 @@ bool SharedManufactureSchematicObjectTemplate::ms_allowDefaultTemplateParams = t
 SharedManufactureSchematicObjectTemplate::SharedManufactureSchematicObjectTemplate(const std::string & filename)
 //@BEGIN TFD INIT
 	: SharedIntangibleObjectTemplate(filename)
-	, m_versionOk(true)
-	, m_templateVersion(0)
-	//@END TFD INIT
+	,m_versionOk(true)
+//@END TFD INIT
 {
 }	// SharedManufactureSchematicObjectTemplate::SharedManufactureSchematicObjectTemplate
 
@@ -45,8 +45,8 @@ SharedManufactureSchematicObjectTemplate::SharedManufactureSchematicObjectTempla
  */
 SharedManufactureSchematicObjectTemplate::~SharedManufactureSchematicObjectTemplate()
 {
-	//@BEGIN TFD CLEANUP
-	//@END TFD CLEANUP
+//@BEGIN TFD CLEANUP
+//@END TFD CLEANUP
 }	// SharedManufactureSchematicObjectTemplate::~SharedManufactureSchematicObjectTemplate
 
 /**
@@ -103,6 +103,15 @@ Tag SharedManufactureSchematicObjectTemplate::getHighestTemplateVersion(void) co
 } // SharedManufactureSchematicObjectTemplate::getHighestTemplateVersion
 
 //@BEGIN TFD
+#ifdef _DEBUG
+/**
+ * Special function used by datalint. Checks for duplicate values in base and derived templates.
+ */
+void SharedManufactureSchematicObjectTemplate::testValues(void) const
+{
+	SharedIntangibleObjectTemplate::testValues();
+}	// SharedManufactureSchematicObjectTemplate::testValues
+#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form
@@ -112,8 +121,8 @@ Tag SharedManufactureSchematicObjectTemplate::getHighestTemplateVersion(void) co
  */
 void SharedManufactureSchematicObjectTemplate::load(Iff &file)
 {
-	static const int MAX_NAME_SIZE = 256;
-	char paramName[MAX_NAME_SIZE];
+static const int MAX_NAME_SIZE = 256;
+char paramName[MAX_NAME_SIZE];
 
 	if (file.getCurrentName() != SharedManufactureSchematicObjectTemplate_tag)
 	{
@@ -123,7 +132,7 @@ void SharedManufactureSchematicObjectTemplate::load(Iff &file)
 
 	file.enterForm();
 	m_templateVersion = file.getCurrentName();
-	if (m_templateVersion == TAG(D, E, R, V))
+	if (m_templateVersion == TAG(D,E,R,V))
 	{
 		file.enterForm();
 		file.enterChunk();
@@ -143,8 +152,10 @@ void SharedManufactureSchematicObjectTemplate::load(Iff &file)
 		file.exitForm();
 		m_templateVersion = file.getCurrentName();
 	}
-	if (getHighestTemplateVersion() != TAG(0, 0, 0, 0))
+	if (getHighestTemplateVersion() != TAG(0,0,0,0))
 	{
+		if (DataLint::isEnabled())
+			DEBUG_WARNING(true, ("template %s version out of date", file.getFileName()));
 		m_versionOk = false;
 	}
 

@@ -17,8 +17,9 @@
 #include "sharedDebug/DataLint.h"
 #include "sharedFile/Iff.h"
 #include "sharedTemplateDefinition/ObjectTemplate.h"
-#include <algorithm>
-#include <cstdio>
+#include <stdio.h>
+
+
 
 /**
  * Class constructor.
@@ -26,13 +27,11 @@
 ServerManufactureSchematicObjectTemplate::ServerManufactureSchematicObjectTemplate(const std::string & filename)
 //@BEGIN TFD INIT
 	: ServerIntangibleObjectTemplate(filename)
-	, m_ingredientsLoaded(false)
-	, m_ingredientsAppend(false)
-	, m_attributesLoaded(false)
-	, m_attributesAppend(false)
-	, m_templateVersion(0)
-	, m_versionOk(false)
-	//@END TFD INIT
+	,m_ingredientsLoaded(false)
+	,m_ingredientsAppend(false)
+	,m_attributesLoaded(false)
+	,m_attributesAppend(false)
+//@END TFD INIT
 {
 }	// ServerManufactureSchematicObjectTemplate::ServerManufactureSchematicObjectTemplate
 
@@ -41,7 +40,7 @@ ServerManufactureSchematicObjectTemplate::ServerManufactureSchematicObjectTempla
  */
 ServerManufactureSchematicObjectTemplate::~ServerManufactureSchematicObjectTemplate()
 {
-	//@BEGIN TFD CLEANUP
+//@BEGIN TFD CLEANUP
 	{
 		std::vector<StructParamOT *>::iterator iter;
 		for (iter = m_ingredients.begin(); iter != m_ingredients.end(); ++iter)
@@ -60,7 +59,7 @@ ServerManufactureSchematicObjectTemplate::~ServerManufactureSchematicObjectTempl
 		}
 		m_attributes.clear();
 	}
-	//@END TFD CLEANUP
+//@END TFD CLEANUP
 }	// ServerManufactureSchematicObjectTemplate::~ServerManufactureSchematicObjectTemplate
 
 /**
@@ -108,10 +107,10 @@ Tag ServerManufactureSchematicObjectTemplate::getTemplateVersion(void) const
  */
 Tag ServerManufactureSchematicObjectTemplate::getHighestTemplateVersion(void) const
 {
-	if (m_baseData == nullptr)
+	if (m_baseData == NULL)
 		return m_templateVersion;
 	const ServerManufactureSchematicObjectTemplate * base = dynamic_cast<const ServerManufactureSchematicObjectTemplate *>(m_baseData);
-	if (base == nullptr)
+	if (base == NULL)
 		return m_templateVersion;
 	return std::max(m_templateVersion, base->getHighestTemplateVersion());
 } // ServerManufactureSchematicObjectTemplate::getHighestTemplateVersion
@@ -282,6 +281,7 @@ bool ServerManufactureSchematicObjectTemplate::isAppend(const char *name) const
 		return ServerIntangibleObjectTemplate::isAppend(name);
 }	// ServerManufactureSchematicObjectTemplate::isAppend
 
+
 int ServerManufactureSchematicObjectTemplate::getListLength(const char *name) const
 {
 	if (strcmp(name, "ingredients") == 0)
@@ -304,8 +304,8 @@ int ServerManufactureSchematicObjectTemplate::getListLength(const char *name) co
  */
 void ServerManufactureSchematicObjectTemplate::load(Iff &file)
 {
-	static const int MAX_NAME_SIZE = 256;
-	char paramName[MAX_NAME_SIZE];
+static const int MAX_NAME_SIZE = 256;
+char paramName[MAX_NAME_SIZE];
 
 	if (file.getCurrentName() != ServerManufactureSchematicObjectTemplate_tag)
 	{
@@ -315,7 +315,7 @@ void ServerManufactureSchematicObjectTemplate::load(Iff &file)
 
 	file.enterForm();
 	m_templateVersion = file.getCurrentName();
-	if (m_templateVersion == TAG(D, E, R, V))
+	if (m_templateVersion == TAG(D,E,R,V))
 	{
 		file.enterForm();
 		file.enterChunk();
@@ -335,7 +335,7 @@ void ServerManufactureSchematicObjectTemplate::load(Iff &file)
 		file.exitForm();
 		m_templateVersion = file.getCurrentName();
 	}
-	if (getHighestTemplateVersion() != TAG(0, 0, 0, 0))
+	if (getHighestTemplateVersion() != TAG(0,0,0,0))
 	{
 		if (DataLint::isEnabled())
 			DEBUG_WARNING(true, ("template %s version out of date", file.getFileName()));
@@ -411,18 +411,18 @@ void ServerManufactureSchematicObjectTemplate::load(Iff &file)
  */
 void ServerManufactureSchematicObjectTemplate::save(Iff &file)
 {
-	int count;
+int count;
 
 	file.insertForm(ServerManufactureSchematicObjectTemplate_tag);
 	if (m_baseTemplateName.size() != 0)
 	{
-		file.insertForm(TAG(D, E, R, V));
+		file.insertForm(TAG(D,E,R,V));
 		file.insertChunk(TAG(X, X, X, X));
 		file.insertChunkData(m_baseTemplateName.c_str(), m_baseTemplateName.size() + 1);
 		file.exitChunk();
 		file.exitForm();
 	}
-	file.insertForm(TAG(0, 0, 0, 0));
+	file.insertForm(TAG(0,0,0,0));
 	file.allowNonlinearFunctions();
 
 	int paramCount = 0;
@@ -451,7 +451,7 @@ void ServerManufactureSchematicObjectTemplate::save(Iff &file)
 	count = m_ingredients.size();
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < count; ++i)
-		m_ingredients[i]->saveToIff(file); }
+		m_ingredients[i]->saveToIff(file);}
 	file.exitChunk();
 	++paramCount;
 	// save itemCount
@@ -472,7 +472,7 @@ void ServerManufactureSchematicObjectTemplate::save(Iff &file)
 	count = m_attributes.size();
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < count; ++i)
-		m_attributes[i]->saveToIff(file); }
+		m_attributes[i]->saveToIff(file);}
 	file.exitChunk();
 	++paramCount;
 
@@ -486,6 +486,7 @@ void ServerManufactureSchematicObjectTemplate::save(Iff &file)
 	ServerIntangibleObjectTemplate::save(file);
 	file.exitForm();
 }	// ServerManufactureSchematicObjectTemplate::save
+
 
 //=============================================================================
 // class ServerManufactureSchematicObjectTemplate::_IngredientSlot
@@ -635,6 +636,7 @@ bool ServerManufactureSchematicObjectTemplate::_IngredientSlot::isAppend(const c
 	return TpfTemplate::isAppend(name);
 }	// ServerManufactureSchematicObjectTemplate::_IngredientSlot::isAppend
 
+
 int ServerManufactureSchematicObjectTemplate::_IngredientSlot::getListLength(const char *name) const
 {
 	return TpfTemplate::getListLength(name);
@@ -648,8 +650,8 @@ int ServerManufactureSchematicObjectTemplate::_IngredientSlot::getListLength(con
  */
 void ServerManufactureSchematicObjectTemplate::_IngredientSlot::load(Iff &file)
 {
-	static const int MAX_NAME_SIZE = 256;
-	char paramName[MAX_NAME_SIZE];
+static const int MAX_NAME_SIZE = 256;
+char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 
@@ -679,7 +681,7 @@ void ServerManufactureSchematicObjectTemplate::_IngredientSlot::load(Iff &file)
  */
 void ServerManufactureSchematicObjectTemplate::_IngredientSlot::save(Iff &file)
 {
-	int count;
+int count;
 
 	file.insertForm(_IngredientSlot_tag);
 

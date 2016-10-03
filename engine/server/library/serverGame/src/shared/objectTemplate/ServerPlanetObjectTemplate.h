@@ -44,8 +44,13 @@ public:
 
 //@BEGIN TFD
 public:
-	const std::string &    getPlanetName() const;
+	const std::string &    getPlanetName(bool testData = false) const;
 
+#ifdef _DEBUG
+public:
+	// special code used by datalint
+	virtual void testValues(void) const;
+#endif
 
 protected:
 	virtual void load(Iff &file);

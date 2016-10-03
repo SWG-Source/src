@@ -22,10 +22,11 @@
 
 const std::string DefaultString("");
 const StringId DefaultStringId("", 0);
-const Vector DefaultVector(0, 0, 0);
+const Vector DefaultVector(0,0,0);
 const TriggerVolumeData DefaultTriggerVolumeData;
 
 bool ServerBuildingObjectTemplate::ms_allowDefaultTemplateParams = true;
+
 
 /**
  * Class constructor.
@@ -33,9 +34,8 @@ bool ServerBuildingObjectTemplate::ms_allowDefaultTemplateParams = true;
 ServerBuildingObjectTemplate::ServerBuildingObjectTemplate(const std::string & filename)
 //@BEGIN TFD INIT
 	: ServerTangibleObjectTemplate(filename)
-	, m_versionOk(true)
-	, m_templateVersion(0)
-	//@END TFD INIT
+	,m_versionOk(true)
+//@END TFD INIT
 {
 }	// ServerBuildingObjectTemplate::ServerBuildingObjectTemplate
 
@@ -44,8 +44,8 @@ ServerBuildingObjectTemplate::ServerBuildingObjectTemplate(const std::string & f
  */
 ServerBuildingObjectTemplate::~ServerBuildingObjectTemplate()
 {
-	//@BEGIN TFD CLEANUP
-	//@END TFD CLEANUP
+//@BEGIN TFD CLEANUP
+//@END TFD CLEANUP
 }	// ServerBuildingObjectTemplate::~ServerBuildingObjectTemplate
 
 /**
@@ -93,10 +93,10 @@ Tag ServerBuildingObjectTemplate::getTemplateVersion(void) const
  */
 Tag ServerBuildingObjectTemplate::getHighestTemplateVersion(void) const
 {
-	if (m_baseData == nullptr)
+	if (m_baseData == NULL)
 		return m_templateVersion;
 	const ServerBuildingObjectTemplate * base = dynamic_cast<const ServerBuildingObjectTemplate *>(m_baseData);
-	if (base == nullptr)
+	if (base == NULL)
 		return m_templateVersion;
 	return std::max(m_templateVersion, base->getHighestTemplateVersion());
 } // ServerBuildingObjectTemplate::getHighestTemplateVersion
@@ -112,12 +112,22 @@ Object * ServerBuildingObjectTemplate::createObject(void) const
 }	// ServerBuildingObjectTemplate::createObject
 
 //@BEGIN TFD
-int ServerBuildingObjectTemplate::getMaintenanceCost() const
+int ServerBuildingObjectTemplate::getMaintenanceCost(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const ServerBuildingObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerBuildingObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getMaintenanceCost(true);
+#endif
 	}
 
 	if (!m_maintenanceCost.isLoaded())
@@ -157,16 +167,31 @@ int ServerBuildingObjectTemplate::getMaintenanceCost() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerBuildingObjectTemplate::getMaintenanceCost
 
-int ServerBuildingObjectTemplate::getMaintenanceCostMin() const
+int ServerBuildingObjectTemplate::getMaintenanceCostMin(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const ServerBuildingObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerBuildingObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getMaintenanceCostMin(true);
+#endif
 	}
 
 	if (!m_maintenanceCost.isLoaded())
@@ -206,16 +231,31 @@ int ServerBuildingObjectTemplate::getMaintenanceCostMin() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerBuildingObjectTemplate::getMaintenanceCostMin
 
-int ServerBuildingObjectTemplate::getMaintenanceCostMax() const
+int ServerBuildingObjectTemplate::getMaintenanceCostMax(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const ServerBuildingObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerBuildingObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getMaintenanceCostMax(true);
+#endif
 	}
 
 	if (!m_maintenanceCost.isLoaded())
@@ -255,16 +295,31 @@ int ServerBuildingObjectTemplate::getMaintenanceCostMax() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerBuildingObjectTemplate::getMaintenanceCostMax
 
-bool ServerBuildingObjectTemplate::getIsPublic() const
+bool ServerBuildingObjectTemplate::getIsPublic(bool testData) const
 {
+#ifdef _DEBUG
+bool testDataValue = false;
+#else
+UNREF(testData);
+#endif
+
 	const ServerBuildingObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerBuildingObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getIsPublic(true);
+#endif
 	}
 
 	if (!m_isPublic.isLoaded())
@@ -282,9 +337,27 @@ bool ServerBuildingObjectTemplate::getIsPublic() const
 	}
 
 	bool value = m_isPublic.getValue();
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerBuildingObjectTemplate::getIsPublic
+
+#ifdef _DEBUG
+/**
+ * Special function used by datalint. Checks for duplicate values in base and derived templates.
+ */
+void ServerBuildingObjectTemplate::testValues(void) const
+{
+	IGNORE_RETURN(getMaintenanceCostMin(true));
+	IGNORE_RETURN(getMaintenanceCostMax(true));
+	IGNORE_RETURN(getIsPublic(true));
+	ServerTangibleObjectTemplate::testValues();
+}	// ServerBuildingObjectTemplate::testValues
+#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form
@@ -294,8 +367,8 @@ bool ServerBuildingObjectTemplate::getIsPublic() const
  */
 void ServerBuildingObjectTemplate::load(Iff &file)
 {
-	static const int MAX_NAME_SIZE = 256;
-	char paramName[MAX_NAME_SIZE];
+static const int MAX_NAME_SIZE = 256;
+char paramName[MAX_NAME_SIZE];
 
 	if (file.getCurrentName() != ServerBuildingObjectTemplate_tag)
 	{
@@ -305,7 +378,7 @@ void ServerBuildingObjectTemplate::load(Iff &file)
 
 	file.enterForm();
 	m_templateVersion = file.getCurrentName();
-	if (m_templateVersion == TAG(D, E, R, V))
+	if (m_templateVersion == TAG(D,E,R,V))
 	{
 		file.enterForm();
 		file.enterChunk();
@@ -325,8 +398,10 @@ void ServerBuildingObjectTemplate::load(Iff &file)
 		file.exitForm();
 		m_templateVersion = file.getCurrentName();
 	}
-	if (getHighestTemplateVersion() != TAG(0, 0, 0, 1))
+	if (getHighestTemplateVersion() != TAG(0,0,0,1))
 	{
+		if (DataLint::isEnabled())
+			DEBUG_WARNING(true, ("template %s version out of date", file.getFileName()));
 		m_versionOk = false;
 	}
 

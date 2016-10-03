@@ -17,8 +17,9 @@
 #include "sharedDebug/DataLint.h"
 #include "sharedFile/Iff.h"
 #include "sharedTemplateDefinition/ObjectTemplate.h"
-#include <algorithm>
-#include <cstdio>
+#include <stdio.h>
+
+
 
 /**
  * Class constructor.
@@ -26,13 +27,11 @@
 SharedDraftSchematicObjectTemplate::SharedDraftSchematicObjectTemplate(const std::string & filename)
 //@BEGIN TFD INIT
 	: SharedIntangibleObjectTemplate(filename)
-	, m_slotsLoaded(false)
-	, m_slotsAppend(false)
-	, m_attributesLoaded(false)
-	, m_attributesAppend(false)
-	, m_templateVersion(0)
-	, m_versionOk(false)
-	//@END TFD INIT
+	,m_slotsLoaded(false)
+	,m_slotsAppend(false)
+	,m_attributesLoaded(false)
+	,m_attributesAppend(false)
+//@END TFD INIT
 {
 }	// SharedDraftSchematicObjectTemplate::SharedDraftSchematicObjectTemplate
 
@@ -41,7 +40,7 @@ SharedDraftSchematicObjectTemplate::SharedDraftSchematicObjectTemplate(const std
  */
 SharedDraftSchematicObjectTemplate::~SharedDraftSchematicObjectTemplate()
 {
-	//@BEGIN TFD CLEANUP
+//@BEGIN TFD CLEANUP
 	{
 		std::vector<StructParamOT *>::iterator iter;
 		for (iter = m_slots.begin(); iter != m_slots.end(); ++iter)
@@ -60,7 +59,7 @@ SharedDraftSchematicObjectTemplate::~SharedDraftSchematicObjectTemplate()
 		}
 		m_attributes.clear();
 	}
-	//@END TFD CLEANUP
+//@END TFD CLEANUP
 }	// SharedDraftSchematicObjectTemplate::~SharedDraftSchematicObjectTemplate
 
 /**
@@ -108,10 +107,10 @@ Tag SharedDraftSchematicObjectTemplate::getTemplateVersion(void) const
  */
 Tag SharedDraftSchematicObjectTemplate::getHighestTemplateVersion(void) const
 {
-	if (m_baseData == nullptr)
+	if (m_baseData == NULL)
 		return m_templateVersion;
 	const SharedDraftSchematicObjectTemplate * base = dynamic_cast<const SharedDraftSchematicObjectTemplate *>(m_baseData);
-	if (base == nullptr)
+	if (base == NULL)
 		return m_templateVersion;
 	return std::max(m_templateVersion, base->getHighestTemplateVersion());
 } // SharedDraftSchematicObjectTemplate::getHighestTemplateVersion
@@ -252,6 +251,7 @@ bool SharedDraftSchematicObjectTemplate::isAppend(const char *name) const
 		return SharedIntangibleObjectTemplate::isAppend(name);
 }	// SharedDraftSchematicObjectTemplate::isAppend
 
+
 int SharedDraftSchematicObjectTemplate::getListLength(const char *name) const
 {
 	if (strcmp(name, "slots") == 0)
@@ -274,8 +274,8 @@ int SharedDraftSchematicObjectTemplate::getListLength(const char *name) const
  */
 void SharedDraftSchematicObjectTemplate::load(Iff &file)
 {
-	static const int MAX_NAME_SIZE = 256;
-	char paramName[MAX_NAME_SIZE];
+static const int MAX_NAME_SIZE = 256;
+char paramName[MAX_NAME_SIZE];
 
 	if (file.getCurrentName() != SharedDraftSchematicObjectTemplate_tag)
 	{
@@ -285,7 +285,7 @@ void SharedDraftSchematicObjectTemplate::load(Iff &file)
 
 	file.enterForm();
 	m_templateVersion = file.getCurrentName();
-	if (m_templateVersion == TAG(D, E, R, V))
+	if (m_templateVersion == TAG(D,E,R,V))
 	{
 		file.enterForm();
 		file.enterChunk();
@@ -305,7 +305,7 @@ void SharedDraftSchematicObjectTemplate::load(Iff &file)
 		file.exitForm();
 		m_templateVersion = file.getCurrentName();
 	}
-	if (getHighestTemplateVersion() != TAG(0, 0, 0, 3))
+	if (getHighestTemplateVersion() != TAG(0,0,0,3))
 	{
 		if (DataLint::isEnabled())
 			DEBUG_WARNING(true, ("template %s version out of date", file.getFileName()));
@@ -377,18 +377,18 @@ void SharedDraftSchematicObjectTemplate::load(Iff &file)
  */
 void SharedDraftSchematicObjectTemplate::save(Iff &file)
 {
-	int count;
+int count;
 
 	file.insertForm(SharedDraftSchematicObjectTemplate_tag);
 	if (m_baseTemplateName.size() != 0)
 	{
-		file.insertForm(TAG(D, E, R, V));
+		file.insertForm(TAG(D,E,R,V));
 		file.insertChunk(TAG(X, X, X, X));
 		file.insertChunkData(m_baseTemplateName.c_str(), m_baseTemplateName.size() + 1);
 		file.exitChunk();
 		file.exitForm();
 	}
-	file.insertForm(TAG(0, 0, 0, 3));
+	file.insertForm(TAG(0,0,0,3));
 	file.allowNonlinearFunctions();
 
 	int paramCount = 0;
@@ -405,7 +405,7 @@ void SharedDraftSchematicObjectTemplate::save(Iff &file)
 	count = m_slots.size();
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < count; ++i)
-		m_slots[i]->saveToIff(file); }
+		m_slots[i]->saveToIff(file);}
 	file.exitChunk();
 	++paramCount;
 	if (!m_attributesLoaded)
@@ -420,7 +420,7 @@ void SharedDraftSchematicObjectTemplate::save(Iff &file)
 	count = m_attributes.size();
 	file.insertChunkData(&count, sizeof(count));
 	{for (int i = 0; i < count; ++i)
-		m_attributes[i]->saveToIff(file); }
+		m_attributes[i]->saveToIff(file);}
 	file.exitChunk();
 	++paramCount;
 	// save craftedSharedTemplate
@@ -440,6 +440,7 @@ void SharedDraftSchematicObjectTemplate::save(Iff &file)
 	SharedIntangibleObjectTemplate::save(file);
 	file.exitForm();
 }	// SharedDraftSchematicObjectTemplate::save
+
 
 //=============================================================================
 // class SharedDraftSchematicObjectTemplate::_IngredientSlot
@@ -586,6 +587,7 @@ bool SharedDraftSchematicObjectTemplate::_IngredientSlot::isAppend(const char *n
 	return TpfTemplate::isAppend(name);
 }	// SharedDraftSchematicObjectTemplate::_IngredientSlot::isAppend
 
+
 int SharedDraftSchematicObjectTemplate::_IngredientSlot::getListLength(const char *name) const
 {
 	return TpfTemplate::getListLength(name);
@@ -599,8 +601,8 @@ int SharedDraftSchematicObjectTemplate::_IngredientSlot::getListLength(const cha
  */
 void SharedDraftSchematicObjectTemplate::_IngredientSlot::load(Iff &file)
 {
-	static const int MAX_NAME_SIZE = 256;
-	char paramName[MAX_NAME_SIZE];
+static const int MAX_NAME_SIZE = 256;
+char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 
@@ -630,7 +632,7 @@ void SharedDraftSchematicObjectTemplate::_IngredientSlot::load(Iff &file)
  */
 void SharedDraftSchematicObjectTemplate::_IngredientSlot::save(Iff &file)
 {
-	int count;
+int count;
 
 	file.insertForm(_IngredientSlot_tag);
 
@@ -658,6 +660,7 @@ void SharedDraftSchematicObjectTemplate::_IngredientSlot::save(Iff &file)
 	file.exitForm(true);
 	UNREF(count);
 }	// SharedDraftSchematicObjectTemplate::_IngredientSlot::save
+
 
 //=============================================================================
 // class SharedDraftSchematicObjectTemplate::_SchematicAttribute
@@ -818,6 +821,7 @@ bool SharedDraftSchematicObjectTemplate::_SchematicAttribute::isAppend(const cha
 	return TpfTemplate::isAppend(name);
 }	// SharedDraftSchematicObjectTemplate::_SchematicAttribute::isAppend
 
+
 int SharedDraftSchematicObjectTemplate::_SchematicAttribute::getListLength(const char *name) const
 {
 	return TpfTemplate::getListLength(name);
@@ -831,8 +835,8 @@ int SharedDraftSchematicObjectTemplate::_SchematicAttribute::getListLength(const
  */
 void SharedDraftSchematicObjectTemplate::_SchematicAttribute::load(Iff &file)
 {
-	static const int MAX_NAME_SIZE = 256;
-	char paramName[MAX_NAME_SIZE];
+static const int MAX_NAME_SIZE = 256;
+char paramName[MAX_NAME_SIZE];
 
 	file.enterForm();
 
@@ -864,7 +868,7 @@ void SharedDraftSchematicObjectTemplate::_SchematicAttribute::load(Iff &file)
  */
 void SharedDraftSchematicObjectTemplate::_SchematicAttribute::save(Iff &file)
 {
-	int count;
+int count;
 
 	file.insertForm(_SchematicAttribute_tag);
 

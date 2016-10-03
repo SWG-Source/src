@@ -38,16 +38,22 @@ set(SHARED_SOURCES
 	shared/template/ServerManufactureInstallationObjectTemplate.h
 	shared/template/ServerManufactureSchematicObjectTemplate.cpp
 	shared/template/ServerManufactureSchematicObjectTemplate.h
+	shared/template/ServerMissionBoardObjectTemplate.cpp
+	shared/template/ServerMissionBoardObjectTemplate.h
+	shared/template/ServerMissionDataObjectTemplate.cpp
+	shared/template/ServerMissionDataObjectTemplate.h
+	shared/template/ServerMissionListEntryObjectTemplate.cpp
+	shared/template/ServerMissionListEntryObjectTemplate.h
 	shared/template/ServerMissionObjectTemplate.cpp
 	shared/template/ServerMissionObjectTemplate.h
 	shared/template/ServerObjectTemplate.cpp
 	shared/template/ServerObjectTemplate.h
 	shared/template/ServerPlanetObjectTemplate.cpp
 	shared/template/ServerPlanetObjectTemplate.h
-	shared/template/ServerPlayerQuestObjectTemplate.cpp
-	shared/template/ServerPlayerQuestObjectTemplate.h
 	shared/template/ServerPlayerObjectTemplate.cpp
 	shared/template/ServerPlayerObjectTemplate.h
+	shared/template/ServerPlayerQuestObjectTemplate.cpp
+	shared/template/ServerPlayerQuestObjectTemplate.h
 	shared/template/ServerResourceClassObjectTemplate.cpp
 	shared/template/ServerResourceClassObjectTemplate.h
 	shared/template/ServerResourceContainerObjectTemplate.cpp
@@ -102,6 +108,10 @@ set(SHARED_SOURCES
 	shared/template/SharedJediManagerObjectTemplate.h
 	shared/template/SharedManufactureSchematicObjectTemplate.cpp
 	shared/template/SharedManufactureSchematicObjectTemplate.h
+	shared/template/SharedMissionDataObjectTemplate.cpp
+	shared/template/SharedMissionDataObjectTemplate.h
+	shared/template/SharedMissionListEntryObjectTemplate.cpp
+	shared/template/SharedMissionListEntryObjectTemplate.h
 	shared/template/SharedMissionObjectTemplate.cpp
 	shared/template/SharedMissionObjectTemplate.h
 	shared/template/SharedObjectTemplate.cpp
@@ -129,7 +139,7 @@ set(SHARED_SOURCES
 	shared/template/SharedWaypointObjectTemplate.cpp
 	shared/template/SharedWaypointObjectTemplate.h
 	shared/template/SharedWeaponObjectTemplate.cpp
-	shared/template/SharedWeaponObjectTemplate.h
+	shared/template/SharedWeaponObjectTemplate.h 
 )
 
 if(WIN32)

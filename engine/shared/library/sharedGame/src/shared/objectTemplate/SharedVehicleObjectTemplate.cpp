@@ -23,10 +23,11 @@
 
 const std::string DefaultString("");
 const StringId DefaultStringId("", 0);
-const Vector DefaultVector(0, 0, 0);
+const Vector DefaultVector(0,0,0);
 const TriggerVolumeData DefaultTriggerVolumeData;
 
 bool SharedVehicleObjectTemplate::ms_allowDefaultTemplateParams = true;
+
 
 /**
  * Class constructor.
@@ -34,9 +35,8 @@ bool SharedVehicleObjectTemplate::ms_allowDefaultTemplateParams = true;
 SharedVehicleObjectTemplate::SharedVehicleObjectTemplate(const std::string & filename)
 //@BEGIN TFD INIT
 	: SharedTangibleObjectTemplate(filename)
-	, m_versionOk(true)
-	, m_templateVersion(0)
-	//@END TFD INIT
+	,m_versionOk(true)
+//@END TFD INIT
 {
 }	// SharedVehicleObjectTemplate::SharedVehicleObjectTemplate
 
@@ -45,8 +45,8 @@ SharedVehicleObjectTemplate::SharedVehicleObjectTemplate(const std::string & fil
  */
 SharedVehicleObjectTemplate::~SharedVehicleObjectTemplate()
 {
-	//@BEGIN TFD CLEANUP
-	//@END TFD CLEANUP
+//@BEGIN TFD CLEANUP
+//@END TFD CLEANUP
 }	// SharedVehicleObjectTemplate::~SharedVehicleObjectTemplate
 
 /**
@@ -250,12 +250,22 @@ float SharedVehicleObjectTemplate::getSpeedMax(MovementTypes index) const
 	return value;
 }	// SharedVehicleObjectTemplate::getSpeedMax
 
-float SharedVehicleObjectTemplate::getSlopeAversion() const
+float SharedVehicleObjectTemplate::getSlopeAversion(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedVehicleObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getSlopeAversion(true);
+#endif
 	}
 
 	if (!m_slopeAversion.isLoaded())
@@ -295,16 +305,31 @@ float SharedVehicleObjectTemplate::getSlopeAversion() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedVehicleObjectTemplate::getSlopeAversion
 
-float SharedVehicleObjectTemplate::getSlopeAversionMin() const
+float SharedVehicleObjectTemplate::getSlopeAversionMin(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedVehicleObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getSlopeAversionMin(true);
+#endif
 	}
 
 	if (!m_slopeAversion.isLoaded())
@@ -344,16 +369,31 @@ float SharedVehicleObjectTemplate::getSlopeAversionMin() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedVehicleObjectTemplate::getSlopeAversionMin
 
-float SharedVehicleObjectTemplate::getSlopeAversionMax() const
+float SharedVehicleObjectTemplate::getSlopeAversionMax(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedVehicleObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getSlopeAversionMax(true);
+#endif
 	}
 
 	if (!m_slopeAversion.isLoaded())
@@ -393,16 +433,31 @@ float SharedVehicleObjectTemplate::getSlopeAversionMax() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedVehicleObjectTemplate::getSlopeAversionMax
 
-float SharedVehicleObjectTemplate::getHoverValue() const
+float SharedVehicleObjectTemplate::getHoverValue(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedVehicleObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getHoverValue(true);
+#endif
 	}
 
 	if (!m_hoverValue.isLoaded())
@@ -442,16 +497,31 @@ float SharedVehicleObjectTemplate::getHoverValue() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedVehicleObjectTemplate::getHoverValue
 
-float SharedVehicleObjectTemplate::getHoverValueMin() const
+float SharedVehicleObjectTemplate::getHoverValueMin(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedVehicleObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getHoverValueMin(true);
+#endif
 	}
 
 	if (!m_hoverValue.isLoaded())
@@ -491,16 +561,31 @@ float SharedVehicleObjectTemplate::getHoverValueMin() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedVehicleObjectTemplate::getHoverValueMin
 
-float SharedVehicleObjectTemplate::getHoverValueMax() const
+float SharedVehicleObjectTemplate::getHoverValueMax(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedVehicleObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getHoverValueMax(true);
+#endif
 	}
 
 	if (!m_hoverValue.isLoaded())
@@ -540,16 +625,31 @@ float SharedVehicleObjectTemplate::getHoverValueMax() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedVehicleObjectTemplate::getHoverValueMax
 
-float SharedVehicleObjectTemplate::getTurnRate() const
+float SharedVehicleObjectTemplate::getTurnRate(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedVehicleObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getTurnRate(true);
+#endif
 	}
 
 	if (!m_turnRate.isLoaded())
@@ -589,16 +689,31 @@ float SharedVehicleObjectTemplate::getTurnRate() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedVehicleObjectTemplate::getTurnRate
 
-float SharedVehicleObjectTemplate::getTurnRateMin() const
+float SharedVehicleObjectTemplate::getTurnRateMin(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedVehicleObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getTurnRateMin(true);
+#endif
 	}
 
 	if (!m_turnRate.isLoaded())
@@ -638,16 +753,31 @@ float SharedVehicleObjectTemplate::getTurnRateMin() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedVehicleObjectTemplate::getTurnRateMin
 
-float SharedVehicleObjectTemplate::getTurnRateMax() const
+float SharedVehicleObjectTemplate::getTurnRateMax(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedVehicleObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getTurnRateMax(true);
+#endif
 	}
 
 	if (!m_turnRate.isLoaded())
@@ -687,16 +817,31 @@ float SharedVehicleObjectTemplate::getTurnRateMax() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedVehicleObjectTemplate::getTurnRateMax
 
-float SharedVehicleObjectTemplate::getMaxVelocity() const
+float SharedVehicleObjectTemplate::getMaxVelocity(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedVehicleObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getMaxVelocity(true);
+#endif
 	}
 
 	if (!m_maxVelocity.isLoaded())
@@ -736,16 +881,31 @@ float SharedVehicleObjectTemplate::getMaxVelocity() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedVehicleObjectTemplate::getMaxVelocity
 
-float SharedVehicleObjectTemplate::getMaxVelocityMin() const
+float SharedVehicleObjectTemplate::getMaxVelocityMin(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedVehicleObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getMaxVelocityMin(true);
+#endif
 	}
 
 	if (!m_maxVelocity.isLoaded())
@@ -785,16 +945,31 @@ float SharedVehicleObjectTemplate::getMaxVelocityMin() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedVehicleObjectTemplate::getMaxVelocityMin
 
-float SharedVehicleObjectTemplate::getMaxVelocityMax() const
+float SharedVehicleObjectTemplate::getMaxVelocityMax(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedVehicleObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getMaxVelocityMax(true);
+#endif
 	}
 
 	if (!m_maxVelocity.isLoaded())
@@ -834,16 +1009,31 @@ float SharedVehicleObjectTemplate::getMaxVelocityMax() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedVehicleObjectTemplate::getMaxVelocityMax
 
-float SharedVehicleObjectTemplate::getAcceleration() const
+float SharedVehicleObjectTemplate::getAcceleration(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedVehicleObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getAcceleration(true);
+#endif
 	}
 
 	if (!m_acceleration.isLoaded())
@@ -883,16 +1073,31 @@ float SharedVehicleObjectTemplate::getAcceleration() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedVehicleObjectTemplate::getAcceleration
 
-float SharedVehicleObjectTemplate::getAccelerationMin() const
+float SharedVehicleObjectTemplate::getAccelerationMin(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedVehicleObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getAccelerationMin(true);
+#endif
 	}
 
 	if (!m_acceleration.isLoaded())
@@ -932,16 +1137,31 @@ float SharedVehicleObjectTemplate::getAccelerationMin() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedVehicleObjectTemplate::getAccelerationMin
 
-float SharedVehicleObjectTemplate::getAccelerationMax() const
+float SharedVehicleObjectTemplate::getAccelerationMax(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedVehicleObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getAccelerationMax(true);
+#endif
 	}
 
 	if (!m_acceleration.isLoaded())
@@ -981,16 +1201,31 @@ float SharedVehicleObjectTemplate::getAccelerationMax() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedVehicleObjectTemplate::getAccelerationMax
 
-float SharedVehicleObjectTemplate::getBraking() const
+float SharedVehicleObjectTemplate::getBraking(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedVehicleObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getBraking(true);
+#endif
 	}
 
 	if (!m_braking.isLoaded())
@@ -1030,16 +1265,31 @@ float SharedVehicleObjectTemplate::getBraking() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedVehicleObjectTemplate::getBraking
 
-float SharedVehicleObjectTemplate::getBrakingMin() const
+float SharedVehicleObjectTemplate::getBrakingMin(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedVehicleObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getBrakingMin(true);
+#endif
 	}
 
 	if (!m_braking.isLoaded())
@@ -1079,16 +1329,31 @@ float SharedVehicleObjectTemplate::getBrakingMin() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedVehicleObjectTemplate::getBrakingMin
 
-float SharedVehicleObjectTemplate::getBrakingMax() const
+float SharedVehicleObjectTemplate::getBrakingMax(bool testData) const
 {
+#ifdef _DEBUG
+float testDataValue = 0.0f;
+#else
+UNREF(testData);
+#endif
+
 	const SharedVehicleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedVehicleObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getBrakingMax(true);
+#endif
 	}
 
 	if (!m_braking.isLoaded())
@@ -1128,9 +1393,36 @@ float SharedVehicleObjectTemplate::getBrakingMax() const
 		else if (delta == '_')
 			value = baseValue - static_cast<float>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// SharedVehicleObjectTemplate::getBrakingMax
+
+#ifdef _DEBUG
+/**
+ * Special function used by datalint. Checks for duplicate values in base and derived templates.
+ */
+void SharedVehicleObjectTemplate::testValues(void) const
+{
+	IGNORE_RETURN(getSlopeAversionMin(true));
+	IGNORE_RETURN(getSlopeAversionMax(true));
+	IGNORE_RETURN(getHoverValueMin(true));
+	IGNORE_RETURN(getHoverValueMax(true));
+	IGNORE_RETURN(getTurnRateMin(true));
+	IGNORE_RETURN(getTurnRateMax(true));
+	IGNORE_RETURN(getMaxVelocityMin(true));
+	IGNORE_RETURN(getMaxVelocityMax(true));
+	IGNORE_RETURN(getAccelerationMin(true));
+	IGNORE_RETURN(getAccelerationMax(true));
+	IGNORE_RETURN(getBrakingMin(true));
+	IGNORE_RETURN(getBrakingMax(true));
+	SharedTangibleObjectTemplate::testValues();
+}	// SharedVehicleObjectTemplate::testValues
+#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form
@@ -1140,8 +1432,8 @@ float SharedVehicleObjectTemplate::getBrakingMax() const
  */
 void SharedVehicleObjectTemplate::load(Iff &file)
 {
-	static const int MAX_NAME_SIZE = 256;
-	char paramName[MAX_NAME_SIZE];
+static const int MAX_NAME_SIZE = 256;
+char paramName[MAX_NAME_SIZE];
 
 	if (file.getCurrentName() != SharedVehicleObjectTemplate_tag)
 	{
@@ -1151,7 +1443,7 @@ void SharedVehicleObjectTemplate::load(Iff &file)
 
 	file.enterForm();
 	m_templateVersion = file.getCurrentName();
-	if (m_templateVersion == TAG(D, E, R, V))
+	if (m_templateVersion == TAG(D,E,R,V))
 	{
 		file.enterForm();
 		file.enterChunk();
@@ -1171,8 +1463,10 @@ void SharedVehicleObjectTemplate::load(Iff &file)
 		file.exitForm();
 		m_templateVersion = file.getCurrentName();
 	}
-	if (getHighestTemplateVersion() != TAG(0, 0, 0, 0))
+	if (getHighestTemplateVersion() != TAG(0,0,0,0))
 	{
+		if (DataLint::isEnabled())
+			DEBUG_WARNING(true, ("template %s version out of date", file.getFileName()));
 		m_versionOk = false;
 	}
 

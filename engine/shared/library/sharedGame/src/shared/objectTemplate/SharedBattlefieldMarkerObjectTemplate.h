@@ -44,13 +44,18 @@ public:
 
 //@BEGIN TFD
 public:
-	int                    getNumberOfPoles() const;
-	int                    getNumberOfPolesMin() const;
-	int                    getNumberOfPolesMax() const;
-	float                  getRadius() const;
-	float                  getRadiusMin() const;
-	float                  getRadiusMax() const;
+	int                    getNumberOfPoles(bool testData = false) const;
+	int                    getNumberOfPolesMin(bool testData = false) const;
+	int                    getNumberOfPolesMax(bool testData = false) const;
+	float                  getRadius(bool testData = false) const;
+	float                  getRadiusMin(bool testData = false) const;
+	float                  getRadiusMax(bool testData = false) const;
 
+#ifdef _DEBUG
+public:
+	// special code used by datalint
+	virtual void testValues(void) const;
+#endif
 
 protected:
 	virtual void load(Iff &file);

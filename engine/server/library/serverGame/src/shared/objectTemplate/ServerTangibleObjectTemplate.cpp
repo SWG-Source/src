@@ -23,10 +23,11 @@
 
 const std::string DefaultString("");
 const StringId DefaultStringId("", 0);
-const Vector DefaultVector(0, 0, 0);
+const Vector DefaultVector(0,0,0);
 const TriggerVolumeData DefaultTriggerVolumeData;
 
 bool ServerTangibleObjectTemplate::ms_allowDefaultTemplateParams = true;
+
 
 /**
  * Class constructor.
@@ -34,11 +35,10 @@ bool ServerTangibleObjectTemplate::ms_allowDefaultTemplateParams = true;
 ServerTangibleObjectTemplate::ServerTangibleObjectTemplate(const std::string & filename)
 //@BEGIN TFD INIT
 	: ServerObjectTemplate(filename)
-	, m_triggerVolumesLoaded(false)
-	, m_triggerVolumesAppend(false)
-	, m_versionOk(true)
-	, m_templateVersion(0)
-	//@END TFD INIT
+	,m_triggerVolumesLoaded(false)
+	,m_triggerVolumesAppend(false)
+	,m_versionOk(true)
+//@END TFD INIT
 {
 }	// ServerTangibleObjectTemplate::ServerTangibleObjectTemplate
 
@@ -47,7 +47,7 @@ ServerTangibleObjectTemplate::ServerTangibleObjectTemplate(const std::string & f
  */
 ServerTangibleObjectTemplate::~ServerTangibleObjectTemplate()
 {
-	//@BEGIN TFD CLEANUP
+//@BEGIN TFD CLEANUP
 	{
 		std::vector<TriggerVolumeParam *>::iterator iter;
 		for (iter = m_triggerVolumes.begin(); iter != m_triggerVolumes.end(); ++iter)
@@ -57,7 +57,7 @@ ServerTangibleObjectTemplate::~ServerTangibleObjectTemplate()
 		}
 		m_triggerVolumes.clear();
 	}
-	//@END TFD CLEANUP
+//@END TFD CLEANUP
 }	// ServerTangibleObjectTemplate::~ServerTangibleObjectTemplate
 
 /**
@@ -105,10 +105,10 @@ Tag ServerTangibleObjectTemplate::getTemplateVersion(void) const
  */
 Tag ServerTangibleObjectTemplate::getHighestTemplateVersion(void) const
 {
-	if (m_baseData == nullptr)
+	if (m_baseData == NULL)
 		return m_templateVersion;
 	const ServerTangibleObjectTemplate * base = dynamic_cast<const ServerTangibleObjectTemplate *>(m_baseData);
-	if (base == nullptr)
+	if (base == NULL)
 		return m_templateVersion;
 	return std::max(m_templateVersion, base->getHighestTemplateVersion());
 } // ServerTangibleObjectTemplate::getHighestTemplateVersion
@@ -124,7 +124,7 @@ Object * ServerTangibleObjectTemplate::createObject(void) const
 }	// ServerTangibleObjectTemplate::createObject
 
 //@BEGIN TFD
-const TriggerVolumeData ServerTangibleObjectTemplate::getTriggerVolumes(int index) const
+const TriggerVolumeData & ServerTangibleObjectTemplate::getTriggerVolumes(int index) const
 {
 	const ServerTangibleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
@@ -155,8 +155,7 @@ const TriggerVolumeData ServerTangibleObjectTemplate::getTriggerVolumes(int inde
 	}
 
 	DEBUG_FATAL(index < 0 || static_cast<size_t>(index) >= m_triggerVolumes.size(), ("template param index out of range"));
-	const TriggerVolumeData value = m_triggerVolumes[index]->getValue();
-
+	const TriggerVolumeData & value = m_triggerVolumes[index]->getValue();
 	return value;
 }	// ServerTangibleObjectTemplate::getTriggerVolumes
 
@@ -184,12 +183,22 @@ size_t ServerTangibleObjectTemplate::getTriggerVolumesCount(void) const
 	return count;
 }	// ServerTangibleObjectTemplate::getTriggerVolumesCount
 
-ServerTangibleObjectTemplate::CombatSkeleton ServerTangibleObjectTemplate::getCombatSkeleton() const
+ServerTangibleObjectTemplate::CombatSkeleton ServerTangibleObjectTemplate::getCombatSkeleton(bool testData) const
 {
+#ifdef _DEBUG
+ServerTangibleObjectTemplate::CombatSkeleton testDataValue = static_cast<ServerTangibleObjectTemplate::CombatSkeleton>(0);
+#else
+UNREF(testData);
+#endif
+
 	const ServerTangibleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerTangibleObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getCombatSkeleton(true);
+#endif
 	}
 
 	if (!m_combatSkeleton.isLoaded())
@@ -207,16 +216,31 @@ ServerTangibleObjectTemplate::CombatSkeleton ServerTangibleObjectTemplate::getCo
 	}
 
 	CombatSkeleton value = static_cast<CombatSkeleton>(m_combatSkeleton.getValue());
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerTangibleObjectTemplate::getCombatSkeleton
 
-int ServerTangibleObjectTemplate::getMaxHitPoints() const
+int ServerTangibleObjectTemplate::getMaxHitPoints(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const ServerTangibleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerTangibleObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getMaxHitPoints(true);
+#endif
 	}
 
 	if (!m_maxHitPoints.isLoaded())
@@ -256,16 +280,31 @@ int ServerTangibleObjectTemplate::getMaxHitPoints() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerTangibleObjectTemplate::getMaxHitPoints
 
-int ServerTangibleObjectTemplate::getMaxHitPointsMin() const
+int ServerTangibleObjectTemplate::getMaxHitPointsMin(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const ServerTangibleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerTangibleObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getMaxHitPointsMin(true);
+#endif
 	}
 
 	if (!m_maxHitPoints.isLoaded())
@@ -305,16 +344,31 @@ int ServerTangibleObjectTemplate::getMaxHitPointsMin() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerTangibleObjectTemplate::getMaxHitPointsMin
 
-int ServerTangibleObjectTemplate::getMaxHitPointsMax() const
+int ServerTangibleObjectTemplate::getMaxHitPointsMax(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const ServerTangibleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerTangibleObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getMaxHitPointsMax(true);
+#endif
 	}
 
 	if (!m_maxHitPoints.isLoaded())
@@ -354,6 +408,11 @@ int ServerTangibleObjectTemplate::getMaxHitPointsMax() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerTangibleObjectTemplate::getMaxHitPointsMax
@@ -386,17 +445,27 @@ const ServerArmorTemplate * ServerTangibleObjectTemplate::getArmor() const
 	{
 		returnValue = dynamic_cast<const ServerArmorTemplate *>(ObjectTemplateList::fetch(templateName));
 		if (returnValue == nullptr)
-			WARNING_STRICT_FATAL(true, ("Error loading template %s", templateName.c_str()));
+			WARNING_STRICT_FATAL(true, ("Error loading template %s",templateName.c_str()));
 	}
 	return returnValue;
 }	// ServerTangibleObjectTemplate::getArmor
 
-int ServerTangibleObjectTemplate::getInterestRadius() const
+int ServerTangibleObjectTemplate::getInterestRadius(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const ServerTangibleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerTangibleObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getInterestRadius(true);
+#endif
 	}
 
 	if (!m_interestRadius.isLoaded())
@@ -436,16 +505,31 @@ int ServerTangibleObjectTemplate::getInterestRadius() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerTangibleObjectTemplate::getInterestRadius
 
-int ServerTangibleObjectTemplate::getInterestRadiusMin() const
+int ServerTangibleObjectTemplate::getInterestRadiusMin(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const ServerTangibleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerTangibleObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getInterestRadiusMin(true);
+#endif
 	}
 
 	if (!m_interestRadius.isLoaded())
@@ -485,16 +569,31 @@ int ServerTangibleObjectTemplate::getInterestRadiusMin() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerTangibleObjectTemplate::getInterestRadiusMin
 
-int ServerTangibleObjectTemplate::getInterestRadiusMax() const
+int ServerTangibleObjectTemplate::getInterestRadiusMax(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const ServerTangibleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerTangibleObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getInterestRadiusMax(true);
+#endif
 	}
 
 	if (!m_interestRadius.isLoaded())
@@ -534,16 +633,31 @@ int ServerTangibleObjectTemplate::getInterestRadiusMax() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerTangibleObjectTemplate::getInterestRadiusMax
 
-int ServerTangibleObjectTemplate::getCount() const
+int ServerTangibleObjectTemplate::getCount(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const ServerTangibleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerTangibleObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getCount(true);
+#endif
 	}
 
 	if (!m_count.isLoaded())
@@ -583,16 +697,31 @@ int ServerTangibleObjectTemplate::getCount() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerTangibleObjectTemplate::getCount
 
-int ServerTangibleObjectTemplate::getCountMin() const
+int ServerTangibleObjectTemplate::getCountMin(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const ServerTangibleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerTangibleObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getCountMin(true);
+#endif
 	}
 
 	if (!m_count.isLoaded())
@@ -632,16 +761,31 @@ int ServerTangibleObjectTemplate::getCountMin() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerTangibleObjectTemplate::getCountMin
 
-int ServerTangibleObjectTemplate::getCountMax() const
+int ServerTangibleObjectTemplate::getCountMax(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const ServerTangibleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerTangibleObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getCountMax(true);
+#endif
 	}
 
 	if (!m_count.isLoaded())
@@ -681,16 +825,31 @@ int ServerTangibleObjectTemplate::getCountMax() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerTangibleObjectTemplate::getCountMax
 
-int ServerTangibleObjectTemplate::getCondition() const
+int ServerTangibleObjectTemplate::getCondition(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const ServerTangibleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerTangibleObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getCondition(true);
+#endif
 	}
 
 	if (!m_condition.isLoaded())
@@ -730,16 +889,31 @@ int ServerTangibleObjectTemplate::getCondition() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerTangibleObjectTemplate::getCondition
 
-int ServerTangibleObjectTemplate::getConditionMin() const
+int ServerTangibleObjectTemplate::getConditionMin(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const ServerTangibleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerTangibleObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getConditionMin(true);
+#endif
 	}
 
 	if (!m_condition.isLoaded())
@@ -779,16 +953,31 @@ int ServerTangibleObjectTemplate::getConditionMin() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerTangibleObjectTemplate::getConditionMin
 
-int ServerTangibleObjectTemplate::getConditionMax() const
+int ServerTangibleObjectTemplate::getConditionMax(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const ServerTangibleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerTangibleObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getConditionMax(true);
+#endif
 	}
 
 	if (!m_condition.isLoaded())
@@ -828,16 +1017,31 @@ int ServerTangibleObjectTemplate::getConditionMax() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerTangibleObjectTemplate::getConditionMax
 
-bool ServerTangibleObjectTemplate::getWantSawAttackTriggers() const
+bool ServerTangibleObjectTemplate::getWantSawAttackTriggers(bool testData) const
 {
+#ifdef _DEBUG
+bool testDataValue = false;
+#else
+UNREF(testData);
+#endif
+
 	const ServerTangibleObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerTangibleObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getWantSawAttackTriggers(true);
+#endif
 	}
 
 	if (!m_wantSawAttackTriggers.isLoaded())
@@ -855,9 +1059,34 @@ bool ServerTangibleObjectTemplate::getWantSawAttackTriggers() const
 	}
 
 	bool value = m_wantSawAttackTriggers.getValue();
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerTangibleObjectTemplate::getWantSawAttackTriggers
+
+#ifdef _DEBUG
+/**
+ * Special function used by datalint. Checks for duplicate values in base and derived templates.
+ */
+void ServerTangibleObjectTemplate::testValues(void) const
+{
+	IGNORE_RETURN(getCombatSkeleton(true));
+	IGNORE_RETURN(getMaxHitPointsMin(true));
+	IGNORE_RETURN(getMaxHitPointsMax(true));
+	IGNORE_RETURN(getInterestRadiusMin(true));
+	IGNORE_RETURN(getInterestRadiusMax(true));
+	IGNORE_RETURN(getCountMin(true));
+	IGNORE_RETURN(getCountMax(true));
+	IGNORE_RETURN(getConditionMin(true));
+	IGNORE_RETURN(getConditionMax(true));
+	IGNORE_RETURN(getWantSawAttackTriggers(true));
+	ServerObjectTemplate::testValues();
+}	// ServerTangibleObjectTemplate::testValues
+#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form
@@ -867,8 +1096,8 @@ bool ServerTangibleObjectTemplate::getWantSawAttackTriggers() const
  */
 void ServerTangibleObjectTemplate::load(Iff &file)
 {
-	static const int MAX_NAME_SIZE = 256;
-	char paramName[MAX_NAME_SIZE];
+static const int MAX_NAME_SIZE = 256;
+char paramName[MAX_NAME_SIZE];
 
 	if (file.getCurrentName() != ServerTangibleObjectTemplate_tag)
 	{
@@ -878,7 +1107,7 @@ void ServerTangibleObjectTemplate::load(Iff &file)
 
 	file.enterForm();
 	m_templateVersion = file.getCurrentName();
-	if (m_templateVersion == TAG(D, E, R, V))
+	if (m_templateVersion == TAG(D,E,R,V))
 	{
 		file.enterForm();
 		file.enterChunk();
@@ -898,8 +1127,10 @@ void ServerTangibleObjectTemplate::load(Iff &file)
 		file.exitForm();
 		m_templateVersion = file.getCurrentName();
 	}
-	if (getHighestTemplateVersion() != TAG(0, 0, 0, 4))
+	if (getHighestTemplateVersion() != TAG(0,0,0,4))
 	{
+		if (DataLint::isEnabled())
+			DEBUG_WARNING(true, ("template %s version out of date", file.getFileName()));
 		m_versionOk = false;
 	}
 

@@ -22,10 +22,11 @@
 
 const std::string DefaultString("");
 const StringId DefaultStringId("", 0);
-const Vector DefaultVector(0, 0, 0);
+const Vector DefaultVector(0,0,0);
 const TriggerVolumeData DefaultTriggerVolumeData;
 
 bool ServerResourceContainerObjectTemplate::ms_allowDefaultTemplateParams = true;
+
 
 /**
  * Class constructor.
@@ -33,9 +34,8 @@ bool ServerResourceContainerObjectTemplate::ms_allowDefaultTemplateParams = true
 ServerResourceContainerObjectTemplate::ServerResourceContainerObjectTemplate(const std::string & filename)
 //@BEGIN TFD INIT
 	: ServerTangibleObjectTemplate(filename)
-	, m_versionOk(true)
-	, m_templateVersion(0)
-	//@END TFD INIT
+	,m_versionOk(true)
+//@END TFD INIT
 {
 }	// ServerResourceContainerObjectTemplate::ServerResourceContainerObjectTemplate
 
@@ -44,8 +44,8 @@ ServerResourceContainerObjectTemplate::ServerResourceContainerObjectTemplate(con
  */
 ServerResourceContainerObjectTemplate::~ServerResourceContainerObjectTemplate()
 {
-	//@BEGIN TFD CLEANUP
-	//@END TFD CLEANUP
+//@BEGIN TFD CLEANUP
+//@END TFD CLEANUP
 }	// ServerResourceContainerObjectTemplate::~ServerResourceContainerObjectTemplate
 
 /**
@@ -93,10 +93,10 @@ Tag ServerResourceContainerObjectTemplate::getTemplateVersion(void) const
  */
 Tag ServerResourceContainerObjectTemplate::getHighestTemplateVersion(void) const
 {
-	if (m_baseData == nullptr)
+	if (m_baseData == NULL)
 		return m_templateVersion;
 	const ServerResourceContainerObjectTemplate * base = dynamic_cast<const ServerResourceContainerObjectTemplate *>(m_baseData);
-	if (base == nullptr)
+	if (base == NULL)
 		return m_templateVersion;
 	return std::max(m_templateVersion, base->getHighestTemplateVersion());
 } // ServerResourceContainerObjectTemplate::getHighestTemplateVersion
@@ -112,12 +112,22 @@ Object * ServerResourceContainerObjectTemplate::createObject(void) const
 }	// ServerResourceContainerObjectTemplate::createObject
 
 //@BEGIN TFD
-int ServerResourceContainerObjectTemplate::getMaxResources() const
+int ServerResourceContainerObjectTemplate::getMaxResources(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const ServerResourceContainerObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerResourceContainerObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getMaxResources(true);
+#endif
 	}
 
 	if (!m_maxResources.isLoaded())
@@ -157,16 +167,31 @@ int ServerResourceContainerObjectTemplate::getMaxResources() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerResourceContainerObjectTemplate::getMaxResources
 
-int ServerResourceContainerObjectTemplate::getMaxResourcesMin() const
+int ServerResourceContainerObjectTemplate::getMaxResourcesMin(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const ServerResourceContainerObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerResourceContainerObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getMaxResourcesMin(true);
+#endif
 	}
 
 	if (!m_maxResources.isLoaded())
@@ -206,16 +231,31 @@ int ServerResourceContainerObjectTemplate::getMaxResourcesMin() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerResourceContainerObjectTemplate::getMaxResourcesMin
 
-int ServerResourceContainerObjectTemplate::getMaxResourcesMax() const
+int ServerResourceContainerObjectTemplate::getMaxResourcesMax(bool testData) const
 {
+#ifdef _DEBUG
+int testDataValue = 0;
+#else
+UNREF(testData);
+#endif
+
 	const ServerResourceContainerObjectTemplate * base = nullptr;
 	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerResourceContainerObjectTemplate *>(m_baseData);
+#ifdef _DEBUG
+		if (testData && base != nullptr)
+			testDataValue = base->getMaxResourcesMax(true);
+#endif
 	}
 
 	if (!m_maxResources.isLoaded())
@@ -255,9 +295,26 @@ int ServerResourceContainerObjectTemplate::getMaxResourcesMax() const
 		else if (delta == '_')
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
+#ifdef _DEBUG
+	if (testData && base != nullptr)
+	{
+	}
+#endif
 
 	return value;
 }	// ServerResourceContainerObjectTemplate::getMaxResourcesMax
+
+#ifdef _DEBUG
+/**
+ * Special function used by datalint. Checks for duplicate values in base and derived templates.
+ */
+void ServerResourceContainerObjectTemplate::testValues(void) const
+{
+	IGNORE_RETURN(getMaxResourcesMin(true));
+	IGNORE_RETURN(getMaxResourcesMax(true));
+	ServerTangibleObjectTemplate::testValues();
+}	// ServerResourceContainerObjectTemplate::testValues
+#endif
 
 /**
  * Loads the template data from an iff file. We should already be in the form
@@ -267,8 +324,8 @@ int ServerResourceContainerObjectTemplate::getMaxResourcesMax() const
  */
 void ServerResourceContainerObjectTemplate::load(Iff &file)
 {
-	static const int MAX_NAME_SIZE = 256;
-	char paramName[MAX_NAME_SIZE];
+static const int MAX_NAME_SIZE = 256;
+char paramName[MAX_NAME_SIZE];
 
 	if (file.getCurrentName() != ServerResourceContainerObjectTemplate_tag)
 	{
@@ -278,7 +335,7 @@ void ServerResourceContainerObjectTemplate::load(Iff &file)
 
 	file.enterForm();
 	m_templateVersion = file.getCurrentName();
-	if (m_templateVersion == TAG(D, E, R, V))
+	if (m_templateVersion == TAG(D,E,R,V))
 	{
 		file.enterForm();
 		file.enterChunk();
@@ -298,8 +355,10 @@ void ServerResourceContainerObjectTemplate::load(Iff &file)
 		file.exitForm();
 		m_templateVersion = file.getCurrentName();
 	}
-	if (getHighestTemplateVersion() != TAG(0, 0, 0, 0))
+	if (getHighestTemplateVersion() != TAG(0,0,0,0))
 	{
+		if (DataLint::isEnabled())
+			DEBUG_WARNING(true, ("template %s version out of date", file.getFileName()));
 		m_versionOk = false;
 	}
 

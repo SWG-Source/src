@@ -17,8 +17,7 @@
 #include "sharedDebug/DataLint.h"
 #include "sharedFile/Iff.h"
 #include "sharedTemplateDefinition/ObjectTemplate.h"
-#include <algorithm>
-#include <cstdio>
+#include <stdio.h>
 
 
 
@@ -86,10 +85,10 @@ Tag SharedWaypointObjectTemplate::getTemplateVersion(void) const
  */
 Tag SharedWaypointObjectTemplate::getHighestTemplateVersion(void) const
 {
-	if (m_baseData == nullptr)
+	if (m_baseData == NULL)
 		return m_templateVersion;
 	const SharedWaypointObjectTemplate * base = dynamic_cast<const SharedWaypointObjectTemplate *>(m_baseData);
-	if (base == nullptr)
+	if (base == NULL)
 		return m_templateVersion;
 	return std::max(m_templateVersion, base->getHighestTemplateVersion());
 } // SharedWaypointObjectTemplate::getHighestTemplateVersion

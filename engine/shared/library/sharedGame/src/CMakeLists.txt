@@ -197,18 +197,18 @@ set(SHARED_SOURCES
 	shared/objectTemplate/SharedJediManagerObjectTemplate.h
 	shared/objectTemplate/SharedManufactureSchematicObjectTemplate.cpp
 	shared/objectTemplate/SharedManufactureSchematicObjectTemplate.h
+	shared/objectTemplate/SharedMissionDataObjectTemplate.cpp
+	shared/objectTemplate/SharedMissionDataObjectTemplate.h
+	shared/objectTemplate/SharedMissionListEntryObjectTemplate.cpp
+	shared/objectTemplate/SharedMissionListEntryObjectTemplate.h
 	shared/objectTemplate/SharedMissionObjectTemplate.cpp
 	shared/objectTemplate/SharedMissionObjectTemplate.h
-	shared/objectTemplate/SharedObjectTemplateClientData.cpp
-	shared/objectTemplate/SharedObjectTemplateClientData.h
-	shared/objectTemplate/SharedObjectTemplateInterface.cpp
-	shared/objectTemplate/SharedObjectTemplateInterface.h
 	shared/objectTemplate/SharedObjectTemplate.cpp
 	shared/objectTemplate/SharedObjectTemplate.h
-	shared/objectTemplate/SharedPlayerQuestObjectTemplate.h
-	shared/objectTemplate/SharedPlayerQuestObjectTemplate.cpp
 	shared/objectTemplate/SharedPlayerObjectTemplate.cpp
 	shared/objectTemplate/SharedPlayerObjectTemplate.h
+	shared/objectTemplate/SharedPlayerQuestObjectTemplate.cpp
+	shared/objectTemplate/SharedPlayerQuestObjectTemplate.h
 	shared/objectTemplate/SharedResourceContainerObjectTemplate.cpp
 	shared/objectTemplate/SharedResourceContainerObjectTemplate.h
 	shared/objectTemplate/SharedShipObjectTemplate.cpp
@@ -219,6 +219,8 @@ set(SHARED_SOURCES
 	shared/objectTemplate/SharedTangibleObjectTemplate.h
 	shared/objectTemplate/SharedTerrainSurfaceObjectTemplate.cpp
 	shared/objectTemplate/SharedTerrainSurfaceObjectTemplate.h
+	shared/objectTemplate/SharedTokenObjectTemplate.cpp
+	shared/objectTemplate/SharedTokenObjectTemplate.h
 	shared/objectTemplate/SharedUniverseObjectTemplate.cpp
 	shared/objectTemplate/SharedUniverseObjectTemplate.h
 	shared/objectTemplate/SharedVehicleObjectTemplate.cpp
@@ -226,7 +228,7 @@ set(SHARED_SOURCES
 	shared/objectTemplate/SharedWaypointObjectTemplate.cpp
 	shared/objectTemplate/SharedWaypointObjectTemplate.h
 	shared/objectTemplate/SharedWeaponObjectTemplate.cpp
-	shared/objectTemplate/SharedWeaponObjectTemplate.h
+	shared/objectTemplate/SharedWeaponObjectTemplate.h 
 
 	shared/quest/PlayerQuestData.cpp
 	shared/quest/PlayerQuestData.h
