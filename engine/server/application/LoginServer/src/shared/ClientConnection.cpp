@@ -250,9 +250,9 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 		LOG("LoginClientConnection", ("validateClient() for stationId (%lu) at IP (%s), id (%s)", m_stationId, getRemoteAddress().c_str(), uname.c_str()));
 		
 		LoginServer::getInstance().onValidateClient(suid, uname, this, true, NULL, 0xFFFFFFFF, 0xFFFFFFFF);
+	} else {
+		disconnect(); // to remove from their connection count
 	}
-
-	disconnect(); // to remove from their connection count
 }
 
 // ----------------------------------------------------------------------------
