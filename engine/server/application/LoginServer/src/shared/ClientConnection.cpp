@@ -59,23 +59,23 @@ ClientConnection::~ClientConnection()
 void ClientConnection::onConnectionClosed()
 {
 	// client has disconnected
-	if (m_clientId)
+	if (m_stationId)
 	{
-		if (m_stationId)
-		{
-			DEBUG_REPORT_LOG(true, ("Client %lu disconnected\n", m_stationId));
-			LOG("LoginClientConnection",
-				("onConnectionClosed() for stationId (%lu) at IP (%s)", m_stationId, getRemoteAddress().c_str()));
-		}
-
-		LoginServer::getInstance().removeClient(m_clientId);
+		DEBUG_REPORT_LOG(true, ("Client %lu disconnected\n", m_stationId));
+		LOG("LoginClientConnection", ("onConnectionClosed() for stationId (%lu) at IP (%s)", m_stationId, getRemoteAddress().c_str()));
 	}
 
-	if (!m_isValidated) {
+	LoginServer::getInstance().removeClient(m_clientId);
+
+	if ((ConfigLoginServer::getValidateStationKey() || ConfigLoginServer::getDoSessionLogin()) && !m_isValidated)
+	{
 		SessionApiClient *session = LoginServer::getInstance().getSessionApiClient();
 		if (session)
+		{
 			session->dropClient(this);
+		}
 	}
+
 }
 
 //-----------------------------------------------------------------------
@@ -194,7 +194,7 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 	if (!authURL.empty()) 
 	{
 		// create the object
-		webAPI api(authURL);
+		webAPI api(authURL); // TODO: is loginserver single threaded? if so then let's make this static, and clear/reset it each run
 		
 		// add our data
 		api.addJsonData<std::string>("user_name", id);
@@ -239,7 +239,8 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 	{
 		if (suid == 0) 
 		{
-			if (uname.length() > MAX_ACCOUNT_NAME_LENGTH) {
+			if (uname.length() > MAX_ACCOUNT_NAME_LENGTH)
+			{
 				uname.resize(MAX_ACCOUNT_NAME_LENGTH);
 			}
 
@@ -288,6 +289,8 @@ void ClientConnection::onCharacterDeletedFromCluster(const NetworkId & character
 		if(f != m_charactersPendingDeletion.end())
 		{
 			m_charactersPendingDeletion.erase(f);
+
+			// TODO: send api request and decrement # characters on this account/subaccount
 		}
 		
 		DeleteCharacterReplyMessage reply(DeleteCharacterReplyMessage::rc_OK);

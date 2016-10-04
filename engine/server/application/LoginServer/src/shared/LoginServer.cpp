@@ -160,7 +160,6 @@ LoginServer::LoginServer() :
 	if (ConfigLoginServer::getDevelopmentMode())
 	{
 		setup.port = ConfigLoginServer::getCentralServicePort();
-		//setup.maxConnections = 1000;
 		m_centralService = new Service(ConnectionAllocator<CentralServerConnection>(), setup);
 	}
 
@@ -219,6 +218,7 @@ int LoginServer::addClient(ClientConnection & client)
 {
 	DEBUG_FATAL(client.getIsValidated(), ("Tried to add an already validated client?!"));
 	//Perhaps add a debug only check to make sure a client connection isn't in twice...I'm not sure how that could happen.
+
 	static int nextClientId = 0;
 	int tmp = ++nextClientId;
 	m_clientMap[tmp] = &client;
@@ -250,7 +250,7 @@ ClientConnection* LoginServer::getUnvalidatedClient(int clientId)
 
 void LoginServer::removeClient(int clientId)
 {
-    if (clientId) // yeah why bother if it's 0 or null? i realize 0 is a valid int but since previously the warning below fired if it was 0....yeah, no
+    if (clientId) // yeah why bother if it's null?
     {
         std::map<int, ClientConnection*>::iterator i = m_clientMap.find(clientId);
         if (i != m_clientMap.end())
@@ -264,7 +264,7 @@ void LoginServer::removeClient(int clientId)
     }
     else
     {
-        WARNING_STRICT_FATAL(true, ("Tried to remove a client with client id == 0"));
+        DEBUG_WARNING(true, ("Tried to remove a client with client id == 0 (possibly DoS attack?)"));
     }
 }
 
@@ -903,6 +903,7 @@ void LoginServer::receiveMessage(const MessageDispatch::Emitter & source, const 
 			if (conn)
 			{
 				// current restriction is that once per account event or item cannot require a "consuming" account feature id
+				// TODO: looks like this is where vet rewards are consumed...the one per account thing, here - session auth may be enough?
 				uint32 const requiredAccountFeatureId = msg->getAccountFeatureId();
 				bool const consumeAccountFeatureId = msg->getConsumeAccountFeatureId();
 				if ((msg->getConsumeEvent() || msg->getConsumeItem()) && (requiredAccountFeatureId > 0) && consumeAccountFeatureId)
@@ -1172,21 +1173,25 @@ void LoginServer::run(void)
 	unsigned long totalTime = 0;
 
 	// load authentication data and bind the monitor to the port
-	CMonitorAPI * mon = new CMonitorAPI("metricsAuthentication.cfg", ConfigLoginServer::getMetricsListenerPort());
-	getInstance().m_soeMonitor = mon;
-	const char *masterChannel = "Population";
-	mon->add(masterChannel, WORLD_COUNT_CHANNEL);
-	std::string host = NetworkHandler::getHostName().c_str();
-	size_t dotPos = host.find(".");
-	if (dotPos != host.npos)
-	{
-		host = host.substr(0, dotPos - 1);
-	}
-	char tmpBuf[1024];
-	IGNORE_RETURN(snprintf(tmpBuf, sizeof(tmpBuf), "LoginServer version %s on %s", ApplicationVersion::getInternalVersion(), host.c_str()));
-	mon->setDescription(WORLD_COUNT_CHANNEL, tmpBuf);
+	const int port = ConfigLoginServer::getMetricsListenerPort();
 
-	mon->add("Galaxies", CLUSTER_COUNT_CHANNEL);
+	if (port) {
+		CMonitorAPI *mon = new CMonitorAPI("metricsAuthentication.cfg", ConfigLoginServer::getMetricsListenerPort());
+		getInstance().m_soeMonitor = mon;
+		const char *masterChannel = "Population";
+		mon->add(masterChannel, WORLD_COUNT_CHANNEL);
+		std::string host = NetworkHandler::getHostName().c_str();
+		size_t dotPos = host.find(".");
+		if (dotPos != host.npos) {
+			host = host.substr(0, dotPos - 1);
+		}
+		char tmpBuf[1024];
+		IGNORE_RETURN(snprintf(tmpBuf, sizeof(tmpBuf), "LoginServer version %s on %s", ApplicationVersion::getInternalVersion(), host
+				.c_str()));
+		mon->setDescription(WORLD_COUNT_CHANNEL, tmpBuf);
+
+		mon->add("Galaxies", CLUSTER_COUNT_CHANNEL);
+	}
 
 	while (!getInstance().done)
 	{
@@ -1224,16 +1229,17 @@ void LoginServer::run(void)
 
 		NetworkHandler::clearBytesThisFrame();
 
-		mon->set(WORLD_COUNT_CHANNEL, static_cast<int>(getInstance().m_clientMap.size()));
-		int count = 0;
-		ClusterListType::const_iterator i;
-		for (i = getInstance().m_clusterList.begin(); i != getInstance().m_clusterList.end(); ++i)
-		{
-			if ((*i)->m_connected)
-				++count;
+		if (port) {
+			mon->set(WORLD_COUNT_CHANNEL, static_cast<int>(getInstance().m_clientMap.size()));
+			int count = 0;
+			ClusterListType::const_iterator i;
+			for (i = getInstance().m_clusterList.begin(); i != getInstance().m_clusterList.end(); ++i) {
+				if ((*i)->m_connected)
+					++count;
+			}
+			mon->set(CLUSTER_COUNT_CHANNEL, count);
+			mon->Update();
 		}
-		mon->set(CLUSTER_COUNT_CHANNEL, count);
-		mon->Update();
 	}
 
 	NetworkHandler::update();

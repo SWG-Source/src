@@ -94,7 +94,7 @@ void ConfigLoginServer::install(void)
 	KEY_BOOL (developmentMode, true);
 	KEY_INT (databaseThreads, 1);
 	KEY_BOOL (compressClientNetworkTraffic, true);
-	KEY_INT (metricsListenerPort, 2201);
+	KEY_INT (metricsListenerPort, 0); // defaults to 2201 but we don't use it
 	KEY_FLOAT (defaultDBQueueUpdateTimeLimit, 0.25f);
 	KEY_INT (disconnectSleepTime, 30000);
 	KEY_INT (clusterGroup,1);
