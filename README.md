@@ -6,3 +6,5 @@ Prebuilt profilers for some (maybe all later) applications are included but as t
 I (darth) will probably use this branch for building release/tc builds.
 
 See http://clang.llvm.org/docs/UsersManual.html#profiling-with-instrumentation 
+
+It is suggested to strip -s the binaries before deployment.
