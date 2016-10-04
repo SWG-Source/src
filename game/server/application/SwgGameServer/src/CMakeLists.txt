@@ -91,14 +91,13 @@ include_directories(
     ${SWG_GAME_SOURCE_DIR}/shared/library/swgSharedNetworkMessages/include/public
     ${SWG_GAME_SOURCE_DIR}/shared/library/swgSharedUtility/include/public
     ${SWG_GAME_SOURCE_DIR}/server/library/swgServerNetworkMessages/include/public
-	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/archive/include
+    ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/archive/include
     ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/fileInterface/include/public
     ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/localization/include
     ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/localizationArchive/include/public
     ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/singleton/include
     ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicode/include
     ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicodeArchive/include/public
-    ${Boost_INCLUDE_DIR}
     ${JNI_INCLUDE_DIRS}
 )
 

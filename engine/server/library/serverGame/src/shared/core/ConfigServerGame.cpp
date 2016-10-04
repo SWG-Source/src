@@ -52,7 +52,6 @@ void ConfigServerGame::install(void)
 	KEY_INT		(taskManagerPort, 60001);	
 	KEY_STRING	(centralServerAddress, "localhost");
 	KEY_INT		(centralServerPort, 44451);
-	KEY_STRING  (javaVMName, "");
 	KEY_STRING  (scriptPath, "../../data/sku.0/sys.server/compiled/game");
 #if defined(WIN32)
 	KEY_STRING  (javaLibPath, "jvm.dll");
@@ -67,7 +66,7 @@ void ConfigServerGame::install(void)
 	KEY_BOOL    (profileScripts, false);
 	KEY_BOOL    (crashOnScriptError, false);
 	KEY_BOOL    (compileScripts, false);
-	KEY_BOOL    (trapScriptCrashes, true);
+	KEY_BOOL    (trapScriptCrashes, false); //this seems to horrifyingly crash java 7/8 sometimes if not always
 	KEY_INT     (scriptWatcherWarnTime, 5000);
 	KEY_INT     (scriptWatcherInterruptTime, 5000);
 	KEY_INT     (scriptStackErrorLimit, 35);
@@ -103,6 +102,7 @@ void ConfigServerGame::install(void)
 	KEY_INT     (jediUpdateLocationTimeSeconds, 60 * 5);
 	KEY_STRING  (planetObjectTemplate, "object/planet/planet.iff");
 	KEY_BOOL    (javaConsoleDebugMessages, false);
+	KEY_BOOL    (javaUseXcheck, false);	 
 	KEY_BOOL    (useVerboseJava, false);
 	KEY_BOOL    (logJavaGc, false);
 	KEY_INT     (javaLocalRefLimit, 16);
@@ -122,9 +122,9 @@ void ConfigServerGame::install(void)
 	KEY_STRING  (pvpUnattackableFactionsFilename, "datatables/pvp/faction_unattackable.iff");
 	KEY_STRING  (pvpBountyTargetFactionsFilename, "datatables/pvp/faction_bountytarget.iff");
 	KEY_BOOL    (createAppearances,true);
-	KEY_STRING  (adminAccountDataTable, "datatables/admin/us_admin.iff");
+	KEY_STRING  (adminAccountDataTable, "datatables/admin/stella_admin.iff");
 	KEY_BOOL    (adminGodToAll, false);
-	KEY_INT     (adminGodToAllGodLevel, 50);
+	KEY_INT     (adminGodToAllGodLevel, 0);
 	KEY_BOOL    (useSecureLoginForGodAccess, false);
 	KEY_BOOL    (useIPForGodAccess, false);
 	KEY_BOOL    (adminPersistAllCreates, false);
@@ -255,8 +255,8 @@ void ConfigServerGame::install(void)
 	KEY_INT     (maxGalacticReserveDepositBillion, 3); // 3 billion
 	KEY_INT     (maxMoneyTransfer,  100000000); // 100 million
 	KEY_INT     (maxFreeTrialMoney, 50000); //50k credits limited to demo customers
-	KEY_BOOL    (enablePreload, true);
-	KEY_BOOL    (buildPreloadLists, true);
+	KEY_BOOL    (enablePreload, false);
+	KEY_BOOL    (buildPreloadLists, false);
 	KEY_BOOL    (logAuthTransfer, false);
 
 	KEY_INT     (overrideUpdateRadius, 0);
@@ -528,10 +528,10 @@ void ConfigServerGame::install(void)
 	// GCW score decay time(s)
 	data->gcwScoreDecayTime.clear();
 	int index = 0;
-	char const * dayOfWeek = NULL;
-	char const * hour = NULL;
-	char const * minute = NULL;
-	char const * second = NULL;
+	char const * dayOfWeek = nullptr;
+	char const * hour = nullptr;
+	char const * minute = nullptr;
+	char const * second = nullptr;
 	do
 	{
 		dayOfWeek = ConfigFile::getKeyString("GameServer", "gcwScoreDecayTimeDayOfWeek", index, 0);

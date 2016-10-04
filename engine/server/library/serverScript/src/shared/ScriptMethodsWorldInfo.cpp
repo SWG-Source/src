@@ -11,7 +11,6 @@
 #include "serverScript/JavaLibrary.h"
 
 #include "UnicodeUtils.h"
-#include "boost/smart_ptr.hpp"  // for boost::shared_ptr and friends
 #include "serverGame/ContainerInterface.h"
 #include "sharedDebug/Profiler.h"
 #include "serverGame/CreatureObject.h"
@@ -182,7 +181,7 @@ const JNINativeMethod NATIVES[] = {
  * @param location		location that is the center of the search area
  * @param range			radius of search area
  *
- * @return array of obj_ids of the objects in range, or null on error
+ * @return array of obj_ids of the objects in range, or nullptr on error
  */
 jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getObjectsInRangeLocation(JNIEnv *env, jobject self, jobject location, jfloat range)
 {
@@ -212,7 +211,7 @@ jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getObjectsInRangeLocation(JN
  * @param location		object that is the center of the search area
  * @param range			radius of search area
  *
- * @return array of obj_ids of the objects in range, or null on error
+ * @return array of obj_ids of the objects in range, or nullptr on error
  */
 jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getObjectsInRangeObject(JNIEnv *env, jobject self, jlong object, jfloat range)
 {
@@ -242,7 +241,7 @@ jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getObjectsInRangeObject(JNIE
  * @param location		location that is the center of the search area
  * @param range			radius of search area
  *
- * @return array of obj_ids of the objects in range, or null on error
+ * @return array of obj_ids of the objects in range, or nullptr on error
  */
 jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getCreaturesInRangeLocation(JNIEnv *env, jobject self, jobject location, jfloat range)
 {
@@ -271,7 +270,7 @@ jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getCreaturesInRangeLocation(
  * @param location		object that is the center of the search area
  * @param range			radius of search area
  *
- * @return array of obj_ids of the objects in range, or null on error
+ * @return array of obj_ids of the objects in range, or nullptr on error
  */
 jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getCreaturesInRangeObject(JNIEnv *env, jobject self, jlong object, jfloat range)
 {
@@ -302,7 +301,7 @@ jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getCreaturesInRangeObject(JN
  * @param type
  * @param mask
  *
- * @return array of obj_ids of the objects in range, or null on error
+ * @return array of obj_ids of the objects in range, or nullptr on error
  */
 jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getCreaturesOfNicheInRangeLocation(JNIEnv *env, jobject self, jobject location, jfloat range, jint type, jint mask)
 {
@@ -333,7 +332,7 @@ jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getCreaturesOfNicheInRangeLo
  * @param type
  * @param mask
  *
- * @return array of obj_ids of the objects in range, or null on error
+ * @return array of obj_ids of the objects in range, or nullptr on error
  */
 jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getCreaturesOfNicheInRangeObject(JNIEnv *env, jobject self, jlong object, jfloat range, jint type, jint mask)
 {
@@ -363,7 +362,7 @@ jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getCreaturesOfNicheInRangeOb
  * @param range			radius of search area
  * @param species
  *
- * @return array of obj_ids of the objects in range, or null on error
+ * @return array of obj_ids of the objects in range, or nullptr on error
  */
 jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getCreaturesOfSpeciesInRangeLocation(JNIEnv *env, jobject self, jobject location, jfloat range, jint species)
 {
@@ -393,7 +392,7 @@ jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getCreaturesOfSpeciesInRange
  * @param range			radius of search area
  * @param species
  *
- * @return array of obj_ids of the objects in range, or null on error
+ * @return array of obj_ids of the objects in range, or nullptr on error
  */
 jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getCreaturesOfSpeciesInRangeObject(JNIEnv *env, jobject self, jlong object, jfloat range, jint species)
 {
@@ -424,7 +423,7 @@ jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getCreaturesOfSpeciesInRange
  * @param species
  * @param race
  *
- * @return array of obj_ids of the objects in range, or null on error
+ * @return array of obj_ids of the objects in range, or nullptr on error
  */
 jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getCreaturesOfRaceInRangeLocation(JNIEnv *env, jobject self, jobject location, jfloat range, jint species, jint race)
 {
@@ -455,7 +454,7 @@ jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getCreaturesOfRaceInRangeLoc
  * @param species
  * @param race
  *
- * @return array of obj_ids of the objects in range, or null on error
+ * @return array of obj_ids of the objects in range, or nullptr on error
  */
 jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getCreaturesOfRaceInRangeObject(JNIEnv *env, jobject self, jlong object, jfloat range, jint species, jint race)
 {
@@ -484,7 +483,7 @@ jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getCreaturesOfRaceInRangeObj
  * @param location		location that is the center of the search area
  * @param range			radius of search area
  *
- * @return array of obj_ids of the objects in range, or null on error
+ * @return array of obj_ids of the objects in range, or nullptr on error
  */
 jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getNonCreaturesInRangeLocation(JNIEnv *env, jobject self, jobject location, jfloat range)
 {
@@ -513,7 +512,7 @@ jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getNonCreaturesInRangeLocati
  * @param location		object that is the center of the search area
  * @param range			radius of search area
  *
- * @return array of obj_ids of the objects in range, or null on error
+ * @return array of obj_ids of the objects in range, or nullptr on error
  */
 jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getNonCreaturesInRangeObject(JNIEnv *env, jobject self, jlong object, jfloat range)
 {
@@ -542,7 +541,7 @@ jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getNonCreaturesInRangeObject
  * @param location		location that is the center of the search area
  * @param range			radius of search area
  *
- * @return array of obj_ids of the objects in range, or null on error
+ * @return array of obj_ids of the objects in range, or nullptr on error
  */
 jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getNPCsInRangeLocation(JNIEnv *env, jobject self, jobject location, jfloat range)
 {
@@ -571,7 +570,7 @@ jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getNPCsInRangeLocation(JNIEn
  * @param location		object that is the center of the search area
  * @param range			radius of search area
  *
- * @return array of obj_ids of the objects in range, or null on error
+ * @return array of obj_ids of the objects in range, or nullptr on error
  */
 jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getNPCsInRangeObject(JNIEnv *env, jobject self, jlong object, jfloat range)
 {
@@ -600,7 +599,7 @@ jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getNPCsInRangeObject(JNIEnv 
  * @param location		location that is the center of the search area
  * @param range			radius of search area
  *
- * @return array of obj_ids of the objects in range, or null on error
+ * @return array of obj_ids of the objects in range, or nullptr on error
  */
 jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getPlayerCreaturesInRangeLocation(JNIEnv *env, jobject self, jobject location, jfloat range)
 {
@@ -629,7 +628,7 @@ jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getPlayerCreaturesInRangeLoc
  * @param location		object that is the center of the search area
  * @param range			radius of search area
  *
- * @return array of obj_ids of the objects in range, or null on error
+ * @return array of obj_ids of the objects in range, or nullptr on error
  */
 jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getPlayerCreaturesInRangeObject(JNIEnv *env, jobject self, jlong object, jfloat range)
 {
@@ -658,7 +657,7 @@ jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getPlayerCreaturesInRangeObj
  * @param env		    Java environment
  * @param self		    class calling this function
  *
- * @return array of obj_ids of the objects in range, or null on error
+ * @return array of obj_ids of the objects in range, or nullptr on error
  */
 jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getObjectsInCone(JNIEnv *env, jobject self, jlong coneCenterObjectId, jlong coneDirectionObjectId, jfloat range, jfloat angle)
 {
@@ -698,7 +697,7 @@ jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getObjectsInCone(JNIEnv *env
  * @param env		    Java environment
  * @param self		    class calling this function
  *
- * @return array of obj_ids of the objects in range, or null on error
+ * @return array of obj_ids of the objects in range, or nullptr on error
  */
 jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getObjectsInConeLocation(JNIEnv *env, jobject self, jlong coneCenterObjectId, jobject coneDirectionLocation, jfloat range, jfloat angle)
 {
@@ -738,7 +737,7 @@ jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getObjectsInConeLocation(JNI
  * @param env		    Java environment
  * @param self		    class calling this function
  *
- * @return array of obj_ids of the objects in range, or null on error
+ * @return array of obj_ids of the objects in range, or nullptr on error
  */
 jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getCreaturesInCone(JNIEnv *env, jobject self, jlong coneCenterObjectId, jlong coneDirectionObjectId, jfloat range, jfloat angle)
 {
@@ -779,7 +778,7 @@ jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getCreaturesInCone(JNIEnv *e
  * @param env		    Java environment
  * @param self		    class calling this function
  *
- * @return array of obj_ids of the objects in range, or null on error
+ * @return array of obj_ids of the objects in range, or nullptr on error
  */
 jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getCreaturesInConeLocation(JNIEnv *env, jobject self, jlong coneCenterObjectId, jobject coneDirectionLocation, jfloat range, jfloat angle)
 {
@@ -820,7 +819,7 @@ jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getCreaturesInConeLocation(J
  * @param env		    Java environment
  * @param self		    class calling this function
  *
- * @return array of obj_ids of the objects in range, or null on error
+ * @return array of obj_ids of the objects in range, or nullptr on error
  */
 jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getCreaturesOfNicheInCone(JNIEnv *env, jobject self, jlong coneCenterObjectId, jlong coneDirectionObjectId, jfloat range, jfloat angle, jint niche, jint mask)
 {
@@ -860,7 +859,7 @@ jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getCreaturesOfNicheInCone(JN
  * @param env		    Java environment
  * @param self		    class calling this function
  *
- * @return array of obj_ids of the objects in range, or null on error
+ * @return array of obj_ids of the objects in range, or nullptr on error
  */
 jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getCreaturesOfSpeciesInCone(JNIEnv *env, jobject self, jlong coneCenterObjectId, jlong coneDirectionObjectId, jfloat range, jfloat angle, jint species)
 {
@@ -900,7 +899,7 @@ jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getCreaturesOfSpeciesInCone(
  * @param env		    Java environment
  * @param self		    class calling this function
  *
- * @return array of obj_ids of the objects in range, or null on error
+ * @return array of obj_ids of the objects in range, or nullptr on error
  */
 jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getCreaturesOfRaceInCone(JNIEnv *env, jobject self, jlong coneCenterObjectId, jlong coneDirectionObjectId, jfloat range, jfloat angle, jint species, jint race)
 {
@@ -940,7 +939,7 @@ jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getCreaturesOfRaceInCone(JNI
  * @param env		    Java environment
  * @param self		    class calling this function
  *
- * @return array of obj_ids of the objects in range, or null on error
+ * @return array of obj_ids of the objects in range, or nullptr on error
  */
 jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getNonCreaturesInCone(JNIEnv *env, jobject self, jlong coneCenterObjectId, jlong coneDirectionObjectId, jfloat range, jfloat angle)
 {
@@ -980,7 +979,7 @@ jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getNonCreaturesInCone(JNIEnv
  * @param env		    Java environment
  * @param self		    class calling this function
  *
- * @return array of obj_ids of the objects in range, or null on error
+ * @return array of obj_ids of the objects in range, or nullptr on error
  */
 jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getNPCsInCone(JNIEnv *env, jobject self, jlong coneCenterObjectId, jlong coneDirectionObjectId, jfloat range, jfloat angle)
 {
@@ -1020,7 +1019,7 @@ jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getNPCsInCone(JNIEnv *env, j
  * @param env		    Java environment
  * @param self		    class calling this function
  *
- * @return array of obj_ids of the objects in range, or null on error
+ * @return array of obj_ids of the objects in range, or nullptr on error
  */
 jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getPlayerCreaturesInCone(JNIEnv *env, jobject self, jlong coneCenterObjectId, jlong coneDirectionObjectId, jfloat range, jfloat angle)
 {
@@ -1169,7 +1168,7 @@ jlong JNICALL ScriptMethodsWorldInfoNamespace::getClosestMobile(JNIEnv *env, job
 		return 0;
 
 	ServerObject * npc = ServerWorld::findClosestNPC(target, radius);
-	if (npc == NULL)
+	if (npc == nullptr)
 		return 0;
 	return (npc->getNetworkId()).getValue();
 }
@@ -1184,7 +1183,7 @@ jlong JNICALL ScriptMethodsWorldInfoNamespace::getClosestPlayer(JNIEnv *env, job
 		return 0;
 
 	ServerObject * player = ServerWorld::findClosestPlayer(target, radius);
-	if (player == NULL)
+	if (player == nullptr)
 		return 0;
 	return (player->getNetworkId()).getValue();
 }
@@ -1209,7 +1208,7 @@ jlong JNICALL ScriptMethodsWorldInfoNamespace::getFirstObjectWithScript(JNIEnv *
 
 	for (ResultsType::iterator i=results.begin(); i!=results.end(); ++i)
 	{
-		if (*i != NULL && (*i)->getScriptObject()->hasScript(scriptName))
+		if (*i != nullptr && (*i)->getScriptObject()->hasScript(scriptName))
 			return ((*i)->getNetworkId()).getValue();
 	}
 
@@ -1237,7 +1236,7 @@ jlong JNICALL ScriptMethodsWorldInfoNamespace::getFirstObjectWithObjVar(JNIEnv *
 
 	for (ResultsType::iterator i=results.begin(); i!=results.end(); ++i)
 	{
-		if (*i != NULL && (*i)->getObjVars().hasItem(objvarName))
+		if (*i != nullptr && (*i)->getObjVars().hasItem(objvarName))
 			return ((*i)->getNetworkId()).getValue();
 	}
 
@@ -1265,7 +1264,7 @@ jlong JNICALL ScriptMethodsWorldInfoNamespace::getFirstObjectWithTemplate(JNIEnv
 
 	for (ResultsType::iterator i=results.begin(); i!=results.end(); ++i)
 	{
-		if (*i != NULL && templateStr == (*i)->getTemplateName())
+		if (*i != nullptr && templateStr == (*i)->getTemplateName())
 			return ((*i)->getNetworkId()).getValue();
 	}
 
@@ -1434,7 +1433,7 @@ jstring JNICALL ScriptMethodsWorldInfoNamespace::getNameForPlanetObject(JNIEnv *
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -1499,7 +1498,7 @@ jobject JNICALL ScriptMethodsWorldInfoNamespace::getValidLocation(JNIEnv *env, j
 
 		// Determine if it's a valid point, and if not search for another one.
 
-		bool isValid = !CollisionWorld::query( Sphere(corralPoint,objectRadius),NULL);
+		bool isValid = !CollisionWorld::query( Sphere(corralPoint,objectRadius),nullptr);
 
 		// ----------
 
@@ -1517,14 +1516,14 @@ jobject JNICALL ScriptMethodsWorldInfoNamespace::getValidLocation(JNIEnv *env, j
 
 	// We failed to find a valid location
 
-	return NULL;
+	return nullptr;
 }
 
 // ----------------------------------------------------------------------
 
 jboolean JNICALL ScriptMethodsWorldInfoNamespace::getCollidesWithObject(JNIEnv * env, jobject self, jobject jlocation, jfloat jradius)
 {
-	if (jlocation == NULL)
+	if (jlocation == nullptr)
 		return JNI_FALSE;
 
 	float const radius = jradius;
@@ -1532,7 +1531,7 @@ jboolean JNICALL ScriptMethodsWorldInfoNamespace::getCollidesWithObject(JNIEnv *
 	if (!ScriptConversion::convertWorld(jlocation, location))
 		return JNI_FALSE;
 
-	bool const result = CollisionWorld::query(Sphere(location, radius), NULL);
+	bool const result = CollisionWorld::query(Sphere(location, radius), nullptr);
 
 	if(result)
 		return JNI_TRUE;
@@ -1556,7 +1555,7 @@ jboolean JNICALL ScriptMethodsWorldInfoNamespace::canSee(JNIEnv *env, jobject se
 {
 	UNREF(self);
 
-	const ServerObject * sourceObject = NULL;
+	const ServerObject * sourceObject = nullptr;
 	if (!JavaLibrary::getObject(source, sourceObject))
 	{
 		NetworkId id(source);
@@ -1572,7 +1571,7 @@ jboolean JNICALL ScriptMethodsWorldInfoNamespace::canSee(JNIEnv *env, jobject se
 		return JNI_TRUE;
 	}
 
-	const ServerObject * targetObject = NULL;
+	const ServerObject * targetObject = nullptr;
 	if (!JavaLibrary::getObject(target, targetObject))
 	{
 		NetworkId id(target);
@@ -1608,7 +1607,7 @@ jboolean JNICALL ScriptMethodsWorldInfoNamespace::canSeeLocation(JNIEnv *env, jo
 {
 	UNREF(self);
 
-	const ServerObject * sourceObject = NULL;
+	const ServerObject * sourceObject = nullptr;
 	if (!JavaLibrary::getObject(source, sourceObject))
 	{
 		NetworkId id(source);
@@ -1640,11 +1639,11 @@ jboolean JNICALL ScriptMethodsWorldInfoNamespace::canManipulate(JNIEnv *env, job
 {
 	UNREF(self);
 
-	const CreatureObject * sourceObject = NULL;
+	const CreatureObject * sourceObject = nullptr;
 	if (!JavaLibrary::getObject(player, sourceObject))
 		return JNI_FALSE;
 
-	const ServerObject * targetObject = NULL;
+	const ServerObject * targetObject = nullptr;
 	if (!JavaLibrary::getObject(target, targetObject))
 		return JNI_FALSE;
 
@@ -1663,7 +1662,7 @@ jboolean JNICALL ScriptMethodsWorldInfoNamespace::canManipulate(JNIEnv *env, job
  * @param performer performer we are looking for listeners of
  * @param range     radius of search area
  *
- * @return array of obj_ids of the objects in range, or null on error
+ * @return array of obj_ids of the objects in range, or nullptr on error
  */
 jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getPerformanceListenersInRange(JNIEnv *env, jobject self, jlong performer, jfloat range)
 {
@@ -1697,7 +1696,7 @@ jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getPerformanceListenersInRan
  * @param performer performer we are looking for watchers of
  * @param range     radius of search area
  *
- * @return array of obj_ids of the objects in range, or null on error
+ * @return array of obj_ids of the objects in range, or nullptr on error
  */
 jlongArray JNICALL ScriptMethodsWorldInfoNamespace::getPerformanceWatchersInRange(JNIEnv *env, jobject self, jlong performer, jfloat range)
 {

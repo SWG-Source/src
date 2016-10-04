@@ -131,10 +131,10 @@ void JNICALL ScriptMethodsHyperspaceNamespace::hyperspacePlayerToLocation(JNIEnv
 
 	// Make sure the ship is not docking
 
-	Controller const * const controller = (shipObject != NULL) ? shipObject->getController() : NULL;
-	ShipController const * const shipController = (controller != NULL) ? controller->asShipController() : NULL;
+	Controller const * const controller = (shipObject != nullptr) ? shipObject->getController() : nullptr;
+	ShipController const * const shipController = (controller != nullptr) ? controller->asShipController() : nullptr;
 
-	if (   (shipController != NULL)
+	if (   (shipController != nullptr)
 		&& shipController->isDocking())
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("hyperspacePlayerToLocation - Hyperspacing is not allowed on ships that are currently docking: %s", shipObject->getDebugInformation().c_str()));
@@ -211,10 +211,10 @@ void JNICALL ScriptMethodsHyperspaceNamespace::hyperspacePlayerToLocationCellNam
 
 	// Make sure the ship is not docking
 
-	Controller const * const controller = (shipObject != NULL) ? shipObject->getController() : NULL;
-	ShipController const * const shipController = (controller != NULL) ? controller->asShipController() : NULL;
+	Controller const * const controller = (shipObject != nullptr) ? shipObject->getController() : nullptr;
+	ShipController const * const shipController = (controller != nullptr) ? controller->asShipController() : nullptr;
 
-	if (   (shipController != NULL)
+	if (   (shipController != nullptr)
 		&& shipController->isDocking())
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("hyperspacePlayerToLocation - Hyperspacing is not allowed on ships that are currently docking: %s", shipObject->getDebugInformation().c_str()));
@@ -272,7 +272,7 @@ void JNICALL ScriptMethodsHyperspaceNamespace::hyperspacePlayerToHyperspacePoint
 		return;
 	}
 
-	CreatureObject * const playerCreature = playerObject ? playerObject->asCreatureObject() : NULL;
+	CreatureObject * const playerCreature = playerObject ? playerObject->asCreatureObject() : nullptr;
 	if(!playerCreature)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("hyperspacePlayerToHyperspacePoint - player is not a creature"));
@@ -309,10 +309,10 @@ void JNICALL ScriptMethodsHyperspaceNamespace::hyperspacePlayerToHyperspacePoint
 
 	// Make sure the ship is not docking
 
-	Controller const * const controller = (shipObject != NULL) ? shipObject->getController() : NULL;
-	ShipController const * const shipController = (controller != NULL) ? controller->asShipController() : NULL;
+	Controller const * const controller = (shipObject != nullptr) ? shipObject->getController() : nullptr;
+	ShipController const * const shipController = (controller != nullptr) ? controller->asShipController() : nullptr;
 
-	if (   (shipController != NULL)
+	if (   (shipController != nullptr)
 		&& shipController->isDocking())
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("hyperspacePlayerToHyperspacePoint - Hyperspacing is not allowed on ships that are currently docking: %s", shipObject->getDebugInformation().c_str()));
@@ -395,7 +395,7 @@ void JNICALL ScriptMethodsHyperspaceNamespace::hyperspacePrepareShipOnClient(JNI
 		return;
 	}
 
-	CreatureObject * const playerCreature = playerObject ? playerObject->asCreatureObject() : NULL;
+	CreatureObject * const playerCreature = playerObject ? playerObject->asCreatureObject() : nullptr;
 	if(playerCreature == 0)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("hyperspacePlayerToHyperspacePoint - player is not a creature"));
@@ -425,8 +425,8 @@ void JNICALL ScriptMethodsHyperspaceNamespace::hyperspacePrepareShipOnClient(JNI
 
 		if (HyperspaceManager::getHyperspacePoint(hyperspacePoint, location))
 		{
-			Controller const * const controller = (shipObject != NULL) ? shipObject->getController() : NULL;
-			ShipController const * const shipController = (controller != NULL) ? controller->asShipController() : NULL;
+			Controller const * const controller = (shipObject != nullptr) ? shipObject->getController() : nullptr;
+			ShipController const * const shipController = (controller != nullptr) ? controller->asShipController() : nullptr;
 
 			if (shipController != 0)
 			{
@@ -467,7 +467,7 @@ void JNICALL ScriptMethodsHyperspaceNamespace::hyperspaceRestoreShipOnClientFrom
 		return;
 	}
 
-	CreatureObject * const playerCreature = playerObject ? playerObject->asCreatureObject() : NULL;
+	CreatureObject * const playerCreature = playerObject ? playerObject->asCreatureObject() : nullptr;
 	if(playerCreature == 0)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("hyperspacePlayerToHyperspacePoint - player is not a creature"));
@@ -482,8 +482,8 @@ void JNICALL ScriptMethodsHyperspaceNamespace::hyperspaceRestoreShipOnClientFrom
 		return;
 	}
 
-	Controller const * const controller = (shipObject != NULL) ? shipObject->getController() : NULL;
-	ShipController const * const shipController = (controller != NULL) ? controller->asShipController() : NULL;
+	Controller const * const controller = (shipObject != nullptr) ? shipObject->getController() : nullptr;
+	ShipController const * const shipController = (controller != nullptr) ? controller->asShipController() : nullptr;
 
 	if (shipController != 0)
 	{
@@ -514,7 +514,7 @@ jstring JNICALL ScriptMethodsHyperspaceNamespace::getSceneForHyperspacePoint(JNI
 	if (!JavaLibrary::convert(localHyperspacePoint, hyperspacePoint))
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("getSceneForHyperspacePoint - could not get hyperspace point name"));
-		return NULL;
+		return nullptr;
 	}
 
 	if(HyperspaceManager::isValidHyperspacePoint(hyperspacePoint))
@@ -528,7 +528,7 @@ jstring JNICALL ScriptMethodsHyperspaceNamespace::getSceneForHyperspacePoint(JNI
 			return str.getReturnValue();
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 //------------------------------------------------------------------------------------------------

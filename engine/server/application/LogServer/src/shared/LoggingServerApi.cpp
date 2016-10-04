@@ -9,8 +9,6 @@
 
 #include "LoggingServerApi.h"
 
-
-
 LoggingServerApi::LoggingServerApi(LoggingServerHandler *handler, int queueSize)
 {
 	mHandler = handler;
@@ -18,21 +16,22 @@ LoggingServerApi::LoggingServerApi(LoggingServerHandler *handler, int queueSize)
 	mQueue = new QueueEntry[mQueueSize];
 	mQueuePosition = 0;
 	mQueueCount = 0;
+	mLoginSent = 0;
 
 	mAuthenticated = false;
 	mLoginName[0] = 0;
 	mPassword[0] = 0;
 	mDefaultDirectory[0] = 0;
-	mConnection = NULL;
-	mUdpManager = NULL;
-	mTransaction = NULL;
-	mSessionId = int(time(NULL));
+	mConnection = nullptr;
+	mUdpManager = nullptr;
+	mTransaction = nullptr;
+	mSessionId = int(time(nullptr));
 	mSessionSequence = 1;
 }
 
 LoggingServerApi::~LoggingServerApi()
 {
-	if (mTransaction != NULL)
+	if (mTransaction != nullptr)
 		StopTransaction();
 
 	for (int i = 0; i < mQueueCount; i++)
@@ -77,7 +76,7 @@ void LoggingServerApi::Connect(const char *address, int port, const char *loginN
 	mUdpManager = new UdpManager(&params);
 
 	mConnection = mUdpManager->EstablishConnection(address, port, 30000);
-	if (mConnection != NULL)
+	if (mConnection != nullptr)
 		mConnection->SetHandler(this);
 	mLoginSent = false;
 }
@@ -89,17 +88,17 @@ void LoggingServerApi::Disconnect()
 	mPassword[0] = 0;
 	mDefaultDirectory[0] = 0;
 
-	if (mConnection != NULL)
+	if (mConnection != nullptr)
 	{
 		mConnection->Disconnect();
 		mConnection->Release();
-		mConnection = NULL;
+		mConnection = nullptr;
 	}
 
-	if (mUdpManager != NULL)
+	if (mUdpManager != nullptr)
 	{
 		mUdpManager->Release();
-		mUdpManager = NULL;
+		mUdpManager = nullptr;
 	}
 }
 
@@ -117,22 +116,22 @@ void LoggingServerApi::Flush(int timeout)
 	UdpMisc::Sleep(20);
 }
 
-LoggingServerApi::Status LoggingServerApi::GetStatus() const 
+LoggingServerApi::Status LoggingServerApi::GetStatus() const
 {
-	if (mConnection != NULL)
+	if (mConnection != nullptr)
 	{
 		switch (mConnection->GetStatus())
 		{
-			case UdpConnection::cStatusConnected:
-				if (mAuthenticated)
-					return(cStatusConnected);
-				else
-					return(cStatusAuthenticating);
-				break;
-			case UdpConnection::cStatusNegotiating:
-				return(cStatusNegotiating);
-			default:
-				break;
+		case UdpConnection::cStatusConnected:
+			if (mAuthenticated)
+				return(cStatusConnected);
+			else
+				return(cStatusAuthenticating);
+			break;
+		case UdpConnection::cStatusNegotiating:
+			return(cStatusNegotiating);
+		default:
+			break;
 		}
 	}
 	return(cStatusDisconnected);
@@ -140,69 +139,69 @@ LoggingServerApi::Status LoggingServerApi::GetStatus() const
 
 void LoggingServerApi::OnRoutePacket(UdpConnection *, const uchar *data, int)
 {
-	switch(data[0])
+	switch (data[0])
 	{
-		case cS2CPacketLoginConfirm:
+	case cS2CPacketLoginConfirm:
+	{
+		mAuthenticated = data[1] ? true : false;
+		if (mAuthenticated)
 		{
-			mAuthenticated = data[1] ? true : false;
-			if (mAuthenticated)
-			{
-					// flush the queue on authentication.  This sends not only any data that was queued before connecting
-					// but also any data that was sent in the last 3 minutes, just to ensure that it didn't get lost on the
-					// server side of things
-				FlushQueue();
-			}
+			// flush the queue on authentication.  This sends not only any data that was queued before connecting
+			// but also any data that was sent in the last 3 minutes, just to ensure that it didn't get lost on the
+			// server side of things
+			FlushQueue();
+		}
 
-			if (mHandler != NULL)
-				mHandler->LshOnLoginConfirm(mAuthenticated);
-			break;
-		}
-		case cS2CPacketMonitor:
-		{
-			char *ptr = (char *)(data + 1);
-			int sessionId = UdpMisc::GetValue32(ptr);
-			ptr += 4;
-			int sequenceNumber = UdpMisc::GetValue32(ptr);
-			ptr += 4;
-			int typeCode = UdpMisc::GetValue32(ptr);
-			ptr += 4;
-			char *name = ptr;
-			ptr += strlen(ptr) + 1;
-			char *filename = ptr;
-			ptr += strlen(ptr) + 1;
-			char *message = ptr;
-			if (mHandler != NULL)
-				mHandler->LshOnMonitor(sessionId, sequenceNumber, name, filename, typeCode, message);
-			break;
-		}
-		case cS2CPacketFileList:
-		{
-			if (mHandler != NULL)
-				mHandler->LshOnFileList((char *)(data + 1));
-			break;
-		}
-		default:
-			break;
+		if (mHandler != nullptr)
+			mHandler->LshOnLoginConfirm(mAuthenticated);
+		break;
+	}
+	case cS2CPacketMonitor:
+	{
+		char *ptr = (char *)(data + 1);
+		int sessionId = UdpMisc::GetValue32(ptr);
+		ptr += 4;
+		int sequenceNumber = UdpMisc::GetValue32(ptr);
+		ptr += 4;
+		int typeCode = UdpMisc::GetValue32(ptr);
+		ptr += 4;
+		char *name = ptr;
+		ptr += strlen(ptr) + 1;
+		char *filename = ptr;
+		ptr += strlen(ptr) + 1;
+		char *message = ptr;
+		if (mHandler != nullptr)
+			mHandler->LshOnMonitor(sessionId, sequenceNumber, name, filename, typeCode, message);
+		break;
+	}
+	case cS2CPacketFileList:
+	{
+		if (mHandler != nullptr)
+			mHandler->LshOnFileList((char *)(data + 1));
+		break;
+	}
+	default:
+		break;
 	}
 }
 
 void LoggingServerApi::OnTerminated(UdpConnection *con)
 {
-	if(mHandler != NULL)
+	if (mHandler != nullptr)
 	{
-		mHandler->LshOnTerminated( con->GetDisconnectReason() );
+		mHandler->LshOnTerminated(con->GetDisconnectReason());
 	}
 }
 
 void LoggingServerApi::GiveTime()
 {
-	if (mConnection != NULL && mConnection->GetStatus() == UdpConnection::cStatusConnected)
+	if (mConnection != nullptr && mConnection->GetStatus() == UdpConnection::cStatusConnected)
 	{
 		if (!mLoginSent)
 		{
 			mLoginSent = true;
 
-				// send login packet
+			// send login packet
 			char buf[1024];
 			char *ptr = buf;
 			*ptr++ = cC2SPacketLogin;
@@ -221,11 +220,11 @@ void LoggingServerApi::GiveTime()
 	{
 		int spot = mQueuePosition % mQueueSize;
 
-			// if entry was actually sent and it has been sitting in the queue long enough to be deleted
-		if (mQueue[spot].sentTime != 0 && UdpMisc::ClockElapsed(mQueue[spot].sentTime) > cSafetyQueueTime)		
+		// if entry was actually sent and it has been sitting in the queue long enough to be deleted
+		if (mQueue[spot].sentTime != 0 && UdpMisc::ClockElapsed(mQueue[spot].sentTime) > cSafetyQueueTime)
 		{
 			mQueue[spot].packet->Release();
-			mQueue[spot].packet = NULL;
+			mQueue[spot].packet = nullptr;
 			mQueuePosition++;
 			mQueueCount--;
 		}
@@ -235,7 +234,7 @@ void LoggingServerApi::GiveTime()
 		}
 	}
 
-	if (mUdpManager != NULL)
+	if (mUdpManager != nullptr)
 	{
 		mUdpManager->GiveTime();
 	}
@@ -243,47 +242,46 @@ void LoggingServerApi::GiveTime()
 
 void LoggingServerApi::StartTransaction()
 {
-	if (mTransaction == NULL)
+	if (mTransaction == nullptr)
 		mTransaction = new GroupLogicalPacket();
 }
 
 void LoggingServerApi::StopTransaction()
 {
-	if (mTransaction != NULL)
+	if (mTransaction != nullptr)
 	{
 		PacketSend(mTransaction);
 		mTransaction->Release();
-		mTransaction = NULL;
+		mTransaction = nullptr;
 	}
 }
 
 void LoggingServerApi::PacketSend(LogicalPacket *lp)
 {
-		// make room in queue
+	// make room in queue
 	if (mQueueCount == mQueueSize)
 	{
 		int spot = mQueuePosition % mQueueSize;
 		mQueue[spot].packet->Release();
-		mQueue[spot].packet = NULL;
+		mQueue[spot].packet = nullptr;
 		mQueuePosition++;
 		mQueueCount--;
 	}
 
-		// queue it
+	// queue it
 	int spot = (mQueuePosition + mQueueCount) % mQueueSize;
 	lp->AddRef();
 	mQueue[spot].packet = lp;
 	mQueue[spot].sentTime = 0;
 	mQueueCount++;
 
-		// if possible, send it
+	// if possible, send it
 	if (GetStatus() == cStatusConnected)
 	{
 		mQueue[spot].sentTime = UdpMisc::Clock();
 		mConnection->Send(cUdpChannelReliable1, lp);
 	}
 }
-
 
 void LoggingServerApi::Log16(const char *filename, int typeCode, const unsigned short *ucs2String)
 {
@@ -374,9 +372,9 @@ void LoggingServerApi::Log(const char *filename, int typeCode, const char *messa
 
 void LoggingServerApi::LogPacket(char *data, int len)
 {
-	if (mTransaction != NULL)
+	if (mTransaction != nullptr)
 	{
-			// add it to the transaction
+		// add it to the transaction
 		mTransaction->AddPacket(data, len);
 	}
 	else
@@ -389,7 +387,7 @@ void LoggingServerApi::LogPacket(char *data, int len)
 
 LogicalPacket *LoggingServerApi::CreatePacket(char *data, int dataLen)
 {
-	if (mUdpManager != NULL)
+	if (mUdpManager != nullptr)
 	{
 		return(mUdpManager->CreatePacket(data, dataLen));
 	}
@@ -437,12 +435,12 @@ void LoggingServerApi::RequestFileList()
 
 void LoggingServerApi::GetStatistics(LoggingServerApiStatistics *stats)
 {
-	memset( stats, 0, sizeof( *stats) );
+	memset(stats, 0, sizeof(*stats));
 	UdpConnectionStatistics udpConnectionStats;
-	memset( &udpConnectionStats, 0, sizeof( udpConnectionStats ) );
-	if( mConnection != NULL )
+	memset(&udpConnectionStats, 0, sizeof(udpConnectionStats));
+	if (mConnection != nullptr)
 	{
-		mConnection->GetStats( &udpConnectionStats );
+		mConnection->GetStats(&udpConnectionStats);
 		stats->applicationPacketsReceived = udpConnectionStats.applicationPacketsReceived;
 		stats->applicationPacketsSent = udpConnectionStats.applicationPacketsSent;
 		stats->totalBytesReceived = udpConnectionStats.totalBytesReceived;
@@ -454,25 +452,25 @@ void LoggingServerApi::GetStatistics(LoggingServerApiStatistics *stats)
 	}
 
 	UdpManagerStatistics managerStats;
-	if( mUdpManager != NULL )
+	if (mUdpManager != nullptr)
 	{
-		mUdpManager->GetStats( &managerStats );
+		mUdpManager->GetStats(&managerStats);
 		udp_int64 iterations = managerStats.iterations;
 		int elapseTime = managerStats.elapsedTime;
 
-		if( elapseTime != 0 )
+		if (elapseTime != 0)
 		{
-			stats->iterationsPerSecond = (double)((iterations * 1000 )/(double)elapseTime);
+			stats->iterationsPerSecond = (double)((iterations * 1000) / (double)elapseTime);
 		}
 		mUdpManager->ResetStats();
 	}
 }
 
-void LoggingServerHandler::LshOnLoginConfirm(bool )
+void LoggingServerHandler::LshOnLoginConfirm(bool)
 {
 }
 
-void LoggingServerHandler::LshOnMonitor(int , int , const char * const, const char * const, int , const char * const)
+void LoggingServerHandler::LshOnMonitor(int, int, const char * const, const char * const, int, const char * const)
 {
 }
 

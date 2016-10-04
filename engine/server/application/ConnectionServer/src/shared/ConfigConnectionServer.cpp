@@ -88,6 +88,7 @@ void ConfigConnectionServer::install(void)
 	KEY_INT     (lagReportThreshold, 10000);
 	KEY_INT     (defaultGameFeatures, 0xFFFFFFFF);
 	KEY_INT     (defaultSubscriptionFeatures, 0xFFFFFFFF);
+	KEY_INT     (maxConnectionsPerIP, 6);
 
 	KEY_BOOL     (validateStationKey, false);
 	KEY_STRING   (sessionServers, "");
@@ -112,6 +113,8 @@ void ConfigConnectionServer::install(void)
 
 	KEY_INT     (connectionServerNumber, 0);
 	KEY_INT     (fakeBuddyPoints, 0);
+
+	KEY_STRING  (altPublicBindAddress, "");
 
 	int index = 0;
 	char const * result = 0;
@@ -161,6 +164,13 @@ bool ConfigConnectionServer::getDisconnectFreeTrialOnInactive()
 int ConfigConnectionServer::getFakeBuddyPoints()
 {
 	return data->fakeBuddyPoints;
+}
+
+// ----------------------------------------------------------------------
+
+const char * ConfigConnectionServer::getPublicBindAddress()
+{
+	return data->altPublicBindAddress;
 }
 
 // ======================================================================

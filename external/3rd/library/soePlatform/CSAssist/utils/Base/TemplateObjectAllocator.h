@@ -93,7 +93,7 @@ namespace Base
 
             void Destroy(TYPE *object)
             {
-                if (object == NULL)
+                if (object == nullptr)
                     return;
 
 #ifdef USE_ALLOCATOR_MUTEX
@@ -142,7 +142,7 @@ namespace Base
 
             void FastDestroy(TYPE *object)
             {
-                if (object == NULL)
+                if (object == nullptr)
                     return;
 
                 object->~TYPE();

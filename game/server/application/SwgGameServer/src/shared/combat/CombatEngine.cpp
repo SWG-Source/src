@@ -102,7 +102,7 @@ void CombatEngine::aim(const Command &, const NetworkId & actor, const NetworkId
 	CachedNetworkId attackerId(actor);
 	TangibleObject * attacker = dynamic_cast<TangibleObject *>(attackerId.getObject());
 
-	if (attacker != NULL)
+	if (attacker != nullptr)
 	{
 		attacker->addAim();
 	}
@@ -121,7 +121,7 @@ bool CombatEngine::addTargetAction(TangibleObject & attacker,
 {
 	// @todo: support tangible attacks
 	CreatureObject * const creatureAttacker = attacker.asCreatureObject ();
-	if (creatureAttacker == NULL)
+	if (creatureAttacker == nullptr)
 	{
 		WARNING_STRICT_FATAL(true, ("Tangible attackers not supported yet"));
 		return false;
@@ -146,7 +146,7 @@ bool CombatEngine::addAttackAction(TangibleObject & attacker,
 {
 	// @todo: support tangible attacks
 	CreatureObject * const creatureAttacker = attacker.asCreatureObject ();
-	if (creatureAttacker == NULL)
+	if (creatureAttacker == nullptr)
 	{
 		WARNING_STRICT_FATAL(true, ("Tangible attackers not supported yet"));
 		return false;
@@ -176,7 +176,7 @@ bool CombatEngine::addAimAction(TangibleObject & attacker)
 
 	// @todo: support tangible attacks
 	CreatureObject * const creatureAttacker = attacker.asCreatureObject ();
-	if (creatureAttacker == NULL)
+	if (creatureAttacker == nullptr)
 	{
 		WARNING_STRICT_FATAL(true, ("Tangible attackers not supported yet"));
 		return false;
@@ -203,7 +203,7 @@ bool CombatEngine::onSuccessfulAttack(const TangibleObject & attacker,
 	TangibleObject & defender, const WeaponObject & weapon, int damageAmount, 
 	int hitLocation)
 {
-	const bool creatureDefender = defender.asCreatureObject() != NULL;
+	const bool creatureDefender = defender.asCreatureObject() != nullptr;
 	const bool isVehicle        = GameObjectTypes::isTypeOf (defender.getGameObjectType (), SharedObjectTemplate::GOT_vehicle);
 
 	// if attacking an object, always hit location 0
@@ -262,9 +262,9 @@ bool CombatEngine::onSuccessfulAttack(const TangibleObject & attacker,
 	}
 	else
 	{
-		TangibleController * const tangibleController = (defender.getController() != NULL) ? defender.getController()->asTangibleController() : NULL;
+		TangibleController * const tangibleController = (defender.getController() != nullptr) ? defender.getController()->asTangibleController() : nullptr;
 
-		if (tangibleController == NULL)
+		if (tangibleController == nullptr)
 		{
 			WARNING_STRICT_FATAL(true, ("CombatEngine::onSuccessfulAttack non-auth "
 				"defender %s doesn't have a TangibleController!", 
@@ -311,7 +311,7 @@ bool CombatEngine::onSuccessfulAttack(const TangibleObject & attacker,
 	TangibleObject & defender, int damageAmount, 
 	int hitLocation)
 {
-	const bool creatureDefender = defender.asCreatureObject() != NULL;
+	const bool creatureDefender = defender.asCreatureObject() != nullptr;
 	const bool isVehicle        = GameObjectTypes::isTypeOf (defender.getGameObjectType (), SharedObjectTemplate::GOT_vehicle);
 
 	// if attacking an object, always hit location 0
@@ -359,9 +359,9 @@ bool CombatEngine::onSuccessfulAttack(const TangibleObject & attacker,
 	}
 	else
 	{
-		TangibleController * const tangibleController = (defender.getController() != NULL) ? defender.getController()->asTangibleController() : NULL;
+		TangibleController * const tangibleController = (defender.getController() != nullptr) ? defender.getController()->asTangibleController() : nullptr;
 
-		if (tangibleController == NULL)
+		if (tangibleController == nullptr)
 		{
 			WARNING_STRICT_FATAL(true, ("CombatEngine::onSuccessfulAttack non-auth "
 				"defender %s doesn't have a TangibleController!", 
@@ -411,7 +411,7 @@ bool CombatEngine::damage(TangibleObject & defender, const WeaponObject & weapon
 		const bool isVehicle    = GameObjectTypes::isTypeOf (defender.getGameObjectType (), SharedObjectTemplate::GOT_vehicle);
 
 		// if attacking an object, always hit location 0
-		if (critter == NULL || isVehicle)
+		if (critter == nullptr || isVehicle)
 			hitLocation = 0;
 
 		// get the damage profile for the hit location
@@ -425,7 +425,7 @@ bool CombatEngine::damage(TangibleObject & defender, const WeaponObject & weapon
 		// put a attribMod structure on the defender's damage list for each type of 
 		// damage received
 		DamageList damageList;
-		if (critter != NULL && !isVehicle)
+		if (critter != nullptr && !isVehicle)
 		{
 			computeCreatureDamage(&hitLocationData, damageAmount, damageList);
 		}
@@ -456,7 +456,7 @@ bool CombatEngine::damage(TangibleObject & defender, const WeaponObject & weapon
 		damageData.damage.insert(damageData.damage.end(), damageList.begin(), damageList.end());
 		damageData.wounded = isWounded;
 
-		if (critter != NULL || !defender.isDisabled())
+		if (critter != nullptr || !defender.isDisabled())
 		{
 			// update the object's hit points or attributes for the damage
 			defender.applyDamage(damageData);
@@ -485,7 +485,7 @@ void CombatEngine::damage(TangibleObject & defender,
 		const bool isVehicle    = GameObjectTypes::isTypeOf (defender.getGameObjectType (), SharedObjectTemplate::GOT_vehicle);
 
 		// if attacking an object, always hit location 0
-		if (critter == NULL || isVehicle)
+		if (critter == nullptr || isVehicle)
 			hitLocation = 0;
 
 		// get the damage profile for the hit location
@@ -514,7 +514,7 @@ void CombatEngine::damage(TangibleObject & defender,
 		damageData.hitLocationIndex = hitLocation;
 		damageData.damage.insert(damageData.damage.end(), damageList.begin(), damageList.end());
 
-		if (critter != NULL || !defender.isDisabled())
+		if (critter != nullptr || !defender.isDisabled())
 		{
 			// update the object's hit points or attributes for the damage
 			defender.applyDamage(damageData);
@@ -668,7 +668,7 @@ void CombatEngine::alter(TangibleObject & object)
 {
 	NOT_NULL(object.getController());
 
-	if (   (object.getCombatData() == NULL)
+	if (   (object.getCombatData() == nullptr)
 	    || object.getCombatData()->defenseData.damage.empty())
 	{
 		return;
@@ -679,18 +679,6 @@ void CombatEngine::alter(TangibleObject & object)
 
 	if (object.isAuthoritative())
 	{
-		// if the object is a creature, get it's attributes
-		Attributes::Value currentAttribs[Attributes::NumberOfAttributes];
-		CreatureObject * const critter = object.asCreatureObject ();
-		if (critter != NULL)
-		{
-			for (int i = 0; i < Attributes::NumberOfAttributes; ++i)
-				currentAttribs[i] = critter->getAttribute(i);
-		}
-		else
-		{
-			// @todo: handle damage to objects
-		}
 		// update the object
 		// to guard against the list changing while we are iterating over it,
 		// we will iterate using index rather than iterator
@@ -705,12 +693,12 @@ void CombatEngine::alter(TangibleObject & object)
 				object.applyDamage(damageData[i]);
 			}
 		}
-	}//lint !e550  Symbol 'currentAttribs' (line 2653) not accessed // yes it is
+	}
 	else
 	{
 		TangibleController * const tangibleController = object.getController()->asTangibleController();
 
-		if (tangibleController == NULL)
+		if (tangibleController == nullptr)
 		{
 			WARNING_STRICT_FATAL(true, ("CombatEngine::alter non-auth "
 				"object %s doesn't have a TangibleController!", 

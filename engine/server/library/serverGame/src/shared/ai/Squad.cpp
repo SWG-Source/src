@@ -380,7 +380,7 @@ void Squad::buildFormation()
 	{
 		NetworkId const & unit = iterUnitMap->first;
 		PersistentCrcString const * unitName = iterUnitMap->second;
-		DEBUG_FATAL((unitName == NULL), ("The unit should have a non-null name."));
+		DEBUG_FATAL((unitName == nullptr), ("The unit should have a non-nullptr name."));
 
 		if (unit == m_leader)
 		{
@@ -401,7 +401,7 @@ void Squad::buildFormation()
 #ifdef DEBUG
 				Object * const unitObject = NetworkIdManager::getObjectById(unit);
 				DEBUG_WARNING(true, ("className(%s) Unable to find the ship(%s) [%s] in the formation priority list.", 
-					getClassName(), unitName->getString(), unitObject ? unitObject->getDebugInformation().c_str() : "NULL"));
+					getClassName(), unitName->getString(), unitObject ? unitObject->getDebugInformation().c_str() : "nullptr"));
 #endif
 			}
 
@@ -463,7 +463,7 @@ void Squad::calculateSquadPosition_w()
 
 		Object * const object = NetworkIdManager::getObjectById(unit);
 
-		if (object != NULL)
+		if (object != nullptr)
 		{
 			m_squadPosition_w += object->getPosition_w();
 		}

@@ -73,7 +73,7 @@ bool ConsoleCommandParserResource::performParsing (const NetworkId & userId, con
 		CachedNetworkId harvester(Unicode::wideToNarrow (argv[1]));
 
 		ServerObject* harvesterObject = safe_cast<ServerObject*>(harvester.getObject());
-		if (harvesterObject == NULL)
+		if (harvesterObject == nullptr)
 		{
 			result += getErrorMessage (argv [0], ERR_INVALID_OBJECT);
 			return true;
@@ -90,7 +90,7 @@ bool ConsoleCommandParserResource::performParsing (const NetworkId & userId, con
 		CachedNetworkId harvester(Unicode::wideToNarrow (argv[1]));
 
 		ServerObject* harvesterObject = safe_cast<ServerObject*>(harvester.getObject());
-		if (harvesterObject == NULL)
+		if (harvesterObject == nullptr)
 		{
 			result += getErrorMessage (argv [0], ERR_INVALID_OBJECT);
 			return true;
@@ -123,7 +123,7 @@ bool ConsoleCommandParserResource::performParsing (const NetworkId & userId, con
 		CachedNetworkId harvester(Unicode::wideToNarrow (argv[1]));
 
 		ServerObject* harvesterObject = safe_cast<ServerObject*>(harvester.getObject());
-		if (harvesterObject == NULL)
+		if (harvesterObject == nullptr)
 		{
 			result += getErrorMessage (argv [0], ERR_INVALID_OBJECT);
 			return true;
@@ -208,7 +208,7 @@ bool ConsoleCommandParserResource::performParsing (const NetworkId & userId, con
 		ResourceContainerObject * const container = dynamic_cast<ResourceContainerObject*>(NetworkIdManager::getObjectById(contId));
 		std::string const & resourcePath = Unicode::wideToNarrow(argv[2]);
 		ResourceTypeObject * const resType = ServerUniverse::getInstance().getResourceTypeByName(resourcePath);
-		int const amount = strtol(Unicode::wideToNarrow (argv[3]).c_str (), NULL, 10);
+		int const amount = strtol(Unicode::wideToNarrow (argv[3]).c_str (), nullptr, 10);
 		NetworkId const source(Unicode::wideToNarrow (argv[4]));
 		
 		if (container && resType)
@@ -228,7 +228,7 @@ bool ConsoleCommandParserResource::performParsing (const NetworkId & userId, con
 	{
 		NetworkId contId (Unicode::wideToNarrow (argv[1]));
 		ResourceContainerObject* container=dynamic_cast<ResourceContainerObject*>(NetworkIdManager::getObjectById(contId));
-		if (container != NULL)
+		if (container != nullptr)
 		{
 			NetworkId sourceId;
 			if (argv.size() >= 3)
@@ -251,7 +251,7 @@ bool ConsoleCommandParserResource::performParsing (const NetworkId & userId, con
 	{
 		NetworkId contId (Unicode::wideToNarrow (argv[1]));
 		ResourceContainerObject* container=dynamic_cast<ResourceContainerObject*>(NetworkIdManager::getObjectById(contId));
-		if (container != NULL)
+		if (container != nullptr)
 		{
 			if (container->debugRecycle())
 					result += getErrorMessage(argv[0], ERR_SUCCESS);
@@ -267,7 +267,7 @@ bool ConsoleCommandParserResource::performParsing (const NetworkId & userId, con
 		CachedNetworkId contId (Unicode::wideToNarrow (argv[1]));
 		ResourceContainerObject* container=dynamic_cast<ResourceContainerObject*>(contId.getObject());
 		ResourceTypeObject *resType=ServerUniverse::getInstance().getResourceTypeByName(Unicode::wideToNarrow(argv[2]));
-		int amount=strtol(Unicode::wideToNarrow (argv[3]).c_str (), NULL, 10);
+		int amount=strtol(Unicode::wideToNarrow (argv[3]).c_str (), nullptr, 10);
 		
 		if (container && resType)
 		{
@@ -307,8 +307,8 @@ bool ConsoleCommandParserResource::performParsing (const NetworkId & userId, con
 	{
 		const std::string       parentResourceClassName   (Unicode::wideToNarrow(argv[1]));
 		const std::string       resourceTypeName          (Unicode::wideToNarrow(argv[2]));
-		const int               surveyRange             = strtol(Unicode::wideToNarrow(argv[3]).c_str(),NULL,10);
-		const int               numPoints               = strtol(Unicode::wideToNarrow(argv[4]).c_str(),NULL,10);
+		const int               surveyRange             = strtol(Unicode::wideToNarrow(argv[3]).c_str(),nullptr,10);
+		const int               numPoints               = strtol(Unicode::wideToNarrow(argv[4]).c_str(),nullptr,10);
 		const Object *          player                  = NetworkIdManager::getObjectById(userId);
 
 		if (player)

@@ -106,7 +106,7 @@ bool AggroListPropertyNamespace::isIncapacitated(TangibleObject const & target)
 {
 	CreatureObject const * const targetCreatureObject = target.asCreatureObject();
 
-	return (targetCreatureObject != NULL) ? targetCreatureObject->isIncapacitated() : false;
+	return (targetCreatureObject != nullptr) ? targetCreatureObject->isIncapacitated() : false;
 }
 
 // ----------------------------------------------------------------------
@@ -114,7 +114,7 @@ bool AggroListPropertyNamespace::isDead(TangibleObject const & target)
 {
 	CreatureObject const * const targetCreatureObject = target.asCreatureObject();
 
-	return (targetCreatureObject != NULL) ? targetCreatureObject->isDead() : false;
+	return (targetCreatureObject != nullptr) ? targetCreatureObject->isDead() : false;
 }
 
 // ----------------------------------------------------------------------
@@ -122,7 +122,7 @@ bool AggroListPropertyNamespace::isInvulnerable(TangibleObject const & target)
 {
 	CreatureObject const * const targetCreatureObject = target.asCreatureObject();
 
-	return (targetCreatureObject != NULL) ? targetCreatureObject->isInvulnerable() : false;
+	return (targetCreatureObject != nullptr) ? targetCreatureObject->isInvulnerable() : false;
 }
 
 // ----------------------------------------------------------------------
@@ -138,7 +138,7 @@ bool AggroListPropertyNamespace::isFeigningDeath(TangibleObject const & target)
 {
 	CreatureObject const * const targetCreatureObject = target.asCreatureObject();
 
-	return (targetCreatureObject != NULL) ? targetCreatureObject->getState(States::FeignDeath) : false;
+	return (targetCreatureObject != nullptr) ? targetCreatureObject->getState(States::FeignDeath) : false;
 }
 
 // ----------------------------------------------------------------------
@@ -146,7 +146,7 @@ bool AggroListPropertyNamespace::isInPlayerBuilding(TangibleObject const & targe
 {
 	ServerObject const * const topMostServerObject = ServerObject::asServerObject(ContainerInterface::getTopmostContainer(target));
 
-	return (topMostServerObject != NULL) ? (topMostServerObject->getGameObjectType() == SharedObjectTemplate::GOT_building_player) : false;
+	return (topMostServerObject != nullptr) ? (topMostServerObject->getGameObjectType() == SharedObjectTemplate::GOT_building_player) : false;
 }
 
 // ----------------------------------------------------------------------
@@ -154,7 +154,7 @@ bool AggroListPropertyNamespace::isAggroImmune(TangibleObject const & target)
 {
 	PlayerObject const * const playerObject = PlayerCreatureController::getPlayerObject(target.asCreatureObject());
 
-	return (playerObject != NULL) ? playerObject->isAggroImmune() : false;
+	return (playerObject != nullptr) ? playerObject->isAggroImmune() : false;
 }
 
 // ======================================================================
@@ -212,7 +212,7 @@ void AggroListProperty::alter()
 		// First, list things that invalidate this target in the aggro list
 		// Second, list the things that promote the target to the hate list
 		 
-		if (target.getObject() == NULL)
+		if (target.getObject() == nullptr)
 		{
 			purgeList.push_back(iterTargetList);
 		}
@@ -315,7 +315,7 @@ TangibleObject & AggroListProperty::getTangibleOwner()
 AggroListProperty * AggroListProperty::getAggroListProperty(Object & object)
 {
 	Property * const property = object.getProperty(getClassPropertyId());
-	AggroListProperty * const aggroProperty = (property != NULL) ? static_cast<AggroListProperty *>(property) : NULL;
+	AggroListProperty * const aggroProperty = (property != nullptr) ? static_cast<AggroListProperty *>(property) : nullptr;
 
 	return aggroProperty;
 }

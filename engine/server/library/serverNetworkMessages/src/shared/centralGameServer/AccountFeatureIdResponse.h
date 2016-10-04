@@ -19,7 +19,7 @@
 class AccountFeatureIdResponse : public GameNetworkMessage
 {
   public:
-	AccountFeatureIdResponse  (NetworkId const & requester, uint32 gameServer, NetworkId const & target, StationId targetStationId, uint32 gameCode, AccountFeatureIdRequest::RequestReason requestReason, unsigned int resultCode, bool resultCameFromSession, std::map<uint32, int> const & featureIds, std::map<uint32, std::string> const & sessionFeatureIdsData, const char * sessionResultString = NULL, const char * sessionResultText = NULL);
+	AccountFeatureIdResponse  (NetworkId const & requester, uint32 gameServer, NetworkId const & target, StationId targetStationId, uint32 gameCode, AccountFeatureIdRequest::RequestReason requestReason, unsigned int resultCode, bool resultCameFromSession, std::map<uint32, int> const & featureIds, std::map<uint32, std::string> const & sessionFeatureIdsData, const char * sessionResultString = nullptr, const char * sessionResultText = nullptr);
 	AccountFeatureIdResponse  (Archive::ReadIterator & source);
 	virtual ~AccountFeatureIdResponse ();
 

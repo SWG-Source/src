@@ -34,9 +34,9 @@ namespace Base
 				bool commit = false;
 
 				if (!mLastSampleTime)
-					mLastSampleTime = time(NULL);
+					mLastSampleTime = time(nullptr);
 				
-				if (!mSampleFrequency || mLastSampleTime + mSampleFrequency < (unsigned)time(NULL))
+				if (!mSampleFrequency || mLastSampleTime + mSampleFrequency < (unsigned)time(nullptr))
 				{
 					mSampleTotal++;
 					mAggregateTotal += value;

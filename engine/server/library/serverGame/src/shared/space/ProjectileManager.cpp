@@ -85,7 +85,7 @@ namespace ProjectileManagerNamespace
 		//----------------------------------------------------------------------
 
 		Projectile() :
-			m_owner(NULL),
+			m_owner(nullptr),
 			m_weaponIndex(0),
 			m_projectileIndex(0),
 			m_targetedComponent(0),
@@ -155,7 +155,7 @@ namespace ProjectileManagerNamespace
 			ColliderList collidedWith;
 			CollisionWorld::getDatabase()->queryFor(static_cast<int>(SpatialDatabase::Q_Physicals), CellProperty::getWorldCellProperty(), true, projectileCapsule_w, collidedWith);
 
-			Object * closestObject = NULL;
+			Object * closestObject = nullptr;
 			float smallestTime = 0.0f;
 			Vector collisionPosition_o;
 
@@ -166,14 +166,14 @@ namespace ProjectileManagerNamespace
 				{
 					// find which object it collided with first, and when
 					BaseExtent const * const extent_l = (*i)->getExtent_l();
-					if (extent_l == NULL)
-						WARNING(true, ("ProjectileManager collided with object with null extent. [%s], appearance=[%s]", collider.getDebugName(), collider.getAppearanceTemplateName()));
+					if (extent_l == nullptr)
+						WARNING(true, ("ProjectileManager collided with object with nullptr extent. [%s], appearance=[%s]", collider.getDebugName(), collider.getAppearanceTemplateName()));
 					else
 					{
 						Vector const start_o = collider.rotateTranslate_w2o(projectilePosition_w);
 						Vector const end_o = collider.rotateTranslate_w2o(projectilePosition_w + projectilePath);
 						float time;
-						if (extent_l->intersect(start_o, end_o, NULL, &time))
+						if (extent_l->intersect(start_o, end_o, nullptr, &time))
 						{
 							if (!closestObject || time < smallestTime)
 							{
@@ -415,7 +415,7 @@ void ProjectileManager::update(float timePassed) // static
 
 			ShipObject * const shipObject = projectile.getOwner();
 
-			if (NULL == shipObject)
+			if (nullptr == shipObject)
 			{
 				WARNING(true, ("ProjectileManager beam weapon [%d] for ship id [%s], ship object no longer exists.", weaponIndex, shipId.getValueString().c_str()));
 			}

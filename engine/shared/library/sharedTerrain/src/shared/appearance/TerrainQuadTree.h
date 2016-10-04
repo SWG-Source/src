@@ -320,7 +320,7 @@ public:
 
 	/**
 	* TerrainQuadTree::Iterator is a preorder iterator
-	* To use an iterator, loop while the current node is non-null. If the
+	* To use an iterator, loop while the current node is non-nullptr. If the
 	* current node's subtree should be processed further, call descend ()
 	* on the iterator, otherwise call advance () to go to the next node.
 	* Either advance () or descend () should be called every loop iteration,

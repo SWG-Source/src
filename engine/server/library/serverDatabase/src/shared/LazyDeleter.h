@@ -47,7 +47,7 @@ class LazyDeleter
 	~LazyDeleter();
 	
   private:	
-	LazyDeleter(LazyDeleter&); //disable
+	LazyDeleter(const LazyDeleter&); //disable
 	LazyDeleter &operator=(const LazyDeleter&); //disable
 	
   private:

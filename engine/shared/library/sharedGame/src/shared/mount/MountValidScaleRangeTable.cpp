@@ -248,7 +248,7 @@ void MountValidScaleRangeTableNamespace::loadTableData(char const *filename)
 		TemporaryCrcString const mountableCreatureAppearanceNameCrc(mountableCreatureAppearanceName.c_str(), true);
 
 		//-- Find or create new MountableCreature instance for this creature name.
-		MountableCreature *mountableCreature = NULL;
+		MountableCreature *mountableCreature = nullptr;
 
 		MountableCreatureTable::iterator lowerBoundIt = s_mountableCreatureTable.lower_bound((const CrcString*)&mountableCreatureAppearanceNameCrc);
 		bool const mountableCreatureEntryExists = ((lowerBoundIt != s_mountableCreatureTable.end()) && !s_mountableCreatureTable.key_comp()(static_cast<CrcString const*>(&mountableCreatureAppearanceNameCrc), lowerBoundIt->first));
@@ -289,7 +289,7 @@ MountValidScaleRangeTableNamespace::MountableCreature const *MountValidScaleRang
 	else
 	{
 		DEBUG_WARNING(true, ("'datatables/mount/valid_scale_range.iff' missing entry for creature appearance name '%s'", creatureAppearanceName.getString()));
-		return NULL;
+		return nullptr;
 	}
 }
 

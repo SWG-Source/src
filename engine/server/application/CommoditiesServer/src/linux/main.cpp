@@ -61,7 +61,7 @@ int main(int argc, char ** argv)
 	Unicode::UnicodeNarrowStringVector localeVector;
 	localeVector.push_back(defaultLocale);
 
-	LocalizationManager::install (new TreeFile::TreeFileFactory, localeVector, debugStringIds, NULL, displayBadStringIds);
+	LocalizationManager::install (new TreeFile::TreeFileFactory, localeVector, debugStringIds, nullptr, displayBadStringIds);
 	ExitChain::add(LocalizationManager::remove, "LocalizationManager::remove");
 
 	DataTableManager::install();

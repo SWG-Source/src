@@ -74,7 +74,9 @@ public:
 		WT_1handLightsaber,
 		WT_2handLightsaber,
 		WT_polearmLightsaber,
-		WeaponType_Last = WT_polearmLightsaber,
+		WT_groundTargetting,
+		WT_directionTargetting,
+		WeaponType_Last = WT_directionTargetting,
 	};
 
 public:

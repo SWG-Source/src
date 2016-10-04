@@ -435,7 +435,7 @@ void VChatInterface::OnConnectionOpened( const char * address )
 	ChatServer::fileLog(ms_voiceLoggingEnabled, ms_logLable, "OnConnectionOpened: %s", address);
 
 
-	uint32 track = VChatAPI::GetAccount(ms_systemAvatarName, ConfigChatServer::getGameCode(), ConfigChatServer::getClusterName(), 0, 0, NULL);
+	uint32 track = VChatAPI::GetAccount(ms_systemAvatarName, ConfigChatServer::getGameCode(), ConfigChatServer::getClusterName(), 0, 0, nullptr);
 	ChatServer::fileLog(ms_voiceLoggingEnabled, ms_logLable, "Creating system avatar: %s track(%u)", getSystemLoginName().c_str(), track);
 }
 
@@ -477,7 +477,7 @@ void VChatInterface::OnGetAccount(unsigned track, unsigned result, unsigned user
 		{
 			requestConnectPlayer(info->suid,info->avatarName,info->id, info->failedAttempts+1);
 			delete info;
-			info = NULL;
+			info = nullptr;
 			return;
 		}
 	}
@@ -501,7 +501,7 @@ void VChatInterface::OnGetAccount(unsigned track, unsigned result, unsigned user
 	}
 
 	delete info;
-	info = NULL;
+	info = nullptr;
 }
 
 void VChatInterface::OnGetChannelV2(unsigned track, unsigned result,
@@ -639,7 +639,7 @@ void VChatInterface::OnGetAllChannels(unsigned track, unsigned result, const VCh
 
 		if(shouldRetry)
 		{
-			GetAllChannels(NULL);
+			GetAllChannels(nullptr);
 		}
 	}
 
@@ -832,7 +832,7 @@ void VChatInterface::checkForCharacterChannelAdd(std::string const & name, std::
 							data.m_channelPassword,
 							data.m_channelURI,
 							"en_US",
-							NULL);
+							nullptr);
 
 						(*iter).second.push_back(playerOID);
 
@@ -877,7 +877,7 @@ void VChatInterface::checkForCharacterChannelRemove(std::string const & name, st
 							parseWorldName(std::string(avatar->getServer().c_str())),
 							"SWG",
 							"guild",
-							NULL);
+							nullptr);
 					}
 
 					iter = (*chanIter).second.erase(iter);

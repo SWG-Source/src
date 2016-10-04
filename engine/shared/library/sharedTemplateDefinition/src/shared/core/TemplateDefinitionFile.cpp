@@ -20,9 +20,9 @@
  * Class constructor.
  */
 TemplateDefinitionFile::TemplateDefinitionFile(void) :
-	m_baseDefinitionFile(NULL),
+	m_baseDefinitionFile(nullptr),
 	m_writeForCompilerFlag(false),
-	m_filterCompiledRegex(NULL)
+	m_filterCompiledRegex(nullptr)
 {
 	cleanup();
 }	// TemplateDefinitionFile::TemplateDefinitionFile
@@ -51,24 +51,24 @@ void TemplateDefinitionFile::cleanup(void)
 	m_compilerPath.clear();
 	m_fileComments.clear();
 
-	if (m_baseDefinitionFile != NULL)
+	if (m_baseDefinitionFile != nullptr)
 	{
 		delete m_baseDefinitionFile;
-		m_baseDefinitionFile = NULL;
+		m_baseDefinitionFile = nullptr;
 	}
 
 	std::map<int, TemplateData *>::iterator iter;
 	for (iter = m_templateMap.begin(); iter != m_templateMap.end(); ++iter)
 	{
 		delete (*iter).second;
-		(*iter).second = NULL;
+		(*iter).second = nullptr;
 	}
 	m_templateMap.clear();
 
-	if (m_filterCompiledRegex != NULL)
+	if (m_filterCompiledRegex != nullptr)
 	{
 		RegexServices::freeMemory(m_filterCompiledRegex);
-		m_filterCompiledRegex = NULL;
+		m_filterCompiledRegex = nullptr;
 	}
 }	// TemplateDefinitionFile::cleanup
 
@@ -99,12 +99,12 @@ void TemplateDefinitionFile::setWriteForCompiler(bool flag)
  */
 const std::string & TemplateDefinitionFile::getTemplateNameFilter(void) const
 {
-static const std::string wildcard = "*";
+	static const std::string wildcard = "*";
 
 	if (!m_templateNameFilter.empty())
 		return m_templateNameFilter;
 
-	if (m_baseDefinitionFile != NULL)
+	if (m_baseDefinitionFile != nullptr)
 		return m_baseDefinitionFile->getTemplateNameFilter();
 
 	return wildcard;
@@ -121,17 +121,17 @@ bool TemplateDefinitionFile::isValidTemplateName(const Filename & name) const
 {
 	if (m_templateNameFilter.empty())
 	{
-		if (m_baseDefinitionFile != NULL)
+		if (m_baseDefinitionFile != nullptr)
 			return m_baseDefinitionFile->isValidTemplateName(name);
 		else
 			return true;
 	}
 
-	int const maxCaptureCount       = 10;
+	int const maxCaptureCount = 10;
 	int const matchDataElementCount = maxCaptureCount * 3;
 	int       matchData[matchDataElementCount];
 
-	int const matchCode = pcre_exec(m_filterCompiledRegex, NULL, name.getName().c_str(), name.getName().length(), 0, 0, matchData, matchDataElementCount);
+	int const matchCode = pcre_exec(m_filterCompiledRegex, nullptr, name.getName().c_str(), name.getName().length(), 0, 0, matchData, matchDataElementCount);
 	bool const result = (matchCode >= 0);
 
 	if (matchCode < -1)
@@ -188,11 +188,11 @@ void TemplateDefinitionFile::writeClassHeaderBegin(File &fp) const
 		baseNamePath = "sharedObject/";
 		baseName = ROOT_TEMPLATE_NAME;
 	}
-	else if(_stricmp(baseName, "tpfTemplate") == 0)
+	else if (_stricmp(baseName, "tpfTemplate") == 0)
 	{
 		baseNamePath = "sharedTemplateDefinition/";
 	}
-	
+
 	fp.print("//========================================================================\n");
 	fp.print("//\n");
 	fp.print("// %s.h\n", name);
@@ -366,10 +366,10 @@ void TemplateDefinitionFile::writeClassSourceBegin(File &fp, const TemplateData 
 	fp.print(" * Class constructor.\n");
 	fp.print(" */\n");
 	fp.print("%s::%s(const std::string & filename)\n", name, name);
-//	if (sourceTemplate.hasList())
+	//	if (sourceTemplate.hasList())
 	sourceTemplate.writeSourceLoadedFlagInit(fp);
 	fp.print("{\n");
-//	fp.print("\tsetId(%s);\n", getTemplateId().tagString.c_str());
+	//	fp.print("\tsetId(%s);\n", getTemplateId().tagString.c_str());
 	fp.print("}	// %s::%s\n", name, name);
 	fp.print("\n");
 	fp.print("/**\n");
@@ -425,10 +425,10 @@ void TemplateDefinitionFile::writeClassSourceBegin(File &fp, const TemplateData 
 	fp.print(" */\n");
 	fp.print("Tag %s::getHighestTemplateVersion(void) const\n", name);
 	fp.print("{\n");
-	fp.print("\tif (m_baseData == NULL)\n");
+	fp.print("\tif (m_baseData == nullptr)\n");
 	fp.print("\t\treturn m_templateVersion;\n");
 	fp.print("\tconst %s * base = dynamic_cast<const %s *>(m_baseData);\n", name, name);
-	fp.print("\tif (base == NULL)\n");
+	fp.print("\tif (base == nullptr)\n");
 	fp.print("\t\treturn m_templateVersion;\n");
 	fp.print("\treturn std::max(m_templateVersion, base->getHighestTemplateVersion());\n");
 	fp.print("} // %s::getHighestTemplateVersion\n", name);
@@ -445,11 +445,11 @@ void TemplateDefinitionFile::writeClassSourceBegin(File &fp, const TemplateData 
  */
 int TemplateDefinitionFile::parse(File &fp)
 {
-static const int BUFFER_SIZE = 1024;
-int lineLen;
-char buffer[BUFFER_SIZE];
-char token[BUFFER_SIZE];
-TemplateData *currentTemplate = NULL;
+	static const int BUFFER_SIZE = 1024;
+	int lineLen;
+	char buffer[BUFFER_SIZE];
+	char token[BUFFER_SIZE];
+	TemplateData *currentTemplate = nullptr;
 
 	cleanup();
 
@@ -490,8 +490,8 @@ TemplateData *currentTemplate = NULL;
 				fp.printError("no compiler path defined");
 				return -1;
 			}
-//			if (m_baseName.size() == 0 && m_templateName != ROOT_TEMPLATE_NAME)
-//				m_baseName = ROOT_TEMPLATE_NAME;
+			//			if (m_baseName.size() == 0 && m_templateName != ROOT_TEMPLATE_NAME)
+			//				m_baseName = ROOT_TEMPLATE_NAME;
 			line = getNextWhitespaceToken(line, token);
 			int version = atoi(token);
 			if (version < 0 || version > 9999)
@@ -506,11 +506,11 @@ TemplateData *currentTemplate = NULL;
 			}
 			if (version > m_highestVersion)
 				m_highestVersion = version;
-			
+
 			currentTemplate = new TemplateData(version, *this);
 			m_templateMap[version] = currentTemplate;
 		}
-		else if (currentTemplate != NULL)
+		else if (currentTemplate != nullptr)
 		{
 			line = currentTemplate->parseLine(fp, buffer, token);
 			if (line == CHAR_ERROR)
@@ -530,7 +530,7 @@ TemplateData *currentTemplate = NULL;
 			}
 			line = getNextWhitespaceToken(line, token);
 			setBaseFilename(token);
-			
+
 			// load and parse the base template
 			Filename baseFileName = fp.getFilename();
 			baseFileName.setName(token);
@@ -540,7 +540,7 @@ TemplateData *currentTemplate = NULL;
 				fp.printError("unable to open base template definition");
 				return -1;
 			}
-			if (m_baseDefinitionFile == NULL)
+			if (m_baseDefinitionFile == nullptr)
 				m_baseDefinitionFile = new TemplateDefinitionFile;
 			else
 				m_baseDefinitionFile->cleanup();
@@ -570,23 +570,23 @@ TemplateData *currentTemplate = NULL;
 			m_templateNameFilter = token;
 
 			//-- Attempt to compile the regex.
-			if (m_filterCompiledRegex != NULL)
+			if (m_filterCompiledRegex != nullptr)
 			{
 				// First free the existing compiled regex.
 				RegexServices::freeMemory(m_filterCompiledRegex);
-				m_filterCompiledRegex = NULL;
+				m_filterCompiledRegex = nullptr;
 			}
 
 			//-- Compile the new regex.
-			char const *errorString = NULL;
+			char const *errorString = nullptr;
 			int         errorOffset = 0;
 
-			m_filterCompiledRegex = pcre_compile(m_templateNameFilter.c_str(), 0, &errorString, &errorOffset, NULL);
-			WARNING(m_filterCompiledRegex == NULL, ("TemplateDefinitionFile::parse(): pcre_compile() failed, error=[%s], errorOffset=[%d], regex text=[%s].", errorString, errorOffset, m_templateNameFilter.c_str()));
+			m_filterCompiledRegex = pcre_compile(m_templateNameFilter.c_str(), 0, &errorString, &errorOffset, nullptr);
+			WARNING(m_filterCompiledRegex == nullptr, ("TemplateDefinitionFile::parse(): pcre_compile() failed, error=[%s], errorOffset=[%d], regex text=[%s].", errorString, errorOffset, m_templateNameFilter.c_str()));
 		}
 		else if (strcmp(token, "clientpath") == 0 ||
-		         strcmp(token, "serverpath") == 0 ||
-		         strcmp(token, "sharedpath") == 0)
+			strcmp(token, "serverpath") == 0 ||
+			strcmp(token, "sharedpath") == 0)
 		{
 			if (m_path.getPath().size() != 0)
 			{
@@ -595,14 +595,14 @@ TemplateData *currentTemplate = NULL;
 			}
 			if (strcmp(token, "clientpath") == 0)
 				m_templateLocation = LOC_CLIENT;
-		    else if (strcmp(token, "serverpath") == 0)
+			else if (strcmp(token, "serverpath") == 0)
 				m_templateLocation = LOC_SERVER;
-		    else
+			else
 				m_templateLocation = LOC_SHARED;
 			line = getNextWhitespaceToken(line, token);
 			m_path.setPath(token);
 			m_path.prependPath(fp.getFilename());
-			// reset the template name to add the corrent prefix to the template 
+			// reset the template name to add the corrent prefix to the template
 			// name
 			setTemplateFilename(m_templateFilename);
 			if (!m_baseFilename.empty())
@@ -622,7 +622,7 @@ TemplateData *currentTemplate = NULL;
 		else
 		{
 			char errbuf[2048];
-			sprintf(errbuf, "I don't know how to handle this line!: <%s>. "
+			snprintf(errbuf, 2048, "I don't know how to handle this line!: <%s>. "
 				"Barfed on token <%s>.", buffer, token);
 			fp.printError(errbuf);
 			return -1;

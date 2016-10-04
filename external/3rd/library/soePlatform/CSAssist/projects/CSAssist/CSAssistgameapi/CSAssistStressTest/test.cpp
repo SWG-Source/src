@@ -376,8 +376,8 @@ void createTicket()
 	Plat_Unicode::String xml	  = narrowToWide("Stress Test XML here");
 	t.setDetails(details.c_str());
 	t.setLocation(location.c_str());
-	track = api->requestCreateTicket(NULL, &t, NULL, t.uid);
-	//track = api->requestCreateTicket(NULL, &t, xml.c_str(), t.uid);
+	track = api->requestCreateTicket(nullptr, &t, nullptr, t.uid);
+	//track = api->requestCreateTicket(nullptr, &t, xml.c_str(), t.uid);
 	submitted++;
 
 	printf("creating ticket\n");
@@ -478,7 +478,7 @@ int main(int argc, char **argv)
 	gamep = argv[4];
 	gameserver = argv[5];
 
-	if (serverhost == NULL || strlen(serverhost) == 0)
+	if (serverhost == nullptr || strlen(serverhost) == 0)
 	{
 		std::cout << "Missing hostname!\n";
 		return 0;
@@ -493,12 +493,12 @@ int main(int argc, char **argv)
 		std::cout << "Missing or invalid number of functions to run!\n";
 		return 0;
 	}
-	if (gamep == NULL || strlen(gamep) == 0)
+	if (gamep == nullptr || strlen(gamep) == 0)
 	{
 		std::cout << "Missing game name!\n";
 		return 0;
 	}
-	if (gameserver == NULL || strlen(gameserver) == 0)
+	if (gameserver == nullptr || strlen(gameserver) == 0)
 	{
 		std::cout << "Missing game server name!\n";
 		return 0;
@@ -517,7 +517,7 @@ while(1)
 	unsigned loginWait(500);
 	unsigned loginAttempts(0);
 	//api = new apiTest(serverhost, serverport, 60, CSASSIST_APIFLAG_ASSUME_RECONNECT);		//, 0, CSASSIST_APIFLAG_ASSUME_RECONNECT);
-	//api->connectCSAssist(NULL, game.c_str(), server.c_str());
+	//api->connectCSAssist(nullptr, game.c_str(), server.c_str());
 	//while (!ready)
 	//	api->Update();
 
@@ -530,7 +530,7 @@ while(1)
 			if (api) delete api;
 			//api = new apiTest(serverhost, serverport, 60, CSASSIST_APIFLAG_ASSUME_RECONNECT);
 			api = new apiTest(serverhost, serverport, 60, CSASSIST_APIFLAG_ASSUME_RECONNECT|CSASSIST_APIFLAG_NO_REDIRECT);
-			track = api->connectCSAssist(NULL, game.c_str(), server.c_str());
+			track = api->connectCSAssist(nullptr, game.c_str(), server.c_str());
 			loginFailed = false;
 			std::cout <<"Trying to connect..."<<endl;
 			Base::sleep(loginWait+=500);
@@ -541,7 +541,7 @@ while(1)
 			loginAttempts = 0;
 			loginFailed = true;
 			delete api;
-			api = NULL;
+			api = nullptr;
 			continue;
 		}
 		std::cout <<"Waiting for login: track:" << track<<" ..."<<endl;
@@ -574,21 +574,21 @@ while(1)
 			case CSASSIST_CALL_NEWTICKETACTIVITY:	
 								character = narrowToWide("Fippy");
 								if ((rand() % 10) < 5)
-									track = api->requestNewTicketActivity(NULL, testUID, 0);
+									track = api->requestNewTicketActivity(nullptr, testUID, 0);
 								else
-									track = api->requestNewTicketActivity(NULL, testUID, character.c_str());
+									track = api->requestNewTicketActivity(nullptr, testUID, character.c_str());
 								submitted++;
 								
 								break;
 			case CSASSIST_CALL_REGISTERCHARACTER:			
 								uid = rand();
-								track = api->requestRegisterCharacter(NULL, uid, 0, 0);
+								track = api->requestRegisterCharacter(nullptr, uid, 0, 0);
 								register_list.push(uid);
 								submitted++;
 								break;
 			case CSASSIST_CALL_GETISSUEHIERARCHY:			
 								lang = narrowToWide("en");
-								track = api->requestGetIssueHierarchy(NULL, hierarchy.c_str(), lang.c_str());
+								track = api->requestGetIssueHierarchy(nullptr, hierarchy.c_str(), lang.c_str());
 								submitted++;
 								break;
 			case CSASSIST_CALL_CREATETICKET:					
@@ -597,33 +597,33 @@ while(1)
 			case CSASSIST_CALL_APPENDCOMMENT:				
 								comment = narrowToWide("Unicode comment by player.");
 								tid = randomTicketID();
-								track = api->requestAppendTicketComment(NULL, tid, testUID, character.c_str(), comment.c_str());
+								track = api->requestAppendTicketComment(nullptr, tid, testUID, character.c_str(), comment.c_str());
 								submitted++;
 								break;
 			case CSASSIST_CALL_GETTICKETBYID:				
 								tid = randomTicketID();
-								track = api->requestGetTicketByID(NULL, tid, 1);
+								track = api->requestGetTicketByID(nullptr, tid, 1);
 								submitted++;
 								break;
 			case CSASSIST_CALL_GETTICKETCOMMENTS:			
 								tid = randomTicketID();
-								track = api->requestGetTicketComments(NULL, tid, 0, (rand() % 100)+1, CSASSIST_OFFSET_START);
+								track = api->requestGetTicketComments(nullptr, tid, 0, (rand() % 100)+1, CSASSIST_OFFSET_START);
 								submitted++;
 								break;
 			case CSASSIST_CALL_GETTICKET:					
-								track = api->requestGetTicketByCharacter(NULL, testUID, character.c_str(), 0, (rand() % 100)+1, 1);
+								track = api->requestGetTicketByCharacter(nullptr, testUID, character.c_str(), 0, (rand() % 100)+1, 1);
 								submitted++;
 								break;
 			case CSASSIST_CALL_MARKREAD:						
 								tid = randomTicketID();
-								track = api->requestMarkTicketRead(NULL, tid);
+								track = api->requestMarkTicketRead(nullptr, tid);
 								submitted++;
 								break;
 			case CSASSIST_CALL_CANCELTICKET:					
 								if (firstTicketID != 0)
 								{
 									comment = narrowToWide("Ticket closed by player");
-									track = api->requestCancelTicket(NULL, firstTicketID, testUID, comment.c_str());
+									track = api->requestCancelTicket(nullptr, firstTicketID, testUID, comment.c_str());
 									if (++firstTicketID > lastTicketID)
 									{
 										firstTicketID = 0;
@@ -634,33 +634,33 @@ while(1)
 								break;
 			case CSASSIST_CALL_COMMENTCOUNT:				
 								tid = randomTicketID();
-								track = api->requestGetTicketCommentsCount(NULL, tid);
+								track = api->requestGetTicketCommentsCount(nullptr, tid);
 								submitted++;
 								break;
 			case CSASSIST_CALL_GETDOCUMENTLIST:				
 //								lang = narrowToWide("en");
-//								track = api->requestGetDocumentList(NULL, hierarchy.c_str(), lang.c_str());
+//								track = api->requestGetDocumentList(nullptr, hierarchy.c_str(), lang.c_str());
 //								submitted++;
 								break;
 			case CSASSIST_CALL_GETDOCUMENT:					
-//								track = api->requestGetDocument(NULL, 1);
+//								track = api->requestGetDocument(nullptr, 1);
 //								submitted++;
 								break;
 			case CSASSIST_CALL_GETTICKETXMLBLOCK:			
 								tid = randomTicketID();
-								track = api->requestGetTicketXMLBlock(NULL, tid);
+								track = api->requestGetTicketXMLBlock(nullptr, tid);
 								submitted++;
 								break;
 			case CSASSIST_CALL_GETKBARTICLE:		
 								/*id = narrowToWide("soe1401");
 								lang = narrowToWide("en");
-								track = api->requestGetKBArticle(NULL, id.c_str(), lang.c_str());
+								track = api->requestGetKBArticle(nullptr, id.c_str(), lang.c_str());
 								submitted++;
 								*/break;
 			case CSASSIST_CALL_SEARCHKB:
 								/*Plat_Unicode::String searchStr = narrowToWide("video drivers");
 								lang = narrowToWide("en");
-								track = api->requestSearchKB(NULL, searchStr.c_str(), lang.c_str());
+								track = api->requestSearchKB(nullptr, searchStr.c_str(), lang.c_str());
 								submitted++;
 								*/break;
 		}
@@ -692,7 +692,7 @@ while(1)
 	{
 		uid = register_list.front();
 		register_list.pop();
-		api->requestUnRegisterCharacter(NULL, uid, 0);
+		api->requestUnRegisterCharacter(nullptr, uid, 0);
 		submitted++;
 	}
 	cout<<"Waiting for unregisters..."<<endl;
@@ -708,7 +708,7 @@ while(1)
 	if (elapsed == 0)
 		elapsed = 1;
 	cout<<"Going to disconnect now."<<endl;
-	api->disconnectCSAssist(NULL);
+	api->disconnectCSAssist(nullptr);
 	submitted++;
 
 	while (submitted > received)
@@ -718,7 +718,7 @@ while(1)
 
 	cout<<"Going to delete API now."<<endl;
 	delete api;
-	api = NULL;
+	api = nullptr;
 	// ----- report findings -----
 
 	for (i=0; i < numberFunctions; i++)

@@ -12,19 +12,19 @@
 
 namespace ConfigCustomerServiceServerNamespace
 {
-	const char * s_clusterName = NULL;
-	const char * s_centralServerAddress = NULL;
+	const char * s_clusterName = nullptr;
+	const char * s_centralServerAddress = nullptr;
 	int          s_centralServerPort = 0;
-	const char * s_gameCode = NULL;
-	const char * s_csServerAddress = NULL;
+	const char * s_gameCode = nullptr;
+	const char * s_csServerAddress = nullptr;
 	int          s_csServerPort = 0;
 	int          s_maxPacketsPerSecond = 50;
 	int          s_requestTimeoutSeconds = 300;
 	int          s_maxAllowedNumberOfTickets = 1;
 	int          s_gameServicePort = 0;
 	int          s_chatServicePort = 0;
-	const char* s_chatServiceBindInterface = NULL;
-	const char* s_gameServiceBindInterface = NULL;
+	const char* s_chatServiceBindInterface = nullptr;
+	const char* s_gameServiceBindInterface = nullptr;
 	bool         s_writeTicketToBugLog = false;
 };
 

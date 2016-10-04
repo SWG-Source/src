@@ -120,26 +120,26 @@ int testDataValue = 0;
 UNREF(testData);
 #endif
 
-	const ServerHarvesterInstallationObjectTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const ServerHarvesterInstallationObjectTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerHarvesterInstallationObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getMaxExtractionRate(true);
 #endif
 	}
 
 	if (!m_maxExtractionRate.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter maxExtractionRate in template %s", DataResource::getName()));
 			return 0;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter maxExtractionRate has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter maxExtractionRate has not been defined in template %s!", DataResource::getName()));
 			return base->getMaxExtractionRate();
 		}
 	}
@@ -149,9 +149,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		int baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getMaxExtractionRate();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -168,7 +168,7 @@ UNREF(testData);
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -184,26 +184,26 @@ int testDataValue = 0;
 UNREF(testData);
 #endif
 
-	const ServerHarvesterInstallationObjectTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const ServerHarvesterInstallationObjectTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerHarvesterInstallationObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getMaxExtractionRateMin(true);
 #endif
 	}
 
 	if (!m_maxExtractionRate.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter maxExtractionRate in template %s", DataResource::getName()));
 			return 0;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter maxExtractionRate has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter maxExtractionRate has not been defined in template %s!", DataResource::getName()));
 			return base->getMaxExtractionRateMin();
 		}
 	}
@@ -213,9 +213,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		int baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getMaxExtractionRateMin();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -232,7 +232,7 @@ UNREF(testData);
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -248,26 +248,26 @@ int testDataValue = 0;
 UNREF(testData);
 #endif
 
-	const ServerHarvesterInstallationObjectTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const ServerHarvesterInstallationObjectTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerHarvesterInstallationObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getMaxExtractionRateMax(true);
 #endif
 	}
 
 	if (!m_maxExtractionRate.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter maxExtractionRate in template %s", DataResource::getName()));
 			return 0;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter maxExtractionRate has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter maxExtractionRate has not been defined in template %s!", DataResource::getName()));
 			return base->getMaxExtractionRateMax();
 		}
 	}
@@ -277,9 +277,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		int baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getMaxExtractionRateMax();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -296,7 +296,7 @@ UNREF(testData);
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -312,26 +312,26 @@ int testDataValue = 0;
 UNREF(testData);
 #endif
 
-	const ServerHarvesterInstallationObjectTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const ServerHarvesterInstallationObjectTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerHarvesterInstallationObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getCurrentExtractionRate(true);
 #endif
 	}
 
 	if (!m_currentExtractionRate.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter currentExtractionRate in template %s", DataResource::getName()));
 			return 0;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter currentExtractionRate has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter currentExtractionRate has not been defined in template %s!", DataResource::getName()));
 			return base->getCurrentExtractionRate();
 		}
 	}
@@ -341,9 +341,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		int baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getCurrentExtractionRate();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -360,7 +360,7 @@ UNREF(testData);
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -376,26 +376,26 @@ int testDataValue = 0;
 UNREF(testData);
 #endif
 
-	const ServerHarvesterInstallationObjectTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const ServerHarvesterInstallationObjectTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerHarvesterInstallationObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getCurrentExtractionRateMin(true);
 #endif
 	}
 
 	if (!m_currentExtractionRate.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter currentExtractionRate in template %s", DataResource::getName()));
 			return 0;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter currentExtractionRate has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter currentExtractionRate has not been defined in template %s!", DataResource::getName()));
 			return base->getCurrentExtractionRateMin();
 		}
 	}
@@ -405,9 +405,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		int baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getCurrentExtractionRateMin();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -424,7 +424,7 @@ UNREF(testData);
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -440,26 +440,26 @@ int testDataValue = 0;
 UNREF(testData);
 #endif
 
-	const ServerHarvesterInstallationObjectTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const ServerHarvesterInstallationObjectTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerHarvesterInstallationObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getCurrentExtractionRateMax(true);
 #endif
 	}
 
 	if (!m_currentExtractionRate.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter currentExtractionRate in template %s", DataResource::getName()));
 			return 0;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter currentExtractionRate has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter currentExtractionRate has not been defined in template %s!", DataResource::getName()));
 			return base->getCurrentExtractionRateMax();
 		}
 	}
@@ -469,9 +469,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		int baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getCurrentExtractionRateMax();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -488,7 +488,7 @@ UNREF(testData);
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -504,26 +504,26 @@ int testDataValue = 0;
 UNREF(testData);
 #endif
 
-	const ServerHarvesterInstallationObjectTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const ServerHarvesterInstallationObjectTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerHarvesterInstallationObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getMaxHopperSize(true);
 #endif
 	}
 
 	if (!m_maxHopperSize.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter maxHopperSize in template %s", DataResource::getName()));
 			return 0;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter maxHopperSize has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter maxHopperSize has not been defined in template %s!", DataResource::getName()));
 			return base->getMaxHopperSize();
 		}
 	}
@@ -533,9 +533,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		int baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getMaxHopperSize();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -552,7 +552,7 @@ UNREF(testData);
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -568,26 +568,26 @@ int testDataValue = 0;
 UNREF(testData);
 #endif
 
-	const ServerHarvesterInstallationObjectTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const ServerHarvesterInstallationObjectTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerHarvesterInstallationObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getMaxHopperSizeMin(true);
 #endif
 	}
 
 	if (!m_maxHopperSize.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter maxHopperSize in template %s", DataResource::getName()));
 			return 0;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter maxHopperSize has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter maxHopperSize has not been defined in template %s!", DataResource::getName()));
 			return base->getMaxHopperSizeMin();
 		}
 	}
@@ -597,9 +597,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		int baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getMaxHopperSizeMin();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -616,7 +616,7 @@ UNREF(testData);
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -632,26 +632,26 @@ int testDataValue = 0;
 UNREF(testData);
 #endif
 
-	const ServerHarvesterInstallationObjectTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const ServerHarvesterInstallationObjectTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerHarvesterInstallationObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getMaxHopperSizeMax(true);
 #endif
 	}
 
 	if (!m_maxHopperSize.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter maxHopperSize in template %s", DataResource::getName()));
 			return 0;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter maxHopperSize has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter maxHopperSize has not been defined in template %s!", DataResource::getName()));
 			return base->getMaxHopperSizeMax();
 		}
 	}
@@ -661,9 +661,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		int baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getMaxHopperSizeMax();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -680,7 +680,7 @@ UNREF(testData);
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -696,33 +696,33 @@ std::string testDataValue = DefaultString;
 UNREF(testData);
 #endif
 
-	const ServerHarvesterInstallationObjectTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const ServerHarvesterInstallationObjectTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerHarvesterInstallationObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getMasterClassName(true);
 #endif
 	}
 
 	if (!m_masterClassName.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter masterClassName in template %s", DataResource::getName()));
 			return DefaultString;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter masterClassName has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter masterClassName has not been defined in template %s!", DataResource::getName()));
 			return base->getMasterClassName();
 		}
 	}
 
 	const std::string & value = m_masterClassName.getValue();
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -774,12 +774,12 @@ char paramName[MAX_NAME_SIZE];
 		file.read_string(baseFilename);
 		file.exitChunk();
 		const ObjectTemplate *base = ObjectTemplateList::fetch(baseFilename);
-		DEBUG_WARNING(base == NULL, ("was unable to load base template %s", baseFilename.c_str()));
-		if (m_baseData == base && base != NULL)
+		DEBUG_WARNING(base == nullptr, ("was unable to load base template %s", baseFilename.c_str()));
+		if (m_baseData == base && base != nullptr)
 			base->releaseReference();
 		else
 		{
-			if (m_baseData != NULL)
+			if (m_baseData != nullptr)
 				m_baseData->releaseReference();
 			m_baseData = base;
 		}

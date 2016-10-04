@@ -17,9 +17,9 @@ public:
 	static void install();
 	static void remove();
 
-	static void processString(const std::string & msg, Client *from = NULL,uint32 msgId = 0);
-	static void broadcastString(const std::string & msg, Client *to = NULL, uint32 msgId = 0);
-	static void broadcastString(const CommandParser::String_t & msg, Client *to = NULL, uint32 msgId = 0);
+	static void processString(const std::string & msg, Client *from = nullptr,uint32 msgId = 0);
+	static void broadcastString(const std::string & msg, Client *to = nullptr, uint32 msgId = 0);
+	static void broadcastString(const CommandParser::String_t & msg, Client *to = nullptr, uint32 msgId = 0);
 	static void broadcastString(const std::string & msg, NetworkId to, uint32 msgId = 0);
 
 private:

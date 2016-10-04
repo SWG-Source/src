@@ -17,8 +17,7 @@
 #include "sharedDebug/DataLint.h"
 #include "sharedFile/Iff.h"
 #include "sharedTemplateDefinition/ObjectTemplate.h"
-#include <algorithm>
-#include <cstdio>
+#include <stdio.h>
 
 
 
@@ -103,9 +102,9 @@ CompilerIntegerParam * ServerIntangibleObjectTemplate::getCompilerIntegerParam(c
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_count;
 		}
@@ -113,7 +112,7 @@ CompilerIntegerParam * ServerIntangibleObjectTemplate::getCompilerIntegerParam(c
 	}
 	else
 		return ServerObjectTemplate::getCompilerIntegerParam(name, deepCheck, index);
-	return NULL;
+	return nullptr;
 }	//ServerIntangibleObjectTemplate::getCompilerIntegerParam
 
 FloatParam * ServerIntangibleObjectTemplate::getFloatParam(const char *name, bool deepCheck, int index)
@@ -211,12 +210,12 @@ char paramName[MAX_NAME_SIZE];
 		file.read_string(baseFilename);
 		file.exitChunk();
 		const ObjectTemplate *base = ObjectTemplateList::fetch(baseFilename);
-		DEBUG_WARNING(base == NULL, ("was unable to load base template %s", baseFilename.c_str()));
-		if (m_baseData == base && base != NULL)
+		DEBUG_WARNING(base == nullptr, ("was unable to load base template %s", baseFilename.c_str()));
+		if (m_baseData == base && base != nullptr)
 			base->releaseReference();
 		else
 		{
-			if (m_baseData != NULL)
+			if (m_baseData != nullptr)
 				m_baseData->releaseReference();
 			m_baseData = base;
 		}
@@ -316,7 +315,7 @@ ServerIntangibleObjectTemplate::_Ingredient::~_Ingredient()
 		for (iter = m_ingredients.begin(); iter != m_ingredients.end(); ++iter)
 		{
 			delete *iter;
-			*iter = NULL;
+			*iter = nullptr;
 		}
 		m_ingredients.clear();
 	}
@@ -358,9 +357,9 @@ CompilerIntegerParam * ServerIntangibleObjectTemplate::_Ingredient::getCompilerI
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_ingredientType;
 		}
@@ -368,7 +367,7 @@ CompilerIntegerParam * ServerIntangibleObjectTemplate::_Ingredient::getCompilerI
 	}
 	else
 		return TpfTemplate::getCompilerIntegerParam(name, deepCheck, index);
-	return NULL;
+	return nullptr;
 }	//ServerIntangibleObjectTemplate::_Ingredient::getCompilerIntegerParam
 
 FloatParam * ServerIntangibleObjectTemplate::_Ingredient::getFloatParam(const char *name, bool deepCheck, int index)
@@ -379,9 +378,9 @@ FloatParam * ServerIntangibleObjectTemplate::_Ingredient::getFloatParam(const ch
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getFloatParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_complexity;
 		}
@@ -389,7 +388,7 @@ FloatParam * ServerIntangibleObjectTemplate::_Ingredient::getFloatParam(const ch
 	}
 	else
 		return TpfTemplate::getFloatParam(name, deepCheck, index);
-	return NULL;
+	return nullptr;
 }	//ServerIntangibleObjectTemplate::_Ingredient::getFloatParam
 
 BoolParam * ServerIntangibleObjectTemplate::_Ingredient::getBoolParam(const char *name, bool deepCheck, int index)
@@ -405,9 +404,9 @@ StringParam * ServerIntangibleObjectTemplate::_Ingredient::getStringParam(const 
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getStringParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_skillCommand;
 		}
@@ -415,7 +414,7 @@ StringParam * ServerIntangibleObjectTemplate::_Ingredient::getStringParam(const 
 	}
 	else
 		return TpfTemplate::getStringParam(name, deepCheck, index);
-	return NULL;
+	return nullptr;
 }	//ServerIntangibleObjectTemplate::_Ingredient::getStringParam
 
 StringIdParam * ServerIntangibleObjectTemplate::_Ingredient::getStringIdParam(const char *name, bool deepCheck, int index)
@@ -449,7 +448,7 @@ StructParamOT * ServerIntangibleObjectTemplate::_Ingredient::getStructParamOT(co
 	}
 	else
 		return TpfTemplate::getStructParamOT(name, deepCheck, index);
-	return NULL;
+	return nullptr;
 }	//ServerIntangibleObjectTemplate::_Ingredient::getStructParamOT
 
 TriggerVolumeParam * ServerIntangibleObjectTemplate::_Ingredient::getTriggerVolumeParam(const char *name, bool deepCheck, int index)
@@ -533,7 +532,7 @@ char paramName[MAX_NAME_SIZE];
 			for (iter = m_ingredients.begin(); iter != m_ingredients.end(); ++iter)
 			{
 				delete *iter;
-				*iter = NULL;
+				*iter = nullptr;
 			}
 			m_ingredients.clear();
 			m_ingredientsAppend = file.read_bool8();
@@ -669,9 +668,9 @@ CompilerIntegerParam * ServerIntangibleObjectTemplate::_SchematicAttribute::getC
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_value;
 		}
@@ -679,7 +678,7 @@ CompilerIntegerParam * ServerIntangibleObjectTemplate::_SchematicAttribute::getC
 	}
 	else
 		return TpfTemplate::getCompilerIntegerParam(name, deepCheck, index);
-	return NULL;
+	return nullptr;
 }	//ServerIntangibleObjectTemplate::_SchematicAttribute::getCompilerIntegerParam
 
 FloatParam * ServerIntangibleObjectTemplate::_SchematicAttribute::getFloatParam(const char *name, bool deepCheck, int index)
@@ -705,9 +704,9 @@ StringIdParam * ServerIntangibleObjectTemplate::_SchematicAttribute::getStringId
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getStringIdParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_name;
 		}
@@ -715,7 +714,7 @@ StringIdParam * ServerIntangibleObjectTemplate::_SchematicAttribute::getStringId
 	}
 	else
 		return TpfTemplate::getStringIdParam(name, deepCheck, index);
-	return NULL;
+	return nullptr;
 }	//ServerIntangibleObjectTemplate::_SchematicAttribute::getStringIdParam
 
 VectorParam * ServerIntangibleObjectTemplate::_SchematicAttribute::getVectorParam(const char *name, bool deepCheck, int index)
@@ -889,9 +888,9 @@ CompilerIntegerParam * ServerIntangibleObjectTemplate::_SimpleIngredient::getCom
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_count;
 		}
@@ -899,7 +898,7 @@ CompilerIntegerParam * ServerIntangibleObjectTemplate::_SimpleIngredient::getCom
 	}
 	else
 		return TpfTemplate::getCompilerIntegerParam(name, deepCheck, index);
-	return NULL;
+	return nullptr;
 }	//ServerIntangibleObjectTemplate::_SimpleIngredient::getCompilerIntegerParam
 
 FloatParam * ServerIntangibleObjectTemplate::_SimpleIngredient::getFloatParam(const char *name, bool deepCheck, int index)
@@ -920,9 +919,9 @@ StringParam * ServerIntangibleObjectTemplate::_SimpleIngredient::getStringParam(
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getStringParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_ingredient;
 		}
@@ -930,7 +929,7 @@ StringParam * ServerIntangibleObjectTemplate::_SimpleIngredient::getStringParam(
 	}
 	else
 		return TpfTemplate::getStringParam(name, deepCheck, index);
-	return NULL;
+	return nullptr;
 }	//ServerIntangibleObjectTemplate::_SimpleIngredient::getStringParam
 
 StringIdParam * ServerIntangibleObjectTemplate::_SimpleIngredient::getStringIdParam(const char *name, bool deepCheck, int index)
@@ -941,9 +940,9 @@ StringIdParam * ServerIntangibleObjectTemplate::_SimpleIngredient::getStringIdPa
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getStringIdParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_name;
 		}
@@ -951,7 +950,7 @@ StringIdParam * ServerIntangibleObjectTemplate::_SimpleIngredient::getStringIdPa
 	}
 	else
 		return TpfTemplate::getStringIdParam(name, deepCheck, index);
-	return NULL;
+	return nullptr;
 }	//ServerIntangibleObjectTemplate::_SimpleIngredient::getStringIdParam
 
 VectorParam * ServerIntangibleObjectTemplate::_SimpleIngredient::getVectorParam(const char *name, bool deepCheck, int index)

@@ -62,15 +62,15 @@ SimpleCollisionMesh * MeshExtent::createMesh( IndexedTriangleList * tris )
 
 MeshExtent::MeshExtent()
 : Extent(ET_Mesh),
-  m_mesh(NULL),
+  m_mesh(nullptr),
   m_box()
 {
-	m_mesh = createMesh(NULL);
+	m_mesh = createMesh(nullptr);
 }
 
 MeshExtent::MeshExtent( IndexedTriangleList * tris )
 : Extent(ET_Mesh),
-  m_mesh(NULL),
+  m_mesh(nullptr),
   m_box()
 {
 	m_mesh = createMesh(tris);
@@ -86,7 +86,7 @@ MeshExtent::MeshExtent( SimpleCollisionMesh * mesh )
 MeshExtent::~MeshExtent()
 {
 	delete m_mesh;
-	m_mesh = NULL;
+	m_mesh = nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -168,7 +168,7 @@ void MeshExtent::drawDebugShapes     ( DebugShapeRenderer * renderer ) const
 
 #ifdef _DEBUG
 
-	if(renderer == NULL) return;
+	if(renderer == nullptr) return;
 
 	renderer->setColor( VectorArgb::solidWhite );
 	m_mesh->drawDebugShapes(renderer);

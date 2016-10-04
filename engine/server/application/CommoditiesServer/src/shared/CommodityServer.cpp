@@ -29,6 +29,9 @@
 #include "sharedNetworkMessages/GenericValueTypeMessage.h"
 #include "sharedLog/Log.h"
 #include "sharedLog/SetupSharedLog.h"
+
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 #include <stdio.h>
 
 //-----------------------------------------------------------------------
@@ -68,7 +71,9 @@ CommodityServer::~CommodityServer()
 
 void CommodityServer::receiveMessage(const MessageDispatch::Emitter & source, const MessageDispatch::MessageBase & message)
 {
-	if(message.isType("CommoditiesLoadDone"))
+	const uint32 messageType = message.getType();
+	
+	if(messageType == constcrc("CommoditiesLoadDone"))
 	{
 		m_commoditiesServerLoadDone = 1;
 
@@ -76,7 +81,7 @@ void CommodityServer::receiveMessage(const MessageDispatch::Emitter & source, co
 		if (m_commoditiesServerLoadTime == -1)
 			m_commoditiesServerLoadTime = (time(0) - m_timeCommoditiesServerStarted) / 60;
 	}
-	else if (message.isType("DatabaseServerConnectionClosed"))
+	else if (messageType == constcrc("DatabaseServerConnectionClosed"))
 	{
 		WARNING(true, ("[Commodities Server] : No connection to the database server. Shutting down.\n"));
 		exit(0);
@@ -191,7 +196,7 @@ void CommodityServer::run()
 	s_commodityServerMetricsData = new CommodityServerMetricsData;
 	MetricsManager::install(s_commodityServerMetricsData, false, "CommoditiesServer", "", 0);
 
-	time_t timePrevious = ::time(NULL);
+	time_t timePrevious = ::time(nullptr);
 	time_t timeCurrent = timePrevious;
 
 	while (true)
@@ -202,7 +207,7 @@ void CommodityServer::run()
 			break;
 		NetworkHandler::update();
 
-		timeCurrent = ::time(NULL);
+		timeCurrent = ::time(nullptr);
 		MetricsManager::update(static_cast<float>((timeCurrent - timePrevious) * 1000));
 		timePrevious = timeCurrent;
 
@@ -229,18 +234,18 @@ void CommodityServer::run()
 	// this is not a high priority thing, so wait until
 	// the cluster has started and "stabilized" before
 	// doing this; 3 hours should be adequate
-	time_t timeToRequestExcludedType = ::time(NULL) + 10800;
+	time_t timeToRequestExcludedType = ::time(nullptr) + 10800;
 
 	// one time request from the game server (any game server)
 	// to receive the resource tree hierarchy to support
 	// searching for resource container
-	time_t timeToRequestResourceTree = ::time(NULL);
+	time_t timeToRequestResourceTree = ::time(nullptr);
 
 	while(true)
 	{
 		NetworkHandler::update();
 
-		timeCurrent = ::time(NULL);
+		timeCurrent = ::time(nullptr);
 		MetricsManager::update(static_cast<float>((timeCurrent - timePrevious) * 1000));
 		timePrevious = timeCurrent;
 

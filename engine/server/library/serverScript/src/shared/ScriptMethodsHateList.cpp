@@ -90,7 +90,7 @@ void JNICALL ScriptMethodsHateListNamespace::setAggroImmuneDuration(JNIEnv * /*e
 	NetworkId const playerNetworkId(player);
 	PlayerObject * const playerObject = PlayerCreatureController::getPlayerObject(CreatureObject::getCreatureObject(playerNetworkId));
 
-	if (playerObject == NULL)
+	if (playerObject == nullptr)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsHateList::setAggroImmuneDuration() player(%s) Unable to resolve the object to a PlayerObject.", playerNetworkId.getValueString().c_str()));
 		return;
@@ -105,7 +105,7 @@ jboolean JNICALL ScriptMethodsHateListNamespace::isAggroImmune(JNIEnv * /*env*/,
 	NetworkId const playerNetworkId(player);
 	PlayerObject * const playerObject = PlayerCreatureController::getPlayerObject(CreatureObject::getCreatureObject(playerNetworkId));
 
-	if (playerObject == NULL)
+	if (playerObject == nullptr)
 	{
 		return JNI_FALSE;
 	}
@@ -120,7 +120,7 @@ void JNICALL ScriptMethodsHateListNamespace::addHate(JNIEnv * /*env*/, jobject /
 	NetworkId const hateTargetNetworkId(hateTarget);
 	TangibleObject * const objectTangibleObject = TangibleObject::getTangibleObject(networkId);
 
-	if (objectTangibleObject == NULL)
+	if (objectTangibleObject == nullptr)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsHateList::addHate() object(%s) hateTarget(%s) hate(%.2f) Unable to resolve the object to a TangibleObject.", networkId.getValueString().c_str(), hateTargetNetworkId.getValueString().c_str(), hate));
 		return;
@@ -148,7 +148,7 @@ void JNICALL ScriptMethodsHateListNamespace::addHateDot(JNIEnv * /*env*/, jobjec
 	NetworkId const hateTargetNetworkId(hateTarget);
 	TangibleObject * const objectTangibleObject = TangibleObject::getTangibleObject(networkId);
 
-	if (objectTangibleObject == NULL)
+	if (objectTangibleObject == nullptr)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsHateList::addHateDot() object(%s) hateTarget(%s) hate(%.2f) seconds(%d) Unable to resolve the object to a TangibleObject.", networkId.getValueString().c_str(), hateTargetNetworkId.getValueString().c_str(), hate, seconds));
 		return;
@@ -178,7 +178,7 @@ void JNICALL ScriptMethodsHateListNamespace::setHate(JNIEnv * /*env*/, jobject /
 	NetworkId const hateTargetNetworkId(hateTarget);
 	TangibleObject * const objectTangibleObject = TangibleObject::getTangibleObject(networkId);
 
-	if (objectTangibleObject == NULL)
+	if (objectTangibleObject == nullptr)
 	{
 		WARNING(true, ("ScriptMethodsHateList::setHate() object(%s) hateTarget(%s) hate(%.2f) Unable to resolve the object to a TangibleObject.", networkId.getValueString().c_str(), hateTargetNetworkId.getValueString().c_str(), hate));
 		return;
@@ -208,7 +208,7 @@ void JNICALL ScriptMethodsHateListNamespace::removeHateTarget(JNIEnv * /*env*/, 
 	NetworkId const hateTargetNetworkId(hateTarget);
 	TangibleObject * const objectTangibleObject = TangibleObject::getTangibleObject(networkId);
 
-	if (objectTangibleObject == NULL)
+	if (objectTangibleObject == nullptr)
 	{
 		WARNING(true, ("ScriptMethodsHateList::removeHateTarget() object(%s) hateTarget(%s) Unable to resolve the object to a TangibleObject.", networkId.getValueString().c_str(), hateTargetNetworkId.getValueString().c_str()));
 		return;
@@ -238,7 +238,7 @@ jfloat JNICALL ScriptMethodsHateListNamespace::getHate(JNIEnv * /*env*/, jobject
 	NetworkId const hateTargetNetworkId(hateTarget);
 	TangibleObject * const objectTangibleObject = TangibleObject::getTangibleObject(networkId);
 
-	if (objectTangibleObject == NULL)
+	if (objectTangibleObject == nullptr)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsHateList::getHate() object(%s) hateTarget(%s) Unable to resolve the object to a TangibleObject.", networkId.getValueString().c_str(), hateTargetNetworkId.getValueString().c_str()));
 		return 0.0f;
@@ -264,7 +264,7 @@ jfloat JNICALL ScriptMethodsHateListNamespace::getMaxHate(JNIEnv * /*env*/, jobj
 	NetworkId const networkId(object);
 	TangibleObject * const objectTangibleObject = TangibleObject::getTangibleObject(networkId);
 
-	if (objectTangibleObject == NULL)
+	if (objectTangibleObject == nullptr)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsHateList::getMaxHate() object(%s) Unable to resolve the object to a TangibleObject.", networkId.getValueString().c_str()));
 		return 0.0f;
@@ -281,7 +281,7 @@ void JNICALL ScriptMethodsHateListNamespace::clearHateList(JNIEnv * /*env*/, job
 	NetworkId const networkId(object);
 	TangibleObject * const objectTangibleObject = TangibleObject::getTangibleObject(networkId);
 
-	if (objectTangibleObject == NULL)
+	if (objectTangibleObject == nullptr)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsHateList::clearHateList() Unable to resolve the object(%s) to a TangibleObject.", networkId.getValueString().c_str()));
 		return;
@@ -298,7 +298,7 @@ jlong JNICALL ScriptMethodsHateListNamespace::getHateTarget(JNIEnv * /*env*/, jo
 	NetworkId const networkId(object);
 	TangibleObject * const objectTangibleObject = TangibleObject::getTangibleObject(networkId);
 
-	if (objectTangibleObject == NULL)
+	if (objectTangibleObject == nullptr)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsHateList::getHateTarget() Unable to resolve the object(%s) to a TangibleObject.", networkId.getValueString().c_str()));
 		return 0;
@@ -317,7 +317,7 @@ jlongArray JNICALL ScriptMethodsHateListNamespace::getHateList(JNIEnv * /*env*/,
 
 	LOGC(AiLogManager::isLogging(networkId), "debug_ai", ("ScriptMethodsHateList::getHateList() object(%s)", networkId.getValueString().c_str()));
 
-	if (objectTangibleObject == NULL)
+	if (objectTangibleObject == nullptr)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsHateList::getHateList() Unable to resolve the object(%s) to a TangibleObject.", networkId.getValueString().c_str()));
 		return 0;
@@ -348,7 +348,7 @@ jboolean JNICALL ScriptMethodsHateListNamespace::isOnHateList(JNIEnv * /*env*/, 
 	NetworkId const targetNetworkId(target);
 	TangibleObject * const objectTangibleObject = TangibleObject::getTangibleObject(networkId);
 
-	if (objectTangibleObject == NULL)
+	if (objectTangibleObject == nullptr)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsHateList::isOnHateList() object(%s) target(%s) Unable to resolve the object to a TangibleObject.", networkId.getValueString().c_str(), targetNetworkId.getValueString().c_str()));
 		return JNI_FALSE;
@@ -369,7 +369,7 @@ void JNICALL ScriptMethodsHateListNamespace::resetHateTimer(JNIEnv * /*env*/, jo
 	NetworkId const networkId(object);
 	TangibleObject * const objectTangibleObject = TangibleObject::getTangibleObject(networkId);
 
-	if (objectTangibleObject == NULL)
+	if (objectTangibleObject == nullptr)
 	{
 		JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsHateList::resetHateTimer() object(%s) Unable to resolve the object to a TangibleObject.", networkId.getValueString().c_str()));
 		return;
@@ -385,7 +385,7 @@ void JNICALL ScriptMethodsHateListNamespace::setAILeashTime(JNIEnv * /*env*/, jo
         NetworkId const networkId(object);
         TangibleObject * const objectTangibleObject = TangibleObject::getTangibleObject(networkId);
 
-        if (objectTangibleObject == NULL)
+        if (objectTangibleObject == nullptr)
         {
                 JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsHateList::setAILeashTime() object(%s)  time(%.2f) Unable to resolve the object to a TangibleObject.", networkId.getValueString().c_str(), time));
                 return;
@@ -408,7 +408,7 @@ jfloat JNICALL ScriptMethodsHateListNamespace::getAILeashTime(JNIEnv * /*env*/, 
         NetworkId const networkId(object);
         TangibleObject * const objectTangibleObject = TangibleObject::getTangibleObject(networkId);
 
-        if (objectTangibleObject == NULL)
+        if (objectTangibleObject == nullptr)
         {
                 JAVA_THROW_SCRIPT_EXCEPTION(true, ("ScriptMethodsHateList::setAILeashTime() object(%s)  time(%.2f) Unable to resolve the object to a TangibleObject.", networkId.getValueString().c_str(), time));
                 return 0.0;
@@ -434,7 +434,7 @@ void JNICALL ScriptMethodsHateListNamespace::forceHateTarget(JNIEnv * env, jobje
 	NetworkId const hateTargetNetworkId(target);
 	TangibleObject * const objectTangibleObject = TangibleObject::getTangibleObject(networkId);
 
-	if (objectTangibleObject == NULL)
+	if (objectTangibleObject == nullptr)
 	{
 		WARNING(true, ("ScriptMethodsHateList::forceHateTarget() object(%s) hateTarget(%s) Unable to resolve the object to a TangibleObject.", networkId.getValueString().c_str(), hateTargetNetworkId.getValueString().c_str()));
 		return;

@@ -30,7 +30,7 @@ namespace TaskGetAccountForPurgeNamespace
 		virtual QueryMode getExecutionMode() const;
 
 		StationId getAccount() const;
-		
+
 	private:
 		DB::BindableLong m_account;
 		DB::BindableLong m_min_age;
@@ -46,8 +46,9 @@ using namespace TaskGetAccountForPurgeNamespace;
 // ======================================================================
 
 TaskGetAccountForPurge::TaskGetAccountForPurge(int purgePhase) :
-		DB::TaskRequest(),
-		m_purgePhase(purgePhase)
+	DB::TaskRequest(),
+	m_purgePhase(purgePhase),
+	m_account(0)
 {
 }
 
@@ -71,12 +72,11 @@ void TaskGetAccountForPurge::onComplete()
 
 // ======================================================================
 
-
 GetAccountForPurgeQuery::GetAccountForPurgeQuery(int purgePhase, int minAge) :
-		Query(),
-		m_account(),
-		m_min_age(minAge),
-		m_purge_phase(purgePhase)
+	Query(),
+	m_account(),
+	m_min_age(minAge),
+	m_purge_phase(purgePhase)
 {
 }
 
@@ -84,7 +84,7 @@ GetAccountForPurgeQuery::GetAccountForPurgeQuery(int purgePhase, int minAge) :
 
 void GetAccountForPurgeQuery::getSQL(std::string &sql)
 {
-	sql=std::string("begin :account := ")+DatabaseConnection::getInstance().getSchemaQualifier()+"purge_process.get_account_for_purge(:purge_phase, :min_age); end;";
+	sql = std::string("begin :account := ") + DatabaseConnection::getInstance().getSchemaQualifier() + "purge_process.get_account_for_purge(:purge_phase, :min_age); end;";
 }
 
 // ----------------------------------------------------------------------

@@ -63,31 +63,27 @@ bool DB::OCIServer::checkerr(OCISession const & session, int status)
 			text errbuf[512];
 			sb4 errcode = 0;
 			
-			OCIErrorGet((dvoid *)(session.errhp), (ub4) 1, (text *) NULL, &errcode,
+			OCIErrorGet((dvoid *)(session.errhp), (ub4) 1, (text *) nullptr, &errcode,
 							   errbuf, (ub4) sizeof(errbuf), OCI_HTYPE_ERROR);
 
 			WARNING(true,("Database error: %.*s",512,errbuf));
 			LOG("DatabaseError",("Database error: %.*s",512,errbuf));
 			FATAL(DB::Server::getFatalOnError() || session.getFatalOnError(),("Database error: %.*s",512,errbuf));
-			
-			return false;
-
-			/*
-			switch (errcode)
+	
+			switch ((int) errcode)
 			{
 				case 1013:
 					FATAL(true,("Cancelled by user request (ctrl-c or kill signal).\n"));
 					break;
-
 				case 12541:
 					REPORT_LOG(true,("Database Error - %.*s\n", 512, errbuf));
 					return false;
-					
 				default:
 					FATAL(true,("Unhandled Database Error - %.*s\n", 512, errbuf));
 					break;
-			}
-			*/
+			}			
+
+			return false;
 		}
 		case OCI_INVALID_HANDLE:
 			REPORT_LOG(true,("Error - OCI_INVALID_HANDLE\n"));

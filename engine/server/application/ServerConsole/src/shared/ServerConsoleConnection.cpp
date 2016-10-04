@@ -10,6 +10,8 @@
 #include "sharedNetwork/NetworkSetupData.h"
 #include "sharedNetworkMessages/ConsoleChannelMessages.h"
 
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 //-----------------------------------------------------------------------
 
 ServerConsoleConnection::ServerConsoleConnection(const std::string & address, const unsigned short port) :
@@ -44,15 +46,21 @@ void ServerConsoleConnection::onReceive(const Archive::ByteStream & bs)
 	Archive::ReadIterator ri = bs.begin();
 	GameNetworkMessage m(ri);
 	ri = bs.begin();
+	
+	const uint32 messageType = m.getType();
 
-	if(m.isType("ConGenericMessage"))
-	{
-		ConGenericMessage msg(ri);
-		fprintf(stdout, "%s", msg.getMsg().c_str());
-	}
-	else if(m.isType("RequestDisconnect"))
-	{
-		disconnect();
+	switch(messageType) {
+		case constcrc("ConGenericMessage") :
+		{
+			ConGenericMessage msg(ri);
+			fprintf(stdout, "%s", msg.getMsg().c_str());
+			break;
+		}
+		case constcrc("RequestDisconnect") :
+		{
+			disconnect();
+			break;
+		}
 	}
 }
 

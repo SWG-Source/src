@@ -19,7 +19,6 @@ const BOOL FALSE = 0;
 const BOOL TRUE = 1;
 
 
-float abs(float x);
 int _stricmp(const char* string1, const char* string2);
 
 //String to numeric conversions
@@ -46,7 +45,7 @@ void OutputDebugString(const char* stringOut);
 
 typedef FILE* HANDLE; 
 
-#define INVALID_HANDLE_VALUE NULL //Have to use a #define because this may be a FILE*
+#define INVALID_HANDLE_VALUE nullptr //Have to use a #define because this may be a FILE*
 
 
 const int GENERIC_READ = 1 << 0;
@@ -66,8 +65,8 @@ const int FILE_END = SEEK_END;
 
 const int FILE_SHARE_READ = 1;
 
-BOOL WriteFile(FILE* hFile, const void* lpBuffer, DWORD numBytesToWrite, DWORD* numBytesWritten, void* unsup=NULL);
-BOOL ReadFile(FILE* hFile, void* lpBuffer, DWORD numBytesToWrite, DWORD* numBytesRead, void* unsup=NULL);
+BOOL WriteFile(FILE* hFile, const void* lpBuffer, DWORD numBytesToWrite, DWORD* numBytesWritten, void* unsup=nullptr);
+BOOL ReadFile(FILE* hFile, void* lpBuffer, DWORD numBytesToWrite, DWORD* numBytesRead, void* unsup=nullptr);
 DWORD SetFilePointer(FILE* hFile, long lDistanceToMove, long* lpDistanceToMoveHigh, DWORD dwMoveMethod);
 FILE* CreateFile(const char* fileName, DWORD access, DWORD shareMode, void* unsupA, DWORD creationDisposition, DWORD flagsAndAttributes, FILE* unsup2);
 BOOL CloseHandle(FILE* hFile);

@@ -18,12 +18,15 @@
 // ======================================================================
 
 TaskRestoreCharacter::TaskRestoreCharacter(const NetworkId &characterId, const std::string &whoRequested) :
-		TaskRequest(),
-		m_characterId(characterId),
-		m_whoRequested(whoRequested)
+	TaskRequest(),
+	m_characterId(characterId),
+	m_whoRequested(whoRequested),
+	m_result(0),
+	m_account(0),
+	m_templateId(0)
 {
 }
-	
+
 //-----------------------------------------------------------------------
 
 TaskRestoreCharacter::~TaskRestoreCharacter()
@@ -36,8 +39,8 @@ bool TaskRestoreCharacter::process(DB::Session *session)
 {
 	RestoreCharacterQuery query;
 	query.character_id = m_characterId;
-	
-	if (! (session->exec(&query)))
+
+	if (!(session->exec(&query)))
 		return false;
 	query.done();
 
@@ -45,7 +48,7 @@ bool TaskRestoreCharacter::process(DB::Session *session)
 	query.character_name.getValue(m_characterName);
 	query.account.getValue(m_account);
 	query.template_id.getValue(m_templateId);
-	
+
 	LOG("DatabaseRestore", ("Restore Character (%s): result %i", m_characterId.getValueString().c_str(), m_result));
 	return true;
 }
@@ -54,7 +57,7 @@ bool TaskRestoreCharacter::process(DB::Session *session)
 
 void TaskRestoreCharacter::onComplete()
 {
-	if (m_result==1)
+	if (m_result == 1)
 	{
 		LoginRestoreCharacterMessage msg(m_whoRequested, m_characterId, m_account, m_characterName, m_templateId, false); //TODO:  "/restoreJedi" command
 		DatabaseProcess::getInstance().sendToCentralServer(msg, true);
@@ -64,21 +67,21 @@ void TaskRestoreCharacter::onComplete()
 		std::string message;
 		switch (m_result)
 		{
-			case 2:
-				message = "Object id was incorrect or character was not deleted";
-				break;
+		case 2:
+			message = "Object id was incorrect or character was not deleted";
+			break;
 
-			case 3:
-				message = "There was an error in the database while attempting to restore the character.";
-				break;
+		case 3:
+			message = "There was an error in the database while attempting to restore the character.";
+			break;
 
-			default:
-				message = "The database returned an unknown code in response to the request to restore the character.";
-				break;
+		default:
+			message = "The database returned an unknown code in response to the request to restore the character.";
+			break;
 		}
-		
+
 		GenericValueTypeMessage<std::pair<std::string, std::string> > reply("DatabaseConsoleReplyMessage",
-																			std::make_pair(m_whoRequested, message));
+			std::make_pair(m_whoRequested, message));
 		DatabaseProcess::getInstance().sendToAnyGameServer(reply);
 	}
 }
@@ -87,7 +90,7 @@ void TaskRestoreCharacter::onComplete()
 
 void TaskRestoreCharacter::RestoreCharacterQuery::getSQL(std::string &sql)
 {
-	sql=std::string("begin :result := ") + DatabaseProcess::getInstance().getSchemaQualifier()+"admin.restore_character (:character_id, :character_name, :account, :template_id); end;";
+	sql = std::string("begin :result := ") + DatabaseProcess::getInstance().getSchemaQualifier() + "admin.restore_character (:character_id, :character_name, :account, :template_id); end;";
 }
 
 // ----------------------------------------------------------------------
@@ -99,7 +102,7 @@ bool TaskRestoreCharacter::RestoreCharacterQuery::bindParameters()
 	if (!bindParameter(character_name)) return false;
 	if (!bindParameter(account)) return false;
 	if (!bindParameter(template_id)) return false;
-	
+
 	return true;
 }
 

@@ -6,7 +6,6 @@
 //
 // ======================================================================
 
-
 #include "serverGame/FirstServerGame.h"
 #include "serverGame/CommandQueueEntry.h"
 #include "serverGame/CreatureObject.h"
@@ -14,15 +13,15 @@
 #include "Archive/ByteStream.h"
 #include "sharedGame/CommandTable.h"
 
-
 // ======================================================================
 
 CommandQueueEntry::CommandQueueEntry() :
-	m_command(&CommandTable::getNullCommand ()),
+	m_command(&CommandTable::getNullCommand()),
 	m_targetId(NetworkId::cms_invalid),
 	m_params(),
 	m_sequenceId(0),
-	m_clearable(true)
+	m_clearable(true),
+	m_priority()
 {
 }
 
@@ -35,8 +34,8 @@ CommandQueueEntry::CommandQueueEntry(
 	uint32 sequenceId,
 	bool clearable,
 	Command::Priority priority,
-	bool autoAttack ) :
-		
+	bool autoAttack) :
+
 	m_command(&command),
 	m_targetId(targetId),
 	m_params(params),
@@ -64,12 +63,12 @@ CommandQueueEntry &CommandQueueEntry::operator=(CommandQueueEntry const &rhs)
 {
 	if (&rhs != this)
 	{
-		m_command    = rhs.m_command; //lint !e1555
-		m_targetId   = rhs.m_targetId;
-		m_params     = rhs.m_params;
+		m_command = rhs.m_command; //lint !e1555
+		m_targetId = rhs.m_targetId;
+		m_params = rhs.m_params;
 		m_sequenceId = rhs.m_sequenceId;
-		m_clearable  = rhs.m_clearable;
-		m_priority   = rhs.m_priority;
+		m_clearable = rhs.m_clearable;
+		m_priority = rhs.m_priority;
 	}
 	return *this;
 }
@@ -78,35 +77,30 @@ CommandQueueEntry &CommandQueueEntry::operator=(CommandQueueEntry const &rhs)
 
 namespace Archive
 {
+	// ----------------------------------------------------------------------
 
-// ----------------------------------------------------------------------
+	void get(ReadIterator &source, CommandQueueEntry &target)
+	{
+		uint32 commandHash;
 
-void get(ReadIterator &source, CommandQueueEntry &target)
-{
-	uint32 commandHash;
+		Archive::get(source, commandHash);
+		Archive::get(source, target.m_targetId);
+		Archive::get(source, target.m_params);
+		Archive::get(source, target.m_sequenceId);
+		Archive::get(source, target.m_clearable);
+		target.m_command = &CommandTable::getCommand(commandHash);
+	}
 
-	Archive::get(source, commandHash);
-	Archive::get(source, target.m_targetId);
-	Archive::get(source, target.m_params);
-	Archive::get(source, target.m_sequenceId);
-	Archive::get(source, target.m_clearable);
-	target.m_command = &CommandTable::getCommand(commandHash);
-}
+	// ----------------------------------------------------------------------
 
-// ----------------------------------------------------------------------
+	void put(ByteStream &target, CommandQueueEntry const &source)
+	{
+		Archive::put(target, source.m_command->m_commandHash);
+		Archive::put(target, source.m_targetId);
+		Archive::put(target, source.m_params);
+		Archive::put(target, source.m_sequenceId);
+		Archive::put(target, source.m_clearable);
+	}
 
-void put(ByteStream &target, CommandQueueEntry const &source)
-{
-	Archive::put(target, source.m_command->m_commandHash);
-	Archive::put(target, source.m_targetId);
-	Archive::put(target, source.m_params);
-	Archive::put(target, source.m_sequenceId);
-	Archive::put(target, source.m_clearable);
-}
-
-
-
-// ----------------------------------------------------------------------
-
-
+	// ----------------------------------------------------------------------
 } // namespace Archive

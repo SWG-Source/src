@@ -22,7 +22,7 @@ IoWin::IoWin(
 	const char *debugName  // Name used for debugging purposes
 	)
 : ioDebugName(DuplicateString(debugName)),
-	ioNext(NULL)
+	ioNext(nullptr)
 {
 
 }
@@ -37,9 +37,9 @@ IoWin::IoWin(
 IoWin::~IoWin(void)
 {
 	delete [] ioDebugName;
-	ioDebugName = NULL;
+	ioDebugName = nullptr;
 
-	ioNext = NULL;
+	ioNext = nullptr;
 }
 
 // ----------------------------------------------------------------------

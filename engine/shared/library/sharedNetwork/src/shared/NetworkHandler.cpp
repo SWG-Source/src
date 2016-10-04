@@ -256,7 +256,7 @@ void NetworkHandler::onReceive(Connection * c, const unsigned char * d, int s)
 {
 	if(c)
 	{
-		services.inputQueue.push_back(IncomingData());
+		services.inputQueue.emplace_back(IncomingData());
 		services.inputQueue.back().connection = c;
 		services.inputQueue.back().byteStream.put(d, s);
 

@@ -369,7 +369,7 @@ void Extent::drawDebugShapes ( DebugShapeRenderer * renderer ) const
 
 #ifdef _DEBUG
 
-	if(renderer == NULL) return;
+	if(renderer == nullptr) return;
 
 	renderer->setColor( VectorArgb::solidYellow );
 	renderer->drawSphere(m_sphere);

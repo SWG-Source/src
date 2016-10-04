@@ -137,7 +137,7 @@ namespace SetupSharedNetworkMessagesNamespace
 
 	MessageQueue::Data* unpackNothing(Archive::ReadIterator &)
 	{
-		return NULL;
+		return nullptr;
 	}
 
 	void packGenericShipDamageMessage(const MessageQueue::Data * data, Archive::ByteStream & target)

@@ -219,7 +219,7 @@ const AppearanceTemplate *AppearanceTemplateList::fetch(const char *const fileNa
 	char const * actualFileName = fileName;
 	if (!fileName)
 	{
-		DEBUG_WARNING(true, ("AppearanceTemplateList::fetch passed NULL fileName, using default"));
+		DEBUG_WARNING(true, ("AppearanceTemplateList::fetch passed nullptr fileName, using default"));
 		actualFileName = getDefaultAppearanceTemplateName();
 	}
 	else if (!*fileName)
@@ -246,14 +246,14 @@ const AppearanceTemplate *AppearanceTemplateList::fetch(const char *const fileNa
 
 	DEBUG_WARNING(true, ("AppearanceTemplateList::fetch actualFileName fetch for %s failed.", actualFileName));
 
-	return NULL;
+	return nullptr;
 }
 
 // ----------------------------------------------------------------------
 /**
  * Add a reference to the specified Appearance.
  * 
- * This routine will do nothing if passed in NULL.  Otherwise, it will
+ * This routine will do nothing if passed in nullptr.  Otherwise, it will
  * increase the reference count of the specified AppearanceTemplate
  * by one.
  * 
@@ -297,7 +297,7 @@ const AppearanceTemplate *AppearanceTemplateList::fetch(Iff *const iff)
 		return 0; //lint !e527 // unreachable
 	}
 
-	AppearanceTemplate *const appearanceTemplate = (*iter).second(NULL, iff);
+	AppearanceTemplate *const appearanceTemplate = (*iter).second(nullptr, iff);
 	NOT_NULL(appearanceTemplate);
 
 	addAnonymousAppearanceTemplate(appearanceTemplate);
@@ -351,7 +351,7 @@ const AppearanceTemplate *AppearanceTemplateList::fetchNew(AppearanceTemplate *c
 /**
  * Remove a reference to the specified AppearanceTemplate.
  * 
- * This routine will do nothing if passed in NULL.
+ * This routine will do nothing if passed in nullptr.
  * 
  * If the reference count drops to 0, the AppearanceTemplate will be deleted.
  * 
@@ -404,9 +404,9 @@ Appearance *AppearanceTemplateList::createAppearance(const char *const fileName)
 #endif	
 	
 	//probably should modify the macro sometime to just be quiet if this isn't defined
-	if (appearanceTemplate == NULL){
+	if (appearanceTemplate == nullptr){
 	    DEBUG_WARNING(true, ("FIX ME: Appearance template for %s could not be fetched - is it missing?", fileName));
-	    return NULL;  // Cekis: TODO: Figure out why the template can't be fetched. DarthArgus: always is due to a missing file or one of the redirectors having a bad path
+	    return nullptr;  // Cekis: TODO: Figure out why the template can't be fetched. DarthArgus: always is due to a missing file or one of the redirectors having a bad path
 	}
 
 	//-- creating the appearance will increment the reference count
@@ -581,7 +581,7 @@ AppearanceTemplate *AppearanceTemplateListNamespace::create(const char *const fi
 		// DEBUG_REPORT_LOG_PRINT(true, ("Loading mesh %s\n", actualFileName.getString()));
 		TagBindingMap::iterator iter = ms_tagBindingMap.find(TAG_MESH);
 		if (iter != ms_tagBindingMap.end())
-			appearanceTemplate = iter->second(actualFileName.getString(), NULL);
+			appearanceTemplate = iter->second(actualFileName.getString(), nullptr);
 	}
 
 	//-- we now need to create the appearance from disk

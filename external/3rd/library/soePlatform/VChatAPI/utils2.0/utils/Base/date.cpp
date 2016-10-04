@@ -42,7 +42,7 @@ namespace soe
 	, mSecond(0)
 	{
 		struct tm timeStruct;
-		struct tm *gotTime = NULL;
+		struct tm *gotTime = nullptr;
 #ifdef WIN32
 		gotTime = gmtime(&src);
 #else

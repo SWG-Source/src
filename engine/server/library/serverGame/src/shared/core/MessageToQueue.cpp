@@ -23,6 +23,8 @@
 #include "sharedNetworkMessages/GenericValueTypeMessage.h"
 #include "sharedObject/NetworkIdManager.h"
 
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 // ======================================================================
 
 std::string MessageToQueue::ms_nullString;
@@ -88,7 +90,7 @@ namespace MessageToQueueNamespace
 	typedef std::set<SchedulerItem, SchedulerItem::IsSoonerThan> SchedulerItemsType;
 	typedef std::vector<MessageToPayload> FrameMessagesType;
 	
-	MessageToQueue * ms_instance=NULL;
+	MessageToQueue * ms_instance=nullptr;
 	LastKnownLocationsType ms_lastKnownLocations;
 	ObjectLocatorsType ms_objectLocators;
 	SchedulerItemsType ms_schedulerItems;
@@ -134,7 +136,7 @@ void MessageToQueue::install()
 void MessageToQueue::remove()
 {
 	delete ms_instance;
-	ms_instance = NULL;
+	ms_instance = nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -234,53 +236,63 @@ void MessageToQueue::receiveMessage(MessageDispatch::Emitter const &, MessageDis
 	static Archive::ReadIterator ri;
 	ri = static_cast<GameNetworkMessage const &>(message).getByteStream().begin(); //lint !e1774 // could use dynamic_cast
 
-	if (message.isType("MessageToMessage"))
-	{
-		ri = static_cast<GameNetworkMessage const &>(message).getByteStream().begin();
-		MessageToMessage const msg(ri);
+	const uint32 messageType = message.getType();
+	
+	switch(messageType) {	
+		case constcrc("MessageToMessage") :
+		{
+			ri = static_cast<GameNetworkMessage const &>(message).getByteStream().begin();
+			MessageToMessage const msg(ri);
 
-		// const_cast avoids having to make another copy of the data.  Since we expect to receive lots of these mesages,
-		// avoiding making extra copies matters.  In this particular case, we know it is safe since the message is about
-		// to go out of scope anyway.
-		handleMessageFromNetwork(const_cast<MessageToPayload&>(msg.getData()), msg.getSourceServerPid());
-	}
-	else if (message.isType("WhoHasMessage"))
-	{
-		// Attempt to find the object, tell the source server if we have it or not
-		GenericValueTypeMessage<std::pair<uint32, NetworkId> > const whoHasMessage(ri);
-		uint32 sourceServer = whoHasMessage.getValue().first;
-		NetworkId const & networkId = whoHasMessage.getValue().second;
-		
-		ServerMessageForwarding::begin(sourceServer);
-		ServerObject const * const object = safe_cast<ServerObject const *>(NetworkIdManager::getObjectById(networkId));
-		if (object)
-		{
-			GenericValueTypeMessage<std::pair<uint32, std::pair<NetworkId, bool> > > reply(
-				"ObjectOnServerMessage",
-				std::make_pair(GameServer::getInstance().getProcessId(),
-							   std::make_pair(networkId,
-											  object->isAuthoritative())));
-			ServerMessageForwarding::send(reply);
+			// const_cast avoids having to make another copy of the data.  Since we expect to receive lots of these mesages,
+			// avoiding making extra copies matters.  In this particular case, we know it is safe since the message is about
+			// to go out of scope anyway.
+			handleMessageFromNetwork(const_cast<MessageToPayload&>(msg.getData()), msg.getSourceServerPid());
+			
+			break;
 		}
-		else
+		case constcrc("WhoHasMessage") :
 		{
-			GenericValueTypeMessage<std::pair<uint32, NetworkId> > reply(
-				"ObjectNotOnServerMessage",
-				std::make_pair(GameServer::getInstance().getProcessId(),
-							   networkId));
-			ServerMessageForwarding::send(reply);
+			// Attempt to find the object, tell the source server if we have it or not
+			GenericValueTypeMessage<std::pair<uint32, NetworkId> > const whoHasMessage(ri);
+			uint32 sourceServer = whoHasMessage.getValue().first;
+			NetworkId const & networkId = whoHasMessage.getValue().second;
+			
+			ServerMessageForwarding::begin(sourceServer);
+			ServerObject const * const object = safe_cast<ServerObject const *>(NetworkIdManager::getObjectById(networkId));
+			if (object)
+			{
+				GenericValueTypeMessage<std::pair<uint32, std::pair<NetworkId, bool> > > reply(
+					"ObjectOnServerMessage",
+					std::make_pair(GameServer::getInstance().getProcessId(),
+								   std::make_pair(networkId,
+												  object->isAuthoritative())));
+				ServerMessageForwarding::send(reply);
+			}
+			else
+			{
+				GenericValueTypeMessage<std::pair<uint32, NetworkId> > reply(
+					"ObjectNotOnServerMessage",
+					std::make_pair(GameServer::getInstance().getProcessId(),
+								   networkId));
+				ServerMessageForwarding::send(reply);
+			}
+			ServerMessageForwarding::end();
+			
+			break;
 		}
-		ServerMessageForwarding::end();
-	}
-	else if (message.isType("ObjectNotOnServerMessage"))
-	{
-		GenericValueTypeMessage<std::pair<uint32, NetworkId> > const msg(ri);
-		handleObjectNotOnServer(msg.getValue().first, msg.getValue().second);
-	}
-	else if (message.isType("ObjectOnServerMessage"))
-	{
-		GenericValueTypeMessage<std::pair<uint32, std::pair<NetworkId, bool> > > const msg(ri);
-		handleObjectOnServer(msg.getValue().first, msg.getValue().second.first, msg.getValue().second.second);
+		case constcrc("ObjectNotOnServerMessage") :
+		{
+			GenericValueTypeMessage<std::pair<uint32, NetworkId> > const msg(ri);
+			handleObjectNotOnServer(msg.getValue().first, msg.getValue().second);
+			break;
+		}
+		case constcrc("ObjectOnServerMessage") :
+		{
+			GenericValueTypeMessage<std::pair<uint32, std::pair<NetworkId, bool> > > const msg(ri);
+			handleObjectOnServer(msg.getValue().first, msg.getValue().second.first, msg.getValue().second.second);
+			break;
+		}
 	}
 }
 

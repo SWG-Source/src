@@ -45,9 +45,9 @@ AiShipBehaviorFollow::AiShipBehaviorFollow(AiShipController & aiShipController, 
  , m_followedUnit(followedUnit)
  , m_followedUnitLost(false)
 {
-	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("AiShipBehaviorFollow::AiShipBehaviorFollow() unit(%s) followedUnit(%s)", (m_aiShipController.getOwner() != NULL) ? m_aiShipController.getOwner()->getNetworkId().getValueString().c_str() : "NULL owner", followedUnit.getValueString().c_str()));
+	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("AiShipBehaviorFollow::AiShipBehaviorFollow() unit(%s) followedUnit(%s)", (m_aiShipController.getOwner() != nullptr) ? m_aiShipController.getOwner()->getNetworkId().getValueString().c_str() : "nullptr owner", followedUnit.getValueString().c_str()));
 
-	DEBUG_WARNING((m_followedUnit.getObject() == NULL), ("Trying to follow a NULL object."));
+	DEBUG_WARNING((m_followedUnit.getObject() == nullptr), ("Trying to follow a nullptr object."));
 }
 
 // ----------------------------------------------------------------------
@@ -60,7 +60,7 @@ void AiShipBehaviorFollow::alter(float const deltaSeconds)
 	Object * const followedUnitObject = m_followedUnit.getObject();
 	Vector goalPosition_w;
 
-	if (followedUnitObject != NULL)
+	if (followedUnitObject != nullptr)
 	{
 		goalPosition_w = Formation::getPosition_w(followedUnitObject->getTransform_o2w(), m_aiShipController.getFormationPosition_l());
 
@@ -69,9 +69,9 @@ void AiShipBehaviorFollow::alter(float const deltaSeconds)
 		if (m_aiShipController.getOwner()->getPosition_w().magnitudeBetweenSquared(goalPosition_w) > sqr(m_aiShipController.getLargestTurnRadius() * slowDownRequestRadiusGain))
 		{
 			ShipController * const shipController = followedUnitObject->getController()->asShipController();
-			AiShipController * const aiShipController = (shipController != NULL) ? shipController->asAiShipController() : NULL;
+			AiShipController * const aiShipController = (shipController != nullptr) ? shipController->asAiShipController() : nullptr;
 
-			if (aiShipController != NULL)
+			if (aiShipController != nullptr)
 			{
 				aiShipController->requestSlowDown();
 			}
@@ -90,7 +90,7 @@ void AiShipBehaviorFollow::alter(float const deltaSeconds)
 
 		Object const * const object = m_aiShipController.getOwner();
 
-		if (object != NULL)
+		if (object != nullptr)
 		{
 			goalPosition_w = object->getPosition_w();
 		}
@@ -109,10 +109,10 @@ void AiShipBehaviorFollow::alter(float const deltaSeconds)
 void AiShipBehaviorFollow::triggerFollowedUnitLost()
 {
 	Object * object = m_aiShipController.getOwner();
-	ServerObject *serverObject = (object != NULL) ? object->asServerObject() : NULL;
-	GameScriptObject * gameScriptObject = (serverObject != NULL) ? serverObject->getScriptObject() : NULL;
+	ServerObject *serverObject = (object != nullptr) ? object->asServerObject() : nullptr;
+	GameScriptObject * gameScriptObject = (serverObject != nullptr) ? serverObject->getScriptObject() : nullptr;
 
-	if(gameScriptObject != NULL)
+	if(gameScriptObject != nullptr)
 	{
 		ScriptParams scriptParams;
 		scriptParams.addParam(m_followedUnit);

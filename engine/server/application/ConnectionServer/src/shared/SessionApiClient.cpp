@@ -19,6 +19,8 @@
 #include "sharedGame/PlatformFeatureBits.h"
 #include "sharedLog/Log.h"
 
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 #include <algorithm>
 #include <map>
 #include <vector>
@@ -303,23 +305,35 @@ void SessionApiClient::OnGetFeatures(const apiTrackingNumber trackingNumber,
 	if (i != ms_getFeaturesTrackingNumberMap.end())
 	{
 		bool reuseMessage = false;
-		AccountFeatureIdRequest const * accountFeatureIdRequest = NULL;
-		AdjustAccountFeatureIdRequest const * adjustAccountFeatureIdRequest = NULL;
-		AdjustAccountFeatureIdResponse * adjustAccountFeatureIdResponse = NULL;
-		ClaimRewardsMessage * claimRewardsMessage = NULL;
+		AccountFeatureIdRequest const * accountFeatureIdRequest = nullptr;
+		AdjustAccountFeatureIdRequest const * adjustAccountFeatureIdRequest = nullptr;
+		AdjustAccountFeatureIdResponse * adjustAccountFeatureIdResponse = nullptr;
+		ClaimRewardsMessage * claimRewardsMessage = nullptr;
 
-		if (i->second->isType("AccountFeatureIdRequest"))
-			accountFeatureIdRequest = dynamic_cast<AccountFeatureIdRequest const *>(i->second);
-		else if (i->second->isType("AdjustAccountFeatureIdRequest"))
-			adjustAccountFeatureIdRequest = dynamic_cast<AdjustAccountFeatureIdRequest const *>(i->second);
-		else if (i->second->isType("AdjustAccountFeatureIdResponse"))
-			adjustAccountFeatureIdResponse = dynamic_cast<AdjustAccountFeatureIdResponse *>(i->second);
-		else if (i->second->isType("ClaimRewardsMessage"))
-			claimRewardsMessage = dynamic_cast<ClaimRewardsMessage *>(i->second);
+		const uint32 msgType = i->second->getType();
+		
+		switch(msgType) {
+			case constcrc("AccountFeatureIdRequest") : {
+				accountFeatureIdRequest = dynamic_cast<AccountFeatureIdRequest const *>(i->second);
+				break;
+			}
+			case constcrc("AdjustAccountFeatureIdRequest") : {
+				adjustAccountFeatureIdRequest = dynamic_cast<AdjustAccountFeatureIdRequest const *>(i->second);
+				break;
+			}
+			case constcrc("AdjustAccountFeatureIdResponse") : {
+				adjustAccountFeatureIdResponse = dynamic_cast<AdjustAccountFeatureIdResponse *>(i->second);
+				break;
+			}
+			case constcrc("ClaimRewardsMessage") : {
+				claimRewardsMessage = dynamic_cast<ClaimRewardsMessage *>(i->second);
+				break;
+			}
+		}
 
 		if (result == RESULT_SUCCESS)
 		{
-			ClientConnection * clientConnection = NULL;
+			ClientConnection * clientConnection = nullptr;
 			if (accountFeatureIdRequest)
 				clientConnection = ConnectionServer::getClientConnection(accountFeatureIdRequest->getTargetStationId());
 			else if (adjustAccountFeatureIdRequest)
@@ -391,7 +405,7 @@ void SessionApiClient::OnGetFeatures(const apiTrackingNumber trackingNumber,
 			else
 			{
 				// if account already has the feature, adjust it, otherwise add the feature
-				LoginAPI::Feature const * existingFeature = NULL;
+				LoginAPI::Feature const * existingFeature = nullptr;
 
 				for (unsigned k = 0; k < featureCount; ++k)
 				{
@@ -444,7 +458,7 @@ void SessionApiClient::OnGetFeatures(const apiTrackingNumber trackingNumber,
 			}
 			else
 			{
-				LoginAPI::Feature const * newlyAddedFeature = NULL;
+				LoginAPI::Feature const * newlyAddedFeature = nullptr;
 
 				for (unsigned k = 0; k < featureCount; ++k)
 				{
@@ -506,7 +520,7 @@ void SessionApiClient::OnGetFeatures(const apiTrackingNumber trackingNumber,
 			else
 			{
 				// see if account already has the required feature
-				LoginAPI::Feature const * existingFeature = NULL;
+				LoginAPI::Feature const * existingFeature = nullptr;
 
 				for (unsigned k = 0; k < featureCount; ++k)
 				{
@@ -904,7 +918,7 @@ void SessionApiClient::validateClient (ClientConnection* client, const std::stri
 
 void SessionApiClient::startPlay(const ClientConnection& client)
 {
-	IGNORE_RETURN(SessionStartPlay(client.getSessionId().c_str(), ConfigConnectionServer::getClusterName(), client.getCharacterName().c_str(), NULL));
+	IGNORE_RETURN(SessionStartPlay(client.getSessionId().c_str(), ConfigConnectionServer::getClusterName(), client.getCharacterName().c_str(), nullptr));
 }
 
 //------------------------------------------------------------

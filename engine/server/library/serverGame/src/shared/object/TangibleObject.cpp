@@ -124,14 +124,6 @@
 namespace TangibleObjectNamespace
 {
 	int const s_minCombatDuration = 4;
-	const int NUM_DAMAGE_TYPES = 9;
-
-	const int s_ignoreDamageTypes =
-		static_cast<int>(ServerArmorTemplate::DT_environmental_heat) |
-		static_cast<int>(ServerArmorTemplate::DT_environmental_cold) |
-		static_cast<int>(ServerArmorTemplate::DT_environmental_acid) |
-		static_cast<int>(ServerArmorTemplate::DT_environmental_electrical);
-
 	bool isEmpty(const ServerObject& obj)
 	{
 		const Container* container = obj.getContainerProperty();
@@ -354,13 +346,13 @@ static const std::string NOMOVE_SCRIPT  = "item.special.nomove";
 
 static const std::string OBJVAR_DECLINE_DUEL  = "decline_duel";
 
-const SharedObjectTemplate * TangibleObject::m_defaultSharedTemplate = NULL;
+const SharedObjectTemplate * TangibleObject::m_defaultSharedTemplate = nullptr;
 
 
 //-----------------------------------------------------------------------
 TangibleObject::TangibleObject(const ServerTangibleObjectTemplate* newTemplate) :
 	ServerObject(newTemplate),
-	m_combatData(NULL),
+	m_combatData(nullptr),
 	m_pvpType(),
 	m_pvpMercenaryType(PvpType_Neutral),
 	m_pvpFutureType(-1),
@@ -392,7 +384,7 @@ TangibleObject::TangibleObject(const ServerTangibleObjectTemplate* newTemplate) 
 	m_accessList(),
 	m_guildAccessList(),
 	m_effectsMap(),
-	m_npcConversation(NULL),
+	m_npcConversation(nullptr),
 	m_conversations()
 {
 	WARNING_STRICT_FATAL(!getSharedTemplate(), ("Tried to create a TANGIBLE %s object without a shared template!\n", newTemplate->DataResource::getName()));
@@ -469,7 +461,7 @@ TangibleObject::TangibleObject(const ServerTangibleObjectTemplate* newTemplate) 
 			{
 				Appearance * newAppearance = AppearanceTemplateList::createAppearance(appearanceString.c_str());
 
-				if(newAppearance != NULL)
+				if(newAppearance != nullptr)
 				{
 					setAppearance(newAppearance);
 				} else {
@@ -522,11 +514,11 @@ TangibleObject::~TangibleObject()
 	//-- This must be the first line in the destructor to invalidate any watchers watching this object
 	nullWatchers();
 
-	if (getSynchronizedUi() != NULL)
+	if (getSynchronizedUi() != nullptr)
 	{
 		CraftingToolSyncUi * sync = dynamic_cast<CraftingToolSyncUi *>(
 			getSynchronizedUi());
-		if (sync != NULL)
+		if (sync != nullptr)
 		{
 			if (isAuthoritative() && isCraftingTool())
 			{
@@ -561,7 +553,7 @@ TangibleObject::~TangibleObject()
 
 	CombatTracker::removeDefender(this);
 
-	if (m_combatData != NULL)
+	if (m_combatData != nullptr)
 	{
 		if (isAuthoritative())
 		{
@@ -598,16 +590,16 @@ TangibleObject::~TangibleObject()
 		}
 
 		delete m_combatData;
-		m_combatData = NULL;
+		m_combatData = nullptr;
 
 		if (!isPlayerControlled())
 			ObjectTracker::removeCombatAI();
 	}
 
-	if (m_npcConversation != NULL)
+	if (m_npcConversation != nullptr)
 	{
 		delete m_npcConversation;
-		m_npcConversation = NULL;
+		m_npcConversation = nullptr;
 	}
 
 	ObjectTracker::removeTangible();
@@ -625,7 +617,7 @@ void TangibleObject::initializeFirstTimeObject()
 	// set up armor from the template
 	const ServerTangibleObjectTemplate * newTemplate = safe_cast<
 		const ServerTangibleObjectTemplate *>(getObjectTemplate());
-	if (newTemplate != NULL)
+	if (newTemplate != nullptr)
 	{
 		setInvulnerable(newTemplate->getInvulnerable());
 
@@ -634,7 +626,7 @@ void TangibleObject::initializeFirstTimeObject()
 			initializeVisibility();
 
 			const ServerArmorTemplate * armorTemplate = newTemplate->getArmor();
-			if (armorTemplate != NULL)
+			if (armorTemplate != nullptr)
 			{
 				int const rating = static_cast<int>(armorTemplate->getRating());
 				if (   rating < static_cast<int>(ServerArmorTemplate::AR_armorNone)
@@ -729,7 +721,7 @@ void TangibleObject::endBaselines()
 
 	// check for existence of objvar to enable/disable m_logCommandEnqueue
 	CommandQueue * const queue = getCommandQueue();
-	if (queue != NULL)
+	if (queue != nullptr)
 	{
 		queue->setLogCommandEnqueue(getObjVars().hasItem("debuggingLogCommandEnqueue"));
 	}
@@ -781,7 +773,7 @@ void TangibleObject::onLoadedFromDatabase()
 				params.addParam(prototypeId, "prototype");
 				ScriptDictionaryPtr dictionary;
 				getScriptObject()->makeScriptDictionary(params, dictionary);
-				if (dictionary.get() != NULL)
+				if (dictionary.get() != nullptr)
 				{
 					dictionary->serialize();
 					MessageToQueue::getInstance().sendMessageToJava(getNetworkId(),
@@ -973,16 +965,16 @@ TangibleObject * TangibleObject::getTangibleObject(NetworkId const & networkId)
 
 TangibleObject * TangibleObject::asTangibleObject(Object * object)
 {
-	ServerObject * serverObject = (object != NULL) ? object->asServerObject() : NULL;
-	return (serverObject != NULL) ? serverObject->asTangibleObject() : NULL;
+	ServerObject * serverObject = (object != nullptr) ? object->asServerObject() : nullptr;
+	return (serverObject != nullptr) ? serverObject->asTangibleObject() : nullptr;
 }
 
 //-----------------------------------------------------------------------
 
 TangibleObject const * TangibleObject::asTangibleObject(Object const * object)
 {
-	ServerObject const * serverObject = (object != NULL) ? object->asServerObject() : NULL;
-	return (serverObject != NULL) ? serverObject->asTangibleObject() : NULL;
+	ServerObject const * serverObject = (object != nullptr) ? object->asServerObject() : nullptr;
+	return (serverObject != nullptr) ? serverObject->asTangibleObject() : nullptr;
 }
 
 //-----------------------------------------------------------------------
@@ -1010,13 +1002,13 @@ const SharedObjectTemplate * TangibleObject::getDefaultSharedTemplate(void) cons
 {
 static const ConstCharCrcLowerString templateName("object/tangible/base/shared_tangible_default.iff");
 
-	if (m_defaultSharedTemplate == NULL)
+	if (m_defaultSharedTemplate == nullptr)
 	{
 		m_defaultSharedTemplate = safe_cast<const SharedObjectTemplate *>(
 			ObjectTemplateList::fetch(templateName));
-		WARNING_STRICT_FATAL(m_defaultSharedTemplate == NULL, ("Cannot create "
+		WARNING_STRICT_FATAL(m_defaultSharedTemplate == nullptr, ("Cannot create "
 			"default shared object template %s", templateName.getString()));
-		if (m_defaultSharedTemplate != NULL)
+		if (m_defaultSharedTemplate != nullptr)
 			ExitChain::add (removeDefaultTemplate, "TangibleObject::removeDefaultTemplate");
 	}
 	return m_defaultSharedTemplate;
@@ -1029,10 +1021,10 @@ static const ConstCharCrcLowerString templateName("object/tangible/base/shared_t
  */
 void TangibleObject::removeDefaultTemplate(void)
 {
-	if (m_defaultSharedTemplate != NULL)
+	if (m_defaultSharedTemplate != nullptr)
 	{
 		m_defaultSharedTemplate->releaseReference();
-		m_defaultSharedTemplate = NULL;
+		m_defaultSharedTemplate = nullptr;
 	}
 }	// TangibleObject::removeDefaultTemplate
 
@@ -1184,7 +1176,7 @@ void TangibleObject::appearanceDataModified(const std::string& value)
 void TangibleObject::getEquippedItems(uint32 combatBone, std::vector<TangibleObject *> &items) const
 {
 	SlottedContainer const * const container = ContainerInterface::getSlottedContainer(*this);
-	if (container == NULL)
+	if (container == nullptr)
 		return;
 
 	std::vector<Container::ContainedItem> itemIds;
@@ -1194,10 +1186,10 @@ void TangibleObject::getEquippedItems(uint32 combatBone, std::vector<TangibleObj
 	for (iter = itemIds.begin(); iter != itemIds.end(); ++iter)
 	{
 		Object * object = (*iter).getObject();
-		if (object != NULL)
+		if (object != nullptr)
 		{
 			TangibleObject * item = dynamic_cast<TangibleObject *>(object);
-			if (item != NULL)
+			if (item != nullptr)
 				items.push_back(item);
 		}
 	}
@@ -1219,7 +1211,7 @@ TangibleObject * TangibleObject::getRandomEquippedItem(uint32 combatBone) const
 
 	if (items.empty())
 	{
-		return NULL;
+		return nullptr;
 	}
 
 	int index = Random::random(0, items.size() - 1);
@@ -1401,17 +1393,17 @@ void TangibleObject::conclude()
 	PROFILER_AUTO_BLOCK_DEFINE("TangibleObject::conclude");
 
 	// if we are a crafting tool, conclude our prototype and manf schematic
-	if (getSynchronizedUi() != NULL)
+	if (getSynchronizedUi() != nullptr)
 	{
 		const CraftingToolSyncUi * sync = dynamic_cast<const CraftingToolSyncUi *>(
 			getSynchronizedUi());
-		if (sync != NULL)
+		if (sync != nullptr)
 		{
 			Object * object = sync->getPrototype().getObject();
-			if (object != NULL)
+			if (object != nullptr)
 				object->conclude();
 			object = sync->getManfSchematic().getObject();
-			if (object != NULL)
+			if (object != nullptr)
 				object->conclude();
 		}
 	}
@@ -1683,12 +1675,12 @@ void TangibleObject::setPvpMercenaryFaction(Pvp::FactionId factionId, Pvp::PvpTy
 	{
 		if (PvpData::isImperialFactionId(m_pvpMercenaryFaction.get()))
 		{
-			IGNORE_RETURN(setObjVarItem("factionalHelper.timeStopHelpingImperial", static_cast<int>(::time(NULL))));
+			IGNORE_RETURN(setObjVarItem("factionalHelper.timeStopHelpingImperial", static_cast<int>(::time(nullptr))));
 			removeObjVarItem("factionalHelper.timeStopHelpingRebel");
 		}
 		else if (PvpData::isRebelFactionId(m_pvpMercenaryFaction.get()))
 		{
-			IGNORE_RETURN(setObjVarItem("factionalHelper.timeStopHelpingRebel", static_cast<int>(::time(NULL))));
+			IGNORE_RETURN(setObjVarItem("factionalHelper.timeStopHelpingRebel", static_cast<int>(::time(nullptr))));
 			removeObjVarItem("factionalHelper.timeStopHelpingImperial");
 		}
 	}
@@ -1821,11 +1813,11 @@ void TangibleObject::onPermanentlyDestroyed()
 		if (isCraftingTool())
 		{
 			ServerObject * owner = ServerWorld::findObjectByNetworkId(getOwnerId());
-			if (owner != NULL && owner->asCreatureObject() != NULL)
+			if (owner != nullptr && owner->asCreatureObject() != nullptr)
 			{
 				PlayerObject * player = PlayerCreatureController::getPlayerObject(
 					owner->asCreatureObject());
-				if (player != NULL && player->isCrafting() && player->getCraftingTool() == getNetworkId())
+				if (player != nullptr && player->isCrafting() && player->getCraftingTool() == getNetworkId())
 					player->stopCrafting(false);
 			}
 		}
@@ -1942,11 +1934,11 @@ bool TangibleObject::onContainerAboutToTransfer(ServerObject * destination, Serv
 			}
 		}
 	}
-	if (destination != NULL && getObjVars().hasItem(OBJVAR_BIO_LINK_ID))
+	if (destination != nullptr && getObjVars().hasItem(OBJVAR_BIO_LINK_ID))
 	{
 		// if this item is bio-linked and a player is trying to equip it, make
 		// sure the link id matches the player's id
-		if (destination->asCreatureObject() != NULL)
+		if (destination->asCreatureObject() != nullptr)
 		{
 			// allow holograms to have biolinked items transferred to them
 			int hologramVal = 0;
@@ -2058,7 +2050,7 @@ Footprint *TangibleObject::getFootprint()
 	if (property)
 		return property->getFootprint();
 	else
-		return NULL;
+		return nullptr;
 }
 
 //-----------------------------------------------------------------------
@@ -2069,7 +2061,7 @@ Footprint const *TangibleObject::getFootprint() const
 	if (property)
 		return property->getFootprint();
 	else
-		return NULL;
+		return nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -2151,9 +2143,9 @@ int TangibleObject::alterHitPoints(int delta, bool ignoreInvulnerable,
 #ifdef _DEBUG
 		char debugBuffer[1024];
 		const char * craftedString = "";
-		Client *client = NULL;
+		Client *client = nullptr;
 		ServerObject * sourceObject = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(source));
-		if (source != NetworkId::cms_invalid && sourceObject != NULL)
+		if (source != NetworkId::cms_invalid && sourceObject != nullptr)
 			client = sourceObject->getClient();
 #endif
 
@@ -2171,7 +2163,7 @@ int TangibleObject::alterHitPoints(int delta, bool ignoreInvulnerable,
 				"from %d to %d\n", craftedString, getNetworkId().getValueString().c_str(),
 				totalHitPoints,	m_damageTaken.get(), totalDamageTaken);
 			DEBUG_REPORT_LOG (true, ("%s", debugBuffer));
-			if (source != NetworkId::cms_invalid && client != NULL)
+			if (source != NetworkId::cms_invalid && client != nullptr)
 				ConsoleMgr::broadcastString(debugBuffer, client);
 		}
 #endif
@@ -2200,7 +2192,7 @@ int TangibleObject::alterHitPoints(int delta, bool ignoreInvulnerable,
 				snprintf(debugBuffer, sizeof(debugBuffer), "%s object %s has been "
 					"disabled\n", craftedString, getNetworkId().getValueString().c_str());
 				DEBUG_REPORT_LOG (true, ("%s", debugBuffer));
-				if (source != NetworkId::cms_invalid && client != NULL)
+				if (source != NetworkId::cms_invalid && client != nullptr)
 					ConsoleMgr::broadcastString(debugBuffer, client);
 			}
 #endif
@@ -2283,7 +2275,7 @@ void TangibleObject::updatePlanetServerInternal(const bool forceUpdate) const
 	if ((forceUpdate || getPositionChanged()) && (!ContainerInterface::getContainedByObject(*this) || getInterestRadius() > 0))
 	{
 		Object const * const topmostContainer = ContainerInterface::getTopmostContainer(*this);
-		FATAL(!topmostContainer, ("Object %s was contained by something, but getTopmostContainer() returned NULL\n",getNetworkId().getValueString().c_str()));
+		FATAL(!topmostContainer, ("Object %s was contained by something, but getTopmostContainer() returned nullptr\n",getNetworkId().getValueString().c_str()));
 		Vector const &position = topmostContainer->getPosition_p();
 
 		UpdateObjectOnPlanetMessage const msg(
@@ -2313,7 +2305,7 @@ void TangibleObject::updatePlanetServerInternal(const bool forceUpdate) const
  */
 void TangibleObject::clearDamageList(void)
 {
-	if (m_combatData != NULL)
+	if (m_combatData != nullptr)
 	{
 		m_combatData->defenseData.damage.clear();
 	}
@@ -2442,7 +2434,7 @@ void TangibleObject::clearHateList()
 	}
 	else
 	{
-		sendControllerMessageToAuthServer(CM_clearHateList, NULL);
+		sendControllerMessageToAuthServer(CM_clearHateList, nullptr);
 	}
 }
 
@@ -2476,7 +2468,7 @@ bool TangibleObject::isHatedBy(Object * const object)
 	bool result = false;
 	TangibleObject * const hatedByTangibleObject = TangibleObject::asTangibleObject(object);
 
-	if (hatedByTangibleObject != NULL)
+	if (hatedByTangibleObject != nullptr)
 	{
 		HateList::UnSortedList const & hateList = hatedByTangibleObject->getUnSortedHateList();
 
@@ -2534,7 +2526,7 @@ void TangibleObject::resetHateTimer()
 	}
 	else
 	{
-		sendControllerMessageToAuthServer(CM_resetHateTimer, NULL);
+		sendControllerMessageToAuthServer(CM_resetHateTimer, nullptr);
 	}
 }
 
@@ -2625,11 +2617,11 @@ void TangibleObject::setCraftedId(const NetworkId & id)
 			IGNORE_RETURN(setObjVarItem(OBJVAR_CRAFTING_SCHEMATIC, id));
 			setCondition(C_crafted);
 			const Object * object = NetworkIdManager::getObjectById(id);
-			if (object != NULL)
+			if (object != nullptr)
 			{
 				const ManufactureSchematicObject * schematic = dynamic_cast<
 					const ManufactureSchematicObject *>(object);
-				if (schematic != NULL)
+				if (schematic != nullptr)
 					m_sourceDraftSchematic = schematic->getDraftSchematic();
 			}
 		}
@@ -2869,7 +2861,7 @@ bool TangibleObject::startCraftingSession(CreatureObject & crafter)
 		UNREF(myIdString);		// needed for release mode
 
 		PlayerObject * crafterPlayer = PlayerCreatureController::getPlayerObject(&crafter);
-		if (crafterPlayer == NULL)
+		if (crafterPlayer == nullptr)
 			return false;
 
 		// make sure we are a crafting tool
@@ -2909,7 +2901,7 @@ bool TangibleObject::startCraftingSession(CreatureObject & crafter)
 
 		// make sure the output slot is empty
 		SlottedContainer const * const slotContainer = ContainerInterface::getSlottedContainer(*this);
-		if (slotContainer == NULL)
+		if (slotContainer == nullptr)
 		{
 			DEBUG_WARNING(true, ("Crafting tool %s does not have a container!", myIdString));
 			return false;
@@ -2938,7 +2930,7 @@ bool TangibleObject::startCraftingSession(CreatureObject & crafter)
 		for (iter = schematics.begin(); iter != schematics.end(); ++iter)
 		{
 			const DraftSchematicObject * schematic = DraftSchematicObject::getSchematic((*iter).first.first);
-			if (schematic != NULL && ((myType & ServerObjectTemplate::CT_genericItem) != 0 ||
+			if (schematic != nullptr && ((myType & ServerObjectTemplate::CT_genericItem) != 0 ||
 				((schematic->getCategory() & myType) != 0)))
 			{
 				// make sure the player has all the skill commands needed for the
@@ -3068,11 +3060,11 @@ bool TangibleObject::stopCraftingSession(void)
 bool TangibleObject::isIngredientInHopper(const NetworkId & ingredientId) const
 {
 	ServerObject const * const hopper = getIngredientHopper();
-	if (hopper == NULL)
+	if (hopper == nullptr)
 		return false;
 
 	Object const * const ingredient = CachedNetworkId(ingredientId).getObject();
-	if (ingredient == NULL)
+	if (ingredient == nullptr)
 		return false;
 
 	return ContainerInterface::isNestedWithin(*ingredient, getNetworkId());
@@ -3098,15 +3090,15 @@ static const SlotId hopperSlotId(SlotIdManager::findSlotId(INGREDIENT_HOPPER_SLO
 	{
 		DEBUG_WARNING(true, ("Tried to get input hopper for non-crafting station "
 			"object %s", myIdString));
-		return NULL;
+		return nullptr;
 	}
 
 	// get the ingredient hopper
 	SlottedContainer const * const container = ContainerInterface::getSlottedContainer(*this);
-	if (container == NULL)
+	if (container == nullptr)
 	{
 		DEBUG_WARNING(true, ("Crafting tool %s does not have a container!", myIdString));
-		return NULL;
+		return nullptr;
 	}
 	Container::ContainerErrorCode tmp = Container::CEC_Success;
 	Container::ContainedItem hopperId = container->getObjectInSlot(hopperSlotId, tmp);
@@ -3114,14 +3106,14 @@ static const SlotId hopperSlotId(SlotIdManager::findSlotId(INGREDIENT_HOPPER_SLO
 	{
 		DEBUG_WARNING(true, ("Crafting tool %s does not have a ingredient "
 			"hopper!", myIdString));
-		return NULL;
+		return nullptr;
 	}
 	ServerObject * hopper = safe_cast<ServerObject *>(hopperId.getObject());
-	if (hopper == NULL)
+	if (hopper == nullptr)
 	{
 		DEBUG_WARNING(true, ("Can't find object for ingredient hopper id %s",
 			hopperId.getValueString().c_str()));
-		return NULL;
+		return nullptr;
 	}
 
 	return hopper;
@@ -3150,16 +3142,16 @@ static const SlotId outputSlotId(SlotIdManager::findSlotId(MANF_OUTPUT_SLOT_NAME
 
 		// get output slot
 		SlottedContainer const * const slotContainer = ContainerInterface::getSlottedContainer(*this);
-		if (slotContainer == NULL)
+		if (slotContainer == nullptr)
 		{
 			DEBUG_WARNING(true, ("Crafting tool %s does not have a container!", myIdString));
 			return false;
 		}
 
 		// make sure the transferer is in the final stage of crafting
-		if (transferer == NULL)
+		if (transferer == nullptr)
 		{
-			DEBUG_WARNING(true, ("addObjectToOutputSlot, NULL transferer"));
+			DEBUG_WARNING(true, ("addObjectToOutputSlot, nullptr transferer"));
 			return false;
 		}
 		NetworkId crafterVarId(NetworkId::cms_invalid);
@@ -3178,14 +3170,14 @@ static const SlotId outputSlotId(SlotIdManager::findSlotId(MANF_OUTPUT_SLOT_NAME
 			return false;
 		}
 		CreatureObject const * const creatureTransferer = transferer->asCreatureObject();
-		if (creatureTransferer == NULL)
+		if (creatureTransferer == nullptr)
 		{
 			DEBUG_WARNING(true, ("addObjectToOutputSlot, transferer %s is not a "
 				"creature", transferer->getNetworkId().getValueString().c_str()));
 			return false;
 		}
 		PlayerObject const * const creaturePlayer = PlayerCreatureController::getPlayerObject(creatureTransferer);
-		if (creaturePlayer == NULL)
+		if (creaturePlayer == nullptr)
 			return false;
 
 		if (creaturePlayer->getCraftingStage() != Crafting::CS_finish)
@@ -3197,11 +3189,11 @@ static const SlotId outputSlotId(SlotIdManager::findSlotId(MANF_OUTPUT_SLOT_NAME
 		}
 
 		// if the object is our prototype, clear the prototype
-		if (getSynchronizedUi() != NULL)
+		if (getSynchronizedUi() != nullptr)
 		{
 			CraftingToolSyncUi * sync = dynamic_cast<CraftingToolSyncUi *>(
 				getSynchronizedUi());
-			if (sync != NULL)
+			if (sync != nullptr)
 			{
 				if (sync->getPrototype() == object.getNetworkId())
 				{
@@ -3212,7 +3204,7 @@ static const SlotId outputSlotId(SlotIdManager::findSlotId(MANF_OUTPUT_SLOT_NAME
 
 		// put the object in the slot
 		Container::ContainerErrorCode tmp = Container::CEC_Success;
-		if (!ContainerInterface::transferItemToSlottedContainer(*this, object, outputSlotId, NULL, tmp))
+		if (!ContainerInterface::transferItemToSlottedContainer(*this, object, outputSlotId, nullptr, tmp))
 		{
 			DEBUG_WARNING(true, ("Failed to transfer object %s to crafting "
 				"tool %s", object.getNetworkId().getValueString().c_str(),
@@ -3250,7 +3242,7 @@ ManufactureSchematicObject * TangibleObject::getCraftingManufactureSchematic(voi
 	{
 		DEBUG_WARNING(true, ("Tried to get non-crafting tool "
 			"object %s", myIdString));
-		return NULL;
+		return nullptr;
 	}
 
 	SlottedContainer const * const container = ContainerInterface::getSlottedContainer(*this);
@@ -3264,7 +3256,7 @@ ManufactureSchematicObject * TangibleObject::getCraftingManufactureSchematic(voi
 	else
 	{
 		DEBUG_WARNING(true, ("ManufactureSchematicObject doesn't have a slotted container."));
-		return NULL;
+		return nullptr;
 	}
 }	// TangibleObject::getCraftingManufactureSchematic
 
@@ -3282,17 +3274,17 @@ ManufactureSchematicObject * TangibleObject::removeCraftingManufactureSchematic(
 	UNREF(myIdString);		// needed for release mode
 
 	// make sure we are a crafting tool
-	if (!isCraftingTool() || getSynchronizedUi() == NULL)
+	if (!isCraftingTool() || getSynchronizedUi() == nullptr)
 	{
 		DEBUG_WARNING(true, ("Tried to get non-crafting tool "
 			"object %s", myIdString));
-		return NULL;
+		return nullptr;
 	}
 
 	CraftingToolSyncUi * sync = dynamic_cast<CraftingToolSyncUi *>(
 		getSynchronizedUi());
-	if (sync == NULL)
-		return NULL;
+	if (sync == nullptr)
+		return nullptr;
 
 	ManufactureSchematicObject * schematic = safe_cast<ManufactureSchematicObject *>(
 		sync->getManfSchematic().getObject());
@@ -3320,7 +3312,7 @@ void TangibleObject::setCraftingManufactureSchematic(ManufactureSchematicObject 
 		UNREF(myIdString);		// needed for release mode
 
 		// make sure we are a crafting tool
-		if (!isCraftingTool() || getSynchronizedUi() == NULL)
+		if (!isCraftingTool() || getSynchronizedUi() == nullptr)
 		{
 			DEBUG_WARNING(true, ("Tried to get non-crafting tool "
 				"object %s", myIdString));
@@ -3329,7 +3321,7 @@ void TangibleObject::setCraftingManufactureSchematic(ManufactureSchematicObject 
 
 		CraftingToolSyncUi * sync = dynamic_cast<CraftingToolSyncUi *>(
 			getSynchronizedUi());
-		if (sync == NULL)
+		if (sync == nullptr)
 			return;
 
 		// see if there is already a schematic object set
@@ -3339,7 +3331,7 @@ void TangibleObject::setCraftingManufactureSchematic(ManufactureSchematicObject 
 
 		// remove the old schematic
 		ServerObject * object = safe_cast<ServerObject *>(schematicId.getObject());
-		if (object == NULL)
+		if (object == nullptr)
 		{
 			if (schematicId != NetworkId::cms_invalid)
 			{
@@ -3358,13 +3350,13 @@ void TangibleObject::setCraftingManufactureSchematic(ManufactureSchematicObject 
 		// the schematic isn't in the world or in a container, so we need to
 		// tell the client about it
 		int stationBonus = 0;
-		ServerObject * crafter = NULL;
+		ServerObject * crafter = nullptr;
 		NetworkId crafterId;
 		if (getObjVars().getItem(OBJVAR_CRAFTING_CRAFTER,crafterId))
 		{
 			crafter = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(crafterId));
 		}
-		if (crafter != NULL)
+		if (crafter != nullptr)
 		{
 			sync->setManfSchematic(CachedNetworkId(schematic), CachedNetworkId(*crafter),
 				true);
@@ -3373,7 +3365,7 @@ void TangibleObject::setCraftingManufactureSchematic(ManufactureSchematicObject 
 			// it has
 			const PlayerObject * player = PlayerCreatureController::getPlayerObject(
 				crafter->asCreatureObject());
-			if (player != NULL && player->getCraftingStation().getObject() != NULL)
+			if (player != nullptr && player->getCraftingStation().getObject() != nullptr)
 			{
 				player->getCraftingStation().getObject()->asServerObject()->
 					getObjVars().getItem(OBJVAR_CRAFTING_STATIONMOD, stationBonus);
@@ -3436,11 +3428,11 @@ void TangibleObject::clearCraftingManufactureSchematic(void)
 		}
 
 		// get our ui
-		CraftingToolSyncUi * sync = NULL;
-		if (getSynchronizedUi() != NULL)
+		CraftingToolSyncUi * sync = nullptr;
+		if (getSynchronizedUi() != nullptr)
 			sync = dynamic_cast<CraftingToolSyncUi *>(getSynchronizedUi());
 
-		if (schematicId == CachedNetworkId::cms_cachedInvalid && sync == NULL)
+		if (schematicId == CachedNetworkId::cms_cachedInvalid && sync == nullptr)
 		{
 			// no schematic
 			return;
@@ -3448,7 +3440,7 @@ void TangibleObject::clearCraftingManufactureSchematic(void)
 
 		if (schematicId == CachedNetworkId::cms_invalid)
 			schematicId = sync->getManfSchematic();
-		else if (sync != NULL && sync->getManfSchematic() != CachedNetworkId::cms_invalid &&
+		else if (sync != nullptr && sync->getManfSchematic() != CachedNetworkId::cms_invalid &&
 			schematicId != sync->getManfSchematic())
 		{
 			WARNING(true, ("TangibleObject::clearCraftingManufactureSchematic "
@@ -3456,7 +3448,7 @@ void TangibleObject::clearCraftingManufactureSchematic(void)
 				"in its ui!!!", getNetworkId().getValueString().c_str(),
 				schematicId.getValueString().c_str(),
 				sync->getManfSchematic().getValueString().c_str()));
-			if (schematicId.getObject() != NULL)
+			if (schematicId.getObject() != nullptr)
 			{
 				schematicId.getObject()->asServerObject()->permanentlyDestroy(
 					DeleteReasons::Consumed);
@@ -3472,9 +3464,9 @@ void TangibleObject::clearCraftingManufactureSchematic(void)
 		}
 
 		// get the schematic
-		ManufactureSchematicObject * manfSchematic = NULL;
+		ManufactureSchematicObject * manfSchematic = nullptr;
 		ServerObject * object = safe_cast<ServerObject *>(schematicId.getObject());
-		if (object == NULL && schematicId != CachedNetworkId::cms_invalid)
+		if (object == nullptr && schematicId != CachedNetworkId::cms_invalid)
 		{
 			WARNING_STRICT_FATAL(true, ("Can't find object for manufactring schematic "
 				"id %s", schematicId.getValueString().c_str()));
@@ -3482,7 +3474,7 @@ void TangibleObject::clearCraftingManufactureSchematic(void)
 		else
 			manfSchematic = safe_cast<ManufactureSchematicObject *>(object);
 
-		if (manfSchematic != NULL)
+		if (manfSchematic != nullptr)
 		{
 			NetworkId crafterId;
 			if (getObjVars().getItem(OBJVAR_CRAFTING_CRAFTER,crafterId))
@@ -3492,7 +3484,7 @@ void TangibleObject::clearCraftingManufactureSchematic(void)
 				// in the tool
 				CreatureObject * const crafter = dynamic_cast<CreatureObject *>(NetworkIdManager::getObjectById(crafterId));
 				PlayerObject * const crafterPlayer = PlayerCreatureController::getPlayerObject(crafter);
-				if (!manfSchematic->mustDestroyIngredients() || (crafterPlayer != NULL &&
+				if (!manfSchematic->mustDestroyIngredients() || (crafterPlayer != nullptr &&
 					crafterPlayer->getCraftingStage() == Crafting::CS_assembly))
 				{
 					crafterPlayer->setAllowEmptySlot(true);
@@ -3526,9 +3518,9 @@ void TangibleObject::clearCraftingManufactureSchematic(void)
 			}
 		}
 
-		if (sync != NULL)
+		if (sync != nullptr)
 			sync->setManfSchematic(CachedNetworkId::cms_cachedInvalid, CachedNetworkId::cms_cachedInvalid, true);
-		if (object != NULL)
+		if (object != nullptr)
 		{
 			object->permanentlyDestroy(DeleteReasons::Consumed);
 		}
@@ -3554,17 +3546,17 @@ ServerObject * TangibleObject::getCraftingPrototype(void) const
 	UNREF(myIdString);		// needed for release mode
 
 	// make sure we are a crafting tool
-	if (!isCraftingTool() || getSynchronizedUi() == NULL)
+	if (!isCraftingTool() || getSynchronizedUi() == nullptr)
 	{
 		DEBUG_WARNING(true, ("Tried to get non-crafting tool "
 			"object %s", myIdString));
-		return NULL;
+		return nullptr;
 	}
 
 	const CraftingToolSyncUi * sync = dynamic_cast<const CraftingToolSyncUi *>(
 		getSynchronizedUi());
-	if (sync == NULL)
-		return NULL;
+	if (sync == nullptr)
+		return nullptr;
 
 	return safe_cast<ServerObject *>(sync->getPrototype().getObject());
 }	// TangibleObject::getCraftingPrototype
@@ -3586,7 +3578,7 @@ void TangibleObject::setCraftingPrototype(ServerObject & prototype)
 		UNREF(myIdString);		// needed for release mode
 
 		// make sure we are a crafting tool
-		if (!isCraftingTool() || getSynchronizedUi() == NULL)
+		if (!isCraftingTool() || getSynchronizedUi() == nullptr)
 		{
 			DEBUG_WARNING(true, ("Tried to get non-crafting tool "
 				"object %s", myIdString));
@@ -3595,7 +3587,7 @@ void TangibleObject::setCraftingPrototype(ServerObject & prototype)
 
 		CraftingToolSyncUi * sync = dynamic_cast<CraftingToolSyncUi *>(
 			getSynchronizedUi());
-		if (sync == NULL)
+		if (sync == nullptr)
 			return;
 
 		// see if there is already a prototype object set
@@ -3605,7 +3597,7 @@ void TangibleObject::setCraftingPrototype(ServerObject & prototype)
 
 		// remove the old prototype
 		ServerObject * object = safe_cast<ServerObject *>(prototypeId.getObject());
-		if (object == NULL)
+		if (object == nullptr)
 		{
 			if (prototypeId != NetworkId::cms_invalid)
 			{
@@ -3624,7 +3616,7 @@ void TangibleObject::setCraftingPrototype(ServerObject & prototype)
 		// about it
 		Container::ContainerErrorCode tmp = Container::CEC_Success;
 		if (!ContainerInterface::transferItemToSlottedContainer(*this, prototype,
-			getCraftingPrototypeSlotId(), NULL, tmp))
+			getCraftingPrototypeSlotId(), nullptr, tmp))
 		{
 			// see if there is something in the slot, and delete it if there is
 			bool failed = true;
@@ -3634,13 +3626,13 @@ void TangibleObject::setCraftingPrototype(ServerObject & prototype)
 				getCraftingPrototypeSlotId(), tmp);
 			if (oldItem != prototype.getNetworkId())
 			{
-				if (oldItem.getObject() != NULL)
+				if (oldItem.getObject() != nullptr)
 				{
 					safe_cast<ServerObject*>(oldItem.getObject())->permanentlyDestroy(
 						DeleteReasons::Consumed);
 					// try the transfer again
 					if (ContainerInterface::transferItemToSlottedContainer(*this,
-						prototype, getCraftingPrototypeSlotId(), NULL, tmp))
+						prototype, getCraftingPrototypeSlotId(), nullptr, tmp))
 					{
 						failed = false;
 					}
@@ -3678,7 +3670,7 @@ void TangibleObject::clearCraftingPrototype(void)
 		UNREF(myIdString);		// needed for release mode
 
 		// make sure we are a crafting tool
-		if (!isCraftingTool() || getSynchronizedUi() == NULL)
+		if (!isCraftingTool() || getSynchronizedUi() == nullptr)
 		{
 			DEBUG_WARNING(true, ("Tried to get non-crafting tool "
 				"object %s", myIdString));
@@ -3687,12 +3679,12 @@ void TangibleObject::clearCraftingPrototype(void)
 
 		CraftingToolSyncUi * sync = dynamic_cast<CraftingToolSyncUi *>(
 			getSynchronizedUi());
-		if (sync == NULL)
+		if (sync == nullptr)
 			return;
 
 		const CachedNetworkId & prototypeId = sync->getPrototype();
 		ServerObject * object = safe_cast<ServerObject *>(prototypeId.getObject());
-		if (object != NULL)
+		if (object != nullptr)
 		{
 			object->permanentlyDestroy(DeleteReasons::Consumed);
 		}
@@ -3704,7 +3696,7 @@ void TangibleObject::clearCraftingPrototype(void)
 			Container::ContainerErrorCode error;
 			const Container::ContainedItem & contents = container->getObjectInSlot(
 				getCraftingPrototypeSlotId(), error);
-			if (contents.getObject() != NULL)
+			if (contents.getObject() != nullptr)
 			{
 				safe_cast<ServerObject *>(contents.getObject())->permanentlyDestroy(
 					DeleteReasons::Consumed);
@@ -3856,7 +3848,7 @@ void TangibleObject::forceExecuteCommand(Command const &command, NetworkId const
 	{
 		CommandQueue * const queue = getCommandQueue();
 
-		if (queue != NULL)
+		if (queue != nullptr)
 		{
 			queue->cancelCurrentCommand();
 		}
@@ -3948,7 +3940,7 @@ void TangibleObject::initializeVisibility()
 	{
 		const ServerTangibleObjectTemplate * myTemplate = safe_cast<
 			const ServerTangibleObjectTemplate *>(getObjectTemplate());
-		if (myTemplate != NULL)
+		if (myTemplate != nullptr)
 		{
 			bool visible = false;
 			for (size_t i = 0; i < myTemplate->getVisibleFlagsCount(); ++i)
@@ -3999,7 +3991,7 @@ void TangibleObject::visibilityDataModified()
 		{
 			// show the object
 			const TriggerVolume * triggerVolume = getTriggerVolume(NetworkTriggerVolumeNamespace::NetworkTriggerVolumeName);
-			if (triggerVolume != NULL)
+			if (triggerVolume != nullptr)
 			{
 				std::vector<ServerObject *> observers;
 				ServerWorld::findPlayerCreaturesInRange(getPosition_w(), triggerVolume->getRadius(), observers);
@@ -4017,7 +4009,7 @@ void TangibleObject::visibilityDataModified()
 			if (isVisible() && isHidden() && !m_passiveRevealPlayerCharacter.empty())
 			{
 				const TriggerVolume * triggerVolume = getTriggerVolume(NetworkTriggerVolumeNamespace::NetworkTriggerVolumeName);
-				if (triggerVolume != NULL)
+				if (triggerVolume != nullptr)
 				{
 					std::vector<ServerObject *> possibleObservers;
 					ServerWorld::findPlayerCreaturesInRange(getPosition_w(), triggerVolume->getRadius(), possibleObservers);
@@ -4077,10 +4069,10 @@ bool TangibleObject::isVisibleOnClient(Client const &client) const
 
 		// if the client's character is grouped with the the owner, then he can see it.
 		const CreatureObject * owner = safe_cast<const CreatureObject *>(ownerId.getObject());
-		if (owner != NULL)
+		if (owner != nullptr)
 		{
 			const GroupObject * group = owner->getGroup();
-			if (group != NULL)
+			if (group != nullptr)
 			{
 				if (group->isGroupMember(characterObject->getNetworkId()))
 					return true;
@@ -4129,7 +4121,7 @@ static int datatable_max_encumbrance_col = -1;
 	encumbrances.clear();
 
 	DataTable * dt = DataTableManager::getTable(DATATABLE_ARMOR, true);
-	if (dt == NULL)
+	if (dt == nullptr)
 		return false;
 	else if (datatable_type_col == -1)
 	{
@@ -4690,7 +4682,7 @@ void TangibleObject::getAttributesForCraftingTool (AttributeVector & data) const
 		// see if there is an object in the output hopper
 		bool hasPrototype = false;
 		SlottedContainer const * const slotContainer = ContainerInterface::getSlottedContainer(*this);
-		if (slotContainer != NULL)
+		if (slotContainer != nullptr)
 		{
 			Container::ContainerErrorCode tmp = Container::CEC_Success;
 			if (slotContainer->getObjectInSlot(outputSlotId, tmp) != Container::ContainedItem::cms_invalid)
@@ -5121,7 +5113,7 @@ void TangibleObject::handleCMessageTo(const MessageToPayload &message)
 				std::string const & sceneId = ServerWorld::getSceneId();
 				Vector const &position = findPosition_w();
 				Region const * const region = RegionMaster::getSmallestVisibleRegionAtPoint(sceneId, position.x, position.z);
-				if (region != NULL)
+				if (region != nullptr)
 					regionName = Unicode::wideToNarrow(region->getName());
 
 				int const cityId = CityInterface::getCityAtLocation(sceneId, static_cast<int>(position.x), static_cast<int>(position.z), 0);
@@ -5248,7 +5240,7 @@ void TangibleObject::setInvulnerable(bool invulnerable)
 
 	GameScriptObject * const gameScriptObject = getScriptObject();
 
-	if (gameScriptObject != NULL)
+	if (gameScriptObject != nullptr)
 	{
 		ScriptParams scriptParams;
 		scriptParams.addParam(hasCondition(ServerTangibleObjectTemplate::C_invulnerable));
@@ -5451,8 +5443,8 @@ void TangibleObject::setPvpable(bool pvpable)
 	if ((oldPvpable != pvpable) && !getObservers().empty())
 	{
 		// did the object's "pvp sync" status change because of the Pvpable change?
-		bool const wasPvpSync = PvpUpdateObserver::satisfyPvpSyncCondition(!oldPvpable, hasCondition(ServerTangibleObjectTemplate::C_invulnerable), (asCreatureObject() != NULL), getPvpFaction());
-		bool const isPvpSync = PvpUpdateObserver::satisfyPvpSyncCondition(!pvpable, hasCondition(ServerTangibleObjectTemplate::C_invulnerable), (asCreatureObject() != NULL), getPvpFaction());
+		bool const wasPvpSync = PvpUpdateObserver::satisfyPvpSyncCondition(!oldPvpable, hasCondition(ServerTangibleObjectTemplate::C_invulnerable), (asCreatureObject() != nullptr), getPvpFaction());
+		bool const isPvpSync = PvpUpdateObserver::satisfyPvpSyncCondition(!pvpable, hasCondition(ServerTangibleObjectTemplate::C_invulnerable), (asCreatureObject() != nullptr), getPvpFaction());
 
 		if (wasPvpSync != isPvpSync)
 		{
@@ -5557,8 +5549,8 @@ void TangibleObject::AppearanceDataCallback::modified(TangibleObject &target, co
 	target.appearanceDataModified(value);
 
 	Object * const objectContainer = ContainerInterface::getContainedByObject(target);
-	ServerObject * const serverContainer = objectContainer ? objectContainer->asServerObject() : NULL;
-	TangibleObject * const tangibleContainer = serverContainer ? serverContainer->asTangibleObject() : NULL;
+	ServerObject * const serverContainer = objectContainer ? objectContainer->asServerObject() : nullptr;
+	TangibleObject * const tangibleContainer = serverContainer ? serverContainer->asTangibleObject() : nullptr;
 	if(tangibleContainer)
 		tangibleContainer->onContainedItemAppearanceDataModified(target, oldValue, value);
 }
@@ -5802,7 +5794,7 @@ void TangibleObject::commandQueueEnqueue(Command const &command, NetworkId const
 	else
 	{
 		CommandQueue * const queue = getCommandQueue();
-		if (queue != NULL)
+		if (queue != nullptr)
 		{
 			queue->enqueue(command, targetId, params, sequenceId, clearable, priority);
 		}
@@ -5820,7 +5812,7 @@ void TangibleObject::commandQueueRemove(uint32 const sequenceId)
 	else
 	{
 		CommandQueue * const queue = getCommandQueue();
-		if (queue != NULL)
+		if (queue != nullptr)
 		{
 			queue->remove(sequenceId);
 		}
@@ -5840,7 +5832,7 @@ void TangibleObject::commandQueueClear()
 bool TangibleObject::commandQueueHasCommandFromGroup(uint32 groupHash) const
 {
 	CommandQueue * const queue = getCommandQueue();
-	if (queue != NULL)
+	if (queue != nullptr)
 	{
 		return queue->hasCommandFromGroup(groupHash);
 	}
@@ -5852,7 +5844,7 @@ bool TangibleObject::commandQueueHasCommandFromGroup(uint32 groupHash) const
 void TangibleObject::commandQueueClearCommandsFromGroup(uint32 groupHash, bool force)
 {
 	CommandQueue * const queue = getCommandQueue();
-	if (queue != NULL)
+	if (queue != nullptr)
 	{
 		queue->clearCommandsFromGroup(groupHash, force);
 	}
@@ -5895,12 +5887,12 @@ void TangibleObject::CombatStateChangedCallback::modified(TangibleObject & targe
 
 			AICreatureController * const aiCreatureController = AICreatureController::asAiCreatureController(target.getController());
 
-			if (aiCreatureController != NULL)
+			if (aiCreatureController != nullptr)
 			{
 				aiCreatureController->markCombatStartLocation();
 			}
 
-			if (target.getScriptObject() != NULL)
+			if (target.getScriptObject() != nullptr)
 			{
 				ScriptParams params;
 				IGNORE_RETURN(target.getScriptObject()->trigAllScripts(Scripting::TRIG_ENTERED_COMBAT, params));
@@ -5926,7 +5918,7 @@ void TangibleObject::CombatStateChangedCallback::modified(TangibleObject & targe
 
 			target.commandQueueClearCommandsFromGroup(COMMAND_GROUP_COMBAT.getCrc());
 
-			if (target.getScriptObject() != NULL)
+			if (target.getScriptObject() != nullptr)
 			{
 				ScriptParams params;
 				IGNORE_RETURN(target.getScriptObject()->trigAllScripts(Scripting::TRIG_EXITED_COMBAT, params));
@@ -5985,7 +5977,7 @@ int TangibleObject::getPassiveRevealRange(NetworkId const & target) const
 
 void TangibleObject::addPassiveReveal(TangibleObject const & target, int range)
 {
-	addPassiveReveal(target.getNetworkId(), range, (NULL != PlayerCreatureController::getPlayerObject(target.asCreatureObject())));
+	addPassiveReveal(target.getNetworkId(), range, (nullptr != PlayerCreatureController::getPlayerObject(target.asCreatureObject())));
 }
 
 //----------------------------------------------------------------------

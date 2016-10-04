@@ -86,13 +86,13 @@ void AuthTransferTracker::beginAuthTransfer(NetworkId const &networkId, uint32 n
 			if ((*i) != GameServer::getInstance().getProcessId())
 				authTransferInfo.unconfirmedProcessIds.push_back(*i);
 		s_authTransfersOrdered->push(networkId);
-				
+
 		if (ConfigServerGame::getLogAuthTransfer())
 		{
 			char logBuffer[1024];
 			logBuffer[0] = '\0';
 			for (std::vector<uint32>::const_iterator i = authTransferInfo.unconfirmedProcessIds.begin(); i != authTransferInfo.unconfirmedProcessIds.end(); ++i)
-				sprintf(logBuffer+strlen(logBuffer), "%lu ", *i);
+				snprintf(logBuffer + strlen(logBuffer), sizeof(logBuffer), "%lu ", *i);
 			LOG("AuthTransfer", ("Begin auth transfer confirm for %s ( %s)", networkId.getValueString().c_str(), logBuffer));
 		}
 	}
@@ -103,9 +103,9 @@ void AuthTransferTracker::beginAuthTransfer(NetworkId const &networkId, uint32 n
 void AuthTransferTracker::sendConfirmAuthTransfer(NetworkId const &networkId, uint32 fromServer)
 {
 	// only send if the old server was set, wasn't this server, and wasn't the db.
-	if (   fromServer
-	    && fromServer != GameServer::getInstance().getProcessId()
-	    && fromServer != GameServer::getInstance().getDatabaseProcessId())
+	if (fromServer
+		&& fromServer != GameServer::getInstance().getProcessId()
+		&& fromServer != GameServer::getInstance().getDatabaseProcessId())
 	{
 		// also only send if we have a connection, since it may be an auth transfer due to a server crash
 		if (GameServer::getInstance().isGameServerConnected(fromServer))
@@ -196,7 +196,7 @@ void AuthTransferTracker::update()
 		std::map<NetworkId, AuthTransferInfo>::iterator i = s_authTransferMap->find(networkId);
 		if (i != s_authTransferMap->end())
 		{
-			if (Clock::timeMs()-(*i).second.startTime < AUTH_TRACK_TIME_MS)
+			if (Clock::timeMs() - (*i).second.startTime < AUTH_TRACK_TIME_MS)
 				return;
 			s_authTransferMap->erase(i);
 		}
@@ -205,4 +205,3 @@ void AuthTransferTracker::update()
 }
 
 // ======================================================================
-

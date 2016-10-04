@@ -64,13 +64,13 @@ void ChatServerConnection::sendTo(GameNetworkMessage const &message)
 {
 	LOG("ChatServerConnection", ("sendTo() message(%s)", message.getCmdName().c_str()));
 
-	if (s_connection != NULL)
+	if (s_connection != nullptr)
 	{
 		s_connection->send(message, true);
 	}
 	else
 	{
-		LOG("ChatServerConnection", ("sendTo() Unable to send, NULL ChatServerConnection"));
+		LOG("ChatServerConnection", ("sendTo() Unable to send, nullptr ChatServerConnection"));
 	}
 }
 

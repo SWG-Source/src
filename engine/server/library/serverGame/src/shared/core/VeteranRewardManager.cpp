@@ -312,7 +312,7 @@ RewardEvent * VeteranRewardManagerNamespace::getRewardEventByName(std::string co
 	if (i!=ms_rewardEvents.end())
 		return i->second;
 	else
-		return NULL;
+		return nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -323,7 +323,7 @@ RewardItem * VeteranRewardManagerNamespace::getRewardItemByName(std::string cons
 	if (i!=ms_rewardItems.end())
 		return i->second;
 	else
-		return NULL;
+		return nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -389,7 +389,7 @@ void VeteranRewardManager::getTriggeredEventsIds(CreatureObject const & playerCr
 					if (((*i)->getAccountFeatureId() > 0) && (*i)->getConsumeAccountFeatureId())
 					{
 						std::vector<std::string> rewardItems;
-						getAvailableRewardItemsForEvent(playerCreature, (*i)->getId(), rewardItems, NULL);
+						getAvailableRewardItemsForEvent(playerCreature, (*i)->getId(), rewardItems, nullptr);
 
 						if (rewardItems.empty())
 							continue;
@@ -512,7 +512,7 @@ bool VeteranRewardManager::claimRewards(CreatureObject const & playerCreature, s
 	}
 
 	std::vector<std::string> possibleRewardItems;
-	getAvailableRewardItemsForEvent(playerCreature, rewardEventName, possibleRewardItems, NULL);
+	getAvailableRewardItemsForEvent(playerCreature, rewardEventName, possibleRewardItems, nullptr);
 	if (possibleRewardItems.empty())
 	{
 		if (debugMessage)
@@ -589,7 +589,7 @@ void VeteranRewardManager::handleClaimRewardsReply(StationId stationId, NetworkI
 	static std::vector<int8> const emptyMessageData;
 		 
 	ServerObject * const so = safe_cast<ServerObject*>(NetworkIdManager::getObjectById(player));
-	CreatureObject * const playerCreature = so ? so->asCreatureObject() : NULL;
+	CreatureObject * const playerCreature = so ? so->asCreatureObject() : nullptr;
 	if (!playerCreature)
 		return;	// player has vanished -- reward claim will be handled by the recovery code at the next login
 	if (!playerCreature->isAuthoritative())
@@ -628,7 +628,7 @@ void VeteranRewardManager::handleClaimRewardsReply(StationId stationId, NetworkI
 
 			// Check that the requested item can be claimed with this event
 			std::vector<std::string> possibleRewardItems;
-			getAvailableRewardItemsForEvent(*playerCreature, rewardEvent, possibleRewardItems, NULL);
+			getAvailableRewardItemsForEvent(*playerCreature, rewardEvent, possibleRewardItems, nullptr);
 			bool found = false;
 
 			for (std::vector<std::string>::const_iterator j=possibleRewardItems.begin(); j!=possibleRewardItems.end(); ++j)
@@ -704,7 +704,7 @@ void VeteranRewardManager::handleClaimRewardsReply(StationId stationId, NetworkI
 			params.addParam(item->getCanTradeIn(), "canTradeIn");
 			ScriptDictionaryPtr dictionary;
 			GameScriptObject::makeScriptDictionary(params, dictionary);
-			if (dictionary.get() != NULL)
+			if (dictionary.get() != nullptr)
 			{
 				dictionary->serialize();
 				MessageToQueue::getInstance().sendMessageToJava(player, "veteranItemGrantSucceeded",dictionary->getSerializedData(),0,false);
@@ -808,11 +808,11 @@ time_t VeteranRewardManagerNamespace::yyyymmddToTime(int const yyyy, int const m
 	FATAL(((mm < 1) || (mm > 12)),("Data bug:  Reward event date (%d / %d / %d) - month %d specified for a reward event must be between 1 - 12.",mm,dd,yyyy,mm));
 	FATAL(((dd < 1) || (dd > 31)),("Data bug:  Reward event date (%d / %d / %d) - day %d specified for a reward event must be between 1 - 31.",mm,dd,yyyy,dd));
 
-	time_t const rawtime = ::time(NULL);
+	time_t const rawtime = ::time(nullptr);
 	struct tm * const timeinfo = ::localtime(&rawtime);
 	if (!timeinfo)
 	{
-		FATAL(true,(":localtime() returns NULL"));
+		FATAL(true,(":localtime() returns nullptr"));
 		return 0;
 	}
 
@@ -848,7 +848,7 @@ void VeteranRewardManager::getRewardChoicesTags(CreatureObject const & playerCre
 
 	std::vector<std::string> rewardItems;
 
-	getAvailableRewardItemsForEvent(playerCreature, eventName, rewardItems, NULL);
+	getAvailableRewardItemsForEvent(playerCreature, eventName, rewardItems, nullptr);
 	for (std::vector<std::string>::const_iterator i=rewardItems.begin(); i!=rewardItems.end(); ++i)
 	{
 		rewardTagsUnicode.push_back(Unicode::narrowToWide(*i));
@@ -866,7 +866,7 @@ StringId const * VeteranRewardManager::getEventAnnouncement(std::string const & 
 	{
 		return &(event->getAnnouncement());
 	}
-	return NULL;
+	return nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -880,7 +880,7 @@ StringId const * VeteranRewardManager::getEventDescription(std::string const & e
 	{
 		return &(event->getDescription());
 	}
-	return NULL;
+	return nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -894,7 +894,7 @@ std::string const * VeteranRewardManager::getEventUrl(std::string const & eventN
 	{
 		return &(event->getUrl());
 	}
-	return NULL;
+	return nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -1147,7 +1147,7 @@ void VeteranRewardManager::tcgRedemption(CreatureObject const & playerCreature, 
 	// the redemption
 	int const redemptionTimeout = 300; // 5 minutes;
 	item.removeObjVarItem(ms_tcgRedemptionInProgressObjvar);
-	item.setObjVarItem(ms_tcgRedemptionInProgressObjvar, static_cast<int>(::time(NULL) + redemptionTimeout)); // 5 minutes
+	item.setObjVarItem(ms_tcgRedemptionInProgressObjvar, static_cast<int>(::time(nullptr) + redemptionTimeout)); // 5 minutes
 
 	// send off request to adjust the account feature Id
 	AdjustAccountFeatureIdRequest const msg(NetworkId::cms_invalid, GameServer::getInstance().getProcessId(), playerCreature.getNetworkId(), PlayerObject::getAccountDescription(&playerCreature), playerPlayer->getStationId(), item.getNetworkId(), ServerObject::getLogDescription(&item), PlatformGameCode::SWGTCG, static_cast<uint32>(featureId), adjustment);
@@ -1169,7 +1169,7 @@ bool VeteranRewardManager::checkForTcgRedemptionInProgress(ServerObject const & 
 		int redemptionTimeout;
 		IGNORE_RETURN(item.getObjVars().getItem(ms_tcgRedemptionInProgressObjvar, redemptionTimeout));
 
-		time_t const currentTime = ::time(NULL);
+		time_t const currentTime = ::time(nullptr);
 		if (redemptionTimeout > currentTime)
 		{
 			// item should be in top level inventory; get the player object the item is in
@@ -1308,7 +1308,7 @@ bool VeteranRewardManager::tradeInReward(CreatureObject const & playerCreature, 
 	if (itemClaimTime > 0)
 	{
 		time_t timeRedeem = itemClaimTime + static_cast<time_t>(ConfigServerGame::getVeteranRewardTradeInWaitPeriodSeconds());
-		time_t const timeNow = ::time(NULL);
+		time_t const timeNow = ::time(nullptr);
 
 		// see if the item has its own trade-in wait period
 		if (itemObjvar.hasItem("rewardTradeInWaitPeriod") && (itemObjvar.getType("rewardTradeInWaitPeriod") == DynamicVariable::INT))
@@ -1337,7 +1337,7 @@ bool VeteranRewardManager::tradeInReward(CreatureObject const & playerCreature, 
 	// the trade in
 	int const redemptionTimeout = 300; // 5 minutes;
 	item.removeObjVarItem(ms_tradeInInProgressObjvar);
-	item.setObjVarItem(ms_tradeInInProgressObjvar, static_cast<int>(::time(NULL) + redemptionTimeout)); // 5 minutes
+	item.setObjVarItem(ms_tradeInInProgressObjvar, static_cast<int>(::time(nullptr) + redemptionTimeout)); // 5 minutes
 
 	// send off request to adjust the account feature Id
 	AdjustAccountFeatureIdRequest const msg(NetworkId::cms_invalid, GameServer::getInstance().getProcessId(), playerCreature.getNetworkId(), PlayerObject::getAccountDescription(&playerCreature), playerPlayer->getStationId(), item.getNetworkId(), ServerObject::getLogDescription(&item), PlatformGameCode::SWG, static_cast<uint32>(featureId), 1);
@@ -1361,7 +1361,7 @@ bool VeteranRewardManager::checkForTradeInInProgress(ServerObject const & item)
 		int redemptionTimeout;
 		IGNORE_RETURN(item.getObjVars().getItem(ms_tradeInInProgressObjvar, redemptionTimeout));
 
-		time_t const currentTime = ::time(NULL);
+		time_t const currentTime = ::time(nullptr);
 		if (redemptionTimeout > currentTime)
 		{
 			// item should be in top level inventory; get the player object the item is in
@@ -1742,7 +1742,7 @@ RewardEvent::RewardEvent(DataTable const & dataTable, int row) :
 		m_id(dataTable.getStringValue("id",row)),
 		m_specificItems(buildVectorFromString(dataTable.getStringValue("Items",row))),
 		m_includeItemsFrom(buildVectorFromString(dataTable.getStringValue("Include Items From",row))),
-		m_allItems(NULL),
+		m_allItems(nullptr),
 		m_category(dataTable.getIntValue("Category", row)),
 		m_featureBitRewardExclusionMask(dataTable.getIntValue("Feature Bit Reward Exclusion Mask", row)),
 		m_accountFlags(static_cast<uint32>(dataTable.getIntValue("Account Flags",row))),
@@ -1839,7 +1839,7 @@ bool RewardEvent::hasPlayerTriggered(CreatureObject const & playerCreature) cons
 
 	if (m_startDate != 0 || m_endDate != 0)
 	{
-		time_t currentTime = time(NULL);
+		time_t currentTime = time(nullptr);
 		if ((m_startDate != 0 && currentTime < m_startDate)
 			|| (m_endDate != 0 && currentTime > m_endDate))
 			return false;

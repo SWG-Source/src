@@ -52,14 +52,14 @@ FileName::FileName (FileName::Path path, const char* filename, const char* ext)
 
 	// see if the filename already begins with the path
 	const char *prePath = pathTable [path].path;
-	if (prePath != NULL && *prePath != '\0')
+	if (prePath != nullptr && *prePath != '\0')
 	{
 		if (strncmp(filename, prePath, strlen(prePath)) == 0)
 			prePath = "";
 	}
 
 	// see if the filename already ends in the extension
-	if (ext != NULL && *ext != '\0')
+	if (ext != nullptr && *ext != '\0')
 	{
 		int extLen = strlen(ext);
 		int filenameLen = strlen(filename);
@@ -278,12 +278,3 @@ void FileName::stripSpecificPathAndExt (Path path, char* nameBuffer, int nameBuf
 }
 
 //-------------------------------------------------------------------
-
-#if 0
-
-	DEBUG_REPORT_LOG_PRINT (true, ("%s\n", FileName (FileName::P_none, "test")));
-	DEBUG_REPORT_LOG_PRINT (true, ("%s\n", FileName (FileName::P_none, "test", "iff")));
-	DEBUG_REPORT_LOG_PRINT (true, ("%s\n", FileName (FileName::P_sound, "test")));
-	DEBUG_REPORT_LOG_PRINT (true, ("%s\n", FileName (FileName::P_sound, "test", "iff")));
-
-#endif

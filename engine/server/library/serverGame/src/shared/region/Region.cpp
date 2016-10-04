@@ -22,7 +22,7 @@ static std::map<uint32, Region *> s_nameCrcRegionMap;
  * Class constructor for a static region.
  */
 Region::Region() :
-	m_bounds(NULL),
+	m_bounds(nullptr),
 	m_dynamicRegionId(),
 	m_name(),
 	m_nameCrc(0),
@@ -49,7 +49,7 @@ Region::Region() :
  * @param dynamicRegionId		the id of the dynamic region object
  */
 Region::Region(const CachedNetworkId & dynamicRegionId) :
-	m_bounds(NULL),
+	m_bounds(nullptr),
 	m_dynamicRegionId(dynamicRegionId),
 	m_name(),
 	m_nameCrc(0),
@@ -83,7 +83,7 @@ Region::~Region()
 	}
 
 	delete const_cast<MxCifQuadTreeBounds *>(m_bounds);
-	m_bounds = NULL;
+	m_bounds = nullptr;
 }
 
 // ----------------------------------------------------------------------

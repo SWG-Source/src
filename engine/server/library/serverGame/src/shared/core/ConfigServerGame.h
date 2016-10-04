@@ -74,7 +74,6 @@ class ConfigServerGame
 		int             jediUpdateLocationTimeSeconds; // how long we wait before updating a Jedi's location in the Jedi manager
 
 		// script data
-		const char *    javaVMName;                 // the type of vm we are using
 		const char *    scriptPath;                 // location of scripts
 		const char *    javaLibPath;                // location of jvm files
 		const char *    javaDebugPort;              // ip port we connect to for remote debugging
@@ -87,7 +86,7 @@ class ConfigServerGame
 		int             scriptWatcherInterruptTime; // time in ms (after scriptWatcherWarnTime) before we abort a script
 		int             scriptStackErrorLimit;      // depth of stack error we assume to be a legit error
 		int             scriptStackErrorLevel;      // how we handle a stack error: 0=recover, 1=javacore, 2=fatal
-		bool            disableObjvarNullCheck;     // flag to disable the check for a null object when get/setting objvars
+		bool            disableObjvarNullCheck;     // flag to disable the check for a nullptr object when get/setting objvars
 
 		// throttle to limit how universe data is sent from
 		// the universe game server to the other game servers;
@@ -110,6 +109,7 @@ class ConfigServerGame
 		int             universeCheckFrequencySeconds; // how often to scan the resource tree for things that need to be spawned
 
 		bool            javaConsoleDebugMessages;
+		bool		javaUseXcheck;
 		bool            useVerboseJava;
 		bool            logJavaGc;
 		int             javaLocalRefLimit;
@@ -670,6 +670,7 @@ class ConfigServerGame
 	static const int        getUniverseCheckFrequencySeconds(void);
 
 	static const bool       getJavaConsoleDebugMessages (void);
+	static const bool	getUseJavaXcheck	    (void);
 	static const bool       getUseVerboseJava           (void);
 	static const bool       getLogJavaGc                (void);
 
@@ -1210,13 +1211,6 @@ inline float ConfigServerGame::getInteriorTargetDurationFactor(void)
 
 //-----------------------------------------------------------------------
 
-inline const char * ConfigServerGame::getJavaVMName(void)
-{
-	return data->javaVMName;
-}
-
-//-----------------------------------------------------------------------
-
 inline const char * ConfigServerGame::getScriptPath(void)
 {
 	return data->scriptPath;
@@ -1472,6 +1466,13 @@ inline int ConfigServerGame::getJediUpdateLocationTimeSeconds(void)
 inline const bool ConfigServerGame::getJavaConsoleDebugMessages()
 {
 	return data->javaConsoleDebugMessages;
+}
+
+//-----------------------------------------------------------------------
+
+inline const bool ConfigServerGame::getUseJavaXcheck()
+{
+        return data->javaUseXcheck;
 }
 
 //-----------------------------------------------------------------------

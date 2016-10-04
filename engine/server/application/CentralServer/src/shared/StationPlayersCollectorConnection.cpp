@@ -15,6 +15,8 @@
 #include "sharedNetworkMessages/GenericValueTypeMessage.h"
 #include "StationPlayersCollectorConnection.h"
 
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 //-----------------------------------------------------------------------
 
 StationPlayersCollectorConnection::StationPlayersCollectorConnection(const std::string & a, const unsigned short p) :
@@ -55,13 +57,19 @@ void StationPlayersCollectorConnection::onReceive(const Archive::ByteStream & me
 	const GameNetworkMessage msg(ri);
 	ri = message.begin();
 
-	if(msg.isType("OnSPCharacterProfileMessage"))
-	{
-	}
-	else if(msg.isType("ConGenericMessage"))
+	const uint32 messageType = msg.getType();
+	
+	if(messageType == constcrc("ConGenericMessage"))
 	{
 		ConGenericMessage con(ri);
 		ConsoleConnection::onCommandComplete(con.getMsg(), static_cast<int>(con.getMsgId()));	 
+	} else {
+		if(messageType == constcrc("OnSPCharacterProfileMessage"))
+		{
+			DEBUG_WARNING(true, ("StationPlayersCollectorConnection called with unimplemented message type OnSPCharacterProfileMessage."));
+		} else {
+			DEBUG_WARNING(true, ("StationPlayersCollectorConnection called with unknown/unused message type."));
+		}
 	}
 }
 

@@ -31,7 +31,7 @@
 // constants and typedefs
 /*************************************************************************/
 
-namespace boost
+namespace std
 {
 	template <class T> class shared_ptr;
 }
@@ -44,7 +44,7 @@ class ScriptDictionary;
 class ScriptMessage;
 class ScriptParams;
 class ServerObject;
-typedef boost::shared_ptr<ScriptDictionary> ScriptDictionaryPtr;
+typedef std::shared_ptr<ScriptDictionary> ScriptDictionaryPtr;
 
 struct ScriptData
 {

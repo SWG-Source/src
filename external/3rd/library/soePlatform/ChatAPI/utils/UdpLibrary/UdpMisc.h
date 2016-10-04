@@ -21,20 +21,6 @@ class UdpMisc
         // they are stuck into this class so as to avoid conflicts with the application
         ////////////////////////////////////////////////////////////////////////////////////////////
     public:
-
-
-#if 1           // DEPRECATED (here for backwards compatibility only.  Not used by UdpLibrary, it uses the UdpPlatformDriver version)
-                // Internally these create a static UdpPlatformDriver and chain the call through.  If you have a UdpManager, I recommend
-                // simply call UdpManager::Clock and UdpManager::ClockElapsed, which chain on through to the driver created by the UdpManager
-                // values returned by this clock function should not be compared to values return from the UdpManager clock function as
-                // they go through two different drivers to get the answer and may not return the same number (though in practice it
-                // likely always will).
-        typedef UdpClockStamp ClockStamp;
-        static ClockStamp Clock();                                        // returns a timestamp (most likely in milliseconds)
-        static int ClockElapsed(ClockStamp stamp);                        // returns a elapsed time since stamp in milliseconds (if elapsed is over 23 days, it returns 23 days)
-#endif
-
-
         static int ClockDiff(UdpClockStamp start, UdpClockStamp stop);    // returns a time difference in milliseconds (if difference is over 23 days, it returns 23 days)
 		static unsigned long int Crc32(const void *buffer, int bufferLen, int encryptValue = 0);                // calculate a 32-bit crc for a buffer (encrypt value simple scrambles the crc at the beginning so the same packet doesn't produce the same crc on different connections)
         static int Random(int *seed);                                // random number generator
@@ -57,7 +43,7 @@ class UdpMisc
             // memory manager does a little bit of this, but if you know you have an allocation that is likely
             // to grow quite a bit, you can set the round'ing size up to a fairly large number and avoid
             // unnecessary reallocs at the cost of a little potentially wasted space
-            // initial allocations are done by passing in ptr==NULL, freeing is done by passing in bytes==0
+            // initial allocations are done by passing in ptr==nullptr, freeing is done by passing in bytes==0
         static void *SmartResize(void *ptr, int bytes, int round = 1);
 
             // the following two functions store values in the buffer as a variable length (B1, 0xffB2B1, 0xffffffB4B3B2B1)
@@ -78,7 +64,7 @@ class UdpMisc
         static udp_uint GetValue24(const void *buffer);             // gets a 24-bit value from the buffer in big-endian format
         static udp_ushort GetValue16(const void *buffer);           // gets a 16-bit value from the buffer in big-endian format
 
-        static LogicalPacket *CreateQuickLogicalPacket(const void *data, int dataLen, const void *data2 = NULL, int dataLen2 = 0);
+        static LogicalPacket *CreateQuickLogicalPacket(const void *data, int dataLen, const void *data2 = nullptr, int dataLen2 = 0);
 
             // looks up the specified name and translates it to an IP address
             // this is a blocking call that can at times take a significant amount of time, but will generally be fast (less than 300ms)
@@ -95,20 +81,7 @@ class UdpMisc
     // inline implementations
     ////////////////////////////////////////////////////////////////////////////
 
-        // UdpMisc
-#if 1       // DEPRECATED (see declaration)
-    inline UdpMisc::ClockStamp UdpMisc::Clock()
-    {
-        static UdpPlatformDriver sClockDriver;
-        return(sClockDriver.Clock());
-    }
-
-    inline int UdpMisc::ClockElapsed(ClockStamp stamp)
-    {
-        return(UdpMisc::ClockDiff(stamp, Clock()));
-    }
-#endif
-
+       // UdpMisc
 inline int UdpMisc::ClockDiff(UdpClockStamp start, UdpClockStamp stop)
 {
     UdpClockStamp t = (stop - start);

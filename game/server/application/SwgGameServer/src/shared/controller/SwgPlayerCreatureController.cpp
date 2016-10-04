@@ -40,7 +40,7 @@ void SwgPlayerCreatureController::handleMessage (const int message, const float 
 	case CM_setJediState:
 		{
 			const MessageQueueGenericValueType<int> * const msg = dynamic_cast<const MessageQueueGenericValueType<int> *>(data);
-			if (msg != NULL)
+			if (msg != nullptr)
 				playerOwner->setJediState(static_cast<JediState>(msg->getValue()));
 		}
 		break;

@@ -201,7 +201,7 @@ namespace CommoditiesMarketNamespace
 		
 		Container::ContainerErrorCode tmp = Container::CEC_Success;
 		ServerObject *bazaarContainer = auctionContainer.getBazaarContainer();
-		if (!bazaarContainer || !ContainerInterface::canTransferTo(bazaarContainer, item, NULL, tmp))
+		if (!bazaarContainer || !ContainerInterface::canTransferTo(bazaarContainer, item, nullptr, tmp))
 		{
 			errorCode = ar_INVALID_ITEM_ID;
 		}
@@ -245,15 +245,6 @@ namespace CommoditiesMarketNamespace
 		{
 			errorCode = ar_ITEM_EQUIPPED;
 		}
-
-#if 0
-		const VolumeContainer *vol = ContainerInterface::getVolumeContainer(item);
-		if (vol && vol->getCurrentVolume() > 0)
-		{
-			errorCode = ar_NOT_EMPTY;
-		}
-
-#endif
 
 		if ((errorCode == ar_OK) && auctionContainer.isVendor() && !auctionContainer.isBazaarTerminal())
 		{
@@ -326,7 +317,7 @@ bool CommoditiesMarketNamespace::isVendorItemRestriction(ServerObject const & it
 		return false;
 	}
 
-	ItemRestriction const * itemRestriction = NULL;
+	ItemRestriction const * itemRestriction = nullptr;
 
 	std::map<std::string, ItemRestriction>::const_iterator const iterFind = itemRestrictionList.find(itemRestrictionFile);
 	if (iterFind != itemRestrictionList.end())
@@ -653,7 +644,7 @@ static void transferBank(const NetworkId &source, const NetworkId &dest, int32 a
 	}
 	else
 	{
-//		printf("Transfering %i bank from %Ld to %Ld\n", (int)amount, source.getValue(), dest.getValue());
+//		printf("Transfering %i bank from %Ld to %Ld", (int)amount, source.getValue(), dest.getValue());
 		char buf[100];
 		sprintf(buf, "%Ld %Ld", (int64)dest.getValue(), (int64)amount);
 		MessageToQueue::getInstance().sendMessageToC(source, "C++ModifyBank", buf, 0, true);
@@ -1068,7 +1059,7 @@ void CommoditiesMarket::getCommoditiesServerConnection()
 	if (ObjectIdManager::hasAvailableObjectId())
 	{
 		s_market = new CommoditiesServerConnection(ConfigServerGame::getCommoditiesServerServiceBindInterface(), static_cast<unsigned short>(ConfigServerGame::getCommoditiesServerServiceBindPort()));
-		s_timeMarketConnectionCreated = ::time(NULL);
+		s_timeMarketConnectionCreated = ::time(nullptr);
 	}
 }
 
@@ -1082,10 +1073,10 @@ int CommoditiesMarket::getCommoditiesServerConnectionAgeSeconds()
 	if (s_timeMarketConnectionCreated <= 0)
 		return 0;
 
-	if (s_market == NULL)
+	if (s_market == nullptr)
 		return 0;
 
-	return static_cast<int>(::time(NULL) - s_timeMarketConnectionCreated);
+	return static_cast<int>(::time(nullptr) - s_timeMarketConnectionCreated);
 }
 
 // ----------------------------------------------------------------------
@@ -1102,7 +1093,7 @@ void CommoditiesMarket::install()
 	if (!ConfigServerGame::getCommoditiesMarketEnabled())
 		return;
 
-	FATAL(s_market, ("CommoditiesMarket already installed.\n"));
+	FATAL(s_market, ("CommoditiesMarket already installed."));
 	getCommoditiesServerConnection();
 	time_t t = time(0);
 	
@@ -1112,7 +1103,7 @@ void CommoditiesMarket::install()
 	}
 	else
 	{
-		DEBUG_WARNING(true, ("[Commodities API] : No commodities server connection to send SetGameTime.\n"));
+		//DEBUG_WARNING(true, ("[Commodities API] : No commodities server connection to send SetGameTime."));
 		
 		getCommoditiesServerConnection(); //attempt to reconnect to commodities server
 	}
@@ -1127,7 +1118,7 @@ void CommoditiesMarket::remove()
 	if (!ConfigServerGame::getCommoditiesMarketEnabled())
 		return;
 
-	//FATAL(!s_market, ("CommoditiesMarket not installed.\n"));
+	//FATAL(!s_market, ("CommoditiesMarket not installed."));
 	try
 	{
 		s_market = 0;
@@ -1179,10 +1170,7 @@ void CommoditiesMarket::giveTime()
 	else
 	{
 		if (Clock::timeSeconds() - ConfigServerGame::getCommoditiesServerReconnectIntervalSec() > reconnectTime)
-		{
-
-			DEBUG_WARNING(true, ("[Commodities API] : No commodities server connection to send GiveTime.\n"));
-			
+		{			
 			getCommoditiesServerConnection(); //attempt to reconnect to commodities server
 			reconnectTime = Clock::timeSeconds();
 		}
@@ -1295,7 +1283,7 @@ void CommoditiesMarket::onAddAuction(int sequence, int32 result, const NetworkId
 
 	CreatureObject * const auctionCreator = dynamic_cast<CreatureObject*>(NetworkIdManager::getObjectById(auctionOwnerId));
 	ServerObject * const item             = dynamic_cast<ServerObject*>(NetworkIdManager::getObjectById(itemId));
-	Client *client = NULL;
+	Client *client = nullptr;
 	if (auctionCreator)
 		client = auctionCreator->getClient();
 
@@ -1347,7 +1335,7 @@ void CommoditiesMarket::onAddAuction(int sequence, int32 result, const NetworkId
 			if (container)
 			{
 				Container::ContainerErrorCode tmp = Container::CEC_Success;
-				bool result = ContainerInterface::transferItemToVolumeContainer(*container,*item, NULL, tmp);
+				bool result = ContainerInterface::transferItemToVolumeContainer(*container,*item, nullptr, tmp);
 				if (!result)
 				{
 					LOG("CustomerService", ("Auction: Player %s transfer of item (%Ld) to auction container (%Ld) failed with code %d",
@@ -1393,7 +1381,7 @@ void CommoditiesMarket::onAddAuction(int sequence, int32 result, const NetworkId
 			}	
 			else
 			{
-				DEBUG_WARNING(true, ("[Commodities API] : No commodities server connection to send CancelAuction.\n"));
+				DEBUG_WARNING(true, ("[Commodities API] : No commodities server connection to send CancelAuction."));
 				getCommoditiesServerConnection(); //attempt to reconnect to commodities server
 			}
 		}
@@ -1509,7 +1497,7 @@ void CommoditiesMarket::auctionCreate(CreatureObject &owner, ServerObject &item,
 		}
 		else
 		{
-			DEBUG_WARNING(true, ("[Commodities API] : No commodities server connection to send AddAuction.\n"));
+			DEBUG_WARNING(true, ("[Commodities API] : No commodities server connection to send AddAuction."));
 			
 			getCommoditiesServerConnection(); //attempt to reconnect to commodities server
 		}
@@ -1581,7 +1569,7 @@ void CommoditiesMarket::transferVendorItemFromStockroom(CreatureObject &owner, N
 		else
 		{
 
-			DEBUG_WARNING(true, ("[Commodities API] : No commodities server connection to send AddImmediateAuction.\n"));
+			DEBUG_WARNING(true, ("[Commodities API] : No commodities server connection to send AddImmediateAuction."));
 
 			getCommoditiesServerConnection(); //attempt to reconnect to commodities server
 		}
@@ -1756,7 +1744,7 @@ void CommoditiesMarket::auctionCreateImmediate(CreatureObject &owner, ServerObje
 		else
 		{
 
-			DEBUG_WARNING(true, ("[Commodities API] : No commodities server connection to send AddImmediateAuction.\n"));
+			DEBUG_WARNING(true, ("[Commodities API] : No commodities server connection to send AddImmediateAuction."));
 
 			getCommoditiesServerConnection(); //attempt to reconnect to commodities server
 		}
@@ -1772,67 +1760,9 @@ void CommoditiesMarket::auctionCreateImmediate(CreatureObject &owner, ServerObje
 
 void CommoditiesMarket::auctionCreatePermanent(const std::string &, const ServerObject &, const ServerObject &, BidAmount , const Unicode::String &, bool )
 {
-	if (!ConfigServerGame::getCommoditiesMarketEnabled())
-		return;
-
 	DEBUG_WARNING(true, ("auctionCreatePermanent has been depricated and shouldn't be used.  If you see this WARNING, add a line to catch cheaters in the command in CommandCppFuncs.cpp"));
 
 	return;
-	
-#if 0 //what the hell is this?
-	
-	const NetworkId & itemId = item.getNetworkId();
-	int flags = AUCTION_ALWAYS_PRESENT;
-	if (premium)
-	{
-		flags |= AUCTION_PREMIUM_AUCTION;
-	}
-	const TangibleObject *tangibleObject = item.asTangibleObject();
-	if (tangibleObject && tangibleObject->hasCondition(ServerTangibleObjectTemplate::C_magicItem))
-	{
-		flags |= AUCTION_MAGIC_ITEM;
-	}
-
-	const Unicode::String objectName = Auction::getItemAuctionName(&item);
-
-	const AuctionToken & token = AuctionTokenServer::createTokenFor(item);
-	Unicode::String oobData;			
-	OutOfBandPackager::pack(token, 0, oobData);
-
-	ServerObject::AttributeVector attributes;
-
-	//-- I don't know why this cast is necessary, but MSDEV is apparently confused otherwise
-	static_cast<const ServerObject &>(item).getAttributes(NetworkId::cms_invalid, attributes);
-	OutOfBandPackager::pack(attributes, 1, oobData);
-
-	OutOfBandPackager::pack(item.getTemplateName(), 2, oobData);
-
-	if (s_market)
-	{	
-		s_market->AddImmediateAuction(
-		-1,
-		ownerName,
-		price,
-		1,
-		itemId,
-		objectName.size(), objectName.data(),
-		item.getGameObjectType(),
-		ConfigServerGame::getUnclaimedAuctionItemDestroyTimeSec(),
-		auctionContainer.getNetworkId(),
-		getLocationString(auctionContainer),
-		flags,
-		userDescription.size(), userDescription.data(),
-		oobData.size(),
-		oobData);
-	}
-	else
-	{
-
-		DEBUG_WARNING(true, ("[Commodities API] : No commodities server connection to send AddImmediateAuction.\n"));
-		
-		getCommoditiesServerConnection(); //attempt to reconnect to commodities server
-	}
-#endif
 }
 
 // ----------------------------------------------------------------------
@@ -1892,7 +1822,7 @@ void CommoditiesMarket::auctionBid(CreatureObject &bidder, AuctionId auctionId, 
 		else
 		{
 
-			DEBUG_WARNING(true, ("[Commodities API] : No commodities server connection to send AddBid.\n"));
+			DEBUG_WARNING(true, ("[Commodities API] : No commodities server connection to send AddBid."));
 
 			getCommoditiesServerConnection(); //attempt to reconnect to commodities server
 		}
@@ -1931,7 +1861,7 @@ void CommoditiesMarket::auctionCancel(const NetworkId &playerId, AuctionId aucti
 	else
 	{
 
-		DEBUG_WARNING(true, ("[Commodities API] : No commodities server connection to send CancelAuction.\n"));
+		DEBUG_WARNING(true, ("[Commodities API] : No commodities server connection to send CancelAuction."));
 
 		getCommoditiesServerConnection(); //attempt to reconnect to commodities server
 	}
@@ -1956,7 +1886,7 @@ void CommoditiesMarket::auctionAccept(CreatureObject &who, AuctionId auctionId)
 	}
 	else
 	{
-		WARNING(true, ("[Commodities API] : No commodities server connection to send AcceptHighBid.\n"));
+		WARNING(true, ("[Commodities API] : No commodities server connection to send AcceptHighBid."));
 		getCommoditiesServerConnection(); //attempt to reconnect to commodities server
 	}
 */
@@ -2066,7 +1996,7 @@ void CommoditiesMarket::auctionQueryHeaders(
 			vendorId = zeroNetworkId;
 		else
 			vendorId = vendorObject->getNetworkId();
-		DEBUG_REPORT_LOG(true, ("  [AuctionQueryHeadersMessage]: container = %s, vendorId = %s\n", container.getValueString().c_str(), vendorId.getValueString().c_str()));
+		DEBUG_REPORT_LOG(true, ("  [AuctionQueryHeadersMessage]: container = %s, vendorId = %s", container.getValueString().c_str(), vendorId.getValueString().c_str()));
 
 		std::string searchStringPlanet;
 		std::string searchStringRegion;
@@ -2101,7 +2031,7 @@ void CommoditiesMarket::auctionQueryHeaders(
 	else
 	{
 
-		DEBUG_WARNING(true, ("[Commodities API] : No commodities server connection to send QueryAuctionHeaders.\n"));
+		DEBUG_WARNING(true, ("[Commodities API] : No commodities server connection to send QueryAuctionHeaders."));
 		
 		getCommoditiesServerConnection(); //attempt to reconnect to commodities server
 	}
@@ -2153,7 +2083,7 @@ void CommoditiesMarket::getAuctionDetails(CreatureObject &who, const NetworkId &
 	else
 	{
 
-		DEBUG_WARNING(true, ("[Commodities API] : No commodities server connection to send GetItemDetails.\n"));
+		DEBUG_WARNING(true, ("[Commodities API] : No commodities server connection to send GetItemDetails."));
 
 		getCommoditiesServerConnection(); //attempt to reconnect to commodities server
 	}
@@ -2170,7 +2100,7 @@ void CommoditiesMarket::getVendorValue(ServerObject &container)
 	}
 	else
 	{
-		DEBUG_WARNING(true, ("[Commodities API] : No commodities server connection to send GetVendorValue.\n"));
+		DEBUG_WARNING(true, ("[Commodities API] : No commodities server connection to send GetVendorValue."));
 		
 		getCommoditiesServerConnection(); //attempt to reconnect to commodities server
 	}
@@ -2189,7 +2119,7 @@ void CommoditiesMarket::createVendorMarket(const CreatureObject &who, ServerObje
 	}
 	else
 	{
-		DEBUG_WARNING(true, ("[Commodities API] : No commodities server connection to send CreateVendorMarket.\n"));
+		DEBUG_WARNING(true, ("[Commodities API] : No commodities server connection to send CreateVendorMarket."));
 
 		getCommoditiesServerConnection(); //attempt to reconnect to commodities server
 	}
@@ -2213,7 +2143,7 @@ void CommoditiesMarket::destroyVendorMarket(const NetworkId &playerId, ServerObj
 	else
 	{
 
-		DEBUG_WARNING(true, ("[Commodities API] : No commodities server connection to send DestroyVendorMarket.\n"));
+		DEBUG_WARNING(true, ("[Commodities API] : No commodities server connection to send DestroyVendorMarket."));
 
 		getCommoditiesServerConnection(); //attempt to reconnect to commodities server
 	}
@@ -2232,7 +2162,7 @@ void CommoditiesMarket::deleteAuctionLocation(const NetworkId& locationId, const
 	}
 	else
 	{
-		DEBUG_WARNING(true, ("[Commodities API] : No commodities server connection to send DestroyVendorMarket.\n"));
+		DEBUG_WARNING(true, ("[Commodities API] : No commodities server connection to send DestroyVendorMarket."));
 
 		getCommoditiesServerConnection(); //attempt to reconnect to commodities server
 	}
@@ -2254,7 +2184,7 @@ void CommoditiesMarket::isVendorOwner(CreatureObject &who, const NetworkId &cont
 		else
 		{
 
-			DEBUG_WARNING(true, ("[Commodities API] : No commodities server connection to send GetVendorOwner.\n"));
+			DEBUG_WARNING(true, ("[Commodities API] : No commodities server connection to send GetVendorOwner."));
 
 			onIsVendorOwner(who.getNetworkId(), zeroNetworkId, zeroNetworkId);
 			getCommoditiesServerConnection(); //attempt to reconnect to commodities server
@@ -2536,7 +2466,7 @@ void CommoditiesMarket::checkPendingLoads(const NetworkId &itemId)
 
 				bool transferAllowed = true;
 				Container::ContainerErrorCode error = Container::CEC_Success;
-				transferAllowed = ContainerInterface::canTransferTo(targetContainer, *item, NULL, error);
+				transferAllowed = ContainerInterface::canTransferTo(targetContainer, *item, nullptr, error);
 
 				if (!transferAllowed)
 				{
@@ -2558,7 +2488,7 @@ void CommoditiesMarket::checkPendingLoads(const NetworkId &itemId)
 					}
 					else
 					{
-						DEBUG_WARNING(true, ("[Commodities API] : No commodities server connection to send GetItem.\n"));
+						DEBUG_WARNING(true, ("[Commodities API] : No commodities server connection to send GetItem."));
 				
 						getCommoditiesServerConnection(); //attempt to reconnect to commodities server
 					}
@@ -2585,7 +2515,7 @@ void CommoditiesMarket::checkPendingLoads(const NetworkId &itemId)
 				}
 				else
 				{
-					DEBUG_WARNING(true, ("[Commodities API] : No commodities server connection to send CleanupInvalidItemRetrieval.\n"));
+					DEBUG_WARNING(true, ("[Commodities API] : No commodities server connection to send CleanupInvalidItemRetrieval."));
 					getCommoditiesServerConnection(); //attempt to reconnect to commodities server
 				}
 
@@ -2603,11 +2533,11 @@ void CommoditiesMarket::onGetItemReply(int32 result, int32 requestId, NetworkId 
 	LOG("AuctionRetrieval", ("CommoditiesMarket::received onGetItemReply for loading object %s for retrieval", itemId.getValueString().c_str()));
 	AuctionResult auctionResult = ar_OK;
 	CreatureObject *player = dynamic_cast<CreatureObject*>(NetworkIdManager::getObjectById(itemOwnerId));
-	Client *client = player ? player->getClient() : NULL;
+	Client *client = player ? player->getClient() : nullptr;
 	bool transactionFailed = false;
 
-	ServerObject* vendor = NULL;
-	ServerObject* item = NULL;
+	ServerObject* vendor = nullptr;
+	ServerObject* item = nullptr;
 	
 	if (result == ARC_AuctionDoesNotExist)
 	{
@@ -2637,7 +2567,7 @@ void CommoditiesMarket::onGetItemReply(int32 result, int32 requestId, NetworkId 
 					vendor = safe_cast<ServerObject*>(ContainerInterface::getContainedByObject(*item));
 					if (vendor && vendor->getNetworkId() == location)
 					{
-						bool retval = ContainerInterface::transferItemToVolumeContainer(*inventory, *item, NULL, tmp, false);
+						bool retval = ContainerInterface::transferItemToVolumeContainer(*inventory, *item, nullptr, tmp, false);
 						if (retval)
 						{
 
@@ -2779,7 +2709,7 @@ void CommoditiesMarket::onIsVendorOwner(const NetworkId & requesterId, const Net
 
 	ServerObject * const auctionContainer = safe_cast<ServerObject*>(NetworkIdManager::getObjectById(container));
 	NetworkId resultContainer = container;
-	const TangibleObject * resultContainerObject = auctionContainer ? auctionContainer->asTangibleObject() : NULL;
+	const TangibleObject * resultContainerObject = auctionContainer ? auctionContainer->asTangibleObject() : nullptr;
 	if (auctionContainer)
 	{
 		marketName = getLocationString(*auctionContainer);
@@ -2952,7 +2882,7 @@ void CommoditiesMarket::onGetItemDetailsReply(int32 result, int32 requestId, Net
 				OutOfBandBase *base = *it;
 				if (!base)
 				{
-					WARNING(true, ("NULL OOB Base for Auction Data"));
+					WARNING(true, ("nullptr OOB Base for Auction Data"));
 					return;
 				}
 				if (base->getTypeId() == OutOfBandPackager::OT_auctionToken)
@@ -2979,7 +2909,7 @@ void CommoditiesMarket::onGetItemDetailsReply(int32 result, int32 requestId, Net
 				base = *it;
 				if (!base)
 				{
-					WARNING(true, ("NULL OOB Base for Auction Data"));
+					WARNING(true, ("nullptr OOB Base for Auction Data"));
 					return;
 				}
 				if (base->getTypeId() == OutOfBandPackager::OT_objectAttributes)
@@ -3007,7 +2937,7 @@ void CommoditiesMarket::onGetItemDetailsReply(int32 result, int32 requestId, Net
 					static const std::string attributeClientSharedTemplateName("ClientSharedTemplateName");
 					static const std::string attributeAppearanceData("AppearanceData");
 
-					DEBUG_REPORT_LOG(true,("Attribute:  %s, %s\n",i->first.c_str(),Unicode::wideToNarrow(i->second).c_str()));
+					DEBUG_REPORT_LOG(true,("Attribute:  %s, %s",i->first.c_str(),Unicode::wideToNarrow(i->second).c_str()));
 					
 					if (i->first==attributeClientSharedTemplateName)
 						details.templateName = Unicode::wideToNarrow(i->second);
@@ -3265,7 +3195,7 @@ void CommoditiesMarket::setSalesTax( int32 salesTax, const NetworkId &bankId, Se
 	}
 	else
 	{
-		WARNING(true, ("[Commodities API] : No commodities server connection to send SetSalesTax.\n"));
+		WARNING(true, ("[Commodities API] : No commodities server connection to send SetSalesTax."));
 		getCommoditiesServerConnection(); //attempt to reconnect to commodities server
 	}
 }
@@ -3399,12 +3329,12 @@ bool CommoditiesMarket::restoreItem(ServerObject& item, TangibleObject & vendor)
 		}
 		else
 		{
-			WARNING(true, ("[Commodities API] : Could not create Owner object in restore item.\n"));
+			WARNING(true, ("[Commodities API] : Could not create Owner object in restore item."));
 		}
 	}
 	else
 	{
-		DEBUG_WARNING(true, ("[Commodities API] : No commodities server connection to send AddImmediateAuction.\n"));
+		DEBUG_WARNING(true, ("[Commodities API] : No commodities server connection to send AddImmediateAuction."));
 
 		getCommoditiesServerConnection(); //attempt to reconnect to commodities server
 		
@@ -3624,22 +3554,22 @@ void CommoditiesMarket::updateItemTypeMap(int itemTypeMapVersionNumber, int item
 
 	// get the server template
 	const ObjectTemplate * ot = ObjectTemplateList::fetch(static_cast<uint32>(itemTemplateId));
-	if (ot != NULL)
+	if (ot != nullptr)
 	{
 		objectName = StringId(std::string(ot->getName()));
 
 		// get the shared template 
 		const ServerObjectTemplate * serverOt = ot->asServerObjectTemplate();
-		if (serverOt != NULL)
+		if (serverOt != nullptr)
 		{
 			const std::string sharedTemplateName(serverOt->getSharedTemplate());
 			serverOt->releaseReference();
-			serverOt = NULL;
+			serverOt = nullptr;
 			ot = ObjectTemplateList::fetch(sharedTemplateName);
-			if (ot != NULL)
+			if (ot != nullptr)
 			{
 				const SharedObjectTemplate * sharedOt = ot->asSharedObjectTemplate();
-				if (sharedOt != NULL)
+				if (sharedOt != nullptr)
 				{
 					gameObjectType = static_cast<int>(sharedOt->getGameObjectType());
 					StringId const tempObjectName(objectName);
@@ -3649,19 +3579,19 @@ void CommoditiesMarket::updateItemTypeMap(int itemTypeMapVersionNumber, int item
 						objectName = tempObjectName;
 					}
 					sharedOt->releaseReference();
-					sharedOt = NULL;
+					sharedOt = nullptr;
 				}
 				else
 				{
 					ot->releaseReference();
-					ot = NULL;
+					ot = nullptr;
 				}
 			}
 		}
 		else
 		{
 			ot->releaseReference();
-			ot = NULL;
+			ot = nullptr;
 		}
 	}
 	else

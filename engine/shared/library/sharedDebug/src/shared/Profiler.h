@@ -207,7 +207,7 @@ inline void ProfilerAutoBlockCheck::transfer(char const *name)
 
 // ======================================================================
 
-#if defined(_DEBUG) || defined(PLATFORM_LINUX)
+#if defined(_DEBUG)
 
 	#define PROFILER_BLOCK_DEFINE(a, b)               ProfilerBlock a ( b )
 	#define PROFILER_BLOCK_ENTER(a)                   a.enter()
@@ -241,47 +241,6 @@ inline void ProfilerAutoBlockCheck::transfer(char const *name)
 	#define PROFILER_GET_LAST_FRAME_DATA()            ""
 
 #endif
-
-// ======================================================================
-// Macro functions that stick around for all non-production builds. 
-// [NP = no/non-production]
-// ======================================================================
-
-#if (PRODUCTION == 0)
-
-	#define NP_PROFILER_BLOCK_DEFINE(a, b)               ProfilerBlock a ( b )
-	#define NP_PROFILER_BLOCK_ENTER(a)                   a.enter()
-	#define NP_PROFILER_BLOCK_LEAVE(a)                   a.leave()
-	#define NP_PROFILER_BLOCK_TRANSFER(a,b)              a.transfer(b)
-	#define NP_PROFILER_BLOCK_LOST_CHECK(a)              a.adjustForLostBlocks()
-
-	#define NP_PABD_PASTE(a,b) a##b
-	#define NP_PABD_XPASTE(a,b) NP_PABD_PASTE(a,b)
-	#define NP_PROFILER_AUTO_BLOCK_DEFINE(a)             ProfilerAutoBlock NP_PABD_XPASTE(profilerAutoBlock, __LINE__) ( a )
-	#define NP_PROFILER_AUTO_BLOCK_CHECK_DEFINE(a)       ProfilerAutoBlockCheck NP_PABD_XPASTE(profilerAutoBlockCheck, __LINE__) ( a )
-	#define NP_PROFILER_NAMED_AUTO_BLOCK_DEFINE(a,b)     ProfilerAutoBlock a ( b )
-	#define NP_PROFILER_NAMED_AUTO_BLOCK_TRANSFER(a,b)   a.transfer(b)
-
-	#define NP_PROFILER_GET_LAST_FRAME_DATA()            Profiler::getLastFrameData()
-
-#else
-
-	#define NP_PROFILER_BLOCK_DEFINE(a, b)               
-	#define NP_PROFILER_BLOCK_CHECK_DEFINE(a, b)         
-	#define NP_PROFILER_BLOCK_ENTER(a)                   NOP
-	#define NP_PROFILER_BLOCK_LEAVE(a)                   NOP
-	#define NP_PROFILER_BLOCK_TRANSFER(a,b)              NOP
-	#define NP_PROFILER_BLOCK_LOST_CHECK(a)              NOP
-
-	#define NP_PROFILER_AUTO_BLOCK_DEFINE(A)             NOP
-	#define NP_PROFILER_AUTO_BLOCK_CHECK_DEFINE(a)       NOP
-	#define NP_PROFILER_NAMED_AUTO_BLOCK_DEFINE(a,b)     
-	#define NP_PROFILER_NAMED_AUTO_BLOCK_TRANSFER(a,b)   NOP
-
-	#define NP_PROFILER_GET_LAST_FRAME_DATA()            ""
-
-#endif
-
 // ======================================================================
 
 #endif

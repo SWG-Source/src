@@ -268,20 +268,6 @@ void ShipClientUpdateTracker::update(float elapsedTime) // static
 
 			static Archive::ByteStream bs;
 
-			#if 0
-			GameClientMessage gcm(
-				(*k).second,
-				false, 
-				ShipUpdateTransformMessage(
-					ship->getNetworkId(),
-					controller->getTransform(),
-					controller->getVelocity(),
-					controller->getYawRate(),
-					controller->getPitchRate(),
-					controller->getRollRate(),
-					(*j).first->getSyncStampLong()));
-			gcm.pack(bs);
-			#else
 			static ConstCharCrcString const s_gcmname("GameClientMessage");
 			static ConstCharCrcString const s_sutmname("ShipUpdateTransformMessage");
 			static unsigned int const s_sutmByteStreamLength =
@@ -313,7 +299,6 @@ void ShipClientUpdateTracker::update(float elapsedTime) // static
 			PackedRotationRate const packedRollRate(controller->getRollRate());
 			Archive::put(bs, packedRollRate);
 			Archive::put(bs, (*j).first->getSyncStampLong());
-			#endif
 
 			(*j).first->Connection::send(bs, false);
 			bs.clear();

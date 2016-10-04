@@ -577,7 +577,7 @@ ResourceTypeObject const * ServerResourceClassObject::getAResourceType() const
 	if (!m_types.empty())
 		return m_types.front();
 	else
-		return NULL;
+		return nullptr;
 }
 
 // ----------------------------------------------------------------------

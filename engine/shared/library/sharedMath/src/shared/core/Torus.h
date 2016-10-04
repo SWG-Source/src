@@ -94,7 +94,7 @@ inline float Torus::getMinorRadius ( void ) const
 
 inline bool Torus::isOriented ( void ) const
 {
-	return fabs(m_axis.y - 1.0f) > 0.00001f;
+	return std::abs(m_axis.y - 1.0f) > 0.00001f;
 }
 
 // ----------------------------------------------------------------------

@@ -74,7 +74,7 @@ typedef struct z_stream_s {
     uInt     avail_out; /* remaining free space at next_out */
     uLong    total_out; /* total nb of bytes output so far */
 
-    char     *msg;      /* last error message, NULL if no error */
+    char     *msg;      /* last error message, nullptr if no error */
     struct internal_state FAR *state; /* not visible by applications */
 
     alloc_func zalloc;  /* used to allocate the internal state */
@@ -193,7 +193,7 @@ ZEXTERN int ZEXPORT deflateInit OF((z_streamp strm, int level));
    enough memory, Z_STREAM_ERROR if level is not a valid compression level,
    Z_VERSION_ERROR if the zlib library version (zlib_version) is incompatible
    with the version assumed by the caller (ZLIB_VERSION).
-   msg is set to null if there is no error message.  deflateInit does not
+   msg is set to nullptr if there is no error message.  deflateInit does not
    perform any compression: this will be done by deflate().
 */
 
@@ -271,7 +271,7 @@ ZEXTERN int ZEXPORT deflate OF((z_streamp strm, int flush));
   processed or more output produced), Z_STREAM_END if all input has been
   consumed and all output has been produced (only when flush is set to
   Z_FINISH), Z_STREAM_ERROR if the stream state was inconsistent (for example
-  if next_in or next_out was NULL), Z_BUF_ERROR if no progress is possible
+  if next_in or next_out was nullptr), Z_BUF_ERROR if no progress is possible
   (for example avail_in or avail_out was zero).
 */
 
@@ -304,7 +304,7 @@ ZEXTERN int ZEXPORT inflateInit OF((z_streamp strm));
 
      inflateInit returns Z_OK if success, Z_MEM_ERROR if there was not enough
    memory, Z_VERSION_ERROR if the zlib library version is incompatible with the
-   version assumed by the caller.  msg is set to null if there is no error
+   version assumed by the caller.  msg is set to nullptr if there is no error
    message. inflateInit does not perform any decompression apart from reading
    the zlib header if present: this will be done by inflate().  (So next_in and
    avail_in may be modified, but next_out and avail_out are unchanged.)
@@ -372,7 +372,7 @@ ZEXTERN int ZEXPORT inflate OF((z_streamp strm, int flush));
   preset dictionary is needed at this point, Z_DATA_ERROR if the input data was
   corrupted (input stream not conforming to the zlib format or incorrect
   adler32 checksum), Z_STREAM_ERROR if the stream structure was inconsistent
-  (for example if next_in or next_out was NULL), Z_MEM_ERROR if there was not
+  (for example if next_in or next_out was nullptr), Z_MEM_ERROR if there was not
   enough memory, Z_BUF_ERROR if no progress is possible or if there was not
   enough room in the output buffer when Z_FINISH is used. In the Z_DATA_ERROR
   case, the application may then call inflateSync to look for a good
@@ -437,7 +437,7 @@ ZEXTERN int ZEXPORT deflateInit2 OF((z_streamp strm,
 
       deflateInit2 returns Z_OK if success, Z_MEM_ERROR if there was not enough
    memory, Z_STREAM_ERROR if a parameter is invalid (such as an invalid
-   method). msg is set to null if there is no error message.  deflateInit2 does
+   method). msg is set to nullptr if there is no error message.  deflateInit2 does
    not perform any compression: this will be done by deflate().
 */
                             
@@ -471,7 +471,7 @@ ZEXTERN int ZEXPORT deflateSetDictionary OF((z_streamp strm,
    actually used by the compressor.)
 
      deflateSetDictionary returns Z_OK if success, or Z_STREAM_ERROR if a
-   parameter is invalid (such as NULL dictionary) or the stream state is
+   parameter is invalid (such as nullptr dictionary) or the stream state is
    inconsistent (for example if deflate has already been called for this stream
    or if the compression method is bsort). deflateSetDictionary does not
    perform any compression: this will be done by deflate().
@@ -491,7 +491,7 @@ ZEXTERN int ZEXPORT deflateCopy OF((z_streamp dest,
 
      deflateCopy returns Z_OK if success, Z_MEM_ERROR if there was not
    enough memory, Z_STREAM_ERROR if the source stream state was inconsistent
-   (such as zalloc being NULL). msg is left unchanged in both source and
+   (such as zalloc being nullptr). msg is left unchanged in both source and
    destination.
 */
 
@@ -503,7 +503,7 @@ ZEXTERN int ZEXPORT deflateReset OF((z_streamp strm));
    that may have been set by deflateInit2.
 
       deflateReset returns Z_OK if success, or Z_STREAM_ERROR if the source
-   stream state was inconsistent (such as zalloc or state being NULL).
+   stream state was inconsistent (such as zalloc or state being nullptr).
 */
 
 ZEXTERN int ZEXPORT deflateParams OF((z_streamp strm,
@@ -544,7 +544,7 @@ ZEXTERN int ZEXPORT inflateInit2 OF((z_streamp strm,
 
       inflateInit2 returns Z_OK if success, Z_MEM_ERROR if there was not enough
    memory, Z_STREAM_ERROR if a parameter is invalid (such as a negative
-   memLevel). msg is set to null if there is no error message.  inflateInit2
+   memLevel). msg is set to nullptr if there is no error message.  inflateInit2
    does not perform any decompression apart from reading the zlib header if
    present: this will be done by inflate(). (So next_in and avail_in may be
    modified, but next_out and avail_out are unchanged.)
@@ -562,7 +562,7 @@ ZEXTERN int ZEXPORT inflateSetDictionary OF((z_streamp strm,
    dictionary (see deflateSetDictionary).
 
      inflateSetDictionary returns Z_OK if success, Z_STREAM_ERROR if a
-   parameter is invalid (such as NULL dictionary) or the stream state is
+   parameter is invalid (such as nullptr dictionary) or the stream state is
    inconsistent, Z_DATA_ERROR if the given dictionary doesn't match the
    expected one (incorrect Adler32 value). inflateSetDictionary does not
    perform any decompression: this will be done by subsequent calls of
@@ -591,7 +591,7 @@ ZEXTERN int ZEXPORT inflateReset OF((z_streamp strm));
    The stream will keep attributes that may have been set by inflateInit2.
 
       inflateReset returns Z_OK if success, or Z_STREAM_ERROR if the source
-   stream state was inconsistent (such as zalloc or state being NULL).
+   stream state was inconsistent (such as zalloc or state being nullptr).
 */
 
 
@@ -667,7 +667,7 @@ ZEXTERN gzFile ZEXPORT gzopen  OF((const char *path, const char *mode));
      gzopen can be used to read a file which is not in gzip format; in this
    case gzread will directly read from the file without decompression.
 
-     gzopen returns NULL if the file could not be opened or if there was
+     gzopen returns nullptr if the file could not be opened or if there was
    insufficient memory to allocate the (de)compression state; errno
    can be checked to distinguish the two cases (if errno is zero, the
    zlib error is Z_MEM_ERROR).  */
@@ -681,7 +681,7 @@ ZEXTERN gzFile ZEXPORT gzdopen  OF((int fd, const char *mode));
      The next call of gzclose on the returned gzFile will also close the
    file descriptor fd, just like fclose(fdopen(fd), mode) closes the file
    descriptor fd. If you want to keep fd open, use gzdopen(dup(fd), mode).
-     gzdopen returns NULL if there was insufficient memory to allocate
+     gzdopen returns nullptr if there was insufficient memory to allocate
    the (de)compression state.
 */
 
@@ -718,8 +718,8 @@ ZEXTERN int ZEXPORTVA   gzprintf OF((gzFile file, const char *format, ...));
 
 ZEXTERN int ZEXPORT gzputs OF((gzFile file, const char *s));
 /*
-      Writes the given null-terminated string to the compressed file, excluding
-   the terminating null character.
+      Writes the given nullptr-terminated string to the compressed file, excluding
+   the terminating nullptr character.
       gzputs returns the number of characters written, or -1 in case of error.
 */
 
@@ -727,7 +727,7 @@ ZEXTERN char * ZEXPORT gzgets OF((gzFile file, char *buf, int len));
 /*
       Reads bytes from the compressed file until len-1 characters are read, or
    a newline character is read and transferred to buf, or an end-of-file
-   condition is encountered.  The string is then terminated with a null
+   condition is encountered.  The string is then terminated with a nullptr
    character.
       gzgets returns buf, or Z_NULL in case of error.
 */
@@ -822,7 +822,7 @@ ZEXTERN uLong ZEXPORT adler32 OF((uLong adler, const Bytef *buf, uInt len));
 
 /*
      Update a running Adler-32 checksum with the bytes buf[0..len-1] and
-   return the updated checksum. If buf is NULL, this function returns
+   return the updated checksum. If buf is nullptr, this function returns
    the required initial value for the checksum.
    An Adler-32 checksum is almost as reliable as a CRC32 but can be computed
    much faster. Usage example:
@@ -838,7 +838,7 @@ ZEXTERN uLong ZEXPORT adler32 OF((uLong adler, const Bytef *buf, uInt len));
 ZEXTERN uLong ZEXPORT crc32   OF((uLong crc, const Bytef *buf, uInt len));
 /*
      Update a running crc with the bytes buf[0..len-1] and return the updated
-   crc. If buf is NULL, this function returns the required initial value
+   crc. If buf is nullptr, this function returns the required initial value
    for the crc. Pre- and post-conditioning (one's complement) is performed
    within this function so it shouldn't be done by the application.
    Usage example:

@@ -181,29 +181,6 @@ jstring JNICALL ScriptMethodsChatNamespace::chatPackOutOfBandToken(JNIEnv * env,
 
 	JavaString result("JavaLibrary::chatPackOutOfBandToken - FAILED Token archive not implemented");
 	return result.getReturnValue();
-
-#if 0
-	JavaStringParam jt(target);
-	Unicode::String t;
-	if(! JavaLibrary::convert(jt, t))
-		return 0;
-
-	if(! source)
-		return 0;
-
-	Token * token = 0;
-	if(!JavaLibrary::getObject(source, token))
-		return 0;
-
-	Archive::ByteStream bs;
-	Archive::put(bs, std::string(token->getObjectTemplateName()));
-	Archive::put(bs, *token);
-
-	OutOfBandPackager::pack(bs, gs_Object, position, t);
-
-	JavaString result(t);
-	return result.getReturnValue();
-#endif
 }
 
 //----------------------------------------------------------------------
@@ -218,7 +195,7 @@ jstring JNICALL ScriptMethodsChatNamespace::chatPackOutOfBandWaypointData(JNIEnv
 	Unicode::String n;   //name
 	StringId        nid; //nameId
 
-	//-- target may be null, we'll just start a new string
+	//-- target may be nullptr, we'll just start a new string
 	if (target)
 	{
 		const JavaStringParam jtarget(target);
@@ -229,7 +206,7 @@ jstring JNICALL ScriptMethodsChatNamespace::chatPackOutOfBandWaypointData(JNIEnv
 		}
 	}
 
-	//-- if planet is null, just use the current sceneId
+	//-- if planet is nullptr, just use the current sceneId
 	if (planet)
 	{
 		const JavaStringParam jplanet(planet);
@@ -304,7 +281,7 @@ jstring JNICALL ScriptMethodsChatNamespace::chatPackOutOfBandWaypoint(JNIEnv * e
 
 	if (!source)
 	{
-		DEBUG_WARNING (true, ("ScriptMethodsChat JavaLibrary::chatPackOutOfBandWaypoint failed null source"));
+		DEBUG_WARNING (true, ("ScriptMethodsChat JavaLibrary::chatPackOutOfBandWaypoint failed nullptr source"));
 		return 0;
 	}
 
@@ -340,7 +317,7 @@ jstring JNICALL ScriptMethodsChatNamespace::packOutOfBandProsePackage(JNIEnv * e
 
 	if (!stringId)
 	{
-		DEBUG_WARNING (true, ("JavaLibrary::packOutOfBandProsePackage attempt to pack prose package with null stringId"));
+		DEBUG_WARNING (true, ("JavaLibrary::packOutOfBandProsePackage attempt to pack prose package with nullptr stringId"));
 		return 0;
 	}
 
@@ -644,10 +621,10 @@ void JNICALL ScriptMethodsChatNamespace::chatSendSystemMessageObjId(JNIEnv * env
 
 	if(!JavaLibrary::getObject(_to, player))
 	{
-		DEBUG_WARNING (true, ("ScriptMethodsChat JavaLibrary::chatSendSystemMessageObjId failed bad source object (not null)"));
+		DEBUG_WARNING (true, ("ScriptMethodsChat JavaLibrary::chatSendSystemMessageObjId failed bad source object (not nullptr)"));
 		if (ConfigServerScript::allowDebugConsoleMessages())
 		{
-			fprintf(stderr, "WARNING: JavaLibrary::chatSendSystemMessageObjId: failed bad source object (not null)\n");
+			fprintf(stderr, "WARNING: JavaLibrary::chatSendSystemMessageObjId: failed bad source object (not nullptr)\n");
 			JavaLibrary::printJavaStack();
 		}
 		return;

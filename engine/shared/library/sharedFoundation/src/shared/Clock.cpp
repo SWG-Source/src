@@ -254,24 +254,6 @@ void Clock::update(void)
 		ms_lastFrameRate = RECIP(ms_lastFrameTime);
 	}
 
-#if 0
-	// -qq- debugging W2K QueryPerformanceCounter
-	static DWORD lastTick;
-	DWORD newTick = GetTickCount();
-
-	DEBUG_REPORT_LOG_PRINT(true, ("Clock::update %I64d %I64d %6I64d  %10d %10d %3d %6.2f=fps %6.4f=time\n", ms_lastPoll, newPoll, newPoll - ms_lastPoll, lastTick, newTick, newTick - lastTick, ms_lastFrameRate, ms_lastFrameTime));
-
-	static int bad = 0;
-
-	if (bad && ++bad > 64)
-		__asm int 3;
-
-	if (ms_lastFrameTime > 3.0)
-		bad = 1;
-
-	lastTick = newTick;
-#endif
-
 	ms_lastPoll = newPoll;
 
 

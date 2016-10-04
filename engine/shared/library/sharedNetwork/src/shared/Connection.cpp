@@ -22,6 +22,7 @@
 #include "sharedNetwork/UdpLibraryMT.h"
 #include "TcpClient.h"
 #include "TcpServer.h"
+#include "../../../../../../external/3rd/library/udplibrary/UdpLibrary.hpp"
 
 #include <algorithm>
 
@@ -206,6 +207,7 @@ m_disconnectReason()
 				p.clockSyncDelay = setup.clockSyncDelay;
 				p.keepAliveDelay = setup.keepAliveDelay;
 				p.maxConnections = 1;
+				p.maxConnectionsPerIP = setup.maxConnectionsPerIP;
 				p.maxRawPacketSize = setup.maxRawPacketSize;
 				p.maxDataHoldSize = setup.maxDataHoldSize;
 				p.reliable[0].maxInstandingPackets = setup.maxInstandingPackets;
@@ -577,17 +579,22 @@ void Connection::onConnectionOverflowing(unsigned int totalBytes)
 
 void Connection::onConnectionClosed(Connection *)
 {
-	if (getService())
-		getService()->onConnectionClosed(this);
+        if (getService())
+        {
+                getService()->onConnectionClosed(this);
+        }
+
 
 	if (udpConnection)
 	{
-		UdpConnection::DisconnectReason reason = udpConnection->GetDisconnectReason();
+        	UdpConnection::DisconnectReason reason = udpConnection->GetDisconnectReason();
 		setDisconnectReason("Connection::onConnectionClosed (udplibrary:%s)", UdpConnection::DisconnectReasonText(reason));
 		FATAL(ConfigSharedNetwork::getFatalOnConnectionClosed(), ("Connection closed %s", UdpConnection::DisconnectReasonText(reason)));
 	}
 	else
-		setDisconnectReason("Connection::onConnectionClosed called");
+	{
+        	setDisconnectReason("Connection::onConnectionClosed called");
+	}
 
 	if (ConfigSharedNetwork::getLogConnectionOpenedClosed())
 	{

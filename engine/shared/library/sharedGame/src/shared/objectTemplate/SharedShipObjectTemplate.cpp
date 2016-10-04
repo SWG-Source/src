@@ -101,10 +101,10 @@ Tag SharedShipObjectTemplate::getTemplateVersion(void) const
  */
 Tag SharedShipObjectTemplate::getHighestTemplateVersion(void) const
 {
-	if (m_baseData == NULL)
+	if (m_baseData == nullptr)
 		return m_templateVersion;
 	const SharedShipObjectTemplate * base = dynamic_cast<const SharedShipObjectTemplate *>(m_baseData);
-	if (base == NULL)
+	if (base == nullptr)
 		return m_templateVersion;
 	return std::max(m_templateVersion, base->getHighestTemplateVersion());
 } // SharedShipObjectTemplate::getHighestTemplateVersion
@@ -155,33 +155,33 @@ std::string testDataValue = DefaultString;
 UNREF(testData);
 #endif
 
-	const SharedShipObjectTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const SharedShipObjectTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedShipObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getCockpitFilename(true);
 #endif
 	}
 
 	if (!m_cockpitFilename.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter cockpitFilename in template %s", DataResource::getName()));
 			return DefaultString;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter cockpitFilename has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter cockpitFilename has not been defined in template %s!", DataResource::getName()));
 			return base->getCockpitFilename();
 		}
 	}
 
 	const std::string & value = m_cockpitFilename.getValue();
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -197,33 +197,33 @@ bool testDataValue = false;
 UNREF(testData);
 #endif
 
-	const SharedShipObjectTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const SharedShipObjectTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedShipObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getHasWings(true);
 #endif
 	}
 
 	if (!m_hasWings.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter hasWings in template %s", DataResource::getName()));
 			return false;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter hasWings has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter hasWings has not been defined in template %s!", DataResource::getName()));
 			return base->getHasWings();
 		}
 	}
 
 	bool value = m_hasWings.getValue();
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -239,33 +239,33 @@ bool testDataValue = false;
 UNREF(testData);
 #endif
 
-	const SharedShipObjectTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const SharedShipObjectTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedShipObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getPlayerControlled(true);
 #endif
 	}
 
 	if (!m_playerControlled.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter playerControlled in template %s", DataResource::getName()));
 			return false;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter playerControlled has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter playerControlled has not been defined in template %s!", DataResource::getName()));
 			return base->getPlayerControlled();
 		}
 	}
 
 	bool value = m_playerControlled.getValue();
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -281,33 +281,33 @@ std::string testDataValue = DefaultString;
 UNREF(testData);
 #endif
 
-	const SharedShipObjectTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const SharedShipObjectTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedShipObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getInteriorLayoutFileName(true);
 #endif
 	}
 
 	if (!m_interiorLayoutFileName.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter interiorLayoutFileName in template %s", DataResource::getName()));
 			return DefaultString;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter interiorLayoutFileName has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter interiorLayoutFileName has not been defined in template %s!", DataResource::getName()));
 			return base->getInteriorLayoutFileName();
 		}
 	}
 
 	const std::string & value = m_interiorLayoutFileName.getValue();
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -356,12 +356,12 @@ char paramName[MAX_NAME_SIZE];
 		file.read_string(baseFilename);
 		file.exitChunk();
 		const ObjectTemplate *base = ObjectTemplateList::fetch(baseFilename);
-		DEBUG_WARNING(base == NULL, ("was unable to load base template %s", baseFilename.c_str()));
-		if (m_baseData == base && base != NULL)
+		DEBUG_WARNING(base == nullptr, ("was unable to load base template %s", baseFilename.c_str()));
+		if (m_baseData == base && base != nullptr)
 			base->releaseReference();
 		else
 		{
-			if (m_baseData != NULL)
+			if (m_baseData != nullptr)
 				m_baseData->releaseReference();
 			m_baseData = base;
 		}

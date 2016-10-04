@@ -18,6 +18,8 @@
 #include "serverNetworkMessages/SetUniverseAuthoritativeMessage.h"
 #include "sharedLog/Log.h"
 
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 // ======================================================================
 
 UniverseManager::UniverseManager() :
@@ -47,62 +49,72 @@ UniverseManager::~UniverseManager()
 
 void UniverseManager::receiveMessage(const MessageDispatch::Emitter & source, const MessageDispatch::MessageBase & message)
 {
-	if(message.isType("CentralGameServerDbProcessServerProcessId"))
-	{
-		DEBUG_REPORT_LOG(true, ("dbProcess connected\n"));
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		CentralGameServerDbProcessServerProcessId d(ri);
-
-		const GameServerConnection * g = static_cast<const GameServerConnection *>(&source); //lint !e826 Suspicious pointer-to-pointer conversion
-		NOT_NULL(g);
-		onDatabaseProcessConnect(*g);
-	}
-	else if (message.isType("CreateDynamicRegionCircleMessage"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		CreateDynamicRegionCircleMessage msg(ri);
-		if (!m_databaseAuthoritative)
-			CentralServer::getInstance().sendToGameServer(m_universeProcess, msg, true);
-	}
-	else if (message.isType("CreateDynamicRegionRectangleMessage"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		CreateDynamicRegionRectangleMessage msg(ri);
-		if (!m_databaseAuthoritative)
-			CentralServer::getInstance().sendToGameServer(m_universeProcess, msg, true);
-	}
-	else if (message.isType("CreateGroupMessage"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		CreateGroupMessage msg(ri);
-		if (!m_databaseAuthoritative)
-			CentralServer::getInstance().sendToGameServer(m_universeProcess, msg, true);
-	}
-	else if (message.isType("ChangeUniverseProcessMessage"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		ChangeUniverseProcessMessage msg(ri);
-		uint32 processId = static_cast<uint32>(msg.getId());
-		if (!m_databaseAuthoritative && CentralServer::getInstance().getGameServer(processId))
+	const uint32 messageType = message.getType();
+	
+	switch(messageType) {
+		case constcrc("CentralGameServerDbProcessServerProcessId") :
 		{
-			m_universeProcess = processId;
-			DEBUG_REPORT_LOG(true, ("Changing our Universe process to %lu\n",m_universeProcess));
-			LOG("Universe", ("Changing our Universe process to %i\n",m_universeProcess));
+			DEBUG_REPORT_LOG(true, ("dbProcess connected\n"));
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			CentralGameServerDbProcessServerProcessId d(ri);
 
-			SetUniverseAuthoritativeMessage authMsg(m_universeProcess);
-			CentralServer::getInstance().sendToAllGameServers(authMsg,true);
+			const GameServerConnection * g = static_cast<const GameServerConnection *>(&source); //lint !e826 Suspicious pointer-to-pointer conversion
+			NOT_NULL(g);
+			onDatabaseProcessConnect(*g);
+			break;
 		}
-	}
-	else if (message.isType("GameServerUniverseLoadedMessage"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		GameServerUniverseLoadedMessage d(ri);
-		UNREF(d);
+		case constcrc("CreateDynamicRegionCircleMessage") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			CreateDynamicRegionCircleMessage msg(ri);
+			if (!m_databaseAuthoritative)
+				CentralServer::getInstance().sendToGameServer(m_universeProcess, msg, true);
+			break;
+		}
+		case constcrc("CreateDynamicRegionRectangleMessage") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			CreateDynamicRegionRectangleMessage msg(ri);
+			if (!m_databaseAuthoritative)
+				CentralServer::getInstance().sendToGameServer(m_universeProcess, msg, true);
+			break;
+		}
+		case constcrc("CreateGroupMessage") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			CreateGroupMessage msg(ri);
+			if (!m_databaseAuthoritative)
+				CentralServer::getInstance().sendToGameServer(m_universeProcess, msg, true);
+			break;
+		}
+		case constcrc("ChangeUniverseProcessMessage") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			ChangeUniverseProcessMessage msg(ri);
+			uint32 processId = static_cast<uint32>(msg.getId());
+			if (!m_databaseAuthoritative && CentralServer::getInstance().getGameServer(processId))
+			{
+				m_universeProcess = processId;
+				DEBUG_REPORT_LOG(true, ("Changing our Universe process to %lu\n",m_universeProcess));
+				LOG("Universe", ("Changing our Universe process to %i\n",m_universeProcess));
 
-		const GameServerConnection * g = static_cast<const GameServerConnection *>(&source); //lint !e826 Suspicious pointer-to-pointer conversion
-		NOT_NULL(g);
-//		DEBUG_REPORT_LOG(true,("m_serversLoadingUniverse->erase(%lu);\n",g->getProcessId()));
-		IGNORE_RETURN(m_serversLoadingUniverse->erase(g->getProcessId()));
+				SetUniverseAuthoritativeMessage authMsg(m_universeProcess);
+				CentralServer::getInstance().sendToAllGameServers(authMsg,true);
+			}
+			break;
+		}
+		case constcrc("GameServerUniverseLoadedMessage") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			GameServerUniverseLoadedMessage d(ri);
+			UNREF(d);
+
+			const GameServerConnection * g = static_cast<const GameServerConnection *>(&source); //lint !e826 Suspicious pointer-to-pointer conversion
+			NOT_NULL(g);
+			// DEBUG_REPORT_LOG(true,("m_serversLoadingUniverse->erase(%lu);\n",g->getProcessId()));
+			IGNORE_RETURN(m_serversLoadingUniverse->erase(g->getProcessId()));
+			break;
+		}
 	}
 }
 

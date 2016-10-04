@@ -138,8 +138,8 @@ using namespace MemoryBlockManagerNamespace;
 MemoryBlockManager::Allocator::Allocator(const int elementSize)
 :
 	m_referenceCount(0),
-	m_firstBlock(NULL),
-	m_firstFreeElement(NULL),
+	m_firstBlock(nullptr),
+	m_firstFreeElement(nullptr),
 	m_elementSize(elementSize),
 	m_elementsPerBlock(64),
 	m_currentNumberOfBlocks(0),
@@ -157,8 +157,8 @@ MemoryBlockManager::Allocator::Allocator(const int elementSize)
 MemoryBlockManager::Allocator::Allocator(int elementSize, int elementsPerBlock, int minimumBlocks, int maximumNumberOfBlocks)
 :
 	m_referenceCount(0),
-	m_firstBlock(NULL),
-	m_firstFreeElement(NULL),
+	m_firstBlock(nullptr),
+	m_firstFreeElement(nullptr),
 	m_elementSize(elementSize),
 	m_elementsPerBlock(elementsPerBlock),
 	m_currentNumberOfBlocks(0),
@@ -188,8 +188,8 @@ MemoryBlockManager::Allocator::~Allocator()
 		delete block;
 	}
 
-	m_firstBlock = NULL;
-	m_firstFreeElement = NULL;
+	m_firstBlock = nullptr;
+	m_firstFreeElement = nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -427,7 +427,7 @@ MemoryBlockManager::MemoryBlockManager(char const * name, bool shared, int eleme
 : m_name(name),
 	m_shared(shared),
 	m_currentNumberOfElements(0),
-	m_allocator(NULL)
+	m_allocator(nullptr)
 {
 	//-- Handle config option where we force all MemoryBlockManagers to be non-shared.
 	if (shared && ms_forceAllNonShared)
@@ -598,7 +598,7 @@ void *MemoryBlockManager::allocate(bool returnNullOnFailure)
 		{
 			ms_globalCriticalSection.leave();
 			DEBUG_FATAL(!returnNullOnFailure, ("MBM %s is full %d", m_name, m_currentNumberOfElements));
-			return NULL;
+			return nullptr;
 		}
 
 		++m_currentNumberOfElements;

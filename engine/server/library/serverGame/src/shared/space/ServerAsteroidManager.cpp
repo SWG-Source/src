@@ -116,10 +116,10 @@ ServerAsteroidManager::FieldHandle ServerAsteroidManager::generateField(Asteroid
 		return BAD_HANDLE;
 	}
 
-	ServerObject * newAsteroid = NULL;
+	ServerObject * newAsteroid = nullptr;
 
 	//TODO disable server-rotation for now, it apparently spams the client horribly
-//	RotationDynamics * rotationDynamics = NULL;
+//	RotationDynamics * rotationDynamics = nullptr;
 
 	for(std::vector<AsteroidGenerationManager::AsteroidData>::iterator i = asteroidDatas.begin(); i != asteroidDatas.end(); ++i)
 	{
@@ -274,7 +274,7 @@ void ServerAsteroidManager::getServerAsteroidData(std::vector<Sphere> & /*OUT*/ 
 	for(std::vector<NetworkId>::iterator i = ms_asteroids.begin(); i != ms_asteroids.end(); ++i)
 	{
 		Object const * const o = NetworkIdManager::getObjectById(*i);
-		ServerObject const * const so = o ? o->asServerObject() : NULL;
+		ServerObject const * const so = o ? o->asServerObject() : nullptr;
 		if(so)
 		{
 			spheres.push_back(so->getSphereExtent());
@@ -297,9 +297,9 @@ void ServerAsteroidManager::sendServerAsteroidDataToPlayer(NetworkId const & pla
 	MessageQueueGenericValueType<std::vector<Sphere> > * const msg = new MessageQueueGenericValueType<std::vector<Sphere> >(spheres);
 
 	Object * const o = NetworkIdManager::getObjectById(player);
-	ServerObject * const so = o ? o->asServerObject() : NULL;
-	CreatureObject * const co = so ? so->asCreatureObject() : NULL;
-	Client const * const client = co ? co->getClient() : NULL;
+	ServerObject * const so = o ? o->asServerObject() : nullptr;
+	CreatureObject * const co = so ? so->asCreatureObject() : nullptr;
+	Client const * const client = co ? co->getClient() : nullptr;
 	if(client && co && co->isAuthoritative())
 	{
 		co->getController()->appendMessage(static_cast<int>(CM_serverAsteroidDebugData), 0.0f, msg,

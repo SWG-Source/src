@@ -20,7 +20,7 @@ class DynamicPathNode;
 // and remove nodes on the fly (such as city graphs)
 
 // DynamicPathGraph uses a sparse array to store its nodes. Calling
-// getNode with a nodeIndex in [0,nodeCount) may return NULL. If you
+// getNode with a nodeIndex in [0,nodeCount) may return nullptr. If you
 // want to know the number of live nodes in the graph, call getLiveNodeCount.
 
 class DynamicPathGraph : public PathGraph

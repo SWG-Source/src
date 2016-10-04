@@ -55,7 +55,7 @@ SharedDraftSchematicObjectTemplate::~SharedDraftSchematicObjectTemplate()
 		for (iter = m_slots.begin(); iter != m_slots.end(); ++iter)
 		{
 			delete *iter;
-			*iter = NULL;
+			*iter = nullptr;
 		}
 		m_slots.clear();
 	}
@@ -64,7 +64,7 @@ SharedDraftSchematicObjectTemplate::~SharedDraftSchematicObjectTemplate()
 		for (iter = m_attributes.begin(); iter != m_attributes.end(); ++iter)
 		{
 			delete *iter;
-			*iter = NULL;
+			*iter = nullptr;
 		}
 		m_attributes.clear();
 	}
@@ -116,10 +116,10 @@ Tag SharedDraftSchematicObjectTemplate::getTemplateVersion(void) const
  */
 Tag SharedDraftSchematicObjectTemplate::getHighestTemplateVersion(void) const
 {
-	if (m_baseData == NULL)
+	if (m_baseData == nullptr)
 		return m_templateVersion;
 	const SharedDraftSchematicObjectTemplate * base = dynamic_cast<const SharedDraftSchematicObjectTemplate *>(m_baseData);
-	if (base == NULL)
+	if (base == nullptr)
 		return m_templateVersion;
 	return std::max(m_templateVersion, base->getHighestTemplateVersion());
 } // SharedDraftSchematicObjectTemplate::getHighestTemplateVersion
@@ -127,28 +127,28 @@ Tag SharedDraftSchematicObjectTemplate::getHighestTemplateVersion(void) const
 //@BEGIN TFD
 void SharedDraftSchematicObjectTemplate::getSlots(IngredientSlot &data, int index) const
 {
-	const SharedDraftSchematicObjectTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const SharedDraftSchematicObjectTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedDraftSchematicObjectTemplate *>(m_baseData);
 	}
 
 	if (!m_slotsLoaded)
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter slots in template %s", DataResource::getName()));
 			return ;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter slots has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter slots has not been defined in template %s!", DataResource::getName()));
 			base->getSlots(data, index);
 			return;
 		}
 	}
 
-	if (m_slotsAppend && base != NULL)
+	if (m_slotsAppend && base != nullptr)
 	{
 		int baseCount = base->getSlotsCount();
 		if (index < baseCount)
@@ -170,28 +170,28 @@ void SharedDraftSchematicObjectTemplate::getSlots(IngredientSlot &data, int inde
 
 void SharedDraftSchematicObjectTemplate::getSlotsMin(IngredientSlot &data, int index) const
 {
-	const SharedDraftSchematicObjectTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const SharedDraftSchematicObjectTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedDraftSchematicObjectTemplate *>(m_baseData);
 	}
 
 	if (!m_slotsLoaded)
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter slots in template %s", DataResource::getName()));
 			return ;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter slots has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter slots has not been defined in template %s!", DataResource::getName()));
 			base->getSlotsMin(data, index);
 			return;
 		}
 	}
 
-	if (m_slotsAppend && base != NULL)
+	if (m_slotsAppend && base != nullptr)
 	{
 		int baseCount = base->getSlotsCount();
 		if (index < baseCount)
@@ -213,28 +213,28 @@ void SharedDraftSchematicObjectTemplate::getSlotsMin(IngredientSlot &data, int i
 
 void SharedDraftSchematicObjectTemplate::getSlotsMax(IngredientSlot &data, int index) const
 {
-	const SharedDraftSchematicObjectTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const SharedDraftSchematicObjectTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedDraftSchematicObjectTemplate *>(m_baseData);
 	}
 
 	if (!m_slotsLoaded)
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter slots in template %s", DataResource::getName()));
 			return ;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter slots has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter slots has not been defined in template %s!", DataResource::getName()));
 			base->getSlotsMax(data, index);
 			return;
 		}
 	}
 
-	if (m_slotsAppend && base != NULL)
+	if (m_slotsAppend && base != nullptr)
 	{
 		int baseCount = base->getSlotsCount();
 		if (index < baseCount)
@@ -258,20 +258,20 @@ size_t SharedDraftSchematicObjectTemplate::getSlotsCount(void) const
 {
 	if (!m_slotsLoaded)
 	{
-		if (m_baseData == NULL)
+		if (m_baseData == nullptr)
 			return 0;
 		const SharedDraftSchematicObjectTemplate * base = dynamic_cast<const SharedDraftSchematicObjectTemplate *>(m_baseData);
-		DEBUG_FATAL(base == NULL, ("base template wrong type"));
+		DEBUG_FATAL(base == nullptr, ("base template wrong type"));
 		return base->getSlotsCount();
 	}
 
 	size_t count = m_slots.size();
 
 	// if we are extending our base template, add it's count
-	if (m_slotsAppend && m_baseData != NULL)
+	if (m_slotsAppend && m_baseData != nullptr)
 	{
 		const SharedDraftSchematicObjectTemplate * base = dynamic_cast<const SharedDraftSchematicObjectTemplate *>(m_baseData);
-		if (base != NULL)
+		if (base != nullptr)
 			count += base->getSlotsCount();
 	}
 
@@ -280,28 +280,28 @@ size_t SharedDraftSchematicObjectTemplate::getSlotsCount(void) const
 
 void SharedDraftSchematicObjectTemplate::getAttributes(SchematicAttribute &data, int index) const
 {
-	const SharedDraftSchematicObjectTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const SharedDraftSchematicObjectTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedDraftSchematicObjectTemplate *>(m_baseData);
 	}
 
 	if (!m_attributesLoaded)
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter attributes in template %s", DataResource::getName()));
 			return ;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter attributes has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter attributes has not been defined in template %s!", DataResource::getName()));
 			base->getAttributes(data, index);
 			return;
 		}
 	}
 
-	if (m_attributesAppend && base != NULL)
+	if (m_attributesAppend && base != nullptr)
 	{
 		int baseCount = base->getAttributesCount();
 		if (index < baseCount)
@@ -324,28 +324,28 @@ void SharedDraftSchematicObjectTemplate::getAttributes(SchematicAttribute &data,
 
 void SharedDraftSchematicObjectTemplate::getAttributesMin(SchematicAttribute &data, int index) const
 {
-	const SharedDraftSchematicObjectTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const SharedDraftSchematicObjectTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedDraftSchematicObjectTemplate *>(m_baseData);
 	}
 
 	if (!m_attributesLoaded)
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter attributes in template %s", DataResource::getName()));
 			return ;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter attributes has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter attributes has not been defined in template %s!", DataResource::getName()));
 			base->getAttributesMin(data, index);
 			return;
 		}
 	}
 
-	if (m_attributesAppend && base != NULL)
+	if (m_attributesAppend && base != nullptr)
 	{
 		int baseCount = base->getAttributesCount();
 		if (index < baseCount)
@@ -368,28 +368,28 @@ void SharedDraftSchematicObjectTemplate::getAttributesMin(SchematicAttribute &da
 
 void SharedDraftSchematicObjectTemplate::getAttributesMax(SchematicAttribute &data, int index) const
 {
-	const SharedDraftSchematicObjectTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const SharedDraftSchematicObjectTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedDraftSchematicObjectTemplate *>(m_baseData);
 	}
 
 	if (!m_attributesLoaded)
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter attributes in template %s", DataResource::getName()));
 			return ;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter attributes has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter attributes has not been defined in template %s!", DataResource::getName()));
 			base->getAttributesMax(data, index);
 			return;
 		}
 	}
 
-	if (m_attributesAppend && base != NULL)
+	if (m_attributesAppend && base != nullptr)
 	{
 		int baseCount = base->getAttributesCount();
 		if (index < baseCount)
@@ -414,20 +414,20 @@ size_t SharedDraftSchematicObjectTemplate::getAttributesCount(void) const
 {
 	if (!m_attributesLoaded)
 	{
-		if (m_baseData == NULL)
+		if (m_baseData == nullptr)
 			return 0;
 		const SharedDraftSchematicObjectTemplate * base = dynamic_cast<const SharedDraftSchematicObjectTemplate *>(m_baseData);
-		DEBUG_FATAL(base == NULL, ("base template wrong type"));
+		DEBUG_FATAL(base == nullptr, ("base template wrong type"));
 		return base->getAttributesCount();
 	}
 
 	size_t count = m_attributes.size();
 
 	// if we are extending our base template, add it's count
-	if (m_attributesAppend && m_baseData != NULL)
+	if (m_attributesAppend && m_baseData != nullptr)
 	{
 		const SharedDraftSchematicObjectTemplate * base = dynamic_cast<const SharedDraftSchematicObjectTemplate *>(m_baseData);
-		if (base != NULL)
+		if (base != nullptr)
 			count += base->getAttributesCount();
 	}
 
@@ -442,33 +442,33 @@ std::string testDataValue = DefaultString;
 UNREF(testData);
 #endif
 
-	const SharedDraftSchematicObjectTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const SharedDraftSchematicObjectTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedDraftSchematicObjectTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getCraftedSharedTemplate(true);
 #endif
 	}
 
 	if (!m_craftedSharedTemplate.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter craftedSharedTemplate in template %s", DataResource::getName()));
 			return DefaultString;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter craftedSharedTemplate has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter craftedSharedTemplate has not been defined in template %s!", DataResource::getName()));
 			return base->getCraftedSharedTemplate();
 		}
 	}
 
 	const std::string & value = m_craftedSharedTemplate.getValue();
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -514,12 +514,12 @@ char paramName[MAX_NAME_SIZE];
 		file.read_string(baseFilename);
 		file.exitChunk();
 		const ObjectTemplate *base = ObjectTemplateList::fetch(baseFilename);
-		DEBUG_WARNING(base == NULL, ("was unable to load base template %s", baseFilename.c_str()));
-		if (m_baseData == base && base != NULL)
+		DEBUG_WARNING(base == nullptr, ("was unable to load base template %s", baseFilename.c_str()));
+		if (m_baseData == base && base != nullptr)
 			base->releaseReference();
 		else
 		{
-			if (m_baseData != NULL)
+			if (m_baseData != nullptr)
 				m_baseData->releaseReference();
 			m_baseData = base;
 		}
@@ -548,7 +548,7 @@ char paramName[MAX_NAME_SIZE];
 			for (iter = m_slots.begin(); iter != m_slots.end(); ++iter)
 			{
 				delete *iter;
-				*iter = NULL;
+				*iter = nullptr;
 			}
 			m_slots.clear();
 			m_slotsAppend = file.read_bool8();
@@ -567,7 +567,7 @@ char paramName[MAX_NAME_SIZE];
 			for (iter = m_attributes.begin(); iter != m_attributes.end(); ++iter)
 			{
 				delete *iter;
-				*iter = NULL;
+				*iter = nullptr;
 			}
 			m_attributes.clear();
 			m_attributesAppend = file.read_bool8();
@@ -646,33 +646,33 @@ StringId testDataValue = DefaultStringId;
 UNREF(testData);
 #endif
 
-	const SharedDraftSchematicObjectTemplate::_IngredientSlot * base = NULL;
-	if (m_baseData != NULL)
+	const SharedDraftSchematicObjectTemplate::_IngredientSlot * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedDraftSchematicObjectTemplate::_IngredientSlot *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getName(true);
 #endif
 	}
 
 	if (!m_name.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter name in template %s", DataResource::getName()));
 			return DefaultStringId;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter name has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter name has not been defined in template %s!", DataResource::getName()));
 			return base->getName(versionOk);
 		}
 	}
 
 	const StringId value = m_name.getValue();
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -688,33 +688,33 @@ std::string testDataValue = DefaultString;
 UNREF(testData);
 #endif
 
-	const SharedDraftSchematicObjectTemplate::_IngredientSlot * base = NULL;
-	if (m_baseData != NULL)
+	const SharedDraftSchematicObjectTemplate::_IngredientSlot * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedDraftSchematicObjectTemplate::_IngredientSlot *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getHardpoint(true);
 #endif
 	}
 
 	if (!m_hardpoint.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter hardpoint in template %s", DataResource::getName()));
 			return DefaultString;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter hardpoint has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter hardpoint has not been defined in template %s!", DataResource::getName()));
 			return base->getHardpoint(versionOk);
 		}
 	}
 
 	const std::string & value = m_hardpoint.getValue();
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -819,33 +819,33 @@ StringId testDataValue = DefaultStringId;
 UNREF(testData);
 #endif
 
-	const SharedDraftSchematicObjectTemplate::_SchematicAttribute * base = NULL;
-	if (m_baseData != NULL)
+	const SharedDraftSchematicObjectTemplate::_SchematicAttribute * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedDraftSchematicObjectTemplate::_SchematicAttribute *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getName(true);
 #endif
 	}
 
 	if (!m_name.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter name in template %s", DataResource::getName()));
 			return DefaultStringId;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter name has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter name has not been defined in template %s!", DataResource::getName()));
 			return base->getName(versionOk);
 		}
 	}
 
 	const StringId value = m_name.getValue();
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -861,33 +861,33 @@ StringId testDataValue = DefaultStringId;
 UNREF(testData);
 #endif
 
-	const SharedDraftSchematicObjectTemplate::_SchematicAttribute * base = NULL;
-	if (m_baseData != NULL)
+	const SharedDraftSchematicObjectTemplate::_SchematicAttribute * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedDraftSchematicObjectTemplate::_SchematicAttribute *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getExperiment(true);
 #endif
 	}
 
 	if (!m_experiment.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter experiment in template %s", DataResource::getName()));
 			return DefaultStringId;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter experiment has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter experiment has not been defined in template %s!", DataResource::getName()));
 			return base->getExperiment(versionOk);
 		}
 	}
 
 	const StringId value = m_experiment.getValue();
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -903,26 +903,26 @@ int testDataValue = 0;
 UNREF(testData);
 #endif
 
-	const SharedDraftSchematicObjectTemplate::_SchematicAttribute * base = NULL;
-	if (m_baseData != NULL)
+	const SharedDraftSchematicObjectTemplate::_SchematicAttribute * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedDraftSchematicObjectTemplate::_SchematicAttribute *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getValue(true);
 #endif
 	}
 
 	if (!m_value.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter value in template %s", DataResource::getName()));
 			return 0;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter value has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter value has not been defined in template %s!", DataResource::getName()));
 			return base->getValue(versionOk);
 		}
 	}
@@ -932,9 +932,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		int baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getValue(versionOk);
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -951,7 +951,7 @@ UNREF(testData);
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -967,26 +967,26 @@ int testDataValue = 0;
 UNREF(testData);
 #endif
 
-	const SharedDraftSchematicObjectTemplate::_SchematicAttribute * base = NULL;
-	if (m_baseData != NULL)
+	const SharedDraftSchematicObjectTemplate::_SchematicAttribute * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedDraftSchematicObjectTemplate::_SchematicAttribute *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getValueMin(true);
 #endif
 	}
 
 	if (!m_value.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter value in template %s", DataResource::getName()));
 			return 0;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter value has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter value has not been defined in template %s!", DataResource::getName()));
 			return base->getValueMin(versionOk);
 		}
 	}
@@ -996,9 +996,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		int baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getValueMin(versionOk);
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -1015,7 +1015,7 @@ UNREF(testData);
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -1031,26 +1031,26 @@ int testDataValue = 0;
 UNREF(testData);
 #endif
 
-	const SharedDraftSchematicObjectTemplate::_SchematicAttribute * base = NULL;
-	if (m_baseData != NULL)
+	const SharedDraftSchematicObjectTemplate::_SchematicAttribute * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const SharedDraftSchematicObjectTemplate::_SchematicAttribute *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getValueMax(true);
 #endif
 	}
 
 	if (!m_value.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter value in template %s", DataResource::getName()));
 			return 0;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter value has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter value has not been defined in template %s!", DataResource::getName()));
 			return base->getValueMax(versionOk);
 		}
 	}
@@ -1060,9 +1060,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		int baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getValueMax(versionOk);
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -1079,7 +1079,7 @@ UNREF(testData);
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif

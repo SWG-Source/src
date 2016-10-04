@@ -62,7 +62,7 @@ public:
 	{
 		INT,      //32 bit signed int
 		FLOAT,    //32 bit signed float
-		CSTRING,  //null terminated char[]
+		CSTRING,  //nullptr terminated char[]
 		BOOL      //0 or 1 (could use an int, but useful for tools)
 	};
 
@@ -92,7 +92,7 @@ public:
 	static void install(RemoveFunction, OpenFunction, CloseFunction, SendFunction, IsReadyFunction);
 
 	///open a session
-	static void open(const char *server = NULL, uint16 port = 0);
+	static void open(const char *server = nullptr, uint16 port = 0);
 
 	///packs the data into a packet, and sends it using the client-defined SendFunction
 	static void send(MESSAGE_TYPE type, const char* name = "");

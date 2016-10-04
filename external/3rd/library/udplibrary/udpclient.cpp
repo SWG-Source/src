@@ -72,15 +72,6 @@ int main(int argc, char **argv)
 	params.pooledPacketMax = 50;
 	params.pooledPacketSize = 512;
 
-#if 0
-	params.simulateIncomingByteRate = 0;
-	params.simulateIncomingLossPercent = 10;
-	params.simulateOutgoingByteRate = 0;
-	params.simulateOutgoingLossPercent = 10;
-	params.simulateDestinationOverloadLevel = 0;
-	params.simulateOutgoingOverloadLevel = 0;
-#endif
-
 	params.reliable[0].maxInstandingPackets = 500;
 	params.reliable[0].maxOutstandingBytes = 200000;
 	params.reliable[0].maxOutstandingPackets = 500;
@@ -106,7 +97,7 @@ int main(int argc, char **argv)
 	printf("Connecting to: %s,%d.", connectIp, connectPort);
 	UdpConnection *myConnection = myUdpManager->EstablishConnection(connectIp, connectPort);
 	myConnection->SetHandler(&myConnectionHandler);
-	assert(myConnection != NULL);
+	assert(myConnection != nullptr);
 	int count = 0;
 	while (myConnection->GetStatus() == UdpConnection::cStatusNegotiating)
 	{
@@ -156,9 +147,7 @@ int main(int argc, char **argv)
 			break;
 		}
 
-
-#if 1
-			// randomly send a medium sized packet on a random channel
+		// randomly send a medium sized packet on a random channel
 		if (rand() % 200 == 0)
 		{
 			char buf[8000];
@@ -176,54 +165,6 @@ int main(int argc, char **argv)
 				myConnection->Send(cUdpChannelReliable1, buf, len);
 			}
 		}
-#elif 0
-			// send a very large packet one after the other (don't send next packet til the previous one has made it)
-		if (myConnection->TotalPendingBytes() == 0)
-		{
-				// send another packet
-			SimpleLogicalPacket *lp = new SimpleLogicalPacket(NULL, 30000000);
-			int dlen = lp->GetDataLen();
-			char *ptr = (char *)lp->GetDataPtr();
-
-			ptr[0] = (char)(rand() % 50);
-			for (int i = 1; i < dlen; i++)
-			{
-				ptr[i] = (char)(i % 100);
-			}
-
-			printf("OUT LEN=%d  \n", dlen);
-			myConnection->Send(cUdpChannelReliable1, lp);
-			lp->Release();
-		}
-#else
-			// prepare a random sized group of medium packets and then send the group, don't prepare next group until previous one has made it
-		UdpConnection::ChannelStatus cs;
-		myConnection->GetChannelStatus(cUdpChannelReliable1, &cs);
-		if (cs.queuedBytes == 0)
-		{
-			int count = 0;
-			GroupLogicalPacket *glp = new GroupLogicalPacket();
-			int di = rand() % 20 + 1;
-			for (int i = 0; i < di; i++)
-			{
-				GroupLogicalPacket *sub = new GroupLogicalPacket();
-				for (int j = 0; j < di; j++)
-				{
-					char buf[8000];
-					*(ushort *)buf = count;
-					int len = (rand() % 1000) + 10;
-					*(ushort *)(buf + len - 2) = count;
-					sub->AddPacket(buf, len);
-					count++;
-				}
-				glp->AddPacket(sub);
-				sub->Release();
-			}
-			myConnection->Send(cUdpChannelReliable1, glp);
-			glp->Release();
-			printf("Group of %d packets sent\n", count);
-		}
-#endif
 
 		myUdpManager->GiveTime();
 		Sleep(10);

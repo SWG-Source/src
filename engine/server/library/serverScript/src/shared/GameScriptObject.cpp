@@ -9,7 +9,6 @@
 #include "serverScript/FirstServerScript.h"
 #include "serverScript/GameScriptObject.h"
 
-#include "boost/smart_ptr.hpp"
 #include "ScriptMessage.h"
 #include "serverGame/ConfigServerGame.h"
 #include "serverGame/ServerController.h"
@@ -40,7 +39,7 @@
 // class GameScriptObject static members
 //========================================================================
 
-GameScriptObject::ScriptDataMap * GameScriptObject::ms_scriptDataMap = NULL;
+GameScriptObject::ScriptDataMap * GameScriptObject::ms_scriptDataMap = nullptr;
 bool GameScriptObject::m_pauseScripting = false;
 
 
@@ -52,7 +51,7 @@ bool GameScriptObject::m_pauseScripting = false;
  * Class constructor.
  */
 GameScriptObject::GameScriptObject(void) :
-	m_owner(NULL),
+	m_owner(nullptr),
 	m_scriptList(),
 	m_scriptListInitialized(false),
 	m_scriptListValid(false),
@@ -69,11 +68,11 @@ GameScriptObject::~GameScriptObject()
 {
 	{
 	PROFILER_AUTO_BLOCK_DEFINE("GameScriptObject::~GameScriptObject removeJavaId\n");
-	if (JavaLibrary::instance() != NULL /*&& m_javaId != NULL*/)
+	if (JavaLibrary::instance() != nullptr /*&& m_javaId != nullptr*/)
 	{
 		NOT_NULL(m_owner);
 		JavaLibrary::removeJavaId(m_owner->getNetworkId());
-//		m_javaId = NULL;
+//		m_javaId = nullptr;
 	}
 	}
 
@@ -82,7 +81,7 @@ GameScriptObject::~GameScriptObject()
 	removeAll();
 	}
 	m_scriptList.clear();
-	m_owner = NULL;
+	m_owner = nullptr;
 }	// GameScriptObject::~GameScriptObject
 
 /**
@@ -92,7 +91,7 @@ GameScriptObject::~GameScriptObject()
  */
 bool GameScriptObject::installScriptEngine(void)
 {
-	if (JavaLibrary::instance() != NULL)
+	if (JavaLibrary::instance() != nullptr)
 	{
 		DEBUG_WARNING(true, ("Trying to install script engine more than once"));
 		return true;
@@ -101,7 +100,7 @@ bool GameScriptObject::installScriptEngine(void)
 	ms_scriptDataMap = new GameScriptObject::ScriptDataMap;
     Scripting::InitScriptFuncHashMap();
     JavaLibrary::install();
-    if (JavaLibrary::instance() == NULL)
+    if (JavaLibrary::instance() == nullptr)
         return false;
 	enableNewJediTracking(ConfigServerGame::getEnableNewJedi());
     return true;
@@ -114,7 +113,7 @@ void GameScriptObject::removeScriptEngine(void)
 {
     JavaLibrary::remove();
     delete ms_scriptDataMap;
-    ms_scriptDataMap = NULL;
+    ms_scriptDataMap = nullptr;
 	Scripting::RemoveScriptFuncHashMap();
 }	// GameScriptObject::removeScriptEngine
 
@@ -145,10 +144,10 @@ void GameScriptObject::alter(real time)
  */
 void GameScriptObject::setOwnerIsAuthoritative(bool authoritative, uint32 pid)
 {
-	if (JavaLibrary::instance() == NULL)
+	if (JavaLibrary::instance() == nullptr)
 		return;
 
-	if (m_owner != NULL && m_owner->getNetworkId() != NetworkId::cms_invalid)
+	if (m_owner != nullptr && m_owner->getNetworkId() != NetworkId::cms_invalid)
 	{
 		JavaLibrary::instance()->setObjIdAuthoritative(m_owner->getNetworkId(), authoritative, pid);
 
@@ -171,9 +170,9 @@ void GameScriptObject::setOwnerIsAuthoritative(bool authoritative, uint32 pid)
  */
 void GameScriptObject::setOwnerIsLoaded(void)
 {
-	if (JavaLibrary::instance() == NULL)
+	if (JavaLibrary::instance() == nullptr)
 		return;
-	if (m_owner != NULL && m_owner->getNetworkId() != NetworkId::cms_invalid)
+	if (m_owner != nullptr && m_owner->getNetworkId() != NetworkId::cms_invalid)
 	{
 		JavaLibrary::instance()->setObjIdLoaded(m_owner->getNetworkId());
 	}
@@ -189,9 +188,9 @@ void GameScriptObject::setOwnerIsLoaded(void)
  */
 void GameScriptObject::setOwnerIsInitialized(void)
 {
-	if (JavaLibrary::instance() == NULL)
+	if (JavaLibrary::instance() == nullptr)
 		return;
-	if (m_owner != NULL && m_owner->getNetworkId() != NetworkId::cms_invalid)
+	if (m_owner != nullptr && m_owner->getNetworkId() != NetworkId::cms_invalid)
 	{
 		JavaLibrary::instance()->setObjIdInitialized(m_owner->getNetworkId());
 		if (m_owner->isAuthoritative())
@@ -211,10 +210,10 @@ void GameScriptObject::setOwnerIsInitialized(void)
  */
 void GameScriptObject::setOwnerDestroyed(void)
 {
-	if (JavaLibrary::instance() == NULL)
+	if (JavaLibrary::instance() == nullptr)
 		return;
 
-	if (m_owner != NULL && m_owner->getNetworkId() != NetworkId::cms_invalid && m_owner->isAuthoritative())
+	if (m_owner != nullptr && m_owner->getNetworkId() != NetworkId::cms_invalid && m_owner->isAuthoritative())
 		JavaLibrary::flagDestroyed(m_owner->getNetworkId());
 
 } //lint !e1762 Do not make const
@@ -283,7 +282,7 @@ int GameScriptObject::attachScript(const std::string& scriptName, bool runTrigge
 	}
 	else
 	{
-		if (ms_scriptDataMap == NULL || JavaLibrary::instance() == NULL)
+		if (ms_scriptDataMap == nullptr || JavaLibrary::instance() == nullptr)
 			return SCRIPT_CONTINUE;
 
 		if (ms_scriptDataMap->find(scriptName) == ms_scriptDataMap->end())
@@ -379,7 +378,7 @@ int GameScriptObject::detachScript(const std::string& scriptName)
 	else
 	{
 
-		if (JavaLibrary::instance() == NULL)
+		if (JavaLibrary::instance() == nullptr)
 			return SCRIPT_CONTINUE;
 
 		// Make sure to call the detach trigger on this one script if one exists.
@@ -420,12 +419,12 @@ void GameScriptObject::initScriptInstances()
 {
 	m_scriptListInitialized = true;
 
-	if (JavaLibrary::instance() == NULL)
+	if (JavaLibrary::instance() == nullptr)
 		return;
 
 	if (!m_owner)
 	{
-		WARNING_STRICT_FATAL(true, ("Use of null m_owner in ::initScriptInstances()"));
+		WARNING_STRICT_FATAL(true, ("Use of nullptr m_owner in ::initScriptInstances()"));
 		return;
 	}
 
@@ -454,7 +453,7 @@ void GameScriptObject::initScriptInstances()
  */
 void GameScriptObject::removeAll(void)
 {
-	if (JavaLibrary::instance() == NULL)
+	if (JavaLibrary::instance() == nullptr)
 		return;
 
 	// removeAll() cannot be overriden by scripts
@@ -483,12 +482,12 @@ int GameScriptObject::trigAllScripts(Scripting::TrigId trigId, ScriptParams &par
 {
 	NOT_NULL(m_owner);
 
-	if (JavaLibrary::instance() == NULL)
+	if (JavaLibrary::instance() == nullptr)
 		return SCRIPT_CONTINUE;
 
-//	if (m_javaId == NULL && m_owner != NULL && m_owner->getNetworkId().getValue() != 0)
+//	if (m_javaId == nullptr && m_owner != nullptr && m_owner->getNetworkId().getValue() != 0)
 //	{
-//		if (JavaLibrary::instance() != NULL)
+//		if (JavaLibrary::instance() != nullptr)
 //			m_javaId = JavaLibrary::getObjId(m_owner->getNetworkId());
 //	}
 
@@ -497,7 +496,7 @@ int GameScriptObject::trigAllScripts(Scripting::TrigId trigId, ScriptParams &par
 
 	//Authoritative check temporarily removed because some triggers aren't being called
 	//because the setAuth message hasn't come in yet from Central on load.
-	if (m_owner == NULL) //@todo FIX THIS HACK || !m_owner->isAuthoritative())
+	if (m_owner == nullptr) //@todo FIX THIS HACK || !m_owner->isAuthoritative())
 		return SCRIPT_CONTINUE;
 	
 	if(!m_owner->isAuthoritative())
@@ -506,7 +505,7 @@ int GameScriptObject::trigAllScripts(Scripting::TrigId trigId, ScriptParams &par
 		Archive::put(paramArchive, params);
 		MessageQueueScriptTrigger * data = new MessageQueueScriptTrigger(static_cast<int>(trigId), paramArchive);
 		ServerController * controller = dynamic_cast<ServerController *>(m_owner->getController());
-		if(controller != NULL)
+		if(controller != nullptr)
 		{
 			controller->appendMessage(
 				CM_scriptTrigger,
@@ -557,13 +556,13 @@ int GameScriptObject::trigAllScripts(Scripting::TrigId trigId, ScriptParams &par
  */
 int GameScriptObject::trigOneScript(const std::string& scriptName, Scripting::TrigId trigId, ScriptParams &params) const
 {
-	if (JavaLibrary::instance() == NULL)
+	if (JavaLibrary::instance() == nullptr)
 		return SCRIPT_CONTINUE;
 
 	if (m_pauseScripting)
 		return SCRIPT_CONTINUE;
 
-	if (m_owner == NULL /*|| !m_owner->isAuthoritative()*/)
+	if (m_owner == nullptr /*|| !m_owner->isAuthoritative()*/)
 		return SCRIPT_OVERRIDE;
 
 	if (!m_owner->isAuthoritative() && (trigId != Scripting::TRIG_ATTACH &&
@@ -607,7 +606,7 @@ int GameScriptObject::trigOneScript(const std::string& scriptName, Scripting::Tr
 int GameScriptObject::trigScriptFromConsole(const Scripting::TrigId trigId,
 	const std::string &scriptName, const StringVector_t &args) const
 {
-	if (JavaLibrary::instance() == NULL)
+	if (JavaLibrary::instance() == nullptr)
 	{
 		LOG("ScriptInvestigation", ("Returning script continue from console trigger request because there is no JavaLibrary instance\n"));
 		return SCRIPT_CONTINUE;
@@ -619,9 +618,9 @@ int GameScriptObject::trigScriptFromConsole(const Scripting::TrigId trigId,
 		return SCRIPT_CONTINUE;
 	}
 
-	if (m_owner == NULL )
+	if (m_owner == nullptr )
 	{
-		LOG("ScriptInvestigation", ("Returning script override from console trigger request becuase m_owner is null\n"));
+		LOG("ScriptInvestigation", ("Returning script override from console trigger request becuase m_owner is nullptr\n"));
 		return SCRIPT_OVERRIDE;
 	}
 
@@ -660,14 +659,14 @@ int GameScriptObject::trigScriptFromConsole(const Scripting::TrigId trigId,
 bool GameScriptObject::handleMessage(const std::string &messageName,
 	const ScriptDictionaryPtr & data)
 {
-	if (JavaLibrary::instance() == NULL)
+	if (JavaLibrary::instance() == nullptr)
 	{
 		WARNING_STRICT_FATAL(true, ("(messageToFailure) GameScriptObject::handleMessage got message "
 			"when Java not running"));
 		return true;
 	}
 
-	if (getOwner() == NULL)
+	if (getOwner() == nullptr)
 	{
 		WARNING_STRICT_FATAL(true, ("(messageToFailure) GameScriptObject::handleMessage got message "
 			"with no owner"));
@@ -703,7 +702,7 @@ bool GameScriptObject::handleMessage(const std::string &messageName, const std::
 {
 	ScriptDictionaryPtr dictionary;
 
-	if (JavaLibrary::instance() == NULL)
+	if (JavaLibrary::instance() == nullptr)
 		return true;
 
 	if (m_pauseScripting)
@@ -733,7 +732,7 @@ bool GameScriptObject::handleMessage(const std::string &messageName, const std::
  */
 int GameScriptObject::callScriptCommandHandler(std::string const &funcName, ScriptParams &params) const
 {
-	if (JavaLibrary::instance() == NULL)
+	if (JavaLibrary::instance() == nullptr)
 		return SCRIPT_CONTINUE;
 
 	if (m_pauseScripting)
@@ -757,7 +756,7 @@ int GameScriptObject::callScriptCommandHandler(std::string const &funcName, Scri
  */
 int GameScriptObject::callScriptBuffHandler(std::string const &funcName, ScriptParams &params) const
 {
-	if (JavaLibrary::instance() == NULL)
+	if (JavaLibrary::instance() == nullptr)
 		return SCRIPT_CONTINUE;
 
 	if (m_pauseScripting)
@@ -825,7 +824,7 @@ void GameScriptObject::enumerateScripts(std::vector<std::string> &scriptNames) c
  */
 void GameScriptObject::makeScriptDictionary(const ScriptParams & params, ScriptDictionaryPtr & dictionary)
 {
-	if (JavaLibrary::instance() != NULL)
+	if (JavaLibrary::instance() != nullptr)
 	{
 		JavaDictionaryPtr jdp;
 		JavaLibrary::instance()->convert(params, jdp);
@@ -840,7 +839,7 @@ void GameScriptObject::makeScriptDictionary(const ScriptParams & params, ScriptD
  */
 bool GameScriptObject::isScriptingEnabled(void)
 {
-	if (JavaLibrary::instance() != NULL)
+	if (JavaLibrary::instance() != nullptr)
 		return true;
 	return false;
 }	// GameScriptObject::isScriptingEnabled
@@ -854,7 +853,7 @@ bool GameScriptObject::isScriptingEnabled(void)
  */
 bool GameScriptObject::reloadScript(const std::string& scriptName)
 {
-	if (JavaLibrary::instance() == NULL)
+	if (JavaLibrary::instance() == nullptr)
 		return false;
 
 	
@@ -904,7 +903,7 @@ bool GameScriptObject::reloadScript(const std::string& scriptName)
  */
 void GameScriptObject::enableLogging(bool enable)
 {
-	if (JavaLibrary::instance() != NULL)
+	if (JavaLibrary::instance() != nullptr)
 		JavaLibrary::instance()->enableLogging(enable);
 }	// GameScriptObject::enableLogging
 
@@ -917,7 +916,7 @@ void GameScriptObject::enableLogging(bool enable)
  */
 void GameScriptObject::enableNewJediTracking(bool enableTracking)
 {
-	if (JavaLibrary::instance() != NULL)
+	if (JavaLibrary::instance() != nullptr)
 		JavaLibrary::instance()->enableNewJediTracking(enableTracking);
 }	// GameScriptObject::enableNewJediTracking
 
@@ -946,7 +945,7 @@ Scheduler & GameScriptObject::getScriptScheduler()
 
 void GameScriptObject::onStopWatching(ServerObject & subject)
 {
-	if (JavaLibrary::instance() == NULL)
+	if (JavaLibrary::instance() == nullptr)
 		return;
 
 	if (m_owner)
@@ -959,7 +958,7 @@ void GameScriptObject::onStopWatching(ServerObject & subject)
 
 void GameScriptObject::onWatching(ServerObject & subject)
 {
-	if (JavaLibrary::instance() == NULL)
+	if (JavaLibrary::instance() == nullptr)
 		return;
 
 	if (m_owner)
@@ -972,7 +971,7 @@ void GameScriptObject::onWatching(ServerObject & subject)
 
 void GameScriptObject::runOneScript(const std::string & scriptName, const std::string & methodName, const std::string & argTypes, ScriptParams & args)
 {
-	if (JavaLibrary::instance() != NULL)
+	if (JavaLibrary::instance() != nullptr)
 		IGNORE_RETURN( JavaLibrary::instance()->runScript(NetworkId(), scriptName, methodName, argTypes, args) );
 }
 
@@ -994,7 +993,7 @@ std::string GameScriptObject::callScriptConsoleHandler(const std::string & scrip
 {
 static const std::string errorReturnString;
 
-	if (JavaLibrary::instance() != NULL)
+	if (JavaLibrary::instance() != nullptr)
 	{
 		return JavaLibrary::instance()->callScriptConsoleHandler(scriptName, methodName, argTypes, args);
 	}
@@ -1019,7 +1018,7 @@ void GameScriptObject::callSpaceClearOvert(const NetworkId &ship)
 
 std::string GameScriptObject::callDumpTargetInfo( NetworkId &id )
 {
-	if( JavaLibrary::instance() != NULL )
+	if( JavaLibrary::instance() != nullptr )
 	{
 		return JavaLibrary::instance()->getObjectDumpInfo( id );
 	}
@@ -1030,7 +1029,7 @@ std::string GameScriptObject::callDumpTargetInfo( NetworkId &id )
 
 void GameScriptObject::setScriptVar(const std::string & name, int value)
 {
-	if (JavaLibrary::instance() == NULL || m_owner == NULL)
+	if (JavaLibrary::instance() == nullptr || m_owner == nullptr)
 		return;
 
 	JavaLibrary::setScriptVar(*m_owner, name, value);
@@ -1040,7 +1039,7 @@ void GameScriptObject::setScriptVar(const std::string & name, int value)
 
 void GameScriptObject::setScriptVar(const std::string & name, float value)
 {
-	if (JavaLibrary::instance() == NULL || m_owner == NULL)
+	if (JavaLibrary::instance() == nullptr || m_owner == nullptr)
 		return;
 
 	JavaLibrary::setScriptVar(*m_owner, name, value);
@@ -1050,7 +1049,7 @@ void GameScriptObject::setScriptVar(const std::string & name, float value)
 
 void GameScriptObject::setScriptVar(const std::string & name, const std::string & value)
 {
-	if (JavaLibrary::instance() == NULL || m_owner == NULL)
+	if (JavaLibrary::instance() == nullptr || m_owner == nullptr)
 		return;
 
 	JavaLibrary::setScriptVar(*m_owner, name, value);
@@ -1060,7 +1059,7 @@ void GameScriptObject::setScriptVar(const std::string & name, const std::string 
 
 void GameScriptObject::packAllScriptVarDeltas()
 {
-	if (JavaLibrary::instance() == NULL)
+	if (JavaLibrary::instance() == nullptr)
 		return;
 
 	JavaLibrary::packAllDeltaScriptVars();
@@ -1070,7 +1069,7 @@ void GameScriptObject::packAllScriptVarDeltas()
 
 void GameScriptObject::clearScriptVars()
 {
-	if (JavaLibrary::instance() == NULL || m_owner == NULL)
+	if (JavaLibrary::instance() == nullptr || m_owner == nullptr)
 		return;
 
 	JavaLibrary::clearScriptVars(*m_owner);
@@ -1080,7 +1079,7 @@ void GameScriptObject::clearScriptVars()
 
 void GameScriptObject::packScriptVars(std::vector<int8> & target) const
 {
-	if (JavaLibrary::instance() == NULL || m_owner == NULL)
+	if (JavaLibrary::instance() == nullptr || m_owner == nullptr)
 		return;
 
 	JavaLibrary::packScriptVars(*m_owner, target);
@@ -1090,7 +1089,7 @@ void GameScriptObject::packScriptVars(std::vector<int8> & target) const
 
 void GameScriptObject::unpackScriptVars(const std::vector<int8> & source) const
 {
-	if (JavaLibrary::instance() == NULL || m_owner == NULL)
+	if (JavaLibrary::instance() == nullptr || m_owner == nullptr)
 		return;
 
 	JavaLibrary::unpackScriptVars(*m_owner, source);
@@ -1100,7 +1099,7 @@ void GameScriptObject::unpackScriptVars(const std::vector<int8> & source) const
 
 void GameScriptObject::unpackDeltaScriptVars(const std::vector<int8> & data) const
 {
-	if (JavaLibrary::instance() == NULL || m_owner == NULL)
+	if (JavaLibrary::instance() == nullptr || m_owner == nullptr)
 		return;
 
 	DEBUG_REPORT_LOG(! m_owner, ("A game script object received a request to unpack script var synchronization data, but it has no owner object!!! All GameScriptObjects MUST have owners!\n"));
@@ -1238,18 +1237,18 @@ namespace Archive
 
 GameScriptObject * GameScriptObject::asGameScriptObject(Object * const object)
 {
-	ServerObject * const serverObject = (object != NULL) ? object->asServerObject() : NULL;
+	ServerObject * const serverObject = (object != nullptr) ? object->asServerObject() : nullptr;
 
-	return (serverObject != NULL) ? serverObject->getScriptObject() : NULL;
+	return (serverObject != nullptr) ? serverObject->getScriptObject() : nullptr;
 }
 
 // ----------------------------------------------------------------------
 
 GameScriptObject const * GameScriptObject::asGameScriptObject(Object const * const object)
 {
-	ServerObject const * const serverObject = (object != NULL) ? object->asServerObject() : NULL;
+	ServerObject const * const serverObject = (object != nullptr) ? object->asServerObject() : nullptr;
 
-	return (serverObject != NULL) ? serverObject->getScriptObject() : NULL;
+	return (serverObject != nullptr) ? serverObject->getScriptObject() : nullptr;
 }
 
 // ======================================================================

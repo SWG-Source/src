@@ -92,7 +92,6 @@ namespace ChatLogManagerNamespace
 	time_t s_purgeTime = 0;
 	int s_currentIndex = 0;
 	time_t s_chatLogMemoryTimer = 0;
-	time_t const s_chatLogMemoryTime = 30;
 	int s_cacheHits = 0;
 	int s_cacheMisses = 0;
 	
@@ -135,7 +134,7 @@ void ChatLogManagerNamespace::addChatLogEntry(Unicode::String const &fromPlayer,
 	}
 	else
 	{
-		Unicode::String const *finalMessage = NULL;
+		Unicode::String const *finalMessage = nullptr;
 
 		// Add the new string to the master message list, or if it already exists, just increase the reference count
 

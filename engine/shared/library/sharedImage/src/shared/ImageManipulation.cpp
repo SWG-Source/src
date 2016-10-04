@@ -367,13 +367,6 @@ void ImageManipulation::install(const InstallData &installData)
 
 	//-- make sure we've got valid function pointers for all
 	NOT_NULL(ms_nextMipmapFunction);
-#if 0
-	NOT_NULL(ms_convertFormatFunction);
-	NOT_NULL(ms_copyIgnoreAlphaFunction);
-	NOT_NULL(ms_copyRespectAlphaFunction);
-	NOT_NULL(ms_blendFunction);
-	NOT_NULL(ms_blendTwoFunction);
-#endif
 }
 
 // ----------------------------------------------------------------------

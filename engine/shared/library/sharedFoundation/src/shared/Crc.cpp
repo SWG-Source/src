@@ -78,28 +78,9 @@ uint32 Crc::calculate(const char *string)
 
 // ----------------------------------------------------------------------
 
-#if 0
-
-uint32 Crc::calculateWithToLower(const char *string)
-{
-	uint32 crc;
-
-	if (!string)
-		return 0;
-
-	for (crc = CRC_INIT; *string; ++string)
-		crc = crctable[((crc>>24) ^ static_cast<uint32>(tolower(*string))) & 0xFF] ^ (crc << 8);
-
-	return (crc ^ CRC_INIT);
-}
-
-#endif
-
-// ----------------------------------------------------------------------
-
 uint32 Crc::calculate(const void *data, int length, uint32 initCrc)
 {
-	DEBUG_FATAL(!data, ("null data arg"));
+	DEBUG_FATAL(!data, ("nullptr data arg"));
 
 	uint32       crc;
 	const byte  *d = reinterpret_cast<const byte *>(data);

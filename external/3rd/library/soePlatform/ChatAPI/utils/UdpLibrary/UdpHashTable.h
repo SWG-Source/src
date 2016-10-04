@@ -38,11 +38,11 @@ template<typename T> class HashTable
         bool Remove(T& obj, int hashValue);
         void Reset();            // removes all entries from the table
 
-        T *FindFirst(int hashValue) const;        // returns NULL if not found
-        T *FindNext(T *prevResult) const;            // returns NULL if not found
+        T *FindFirst(int hashValue) const;        // returns nullptr if not found
+        T *FindNext(T *prevResult) const;            // returns nullptr if not found
 
-        T *WalkFirst() const;                        // returns NULL if not found
-        T *WalkNext(T *prevResult) const;            // returns NULL if not found
+        T *WalkFirst() const;                        // returns nullptr if not found
+        T *WalkNext(T *prevResult) const;            // returns nullptr if not found
 
         void Resize(int hashSize);            // the actual hash size will be rounded up to the next larger prime number (very slow, not recommended)
         void GetStatistics(HashTableStatistics *stats) const;
@@ -64,7 +64,7 @@ template<typename T> class HashTable
 
 template<typename T> HashTable<T>::HashTable(int hashSize)
 {
-    mTable = NULL;
+    mTable = nullptr;
     mTableSize = 0;
     mEntryCount = 0;
     mStatUsedSlots = 0;
@@ -84,9 +84,9 @@ template<typename T> void HashTable<T>::Insert(T& obj, int hashValue)
     entry->hashValue = hashValue;
 
     int spot = ((unsigned)hashValue) % mTableSize;
-    if (mTable[spot] == NULL)
+    if (mTable[spot] == nullptr)
     {
-        entry->nextEntry = NULL;
+        entry->nextEntry = nullptr;
         mTable[spot] = entry;
         mStatUsedSlots++;
     }
@@ -103,14 +103,14 @@ template<typename T> bool HashTable<T>::Remove(T& obj, int hashValue)
     int spot = ((unsigned)hashValue) % mTableSize;
     HashEntry* next = mTable[spot];
     HashEntry** prev = &mTable[spot];
-    while (next != NULL)
+    while (next != nullptr)
     {
         if (next->obj == obj && next->hashValue == hashValue)
         {
             *prev = next->nextEntry;
             delete next;
             mEntryCount--;
-            if (mTable[spot] == NULL)
+            if (mTable[spot] == nullptr)
                 mStatUsedSlots--;
             return(true);
             break;
@@ -127,17 +127,17 @@ template<typename T> void HashTable<T>::Reset()
     for (int spot = 0; spot < mTableSize; spot++)
     {
         HashEntry *curr = mTable[spot];
-        if (curr != NULL)
+        if (curr != nullptr)
         {
             mStatUsedSlots--;
-            while (curr != NULL)
+            while (curr != nullptr)
             {
                 HashEntry *next = curr->nextEntry;
                 delete curr;
                 mEntryCount--;
                 curr = next;
             }
-            mTable[spot] = NULL;
+            mTable[spot] = nullptr;
         }
     }
 }
@@ -145,13 +145,13 @@ template<typename T> void HashTable<T>::Reset()
 template<typename T> T *HashTable<T>::FindFirst(int hashValue) const
 {
     HashEntry *entry = mTable[((unsigned)hashValue) % mTableSize];
-    while (entry != NULL)
+    while (entry != nullptr)
     {
         if (entry->hashValue == hashValue)
             return(&entry->obj);
         entry = entry->nextEntry;
     }
-    return(NULL);
+    return(nullptr);
 }
 
 template<typename T> T *HashTable<T>::FindNext(T *prevResult) const
@@ -159,13 +159,13 @@ template<typename T> T *HashTable<T>::FindNext(T *prevResult) const
     HashEntry *entry = (HashEntry *)(((char *)prevResult) - offsetof(HashEntry, obj));
     int hashValue = entry->hashValue;
     entry = entry->nextEntry;
-    while (entry != NULL)
+    while (entry != nullptr)
     {
         if (entry->hashValue == hashValue)
             return(&entry->obj);
         entry = entry->nextEntry;
     }
-    return(NULL);
+    return(nullptr);
 }
 
 template<typename T> T *HashTable<T>::WalkFirst() const
@@ -173,10 +173,10 @@ template<typename T> T *HashTable<T>::WalkFirst() const
     for (int bucket = 0; bucket < mTableSize; bucket++)
     {
         HashEntry *entry = mTable[bucket];
-        if (entry != NULL)
+        if (entry != nullptr)
             return(&entry->obj);
     }
-    return(NULL);
+    return(nullptr);
 }
 
 template<typename T> T *HashTable<T>::WalkNext(T *prevResult) const
@@ -185,17 +185,17 @@ template<typename T> T *HashTable<T>::WalkNext(T *prevResult) const
     int bucket = ((unsigned)entry->hashValue) % mTableSize;
 
     entry = entry->nextEntry;
-    if (entry != NULL)
+    if (entry != nullptr)
         return(&entry->obj);
 
     bucket++;    // go onto next bucket
     for (; bucket < mTableSize; bucket++)
     {
         HashEntry *entry = mTable[bucket];
-        if (entry != NULL)
+        if (entry != nullptr)
             return(&entry->obj);
     }
-    return(NULL);
+    return(nullptr);
 }
 
 template<typename T> void HashTable<T>::Resize(int hashSize)
@@ -215,16 +215,16 @@ template<typename T> void HashTable<T>::Resize(int hashSize)
         for (int i = 0; i < oldSize; i++)
         {
             HashEntry* next = oldTable[i];
-            while (next != NULL)
+            while (next != nullptr)
             {
                 HashEntry* hold = next;
                 next = next->nextEntry;
 
                     // insert hold into new table
                 int spot = ((unsigned)hold->hashValue) % mTableSize;
-                if (mTable[spot] == NULL)
+                if (mTable[spot] == nullptr)
                 {
-                    hold->nextEntry = NULL;
+                    hold->nextEntry = nullptr;
                     mTable[spot] = hold;
                     mStatUsedSlots++;
                 }
@@ -284,11 +284,11 @@ template<typename T, typename C = T> class ObjectHashTable
         bool Remove(T *obj);
         void Reset();                            // removes all entries from the table
 
-        T *FindFirst(int hashValue) const;        // returns NULL if not found
-        T *FindNext(T *prevResult) const;        // returns NULL if not found
+        T *FindFirst(int hashValue) const;        // returns nullptr if not found
+        T *FindNext(T *prevResult) const;        // returns nullptr if not found
 
-        T *WalkFirst() const;                    // returns NULL if not found
-        T *WalkNext(T *prevResult) const;        // returns NULL if not found
+        T *WalkFirst() const;                    // returns nullptr if not found
+        T *WalkNext(T *prevResult) const;        // returns nullptr if not found
 
         void Resize(int hashSize);                // the actual hash size will be rounded up to the next larger prime number (very slow, not recommended)
         void GetStatistics(HashTableStatistics *stats) const;
@@ -303,7 +303,7 @@ template<typename T, typename C = T> class ObjectHashTable
 
 template<typename T, typename C> ObjectHashTable<T, C>::ObjectHashTable(int hashSize)
 {
-    mTable = NULL;
+    mTable = nullptr;
     mTableSize = 0;
     mEntryCount = 0;
     mStatUsedSlots = 0;
@@ -320,9 +320,9 @@ template<typename T, typename C> void ObjectHashTable<T, C>::Insert(T *obj, int 
     static_cast<C *>(obj)->mHashValue = hashValue;
 
     int spot = ((unsigned)hashValue) % mTableSize;
-    if (mTable[spot] == NULL)
+    if (mTable[spot] == nullptr)
     {
-        static_cast<C *>(obj)->mHashNextEntry = NULL;
+        static_cast<C *>(obj)->mHashNextEntry = nullptr;
         mTable[spot] = obj;
         mStatUsedSlots++;
     }
@@ -339,14 +339,14 @@ template<typename T, typename C> bool ObjectHashTable<T, C>::Remove(T *obj)
     int spot = ((unsigned)static_cast<C *>(obj)->mHashValue) % mTableSize;
     T *cur = mTable[spot];
     T **prev = &mTable[spot];
-    while (cur != NULL)
+    while (cur != nullptr)
     {
         if (cur == obj)
         {
             *prev = static_cast<C *>(cur)->mHashNextEntry;
-            static_cast<C *>(cur)->mHashNextEntry = NULL;
+            static_cast<C *>(cur)->mHashNextEntry = nullptr;
             mEntryCount--;
-            if (mTable[spot] == NULL)
+            if (mTable[spot] == nullptr)
                 mStatUsedSlots--;
             return(true);
             break;
@@ -368,13 +368,13 @@ template<typename T, typename C> void ObjectHashTable<T, C>::Reset()
 template<typename T, typename C> T *ObjectHashTable<T, C>::FindFirst(int hashValue) const
 {
     T *entry = mTable[((unsigned)hashValue) % mTableSize];
-    while (entry != NULL)
+    while (entry != nullptr)
     {
         if (static_cast<C *>(entry)->mHashValue == hashValue)
             return(entry);
         entry = static_cast<C *>(entry)->mHashNextEntry;
     }
-    return(NULL);
+    return(nullptr);
 }
 
 template<typename T, typename C> T *ObjectHashTable<T, C>::FindNext(T *prevResult) const
@@ -382,13 +382,13 @@ template<typename T, typename C> T *ObjectHashTable<T, C>::FindNext(T *prevResul
     T *entry = prevResult;
     int hashValue = static_cast<C *>(entry)->mHashValue;
     entry = static_cast<C *>(entry)->mHashNextEntry;
-    while (entry != NULL)
+    while (entry != nullptr)
     {
         if (static_cast<C *>(entry)->mHashValue == hashValue)
             return(entry);
         entry = static_cast<C *>(entry)->mHashNextEntry;
     }
-    return(NULL);
+    return(nullptr);
 }
 
 template<typename T, typename C> T *ObjectHashTable<T, C>::WalkFirst() const
@@ -396,10 +396,10 @@ template<typename T, typename C> T *ObjectHashTable<T, C>::WalkFirst() const
     for (int bucket = 0; bucket < mTableSize; bucket++)
     {
         T *entry = mTable[bucket];
-        if (entry != NULL)
+        if (entry != nullptr)
             return(entry);
     }
-    return(NULL);
+    return(nullptr);
 }
 
 template<typename T, typename C> T *ObjectHashTable<T, C>::WalkNext(T *prevResult) const
@@ -408,17 +408,17 @@ template<typename T, typename C> T *ObjectHashTable<T, C>::WalkNext(T *prevResul
     int bucket = ((unsigned)static_cast<C *>(entry)->mHashValue) % mTableSize;
 
     entry = static_cast<C *>(entry)->mHashNextEntry;
-    if (entry != NULL)
+    if (entry != nullptr)
         return(entry);
 
     bucket++;    // go onto next bucket
     for (; bucket < mTableSize; bucket++)
     {
         entry = mTable[bucket];
-        if (entry != NULL)
+        if (entry != nullptr)
             return(entry);
     }
-    return(NULL);
+    return(nullptr);
 }
 
 template<typename T, typename C> void ObjectHashTable<T, C>::Resize(int hashSize)
@@ -438,16 +438,16 @@ template<typename T, typename C> void ObjectHashTable<T, C>::Resize(int hashSize
         for (int i = 0; i < oldSize; i++)
         {
             T *cur = oldTable[i];
-            while (cur != NULL)
+            while (cur != nullptr)
             {
                 T *hold = cur;
                 cur = static_cast<C *>(cur)->mHashNextEntry;
 
                     // insert hold into new table
                 int spot = ((unsigned)static_cast<C *>(hold)->mHashValue) % mTableSize;
-                if (mTable[spot] == NULL)
+                if (mTable[spot] == nullptr)
                 {
-                    static_cast<C *>(hold)->mHashNextEntry = NULL;
+                    static_cast<C *>(hold)->mHashNextEntry = nullptr;
                     mTable[spot] = hold;
                     mStatUsedSlots++;
                 }

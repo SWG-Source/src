@@ -33,22 +33,28 @@ void SetWarningCallback(WarningCallback);
 
 // ======================================================================
 
-#define FATAL(a, b) ((a) ? Fatal b : NOP)
 #ifdef _DEBUG
-	#define DEBUG_FATAL(a, b)   ((a) ? DebugFatal b : NOP)
+	#define LINEINFO(a) fprintf(stderr, "\n%s in %s() file %s:%d \n", a, __FUNCTION__, __FILE__ , __LINE__)
+#else
+	#define LINEINFO(a) fprintf(stderr, "%s: ", a)
+#endif
+
+#define FATAL(a, b) ((a) ? LINEINFO("FATAL"), Fatal b : NOP)
+#ifdef _DEBUG
+	#define DEBUG_FATAL(a, b)   ((a) ? LINEINFO("DEBUG FATAL"), DebugFatal b : NOP)
 #else
 	#define DEBUG_FATAL(a, b)   NOP
 #endif
 
-#define WARNING(a, b) ((a) ? Warning b : NOP)
-#define WARNING_STACK_DEPTH(a, b) ((a) ? WarningStackDepth b : NOP)
+#define WARNING(a, b) ((a) ? LINEINFO("WARNING"), Warning b : NOP)
+#define WARNING_STACK_DEPTH(a, b) ((a) ? LINEINFO("WARNING"), WarningStackDepth b : NOP)
 #ifdef _DEBUG
 	#define DEBUG_WARNING(a, b)   WARNING(a, b)
 #else
 	#define DEBUG_WARNING(a, b)   NOP
 #endif
 
-#define CONSOLE_WARNING(a, b) ((a) ? ConsoleWarning b : NOP)
+#define CONSOLE_WARNING(a, b) ((a) ? LINEINFO("WARNING"), ConsoleWarning b : NOP)
 #ifdef _DEBUG
 	#define DEBUG_CONSOLE_WARNING(a, b)   CONSOLE_WARNING(a, b)
 #else
@@ -61,22 +67,22 @@ void SetWarningCallback(WarningCallback);
 	#define WARNING_DEBUG_FATAL(a, b)   WARNING(a, b)
 #endif
 
-#define WARNING_STRICT_FATAL(a, b) ((a) ? WarningStrictFatal b : NOP)
+#define WARNING_STRICT_FATAL(a, b) ((a) ? LINEINFO("WARNING STRICT FATAL"), WarningStrictFatal b : NOP)
 
 #ifdef _DEBUG
 
 	template <class T>
 	inline T *NonNull(T *pointer, const char *name)
 	{
-		WARNING(!pointer, ("%s pointer is null", name));
+		WARNING(!pointer, ("%s pointer is nullptr", name));
 		return pointer;
 	}
 
 	#define NON_NULL(a) NonNull(a, #a)
-	#define NOT_NULL(a) FATAL(!a, ("%s pointer is null", #a))
+	#define NOT_NULL(a) FATAL(!a, ("%s pointer is nullptr", #a))
 
-	// FATAL if the specified pointer is not NULL (i.e. assert that the pointer is null, the opposite of NOT_NULL).
-	#define IS_NULL(a)  FATAL(a, ("%s pointer is not null, unexpected.", #a))
+	// FATAL if the specified pointer is not nullptr (i.e. assert that the pointer is nullptr, the opposite of NOT_NULL).
+	#define IS_NULL(a)  FATAL(a, ("%s pointer is not nullptr, unexpected.", #a))
 
 #else
 

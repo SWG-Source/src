@@ -106,8 +106,8 @@ CollisionMesh::CollisionMesh()
 : CollisionSurface(),
   m_id(0),
   m_version(1),
-  m_boxTree(NULL),
-  m_extent(NULL),
+  m_boxTree(nullptr),
+  m_extent(nullptr),
   m_boundsDirty(true)
 {
     m_extent = new SimpleExtent( MultiShape(AxialBox()) );
@@ -116,10 +116,10 @@ CollisionMesh::CollisionMesh()
 CollisionMesh::~CollisionMesh()
 {
 	delete m_boxTree;
-	m_boxTree = NULL;
+	m_boxTree = nullptr;
 
     delete m_extent;
-    m_extent = NULL;
+    m_extent = nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -154,7 +154,7 @@ BaseExtent const * CollisionMesh::getExtent_p ( void ) const
 void CollisionMesh::clear ( void )
 {
 	delete m_boxTree;
-	m_boxTree = NULL;
+	m_boxTree = nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -1010,7 +1010,7 @@ void CollisionMesh::transform( CollisionMesh const * sourceMesh, Transform const
 
 bool CollisionMesh::hasBoxTree ( void ) const
 {
-	return m_boxTree != NULL;
+	return m_boxTree != nullptr;
 }
 
 // ----------

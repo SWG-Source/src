@@ -137,7 +137,7 @@ AuctionLocation::~AuctionLocation()
 
 bool AuctionLocation::AddAuction(Auction *auction)
 {
-	assert(auction != NULL);
+	assert(auction != nullptr);
 	if (IsVendorMarket() &&
 		(!auction->IsActive() || !IsOwner(auction->GetCreatorId())))
 	{
@@ -189,7 +189,7 @@ void AuctionLocation::CancelVendorSale(Auction *auction)
 
 bool AuctionLocation::RemoveAuction(Auction *auction)
 {
-	assert(auction != NULL);
+	assert(auction != nullptr);
 	return RemoveAuction(auction->GetItem().GetItemId());
 }
 
@@ -265,7 +265,7 @@ Auction *AuctionLocation::GetAuction(const NetworkId & itemId)
 			return((*i).second);
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
 // ----------------------------------------------------------------------

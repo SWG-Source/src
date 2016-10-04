@@ -102,7 +102,7 @@ bool UdpPlatformDriver::SocketOpen(int port, int incomingBufferSize, int outgoin
         addr_loc.sin_family = PF_INET;
         addr_loc.sin_port = htons((unsigned short)port);
         addr_loc.sin_addr.s_addr = htonl(INADDR_ANY);
-        if (bindIpAddress != NULL && bindIpAddress[0] != 0)
+        if (bindIpAddress != nullptr && bindIpAddress[0] != 0)
         {
             unsigned long address = inet_addr(bindIpAddress);
             if (address != INADDR_NONE)
@@ -205,7 +205,7 @@ bool UdpPlatformDriver::GetHostByName(UdpPlatformAddress *ipAddress, const char 
     {
         struct hostent *lphp;
         lphp = gethostbyname(hostName);
-        if (lphp == NULL)
+        if (lphp == nullptr)
         {
             address = 0;
         }
@@ -227,7 +227,7 @@ bool UdpPlatformDriver::GetSelfAddress(UdpPlatformAddress *ipAddress, bool prefe
     if (gethostname(hostname, sizeof(hostname)) == 0)
     {
         struct hostent *entry = gethostbyname(hostname);
-        if (entry != NULL)
+        if (entry != nullptr)
         {
             for (int i = 0; entry->h_addr_list[i] != 0; i++)
             {
@@ -329,10 +329,10 @@ unsigned __stdcall GoThread(void *param)
 UdpPlatformThreadObject::~UdpPlatformThreadObject()
 {
 #ifndef UDPLIBRARY_SINGLE_THREAD
-    if (mThreadData->handle != NULL)
+    if (mThreadData->handle != nullptr)
     {
         CloseHandle(mThreadData->handle);
-        mThreadData->handle = NULL;
+        mThreadData->handle = nullptr;
     }
 #endif
     delete mThreadData;
@@ -343,7 +343,7 @@ void UdpPlatformThreadObject::Start()
     AddRef();
 #ifndef UDPLIBRARY_SINGLE_THREAD
     unsigned threadId;
-    mThreadData->handle = (HANDLE)_beginthreadex(NULL, 0, &GoThread, this, 0, &threadId);
+    mThreadData->handle = (HANDLE)_beginthreadex(nullptr, 0, &GoThread, this, 0, &threadId);
 #else
     GoThread(this);   // run it inline in main thread (blocks til it's finished, so odds are it won't work, but they shouldn't be using it anyhow in this mode)
 #endif
@@ -352,7 +352,7 @@ void UdpPlatformThreadObject::Start()
 UdpPlatformThreadObject::UdpPlatformThreadObject()
 {
     mThreadData = new UdpPlatformThreadData;
-    mThreadData->handle = NULL;
+    mThreadData->handle = nullptr;
     mThreadData->running = false;
 }
 
@@ -389,7 +389,7 @@ char *UdpPlatformAddress::GetAddress(char *buffer, int bufferLen) const
 			*buffer = 0;
 			return(buffer);
 		}
-		assert(buffer != NULL);
+		assert(buffer != nullptr);
 		sprintf(buffer, "%d.%d.%d.%d", mData[0], mData[1], mData[2], mData[3]);
 		return(buffer);
 	}

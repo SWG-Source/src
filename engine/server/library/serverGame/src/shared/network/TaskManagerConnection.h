@@ -21,7 +21,7 @@ public:
 	void	                      onReceive               (const Archive::ByteStream & message);
 
 private:
-	TaskManagerConnection(TaskManagerConnection&);
+	TaskManagerConnection(const TaskManagerConnection&);
 	TaskManagerConnection& operator=(TaskManagerConnection&);
 };
 

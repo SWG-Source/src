@@ -187,7 +187,7 @@ class CA2GZIPT
  int destroy()
  {
     int err = Z_OK;
-	if (m_zstream.state != NULL) {
+	if (m_zstream.state != nullptr) {
     err = deflateEnd(&(m_zstream));
     }
     if (m_z_err < 0) err = m_z_err;
@@ -459,7 +459,7 @@ class CGZIP2AT
  int destroy()
  {
     int err = Z_OK;
-	if (m_zstream.state != NULL) {
+	if (m_zstream.state != nullptr) {
 	    err = inflateEnd(&(m_zstream));
 	}
     if (m_z_err < 0) err = m_z_err;

@@ -25,7 +25,7 @@
 AiShipBehaviorIdle::AiShipBehaviorIdle(AiShipController & aiShipController)
  : AiShipBehaviorBase(aiShipController)
 {
-	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("AiShipBehaviorIdle() unit(%s)", (m_aiShipController.getOwner() != NULL) ? m_aiShipController.getOwner()->getNetworkId().getValueString().c_str() : "NULL owner"));
+	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("AiShipBehaviorIdle() unit(%s)", (m_aiShipController.getOwner() != nullptr) ? m_aiShipController.getOwner()->getNetworkId().getValueString().c_str() : "nullptr owner"));
 }
 
 // ----------------------------------------------------------------------

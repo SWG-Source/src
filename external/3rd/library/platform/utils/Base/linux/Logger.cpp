@@ -18,37 +18,37 @@ Logger::Logger(const char *prefix, int level, unsigned size, bool rollDate)
 : m_defaultLevel(level), m_defaultSize(size), m_dirPrefix(prefix), m_rollDate(rollDate)
 {
 	char buf[1024];
-	FILE *logDir = NULL;
+	FILE *logDir = nullptr;
 	
 	logDir = fopen(m_dirPrefix.c_str(), "r+");
 	if(errno == ENOENT)
 	{
 		cmkdir(m_dirPrefix.c_str(), 0755);
 	}
-	else if(logDir != NULL)
+	else if(logDir != nullptr)
 	{
 		fclose(logDir);
 	}
 	
 	tm now;
-	time_t t = time(NULL);
+	time_t t = time(nullptr);
 	localtime_r(&t, &now);
 
 	memcpy(&m_lastDateTime, &now, sizeof(tm));
 	if(m_rollDate)
 	{
-		sprintf(buf, "%s%c%2.2d-%2.2d-%2.2d", m_dirPrefix.c_str(), file_sep, (now.tm_mon + 1), now.tm_mday, (now.tm_year % 100));
+		snprintf(buf, 1024, "%s%c%2.2d-%2.2d-%2.2d", m_dirPrefix.c_str(), file_sep, (now.tm_mon + 1), now.tm_mday, (now.tm_year % 100));
 	}
 	else
 	{
-		sprintf(buf, "%s", m_dirPrefix.c_str());
+		snprintf(buf, 1024, "%s", m_dirPrefix.c_str());
 	}
 	logDir = fopen(buf, "r+");
 	if(errno == ENOENT)
 	{
 		cmkdir(buf, 0755);
 	}
-	else if(logDir != NULL)
+	else if(logDir != nullptr)
 	{
 		fclose(logDir);
 	}
@@ -178,7 +178,7 @@ void Logger::logSimple(unsigned logenum, int level, const char *message)
 	{
 		return;
 	}
-	time_t t = time(NULL);
+	time_t t = time(nullptr);
 	LogInfo *info = (*iter).second;
 	if(level >= info->level)
 	{
@@ -241,7 +241,7 @@ void Logger::log(unsigned logenum, int level, const char *message, ...)
 	{
                 return;
 	}
-	time_t t = time(NULL);
+	time_t t = time(nullptr);
 	LogInfo *info = (*iter).second;
 	if(level >= info->level)
 	{
@@ -294,14 +294,14 @@ void Logger::log(unsigned logenum, int level, const char *message, ...)
 void Logger::rollDate(time_t t)
 {
 	char buf[80];
-	FILE *logDir = NULL;
+	FILE *logDir = nullptr;
 	
 	logDir = fopen(m_dirPrefix.c_str(), "r+");
 	if(errno == ENOENT)
 	{
 		cmkdir(m_dirPrefix.c_str(), 0755);
 	}
-	else if(logDir != NULL)
+	else if(logDir != nullptr)
 	{
 		fclose(logDir);
 	}
@@ -309,14 +309,14 @@ void Logger::rollDate(time_t t)
 	tm now;
 	localtime_r(&t, &now);
 
-	sprintf(buf, "%s%c%2.2d-%2.2d-%2.2d", m_dirPrefix.c_str(), file_sep, (now.tm_mon + 1), now.tm_mday, (now.tm_year % 100));
+	snprintf(buf, 80, "%s%c%2.2d-%2.2d-%2.2d", m_dirPrefix.c_str(), file_sep, (now.tm_mon + 1), now.tm_mday, (now.tm_year % 100));
 	logDir = fopen(buf, "r+");
 
 	if(errno == ENOENT)
 	{
 		cmkdir(buf, 0755);
 	}
-	else if(logDir != NULL)
+	else if(logDir != nullptr)
 	{
 		fclose(logDir);
 	}

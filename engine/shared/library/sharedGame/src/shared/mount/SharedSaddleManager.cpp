@@ -237,8 +237,6 @@ namespace SharedSaddleManagerNamespace
 
 	ConstCharCrcString const cs_defaultCoveringLogicalAppearanceName("lookup/mnt_wr_default_covering");
 	ConstCharCrcString const cs_saddleHardpointName("saddle");
-	char const * const cs_driverHardpointName = "player";
-	char const * const cs_passengerHardpointName = "passenger";
 
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -433,7 +431,7 @@ int SharedSaddleManagerNamespace::TemporaryRiderPoseMapEntry::getRiderSeatIndex(
 
 CrcString const *SharedSaddleManagerNamespace::TemporaryRiderPoseMapEntry::getRiderPoseName() const
 {
-	return NULL;
+	return nullptr;
 }
 
 // ======================================================================

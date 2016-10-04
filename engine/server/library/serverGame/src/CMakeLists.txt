@@ -543,16 +543,22 @@ set(SHARED_SOURCES
 	shared/objectTemplate/ServerManufactureInstallationObjectTemplate.h
 	shared/objectTemplate/ServerManufactureSchematicObjectTemplate.cpp
 	shared/objectTemplate/ServerManufactureSchematicObjectTemplate.h
+	shared/objectTemplate/ServerMissionBoardObjectTemplate.cpp
+	shared/objectTemplate/ServerMissionBoardObjectTemplate.h
+	shared/objectTemplate/ServerMissionDataObjectTemplate.cpp
+	shared/objectTemplate/ServerMissionDataObjectTemplate.h
+	shared/objectTemplate/ServerMissionListEntryObjectTemplate.cpp
+	shared/objectTemplate/ServerMissionListEntryObjectTemplate.h
 	shared/objectTemplate/ServerMissionObjectTemplate.cpp
 	shared/objectTemplate/ServerMissionObjectTemplate.h
 	shared/objectTemplate/ServerObjectTemplate.cpp
 	shared/objectTemplate/ServerObjectTemplate.h
 	shared/objectTemplate/ServerPlanetObjectTemplate.cpp
 	shared/objectTemplate/ServerPlanetObjectTemplate.h
-	shared/objectTemplate/ServerPlayerQuestObjectTemplate.h
-	shared/objectTemplate/ServerPlayerQuestObjectTemplate.cpp
 	shared/objectTemplate/ServerPlayerObjectTemplate.cpp
 	shared/objectTemplate/ServerPlayerObjectTemplate.h
+	shared/objectTemplate/ServerPlayerQuestObjectTemplate.cpp
+	shared/objectTemplate/ServerPlayerQuestObjectTemplate.h
 	shared/objectTemplate/ServerResourceContainerObjectTemplate.cpp
 	shared/objectTemplate/ServerResourceContainerObjectTemplate.h
 	shared/objectTemplate/ServerSharedObjectTemplateInterface.cpp
@@ -563,6 +569,8 @@ set(SHARED_SOURCES
 	shared/objectTemplate/ServerStaticObjectTemplate.h
 	shared/objectTemplate/ServerTangibleObjectTemplate.cpp
 	shared/objectTemplate/ServerTangibleObjectTemplate.h
+	shared/objectTemplate/ServerTokenObjectTemplate.cpp
+	shared/objectTemplate/ServerTokenObjectTemplate.h
 	shared/objectTemplate/ServerUniverseObjectTemplate.cpp
 	shared/objectTemplate/ServerUniverseObjectTemplate.h
 	shared/objectTemplate/ServerVehicleObjectTemplate.cpp
@@ -570,7 +578,7 @@ set(SHARED_SOURCES
 	shared/objectTemplate/ServerWeaponObjectTemplate.cpp
 	shared/objectTemplate/ServerWeaponObjectTemplate.h
 	shared/objectTemplate/ServerXpManagerObjectTemplate.cpp
-	shared/objectTemplate/ServerXpManagerObjectTemplate.h
+	shared/objectTemplate/ServerXpManagerObjectTemplate.h 
 
 	shared/pvp/Pvp.cpp
 	shared/pvp/PvpFactions.cpp
@@ -752,7 +760,6 @@ include_directories(
 	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicode/include
 	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicodeArchive/include/public
 	${SWG_EXTERNALS_SOURCE_DIR}/3rd/library/platform/projects
-	${Boost_INCLUDE_DIR}
 	${JNI_INCLUDE_DIRS}
 	${PCRE_INCLUDE_DIR}
 )
@@ -779,9 +786,17 @@ add_library(serverGame STATIC
 	${CMAKE_CURRENT_BINARY_DIR}/shared/generated/Packager.cpp
 )
 
+if(NOT WIN32 AND CMAKE_SIZEOF_VOID_P EQUAL 8)
+    target_link_libraries(mulodi)
+endif()
+
 target_link_libraries(serverGame
 	sharedCommandParser
 	sharedPathfinding
 	sharedSkillSystem
 	sharedTerrain
 )
+
+if(${BUILD_MULODI_LIB})
+    target_link_libraries(serverGame mulodi)
+endif()

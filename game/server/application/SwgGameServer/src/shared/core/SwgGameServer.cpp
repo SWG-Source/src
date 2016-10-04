@@ -25,6 +25,7 @@
 #include "SwgGameServer/SwgServerUniverse.h"
 #include "SwgGameServer/CSHandler.h"
 
+#include "sharedFoundation/CrcConstexpr.hpp"
 
 //#undef PROFILE_INDIVIDUAL_MESSAGES
 #define PROFILE_INDIVIDUAL_MESSAGES 1
@@ -55,7 +56,7 @@ SwgGameServer::~SwgGameServer()
 
 void SwgGameServer::install()
 {
-	DEBUG_FATAL (ms_instance != NULL, ("already installed"));
+	DEBUG_FATAL (ms_instance != nullptr, ("already installed"));
 	ms_instance = new SwgGameServer;
 
 	SwgServerUniverse::install();
@@ -100,7 +101,9 @@ void SwgGameServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 
 	PROFILER_AUTO_BLOCK_DEFINE("SwgGameServer::receiveMessage");
 
-	if (message.isType("BountyHunterTargetListMessage"))
+	const uint32 msgType = message.getType();
+	
+	if (msgType == constcrc("BountyHunterTargetListMessage"))
 	{
 		DEBUG_REPORT_LOG(true, ("SwgGameServer: got BountyHunterTargetListMessage\n"));
 		MESSAGE_PROFILER_BLOCK("BountyHunterTargetListMessage");
@@ -110,7 +113,7 @@ void SwgGameServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		JediManagerObject * jediManager = static_cast<SwgServerUniverse &>(
 			ServerUniverse::getInstance()).getJediManager();
 
-		if (jediManager != NULL && jediManager->isAuthoritative())
+		if (jediManager != nullptr && jediManager->isAuthoritative())
 		{
 			jediManager->addJediBounties(*msg);
 			delete msg;
@@ -121,7 +124,7 @@ void SwgGameServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 			JediManagerObject::queueBountyHunterTargetListFromDB(msg);
 		}
 	}
-	else if (message.isType("DeleteCharacterNotificationMessage"))
+	else if (msgType == constcrc("DeleteCharacterNotificationMessage"))
 	{
 		ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 		const GenericValueTypeMessage<NetworkId> msg(ri);
@@ -129,7 +132,7 @@ void SwgGameServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		JediManagerObject * jediManager = static_cast<SwgServerUniverse &>(
 			ServerUniverse::getInstance()).getJediManager();
 
-		if (jediManager != NULL)
+		if (jediManager != nullptr)
 		{
 			jediManager->characterBeingDeleted(msg.getValue());
 		}

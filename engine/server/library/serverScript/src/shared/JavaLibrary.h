@@ -62,7 +62,7 @@ namespace Crafting
 
 namespace Archive
 {
-//	struct DefaultObjectType;
+	//	struct DefaultObjectType;
 	template <typename T, typename U> class AutoDeltaVector;
 }
 
@@ -71,11 +71,9 @@ typedef Unicode::String           String_t;
 typedef stdvector <String_t>::fwd StringVector_t;
 typedef stdvector<ObjectMenuRequestData>::fwd MenuDataVector;
 
-
 //========================================================================
 // C<->Java conversion functions
 //========================================================================
-
 
 namespace ScriptConversion
 {
@@ -127,14 +125,13 @@ namespace ScriptConversion
 	const bool convert(const LocalRefParam & sourceVector, Vector & target);
 }
 
-
 //========================================================================
 // class JavaLibrary
 //========================================================================
 
 class JavaLibrary
 {
-//	friend jobject convertDynamicVariableListToObject(JNIEnv *env, const DynamicVariableList& list);
+	//	friend jobject convertDynamicVariableListToObject(JNIEnv *env, const DynamicVariableList& list);
 	friend const bool ScriptConversion::convert(const Location & sourceLoc, LocalRefPtr & target);
 	friend const bool ScriptConversion::convert(const LocalRefParam & sourceLoc, Location & target);
 	friend const bool ScriptConversion::convert(const LocalObjectArrayRefParam & sourceLoc, stdvector<Location>::fwd & target);
@@ -239,7 +236,7 @@ public:
 	static jlong           getFreeJavaMemory();
 	static void            printJavaStack();
 
-	static ServerObject *  findObjectByNetworkId (const NetworkId & id);
+	static ServerObject *  findObjectByNetworkId(const NetworkId & id);
 
 	static CreatureObject *getCreatureThrow(JNIEnv *env, jlong objId, char const *errorDescription, bool throwIfNotOnServer = true);
 	static ShipObject *    getShipThrow(JNIEnv *env, jlong objId, char const *errorDescription, bool throwIfNotOnServer = true);
@@ -250,7 +247,7 @@ public:
 		if (obj != 0)
 		{
 			NetworkId id(getNetworkId(obj));
-			result = dynamic_cast<OBJPTR>(findObjectByNetworkId (id));
+			result = dynamic_cast<OBJPTR>(findObjectByNetworkId(id));
 			return result != 0;
 		}
 		return 0;
@@ -262,7 +259,7 @@ public:
 		if (obj != 0)
 		{
 			NetworkId id(static_cast<NetworkId::NetworkIdType>(obj));
-			result = dynamic_cast<OBJPTR>(findObjectByNetworkId (id));
+			result = dynamic_cast<OBJPTR>(findObjectByNetworkId(id));
 			return result != 0;
 		}
 		return 0;
@@ -274,7 +271,7 @@ public:
 		if (obj.getValue() != 0)
 		{
 			NetworkId id(getNetworkId(obj));
-			result = dynamic_cast<OBJPTR>(findObjectByNetworkId (id));
+			result = dynamic_cast<OBJPTR>(findObjectByNetworkId(id));
 			return result != 0;
 		}
 		return 0;
@@ -283,7 +280,7 @@ public:
 	template <class OBJPTR, class CTLPTR>
 	static bool getObjectController(const jobject obj, OBJPTR &object, CTLPTR &controller)
 	{
-		if (getObject (obj, object) && object)
+		if (getObject(obj, object) && object)
 		{
 			controller = dynamic_cast<CTLPTR>(object->getController());
 			return controller != 0;
@@ -294,7 +291,7 @@ public:
 	template <class OBJPTR, class CTLPTR>
 	static bool getObjectController(const jlong obj, OBJPTR &object, CTLPTR &controller)
 	{
-		if (getObject (obj, object) && object)
+		if (getObject(obj, object) && object)
 		{
 			controller = dynamic_cast<CTLPTR>(object->getController());
 			return controller != 0;
@@ -341,7 +338,7 @@ public:
 
 	static void         setupWeaponCombatData(JNIEnv *env, const WeaponObject * weapon, jobject weaponData);
 	static LocalRefPtr  createObjectAttribute(const ManufactureObjectInterface & manfSchematic, const DraftSchematicObject & draftSchematic, int attribIndex);
-	static LocalRefPtr  createExperimentAttribute(const ManufactureObjectInterface & manfSchematic,	const StringId & attribName);
+	static LocalRefPtr  createExperimentAttribute(const ManufactureObjectInterface & manfSchematic, const StringId & attribName);
 	static LocalRefPtr  convert(const ManufactureObjectInterface & source);
 	static LocalRefPtr  convert(const ManufactureObjectInterface & schematic, const Crafting::IngredientSlot & source, int amountRequired, const std::string & appearance, const std::string & requiredIngredient);
 	static jobject      convert(const DraftSchematicObject & source);
@@ -355,7 +352,7 @@ public:
 	static jmethodID getMidAttribute();
 	static jfieldID  getFidAttributeType();
 	static jfieldID  getFidAttributeValue();
-	
+
 	static jclass    getClsBaseClassRangeInfo();
 	static jfieldID  getFidBaseClassRangeInfoMinRange();
 	static jfieldID  getFidBaseClassRangeInfoMaxRange();
@@ -375,9 +372,9 @@ public:
 	static jfieldID  getFidBaseClassDefenderResultsResult();
 	static jfieldID  getFidBaseClassDefenderResultsClientEffectId();
 
-	static jclass    getClsColor(); 
+	static jclass    getClsColor();
 	static jmethodID getMidColor();
-	
+
 	static jfieldID  getFidCombatEngineAttackerDataWeaponSkill();
 	static jfieldID  getFidCombatEngineAttackerDataAims();
 	static jfieldID  getFidCombatEngineCombatantDataPos();
@@ -539,7 +536,7 @@ public:
 
 	static jclass    getClsVector();
 	static jclass    getClsVectorArray();
-	
+
 protected:
 	JavaLibrary(void);
 	virtual ~JavaLibrary();
@@ -654,7 +651,6 @@ private:
 	static jmethodID       ms_midThrowableGetMessage;// reference to java.lang.Throwable.getMessage()
 	static jclass          ms_clsThread;             // reference to java.lang.Thread
 	static jmethodID       ms_midThreadDumpStack;    // reference to java.lang.Thread.dumpStack()
-
 
 	static jclass          ms_clsInternalScriptError;             // reference to internal_script_exception
 	static jclass          ms_clsInternalScriptSeriousError;      // reference to internal_script_error
@@ -908,7 +904,7 @@ private:
 	static jfieldID        ms_fidCombatEngineWeaponDataElementalType;
 	static jfieldID        ms_fidCombatEngineWeaponDataElementalValue;
 	static jfieldID        ms_fidCombatEngineWeaponDataAttackSpeed;
-    static jfieldID        ms_fidCombatEngineWeaponDataWoundChance;
+	static jfieldID        ms_fidCombatEngineWeaponDataWoundChance;
 	static jfieldID        ms_fidCombatEngineWeaponDataAccuracy;
 	static jfieldID        ms_fidCombatEngineWeaponDataMinRange;
 	static jfieldID        ms_fidCombatEngineWeaponDataMaxRange;
@@ -967,25 +963,25 @@ private:
 	static jclass	       ms_clsLibrarySpaceTransition;
 	static jmethodID       ms_midLibrarySpaceTransitionSetPlayerOvert;
 	static jmethodID       ms_midLibrarySpaceTransitionClearOvertStatus;
-	
-////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////
-	// java classes/methods needed by CS Handlers.  These classes may not be CS specific
-	// if there is no previous call into them specifically.
-	
+
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+		// java classes/methods needed by CS Handlers.  These classes may not be CS specific
+		// if there is no previous call into them specifically.
+
 	static jclass          ms_clsLibraryDump;
 	static jmethodID       ms_midLibraryDumpDumpTargetInfo;
-	
+
 	static jclass	       ms_clsLibraryGMLib;
 	static jmethodID       ms_midLibraryGMLibFreeze;
 	static jmethodID       ms_midLibraryGMLibUnfreeze;
-		
-////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////	
-	
-	// flag that the JVM was loaded; once it is, it can never be loaded again
-	// without restarting the program
-	static int         ms_loaded;
+
+	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////
+
+		// flag that the JVM was loaded; once it is, it can never be loaded again
+		// without restarting the program
+	volatile static int         ms_loaded;
 	static Semaphore * ms_shutdownJava;
 
 	// Java initialization functions
@@ -1001,7 +997,7 @@ private:
 	static jstring callScriptConsoleHandlerEntry(const JavaStringParam & script, const JavaStringParam & method, jobjectArray params);
 
 	// obj_id functions
-  public:
+public:
 	static LocalRefPtr     getObjId(const ServerObject & object);
 	static LocalRefPtr     getObjId(const NetworkId::NetworkIdType & id);
 	static LocalRefPtr     getObjId(const NetworkId & id);
@@ -1011,20 +1007,20 @@ private:
 
 	static LocalRefPtr     getVector(Vector const & vector);
 
-/////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////////
 	static void	       spaceMakeOvert(const NetworkId &player);
 	static void	       spaceClearOvert(const NetworkId &ship);
 
-	static std::string     getObjectDumpInfo( NetworkId id );
+	static std::string     getObjectDumpInfo(NetworkId id);
 
-	static void	       freezePlayer( const NetworkId &id );
-	static void	       unFreezePlayer( const NetworkId &id );
-	
-/////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////	
+	static void	       freezePlayer(const NetworkId &id);
+	static void	       unFreezePlayer(const NetworkId &id);
 
-  private:
+	/////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////////
+
+private:
 
 	// misc support functions
 	static LocalObjectArrayRefPtr convert(const NetworkId & caller, const std::string& argList, const ScriptParams &args);
@@ -1260,7 +1256,7 @@ inline jfieldID  JavaLibrary::getFidBaseClassDefenderResultsId()
 {
 	return ms_fidBaseClassDefenderResultsId;
 }
-	
+
 inline jfieldID  JavaLibrary::getFidBaseClassDefenderResultsPosture()
 {
 	return ms_fidBaseClassDefenderResultsPosture;
@@ -1330,7 +1326,7 @@ inline jfieldID  JavaLibrary::getFidCombatEngineCombatantDataScriptMod()
 {
 	return ms_fidCombatEngineCombatantDataScriptMod;
 }
-		
+
 inline jfieldID  JavaLibrary::getFidCombatEngineDefenderDataCombatSkeleton()
 {
 	return ms_fidCombatEngineDefenderDataCombatSkeleton;
@@ -1620,7 +1616,7 @@ inline jmethodID JavaLibrary::getMidDynamicVariableListSetFloatArray()
 {
 	return ms_midDynamicVariableListSetFloatArray;
 }
-	
+
 inline jmethodID JavaLibrary::getMidDynamicVariableListSetInt()
 {
 	return ms_midDynamicVariableListSetInt;
@@ -1685,7 +1681,7 @@ inline jmethodID JavaLibrary::getMidDynamicVariableListSetVector()
 {
 	return ms_midDynamicVariableListSetVector;
 }
-	
+
 inline jmethodID JavaLibrary::getMidDynamicVariableListSetVectorArray()
 {
 	return ms_midDynamicVariableListSetVectorArray;
@@ -1880,7 +1876,7 @@ inline jclass    JavaLibrary::getClsRegion()
 {
 	return ms_clsRegion;
 }
-	
+
 inline jclass    JavaLibrary::getClsResourceAttribute()
 {
 	return ms_clsResourceAttribute;

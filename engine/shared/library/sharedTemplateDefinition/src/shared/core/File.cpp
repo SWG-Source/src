@@ -19,7 +19,7 @@
 // File static variables
 
 Filename File::m_basePath;
-File::FunctionPtr File::m_callBack = NULL;
+File::FunctionPtr File::m_callBack = nullptr;
 
 //========================================================================
 // File functions
@@ -49,7 +49,7 @@ bool File::open(const char *filename, const char *mode)
 	// @todo: find an equivalent function for Linux
 	m_fp = fopen(m_filename, mode);
 #endif
-	if (m_fp != NULL)
+	if (m_fp != nullptr)
 	{
 		m_currentLine = 0;
 		return true;
@@ -57,7 +57,7 @@ bool File::open(const char *filename, const char *mode)
 	else
 	{
 		const char * errstr = strerror(errno);
-		if (errstr != NULL)
+		if (errstr != nullptr)
 		{
 			m_filename.clear();
 			printError(errstr);
@@ -75,7 +75,7 @@ bool File::open(const char *filename, const char *mode)
  */
 bool File::exists(const char *filename)
 {
-	if (filename == NULL)
+	if (filename == nullptr)
 		return false;
 
 #if defined(WIN32)
@@ -110,7 +110,7 @@ int File::readRawLine(char *buffer, int bufferSize)
 	NOT_NULL(buffer);
 
 	++m_currentLine;
-	if (fgets(buffer, bufferSize, m_fp) == NULL)
+	if (fgets(buffer, bufferSize, m_fp) == nullptr)
 	{
 		if (feof(m_fp))
 			return -1;
@@ -149,7 +149,7 @@ int File::readLine(char *buffer, int bufferSize)
 	for (;;)
 	{
 		++m_currentLine;
-		if (fgets(buffer, bufferSize, m_fp) == NULL)
+		if (fgets(buffer, bufferSize, m_fp) == nullptr)
 		{
 			if (feof(m_fp))
 				return -1;

@@ -16,8 +16,9 @@
 // ======================================================================
 
 TaskCheckCharacterName::TaskCheckCharacterName(uint32 stationId, const Unicode::String &name) :
-		m_name(name),
-		m_stationId(stationId)
+	m_name(name),
+	m_stationId(stationId),
+	m_resultCode(0)
 {
 }
 
@@ -26,11 +27,11 @@ TaskCheckCharacterName::TaskCheckCharacterName(uint32 stationId, const Unicode::
 bool TaskCheckCharacterName::process(DB::Session *session)
 {
 	CheckCharacterNameQuery qry(Unicode::wideToNarrow(m_name));
-	
+
 	bool rval = session->exec(&qry);
 	qry.done();
 
-	m_resultCode=qry.result.getValue();
+	m_resultCode = qry.result.getValue();
 	return rval;
 }
 
@@ -38,14 +39,14 @@ bool TaskCheckCharacterName::process(DB::Session *session)
 
 void TaskCheckCharacterName::onComplete()
 {
-	DataLookup::getInstance().onCharacterNameChecked(m_stationId, m_name,m_resultCode);
+	DataLookup::getInstance().onCharacterNameChecked(m_stationId, m_name, m_resultCode);
 	LOG("TraceCharacterCreation", ("%d TaskCheckCharacterName(%s) complete with result code %d", m_stationId, Unicode::wideToNarrow(m_name).c_str(), m_resultCode));
 }
 
 // ======================================================================
 
 TaskCheckCharacterName::CheckCharacterNameQuery::CheckCharacterNameQuery(const std::string &name) :
-		character_name(name)
+	character_name(name)
 {
 }
 
@@ -53,7 +54,7 @@ TaskCheckCharacterName::CheckCharacterNameQuery::CheckCharacterNameQuery(const s
 
 void TaskCheckCharacterName::CheckCharacterNameQuery::getSQL(std::string &sql)
 {
-	sql="begin :result := " + DatabaseProcess::getInstance().getSchemaQualifier() + "datalookup.check_character_name (:name); end;";
+	sql = "begin :result := " + DatabaseProcess::getInstance().getSchemaQualifier() + "datalookup.check_character_name (:name); end;";
 }
 
 // ----------------------------------------------------------------------

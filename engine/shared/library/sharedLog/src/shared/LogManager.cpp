@@ -164,7 +164,7 @@ void LogManager::log(char const *format, ...)
 		{
 			va_list ap;
 			va_start(ap, format); //lint !e746 !e1055
-			IGNORE_RETURN( _vsnprintf(text, sizeof(text), format, ap) );
+			IGNORE_RETURN( _vsnprintf(text, MaxLogMessageLen, format, ap) );
 			text[sizeof(text)-1] = '\0';
 			size_t len = strlen(text);
 			// if string was truncated, stick a + on the end
@@ -241,7 +241,7 @@ void LogManager::registerObserverType(std::string const &name, LogObserverCreate
 	s_data->observerCreateMap[name] = func;
 
 	char buffer[256];
-	sprintf(buffer, "%s:", name.c_str());
+	snprintf(buffer, 256, "%s:", name.c_str());
 
 	// run through SharedLog keys looking for logTarget=name:
 	{
@@ -264,7 +264,7 @@ void LogManager::registerObserverType(std::string const &name, LogObserverCreate
 		for (int i = 0; i < 20; ++i)
 		{
 			char const * result = 0;
-			sprintf(key+9, "%d", i);
+			snprintf(key+9, 25, "%d", i);
 			int count = 0;
 			do
 			{

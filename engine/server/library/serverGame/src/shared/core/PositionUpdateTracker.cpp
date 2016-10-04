@@ -122,7 +122,7 @@ bool PositionUpdateTracker::shouldSendPositionUpdate(ServerObject const &obj)
 		return false;
 
 	ServerObject const   *containedByObj    = safe_cast<ServerObject const *>(ContainerInterface::getContainedByObject(obj));
-	CreatureObject const *creatureContainer = (containedByObj ? containedByObj->asCreatureObject() : NULL);
+	CreatureObject const *creatureContainer = (containedByObj ? containedByObj->asCreatureObject() : nullptr);
 	bool const objectIsRidingMount          = (creatureContainer && creatureContainer->isMountable());
 	
 	if (containedByObj && !isContainerConsideredPersisted(obj, *containedByObj) && !objectIsRidingMount)
@@ -204,7 +204,7 @@ void PositionUpdateTracker::sendPositionUpdate(ServerObject &obj)
 			else
 			{
 				ServerObject const * const container = safe_cast<ServerObject const *>(ContainerInterface::getContainedByObject(obj));
-				CreatureObject const * const creatureContainer = (container ? container->asCreatureObject() : NULL);
+				CreatureObject const * const creatureContainer = (container ? container->asCreatureObject() : nullptr);
 				if (creatureContainer && creatureContainer->isMountable())
 				{
 					// Riders of mounts persist at the location of the mount
@@ -317,7 +317,7 @@ bool PositionUpdateTrackerNamespace::isContainerConsideredPersisted(ServerObject
 	// and also consider all buildout bazaar terminals (crc 0x8c525205) to be persisted to handle the case of the
 	// Restuss bazaar terminals which are buildout which are not persisted, so when a player places an item on those
 	// bazaar terminals, we need to update the database that the items are now contained inside the bazaar terminals
-	return container.isPersisted() || (obj.isPlayerControlled() && container.getNetworkId() < NetworkId::cms_invalid) || ((container.getNetworkId() < NetworkId::cms_invalid) && container.getObjectTemplate() && (container.getObjectTemplate()->getCrcName().getCrc() == 0x8c525205));
+	return container.isPersisted() || (obj.isPlayerControlled() && container.getNetworkId() < NetworkId::cms_invalid) || (container.getObjectTemplate() && (container.getObjectTemplate()->getCrcName().getCrc() == 0x8c525205));
 }
 
 // ======================================================================

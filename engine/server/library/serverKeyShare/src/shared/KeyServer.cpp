@@ -42,23 +42,7 @@ KeyServer::~KeyServer()
 
 bool KeyServer::update(void)
 {
-	bool	result = false;
-#if 0 // disable key rotation
-	lastUpdateTime += Clock::frameTime();
-	if(lastUpdateTime > updateRate)
-	{
-		lastUpdateTime = CONST_REAL(0.0);
-		KeyShare::Key	k;
-		for(unsigned int j = 0; j < KeyShareConstants::keyLength; j ++)
-		{
-			k.value[j] = static_cast<unsigned char>(randomNumberGenerator->random(255));
-		}
-		pushKey(k);
-		result = true;
-	}
-#endif // disable key rotation
-
-	return result;
+	return false;
 }
 
 //-----------------------------------------------------------------------

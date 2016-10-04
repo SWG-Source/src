@@ -97,7 +97,7 @@ void JNICALL ScriptMethodsAnimationNamespace::setAnimationMood (JNIEnv *env, job
 
 	JavaStringParam localMoodName(moodName);
 
-	ServerObject * targetObject = NULL;
+	ServerObject * targetObject = nullptr;
 	if (!JavaLibrary::getObject(target, targetObject))
 		return;
 
@@ -114,7 +114,7 @@ void JNICALL ScriptMethodsAnimationNamespace::setAnimationMood (JNIEnv *env, job
 
 jstring JNICALL ScriptMethodsAnimationNamespace::getAnimationMood (JNIEnv *env, jobject self, jlong target)
 {
-	ServerObject * targetObject = NULL;
+	ServerObject * targetObject = nullptr;
 	if (!JavaLibrary::getObject(target, targetObject))
 		return 0;
 
@@ -143,7 +143,7 @@ jboolean JNICALL ScriptMethodsAnimationNamespace::sitOnObject (JNIEnv *env, jobj
 	CreatureObject *sitterObject = 0;
 	if (!JavaLibrary::getObject (sitterId, sitterObject) || !sitterObject)
 	{
-		DEBUG_WARNING (true, ("sitOnObject(): Sitter object is NULL."));
+		DEBUG_WARNING (true, ("sitOnObject(): Sitter object is nullptr."));
 		return JNI_FALSE;
 	}
 
@@ -175,11 +175,11 @@ void JNICALL ScriptMethodsAnimationNamespace::setObjectAppearance(JNIEnv *env, j
 	UNREF(env);
 	UNREF(self);
 
-	CreatureObject* creature = NULL;
+	CreatureObject* creature = nullptr;
 
 	if(!JavaLibrary::getObject(target, creature) || !creature)
 	{
-		DEBUG_WARNING(true, ("SetObjectAppearance() : Creature object was NULL.\n"));
+		DEBUG_WARNING(true, ("SetObjectAppearance() : Creature object was nullptr.\n"));
 		return;
 	}
 
@@ -209,11 +209,11 @@ void JNICALL ScriptMethodsAnimationNamespace::revertObjectAppearance(JNIEnv *env
 	UNREF(env);
 	UNREF(self);
 
-	CreatureObject* creature = NULL;
+	CreatureObject* creature = nullptr;
 
 	if(!JavaLibrary::getObject(target, creature) || !creature)
 	{
-		DEBUG_WARNING(true, ("RevertObjectAppearance() : Creature object was NULL.\n"));
+		DEBUG_WARNING(true, ("RevertObjectAppearance() : Creature object was nullptr.\n"));
 		return;
 	}
 

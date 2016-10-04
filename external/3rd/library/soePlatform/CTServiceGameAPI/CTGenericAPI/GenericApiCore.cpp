@@ -117,7 +117,7 @@ unsigned GenericAPICore::submitRequest(GenericRequest *req, GenericResponse *res
 	}
 	req->setTrack(m_currTrack);
 	res->setTrack(m_currTrack);
-	time_t timeout = time(NULL) + m_requestTimeout;
+	time_t timeout = time(nullptr) + m_requestTimeout;
 
 	req->setTimeout(timeout);
 	res->setTimeout(timeout);
@@ -136,7 +136,7 @@ void GenericAPICore::process()
 	if (!m_suspended)
 	{
 		// Process timeout on pending requests
-		while((m_outCount > 0) && ((req = m_outboundQueue.front().first)->getTimeout() <= time(NULL)))
+		while((m_outCount > 0) && ((req = m_outboundQueue.front().first)->getTimeout() <= time(nullptr)))
 		{
 			--m_outCount;
 			res = m_outboundQueue.front().second;
@@ -148,7 +148,7 @@ void GenericAPICore::process()
 		}
 
 		// Process timeout on pending responses
-		while((m_pendingCount > 0) && ((res = (*m_pending.begin()).second)->getTimeout() <= time(NULL)))
+		while((m_pendingCount > 0) && ((res = (*m_pending.begin()).second)->getTimeout() <= time(nullptr)))
 		{
 			--m_pendingCount;
 			m_pending.erase(m_pending.begin());
@@ -161,7 +161,7 @@ void GenericAPICore::process()
 			pair<GenericRequest *, GenericResponse *> out_pair = m_outboundQueue.front();
             req = out_pair.first;
             res = out_pair.second;
-			GenericConnection *con = NULL;
+			GenericConnection *con = nullptr;
 			if (req->getMappedServerTrack() == 0)					// request has no originating "owner" server
 			{
 				con = getNextActiveConnection();					// it does not matter which server we send this to
@@ -178,7 +178,7 @@ void GenericAPICore::process()
 				}
 			}
 
-            if (con != NULL)
+            if (con != nullptr)
             {
 				Base::ByteStream msg;
 				req->pack(msg);
@@ -213,7 +213,7 @@ GenericConnection *GenericAPICore::getNextActiveConnection()
     unsigned startIndex = m_nextConnectionIndex;
     unsigned maxIndex = m_serverConnections.size() - 1;
 
-    GenericConnection *con = NULL;
+    GenericConnection *con = nullptr;
 
     //loop until we find an active connection, or until we get back
     //              to where we started
@@ -233,7 +233,7 @@ GenericConnection *GenericAPICore::getNextActiveConnection()
             //went past end of vector, start back at 0
             m_nextConnectionIndex = 0;
         }
-    }while (con == NULL && m_nextConnectionIndex != startIndex);
+    }while (con == nullptr && m_nextConnectionIndex != startIndex);
 
     return con;
 }
@@ -259,7 +259,7 @@ ServerTrackObject *GenericAPICore::findServer(unsigned server_track)
 {
 	std::map<unsigned, ServerTrackObject *>::iterator iter = m_serverTracks.find(server_track);
 	if (iter == m_serverTracks.end())
-		return NULL;
+		return nullptr;
 	ServerTrackObject *stobj = (*iter).second;
 	m_serverTracks.erase(server_track);
 	return stobj;

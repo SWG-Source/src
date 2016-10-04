@@ -100,12 +100,7 @@ void AffectorShaderConstant::affect (const float worldX, const float worldZ, con
 
 		FastRandomGenerator randomGenerator(CoordinateHash::hashTuple(worldX, worldZ));
 
-#if 1
 		if (amount >= featherClamp)
-#else
-		//-- this causes better looking terrain, but more shader blends
-		if (randomGenerator.randomFloat() <= amount * featherClamp)
-#endif
 		{
 			ShaderGroup::Info sgi = m_cachedSgi;
 			sgi.setChildChoice(randomGenerator.randomFloat());
@@ -128,12 +123,7 @@ void AffectorShaderConstant::_legacyAffect (const float /*worldX*/, const float 
 
 		const float featherClamp = m_useFeatherClampOverride ? m_featherClampOverride : m_cachedFeatherClamp;
 
-#if 1
 		if (amount >= featherClamp)
-#else
-		//-- this causes better looking terrain, but more shader blends
-		if (generatorChunkData.randomGenerator.randomReal (0.f, 1.f) <= amount * featherClamp)
-#endif
 		{
 			ShaderGroup::Info sgi = m_cachedSgi;
 			sgi.setChildChoice (generatorChunkData.m_legacyRandomGenerator->randomReal (0.0f, 1.0f));
@@ -321,12 +311,7 @@ void AffectorShaderReplace::affect (const float /*worldX*/, const float /*worldZ
 
 			const float featherClamp = m_useFeatherClampOverride ? m_featherClampOverride : m_cachedFeatherClamp;
 
-#if 1
 			if (amount >= featherClamp)
-#else
-			//-- this causes better looking terrain, but more shader blends
-			if (generatorChunkData.randomGenerator.randomReal (0.f, 1.f) <= amount * featherClamp)
-#endif
 			{
 				m_cachedSgi.setChildChoice (sgi.getChildChoice ());
 

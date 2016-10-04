@@ -55,7 +55,7 @@
 
 CellProperty const * getCell(Object const * obj)
 {
-	if(obj == NULL) return NULL;
+	if(obj == nullptr) return nullptr;
 
 	return obj->getCellProperty();
 }
@@ -74,7 +74,7 @@ Vector		movePointBetweenCells ( Object const * oldCellObject, Object const * new
 	Transform toWorld = Transform::identity;
 	Transform toCell = Transform::identity;
 
-	if(oldCellObject != NULL)
+	if(oldCellObject != nullptr)
 	{
 		CellProperty const * oldCell = getCell(oldCellObject);
 
@@ -84,7 +84,7 @@ Vector		movePointBetweenCells ( Object const * oldCellObject, Object const * new
 		}
 	}
 
-	if(newCellObject != NULL)
+	if(newCellObject != nullptr)
 	{
 		CellProperty const * newCell = getCell(newCellObject);
 
@@ -115,7 +115,7 @@ Transform	moveTransformBetweenCells ( Object const * oldCellObject, Object const
 	Transform toWorld = Transform::identity;
 	Transform toCell = Transform::identity;
 
-	if(oldCellObject != NULL)
+	if(oldCellObject != nullptr)
 	{
 		CellProperty const * oldCell = getCell(oldCellObject);
 
@@ -125,7 +125,7 @@ Transform	moveTransformBetweenCells ( Object const * oldCellObject, Object const
 		}
 	}
 
-	if(newCellObject != NULL)
+	if(newCellObject != nullptr)
 	{
 		CellProperty const * newCell = getCell(newCellObject);
 
@@ -220,7 +220,7 @@ void ServerController::setAuthoritative(bool newAuthoritative)
 {
 	if (!newAuthoritative && m_bHasGoal && m_goalCellObject)
 	{
-		m_goalCellObject = NULL;
+		m_goalCellObject = nullptr;
 		m_bHasGoal = false;
 		m_bAtGoal = true;
 	}
@@ -420,7 +420,7 @@ bool changeCells(ServerObject &object, ServerObject *newCellObject)
 
 	// ----------
 
-	if (newCellObject == NULL)
+	if (newCellObject == nullptr)
 	{
 		// Object was in a cell and is moving to the world, transfer from cell container to world
 
@@ -428,7 +428,7 @@ bool changeCells(ServerObject &object, ServerObject *newCellObject)
 		Transform const &newTransform = oldCellObject->getTransform_o2w().rotateTranslate_l2p(objectTransform);
 
 		Container::ContainerErrorCode tmp = Container::CEC_Success;
-		result = ContainerInterface::transferItemToWorld(object, newTransform, NULL, tmp);
+		result = ContainerInterface::transferItemToWorld(object, newTransform, nullptr, tmp);
 
 		if (!result)
 		{
@@ -444,13 +444,13 @@ bool changeCells(ServerObject &object, ServerObject *newCellObject)
 
 		CellProperty * const pCell = ContainerInterface::getCell(*newCellObject);
 
-		DEBUG_REPORT_LOG(pCell == NULL, ("changeCells - Received transform with parent to a non-cell object.  This should only happen from the DB\n"));
+		DEBUG_REPORT_LOG(pCell == nullptr, ("changeCells - Received transform with parent to a non-cell object.  This should only happen from the DB\n"));
 
 		if (pCell)
 		{
 			Transform objectTransform = object.getTransform_o2p();
 			Container::ContainerErrorCode tmp = Container::CEC_Success;
-			result = ContainerInterface::transferItemToCell(*newCellObject, object, NULL, tmp);
+			result = ContainerInterface::transferItemToCell(*newCellObject, object, nullptr, tmp);
 
 			if (!result)
 			{
@@ -537,7 +537,7 @@ void ServerController::handleNetUpdateTransform(const MessageQueueDataTransform&
 		return;
 	}
 
-	setGoal( message.getTransform(), NULL );
+	setGoal( message.getTransform(), nullptr );
 }
 
 //-----------------------------------------------------------------------
@@ -562,12 +562,12 @@ void ServerController::handleNetUpdateTransformWithParent(const MessageQueueData
 	if(!cellObject)
 	{
 		WARNING_STRICT_FATAL(true, ("WARNING: db or authoritative player says to depersist %s into a cell %s but we cannot because cell does not exist.", getOwner()->getNetworkId().getValueString().c_str(), cellNetworkId.getValueString().c_str()));
+
 		//@todo big demo hack.  If depersisting into a cell, set the transform to start lcoation
-#if 1
 		Transform start = Transform::identity;
 		start.setPosition_p(ConfigServerGame::getStartingPosition());
-		setGoal( start, NULL );
-#endif
+		setGoal( start, nullptr );
+
 		return;
 	}
 	setGoal( message.getTransform(), serverCellObject );

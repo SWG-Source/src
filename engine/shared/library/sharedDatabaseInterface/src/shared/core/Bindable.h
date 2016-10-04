@@ -1,13 +1,13 @@
 /* Bindable.h
  *
  * Defines classes based on built-in simple types that know how to bind themselves to 
- * database queries and support null values.
+ * database queries and support nullptr values.
  *
  * Each class supports the following functions:
- * bool isNull    -- test whether the value is null
- * void setToNull -- set the value to null
- *      getValue  -- return the value (make sure you test for null before calling this.  The results
- *                   are undefined if the Bindable is null.)
+ * bool isNull    -- test whether the value is nullptr
+ * void setToNull -- set the value to nullptr
+ *      getValue  -- return the value (make sure you test for nullptr before calling this.  The results
+ *                   are undefined if the Bindable is nullptr.)
  *      setValue  -- set the value
  *
  * ODBC version

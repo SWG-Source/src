@@ -17,8 +17,7 @@
 #include "sharedDebug/DataLint.h"
 #include "sharedFile/Iff.h"
 #include "sharedTemplateDefinition/ObjectTemplate.h"
-#include <algorithm>
-#include <cstdio>
+#include <stdio.h>
 
 
 
@@ -47,7 +46,7 @@ SharedDraftSchematicObjectTemplate::~SharedDraftSchematicObjectTemplate()
 		for (iter = m_slots.begin(); iter != m_slots.end(); ++iter)
 		{
 			delete *iter;
-			*iter = NULL;
+			*iter = nullptr;
 		}
 		m_slots.clear();
 	}
@@ -56,7 +55,7 @@ SharedDraftSchematicObjectTemplate::~SharedDraftSchematicObjectTemplate()
 		for (iter = m_attributes.begin(); iter != m_attributes.end(); ++iter)
 		{
 			delete *iter;
-			*iter = NULL;
+			*iter = nullptr;
 		}
 		m_attributes.clear();
 	}
@@ -140,9 +139,9 @@ StringParam * SharedDraftSchematicObjectTemplate::getStringParam(const char *nam
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getStringParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_craftedSharedTemplate;
 		}
@@ -150,7 +149,7 @@ StringParam * SharedDraftSchematicObjectTemplate::getStringParam(const char *nam
 	}
 	else
 		return SharedIntangibleObjectTemplate::getStringParam(name, deepCheck, index);
-	return NULL;
+	return nullptr;
 }	//SharedDraftSchematicObjectTemplate::getStringParam
 
 StringIdParam * SharedDraftSchematicObjectTemplate::getStringIdParam(const char *name, bool deepCheck, int index)
@@ -196,7 +195,7 @@ StructParamOT * SharedDraftSchematicObjectTemplate::getStructParamOT(const char 
 	}
 	else
 		return SharedIntangibleObjectTemplate::getStructParamOT(name, deepCheck, index);
-	return NULL;
+	return nullptr;
 }	//SharedDraftSchematicObjectTemplate::getStructParamOT
 
 TriggerVolumeParam * SharedDraftSchematicObjectTemplate::getTriggerVolumeParam(const char *name, bool deepCheck, int index)
@@ -294,12 +293,12 @@ char paramName[MAX_NAME_SIZE];
 		file.read_string(baseFilename);
 		file.exitChunk();
 		const ObjectTemplate *base = ObjectTemplateList::fetch(baseFilename);
-		DEBUG_WARNING(base == NULL, ("was unable to load base template %s", baseFilename.c_str()));
-		if (m_baseData == base && base != NULL)
+		DEBUG_WARNING(base == nullptr, ("was unable to load base template %s", baseFilename.c_str()));
+		if (m_baseData == base && base != nullptr)
 			base->releaseReference();
 		else
 		{
-			if (m_baseData != NULL)
+			if (m_baseData != nullptr)
 				m_baseData->releaseReference();
 			m_baseData = base;
 		}
@@ -327,7 +326,7 @@ char paramName[MAX_NAME_SIZE];
 			for (iter = m_slots.begin(); iter != m_slots.end(); ++iter)
 			{
 				delete *iter;
-				*iter = NULL;
+				*iter = nullptr;
 			}
 			m_slots.clear();
 			m_slotsAppend = file.read_bool8();
@@ -346,7 +345,7 @@ char paramName[MAX_NAME_SIZE];
 			for (iter = m_attributes.begin(); iter != m_attributes.end(); ++iter)
 			{
 				delete *iter;
-				*iter = NULL;
+				*iter = nullptr;
 			}
 			m_attributes.clear();
 			m_attributesAppend = file.read_bool8();
@@ -512,9 +511,9 @@ StringParam * SharedDraftSchematicObjectTemplate::_IngredientSlot::getStringPara
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getStringParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_hardpoint;
 		}
@@ -522,7 +521,7 @@ StringParam * SharedDraftSchematicObjectTemplate::_IngredientSlot::getStringPara
 	}
 	else
 		return TpfTemplate::getStringParam(name, deepCheck, index);
-	return NULL;
+	return nullptr;
 }	//SharedDraftSchematicObjectTemplate::_IngredientSlot::getStringParam
 
 StringIdParam * SharedDraftSchematicObjectTemplate::_IngredientSlot::getStringIdParam(const char *name, bool deepCheck, int index)
@@ -533,9 +532,9 @@ StringIdParam * SharedDraftSchematicObjectTemplate::_IngredientSlot::getStringId
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getStringIdParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_name;
 		}
@@ -543,7 +542,7 @@ StringIdParam * SharedDraftSchematicObjectTemplate::_IngredientSlot::getStringId
 	}
 	else
 		return TpfTemplate::getStringIdParam(name, deepCheck, index);
-	return NULL;
+	return nullptr;
 }	//SharedDraftSchematicObjectTemplate::_IngredientSlot::getStringIdParam
 
 VectorParam * SharedDraftSchematicObjectTemplate::_IngredientSlot::getVectorParam(const char *name, bool deepCheck, int index)
@@ -717,9 +716,9 @@ CompilerIntegerParam * SharedDraftSchematicObjectTemplate::_SchematicAttribute::
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_value;
 		}
@@ -727,7 +726,7 @@ CompilerIntegerParam * SharedDraftSchematicObjectTemplate::_SchematicAttribute::
 	}
 	else
 		return TpfTemplate::getCompilerIntegerParam(name, deepCheck, index);
-	return NULL;
+	return nullptr;
 }	//SharedDraftSchematicObjectTemplate::_SchematicAttribute::getCompilerIntegerParam
 
 FloatParam * SharedDraftSchematicObjectTemplate::_SchematicAttribute::getFloatParam(const char *name, bool deepCheck, int index)
@@ -753,9 +752,9 @@ StringIdParam * SharedDraftSchematicObjectTemplate::_SchematicAttribute::getStri
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getStringIdParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_name;
 		}
@@ -767,9 +766,9 @@ StringIdParam * SharedDraftSchematicObjectTemplate::_SchematicAttribute::getStri
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getStringIdParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_experiment;
 		}
@@ -777,7 +776,7 @@ StringIdParam * SharedDraftSchematicObjectTemplate::_SchematicAttribute::getStri
 	}
 	else
 		return TpfTemplate::getStringIdParam(name, deepCheck, index);
-	return NULL;
+	return nullptr;
 }	//SharedDraftSchematicObjectTemplate::_SchematicAttribute::getStringIdParam
 
 VectorParam * SharedDraftSchematicObjectTemplate::_SchematicAttribute::getVectorParam(const char *name, bool deepCheck, int index)

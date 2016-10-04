@@ -16,8 +16,9 @@
 // ======================================================================
 
 DeleteCharacterCustomPersistStep::DeleteCharacterCustomPersistStep(uint32 stationId, const NetworkId &characterId) :
-		m_characterId(characterId),
-		m_stationId(stationId)
+	m_characterId(characterId),
+	m_stationId(stationId),
+	m_resultCode(0)
 {
 }
 
@@ -33,12 +34,12 @@ bool DeleteCharacterCustomPersistStep::beforePersist(DB::Session *)
 bool DeleteCharacterCustomPersistStep::afterPersist(DB::Session *session)
 {
 	DeleteCharacterQuery qry(m_stationId, m_characterId);
-	
-	if (! (session->exec(&qry)))
+
+	if (!(session->exec(&qry)))
 		return false;
 	qry.done();
 
-	m_resultCode=qry.result.getValue();
+	m_resultCode = qry.result.getValue();
 	return true;
 }
 
@@ -48,18 +49,18 @@ void DeleteCharacterCustomPersistStep::onComplete()
 {
 	if (m_resultCode == 2)
 	{
-		GenericValueTypeMessage<NetworkId> msg("ReleaseCharacterNameByIdMessage",m_characterId);
-		DatabaseProcess::getInstance().sendToAllGameServers(msg,true);
+		GenericValueTypeMessage<NetworkId> msg("ReleaseCharacterNameByIdMessage", m_characterId);
+		DatabaseProcess::getInstance().sendToAllGameServers(msg, true);
 	}
 }
 
 // ======================================================================
 
 DeleteCharacterCustomPersistStep::DeleteCharacterQuery::DeleteCharacterQuery(uint32 stationId, const NetworkId &characterId) :
-		station_id(stationId),
-		character_id(characterId),
-		delete_minutes(ConfigServerDatabase::getCharacterImmediateDeleteMinutes()),
-		result()
+	station_id(stationId),
+	character_id(characterId),
+	delete_minutes(ConfigServerDatabase::getCharacterImmediateDeleteMinutes()),
+	result()
 {
 }
 
@@ -67,7 +68,7 @@ DeleteCharacterCustomPersistStep::DeleteCharacterQuery::DeleteCharacterQuery(uin
 
 void DeleteCharacterCustomPersistStep::DeleteCharacterQuery::getSQL(std::string &sql)
 {
-	sql="begin :result := " + DatabaseProcess::getInstance().getSchemaQualifier() + "persister.delete_character (:station_id, :character_id, :delete_minutes); end;";
+	sql = "begin :result := " + DatabaseProcess::getInstance().getSchemaQualifier() + "persister.delete_character (:station_id, :character_id, :delete_minutes); end;";
 }
 
 // ----------------------------------------------------------------------

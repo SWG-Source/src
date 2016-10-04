@@ -91,8 +91,8 @@ namespace Archive
 		get(source, isWeapon);
 		if (isWeapon)
 		{
-			target.m_weaponSharedBaselines = boost::shared_ptr<const BaselinesMessage>(new BaselinesMessage(source));
-			target.m_weaponSharedNpBaselines = boost::shared_ptr<const BaselinesMessage>(new BaselinesMessage(source));
+			target.m_weaponSharedBaselines = std::make_shared<const BaselinesMessage>(source);
+			target.m_weaponSharedNpBaselines = std::make_shared<const BaselinesMessage>(source);
 		}
 	}
 
@@ -103,7 +103,7 @@ namespace Archive
 		put(target, source.m_networkId);
 		put(target, source.m_objectTemplate);
 
-		bool isWeapon = (source.m_weaponSharedBaselines.get() != NULL);
+		bool isWeapon = (source.m_weaponSharedBaselines.get() != nullptr);
 		put(target, isWeapon);
 		if (isWeapon)
 		{

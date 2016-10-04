@@ -31,7 +31,7 @@ ResourceTypeBuffer::~ResourceTypeBuffer()
 	for (DataType::iterator i=m_data.begin(); i!=m_data.end(); ++i)
 	{
 		delete i->second;
-		i->second=NULL;
+		i->second=nullptr;
 	}
 }
 
@@ -41,7 +41,7 @@ void ResourceTypeBuffer::handleAddResourceTypeMessage(AddResourceTypeMessage con
 {
 	for (std::vector<AddResourceTypeMessageNamespace::ResourceTypeData>::const_iterator typeData = message.getData().begin(); typeData != message.getData().end(); ++typeData)
 	{
-		DBSchema::ResourceTypeRow * row = NULL;
+		DBSchema::ResourceTypeRow * row = nullptr;
 		DataType::iterator rowIter = m_data.find(typeData->m_networkId);
 		if (rowIter == m_data.end())
 		{

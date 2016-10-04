@@ -42,6 +42,7 @@ public:
 		int           clientMaxDataHoldTime;
 		int           clientHashTableSize;
 		int           lagReportThreshold;
+		int           maxConnectionsPerIP;
 
 		bool          validateStationKey;
 		const char *  sessionServers;
@@ -68,6 +69,9 @@ public:
 
 		int           connectionServerNumber;
 		int           fakeBuddyPoints;
+
+
+		const char *  altPublicBindAddress;
 	};
 
 
@@ -133,6 +137,9 @@ public:
 	static int                 getConnectionServerNumber();
 	static int                 getFakeBuddyPoints();
 
+	static const char * 	   getPublicBindAddress();
+
+	static int 		   getMaxConnectionsPerIP();
 private:
 	static Data *	data;
 };
@@ -460,6 +467,12 @@ inline bool ConfigConnectionServer::getValidateClientVersion()
 inline int ConfigConnectionServer::getConnectionServerNumber()
 {
 	return data->connectionServerNumber;
+}
+
+
+inline int ConfigConnectionServer::getMaxConnectionsPerIP()
+{
+        return data->maxConnectionsPerIP;
 }
 
 #endif	// _ConfigConnectionServer_H

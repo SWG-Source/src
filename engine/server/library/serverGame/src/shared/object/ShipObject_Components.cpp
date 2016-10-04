@@ -1638,7 +1638,7 @@ bool ShipObject::canInstallComponent     (int chassisSlot, TangibleObject const 
 
 		ShipChassisSlot const * const slot = shipChassis->getSlot (static_cast<ShipChassisSlotType::Type>(effectiveCompatibilitySlot));
 
-		if (slot != NULL)
+		if (slot != nullptr)
 		{
 			if (slot->canAcceptComponent (shipComponentData->getDescriptor ()))
 			{
@@ -1721,7 +1721,7 @@ bool ShipObject::installComponent   (NetworkId const & installerId, int chassisS
 
 void ShipObject::purgeComponent          (int chassisSlot)
 {
-	IGNORE_RETURN (internalUninstallComponent (NetworkId::cms_invalid, chassisSlot, NULL));
+	IGNORE_RETURN (internalUninstallComponent (NetworkId::cms_invalid, chassisSlot, nullptr));
 }
 
 //----------------------------------------------------------------------
@@ -1731,16 +1731,16 @@ TangibleObject *    ShipObject::internalUninstallComponent      (NetworkId const
 	if (!isSlotInstalled (chassisSlot))
 	{
 		WARNING (true, ("ShipObject::internalUninstallComponent failed... no component installed in slot"));
-		return NULL;
+		return nullptr;
 	}
 
 	ShipComponentData * const shipComponentData = createShipComponentData (chassisSlot);
 
-	if (shipComponentData == NULL)
+	if (shipComponentData == nullptr)
 	{
-		WARNING (true, ("ShipObject::internalUninstallComponent failed null data"));
+		WARNING (true, ("ShipObject::internalUninstallComponent failed nullptr data"));
 		delete shipComponentData;
-		return NULL;
+		return nullptr;
 	}
 
 	if(getScriptObject())
@@ -1751,7 +1751,7 @@ TangibleObject *    ShipObject::internalUninstallComponent      (NetworkId const
 		p.addParam (containerTarget ? containerTarget->getNetworkId () : NetworkId::cms_invalid);
 
 		if (getScriptObject()->trigAllScripts(Scripting::TRIG_SHIP_COMPONENT_UNINSTALLING, p) == SCRIPT_OVERRIDE)
-			return NULL;
+			return nullptr;
 	}
 
 	TangibleObject * tangible = 0;
@@ -1765,7 +1765,7 @@ TangibleObject *    ShipObject::internalUninstallComponent      (NetworkId const
 		{
 
 			VolumeContainer * volContainer = ContainerInterface::getVolumeContainer(*containerTarget);
-			if (volContainer == NULL)
+			if (volContainer == nullptr)
 				return 0;
 
 			int oldCapacity = volContainer->debugDoNotUseSetCapacity(-1);
@@ -1780,21 +1780,21 @@ TangibleObject *    ShipObject::internalUninstallComponent      (NetworkId const
 			obj = safe_cast<ServerObject *>(ServerWorld::createNewObject (objectTemplateCrc, *containerTarget, true));
 		}
 
-		if (obj == NULL)
+		if (obj == nullptr)
 		{
 			WARNING (true, ("ShipObject::internalUninstallComponent failed for slot [%d] because ServerWorld could not create an object for [%d], or container is full", chassisSlot, objectTemplateCrc));
 			delete shipComponentData;
-			return NULL;
+			return nullptr;
 		}
 
 		tangible = obj->asTangibleObject ();
 
-		if (tangible == NULL)
+		if (tangible == nullptr)
 		{
 			WARNING (true, ("ShipObject::internalUninstallComponent failed for slot [%d] because object template [%d] is not tangible", chassisSlot, objectTemplateCrc));
 			delete shipComponentData;
 			IGNORE_RETURN (obj->permanentlyDestroy (DeleteReasons::SetupFailed));
-			return NULL;
+			return nullptr;
 		}
 
 		shipComponentData->writeDataToComponent (*tangible);
@@ -1897,7 +1897,7 @@ TangibleObject * ShipObject::uninstallComponent (NetworkId const & uninstallerId
 bool ShipObject::installComponentFromData(int chassisSlot, ShipComponentData const & shipComponentData)
 {
 	ShipChassis const * const shipChassis = ShipChassis::findShipChassisByCrc (getChassisType ());
-	if (shipChassis == NULL)
+	if (shipChassis == nullptr)
 	{
 		DEBUG_WARNING (true, ("Ship [%s] chassis [%d] is invalid for installing component [%s]",
 			getNetworkId().getValueString().c_str(), 
@@ -1922,7 +1922,7 @@ bool ShipObject::installComponentFromData(int chassisSlot, ShipComponentData con
 		effectiveCompatibilitySlot = ShipChassisSlotType::SCST_weapon_first+((chassisSlot-ShipChassisSlotType::SCST_weapon_first)&7);
 
 	ShipChassisSlot const * const slot = shipChassis->getSlot (static_cast<ShipChassisSlotType::Type>(effectiveCompatibilitySlot));
-	if (slot == NULL)
+	if (slot == nullptr)
 	{
 		DEBUG_WARNING (true, ("Ship [%s] chassis [%s] does not support slot [%s] for installing component [%s]",
 			getNetworkId().getValueString().c_str(), 
@@ -1957,7 +1957,7 @@ bool ShipObject::installComponentFromData(int chassisSlot, ShipComponentData con
 bool ShipObject::pseudoInstallComponent(int chassisSlot, uint32 componentCrc)
 {
 	ShipComponentDescriptor const * const shipComponentDescriptor = ShipComponentDescriptor::findShipComponentDescriptorByCrc (componentCrc);
-	if (shipComponentDescriptor == NULL)
+	if (shipComponentDescriptor == nullptr)
 	{
 		WARNING (true, ("Invalid component name"));
 		return false;
@@ -1965,7 +1965,7 @@ bool ShipObject::pseudoInstallComponent(int chassisSlot, uint32 componentCrc)
 
 	ShipComponentData * const shipComponentData = ShipComponentDataManager::create (*shipComponentDescriptor);
 
-	if (shipComponentData == NULL)
+	if (shipComponentData == nullptr)
 	{
 		WARNING(true, ("ShipObject::pseudoInstallComponent invalid descriptor"));
 		return false;
@@ -1982,27 +1982,27 @@ bool ShipObject::pseudoInstallComponent(int chassisSlot, uint32 componentCrc)
 
 ShipComponentData * ShipObject::createShipComponentData (int chassisSlot) const
 {
-	ShipComponentDescriptor const * shipComponentDescriptor = NULL;
+	ShipComponentDescriptor const * shipComponentDescriptor = nullptr;
 
 	uint32 const componentCrc = getComponentCrc (chassisSlot);
 	if (componentCrc)
 	{
 		shipComponentDescriptor   = ShipComponentDescriptor::findShipComponentDescriptorByCrc (componentCrc);
-		if (shipComponentDescriptor == NULL)
+		if (shipComponentDescriptor == nullptr)
 		{
 			WARNING (true, ("ShipObject::createShipComponentData failed for slot [%d] because component crc [%d] could not map to a component descriptor", chassisSlot, componentCrc));
-			return NULL;
+			return nullptr;
 		}
 	}
 	else
-		return NULL;
+		return nullptr;
 
 	ShipComponentData * const shipComponentData = ShipComponentDataManager::create (*shipComponentDescriptor);
-	if (shipComponentData == NULL)
+	if (shipComponentData == nullptr)
 	{
 		WARNING (true, ("ShipObject::createShipComponentData failed for slot [%d] ship Component data could not be constructed", chassisSlot));
 		delete(shipComponentData);
-		return NULL;
+		return nullptr;
 	}
 
 	if (!shipComponentData->readDataFromShip (chassisSlot, *this))
@@ -2334,7 +2334,7 @@ float ShipObject::computeShipActualSpeedMaximum           () const
 	if (hasWings() && hasCondition(TangibleObject::C_wingsOpened))
 	{
 		ShipChassis const * const shipChassis = ShipChassis::findShipChassisByCrc(getChassisType());
-		if (NULL != shipChassis)			
+		if (nullptr != shipChassis)			
 		{
 			float const wingOpenSpeedFactor = shipChassis->getWingOpenSpeedFactor();
 			rate *= wingOpenSpeedFactor;
@@ -2673,7 +2673,7 @@ void ShipObject::handlePowerPulse (float timeElapsedSecs)
 					if (boosterEnergyCurrent <= 0.0f)
 					{
 						IGNORE_RETURN(setComponentActive(ShipChassisSlotType::SCST_booster, false));
-						if (pilot != NULL)
+						if (pilot != nullptr)
 							Chat::sendSystemMessage(*pilot, SharedStringIds::booster_energy_depleted, Unicode::emptyString);
 
 						restartBoosterTimer();
@@ -3368,7 +3368,7 @@ void ShipObject::setCargoHoldContent(NetworkId const & resourceTypeId, int amoun
 		else
 		{
 			ResourceTypeObject const * const resourceTypeObject = ServerUniverse::getInstance().getResourceTypeById(resourceTypeId);
-			if (NULL == ServerUniverse::getInstance().getResourceTypeById(resourceTypeId))
+			if (nullptr == ServerUniverse::getInstance().getResourceTypeById(resourceTypeId))
 			{
 				WARNING(true, ("ShipObject::setCargoHoldContent invalid resource type [%s]", resourceTypeId.getValueString().c_str()));
 				return;

@@ -113,19 +113,19 @@ void *UdpMisc::SmartResize(void *ptr, int bytes, int round)
 
     if (bytes == 0)
     {
-        if (ptr != NULL)
+        if (ptr != nullptr)
         {
             free((udp_uchar *)ptr - cAlignment);
         }
-        return(NULL);
+        return(nullptr);
     }
 
     udp_uchar *ptr2;
-    if (ptr == NULL)
+    if (ptr == nullptr)
     {
         ptr2 = (udp_uchar *)malloc(bytes + cAlignment);
-        if (ptr2 == NULL)
-            return(NULL);
+        if (ptr2 == nullptr)
+            return(nullptr);
         *(int *)ptr2 = bytes;
         return(ptr2 + cAlignment);
     }
@@ -135,8 +135,8 @@ void *UdpMisc::SmartResize(void *ptr, int bytes, int round)
         return(ptr);
 
     ptr2 = (udp_uchar *)realloc((udp_uchar *)ptr - cAlignment, bytes + cAlignment);
-    if (ptr2 == NULL)
-        return(NULL);
+    if (ptr2 == nullptr)
+        return(nullptr);
 
     *(int *)ptr2 = bytes;
     return(ptr2 + cAlignment);
@@ -199,30 +199,30 @@ LogicalPacket *UdpMisc::CreateQuickLogicalPacket(const void *data, int dataLen, 
     switch(q)
     {
         case 0:
-            tlp = new FixedLogicalPacket<cQuickFactor>(NULL, totalDataLen);
+            tlp = new FixedLogicalPacket<cQuickFactor>(nullptr, totalDataLen);
             break;
         case 1:
-            tlp = new FixedLogicalPacket<cQuickFactor * 2>(NULL, totalDataLen);
+            tlp = new FixedLogicalPacket<cQuickFactor * 2>(nullptr, totalDataLen);
             break;
         case 2:
         case 3:
-            tlp = new FixedLogicalPacket<cQuickFactor * 4>(NULL, totalDataLen);
+            tlp = new FixedLogicalPacket<cQuickFactor * 4>(nullptr, totalDataLen);
             break;
         case 4:
         case 5:
         case 6:
         case 7:
-            tlp = new FixedLogicalPacket<cQuickFactor * 8>(NULL, totalDataLen);
+            tlp = new FixedLogicalPacket<cQuickFactor * 8>(nullptr, totalDataLen);
             break;
         default:
-            tlp = new SimpleLogicalPacket(NULL, totalDataLen);
+            tlp = new SimpleLogicalPacket(nullptr, totalDataLen);
             break;
     }
 
     udp_uchar *dest = (udp_uchar *)tlp->GetDataPtr();
-    if (data != NULL)
+    if (data != nullptr)
         memcpy(dest, data, dataLen);
-    if (data2 != NULL)
+    if (data2 != nullptr)
         memcpy(dest + dataLen, data2, dataLen2);
     return(tlp);
 }

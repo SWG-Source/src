@@ -34,66 +34,28 @@
 #include <fcntl.h>
 #include <new>
 
-#ifdef _WIN32
-#define DISABLE_MEMORY_MANAGER 0
-#else
-#define DISABLE_MEMORY_MANAGER 0
-#endif
+// the below seems to bare minimum cause the DB process to segfault
+// too bad, if we weren't using an omnibus mem manager we could potentially maximize usage
+#define DISABLE_MEMORY_MANAGER 1
 
 //lint -e826 // Suspicious pointer-to-pointer conversion (area too small)
 
 #if !DISABLE_MEMORY_MANAGER
 
 // ======================================================================
-// 
-#define DISABLED                0
 
-#if PRODUCTION
+// this flag is different than above, as it doesn't fully disable the manager, only a few pieces
+// including the destructor for some reason
+#define DISABLED                1
 
-	#define DO_TRACK               0
-	#define DO_SCALAR              0
-	#define DO_GUARDS              0
-	#define DO_INITIALIZE_FILLS    0
-	#define DO_FREE_FILLS          0
-
-#else
-
-	#if DEBUG_LEVEL == DEBUG_LEVEL_DEBUG
-
-		#define DO_TRACK             1
-		#define DO_SCALAR            1
-		#define DO_GUARDS            1
-		#define DO_INITIALIZE_FILLS  1
-		#define DO_FREE_FILLS        1
-
-	#elif DEBUG_LEVEL == DEBUG_LEVEL_OPTIMIZED
-
-		#define DO_TRACK             1
-		#define DO_SCALAR            1
-		#define DO_GUARDS            1
-		#define DO_INITIALIZE_FILLS  1
-		#define DO_FREE_FILLS        1
-
-	#elif DEBUG_LEVEL == DEBUG_LEVEL_RELEASE
-
-		#define DO_TRACK             0
-		#define DO_SCALAR            0
-		#define DO_GUARDS            0
-		#define DO_INITIALIZE_FILLS  0
-		#define DO_FREE_FILLS        0
-
-	#else
-
-		#error unknown DEBUG_LEVEL
-
-	#endif
-
-#endif
-
-#ifdef PLATFORM_LINUX
-	#undef DO_TRACK
-	#define DO_TRACK 5
-#endif
+// removed all the debug cases for these as these seem to cause problems
+// recent modifications force the mem manager to always behave in production mode
+// other areas will remain unaffected
+#define DO_TRACK               0
+#define DO_SCALAR              0
+#define DO_GUARDS              0
+#define DO_INITIALIZE_FILLS    0
+#define DO_FREE_FILLS          0
 
 // ======================================================================
 
@@ -159,7 +121,7 @@ namespace MemoryManagerNamespace
 		bool           m_array:1;
 #endif
 #if DO_TRACK
-		bool           m_leakTest:1;
+		bool           m_leakTest:0;
 #endif
 #if DO_TRACK || DO_GUARDS
 		unsigned int   m_requestedSize:cms_requestedSizeBits;
@@ -256,21 +218,18 @@ namespace MemoryManagerNamespace
 	bool                  ms_installed;
 	bool                  ms_limitSet;
 	bool                  ms_hardLimit;
-	int                   ms_limitMegabytes = 4095;
+	int                   ms_limitMegabytes = 3071;
 	SystemAllocation *    ms_firstSystemAllocation;
 	int                   ms_numberOfSystemAllocations;
 	int                   ms_systemMemoryAllocatedMegabytes;
 	bool                  ms_reportAllocations;
-//	bool                  ms_logEachAlloc;
-
-#if PRODUCTION == 0
-	PixCounter::ResetInteger ms_allocationsPerFrame;
-	PixCounter::ResetInteger ms_bytesAllocatedPerFrame;
-	PixCounter::ResetInteger ms_freesPerFrame;
-	PixCounter::ResetInteger ms_bytesFreedPerFrame;
-#endif
 
 #ifdef _DEBUG
+        PixCounter::ResetInteger ms_allocationsPerFrame;
+        PixCounter::ResetInteger ms_bytesAllocatedPerFrame;
+        PixCounter::ResetInteger ms_freesPerFrame;
+        PixCounter::ResetInteger ms_bytesFreedPerFrame;
+
 	bool                  ms_debugReportFlag;
 	bool                  ms_debugReportMapFlag;
 	bool                  ms_debugReportAllocations;
@@ -327,7 +286,7 @@ using namespace MemoryManagerNamespace;
 SystemAllocation::SystemAllocation(int size)
 :
 	m_size(size),
-	m_next(NULL),
+	m_next(nullptr),
 	m_pad1(0),
 	m_pad2(0)
 {
@@ -343,7 +302,7 @@ SystemAllocation::SystemAllocation(int size)
 	Block * lastMemoryBlock = getLastMemoryBlock();
 
 	// set up the prefix sentinel block
-	firstMemoryBlock->setPrevious(NULL);
+	firstMemoryBlock->setPrevious(nullptr);
 	firstMemoryBlock->setNext(firstFreeBlock);
 	firstMemoryBlock->setFree(false);
 
@@ -353,7 +312,7 @@ SystemAllocation::SystemAllocation(int size)
 
 	// set up the suffix sentinel block
 	lastMemoryBlock->setPrevious(firstFreeBlock);
-	lastMemoryBlock->setNext(NULL);
+	lastMemoryBlock->setNext(nullptr);
 	lastMemoryBlock->setFree(false);
 
 	// put the first block on the free list
@@ -663,13 +622,6 @@ MemoryManager::~MemoryManager()
 	return;
 #else
 
-#if PRODUCTION == 0
-	ms_allocationsPerFrame.disable();
-	ms_bytesAllocatedPerFrame.disable();
-	ms_freesPerFrame.disable();
-	ms_bytesFreedPerFrame.disable();
-#endif
-
 	DEBUG_FATAL(!ms_installed, ("not installed"));
 
 	ms_criticalSection->enter();
@@ -748,7 +700,7 @@ void MemoryManagerNamespace::allocateSystemMemory(int megabytes)
 	ms_systemMemoryAllocatedMegabytes += megabytes;
 
 	// insert the memory into the sorted linked list of system allocations
-	SystemAllocation * back = NULL;
+	SystemAllocation * back = nullptr;
 	SystemAllocation * front = ms_firstSystemAllocation;
 	for ( ; front && front->getFirstMemoryBlock() < systemAllocation->getFirstMemoryBlock(); back = front, front = front->getNext())
 		{}
@@ -817,13 +769,6 @@ void MemoryManager::setReportAllocations(bool reportAllocations)
 
 void MemoryManager::registerDebugFlags()
 {
-#if PRODUCTION == 0
-	ms_allocationsPerFrame.bindToCounter("MemoryManagerAllocateCount");
-	ms_bytesAllocatedPerFrame.bindToCounter("MemoryManagerAllocateBytes");
-	ms_freesPerFrame.bindToCounter("MemoryManagerFreeCount");
-	ms_bytesFreedPerFrame.bindToCounter("MemoryManagerFreeBytes");
-#endif
-
 #ifdef _DEBUG
 	DebugFlags::registerFlag(ms_debugReportFlag,                       "SharedMemoryManager", "reportMemory",                     debugReport);
 	DebugFlags::registerFlag(ms_debugReportMapFlag,                    "SharedMemoryManager", "reportMemoryMap",                  debugReportMap);
@@ -967,7 +912,7 @@ void MemoryManagerNamespace::addToFreeList(Block * block)
 
 	FreeBlock *   freeBlock     = static_cast<FreeBlock *>(block);
 	int const     freeBlockSize = freeBlock->getSize();
-	FreeBlock *   parent        = NULL;
+	FreeBlock *   parent        = nullptr;
 	FreeBlock * * next          = &ms_firstFreeBlock;
 	FreeBlock *   same          = 0;
 
@@ -991,7 +936,7 @@ void MemoryManagerNamespace::addToFreeList(Block * block)
 	{
 
 		freeBlock->m_smallerFreeBlock = same->m_smallerFreeBlock;
-		same->m_smallerFreeBlock = NULL;
+		same->m_smallerFreeBlock = nullptr;
 		if (freeBlock->m_smallerFreeBlock)
 			freeBlock->m_smallerFreeBlock->m_parentFreeBlock = freeBlock;
 
@@ -999,7 +944,7 @@ void MemoryManagerNamespace::addToFreeList(Block * block)
 		same->m_parentFreeBlock = freeBlock;
 
 		freeBlock->m_largerFreeBlock = same->m_largerFreeBlock;
-		same->m_largerFreeBlock = NULL;
+		same->m_largerFreeBlock = nullptr;
 		if (freeBlock->m_largerFreeBlock)
 			freeBlock->m_largerFreeBlock->m_parentFreeBlock = freeBlock;
 
@@ -1009,9 +954,9 @@ void MemoryManagerNamespace::addToFreeList(Block * block)
 	else
 	{
 		*next = freeBlock;
-		freeBlock->m_smallerFreeBlock = NULL;
-		freeBlock->m_sameFreeBlock    = NULL;
-		freeBlock->m_largerFreeBlock  = NULL;
+		freeBlock->m_smallerFreeBlock = nullptr;
+		freeBlock->m_sameFreeBlock    = nullptr;
+		freeBlock->m_largerFreeBlock  = nullptr;
 		freeBlock->m_parentFreeBlock  = parent;
 	}
 
@@ -1042,7 +987,7 @@ void MemoryManagerNamespace::removeFromFreeList(FreeBlock * block)
 	NOT_NULL(block);
 
 	// find the pointer that points to block
-	FreeBlock * * parentPointer = NULL;
+	FreeBlock * * parentPointer = nullptr;
 	FreeBlock * parent = block->m_parentFreeBlock;
 	if (parent)
 	{
@@ -1088,7 +1033,7 @@ void MemoryManagerNamespace::removeFromFreeList(FreeBlock * block)
 			{
 				// this is the worst case.  this free block has smaller and larger children, but not any same sized children
 				// we're going to take the smallest block off the larger list and use that to replace the current node
-				FreeBlock * back = NULL;
+				FreeBlock * back = nullptr;
 				FreeBlock * replacement = block->m_largerFreeBlock;
 				while (replacement->m_smallerFreeBlock)
 				{
@@ -1133,16 +1078,16 @@ void MemoryManagerNamespace::removeFromFreeList(FreeBlock * block)
 			else
 			{
 				// this block has no children
-				*parentPointer = NULL;
+				*parentPointer = nullptr;
 			}
 		}
 	}
 
 	// remove all the pointers the block may have had
-	block->m_smallerFreeBlock = NULL;
-	block->m_sameFreeBlock    = NULL;
-	block->m_largerFreeBlock  = NULL;
-	block->m_parentFreeBlock  = NULL;
+	block->m_smallerFreeBlock = nullptr;
+	block->m_sameFreeBlock    = nullptr;
+	block->m_largerFreeBlock  = nullptr;
+	block->m_parentFreeBlock  = nullptr;
 
 	--ms_freeBlocks;
 }
@@ -1151,7 +1096,7 @@ void MemoryManagerNamespace::removeFromFreeList(FreeBlock * block)
 
 FreeBlock *MemoryManagerNamespace::searchFreeList(int blockSize)
 {
-	FreeBlock * result = NULL;
+	FreeBlock * result = nullptr;
 	FreeBlock * current = ms_firstFreeBlock;
 	while (current)
 	{
@@ -1206,11 +1151,6 @@ void * MemoryManager::allocate(size_t size, uint32 owner, bool array, bool leakT
 
 	DEBUG_FATAL(!ms_installed, ("not installed"));
 
-#if PRODUCTION == 0
-	++ms_allocationsPerFrame;
-	ms_bytesAllocatedPerFrame += size;
-#endif
-
 #ifdef _DEBUG
 	if (ms_debugProfileAllocate)
 		PROFILER_BLOCK_ENTER(ms_allocateProfilerBlock);
@@ -1239,7 +1179,7 @@ void * MemoryManager::allocate(size_t size, uint32 owner, bool array, bool leakT
 		// get the size of the allocation
 		int allocSize = (cms_allocatedBlockSize + cms_guardBandSize + (size ? static_cast<int>(size) : 1) + cms_guardBandSize + 15) & ~15;
 
-		FreeBlock * bestFreeBlock = NULL;
+		FreeBlock * bestFreeBlock = nullptr;
 		for (int tries = 0; !bestFreeBlock && tries < 2; ++tries)
 		{
 			bestFreeBlock = searchFreeList(allocSize);
@@ -1396,7 +1336,7 @@ void *MemoryManager::reallocate(void *userPointer, size_t newSize)
 		{
 			MemoryManager::free(userPointer, array);
 
-//			DEBUG_REPORT_LOG(ms_logEachAlloc, ("MemoryManager::reallocate() new_requested_size=%d, org ptr=%p, new ptr=NULL\n", newSize, userPointer));
+//			DEBUG_REPORT_LOG(ms_logEachAlloc, ("MemoryManager::reallocate() new_requested_size=%d, org ptr=%p, new ptr=nullptr\n", newSize, userPointer));
 
 			return 0;
 		}
@@ -1440,7 +1380,7 @@ void *MemoryManager::reallocate(void *userPointer, size_t newSize)
  * Users should not call this routine directly.  It should only be called
  * by operator delete.
  *
- * This routine should not be called with the NULL pointer.
+ * This routine should not be called with the nullptr pointer.
  *
  * @param userPointer  Pointer to the memory
  * @param array  True if the array form of operator new was used, false if the scalar form was used
@@ -1476,11 +1416,8 @@ void MemoryManager::free(void * userPointer, bool array)
 		DEBUG_FATAL(allocatedBlock->isFree(),                                                                        ("Freeing already free block %p", userPointer));
 #endif
 
-#if PRODUCTION == 0
-		++ms_freesPerFrame;
 #if DO_TRACK
 		ms_bytesFreedPerFrame += allocatedBlock->getRequestedSize();
-#endif
 #endif
 
 #if DO_GUARDS
@@ -1998,9 +1935,11 @@ unsigned long MemoryManager::getCurrentNumberOfBytesAllocated(const int processI
 	static time_t seconds = 0;
 	    
 	unsigned long retVal = 0;
-	
+
+#if !DISABLED	
 	ms_criticalSection->enter();
-	
+#endif	
+
 	if (processId) 
 	{		
 		if ((time (0) - seconds) > 60 )
@@ -2038,9 +1977,11 @@ unsigned long MemoryManager::getCurrentNumberOfBytesAllocated(const int processI
 			retVal = static_cast<unsigned long>(s_statm.tpsr) * static_cast<unsigned long>(s_pagesize);
 		}
 	}
-	
+
+#if !DISABLED	
 	ms_criticalSection->leave();
-	
+#endif	
+
 	return retVal;	
 #endif			
 }
@@ -2102,7 +2043,7 @@ void  MemoryManager::setLimit(int, bool, bool)
 
 int MemoryManager::getLimit()
 {
-	return 768;
+	return 3072;
 }
 
 // ----------------------------------------------------------------------

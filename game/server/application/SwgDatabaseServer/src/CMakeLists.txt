@@ -12,7 +12,6 @@ set(SHARED_SOURCES
     shared/buffers/ExperienceBuffer.h
     shared/buffers/IndexedNetworkTableBuffer.cpp
     shared/buffers/IndexedNetworkTableBuffer.h
-    shared/buffers/IndexedTableBuffer.h
     shared/buffers/LocationBuffer.cpp
     shared/buffers/LocationBuffer.h
     shared/buffers/ManufactureSchematicAttributeBuffer.cpp

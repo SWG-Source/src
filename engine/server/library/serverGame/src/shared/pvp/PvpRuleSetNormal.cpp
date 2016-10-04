@@ -34,7 +34,7 @@ bool PvpRuleSetNormal::canAttack(TangibleObject const &actor, TangibleObject con
 	bool const actorIsPlayer = PvpInternal::isPlayer(actor);
 	bool const targetIsPlayer = PvpInternal::isPlayer(target);
 	Pvp::FactionId targetFaction = PvpInternal::getAlignedFaction(target);
-	Pvp::FactionId actorFaction  = PvpInternal::getAlignedFaction(actor);
+	Pvp::FactionId actorFaction = PvpInternal::getAlignedFaction(actor);
 	Pvp::PvpType actorPvpType = actor.getPvpType();
 	Pvp::PvpType targetPvpType = target.getPvpType();
 
@@ -92,7 +92,7 @@ bool PvpRuleSetNormal::canAttack(TangibleObject const &actor, TangibleObject con
 
 			return false;
 		}
-		
+
 		if (actorFaction != targetFaction)
 		{
 			// special forces player can attack opposing special forces NPC
@@ -104,30 +104,29 @@ bool PvpRuleSetNormal::canAttack(TangibleObject const &actor, TangibleObject con
 	}
 
 	// anyone may attack someone they are mutually dueling with
-	if (   PvpInternal::hasDuelEnemyFlag(target, actor.getNetworkId())
-	    && PvpInternal::hasDuelEnemyFlag(actor, target.getNetworkId()))
+	if (PvpInternal::hasDuelEnemyFlag(target, actor.getNetworkId())
+		&& PvpInternal::hasDuelEnemyFlag(actor, target.getNetworkId()))
 		return true;
 
 	// a bounty hunter can attack their target
 	if (actorIsPlayer && targetIsPlayer && creatureActor && creatureTarget && creatureActor->hasBounty(*creatureTarget) && creatureActor->hasBountyMissionForTarget(creatureTarget->getNetworkId()))
 		return true;
 
-	if(targetIsPlayer && actorIsPlayer)
+	if (targetIsPlayer && actorIsPlayer)
 	{
 		// noone may attack someone in their own group
 		if (PvpInternal::inSameGroup(actor, target))
 			return false;
-				
-		if(actorFaction!=targetFaction)
+
+		if (actorFaction != targetFaction)
 		{
 			//IF I'M DECLARED AND THEY ARE AS WELL, WE CAN ATTACK.
 			if ((actorPvpType == PvpType_Declared) && (targetPvpType == PvpType_Declared))
 			{
 				return true;
-			}	
+			}
 		}
-		
-	}	
+	}
 
 	// anyone may attack someone with a PEF against them (unless they are unattackable)
 	if (PvpInternal::hasPersonalEnemyFlag(target, actor.getNetworkId()))
@@ -158,22 +157,22 @@ bool PvpRuleSetNormal::canAttack(TangibleObject const &actor, TangibleObject con
 			NetworkId bhId;
 			if (target.getObjVars().getItem("objHunter", bhId) && (bhId == actor.getNetworkId()))
 			{
-/*
-				static int sentinel = 0;
+				/*
+								static int sentinel = 0;
 
-				// PvpInternal::setPermanentPersonalEnemyFlag() can cause PvpRuleSetNormal::canAttack()
-				// to get called again; to prevent infinite recursion, don't call
-				// PvpInternal::setPermanentPersonalEnemyFlag() again
-				if (sentinel == 0)
-				{
-					sentinel = 1;
+								// PvpInternal::setPermanentPersonalEnemyFlag() can cause PvpRuleSetNormal::canAttack()
+								// to get called again; to prevent infinite recursion, don't call
+								// PvpInternal::setPermanentPersonalEnemyFlag() again
+								if (sentinel == 0)
+								{
+									sentinel = 1;
 
-					// need to const cast because of updating target to set the PEF
-					PvpInternal::setPermanentPersonalEnemyFlag(const_cast<TangibleObject &>(target), actor.getNetworkId());
+									// need to const cast because of updating target to set the PEF
+									PvpInternal::setPermanentPersonalEnemyFlag(const_cast<TangibleObject &>(target), actor.getNetworkId());
 
-					sentinel = 0;
-				}
-*/
+									sentinel = 0;
+								}
+				*/
 
 				return true;
 			}
@@ -187,27 +186,26 @@ bool PvpRuleSetNormal::canAttack(TangibleObject const &actor, TangibleObject con
 	{
 		// guild members may attack members of other guilds which have declared war on their guild,
 		// but only if neither guild members is in a guild war "cool down" period
-		if (   GuildInterface::hasDeclaredWarAgainst(creatureTarget->getGuildId(), creatureActor->getGuildId())
-		    && GuildInterface::hasDeclaredWarAgainst(creatureActor->getGuildId(), creatureTarget->getGuildId())
+		if (GuildInterface::hasDeclaredWarAgainst(creatureTarget->getGuildId(), creatureActor->getGuildId())
+			&& GuildInterface::hasDeclaredWarAgainst(creatureActor->getGuildId(), creatureTarget->getGuildId())
 			&& creatureActor->getGuildWarEnabled()
 			&& creatureTarget->getGuildWarEnabled()
-		    && !PvpInternal::hasAnyGuildWarCoolDownPeriodEnemyFlag(*creatureActor)
-		    && !PvpInternal::hasAnyGuildWarCoolDownPeriodEnemyFlag(*creatureTarget))
+			&& !PvpInternal::hasAnyGuildWarCoolDownPeriodEnemyFlag(*creatureActor)
+			&& !PvpInternal::hasAnyGuildWarCoolDownPeriodEnemyFlag(*creatureTarget))
 			return true;
 	}
-	
-	if ( (actorIsPlayer) && (!targetIsPlayer) )
+
+	if ((actorIsPlayer) && (!targetIsPlayer))
 	{
 		// PC attacker rules
 		// anyone may attack npc targets with no faction opponents
-		if (!targetIsPlayer && PvpFactions::getOpposingFactions(targetFaction).empty())
+		if (PvpFactions::getOpposingFactions(targetFaction).empty())
 			return true;
 
-		
 		if (targetFaction != 0)
 		{
 			// so they're factional
-			if (actorFaction!=targetFaction)
+			if (actorFaction != targetFaction)
 			{
 				//they have a differnent faction than me
 				//am I neutral?
@@ -222,16 +220,16 @@ bool PvpRuleSetNormal::canAttack(TangibleObject const &actor, TangibleObject con
 		else
 		{
 			return true;
-		}	
+		}
 	}
-	
-	if (!actorIsPlayer)	
+
+	if (!actorIsPlayer)
 	{
 		// NPC attacker rules
 
 		if (!actorFaction)
 		{
-		 	// A neutral NPC can attack anything
+			// A neutral NPC can attack anything
 			return true;
 		}
 		else if ((!targetFaction) && (targetIsPlayer))
@@ -278,7 +276,7 @@ bool PvpRuleSetNormal::canHelp(TangibleObject const &actor, TangibleObject const
 	bool const actorIsPlayer = PvpInternal::isPlayer(actor);
 	bool const targetIsPlayer = PvpInternal::isPlayer(target);
 	Pvp::FactionId targetFaction = PvpInternal::getAlignedFaction(target);
-	Pvp::FactionId actorFaction  = PvpInternal::getAlignedFaction(actor);
+	Pvp::FactionId actorFaction = PvpInternal::getAlignedFaction(actor);
 	Pvp::PvpType actorPvpType = actor.getPvpType();
 	Pvp::PvpType targetPvpType = target.getPvpType();
 
@@ -299,7 +297,7 @@ bool PvpRuleSetNormal::canHelp(TangibleObject const &actor, TangibleObject const
 	// npcs are allowed to help anyone
 	if (!actorIsPlayer)
 		return true;
-		
+
 	// help target not player and not pet
 	if (!targetIsPlayer && !PvpInternal::isPet(target))
 		return false;
@@ -354,8 +352,8 @@ void PvpRuleSetNormal::getAttackRepercussions(TangibleObject const &actor, Tangi
 
 	// attacks between dueling characters only refresh duel flags
 	// attacks between dueling characters have no repercussions
-	if (   PvpInternal::hasDuelEnemyFlag(target, actor.getNetworkId())
-	    && PvpInternal::hasDuelEnemyFlag(actor, target.getNetworkId()))
+	if (PvpInternal::hasDuelEnemyFlag(target, actor.getNetworkId())
+		&& PvpInternal::hasDuelEnemyFlag(actor, target.getNetworkId()))
 		return;
 
 	bool const actorIsPlayer = PvpInternal::isPlayer(actor);
@@ -378,17 +376,17 @@ void PvpRuleSetNormal::getAttackRepercussions(TangibleObject const &actor, Tangi
 
 		// attacks between guild war members have no repercussions, but only if
 		// both the guild war members are not in the guild war "cool down" period
-		if (   GuildInterface::hasDeclaredWarAgainst(creatureActor->getGuildId(), creatureTarget->getGuildId())
-		    && GuildInterface::hasDeclaredWarAgainst(creatureTarget->getGuildId(), creatureActor->getGuildId())
+		if (GuildInterface::hasDeclaredWarAgainst(creatureActor->getGuildId(), creatureTarget->getGuildId())
+			&& GuildInterface::hasDeclaredWarAgainst(creatureTarget->getGuildId(), creatureActor->getGuildId())
 			&& creatureActor->getGuildWarEnabled()
 			&& creatureTarget->getGuildWarEnabled()
-		    && !PvpInternal::hasAnyGuildWarCoolDownPeriodEnemyFlag(*creatureActor)
-		    && !PvpInternal::hasAnyGuildWarCoolDownPeriodEnemyFlag(*creatureTarget))
+			&& !PvpInternal::hasAnyGuildWarCoolDownPeriodEnemyFlag(*creatureActor)
+			&& !PvpInternal::hasAnyGuildWarCoolDownPeriodEnemyFlag(*creatureTarget))
 			return;
 	}
 
 	Pvp::FactionId targetFaction = PvpInternal::getAlignedFaction(target);
-	Pvp::FactionId actorFaction  = PvpInternal::getAlignedFaction(actor);
+	Pvp::FactionId actorFaction = PvpInternal::getAlignedFaction(actor);
 	Pvp::PvpType actorPvpType = actor.getPvpType();
 	Pvp::PvpType targetPvpType = target.getPvpType();
 
@@ -417,13 +415,13 @@ void PvpRuleSetNormal::getAttackRepercussions(TangibleObject const &actor, Tangi
 		targetFaction = 0;
 	}
 
-	if( PvpFactions::isBubbleFaction(actorFaction) || PvpFactions::isBubbleFaction(targetFaction))
+	if (PvpFactions::isBubbleFaction(actorFaction) || PvpFactions::isBubbleFaction(targetFaction))
 	{
-		if(actorIsPlayer)
+		if (actorIsPlayer)
 			actorRepercussions.push_back(PvpEnemy(target.getNetworkId(), PvpFactions::getBubbleCombatFactionId(), -1));
 		else if (targetIsPlayer)
 			targetRepercussions.push_back(PvpEnemy(actor.getNetworkId(), PvpFactions::getBubbleCombatFactionId(), -1));
-		
+
 		return;
 	}
 
@@ -462,7 +460,7 @@ void PvpRuleSetNormal::getAttackRepercussions(TangibleObject const &actor, Tangi
 
 void PvpRuleSetNormal::getHelpRepercussions(TangibleObject const &actor, TangibleObject const &target, std::vector<PvpEnemy> &actorRepercussions, std::vector<PvpEnemy> &targetRepercussions) const
 {
-	actorRepercussions.clear();	
+	actorRepercussions.clear();
 	targetRepercussions.clear();
 }
 
@@ -483,7 +481,7 @@ bool PvpRuleSetNormal::isEnemy(TangibleObject const &actor, TangibleObject const
 		return true;
 
 	Pvp::FactionId targetFaction = PvpInternal::getAlignedFaction(target);
-	Pvp::FactionId actorFaction  = PvpInternal::getAlignedFaction(actor);
+	Pvp::FactionId actorFaction = PvpInternal::getAlignedFaction(actor);
 	Pvp::PvpType actorPvpType = actor.getPvpType();
 	Pvp::PvpType targetPvpType = target.getPvpType();
 
@@ -547,7 +545,7 @@ bool PvpRuleSetNormal::isEnemy(TangibleObject const &actor, TangibleObject const
 
 	// do duel and guild war checks before attackable player faction checks
 	//   this is so covert opposite faction players who duel or guild war can still death blow correctly
-	if (   PvpInternal::hasDuelEnemyFlag(target, actor.getNetworkId())
+	if (PvpInternal::hasDuelEnemyFlag(target, actor.getNetworkId())
 		&& PvpInternal::hasDuelEnemyFlag(actor, target.getNetworkId()))
 		return true;
 
@@ -557,7 +555,7 @@ bool PvpRuleSetNormal::isEnemy(TangibleObject const &actor, TangibleObject const
 		// guild members are enemies of other guilds which have declared war on their guild,
 		// but only if neither guild members is in a guild war "cool down" period
 		// being an enemy sets the client's "default action" to death blow for incapacitated players in a guild war
-		if (   GuildInterface::hasDeclaredWarAgainst(creatureTarget->getGuildId(), creatureActor->getGuildId())
+		if (GuildInterface::hasDeclaredWarAgainst(creatureTarget->getGuildId(), creatureActor->getGuildId())
 			&& GuildInterface::hasDeclaredWarAgainst(creatureActor->getGuildId(), creatureTarget->getGuildId())
 			&& creatureActor->getGuildWarEnabled()
 			&& creatureTarget->getGuildWarEnabled()
@@ -566,7 +564,7 @@ bool PvpRuleSetNormal::isEnemy(TangibleObject const &actor, TangibleObject const
 			return true;
 	}
 
-	if ( actorFaction )
+	if (actorFaction)
 	{
 		//i'm not neutral
 		if (targetFaction)
@@ -608,8 +606,8 @@ bool PvpRuleSetNormal::isDuelingAllowed(TangibleObject const &actor, TangibleObj
 	CreatureObject const * actorCreature = actor.asCreatureObject();
 	CreatureObject const * targetCreature = target.asCreatureObject();
 
-	return ( actorCreature && actorIsPlayer && actorCreature->isInWorld() && !actorCreature->isInTutorial()
-		&& targetCreature && targetIsPlayer && targetCreature->isInWorld() && !targetCreature->isInTutorial() );
+	return (actorCreature && actorIsPlayer && actorCreature->isInWorld() && !actorCreature->isInTutorial()
+		&& targetCreature && targetIsPlayer && targetCreature->isInWorld() && !targetCreature->isInTutorial());
 }
-				
+
 // ======================================================================

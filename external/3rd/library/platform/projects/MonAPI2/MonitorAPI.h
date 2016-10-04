@@ -42,14 +42,14 @@ public:
 	*
 	*	debug = turn on/off debugging.
 	*
-	*	address = (NOT USED) Leave as NULL
+	*	address = (NOT USED) Leave as nullptr
 	*
-	*	UdpManager * mang = (NOT USED) Leave as NULL
+	*	UdpManager * mang = (NOT USED) Leave as nullptr
 	*	
-	*	// GenericNotifier *notifier = (NOT USED) Leave as NULL
+	*	// GenericNotifier *notifier = (NOT USED) Leave as nullptr
 	*
 	*/
-	CMonitorAPI( const char *configFile, unsigned short port, bool debug = false , char * address = NULL, UdpManager * mang = NULL );
+	CMonitorAPI( const char *configFile, unsigned short port, bool debug = false , char * address = nullptr, UdpManager * mang = nullptr );
 	
 	~CMonitorAPI();
 
@@ -112,7 +112,7 @@ public:
 	*	Max Limited
 	*	#define ELEMENT_MAX_START 2000
 	*/
-	int add( const char *label, int Key, int mode = MON_HISTORY, const char *Description = NULL );
+	int add( const char *label, int Key, int mode = MON_HISTORY, const char *Description = nullptr );
 
 
 	/****************  Set the description of an element  **

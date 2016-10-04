@@ -63,7 +63,7 @@ void JNICALL ScriptMethodsBroadcastingNamespace::listenToMessage(JNIEnv *env, jo
 	CachedNetworkId emitterId(emitter);
 
 	ServerObject* listenerObject = dynamic_cast<ServerObject*>(listenerId.getObject());
-	if (listenerObject == NULL)
+	if (listenerObject == nullptr)
 		return;
 
 	std::string messageHandlerNameString;
@@ -88,7 +88,7 @@ void JNICALL ScriptMethodsBroadcastingNamespace::stopListeningToMessage(JNIEnv *
 	CachedNetworkId emitterId(emitter);
 
 	ServerObject* listenerObject = dynamic_cast<ServerObject*>(listenerId.getObject());
-	if (listenerObject == NULL)
+	if (listenerObject == nullptr)
 		return;
 
 	std::string messageHandlerNameString;
@@ -112,7 +112,7 @@ jlongArray JNICALL ScriptMethodsBroadcastingNamespace::getMessageListeners(JNIEn
 	CachedNetworkId emitterId(emitter);
 
 	ServerObject* emitterObject = dynamic_cast<ServerObject*>(emitterId.getObject());
-	if (emitterObject == NULL)
+	if (emitterObject == nullptr)
 		return 0;
 
 	std::string messageHandlerNameString;

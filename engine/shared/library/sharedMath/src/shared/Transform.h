@@ -540,7 +540,7 @@ inline void Transform::move_l(const Vector &vec)
 
 inline bool Transform::isYawOnly(void) const
 {
-	return abs(matrix[1][1] - 1.0f) < 0.00001f;
+	return std::abs(matrix[1][1] - 1.0f) < 0.00001f;
 }
 
 // ----------------------------------------------------------------------
@@ -550,9 +550,9 @@ inline bool Transform::isYawOnly(void) const
 
 inline bool Transform::isTranslateOnly(void) const
 {
-	if(abs(matrix[0][0] - 1.0f) > 0.00001f) return false;
-	if(abs(matrix[1][1] - 1.0f) > 0.00001f) return false;
-	if(abs(matrix[2][2] - 1.0f) > 0.00001f) return false;
+	if(std::abs(matrix[0][0] - 1.0f) > 0.00001f) return false;
+	if(std::abs(matrix[1][1] - 1.0f) > 0.00001f) return false;
+	if(std::abs(matrix[2][2] - 1.0f) > 0.00001f) return false;
 
 	return true;
 }

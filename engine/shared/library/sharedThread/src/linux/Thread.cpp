@@ -142,18 +142,3 @@ void Thread::setPriority(ePriority priority)
 	pthread_setschedparam(thread, policies[priority], &p);
 }
 
-// Make sure the header-only files compile :)
-
-#if 0
-
-#include "sharedSynchronization/CountingSemaphore.h"
-#include "sharedSynchronization/BlockingPointer.h"
-#include "sharedSynchronization/BlockingQueue.h"
-#include "sharedSynchronization/WriteOnce.h"
-
-Mutex t;
-BlockingQueue<int> bqint(t, 0, 0);
-BlockingPointer<int> bpint(t, 0, 0);
-WriteOnce<int> woint;
-
-#endif

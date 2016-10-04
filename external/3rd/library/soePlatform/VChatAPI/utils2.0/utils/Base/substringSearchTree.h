@@ -156,15 +156,15 @@ private:
 	class letterNode
 	{
 	public:
-		letterNode() : mpData(NULL), mpChildren(NULL), mNumChildren(0) { }
-		letterNode(const letter_t & letter) : mLetter(letter), mpData(NULL), mpChildren(NULL), mNumChildren(0) { }
+		letterNode() : mpData(nullptr), mpChildren(nullptr), mNumChildren(0) { }
+		letterNode(const letter_t & letter) : mLetter(letter), mpData(nullptr), mpChildren(nullptr), mNumChildren(0) { }
 		~letterNode();
 
-		inline bool hasData() const { return (mpData != NULL); }
+		inline bool hasData() const { return (mpData != nullptr); }
 		inline data_t & getData() { return *mpData; }
 		inline const data_t & getData() const { return *mpData; }
 		inline void setData(const data_t & data) { if (mpData) { *mpData = data; } else { mpData = new data_t(data); } }
-		inline void removeData() { delete mpData; mpData = NULL; }
+		inline void removeData() { delete mpData; mpData = nullptr; }
 
 		letterNode * get(letter_t index) const;
 		bool put(letter_t index, letterNode ** tree);
@@ -182,7 +182,7 @@ private:
 
 		inline letter_t & letter() { return mLetter; }
 		inline const letter_t & letter() const { return mLetter; }
-		inline bool hasNoChildren() const { return (mpChildren == NULL) || (mNumChildren == 0); }
+		inline bool hasNoChildren() const { return (mpChildren == nullptr) || (mNumChildren == 0); }
 
 	private:
 		letter_t mLetter;
@@ -272,9 +272,9 @@ bool stringTree<letter_t, data_t>::seek(iter_t & start, const iter_t & stop, typ
 		position.mBranch.push_back(&mRoot);
 	}
 
-	const letterNode * pnode = (start != stop) ? position.mBranch.back() : NULL;
+	const letterNode * pnode = (start != stop) ? position.mBranch.back() : nullptr;
 
-	for	(; (start != stop) && ((pnode = pnode->get(*start)) != NULL); start++)
+	for	(; (start != stop) && ((pnode = pnode->get(*start)) != nullptr); start++)
 	{
 		position.mBranch.push_back(pnode);
 		if (pnode->hasData()) {
@@ -298,9 +298,9 @@ bool stringTree<letter_t, data_t>::seek(iter_t & start, const iter_t & stop, typ
 		position.mBranch.push_back(&mRoot);
 	}
 
-	const letterNode * pnode = (start != stop) ? position.mBranch.back() : NULL;
+	const letterNode * pnode = (start != stop) ? position.mBranch.back() : nullptr;
 
-	for	(; (start != stop) && ((pnode = pnode->get(*start)) != NULL); start++)
+	for	(; (start != stop) && ((pnode = pnode->get(*start)) != nullptr); start++)
 	{
 		position.mBranch.push_back(pnode);
 		if (pnode->hasData()) {
@@ -441,7 +441,7 @@ stringTree<letter_t, data_t>::letterNode::~letterNode()
 template<typename letter_t, typename data_t>
 typename stringTree<letter_t, data_t>::letterNode * stringTree<letter_t, data_t>::letterNode::get(letter_t index) const
 {
-	letterNode * tree = NULL;
+	letterNode * tree = nullptr;
 	letterNode * end = mpChildren + mNumChildren;
 	letterNode * place = std::lower_bound<letterNode *>(mpChildren, mpChildren + mNumChildren, index);
 
@@ -495,10 +495,10 @@ bool stringTree<letter_t, data_t>::letterNode::take(letter_t index, bool dealloc
 		mNumChildren--;
 		if (!mNumChildren) { deallocate = true; }
 
-		letterNode * children = NULL;
+		letterNode * children = nullptr;
 
 		if (deallocate) {
-			children = mNumChildren ? new letterNode[mNumChildren] : NULL;
+			children = mNumChildren ? new letterNode[mNumChildren] : nullptr;
 		} else {
 			children = mpChildren;	
 		}
@@ -536,7 +536,7 @@ void stringTree<letter_t, data_t>::const_iterator::getKey(string_t & key) const
 template<typename letter_t, typename data_t>
 typename stringTree<letter_t, data_t>::letterNode * stringTree<letter_t, data_t>::letterNode::firstChild() const
 {
-	letterNode * child = NULL;
+	letterNode * child = nullptr;
 
 	if (mpChildren) {
 		child = mpChildren;
@@ -548,7 +548,7 @@ typename stringTree<letter_t, data_t>::letterNode * stringTree<letter_t, data_t>
 template<typename letter_t, typename data_t>
 typename stringTree<letter_t, data_t>::letterNode * stringTree<letter_t, data_t>::letterNode::lastChild() const
 {
-	letterNode * child = NULL;
+	letterNode * child = nullptr;
 
 	if (mpChildren) {
 		child = mpChildren + mNumChildren - 1;
@@ -560,7 +560,7 @@ typename stringTree<letter_t, data_t>::letterNode * stringTree<letter_t, data_t>
 template<typename letter_t, typename data_t>
 typename stringTree<letter_t, data_t>::letterNode * stringTree<letter_t, data_t>::letterNode::nextChild(const letterNode * child) const
 {
-	letterNode * next = NULL;
+	letterNode * next = nullptr;
 
 	if (mpChildren) {
 		size_t index = child - mpChildren;
@@ -577,7 +577,7 @@ typename stringTree<letter_t, data_t>::letterNode * stringTree<letter_t, data_t>
 template<typename letter_t, typename data_t>
 typename stringTree<letter_t, data_t>::letterNode * stringTree<letter_t, data_t>::letterNode::previousChild(const letterNode * child) const
 {
-	letterNode * previous = NULL;
+	letterNode * previous = nullptr;
 
 	if (mpChildren) {
 		size_t index = child - mpChildren;
@@ -623,13 +623,13 @@ template<typename letter_t, typename data_t>
 bool stringTree<letter_t, data_t>::const_iterator::advance()
 {
 	bool wentForward = false;
-	const letterNode * terminal = NULL;
-	const letterNode * penultimate = NULL;
-	const letterNode * next = NULL;
+	const letterNode * terminal = nullptr;
+	const letterNode * penultimate = nullptr;
+	const letterNode * next = nullptr;
 
 	if (mBranch.back()->hasNoChildren()) {
 		// go forward
-		while ((mBranch.size() >= 2) && (next == NULL))
+		while ((mBranch.size() >= 2) && (next == nullptr))
 		{
 			penultimate = mBranch[mBranch.size() - 2];
 			terminal = mBranch[mBranch.size() - 1];
@@ -654,9 +654,9 @@ template<typename letter_t, typename data_t>
 bool stringTree<letter_t, data_t>::const_iterator::retreat()
 {
 	bool wentBack = false;
-	const letterNode * terminal = NULL;
-	const letterNode * penultimate = NULL;
-	const letterNode * next = NULL;
+	const letterNode * terminal = nullptr;
+	const letterNode * penultimate = nullptr;
+	const letterNode * next = nullptr;
 
 	if (mBranch.size() >= 2) {
 		// go backwards
@@ -670,7 +670,7 @@ bool stringTree<letter_t, data_t>::const_iterator::retreat()
 		mBranch.pop_back();
 	}
 	// go to leaf
-	for (; next != NULL; next = next->lastChild())
+	for (; next != nullptr; next = next->lastChild())
 	{
 		mBranch.push_back(next);
 		if (next->hasData() && next->hasNoChildren()) {
@@ -724,9 +724,9 @@ template<typename letter_t, typename data_t>
 void stringTree<letter_t, data_t>::setBegin() const
 {
 	mBegin.mBranch.clear();
-	const letterNode * leaf = NULL;
+	const letterNode * leaf = nullptr;
 
-	for (leaf = &mRoot; leaf != NULL; leaf = leaf->firstChild())
+	for (leaf = &mRoot; leaf != nullptr; leaf = leaf->firstChild())
 	{
 		mBegin.mBranch.push_back(leaf);
 		if (leaf->hasData()) {
@@ -782,7 +782,7 @@ template<typename letter_t, typename data_t>
 template<typename iter_t>
 const data_t * stringTree<letter_t, data_t>::finder<iter_t>::data() const
 {
-	const data_t * pData = NULL;
+	const data_t * pData = nullptr;
 
 	if (mDictionaryIter != mDictionary.end()) {
 		pData = &(*mDictionaryIter);

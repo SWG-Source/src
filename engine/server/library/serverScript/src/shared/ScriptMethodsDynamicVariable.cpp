@@ -39,7 +39,7 @@ namespace NonAuthObjvarNamespace
 		if (!ConfigServerGame::getTrackNonAuthoritativeObjvarSets())
 			return;
 
-		if (name == NULL || *name == '\0')
+		if (name == nullptr || *name == '\0')
 			return;
 		if (obj.isAuthoritative())
 			return;
@@ -504,13 +504,13 @@ LocalRefPtr ScriptMethodsDynamicVariableNamespace::convertDynamicVariableListToO
  * @param buffer		a buffer to be filled in with the converted C name
  * @param bufferSize	the length of buffer
  *
- * @return the ServerObject * for the obj_id, or null on error
+ * @return the ServerObject * for the obj_id, or nullptr on error
  */
 ServerObject * ScriptMethodsDynamicVariableNamespace::getObjectAndName(JNIEnv *env, jlong objId, jstring name, char * buffer, size_t bufferSize)
 {
 	NOT_NULL(buffer);
 
-	ServerObject * object = NULL;
+	ServerObject * object = nullptr;
 	JavaStringParam localName(name);
 	if (localName.fillBuffer(buffer, bufferSize) > 1)
 	{
@@ -523,7 +523,7 @@ ServerObject * ScriptMethodsDynamicVariableNamespace::getObjectAndName(JNIEnv *e
 	{
 		fprintf(stderr, "WARNING: Could not get objvar name\n");
 	}
-	if (object == NULL && !ConfigServerGame::getDisableObjvarNullCheck())
+	if (object == nullptr && !ConfigServerGame::getDisableObjvarNullCheck())
 		JavaLibrary::printJavaStack();
 
 	return object;
@@ -540,15 +540,15 @@ ServerObject * ScriptMethodsDynamicVariableNamespace::getObjectAndName(JNIEnv *e
  * @param buffer		a buffer to be filled in with the converted C name
  * @param bufferSize	the length of buffer
  *
- * @return the DynamicVariableList * for the obj_id, or null on error
+ * @return the DynamicVariableList * for the obj_id, or nullptr on error
  */
 const DynamicVariableList * ScriptMethodsDynamicVariableNamespace::getObjvarsAndName(JNIEnv *env, jlong objId, jstring name, char * buffer, size_t bufferSize)
 {
 	NOT_NULL(buffer);
 
-	const DynamicVariableList * objvars = NULL;
+	const DynamicVariableList * objvars = nullptr;
 	const ServerObject * object = getObjectAndName(env, objId, name, buffer, bufferSize);
-	if (object != NULL)
+	if (object != nullptr)
 	{
 		testIsSafeToReadObjvar(*object, buffer);
 		objvars = &object->getObjVars();
@@ -582,7 +582,7 @@ jobject JNICALL ScriptMethodsDynamicVariableNamespace::getDynamicVariable(JNIEnv
 
 	char buffer[DynamicVariable::MAX_DYNAMIC_VARIABLE_NAME_LEN];
 	const DynamicVariableList * objvars = getObjvarsAndName(env, objId, name, buffer, sizeof(buffer));
-	if (objvars == NULL)
+	if (objvars == nullptr)
 		return 0;
 	const std::string objvarName(buffer);
 
@@ -751,7 +751,7 @@ jint JNICALL ScriptMethodsDynamicVariableNamespace::getIntDynamicVariable(JNIEnv
 
 	char buffer[DynamicVariable::MAX_DYNAMIC_VARIABLE_NAME_LEN];
 	const DynamicVariableList * objvarList = getObjvarsAndName(env, objId, name, buffer, sizeof(buffer));
-	if (objvarList == NULL)
+	if (objvarList == nullptr)
 		return 0;
 
 	int localValue=0;
@@ -781,7 +781,7 @@ jintArray JNICALL ScriptMethodsDynamicVariableNamespace::getIntArrayDynamicVaria
 
 	char buffer[DynamicVariable::MAX_DYNAMIC_VARIABLE_NAME_LEN];
 	const DynamicVariableList * objvarList = getObjvarsAndName(env, objId, name, buffer, sizeof(buffer));
-	if (objvarList == NULL)
+	if (objvarList == nullptr)
 		return 0;
 
 	std::vector<int> value;
@@ -816,7 +816,7 @@ jfloat JNICALL ScriptMethodsDynamicVariableNamespace::getFloatDynamicVariable(JN
 
 	char buffer[DynamicVariable::MAX_DYNAMIC_VARIABLE_NAME_LEN];
 	const DynamicVariableList * objvarList = getObjvarsAndName(env, objId, name, buffer, sizeof(buffer));
-	if (objvarList == NULL)
+	if (objvarList == nullptr)
 		return 0;
 
 	float localValue = 0;
@@ -846,7 +846,7 @@ jfloatArray JNICALL ScriptMethodsDynamicVariableNamespace::getFloatArrayDynamicV
 
 	char buffer[DynamicVariable::MAX_DYNAMIC_VARIABLE_NAME_LEN];
 	const DynamicVariableList * objvarList = getObjvarsAndName(env, objId, name, buffer, sizeof(buffer));
-	if (objvarList == NULL)
+	if (objvarList == nullptr)
 		return 0;
 
 	std::vector<real> value;
@@ -878,7 +878,7 @@ jstring JNICALL ScriptMethodsDynamicVariableNamespace::getStringDynamicVariable(
 
 	char buffer[DynamicVariable::MAX_DYNAMIC_VARIABLE_NAME_LEN];
 	const DynamicVariableList * objvarList = getObjvarsAndName(env, objId, name, buffer, sizeof(buffer));
-	if (objvarList == NULL)
+	if (objvarList == nullptr)
 		return 0;
 
 	Unicode::String value;
@@ -908,7 +908,7 @@ jobjectArray JNICALL ScriptMethodsDynamicVariableNamespace::getStringArrayDynami
 
 	char buffer[DynamicVariable::MAX_DYNAMIC_VARIABLE_NAME_LEN];
 	const DynamicVariableList * objvarList = getObjvarsAndName(env, objId, name, buffer, sizeof(buffer));
-	if (objvarList == NULL)
+	if (objvarList == nullptr)
 		return 0;
 
 	std::vector<Unicode::String> value;
@@ -944,7 +944,7 @@ jlong JNICALL ScriptMethodsDynamicVariableNamespace::getObjIdDynamicVariable(JNI
 
 	char buffer[DynamicVariable::MAX_DYNAMIC_VARIABLE_NAME_LEN];
 	const DynamicVariableList * objvarList = getObjvarsAndName(env, objId, name, buffer, sizeof(buffer));
-	if (objvarList == NULL)
+	if (objvarList == nullptr)
 		return 0;
 
 	NetworkId localValue;
@@ -972,7 +972,7 @@ jlongArray JNICALL ScriptMethodsDynamicVariableNamespace::getObjIdArrayDynamicVa
 
 	char buffer[DynamicVariable::MAX_DYNAMIC_VARIABLE_NAME_LEN];
 	const DynamicVariableList *objvarList = getObjvarsAndName(env, objId, name, buffer, sizeof(buffer));
-	if (objvarList == NULL)
+	if (objvarList == nullptr)
 		return 0;
 
 	std::vector<NetworkId> value;
@@ -1013,7 +1013,7 @@ jobject JNICALL ScriptMethodsDynamicVariableNamespace::getLocationDynamicVariabl
 
 	char buffer[DynamicVariable::MAX_DYNAMIC_VARIABLE_NAME_LEN];
 	const DynamicVariableList * objvarList = getObjvarsAndName(env, objId, name, buffer, sizeof(buffer));
-	if (objvarList == NULL)
+	if (objvarList == nullptr)
 		return 0;
 
 	DynamicVariableLocationData value;
@@ -1046,7 +1046,7 @@ jobjectArray JNICALL ScriptMethodsDynamicVariableNamespace::getLocationArrayDyna
 
 	char buffer[DynamicVariable::MAX_DYNAMIC_VARIABLE_NAME_LEN];
 	const DynamicVariableList * objvarList = getObjvarsAndName(env, objId, name, buffer, sizeof(buffer));
-	if (objvarList == NULL)
+	if (objvarList == nullptr)
 		return 0;
 
 	std::vector<DynamicVariableLocationData> value;
@@ -1092,7 +1092,7 @@ jobject JNICALL ScriptMethodsDynamicVariableNamespace::getStringIdDynamicVariabl
 
 	char buffer[DynamicVariable::MAX_DYNAMIC_VARIABLE_NAME_LEN];
 	const DynamicVariableList * objvarList = getObjvarsAndName(env, objId, name, buffer, sizeof(buffer));
-	if (objvarList == NULL)
+	if (objvarList == nullptr)
 		return 0;
 
 	StringId value;
@@ -1125,7 +1125,7 @@ jobjectArray JNICALL ScriptMethodsDynamicVariableNamespace::getStringIdArrayDyna
 
 	char buffer[DynamicVariable::MAX_DYNAMIC_VARIABLE_NAME_LEN];
 	const DynamicVariableList * objvarList = getObjvarsAndName(env, objId, name, buffer, sizeof(buffer));
-	if (objvarList == NULL)
+	if (objvarList == nullptr)
 		return 0;
 
 	std::vector<StringId> value;
@@ -1168,7 +1168,7 @@ jobject JNICALL ScriptMethodsDynamicVariableNamespace::getTransformDynamicVariab
 
 	char buffer[DynamicVariable::MAX_DYNAMIC_VARIABLE_NAME_LEN];
 	const DynamicVariableList * objvarList = getObjvarsAndName(env, objId, name, buffer, sizeof(buffer));
-	if (objvarList == NULL)
+	if (objvarList == nullptr)
 		return 0;
 
 	Transform value;
@@ -1201,7 +1201,7 @@ jobjectArray JNICALL ScriptMethodsDynamicVariableNamespace::getTransformArrayDyn
 
 	char buffer[DynamicVariable::MAX_DYNAMIC_VARIABLE_NAME_LEN];
 	const DynamicVariableList * objvarList = getObjvarsAndName(env, objId, name, buffer, sizeof(buffer));
-	if (objvarList == NULL)
+	if (objvarList == nullptr)
 		return 0;
 
 	std::vector<Transform> value;
@@ -1244,7 +1244,7 @@ jobject JNICALL ScriptMethodsDynamicVariableNamespace::getVectorDynamicVariable(
 
 	char buffer[DynamicVariable::MAX_DYNAMIC_VARIABLE_NAME_LEN];
 	const DynamicVariableList * objvarList = getObjvarsAndName(env, objId, name, buffer, sizeof(buffer));
-	if (objvarList == NULL)
+	if (objvarList == nullptr)
 		return 0;
 
 	Vector value;
@@ -1277,7 +1277,7 @@ jobjectArray JNICALL ScriptMethodsDynamicVariableNamespace::getVectorArrayDynami
 
 	char buffer[DynamicVariable::MAX_DYNAMIC_VARIABLE_NAME_LEN];
 	const DynamicVariableList * objvarList = getObjvarsAndName(env, objId, name, buffer, sizeof(buffer));
-	if (objvarList == NULL)
+	if (objvarList == nullptr)
 		return 0;
 
 	std::vector<Vector> value;
@@ -1320,7 +1320,7 @@ jobject JNICALL ScriptMethodsDynamicVariableNamespace::getDynamicVariableList(JN
 
 	JavaStringParam localName(name);
 
-	const ServerObject* object = NULL;
+	const ServerObject* object = nullptr;
 	if (!JavaLibrary::getObject(objId, object))
 		return 0;
 
@@ -1342,7 +1342,7 @@ jobject JNICALL ScriptMethodsDynamicVariableNamespace::getDynamicVariableList(JN
 		}
 	}
 
-	if (result.get() == NULL)
+	if (result.get() == nullptr)
 		return 0;
 	return result->getReturnValue();
 }	// JavaLibrary::getDynamicVariableList
@@ -1364,7 +1364,7 @@ void JNICALL ScriptMethodsDynamicVariableNamespace::removeDynamicVariable(JNIEnv
 
 	char buffer[DynamicVariable::MAX_DYNAMIC_VARIABLE_NAME_LEN];
 	ServerObject * object = getObjectAndName(env, objId, name, buffer, sizeof(buffer));
-	if (object == NULL)
+	if (object == nullptr)
 		return;
 
 	object->removeObjVarItem(buffer);
@@ -1384,7 +1384,7 @@ void JNICALL ScriptMethodsDynamicVariableNamespace::removeAllDynamicVariables(JN
 	if (objId == 0)
 		return;
 
-	ServerObject* object = NULL;
+	ServerObject* object = nullptr;
 	if (!JavaLibrary::getObject(objId, object))
 		return;
 
@@ -1410,7 +1410,7 @@ jboolean JNICALL ScriptMethodsDynamicVariableNamespace::hasDynamicVariable(JNIEn
 
 	char buffer[DynamicVariable::MAX_DYNAMIC_VARIABLE_NAME_LEN];
 	const ServerObject * object = getObjectAndName(env, objId, name, buffer, sizeof(buffer));
-	if (object == NULL)
+	if (object == nullptr)
 		return 0;
 
 	const DynamicVariableList &objvarList = object->getObjVars();
@@ -1441,11 +1441,11 @@ jboolean JNICALL ScriptMethodsDynamicVariableNamespace::setDynamicVariable(JNIEn
 
 	char buffer[DynamicVariable::MAX_DYNAMIC_VARIABLE_NAME_LEN];
 	ServerObject * object = getObjectAndName(env, objId, name, buffer, sizeof(buffer));
-	if (object == NULL)
+	if (object == nullptr)
 		return JNI_FALSE;
 
 	const DynamicVariableList *objvarList = &(object->getObjVars());
-	if (objvarList == NULL)
+	if (objvarList == nullptr)
 		return JNI_FALSE;
 
 	// determine what type the data is
@@ -1454,9 +1454,9 @@ jboolean JNICALL ScriptMethodsDynamicVariableNamespace::setDynamicVariable(JNIEn
 	{
 		// name is the name of an objvar list we will add data to
 		DynamicVariable *objvar = objvarList->getItemByName(localName);
-		if (objvar == NULL)
+		if (objvar == nullptr)
 			objvar = objvarList->addNestedList(localName);
-		if (objvar != NULL && objvar->getType() == DynamicVariable::LIST)
+		if (objvar != nullptr && objvar->getType() == DynamicVariable::LIST)
 			return updateDynamicVariableList(env, *dynamic_cast<DynamicVariableList*>(objvar), data);
 		return JNI_FALSE;
 	}
@@ -1474,7 +1474,7 @@ jboolean JNICALL ScriptMethodsDynamicVariableNamespace::setDynamicVariable(JNIEn
 	}
 	else if (env->IsInstanceOf(data, ms_clsString) == JNI_TRUE)
 	{
-		if (objvarList->setItem(localName, Unicode::String(env->GetStringChars(static_cast<jstring>(data), NULL))))
+		if (objvarList->setItem(localName, Unicode::String(env->GetStringChars(static_cast<jstring>(data), nullptr))))
 		#error must release characters
 			return JNI_TRUE;
 		return JNI_FALSE;
@@ -1503,7 +1503,7 @@ jboolean JNICALL ScriptMethodsDynamicVariableNamespace::setIntDynamicVariable(JN
 
 	char buffer[DynamicVariable::MAX_DYNAMIC_VARIABLE_NAME_LEN];
 	ServerObject * object = getObjectAndName(env, objId, name, buffer, sizeof(buffer));
-	if (object == NULL)
+	if (object == nullptr)
 		return JNI_FALSE;
 
 	addSetObjvar(*object, buffer);
@@ -1531,7 +1531,7 @@ jboolean JNICALL ScriptMethodsDynamicVariableNamespace::setIntArrayDynamicVariab
 
 	char buffer[DynamicVariable::MAX_DYNAMIC_VARIABLE_NAME_LEN];
 	ServerObject * object = getObjectAndName(env, objId, name, buffer, sizeof(buffer));
-	if (object == NULL)
+	if (object == nullptr)
 		return JNI_FALSE;
 
 	size_t size = env->GetArrayLength(value);
@@ -1574,7 +1574,7 @@ jboolean JNICALL ScriptMethodsDynamicVariableNamespace::setFloatDynamicVariable(
 
 	char buffer[DynamicVariable::MAX_DYNAMIC_VARIABLE_NAME_LEN];
 	ServerObject * object = getObjectAndName(env, objId, name, buffer, sizeof(buffer));
-	if (object == NULL)
+	if (object == nullptr)
 		return JNI_FALSE;
 
 	addSetObjvar(*object, buffer);
@@ -1602,7 +1602,7 @@ jboolean JNICALL ScriptMethodsDynamicVariableNamespace::setFloatArrayDynamicVari
 
 	char buffer[DynamicVariable::MAX_DYNAMIC_VARIABLE_NAME_LEN];
 	ServerObject * object = getObjectAndName(env, objId, name, buffer, sizeof(buffer));
-	if (object == NULL)
+	if (object == nullptr)
 		return JNI_FALSE;
 
 	size_t size = env->GetArrayLength(value);
@@ -1645,7 +1645,7 @@ jboolean JNICALL ScriptMethodsDynamicVariableNamespace::setStringDynamicVariable
 
 	if (name == 0)
 	{
-		DEBUG_WARNING(true, ("NULL name passed from script to JavaLibrary::setStringDynamicValue"));
+		DEBUG_WARNING(true, ("nullptr name passed from script to JavaLibrary::setStringDynamicValue"));
 		return JNI_FALSE;
 	}
 
@@ -1653,17 +1653,17 @@ jboolean JNICALL ScriptMethodsDynamicVariableNamespace::setStringDynamicVariable
 
 	char buffer[DynamicVariable::MAX_DYNAMIC_VARIABLE_NAME_LEN];
 	ServerObject * object = getObjectAndName(env, objId, name, buffer, sizeof(buffer));
-	if (object == NULL)
+	if (object == nullptr)
 		return JNI_FALSE;
 
 	if (value == 0)
 	{
-		DEBUG_WARNING(true, ("NULL string passed from script to JavaLibrary::setStringDynamicValue (%s)",buffer));
+		DEBUG_WARNING(true, ("nullptr string passed from script to JavaLibrary::setStringDynamicValue (%s)",buffer));
 		return JNI_FALSE;
 	}
 
 	const DynamicVariableList *objvarList = &(object->getObjVars());
-	if (objvarList == NULL)
+	if (objvarList == nullptr)
 		return JNI_FALSE;
 
 	Unicode::String valueString;
@@ -1698,7 +1698,7 @@ jboolean JNICALL ScriptMethodsDynamicVariableNamespace::setStringArrayDynamicVar
 
 	char buffer[DynamicVariable::MAX_DYNAMIC_VARIABLE_NAME_LEN];
 	ServerObject * object = getObjectAndName(env, objId, name, buffer, sizeof(buffer));
-	if (object == NULL)
+	if (object == nullptr)
 		return JNI_FALSE;
 
 	std::vector<Unicode::String> valueArray;
@@ -1754,7 +1754,7 @@ jboolean JNICALL ScriptMethodsDynamicVariableNamespace::setObjIdDynamicVariable(
 
 	char buffer[DynamicVariable::MAX_DYNAMIC_VARIABLE_NAME_LEN];
 	ServerObject * object = getObjectAndName(env, objId, name, buffer, sizeof(buffer));
-	if (object == NULL)
+	if (object == nullptr)
 		return JNI_FALSE;
 
 	NetworkId oidValue(static_cast<NetworkId::NetworkIdType>
@@ -1785,7 +1785,7 @@ jboolean JNICALL ScriptMethodsDynamicVariableNamespace::setObjIdArrayDynamicVari
 
 	char buffer[DynamicVariable::MAX_DYNAMIC_VARIABLE_NAME_LEN];
 	ServerObject * object = getObjectAndName(env, objId, name, buffer, sizeof(buffer));
-	if (object == NULL)
+	if (object == nullptr)
 		return JNI_FALSE;
 
 	std::vector<NetworkId> valueArray;
@@ -1838,7 +1838,7 @@ jboolean JNICALL ScriptMethodsDynamicVariableNamespace::setLocationDynamicVariab
 
 	char buffer[DynamicVariable::MAX_DYNAMIC_VARIABLE_NAME_LEN];
 	ServerObject * object = getObjectAndName(env, objId, name, buffer, sizeof(buffer));
-	if (object == NULL)
+	if (object == nullptr)
 		return JNI_FALSE;
 
 	DynamicVariableLocationData locValue;
@@ -1878,7 +1878,7 @@ jboolean JNICALL ScriptMethodsDynamicVariableNamespace::setLocationArrayDynamicV
 
 	char buffer[DynamicVariable::MAX_DYNAMIC_VARIABLE_NAME_LEN];
 	ServerObject * object = getObjectAndName(env, objId, name, buffer, sizeof(buffer));
-	if (object == NULL)
+	if (object == nullptr)
 		return JNI_FALSE;
 
 	std::vector<DynamicVariableLocationData> valueArray;
@@ -1942,7 +1942,7 @@ jboolean JNICALL ScriptMethodsDynamicVariableNamespace::setStringIdDynamicVariab
 
 	char buffer[DynamicVariable::MAX_DYNAMIC_VARIABLE_NAME_LEN];
 	ServerObject * object = getObjectAndName(env, objId, name, buffer, sizeof(buffer));
-	if (object == NULL)
+	if (object == nullptr)
 		return JNI_FALSE;
 
 	StringId locValue;
@@ -1977,7 +1977,7 @@ jboolean JNICALL ScriptMethodsDynamicVariableNamespace::setStringIdArrayDynamicV
 
 	char buffer[DynamicVariable::MAX_DYNAMIC_VARIABLE_NAME_LEN];
 	ServerObject * object = getObjectAndName(env, objId, name, buffer, sizeof(buffer));
-	if (object == NULL)
+	if (object == nullptr)
 		return JNI_FALSE;
 
 	std::vector<StringId> valueArray;
@@ -2033,7 +2033,7 @@ jboolean JNICALL ScriptMethodsDynamicVariableNamespace::setTransformDynamicVaria
 
 	char buffer[DynamicVariable::MAX_DYNAMIC_VARIABLE_NAME_LEN];
 	ServerObject * object = getObjectAndName(env, objId, name, buffer, sizeof(buffer));
-	if (object == NULL)
+	if (object == nullptr)
 		return JNI_FALSE;
 
 	Transform locValue;
@@ -2068,7 +2068,7 @@ jboolean JNICALL ScriptMethodsDynamicVariableNamespace::setTransformArrayDynamic
 
 	char buffer[DynamicVariable::MAX_DYNAMIC_VARIABLE_NAME_LEN];
 	ServerObject * object = getObjectAndName(env, objId, name, buffer, sizeof(buffer));
-	if (object == NULL)
+	if (object == nullptr)
 		return JNI_FALSE;
 
 	std::vector<Transform> valueArray;
@@ -2120,7 +2120,7 @@ jboolean JNICALL ScriptMethodsDynamicVariableNamespace::setVectorDynamicVariable
 
 	char buffer[DynamicVariable::MAX_DYNAMIC_VARIABLE_NAME_LEN];
 	ServerObject * object = getObjectAndName(env, objId, name, buffer, sizeof(buffer));
-	if (object == NULL)
+	if (object == nullptr)
 		return JNI_FALSE;
 
 	Vector locValue;
@@ -2155,7 +2155,7 @@ jboolean JNICALL ScriptMethodsDynamicVariableNamespace::setVectorArrayDynamicVar
 
 	char buffer[DynamicVariable::MAX_DYNAMIC_VARIABLE_NAME_LEN];
 	ServerObject * object = getObjectAndName(env, objId, name, buffer, sizeof(buffer));
-	if (object == NULL)
+	if (object == nullptr)
 		return JNI_FALSE;
 
 	std::vector<Vector> valueArray;
@@ -2227,10 +2227,10 @@ jboolean JNICALL ScriptMethodsDynamicVariableNamespace::copyDynamicVariable(JNIE
 		return JNI_TRUE;
 
 	ServerObject* fromObject = dynamic_cast<ServerObject*>(from.getObject());
-	if (fromObject == NULL)
+	if (fromObject == nullptr)
 		return JNI_FALSE;
 	ServerObject* toObject = dynamic_cast<ServerObject*>(to.getObject());
-	if (toObject == NULL)
+	if (toObject == nullptr)
 		return JNI_FALSE;
 
 	char buffer[DynamicVariable::MAX_DYNAMIC_VARIABLE_NAME_LEN];

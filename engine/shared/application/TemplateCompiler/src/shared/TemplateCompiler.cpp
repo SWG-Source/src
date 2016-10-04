@@ -33,80 +33,6 @@
 
 #include <ctime>
 
-
-//==============================================================================
-// subclass Perforce API class ClientUser in order to trap errors
-
-static const int SUBMIT_NO_FILE_ERR = 17;	// need to add file before submitting
-
-//class MyPerforceUser : public ClientUser
-//{
-//public:
-//	MyPerforceUser(void) : ClientUser(), m_errorOccurred(false) {}
-//  virtual ~MyPerforceUser() {}
-//	virtual void HandleError( Error *err )
-//	{
-//		if (err != NULL && err->Test())
-//		{
-//			m_errorOccurred = true;
-//			m_lastError = err->GetGeneric();
-//			// test for filtered errors
-//			for (size_t i = 0; i < m_filteredErrors.size(); ++i)
-//			{
-//				if (m_lastError == m_filteredErrors[i])
-//					return;
-//			}
-//		}
-//		ClientUser::HandleError(err);
-//	}
-//
-//	bool errorOccurred(void) const
-//	{
-//		return m_errorOccurred;
-//	}
-//
-//	int getLastError(void) const
-//	{
-//		return m_lastError;
-//	}
-//
-//	void clearLastError(void)
-//	{
-//		m_errorOccurred = false;
-//		m_lastError = 0;
-//	}
-//
-//	void addFilteredError(int error)
-//	{
-//		m_filteredErrors.push_back(error);
-//	}
-//
-//	void clearFilteredErrors(void)
-//	{
-//		m_filteredErrors.clear();
-//	}
-//
-//private:
-//	bool m_errorOccurred;
-//	int m_lastError;
-//	std::vector<int> m_filteredErrors;
-//};
-
-//==============================================================================
-// subclass of the PerforceAPI StrBuf class, to workaround a bug
-//  in the destructor. We can't fix the bug because it's an external library
-//class StrBufFixed : public StrBuf
-//{
-//public:
-//	~StrBufFixed()
-//	{
-//		delete buffer;
-//		StringInit();
-//	}
-//};
-
-
-
 //==============================================================================
 // functions
 
@@ -154,7 +80,7 @@ int generateTemplate(File &definitionFp, File &templateFp)
 
 	// we now need to move down the template definition heiarchy and write the
 	// parameters of the base class
-	Filename basename(NULL, definitionFp.getFilename().getPath().c_str(),
+	Filename basename(nullptr, definitionFp.getFilename().getPath().c_str(),
 		TemplateDefinitionFile.getBaseFilename().c_str(), TEMPLATE_DEFINITION_EXTENSION);
 	if (basename.getName().size() == 0)
 		return 0;
@@ -185,8 +111,8 @@ int generateTemplate(File &definitionFp, File &templateFp)
 int generateTemplate(const char *definitionFile, const char *templateFile)
 {
 	// check filename extensions
-	Filename defFile(NULL, NULL, definitionFile, TEMPLATE_DEFINITION_EXTENSION);
-	Filename temFile(NULL, NULL, templateFile, TEMPLATE_EXTENSION);
+	Filename defFile(nullptr, nullptr, definitionFile, TEMPLATE_DEFINITION_EXTENSION);
+	Filename temFile(nullptr, nullptr, templateFile, TEMPLATE_EXTENSION);
 
 	File definitionFp;
 	int i = 0;
@@ -231,8 +157,8 @@ int generateTemplate(const char *definitionFile, const char *templateFile)
 int deriveTemplate(const char *baseFile, const char *templateFile)
 {
 	// check filename extensions
-	Filename basFile(NULL, NULL, baseFile, TEMPLATE_EXTENSION);
-	Filename temFile(NULL, NULL, templateFile, TEMPLATE_EXTENSION);
+	Filename basFile(nullptr, nullptr, baseFile, TEMPLATE_EXTENSION);
+	Filename temFile(nullptr, nullptr, templateFile, TEMPLATE_EXTENSION);
 
 	File basFp;
 	if (!basFp.open(basFile, "rt"))
@@ -263,7 +189,7 @@ int compileTemplate(const char *filename)
 {
 TpfFile templateFile;
 
-	Filename templateFileName(NULL, NULL, filename, TEMPLATE_EXTENSION);
+	Filename templateFileName(nullptr, nullptr, filename, TEMPLATE_EXTENSION);
 	return templateFile.makeIffFiles(templateFileName);
 }	// compileTemplate
 
@@ -279,162 +205,13 @@ int verifyTemplate(const char *filename)
 TpfFile templateFile;
 
 	printf("Verifying %s: ", filename);
-	Filename templateFileName(NULL, NULL, filename, TEMPLATE_EXTENSION);
+	Filename templateFileName(nullptr, nullptr, filename, TEMPLATE_EXTENSION);
 	int result = templateFile.loadTemplate(templateFileName);
 	if (result == 0)
 		printf("file ok");
 	printf("\n");
 	return result;
 }	// verifyTemplate
-
-/**
- * Adds or removes parameters from a template based on the current template
- * definition.
- *
- * @param filename		the filename of the template
- *
- * @return 0 on success, error code on fail
- *
-int updateTemplate(const char *filename)
-{
-TpfFile templateFile;
-
-	Filename templateFileName(NULL, NULL, filename, TEMPLATE_EXTENSION);
-	return templateFile.updateTemplate(templateFileName);
-}	// updateTemplate
-*/
-/**
- * Checks out a template file and the iff files associated with it from Perforce.
- *
- * @param filename		the filename of the template
- *
- * @return 0 on success, error code on fail
- */
-//int checkOut(const char *filename)
-//{
-//MyPerforceUser ui;
-//ClientApi client;
-//Error e;
-//
-//	// check filename extensions
-//	Filename templateFileName(NULL, NULL, filename, TEMPLATE_EXTENSION);
-//	Filename iffFileName = templateFileName;
-//	iffFileName.setExtension(IFF_EXTENSION);
-//
-//	// Connect to Perforce server
-//	client.Init( &e );
-//	if (e.Test())
-//	{
-//		StrBufFixed msg;
-//		e.Fmt(&msg);
-//		fprintf(stderr, msg.Text());
-//		return -1;
-//	}
-//
-//	// check out the template file
-//	const char * commands[2];
-//	commands[0] = "edit";
-//	commands[1] = templateFileName;
-//	client.SetArgv( 1, const_cast<char **>(&commands[1]) );
-//	client.Run( commands[0], &ui );
-//	if (ui.errorOccurred())
-//		return -1;
-//
-//	// find the client and server paths
-//	TpfFile templateFile;
-//	IGNORE_RETURN(templateFile.loadTemplate(templateFileName));
-//
-//	// check out the client template iff file
-//	Filename iffName(NULL, templateFile.getIffPath().c_str(), iffFileName, IFF_EXTENSION);
-//	commands[1] = iffName;
-//	client.SetArgv( 1, const_cast<char **>(&commands[1]) );
-//	client.Run( commands[0], &ui );
-//	if (ui.errorOccurred())
-//		return -1;
-//
-//	// Close connection
-//	return client.Final( &e );
-//}	// checkOut
-
-/**
- * Checks in a template file and the iff files associated with it to Perforce.
- *
- * @param filename		the filename of the template
- *
- * @return 0 on success, error code on fail
- */
-//int checkIn(const char *filename)
-//{
-//MyPerforceUser ui;
-//ClientApi client;
-//Error e;
-//
-//	// check filename extensions
-//	Filename templateFileName(NULL, NULL, filename, TEMPLATE_EXTENSION);
-//	Filename iffFileName = templateFileName;
-//	iffFileName.setExtension(IFF_EXTENSION);
-//
-//	// find the client and server paths
-//	TpfFile templateFile;
-//	int result = templateFile.loadTemplate(templateFileName);
-//	if (result != 0)
-//	{
-//		// don't allow check-in if there are errors
-//		return result;
-//	}
-//
-//	// Connect to Perforce server
-//	client.Init( &e );
-//	if (e.Test())
-//	{
-//		StrBufFixed msg;
-//		e.Fmt(&msg);
-//		fprintf(stderr, msg.Text());
-//		return -1;
-//	}
-//
-//	// try to submit the files
-//	const char * commands[4];
-//	char param1[256];
-//	for (;;)
-//	{
-//		sprintf(param1, "//depot/.../%s.*", templateFileName.getName().c_str());
-//		commands[0] = "submit";
-//		commands[1] = param1;
-//
-//		// don't report an error if the files need to be added before submitting
-//		ui.addFilteredError(SUBMIT_NO_FILE_ERR);
-//		client.SetArgv( 1, const_cast<char **>(&commands[1]) );
-//		client.Run( commands[0], &ui );
-//		if (!ui.errorOccurred())
-//			break;
-//		if (ui.getLastError() != SUBMIT_NO_FILE_ERR)
-//			return -1;
-//		ui.clearLastError();
-//		ui.clearFilteredErrors();
-//
-//		// we need to add the files to Perforce before submitting
-//		commands[0] = "add";
-//
-//		// add the template file
-//		commands[1] = templateFileName;
-//		client.SetArgv( 1, const_cast<char **>(&commands[1]) );
-//		client.Run( commands[0], &ui );
-//		if (ui.errorOccurred())
-//			return -1;
-//
-//		// add the client iff file
-//		Filename iffName(NULL, templateFile.getIffPath().c_str(), iffFileName, NULL);
-//		commands[1] = iffName;
-//		client.SetArgv( 1, const_cast<char **>(&commands[1]) );
-//		client.Run( commands[0], &ui );
-//		if (ui.errorOccurred())
-//			return -1;
-//	}
-//
-//	// Close connection
-//	return client.Final( &e );
-//}	// checkIn
 
 /**
  * Prints the command syntax to the console.
@@ -444,13 +221,8 @@ void printSyntax(void)
 	printf("TemplateCompiler " __DATE__ " " __TIME__ "\n\n");
 	printf("Compiler commands:\n");
 	printf("-generate <defname>[.tdf] <templatename>[.tpf]\n");
-//	printf("-update <filename1>[.tpf] [<filename2>[.tpf] ...]\n");
-//	printf("-derive <basename>[.tpf] <derivedname>[.tpf]\n");
 	printf("-compile <filename1>[.tpf] [<filename2>[.tpf] ...]\n");
 	printf("-verify <filename1>[.tpf] [<filename2>[.tpf] ...]\n");
-//	printf("Perforce commands:\n");
-//	printf("-edit <filename1>[.tpf] [<filename2>[.tpf] ...]\n");
-//	printf("-submit <filename1>[.tpf] [<filename2>[.tpf] ...]\n");
 }	// printSyntax
 
 /**
@@ -473,20 +245,6 @@ int processArgs(int argc, char *argv[ ])
 		}
 		return generateTemplate(argv[2], argv[3]);
 	}
-//	else if (strcmp(argv[1], "-update") == 0)
-//	{
-//		if (argc < 3)
-//		{
-//			printSyntax();
-//			return 0;
-//		}
-//		for (int i = 2; i < argc; ++i)
-//		{
-//			int result = updateTemplate(argv[i]);
-//			if (result != 0)
-//				return result;
-//		}
-//	}
 	else if (strcmp(argv[1], "-derive") == 0)
 	{
 		if (argc != 4)
@@ -542,34 +300,6 @@ int processArgs(int argc, char *argv[ ])
 		}
 		return result;
 	}
-	//else if (strcmp(argv[1], "-edit") == 0)
-	//{
-	//	if (argc < 3)
-	//	{
-	//		printSyntax();
-	//		return 0;
-	//	}
-	//	for (int i = 2; i < argc; ++i)
-	//	{
-	//		int result = checkOut(argv[i]);
-	//		if (result != 0)
-	//			return result;
-	//	}
-	//}
-	//else if (strcmp(argv[1], "-submit") == 0)
-	//{
-	//	if (argc < 3)
-	//	{
-	//		printSyntax();
-	//		return 0;
-	//	}
-	//	for (int i = 2; i < argc; ++i)
-	//	{
-	//		int result = checkIn(argv[i]);
-	//		if (result != 0)
-	//			return result;
-	//	}
-	//}
 	else
 	{
 		printSyntax();
@@ -591,7 +321,7 @@ int main(int argc, char *argv[ ])
 		SetupSharedFoundation::Data data(SetupSharedFoundation::Data::D_console);
 #ifdef WIN32
 		char buffer[1024];
-		GetModuleFileName(GetModuleHandle(NULL), buffer, 1024);
+		GetModuleFileName(GetModuleHandle(nullptr), buffer, 1024);
 		Filename configName;
 		configName.setName(buffer);
 		configName.setName("templateCompiler.cfg");
@@ -607,7 +337,7 @@ int main(int argc, char *argv[ ])
 
 	// setup the random number generator
 	// @todo need a better seed
-	SetupSharedRandom::install(static_cast<uint32>(time(NULL)));
+	SetupSharedRandom::install(static_cast<uint32>(time(nullptr)));
 
 	// install templates
 	SetupSharedTemplate::install();

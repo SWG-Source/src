@@ -178,7 +178,7 @@ struct UdpParams
             // pointer equal to your object and the UdpManager will call it as appropriate.  The UdpConnection object
             // also has a handler mechanism that replaces the other callback functions below, see UdpConnection::SetHandler
             // if a handler is specified, the callback function is ignored, even if specified.
-            // default = NULL (not used)
+            // default = nullptr (not used)
     UdpManagerHandler *handler;
 
             // this is the maximum number of connections that can be established by this manager, any incoming/outgoing connections
@@ -496,7 +496,7 @@ struct UdpParams
             // the UdpPlatformDriver object itself and chain the calls on through, plus do whatever else it wants;
             // however, that is not required.  The application maintains ownership of this object and the object must
             // not be destroyed by the application until the UdpManager using it is destroyed.
-            // default = NULL, meaning the UdpManager it will create it's own UdpPlatformDriver for use.
+            // default = nullptr, meaning the UdpManager it will create it's own UdpPlatformDriver for use.
     UdpDriver *udpDriver;
 
 
@@ -642,7 +642,7 @@ class UdpManager : public UdpGuardedRefCount
             // will call EstablishConnection, then sit in a loop calling UdpManager::GiveTime and checking to see
             // if the status of the returned UdpConnection object is changed from cStatusNegotiating.  This allows
             // the application to look for the ESC key or timeout an attempted connection.
-            // This function will return NULL if the manager object has exceeded its maximum number of connections
+            // This function will return nullptr if the manager object has exceeded its maximum number of connections
             // or if the serverAddress cannot be resolved to an IP address
             // as is noted in the declaration, it is the responsibility of the application establishing the connection to delete it
             // setting the timeout value (in milliseconds) to something greater than 0 will cause the UdpConnection object to change
@@ -685,13 +685,13 @@ class UdpManager : public UdpGuardedRefCount
             // a terminated packet.
         void DisconnectAll();
 
-            // creates a logical packet and populates it with data.  data can be NULL, in which case it gives you logical packet
+            // creates a logical packet and populates it with data.  data can be nullptr, in which case it gives you logical packet
             // of the size specified, but copies no data into it.  If you are using pool management (see Params::poolPacketMax),
             // it will give you a packet out of the pool if possible, otherwise it will create a packet for you.  When logical
             // are packets are needed internally for various things (like reliable channel sends that use the (void *, int) interface)
             // they are gotten from this function, so your application can likely take advantage of pooling, even if it never bothers
             // to explicitly call this function.
-        LogicalPacket *CreatePacket(const void *data, int dataLen, const void *data2 = NULL, int dataLen2 = 0);
+        LogicalPacket *CreatePacket(const void *data, int dataLen, const void *data2 = nullptr, int dataLen2 = 0);
 
         void GetSimulation(UdpSimulationParameters *simulationParameters) const;
         void SetSimulation(const UdpSimulationParameters *simulationParameters);
@@ -796,7 +796,7 @@ class UdpManager : public UdpGuardedRefCount
 
                 CallbackEvent();
                 ~CallbackEvent();
-                void SetEventData(CallbackEventType eventType, UdpConnection *con, const LogicalPacket *payload = NULL);
+                void SetEventData(CallbackEventType eventType, UdpConnection *con, const LogicalPacket *payload = nullptr);
                 void ClearEventData();
 
                 CallbackEventType mEventType;
@@ -926,7 +926,7 @@ inline void UdpManager::SetPriority(UdpConnection *con, UdpClockStamp stamp)
     if (stamp < mMinimumScheduledStamp)
         stamp = mMinimumScheduledStamp;
 
-    if (mPriorityQueue != NULL)
+    if (mPriorityQueue != nullptr)
     {
         mPriorityQueue->Add(con, stamp);
     }
@@ -1025,7 +1025,7 @@ inline int UdpManager::CachedClockElapsed(UdpClockStamp start)
 inline int UdpManager::EncryptUserSupplied(UdpConnection *con, udp_uchar *destData, const udp_uchar *sourceData, int sourceLen)
 {
     UdpGuard guard(&mHandlerGuard);
-    if (mParams.handler != NULL)
+    if (mParams.handler != nullptr)
     {
         return(mParams.handler->OnUserSuppliedEncrypt(con, destData, sourceData, sourceLen));
     }
@@ -1035,7 +1035,7 @@ inline int UdpManager::EncryptUserSupplied(UdpConnection *con, udp_uchar *destDa
 inline int UdpManager::EncryptUserSupplied2(UdpConnection *con, udp_uchar *destData, const udp_uchar *sourceData, int sourceLen)
 {
     UdpGuard guard(&mHandlerGuard);
-    if (mParams.handler != NULL)
+    if (mParams.handler != nullptr)
     {
         return(mParams.handler->OnUserSuppliedEncrypt2(con, destData, sourceData, sourceLen));
     }
@@ -1045,7 +1045,7 @@ inline int UdpManager::EncryptUserSupplied2(UdpConnection *con, udp_uchar *destD
 inline int UdpManager::DecryptUserSupplied(UdpConnection *con, udp_uchar *destData, const udp_uchar *sourceData, int sourceLen)
 {
     UdpGuard guard(&mHandlerGuard);
-    if (mParams.handler != NULL)
+    if (mParams.handler != nullptr)
     {
         return(mParams.handler->OnUserSuppliedDecrypt(con, destData, sourceData, sourceLen));
     }
@@ -1055,7 +1055,7 @@ inline int UdpManager::DecryptUserSupplied(UdpConnection *con, udp_uchar *destDa
 inline int UdpManager::DecryptUserSupplied2(UdpConnection *con, udp_uchar *destData, const udp_uchar *sourceData, int sourceLen)
 {
     UdpGuard guard(&mHandlerGuard);
-    if (mParams.handler != NULL)
+    if (mParams.handler != nullptr)
     {
         return(mParams.handler->OnUserSuppliedDecrypt2(con, destData, sourceData, sourceLen));
     }
@@ -1070,7 +1070,7 @@ inline int UdpManager::DecryptUserSupplied2(UdpConnection *con, udp_uchar *destD
     /////////////////////////////////////////////////////////////////////////////////////////////////////
 inline UdpParams::UdpParams(ManagerRole role)
 {
-    handler = NULL;
+    handler = nullptr;
     outgoingBufferSize = 64 * 1024;
     incomingBufferSize = 64 * 1024;
     packetHistoryMax = 4;
@@ -1103,7 +1103,7 @@ inline UdpParams::UdpParams(ManagerRole role)
     reliableOverflowBytes = 0;
     lingerDelay = 10;
     bindIpAddress[0] = 0;
-    udpDriver = NULL;
+    udpDriver = nullptr;
     callbackEventPoolMax = 5000;
     eventQueuing = false;
     threadSleepTime = 20;

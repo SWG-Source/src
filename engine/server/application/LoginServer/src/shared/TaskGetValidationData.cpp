@@ -46,8 +46,8 @@ namespace TaskGetValidationDataNamespace
 	public:
 		GetCompletedTutorialQuery(StationId stationId);
 
-		DB::BindableLong station_id; 
-		DB::BindableBool completed_tutorial; 
+		DB::BindableLong station_id;
+		DB::BindableBool completed_tutorial;
 
 		virtual void getSQL(std::string &sql);
 		virtual bool bindParameters();
@@ -72,13 +72,13 @@ namespace TaskGetValidationDataNamespace
 		std::string getEventId() const;
 		uint32 getClusterId() const;
 		NetworkId const getCharacterId() const;
-		
+
 	private:
 		DB::BindableLong station_id;
 		DB::BindableString<100> event_id;
 		DB::BindableLong cluster_id;
 		DB::BindableNetworkId character_id;
-	
+
 	private: //disable
 		GetConsumedRewardEventsQuery();
 		GetConsumedRewardEventsQuery(const GetConsumedRewardEventsQuery&);
@@ -119,13 +119,13 @@ namespace TaskGetValidationDataNamespace
 		DB::BindableLong         cluster_id; //lint !e1925 // public data member
 		DB::BindableLong         result; //lint !e1925 // public data member
 
-		virtual void getSQL                (std::string &sql);
-		virtual bool bindParameters        ();
-		virtual bool bindColumns           ();
-		virtual QueryMode getExecutionMode () const;
+		virtual void getSQL(std::string &sql);
+		virtual bool bindParameters();
+		virtual bool bindColumns();
+		virtual QueryMode getExecutionMode() const;
 
 	private: //disable
-		IsClusterAtLimitQuery               (const IsClusterAtLimitQuery&);
+		IsClusterAtLimitQuery(const IsClusterAtLimitQuery&);
 		IsClusterAtLimitQuery &operator=    (const IsClusterAtLimitQuery&);
 	};
 }
@@ -134,36 +134,37 @@ using namespace TaskGetValidationDataNamespace;
 
 // ======================================================================
 
-TaskGetValidationData::TaskGetValidationData (StationId stationId, int clusterGroupId, uint32 clusterId, unsigned int track, uint32 subscriptionBits) :
-		TaskRequest(),
-		m_stationId(stationId),
-		m_clusterGroupId(clusterGroupId),
-		m_clusterId(clusterId),
-		m_openCharacterSlots(4,0),
-		m_canSkipTutorial(false),
-		m_track(track),
-		m_subscriptionBits(subscriptionBits),
-		m_transferRequest(0),
-		m_transferRequestSourceCharacterTemplateId(0),
-		m_consumedRewardEvents(),
-		m_claimedRewardItems()
+TaskGetValidationData::TaskGetValidationData(StationId stationId, int clusterGroupId, uint32 clusterId, unsigned int track, uint32 subscriptionBits) :
+	TaskRequest(),
+	m_stationId(stationId),
+	m_clusterGroupId(clusterGroupId),
+	m_clusterId(clusterId),
+	m_openCharacterSlots(4, 0),
+	m_canSkipTutorial(false),
+	m_track(track),
+	m_subscriptionBits(subscriptionBits),
+	m_transferRequest(0),
+	m_transferRequestSourceCharacterTemplateId(0),
+	m_consumedRewardEvents(),
+	m_claimedRewardItems()
 {
 }
 
 // ----------------------------------------------------------------------
 
 TaskGetValidationData::TaskGetValidationData(const TransferRequestMoveValidation & request, int clusterGroupId, uint32 clusterId) :
-		TaskRequest(),
-		m_stationId(request.getDestinationStationId()),
-		m_clusterGroupId(clusterGroupId),
-		m_clusterId(clusterId),
-		m_openCharacterSlots(4,0),
-		m_canSkipTutorial(true),
-		m_track(request.getTrack()),
-		m_transferRequest(0),
-		m_transferRequestSourceCharacterTemplateId(request.getSourceCharacterTemplateId()),
-		m_consumedRewardEvents(),
-		m_claimedRewardItems()
+	TaskRequest(),
+	m_stationId(request.getDestinationStationId()),
+	m_clusterGroupId(clusterGroupId),
+	m_clusterId(clusterId),
+	m_openCharacterSlots(4, 0),
+	m_canSkipTutorial(true),
+	m_track(request.getTrack()),
+	m_transferRequest(0),
+	m_transferRequestSourceCharacterTemplateId(request.getSourceCharacterTemplateId()),
+	m_consumedRewardEvents(),
+	m_claimedRewardItems(),
+	m_subscriptionBits(0)
 {
 	Archive::ByteStream bs;
 	request.pack(bs);
@@ -205,10 +206,10 @@ bool TaskGetValidationData::process(DB::Session *session)
 			qry.cluster_id = static_cast<long>(m_clusterId);
 
 			int rowsFetched;
-			if (! (session->exec(&qry)))
+			if (!(session->exec(&qry)))
 				return false;
 			while ((rowsFetched = qry.fetch()) > 0)
-				m_openCharacterSlots[static_cast<unsigned long>(qry.character_type_id.getValue())]=qry.num_open_slots.getValue();
+				m_openCharacterSlots[static_cast<unsigned long>(qry.character_type_id.getValue())] = qry.num_open_slots.getValue();
 			qry.done();
 			if (rowsFetched < 0)
 				return false;
@@ -219,12 +220,12 @@ bool TaskGetValidationData::process(DB::Session *session)
 		GetValidationDataQuery qry;
 		qry.station_id = static_cast<long>(m_stationId);
 		qry.cluster_id = static_cast<long>(m_clusterId);
-	
+
 		int rowsFetched;
-		if (! (session->exec(&qry)))
+		if (!(session->exec(&qry)))
 			return false;
 		while ((rowsFetched = qry.fetch()) > 0)
-			m_openCharacterSlots[static_cast<unsigned long>(qry.character_type_id.getValue())]=qry.num_open_slots.getValue();
+			m_openCharacterSlots[static_cast<unsigned long>(qry.character_type_id.getValue())] = qry.num_open_slots.getValue();
 		qry.done();
 		if (rowsFetched < 0)
 			return false;
@@ -254,7 +255,7 @@ bool TaskGetValidationData::process(DB::Session *session)
 				qryGetCharacters.character_name.getValue(characterName);
 				if (characterName == m_transferRequest->getSourceCharacter())
 				{
-					qryGetCharacters.object_template_id.getValue(m_transferRequestSourceCharacterTemplateId); 
+					qryGetCharacters.object_template_id.getValue(m_transferRequestSourceCharacterTemplateId);
 					break;
 				}
 			}
@@ -267,13 +268,13 @@ bool TaskGetValidationData::process(DB::Session *session)
 	{
 		GetConsumedRewardEventsQuery eventQuery(m_stationId);
 		int rowsFetched;
-		if (! (session->exec(&eventQuery)))
+		if (!(session->exec(&eventQuery)))
 			return false;
 		while ((rowsFetched = eventQuery.fetch()) > 0)
 		{
 			// If the event was claimed on this cluster, tell the cluster the network ID of the character that claimed it.
-			// If claimed on another cluster, hide the network ID because it's not meaningful			
-			NetworkId const characterId = eventQuery.getClusterId()==m_clusterId ? eventQuery.getCharacterId() : NetworkId::cms_invalid;
+			// If claimed on another cluster, hide the network ID because it's not meaningful
+			NetworkId const characterId = eventQuery.getClusterId() == m_clusterId ? eventQuery.getCharacterId() : NetworkId::cms_invalid;
 			m_consumedRewardEvents.push_back(std::make_pair(characterId, eventQuery.getEventId()));
 		}
 		eventQuery.done();
@@ -281,11 +282,11 @@ bool TaskGetValidationData::process(DB::Session *session)
 			return false;
 
 		GetClaimedRewardItemsQuery itemQuery(m_stationId);
-		if (! (session->exec(&itemQuery)))
+		if (!(session->exec(&itemQuery)))
 			return false;
 		while ((rowsFetched = itemQuery.fetch()) > 0)
 		{
-			NetworkId const characterId = itemQuery.getClusterId()==m_clusterId ? itemQuery.getCharacterId() : NetworkId::cms_invalid;
+			NetworkId const characterId = itemQuery.getClusterId() == m_clusterId ? itemQuery.getCharacterId() : NetworkId::cms_invalid;
 			m_claimedRewardItems.push_back(std::make_pair(characterId, itemQuery.getItemId()));
 		}
 		itemQuery.done();
@@ -294,12 +295,12 @@ bool TaskGetValidationData::process(DB::Session *session)
 
 		// check to see if the account can skip the tutorial or not
 		GetCompletedTutorialQuery tutorialQuery(m_stationId);
-		if (! (session->exec(&tutorialQuery)))
+		if (!(session->exec(&tutorialQuery)))
 			return false;
 		while ((rowsFetched = tutorialQuery.fetch()) > 0)
 		{
 			tutorialQuery.completed_tutorial.getValue(m_canSkipTutorial);
-	}
+		}
 		tutorialQuery.done();
 		if (rowsFetched < 0)
 			return false;
@@ -311,21 +312,21 @@ bool TaskGetValidationData::process(DB::Session *session)
 
 void TaskGetValidationData::onComplete()
 {
-	bool canCreateNormal=false;
-	bool canCreateJedi=false;
+	bool canCreateNormal = false;
+	bool canCreateJedi = false;
 	if (m_openCharacterSlots[1] > 0)
-		canCreateNormal=true;
+		canCreateNormal = true;
 	if (m_openCharacterSlots[2] > 0 && m_openCharacterSlots[3] > 0)
-		canCreateJedi=true;
+		canCreateJedi = true;
 
 	// check to see if character creation has been disabled for the cluster
 	if (ConfigLoginServer::isCharacterCreationDisabled(LoginServer::getInstance().getClusterNameById(m_clusterId)))
 	{
-		canCreateNormal=false;
-		canCreateJedi=false;
+		canCreateNormal = false;
+		canCreateJedi = false;
 	}
 
-	if(m_transferRequest)
+	if (m_transferRequest)
 	{
 		LoginServer::getInstance().validateAccountForTransfer(*m_transferRequest, m_clusterId, m_transferRequestSourceCharacterTemplateId, canCreateNormal, false);
 	}
@@ -339,7 +340,7 @@ void TaskGetValidationData::onComplete()
 
 void GetValidationDataQuery::getSQL(std::string &sql)
 {
-	sql = std::string("begin :rc := ")+DatabaseConnection::getInstance().getSchemaQualifier()+"login.get_open_character_slots(:station_id,:cluster_id); end;";
+	sql = std::string("begin :rc := ") + DatabaseConnection::getInstance().getSchemaQualifier() + "login.get_open_character_slots(:station_id,:cluster_id); end;";
 }
 
 // ----------------------------------------------------------------------
@@ -347,9 +348,9 @@ void GetValidationDataQuery::getSQL(std::string &sql)
 bool GetValidationDataQuery::bindParameters()
 {
 	if (!bindParameter(station_id)) return false;
- 	if (!bindParameter(cluster_id)) return false;
+	if (!bindParameter(cluster_id)) return false;
 
-	return true;	
+	return true;
 }
 
 // ----------------------------------------------------------------------
@@ -372,11 +373,11 @@ DB::Query::QueryMode GetValidationDataQuery::getExecutionMode() const
 // ----------------------------------------------------------------------
 
 GetValidationDataQuery::GetValidationDataQuery() :
-		Query(),
-		station_id(),
-		cluster_id(),
-		character_type_id(),
-		num_open_slots()
+	Query(),
+	station_id(),
+	cluster_id(),
+	character_type_id(),
+	num_open_slots()
 {
 }
 
@@ -384,7 +385,7 @@ GetValidationDataQuery::GetValidationDataQuery() :
 
 void GetCompletedTutorialQuery::getSQL(std::string &sql)
 {
-	sql = std::string("begin :rc := ")+DatabaseConnection::getInstance().getSchemaQualifier()+"login.get_completed_tutorial(:station_id); end;";
+	sql = std::string("begin :rc := ") + DatabaseConnection::getInstance().getSchemaQualifier() + "login.get_completed_tutorial(:station_id); end;";
 }
 
 // ----------------------------------------------------------------------
@@ -393,7 +394,7 @@ bool GetCompletedTutorialQuery::bindParameters()
 {
 	if (!bindParameter(station_id)) return false;
 
-	return true;	
+	return true;
 }
 
 // ----------------------------------------------------------------------
@@ -415,20 +416,20 @@ DB::Query::QueryMode GetCompletedTutorialQuery::getExecutionMode() const
 // ----------------------------------------------------------------------
 
 GetCompletedTutorialQuery::GetCompletedTutorialQuery(StationId stationId) :
-		DB::Query(),
-		station_id(stationId),
-		completed_tutorial(false)
+	DB::Query(),
+	station_id(stationId),
+	completed_tutorial(false)
 {
 }
 
 // ======================================================================
 
 GetConsumedRewardEventsQuery::GetConsumedRewardEventsQuery(StationId stationId) :
-		DB::Query(),
-		station_id(static_cast<long>(stationId)),
-		event_id(),
-		cluster_id(),
-		character_id()
+	DB::Query(),
+	station_id(static_cast<long>(stationId)),
+	event_id(),
+	cluster_id(),
+	character_id()
 {
 }
 
@@ -436,7 +437,7 @@ GetConsumedRewardEventsQuery::GetConsumedRewardEventsQuery(StationId stationId) 
 
 void GetConsumedRewardEventsQuery::getSQL(std::string &sql)
 {
-	sql = std::string("begin :result := ")+DatabaseConnection::getInstance().getSchemaQualifier()+"login.get_consumed_reward_events(:station_id); end;";
+	sql = std::string("begin :result := ") + DatabaseConnection::getInstance().getSchemaQualifier() + "login.get_consumed_reward_events(:station_id); end;";
 }
 
 // ----------------------------------------------------------------------
@@ -488,11 +489,11 @@ NetworkId const GetConsumedRewardEventsQuery::getCharacterId() const
 // ======================================================================
 
 GetClaimedRewardItemsQuery::GetClaimedRewardItemsQuery(StationId stationId) :
-		DB::Query(),
-		station_id(static_cast<long>(stationId)),
-		item_id(),
-		cluster_id(),
-		character_id()
+	DB::Query(),
+	station_id(static_cast<long>(stationId)),
+	item_id(),
+	cluster_id(),
+	character_id()
 {
 }
 
@@ -500,7 +501,7 @@ GetClaimedRewardItemsQuery::GetClaimedRewardItemsQuery(StationId stationId) :
 
 void GetClaimedRewardItemsQuery::getSQL(std::string &sql)
 {
-	sql = std::string("begin :result := ")+DatabaseConnection::getInstance().getSchemaQualifier()+"login.get_claimed_reward_items(:station_id); end;";
+	sql = std::string("begin :result := ") + DatabaseConnection::getInstance().getSchemaQualifier() + "login.get_claimed_reward_items(:station_id); end;";
 }
 
 // ----------------------------------------------------------------------
@@ -552,9 +553,9 @@ NetworkId const GetClaimedRewardItemsQuery::getCharacterId() const
 // ======================================================================
 
 IsClusterAtLimitQuery::IsClusterAtLimitQuery() :
-Query(),
-cluster_id(),
-result()
+	Query(),
+	cluster_id(),
+	result()
 {
 }
 
@@ -562,7 +563,7 @@ result()
 
 void IsClusterAtLimitQuery::getSQL(std::string &sql)
 {
-	sql = std::string("begin :result := ")+DatabaseConnection::getInstance().getSchemaQualifier()+"login.is_cluster_at_limit(:cluster_id); end;";
+	sql = std::string("begin :result := ") + DatabaseConnection::getInstance().getSchemaQualifier() + "login.is_cluster_at_limit(:cluster_id); end;";
 }
 
 // ----------------------------------------------------------------------

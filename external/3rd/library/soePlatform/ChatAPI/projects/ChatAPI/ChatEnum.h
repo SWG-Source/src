@@ -6,24 +6,15 @@
 
 #pragma warning ( disable : 4786 )
 
-// Defining _chatdebug_
+inline static void _chatdebug_(const char *fmt, ...)
+{
 #ifdef _DEBUG
-#ifdef WIN32
-#define _chatdebug_ ::printf
-#else
-#define _chatdebug_ ::printf
+    va_list args;
+    va_start(args, fmt);
+    printf(fmt, args);
+    va_end(args);
 #endif
-#endif
-
-#ifndef _DEBUG
-#ifdef WIN32
-#define _chatdebug_
-#else
-#define _chatdebug_ 
-#endif
-#endif
-// END: "Defining _chatdebug_"
-
+}
 
 // Use AVATAR_PRIORITY_NOFORCELOGOUT on RequestAvatarLogin if you want to override the
 // "last login wins" rule, switching that given avatar's session to use "first login wins"

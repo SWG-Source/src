@@ -27,8 +27,8 @@ unsigned int                   SharedRemoteDebugServer::ms_remoteDebugToolChanne
 
 void SharedRemoteDebugServer::install()
 {
-	ms_serviceHandle = NULL;
-	ms_connection = NULL;
+	ms_serviceHandle = nullptr;
+	ms_connection = nullptr;
 
 	if (!ConfigSharedFoundation::getUseRemoteDebug())
 		return;
@@ -41,7 +41,7 @@ void SharedRemoteDebugServer::install()
 	ms_serviceHandle = new Service(ConnectionAllocator<SharedRemoteDebugServerConnection>(), setup);
 
 	//even though this is the game client, this is a remoteDebug *server*, since it sends data to a Qt app for viewing
-	RemoteDebugServer::install(NULL, open, close, send, NULL);
+	RemoteDebugServer::install(nullptr, open, close, send, nullptr);
 
 	//this value needs to be true before the call to RemoteDebugServer::open
 	ms_installed = true;
@@ -84,7 +84,7 @@ void SharedRemoteDebugServer::close(void)
 {
 	DEBUG_FATAL(!ms_installed, ("sharedRemoteDebugServer not installed"));
 	delete ms_connection;
-	ms_connection = NULL;
+	ms_connection = nullptr;
 }
 
 //-------------------------------------------------------------------

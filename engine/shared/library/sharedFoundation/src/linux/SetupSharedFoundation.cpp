@@ -44,12 +44,6 @@ void SetupSharedFoundation::install(const Data &data)
 	if (data.argc)
 		CommandLine::absorbStrings(const_cast<const char**>(data.argv+1), data.argc-1);
 
-#if 0
-	//currently there's a problem that we cannot override the defaults here.
-	if (data.configFile)
-		IGNORE_RETURN(ConfigFile::loadFile(data.configFile));
-#endif
-
 	// get the post command-line text for the ConfigFile (key-value pairs)
 	const char *configString = CommandLine::getPostCommandLineString();
 	if (configString)
@@ -90,34 +84,7 @@ void SetupSharedFoundation::install(const Data &data)
 
 void SetupSharedFoundation::callbackWithExceptionHandling( void (*callback)(void) )   // Routine to call with exception handling
 {
-	if (ConfigSharedFoundation::getNoExceptionHandling())
-	{
-		callback();
-	}
-	else
-	{
-		try
-		{
-			callback();
-		}
-		catch (__exception * mathException)
-		{
-			FATAL(true, ("Math Exception: %s\n", mathException->name));
-		}
-		catch (const char* message)
-		{
-			FATAL(true, ("Character Exception: %s\n", message));
-		}
-		catch(std::exception & m)
-		{
-			const char * c = m.what();
-			FATAL(true, ("Std::exception: %s\n", c));
-		}
-		catch(...)
-		{
-			FATAL(true, ("Unknown exception\n"));
-		}
-	}
+	callback();
 }
 
 // ----------------------------------------------------------------------
@@ -150,11 +117,11 @@ SetupSharedFoundation::Data::Data(Defaults defaults)
 		case D_game:
 			runInBackground                 = true;
 
-			lpCmdLine                       = NULL;
+			lpCmdLine                       = nullptr;
 			argc                            = 0;
-			argv                            = NULL;
+			argv                            = nullptr;
 
-			configFile                      = NULL;
+			configFile                      = nullptr;
 
 			frameRateLimit                  = CONST_REAL(0);
 			break;
@@ -162,11 +129,11 @@ SetupSharedFoundation::Data::Data(Defaults defaults)
 		case D_console:
 			runInBackground                 = true;
 
-			lpCmdLine                       = NULL;
+			lpCmdLine                       = nullptr;
 			argc                            = 0;
-			argv                            = NULL;
+			argv                            = nullptr;
 
-			configFile                      = NULL;
+			configFile                      = nullptr;
 
 			frameRateLimit                  = CONST_REAL(0);
 			break;

@@ -54,6 +54,8 @@ bool TaskGetClusterList::process(DB::Session *session)
 		qry.free_trial_can_create_char.getValue(temp.m_freeTrialCanCreateChar);
 		qry.online_tutorial_limit.getValue(temp.m_onlineTutorialLimit);
 
+		DEBUG_WARNING(true, ("Customer facing cluster address for %s is %s", temp.m_clusterName.c_str(), temp.m_address.c_str()));
+
 		m_clusterData.push_back(temp);
 	}
 	return (rowsFetched >= 0);

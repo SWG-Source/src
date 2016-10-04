@@ -115,7 +115,7 @@ void ExitChain::add(Function function, const char *debugName, int priority, bool
 #endif
 	
 	// linked list traversal with a back pointer
-	for (back = NULL, front = PerThreadData::getExitChainFirstEntry(); front && front->priority > priority; back = front, front = front->next)
+	for (back = nullptr, front = PerThreadData::getExitChainFirstEntry(); front && front->priority > priority; back = front, front = front->next)
 		;
 
 	// hook it into the linked list
@@ -133,7 +133,7 @@ void ExitChain::add(Function function, const char *debugName, int priority, bool
  * The ExitChain will automatically remove a function from the ExitChain when it calls the function, so an
  * exit function should not attempt to remove itself from the ExitChain.
  * 
- * Calling this routine with a NULL pointer will cause this routine to call Fatal in debug compilations.
+ * Calling this routine with a nullptr pointer will cause this routine to call Fatal in debug compilations.
  * 
  * Calling this routine with a function that is not on the ExitChain will cause this routine to call
  * Fatal in debug compilations.
@@ -145,14 +145,14 @@ void ExitChain::remove(Function function)
 {
 	Entry *back, *front;
 
-	if (function == NULL)
+	if (function == nullptr)
 	{
-		DEBUG_FATAL(true, ("ExitChain::remove NULL function"));
+		DEBUG_FATAL(true, ("ExitChain::remove nullptr function"));
 		return;  //lint !e527 // Warning -- Unreachable
 	}
 
 	// linked list traversal with a back pointer
-	for (back = NULL, front = PerThreadData::getExitChainFirstEntry(); front && front->function != function; back = front, front = front->next)
+	for (back = nullptr, front = PerThreadData::getExitChainFirstEntry(); front && front->function != function; back = front, front = front->next)
 		;
 
 	// make sure it was found
@@ -191,7 +191,7 @@ void ExitChain::run(void)
 
 	PerThreadData::setExitChainRunning(true);
 
-	while ((entry = PerThreadData::getExitChainFirstEntry()) != NULL)
+	while ((entry = PerThreadData::getExitChainFirstEntry()) != nullptr)
 	{
 		// remove the first entry off the ExitChain
 		PerThreadData::setExitChainFirstEntry(entry->next);

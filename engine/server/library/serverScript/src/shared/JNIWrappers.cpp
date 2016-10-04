@@ -90,7 +90,7 @@ LocalRefPtr createNewObject(jclass clazz, jmethodID constructorID, ...)
 
 JavaStringPtr createNewString(const char * bytes)
 {
-	if (bytes != NULL)
+	if (bytes != nullptr)
 	{
 		JavaStringPtr result(new JavaString(JavaLibrary::getEnv()->NewStringUTF(bytes)));
 		if (result->getValue() != 0)
@@ -103,7 +103,7 @@ JavaStringPtr createNewString(const char * bytes)
 
 JavaStringPtr createNewString(const jchar * unicodeChars, jsize len)
 {
-	if (unicodeChars != NULL && len >= 0)
+	if (unicodeChars != nullptr && len >= 0)
 	{
 		JavaStringPtr result(new JavaString(JavaLibrary::getEnv()->NewString(unicodeChars, len)));
 		if (result->getValue() != 0)
@@ -902,7 +902,7 @@ LocalRef::LocalRef(jobject src) :
 
 LocalRef::~LocalRef()
 {
-	if (m_ref != 0 && JavaLibrary::getEnv() != NULL)
+	if (m_ref > 0 && JavaLibrary::getEnv() != nullptr) 
 		JavaLibrary::getEnv()->DeleteLocalRef(m_ref);
 	m_ref = 0;
 }
@@ -917,7 +917,7 @@ LocalArrayRef::LocalArrayRef(jarray src) :
 
 LocalArrayRef::~LocalArrayRef()
 {
-	if (m_ref != 0 && JavaLibrary::getEnv() != NULL)
+	if (m_ref > 0 && JavaLibrary::getEnv() != nullptr)
 		JavaLibrary::getEnv()->DeleteLocalRef(m_ref);
 	m_ref = 0;
 }
@@ -932,7 +932,7 @@ LocalObjectArrayRef::LocalObjectArrayRef(jobjectArray src) :
 
 LocalObjectArrayRef::~LocalObjectArrayRef()
 {
-	if (m_ref != 0 && JavaLibrary::getEnv() != NULL)
+	if (m_ref > 0 && JavaLibrary::getEnv() != nullptr)
 		JavaLibrary::getEnv()->DeleteLocalRef(m_ref);
 	m_ref = 0;
 }
@@ -1002,13 +1002,13 @@ LocalLongArrayRef::~LocalLongArrayRef()
 GlobalRef::GlobalRef(const LocalRefParam & src) :
 	LocalRefParam(static_cast<jobject>(0))
 {
-	if (src.getValue() != 0 && JavaLibrary::getEnv() != NULL)
+	if (src.getValue() != 0 && JavaLibrary::getEnv() != nullptr)
 		m_ref = JavaLibrary::getEnv()->NewGlobalRef(src.getValue());
 }
 
 GlobalRef::~GlobalRef()
 {
-	if (m_ref != 0 && JavaLibrary::getEnv() != NULL)
+	if (m_ref > 0 && JavaLibrary::getEnv() != nullptr)
 		JavaLibrary::getEnv()->DeleteGlobalRef(m_ref);
 	m_ref = 0;
 }
@@ -1019,13 +1019,13 @@ GlobalRef::~GlobalRef()
 GlobalArrayRef::GlobalArrayRef(const LocalObjectArrayRefParam & src) :
 	LocalObjectArrayRefParam(static_cast<jobjectArray>(0))
 {
-	if (src.getValue() != 0 && JavaLibrary::getEnv() != NULL)
+	if (src.getValue() != 0 && JavaLibrary::getEnv() != nullptr)
 		m_ref = JavaLibrary::getEnv()->NewGlobalRef(src.getValue());
 }
 
 GlobalArrayRef::~GlobalArrayRef()
 {
-	if (m_ref != 0 && JavaLibrary::getEnv() != NULL)
+	if (m_ref > 0 && JavaLibrary::getEnv() != nullptr)
 		JavaLibrary::getEnv()->DeleteGlobalRef(m_ref);
 	m_ref = 0;
 }
@@ -1048,10 +1048,10 @@ JavaStringParam::~JavaStringParam()
 
 int JavaStringParam::fillBuffer(char * buffer, int size) const
 {
-	if (m_ref != 0 && buffer != NULL && JavaLibrary::getEnv() != NULL)
+	if (m_ref > 0 && buffer != nullptr && JavaLibrary::getEnv() != nullptr)
 	{
 		// Get the number of storage bytes required to convert this Java string into a UTF-8 string.
-		// Include the terminating null byte in the required buffer size.
+		// Include the terminating nullptr byte in the required buffer size.
 		int requiredBufferSize = JavaLibrary::getEnv()->GetStringUTFLength(static_cast<jstring>(m_ref)) + 1;
 		if (requiredBufferSize <= size)
 		{
@@ -1059,7 +1059,7 @@ int JavaStringParam::fillBuffer(char * buffer, int size) const
 
 			JavaLibrary::getEnv()->GetStringUTFRegion(static_cast<jstring>(m_ref), 0, stringLength, buffer);
 
-			// Null terminate the string.  requiredBufferSize already includes the byte count for the null terminator.
+			// Null terminate the string.  requiredBufferSize already includes the byte count for the nullptr terminator.
 			buffer[requiredBufferSize - 1] = '\0';
 
 			return requiredBufferSize;
@@ -1077,7 +1077,7 @@ JavaString::JavaString(jstring src) :
 }
 
 JavaString::JavaString(const char * src) :
-	JavaStringParam(JavaLibrary::getEnv()->NewStringUTF(src != NULL ? src : ""))
+	JavaStringParam(JavaLibrary::getEnv()->NewStringUTF(src != nullptr ? src : ""))
 {
 }
 
@@ -1093,7 +1093,7 @@ JavaString::JavaString(const Unicode::String & src) :
 
 JavaString::~JavaString()
 {
-	if (m_ref != 0 && JavaLibrary::getEnv() != NULL)
+	if (m_ref > 0 && JavaLibrary::getEnv() != nullptr) 
 		JavaLibrary::getEnv()->DeleteLocalRef(m_ref);
 	m_ref = 0;
 }

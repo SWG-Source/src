@@ -109,7 +109,7 @@ void SetupSharedUtility::installFileManifestEntries ()
 			if (!fileName.empty())
 				FileManifest::addStoredManifestEntry(fileName.c_str(), sceneId.c_str(), fileSize);
 			else
-				DEBUG_WARNING(true, ("SetupSharedUtility::installFileManifestEntries(): found an entry with a null filename: (row %i)\n", i));
+				DEBUG_WARNING(true, ("SetupSharedUtility::installFileManifestEntries(): found an entry with a nullptr filename: (row %i)\n", i));
 		}
 	}
 	else

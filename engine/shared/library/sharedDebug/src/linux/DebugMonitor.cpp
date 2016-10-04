@@ -115,7 +115,6 @@ void DebugMonitor::install(void)
 		return;
 	}
 
-#if 1
 	// NOTE: -TRF- I would not expect this chunk of termios setup
 	//       code to be necessary.  My expectation is that it should
 	//       be handled by the curs_inopts (see man page) options I have
@@ -152,7 +151,6 @@ void DebugMonitor::install(void)
 		fclose(s_ttyInputFile);
 		return;
 	}
-#endif
 	
 	//-- Create a curses screen to represent the DebugMonitor output tty.
 	//   NOTE: for now the curses input is hooked up to the application's
@@ -160,7 +158,7 @@ void DebugMonitor::install(void)
 	//         handle input from the output terminal, particularly to
 	//         handle profiler modifications when the output window
 	//         is active.
-	s_outputScreen = newterm(NULL, s_ttyOutputFile, stdin);
+	s_outputScreen = newterm(nullptr, s_ttyOutputFile, stdin);
 	if (!s_outputScreen)
 	{
 		DEBUG_WARNING(true, ("DebugMonitor: newterm() failed [%s].", strerror(errno)));
@@ -417,10 +415,6 @@ void DebugMonitor::flushOutput()
 	const int input = wgetch(s_outputWindow);
 	if (input != ERR)
 	{
-#if 0
-		DEBUG_REPORT_LOG(true, ("DebugMonitor: received key [index=%d].\n", input));
-#endif
-										 
 		//-- Handle input.
 		switch (input)
 		{

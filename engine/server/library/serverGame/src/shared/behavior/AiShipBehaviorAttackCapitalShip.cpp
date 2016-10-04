@@ -19,7 +19,7 @@
 AiShipBehaviorAttackCapitalShip::AiShipBehaviorAttackCapitalShip(AiShipController & aiShipController)
 		: AiShipBehaviorAttack(aiShipController)
 {
-	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("AiShipBehaviorAttackCapitalShip::AiShipBehaviorAttackCapitalShip() unit(%s)", (m_aiShipController.getOwner() != NULL) ? m_aiShipController.getOwner()->getNetworkId().getValueString().c_str() : "NULL owner"));
+	LOGC(ConfigServerGame::isSpaceAiLoggingEnabled(), "space_debug_ai", ("AiShipBehaviorAttackCapitalShip::AiShipBehaviorAttackCapitalShip() unit(%s)", (m_aiShipController.getOwner() != nullptr) ? m_aiShipController.getOwner()->getNetworkId().getValueString().c_str() : "nullptr owner"));
 }
 
 // ----------------------------------------------------------------------

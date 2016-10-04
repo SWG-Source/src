@@ -31,7 +31,7 @@ MarketAuctionBidsBuffer::~MarketAuctionBidsBuffer(void)
 	for (IndexType::iterator i=m_rows.begin(); i!=m_rows.end(); ++i)
 	{
 		delete i->second;
-		i->second=NULL;
+		i->second=nullptr;
 	}
 }
 
@@ -57,7 +57,7 @@ void MarketAuctionBidsBuffer::removeMarketAuctionBids(const NetworkId &itemId)
 	if (i!=m_rows.end())
 	{
 		delete i->second;
-		i->second=NULL;
+		i->second=nullptr;
 		m_rows.erase(i);
 	}
 }

@@ -52,36 +52,6 @@ int RangedIntCustomizationVariable::getPersistedDataByteCount() const
 
 // ----------------------------------------------------------------------
 
-#if 0
-
-std::string RangedIntCustomizationVariable::writeToString() const
-{
-	char buffer[64];
-	sprintf(buffer, "%x", getValue());
-	return std::string(buffer);
-}
-
-#endif
-
-// ----------------------------------------------------------------------
-
-#if 0
-
-bool RangedIntCustomizationVariable::loadFromString(int version, const std::string &data)
-{
-	if (version == 2)
-		return loadFromString_0002(data);
-	else
-	{
-		WARNING(true, ("loadFromString(): version %d unsupported.\n", version));
-		return false;
-	}
-}
-
-#endif
-
-// ----------------------------------------------------------------------
-
 void RangedIntCustomizationVariable::saveToByteVector(ByteVector &data) const
 {
 	int const byteCount = getPersistedDataByteCount();
@@ -178,29 +148,6 @@ RangedIntCustomizationVariable::RangedIntCustomizationVariable()
 }
 
 // ======================================================================
-
-#if 0
-
-bool RangedIntCustomizationVariable::loadFromString_0002(const std::string &data)
-{
-	int newValue;
-
-	const int scanfResult = sscanf(data.c_str(), "%x", &newValue);
-	if (scanfResult != 1)
-	{
-		// failed
-		return false;
-	}
-	else
-	{
-		setValue(newValue);
-		return true;
-	}
-}
-
-#endif
-
-//----------------------------------------------------------------------
 
 /**
 * This function computes the normalized value.

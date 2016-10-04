@@ -107,7 +107,7 @@ namespace Base
     ByteStream::ByteStream() :
     allocatedSize(0),
     beginReadIterator(),
-    data(NULL),
+    data(nullptr),
     size(0),
 	lastPutSize(0)
     {
@@ -224,7 +224,7 @@ namespace Base
 	    if(data->size < allocatedSize)
 	    {
 		    unsigned char * tmp = new unsigned char[newSize];
-		    if(data->buffer != NULL)
+		    if(data->buffer != nullptr)
 			    memcpy(tmp, data->buffer, size);
 		    delete[] data->buffer;
 		    data->buffer = tmp;

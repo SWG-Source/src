@@ -53,9 +53,7 @@
 #include <stdlib.h>					// for tolower()
 
 //================================================= static vars assignment ==
-const int	entryPointVersion = 1;				// constantly check DataEntryPoint.h to see if this value has changed
-
-OutputFileHandler   *outfileHandler = NULL;
+OutputFileHandler   *outfileHandler = nullptr;
 const int   bufferSize = 16 * 1024 * 1024;
 const int   maxStringSize = 256;
 const char  version[] = "1.3 September 18, 2000";
@@ -242,7 +240,7 @@ int main(	int argc,				// number of args in commandline
 //
 static void callbackFunction(void)
 {
-	outfileHandler = NULL;
+	outfileHandler = nullptr;
 
 #ifdef WIN32
 
@@ -382,201 +380,6 @@ static errorType evaluateArgs(void)
 		return retVal;
 
 	return retVal;
-
-#if 0
-
-	errorType retVal = ERR_NONE;  // assume no error has been found
-	bool		outPathUsed = false;	// flag to monitor if -o flag was used, if so, we can ignore -d, -p, -e, -f
-	bool		inFileEntered = false;
-	int			argc = CommandLine::getPlainCount();
-
-	// get default values from DOS
-	char		currentDir[maxStringSize];
-	if (NULL == getcwd(currentDir, maxStringSize))		// get current working directory
-	{
-		retVal = ERR_UNKNOWNDIR;
-		return(retVal);
-	}
-	drive[0] = currentDir[0];				// drive letter
-	drive[1] = 0;							// and null terminate it
-	strcpy(extension, "IFF");				// default to uppercase .IFF
-	strcpy(directory, &currentDir[2]);		// get everything after the Drive: including the first backslash
-	filename[0] = 0;
-
-	// see specs.txt for requests
-	// scan for any argv's that has '-' in the argv[n][0]'s character
-	for (int index = 0; index < argc; index++)	// note: if using argv[] rather then CommandLine::getPlainString() then start with 1 rather then 0
-	{
-		if ('-' == CommandLine::getPlainString(index)[0])
-		{
-			// we've found a parameter switch
-			switch (tolower(CommandLine::getPlainString(index)[1]))		// assume non case sensitive switches
-			{
-				case 'i':			// install via #pragma
-				{
-					usePragma = true;
-					break;
-				}
-
-				case 'c':			// use CCCP instead of CPP
-					useCCCP = true;
-					break;
-
-				case 'v':			// don't show any debug message
-					verboseMode = true;
-					break;
-
-				case '$':
-					debugMode = true;
-					break;
-
-				case 'o':			// target output file name and path (complete path)
-				{
-					index++;			// next param
-					outPathUsed = true;
-					strcpy(outFileName, CommandLine::getPlainString(index));
-					break;
-					
-				}
-
-				case 'd':			// target drive letter (-p must be present)
-				{
-					if (!outPathUsed)
-					{
-						index++;			// next param
-						strcpy(drive, CommandLine::getPlainString(index));
-					}
-					else
-						index++;	// skip the drive letter arg that SHOULD follow the -d option
-					break;
-				}
-
-				case 'p':			// target pathname
-				{
-					if (!outPathUsed)
-					{
-						index++;			// next param
-						strcpy(directory, CommandLine::getPlainString(index));
-					}
-					else
-						index++;	// skip the pathname arg that follows the -p option
-					break;
-				}
-
-				case 'f':			// target filename
-				{
-					if (!outPathUsed)
-					{
-						index++;			// next param
-						strcpy(filename, CommandLine::getPlainString(index));
-					}
-					else
-						index++;	// skip the filename arg that follows the -f
-					break;
-				}
-
-				case 'e':			// target extension
-				{
-					if (!outPathUsed)
-					{
-						index++;			// next param
-						strcpy(extension, CommandLine::getPlainString(index));
-					}
-					else
-						index++;	// skip the extension arg that follows the -e
-					break;
-				}
-
-				case 'h':			// help!
-				case '?':
-				{
-					help();
-					index = argc;			// force to exit
-					retVal = ERR_HELPREQUEST;
-					return(retVal);			// special case, ONLY time I call return() in the middle of the function (because I check for argc < 2 at the end of the code)
-					break;
-				}
-
-				default:
-				{
-					sprintf(err_msg, "\nUnknown parameter %s, use -h to seek help...\n", CommandLine::getPlainString(index));
-					MIFFMessage(err_msg, 1);
-					index = argc;			// force to exit
-					break;
-				}
-			}
-		}
-		else
-		{
-			// we found an arg that doesn't start with '-' so let's assume it's a filename
-			if (!inFileEntered)
-			{
-				strcpy(inFileName, CommandLine::getPlainString(index));
-				inFileEntered = true;
-			}
-			else
-			{
-				retVal = ERR_MULTIPLEINFILE;
-				index = argc;
-			}
-
-			// now construct the DEFAULT filename for this file by scanning backwards to front and only extracting the filename (no extension, no path)
-			if (ERR_NONE == retVal)
-			{
-				char	sourceName[maxStringSize];
-				strcpy(sourceName, inFileName);			// make a duplicate for us to play with
-				for (int strIndex = strlen(sourceName); strIndex > 0; strIndex--)
-				{
-					if ('.' == sourceName[strIndex])
-						sourceName[strIndex] = 0;			// put a stopper here...  we are assuming that '.' indicates extension! I'm going to assume that the person is just testing me if s/he decides to use filename like "foo.bar.psych" which will truncate to "foo"
-					if ('\\' == sourceName[strIndex])
-						break;		// get out, for we've reached the path name...
-				}
-
-				// ok, by here, strIndex should point to either beginning of the string, or where the first '\' was found scanning backwards
-				strcpy(filename, &sourceName[strIndex]);		// ta-da-!
-			}
-		}
-	}
-
-	if (inFileEntered)
-	{
-		if (0 == preprocessSource(inFileName))
-		{
-			if (verboseMode)
-			{
-				// using err_msg as my temp buffer...
-				sprintf(err_msg,"Now compiling %s\n", inFileName);
-				MIFFMessage(err_msg, 0);
-			}
-
-			if (ERR_NONE == retVal)
-				retVal = loadInputToBuffer(sourceBuffer, bufferSize);
-		}
-		else	// preprocessSource returned an error...
-		{
-			retVal = ERR_PREPROCESS;
-		}
-	}
-	else	// inFileEntered == false
-	{
-		MIFFMessage("Missing input filename in command line!", 1);
-	}
-
-	// construct a outFileName[] based on drive[], directory[], filename[], and extension[]
-	if (!outPathUsed && (ERR_NONE == retVal))
-	{
-		if (inFileName[0])	// make sure the user has entered a input filename
-			sprintf(outFileName,"%s:%s\\%s.%s", drive, directory, filename, extension);
-	}
-
-	if (argc < 1)
-		retVal = ERR_ARGSTOOFEW;		// we can do this because we know -h was not entered...
-
-	return(retVal);
-
-#endif
-
 }
 
 
@@ -619,7 +422,7 @@ static errorType loadInputToBuffer(
 		// we've successfully read the file, now close it...
 		delete inFileHandler;
 	}
-	else	// inFileName is NULL
+	else	// inFileName is nullptr
 	{
 		retVal = ERR_FILENOTFOUND;
 	}
@@ -746,7 +549,7 @@ static void handleError(errorType error)
 // Revisions and History:
 //   1/07/99 [] - created
 //
-extern "C" void MIFFMessage(char *message,			// null terminated string to be displayed
+extern "C" void MIFFMessage(char *message,			// nullptr terminated string to be displayed
 							int  forceOutput)		// if non-zero, it will print out even in quiet mode (for ERRORs)
 {
 	if (forceOutput)

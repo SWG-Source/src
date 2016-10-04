@@ -55,7 +55,7 @@ SetupSharedObject::Data::Data()
 	customizationIdManagerFilename(0),
 	objectsAlterChildrenAndContents(true),
 	loadObjectTemplateCrcStringTable(true),
-	pobEjectionTransformFilename(NULL)
+	pobEjectionTransformFilename(nullptr)
 {
 }
 

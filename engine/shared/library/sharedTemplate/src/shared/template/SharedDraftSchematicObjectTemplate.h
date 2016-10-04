@@ -53,7 +53,6 @@ public:
 
 	enum DamageType
 	{
-		DT_none = 0x000000,
 		DT_kinetic = 0x00000001,
 		DT_energy = 0x00000002,
 		DT_blast = 0x00000004,

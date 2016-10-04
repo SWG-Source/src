@@ -99,7 +99,7 @@ public:
 		int          getKeyInt   (const char *key, int index, int defaultValue = 0) const;
 		bool         getKeyBool  (const char *key, int index, bool defaultValue = false) const;
 		float        getKeyFloat (const char *key, int index, float defaultValue = 0.f) const;
-		const char  *getKeyString(const char *key, int index, const char *defaultValue = NULL) const;
+		const char  *getKeyString(const char *key, int index, const char *defaultValue = nullptr) const;
 		Tag          getKeyTag   (const char *key, int index, Tag defaultValue = 0) const;
 		int          getKeyCount(const char *key) const;
 		void         addKey(const char *keyName, const char *value, bool lazyAdd = false);

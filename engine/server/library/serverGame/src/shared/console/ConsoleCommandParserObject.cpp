@@ -119,23 +119,23 @@ namespace ConsoleCommandParserObjectNamespace
 			{
 				WARNING(true, ("ConsoleCommandParserObject invalid object template [%s]", templateName.c_str()));
 				ot->releaseReference();
-				return NULL;
+				return nullptr;
 			}
 
 			if (sot->getId() == ServerShipObjectTemplate::ServerShipObjectTemplate_tag)
 			{
 				SharedObjectTemplate const * const sharedTemplate = safe_cast<SharedObjectTemplate const *>(ObjectTemplateList::fetch(sot->getSharedTemplate()));
-				if (NULL == sharedTemplate || 
+				if (nullptr == sharedTemplate || 
 					(sharedTemplate->getGameObjectType() != SharedObjectTemplate::GOT_ship_mining_asteroid_dynamic &&
 					sharedTemplate->getGameObjectType() != SharedObjectTemplate::GOT_ship_mining_asteroid_static))
 				{
 					ot->releaseReference();
-					return NULL;
+					return nullptr;
 				}
 			}
 			return sot;
 		}
-		return NULL;
+		return nullptr;
 	}
 
 	void checkBadBuildClusterObject(ServerObject *& o)
@@ -523,7 +523,7 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		ServerObject const * const obj = dynamic_cast<ServerObject *>(ServerWorld::findObjectByNetworkId(oid));
-		if (obj == NULL)
+		if (obj == nullptr)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
@@ -531,7 +531,7 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 
 		Client const * const client = obj->getClient();
 
-		if(client == NULL)
+		if(client == nullptr)
 		{
 			result += Unicode::narrowToWide("specified object is not a client object\n");
 			return true;
@@ -561,7 +561,7 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 		}
 
 		const char *objectTemplateName = obj->getObjectTemplateName();
-		result += Unicode::narrowToWide(FormattedString<512>().sprintf("object %s (%s) has %d total opened objects\n", obj->getNetworkId().getValueString().c_str(), (objectTemplateName ? objectTemplateName : "NULL object template"), opened.size()));
+		result += Unicode::narrowToWide(FormattedString<512>().sprintf("object %s (%s) has %d total opened objects\n", obj->getNetworkId().getValueString().c_str(), (objectTemplateName ? objectTemplateName : "nullptr object template"), opened.size()));
 
 		if(!text.empty())
 		{
@@ -615,7 +615,7 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 		ServerObject * const object = dynamic_cast<ServerObject *>(NetworkIdManager::getObjectById(oid));
 		if (object)
 		{
-			uint32 const pid = (strtoul(Unicode::wideToNarrow(argv[2]).c_str (), NULL, 10));
+			uint32 const pid = (strtoul(Unicode::wideToNarrow(argv[2]).c_str (), nullptr, 10));
 			GenericValueTypeMessage<std::pair<NetworkId, uint32> > const msg(
 				"RequestAuthTransfer",
 				std::make_pair(
@@ -646,9 +646,9 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 		}
 
 		real x,y,z;
-		x = static_cast<real>(strtod(Unicode::wideToNarrow(argv[2]).c_str(), NULL));
-		y = static_cast<real>(strtod(Unicode::wideToNarrow(argv[3]).c_str(), NULL));
-		z = static_cast<real>(strtod(Unicode::wideToNarrow(argv[4]).c_str(), NULL));
+		x = static_cast<real>(strtod(Unicode::wideToNarrow(argv[2]).c_str(), nullptr));
+		y = static_cast<real>(strtod(Unicode::wideToNarrow(argv[3]).c_str(), nullptr));
+		z = static_cast<real>(strtod(Unicode::wideToNarrow(argv[4]).c_str(), nullptr));
 
 		ServerObject *newObject = 0;
 		ServerObjectTemplate const * const ot = getObjectTemplateForCreation(tmpString);
@@ -656,7 +656,7 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 		{
 			if (ConfigServerGame::getStripNonFreeAssetsFromPlayersInTutorial() && NewbieTutorial::isInTutorialArea(userObject))
 			{
-				std::string sharedTemplate = ot->getSharedTemplate(false);
+				std::string sharedTemplate = ot->getSharedTemplate();
 
 				if (!FileManifest::contains(sharedTemplate.c_str()))
 				{
@@ -706,9 +706,9 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 		}
 
 		real x,y,z;
-		x = static_cast<real>(strtod(Unicode::wideToNarrow(argv[2]).c_str(), NULL));
-		y = static_cast<real>(strtod(Unicode::wideToNarrow(argv[3]).c_str(), NULL));
-		z = static_cast<real>(strtod(Unicode::wideToNarrow(argv[4]).c_str(), NULL));
+		x = static_cast<real>(strtod(Unicode::wideToNarrow(argv[2]).c_str(), nullptr));
+		y = static_cast<real>(strtod(Unicode::wideToNarrow(argv[3]).c_str(), nullptr));
+		z = static_cast<real>(strtod(Unicode::wideToNarrow(argv[4]).c_str(), nullptr));
 
 		// check to see if we're in a region we shouldn't be building in
 		if ( ConfigServerGame::getBlockBuildRegionPlacement() )
@@ -726,10 +726,10 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 		}
  
 		real quatW,quatX,quatY,quatZ;
-		quatW = static_cast<real>(strtod(Unicode::wideToNarrow(argv[5]).c_str(), NULL));
-		quatX = static_cast<real>(strtod(Unicode::wideToNarrow(argv[6]).c_str(), NULL));
-		quatY = static_cast<real>(strtod(Unicode::wideToNarrow(argv[7]).c_str(), NULL));
-		quatZ = static_cast<real>(strtod(Unicode::wideToNarrow(argv[8]).c_str(), NULL));
+		quatW = static_cast<real>(strtod(Unicode::wideToNarrow(argv[5]).c_str(), nullptr));
+		quatX = static_cast<real>(strtod(Unicode::wideToNarrow(argv[6]).c_str(), nullptr));
+		quatY = static_cast<real>(strtod(Unicode::wideToNarrow(argv[7]).c_str(), nullptr));
+		quatZ = static_cast<real>(strtod(Unicode::wideToNarrow(argv[8]).c_str(), nullptr));
 
 		ServerObject * const cell = safe_cast<ServerObject *>(ContainerInterface::getContainingCellObject(*playerObject));
 
@@ -739,7 +739,7 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 		{
 			if (ConfigServerGame::getStripNonFreeAssetsFromPlayersInTutorial() && NewbieTutorial::isInTutorialArea(userObject))
 			{
-				std::string sharedTemplate = ot->getSharedTemplate(false);
+				std::string sharedTemplate = ot->getSharedTemplate();
 
 				if (!FileManifest::contains(sharedTemplate.c_str()))
 				{
@@ -809,7 +809,7 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 
 		if (ConfigServerGame::getStripNonFreeAssetsFromPlayersInTutorial() && NewbieTutorial::isInTutorialArea(userObject))
 		{
-			std::string sharedTemplate = ot->getSharedTemplate(false);
+			std::string sharedTemplate = ot->getSharedTemplate();
 
 			if (!FileManifest::contains(sharedTemplate.c_str()))
 			{
@@ -886,7 +886,7 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 		{
 			if (ConfigServerGame::getStripNonFreeAssetsFromPlayersInTutorial() && NewbieTutorial::isInTutorialArea(userObject))
 			{
-				std::string sharedTemplate = ot->getSharedTemplate(false);
+				std::string sharedTemplate = ot->getSharedTemplate();
 
 				if (!FileManifest::contains(sharedTemplate.c_str()))
 				{
@@ -934,7 +934,7 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 
 		NetworkId oid(Unicode::wideToNarrow(argv[2]));
 		ServerObject* object = dynamic_cast<ServerObject*>(NetworkIdManager::getObjectById(oid));
-		if (object == NULL)
+		if (object == nullptr)
 		{
 			//container does not exist
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
@@ -953,7 +953,7 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 		{
 			if (ConfigServerGame::getStripNonFreeAssetsFromPlayersInTutorial() && NewbieTutorial::isInTutorialArea(userObject))
 			{
-				std::string sharedTemplate = ot->getSharedTemplate(false);
+				std::string sharedTemplate = ot->getSharedTemplate();
 
 				if (!FileManifest::contains(sharedTemplate.c_str()))
 				{
@@ -994,7 +994,7 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 	{
 		NetworkId cellId(Unicode::wideToNarrow(argv[2]));
 		ServerObject* cell = dynamic_cast<ServerObject*>(NetworkIdManager::getObjectById(cellId));
-		if (cell == NULL && cellId != NetworkId::cms_invalid)
+		if (cell == nullptr && cellId != NetworkId::cms_invalid)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
@@ -1011,9 +1011,9 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 		}
 
 		real x,y,z;
-		x = static_cast<real>(strtod(Unicode::wideToNarrow(argv[3]).c_str(), NULL));
-		y = static_cast<real>(strtod(Unicode::wideToNarrow(argv[4]).c_str(), NULL));
-		z = static_cast<real>(strtod(Unicode::wideToNarrow(argv[5]).c_str(), NULL));
+		x = static_cast<real>(strtod(Unicode::wideToNarrow(argv[3]).c_str(), nullptr));
+		y = static_cast<real>(strtod(Unicode::wideToNarrow(argv[4]).c_str(), nullptr));
+		z = static_cast<real>(strtod(Unicode::wideToNarrow(argv[5]).c_str(), nullptr));
 
 		ServerObject *newObject = 0;
 		ServerObjectTemplate const * const ot = getObjectTemplateForCreation(tmpString);
@@ -1021,7 +1021,7 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 		{
 			if (ConfigServerGame::getStripNonFreeAssetsFromPlayersInTutorial() && NewbieTutorial::isInTutorialArea(userObject))
 			{
-				std::string sharedTemplate = ot->getSharedTemplate(false);
+				std::string sharedTemplate = ot->getSharedTemplate();
 
 				if (!FileManifest::contains(sharedTemplate.c_str()))
 				{
@@ -1070,22 +1070,22 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 
 		NetworkId cellId(Unicode::wideToNarrow(argv[2]));
 		ServerObject * const cell = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(cellId));
-		if (cell == NULL && cellId != NetworkId::cms_invalid)
+		if (cell == nullptr && cellId != NetworkId::cms_invalid)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
 		}
 
 		real x,y,z;
-		x = static_cast<real>(strtod(Unicode::wideToNarrow(argv[3]).c_str(), NULL));
-		y = static_cast<real>(strtod(Unicode::wideToNarrow(argv[4]).c_str(), NULL));
-		z = static_cast<real>(strtod(Unicode::wideToNarrow(argv[5]).c_str(), NULL));
+		x = static_cast<real>(strtod(Unicode::wideToNarrow(argv[3]).c_str(), nullptr));
+		y = static_cast<real>(strtod(Unicode::wideToNarrow(argv[4]).c_str(), nullptr));
+		z = static_cast<real>(strtod(Unicode::wideToNarrow(argv[5]).c_str(), nullptr));
 
 		real quatW,quatX,quatY,quatZ;
-		quatW = static_cast<real>(strtod(Unicode::wideToNarrow(argv[6]).c_str(), NULL));
-		quatX = static_cast<real>(strtod(Unicode::wideToNarrow(argv[7]).c_str(), NULL));
-		quatY = static_cast<real>(strtod(Unicode::wideToNarrow(argv[8]).c_str(), NULL));
-		quatZ = static_cast<real>(strtod(Unicode::wideToNarrow(argv[9]).c_str(), NULL));
+		quatW = static_cast<real>(strtod(Unicode::wideToNarrow(argv[6]).c_str(), nullptr));
+		quatX = static_cast<real>(strtod(Unicode::wideToNarrow(argv[7]).c_str(), nullptr));
+		quatY = static_cast<real>(strtod(Unicode::wideToNarrow(argv[8]).c_str(), nullptr));
+		quatZ = static_cast<real>(strtod(Unicode::wideToNarrow(argv[9]).c_str(), nullptr));
 
 		ServerObject *newObject = 0;
 		ServerObjectTemplate const * const ot = getObjectTemplateForCreation(tmpString);
@@ -1093,7 +1093,7 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 		{
 			if (ConfigServerGame::getStripNonFreeAssetsFromPlayersInTutorial() && NewbieTutorial::isInTutorialArea(userObject))
 			{
-				std::string sharedTemplate = ot->getSharedTemplate(false);
+				std::string sharedTemplate = ot->getSharedTemplate();
 
 				if (!FileManifest::contains(sharedTemplate.c_str()))
 				{
@@ -1165,7 +1165,7 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		ServerObject* object = dynamic_cast<ServerObject*>(NetworkIdManager::getObjectById(oid));
-		if (object == NULL)
+		if (object == nullptr)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
@@ -1200,7 +1200,7 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		ServerObject* object = dynamic_cast<ServerObject*>(NetworkIdManager::getObjectById(oid));
-		if (object == NULL)
+		if (object == nullptr)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
@@ -1236,7 +1236,7 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 		const NetworkId oid (Unicode::wideToNarrow(argv[1]));
 		ServerObject* const object = safe_cast<ServerObject*>(NetworkIdManager::getObjectById(oid));
 		
-		if (object == NULL)
+		if (object == nullptr)
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 		else if (object->getClient())
 			result += getErrorMessage(argv[0], ERR_INVALID_USER);
@@ -1268,7 +1268,7 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 
 		ServerObject* const object = safe_cast<ServerObject*>(NetworkIdManager::getObjectById(oid));
 		
-		if (object == NULL)
+		if (object == nullptr)
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 
 		// ----------
@@ -1279,11 +1279,11 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 		{
 			ServerObject * object = ServerWorld::getObject(i);
 
-			if(object == NULL) continue;
+			if(object == nullptr) continue;
 
 			CreatureObject * creature = object->asCreatureObject();
 
-			if(creature == NULL) continue;
+			if(creature == nullptr) continue;
 
 			if(creature->getNetworkId() == oid) continue;
 
@@ -1307,11 +1307,11 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 		{
 			ServerObject * object = ServerWorld::getObject(i);
 
-			if(object == NULL) continue;
+			if(object == nullptr) continue;
 
 			CreatureObject * creature = object->asCreatureObject();
 
-			if(creature == NULL) continue;
+			if(creature == nullptr) continue;
 
 			if(creature->getParentCell() != CellProperty::getWorldCellProperty()) continue;
 
@@ -1331,9 +1331,9 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		Vector pos;
-		pos.x = static_cast<real>(strtod(Unicode::wideToNarrow(argv[2]).c_str(), NULL));
-		pos.y = static_cast<real>(strtod(Unicode::wideToNarrow(argv[3]).c_str(), NULL));
-		pos.z = static_cast<real>(strtod(Unicode::wideToNarrow(argv[4]).c_str(), NULL));
+		pos.x = static_cast<real>(strtod(Unicode::wideToNarrow(argv[2]).c_str(), nullptr));
+		pos.y = static_cast<real>(strtod(Unicode::wideToNarrow(argv[3]).c_str(), nullptr));
+		pos.z = static_cast<real>(strtod(Unicode::wideToNarrow(argv[4]).c_str(), nullptr));
 
 		// disallow certain object types from being "move"
 		bool allowMove = true;
@@ -1418,7 +1418,7 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		ServerObject* o = ServerWorld::findObjectByNetworkId(oid);
-		if (o == NULL)
+		if (o == nullptr)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
@@ -1433,9 +1433,9 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		real r,p,y;
-		r = static_cast<real>(strtod(Unicode::wideToNarrow(argv[2]).c_str(), NULL));
-		p = static_cast<real>(strtod(Unicode::wideToNarrow(argv[3]).c_str(), NULL));
-		y = static_cast<real>(strtod(Unicode::wideToNarrow(argv[4]).c_str(), NULL));
+		r = static_cast<real>(strtod(Unicode::wideToNarrow(argv[2]).c_str(), nullptr));
+		p = static_cast<real>(strtod(Unicode::wideToNarrow(argv[3]).c_str(), nullptr));
+		y = static_cast<real>(strtod(Unicode::wideToNarrow(argv[4]).c_str(), nullptr));
 		if (rotateObject(oid, r, p, y))
 		{
 			result += getErrorMessage(argv[0], ERR_SUCCESS);
@@ -1450,7 +1450,7 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		ServerObject* o = ServerWorld::findObjectByNetworkId(oid);
-		if (o == NULL)
+		if (o == nullptr)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
@@ -1479,7 +1479,7 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 		// erase keys assigned to this player.
 		s_playerCreatureNameMap.erase(userId);
 
-		if (dataTable != NULL)
+		if (dataTable != nullptr)
 		{
 			StringVector creatureStrings;
 			{
@@ -1548,7 +1548,7 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 	{
 		NetworkId const oid(Unicode::wideToNarrow(argv[1]));
 		ServerObject* const o = ServerWorld::findObjectByNetworkId(oid);
-		if (o == NULL)
+		if (o == nullptr)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
@@ -1580,7 +1580,7 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
 		}
-		o->deletePobPersistedContents(NULL, DeleteReasons::God);
+		o->deletePobPersistedContents(nullptr, DeleteReasons::God);
 		result += getErrorMessage(argv[0], ERR_SUCCESS);
 	}
 	else if (isCommand( argv[0], "moveItemInHouseToMe"))
@@ -1607,7 +1607,7 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		TangibleObject* vendor = dynamic_cast<TangibleObject*>(ServerWorld::findObjectByNetworkId(oid));
-		if (vendor == NULL)
+		if (vendor == nullptr)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
@@ -1621,7 +1621,7 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
     {
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
         TangibleObject* vendor = dynamic_cast<TangibleObject*>(ServerWorld::findObjectByNetworkId(oid));
-        if (vendor == NULL)
+        if (vendor == nullptr)
         {
             result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
             return true;
@@ -1699,13 +1699,13 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		CreatureObject* o = dynamic_cast<CreatureObject*>(ServerWorld::findObjectByNetworkId(oid));
-		if (o == NULL)
+		if (o == nullptr)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
 		}
 		real scale;
-		scale = static_cast<real>(strtod(Unicode::wideToNarrow(argv[2]).c_str(), NULL));
+		scale = static_cast<real>(strtod(Unicode::wideToNarrow(argv[2]).c_str(), nullptr));
 		o->setMovementScale(scale);
 		result += getErrorMessage(argv[0], ERR_SUCCESS);
 	}
@@ -1716,13 +1716,13 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		CreatureObject* o = dynamic_cast<CreatureObject*>(ServerWorld::findObjectByNetworkId(oid));
-		if (o == NULL)
+		if (o == nullptr)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
 		}
 		real scale;
-		scale = static_cast<real>(strtod(Unicode::wideToNarrow(argv[2]).c_str(), NULL));
+		scale = static_cast<real>(strtod(Unicode::wideToNarrow(argv[2]).c_str(), nullptr));
 		o->setScaleFactor(scale);
 		result += getErrorMessage(argv[0], ERR_SUCCESS);
 	}
@@ -1765,7 +1765,7 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		ServerObject* o = ServerWorld::findObjectByNetworkId(oid);
-		if (o == NULL)
+		if (o == nullptr)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
@@ -1788,13 +1788,13 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 	{
 		CachedNetworkId oid(Unicode::wideToNarrow(argv[1]));
 		ServerObject * o = dynamic_cast<ServerObject *>(oid.getObject());
-		if (o == NULL)
+		if (o == nullptr)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
 		}
 		Container const * const container = ContainerInterface::getContainer(*o);
-		if (container == NULL)
+		if (container == nullptr)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
@@ -1811,7 +1811,7 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		ServerObject * o = ServerWorld::findObjectByNetworkId(oid);
-		if (o == NULL)
+		if (o == nullptr)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
@@ -1846,7 +1846,7 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		ServerObject * o = ServerWorld::findObjectByNetworkId(oid);
-		if (o == NULL)
+		if (o == nullptr)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
@@ -1881,7 +1881,7 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		ServerObject * o = ServerWorld::findObjectByNetworkId(oid);
-		if (o == NULL)
+		if (o == nullptr)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
@@ -1914,7 +1914,7 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		TangibleObject* o = dynamic_cast<TangibleObject *>(ServerWorld::findObjectByNetworkId(oid));
-		if (o == NULL)
+		if (o == nullptr)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
@@ -1940,7 +1940,7 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		const ServerObject* o = dynamic_cast<const ServerObject *>(ServerWorld::findObjectByNetworkId(oid));
-		if (o == NULL)
+		if (o == nullptr)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
@@ -1976,7 +1976,7 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 
 		ServerMessageForwarding::end();
 
-		if (ObjectTemplateList::reload(templateFile) == NULL)
+		if (ObjectTemplateList::reload(templateFile) == nullptr)
 		{
 			result += getErrorMessage(argv[0], ERR_TEMPLATE_NOT_LOADED);
 			return true;
@@ -1991,7 +1991,7 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		CreatureObject * creature = dynamic_cast<CreatureObject *>(ServerWorld::findObjectByNetworkId(oid));
-		if (creature == NULL || !creature->isIncapacitated())
+		if (creature == nullptr || !creature->isIncapacitated())
 			result += Unicode::narrowToWide("no");
 		else if (creature->isDead())
 			result += Unicode::narrowToWide("dead");
@@ -2011,11 +2011,11 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 			LocationData d;
 			d.name = argv[2];
 			Vector pos;
-			pos.x = static_cast<real>(strtod(Unicode::wideToNarrow(argv[3]).c_str(), NULL));
-			pos.y = static_cast<real>(strtod(Unicode::wideToNarrow(argv[4]).c_str(), NULL));
-			pos.z = static_cast<real>(strtod(Unicode::wideToNarrow(argv[5]).c_str(), NULL));
+			pos.x = static_cast<real>(strtod(Unicode::wideToNarrow(argv[3]).c_str(), nullptr));
+			pos.y = static_cast<real>(strtod(Unicode::wideToNarrow(argv[4]).c_str(), nullptr));
+			pos.z = static_cast<real>(strtod(Unicode::wideToNarrow(argv[5]).c_str(), nullptr));
 			d.location.setCenter(pos);
-			float radius = static_cast<real>(strtod(Unicode::wideToNarrow(argv[6]).c_str(), NULL));
+			float radius = static_cast<real>(strtod(Unicode::wideToNarrow(argv[6]).c_str(), nullptr));
 			d.location.setRadius(radius);
 			o->addLocationTarget(d);			
 		}
@@ -2079,7 +2079,7 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 			oid.getObject());
 		const CreatureObject * creature = dynamic_cast<const CreatureObject *>(
 			tangible);
-		if (creature != NULL)
+		if (creature != nullptr)
 		{
 			char buffer[1024];
 			sprintf(buffer, "he:%d, co=%d, ac=%d, st=%d, mi=%d, wi=%d", 
@@ -2091,7 +2091,7 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 					creature->getAttribute(Attributes::Willpower));
 			result += Unicode::narrowToWide(buffer);
 		}
-		else if (tangible != NULL)
+		else if (tangible != nullptr)
 		{
 			char buffer[1024];
 			sprintf(buffer, "max hp = %d, damage taken = %d",
@@ -2156,13 +2156,13 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 		bool value = strtoul(Unicode::wideToNarrow(argv[2]).c_str(), 0, 10) != 0;
 
 		ServerObject * const o = dynamic_cast<ServerObject *>(ServerWorld::findObjectByNetworkId(actorId));
-		CreatureObject * const c = (o ? o->asCreatureObject() : NULL);
-		if (o == NULL)
+		CreatureObject * const c = (o ? o->asCreatureObject() : nullptr);
+		if (o == nullptr)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
 		}
-		if (c == NULL)
+		if (c == nullptr)
 		{
 			result += Unicode::narrowToWide("specified object is not a creature object\n");
 			return true;
@@ -2261,7 +2261,7 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 
 			const char *objectTemplateName = obj->getObjectTemplateName();
 
-			result += Unicode::narrowToWide(FormattedString<512>().sprintf("object %s (%s) has %d total observers (%d observers on this game server)\n", obj->getNetworkId().getValueString().c_str(), (objectTemplateName ? objectTemplateName : "NULL object template"), obj->getObserversCount(), observerList.size()));
+			result += Unicode::narrowToWide(FormattedString<512>().sprintf("object %s (%s) has %d total observers (%d observers on this game server)\n", obj->getNetworkId().getValueString().c_str(), (objectTemplateName ? objectTemplateName : "nullptr object template"), obj->getObserversCount(), observerList.size()));
 
 			if (!observers.empty())
 			{
@@ -2560,7 +2560,7 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 
 	else if(isCommand(argv[0], "setPathLinkDistance"))
 	{
-		float dist = static_cast<real>(strtod(Unicode::wideToNarrow(argv[1]).c_str(), NULL));
+		float dist = static_cast<real>(strtod(Unicode::wideToNarrow(argv[1]).c_str(), nullptr));
 
 		CityPathGraphManager::setLinkDistance(dist);
 
@@ -2601,7 +2601,7 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 	{
 		CachedNetworkId const oid(Unicode::wideToNarrow(argv[1]));
 		TangibleObject * object = dynamic_cast<TangibleObject *>(oid.getObject());
-		if (object == NULL)
+		if (object == nullptr)
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 		else
 		{
@@ -2619,7 +2619,7 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 	{
 		CachedNetworkId const oid(Unicode::wideToNarrow(argv[1]));
 		TangibleObject * object = dynamic_cast<TangibleObject *>(oid.getObject());
-		if (object == NULL)
+		if (object == nullptr)
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 		else
 		{
@@ -2653,7 +2653,7 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 
 		ServerObject * object = dynamic_cast<TangibleObject *>(oid.getObject());
 		CreatureObject * creature = dynamic_cast<CreatureObject *>(object);
-		if (object == NULL)
+		if (object == nullptr)
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 		else
 		{
@@ -2694,7 +2694,7 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		CreatureObject *creature  = dynamic_cast<CreatureObject*>(NetworkIdManager::getObjectById(oid));
-		PlayerObject *player = NULL;
+		PlayerObject *player = nullptr;
 		if (creature)
 			player = PlayerCreatureController::getPlayerObject(creature);
 		if (player)
@@ -2739,7 +2739,7 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		CreatureObject *creature  = dynamic_cast<CreatureObject*>(NetworkIdManager::getObjectById(oid));
-		PlayerObject *player = NULL;
+		PlayerObject *player = nullptr;
 		if (creature)
 			player = PlayerCreatureController::getPlayerObject(creature);
 		if (player)
@@ -2864,7 +2864,7 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		const InstallationObject* o = dynamic_cast<const InstallationObject*>(ServerWorld::findObjectByNetworkId(oid));
-		if (o == NULL)
+		if (o == nullptr)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
@@ -2888,7 +2888,7 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		InstallationObject* o = dynamic_cast<InstallationObject*>(ServerWorld::findObjectByNetworkId(oid));
-		if (o == NULL)
+		if (o == nullptr)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
@@ -2904,7 +2904,7 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		const InstallationObject* o = dynamic_cast<const InstallationObject*>(ServerWorld::findObjectByNetworkId(oid));
-		if (o == NULL)
+		if (o == nullptr)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
@@ -2928,7 +2928,7 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		InstallationObject* o = dynamic_cast<InstallationObject*>(ServerWorld::findObjectByNetworkId(oid));
-		if (o == NULL)
+		if (o == nullptr)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
@@ -3056,7 +3056,7 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		ServerObject *o = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(oid));
-		if (o != NULL && o->asCreatureObject() != NULL && o->isPlayerControlled())
+		if (o != nullptr && o->asCreatureObject() != nullptr && o->isPlayerControlled())
 		{
 			CreatureObject * creatureTarget = o->asCreatureObject();
 
@@ -3068,7 +3068,7 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 				for (CreatureObject::SkillList::const_iterator i = skills.begin(); i != skills.end(); ++i)
 				{
 					const SkillObject * profession = (*i)->findProfessionForSkill();
-					if (profession != NULL)
+					if (profession != nullptr)
 						professionName = profession->getSkillName();
 				}
 			}
@@ -3317,7 +3317,7 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 		NetworkId oid (Unicode::wideToNarrow(argv[1]));
 		ServerObject* const object = safe_cast<ServerObject*>(NetworkIdManager::getObjectById(oid));
 
-		if (object == NULL)
+		if (object == nullptr)
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 		else if (!object->getClient())
 			result += getErrorMessage(argv[0], ERR_INVALID_USER);
@@ -3346,7 +3346,7 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 		NetworkId ownerId (Unicode::wideToNarrow(argv[2]));
 
 		ServerObject * const object = safe_cast<ServerObject*>(NetworkIdManager::getObjectById(houseId));
-		TangibleObject * const tangible = object ? object->asTangibleObject() : NULL;
+		TangibleObject * const tangible = object ? object->asTangibleObject() : nullptr;
 		if (!tangible)
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 		else
@@ -3359,7 +3359,7 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 	{
 		ServerObject * object = safe_cast<ServerObject*>(NetworkIdManager::getObjectById(playerObject->getLookAtTarget()));
 
-		if (NULL == object)
+		if (nullptr == object)
 			object = playerObject;
 
 		RegionMaster::RegionVector rv;
@@ -3373,7 +3373,7 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 		for (RegionMaster::RegionVector::const_iterator it = rv.begin(); it != rv.end(); ++it)
 		{
 			Region const * const r = *it;
-			if (NULL != r)
+			if (nullptr != r)
 			{
 				_itoa(r->getGeography(), buf, 10);
 				result += Unicode::narrowToWide(buf);
@@ -3390,7 +3390,7 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 	{
 		ServerObject * const target = safe_cast<ServerObject*>(NetworkIdManager::getObjectById(playerObject->getLookAtTarget()));
 
-		if (NULL == target)
+		if (nullptr == target)
 		{
 			result += Unicode::narrowToWide("Invalid target");
 			return true;
@@ -3434,7 +3434,7 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 
 		ServerObject * object = safe_cast<ServerObject*>(NetworkIdManager::getObjectById(playerObject->getLookAtTarget()));
 
-		if (NULL == object)
+		if (nullptr == object)
 			object = playerObject;
 
 		Vector const & pos_w = object->getPosition_w();
@@ -3449,7 +3449,7 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 	{
 		ServerObject * object = safe_cast<ServerObject*>(NetworkIdManager::getObjectById(playerObject->getLookAtTarget()));
 
-		if (NULL == object)
+		if (nullptr == object)
 			object = playerObject;
 
 		Vector const & pos_w = object->getPosition_w();
@@ -3463,7 +3463,7 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 	{
 		ServerObject * object = safe_cast<ServerObject*>(NetworkIdManager::getObjectById(playerObject->getLookAtTarget()));
 
-		if (NULL == object)
+		if (nullptr == object)
 			object = playerObject;
 
 		Vector const & pos_w = object->getPosition_w();
@@ -3477,7 +3477,7 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		const ServerObject* o = dynamic_cast<const ServerObject *>(ServerWorld::findObjectByNetworkId(oid));
-		if (o == NULL)
+		if (o == nullptr)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
@@ -3503,7 +3503,7 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		const ServerObject* o = dynamic_cast<const ServerObject *>(ServerWorld::findObjectByNetworkId(oid));
-		if (o == NULL)
+		if (o == nullptr)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
@@ -3576,13 +3576,13 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		ServerObject const* o = dynamic_cast<ServerObject const*>(ServerWorld::findObjectByNetworkId(oid));
-		CreatureObject const* c = (o ? o->asCreatureObject() : NULL);
-		if (o == NULL)
+		CreatureObject const* c = (o ? o->asCreatureObject() : nullptr);
+		if (o == nullptr)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
 		}
-		else if (c == NULL)
+		else if (c == nullptr)
 		{
 			result += Unicode::narrowToWide("specified object is not a creature object\n");
 			return true;
@@ -3590,7 +3590,7 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 		else
 		{
 			PlayerObject const* p = PlayerCreatureController::getPlayerObject(c);
-			if (p == NULL)
+			if (p == nullptr)
 			{
 				result += Unicode::narrowToWide("specified object is not a character object\n");
 				return true;
@@ -3612,8 +3612,8 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		ServerObject* o = dynamic_cast<ServerObject*>(ServerWorld::findObjectByNetworkId(oid));
-		CreatureObject* c = (o ? o->asCreatureObject() : NULL);
-		if (o == NULL)
+		CreatureObject* c = (o ? o->asCreatureObject() : nullptr);
+		if (o == nullptr)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
@@ -3623,7 +3623,7 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 			result += Unicode::narrowToWide("specified object is not authoritative on this game server\n");
 			return true;
 		}
-		else if (c == NULL)
+		else if (c == nullptr)
 		{
 			result += Unicode::narrowToWide("specified object is not a creature object\n");
 			return true;
@@ -3631,7 +3631,7 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 		else
 		{
 			PlayerObject* p = PlayerCreatureController::getPlayerObject(c);
-			if (p == NULL)
+			if (p == nullptr)
 			{
 				result += Unicode::narrowToWide("specified object is not a character object\n");
 				return true;
@@ -3668,20 +3668,20 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		ServerObject * o = dynamic_cast<ServerObject *>(ServerWorld::findObjectByNetworkId(oid));
-		CreatureObject * c = (o ? o->asCreatureObject() : NULL);
-		if (o == NULL)
+		CreatureObject * c = (o ? o->asCreatureObject() : nullptr);
+		if (o == nullptr)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
 		}
-		else if (c == NULL)
+		else if (c == nullptr)
 		{
 			result += Unicode::narrowToWide("specified object is not a creature object\n");
 			return true;
 		}
 
 		PlayerObject * p = PlayerCreatureController::getPlayerObject(c);
-		if (p == NULL)
+		if (p == nullptr)
 		{
 			result += Unicode::narrowToWide("specified object is not a character object\n");
 			return true;
@@ -3755,14 +3755,14 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		ServerObject const* o = dynamic_cast<ServerObject const*>(ServerWorld::findObjectByNetworkId(oid));
-		if (o == NULL)
+		if (o == nullptr)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
 		}
 
 		TangibleObject const* t = o->asTangibleObject();
-		if (t == NULL)
+		if (t == nullptr)
 		{
 			result += Unicode::narrowToWide("specified object is not a tangible object\n");
 			return true;
@@ -3797,14 +3797,14 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 	{
 		NetworkId sourceOid(Unicode::wideToNarrow(argv[1]));
 		ServerObject * sourceSo = dynamic_cast<ServerObject *>(ServerWorld::findObjectByNetworkId(sourceOid));
-		if (sourceSo == NULL)
+		if (sourceSo == nullptr)
 		{
 			result += Unicode::narrowToWide(FormattedString<512>().sprintf("%s is an invalid object\n", sourceOid.getValueString().c_str()));
 			return true;
 		}
 
 		TangibleObject * sourceTo = sourceSo->asTangibleObject();
-		if (sourceTo == NULL)
+		if (sourceTo == nullptr)
 		{
 			result += Unicode::narrowToWide(FormattedString<512>().sprintf("%s is not a tangible object\n", sourceOid.getValueString().c_str()));
 			return true;
@@ -3812,14 +3812,14 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 
 		NetworkId targetOid(Unicode::wideToNarrow(argv[2]));
 		ServerObject * targetSo = dynamic_cast<ServerObject *>(ServerWorld::findObjectByNetworkId(targetOid));
-		if (targetSo == NULL)
+		if (targetSo == nullptr)
 		{
 			result += Unicode::narrowToWide(FormattedString<512>().sprintf("%s is an invalid object\n", targetOid.getValueString().c_str()));
 			return true;
 		}
 
 		TangibleObject * targetTo = targetSo->asTangibleObject();
-		if (targetTo == NULL)
+		if (targetTo == nullptr)
 		{
 			result += Unicode::narrowToWide(FormattedString<512>().sprintf("%s is not a tangible object\n", targetOid.getValueString().c_str()));
 			return true;
@@ -3839,14 +3839,14 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 	{
 		NetworkId sourceOid(Unicode::wideToNarrow(argv[1]));
 		ServerObject * sourceSo = dynamic_cast<ServerObject *>(ServerWorld::findObjectByNetworkId(sourceOid));
-		if (sourceSo == NULL)
+		if (sourceSo == nullptr)
 		{
 			result += Unicode::narrowToWide(FormattedString<512>().sprintf("%s is an invalid object\n", sourceOid.getValueString().c_str()));
 			return true;
 		}
 
 		TangibleObject * sourceTo = sourceSo->asTangibleObject();
-		if (sourceTo == NULL)
+		if (sourceTo == nullptr)
 		{
 			result += Unicode::narrowToWide(FormattedString<512>().sprintf("%s is not a tangible object\n", sourceOid.getValueString().c_str()));
 			return true;
@@ -3866,14 +3866,14 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 	{
 		NetworkId sourceOid(Unicode::wideToNarrow(argv[1]));
 		ServerObject * sourceSo = dynamic_cast<ServerObject *>(ServerWorld::findObjectByNetworkId(sourceOid));
-		if (sourceSo == NULL)
+		if (sourceSo == nullptr)
 		{
 			result += Unicode::narrowToWide(FormattedString<512>().sprintf("%s is an invalid object\n", sourceOid.getValueString().c_str()));
 			return true;
 		}
 
 		TangibleObject * sourceTo = sourceSo->asTangibleObject();
-		if (sourceTo == NULL)
+		if (sourceTo == nullptr)
 		{
 			result += Unicode::narrowToWide(FormattedString<512>().sprintf("%s is not a tangible object\n", sourceOid.getValueString().c_str()));
 			return true;
@@ -3891,14 +3891,14 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 	{
 		NetworkId sourceOid(Unicode::wideToNarrow(argv[1]));
 		ServerObject const * sourceSo = dynamic_cast<ServerObject *>(ServerWorld::findObjectByNetworkId(sourceOid));
-		if (sourceSo == NULL)
+		if (sourceSo == nullptr)
 		{
 			result += Unicode::narrowToWide(FormattedString<512>().sprintf("%s is an invalid object\n", sourceOid.getValueString().c_str()));
 			return true;
 		}
 
 		CreatureObject const * sourceCo = sourceSo->asCreatureObject();
-		if (sourceCo == NULL)
+		if (sourceCo == nullptr)
 		{
 			result += Unicode::narrowToWide(FormattedString<512>().sprintf("%s is not a creature object\n", sourceOid.getValueString().c_str()));
 			return true;
@@ -3915,14 +3915,14 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 	{
 		NetworkId sourceOid(Unicode::wideToNarrow(argv[1]));
 		ServerObject * sourceSo = dynamic_cast<ServerObject *>(ServerWorld::findObjectByNetworkId(sourceOid));
-		if (sourceSo == NULL)
+		if (sourceSo == nullptr)
 		{
 			result += Unicode::narrowToWide(FormattedString<512>().sprintf("%s is an invalid object\n", sourceOid.getValueString().c_str()));
 			return true;
 		}
 
 		CreatureObject * sourceCo = sourceSo->asCreatureObject();
-		if (sourceCo == NULL)
+		if (sourceCo == nullptr)
 		{
 			result += Unicode::narrowToWide(FormattedString<512>().sprintf("%s is not a creature object\n", sourceOid.getValueString().c_str()));
 			return true;
@@ -3931,7 +3931,7 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 		result += Unicode::narrowToWide(FormattedString<512>().sprintf("dumping %s's command queue contents\n", sourceCo->getNetworkId().getValueString().c_str()));
 
 		CommandQueue * queue = sourceCo->getCommandQueue();
-		if (queue != NULL)
+		if (queue != nullptr)
 		{
 			std::string output;
 			queue->spew(&output);
@@ -3947,26 +3947,26 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		ServerObject * o = dynamic_cast<ServerObject *>(ServerWorld::findObjectByNetworkId(oid));
-		CreatureObject * c = (o ? o->asCreatureObject() : NULL);
-		if (o == NULL)
+		CreatureObject * c = (o ? o->asCreatureObject() : nullptr);
+		if (o == nullptr)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
 		}
-		else if (c == NULL)
+		else if (c == nullptr)
 		{
 			result += Unicode::narrowToWide("specified object is not a creature object\n");
 			return true;
 		}
 
 		PlayerObject * p = PlayerCreatureController::getPlayerObject(c);
-		if (p == NULL)
+		if (p == nullptr)
 		{
 			result += Unicode::narrowToWide("specified object is not a character object\n");
 			return true;
 		}
 
-		time_t const timeNow = ::time(NULL);
+		time_t const timeNow = ::time(nullptr);
 		time_t const timeStartInterval = ((p->getChatSpamTimeEndInterval() > 0) ? static_cast<time_t>(p->getChatSpamTimeEndInterval() - (ConfigServerGame::getChatSpamLimiterIntervalMinutes() * 60)) : 0);
 
 		if ((timeStartInterval <= 0) || (timeNow < timeStartInterval))
@@ -3986,28 +3986,28 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		ServerObject const * o = dynamic_cast<ServerObject *>(ServerWorld::findObjectByNetworkId(oid));
-		if (o == NULL)
+		if (o == nullptr)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
 		}
 
 		CreatureObject const * c = o->asCreatureObject();
-		if (c == NULL)
+		if (c == nullptr)
 		{
 			result += Unicode::narrowToWide("specified object is not a creature object\n");
 			return true;
 		}
 
 		PlayerObject const * p = PlayerCreatureController::getPlayerObject(c);
-		if (p == NULL)
+		if (p == nullptr)
 		{
 			result += Unicode::narrowToWide("specified object is not a character object\n");
 			return true;
 		}
 
 		Client * client = o->getClient();
-		if (client == NULL)
+		if (client == nullptr)
 		{
 			result += Unicode::narrowToWide(FormattedString<512>().sprintf("specified character object %s (%s) doesn't have a Client object (possible causes are may not be authoritative, or may not be connected)\n", o->getNetworkId().getValueString().c_str(), Unicode::wideToNarrow(o->getAssignedObjectName()).c_str()));
 			return true;
@@ -4042,28 +4042,28 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		ServerObject * o = dynamic_cast<ServerObject *>(ServerWorld::findObjectByNetworkId(oid));
-		if (o == NULL)
+		if (o == nullptr)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
 		}
 
 		CreatureObject const * c = o->asCreatureObject();
-		if (c == NULL)
+		if (c == nullptr)
 		{
 			result += Unicode::narrowToWide("specified object is not a creature object\n");
 			return true;
 		}
 
 		PlayerObject const * p = PlayerCreatureController::getPlayerObject(c);
-		if (p == NULL)
+		if (p == nullptr)
 		{
 			result += Unicode::narrowToWide("specified object is not a character object\n");
 			return true;
 		}
 
 		Client * client = o->getClient();
-		if (client == NULL)
+		if (client == nullptr)
 		{
 			result += Unicode::narrowToWide(FormattedString<512>().sprintf("specified character object %s (%s) doesn't have a Client object (possible causes are may not be authoritative, or may not be connected)\n", o->getNetworkId().getValueString().c_str(), Unicode::wideToNarrow(o->getAssignedObjectName()).c_str()));
 			return true;
@@ -4083,28 +4083,28 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 	{
 		NetworkId oid(Unicode::wideToNarrow(argv[1]));
 		ServerObject * o = dynamic_cast<ServerObject *>(ServerWorld::findObjectByNetworkId(oid));
-		if (o == NULL)
+		if (o == nullptr)
 		{
 			result += getErrorMessage(argv[0], ERR_INVALID_OBJECT);
 			return true;
 		}
 
 		CreatureObject const * c = o->asCreatureObject();
-		if (c == NULL)
+		if (c == nullptr)
 		{
 			result += Unicode::narrowToWide("specified object is not a creature object\n");
 			return true;
 		}
 
 		PlayerObject const * p = PlayerCreatureController::getPlayerObject(c);
-		if (p == NULL)
+		if (p == nullptr)
 		{
 			result += Unicode::narrowToWide("specified object is not a character object\n");
 			return true;
 		}
 
 		Client * client = o->getClient();
-		if (client == NULL)
+		if (client == nullptr)
 		{
 			result += Unicode::narrowToWide(FormattedString<512>().sprintf("specified character object %s (%s) doesn't have a Client object (possible causes are may not be authoritative, or may not be connected)\n", o->getNetworkId().getValueString().c_str(), Unicode::wideToNarrow(o->getAssignedObjectName()).c_str()));
 			return true;
@@ -4180,12 +4180,12 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 				}
 				else
 				{
-					result += Unicode::narrowToWide(FormattedString<1024>().sprintf("object (%s) getFootprint() returns NULL.\n", oid.getValueString().c_str()));
+					result += Unicode::narrowToWide(FormattedString<1024>().sprintf("object (%s) getFootprint() returns nullptr.\n", oid.getValueString().c_str()));
 				}
 			}
 			else
 			{
-				result += Unicode::narrowToWide(FormattedString<1024>().sprintf("object (%s) getCollisionProperty() returns NULL.\n", oid.getValueString().c_str()));
+				result += Unicode::narrowToWide(FormattedString<1024>().sprintf("object (%s) getCollisionProperty() returns nullptr.\n", oid.getValueString().c_str()));
 			}
 		}
 		else

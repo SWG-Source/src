@@ -10,6 +10,10 @@
 #include "serverUtility/ServerConnection.h"
 #include "sharedFoundation/StationId.h"
 
+#include <algorithm>
+#include <cctype>
+#include <string>
+
 class ClientCommandChannel;
 class NetworkId;
 
@@ -67,6 +71,20 @@ private:
 	std::vector<NetworkId>  m_charactersPendingDeletion;
 
 }; //lint !e1712 // default constructor not defined
+
+//-----------------------------------------------------------------------
+	
+// stolen from http://www.codeproject.com/Articles/10880/A-trim-implementation-for-std-string
+// i'm rusty and haven't gotten to lambdas yet
+inline const std::string trim(std::string str)
+{
+	
+	str.erase(str.begin(), std::find_if(str.begin(), str.end(),
+	  [](char& ch)->bool { return !isspace(ch); }));
+	str.erase(std::find_if(str.rbegin(), str.rend(),
+	  [](char& ch)->bool { return !isspace(ch); }).base(), str.end());
+	return str;
+} 
 
 //-----------------------------------------------------------------------
 

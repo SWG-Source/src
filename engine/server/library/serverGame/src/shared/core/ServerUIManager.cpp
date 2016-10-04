@@ -6,7 +6,6 @@
 #include "serverGame/FirstServerGame.h"
 #include "ServerUIManager.h"
 
-#include "boost/smart_ptr.hpp"
 #include "serverGame/Client.h"
 #include "serverGame/GameServer.h"
 #include "serverGame/ServerMessageForwarding.h"
@@ -27,8 +26,12 @@
 #include "sharedNetworkMessages/SuiCreatePageMessage.h"
 #include "sharedNetworkMessages/SuiEventNotification.h"
 #include "sharedNetworkMessages/SuiUpdatePageMessage.h"
+
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 #include <algorithm>
 #include <map>
+#include <memory>
 
 //----------------------------------------------------------------------
 
@@ -105,7 +108,7 @@ int ServerUIManager::createPage(const std::string& pageName, const ServerObject&
 		return pageId;
 
 	ServerUIPage * const serverUIPage = ServerUIManager::getPage(pageId);
-	if (serverUIPage != NULL)
+	if (serverUIPage != nullptr)
 	{
 		serverUIPage->setCallback(callbackFunction);
 		return pageId;
@@ -153,7 +156,7 @@ ServerUIPage* ServerUIManager::getPage(int pageId)
 {
 	std::map<int, ServerUIPage*>::const_iterator iterFind = m_pages.find(pageId);
 	if (iterFind == m_pages.end())
-		return NULL;
+		return nullptr;
 	else
 		return iterFind->second;
 }
@@ -163,7 +166,7 @@ ServerUIPage* ServerUIManager::getPage(int pageId)
 bool ServerUIManager::showPage(int pageId)
 {
 	ServerUIPage * const page = getPage(pageId);
-	if (page != NULL)
+	if (page != nullptr)
 		return showPage(*page);
 
 	WARNING(true, ("ServerUIManager::showPage(%d) invalid page", pageId));
@@ -175,14 +178,14 @@ bool ServerUIManager::showPage(int pageId)
 bool ServerUIManager::showPage(ServerUIPage &  page)
 {
 	Client * const client = page.getClient();
-	if (client == NULL)
+	if (client == nullptr)
 	{
-//		WARNING(true, ("ServerUIManager::showPage attempt to show page on null client"));
+//		WARNING(true, ("ServerUIManager::showPage attempt to show page on nullptr client"));
 		return false;
 	}
 
 	ServerObject const * const characterObject = client->getCharacterObject();
-	if (characterObject == NULL)
+	if (characterObject == nullptr)
 	{
 		WARNING(true, ("ServerUIManager::showPage attempt to show page to client with no character object"));
 		return false;
@@ -219,11 +222,11 @@ bool ServerUIManager::closePage(int pageId)
 {
 	//send close_page message
 	const ServerUIPage * const page = getPage(pageId);
-	if(page == NULL)
+	if(page == nullptr)
 		return false;
 
 	Client * const client = page->getClient();
-	if(client == NULL)
+	if(client == nullptr)
 		return false;
 
 	SuiForceClosePage msg;
@@ -239,7 +242,7 @@ bool ServerUIManager::removePage(int pageId)
 {
 	//send close_page message
 	const ServerUIPage * const page = getPage(pageId);
-	if(page == NULL)
+	if(page == nullptr)
 		return false;
 
 	NetworkId const & primaryControlledObject = page->getPrimaryControlledObject();
@@ -268,6 +271,7 @@ bool ServerUIManager::removePage(int pageId)
 void ServerUIManager::receiveMessage(const MessageDispatch::MessageBase& message)
 {
 	Archive::ReadIterator ri = NON_NULL(dynamic_cast<const GameNetworkMessage *>(&message))->getByteStream().begin();
+		
 	if (message.isType(SuiEventNotification::MessageType))
 	{
 		SuiEventNotification const suiEventNotification(ri);
@@ -275,11 +279,11 @@ void ServerUIManager::receiveMessage(const MessageDispatch::MessageBase& message
 		int const pageId = suiEventNotification.getPageId();
 
 		ServerUIPage const * const page = getPage(pageId);
-		if (page == NULL)
+		if (page == nullptr)
 			return;
 
 		Client * const client = page->getClient();
-		if (client == NULL)
+		if (client == nullptr)
 		{
 			removePage(pageId);
 			return;
@@ -287,9 +291,9 @@ void ServerUIManager::receiveMessage(const MessageDispatch::MessageBase& message
 
 		ServerObject * const characterObject = client->getCharacterObject();
 
-		if (characterObject == NULL)
+		if (characterObject == nullptr)
 		{
-			WARNING(true, ("ServerUIManager::recieveMessage got SuiEventNotification for null character object"));
+			WARNING(true, ("ServerUIManager::recieveMessage got SuiEventNotification for nullptr character object"));
 			removePage(pageId);
 			return;
 		}
@@ -300,15 +304,15 @@ void ServerUIManager::receiveMessage(const MessageDispatch::MessageBase& message
 
 		ServerObject * const ownerObject = ServerWorld::findObjectByNetworkId(suiPageDataServer.getOwnerId());
 
-		if (ownerObject == NULL)
+		if (ownerObject == nullptr)
 		{
-			WARNING(true, ("ServerUIManager::recieveMessage got SuiEventNotification for null owner object"));
+			WARNING(true, ("ServerUIManager::recieveMessage got SuiEventNotification for nullptr owner object"));
 			removePage(pageId);
 			return;
 		}
 
 		GameScriptObject * const gso = ownerObject->getScriptObject();
-		if (gso == NULL)
+		if (gso == nullptr)
 		{
 			WARNING(true, ("ServerUIManager::recieveMessage got SuiEventNotification for owner object with no scripts"));
 			removePage(pageId);
@@ -318,7 +322,7 @@ void ServerUIManager::receiveMessage(const MessageDispatch::MessageBase& message
 		int const eventIndex = suiEventNotification.getSubscribedEventIndex();
 		SuiCommand const * const command = suiPageData.findSubscribeToEventCommandByIndex(eventIndex);
 
-		if (command == NULL)
+		if (command == nullptr)
 		{
 			WARNING(true, ("ServerUIManager::recieveMessage got SuiEventNotification invalid notification index [%d]", eventIndex));
 			return;
@@ -385,7 +389,7 @@ void ServerUIManager::receiveMessage(const MessageDispatch::MessageBase& message
 		ScriptDictionaryPtr sd;
 		//it allocates sd, we have to clean it up later
 		gso->makeScriptDictionary(sp, sd);
-		if(sd.get() == NULL)
+		if(sd.get() == nullptr)
 			return;
 
 		//call the script callback function
@@ -397,7 +401,7 @@ void ServerUIManager::receiveMessage(const MessageDispatch::MessageBase& message
 		if ((eventType == SuiEventType::SET_onClosedOk) || (eventType == SuiEventType::SET_onClosedCancel))
 			IGNORE_RETURN(removePage(pageId));
 	}
-	else if(message.isType("PageChangeAuthority"))
+	else if(message.getType() == constcrc("PageChangeAuthority"))
 	{
 		//DEBUG_WARNING(true, ("ServerUIManager: received PageChangeAuthority message"));
 		const GenericValueTypeMessage<std::pair<NetworkId, SuiPageDataServer> > pageChangeAuthority(ri);

@@ -18,8 +18,7 @@
 #include "sharedObject/ObjectTemplateList.h"
 //@BEGIN TFD TEMPLATE REFS
 //@END TFD TEMPLATE REFS
-#include <algorithm>
-#include <cstdio>
+#include <stdio.h>
 
 const std::string DefaultString("");
 const StringId DefaultStringId("", 0);
@@ -53,7 +52,7 @@ ServerArmorTemplate::~ServerArmorTemplate()
 		for (iter = m_specialProtection.begin(); iter != m_specialProtection.end(); ++iter)
 		{
 			delete *iter;
-			*iter = NULL;
+			*iter = nullptr;
 		}
 		m_specialProtection.clear();
 	}
@@ -122,33 +121,33 @@ ServerArmorTemplate::ArmorRating testDataValue = static_cast<ServerArmorTemplate
 UNREF(testData);
 #endif
 
-	const ServerArmorTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const ServerArmorTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerArmorTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getRating(true);
 #endif
 	}
 
 	if (!m_rating.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter rating in template %s", DataResource::getName()));
 			return static_cast<ArmorRating>(0);
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter rating has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter rating has not been defined in template %s!", DataResource::getName()));
 			return base->getRating();
 		}
 	}
 
 	ArmorRating value = static_cast<ArmorRating>(m_rating.getValue());
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -164,26 +163,26 @@ int testDataValue = 0;
 UNREF(testData);
 #endif
 
-	const ServerArmorTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const ServerArmorTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerArmorTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getIntegrity(true);
 #endif
 	}
 
 	if (!m_integrity.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter integrity in template %s", DataResource::getName()));
 			return 0;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter integrity has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter integrity has not been defined in template %s!", DataResource::getName()));
 			return base->getIntegrity();
 		}
 	}
@@ -193,9 +192,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		int baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getIntegrity();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -212,7 +211,7 @@ UNREF(testData);
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -228,26 +227,26 @@ int testDataValue = 0;
 UNREF(testData);
 #endif
 
-	const ServerArmorTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const ServerArmorTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerArmorTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getIntegrityMin(true);
 #endif
 	}
 
 	if (!m_integrity.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter integrity in template %s", DataResource::getName()));
 			return 0;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter integrity has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter integrity has not been defined in template %s!", DataResource::getName()));
 			return base->getIntegrityMin();
 		}
 	}
@@ -257,9 +256,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		int baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getIntegrityMin();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -276,7 +275,7 @@ UNREF(testData);
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -292,26 +291,26 @@ int testDataValue = 0;
 UNREF(testData);
 #endif
 
-	const ServerArmorTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const ServerArmorTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerArmorTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getIntegrityMax(true);
 #endif
 	}
 
 	if (!m_integrity.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter integrity in template %s", DataResource::getName()));
 			return 0;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter integrity has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter integrity has not been defined in template %s!", DataResource::getName()));
 			return base->getIntegrityMax();
 		}
 	}
@@ -321,9 +320,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		int baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getIntegrityMax();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -340,7 +339,7 @@ UNREF(testData);
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -356,26 +355,26 @@ int testDataValue = 0;
 UNREF(testData);
 #endif
 
-	const ServerArmorTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const ServerArmorTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerArmorTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getEffectiveness(true);
 #endif
 	}
 
 	if (!m_effectiveness.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter effectiveness in template %s", DataResource::getName()));
 			return 0;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter effectiveness has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter effectiveness has not been defined in template %s!", DataResource::getName()));
 			return base->getEffectiveness();
 		}
 	}
@@ -385,9 +384,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		int baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getEffectiveness();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -404,7 +403,7 @@ UNREF(testData);
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -420,26 +419,26 @@ int testDataValue = 0;
 UNREF(testData);
 #endif
 
-	const ServerArmorTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const ServerArmorTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerArmorTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getEffectivenessMin(true);
 #endif
 	}
 
 	if (!m_effectiveness.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter effectiveness in template %s", DataResource::getName()));
 			return 0;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter effectiveness has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter effectiveness has not been defined in template %s!", DataResource::getName()));
 			return base->getEffectivenessMin();
 		}
 	}
@@ -449,9 +448,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		int baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getEffectivenessMin();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -468,7 +467,7 @@ UNREF(testData);
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -484,26 +483,26 @@ int testDataValue = 0;
 UNREF(testData);
 #endif
 
-	const ServerArmorTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const ServerArmorTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerArmorTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getEffectivenessMax(true);
 #endif
 	}
 
 	if (!m_effectiveness.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter effectiveness in template %s", DataResource::getName()));
 			return 0;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter effectiveness has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter effectiveness has not been defined in template %s!", DataResource::getName()));
 			return base->getEffectivenessMax();
 		}
 	}
@@ -513,9 +512,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		int baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getEffectivenessMax();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -532,7 +531,7 @@ UNREF(testData);
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -542,28 +541,28 @@ UNREF(testData);
 
 void ServerArmorTemplate::getSpecialProtection(SpecialProtection &data, int index) const
 {
-	const ServerArmorTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const ServerArmorTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerArmorTemplate *>(m_baseData);
 	}
 
 	if (!m_specialProtectionLoaded)
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter specialProtection in template %s", DataResource::getName()));
 			return ;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter specialProtection has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter specialProtection has not been defined in template %s!", DataResource::getName()));
 			base->getSpecialProtection(data, index);
 			return;
 		}
 	}
 
-	if (m_specialProtectionAppend && base != NULL)
+	if (m_specialProtectionAppend && base != nullptr)
 	{
 		int baseCount = base->getSpecialProtectionCount();
 		if (index < baseCount)
@@ -585,28 +584,28 @@ void ServerArmorTemplate::getSpecialProtection(SpecialProtection &data, int inde
 
 void ServerArmorTemplate::getSpecialProtectionMin(SpecialProtection &data, int index) const
 {
-	const ServerArmorTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const ServerArmorTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerArmorTemplate *>(m_baseData);
 	}
 
 	if (!m_specialProtectionLoaded)
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter specialProtection in template %s", DataResource::getName()));
 			return ;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter specialProtection has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter specialProtection has not been defined in template %s!", DataResource::getName()));
 			base->getSpecialProtectionMin(data, index);
 			return;
 		}
 	}
 
-	if (m_specialProtectionAppend && base != NULL)
+	if (m_specialProtectionAppend && base != nullptr)
 	{
 		int baseCount = base->getSpecialProtectionCount();
 		if (index < baseCount)
@@ -628,28 +627,28 @@ void ServerArmorTemplate::getSpecialProtectionMin(SpecialProtection &data, int i
 
 void ServerArmorTemplate::getSpecialProtectionMax(SpecialProtection &data, int index) const
 {
-	const ServerArmorTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const ServerArmorTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerArmorTemplate *>(m_baseData);
 	}
 
 	if (!m_specialProtectionLoaded)
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter specialProtection in template %s", DataResource::getName()));
 			return ;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter specialProtection has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter specialProtection has not been defined in template %s!", DataResource::getName()));
 			base->getSpecialProtectionMax(data, index);
 			return;
 		}
 	}
 
-	if (m_specialProtectionAppend && base != NULL)
+	if (m_specialProtectionAppend && base != nullptr)
 	{
 		int baseCount = base->getSpecialProtectionCount();
 		if (index < baseCount)
@@ -673,20 +672,20 @@ size_t ServerArmorTemplate::getSpecialProtectionCount(void) const
 {
 	if (!m_specialProtectionLoaded)
 	{
-		if (m_baseData == NULL)
+		if (m_baseData == nullptr)
 			return 0;
 		const ServerArmorTemplate * base = dynamic_cast<const ServerArmorTemplate *>(m_baseData);
-		DEBUG_FATAL(base == NULL, ("base template wrong type"));
+		DEBUG_FATAL(base == nullptr, ("base template wrong type"));
 		return base->getSpecialProtectionCount();
 	}
 
 	size_t count = m_specialProtection.size();
 
 	// if we are extending our base template, add it's count
-	if (m_specialProtectionAppend && m_baseData != NULL)
+	if (m_specialProtectionAppend && m_baseData != nullptr)
 	{
 		const ServerArmorTemplate * base = dynamic_cast<const ServerArmorTemplate *>(m_baseData);
-		if (base != NULL)
+		if (base != nullptr)
 			count += base->getSpecialProtectionCount();
 	}
 
@@ -701,26 +700,26 @@ int testDataValue = 0;
 UNREF(testData);
 #endif
 
-	const ServerArmorTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const ServerArmorTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerArmorTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getVulnerability(true);
 #endif
 	}
 
 	if (!m_vulnerability.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter vulnerability in template %s", DataResource::getName()));
 			return 0;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter vulnerability has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter vulnerability has not been defined in template %s!", DataResource::getName()));
 			return base->getVulnerability();
 		}
 	}
@@ -730,9 +729,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		int baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getVulnerability();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -749,7 +748,7 @@ UNREF(testData);
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -765,26 +764,26 @@ int testDataValue = 0;
 UNREF(testData);
 #endif
 
-	const ServerArmorTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const ServerArmorTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerArmorTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getVulnerabilityMin(true);
 #endif
 	}
 
 	if (!m_vulnerability.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter vulnerability in template %s", DataResource::getName()));
 			return 0;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter vulnerability has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter vulnerability has not been defined in template %s!", DataResource::getName()));
 			return base->getVulnerabilityMin();
 		}
 	}
@@ -794,9 +793,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		int baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getVulnerabilityMin();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -813,7 +812,7 @@ UNREF(testData);
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -829,26 +828,26 @@ int testDataValue = 0;
 UNREF(testData);
 #endif
 
-	const ServerArmorTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const ServerArmorTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerArmorTemplate *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getVulnerabilityMax(true);
 #endif
 	}
 
 	if (!m_vulnerability.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter vulnerability in template %s", DataResource::getName()));
 			return 0;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter vulnerability has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter vulnerability has not been defined in template %s!", DataResource::getName()));
 			return base->getVulnerabilityMax();
 		}
 	}
@@ -858,9 +857,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		int baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getVulnerabilityMax();
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -877,7 +876,7 @@ UNREF(testData);
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -887,8 +886,8 @@ UNREF(testData);
 
 int ServerArmorTemplate::getEncumbrance(int index) const
 {
-	const ServerArmorTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const ServerArmorTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerArmorTemplate *>(m_baseData);
 	}
@@ -896,14 +895,14 @@ int ServerArmorTemplate::getEncumbrance(int index) const
 	DEBUG_FATAL(index < 0 || index >= 3, ("template param index out of range"));
 	if (!m_encumbrance[index].isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter encumbrance in template %s", DataResource::getName()));
 			return 0;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter encumbrance has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter encumbrance has not been defined in template %s!", DataResource::getName()));
 			return base->getEncumbrance(index);
 		}
 	}
@@ -913,9 +912,9 @@ int ServerArmorTemplate::getEncumbrance(int index) const
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		int baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getEncumbrance(index);
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -936,8 +935,8 @@ int ServerArmorTemplate::getEncumbrance(int index) const
 
 int ServerArmorTemplate::getEncumbranceMin(int index) const
 {
-	const ServerArmorTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const ServerArmorTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerArmorTemplate *>(m_baseData);
 	}
@@ -945,14 +944,14 @@ int ServerArmorTemplate::getEncumbranceMin(int index) const
 	DEBUG_FATAL(index < 0 || index >= 3, ("template param index out of range"));
 	if (!m_encumbrance[index].isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter encumbrance in template %s", DataResource::getName()));
 			return 0;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter encumbrance has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter encumbrance has not been defined in template %s!", DataResource::getName()));
 			return base->getEncumbranceMin(index);
 		}
 	}
@@ -962,9 +961,9 @@ int ServerArmorTemplate::getEncumbranceMin(int index) const
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		int baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getEncumbranceMin(index);
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -985,8 +984,8 @@ int ServerArmorTemplate::getEncumbranceMin(int index) const
 
 int ServerArmorTemplate::getEncumbranceMax(int index) const
 {
-	const ServerArmorTemplate * base = NULL;
-	if (m_baseData != NULL)
+	const ServerArmorTemplate * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerArmorTemplate *>(m_baseData);
 	}
@@ -994,14 +993,14 @@ int ServerArmorTemplate::getEncumbranceMax(int index) const
 	DEBUG_FATAL(index < 0 || index >= 3, ("template param index out of range"));
 	if (!m_encumbrance[index].isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!m_versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter encumbrance in template %s", DataResource::getName()));
 			return 0;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter encumbrance has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter encumbrance has not been defined in template %s!", DataResource::getName()));
 			return base->getEncumbranceMax(index);
 		}
 	}
@@ -1011,9 +1010,9 @@ int ServerArmorTemplate::getEncumbranceMax(int index) const
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		int baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getEncumbranceMax(index);
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -1074,12 +1073,12 @@ char paramName[MAX_NAME_SIZE];
 		file.read_string(baseFilename);
 		file.exitChunk();
 		const ObjectTemplate *base = ObjectTemplateList::fetch(baseFilename);
-		DEBUG_WARNING(base == NULL, ("was unable to load base template %s", baseFilename.c_str()));
-		if (m_baseData == base && base != NULL)
+		DEBUG_WARNING(base == nullptr, ("was unable to load base template %s", baseFilename.c_str()));
+		if (m_baseData == base && base != nullptr)
 			base->releaseReference();
 		else
 		{
-			if (m_baseData != NULL)
+			if (m_baseData != nullptr)
 				m_baseData->releaseReference();
 			m_baseData = base;
 		}
@@ -1114,7 +1113,7 @@ char paramName[MAX_NAME_SIZE];
 			for (iter = m_specialProtection.begin(); iter != m_specialProtection.end(); ++iter)
 			{
 				delete *iter;
-				*iter = NULL;
+				*iter = nullptr;
 			}
 			m_specialProtection.clear();
 			m_specialProtectionAppend = file.read_bool8();
@@ -1205,33 +1204,33 @@ ServerArmorTemplate::DamageType testDataValue = static_cast<ServerArmorTemplate:
 UNREF(testData);
 #endif
 
-	const ServerArmorTemplate::_SpecialProtection * base = NULL;
-	if (m_baseData != NULL)
+	const ServerArmorTemplate::_SpecialProtection * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerArmorTemplate::_SpecialProtection *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getType(true);
 #endif
 	}
 
 	if (!m_type.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter type in template %s", DataResource::getName()));
 			return static_cast<DamageType>(0);
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter type has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter type has not been defined in template %s!", DataResource::getName()));
 			return base->getType(versionOk);
 		}
 	}
 
 	DamageType value = static_cast<DamageType>(m_type.getValue());
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -1247,26 +1246,26 @@ int testDataValue = 0;
 UNREF(testData);
 #endif
 
-	const ServerArmorTemplate::_SpecialProtection * base = NULL;
-	if (m_baseData != NULL)
+	const ServerArmorTemplate::_SpecialProtection * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerArmorTemplate::_SpecialProtection *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getEffectiveness(true);
 #endif
 	}
 
 	if (!m_effectiveness.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter effectiveness in template %s", DataResource::getName()));
 			return 0;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter effectiveness has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter effectiveness has not been defined in template %s!", DataResource::getName()));
 			return base->getEffectiveness(versionOk);
 		}
 	}
@@ -1276,9 +1275,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		int baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getEffectiveness(versionOk);
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -1295,7 +1294,7 @@ UNREF(testData);
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -1311,26 +1310,26 @@ int testDataValue = 0;
 UNREF(testData);
 #endif
 
-	const ServerArmorTemplate::_SpecialProtection * base = NULL;
-	if (m_baseData != NULL)
+	const ServerArmorTemplate::_SpecialProtection * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerArmorTemplate::_SpecialProtection *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getEffectivenessMin(true);
 #endif
 	}
 
 	if (!m_effectiveness.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter effectiveness in template %s", DataResource::getName()));
 			return 0;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter effectiveness has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter effectiveness has not been defined in template %s!", DataResource::getName()));
 			return base->getEffectivenessMin(versionOk);
 		}
 	}
@@ -1340,9 +1339,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		int baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getEffectivenessMin(versionOk);
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -1359,7 +1358,7 @@ UNREF(testData);
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif
@@ -1375,26 +1374,26 @@ int testDataValue = 0;
 UNREF(testData);
 #endif
 
-	const ServerArmorTemplate::_SpecialProtection * base = NULL;
-	if (m_baseData != NULL)
+	const ServerArmorTemplate::_SpecialProtection * base = nullptr;
+	if (m_baseData != nullptr)
 	{
 		base = dynamic_cast<const ServerArmorTemplate::_SpecialProtection *>(m_baseData);
 #ifdef _DEBUG
-		if (testData && base != NULL)
+		if (testData && base != nullptr)
 			testDataValue = base->getEffectivenessMax(true);
 #endif
 	}
 
 	if (!m_effectiveness.isLoaded())
 	{
-		if (ms_allowDefaultTemplateParams && /*!versionOk &&*/ base == NULL)
+		if (ms_allowDefaultTemplateParams && /*!versionOk &&*/ base == nullptr)
 		{
 			DEBUG_WARNING(true, ("Returning default value for missing parameter effectiveness in template %s", DataResource::getName()));
 			return 0;
 		}
 		else
 		{
-			DEBUG_FATAL(base == NULL, ("Template parameter effectiveness has not been defined in template %s!", DataResource::getName()));
+			DEBUG_FATAL(base == nullptr, ("Template parameter effectiveness has not been defined in template %s!", DataResource::getName()));
 			return base->getEffectivenessMax(versionOk);
 		}
 	}
@@ -1404,9 +1403,9 @@ UNREF(testData);
 	if (delta == '+' || delta == '-' || delta == '_' || delta == '=')
 	{
 		int baseValue = 0;
-		if (m_baseData != NULL)
+		if (m_baseData != nullptr)
 		{
-			if (base != NULL)
+			if (base != nullptr)
 				baseValue = base->getEffectivenessMax(versionOk);
 			else if (ms_allowDefaultTemplateParams)
 				DEBUG_WARNING(true, ("No base template for delta, using 0"));
@@ -1423,7 +1422,7 @@ UNREF(testData);
 			value = baseValue - static_cast<int>(baseValue * (value / 100.0f));
 	}
 #ifdef _DEBUG
-	if (testData && base != NULL)
+	if (testData && base != nullptr)
 	{
 	}
 #endif

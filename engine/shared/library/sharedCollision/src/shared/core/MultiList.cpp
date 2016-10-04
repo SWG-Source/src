@@ -14,8 +14,8 @@
 MultiListHandle::MultiListHandle( BaseClass * object, int color )
 : m_color(color),
   m_object(object),
-  m_head(NULL),
-  m_tail(NULL)
+  m_head(nullptr),
+  m_tail(nullptr)
 {
 }
 
@@ -23,9 +23,9 @@ MultiListHandle::~MultiListHandle()
 {
 	IGNORE_RETURN( detach() );
 
-    m_object = NULL;
-    m_head = NULL;
-    m_tail = NULL;
+    m_object = nullptr;
+    m_head = nullptr;
+    m_tail = nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -55,7 +55,7 @@ MultiListNode *	MultiListHandle::detachHead ( void )
     }
     else
     {
-        return NULL;
+        return nullptr;
     }
 }
 
@@ -72,7 +72,7 @@ MultiListHandle * MultiListHandle::detach ( void )
 
 bool MultiListHandle::isConnected ( void ) const
 {
-	return m_head != NULL;
+	return m_head != nullptr;
 }
 
 // ----------
@@ -97,7 +97,7 @@ void MultiListHandle::erase ( MultiListNode * node )
 
 bool MultiListHandle::isEmpty ( void ) const
 {
-	return m_head == NULL;
+	return m_head == nullptr;
 }
 
 // ----------
@@ -109,8 +109,8 @@ void MultiListHandle::insert( MultiListNode * node, MultiListNode * prev, MultiL
 	DEBUG_FATAL( next == node, ("MultiListHandle::insert - Next and node are the same "));
 	DEBUG_FATAL( (prev || next) && (prev == next), ("MultiListHandle::insert - Prev and Next are the same"));
 
-	// verify that the node to insert is not null
-	DEBUG_FATAL( node == NULL, ("MultiListHandle::insert - Cannot insert null node"));
+	// verify that the node to insert is not nullptr
+	DEBUG_FATAL( node == nullptr, ("MultiListHandle::insert - Cannot insert nullptr node"));
 
 	// verify that the nodes we're inserting between are adjacent
 	DEBUG_FATAL( prev && (prev->m_next[m_color] != next), ("MultiListHandle::insert - Prev and Next are not adjacent"));
@@ -155,7 +155,7 @@ void MultiListHandle::connectTo( MultiListHandle & handle, BaseClass * data )
 
 void MultiListHandle::insert( MultiListNode * node )
 {
-	insert( node, NULL, m_head );
+	insert( node, nullptr, m_head );
 }
 
 // ----------
@@ -175,9 +175,9 @@ MultiListNode * MultiListHandle::detach ( MultiListNode * node )
 
 	    // ----------
 
-	    node->m_next[m_color] = NULL;
-	    node->m_prev[m_color] = NULL;
-	    node->m_list[m_color] = NULL;
+	    node->m_next[m_color] = nullptr;
+	    node->m_prev[m_color] = nullptr;
+	    node->m_list[m_color] = nullptr;
     }
 
 	return node;
@@ -221,7 +221,7 @@ MultiListNode * MultiListHandle::find ( MultiListHandle & testHandle )
 		cursor = cursor->m_next[m_color];
 	}
 
-	return NULL;
+	return nullptr;
 } //lint !e1764 // testHandle could be made const ref
 
 MultiListNode const * MultiListHandle::find ( MultiListHandle const & testHandle ) const
@@ -240,7 +240,7 @@ MultiListNode const * MultiListHandle::find ( MultiListHandle const & testHandle
 		cursor = cursor->m_next[m_color];
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 // ----------
@@ -288,13 +288,13 @@ void MultiListHandle::destroyNodes ( void )
 // ======================================================================
 
 MultiListNode::MultiListNode()
-: m_data(NULL)
+: m_data(nullptr)
 {
 	for(int i = 0; i < nColors; i++)
 	{
-		m_next[i] = NULL;
-		m_prev[i] = NULL;
-		m_list[i] = NULL;
+		m_next[i] = nullptr;
+		m_prev[i] = nullptr;
+		m_list[i] = nullptr;
 	}
 }
 
@@ -303,7 +303,7 @@ MultiListNode::~MultiListNode()
 	IGNORE_RETURN( detach() );
 
 	BaseClass * data = m_data;
-	m_data = NULL;
+	m_data = nullptr;
 	delete data;
 }
 
@@ -346,7 +346,7 @@ BaseClass * MultiListNode::getObject ( int color )
 	if(m_list[color])
 		return m_list[color]->getObject();
 	else
-		return NULL;
+		return nullptr;
 } //lint !e1762 // function could be const
 
 
@@ -355,7 +355,7 @@ BaseClass const * MultiListNode::getObject ( int color ) const
 	if(m_list[color])
 		return m_list[color]->getObject();
 	else
-		return NULL;
+		return nullptr;
 }
 
 // ----------
@@ -375,7 +375,7 @@ void MultiListNode::setData( BaseClass * data )
 	if(m_data == data) return;
 
 	BaseClass * deadData = m_data;
-	m_data = NULL;
+	m_data = nullptr;
 	delete deadData;
 	m_data = data;
 }
@@ -403,7 +403,7 @@ void MultiListNode::swapNext ( int color )
 
 /*
 MultiList::MultiList()
-: m_free(0,NULL)
+: m_free(0,nullptr)
 {
 }
 
@@ -411,7 +411,7 @@ MultiList::MultiList()
 
 bool MultiList::connect ( MultiListHandle * red, MultiListHandle * blue )
 {
-	return connect(red,blue,NULL);
+	return connect(red,blue,nullptr);
 }
 
 // ----------
@@ -436,7 +436,7 @@ bool MultiList::connect ( MultiListHandle & red, MultiListHandle & blue, BaseCla
 
 bool MultiList::connected( MultiListHandle & red, MultiListHandle & blue )
 {
-	return red.find(blue) != NULL;
+	return red.find(blue) != nullptr;
 }
 
 // ----------
@@ -450,7 +450,7 @@ bool MultiList::disconnect( MultiListHandle & red, MultiListHandle & blue )
 
 MultiListNode * MultiList::getFreeNode ( void )
 {
-	if(m_free.m_head == NULL)
+	if(m_free.m_head == nullptr)
 	{
 		return new MultiListNode();
 	}
@@ -502,8 +502,8 @@ void MultiList::insert( MultiListHandle * node, MultiListHandle * prev, MultiLis
 	DEBUG_FATAL( next == node, ("MultiList::insert - Next and Node are the same"));
 	DEBUG_FATAL( prev == next, ("MultiList::insert - Prev and Next are the same"));
 
-	// verify that the node to insert is not null
-	DEBUG_FATAL( node == NULL, ("MultiList::insert - Cannot insert a null node"));
+	// verify that the node to insert is not nullptr
+	DEBUG_FATAL( node == nullptr, ("MultiList::insert - Cannot insert a nullptr node"));
 
 	// verify that the two nodes are adjacent
 	DEBUG_FATAL( prev && (prev->m_next != next), ("MultiList::insert - Prev and Next are not adjacent"));
@@ -539,7 +539,7 @@ void MultiList::insert( MultiListHandle * node, MultiListHandle * prev, MultiLis
 
 MultiListHandle * MultiList::detach( MultiListHandle * node )
 {
-	DEBUG_FATAL( node == NULL, ("MultiList::detach - Cannot detach null node"));
+	DEBUG_FATAL( node == nullptr, ("MultiList::detach - Cannot detach nullptr node"));
 	DEBUG_FATAL( node->m_list != this, ("MultiList::detach - Node is not part of this list"));
 
 	// ----------
@@ -555,9 +555,9 @@ MultiListHandle * MultiList::detach( MultiListHandle * node )
 	if(m_head[color] == node) m_head[color] = node->m_next;
 	if(m_tail[color] == node) m_tail[color] = node->m_prev;
 
-	node->m_prev = NULL;
-	node->m_next = NULL;
-	node->m_list = NULL;
+	node->m_prev = nullptr;
+	node->m_next = nullptr;
+	node->m_list = nullptr;
 
 	return node;
 }
@@ -566,13 +566,13 @@ MultiListHandle * MultiList::detach( MultiListHandle * node )
 
 void MultiList::insert( MultiListHandle * node )
 {
-	DEBUG_FATAL(node == NULL, ("MultiList::insert - Cannot insert NULL node"));
+	DEBUG_FATAL(node == nullptr, ("MultiList::insert - Cannot insert nullptr node"));
 
 	// ----------
 
 	int color = node->m_color;
 
-	insert(node,NULL,m_head[color]);
+	insert(node,nullptr,m_head[color]);
 }
 */
 

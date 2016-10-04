@@ -2,7 +2,6 @@
 // copyright 2000 Verant Interactive
 // Author: Justin Randall
 
-
 //-----------------------------------------------------------------------
 
 #include "FirstLoginServer.h"
@@ -69,6 +68,8 @@
 #include "sharedNetworkMessages/LoginEnumCluster.h"
 #include "sharedUtility/DataTableManager.h"
 
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 #include <algorithm>
 
 //-----------------------------------------------------------------------
@@ -123,27 +124,28 @@ bool ConnectionServerEntryLessThan::operator()(const LoginServer::ConnectionServ
 	return x.numClients < y.numClients;
 }
 
-
 //-----------------------------------------------------------------------
 
 LoginServer::LoginServer() :
-Singleton<LoginServer>(),
-MessageDispatch::Receiver(),
-done(false),
-m_centralService(NULL),
-clientService(0),
-pingService(0),
-keyServer(0),
-m_clientMap(),
-m_clusterList(),
-m_sessionApiClient(0),
-m_validatedClientMap(),
-m_clusterStatusChanged(false),
-m_soeMonitor(0)
+	Singleton<LoginServer>(),
+	MessageDispatch::Receiver(),
+	done(false),
+	m_centralService(nullptr),
+	clientService(0),
+	pingService(0),
+	keyServer(0),
+	m_clientMap(),
+	m_clusterList(),
+	m_sessionApiClient(0),
+	m_validatedClientMap(),
+	m_clusterStatusChanged(false),
+	m_soeMonitor(0)
 {
 	NetworkSetupData setup;
 	setup.port = ConfigLoginServer::getClientServicePort();
 	setup.maxConnections = ConfigLoginServer::getMaxClients();
+	setup.maxConnectionsPerIP = ConfigLoginServer::getMaxConnectionsPerIP();
+	setup.oldestUnacknowledgedTimeout = 30000;
 	setup.keepAliveDelay = 45000;
 	setup.compress = ConfigLoginServer::getCompressClientNetworkTraffic();
 	setup.useTcp = false;
@@ -158,12 +160,16 @@ m_soeMonitor(0)
 	if (ConfigLoginServer::getDevelopmentMode())
 	{
 		setup.port = ConfigLoginServer::getCentralServicePort();
-		setup.maxConnections = 1000;
+		//setup.maxConnections = 1000;
 		m_centralService = new Service(ConnectionAllocator<CentralServerConnection>(), setup);
 	}
-	
+
+	// only start the customer tool connection listener if the port is set (defaults to 0)
 	setup.port = ConfigLoginServer::getCSToolPort();
-	m_CSService = new Service(ConnectionAllocator<CSToolConnection>(), setup );
+	if (setup.port) 
+	{
+		m_CSService = new Service(ConnectionAllocator<CSToolConnection>(), setup);
+	}
 
 	// set up message connections
 	connectToMessage("ClaimRewardsMessage");
@@ -209,7 +215,7 @@ LoginServer::~LoginServer()
 
 //-----------------------------------------------------------------------
 
-int LoginServer::addClient (ClientConnection & client)
+int LoginServer::addClient(ClientConnection & client)
 {
 	DEBUG_FATAL(client.getIsValidated(), ("Tried to add an already validated client?!"));
 	//Perhaps add a debug only check to make sure a client connection isn't in twice...I'm not sure how that could happen.
@@ -221,18 +227,17 @@ int LoginServer::addClient (ClientConnection & client)
 
 //-----------------------------------------------------------------------
 
-ClientConnection* LoginServer::getValidatedClient  (const StationId& clientId)
+ClientConnection* LoginServer::getValidatedClient(const StationId& clientId)
 {
 	std::map<StationId, ClientConnection*>::iterator i = m_validatedClientMap.find(clientId);
 	if (i == m_validatedClientMap.end())
 		return 0;
 	return i->second;
-
 }
 
 //-----------------------------------------------------------------------
 
-ClientConnection* LoginServer::getUnvalidatedClient (int clientId)
+ClientConnection* LoginServer::getUnvalidatedClient(int clientId)
 {
 	WARNING_STRICT_FATAL(clientId == 0, ("Tried to get an unvalidated client with client id == 0"));
 	std::map<int, ClientConnection*>::iterator i = m_clientMap.find(clientId);
@@ -243,18 +248,24 @@ ClientConnection* LoginServer::getUnvalidatedClient (int clientId)
 }
 //-----------------------------------------------------------------------
 
-void LoginServer::removeClient (int clientId)
+void LoginServer::removeClient(int clientId)
 {
-	WARNING_STRICT_FATAL(clientId == 0, ("Tried to remove a client with client id == 0"));
-	std::map<int, ClientConnection*>::iterator i = m_clientMap.find(clientId);
-	if (i != m_clientMap.end())
-	{
-		if (i->second->getIsValidated())
-		{
-			IGNORE_RETURN(m_validatedClientMap.erase(i->second->getStationId()));
-		}
-		IGNORE_RETURN(m_clientMap.erase(clientId));
-	}
+    if (clientId) // yeah why bother if it's 0 or null? i realize 0 is a valid int but since previously the warning below fired if it was 0....yeah, no
+    {
+        std::map<int, ClientConnection*>::iterator i = m_clientMap.find(clientId);
+        if (i != m_clientMap.end())
+        {
+            if (i->second->getIsValidated())
+            {
+                IGNORE_RETURN(m_validatedClientMap.erase(i->second->getStationId()));
+            }
+            IGNORE_RETURN(m_clientMap.erase(clientId));
+        }
+    }
+    else
+    {
+        WARNING_STRICT_FATAL(true, ("Tried to remove a client with client id == 0"));
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -268,7 +279,7 @@ void LoginServer::installSessionValidation()
 	for (i = 0; i < numberOfSessionServers; ++i)
 	{
 		char const * const p = ConfigLoginServer::getSessionServer(i);
-		if(p)
+		if (p)
 		{
 			REPORT_LOG(true, ("Using session server %s\n", p));
 			sessionServers.push_back(p);
@@ -291,7 +302,7 @@ bool LoginServer::deleteCharacter(uint32 clusterId, NetworkId const & characterI
 		if (cle->m_centralServerConnection)
 		{
 			ServerDeleteCharacterMessage smsg(suid, characterId, 0);
-			cle->m_centralServerConnection->send(smsg,true);
+			cle->m_centralServerConnection->send(smsg, true);
 
 			ClientConnection* target = getValidatedClient(suid);
 			if (target)
@@ -304,17 +315,16 @@ bool LoginServer::deleteCharacter(uint32 clusterId, NetworkId const & characterI
 		}
 		else
 		{
-			DEBUG_REPORT_LOG(true,("User %lu requested deleting character %s on cluster %lu, but the cluster is not currently connected.\n",suid , characterId.getValueString().c_str(), clusterId));
+			DEBUG_REPORT_LOG(true, ("User %lu requested deleting character %s on cluster %lu, but the cluster is not currently connected.\n", suid, characterId.getValueString().c_str(), clusterId));
 			return false;
 		}
 	}
 	else
 	{
-		DEBUG_REPORT_LOG(true,("User %lu requested deleting character %s on cluster %lu, but we have no cluster with that number.\n", suid, characterId.getValueString().c_str(), clusterId));
+		DEBUG_REPORT_LOG(true, ("User %lu requested deleting character %s on cluster %lu, but we have no cluster with that number.\n", suid, characterId.getValueString().c_str(), clusterId));
 		return false;
 	}
 }
-
 
 //-----------------------------------------------------------------------
 
@@ -330,7 +340,6 @@ SessionApiClient * LoginServer::getSessionApiClient()
 	return m_sessionApiClient;
 }
 
-
 //-----------------------------------------------------------------------
 
 KeyShare::Token LoginServer::makeToken(const unsigned char * const data, const uint32 dataLen) const
@@ -342,7 +351,7 @@ KeyShare::Token LoginServer::makeToken(const unsigned char * const data, const u
 
 void LoginServer::pushAllKeys(CentralServerConnection * targetGameServer) const
 {
-	for(int i = static_cast<int>(keyServer->getKeyCount()) - 1; i >=0 ; i --)
+	for (int i = static_cast<int>(keyServer->getKeyCount()) - 1; i >= 0; i--)
 	{
 		LoginKeyPush	pk(keyServer->getKey(static_cast<unsigned int>(i)));
 		targetGameServer->send(pk, true);
@@ -353,24 +362,24 @@ void LoginServer::pushAllKeys(CentralServerConnection * targetGameServer) const
 
 void LoginServer::pushKeyToAllServers(void)
 {
-    KeyShare::Key k = keyServer->getKey(0);
-    CentralServerConnection *	c;
+	KeyShare::Key k = keyServer->getKey(0);
+	CentralServerConnection *	c;
 
-    LoginKeyPush	msg(k);
+	LoginKeyPush	msg(k);
 
-    unsigned char s[128];
-    memcpy(s, k.value, 16); //lint !e64 !e119 !e534 // not sure where lint is finding a memcpy(void *, int) prototype
-    DEBUG_REPORT_LOG(true, ("Key Exchange ->: "));
-    for(int x = 0; x < 16; x++)
-    {
-        DEBUG_REPORT_LOG(true, ("[%3i]", s[x]));
-    }
-    DEBUG_REPORT_LOG(true, ("\n"));
+	unsigned char s[128];
+	memcpy(s, k.value, 16); //lint !e64 !e119 !e534 // not sure where lint is finding a memcpy(void *, int) prototype
+	DEBUG_REPORT_LOG(true, ("Key Exchange ->: "));
+	for (int x = 0; x < 16; x++)
+	{
+		DEBUG_REPORT_LOG(true, ("[%3i]", s[x]));
+	}
+	DEBUG_REPORT_LOG(true, ("\n"));
 
-	for (ClusterListType::const_iterator i=m_clusterList.begin(); i!=m_clusterList.end(); ++i)
+	for (ClusterListType::const_iterator i = m_clusterList.begin(); i != m_clusterList.end(); ++i)
 	{
 		c = (*i)->m_centralServerConnection;
-		if(c)
+		if (c)
 		{
 			c->send(msg, true);
 		}
@@ -382,612 +391,655 @@ void LoginServer::pushKeyToAllServers(void)
 void LoginServer::receiveMessage(const MessageDispatch::Emitter & source, const MessageDispatch::MessageBase & message)
 {
 	// determine message type
-	
-  if(message.isType("LoginClusterName") || message.isType( "LoginClusterName2" ) )
-  {
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-    const LoginClusterName msg(ri);
-    if(msg.getClusterName().length() > 0)
-    {
-			CentralServerConnection * connection = const_cast<CentralServerConnection*>(safe_cast<const CentralServerConnection *>(&source));
-			DEBUG_REPORT_LOG(true, ("Cluster connection %s opened\n", msg.getClusterName().c_str()));
-			ClusterListEntry *cle=NULL;
-			if (ConfigLoginServer::getDevelopmentMode())
+	const uint32 messageType = message.getType();
+
+	switch(messageType) {
+		case constcrc("LoginClusterName") :
+		case constcrc("LoginClusterName2") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			const LoginClusterName msg(ri);
+			if (msg.getClusterName().length() > 0)
 			{
-				// in this mode, we trust the name sent by the cluster and we dynamically add clusters we don't know about
-				cle = findClusterByName(msg.getClusterName());
-				if (!cle)
-					cle = addCluster(msg.getClusterName());
-			}
-			else
-			{
-				// in this mode, the cluster name has to match what we were expecting
-				cle = findClusterByConnection(connection);
-				if (!cle)
-					DEBUG_FATAL(true,("PROGRAMMER BUG:  Got a connection from %s:%hu, which we weren't expecting.  Cluster name is \"%s\".\n",connection->getRemoteAddress().c_str(), connection->getRemotePort(), msg.getClusterName().c_str()));
-				else
-					if (msg.getClusterName() != cle->m_clusterName)
+				CentralServerConnection * connection = const_cast<CentralServerConnection*>(safe_cast<const CentralServerConnection *>(&source));
+				DEBUG_REPORT_LOG(true, ("Cluster connection %s opened\n", msg.getClusterName().c_str()));
+				ClusterListEntry *cle = nullptr;
+				if (ConfigLoginServer::getDevelopmentMode()) {
+					// in this mode, we trust the name sent by the cluster
+					cle = findClusterByName(msg.getClusterName());
+#ifdef _DEBUG
+					// if in debug mode, we dynamically add clusters we don't know about
+					// DO NOT USE ON PRODUCTION! This is where other servers are getting hijacked.
+					if (!cle)
 					{
-						WARNING(true,("Server %i is named \"%s\" in the database.  The server at the specified address (%s:%hu) reports its name as \"%s\".  It will not be allowed in the service.  Either the name in the database or the name in Central's config file should be corrected.\n",cle->m_clusterId, cle->m_clusterName.c_str(), connection->getRemoteAddress().c_str(), connection->getRemotePort(), msg.getClusterName().c_str()));
-						disconnectCluster(*cle,true,false);
-						cle=NULL;
+						cle = addCluster(msg.getClusterName());
 					}
-			}
-
-			if (cle)
-			{
-				cle->m_timeZone = msg.getTimeZone();
-				cle->m_centralServerConnection = connection;
-				cle->m_connected = true;
-				pushAllKeys(connection);
-
-				if (cle->m_clusterId == 0)
-				{
-					DEBUG_FATAL(!ConfigLoginServer::getDevelopmentMode(),("Programmer bug:  cle->m_clusterId was 0 in non-development mode.  The code before this line should have prevented this.\n"));
-					DEBUG_REPORT_LOG(true,("Cluster was not on the list.  Adding it to the database.\n"));
-					DatabaseConnection::getInstance().registerNewCluster(msg.getClusterName(), connection->getRemoteAddress());
-				}
-				else
-					cle->m_centralServerConnection->setClusterId(cle->m_clusterId);
-
-				m_clusterStatusChanged = true;
-
-				// tell the cluster its cluster id
-				if (cle->m_clusterId > 0)
-				{
-					GenericValueTypeMessage<uint32> const msgClusterId("ClusterId", cle->m_clusterId);
-					cle->m_centralServerConnection->send(msgClusterId, true);
-				}
-
-				// tell the cluster about its locked and secret state
-				GenericValueTypeMessage<std::pair<bool, bool> > const msgState("UpdateClusterLockedAndSecretState", std::make_pair(cle->m_locked, cle->m_secret));
-				cle->m_centralServerConnection->send(msgState,true);
-			}
-		}
-  }
-	else if (message.isType("LoginConnectionServerAddress"))
-	{
-		const CentralServerConnection * cs = safe_cast<const CentralServerConnection *>(&source);
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-
-    LoginConnectionServerAddress m(ri); //lint !e1774 !e826onServerEntry entry;
-		ConnectionServerEntry entry;
-		entry.clientServiceAddress      = Address(Address(m.getClientServiceAddress(), 0).getSockAddr4()).getHostAddress();
-		entry.clientServicePortPrivate  = m.getClientServicePortPrivate();
-		entry.clientServicePortPublic   = m.getClientServicePortPublic();
-		entry.id                        = m.getId();
-		entry.numClients                = m.getNumClients();
-		entry.pingPort                  = m.getPingPort ();
-
-		DEBUG_REPORT_LOG(true, ("ConnectionServer Reconnect - address from connection server (%s), address after conversion (%s)\n", m.getClientServiceAddress().c_str(), entry.clientServiceAddress.c_str()));
-
-		ClusterListEntry *cle = findClusterByConnection(cs);
-		if (cle)
-		{
-			WARNING_STRICT_FATAL(!cle->m_centralServerConnection, ("Got reconnect for connection server with no central!  Cluster %s\n",cs->getClusterName().c_str()));
-			std::vector<ConnectionServerEntry>::iterator i = std::find(cle->m_connectionServers.begin(), cle->m_connectionServers.end(), entry);
-			if (i == cle->m_connectionServers.end())
-			{
-				cle->m_connectionServers.push_back(entry);
-				m_clusterStatusChanged = true;
-			}
-			else
-			{
-				*i = entry;
-			}
-
-			std::sort(cle->m_connectionServers.begin(), cle->m_connectionServers.end(), ConnectionServerEntryLessThan());
-		}
-		else
-			WARNING_STRICT_FATAL(true,("Programmer bug:  Got LoginConnectionServerAddress from a cluster that wasn't on the list.  Probably indicates we aren't tracking connections properly.\n"));
-	}
-	else if (message.isType("PreloadFinishedMessage"))
-	{
-		const CentralServerConnection * cs = safe_cast<const CentralServerConnection *>(&source);
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		PreloadFinishedMessage msg(ri);
-
-		ClusterListEntry *cle = findClusterByConnection(cs);
-		if (cle)
-		{
-			if (msg.getFinished())
-			{
-				DEBUG_REPORT_LOG(true, ("Cluster %s is ready for players.\n",cle->m_clusterName.c_str()));
-				if (!cle->m_readyForPlayers)
-				{
-					cle->m_readyForPlayers = true;
-					m_clusterStatusChanged = true;
-				}
-			}
-			else
-			{
-				DEBUG_REPORT_LOG(true, ("Cluster %s is not ready for players.\n",cle->m_clusterName.c_str()));
-				if (cle->m_readyForPlayers)
-				{
-					cle->m_readyForPlayers = false;
-					m_clusterStatusChanged = true;
-					PurgeManager::onClusterNoLongerReady(cle->m_clusterId);
-				}
-			}
-		}
-		else
-			WARNING_STRICT_FATAL(true,("Programmer bug:  Got PreloadFinishedMessage from a cluster that wasn't on the list.  Probably indicates we aren't tracking connections properly.\n"));
-	}
-	else if(message.isType("ConnectionServerDown"))
-	{
-
-		const CentralServerConnection * centralConnection = safe_cast<const CentralServerConnection*>(&source);
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		ConnectionServerDown c(ri); //lint !e1774 !e826
-		ClusterListEntry *cle = findClusterByConnection(centralConnection);
-		if (cle)
-		{
-			DEBUG_REPORT_LOG(true, ("Lost a connection server %d for %s.\n", c.getId(), cle->m_clusterName.c_str()));
-
-			std::vector<ConnectionServerEntry>::iterator iter = cle->m_connectionServers.begin();
-			bool found = false;
-			for (; iter != cle->m_connectionServers.end(); ++iter)
-			{
-				if (iter->id == c.getId())
-				{
-					IGNORE_RETURN(cle->m_connectionServers.erase(iter));
-					std::sort(cle->m_connectionServers.begin(), cle->m_connectionServers.end(), ConnectionServerEntryLessThan());
-					found = true;
-					break;
-				}
-			}
-			DEBUG_REPORT_LOG(!found, ("Tried to remove a connection server that wasn't in our list.\n"));
-			m_clusterStatusChanged = true;
-		}
-		else
-			WARNING_STRICT_FATAL(true,("Programmer bug:  Got ConnectionServerDown from a cluster that wasn't on the list.  Probably indicates we aren't tracking connections properly.\n"));
-	}
-	else if(message.isType("ConnectionClosed"))
-	{
-		const CentralServerConnection *c = dynamic_cast<const CentralServerConnection *>(&source);
-		if (c)
-		{
-			ClusterListEntry *cle = findClusterByConnection(c);
-			if (cle)
-			{
-				DEBUG_REPORT_LOG(true, ("Cluster connection %s closed.\n", c->getClusterName().c_str()));
-				disconnectCluster(*cle,false,true);
-			}
-			else
-				WARNING_STRICT_FATAL(true,("Programmer bug: Cluster disconnected but it wasn't on the list.  Probably indicates we aren't tracking connections properly.\n"));
-		}
-	}
-	else if (message.isType("ValidateAccountMessage"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-        ValidateAccountMessage msg(ri);
-
-		const CentralServerConnection *conn = dynamic_cast<const CentralServerConnection*>(&source);
-		if (conn)
-			DatabaseConnection::getInstance().getAccountValidationData(msg.getStationId(), conn->getClusterId(),  msg.getTrack(), msg.getSubscriptionBits());
-		else
-			WARNING_STRICT_FATAL(true,("Expect ValidateAccountMessage's to only come from CentralServers.\n"));
-	}
-	else if (message.isType("CntrlSrvDropDupeConns"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		GenericValueTypeMessage<std::pair<uint32, std::string> > const msg(ri);
-
-		sendToAllClusters(msg, dynamic_cast<Connection const *>(&source));
-	}
-	else if (message.isType("AdjustAccountFeatureIdRequest"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		AdjustAccountFeatureIdRequest const msg(ri);
-
-		if (m_sessionApiClient)
-		{
-			// on a session authenticated cluster, this request should have been serviced by the ConnectionServer
-		}
-		else
-		{
-			// for testing purpose when not using session authentication, store
-			// the account feature Ids locally in memory, which will get cleared
-			// (obviously) when the LoginServer is restarted
-			std::map<uint32, std::map<uint32, int> > * nonSessionTestingAccountFeatureIds = NULL;
-			if (msg.getGameCode() == PlatformGameCode::SWG)
-				nonSessionTestingAccountFeatureIds = &s_nonSessionTestingAccountSwgFeatureIds;
-			else if (msg.getGameCode() == PlatformGameCode::SWGTCG)
-				nonSessionTestingAccountFeatureIds = &s_nonSessionTestingAccountSwgTcgFeatureIds;
-
-			int currentFeatureIdCount = 0;
-			int updatedFeatureIdCount = 0;
-			if (nonSessionTestingAccountFeatureIds)
-			{
-				std::map<uint32, int> & accountFeatureIds = (*nonSessionTestingAccountFeatureIds)[msg.getTargetStationId()];
-				std::map<uint32, int>::const_iterator accountFeatureId = accountFeatureIds.find(msg.getFeatureId());
-				if (accountFeatureId != accountFeatureIds.end())
-					currentFeatureIdCount = accountFeatureId->second;
-
-				updatedFeatureIdCount = std::max(0, currentFeatureIdCount + msg.getAdjustment());
-				if (updatedFeatureIdCount > 0)
-				{
-					accountFeatureIds[msg.getFeatureId()] = updatedFeatureIdCount;
+#endif
 				}
 				else
 				{
-					IGNORE_RETURN(accountFeatureIds.erase(msg.getFeatureId()));
-					if (accountFeatureIds.empty())
-						IGNORE_RETURN(nonSessionTestingAccountFeatureIds->erase(msg.getTargetStationId()));
-				}
-			}
+					// in this mode, the cluster name has to match what we were expecting
+					cle = findClusterByConnection(connection);
+					if (!cle)
+						DEBUG_FATAL(true, ("PROGRAMMER BUG:  Got a connection from %s:%hu, which we weren't expecting.  Cluster name is \"%s\".\n", connection->getRemoteAddress().c_str(), connection->getRemotePort(), msg.getClusterName().c_str()));
+					else
+						if (msg.getClusterName() != cle->m_clusterName)
+						{
+							WARNING(true, ("Server %i is named \"%s\" in the database.  The server at the specified address (%s:%hu) reports its name as \"%s\".  It will not be allowed in the service.  Either the name in the database or the name in Central's config file should be corrected.\n", cle->m_clusterId, cle->m_clusterName.c_str(), connection->getRemoteAddress().c_str(), connection->getRemotePort(), msg.getClusterName().c_str()));
+							disconnectCluster(*cle, true, false);
+							cle = nullptr;
+						}
+				}		
 
-			// CS log SWG TCG account feature grant or SWG account feature grant for reward item trade in
-			if (nonSessionTestingAccountFeatureIds && !msg.getTargetPlayerDescription().empty() && msg.getTargetItem().isValid() && !msg.getTargetItemDescription().empty())
-			{
-				if (msg.getGameCode() == PlatformGameCode::SWGTCG)
-					LOG("CustomerService",("TcgRedemption: %s redeemed %s for SWGTCG account feature Id %lu (%d -> %d)", msg.getTargetPlayerDescription().c_str(), msg.getTargetItemDescription().c_str(), msg.getFeatureId(), currentFeatureIdCount, updatedFeatureIdCount));
-				else if (msg.getGameCode() == PlatformGameCode::SWG)
-					LOG("CustomerService",("VeteranRewards: %s traded in %s for SWG account feature Id %lu (%d -> %d)", msg.getTargetPlayerDescription().c_str(), msg.getTargetItemDescription().c_str(), msg.getFeatureId(), currentFeatureIdCount, updatedFeatureIdCount));
-			}
-
-			const CentralServerConnection * conn = dynamic_cast<const CentralServerConnection*>(&source);
-			if (conn)
-			{
-				AdjustAccountFeatureIdResponse const rsp(msg.getRequestingPlayer(), msg.getGameServer(), msg.getTargetPlayer(), msg.getTargetPlayerDescription(), msg.getTargetStationId(), msg.getTargetItem(), msg.getTargetItemDescription(), msg.getGameCode(), msg.getFeatureId(), currentFeatureIdCount, updatedFeatureIdCount, (nonSessionTestingAccountFeatureIds ? RESULT_SUCCESS : RESULT_CANCELLED), false);
-				sendToCluster(conn->getClusterId(), rsp);
-			}
-		}
-	}
-	else if (message.isType("AccountFeatureIdRequest"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		AccountFeatureIdRequest const msg(ri);
-
-		if (m_sessionApiClient)
-		{
-			// on a session authenticated cluster, this request should have been serviced by the ConnectionServer
-		}
-		else
-		{
-			// for testing purpose when not using session authentication, store
-			// the account feature Ids locally in memory, which will get cleared
-			// (obviously) when the LoginServer is restarted
-			std::map<uint32, std::map<uint32, int> > * nonSessionTestingAccountFeatureIds = NULL;
-			if (msg.getGameCode() == PlatformGameCode::SWG)
-				nonSessionTestingAccountFeatureIds = &s_nonSessionTestingAccountSwgFeatureIds;
-			else if (msg.getGameCode() == PlatformGameCode::SWGTCG)
-				nonSessionTestingAccountFeatureIds = &s_nonSessionTestingAccountSwgTcgFeatureIds;
-
-			static std::map<uint32, int> const empty;
-			std::map<uint32, int> const * accountFeatureIds = &empty;
-
-			if (nonSessionTestingAccountFeatureIds)
-			{
-				std::map<uint32, std::map<uint32, int> >::const_iterator iterFind = nonSessionTestingAccountFeatureIds->find(msg.getTargetStationId());
-				if (iterFind != nonSessionTestingAccountFeatureIds->end())
-					accountFeatureIds = &(iterFind->second);
-			}
-
-			const CentralServerConnection * conn = dynamic_cast<const CentralServerConnection*>(&source);
-			if (conn)
-			{
-				static std::map<uint32, std::string> const empty;
-				AccountFeatureIdResponse const rsp(msg.getRequester(), msg.getGameServer(), msg.getTarget(), msg.getTargetStationId(), msg.getGameCode(), msg.getRequestReason(), RESULT_SUCCESS, false, *accountFeatureIds, empty);
-				sendToCluster(conn->getClusterId(), rsp);
-			}
-		}
-	}
-	else if (message.isType("FeatureIdTransactionRequest"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		FeatureIdTransactionRequest const fitr(ri);
-
-		const CentralServerConnection *conn = dynamic_cast<const CentralServerConnection *>(&source);
-		if (conn)
-			DatabaseConnection::getInstance().featureIdTransactionRequest(conn->getClusterId(), fitr.getStationId(), fitr.getPlayer(), fitr.getGameServer());
-	}
-	else if (message.isType("FeatureIdTransactionSyncUpdate"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		FeatureIdTransactionSyncUpdate const fitsu(ri);
-
-		const CentralServerConnection *conn = dynamic_cast<const CentralServerConnection *>(&source);
-		if (conn)
-			DatabaseConnection::getInstance().featureIdTransactionSyncUpdate(conn->getClusterId(), fitsu.getStationId(), fitsu.getPlayer(), fitsu.getItemId(), fitsu.getAdjustment());
-	}
-	else if (message.isType("TransferRequestMoveValidation"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		const TransferRequestMoveValidation request(ri);
-
-		TransferReplyMoveValidation::TransferReplyMoveValidationResult result = TransferReplyMoveValidation::TRMVR_can_create_regular_character;
-
-		ClusterListEntry * cle = findClusterByName(request.getDestinationGalaxy());
-		if (!cle)
-		{
-			result = TransferReplyMoveValidation::TRMVR_destination_galaxy_invalid;
-		}
-		else if (!cle->m_centralServerConnection)
-		{
-			result = TransferReplyMoveValidation::TRMVR_destination_galaxy_not_connected;
-		}
-		else if (!cle->m_readyForPlayers)
-		{
-			result = TransferReplyMoveValidation::TRMVR_destination_galaxy_in_loading;
-		}
-
-		if (result == TransferReplyMoveValidation::TRMVR_can_create_regular_character)
-		{
-			// check with DB to see if account is allowed to create character on the destination galaxy
-			LOG("CustomerService", ("CharacterTransfer: Received TransferRequestMoveValidation : %s (character template id %lu) on %s to %s on %s. Forwarding request to Login Database.", request.getSourceCharacter().c_str(), request.getSourceCharacterTemplateId(), request.getSourceGalaxy().c_str(), request.getDestinationCharacter().c_str(), request.getDestinationGalaxy().c_str()));
-			DatabaseConnection::getInstance().getAccountValidationData(request, cle->m_centralServerConnection->getClusterId());
-		}
-		else
-		{
-			// send failure back to originating server
-			TransferReplyMoveValidation reply(request.getTransferRequestSource(), request.getTrack(), request.getSourceStationId(), request.getDestinationStationId(), request.getSourceGalaxy(), request.getDestinationGalaxy(), request.getSourceCharacter(), request.getSourceCharacterId(), request.getSourceCharacterTemplateId(), request.getDestinationCharacter(), request.getCustomerLocalizedLanguage(), result);
-			const CentralServerConnection * conn = dynamic_cast<const CentralServerConnection*>(&source);
-			if(conn)
-			{
-				ClusterListEntry * sourceEntry = findClusterById(conn->getClusterId());
-				if(sourceEntry && sourceEntry->m_centralServerConnection)
+				if (cle)
 				{
-					sourceEntry->m_centralServerConnection->send(reply, true);
-				}
-			}
-		}
-	}
-	else if (message.isType("TransferReplyNameValidation"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		GenericValueTypeMessage<std::pair<std::string, TransferCharacterData> > const replyNameValidation(ri);
+					cle->m_timeZone = msg.getTimeZone();
+					cle->m_centralServerConnection = connection;
+					cle->m_connected = true;
+					pushAllKeys(connection);
 
-		const CentralServerConnection * conn = dynamic_cast<const CentralServerConnection*>(&source);
-		if (conn)
-		{
-			ClusterListEntry * cle = findClusterByName(replyNameValidation.getValue().second.getSourceGalaxy());
-			if (cle && cle->m_centralServerConnection)
-			{
-				LOG("CustomerService", ("CharacterTransfer: Received TransferReplyNameValidation from destination galaxy CentralServer, forwarding to source galaxy CentralServer : %s", replyNameValidation.getValue().second.toString().c_str()));
-				cle->m_centralServerConnection->send(replyNameValidation, true);
-			}
-		}
-	}
-	else if (message.isType("TransferLoginCharacterToDestinationServer"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		GenericValueTypeMessage<TransferCharacterData> const login(ri);
-
-		const CentralServerConnection * conn = dynamic_cast<const CentralServerConnection*>(&source);
-		if (conn)
-		{
-			ClusterListEntry * cle = findClusterByName(login.getValue().getDestinationGalaxy());
-			if (cle && cle->m_centralServerConnection)
-			{
-				LOG("CustomerService", ("CharacterTransfer: Received TransferLoginCharacterToDestinationServer from source galaxy CentralServer, forwarding to destination galaxy CentralServer : %s", login.getValue().toString().c_str()));
-				cle->m_centralServerConnection->send(login, true);
-			}
-		}
-	}
-	else if (message.isType("UpdateLoginConnectionServerStatus"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		UpdateLoginConnectionServerStatus msg(ri);
-		const CentralServerConnection *conn = dynamic_cast<const CentralServerConnection *>(&source);
-		if (conn)
-		{
-			ClusterListEntry *cle = findClusterByConnection(conn);
-			if (cle)
-			{
-				std::vector<ConnectionServerEntry>::iterator i = cle->m_connectionServers.begin();
-				for (; i!= cle->m_connectionServers.end(); ++i)
-				{
-					if (i->id == msg.getId())
+					if (cle->m_clusterId == 0)
 					{
-						i->clientServicePortPublic = msg.getPublicPort();
-						i->clientServicePortPrivate = msg.getPrivatePort();
-						i->numClients = msg.getPlayerCount();
+						DEBUG_FATAL(!ConfigLoginServer::getDevelopmentMode(), ("Programmer bug:  cle->m_clusterId was 0 in non-development mode.  The code before this line should have prevented this.\n"));
+						DEBUG_REPORT_LOG(true, ("Cluster was not on the list.  Adding it to the database.\n"));
+						DatabaseConnection::getInstance().registerNewCluster(msg.getClusterName(), connection->getRemoteAddress());
+					}
+					else
+						cle->m_centralServerConnection->setClusterId(cle->m_clusterId);
+
+					m_clusterStatusChanged = true;
+
+					// tell the cluster its cluster id
+					if (cle->m_clusterId > 0)
+					{
+						GenericValueTypeMessage<uint32> const msgClusterId("ClusterId", cle->m_clusterId);
+						cle->m_centralServerConnection->send(msgClusterId, true);
+					}
+
+					// tell the cluster about its locked and secret state
+					GenericValueTypeMessage<std::pair<bool, bool> > const msgState("UpdateClusterLockedAndSecretState", std::make_pair(cle->m_locked, cle->m_secret));
+					cle->m_centralServerConnection->send(msgState, true);
+				}
+			}
+			break;
+		}
+		case constcrc("LoginConnectionServerAddress") :
+		{
+			const CentralServerConnection * cs = safe_cast<const CentralServerConnection *>(&source);
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+
+			LoginConnectionServerAddress m(ri); //lint !e1774 !e826onServerEntry entry;
+			ConnectionServerEntry entry;
+			entry.clientServiceAddress = Address(Address(m.getClientServiceAddress(), 0).getSockAddr4()).getHostAddress();
+			entry.clientServicePortPrivate = m.getClientServicePortPrivate();
+			entry.clientServicePortPublic = m.getClientServicePortPublic();
+			entry.id = m.getId();
+			entry.numClients = m.getNumClients();
+			entry.pingPort = m.getPingPort();
+
+			DEBUG_REPORT_LOG(true, ("ConnectionServer Reconnect - address from connection server (%s), address after conversion (%s)\n", m.getClientServiceAddress().c_str(), entry.clientServiceAddress.c_str()));
+
+			ClusterListEntry *cle = findClusterByConnection(cs);
+			if (cle)
+			{
+				WARNING_STRICT_FATAL(!cle->m_centralServerConnection, ("Got reconnect for connection server with no central!  Cluster %s\n", cs->getClusterName().c_str()));
+				std::vector<ConnectionServerEntry>::iterator i = std::find(cle->m_connectionServers.begin(), cle->m_connectionServers.end(), entry);
+				if (i == cle->m_connectionServers.end())
+				{
+					cle->m_connectionServers.push_back(entry);
+					m_clusterStatusChanged = true;
+				}
+				else
+				{
+					*i = entry;
+				}
+
+				std::sort(cle->m_connectionServers.begin(), cle->m_connectionServers.end(), ConnectionServerEntryLessThan());
+			}
+			else
+				WARNING_STRICT_FATAL(true, ("Programmer bug:  Got LoginConnectionServerAddress from a cluster that wasn't on the list.  Probably indicates we aren't tracking connections properly.\n"));
+			break;
+		}
+		case constcrc("PreloadFinishedMessage") :
+		{
+			const CentralServerConnection * cs = safe_cast<const CentralServerConnection *>(&source);
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			PreloadFinishedMessage msg(ri);
+
+			ClusterListEntry *cle = findClusterByConnection(cs);
+			if (cle)
+			{
+				if (msg.getFinished())
+				{
+					REPORT_LOG(true, ("Cluster %s is ready for players.\n", cle->m_clusterName.c_str()));
+					if (!cle->m_readyForPlayers)
+					{
+						cle->m_readyForPlayers = true;
+						m_clusterStatusChanged = true;
+					}
+				}
+				else
+				{
+					REPORT_LOG(true, ("Cluster %s is not ready for players.\n", cle->m_clusterName.c_str()));
+					if (cle->m_readyForPlayers)
+					{
+						cle->m_readyForPlayers = false;
+						m_clusterStatusChanged = true;
+						PurgeManager::onClusterNoLongerReady(cle->m_clusterId);
+					}
+				}
+			}
+			else
+				WARNING_STRICT_FATAL(true, ("Programmer bug:  Got PreloadFinishedMessage from a cluster that wasn't on the list.  Probably indicates we aren't tracking connections properly.\n"));
+			
+			break;
+		}
+		case constcrc("ConnectionServerDown") :
+		{
+			const CentralServerConnection * centralConnection = safe_cast<const CentralServerConnection*>(&source);
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			ConnectionServerDown c(ri); //lint !e1774 !e826
+			ClusterListEntry *cle = findClusterByConnection(centralConnection);
+			if (cle)
+			{
+				DEBUG_REPORT_LOG(true, ("Lost a connection server %d for %s.\n", c.getId(), cle->m_clusterName.c_str()));
+
+				std::vector<ConnectionServerEntry>::iterator iter = cle->m_connectionServers.begin();
+				bool found = false;
+				for (; iter != cle->m_connectionServers.end(); ++iter)
+				{
+					if (iter->id == c.getId())
+					{
+						IGNORE_RETURN(cle->m_connectionServers.erase(iter));
+						std::sort(cle->m_connectionServers.begin(), cle->m_connectionServers.end(), ConnectionServerEntryLessThan());
+						found = true;
 						break;
 					}
 				}
-				std::sort(cle->m_connectionServers.begin(), cle->m_connectionServers.end(), ConnectionServerEntryLessThan());
+				DEBUG_REPORT_LOG(!found, ("Tried to remove a connection server that wasn't in our list.\n"));
+				m_clusterStatusChanged = true;
 			}
+			else
+				WARNING_STRICT_FATAL(true, ("Programmer bug:  Got ConnectionServerDown from a cluster that wasn't on the list.  Probably indicates we aren't tracking connections properly.\n"));
+			
+			break;
 		}
-
-	}
-	else if (message.isType("UpdatePlayerCountMessage"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		UpdatePlayerCountMessage msg(ri);
-		const CentralServerConnection *conn = dynamic_cast<const CentralServerConnection *>(&source);
-		if (conn)
+		case constcrc("ConnectionClosed") :
 		{
-			ClusterListEntry *cle = findClusterByConnection(conn);
-			if (cle)
+			const CentralServerConnection *c = dynamic_cast<const CentralServerConnection *>(&source);
+			if (c)
 			{
-				const int tutorialPlayerCount = (msg.getEmptySceneCount() + msg.getTutorialSceneCount() + msg.getFalconSceneCount());
-
-				// We only want to update the clients if some "threshold" has been crossed
-				if ((cle->m_notRecommendedCentral != msg.getLoadedRecently())
-					  || hasCrossedThreshold(cle->m_onlineTutorialLimit, cle->m_numTutorialPlayers, tutorialPlayerCount)
-					  || hasCrossedThreshold(cle->m_onlineFreeTrialLimit, cle->m_numFreeTrialPlayers, msg.getFreeTrialCount())
-					  || hasCrossedThreshold(cle->m_onlinePlayerLimit, cle->m_numPlayers, msg.getCount()))
+				ClusterListEntry *cle = findClusterByConnection(c);
+				if (cle)
 				{
-					m_clusterStatusChanged = true;
+					DEBUG_REPORT_LOG(true, ("Cluster connection %s closed.\n", c->getClusterName().c_str()));
+					disconnectCluster(*cle, false, true);
 				}
-
-				cle->m_numPlayers = msg.getCount();
-				cle->m_numFreeTrialPlayers = msg.getFreeTrialCount();
-				cle->m_notRecommendedCentral = msg.getLoadedRecently();
-				cle->m_numTutorialPlayers = tutorialPlayerCount;
+				else
+					WARNING_STRICT_FATAL(true, ("Programmer bug: Cluster disconnected but it wasn't on the list.  Probably indicates we aren't tracking connections properly.\n"));
 			}
+			break;
 		}
-	}
-	else if (message.isType("RenameCharacterMessage"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		RenameCharacterMessage msg(ri);
-
-		const CentralServerConnection *conn = dynamic_cast<const CentralServerConnection *>(&source);
-		if (conn)
-			DatabaseConnection::getInstance().renameCharacter(conn->getClusterId(), msg.getCharacterId(), msg.getNewName(), NULL);
-		else
-			WARNING_STRICT_FATAL(true,("Got RenameCharacterMessage from something other than CentralServerConnection.\n"));
-	}
-	else if (message.isType("LoginCreateCharacterMessage"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		LoginCreateCharacterMessage msg(ri);
-		const CentralServerConnection *conn = dynamic_cast<const CentralServerConnection *>(&source);
-		if (conn)
-			DatabaseConnection::getInstance().createCharacter(conn->getClusterId(),msg.getStationId(),msg.getCharacterName(),msg.getCharacterObjectId(),msg.getTemplateId(), msg.getJedi());
-	}
-	else if (message.isType("LoginRestoreCharacterMessage"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		LoginRestoreCharacterMessage msg(ri);
-		const CentralServerConnection *conn = dynamic_cast<const CentralServerConnection *>(&source);
-		if (conn)
-			DatabaseConnection::getInstance().restoreCharacter(conn->getClusterId(),msg.getWhoRequested(),msg.getAccount(),msg.getCharacterName(),msg.getCharacterId(),msg.getTemplateId(), msg.getJedi());
-	}
-	else if (message.isType("LoginUpgradeAccountMessage"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		LoginUpgradeAccountMessage *msg = new LoginUpgradeAccountMessage(ri);
-		const CentralServerConnection *conn = dynamic_cast<const CentralServerConnection *>(&source);
-		if (conn)
-			DatabaseConnection::getInstance().upgradeAccount(msg,conn->getClusterId());
-	}
-	else if (message.isType("ClaimRewardsMessage"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		ClaimRewardsMessage const * msg = new ClaimRewardsMessage(ri);
-		const CentralServerConnection *conn = dynamic_cast<const CentralServerConnection *>(&source);
-		if (conn)
+		case constcrc("ValidateAccountMessage") :
 		{
-			// current restriction is that once per account event or item cannot require a "consuming" account feature id
-			uint32 const requiredAccountFeatureId = msg->getAccountFeatureId();
-			bool const consumeAccountFeatureId = msg->getConsumeAccountFeatureId();
-			if ((msg->getConsumeEvent() || msg->getConsumeItem()) && (requiredAccountFeatureId > 0) && consumeAccountFeatureId)
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			ValidateAccountMessage msg(ri);
+
+			const CentralServerConnection *conn = dynamic_cast<const CentralServerConnection*>(&source);
+			if (conn)
+				DatabaseConnection::getInstance().getAccountValidationData(msg.getStationId(), conn->getClusterId(), msg.getTrack(), msg.getSubscriptionBits());
+			else
+				WARNING_STRICT_FATAL(true, ("Expect ValidateAccountMessage's to only come from CentralServers.\n"));
+			break;
+		}
+		case constcrc("CntrlSrvDropDupeConns") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			GenericValueTypeMessage<std::pair<uint32, std::string> > const msg(ri);
+
+			sendToAllClusters(msg, dynamic_cast<Connection const *>(&source));
+			break;
+		}
+		case constcrc("AdjustAccountFeatureIdRequest") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			AdjustAccountFeatureIdRequest const msg(ri);
+
+			if (m_sessionApiClient)
 			{
-				ClaimRewardsReplyMessage const rsp(msg->getGameServer(), msg->getStationId(), msg->getPlayer(), msg->getRewardEvent(), msg->getRewardItem(), requiredAccountFeatureId, consumeAccountFeatureId, 0, 0, false);
-				sendToCluster(conn->getClusterId(), rsp);
-				delete msg;
+				// on a session authenticated cluster, this request should have been serviced by the ConnectionServer
 			}
-			else if (requiredAccountFeatureId > 0)
+			else
 			{
-				if (m_sessionApiClient)
+				// for testing purpose when not using session authentication, store
+				// the account feature Ids locally in memory, which will get cleared
+				// (obviously) when the LoginServer is restarted
+				std::map<uint32, std::map<uint32, int> > * nonSessionTestingAccountFeatureIds = nullptr;
+				if (msg.getGameCode() == PlatformGameCode::SWG)
+					nonSessionTestingAccountFeatureIds = &s_nonSessionTestingAccountSwgFeatureIds;
+				else if (msg.getGameCode() == PlatformGameCode::SWGTCG)
+					nonSessionTestingAccountFeatureIds = &s_nonSessionTestingAccountSwgTcgFeatureIds;
+
+				int currentFeatureIdCount = 0;
+				int updatedFeatureIdCount = 0;
+				if (nonSessionTestingAccountFeatureIds)
 				{
-					if (consumeAccountFeatureId)
+					std::map<uint32, int> & accountFeatureIds = (*nonSessionTestingAccountFeatureIds)[msg.getTargetStationId()];
+					std::map<uint32, int>::const_iterator accountFeatureId = accountFeatureIds.find(msg.getFeatureId());
+					if (accountFeatureId != accountFeatureIds.end())
+						currentFeatureIdCount = accountFeatureId->second;
+
+					updatedFeatureIdCount = std::max(0, currentFeatureIdCount + msg.getAdjustment());
+					if (updatedFeatureIdCount > 0)
 					{
-						// request session/Platform to update the account feature id
-						// SessionApiClient will own (and delete) msg
-						m_sessionApiClient->handleClaimRewardsMessage(conn->getClusterId(), msg);
+						accountFeatureIds[msg.getFeatureId()] = updatedFeatureIdCount;
 					}
 					else
 					{
-						LoginAPI::Feature oldFeature;
-						oldFeature.SetID(requiredAccountFeatureId);
-						oldFeature.SetData(msg->getAccountFeatureIdOldValue());
+						IGNORE_RETURN(accountFeatureIds.erase(msg.getFeatureId()));
+						if (accountFeatureIds.empty())
+							IGNORE_RETURN(nonSessionTestingAccountFeatureIds->erase(msg.getTargetStationId()));
+					}
+				}
 
-						LoginAPI::Feature newFeature;
-						newFeature.SetID(requiredAccountFeatureId);
-						newFeature.SetData(msg->getAccountFeatureIdNewValue());
+				// CS log SWG TCG account feature grant or SWG account feature grant for reward item trade in
+				if (nonSessionTestingAccountFeatureIds && !msg.getTargetPlayerDescription().empty() && msg.getTargetItem().isValid() && !msg.getTargetItemDescription().empty())
+				{
+					if (msg.getGameCode() == PlatformGameCode::SWGTCG)
+						LOG("CustomerService", ("TcgRedemption: %s redeemed %s for SWGTCG account feature Id %lu (%d -> %d)", msg.getTargetPlayerDescription().c_str(), msg.getTargetItemDescription().c_str(), msg.getFeatureId(), currentFeatureIdCount, updatedFeatureIdCount));
+					else if (msg.getGameCode() == PlatformGameCode::SWG)
+						LOG("CustomerService", ("VeteranRewards: %s traded in %s for SWG account feature Id %lu (%d -> %d)", msg.getTargetPlayerDescription().c_str(), msg.getTargetItemDescription().c_str(), msg.getFeatureId(), currentFeatureIdCount, updatedFeatureIdCount));
+				}
 
-						DatabaseConnection::getInstance().claimRewards(conn->getClusterId(), msg->getGameServer(), msg->getStationId(), msg->getPlayer(), msg->getRewardEvent(), msg->getConsumeEvent(), msg->getRewardItem(), msg->getConsumeItem(), requiredAccountFeatureId, false, oldFeature.GetConsumeCount(), newFeature.GetConsumeCount());
+				const CentralServerConnection * conn = dynamic_cast<const CentralServerConnection*>(&source);
+				if (conn)
+				{
+					AdjustAccountFeatureIdResponse const rsp(msg.getRequestingPlayer(), msg.getGameServer(), msg.getTargetPlayer(), msg.getTargetPlayerDescription(), msg.getTargetStationId(), msg.getTargetItem(), msg.getTargetItemDescription(), msg.getGameCode(), msg.getFeatureId(), currentFeatureIdCount, updatedFeatureIdCount, (nonSessionTestingAccountFeatureIds ? RESULT_SUCCESS : RESULT_CANCELLED), false);
+					sendToCluster(conn->getClusterId(), rsp);
+				}
+			}
+			break;
+		}
+		case constcrc("AccountFeatureIdRequest") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			AccountFeatureIdRequest const msg(ri);
+
+			if (m_sessionApiClient)
+			{
+				// on a session authenticated cluster, this request should have been serviced by the ConnectionServer
+			}
+			else
+			{
+				// for testing purpose when not using session authentication, store
+				// the account feature Ids locally in memory, which will get cleared
+				// (obviously) when the LoginServer is restarted
+				std::map<uint32, std::map<uint32, int> > * nonSessionTestingAccountFeatureIds = nullptr;
+				if (msg.getGameCode() == PlatformGameCode::SWG)
+					nonSessionTestingAccountFeatureIds = &s_nonSessionTestingAccountSwgFeatureIds;
+				else if (msg.getGameCode() == PlatformGameCode::SWGTCG)
+					nonSessionTestingAccountFeatureIds = &s_nonSessionTestingAccountSwgTcgFeatureIds;
+
+				static std::map<uint32, int> const empty;
+				std::map<uint32, int> const * accountFeatureIds = &empty;
+
+				if (nonSessionTestingAccountFeatureIds)
+				{
+					std::map<uint32, std::map<uint32, int> >::const_iterator iterFind = nonSessionTestingAccountFeatureIds->find(msg.getTargetStationId());
+					if (iterFind != nonSessionTestingAccountFeatureIds->end())
+						accountFeatureIds = &(iterFind->second);
+				}
+
+				const CentralServerConnection * conn = dynamic_cast<const CentralServerConnection*>(&source);
+				if (conn)
+				{
+					static std::map<uint32, std::string> const empty;
+					AccountFeatureIdResponse const rsp(msg.getRequester(), msg.getGameServer(), msg.getTarget(), msg.getTargetStationId(), msg.getGameCode(), msg.getRequestReason(), RESULT_SUCCESS, false, *accountFeatureIds, empty);
+					sendToCluster(conn->getClusterId(), rsp);
+				}
+			}
+			break;
+		}
+		case constcrc("FeatureIdTransactionRequest") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			FeatureIdTransactionRequest const fitr(ri);
+
+			const CentralServerConnection *conn = dynamic_cast<const CentralServerConnection *>(&source);
+			if (conn)
+				DatabaseConnection::getInstance().featureIdTransactionRequest(conn->getClusterId(), fitr.getStationId(), fitr.getPlayer(), fitr.getGameServer());
+			break;
+		}
+		case constcrc("FeatureIdTransactionSyncUpdate") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			FeatureIdTransactionSyncUpdate const fitsu(ri);
+
+			const CentralServerConnection *conn = dynamic_cast<const CentralServerConnection *>(&source);
+			if (conn)
+				DatabaseConnection::getInstance().featureIdTransactionSyncUpdate(conn->getClusterId(), fitsu.getStationId(), fitsu.getPlayer(), fitsu.getItemId(), fitsu.getAdjustment());
+			break;
+		}
+		case constcrc("TransferRequestMoveValidation") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			const TransferRequestMoveValidation request(ri);
+
+			TransferReplyMoveValidation::TransferReplyMoveValidationResult result = TransferReplyMoveValidation::TRMVR_can_create_regular_character;
+
+			ClusterListEntry * cle = findClusterByName(request.getDestinationGalaxy());
+			if (!cle)
+			{
+				result = TransferReplyMoveValidation::TRMVR_destination_galaxy_invalid;
+			}
+			else if (!cle->m_centralServerConnection)
+			{
+				result = TransferReplyMoveValidation::TRMVR_destination_galaxy_not_connected;
+			}
+			else if (!cle->m_readyForPlayers)
+			{
+				result = TransferReplyMoveValidation::TRMVR_destination_galaxy_in_loading;
+			}
+
+			if (result == TransferReplyMoveValidation::TRMVR_can_create_regular_character)
+			{
+				// check with DB to see if account is allowed to create character on the destination galaxy
+				LOG("CustomerService", ("CharacterTransfer: Received TransferRequestMoveValidation : %s (character template id %lu) on %s to %s on %s. Forwarding request to Login Database.", request.getSourceCharacter().c_str(), request.getSourceCharacterTemplateId(), request.getSourceGalaxy().c_str(), request.getDestinationCharacter().c_str(), request.getDestinationGalaxy().c_str()));
+				DatabaseConnection::getInstance().getAccountValidationData(request, cle->m_centralServerConnection->getClusterId());
+			}
+			else
+			{
+				// send failure back to originating server
+				TransferReplyMoveValidation reply(request.getTransferRequestSource(), request.getTrack(), request.getSourceStationId(), request.getDestinationStationId(), request.getSourceGalaxy(), request.getDestinationGalaxy(), request.getSourceCharacter(), request.getSourceCharacterId(), request.getSourceCharacterTemplateId(), request.getDestinationCharacter(), request.getCustomerLocalizedLanguage(), result);
+				const CentralServerConnection * conn = dynamic_cast<const CentralServerConnection*>(&source);
+				if (conn)
+				{
+					ClusterListEntry * sourceEntry = findClusterById(conn->getClusterId());
+					if (sourceEntry && sourceEntry->m_centralServerConnection)
+					{
+						sourceEntry->m_centralServerConnection->send(reply, true);
+					}
+				}
+			}
+			break;
+		}
+		case constcrc("TransferReplyNameValidation") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			GenericValueTypeMessage<std::pair<std::string, TransferCharacterData> > const replyNameValidation(ri);
+
+			const CentralServerConnection * conn = dynamic_cast<const CentralServerConnection*>(&source);
+			if (conn)
+			{
+				ClusterListEntry * cle = findClusterByName(replyNameValidation.getValue().second.getSourceGalaxy());
+				if (cle && cle->m_centralServerConnection)
+				{
+					LOG("CustomerService", ("CharacterTransfer: Received TransferReplyNameValidation from destination galaxy CentralServer, forwarding to source galaxy CentralServer : %s", replyNameValidation.getValue().second.toString().c_str()));
+					cle->m_centralServerConnection->send(replyNameValidation, true);
+				}
+			}
+			break;
+		}
+		case constcrc("TransferLoginCharacterToDestinationServer") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			GenericValueTypeMessage<TransferCharacterData> const login(ri);
+
+			const CentralServerConnection * conn = dynamic_cast<const CentralServerConnection*>(&source);
+			if (conn)
+			{
+				ClusterListEntry * cle = findClusterByName(login.getValue().getDestinationGalaxy());
+				if (cle && cle->m_centralServerConnection)
+				{
+					LOG("CustomerService", ("CharacterTransfer: Received TransferLoginCharacterToDestinationServer from source galaxy CentralServer, forwarding to destination galaxy CentralServer : %s", login.getValue().toString().c_str()));
+					cle->m_centralServerConnection->send(login, true);
+				}
+			}
+			break;
+		}
+		case constcrc("UpdateLoginConnectionServerStatus") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			UpdateLoginConnectionServerStatus msg(ri);
+			const CentralServerConnection *conn = dynamic_cast<const CentralServerConnection *>(&source);
+			if (conn)
+			{
+				ClusterListEntry *cle = findClusterByConnection(conn);
+				if (cle)
+				{
+					std::vector<ConnectionServerEntry>::iterator i = cle->m_connectionServers.begin();
+					for (; i != cle->m_connectionServers.end(); ++i)
+					{
+						if (i->id == msg.getId())
+						{
+							i->clientServicePortPublic = msg.getPublicPort();
+							i->clientServicePortPrivate = msg.getPrivatePort();
+							i->numClients = msg.getPlayerCount();
+							break;
+						}
+					}
+					std::sort(cle->m_connectionServers.begin(), cle->m_connectionServers.end(), ConnectionServerEntryLessThan());
+				}
+			}
+			break;
+		}
+		case constcrc("UpdatePlayerCountMessage") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			UpdatePlayerCountMessage msg(ri);
+			const CentralServerConnection *conn = dynamic_cast<const CentralServerConnection *>(&source);
+			if (conn)
+			{
+				ClusterListEntry *cle = findClusterByConnection(conn);
+				if (cle)
+				{
+					const int tutorialPlayerCount = (msg.getEmptySceneCount() + msg.getTutorialSceneCount() + msg.getFalconSceneCount());
+
+					// We only want to update the clients if some "threshold" has been crossed
+					if ((cle->m_notRecommendedCentral != msg.getLoadedRecently())
+						|| hasCrossedThreshold(cle->m_onlineTutorialLimit, cle->m_numTutorialPlayers, tutorialPlayerCount)
+						|| hasCrossedThreshold(cle->m_onlineFreeTrialLimit, cle->m_numFreeTrialPlayers, msg.getFreeTrialCount())
+						|| hasCrossedThreshold(cle->m_onlinePlayerLimit, cle->m_numPlayers, msg.getCount()))
+					{
+						m_clusterStatusChanged = true;
+					}
+
+					cle->m_numPlayers = msg.getCount();
+					cle->m_numFreeTrialPlayers = msg.getFreeTrialCount();
+					cle->m_notRecommendedCentral = msg.getLoadedRecently();
+					cle->m_numTutorialPlayers = tutorialPlayerCount;
+				}
+			}
+			break;
+		}
+		case constcrc("RenameCharacterMessage") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			RenameCharacterMessage msg(ri);
+
+			const CentralServerConnection *conn = dynamic_cast<const CentralServerConnection *>(&source);
+			if (conn)
+				DatabaseConnection::getInstance().renameCharacter(conn->getClusterId(), msg.getCharacterId(), msg.getNewName(), nullptr);
+			else
+				WARNING_STRICT_FATAL(true, ("Got RenameCharacterMessage from something other than CentralServerConnection.\n"));
+			
+			break;
+		}
+		case constcrc("LoginCreateCharacterMessage") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			LoginCreateCharacterMessage msg(ri);
+			const CentralServerConnection *conn = dynamic_cast<const CentralServerConnection *>(&source);
+			if (conn)
+				DatabaseConnection::getInstance().createCharacter(conn->getClusterId(), msg.getStationId(), msg.getCharacterName(), msg.getCharacterObjectId(), msg.getTemplateId(), msg.getJedi());
+			
+			break;
+		}
+		case constcrc("LoginRestoreCharacterMessage") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			LoginRestoreCharacterMessage msg(ri);
+			const CentralServerConnection *conn = dynamic_cast<const CentralServerConnection *>(&source);
+			if (conn)
+				DatabaseConnection::getInstance().restoreCharacter(conn->getClusterId(), msg.getWhoRequested(), msg.getAccount(), msg.getCharacterName(), msg.getCharacterId(), msg.getTemplateId(), msg.getJedi());
+			
+			break;
+		}
+		case constcrc("LoginUpgradeAccountMessage") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			LoginUpgradeAccountMessage *msg = new LoginUpgradeAccountMessage(ri);
+			const CentralServerConnection *conn = dynamic_cast<const CentralServerConnection *>(&source);
+			if (conn)
+				DatabaseConnection::getInstance().upgradeAccount(msg, conn->getClusterId());
+			
+			break;
+		}
+		case constcrc("ClaimRewardsMessage") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			ClaimRewardsMessage const * msg = new ClaimRewardsMessage(ri);
+			const CentralServerConnection *conn = dynamic_cast<const CentralServerConnection *>(&source);
+			if (conn)
+			{
+				// current restriction is that once per account event or item cannot require a "consuming" account feature id
+				uint32 const requiredAccountFeatureId = msg->getAccountFeatureId();
+				bool const consumeAccountFeatureId = msg->getConsumeAccountFeatureId();
+				if ((msg->getConsumeEvent() || msg->getConsumeItem()) && (requiredAccountFeatureId > 0) && consumeAccountFeatureId)
+				{
+					ClaimRewardsReplyMessage const rsp(msg->getGameServer(), msg->getStationId(), msg->getPlayer(), msg->getRewardEvent(), msg->getRewardItem(), requiredAccountFeatureId, consumeAccountFeatureId, 0, 0, false);
+					sendToCluster(conn->getClusterId(), rsp);
+					delete msg;
+				}
+				else if (requiredAccountFeatureId > 0)
+				{
+					if (m_sessionApiClient)
+					{
+						if (consumeAccountFeatureId)
+						{
+							// request session/Platform to update the account feature id
+							// SessionApiClient will own (and delete) msg
+							m_sessionApiClient->handleClaimRewardsMessage(conn->getClusterId(), msg);
+						}
+						else
+						{
+							LoginAPI::Feature oldFeature;
+							oldFeature.SetID(requiredAccountFeatureId);
+							oldFeature.SetData(msg->getAccountFeatureIdOldValue());
+
+							LoginAPI::Feature newFeature;
+							newFeature.SetID(requiredAccountFeatureId);
+							newFeature.SetData(msg->getAccountFeatureIdNewValue());
+
+							DatabaseConnection::getInstance().claimRewards(conn->getClusterId(), msg->getGameServer(), msg->getStationId(), msg->getPlayer(), msg->getRewardEvent(), msg->getConsumeEvent(), msg->getRewardItem(), msg->getConsumeItem(), requiredAccountFeatureId, false, oldFeature.GetConsumeCount(), newFeature.GetConsumeCount());
+							delete msg;
+						}
+					}
+					else
+					{
+						// for testing purpose when not using session authentication, store
+						// the account feature Ids locally in memory, which will get cleared
+						// (obviously) when the LoginServer is restarted
+						std::map<uint32, int> & accountFeatureIds = s_nonSessionTestingAccountSwgFeatureIds[msg->getStationId()];
+						std::map<uint32, int>::const_iterator accountFeatureId = accountFeatureIds.find(requiredAccountFeatureId);
+						int currentFeatureIdCount = 0;
+						if (accountFeatureId != accountFeatureIds.end())
+							currentFeatureIdCount = accountFeatureId->second;
+
+						if (currentFeatureIdCount <= 0)
+						{
+							// fail because account doesn't have required feature id
+							IGNORE_RETURN(accountFeatureIds.erase(requiredAccountFeatureId));
+							if (accountFeatureIds.empty())
+								IGNORE_RETURN(s_nonSessionTestingAccountSwgFeatureIds.erase(msg->getStationId()));
+
+							ClaimRewardsReplyMessage rsp(msg->getGameServer(), msg->getStationId(), msg->getPlayer(), msg->getRewardEvent(), msg->getRewardItem(), requiredAccountFeatureId, consumeAccountFeatureId, 0, 0, false);
+							sendToCluster(conn->getClusterId(), rsp);
+						}
+						else
+						{
+							// account has required feature id so claim is success, so update feature id for claim
+							int const updatedFeatureIdCount = (consumeAccountFeatureId ? std::max(0, currentFeatureIdCount - 1) : currentFeatureIdCount);
+
+							if (consumeAccountFeatureId)
+							{
+								if (updatedFeatureIdCount > 0)
+								{
+									accountFeatureIds[requiredAccountFeatureId] = updatedFeatureIdCount;
+								}
+								else
+								{
+									IGNORE_RETURN(accountFeatureIds.erase(requiredAccountFeatureId));
+									if (accountFeatureIds.empty())
+										IGNORE_RETURN(s_nonSessionTestingAccountSwgFeatureIds.erase(msg->getStationId()));
+								}
+							}
+
+							// if feature id updated successfully, record transaction
+							DatabaseConnection::getInstance().claimRewards(conn->getClusterId(), msg->getGameServer(), msg->getStationId(), msg->getPlayer(), msg->getRewardEvent(), msg->getConsumeEvent(), msg->getRewardItem(), msg->getConsumeItem(), requiredAccountFeatureId, consumeAccountFeatureId, currentFeatureIdCount, updatedFeatureIdCount);
+						}
+
 						delete msg;
 					}
 				}
 				else
 				{
-					// for testing purpose when not using session authentication, store
-					// the account feature Ids locally in memory, which will get cleared
-					// (obviously) when the LoginServer is restarted
-					std::map<uint32, int> & accountFeatureIds = s_nonSessionTestingAccountSwgFeatureIds[msg->getStationId()];
-					std::map<uint32, int>::const_iterator accountFeatureId = accountFeatureIds.find(requiredAccountFeatureId);
-					int currentFeatureIdCount = 0;
-					if (accountFeatureId != accountFeatureIds.end())
-						currentFeatureIdCount = accountFeatureId->second;
-
-					if (currentFeatureIdCount <= 0)
-					{
-						// fail because account doesn't have required feature id
-						IGNORE_RETURN(accountFeatureIds.erase(requiredAccountFeatureId));
-						if (accountFeatureIds.empty())
-							IGNORE_RETURN(s_nonSessionTestingAccountSwgFeatureIds.erase(msg->getStationId()));
-
-						ClaimRewardsReplyMessage rsp(msg->getGameServer(), msg->getStationId(), msg->getPlayer(), msg->getRewardEvent(), msg->getRewardItem(), requiredAccountFeatureId, consumeAccountFeatureId, 0, 0, false);
-						sendToCluster(conn->getClusterId(), rsp);
-					}
-					else
-					{
-						// account has required feature id so claim is success, so update feature id for claim
-						int const updatedFeatureIdCount = (consumeAccountFeatureId ? std::max(0, currentFeatureIdCount - 1) : currentFeatureIdCount);
-
-						if (consumeAccountFeatureId)
-						{
-							if (updatedFeatureIdCount > 0)
-							{
-								accountFeatureIds[requiredAccountFeatureId] = updatedFeatureIdCount;
-							}
-							else
-							{
-								IGNORE_RETURN(accountFeatureIds.erase(requiredAccountFeatureId));
-								if (accountFeatureIds.empty())
-									IGNORE_RETURN(s_nonSessionTestingAccountSwgFeatureIds.erase(msg->getStationId()));
-							}
-						}
-
-						// if feature id updated successfully, record transaction
-						DatabaseConnection::getInstance().claimRewards(conn->getClusterId(), msg->getGameServer(), msg->getStationId(), msg->getPlayer(), msg->getRewardEvent(), msg->getConsumeEvent(), msg->getRewardItem(), msg->getConsumeItem(), requiredAccountFeatureId, consumeAccountFeatureId, currentFeatureIdCount, updatedFeatureIdCount);
-					}
-
+					DatabaseConnection::getInstance().claimRewards(conn->getClusterId(), msg->getGameServer(), msg->getStationId(), msg->getPlayer(), msg->getRewardEvent(), msg->getConsumeEvent(), msg->getRewardItem(), msg->getConsumeItem(), 0, false, 0, 0);
 					delete msg;
 				}
 			}
 			else
 			{
-				DatabaseConnection::getInstance().claimRewards(conn->getClusterId(), msg->getGameServer(), msg->getStationId(), msg->getPlayer(), msg->getRewardEvent(), msg->getConsumeEvent(), msg->getRewardItem(), msg->getConsumeItem(), 0, false, 0, 0);
 				delete msg;
 			}
+			
+			break;
 		}
-		else
+		case constcrc("PurgeCompleteMessage") :
 		{
-			delete msg;
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			GenericValueTypeMessage<StationId> msg(ri);
+			const CentralServerConnection *conn = dynamic_cast<const CentralServerConnection *>(&source);
+			if (conn)
+				PurgeManager::handlePurgeCompleteOnCluster(msg.getValue(), conn->getClusterId());
+			else
+				WARNING_STRICT_FATAL(true, ("Programmer bug:  got PurgeCompleteMessage from something that couldn't be cast to a CentralServerConnection"));
+			
+			break;
 		}
-	}
-	else if (message.isType("PurgeCompleteMessage"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		GenericValueTypeMessage<StationId> msg(ri);
-		const CentralServerConnection *conn = dynamic_cast<const CentralServerConnection *>(&source);
-		if (conn)
-			PurgeManager::handlePurgeCompleteOnCluster(msg.getValue(), conn->getClusterId());
-		else
-			WARNING_STRICT_FATAL(true,("Programmer bug:  got PurgeCompleteMessage from something that couldn't be cast to a CentralServerConnection"));
-	}
-	else if (message.isType("OccupyUnlockedSlotReq"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		GenericValueTypeMessage<std::pair<std::pair<uint32, NetworkId>, uint32> > const occupyUnlockedSlotReq(ri);
+		case constcrc("OccupyUnlockedSlotReq") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			GenericValueTypeMessage<std::pair<std::pair<uint32, NetworkId>, uint32> > const occupyUnlockedSlotReq(ri);
 
-		const CentralServerConnection *conn = dynamic_cast<const CentralServerConnection *>(&source);
-		if (conn)
-			DatabaseConnection::getInstance().occupyUnlockedSlot(conn->getClusterId(), static_cast<StationId>(occupyUnlockedSlotReq.getValue().first.first), occupyUnlockedSlotReq.getValue().first.second, occupyUnlockedSlotReq.getValue().second);
-	}
-	else if (message.isType("VacateUnlockedSlotReq"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		GenericValueTypeMessage<std::pair<std::pair<uint32, NetworkId>, uint32> > const vacateUnlockedSlotReq(ri);
+			const CentralServerConnection *conn = dynamic_cast<const CentralServerConnection *>(&source);
+			if (conn)
+				DatabaseConnection::getInstance().occupyUnlockedSlot(conn->getClusterId(), static_cast<StationId>(occupyUnlockedSlotReq.getValue().first.first), occupyUnlockedSlotReq.getValue().first.second, occupyUnlockedSlotReq.getValue().second);
+			
+			break;
+		}
+		case constcrc("VacateUnlockedSlotReq") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			GenericValueTypeMessage<std::pair<std::pair<uint32, NetworkId>, uint32> > const vacateUnlockedSlotReq(ri);
 
-		const CentralServerConnection *conn = dynamic_cast<const CentralServerConnection *>(&source);
-		if (conn)
-			DatabaseConnection::getInstance().vacateUnlockedSlot(conn->getClusterId(), static_cast<StationId>(vacateUnlockedSlotReq.getValue().first.first), vacateUnlockedSlotReq.getValue().first.second, vacateUnlockedSlotReq.getValue().second);
-	}
-	else if (message.isType("SwapUnlockedSlotReq"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		GenericValueTypeMessage<std::pair<std::pair<uint32, NetworkId>, std::pair<uint32, NetworkId> > > const swapUnlockedSlotReq(ri);
+			const CentralServerConnection *conn = dynamic_cast<const CentralServerConnection *>(&source);
+			if (conn)
+				DatabaseConnection::getInstance().vacateUnlockedSlot(conn->getClusterId(), static_cast<StationId>(vacateUnlockedSlotReq.getValue().first.first), vacateUnlockedSlotReq.getValue().first.second, vacateUnlockedSlotReq.getValue().second);
+			
+			break;
+		}
+		case constcrc("SwapUnlockedSlotReq") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			GenericValueTypeMessage<std::pair<std::pair<uint32, NetworkId>, std::pair<uint32, NetworkId> > > const swapUnlockedSlotReq(ri);
 
-		const CentralServerConnection *conn = dynamic_cast<const CentralServerConnection *>(&source);
-		if (conn)
-			DatabaseConnection::getInstance().swapUnlockedSlot(conn->getClusterId(), static_cast<StationId>(swapUnlockedSlotReq.getValue().first.first), swapUnlockedSlotReq.getValue().first.second, swapUnlockedSlotReq.getValue().second.second, swapUnlockedSlotReq.getValue().second.first);
+			const CentralServerConnection *conn = dynamic_cast<const CentralServerConnection *>(&source);
+			if (conn)
+				DatabaseConnection::getInstance().swapUnlockedSlot(conn->getClusterId(), static_cast<StationId>(swapUnlockedSlotReq.getValue().first.first), swapUnlockedSlotReq.getValue().first.second, swapUnlockedSlotReq.getValue().second.second, swapUnlockedSlotReq.getValue().second.first);
+			
+			break;
+		}
 	}
 }
 
@@ -1010,11 +1062,11 @@ void LoginServer::validateAccount(const StationId& stationId, uint32 clusterId, 
 		// allow logins unless the cluster is full
 		bool clientIsInternal = false;
 		ClientConnection *conn = getValidatedClient(stationId);
-		if (conn) 
+		if (conn)
 		{
 			clientIsInternal = AdminAccountManager::isInternalIp(conn->getRemoteAddress());
 		}
-		
+
 		if (clientIsInternal && ConfigLoginServer::getInternalBypassOnlineLimit())
 		{
 			canLogin = true;
@@ -1022,17 +1074,17 @@ void LoginServer::validateAccount(const StationId& stationId, uint32 clusterId, 
 		else if (cle->m_numPlayers <= cle->m_onlinePlayerLimit)
 		{
 			canLogin = true;
-			
+
 			// Check cluster npe user limit
 			if (cle->m_numTutorialPlayers > cle->m_onlineTutorialLimit)
 			{
-				canCreateRegular=false;
-				canCreateJedi=false;
+				canCreateRegular = false;
+				canCreateJedi = false;
 			}
-			
+
 			// limit login/character creation based on subscription feature bits
-			if (   ((subscriptionBits & ClientSubscriptionFeature::FreeTrial) != 0)
-			    && ((subscriptionBits & ClientSubscriptionFeature::Base)      == 0))
+			if (((subscriptionBits & ClientSubscriptionFeature::FreeTrial) != 0)
+				&& ((subscriptionBits & ClientSubscriptionFeature::Base) == 0))
 			{
 				// Check cluster free trial user limit
 				if (cle->m_numFreeTrialPlayers > cle->m_onlineFreeTrialLimit)
@@ -1042,25 +1094,25 @@ void LoginServer::validateAccount(const StationId& stationId, uint32 clusterId, 
 				// Check cluster free trial character creation
 				if (!cle->m_freeTrialCanCreateChar)
 				{
-					canCreateRegular=false;
-					canCreateJedi=false;
+					canCreateRegular = false;
+					canCreateJedi = false;
 				}
 			}
 		}
 
 		if (!canLogin)
 		{
-			canCreateRegular=false;
-			canCreateJedi=false;
-			canSkipTutorial=false;
+			canCreateRegular = false;
+			canCreateJedi = false;
+			canSkipTutorial = false;
 		}
 
 		// check if we want to allow skip tutorial to all
 		if (ConfigLoginServer::getAllowSkipTutorialToAll())
-			canSkipTutorial=true;
+			canSkipTutorial = true;
 
 		ValidateAccountReplyMessage msg(stationId, canLogin, canCreateRegular, canCreateJedi, canSkipTutorial, track, consumedRewardEvents, claimedRewardItems);
-		cle->m_centralServerConnection->send(msg,true);
+		cle->m_centralServerConnection->send(msg, true);
 	}
 }
 
@@ -1095,7 +1147,7 @@ void LoginServer::validateAccountForTransfer(const TransferRequestMoveValidation
 	}
 
 	ClusterListEntry * cle = findClusterById(clusterId);
-	if(cle && cle->m_centralServerConnection)
+	if (cle && cle->m_centralServerConnection)
 	{
 		TransferReplyMoveValidation response(request.getTransferRequestSource(), request.getTrack(), request.getSourceStationId(), request.getDestinationStationId(), request.getSourceGalaxy(), request.getDestinationGalaxy(), request.getSourceCharacter(), request.getSourceCharacterId(), sourceCharacterTemplateId, request.getDestinationCharacter(), request.getCustomerLocalizedLanguage(), (canCreateRegular ? TransferReplyMoveValidation::TRMVR_can_create_regular_character : TransferReplyMoveValidation::TRMVR_cannot_create_regular_character));
 		cle->m_centralServerConnection->send(response, true);
@@ -1126,7 +1178,7 @@ void LoginServer::run(void)
 	mon->add(masterChannel, WORLD_COUNT_CHANNEL);
 	std::string host = NetworkHandler::getHostName().c_str();
 	size_t dotPos = host.find(".");
-	if(dotPos != host.npos)
+	if (dotPos != host.npos)
 	{
 		host = host.substr(0, dotPos - 1);
 	}
@@ -1136,11 +1188,11 @@ void LoginServer::run(void)
 
 	mon->add("Galaxies", CLUSTER_COUNT_CHANNEL);
 
-	while(!getInstance().done)
+	while (!getInstance().done)
 	{
 		startTime = Clock::timeMs();
 		IGNORE_RETURN(Os::update());
-		if(getInstance().keyServer->update())
+		if (getInstance().keyServer->update())
 		{
 			getInstance().pushKeyToAllServers();
 		}
@@ -1149,10 +1201,10 @@ void LoginServer::run(void)
 		{
 			Os::sleep(1);
 			NetworkHandler::update();
-		} while(Clock::timeMs() - startTime < limit);
+		} while (Clock::timeMs() - startTime < limit);
 
 		DatabaseConnection::getInstance().update();
-		PurgeManager::update(static_cast<float>(limit)/ 1000.0f);
+		PurgeManager::update(static_cast<float>(limit) / 1000.0f);
 		if (getInstance().m_clusterStatusChanged)
 		{
 			getInstance().sendClusterStatusToAll();
@@ -1175,9 +1227,9 @@ void LoginServer::run(void)
 		mon->set(WORLD_COUNT_CHANNEL, static_cast<int>(getInstance().m_clientMap.size()));
 		int count = 0;
 		ClusterListType::const_iterator i;
-		for(i = getInstance().m_clusterList.begin(); i != getInstance().m_clusterList.end(); ++i)
+		for (i = getInstance().m_clusterList.begin(); i != getInstance().m_clusterList.end(); ++i)
 		{
-			if((*i)->m_connected)
+			if ((*i)->m_connected)
 				++count;
 		}
 		mon->set(CLUSTER_COUNT_CHANNEL, count);
@@ -1194,7 +1246,6 @@ void LoginServer::run(void)
 	NetworkHandler::remove();
 }
 
-
 //-----------------------------------------------------------------------
 
 void LoginServer::sendAvatarList(const StationId& stationId, int stationIdNumberJediSlot, const AvatarList &avatars, TransferCharacterData * const transferData)
@@ -1203,7 +1254,7 @@ void LoginServer::sendAvatarList(const StationId& stationId, int stationIdNumber
 	chardata.reserve(avatars.size());
 
 	EnumerateCharacterId::Chardata temp;
-	for (AvatarList::const_iterator i=avatars.begin(); i!=avatars.end(); ++i)
+	for (AvatarList::const_iterator i = avatars.begin(); i != avatars.end(); ++i)
 	{
 		temp.m_name = (*i).m_name;
 		temp.m_objectTemplateId = (*i).m_objectTemplateId;
@@ -1216,15 +1267,15 @@ void LoginServer::sendAvatarList(const StationId& stationId, int stationIdNumber
 
 	EnumerateCharacterId msg(chardata);
 
-	if(transferData)
+	if (transferData)
 	{
 		// send this to the appropriate CentralServer
-		if(transferData->getSourceCharacterName().empty())
+		if (transferData->getSourceCharacterName().empty())
 		{
 			// CTS API character list request
 			bool result = CentralServerConnection::sendCharacterListResponse(transferData->getSourceStationId(), avatars, *transferData);
 			UNREF(result);
-			DEBUG_REPORT_LOG(! result,("Could not send avatar list to StationId %lu because connection has been closed.\n",stationId));
+			DEBUG_REPORT_LOG(!result, ("Could not send avatar list to StationId %lu because connection has been closed.\n", stationId));
 		}
 		else
 		{
@@ -1234,11 +1285,11 @@ void LoginServer::sendAvatarList(const StationId& stationId, int stationIdNumber
 			if (cle)
 			{
 				// find associated character ID
-				for (AvatarList::const_iterator i=avatars.begin(); i!=avatars.end(); ++i)
+				for (AvatarList::const_iterator i = avatars.begin(); i != avatars.end(); ++i)
 				{
 					REPORT_LOG(true, ("checking %s == %s\n", Unicode::wideToNarrow(i->m_name).c_str(), transferData->getSourceCharacterName().c_str()));
-					if(Unicode::wideToNarrow(i->m_name) == transferData->getSourceCharacterName()
-					   && i->m_clusterId == cle->m_clusterId)
+					if (Unicode::wideToNarrow(i->m_name) == transferData->getSourceCharacterName()
+						&& i->m_clusterId == cle->m_clusterId)
 					{
 						characterTemplateId = static_cast<uint32>(i->m_objectTemplateId);
 						characterId = i->m_networkId;
@@ -1267,13 +1318,13 @@ void LoginServer::sendAvatarList(const StationId& stationId, int stationIdNumber
 			// this message ***MUST*** be sent first, as the client expects to
 			// receive this information before receiving the avatar list information
 			GenericValueTypeMessage<int> const msgStationIdHasJediSlot("StationIdHasJediSlot", stationIdNumberJediSlot);
-			conn->send(msgStationIdHasJediSlot,true);
+			conn->send(msgStationIdHasJediSlot, true);
 
-			conn->send(msg,true);
+			conn->send(msg, true);
 		}
 		else
 		{
-			DEBUG_REPORT_LOG(true,("Could not send avatar list to StationId %lu.\n",stationId));
+			DEBUG_REPORT_LOG(true, ("Could not send avatar list to StationId %lu.\n", stationId));
 			LOG("LoginClientConnection", ("sendAvatarList() for stationId (%lu), cannot find connection to client for sending avatar list", stationId));
 		}
 	}
@@ -1281,7 +1332,7 @@ void LoginServer::sendAvatarList(const StationId& stationId, int stationIdNumber
 
 // ----------------------------------------------------------------------
 
-void LoginServer::performAccountTransfer (const AvatarList &avatars, TransferAccountData * transferAccountData)
+void LoginServer::performAccountTransfer(const AvatarList &avatars, TransferAccountData * transferAccountData)
 {
 	// grab the station ids
 	StationId sourceStationId = transferAccountData->getSourceStationId();
@@ -1297,14 +1348,14 @@ void LoginServer::performAccountTransfer (const AvatarList &avatars, TransferAcc
 
 		if (cluster)
 		{
-			std::string clusterName = cluster->m_clusterName;		
+			std::string clusterName = cluster->m_clusterName;
 			std::string avatarName = Unicode::wideToNarrow(i->m_name);
 
 			avatarData.push_back(AvatarData(clusterName, avatarName));
-			
+
 			LOG("CustomerService", ("CharacterTransfer: Sending request to update game db (via cluster: %s) for account transfer from %lu to %lu (avatar: %s)", clusterName.c_str(), sourceStationId, destinationStationId, avatarName.c_str()));
 			const GenericValueTypeMessage<TransferAccountData> message("TransferAccountRequestCentralDatabase", *transferAccountData);
-			sendToCluster (i->m_clusterId, message);
+			sendToCluster(i->m_clusterId, message);
 		}
 		else
 		{
@@ -1331,38 +1382,38 @@ void LoginServer::onValidateClient(StationId suid, const std::string & username,
 	NOT_NULL(conn);
 	WARNING_STRICT_FATAL(getValidatedClient(suid), ("Validating an already valid client in onValidateClient().  StationId: %d UserName: %s", suid, username.c_str()));
 
-	int adminLevel=0;
+	int adminLevel = 0;
 	const bool isAdminAccount = AdminAccountManager::isAdminAccount(Unicode::toLower(username), adminLevel);
 
 	if (conn->getRequestedAdminSuid() != 0)
 	{
 		//verify internal, secure, is on the god list
-		bool loginOK=false;
-		if(!isSecure)
-			LOG("CustomerService",("AdminLogin:  User %s (account %li) attempted to log into account %li, but was not using a SecureID token", username.c_str(),suid, conn->getRequestedAdminSuid()));
+		bool loginOK = false;
+		if (!isSecure)
+			LOG("CustomerService", ("AdminLogin:  User %s (account %li) attempted to log into account %li, but was not using a SecureID token", username.c_str(), suid, conn->getRequestedAdminSuid()));
 		else
 		{
 			if (!AdminAccountManager::isInternalIp(conn->getRemoteAddress()))
-				LOG("CustomerService",("AdminLogin:  User %s (account %li) attempted to log into account %li, but was not logging in from an internal IP", username.c_str(),suid, conn->getRequestedAdminSuid()));
+				LOG("CustomerService", ("AdminLogin:  User %s (account %li) attempted to log into account %li, but was not logging in from an internal IP", username.c_str(), suid, conn->getRequestedAdminSuid()));
 			else
 			{
 				if (!isAdminAccount || adminLevel < 10)
-					LOG("CustomerService",("AdminLogin:  User %s (account %li) attempted to log into account %li, but did not have sufficient permissions", username.c_str(),suid, conn->getRequestedAdminSuid()));
+					LOG("CustomerService", ("AdminLogin:  User %s (account %li) attempted to log into account %li, but did not have sufficient permissions", username.c_str(), suid, conn->getRequestedAdminSuid()));
 				else
 				{
 					suid = conn->getRequestedAdminSuid();
-					loginOK=true;
+					loginOK = true;
 				}
 			}
 		}
-		
+
 		if (!loginOK)
 		{
 			conn->disconnect();
 			return;
 		}
 	}
-	
+
 	// encrypt the clients credentials with the key, return
 	// the cipher text to the client for use as a connection
 	// token with the central server
@@ -1408,39 +1459,39 @@ void LoginServer::onValidateClient(StationId suid, const std::string & username,
 
 	const LoginClientToken k(a.getBuffer(), static_cast<unsigned char>(a.getSize()), static_cast<uint32>(suid), username);
 	conn->send(k, true);
-	delete [] keyBuffer;
+	delete[] keyBuffer;
 
 	// send cluster enum
 	bool clientInternal = AdminAccountManager::isInternalIp(conn->getRemoteAddress());
-	
+
 	std::vector<LoginEnumCluster::ClusterData>          data;
 
-	for(ClusterListType::const_iterator j = m_clusterList.begin(); j != m_clusterList.end(); ++j)
+	for (ClusterListType::const_iterator j = m_clusterList.begin(); j != m_clusterList.end(); ++j)
 	{
 		ClusterListEntry *cle = *j;
-		if (cle && cle->m_clusterId!=0 && cle->m_clusterName.size()!=0 && (clientInternal || !cle->m_secret))
+		if (cle && cle->m_clusterId != 0 && cle->m_clusterName.size() != 0 && (clientInternal || !cle->m_secret))
 		{
 			LoginEnumCluster::ClusterData         item;
-			item.m_clusterId   = cle->m_clusterId;
+			item.m_clusterId = cle->m_clusterId;
 			item.m_clusterName = cle->m_clusterName;
-			item.m_timeZone    = cle->m_timeZone;
+			item.m_timeZone = cle->m_timeZone;
 			data.push_back(item);
 		}
 	}
-	
-	LoginEnumCluster e( data, ConfigLoginServer::getMaxCharactersPerAccount() );
-	
-	conn->send(e,true);
+
+	LoginEnumCluster e(data, ConfigLoginServer::getMaxCharactersPerAccount());
+
+	conn->send(e, true);
 
 	//Send off list of cluster that has character
 	//creation disabled, even if the list is empty
 	//***MUST*** be done after sending LoginEnumCluster
 	GenericValueTypeMessage<std::set<std::string> > const msgCharacterCreationDisabledClusterList("CharacterCreationDisabled", ConfigLoginServer::getCharacterCreationDisabledClusterList());
-	conn->send(msgCharacterCreationDisabledClusterList,true);
+	conn->send(msgCharacterCreationDisabledClusterList, true);
 
 	//Send off request for the avatar list from the database.
 	DatabaseConnection::getInstance().requestAvatarListForAccount(suid, 0);
-	DEBUG_REPORT_LOG(true, ("Client connected.  Station Id:  %lu, Username: %s\n", suid, username.c_str()));
+	REPORT_LOG(true, ("Client connected.  Station Id:  %lu, Username: %s\n", suid, username.c_str()));
 	LOG("LoginClientConnection", ("onValidateClient() for stationId (%lu) at IP (%s), id (%s), requesting avatar list for account", suid, conn->getRemoteAddress().c_str(), username.c_str()));
 
 	//Set up the connection as being validated with this suid.
@@ -1459,26 +1510,26 @@ void LoginServer::onValidateClient(StationId suid, const std::string & username,
 LoginServer::ClusterListEntry *LoginServer::findClusterByName(const std::string &clusterName)
 {
 	ClusterListType::iterator i;
-	for (i=m_clusterList.begin(); i!=m_clusterList.end(); ++i)
+	for (i = m_clusterList.begin(); i != m_clusterList.end(); ++i)
 	{
-		NOT_NULL(*i); // not legal to push null pointers on the vector
+		NOT_NULL(*i); // not legal to push nullptr pointers on the vector
 		if ((*i)->m_clusterName == clusterName)
 			return *i;
 	}
-	return NULL;
+	return nullptr;
 }
 
 // ----------------------------------------------------------------------
 
-uint32 LoginServer::getClusterIDByName( const std::string &sName )
+uint32 LoginServer::getClusterIDByName(const std::string &sName)
 {
-	ClusterListEntry const * const p_cluster = findClusterByName( sName );
+	ClusterListEntry const * const p_cluster = findClusterByName(sName);
 	return p_cluster ? p_cluster->m_clusterId : 0;
 }
 
 // ----------------------------------------------------------------------
 
-const std::string & LoginServer::getClusterNameById( uint32 clusterId )
+const std::string & LoginServer::getClusterNameById(uint32 clusterId)
 {
 	static std::string const empty;
 
@@ -1493,7 +1544,7 @@ const std::string & LoginServer::getClusterNameById( uint32 clusterId )
 
 LoginServer::ClusterListEntry *LoginServer::addCluster(const std::string &clusterName)
 {
-	DEBUG_FATAL(!ConfigLoginServer::getDevelopmentMode(),("Programmer bug:  addCluster(std::string&) can only be used in development mode.\n"));
+	DEBUG_FATAL(!ConfigLoginServer::getDevelopmentMode(), ("Programmer bug:  addCluster(std::string&) can only be used in development mode.\n"));
 
 	ClusterListEntry *e = new ClusterListEntry;
 	e->m_clusterName = clusterName;
@@ -1503,27 +1554,26 @@ LoginServer::ClusterListEntry *LoginServer::addCluster(const std::string &cluste
 
 // ----------------------------------------------------------------------
 
-void LoginServer::sendExtendedClusterInfo( ClientConnection &client ) const
+void LoginServer::sendExtendedClusterInfo(ClientConnection &client) const
 {
 	std::vector<LoginClusterStatusEx::ClusterData> data;
-	
-	for(ClusterListType::const_iterator j = m_clusterList.begin(); j != m_clusterList.end(); ++j)
+
+	for (ClusterListType::const_iterator j = m_clusterList.begin(); j != m_clusterList.end(); ++j)
 	{
 		ClusterListEntry *cle = *j;
 
-		if ( cle )
+		if (cle)
 		{
 			LoginClusterStatusEx::ClusterData item;
-			item.m_clusterId      = cle->m_clusterId;
-			item.m_branch         = cle->m_branch;
-			item.m_version        = cle->m_changelist;
+			item.m_clusterId = cle->m_clusterId;
+			item.m_branch = cle->m_branch;
+			item.m_version = cle->m_changelist;
 			item.m_networkVersion = cle->m_networkVersion;
-			data.push_back( item );
+			data.push_back(item);
 		}
-		
 	}
-	
-	client.send( LoginClusterStatusEx( data ), true );	
+
+	client.send(LoginClusterStatusEx(data), true);
 }
 
 // ----------------------------------------------------------------------
@@ -1536,15 +1586,15 @@ void LoginServer::sendExtendedClusterInfo( ClientConnection &client ) const
  */
 void LoginServer::sendClusterStatus(ClientConnection &conn) const
 {
-	const bool clientIsPrivate            = AdminAccountManager::isInternalIp(conn.getRemoteAddress());
-	const unsigned int subscriptionBits   = conn.getSubscriptionBits();
-	const bool         isFreeTrialAccount = (   ((subscriptionBits & ClientSubscriptionFeature::FreeTrial) != 0)
-	                                         && ((subscriptionBits & ClientSubscriptionFeature::Base)      == 0));
+	const bool clientIsPrivate = AdminAccountManager::isInternalIp(conn.getRemoteAddress());
+	const unsigned int subscriptionBits = conn.getSubscriptionBits();
+	const bool         isFreeTrialAccount = (((subscriptionBits & ClientSubscriptionFeature::FreeTrial) != 0)
+		&& ((subscriptionBits & ClientSubscriptionFeature::Base) == 0));
 
 	std::vector<LoginClusterStatus::ClusterData> data;
 	std::vector<LoginClusterStatusEx::ClusterData> dataEx;
-	
-	for(ClusterListType::const_iterator j = m_clusterList.begin(); j != m_clusterList.end(); ++j)
+
+	for (ClusterListType::const_iterator j = m_clusterList.begin(); j != m_clusterList.end(); ++j)
 	{
 		ClusterListEntry *cle = *j;
 		// Cluster is OK for login if
@@ -1553,26 +1603,26 @@ void LoginServer::sendClusterStatus(ClientConnection &conn) const
 		//   3) We have at least one Connection Server
 		//   4) Client is internal or the cluster is not secret
 		//   5) Cluster has told us its ready for players
-		if (cle && cle->m_clusterId!=0 && cle->m_connected && !cle->m_connectionServers.empty() && (clientIsPrivate || !cle->m_secret))
+		if (cle && cle->m_clusterId != 0 && cle->m_connected && !cle->m_connectionServers.empty() && (clientIsPrivate || !cle->m_secret))
 		{
-			DEBUG_FATAL(!cle->m_centralServerConnection,("Programmer bug:  m_connected was true but m_centralServerConnection was NULL\n"));
+			DEBUG_FATAL(!cle->m_centralServerConnection, ("Programmer bug:  m_connected was true but m_centralServerConnection was nullptr\n"));
 			LoginClusterStatus::ClusterData item;
 			item.m_clusterId = cle->m_clusterId;
 			item.m_timeZone = cle->m_timeZone;
 
-//			size_t connectionServerChoice = Random::random(cle->m_connectionServers.size() - 1); //lint !e713 !e732 // loss of precision (arg no 1)
+			//			size_t connectionServerChoice = Random::random(cle->m_connectionServers.size() - 1); //lint !e713 !e732 // loss of precision (arg no 1)
 			ConnectionServerEntry &connServer = cle->m_connectionServers[0];
 
-			item.m_connectionServerAddress  = connServer.clientServiceAddress;
-			if(clientIsPrivate)
+			item.m_connectionServerAddress = connServer.clientServiceAddress;
+			if (clientIsPrivate)
 			{
-				item.m_connectionServerPort     = connServer.clientServicePortPrivate;
+				item.m_connectionServerPort = connServer.clientServicePortPrivate;
 			}
 			else
 			{
-				item.m_connectionServerPort     = connServer.clientServicePortPublic;
+				item.m_connectionServerPort = connServer.clientServicePortPublic;
 			}
-			if(item.m_connectionServerPort)
+			if (item.m_connectionServerPort)
 			{
 				item.m_connectionServerPingPort = connServer.pingPort;
 
@@ -1580,27 +1630,27 @@ void LoginServer::sendClusterStatus(ClientConnection &conn) const
 				// population count to secured internal connections with
 				// admin privilege >= 10
 				if (clientIsPrivate && conn.getIsSecure() && (conn.getAdminLevel() >= 10))
-					item.m_populationOnline     = cle->m_numPlayers;
+					item.m_populationOnline = cle->m_numPlayers;
 				else
-					item.m_populationOnline     = -1;
+					item.m_populationOnline = -1;
 
 				const int percentFull = cle->m_numPlayers * 100 / cle->m_onlinePlayerLimit;
 				if (percentFull >= 100)
 					item.m_populationOnlineStatus = LoginClusterStatus::ClusterData::PS_full;
 				else if (percentFull >= ConfigLoginServer::getPopulationExtremelyHeavyThresholdPercent())
 					item.m_populationOnlineStatus = LoginClusterStatus::ClusterData::PS_extremely_heavy;
-   				else if (percentFull >= ConfigLoginServer::getPopulationVeryHeavyThresholdPercent())
+				else if (percentFull >= ConfigLoginServer::getPopulationVeryHeavyThresholdPercent())
 					item.m_populationOnlineStatus = LoginClusterStatus::ClusterData::PS_very_heavy;
-   				else if (percentFull >= ConfigLoginServer::getPopulationHeavyThresholdPercent())
+				else if (percentFull >= ConfigLoginServer::getPopulationHeavyThresholdPercent())
 					item.m_populationOnlineStatus = LoginClusterStatus::ClusterData::PS_heavy;
-   				else if (percentFull >= ConfigLoginServer::getPopulationMediumThresholdPercent())
+				else if (percentFull >= ConfigLoginServer::getPopulationMediumThresholdPercent())
 					item.m_populationOnlineStatus = LoginClusterStatus::ClusterData::PS_medium;
-   				else if (percentFull >= ConfigLoginServer::getPopulationLightThresholdPercent())
+				else if (percentFull >= ConfigLoginServer::getPopulationLightThresholdPercent())
 					item.m_populationOnlineStatus = LoginClusterStatus::ClusterData::PS_light;
-   				else
+				else
 					item.m_populationOnlineStatus = LoginClusterStatus::ClusterData::PS_very_light;
 
-				item.m_maxCharactersPerAccount  = cle->m_maxCharactersPerAccount;
+				item.m_maxCharactersPerAccount = cle->m_maxCharactersPerAccount;
 				if (cle->m_readyForPlayers)
 				{
 					item.m_status = LoginClusterStatus::ClusterData::S_up;
@@ -1611,7 +1661,7 @@ void LoginServer::sendClusterStatus(ClientConnection &conn) const
 						item.m_status = LoginClusterStatus::ClusterData::S_restricted;
 					}
 					if ((cle->m_numPlayers >= cle->m_onlinePlayerLimit)
-					    || (isFreeTrialAccount && (cle->m_numFreeTrialPlayers >= cle->m_onlineFreeTrialLimit)))
+						|| (isFreeTrialAccount && (cle->m_numFreeTrialPlayers >= cle->m_onlineFreeTrialLimit)))
 					{
 						item.m_status = LoginClusterStatus::ClusterData::S_full;
 					}
@@ -1620,31 +1670,30 @@ void LoginServer::sendClusterStatus(ClientConnection &conn) const
 					item.m_status = LoginClusterStatus::ClusterData::S_loading;
 				if (cle->m_locked && !clientIsPrivate)
 					item.m_status = LoginClusterStatus::ClusterData::S_locked; // locked takes precedence over up or loading
-					
+
 				item.m_dontRecommend = (cle->m_notRecommendedDatabase || cle->m_notRecommendedCentral);
-				item.m_onlinePlayerLimit        = cle->m_onlinePlayerLimit;
-				item.m_onlineFreeTrialLimit     = cle->m_onlineFreeTrialLimit;
-				
+				item.m_onlinePlayerLimit = cle->m_onlinePlayerLimit;
+				item.m_onlineFreeTrialLimit = cle->m_onlineFreeTrialLimit;
+
 				data.push_back(item);
 			}
 
 			++connServer.numClients;
 			std::sort(cle->m_connectionServers.begin(), cle->m_connectionServers.end(), ConnectionServerEntryLessThan());
-			
 		}
-		
-		if ( cle )
+
+		if (cle)
 		{
 			LoginClusterStatusEx::ClusterData itemEx;
 			itemEx.m_clusterId = cle->m_clusterId;
-			itemEx.m_branch    = cle->m_branch;
-			itemEx.m_version   = cle->m_changelist;
-			dataEx.push_back( itemEx );
+			itemEx.m_branch = cle->m_branch;
+			itemEx.m_version = cle->m_changelist;
+			dataEx.push_back(itemEx);
 		}
 	}
 
 	LoginClusterStatus msg(data);
-	conn.send(msg,true);
+	conn.send(msg, true);
 }
 
 // ----------------------------------------------------------------------
@@ -1654,7 +1703,7 @@ void LoginServer::sendClusterStatus(ClientConnection &conn) const
  */
 void LoginServer::sendClusterStatusToAll() const
 {
-	for (std::map<StationId, ClientConnection*>::const_iterator i=m_validatedClientMap.begin(); i!=m_validatedClientMap.end(); ++i)
+	for (std::map<StationId, ClientConnection*>::const_iterator i = m_validatedClientMap.begin(); i != m_validatedClientMap.end(); ++i)
 	{
 		if (i->second)
 			sendClusterStatus(*(i->second));
@@ -1664,29 +1713,30 @@ void LoginServer::sendClusterStatusToAll() const
 // ----------------------------------------------------------------------
 
 LoginServer::ClusterListEntry::ClusterListEntry() :
-		m_clusterId(0),
-		m_clusterName(),
-		m_centralServerConnection(0),
-		m_connectionServers(),
-		m_numPlayers(0),
-		m_numFreeTrialPlayers(0),
-		m_numTutorialPlayers(0),
-		m_maxCharacters(ConfigLoginServer::getMaxCharactersPerCluster()),
-		m_maxCharactersPerAccount(0),
-		m_onlinePlayerLimit(0),
-		m_onlineFreeTrialLimit(0),
-		m_onlineTutorialLimit(0),
-		m_freeTrialCanCreateChar(false),
-		m_timeZone(0),
-		m_connected(false),
-		m_address(""),
-		m_port(0),
-		m_allowReconnect(true),
-		m_secret(false),
-		m_readyForPlayers(false),
-		m_locked(false),
-		m_notRecommendedDatabase(false),
-		m_notRecommendedCentral(false)
+	m_clusterId(0),
+	m_clusterName(),
+	m_centralServerConnection(0),
+	m_connectionServers(),
+	m_numPlayers(0),
+	m_numFreeTrialPlayers(0),
+	m_numTutorialPlayers(0),
+	m_maxCharacters(ConfigLoginServer::getMaxCharactersPerCluster()),
+	m_maxCharactersPerAccount(0),
+	m_onlinePlayerLimit(0),
+	m_onlineFreeTrialLimit(0),
+	m_onlineTutorialLimit(0),
+	m_freeTrialCanCreateChar(false),
+	m_timeZone(0),
+	m_connected(false),
+	m_address(""),
+	m_port(0),
+	m_allowReconnect(true),
+	m_secret(false),
+	m_readyForPlayers(false),
+	m_locked(false),
+	m_notRecommendedDatabase(false),
+	m_notRecommendedCentral(false),
+	m_changelist(0)
 {
 }
 
@@ -1713,26 +1763,26 @@ void LoginServer::updateClusterData(uint32 clusterId, const std::string &cluster
 			// refreshing data on a cluster we already know about
 			if ((cle->m_clusterName != clusterName) || (cle->m_address != address) || (cle->m_port != port))
 			{
-				DEBUG_REPORT_LOG(true,("Disconnecting from cluster %lu because its data has changed in the database.\n",clusterId));
-				disconnectCluster(*cle,true,true);
+				DEBUG_REPORT_LOG(true, ("Disconnecting from cluster %lu because its data has changed in the database.\n", clusterId));
+				disconnectCluster(*cle, true, true);
 			}
 		}
 	}
 
 	if (!cle)
 	{
-		DEBUG_REPORT_LOG(true,("Cluster %lu: %s\n", clusterId, clusterName.c_str()));
+		DEBUG_REPORT_LOG(true, ("Cluster %lu: %s\n", clusterId, clusterName.c_str()));
 
 		cle = new ClusterListEntry;
 		m_clusterList.push_back(cle);
 	}
 
 	if ((cle->m_secret != secret)
-	    || (cle->m_locked != locked)
-	    || (cle->m_onlinePlayerLimit != onlinePlayerLimit)
-	    || (cle->m_onlineFreeTrialLimit != onlineFreeTrialLimit)
-	    || (cle->m_freeTrialCanCreateChar != freeTrialCanCreateChar)
-	    || (cle->m_onlineTutorialLimit != onlineTutorialLimit))
+		|| (cle->m_locked != locked)
+		|| (cle->m_onlinePlayerLimit != onlinePlayerLimit)
+		|| (cle->m_onlineFreeTrialLimit != onlineFreeTrialLimit)
+		|| (cle->m_freeTrialCanCreateChar != freeTrialCanCreateChar)
+		|| (cle->m_onlineTutorialLimit != onlineTutorialLimit))
 	{
 		// The cluster may now be locked/unlocked to some players, so let them know
 		m_clusterStatusChanged = true;
@@ -1742,7 +1792,7 @@ void LoginServer::updateClusterData(uint32 clusterId, const std::string &cluster
 	if (((cle->m_locked != locked) || (cle->m_secret != secret)) && cle->m_connected && cle->m_centralServerConnection)
 	{
 		GenericValueTypeMessage<std::pair<bool, bool> > const msgState("UpdateClusterLockedAndSecretState", std::make_pair(locked, secret));
-		cle->m_centralServerConnection->send(msgState,true);
+		cle->m_centralServerConnection->send(msgState, true);
 	}
 
 	bool const clusterIdSet = ((cle->m_clusterId == 0) && (clusterId > 0));
@@ -1806,7 +1856,7 @@ void LoginServer::disconnectCluster(ClusterListEntry &cle, bool const forceDisco
 	// started, and the LoginServer will connect to it
 	if (!ConfigLoginServer::getDevelopmentMode() && reconnect)
 	{
-		for (ClusterListType::iterator i=m_clusterList.begin(); i!=m_clusterList.end(); ++i)
+		for (ClusterListType::iterator i = m_clusterList.begin(); i != m_clusterList.end(); ++i)
 		{
 			NOT_NULL(*i);
 			if (!(*i)->m_centralServerConnection && !(*i)->m_allowReconnect && ((*i)->m_address == cle.m_address))
@@ -1824,7 +1874,7 @@ void LoginServer::disconnectCluster(ClusterListEntry &cle, bool const forceDisco
  */
 void LoginServer::onClusterRegistered(uint32 clusterId, const std::string &clusterName)
 {
-	DEBUG_FATAL(!ConfigLoginServer::getDevelopmentMode(),("Programmer bug:  should not be registering new clusters automatically unless running in development mode.\n"));
+	DEBUG_FATAL(!ConfigLoginServer::getDevelopmentMode(), ("Programmer bug:  should not be registering new clusters automatically unless running in development mode.\n"));
 	static std::string noAddress("");
 	updateClusterData(clusterId, clusterName, noAddress, 0, false, false, false, 8, 100, 100, true, 350);
 }
@@ -1838,14 +1888,14 @@ void LoginServer::onClusterRegistered(uint32 clusterId, const std::string &clust
 LoginServer::ClusterListEntry * LoginServer::findClusterById(uint32 clusterId)
 {
 	ClusterListType::const_iterator i;
-	for (i=m_clusterList.begin(); i!=m_clusterList.end(); ++i)
+	for (i = m_clusterList.begin(); i != m_clusterList.end(); ++i)
 	{
-		NOT_NULL(*i); // not legal to push null pointers on the vector
+		NOT_NULL(*i); // not legal to push nullptr pointers on the vector
 		if ((*i)->m_clusterId == clusterId)
 			return *i;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -1857,14 +1907,14 @@ LoginServer::ClusterListEntry * LoginServer::findClusterById(uint32 clusterId)
 LoginServer::ClusterListEntry * LoginServer::findClusterByConnection(const CentralServerConnection *connection)
 {
 	ClusterListType::const_iterator i;
-	for (i=m_clusterList.begin(); i!=m_clusterList.end(); ++i)
+	for (i = m_clusterList.begin(); i != m_clusterList.end(); ++i)
 	{
-		NOT_NULL(*i); // not legal to push null pointers on the vector
+		NOT_NULL(*i); // not legal to push nullptr pointers on the vector
 		if ((*i)->m_centralServerConnection == connection)
 			return *i;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -1874,7 +1924,7 @@ void LoginServer::refreshConnections()
 	if (ConfigLoginServer::getDevelopmentMode())
 		return; // in development mode, we don't establish any connections
 	ClusterListType::iterator i;
-	for (i=m_clusterList.begin(); i!=m_clusterList.end(); ++i)
+	for (i = m_clusterList.begin(); i != m_clusterList.end(); ++i)
 	{
 		NOT_NULL(*i);
 		if (!(*i)->m_centralServerConnection && (*i)->m_allowReconnect)
@@ -1890,13 +1940,13 @@ void LoginServer::refreshConnections()
 
 // ----------------------------------------------------------------------
 
-void LoginServer::sendToCluster (uint32 clusterId, const GameNetworkMessage &message)
+void LoginServer::sendToCluster(uint32 clusterId, const GameNetworkMessage &message)
 {
 	ClusterListEntry *cle = findClusterById(clusterId);
 	if (cle && cle->m_connected && cle->m_centralServerConnection)
-		cle->m_centralServerConnection->send(message,true);
+		cle->m_centralServerConnection->send(message, true);
 	else
-		DEBUG_REPORT_LOG(true,("Could not send message to cluster %lu because it was not connected.\n",clusterId));
+		DEBUG_REPORT_LOG(true, ("Could not send message to cluster %lu because it was not connected.\n", clusterId));
 }
 
 //-----------------------------------------------------------------------
@@ -1908,13 +1958,13 @@ void LoginServer::setDone(const bool isDone)
 
 // ----------------------------------------------------------------------
 
-void LoginServer::sendToAllClusters(GameNetworkMessage const & message, Connection const * excludeCentralConnection /*= NULL*/, uint32 excludeClusterId /*= 0*/, char const * excludeClusterName /*= NULL*/)
+void LoginServer::sendToAllClusters(GameNetworkMessage const & message, Connection const * excludeCentralConnection /*= nullptr*/, uint32 excludeClusterId /*= 0*/, char const * excludeClusterName /*= nullptr*/)
 {
 	ClusterListType::const_iterator i;
-	for (i=m_clusterList.begin(); i!=m_clusterList.end(); ++i)
+	for (i = m_clusterList.begin(); i != m_clusterList.end(); ++i)
 	{
-		if (NON_NULL(*i)->m_connected && (*i)->m_centralServerConnection && ((*i)->m_centralServerConnection != excludeCentralConnection) && ((*i)->m_clusterId != excludeClusterId) && ((excludeClusterName == NULL) || _stricmp(excludeClusterName, (*i)->m_centralServerConnection->getClusterName().c_str())))
-			(*i)->m_centralServerConnection->send(message,true);
+		if (NON_NULL(*i)->m_connected && (*i)->m_centralServerConnection && ((*i)->m_centralServerConnection != excludeCentralConnection) && ((*i)->m_clusterId != excludeClusterId) && ((excludeClusterName == nullptr) || _stricmp(excludeClusterName, (*i)->m_centralServerConnection->getClusterName().c_str())))
+			(*i)->m_centralServerConnection->send(message, true);
 	}
 }
 
@@ -1924,9 +1974,9 @@ bool LoginServer::areAllClustersUp() const
 {
 	if (m_clusterList.empty())
 		return false;
-	
+
 	ClusterListType::const_iterator i;
-	for (i=m_clusterList.begin(); i!=m_clusterList.end(); ++i)
+	for (i = m_clusterList.begin(); i != m_clusterList.end(); ++i)
 	{
 		if (!(NON_NULL(*i)->m_readyForPlayers))
 			return false;
@@ -1936,16 +1986,15 @@ bool LoginServer::areAllClustersUp() const
 
 // ----------------------------------------------------------------------
 
-void LoginServer::getAllClusterNamesAndIDs( std::map< std::string, uint32 > &results ) const
+void LoginServer::getAllClusterNamesAndIDs(std::map< std::string, uint32 > &results) const
 {
 	results.clear();
-	for (ClusterListType::const_iterator i=m_clusterList.begin(); i!=m_clusterList.end(); ++i)
+	for (ClusterListType::const_iterator i = m_clusterList.begin(); i != m_clusterList.end(); ++i)
 	{
-		if( !*i )
+		if (!*i)
 			continue;
-		results[ (*i)->m_clusterName ] = (*i)->m_clusterId;
+		results[(*i)->m_clusterName] = (*i)->m_clusterId;
 	}
-	
 }
 
 // ----------------------------------------------------------------------
@@ -1953,20 +2002,20 @@ void LoginServer::getAllClusterNamesAndIDs( std::map< std::string, uint32 > &res
 void LoginServer::getClusterIds(std::vector<uint32> result)
 {
 	result.reserve(m_clusterList.size());
-	for (ClusterListType::const_iterator i=m_clusterList.begin(); i!=m_clusterList.end(); ++i)
+	for (ClusterListType::const_iterator i = m_clusterList.begin(); i != m_clusterList.end(); ++i)
 		result.push_back(NON_NULL(*i)->m_clusterId);
 }
 
 // ----------------------------------------------------------------------
 
-void LoginServer::setClusterInfoByName( const std::string &name, const std::string &branch, int changelist, const std::string &networkVersion )
+void LoginServer::setClusterInfoByName(const std::string &name, const std::string &branch, int changelist, const std::string &networkVersion)
 {
-	ClusterListEntry *entry = findClusterByName( name );
-	
-	if ( entry )
+	ClusterListEntry *entry = findClusterByName(name);
+
+	if (entry)
 	{
-		entry->m_branch         = branch;
-		entry->m_changelist     = changelist;
+		entry->m_branch = branch;
+		entry->m_changelist = changelist;
 		entry->m_networkVersion = networkVersion;
 	}
 }

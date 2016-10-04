@@ -133,7 +133,7 @@ void BiographyManager::deleteBiography(const NetworkId &owner)
 
 	DEBUG_FATAL(!m_installed, ("BioManager not installed"));
 	
-	BiographyMessage const msg(owner,NULL);
+	BiographyMessage const msg(owner,nullptr);
 	GameServer::getInstance().sendToDatabaseServer(msg);
 
 	// Save off the bio for viewing by other players

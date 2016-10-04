@@ -124,7 +124,6 @@ include_directories(
 	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/localization/include
 	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicode/include
 	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicodeArchive/include/public
-	${Boost_INCLUDE_DIR}
 )
 
 add_library(sharedUtility STATIC

@@ -13,7 +13,8 @@
 #include "Archive/AutoByteStream.h"
 #include "sharedFoundation/NetworkId.h"
 #include "sharedNetworkMessages/BaselinesMessage.h"
-#include "boost/smart_ptr.hpp"
+
+#include <memory>
 
 
 class WearableEntry;
@@ -42,8 +43,8 @@ class WearableEntry
 	int         m_arrangement;
 	NetworkId   m_networkId;
 	int         m_objectTemplate;
-	boost::shared_ptr<const BaselinesMessage> m_weaponSharedBaselines;
-	boost::shared_ptr<const BaselinesMessage> m_weaponSharedNpBaselines;
+	std::shared_ptr<const BaselinesMessage> m_weaponSharedBaselines;
+	std::shared_ptr<const BaselinesMessage> m_weaponSharedNpBaselines;
 
 	bool operator==(const WearableEntry&) const;
 

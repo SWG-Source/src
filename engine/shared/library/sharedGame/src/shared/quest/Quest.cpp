@@ -358,7 +358,7 @@ int Quest::getNumberOfTasks() const
 QuestTask const * Quest::getTask(int const taskId) const
 {
 	if (taskId < 0 || taskId >= getNumberOfTasks())
-		return NULL;
+		return nullptr;
 	return (*m_tasks)[static_cast<size_t>(taskId)];
 }
 
@@ -482,15 +482,6 @@ int Quest::getMoneyRewardCredits() const
 {
 	return m_moneyRewardCredits;
 }
-
-// ----------------------------------------------------------------------
-
-#if 0
-std::vector<QuestTask *> const & Quest::getTasks() const
-{
-	return *m_tasks;
-}
-#endif
 
 // ----------------------------------------------------------------------
 

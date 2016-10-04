@@ -91,13 +91,6 @@ namespace PreloadManagerNameSpace
 				if (tmp)
 					line = tmp;
 
-				DataTable* dt =  DataTableManager::getTable(line, true);
-#if 0
-				if (dt)
-					ms_dataTableList.push_back(dt);
-#else
-				UNREF(dt);
-#endif
 				DEBUG_REPORT_LOG(true, ("."));
 				line = fgets(buf, 256, fp);
 			}

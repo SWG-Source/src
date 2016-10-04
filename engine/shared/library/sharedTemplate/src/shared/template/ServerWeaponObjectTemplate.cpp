@@ -17,8 +17,7 @@
 #include "sharedDebug/DataLint.h"
 #include "sharedFile/Iff.h"
 #include "sharedTemplateDefinition/ObjectTemplate.h"
-#include <algorithm>
-#include <cstdio>
+#include <stdio.h>
 
 
 
@@ -103,9 +102,9 @@ CompilerIntegerParam * ServerWeaponObjectTemplate::getCompilerIntegerParam(const
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_weaponType;
 		}
@@ -117,9 +116,9 @@ CompilerIntegerParam * ServerWeaponObjectTemplate::getCompilerIntegerParam(const
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_attackType;
 		}
@@ -131,9 +130,9 @@ CompilerIntegerParam * ServerWeaponObjectTemplate::getCompilerIntegerParam(const
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_damageType;
 		}
@@ -145,9 +144,9 @@ CompilerIntegerParam * ServerWeaponObjectTemplate::getCompilerIntegerParam(const
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_elementalType;
 		}
@@ -159,9 +158,9 @@ CompilerIntegerParam * ServerWeaponObjectTemplate::getCompilerIntegerParam(const
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_elementalValue;
 		}
@@ -173,9 +172,9 @@ CompilerIntegerParam * ServerWeaponObjectTemplate::getCompilerIntegerParam(const
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_minDamageAmount;
 		}
@@ -187,9 +186,9 @@ CompilerIntegerParam * ServerWeaponObjectTemplate::getCompilerIntegerParam(const
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_maxDamageAmount;
 		}
@@ -201,9 +200,9 @@ CompilerIntegerParam * ServerWeaponObjectTemplate::getCompilerIntegerParam(const
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_attackCost;
 		}
@@ -215,9 +214,9 @@ CompilerIntegerParam * ServerWeaponObjectTemplate::getCompilerIntegerParam(const
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_accuracy;
 		}
@@ -225,7 +224,7 @@ CompilerIntegerParam * ServerWeaponObjectTemplate::getCompilerIntegerParam(const
 	}
 	else
 		return ServerTangibleObjectTemplate::getCompilerIntegerParam(name, deepCheck, index);
-	return NULL;
+	return nullptr;
 }	//ServerWeaponObjectTemplate::getCompilerIntegerParam
 
 FloatParam * ServerWeaponObjectTemplate::getFloatParam(const char *name, bool deepCheck, int index)
@@ -236,9 +235,9 @@ FloatParam * ServerWeaponObjectTemplate::getFloatParam(const char *name, bool de
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getFloatParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_attackSpeed;
 		}
@@ -250,9 +249,9 @@ FloatParam * ServerWeaponObjectTemplate::getFloatParam(const char *name, bool de
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getFloatParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_audibleRange;
 		}
@@ -264,9 +263,9 @@ FloatParam * ServerWeaponObjectTemplate::getFloatParam(const char *name, bool de
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getFloatParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_minRange;
 		}
@@ -278,9 +277,9 @@ FloatParam * ServerWeaponObjectTemplate::getFloatParam(const char *name, bool de
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getFloatParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_maxRange;
 		}
@@ -292,9 +291,9 @@ FloatParam * ServerWeaponObjectTemplate::getFloatParam(const char *name, bool de
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getFloatParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_damageRadius;
 		}
@@ -306,9 +305,9 @@ FloatParam * ServerWeaponObjectTemplate::getFloatParam(const char *name, bool de
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getFloatParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_woundChance;
 		}
@@ -316,7 +315,7 @@ FloatParam * ServerWeaponObjectTemplate::getFloatParam(const char *name, bool de
 	}
 	else
 		return ServerTangibleObjectTemplate::getFloatParam(name, deepCheck, index);
-	return NULL;
+	return nullptr;
 }	//ServerWeaponObjectTemplate::getFloatParam
 
 BoolParam * ServerWeaponObjectTemplate::getBoolParam(const char *name, bool deepCheck, int index)
@@ -409,12 +408,12 @@ char paramName[MAX_NAME_SIZE];
 		file.read_string(baseFilename);
 		file.exitChunk();
 		const ObjectTemplate *base = ObjectTemplateList::fetch(baseFilename);
-		DEBUG_WARNING(base == NULL, ("was unable to load base template %s", baseFilename.c_str()));
-		if (m_baseData == base && base != NULL)
+		DEBUG_WARNING(base == nullptr, ("was unable to load base template %s", baseFilename.c_str()));
+		if (m_baseData == base && base != nullptr)
 			base->releaseReference();
 		else
 		{
-			if (m_baseData != NULL)
+			if (m_baseData != nullptr)
 				m_baseData->releaseReference();
 			m_baseData = base;
 		}

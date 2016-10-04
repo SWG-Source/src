@@ -235,7 +235,7 @@ namespace SetupSwgServerNetworkMessagesNamespace
 	}
 	MessageQueue::Data* unpackNothing(Archive::ReadIterator &)
 	{
-		return NULL;
+		return nullptr;
 	}
 
 	void packVectorNetworkIdVector(const MessageQueue::Data * data, Archive::ByteStream & target)

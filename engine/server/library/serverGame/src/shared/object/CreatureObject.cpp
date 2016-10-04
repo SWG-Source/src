@@ -189,7 +189,7 @@
 //----------------------------------------------------------------------
 // static CreatureObject vars
 
-const SharedObjectTemplate * CreatureObject::m_defaultSharedTemplate = NULL;
+const SharedObjectTemplate * CreatureObject::m_defaultSharedTemplate = nullptr;
 
 //----------------------------------------------------------------------
 
@@ -661,9 +661,9 @@ float MonitoredCreatureMovement::operator-(MonitoredCreatureMovement const &othe
 
 CreatureObject::CreatureObject(const ServerCreatureObjectTemplate* newTemplate) :
 	TangibleObject(newTemplate),
-	m_commandQueue(NULL),
+	m_commandQueue(nullptr),
 	m_isStatic(false),
-	m_shield(NULL),
+	m_shield(nullptr),
 	m_regenerationTime(0),
 	m_attributes(Attributes::NumberOfAttributes),
 	m_maxAttributes(Attributes::NumberOfAttributes),
@@ -942,7 +942,7 @@ CreatureObject::~CreatureObject()
 			trade->cancelTrade(*this);
 	}
 //	AICreatureController * aiController = AICreatureController::asAiCreatureController(controller);
-//	if (aiController != NULL)
+//	if (aiController != nullptr)
 //	{
 //		aiController->stop();
 //	}
@@ -1083,15 +1083,15 @@ const SharedObjectTemplate * CreatureObject::getDefaultSharedTemplate() const
 {
 static const ConstCharCrcLowerString templateName("object/creature/base/shared_creature_default.iff");
 
-	if (m_defaultSharedTemplate == NULL)
+	if (m_defaultSharedTemplate == nullptr)
 	{
 		m_defaultSharedTemplate = safe_cast<const SharedObjectTemplate *>(
 			ObjectTemplateList::fetch(templateName));
 
-		DEBUG_WARNING(m_defaultSharedTemplate == NULL, ("Cannot create "
+		DEBUG_WARNING(m_defaultSharedTemplate == nullptr, ("Cannot create "
 			"default shared object template %s", templateName.getString()));
 			
-		if (m_defaultSharedTemplate != NULL)
+		if (m_defaultSharedTemplate != nullptr)
 			ExitChain::add (removeDefaultTemplate, "CreatureObject::removeDefaultTemplate");
 	}
 	return m_defaultSharedTemplate;
@@ -1104,10 +1104,10 @@ static const ConstCharCrcLowerString templateName("object/creature/base/shared_c
  */
 void CreatureObject::removeDefaultTemplate()
 {
-	if (m_defaultSharedTemplate != NULL)
+	if (m_defaultSharedTemplate != nullptr)
 	{
 		m_defaultSharedTemplate->releaseReference();
-		m_defaultSharedTemplate = NULL;
+		m_defaultSharedTemplate = nullptr;
 	}
 }	// CreatureObject::removeDefaultTemplate
 
@@ -1192,7 +1192,7 @@ void CreatureObject::runSpawnQueue()
 					ScriptParams params;
 					ScriptDictionaryPtr dictionary;
 					GameScriptObject::makeScriptDictionary(params, dictionary);
-					if (dictionary.get() != NULL)
+					if (dictionary.get() != nullptr)
 					{
 						dictionary->serialize();
 						MessageToQueue::getInstance().sendMessageToJava(id, "spawn_Trigger", dictionary->getSerializedData(), 0, false);
@@ -1263,7 +1263,7 @@ bool CreatureObject::assignMission(MissionObject * missionObject)
 			}
 
 			Container::ContainerErrorCode tmp = Container::CEC_Success;
-			result = ContainerInterface::transferItemToGeneralContainer(*datapad, *missionObject, NULL, tmp);
+			result = ContainerInterface::transferItemToGeneralContainer(*datapad, *missionObject, nullptr, tmp);
 			if(result)
 			{
 				missionObject->setMissionHolderId(getNetworkId());
@@ -1725,7 +1725,7 @@ void CreatureObject::forwardServerObjectSpecificBaselines() const
 	TangibleObject::forwardServerObjectSpecificBaselines();
 
 	Property const * const property = getProperty(SlowDownProperty::getClassPropertyId());
-	if (property != NULL)
+	if (property != nullptr)
 	{
 		SlowDownProperty const * const slowdownProperty = safe_cast<const SlowDownProperty *>(property);
 
@@ -1736,7 +1736,7 @@ void CreatureObject::forwardServerObjectSpecificBaselines() const
 	// if we are an ai creature, have our controller send our current ai state
 	AICreatureController const * const aiCreatureController = AICreatureController::asAiCreatureController(getController());
 
-	if (aiCreatureController != NULL)
+	if (aiCreatureController != nullptr)
 	{
 		aiCreatureController->forwardServerObjectSpecificBaselines();
 }
@@ -1749,7 +1749,7 @@ void CreatureObject::sendObjectSpecificBaselinesToClient(Client const &client) c
 	TangibleObject::sendObjectSpecificBaselinesToClient(client);
 
 	Property const * const property = getProperty(SlowDownProperty::getClassPropertyId());
-	if (property != NULL)
+	if (property != nullptr)
 	{
 		SlowDownProperty const * const slowdownProperty = safe_cast<const SlowDownProperty *>(property);
 
@@ -1778,7 +1778,7 @@ void CreatureObject::initializeFirstTimeObject()
 
 	// set the current weapon
 	WeaponObject * weapon = getReadiedWeapon();
-	if (weapon != NULL)
+	if (weapon != nullptr)
 		setCurrentWeapon(*weapon);
 
 #ifdef _DEBUG
@@ -1835,7 +1835,7 @@ void CreatureObject::onLoadedFromDatabase()
 				{
 					Container::ContainedItem itemId = container->getObjectInSlot(slot, tmp);
 					Object* appearanceInventory = itemId.getObject();
-					if(appearanceInventory == NULL)
+					if(appearanceInventory == nullptr)
 					{
 						WARNING(true, ("Player %s has lost their appearance inventory", getNetworkId().getValueString().c_str()));
 						appearanceInventory = ServerWorld::createNewObject(s_appearanceTemplate, *this, slot, false);
@@ -1941,7 +1941,7 @@ void CreatureObject::onLoadedFromDatabase()
 							if (i.getValue(ctsTransactionDetail))
 							{
 								Unicode::UnicodeStringVector tokens;
-								if (Unicode::tokenize(ctsTransactionDetail, tokens, NULL, NULL) && (tokens.size() >= 4))
+								if (Unicode::tokenize(ctsTransactionDetail, tokens, nullptr, nullptr) && (tokens.size() >= 4))
 								{
 									int const transferTime = atoi(Unicode::wideToNarrow(tokens[0]).c_str());
 									if ((earliestTransferTime == -1) || (transferTime < earliestTransferTime))
@@ -1978,7 +1978,7 @@ void CreatureObject::onLoadedFromDatabase()
 					}
 
 					// set "born on <galaxy>" collection slot and clear all the other "born on <galaxy>" collection slots;
-					// this still needs to be run even if collectionSlot is NULL in order to forcefully clear all of the
+					// this still needs to be run even if collectionSlot is nullptr in order to forcefully clear all of the
 					// other "born on <galaxy>" collection slots, since we are reusing deleted/no longer used collection
 					// slot bits, and those bits may be left in a set state at the time they were deleted/no longer used
 					std::vector<CollectionsDataTable::CollectionInfoSlot const *> const & slots = CollectionsDataTable::getSlotsInCollection("born_on_collection");
@@ -2064,7 +2064,7 @@ void CreatureObject::onLoadedFromDatabase()
 		std::vector<std::pair<std::string, int> > skillModBonuses;
 		std::vector<std::pair<int, int> > attribBonuses;
 		Container const * const equipment = ContainerInterface::getContainer(*this);
-		if (equipment != NULL)
+		if (equipment != nullptr)
 		{
 			for (ContainerConstIterator i(equipment->begin()); i != equipment->end(); ++i)
 			{
@@ -2072,7 +2072,7 @@ void CreatureObject::onLoadedFromDatabase()
 				if (so)
 				{
 					TangibleObject const * const equippedItem = so->asTangibleObject();
-					if (equippedItem != NULL)
+					if (equippedItem != nullptr)
 					{
 						equippedItem->getSkillModBonuses(skillModBonuses);
 						int bonusCount = skillModBonuses.size();
@@ -2110,7 +2110,7 @@ void CreatureObject::onLoadedFromDatabase()
 		setDefaultAlterTime(defaultAlterTime);
 
 		CreatureController * controller = getCreatureController();
-		if (controller != NULL)
+		if (controller != nullptr)
 			controller->updateHibernate();
 	}
 }
@@ -2379,7 +2379,7 @@ void CreatureObject::endBaselines()
 void CreatureObject::checkAndRestoreRequiredSlots()
 {
 	SlottedContainer * const container = ContainerInterface::getSlottedContainer(*this);
-	if (container == NULL)
+	if (container == nullptr)
 	{
 		WARNING_STRICT_FATAL(true, ("This creature is not slotted!"));
 		return;
@@ -2422,7 +2422,7 @@ void CreatureObject::checkAndRestoreRequiredSlots()
 		{
 			Container::ContainedItem itemId = container->getObjectInSlot(slot, tmp);
 			Object* inventory = itemId.getObject();
-			if (inventory == NULL)
+			if (inventory == nullptr)
 			{
 				WARNING(true, ("Player %s has lost their inventory", getNetworkId().getValueString().c_str()));
 				inventory = ServerWorld::createNewObject(s_inventoryTemplate, *this, slot, false);
@@ -2438,7 +2438,7 @@ void CreatureObject::checkAndRestoreRequiredSlots()
 		{
 			Container::ContainedItem itemId = container->getObjectInSlot(slot, tmp);
 			Object* datapad = itemId.getObject();
-			if (datapad == NULL)
+			if (datapad == nullptr)
 			{
 				WARNING(true, ("Player %s has lost their datapad", getNetworkId().getValueString().c_str()));
 				datapad = ServerWorld::createNewObject(s_datapadTemplate, *this, slot, false);
@@ -2454,7 +2454,7 @@ void CreatureObject::checkAndRestoreRequiredSlots()
 		{
 			Container::ContainedItem itemId = container->getObjectInSlot(slot, tmp);
 			ServerObject* missionBag = safe_cast<ServerObject*>(itemId.getObject());
-			if (missionBag == NULL)
+			if (missionBag == nullptr)
 			{
 				WARNING(true, ("Player %s has lost their mission bag", getNetworkId().getValueString().c_str()));
 				missionBag = ServerWorld::createNewObject(s_missionBagTemplate, *this, slot, false);
@@ -2472,7 +2472,7 @@ void CreatureObject::checkAndRestoreRequiredSlots()
 		{
 			Container::ContainedItem itemId = container->getObjectInSlot(slot, tmp);
 			ServerObject* bank = safe_cast<ServerObject*>(itemId.getObject());
-			if (bank == NULL)
+			if (bank == nullptr)
 			{
 				WARNING(true, ("Player %s has lost their bank", getNetworkId().getValueString().c_str()));
 				bank = ServerWorld::createNewObject(s_bankTemplate, *this, slot, false);
@@ -2502,7 +2502,7 @@ void CreatureObject::onRemovingFromWorld()
 	{
 		// if we are crafting, end the crafting session
 		PlayerObject * const player = PlayerCreatureController::getPlayerObject(this);
-		if (player != NULL && player->isCrafting())
+		if (player != nullptr && player->isCrafting())
 			player->stopCrafting(false);
 
 		// exit all notify regions
@@ -2541,7 +2541,7 @@ void CreatureObject::addToWorld()
 	Object::addToWorld();
 	updateTriggerVolumes();
 
-	if (getScriptObject() != NULL)
+	if (getScriptObject() != nullptr)
 		getScriptObject()->setOwnerIsLoaded();
 
 	ContainedByProperty * const containedByProperty = getContainedByProperty();
@@ -2607,7 +2607,7 @@ void CreatureObject::setupSkillData()
 			clearCommands();
 
 			PlayerObject * const playerObject = PlayerCreatureController::getPlayerObject(this);
-			if (playerObject != NULL)
+			if (playerObject != nullptr)
 			{
 				playerObject->clearSchematics();
 			}
@@ -2679,7 +2679,7 @@ void CreatureObject::setupSkillData()
 			DynamicVariableList::NestedList::const_iterator i(schematics.begin());
 			for (; i != schematics.end(); ++i)
 			{
-				grantSchematic(strtoul(i.getName().c_str(), NULL, 10), true);
+				grantSchematic(strtoul(i.getName().c_str(), nullptr, 10), true);
 			}
 		}
 
@@ -2711,7 +2711,7 @@ Controller* CreatureObject::createDefaultController ()
 
 		AICreatureController * const aiCreatureController = AICreatureController::asAiCreatureController(controller);
 
-		if (aiCreatureController != NULL)
+		if (aiCreatureController != nullptr)
 		{
 			aiCreatureController->addServerNpAutoDeltaVariables(m_serverPackage_np);
 		}
@@ -2758,7 +2758,7 @@ void CreatureObject::setAuthServerProcessId(uint32 processId)
 	if (oldProcess != getAuthServerProcessId())
 	{
 		// we can't trade if we are on different servers, so cancel it
-		if (getCreatureController()->getSecureTrade() != NULL)
+		if (getCreatureController()->getSecureTrade() != nullptr)
 		{
 			getCreatureController()->getSecureTrade()->cancelTrade(*this);
 		}
@@ -2786,7 +2786,7 @@ float CreatureObject::alter(float time)
 		// If the player is trading, cancel the trade.
 		// We need to force the issue to catch edge cases.
 		ServerSecureTrade * const secureTradeObject = getCreatureController()->getSecureTrade();
-		if (secureTradeObject != NULL)
+		if (secureTradeObject != nullptr)
 		{
 			secureTradeObject->cancelTrade(*this);
 		}
@@ -2821,12 +2821,6 @@ float CreatureObject::alter(float time)
 		}
 
 		//check timer and migrate stats if necessary
-
-//disable self stat migration
-#if 0
-		migrateStats(time);
-#endif
-
 		if (isPlayerControlled())
 		{
 			PROFILER_AUTO_BLOCK_DEFINE("CreatureObject::alter auth player stuff");
@@ -2854,7 +2848,7 @@ float CreatureObject::alter(float time)
 
 				if (playerObject->getIsUnsticking() && getPositionChanged())
 				{
-					Chat::sendSystemMessageSimple(*this, SharedStringIds::unstick_request_cancelled, NULL);
+					Chat::sendSystemMessageSimple(*this, SharedStringIds::unstick_request_cancelled, nullptr);
 					playerObject->setIsUnsticking(false);
 				}
 			}
@@ -2862,13 +2856,13 @@ float CreatureObject::alter(float time)
 			if (!ServerWorld::isSpaceScene())
 			{
 				// if we're in a conversation, end it if we move too far from the npc
-				if (m_npcConversation != NULL)
+				if (m_npcConversation != nullptr)
 				{
 					PROFILER_AUTO_BLOCK_DEFINE("CreatureObject::alter::npcConvCheck");
 					bool endConversation = false;
 					// check the distance to the npc
 					ServerObject const * const npc = safe_cast<ServerObject const *>(m_npcConversation->getNPC().getObject());
-					if (npc != NULL)
+					if (npc != nullptr)
 					{
 						float distance = findPosition_w().magnitudeBetween(npc->findPosition_w());
 						distance -= getRadius();
@@ -2894,7 +2888,7 @@ float CreatureObject::alter(float time)
 
 	// see if we are performing a slow down effect
 	Property * property = getProperty(SlowDownProperty::getClassPropertyId());
-	if (property != NULL)
+	if (property != nullptr)
 	{
 		// has it expired?
 		SlowDownProperty * slowdown = safe_cast<SlowDownProperty *>(property);
@@ -2909,7 +2903,7 @@ float CreatureObject::alter(float time)
 			// area, and and tell them they are moving on our effect "hill" during their next alter
 			// (player creatures are handled on the player's client)
 			Object * target = slowdown->getTarget().getObject();
-			if (target != NULL)
+			if (target != nullptr)
 			{
 				std::vector<ServerObject *> found;
 				ServerWorld::findAuthoritativeNonPlayerCreaturesInCone(*this, *target, slowdown->getConeLength(), slowdown->getConeAngle(), found);
@@ -2974,14 +2968,14 @@ bool CreatureObject::canDestroy() const
 	// turn off our default weapon so it won't prevent us from getting
 	// destroyed
 	WeaponObject * defaultWeapon = getDefaultWeapon();
-	if (defaultWeapon != NULL)
+	if (defaultWeapon != nullptr)
 		defaultWeapon->setAsDefaultWeapon(false);
 
 	bool result = TangibleObject::canDestroy();
 	if (!result)
 	{
 		// we're not being destroyed, turn our default weapon back on
-		if (defaultWeapon != NULL)
+		if (defaultWeapon != nullptr)
 			defaultWeapon->setAsDefaultWeapon(true);
 	}
 
@@ -3007,22 +3001,22 @@ void CreatureObject::initializeDefaultWeapon()
 	FATAL(!isAuthoritative(), ("CreatureObject::initializeDefaultWeapon: obj %s, while nonauth", getDebugInformation().c_str()));
 
 	ServerCreatureObjectTemplate const * const myTemplate = safe_cast<ServerCreatureObjectTemplate const *>(getObjectTemplate());
-	if (myTemplate != NULL)
+	if (myTemplate != nullptr)
 	{
 		ServerWeaponObjectTemplate const *weaponTemplate = myTemplate->getDefaultWeapon();
-		if (weaponTemplate == NULL)
+		if (weaponTemplate == nullptr)
 		{
 			WARNING(true, ("Creature template %s has no valid default weapon!", getTemplateName()));
 
 			// try to use the fallback weapon
 			weaponTemplate = dynamic_cast<ServerWeaponObjectTemplate const *>(ObjectTemplateList::fetch(ConfigServerGame::getFallbackDefaultWeapon()));
 
-			FATAL(weaponTemplate == NULL, ("CreatureObject::initializeFirstTimeObject fallback weapon template %s is bad!", ConfigServerGame::getFallbackDefaultWeapon()));
+			FATAL(weaponTemplate == nullptr, ("CreatureObject::initializeFirstTimeObject fallback weapon template %s is bad!", ConfigServerGame::getFallbackDefaultWeapon()));
 		}
 
 		WeaponObject * const weapon = safe_cast<WeaponObject *>(ServerWorld::createNewObject(*weaponTemplate, *this, s_defaultWeaponSlotId, false));
 
-		if (weapon != NULL)
+		if (weapon != nullptr)
 		{
 			weapon->setAsDefaultWeapon(true);
 		}
@@ -3044,7 +3038,7 @@ bool CreatureObject::swapDefaultWeapons(WeaponObject &newDefaultWeapon, ServerOb
 	FATAL(!newDefaultWeapon.isAuthoritative(), ("CreatureObject::swapDefaultWeapons: obj %s, weapon %s, weaponContainer %s, while newDefaultWeapon nonauth", getDebugInformation().c_str(), newDefaultWeapon.getDebugInformation().c_str(), weaponContainer.getDebugInformation().c_str()));
 	FATAL(!weaponContainer.isAuthoritative(), ("CreatureObject::swapDefaultWeapons: obj %s, weapon %s, weaponContainer %s, while weaponContainer nonauth", getDebugInformation().c_str(), newDefaultWeapon.getDebugInformation().c_str(), weaponContainer.getDebugInformation().c_str()));
 
-	// There is a window here where the default weapon can be null, so we
+	// There is a window here where the default weapon can be nullptr, so we
 	// set a flag that it's ok until we've finished the transfer.
 	FATAL(s_allowNullDefaultWeapon, ("CreatureObject::swapDefaultWeapons has been recursively called!"));
 
@@ -3080,12 +3074,12 @@ bool CreatureObject::swapDefaultWeapons(WeaponObject &newDefaultWeapon, ServerOb
 WeaponObject *CreatureObject::getDefaultWeapon() const
 {
 	SlottedContainer const * const container = ContainerInterface::getSlottedContainer(*this);
-	if (container == NULL)
+	if (container == nullptr)
 	{
-		return NULL;
+		return nullptr;
 	}
 
-	WeaponObject * defaultWeapon = NULL;
+	WeaponObject * defaultWeapon = nullptr;
 	Container::ContainerErrorCode error;
 	Container::ContainedItem itemId = container->getObjectInSlot(s_defaultWeaponSlotId, error);
 	if (error == Container::CEC_Success)
@@ -3097,7 +3091,7 @@ WeaponObject *CreatureObject::getDefaultWeapon() const
 			if (so)
 				defaultWeapon = so->asWeaponObject();
 		}
-		FATAL(!s_allowNullDefaultWeapon && defaultWeapon == NULL, ("CreatureObject::getDefaultWeapon, weapon is NULL! Object in default slot is %s", itemId.getValueString().c_str()));
+		FATAL(!s_allowNullDefaultWeapon && defaultWeapon == nullptr, ("CreatureObject::getDefaultWeapon, weapon is nullptr! Object in default slot is %s", itemId.getValueString().c_str()));
 	}
 	return defaultWeapon;
 }
@@ -3376,7 +3370,7 @@ void CreatureObject::updateSlopeMovement(const std::string & modName)
 		recomputeSlopeModPercent();
 	// if I'm modifiying the group slope mod and I'm a group leader,
 	// update my group's speed
-	else if (modName == GROUP_SLOPE_MOD && getGroup() != NULL &&
+	else if (modName == GROUP_SLOPE_MOD && getGroup() != nullptr &&
 		getGroup()->getGroupLeaderId() == getNetworkId())
 	{
 		const GroupObject::GroupMemberVector & members = getGroup()->getGroupMembers();
@@ -3385,7 +3379,7 @@ void CreatureObject::updateSlopeMovement(const std::string & modName)
 		{
 			CreatureObject * member = safe_cast<CreatureObject *>(
 				NetworkIdManager::getObjectById((*iter).first));
-			if (member != NULL)
+			if (member != nullptr)
 				member->recomputeSlopeModPercent();
 		}
 	}
@@ -3581,7 +3575,7 @@ int CreatureObject::getExperiencePoints(const std::string & experienceType) cons
 	if (isPlayerControlled())
 	{
 		const PlayerObject * const playerObject = PlayerCreatureController::getPlayerObject(this);
-		if (playerObject != NULL)
+		if (playerObject != nullptr)
 			return playerObject->getExperiencePoints(experienceType);
 	}
 	return 0;
@@ -3595,7 +3589,7 @@ const std::map<std::string, int> & CreatureObject::getExperiencePoints() const
 	if(isPlayerControlled())
 	{
 		const PlayerObject * const playerObject = PlayerCreatureController::getPlayerObject(this);
-		if(playerObject != NULL)
+		if(playerObject != nullptr)
 		{
 			return playerObject->getExperiencePoints();
 		}
@@ -3617,7 +3611,7 @@ const int CreatureObject::grantExperiencePoints(const std::string & experienceTy
 	if (isPlayerControlled())
 	{
 		PlayerObject * const playerObject = PlayerCreatureController::getPlayerObject(this);
-		if (playerObject != NULL)
+		if (playerObject != nullptr)
 		{
 			int const amountGranted = playerObject->grantExperiencePoints(experienceType, amount);
 
@@ -3770,7 +3764,7 @@ void CreatureObject::revokeSkill(const SkillObject & oldSkill, bool silent)
 
 				PlayerObject * const playerObject = PlayerCreatureController::getPlayerObject(this);
 
-				if ((playerObject != NULL) &&
+				if ((playerObject != nullptr) &&
 					(oldSkill.getSkillName() == playerObject->getTitle()))
 				{
 					StringId message("shared", "skill_title_removed");
@@ -3809,7 +3803,7 @@ const bool CreatureObject::grantSchematicGroup(const std::string & groupNameWith
 	if (isPlayerControlled())
 	{
 		PlayerObject * const playerObject = PlayerCreatureController::getPlayerObject(this);
-		if (playerObject != NULL)
+		if (playerObject != nullptr)
 			return playerObject->grantSchematicGroup(groupNameWithModifier, fromSkill);
 	}
 	return false;
@@ -3829,7 +3823,7 @@ const bool CreatureObject::grantSchematic(uint32 schematicCrc, bool fromSkill)
 	if (isPlayerControlled())
 	{
 		PlayerObject * const playerObject = PlayerCreatureController::getPlayerObject(this);
-		if (playerObject != NULL)
+		if (playerObject != nullptr)
 			return playerObject->grantSchematic(schematicCrc, fromSkill);
 	}
 	return false;
@@ -3849,7 +3843,7 @@ const bool CreatureObject::revokeSchematic(uint32 schematicCrc, bool fromSkill)
 	if (isPlayerControlled())
 	{
 		PlayerObject * const playerObject = PlayerCreatureController::getPlayerObject(this);
-		if (playerObject != NULL)
+		if (playerObject != nullptr)
 			return playerObject->revokeSchematic(schematicCrc, fromSkill);
 	}
 	return false;
@@ -3869,7 +3863,7 @@ const bool CreatureObject::hasSchematic(uint32 schematicCrc)
 	if (isPlayerControlled())
 	{
 		PlayerObject * const playerObject = PlayerCreatureController::getPlayerObject(this);
-		if (playerObject != NULL)
+		if (playerObject != nullptr)
 			return playerObject->hasSchematic(schematicCrc);
 	}
 	return false;
@@ -3909,7 +3903,7 @@ void CreatureObject::setInCombat(bool inCombat)
 
 			PlayerObject * const player = PlayerCreatureController::getPlayerObject(this);
 
-			if (player != NULL && player->isCrafting())
+			if (player != nullptr && player->isCrafting())
 			{
 				player->stopCrafting(false);
 			}
@@ -4274,10 +4268,10 @@ static const int internalTagBufLen = strlen(internalTagBuf);
 					mod.value,
 					m_attributes[mod.attrib] + mod.value);
 				DEBUG_REPORT_LOG (true, ("%s", debugBuffer));
-				if (attacker != NULL)
+				if (attacker != nullptr)
 				{
 					Client *client = attacker->getClient();
-					if (client != NULL)
+					if (client != nullptr)
 						ConsoleMgr::broadcastString(debugBuffer, client);
 				}
 			}
@@ -4359,8 +4353,8 @@ static const int internalTagBufLen = strlen(internalTagBuf);
 			else
 			{
 				const char * modName = AttribModNameManager::getInstance().getAttribModName(mod.tag);
-				if (modName == NULL)
-					modName = "<NULL>";
+				if (modName == nullptr)
+					modName = "<nullptr>";
 				WARNING(true, ("Creature %s received a mod %s with invalid "
 					"attack(%.2f) or duration(%.2f)",
 					getNetworkId().getValueString().c_str(), modName, mod.attack,
@@ -4434,11 +4428,10 @@ void CreatureObject::removeAttributeModifier (const std::string & modName)
 			{
 				sendCancelTimedMod(m.mod.tag);
 			}
-			const char * type = "attrib";
 			if (AttribMod::isSkillMod(m.mod))
 			{
 				const char * skillModName = AttribModNameManager::getInstance().getAttribModName(m.mod.skill);
-				if (skillModName != NULL)
+				if (skillModName != nullptr)
 					addModValue(skillModName, -m.maxVal, true);
 				else
 				{
@@ -4447,11 +4440,8 @@ void CreatureObject::removeAttributeModifier (const std::string & modName)
 						PlayerObject::getAccountDescription(this).c_str(),
 						m.mod.tag, m.mod.skill, m.mod.value, m.mod.sustain, m.mod.flags));
 				}
-				type = "skill";
 			}
 			m_attributeModList.erase(f);
-//			LOG("CustomerService", ("Attribs: Removed named %s mod %s from %s",
-//				type, modName.c_str(), PlayerObject::getAccountDescription(this).c_str()));
 		}
 	}
 }	// CreatureObject::removeAttributeModifier
@@ -4569,7 +4559,7 @@ void CreatureObject::removeAllAttributeAndSkillmodMods ()
 			if (AttribMod::isSkillMod(m.mod))
 			{
 				const char * skillModName = AttribModNameManager::getInstance().getAttribModName(m.mod.skill);
-				if (skillModName != NULL)
+				if (skillModName != nullptr)
 					addModValue(skillModName, -m.maxVal, true);
 			}
 			// if the mod is visible, we need to tell the player it's being
@@ -4582,7 +4572,7 @@ void CreatureObject::removeAllAttributeAndSkillmodMods ()
 			if (m.mod.flags & AttribMod::AMF_triggerOnDone)
 			{
 				const char * modName = AttribModNameManager::getInstance().getAttribModName(m.mod.tag);
-				if (modName != NULL)
+				if (modName != nullptr)
 				{
 					ScriptParams params;
 					params.addParam(modName);
@@ -4624,7 +4614,7 @@ void CreatureObject::removeAllAttributeAndSkillmodMods ()
  *
  * @param modName		the mod to look for
  *
- * @return the mod, or NULL if there is no mod with that name attached to us
+ * @return the mod, or nullptr if there is no mod with that name attached to us
  */
 const AttribMod::AttribMod * CreatureObject::getAttributeModifier(
 	const std::string & modName) const
@@ -4642,7 +4632,7 @@ const AttribMod::AttribMod * CreatureObject::getAttributeModifier(
 		if (found != m_attributeModList.end())
 			return &((*found).second.mod);
 	}
-	return NULL;
+	return nullptr;
 }	// CreatureObject::getAttributeModifier
 
 //-----------------------------------------------------------------------
@@ -4666,7 +4656,7 @@ const std::map<uint32, CreatureMod> & CreatureObject::getAttributeModifiers() co
  */
 void CreatureObject::sendTimedModData(uint32 id, float time, bool updateCache/* = true*/)
 {
-	if (isPlayerControlled() && getController() != NULL && id != 0)
+	if (isPlayerControlled() && getController() != nullptr && id != 0)
 	{
 		MessageQueueGenericValueType<std::pair<uint32, float> > * const msg =
 			new MessageQueueGenericValueType<std::pair<uint32, float> >(
@@ -4707,7 +4697,7 @@ void CreatureObject::sendTimedModData(uint32 id, float time, bool updateCache/* 
  */
 void CreatureObject::sendCancelTimedMod(uint32 id)
 {
-	if (isPlayerControlled() && getController() != NULL && id != 0)
+	if (isPlayerControlled() && getController() != nullptr && id != 0)
 	{
 		MessageQueueGenericValueType<uint32> * const msg =
 			new MessageQueueGenericValueType<uint32>(id);
@@ -4764,7 +4754,7 @@ void CreatureObject::applyDamage(const CombatEngineData::DamageData &damageData)
 
 	// if the attacker is a player and we are not, and we are incapped/dead,
 	// don't allow additional damage
-	if (attacker != NULL && attacker->isPlayerControlled() && !isPlayerControlled() &&
+	if (attacker != nullptr && attacker->isPlayerControlled() && !isPlayerControlled() &&
 		(isIncapacitated() || isDead()))
 	{
 		return;
@@ -5018,7 +5008,7 @@ void CreatureObject::decayAttributes(float time)
 			if (AttribMod::isSkillMod(m.mod))
 			{
 				const char * skillModName = AttribModNameManager::getInstance().getAttribModName(m.mod.skill);
-				if (skillModName != NULL)
+				if (skillModName != nullptr)
 				{
 					addModValue(skillModName, -m.maxVal, true);
 
@@ -5051,7 +5041,7 @@ void CreatureObject::decayAttributes(float time)
 			{
 				// tell scripts the mod has ended
 				const char * modName = AttribModNameManager::getInstance().getAttribModName(m.mod.tag);
-				if (modName != NULL)
+				if (modName != nullptr)
 				{
 					ScriptParams params;
 					params.addParam(modName);
@@ -5112,7 +5102,7 @@ void CreatureObject::decayAttributes(float time)
 					// add the skillmod mod as if it were from a skill,
 					// which makes it temporary
 					const char * skillModName = AttribModNameManager::getInstance().getAttribModName(m.mod.skill);
-					if (skillModName != NULL)
+					if (skillModName != nullptr)
 						addModValue(skillModName, delta, true);
 					else
 					{
@@ -5185,7 +5175,6 @@ void CreatureObject::decayAttributes(float time)
 
 	// regenerate attributes
 	int i;
-	bool attribRegen = false;
 	float regenerationRate[3] = {0,0,0};
 	m_regenerationTime += time;
 	for (i = 0; i < 3; ++i)
@@ -5195,7 +5184,6 @@ void CreatureObject::decayAttributes(float time)
  		int currentAttrib = getAttribute(poolAttrib);
  		if (currentAttrib < maxAttrib)
 		{
-			attribRegen = true;
 			regenerationRate[i] = getRegenRate(poolAttrib);
 			m_regeneration[poolAttrib] += regenerationRate[i] * time;
 		}
@@ -6014,7 +6002,7 @@ static const std::map<std::pair<uint32, uint32>,int> npcSchematics;
 	if (isPlayerControlled())
 	{
 		PlayerObject const * const playerObject = PlayerCreatureController::getPlayerObject(this);
-		if (playerObject != NULL)
+		if (playerObject != nullptr)
 			return playerObject->getDraftSchematics();
 	}
 	return npcSchematics;
@@ -6032,11 +6020,11 @@ static const std::map<std::pair<uint32, uint32>,int> npcSchematics;
 bool CreatureObject::isIngredientInInventory(const Object & ingredient) const
 {
 	const ServerObject * inventory = getInventory();
-	if (inventory == NULL)
+	if (inventory == nullptr)
 		return false;
 
 	const Object * container = ContainerInterface::getContainedByObject(ingredient);
-	while (container != NULL)
+	while (container != nullptr)
 	{
 		if (inventory->getNetworkId() == container->getNetworkId() ||
 			getNetworkId() == container->getNetworkId())
@@ -6057,7 +6045,7 @@ bool CreatureObject::isIngredientInInventory(const Object & ingredient) const
  */
 void CreatureObject::disableSchematicFiltering()
 {
-	if (getClient() == NULL || !getClient()->isGod())
+	if (getClient() == nullptr || !getClient()->isGod())
 		return;
 
 	setObjVarItem(OBJVAR_DISABLE_SCHEMATIC_FILTER, 1);
@@ -6071,7 +6059,7 @@ void CreatureObject::disableSchematicFiltering()
  */
 void CreatureObject::enableSchematicFiltering()
 {
-	if (getClient() == NULL || !getClient()->isGod())
+	if (getClient() == nullptr || !getClient()->isGod())
 		return;
 
 	removeObjVarItem(OBJVAR_DISABLE_SCHEMATIC_FILTER);
@@ -6087,7 +6075,7 @@ void CreatureObject::enableSchematicFiltering()
  */
 bool CreatureObject::isSchematicFilteringEnabled()
 {
-	if (getClient() == NULL || !getClient()->isGod())
+	if (getClient() == nullptr || !getClient()->isGod())
 		return true;
 
 	return (!getObjVars().hasItem(OBJVAR_DISABLE_SCHEMATIC_FILTER));
@@ -6103,17 +6091,17 @@ bool CreatureObject::isSchematicFilteringEnabled()
 void CreatureObject::getManufactureSchematics(std::vector<const ManufactureSchematicObject *> & schematics)
 {
 	const ServerObject * datapad = getDatapad();
-	if (datapad == NULL)
+	if (datapad == nullptr)
 		return;
 	const VolumeContainer * container = ContainerInterface::getVolumeContainer(*datapad);
-	if (container == NULL)
+	if (container == nullptr)
 		return;
 
 	for (ContainerConstIterator iter = container->begin(); iter != container->end(); ++iter)
 	{
 		const ManufactureSchematicObject * schematic = dynamic_cast<const
 			ManufactureSchematicObject *>((*iter).getObject());
-		if (schematic != NULL)
+		if (schematic != nullptr)
 			schematics.push_back(schematic);
 	}
 }	// CreatureObject::getManufactureSchematics(unfiltered)
@@ -6130,17 +6118,17 @@ void CreatureObject::getManufactureSchematics(std::vector<const ManufactureSchem
 void CreatureObject::getManufactureSchematics(std::vector<const ManufactureSchematicObject *> & schematics, uint32 craftingTypes)
 {
 	const ServerObject * datapad = getDatapad();
-	if (datapad == NULL)
+	if (datapad == nullptr)
 		return;
 	const VolumeContainer * container = ContainerInterface::getVolumeContainer(*datapad);
-	if (container == NULL)
+	if (container == nullptr)
 		return;
 
 	for (ContainerConstIterator iter = container->begin(); iter != container->end(); ++iter)
 	{
 		const ManufactureSchematicObject * schematic = dynamic_cast<const
 			ManufactureSchematicObject *>((*iter).getObject());
-		if (schematic != NULL && ((schematic->getCategory() & craftingTypes) != 0))
+		if (schematic != nullptr && ((schematic->getCategory() & craftingTypes) != 0))
 			schematics.push_back(schematic);
 	}
 }	// CreatureObject::getManufactureSchematics(filtered)
@@ -6278,7 +6266,7 @@ void CreatureObject::setIncapacitated(bool flag, const NetworkId & attackerId)
 
 			// if we are crafting, end the crafting session
 			PlayerObject * const player = PlayerCreatureController::getPlayerObject(this);
-			if (player != NULL && player->isCrafting())
+			if (player != nullptr && player->isCrafting())
 				player->stopCrafting(false);
 
 			if (isInNpcConversation())
@@ -6299,7 +6287,7 @@ void CreatureObject::setIncapacitated(bool flag, const NetworkId & attackerId)
 					// invoke incapacitation script on who incapacitated us
 					ServerObject * attacker = safe_cast<ServerObject *>(
 						NetworkIdManager::getObjectById(attackerId));
-					if (attacker != NULL)
+					if (attacker != nullptr)
 					{
 						params.clear();
 						params.addParam(getNetworkId());
@@ -6308,7 +6296,7 @@ void CreatureObject::setIncapacitated(bool flag, const NetworkId & attackerId)
 
 						TangibleObject * const tangibleAttacker = attacker->asTangibleObject();
 
-						if (tangibleAttacker != NULL)
+						if (tangibleAttacker != nullptr)
 						{
 							tangibleAttacker->verifyHateList();
 						}
@@ -6335,7 +6323,7 @@ void CreatureObject::setIncapacitated(bool flag, const NetworkId & attackerId)
 			setPosture(Postures::Upright);
 		}
 		// if we are a player, send us our new posture
-		if ((getController() != NULL) && !isInCombat())
+		if ((getController() != nullptr) && !isInCombat())
 		{
 			getController()->appendMessage(
 				CM_setPosture,
@@ -6466,7 +6454,7 @@ void CreatureObject::updateMovementInfo()
 				rider->requestMovementInfoUpdate();
 			else
 			{
-				LOG("mounts-bug", ("CreatureObject::updateMovementInfo(): server id=[%d],mount id=[%s],has MountedCreature state but getMountingRider() returns null.", static_cast<int>(GameServer::getInstance().getProcessId()), getNetworkId().getValueString().c_str()));
+				LOG("mounts-bug", ("CreatureObject::updateMovementInfo(): server id=[%d],mount id=[%s],has MountedCreature state but getMountingRider() returns nullptr.", static_cast<int>(GameServer::getInstance().getProcessId()), getNetworkId().getValueString().c_str()));
 				detachAllRiders();
 			}
 		}
@@ -6538,7 +6526,7 @@ void CreatureObject::setPosture(Postures::Enumerator newPosture, bool isClientIm
 			// guaranteed to be the authoritative object, this is an invalid thing to do.
 			requestMovementInfoUpdate();
 
-			if (getScriptObject() != NULL)
+			if (getScriptObject() != nullptr)
 			{
 				ScriptParams params;
 				params.addParam(oldPosture);
@@ -6950,13 +6938,13 @@ bool CreatureObject::onContainerAboutToTransfer(ServerObject * destination, Serv
 int CreatureObject::onContainerAboutToGainItem(ServerObject& item, ServerObject* transferer)
 {
 	TangibleObject const * const object = item.asTangibleObject();
-	if (object != NULL)
+	if (object != nullptr)
 	{
 		// See if this item is equippable
 		const char *sharedTemplateName = item.getSharedTemplateName();
 		if (!isAppearanceEquippable(sharedTemplateName))
 		{
-			if (getClient() != NULL)
+			if (getClient() != nullptr)
 			{
 				StringId message("shared", "item_not_equippable");
 				Unicode::String outOfBand;
@@ -6984,7 +6972,7 @@ int CreatureObject::onContainerAboutToGainItem(ServerObject& item, ServerObject*
 void CreatureObject::onContainerLostItem(ServerObject *destination, ServerObject &item, ServerObject *transferer)
 {
 	TangibleObject const * const tangibleObject = item.asTangibleObject();
-	if (tangibleObject == NULL)
+	if (tangibleObject == nullptr)
 		return;
 
 	// check if the object applies skill mod bonuses when equipped
@@ -7026,12 +7014,12 @@ void CreatureObject::onContainerLostItem(ServerObject *destination, ServerObject
 
 	// if the item is a weapon, make our current weapon our default weapon
 	WeaponObject const * const weaponObject = tangibleObject->asWeaponObject();
-	if (weaponObject != NULL && getDefaultWeapon() != NULL)
+	if (weaponObject != nullptr && getDefaultWeapon() != nullptr)
 		setCurrentWeapon(*getDefaultWeapon());
 
 	// check if the object is our shield
 	if (tangibleObject == m_shield)
-		m_shield = NULL;
+		m_shield = nullptr;
 
 	//Update wearbles data
 	SlottedContainmentProperty* scp = ContainerInterface::getSlottedContainmentProperty(item);
@@ -7060,7 +7048,7 @@ void CreatureObject::onContainerLostItem(ServerObject *destination, ServerObject
 void CreatureObject::onContainerGainItem(ServerObject& item, ServerObject* source, ServerObject* transferer)
 {
 	TangibleObject * const tangibleObject = item.asTangibleObject();
-	if (tangibleObject == NULL)
+	if (tangibleObject == nullptr)
 		return;
 
 	// check if the object applies skill mod bonuses when equipped
@@ -7100,7 +7088,7 @@ void CreatureObject::onContainerGainItem(ServerObject& item, ServerObject* sourc
 
 	// if the item is a weapon, make it our current weapon
 	WeaponObject * const weaponObject = tangibleObject->asWeaponObject();
-	if (weaponObject != NULL)
+	if (weaponObject != nullptr)
 		setCurrentWeapon(*weaponObject);
 
 	//Update wearables data
@@ -7109,7 +7097,6 @@ void CreatureObject::onContainerGainItem(ServerObject& item, ServerObject* sourc
 	{
 		Object const * inventory = 0;
 		Object const * datapad = 0;
-		Object const * appearance = 0;
 
 		SlottedContainer const * const myContainer = ContainerInterface::getSlottedContainer(*this);
 
@@ -7132,7 +7119,6 @@ void CreatureObject::onContainerGainItem(ServerObject& item, ServerObject* sourc
 			if (appearanceInvSlot != SlotId::invalid)
 			{
 				Container::ContainedItem itemId = myContainer->getObjectInSlot(appearanceInvSlot, tmp);
-				appearance = itemId.getObject();
 			}
 		}
 
@@ -7141,7 +7127,7 @@ void CreatureObject::onContainerGainItem(ServerObject& item, ServerObject* sourc
 			ConstCharCrcString clientSharedTemplateNameCrcString = ObjectTemplateList::lookUp(tangibleObject->getClientSharedTemplateName());
 			if (clientSharedTemplateNameCrcString.isEmpty())
 				WARNING(true, ("Could not find crc for %s.  Wearable will not be streamed to client", tangibleObject->getClientSharedTemplateName()));
-			else if (tangibleObject->asWeaponObject() != NULL)
+			else if (tangibleObject->asWeaponObject() != nullptr)
 			{
 				addPackedWearable(tangibleObject->getAppearanceData(), scp->getCurrentArrangement(), tangibleObject->getNetworkId(), clientSharedTemplateNameCrcString.getCrc(),
 					tangibleObject->createSharedBaselinesMessage(), tangibleObject->createSharedNpBaselinesMessage());
@@ -7591,7 +7577,7 @@ void CreatureObject::onClientReady(Client *c)
 	{
 		time_t timeUnsquelch = static_cast<time_t>(player->getSecondsUntilUnsquelched());
 		if (timeUnsquelch > 0)
-			timeUnsquelch += ::time(NULL);
+			timeUnsquelch += ::time(nullptr);
 
 		GenericValueTypeMessage<std::pair<std::pair<std::pair<NetworkId, int>, int>, std::pair<int, int> > > chatStatistics("ChatStatisticsGS", std::make_pair(std::make_pair(std::make_pair(getNetworkId(), static_cast<int>(timeUnsquelch)), player->getChatSpamTimeEndInterval()), std::make_pair(player->getChatSpamSpatialNumCharacters(), player->getChatSpamNonSpatialNumCharacters())));
 		Chat::sendToChatServer(chatStatistics);
@@ -7926,7 +7912,7 @@ bool CreatureObject::makeDead(const NetworkId & killer, const NetworkId & corpse
 
 		// if we are crafting, end the crafting session
 		PlayerObject * const player = PlayerCreatureController::getPlayerObject(this);
-		if (player != NULL && player->isCrafting())
+		if (player != nullptr && player->isCrafting())
 			player->stopCrafting(false);
 
 		// if we are in a conversation, end it
@@ -7991,7 +7977,7 @@ bool CreatureObject::makeDead(const NetworkId & killer, const NetworkId & corpse
 				if (AttribMod::isSkillMod(m.mod))
 				{
 					const char * skillModName = AttribModNameManager::getInstance().getAttribModName(m.mod.skill);
-					if (skillModName != NULL)
+					if (skillModName != nullptr)
 						addModValue(skillModName, -m.maxVal, true);
 				}
 				// if the mod is visible, we need to tell the player it's being
@@ -8004,7 +7990,7 @@ bool CreatureObject::makeDead(const NetworkId & killer, const NetworkId & corpse
 				if (m.mod.flags & AttribMod::AMF_triggerOnDone)
 				{
 					const char * modName = AttribModNameManager::getInstance().getAttribModName(m.mod.tag);
-					if (modName != NULL)
+					if (modName != nullptr)
 					{
 						ScriptParams params;
 						params.addParam(modName);
@@ -8149,7 +8135,7 @@ Object const * CreatureObject::getStandingOn() const
 	}
 	else
 	{
-		return NULL;
+		return nullptr;
 	}
 }
 
@@ -8302,7 +8288,7 @@ bool CreatureObject::setSlopeModPercent(float percent)
 
 		// get my skill mod
 		int movementMod = getEnhancedModValue(SLOPE_MOD);
-		if (getGroup() != NULL)
+		if (getGroup() != nullptr)
 		{
 			// get my group leader skill mod
 			const NetworkId & leaderId = getGroup()->getGroupLeaderId();
@@ -8310,7 +8296,7 @@ bool CreatureObject::setSlopeModPercent(float percent)
 			{
 				const CreatureObject * leader = safe_cast<const CreatureObject *>(
 					NetworkIdManager::getObjectById(leaderId));
-				if (leader != NULL)
+				if (leader != nullptr)
 				{
 					movementMod += leader->getEnhancedModValue(GROUP_SLOPE_MOD);
 				}
@@ -8519,7 +8505,7 @@ void CreatureObject::onBiographyRetrieved(const NetworkId &owner, const Unicode:
 
 	CreatureController *creatureController = getCreatureController();
 
-	if (creatureController != NULL)
+	if (creatureController != nullptr)
 	{
 		typedef std::pair<NetworkId, Unicode::String> Payload;
 
@@ -8535,7 +8521,7 @@ void CreatureObject::onCharacterMatchRetrieved(MatchMakingCharacterResult const 
 {
 	CreatureController *creatureController = getCreatureController();
 
-	if (creatureController != NULL)
+	if (creatureController != nullptr)
 	{
 		MessageQueueGenericValueType<MatchMakingCharacterResult> * const msg = new MessageQueueGenericValueType<MatchMakingCharacterResult>(results);
 
@@ -8939,7 +8925,7 @@ bool CreatureObject::isAppearanceEquippable(const char *appearanceTemplateName)
 
 	// Make sure this object has a valid appearance
 
-	if (appearanceTemplateName == NULL)
+	if (appearanceTemplateName == nullptr)
 	{
 		result = false;
 	}
@@ -9063,7 +9049,7 @@ void CreatureObject::updatePlanetServerInternal(const bool forceUpdate) const
 			AICreatureController const * const aiCreatureController = dynamic_cast<AICreatureController const *>(getCreatureController());
 
 			Object const * const topmostContainer = ContainerInterface::getTopmostContainer(*this);
-			FATAL(!topmostContainer, ("Object %s was contained by something, but getTopmostContainer() returned NULL", getNetworkId().getValueString().c_str()));
+			FATAL(!topmostContainer, ("Object %s was contained by something, but getTopmostContainer() returned nullptr", getNetworkId().getValueString().c_str()));
 			Vector const &position = topmostContainer->getPosition_p();
 			UpdateObjectOnPlanetMessage const msg(
 				getNetworkId(),
@@ -9265,7 +9251,7 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 		// set objvar to indicate there's a pending rename request for this character,
 		// and the time of the rename request, to enforce the 90 days wait between rename
 		if (!getClient() || !getClient()->isGod())
-			setObjVarItem("renameCharacterRequest.requestTime", static_cast<int>(::time(NULL)));
+			setObjVarItem("renameCharacterRequest.requestTime", static_cast<int>(::time(nullptr)));
 
 		std::string const newName(message.getDataAsString());
 		if (getObjVars().hasItem("renameCharacterRequest.requestTime") && !newName.empty())
@@ -9306,7 +9292,7 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 		if (!getObjVars().hasItem(OBJVAR_ADD_JEDI_ACK))
 		{
 			PlayerObject * const player = PlayerCreatureController::getPlayerObject(this);
-			if (player != NULL)
+			if (player != nullptr)
 			{
 				player->addJediToAccount();
 				MessageToQueue::getInstance().sendMessageToC(getNetworkId(),
@@ -9461,7 +9447,7 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 			MessageToQueue::cancelRecurringMessageTo(getNetworkId(), "C++WaitForPatrolPreload");
 
 			AICreatureController * const aiCreatureController = safe_cast<AICreatureController * const>(getController());
-			if (aiCreatureController != NULL)
+			if (aiCreatureController != nullptr)
 			{
 				const std::string data = message.getDataAsString();
 				std::string::size_type locationStart = 0;
@@ -9797,7 +9783,7 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 
 			Unicode::String const delimiters(Unicode::narrowToWide("|"));
 			Unicode::UnicodeStringVector tokens;
-			if ((Unicode::tokenize(Unicode::narrowToWide(params), tokens, &delimiters, NULL)) && (tokens.size() == 2))
+			if ((Unicode::tokenize(Unicode::narrowToWide(params), tokens, &delimiters, nullptr)) && (tokens.size() == 2))
 			{
 				existingWarden = NetworkId(Unicode::wideToNarrow(tokens[0]));
 				
@@ -9874,7 +9860,7 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 
 			Unicode::String const delimiters(Unicode::narrowToWide("|"));
 			Unicode::UnicodeStringVector tokens;
-			if ((Unicode::tokenize(Unicode::narrowToWide(params), tokens, &delimiters, NULL)) && (tokens.size() == 2))
+			if ((Unicode::tokenize(Unicode::narrowToWide(params), tokens, &delimiters, nullptr)) && (tokens.size() == 2))
 			{
 				existingWarden = NetworkId(Unicode::wideToNarrow(tokens[0]));
 
@@ -9970,12 +9956,12 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 			bool success = false;
 			NetworkId actor, actorShip, group;
 			std::string actorName;
-			GroupObject const * groupObject = NULL;
+			GroupObject const * groupObject = nullptr;
 			StringId responseSid;
 
 			Unicode::String const delimiters(Unicode::narrowToWide("|"));
 			Unicode::UnicodeStringVector tokens;
-			if ((Unicode::tokenize(Unicode::narrowToWide(params), tokens, &delimiters, NULL)) && (tokens.size() == 4))
+			if ((Unicode::tokenize(Unicode::narrowToWide(params), tokens, &delimiters, nullptr)) && (tokens.size() == 4))
 			{
 				success = true;
 				actor = NetworkId(Unicode::wideToNarrow(tokens[0]));
@@ -9983,8 +9969,8 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 				group = NetworkId(Unicode::wideToNarrow(tokens[2]));
 				actorName = Unicode::wideToNarrow(tokens[3]);
 
-				ServerObject const * so = (group.isValid() ? safe_cast<ServerObject const *>(NetworkIdManager::getObjectById(group)) : NULL);
-				groupObject = (so ? so->asGroupObject() : NULL);
+				ServerObject const * so = (group.isValid() ? safe_cast<ServerObject const *>(NetworkIdManager::getObjectById(group)) : nullptr);
+				groupObject = (so ? so->asGroupObject() : nullptr);
 			}
 
 			if (success)
@@ -10011,7 +9997,7 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 			if (success)
 			{
 				GameScriptObject* const gso = getScriptObject();
-				if (gso != NULL && gso->hasScript("ai.beast"))
+				if (gso != nullptr && gso->hasScript("ai.beast"))
 				{
 					responseSid = GroupStringId::SID_GROUP_BEASTS_CANT_JOIN;
 					success = false;
@@ -10092,7 +10078,7 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 	}
 	else if (message.getMethod() == "C++InviteToGroupRspTargetNotFound")
 	{
-		Chat::sendSystemMessageSimple(*this, GroupStringId::SID_GROUP_INVITE_NO_TARGET_SELF, NULL);
+		Chat::sendSystemMessageSimple(*this, GroupStringId::SID_GROUP_INVITE_NO_TARGET_SELF, nullptr);
 	}
 	else if (message.getMethod() == "C++GroupOperationGenericRsp")
 	{
@@ -10101,7 +10087,7 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 			std::string const result(message.getPackedDataVector().begin(), message.getPackedDataVector().end());
 			Unicode::String const delimiters(Unicode::narrowToWide("|"));
 			Unicode::UnicodeStringVector tokens;
-			if ((Unicode::tokenize(Unicode::narrowToWide(result), tokens, &delimiters, NULL)) && (tokens.size() == 3))
+			if ((Unicode::tokenize(Unicode::narrowToWide(result), tokens, &delimiters, nullptr)) && (tokens.size() == 3))
 			{
 				std::string const response(Unicode::wideToNarrow(tokens[0]));
 				std::string const responseParmType(Unicode::wideToNarrow(tokens[1]));
@@ -10138,7 +10124,7 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 
 			Unicode::String const delimiters(Unicode::narrowToWide("|"));
 			Unicode::UnicodeStringVector tokens;
-			if ((Unicode::tokenize(Unicode::narrowToWide(params), tokens, &delimiters, NULL)) && (tokens.size() == 2))
+			if ((Unicode::tokenize(Unicode::narrowToWide(params), tokens, &delimiters, nullptr)) && (tokens.size() == 2))
 			{
 				success = true;
 				actor = NetworkId(Unicode::wideToNarrow(tokens[0]));
@@ -10194,7 +10180,7 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 	}
 	else if (message.getMethod() == "C++UninviteFromGroupRspTargetNotFound")
 	{
-		Chat::sendSystemMessageSimple(*this, GroupStringId::SID_GROUP_UNINVITE_NO_TARGET_SELF, NULL);
+		Chat::sendSystemMessageSimple(*this, GroupStringId::SID_GROUP_UNINVITE_NO_TARGET_SELF, nullptr);
 	}
 	else if (message.getMethod() == "C++GroupJoinInviterInfoReq")
 	{
@@ -10250,7 +10236,7 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 
 			Unicode::String const delimiters(Unicode::narrowToWide("|"));
 			Unicode::UnicodeStringVector tokens;
-			if ((Unicode::tokenize(Unicode::narrowToWide(params), tokens, &delimiters, NULL)) && (tokens.size() == 10))
+			if ((Unicode::tokenize(Unicode::narrowToWide(params), tokens, &delimiters, nullptr)) && (tokens.size() == 10))
 			{
 				success = true;
 				existingGroupId = NetworkId(Unicode::wideToNarrow(tokens[0]));
@@ -10265,17 +10251,17 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 				inviterInCombat = (atoi(Unicode::wideToNarrow(tokens[9]).c_str()) != 0);
 			}
 
-			GroupObject * existingGroup = NULL;
+			GroupObject * existingGroup = nullptr;
 			if (success)
 			{
 				if (existingGroupId.isValid())
 				{
 					ServerObject * so = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(existingGroupId));
-					existingGroup = (so ? so->asGroupObject() : NULL);
+					existingGroup = (so ? so->asGroupObject() : nullptr);
 					if (!existingGroup)
 					{
 						success = false;
-						Chat::sendSystemMessageSimple(*this, GroupStringId::SID_GROUP_EXISTING_GROUP_NOT_FOUND, NULL);
+						Chat::sendSystemMessageSimple(*this, GroupStringId::SID_GROUP_EXISTING_GROUP_NOT_FOUND, nullptr);
 					}
 				}
 			}
@@ -10318,7 +10304,7 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 				if (existingGroup && !GroupHelpers::roomInGroup(existingGroup, targets.size()))
 				{
 					success = false;
-					Chat::sendSystemMessageSimple(*this, GroupStringId::SID_GROUP_JOIN_FULL, NULL);
+					Chat::sendSystemMessageSimple(*this, GroupStringId::SID_GROUP_JOIN_FULL, nullptr);
 				}
 			}
 
@@ -10390,7 +10376,7 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 	}
 	else if (message.getMethod() == "C++GroupJoinInviterInfoReqInviterNotFound")
 	{
-		Chat::sendSystemMessageSimple(*this, GroupStringId::SID_GROUP_MUST_BE_INVITED, NULL);
+		Chat::sendSystemMessageSimple(*this, GroupStringId::SID_GROUP_MUST_BE_INVITED, nullptr);
 	}
 	else if (message.getMethod() == "C++LeaveGroupReq")
 	{
@@ -10417,7 +10403,7 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 
 			Unicode::String const delimiters(Unicode::narrowToWide("|"));
 			Unicode::UnicodeStringVector tokens;
-			if ((Unicode::tokenize(Unicode::narrowToWide(params), tokens, &delimiters, NULL)) && (tokens.size() == 5))
+			if ((Unicode::tokenize(Unicode::narrowToWide(params), tokens, &delimiters, nullptr)) && (tokens.size() == 5))
 			{
 				// tell group member that the group pickup point has been created
 				if (getClient())
@@ -10767,7 +10753,7 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 					params.addParam(msg.getDestinationGalaxy().c_str(), "destinationGalaxy");
 					ScriptDictionaryPtr dictionary;
 					GameScriptObject::makeScriptDictionary(params, dictionary);
-					if (dictionary.get() != NULL)
+					if (dictionary.get() != nullptr)
 					{
 						dictionary->serialize();
 						MessageToQueue::getInstance().sendMessageToJava(getNetworkId(), "handleFreeCtsValidateFailCannotCreateCharacter", dictionary->getSerializedData(), 0, false);
@@ -10781,7 +10767,7 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 					params.addParam(msg.getDestinationGalaxy().c_str(), "destinationGalaxy");
 					ScriptDictionaryPtr dictionary;
 					GameScriptObject::makeScriptDictionary(params, dictionary);
-					if (dictionary.get() != NULL)
+					if (dictionary.get() != nullptr)
 					{
 						dictionary->serialize();
 						MessageToQueue::getInstance().sendMessageToJava(getNetworkId(), "handleFreeCtsValidateFailDestGalaxyUnavailable", dictionary->getSerializedData(), 0, false);
@@ -10801,7 +10787,7 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 					params.addParam(msg.getDestinationGalaxy().c_str(), "destinationGalaxy");
 					ScriptDictionaryPtr dictionary;
 					GameScriptObject::makeScriptDictionary(params, dictionary);
-					if (dictionary.get() != NULL)
+					if (dictionary.get() != nullptr)
 					{
 						dictionary->serialize();
 						MessageToQueue::getInstance().sendMessageToJava(getNetworkId(), "handleCtsValidateFailCannotCreateCharacter", dictionary->getSerializedData(), 0, false);
@@ -10815,7 +10801,7 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 					params.addParam(msg.getDestinationGalaxy().c_str(), "destinationGalaxy");
 					ScriptDictionaryPtr dictionary;
 					GameScriptObject::makeScriptDictionary(params, dictionary);
-					if (dictionary.get() != NULL)
+					if (dictionary.get() != nullptr)
 					{
 						dictionary->serialize();
 						MessageToQueue::getInstance().sendMessageToJava(getNetworkId(), "handleCtsValidateFailDestGalaxyUnavailable", dictionary->getSerializedData(), 0, false);
@@ -10854,7 +10840,7 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 					params.addParam(msg.getValue().first.c_str(), "reason");
 					ScriptDictionaryPtr dictionary;
 					GameScriptObject::makeScriptDictionary(params, dictionary);
-					if (dictionary.get() != NULL)
+					if (dictionary.get() != nullptr)
 					{
 						dictionary->serialize();
 						MessageToQueue::getInstance().sendMessageToJava(getNetworkId(), "handleFreeCtsValidateFailNameValidation", dictionary->getSerializedData(), 0, false);
@@ -10868,7 +10854,7 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 					params.addParam(msg.getValue().first.c_str(), "reason");
 					ScriptDictionaryPtr dictionary;
 					GameScriptObject::makeScriptDictionary(params, dictionary);
-					if (dictionary.get() != NULL)
+					if (dictionary.get() != nullptr)
 					{
 						dictionary->serialize();
 						MessageToQueue::getInstance().sendMessageToJava(getNetworkId(), "handleCtsValidateFailNameValidation", dictionary->getSerializedData(), 0, false);
@@ -10882,7 +10868,7 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 				params.addParam(msg.getValue().second.getDestinationCharacterName().c_str(), "destinationCharacterName");
 				ScriptDictionaryPtr dictionary;
 				GameScriptObject::makeScriptDictionary(params, dictionary);
-				if (dictionary.get() != NULL)
+				if (dictionary.get() != nullptr)
 				{
 					dictionary->serialize();
 					MessageToQueue::getInstance().sendMessageToJava(getNetworkId(), "handleFreeCtsValidateSuccess", dictionary->getSerializedData(), 0, false);
@@ -10895,7 +10881,7 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 				params.addParam(msg.getValue().second.getDestinationCharacterName().c_str(), "destinationCharacterName");
 				ScriptDictionaryPtr dictionary;
 				GameScriptObject::makeScriptDictionary(params, dictionary);
-				if (dictionary.get() != NULL)
+				if (dictionary.get() != nullptr)
 				{
 					dictionary->serialize();
 					MessageToQueue::getInstance().sendMessageToJava(getNetworkId(), "handleCtsValidateSuccess", dictionary->getSerializedData(), 0, false);
@@ -10906,7 +10892,7 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 	else if (message.getMethod() == "C++PickupAllRoomItemsIntoInventory")
 	{
 		// use while(true) loop to use break to discontinue processing and go to the end of loop to run cleanup code
-		PlayerObject * playerObject = NULL;
+		PlayerObject * playerObject = nullptr;
 		while (true)
 		{
 			playerObject = PlayerCreatureController::getPlayerObject(this);
@@ -11148,7 +11134,7 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 	else if (message.getMethod() == "C++DropAllInventoryItemsIntoRoom")
 	{
 		// use while(true) loop to use break to discontinue processing and go to the end of loop to run cleanup code
-		PlayerObject * playerObject = NULL;
+		PlayerObject * playerObject = nullptr;
 		while (true)
 		{
 			playerObject = PlayerCreatureController::getPlayerObject(this);
@@ -11355,7 +11341,7 @@ void CreatureObject::handleCMessageTo(MessageToPayload const &message)
 	else if (message.getMethod() == "C++RestoreDecorationLayout")
 	{
 		// use while(true) loop to use break to discontinue processing and go to the end of loop to run cleanup code
-		PlayerObject * playerObject = NULL;
+		PlayerObject * playerObject = nullptr;
 		while (true)
 		{
 			playerObject = PlayerCreatureController::getPlayerObject(this);
@@ -11681,7 +11667,7 @@ void CreatureObject::virtualOnReleaseAuthority()
 
 	if(controller)
 	{
-		if (getProperty(SlopeEffectProperty::getClassPropertyId()) != NULL)
+		if (getProperty(SlopeEffectProperty::getClassPropertyId()) != nullptr)
 			removeProperty(SlopeEffectProperty::getClassPropertyId());
 		controller->setAuthority(false);
 	}
@@ -11693,7 +11679,7 @@ void CreatureObject::virtualOnLogout()
 {
 	TangibleObject::virtualOnLogout();
 	PlayerObject * const player = PlayerCreatureController::getPlayerObject(this);
-	if (player != NULL)
+	if (player != nullptr)
 		player->virtualOnLogout();
 }
 
@@ -11789,7 +11775,7 @@ void CreatureObject::packWearables()
 								ConstCharCrcString clientSharedTemplateNameCrcString = ObjectTemplateList::lookUp(tang->getClientSharedTemplateName());
 								if (clientSharedTemplateNameCrcString.isEmpty())
 									WARNING(true, ("Could not find crc for [%s].  Wearable will not be streamed to client", tang->getClientSharedTemplateName()));
-								else if (so->asWeaponObject() != NULL)
+								else if (so->asWeaponObject() != nullptr)
 								{
 									addPackedWearable(tang->getAppearanceData(), scp->getCurrentArrangement(), tang->getNetworkId(), clientSharedTemplateNameCrcString.getCrc(),
 										tang->createSharedBaselinesMessage(), tang->createSharedNpBaselinesMessage());
@@ -12048,7 +12034,7 @@ int CreatureObject::loadPackedHouses()
 							++hcdIter)
 						{
 							Object * const houseId = (*hcdIter).getObject();
-							BuildingObject * const house = (houseId ? houseId->asServerObject()->asBuildingObject() : NULL);
+							BuildingObject * const house = (houseId ? houseId->asServerObject()->asBuildingObject() : nullptr);
 							if (house && !house->getContentsLoaded())
 							{
 								LOG("CustomerService", ("CharacterTransfer: starting packed house load (%s) for CTS character %s", house->getNetworkId().getValueString().c_str(), PlayerObject::getAccountDescription(this).c_str()));
@@ -12612,7 +12598,7 @@ void CreatureObject::unequipAllItems()
 	Container::ContainerErrorCode errorCode          = Container::CEC_Success;
 	Container::ContainedItem  inventoryContainedItem = equipmentContainer->getObjectInSlot(s_inventorySlotId, errorCode);
 	Object *const             inventoryObjectBase    = inventoryContainedItem.getObject();
-	ServerObject *const       inventoryObject        = inventoryObjectBase ? inventoryObjectBase->asServerObject() : NULL;
+	ServerObject *const       inventoryObject        = inventoryObjectBase ? inventoryObjectBase->asServerObject() : nullptr;
 	if (!inventoryObject || (errorCode != Container::CEC_Success))
 	{
 		WARNING(true,
@@ -12629,7 +12615,7 @@ void CreatureObject::unequipAllItems()
 	if (!inventoryContainer)
 	{
 		WARNING(true,
-			("unequipAllItems() called on object id=[%s], template=[%s] on server id=[%d]: inventory object is NULL.",
+			("unequipAllItems() called on object id=[%s], template=[%s] on server id=[%d]: inventory object is nullptr.",
 			getNetworkId().getValueString().c_str(),
 			getObjectTemplateName(),
 			static_cast<int>(GameServer::getInstance().getProcessId())
@@ -12648,11 +12634,11 @@ void CreatureObject::unequipAllItems()
 			// Get the equipment item.
 			Container::ContainedItem containedItem = *it;
 			Object *const       objectBase = containedItem.getObject();
-			ServerObject *const object     = objectBase ? objectBase->asServerObject() : NULL;
+			ServerObject *const object     = objectBase ? objectBase->asServerObject() : nullptr;
 			if (!object)
 			{
 				WARNING(true,
-					("null object in equipment container for object id=[%s]: equipment item id=[%s].",
+					("nullptr object in equipment container for object id=[%s]: equipment item id=[%s].",
 					getNetworkId().getValueString().c_str(),
 					containedItem.getValueString().c_str()
 					));
@@ -12686,7 +12672,7 @@ void CreatureObject::unequipAllItems()
 			if (!object)
 				continue;
 
-			ContainerInterface::transferItemToVolumeContainer(*inventoryObject, *object, NULL, errorCode);
+			ContainerInterface::transferItemToVolumeContainer(*inventoryObject, *object, nullptr, errorCode);
 			WARNING(errorCode != Container::CEC_Success,
 				("unequipAllItems(): CreatureObject id=[%s] failed to transfer item id=[%s], template=[%s] from equipment to inventory container, container error code [%d].",
 				getNetworkId().getValueString().c_str(),
@@ -13322,18 +13308,18 @@ CreatureObject * CreatureObject::getCreatureObject(NetworkId const & networkId)
 
 CreatureObject const * CreatureObject::asCreatureObject(Object const * object)
 {
-	ServerObject const * const serverObject = (object != NULL) ? object->asServerObject() : NULL;
+	ServerObject const * const serverObject = (object != nullptr) ? object->asServerObject() : nullptr;
 
-	return (serverObject != NULL) ? serverObject->asCreatureObject() : NULL;
+	return (serverObject != nullptr) ? serverObject->asCreatureObject() : nullptr;
 }
 
 // ----------------------------------------------------------------------
 
 CreatureObject * CreatureObject::asCreatureObject(Object * object)
 {
-	ServerObject * serverObject = (object != NULL) ? object->asServerObject() : NULL;
+	ServerObject * serverObject = (object != nullptr) ? object->asServerObject() : nullptr;
 
-	return (serverObject != NULL) ? serverObject->asCreatureObject() : NULL;
+	return (serverObject != nullptr) ? serverObject->asCreatureObject() : nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -13474,7 +13460,7 @@ void CreatureObject::pushedMe(const NetworkId & attackerId,
 		UNREF(defenderPos);
 
 		Vector offset(getPosition_w());
-		if (attacker != NULL)
+		if (attacker != nullptr)
 			offset -= attacker->getPosition_w();
 		else
 			offset -= attackerPos;
@@ -13489,14 +13475,14 @@ void CreatureObject::pushedMe(const NetworkId & attackerId,
 		move_p(rotate_w2p(offset));
 
 		AICreatureController *controller = dynamic_cast<AICreatureController *>(getController());
-		if (controller != NULL)
+		if (controller != nullptr)
 		{
 			// we only need to do this for npcs, because we'll use the update from a player's client for players
 			// we need to do this for npcs to prevent the ai from moving them back to their previous position
 			const Vector newPos(getPosition_p());
 			float closestPortalT = 0.0f;
 			const CellProperty * destinationCell = getParentCell()->getDestinationCell(oldPos, newPos, closestPortalT);
-			if (destinationCell == NULL || destinationCell == getParentCell())
+			if (destinationCell == nullptr || destinationCell == getParentCell())
 			{
 				// no cell change
 				controller->warpTo(getParentCell(), newPos);
@@ -13576,7 +13562,7 @@ bool CreatureObject::addSlowDownEffectProxy(const TangibleObject & defender, flo
 {
 	// if we already are doing a slowdown, don't do another
 	Property * property = getProperty(SlowDownProperty::getClassPropertyId());
-	if (property != NULL)
+	if (property != nullptr)
 		return false;
 
 	property = new SlowDownProperty(*this, CachedNetworkId(defender), coneLength, coneAngle, slopeAngle, expireTime);
@@ -13598,11 +13584,11 @@ void CreatureObject::removeSlowDownEffect()
 		// tell all my proxies (client and server) to remove the effect
 		Controller * const controller = getController();
 		if (controller)
-			controller->appendMessage(CM_removeSlowDownEffectProxy, 0, NULL, GameControllerMessageFlags::SEND | GameControllerMessageFlags::RELIABLE | GameControllerMessageFlags::DEST_ALL_CLIENT | GameControllerMessageFlags::DEST_PROXY_SERVER);
+			controller->appendMessage(CM_removeSlowDownEffectProxy, 0, nullptr, GameControllerMessageFlags::SEND | GameControllerMessageFlags::RELIABLE | GameControllerMessageFlags::DEST_ALL_CLIENT | GameControllerMessageFlags::DEST_PROXY_SERVER);
 	}
 	else
 	{
-		sendControllerMessageToAuthServer(CM_removeSlowDownEffect, NULL);
+		sendControllerMessageToAuthServer(CM_removeSlowDownEffect, nullptr);
 	}
 }
 
@@ -13613,7 +13599,7 @@ void CreatureObject::removeSlowDownEffect()
  */
 void CreatureObject::removeSlowDownEffectProxy()
 {
-	if (getProperty(SlowDownProperty::getClassPropertyId()) != NULL)
+	if (getProperty(SlowDownProperty::getClassPropertyId()) != nullptr)
 		removeProperty(SlowDownProperty::getClassPropertyId());
 }
 
@@ -13631,7 +13617,7 @@ void CreatureObject::addTerrainSlopeEffect(const Vector & normal)
 	if (isAuthoritative() && !isPlayerControlled())
 	{
 		Property * property = getProperty(SlopeEffectProperty::getClassPropertyId());
-		if (property == NULL)
+		if (property == nullptr)
 		{
 			property = new SlopeEffectProperty(*this);
 			addProperty(*property, true);
@@ -13994,7 +13980,7 @@ void CreatureObject::setLevel(int level)
 	else
 	{
 		PlayerObject * const playerObject = PlayerCreatureController::getPlayerObject(this);
-		if (playerObject == NULL)
+		if (playerObject == nullptr)
 		{
 			// this is an ai, so just set the level
 			m_level = (int16) level;
@@ -14014,7 +14000,7 @@ void CreatureObject::setLevel(int level)
 void CreatureObject::recalculateLevel()
 {
 	PlayerObject * const playerObject = PlayerCreatureController::getPlayerObject(this);
-	if (playerObject != NULL)
+	if (playerObject != nullptr)
 	{
 		if (!isAuthoritative())
 		{
@@ -14044,7 +14030,7 @@ void CreatureObject::recalculateLevel()
 void CreatureObject::setLevelData(int16 level, int levelXp, int health)
 {
 	PlayerObject * const playerObject = PlayerCreatureController::getPlayerObject(this);
-	if (playerObject != NULL)
+	if (playerObject != nullptr)
 	{
 		m_totalLevelXp = levelXp;
 
@@ -14278,7 +14264,7 @@ bool CreatureObject::doesLocomotionInvalidateCommand(Command const &cmd) const
 
 CommandQueue * CreatureObject::getCommandQueue() const
 {
-	if (m_commandQueue == NULL)
+	if (m_commandQueue == nullptr)
 	{
 		m_commandQueue = CommandQueue::getCommandQueue(*const_cast<CreatureObject *>(this));
 	}
@@ -14667,7 +14653,7 @@ void CreatureObject::incrementKillMeter(int amount)
 	if (isPlayerControlled())
 	{
 		PlayerObject * const playerObject = PlayerCreatureController::getPlayerObject(this);
-		if (playerObject != NULL)
+		if (playerObject != nullptr)
 		{
 			playerObject->incrementKillMeter(amount);
 		}
@@ -14812,7 +14798,7 @@ void CreatureObject::getLfgCharacterData(LfgCharacterData & lfgCharacterData) co
 		Vector const creaturePosition = findPosition_w();
 		Region const * const region = RegionMaster::getSmallestVisibleRegionAtPoint(planetObject->getName(), creaturePosition.x, creaturePosition.z);
 
-		if (region != NULL)
+		if (region != nullptr)
 			lfgCharacterData.locationRegion = Unicode::wideToNarrow(region->getName());
 
 		// handle factional presence
@@ -14853,7 +14839,7 @@ void CreatureObject::getLfgCharacterData(LfgCharacterData & lfgCharacterData) co
 							{
 								// is factional presence allowed while mounted?
 								if (ConfigServerGame::getGcwFactionalPresenceMountedPct() <= 0)
-									playerOrMount = NULL;
+									playerOrMount = nullptr;
 							}
 							else
 							{
@@ -14863,7 +14849,7 @@ void CreatureObject::getLfgCharacterData(LfgCharacterData & lfgCharacterData) co
 							if (playerOrMount)
 							{
 								CollisionProperty const * const collisionProperty = playerOrMount->getCollisionProperty();
-								Footprint const * const footprint = (collisionProperty ? collisionProperty->getFootprint() : NULL);
+								Footprint const * const footprint = (collisionProperty ? collisionProperty->getFootprint() : nullptr);
 								bool isOnSolidFloor = (footprint && footprint->isOnSolidFloor());
 								if (isOnSolidFloor)
 								{
@@ -14939,7 +14925,7 @@ void CreatureObject::getLfgCharacterData(LfgCharacterData & lfgCharacterData) co
 			if (i.getValue(ctsTransactionDetail))
 			{
 				Unicode::UnicodeStringVector tokens;
-				if (Unicode::tokenize(ctsTransactionDetail, tokens, NULL, NULL) && (tokens.size() >= 4))
+				if (Unicode::tokenize(ctsTransactionDetail, tokens, nullptr, nullptr) && (tokens.size() >= 4))
 				{
 					IGNORE_RETURN(lfgCharacterData.ctsSourceGalaxy.insert(Unicode::wideToNarrow(tokens[1])));
 				}
@@ -15094,7 +15080,7 @@ void CreatureObjectNamespace::restoreItemDecorationLayout(CreatureObject & decor
 	// item is not currently in the target room, need to move it
 	bool needToMoveItem = false;
 	bool needToRotateItem = false;
-	Transform const * itemCurrentTransform = NULL;
+	Transform const * itemCurrentTransform = nullptr;
 	if (itemContainingCell->getNetworkId() != cellSo->getNetworkId())
 	{
 		needToMoveItem = true;
@@ -15344,7 +15330,7 @@ void CreatureObject::addPackedAppearanceWearable(std::string const &appearanceDa
 		}
 	}
 	//-- Add the new entry.
-	m_wearableAppearanceData.push_back(WearableEntry(appearanceData, arrangementIndex, networkId, sharedTemplateCrcValue, NULL, NULL));
+	m_wearableAppearanceData.push_back(WearableEntry(appearanceData, arrangementIndex, networkId, sharedTemplateCrcValue, nullptr, nullptr));
 }
 
 // ----------------------------------------------------------------------
@@ -15511,7 +15497,7 @@ void CreatureObject::saveDecorationLayout(ServerObject const & pobSourceObject, 
 			}
 
 			snprintf(buffer1, sizeof(buffer1)-1, "savedDecoration%d.saveTime", saveSlotNumber);
-			playerObj->setObjVarItem(buffer1, static_cast<int>(::time(NULL)));
+			playerObj->setObjVarItem(buffer1, static_cast<int>(::time(nullptr)));
 
 			snprintf(buffer1, sizeof(buffer1)-1, "savedDecoration%d.pobName", saveSlotNumber);
 			playerObj->setObjVarItem(buffer1, containingPOB->getObjectNameStringId().localize());
@@ -15607,7 +15593,7 @@ void CreatureObject::restoreDecorationLayout(ServerObject const & pobTargetObjec
 	}
 
 	// don't allow another restore on the pob while one is still in progress
-	int const timeNow = static_cast<int>(::time(NULL));
+	int const timeNow = static_cast<int>(::time(nullptr));
 	int restoreDecorationOperationTimeout = 0;
 	if (getObjVars().getItem("restoreDecorationOperation.timeout", restoreDecorationOperationTimeout) && (restoreDecorationOperationTimeout > timeNow))
 	{

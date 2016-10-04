@@ -146,7 +146,7 @@ void PaletteArgb::release() const
 		--m_referenceCount;
 
 		//-- We are going to let the PaletteArgbList keep references to the palettes and clean them up at the end.
-#if 0
+#if 0 //TODO: should we use the below or nuke it?
 		if (m_referenceCount == 0)
 		{
 			PaletteArgbList::stopTracking(*this);

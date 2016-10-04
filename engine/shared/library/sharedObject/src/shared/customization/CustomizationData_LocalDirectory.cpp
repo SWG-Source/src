@@ -95,7 +95,7 @@ bool CustomizationData::LocalDirectory::resolvePathNameToDirectory(const std::st
 	//-- ensure we've got a directory
 	if (!subdir)
 	{
-		WARNING(true, ("resolvePathNameToDirectory(): logic failure, subdir is null"));
+		WARNING(true, ("resolvePathNameToDirectory(): logic failure, subdir is nullptr"));
 		return false;
 	}
 
@@ -110,7 +110,7 @@ bool CustomizationData::LocalDirectory::addVariableTakeOwnership(const std::stri
 	//-- ensure caller passed in valid customizationVariable
 	if (!variable)
 	{
-		WARNING(true, ("addVariableTakeOwnership(): caller passed in NULL variable"));
+		WARNING(true, ("addVariableTakeOwnership(): caller passed in nullptr variable"));
 		return false;
 	}
 
@@ -210,10 +210,10 @@ CustomizationData::Directory *CustomizationData::LocalDirectory::findDirectory(c
 
 void CustomizationData::LocalDirectory::deleteDirectory(Directory *childDirectory)
 {
-	//-- check for null directory
+	//-- check for nullptr directory
 	if (!childDirectory)
 	{
-		WARNING(true, ("deleteDirectory(): NULL childDirectory arg"));
+		WARNING(true, ("deleteDirectory(): nullptr childDirectory arg"));
 		return;
 	}
 
@@ -255,10 +255,10 @@ void CustomizationData::LocalDirectory::iterateOverConstVariables(const std::str
 		const DirectoryMap::const_iterator endIt = m_directories.end();
 		for (DirectoryMap::const_iterator it = m_directories.begin(); it != endIt; ++it)
 		{
-			//-- check for null directory pointer (shouldn't happen but shouldn't FATAL)
+			//-- check for nullptr directory pointer (shouldn't happen but shouldn't FATAL)
 			if (!it->second)
 			{
-				WARNING(true, ("iterateOverConstVariables(): directory 0x%08x has null child directory for [%s].", this, it->first.getString()));
+				WARNING(true, ("iterateOverConstVariables(): directory 0x%08x has nullptr child directory for [%s].", this, it->first.getString()));
 				return;
 			}
 
@@ -292,10 +292,10 @@ void CustomizationData::LocalDirectory::iterateOverVariables(const std::string &
 		const DirectoryMap::iterator endIt = m_directories.end();
 		for (DirectoryMap::iterator it = m_directories.begin(); it != endIt; ++it)
 		{
-			//-- check for null directory pointer (shouldn't happen but shouldn't FATAL)
+			//-- check for nullptr directory pointer (shouldn't happen but shouldn't FATAL)
 			if (!it->second)
 			{
-				WARNING(true, ("iterateOverConstVariables(): directory 0x%08x has null child directory for [%s].", this, it->first.getString()));
+				WARNING(true, ("iterateOverConstVariables(): directory 0x%08x has nullptr child directory for [%s].", this, it->first.getString()));
 				return;
 			}
 
@@ -314,10 +314,10 @@ void CustomizationData::LocalDirectory::iterateOverVariables(const std::string &
 
 void CustomizationData::LocalDirectory::replaceOrAddDirectory(const std::string &directoryPathName, int directoryNameStartIndex, Directory *directory)
 {
-	//-- ensure attached directory is not null
+	//-- ensure attached directory is not nullptr
 	if (!directory)
 	{
-		WARNING(true, ("replaceOrAddDirectory(): directory arg is NULL"));
+		WARNING(true, ("replaceOrAddDirectory(): directory arg is nullptr"));
 		return;
 	}
 
@@ -394,232 +394,5 @@ bool CustomizationData::LocalDirectory::isLocalDirectory() const
 {
 	return true;
 }
-
-// ----------------------------------------------------------------------
-
-#if 0
-
-std::string CustomizationData::LocalDirectory::writeLocalDirectoryToString() const
-{
-	char         scratchBuffer[1024];
-	std::string  data;
-
-	//-- count # persistable variables
-	int variableCount = 0;
-
-	{
-		const CustomizationVariableMap::const_iterator endIt = m_variables.end();
-		for (CustomizationVariableMap::const_iterator it = m_variables.begin(); it != endIt; ++it)
-		{
-			//-- verify it's a non-null variable
-			const CustomizationVariable *const variable = it->second;
-			if (variable && variable->doesVariablePersist())
-			{
-				// we will write this variable
-				++variableCount;
-			}
-		}
-	}
-
-	//-- write # variables
-	sprintf(scratchBuffer, "%x%c", variableCount, cms_stringFieldSeparator);
-	data += scratchBuffer;
-
-	//-- write each variable
-	{
-		const CustomizationVariableMap::const_iterator endIt = m_variables.end();
-		for (CustomizationVariableMap::const_iterator it = m_variables.begin(); it != endIt; ++it)
-		{
-			//-- verify it's a non-null variable
-			const CustomizationVariable *const variable = it->second;
-			if (!variable)
-			{
-				WARNING(true, ("writeLocalDirectoryToString: NULL variable for [%s], skipping variable writing."));
-				continue;
-			}
-
-			//-- skip variables that should not be written.  typically this will be constant data
-			//   that doesn't need to be  customized or transmitted/persisted.
-			if (!variable->doesVariablePersist())
-				continue;
-
-			//-- write variable name
-			data += it->first.getString();
-			data += cms_stringFieldSeparator;
-
-			//-- write variable data
-			// get variable content data
-			const std::string variableContents = variable->writeToString();
-
-			// write content length (we do this so we can skip a variable if its not supported at load time)
-			sprintf(scratchBuffer, "%x%c", variableContents.size(), cms_stringFieldSeparator);
-			data += scratchBuffer;
-
-			// write variable content
-			data += variableContents;
-		}
-	}
-
-	//-- get # local directories to write
-	int directoryCount = 0;
-	{
-		const DirectoryMap::const_iterator endIt = m_directories.end();
-		for (DirectoryMap::const_iterator it = m_directories.begin(); it != endIt; ++it)
-		{
-			if (it->second && it->second->isLocalDirectory())
-				++directoryCount;
-		}
-	}
-
-	//-- write # directories
-	sprintf(scratchBuffer, "%x%c", directoryCount, cms_stringFieldSeparator);
-	data += scratchBuffer;
-
-	//-- write directory contents
-	{
-		const DirectoryMap::const_iterator endIt = m_directories.end();
-		for (DirectoryMap::const_iterator it = m_directories.begin(); it != endIt; ++it)
-		{
-			if (it->second && it->second->isLocalDirectory())
-			{
-				// write directory name
-				data += it->first.getString();
-				data += cms_stringFieldSeparator;
-
-				// get directory data contents
-				const std::string subdirData = it->second->writeLocalDirectoryToString();
-
-				// write directory data size (we do this so we can skip a directory if its not supported at load time)
-				sprintf(scratchBuffer, "%x%c", subdirData.size(), cms_stringFieldSeparator);
-				data += scratchBuffer;
-
-				// write directory contents
-				data += subdirData;
-			}
-		}
-	}
-
-	return data;
-}
-
-#endif
-
-// ----------------------------------------------------------------------
-
-#if 0
-
-void CustomizationData::LocalDirectory::loadLocalDirectoryFromString(int version, const std::string &string, int startIndex)
-{
-	if (version == 2)
-		loadLocalDirectoryFromString_0002(string, startIndex);
-	else
-		WARNING(true, ("loadLocalDirectoryFromString(): unsupported version [%d]", version));
-}
-
-#endif
-
-// ======================================================================
-
-#if 0
-
-void CustomizationData::LocalDirectory::loadLocalDirectoryFromString_0002(const std::string &data, int startIndex)
-{
-	int currentPosition = startIndex;
-
-	//-- get # variables
-	const int variableCount = parseSeparatedHexInt(data, currentPosition, currentPosition);
-	if (currentPosition == static_cast<int>(std::string::npos))
-	{
-		WARNING(true, ("loadLocalDirectoryFromString_0002(): failed to load variable count, aborting load."));
-		return;
-	}
-
-	//-- load each variable
-	{
-		for (int i = 0; i < variableCount; ++i)
-		{
-			//-- load the variable name
-			const std::string variableName = parseSeparatedString(data, currentPosition, currentPosition);
-			if (currentPosition == static_cast<int>(std::string::npos))
-			{
-				WARNING(true, ("loadLocalDirectoryFromString_0002(): failed to load variable name, aborting load."));
-				return;
-			}
-
-			//-- load the # characters in the value data
-			const int valueCharacterCount = parseSeparatedHexInt(data, currentPosition, currentPosition);
-			if (currentPosition == static_cast<int>(std::string::npos))
-			{
-				WARNING(true, ("loadLocalDirectoryFromString_0002(): failed to load variable data size, aborting load."));
-				return;
-			}
-
-			//-- find the customization variable
-			CustomizationVariable *const variable = findVariable(variableName, 0);
-			if (!variable)
-			{
-				WARNING(true, ("loadLocalDirectoryFromString_0002(): variable [%s] does not exist to be restored.", variableName.c_str()));
-				return;
-			}
-			else
-			{
-				//-- load the data
-				if (!variable->loadFromString(2, std::string(data, static_cast<std::string::size_type>(currentPosition), static_cast<std::string::size_type>(valueCharacterCount))))
-					WARNING(true, ("loadLocalDirectoryFromString_0002(): variable [%s] failed to load.", variableName.c_str()));
-			}
-
-			//-- pass the variable data
-			currentPosition += valueCharacterCount;
-		}
-	}
-
-	//-- get # subdirectories
-	const int directoryCount = parseSeparatedHexInt(data, currentPosition, currentPosition);
-	if (currentPosition == static_cast<int>(std::string::npos))
-	{
-		WARNING(true, ("loadLocalDirectoryFromString_0002(): failed to load directory count, aborting load."));
-		return;
-	}
-
-	//-- load each subdirectory
-	{
-		for (int i = 0; i < directoryCount; ++i)
-		{
-			//-- load the directory name
-			const std::string directoryName = parseSeparatedString(data, currentPosition, currentPosition);
-			if (currentPosition == static_cast<int>(std::string::npos))
-			{
-				WARNING(true, ("loadLocalDirectoryFromString_0002(): failed to load directory name, aborting load."));
-				return;
-			}
-
-			//-- load the # characters in the value data
-			const int directoryCharacterCount = parseSeparatedHexInt(data, currentPosition, currentPosition);
-			if (currentPosition == static_cast<int>(std::string::npos))
-			{
-				WARNING(true, ("loadLocalDirectoryFromString_0002(): failed to load directory data size, aborting load."));
-				return;
-			}
-
-			//-- find the customization variable
-			Directory *const directory = findDirectory(directoryName, 0);
-			if (!directory)
-			{
-				WARNING(true, ("loadLocalDirectoryFromString_0002(): object id=[%s], directory [%s] does not exist to be restored.", getOwner().getOwnerObject().getNetworkId().getValueString().c_str(), directoryName.c_str()));
-				return;
-			}
-			else
-			{
-				//-- load the data
-				directory->loadLocalDirectoryFromString(2, data, currentPosition);
-			}
-
-			//-- pass the variable data
-			currentPosition += directoryCharacterCount;
-		}
-	}
-}
-
-#endif
 
 // ======================================================================

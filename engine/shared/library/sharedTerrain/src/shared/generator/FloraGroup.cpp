@@ -250,7 +250,6 @@ void FloraGroup::Family::addChild (const FamilyChildData& familyChildData)
 	FamilyChildData child = familyChildData;
 	child.familyId = familyId;
 
-#if 1
 	//-- fixup fubar'ed names for a version
 	FileName baseName (FileName::P_none, familyChildData.appearanceTemplateName);
 	baseName.stripPathAndExt ();
@@ -281,9 +280,6 @@ void FloraGroup::Family::addChild (const FamilyChildData& familyChildData)
 				child.appearanceTemplateName = DuplicateString (familyChildData.appearanceTemplateName);
 		}
 	}
-#else
-	child.appearanceTemplateName = DuplicateString (familyChildData.appearanceTemplateName);
-#endif
 
 	childList.add (child);
 }

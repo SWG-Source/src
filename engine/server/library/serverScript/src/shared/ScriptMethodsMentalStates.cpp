@@ -310,7 +310,7 @@ jboolean JNICALL ScriptMethodsMentalStatesNamespace::addMentalStateModifier(JNIE
 	* @param mob	    id of creature to access
 	* @param mentalState		mental state we are interested in
 	*
-	* @return the mental state modifiers for the creature, or null if it has none
+	* @return the mental state modifiers for the creature, or nullptr if it has none
 */
 jobjectArray JNICALL ScriptMethodsMentalStatesNamespace::getMentalStateModifiers(JNIEnv *env, jobject self, jlong mob, jint mentalState)
 {
@@ -697,7 +697,7 @@ jboolean JNICALL ScriptMethodsMentalStatesNamespace::addMentalStateModifierTowar
 	* @param mob	    id of creature to access
 	* @param mentalState		mental state we are interested in
 	*
-	* @return the mental state modifiers for the creature, or null if it has none
+	* @return the mental state modifiers for the creature, or nullptr if it has none
 */
 jobjectArray JNICALL ScriptMethodsMentalStatesNamespace::getMentalStateModifiersToward(JNIEnv *env, jobject self, jlong mob, jlong target, jint mentalState)
 {

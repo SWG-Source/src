@@ -17,14 +17,14 @@ class ConfigLoginServer
 		int             maxClients;
 		int             taskServicePort;
 		int             pingServicePort;
-		int		httpServicePort;
+		int		        httpServicePort;
 		bool            validateClientVersion;
 		bool            validateStationKey;
 		bool            doSessionLogin;
-		bool            doConsumption; 
+		bool            doConsumption;
 		const char *    sessionServers;
 		int             sessionType;
-		
+
 		const char *    DSN;
  		const char *    databaseUID;
 		const char *    schemaOwner;
@@ -54,7 +54,7 @@ class ConfigLoginServer
 		const char *    purgeAccountSourceTable;
 		const char *    adminAccountDataTable;
 		bool            allowSkipTutorialToAll;
-		
+
 		bool            internalBypassOnlineLimit;
 
 		int             populationExtremelyHeavyThresholdPercent;
@@ -63,8 +63,13 @@ class ConfigLoginServer
 		int             populationMediumThresholdPercent;
 		int             populationLightThresholdPercent;
 		int             csToolPort;
-		
-		bool		requireSecureLoginForCsTool;
+
+		bool		    requireSecureLoginForCsTool;
+		bool		    useExternalAuth;
+
+		const char *	externalAuthURL;
+
+        int             maxConnectionsPerIP;
 	};
 
 	static const uint16 getCentralServicePort();
@@ -79,7 +84,7 @@ class ConfigLoginServer
 	static const bool   getDoConsumption();
 	static const char * getSessionServers();
 	static const int    getSessionType();
-	
+
 	static const int    getMaxClients ();
 	static const char * getPrivateIpMask();
 	static const char * getDSN();
@@ -102,7 +107,7 @@ class ConfigLoginServer
 	static void         install ();
 	static void         remove ();
 
-	static int getNumberOfSessionServers();
+	static int          getNumberOfSessionServers();
 	static char const * getSessionServer(int index);
 	static const int    getDisconnectSleepTime (void);
 	static const int    getClusterGroup();
@@ -115,11 +120,11 @@ class ConfigLoginServer
 	static int          getPurgePhaseAdvanceDays(int purgePhase);
 	static const char * getAdminAccountDataTable();
 	static bool         getAllowSkipTutorialToAll();
-	
+
 	static bool         getInternalBypassOnlineLimit();
 	static const int    getCSToolPort();
 
-	static bool	    getRequireSecureLoginForCsTool();
+	static bool	        getRequireSecureLoginForCsTool();
 
 	static int          getPopulationExtremelyHeavyThresholdPercent();
 	static int          getPopulationVeryHeavyThresholdPercent();
@@ -127,9 +132,14 @@ class ConfigLoginServer
 	static int          getPopulationMediumThresholdPercent();
 	static int          getPopulationLightThresholdPercent();
 
+	static bool	        getUseExternalAuth();
+	static const char * getExternalAuthUrl();
+
 	// has character creation for this cluster been disabled through config option
 	static bool         isCharacterCreationDisabled(std::string const & cluster);
-	static stdset<std::string>::fwd const & getCharacterCreationDisabledClusterList();
+	static              stdset<std::string>::fwd const & getCharacterCreationDisabledClusterList();
+
+	static const int	getMaxConnectionsPerIP();
 
 private:
 	static Data *	data;
@@ -466,6 +476,21 @@ inline bool ConfigLoginServer::getRequireSecureLoginForCsTool()
 inline const int ConfigLoginServer::getCSToolPort()
 {
 	return data->csToolPort;
+}
+
+inline bool ConfigLoginServer::getUseExternalAuth()
+{
+	return data->useExternalAuth;
+}
+
+inline const char * ConfigLoginServer::getExternalAuthUrl()
+{
+	return data->externalAuthURL;
+}
+
+inline const int ConfigLoginServer::getMaxConnectionsPerIP()
+{
+    return data->maxConnectionsPerIP;
 }
 // ======================================================================
 

@@ -56,7 +56,7 @@ void LineOfSightCache::update()
 	while (!s_lineOfSightCacheExpireQueue.empty())
 	{
 		LineOfSightCacheExpireQueueEntry const &entry = s_lineOfSightCacheExpireQueue.front();
-		if (static_cast<int>(entry.second-frameStartTime) > 0)
+		if (static_cast<int>(entry.second - frameStartTime) > 0)
 			break;
 		IGNORE_RETURN(s_lineOfSightCacheMap.erase(entry.first));
 		s_lineOfSightCacheExpireQueue.pop();
@@ -64,7 +64,7 @@ void LineOfSightCache::update()
 	while (!s_lineOfSightLocationCacheExpireQueue.empty())
 	{
 		LineOfSightLocationCacheExpireQueueEntry const &entry = s_lineOfSightLocationCacheExpireQueue.front();
-		if (static_cast<int>(entry.second-frameStartTime) > 0)
+		if (static_cast<int>(entry.second - frameStartTime) > 0)
 			break;
 		IGNORE_RETURN(s_lineOfSightLocationCacheMap.erase(entry.first));
 		s_lineOfSightLocationCacheExpireQueue.pop();
@@ -308,14 +308,14 @@ bool LineOfSightCache::checkLOS(Object const &a, Location const &b)
 				Clock::getFrameStartTimeMs() + ConfigServerGame::getLineOfSightCacheDurationMs()));
 
 		CellProperty const * const sourceCell = source->getParentCell();
-		CellProperty const * targetCell = NULL;
+		CellProperty const * targetCell = nullptr;
 		if (b.getCell() != NetworkId::cms_invalid)
 		{
 			Object const * cellObject = NetworkIdManager::getObjectById(b.getCell());
-			if (cellObject != NULL)
+			if (cellObject != nullptr)
 				targetCell = ContainerInterface::getCell(*cellObject);
 		}
-		if (targetCell == NULL)
+		if (targetCell == nullptr)
 			targetCell = CellProperty::getWorldCellProperty();
 
 		// if source and target are in the same cell in a player structure, skip LOS check;
@@ -418,7 +418,7 @@ bool LineOfSightCache::checkLOS(Object const &a, Location const &b)
 			qirResult = CollisionWorld::queryInteraction(
 				targetCell, b.getCoordinates(),
 				sourceCell, sourceTop,
-				NULL,
+				nullptr,
 				(!ConfigSharedCollision::getIgnoreTerrainLos() && !ConfigSharedCollision::getGenerateTerrainLos()),
 				false,
 				ConfigSharedCollision::getTerrainLOSMinDistance(),
@@ -436,4 +436,3 @@ bool LineOfSightCache::checkLOS(Object const &a, Location const &b)
 }
 
 // ======================================================================
-

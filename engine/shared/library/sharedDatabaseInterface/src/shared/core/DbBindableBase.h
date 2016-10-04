@@ -31,7 +31,7 @@ namespace DB {
 		explicit Bindable(int _indicator);
 
 		/**
-		 * The size of the data, or -1 for NULL.
+		 * The size of the data, or -1 for nullptr.
 		 */
 		int indicator;
 	};

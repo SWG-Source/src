@@ -121,7 +121,7 @@ public:
 	void     sendToAllGameServersExceptDBProcess(const GameNetworkMessage & message, const bool reliable);
 	void     sendToAllPlanetServers(const GameNetworkMessage & message, const bool reliable);
 	void     sendToPlanetServer(const std::string &sceneId, const GameNetworkMessage & message, const bool reliable);
-	void     sendToAllConnectionServers(const GameNetworkMessage & message, const bool reliable, Connection const * exclude = NULL);
+	void     sendToAllConnectionServers(const GameNetworkMessage & message, const bool reliable, Connection const * exclude = nullptr);
 	void     sendToConnectionServerForAccount(StationId account, const GameNetworkMessage & message, const bool reliable);
 	void     sendToDBProcess(const GameNetworkMessage & message, const bool reliable) const;
 	void     sendToLoginServer(uint32 loginServerId, const GameNetworkMessage &message);
@@ -182,6 +182,7 @@ private:
 	size_t                       getGameServerCount		(void) const;
 	void                         update();
 	void                         sendPopulationUpdateToLoginServer();
+	void			     sendMetricsToWebAPI();
 	ConnectionServerConnection * getConnectionServerForAccount(StationId suid);
 	void                         addToAccountConnectionMap(StationId suid, ConnectionServerConnection * cconn, uint32 subscriptionBits);
 	void                         removeFromAccountConnectionMap(int connectionServerConnectionId);

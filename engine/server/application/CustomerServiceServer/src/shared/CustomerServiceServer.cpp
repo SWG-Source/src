@@ -49,7 +49,7 @@ namespace CustomerServiceServerNamespace
 
 using namespace CustomerServiceServerNamespace;
 
-CustomerServiceServer *CustomerServiceServer::m_instance = NULL;
+CustomerServiceServer *CustomerServiceServer::m_instance = nullptr;
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -83,12 +83,12 @@ CustomerServiceServer::PendingTicket::PendingTicket()
 
 CustomerServiceServer::CustomerServiceServer() :
 m_callback(new MessageDispatch::Callback),
-m_centralServerConnection(NULL),
+m_centralServerConnection(nullptr),
 m_connectionServerSet(new ConnectionServerSet),
 m_done(false),
 m_csInterface(ConfigCustomerServiceServer::getCustomerServiceServerAddress(), ConfigCustomerServiceServer::getCustomerServiceServerPort(), ConfigCustomerServiceServer::getRequestTimeoutSeconds()),
-m_gameServerService(NULL),
-m_chatServerService(NULL),
+m_gameServerService(nullptr),
+m_chatServerService(nullptr),
 m_nextSequenceId(0),
 m_pendingTicketList(new PendingTicketList)
 {
@@ -103,7 +103,7 @@ m_pendingTicketList(new PendingTicketList)
 	m_callback->connect(*this, &CustomerServiceServer::onEnumerateServers);
 
 	char text[512];
-	snprintf(text, sizeof(text), "CustomerServiceServer() - ServerName(%s) ServerPort(%i) GameCode(%s)", ConfigCustomerServiceServer::getCustomerServiceServerAddress(), ConfigCustomerServiceServer::getCustomerServiceServerPort(), ConfigCustomerServiceServer::getGameCode());
+	snprintf(text, 512, "CustomerServiceServer() - ServerName(%s) ServerPort(%i) GameCode(%s)", ConfigCustomerServiceServer::getCustomerServiceServerAddress(), ConfigCustomerServiceServer::getCustomerServiceServerPort(), ConfigCustomerServiceServer::getGameCode());
 	REPORT_LOG(true, ("%s\n", text));
 	LOG("CSServer", ("%s", text));
 
@@ -113,7 +113,7 @@ m_pendingTicketList(new PendingTicketList)
 
 	m_csInterface.setMaxPacketsPerSecond(ConfigCustomerServiceServer::getMaxPacketsPerSecond());
 
-	m_csInterface.connectCSAssist(NULL, 
+	m_csInterface.connectCSAssist(nullptr, 
 		Unicode::narrowToWide(ConfigCustomerServiceServer::getGameCode()).data(), 
 		Unicode::narrowToWide(ConfigCustomerServiceServer::getClusterName()).data());
 
@@ -148,19 +148,19 @@ CustomerServiceServer::~CustomerServiceServer()
 		m_centralServerConnection->disconnect();
 
 	delete m_callback;
-	m_callback = NULL;
+	m_callback = nullptr;
 
 	delete m_connectionServerSet;
-	m_connectionServerSet = NULL;
+	m_connectionServerSet = nullptr;
 
 	delete m_gameServerService;
-	m_gameServerService = NULL;
+	m_gameServerService = nullptr;
 
 	delete m_chatServerService;
-	m_chatServerService = NULL;
+	m_chatServerService = nullptr;
 
 	delete m_pendingTicketList;
-	m_pendingTicketList = NULL;
+	m_pendingTicketList = nullptr;
 
 	MetricsManager::remove();
 	delete s_customerServiceServerMetricsData;
@@ -233,7 +233,7 @@ void CustomerServiceServer::update()
 
 CustomerServiceServer &CustomerServiceServer::getInstance()
 {
-	if (m_instance == NULL)
+	if (m_instance == nullptr)
 	{
 		m_instance = new CustomerServiceServer;
 	}
@@ -405,7 +405,7 @@ void CustomerServiceServer::getTickets(
 
 	NetworkId *tmpNetworkId = new NetworkId(requester);
 	m_csInterface.requestGetTicketByCharacter(
-		reinterpret_cast<const void *>(tmpNetworkId), suid, NULL,
+		reinterpret_cast<const void *>(tmpNetworkId), suid, nullptr,
 		start, count, markAsRead);
 }
 
@@ -475,7 +475,7 @@ void CustomerServiceServer::requestNewTicketActivity(const NetworkId &requester,
 
 	NetworkId *tmpNetworkId = new NetworkId(requester);
 
-	m_csInterface.requestNewTicketActivity(reinterpret_cast<const void *>(tmpNetworkId), suid, NULL);
+	m_csInterface.requestNewTicketActivity(reinterpret_cast<const void *>(tmpNetworkId), suid, nullptr);
 }
 
 //-----------------------------------------------------------------------
@@ -497,7 +497,7 @@ void CustomerServiceServer::requestRegisterCharacter(const NetworkId &requester,
 		LOG("CSServer", ("CustomerServiceInterface::requestRegisterCharacter() - networkId(%s) suid(%i)", requester.getValueString().c_str(), suid));
 
 		NetworkId *tmpNetworkId = new NetworkId(requester);
-		m_csInterface.requestRegisterCharacter(reinterpret_cast<const void *>(tmpNetworkId), suid, NULL, 0);
+		m_csInterface.requestRegisterCharacter(reinterpret_cast<const void *>(tmpNetworkId), suid, nullptr, 0);
 	}
 }
 

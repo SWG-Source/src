@@ -112,8 +112,11 @@ void ConfigLoginServer::install(void)
 	KEY_INT (populationHeavyThresholdPercent, 32);
 	KEY_INT (populationMediumThresholdPercent, 16);
 	KEY_INT (populationLightThresholdPercent, 8);
-	KEY_INT (csToolPort, 10666);
+	KEY_INT (csToolPort, 0); // use 10666 if you want to turn the tool on
 	KEY_BOOL(requireSecureLoginForCsTool, true);
+	KEY_BOOL(useExternalAuth, false);
+	KEY_STRING(externalAuthURL, "");
+	KEY_INT(maxConnectionsPerIP, 4); // assuming 2 people playing in the same household
 
 	int index = 0;
 	char const * result = 0;

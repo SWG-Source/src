@@ -58,7 +58,7 @@ AiCreatureWeaponActions::AiCreatureWeaponActions()
  : m_singleUseActionList()
  , m_delayRepeatActionList()
  , m_instantRepeatActionList()
- , m_combatProfile(NULL)
+ , m_combatProfile(nullptr)
 {
 }
 
@@ -81,7 +81,7 @@ void AiCreatureWeaponActions::setCombatProfile(CreatureObject & owner, AiCreatur
 // ----------------------------------------------------------------------
 void AiCreatureWeaponActions::reset()
 {
-	if (m_combatProfile != NULL)
+	if (m_combatProfile != nullptr)
 	{
 		resetActionTimers(m_singleUseActionList, m_combatProfile->m_singleUseActionList);
 		resetActionTimers(m_delayRepeatActionList, m_combatProfile->m_delayRepeatActionList);
@@ -92,9 +92,9 @@ void AiCreatureWeaponActions::reset()
 // ----------------------------------------------------------------------
 PersistentCrcString const & AiCreatureWeaponActions::getCombatAction()
 {
-	// If the combat profile is NULL, then the AI has no special actions assigned
+	// If the combat profile is nullptr, then the AI has no special actions assigned
 
-	if (m_combatProfile != NULL)
+	if (m_combatProfile != nullptr)
 	{
 		time_t const osTime = Os::getRealSystemTime();
 

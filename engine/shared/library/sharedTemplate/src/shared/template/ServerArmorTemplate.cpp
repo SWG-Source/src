@@ -17,9 +17,8 @@
 #include "sharedDebug/DataLint.h"
 #include "sharedFile/Iff.h"
 #include "sharedTemplateDefinition/ObjectTemplate.h"
+#include <stdio.h>
 
-#include <algorithm>
-#include <cstdio>
 
 
 /**
@@ -45,7 +44,7 @@ ServerArmorTemplate::~ServerArmorTemplate()
 		for (iter = m_specialProtection.begin(); iter != m_specialProtection.end(); ++iter)
 		{
 			delete *iter;
-			*iter = NULL;
+			*iter = nullptr;
 		}
 		m_specialProtection.clear();
 	}
@@ -114,9 +113,9 @@ CompilerIntegerParam * ServerArmorTemplate::getCompilerIntegerParam(const char *
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_rating;
 		}
@@ -128,9 +127,9 @@ CompilerIntegerParam * ServerArmorTemplate::getCompilerIntegerParam(const char *
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_integrity;
 		}
@@ -142,9 +141,9 @@ CompilerIntegerParam * ServerArmorTemplate::getCompilerIntegerParam(const char *
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_effectiveness;
 		}
@@ -156,9 +155,9 @@ CompilerIntegerParam * ServerArmorTemplate::getCompilerIntegerParam(const char *
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_vulnerability;
 		}
@@ -170,9 +169,9 @@ CompilerIntegerParam * ServerArmorTemplate::getCompilerIntegerParam(const char *
 		{
 			if (deepCheck && !isParamLoaded(name, false, index))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_encumbrance[index];
 		}
@@ -180,7 +179,7 @@ CompilerIntegerParam * ServerArmorTemplate::getCompilerIntegerParam(const char *
 	}
 	else
 		return TpfTemplate::getCompilerIntegerParam(name, deepCheck, index);
-	return NULL;
+	return nullptr;
 }	//ServerArmorTemplate::getCompilerIntegerParam
 
 FloatParam * ServerArmorTemplate::getFloatParam(const char *name, bool deepCheck, int index)
@@ -229,7 +228,7 @@ StructParamOT * ServerArmorTemplate::getStructParamOT(const char *name, bool dee
 	}
 	else
 		return TpfTemplate::getStructParamOT(name, deepCheck, index);
-	return NULL;
+	return nullptr;
 }	//ServerArmorTemplate::getStructParamOT
 
 TriggerVolumeParam * ServerArmorTemplate::getTriggerVolumeParam(const char *name, bool deepCheck, int index)
@@ -316,12 +315,12 @@ char paramName[MAX_NAME_SIZE];
 		file.read_string(baseFilename);
 		file.exitChunk();
 		const ObjectTemplate *base = ObjectTemplateList::fetch(baseFilename);
-		DEBUG_WARNING(base == NULL, ("was unable to load base template %s", baseFilename.c_str()));
-		if (m_baseData == base && base != NULL)
+		DEBUG_WARNING(base == nullptr, ("was unable to load base template %s", baseFilename.c_str()));
+		if (m_baseData == base && base != nullptr)
 			base->releaseReference();
 		else
 		{
-			if (m_baseData != NULL)
+			if (m_baseData != nullptr)
 				m_baseData->releaseReference();
 			m_baseData = base;
 		}
@@ -355,7 +354,7 @@ char paramName[MAX_NAME_SIZE];
 			for (iter = m_specialProtection.begin(); iter != m_specialProtection.end(); ++iter)
 			{
 				delete *iter;
-				*iter = NULL;
+				*iter = nullptr;
 			}
 			m_specialProtection.clear();
 			m_specialProtectionAppend = file.read_bool8();
@@ -532,9 +531,9 @@ CompilerIntegerParam * ServerArmorTemplate::_SpecialProtection::getCompilerInteg
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_type;
 		}
@@ -546,9 +545,9 @@ CompilerIntegerParam * ServerArmorTemplate::_SpecialProtection::getCompilerInteg
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getCompilerIntegerParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_effectiveness;
 		}
@@ -556,7 +555,7 @@ CompilerIntegerParam * ServerArmorTemplate::_SpecialProtection::getCompilerInteg
 	}
 	else
 		return TpfTemplate::getCompilerIntegerParam(name, deepCheck, index);
-	return NULL;
+	return nullptr;
 }	//ServerArmorTemplate::_SpecialProtection::getCompilerIntegerParam
 
 FloatParam * ServerArmorTemplate::_SpecialProtection::getFloatParam(const char *name, bool deepCheck, int index)

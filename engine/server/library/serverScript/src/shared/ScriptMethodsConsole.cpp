@@ -52,10 +52,10 @@ void JNICALL ScriptMethodsConsoleNamespace::consoleSendMessageObjId(JNIEnv * env
 	const ServerObject* player = 0;
 	if(!JavaLibrary::getObject(_to, player))
 	{
-		DEBUG_WARNING (true, ("ScriptMethodsConsole JavaLibrary::consoleSendMessageObjId failed bad source object (not null)"));
+		DEBUG_WARNING (true, ("ScriptMethodsConsole JavaLibrary::consoleSendMessageObjId failed bad source object (not nullptr)"));
 		if (ConfigServerScript::allowDebugConsoleMessages())
 		{
-			fprintf(stderr, "WARNING: ScriptMethodsConsole JavaLibrary::consoleSendMessageObjId: failed bad source object (not null)\n");
+			fprintf(stderr, "WARNING: ScriptMethodsConsole JavaLibrary::consoleSendMessageObjId: failed bad source object (not nullptr)\n");
 			JavaLibrary::printJavaStack();
 		}
 		return;

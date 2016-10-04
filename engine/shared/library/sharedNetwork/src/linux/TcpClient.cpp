@@ -494,7 +494,7 @@ void TcpClient::update()
 		// disconnected so we can handle cleanup.
 		if (pollResult)
 		{
-			if (m_recvBuffer == NULL)
+			if (m_recvBuffer == nullptr)
 			{
 				m_recvBufferLength = 1500;
 				m_recvBuffer = new unsigned char [m_recvBufferLength];
@@ -533,7 +533,7 @@ void TcpClient::update()
 				}
 				else
 				{
-					LOG("Network", ("(null connection object) Read zero bytes on a successful poll (POLLIN|POLLHUP).  Closing socket since we think it is closed."));				
+					LOG("Network", ("(nullptr connection object) Read zero bytes on a successful poll (POLLIN|POLLHUP).  Closing socket since we think it is closed."));				
 				}
 				onConnectionClosed();
 			}

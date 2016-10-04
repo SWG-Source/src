@@ -209,25 +209,4 @@ float CoordinateHash::makeFloat(unsigned long hash)
 	return returnValue;
 }
 
-#if 0
-long CoordinateHash::hashTuple(float x, float z)
-{
-	const unsigned long ix = (*(unsigned long *)&x)^0x5a5a5a5a;
-	const unsigned long iz = (*(unsigned long *)&z)^0xa5a5a5a5;
-	const unsigned long hx = _hash1((ix>>8) | (ix<<24));
-	const unsigned long hz = _hash1((iz>>16) | (iz<<16));
-	const unsigned long hmix1 = hx^hz;
-	const unsigned long h =  hmix1;
-
-	/*
-	FastRandomGenerator rngx(hx);
-	FastRandomGenerator rngz(hz);
-	const long rnx = rngx.random();
-	const long rnz = rngz.random();
-	return rnx^rnz;
-	*/
-
-	return h;
-}
-#endif
 //===================================================================

@@ -15,6 +15,8 @@
 #include "sharedNetworkMessages/ConsoleChannelMessages.h"
 #include "sharedNetworkMessages/GenericValueTypeMessage.h"
 
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 // ======================================================================
 
 PlanetServerConnection::PlanetServerConnection(UdpConnectionMT *u, TcpClient *t) :
@@ -69,39 +71,42 @@ void PlanetServerConnection::onReceive(Archive::ByteStream const &message)
 	GameNetworkMessage const msg(ri);
 	ri = message.begin();
 
+	const uint32 msgType = msg.getType();
+
 	if (!m_forwardDestinationServers.empty())
 	{
-		if (isMessageForwardable(msg.getType()))
+		if (isMessageForwardable(msgType))
 		{
 			m_forwardMessages.push_back(std::make_pair(message, m_forwardDestinationServers.back()));
 			return;
-		}
-		else if (msg.isType("EndForward"))
-		{
-			if (--m_forwardCounts.back() == 0)
-			{
-				m_forwardCounts.pop_back();
-				m_forwardDestinationServers.pop_back();
-				if (m_forwardDestinationServers.empty())
-					pushAndClearObjectForwarding();
+		} else {
+			switch (msgType) {
+				case constcrc("EndForward"): {
+					if (--m_forwardCounts.back() == 0) {
+						m_forwardCounts.pop_back();
+						m_forwardDestinationServers.pop_back();
+
+						if (m_forwardDestinationServers.empty()) {
+							pushAndClearObjectForwarding();
+						}
+					}
+					return;
+				}
+				case constcrc("BeginForward") : {
+					GenericValueTypeMessage <std::vector<uint32>> const beginForwardMessage(ri);
+					if (beginForwardMessage.getValue() == m_forwardDestinationServers.back())
+						++m_forwardCounts.back();
+					else {
+						m_forwardCounts.push_back(1);
+						m_forwardDestinationServers.push_back(beginForwardMessage.getValue());
+					}
+					return;
+				}
 			}
-			return;
-		}
-		else if (msg.isType("BeginForward"))
-		{
-			GenericValueTypeMessage<std::vector<uint32> > const beginForwardMessage(ri);
-			if (beginForwardMessage.getValue() == m_forwardDestinationServers.back())
-				++m_forwardCounts.back();
-			else
-			{
-				m_forwardCounts.push_back(1);
-				m_forwardDestinationServers.push_back(beginForwardMessage.getValue());
-			}
-			return;
 		}
 	}
 
-	if (msg.isType("BeginForward"))
+	if (msgType == constcrc("BeginForward"))
 	{
 		GenericValueTypeMessage<std::vector<uint32> > const beginForwardMessage(ri);
 
@@ -112,20 +117,22 @@ void PlanetServerConnection::onReceive(Archive::ByteStream const &message)
 
 	ServerConnection::onReceive(message);
 
-	if (msg.isType("CentralPlanetServerConnect"))
-	{
-		CentralPlanetServerConnect const id(ri);
-		sceneId = id.getSceneId();
-	}
-	else if (msg.isType("TaskSpawnProcess"))
-	{
-		TaskSpawnProcess const spawn(ri);
-		CentralServer::getInstance().sendTaskMessage(spawn);
-	}
-	else if (msg.isType("ConGenericMessage"))
-	{
-		ConGenericMessage const con(ri);
-		ConsoleConnection::onCommandComplete(con.getMsg(), static_cast<int>(con.getMsgId()));
+	switch (msgType) {
+		case constcrc("CentralPlanetServerConnect") : {
+			CentralPlanetServerConnect const id(ri);
+			sceneId = id.getSceneId();
+			break;
+		}
+		case constcrc("TaskSpawnProcess") : {
+			TaskSpawnProcess const spawn(ri);
+			CentralServer::getInstance().sendTaskMessage(spawn);
+			break;
+		}
+		case constcrc("ConGenericMessage") : {
+			ConGenericMessage const con(ri);
+			ConsoleConnection::onCommandComplete(con.getMsg(), static_cast<int>(con.getMsgId()));
+			break;
+		}
 	}
 }
 

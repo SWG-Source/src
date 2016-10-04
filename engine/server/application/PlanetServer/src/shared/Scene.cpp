@@ -23,6 +23,8 @@
 #include "sharedNetworkMessages/GenericValueTypeMessage.h"
 #include "sharedUtility/LocationManager.h"
 
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 // ======================================================================
 
 Scene::Scene() :
@@ -77,7 +79,7 @@ PlanetProxyObject *Scene::findObjectByID(const NetworkId &objectID) const
 {
 	ObjectMapType::const_iterator i=m_objects.find(objectID);
 	if (i==m_objects.end())
-		return NULL;
+		return nullptr;
 	else
 		return ((*i).second);
 }
@@ -94,97 +96,107 @@ bool Scene::isObjectLoaded(const NetworkId &networkId) const
 void Scene::receiveMessage(const MessageDispatch::Emitter & source, const MessageDispatch::MessageBase & message)
 {
 	const GameServerConnection *gameServer=dynamic_cast<const GameServerConnection*>(&source);
-	WARNING_DEBUG_FATAL(gameServer==0,("Source was NULL or source was not a GameServerConnection."));
+	WARNING_DEBUG_FATAL(gameServer==0,("Source was nullptr or source was not a GameServerConnection."));
 
-	if (message.isType("GameConnectionClosed"))
-	{
-		DEBUG_REPORT_LOG(true, ("Handling a game server crash for server %lu\n", gameServer->getProcessId()));
-		handleCrash(gameServer->getProcessId());
-	}
-
-	else if (message.isType("UpdateObjectOnPlanetMessage"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		UpdateObjectOnPlanetMessage msg(ri);
-
-		int interestRadius = msg.getInterestRadius();
-
-		if(msg.getWatched() && interestRadius == 0)
-			interestRadius = 1;
-
-		if (m_deletedObjects.find(msg.getObjectId())!=m_deletedObjects.end())
+	const uint32 messageType = message.getType();
+	
+	switch(messageType) {
+		case constcrc("GameConnectionClosed") :
 		{
-			DEBUG_REPORT_LOG(true,("Ignoring update for object %s which has been removed.\n",msg.getObjectId().getValueString().c_str()));
+			DEBUG_REPORT_LOG(true, ("Handling a game server crash for server %lu\n", gameServer->getProcessId()));
+			handleCrash(gameServer->getProcessId());
+			break;
 		}
-		else
+		case constcrc("UpdateObjectOnPlanetMessage") :
 		{
-			NetworkId container(msg.getTopmostContainer());
-			if (container==msg.getObjectId()) // game server sends container == objectId if the object is not contained
-				container=NetworkId::cms_invalid;
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			UpdateObjectOnPlanetMessage msg(ri);
 
-			bool processUpdate = true;
-			if (container != NetworkId::cms_invalid)
+			int interestRadius = msg.getInterestRadius();
+
+			if(msg.getWatched() && interestRadius == 0)
+				interestRadius = 1;
+
+			if (m_deletedObjects.find(msg.getObjectId())!=m_deletedObjects.end())
 			{
-				PlanetProxyObject const *const containerObject = findObjectByID(container);
-				if (containerObject)
+				DEBUG_REPORT_LOG(true,("Ignoring update for object %s which has been removed.\n",msg.getObjectId().getValueString().c_str()));
+			}
+			else
+			{
+				NetworkId container(msg.getTopmostContainer());
+				if (container==msg.getObjectId()) // game server sends container == objectId if the object is not contained
+					container=NetworkId::cms_invalid;
+
+				bool processUpdate = true;
+				if (container != NetworkId::cms_invalid)
 				{
-					if (containerObject->getAuthoritativeServer() != gameServer->getProcessId())
+					PlanetProxyObject const *const containerObject = findObjectByID(container);
+					if (containerObject)
 					{
-						// This update message came from a server that is not
-						// authoritative for the container of this object.  This
-						// can happen when the planet server is in control of
-						// switching the container's authority but is not in
-						// charge of changing the container content's authority.
-						// This happens to the rider of a mount when the mount
-						// switches authority.
-						processUpdate = false;
+						if (containerObject->getAuthoritativeServer() != gameServer->getProcessId())
+						{
+							// This update message came from a server that is not
+							// authoritative for the container of this object.  This
+							// can happen when the planet server is in control of
+							// switching the container's authority but is not in
+							// charge of changing the container content's authority.
+							// This happens to the rider of a mount when the mount
+							// switches authority.
+							processUpdate = false;
+						}
 					}
 				}
-			}
 
-			if (processUpdate)
-			{
-				PlanetProxyObject *theObject=findObjectByID(msg.getObjectId());
-				if (!theObject)
+				if (processUpdate)
 				{
-					// this is a new object
-					theObject=new PlanetProxyObject(msg.getObjectId());
-					addObject(theObject);
+					PlanetProxyObject *theObject=findObjectByID(msg.getObjectId());
+					if (!theObject)
+					{
+						// this is a new object
+						theObject=new PlanetProxyObject(msg.getObjectId());
+						addObject(theObject);
+					}
+					
+					theObject->onReceivedMessageFromServer(gameServer->getProcessId());
+					theObject->update(msg.getX(), msg.getY(), msg.getZ(), container, gameServer->getProcessId(), interestRadius, msg.getObjectTypeTag(), msg.getLevel(), msg.getHibernating(), msg.getTemplateCrc(), msg.getAiActivity(), msg.getCreationType());
+
+					//-- handle updating LocationManager
+					if (msg.getLocationReservationRadius () > 0.f)
+						LocationManager::updateObject (msg.getObjectId (), msg.getX (), msg.getZ (), msg.getLocationReservationRadius ());
 				}
-				
-				theObject->onReceivedMessageFromServer(gameServer->getProcessId());
-				theObject->update(msg.getX(), msg.getY(), msg.getZ(), container, gameServer->getProcessId(), interestRadius, msg.getObjectTypeTag(), msg.getLevel(), msg.getHibernating(), msg.getTemplateCrc(), msg.getAiActivity(), msg.getCreationType());
-
-				//-- handle updating LocationManager
-				if (msg.getLocationReservationRadius () > 0.f)
-					LocationManager::updateObject (msg.getObjectId (), msg.getX (), msg.getZ (), msg.getLocationReservationRadius ());
 			}
+			break;
 		}
-	}
-	else if (message.isType("PlanetRemoveObject"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		PlanetRemoveObject msg(ri);
-		handleRemoveObject(msg.getObjectId());
+		case constcrc("PlanetRemoveObject") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			PlanetRemoveObject msg(ri);
+			handleRemoveObject(msg.getObjectId());
 
-		//-- handle updating LocationManager
-		LocationManager::removeObject (msg.getObjectId ());
-	}
-	else if (message.isType("ForceLoadArea"))
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		GenericValueTypeMessage<std::pair<uint32, std::pair<std::pair<float, float>, std::pair<float, float> > > > const msg(ri);
+			//-- handle updating LocationManager
+			LocationManager::removeObject (msg.getObjectId ());
+			break;
+		}
+		case constcrc("ForceLoadArea") :
+		{
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			GenericValueTypeMessage<std::pair<uint32, std::pair<std::pair<float, float>, std::pair<float, float> > > > const msg(ri);
 
-		handleForceLoadArea(
-			msg.getValue().first,
-			static_cast<int>(msg.getValue().second.first.first),
-			static_cast<int>(msg.getValue().second.first.second),
-			static_cast<int>(msg.getValue().second.second.first),
-			static_cast<int>(msg.getValue().second.second.second));
-	}
-	else
-	{
-		DEBUG_REPORT_LOG(true,("Scene.cpp received an unidentified message.\n"));
+			handleForceLoadArea(
+				msg.getValue().first,
+				static_cast<int>(msg.getValue().second.first.first),
+				static_cast<int>(msg.getValue().second.first.second),
+				static_cast<int>(msg.getValue().second.second.first),
+				static_cast<int>(msg.getValue().second.second.second)
+			);
+				
+			break;
+		}
+		default :
+		{
+			DEBUG_REPORT_LOG(true,("Scene.cpp received an unidentified message.\n"));
+			break;
+		}
 	}
 }
 
@@ -216,7 +228,7 @@ Node *Scene::findNodeByPosition(int x, int z)
 
 /**
  * Given coordinates, return a const pointer to the node that encloses
- * those coordinates.  Will not create new nodes, so it may return NULL.
+ * those coordinates.  Will not create new nodes, so it may return nullptr.
  */
 const Node *Scene::findNodeByPositionConst(int x, int z) const
 {
@@ -245,7 +257,7 @@ Node *Scene::findNodeByRoundedPosition(int x, int z)
 
 /**
  * Given coordinates that are known to be a node boundary, return a const pointer
- * to the node.  Does not create new nodes, so may return NULL.
+ * to the node.  Does not create new nodes, so may return nullptr.
  */
 const Node *Scene::findNodeByRoundedPositionConst(int x, int z) const
 {
@@ -254,7 +266,7 @@ const Node *Scene::findNodeByRoundedPositionConst(int x, int z) const
 	if (i!=m_nodeMap.end())
 		return (*i).second;
 	else
-		return NULL;
+		return nullptr;
 }
 
 // ----------------------------------------------------------------------

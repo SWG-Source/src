@@ -127,7 +127,7 @@ jlong JNICALL ScriptMethodsPlayerAccountNamespace::getPlayerObject(JNIEnv *env, 
 
 	jlong objId = 0;
 
-	ServerObject * creatureServerObject = NULL;
+	ServerObject * creatureServerObject = nullptr;
 	if (JavaLibrary::getObject(creature,creatureServerObject))
 	{
 		SlotId slot = SlotIdManager::findSlotId(ConstCharCrcLowerString("ghost"));
@@ -258,11 +258,11 @@ jobject JNICALL ScriptMethodsPlayerAccountNamespace::getAccountTimeData(JNIEnv *
 
 	const PlayerObject * player = PlayerCreatureController::getPlayerObject(
 		creature);
-	if (player == NULL)
+	if (player == nullptr)
 		return 0;
 
 	const Client * client = creature->getClient();
-	if (client == NULL)
+	if (client == nullptr)
 		return 0;
 
 	// get the values that came from Platform
@@ -407,7 +407,7 @@ jboolean JNICALL ScriptMethodsPlayerAccountNamespace::setCompletedTutorial(JNIEn
 	const unsigned int stationId = playerObject->getClient()->getStationId();
 
 	LOG("CustomerService", ("Setting tutorial bit to %s for stationId %i\n", (value) ? "true" : "false", stationId));
-	GenericValueTypeMessage< std::pair<unsigned int, bool> > const updateTutorial("LoginToggleCompletedTutorial", std::pair<unsigned int, bool>(stationId, value));
+	GenericValueTypeMessage< std::pair<unsigned int, bool> > const updateTutorial("LoginToggleCompletedTutorial", std::pair<unsigned int, bool>(stationId, (bool)value));
 	GameServer::getInstance().sendToCentralServer(updateTutorial);
 	return true;
 }
@@ -463,7 +463,7 @@ jboolean JNICALL ScriptMethodsPlayerAccountNamespace::isAccountQualifiedForHouse
 * @returns a dictionary that contains the following data in paralled arrays
 * with the oldest CTS transaction first and the newest CTS transaction last
 *
-* @returns null if the character doesn't have any CTS history
+* @returns nullptr if the character doesn't have any CTS history
 *
 * string[] character_name        full name of the source character
 * string[] cluster_name          name of the source cluster
@@ -471,7 +471,7 @@ jboolean JNICALL ScriptMethodsPlayerAccountNamespace::isAccountQualifiedForHouse
 */
 jobject JNICALL ScriptMethodsPlayerAccountNamespace::getCharacterCtsHistory(JNIEnv * env, jobject self, jlong player)
 {
-	CreatureObject const * playerObject = NULL;
+	CreatureObject const * playerObject = nullptr;
 	if (!JavaLibrary::getObject(player, playerObject))
 	{
 		DEBUG_WARNING(true, ("JavaLibrary::getCharacterCtsHistory:  bad player object"));
@@ -491,7 +491,7 @@ jobject JNICALL ScriptMethodsPlayerAccountNamespace::getCharacterCtsHistory(JNIE
 		if (i.getValue(ctsTransactionDetail))
 		{
 			Unicode::UnicodeStringVector tokens;
-			if (Unicode::tokenize(ctsTransactionDetail, tokens, NULL, NULL) && (tokens.size() >= 4))
+			if (Unicode::tokenize(ctsTransactionDetail, tokens, nullptr, nullptr) && (tokens.size() >= 4))
 			{
 				Unicode::String * characterName = new Unicode::String();
 				for (size_t i = 3, j = tokens.size(); i < j; ++i)
@@ -538,13 +538,13 @@ jobject JNICALL ScriptMethodsPlayerAccountNamespace::getCharacterCtsHistory(JNIE
 * for the particular CTS source character that this character at one time transferred from
 * with the oldest CTS transaction first and the newest CTS transaction last
 *
-* @returns null if the character doesn't have any retroactive CTS objvars history
+* @returns nullptr if the character doesn't have any retroactive CTS objvars history
 */
 jobjectArray JNICALL ScriptMethodsPlayerAccountNamespace::getCharacterRetroactiveCtsObjvars(JNIEnv * env, jobject self, jlong player)
 {
 	std::vector<std::vector<std::pair<std::string, DynamicVariable> > const *> const & characterRetroactiveCtsObjvars = GameServer::getRetroactiveCtsHistoryObjvars(NetworkId(static_cast<NetworkId::NetworkIdType>(player)));
 	if (characterRetroactiveCtsObjvars.empty())
-		return NULL;
+		return nullptr;
 
 	LocalObjectArrayRefPtr results = createNewObjectArray(characterRetroactiveCtsObjvars.size(), JavaLibrary::getClsDictionary());
 	for (size_t i = 0, size = characterRetroactiveCtsObjvars.size(); i < size; ++i)
@@ -603,7 +603,7 @@ jobjectArray JNICALL ScriptMethodsPlayerAccountNamespace::qualifyForFreeCts(JNIE
 	// see if we can/should bypass the free CTS time restriction
 	if (!freeCtsInfo && ConfigServerGame::getAllowIgnoreFreeCtsTimeRestriction())
 	{
-		CreatureObject const * playerObject = NULL;
+		CreatureObject const * playerObject = nullptr;
 		if (JavaLibrary::getObject(player, playerObject) && playerObject && playerObject->getClient() && playerObject->getClient()->isGod())
 		{
 			freeCtsInfo = FreeCtsDataTable::getFreeCtsInfoForCharacter(characterCreateTime, GameServer::getInstance().getClusterName(), true);
@@ -615,7 +615,7 @@ jobjectArray JNICALL ScriptMethodsPlayerAccountNamespace::qualifyForFreeCts(JNIE
 	}
 
 	if (!freeCtsInfo || freeCtsInfo->targetCluster.empty())
-		return NULL;
+		return nullptr;
 
 	LocalObjectArrayRefPtr valueArray = createNewObjectArray(freeCtsInfo->targetCluster.size(), JavaLibrary::getClsString());
 
@@ -634,7 +634,7 @@ jobjectArray JNICALL ScriptMethodsPlayerAccountNamespace::qualifyForFreeCts(JNIE
 */
 void JNICALL ScriptMethodsPlayerAccountNamespace::validateFreeCts(JNIEnv * /*env*/, jobject /*self*/, jlong player, jstring destinationGalaxy, jstring destinationCharacterName)
 {
-	CreatureObject const * creatureObject = NULL;
+	CreatureObject const * creatureObject = nullptr;
 	if (!JavaLibrary::getObject(player, creatureObject) || !creatureObject)
 	{
 		DEBUG_WARNING(true, ("JavaLibrary::validateFreeCts: bad CreatureObject"));
@@ -674,7 +674,7 @@ void JNICALL ScriptMethodsPlayerAccountNamespace::validateFreeCts(JNIEnv * /*env
 */
 void JNICALL ScriptMethodsPlayerAccountNamespace::performFreeCts(JNIEnv * /*env*/, jobject /*self*/, jlong player, jstring destinationGalaxy, jstring destinationCharacterName)
 {
-	CreatureObject const * creatureObject = NULL;
+	CreatureObject const * creatureObject = nullptr;
 	if (!JavaLibrary::getObject(player, creatureObject) || !creatureObject)
 	{
 		DEBUG_WARNING(true, ("JavaLibrary::performFreeCts: bad CreatureObject"));
@@ -713,7 +713,7 @@ void JNICALL ScriptMethodsPlayerAccountNamespace::performFreeCts(JNIEnv * /*env*
 */
 void JNICALL ScriptMethodsPlayerAccountNamespace::validateCts(JNIEnv * /*env*/, jobject /*self*/, jlong player, jstring destinationGalaxy, jstring destinationCharacterName)
 {
-	CreatureObject const * creatureObject = NULL;
+	CreatureObject const * creatureObject = nullptr;
 	if (!JavaLibrary::getObject(player, creatureObject) || !creatureObject)
 	{
 		DEBUG_WARNING(true, ("JavaLibrary::validateCts: bad CreatureObject"));
@@ -753,7 +753,7 @@ void JNICALL ScriptMethodsPlayerAccountNamespace::validateCts(JNIEnv * /*env*/, 
 */
 void JNICALL ScriptMethodsPlayerAccountNamespace::performCts(JNIEnv * /*env*/, jobject /*self*/, jlong player, jstring destinationGalaxy, jstring destinationCharacterName)
 {
-	CreatureObject const * creatureObject = NULL;
+	CreatureObject const * creatureObject = nullptr;
 	if (!JavaLibrary::getObject(player, creatureObject) || !creatureObject)
 	{
 		DEBUG_WARNING(true, ("JavaLibrary::performCts: bad CreatureObject"));
@@ -792,7 +792,7 @@ void JNICALL ScriptMethodsPlayerAccountNamespace::performCts(JNIEnv * /*env*/, j
  */
 void JNICALL ScriptMethodsPlayerAccountNamespace::validateRenameCharacter(JNIEnv *env, jobject self, jlong player, jstring newName)
 {
-	CreatureObject const * creatureObject = NULL;
+	CreatureObject const * creatureObject = nullptr;
 	if (!JavaLibrary::getObject(player, creatureObject) || !creatureObject)
 	{
 		DEBUG_WARNING(true, ("JavaLibrary::validateRenameCharacter: bad CreatureObject"));
@@ -819,7 +819,7 @@ void JNICALL ScriptMethodsPlayerAccountNamespace::validateRenameCharacter(JNIEnv
 	bool lastNameChangeOnly = false;
 	static Unicode::String const delimiters(Unicode::narrowToWide(" "));
 	Unicode::UnicodeStringVector newNameTokens;
-	if (!Unicode::tokenize(newNameString, newNameTokens, &delimiters, NULL))
+	if (!Unicode::tokenize(newNameString, newNameTokens, &delimiters, nullptr))
 		newNameTokens.clear();
 
 	size_t const newNameTokensCount = newNameTokens.size();
@@ -846,7 +846,7 @@ void JNICALL ScriptMethodsPlayerAccountNamespace::validateRenameCharacter(JNIEnv
 					{
 						Unicode::String const uniqueRandomName = NameManager::getInstance().generateUniqueRandomName(ConfigServerGame::getCharacterNameGeneratorDirectory(), creatureTemplate->getNameGeneratorType());
 						Unicode::UnicodeStringVector uniqueRandomNameTokens;
-						if (!Unicode::tokenize(uniqueRandomName, uniqueRandomNameTokens, &delimiters, NULL))
+						if (!Unicode::tokenize(uniqueRandomName, uniqueRandomNameTokens, &delimiters, nullptr))
 							uniqueRandomNameTokens.clear();
 
 						newNameString = ((uniqueRandomNameTokens.size() >= 1) ? uniqueRandomNameTokens[0] : delimiters) + delimiters + newNameTokens[1];
@@ -861,7 +861,7 @@ void JNICALL ScriptMethodsPlayerAccountNamespace::validateRenameCharacter(JNIEnv
 		params.addParam("@ui:name_declined_racially_inappropriate", "reason");
 		ScriptDictionaryPtr dictionary;
 		GameScriptObject::makeScriptDictionary(params, dictionary);
-		if (dictionary.get() != NULL)
+		if (dictionary.get() != nullptr)
 		{
 			dictionary->serialize();
 			MessageToQueue::getInstance().sendMessageToJava(creatureObject->getNetworkId(), "renameCharacterNameValidationFail", dictionary->getSerializedData(), 0, false);
@@ -879,7 +879,7 @@ void JNICALL ScriptMethodsPlayerAccountNamespace::validateRenameCharacter(JNIEnv
 		params.addParam(errorText.c_str(), "reason");
 		ScriptDictionaryPtr dictionary;
 		GameScriptObject::makeScriptDictionary(params, dictionary);
-		if (dictionary.get() != NULL)
+		if (dictionary.get() != nullptr)
 		{
 			dictionary->serialize();
 			MessageToQueue::getInstance().sendMessageToJava(creatureObject->getNetworkId(), "renameCharacterNameValidationFail", dictionary->getSerializedData(), 0, false);
@@ -906,7 +906,7 @@ void JNICALL ScriptMethodsPlayerAccountNamespace::validateRenameCharacter(JNIEnv
 */
 void JNICALL ScriptMethodsPlayerAccountNamespace::renameCharacterReleaseNameReservation(JNIEnv *env, jobject self, jlong player)
 {
-	CreatureObject const * creatureObject = NULL;
+	CreatureObject const * creatureObject = nullptr;
 	if (!JavaLibrary::getObject(player, creatureObject) || !creatureObject)
 	{
 		DEBUG_WARNING(true, ("JavaLibrary::renameCharacterReleaseNameReservation: bad CreatureObject"));
@@ -929,7 +929,7 @@ void JNICALL ScriptMethodsPlayerAccountNamespace::renameCharacterReleaseNameRese
 */
 void JNICALL ScriptMethodsPlayerAccountNamespace::renameCharacter(JNIEnv *env, jobject self, jlong player, jstring newName)
 {
-	CreatureObject const * creatureObject = NULL;
+	CreatureObject const * creatureObject = nullptr;
 	if (!JavaLibrary::getObject(player, creatureObject) || !creatureObject)
 	{
 		DEBUG_WARNING(true, ("JavaLibrary::renameCharacter: bad CreatureObject"));

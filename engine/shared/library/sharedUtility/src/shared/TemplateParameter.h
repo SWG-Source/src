@@ -21,7 +21,6 @@
 
 class Vector;
 
-
 //========================================================================
 template <class DataType, class ReturnType>
 class TemplateBase
@@ -40,12 +39,12 @@ public:
 		DataType max_value;
 
 		Range(void) {}
-		Range(const Range &s) : 
-			min_value(s.min_value), 
+		Range(const Range &s) :
+			min_value(s.min_value),
 			max_value(s.max_value) {}
 		Range & operator=(const Range &s)
 		{
-			min_value = s.min_value; 
+			min_value = s.min_value;
 			max_value = s.max_value;
 			return *this;
 		}
@@ -58,8 +57,8 @@ public:
 		DataType base;
 
 		DieRoll(void) {}
-		DieRoll(const DieRoll &s) : 
-			num_dice(s.num_dice), 
+		DieRoll(const DieRoll &s) :
+			num_dice(s.num_dice),
 			die_sides(s.die_sides),
 			base(s.base) {}
 		DieRoll & operator =(const DieRoll &s)
@@ -112,81 +111,80 @@ protected:
 	} m_data;							// storage for complex-type data
 	bool m_loaded;						// flag that this parameter has been loaded
 
-
-			TemplateBase(void);
-			TemplateBase(const TemplateBase<DataType, ReturnType> &);
-			TemplateBase<DataType, ReturnType> & operator =(const TemplateBase<DataType, ReturnType> &);
+	TemplateBase(void);
+	TemplateBase(const TemplateBase<DataType, ReturnType> &);
+	TemplateBase<DataType, ReturnType> & operator =(const TemplateBase<DataType, ReturnType> &);
 	virtual ~TemplateBase();
 
-
 	virtual void              cleanSingleParam(void);
-			void              loadWeightedListFromIff(Iff &file);
-			void              saveWeightedListToIff(Iff &file) const;
+	void              loadWeightedListFromIff(Iff &file);
+	void              saveWeightedListToIff(Iff &file) const;
 
 	virtual TemplateBase<DataType, ReturnType> * createNewParam(void) = 0;
 
 	virtual ReturnType   getSingle(void) const;
 	virtual ReturnType   getRange(void) const;
 	virtual ReturnType   getDieRoll(void) const;
-	        void         setValue(const DataType & min_value, const DataType & max_value);
-	        void         setValue(const DataType & num_dice, const DataType & die_sides, const DataType & base);
+	void         setValue(const DataType & min_value, const DataType & max_value);
+	void         setValue(const DataType & num_dice, const DataType & die_sides, const DataType & base);
 };
 
 template <class DataType, class ReturnType>
 inline TemplateBase<DataType, ReturnType>::TemplateBase(void) :
-    m_dataType(NONE),
-	m_loaded(false)
+	m_dataType(NONE),
+	m_loaded(false),
+	m_data()
 {
 }	// TemplateBase::TemplateBase(void)
 
 template <class DataType, class ReturnType>
 inline TemplateBase<DataType, ReturnType>::TemplateBase(const TemplateBase<
-	DataType, ReturnType> & source)
+	DataType, ReturnType> & source) : m_loaded(false)
 {
 	m_dataType = source.m_dataType;
 	switch (m_dataType)
 	{
-		case SINGLE:
-			m_dataSingle = source.m_dataSingle;
-			break;
-		case WEIGHTED_LIST:
-			m_data.weightedList = new WeightedList(*source.m_data.weightedList);
-			break;
-		case RANGE:
-			m_data.range = new Range(*source.m_data.range);
-			break;
-		case DIE_ROLL:
-			m_data.dieRoll = new DieRoll(*source.m_data.dieRoll);
-			break;
-		case NONE:
-		default:
-			break;
+	case SINGLE:
+		m_dataSingle = source.m_dataSingle;
+		break;
+	case WEIGHTED_LIST:
+		m_data.weightedList = new WeightedList(*source.m_data.weightedList);
+		break;
+	case RANGE:
+		m_data.range = new Range(*source.m_data.range);
+		break;
+	case DIE_ROLL:
+		m_data.dieRoll = new DieRoll(*source.m_data.dieRoll);
+		break;
+	case NONE:
+	default:
+		break;
 	}
 }	// TemplateBase::TemplateBase(const TemplateBase &)
 
 template <class DataType, class ReturnType>
 inline TemplateBase<DataType, ReturnType> & TemplateBase<DataType, ReturnType>::
-	operator =(const TemplateBase<DataType, ReturnType> &source)
+operator =(const TemplateBase<DataType, ReturnType> &source)
 {
 	cleanData();
 	m_dataType = source.m_dataType;
 	switch (m_dataType)
 	{
-		case SINGLE:
-			m_dataSingle = source.m_dataSingle;
-			break;
-		case WEIGHTED_LIST:
-			m_data.weightedList = new WeightedList(*source.m_data.weightedList);
-			break;
-		case RANGE:
-			m_data.range = new Range(*source.m_data.range);
-			break;
-		case DIE_ROLL:
-			m_data.dieRoll = new DieRoll(*source.m_data.dieRoll);
-			break;
-		case NONE:
-		default:
-			break;
+	case SINGLE:
+		m_dataSingle = source.m_dataSingle;
+		break;
+	case WEIGHTED_LIST:
+		m_data.weightedList = new WeightedList(*source.m_data.weightedList);
+		break;
+	case RANGE:
+		m_data.range = new Range(*source.m_data.range);
+		break;
+	case DIE_ROLL:
+		m_data.dieRoll = new DieRoll(*source.m_data.dieRoll);
+		break;
+	case NONE:
+	default:
+		break;
 	}
 	return *this;
 }	// TemplateBase::operator =
@@ -199,34 +197,34 @@ inline void TemplateBase<DataType, ReturnType>::cleanData(void)
 {
 	switch (m_dataType)
 	{
-		case SINGLE:
-			cleanSingleParam();
-			break;
-		case WEIGHTED_LIST:
-			{
-				typename WeightedList::iterator end = m_data.weightedList->end();
-				for (typename WeightedList::iterator iter = m_data.weightedList->begin();
-					iter != end;
-					++iter)
-				{
-					delete (*iter).value;
-					(*iter).value = NULL;
-				}
-				delete m_data.weightedList;
-				m_data.weightedList = NULL;
-			}
-			break;
-		case RANGE:
-			delete m_data.range;
-			m_data.range = NULL;
-			break;
-		case DIE_ROLL:
-			delete m_data.dieRoll;
-			m_data.dieRoll = NULL;
-			break;
-		case NONE:
-		default:
-			break;
+	case SINGLE:
+		cleanSingleParam();
+		break;
+	case WEIGHTED_LIST:
+	{
+		typename WeightedList::iterator end = m_data.weightedList->end();
+		for (typename WeightedList::iterator iter = m_data.weightedList->begin();
+			iter != end;
+			++iter)
+		{
+			delete (*iter).value;
+			(*iter).value = nullptr;
+		}
+		delete m_data.weightedList;
+		m_data.weightedList = nullptr;
+	}
+	break;
+	case RANGE:
+		delete m_data.range;
+		m_data.range = nullptr;
+		break;
+	case DIE_ROLL:
+		delete m_data.dieRoll;
+		m_data.dieRoll = nullptr;
+		break;
+	case NONE:
+	default:
+		break;
 	}
 	m_dataType = NONE;
 	m_loaded = false;
@@ -247,38 +245,38 @@ inline bool TemplateBase<DataType, ReturnType>::isLoaded(void) const
 template <class DataType, class ReturnType>
 inline ReturnType TemplateBase<DataType, ReturnType>::getValue(void) const
 {
-static DataType dummyReturn;
+	static DataType dummyReturn;
 
 	switch (m_dataType)
 	{
-		case SINGLE:
-			return getSingle();
-		case WEIGHTED_LIST:
+	case SINGLE:
+		return getSingle();
+	case WEIGHTED_LIST:
+	{
+		int weight = Random::random(1, 100);
+		typename WeightedList::const_iterator end = m_data.weightedList->end();
+		for (typename WeightedList::const_iterator iter = m_data.weightedList->begin();
+			iter != end;
+			++iter)
+		{
+			weight -= (*iter).weight;
+			if (weight <= 0)
 			{
-				int weight = Random::random(1, 100);
-				typename WeightedList::const_iterator end = m_data.weightedList->end();
-				for (typename WeightedList::const_iterator iter = m_data.weightedList->begin();
-					iter != end;
-					++iter)
-				{
-					weight -= (*iter).weight;
-					if (weight <= 0)
-					{
-						return dynamic_cast<const TemplateBase<DataType, ReturnType> *>
-							((*iter).value)->getValue();
-					}
-				}
-				DEBUG_FATAL(true, ("weighted list does not equal 100"));
+				return dynamic_cast<const TemplateBase<DataType, ReturnType> *>
+					((*iter).value)->getValue();
 			}
-			break;
-		case RANGE:
-			return getRange();
-		case DIE_ROLL:
-			return getDieRoll();
-		case NONE:
-		default:
-			DEBUG_FATAL(true, ("Unknown data type %d for template param", m_dataType));
-			break;
+		}
+		DEBUG_FATAL(true, ("weighted list does not equal 100"));
+	}
+	break;
+	case RANGE:
+		return getRange();
+	case DIE_ROLL:
+		return getDieRoll();
+	case NONE:
+	default:
+		DEBUG_FATAL(true, ("Unknown data type %d for template param", m_dataType));
+		break;
 	}
 	return dummyReturn;
 }	// TemplateBase::getValue
@@ -288,7 +286,7 @@ inline const typename TemplateBase<DataType, ReturnType>::Range * TemplateBase<D
 {
 	if (m_dataType == RANGE)
 		return m_data.range;
-	return NULL;
+	return nullptr;
 }
 
 template <class DataType, class ReturnType>
@@ -296,7 +294,7 @@ inline const typename TemplateBase<DataType, ReturnType>::DieRoll * TemplateBase
 {
 	if (m_dataType == DIE_ROLL)
 		return m_data.dieRoll;
-	return NULL;
+	return nullptr;
 }
 
 template <class DataType, class ReturnType>
@@ -304,7 +302,7 @@ inline const typename TemplateBase<DataType, ReturnType>::WeightedList * Templat
 {
 	if (m_dataType == WEIGHTED_LIST)
 		return m_data.weightedList;
-	return NULL;
+	return nullptr;
 }
 
 template <class DataType, class ReturnType>
@@ -322,7 +320,7 @@ inline ReturnType TemplateBase<DataType, ReturnType>::getSingle(void) const
 template <class DataType, class ReturnType>
 inline ReturnType TemplateBase<DataType, ReturnType>::getRange(void) const
 {
-static DataType dummyReturn;
+	static DataType dummyReturn;
 
 	DEBUG_FATAL(true, ("getRange not supported"));
 	return dummyReturn;
@@ -331,7 +329,7 @@ static DataType dummyReturn;
 template <class DataType, class ReturnType>
 inline ReturnType TemplateBase<DataType, ReturnType>::getDieRoll(void) const
 {
-static DataType dummyReturn;
+	static DataType dummyReturn;
 
 	DEBUG_FATAL(true, ("getDieRoll not supported"));
 	return dummyReturn;
@@ -347,7 +345,7 @@ inline void TemplateBase<DataType, ReturnType>::setValue(const DataType & value)
 }
 
 template <class DataType, class ReturnType>
-inline void TemplateBase<DataType, ReturnType>::setValue(const DataType & min_value, 
+inline void TemplateBase<DataType, ReturnType>::setValue(const DataType & min_value,
 	const DataType & max_value)
 {
 	cleanData();
@@ -359,7 +357,7 @@ inline void TemplateBase<DataType, ReturnType>::setValue(const DataType & min_va
 }
 
 template <class DataType, class ReturnType>
-inline void TemplateBase<DataType, ReturnType>::setValue(const DataType & num_dice, 
+inline void TemplateBase<DataType, ReturnType>::setValue(const DataType & num_dice,
 	const DataType & die_sides, const DataType & base)
 {
 	cleanData();
@@ -398,7 +396,7 @@ inline void TemplateBase<DataType, ReturnType>::cleanSingleParam(void)
 template <class DataType, class ReturnType>
 inline void TemplateBase<DataType, ReturnType>::loadWeightedListFromIff(Iff &file)
 {
-WeightedValue weightedValue;
+	WeightedValue weightedValue;
 
 	NOT_NULL(m_data.weightedList);
 
@@ -423,7 +421,7 @@ WeightedValue weightedValue;
 template <class DataType, class ReturnType>
 inline void TemplateBase<DataType, ReturnType>::saveWeightedListToIff(Iff &file) const
 {
-int32 intData;
+	int32 intData;
 
 	NOT_NULL(m_data.weightedList);
 
@@ -441,14 +439,13 @@ int32 intData;
 	}
 }	// TemplateBase::saveWeightedListToIff
 
-
 //========================================================================
 // class IntegerParam
 
 class IntegerParam : public TemplateBase<int, int>
 {
 public:
-	         IntegerParam(void);
+	IntegerParam(void);
 	virtual ~IntegerParam();
 
 	virtual void loadFromIff(Iff &file);
@@ -477,7 +474,6 @@ private:
 	char m_dataDeltaType;		// if '+' or '-', this param is a delta on a
 								// derived template param
 };
-
 
 inline char IntegerParam::getDeltaType(void) const
 {
@@ -535,25 +531,25 @@ inline void IntegerParam::setValue(const int & num_dice, const int & die_sides, 
 
 inline const IntegerParam::DieRoll * IntegerParam::getDieRollStruct(void) const
 {
-	if(m_dataType == DIE_ROLL)
+	if (m_dataType == DIE_ROLL)
 	{
 		return m_data.dieRoll;
 	}
 	else
 	{
-		return NULL;
+		return nullptr;
 	}
 }
 
 inline const IntegerParam::Range * IntegerParam::getRangeStruct(void) const
 {
-	if(m_dataType == RANGE)
+	if (m_dataType == RANGE)
 	{
 		return m_data.range;
 	}
 	else
 	{
-		return NULL;
+		return nullptr;
 	}
 }
 
@@ -563,7 +559,7 @@ inline const IntegerParam::Range * IntegerParam::getRangeStruct(void) const
 class FloatParam : public TemplateBase<float, float>
 {
 public:
-	         FloatParam(void);
+	FloatParam(void);
 	virtual ~FloatParam();
 
 	virtual void loadFromIff(Iff &file);
@@ -589,7 +585,6 @@ private:
 	char m_dataDeltaType;		// if '+' or '-', this param is a delta on a
 								// derived template param
 };
-
 
 inline char FloatParam::getDeltaType(void) const
 {
@@ -631,13 +626,13 @@ inline void FloatParam::setValue(const float & min_value, const float & max_valu
 
 inline const FloatParam::Range * FloatParam::getRangeStruct() const
 {
-	if(m_dataType == RANGE)
+	if (m_dataType == RANGE)
 	{
 		return m_data.range;
 	}
 	else
 	{
-		return NULL;
+		return nullptr;
 	}
 }
 
@@ -647,7 +642,7 @@ inline const FloatParam::Range * FloatParam::getRangeStruct() const
 class BoolParam : public TemplateBase<bool, bool>
 {
 public:
-	         BoolParam(void);
+	BoolParam(void);
 	virtual ~BoolParam();
 
 	virtual void loadFromIff(Iff &file);
@@ -662,14 +657,13 @@ inline TemplateBase<bool, bool> *BoolParam::createNewParam(void)
 	return new BoolParam;
 }
 
-
 //========================================================================
 //
 
 class StringParam : public TemplateBase<std::string, const std::string &>
 {
 public:
-	         StringParam(void);
+	StringParam(void);
 	virtual ~StringParam();
 
 	virtual void cleanSingleParam(void);
@@ -681,12 +675,10 @@ protected:
 	virtual TemplateBase<std::string, const std::string &> *createNewParam(void);
 };
 
-
 inline TemplateBase<std::string, const std::string &> *StringParam::createNewParam(void)
 {
 	return new StringParam;
 }
-
 
 //========================================================================
 // class VectorParam
@@ -705,7 +697,7 @@ struct VectorParamData
 class VectorParam : public TemplateBase<VectorParamData, const VectorParamData &>
 {
 public:
-	         VectorParam(void);
+	VectorParam(void);
 	virtual ~VectorParam();
 
 	virtual void cleanSingleParam(void);
@@ -717,28 +709,26 @@ protected:
 	virtual TemplateBase<VectorParamData, const VectorParamData &> *createNewParam(void);
 };
 
-
 inline TemplateBase<VectorParamData, const VectorParamData &> *VectorParam::createNewParam(void)
 {
 	return new VectorParam;
 }
 
-
 //========================================================================
 // class StringId param
 
 struct StringIdParamData
-{	
+{
 	StringParam table;
 	StringParam index;
 
-	StringIdParamData(void) : table() , index() {}
+	StringIdParamData(void) : table(), index() {}
 };
 
 class StringIdParam : public TemplateBase<StringIdParamData, StringIdParamData>
 {
 public:
-	         StringIdParam(void);
+	StringIdParam(void);
 	virtual ~StringIdParam();
 
 	virtual void cleanSingleParam(void);
@@ -757,7 +747,6 @@ inline TemplateBase<StringIdParamData, StringIdParamData> *StringIdParam::create
 	return new StringIdParam;
 }
 
-
 //========================================================================
 // class TriggerVolume param
 
@@ -765,7 +754,7 @@ class TriggerVolumeData
 {
 	friend class TriggerVolumeParam;
 public:
-	TriggerVolumeData(void) : m_name(NULL), m_radius(0.0f) {}
+	TriggerVolumeData(void) : m_name(nullptr), m_radius(0.0f) {}
 	TriggerVolumeData(const std::string & name, float radius) : m_name(&name), m_radius(radius) {}
 
 	const std::string & getName(void) const;
@@ -788,11 +777,11 @@ inline float TriggerVolumeData::getRadius(void) const
 }	// TriggerVolumeData::getRadius
 
 struct TriggerVolumeParamData
-{	
+{
 	StringParam name;
 	FloatParam radius;
 
-	TriggerVolumeParamData(void) : name() , radius() {}
+	TriggerVolumeParamData(void) : name(), radius() {}
 
 private:
 	// no copying
@@ -800,11 +789,11 @@ private:
 //	TriggerVolumeParamData & operator =(const TriggerVolumeParamData &);
 };
 
-class TriggerVolumeParam : public TemplateBase<TriggerVolumeParamData, 
+class TriggerVolumeParam : public TemplateBase<TriggerVolumeParamData,
 	TriggerVolumeParamData>
 {
 public:
-	         TriggerVolumeParam(void);
+	TriggerVolumeParam(void);
 	virtual ~TriggerVolumeParam();
 
 	virtual void cleanSingleParam(void);
@@ -822,7 +811,6 @@ inline TemplateBase<TriggerVolumeParamData, TriggerVolumeParamData> *TriggerVolu
 {
 	return new TriggerVolumeParam;
 }
-
 
 //========================================================================
 // class DynamicVariableParamData - used by class DynamicVariableParam
@@ -842,7 +830,7 @@ public:
 		STRING,
 		LIST
 	} m_type;
-	union 
+	union
 	{
 		IntegerParam *iparam;
 		FloatParam *fparam;
@@ -850,8 +838,8 @@ public:
 		std::vector<DynamicVariableParamData *> *lparam;
 	} m_data;
 
-	         DynamicVariableParamData(void);
-	         DynamicVariableParamData(const std::string &name, DataType type);
+	DynamicVariableParamData(void);
+	DynamicVariableParamData(const std::string &name, DataType type);
 	virtual ~DynamicVariableParamData();
 	void loadFromIff(Iff &file);
 	void saveToIff(Iff &file) const;
@@ -862,13 +850,12 @@ private:
 	DynamicVariableParamData & operator =(const DynamicVariableParamData &);
 };
 
-inline DynamicVariableParamData::DynamicVariableParamData(void) : 
+inline DynamicVariableParamData::DynamicVariableParamData(void) :
 	m_name(),
 	m_type(UNKNOWN)
 {
 	memset(&m_data, 0, sizeof(m_data));
 }
-
 
 //========================================================================
 //
@@ -876,7 +863,7 @@ inline DynamicVariableParamData::DynamicVariableParamData(void) :
 class DynamicVariableParam : public TemplateBase<DynamicVariableParamData, const DynamicVariableParamData &>
 {
 public:
-	         DynamicVariableParam(void);
+	DynamicVariableParam(void);
 	virtual ~DynamicVariableParam();
 
 	virtual void cleanSingleParam(void);
@@ -900,9 +887,8 @@ private:
 	DynamicVariableParam & operator =(const DynamicVariableParam &);
 };
 
-
 inline TemplateBase<DynamicVariableParamData, const DynamicVariableParamData &> *
-	DynamicVariableParam::createNewParam(void)
+DynamicVariableParam::createNewParam(void)
 {
 	return new DynamicVariableParam();
 }
@@ -922,7 +908,6 @@ inline void DynamicVariableParam::setIsLoaded(void)
 	m_loaded = true;
 }
 
-
 //========================================================================
 //
 
@@ -930,7 +915,7 @@ template <class SP>
 class StructParam : public TemplateBase<SP *, SP *>
 {
 public:
-	         StructParam(void);
+	StructParam(void);
 	virtual ~StructParam();
 
 	bool isInitialized(void) const;
@@ -962,7 +947,7 @@ inline TemplateBase<SP *, SP *> *StructParam<SP>::createNewParam(void)
 template <class SP>
 inline StructParam<SP>::StructParam(void) : TemplateBase<SP *, SP *>()
 {
-	this->m_dataSingle = NULL;
+	this->m_dataSingle = nullptr;
 }	// StructParam<SP>::StructParam
 
 /**
@@ -974,7 +959,7 @@ inline StructParam<SP>::~StructParam()
 	if (this->m_dataType == TemplateBase<SP *, SP *>::SINGLE)
 	{
 		delete this->m_dataSingle;
-		this->m_dataSingle = NULL;
+		this->m_dataSingle = nullptr;
 		this->m_dataType = TemplateBase<SP *, SP *>::NONE;
 	}
 }	// StructParam<SP>::~StructParam
@@ -986,7 +971,7 @@ template <class SP>
 inline void StructParam<SP>::cleanSingleParam(void)
 {
 	delete this->m_dataSingle;
-	this->m_dataSingle = NULL;
+	this->m_dataSingle = nullptr;
 }	// StructParam<SP>::cleanSingleParam
 
 /**
@@ -1000,34 +985,34 @@ inline void StructParam<SP>::loadFromIff(Iff &file)
 	typename StructParam<SP>::DataTypeId dataType = static_cast<typename StructParam<SP>::DataTypeId>(file.read_int8());
 	switch (dataType)
 	{
-		case TemplateBase<SP *, SP *>::SINGLE:
-			{
-				Tag id = file.read_int32();
-				SP * structTemplate = DataResourceList<SP>::fetch(id);
-				NOT_NULL(structTemplate);
-				// we need to exit the chunk because the iff class doesn't
-				// support chunk nesting
-				file.exitChunk();
-				structTemplate->loadFromIff(file);
-				// we need to enter a fake chunk because whoever called this 
-				// function assumes we are still in a chunk
-				file.enterChunk();
-				this->setValue(structTemplate);
-				this->m_loaded = true;
-			}
-			break;
-		case TemplateBase<SP *, SP *>::WEIGHTED_LIST:
-			this->setValue(new typename TemplateBase<SP *, SP *>::WeightedList);
-			this->loadWeightedListFromIff(file);
-			break;
-		case TemplateBase<SP *, SP *>::NONE:
-			this->cleanData();
-			break;
-		case TemplateBase<SP *, SP *>::RANGE:
-		case TemplateBase<SP *, SP *>::DIE_ROLL:
-		default:
-			DEBUG_FATAL(true, ("loaded unknown data type %d for template struct param", this->m_dataType));
-			break;
+	case TemplateBase<SP *, SP *>::SINGLE:
+	{
+		Tag id = file.read_int32();
+		SP * structTemplate = DataResourceList<SP>::fetch(id);
+		NOT_NULL(structTemplate);
+		// we need to exit the chunk because the iff class doesn't
+		// support chunk nesting
+		file.exitChunk();
+		structTemplate->loadFromIff(file);
+		// we need to enter a fake chunk because whoever called this
+		// function assumes we are still in a chunk
+		file.enterChunk();
+		this->setValue(structTemplate);
+		this->m_loaded = true;
+	}
+	break;
+	case TemplateBase<SP *, SP *>::WEIGHTED_LIST:
+		this->setValue(new typename TemplateBase<SP *, SP *>::WeightedList);
+		this->loadWeightedListFromIff(file);
+		break;
+	case TemplateBase<SP *, SP *>::NONE:
+		this->cleanData();
+		break;
+	case TemplateBase<SP *, SP *>::RANGE:
+	case TemplateBase<SP *, SP *>::DIE_ROLL:
+	default:
+		DEBUG_FATAL(true, ("loaded unknown data type %d for template struct param", this->m_dataType));
+		break;
 	}
 }	// StructParam<SP>::loadFromIff
 
@@ -1043,35 +1028,32 @@ inline void StructParam<SP>::saveToIff(Iff &file) const
 	file.insertChunkData(&type, sizeof(type));
 	switch (this->m_dataType)
 	{
-		case TemplateBase<SP *, SP *>::SINGLE:
-			{
-				int32 tag = this->m_dataSingle->getId();
-				file.insertChunkData(&tag, sizeof(tag));
-				// we need to exit the chunk because the iff class doesn't
-				// support chunk nesting
-				file.exitChunk();
-				this->m_dataSingle->saveToIff(file);
-				// we need to insert a fake chunk because whoever called this 
-				// function assumes we are still in a chunk
-				file.insertChunk(TAG(X, X, X, X));
-			}
-			break;
-		case TemplateBase<SP *, SP *>::WEIGHTED_LIST:
-			this->saveWeightedListToIff(file);
-			break;
-		case TemplateBase<SP *, SP *>::NONE:
-			break;
-		case TemplateBase<SP *, SP *>::RANGE:
-		case TemplateBase<SP *, SP *>::DIE_ROLL:
-		default:
-			DEBUG_FATAL(true, ("saving unknown data type %d for template struct param", this->m_dataType));
-			break;
+	case TemplateBase<SP *, SP *>::SINGLE:
+	{
+		int32 tag = this->m_dataSingle->getId();
+		file.insertChunkData(&tag, sizeof(tag));
+		// we need to exit the chunk because the iff class doesn't
+		// support chunk nesting
+		file.exitChunk();
+		this->m_dataSingle->saveToIff(file);
+		// we need to insert a fake chunk because whoever called this
+		// function assumes we are still in a chunk
+		file.insertChunk(TAG(X, X, X, X));
+	}
+	break;
+	case TemplateBase<SP *, SP *>::WEIGHTED_LIST:
+		this->saveWeightedListToIff(file);
+		break;
+	case TemplateBase<SP *, SP *>::NONE:
+		break;
+	case TemplateBase<SP *, SP *>::RANGE:
+	case TemplateBase<SP *, SP *>::DIE_ROLL:
+	default:
+		DEBUG_FATAL(true, ("saving unknown data type %d for template struct param", this->m_dataType));
+		break;
 	}
 }	// StructParam<SP>::saveToIff
 
-
 //========================================================================
 
-
 #endif	// _INCLUDED_TemplateParameter_H
-

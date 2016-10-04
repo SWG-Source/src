@@ -41,7 +41,7 @@
 
 typedef BaseClass * (*ExpandBuildingGraphHook)( PortalPropertyTemplate * portalTemplate, BaseClass * baseBuildingGraph );
 
-ExpandBuildingGraphHook g_expandBuildingGraphHook = NULL;
+ExpandBuildingGraphHook g_expandBuildingGraphHook = nullptr;
 
 // ======================================================================
 
@@ -257,8 +257,8 @@ PortalPropertyTemplateCellPortal::PortalPropertyTemplateCellPortal(const PortalP
 	m_disabled(false),
 	m_passable(false),
 	m_geometryWindingClockwise(true),
-	m_portalGeometry(NULL),
-	m_doorStyle(NULL),
+	m_portalGeometry(nullptr),
+	m_doorStyle(nullptr),
 	m_hasDoorHardpoint(false),
 	m_doorHardpoint(),
 	m_plane(),
@@ -272,7 +272,7 @@ PortalPropertyTemplateCellPortal::PortalPropertyTemplateCellPortal(const PortalP
 
 PortalPropertyTemplateCellPortal::~PortalPropertyTemplateCellPortal()
 {
-	m_portalGeometry = NULL;
+	m_portalGeometry = nullptr;
 	delete [] m_doorStyle;
 
 	if (m_preloadManager)
@@ -524,14 +524,14 @@ PortalPropertyTemplateCell::PreloadManager::~PreloadManager ()
 
 PortalPropertyTemplateCell::PortalPropertyTemplateCell(const PortalPropertyTemplate &portalPropertyTemplate, int index, Iff &iff)
 :
-	m_name(NULL),
-	m_appearanceName(NULL),
-	m_floorName(NULL),
-	m_floorMesh(NULL),
+	m_name(nullptr),
+	m_appearanceName(nullptr),
+	m_floorName(nullptr),
+	m_floorMesh(nullptr),
 	m_canSeeParentCell(false),
-	m_lightList(NULL),
+	m_lightList(nullptr),
 	m_portalList(new PortalPropertyTemplateCellPortalList),
-	m_collisionExtent(NULL),
+	m_collisionExtent(nullptr),
 	m_preloadManager (0)
 {
 	load(portalPropertyTemplate, index, iff);
@@ -556,7 +556,7 @@ PortalPropertyTemplateCell::~PortalPropertyTemplateCell()
 	}
 
 	delete m_collisionExtent;
-	m_collisionExtent = NULL;
+	m_collisionExtent = nullptr;
 
 	if (m_preloadManager)
 	{
@@ -567,7 +567,7 @@ PortalPropertyTemplateCell::~PortalPropertyTemplateCell()
 	if (m_floorMesh)
 	{
 		m_floorMesh->releaseReference ();
-		m_floorMesh = NULL;
+		m_floorMesh = nullptr;
 	}
 }
 
@@ -875,7 +875,7 @@ const char *PortalPropertyTemplateCell::getFloorName() const
 
 FloorMesh const * PortalPropertyTemplateCell::getFloorMesh() const
 {
-	if(m_floorMesh == NULL)
+	if(m_floorMesh == nullptr)
 	{
 		if(m_floorName)
 		{
@@ -885,7 +885,7 @@ FloorMesh const * PortalPropertyTemplateCell::getFloorMesh() const
 		}
 		else
 		{
-			//-- cell template r0 always has a null floor name for POBs without accessible exteriors (POB ships & POB-only dungeons)
+			//-- cell template r0 always has a nullptr floor name for POBs without accessible exteriors (POB ships & POB-only dungeons)
 			//-- don't warn for that cell template
 			DEBUG_WARNING(ConfigSharedCollision::getReportWarnings() && strcmp(m_name, "r0"),
 				("PortalPropertyTemplateCell::getFloorMesh() - Cell template %s on [%s] has no floor name", m_name, m_appearanceName));
@@ -1039,7 +1039,7 @@ PortalPropertyTemplate::PortalPropertyTemplate(const CrcString &name)
 	m_cellList(new CellList),
 	m_cellNameList(new CellNameList),
 	m_crc(0),
-	m_pathGraph(NULL),
+	m_pathGraph(nullptr),
 	m_radarPortalGeometry(0)
 {
 	FileName shortName(name.getString());
@@ -1079,7 +1079,7 @@ PortalPropertyTemplate::~PortalPropertyTemplate()
 	delete m_portalOwnersList;
 
 	delete m_pathGraph;
-	m_pathGraph = NULL;
+	m_pathGraph = nullptr;
 
 	delete m_radarPortalGeometry;
 	m_radarPortalGeometry = 0;

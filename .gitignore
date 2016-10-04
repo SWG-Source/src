@@ -1,3 +1,6 @@
+*.geany
+*.cfg
+*.cmd
 .project
 *.kdev4
 latex
@@ -5,3 +8,9 @@ html
 build*/
 !game/server/database/build/
 game/server/database/data/templates.sql
+.codelite/
+.idea/
+build.log
+*.phprj
+*.project
+*.workspace

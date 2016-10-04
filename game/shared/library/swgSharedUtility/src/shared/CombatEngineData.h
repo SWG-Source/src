@@ -6,7 +6,6 @@
 //
 //========================================================================
 
-
 #ifndef _INCLUDED_CombatEngineData_H
 #define _INCLUDED_CombatEngineData_H
 
@@ -67,19 +66,19 @@ namespace CombatEngineData
 
 	enum DamageType
 	{
-		DT_none	                    = 0x00000000,
-		DT_kinetic                  = 0x00000001,
-		DT_energy                   = 0x00000002,
-		DT_blast                    = 0x00000004,
-		DT_stun                     = 0x00000008,
-		DT_restraint                = 0x00000010,
-		DT_elemental_heat           = 0x00000020,
-		DT_elemental_cold           = 0x00000040,
-		DT_elemental_acid           = 0x00000080,
-		DT_elemental_eletrical      = 0x00000100,
-		DT_environmental_heat       = 0x00000200,
-		DT_environmental_cold       = 0x00000400,
-		DT_environmental_acid       = 0x00000800,
+		DT_none = 0x00000000,
+		DT_kinetic = 0x00000001,
+		DT_energy = 0x00000002,
+		DT_blast = 0x00000004,
+		DT_stun = 0x00000008,
+		DT_restraint = 0x00000010,
+		DT_elemental_heat = 0x00000020,
+		DT_elemental_cold = 0x00000040,
+		DT_elemental_acid = 0x00000080,
+		DT_elemental_eletrical = 0x00000100,
+		DT_environmental_heat = 0x00000200,
+		DT_environmental_cold = 0x00000400,
+		DT_environmental_acid = 0x00000800,
 		DT_environmental_electrical = 0x00001000
 	};
 
@@ -109,14 +108,14 @@ namespace CombatEngineData
 				NetworkId::NetworkIdType target;		// if only one target is given
 				NetworkId::NetworkIdType *targets;	// for multiple targets
 			} targetData;
-			
+
 			struct
 			{
 				//@todo make this a NetworkId
 				NetworkId::NetworkIdType weapon;		// if 0, use attacker's primary weapon
 				int mode;		// 0 = primary, 1 = secondary, etc
 			} attackData;
-			
+
 			int attitudeData;
 			Postures::Enumerator postureData;
 		} actionData;
@@ -137,23 +136,23 @@ namespace CombatEngineData
 	{
 		DamageData(void);
 
-		std::vector<AttribMod::AttribMod> damage;// list of attribute modifiers this damage 
-		                                         // caused, pre armor effectiveness
-		CachedNetworkId            attackerId;   // who caused the damage (null for 
-		                                         // environmental effects, etc)
+		std::vector<AttribMod::AttribMod> damage;// list of attribute modifiers this damage
+												 // caused, pre armor effectiveness
+		CachedNetworkId            attackerId;   // who caused the damage (nullptr for
+												 // environmental effects, etc)
 		NetworkId                  weaponId;     // id of the weapon used
 		DamageType                 damageType;
 		uint16                     hitLocationIndex;
 		uint16                     actionId;
 		bool                       wounded;
 		bool                       ignoreInvulnerable;
-//		MessageQueueCombatAction * combatActionMessage;
+		//		MessageQueueCombatAction * combatActionMessage;
 	};
 
 	struct DefenseData
 	{
-		std::vector<DamageData>  damage;       // list of damage I have taken this 
-		                                       // timeslice
+		std::vector<DamageData>  damage;       // list of damage I have taken this
+											   // timeslice
 	};
 
 	struct CombatData
@@ -161,7 +160,6 @@ namespace CombatEngineData
 		AttackData attackData;
 		DefenseData defenseData;
 	};
-
 
 	//--------------------------------------------------
 	// CombatEngineData inline functions
@@ -171,14 +169,15 @@ namespace CombatEngineData
 		type = none;
 		memset(&actionData, 0, sizeof(actionData));
 		sequenceId = 0;
+		targetSelf = 0;
 	}	// ActionItem::ActionItem
 
 	inline ActionItem::~ActionItem(void)
 	{
-		if (type == target && actionData.targetData.targets != NULL)
+		if (type == target && actionData.targetData.targets != nullptr)
 		{
 			delete[] actionData.targetData.targets;
-			actionData.targetData.targets = NULL;
+			actionData.targetData.targets = nullptr;
 		}
 	}	// ActionItem::~ActionItem
 
@@ -195,13 +194,11 @@ namespace CombatEngineData
 		actionId(0),
 		wounded(false),
 		ignoreInvulnerable(false)
-//		combatActionMessage(NULL)
-		{
-		}
-
+		//		combatActionMessage(nullptr)
+	{
+	}
 
 	const char *const getCombatDefenseName(CombatDefense combatDefense);
 };
-
 
 #endif	// _INCLUDED_CombatEngineData_H

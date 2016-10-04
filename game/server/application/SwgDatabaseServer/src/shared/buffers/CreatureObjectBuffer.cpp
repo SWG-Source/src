@@ -238,7 +238,7 @@ void CreatureObjectBuffer::getAttributesForObject(const NetworkId &objectId, std
 			}
 		if (value == -999)
 		{
-			WARNING(true,("Object %s had null attribute %i, defaulting to 100",objectId.getValueString().c_str(), position));
+			WARNING(true,("Object %s had nullptr attribute %i, defaulting to 100",objectId.getValueString().c_str(), position));
 			value = 100;
 		}
 		

@@ -141,7 +141,7 @@ void SpaceVisibilityManager::addClient(Client & client, ServerObject & observing
 	DEBUG_REPORT_LOG(ConfigServerGame::getDebugSpaceVisibilityManager(),("SpaceVisibilityManager::addClient(Client & client, %s);\n",observingObject.getNetworkId().getValueString().c_str()));
 
 	TrackedObjectsType::iterator i=ms_trackedObjects.find(observingObject.getNetworkId());
-	TrackedObject *to=NULL;
+	TrackedObject *to=nullptr;
 	if (i!=ms_trackedObjects.end())
 	{
 		to=i->second;
@@ -244,7 +244,7 @@ void SpaceVisibilityManager::removeObject(ServerObject & object)
 	if (!vis)   //lint !e774 //always false (in debug build only)
 		return;
 	delete vis;
-	vis=NULL;
+	vis=nullptr;
 
 	object.removeNotification(VisibleObjectNotification::getInstance(),true);
 }
@@ -534,7 +534,7 @@ TrackedObject::TrackedObject(const ServerObject &object, int updateRadius) :
 		m_object(object),
 		m_updateRadius(updateRadius),
 		m_currentLocation(NodeId(object.getPosition_w())),
-		m_clients(NULL)
+		m_clients(nullptr)
 {
 	ms_trackedObjects[object.getNetworkId()]=this;
 	addToNodesInRange(*this, m_currentLocation, updateRadius);
@@ -554,7 +554,7 @@ TrackedObject::~TrackedObject()
 		}
 
 		delete m_clients;
-		m_clients=NULL;
+		m_clients=nullptr;
 	}
 
 	removeFromNodesInRange(*this, m_currentLocation, m_updateRadius);
@@ -572,7 +572,7 @@ const CachedNetworkId & TrackedObject::getNetworkId() const
 
 bool TrackedObject::hasClients() const
 {
-	return (m_clients != NULL);
+	return (m_clients != nullptr);
 }
 
 // ----------------------------------------------------------------------
@@ -594,7 +594,7 @@ void TrackedObject::removeClient(Client &client)
 		if (m_clients->empty())
 		{
 			delete m_clients;
-			m_clients=NULL;
+			m_clients=nullptr;
 
 			getNode(m_currentLocation).removeObservingObject(*this);
 		}

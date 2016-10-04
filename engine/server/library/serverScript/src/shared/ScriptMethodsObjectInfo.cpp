@@ -561,15 +561,15 @@ void ScriptMethodsObjectInfoNamespace::getGoodItemsFromContainer(const Container
 {
 	const ServerObject * owner = safe_cast<const ServerObject *>(
 		ContainerInterface::getFirstParentInWorld(container.getOwner()));
-	const ServerObject * ownerInventory = NULL;
-	const ServerObject * ownerDatapad = NULL;
-	const ServerObject * ownerAppearanceInventory = NULL;
-	const ServerObject * ownerHangar = NULL;
+	const ServerObject * ownerInventory = nullptr;
+	const ServerObject * ownerDatapad = nullptr;
+	const ServerObject * ownerAppearanceInventory = nullptr;
+	const ServerObject * ownerHangar = nullptr;
 
-	if (owner != NULL)
+	if (owner != nullptr)
 	{
 		const CreatureObject * creature =  owner->asCreatureObject();
-		if (creature != NULL)
+		if (creature != nullptr)
 		{
 			ownerInventory = creature->getInventory();
 			ownerDatapad = creature->getDatapad();
@@ -583,7 +583,7 @@ void ScriptMethodsObjectInfoNamespace::getGoodItemsFromContainer(const Container
 		const CachedNetworkId & itemId = *i;
 		const ServerObject * item = safe_cast<const ServerObject *>(
 			itemId.getObject());
-		if (item != NULL && item->asTangibleObject() != NULL &&
+		if (item != nullptr && item->asTangibleObject() != nullptr &&
 			item->asTangibleObject()->isVisible())
 		{
 			//
@@ -591,14 +591,14 @@ void ScriptMethodsObjectInfoNamespace::getGoodItemsFromContainer(const Container
 			//
 
 			// no player inventory
-			if (ownerInventory != NULL && ownerInventory->getNetworkId() ==
+			if (ownerInventory != nullptr && ownerInventory->getNetworkId() ==
 				item->getNetworkId())
 			{
 				continue;
 			}
 
 			// no player datapad
-			if (ownerDatapad != NULL && ownerDatapad->getNetworkId() ==
+			if (ownerDatapad != nullptr && ownerDatapad->getNetworkId() ==
 				item->getNetworkId())
 			{
 				continue;
@@ -613,14 +613,14 @@ void ScriptMethodsObjectInfoNamespace::getGoodItemsFromContainer(const Container
 				continue;
 
 			// no creatures (pets/droids)
-			if (item->asCreatureObject() != NULL)
+			if (item->asCreatureObject() != nullptr)
 				continue;
 
 			// no hair
 			const ServerObjectTemplate * itemTemplate = safe_cast<
 				const ServerObjectTemplate *>(item->getObjectTemplate());
 			NOT_NULL(itemTemplate);
-			if (strstr(itemTemplate->getName(), "tangible/hair") != NULL)
+			if (strstr(itemTemplate->getName(), "tangible/hair") != nullptr)
 				continue;
 
 			// no Trandoshan feet
@@ -631,7 +631,7 @@ void ScriptMethodsObjectInfoNamespace::getGoodItemsFromContainer(const Container
 
 			// see if the item is a container and go through its contents
 			const Container * itemContainer = ContainerInterface::getContainer(*item);
-			if (itemContainer != NULL)
+			if (itemContainer != nullptr)
 				getGoodItemsFromContainer(*itemContainer, goodItems);
 		}
 	}
@@ -644,7 +644,7 @@ void ScriptMethodsObjectInfoNamespace::getGoodItemsFromContainer(const Container
  * @param self				class calling this function
  * @param jtemplateCrcs		the template crcs
  *
- * @return the names, or null on error
+ * @return the names, or nullptr on error
  */
 jobjectArray ScriptMethodsObjectInfoNamespace::getNamesFromCrcs(JNIEnv *env,
 	const std::vector<jint> & templateCrcs)
@@ -661,7 +661,7 @@ jobjectArray ScriptMethodsObjectInfoNamespace::getNamesFromCrcs(JNIEnv *env,
 
 		// get the server template
 		const ObjectTemplate * ot = ObjectTemplateList::fetch(templateCrcs[i]);
-		if (ot == NULL)
+		if (ot == nullptr)
 		{
 			WARNING(true, ("JavaLibrary::getNamesFromTemplateCrcs: Could not "
 				"find object template for crc %d", templateCrcs[i]));
@@ -670,13 +670,13 @@ jobjectArray ScriptMethodsObjectInfoNamespace::getNamesFromCrcs(JNIEnv *env,
 
 		// get the shared template
 		const ServerObjectTemplate * serverOt = ot->asServerObjectTemplate();
-		if (serverOt != NULL)
+		if (serverOt != nullptr)
 		{
 			const std::string sharedTemplateName(serverOt->getSharedTemplate());
 			serverOt->releaseReference();
-			serverOt = NULL;
+			serverOt = nullptr;
 			ot = ObjectTemplateList::fetch(sharedTemplateName);
-			if (ot == NULL)
+			if (ot == nullptr)
 			{
 				WARNING(true, ("JavaLibrary::getNamesFromTemplateCrcs: Could not "
 					"find shared object template %s", sharedTemplateName.c_str()));
@@ -685,18 +685,18 @@ jobjectArray ScriptMethodsObjectInfoNamespace::getNamesFromCrcs(JNIEnv *env,
 		}
 
 		const SharedObjectTemplate * sharedOt = ot->asSharedObjectTemplate();
-		if (sharedOt == NULL)
+		if (sharedOt == nullptr)
 		{
 			WARNING(true, ("JavaLibrary::getNamesFromTemplateCrcs: template %s "
 				"is not a shared template", ot->getName()));
 			ot->releaseReference();
 			continue;
 		}
-		ot = NULL;
+		ot = nullptr;
 
 		const StringId objectName(sharedOt->getObjectName());
 		sharedOt->releaseReference();
-		sharedOt = NULL;
+		sharedOt = nullptr;
 
 		LocalRefPtr jobjectName;
 		if (ScriptConversion::convert(objectName, jobjectName))
@@ -734,7 +734,7 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::setNameFromString(JNIEnv *env
 
 	JavaStringParam localName(name);
 
-	ServerObject* object = NULL;
+	ServerObject* object = nullptr;
 	if (!JavaLibrary::getObject(target, object))
 		return JNI_FALSE;
 
@@ -813,7 +813,7 @@ void JNICALL ScriptMethodsObjectInfoNamespace::setDescriptionStringId(JNIEnv * e
 * @param self		    class calling this function
 * @param target	        id of object whose name to get
 *
-* @return the description, or null on error
+* @return the description, or nullptr on error
 */
 jobject JNICALL ScriptMethodsObjectInfoNamespace::getDescriptionStringId(JNIEnv * env, jobject self, jlong target)
 {
@@ -837,13 +837,13 @@ jobject JNICALL ScriptMethodsObjectInfoNamespace::getDescriptionStringId(JNIEnv 
  * @param self		    class calling this function
  * @param target	    id of object whose name to get
  *
- * @return the name, or null on error
+ * @return the name, or nullptr on error
  */
 jstring JNICALL ScriptMethodsObjectInfoNamespace::getName(JNIEnv *env, jobject self, jlong target)
 {
 	UNREF(self);
 
-	ServerObject* object = NULL;
+	ServerObject* object = nullptr;
 	if (!JavaLibrary::getObject(target, object))
 		return 0;
 
@@ -859,7 +859,7 @@ jstring JNICALL ScriptMethodsObjectInfoNamespace::getName(JNIEnv *env, jobject s
  * @param self		    class calling this function
  * @param player		id of the player to get
  *
- * @return the name, or null on error
+ * @return the name, or nullptr on error
  */
 jstring JNICALL ScriptMethodsObjectInfoNamespace::getPlayerName(JNIEnv *env, jobject self, jlong target)
 {
@@ -894,13 +894,13 @@ jstring JNICALL ScriptMethodsObjectInfoNamespace::getPlayerFullName(JNIEnv *env,
  * @param self		    class calling this function
  * @param target	    id of object whose name to get
  *
- * @return the name, or null on error
+ * @return the name, or nullptr on error
  */
 jstring JNICALL ScriptMethodsObjectInfoNamespace::getAssignedName(JNIEnv *env, jobject self, jlong target)
 {
 	UNREF(self);
 
-	ServerObject* object = NULL;
+	ServerObject* object = nullptr;
 	if (!JavaLibrary::getObject(target, object))
 		return 0;
 
@@ -915,7 +915,7 @@ void JNICALL ScriptMethodsObjectInfoNamespace::setCreatureName(JNIEnv * /*env*/,
 	NetworkId const networkId(creature);
 	CreatureObject * const creatureObject = CreatureObject::getCreatureObject(networkId);
 
-	if (creatureObject == NULL)
+	if (creatureObject == nullptr)
 	{
 		WARNING(true, ("ERROR: ScriptMethodsObjectInfo::setCreatureName() Unable to resolve the object(%s) to a CreatureObject.", networkId.getValueString().c_str()));
 		return;
@@ -923,7 +923,7 @@ void JNICALL ScriptMethodsObjectInfoNamespace::setCreatureName(JNIEnv * /*env*/,
 
 	AICreatureController * const aiCreatureController = AICreatureController::asAiCreatureController(creatureObject->getController());
 
-	if (aiCreatureController == NULL)
+	if (aiCreatureController == nullptr)
 	{
 		WARNING(true, ("ERROR: ScriptMethodsObjectInfo::setCreatureName() Unable to resolve the object's(%s) controller to an AiCreatureController.", creatureObject->getDebugInformation().c_str()));
 		return;
@@ -941,14 +941,14 @@ jstring JNICALL ScriptMethodsObjectInfoNamespace::getCreatureName(JNIEnv * /*env
 	NetworkId const networkId(creature);
 	CreatureObject * const creatureObject = CreatureObject::getCreatureObject(networkId);
 
-	if (creatureObject == NULL)
+	if (creatureObject == nullptr)
 	{
 		return 0;
 	}
 
 	AICreatureController * const aiCreatureController = AICreatureController::asAiCreatureController(creatureObject->getController());
 
-	if (aiCreatureController == NULL)
+	if (aiCreatureController == nullptr)
 	{
 		return 0;
 	}
@@ -972,13 +972,13 @@ jstring JNICALL ScriptMethodsObjectInfoNamespace::getCreatureName(JNIEnv * /*env
  * @param self		    class calling this function
  * @param target	    id of object whose name to get
  *
- * @return the name, or null on error
+ * @return the name, or nullptr on error
  */
 jobject JNICALL ScriptMethodsObjectInfoNamespace::getNameStringId(JNIEnv *env, jobject self, jlong target)
 {
 	UNREF(self);
 
-	ServerObject* object = NULL;
+	ServerObject* object = nullptr;
 	if (!JavaLibrary::getObject(target, object))
 		return 0;
 
@@ -997,7 +997,7 @@ jobject JNICALL ScriptMethodsObjectInfoNamespace::getNameStringId(JNIEnv *env, j
  * @param self				class calling this function
  * @param jtemplateName		the template name
  *
- * @return the name, or null if the template doesn't exist
+ * @return the name, or nullptr if the template doesn't exist
  */
 jobject JNICALL ScriptMethodsObjectInfoNamespace::getNameFromTemplate(JNIEnv *env, jobject self,
 	jstring jtemplateName)
@@ -1020,41 +1020,41 @@ jobject JNICALL ScriptMethodsObjectInfoNamespace::getNameFromTemplate(JNIEnv *en
  * @param self				class calling this function
  * @param templateCrc		the template crc
  *
- * @return the name, or null if the template doesn't exist
+ * @return the name, or nullptr if the template doesn't exist
  */
 jobject JNICALL ScriptMethodsObjectInfoNamespace::getNameFromTemplateCrc(JNIEnv *env, jobject self,
 	jint templateCrc)
 {
 	const ObjectTemplate * ot = ObjectTemplateList::fetch(templateCrc);
-	if (ot == NULL)
+	if (ot == nullptr)
 		return 0;
 
 	// the name is stored in the shared template, so if this is a server template,
 	// get the shared one from it
-	const SharedObjectTemplate * sharedOt = NULL;
+	const SharedObjectTemplate * sharedOt = nullptr;
 	const ServerObjectTemplate * serverOt = dynamic_cast<const ServerObjectTemplate *>(
 		ot);
-	if (serverOt != NULL)
+	if (serverOt != nullptr)
 	{
 		const std::string sharedTemplateName(serverOt->getSharedTemplate());
 		serverOt->releaseReference();
-		serverOt = NULL;
+		serverOt = nullptr;
 		ot = ObjectTemplateList::fetch(sharedTemplateName);
-		if (ot == NULL)
+		if (ot == nullptr)
 			return 0;
 	}
 
 	sharedOt = dynamic_cast<const SharedObjectTemplate *>(ot);
-	if (sharedOt == NULL)
+	if (sharedOt == nullptr)
 	{
 		ot->releaseReference();
 		return 0;
 	}
-	ot = NULL;
+	ot = nullptr;
 
 	const StringId objectName(sharedOt->getObjectName());
 	sharedOt->releaseReference();
-	sharedOt = NULL;
+	sharedOt = nullptr;
 
 	LocalRefPtr jobjectName;
 	if (!ScriptConversion::convert(objectName, jobjectName))
@@ -1069,7 +1069,7 @@ jobject JNICALL ScriptMethodsObjectInfoNamespace::getNameFromTemplateCrc(JNIEnv 
  * @param self				class calling this function
  * @param jtemplateNames	the template names
  *
- * @return the names, or null on error
+ * @return the names, or nullptr on error
  */
 jobjectArray JNICALL ScriptMethodsObjectInfoNamespace::getNamesFromTemplates(JNIEnv *env, jobject self,
 	jobjectArray jtemplateNames)
@@ -1102,7 +1102,7 @@ jobjectArray JNICALL ScriptMethodsObjectInfoNamespace::getNamesFromTemplates(JNI
  * @param self				class calling this function
  * @param jtemplateCrcs		the template crcs
  *
- * @return the names, or null on error
+ * @return the names, or nullptr on error
  */
 jobjectArray JNICALL ScriptMethodsObjectInfoNamespace::getNamesFromTemplateCrcs(JNIEnv *env, jobject self,
 	jintArray jtemplateCrcs)
@@ -1140,7 +1140,7 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::internalIsAuthoritative(JNIEn
 {
 	UNREF(self);
 
-	const ServerObject * object = NULL;
+	const ServerObject * object = nullptr;
 	if (!JavaLibrary::getObject(target, object))
 		return JNI_FALSE;
 
@@ -1173,7 +1173,7 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::hasProxyOrAuthObject(JNIEnv *
 
 	UNREF(self);
 
-	const ServerObject * object = NULL;
+	const ServerObject * object = nullptr;
 
 	// if I'm not authoritative, then I must have an authoritative object on another game server
 	// if I'm authoritative, then see if I'm proxied on any other game server
@@ -1447,12 +1447,12 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::isAwayFromKeyBoard(JNIEnv *en
 {
 	UNREF(self);
 
-	CreatureObject * playerCreature = NULL;
+	CreatureObject * playerCreature = nullptr;
 	if (!JavaLibrary::getObject(player, playerCreature))
 		return JNI_FALSE;
 
 	PlayerObject * const playerObj = PlayerCreatureController::getPlayerObject(playerCreature);
-	if (playerObj != NULL && playerObj->isAwayFromKeyBoard())
+	if (playerObj != nullptr && playerObj->isAwayFromKeyBoard())
 	{
 		return JNI_TRUE;
 	}
@@ -1473,7 +1473,7 @@ jint JNICALL ScriptMethodsObjectInfoNamespace::getObjType(JNIEnv *env, jobject s
 {
 	UNREF(self);
 
-	const Object *object = NULL;
+	const Object *object = nullptr;
 	if (!JavaLibrary::getObject(target, object))
 		return -1;
 
@@ -1487,13 +1487,13 @@ jint JNICALL ScriptMethodsObjectInfoNamespace::getObjType(JNIEnv *env, jobject s
  * @param self		    class calling this function
  * @param target		object we want to check
  *
- * @return the template type, or null on error
+ * @return the template type, or nullptr on error
  */
 jstring JNICALL ScriptMethodsObjectInfoNamespace::getTemplateId(JNIEnv *env, jobject self, jlong target)
 {
 	UNREF(self);
 
-	const Object *object = NULL;
+	const Object *object = nullptr;
 	if (!JavaLibrary::getObject(target, object))
 		return 0;
 
@@ -1507,12 +1507,12 @@ jstring JNICALL ScriptMethodsObjectInfoNamespace::getTemplateId(JNIEnv *env, job
 	* @param self		    class calling this function
 	* @param target		object we want to check
 	*
-	* @return the template type, or null on error
+	* @return the template type, or nullptr on error
 */
 
 jstring JNICALL ScriptMethodsObjectInfoNamespace::getSharedObjectTemplateName(JNIEnv * /*env*/, jobject /*self*/, jlong target)
 {
-	Object const * object = NULL;
+	Object const * object = nullptr;
 	if (!JavaLibrary::getObject(target, object))
 		return 0;
 
@@ -2039,7 +2039,7 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::isDisabled(JNIEnv *env, jobje
 		return JNI_FALSE;
 
 	// make sure the object isn't a creature or is a vehicle
-	if (object->asCreatureObject () != NULL &&
+	if (object->asCreatureObject () != nullptr &&
 		!GameObjectTypes::isTypeOf (object->getGameObjectType (), SharedObjectTemplate::GOT_vehicle))
 		return JNI_FALSE;
 
@@ -2093,7 +2093,7 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::isCrafted(JNIEnv *env, jobjec
 		return JNI_FALSE;
 
 	// make sure the object isn't a creature
-	if (dynamic_cast<const CreatureObject *>(object) != NULL)
+	if (dynamic_cast<const CreatureObject *>(object) != nullptr)
 		return JNI_FALSE;
 
 	if (object->isCrafted())
@@ -2110,7 +2110,7 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::isCrafted(JNIEnv *env, jobjec
  * @param self		    class calling this function
  * @param target		object we want to know about
  *
- * @return the crafter id, or null on error or if the item was not crafted
+ * @return the crafter id, or nullptr on error or if the item was not crafted
  */
 jlong JNICALL ScriptMethodsObjectInfoNamespace::getCrafter(JNIEnv *env, jobject self, jlong target)
 {
@@ -2168,7 +2168,7 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::setCrafter(JNIEnv *env, jobje
  */
 jfloat JNICALL ScriptMethodsObjectInfoNamespace::getScale(JNIEnv *env, jobject self, jlong target)
 {
-	const CreatureObject * creature = NULL;
+	const CreatureObject * creature = nullptr;
 	if (!JavaLibrary::getObject(target, creature))
 		return -1.0f;
 
@@ -2190,7 +2190,7 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::setScale(JNIEnv *env, jobject
 	if (scale <= 0)
 		return JNI_FALSE;
 
-	CreatureObject * creature = NULL;
+	CreatureObject * creature = nullptr;
 	if (!JavaLibrary::getObject(target, creature))
 		return JNI_FALSE;
 
@@ -2375,11 +2375,11 @@ jfloat JNICALL ScriptMethodsObjectInfoNamespace::getLocationDistance(JNIEnv *env
 
 	// translate local coordinates to world coordinates
 	Object * cell1 = NetworkIdManager::getObjectById(targetCell1);
-	if (cell1 == NULL)
+	if (cell1 == nullptr)
 		return -1;
 	const Vector & worldLoc1 = cell1->rotateTranslate_o2w(targetLoc1);
 	Object * cell2 = NetworkIdManager::getObjectById(targetCell2);
-	if (cell2 == NULL)
+	if (cell2 == nullptr)
 		return -1;
 	const Vector & worldLoc2 = cell2->rotateTranslate_o2w(targetLoc2);
 
@@ -2433,13 +2433,13 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::isLocationInConicalFrustum(JN
 
 	// translate local coordinates to world coordinates if they are in cells
 	Object * testCell = NetworkIdManager::getObjectById(testCellId);
-	Vector testWorldLoc = (testCell != NULL) ? testCell->rotateTranslate_o2w(testLoc) : testLoc;
+	Vector testWorldLoc = (testCell != nullptr) ? testCell->rotateTranslate_o2w(testLoc) : testLoc;
 
 	Object * startCell = NetworkIdManager::getObjectById(startCellId);
-	Vector startWorldLoc = (startCell != NULL) ? startCell->rotateTranslate_o2w(startLoc) : startLoc;
+	Vector startWorldLoc = (startCell != nullptr) ? startCell->rotateTranslate_o2w(startLoc) : startLoc;
 
 	Object * endCell = NetworkIdManager::getObjectById(endCellId);
-	Vector endWorldLoc = (endCell != NULL) ? endCell->rotateTranslate_o2w(endLoc) : endLoc;
+	Vector endWorldLoc = (endCell != nullptr) ? endCell->rotateTranslate_o2w(endLoc) : endLoc;
 
 	if(use2d)
 	{
@@ -2504,13 +2504,13 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::isLocationInCone(JNIEnv *env,
 
 	// translate local coordinates to world coordinates if they are in cells
 	Object * testCell = NetworkIdManager::getObjectById(testCellId);
-	Vector const& testWorldLoc = (testCell != NULL) ? testCell->rotateTranslate_o2w(testLoc) : testLoc;
+	Vector const& testWorldLoc = (testCell != nullptr) ? testCell->rotateTranslate_o2w(testLoc) : testLoc;
 
 	Object * startCell = NetworkIdManager::getObjectById(startCellId);
-	Vector const & startWorldLoc = (startCell != NULL) ? startCell->rotateTranslate_o2w(startLoc) : startLoc;
+	Vector const & startWorldLoc = (startCell != nullptr) ? startCell->rotateTranslate_o2w(startLoc) : startLoc;
 
 	Object * endCell = NetworkIdManager::getObjectById(endCellId);
-	Vector const & endWorldLoc = (endCell != NULL) ? endCell->rotateTranslate_o2w(endLoc) : endLoc;
+	Vector const & endWorldLoc = (endCell != nullptr) ? endCell->rotateTranslate_o2w(endLoc) : endLoc;
 
 	Vector testPointConeSpace = testWorldLoc - startWorldLoc;
 	if(use2d)
@@ -2606,7 +2606,7 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::isInWorldCell(JNIEnv *env, jo
 	UNREF(self);
 	NOT_NULL(env);
 
-	ServerObject* object = NULL;
+	ServerObject* object = nullptr;
 	if (!JavaLibrary::getObject(target, object))
 		return JNI_FALSE;
 
@@ -2684,7 +2684,6 @@ namespace
 
 	// custom_var TypeId definitions
 	const jint CVT_UNKNOWN      = static_cast<jint>(0);
-	const jint CVT_CONST_STRING = static_cast<jint>(1);
 	const jint CVT_RANGED_INT   = static_cast<jint>(2);
 	const jint CVT_PALCOLOR     = static_cast<jint>(3);
 
@@ -2704,7 +2703,7 @@ namespace
 		//-- validate arguments
 		if (!customizationVariable || !context)
 		{
-			DEBUG_FATAL(true, ("programmer error: callback made with NULL arguments.\n"));
+			DEBUG_FATAL(true, ("programmer error: callback made with nullptr arguments.\n"));
 			return;
 		}
 
@@ -2736,7 +2735,7 @@ namespace
  *                          Java custom_var.
  *
  * @return  the Java-accessible custom_var instance, the script-side counterpart to
- *          the given C++-side CustomizationVariable.  Will return NULL if
+ *          the given C++-side CustomizationVariable.  Will return nullptr if
  *          a Java exception or other error occurs.
  */
 LocalRefPtr ScriptMethodsObjectInfoNamespace::createCustomVar(const jlong &objId, const std::string &variablePathName, CustomizationVariable &variable)
@@ -2779,7 +2778,7 @@ LocalRefPtr ScriptMethodsObjectInfoNamespace::createCustomVar(const jlong &objId
  *                          Java custom_var.
  *
  * @return  the Java-accessible ranged_int_custom_var instance, the script-side counterpart to
- *          the given C++-side CustomizationVariable.  Will return NULL if
+ *          the given C++-side CustomizationVariable.  Will return nullptr if
  *          a Java exception or other error occurs.
  */
 LocalRefPtr ScriptMethodsObjectInfoNamespace::createRangedIntCustomVar(const jlong &objId, const std::string &variablePathName, RangedIntCustomizationVariable &rangedIntVariable)
@@ -2818,7 +2817,7 @@ LocalRefPtr ScriptMethodsObjectInfoNamespace::createRangedIntCustomVar(const jlo
  *                          Java custom_var.
  *
  * @return  the Java-accessible palcolor_custom_var instance, the script-side counterpart to
- *          the given C++-side CustomizationVariable.  Will return NULL if
+ *          the given C++-side CustomizationVariable.  Will return nullptr if
  *          a Java exception or other error occurs.
  */
 LocalRefPtr ScriptMethodsObjectInfoNamespace::createPalcolorCustomVar(const jlong &objId, const std::string &variablePathName, PaletteColorCustomizationVariable &variable)
@@ -2854,10 +2853,10 @@ LocalRefPtr ScriptMethodsObjectInfoNamespace::createColor(int r, int g, int b, i
  * Fetch the CustomizationData instance associated with the Object
  * specified by the given obj_id.
  *
- * This function may return NULL if the specified object doesn't have
+ * This function may return nullptr if the specified object doesn't have
  * customization data or if some other error occurs.
  *
- * The caller must call CustomizationData::release() on the non-NULL return
+ * The caller must call CustomizationData::release() on the non-nullptr return
  * value when the reference no longer is needed.  Failure to do so will cause
  * a memory leak.
  *
@@ -2865,21 +2864,21 @@ LocalRefPtr ScriptMethodsObjectInfoNamespace::createColor(int r, int g, int b, i
  *               CustomizationData instance should be retrieved.
  *
  * @return  the CustomizationData instance associated with the specified
- *          Object.  May return NULL if the Object doesn't have customization
+ *          Object.  May return nullptr if the Object doesn't have customization
  *          data or if an error occurs.
  */
 CustomizationData *ScriptMethodsObjectInfoNamespace::fetchCustomizationDataFromObjId(jlong objId)
 {
 	PROFILER_AUTO_BLOCK_DEFINE("JNI::fetchCustomizationDataFromObjId");
 	if (!objId)
-		return NULL;
+		return nullptr;
 
 	//-- Get the target TangibleObject.
 	TangibleObject *object = 0;
 	if (!JavaLibrary::getObject(objId, object))
 	{
 		// this Object doesn't exist or isn't derived from TangibleObject
-		return NULL;
+		return nullptr;
 	}
 
 	//-- Fetch the CustomizationData.
@@ -2887,15 +2886,15 @@ CustomizationData *ScriptMethodsObjectInfoNamespace::fetchCustomizationDataFromO
 	if (!cdProperty)
 	{
 		// this Object doesn't expose any customization data
-		return NULL;
+		return nullptr;
 	}
 
 	CustomizationData *const customizationData = cdProperty->fetchCustomizationData();
 	if (!customizationData)
 	{
 		// this shouldn't happen
-		DEBUG_WARNING(true, ("CustomizationDataProperty returned NULL CustomizationData on fetch().\n"));
-		return NULL;
+		DEBUG_WARNING(true, ("CustomizationDataProperty returned nullptr CustomizationData on fetch().\n"));
+		return nullptr;
 	}
 
 	//-- return the CustomizationData instance.
@@ -2910,7 +2909,7 @@ jobjectArray JNICALL ScriptMethodsObjectInfoNamespace::getAllCustomVars(JNIEnv *
 	//-- get the CustomizationData instance for the target object.
 	CustomizationData *const customizationData = fetchCustomizationDataFromObjId(target);
 	if (!customizationData)
-		return NULL;
+		return nullptr;
 
 	//-- collect all local CustomizationVariable instances.
 	// NOTE: if we allow multithreaded access to this code from script, we cannot use this static
@@ -2961,7 +2960,7 @@ jobjectArray JNICALL ScriptMethodsObjectInfoNamespace::getAllCustomVars(JNIEnv *
 	customizationData->release();
 
 	//-- return result
-	if (customVarArray.get() != NULL)
+	if (customVarArray.get() != nullptr)
 		return customVarArray->getReturnValue();
 	return 0;
 }
@@ -2975,7 +2974,7 @@ jobject JNICALL ScriptMethodsObjectInfoNamespace::getCustomVarByName(JNIEnv * /*
 	//-- get the CustomizationData instance for the target object.
 	CustomizationData *const customizationData = fetchCustomizationDataFromObjId(target);
 	if (!customizationData)
-		return NULL;
+		return nullptr;
 
 	//-- get the CustomizationVariable for the specified variable name
 	std::string nativeVarPathName;
@@ -2983,7 +2982,7 @@ jobject JNICALL ScriptMethodsObjectInfoNamespace::getCustomVarByName(JNIEnv * /*
 
 	CustomizationVariable *const variable = customizationData->findVariable(nativeVarPathName);
 	if (!variable)
-		return NULL;
+		return nullptr;
 
 	//-- create a Java custom_var based on this CustomizationVariable
 	LocalRefPtr newCustomVar = createCustomVar(target, nativeVarPathName, *variable);
@@ -3089,7 +3088,7 @@ jobject JNICALL ScriptMethodsObjectInfoNamespace::getPalcolorCustomVarSelectedCo
 	customizationData->release();
 
 	if (error)
-		return NULL;
+		return nullptr;
 
 	//-- return value
 	return createColor(color.getR(), color.getG(), color.getB(), color.getA())->getReturnValue();
@@ -3196,7 +3195,7 @@ jobjectArray JNICALL ScriptMethodsObjectInfoNamespace::getPalcolorCustomVarColor
 	customizationData->release();
 
 	//-- return result
-	if (colorArray.get() != NULL)
+	if (colorArray.get() != nullptr)
 		return colorArray->getReturnValue();
 	return 0;
 }
@@ -3205,7 +3204,7 @@ jobjectArray JNICALL ScriptMethodsObjectInfoNamespace::getPalcolorCustomVarColor
 
 jobjectArray JNICALL ScriptMethodsObjectInfoNamespace::getCtsDestinationClusters(JNIEnv * /*env*/, jobject /*self*/)
 {
-	static std::set<std::string> * s_ctsDestinationClusters = NULL;
+	static std::set<std::string> * s_ctsDestinationClusters = nullptr;
 	if (!s_ctsDestinationClusters)
 	{
 		s_ctsDestinationClusters = new std::set<std::string>;
@@ -3449,15 +3448,15 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::kill(JNIEnv *env, jobject sel
  * @param env		    Java environment
  * @param self		    class calling this function
  * @param player		the player
- * @param killer		who killed the player (may be null)
+ * @param killer		who killed the player (may be nullptr)
  *
- * @return the corpse id of the player, or null on error
+ * @return the corpse id of the player, or nullptr on error
  */
 jobject JNICALL ScriptMethodsObjectInfoNamespace::killPlayer(JNIEnv *env, jobject self, jobject player, jobject killer)
 {
 	static const std::string corpseTemplateName("object/tangible/container/corpse/player_corpse.iff");
 
-	CreatureObject * playerObject = NULL;
+	CreatureObject * playerObject = nullptr;
 	if (!JavaLibrary::getObject(player, playerObject))
 		return 0;
 
@@ -3474,7 +3473,7 @@ jobject JNICALL ScriptMethodsObjectInfoNamespace::killPlayer(JNIEnv *env, jobjec
 	Transform tr;
 	tr.setPosition_p(playerObject->getPosition_p());
 	ServerObject * corpse = ServerWorld::createNewObject(corpseTemplateName, tr, cell, true);
-	if (corpse == NULL)
+	if (corpse == nullptr)
 		return 0;
 
 	if (playerObject->makeDead(killerId, corpse->getNetworkId()))
@@ -3557,7 +3556,7 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::setInvulnerable(JNIEnv *env, 
 {
 	UNREF(self);
 
-	TangibleObject * object = NULL;
+	TangibleObject * object = nullptr;
 	if (!JavaLibrary::getObject(target, object))
 		return JNI_FALSE;
 
@@ -3580,7 +3579,7 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::isInvulnerable(JNIEnv *env, j
 {
 	UNREF(self);
 
-	TangibleObject * object = NULL;
+	TangibleObject * object = nullptr;
 	if (!JavaLibrary::getObject(target, object))
 		return JNI_FALSE;
 
@@ -3602,7 +3601,7 @@ jfloat JNICALL ScriptMethodsObjectInfoNamespace::getComplexity(JNIEnv *env, jobj
 {
 	UNREF(self);
 
-	const ServerObject * object = NULL;
+	const ServerObject * object = nullptr;
 	if (!JavaLibrary::getObject(target, object))
 		return -1;
 
@@ -3625,7 +3624,7 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::setComplexity(JNIEnv *env, jo
 {
 	UNREF(self);
 
-	ServerObject * object = NULL;
+	ServerObject * object = nullptr;
 	if (!JavaLibrary::getObject(target, object))
 		return JNI_FALSE;
 
@@ -3639,7 +3638,7 @@ jint JNICALL ScriptMethodsObjectInfoNamespace::getGameObjectType(JNIEnv *env, jo
 {
 	UNREF (self);
 
-	ServerObject * object = NULL;
+	ServerObject * object = nullptr;
 	if (!JavaLibrary::getObject(obj, object))
 		return JNI_FALSE;
 
@@ -3662,13 +3661,13 @@ jint JNICALL ScriptMethodsObjectInfoNamespace::getGameObjectTypeFromTemplate(JNI
 jint JNICALL ScriptMethodsObjectInfoNamespace::getGameObjectTypeFromTemplateCrc(JNIEnv *env, jobject self, jint templateCrc)
 {
 	const ObjectTemplate * objectTemplate = ObjectTemplateList::fetch(templateCrc);
-	if (objectTemplate == NULL)
+	if (objectTemplate == nullptr)
 		return 0;
 
 	const std::string & sharedTemplateName = safe_cast<const ServerObjectTemplate *>(objectTemplate)->getSharedTemplate();
 	const ObjectTemplate * sharedTemplate = ObjectTemplateList::fetch(sharedTemplateName);
 	objectTemplate->releaseReference();
-	if (sharedTemplate == NULL)
+	if (sharedTemplate == nullptr)
 		return 0;
 
 	jint got = safe_cast<const SharedObjectTemplate *>(sharedTemplate)->getGameObjectType();
@@ -3710,11 +3709,11 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::isGod(JNIEnv *env, jobject se
 {
 	UNREF (self);
 
-	const ServerObject * object = NULL;
+	const ServerObject * object = nullptr;
 	if (!JavaLibrary::getObject(target, object))
 		return JNI_FALSE;
 
-	if (object->getClient() == NULL)
+	if (object->getClient() == nullptr)
 		return JNI_FALSE;
 
 	return object->getClient()->isGod();
@@ -3735,11 +3734,11 @@ jint JNICALL ScriptMethodsObjectInfoNamespace::getGodLevel(JNIEnv *env, jobject 
 {
 	UNREF (self);
 
-	const ServerObject * object = NULL;
+	const ServerObject * object = nullptr;
 	if (!JavaLibrary::getObject(target, object))
 		return 0;
 
-	if (object->getClient() == NULL)
+	if (object->getClient() == nullptr)
 		return 0;
 
 	if (object->getClient()->isGod())
@@ -3763,13 +3762,13 @@ jint JNICALL ScriptMethodsObjectInfoNamespace::getCount(JNIEnv *env, jobject sel
 	// both Tangible and Intangible have counters, so we have to test for both
 	// cases
 
-	const TangibleObject * tangibleObject = NULL;
+	const TangibleObject * tangibleObject = nullptr;
 	if (JavaLibrary::getObject(target, tangibleObject))
 	{
 		return tangibleObject->getCount();
 	}
 
-	const IntangibleObject * intangibleObject = NULL;
+	const IntangibleObject * intangibleObject = nullptr;
 	if (JavaLibrary::getObject(target, intangibleObject))
 	{
 		return intangibleObject->getCount();
@@ -3795,14 +3794,14 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::setCount(JNIEnv *env, jobject
 	// both Tangible and Intangible have counters, so we have to test for both
 	// cases
 
-	TangibleObject * tangibleObject = NULL;
+	TangibleObject * tangibleObject = nullptr;
 	if (JavaLibrary::getObject(target, tangibleObject))
 	{
 		tangibleObject->setCount(value);
 		return JNI_TRUE;
 	}
 
-	IntangibleObject * intangibleObject = NULL;
+	IntangibleObject * intangibleObject = nullptr;
 	if (JavaLibrary::getObject(target, intangibleObject))
 	{
 		intangibleObject->setCount(value);
@@ -3829,14 +3828,14 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::incrementCount(JNIEnv *env, j
 	// both Tangible and Intangible have counters, so we have to test for both
 	// cases
 
-	TangibleObject * tangibleObject = NULL;
+	TangibleObject * tangibleObject = nullptr;
 	if (JavaLibrary::getObject(target, tangibleObject))
 	{
 		tangibleObject->incrementCount(delta);
 		return JNI_TRUE;
 	}
 
-	IntangibleObject * intangibleObject = NULL;
+	IntangibleObject * intangibleObject = nullptr;
 	if (JavaLibrary::getObject(target, intangibleObject))
 	{
 		intangibleObject->incrementCount(delta);
@@ -3859,7 +3858,7 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::incrementCount(JNIEnv *env, j
  */
 jint JNICALL ScriptMethodsObjectInfoNamespace::getCondition(JNIEnv *env, jobject self, jlong target)
 {
-	const TangibleObject * object = NULL;
+	const TangibleObject * object = nullptr;
 	if (!JavaLibrary::getObject(target, object))
 		return 0;
 
@@ -3880,7 +3879,7 @@ jint JNICALL ScriptMethodsObjectInfoNamespace::getCondition(JNIEnv *env, jobject
  */
 jboolean JNICALL ScriptMethodsObjectInfoNamespace::hasCondition(JNIEnv *env, jobject self, jlong target, jint condition)
 {
-	const TangibleObject * object = NULL;
+	const TangibleObject * object = nullptr;
 	if (!JavaLibrary::getObject(target, object))
 		return JNI_FALSE;
 
@@ -3901,7 +3900,7 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::hasCondition(JNIEnv *env, job
  */
 jboolean JNICALL ScriptMethodsObjectInfoNamespace::setCondition(JNIEnv *env, jobject self, jlong target, jint condition)
 {
-	TangibleObject * object = NULL;
+	TangibleObject * object = nullptr;
 	if (!JavaLibrary::getObject(target, object))
 		return JNI_FALSE;
 
@@ -3923,7 +3922,7 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::setCondition(JNIEnv *env, job
  */
 jboolean JNICALL ScriptMethodsObjectInfoNamespace::clearCondition(JNIEnv *env, jobject self, jlong target, jint condition)
 {
-	TangibleObject * object = NULL;
+	TangibleObject * object = nullptr;
 	if (!JavaLibrary::getObject(target, object))
 		return JNI_FALSE;
 
@@ -4748,7 +4747,7 @@ jint JNICALL ScriptMethodsObjectInfoNamespace::getGroupLevel(JNIEnv *, jobject, 
 {
 	if (!target)
 	{
-		DEBUG_WARNING (true, ("JavaLibrary::getGroupLevel null target "));
+		DEBUG_WARNING (true, ("JavaLibrary::getGroupLevel nullptr target "));
 		return 0;
 	}
 
@@ -4864,18 +4863,18 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::getVisibleOnMapAndRadar(JNIEn
  * @param self		    class calling this function
  * @param target		the object
  *
- * @return the appearance name, or null on error
+ * @return the appearance name, or nullptr on error
  */
 jstring JNICALL ScriptMethodsObjectInfoNamespace::getAppearance(JNIEnv * env, jobject self, jlong target)
 {
 	UNREF(self);
 
-	const ServerObject * object = NULL;
+	const ServerObject * object = nullptr;
 	if (!JavaLibrary::getObject(target, object))
 		return 0;
 
 	const SharedObjectTemplate * sharedTemplate = object->getSharedTemplate();
-	if (sharedTemplate == NULL)
+	if (sharedTemplate == nullptr)
 		return 0;
 
 	JavaString appearance(sharedTemplate->getAppearanceFilename());
@@ -4897,7 +4896,7 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::isInsured(JNIEnv * env, jobje
 {
 	UNREF(self);
 
-	const TangibleObject * object = NULL;
+	const TangibleObject * object = nullptr;
 	if (!JavaLibrary::getObject(target, object))
 		return JNI_FALSE;
 
@@ -4919,7 +4918,7 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::isAutoInsured(JNIEnv * env, j
 {
 	UNREF(self);
 
-	const TangibleObject * object = NULL;
+	const TangibleObject * object = nullptr;
 	if (!JavaLibrary::getObject(target, object))
 		return JNI_FALSE;
 
@@ -4941,7 +4940,7 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::isUninsurable(JNIEnv * env, j
 {
 	UNREF(self);
 
-	const TangibleObject * object = NULL;
+	const TangibleObject * object = nullptr;
 	if (!JavaLibrary::getObject(target, object))
 		return JNI_FALSE;
 
@@ -4959,13 +4958,13 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::isUninsurable(JNIEnv * env, j
  * @param self		    class calling this function
  * @param player		the player to get objects from
  *
- * @return an array of objects, or null on error
+ * @return an array of objects, or nullptr on error
  */
 jlongArray JNICALL ScriptMethodsObjectInfoNamespace::getInventoryAndEquipment(JNIEnv * env, jobject self, jlong player)
 {
 	UNREF(self);
 
-	const CreatureObject * playerCreature = NULL;
+	const CreatureObject * playerCreature = nullptr;
 	if (!JavaLibrary::getObject(player, playerCreature))
 		return 0;
 
@@ -4973,11 +4972,11 @@ jlongArray JNICALL ScriptMethodsObjectInfoNamespace::getInventoryAndEquipment(JN
 
 	// go through the player's inventory
 	const ServerObject * inventoryObject = playerCreature->getInventory();
-	if (inventoryObject != NULL)
+	if (inventoryObject != nullptr)
 	{
 		const VolumeContainer * inventoryContainer =
 			ContainerInterface::getVolumeContainer(*inventoryObject);
-		if (inventoryContainer != NULL)
+		if (inventoryContainer != nullptr)
 		{
 			getGoodItemsFromContainer(*inventoryContainer, objectIds);
 		}
@@ -4998,7 +4997,7 @@ jlongArray JNICALL ScriptMethodsObjectInfoNamespace::getInventoryAndEquipment(JN
 
 	// go through the player's equipment
 	SlottedContainer const * const equipmentContainer = ContainerInterface::getSlottedContainer(*playerCreature);
-	if (equipmentContainer != NULL)
+	if (equipmentContainer != nullptr)
 		getGoodItemsFromContainer(*equipmentContainer, objectIds);
 	else
 	{
@@ -5022,12 +5021,12 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::setCheaterLevel(JNIEnv * env,
 {
 	UNREF(self);
 
-	CreatureObject * playerCreature = NULL;
+	CreatureObject * playerCreature = nullptr;
 	if (!JavaLibrary::getObject(player, playerCreature))
 		return JNI_FALSE;
 
 	PlayerObject * const playerObj = PlayerCreatureController::getPlayerObject(playerCreature);
-	if (playerObj != NULL && playerObj->isAuthoritative())
+	if (playerObj != nullptr && playerObj->isAuthoritative())
 	{
 		playerObj->setCheaterLevel(static_cast<float>(level));
 		return JNI_TRUE;
@@ -5042,12 +5041,12 @@ jint JNICALL ScriptMethodsObjectInfoNamespace::getCheaterLevel(JNIEnv * env, job
 {
 	UNREF(self);
 
-	const CreatureObject * playerCreature = NULL;
+	const CreatureObject * playerCreature = nullptr;
 	if (!JavaLibrary::getObject(player, playerCreature))
 		return 0;
 
 	PlayerObject const * const playerObj = PlayerCreatureController::getPlayerObject(playerCreature);
-	if (playerObj != NULL)
+	if (playerObj != nullptr)
 	{
 		return static_cast<int>(playerObj->getCheaterLevel());
 	}
@@ -5071,7 +5070,7 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::setHouseId(JNIEnv * env, jobj
 {
 	UNREF(self);
 
-	CreatureObject * playerCreature = NULL;
+	CreatureObject * playerCreature = nullptr;
 	if (!JavaLibrary::getObject(player, playerCreature))
 		return JNI_FALSE;
 
@@ -5090,13 +5089,13 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::setHouseId(JNIEnv * env, jobj
  * @param self		    class calling this function
  * @param player		the player
  *
- * @return the house id, or null on error
+ * @return the house id, or nullptr on error
  */
 jlong JNICALL ScriptMethodsObjectInfoNamespace::getHouseId(JNIEnv * env, jobject self, jlong player)
 {
 	UNREF(self);
 
-	const CreatureObject * playerCreature = NULL;
+	const CreatureObject * playerCreature = nullptr;
 	if (!JavaLibrary::getObject(player, playerCreature))
 		return 0;
 
@@ -5113,16 +5112,16 @@ jlong JNICALL ScriptMethodsObjectInfoNamespace::getHouseId(JNIEnv * env, jobject
  * @param self			class calling this function
  * @param object		the manf schematic or factory id
  *
- * @return the draft schematic name, or null on error
+ * @return the draft schematic name, or nullptr on error
  */
 jstring JNICALL ScriptMethodsObjectInfoNamespace::getDraftSchematic(JNIEnv * env, jobject self, jlong object)
 {
 	UNREF(self);
 
-	const ManufactureObjectInterface * craftable = NULL;
+	const ManufactureObjectInterface * craftable = nullptr;
 
-	const FactoryObject * factoryObject = NULL;
-	const ManufactureSchematicObject * manfSchematicObject = NULL;
+	const FactoryObject * factoryObject = nullptr;
+	const ManufactureSchematicObject * manfSchematicObject = nullptr;
 	if (JavaLibrary::getObject(object, manfSchematicObject))
 	{
 		craftable = manfSchematicObject;
@@ -5136,7 +5135,7 @@ jstring JNICALL ScriptMethodsObjectInfoNamespace::getDraftSchematic(JNIEnv * env
 
 	const ConstCharCrcString draftSchematic(ObjectTemplateList::lookUp(
 		craftable->getDraftSchematic()));
-	if (draftSchematic.getString() == NULL)
+	if (draftSchematic.getString() == nullptr)
 		return 0;
 
 	return JavaString(draftSchematic.getString()).getReturnValue();
@@ -5152,16 +5151,16 @@ jstring JNICALL ScriptMethodsObjectInfoNamespace::getDraftSchematic(JNIEnv * env
  * @param self			class calling this function
  * @param object		the manf schematic or factory id
  *
- * @return the draft schematic name crc, or null on error
+ * @return the draft schematic name crc, or nullptr on error
  */
 jint JNICALL ScriptMethodsObjectInfoNamespace::getDraftSchematicCrc(JNIEnv * env, jobject self, jlong object)
 {
 	UNREF(self);
 
-	const ManufactureObjectInterface * craftable = NULL;
+	const ManufactureObjectInterface * craftable = nullptr;
 
-	const FactoryObject * factoryObject = NULL;
-	const ManufactureSchematicObject * manfSchematicObject = NULL;
+	const FactoryObject * factoryObject = nullptr;
+	const ManufactureSchematicObject * manfSchematicObject = nullptr;
 	if (JavaLibrary::getObject(object, manfSchematicObject))
 	{
 		craftable = manfSchematicObject;
@@ -5175,7 +5174,7 @@ jint JNICALL ScriptMethodsObjectInfoNamespace::getDraftSchematicCrc(JNIEnv * env
 
 	const ConstCharCrcString draftSchematic(ObjectTemplateList::lookUp(
 		craftable->getDraftSchematic()));
-	if (draftSchematic.getString() == NULL)
+	if (draftSchematic.getString() == nullptr)
 		return 0;
 
 	return draftSchematic.getCrc();
@@ -5196,7 +5195,7 @@ jint JNICALL ScriptMethodsObjectInfoNamespace::getSourceDraftSchematic(JNIEnv * 
 {
 	UNREF(self);
 
-	const TangibleObject * object = NULL;
+	const TangibleObject * object = nullptr;
 	if (!JavaLibrary::getObject(target, object))
 		return 0;
 
@@ -5219,13 +5218,13 @@ jint JNICALL ScriptMethodsObjectInfoNamespace::getPlayerBirthDate(JNIEnv * env, 
 {
 	UNREF(self);
 
-	const CreatureObject * playerCreature = NULL;
+	const CreatureObject * playerCreature = nullptr;
 	if (!JavaLibrary::getObject(playerId, playerCreature))
 		return -1;
 
 	const PlayerObject * player = PlayerCreatureController::getPlayerObject(
 		playerCreature);
-	if (player == NULL)
+	if (player == nullptr)
 		return -1;
 
 	return player->getBornDate();
@@ -5263,13 +5262,13 @@ jint JNICALL ScriptMethodsObjectInfoNamespace::getPlayerPlayedTime(JNIEnv * env,
 {
 	UNREF(self);
 
-	const CreatureObject * playerCreature = NULL;
+	const CreatureObject * playerCreature = nullptr;
 	if (!JavaLibrary::getObject(playerId, playerCreature))
 		return -1;
 
 	const PlayerObject * player = PlayerCreatureController::getPlayerObject(
 		playerCreature);
-	if (player == NULL)
+	if (player == nullptr)
 		return -1;
 
 	return player->getPlayedTime();
@@ -5306,7 +5305,7 @@ void JNICALL ScriptMethodsObjectInfoNamespace::setBuildingCityId(JNIEnv *env, jo
  * @param self				class calling this function
  * @param jschematicName	the schematic name
  *
- * @return the object name, or null if the schematic doesn't exist
+ * @return the object name, or nullptr if the schematic doesn't exist
  */
 jobject JNICALL ScriptMethodsObjectInfoNamespace::getProductNameFromSchematic(JNIEnv *env, jobject self,
 	jstring jschematicName)
@@ -5319,30 +5318,30 @@ jobject JNICALL ScriptMethodsObjectInfoNamespace::getProductNameFromSchematic(JN
 
 	const DraftSchematicObject * schematic = DraftSchematicObject::getSchematic(
 		schematicName);
-	if (schematic == NULL)
+	if (schematic == nullptr)
 		return 0;
 
 	const ServerObjectTemplate * serverOt = schematic->getCraftedObjectTemplate();
-	if (serverOt == NULL)
+	if (serverOt == nullptr)
 		return 0;
 
 	const std::string sharedTemplateName(serverOt->getSharedTemplate());
 	const ObjectTemplate * ot = ObjectTemplateList::fetch(sharedTemplateName);
-	if (ot == NULL)
+	if (ot == nullptr)
 		return 0;
 
 	const SharedObjectTemplate * sharedOt = dynamic_cast<const SharedObjectTemplate *>(
 		ot);
-	if (sharedOt == NULL)
+	if (sharedOt == nullptr)
 	{
 		ot->releaseReference();
 		return 0;
 	}
-	ot = NULL;
+	ot = nullptr;
 
 	const StringId objectName(sharedOt->getObjectName());
 	sharedOt->releaseReference();
-	sharedOt = NULL;
+	sharedOt = nullptr;
 
 	LocalRefPtr jobjectName;
 	if (!ScriptConversion::convert(objectName, jobjectName))
@@ -5360,37 +5359,37 @@ jobject JNICALL ScriptMethodsObjectInfoNamespace::getProductNameFromSchematic(JN
  * @param self				class calling this function
  * @param schematicCrc		the schematic name crc
  *
- * @return the object name, or null if the schematic doesn't exist
+ * @return the object name, or nullptr if the schematic doesn't exist
  */
 jobject JNICALL ScriptMethodsObjectInfoNamespace::getProductNameFromSchematicCrc(JNIEnv *env, jobject self,
 	jint schematicCrc)
 {
 	const DraftSchematicObject * schematic = DraftSchematicObject::getSchematic(
 		schematicCrc);
-	if (schematic == NULL)
+	if (schematic == nullptr)
 		return 0;
 
 	const ServerObjectTemplate * serverOt = schematic->getCraftedObjectTemplate();
-	if (serverOt == NULL)
+	if (serverOt == nullptr)
 		return 0;
 
 	const std::string sharedTemplateName(serverOt->getSharedTemplate());
 	const ObjectTemplate * ot = ObjectTemplateList::fetch(sharedTemplateName);
-	if (ot == NULL)
+	if (ot == nullptr)
 		return 0;
 
 	const SharedObjectTemplate * sharedOt = dynamic_cast<const SharedObjectTemplate *>(
 		ot);
-	if (sharedOt == NULL)
+	if (sharedOt == nullptr)
 	{
 		ot->releaseReference();
 		return 0;
 	}
-	ot = NULL;
+	ot = nullptr;
 
 	const StringId objectName(sharedOt->getObjectName());
 	sharedOt->releaseReference();
-	sharedOt = NULL;
+	sharedOt = nullptr;
 
 	LocalRefPtr jobjectName;
 	if (!ScriptConversion::convert(objectName, jobjectName))
@@ -5407,7 +5406,7 @@ jobject JNICALL ScriptMethodsObjectInfoNamespace::getProductNameFromSchematicCrc
  * @param self		     class calling this function
  * @param draftSchematic the draft schematic's template
  *
- * @return the template for the item the schematic creates, or null on error
+ * @return the template for the item the schematic creates, or nullptr on error
  */
 jstring JNICALL ScriptMethodsObjectInfoNamespace::getTemplateCreatedFromSchematic(JNIEnv *env, jobject self,
 	jstring draftSchematic)
@@ -5433,7 +5432,7 @@ jstring JNICALL ScriptMethodsObjectInfoNamespace::getTemplateCreatedFromSchemati
  * @param self		        class calling this function
  * @param draftSchematicCrc the draft schematic's template crc
  *
- * @return the template for the item the schematic creates, or null on error
+ * @return the template for the item the schematic creates, or nullptr on error
  */
 jstring JNICALL ScriptMethodsObjectInfoNamespace::getTemplateCreatedFromSchematicCrc(JNIEnv *env, jobject self,
 	jint draftSchematicCrc)
@@ -5445,11 +5444,11 @@ jstring JNICALL ScriptMethodsObjectInfoNamespace::getTemplateCreatedFromSchemati
 
 	const DraftSchematicObject * schematic = DraftSchematicObject::getSchematic(
 		draftSchematicCrc);
-	if (schematic == NULL)
+	if (schematic == nullptr)
 		return 0;
 
 	const ServerObjectTemplate * serverOt = schematic->getCraftedObjectTemplate();
-	if (serverOt == NULL)
+	if (serverOt == nullptr)
 		return 0;
 
 	JavaString templateName(serverOt->getName());
@@ -5503,11 +5502,11 @@ jint JNICALL ScriptMethodsObjectInfoNamespace::getTemplateCrcCreatedFromSchemati
 
 	const DraftSchematicObject * schematic = DraftSchematicObject::getSchematic(
 		draftSchematicCrc);
-	if (schematic == NULL)
+	if (schematic == nullptr)
 		return 0;
 
 	const ServerObjectTemplate * serverOt = schematic->getCraftedObjectTemplate();
-	if (serverOt == NULL)
+	if (serverOt == nullptr)
 		return 0;
 
 	return Crc::calculate(serverOt->getName());
@@ -5717,7 +5716,7 @@ void JNICALL ScriptMethodsObjectInfoNamespace::requestPreloadCompleteTrigger(JNI
 
 void JNICALL ScriptMethodsObjectInfoNamespace::activateQuest(JNIEnv * env, jobject self, jlong target, jint questId)
 {
-	CreatureObject * playerCreature = NULL;
+	CreatureObject * playerCreature = nullptr;
 	if (JavaLibrary::getObject(target, playerCreature))
 	{
 		PlayerObject * player = PlayerCreatureController::getPlayerObject(playerCreature);
@@ -5733,7 +5732,7 @@ void JNICALL ScriptMethodsObjectInfoNamespace::activateQuest(JNIEnv * env, jobje
 
 void JNICALL ScriptMethodsObjectInfoNamespace::deactivateQuest(JNIEnv * env, jobject self, jlong target, jint questId)
 {
-	CreatureObject * playerCreature = NULL;
+	CreatureObject * playerCreature = nullptr;
 	if (JavaLibrary::getObject(target, playerCreature))
 	{
 		PlayerObject * player = PlayerCreatureController::getPlayerObject(playerCreature);
@@ -5749,7 +5748,7 @@ void JNICALL ScriptMethodsObjectInfoNamespace::deactivateQuest(JNIEnv * env, job
 
 void JNICALL ScriptMethodsObjectInfoNamespace::completeQuest(JNIEnv * env, jobject self, jlong target, jint questId)
 {
-	CreatureObject * playerCreature = NULL;
+	CreatureObject * playerCreature = nullptr;
 	if (JavaLibrary::getObject(target, playerCreature))
 	{
 		PlayerObject * player = PlayerCreatureController::getPlayerObject(playerCreature);
@@ -5766,7 +5765,7 @@ void JNICALL ScriptMethodsObjectInfoNamespace::completeQuest(JNIEnv * env, jobje
 jboolean JNICALL ScriptMethodsObjectInfoNamespace::isQuestComplete(JNIEnv * env, jobject self, jlong target, jint questId)
 {
 	jboolean result = false;
-	const CreatureObject * playerCreature = NULL;
+	const CreatureObject * playerCreature = nullptr;
 	if (JavaLibrary::getObject(target, playerCreature))
 	{
 		const PlayerObject * player = PlayerCreatureController::getPlayerObject(playerCreature);
@@ -5783,7 +5782,7 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::isQuestComplete(JNIEnv * env,
 jboolean JNICALL ScriptMethodsObjectInfoNamespace::isQuestActive(JNIEnv * env, jobject self, jlong target, jint questId)
 {
 	jboolean result = false;
-	const CreatureObject * playerCreature = NULL;
+	const CreatureObject * playerCreature = nullptr;
 	if (JavaLibrary::getObject(target, playerCreature))
 	{
 		const PlayerObject * player = PlayerCreatureController::getPlayerObject(playerCreature);
@@ -5801,7 +5800,7 @@ void JNICALL ScriptMethodsObjectInfoNamespace::clearCompletedQuest(JNIEnv * env,
 {
 	if(questId >= 0)
 	{
-		CreatureObject * playerCreature = NULL;
+		CreatureObject * playerCreature = nullptr;
 		if (JavaLibrary::getObject(target, playerCreature))
 		{
 			PlayerObject * player = PlayerCreatureController::getPlayerObject(playerCreature);
@@ -5817,7 +5816,7 @@ void JNICALL ScriptMethodsObjectInfoNamespace::clearCompletedQuest(JNIEnv * env,
 
 jboolean JNICALL ScriptMethodsObjectInfoNamespace::canTrade(JNIEnv *env, jobject self, jlong target)
 {
-	const ServerObject * object = NULL;
+	const ServerObject * object = nullptr;
 	if (!JavaLibrary::getObject(target, object))
 		return JNI_FALSE;
 
@@ -5828,7 +5827,7 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::canTrade(JNIEnv *env, jobject
 
 jboolean JNICALL ScriptMethodsObjectInfoNamespace::isNoTradeShared(JNIEnv *env, jobject self, jlong target)
 {
-	const ServerObject * object = NULL;
+	const ServerObject * object = nullptr;
 	if (!JavaLibrary::getObject(target, object))
 		return JNI_FALSE;
 
@@ -5845,16 +5844,16 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::isNoTradeShared(JNIEnv *env, 
  * @param self		    class calling this function
  * @param player		the player to check
  *
- * @return the theater id, or null on error
+ * @return the theater id, or nullptr on error
  */
 jlong JNICALL ScriptMethodsObjectInfoNamespace::getLastSpawnedTheater(JNIEnv *env, jobject self, jlong player)
 {
-	const CreatureObject * creature = NULL;
+	const CreatureObject * creature = nullptr;
 	if (!JavaLibrary::getObject(player, creature))
 		return 0;
 
 	const PlayerObject * playerObject = PlayerCreatureController::getPlayerObject(creature);
-	if (playerObject == NULL)
+	if (playerObject == nullptr)
 		return 0;
 
 	return (playerObject->getTheater()).getValue();
@@ -5930,7 +5929,7 @@ void JNICALL ScriptMethodsObjectInfoNamespace::setAutoVariableFromByteStream(JNI
  */
 jboolean JNICALL ScriptMethodsObjectInfoNamespace::setBioLink(JNIEnv *env, jobject self, jlong target, jlong link)
 {
-	TangibleObject * object = NULL;
+	TangibleObject * object = nullptr;
 	if (!JavaLibrary::getObject(target, object))
 		return JNI_FALSE;
 
@@ -5955,7 +5954,7 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::setBioLink(JNIEnv *env, jobje
  */
 jboolean JNICALL ScriptMethodsObjectInfoNamespace::clearBioLink(JNIEnv *env, jobject self, jlong target)
 {
-	TangibleObject * object = NULL;
+	TangibleObject * object = nullptr;
 	if (!JavaLibrary::getObject(target, object))
 		return JNI_FALSE;
 
@@ -5972,11 +5971,11 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::clearBioLink(JNIEnv *env, job
  * @param self		    class calling this function
  * @param target		the item to get the link from
  *
- * @return the bio-link id, null if the item isn't linked
+ * @return the bio-link id, nullptr if the item isn't linked
  */
 jlong JNICALL ScriptMethodsObjectInfoNamespace::getBioLink(JNIEnv *env, jobject self, jlong target)
 {
-	const TangibleObject * object = NULL;
+	const TangibleObject * object = nullptr;
 	if (!JavaLibrary::getObject(target, object))
 		return 0;
 
@@ -5990,7 +5989,7 @@ jlong JNICALL ScriptMethodsObjectInfoNamespace::getBioLink(JNIEnv *env, jobject 
 
 float JNICALL ScriptMethodsObjectInfoNamespace::getObjectCollisionRadius(JNIEnv * env, jobject self, jlong jobject_obj)
 {
-	const Object * object = NULL;
+	const Object * object = nullptr;
 	if (!JavaLibrary::getObject(jobject_obj, object))
 		return 0.0f;
 
@@ -6008,11 +6007,11 @@ float JNICALL ScriptMethodsObjectInfoNamespace::getObjectCollisionRadius(JNIEnv 
  * @param self		    class calling this function
  * @param target		id of the object
  *
- * @return the name, or null on error
+ * @return the name, or nullptr on error
  */
 jstring JNICALL ScriptMethodsObjectInfoNamespace::getStaticItemName(JNIEnv * /*env*/, jobject /*self*/, jlong target)
 {
-	const ServerObject * o = NULL;
+	const ServerObject * o = nullptr;
 	if (!JavaLibrary::getObject(target, o))
 		return 0;
 
@@ -6026,7 +6025,7 @@ jstring JNICALL ScriptMethodsObjectInfoNamespace::getStaticItemName(JNIEnv * /*e
 
 jint JNICALL ScriptMethodsObjectInfoNamespace::getStaticItemVersion(JNIEnv *env, jobject /*self*/, jlong target)
 {
-	const ServerObject * o = NULL;
+	const ServerObject * o = nullptr;
 	if (!JavaLibrary::getObject(target, o))
 		return 0;
 
@@ -6040,7 +6039,7 @@ void JNICALL ScriptMethodsObjectInfoNamespace::setStaticItemName(JNIEnv * /*env*
 	NetworkId const networkId(target);
 	ServerObject * const o = ServerObject::getServerObject(networkId);
 
-	if (o == NULL)
+	if (o == nullptr)
 	{
 		WARNING(true, ("ERROR: ScriptMethodsObjectInfo::setStaticItemName() Unable to resolve the object(%s).", networkId.getValueString().c_str()));
 		return;
@@ -6058,7 +6057,7 @@ void JNICALL ScriptMethodsObjectInfoNamespace::setStaticItemVersion(JNIEnv * /*e
 	NetworkId const networkId(target);
 	ServerObject * const o = ServerObject::getServerObject(networkId);
 
-	if (o == NULL)
+	if (o == nullptr)
 	{
 		WARNING(true, ("ERROR: ScriptMethodsObjectInfo::setStaticItemVersion() Unable to resolve the object(%s).", networkId.getValueString().c_str()));
 		return;
@@ -6071,7 +6070,7 @@ void JNICALL ScriptMethodsObjectInfoNamespace::setStaticItemVersion(JNIEnv * /*e
 
 jint JNICALL ScriptMethodsObjectInfoNamespace::getConversionId(JNIEnv * /*env*/, jobject /*self*/, jlong target)
 {
-	const ServerObject * o = NULL;
+	const ServerObject * o = nullptr;
 	if (!JavaLibrary::getObject(target, o))
 		return 0;
 
@@ -6085,7 +6084,7 @@ void JNICALL ScriptMethodsObjectInfoNamespace::setConversionId(JNIEnv * /*env*/,
 	NetworkId const networkId(target);
 	ServerObject * const o = ServerObject::getServerObject(networkId);
 
-	if (o == NULL)
+	if (o == nullptr)
 	{
 		WARNING(true, ("ERROR: ScriptMethodsObjectInfo::setConversionId() Unable to resolve the object(%s).", networkId.getValueString().c_str()));
 		return;
@@ -6098,7 +6097,7 @@ void JNICALL ScriptMethodsObjectInfoNamespace::setConversionId(JNIEnv * /*env*/,
 
 void JNICALL ScriptMethodsObjectInfoNamespace::openCustomizationWindow(JNIEnv *env, jobject self, jlong player, jlong object, jstring customVarName1, jint minVar1, jint maxVar1, jstring customVarName2, jint minVar2, jint maxVar2, jstring customVarName3, jint minVar3, jint maxVar3, jstring customVarName4, jint minVar4, jint maxVar4)
 {
-	CreatureObject * playerObject = NULL;
+	CreatureObject * playerObject = nullptr;
 	if (!JavaLibrary::getObject(player, playerObject))
 		return;
 	std::string customVarName1String;
@@ -6142,7 +6141,7 @@ void JNICALL ScriptMethodsObjectInfoNamespace::openCustomizationWindow(JNIEnv *e
 
 	NetworkId const objectId(object);
 
-	if (playerObject->isPlayerControlled() && playerObject->getController() != NULL)
+	if (playerObject->isPlayerControlled() && playerObject->getController() != nullptr)
 	{		
 		playerObject->getController()->appendMessage(
 			static_cast<int>(CM_openCustomizationWindow),
@@ -6253,7 +6252,7 @@ jfloat JNICALL ScriptMethodsObjectInfoNamespace::getDefaultScaleFromSharedObject
 
 jboolean JNICALL ScriptMethodsObjectInfoNamespace::setOverrideMapColor(JNIEnv * env, jobject self, jlong object, jint r, jint g, jint b)
 {
-	TangibleObject * tangible = NULL;
+	TangibleObject * tangible = nullptr;
 	if (!JavaLibrary::getObject(object, tangible))
 		return JNI_FALSE;
 
@@ -6269,7 +6268,7 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::setOverrideMapColor(JNIEnv * 
 
 jboolean JNICALL ScriptMethodsObjectInfoNamespace::clearOverrideMapColor(JNIEnv * env, jobject self, jlong object)
 {
-	TangibleObject * tangible = NULL;
+	TangibleObject * tangible = nullptr;
 	if (!JavaLibrary::getObject(object, tangible))
 		return JNI_FALSE;
 
@@ -6285,14 +6284,14 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::clearOverrideMapColor(JNIEnv 
 
 jobject JNICALL ScriptMethodsObjectInfoNamespace::getOverrideMapColor(JNIEnv * env, jobject self, jlong object)
 {
-	TangibleObject * tangible = NULL;
+	TangibleObject * tangible = nullptr;
 	if (!JavaLibrary::getObject(object, tangible))
-		return NULL;
+		return nullptr;
 
 	uint8 r, g, b;
 	if(!tangible->getOverrideMapColor(r,g,b))
 	{
-		return NULL;
+		return nullptr;
 	}
 
 	return createColor(r, g, b, 255)->getReturnValue();
@@ -6302,7 +6301,7 @@ jobject JNICALL ScriptMethodsObjectInfoNamespace::getOverrideMapColor(JNIEnv * e
 
 jboolean JNICALL ScriptMethodsObjectInfoNamespace::setForceShowHam(JNIEnv * env, jobject self, jlong object, jboolean show)
 {
-	CreatureObject * creature = NULL;
+	CreatureObject * creature = nullptr;
 	if (!JavaLibrary::getObject(object, creature))
 		return JNI_FALSE;
 
@@ -6317,8 +6316,8 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::setForceShowHam(JNIEnv * env,
 jboolean JNICALL ScriptMethodsObjectInfoNamespace::isContainedByPlayerAppearanceInventory(JNIEnv *env, jobject self, jlong player, jlong item)
 {
 	UNREF(self);
-	ServerObject *itemObj = NULL;
-	CreatureObject *playerObj = NULL;
+	ServerObject *itemObj = nullptr;
+	CreatureObject *playerObj = nullptr;
 
 	if(!JavaLibrary::getObject(item, itemObj))
 	{
@@ -6348,7 +6347,7 @@ jlongArray JNICALL ScriptMethodsObjectInfoNamespace::getAllItemsFromAppearanceIn
 {
 	UNREF(self);
 
-	const CreatureObject * playerCreature = NULL;
+	const CreatureObject * playerCreature = nullptr;
 	if (!JavaLibrary::getObject(player, playerCreature))
 		return 0;
 
@@ -6356,11 +6355,11 @@ jlongArray JNICALL ScriptMethodsObjectInfoNamespace::getAllItemsFromAppearanceIn
 
 	// go through the player's appearance inventory
 	const ServerObject * appearanceInventoryObject = playerCreature->getAppearanceInventory();
-	if (appearanceInventoryObject != NULL)
+	if (appearanceInventoryObject != nullptr)
 	{
 		const SlottedContainer * appearanceInvContainer =
 			ContainerInterface::getSlottedContainer(*appearanceInventoryObject);
-		if (appearanceInvContainer != NULL)
+		if (appearanceInvContainer != nullptr)
 		{
 			getGoodItemsFromContainer(*appearanceInvContainer, objectIds);
 		}
@@ -6395,7 +6394,7 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::isAPlayerAppearanceInventoryC
 {
 	UNREF(self);
 
-	const ServerObject * containerObj = NULL;
+	const ServerObject * containerObj = nullptr;
 	if (!JavaLibrary::getObject(container, containerObj))
 		return JNI_FALSE;
 
@@ -6412,7 +6411,7 @@ jlongArray JNICALL ScriptMethodsObjectInfoNamespace::getAllWornItems(JNIEnv *env
 {
 	UNREF(self);
 
-	const CreatureObject * playerCreature = NULL;
+	const CreatureObject * playerCreature = nullptr;
 	if (!JavaLibrary::getObject(player, playerCreature))
 		return 0;
 
@@ -6428,7 +6427,7 @@ jlongArray JNICALL ScriptMethodsObjectInfoNamespace::getAllWornItems(JNIEnv *env
 			DEBUG_WARNING(true, ("JavaLibrary: getAllWornItems - Tried to get all the worn items(INCLUDING appearance items) from player [%s], but this player has no appearance inventory container.",
 				playerCreature->getNetworkId().getValueString().c_str()));
 			
-			return NULL;
+			return nullptr;
 		}
 
 		for (ContainerConstIterator i(appearanceInventory->begin()); i != appearanceInventory->end(); ++i)
@@ -6436,7 +6435,7 @@ jlongArray JNICALL ScriptMethodsObjectInfoNamespace::getAllWornItems(JNIEnv *env
 			const CachedNetworkId & itemId = *i;
 			const ServerObject * item = safe_cast<const ServerObject *>(
 				itemId.getObject());
-			if (item != NULL && item->asTangibleObject() != NULL &&
+			if (item != nullptr && item->asTangibleObject() != nullptr &&
 				item->asTangibleObject()->isVisible())
 			{
 
@@ -6459,7 +6458,7 @@ jlongArray JNICALL ScriptMethodsObjectInfoNamespace::getAllWornItems(JNIEnv *env
 		DEBUG_WARNING(true, ("JavaLibrary: getAllWornItems - Tried to get all the worn items from player [%s], but this player has no creature slot container.",
 			playerCreature->getNetworkId().getValueString().c_str()));
 
-		return NULL;
+		return nullptr;
 	}
 
 	for (ContainerConstIterator i(inventory->begin()); i != inventory->end(); ++i)
@@ -6467,7 +6466,7 @@ jlongArray JNICALL ScriptMethodsObjectInfoNamespace::getAllWornItems(JNIEnv *env
 		const CachedNetworkId & itemId = *i;
 		const ServerObject * item = safe_cast<const ServerObject *>(
 			itemId.getObject());
-		if (item != NULL && item->asTangibleObject() != NULL &&
+		if (item != nullptr && item->asTangibleObject() != nullptr &&
 			item->asTangibleObject()->isVisible())
 		{
 			const SlottedContainmentProperty * slottedContainment = ContainerInterface::getSlottedContainmentProperty(*item); // Get the slot property of our item.
@@ -6507,7 +6506,7 @@ jlongArray JNICALL ScriptMethodsObjectInfoNamespace::getAllWornItems(JNIEnv *env
 			return returnedIds->getReturnValue();
 	}
 
-	return NULL;
+	return nullptr;
 
 }
 
@@ -6518,7 +6517,7 @@ jlong JNICALL ScriptMethodsObjectInfoNamespace::getAppearanceInventory(JNIEnv *e
 	UNREF(env);
 	UNREF(self);
 
-	const CreatureObject * playerCreature = NULL;
+	const CreatureObject * playerCreature = nullptr;
 	if (!JavaLibrary::getObject(player, playerCreature))
 		return 0;
 
@@ -6536,11 +6535,11 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::setDecoyOrigin(JNIEnv *env, j
 	UNREF(env);
 	UNREF(self);
 
-	CreatureObject * decoyCreature = NULL;
+	CreatureObject * decoyCreature = nullptr;
 	if (!JavaLibrary::getObject(creature, decoyCreature))
 		return JNI_FALSE;
 	
-	const CreatureObject * originCreature = NULL;
+	const CreatureObject * originCreature = nullptr;
 	if (!JavaLibrary::getObject(origin, originCreature))
 		return JNI_FALSE;
 
@@ -6561,7 +6560,7 @@ jlong JNICALL ScriptMethodsObjectInfoNamespace::getDecoyOrigin(JNIEnv *env, jobj
 	UNREF(env);
 	UNREF(self);
 
-	CreatureObject * decoyCreature = NULL;
+	CreatureObject * decoyCreature = nullptr;
 	if (!JavaLibrary::getObject(creature, decoyCreature))
 		return JNI_FALSE;
 
@@ -6578,7 +6577,7 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::openRatingWindow(JNIEnv * env
 	UNREF(env);
 	UNREF(self);
 
-	CreatureObject * playerCreature = NULL;
+	CreatureObject * playerCreature = nullptr;
 	if (!JavaLibrary::getObject(player, playerCreature))
 	{
 		DEBUG_WARNING(true, ("OpenRatingWindow: Failed to get valid creature object with OID %d", player));
@@ -6603,7 +6602,7 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::openRatingWindow(JNIEnv * env
 		return JNI_FALSE;
 	}
 
-	if (playerCreature->isPlayerControlled() && playerCreature->getController() != NULL)
+	if (playerCreature->isPlayerControlled() && playerCreature->getController() != nullptr)
 	{		
 		playerCreature->getController()->appendMessage(
 			static_cast<int>(CM_openRatingWindow),
@@ -6626,13 +6625,13 @@ void JNICALL ScriptMethodsObjectInfoNamespace::openExamineWindow(JNIEnv * env, j
 	UNREF(env);
 	UNREF(self);
 
-	CreatureObject const * playerCreature = NULL;
+	CreatureObject const * playerCreature = nullptr;
 	if (!JavaLibrary::getObject(player, playerCreature) || !playerCreature || !playerCreature->getClient())
 	{
 		return;
 	}
 
-	ServerObject const * itemObject = NULL;
+	ServerObject const * itemObject = nullptr;
 	if (!JavaLibrary::getObject(item, itemObject) || !itemObject)
 	{
 		return;

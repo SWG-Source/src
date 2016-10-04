@@ -17,8 +17,7 @@
 #include "sharedDebug/DataLint.h"
 #include "sharedFile/Iff.h"
 #include "sharedTemplateDefinition/ObjectTemplate.h"
-#include <algorithm>
-#include <cstdio>
+#include <stdio.h>
 
 
 
@@ -118,9 +117,9 @@ StringParam * SharedBuildingObjectTemplate::getStringParam(const char *name, boo
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getStringParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_terrainModificationFileName;
 		}
@@ -132,9 +131,9 @@ StringParam * SharedBuildingObjectTemplate::getStringParam(const char *name, boo
 		{
 			if (deepCheck && !isParamLoaded(name, false, 0))
 			{
-				if (getBaseTemplate() != NULL)
+				if (getBaseTemplate() != nullptr)
 					return getBaseTemplate()->getStringParam(name, deepCheck, index);
-				return NULL;
+				return nullptr;
 			}
 			return &m_interiorLayoutFileName;
 		}
@@ -142,7 +141,7 @@ StringParam * SharedBuildingObjectTemplate::getStringParam(const char *name, boo
 	}
 	else
 		return SharedTangibleObjectTemplate::getStringParam(name, deepCheck, index);
-	return NULL;
+	return nullptr;
 }	//SharedBuildingObjectTemplate::getStringParam
 
 StringIdParam * SharedBuildingObjectTemplate::getStringIdParam(const char *name, bool deepCheck, int index)
@@ -225,12 +224,12 @@ char paramName[MAX_NAME_SIZE];
 		file.read_string(baseFilename);
 		file.exitChunk();
 		const ObjectTemplate *base = ObjectTemplateList::fetch(baseFilename);
-		DEBUG_WARNING(base == NULL, ("was unable to load base template %s", baseFilename.c_str()));
-		if (m_baseData == base && base != NULL)
+		DEBUG_WARNING(base == nullptr, ("was unable to load base template %s", baseFilename.c_str()));
+		if (m_baseData == base && base != nullptr)
 			base->releaseReference();
 		else
 		{
-			if (m_baseData != NULL)
+			if (m_baseData != nullptr)
 				m_baseData->releaseReference();
 			m_baseData = base;
 		}

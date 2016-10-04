@@ -47,11 +47,6 @@ public:
 	virtual void                         deleteLinksTo(const CustomizationData &customizationData);
 
 	virtual bool                         isLocalDirectory() const;
-#if 0	
-	virtual std::string                  writeLocalDirectoryToString() const;
-
-	virtual void                         loadLocalDirectoryFromString(int version, const std::string &string, int startIndex);
-#endif
 	
 private:
 

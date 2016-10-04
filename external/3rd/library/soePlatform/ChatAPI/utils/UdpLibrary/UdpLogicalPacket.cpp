@@ -31,7 +31,7 @@ SimpleLogicalPacket::SimpleLogicalPacket(const void *data, int dataLen)
 {
     mDataLen = dataLen;
     mData = new udp_uchar[mDataLen];
-    if (data != NULL)
+    if (data != nullptr)
         memcpy(mData, data, mDataLen);
 }
 
@@ -66,7 +66,7 @@ void SimpleLogicalPacket::SetDataLen(int len)
 GroupLogicalPacket::GroupLogicalPacket() : LogicalPacket()
 {
     mDataLen = 0;
-    mData = NULL;
+    mData = nullptr;
 }
 
 GroupLogicalPacket::~GroupLogicalPacket()
@@ -76,13 +76,13 @@ GroupLogicalPacket::~GroupLogicalPacket()
 
 void GroupLogicalPacket::AddPacket(const LogicalPacket *packet)
 {
-    assert(packet != NULL);
+    assert(packet != nullptr);
     AddPacketInternal(packet->GetDataPtr(), packet->GetDataLen(), packet->IsInternalPacket());
 }
 
 void GroupLogicalPacket::AddPacket(const void *data, int dataLen)
 {
-    assert(data != NULL);
+    assert(data != nullptr);
     assert(dataLen >= 0);
     AddPacketInternal(data, dataLen, false);
 }
@@ -152,10 +152,10 @@ PooledLogicalPacket::PooledLogicalPacket(UdpManager *manager, int len)
 
 PooledLogicalPacket::~PooledLogicalPacket()
 {
-    if (mUdpManager != NULL)
+    if (mUdpManager != nullptr)
     {
         mUdpManager->PoolDestroyed(this);
-        mUdpManager = NULL;
+        mUdpManager = nullptr;
     }
 
     delete[] mData;
@@ -168,7 +168,7 @@ void PooledLogicalPacket::AddRef() const
 
 void PooledLogicalPacket::Release() const
 {
-    if (GetRefCount() == 1 && mUdpManager != NULL)
+    if (GetRefCount() == 1 && mUdpManager != nullptr)
     {
             // the PoolReturn function steals our reference (ie, we don't release, they don't addref), this is for thread safety reasons
         mUdpManager->PoolReturn(const_cast<PooledLogicalPacket *>(this));
@@ -208,9 +208,9 @@ void PooledLogicalPacket::SetDataLen(int len)
 void PooledLogicalPacket::SetData(const void *data, int dataLen, const void *data2, int dataLen2)
 {
     mDataLen = dataLen + dataLen2;
-    if (data != NULL)
+    if (data != nullptr)
         memcpy(mData, data, dataLen);
-    if (data2 != NULL)
+    if (data2 != nullptr)
         memcpy(mData + dataLen, data2, dataLen2);
 }
 

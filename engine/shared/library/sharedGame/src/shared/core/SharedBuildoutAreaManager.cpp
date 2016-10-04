@@ -223,7 +223,7 @@ void SharedBuildoutAreaManager::install()
 			int const areaCount = areaListTable.getNumRows();
 			for (int areaRow = 0; areaRow < areaCount; ++areaRow)
 			{
-				areasForScene.push_back(BuildoutArea());
+				areasForScene.emplace_back(BuildoutArea());
 				BuildoutArea &buildoutArea = areasForScene.back();
 				buildoutArea.areaIndex = i*100+areaRow;
 				buildoutArea.areaName = areaListTable.getStringValue("area", areaRow);
@@ -321,7 +321,7 @@ std::string SharedBuildoutAreaManager::getBuildoutNameForPosition(std::string co
 {
 	BuildoutArea const * const ba = findBuildoutAreaAtPosition(sceneName, location_w.x, location_w.z, ignoreInternal, ignoreNonActiveEvents);
 	
-	if (NULL != ba)
+	if (nullptr != ba)
 		return sceneName + cms_sceneAndAreaDelimeter + ba->areaName;
 
 	return sceneName;
@@ -537,7 +537,7 @@ SharedBuildoutAreaManager::BuildoutAreaVector const * SharedBuildoutAreaManager:
 	{
 		return &it->second;
 	}
-	return NULL;
+	return nullptr;
 }
 
 //----------------------------------------------------------------------
@@ -546,8 +546,8 @@ BuildoutArea const * SharedBuildoutAreaManager::findBuildoutAreaAtPosition(std::
 {
 	BuildoutAreaVector const * const bav = findBuildoutAreasForScene(sceneId);
 
-	if (NULL == bav)
-		return NULL;
+	if (nullptr == bav)
+		return nullptr;
 
 	for (BuildoutAreaVector::const_iterator it = bav->begin(); it != bav->end(); ++it)
 	{
@@ -567,7 +567,7 @@ BuildoutArea const * SharedBuildoutAreaManager::findBuildoutAreaAtPosition(std::
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 //----------------------------------------------------------------------
 
@@ -579,11 +579,11 @@ BuildoutArea const * SharedBuildoutAreaManager::findBuildoutAreaAtPosition(float
 
 		if (ignoreInternal && buildoutArea.internalBuildoutArea)
 		{
-			return NULL;
+			return nullptr;
 		}
 
 		if(ignoreNonActiveEvents && !buildoutArea.requiredEventName.empty())
-			return NULL;
+			return nullptr;
 
 		if (buildoutArea.isLocationInside(x, z))
 		{
@@ -591,7 +591,7 @@ BuildoutArea const * SharedBuildoutAreaManager::findBuildoutAreaAtPosition(float
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 //----------------------------------------------------------------------

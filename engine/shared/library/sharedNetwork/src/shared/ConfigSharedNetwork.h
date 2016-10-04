@@ -67,6 +67,7 @@ public:
 	static int   getNetworkHandlerDispatchThrottleTimeMilliseconds();
 	static int   getNetworkHandlerDispatchQueueSize();
 	static int   getMaxTCPRetries();
+	static int   getMaxConnectionsPerIP();
 	static bool  getLogSendingTooMuchData();
 };
 

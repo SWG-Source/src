@@ -224,7 +224,7 @@ void JNICALL ScriptMethodsInstallationNamespace::displayStructurePermissionData(
 	UNREF(self);
 
 	//get the player id from player
-	CreatureObject* creatureObject = NULL;
+	CreatureObject* creatureObject = nullptr;
 	if (!JavaLibrary::getObject(player, creatureObject))
 		return;
 
@@ -290,7 +290,7 @@ jfloat JNICALL ScriptMethodsInstallationNamespace::getPowerValue(JNIEnv *env, jo
 	UNREF(self);
 
 	//get the player id from player
-	const InstallationObject * installation = NULL;
+	const InstallationObject * installation = nullptr;
 	if (!JavaLibrary::getObject(target, installation))
 		return 0;
 
@@ -314,7 +314,7 @@ jboolean JNICALL ScriptMethodsInstallationNamespace::setPowerValue(JNIEnv *env, 
 	UNREF(self);
 
 	//get the player id from player
-	InstallationObject * installation = NULL;
+	InstallationObject * installation = nullptr;
 	if (!JavaLibrary::getObject(target, installation))
 		return JNI_FALSE;
 
@@ -340,7 +340,7 @@ jboolean JNICALL ScriptMethodsInstallationNamespace::incrementPowerValue(JNIEnv 
 	UNREF(self);
 
 	//get the player id from player
-	InstallationObject * installation = NULL;
+	InstallationObject * installation = nullptr;
 	if (!JavaLibrary::getObject(target, installation))
 		return JNI_FALSE;
 
@@ -365,7 +365,7 @@ jfloat JNICALL ScriptMethodsInstallationNamespace::getPowerRate(JNIEnv *env, job
 	UNREF(self);
 
 	//get the player id from player
-	const InstallationObject * installation = NULL;
+	const InstallationObject * installation = nullptr;
 	if (!JavaLibrary::getObject(target, installation))
 		return 0;
 
@@ -389,7 +389,7 @@ jboolean JNICALL ScriptMethodsInstallationNamespace::setPowerRate(JNIEnv *env, j
 	UNREF(self);
 
 	//get the player id from player
-	InstallationObject * installation = NULL;
+	InstallationObject * installation = nullptr;
 	if (!JavaLibrary::getObject(target, installation))
 		return JNI_FALSE;
 

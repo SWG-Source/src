@@ -271,7 +271,7 @@ static YY_BUFFER_STATE * yy_buffer_stack = 0; /**< Stack as an array. */
  */
 #define YY_CURRENT_BUFFER ( (yy_buffer_stack) \
                           ? (yy_buffer_stack)[(yy_buffer_stack_top)] \
-                          : NULL)
+                          : nullptr)
 
 /* Same as previous macro, but useful when we know that the buffer stack is not
  * NULL or when we need an lvalue. For internal use only.
@@ -5779,7 +5779,7 @@ extern int isatty (int );
  */
 void yypush_buffer_state (YY_BUFFER_STATE new_buffer )
 {
-    	if (new_buffer == NULL)
+    	if (new_buffer == nullptr)
 		return;
 
 	yyensure_buffer_stack();
@@ -5813,7 +5813,7 @@ void yypop_buffer_state (void)
 		return;
 
 	yy_delete_buffer(YY_CURRENT_BUFFER );
-	YY_CURRENT_BUFFER_LVALUE = NULL;
+	YY_CURRENT_BUFFER_LVALUE = nullptr;
 	if ((yy_buffer_stack_top) > 0)
 		--(yy_buffer_stack_top);
 
@@ -6097,13 +6097,13 @@ int yylex_destroy  (void)
     /* Pop the buffer stack, destroying each element. */
 	while(YY_CURRENT_BUFFER){
 		yy_delete_buffer(YY_CURRENT_BUFFER  );
-		YY_CURRENT_BUFFER_LVALUE = NULL;
+		YY_CURRENT_BUFFER_LVALUE = nullptr;
 		yypop_buffer_state();
 	}
 
 	/* Destroy the stack itself. */
 	yyfree((yy_buffer_stack) );
-	(yy_buffer_stack) = NULL;
+	(yy_buffer_stack) = nullptr;
 
     /* Reset the globals. This is important in a non-reentrant scanner so the next time
      * yylex() is called, initialization will occur. */

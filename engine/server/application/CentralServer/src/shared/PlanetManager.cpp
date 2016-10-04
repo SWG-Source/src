@@ -17,6 +17,8 @@
 #include "serverNetworkMessages/TaskSpawnProcess.h"
 #include "sharedNetwork/NetworkHandler.h"
 
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 // ======================================================================
 
 PlanetManager::PlanetRec::PlanetRec() :
@@ -85,48 +87,55 @@ void PlanetManager::addGameServerForScene(const std::string &sceneId, GameServer
 
 void PlanetManager::receiveMessage(const MessageDispatch::Emitter &source , const MessageDispatch::MessageBase & message)
 {
-	if(message.isType("PlanetObjectIdMessage"))  //@todo:  Is this message actually used anymore?
-	{
-		Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-		PlanetObjectIdMessage msg(ri);
-
-		// Message identifies the PlanetObject that belongs to a particular planet
-		ServerListType::iterator i=m_servers.find(msg.getSceneId());
-		if (i==m_servers.end())
+	const uint32 messageType = message.getType();
+	
+	switch (messageType) {
+		case constcrc("PlanetObjectIdMessage") :  //@todo:  Is this message actually used anymore?
 		{
-			WARNING_STRICT_FATAL(true,("Got unexpected PlanetObjectIdMessage for %s.\n",msg.getSceneId().c_str()));
-			return;
-		}
+			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			PlanetObjectIdMessage msg(ri);
 
-		(*i).second.m_planetObjectId=msg.getPlanetObject();
-
-		// Not needed because all UniverseObjects are proxied.
-//		CentralServer::getInstance().proxyOnAllServersForScene(msg.getPlanetObject(),msg.getSceneId());
-	}
-	else if(message.isType("PlanetServerConnectionClosed"))
-	{
-		const PlanetServerConnection * c = static_cast<const PlanetServerConnection *>(&source); //lint !e826 Suspiscious pointer-to-pointer conversion (area too small)
-		ServerListType::iterator i = m_servers.begin();
-		for (; i != m_servers.end(); ++i)
-		{
-			if (i->second.m_connection == c)
+			// Message identifies the PlanetObject that belongs to a particular planet
+			ServerListType::iterator i=m_servers.find(msg.getSceneId());
+			if (i==m_servers.end())
 			{
-				m_servers.erase(i);
-				break;
+				WARNING_STRICT_FATAL(true,("Got unexpected PlanetObjectIdMessage for %s.\n",msg.getSceneId().c_str()));
+				return;
 			}
-		}
 
-		if (ConfigCentralServer::getRequestDbSaveOnPlanetServerCrash())
+			(*i).second.m_planetObjectId=msg.getPlanetObject();
+
+			// Not needed because all UniverseObjects are proxied.
+			// CentralServer::getInstance().proxyOnAllServersForScene(msg.getPlanetObject(),msg.getSceneId());
+			break;
+		}
+		case constcrc("PlanetServerConnectionClosed") :
 		{
-			GameNetworkMessage const msg("CentralRequestSave");
-			CentralServer::getInstance().sendToDBProcess(msg, true);
-		}
+			const PlanetServerConnection * c = static_cast<const PlanetServerConnection *>(&source); //lint !e826 Suspiscious pointer-to-pointer conversion (area too small)
+			ServerListType::iterator i = m_servers.begin();
+			for (; i != m_servers.end(); ++i)
+			{
+				if (i->second.m_connection == c)
+				{
+					m_servers.erase(i);
+					break;
+				}
+			}
 
-		CentralServer::getInstance().startPlanetServer(CentralServer::getInstance().getHostForScene(c->getSceneId()), c->getSceneId(), ConfigCentralServer::getPlanetServerRestartDelayTimeSeconds());
-	}
-	else
-	{
-		WARNING_STRICT_FATAL(true,("Planet Manager got unexpected message.\n"));
+			if (ConfigCentralServer::getRequestDbSaveOnPlanetServerCrash())
+			{
+				GameNetworkMessage const msg("CentralRequestSave");
+				CentralServer::getInstance().sendToDBProcess(msg, true);
+			}
+
+			CentralServer::getInstance().startPlanetServer(CentralServer::getInstance().getHostForScene(c->getSceneId()), c->getSceneId(), ConfigCentralServer::getPlanetServerRestartDelayTimeSeconds());
+			break;
+		}
+		default :
+		{
+			WARNING_STRICT_FATAL(true,("Planet Manager got unexpected message.\n"));
+			break;
+		}
 	}
 }
 
@@ -138,7 +147,7 @@ PlanetServerConnection *PlanetManager::getPlanetServerForScene(const std::string
 	if (i!=instance().m_servers.end())
 		return (*i).second.m_connection;
 	else
-		return NULL;
+		return nullptr;
 }
 
 // ----------------------------------------------------------------------

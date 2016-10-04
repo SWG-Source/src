@@ -75,7 +75,6 @@ private:
         TcpConnection	*m_con;
 		std::string		m_host;
 		short			m_port;
-		unsigned		m_lastTrack;
 		eConState		m_conState;
 		time_t			m_conTimeout;
 		unsigned		m_reconnectTimeout;
