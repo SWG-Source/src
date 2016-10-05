@@ -1175,9 +1175,10 @@ void LoginServer::run(void)
 
 	// load authentication data and bind the monitor to the port
 	const int port = ConfigLoginServer::getMetricsListenerPort();
+	CMonitorAPI *mon = nullptr;
 
 	if (port) {
-		CMonitorAPI *mon = new CMonitorAPI("metricsAuthentication.cfg", ConfigLoginServer::getMetricsListenerPort());
+		mon = new CMonitorAPI("metricsAuthentication.cfg", ConfigLoginServer::getMetricsListenerPort());
 		getInstance().m_soeMonitor = mon;
 		const char *masterChannel = "Population";
 		mon->add(masterChannel, WORLD_COUNT_CHANNEL);
