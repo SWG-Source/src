@@ -14,7 +14,11 @@
 #include "ConsoleManager.h"
 #include "CSToolConnection.h"
 #include "DatabaseConnection.h"
+
+#ifdef _DEBUG
 #include "LoginServerRemoteDebugSetup.h"
+#endif
+
 #include "MonAPI2/MonitorAPI.h"
 #include "PingConnection.h"
 #include "PurgeManager.h"
@@ -250,21 +254,14 @@ ClientConnection* LoginServer::getUnvalidatedClient(int clientId)
 
 void LoginServer::removeClient(int clientId)
 {
-    if (clientId) // yeah why bother if it's null?
+    std::map<int, ClientConnection*>::iterator i = m_clientMap.find(clientId);
+    if (i != m_clientMap.end())
     {
-        std::map<int, ClientConnection*>::iterator i = m_clientMap.find(clientId);
-        if (i != m_clientMap.end())
+        if (i->second->getIsValidated())
         {
-            if (i->second->getIsValidated())
-            {
-                IGNORE_RETURN(m_validatedClientMap.erase(i->second->getStationId()));
-            }
-            IGNORE_RETURN(m_clientMap.erase(clientId));
+            IGNORE_RETURN(m_validatedClientMap.erase(i->second->getStationId()));
         }
-    }
-    else
-    {
-        DEBUG_WARNING(true, ("Tried to remove a client with client id == 0 (possibly DoS attack?)"));
+        IGNORE_RETURN(m_clientMap.erase(clientId));
     }
 }
 
@@ -1160,7 +1157,11 @@ void LoginServer::validateAccountForTransfer(const TransferRequestMoveValidation
 void LoginServer::run(void)
 {
 	NetworkHandler::install();
+
+#ifdef _DEBUG
 	LoginServerRemoteDebugSetup::install();
+#endif
+
 	DatabaseConnection::getInstance().connect();
 	DatabaseConnection::getInstance().requestClusterList();
 	SetupSharedLog::install("LoginServer");
@@ -1246,7 +1247,10 @@ void LoginServer::run(void)
 
 	ConsoleManager::remove();
 	DatabaseConnection::getInstance().disconnect();
+
+#ifdef _DEBUG
 	LoginServerRemoteDebugSetup::remove();
+#endif
 
 	SetupSharedLog::remove();
 	NetworkHandler::remove();
