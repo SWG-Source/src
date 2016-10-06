@@ -1022,7 +1022,7 @@ void UdpManager::ProcessRawPacket(const PacketHistoryEntry *e)
 {
 	if (e->mBuffer[0] == 0 && e->mBuffer[1] == UdpConnection::cUdpPacketPortAlive)
 		return;		// port-alive packets are not supposed to reach the destination machine, but on the odd chance they do, pretend like they never existed
-	
+
 	UdpConnection *con = AddressGetConnection(e->mIp, e->mPort);
 
 	if (con == nullptr)

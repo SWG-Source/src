@@ -1078,7 +1078,7 @@ class UdpConnection : public PriorityQueueMember, public AddressHashTableMember,
 							  , cDisconnectReasonNewConnectionAttempt, cDisconnectReasonConnectionRefused
 							  , cDisconnectReasonMutualConnectError, cDisconnectReasonConnectingToSelf
 							  , cDisconnectReasonReliableOverflow
-							  , cDisconnectReasonCount, cDisconnectReasonDosAttack };
+							  , cDisconnectReasonDosAttack, cDisconnectReasonCount };
 		
 			// standard AddRef/Release scheme
 		void AddRef();
