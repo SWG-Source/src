@@ -1,4 +1,5 @@
 *.geany
+PVS*
 *.cfg
 *.cmd
 .project
