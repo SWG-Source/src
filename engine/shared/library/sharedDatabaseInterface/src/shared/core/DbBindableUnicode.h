@@ -192,12 +192,20 @@ namespace DB
 	template<int S>
 	void BindableUnicode<S>::setValue(const Unicode::String &buffer)
 	{
-		FATAL(buffer.size()>S,("Attempt to save a Unicode::String \"%s\"that is too long to the database.", Unicode::wideToNarrow(buffer).c_str()));
-		
-		std::string str;
-		str = Unicode::wideToUTF8(buffer, str);
-		indicator = (str.size()>S ? S : str.size());
-		memcpy(m_value, str.c_str(),indicator);
+                std::string str;
+                str = Unicode::wideToUTF8(buffer, str);
+
+                size_t bufsize = str.size();
+
+                if (bufsize >= S) {
+                        WARNING(true, ("Attmpted to insert %s which is too long. Truncating.", buffer.c_str()));
+                        indicator = S;
+			memcpy(m_value, str.c_str(), indicator-1);
+                } else {
+                        indicator = bufsize;
+			memcpy(m_value, str.c_str(), indicator);
+                }	
+	
 		m_value[indicator] = '\0';
 	}
 
