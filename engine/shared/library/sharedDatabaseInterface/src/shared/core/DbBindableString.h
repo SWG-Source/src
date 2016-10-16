@@ -254,12 +254,11 @@ namespace DB
 		if (bufsize >= S) {
 			WARNING(true, ("Attmpted to insert %s which is too long. Truncating.", buffer));
 			indicator = S;
-			memcpy(m_value, buffer, indicator-1);
 		} else {
 			indicator = bufsize;
-			memcpy(m_value, buffer, indicator);
 		}
 
+		memcpy(m_value, buffer, indicator);
                 m_value[indicator] = '\0';
 	}
 
@@ -274,10 +273,10 @@ namespace DB
 			memcpy(m_value, Unicode::wideToNarrow(buffer).c_str(), indicator-1);
                 } else {
                         indicator = bufsize;
-			memcpy(m_value, Unicode::wideToNarrow(buffer).c_str(), indicator);
                 }
 
-                m_value[indicator] = '\0';
+        	memcpy(m_value, Unicode::wideToNarrow(buffer).c_str(), indicator);
+		m_value[indicator] = '\0';
 	}
 
 	template<int S>
@@ -288,12 +287,12 @@ namespace DB
                 if (bufsize >= S) {
                         WARNING(true, ("Attmpted to insert %s which is too long. Truncating.", buffer.c_str()));
                         indicator = S;
-			memcpy(m_value, buffer.c_str(), indicator-1);
                 } else {
                         indicator = bufsize;
 			memcpy(m_value, buffer.c_str(), indicator);
                 }
 
+		memcpy(m_value, buffer.c_str(), indicator);
                 m_value[indicator] = '\0';
 	}
 
