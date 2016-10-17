@@ -200,12 +200,11 @@ namespace DB
                 if (bufsize >= S) {
                         WARNING(true, ("Attmpted to insert %s which is too long. Truncating.", buffer.c_str()));
                         indicator = S;
-			memcpy(m_value, str.c_str(), indicator-1);
                 } else {
                         indicator = bufsize;
-			memcpy(m_value, str.c_str(), indicator);
                 }	
-	
+
+		memcpy(m_value, str.c_str(), indicator);	
 		m_value[indicator] = '\0';
 	}
 
