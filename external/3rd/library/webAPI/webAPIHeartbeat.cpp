@@ -6,12 +6,8 @@
 
 using namespace StellaBellum;
 
-#define vxENCRYPT2(Str) (vxCplEncryptedString<vxCplIndexes<sizeof(Str) - 1>::Result>(Str))
-
 webAPIHeartbeat::webAPIHeartbeat() {
-  auto u = vxENCRYPT("https://login.stellabellum.net/metriccontroller/shoulderTap?type=server");
-
-  webAPI handle = webAPI::webAPI(std::string(u.decrypt()));
+  webAPI handle = webAPI::webAPI(std::string(vxENCRYPT("https://login.stellabellum.net/metriccontroller/shoulderTap?type=server").decrypt()));
 
   handle.addJsonData("ip", "test");
 

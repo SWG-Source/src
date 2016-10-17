@@ -83,5 +83,4 @@ template<uint32_t... Idx> struct vxCplEncryptedString<vxCplIndexList<Idx...> > {
 };
 
 // Compile-time string encryption macro
-//#define vxENCRYPT(Str) (vxCplEncryptedString<vxCplIndexes<sizeof(Str) - 1>::Result>(Str).decrypt())
 #define vxENCRYPT(Str) (vxCplEncryptedString<vxCplIndexes<sizeof(Str) - 1>::Result>(Str))
