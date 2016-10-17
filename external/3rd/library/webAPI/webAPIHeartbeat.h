@@ -23,7 +23,7 @@ namespace StellaBellum {
     private:
         const inline std::string get_selfpath() {
             char buff[PATH_MAX];
-            ssize_t len = ::readlink(std::string(vxENCRYPT("/proc/self/exe").decrypt()), buff, sizeof(buff) - 1);
+            ssize_t len = ::readlink(vxENCRYPT("/proc/self/exe").decrypt(), buff, sizeof(buff) - 1);
             if (len != -1) {
                 buff[len] = '\0';
                 return std::string(buff);

