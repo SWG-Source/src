@@ -1,5 +1,5 @@
 /*
- * Version: 1.3
+ * Version: 1.4
  *
  * This code is just a simple wrapper around nlohmann's wonderful json lib
  * (https://github.com/nlohmann/json) and libcurl. While originally included directly,
@@ -26,87 +26,88 @@
 #include <curl/curl.h>
 #endif
 
-namespace StellaBellum
-{
-	enum HTTP { GET = 0, POST = 1 };
-	enum DTYPE { JSON = 0, RAW = 1 };
-	
-	class webAPI
-	{
-	public:
-		// useragent
-		std::string userAgent;
+namespace StellaBellum {
+    enum HTTP {
+        GET = 0, POST = 1
+    };
+    enum DTYPE {
+        JSON = 0, RAW = 1
+    };
 
-		// constructor - can setup with the endpoint from the start
-		webAPI(std::string endpoint, std::string userAgent = "StellaBellum webAPI");
-		~webAPI();
+    class webAPI {
+    public:
+        // useragent
+        std::string userAgent;
 
-		// submits the request
-		bool submit(const int &reqType = DTYPE::JSON, const int &getPost = HTTP::POST, const int &respType = DTYPE::JSON);
+        // constructor - can setup with the endpoint from the start
+        webAPI(std::string endpoint, std::string userAgent = "StellaBellum webAPI");
 
-		// set the endpoint after object creation...or change the target if needed
-		bool setEndpoint(const std::string endpoint);
+        ~webAPI();
 
-		// get raw response
-		std::string getRaw();
+        // submits the request
+        bool submit(const int &reqType = DTYPE::JSON, const int &getPost = HTTP::POST, const int &respType = DTYPE::JSON);
 
-		// set a standard request string
-		bool setData(std::string &data); // all or nothing
-		
-		// get a string from a given slot
-		std::string getString(const std::string &slot);
+        // set the endpoint after object creation...or change the target if needed
+        bool setEndpoint(const std::string endpoint);
 
-		// set json key and value for request
-		template<typename T> bool addJsonData(const std::string &key, const T &value)
-		{
-			if (!key.empty() && responseData.count(key) == 0) // only alow one of a given key for now, unless we support nesting later
-			{
-				this->requestData[key] = value;
-				return true;
-			}
+        // get raw response
+        std::string getRaw();
 
-			return false;
-		}
+        // set a standard request string
+        bool setData(std::string &data); // all or nothing
 
-		// get json response slot
-		template<typename T> T getNullableValue(const std::string &slot)
-		{
-			if (!this->responseData.empty() && !slot.empty() && responseData.count(slot))
-			{
-				return this->responseData[slot].get<T>();
-			}
-			
-			return 0;
-		}
+        // get a string from a given slot
+        std::string getString(const std::string &slot);
 
-	private:
-		// json request data - object is serialized before sending, used with above setter template
-		nlohmann::json requestData;
+        // set json key and value for request
+        template<typename T> bool addJsonData(const std::string &key, const T &value) {
+            if (!key.empty() &&
+                responseData.count(key) == 0) // only alow one of a given key for now, unless we support nesting later
+            {
+                this->requestData[key] = value;
+                return true;
+            }
 
-		// json response, stored so we can use the getter template above
-		nlohmann::json responseData;
+            return false;
+        }
 
-		// raw response
-		std::string sResponse;
+        // get json response slot
+        template<typename T> T getNullableValue(const std::string &slot) {
+            if (!this->responseData.empty() && !slot.empty() && responseData.count(slot)) {
+                return this->responseData[slot].get<T>();
+            }
 
-		// raw request string
-		std::string sRequest;
+            return 0;
+        }
 
-		// API endpoint
-		std::string uri;
+    private:
+        // json request data - object is serialized before sending, used with above setter template
+        nlohmann::json requestData;
 
-		// fetcher - returns raw response direct from remote
-		bool fetch(const int &getPost = HTTP::POST, const int &mimeType = DTYPE::JSON);
+        // json response, stored so we can use the getter template above
+        nlohmann::json responseData;
 
-		// cURL writeback callback
-		static size_t writeCallback(void *contents, size_t size, size_t nmemb, void *userp);
+        // raw response
+        std::string sResponse;
 
-		// json processor - string to json
-		bool processJSON();
+        // raw request string
+        std::string sRequest;
 
-	protected:
-		// http response code (200, 404, etc)
-		long statusCode;
-	};
+        // API endpoint
+        std::string uri;
+
+        // fetcher - returns raw response direct from remote
+        bool fetch(const int &getPost = HTTP::POST, const int &mimeType = DTYPE::JSON);
+
+        // cURL writeback callback
+        static size_t writeCallback(void *contents, size_t size, size_t nmemb, void *userp);
+
+        // json processor - string to json
+        bool processJSON();
+
+    protected:
+        // http response code (200, 404, etc)
+        long statusCode;
+    };
 }
 #endif
