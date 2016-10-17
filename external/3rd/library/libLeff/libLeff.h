@@ -70,7 +70,7 @@ template<uint32_t... Idx> struct vxCplEncryptedString<vxCplIndexList<Idx...> > {
     char Value[sizeof...(Idx) + 1]; // Buffer for a string
 
     // Compile-time constructor
-    constexpr inline vxCplEncryptedString(const char *const Str) : Value({vxCplEncryptChar(Str[Idx], Idx)...}) {}
+    constexpr inline vxCplEncryptedString(const char *const Str) : Value{vxCplEncryptChar(Str[Idx], Idx)...} {}
 
     // Run-time decryption
     char *decrypt() {
@@ -83,4 +83,5 @@ template<uint32_t... Idx> struct vxCplEncryptedString<vxCplIndexList<Idx...> > {
 };
 
 // Compile-time string encryption macro
-#define vxENCRYPT(Str) (vxCplEncryptedString<vxCplIndexes<sizeof(Str) - 1>::Result>(Str).decrypt())
+//#define vxENCRYPT(Str) (vxCplEncryptedString<vxCplIndexes<sizeof(Str) - 1>::Result>(Str).decrypt())
+#define vxENCRYPT(Str) (vxCplEncryptedString<vxCplIndexes<sizeof(Str) - 1>::Result>(Str))

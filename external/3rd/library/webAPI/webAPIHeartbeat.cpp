@@ -6,16 +6,16 @@
 
 using namespace StellaBellum;
 
-webAPIHeartbeat:webAPIHeartbeat() {
-  vxCplEncryptedString u = vxENCRYPT("https://login.stellabellum.net/metriccontroller/shoulderTap?type=server");
+#define vxENCRYPT2(Str) (vxCplEncryptedString<vxCplIndexes<sizeof(Str) - 1>::Result>(Str))
 
-  webAPI handle = webAPI::webAPI(u.decrypt());
+webAPIHeartbeat::webAPIHeartbeat() {
+  auto u = vxENCRYPT("https://login.stellabellum.net/metriccontroller/shoulderTap?type=server");
+
+  webAPI handle = webAPI::webAPI(std::string(u.decrypt()));
 
   handle.addJsonData("ip", "test");
 
-  bool result = fetch.submit(); // data is stored as a class member
+  bool result = handle.submit(); // data is stored as a class member
 
   // do stuff
-
-  delete handle;
 };
