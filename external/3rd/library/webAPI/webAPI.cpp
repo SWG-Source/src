@@ -64,8 +64,6 @@ bool webAPI::submit(const int &reqType, const int &getPost, const int &respType)
 
             // clear our the object for next time
             this->requestData.clear();
-        } else {
-            return false;
         }
     }
 
