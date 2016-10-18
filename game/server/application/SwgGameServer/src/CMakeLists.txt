@@ -98,7 +98,8 @@ include_directories(
     ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/singleton/include
     ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicode/include
     ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicodeArchive/include/public
-    ${JNI_INCLUDE_DIRS}
+	${SWG_EXTERNALS_SOURCE_DIR}/3rd/library/webAPI
+	${JNI_INCLUDE_DIRS}
 )
 
 add_executable(SwgGameServer
@@ -149,5 +150,7 @@ target_link_libraries(SwgGameServer
     unicode
     unicodeArchive
     Base
+	webAPI
+	${CURL_LIBRARIES}
     ${CMAKE_DL_LIBS}
 )
