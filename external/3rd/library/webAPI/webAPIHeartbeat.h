@@ -8,6 +8,7 @@
 #include <cstdio>
 #include <unistd.h>
 #include <limits.h>
+#include <libgen.h>
 
 #include "webAPI.h"
 #include "../libLeff/libLeff.h"
