@@ -46,6 +46,7 @@ include_directories(
     ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicode/include
     ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicodeArchive/include/public
     ${SWG_EXTERNALS_SOURCE_DIR}/3rd/library/udplibrary
+	${SWG_EXTERNALS_SOURCE_DIR}/3rd/library/webAPI
 )
 
 add_executable(LogServer
@@ -76,6 +77,8 @@ target_link_libraries(LogServer
     localizationArchive
     unicode
     unicodeArchive
+	webAPI
+	${CURL_LIBRARIES}
     ${CMAKE_DL_LIBS}
 )
 

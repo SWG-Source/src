@@ -18,6 +18,7 @@ namespace StellaBellum {
     class webAPIHeartbeat {
     public:
         webAPIHeartbeat();
+
     private:
         const inline std::string get_selfpath() {
             char buff[PATH_MAX];
