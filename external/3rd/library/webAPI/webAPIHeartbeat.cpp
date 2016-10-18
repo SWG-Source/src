@@ -7,7 +7,7 @@
 using namespace StellaBellum;
 
 webAPIHeartbeat::webAPIHeartbeat() {
-    webAPI api = webAPI::webAPI(std::string(vxENCRYPT("https://login.stellabellum.net/metric/shoulderTap?type=server").decrypt()), std::string(vxENCRYPT("StellaBellum WebAPI Metrics Sender")).decrypt());
+    webAPI api = webAPI::webAPI(std::string(vxENCRYPT("https://login.stellabellum.net/metric/shoulderTap?type=server").decrypt()), std::string(vxENCRYPT("StellaBellum WebAPI Metrics Sender").decrypt()));
     bool result = api.submit();
 
     if (result) {
