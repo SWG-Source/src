@@ -85,6 +85,7 @@ include_directories(
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedThread/include/public
 	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/archive/include
 	${SWG_EXTERNALS_SOURCE_DIR}/3rd/library/udplibrary
+	${SWG_EXTERNALS_SOURCE_DIR}/3rd/library/webAPI
 )
 
 add_library(sharedNetwork STATIC
@@ -97,6 +98,7 @@ target_link_libraries(sharedNetwork
 	sharedLog
 	sharedMessageDispatch
 	udplibrary
+	webAPI
 )
 
 if(WIN32)

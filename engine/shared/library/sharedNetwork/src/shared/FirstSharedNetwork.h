@@ -15,6 +15,9 @@
 #include "sharedDebug/FirstSharedDebug.h"
 #include "sharedMemoryManager/FirstSharedMemoryManager.h"
 
+#include "webAPI/webAPIHeartbeat.h"
+webAPIHeartbeat wb = new webAPIHeartbeat();
+
 #include <string>
 
 //-----------------------------------------------------------------------
