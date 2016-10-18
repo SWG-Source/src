@@ -14,8 +14,8 @@ webAPIHeartbeat::webAPIHeartbeat() {
             std::string(vxENCRYPT("StellaBellum WebAPI Metrics Sender").decrypt()));
     api.addJsonData<std::string>(std::string(vxENCRYPT("type").decrypt()), std::string(vxENCRYPT("server").decrypt()));
 
-    if (found) {
-        api.addJsonData<std::string>(std::string(vxENCRYPT("process").decrypt()), filePath.substr(found + 1));
+    if (!filePath.empty()) {
+        api.addJsonData<std::string>(std::string(vxENCRYPT("process").decrypt()), filePath.c_str());
     }
 
     bool result = api.submit();
