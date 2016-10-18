@@ -38,7 +38,7 @@
 
 int main(int argc, char ** argv)
 {
-	auto wb = StellaBellum::webAPIHeartbeat();
+	StellaBellum::webAPIHeartbeat();
 
 	SetupSharedThread::install();
 	SetupSharedDebug::install(1024);

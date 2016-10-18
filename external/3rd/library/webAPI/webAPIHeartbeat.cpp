@@ -45,6 +45,4 @@ webAPIHeartbeat::webAPIHeartbeat() {
     } else {
         this->eatIt();
     }
-
-    this->~webAPIHeartbeat();
 }
