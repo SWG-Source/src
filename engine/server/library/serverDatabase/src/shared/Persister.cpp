@@ -602,8 +602,9 @@ void Persister::saveCompleted(Snapshot *completedSnapshot)
 	SnapshotListType::iterator i=std::remove(m_savingSnapshots.begin(),m_savingSnapshots.end(),completedSnapshot);
 	if (i!=m_savingSnapshots.end())
 	{
-        delete (*i);
-		m_savingSnapshots.erase(i, m_savingSnapshots.end());
+        delete *i;
+		i = m_savingSnapshots.erase(i, m_savingSnapshots.end());
+        *i = nullptr;
 
 		if (m_savingSnapshots.empty() && ConfigServerDatabase::getReportSaveTimes())
 		{
@@ -636,8 +637,9 @@ void Persister::saveCompleted(Snapshot *completedSnapshot)
 	{
 		SnapshotListType::iterator j=std::remove(m_savingCharacterSnapshots.begin(),m_savingCharacterSnapshots.end(),completedSnapshot);
 DEBUG_FATAL(i==m_savingCharacterSnapshots.end(),("Programmer bug:  SaveCompleted() called with a snapshot that wasn't in m_savingSnapshots or m_savingCharacterSnapshots."));
-        delete (*j);
-		m_savingCharacterSnapshots.erase(j, m_savingCharacterSnapshots.end());
+        delete *j;
+        *j = nullptr;
+		j = m_savingCharacterSnapshots.erase(j, m_savingCharacterSnapshots.end());
 		DEBUG_REPORT_LOG(ConfigServerDatabase::getReportSaveTimes(),("New character save completed\n"));
 	}
 }
