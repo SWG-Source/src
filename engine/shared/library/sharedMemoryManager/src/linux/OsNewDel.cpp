@@ -5,7 +5,7 @@
 // Copyright 2002 Sony Online Entertainment
 //
 // ======================================================================
-
+/*
 #include "sharedMemoryManager/FirstSharedMemoryManager.h"
 #include "sharedMemoryManager/MemoryManager.h"
 #include "sharedMemoryManager/OsNewDel.h"
@@ -88,6 +88,6 @@ void operator delete[](void *pointer, const char *file, int line) throw()
 	if (pointer)
 		MemoryManager::free(pointer, true);
 }
-
+*/
 // ======================================================================
 

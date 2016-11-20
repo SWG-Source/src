@@ -51,9 +51,6 @@ void SetupSharedFoundation::install(const Data &data)
 
 	//@todo there is a lot of stuff in win32 setup not here...like exitchain
 	Profiler::registerDebugFlags();
-#if _DEBUG
-	MemoryManager::registerDebugFlags();
-#endif//_DEBUG
 
 	// Setup Linux DebugMonitor support.
 	// @todo fix this dependency: DebugMonitor really should be moved into Foundation the way things currently are.  TRF is following the existing win32 setup.

@@ -30,7 +30,6 @@
 #include "SwgDatabaseServer/Schema.h"
 #include "SwgDatabaseServer/ScriptBuffer.h"
 #include "SwgDatabaseServer/WaypointBuffer.h"
-
 namespace DB
 {
 	class Session;

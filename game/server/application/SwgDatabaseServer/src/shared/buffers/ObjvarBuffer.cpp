@@ -40,12 +40,6 @@ ObjvarBuffer::~ObjvarBuffer()
 {
 }
 
-// ----------------------------------------------------------------------
-
-/**
- * Loads all the object variables for the remembered objectId's
- */
-
 bool ObjvarBuffer::load(DB::Session *session,const DB::TagSet &tags, const std::string &schema, bool usingGoldDatabase)
 {
 	int rowsFetched;

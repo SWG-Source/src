@@ -10,12 +10,10 @@
 
 #include "serverDatabase/Persister.h"
 #include "serverDatabase/Snapshot.h"
-#include "sharedFoundation/NetworkIdArchive.h" //TODO:  Windows build breaks without this.  Why?  Makes no sense.
 
 // ======================================================================
 
-TaskSaveSnapshot::TaskSaveSnapshot(Snapshot *snapshot) :
-		m_snapshot(snapshot)
+TaskSaveSnapshot::TaskSaveSnapshot(Snapshot *snapshot) : m_snapshot(snapshot)
 {
 }
 

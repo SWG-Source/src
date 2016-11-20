@@ -116,17 +116,8 @@ XmlTreeDocument const *XmlTreeDocumentList::fetch(CrcString const &filename)
 	delete file;
 
 	//-- Create an XML DOM tree out of it.
-#ifdef _DEBUG
-	unsigned long const preDomBytesAllocated = MemoryManager::getCurrentNumberOfBytesAllocated();
-#endif
-
 	xmlDocPtr const xmlDocument = xmlParseMemory(reinterpret_cast<char const *>(fileContents), fileSize);
 	FATAL(!xmlDocument, ("xmlParseMemory() returned nullptr when parsing contents of file [%s].", cPathName));
-
-#ifdef _DEBUG
-	unsigned long const postDomBytesAllocated = MemoryManager::getCurrentNumberOfBytesAllocated();
-	DEBUG_REPORT_LOG(s_logXmlDomTreeSize, ("XmlTreeDocumentList: XML tree file [%s]: XML DOM tree appears to have consumed [%d] bytes.\n", cPathName, static_cast<int>(postDomBytesAllocated - preDomBytesAllocated)));
-#endif
 
 	// Release initial file contents buffer.
 	delete [] fileContents;
