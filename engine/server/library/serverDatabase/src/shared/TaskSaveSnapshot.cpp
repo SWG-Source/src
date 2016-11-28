@@ -14,8 +14,7 @@
 
 // ======================================================================
 
-TaskSaveSnapshot::TaskSaveSnapshot(Snapshot *snapshot) :
-		m_snapshot(snapshot)
+TaskSaveSnapshot::TaskSaveSnapshot(Snapshot *snapshot) : m_snapshot(snapshot)
 {
 }
 
@@ -32,6 +31,8 @@ void TaskSaveSnapshot::onComplete()
 {
 	m_snapshot->saveCompleted();
 	Persister::getInstance().saveCompleted(m_snapshot);
+	delete m_snapshot;
+	m_snapshot = nullptr;
 }
 
 // ======================================================================

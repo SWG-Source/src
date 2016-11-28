@@ -336,10 +336,10 @@ void Persister::startSave(void)
 		taskQueue->asyncRequest(new TaskSaveSnapshot(i->second));
 	}
 	for (i=m_newObjectSnapshots.begin(); i!=m_newObjectSnapshots.end(); ++i)
-	{
-		m_savingSnapshots.push_back(i->second);
-		taskQueue->asyncRequest(new TaskSaveSnapshot(i->second));
-	}
+        {
+                m_savingSnapshots.push_back(i->second);
+                taskQueue->asyncRequest(new TaskSaveSnapshot(i->second));
+        }
 
 	// nothing changed so send a complete message for the shutdown process
 	if( m_savingSnapshots.empty() )
@@ -603,7 +603,6 @@ void Persister::saveCompleted(Snapshot *completedSnapshot)
 	if (i!=m_savingSnapshots.end())
 	{
 		m_savingSnapshots.erase(i, m_savingSnapshots.end());
-
 		if (m_savingSnapshots.empty() && ConfigServerDatabase::getReportSaveTimes())
 		{
 			int saveTime = Clock::timeMs() - m_saveStartTime;
@@ -635,16 +634,9 @@ void Persister::saveCompleted(Snapshot *completedSnapshot)
 	{
 		SnapshotListType::iterator j=std::remove(m_savingCharacterSnapshots.begin(),m_savingCharacterSnapshots.end(),completedSnapshot);
 DEBUG_FATAL(i==m_savingCharacterSnapshots.end(),("Programmer bug:  SaveCompleted() called with a snapshot that wasn't in m_savingSnapshots or m_savingCharacterSnapshots."));
-        m_savingCharacterSnapshots.erase(j, m_savingCharacterSnapshots.end());
+        	m_savingCharacterSnapshots.erase(j, m_savingCharacterSnapshots.end());
 		DEBUG_REPORT_LOG(ConfigServerDatabase::getReportSaveTimes(),("New character save completed\n"));
 	}
-
-    if (completedSnapshot) {
-        delete completedSnapshot;
-        completedSnapshot = nullptr; // in case of double deletes by any other pointers to this thing
-    } else {
-        DEBUG_WARNING(true, ("We just attempted a double delete!"));
-    }
 }
 
 // ----------------------------------------------------------------------

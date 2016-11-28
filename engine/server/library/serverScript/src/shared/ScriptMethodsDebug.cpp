@@ -354,7 +354,6 @@ void JNICALL ScriptMethodsDebugNamespace::profilerStopAccum(JNIEnv *env, jobject
 void JNICALL ScriptMethodsDebugNamespace::disableGameMemoryDump(JNIEnv *env, jobject self)
 {
 	UNREF(self);
-	MemoryManager::setReportAllocations(false);
 	NetworkIdManager::setReportObjectLeaks(false);
 }
 
@@ -363,7 +362,6 @@ void JNICALL ScriptMethodsDebugNamespace::disableGameMemoryDump(JNIEnv *env, job
 void JNICALL ScriptMethodsDebugNamespace::debugMemoryReport(JNIEnv *env, jobject self)
 {
 	UNREF(self);
-	MemoryManager::debugReport();
 }
 
 // ----------------------------------------------------------------------
@@ -371,7 +369,6 @@ void JNICALL ScriptMethodsDebugNamespace::debugMemoryReport(JNIEnv *env, jobject
 void JNICALL ScriptMethodsDebugNamespace::debugMemoryReportMap(JNIEnv *env, jobject self)
 {
 	UNREF(self);
-	MemoryManager::debugReportMap();
 }
 
 // ----------------------------------------------------------------------

@@ -1349,7 +1349,7 @@ void *MemoryManager::reallocate(void *userPointer, size_t newSize)
 
 	if (newSize <= static_cast<size_t>(oldSize))
 	{
-//		DEBUG_REPORT_LOG(ms_logEachAlloc, ("MemoryManager::reallocate() new_requested_size=%d, org ptr=%p, new ptr=%p\n", newSize, userPointer, userPointer));
+//		DEBUG_REPORT_LOG(ms_logEachAlloc, ("realloc() new_requested_size=%d, org ptr=%p, new ptr=%p\n", newSize, userPointer, userPointer));
 
 		return userPointer;
 	}

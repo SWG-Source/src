@@ -141,6 +141,7 @@ SwgSnapshot::SwgSnapshot(DB::ModeQuery::Mode mode, bool useGoldDatabase) :
 
 SwgSnapshot::~SwgSnapshot()
 {
+	m_objvarBuffer.~ObjvarBuffer();
 }
 
 // ----------------------------------------------------------------------

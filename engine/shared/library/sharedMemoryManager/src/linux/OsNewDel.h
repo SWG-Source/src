@@ -17,16 +17,19 @@ enum MemoryManagerNotALeak
 	MM_notALeak
 };
 
+/*
 void *operator new(size_t size, MemoryManagerNotALeak);
 void *operator new(size_t size);
 void *operator new[](std::size_t size);
 void *operator new(size_t size, char const *file, int line);
 void *operator new[](size_t size, char const *file, int line);
 
+
 void operator delete(void *pointer) throw();
 void operator delete[](void *pointer) throw();
 void operator delete(void *pointer, char const *file, int line) throw();
 void operator delete[](void *pointer, char const *file, int line) throw();
+*/
 
 // ======================================================================
 

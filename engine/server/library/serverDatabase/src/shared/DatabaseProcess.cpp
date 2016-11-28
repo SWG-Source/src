@@ -197,7 +197,6 @@ void DatabaseProcess::run(void)
 	static bool shouldSleep = ConfigServerDatabase::getShouldSleep();
 	bool idle=false;
 	int loopcount=0;
-	float nextMemoryReportTime=0;
 	float nextQueryCountTime=0;
 
 	LOG("ServerStartup",("DatabaseServer starting")); 
@@ -239,16 +238,6 @@ void DatabaseProcess::run(void)
 		{
 			PROFILER_AUTO_BLOCK_DEFINE("NetworkHandler::update");
 			NetworkHandler::update();
-		}
-		nextMemoryReportTime-=updateTime;
-		if (nextMemoryReportTime < 0)
-		{
-#ifndef _WIN32
-			LOG("DatabaseMemory",("Bytes used:  %lu (VmSize %dK)  Open allocations:  %d  Total Allocations %d",MemoryManager::getCurrentNumberOfBytesAllocated(static_cast<int>(Os::getProcessId())),MemoryManager::getProcessVmSizeKBytes(static_cast<int>(Os::getProcessId())),MemoryManager::getCurrentNumberOfAllocations(),MemoryManagerNamespace::ms_allocateCalls));
-#else
-			LOG("DatabaseMemory",("Bytes used:  %lu  Open allocations:  %d  Total Allocations %d",MemoryManager::getCurrentNumberOfBytesAllocated(static_cast<int>(Os::getProcessId())),MemoryManager::getCurrentNumberOfAllocations(),MemoryManagerNamespace::ms_allocateCalls));
-#endif
-			nextMemoryReportTime=10;
 		}
 
 		nextQueryCountTime-=updateTime;

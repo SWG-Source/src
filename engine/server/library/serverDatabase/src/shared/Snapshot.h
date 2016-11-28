@@ -79,8 +79,8 @@ public:
 	virtual void startLoadAfterSaveComplete() =0;
 
   protected:
-	typedef std::vector<AbstractTableBuffer*> BufferListType;
-	typedef std::vector<ObjectLocator*> LocatorListType;
+	typedef std::vector<AbstractTableBuffer *> BufferListType;
+	typedef std::vector<ObjectLocator *> LocatorListType;
 	typedef std::vector<CustomPersistStep*> CustomStepListType;
 	
     /**

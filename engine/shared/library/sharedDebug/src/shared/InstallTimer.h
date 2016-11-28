@@ -38,7 +38,6 @@ private:
 
 	char const * m_description;
 	PerformanceTimer m_performanceTimer;
-	unsigned long const m_startingNumberOfBytesAllocated;
 };
 
 // ======================================================================

@@ -11,7 +11,6 @@
 
 #include "sharedDebug/DebugFlags.h"
 #include "sharedFoundation/ExitChain.h"
-#include "sharedMemoryManager/MemoryManager.h"
 #include "sharedSynchronization/Mutex.h"
 
 #include "zlib.h"
@@ -88,10 +87,10 @@ void ZlibCompressorNamespace::freeWrapper(voidpf opaque, voidpf address)
 
 void ZlibCompressor::install(int numberOfParallelThreads)
 {
-	if (numberOfParallelThreads <= 1 || MemoryManager::getLimit() < 260)
+	if (numberOfParallelThreads <= 1)
 		ms_poolElementCount = 5;
 	else
-		if (numberOfParallelThreads <= 2 || MemoryManager::getLimit() < 375)
+		if (numberOfParallelThreads <= 2)
 			ms_poolElementCount = 10;
 		else
 			ms_poolElementCount = 15;
