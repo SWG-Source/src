@@ -81,26 +81,6 @@ bool DB::OCISession::connect()
 	// so that each session can be used by a different thread concurrently.
 
 	sword result=OCI_ERROR;
-	if (m_server->getUseMemoryManager())
-	{
-		result = OCIEnvCreate(&envhp, // OCIEnv        **envhpp,
-							  OCI_THREADED | OCI_OBJECT, //ub4           mode, //TODO:  do we have to use threaded mode?
-							  0, // CONST dvoid   *ctxp,
-							  &mallocHook, // CONST dvoid   *(*malocfp)
-							  //           (dvoid *ctxp,
-							  //               size_t size),
-							  &reallocHook, // CONST dvoid   *(*ralocfp)
-							  //            (dvoid *ctxp,
-							  //             dvoid *memptr,
-							  //             size_t newsize),
-							  &freeHook, // CONST void    (*mfreefp)
-							  //            (dvoid *ctxp,
-							  //             dvoid *memptr))
-							  0, //size_t    xtramemsz,
-							  0 ); //dvoid     **usrmempp );
-	}
-	else
-	{
 		result = OCIEnvCreate(&envhp, // OCIEnv        **envhpp,
 							  OCI_THREADED | OCI_OBJECT, //ub4           mode, //TODO:  do we have to use threaded mode?
 							  0, // CONST dvoid   *ctxp,
@@ -117,7 +97,6 @@ bool DB::OCISession::connect()
 							  0, //size_t    xtramemsz,
 							  0 ); //dvoid     **usrmempp );
 		
-	}
 	FATAL(result != OCI_SUCCESS,("OciEnvCreate failed with error code %hd",result));
 	
 	// Create error handle.
