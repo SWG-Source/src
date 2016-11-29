@@ -50,6 +50,9 @@ Snapshot::~Snapshot()
 		*j = nullptr;
 	}
 
+	m_locatorList.clear();
+	m_customStepList.clear();
+
 	++ms_deletionCount;
 	LOG("Snapshot",("Deleted snapshot.  %i outstanding, %i created, %i deleted", ms_creationCount-ms_deletionCount,ms_creationCount,ms_deletionCount));	
 }
