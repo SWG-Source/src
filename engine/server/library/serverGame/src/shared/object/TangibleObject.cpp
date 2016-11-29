@@ -566,7 +566,6 @@ TangibleObject::~TangibleObject()
 				const int maxStackDepth   = 64;
 				const int callStackSize = callStackOffset + maxStackDepth;
 				uint32 callStack[callStackOffset + maxStackDepth];
-				DebugHelp::getCallStack(callStack, callStackOffset + maxStackDepth);
 
 				// look up the caller's file and line
 				if (callStack[callStackOffset])
@@ -579,10 +578,7 @@ TangibleObject::~TangibleObject()
 					{
 						if (callStack[i])
 						{
-							if (DebugHelp::lookupAddress(callStack[i], lib, file, sizeof(file), line))
 								REPORT_LOG(true, ("\t%s(%d) : caller %d\n", file, line, i-callStackOffset));
-							else
-								REPORT_LOG(true, ("\tunknown(0x%08X) : caller %d\n", static_cast<int>(callStack[i]), i-callStackOffset));
 						}
 					}
 				}

@@ -15,7 +15,7 @@
 #include "Archive/ByteStream.h"
 #include "serverUtility/ServerConnection.h"
 #include "sharedDebug/FirstSharedDebug.h"
-#include "sharedMemoryManager/FirstSharedMemoryManager.h"
+
 #include "LoginServer.h"
 #include "sharedNetworkMessages/GameNetworkMessage.h"
 // ======================================================================

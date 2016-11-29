@@ -38,7 +38,7 @@ include_directories(
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFoundationTypes/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedGame/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMath/include/public
-	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMemoryManager/include/public
+	
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedObject/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedUtility/include/public
 	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/localization/include

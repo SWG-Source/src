@@ -64,7 +64,7 @@ include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}/shared
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFoundation/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFoundationTypes/include/public
-	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMemoryManager/include/public
+	
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedSynchronization/include/public
 	${SWG_EXTERNALS_SOURCE_DIR}/3rd/library/vtune
 )

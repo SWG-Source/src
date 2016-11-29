@@ -14,7 +14,7 @@ include_directories(
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFoundation/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFoundationTypes/include/public
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedIoWin/include/public
-    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMemoryManager/include/public
+    
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedObject/include/public
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedRandom/include/public
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedRegex/include/public
@@ -40,7 +40,7 @@ target_link_libraries(DataTableTool
     sharedFoundation
     sharedIoWin
     sharedLog
-    sharedMemoryManager
+    
     sharedMessageDispatch
     sharedObject
     sharedRandom
