@@ -91,11 +91,11 @@ void ConfigSharedFoundation::install (const Defaults &defaults)
 	KEY_BOOL(useRemoteDebug,                  false);
 	KEY_INT(defaultRemoteDebugPort,           4445);
 
-	KEY_BOOL(profilerExpandAllBranches,       true);
-	KEY_BOOL(memoryManagerReportAllocations,  true);
-	KEY_BOOL(memoryManagerReportOnOutOfMemory, true);
+	KEY_BOOL(profilerExpandAllBranches,       false);
+	KEY_BOOL(memoryManagerReportAllocations,  false);
+	KEY_BOOL(memoryManagerReportOnOutOfMemory, false);
 
-	KEY_BOOL(useMemoryBlockManager,               true);
+	KEY_BOOL(useMemoryBlockManager,               false);
 	KEY_BOOL(memoryBlockManagerDebugDumpOnRemove, false);
 
 	KEY_INT(fatalCallStackDepth,              c_defaultFatalCallStackDepth);

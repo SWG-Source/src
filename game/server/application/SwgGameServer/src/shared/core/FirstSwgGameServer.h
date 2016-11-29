@@ -13,7 +13,7 @@
 #pragma warning ( disable : 4503 ) // name truncated (STL)
 #include "sharedFoundation/FirstSharedFoundation.h"
 #include "sharedDebug/FirstSharedDebug.h"
-#include "sharedMemoryManager/FirstSharedMemoryManager.h"
+
 
 #include "StringId.h"
 
