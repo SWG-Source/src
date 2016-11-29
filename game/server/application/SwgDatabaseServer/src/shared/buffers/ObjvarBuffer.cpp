@@ -199,7 +199,7 @@ bool ObjvarBuffer::save(DB::Session *session)
 
 // ----------------------------------------------------------------------
 
-void ObjvarBuffer::getObjvarsForObject(const NetworkId &objectId, std::vector<DynamicVariableList::MapType::Command> &commands) const
+void ObjvarBuffer::getObjvarsForObject(const NetworkId objectId, std::vector<DynamicVariableList::MapType::Command> commands) const
 {
 	DynamicVariableList::MapType::Command c;
 
@@ -258,7 +258,7 @@ void ObjvarBuffer::getObjvarsForObject(const NetworkId &objectId, std::vector<Dy
 
 // ----------------------------------------------------------------------
 
-void ObjvarBuffer::updateObjvars(const NetworkId &objectId, const std::vector<DynamicVariableList::MapType::Command> &commands)
+void ObjvarBuffer::updateObjvars(const NetworkId objectId, const std::vector<DynamicVariableList::MapType::Command> commands)
 {
 	bool override=false; // flag that we're dealing with the gold data override case (storing an objvar change in the live database, on an object that came from the gold database)
 	if (ConfigServerDatabase::getEnableGoldDatabase() && objectId < ConfigServerDatabase::getMaxGoldNetworkId())

@@ -49,10 +49,10 @@ public:
 	virtual bool save(DB::Session *session);
 	virtual void removeObject(const NetworkId &object);
 		
-	DBSchema::ObjectVariableRow *findRowByIndex(const NetworkId &objectId, const std::string &name);
+	DBSchema::ObjectVariableRow *findRowByIndex(const NetworkId objectId, const std::string &name);
 
-	void updateObjvars(const NetworkId &objectId, const std::vector<DynamicVariableList::MapType::Command> &commands);
-	void getObjvarsForObject(const NetworkId &objectId, std::vector<DynamicVariableList::MapType::Command> &commands) const;
+	void updateObjvars(const NetworkId objectId, const std::vector<DynamicVariableList::MapType::Command> commands);
+	void getObjvarsForObject(const NetworkId objectId, std::vector<DynamicVariableList::MapType::Command> commands) const;
 	
   private:
 	struct IndexKey
