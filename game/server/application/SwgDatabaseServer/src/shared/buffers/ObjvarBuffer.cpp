@@ -332,10 +332,7 @@ void ObjvarBuffer::removeObject(const NetworkId &object)
 	DataType::iterator i=m_data.lower_bound(IndexKey(object,0));
 	while (i!=m_data.end() && i->first.m_objectId==object)
 	{
-		DataType::iterator next=i;
-		++next;
-		m_data.erase(i);
-		i=next;
+		i = m_data.erase(i);
 	}
 }
 
