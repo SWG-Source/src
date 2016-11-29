@@ -42,12 +42,12 @@ Snapshot::~Snapshot()
 	for (LocatorListType::iterator i=m_locatorList.begin(); i!=m_locatorList.end(); ++i)
 	{
 		delete *i;
-		i = m_locatorList.erase(i);
+		*i = nullptr;
 	}
 
 	for (CustomStepListType::iterator j=m_customStepList.begin(); j!=m_customStepList.end(); ++j) {
 		delete *j;
-		j = m_customStepList.erase(j);
+		*j = nullptr;
 	}
 
 	++ms_deletionCount;

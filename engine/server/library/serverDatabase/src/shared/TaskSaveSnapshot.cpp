@@ -10,7 +10,6 @@
 
 #include "serverDatabase/Persister.h"
 #include "serverDatabase/Snapshot.h"
-#include "sharedFoundation/NetworkIdArchive.h" //TODO:  Windows build breaks without this.  Why?  Makes no sense.
 
 // ======================================================================
 
@@ -31,8 +30,6 @@ void TaskSaveSnapshot::onComplete()
 {
 	m_snapshot->saveCompleted();
 	Persister::getInstance().saveCompleted(m_snapshot);
-	delete m_snapshot;
-	m_snapshot = nullptr;
 }
 
 // ======================================================================
