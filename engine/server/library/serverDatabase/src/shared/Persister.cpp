@@ -174,15 +174,44 @@ Persister::~Persister()
 {
 	DEBUG_FATAL(taskQueue,("Call shutdown() before deleting Persister.\n"));
 
-	ServerSnapshotMap::iterator i;
-	for (i=m_currentSnapshots.begin(); i!=m_currentSnapshots.end(); ++i)
+	for (auto i = m_currentSnapshots.begin(); i!=m_currentSnapshots.end(); ++i) {
 		delete i->second;
-	for (i=m_newObjectSnapshots.begin(); i!=m_newObjectSnapshots.end(); ++i)
+		i->second = nullptr;
+	}
+	
+	for (auto i = m_newObjectSnapshots.begin(); i!=m_newObjectSnapshots.end(); ++i) {
 		delete i->second;
+		i->second = nullptr;
+	}
+
+	for (auto i = m_newCharacterSnapshots.begin(); i!=m_newCharacterSnapshots.end(); ++i) {
+		delete i->second;
+		i->second = nullptr;
+	}
+
+        for (auto i = m_objectSnapshotMap.begin(); i!=m_objectSnapshotMap.end(); ++i) {
+                delete i->second;
+                i->second = nullptr;
+        }
+
+        for (auto i = m_savingSnapshots.begin(); i!=m_savingSnapshots.end(); ++i) {
+                delete *i;
+                *i = nullptr;
+        }
+
+        for (auto i = m_savingCharacterSnapshots.begin(); i!=m_savingCharacterSnapshots.end(); ++i) {
+                delete *i;
+                *i = nullptr;
+        }
 
 	m_currentSnapshots.clear();
 	m_newObjectSnapshots.clear();
 	m_objectSnapshotMap.clear();
+	
+	delete m_messageSnapshot;
+	delete m_commoditiesSnapshot;
+	delete m_arbitraryGameDataSnapshot;
+
 	m_messageSnapshot = nullptr;
 	m_commoditiesSnapshot = nullptr;
 	m_arbitraryGameDataSnapshot = nullptr;
@@ -602,8 +631,6 @@ void Persister::saveCompleted(Snapshot *completedSnapshot)
 	SnapshotListType::iterator i=std::remove(m_savingSnapshots.begin(),m_savingSnapshots.end(),completedSnapshot);
 	if (i!=m_savingSnapshots.end())
 	{
-		delete completedSnapshot;
-
 		m_savingSnapshots.erase(i, m_savingSnapshots.end());
 		if (m_savingSnapshots.empty() && ConfigServerDatabase::getReportSaveTimes())
 		{
@@ -636,8 +663,6 @@ void Persister::saveCompleted(Snapshot *completedSnapshot)
 	{
 		SnapshotListType::iterator j=std::remove(m_savingCharacterSnapshots.begin(),m_savingCharacterSnapshots.end(),completedSnapshot);
 DEBUG_FATAL(i==m_savingCharacterSnapshots.end(),("Programmer bug:  SaveCompleted() called with a snapshot that wasn't in m_savingSnapshots or m_savingCharacterSnapshots."));
-		delete completedSnapshot;
-
         	m_savingCharacterSnapshots.erase(j, m_savingCharacterSnapshots.end());
 		DEBUG_REPORT_LOG(ConfigServerDatabase::getReportSaveTimes(),("New character save completed\n"));
 	}
