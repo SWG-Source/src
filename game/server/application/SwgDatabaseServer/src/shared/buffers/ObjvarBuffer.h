@@ -49,10 +49,10 @@ public:
 	virtual bool save(DB::Session *session);
 	virtual void removeObject(const NetworkId &object);
 		
-	DBSchema::ObjectVariableRow *findRowByIndex(const NetworkId objectId, const std::string &name);
+	DBSchema::ObjectVariableRow *findRowByIndex(const NetworkId &objectId, const std::string &name);
 
-	void updateObjvars(const NetworkId objectId, const std::vector<DynamicVariableList::MapType::Command> commands);
-	void getObjvarsForObject(const NetworkId objectId, std::vector<DynamicVariableList::MapType::Command> commands) const;
+	void updateObjvars(const NetworkId &objectId, const std::vector<DynamicVariableList::MapType::Command> &commands);
+	void getObjvarsForObject(const NetworkId &objectId, std::vector<DynamicVariableList::MapType::Command> &commands) const;
 	
   private:
 	struct IndexKey
@@ -60,7 +60,7 @@ public:
 		NetworkId m_objectId;
 		int m_nameId;
 
-		IndexKey(const NetworkId objectId, int nameId);
+		IndexKey(const NetworkId &objectId, int nameId);
 		~IndexKey(){
 			m_nameId = 0;
 		}
@@ -101,7 +101,7 @@ public:
 
 // ======================================================================
 
-inline ObjvarBuffer::IndexKey::IndexKey(const NetworkId objectId, int nameId) :
+inline ObjvarBuffer::IndexKey::IndexKey(const NetworkId &objectId, int nameId) :
 		m_objectId(objectId),
         m_nameId(nameId)
 {
