@@ -63,7 +63,7 @@ bool ObjvarBuffer::load(DB::Session *session,const DB::TagSet &tags, const std::
 				break;
 			}
 			
-			IndexKey key(row->object_id.getValue(), row->name_id.getValue());
+			IndexKey key = { row->object_id.getValue(), row->name_id.getValue() };
 			ObjvarValue value;
 			value.m_type=row->type.getValue();
 
@@ -100,7 +100,7 @@ bool ObjvarBuffer::load(DB::Session *session,const DB::TagSet &tags, const std::
 					break;
 				}
 			
-				IndexKey key(row->object_id.getValue(), row->name_id.getValue());
+				IndexKey key = { row->object_id.getValue(), row->name_id.getValue() };
 				ObjvarValue value;
 				value.m_type=row->type.getValue();
 
@@ -204,7 +204,7 @@ void ObjvarBuffer::getObjvarsForObject(const NetworkId &objectId, std::vector<Dy
 	// unpacked object variables
 
 	{
-		for (DataType::const_iterator i= m_data.lower_bound(IndexKey(objectId,0)); (i!=m_data.end()) && (i->first.m_objectId==objectId); ++i)
+		for (DataType::const_iterator i= m_data.lower_bound(IndexKey {objectId,0}); (i!=m_data.end()) && (i->first.m_objectId==objectId); ++i)
 		{
 			std::string name;
 			bool foundName = false;
@@ -234,7 +234,7 @@ void ObjvarBuffer::getObjvarsForObject(const NetworkId &objectId, std::vector<Dy
 	// The last objvar sent to the game takes precedence, so we want to send the overrides after the values read in through the regular process
 
 	{
-		for (DataType::const_iterator i= m_overrides.lower_bound(IndexKey(objectId,0)); (i!=m_overrides.end()) && (i->first.m_objectId==objectId); ++i)
+		for (DataType::const_iterator i= m_overrides.lower_bound(IndexKey {objectId,0}); (i!=m_overrides.end()) && (i->first.m_objectId==objectId); ++i)
 		{
 			std::string name;
 			bool foundName = false;
@@ -279,10 +279,10 @@ void ObjvarBuffer::updateObjvars(const NetworkId &objectId, const std::vector<Dy
 				{
 					int nameId = ObjvarNameManager::getInstance().getOrAddNameId(i->key);
 					
-					DataType::iterator row=m_data.find(IndexKey(objectId, nameId));
+					DataType::iterator row=m_data.find(IndexKey {objectId, nameId});
 					if (row==m_data.end())
 					{
-						row=m_data.insert(std::make_pair(IndexKey(objectId, nameId),ObjvarValue())).first;
+						row=m_data.insert(std::make_pair(IndexKey{objectId, nameId},ObjvarValue())).first;
 						if (i->cmd==DynamicVariableList::MapType::Command::ADD || override)
 							row->second.m_inDatabase=false; // new variable
 						else
@@ -300,12 +300,12 @@ void ObjvarBuffer::updateObjvars(const NetworkId &objectId, const std::vector<Dy
 				int nameId = ObjvarNameManager::getInstance().getNameId(i->key);
 				if (nameId != 0) // It's possible to get an ERASE for a packed objvar where the name was never used in the OBJECT_VARIABLES table.  We can safely ignore these.
 				{
-					DataType::iterator row=m_data.find(IndexKey(objectId, nameId));
+					DataType::iterator row=m_data.find(IndexKey {objectId, nameId});
 					if (row==m_data.end())
 					{
 						if (i->value.getPosition() == -1 || override)
 						{
-							row=m_data.insert(std::make_pair(IndexKey(objectId, nameId),ObjvarValue())).first;
+							row=m_data.insert(std::make_pair(IndexKey {objectId, nameId},ObjvarValue())).first;
 							row->second.m_inDatabase=true; // deleting existing variable
 						}
 						// else it was a packed objvar, and no update is necessary
@@ -329,7 +329,7 @@ void ObjvarBuffer::updateObjvars(const NetworkId &objectId, const std::vector<Dy
 
 void ObjvarBuffer::removeObject(const NetworkId &object)
 {
-	DataType::iterator i=m_data.lower_bound(IndexKey(object,0));
+	DataType::iterator i=m_data.lower_bound(IndexKey {object,0});
 	while (i!=m_data.end() && i->first.m_objectId==object)
 	{
 		i = m_data.erase(i);
