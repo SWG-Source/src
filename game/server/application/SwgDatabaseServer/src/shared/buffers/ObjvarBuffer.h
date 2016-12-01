@@ -57,9 +57,10 @@ public:
   private:
 	struct IndexKey
 	{
-		const NetworkId &m_objectId;
+		NetworkId m_objectId;
 		int m_nameId;
 
+		IndexKey(const NetworkId &objectId, int nameId);
 		bool operator==(const IndexKey &rhs) const;
 		bool operator<(const IndexKey &rhs) const;
 	};
@@ -82,6 +83,7 @@ public:
 
 //	typedef std::map<NetworkId,std::vector<DBSchema::ObjectVariableRow*> > LoadIndexType;
 //	LoadIndexType m_loadIndex;
+
   private:
 	ObjvarBuffer(); //disable
 	ObjvarBuffer(const ObjvarBuffer&); //disable
@@ -89,6 +91,14 @@ public:
 }; //lint !e1712 // IndexKey has no default constructor
 
 // ======================================================================
+
+inline ObjvarBuffer::IndexKey::IndexKey(const NetworkId &objectId, int nameId) :
+		m_objectId(objectId),
+        m_nameId(nameId)
+{
+}
+
+// ----------------------------------------------------------------------
 
 inline bool ObjvarBuffer::IndexKey::operator==(const IndexKey &rhs) const
 {
