@@ -61,9 +61,6 @@ public:
 		int m_nameId;
 
 		IndexKey(const NetworkId &objectId, int nameId);
-		~IndexKey(){
-			m_nameId = 0;
-		}
 		bool operator==(const IndexKey &rhs) const;
 		bool operator<(const IndexKey &rhs) const;
 	};
@@ -74,12 +71,6 @@ public:
 		std::string m_value;
 		bool m_detached;
 		bool m_inDatabase;
-		~ObjvarValue(){
-			m_type = 0;
-			m_detached = 0;
-			m_inDatabase = 0;
-			m_value.clear();
-		}
 	};
 
 	typedef std::map<IndexKey,ObjvarValue> DataType;
