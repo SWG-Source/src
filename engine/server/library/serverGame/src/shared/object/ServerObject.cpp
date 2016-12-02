@@ -3235,12 +3235,10 @@ bool ServerObject::persist()
 			ServerObject *parent = static_cast<ServerObject*>(ContainerInterface::getContainedByObject(*this));
 			if (parent && !parent->isPersisted())
 			{
-				WARNING(true, ("Persisting %s into %s which is not persisted!", getNetworkId().getValueString().c_str(), parent->getNetworkId().getValueString().c_str()));
+				WARNING(true, ("Persisting %s into %s, which is not persisted!", getNetworkId().getValueString().c_str(), parent->getNetworkId().getValueString().c_str()));
 			}
 #endif
-
 			m_persisted = true;
-
 			markChildrenPersisted();
 			sendCreateAndBaselinesToDatabaseServer();
 
