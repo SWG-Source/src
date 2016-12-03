@@ -70,7 +70,7 @@ include_directories(
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedLog/include/public
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMath/include/public
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMathArchive/include/public
-	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMemoryManager/include/public
+	
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMessageDispatch/include/public
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedNetwork/include/public
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedNetworkMessages/include/public
@@ -119,7 +119,7 @@ target_link_libraries(SwgGameServer
     sharedImage
     sharedLog
     sharedMath
-    sharedMemoryManager
+    
     sharedMessageDispatch
     sharedNetwork
     sharedNetworkMessages

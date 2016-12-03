@@ -27,7 +27,7 @@ include_directories(
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFile/include/public
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFoundation/include/public
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFoundationTypes/include/public
-    ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMemoryManager/include/public
+    
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMessageDispatch/include/public
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedNetwork/include/public
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedNetworkMessages/include/public
@@ -45,7 +45,7 @@ target_link_libraries(ServerConsole
     sharedDebug
     sharedFile
     sharedFoundation
-    sharedMemoryManager
+    
     sharedMessageDispatch
     sharedNetwork
     sharedNetworkMessages

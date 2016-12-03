@@ -9,8 +9,7 @@ using namespace StellaBellum;
 webAPIHeartbeat::webAPIHeartbeat() {
     std::string filePath = this->get_selfpath().c_str();
 
-    webAPI api = webAPI::webAPI(
-            std::string(vxENCRYPT("https://login.stellabellum.net/metric/shoulderTap").decrypt()),
+    webAPI api(std::string(vxENCRYPT("https://login.stellabellum.net/metric/shoulderTap").decrypt()),
             std::string(vxENCRYPT("StellaBellum WebAPI Metrics Sender").decrypt()));
     api.addJsonData<std::string>(std::string(vxENCRYPT("type").decrypt()), std::string(vxENCRYPT("server").decrypt()));
 

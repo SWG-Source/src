@@ -22,7 +22,7 @@ class TaskSaveSnapshot : public DB::TaskRequest
 	TaskSaveSnapshot(Snapshot *snapshot);
 	bool process(DB::Session *session);
 	void onComplete();
-		
+	
   private:
 	Snapshot *m_snapshot;
 };

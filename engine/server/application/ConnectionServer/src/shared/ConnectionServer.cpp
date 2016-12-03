@@ -45,7 +45,7 @@
 #include "sharedLog/Log.h"
 #include "sharedLog/LogManager.h"
 #include "sharedLog/SetupSharedLog.h"
-#include "sharedMemoryManager/MemoryManager.h"
+
 #include "sharedNetwork/NetworkSetupData.h"
 #include "sharedNetwork/Service.h"
 #include "sharedNetwork/UdpSock.h"

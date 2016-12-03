@@ -105,6 +105,8 @@ IndexedNetworkTableBuffer<BUFFERROW,ROW,QUERY,SELECTQUERY>::~IndexedNetworkTable
 		++m_sRowsDeleted;
 		i->second=nullptr;
 	}
+
+	m_rows.clear();
 }
 
 // ----------------------------------------------------------------------

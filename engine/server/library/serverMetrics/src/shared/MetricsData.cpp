@@ -77,13 +77,6 @@ const GameNetworkMessage & MetricsData::getDataToSend()
 
 void MetricsData::updateData()
 {
-	m_data[m_memoryUtilization].m_value = static_cast<int>(MemoryManager::getCurrentNumberOfBytesAllocated(static_cast<int>(Os::getProcessId())) / 1024);
-	m_data[m_memoryUtilizationNoLeakTest].m_value = static_cast<int>(MemoryManager::getCurrentNumberOfBytesAllocatedNoLeakTest() / 1024);
-	m_data[m_memoryAllocated].m_value = MemoryManager::getSystemMemoryAllocatedMegabytes() * 1024;
-#ifndef _WIN32
-	m_data[m_memoryVmSize].m_value = MemoryManager::getProcessVmSizeKBytes(static_cast<int>(Os::getProcessId()));
-#endif
-
 	//deal with frame time
 	float frameTime = Clock::frameTime() * 1000;
 	float oldFrameTime = m_frameTimeHistory[m_frameTimeHistoryIndex];

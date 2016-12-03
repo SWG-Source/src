@@ -42,14 +42,19 @@ Snapshot::~Snapshot()
 	for (LocatorListType::iterator i=m_locatorList.begin(); i!=m_locatorList.end(); ++i)
 	{
 		delete *i;
-		*i=0;
+		*i = nullptr;
 	}
 
-	for (CustomStepListType::iterator j=m_customStepList.begin(); j!=m_customStepList.end(); ++j)
+	for (CustomStepListType::iterator j=m_customStepList.begin(); j!=m_customStepList.end(); ++j) {
 		delete *j;
+		*j = nullptr;
+	}
+
+	m_locatorList.clear();
+	m_customStepList.clear();
 
 	++ms_deletionCount;
-	LOG("Snapshot",("Deleted snapshot.  %i outstanding, %i created, %i deleted", ms_creationCount-ms_deletionCount,ms_creationCount,ms_deletionCount));		
+	LOG("Snapshot",("Deleted snapshot.  %i outstanding, %i created, %i deleted", ms_creationCount-ms_deletionCount,ms_creationCount,ms_deletionCount));
 }
 
 // ----------------------------------------------------------------------

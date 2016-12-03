@@ -32,7 +32,7 @@
 #include <wchar.h>
 
 #include "sharedFoundation/PlatformGlue.h"
-#include "sharedMemoryManager/MemoryManager.h"
+
 
 
 // ======================================================================

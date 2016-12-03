@@ -16,7 +16,7 @@
 #include "sharedFoundation/DynamicVariableList.h"
 #include <map>
 #include <string>
-
+#include <memory>
 // ======================================================================
 
 class ObjectTableBuffer;
