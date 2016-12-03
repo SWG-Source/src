@@ -100,11 +100,11 @@ namespace ChatServerNamespace
 		
 		if(fullName.find(ConfigChatServer::getClusterName()) == std::string::npos)
 		{
-			fullName = ConfigChatServer::getClusterName() + '+' + fullName;
+			fullName = std::string(ConfigChatServer::getClusterName()) + std::string("+") + fullName;
 		}
 		if(fullName.find(ConfigChatServer::getGameCode()) == std::string::npos)
 		{
-			fullName = ConfigChatServer::getGameCode() + '+' + fullName;
+			fullName = std::string(ConfigChatServer::getGameCode()) + std::string("+") + fullName;
 		}
 		if(fullName.find("SOE") == std::string::npos)
 		{
@@ -122,7 +122,7 @@ namespace ChatServerNamespace
 	std::set<NetworkId> s_notSubscribedClients;
 
 	// Control log output for chat room related methods
-	bool const s_enableChatRoomLogs = false;
+	bool const s_enableChatRoomLogs = false; // make configurable?
 }
 
 using namespace ChatServerNamespace;
