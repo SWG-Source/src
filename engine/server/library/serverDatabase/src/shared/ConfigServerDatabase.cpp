@@ -34,14 +34,14 @@ void ConfigServerDatabase::install(void)
 	ConfigServerUtility::install();
 	data = &staticData;
 
-	KEY_INT     (objvarNameCleanupTime, 0);
-	KEY_INT     (orphanedObjectCleanupTime, 0);
-	KEY_INT     (marketAttributesCleanupTime, 0);
-	KEY_INT     (messagesCleanupTime, 0);
-	KEY_INT     (brokenObjectCleanupTime, 0);
-	KEY_INT     (vendorObjectCleanupTime, 0);
+	KEY_INT     (objvarNameCleanupTime, 60);
+	KEY_INT     (orphanedObjectCleanupTime, 60);
+	KEY_INT     (marketAttributesCleanupTime, 60);
+	KEY_INT     (messagesCleanupTime, 60);
+	KEY_INT     (brokenObjectCleanupTime, 60);
+	KEY_INT     (vendorObjectCleanupTime, 60);
 	KEY_STRING  (customSQLFilename,"");
-	KEY_BOOL    (enableFixBadCells, false);
+	KEY_BOOL    (enableFixBadCells, true);
 	KEY_STRING  (objectTemplateListUpdateFilename,"");
 
 	KEY_STRING  (DSN,"gameserver");
@@ -56,7 +56,7 @@ void ConfigServerDatabase::install(void)
 	KEY_INT     (taskManagerPort, 60001);
 	KEY_INT     (expectedDBVersion, 270);
 	KEY_BOOL    (correctDBVersionRequired,true);
-	KEY_INT     (saveFrequencyLimit,10);
+	KEY_INT     (saveFrequencyLimit,5);
 	KEY_STRING  (schemaOwner, "");
 	KEY_STRING  (goldSchemaOwner, "");
 	KEY_FLOAT   (uniqueMessageCacheTimeSec, 30.0f);
@@ -72,10 +72,10 @@ void ConfigServerDatabase::install(void)
 	KEY_BOOL    (reportSaveTimes, false);
 	KEY_BOOL    (shouldSleep, true);
 	KEY_BOOL    (enableLoadLocks, true);
-	KEY_INT     (databaseReconnectTime, 0);
+	KEY_INT     (databaseReconnectTime, 1);
 	KEY_BOOL    (logChunkLoading,false);
 	KEY_BOOL    (useMemoryManagerForOCI,false);
-	KEY_INT     (maxCharactersPerLoadRequest,10);
+	KEY_INT     (maxCharactersPerLoadRequest,20);
 	KEY_INT     (maxChunksPerLoadRequest,200);
 	KEY_FLOAT   (maxLoadStartDelay,300.0f);
 	KEY_INT     (maxErrorCountBeforeDisconnect,5);
@@ -97,7 +97,7 @@ void ConfigServerDatabase::install(void)
 	KEY_BOOL    (enableGoldDatabase, false);
 	KEY_STRING  (maxGoldNetworkId, "10000000");
 	KEY_FLOAT   (defaultQueueUpdateTimeLimit, 0.25f);
-	KEY_BOOL    (enableDataCleanup, false);
+	KEY_BOOL    (enableDataCleanup, true);
 	KEY_INT     (defaultLazyDeleteBulkBindSize, 100);
 	KEY_INT     (defaultLazyDeleteSleepTime, 1000);
 	KEY_INT     (writeDelay, 0);
@@ -106,11 +106,11 @@ void ConfigServerDatabase::install(void)
 	KEY_INT     (maxLoaderFinishedTasks, 100);
 	KEY_FLOAT   (reportLongFrameTime, 1.0f);
 	KEY_BOOL    (enableVerboseMessageLogging, false);
-	KEY_BOOL    (profilerExpandAll, true);
+	KEY_BOOL    (profilerExpandAll, false);
 	KEY_INT     (profilerDisplayPercentageMinimum, 0);
 	KEY_BOOL    (fatalOnDataError, false);
 	KEY_INT     (maxUnackedLoadCount, 1000000000);  // by default, set to an "unlimited" number, and use maxUnackedLoadCountPerServer as the cap
-	KEY_INT     (maxUnackedLoadCountPerServer, 2);
+	KEY_INT     (maxUnackedLoadCountPerServer, 5);
 	KEY_INT     (auctionLocationLoadBatchSize, 100);
 	KEY_INT     (auctionLoadBatchSize, 100);
 	KEY_INT     (auctionAttributeLoadBatchSize, 100);
