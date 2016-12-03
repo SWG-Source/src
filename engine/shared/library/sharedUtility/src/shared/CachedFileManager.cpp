@@ -186,10 +186,6 @@ void CachedFileManager::preloadSomeAssets ()
 	{
 		unsigned long const startTime = Clock::timeMs ();
 
-#if PRODUCTION == 0
-		unsigned long const bytesBefore = MemoryManager::getCurrentNumberOfBytesAllocated();
-#endif
-
 		//-- preloading occurs in one second slices
 		while (ms_filenamesCurrentPos < ms_filenamesLength && Clock::timeMs () - startTime < 1000)
 		{
@@ -229,8 +225,6 @@ void CachedFileManager::preloadSomeAssets ()
 #if PRODUCTION == 0
 		unsigned long const stopTime = Clock::timeMs ();
 		ms_totalTime += stopTime - startTime;
-
-		ms_totalAllocatedBytes += MemoryManager::getCurrentNumberOfBytesAllocated() - bytesBefore;
 #endif
 
 		if (donePreloading ())

@@ -11,7 +11,7 @@
 // ======================================================================
 
 #include "sharedFoundation/FirstSharedFoundation.h"
-#include "sharedMemoryManager/FirstSharedMemoryManager.h"
+
 #include "sharedDebug/FirstSharedDebug.h"
 #include "ConnectionServer.h"
 #include "sharedFoundation/NetworkIdArchive.h"

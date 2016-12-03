@@ -18,7 +18,7 @@ include_directories(
 	#${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedDebug/include/public
 	#${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFoundation/include/public
 	#${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFoundationTypes/include/public
-	#${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMemoryManager/include/public
+	#
 )
 
 add_library(sharedMathArchive STATIC ${EXCLUDE_PROJECT}

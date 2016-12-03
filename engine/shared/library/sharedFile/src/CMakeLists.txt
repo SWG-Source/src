@@ -53,7 +53,7 @@ include_directories(
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFoundation/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedFoundationTypes/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMath/include/public
-	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMemoryManager/include/public
+	
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedSynchronization/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedThread/include/public
 	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/fileInterface/include/public

@@ -41,7 +41,7 @@
 #include "sharedFoundation/Crc.h"
 #include "sharedFoundation/Os.h"
 #include "sharedFoundation/SetupSharedFoundation.h"
-#include "sharedMemoryManager/MemoryManager.h"
+
 #include "sharedThread/SetupSharedThread.h"
 
 #include "InputFileHandler.h"

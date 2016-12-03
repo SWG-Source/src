@@ -140,7 +140,7 @@ include_directories(
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedGame/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedLog/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMath/include/public
-	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMemoryManager/include/public
+	
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedObject/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedRandom/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedTerrain/include/public

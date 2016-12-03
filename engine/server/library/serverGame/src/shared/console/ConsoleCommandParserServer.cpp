@@ -96,7 +96,6 @@ static const CommandParser::CmdInfo cmds[] =
 	{"error",                    1,  "<error message>",                   "Display an error message."},
 	{"getPlanetId",              0,  "[planet]",                          "Get the current obj_id of the planet for this server (or for the specified planet)."},
 	{"memUsage",                 0,  "",                                  "Query memory usage statistics."},
-	{"memoryReport",             0,  "",                                  "Dump memory manager (call MemoryManager::report())."},
 	{"dumpMemToFile",            2,  "<fileName> <leaksOnly>",            "Dump memory report to file on server, can be called to dump all allocations or only known leaks."},
 	{"clock",                    0,  "",                                  "Query clock statistics."},
 	{"releaseAuth",              1,  "<oid>",                             "Release Authority for object with oid."},
