@@ -60,7 +60,7 @@ public:
 		NetworkId m_objectId;
 		int m_nameId;
 
-		IndexKey(const NetworkId &objectId, int nameId);
+		IndexKey(const NetworkId objectId, int nameId);
 		bool operator==(const IndexKey &rhs) const;
 		bool operator<(const IndexKey &rhs) const;
 	};
@@ -92,9 +92,7 @@ public:
 
 // ======================================================================
 
-inline ObjvarBuffer::IndexKey::IndexKey(const NetworkId &objectId, int nameId) :
-		m_objectId(objectId),
-        m_nameId(nameId)
+inline ObjvarBuffer::IndexKey::IndexKey(const NetworkId objectId, int nameId) : m_objectId(objectId), m_nameId(nameId)
 {
 }
 

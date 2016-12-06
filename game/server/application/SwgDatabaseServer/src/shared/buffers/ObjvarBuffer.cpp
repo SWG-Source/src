@@ -38,6 +38,8 @@ ObjvarBuffer::ObjvarBuffer(DB::ModeQuery::Mode mode, ObjectTableBuffer *objectTa
 
 ObjvarBuffer::~ObjvarBuffer()
 {
+	m_data.clear();
+	m_overrides.clear();
 }
 
 bool ObjvarBuffer::load(DB::Session *session,const DB::TagSet &tags, const std::string &schema, bool usingGoldDatabase)
