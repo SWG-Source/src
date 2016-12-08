@@ -80,7 +80,7 @@ elseif(UNIX)
 	#	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 	#endif()
 	
-	add_definitions(-DLINUX -D_REENTRANT -Dlinux -DSTELLA_INTERNAL -D_USING_STL -D_GNU_SOURCE -D_XOPEN_SOURCE=500)
+	add_definitions(-DLINUX -D_REENTRANT -Dlinux -DSTELLA_INTERNAL -D_GNU_SOURCE -D_XOPEN_SOURCE=500)
 endif()
 
 add_subdirectory(external)
