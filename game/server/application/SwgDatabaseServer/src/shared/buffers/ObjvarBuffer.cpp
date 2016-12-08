@@ -64,16 +64,14 @@ bool ObjvarBuffer::load(DB::Session *session,const DB::TagSet &tags, const std::
 			{
 				break;
 			}
-			
-			IndexKey key(row->object_id.getValue(), row->name_id.getValue());
-			ObjvarValue value;
-			value.m_type=row->type.getValue();
-
-			// The string is stored in the database as utf8, so a wide-to-narrow is appropriate
-			value.m_value=Unicode::wideToNarrow(row->value.getValue());
-
-			value.m_detached=false;
 		
+                        IndexKey key(row->object_id.getValue(), row->name_id.getValue());
+                        ObjvarValue value;
+                        value.m_type=row->type.getValue();
+
+                        // The string is stored in the database as utf8, so a wide-to-narrow is appropriate
+                        value.m_value=Unicode::wideToNarrow(row->value.getValue());
+
 			m_data.insert(std::make_pair(key,value));
 		}
 	}
@@ -199,7 +197,7 @@ bool ObjvarBuffer::save(DB::Session *session)
 
 // ----------------------------------------------------------------------
 
-void ObjvarBuffer::getObjvarsForObject(const NetworkId objectId, std::vector<DynamicVariableList::MapType::Command> commands) const
+void ObjvarBuffer::getObjvarsForObject(const NetworkId &objectId, std::vector<DynamicVariableList::MapType::Command> &commands) const
 {
 	DynamicVariableList::MapType::Command c;
 
@@ -258,7 +256,7 @@ void ObjvarBuffer::getObjvarsForObject(const NetworkId objectId, std::vector<Dyn
 
 // ----------------------------------------------------------------------
 
-void ObjvarBuffer::updateObjvars(const NetworkId objectId, const std::vector<DynamicVariableList::MapType::Command> commands)
+void ObjvarBuffer::updateObjvars(const NetworkId &objectId, const std::vector<DynamicVariableList::MapType::Command> &commands)
 {
 	bool override=false; // flag that we're dealing with the gold data override case (storing an objvar change in the live database, on an object that came from the gold database)
 	if (ConfigServerDatabase::getEnableGoldDatabase() && objectId < ConfigServerDatabase::getMaxGoldNetworkId())
@@ -314,8 +312,9 @@ void ObjvarBuffer::updateObjvars(const NetworkId objectId, const std::vector<Dyn
 					}
 
 					row->second.m_type = i->value.getType();
-					row->second.m_detached = true;
+					row->second.m_detached = true; //why the fuck even store it at this point?
 				}
+
 				break;
 			}
 			
@@ -332,9 +331,12 @@ void ObjvarBuffer::updateObjvars(const NetworkId objectId, const std::vector<Dyn
 void ObjvarBuffer::removeObject(const NetworkId &object)
 {
 	DataType::iterator i=m_data.lower_bound(IndexKey(object,0));
-	while (i!=m_data.end() && i->first.m_objectId==object)
+	while (i!=m_data.end())
 	{
-		i = m_data.erase(i);
+		if (i->first.m_objectId==object) 
+			i = m_data.erase(i);
+		else
+			++i;
 	}
 }
 
