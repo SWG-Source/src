@@ -2183,7 +2183,8 @@ jlong JavaLibrary::getFreeJavaMemory()
  */
 void JavaLibrary::printJavaStack()
 {
-	ms_env->CallStaticVoidMethod(ms_clsThread, ms_midThreadDumpStack);
+	if (ConfigServerScript::getPrintStacks())
+		ms_env->CallStaticVoidMethod(ms_clsThread, ms_midThreadDumpStack);
 }
 
 /**

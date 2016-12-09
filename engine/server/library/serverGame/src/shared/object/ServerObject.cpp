@@ -599,8 +599,8 @@ void ServerObject::MoveNotification::checkForGoldObject(const Object &object) co
 {
 	if (ConfigServerGame::getMaxGoldNetworkId()!=NetworkId::cms_invalid && object.getNetworkId() < ConfigServerGame::getMaxGoldNetworkId())
 	{
-		FATAL(ConfigServerGame::getFatalOnMovingGoldObject(),("Attempted to move object %s, which is a gold object that should not be movable.", object.getNetworkId().getValueString().c_str()));
-		WARNING(true,("Attempted to move object %s, which is a gold object that should not be movable.", object.getNetworkId().getValueString().c_str()));
+		DEBUG_FATAL(ConfigServerGame::getFatalOnMovingGoldObject(),("Attempted to move object %s, which is a gold object that should not be movable.", object.getNetworkId().getValueString().c_str()));
+		DEBUG_WARNING(true,("Attempted to move object %s, which is a gold object that should not be movable.", object.getNetworkId().getValueString().c_str()));
 	}
 }
 
@@ -2528,7 +2528,7 @@ bool ServerObject::serverObjectInitializeFirstTimeObject(ServerObject *cell, Tra
 		Container::ContainerErrorCode tmp = Container::CEC_Success;
 		if (!ContainerInterface::transferItemToCell(*cell, *this, transform, nullptr, tmp))
 		{
-			WARNING(true, ("ServerWorld::createNewObjectIntermediate tried to create a new object in a cell, but it failed."));
+			DEBUG_WARNING(true, ("ServerWorld::createNewObjectIntermediate tried to create a new object in a cell, but it failed."));
 			return false;
 		}
 	}
