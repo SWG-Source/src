@@ -38,6 +38,8 @@ ObjvarBuffer::ObjvarBuffer(DB::ModeQuery::Mode mode, ObjectTableBuffer *objectTa
 
 ObjvarBuffer::~ObjvarBuffer()
 {
+	m_data.clear();
+	m_overrides.clear();
 }
 
 bool ObjvarBuffer::load(DB::Session *session,const DB::TagSet &tags, const std::string &schema, bool usingGoldDatabase)
@@ -62,16 +64,14 @@ bool ObjvarBuffer::load(DB::Session *session,const DB::TagSet &tags, const std::
 			{
 				break;
 			}
-			
-			IndexKey key(row->object_id.getValue(), row->name_id.getValue());
-			ObjvarValue value;
-			value.m_type=row->type.getValue();
-
-			// The string is stored in the database as utf8, so a wide-to-narrow is appropriate
-			value.m_value=Unicode::wideToNarrow(row->value.getValue());
-
-			value.m_detached=false;
 		
+                        IndexKey key(row->object_id.getValue(), row->name_id.getValue());
+                        ObjvarValue value;
+                        value.m_type=row->type.getValue();
+
+                        // The string is stored in the database as utf8, so a wide-to-narrow is appropriate
+                        value.m_value=Unicode::wideToNarrow(row->value.getValue());
+
 			m_data.insert(std::make_pair(key,value));
 		}
 	}
@@ -312,8 +312,9 @@ void ObjvarBuffer::updateObjvars(const NetworkId &objectId, const std::vector<Dy
 					}
 
 					row->second.m_type = i->value.getType();
-					row->second.m_detached = true;
+					row->second.m_detached = true; //why the fuck even store it at this point?
 				}
+
 				break;
 			}
 			
@@ -330,9 +331,12 @@ void ObjvarBuffer::updateObjvars(const NetworkId &objectId, const std::vector<Dy
 void ObjvarBuffer::removeObject(const NetworkId &object)
 {
 	DataType::iterator i=m_data.lower_bound(IndexKey(object,0));
-	while (i!=m_data.end() && i->first.m_objectId==object)
+	while (i!=m_data.end())
 	{
-		i = m_data.erase(i);
+		if (i->first.m_objectId==object) 
+			i = m_data.erase(i);
+		else
+			++i;
 	}
 }
 

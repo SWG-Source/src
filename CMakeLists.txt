@@ -56,7 +56,7 @@ elseif(UNIX)
 	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS}")
 
 	# don't put anything too crazy in debug...and any common flags go into CMAKE_CXX_FLAGS 
-	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG -DDEBUG_LEVEL=2 -DPRODUCTION=0 -O0")
+	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG -DDEBUG_LEVEL=2 -DPRODUCTION=0 -O0 -g3")
 	
 	# funroll loops and everything else potentially crazy for performance here
 	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DDEBUG_LEVEL=0 -DPRODUCTION=1 -Ofast -funroll-loops")
@@ -80,7 +80,7 @@ elseif(UNIX)
 	#	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 	#endif()
 	
-	add_definitions(-DLINUX -D_REENTRANT -Dlinux -DSTELLA_INTERNAL -D_USING_STL -D_GNU_SOURCE -D_XOPEN_SOURCE=500)
+	add_definitions(-DLINUX -D_REENTRANT -Dlinux -DSTELLA_INTERNAL -D_GNU_SOURCE -D_XOPEN_SOURCE=500)
 endif()
 
 add_subdirectory(external)

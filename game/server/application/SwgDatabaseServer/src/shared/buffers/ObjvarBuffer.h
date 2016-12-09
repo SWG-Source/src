@@ -57,7 +57,7 @@ public:
   private:
 	struct IndexKey
 	{
-		NetworkId m_objectId;
+		const NetworkId m_objectId;
 		int m_nameId;
 
 		IndexKey(const NetworkId &objectId, int nameId);
@@ -92,9 +92,7 @@ public:
 
 // ======================================================================
 
-inline ObjvarBuffer::IndexKey::IndexKey(const NetworkId &objectId, int nameId) :
-		m_objectId(objectId),
-        m_nameId(nameId)
+inline ObjvarBuffer::IndexKey::IndexKey(const NetworkId &objectId, int nameId) : m_objectId(objectId), m_nameId(nameId)
 {
 }
 
