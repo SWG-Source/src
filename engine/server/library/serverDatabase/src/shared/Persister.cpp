@@ -346,17 +346,22 @@ void Persister::startSave(void)
 		m_currentSnapshots.begin()->second->takeTimestamp();
 
 	// queue up snapshots to be saved
+	m_savingDeleting_mtx.lock();
+	
 	ServerSnapshotMap::iterator i;
 	for (i=m_currentSnapshots.begin(); i!=m_currentSnapshots.end(); ++i)
 	{
 		m_savingSnapshots.push_back(i->second);
 		taskQueue->asyncRequest(new TaskSaveSnapshot(i->second));
 	}
+
 	for (i=m_newObjectSnapshots.begin(); i!=m_newObjectSnapshots.end(); ++i)
         {
                 m_savingSnapshots.push_back(i->second);
                 taskQueue->asyncRequest(new TaskSaveSnapshot(i->second));
         }
+
+	m_savingDeleting_mtx.unlock();
 
 	// nothing changed so send a complete message for the shutdown process
 	if( m_savingSnapshots.empty() )
