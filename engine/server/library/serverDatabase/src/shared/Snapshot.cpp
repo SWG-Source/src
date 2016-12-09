@@ -69,8 +69,6 @@ bool Snapshot::saveToDB(DB::Session *session)
 {
 	NOT_NULL(session);
 
-	std::lock_guard<std::mutex> lock(snapshot_mtx);
-
 	CustomStepListType::iterator step;
 	for (step=m_customStepList.begin(); step !=m_customStepList.end(); ++step)
 	{
@@ -197,7 +195,6 @@ void Snapshot::addLocator(ObjectLocator *newLocator)
 {
 		
 	NOT_NULL(newLocator);
-	std::lock_guard<std::mutex> lock(snapshot_mtx);
 	m_locatorList.push_back(newLocator);
 }
 
@@ -231,7 +228,6 @@ bool Snapshot::saveTimestamp(DB::Session *session)
 
 void Snapshot::addCustomPersistStep(CustomPersistStep *newStep)
 {
-	std::lock_guard<std::mutex> lock(snapshot_mtx);
 	NOT_NULL(newStep);
 	m_customStepList.push_back(newStep);
 }
@@ -242,7 +238,6 @@ void Snapshot::saveCompleted()
 {
 	for (CustomStepListType::iterator step=m_customStepList.begin(); step !=m_customStepList.end(); ++step)
 	{
-		std::lock_guard<std::mutex> lock(snapshot_mtx);
 		NOT_NULL(*step);
 		(*step)->onComplete();
 	}

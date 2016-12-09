@@ -16,7 +16,6 @@
 #include "sharedNetworkMessages/BaselinesMessage.h"
 #include "sharedNetworkMessages/BatchBaselinesMessage.h"
 #include "sharedNetworkMessages/DeltasMessage.h"
-#include <mutex>
 
 namespace DB
 {
@@ -108,8 +107,6 @@ public:
 	static int getCreationCount() { return ms_creationCount; }
 	static int getDeletionCount() { return ms_deletionCount; }
 	static int getPendingCount() { return ms_creationCount - ms_deletionCount; }
-
-	std::mutex snapshot_mtx;
 private:
 	static int ms_creationCount;
 	static int ms_deletionCount;
