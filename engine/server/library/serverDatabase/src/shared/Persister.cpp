@@ -235,7 +235,9 @@ void Persister::onFrameBarrierReached()
 	if (m_newCharacterTaskQueue->getNumPendingTasks() == 0)
 	{
 		ServerSnapshotMap delayedSaves;
-		
+
+		std::lock_guard<std::mutex> lock(m_savingDeleting_mtx);		
+	
 		for (ServerSnapshotMap::iterator i=m_newCharacterSnapshots.begin(); i!=m_newCharacterSnapshots.end(); ++i)
 		{
 			if (m_newCharacterLock.find(i->first)==m_newCharacterLock.end())
@@ -261,7 +263,7 @@ void Persister::onFrameBarrierReached()
 	}
 
 	// Check for whether it is time to save
-	WARNING(m_timeSinceLastSave > ConfigServerDatabase::getMaxTimewarp(),("Save was not completed within %i seconds. We may experience a \"time warp\"\n",ConfigServerDatabase::getMaxTimewarp()));
+	FATAL(m_timeSinceLastSave > ConfigServerDatabase::getMaxTimewarp(),("Save was not completed within %i seconds. We may experience a \"time warp\"\n",ConfigServerDatabase::getMaxTimewarp()));
 
 	if (ConfigServerDatabase::getSaveAtModulus()!=-1)
 	{
@@ -616,17 +618,29 @@ void Persister::endBaselines(const NetworkId &objectId, uint32 serverId)
 
 void Persister::saveCompleted(Snapshot *completedSnapshot)
 {
-	std::lock_guard<std::mutex> lck(m_savingDeleting_mtx);
-
-	delete completedSnapshot;
-	completedSnapshot = nullptr;
+	if (m_savingDeleting_mtx.try_lock()) {
+		delete completedSnapshot;
+		completedSnapshot = nullptr;
 	
+		m_savingDeleting_mtx.unlock();
+	} else {
+		//perhaps we should put these into a new vector that we cycle through and purge later?
+		WARNING(true, ("Race Attempt! Unable to lock the savingDeleting mutex, we may leak memory here!"));
+	}
+
 	auto i=std::remove(m_savingSnapshots.begin(),m_savingSnapshots.end(),completedSnapshot);
 
 	if (i!=m_savingSnapshots.end())
 	{
 		WARNING(true, ("m_SavingSnapshots is not empty and we're nuking everything for some reason. Is this a leak?"));
-		m_savingSnapshots.erase(i, m_savingSnapshots.end());
+		
+		if (m_savingDeleting_mtx.try_lock()) {
+			m_savingSnapshots.erase(i, m_savingSnapshots.end());
+			m_savingDeleting_mtx.unlock();
+		} else {
+			// perhaps we should put these into a new vector that we cycle through and purge later?
+			WARNING(true, ("Race attempt! Unable to lock the savingDeleting mutex, we may leak memory here!"));
+		}
 	
 		if (m_savingSnapshots.empty() && ConfigServerDatabase::getReportSaveTimes())
 		{
@@ -660,8 +674,15 @@ void Persister::saveCompleted(Snapshot *completedSnapshot)
 		auto j=std::remove(m_savingCharacterSnapshots.begin(),m_savingCharacterSnapshots.end(),completedSnapshot);
 	
 		DEBUG_WARNING(j==m_savingCharacterSnapshots.end(),("saveCompleted() called w/o snap in m_savingSnapshots or m_savingCharacterSnapshots."));
-	
-		m_savingCharacterSnapshots.erase(j, m_savingCharacterSnapshots.end());
+
+
+		if (m_savingDeleting_mtx.try_lock()) {
+        	        m_savingCharacterSnapshots.erase(j, m_savingCharacterSnapshots.end());
+			m_savingDeleting_mtx.unlock();
+        	} else {
+			//perhaps we should put these into a new vector that we cycle through and purge later?
+        	        WARNING(true, ("Race attempt! Unable to lock the savingDeleting mutex, we may leak memory here!"));
+	        }
 	}
 }
 
