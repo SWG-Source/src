@@ -16,6 +16,7 @@
 #include "sharedNetworkMessages/BaselinesMessage.h"
 #include "sharedNetworkMessages/BatchBaselinesMessage.h"
 #include "sharedNetworkMessages/DeltasMessage.h"
+#include <mutex>
 
 namespace DB
 {
@@ -102,7 +103,7 @@ public:
 	bool m_useGoldDatabase;
 	DB::ModeQuery::Mode m_mode;
 	int m_timestamp;
-
+	std::mutex snapshot_mtx;
 
 public:
 	static int getCreationCount() { return ms_creationCount; }

@@ -69,6 +69,8 @@ bool Snapshot::saveToDB(DB::Session *session)
 {
 	NOT_NULL(session);
 
+	std::lock_guard<std::mutex> lock(snapshot_mtx);
+
 	CustomStepListType::iterator step;
 	for (step=m_customStepList.begin(); step !=m_customStepList.end(); ++step)
 	{
@@ -117,40 +119,29 @@ void Snapshot::handleDeltasMessage(NetworkId objectId, const DeltasMessage &msg)
 	{
 		unsigned short int index;
 		Archive::get(bs,index);
- 		if (packageId==DeltasMessage::DELTAS_SERVER)
-		{
-			decodeServerData(objectId,typeId,index,bs,false);
-		}
-		else if (packageId==DeltasMessage::DELTAS_SHARED)
-		{
-			decodeSharedData(objectId,typeId,index,bs,false);
-		}
-		else if (packageId==DeltasMessage::DELTAS_CLIENT_SERVER)
-		{
-			decodeClientData(objectId,typeId,index,bs,false);
-		}
- 		else if (packageId==DeltasMessage::DELTAS_SERVER_NP)
-		{
-		}
-		else if (packageId==DeltasMessage::DELTAS_SHARED_NP)
-		{
-		}
-		else if (packageId==DeltasMessage::DELTAS_CLIENT_SERVER_NP)
-		{
-		}
-		else if (packageId==DeltasMessage::DELTAS_FIRST_PARENT_CLIENT_SERVER)
-		{
-			decodeParentClientData(objectId,typeId,index,bs,false);
-		}
-		else if (packageId==DeltasMessage::DELTAS_FIRST_PARENT_CLIENT_SERVER_NP)
-		{
-		}
-		else if (packageId==DeltasMessage::DELTAS_UI)
-		{
-		}
-		else
-		{
-			FATAL(true,("PackageId was invalid."));
+
+		switch (packageId) {
+ 			case DeltasMessage::DELTAS_SERVER:
+				decodeServerData(objectId,typeId,index,bs,false);
+				break;
+			case DeltasMessage::DELTAS_SHARED:
+				decodeSharedData(objectId,typeId,index,bs,false);
+				break;
+			case DeltasMessage::DELTAS_CLIENT_SERVER:
+				decodeClientData(objectId,typeId,index,bs,false);
+				break;
+			case DeltasMessage::DELTAS_FIRST_PARENT_CLIENT_SERVER:
+				decodeParentClientData(objectId,typeId,index,bs,false);
+				break;
+                        case DeltasMessage::DELTAS_SERVER_NP:
+                        case DeltasMessage::DELTAS_SHARED_NP:
+                        case DeltasMessage::DELTAS_CLIENT_SERVER_NP:			
+			case DeltasMessage::DELTAS_FIRST_PARENT_CLIENT_SERVER_NP:
+			case DeltasMessage::DELTAS_UI:
+				break;
+			default:
+				FATAL(true,("PackageId was invalid."));
+				break;
 		}
 	}
 }
@@ -173,41 +164,30 @@ void Snapshot::handleBaselinesMessage(NetworkId objectId, const BaselinesMessage
 	Archive::get(bs,count);
 	for (uint16 i=0; i< count; ++i)
 	{
-		if (packageId==BaselinesMessage::BASELINES_SERVER)
-		{
-			decodeServerData(objectId,typeId,i,bs,true);
-		}
-		else if (packageId==BaselinesMessage::BASELINES_SHARED)
-		{
-			decodeSharedData(objectId,typeId,i,bs,true);
-		}
-		else if (packageId==BaselinesMessage::BASELINES_CLIENT_SERVER)
-		{
-			decodeClientData(objectId,typeId,i,bs,true);
-		}
-		else if (packageId==BaselinesMessage::BASELINES_SERVER_NP)
-		{
-		}
-		else if (packageId==BaselinesMessage::BASELINES_SHARED_NP)
-		{
-		}
-		else if (packageId==BaselinesMessage::BASELINES_CLIENT_SERVER_NP)
-		{
-		}
-		else if (packageId==BaselinesMessage::BASELINES_UI)
-		{
-		}
-		else if (packageId==BaselinesMessage::BASELINES_FIRST_PARENT_CLIENT_SERVER)
-		{
-			decodeParentClientData(objectId,typeId,i,bs,true);
-		}
-		else if (packageId==BaselinesMessage::BASELINES_FIRST_PARENT_CLIENT_SERVER_NP)
-		{
-		}
-		else
-		{
-			FATAL(true,("PackageId was not BASELINES_SERVER, BASELINES_SHARED, or BASELINES_CLIENT.\n"));
-		}
+		switch (packageId){
+			case BaselinesMessage::BASELINES_SERVER :
+				decodeServerData(objectId,typeId,i,bs,true);
+				break;	
+			case BaselinesMessage::BASELINES_SHARED:
+				decodeSharedData(objectId,typeId,i,bs,true);
+				break;
+			case BaselinesMessage::BASELINES_CLIENT_SERVER :
+				decodeClientData(objectId,typeId,i,bs,true);
+				break;
+			case BaselinesMessage::BASELINES_FIRST_PARENT_CLIENT_SERVER:
+				decodeParentClientData(objectId,typeId,i,bs,true);
+				break;
+			case BaselinesMessage::BASELINES_SERVER_NP :
+			case BaselinesMessage::BASELINES_SHARED_NP :
+			case BaselinesMessage::BASELINES_CLIENT_SERVER_NP :
+			case BaselinesMessage::BASELINES_UI :
+			case BaselinesMessage::BASELINES_FIRST_PARENT_CLIENT_SERVER_NP :
+				break;	
+			default:
+				FATAL(true,("PackageId was not BASELINES_SERVER, BASELINES_SHARED, or BASELINES_CLIENT.\n"));
+				break;
+		
+		}	
 	}
 }
 
@@ -215,7 +195,9 @@ void Snapshot::handleBaselinesMessage(NetworkId objectId, const BaselinesMessage
 
 void Snapshot::addLocator(ObjectLocator *newLocator)
 {
+		
 	NOT_NULL(newLocator);
+	std::lock_guard<std::mutex> lock(snapshot_mtx);
 	m_locatorList.push_back(newLocator);
 }
 
@@ -249,6 +231,7 @@ bool Snapshot::saveTimestamp(DB::Session *session)
 
 void Snapshot::addCustomPersistStep(CustomPersistStep *newStep)
 {
+	std::lock_guard<std::mutex> lock(snapshot_mtx);
 	NOT_NULL(newStep);
 	m_customStepList.push_back(newStep);
 }
@@ -259,6 +242,7 @@ void Snapshot::saveCompleted()
 {
 	for (CustomStepListType::iterator step=m_customStepList.begin(); step !=m_customStepList.end(); ++step)
 	{
+		std::lock_guard<std::mutex> lock(snapshot_mtx);
 		NOT_NULL(*step);
 		(*step)->onComplete();
 	}
