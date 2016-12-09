@@ -71,7 +71,7 @@ void ConfigServerGame::install(void)
 	KEY_INT     (scriptWatcherInterruptTime, 5000);
 	KEY_INT     (scriptStackErrorLimit, 35);
 	KEY_INT     (scriptStackErrorLevel, 0);
-	KEY_BOOL    (disableObjvarNullCheck, false);
+	KEY_BOOL    (disableObjvarNullCheck, true);
 	KEY_INT     (maxGameServerToSendUniverseData, 1000000);
 	KEY_INT     (timeoutToAckUniverseDataReceived, 0);
 	KEY_BOOL    (disableCombat, false);

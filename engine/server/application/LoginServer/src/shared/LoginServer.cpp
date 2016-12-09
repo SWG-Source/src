@@ -1076,25 +1076,7 @@ void LoginServer::validateAccount(const StationId& stationId, uint32 clusterId, 
 			// Check cluster npe user limit
 			if (cle->m_numTutorialPlayers > cle->m_onlineTutorialLimit)
 			{
-				canCreateRegular = false;
-				canCreateJedi = false;
-			}
-
-			// limit login/character creation based on subscription feature bits
-			if (((subscriptionBits & ClientSubscriptionFeature::FreeTrial) != 0)
-				&& ((subscriptionBits & ClientSubscriptionFeature::Base) == 0))
-			{
-				// Check cluster free trial user limit
-				if (cle->m_numFreeTrialPlayers > cle->m_onlineFreeTrialLimit)
-				{
-					canLogin = false;
-				}
-				// Check cluster free trial character creation
-				if (!cle->m_freeTrialCanCreateChar)
-				{
-					canCreateRegular = false;
-					canCreateJedi = false;
-				}
+				canLogin = false;
 			}
 		}
 

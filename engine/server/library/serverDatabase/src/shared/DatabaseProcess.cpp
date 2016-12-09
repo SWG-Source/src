@@ -91,13 +91,13 @@ m_queryFetchCount(0)
 
 	centralServerConnection = new CentralServerConnection(ConfigServerDatabase::getCentralServerAddress(), ConfigServerDatabase::getCentralServerPort());
 	NetworkSetupData setup;
-	setup.maxConnections = 100;
+	setup.maxConnections = 300;
 	setup.port = 0;
 	setup.bindInterface = ConfigServerDatabase::getGameServiceBindInterface();
 	gameService = new Service(ConnectionAllocator<GameServerConnection>(), setup);
 
 	NetworkSetupData cmSetup;
-	cmSetup.maxConnections = 100;
+	cmSetup.maxConnections = 300;
 	cmSetup.port = ConfigServerDatabase::getCommoditiesServerPort();
 	cmSetup.bindInterface = ConfigServerDatabase::getCommoditiesServerAddress();
 	commoditiesService = new Service(ConnectionAllocator<CommoditiesServerConnection>(), cmSetup);
@@ -128,7 +128,7 @@ m_queryFetchCount(0)
 	DB::Server::setDisconnectSleepTime(ConfigServerDatabase::getDisconnectSleepTime());
 	DB::Server::setFatalOnDataError(ConfigServerDatabase::getFatalOnDataError());
 	
-    // the DatabaseProcess singleton will want to know when major, connection
+        // the DatabaseProcess singleton will want to know when major, connection
 	// oriented events occur. These events are defined in Game, Task and Central
 	// connection classes.
 	connectToMessage("CentralConnectionOpened");
@@ -252,7 +252,7 @@ void DatabaseProcess::run(void)
 		// TODO: sleep longer if idle
 		if (shouldSleep)
 		{
-			Os::sleep(1);
+			Os::sleep(3);
 		}
 
 		NetworkHandler::dispatch();

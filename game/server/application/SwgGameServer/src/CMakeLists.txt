@@ -55,8 +55,6 @@ else()
 	)
 endif()
 
-add_compile_options(-fprofile-instr-use=${PROJECT_SOURCE_DIR}/src/linux/SwgGameServer.profdata)
-
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/shared/combat
 	${CMAKE_CURRENT_SOURCE_DIR}/shared/core

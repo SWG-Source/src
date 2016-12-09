@@ -119,7 +119,7 @@ public:
 	void newMissionObject                 (NetworkId const & objectId);
 	void newPlanetObject                  (NetworkId const & objectId);
 	void newPlayerObject                  (NetworkId const & objectId);
-	void newPlayerQuestObject			  (NetworkId const & objectId);
+	void newPlayerQuestObject	      (NetworkId const & objectId);
 	void newRegionCircleObject            (NetworkId const & objectId);
 	void newRegionObject                  (NetworkId const & objectId);
 	void newRegionRectangleObject         (NetworkId const & objectId);

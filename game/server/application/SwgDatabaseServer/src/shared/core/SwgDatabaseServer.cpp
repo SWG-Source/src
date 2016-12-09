@@ -61,8 +61,6 @@ void SwgDatabaseServer::run()
 	
 	DataCleanupManager cleanupManager;
 	cleanupManager.runDailyCleanup();
-
-	
 	
 	DatabaseProcess::run();
 }

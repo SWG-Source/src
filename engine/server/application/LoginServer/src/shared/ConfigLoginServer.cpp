@@ -116,7 +116,7 @@ void ConfigLoginServer::install(void)
 	KEY_BOOL(requireSecureLoginForCsTool, true);
 	KEY_BOOL(useExternalAuth, false);
 	KEY_STRING(externalAuthURL, "");
-	KEY_INT(maxConnectionsPerIP, 0); // assuming 2 people playing in the same household
+	KEY_INT(maxConnectionsPerIP, 4); // assuming 2 people playing in the same household
 
 	int index = 0;
 	char const * result = 0;

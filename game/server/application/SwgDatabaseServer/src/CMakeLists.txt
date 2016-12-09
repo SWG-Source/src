@@ -152,8 +152,6 @@ else()
 	)
 endif()
 
-add_compile_options(-fprofile-instr-use=${PROJECT_SOURCE_DIR}/src/linux/SwgDatabaseServer.profdata)
-
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/shared/buffers
     ${CMAKE_CURRENT_SOURCE_DIR}/shared/core
@@ -295,8 +293,8 @@ add_custom_command(
 )
 
 add_executable(SwgDatabaseServer
-    ${SHARED_SOURCES}
-    ${PLATFORM_SOURCES}
+	${SHARED_SOURCES}
+	${PLATFORM_SOURCES}
     ${SCHEMA_H_OUTPUT}
     ${ENCODER_CPP_OUTPUT}
     ${DECODER_CPP_OUTPUT}

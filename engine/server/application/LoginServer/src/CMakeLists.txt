@@ -78,8 +78,6 @@ else()
 	)
 endif()
 
-add_compile_options(-fprofile-instr-use=${PROJECT_SOURCE_DIR}/src/linux/LoginServer.profdata)
-
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/shared
     ${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedCommandParser/include/public
