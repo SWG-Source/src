@@ -16,8 +16,6 @@
 #include <vector>
 #include <set> //TODO: remove when we clean up newCharacterLock hack
 
-#include <mutex>
-
 #include "Unicode.h"
 #include "serverNetworkMessages/MessageToPayload.h"
 #include "sharedDatabaseInterface/DbModeQuery.h"
@@ -121,8 +119,6 @@ class Persister : public MessageDispatch::Receiver
 
 	SnapshotListType       m_savingSnapshots;
 	SnapshotListType       m_savingCharacterSnapshots;
-	
-	std::mutex m_savingDeleting_mtx;
 	
 	NewCharacterLockType   m_newCharacterLock;
 	CharactersToDeleteType * m_charactersToDeleteThisSaveCycle;

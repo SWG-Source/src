@@ -346,8 +346,6 @@ void Persister::startSave(void)
 		m_currentSnapshots.begin()->second->takeTimestamp();
 
 	// queue up snapshots to be saved
-	m_savingDeleting_mtx.lock();
-	
 	ServerSnapshotMap::iterator i;
 	for (i=m_currentSnapshots.begin(); i!=m_currentSnapshots.end(); ++i)
 	{
@@ -360,8 +358,6 @@ void Persister::startSave(void)
                 m_savingSnapshots.push_back(i->second);
                 taskQueue->asyncRequest(new TaskSaveSnapshot(i->second));
         }
-
-	m_savingDeleting_mtx.unlock();
 
 	// nothing changed so send a complete message for the shutdown process
 	if( m_savingSnapshots.empty() )
@@ -621,61 +617,43 @@ void Persister::endBaselines(const NetworkId &objectId, uint32 serverId)
 
 void Persister::saveCompleted(Snapshot *completedSnapshot)
 {
-	if (m_savingDeleting_mtx.try_lock()) {
-		auto i=std::remove(m_savingSnapshots.begin(),m_savingSnapshots.end(),completedSnapshot);
-
-		if (i!=m_savingSnapshots.end())
+	auto i=std::remove(m_savingSnapshots.begin(),m_savingSnapshots.end(),completedSnapshot);
+	if (i!=m_savingSnapshots.end())
+	{
+		m_savingSnapshots.erase(i, m_savingSnapshots.end());
+		if (m_savingSnapshots.empty() && ConfigServerDatabase::getReportSaveTimes())
 		{
-			delete completedSnapshot;
-			completedSnapshot = nullptr;
+			int saveTime = Clock::timeMs() - m_saveStartTime;
+			++m_saveCount;
+			m_totalSaveTime += saveTime;
+			if (saveTime > m_maxSaveTime)
+				m_maxSaveTime = saveTime;
 
-			m_savingSnapshots.erase(i, m_savingSnapshots.end());
-			m_savingDeleting_mtx.unlock();
-	
-			if (m_savingSnapshots.empty() && ConfigServerDatabase::getReportSaveTimes())
-			{
-				int saveTime = Clock::timeMs() - m_saveStartTime;
-				++m_saveCount;
-				m_totalSaveTime += saveTime;
-				if (saveTime > m_maxSaveTime)
-					m_maxSaveTime = saveTime;
-	
-				DEBUG_REPORT_LOG(true,("Save completed in %i.  (Average %i, max %i)\n", saveTime, m_totalSaveTime/m_saveCount, m_maxSaveTime));
-				LOG("SaveTimes",("Save completed in %i.  (Average %i, max %i)", saveTime, m_totalSaveTime/m_saveCount, m_maxSaveTime));
-				m_lastSaveTime = saveTime;
-			}
-
-			if (m_savingSnapshots.empty())
-			{
-				// message Central Server that the current save cycle is complete
-				GenericValueTypeMessage<int> const saveCompleteMessage("DatabaseSaveComplete", ++m_saveCounter);
-				DatabaseProcess::getInstance().sendToCentralServer(saveCompleteMessage, true);
-				LOG("Database",("Sending DatabaseSaveComplete network message to Central."));
-			}
-	
-			{
-				// set the last save completion time (for the monitoring program)
-				time_t theTime = time(0);
-				m_lastSaveCompletionTime = ctime(&theTime);
-			}
+			DEBUG_REPORT_LOG(true,("Save completed in %i.  (Average %i, max %i)\n", saveTime, m_totalSaveTime/m_saveCount, m_maxSaveTime));
+			LOG("SaveTimes",("Save completed in %i.  (Average %i, max %i)", saveTime, m_totalSaveTime/m_saveCount, m_maxSaveTime));
+			m_lastSaveTime = saveTime;
 		}
-		else
+			if (m_savingSnapshots.empty())
 		{
-			auto j=std::remove(m_savingCharacterSnapshots.begin(),m_savingCharacterSnapshots.end(),completedSnapshot);
-	
-			DEBUG_WARNING(j==m_savingCharacterSnapshots.end(),("saveCompleted called w/o snap in m_savingSnapshots or m_savingCharacterSnapshots."));
+			// message Central Server that the current save cycle is complete
+			GenericValueTypeMessage<int> const saveCompleteMessage("DatabaseSaveComplete", ++m_saveCounter);
+			DatabaseProcess::getInstance().sendToCentralServer(saveCompleteMessage, true);
+			LOG("Database",("Sending DatabaseSaveComplete network message to Central."));
+		}
 
-			delete completedSnapshot;
-			completedSnapshot = nullptr;
+		{
+			// set the last save completion time (for the monitoring program)
+			time_t theTime = time(0);
+			m_lastSaveCompletionTime = ctime(&theTime);
+		}
+	}
+	else
+	{
+		auto j=std::remove(m_savingCharacterSnapshots.begin(),m_savingCharacterSnapshots.end(),completedSnapshot);
 
+		DEBUG_WARNING(j==m_savingCharacterSnapshots.end(),("saveCompleted called w/o snap in m_savingSnapshots or m_savingCharacterSnapshots."));
         	        m_savingCharacterSnapshots.erase(j, m_savingCharacterSnapshots.end());
-			m_savingDeleting_mtx.unlock();
-        	} 
-	} else {
-			//perhaps we should put these into a new vector that we cycle through and purge later?
-        	        WARNING(true, ("Race attempt! Unable to lock the savingDeleting mutex, we may leak memory here!"));
-			return;
-        }
+       	}
 }
 
 // ----------------------------------------------------------------------
