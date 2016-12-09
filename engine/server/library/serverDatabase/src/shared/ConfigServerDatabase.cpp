@@ -56,7 +56,7 @@ void ConfigServerDatabase::install(void)
 	KEY_INT     (taskManagerPort, 60001);
 	KEY_INT     (expectedDBVersion, 270);
 	KEY_BOOL    (correctDBVersionRequired,true);
-	KEY_INT     (saveFrequencyLimit,5);
+	KEY_INT     (saveFrequencyLimit,1);
 	KEY_STRING  (schemaOwner, "");
 	KEY_STRING  (goldSchemaOwner, "");
 	KEY_FLOAT   (uniqueMessageCacheTimeSec, 30.0f);
