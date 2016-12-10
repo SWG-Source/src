@@ -9,6 +9,9 @@
 #ifndef	INCLUDED_ServerPathBuilder_H
 #define	INCLUDED_ServerPathBuilder_H
 
+#include <vector>
+#include <list>
+
 #include "serverGame/AiLocation.h"
 #include "Unicode.h"
 
@@ -22,8 +25,8 @@ class PathSearch;
 class PathNode;
 class ServerObject;
 
-typedef stdlist<AiLocation>::fwd AiPath;
-typedef stdvector<int>::fwd IndexList;
+typedef std::list<AiLocation> AiPath;
+typedef std::vector<int> IndexList;
 
 // ======================================================================
 

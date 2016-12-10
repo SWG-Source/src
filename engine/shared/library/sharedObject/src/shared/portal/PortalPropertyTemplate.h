@@ -106,9 +106,9 @@ class PortalPropertyTemplateCell
 public:
 
 	typedef PortalPropertyTemplateCellLight                     Light;
-	typedef stdvector<Light>::fwd                               LightList;
-	typedef stdvector<Portal *>::fwd                            PortalList;
-	typedef stdvector<PortalPropertyTemplateCellPortal *>::fwd  PortalPropertyTemplateCellPortalList;
+	typedef std::vector<Light>                               LightList;
+	typedef std::vector<Portal *>                            PortalList;
+	typedef std::vector<PortalPropertyTemplateCellPortal *>  PortalPropertyTemplateCellPortalList;
 
 public:
 
@@ -187,12 +187,12 @@ public:
 
 
 	typedef PortalPropertyTemplateCell     Cell;
-	typedef stdvector<Cell *>::fwd         CellList;
-	typedef stdvector<Vector>::fwd         VertexList;
-	typedef stdvector<Portal *>::fwd       PortalList;
-	typedef stdvector<PortalOwners>::fwd   PortalOwnersList;
-	typedef stdvector<IndexedTriangleList *>::fwd PortalGeometryList;
-	typedef stdvector<const char *>::fwd   CellNameList;
+	typedef std::vector<Cell *>         CellList;
+	typedef std::vector<Vector>         VertexList;
+	typedef std::vector<Portal *>       PortalList;
+	typedef std::vector<PortalOwners>   PortalOwnersList;
+	typedef std::vector<IndexedTriangleList *> PortalGeometryList;
+	typedef std::vector<const char *>   CellNameList;
 
 public:
 

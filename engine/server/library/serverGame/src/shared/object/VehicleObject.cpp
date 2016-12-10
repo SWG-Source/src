@@ -45,7 +45,7 @@ Controller* VehicleObject::createDefaultController(void)
 
 //-----------------------------------------------------------------------
 
-void VehicleObject::getAttributes(stdvector<std::pair<std::string, Unicode::String> >::fwd &data) const
+void VehicleObject::getAttributes(std::vector<std::pair<std::string, Unicode::String> > &data) const
 {
 	TangibleObject::getAttributes(data);
 }

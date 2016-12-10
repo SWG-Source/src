@@ -18,7 +18,7 @@ class NetworkId;
 class StaticLootItemManager
 {
 public:
-	typedef stdvector<std::pair<std::string, Unicode::String> >::fwd AttributeVector;
+	typedef std::vector<std::pair<std::string, Unicode::String> > AttributeVector;
 
 	static void sendDataToClient(NetworkId const & playerId, std::string const & staticItemName);
 	static void getAttributes(NetworkId const & playerId, std::string const & staticItemName, AttributeVector & data);

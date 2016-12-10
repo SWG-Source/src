@@ -37,7 +37,7 @@ public:
 	class ScheduleTimeComparator;
 
 	typedef uint64                                   ScheduleTime;
-	typedef stdmultimap<ScheduleTime, Object*>::fwd  ScheduleTimeMap;
+	typedef std::multimap<ScheduleTime, Object*>  ScheduleTimeMap;
 
 public:
 

@@ -60,7 +60,7 @@ private:
 private:
 
 	class Segment;
-	typedef stdvector<Segment*>::fwd SegmentList;
+	typedef std::vector<Segment*> SegmentList;
 	SegmentList*  m_segmentList;
 
 	bool          m_needsRecalculateExtents;

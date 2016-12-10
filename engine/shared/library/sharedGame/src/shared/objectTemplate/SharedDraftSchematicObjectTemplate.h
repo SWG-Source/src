@@ -199,10 +199,10 @@ protected:
 private:
 	// this enum is also defined in the server object_template.tdf file
 	// this enum is also defined in the server object_template.tdf file
-	stdvector<StructParamOT *>::fwd m_slots;		// ingredient slots
+	std::vector<StructParamOT *> m_slots;		// ingredient slots
 	bool m_slotsLoaded;
 	bool m_slotsAppend;
-	stdvector<StructParamOT *>::fwd m_attributes;		// what attributes the schematic can affect
+	std::vector<StructParamOT *> m_attributes;		// what attributes the schematic can affect
 	bool m_attributesLoaded;
 	bool m_attributesAppend;
 	StringParam m_craftedSharedTemplate;

@@ -104,7 +104,7 @@ public:
 
 private:
 
-	typedef stdvector<SearchNode *>::fwd  SearchNodes;
+	typedef std::vector<SearchNode *>  SearchNodes;
 
 private:
 

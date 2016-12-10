@@ -10,7 +10,7 @@
 
 //-----------------------------------------------------------------------
 
-ChatInviteGroupMembersToRoom::ChatInviteGroupMembersToRoom(const NetworkId & i, const ChatAvatarId & g, const std::string & r, const stdvector<NetworkId>::fwd & m) :
+ChatInviteGroupMembersToRoom::ChatInviteGroupMembersToRoom(const NetworkId & i, const ChatAvatarId & g, const std::string & r, const std::vector<NetworkId> & m) :
 GameNetworkMessage("ChatInviteGroupMembersToRoom"),
 invitorNetworkId(i),
 groupLeaderId(g),

@@ -18,10 +18,10 @@ class GameObjectTypes
 {
 public:
 
-	typedef stdmap<int, StringId>::fwd        TypeStringIdMap;
-	typedef stdmap<int, std::string>::fwd     TypeStringMap;
-	typedef stdmap<std::string, int>::fwd     StringTypeMap;
-	typedef stdmap<int, Unicode::String>::fwd TypeUnicodeStringMap;
+	typedef std::map<int, StringId>        TypeStringIdMap;
+	typedef std::map<int, std::string>     TypeStringMap;
+	typedef std::map<std::string, int>     StringTypeMap;
+	typedef std::map<int, Unicode::String> TypeUnicodeStringMap;
 
 	static const TypeStringMap &   getTypeStringMap ();
 
@@ -41,7 +41,7 @@ public:
 	static bool                    doesPowerupApply (int powerupType, int targetType);
 
 	static bool                    isExcludedFromCommodities(int type);
-	static stdmap<int, std::string>::fwd const & getTypesExcludedFromCommodities();
+	static std::map<int, std::string> const & getTypesExcludedFromCommodities();
 
 	static const int ms_type_mask;
 };

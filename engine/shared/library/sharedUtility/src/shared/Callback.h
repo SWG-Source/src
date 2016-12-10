@@ -44,7 +44,7 @@ private:
 
 private:
 
-	typedef stdvector<CallbackReceiver *>::fwd CallbackReceiverVector;
+	typedef std::vector<CallbackReceiver *> CallbackReceiverVector;
 
 	int                       m_referenceCount;
 	CallbackReceiverVector    m_receivers;

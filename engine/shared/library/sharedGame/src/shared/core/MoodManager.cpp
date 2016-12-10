@@ -20,8 +20,8 @@
 
 namespace
 {
-	typedef stdmap<uint32,std::string>::fwd IntStringMap;
-	typedef stdmap<std::string,uint32>::fwd StringIntMap;
+	typedef std::map<uint32,std::string> IntStringMap;
+	typedef std::map<std::string,uint32> StringIntMap;
 	
 	IntStringMap s_idToNameMap;
 	StringIntMap s_nameToIdMap;

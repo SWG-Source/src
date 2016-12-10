@@ -28,7 +28,7 @@ class ImmediateDeleteCustomPersistStep : public CustomPersistStep
 	void addObject             (const NetworkId &deletedObject);
 	
   private:
-	stdset<NetworkId>::fwd     *m_objects; // using set instead of vector to enforce uniqueness
+	std::set<NetworkId>     *m_objects; // using set instead of vector to enforce uniqueness
 
   private:
 	ImmediateDeleteCustomPersistStep &operator= (const ImmediateDeleteCustomPersistStep&); //disable

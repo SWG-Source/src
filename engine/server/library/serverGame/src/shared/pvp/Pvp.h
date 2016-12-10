@@ -64,7 +64,7 @@ public:
 	static bool hasAnyBountyDuelEnemyFlag (TangibleObject const &who);
 	static bool hasAnyGuildWarCoolDownPeriodEnemyFlag(TangibleObject const &who);
 	static bool isDuelingAllowed          (TangibleObject const &actor, TangibleObject const &target);
-	static void getPersonalEnemyIds       (TangibleObject const &who, stdvector<NetworkId>::fwd &enemyIds);
+	static void getPersonalEnemyIds       (TangibleObject const &who, std::vector<NetworkId> &enemyIds);
 
 	// pvp setup
 	static void setAlignedFaction         (TangibleObject &who, FactionId factionId);
@@ -145,13 +145,13 @@ public:
 
 	static GcwScoreCategory const * getGcwScoreCategory(std::string const & scoreCategory);
 	static GcwScoreCategory const * getGcwScoreDefaultCategoryForPlanet(std::string const & planetName);
-	static stdmap<std::string, Pvp::GcwScoreCategory const *>::fwd const & getAllGcwScoreCategory();
-	static stdmap<std::string, stdmap<std::string, std::pair<std::pair<float, float>, float> >::fwd >::fwd const & getGcwScoreCategoryRegions();
+	static std::map<std::string, Pvp::GcwScoreCategory const *> const & getAllGcwScoreCategory();
+	static std::map<std::string, std::map<std::string, std::pair<std::pair<float, float>, float> > > const & getGcwScoreCategoryRegions();
 	static std::string const & getGcwScoreCategoryRegion(std::string const & planetName, Vector const & position_w);
-	static stdmap<std::string, stdmap<std::string, int>::fwd >::fwd const & getGcwScoreCategoryGroups();
+	static std::map<std::string, std::map<std::string, int> > const & getGcwScoreCategoryGroups();
 	static bool getGcwScoreCategoryGroupTotalPoints(std::string const & group, std::string const & category, int & totalPoints);
-	static int calculateGcwImperialScorePercentile(std::string const & gcwCategory, stdmap<std::string, std::pair<int64, int64> >::fwd const & gcwImperialScore, stdmap<std::string, std::pair<int64, int64> >::fwd const & gcwRebelScore);
-	static int calculateGcwImperialScorePercentile(std::string const & gcwCategory, stdmap<std::string, std::pair<uint64, uint64> >::fwd const & gcwImperialScore, stdmap<std::string, std::pair<uint64, uint64> >::fwd const & gcwRebelScore);
+	static int calculateGcwImperialScorePercentile(std::string const & gcwCategory, std::map<std::string, std::pair<int64, int64> > const & gcwImperialScore, std::map<std::string, std::pair<int64, int64> > const & gcwRebelScore);
+	static int calculateGcwImperialScorePercentile(std::string const & gcwCategory, std::map<std::string, std::pair<uint64, uint64> > const & gcwImperialScore, std::map<std::string, std::pair<uint64, uint64> > const & gcwRebelScore);
 	static float getGcwDefenderRegionImperialBonus(std::string const & scoreCategory);
 	static float getGcwDefenderRegionRebelBonus(std::string const & scoreCategory);
 	static bool getGcwDefenderRegionBonus(CreatureObject const & creature, PlayerObject const & player, float & bonus);

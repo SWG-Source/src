@@ -24,7 +24,7 @@ private:
 	unsigned long  m_watcherPort;
 
 	// used for reporting load time of each game server
-	stdmap<uint32, unsigned long>::fwd m_gameServerLoadTime;
+	std::map<uint32, unsigned long> m_gameServerLoadTime;
 
 private:
 

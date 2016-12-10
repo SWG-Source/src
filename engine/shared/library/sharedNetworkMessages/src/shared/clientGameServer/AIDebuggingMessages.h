@@ -212,10 +212,10 @@ public:
 	void                          setLocation(const Vector& v);
 	int                           getParent() const;
 	void                          setParent(int p);
-	const stdvector<int>::fwd&    getChildren() const;
-	void                          setChildren(const stdvector<int>::fwd& c);
-	const stdvector<int>::fwd&    getSiblings() const;
-	void                          setSiblings(const stdvector<int>::fwd& c);
+	const std::vector<int>&    getChildren() const;
+	void                          setChildren(const std::vector<int>& c);
+	const std::vector<int>&    getSiblings() const;
+	void                          setSiblings(const std::vector<int>& c);
 	int                           getType() const;
 	void                          setType(int t);
 	int                           getLevel() const;
@@ -348,8 +348,8 @@ public:
 	NetworkId const &getObjectId() const;
 	void setObjectId(NetworkId const & pathId);
 
-	stdvector<AIPathInfo_NodeInfo>::fwd const &getNodes() const;
-	void setNodes(stdvector<AIPathInfo_NodeInfo>::fwd const &n);
+	std::vector<AIPathInfo_NodeInfo> const &getNodes() const;
+	void setNodes(std::vector<AIPathInfo_NodeInfo> const &n);
 
 private:
 	Archive::AutoVariable<NetworkId> m_objectId;

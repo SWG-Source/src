@@ -62,59 +62,59 @@ class DynamicVariable
 	void setPosition(int newPosition);
 
 	explicit DynamicVariable(int value);
-	explicit DynamicVariable(const stdvector<int>::fwd & value);
+	explicit DynamicVariable(const std::vector<int> & value);
 	explicit DynamicVariable(float value);
-	explicit DynamicVariable(const stdvector<float>::fwd & value);
+	explicit DynamicVariable(const std::vector<float> & value);
 	explicit DynamicVariable(const Unicode::String &value);
 	explicit DynamicVariable(const std::string &value);
-	explicit DynamicVariable(const stdvector<Unicode::String>::fwd & value);
+	explicit DynamicVariable(const std::vector<Unicode::String> & value);
 	explicit DynamicVariable(const NetworkId & value);
-	explicit DynamicVariable(const stdvector<NetworkId>::fwd & value);
+	explicit DynamicVariable(const std::vector<NetworkId> & value);
 	explicit DynamicVariable(const DynamicVariableLocationData & value);
-	explicit DynamicVariable(const stdvector<DynamicVariableLocationData>::fwd & value);
+	explicit DynamicVariable(const std::vector<DynamicVariableLocationData> & value);
 	explicit DynamicVariable(const StringId &value);
-	explicit DynamicVariable(const stdvector<StringId>::fwd &value);
+	explicit DynamicVariable(const std::vector<StringId> &value);
 	explicit DynamicVariable(const Transform &value);
-	explicit DynamicVariable(const stdvector<Transform>::fwd &value);
+	explicit DynamicVariable(const std::vector<Transform> &value);
 	explicit DynamicVariable(const Vector &value);
-	explicit DynamicVariable(const stdvector<Vector>::fwd &value);
+	explicit DynamicVariable(const std::vector<Vector> &value);
 
 	bool get(int & value) const;
-	bool get(stdvector<int>::fwd & value) const;
+	bool get(std::vector<int> & value) const;
 	bool get(float & value) const;
-	bool get(stdvector<float>::fwd & value) const;
+	bool get(std::vector<float> & value) const;
 	bool get(Unicode::String & value) const;
 	bool get(std::string & value) const;
-	bool get(stdvector<Unicode::String>::fwd & value) const;
+	bool get(std::vector<Unicode::String> & value) const;
 	bool get(NetworkId & value) const;
-	bool get(stdvector<NetworkId>::fwd & value) const;
+	bool get(std::vector<NetworkId> & value) const;
 	bool get(DynamicVariableLocationData & value) const;
-	bool get(stdvector<DynamicVariableLocationData>::fwd & value) const;
+	bool get(std::vector<DynamicVariableLocationData> & value) const;
 	bool get(StringId &value) const;
-	bool get(stdvector<StringId>::fwd &value) const;
+	bool get(std::vector<StringId> &value) const;
 	bool get(Transform &value) const;
-	bool get(stdvector<Transform>::fwd &value) const;
+	bool get(std::vector<Transform> &value) const;
 	bool get(Vector &value) const;
-	bool get(stdvector<Vector>::fwd &value) const;
+	bool get(std::vector<Vector> &value) const;
 
 	       int getUTF8Length() const;
 	static int getUTF8Length(const int & value);
-	static int getUTF8Length(const stdvector<int>::fwd & value);
+	static int getUTF8Length(const std::vector<int> & value);
 	static int getUTF8Length(const float & value);
-	static int getUTF8Length(const stdvector<float>::fwd & value);
+	static int getUTF8Length(const std::vector<float> & value);
 	static int getUTF8Length(const Unicode::String &value);
 	static int getUTF8Length(const std::string &value);
-	static int getUTF8Length(const stdvector<Unicode::String>::fwd & value);
+	static int getUTF8Length(const std::vector<Unicode::String> & value);
 	static int getUTF8Length(const NetworkId & value);
-	static int getUTF8Length(const stdvector<NetworkId>::fwd & value);
+	static int getUTF8Length(const std::vector<NetworkId> & value);
 	static int getUTF8Length(const DynamicVariableLocationData & value);
-	static int getUTF8Length(const stdvector<DynamicVariableLocationData>::fwd & value);
+	static int getUTF8Length(const std::vector<DynamicVariableLocationData> & value);
 	static int getUTF8Length(const StringId &value);
-	static int getUTF8Length(const stdvector<StringId>::fwd &value);
+	static int getUTF8Length(const std::vector<StringId> &value);
 	static int getUTF8Length(const Transform &value);
-	static int getUTF8Length(const stdvector<Transform>::fwd &value);
+	static int getUTF8Length(const std::vector<Transform> &value);
 	static int getUTF8Length(const Vector &value);
-	static int getUTF8Length(const stdvector<Vector>::fwd &value);
+	static int getUTF8Length(const std::vector<Vector> &value);
 
 public:
 	// functions used for persistence:
@@ -125,22 +125,22 @@ public:
 private:
 
 	static void pack(int value, Unicode::String & packedData);
-	static void pack(const stdvector<int>::fwd & value, Unicode::String & packedData);
+	static void pack(const std::vector<int> & value, Unicode::String & packedData);
 	static void pack(float value, Unicode::String & packedData);
-	static void pack(const stdvector<float>::fwd & value, Unicode::String & packedData);
+	static void pack(const std::vector<float> & value, Unicode::String & packedData);
 	static void pack(const Unicode::String &value, Unicode::String & packedData);
 	static void pack(const std::string &value, Unicode::String & packedData);
-	static void pack(const stdvector<Unicode::String>::fwd & value, Unicode::String & packedData);
+	static void pack(const std::vector<Unicode::String> & value, Unicode::String & packedData);
 	static void pack(const NetworkId & value, Unicode::String & packedData);
-	static void pack(const stdvector<NetworkId>::fwd & value, Unicode::String & packedData);
+	static void pack(const std::vector<NetworkId> & value, Unicode::String & packedData);
 	static void pack(const DynamicVariableLocationData & value, Unicode::String & packedData);
-	static void pack(const stdvector<DynamicVariableLocationData>::fwd & value, Unicode::String & packedData);
+	static void pack(const std::vector<DynamicVariableLocationData> & value, Unicode::String & packedData);
 	static void pack(const StringId &value, Unicode::String & packedData);
-	static void pack(const stdvector<StringId>::fwd &value, Unicode::String & packedData);
+	static void pack(const std::vector<StringId> &value, Unicode::String & packedData);
 	static void pack(const Transform &value, Unicode::String & packedData);
-	static void pack(const stdvector<Transform>::fwd &value, Unicode::String & packedData);
+	static void pack(const std::vector<Transform> &value, Unicode::String & packedData);
 	static void pack(const Vector &value, Unicode::String & packedData);
-	static void pack(const stdvector<Vector>::fwd &value, Unicode::String & packedData);
+	static void pack(const std::vector<Vector> &value, Unicode::String & packedData);
 
 private:
 	DynamicVariableType m_type;

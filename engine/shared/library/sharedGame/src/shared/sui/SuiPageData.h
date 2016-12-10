@@ -29,7 +29,7 @@ class SuiPageData
 {
 public:
 
-	typedef stdvector<SuiCommand>::fwd SuiCommandVector;
+	typedef std::vector<SuiCommand> SuiCommandVector;
 
 public:
 

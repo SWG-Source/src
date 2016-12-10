@@ -337,7 +337,7 @@ private:
 private:
 
 	class CachedFile;
-	typedef stdmap<CrcString const *, CachedFile *, LessPointerComparator>::fwd CachedFileMap;
+	typedef std::map<CrcString const *, CachedFile *, LessPointerComparator> CachedFileMap;
 	CachedFileMap * const m_cachedFileMap;
 };
 

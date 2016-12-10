@@ -24,7 +24,7 @@ class Quest;
 class QuestTask
 {
 public:
-	typedef stdvector<int>::fwd TaskIdList;
+	typedef std::vector<int> TaskIdList;
 
 	enum QuestControl
 	{

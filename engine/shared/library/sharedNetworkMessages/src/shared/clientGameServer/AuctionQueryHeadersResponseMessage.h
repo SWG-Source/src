@@ -26,8 +26,8 @@ public:
 
 	static const char * const MessageType;
 
-	typedef stdvector<Auction::ItemDataHeader>::fwd           AuctionHeaderVector;
-	typedef stdvector<Auction::PalettizedItemDataHeader>::fwd PalettizedAuctionHeaderVector;
+	typedef std::vector<Auction::ItemDataHeader>           AuctionHeaderVector;
+	typedef std::vector<Auction::PalettizedItemDataHeader> PalettizedAuctionHeaderVector;
 
 	AuctionQueryHeadersResponseMessage(int requestId, int typeFlag, AuctionHeaderVector const &auctionData, uint16 queryOffset, bool hasMorePages);
 	explicit AuctionQueryHeadersResponseMessage(Archive::ReadIterator &source);

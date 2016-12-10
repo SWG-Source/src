@@ -20,7 +20,7 @@ public:
 
 	struct Action;
 
-	typedef stdvector<Action *>::fwd ActionList;
+	typedef std::vector<Action *> ActionList;
 
 	AiCreatureCombatProfile();
 

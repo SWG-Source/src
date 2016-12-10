@@ -155,7 +155,7 @@ void ShipComponentDataBooster::printDebugString      (Unicode::String & result, 
 
 //----------------------------------------------------------------------
 
-void ShipComponentDataBooster::getAttributes(stdvector<std::pair<std::string, Unicode::String> >::fwd & data) const
+void ShipComponentDataBooster::getAttributes(std::vector<std::pair<std::string, Unicode::String> > & data) const
 {
 	ServerShipComponentData::getAttributes(data);
 

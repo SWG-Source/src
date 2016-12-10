@@ -103,7 +103,7 @@ public:
 	bool                  isDay () const;
 	bool                  isTimeLocked() const;
 
-	typedef stdvector<std::pair<Vector, float> >::fwd ClearFloraEntryList;
+	typedef std::vector<std::pair<Vector, float> > ClearFloraEntryList;
 	void                  addClearCollidableFloraObject (const Object* object, const Vector& position_w, float radius);
 	void                  removeClearCollidableFloraObject (const Object* object);
 	void                  addClearNonCollidableFloraObject (const Object* object, const ClearFloraEntryList& clearFloraEntryList);

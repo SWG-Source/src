@@ -39,11 +39,11 @@ namespace AddResourceTypeMessageNamespace
 class AddResourceTypeMessage : public GameNetworkMessage
 {
   public:
-	AddResourceTypeMessage  (stdvector<AddResourceTypeMessageNamespace::ResourceTypeData>::fwd const &data);
+	AddResourceTypeMessage  (std::vector<AddResourceTypeMessageNamespace::ResourceTypeData> const &data);
 	AddResourceTypeMessage  (Archive::ReadIterator & source);
 	~AddResourceTypeMessage ();
 
-	stdvector<AddResourceTypeMessageNamespace::ResourceTypeData>::fwd const & getData() const;
+	std::vector<AddResourceTypeMessageNamespace::ResourceTypeData> const & getData() const;
 	
   private:
 	Archive::AutoArray<AddResourceTypeMessageNamespace::ResourceTypeData> m_data;

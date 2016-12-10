@@ -829,7 +829,7 @@ void GroupObject::onVoiceChatRoomCreate(std::string const &name) // static
 
 // ----------------------------------------------------------------------
 
-void GroupObject::getAttributes(stdvector<std::pair<std::string, Unicode::String> >::fwd &data) const
+void GroupObject::getAttributes(std::vector<std::pair<std::string, Unicode::String> > &data) const
 {
 	UniverseObject::getAttributes(data);
 }

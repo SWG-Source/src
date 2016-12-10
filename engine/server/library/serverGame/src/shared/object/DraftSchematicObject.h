@@ -60,7 +60,7 @@ public:
 	float                                                          getManufactureTime(void) const;
 	float                                                          getPrototypeTime(void) const;
 	bool                                                           mustDestroyIngredients(void) const;
-	virtual void                                                   getAttributes(stdvector<std::pair<std::string, Unicode::String> >::fwd &data) const;
+	virtual void                                                   getAttributes(std::vector<std::pair<std::string, Unicode::String> > &data) const;
 
 	const StringId                getExperimentalAttributeFromAttribute(int index) const;
 	const StringId                getExperimentalAttributeFromAttribute(const StringId & attribName) const;

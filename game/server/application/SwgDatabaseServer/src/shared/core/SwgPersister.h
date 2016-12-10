@@ -26,7 +26,7 @@ class SwgPersister : public Persister
 	virtual void restoreCharacter(const NetworkId &playerId, const std::string &whoRequested);
 	virtual void undeleteItem(const NetworkId &itemId, const std::string &whoRequested);
 	virtual void moveToPlayer(const NetworkId &oid, const NetworkId &player, const std::string &whoRequested);
-	virtual void getMoneyFromOfflineObject(uint32 replyServer, NetworkId const & sourceObject, int amount, NetworkId const & replyTo, std::string const & successCallback, std::string const & failCallback, stdvector<int8>::fwd const & packedDictionary);
+	virtual void getMoneyFromOfflineObject(uint32 replyServer, NetworkId const & sourceObject, int amount, NetworkId const & replyTo, std::string const & successCallback, std::string const & failCallback, std::vector<int8> const & packedDictionary);
 		
   private:
 	SwgPersister();

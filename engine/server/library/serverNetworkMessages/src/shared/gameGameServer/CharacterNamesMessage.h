@@ -21,7 +21,7 @@
 class CharacterNamesMessage : public GameNetworkMessage
 {
   public:
-	CharacterNamesMessage(const stdvector<NetworkId>::fwd &ids, const stdvector<int>::fwd &stationIds, const stdvector<std::string>::fwd &characterNames, const stdvector<std::string>::fwd &characterFullNames, const stdvector<int>::fwd &createTimes, const stdvector<int>::fwd &loginTimes);
+	CharacterNamesMessage(const std::vector<NetworkId> &ids, const std::vector<int> &stationIds, const std::vector<std::string> &characterNames, const std::vector<std::string> &characterFullNames, const std::vector<int> &createTimes, const std::vector<int> &loginTimes);
 	CharacterNamesMessage(Archive::ReadIterator & source);
 	~CharacterNamesMessage();
 

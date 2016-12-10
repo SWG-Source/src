@@ -33,7 +33,7 @@ class MessageQueueScriptTransferMoney : public MessageQueue::Data
 		enum TransactionType {TT_bankTransfer, TT_cashTransfer, TT_bankWithdrawal, TT_bankDeposit, TT_bankTransferToNamedAccount, TT_bankTransferFromNamedAccount};
 
   public:
-	MessageQueueScriptTransferMoney(TransactionType typeId, const NetworkId &target, const std::string &namedAccount, int amount, const NetworkId &replyTo, const std::string &successCallback, const std::string &failCallback, const stdvector<int8>::fwd &packedDictionary);
+	MessageQueueScriptTransferMoney(TransactionType typeId, const NetworkId &target, const std::string &namedAccount, int amount, const NetworkId &replyTo, const std::string &successCallback, const std::string &failCallback, const std::vector<int8> &packedDictionary);
 	virtual ~MessageQueueScriptTransferMoney();
 
 	TransactionType              getTypeId() const;
@@ -43,7 +43,7 @@ class MessageQueueScriptTransferMoney : public MessageQueue::Data
 	const NetworkId &            getReplyTo() const;
 	const std::string &          getSuccessCallback() const;
 	const std::string &          getFailCallback() const;
-	const stdvector<int8>::fwd & getPackedDictionary() const;
+	const std::vector<int8> & getPackedDictionary() const;
 		
   private:
 	TransactionType      m_typeId;
@@ -53,7 +53,7 @@ class MessageQueueScriptTransferMoney : public MessageQueue::Data
 	NetworkId            m_replyTo;
 	std::string          m_successCallback;
 	std::string          m_failCallback;
-	stdvector<int8>::fwd m_packedDictionary;
+	std::vector<int8> m_packedDictionary;
 		 
   private:
 	MessageQueueScriptTransferMoney&	operator=	(const MessageQueueScriptTransferMoney & source);
@@ -111,7 +111,7 @@ inline const std::string & MessageQueueScriptTransferMoney::getFailCallback() co
 
 // ----------------------------------------------------------------------
 
-inline const stdvector<int8>::fwd & MessageQueueScriptTransferMoney::getPackedDictionary() const
+inline const std::vector<int8> & MessageQueueScriptTransferMoney::getPackedDictionary() const
 {
 	return m_packedDictionary;
 }

@@ -27,7 +27,7 @@ class ServerGroupObjectTemplate;
 class GroupObject: public UniverseObject
 {
 public:
-	typedef stdvector<GroupMemberParam>::fwd GroupMemberParamVector;
+	typedef std::vector<GroupMemberParam> GroupMemberParamVector;
 
 	GroupObject(ServerGroupObjectTemplate const *newTemplate);
 	virtual ~GroupObject();
@@ -50,12 +50,12 @@ public:
 	static int           maximumMembersInGroup();
 
 	typedef std::pair<NetworkId, std::string> GroupMember;
-	typedef stdvector<GroupMember>::fwd GroupMemberVector;
+	typedef std::vector<GroupMember> GroupMemberVector;
 	typedef std::pair<NetworkId /*ship*/, int /*formation slot*/> GroupShipFormationMember;
 	typedef std::pair<NetworkId /*POB ship*/, NetworkId /*owner of the POB*/> GroupPOBShipAndOwner;
 
 	std::string const &       getGroupName       () const;
-	void                      getGroupMemberIds  (stdvector<NetworkId>::fwd &members) const;
+	void                      getGroupMemberIds  (std::vector<NetworkId> &members) const;
 	NetworkId const &         getGroupLeaderId   () const;
 	std::string const &       getGroupLeaderName () const;
 	bool                      isGroupFull        () const;

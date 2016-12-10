@@ -108,7 +108,7 @@ void SwgPersister::moveToPlayer(const NetworkId &oid, const NetworkId &player, c
 
 // ----------------------------------------------------------------------
 
-void SwgPersister::getMoneyFromOfflineObject(uint32 replyServer, NetworkId const & sourceObject, int amount, NetworkId const & replyTo, std::string const & successCallback, std::string const & failCallback, stdvector<int8>::fwd const & packedDictionary)
+void SwgPersister::getMoneyFromOfflineObject(uint32 replyServer, NetworkId const & sourceObject, int amount, NetworkId const & replyTo, std::string const & successCallback, std::string const & failCallback, std::vector<int8> const & packedDictionary)
 {
 	SwgSnapshot * snapshot=nullptr;
 	

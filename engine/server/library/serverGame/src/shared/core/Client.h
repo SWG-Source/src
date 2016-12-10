@@ -40,7 +40,7 @@ class Client : public MessageDispatch::Receiver, public MessageDispatch::Emitter
 public:
 	typedef std::map<uint32, int> AccountFeatureIdList;
 
-	Client                  (ConnectionServerConnection & connection, const NetworkId & characterObjectId, const std::string& accountName, const std::string& ipAddr, bool isSecure, bool isSkipLoadScreen, unsigned int stationId, stdset<NetworkId>::fwd const & observedObjects, uint32 gameFeatures, uint32 subscriptionFeatures, AccountFeatureIdList const & accountFeatureIds, unsigned int entitlementTotalTime, unsigned int entitlementEntitledTime, unsigned int entitlementTotalTimeSinceLastLogin, unsigned int entitlementEntitledTimeSinceLastLogin, int buddyPoints, std::vector<std::pair<NetworkId, std::string> > const & consumedRewardEvents, std::vector<std::pair<NetworkId, std::string> > const & claimedRewardItems, bool usingAdminLogin, CombatDataTable::CombatSpamFilterType combatSpamFilter, int combatSpamRangeSquaredFilter, int furnitureRotationDegree, bool hasUnoccupiedJediSlot, bool isJediSlotCharacter, bool sendToStarport = false);
+	Client                  (ConnectionServerConnection & connection, const NetworkId & characterObjectId, const std::string& accountName, const std::string& ipAddr, bool isSecure, bool isSkipLoadScreen, unsigned int stationId, std::set<NetworkId> const & observedObjects, uint32 gameFeatures, uint32 subscriptionFeatures, AccountFeatureIdList const & accountFeatureIds, unsigned int entitlementTotalTime, unsigned int entitlementEntitledTime, unsigned int entitlementTotalTimeSinceLastLogin, unsigned int entitlementEntitledTimeSinceLastLogin, int buddyPoints, std::vector<std::pair<NetworkId, std::string> > const & consumedRewardEvents, std::vector<std::pair<NetworkId, std::string> > const & claimedRewardItems, bool usingAdminLogin, CombatDataTable::CombatSpamFilterType combatSpamFilter, int combatSpamRangeSquaredFilter, int furnitureRotationDegree, bool hasUnoccupiedJediSlot, bool isJediSlotCharacter, bool sendToStarport = false);
 	virtual                  ~Client                 ();
 
 	static void              install();
@@ -215,7 +215,7 @@ private:
 	unsigned int                                  m_entitlementEntitledTimeSinceLastLogin;
 	int                                           m_buddyPoints;
 	std::set<NetworkId>                           m_previousObservedObjects;
-	stdvector<Watcher<ServerSynchronizedUi> >::fwd m_syncUIs;
+	std::vector<Watcher<ServerSynchronizedUi> > m_syncUIs;
 	std::vector<std::pair<NetworkId, std::string> > m_consumedRewardEvents;
 	std::vector<std::pair<NetworkId, std::string> > m_claimedRewardItems;
 	bool                                          m_usingAdminLogin;

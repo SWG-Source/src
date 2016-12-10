@@ -7327,7 +7327,7 @@ std::string ServerObject::getLogDescription(const ServerObject * source)
 
 void ServerObject::retrieveStoredObjectAttributes (AttributeVector & av) const
 {
-	typedef stdvector<Unicode::String>::fwd UnicodeStringVector;
+	typedef std::vector<Unicode::String> UnicodeStringVector;
 
 	static UnicodeStringVector kv;
 	static UnicodeStringVector vv;
@@ -7358,7 +7358,7 @@ void ServerObject::retrieveStoredObjectAttributes (AttributeVector & av) const
 
 void ServerObject::storeObjectAttributes     (const ServerObject & prototype)
 {
-	typedef stdvector<Unicode::String>::fwd UnicodeStringVector;
+	typedef std::vector<Unicode::String> UnicodeStringVector;
 
 	static UnicodeStringVector kv;
 	static UnicodeStringVector vv;
@@ -7398,7 +7398,7 @@ void ServerObject::clearStoredObjectAttributes    ()
 
 void ServerObject::replaceStoredObjectAttribute(Unicode::String const & attribute, Unicode::String const & value)
 {
-	typedef stdvector<Unicode::String>::fwd UnicodeStringVector;
+	typedef std::vector<Unicode::String> UnicodeStringVector;
 
 	static UnicodeStringVector kv;
 	static UnicodeStringVector vv;

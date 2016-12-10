@@ -122,7 +122,7 @@ void ShipComponentDataCapacitor::printDebugString      (Unicode::String & result
 
 //----------------------------------------------------------------------
 
-void ShipComponentDataCapacitor::getAttributes(stdvector<std::pair<std::string, Unicode::String> >::fwd & data) const
+void ShipComponentDataCapacitor::getAttributes(std::vector<std::pair<std::string, Unicode::String> > & data) const
 {
 	ServerShipComponentData::getAttributes(data);
 

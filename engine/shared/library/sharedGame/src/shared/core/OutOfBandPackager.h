@@ -25,8 +25,8 @@ class OutOfBandPackager
 {
 public:
 
-	typedef stdvector<OutOfBandBase *>::fwd OutOfBandBaseVector;
-	typedef stdvector<std::pair<std::string, Unicode::String> >::fwd AttributeVector;
+	typedef std::vector<OutOfBandBase *> OutOfBandBaseVector;
+	typedef std::vector<std::pair<std::string, Unicode::String> > AttributeVector;
 
 	enum OobTypes
 	{

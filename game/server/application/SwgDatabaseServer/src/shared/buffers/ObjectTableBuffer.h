@@ -53,14 +53,14 @@ public:
 	int encodeObjVarFreeFlags(const NetworkId & objectId) const;
 	void handlePackedObjvar(const NetworkId &objectId, int position, const std::string &objvarName, int typeId, const std::string &packedValue);
 	void getObjvarsForObject(const NetworkId &objectId, std::vector<DynamicVariableList::MapType::Command> &commands) const;
-	bool getMoneyFromOfflineObject(uint32 replyServer,NetworkId const & sourceObject, int amount, NetworkId const & replyTo, std::string const & successCallback, std::string const & failCallback, stdvector<int8>::fwd const & packedDictionary);
+	bool getMoneyFromOfflineObject(uint32 replyServer,NetworkId const & sourceObject, int amount, NetworkId const & replyTo, std::string const & successCallback, std::string const & failCallback, std::vector<int8> const & packedDictionary);
 		
 	void newObject(const NetworkId &objectId, int templateId, Tag typeId);
 
-//	std::vector<NetworkId> queueForLoadWithContents(const stdvector<NetworkId>::fwd &oidList, DB::Session *session);
+//	std::vector<NetworkId> queueForLoadWithContents(const std::vector<NetworkId> &oidList, DB::Session *session);
 
-	void getObjectList(stdvector<NetworkId>::fwd &theList) const;
-	void getWorldContainers(stdvector<NetworkId>::fwd &containers) const;
+	void getObjectList(std::vector<NetworkId> &theList) const;
+	void getWorldContainers(std::vector<NetworkId> &containers) const;
 	void getTags(DB::TagSet &tags) const;
 	
 	virtual bool save(DB::Session *session);

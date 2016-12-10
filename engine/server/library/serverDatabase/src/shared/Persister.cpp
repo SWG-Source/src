@@ -5,6 +5,8 @@
 //
 // ======================================================================
 
+#include <memory>
+
 #include "serverDatabase/FirstServerDatabase.h"
 #include "serverDatabase/Persister.h"
 
@@ -174,33 +176,15 @@ Persister::~Persister()
 {
 	DEBUG_FATAL(taskQueue,("Call shutdown() before deleting Persister.\n"));
 
-	for (auto i=m_currentSnapshots.begin(); i!=m_currentSnapshots.end(); ++i) {
+	ServerSnapshotMap::iterator i;
+	for (i=m_currentSnapshots.begin(); i!=m_currentSnapshots.end(); ++i)
 		delete i->second;
-		i->second = nullptr;
-	}
-	
-	for (auto i=m_newObjectSnapshots.begin(); i!=m_newObjectSnapshots.end(); ++i) {
+	for (i=m_newObjectSnapshots.begin(); i!=m_newObjectSnapshots.end(); ++i)
 		delete i->second;
-		i->second = nullptr;
-	}
-
-	for (auto i=m_savingCharacterSnapshots.begin(); i!=m_savingCharacterSnapshots.end(); ++i) {
-		delete *i;
-		*i = nullptr;
-	}
-
-	for (auto i=m_savingSnapshots.begin(); i!=m_savingSnapshots.end(); ++i) {
-		delete *i;
-		*i = nullptr;
-	}
 
 	m_currentSnapshots.clear();
 	m_newObjectSnapshots.clear();
 	m_objectSnapshotMap.clear();
-	m_savingCharacterSnapshots.clear();
-	m_savingSnapshots.clear();
-
-
 	m_messageSnapshot = nullptr;
 	m_commoditiesSnapshot = nullptr;
 	m_arbitraryGameDataSnapshot = nullptr;
@@ -235,18 +219,14 @@ void Persister::onFrameBarrierReached()
 	if (m_newCharacterTaskQueue->getNumPendingTasks() == 0)
 	{
 		ServerSnapshotMap delayedSaves;
-
+		
 		for (ServerSnapshotMap::iterator i=m_newCharacterSnapshots.begin(); i!=m_newCharacterSnapshots.end(); ++i)
 		{
 			if (m_newCharacterLock.find(i->first)==m_newCharacterLock.end())
 			{
 				DEBUG_REPORT_LOG(ConfigServerDatabase::getReportSaveTimes(),("Starting new character save\n"));
-				
-				if (i->second != nullptr) {
-					m_savingCharacterSnapshots.push_back(i->second);
-					m_newCharacterTaskQueue->asyncRequest(new TaskSaveSnapshot(i->second));
-				}	
-				
+				m_savingCharacterSnapshots.push_back(i->second);
+				m_newCharacterTaskQueue->asyncRequest(new TaskSaveSnapshot(i->second));
 				for (ObjectSnapshotMap::iterator obj=m_objectSnapshotMap.begin(); obj!=m_objectSnapshotMap.end();)
 				{
 					if (obj->second == i->second)
@@ -265,7 +245,8 @@ void Persister::onFrameBarrierReached()
 	}
 
 	// Check for whether it is time to save
-	FATAL(m_timeSinceLastSave > ConfigServerDatabase::getMaxTimewarp(),("Save was not completed within %i seconds. We may experience a \"time warp\"\n",ConfigServerDatabase::getMaxTimewarp()));
+
+	FATAL(m_timeSinceLastSave > ConfigServerDatabase::getMaxTimewarp(),("Save was not completed within %i seconds.  Shutting down to avoid a longer timewarp.\n",ConfigServerDatabase::getMaxTimewarp()));
 
 	if (ConfigServerDatabase::getSaveAtModulus()!=-1)
 	{
@@ -353,19 +334,14 @@ void Persister::startSave(void)
 	ServerSnapshotMap::iterator i;
 	for (i=m_currentSnapshots.begin(); i!=m_currentSnapshots.end(); ++i)
 	{
-		if (i->second != nullptr) {
-			m_savingSnapshots.push_back(i->second);
-			taskQueue->asyncRequest(new TaskSaveSnapshot(i->second));
-		}
+		m_savingSnapshots.push_back(i->second);
+		taskQueue->asyncRequest(new TaskSaveSnapshot(i->second));
 	}
-
 	for (i=m_newObjectSnapshots.begin(); i!=m_newObjectSnapshots.end(); ++i)
-        {
-		if (i->second != nullptr) {
-	                m_savingSnapshots.push_back(i->second);
-        	        taskQueue->asyncRequest(new TaskSaveSnapshot(i->second));
-		}
-        }
+	{
+		m_savingSnapshots.push_back(i->second);
+		taskQueue->asyncRequest(new TaskSaveSnapshot(i->second));
+	}
 
 	// nothing changed so send a complete message for the shutdown process
 	if( m_savingSnapshots.empty() )
@@ -619,94 +595,46 @@ void Persister::endBaselines(const NetworkId &objectId, uint32 serverId)
 
 // ----------------------------------------------------------------------
 
-
-void Persister::nukeOrphans() {
-        if (m_completedSnapshots.size() > 0) {
-                int completeCount = m_completedSnapshots.size();
-                int snapshotClassCount = (*m_completedSnapshots.begin())->getPendingCount();
-
-		WARNING(true, ("%i snapshots done, snapshot class reports %i currently allocated", completeCount, snapshotClassCount));
-
-		if (snapshotClassCount > 5) {
-			delmutex.lock();
-                
-      	          	for (auto i = m_completedSnapshots.begin(); i != m_completedSnapshots.end(); ++i) {
-      	          		if (i != m_completedSnapshots.end() && *i != nullptr && !(*i)->getIsBeingSaved() && completeCount > 5) {
-                        		WARNING(true, ("Deleting orphaned snapshot"));
-	
-	                        	delete (*i);
-	                        	*i = nullptr;
-
-        	                	i = m_completedSnapshots.erase(i);
-        	         	       completeCount--;
-        	        	} else {
-        	                	break;
-        	        	}
-        		}
-	
-			delmutex.unlock();
-		}
-	}
-}
-
 /**
  * Called by TaskSaveSnapshot when it finishes.
  */
 
 void Persister::saveCompleted(Snapshot *completedSnapshot)
 {
-	nukeOrphans();
-
-	auto i=std::remove(m_savingSnapshots.begin(),m_savingSnapshots.end(),completedSnapshot);
+	SnapshotListType::iterator i=std::remove(m_savingSnapshots.begin(),m_savingSnapshots.end(),completedSnapshot);
 	if (i!=m_savingSnapshots.end())
 	{
 		m_savingSnapshots.erase(i, m_savingSnapshots.end());
-		if (m_savingSnapshots.empty() && ConfigServerDatabase::getReportSaveTimes())
-		{
+	}	
+       
+	if (m_savingSnapshots.empty()) {
+		if (ConfigServerDatabase::getReportSaveTimes()) {
 			int saveTime = Clock::timeMs() - m_saveStartTime;
 			++m_saveCount;
 			m_totalSaveTime += saveTime;
 			if (saveTime > m_maxSaveTime)
 				m_maxSaveTime = saveTime;
-
+		
 			DEBUG_REPORT_LOG(true,("Save completed in %i.  (Average %i, max %i)\n", saveTime, m_totalSaveTime/m_saveCount, m_maxSaveTime));
 			LOG("SaveTimes",("Save completed in %i.  (Average %i, max %i)", saveTime, m_totalSaveTime/m_saveCount, m_maxSaveTime));
 			m_lastSaveTime = saveTime;
 		}
-			if (m_savingSnapshots.empty())
-		{
-			// message Central Server that the current save cycle is complete
-			GenericValueTypeMessage<int> const saveCompleteMessage("DatabaseSaveComplete", ++m_saveCounter);
-			DatabaseProcess::getInstance().sendToCentralServer(saveCompleteMessage, true);
-			LOG("Database",("Sending DatabaseSaveComplete network message to Central."));
-		}
-
-		{
-			// set the last save completion time (for the monitoring program)
-			time_t theTime = time(0);
-			m_lastSaveCompletionTime = ctime(&theTime);
-		}
+		// message Central Server that the current save cycle is complete
+		GenericValueTypeMessage<int> const saveCompleteMessage("DatabaseSaveComplete", ++m_saveCounter);
+		DatabaseProcess::getInstance().sendToCentralServer(saveCompleteMessage, true);
+		LOG("Database",("Sending DatabaseSaveComplete network message to Central."));
 	}
-	else
-	{
-		auto j=std::remove(m_savingCharacterSnapshots.begin(),m_savingCharacterSnapshots.end(),completedSnapshot);
-		if (j != m_savingCharacterSnapshots.end()) {
-			m_savingCharacterSnapshots.erase(j, m_savingCharacterSnapshots.end());
-		} else {
-			DEBUG_WARNING(true,("saveCompleted called w/o snap in m_savingSnapshots or m_savingCharacterSnapshots."));
-		}
-       	}
-
-	bool locked = false;
-	do {
-		locked = delmutex.try_lock();
-	} while (!locked);
-
-	if (completedSnapshot != nullptr){
-		m_completedSnapshots.push_back(completedSnapshot);
+		
+	// character snapshot deletions seem to work ok, but world and object snaps do not for deletion...wtf
+	SnapshotListType::iterator j=std::remove(m_savingCharacterSnapshots.begin(),m_savingCharacterSnapshots.end(),completedSnapshot);
+	if (j != m_savingCharacterSnapshots.end()) {
+		m_savingCharacterSnapshots.erase(j, m_savingCharacterSnapshots.end());
 	}
 
-	delmutex.unlock();
+	if (completedSnapshot != nullptr) {
+		delete completedSnapshot;
+		completedSnapshot = nullptr;
+	}
 }
 
 // ----------------------------------------------------------------------

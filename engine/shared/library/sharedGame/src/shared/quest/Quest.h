@@ -33,8 +33,8 @@ public:
 public:
 	bool isRepeatable() const;
 	bool isVisible() const;
-	stdvector<uint32>::fwd const & getPrerequisiteQuests() const;
-	stdvector<uint32>::fwd const & getExclusionQuests() const;
+	std::vector<uint32> const & getPrerequisiteQuests() const;
+	std::vector<uint32> const & getExclusionQuests() const;
 	int getNumberOfTasks() const;
 	QuestTask const * getTask(int taskId) const;
 	CrcString const & getName() const;
@@ -64,9 +64,9 @@ private:
 	StringId m_journalEntryTitle;
 	StringId m_journalEntryDescription;
 	StringId m_journalEntryCompetionSummary;
-	stdvector<uint32>::fwd * const m_prerequisiteQuests;
-	stdvector<uint32>::fwd * const m_exclusionQuests;
-	stdvector<QuestTask *>::fwd * const m_tasks;
+	std::vector<uint32> * const m_prerequisiteQuests;
+	std::vector<uint32> * const m_exclusionQuests;
+	std::vector<QuestTask *> * const m_tasks;
 	bool m_allowRepeats;
 	bool m_visible;
 	StringId m_category;

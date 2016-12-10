@@ -34,8 +34,8 @@ public:
 	static bool saveChassisInfo(std::string const & chassisName, std::string const & chassisFilenameTab, std::string const & chassisFilenameIff);
 
 	typedef std::pair<uint32, PersistentCrcString>  TemplateHardpointPair;
-	typedef stdvector<TemplateHardpointPair>::fwd   TemplateHardpointPairVector;
-	typedef stdvector<PersistentCrcString>::fwd     HardpointVector;
+	typedef std::vector<TemplateHardpointPair>   TemplateHardpointPairVector;
+	typedef std::vector<PersistentCrcString>     HardpointVector;
 
 	static TemplateHardpointPairVector const & getAttachmentsForShip          (uint32 chassisCrc, uint32 componentCrc, int chassisSlotType);
 	static bool getAttachmentsForShip(uint32 chassisCrc, uint32 componentCrc, TemplateHardpointPairVector const ** thpVectors);

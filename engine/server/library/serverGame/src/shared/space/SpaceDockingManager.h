@@ -17,7 +17,7 @@ class SpaceDockingManager
 {
 public:
 
-	typedef stdlist<Transform>::fwd HardPointList;
+	typedef std::list<Transform> HardPointList;
 
 	static void install();
 

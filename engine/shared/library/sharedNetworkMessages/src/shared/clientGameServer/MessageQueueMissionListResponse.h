@@ -23,7 +23,7 @@ class MessageQueueMissionListResponse : public MessageQueue::Data
 public:
 
 	typedef MessageQueueMissionListResponseData DataElement;
-	typedef stdvector<DataElement>::fwd         DataVector;
+	typedef std::vector<DataElement>         DataVector;
 
 public:
 	MessageQueueMissionListResponse();

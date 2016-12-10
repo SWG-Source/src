@@ -78,7 +78,7 @@ public:
 	 *  could be a new widget description, an item for a data source, a property to set, etc.
 	 */
 	typedef SuiCreatePage_Command Command;
-	typedef stdvector<Command>::fwd CommandVector;
+	typedef std::vector<Command> CommandVector;
 
 	           SuiCreatePage ();
 	explicit   SuiCreatePage (Archive::ReadIterator & source);

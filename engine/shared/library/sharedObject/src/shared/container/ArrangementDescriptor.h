@@ -23,7 +23,7 @@ friend class ArrangementDescriptorList;
 
 public:
 
-	typedef stdvector<SlotId>::fwd        SlotIdVector;
+	typedef std::vector<SlotId>        SlotIdVector;
 
 public:
 
@@ -40,7 +40,7 @@ public:
 
 private:
 
-	typedef stdvector<SlotIdVector>::fwd  ArrangementVector;
+	typedef std::vector<SlotIdVector>  ArrangementVector;
 
 private:
 

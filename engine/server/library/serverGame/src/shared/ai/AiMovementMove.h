@@ -16,7 +16,7 @@ class PathGraph;
 class PortalProperty;
 class AiLocation;
 
-typedef stdvector<int>::fwd IndexList;
+typedef std::vector<int> IndexList;
 
 // ======================================================================
 // The simple move behavior moves to the waypoint, and then transitions

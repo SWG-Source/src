@@ -16,8 +16,6 @@
 #include <vector>
 #include <set> //TODO: remove when we clean up newCharacterLock hack
 
-#include <mutex>
-
 #include "Unicode.h"
 #include "serverNetworkMessages/MessageToPayload.h"
 #include "sharedDatabaseInterface/DbModeQuery.h"
@@ -71,8 +69,6 @@ class Persister : public MessageDispatch::Receiver
 	void beginBaselines(const NetworkId &newObject) const;
 	void endBaselines(const NetworkId &newObject, uint32 serverId);
 
-
-	void nukeOrphans();
 	void saveCompleted       (Snapshot *completedSnapshot);
 	void onNewCharacterSaved (uint32 stationId, const NetworkId &characterObject, const Unicode::String &characterName, const int templateId, bool special) const;
 
@@ -101,8 +97,6 @@ class Persister : public MessageDispatch::Receiver
 	DB::TaskQueue *m_newCharacterTaskQueue;
 	
   private:
-	std::mutex delmutex;
-
 	struct PendingCharacter
 	{
 		uint32 stationId;
@@ -122,11 +116,8 @@ class Persister : public MessageDispatch::Receiver
 	ServerSnapshotMap      m_newCharacterSnapshots;
 	ObjectSnapshotMap      m_objectSnapshotMap;
 	PendingCharactersType  m_pendingCharacters;
-
 	SnapshotListType       m_savingSnapshots;
 	SnapshotListType       m_savingCharacterSnapshots;
-	SnapshotListType       m_completedSnapshots;
-	
 	NewCharacterLockType   m_newCharacterLock;
 	CharactersToDeleteType * m_charactersToDeleteThisSaveCycle;
 	CharactersToDeleteType * m_charactersToDeleteNextSaveCycle;
@@ -192,7 +183,7 @@ class Persister : public MessageDispatch::Receiver
 	/**
 	 * Misc game-specific persistence steps
 	 */
-	virtual void getMoneyFromOfflineObject(uint32 replyServer, NetworkId const & sourceObject, int amount, NetworkId const & replyTo, std::string const & successCallback, std::string const & failCallback, stdvector<int8>::fwd const & packedDictionary)=0;
+	virtual void getMoneyFromOfflineObject(uint32 replyServer, NetworkId const & sourceObject, int amount, NetworkId const & replyTo, std::string const & successCallback, std::string const & failCallback, std::vector<int8> const & packedDictionary)=0;
 
   protected:
 	Persister();

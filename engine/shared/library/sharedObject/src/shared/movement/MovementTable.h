@@ -58,7 +58,7 @@ public:
 private:
 
 	struct rates;
-	typedef stdmap<Postures::Enumerator, rates>::fwd PostureMap;
+	typedef std::map<Postures::Enumerator, rates> PostureMap;
 
 private:
 

@@ -55,7 +55,7 @@ struct ScriptData
 typedef std::vector<ScriptListEntry> ScriptList;
 
 typedef Unicode::String        String_t;
-typedef stdvector <String_t>::fwd StringVector_t;
+typedef std::vector <String_t> StringVector_t;
 
 // values returned from script functions
 enum 
@@ -135,7 +135,7 @@ public:
 
 	static void makeScriptDictionary(const ScriptParams & params, ScriptDictionaryPtr & dictionary);
 	bool        handleMessage(const std::string &messageName, const ScriptDictionaryPtr & data);
-	bool        handleMessage(const std::string &messageName, const stdvector<int8>::fwd & packedData);
+	bool        handleMessage(const std::string &messageName, const std::vector<int8> & packedData);
 	
 	void onWatching(ServerObject & subject);
 	void onStopWatching(ServerObject & subject);
@@ -150,7 +150,7 @@ public:
 	static void enableNewJediTracking(bool enableTracking);
 	static int  getScriptFreeMem();
 
-	static stdset<std::string>::fwd & getScriptFunctions(const std::string & script);
+	static std::set<std::string> & getScriptFunctions(const std::string & script);
 	static Scheduler & getScriptScheduler();
 	static void runOneScript(
 		const std::string & scriptName, 
@@ -174,9 +174,9 @@ public:
 	
 	static void packAllScriptVarDeltas();
 	void clearScriptVars();
-	void packScriptVars(stdvector<int8>::fwd & target) const;
-	void unpackScriptVars(const stdvector<int8>::fwd & data) const;
-	void unpackDeltaScriptVars(const stdvector<int8>::fwd & source) const;
+	void packScriptVars(std::vector<int8> & target) const;
+	void unpackScriptVars(const std::vector<int8> & data) const;
+	void unpackDeltaScriptVars(const std::vector<int8> & source) const;
 
 	static ScriptListEntry getScriptListEntry(std::string const &scriptName);
 
@@ -238,7 +238,7 @@ inline const ScriptList & GameScriptObject::getScripts(void) const
 	return m_scriptList;
 }
 
-inline stdset<std::string>::fwd & GameScriptObject::getScriptFunctions(const std::string & script)
+inline std::set<std::string> & GameScriptObject::getScriptFunctions(const std::string & script)
 {
 	return (*ms_scriptDataMap)[script].functions;
 }

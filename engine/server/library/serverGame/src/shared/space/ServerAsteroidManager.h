@@ -35,14 +35,14 @@ public:
 
 private:
 	static void remove();
-	static void getServerAsteroidData(stdvector<Sphere>::fwd & /*OUT*/ spheres);
-	static void sendServerAsteroidDataToPlayer(NetworkId const & player, stdvector<Sphere>::fwd const & spheres);
+	static void getServerAsteroidData(std::vector<Sphere> & /*OUT*/ spheres);
+	static void sendServerAsteroidDataToPlayer(NetworkId const & player, std::vector<Sphere> const & spheres);
 
 private:
 	static FieldHandle const BAD_HANDLE;
 	static FieldHandle s_nextHandle;
-	static stdset<NetworkId>::fwd ms_playersListeningForServerAsteroidDebugData;
-	static stdvector<NetworkId>::fwd ms_asteroids;
+	static std::set<NetworkId> ms_playersListeningForServerAsteroidDebugData;
+	static std::vector<NetworkId> ms_asteroids;
 
 private:
 	//disabled

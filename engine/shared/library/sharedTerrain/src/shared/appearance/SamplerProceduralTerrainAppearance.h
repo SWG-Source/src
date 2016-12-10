@@ -110,10 +110,10 @@ public:
 
 protected:
 
-	typedef stdmap<uint32, Chunk const *>::fwd ChunkMap;
-	typedef stdvector<Chunk const *>::fwd ChunkList;
-	typedef stdvector<SamplerChunk const *>::fwd SamplerChunkList;
-	typedef stdset<uint32>::fwd ChunkSet;
+	typedef std::map<uint32, Chunk const *> ChunkMap;
+	typedef std::vector<Chunk const *> ChunkList;
+	typedef std::vector<SamplerChunk const *> SamplerChunkList;
+	typedef std::set<uint32> ChunkSet;
 
 protected:
 	

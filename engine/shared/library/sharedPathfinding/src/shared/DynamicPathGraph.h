@@ -68,8 +68,8 @@ protected:
 	DynamicPathNode *         _getNode        ( int nodeIndex );
 	DynamicPathNode const *   _getNode        ( int nodeIndex ) const;
 
-	typedef stdvector<DynamicPathNode *>::fwd NodeList;
-	typedef stdvector<int>::fwd IndexList;
+	typedef std::vector<DynamicPathNode *> NodeList;
+	typedef std::vector<int> IndexList;
 
 	NodeList *  m_nodeList;
 	IndexList * m_dirtyNodes;

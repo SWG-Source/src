@@ -14,7 +14,7 @@ const char * const ResourceListForSurveyMessage::MessageType = "ResourceListForS
 
 //----------------------------------------------------------------------
 
-ResourceListForSurveyMessage::ResourceListForSurveyMessage (const stdvector<DataItem>::fwd &data, const std::string& type, const NetworkId& surveyToolId) :
+ResourceListForSurveyMessage::ResourceListForSurveyMessage (const std::vector<DataItem> &data, const std::string& type, const NetworkId& surveyToolId) :
 		GameNetworkMessage(MessageType),
 		m_data(),
 		m_surveyType(),

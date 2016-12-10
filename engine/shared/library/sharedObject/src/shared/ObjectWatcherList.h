@@ -58,7 +58,7 @@ public:
 
 private:
 	
-	typedef stdvector<Watcher<Object> >::fwd ObjectVector;
+	typedef std::vector<Watcher<Object> > ObjectVector;
 	bool                                     m_altering;
 	ObjectVector *                           m_objectVector;
 	ObjectVector *                           m_alterSafeObjectVector;

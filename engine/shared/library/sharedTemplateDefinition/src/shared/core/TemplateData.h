@@ -174,7 +174,7 @@ private:
 	TemplateData & operator =(const TemplateData &);
 
 	// access functions
-	void getTemplateNames(stdset<std::string>::fwd &names) const;
+	void getTemplateNames(std::set<std::string> &names) const;
 	const TemplateDefinitionFile * getFileParent(void) const;
 
 	// template definition parsing functions

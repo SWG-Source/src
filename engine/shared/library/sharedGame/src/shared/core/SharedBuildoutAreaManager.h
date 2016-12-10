@@ -100,7 +100,7 @@ class SharedBuildoutAreaManager
 {
 public:
 
-	typedef stdvector<BuildoutArea>::fwd BuildoutAreaVector;
+	typedef std::vector<BuildoutArea> BuildoutAreaVector;
 	typedef std::pair<std::string, std::string> StringPair;
 
 	static bool isBuildoutScene(std::string const & sceneName);

@@ -25,7 +25,7 @@ public:
 
 	virtual Controller* createDefaultController (void);
 	void                addMembersToPackages    ();
-	void                getAttributes           (stdvector<std::pair<std::string, Unicode::String> >::fwd &data) const;
+	void                getAttributes           (std::vector<std::pair<std::string, Unicode::String> > &data) const;
 	
 public:
 	int getBogus() const;

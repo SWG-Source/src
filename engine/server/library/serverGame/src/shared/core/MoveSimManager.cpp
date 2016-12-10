@@ -27,7 +27,7 @@
 
 namespace MoveSimManagerNamespace
 {
-	typedef stdvector<NetworkId>::fwd NetworkIdVector;
+	typedef std::vector<NetworkId> NetworkIdVector;
 	NetworkIdVector s_moveSimCreatures;
 
 	const char * const templateName_npc = "object/mobile/kaadu_hue.iff";

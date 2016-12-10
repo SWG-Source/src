@@ -54,7 +54,7 @@ private:
 	};
 
 	typedef std::set<std::string> Names;
-	typedef stdmap<uint32, Names::const_iterator>::fwd CrcNameMap;
+	typedef std::map<uint32, Names::const_iterator> CrcNameMap;
 
 	Names      * m_names;
 	CrcNameMap * m_crcMap;

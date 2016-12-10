@@ -5350,7 +5350,7 @@ bool TangibleObject::isOnAdminList(const CreatureObject& player) const
 	// 1) All player are stored as network IDs represented as a string
 	// 2) All guilds are stored as guild IDs represted as a string and prefixed with "guild:"
 
-	typedef stdvector<Unicode::String>::fwd StringVector;
+	typedef std::vector<Unicode::String> StringVector;
 	static StringVector sv;
 	sv.clear ();
 
@@ -5390,7 +5390,7 @@ bool TangibleObject::isOnHopperList(const CreatureObject& player) const
 	// 1) All player are stored as network IDs represented as a string
 	// 2) All guilds are stored as guild IDs represted as a string and prefixed with "guild:"
 
-	typedef stdvector<Unicode::String>::fwd StringVector;
+	typedef std::vector<Unicode::String> StringVector;
 	static StringVector sv;
 	sv.clear ();
 

@@ -36,7 +36,7 @@ struct LocationRecord
 
 // ======================================================================
 
-typedef stdvector<LocationRecord>::fwd LocationList;
+typedef std::vector<LocationRecord> LocationList;
 
 // ======================================================================
 

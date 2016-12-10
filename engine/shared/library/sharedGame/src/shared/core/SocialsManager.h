@@ -14,7 +14,7 @@ class SocialsManager
 {
 public:
 
-	typedef stdmap<std::string, uint32>::fwd StringIntMap;
+	typedef std::map<std::string, uint32> StringIntMap;
 
 	static void                         install ();
 	static void                         remove  ();

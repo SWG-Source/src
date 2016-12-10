@@ -66,7 +66,7 @@ public:
 	struct Ingredient
 	{
 		enum IngredientType ingredientType;
-		stdvector<SimpleIngredient>::fwd ingredients;
+		std::vector<SimpleIngredient> ingredients;
 		float                  complexity;
 		std::string            skillCommand;
 	};
@@ -163,7 +163,7 @@ protected:
 
 private:
 	CompilerIntegerParam m_ingredientType;		// type of ingredient required
-	stdvector<StructParamOT *>::fwd m_ingredients;		// ingredients to be used/being used
+	std::vector<StructParamOT *> m_ingredients;		// ingredients to be used/being used
 	bool m_ingredientsLoaded;
 	bool m_ingredientsAppend;
 	FloatParam m_complexity;		// adjustment to complexity by using this ingredient

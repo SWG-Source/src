@@ -19,7 +19,7 @@
 class TaskSaveObjvarNames : public DB::TaskRequest
 {
   public:
-	typedef stdvector<std::pair<int, std::string> >::fwd NameList;
+	typedef std::vector<std::pair<int, std::string> > NameList;
 	
   public:
 	TaskSaveObjvarNames     (const NameList &names);

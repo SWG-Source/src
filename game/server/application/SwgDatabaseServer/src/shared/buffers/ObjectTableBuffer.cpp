@@ -162,7 +162,7 @@ void ObjectTableBuffer::getTags(DB::TagSet &tags) const
 
 // ----------------------------------------------------------------------
 
-void ObjectTableBuffer::getObjectList(stdvector<NetworkId>::fwd &theList) const
+void ObjectTableBuffer::getObjectList(std::vector<NetworkId> &theList) const
 {
 	typedef std::map <NetworkId, DFSNode> NodesType;
 	NodesType nodes;
@@ -761,7 +761,7 @@ void ObjectTableBuffer::getWorldContainers(std::vector<NetworkId> &containers) c
 
 // ----------------------------------------------------------------------
 
-bool ObjectTableBuffer::getMoneyFromOfflineObject(uint32 replyServer, NetworkId const & sourceObject, int amount, NetworkId const & replyTo, std::string const & successCallback, std::string const & failCallback, stdvector<int8>::fwd const & packedDictionary)
+bool ObjectTableBuffer::getMoneyFromOfflineObject(uint32 replyServer, NetworkId const & sourceObject, int amount, NetworkId const & replyTo, std::string const & successCallback, std::string const & failCallback, std::vector<int8> const & packedDictionary)
 {
 	DBSchema::ObjectBufferRow * const row=findRowByIndex(sourceObject);
 	if (!row)

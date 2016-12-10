@@ -51,7 +51,7 @@ public:
 	virtual void handleAddResourceTypeMessage (const AddResourceTypeMessage &message) =0;
 	virtual void handleBountyHunterTargetMessage (const BountyHunterTargetMessage &message) =0;
 
-	virtual void getWorldContainers    (stdvector<NetworkId>::fwd &containers) const = 0;
+	virtual void getWorldContainers    (std::vector<NetworkId> &containers) const = 0;
 
 	void handleDeltasMessage           (NetworkId & objectId, const DeltasMessage &msg);
 	void handleBaselinesMessage        (NetworkId & objectId, const BaselinesMessage &msg);
@@ -118,10 +118,10 @@ private:
 	virtual void decodeClientData(const NetworkId & objectId, Tag typeId, uint16 index, Archive::ReadIterator &bs, bool isBaseline) = 0;
 	virtual void decodeParentClientData(const NetworkId & objectId, Tag typeId, uint16 index, Archive::ReadIterator &bs, bool isBaseline) = 0;
 	
-	virtual bool encodeParentClientData(const NetworkId & objectId, Tag typeId, stdvector<BatchBaselinesMessageData>::fwd &baselines) const = 0;
-	virtual bool encodeClientData(const NetworkId & objectId, Tag typeId, stdvector<BatchBaselinesMessageData>::fwd &baselines) const = 0;
-	virtual bool encodeServerData(const NetworkId & objectId, Tag typeId, stdvector<BatchBaselinesMessageData>::fwd &baselines) const = 0;
-	virtual bool encodeSharedData(const NetworkId & objectId, Tag typeId, stdvector<BatchBaselinesMessageData>::fwd &baselines) const = 0;
+	virtual bool encodeParentClientData(NetworkId const & objectId, Tag typeId, std::vector<BatchBaselinesMessageData> &baselines) const = 0;
+	virtual bool encodeClientData(NetworkId const & objectId, Tag typeId, std::vector<BatchBaselinesMessageData> &baselines) const = 0;
+	virtual bool encodeServerData(NetworkId const & objectId, Tag typeId, std::vector<BatchBaselinesMessageData> &baselines) const = 0;
+	virtual bool encodeSharedData(NetworkId const & objectId, Tag typeId, std::vector<BatchBaselinesMessageData> &baselines) const = 0;
 
   private:
 	Snapshot(const Snapshot&); //disable

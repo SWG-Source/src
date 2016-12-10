@@ -26,7 +26,7 @@ class WatcherConnection : public ServerConnection
 	void                          onConnectionOpened      ();
 
 	void addObjectUpdate (const NetworkId &objectId, int x, int z, uint32 authoritativeServer, int interestRadius, bool deleteObject, int objectTypeTag, int level, bool hibernating, uint32 templateCrc, int aiActivity, int creationType);
-	void addNodeUpdate   (int x, int z, bool loaded, const stdvector<uint32>::fwd &servers, const stdvector<int>::fwd &subscriptionCounts);
+	void addNodeUpdate   (int x, int z, bool loaded, const std::vector<uint32> &servers, const std::vector<int> &subscriptionCounts);
 	void flushQueuedData ();
 
   private:
@@ -34,10 +34,10 @@ class WatcherConnection : public ServerConnection
 	void flushQueuedNodeData();
 		
   private:
-	typedef stdvector<PlanetObjectStatusMessageData>::fwd ObjectDataList;
+	typedef std::vector<PlanetObjectStatusMessageData> ObjectDataList;
 	ObjectDataList *m_objectData;
 
-	typedef stdvector<PlanetNodeStatusMessageData>::fwd NodeDataList;
+	typedef std::vector<PlanetNodeStatusMessageData> NodeDataList;
 	NodeDataList *m_nodeData;
 
   private:

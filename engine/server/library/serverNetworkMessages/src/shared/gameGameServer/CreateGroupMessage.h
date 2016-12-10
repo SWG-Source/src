@@ -20,19 +20,19 @@
 class CreateGroupMessage: public GameNetworkMessage
 {
 public:
-	CreateGroupMessage(GroupMemberParam const &leader, stdvector<GroupMemberParam>::fwd const & members);
+	CreateGroupMessage(GroupMemberParam const &leader, std::vector<GroupMemberParam> const & members);
 	CreateGroupMessage(Archive::ReadIterator &source);
 	~CreateGroupMessage();
 
 	GroupMemberParam const & getLeader() const;
-	stdvector<GroupMemberParam>::fwd const & getMembers() const;
+	std::vector<GroupMemberParam> const & getMembers() const;
 
 private:
 	CreateGroupMessage(CreateGroupMessage const &);
 	CreateGroupMessage &operator=(CreateGroupMessage const &);
 
 	Archive::AutoVariable<GroupMemberParam> m_leader;
-	Archive::AutoVariable<stdvector<GroupMemberParam>::fwd > m_members;
+	Archive::AutoVariable<std::vector<GroupMemberParam> > m_members;
 };
 
 // ----------------------------------------------------------------------
@@ -44,7 +44,7 @@ inline GroupMemberParam const &CreateGroupMessage::getLeader() const
 
 // ----------------------------------------------------------------------
 
-inline stdvector<GroupMemberParam>::fwd const &CreateGroupMessage::getMembers() const
+inline std::vector<GroupMemberParam> const &CreateGroupMessage::getMembers() const
 {
 	return m_members.get();
 }

@@ -422,7 +422,7 @@ namespace CreatureObjectNamespace
 
 		const NetworkId & targetId = target.getNetworkId ();
 
-		typedef stdvector<NetworkId>::fwd NetworkIdVector;
+		typedef std::vector<NetworkId> NetworkIdVector;
 		static NetworkIdVector ids;
 		ids.clear ();
 
@@ -444,7 +444,7 @@ namespace CreatureObjectNamespace
 		static const std::string objvarname_vendorList = "player_structure.vendor.vendorList";
 
 		const Unicode::String & requestorFirstName = object.getAssignedObjectFirstName ();
-		typedef stdvector<Unicode::String>::fwd StringVector;
+		typedef std::vector<Unicode::String> StringVector;
 		static StringVector sv;
 		sv.clear ();
 
@@ -8909,7 +8909,7 @@ void CreatureObject::updateMissionRequestQueue()
 
 // ----------------------------------------------------------------------
 
-void CreatureObject::getAttributes(stdvector<std::pair<std::string, Unicode::String> >::fwd &data) const
+void CreatureObject::getAttributes(std::vector<std::pair<std::string, Unicode::String> > &data) const
 {
 	TangibleObject::getAttributes(data);
 }
@@ -13910,7 +13910,7 @@ bool CreatureObject::stillHasBuffState(uint32 buffNameCrc, int state) const
 
 // ----------------------------------------------------------------------
 
-void CreatureObject::getAllBuffs(stdvector<uint32>::fwd & buffCrcs) const
+void CreatureObject::getAllBuffs(std::vector<uint32> & buffCrcs) const
 {
 	buffCrcs.clear();
 	buffCrcs.reserve(m_buffs.size());

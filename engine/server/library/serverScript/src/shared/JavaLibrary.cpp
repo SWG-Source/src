@@ -5483,7 +5483,7 @@ namespace ScriptConversion {
 		return true;
 	}
 
-	const bool convert(const jobjectArray & source, stdvector<std::string>::fwd & target)
+	const bool convert(const jobjectArray & source, std::vector<std::string> & target)
 	{
 		JNIEnv * env = JavaLibrary::getEnv();
 		if (!env || !source)

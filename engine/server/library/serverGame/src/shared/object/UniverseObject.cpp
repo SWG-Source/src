@@ -138,7 +138,7 @@ bool UniverseObject::isVisibleOnClient (const Client & /*client*/) const
 
 // ----------------------------------------------------------------------
 
-void UniverseObject::getAttributes(stdvector<std::pair<std::string, Unicode::String> >::fwd &data) const
+void UniverseObject::getAttributes(std::vector<std::pair<std::string, Unicode::String> > &data) const
 {
 	ServerObject::getAttributes(data);
 }

@@ -120,7 +120,7 @@ private:
 	// //depot/swg/current/dsrc/sku.0/sys.server/compiled/game/script/base_class.java
 	// //depot/swg/current/src/engine/client/library/clientGame/src/shared/object/TangibleObject.h
 	// //depot/swg/current/src/engine/server/library/serverGame/src/shared/object/TangibleObject.h
-	stdvector<TriggerVolumeParam *>::fwd m_triggerVolumes;		// trigger volume(s) attached to the object
+	std::vector<TriggerVolumeParam *> m_triggerVolumes;		// trigger volume(s) attached to the object
 	bool m_triggerVolumesLoaded;
 	bool m_triggerVolumesAppend;
 	IntegerParam m_combatSkeleton;		// this should be fixed (not random) for any template type

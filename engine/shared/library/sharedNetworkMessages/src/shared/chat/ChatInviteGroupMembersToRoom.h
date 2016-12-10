@@ -17,14 +17,14 @@
 class ChatInviteGroupMembersToRoom : public GameNetworkMessage
 {
 public:
-	ChatInviteGroupMembersToRoom(const NetworkId & invitor, const ChatAvatarId & groupLeaderId, const std::string & roomName, const stdvector<NetworkId>::fwd & members);
+	ChatInviteGroupMembersToRoom(const NetworkId & invitor, const ChatAvatarId & groupLeaderId, const std::string & roomName, const std::vector<NetworkId> & members);
 	explicit ChatInviteGroupMembersToRoom(Archive::ReadIterator & source);
 	~ChatInviteGroupMembersToRoom();
 
 	const NetworkId &                 getInvitorNetworkId() const;
 	const ChatAvatarId &              getGroupLeaderId   () const;
 	const std::string &               getRoomName        () const;
-	const stdvector<NetworkId>::fwd & getInvitedMembers  () const;
+	const std::vector<NetworkId> & getInvitedMembers  () const;
 
 private:
 	ChatInviteGroupMembersToRoom & operator = (const ChatInviteGroupMembersToRoom & rhs);

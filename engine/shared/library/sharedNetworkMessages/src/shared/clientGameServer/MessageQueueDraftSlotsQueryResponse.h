@@ -26,7 +26,7 @@ public:
 
 	typedef MessageQueueDraftSlotsData::Option Option;
 	typedef MessageQueueDraftSlotsData         Slot;
-	typedef stdvector<Slot>::fwd               SlotVector;
+	typedef std::vector<Slot>               SlotVector;
 
 public:
 

@@ -143,7 +143,7 @@ void ShipComponentDataShield::printDebugString      (Unicode::String & result, U
 
 //----------------------------------------------------------------------
 
-void ShipComponentDataShield::getAttributes(stdvector<std::pair<std::string, Unicode::String> >::fwd & data) const
+void ShipComponentDataShield::getAttributes(std::vector<std::pair<std::string, Unicode::String> > & data) const
 {
 	ServerShipComponentData::getAttributes(data);
 

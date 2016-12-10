@@ -200,9 +200,9 @@ enum VendorStatusCode
 	AuctionLocation & GetLocation         (const std::string & location);
 	AuctionLocation & GetLocation         (const NetworkId & location);
 
-	void    VerifyExcludedGotTypes        (stdmap<int, std::string>::fwd const & excludedGotTypes);
-	void    VerifyExcludedResourceClasses (stdset<std::string>::fwd const & excludedResourceClasses);
-	void    SetResourceTreeHierarchy      (stdmap<int, stdset<int>::fwd>::fwd const & resourceTreeHierarchy);
+	void    VerifyExcludedGotTypes        (std::map<int, std::string> const & excludedGotTypes);
+	void    VerifyExcludedResourceClasses (std::set<std::string> const & excludedResourceClasses);
+	void    SetResourceTreeHierarchy      (std::map<int, std::set<int>> const & resourceTreeHierarchy);
 	bool    HasReceivedResourceTreeHierarchy() const {return !m_resourceTreeHierarchy.empty();}
 
 	std::map<std::string, int> const & getAuctionsCountByGameObjectType() const { return m_auctionsCountByGameObjectType; }

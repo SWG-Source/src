@@ -26,7 +26,7 @@ public:
 
 	static const char * const MessageType;
 
-	FactionResponseMessage(int rebel, int imperial, int criminal, const stdvector<std::string>::fwd & npcFactionNameList, const stdvector<float>::fwd & npcFactionValueList);
+	FactionResponseMessage(int rebel, int imperial, int criminal, const std::vector<std::string> & npcFactionNameList, const std::vector<float> & npcFactionValueList);
 	explicit FactionResponseMessage(Archive::ReadIterator & source);
 	virtual ~FactionResponseMessage();
 
@@ -34,8 +34,8 @@ public:
 	int                getFactionRebel   () const;
 	int                getFactionImperial() const;
 	int                getFactionCriminal() const;
-	const stdvector<std::string>::fwd & getNPCFactionNames()  const;
-	const stdvector<float>::fwd       & getNPCFactionValues() const;
+	const std::vector<std::string> & getNPCFactionNames()  const;
+	const std::vector<float>       & getNPCFactionValues() const;
 	
 private:
 	Archive::AutoVariable<int>         m_factionRebelValue;

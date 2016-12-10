@@ -174,7 +174,7 @@ void TangibleObject::endNpcConversation()
 			{
 				// since m_conversations will be changed as players are forced out
 				// of the conversation, we need to make a copy of our conversants
-				typedef stdvector<NetworkId>::fwd NetworkIdVector;
+				typedef std::vector<NetworkId> NetworkIdVector;
 				NetworkIdVector conversants(m_conversations.get());
 
 				{

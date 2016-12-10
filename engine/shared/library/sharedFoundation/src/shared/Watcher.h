@@ -151,7 +151,7 @@ private:
 
 private:
 
-	typedef stdvector<BaseWatcher *>::fwd List;
+	typedef std::vector<BaseWatcher *> List;
 
 private:
 

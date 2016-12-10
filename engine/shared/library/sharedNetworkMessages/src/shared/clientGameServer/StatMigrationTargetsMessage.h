@@ -19,13 +19,13 @@
 class StatMigrationTargetsMessage : public GameNetworkMessage
 {
 public:
-	StatMigrationTargetsMessage(const stdvector<int>::fwd& targets, int pointsLeft);
+	StatMigrationTargetsMessage(const std::vector<int>& targets, int pointsLeft);
 	explicit StatMigrationTargetsMessage(Archive::ReadIterator &source);
 	~StatMigrationTargetsMessage();
 
 public: // methods
 	int                               getPointsLeft() const;
-	stdvector<int>::fwd getTargets   () const;
+	std::vector<int> getTargets   () const;
 
 public:
 	static const char* const cms_name;

@@ -22,7 +22,7 @@
 
 const Tag TAG_CMSH = TAG(C,M,S,H);
 
-typedef stdvector<Vector>::fwd VertexList;
+typedef std::vector<Vector> VertexList;
 
 // ----------------------------------------------------------------------
 

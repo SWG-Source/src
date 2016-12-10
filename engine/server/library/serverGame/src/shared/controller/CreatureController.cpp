@@ -224,7 +224,7 @@ void CreatureController::handleMessage(const int message, const float value, con
 	{
 		const MessageQueueNetworkId * const msg = NON_NULL(dynamic_cast<const MessageQueueNetworkId *>(data));
 
-		typedef stdvector<InstallationResourceData>::fwd DataVector;
+		typedef std::vector<InstallationResourceData> DataVector;
 		DataVector dv;
 
 		HarvesterInstallationObject * const harvester = dynamic_cast<HarvesterInstallationObject *>(ServerWorld::findObjectByNetworkId(msg->getNetworkId()));

@@ -21,11 +21,11 @@ class PlanetMapManagerServer
 {
 public:
 
-	typedef stdvector<MapLocation>::fwd MapLocationVector;
-	typedef stdvector<int>::fwd         IntVector;
+	typedef std::vector<MapLocation> MapLocationVector;
+	typedef std::vector<int>         IntVector;
 
 	static void                handleClientRequest         (const Client & client, const GetMapLocationsMessage & msg);
-	static void                handleClientRequestGetSpecificMapLocationsMessage (const Client & client, const stdset<std::pair<std::string, NetworkId> >::fwd & msg);
+	static void                handleClientRequestGetSpecificMapLocationsMessage (const Client & client, const std::set<std::pair<std::string, NetworkId> > & msg);
 
 	static bool                addMapLocation              (const MapLocation & loc, int mapLocationType, bool enforceLocationCountLimits);
 	static bool                removeMapLocation           (const NetworkId & id);

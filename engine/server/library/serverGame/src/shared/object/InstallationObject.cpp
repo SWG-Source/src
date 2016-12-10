@@ -325,7 +325,7 @@ void InstallationObject::handleCMessageTo (const MessageToPayload &message)
 
 // ----------------------------------------------------------------------
 
-void InstallationObject::getAttributes(stdvector<std::pair<std::string, Unicode::String> >::fwd &data) const
+void InstallationObject::getAttributes(std::vector<std::pair<std::string, Unicode::String> > &data) const
 {
 	TangibleObject::getAttributes(data);
 }

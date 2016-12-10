@@ -50,7 +50,7 @@ public:
 	{
 		bool                   optional;
 		StringId               name;
-		stdvector<Ingredient>::fwd options;
+		std::vector<Ingredient> options;
 		std::string            optionalSkillCommand;
 		float                  complexity;
 		std::string            appearance;
@@ -97,7 +97,7 @@ protected:
 private:
 	BoolParam m_optional;		// is the slot optional
 	StringIdParam m_name;		// slot name
-	stdvector<StructParamOT *>::fwd m_options;		// possible ingredients that can be used to fill the slot
+	std::vector<StructParamOT *> m_options;		// possible ingredients that can be used to fill the slot
 	bool m_optionsLoaded;
 	bool m_optionsAppend;
 	StringParam m_optionalSkillCommand;		// skill commands needed to access this slot if it is optional (ignored for required slots)
@@ -148,14 +148,14 @@ private:
 	IntegerParam m_category;		// schematic category (food, weapon, etc)
 	StringParam m_craftedObjectTemplate;		// what object we create
 	StringParam m_crateObjectTemplate;		// the "crate" to use when manufacturing multiple copies of the object
-	stdvector<StructParamOT *>::fwd m_slots;		// ingredient slots
+	std::vector<StructParamOT *> m_slots;		// ingredient slots
 	bool m_slotsLoaded;
 	bool m_slotsAppend;
-	stdvector<StringParam *>::fwd m_skillCommands;		// skill commands needed to access this schematic and required slots
+	std::vector<StringParam *> m_skillCommands;		// skill commands needed to access this schematic and required slots
 	bool m_skillCommandsLoaded;
 	bool m_skillCommandsAppend;
 	BoolParam m_destroyIngredients;		// flag that the ingredients used in the design stage should be destroyed
-	stdvector<StringParam *>::fwd m_manufactureScripts;		// scripts that will be attached to a manufacturing schematic created from this schematic
+	std::vector<StringParam *> m_manufactureScripts;		// scripts that will be attached to a manufacturing schematic created from this schematic
 	bool m_manufactureScriptsLoaded;
 	bool m_manufactureScriptsAppend;
 	IntegerParam m_itemsPerContainer;		// when manufacturing, how many items will be put in a container (1 = items not in a container)

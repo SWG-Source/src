@@ -27,7 +27,7 @@ public:
 
 	static const char * const MESSAGE_TYPE;
 
-	typedef stdvector<NetworkId>::fwd NetworkIdVector;
+	typedef std::vector<NetworkId> NetworkIdVector;
 
 	           ResourceHarvesterActivatePageMessage (const NetworkId & harvesterId);
 	explicit   ResourceHarvesterActivatePageMessage (Archive::ReadIterator & source);

@@ -93,8 +93,8 @@ public:
 	static std::string const cms_shared_owner_no_slash;
 	static std::string const cms_priv;
 
-	typedef stdvector<Customization>::fwd CustomizationVector;
-	typedef stdmap<std::string, CustomizationVector>::fwd CustomizationSpeciesMap;
+	typedef std::vector<Customization> CustomizationVector;
+	typedef std::map<std::string, CustomizationVector> CustomizationSpeciesMap;
 
 	static void install();
 	static void remove();
@@ -113,7 +113,7 @@ public:
 	static std::string convertServerHairTemplateNameToSharedHairTemplateName(std::string const &serverHairTemplateName);
 	static PaletteColumns getPaletteColumnDataShortName(std::string const & paletteName);
 	static PaletteColumns getPaletteColumnDataLongName(std::string const & paletteName);
-	static stdmap<std::string, PaletteColumns>::fwd const & getPaletteColumnData();
+	static std::map<std::string, PaletteColumns> const & getPaletteColumnData();
 	static bool isHoloemoteName(std::string const & holoemoteName);
 	static int const getRequiredHairSkillForHoloemote(std::string const & holoemoteName);
 

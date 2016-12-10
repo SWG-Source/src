@@ -62,8 +62,8 @@ class GameServer :
 public MessageDispatch::Receiver
 {
 public:
-	typedef stdunordered_map<NetworkId, Client *, NetworkId::Hash>::fwd ClientMap;
-	typedef stdvector<ConnectionServerConnection *>::fwd           ConnectionServerVector;
+	typedef std::unordered_map<NetworkId, Client *, NetworkId::Hash> ClientMap;
+	typedef std::vector<ConnectionServerConnection *>           ConnectionServerVector;
 
 	virtual ~GameServer ();
 
@@ -117,10 +117,10 @@ public:
 	
 	void                         loadTerrain ();
 
-	stdvector<uint32>::fwd const &getAllGameServerPids() const;
+	std::vector<uint32> const &getAllGameServerPids() const;
 	bool                         hasConnectionsToOtherGameServers() const;
 
-	void                         getObjectsWithClients(stdvector<ServerObject *>::fwd &objects) const;
+	void                         getObjectsWithClients(std::vector<ServerObject *> &objects) const;
 
 	static uint64                getTotalObjectCreatesReceived();
 	static uint64                getTotalObjectCreatesSent();
@@ -185,8 +185,8 @@ private:
 	//-----------------------------------------------------------------------
 	//	maps
 	
-	typedef stdmap<NetworkId, stdvector<NetworkId>::fwd >::fwd     PendingContainedObjectsMap;
-	typedef stdmap<uint32, const CentralCreateCharacter *>::fwd    CharactersPendingCreationMap;
+	typedef std::map<NetworkId, std::vector<NetworkId> >     PendingContainedObjectsMap;
+	typedef std::map<uint32, const CentralCreateCharacter *>    CharactersPendingCreationMap;
 
 	bool                            m_done;
 	uint32                          m_processId;

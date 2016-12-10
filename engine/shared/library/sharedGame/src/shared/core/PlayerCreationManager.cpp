@@ -600,7 +600,7 @@ bool PlayerCreationManager::getRacialTotal(const std::string & sharedTemplateNam
 
 //----------------------------------------------------------------------
 
-bool PlayerCreationManager::test (std::string & result, const stdvector<std::string>::fwd & templateNames)
+bool PlayerCreationManager::test (std::string & result, const std::vector<std::string> & templateNames)
 {
 	DEBUG_FATAL (!s_installed, ("not installed.\n"));
 	UNREF (result);

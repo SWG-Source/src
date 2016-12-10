@@ -22,7 +22,7 @@
 // ======================================================================
 
 bool BiographyManager::m_installed = false;
-stdmap<NetworkId, stdvector<CachedNetworkId>::fwd >::fwd *BiographyManager::m_retrievalQueue;
+std::map<NetworkId, std::vector<CachedNetworkId> > *BiographyManager::m_retrievalQueue;
 
 
 BiographyManager::BiographyManager()

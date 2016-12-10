@@ -754,7 +754,7 @@ void HarvesterInstallationObject::sendResourceDataToClient(CreatureObject &clien
 
 // ----------------------------------------------------------------------
 
-void HarvesterInstallationObject::getAttributes(stdvector<std::pair<std::string, Unicode::String> >::fwd &data) const
+void HarvesterInstallationObject::getAttributes(std::vector<std::pair<std::string, Unicode::String> > &data) const
 {
 	InstallationObject::getAttributes(data);
 }

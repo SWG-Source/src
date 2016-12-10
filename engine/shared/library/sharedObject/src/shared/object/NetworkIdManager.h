@@ -16,7 +16,7 @@ class NetworkIdManager
 public:
 	~NetworkIdManager();
 
-	typedef stdunordered_map<NetworkId, Object *, NetworkId::Hash>::fwd NetworkIdObjectHashMap;
+	typedef std::unordered_map<NetworkId, Object *, NetworkId::Hash> NetworkIdObjectHashMap;
 
 	static void                      addObject      (Object & newObject);
 	static Object *                  getObjectById  (const NetworkId & source);

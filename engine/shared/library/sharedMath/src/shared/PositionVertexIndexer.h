@@ -19,7 +19,7 @@
 class PositionVertexIndexer
 {
 public:
-	typedef stdvector<Vector>::fwd VectorVector;
+	typedef std::vector<Vector> VectorVector;
 
 	PositionVertexIndexer();
 	~PositionVertexIndexer();

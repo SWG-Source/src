@@ -60,7 +60,7 @@ public:
 	void                              setSpatialSubdivisionHandle(SpatialSubdivisionHandle *newHandle);
 	void                              objectMoved(ServerObject &object);
 	void                              objectDestroyed(ServerObject &object);
-	void                              contentsChanged(stdvector<ServerObject *>::fwd const &newSortedContents);
+	void                              contentsChanged(std::vector<ServerObject *> const &newSortedContents);
 	static void                       runScriptTriggers();
 
 	virtual bool                      isNetworkTriggerVolume() const;

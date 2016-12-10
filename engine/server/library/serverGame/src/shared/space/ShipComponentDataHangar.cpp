@@ -89,7 +89,7 @@ void ShipComponentDataHangar::printDebugString      (Unicode::String & result, U
 
 //----------------------------------------------------------------------
 
-void ShipComponentDataHangar::getAttributes(stdvector<std::pair<std::string, Unicode::String> >::fwd & data) const
+void ShipComponentDataHangar::getAttributes(std::vector<std::pair<std::string, Unicode::String> > & data) const
 {
 	ServerShipComponentData::getAttributes(data);
 }

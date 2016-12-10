@@ -23,7 +23,7 @@
 class PurgeManager
 {
   public:
-	  static void handleStructuresAndVendorsForPurge(StationId stationId, stdvector<std::pair<NetworkId, NetworkId> >::fwd const & structures, stdvector<std::pair<NetworkId, std::pair<NetworkId, Unicode::String> > >::fwd const & vendors, bool warnOnly);
+	  static void handleStructuresAndVendorsForPurge(StationId stationId, std::vector<std::pair<NetworkId, NetworkId> > const & structures, std::vector<std::pair<NetworkId, std::pair<NetworkId, Unicode::String> > > const & vendors, bool warnOnly);
 };
 
 // ======================================================================

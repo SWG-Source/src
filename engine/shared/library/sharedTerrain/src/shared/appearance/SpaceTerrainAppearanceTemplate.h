@@ -128,7 +128,7 @@ private:
 	
 	VectorArgb m_ambientColor;
 
-	typedef stdvector<LightData>::fwd LightDataList;
+	typedef std::vector<LightData> LightDataList;
 	LightDataList * const m_lightDataList;
 
 	PersistentCrcString m_environmentTextureName;
@@ -146,10 +146,10 @@ private:
 	bool m_skyBoxCubeMap;
 	PersistentCrcString m_skyBoxTextureNameMask;
 
-	typedef stdvector<CelestialData>::fwd CelestialDataList;
+	typedef std::vector<CelestialData> CelestialDataList;
 	CelestialDataList * const m_celestialDataList;
 
-	typedef stdvector<DistantAppearanceData>::fwd DistantAppearanceDataList;
+	typedef std::vector<DistantAppearanceData> DistantAppearanceDataList;
 	DistantAppearanceDataList * const m_distantAppearanceDataList;
 
 	float m_mapWidthInMeters;

@@ -30,9 +30,9 @@ public:
 	static unsigned long getEffectiveMessageToTime();
 	
 	static void sendMessageToC                     (const NetworkId &objectId, const std::string &method, const std::string &data, int delay, bool guaranteed, NetworkId const & undeliveredCallbackObject=NetworkId::cms_invalid, std::string const & undeliveredCallbackMethod=ms_nullString);
-	static void sendMessageToJava                  (const NetworkId &objectId, const std::string &method, const stdvector<int8>::fwd &packedData, int delay, bool guaranteed, NetworkId const & undeliveredCallbackObject=NetworkId::cms_invalid, std::string const & undeliveredCallbackMethod=ms_nullString);
+	static void sendMessageToJava                  (const NetworkId &objectId, const std::string &method, const std::vector<int8> &packedData, int delay, bool guaranteed, NetworkId const & undeliveredCallbackObject=NetworkId::cms_invalid, std::string const & undeliveredCallbackMethod=ms_nullString);
 	static void sendRecurringMessageToC            (const NetworkId &objectId, const std::string &method, const std::string & data, int delay);
-	static void sendRecurringMessageToJava         (const NetworkId &objectId, const std::string &method, const stdvector<int8>::fwd &packedData, int delay);
+	static void sendRecurringMessageToJava         (const NetworkId &objectId, const std::string &method, const std::vector<int8> &packedData, int delay);
 	static void cancelRecurringMessageTo           (const NetworkId &objectId, const std::string &method);
 	static void update                             (float frameTime);
 	static void addToScheduler                     (ServerObject const & object, unsigned long callTime);

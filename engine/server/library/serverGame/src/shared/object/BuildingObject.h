@@ -44,7 +44,7 @@ public:
 
 	virtual Controller* createDefaultController(void);
 	void                addMembersToPackages   ();
-	virtual void        getAttributes          (stdvector<std::pair<std::string, Unicode::String> >::fwd &data) const;
+	virtual void        getAttributes          (std::vector<std::pair<std::string, Unicode::String> > &data) const;
 
 	int                 getMaintenanceCost() const;
 	void                setMaintenanceCost(int newConst);
@@ -89,7 +89,7 @@ public:
 		};
 	};
 
-	typedef stdunordered_set<const BuildingObject *, BuildingObjectPointerHash>::fwd AllBuildingsSet;
+	typedef std::unordered_set<const BuildingObject *, BuildingObjectPointerHash> AllBuildingsSet;
 	static const AllBuildingsSet & getAllBuildings();
 
 protected:

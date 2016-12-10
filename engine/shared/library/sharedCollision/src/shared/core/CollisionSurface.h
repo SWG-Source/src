@@ -52,7 +52,7 @@ struct LineIntersectResult
 	ContactPoint    m_hitLoc;
 };
 
-typedef stdvector<LineIntersectResult>::fwd LineIntersectResultVec;
+typedef std::vector<LineIntersectResult> LineIntersectResultVec;
 
 // ======================================================================
 

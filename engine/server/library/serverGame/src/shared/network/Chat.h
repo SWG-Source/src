@@ -77,7 +77,7 @@ public:
 	static void sendSystemMessage        (const std::string & to, const ProsePackage & pp);
 	static void invite                   (const std::string & to, const std::string & room); 
 	static void uninvite                 (const std::string & to, const std::string & room); 
-	static void inviteGroupMembers       (const NetworkId & invitor, const ChatAvatarId & groupLeader, const std::string & room, const stdvector<NetworkId>::fwd & members); 
+	static void inviteGroupMembers       (const NetworkId & invitor, const ChatAvatarId & groupLeader, const std::string & room, const std::vector<NetworkId> & members); 
 
 	static unsigned int isAllowedToEnterRoom(const CreatureObject & who, const std::string & room);
 
@@ -99,7 +99,7 @@ private:
 	static Chat *                        m_instance;
 	ChatAvatarId *                       m_serverAvatar;
 	ChatServerConnection *               m_chatServer;	
-	stdvector<Archive::ByteStream>::fwd  m_deferredChatMessages;
+	std::vector<Archive::ByteStream>  m_deferredChatMessages;
 	std::string                          m_gameCode;
 };
 
