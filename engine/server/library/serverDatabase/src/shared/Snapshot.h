@@ -45,7 +45,7 @@ public:
 	virtual ~Snapshot();
 	
 	virtual void handleUpdateObjectPosition(const UpdateObjectPositionMessage &msg) =0;
-	virtual void handleDeleteMessage   (const NetworkId objectID, int reasonCode, bool immediate, bool demandLoadedContainer, bool cascadeReason) =0;
+	virtual void handleDeleteMessage   (const NetworkId & objectID, int reasonCode, bool immediate, bool demandLoadedContainer, bool cascadeReason) =0;
 	virtual void handleMessageTo       (const MessageToPayload &data) =0;
 	virtual void handleMessageToAck    (const MessageToId &messageId) =0;
 	virtual void handleAddResourceTypeMessage (const AddResourceTypeMessage &message) =0;
@@ -53,8 +53,8 @@ public:
 
 	virtual void getWorldContainers    (stdvector<NetworkId>::fwd &containers) const = 0;
 
-	void handleDeltasMessage           (NetworkId objectId, const DeltasMessage &msg);
-	void handleBaselinesMessage        (NetworkId objectId, const BaselinesMessage &msg);
+	void handleDeltasMessage           (NetworkId & objectId, const DeltasMessage &msg);
+	void handleBaselinesMessage        (NetworkId & objectId, const BaselinesMessage &msg);
 	
 	virtual bool saveToDB              (DB::Session *session) =0;
 	virtual bool load                  (DB::Session *session) =0;
@@ -63,8 +63,8 @@ public:
 
 	void takeTimestamp();
 
-	virtual void newObject             (NetworkId const objectId, int templateId, Tag typeId) =0;
-//	virtual void addObjectIdForLoad    (NetworkId objectId)=0; //TODO:  the load list could be moved into Snapshot, intead of being in the derived class
+	virtual void newObject             (const NetworkId & objectId, int templateId, Tag typeId) =0;
+//	virtual void addObjectIdForLoad    (NetworkId & objectId)=0; //TODO:  the load list could be moved into Snapshot, intead of being in the derived class
 
 	void addLocator                    (ObjectLocator *newLocator);
 	void addCustomPersistStep          (CustomPersistStep *newStep);
@@ -113,15 +113,15 @@ private:
 	static int ms_deletionCount;
 
   protected:
-	virtual void decodeServerData(NetworkId const objectId, Tag typeId, uint16 index, Archive::ReadIterator &bs, bool isBaseline) = 0;
-	virtual void decodeSharedData(NetworkId const objectId, Tag typeId, uint16 index, Archive::ReadIterator &bs, bool isBaseline) = 0;
-	virtual void decodeClientData(NetworkId const objectId, Tag typeId, uint16 index, Archive::ReadIterator &bs, bool isBaseline) = 0;
-	virtual void decodeParentClientData(NetworkId const objectId, Tag typeId, uint16 index, Archive::ReadIterator &bs, bool isBaseline) = 0;
+	virtual void decodeServerData(const NetworkId & objectId, Tag typeId, uint16 index, Archive::ReadIterator &bs, bool isBaseline) = 0;
+	virtual void decodeSharedData(const NetworkId & objectId, Tag typeId, uint16 index, Archive::ReadIterator &bs, bool isBaseline) = 0;
+	virtual void decodeClientData(const NetworkId & objectId, Tag typeId, uint16 index, Archive::ReadIterator &bs, bool isBaseline) = 0;
+	virtual void decodeParentClientData(const NetworkId & objectId, Tag typeId, uint16 index, Archive::ReadIterator &bs, bool isBaseline) = 0;
 	
-	virtual bool encodeParentClientData(NetworkId const objectId, Tag typeId, stdvector<BatchBaselinesMessageData>::fwd &baselines) const = 0;
-	virtual bool encodeClientData(NetworkId const objectId, Tag typeId, stdvector<BatchBaselinesMessageData>::fwd &baselines) const = 0;
-	virtual bool encodeServerData(NetworkId const objectId, Tag typeId, stdvector<BatchBaselinesMessageData>::fwd &baselines) const = 0;
-	virtual bool encodeSharedData(NetworkId const objectId, Tag typeId, stdvector<BatchBaselinesMessageData>::fwd &baselines) const = 0;
+	virtual bool encodeParentClientData(const NetworkId & objectId, Tag typeId, stdvector<BatchBaselinesMessageData>::fwd &baselines) const = 0;
+	virtual bool encodeClientData(const NetworkId & objectId, Tag typeId, stdvector<BatchBaselinesMessageData>::fwd &baselines) const = 0;
+	virtual bool encodeServerData(const NetworkId & objectId, Tag typeId, stdvector<BatchBaselinesMessageData>::fwd &baselines) const = 0;
+	virtual bool encodeSharedData(const NetworkId & objectId, Tag typeId, stdvector<BatchBaselinesMessageData>::fwd &baselines) const = 0;
 
   private:
 	Snapshot(const Snapshot&); //disable
