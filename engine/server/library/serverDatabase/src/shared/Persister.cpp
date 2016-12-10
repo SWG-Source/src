@@ -677,7 +677,7 @@ void Persister::saveCompleted(Snapshot *completedSnapshot)
 		for (auto i = m_completedSnapshots.begin(); i != m_completedSnapshots.end(); ++i) {
 			if (*i != nullptr) {
 				++completeCount;
-				DEBUG_WARNING(true, ("m_completedSnapshots has %i snapshots inside, snapshot class reports %i deleted", completeCount, snapshotClassCount));
+				DEBUG_WARNING(true, ("m_completedSnapshots has %i snapshots inside, snapshot class reports %i currently allocated", completeCount, snapshotClassCount));
 			} else {
 				m_completedSnapshots.erase(i);
 			}
