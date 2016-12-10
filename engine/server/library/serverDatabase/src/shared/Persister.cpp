@@ -619,12 +619,44 @@ void Persister::endBaselines(const NetworkId &objectId, uint32 serverId)
 
 // ----------------------------------------------------------------------
 
+
+void Persister::nukeOrphans() {
+        if (m_completedSnapshots.size() > 0) {
+                int completeCount = m_completedSnapshots.size();
+                int snapshotClassCount = (*m_completedSnapshots.begin())->getPendingCount();
+
+		WARNING(true, ("%i snapshots done, snapshot class reports %i currently allocated", completeCount, snapshotClassCount));
+
+		if (snapshotClassCount > 5) {
+			delmutex.lock();
+                
+      	          	for (auto i = m_completedSnapshots.begin(); i != m_completedSnapshots.end(); ++i) {
+      	          		if (i != m_completedSnapshots.end() && *i != nullptr && !(*i)->getIsBeingSaved() && completeCount > 5) {
+                        		WARNING(true, ("Deleting orphaned snapshot"));
+	
+	                        	delete (*i);
+	                        	*i = nullptr;
+
+        	                	i = m_completedSnapshots.erase(i);
+        	         	       completeCount--;
+        	        	} else {
+        	                	break;
+        	        	}
+        		}
+	
+			delmutex.unlock();
+		}
+	}
+}
+
 /**
  * Called by TaskSaveSnapshot when it finishes.
  */
 
 void Persister::saveCompleted(Snapshot *completedSnapshot)
 {
+	nukeOrphans();
+
 	auto i=std::remove(m_savingSnapshots.begin(),m_savingSnapshots.end(),completedSnapshot);
 	if (i!=m_savingSnapshots.end())
 	{
@@ -658,7 +690,6 @@ void Persister::saveCompleted(Snapshot *completedSnapshot)
 	else
 	{
 		auto j=std::remove(m_savingCharacterSnapshots.begin(),m_savingCharacterSnapshots.end(),completedSnapshot);
-
 		if (j != m_savingCharacterSnapshots.end()) {
 			m_savingCharacterSnapshots.erase(j, m_savingCharacterSnapshots.end());
 		} else {
@@ -666,38 +697,16 @@ void Persister::saveCompleted(Snapshot *completedSnapshot)
 		}
        	}
 
+	bool locked = false;
+	do {
+		locked = delmutex.try_lock();
+	} while (!locked);
+
 	if (completedSnapshot != nullptr){
 		m_completedSnapshots.push_back(completedSnapshot);
 	}
 
-	if (m_completedSnapshots.size() > 0) {
-		int completeCount = 0;
-		int snapshotClassCount = (*m_completedSnapshots.begin())->getPendingCount();
-
-		for (auto i = m_completedSnapshots.begin(); i != m_completedSnapshots.end(); ++i) {
-			if (*i != nullptr) {
-				++completeCount;
-				DEBUG_WARNING(true, ("m_completedSnapshots has %i snapshots inside, snapshot class reports %i currently allocated", completeCount, snapshotClassCount));
-			} else {
-				i = m_completedSnapshots.erase(i);
-			}
-		}
-
-		if (completeCount > snapshotClassCount) {
-			for (auto i = m_completedSnapshots.begin(); i != m_completedSnapshots.end(); ++i) {
-				if (*i != nullptr && completeCount > snapshotClassCount) {
-					WARNING(true, ("Deleting orphaned snapshots, discrepancy of %i", (completeCount-snapshotClassCount)));
-					delete (*i);
-					*i = nullptr;
-					
-					i = m_completedSnapshots.erase(i);	
-					completeCount--;
-				} else {
-					break;
-				}
-			}
-		}
-	}
+	delmutex.unlock();
 }
 
 // ----------------------------------------------------------------------

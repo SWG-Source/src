@@ -16,6 +16,8 @@
 #include <vector>
 #include <set> //TODO: remove when we clean up newCharacterLock hack
 
+#include <mutex>
+
 #include "Unicode.h"
 #include "serverNetworkMessages/MessageToPayload.h"
 #include "sharedDatabaseInterface/DbModeQuery.h"
@@ -69,6 +71,8 @@ class Persister : public MessageDispatch::Receiver
 	void beginBaselines(const NetworkId &newObject) const;
 	void endBaselines(const NetworkId &newObject, uint32 serverId);
 
+
+	void nukeOrphans();
 	void saveCompleted       (Snapshot *completedSnapshot);
 	void onNewCharacterSaved (uint32 stationId, const NetworkId &characterObject, const Unicode::String &characterName, const int templateId, bool special) const;
 
@@ -97,6 +101,8 @@ class Persister : public MessageDispatch::Receiver
 	DB::TaskQueue *m_newCharacterTaskQueue;
 	
   private:
+	std::mutex delmutex;
+
 	struct PendingCharacter
 	{
 		uint32 stationId;

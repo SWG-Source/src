@@ -45,7 +45,7 @@ public:
 	virtual ~Snapshot();
 	
 	virtual void handleUpdateObjectPosition(const UpdateObjectPositionMessage &msg) =0;
-	virtual void handleDeleteMessage   (const NetworkId &objectID, int reasonCode, bool immediate, bool demandLoadedContainer, bool cascadeReason) =0;
+	virtual void handleDeleteMessage   (const NetworkId objectID, int reasonCode, bool immediate, bool demandLoadedContainer, bool cascadeReason) =0;
 	virtual void handleMessageTo       (const MessageToPayload &data) =0;
 	virtual void handleMessageToAck    (const MessageToId &messageId) =0;
 	virtual void handleAddResourceTypeMessage (const AddResourceTypeMessage &message) =0;
@@ -63,7 +63,7 @@ public:
 
 	void takeTimestamp();
 
-	virtual void newObject             (NetworkId const & objectId, int templateId, Tag typeId) =0;
+	virtual void newObject             (NetworkId const objectId, int templateId, Tag typeId) =0;
 //	virtual void addObjectIdForLoad    (NetworkId objectId)=0; //TODO:  the load list could be moved into Snapshot, intead of being in the derived class
 
 	void addLocator                    (ObjectLocator *newLocator);
@@ -98,12 +98,13 @@ public:
 	bool saveTimestamp (DB::Session *session);
 	
   private:
-	bool m_isBeingSaved;
 	bool m_useGoldDatabase;
 	DB::ModeQuery::Mode m_mode;
 	int m_timestamp;
 
 public:
+	bool m_isBeingSaved;
+	bool getIsBeingSaved();
 	static int getCreationCount() { return ms_creationCount; }
 	static int getDeletionCount() { return ms_deletionCount; }
 	static int getPendingCount() { return ms_creationCount - ms_deletionCount; }
@@ -112,15 +113,15 @@ private:
 	static int ms_deletionCount;
 
   protected:
-	virtual void decodeServerData(NetworkId const & objectId, Tag typeId, uint16 index, Archive::ReadIterator &bs, bool isBaseline) = 0;
-	virtual void decodeSharedData(NetworkId const & objectId, Tag typeId, uint16 index, Archive::ReadIterator &bs, bool isBaseline) = 0;
-	virtual void decodeClientData(NetworkId const & objectId, Tag typeId, uint16 index, Archive::ReadIterator &bs, bool isBaseline) = 0;
-	virtual void decodeParentClientData(NetworkId const & objectId, Tag typeId, uint16 index, Archive::ReadIterator &bs, bool isBaseline) = 0;
+	virtual void decodeServerData(NetworkId const objectId, Tag typeId, uint16 index, Archive::ReadIterator &bs, bool isBaseline) = 0;
+	virtual void decodeSharedData(NetworkId const objectId, Tag typeId, uint16 index, Archive::ReadIterator &bs, bool isBaseline) = 0;
+	virtual void decodeClientData(NetworkId const objectId, Tag typeId, uint16 index, Archive::ReadIterator &bs, bool isBaseline) = 0;
+	virtual void decodeParentClientData(NetworkId const objectId, Tag typeId, uint16 index, Archive::ReadIterator &bs, bool isBaseline) = 0;
 	
-	virtual bool encodeParentClientData(NetworkId const & objectId, Tag typeId, stdvector<BatchBaselinesMessageData>::fwd &baselines) const = 0;
-	virtual bool encodeClientData(NetworkId const & objectId, Tag typeId, stdvector<BatchBaselinesMessageData>::fwd &baselines) const = 0;
-	virtual bool encodeServerData(NetworkId const & objectId, Tag typeId, stdvector<BatchBaselinesMessageData>::fwd &baselines) const = 0;
-	virtual bool encodeSharedData(NetworkId const & objectId, Tag typeId, stdvector<BatchBaselinesMessageData>::fwd &baselines) const = 0;
+	virtual bool encodeParentClientData(NetworkId const objectId, Tag typeId, stdvector<BatchBaselinesMessageData>::fwd &baselines) const = 0;
+	virtual bool encodeClientData(NetworkId const objectId, Tag typeId, stdvector<BatchBaselinesMessageData>::fwd &baselines) const = 0;
+	virtual bool encodeServerData(NetworkId const objectId, Tag typeId, stdvector<BatchBaselinesMessageData>::fwd &baselines) const = 0;
+	virtual bool encodeSharedData(NetworkId const objectId, Tag typeId, stdvector<BatchBaselinesMessageData>::fwd &baselines) const = 0;
 
   private:
 	Snapshot(const Snapshot&); //disable
@@ -128,6 +129,11 @@ private:
 };
 
 // ----------------------------------------------------------------------
+
+inline bool Snapshot::getIsBeingSaved()
+{
+	return m_isBeingSaved;
+}
 
 inline void Snapshot::setUniverseAuthHack()
 {
