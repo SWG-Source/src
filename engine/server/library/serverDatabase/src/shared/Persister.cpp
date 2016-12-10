@@ -679,7 +679,7 @@ void Persister::saveCompleted(Snapshot *completedSnapshot)
 				++completeCount;
 				DEBUG_WARNING(true, ("m_completedSnapshots has %i snapshots inside, snapshot class reports %i currently allocated", completeCount, snapshotClassCount));
 			} else {
-				m_completedSnapshots.erase(i);
+				i = m_completedSnapshots.erase(i);
 			}
 		}
 
@@ -689,6 +689,8 @@ void Persister::saveCompleted(Snapshot *completedSnapshot)
 					WARNING(true, ("Deleting orphaned snapshots, discrepancy of %i", (completeCount-snapshotClassCount)));
 					delete (*i);
 					*i = nullptr;
+					
+					i = m_completedSnapshots.erase(i);	
 					completeCount--;
 				} else {
 					break;
