@@ -33,7 +33,7 @@ namespace ConfigCombatEngineData
 
 namespace CombatEngineData
 {
-	typedef stdvector<CachedNetworkId>::fwd TargetIdList;
+	typedef std::vector<CachedNetworkId> TargetIdList;
 
 	// results of a defense
 	// NOTE: make sure CombatEngineData.cpp name-string table is updated when these values change.

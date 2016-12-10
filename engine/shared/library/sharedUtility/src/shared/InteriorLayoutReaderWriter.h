@@ -42,7 +42,7 @@ public:
 
 	//-- preload interface
 	int getNumberOfObjects() const;
-	typedef stdvector<CrcString const *>::fwd CrcStringVector;
+	typedef std::vector<CrcString const *> CrcStringVector;
 	void getObjectTemplateNames(CrcStringVector & crcStringVector);
 
 	//-- writer interface
@@ -66,7 +66,7 @@ private:
 	PersistentCrcString m_fileName;
 
 	class Node;
-	typedef stdmap<CrcString const *, Node *, LessPointerComparator>::fwd NodeMap;
+	typedef std::map<CrcString const *, Node *, LessPointerComparator> NodeMap;
 	NodeMap * const m_nodeMap;
 	int m_numberOfObjects;
 };

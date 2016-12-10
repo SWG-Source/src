@@ -58,7 +58,7 @@ public:
 
 protected:
 
-	stdvector<AiLocation>::fwd  m_patrolPath;
+	std::vector<AiLocation>  m_patrolPath;
 	bool                        m_random;
 	bool                        m_flip;
 	bool                        m_repeat;

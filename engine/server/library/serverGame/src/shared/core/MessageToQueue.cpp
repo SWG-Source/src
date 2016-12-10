@@ -342,7 +342,7 @@ void MessageToQueue::sendRecurringMessageToC  (const NetworkId &objectId, const 
 
 // ----------------------------------------------------------------------
 
-void MessageToQueue::sendRecurringMessageToJava(const NetworkId &objectId, const std::string &method, const stdvector<int8>::fwd &packedData, int delay)
+void MessageToQueue::sendRecurringMessageToJava(const NetworkId &objectId, const std::string &method, const std::vector<int8> &packedData, int delay)
 {
 	WARNING_DEBUG_FATAL(delay < 0, ("Sent messageTo with negative delay.  Target %s, method %s, delay %f",objectId.getValueString().c_str(), method.c_str(), delay));
 	if (delay < 0)

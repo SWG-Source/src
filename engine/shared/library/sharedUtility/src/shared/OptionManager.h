@@ -90,7 +90,7 @@ private:
 		Type m_type;
 	};
 
-	typedef stdvector<Option>::fwd OptionList;
+	typedef std::vector<Option> OptionList;
 
 private:
 
@@ -114,22 +114,22 @@ private:
 	OptionList * const m_registeredOptionList;
 	OptionList * const m_savedOptionList;
 
-	typedef stdvector<char*>::fwd StringList;
+	typedef std::vector<char*> StringList;
 	StringList * const m_stringList;
 
-	typedef stdvector<bool*>::fwd BoolList;
+	typedef std::vector<bool*> BoolList;
 	BoolList * const m_boolList;
 
-	typedef stdvector<float*>::fwd FloatList;
+	typedef std::vector<float*> FloatList;
 	FloatList * const m_floatList;
 
-	typedef stdvector<int*>::fwd IntList;
+	typedef std::vector<int*> IntList;
 	IntList * const m_intList;
 
-	typedef stdvector<std::string*>::fwd StdStringList;
+	typedef std::vector<std::string*> StdStringList;
 	StdStringList * const m_stdStringList;
 
-	typedef stdvector<Unicode::String*>::fwd UnicodeStringList;
+	typedef std::vector<Unicode::String*> UnicodeStringList;
 	UnicodeStringList * const m_unicodeStringList;
 };
 

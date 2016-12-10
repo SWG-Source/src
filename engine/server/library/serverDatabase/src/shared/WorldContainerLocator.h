@@ -23,14 +23,14 @@
 class WorldContainerLocator : public ObjectLocator
 {
   public:
-	WorldContainerLocator(const stdvector<NetworkId>::fwd &containers);
+	WorldContainerLocator(const std::vector<NetworkId> &containers);
 	virtual ~WorldContainerLocator();
 	
   public:
 	virtual bool locateObjects(DB::Session *session, const std::string &schema, int &objectsLocated);
 
   private:
-	stdvector<NetworkId>::fwd * m_containers;
+	std::vector<NetworkId> * m_containers;
 
   private:
 	WorldContainerLocator &operator=(const WorldContainerLocator&); //disable

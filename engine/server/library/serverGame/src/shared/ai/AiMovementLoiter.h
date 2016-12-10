@@ -85,7 +85,7 @@ protected:
 		, BCR_failure
 	};
 
-	typedef stdvector<AiLocation>::fwd CachedAiLocations;
+	typedef std::vector<AiLocation> CachedAiLocations;
 
 	AiLocation m_anchor;
 	AiLocation m_target;

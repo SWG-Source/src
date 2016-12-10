@@ -52,8 +52,8 @@ public:
 	
 private:
 
-	typedef stdmap<const CrcLowerString, Directory*>::fwd              DirectoryMap;
-	typedef stdmap<const CrcLowerString, CustomizationVariable*>::fwd  CustomizationVariableMap;
+	typedef std::map<const CrcLowerString, Directory*>              DirectoryMap;
+	typedef std::map<const CrcLowerString, CustomizationVariable*>  CustomizationVariableMap;
 
 private:
 	// Disabled.

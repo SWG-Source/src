@@ -16,7 +16,7 @@
 
 namespace FootprintForceReattachManagerNamespace
 {
-	typedef stdvector<std::string>::fwd StringVector;
+	typedef std::vector<std::string> StringVector;
 
 	StringVector ms_sceneIds;
 

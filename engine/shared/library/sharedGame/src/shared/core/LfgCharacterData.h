@@ -53,7 +53,7 @@ public:
 	static LfgCharacterData::Profession convertSkillTemplateToProfession(const std::string & skillTemplate);
 	static std::string getProfessionDebugString(LfgCharacterData::Profession profession);
 	static Unicode::String const & getProfessionDisplayString(LfgCharacterData::Profession profession);
-	static stdmap<std::string, int>::fwd const & calculateStatistics(stdmap<NetworkId, LfgCharacterData>::fwd const & connectedCharacterLfgData);
+	static std::map<std::string, int> const & calculateStatistics(std::map<NetworkId, LfgCharacterData> const & connectedCharacterLfgData);
 
 	std::string getDebugString() const;
 

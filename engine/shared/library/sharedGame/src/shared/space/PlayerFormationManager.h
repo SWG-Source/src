@@ -19,7 +19,7 @@ class PlayerFormationManager
 {
 public:
 
-	typedef stdvector<std::string>::fwd  FormationNameList;
+	typedef std::vector<std::string>  FormationNameList;
 	struct FormationLocation;
 
 public:

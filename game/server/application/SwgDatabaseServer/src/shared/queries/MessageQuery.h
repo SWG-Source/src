@@ -53,7 +53,7 @@ namespace DBQuery
 		SaveMessageQuery(const SaveMessageQuery&); // disable
 		SaveMessageQuery& operator=(const SaveMessageQuery&); // disable
 
-		void convertMessageToUTF8(const stdvector<int8>::fwd & messageData, std::string & utf8Data) const;
+		void convertMessageToUTF8(const std::vector<int8> & messageData, std::string & utf8Data) const;
 	};
 
 	class AckMessageQuery : public DB::Query
@@ -109,7 +109,7 @@ namespace DBQuery
 		virtual DB::Query::QueryMode getExecutionMode() const;
 		virtual void getSQL(std::string &sql);
 
-		void convertUTF8ToMessage(const std::string & utf8Data, stdvector<int8>::fwd & messageData) const;
+		void convertUTF8ToMessage(const std::string & utf8Data, std::vector<int8> & messageData) const;
 				
 	  private:
 		std::vector<MessageRow> m_data;

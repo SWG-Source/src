@@ -26,22 +26,22 @@ public:
 		EqInfo (int32 i, const std::string & a, const std::string & b);
 	};
 
-	typedef stdvector<std::string>::fwd            SkillVector;
-	typedef stdvector<EqInfo>::fwd                 EqVector;
-	typedef stdvector<std::string>::fwd            StringVector;
-	typedef stdvector<int>::fwd                    AttribVector;
-	typedef stdmap<std::string, AttribVector>::fwd ProfessionAttribMap;
+	typedef std::vector<std::string>            SkillVector;
+	typedef std::vector<EqInfo>                 EqVector;
+	typedef std::vector<std::string>            StringVector;
+	typedef std::vector<int>                    AttribVector;
+	typedef std::map<std::string, AttribVector> ProfessionAttribMap;
 
 	static void                   clear ();
 	static void                   init  ();
 	
-	static bool                   test (std::string & result, const stdvector<std::string>::fwd & templateNames);
+	static bool                   test (std::string & result, const std::vector<std::string> & templateNames);
 
 	static void                   getProfessionVector (StringVector & sv, const std::string & categoryName);
 
-	static bool                   getRacialModifiers     (const std::string& sharedTemplateName, stdvector<int>::fwd & /*OUT*/ modifiers);
-	static bool                   getProfessionModifiers (const std::string& profession, stdvector<int>::fwd & /*OUT*/modifiers);
-	static bool                   getRacialMinMaxes      (const std::string& sharedTemplateName, stdvector<std::pair<int, int> >::fwd & /*OUT*/ minMaxes);
+	static bool                   getRacialModifiers     (const std::string& sharedTemplateName, std::vector<int> & /*OUT*/ modifiers);
+	static bool                   getProfessionModifiers (const std::string& profession, std::vector<int> & /*OUT*/modifiers);
+	static bool                   getRacialMinMaxes      (const std::string& sharedTemplateName, std::vector<std::pair<int, int> > & /*OUT*/ minMaxes);
 	static bool                   getRacialTotal         (const std::string& sharedTemplateName, int & /*OUT*/ total);
 
 protected:
@@ -60,10 +60,10 @@ private:
 	static void                   buildRacialMinsMaxes   ();
 
 private:
-	static stdmap<std::string, stdvector<int>::fwd >::fwd                  m_racialModifiers;
-	static stdmap<std::string, stdvector<int>::fwd >::fwd                  m_professionModifiers;
-	static stdmap<std::string, stdvector<std::pair<int, int> >::fwd >::fwd m_racialMinMaxes;
-	static stdmap<std::string, int>::fwd                                   m_racialTotals;
+	static std::map<std::string, std::vector<int> >                  m_racialModifiers;
+	static std::map<std::string, std::vector<int> >                  m_professionModifiers;
+	static std::map<std::string, std::vector<std::pair<int, int> > > m_racialMinMaxes;
+	static std::map<std::string, int>                                   m_racialTotals;
 };
 
 //======================================================================

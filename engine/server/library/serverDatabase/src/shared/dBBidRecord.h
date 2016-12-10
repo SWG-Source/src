@@ -29,7 +29,7 @@ struct BidRecord
 
 // ======================================================================
 
-typedef stdvector<BidRecord>::fwd BidList;
+typedef std::vector<BidRecord> BidList;
 
 // ======================================================================
 

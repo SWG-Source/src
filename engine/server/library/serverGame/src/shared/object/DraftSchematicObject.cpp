@@ -557,7 +557,7 @@ void DraftSchematicObject::remove()
 
 // ----------------------------------------------------------------------
 
-void DraftSchematicObject::getAttributes(stdvector<std::pair<std::string, Unicode::String> >::fwd &data) const
+void DraftSchematicObject::getAttributes(std::vector<std::pair<std::string, Unicode::String> > &data) const
 {
 	IntangibleObject::getAttributes(data);
 }

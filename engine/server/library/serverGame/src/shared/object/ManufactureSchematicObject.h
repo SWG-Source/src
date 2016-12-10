@@ -151,7 +151,7 @@ public:
 public:
 	// <name, <isComponent, countPerItem> >
 	typedef std::pair<Unicode::String, std::pair<bool, int> >   IngredientInfo;
-	typedef stdvector<IngredientInfo>::fwd                      IngredientInfoVector;
+	typedef std::vector<IngredientInfo>                      IngredientInfoVector;
 	void                            getIngredientInfo (IngredientInfoVector & iiv) const;
 
 protected:

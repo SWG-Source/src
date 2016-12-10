@@ -218,7 +218,7 @@ void ServerShipComponentData::printDebugString      (Unicode::String & result, U
 
 //----------------------------------------------------------------------
 
-void ServerShipComponentData::getAttributes(stdvector<std::pair<std::string, Unicode::String> >::fwd & data) const
+void ServerShipComponentData::getAttributes(std::vector<std::pair<std::string, Unicode::String> > & data) const
 {
 	//everything is handled in the shared, base class
 	ShipComponentData::getAttributes(data);

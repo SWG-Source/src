@@ -116,7 +116,7 @@ bool Snapshot::saveToDB(DB::Session *session)
  * appropriate (virtual) function.
  */
 
-void Snapshot::handleDeltasMessage(NetworkId objectId, const DeltasMessage &msg)
+void Snapshot::handleDeltasMessage(NetworkId & objectId, const DeltasMessage &msg)
 {
 	unsigned char packageId=msg.getPackageId();
 	Tag typeId=msg.getTypeId();
@@ -164,7 +164,7 @@ void Snapshot::handleDeltasMessage(NetworkId objectId, const DeltasMessage &msg)
  * appropriate (virtual) function.
  */
 
-void Snapshot::handleBaselinesMessage(NetworkId objectId, const BaselinesMessage &msg)
+void Snapshot::handleBaselinesMessage(NetworkId &objectId, const BaselinesMessage &msg)
 {
 	unsigned char packageId=msg.getPackageId();
 	Tag typeId=msg.getTypeId();

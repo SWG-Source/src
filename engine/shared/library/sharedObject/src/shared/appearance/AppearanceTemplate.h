@@ -83,7 +83,7 @@ protected:
 
 private:
 
-	typedef stdvector<Hardpoint*>::fwd HardpointList;
+	typedef std::vector<Hardpoint*> HardpointList;
 
 private:
 

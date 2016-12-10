@@ -28,8 +28,8 @@ class Range;
 class BoxTree;
 class FloorLocator;
 
-typedef stdvector<Vector>::fwd      VectorVector;
-typedef stdvector<int>::fwd         IntVector;
+typedef std::vector<Vector>      VectorVector;
+typedef std::vector<int>         IntVector;
 
 // ======================================================================
 

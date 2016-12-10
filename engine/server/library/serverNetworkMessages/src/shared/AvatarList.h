@@ -29,7 +29,7 @@ struct AvatarRecord
 
 // ======================================================================
 
-typedef stdvector<AvatarRecord>::fwd AvatarList;
+typedef std::vector<AvatarRecord> AvatarList;
 
 // ======================================================================
 

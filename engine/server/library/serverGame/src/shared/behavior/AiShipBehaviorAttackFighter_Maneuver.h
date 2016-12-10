@@ -48,7 +48,7 @@ public:
 	
 	// Path management.
 	class Path;
-	typedef stdvector<Path*>::fwd PathList;
+	typedef std::vector<Path*> PathList;
 	void addPath(Path * path);
 	Path * getCurrentPath();
 	bool selectNextPath();

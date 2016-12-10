@@ -29,9 +29,9 @@
 
 namespace ShipComponentDescriptorNamespace
 {
-	typedef stdmap<PersistentCrcString, ShipComponentDescriptor *>::fwd NameComponentMap;
-	typedef stdmap<uint32, ShipComponentDescriptor const *>::fwd        CrcComponentMap;
-	typedef stdmap<uint32, ShipComponentDescriptor const *>::fwd        ObjectTemplateCrcComponentMap;
+	typedef std::map<PersistentCrcString, ShipComponentDescriptor *> NameComponentMap;
+	typedef std::map<uint32, ShipComponentDescriptor const *>        CrcComponentMap;
+	typedef std::map<uint32, ShipComponentDescriptor const *>        ObjectTemplateCrcComponentMap;
 
 	//-- the s_nameComponentMap owns the ShipComponentDescriptor objects
 	NameComponentMap *            s_nameComponentMap;

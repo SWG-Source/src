@@ -45,7 +45,7 @@ void PlanetNodeStatusMessage::getData(std::vector<PlanetNodeStatusMessageData> &
 
 // ======================================================================
 
-PlanetNodeStatusMessageData::PlanetNodeStatusMessageData(int x, int z, bool loaded, const stdvector<uint32>::fwd &servers, const stdvector<int>::fwd &subscriptionCounts) :
+PlanetNodeStatusMessageData::PlanetNodeStatusMessageData(int x, int z, bool loaded, const std::vector<uint32> &servers, const std::vector<int> &subscriptionCounts) :
 		m_x(x),m_z(z),m_loaded(loaded),m_servers(servers),m_subscriptionCounts(subscriptionCounts)
 {
 }

@@ -30,8 +30,8 @@ public:
 	explicit MessageQueueResourceWeights (const std::pair<uint32, uint32> & combinedCrc);
 	virtual ~MessageQueueResourceWeights ();
 
-	typedef stdvector<std::pair<int, int> >::fwd WeightVector;
-	typedef stdvector<std::pair<int, WeightVector> >::fwd AttribWeightVector;
+	typedef std::vector<std::pair<int, int> > WeightVector;
+	typedef std::vector<std::pair<int, WeightVector> > AttribWeightVector;
 
 	void                          addAssemblyWeight     (int attrib, int slot, int resource, int weight);
 	void                          addResourceMaxWeight  (int attrib, int slot, int resource, int weight);
@@ -50,7 +50,7 @@ private:
 	AttribWeightVector            m_assemblyWeights;
 	AttribWeightVector            m_resourceMaxWeights;
 	std::pair<uint32, uint32>     m_crc;
-	stdset<int>::fwd              m_attribs;
+	std::set<int>              m_attribs;
 };
 
 //----------------------------------------------------------------------

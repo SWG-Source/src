@@ -34,7 +34,7 @@ public:
 	virtual Controller* createDefaultController(void);
 	void                addMembersToPackages();
 	virtual float       alter(float time);
-	virtual void        getAttributes(stdvector<std::pair<std::string, Unicode::String> >::fwd &data) const;
+	virtual void        getAttributes(std::vector<std::pair<std::string, Unicode::String> > &data) const;
 
 	virtual void getByteStreamFromAutoVariable(const std::string & name, Archive::ByteStream & target) const;
 	virtual void setAutoVariableFromByteStream(const std::string & name, const Archive::ByteStream & source);
@@ -67,7 +67,7 @@ public:
 		};
 	};
 
-	typedef stdunordered_set<const InstallationObject *, InstallationObjectPointerHash>::fwd AllInstallationsSet;
+	typedef std::unordered_set<const InstallationObject *, InstallationObjectPointerHash> AllInstallationsSet;
 	static const AllInstallationsSet & getAllInstallations();
 
 protected:

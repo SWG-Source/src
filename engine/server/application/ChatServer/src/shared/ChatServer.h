@@ -178,7 +178,7 @@ public:
 	static void       disconnectAvatar          (const ChatAvatar &);
 	static void       disconnectPlayer          (const NetworkId &);
 	static void       invite                    (const NetworkId & id, const ChatAvatarId & avatar, const std::string & roomName);
-	static void       inviteGroupMembers        (const NetworkId & id, const ChatAvatarId & avatar, const std::string & roomName, const stdvector<NetworkId>::fwd & members);
+	static void       inviteGroupMembers        (const NetworkId & id, const ChatAvatarId & avatar, const std::string & roomName, const std::vector<NetworkId> & members);
 	static void       uninvite                  (const NetworkId & id, const unsigned int sequence, const ChatAvatarId & avatar, const std::string & roomName);
 	static void       queryRoom                 (const NetworkId & id, ConnectionServerConnection * connection, const unsigned int sequence, const std::string & roomName);
 	static void       requestRoomList           (const NetworkId & id, ConnectionServerConnection * connection);

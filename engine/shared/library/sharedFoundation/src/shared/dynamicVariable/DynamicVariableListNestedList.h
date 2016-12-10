@@ -58,22 +58,22 @@ public:
 		bool                                 operator!=       (const const_iterator &rhs) const;
 
 		bool getValue (int & value) const;
-		bool getValue (stdvector<int>::fwd & value) const;
+		bool getValue (std::vector<int> & value) const;
 		bool getValue (float & value) const;
-		bool getValue (stdvector<float>::fwd & value) const;
+		bool getValue (std::vector<float> & value) const;
 		bool getValue (Unicode::String & value) const;
 		bool getValue (std::string & value) const;
-		bool getValue (stdvector<Unicode::String>::fwd & value) const;
+		bool getValue (std::vector<Unicode::String> & value) const;
 		bool getValue (NetworkId & value) const;
-		bool getValue (stdvector<NetworkId>::fwd & value) const;
+		bool getValue (std::vector<NetworkId> & value) const;
 		bool getValue (DynamicVariableLocationData & value) const;
-		bool getValue (stdvector<DynamicVariableLocationData>::fwd & value) const;
+		bool getValue (std::vector<DynamicVariableLocationData> & value) const;
 		bool getValue (StringId &value) const;
-		bool getValue (stdvector<StringId>::fwd &value) const;
+		bool getValue (std::vector<StringId> &value) const;
 		bool getValue (Transform &value) const;
-		bool getValue (stdvector<Transform>::fwd &value) const;
+		bool getValue (std::vector<Transform> &value) const;
 		bool getValue (Vector &value) const;
-		bool getValue (stdvector<Vector>::fwd &value) const;
+		bool getValue (std::vector<Vector> &value) const;
 
 	private:
 		const DynamicVariableListNestedList &   m_context;
@@ -103,22 +103,22 @@ public:
 	const_iterator      getItemByPosition (int position) const;
 	
 	bool getItem (const std::string &name,int & value) const;
-	bool getItem (const std::string &name,stdvector<int>::fwd & value) const;
+	bool getItem (const std::string &name,std::vector<int> & value) const;
 	bool getItem (const std::string &name,float & value) const;
-	bool getItem (const std::string &name,stdvector<float>::fwd & value) const;
+	bool getItem (const std::string &name,std::vector<float> & value) const;
 	bool getItem (const std::string &name,Unicode::String & value) const;
 	bool getItem (const std::string &name,std::string & value) const;
-	bool getItem (const std::string &name,stdvector<Unicode::String>::fwd & value) const;
+	bool getItem (const std::string &name,std::vector<Unicode::String> & value) const;
 	bool getItem (const std::string &name,NetworkId & value) const;
-	bool getItem (const std::string &name,stdvector<NetworkId>::fwd & value) const;
+	bool getItem (const std::string &name,std::vector<NetworkId> & value) const;
 	bool getItem (const std::string &name,DynamicVariableLocationData & value) const;
-	bool getItem (const std::string &name,stdvector<DynamicVariableLocationData>::fwd & value) const;
+	bool getItem (const std::string &name,std::vector<DynamicVariableLocationData> & value) const;
 	bool getItem (const std::string &name,StringId &value) const;
-	bool getItem (const std::string &name,stdvector<StringId>::fwd &value) const;
+	bool getItem (const std::string &name,std::vector<StringId> &value) const;
 	bool getItem (const std::string &name,Transform &value) const;
-	bool getItem (const std::string &name,stdvector<Transform>::fwd &value) const;
+	bool getItem (const std::string &name,std::vector<Transform> &value) const;
 	bool getItem (const std::string &name,Vector &value) const;
-	bool getItem (const std::string &name,stdvector<Vector>::fwd &value) const;
+	bool getItem (const std::string &name,std::vector<Vector> &value) const;
 	
 private:
 	const DynamicVariableList & m_list;

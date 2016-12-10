@@ -26,7 +26,7 @@ public:
 
 	static const char * const MessageType;
 
-	typedef stdvector<MapLocation>::fwd MapLocationVector;
+	typedef std::vector<MapLocation> MapLocationVector;
 
 	GetMapLocationsResponseMessage          (const std::string &planetName, const MapLocationVector & locStatic, const MapLocationVector & locDynamic, const MapLocationVector & locPersist, int versionStatic, int versionDynamic, int versionPersist);
 	explicit GetMapLocationsResponseMessage (Archive::ReadIterator &source);

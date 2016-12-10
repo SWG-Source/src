@@ -36,10 +36,10 @@ class MessageQueueObjectMenuRequest : public MessageQueue::Data
 
 public:
 	
-	           MessageQueueObjectMenuRequest (const NetworkId & id, const NetworkId & requestorId, const stdvector<ObjectMenuRequestData>::fwd & data, uint8 sequence);
+	           MessageQueueObjectMenuRequest (const NetworkId & id, const NetworkId & requestorId, const std::vector<ObjectMenuRequestData> & data, uint8 sequence);
 	virtual   ~MessageQueueObjectMenuRequest ();
 
-	const stdvector<ObjectMenuRequestData>::fwd &  getData         () const;
+	const std::vector<ObjectMenuRequestData> &  getData         () const;
 	const NetworkId &                              getRequestorId  () const;
 	const NetworkId &                              getTargetId     () const;
 
@@ -47,7 +47,7 @@ public:
 
 private:
 
-	stdvector<ObjectMenuRequestData>::fwd  m_data;
+	std::vector<ObjectMenuRequestData>  m_data;
 	NetworkId                              m_requestorId;
 	NetworkId                              m_targetId;
 
@@ -58,7 +58,7 @@ private:
 
 //----------------------------------------------------------------------
 
-inline const stdvector<ObjectMenuRequestData>::fwd &  MessageQueueObjectMenuRequest::getData () const
+inline const std::vector<ObjectMenuRequestData> &  MessageQueueObjectMenuRequest::getData () const
 {
 	return m_data;
 }

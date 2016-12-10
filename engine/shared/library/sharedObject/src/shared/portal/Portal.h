@@ -39,7 +39,7 @@ class Portal
 
 public:
 
-	typedef stdvector<Vector>::fwd     VertexList;
+	typedef std::vector<Vector>     VertexList;
 	typedef DPVS::Object            *(*CreateDpvsPortalHookFunction)(Portal *owner);
 	typedef void                     (*DestroyDpvsPortalHookFunction)(DPVS::Object *cellToDestroy);
 	typedef void                     (*ClosedStateChangedHookFunction)(Portal &);
@@ -47,7 +47,7 @@ public:
 	static void install();
 	static void remove();
 	static void setHookFunctions(CreateDpvsPortalHookFunction createDpvsPortalHookFunction, DestroyDpvsPortalHookFunction destroyDpvsPortalHookFunction, ClosedStateChangedHookFunction closedStateChangedHookFunction, bool createDoors);
-	static void preloadDoorStyle(const char *doorStyle, stdvector<const AppearanceTemplate*>::fwd& preloadAppearanceTemplateList);
+	static void preloadDoorStyle(const char *doorStyle, std::vector<const AppearanceTemplate*>& preloadAppearanceTemplateList);
 
 public:
 

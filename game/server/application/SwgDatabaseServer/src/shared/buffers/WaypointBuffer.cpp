@@ -43,7 +43,7 @@ void WaypointBuffer::setWaypoint(const NetworkId &objectId, const NetworkId &way
 
 // ----------------------------------------------------------------------
 
-bool WaypointBuffer::getWaypointsForObject(const NetworkId &objectId, stdvector<PersistableWaypoint>::fwd &values) const
+bool WaypointBuffer::getWaypointsForObject(const NetworkId &objectId, std::vector<PersistableWaypoint> &values) const
 {
 	DEBUG_FATAL(values.size()!=0,("Values vector should be empty on call to getWaypointForObject()\n"));
 	IndexType::const_iterator i ( m_data.lower_bound(IndexKey(objectId,NetworkId::cms_invalid)) );

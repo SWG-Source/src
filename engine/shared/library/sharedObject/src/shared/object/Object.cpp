@@ -399,8 +399,8 @@ namespace ObjectNamespace
 	typedef std::map<PropertyId,int>                 PropertySearchStatistics;
 	typedef std::vector<Property *>                  PropertyList;
 	typedef std::vector<Object::PropertyList *>      PropertyListList;
-	typedef stdvector<Object *>::fwd                 AttachedObjects;
-	typedef stdvector<AttachedObjects *>::fwd        AttachedObjectsList;
+	typedef std::vector<Object *>                 AttachedObjects;
+	typedef std::vector<AttachedObjects *>        AttachedObjectsList;
 
 	MemoryBlockManager                              *ms_transformMemoryBlockManager;
 	DpvsObjectsList                                  ms_systemAllocatedDpvsObjectsList;

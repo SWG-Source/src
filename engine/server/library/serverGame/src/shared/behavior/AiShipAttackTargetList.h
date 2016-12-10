@@ -36,8 +36,8 @@ public:
 		AiShipAttackTargetEntry();
 	};
 
-	typedef stdmap<CachedNetworkId, AiShipAttackTargetEntry>::fwd TargetList;
-	typedef stdvector<std::pair<CachedNetworkId, AiShipAttackTargetEntry> >::fwd SortedTargetList;
+	typedef std::map<CachedNetworkId, AiShipAttackTargetEntry> TargetList;
+	typedef std::vector<std::pair<CachedNetworkId, AiShipAttackTargetEntry> > SortedTargetList;
 
 public:
 

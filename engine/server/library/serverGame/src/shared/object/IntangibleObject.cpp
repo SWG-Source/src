@@ -930,7 +930,7 @@ bool IntangibleObject::setTheaterName(const std::string & name)
 
 // ----------------------------------------------------------------------
 
-void IntangibleObject::getAttributes(stdvector<std::pair<std::string, Unicode::String> >::fwd &data) const
+void IntangibleObject::getAttributes(std::vector<std::pair<std::string, Unicode::String> > &data) const
 {
 	ServerObject::getAttributes(data);
 }

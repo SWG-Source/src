@@ -32,7 +32,7 @@ class Node
   public:
 	void         addObject         (PlanetProxyObject *newObject);
 	void         checkServerAssignment();
-	void         handleCrash       (uint32 crashedServer, stdvector<PlanetProxyObject*>::fwd &subscriptionFixups);
+	void         handleCrash       (uint32 crashedServer, std::vector<PlanetProxyObject*> &subscriptionFixups);
 	void         load              ();
 	void         migrateToServer   (uint32 newServerId);
 	void         load              (uint32 serverId);

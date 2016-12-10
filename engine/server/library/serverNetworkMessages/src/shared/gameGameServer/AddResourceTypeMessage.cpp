@@ -10,7 +10,7 @@
 
 // ======================================================================
 
-AddResourceTypeMessage::AddResourceTypeMessage(stdvector<AddResourceTypeMessageNamespace::ResourceTypeData>::fwd const &data) :
+AddResourceTypeMessage::AddResourceTypeMessage(std::vector<AddResourceTypeMessageNamespace::ResourceTypeData> const &data) :
 	GameNetworkMessage("AddResourceTypeMessage"),
 	m_data()
 {

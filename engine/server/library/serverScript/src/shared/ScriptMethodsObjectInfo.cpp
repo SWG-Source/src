@@ -72,8 +72,8 @@ using namespace JNIWrappersNamespace;
 namespace ScriptMethodsObjectInfoNamespace
 {
 	bool                install();
-	void                getGoodItemsFromContainer(const Container & container, stdvector<NetworkId>::fwd & goodItems);
-	jobjectArray        getNamesFromCrcs(JNIEnv *env, const stdvector<jint>::fwd & templateCrcs);
+	void                getGoodItemsFromContainer(const Container & container, std::vector<NetworkId> & goodItems);
+	jobjectArray        getNamesFromCrcs(JNIEnv *env, const std::vector<jint> & templateCrcs);
 	LocalRefPtr         createCustomVar(const jlong &objId, const std::string &variablePathName, CustomizationVariable &variable);
 	LocalRefPtr         createRangedIntCustomVar(const jlong &objId, const std::string &variablePathName, RangedIntCustomizationVariable &rangedIntVariable);
 	LocalRefPtr         createPalcolorCustomVar(const jlong &objId, const std::string &variablePathName, PaletteColorCustomizationVariable &variable);

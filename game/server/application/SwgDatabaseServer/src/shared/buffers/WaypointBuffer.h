@@ -32,7 +32,7 @@ public:
 		
 	void                      setWaypoint          (const NetworkId &objectId, const NetworkId &waypointId, const PersistableWaypoint &value);
 	void                      removeWaypoint       (const NetworkId &objectId, const NetworkId &waypointId);
-	bool                      getWaypointsForObject(const NetworkId &objectId, stdvector<PersistableWaypoint>::fwd &values) const;
+	bool                      getWaypointsForObject(const NetworkId &objectId, std::vector<PersistableWaypoint> &values) const;
 	
   private:
 	struct IndexKey

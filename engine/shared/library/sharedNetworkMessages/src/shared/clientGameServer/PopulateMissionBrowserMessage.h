@@ -22,14 +22,14 @@ class PopulateMissionBrowserMessage : public GameNetworkMessage
 {
 public:
 
-	PopulateMissionBrowserMessage(stdvector<NetworkId>::fwd const & missions);
+	PopulateMissionBrowserMessage(std::vector<NetworkId> const & missions);
 	explicit PopulateMissionBrowserMessage(Archive::ReadIterator &source);
 
 	~PopulateMissionBrowserMessage();
 
 public: // methods
 
-	stdvector<NetworkId>::fwd const &getMissions() const;
+	std::vector<NetworkId> const &getMissions() const;
 
 public: // types
 
@@ -39,7 +39,7 @@ private:
 
 // ----------------------------------------------------------------------
 
-inline stdvector<NetworkId>::fwd const & PopulateMissionBrowserMessage::getMissions() const
+inline std::vector<NetworkId> const & PopulateMissionBrowserMessage::getMissions() const
 {
 	return m_missions.get();
 }

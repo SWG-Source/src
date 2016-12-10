@@ -86,7 +86,7 @@ public:
 	};
 
 	static std::vector<LfgNode const *> const & getTopLevelLfgNodes();
-	static stdmap<std::string, LfgDataTable::LfgNode const *>::fwd const & getAllLfgLeafNodes();
+	static std::map<std::string, LfgDataTable::LfgNode const *> const & getAllLfgLeafNodes();
 	static LfgNode const * getLfgNodeByName(std::string const & lfgNodeName);
 	static LfgNode const * getLfgLeafNodeByName(std::string const & lfgNodeName);
 	

@@ -48,7 +48,7 @@ namespace ShipComponentTypeNamespace
 		"mod_"
 	};
 
-	typedef stdunordered_map<std::string, ShipComponentType::Type>::fwd ComponentNameTypeMap;
+	typedef std::unordered_map<std::string, ShipComponentType::Type> ComponentNameTypeMap;
 	ComponentNameTypeMap s_componentNameTypeMap;
 
 	bool s_installed = false;

@@ -34,7 +34,7 @@ public:
 	virtual Controller* createDefaultController(void);
 	void                addMembersToPackages();
 	virtual float       alter(float time);
-	virtual void        getAttributes(stdvector<std::pair<std::string, Unicode::String> >::fwd &data) const;
+	virtual void        getAttributes(std::vector<std::pair<std::string, Unicode::String> > &data) const;
 
 	//simulation functions:
 	virtual void activate         (const NetworkId &actorId);
@@ -48,9 +48,9 @@ public:
 	virtual void handleCMessageTo (const MessageToPayload &message);
 
 	//getters
-	typedef stdvector<InstallationResourceData>::fwd ResourceDataVector;
+	typedef std::vector<InstallationResourceData> ResourceDataVector;
 	typedef std::pair<NetworkId, float>              HopperContentElement;
-	typedef stdvector<HopperContentElement>::fwd     HopperContentsVector;
+	typedef std::vector<HopperContentElement>     HopperContentsVector;
 	
 	float                   getHopperContents(HopperContentsVector * data=nullptr) const;
 	void                    getResourceData(ResourceDataVector & data);
@@ -98,7 +98,7 @@ private:
 	Archive::AutoDeltaVariable<float> m_hopperAmount; // amount of resource in the hopper.  0=empty, >0 = hopper containes that quantity of m_hopperResource, <0 = use object variables instead (contains multiple resources)
 //EPM
 
-	stdvector<ResourceTypeObject const *>::fwd * m_survey;
+	std::vector<ResourceTypeObject const *> * m_survey;
 	uint32 m_surveyTime;
 	
 /// Members yet to be implemented.

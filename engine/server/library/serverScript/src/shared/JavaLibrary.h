@@ -68,8 +68,8 @@ namespace Archive
 
 typedef std::vector<ScriptListEntry> ScriptList;
 typedef Unicode::String           String_t;
-typedef stdvector <String_t>::fwd StringVector_t;
-typedef stdvector<ObjectMenuRequestData>::fwd MenuDataVector;
+typedef std::vector <String_t> StringVector_t;
+typedef std::vector<ObjectMenuRequestData> MenuDataVector;
 
 //========================================================================
 // C<->Java conversion functions
@@ -79,20 +79,20 @@ namespace ScriptConversion
 {
 	const bool convert(const Location & sourceLoc, LocalRefPtr & target);
 	const bool convert(const LocalRefParam & sourceLoc, Location & target);
-	const bool convert(const LocalObjectArrayRefParam & sourceLoc, stdvector<Location>::fwd & target);
-	const bool convert(const stdvector<const Unicode::String *>::fwd & source, LocalObjectArrayRefPtr & target);
+	const bool convert(const LocalObjectArrayRefParam & sourceLoc, std::vector<Location> & target);
+	const bool convert(const std::vector<const Unicode::String *> & source, LocalObjectArrayRefPtr & target);
 	const bool convert(const jobject source, StringId & target);
 	const bool convert(const LocalRefParam & source, StringId & target);
 	const bool convert(const StringId & source, LocalRefPtr & target);
 	const bool getClassName(const jobject & source, std::string & target);
-	const bool convert(const stdvector<const char *>::fwd & source, LocalObjectArrayRefPtr & strArray);
-	const bool convert(const stdvector<std::string>::fwd & source, LocalObjectArrayRefPtr & strArray);
-	const bool convert(const jobjectArray & source, stdvector<std::string>::fwd & strArray);
-	const bool convert(const stdset<CellPermissions::PermissionObject>::fwd & source, LocalObjectArrayRefPtr & strArray);
-	const bool convert(const stdvector<ServerObject *>::fwd & source, LocalLongArrayRefPtr & target);
-	const bool convert(const stdvector<NetworkId>::fwd & source, LocalLongArrayRefPtr & target);
-	const bool convert(const jlongArray & source, stdvector<ServerObject *>::fwd & target);
-	const bool convert(const jlongArray & source, stdvector<NetworkId>::fwd & target);
+	const bool convert(const std::vector<const char *> & source, LocalObjectArrayRefPtr & strArray);
+	const bool convert(const std::vector<std::string> & source, LocalObjectArrayRefPtr & strArray);
+	const bool convert(const jobjectArray & source, std::vector<std::string> & strArray);
+	const bool convert(const std::set<CellPermissions::PermissionObject> & source, LocalObjectArrayRefPtr & strArray);
+	const bool convert(const std::vector<ServerObject *> & source, LocalLongArrayRefPtr & target);
+	const bool convert(const std::vector<NetworkId> & source, LocalLongArrayRefPtr & target);
+	const bool convert(const jlongArray & source, std::vector<ServerObject *> & target);
+	const bool convert(const jlongArray & source, std::vector<NetworkId> & target);
 	const bool convert(const jobject & source, Vector & target, NetworkId & targetCell);
 	const bool convertWorld(const jobject & source, Vector & target);
 	const bool convertWorld(const jlong & source, Vector & target);
@@ -101,16 +101,16 @@ namespace ScriptConversion
 	const bool convert(const jobject & source, Vector & targetLoc, std::string & targetSceneId, NetworkId & targetCell);
 	const bool convertWorld(const jobject & source, Vector & targetLoc, std::string & targetSceneId);
 	const bool convert(const Vector & sourceLoc, const std::string & sourceSceneId, const NetworkId & sourceCell, LocalRefPtr & target);
-	const bool convertWorld(const jobjectArray & source, stdvector<Vector>::fwd & target);
-	const bool convert(const stdvector<const Vector *>::fwd & source, LocalObjectArrayRefPtr & target);
+	const bool convertWorld(const jobjectArray & source, std::vector<Vector> & target);
+	const bool convert(const std::vector<const Vector *> & source, LocalObjectArrayRefPtr & target);
 	const bool convert(const LocalRefParam & source, const Region * & target);
 	const bool convert(const jobject & source, const Region * & target);
 	const bool convert(const Region & source, LocalRefPtr & target);
 	const bool convert(const AttribMod::AttribMod & source, LocalRefPtr & target);
 	const bool convert(const jobject & source, AttribMod::AttribMod & target);
 	const bool convert(const LocalRefParam & source, AttribMod::AttribMod & target);
-	const bool convert(const stdvector<AttribMod::AttribMod>::fwd & source, LocalObjectArrayRefPtr & target);
-	const bool convert(const jobjectArray & source, stdvector<AttribMod::AttribMod>::fwd & target);
+	const bool convert(const std::vector<AttribMod::AttribMod> & source, LocalObjectArrayRefPtr & target);
+	const bool convert(const jobjectArray & source, std::vector<AttribMod::AttribMod> & target);
 	const bool convert(const jobject & source, Vector & target, NetworkId & targetCell, const Vector & i_default);
 	const bool convert(const jbyteArray & source, std::vector<int8> & target);
 	const bool convert(const LocalByteArrayRef & source, std::vector<int8> & target);
@@ -134,16 +134,16 @@ class JavaLibrary
 	//	friend jobject convertDynamicVariableListToObject(JNIEnv *env, const DynamicVariableList& list);
 	friend const bool ScriptConversion::convert(const Location & sourceLoc, LocalRefPtr & target);
 	friend const bool ScriptConversion::convert(const LocalRefParam & sourceLoc, Location & target);
-	friend const bool ScriptConversion::convert(const LocalObjectArrayRefParam & sourceLoc, stdvector<Location>::fwd & target);
-	friend const bool ScriptConversion::convert(const stdvector<const Unicode::String *>::fwd & source, LocalObjectArrayRefPtr & target);
+	friend const bool ScriptConversion::convert(const LocalObjectArrayRefParam & sourceLoc, std::vector<Location> & target);
+	friend const bool ScriptConversion::convert(const std::vector<const Unicode::String *> & source, LocalObjectArrayRefPtr & target);
 	friend const bool ScriptConversion::convert(const jobject source, StringId & target);
 	friend const bool ScriptConversion::convert(const LocalRefParam & source, StringId & target);
 	friend const bool ScriptConversion::convert(const StringId & source, LocalRefPtr & target);
-	friend const bool ScriptConversion::convert(const stdvector<ServerObject *>::fwd & source, LocalLongArrayRefPtr & target);
-	friend const bool ScriptConversion::convert(const stdvector<NetworkId>::fwd & source, LocalLongArrayRefPtr & target);
-	friend const bool ScriptConversion::convert(const stdvector<const char *>::fwd & source, LocalObjectArrayRefPtr & strArray);
-	friend const bool ScriptConversion::convert(const jlongArray & source, stdvector<ServerObject *>::fwd & target);
-	friend const bool ScriptConversion::convert(const jlongArray & source, stdvector<NetworkId>::fwd & target);
+	friend const bool ScriptConversion::convert(const std::vector<ServerObject *> & source, LocalLongArrayRefPtr & target);
+	friend const bool ScriptConversion::convert(const std::vector<NetworkId> & source, LocalLongArrayRefPtr & target);
+	friend const bool ScriptConversion::convert(const std::vector<const char *> & source, LocalObjectArrayRefPtr & strArray);
+	friend const bool ScriptConversion::convert(const jlongArray & source, std::vector<ServerObject *> & target);
+	friend const bool ScriptConversion::convert(const jlongArray & source, std::vector<NetworkId> & target);
 	friend const bool ScriptConversion::convert(const jobject & source, Vector & target, NetworkId & targetCell);
 	friend const bool ScriptConversion::convertWorld(const jobject & source, Vector & target);
 	friend const bool ScriptConversion::convertWorld(const jlong & source, Vector & target);
@@ -152,18 +152,18 @@ class JavaLibrary
 	friend const bool ScriptConversion::convert(const jobject & source, Vector & targetLoc, std::string & targetSceneId, NetworkId & targetCell);
 	friend const bool ScriptConversion::convertWorld(const jobject & source, Vector & targetLoc, std::string & targetSceneId);
 	friend const bool ScriptConversion::convert(const Vector & sourceLoc, const std::string & sourceSceneId, const NetworkId & sourceCell, LocalRefPtr & target);
-	friend const bool ScriptConversion::convertWorld(const jobjectArray & source, stdvector<Vector>::fwd & target);
-	friend const bool ScriptConversion::convert(const stdvector<const Vector *>::fwd & source, LocalObjectArrayRefPtr & target);
+	friend const bool ScriptConversion::convertWorld(const jobjectArray & source, std::vector<Vector> & target);
+	friend const bool ScriptConversion::convert(const std::vector<const Vector *> & source, LocalObjectArrayRefPtr & target);
 	friend const bool ScriptConversion::convert(const jobject & source, const Region* &target);
 	friend const bool ScriptConversion::convert(const Region & source, LocalRefPtr & target);
-	friend const bool ScriptConversion::convert(const stdvector<std::string>::fwd & source, LocalObjectArrayRefPtr & strArray);
-	friend const bool ScriptConversion::convert(const jobjectArray & source, stdvector<std::string>::fwd & strArray);
-	friend const bool ScriptConversion::convert(const stdset<CellPermissions::PermissionObject>::fwd & source, LocalObjectArrayRefPtr & strArray);
+	friend const bool ScriptConversion::convert(const std::vector<std::string> & source, LocalObjectArrayRefPtr & strArray);
+	friend const bool ScriptConversion::convert(const jobjectArray & source, std::vector<std::string> & strArray);
+	friend const bool ScriptConversion::convert(const std::set<CellPermissions::PermissionObject> & source, LocalObjectArrayRefPtr & strArray);
 	friend const bool ScriptConversion::convert(const AttribMod::AttribMod & source, LocalRefPtr & target);
 	friend const bool ScriptConversion::convert(const jobject & source, AttribMod::AttribMod & target);
 	friend const bool ScriptConversion::convert(const LocalRefParam & source, AttribMod::AttribMod & target);
-	friend const bool ScriptConversion::convert(const stdvector<AttribMod::AttribMod>::fwd & source, LocalObjectArrayRefPtr & target);
-	friend const bool ScriptConversion::convert(const jobjectArray & source, stdvector<AttribMod::AttribMod>::fwd & target);
+	friend const bool ScriptConversion::convert(const std::vector<AttribMod::AttribMod> & source, LocalObjectArrayRefPtr & target);
+	friend const bool ScriptConversion::convert(const jobjectArray & source, std::vector<AttribMod::AttribMod> & target);
 	friend const bool ScriptConversion::convert(const jbyteArray & source, std::vector<int8> & target);
 	friend const bool ScriptConversion::convert(const LocalByteArrayRef & source, std::vector<int8> & target);
 	friend const bool ScriptConversion::convert(const std::vector<int8> & source, LocalByteArrayRefPtr & target);
@@ -221,9 +221,9 @@ public:
 	static void            setScriptVar(const ServerObject &object, const std::string & name, float value);
 	static void            setScriptVar(const ServerObject &object, const std::string & name, const std::string & value);
 	static void            clearScriptVars(const ServerObject & source);
-	static void            unpackScriptVars(const ServerObject & target, const stdvector<int8>::fwd & data);
-	static void            unpackDeltaScriptVars(const ServerObject & target, const stdvector<int8>::fwd & data);
-	static void            packScriptVars(const ServerObject & source, stdvector<int8>::fwd & data);
+	static void            unpackScriptVars(const ServerObject & target, const std::vector<int8> & data);
+	static void            unpackDeltaScriptVars(const ServerObject & target, const std::vector<int8> & data);
+	static void            packScriptVars(const ServerObject & source, std::vector<int8> & data);
 	static void            packAllDeltaScriptVars();
 
 	// accessor functions
@@ -309,13 +309,13 @@ public:
 	static const bool convert(const JavaStringParam & source, std::string & target);
 	static const bool convert(const Unicode::String & source, JavaString & target);
 	static const bool convert(const JavaStringParam & source, Unicode::String & target);
-	static const bool convert(const JavaDictionary & source, stdvector<int8>::fwd & target);
+	static const bool convert(const JavaDictionary & source, std::vector<int8> & target);
 	static const bool convert(const LocalRefParamPtr & source, MenuDataVector & target);
 	static const bool convert(const MenuDataVector & source, LocalRefParamPtr & target);
-	static const bool convert(const stdmap<std::string, int>::fwd & source, JavaDictionaryPtr & target);
-	static const bool convert(const stdvector<std::pair<std::string, int> >::fwd & source, JavaDictionaryPtr & target);
-	static const bool convert(const stdvector<std::pair<std::string, std::pair<int, int> > >::fwd & source, JavaDictionaryPtr & target);
-	static const bool convert(const stdvector<std::pair<std::string, bool> >::fwd & source, JavaDictionaryPtr & target);
+	static const bool convert(const std::map<std::string, int> & source, JavaDictionaryPtr & target);
+	static const bool convert(const std::vector<std::pair<std::string, int> > & source, JavaDictionaryPtr & target);
+	static const bool convert(const std::vector<std::pair<std::string, std::pair<int, int> > > & source, JavaDictionaryPtr & target);
+	static const bool convert(const std::vector<std::pair<std::string, bool> > & source, JavaDictionaryPtr & target);
 	static LocalRefPtr convert(const ValueDictionary & source);
 	static void        convert(const jobject & source, ValueDictionary & target);
 
@@ -332,8 +332,8 @@ public:
 	// message functions
 	int callMessages(const NetworkId & caller, const std::string & method, const ScriptDictionaryPtr & data);
 	int callMessage(const NetworkId & caller, const std::string & script, const std::string & method, const ScriptDictionary & data);
-	void packDictionary(const ScriptDictionary & dictionary, stdvector<int8>::fwd & packedData);
-	bool unpackDictionary(const stdvector<int8>::fwd & packedData, ScriptDictionaryPtr & dictionary);
+	void packDictionary(const ScriptDictionary & dictionary, std::vector<int8> & packedData);
+	bool unpackDictionary(const std::vector<int8> & packedData, ScriptDictionaryPtr & dictionary);
 	void convert(const ScriptParams & params, JavaDictionaryPtr & dictionary);
 
 	static void         setupWeaponCombatData(JNIEnv *env, const WeaponObject * weapon, jobject weaponData);

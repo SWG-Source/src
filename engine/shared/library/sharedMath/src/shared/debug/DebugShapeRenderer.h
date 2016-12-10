@@ -21,7 +21,7 @@ class Vector;
 class Object;
 class Transform;
 
-typedef stdvector<Vector>::fwd VectorVec;
+typedef std::vector<Vector> VectorVec;
 
 class DebugShapeRenderer
 {

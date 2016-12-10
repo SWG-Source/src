@@ -30,7 +30,7 @@ class MissileManager
   public:
 	int          getNearestUnlockedMissileForTarget  (const NetworkId &target) const;
 	bool         isTargetedByMissile                 (const NetworkId &target) const;
-	void         getAllUnlockedMissilesForTarget     (const NetworkId &target, stdvector<int>::fwd &results) const;
+	void         getAllUnlockedMissilesForTarget     (const NetworkId &target, std::vector<int> &results) const;
 
 	bool         destroyMissile               (int missileId);
 	bool         requestFireMissile           (const NetworkId &sourcePlayer, const NetworkId &sourceShip, const NetworkId &targetShip, int weaponIndex, int missileType, ShipChassisSlotType::Type targetedComponent);

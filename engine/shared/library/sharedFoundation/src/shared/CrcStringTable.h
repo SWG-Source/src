@@ -30,7 +30,7 @@ public:
 	ConstCharCrcString const lookUp(const char * string) const;
 	ConstCharCrcString const lookUp(uint32 crc) const;
 
-	void getAllStrings(stdvector<const char *>::fwd & strings) const;
+	void getAllStrings(std::vector<const char *> & strings) const;
 
 	int getNumberOfStrings() const;
 	ConstCharCrcString const getString(int index) const;

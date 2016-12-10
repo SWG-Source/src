@@ -119,11 +119,11 @@ protected:
 private:
 	StringParam m_draftSchematic;		// source draft schematic
 	StringParam m_creator;		// who created me
-	stdvector<StructParamOT *>::fwd m_ingredients;		// ingredients needed to create
+	std::vector<StructParamOT *> m_ingredients;		// ingredients needed to create
 	bool m_ingredientsLoaded;
 	bool m_ingredientsAppend;
 	CompilerIntegerParam m_itemCount;		// number of items this schematic can make
-	stdvector<StructParamOT *>::fwd m_attributes;		// values for the attributes the schematic affects
+	std::vector<StructParamOT *> m_attributes;		// values for the attributes the schematic affects
 	bool m_attributesLoaded;
 	bool m_attributesAppend;
 //@END TFD

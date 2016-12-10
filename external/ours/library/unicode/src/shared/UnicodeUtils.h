@@ -18,27 +18,18 @@
 #endif
 
 #include <cstring>
+#include <vector>
 
 #include "Unicode.h"
 #include "utf8.h"
-
-namespace std
-{
-	template <class _Tp, class _Alloc> class  vector;
-}
-
-template <class _Tp, class _Alloc = std::allocator<_Tp> > struct unicode_stdvector
-{
-	typedef std::vector<_Tp, _Alloc> fwd;
-};
 
 //-----------------------------------------------------------------
 
 namespace Unicode
 {
 	typedef std::string UTF8String;
-	typedef unicode_stdvector<Unicode::String>::fwd UnicodeStringVector;
-	typedef unicode_stdvector<Unicode::NarrowString>::fwd UnicodeNarrowStringVector;
+	typedef std::vector<Unicode::String> UnicodeStringVector;
+	typedef std::vector<Unicode::NarrowString> UnicodeNarrowStringVector;
 
 	String                     narrowToWide (const char * const nstr);
 	String                     narrowToWide (const NarrowString & nstr);

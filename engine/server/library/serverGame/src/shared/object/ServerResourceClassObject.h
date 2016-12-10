@@ -40,8 +40,8 @@ class ServerResourceClassObject : public ResourceClassObject
 	virtual void  debugOutput        (std::string &output, int numSpaces=0) const;
 	int           numTypesCouldSpawn () const;
 	int           getNumTypes        () const;
-	void          getResourceTypes   (stdvector<ResourceTypeObject const *>::fwd & types) const;
-	void          getAllDerivedResourceTypes(stdvector<ResourceTypeObject const *>::fwd & types) const;
+	void          getResourceTypes   (std::vector<ResourceTypeObject const *> & types) const;
+	void          getAllDerivedResourceTypes(std::vector<ResourceTypeObject const *> & types) const;
 	bool          hasDerivedResourceType() const;
 	ResourceTypeObject const * getAResourceType() const;
 	ResourceFractalData const & getFractalData() const;
@@ -56,7 +56,7 @@ class ServerResourceClassObject : public ResourceClassObject
 	void          checkRanges        ();
 	void          checkAttributeLimits();
 	void          spawnAsNeeded      ();
-	static void   loadDistributionFromIff (stdmap<int, ResourceClassObject*>::fwd &resourceClasses);
+	static void   loadDistributionFromIff (std::map<int, ResourceClassObject*> &resourceClasses);
 
   private:
 	// simulation helper functions

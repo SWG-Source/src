@@ -78,7 +78,7 @@ private:
 	class TaskManufactureObject;
 	friend class TaskManufactureObject;
 
-	typedef stdvector<std::pair<CachedNetworkId, int> >::fwd IngredientVector;
+	typedef std::vector<std::pair<CachedNetworkId, int> > IngredientVector;
 
 	void              restoreIngredients(IngredientVector const &ingredients);
 	void              destroyIngredients(IngredientVector const &ingredients);

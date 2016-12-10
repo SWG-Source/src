@@ -23,8 +23,8 @@ public:
 
 	friend class SpaceSquadManager;
 
-	typedef stdmap<CachedNetworkId, PersistentCrcString const *>::fwd UnitMap;
-	typedef stdvector<CachedNetworkId>::fwd UnitList;
+	typedef std::map<CachedNetworkId, PersistentCrcString const *> UnitMap;
+	typedef std::vector<CachedNetworkId> UnitList;
 
 	static void install();
 

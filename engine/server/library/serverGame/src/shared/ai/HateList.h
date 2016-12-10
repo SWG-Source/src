@@ -27,9 +27,9 @@ class HateList
 {
 public:
 
-	typedef stdmap<CachedNetworkId, float>::fwd UnSortedList;
-	typedef stdvector<std::pair<CachedNetworkId, float> >::fwd SortedList;
-	typedef stdset<CachedNetworkId>::fwd RecentList;
+	typedef std::map<CachedNetworkId, float> UnSortedList;
+	typedef std::vector<std::pair<CachedNetworkId, float> > SortedList;
+	typedef std::set<CachedNetworkId> RecentList;
 
 	static float getMaxDistanceToTarget();
 
@@ -92,7 +92,7 @@ private:
 	Archive::AutoDeltaVariable<float> m_maxHate;
 	Archive::AutoDeltaVariable<time_t> m_lastUpdateTime;
 	Archive::AutoDeltaVariable<time_t> m_autoExpireTargetDuration;
-	stdset<CachedNetworkId>::fwd m_recentHateList; // This is used for assist logic
+	std::set<CachedNetworkId> m_recentHateList; // This is used for assist logic
 };
 
 //----------------------------------------------------------------------

@@ -60,7 +60,7 @@ public:
 
 	static void garbageCollect ();
 
-	static void getAllTemplateNamesFromCrcStringTable(stdvector<const char *>::fwd & objectTemplateNames);
+	static void getAllTemplateNamesFromCrcStringTable(std::vector<const char *> & objectTemplateNames);
 
 private:
 

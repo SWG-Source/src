@@ -76,9 +76,8 @@ bool ConsoleCommandParserSpawner::performParsing (const NetworkId &, const Strin
 		static const Unicode::String header(Unicode::narrowToWide(std::string("Creature Listing - ID: POS: Auth Server: Template Name\n")));
 		result += header;
 		const CreatureObject::AllCreaturesSet & creatureList = CreatureObject::getAllCreatures();
-		CreatureObject::AllCreaturesSet::const_iterator i;
 		int count = 0;
-		for(i = creatureList.begin(); i != creatureList.end(); ++i)
+		for(auto i = creatureList.begin(); i != creatureList.end(); ++i)
 		{
 			const CreatureObject * creature = (*i);
 			if(creature)

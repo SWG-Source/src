@@ -39,7 +39,7 @@ public:
 
 public:
 
-	typedef stdvector<const Region *>::fwd RegionVector;
+	typedef std::vector<const Region *> RegionVector;
 	static void install();
 	static void exit();
 
@@ -73,11 +73,11 @@ private:
 	static bool setDynamicSpawnRegionObjectData (UniverseObject & object, const Unicode::String & name, const std::string & planet, int geometry, float minX, float minZ, float maxX, float maxZ, int pvp, int buildable, int municipal, int geography, int minDifficulty, int maxDifficulty, int spawnable, int mission, bool visible, bool notify, std::string spawntable, int duration);
 	// we need to get regions by position or name, so we have fast lookup
 	// structures for both, at the expense of using more memory
-	typedef stdmap<Unicode::String, Region *>::fwd RegionsMappedByName;
+	typedef std::map<Unicode::String, Region *> RegionsMappedByName;
 	struct RegionData;
 
 	// regions per planet
-	static stdmap<std::string, RegionData>::fwd ms_planetRegions;
+	static std::map<std::string, RegionData> ms_planetRegions;
 
 	// regions created from the region datatables
 	static RegionVector ms_staticRegions;

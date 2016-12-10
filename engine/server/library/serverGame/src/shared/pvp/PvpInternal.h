@@ -31,7 +31,7 @@ public:
 	static TangibleObject const *getPetMaster   (TangibleObject const &who);
 	static TangibleObject *getPetMaster         (TangibleObject &who);
 	static bool      inSameGroup                (TangibleObject const &obj1, TangibleObject const &obj2);
-	static void      getGroupMembers            (TangibleObject const &src, stdvector<TangibleObject const *>::fwd &members);
+	static void      getGroupMembers            (TangibleObject const &src, std::vector<TangibleObject const *> &members);
 	static Pvp::FactionId getAlignedFaction     (TangibleObject const &who);
 	static Pvp::FactionId getAlignedFaction     (NetworkId const &who);
 	static bool      hasAnyEnemyFlag            (TangibleObject const &who);
@@ -46,7 +46,7 @@ public:
 	static bool      hasPersonalEnemyFlag       (TangibleObject const &who, NetworkId const &enemyId);
 	static bool		 hasBubbleCombatFlag		(TangibleObject const &who);
 	static bool		 hasBubbleCombatFlagAgainstTarget (TangibleObject const &who, NetworkId const &enemyId);
-	static void      getPersonalEnemyIds        (TangibleObject const &who, stdvector<NetworkId>::fwd &enemyIds);
+	static void      getPersonalEnemyIds        (TangibleObject const &who, std::vector<NetworkId> &enemyIds);
 	static Pvp::FactionId battlefieldGetFaction (TangibleObject const &who, RegionPvp const &region);
 	static bool      battlefieldIsParticipant   (TangibleObject const &who, RegionPvp const &region);
 	static void      battlefieldSetParticipant  (TangibleObject const &who, RegionPvp const &region, Pvp::FactionId factionId);

@@ -11,7 +11,7 @@
 
 #include "serverGame/AiMovementWaypoint.h"
 
-typedef stdlist<AiLocation>::fwd AiPath;
+typedef std::list<AiLocation> AiPath;
 class ServerPathBuilder;
 
 // ======================================================================

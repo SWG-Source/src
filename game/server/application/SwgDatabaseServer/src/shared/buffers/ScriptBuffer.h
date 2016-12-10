@@ -65,7 +65,7 @@ class ScriptBuffer : public AbstractTableBuffer
 	
 	std::set<NetworkId> m_objectsToClear;
 
-	typedef stdmap<IndexKey, std::string>::fwd LoadedDataType;
+	typedef std::map<IndexKey, std::string> LoadedDataType;
 	LoadedDataType *m_loadedData; // data loaded from the database
 };
 

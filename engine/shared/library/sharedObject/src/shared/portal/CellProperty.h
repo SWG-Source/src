@@ -45,8 +45,8 @@ class CellProperty : public Container
 
 public:
 
-	typedef stdvector<Vector>::fwd   VertexList;
-	typedef stdvector<Portal *>::fwd PortalList;
+	typedef std::vector<Vector>   VertexList;
+	typedef std::vector<Portal *> PortalList;
 
 	typedef void                      (*AddToRenderWorldHookFunction) (Object& object);
 	typedef Appearance               *(*PolyAppearanceFactory)(VertexList const & verts, VectorArgb const & color);
@@ -127,7 +127,7 @@ public:
 
 	CellProperty         *getDestinationCell(const Vector &startPosition, const Vector &endPosition, float &t, bool passableOnly=false) const;
 	CellProperty         *getDestinationCell(const Object *object, int portalId) const;
-	bool                  getDestinationCells(const Sphere &sphere, stdvector<CellProperty*>::fwd & outCells) const;
+	bool                  getDestinationCells(const Sphere &sphere, std::vector<CellProperty*> & outCells) const;
 
 	bool                  isAdjacentTo(const CellProperty *cell) const;
 	void                  addObject_w(Object &object);
@@ -182,8 +182,8 @@ public:
 
 private:
 
-	typedef stdvector<PortalObjectEntry>::fwd PortalObjectList;
-	typedef stdvector<RenderHookFunction>::fwd  RenderHookFunctionList;
+	typedef std::vector<PortalObjectEntry> PortalObjectList;
+	typedef std::vector<RenderHookFunction>  RenderHookFunctionList;
 
 private:
 

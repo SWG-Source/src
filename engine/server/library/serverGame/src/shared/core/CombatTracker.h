@@ -27,7 +27,7 @@ public:
 	static void removeDefender(TangibleObject *defender);
 
 private:
-	static void getInterestedViewers(TangibleObject const *defender, stdvector<ServerObject *>::fwd &combatViewers);
+	static void getInterestedViewers(TangibleObject const *defender, std::vector<ServerObject *> &combatViewers);
 };
 
 // ======================================================================

@@ -25,22 +25,22 @@ class Vector;
 class CityInterface // static
 {
 public:
-	static stdvector<int>::fwd const &getCitizenOfCityId(NetworkId const &citizenId);
+	static std::vector<int> const &getCitizenOfCityId(NetworkId const &citizenId);
 	static int getMilitiaOfCityId(NetworkId const &citizenId);
-	static void getAllCityIds(stdvector<int>::fwd &results);
+	static void getAllCityIds(std::vector<int> &results);
 	static int findCityByName(std::string const &name);
 	static int findCityByCityHall(NetworkId const &cityHallId);
 	static int getCityAtLocation(std::string const &planetName, int x, int z, int radius);
 	static bool cityExists(int cityId);
-	static void getCitizenIds(int cityId, stdvector<NetworkId>::fwd &results);
+	static void getCitizenIds(int cityId, std::vector<NetworkId> &results);
 	static int getCitizenCount(int cityId);
-	static void getCityStructureIds(int cityId, stdvector<NetworkId>::fwd &results);
+	static void getCityStructureIds(int cityId, std::vector<NetworkId> &results);
 	static CityInfo const &getCityInfo(int cityId);
-	static stdmap<int, CityInfo>::fwd const &getAllCityInfo();
+	static std::map<int, CityInfo> const &getAllCityInfo();
 	static CitizenInfo const *getCitizenInfo(int cityId, NetworkId const &citizenId);
-	static stdmap<std::pair<int, NetworkId>, CitizenInfo>::fwd const &getAllCitizensInfo();
+	static std::map<std::pair<int, NetworkId>, CitizenInfo> const &getAllCitizensInfo();
 	static CityStructureInfo const *getCityStructureInfo(int cityId, NetworkId const &structureId);
-	static stdmap<std::pair<int, NetworkId>, CityStructureInfo>::fwd const & getAllCityStructuresInfo();
+	static std::map<std::pair<int, NetworkId>, CityStructureInfo> const & getAllCityStructuresInfo();
 	static std::map<std::pair<std::string, int>, uint32> const & getGcwRegionDefenderCities();
 	static std::map<std::string, std::pair<int, int> > const & getGcwRegionDefenderCitiesCount();
 	static int getGcwRegionDefenderCitiesVersion();
@@ -69,7 +69,7 @@ public:
 	static void addCitizenRank(int cityId, NetworkId const &citizenId, std::string const &rankName);
 	static void removeCitizenRank(int cityId, NetworkId const &citizenId, std::string const &rankName);
 	static bool hasCitizenRank(int cityId, NetworkId const &citizenId, std::string const &rankName);
-	static void getCitizenRank(int cityId, NetworkId const &citizenId, stdvector<std::string>::fwd &ranks);
+	static void getCitizenRank(int cityId, NetworkId const &citizenId, std::vector<std::string> &ranks);
 	static void setCitizenTitle(int cityId, NetworkId const &citizenId, std::string const &citizenTitle);
 	static void setCityStructureInfo(int cityId, NetworkId const &structureId, int structureType, bool structureValid);
 	static void enterCityChatRoom(int cityId, CreatureObject const &who);

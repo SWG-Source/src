@@ -43,7 +43,7 @@ private:
 	/**
 	 * Map of (object bio) -> (set of objects that want the bio when it's loaded)
 	 */
-	static stdmap<NetworkId, stdvector<CachedNetworkId>::fwd >::fwd *m_retrievalQueue;
+	static std::map<NetworkId, std::vector<CachedNetworkId> > *m_retrievalQueue;
 };
 
 // ======================================================================

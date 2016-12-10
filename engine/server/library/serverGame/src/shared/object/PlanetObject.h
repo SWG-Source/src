@@ -54,7 +54,7 @@ public:
 public:
 	const std::string &    getName               () const;
 	void                   setPlanetName         (const std::string &newName);
-	virtual void           getAttributes         (stdvector<std::pair<std::string, Unicode::String> >::fwd &data) const;
+	virtual void           getAttributes         (std::vector<std::pair<std::string, Unicode::String> > &data) const;
 		
 	//resource pools functions
 	void                   getAvailableResourceList (std::vector<ResourceTypeObject const *> &buffer) const;
@@ -72,10 +72,10 @@ public:
 
 	//-- planetary map support
 
-	typedef stdvector<MapLocation>::fwd                    MapLocationVector;
-	typedef stdmap<NetworkId, MapLocation>::fwd            MapLocationMap;
+	typedef std::vector<MapLocation>                    MapLocationVector;
+	typedef std::map<NetworkId, MapLocation>            MapLocationMap;
 	typedef Archive::AutoDeltaMap<NetworkId, MapLocation>  ArchiveMapLocationMap;
-	typedef stdvector<int>::fwd                            IntVector;
+	typedef std::vector<int>                            IntVector;
 
 	bool                            addMapLocation               (const MapLocation &location, int mapLocationType, bool enforceLocationCountLimits);
 	bool                            removeMapLocation            (const NetworkId &id);
@@ -93,10 +93,10 @@ public:
 	int                getNumberOfTravelPoints () const;
 	const TravelPoint* getTravelPoint (int travelPointIndex) const;
 	const TravelPoint* getTravelPoint (const std::string& name) const;
-	void               getTravelPointNameList (stdvector<std::string>::fwd& travelPointNameList) const;
-	void               getTravelPointPointList (stdvector<Vector>::fwd& travelPointPointList) const;
-	void               getTravelPointCostList (stdvector<int>::fwd& travelPointCostList) const;
-	void               getTravelPointInterplanetaryList (stdvector<bool>::fwd& travelPointInterplanetaryList) const;
+	void               getTravelPointNameList (std::vector<std::string>& travelPointNameList) const;
+	void               getTravelPointPointList (std::vector<Vector>& travelPointPointList) const;
+	void               getTravelPointCostList (std::vector<int>& travelPointCostList) const;
+	void               getTravelPointInterplanetaryList (std::vector<bool>& travelPointInterplanetaryList) const;
 
 	std::set<std::pair<std::pair<int32, std::string>, std::pair<NetworkId, Unicode::String> > > const & getCollectionServerFirst() const;
 	int                getCollectionServerFirstUpdateNumber() const;

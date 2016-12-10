@@ -49,10 +49,10 @@ public:
 		SearchAttribute &operator =(SearchAttribute const &);
 	};
 
-	static stdmap<std::string, CommoditiesAdvancedSearchAttribute::SearchAttribute const *>::fwd const & getSearchAttributeForGameObjectType(int gameObjectType);
+	static std::map<std::string, CommoditiesAdvancedSearchAttribute::SearchAttribute const *> const & getSearchAttributeForGameObjectType(int gameObjectType);
 	static CommoditiesAdvancedSearchAttribute::SearchAttribute const * getSearchAttribute(int gameObjectType, std::string const & attributeName);
 
-	static stdmap<std::string, std::string>::fwd const & getSearchAttributeNameAliasesForGameObjectType(int gameObjectType);
+	static std::map<std::string, std::string> const & getSearchAttributeNameAliasesForGameObjectType(int gameObjectType);
 
 	static bool allowChildGameObjectTypeToInheritSearchAttribute(int gameObjectType);
 

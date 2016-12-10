@@ -57,8 +57,8 @@ private:
 
 	};
 
-	typedef stdmap<int, WaterTypeDataRecord>::fwd WaterTypeDataType;
-	typedef stdmap<std::string, CreatureWaterTypeDataRecord>::fwd CreatureWaterTypeDataType;
+	typedef std::map<int, WaterTypeDataRecord> WaterTypeDataType;
+	typedef std::map<std::string, CreatureWaterTypeDataRecord> CreatureWaterTypeDataType;
 	
 	static bool				ms_installed;
 	static					WaterTypeDataType * ms_waterTypeData;

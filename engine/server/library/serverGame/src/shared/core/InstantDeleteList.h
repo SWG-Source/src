@@ -26,7 +26,7 @@ class InstantDeleteList
 	static bool isOnList(const ObjectTemplate &theTemplate);
 
   private:
-	typedef stdset<uint32>::fwd ListType; 
+	typedef std::set<uint32> ListType; 
 	static ListType *ms_theList;
 };
 

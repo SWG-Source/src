@@ -79,7 +79,7 @@ namespace ShipComponentAttachmentManagerNamespace
 		}
 	};
 
-	typedef stdmap<AttachmentKey, TemplateHardpointPairVector>::fwd AttachmentMap;
+	typedef std::map<AttachmentKey, TemplateHardpointPairVector> AttachmentMap;
 	AttachmentMap * s_attachmentMap;
 
 	typedef std::map<AttachmentKey, float> ComponentHitRangeMap;

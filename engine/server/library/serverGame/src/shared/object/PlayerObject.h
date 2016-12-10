@@ -63,10 +63,10 @@ public:
 		time_t m_time;
 	};
 
-	typedef stdlist<ChatLogEntry>::fwd    ChatLog;
-	typedef stdvector<std::string>::fwd   StringVector;
-	typedef stdmap<std::string, int>::fwd ExperiencePointMap;
-	typedef stdmap<NetworkId, Waypoint>::fwd WaypointMap;
+	typedef std::list<ChatLogEntry>    ChatLog;
+	typedef std::vector<std::string>   StringVector;
+	typedef std::map<std::string, int> ExperiencePointMap;
+	typedef std::map<NetworkId, Waypoint> WaypointMap;
 	typedef Archive::AutoDeltaPackedMap<uint32, PlayerQuestData> PlayerQuestDataMap;
 
 	explicit    PlayerObject(const ServerPlayerObjectTemplate* newTemplate);
@@ -76,7 +76,7 @@ public:
 	virtual PlayerObject const *asPlayerObject() const;
 
 	static void removeDefaultTemplate(void);
-	static stdset<PlayerObject const *>::fwd const &getAllPlayerObjects();
+	static std::set<PlayerObject const *> const &getAllPlayerObjects();
 
 	void               addMembersToPackages  ();
 	Waypoint const     createWaypoint        (const Location & location, bool ignoreLimits);
@@ -88,7 +88,7 @@ public:
 	WaypointMap const &getWaypoints          () const;
 	void               setGroupWaypoints     (WaypointMap const &groupWaypointMap);
 
-	virtual void  getAttributes        (stdvector<std::pair<std::string, Unicode::String> >::fwd &data) const;
+	virtual void  getAttributes        (std::vector<std::pair<std::string, Unicode::String> > &data) const;
 	virtual void  endBaselines();
 	virtual void  onLoadedFromDatabase();
 	static std::string  getAccountDescription(const ServerObject *);
@@ -213,21 +213,21 @@ public:
 
 	// crafting functions
 	bool                                isCrafting(void) const;
-	const stdmap<std::pair<uint32, uint32>,int>::fwd & getDraftSchematics () const;
+	const std::map<std::pair<uint32, uint32>,int> & getDraftSchematics () const;
 	const CachedNetworkId &             getCraftingTool () const;
 	void                                setCraftingTool(const TangibleObject & tool);
 	const CachedNetworkId &             getCraftingStation () const;
 	void                                setCraftingStation(const TangibleObject * station);
 	const DraftSchematicObject *        getCurrentDraftSchematic () const;
 	bool                                requestCraftingSession(const NetworkId & toolId);
-	void                                sendUseableDraftSchematics(stdvector<uint32>::fwd & schematicNames);
+	void                                sendUseableDraftSchematics(std::vector<uint32> & schematicNames);
 	bool                                requestDraftSlots(uint32 draftSchematicCrc, MessageQueueDraftSlots * message, MessageQueueDraftSlotsQueryResponse * queryMessage);
 	void                                selectDraftSchematic(int index);
 	Crafting::CraftingError             fillSlot(int slotIndex, int slotOptionIndex, const NetworkId & ingredientIndex);
 	Crafting::CraftingError             emptySlot(int slotIndex, const NetworkId & targetContainer);
 	int                                 goToNextCraftingStage ();
 	int                                 startCraftingExperiment ();
-	Crafting::CraftingResult            experiment(const stdvector<MessageQueueCraftExperiment::ExperimentInfo>::fwd & experiments, int totalPoints, int corelevel);
+	Crafting::CraftingResult            experiment(const std::vector<MessageQueueCraftExperiment::ExperimentInfo> & experiments, int totalPoints, int corelevel);
 	bool                                customize(int property, int value) const;
 	int                                 setCustomizationData(const Unicode::String & name, int appearanceIndex, const std::vector<Crafting::CustomValue> & customizations, int itemCount) const;
 	bool                                createPrototype(bool keepPrototype);
@@ -276,8 +276,8 @@ public:
 	bool                                questHasActiveQuestTask(uint32 questCrc, int taskId) const;
 	bool                                questHasCompletedQuestTask(uint32 questCrc, int taskId) const;
 	uint32                              questGetQuestStatus(uint32 const questCrc) const;
-	stdvector<int>::fwd                 questGetAllActiveQuestIds() const;
-	stdvector<int>::fwd                 questGetAllCompletedQuestIds() const;
+	std::vector<int>                 questGetAllActiveQuestIds() const;
+	std::vector<int>                 questGetAllCompletedQuestIds() const;
 	bool                                questPlayerCanClaimRewardFor(uint32 questCrc);
 
 	uint32                              getCurrentQuest() const;
@@ -361,8 +361,8 @@ public:
 	bool getCollectionSlotValue(std::string const & slotName, unsigned long & value) const;
 	bool getCollectionSlotValue(CollectionsDataTable::CollectionInfoSlot const & slotInfo, unsigned long & value) const;
 
-	bool hasCompletedCollectionSlotPrereq(std::string const & slotName, stdvector<CollectionsDataTable::CollectionInfoSlot const *>::fwd * collectionInfo = nullptr) const;
-	bool hasCompletedCollectionSlotPrereq(CollectionsDataTable::CollectionInfoSlot const & slotInfo, stdvector<CollectionsDataTable::CollectionInfoSlot const *>::fwd * collectionInfo = nullptr) const;
+	bool hasCompletedCollectionSlotPrereq(std::string const & slotName, std::vector<CollectionsDataTable::CollectionInfoSlot const *> * collectionInfo = nullptr) const;
+	bool hasCompletedCollectionSlotPrereq(CollectionsDataTable::CollectionInfoSlot const & slotInfo, std::vector<CollectionsDataTable::CollectionInfoSlot const *> * collectionInfo = nullptr) const;
 
 	bool hasCompletedCollectionSlot(std::string const & slotName) const;
 	bool hasCompletedCollectionSlot(CollectionsDataTable::CollectionInfoSlot const & slotInfo) const;
@@ -374,17 +374,17 @@ public:
 
 	bool hasCompletedCollectionBook(std::string const & bookName) const;
 
-	int getCompletedCollectionSlotCountInCollection(std::string const & collectionName, stdvector<CollectionsDataTable::CollectionInfoSlot const *>::fwd * collectionInfo = nullptr) const;
+	int getCompletedCollectionSlotCountInCollection(std::string const & collectionName, std::vector<CollectionsDataTable::CollectionInfoSlot const *> * collectionInfo = nullptr) const;
 
-	int getCompletedCollectionSlotCountInPage(std::string const & pageName, stdvector<CollectionsDataTable::CollectionInfoSlot const *>::fwd * collectionInfo = nullptr) const;
-	int getCompletedCollectionCountInPage(std::string const & pageName, stdvector<CollectionsDataTable::CollectionInfoCollection const *>::fwd * collectionInfo = nullptr) const;
+	int getCompletedCollectionSlotCountInPage(std::string const & pageName, std::vector<CollectionsDataTable::CollectionInfoSlot const *> * collectionInfo = nullptr) const;
+	int getCompletedCollectionCountInPage(std::string const & pageName, std::vector<CollectionsDataTable::CollectionInfoCollection const *> * collectionInfo = nullptr) const;
 
-	int getCompletedCollectionSlotCountInBook(std::string const & bookName, stdvector<CollectionsDataTable::CollectionInfoSlot const *>::fwd * collectionInfo = nullptr) const;
-	int getCompletedCollectionCountInBook(std::string const & bookName, stdvector<CollectionsDataTable::CollectionInfoCollection const *>::fwd * collectionInfo = nullptr) const;
-	int getCompletedCollectionPageCountInBook(std::string const & bookName, stdvector<CollectionsDataTable::CollectionInfoPage const *>::fwd * collectionInfo = nullptr) const;
-	int getCompletedCollectionBookCount(stdvector<CollectionsDataTable::CollectionInfoBook const *>::fwd * collectionInfo = nullptr) const;
+	int getCompletedCollectionSlotCountInBook(std::string const & bookName, std::vector<CollectionsDataTable::CollectionInfoSlot const *> * collectionInfo = nullptr) const;
+	int getCompletedCollectionCountInBook(std::string const & bookName, std::vector<CollectionsDataTable::CollectionInfoCollection const *> * collectionInfo = nullptr) const;
+	int getCompletedCollectionPageCountInBook(std::string const & bookName, std::vector<CollectionsDataTable::CollectionInfoPage const *> * collectionInfo = nullptr) const;
+	int getCompletedCollectionBookCount(std::vector<CollectionsDataTable::CollectionInfoBook const *> * collectionInfo = nullptr) const;
 
-	void migrateLegacyBadgesToCollection(stdvector<int>::fwd const & badges);
+	void migrateLegacyBadgesToCollection(std::vector<int> const & badges);
 
 	// chat spam info
 	int getChatSpamSpatialNumCharacters() const;
@@ -530,7 +530,7 @@ private:
 	Archive::AutoDeltaVariable<CachedNetworkId>      m_craftingTool;         // tool a player is crafting with
 	Archive::AutoDeltaVariable<CachedNetworkId>      m_craftingStation;         // station a player is crafting with
 	Archive::AutoDeltaVariable<NetworkId>            m_craftingComponentBioLink;// bio-link id of a component
-	stdvector<uint32>::fwd                           m_useableDraftSchematics;  // draft schematics a player may currently select from
+	std::vector<uint32>                           m_useableDraftSchematics;  // draft schematics a player may currently select from
 	ConstWatcher<DraftSchematicObject>               m_draftSchematic;          // draft schematic the player is crafting with
 	static bool                                      m_allowEmptySlot;          // flag to allow emptySlot() to be called when not in the crafting assembly stage.
 
@@ -740,7 +740,7 @@ inline int32 PlayerObject::getSessionLastActiveTime() const
 
 // ----------------------------------------------------------------------
 
-inline const stdmap<std::pair<uint32, uint32>,int>::fwd & PlayerObject::getDraftSchematics () const
+inline const std::map<std::pair<uint32, uint32>,int> & PlayerObject::getDraftSchematics () const
 {
 	return m_draftSchematics.getMap();
 }

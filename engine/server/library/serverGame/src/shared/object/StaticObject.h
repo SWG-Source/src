@@ -31,7 +31,7 @@ public:
 
 	virtual bool canDropInWorld() const;
 	virtual bool isVisibleOnClient (const Client & client) const;
-	virtual void getAttributes     (stdvector<std::pair<std::string, Unicode::String> >::fwd &data) const;
+	virtual void getAttributes     (std::vector<std::pair<std::string, Unicode::String> > &data) const;
 
 protected:
 	

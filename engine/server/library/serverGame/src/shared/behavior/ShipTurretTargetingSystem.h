@@ -54,7 +54,7 @@ class ShipTurretTargetingSystem
 	bool buildTargetList();
 
   protected:
-	typedef stdmap<NetworkId, int>::fwd TurretsPerTargetType;
+	typedef std::map<NetworkId, int> TurretsPerTargetType;
 
   private:
 	ShipController & m_shipController;

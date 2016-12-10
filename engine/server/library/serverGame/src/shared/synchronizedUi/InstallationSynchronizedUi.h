@@ -21,13 +21,13 @@ public:
 	explicit InstallationSynchronizedUi(InstallationObject &);
 	~InstallationSynchronizedUi();
 		
-	typedef stdvector<InstallationResourceData>::fwd ResourceDataVector;
-	typedef stdvector<NetworkId>::fwd                ResourcePoolVector;
-	typedef stdvector<NetworkId>::fwd                ResourceTypeIdVector;
-	typedef stdvector<std::string>::fwd              ResourceTypeNameVector;
-	typedef stdvector<std::string>::fwd              ResourceTypeParentVector;
+	typedef std::vector<InstallationResourceData> ResourceDataVector;
+	typedef std::vector<NetworkId>                ResourcePoolVector;
+	typedef std::vector<NetworkId>                ResourceTypeIdVector;
+	typedef std::vector<std::string>              ResourceTypeNameVector;
+	typedef std::vector<std::string>              ResourceTypeParentVector;
 	typedef std::pair<NetworkId, float>              HopperContentElement;
-	typedef stdvector<HopperContentElement>::fwd     HopperContentsVector;
+	typedef std::vector<HopperContentElement>     HopperContentsVector;
 
 	void                         getResourceData (ResourceDataVector & data);
 

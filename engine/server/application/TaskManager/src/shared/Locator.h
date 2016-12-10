@@ -37,7 +37,7 @@ public:
 	static void sendToAllTaskManagers(GameNetworkMessage const &msg);
 	static void updateServerLoad(std::string const &label, float load);
 	static void updateAllLoads(float delta);
-	static stdmap<std::string, std::string>::fwd const & getClosedConnections();
+	static std::map<std::string, std::string> const & getClosedConnections();
 };
 
 // ======================================================================

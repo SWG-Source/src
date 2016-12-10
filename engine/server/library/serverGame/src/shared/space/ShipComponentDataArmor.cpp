@@ -82,7 +82,7 @@ void ShipComponentDataArmor::printDebugString      (Unicode::String & result, Un
 
 //----------------------------------------------------------------------
 
-void ShipComponentDataArmor::getAttributes(stdvector<std::pair<std::string, Unicode::String> >::fwd & data) const
+void ShipComponentDataArmor::getAttributes(std::vector<std::pair<std::string, Unicode::String> > & data) const
 {
 	ServerShipComponentData::getAttributes(data);
 }

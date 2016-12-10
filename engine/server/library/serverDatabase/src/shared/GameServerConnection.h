@@ -27,7 +27,7 @@ public:
 	void clearChunkCompleteQueue();
 
 private:
-	typedef stdvector<std::pair<int, int> >::fwd ChunkCompleteQueueType;
+	typedef std::vector<std::pair<int, int> > ChunkCompleteQueueType;
 	ChunkCompleteQueueType * const m_chunkCompleteQueue;
 	
 private:

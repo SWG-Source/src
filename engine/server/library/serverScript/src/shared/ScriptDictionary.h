@@ -27,7 +27,7 @@ public:
 
 	virtual void serialize(void) = 0;
 
-	const stdvector<int8>::fwd & getSerializedData(void) const;
+	const std::vector<int8> & getSerializedData(void) const;
 	uint32                    getCrc(void) const;
 
 protected:
@@ -35,7 +35,7 @@ protected:
 	ScriptDictionary(void);
 
 
-	stdvector<int8>::fwd m_serializedData;
+	std::vector<int8> m_serializedData;
 	uint32               m_crc;
 
 private:
@@ -53,7 +53,7 @@ inline ScriptDictionary::~ScriptDictionary()
 {
 }
 
-inline const stdvector<int8>::fwd & ScriptDictionary::getSerializedData(void) const
+inline const std::vector<int8> & ScriptDictionary::getSerializedData(void) const
 {
 	return m_serializedData;
 }

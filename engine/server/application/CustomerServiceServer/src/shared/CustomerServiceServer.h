@@ -34,7 +34,7 @@ private:
 
 	//typedefs
 
-	typedef stdset<ConnectionServerConnection *>::fwd ConnectionServerSet;
+	typedef std::set<ConnectionServerConnection *> ConnectionServerSet;
 	typedef std::multimap<unsigned long, Unicode::String> SortedChatLog;
 
 	//Member variables
@@ -65,7 +65,7 @@ private:
 		bool                      m_gameServerChatLogReceived;
 	};
 
-	typedef stdmap<unsigned int, PendingTicket>::fwd  PendingTicketList;
+	typedef std::map<unsigned int, PendingTicket>  PendingTicketList;
 	PendingTicketList *m_pendingTicketList;
 
 	void createTicket(NetworkId const &networkId, const CSAssistGameAPITicket &ticket, Unicode::String const &hiddenDetails, Unicode::String const &harassingPlayerName, const unsigned int suid, const bool logChat);

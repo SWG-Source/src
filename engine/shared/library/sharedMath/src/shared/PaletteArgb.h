@@ -58,7 +58,7 @@ public:
 public:
 
 	explicit PaletteArgb(int entryCount);
-	explicit PaletteArgb(stdvector<PackedArgb>::fwd const & packedArgbVector);
+	explicit PaletteArgb(std::vector<PackedArgb> const & packedArgbVector);
 
 	const CrcString      &getName() const;
 	
@@ -77,7 +77,7 @@ public:
 
 private:
 
-	typedef stdvector<PackedArgb>::fwd  PackedArgbVector;
+	typedef std::vector<PackedArgb>  PackedArgbVector;
 
 private:
 

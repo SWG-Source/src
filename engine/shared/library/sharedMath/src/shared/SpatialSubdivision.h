@@ -81,10 +81,10 @@ public:
 	virtual                             ~SpatialSubdivision  () = 0;
 	virtual SpatialSubdivisionHandle *  addObject            (ObjectType object) = 0;
 	virtual const bool                  canSee               (SpatialSubdivisionHandle * target, const Vector & start, const float distance, const float fov=0.0f) const = 0; //lint !e1735 // virtual function has default parameter
-	virtual void                        findInRange          (const Vector & origin, const float distance, typename stdvector<ObjectType>::fwd & results) const = 0;
-	virtual void                        findInRange          (const Vector & origin, const float distance, const SpatialSubdivisionFilter<ObjectType> &filter, typename stdvector<ObjectType>::fwd & results) const = 0;
-	virtual void                        findOnRay            (const Vector & begin, const Vector & dir, typename stdvector<ObjectType>::fwd & results) const = 0;
-	virtual void                        findOnSegment        (const Vector & begin, const Vector & end, typename stdvector<ObjectType>::fwd & results) const = 0;
+	virtual void                        findInRange          (const Vector & origin, const float distance, typename std::vector<ObjectType> & results) const = 0;
+	virtual void                        findInRange          (const Vector & origin, const float distance, const SpatialSubdivisionFilter<ObjectType> &filter, typename std::vector<ObjectType> & results) const = 0;
+	virtual void                        findOnRay            (const Vector & begin, const Vector & dir, typename std::vector<ObjectType> & results) const = 0;
+	virtual void                        findOnSegment        (const Vector & begin, const Vector & end, typename std::vector<ObjectType> & results) const = 0;
 	virtual void                        move                 (SpatialSubdivisionHandle * object) = 0;
 	virtual void                        removeObject         (SpatialSubdivisionHandle * object) = 0;
 

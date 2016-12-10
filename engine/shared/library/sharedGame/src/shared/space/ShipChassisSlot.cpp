@@ -31,7 +31,7 @@ namespace ShipChassisSlotNamespace
 
 	//----------------------------------------------------------------------
 
-	typedef stdvector<CrcString *>::fwd CompatibilityVector;
+	typedef std::vector<CrcString *> CompatibilityVector;
 
 	//----------------------------------------------------------------------
 

@@ -25,7 +25,7 @@
 namespace NebulaManagerNamespace
 {
 	typedef NebulaManager::NebulaVector NebulaVector;
-	typedef stdmap<int, Nebula const *>::fwd NebulaMap;
+	typedef std::map<int, Nebula const *> NebulaMap;
 	typedef std::map<std::string, NebulaVector> NebulasByScene;
 
 	//-- nebula vector OWNS the nebulas

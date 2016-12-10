@@ -159,15 +159,15 @@ protected:
 	static SendFunction            ms_sendFunction;
 	static IsReadyFunction         ms_isReadyFunction;
 
-	typedef stdmap<uint32, Channel *>::fwd StreamMap;
+	typedef std::map<uint32, Channel *> StreamMap;
 	///stream names
 	static  StreamMap                *ms_streams;
 
-	typedef stdmap<uint32, Channel *>::fwd VariableMap;
+	typedef std::map<uint32, Channel *> VariableMap;
 	///What variables are registered
 	static  VariableMap              *ms_variables;
 
-	typedef stdmap<uint32, Channel *>::fwd StaticViewMap;
+	typedef std::map<uint32, Channel *> StaticViewMap;
 	///StaticView names
 	static  StaticViewMap            *ms_staticViews;
 
@@ -184,10 +184,10 @@ protected:
 	static bool                      ms_opened;
 
 	///What streaming channels are squelched (i.e. don't send to client at all)
-	static stdmap<uint32, bool>::fwd      *ms_squelchedStream;
+	static std::map<uint32, bool>      *ms_squelchedStream;
 
 	///What static channels are squelched (i.e. don't send to client at all)
-	static stdmap<uint32, bool>::fwd      *ms_squelchedStatic;
+	static std::map<uint32, bool>      *ms_squelchedStatic;
 
 	///the next stream number
 	static uint32                    ms_nextStream;
@@ -198,10 +198,10 @@ protected:
 	///the next staticView number
 	static uint32                    ms_nextStaticView;
 
-	typedef stdmap<uint32, Variable *>::fwd VariableValueMap;
+	typedef std::map<uint32, Variable *> VariableValueMap;
 	static VariableValueMap            *ms_variableValues;
 
-	typedef stdmap<uint32, UpFunction>::fwd MovementFunctionMap;
+	typedef std::map<uint32, UpFunction> MovementFunctionMap;
 	static MovementFunctionMap         *ms_upFunctionMap;
 	static MovementFunctionMap         *ms_downFunctionMap;
 	static MovementFunctionMap         *ms_leftFunctionMap;

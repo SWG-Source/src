@@ -19,7 +19,7 @@ public:
 	static uint32                        getChatTypeByName   (const std::string & name);
 	static uint32                        getDefaultChatType  ();
 	static bool                          getChatNameByType   (uint32 type, std::string & name);
-	static const stdvector<std::string>::fwd & getSkillsProviding  (uint32 type);
+	static const std::vector<std::string> & getSkillsProviding  (uint32 type);
 
 	static bool                          isPrivate           (uint32 type);
 	static uint16                        getVolume           (uint32 type);

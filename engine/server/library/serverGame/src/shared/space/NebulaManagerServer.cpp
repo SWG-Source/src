@@ -44,11 +44,11 @@
 namespace NebulaManagerServerNamespace
 {
 
-	typedef stdvector<NebulaLightningData>::fwd LightningDataVector;
+	typedef std::vector<NebulaLightningData> LightningDataVector;
 
 	LightningDataVector s_lightningDataVector;
 
-	typedef stdmap<CachedNetworkId, uint32>::fwd NetworkIdTimeMap;
+	typedef std::map<CachedNetworkId, uint32> NetworkIdTimeMap;
 	NetworkIdTimeMap s_objectsRecentlyHitByLightning;
 
 	static uint16 s_lastLightningId = 0;
@@ -190,7 +190,7 @@ void NebulaManagerServer::handleEnqueuedLightningEvents()
 				continue;
 			}
 
-			typedef stdvector<Object *>::fwd ObjectVector;
+			typedef std::vector<Object *> ObjectVector;
 			
 			static ObjectVector collidingObjects;
 			collidingObjects.clear();

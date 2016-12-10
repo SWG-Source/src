@@ -28,7 +28,7 @@
 class GetMoneyFromOfflineObjectMessage : public GameNetworkMessage
 {
   public:
-	GetMoneyFromOfflineObjectMessage  (NetworkId const & sourceObject, int amount, NetworkId const & replyTo, std::string const & successCallback, std::string const & failCallback, stdvector<int8>::fwd const & packedDictionary, bool success);
+	GetMoneyFromOfflineObjectMessage  (NetworkId const & sourceObject, int amount, NetworkId const & replyTo, std::string const & successCallback, std::string const & failCallback, std::vector<int8> const & packedDictionary, bool success);
 	GetMoneyFromOfflineObjectMessage  (Archive::ReadIterator & source);
 	~GetMoneyFromOfflineObjectMessage ();
 
@@ -38,7 +38,7 @@ class GetMoneyFromOfflineObjectMessage : public GameNetworkMessage
 	NetworkId const & getReplyTo() const;
 	std::string const & getSuccessCallback() const;
 	std::string const & getFailCallback() const;
-	stdvector<int8>::fwd const & getPackedDictionary() const;
+	std::vector<int8> const & getPackedDictionary() const;
 	bool getSuccess() const;
 	
   private:

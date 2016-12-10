@@ -21,8 +21,8 @@ public:
 	explicit ExpertiseRequestMessage(Archive::ReadIterator &source);
 	virtual ~ExpertiseRequestMessage();
 
-	stdvector<std::string>::fwd const &getAddExpertisesList() const;
-	void setAddExpertisesList(stdvector<std::string>::fwd const &addExpertisesList);
+	std::vector<std::string> const &getAddExpertisesList() const;
+	void setAddExpertisesList(std::vector<std::string> const &addExpertisesList);
 	bool getClearAllExpertisesFirst() const;
 	void setClearAllExpertisesFirst(bool clearAllExpertisesFirst);
 
@@ -38,7 +38,7 @@ private:
 
 // ----------------------------------------------------------------------
 
-inline stdvector<std::string>::fwd const &ExpertiseRequestMessage::getAddExpertisesList() const
+inline std::vector<std::string> const &ExpertiseRequestMessage::getAddExpertisesList() const
 {
 	return m_addExpertisesList.get();
 }

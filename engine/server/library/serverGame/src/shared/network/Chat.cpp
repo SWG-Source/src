@@ -567,7 +567,7 @@ void Chat::uninvite(const std::string & to, const std::string & room)
 
 //----------------------------------------------------------------------
 
-void Chat::inviteGroupMembers(const NetworkId & invitor, const ChatAvatarId & groupLeader, const std::string & room, const stdvector<NetworkId>::fwd & members) 
+void Chat::inviteGroupMembers(const NetworkId & invitor, const ChatAvatarId & groupLeader, const std::string & room, const std::vector<NetworkId> & members) 
 {
 	ChatInviteGroupMembersToRoom inviteMessage(invitor, groupLeader, room, members);
 	sendToChatServer(inviteMessage);

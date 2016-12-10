@@ -18,8 +18,8 @@
 
 namespace WatchedByListNamespace
 {
-	typedef stdvector<BaseWatcher *>::fwd List;
-	typedef stdvector<List *>::fwd ListList;
+	typedef std::vector<BaseWatcher *> List;
+	typedef std::vector<List *> ListList;
 
 	ListList ms_listList;
 
