@@ -119,6 +119,7 @@ class Persister : public MessageDispatch::Receiver
 
 	SnapshotListType       m_savingSnapshots;
 	SnapshotListType       m_savingCharacterSnapshots;
+	SnapshotListType       m_completedSnapshots;
 	
 	NewCharacterLockType   m_newCharacterLock;
 	CharactersToDeleteType * m_charactersToDeleteThisSaveCycle;

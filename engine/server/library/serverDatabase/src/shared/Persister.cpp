@@ -241,8 +241,12 @@ void Persister::onFrameBarrierReached()
 			if (m_newCharacterLock.find(i->first)==m_newCharacterLock.end())
 			{
 				DEBUG_REPORT_LOG(ConfigServerDatabase::getReportSaveTimes(),("Starting new character save\n"));
-				m_savingCharacterSnapshots.push_back(i->second);
-				m_newCharacterTaskQueue->asyncRequest(new TaskSaveSnapshot(i->second));
+				
+				if (i->second != nullptr) {
+					m_savingCharacterSnapshots.push_back(i->second);
+					m_newCharacterTaskQueue->asyncRequest(new TaskSaveSnapshot(i->second));
+				}	
+				
 				for (ObjectSnapshotMap::iterator obj=m_objectSnapshotMap.begin(); obj!=m_objectSnapshotMap.end();)
 				{
 					if (obj->second == i->second)
@@ -349,14 +353,18 @@ void Persister::startSave(void)
 	ServerSnapshotMap::iterator i;
 	for (i=m_currentSnapshots.begin(); i!=m_currentSnapshots.end(); ++i)
 	{
-		m_savingSnapshots.push_back(i->second);
-		taskQueue->asyncRequest(new TaskSaveSnapshot(i->second));
+		if (i->second != nullptr) {
+			m_savingSnapshots.push_back(i->second);
+			taskQueue->asyncRequest(new TaskSaveSnapshot(i->second));
+		}
 	}
 
 	for (i=m_newObjectSnapshots.begin(); i!=m_newObjectSnapshots.end(); ++i)
         {
-                m_savingSnapshots.push_back(i->second);
-                taskQueue->asyncRequest(new TaskSaveSnapshot(i->second));
+		if (i->second != nullptr) {
+	                m_savingSnapshots.push_back(i->second);
+        	        taskQueue->asyncRequest(new TaskSaveSnapshot(i->second));
+		}
         }
 
 	// nothing changed so send a complete message for the shutdown process
@@ -651,9 +659,43 @@ void Persister::saveCompleted(Snapshot *completedSnapshot)
 	{
 		auto j=std::remove(m_savingCharacterSnapshots.begin(),m_savingCharacterSnapshots.end(),completedSnapshot);
 
-		DEBUG_WARNING(j==m_savingCharacterSnapshots.end(),("saveCompleted called w/o snap in m_savingSnapshots or m_savingCharacterSnapshots."));
-        	        m_savingCharacterSnapshots.erase(j, m_savingCharacterSnapshots.end());
+		if (j != m_savingCharacterSnapshots.end()) {
+			m_savingCharacterSnapshots.erase(j, m_savingCharacterSnapshots.end());
+		} else {
+			DEBUG_WARNING(true,("saveCompleted called w/o snap in m_savingSnapshots or m_savingCharacterSnapshots."));
+		}
        	}
+
+	if (completedSnapshot != nullptr){
+		m_completedSnapshots.push_back(completedSnapshot);
+	}
+
+	if (m_completedSnapshots.size() > 0) {
+		int completeCount = 0;
+		int snapshotClassCount = (*m_completedSnapshots.begin())->getPendingCount();
+
+		for (auto i = m_completedSnapshots.begin(); i != m_completedSnapshots.end(); ++i) {
+			if (*i != nullptr) {
+				++completeCount;
+				DEBUG_WARNING(true, ("m_completedSnapshots has %i snapshots inside, snapshot class reports %i deleted", completeCount, snapshotClassCount));
+			} else {
+				m_completedSnapshots.erase(i);
+			}
+		}
+
+		if (completeCount > snapshotClassCount) {
+			for (auto i = m_completedSnapshots.begin(); i != m_completedSnapshots.end(); ++i) {
+				if (*i != nullptr && completeCount > snapshotClassCount) {
+					WARNING(true, ("Deleting orphaned snapshots, discrepancy of %i", (completeCount-snapshotClassCount)));
+					delete (*i);
+					*i = nullptr;
+					completeCount--;
+				} else {
+					break;
+				}
+			}
+		}
+	}
 }
 
 // ----------------------------------------------------------------------
