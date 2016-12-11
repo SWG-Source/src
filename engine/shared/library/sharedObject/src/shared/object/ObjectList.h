@@ -56,7 +56,7 @@ public:
 
 private:
 	
-	typedef stdvector<Object *>::fwd ObjectVector;
+	typedef std::vector<Object *> ObjectVector;
 	bool                             m_altering;
 	ObjectVector *                   m_objectVector;
 	ObjectVector *                   m_alterSafeObjectVector;

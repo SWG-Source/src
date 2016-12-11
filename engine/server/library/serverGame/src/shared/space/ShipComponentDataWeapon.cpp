@@ -184,7 +184,7 @@ void ShipComponentDataWeapon::printDebugString      (Unicode::String & result, U
 
 //----------------------------------------------------------------------
 
-void ShipComponentDataWeapon::getAttributes(stdvector<std::pair<std::string, Unicode::String> >::fwd & data) const
+void ShipComponentDataWeapon::getAttributes(std::vector<std::pair<std::string, Unicode::String> > & data) const
 {
 	ServerShipComponentData::getAttributes(data);
 

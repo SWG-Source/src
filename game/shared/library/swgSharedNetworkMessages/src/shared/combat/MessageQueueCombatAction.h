@@ -56,7 +56,7 @@ public:
 		int                             damageAmount;   // amount of damage being applied
 	};
 
-	typedef stdvector<DefenderData>::fwd  DefenderDataVector;
+	typedef std::vector<DefenderData>  DefenderDataVector;
 
 	typedef void (*ActionNameLookupFunction)(uint32 actionId, char *buffer, int bufferLength);
 
@@ -120,7 +120,7 @@ inline const MessageQueueCombatAction::AttackerData &
 	return m_attacker;
 }	// MessageQueueCombatAction::getAttacker
 
-inline const stdvector<MessageQueueCombatAction::DefenderData>::fwd & 
+inline const std::vector<MessageQueueCombatAction::DefenderData> & 
 	MessageQueueCombatAction::getDefenders(void) const
 {
 	return m_defenders;

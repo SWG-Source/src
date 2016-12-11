@@ -37,7 +37,7 @@ namespace
 
 	//----------------------------------------------------------------------
 
-	typedef stdvector<std::string>::fwd StringVector;
+	typedef std::vector<std::string> StringVector;
 	inline void tokenizeList (const std::string & str, StringVector & sv, int row, const std::string & columnName)
 	{
 		UNREF (row);

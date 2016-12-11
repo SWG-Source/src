@@ -57,7 +57,7 @@ protected:
 
 	// ----------
 
-	typedef stdvector< BaseExtent * >::fwd ExtentVec;
+	typedef std::vector< BaseExtent * > ExtentVec;
 
 	ExtentVec * m_extents;
 

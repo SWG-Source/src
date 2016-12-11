@@ -311,7 +311,7 @@ namespace ProjectileManagerNamespace
 	//----------------------------------------------------------------------
 
 	typedef std::pair<NetworkId /* ship id */, int /*weaponIndex */> ShipWeaponPair;
-	typedef stdmap<ShipWeaponPair, Projectile>::fwd ProjectileMap;
+	typedef std::map<ShipWeaponPair, Projectile> ProjectileMap;
 	ProjectileMap s_projectileBeamMap;
 
 

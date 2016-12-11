@@ -28,7 +28,7 @@ public:
 
 	virtual void printDebugString      (Unicode::String & result, Unicode::String const & padding) const;
 
-	virtual void getAttributes         (stdvector<std::pair<std::string, Unicode::String> >::fwd & data) const;
+	virtual void getAttributes         (std::vector<std::pair<std::string, Unicode::String> > & data) const;
 
 private:
 	ServerShipComponentData (const ServerShipComponentData & rhs);

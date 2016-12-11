@@ -28,7 +28,7 @@ class SpatialDatabase;
 class SpatialSubdivisionHandle;
 class Transform;
 
-typedef stdvector<CollisionProperty*>::fwd  ColliderList;
+typedef std::vector<CollisionProperty*>  ColliderList;
 
 // ======================================================================
 

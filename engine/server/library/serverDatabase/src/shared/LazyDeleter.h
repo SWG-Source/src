@@ -53,8 +53,8 @@ class LazyDeleter
   private:
 	static LazyDeleter *ms_instance;
 	Thread *m_workerThread;
-	stdvector<NetworkId>::fwd *m_incomingObjects;
-	stddeque<NetworkId>::fwd *m_objectsToDelete;
+	std::vector<NetworkId> *m_incomingObjects;
+	std::deque<NetworkId> *m_objectsToDelete;
 	Mutex *m_objectListLock;
 	bool m_shutdown;
 	bool m_paused;

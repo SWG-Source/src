@@ -16,10 +16,10 @@
 class FloorLocator;
 
 typedef std::pair<int,int> IndexPair;
-typedef stdvector<int>::fwd IntList;
-typedef stdvector<Vector>::fwd VectorList;
-typedef stdvector<IndexPair>::fwd IndexPairList;
-typedef stdvector<FloorLocator>::fwd FloorLocatorList;
+typedef std::vector<int> IntList;
+typedef std::vector<Vector> VectorList;
+typedef std::vector<IndexPair> IndexPairList;
+typedef std::vector<FloorLocator> FloorLocatorList;
 
 // ======================================================================
 // Very simple concrete path graph class, uses base PathEdge and PathNode
@@ -29,8 +29,8 @@ class SimplePathGraph : public PathGraph
 {
 public:
 
-	typedef stdvector<PathEdge>::fwd EdgeList;
-	typedef stdvector<PathNode>::fwd NodeList;
+	typedef std::vector<PathEdge> EdgeList;
+	typedef std::vector<PathNode> NodeList;
 
 	SimplePathGraph ( PathGraphType type = PGT_None );
 

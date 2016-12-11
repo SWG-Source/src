@@ -40,9 +40,9 @@ private:
 	static DataTable*                         m_cachedTable;
 	static std::string                        m_cachedTableName;
 	static bool                               m_errorChecking;
-	static stdmap<std::string, DataTable *>::fwd m_tables;
+	static std::map<std::string, DataTable *> m_tables;
 	static bool                               m_installed;
-	static stdmultimap<std::string, DataTableReloadCallback>::fwd m_reloadCallbacks;
+	static std::multimap<std::string, DataTableReloadCallback> m_reloadCallbacks;
 };
 
 // ======================================================================

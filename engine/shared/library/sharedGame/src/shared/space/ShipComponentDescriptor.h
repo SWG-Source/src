@@ -21,8 +21,8 @@ class ShipComponentDescriptor
 {
 public:
 	
-	typedef stdvector<std::string>::fwd StringVector;
-	typedef stdmap<PersistentCrcString, ShipComponentDescriptor *>::fwd NameComponentMap;
+	typedef std::vector<std::string> StringVector;
+	typedef std::map<PersistentCrcString, ShipComponentDescriptor *> NameComponentMap;
 
 	static void install ();
 	static void fetchSharedObjectTemplates();

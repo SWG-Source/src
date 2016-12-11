@@ -33,7 +33,7 @@ public:
 	static Vector getDirectionToHyperspacePoint_w(std::string const & fromSceneName, Vector const & fromLocation_w, std::string const & toSceneName, Vector const & toLocation_w);
 	static bool isValidHyperspacePoint(std::string const & hyperspacePointName);
 	static bool getHyperspacePoint(std::string const & hyperspacePointName, HyperspaceLocation & /*OUT*/ location);
-	static bool getHyperspacePoints(std::string const & sceneName, stdvector<HyperspaceLocation>::fwd & /*OUT*/ locations);
+	static bool getHyperspacePoints(std::string const & sceneName, std::vector<HyperspaceLocation> & /*OUT*/ locations);
 
 	static std::string getHomeLocationHyperspacePointName();
 	static bool isValidSceneForHomeLocationHyperspace(std::string const & sceneName);

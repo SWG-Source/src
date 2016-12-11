@@ -648,7 +648,7 @@ bool BuildingObject::isVisibleOnClient (const Client & /*client*/) const
 
 // ----------------------------------------------------------------------
 
-void BuildingObject::getAttributes(stdvector<std::pair<std::string, Unicode::String> >::fwd &data) const
+void BuildingObject::getAttributes(std::vector<std::pair<std::string, Unicode::String> > &data) const
 {
 	TangibleObject::getAttributes(data);
 }

@@ -14,7 +14,7 @@ class DataLint
 {
 public:
 
-	typedef stdvector<std::pair<std::string, std::string> >::fwd StringPairList;
+	typedef std::vector<std::pair<std::string, std::string> > StringPairList;
 
 public:
 

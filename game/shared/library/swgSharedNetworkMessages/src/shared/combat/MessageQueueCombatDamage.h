@@ -29,7 +29,7 @@ public:
 		Attributes::Value      value;
 	};
 
-	typedef stdvector<CurrentAttribute>::fwd  CurrentAttributeVector;
+	typedef std::vector<CurrentAttribute>  CurrentAttributeVector;
 
 public:
 	         MessageQueueCombatDamage(void);

@@ -76,13 +76,13 @@ public:
 
 public:
 	static void install();
-	static bool generateField(AsteroidFieldData const & fieldData, stdvector<AsteroidData>::fwd & result);
-	static bool generateField(Vector const & centerPosition, float radius, int count, uint32 seed, float scaleMin, float scaleMax, float rotationMin, float rotationMax, stdvector<std::pair<uint32, float> >::fwd const & templateCrcsAndLikelihood, stdvector<AsteroidData>::fwd & asteroidDatas);
+	static bool generateField(AsteroidFieldData const & fieldData, std::vector<AsteroidData> & result);
+	static bool generateField(Vector const & centerPosition, float radius, int count, uint32 seed, float scaleMin, float scaleMax, float rotationMin, float rotationMax, std::vector<std::pair<uint32, float> > const & templateCrcsAndLikelihood, std::vector<AsteroidData> & asteroidDatas);
 	static void loadStaticFieldDataForScene(std::string const & sceneName, bool server);
 	static void clearStaticFieldData();
 	static void clearInstantiatedData();
 	static bool hasDataForScene(std::string const & sceneName);
-	static stdvector<AsteroidFieldData>::fwd const & getDataForScene(std::string const & sceneName);
+	static std::vector<AsteroidFieldData> const & getDataForScene(std::string const & sceneName);
 	static void registerGetExtentRadiusFunction(GetExtentRadiusFunction);
 
 private:
@@ -99,7 +99,7 @@ private:
 
 private:
 	typedef std::string SceneNameKey;
-	static stdmap<SceneNameKey, stdvector<AsteroidFieldData>::fwd>::fwd ms_staticFieldData;
+	static std::map<SceneNameKey, std::vector<AsteroidFieldData>> ms_staticFieldData;
 	static SphereTree<Sphere*, AsteroidDataSphereExtentAccessor> ms_collisionSphereTree;
 	static std::vector<SpatialSubdivisionHandle*> ms_objectsInSphereTree;
 	static GetExtentRadiusFunction ms_getRadiusFunction;

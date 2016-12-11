@@ -32,10 +32,10 @@ public:
 	typedef Survey_DataItem DataItem;
 	
 public:
-	SurveyMessage           (const stdvector<DataItem>::fwd &data);
+	SurveyMessage           (const std::vector<DataItem> &data);
 	explicit SurveyMessage  (Archive::ReadIterator & source);
 	virtual  ~SurveyMessage ();
-	const stdvector<DataItem>::fwd& getData() const;
+	const std::vector<DataItem>& getData() const;
 	
 private:
 	

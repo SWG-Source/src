@@ -65,7 +65,7 @@ public:
 
 private:
 
-	typedef stdmap<SlotId, int>::fwd  SlotMap;
+	typedef std::map<SlotId, int>  SlotMap;
 
 private:
 

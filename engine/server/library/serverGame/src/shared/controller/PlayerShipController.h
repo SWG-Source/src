@@ -80,7 +80,7 @@ private:
 
 private:
 
-	typedef stdmap<NetworkId, int>::fwd GunnerWeaponIndexList;
+	typedef std::map<NetworkId, int> GunnerWeaponIndexList;
 
 	uint32 m_clientToServerLastSyncStamp;
 	std::set<int> m_teleportIds;

@@ -1198,7 +1198,7 @@ void SwgSnapshot::startLoadAfterSaveComplete()
  * ordinary (non-demand-load) containers.  The live database will be checked
  * for objects inside these objects.
  */
-void SwgSnapshot::getWorldContainers(stdvector<NetworkId>::fwd &containers) const
+void SwgSnapshot::getWorldContainers(std::vector<NetworkId> &containers) const
 {
 	m_objectTableBuffer.getWorldContainers(containers);
 }
@@ -1219,7 +1219,7 @@ void SwgSnapshot::handleBountyHunterTargetMessage (const BountyHunterTargetMessa
 
 // ----------------------------------------------------------------------
 
-void SwgSnapshot::getMoneyFromOfflineObject(uint32 replyServer, NetworkId const & sourceObject, int amount, NetworkId const & replyTo, std::string const & successCallback, std::string const & failCallback, stdvector<int8>::fwd const & packedDictionary)
+void SwgSnapshot::getMoneyFromOfflineObject(uint32 replyServer, NetworkId const & sourceObject, int amount, NetworkId const & replyTo, std::string const & successCallback, std::string const & failCallback, std::vector<int8> const & packedDictionary)
 {
 	// Object might be "offline" but still buffered.  Try to handle it in memory first:
 	if (!m_objectTableBuffer.getMoneyFromOfflineObject(replyServer, sourceObject, amount, replyTo, successCallback, failCallback, packedDictionary))

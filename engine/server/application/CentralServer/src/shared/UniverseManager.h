@@ -36,7 +36,7 @@ private:
 	void sendUniverseToServer(uint32 gameServerId);
 
 private:
-	typedef stdset<uint32>::fwd ServersLoadingUniverseType;
+	typedef std::set<uint32> ServersLoadingUniverseType;
 
 	uint32 m_universeProcess;  ///< Process that owns the universe objects
 	bool m_databaseAuthoritative; ///< True if database is authoritative for the universe objects

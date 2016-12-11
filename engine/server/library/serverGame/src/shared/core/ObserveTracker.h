@@ -26,13 +26,13 @@ public:
 	static void update();
 
 	static bool isObserving(Client const &client, ServerObject const &obj);
-	static void onObjectControlled(Client &client, ServerObject &obj, stdset<NetworkId>::fwd const &oldObserveList);
-	static void onClientControlComplete(Client &client, stdset<NetworkId>::fwd const &oldObserveList);
-	static void onClientEnteredNetworkTriggerVolume(Client &client, TriggerVolume &triggerVolume, stdset<NetworkId>::fwd const *oldObserveList = 0);
+	static void onObjectControlled(Client &client, ServerObject &obj, std::set<NetworkId> const &oldObserveList);
+	static void onClientControlComplete(Client &client, std::set<NetworkId> const &oldObserveList);
+	static void onClientEnteredNetworkTriggerVolume(Client &client, TriggerVolume &triggerVolume, std::set<NetworkId> const *oldObserveList = 0);
 	static void onClientExitedNetworkTriggerVolume(Client &client, TriggerVolume &triggerVolume);
 	static void onClientAddedVisibleObjectSpace(Client &client, ServerObject &visibleObject);
 	static void onClientLostVisibleObjectSpace(Client &client, ServerObject &visibleObject);
-	static void onClientEnteredPortalTriggerVolume(Client &client, TriggerVolume &triggerVolume, stdset<NetworkId>::fwd const *oldObserveList = 0);
+	static void onClientEnteredPortalTriggerVolume(Client &client, TriggerVolume &triggerVolume, std::set<NetworkId> const *oldObserveList = 0);
 	static void onClientExitedPortalTriggerVolume(Client &client, TriggerVolume &triggerVolume);
 	static bool onClientOpenedContainer(Client &client, ServerObject &obj, int sequence, std::string const &slotDesc, bool sendOpenContainerNotification = true);
 	static bool onClientClosedContainer(Client &client, ServerObject &obj);
@@ -49,7 +49,7 @@ public:
 	static void onCraftingPrototypeCreated(ServerObject const &objOwner, ServerObject &objPrototype);
 	static void onCraftingEndCraftingSession(ServerObject const &objOwner, ServerObject &objPrototype);
 	static void onMissionCriticalObjectAdded(ServerObject const &playerObject, ServerObject &criticalShip);
-	static void onMakeVendorInventory(ServerObject &vendorInventory, stdset<Client *>::fwd const & oldInventoryObservers);
+	static void onMakeVendorInventory(ServerObject &vendorInventory, std::set<Client *> const & oldInventoryObservers);
 	static void onClientAboutToOpenPublicContainer(Client & client, ServerObject & container);
 };
 

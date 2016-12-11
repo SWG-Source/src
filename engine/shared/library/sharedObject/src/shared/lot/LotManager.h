@@ -123,10 +123,10 @@ private:
 	const int        m_width;
 	const int        m_width_2;
 
-	typedef stdmap<const Object*, NoBuildEntry*>::fwd NoBuildEntryMap;
+	typedef std::map<const Object*, NoBuildEntry*> NoBuildEntryMap;
 	NoBuildEntryMap* const m_noBuildEntryMap;
 
-	typedef stdmap<const Object*, StructureFootprintEntry>::fwd StructureFootprintEntryMap;
+	typedef std::map<const Object*, StructureFootprintEntry> StructureFootprintEntryMap;
 	StructureFootprintEntryMap* const m_structureFootprintEntryMap;
 
 	SphereTree<const NoBuildEntry*, NoBuildEntrySphereExtentAccessor> m_sphereTree;

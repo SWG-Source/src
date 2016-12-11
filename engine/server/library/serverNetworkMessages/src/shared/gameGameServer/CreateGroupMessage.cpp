@@ -11,7 +11,7 @@
 
 // ======================================================================
 
-CreateGroupMessage::CreateGroupMessage(GroupMemberParam const & leader, stdvector<GroupMemberParam>::fwd const & members) :
+CreateGroupMessage::CreateGroupMessage(GroupMemberParam const & leader, std::vector<GroupMemberParam> const & members) :
 	GameNetworkMessage("CreateGroupMessage"),
 	m_leader(leader),
 	m_members(members)

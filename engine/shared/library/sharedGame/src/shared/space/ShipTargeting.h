@@ -19,7 +19,7 @@ class ShipTargeting
 {
 public:
 
-	typedef stdvector<Object *>::fwd ObjectVector;
+	typedef std::vector<Object *> ObjectVector;
 
 	typedef bool (*ActorAndTargetHaveReletionship)(Object const * actor, Object const * target);
 

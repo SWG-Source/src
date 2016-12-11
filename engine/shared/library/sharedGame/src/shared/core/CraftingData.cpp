@@ -209,7 +209,7 @@ const std::string & Crafting::getResourceAttributeName (int attr)
 
 const StringId & Crafting::getResourceAttributeNameStringId (int attr)
 {
-	typedef stdmap<int, StringId>::fwd ResourceAttributeNameStringIds;
+	typedef std::map<int, StringId> ResourceAttributeNameStringIds;
 	static ResourceAttributeNameStringIds sids;
 
 	const ResourceAttributeNameStringIds::iterator it = sids.find (attr);

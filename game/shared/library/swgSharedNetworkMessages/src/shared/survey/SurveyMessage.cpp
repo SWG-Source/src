@@ -16,7 +16,7 @@ const char * const SurveyMessage::MessageType = "SurveyMessage";
 
 //----------------------------------------------------------------------
 
-SurveyMessage::SurveyMessage (const stdvector<DataItem>::fwd &data) :
+SurveyMessage::SurveyMessage (const std::vector<DataItem> &data) :
 		GameNetworkMessage(MessageType),
 		m_data()
 {

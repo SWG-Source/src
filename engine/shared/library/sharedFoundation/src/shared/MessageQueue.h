@@ -74,7 +74,7 @@ private:
 
 private:
 
-	typedef stdvector<Message>::fwd MessageList;
+	typedef std::vector<Message> MessageList;
 
 private:
 

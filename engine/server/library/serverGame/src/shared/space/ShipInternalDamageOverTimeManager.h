@@ -19,7 +19,7 @@ class ShipInternalDamageOverTimeManager
 {
 public:
 
-	typedef stdvector<ShipInternalDamageOverTime>::fwd IdotVector;
+	typedef std::vector<ShipInternalDamageOverTime> IdotVector;
 
 	static void install();
 	static void remove();

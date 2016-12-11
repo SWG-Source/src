@@ -707,7 +707,7 @@ bool ContainerInterface::transferItemToSlottedContainer(ServerObject &destinatio
 
 	if (arrangementIndex < 0)
 	{
-		WARNING_STRICT_FATAL(true, ("Invaid arrangement index in transferItemToSlottedContainer"));
+		DEBUG_WARNING(true, ("Invaid arrangement index in transferItemToSlottedContainer"));
 		error = Container::CEC_InvalidArrangement;
 		return false;
 	}

@@ -28,7 +28,7 @@ class MessageQueueHarvesterResourceData : public MessageQueue::Data
 
 public:
 
-	typedef stdvector<InstallationResourceData>::fwd DataVector;
+	typedef std::vector<InstallationResourceData> DataVector;
 
 	                        MessageQueueHarvesterResourceData (const NetworkId & id, const DataVector & data);
 	virtual                ~MessageQueueHarvesterResourceData();

@@ -105,7 +105,7 @@ AiMovementPatrol::AiMovementPatrol( AICreatureController * controller, std::vect
 				else
 				{
 					m_patrolPath.clear();
-					WARNING(true, ("AiMovementPatrol unable to find path node %s for object %s", 
+					DEBUG_WARNING(true, ("AiMovementPatrol unable to find path node %s for object %s", 
 						Unicode::wideToNarrow(pointName).c_str(), 
 						owner->getNetworkId().getValueString().c_str()));
 					break;

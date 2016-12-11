@@ -25,7 +25,7 @@ class NetworkId;
 
 namespace DB
 {
-	typedef stdset<Tag>::fwd TagSet;
+	typedef std::set<Tag> TagSet;
 }
 
 // ======================================================================

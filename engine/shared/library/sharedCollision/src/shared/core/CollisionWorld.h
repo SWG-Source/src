@@ -28,9 +28,9 @@ class SpatialDatabase;
 class Sphere;
 class MultiShape;
 
-typedef stdvector<Object*>::fwd             ObjectVec;
-typedef stdvector<CollisionProperty*>::fwd  ColliderList;
-typedef stdvector<Footprint*>::fwd          FootprintList;
+typedef std::vector<Object*>             ObjectVec;
+typedef std::vector<CollisionProperty*>  ColliderList;
+typedef std::vector<Footprint*>          FootprintList;
 
 // ======================================================================
 
@@ -120,7 +120,7 @@ public:
 	
 	// ----------
 	
-	static bool     findLocators        ( CellProperty const * cell, Vector const & point, stdvector<FloorLocator>::fwd & outLocs );
+	static bool     findLocators        ( CellProperty const * cell, Vector const & point, std::vector<FloorLocator> & outLocs );
 	
 	static bool		makeLocator  ( CellProperty const * cell, Vector const & point, FloorLocator & outLoc);
 

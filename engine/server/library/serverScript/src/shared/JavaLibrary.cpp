@@ -2183,7 +2183,8 @@ jlong JavaLibrary::getFreeJavaMemory()
  */
 void JavaLibrary::printJavaStack()
 {
-	ms_env->CallStaticVoidMethod(ms_clsThread, ms_midThreadDumpStack);
+	if (ConfigServerScript::getPrintStacks())
+		ms_env->CallStaticVoidMethod(ms_clsThread, ms_midThreadDumpStack);
 }
 
 /**
@@ -5482,7 +5483,7 @@ namespace ScriptConversion {
 		return true;
 	}
 
-	const bool convert(const jobjectArray & source, stdvector<std::string>::fwd & target)
+	const bool convert(const jobjectArray & source, std::vector<std::string> & target)
 	{
 		JNIEnv * env = JavaLibrary::getEnv();
 		if (!env || !source)

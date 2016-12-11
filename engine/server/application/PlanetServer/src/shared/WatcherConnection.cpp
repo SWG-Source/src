@@ -83,7 +83,7 @@ void WatcherConnection::flushQueuedObjectData()
 
 // ----------------------------------------------------------------------
 
-void WatcherConnection::addNodeUpdate(int x, int z, bool loaded, const stdvector<uint32>::fwd &servers, const stdvector<int>::fwd &subscriptionCounts)
+void WatcherConnection::addNodeUpdate(int x, int z, bool loaded, const std::vector<uint32> &servers, const std::vector<int> &subscriptionCounts)
 {
 	NOT_NULL(m_nodeData);	
 	m_nodeData->push_back(PlanetNodeStatusMessageData(x,z,loaded,servers,subscriptionCounts));

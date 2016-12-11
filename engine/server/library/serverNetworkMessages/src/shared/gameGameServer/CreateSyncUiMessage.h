@@ -21,13 +21,13 @@
 class CreateSyncUiMessage : public GameNetworkMessage
 {
 public:
-	CreateSyncUiMessage  (const NetworkId& id, const stdvector<NetworkId>::fwd & clients);
+	CreateSyncUiMessage  (const NetworkId& id, const std::vector<NetworkId> & clients);
 	CreateSyncUiMessage  (Archive::ReadIterator & source);
 	~CreateSyncUiMessage ();
 
 public:
 	const NetworkId&                  getId(void) const;
-	const stdvector<NetworkId>::fwd & getClients() const;
+	const std::vector<NetworkId> & getClients() const;
 	
 private:
 	Archive::AutoVariable<NetworkId>         m_id;               // id of the object
@@ -47,7 +47,7 @@ inline const NetworkId& CreateSyncUiMessage::getId(void) const
 
 //-----------------------------------------------------------------------
 
-inline const stdvector<NetworkId>::fwd & CreateSyncUiMessage::getClients() const
+inline const std::vector<NetworkId> & CreateSyncUiMessage::getClients() const
 {
 	return m_clients.get();
 }

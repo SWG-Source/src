@@ -156,7 +156,7 @@ bool StaticObject::canDropInWorld() const
 
 //-----------------------------------------------------------------------
 
-void StaticObject::getAttributes(stdvector<std::pair<std::string, Unicode::String> >::fwd &data) const
+void StaticObject::getAttributes(std::vector<std::pair<std::string, Unicode::String> > &data) const
 {
 	ServerObject::getAttributes(data);
 }

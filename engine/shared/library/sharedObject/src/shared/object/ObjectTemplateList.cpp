@@ -194,7 +194,7 @@ void ObjectTemplateList::garbageCollect ()
 
 //----------------------------------------------------------------------
 
-void ObjectTemplateList::getAllTemplateNamesFromCrcStringTable(stdvector<const char *>::fwd & objectTemplateNames)
+void ObjectTemplateList::getAllTemplateNamesFromCrcStringTable(std::vector<const char *> & objectTemplateNames)
 {
 	ms_crcStringTable.getAllStrings(objectTemplateNames);
 }

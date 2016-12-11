@@ -80,7 +80,7 @@ public:
 	virtual bool                  isDay () const;
 	virtual bool                  isTimeLocked() const;
 
-	typedef stdvector<std::pair<Vector, float> >::fwd ClearFloraEntryList;
+	typedef std::vector<std::pair<Vector, float> > ClearFloraEntryList;
 	virtual void                  addClearCollidableFloraObject (const Object* object, const Vector& position_o, float radius);
 	virtual void                  removeClearCollidableFloraObject (const Object* object);
 	virtual void                  addClearNonCollidableFloraObject (const Object* object, const ClearFloraEntryList& clearFloraEntryList);

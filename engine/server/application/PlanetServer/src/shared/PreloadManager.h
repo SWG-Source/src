@@ -58,7 +58,7 @@ class PreloadManager : public Singleton2<PreloadManager>
 	uint32 getRealServerId       (PreloadServerId preloadServerId) const;
 	void getDebugString          (std::string &output) const;
 
-	typedef stdmap<PreloadServerId, PreloadServerInformation>::fwd ServerMapType;
+	typedef std::map<PreloadServerId, PreloadServerInformation> ServerMapType;
 	ServerMapType const * getServerMap () const;
 	
   private:
@@ -67,10 +67,10 @@ class PreloadManager : public Singleton2<PreloadManager>
   private:
 	ServerMapType *m_serverMap; // map of server id in preload list ---> actual server id
 
-	typedef stdvector<PreloadListData>::fwd PreloadListType;
+	typedef std::vector<PreloadListData> PreloadListType;
 	PreloadListType *m_preloadList;
 
-	typedef stdset<PreloadServerId>::fwd ServersWaitingType;
+	typedef std::set<PreloadServerId> ServersWaitingType;
 	ServersWaitingType *m_serversWaiting; // set of servers (by list id, not actual id) that still need preloads.
 
 	bool m_listReceived;

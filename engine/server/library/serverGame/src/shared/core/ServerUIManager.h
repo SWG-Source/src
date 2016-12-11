@@ -42,8 +42,8 @@ private:
 	static int  getNewPageId();
 
 private:
-	static stdmap<int, ServerUIPage*>::fwd  m_pages;
-	static stdmultimap<NetworkId, int>::fwd  m_primaryControlledObjectMap;
+	static std::map<int, ServerUIPage*>  m_pages;
+	static std::multimap<NetworkId, int>  m_primaryControlledObjectMap;
 	static int m_pageCounter;
 };
 

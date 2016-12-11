@@ -27,14 +27,14 @@ class OfflineMoneyCustomPersistStep : public CustomPersistStep
 	OfflineMoneyCustomPersistStep();
 	~OfflineMoneyCustomPersistStep();
 	
-	void getMoneyFromOfflineObject(uint32 replyServer, NetworkId const & sourceObject, int amount, NetworkId const & replyTo, std::string const & successCallback, std::string const & failCallback, stdvector<int8>::fwd const & packedDictionary);
+	void getMoneyFromOfflineObject(uint32 replyServer, NetworkId const & sourceObject, int amount, NetworkId const & replyTo, std::string const & successCallback, std::string const & failCallback, std::vector<int8> const & packedDictionary);
 		
 	virtual bool beforePersist (DB::Session *session);
 	virtual bool afterPersist  (DB::Session *session);
 	virtual void onComplete    ();
 
   private:
-	typedef stdvector<OfflineMoneyCustomPersistStepNamespace::GetMoneyData*>::fwd GetMoneyRequestsType;
+	typedef std::vector<OfflineMoneyCustomPersistStepNamespace::GetMoneyData*> GetMoneyRequestsType;
 	GetMoneyRequestsType * const m_getMoneyRequests;
 
   private:

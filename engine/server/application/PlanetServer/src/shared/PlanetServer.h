@@ -57,7 +57,7 @@ public:
 	int                  getObjectCountForServer(uint32 serverId) const;
 	int                  getInterestObjectCountForServer(uint32 serverId) const;
 	int                  getInterestCreatureObjectCountForServer(uint32 serverId) const;
-	void                 getObjectCountsForAllServers(stdmap<uint32, GameServerData>::fwd &counts) const;
+	void                 getObjectCountsForAllServers(std::map<uint32, GameServerData> &counts) const;
 	virtual void         receiveMessage(const MessageDispatch::Emitter & source, const MessageDispatch::MessageBase & message);
 	void                 sendToCentral(const GameNetworkMessage & message, const bool reliable);
 	void                 sendToGameServer(const uint32 processId, const GameNetworkMessage & message);
@@ -106,8 +106,8 @@ private:
 	TaskConnection *           m_taskConnection;
 	bool                       m_done;
 	int                        m_roundRobinGameServer;
-	stdmap<PreloadServerId, GameServerSpawnDelaySeconds>::fwd * m_pendingServerStarts; // number of game servers to start when central & task manager are ready
-	stdmap<int, std::pair<std::string, time_t> >::fwd * m_startingGameServers; // number of game servers we've started that haven't connected to us yet
+	std::map<PreloadServerId, GameServerSpawnDelaySeconds> * m_pendingServerStarts; // number of game servers to start when central & task manager are ready
+	std::map<int, std::pair<std::string, time_t> > * m_startingGameServers; // number of game servers we've started that haven't connected to us yet
 	uint32                     m_firstGameServer;
 	bool                       m_tutorialMode;
 	bool                       m_spaceMode;
@@ -116,15 +116,15 @@ private:
 	std::vector<const GameNetworkMessage *> m_messagesWaitingForGameServer;
 	PlanetServerMetricsData*                m_metricsData;
 	TaskConnection*                         m_taskManagerConnection;
-	stdlist<const RequestSceneTransfer *>::fwd *m_sceneTransferChunkLoads;
-	stdmap<NetworkId, uint32>::fwd          *m_pendingCharacterSaves;
+	std::list<const RequestSceneTransfer *> *m_sceneTransferChunkLoads;
+	std::map<NetworkId, uint32>          *m_pendingCharacterSaves;
 
 	WatcherList m_watchers;
 	bool m_watcherIsPresent;
 
 	typedef std::map<NetworkId, std::vector<GameNetworkMessage*> > QueuedMessagesType;
 	QueuedMessagesType m_queuedMessages;
-	stdmap<NetworkId, CharacterFindInfo>::fwd *m_characterFindMap;
+	std::map<NetworkId, CharacterFindInfo> *m_characterFindMap;
 	unsigned int m_characterFindSequence;
 	int          m_waitForSaveCounter;
 	int          m_lastSaveCounter;

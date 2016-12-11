@@ -28,8 +28,8 @@
 namespace ShipChassisNamespace
 {
 
-	typedef stdmap<PersistentCrcString, ShipChassis *>::fwd       NameChassisMap;
-	typedef stdmap<uint32,              ShipChassis const *>::fwd CrcChassisMap;
+	typedef std::map<PersistentCrcString, ShipChassis *>       NameChassisMap;
+	typedef std::map<uint32,              ShipChassis const *> CrcChassisMap;
 
 	typedef ShipChassis::PersistentCrcStringVector      PersistentCrcStringVector;
 	PersistentCrcStringVector * s_shipChassisNameVector;

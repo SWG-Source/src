@@ -71,7 +71,7 @@ Floor * FloorManager::createFloor ( const char * floorMeshFilename, Object const
 
 	if(!pMesh)
 	{
-		WARNING(true, ("Could not find floor mesh %s", floorMeshFilename));
+		DEBUG_WARNING(true, ("Could not find floor mesh %s", floorMeshFilename));
 		return nullptr;
 	}
 

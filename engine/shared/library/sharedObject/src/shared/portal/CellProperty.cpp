@@ -449,11 +449,11 @@ void CellProperty::initialize(const PortalProperty &portalProperty, int cellInde
 	if (cellTemplate.getFloorName())
 	{
 		m_floor = FloorManager::createFloor(cellTemplate.getFloorName(),&getOwner(),nullptr,false);
-		WARNING(!m_floor, ("Cell %s could not load floor %s", cellTemplate.getAppearanceName(), cellTemplate.getFloorName()));
+		DEBUG_WARNING(!m_floor, ("Cell %s could not load floor %s", cellTemplate.getAppearanceName(), cellTemplate.getFloorName()));
 	}
 	else
 	{
-		WARNING(true, ("Cell %s has no floor", cellTemplate.getAppearanceName()));
+		DEBUG_WARNING(true, ("Cell %s has no floor", cellTemplate.getAppearanceName()));
 	}
 
 	m_cellIndex = cellIndex;

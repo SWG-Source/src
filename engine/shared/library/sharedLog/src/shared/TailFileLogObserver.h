@@ -51,7 +51,7 @@ private:
 	int m_fileIndex;
 
 	int m_numLines;
-	stdvector<std::string>::fwd *m_textBuffer;
+	std::vector<std::string> *m_textBuffer;
 	int m_nextTextBufferEntry;
 };
 

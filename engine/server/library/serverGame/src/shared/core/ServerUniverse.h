@@ -65,12 +65,12 @@ public:
 	void                 registerPlanetObject           (PlanetObject &newPlanet);
 	void                 registerResourceTypeObject     (ResourceTypeObject &newType, bool newlySpawned);
 	void                 sendUpdatedTypeToAllServers    (ResourceTypeObject &changedType);
-	virtual void         resourceClassTreeLoaded        (stdmap<int, ResourceClassObject*>::fwd &resourceClasses);
+	virtual void         resourceClassTreeLoaded        (std::map<int, ResourceClassObject*> &resourceClasses);
 	std::string          generateRandomResourceName     (const std::string &nameTable) const;
 	ResourceTypeObject const * pickRandomNonDepletedResource  (const std::string &parentResourceClassName) const;
 //	int                  extractResourceFromRandomPool  (const std::string &parentResourceClassName, int amount, const Vector &pos);
 	virtual ResourceClassObject* makeResourceClassObject();
-	void                 createGroup                    (GroupMemberParam const & leader, stdvector<GroupMemberParam>::fwd const & members);
+	void                 createGroup                    (GroupMemberParam const & leader, std::vector<GroupMemberParam> const & members);
 	void                 onServerConnectionClosed       (uint32 processId);
 	void                 updatePopulationList           (const PopulationList &newData);
 	int                  getPopulationAtLocation        (const std::string &scene, int x, int z) const;
@@ -91,7 +91,7 @@ public:
 	int                  getGcwGroupImperialScorePercentile(std::string const & gcwGroup) const; // the rebel score is 100 - the imperial score
 
 	static void          setConnectedCharacterLfgData(const NetworkId & characterId, const LfgCharacterData & lfgCharacterData);
-	static stdmap<NetworkId, LfgCharacterData>::fwd const & getConnectedCharacterLfgData();
+	static std::map<NetworkId, LfgCharacterData> const & getConnectedCharacterLfgData();
 
 	static void          setConnectedCharacterGroupData(const NetworkId & characterId, const NetworkId & groupId);
 
@@ -115,7 +115,7 @@ public:
 
 	static void          setConnectedCharacterBiographyData(const NetworkId & characterId, const Unicode::String & biography);
 	static void          removeConnectedCharacterBiographyData(const NetworkId & characterId);
-	static stdmap<NetworkId, Unicode::String>::fwd const & getConnectedCharacterBiographyData();
+	static std::map<NetworkId, Unicode::String> const & getConnectedCharacterBiographyData();
 
 	static void          removeConnectedCharacterData(const NetworkId & characterId);
 
@@ -136,7 +136,7 @@ private:
 	
 private:
 	//TODO:  consistency about whether STL containers are pointers or not
-	typedef stdvector<CachedNetworkId*>::fwd             UniverseObjectList;
+	typedef std::vector<CachedNetworkId*>             UniverseObjectList;
 	UniverseObjectList * m_universeObjectList;
 	UniverseObjectList * m_pendingUniverseObjects;
 	bool m_loaded;
@@ -148,7 +148,7 @@ private:
 	//
 	// Planet Objects
 	//
-	typedef stdmap<const std::string, PlanetObject*>::fwd PlanetNameMap;
+	typedef std::map<const std::string, PlanetObject*> PlanetNameMap;
 	
 	PlanetObject  *m_thisPlanet;
 	PlanetObject  *m_tatooinePlanet;
@@ -157,9 +157,9 @@ private:
 	//
 	// Resource Type Objects
 	//
-	typedef stdmap<std::string, ResourceTypeObject*>::fwd       ResourceTypeNameMap;
-	typedef stdmap<NetworkId, ResourceTypeObject*>::fwd         ResourceTypeIdMap;
-	typedef stdvector<ResourceTypeObject*>::fwd                 ResourcesToSendType;
+	typedef std::map<std::string, ResourceTypeObject*>       ResourceTypeNameMap;
+	typedef std::map<NetworkId, ResourceTypeObject*>         ResourceTypeIdMap;
+	typedef std::vector<ResourceTypeObject*>                 ResourcesToSendType;
 	
 	ResourceTypeNameMap *m_resourceTypeNameMap;
 	ResourceTypeIdMap *m_resourceTypeIdMap;
@@ -173,8 +173,8 @@ private:
 	//	 bool m_loaded;
 
 	// Theater data
-	typedef stdmap<const std::string, const NetworkId>::fwd TheaterNameIdMap;
-	typedef stdmap<const NetworkId, const std::string>::fwd TheaterIdNameMap;
+	typedef std::map<const std::string, const NetworkId> TheaterNameIdMap;
+	typedef std::map<const NetworkId, const std::string> TheaterIdNameMap;
 
 	TheaterNameIdMap * m_theaterNameIdMap;
 	TheaterIdNameMap * m_theaterIdNameMap;

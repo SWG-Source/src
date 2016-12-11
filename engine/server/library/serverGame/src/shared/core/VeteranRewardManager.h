@@ -44,10 +44,10 @@ class VeteranRewardManager
 	static bool isEventAccountUnique(std::string const & eventName);
 	static bool isItemAccountUnique(std::string const & itemName);
 	static bool isItemAccountUniqueFeatureId(std::string const & itemName);
-	static void verifyFeatureIdTransactions(CreatureObject & playerCreature, stdmap<std::string, int>::fwd const & transactionsFromLoginServer);
+	static void verifyFeatureIdTransactions(CreatureObject & playerCreature, std::map<std::string, int> const & transactionsFromLoginServer);
 	static void migrateVeteranRewardsClaimInformation(CreatureObject & playerCreature);
-	static void getConsumedEvents(ServerObject const & playerCreature, stdvector<std::string>::fwd & consumedEvents);
-	static void getClaimedItems(ServerObject const & playerCreature, stdvector<std::string>::fwd & claimedItems);
+	static void getConsumedEvents(ServerObject const & playerCreature, std::vector<std::string> & consumedEvents);
+	static void getClaimedItems(ServerObject const & playerCreature, std::vector<std::string> & claimedItems);
 	static void tcgRedemption(CreatureObject const & playerCreature, ServerObject & item, int featureId, int adjustment);
 	static bool checkForTcgRedemptionInProgress(ServerObject const & item);
 	static void handleTcgRedemptionResponse(ServerObject & item, AdjustAccountFeatureIdResponse const & response);

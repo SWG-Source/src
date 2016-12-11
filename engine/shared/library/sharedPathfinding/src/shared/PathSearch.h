@@ -21,8 +21,8 @@ struct PathNodeHasher
 	size_t operator() ( PathNode const * node ) const;
 };
 
-typedef stdvector<int>::fwd IndexList;
-typedef stdvector<PathNode const *>::fwd NodeList;
+typedef std::vector<int> IndexList;
+typedef std::vector<PathNode const *> NodeList;
 
 // ======================================================================
 

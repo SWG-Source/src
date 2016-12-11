@@ -516,7 +516,7 @@ std::string ResourceContainerObject::getItemLog() const
 
 // ----------------------------------------------------------------------
 
-void ResourceContainerObject::getAttributes(stdvector<std::pair<std::string, Unicode::String> >::fwd &data) const
+void ResourceContainerObject::getAttributes(std::vector<std::pair<std::string, Unicode::String> > &data) const
 {
 	TangibleObject::getAttributes(data);
 

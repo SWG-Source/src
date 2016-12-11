@@ -34,14 +34,14 @@ void ConfigServerDatabase::install(void)
 	ConfigServerUtility::install();
 	data = &staticData;
 
-	KEY_INT     (objvarNameCleanupTime, 10);
-	KEY_INT     (orphanedObjectCleanupTime, 10);
-	KEY_INT     (marketAttributesCleanupTime, 10);
-	KEY_INT     (messagesCleanupTime, 10);
-	KEY_INT     (brokenObjectCleanupTime, 10);
-	KEY_INT     (vendorObjectCleanupTime, 10);
+	KEY_INT     (objvarNameCleanupTime, 0);
+	KEY_INT     (orphanedObjectCleanupTime, 0);
+	KEY_INT     (marketAttributesCleanupTime, 0);
+	KEY_INT     (messagesCleanupTime, 0);
+	KEY_INT     (brokenObjectCleanupTime, 0);
+	KEY_INT     (vendorObjectCleanupTime, 0);
 	KEY_STRING  (customSQLFilename,"");
-	KEY_BOOL    (enableFixBadCells, true);
+	KEY_BOOL    (enableFixBadCells, false);
 	KEY_STRING  (objectTemplateListUpdateFilename,"");
 
 	KEY_STRING  (DSN,"gameserver");
@@ -56,7 +56,7 @@ void ConfigServerDatabase::install(void)
 	KEY_INT     (taskManagerPort, 60001);
 	KEY_INT     (expectedDBVersion, 270);
 	KEY_BOOL    (correctDBVersionRequired,true);
-	KEY_INT     (saveFrequencyLimit,5);
+	KEY_INT     (saveFrequencyLimit,0);
 	KEY_STRING  (schemaOwner, "");
 	KEY_STRING  (goldSchemaOwner, "");
 	KEY_FLOAT   (uniqueMessageCacheTimeSec, 30.0f);

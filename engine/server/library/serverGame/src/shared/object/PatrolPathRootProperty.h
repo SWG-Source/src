@@ -36,12 +36,12 @@ public:
 
 	void addPatrollingObject(const ServerObject & ai);
 	void removePatrollingObject(const ServerObject & ai);
-	const stdset<ConstWatcher<ServerObject> >::fwd & getPatrollingObjects() const;
+	const std::set<ConstWatcher<ServerObject> > & getPatrollingObjects() const;
 
 private:
 	
 	int                                        m_observerCount;
-	stdset<ConstWatcher<ServerObject> >::fwd * m_patrollers;
+	std::set<ConstWatcher<ServerObject> > * m_patrollers;
 
 private:
 	PatrolPathRootProperty();

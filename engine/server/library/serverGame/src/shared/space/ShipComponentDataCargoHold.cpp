@@ -87,11 +87,11 @@ bool ShipComponentDataCargoHold::readDataFromComponent (TangibleObject const & c
 
 	//-- read contents
 	{
-		stdvector<NetworkId>::fwd types;
+		std::vector<NetworkId> types;
 		
 		if (objvars.getItem(Objvars::cargoHoldContentsTypes, types))
 		{
-			stdvector<int>::fwd amounts;
+			std::vector<int> amounts;
 			if (!objvars.getItem(Objvars::cargoHoldContentsAmounts, amounts))
 				WARNING (true, ("ShipComponentDataCargoHold [%s] has no cargoHoldContentsAmounts [%s]", component.getNetworkId ().getValueString ().c_str (), Objvars::cargoHoldContentsAmounts.c_str ()));
 			else if (amounts.size() != types.size())
@@ -123,8 +123,8 @@ void ShipComponentDataCargoHold::writeDataToComponent  (TangibleObject & compone
 
 	//-- write contents
 	{
-		stdvector<NetworkId>::fwd types;
-		stdvector<int>::fwd amounts;
+		std::vector<NetworkId> types;
+		std::vector<int> amounts;
 
 		types.reserve(m_cargoHoldContents.size());
 		amounts.reserve(m_cargoHoldContents.size());
@@ -174,7 +174,7 @@ void ShipComponentDataCargoHold::printDebugString      (Unicode::String & result
 
 //----------------------------------------------------------------------
 
-void ShipComponentDataCargoHold::getAttributes(stdvector<std::pair<std::string, Unicode::String> >::fwd & data) const
+void ShipComponentDataCargoHold::getAttributes(std::vector<std::pair<std::string, Unicode::String> > & data) const
 {
 	ServerShipComponentData::getAttributes(data);
 

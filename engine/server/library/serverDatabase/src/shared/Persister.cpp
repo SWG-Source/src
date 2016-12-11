@@ -5,6 +5,8 @@
 //
 // ======================================================================
 
+#include <memory>
+
 #include "serverDatabase/FirstServerDatabase.h"
 #include "serverDatabase/Persister.h"
 
@@ -174,33 +176,15 @@ Persister::~Persister()
 {
 	DEBUG_FATAL(taskQueue,("Call shutdown() before deleting Persister.\n"));
 
-	for (auto i=m_currentSnapshots.begin(); i!=m_currentSnapshots.end(); ++i) {
+	ServerSnapshotMap::iterator i;
+	for (i=m_currentSnapshots.begin(); i!=m_currentSnapshots.end(); ++i)
 		delete i->second;
-		i->second = nullptr;
-	}
-	
-	for (auto i=m_newObjectSnapshots.begin(); i!=m_newObjectSnapshots.end(); ++i) {
+	for (i=m_newObjectSnapshots.begin(); i!=m_newObjectSnapshots.end(); ++i)
 		delete i->second;
-		i->second = nullptr;
-	}
-
-	for (auto i=m_savingCharacterSnapshots.begin(); i!=m_savingCharacterSnapshots.end(); ++i) {
-		delete *i;
-		*i = nullptr;
-	}
-
-	for (auto i=m_savingSnapshots.begin(); i!=m_savingSnapshots.end(); ++i) {
-		delete *i;
-		*i = nullptr;
-	}
 
 	m_currentSnapshots.clear();
 	m_newObjectSnapshots.clear();
 	m_objectSnapshotMap.clear();
-	m_savingCharacterSnapshots.clear();
-	m_savingSnapshots.clear();
-
-
 	m_messageSnapshot = nullptr;
 	m_commoditiesSnapshot = nullptr;
 	m_arbitraryGameDataSnapshot = nullptr;
@@ -354,10 +338,10 @@ void Persister::startSave(void)
 		taskQueue->asyncRequest(new TaskSaveSnapshot(i->second));
 	}
 	for (i=m_newObjectSnapshots.begin(); i!=m_newObjectSnapshots.end(); ++i)
-        {
-                m_savingSnapshots.push_back(i->second);
-                taskQueue->asyncRequest(new TaskSaveSnapshot(i->second));
-        }
+	{
+		m_savingSnapshots.push_back(i->second);
+		taskQueue->asyncRequest(new TaskSaveSnapshot(i->second));
+	}
 
 	// nothing changed so send a complete message for the shutdown process
 	if( m_savingSnapshots.empty() )
@@ -617,23 +601,13 @@ void Persister::endBaselines(const NetworkId &objectId, uint32 serverId)
 
 void Persister::saveCompleted(Snapshot *completedSnapshot)
 {
-	{
-		std::lock_guard<std::mutex> lck(m_savingDeleting_mtx);
-
-		delete completedSnapshot;
-		completedSnapshot = nullptr;
-	}
-		auto i=std::remove(m_savingSnapshots.begin(),m_savingSnapshots.end(),completedSnapshot);
-
+	SnapshotListType::iterator i=std::remove(m_savingSnapshots.begin(),m_savingSnapshots.end(),completedSnapshot);
 	if (i!=m_savingSnapshots.end())
 	{
-		
-		{
-			std::lock_guard<std::mutex> lck(m_savingDeleting_mtx);
-			WARNING(true, ("m_SavingSnapshots is not empty and we're nuking everything for some reason. Is this a leak?"));
-			m_savingSnapshots.erase(i, m_savingSnapshots.end());
-		}
-	
+		m_savingSnapshots.erase(i, m_savingSnapshots.end());
+
+		delete completedSnapshot;
+
 		if (m_savingSnapshots.empty() && ConfigServerDatabase::getReportSaveTimes())
 		{
 			int saveTime = Clock::timeMs() - m_saveStartTime;
@@ -641,9 +615,10 @@ void Persister::saveCompleted(Snapshot *completedSnapshot)
 			m_totalSaveTime += saveTime;
 			if (saveTime > m_maxSaveTime)
 				m_maxSaveTime = saveTime;
-	
+
 			DEBUG_REPORT_LOG(true,("Save completed in %i.  (Average %i, max %i)\n", saveTime, m_totalSaveTime/m_saveCount, m_maxSaveTime));
 			LOG("SaveTimes",("Save completed in %i.  (Average %i, max %i)", saveTime, m_totalSaveTime/m_saveCount, m_maxSaveTime));
+
 			m_lastSaveTime = saveTime;
 		}
 
@@ -654,7 +629,7 @@ void Persister::saveCompleted(Snapshot *completedSnapshot)
 			DatabaseProcess::getInstance().sendToCentralServer(saveCompleteMessage, true);
 			LOG("Database",("Sending DatabaseSaveComplete network message to Central."));
 		}
-	
+
 		{
 			// set the last save completion time (for the monitoring program)
 			time_t theTime = time(0);
@@ -663,15 +638,18 @@ void Persister::saveCompleted(Snapshot *completedSnapshot)
 	}
 	else
 	{
-		std::lock_guard<std::mutex> lck(m_savingDeleting_mtx);
+		SnapshotListType::iterator j=std::remove(m_savingCharacterSnapshots.begin(),m_savingCharacterSnapshots.end(),completedSnapshot);
 
-		auto j=std::remove(m_savingCharacterSnapshots.begin(),m_savingCharacterSnapshots.end(),completedSnapshot);
-	
-		WARNING(j==m_savingCharacterSnapshots.end(),("saveCompleted() called w/o snap in m_savingSnapshots or m_savingCharacterSnapshots."));
-	
+		DEBUG_FATAL(i==m_savingCharacterSnapshots.end(),("Programmer bug:  SaveCompleted() called with a snapshot that wasn't in m_savingSnapshots or m_savingCharacterSnapshots."));
+
 		m_savingCharacterSnapshots.erase(j, m_savingCharacterSnapshots.end());
+
+		delete completedSnapshot;
+
+		DEBUG_REPORT_LOG(ConfigServerDatabase::getReportSaveTimes(),("New character save completed\n"));
 	}
 }
+
 
 // ----------------------------------------------------------------------
 

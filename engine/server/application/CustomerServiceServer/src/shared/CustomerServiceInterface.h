@@ -37,9 +37,9 @@ private:
 		int                         m_pendingTicketCount;
 	};
 
-	typedef stdunordered_map<NetworkId, ClientInfo, NetworkId::Hash>::fwd ClientConnectionMap;
-	typedef stdmap<unsigned int, NetworkId>::fwd                     SuidToNetworkIdMap;
-	typedef stdvector<CustomerServiceCategory>::fwd                  CategoryList;
+	typedef std::unordered_map<NetworkId, ClientInfo, NetworkId::Hash> ClientConnectionMap;
+	typedef std::map<unsigned int, NetworkId>                     SuidToNetworkIdMap;
+	typedef std::vector<CustomerServiceCategory>                  CategoryList;
 
 	CategoryList * const m_englishCategoryList;
 	CSAssistGameAPITrack m_englishCategoryTrack;

@@ -26,8 +26,8 @@ class SpaceVisibilityManager
 	static void moveObject          (const ServerObject & object);
 	static void removeObject        (ServerObject & object);
 
-	static void getObjectsVisibleFromLocation (const Vector & location, stdvector<ServerObject*>::fwd &results);
-	static void getClientsInRange (const Vector &location, float radius, stdset<Client*>::fwd &results);
+	static void getObjectsVisibleFromLocation (const Vector & location, std::vector<ServerObject*> &results);
+	static void getClientsInRange (const Vector &location, float radius, std::set<Client*> &results);
 };
 
 

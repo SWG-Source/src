@@ -66,7 +66,7 @@ private:
 	CachedNetworkId                  m_player;
 	CachedNetworkId                  m_npc;
 
-	typedef stdvector<Response>::fwd ResponseVector;
+	typedef std::vector<Response> ResponseVector;
 	ResponseVector *                 m_responses;
 	uint32                           m_appearanceOverrideSharedTemplateCrc;
 

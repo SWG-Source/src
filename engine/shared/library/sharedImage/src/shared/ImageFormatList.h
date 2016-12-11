@@ -36,8 +36,8 @@ private:
 
 private:
 
-	typedef stdvector<const ImageFormat*>::fwd            ImageFormatVector;
-	typedef stdmap<std::string, const ImageFormat*>::fwd  ExtensionMap;
+	typedef std::vector<const ImageFormat*>            ImageFormatVector;
+	typedef std::map<std::string, const ImageFormat*>  ExtensionMap;
 
 private:
 

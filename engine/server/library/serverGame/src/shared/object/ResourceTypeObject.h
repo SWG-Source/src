@@ -56,8 +56,8 @@ class ResourceTypeObject
 	bool                        hasPoolForPlanet (const NetworkId &planet) const;
 	bool                        isDerivedFrom    (const ResourceClassObject &masterClass) const;
 	void                        getCrateTemplate (std::string &buffer) const;
-	void                        getResourceAttributes (stdvector<std::pair<std::string, Unicode::String> >::fwd &data) const;
-	const stdmap<std::string, int>::fwd & getResourceAttributes () const;
+	void                        getResourceAttributes (std::vector<std::pair<std::string, Unicode::String> > &data) const;
+	const std::map<std::string, int> & getResourceAttributes () const;
 	ResourceFractalData const & getFractalData() const;
 	uint32                      getDepletedTimestamp() const;
 	void                        deplete          ();

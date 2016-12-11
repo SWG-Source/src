@@ -35,7 +35,7 @@ public:
 	typedef ResourceList_DataItem DataItem;
 
 public:
-	ResourceListForSurveyMessage                        (const stdvector<DataItem>::fwd &data, const std::string& type, const NetworkId& surveyToolId);
+	ResourceListForSurveyMessage                        (const std::vector<DataItem> &data, const std::string& type, const NetworkId& surveyToolId);
 	explicit ResourceListForSurveyMessage               (Archive::ReadIterator & source);
 	virtual  ~ResourceListForSurveyMessage              ();
 	const std::vector<DataItem> &getData                () const;

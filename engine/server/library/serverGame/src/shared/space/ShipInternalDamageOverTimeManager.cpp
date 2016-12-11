@@ -23,7 +23,7 @@ namespace ShipInternalDamageOverTimeManagerNamespace
 {
 	typedef ShipInternalDamageOverTimeManager::IdotVector IdotVector;
 	typedef std::pair<ShipInternalDamageOverTime, float> IdotDamage;
-	typedef stdvector<IdotDamage>::fwd IdotDamageVector;
+	typedef std::vector<IdotDamage> IdotDamageVector;
 
 	IdotVector s_idotVector;
 	IdotVector s_temporaryIdotVector;

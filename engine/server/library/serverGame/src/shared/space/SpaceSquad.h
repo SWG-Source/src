@@ -25,7 +25,7 @@ friend class SpaceSquadManager;
 
 public:
 
-	typedef stdset<SpaceSquad *>::fwd SpaceSquadList;
+	typedef std::set<SpaceSquad *> SpaceSquadList;
 
 	static void install();
 
@@ -84,7 +84,7 @@ private:
 	void verifyAttackSquads();
 #endif // _DEBUG
 
-	typedef stdlist<SpaceAttackSquad *>::fwd AttackSquadList;
+	typedef std::list<SpaceAttackSquad *> AttackSquadList;
 
 	SpaceSquad * m_guardTarget;
 	SpaceSquadList * const m_guardedByList;

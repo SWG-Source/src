@@ -21,7 +21,7 @@ public:
 
 	typedef void (*ImplementationClearFunction) (void);
 
-	typedef stdvector<Nebula const *>::fwd NebulaVector;
+	typedef std::vector<Nebula const *> NebulaVector;
 
 	static void install();
 	static void remove();

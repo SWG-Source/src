@@ -105,7 +105,7 @@ void ShipComponentDataDroidInterface::printDebugString      (Unicode::String & r
 
 //----------------------------------------------------------------------
 
-void ShipComponentDataDroidInterface::getAttributes(stdvector<std::pair<std::string, Unicode::String> >::fwd & data) const
+void ShipComponentDataDroidInterface::getAttributes(std::vector<std::pair<std::string, Unicode::String> > & data) const
 {
 	ServerShipComponentData::getAttributes(data);
 

@@ -30,7 +30,7 @@ void MessageQueueObjectMenuRequest::install()
 
 //-----------------------------------------------------------------------
 
-MessageQueueObjectMenuRequest::MessageQueueObjectMenuRequest (const NetworkId & targetId, const NetworkId & requestorId, const stdvector<ObjectMenuRequestData>::fwd & data, uint8 sequence) :
+MessageQueueObjectMenuRequest::MessageQueueObjectMenuRequest (const NetworkId & targetId, const NetworkId & requestorId, const std::vector<ObjectMenuRequestData> & data, uint8 sequence) :
 m_sequence (sequence),
 m_data (data),
 m_requestorId (requestorId),

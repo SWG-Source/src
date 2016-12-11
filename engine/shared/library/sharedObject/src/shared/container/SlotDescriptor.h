@@ -37,7 +37,7 @@ friend class SlotDescriptorList;
 
 public:
 
-	typedef stdvector<SlotId>::fwd  SlotIdVector;
+	typedef std::vector<SlotId>  SlotIdVector;
 
 public:
 

@@ -56,8 +56,8 @@ private:
 	NetLogConnection *         m_connection;
 	bool                       m_connectionOpen;
 	unsigned long              m_connectTime;
-	stdvector<LogMessage>::fwd* m_logMessageQueue1;
-	stdvector<LogMessage>::fwd* m_logMessageQueue2;
+	std::vector<LogMessage>* m_logMessageQueue1;
+	std::vector<LogMessage>* m_logMessageQueue2;
 };
 
 // ======================================================================

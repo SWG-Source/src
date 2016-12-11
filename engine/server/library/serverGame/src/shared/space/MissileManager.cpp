@@ -272,7 +272,7 @@ bool MissileManager::isTargetedByMissile(const NetworkId &target) const
 /**
  * Get a list of all the unlocked missiles aimed at the specified target.
  */
-void MissileManager::getAllUnlockedMissilesForTarget(const NetworkId &target, stdvector<int>::fwd &results) const
+void MissileManager::getAllUnlockedMissilesForTarget(const NetworkId &target, std::vector<int> &results) const
 {
 	const std::pair<MissilesForTargetType::const_iterator, MissilesForTargetType::const_iterator> range=m_missilesForTarget.equal_range(target);
 

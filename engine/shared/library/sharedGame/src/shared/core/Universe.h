@@ -28,7 +28,7 @@ class Universe
 	ResourceClassObject *         getResourceClassByName      (const std::string &name) const;
 	ResourceClassObject *         getResourceClassByNameCrc   (uint32 nameCrc) const;
 	void                          registerResourceClassObject (ResourceClassObject &newClass);
-	virtual void                  resourceClassTreeLoaded     (stdmap<int, ResourceClassObject*>::fwd &resourceClasses) = 0;
+	virtual void                  resourceClassTreeLoaded     (std::map<int, ResourceClassObject*> &resourceClasses) = 0;
 	virtual ResourceClassObject * makeResourceClassObject     () = 0;
 
 	bool                          derivesFromResource         (const std::string & base, const std::string & leaf) const;
@@ -37,8 +37,8 @@ class Universe
 	//
 	// Resource Class Objects
 	//
-	typedef stdmap<std::string, ResourceClassObject*>::fwd    ResourceClassNameMap;
-	typedef stdmap<uint32, ResourceClassObject*>::fwd         ResourceClassNameCrcMap;
+	typedef std::map<std::string, ResourceClassObject*>    ResourceClassNameMap;
+	typedef std::map<uint32, ResourceClassObject*>         ResourceClassNameCrcMap;
 	ResourceClassNameMap *                                    m_resourceClassNameMap;
 	ResourceClassNameCrcMap *                                 m_resourceClassNameCrcMap;
 	ResourceClassObject *                                     m_resourceTreeRoot;

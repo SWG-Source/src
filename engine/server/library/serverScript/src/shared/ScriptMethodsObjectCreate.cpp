@@ -68,7 +68,7 @@ static const std::string THEATER_FLATTEN_LAYER("terrain/poi_small.lay");
 namespace ScriptMethodsObjectCreateNamespace
 {
 	bool  install();
-	jlong createTheater(const stdvector<jint>::fwd & crcs, const stdvector<Vector>::fwd & positions, const stdvector<float>::fwd & headings, const std::vector<std::string> & scripts, const Vector & center, const std::string & script, const NetworkId & creator, const std::string & name, int locationType);
+	jlong createTheater(const std::vector<jint> & crcs, const std::vector<Vector> & positions, const std::vector<float> & headings, const std::vector<std::string> & scripts, const Vector & center, const std::string & script, const NetworkId & creator, const std::string & name, int locationType);
 
 	jlong        JNICALL createNewObjectAt(JNIEnv *env, jobject self, jstring source, jlong target);
 	jlong        JNICALL createNewObjectInWorld(JNIEnv *env, jobject self, jlong source, jobject location);

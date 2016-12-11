@@ -64,28 +64,28 @@ public:
 
 	static ServerObject *       findObjectByNetworkId          (const NetworkId& id, bool searchQueuedList=false);
 	static ServerObject *       findUninitializedObjectByNetworkId(const NetworkId& id);
-	static void                 findObjectsInRange             (const Vector & location, const float distance, stdvector<ServerObject *>::fwd & results);
-	static void                 findStaticCollidableObjectsInRange (const Vector & location, const float distance, stdvector<ServerObject *>::fwd & results);
-	static void                 findCreaturesInRange           (const Vector & location, const float distance, stdvector<ServerObject *>::fwd & results);
-	static void                 findAuthoritativeNonPlayerCreaturesInRange(const Vector & location, const float distance, stdvector<ServerObject *>::fwd & results);
-	static void                 findCreaturesOfNicheInRange    (const Vector & location, const float distance, int niche, int mask, stdvector<ServerObject *>::fwd & results);
-	static void                 findCreaturesOfSpeciesInRange  (const Vector & location, const float distance, int species, stdvector<ServerObject *>::fwd & results);
-	static void                 findCreaturesOfRaceInRange     (const Vector & location, const float distance, int species, int race, stdvector<ServerObject *>::fwd & results);
-	static void                 findNonCreaturesInRange        (const Vector & location, const float distance, stdvector<ServerObject *>::fwd & results);
-	static void                 findNPCsInRange                (const Vector & location, const float distance, stdvector<ServerObject *>::fwd & results);
-	static void                 findPlayerCreaturesInRange     (const Vector & location, const float distance, stdvector<ServerObject *>::fwd & results);
+	static void                 findObjectsInRange             (const Vector & location, const float distance, std::vector<ServerObject *> & results);
+	static void                 findStaticCollidableObjectsInRange (const Vector & location, const float distance, std::vector<ServerObject *> & results);
+	static void                 findCreaturesInRange           (const Vector & location, const float distance, std::vector<ServerObject *> & results);
+	static void                 findAuthoritativeNonPlayerCreaturesInRange(const Vector & location, const float distance, std::vector<ServerObject *> & results);
+	static void                 findCreaturesOfNicheInRange    (const Vector & location, const float distance, int niche, int mask, std::vector<ServerObject *> & results);
+	static void                 findCreaturesOfSpeciesInRange  (const Vector & location, const float distance, int species, std::vector<ServerObject *> & results);
+	static void                 findCreaturesOfRaceInRange     (const Vector & location, const float distance, int species, int race, std::vector<ServerObject *> & results);
+	static void                 findNonCreaturesInRange        (const Vector & location, const float distance, std::vector<ServerObject *> & results);
+	static void                 findNPCsInRange                (const Vector & location, const float distance, std::vector<ServerObject *> & results);
+	static void                 findPlayerCreaturesInRange     (const Vector & location, const float distance, std::vector<ServerObject *> & results);
 
-	static void                 findObjectsInCone              (const Object & coneCenterObject, const Object & coneDirectionObject, const float distance, float angle, stdvector<ServerObject *>::fwd & results);
-	static void                 findObjectsInCone              (const Object & coneCenterObject, const Location & coneDirection, const float distance, float angle, stdvector<ServerObject *>::fwd & results);
-	static void                 findCreaturesInCone            (const Object & coneCenterObject, const Object & coneDirectionObject, const float distance, float angle, stdvector<ServerObject *>::fwd & results);
-	static void                 findCreaturesInCone            (const Object & coneCenterObject, const Location & coneDirection, const float distance, float angle, stdvector<ServerObject *>::fwd & results);
-	static void                 findAuthoritativeNonPlayerCreaturesInCone(const Object & coneCenterObject, const Object & coneDirectionObject, const float distance, float angle, stdvector<ServerObject *>::fwd & results);
-	static void                 findCreaturesOfNicheInCone     (const Object & coneCenterObject, const Object & coneDirectionObject, const float distance, float angle, int niche, int mask, stdvector<ServerObject *>::fwd & results);
-	static void                 findCreaturesOfSpeciesInCone   (const Object & coneCenterObject, const Object & coneDirectionObject, const float distance, float angle, int species, stdvector<ServerObject *>::fwd & results);
-	static void                 findCreaturesOfRaceInCone      (const Object & coneCenterObject, const Object & coneDirectionObject, const float distance, float angle, int species, int race, stdvector<ServerObject *>::fwd & results);
-	static void                 findNonCreaturesInCone         (const Object & coneCenterObject, const Object & coneDirectionObject, const float distance, float angle, stdvector<ServerObject *>::fwd & results);
-	static void                 findNPCsInCone                 (const Object & coneCenterObject, const Object & coneDirectionObject, const float distance, float angle, stdvector<ServerObject *>::fwd & results);
-	static void                 findPlayerCreaturesInCone      (const Object & coneCenterObject, const Object & coneDirectionObject, const float distance, float angle, stdvector<ServerObject *>::fwd & results);
+	static void                 findObjectsInCone              (const Object & coneCenterObject, const Object & coneDirectionObject, const float distance, float angle, std::vector<ServerObject *> & results);
+	static void                 findObjectsInCone              (const Object & coneCenterObject, const Location & coneDirection, const float distance, float angle, std::vector<ServerObject *> & results);
+	static void                 findCreaturesInCone            (const Object & coneCenterObject, const Object & coneDirectionObject, const float distance, float angle, std::vector<ServerObject *> & results);
+	static void                 findCreaturesInCone            (const Object & coneCenterObject, const Location & coneDirection, const float distance, float angle, std::vector<ServerObject *> & results);
+	static void                 findAuthoritativeNonPlayerCreaturesInCone(const Object & coneCenterObject, const Object & coneDirectionObject, const float distance, float angle, std::vector<ServerObject *> & results);
+	static void                 findCreaturesOfNicheInCone     (const Object & coneCenterObject, const Object & coneDirectionObject, const float distance, float angle, int niche, int mask, std::vector<ServerObject *> & results);
+	static void                 findCreaturesOfSpeciesInCone   (const Object & coneCenterObject, const Object & coneDirectionObject, const float distance, float angle, int species, std::vector<ServerObject *> & results);
+	static void                 findCreaturesOfRaceInCone      (const Object & coneCenterObject, const Object & coneDirectionObject, const float distance, float angle, int species, int race, std::vector<ServerObject *> & results);
+	static void                 findNonCreaturesInCone         (const Object & coneCenterObject, const Object & coneDirectionObject, const float distance, float angle, std::vector<ServerObject *> & results);
+	static void                 findNPCsInCone                 (const Object & coneCenterObject, const Object & coneDirectionObject, const float distance, float angle, std::vector<ServerObject *> & results);
+	static void                 findPlayerCreaturesInCone      (const Object & coneCenterObject, const Object & coneDirectionObject, const float distance, float angle, std::vector<ServerObject *> & results);
 
 	static ServerObject *       findClosestNPC                 (const Vector & location, float distance);
 	static ServerObject *       findClosestPlayer              (const Vector & location, float distance);
@@ -129,8 +129,8 @@ public:
 	static bool                 isSpaceBattlefieldZoneWithPvp   ();
 	static void                 removeObjectTriggerVolume       (TriggerVolume * triggerVolume);
 
-	static void                 dumpObjectSphereTree            (stdvector<std::pair<ServerObject *, Sphere> >::fwd & results);
-	static void                 dumpTriggerSphereTree           (stdvector<std::pair<TriggerVolume *, Sphere> >::fwd & results);
+	static void                 dumpObjectSphereTree            (std::vector<std::pair<ServerObject *, Sphere> > & results);
+	static void                 dumpTriggerSphereTree           (std::vector<std::pair<TriggerVolume *, Sphere> > & results);
 
 	static const WeatherData &  getWeather                      ();
 
@@ -145,9 +145,9 @@ public:
 	static void                 onPreloadComplete               ();
 	static bool                 isPreloadComplete               ();
 
-	static void                 getSpatialChatListeners(ServerObject &source, float distance, stdvector<ServerObject *>::fwd &results);
+	static void                 getSpatialChatListeners(ServerObject &source, float distance, std::vector<ServerObject *> &results);
 
-	static int                  getNumMoveLists(stdvector<int>::fwd & moveListSize);
+	static int                  getNumMoveLists(std::vector<int> & moveListSize);
 	static void                 setNumMoveLists(int numMoveLists);
 
 protected:
@@ -166,7 +166,7 @@ private:
 	static ServerObject* createNewObjectIntermediate(ServerObject* newObject, ServerObject & container, bool persisted, bool);  ///< Called by CreateNewObject(*) functions.  This is provided to share code.
 	static ServerObject* createNewObjectIntermediate(ServerObject* newObject, ServerObject & container, const SlotId & slotId, bool persisted);
 
-	static ServerObject *findClosestObjectInList(const Vector &location, const stdvector<ServerObject*>::fwd &candidates);
+	static ServerObject *findClosestObjectInList(const Vector &location, const std::vector<ServerObject*> &candidates);
 
 	static void    addTangibleObject(ServerObject * object);
 	static void    removeTangibleObject(ServerObject * object);

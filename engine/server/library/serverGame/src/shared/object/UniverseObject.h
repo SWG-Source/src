@@ -35,7 +35,7 @@ public:
 	virtual void onServerUniverseGainedAuthority();
 
 	virtual bool isVisibleOnClient (const Client & client) const;
-	virtual void getAttributes     (stdvector<std::pair<std::string, Unicode::String> >::fwd &data) const;
+	virtual void getAttributes     (std::vector<std::pair<std::string, Unicode::String> > &data) const;
 
 	bool           isDynamicRegion() const;
 	const Region * getDynamicRegion() const;

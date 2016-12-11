@@ -581,7 +581,7 @@ bool CellObject::isVisibleOnClient (const Client & /*client*/) const
 
 // ----------------------------------------------------------------------
 
-void CellObject::getAttributes (stdvector<std::pair<std::string, Unicode::String> >::fwd &data) const
+void CellObject::getAttributes (std::vector<std::pair<std::string, Unicode::String> > &data) const
 {
 	ServerObject::getAttributes(data);
 }

@@ -134,7 +134,7 @@ void ArrangementDescriptor::load_0000(Iff &iff)
 					// convert slot name to SlotId
 					const SlotId slotId = SlotIdManager::findSlotId(slotName);
 					if (slotId == SlotId::invalid)
-						WARNING(true, ("ArrangementDescriptor [%s] specified invalid slot name [%s], ignoring", m_name->getString(), slotName.getString()));
+						DEBUG_WARNING(true, ("ArrangementDescriptor [%s] specified invalid slot name [%s], ignoring", m_name->getString(), slotName.getString()));
 					else
 						arrangement.push_back(slotId);
 				}

@@ -52,7 +52,7 @@ namespace CombatEngineData
 	struct CombatData;
 	struct DamageData;
 
-	typedef stdvector<CachedNetworkId>::fwd TargetIdList;
+	typedef std::vector<CachedNetworkId> TargetIdList;
 };
 
 namespace LocalObjectFlags
@@ -224,7 +224,7 @@ public:
 	virtual void        unload();
 	virtual void        onPermanentlyDestroyed();
 
-	void getEquippedItems(uint32 combatBone, stdvector<TangibleObject *>::fwd & items) const;
+	void getEquippedItems(uint32 combatBone, std::vector<TangibleObject *> & items) const;
 	TangibleObject * getRandomEquippedItem(uint32 combatBone) const;
 
 
@@ -287,7 +287,7 @@ public:
 	bool                               addSkillModSocketBonuses(const std::vector<std::pair<std::string, int> > & skillModBonuses);
 	int                                getSkillModSockets(void) const;
 	void                               setSkillModSockets(int sockets);
-	void                               getRequiredCertifications(stdvector<std::string>::fwd & results) const;
+	void                               getRequiredCertifications(std::vector<std::string> & results) const;
 
 	void                               forceExecuteCommand(Command const &command, NetworkId const &targetId, Unicode::String const &params, Command::ErrorCode &status, bool commandIsFromCommandQueue);
 	virtual void                       setOwnerId(const NetworkId &id);
@@ -354,7 +354,7 @@ public:
 	bool                              isInNpcConversation           () const;
 	void                              addConversation               (const NetworkId & conversant);
 	void                              removeConversation            (const NetworkId & conversant);
-	const stdvector<NetworkId>::fwd & getConversations              () const;
+	const std::vector<NetworkId> & getConversations              () const;
 	void                              handlePlayerResponseToNpcConversation (const std::string & conversationName, const NetworkId & player, const StringId & response, const ProsePackage & pp);
 	virtual void                      setCacheVersion (const int cacheVersion);
 
@@ -761,7 +761,7 @@ inline bool TangibleObject::isInNpcConversation () const
 
 //-----------------------------------------------------------------------
 
-inline const stdvector<NetworkId>::fwd & TangibleObject::getConversations () const
+inline const std::vector<NetworkId> & TangibleObject::getConversations () const
 {
 	return m_conversations.get ();
 }

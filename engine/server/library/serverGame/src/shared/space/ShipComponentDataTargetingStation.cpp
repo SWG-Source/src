@@ -89,7 +89,7 @@ void ShipComponentDataTargetingStation::printDebugString      (Unicode::String &
 
 //----------------------------------------------------------------------
 
-void ShipComponentDataTargetingStation::getAttributes(stdvector<std::pair<std::string, Unicode::String> >::fwd & data) const
+void ShipComponentDataTargetingStation::getAttributes(std::vector<std::pair<std::string, Unicode::String> > & data) const
 {
 	ServerShipComponentData::getAttributes(data);
 }

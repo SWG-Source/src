@@ -62,7 +62,7 @@ private:
 
 private:
 
-	typedef stdvector<Flag>::fwd FlagVector;
+	typedef std::vector<Flag> FlagVector;
 
 	static FlagVector ms_flagsSortedByName;
 	static FlagVector ms_flagsSortedByReportPriority;

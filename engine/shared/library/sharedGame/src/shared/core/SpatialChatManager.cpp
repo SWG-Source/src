@@ -21,11 +21,11 @@
 
 namespace SpatialChatManagerNamespace
 {
-	typedef stdmap<uint32,std::string>::fwd IntStringMap;
-	typedef stdmap<std::string,uint32>::fwd StringIntMap;
-	typedef stdmap<uint32,uint16>::fwd      IntShortMap;
-	typedef stdset<uint32>::fwd             IntSet;
-	typedef stdmap<uint32,std::vector<std::string> >::fwd IntStringVectorMap;
+	typedef std::map<uint32,std::string> IntStringMap;
+	typedef std::map<std::string,uint32> StringIntMap;
+	typedef std::map<uint32,uint16>      IntShortMap;
+	typedef std::set<uint32>             IntSet;
+	typedef std::map<uint32,std::vector<std::string> > IntStringVectorMap;
 
 	IntStringMap s_idToNameMap;
 	StringIntMap s_nameToIdMap;
@@ -150,7 +150,7 @@ uint16 SpatialChatManager::getVolume           (uint32 type)
 
 //----------------------------------------------------------------------
 
-const stdvector<std::string>::fwd &SpatialChatManager::getSkillsProviding(uint32 type)
+const std::vector<std::string> &SpatialChatManager::getSkillsProviding(uint32 type)
 {
 	const IntStringVectorMap::const_iterator it = s_skillsProviding.find(type);
 	if (it != s_skillsProviding.end())

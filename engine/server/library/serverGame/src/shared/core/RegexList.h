@@ -39,7 +39,7 @@ public:
 private:
 
 	class Entry;
-	typedef stdvector<Entry*>::fwd  EntryVector;
+	typedef std::vector<Entry*>  EntryVector;
 		
 private:
 

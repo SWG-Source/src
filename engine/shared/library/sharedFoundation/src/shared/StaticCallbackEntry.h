@@ -48,7 +48,7 @@ private:
 
 private:
 
-	static stdvector<StaticCallbackEntry *>::fwd & getStaticCallbackFreeList();
+	static std::vector<StaticCallbackEntry *> & getStaticCallbackFreeList();
 
 private:
 

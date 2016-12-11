@@ -23,11 +23,11 @@ public:
 
 	static const char * const MessageType;
 
-	                                       PermissionListCreateMessage (const stdvector<Unicode::String>::fwd &currentMembers, const stdvector<Unicode::String>::fwd &nearbyPeople, Unicode::String listName);
+	                                       PermissionListCreateMessage (const std::vector<Unicode::String> &currentMembers, const std::vector<Unicode::String> &nearbyPeople, Unicode::String listName);
 	explicit                               PermissionListCreateMessage (Archive::ReadIterator & source);
 	virtual                               ~PermissionListCreateMessage ();
-	const stdvector<Unicode::String>::fwd& getCurrentMembers           () const;
-	const stdvector<Unicode::String>::fwd& getNearbyPeople             () const;
+	const std::vector<Unicode::String>& getCurrentMembers           () const;
+	const std::vector<Unicode::String>& getNearbyPeople             () const;
 	const Unicode::String&                 getListName                 () const;
 
 private:

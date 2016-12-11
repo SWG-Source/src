@@ -36,7 +36,7 @@ public:
 	void                 sendDeltas() const;
 
 	int                  getNumClients () const;
-	const stdvector<NetworkId>::fwd & getClients() const;
+	const std::vector<NetworkId> & getClients() const;
 
 	ServerObject *       getOwner ();
 	const ServerObject * getOwner () const;
@@ -54,7 +54,7 @@ private:
 
 	void sendBaselinesToClient(const Client& client) const;
 	
-	stdvector<NetworkId>::fwd *   m_clientObjects;
+	std::vector<NetworkId> *   m_clientObjects;
 	ServerObject*                 m_owner;
 	mutable bool                  m_ownerChangingAuthority;
 	Archive::AutoDeltaByteStream  m_uiPackage;

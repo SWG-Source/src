@@ -56,10 +56,10 @@ public:
 	static ShipObject const * asShipObject(Object const * object);
 	static ShipObject * asShipObject(Object * object);
 
-	typedef stdvector<int>::fwd IntVector;
-	typedef stdmap<NetworkId, int>::fwd NetworkIdIntMap;
+	typedef std::vector<int> IntVector;
+	typedef std::map<NetworkId, int> NetworkIdIntMap;
 	typedef std::pair<Unicode::String, std::string> ResourceTypeInfoPair;
-	typedef stdmap<NetworkId, ResourceTypeInfoPair>::fwd ResourceTypeInfoMap;
+	typedef std::map<NetworkId, ResourceTypeInfoPair> ResourceTypeInfoMap;
 
 public:
 
@@ -86,7 +86,7 @@ public:
 
 	CreatureObject const *getPilot() const;
 	CreatureObject *getPilot();
-	void findAllPassengers(stdvector<CreatureObject *>::fwd & passengers, bool onlyPlayerControlled);
+	void findAllPassengers(std::vector<CreatureObject *> & passengers, bool onlyPlayerControlled);
 
 	Vector getCurrentVelocity_p() const;
 	Vector getTargetLead_p(const Vector & startPosition_p, float projectileSpeed) const;
@@ -149,7 +149,7 @@ public:
 	bool                getSlotTargetable(ShipChassisSlotType::Type slot) const;
 	bool                isValidTargetableSlot (ShipChassisSlotType::Type slot) const;
 	int findTargetChassisSlotByPosition(Vector const & position_o) const;
-	void findTransformsForComponent(int const chassisSlot, stdvector<Transform>::fwd & transforms) const;
+	void findTransformsForComponent(int const chassisSlot, std::vector<Transform> & transforms) const;
 	AppearanceTemplate const * getExteriorAppearance() const;
 
 	int getNumberOfHits() const;
@@ -444,7 +444,7 @@ public:
 
 	float getChassisSpeedMaximumModifier() const;
 	void setChassisSpeedMaximumModifier(float f);
-	virtual void getAuthClients(stdset<Client const *>::fwd &authClients) const;
+	virtual void getAuthClients(std::set<Client const *> &authClients) const;
 
 	void stopFiringWeapon(int weaponIndex);
 
@@ -613,7 +613,7 @@ private:
 
 	float                                 m_timeSinceLastPowerPulse;
 
-	typedef stdvector<FireShotQueueData>::fwd FireShotQueue;
+	typedef std::vector<FireShotQueueData> FireShotQueue;
 	FireShotQueue *                       m_fireShotQueue;
 
 	static float const                    ms_powerPulsePeriodSecs;
