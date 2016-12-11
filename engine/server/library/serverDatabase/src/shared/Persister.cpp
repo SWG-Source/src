@@ -606,7 +606,7 @@ void Persister::saveCompleted(Snapshot *completedSnapshot)
 	{
 		m_savingSnapshots.erase(i, m_savingSnapshots.end());
 
-		delete completedSnapshot;
+		//delete completedSnapshot;
 
 		if (m_savingSnapshots.empty() && ConfigServerDatabase::getReportSaveTimes())
 		{
