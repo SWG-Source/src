@@ -113,9 +113,9 @@ void SwgPersister::getMoneyFromOfflineObject(uint32 replyServer, NetworkId const
 	SwgSnapshot * snapshot=nullptr;
 	
 	if (hasDataForObject(sourceObject))
-		snapshot=safe_cast<SwgSnapshot*>(&getSnapshotForObject(sourceObject, 0));
+		snapshot=safe_cast<SwgSnapshot*>(getSnapshotForObject(sourceObject, 0));
 	else
-		snapshot=safe_cast<SwgSnapshot*>(&getSnapshotForServer(0));
+		snapshot=safe_cast<SwgSnapshot*>(getSnapshotForServer(0));
 
 	snapshot->getMoneyFromOfflineObject(replyServer, sourceObject, amount, replyTo, successCallback, failCallback, packedDictionary);
 }

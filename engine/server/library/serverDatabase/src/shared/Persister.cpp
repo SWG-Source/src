@@ -310,7 +310,7 @@ void Persister::startSave(void)
 		for (CharactersToDeleteType::const_iterator iter = m_charactersToDeleteThisSaveCycle->begin(); iter != m_charactersToDeleteThisSaveCycle->end(); ++iter)
 		{
 			DeleteCharacterCustomPersistStep *cps = new DeleteCharacterCustomPersistStep(iter->first, iter->second);
-			getSnapshotForObject(iter->second, 0).addCustomPersistStep(cps);
+			getSnapshotForObject(iter->second, 0)->addCustomPersistStep(cps);
 		}
 
 		// if this is the final save before the cluster is brought down,
@@ -321,7 +321,7 @@ void Persister::startSave(void)
 			for (CharactersToDeleteType::const_iterator iter2 = m_charactersToDeleteNextSaveCycle->begin(); iter2 != m_charactersToDeleteNextSaveCycle->end(); ++iter2)
 			{
 				DeleteCharacterCustomPersistStep *cps = new DeleteCharacterCustomPersistStep(iter2->first, iter2->second);
-				getSnapshotForObject(iter2->second, 0).addCustomPersistStep(cps);
+				getSnapshotForObject(iter2->second, 0)->addCustomPersistStep(cps);
 			}
 		}
 	}
@@ -383,18 +383,18 @@ void Persister::startSave(void)
  * the first time we've seen the object, remember which snapshot we
  * decided to use for it.)
  */
-Snapshot & Persister::getSnapshotForObject(const NetworkId &networkId, uint32 serverId)
+Snapshot * Persister::getSnapshotForObject(const NetworkId &networkId, uint32 serverId)
 {
 	ObjectSnapshotMap::const_iterator i=m_objectSnapshotMap.find(networkId);
 	if (i!=m_objectSnapshotMap.end())
 	{
 		NOT_NULL(i->second);
-		return *(i->second);
+		return i->second;
 	}
 	else
 	{
-		Snapshot &snap = getSnapshotForServer(serverId);
-		m_objectSnapshotMap[networkId]=&snap;
+		Snapshot *snap = getSnapshotForServer(serverId);
+		m_objectSnapshotMap[networkId]=snap;
 		return snap;
 	}
 }
@@ -409,7 +409,7 @@ bool Persister::hasDataForObject(const NetworkId &objectId) const
 
 // ----------------------------------------------------------------------
 
-Snapshot & Persister::getSnapshotForServer(uint32 serverId)
+Snapshot *Persister::getSnapshotForServer(uint32 serverId)
 {
 	if (serverId==0)
 	{
@@ -418,7 +418,7 @@ Snapshot & Persister::getSnapshotForServer(uint32 serverId)
 			m_arbitraryGameDataSnapshot = makeSnapshot(DB::ModeQuery::mode_UPDATE);
 			m_currentSnapshots[0] = m_arbitraryGameDataSnapshot;
 		}
-		return *m_arbitraryGameDataSnapshot;
+		return m_arbitraryGameDataSnapshot;
 	}
 	else
 	{
@@ -430,23 +430,23 @@ Snapshot & Persister::getSnapshotForServer(uint32 serverId)
 			m_currentSnapshots[serverId]=snap;
 			if (!m_arbitraryGameDataSnapshot)
 				m_arbitraryGameDataSnapshot = snap;
-			return *snap;
+			return snap;
 		}
 		else
 		{
 			NOT_NULL (j->second);
-			return *(j->second);
+			return j->second;
 		}
 	}
 }
 
 // ----------------------------------------------------------------------
 
-Snapshot & Persister::getCommoditiesSnapshot(uint32 serverId)
+Snapshot *Persister::getCommoditiesSnapshot(uint32 serverId)
 {
 	if (m_commoditiesSnapshot)
 	{
-		return *m_commoditiesSnapshot;
+		return m_commoditiesSnapshot;
 	}
 	else
 	{
@@ -459,13 +459,13 @@ Snapshot & Persister::getCommoditiesSnapshot(uint32 serverId)
 			Snapshot *snap = makeCommoditiesSnapshot(DB::ModeQuery::mode_INSERT);
 			m_currentSnapshots[serverId]=snap;
 			m_commoditiesSnapshot = snap;
-			return *snap;
+			return snap;
 		}
 		else
 		{
 			NOT_NULL (j->second);
 			m_commoditiesSnapshot = j->second;
-			return *(j->second);
+			return j->second;
 		}
 	}
 }
@@ -476,7 +476,7 @@ void Persister::handleDeltasMessage(uint32 serverId, const DeltasMessage &msg)
 {
 	NetworkId objectId=msg.getTarget();
 //	DEBUG_REPORT_LOG(true,("Got deltas message for object %s.\n",objectId.getValueString().c_str()));
-	getSnapshotForObject(objectId,serverId).handleDeltasMessage(objectId, msg);
+	getSnapshotForObject(objectId,serverId)->handleDeltasMessage(objectId, msg);
 }
 
 // ----------------------------------------------------------------------
@@ -486,7 +486,7 @@ void Persister::handleBaselinesMessage(uint32 serverId, const BaselinesMessage &
 //	DEBUG_REPORT_LOG(true,("Got baselines message.\n"));
 	
 	NetworkId objectId=msg.getTarget();
-	getSnapshotForObject(objectId,serverId).handleBaselinesMessage(objectId, msg);
+	getSnapshotForObject(objectId,serverId)->handleBaselinesMessage(objectId, msg);
 }
 
 // ----------------------------------------------------------------------
@@ -497,7 +497,7 @@ void Persister::handleBaselinesMessage(uint32 serverId, const BaselinesMessage &
 
 void Persister::handleDeleteMessage(uint32 serverId, const NetworkId &objectId, int reasonCode, bool immediate, bool demandLoadedContainer, bool cascadeReason)
 {
-	getSnapshotForObject(objectId,serverId).handleDeleteMessage(objectId, reasonCode, immediate, demandLoadedContainer, cascadeReason);
+	getSnapshotForObject(objectId,serverId)->handleDeleteMessage(objectId, reasonCode, immediate, demandLoadedContainer, cascadeReason);
 }
 
 // ----------------------------------------------------------------------
@@ -606,7 +606,10 @@ void Persister::saveCompleted(Snapshot *completedSnapshot)
 	{
 		m_savingSnapshots.erase(i, m_savingSnapshots.end());
 
-		delete completedSnapshot;
+		if (completedSnapshot != nullptr) {
+			delete completedSnapshot;
+			completedSnapshot = nullptr;
+		}
 
 		if (m_savingSnapshots.empty() && ConfigServerDatabase::getReportSaveTimes())
 		{
@@ -644,7 +647,10 @@ void Persister::saveCompleted(Snapshot *completedSnapshot)
 
 		m_savingCharacterSnapshots.erase(j, m_savingCharacterSnapshots.end());
 
-		delete completedSnapshot;
+		if (completedSnapshot != nullptr) {
+			delete completedSnapshot;
+			completedSnapshot = nullptr;
+		}
 
 		DEBUG_REPORT_LOG(ConfigServerDatabase::getReportSaveTimes(),("New character save completed\n"));
 	}
@@ -706,7 +712,7 @@ void Persister::receiveMessage(const MessageDispatch::Emitter & source, const Me
 			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 			UpdateObjectPositionMessage msg(ri);
 
-			getSnapshotForObject(msg.getNetworkId(), sourceGameServer).handleUpdateObjectPosition(msg);
+			getSnapshotForObject(msg.getNetworkId(), sourceGameServer)->handleUpdateObjectPosition(msg);
 			break;
 		}
 		case constcrc("AddCharacterMessage") :
@@ -866,7 +872,7 @@ void Persister::receiveMessage(const MessageDispatch::Emitter & source, const Me
 		{
 			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 			BountyHunterTargetMessage msg(ri);
-			getSnapshotForServer(sourceGameServer).handleBountyHunterTargetMessage(msg);
+			getSnapshotForServer(sourceGameServer)->handleBountyHunterTargetMessage(msg);
 			break;
 		}
 		case constcrc("CMCreateAuctionMessage") :
@@ -882,7 +888,7 @@ void Persister::receiveMessage(const MessageDispatch::Emitter & source, const Me
 			if (commConnection)
 				commServerId = commConnection->getProcessId();
 			
-			getCommoditiesSnapshot(commServerId).handleCommoditiesDataMessage(message);
+			getCommoditiesSnapshot(commServerId)->handleCommoditiesDataMessage(message);
 			break;
 		}
 		case constcrc("LoadCommodities") :
@@ -1014,9 +1020,8 @@ void Persister::handleMessageTo(uint32 sourceServer, const MessageToPayload &dat
 	}
 	else
 	{
-		if (!m_messageSnapshot)
-			m_messageSnapshot = &getSnapshotForServer(sourceServer);
-
+		if (!m_messageSnapshot) 
+			m_messageSnapshot = getSnapshotForServer(sourceServer);
 		m_messageSnapshot->handleMessageTo(data);
 	}
 	MessageToManager::getInstance().handleMessageTo(data);
@@ -1031,7 +1036,7 @@ void Persister::handleMessageTo(uint32 sourceServer, const MessageToPayload &dat
 void Persister::handleMessageToAck(uint32 sourceServer, const MessageToId &messageId)
 {
 	if (!m_messageSnapshot)
-		m_messageSnapshot = &getSnapshotForServer(sourceServer);
+		m_messageSnapshot = getSnapshotForServer(sourceServer);
 	
 	m_messageSnapshot->handleMessageToAck(messageId);
 	MessageToManager::getInstance().handleMessageToAck(messageId);
@@ -1056,7 +1061,7 @@ void Persister::deleteCharacter(StationId stationId, const NetworkId &characterI
 	else
 	{
 		DeleteCharacterCustomPersistStep *cps = new DeleteCharacterCustomPersistStep(stationId, characterId);
-		getSnapshotForObject(characterId, 0).addCustomPersistStep(cps);
+		getSnapshotForObject(characterId, 0)->addCustomPersistStep(cps);
 	}
 
 	// send delete character message to CommoditiesServer to delete auction items from this character
@@ -1111,7 +1116,7 @@ void Persister::renameCharacter(uint32 sourceServer, int8 renameCharacterMessage
 	}
 
 	RenameCharacterCustomPersistStep *cps = new RenameCharacterCustomPersistStep(renameCharacterMessageSource, stationId, characterId, newName, oldName, requestedBy, renameRequest);
-	getSnapshotForServer(sourceServer).addCustomPersistStep(cps);
+	getSnapshotForServer(sourceServer)->addCustomPersistStep(cps);
 
 	if (static_cast<RenameCharacterMessageEx::RenameCharacterMessageSource>(renameCharacterMessageSource) == RenameCharacterMessageEx::RCMS_player_request)
 	{
@@ -1156,7 +1161,7 @@ void Persister::changeStationId(const TransferAccountData * transferRequest)
 void Persister::unloadCharacter(const NetworkId &characterId, uint32 sourceServer)
 {
 	UnloadCharacterCustomPersistStep *cps = new UnloadCharacterCustomPersistStep(characterId, sourceServer);
-	getSnapshotForObject(characterId, sourceServer).addCustomPersistStep(cps);
+	getSnapshotForObject(characterId, sourceServer)->addCustomPersistStep(cps);
 }
 
 // ----------------------------------------------------------------------
@@ -1178,7 +1183,7 @@ bool Persister::isSaveInProgress()
 void Persister::moveToPlayer(uint32 sourceServer, const NetworkId &objectId, const NetworkId &targetPlayer, int maxDepth, bool useBank, bool useDatapad)
 {
 	MoveToPlayerCustomPersistStep *cps = new MoveToPlayerCustomPersistStep(objectId, targetPlayer, maxDepth, useBank, useDatapad);
-	getSnapshotForObject(objectId, sourceServer).addCustomPersistStep(cps);
+	getSnapshotForObject(objectId, sourceServer)->addCustomPersistStep(cps);
 }
 
 // ----------------------------------------------------------------------
@@ -1186,7 +1191,7 @@ void Persister::moveToPlayer(uint32 sourceServer, const NetworkId &objectId, con
 void Persister::fixLoadWith(uint32 sourceServer, const NetworkId &topmostObject, const NetworkId &startingLoadWith, int maxDepth)
 {
 	FixLoadWithCustomPersistStep *cps = new FixLoadWithCustomPersistStep(topmostObject, startingLoadWith, maxDepth);
-	getSnapshotForObject(topmostObject, sourceServer).addCustomPersistStep(cps);
+	getSnapshotForObject(topmostObject, sourceServer)->addCustomPersistStep(cps);
 }
 
 // ----------------------------------------------------------------------
@@ -1232,7 +1237,7 @@ void Persister::planetRequestedSave()
 
 void Persister::handleAddResourceTypeMessage(uint32 const serverId, AddResourceTypeMessage const & message)
 {
-	getSnapshotForServer(serverId).handleAddResourceTypeMessage(message);
+	getSnapshotForServer(serverId)->handleAddResourceTypeMessage(message);
 }
 
 // ----------------------------------------------------------------------
@@ -1240,7 +1245,7 @@ void Persister::handleAddResourceTypeMessage(uint32 const serverId, AddResourceT
 void Persister::handlePurgeCompleteMessage(uint32 const serverId, StationId stationId)
 {
 	PurgeCompleteCustomPersistStep * cps = new PurgeCompleteCustomPersistStep(stationId);
-	getSnapshotForServer(serverId).addCustomPersistStep(cps);
+	getSnapshotForServer(serverId)->addCustomPersistStep(cps);
 }
 
 // ======================================================================
