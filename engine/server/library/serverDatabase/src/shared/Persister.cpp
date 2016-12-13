@@ -220,7 +220,7 @@ void Persister::onFrameBarrierReached()
 	{
 		ServerSnapshotMap delayedSaves;
 		
-		for (ServerSnapshotMap::iterator i=m_newCharacterSnapshots.begin(); i!=m_newCharacterSnapshots.end(); ++i)
+		for (auto i=m_newCharacterSnapshots.begin(); i!=m_newCharacterSnapshots.end(); ++i)
 		{
 			if (m_newCharacterLock.find(i->first)==m_newCharacterLock.end())
 			{
@@ -298,6 +298,7 @@ void Persister::startSave(void)
 	LOG("Database",("Sending DatabaseSaveStart network message to Central."));
 	DatabaseSaveStart const startSaveMessage;
 	DatabaseProcess::getInstance().sendToCentralServer(startSaveMessage, true);
+
 	// record metrics data
 	m_lastSaveTotalObjectCount=m_objectSnapshotMap.size();
 	m_lastSaveNewObjectCount=m_newObjectCount;
@@ -307,7 +308,7 @@ void Persister::startSave(void)
 	// delete any characters for this save cycle
 	if (m_charactersToDeleteNextSaveCycle && m_charactersToDeleteThisSaveCycle)
 	{
-		for (CharactersToDeleteType::const_iterator iter = m_charactersToDeleteThisSaveCycle->begin(); iter != m_charactersToDeleteThisSaveCycle->end(); ++iter)
+		for (auto iter = m_charactersToDeleteThisSaveCycle->begin(); iter != m_charactersToDeleteThisSaveCycle->end(); ++iter)
 		{
 			DeleteCharacterCustomPersistStep *cps = new DeleteCharacterCustomPersistStep(iter->first, iter->second);
 			getSnapshotForObject(iter->second, 0)->addCustomPersistStep(cps);
@@ -385,7 +386,7 @@ void Persister::startSave(void)
  */
 Snapshot * Persister::getSnapshotForObject(const NetworkId &networkId, uint32 serverId)
 {
-	ObjectSnapshotMap::const_iterator i=m_objectSnapshotMap.find(networkId);
+	auto i = m_objectSnapshotMap.find(networkId);
 	if (i!=m_objectSnapshotMap.end())
 	{
 		NOT_NULL(i->second);
@@ -403,7 +404,7 @@ Snapshot * Persister::getSnapshotForObject(const NetworkId &networkId, uint32 se
 
 bool Persister::hasDataForObject(const NetworkId &objectId) const
 {
-	ObjectSnapshotMap::const_iterator i=m_objectSnapshotMap.find(objectId);
+	auto i=m_objectSnapshotMap.find(objectId);
 	return (i!=m_objectSnapshotMap.end());
 }
 
@@ -422,15 +423,19 @@ Snapshot *Persister::getSnapshotForServer(uint32 serverId)
 	}
 	else
 	{
-		ServerSnapshotMap::const_iterator j=m_currentSnapshots.find(serverId);
+		auto j=m_currentSnapshots.find(serverId);
 	
 		if (j==m_currentSnapshots.end())
 		{
 			Snapshot *snap = makeSnapshot(DB::ModeQuery::mode_UPDATE);
 			m_currentSnapshots[serverId]=snap;
-			if (!m_arbitraryGameDataSnapshot)
+			
+			if (!m_arbitraryGameDataSnapshot) {
 				m_arbitraryGameDataSnapshot = snap;
+			}
+			
 			return snap;
+
 		}
 		else
 		{
@@ -450,10 +455,7 @@ Snapshot *Persister::getCommoditiesSnapshot(uint32 serverId)
 	}
 	else
 	{
-		ServerSnapshotMap::const_iterator j;
-	
-		j=m_currentSnapshots.find(serverId);
-		
+		auto j = m_currentSnapshots.find(serverId);
 		if (j==m_currentSnapshots.end())
 		{
 			Snapshot *snap = makeCommoditiesSnapshot(DB::ModeQuery::mode_INSERT);
@@ -512,7 +514,6 @@ void Persister::newObject(uint32 serverId, const NetworkId &objectId, int templa
 {
 	UNREF(serverId);
 
-//	DEBUG_REPORT_LOG (true,("Recieved new object message for %s\n",objectId.getValueString().c_str()));
 	if (m_objectSnapshotMap.find(objectId)!=m_objectSnapshotMap.end())
 	{
 		DEBUG_WARNING(true,("Database received multiple new object messages for object %s",objectId.getValueString().c_str()));
@@ -521,7 +522,7 @@ void Persister::newObject(uint32 serverId, const NetworkId &objectId, int templa
 
 	Snapshot *snap=nullptr;
 
-	PendingCharactersType::iterator chardata=m_pendingCharacters.find(objectId);
+	auto chardata=m_pendingCharacters.find(objectId);
 	if (chardata!=m_pendingCharacters.end())
 	{
 		// Object is a new character
@@ -549,12 +550,12 @@ void Persister::newObject(uint32 serverId, const NetworkId &objectId, int templa
 		// Add the object to the appropriate snapshot
 		snap=nullptr;
 		{
-			ObjectSnapshotMap::const_iterator j=m_objectSnapshotMap.find(container);
+			auto j = m_objectSnapshotMap.find(container);
 			if (j!=m_objectSnapshotMap.end() && j->second->getMode() == DB::ModeQuery::mode_INSERT)
 				snap = j->second;
 			else
 			{
-				ServerSnapshotMap::const_iterator i=m_newObjectSnapshots.find(serverId);
+				auto i = m_newObjectSnapshots.find(serverId);
 				if (i==m_newObjectSnapshots.end())
 				{
 					snap=makeSnapshot(DB::ModeQuery::mode_INSERT);
@@ -585,7 +586,7 @@ void Persister::endBaselines(const NetworkId &objectId, uint32 serverId)
 	//TODO:  This is a hack until we remove frame boundaries and have "end frame" messages from the game server.  Apparently the game
 	// server can split baselines across frame boundaries, so we can't assume we have all the data for a character when we hit a
 	// frame bounday.
-	PendingCharactersType::iterator chardata=m_pendingCharacters.find(objectId);
+	auto chardata=m_pendingCharacters.find(objectId);
 	if (chardata!=m_pendingCharacters.end())
 	{
 		m_pendingCharacters.erase(chardata);
@@ -601,7 +602,7 @@ void Persister::endBaselines(const NetworkId &objectId, uint32 serverId)
 
 void Persister::saveCompleted(Snapshot *completedSnapshot)
 {
-	SnapshotListType::iterator i=std::remove(m_savingSnapshots.begin(),m_savingSnapshots.end(),completedSnapshot);
+	auto i=std::remove(m_savingSnapshots.begin(),m_savingSnapshots.end(),completedSnapshot);
 	if (i!=m_savingSnapshots.end())
 	{
 		m_savingSnapshots.erase(i, m_savingSnapshots.end());
@@ -641,11 +642,13 @@ void Persister::saveCompleted(Snapshot *completedSnapshot)
 	}
 	else
 	{
-		SnapshotListType::iterator j=std::remove(m_savingCharacterSnapshots.begin(),m_savingCharacterSnapshots.end(),completedSnapshot);
+		auto j=std::remove(m_savingCharacterSnapshots.begin(),m_savingCharacterSnapshots.end(),completedSnapshot);
 
 		DEBUG_FATAL(i==m_savingCharacterSnapshots.end(),("Programmer bug:  SaveCompleted() called with a snapshot that wasn't in m_savingSnapshots or m_savingCharacterSnapshots."));
 
-		m_savingCharacterSnapshots.erase(j, m_savingCharacterSnapshots.end());
+		if (j != m_savingCharacterSnapshots.end()) {
+			m_savingCharacterSnapshots.erase(j, m_savingCharacterSnapshots.end());
+		}
 
 		if (completedSnapshot != nullptr) {
 			delete completedSnapshot;
@@ -671,14 +674,14 @@ void Persister::receiveMessage(const MessageDispatch::Emitter & source, const Me
 	switch(messageType) {
 		case constcrc("FlagObjectForDeleteMessage") :
 		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			auto ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 			FlagObjectForDeleteMessage m(ri);
 			handleDeleteMessage(sourceGameServer, m.getId(),m.getReason(),m.getImmediate(),m.getDemandLoadedContainer(),m.getCascadeReason());
 			break;
 		}
 		case constcrc("CreateObjectByCrcMessage") :
 		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			auto ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 			CreateObjectByCrcMessage t(ri);
 			// DEBUG_REPORT_LOG(true,("Got CreateObjectByCrcMessage for %s\n", t.getId().getValueString().c_str()));
 			newObject(sourceGameServer, t.getId(), t.getCrc(), t.getObjectType(), t.getContainer());
@@ -686,14 +689,14 @@ void Persister::receiveMessage(const MessageDispatch::Emitter & source, const Me
 		}
 		case constcrc("EndBaselinesMessage") :
 		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			auto ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 			EndBaselinesMessage t(ri);
 			endBaselines(t.getId(),sourceGameServer);
 			break;
 		}
 		case constcrc("DeltasMessage") :
 		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			auto ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 			DeltasMessage msg(ri);
 
 			handleDeltasMessage(sourceGameServer,msg);
@@ -701,7 +704,7 @@ void Persister::receiveMessage(const MessageDispatch::Emitter & source, const Me
 		}
 		case constcrc("BaselinesMessage") :
 		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			auto ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 			BaselinesMessage msg(ri);
 
 			handleBaselinesMessage(sourceGameServer,msg);
@@ -709,7 +712,7 @@ void Persister::receiveMessage(const MessageDispatch::Emitter & source, const Me
 		}
 		case constcrc("UpdateObjectPositionMessage") :
 		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			auto ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 			UpdateObjectPositionMessage msg(ri);
 
 			getSnapshotForObject(msg.getNetworkId(), sourceGameServer)->handleUpdateObjectPosition(msg);
@@ -717,7 +720,7 @@ void Persister::receiveMessage(const MessageDispatch::Emitter & source, const Me
 		}
 		case constcrc("AddCharacterMessage") :
 		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			auto ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 			AddCharacterMessage ocm(ri);
 			DEBUG_REPORT_LOG(true, ("Got AddCharacterMessage for object %s.\n",ocm.getObjectId().getValueString().c_str()));
 
@@ -731,7 +734,7 @@ void Persister::receiveMessage(const MessageDispatch::Emitter & source, const Me
 		}
 		case constcrc("MessageToMessage") :
 		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			auto ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 			MessageToMessage m(ri);
 
 			handleMessageTo (sourceGameServer, m.getData());
@@ -739,7 +742,7 @@ void Persister::receiveMessage(const MessageDispatch::Emitter & source, const Me
 		}
 		case constcrc("MessageToAckMessage") :
 		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			auto ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 			MessageToAckMessage m(ri);
 
 			handleMessageToAck (sourceGameServer, m.getMessageId());
@@ -747,7 +750,7 @@ void Persister::receiveMessage(const MessageDispatch::Emitter & source, const Me
 		}
 		case constcrc("ServerDeleteCharacterMessage") :
 		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			auto ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 			ServerDeleteCharacterMessage m(ri);
 
 			deleteCharacter(m.getStationId(), m.getCharacterId());
@@ -755,7 +758,7 @@ void Persister::receiveMessage(const MessageDispatch::Emitter & source, const Me
 		}
 		case constcrc("RenameCharacterMessageEx") :
 		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			auto ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 			RenameCharacterMessageEx msg(ri);
 
 			renameCharacter(sourceGameServer, static_cast<int8>(msg.getRenameCharacterMessageSource()), msg.getStationId(), msg.getCharacterId(), msg.getNewName(), msg.getOldName(), msg.getLastNameChangeOnly(), msg.getRequestedBy(), nullptr);
@@ -763,7 +766,7 @@ void Persister::receiveMessage(const MessageDispatch::Emitter & source, const Me
 		}
 		case constcrc("UnloadedPlayerMessage") :
 		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			auto ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 			UnloadedPlayerMessage msg(ri);
 
 			unloadCharacter(msg.getPlayerId(),sourceGameServer);
@@ -771,7 +774,7 @@ void Persister::receiveMessage(const MessageDispatch::Emitter & source, const Me
 		}
 		case constcrc("MoveToPlayer") :
 		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			auto ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 			GenericValueTypeMessage<std::pair<NetworkId, NetworkId> > msg(ri);
 
 			moveToPlayer(sourceGameServer, msg.getValue().first, msg.getValue().second, -1, false, false);
@@ -779,7 +782,7 @@ void Persister::receiveMessage(const MessageDispatch::Emitter & source, const Me
 		}
 		case constcrc("MoveToPlayerBankMessage") :
 		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			auto ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 			GenericValueTypeMessage<std::pair<NetworkId, NetworkId> > msg(ri);
 
 			moveToPlayer(sourceGameServer, msg.getValue().first, msg.getValue().second, -1, true, false);
@@ -787,7 +790,7 @@ void Persister::receiveMessage(const MessageDispatch::Emitter & source, const Me
 		}
 		case constcrc("MoveToPlayerDatapadMessage") :
 		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			auto ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 			GenericValueTypeMessage<std::pair<std::pair<NetworkId, NetworkId>, int> > msg(ri);
 
 			moveToPlayer(sourceGameServer, msg.getValue().first.first, msg.getValue().first.second, msg.getValue().second, false, true);
@@ -795,7 +798,7 @@ void Persister::receiveMessage(const MessageDispatch::Emitter & source, const Me
 		}
 		case constcrc("FixLoadWith") :
 		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			auto ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 			GenericValueTypeMessage<std::pair<std::pair<NetworkId, NetworkId>, int> > msg(ri);
 
 			fixLoadWith(sourceGameServer, msg.getValue().first.first, msg.getValue().first.second, msg.getValue().second);
@@ -803,7 +806,7 @@ void Persister::receiveMessage(const MessageDispatch::Emitter & source, const Me
 		}
 		case constcrc("ClusterShutdownMessage") :
 		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			auto ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 			GenericValueTypeMessage<bool> msg(ri);
 
 			m_clusterShuttingDown = msg.getValue();
@@ -811,7 +814,7 @@ void Persister::receiveMessage(const MessageDispatch::Emitter & source, const Me
 		}
 		case constcrc("StartSaveMessage") :
 		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			auto ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 			GenericValueTypeMessage<NetworkId > msg(ri);
 
 			userRequestedSave(sourceGameServer, msg.getValue());
@@ -819,7 +822,7 @@ void Persister::receiveMessage(const MessageDispatch::Emitter & source, const Me
 		}
 		case constcrc("RestoreHouseMessage") :
 		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			auto ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 			GenericValueTypeMessage<std::pair<NetworkId, std::string> > msg(ri);
 
 			restoreHouse(msg.getValue().first, msg.getValue().second);
@@ -827,7 +830,7 @@ void Persister::receiveMessage(const MessageDispatch::Emitter & source, const Me
 		}
 		case constcrc("RestoreCharacterMessage") :
 		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			auto ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 			GenericValueTypeMessage<std::pair<NetworkId, std::string> > msg(ri);
 
 			restoreCharacter(msg.getValue().first, msg.getValue().second);
@@ -835,7 +838,7 @@ void Persister::receiveMessage(const MessageDispatch::Emitter & source, const Me
 		}
 		case constcrc("UndeleteItemMessage") :
 		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			auto ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 			GenericValueTypeMessage<std::pair<NetworkId, std::string> > msg(ri);
 
 			LOG("CustomerService", ("undeleteItem %s request from %s", msg.getValue().first.getValueString().c_str(), msg.getValue().second.c_str()));
@@ -844,7 +847,7 @@ void Persister::receiveMessage(const MessageDispatch::Emitter & source, const Me
 		}
 		case constcrc("MoveToPlayerMessage") :
 		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			auto ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 			GenericValueTypeMessage<std::pair<std::pair<NetworkId, NetworkId>, std::string> > msg(ri);
 
 			LOG("CustomerService", ("moveToPlayer %s, %s request from %s", msg.getValue().first.first.getValueString().c_str(), msg.getValue().first.second.getValueString().c_str(), msg.getValue().second.c_str()));
@@ -863,14 +866,14 @@ void Persister::receiveMessage(const MessageDispatch::Emitter & source, const Me
 		}
 		case constcrc("AddResourceTypeMessage") :
 		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			auto ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 			AddResourceTypeMessage msg(ri);
 			handleAddResourceTypeMessage(sourceGameServer, msg);
 			break;
 		}
 		case constcrc("BountyHunterTargetMessage") :
 		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			auto ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 			BountyHunterTargetMessage msg(ri);
 			getSnapshotForServer(sourceGameServer)->handleBountyHunterTargetMessage(msg);
 			break;
@@ -907,28 +910,28 @@ void Persister::receiveMessage(const MessageDispatch::Emitter & source, const Me
 		}
 		case constcrc("GetMoneyFromOfflineObjectMessage") :
 		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			auto ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 			GetMoneyFromOfflineObjectMessage msg(ri);
 			getMoneyFromOfflineObject(sourceGameServer, msg.getSourceObject(), msg.getAmount(), msg.getReplyTo(), msg.getSuccessCallback(), msg.getFailCallback(), msg.getPackedDictionary());
 			break;
 		}
 		case constcrc("PurgeCompleteMessage") :
 		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			auto ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 			GenericValueTypeMessage<StationId> msg(ri);
 			handlePurgeCompleteMessage(sourceGameServer, msg.getValue());
 			break;
 		}
 		case constcrc("DBCSRequestMessage" ) :
 		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			auto ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 			DBCSRequestMessage const msg( ri );
 			handleCSRequest( msg );
 			break;
 		}
 		case constcrc("UndeleteItemForCsMessage") :
 		{
-			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+			auto ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 			GenericValueTypeMessage<std::pair<std::pair<std::pair<NetworkId, NetworkId>, std::string>, bool> > undeleteRequest(ri);
 			handleCsUndelete(undeleteRequest.getValue().first.first.first, 
 					 undeleteRequest.getValue().first.first.second, 
@@ -990,7 +993,7 @@ void Persister::addCharacter(uint32 stationId, const NetworkId &characterObject,
 	m_pendingCharacters[characterObject]=temp;
 
 	//TODO:  remove this hack: match up create and end messages because we can't count on having all the data at a frame bounday
-	NewCharacterLockType::iterator i=m_newCharacterLock.find(creationGameServer);
+	auto i=m_newCharacterLock.find(creationGameServer);
 	UNREF(i);	
 	DEBUG_FATAL(i!=m_newCharacterLock.end(),("Programmer bug:  got an addCharacter from server %i before we received EndBaselines from the previous addCharacter.  Indicates we're getting network messages out of order.\n",creationGameServer));
 	m_newCharacterLock.insert(creationGameServer);
