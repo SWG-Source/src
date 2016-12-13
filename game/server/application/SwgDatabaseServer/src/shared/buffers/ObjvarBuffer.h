@@ -110,20 +110,22 @@ inline bool ObjvarBuffer::IndexKey::operator<(const IndexKey &rhs) const
 {
 	if (m_objectId < rhs.m_objectId)
 		return true;
-	else if (m_objectId == rhs.m_objectId)
+
+	if (m_objectId == rhs.m_objectId)
 		return (m_nameId < rhs.m_nameId);
-	else
-		return false;
+
+	return false;
 }
 
 inline bool ObjvarBuffer::IndexKey::operator>(const IndexKey &rhs) const
 {
         if (m_objectId > rhs.m_objectId)
                 return true;
-        else if (m_objectId == rhs.m_objectId)
+        
+	if (m_objectId == rhs.m_objectId)
                 return (m_nameId > rhs.m_nameId);
-        else
-                return false;
+	
+	return false;
 }
 
 // ======================================================================
