@@ -16,7 +16,7 @@
 #include "sharedFoundation/DynamicVariableList.h"
 #include <map>
 #include <string>
-#include <memory>
+
 // ======================================================================
 
 class ObjectTableBuffer;
@@ -63,6 +63,7 @@ public:
 		IndexKey(const NetworkId &objectId, int nameId);
 		bool operator==(const IndexKey &rhs) const;
 		bool operator<(const IndexKey &rhs) const;
+		bool operator>(const IndexKey &rhs) const;
 	};
 
 	struct ObjvarValue
@@ -77,7 +78,6 @@ public:
 
 	DB::ModeQuery::Mode m_mode;
 	DataType m_data;
-	DataType m_overrides;
 	ObjectTableBuffer *m_objectTableBuffer;
 	bool m_useGoldNames;
 
@@ -109,10 +109,22 @@ inline bool ObjvarBuffer::IndexKey::operator<(const IndexKey &rhs) const
 {
 	if (m_objectId < rhs.m_objectId)
 		return true;
-	else if (m_objectId == rhs.m_objectId)
+
+	if (m_objectId == rhs.m_objectId)
 		return (m_nameId < rhs.m_nameId);
-	else
-		return false;
+
+	return false;
+}
+
+inline bool ObjvarBuffer::IndexKey::operator>(const IndexKey &rhs) const
+{
+        if (m_objectId > rhs.m_objectId)
+                return true;
+        
+	if (m_objectId == rhs.m_objectId)
+                return (m_nameId > rhs.m_nameId);
+	
+	return false;
 }
 
 // ======================================================================

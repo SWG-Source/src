@@ -39,7 +39,6 @@ ObjvarBuffer::ObjvarBuffer(DB::ModeQuery::Mode mode, ObjectTableBuffer *objectTa
 ObjvarBuffer::~ObjvarBuffer()
 {
 	m_data.clear();
-	m_overrides.clear();
 }
 
 bool ObjvarBuffer::load(DB::Session *session,const DB::TagSet &tags, const std::string &schema, bool usingGoldDatabase)
@@ -109,7 +108,7 @@ bool ObjvarBuffer::load(DB::Session *session,const DB::TagSet &tags, const std::
 
 				value.m_detached=false;
 		
-				m_overrides.insert(std::make_pair(key,value));
+				m_data.insert(std::make_pair(key,value));
 			}
 		}
 	
@@ -234,7 +233,7 @@ void ObjvarBuffer::getObjvarsForObject(const NetworkId &objectId, std::vector<Dy
 	// The last objvar sent to the game takes precedence, so we want to send the overrides after the values read in through the regular process
 
 	{
-		for (DataType::const_iterator i= m_overrides.lower_bound(IndexKey(objectId,0)); (i!=m_overrides.end()) && (i->first.m_objectId==objectId); ++i)
+		for (DataType::const_iterator i= m_data.lower_bound(IndexKey(objectId,0)); (i!=m_data.end()) && (i->first.m_objectId==objectId); ++i)
 		{
 			std::string name;
 			bool foundName = false;
