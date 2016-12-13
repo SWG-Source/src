@@ -16,7 +16,7 @@
 #include "sharedFoundation/DynamicVariableList.h"
 #include <map>
 #include <string>
-#include <memory>
+
 // ======================================================================
 
 class ObjectTableBuffer;
@@ -78,7 +78,6 @@ public:
 
 	DB::ModeQuery::Mode m_mode;
 	DataType m_data;
-	DataType m_overrides;
 	ObjectTableBuffer *m_objectTableBuffer;
 	bool m_useGoldNames;
 
