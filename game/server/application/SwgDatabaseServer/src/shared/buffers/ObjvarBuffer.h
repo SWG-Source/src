@@ -63,6 +63,7 @@ public:
 		IndexKey(const NetworkId &objectId, int nameId);
 		bool operator==(const IndexKey &rhs) const;
 		bool operator<(const IndexKey &rhs) const;
+		bool operator>(const IndexKey &rhs) const;
 	};
 
 	struct ObjvarValue
@@ -113,6 +114,16 @@ inline bool ObjvarBuffer::IndexKey::operator<(const IndexKey &rhs) const
 		return (m_nameId < rhs.m_nameId);
 	else
 		return false;
+}
+
+inline bool ObjvarBuffer::IndexKey::operator>(const IndexKey &rhs) const
+{
+        if (m_objectId > rhs.m_objectId)
+                return true;
+        else if (m_objectId == rhs.m_objectId)
+                return (m_nameId > rhs.m_nameId);
+        else
+                return false;
 }
 
 // ======================================================================
