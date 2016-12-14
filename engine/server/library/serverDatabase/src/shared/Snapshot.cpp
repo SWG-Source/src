@@ -87,14 +87,6 @@ bool Snapshot::saveToDB(DB::Session *session)
 			return false;
 		}
 
-	for (BufferListType::iterator buffer=m_bufferList.begin(); buffer!=m_bufferList.end(); ++buffer)
-	{
-		if (! (*buffer)->save(session)) {
-			m_isBeingSaved = false;
-			return false;
-		}
-	}
-
 	for (step=m_customStepList.begin(); step !=m_customStepList.end(); ++step)
 	{
 		NOT_NULL(*step);
