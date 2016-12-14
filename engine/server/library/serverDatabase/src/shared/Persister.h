@@ -145,8 +145,8 @@ class Persister : public MessageDispatch::Receiver
 
 	virtual void startSave() = 0;
 
-	Snapshot & getSnapshotForObject(const NetworkId &networkId, uint32 serverId);
-	Snapshot & getSnapshotForServer(uint32 serverId);
+	Snapshot *getSnapshotForObject(const NetworkId &networkId, uint32 serverId);
+	Snapshot *getSnapshotForServer(uint32 serverId);
 
   private:
 	
@@ -164,7 +164,7 @@ class Persister : public MessageDispatch::Receiver
 	void centralRequestedSave    ();
 	void planetRequestedSave     ();
 
-	Snapshot & getCommoditiesSnapshot(uint32 serverId);
+	Snapshot *getCommoditiesSnapshot(uint32 serverId);
 	
     /**
 	 * Derived class should override this to make a game-specific derived Snapshot.
