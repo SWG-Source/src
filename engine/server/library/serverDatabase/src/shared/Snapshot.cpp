@@ -69,31 +69,34 @@ bool Snapshot::saveToDB(DB::Session *session)
 {
 	NOT_NULL(session);
 
+	m_isBeingSaved = true;
+
 	CustomStepListType::iterator step;
 	for (step=m_customStepList.begin(); step !=m_customStepList.end(); ++step)
 	{
 		NOT_NULL(*step);
-		if (!(*step)->beforePersist(session))
+		if (!(*step)->beforePersist(session)) {
+			m_isBeingSaved = false;
 			return false;
+		}
 	}
 
 	if (m_timestamp!=0)
-		if (! saveTimestamp(session))
+		if (! saveTimestamp(session)) {
+			m_isBeingSaved = false;
 			return false;
-
-	for (BufferListType::iterator buffer=m_bufferList.begin(); buffer!=m_bufferList.end(); ++buffer)
-	{
-		if (! (*buffer)->save(session))
-			return false;
-	}
+		}
 
 	for (step=m_customStepList.begin(); step !=m_customStepList.end(); ++step)
 	{
 		NOT_NULL(*step);
-		if (!(*step)->afterPersist(session))
+		if (!(*step)->afterPersist(session)){
+			m_isBeingSaved = false;
 			return false;
+		}
 	}
 
+	m_isBeingSaved = false;
 	return true;
 }
 // ----------------------------------------------------------------------
@@ -105,7 +108,7 @@ bool Snapshot::saveToDB(DB::Session *session)
  * appropriate (virtual) function.
  */
 
-void Snapshot::handleDeltasMessage(NetworkId objectId, const DeltasMessage &msg)
+void Snapshot::handleDeltasMessage(NetworkId & objectId, const DeltasMessage &msg)
 {
 	unsigned char packageId=msg.getPackageId();
 	Tag typeId=msg.getTypeId();
@@ -117,40 +120,29 @@ void Snapshot::handleDeltasMessage(NetworkId objectId, const DeltasMessage &msg)
 	{
 		unsigned short int index;
 		Archive::get(bs,index);
- 		if (packageId==DeltasMessage::DELTAS_SERVER)
-		{
-			decodeServerData(objectId,typeId,index,bs,false);
-		}
-		else if (packageId==DeltasMessage::DELTAS_SHARED)
-		{
-			decodeSharedData(objectId,typeId,index,bs,false);
-		}
-		else if (packageId==DeltasMessage::DELTAS_CLIENT_SERVER)
-		{
-			decodeClientData(objectId,typeId,index,bs,false);
-		}
- 		else if (packageId==DeltasMessage::DELTAS_SERVER_NP)
-		{
-		}
-		else if (packageId==DeltasMessage::DELTAS_SHARED_NP)
-		{
-		}
-		else if (packageId==DeltasMessage::DELTAS_CLIENT_SERVER_NP)
-		{
-		}
-		else if (packageId==DeltasMessage::DELTAS_FIRST_PARENT_CLIENT_SERVER)
-		{
-			decodeParentClientData(objectId,typeId,index,bs,false);
-		}
-		else if (packageId==DeltasMessage::DELTAS_FIRST_PARENT_CLIENT_SERVER_NP)
-		{
-		}
-		else if (packageId==DeltasMessage::DELTAS_UI)
-		{
-		}
-		else
-		{
-			FATAL(true,("PackageId was invalid."));
+
+		switch (packageId) {
+ 			case DeltasMessage::DELTAS_SERVER:
+				decodeServerData(objectId,typeId,index,bs,false);
+				break;
+			case DeltasMessage::DELTAS_SHARED:
+				decodeSharedData(objectId,typeId,index,bs,false);
+				break;
+			case DeltasMessage::DELTAS_CLIENT_SERVER:
+				decodeClientData(objectId,typeId,index,bs,false);
+				break;
+			case DeltasMessage::DELTAS_FIRST_PARENT_CLIENT_SERVER:
+				decodeParentClientData(objectId,typeId,index,bs,false);
+				break;
+                        case DeltasMessage::DELTAS_SERVER_NP:
+                        case DeltasMessage::DELTAS_SHARED_NP:
+                        case DeltasMessage::DELTAS_CLIENT_SERVER_NP:			
+			case DeltasMessage::DELTAS_FIRST_PARENT_CLIENT_SERVER_NP:
+			case DeltasMessage::DELTAS_UI:
+				break;
+			default:
+				FATAL(true,("PackageId was invalid."));
+				break;
 		}
 	}
 }
@@ -164,7 +156,7 @@ void Snapshot::handleDeltasMessage(NetworkId objectId, const DeltasMessage &msg)
  * appropriate (virtual) function.
  */
 
-void Snapshot::handleBaselinesMessage(NetworkId objectId, const BaselinesMessage &msg)
+void Snapshot::handleBaselinesMessage(NetworkId &objectId, const BaselinesMessage &msg)
 {
 	unsigned char packageId=msg.getPackageId();
 	Tag typeId=msg.getTypeId();
@@ -173,41 +165,30 @@ void Snapshot::handleBaselinesMessage(NetworkId objectId, const BaselinesMessage
 	Archive::get(bs,count);
 	for (uint16 i=0; i< count; ++i)
 	{
-		if (packageId==BaselinesMessage::BASELINES_SERVER)
-		{
-			decodeServerData(objectId,typeId,i,bs,true);
-		}
-		else if (packageId==BaselinesMessage::BASELINES_SHARED)
-		{
-			decodeSharedData(objectId,typeId,i,bs,true);
-		}
-		else if (packageId==BaselinesMessage::BASELINES_CLIENT_SERVER)
-		{
-			decodeClientData(objectId,typeId,i,bs,true);
-		}
-		else if (packageId==BaselinesMessage::BASELINES_SERVER_NP)
-		{
-		}
-		else if (packageId==BaselinesMessage::BASELINES_SHARED_NP)
-		{
-		}
-		else if (packageId==BaselinesMessage::BASELINES_CLIENT_SERVER_NP)
-		{
-		}
-		else if (packageId==BaselinesMessage::BASELINES_UI)
-		{
-		}
-		else if (packageId==BaselinesMessage::BASELINES_FIRST_PARENT_CLIENT_SERVER)
-		{
-			decodeParentClientData(objectId,typeId,i,bs,true);
-		}
-		else if (packageId==BaselinesMessage::BASELINES_FIRST_PARENT_CLIENT_SERVER_NP)
-		{
-		}
-		else
-		{
-			FATAL(true,("PackageId was not BASELINES_SERVER, BASELINES_SHARED, or BASELINES_CLIENT.\n"));
-		}
+		switch (packageId){
+			case BaselinesMessage::BASELINES_SERVER :
+				decodeServerData(objectId,typeId,i,bs,true);
+				break;	
+			case BaselinesMessage::BASELINES_SHARED:
+				decodeSharedData(objectId,typeId,i,bs,true);
+				break;
+			case BaselinesMessage::BASELINES_CLIENT_SERVER :
+				decodeClientData(objectId,typeId,i,bs,true);
+				break;
+			case BaselinesMessage::BASELINES_FIRST_PARENT_CLIENT_SERVER:
+				decodeParentClientData(objectId,typeId,i,bs,true);
+				break;
+			case BaselinesMessage::BASELINES_SERVER_NP :
+			case BaselinesMessage::BASELINES_SHARED_NP :
+			case BaselinesMessage::BASELINES_CLIENT_SERVER_NP :
+			case BaselinesMessage::BASELINES_UI :
+			case BaselinesMessage::BASELINES_FIRST_PARENT_CLIENT_SERVER_NP :
+				break;	
+			default:
+				FATAL(true,("PackageId was not BASELINES_SERVER, BASELINES_SHARED, or BASELINES_CLIENT.\n"));
+				break;
+		
+		}	
 	}
 }
 
@@ -215,6 +196,7 @@ void Snapshot::handleBaselinesMessage(NetworkId objectId, const BaselinesMessage
 
 void Snapshot::addLocator(ObjectLocator *newLocator)
 {
+		
 	NOT_NULL(newLocator);
 	m_locatorList.push_back(newLocator);
 }

@@ -30,8 +30,8 @@ class ShipController : public TangibleController
 {
 public:
 
-	typedef stdset<CachedNetworkId>::fwd CachedNetworkIdList;
-	typedef stdmultiset<CachedNetworkId>::fwd DockedByList;
+	typedef std::set<CachedNetworkId> CachedNetworkIdList;
+	typedef std::multiset<CachedNetworkId> DockedByList;
 
 	explicit ShipController(ShipObject * newOwner);
 	virtual ~ShipController();

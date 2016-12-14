@@ -392,7 +392,7 @@ void JNICALL ScriptMethodsNewbieTutorialNamespace::newbieTutorialSendStartingLoc
 
 	//-- Build the list for the client in order.  Mark them unavailable when we've reached the minimum and the population is too high.
 	typedef std::pair<StartingLocationData, bool> LocationStatus;
-	typedef stdvector<LocationStatus>::fwd        LocationStatusVector;
+	typedef std::vector<LocationStatus>        LocationStatusVector;
 	LocationStatusVector clientLocations;
 	clientLocations.reserve (ldv.size ());
 

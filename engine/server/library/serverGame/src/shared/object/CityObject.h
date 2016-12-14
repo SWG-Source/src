@@ -32,7 +32,7 @@ public:
 
 	virtual Controller* createDefaultController();
 	virtual void setupUniverse();
-	virtual void getAttributes(stdvector<std::pair<std::string, Unicode::String> >::fwd &data) const;
+	virtual void getAttributes(std::vector<std::pair<std::string, Unicode::String> > &data) const;
 	virtual void unload();
 
 	int createCity(std::string const &cityName, NetworkId const &cityHallId, std::string const &cityPlanet, int x, int z, int radius, NetworkId const &leaderId, int incomeTax, int propertyTax, int salesTax, Vector const &travelLoc, int travelCost, bool travelInterplanetary, Vector const &cloneLoc, Vector const &cloneRespawn, NetworkId const &cloneRespawnCell, NetworkId const &cloneId, int cityId = 0);
@@ -57,24 +57,24 @@ public:
 	void addCitizenRank(int cityId, NetworkId const &citizenId, std::string const &rankName);
 	void removeCitizenRank(int cityId, NetworkId const &citizenId, std::string const &rankName);
 	bool hasCitizenRank(int cityId, NetworkId const &citizenId, std::string const &rankName);
-	void getCitizenRank(int cityId, NetworkId const &citizenId, stdvector<std::string>::fwd &ranks);
+	void getCitizenRank(int cityId, NetworkId const &citizenId, std::vector<std::string> &ranks);
 	void setCitizenTitle(int cityId, NetworkId const &citizenId, std::string const &citizenTitle);
 	void setCityStructure(int cityId, NetworkId const &structureId, int structureType, bool structureValid);
 
 	bool cityExists(int cityId) const;
 	CityInfo const &getCityInfo(int cityId) const;
-	void getAllCityIds(stdvector<int>::fwd &results) const;
-	stdmap<int, CityInfo>::fwd const &getAllCityInfo() const;
+	void getAllCityIds(std::vector<int> &results) const;
+	std::map<int, CityInfo> const &getAllCityInfo() const;
 	int findCityByName(std::string const &name) const;
 	int findCityByCityHall(NetworkId const &cityHallId) const;
 	int getCityAtLocation(std::string const &planetName, int x, int z, int radius) const;
-	void getCitizenIds(int cityId, stdvector<NetworkId>::fwd &results) const;
-	stdmap<std::pair<int, NetworkId>, CitizenInfo>::fwd const &getAllCitizensInfo() const;
+	void getCitizenIds(int cityId, std::vector<NetworkId> &results) const;
+	std::map<std::pair<int, NetworkId>, CitizenInfo> const &getAllCitizensInfo() const;
 	CitizenInfo const *getCitizenInfo(int cityId, NetworkId const &citizenId) const;
-	void getCityStructureIds(int cityId, stdvector<NetworkId>::fwd &results) const;
-	stdmap<std::pair<int, NetworkId>, CityStructureInfo>::fwd const & getAllCityStructuresInfo() const;
+	void getCityStructureIds(int cityId, std::vector<NetworkId> &results) const;
+	std::map<std::pair<int, NetworkId>, CityStructureInfo> const & getAllCityStructuresInfo() const;
 	CityStructureInfo const *getCityStructureInfo(int cityId, NetworkId const &structureId) const;
-	stdvector<int>::fwd const & getCitizenOfCityId(NetworkId const &citizenId) const;
+	std::vector<int> const & getCitizenOfCityId(NetworkId const &citizenId) const;
 
 	std::map<std::pair<std::string, int>, uint32> const & getGcwRegionDefenderCities() const;
 	std::map<std::string, std::pair<int, int> > const & getGcwRegionDefenderCitiesCount() const;

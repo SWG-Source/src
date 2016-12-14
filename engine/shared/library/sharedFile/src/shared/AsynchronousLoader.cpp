@@ -48,7 +48,7 @@ namespace AsynchronousLoaderNamespace
 		AsynchronousLoader::FetchFunction    fetchFunction;
 		AsynchronousLoader::ReleaseFunction  releaseFunction;
 	};
-	typedef stdvector<ExtensionFunctions>::fwd ExtensionFunctionsList;
+	typedef std::vector<ExtensionFunctions> ExtensionFunctionsList;
 
 	struct FileRecord
 	{
@@ -61,7 +61,7 @@ namespace AsynchronousLoaderNamespace
 		FileRecord();
 		FileRecord &operator =(const FileRecord &);
 	};
-	typedef stdvector<FileRecord *>::fwd FileRecordList;
+	typedef std::vector<FileRecord *> FileRecordList;
 
 	class FileMapComparison
 	{
@@ -69,7 +69,7 @@ namespace AsynchronousLoaderNamespace
 		bool operator ()(const char *lhs, const char *rhs) const;
 	};
 
-	typedef stdmap<const char *, FileRecordList *, FileMapComparison>::fwd  FileMap;
+	typedef std::map<const char *, FileRecordList *, FileMapComparison>  FileMap;
 
 	struct CachedFile
 	{
@@ -77,8 +77,8 @@ namespace AsynchronousLoaderNamespace
 		AbstractFile *file;
 		const void   *resource;
 	};
-	typedef stdvector<CachedFile>::fwd   CachedFiles;
-	typedef stdvector<CachedFiles*>::fwd CachedFilesPool;
+	typedef std::vector<CachedFile>   CachedFiles;
+	typedef std::vector<CachedFiles*> CachedFilesPool;
 
 	struct Request
 	{
@@ -87,7 +87,7 @@ namespace AsynchronousLoaderNamespace
 		void                           *data;
 		CachedFiles                    *cachedFiles;
 	};
-	typedef stddeque<Request *>::fwd  Requests;
+	typedef std::deque<Request *>  Requests;
 
 	void remove();
 	void submitRequest(Request *request);

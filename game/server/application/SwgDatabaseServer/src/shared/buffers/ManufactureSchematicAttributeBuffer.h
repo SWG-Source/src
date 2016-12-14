@@ -37,7 +37,7 @@ public:
 
 	void                      setManufactureSchematicAttribute           (const NetworkId &objectId, std::string attributeType, float value);
 	void                      removeManufactureSchematicAttribute        (const NetworkId &objectId, std::string attributeType);
-	bool                      getDataForObject                           (const NetworkId &objectId, stdvector<std::pair<std::string, float> >::fwd &values) const;
+	bool                      getDataForObject                           (const NetworkId &objectId, std::vector<std::pair<std::string, float> > &values) const;
 	
   private:
 	void                      addRowToIndex                              (NetworkId objectId, std::string attributeType, DBSchema::ManufactureSchematicAttributeRow *row);

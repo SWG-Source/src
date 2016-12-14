@@ -27,7 +27,7 @@ class MultiShape;
 
 #include "sharedCollision/CollisionEnums.h"
 
-typedef stdvector<Vector>::fwd  VectorVector;
+typedef std::vector<Vector>  VectorVector;
 
 // ----------
 // These methods should always be of the form

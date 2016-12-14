@@ -24,7 +24,7 @@ public:
 	static const char * const MessageType;
 
 	typedef std::pair<std::string, Unicode::String> AttributePair;
-	typedef stdvector<AttributePair>::fwd AttributeVector;
+	typedef std::vector<AttributePair> AttributeVector;
 
 	AttributeListMessage(NetworkId const & id, AttributeVector const & data, int const revision);
 	AttributeListMessage(std::string const & staticItemName, AttributeVector const & data, int const revision);

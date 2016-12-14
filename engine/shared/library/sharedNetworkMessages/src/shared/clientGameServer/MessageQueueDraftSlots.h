@@ -38,7 +38,7 @@ public:
 	int                getSlotCount(void) const;
 	const Slot  &      getSlot(int index) const;
 
-	typedef stdvector<Slot>::fwd SlotVector;
+	typedef std::vector<Slot> SlotVector;
 	const SlotVector & getSlots() const;
 	void               setSlots(const SlotVector & sv);
 

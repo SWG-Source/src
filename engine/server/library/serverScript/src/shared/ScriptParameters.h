@@ -27,7 +27,7 @@ namespace Crafting
 	struct IngredientSlot;
 }
 
-typedef stdvector<ObjectMenuRequestData>::fwd MenuDataVector;
+typedef std::vector<ObjectMenuRequestData> MenuDataVector;
 
 struct SlotData
 {
@@ -78,33 +78,33 @@ struct Param
 	union
 	{
 		bool bParam;
-		const stddeque<bool>::fwd * baParam;
+		const std::deque<bool> * baParam;
 		int iParam;
-		const stdvector<int>::fwd * iaParam;
+		const std::vector<int> * iaParam;
 		float fParam;
-		const stdvector<float>::fwd * faParam;
+		const std::vector<float> * faParam;
 		const char * sParam;
-		stdvector<const char *>::fwd *saParam;
+		std::vector<const char *> *saParam;
 		const Unicode::String * uParam;
-		stdvector<const Unicode::String *>::fwd * uaParam;
+		std::vector<const Unicode::String *> * uaParam;
 		const NetworkId * oidParam;
-		const stdvector<NetworkId>::fwd *oidaParam;
-		const stdvector<CachedNetworkId>::fwd *coidaParam;
-		const stdvector<const stdvector<NetworkId>::fwd *>::fwd *oidaaParam;
+		const std::vector<NetworkId> *oidaParam;
+		const std::vector<CachedNetworkId> *coidaParam;
+		const std::vector<const std::vector<NetworkId> *> *oidaaParam;
 		const StringId * sidParam;
-		const stdvector<const StringId *>::fwd *sidaParam;
+		const std::vector<const StringId *> *sidaParam;
 		const AttribMod::AttribMod * amParam;
-		const stdvector<AttribMod::AttribMod>::fwd * amaParam;
+		const std::vector<AttribMod::AttribMod> * amaParam;
 		const ServerObjectTemplate::MentalStateMod * msmParam;
-		const stdvector<ServerObjectTemplate::MentalStateMod>::fwd * amsmParam;
+		const std::vector<ServerObjectTemplate::MentalStateMod> * amsmParam;
 		const MenuDataVector * aomrdParam;
 		const ManufactureObjectInterface * msoParam;
 		const Vector * lParam;
-		const stdvector<const Vector *>::fwd * laParam;
+		const std::vector<const Vector *> * laParam;
 		SlotData isParam;
 		const ValueDictionary * valueDictionaryParam;
-		const stdvector<ValueDictionary>::fwd * valueDictionaryArrayParam;
-		const stdvector<unsigned char>::fwd * byteArrayParam;
+		const std::vector<ValueDictionary> * valueDictionaryArrayParam;
+		const std::vector<unsigned char> * byteArrayParam;
 
 	} m_param;
 };
@@ -115,8 +115,8 @@ namespace Archive
 	class ReadIterator;
 	void get(ReadIterator & source, ScriptParams & target);
 	void put(ByteStream & target, const ScriptParams & source);
-	void get(ReadIterator & source, stdvector<const stdvector<NetworkId>::fwd *>::fwd & target);
-	void put(ByteStream & target, const stdvector<const stdvector<NetworkId>::fwd *>::fwd & source);
+	void get(ReadIterator & source, std::vector<const std::vector<NetworkId> *> & target);
+	void put(ByteStream & target, const std::vector<const std::vector<NetworkId> *> & source);
 }
 
 class ScriptParams
@@ -132,74 +132,74 @@ public:
 
 	void addParam(const Unicode::unicode_char_t *, const std::string & paramName = "", bool owned = false);
 	void addParam(bool param, const std::string & paramName = "", bool owned = false);
-	void addParam(const stddeque<bool>::fwd & param, const std::string & paramName = "", bool owned = false);
+	void addParam(const std::deque<bool> & param, const std::string & paramName = "", bool owned = false);
 	void addParam(int param, const std::string & paramName = "", bool owned = false);
-	void addParam(const stdvector<int>::fwd & param, const std::string & paramName = "", bool owned = false);
+	void addParam(const std::vector<int> & param, const std::string & paramName = "", bool owned = false);
 	void addParam(float param, const std::string & paramName = "", bool owned = false);
-	void addParam(const stdvector<float>::fwd & param, const std::string & paramName = "", bool owned = false);
+	void addParam(const std::vector<float> & param, const std::string & paramName = "", bool owned = false);
 	void addParam(const char * param, const std::string & paramName = "", bool owned = false);
-	void addParam(stdvector<const char *>::fwd & param, const std::string & paramName = "", bool owned = false);
+	void addParam(std::vector<const char *> & param, const std::string & paramName = "", bool owned = false);
 	void addParam(const Unicode::String & param, const std::string & paramName = "", bool owned = false);
-	void addParam(stdvector<const Unicode::String *>::fwd & param, const std::string & paramName = "", bool owned = false);
+	void addParam(std::vector<const Unicode::String *> & param, const std::string & paramName = "", bool owned = false);
 	void addParam(const NetworkId & param, const std::string & paramName = "", bool owned = false);
-	void addParam(const stdvector<NetworkId>::fwd & param, const std::string & paramName = "", bool owned = false);
-	void addParam(const stdvector<CachedNetworkId>::fwd & param, const std::string & paramName = "", bool owned = false);
-	void addParam(const stdvector<const stdvector<NetworkId>::fwd *>::fwd & param, const std::string & paramName = "", bool owned = false);
+	void addParam(const std::vector<NetworkId> & param, const std::string & paramName = "", bool owned = false);
+	void addParam(const std::vector<CachedNetworkId> & param, const std::string & paramName = "", bool owned = false);
+	void addParam(const std::vector<const std::vector<NetworkId> *> & param, const std::string & paramName = "", bool owned = false);
 	void addParam(const StringId & param, const std::string & paramName = "", bool owned = false);
-	void addParam(const stdvector<const StringId *>::fwd & param, const std::string & paramName = "", bool owned = false);
+	void addParam(const std::vector<const StringId *> & param, const std::string & paramName = "", bool owned = false);
 //	void addParam(SlotData param);
 //	void addParam(const std::vector<SlotData> & param);
 	void addParam(const AttribMod::AttribMod & param, const std::string & paramName = "", bool owned = false);
-	void addParam(const stdvector<AttribMod::AttribMod>::fwd & param, const std::string & paramName = "", bool owned = false);
+	void addParam(const std::vector<AttribMod::AttribMod> & param, const std::string & paramName = "", bool owned = false);
 	void addParam(const ServerObjectTemplate::MentalStateMod & param, const std::string & paramName = "", bool owned = false);
-	void addParam(const stdvector<ServerObjectTemplate::MentalStateMod>::fwd & param, const std::string & paramName = "", bool owned = false);
+	void addParam(const std::vector<ServerObjectTemplate::MentalStateMod> & param, const std::string & paramName = "", bool owned = false);
 	void addParam(const ManufactureObjectInterface & param, const std::string & paramName = "", bool owned = false);
 	void addParam(const Crafting::IngredientSlot & param, const ManufactureObjectInterface & schematic, int amountRequired, const std::string & appearance, const std::string & paramName = "", bool owned = false);
 	void addParam(const Vector &location, const std::string &paramName = "", bool owned = false);
-	void addParam(const stdvector<const Vector *>::fwd &location, const std::string &paramName = "", bool owned = false);
+	void addParam(const std::vector<const Vector *> &location, const std::string &paramName = "", bool owned = false);
 	void addParam(const ValueDictionary & param, const std::string & paramName = "", bool owned = false);
-	void addParam(const stdvector<ValueDictionary>::fwd & param, const std::string & paramName = "", bool owned = false);
+	void addParam(const std::vector<ValueDictionary> & param, const std::string & paramName = "", bool owned = false);
 
 	void addParam(const MenuDataVector & param, const std::string & paramName = "", bool owned = false);
-	void addParam(const stdvector<unsigned char>::fwd & param, const std::string & paramName = "", bool owned = false);
+	void addParam(const std::vector<unsigned char> & param, const std::string & paramName = "", bool owned = false);
 	
 	bool changeParam(int index, int param, bool owned = false);
-	bool changeParam(int index, stdvector<int>::fwd & param, bool owned = false);
+	bool changeParam(int index, std::vector<int> & param, bool owned = false);
 	bool changeParam(int index, float param, bool owned = false);
 	bool changeParam(int index, const StringId & param, bool owned = false);
 	bool changeParam(int index, const MenuDataVector & param, bool owned = false);
-	bool changeParam(int index, stdvector<const char *>::fwd & param, bool owned = false);
-	bool changeParam(int index, stdvector<const Unicode::String *>::fwd & param, bool owned = false);
-	bool changeParam(int index, stdvector<unsigned char>::fwd & param, bool owned = false);
+	bool changeParam(int index, std::vector<const char *> & param, bool owned = false);
+	bool changeParam(int index, std::vector<const Unicode::String *> & param, bool owned = false);
+	bool changeParam(int index, std::vector<unsigned char> & param, bool owned = false);
 
-	stdvector<Param>::fwd &                                   getParams();
-	const stdvector<Param>::fwd &                             getParams() const;
+	std::vector<Param> &                                   getParams();
+	const std::vector<Param> &                             getParams() const;
 	int                                                       getParamCount(void) const;
 	Param::ParamType                                          getParamType(int index) const;
 	const std::string &                                       getParamName(int index) const;
 	bool                                                      getBoolParam(int index) const;
-	const stddeque<bool>::fwd &                               getBoolArrayParam(int index) const;
+	const std::deque<bool> &                               getBoolArrayParam(int index) const;
 	int                                                       getIntParam(int index) const;
-	const stdvector<int>::fwd &                               getIntArrayParam(int index) const;
+	const std::vector<int> &                               getIntArrayParam(int index) const;
 	float                                                     getFloatParam(int index) const;
-	const stdvector<float>::fwd &                             getFloatArrayParam(int index) const;
+	const std::vector<float> &                             getFloatArrayParam(int index) const;
 	const char *                                              getStringParam(int index) const;
-	const stdvector<const char *>::fwd &                      getStringArrayParam(int index) const;
+	const std::vector<const char *> &                      getStringArrayParam(int index) const;
 	const Unicode::String &                                   getUnicodeParam(int index) const;
-	const stdvector<const Unicode::String *>::fwd &           getUnicodeArrayParam(int index) const;
+	const std::vector<const Unicode::String *> &           getUnicodeArrayParam(int index) const;
 	const NetworkId &                                         getObjIdParam(int index) const;
-	const stdvector<NetworkId>::fwd &                         getObjIdArrayParam(int index) const;
-	const stdvector<CachedNetworkId>::fwd &                   getCachedObjIdArrayParam(int index) const;
-	const stdvector<const stdvector<NetworkId>::fwd *>::fwd & getObjIdArrayArrayParam(int index) const;
+	const std::vector<NetworkId> &                         getObjIdArrayParam(int index) const;
+	const std::vector<CachedNetworkId> &                   getCachedObjIdArrayParam(int index) const;
+	const std::vector<const std::vector<NetworkId> *> & getObjIdArrayArrayParam(int index) const;
 	const Vector &                                            getLocationParam(int index) const;
-	const stdvector<const Vector *>::fwd &                    getLocationArrayParam(int index) const;
+	const std::vector<const Vector *> &                    getLocationArrayParam(int index) const;
 	const StringId &                                          getStringIdParam(int index) const;
-	const stdvector<const StringId *>::fwd &                  getStringIdArrayParam(int index) const;
+	const std::vector<const StringId *> &                  getStringIdArrayParam(int index) const;
 	const AttribMod::AttribMod &                              getAttribModParam(int index) const;
-	const stdvector<unsigned char>::fwd &                     getByteArrayParam(int index) const;
-	const stdvector<AttribMod::AttribMod>::fwd &              getAttribModArrayParam(int index) const;
+	const std::vector<unsigned char> &                     getByteArrayParam(int index) const;
+	const std::vector<AttribMod::AttribMod> &              getAttribModArrayParam(int index) const;
 	const ServerObjectTemplate::MentalStateMod &                   getMentalStateModParam(int index) const;
-	const stdvector<ServerObjectTemplate::MentalStateMod>::fwd &   getMentalStateModArrayParam(int index) const;
+	const std::vector<ServerObjectTemplate::MentalStateMod> &   getMentalStateModArrayParam(int index) const;
 	const MenuDataVector &                                    getObjectMenuRequestDataArrayParam(int index) const;
 	const ManufactureObjectInterface &                        getManufactureSchematicParam(int index) const;
 	const Crafting::IngredientSlot &                          getIngredientSlotParam(int index) const;
@@ -207,14 +207,14 @@ public:
 	int                                                       getIngredientSlotParamAmountRequired(int index) const;
 	const std::string &                                       getIngredientSlotParamAppearance(int index) const;
 	const ValueDictionary &                                   getValueDictionaryParam(int index) const;
-	const stdvector<ValueDictionary>::fwd &                   getValueDictionaryArrayParam(int index) const;
+	const std::vector<ValueDictionary> &                   getValueDictionaryArrayParam(int index) const;
 
 protected:
 	friend void Archive::get(Archive::ReadIterator & source, ScriptParams & target);
 
 private:
 
-	stdvector<Param>::fwd m_params;
+	std::vector<Param> m_params;
 };
 
 
@@ -224,12 +224,12 @@ inline void ScriptParams::clear(void)
 	m_params.clear();
 }	// ScriptParams::clear
 
-inline stdvector<Param>::fwd & ScriptParams::getParams()
+inline std::vector<Param> & ScriptParams::getParams()
 {
 	return m_params;
 }
 
-inline const stdvector<Param>::fwd & ScriptParams::getParams() const
+inline const std::vector<Param> & ScriptParams::getParams() const
 {
 	return m_params;
 }
@@ -254,7 +254,7 @@ inline bool ScriptParams::getBoolParam(int index) const
 	return m_params[index].m_param.bParam;
 }	// ScriptParams::getBoolParam
 
-inline const stddeque<bool>::fwd & ScriptParams::getBoolArrayParam(int index) const
+inline const std::deque<bool> & ScriptParams::getBoolArrayParam(int index) const
 {
 	return *m_params[index].m_param.baParam;
 }	// ScriptParams::getBoolArrayParam
@@ -264,7 +264,7 @@ inline int ScriptParams::getIntParam(int index) const
 	return m_params[index].m_param.iParam;
 }	// ScriptParams::getIntParam
 
-inline const stdvector<int>::fwd & ScriptParams::getIntArrayParam(int index) const
+inline const std::vector<int> & ScriptParams::getIntArrayParam(int index) const
 {
 	return *m_params[index].m_param.iaParam;
 }	// ScriptParams::getIntArrayParam
@@ -274,7 +274,7 @@ inline float ScriptParams::getFloatParam(int index) const
 	return m_params[index].m_param.fParam;
 }	// ScriptParams::getFloatParam
 
-inline const stdvector<float>::fwd & ScriptParams::getFloatArrayParam(int index) const
+inline const std::vector<float> & ScriptParams::getFloatArrayParam(int index) const
 {
 	return *m_params[index].m_param.faParam;
 }	// ScriptParams::getFloatArrayParam
@@ -284,7 +284,7 @@ inline const char * ScriptParams::getStringParam(int index) const
 	return m_params[index].m_param.sParam;
 }	// ScriptParams::getStringParam
 
-inline const stdvector<const char *>::fwd & ScriptParams::getStringArrayParam(int index) const
+inline const std::vector<const char *> & ScriptParams::getStringArrayParam(int index) const
 {
 	return *m_params[index].m_param.saParam;
 }	// ScriptParams::getStringArrayParam
@@ -294,7 +294,7 @@ inline const Unicode::String & ScriptParams::getUnicodeParam(int index) const
 	return *m_params[index].m_param.uParam;
 }	// ScriptParams::getUnicodeParam
 
-inline const stdvector<const Unicode::String *>::fwd & ScriptParams::getUnicodeArrayParam(int index) const
+inline const std::vector<const Unicode::String *> & ScriptParams::getUnicodeArrayParam(int index) const
 {
 	return *m_params[index].m_param.uaParam;
 }	// ScriptParams::getUnicodeArrayParam
@@ -304,7 +304,7 @@ inline const Vector &ScriptParams::getLocationParam(int index) const
 	return *m_params[index].m_param.lParam;
 }	// ScriptParams::getIntParam
 
-inline const stdvector<const Vector *>::fwd & ScriptParams::getLocationArrayParam(int index) const
+inline const std::vector<const Vector *> & ScriptParams::getLocationArrayParam(int index) const
 {
 	return *m_params[index].m_param.laParam;
 }	// ScriptParams::getIntArrayParam
@@ -316,17 +316,17 @@ inline const NetworkId & ScriptParams::getObjIdParam(int index) const
 	return NetworkId::cms_invalid;
 }	// ScriptParams::getObjIdParam
 
-inline const stdvector<NetworkId>::fwd & ScriptParams::getObjIdArrayParam(int index) const
+inline const std::vector<NetworkId> & ScriptParams::getObjIdArrayParam(int index) const
 {
 	return *m_params[index].m_param.oidaParam;
 }	// ScriptParams::getObjIdArrayParam
 
-inline const stdvector<CachedNetworkId>::fwd & ScriptParams::getCachedObjIdArrayParam(int index) const
+inline const std::vector<CachedNetworkId> & ScriptParams::getCachedObjIdArrayParam(int index) const
 {
 	return *m_params[index].m_param.coidaParam;
 }	// ScriptParams::getCachedObjIdArrayParam
 
-inline const stdvector<const stdvector<NetworkId>::fwd *>::fwd & ScriptParams::getObjIdArrayArrayParam(int index) const
+inline const std::vector<const std::vector<NetworkId> *> & ScriptParams::getObjIdArrayArrayParam(int index) const
 {
 	return *m_params[index].m_param.oidaaParam;
 }
@@ -336,7 +336,7 @@ inline const StringId & ScriptParams::getStringIdParam(int index) const
 	return *m_params[index].m_param.sidParam;
 }	// ScriptParams::getStringIdParam
 
-inline const stdvector<const StringId *>::fwd & ScriptParams::getStringIdArrayParam(int index) const
+inline const std::vector<const StringId *> & ScriptParams::getStringIdArrayParam(int index) const
 {
 	return *m_params[index].m_param.sidaParam;
 }	// ScriptParams::getStringIdArrayParam
@@ -346,7 +346,7 @@ inline const AttribMod::AttribMod & ScriptParams::getAttribModParam(int index) c
 	return *m_params[index].m_param.amParam;
 }	// ScriptParams::getAttribModParam
 
-inline const stdvector<AttribMod::AttribMod>::fwd & ScriptParams::getAttribModArrayParam(int index) const
+inline const std::vector<AttribMod::AttribMod> & ScriptParams::getAttribModArrayParam(int index) const
 {
 	return *m_params[index].m_param.amaParam;
 }	// ScriptParams::getAttribModArrayParam
@@ -356,7 +356,7 @@ inline const ServerObjectTemplate::MentalStateMod & ScriptParams::getMentalState
 	return *m_params[index].m_param.msmParam;
 }	// ScriptParams::getMentalStateModParam
 
-inline const stdvector<ServerObjectTemplate::MentalStateMod>::fwd & ScriptParams::getMentalStateModArrayParam(int index) const
+inline const std::vector<ServerObjectTemplate::MentalStateMod> & ScriptParams::getMentalStateModArrayParam(int index) const
 {
 	return *m_params[index].m_param.amsmParam;
 }	// ScriptParams::getMentalStateModArrayParam
@@ -396,12 +396,12 @@ inline const ValueDictionary & ScriptParams::getValueDictionaryParam(int index) 
 	return *m_params[index].m_param.valueDictionaryParam;
 }
 
-inline const stdvector<ValueDictionary>::fwd & ScriptParams::getValueDictionaryArrayParam(int index) const
+inline const std::vector<ValueDictionary> & ScriptParams::getValueDictionaryArrayParam(int index) const
 {
 	return *m_params[index].m_param.valueDictionaryArrayParam;
 }
 
-inline const stdvector<unsigned char>::fwd & ScriptParams::getByteArrayParam(int index) const
+inline const std::vector<unsigned char> & ScriptParams::getByteArrayParam(int index) const
 {
 	return *m_params[index].m_param.byteArrayParam;
 }	// ScriptParams::getIntArrayParam

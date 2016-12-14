@@ -17,7 +17,7 @@ class SpacePath
 public:
 	friend class SpacePathManager;
 
-	typedef stdvector<Transform>::fwd TransformList;
+	typedef std::vector<Transform> TransformList;
 
 	void addTransform(Transform const & transform);
 	TransformList const & getTransformList() const;
@@ -48,7 +48,7 @@ private:
 
 	float m_collisionRadius;
 
-	typedef stdmultimap<void const * /*object*/, float /*size of object */>::fwd ObjectSizeMap;
+	typedef std::multimap<void const * /*object*/, float /*size of object */> ObjectSizeMap;
 	ObjectSizeMap * const m_collisionRadiusMap;
 
 	void addReference(void const * const object, float const objectSize);

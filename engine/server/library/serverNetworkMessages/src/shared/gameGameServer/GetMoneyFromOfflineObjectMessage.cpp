@@ -10,7 +10,7 @@
 
 // ======================================================================
 
-GetMoneyFromOfflineObjectMessage::GetMoneyFromOfflineObjectMessage(NetworkId const & sourceObject, int amount, NetworkId const & replyTo, std::string const & successCallback, std::string const & failCallback, stdvector<int8>::fwd const & packedDictionary, bool success) :
+GetMoneyFromOfflineObjectMessage::GetMoneyFromOfflineObjectMessage(NetworkId const & sourceObject, int amount, NetworkId const & replyTo, std::string const & successCallback, std::string const & failCallback, std::vector<int8> const & packedDictionary, bool success) :
 		GameNetworkMessage("GetMoneyFromOfflineObjectMessage"),
 		m_sourceObject(sourceObject),
 		m_amount(amount),

@@ -273,7 +273,7 @@ namespace ShipChassisSlotTypeNamespace
 		static_cast<int>(ShipComponentType::SCT_weapon),           // SCST_weapon_99
 	};
 
-	typedef stdunordered_map<std::string, ShipChassisSlotType::Type>::fwd SlotNameTypeMap;
+	typedef std::unordered_map<std::string, ShipChassisSlotType::Type> SlotNameTypeMap;
 	SlotNameTypeMap s_slotNameTypeMap;
 
 	bool s_installed = false;

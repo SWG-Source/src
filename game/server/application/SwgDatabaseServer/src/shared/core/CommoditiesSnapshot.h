@@ -57,7 +57,7 @@ public:
 	virtual bool saveToDB              (DB::Session *session);
 	virtual bool load                  (DB::Session *session);
 	virtual void saveCompleted         ();
-	virtual void getWorldContainers    (stdvector<NetworkId>::fwd &containers) const;
+	virtual void getWorldContainers    (std::vector<NetworkId> &containers) const;
 	
 	virtual void handleCommoditiesDataMessage(const MessageDispatch::MessageBase & message);
 	virtual void startLoadAfterSaveComplete();
@@ -90,10 +90,10 @@ private:
 	virtual void decodeClientData(NetworkId const & objectId, Tag typeId, uint16 index, Archive::ReadIterator &bs, bool isBaseline);
 	virtual void decodeParentClientData(NetworkId const & objectId, Tag typeId, uint16 index, Archive::ReadIterator &bs, bool isBaseline);
 	
-	virtual bool encodeParentClientData(NetworkId const & objectId, Tag typeId, stdvector<BatchBaselinesMessageData>::fwd &baselines) const;
-	virtual bool encodeClientData(NetworkId const & objectId, Tag typeId, stdvector<BatchBaselinesMessageData>::fwd &baselines) const;
-	virtual bool encodeServerData(NetworkId const & objectId, Tag typeId, stdvector<BatchBaselinesMessageData>::fwd &baselines) const;
-	virtual bool encodeSharedData(NetworkId const & objectId, Tag typeId, stdvector<BatchBaselinesMessageData>::fwd &baselines) const;
+	virtual bool encodeParentClientData(NetworkId const & objectId, Tag typeId, std::vector<BatchBaselinesMessageData> &baselines) const;
+	virtual bool encodeClientData(NetworkId const & objectId, Tag typeId, std::vector<BatchBaselinesMessageData> &baselines) const;
+	virtual bool encodeServerData(NetworkId const & objectId, Tag typeId, std::vector<BatchBaselinesMessageData> &baselines) const;
+	virtual bool encodeSharedData(NetworkId const & objectId, Tag typeId, std::vector<BatchBaselinesMessageData> &baselines) const;
 
 private:
 	CommoditiesSnapshot(const CommoditiesSnapshot&); //disable

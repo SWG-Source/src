@@ -27,7 +27,7 @@ class GameServerConnection;
 class MessageToManager
 {
   public:
-	typedef stdvector<MessageToPayload>::fwd MessageVector;
+	typedef std::vector<MessageToPayload> MessageVector;
 
   public:
 	static void install();

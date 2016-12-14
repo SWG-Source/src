@@ -86,14 +86,14 @@ public:
 	static void updateVendorStatus(const NetworkId & vendorId, int status);
 	static void updateVendorLocation(const ServerObject & vendor);
 
-	static void updateItemTypeMap(int itemTypeMapVersionNumber, const stdmap<int, stdset<int>::fwd >::fwd & itemTypeMap);
+	static void updateItemTypeMap(int itemTypeMapVersionNumber, const std::map<int, std::set<int> > & itemTypeMap);
 	static void updateItemTypeMap(int itemTypeMapVersionNumber, int itemType, int itemTemplateId);
-	static const stdmap<int, stdmap<int, std::pair<int, StringId> >::fwd >::fwd & getItemTypeMap();
+	static const std::map<int, std::map<int, std::pair<int, StringId> > > & getItemTypeMap();
 	static int  getItemTypeMapVersionNumber();
 
-	static void updateResourceTypeMap(int resourceTypeMapVersionNumber, const stdmap<int, stdset<std::string>::fwd >::fwd & resourceTypeMap);
+	static void updateResourceTypeMap(int resourceTypeMapVersionNumber, const std::map<int, std::set<std::string> > & resourceTypeMap);
 	static void updateResourceTypeMap(int resourceTypeMapVersionNumber, int resourceClassCrc, const std::string & resourceName);
-	static const stdmap<int, stdset<std::string>::fwd >::fwd & getResourceTypeMap();
+	static const std::map<int, std::set<std::string> > & getResourceTypeMap();
 	static int  getResourceTypeMapVersionNumber();
 
 	static void sendToCommoditiesServer(const GameNetworkMessage & message);

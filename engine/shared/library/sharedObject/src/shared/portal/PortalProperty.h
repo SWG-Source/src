@@ -38,9 +38,9 @@ public:
 
 public:
 
-	typedef stdvector<Portal *>::fwd        PortalList;
-	typedef stdvector<const char *>::fwd    CellNameList;
-	typedef stdvector<Vector>::fwd          VertexList;
+	typedef std::vector<Portal *>        PortalList;
+	typedef std::vector<const char *>    CellNameList;
+	typedef std::vector<Vector>          VertexList;
 
 	typedef Object *(*BeginCreateObjectFunction)(int cellIndex);
 	typedef void    (*EndCreateObjectFunction)(Object *newObject);
@@ -70,7 +70,7 @@ public:
 	virtual int                   getTypeId() const;
 	virtual void                  debugPrint(std::string &buffer) const;
 
-	bool                          serverEndBaselines(int crc,stdvector<Object*>::fwd &unfixables, bool authoritative);
+	bool                          serverEndBaselines(int crc,std::vector<Object*> &unfixables, bool authoritative);
 
 	const PortalPropertyTemplate &getPortalPropertyTemplate() const;
 	int                           getCrc() const;
@@ -111,8 +111,8 @@ private:
 		Object    *m_obj;
 		Transform  m_transform;
 	};
-	typedef stdvector<FixupRec>::fwd        FixupList;
-	typedef stdvector<CellProperty*>::fwd   CellList;
+	typedef std::vector<FixupRec>        FixupList;
+	typedef std::vector<CellProperty*>   CellList;
 
 private:
 

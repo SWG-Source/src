@@ -24,9 +24,9 @@ class VectorArgb;
 class BoxTreeNode;
 class Iff;
 
-typedef stdvector<BoxTreeNode>::fwd BoxTreeNodeVec;
-typedef stdvector<AxialBox>::fwd BoxVec;
-typedef stdvector<int>::fwd IdVec;
+typedef std::vector<BoxTreeNode> BoxTreeNodeVec;
+typedef std::vector<AxialBox> BoxVec;
+typedef std::vector<int> IdVec;
 
 // ----------------------------------------------------------------------
 

@@ -1673,7 +1673,7 @@ void ChatServer::invite(const NetworkId & id, const ChatAvatarId & avatarId, con
 
 //-----------------------------------------------------------------------
 
-void ChatServer::inviteGroupMembers(const NetworkId & id, const ChatAvatarId & avatarId, const std::string & roomName, const stdvector<NetworkId>::fwd & members)
+void ChatServer::inviteGroupMembers(const NetworkId & id, const ChatAvatarId & avatarId, const std::string & roomName, const std::vector<NetworkId> & members)
 {
 	ChatServer::fileLog(s_enableChatRoomLogs, "ChatServer", "inviteGroupMembers() id(%s) avatarId(%s) roomName(%s) number of members (%u)", id.getValueString().c_str(), avatarId.getFullName().c_str(), roomName.c_str(), members.size());
 

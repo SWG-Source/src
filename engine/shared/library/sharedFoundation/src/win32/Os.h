@@ -27,7 +27,7 @@ public:
 	typedef void (*QueueCharacterHookFunction)(int keyboard, int character);
 	typedef void (*SetSystemMouseCursorPositionHookFunction)(int x, int y);
 	typedef bool (*GetHardwareMouseCursorEnabled)();
-	typedef void (*GetOtherAdapterRectsHookFunction)(stdvector<RECT>::fwd &);
+	typedef void (*GetOtherAdapterRectsHookFunction)(std::vector<RECT> &);
 	typedef void (*WindowPositionChangedHookFunction)();
 	typedef void (*DisplayModeChangedHookFunction)();
 	typedef void (*InputLanguageChangedHookFunction)();

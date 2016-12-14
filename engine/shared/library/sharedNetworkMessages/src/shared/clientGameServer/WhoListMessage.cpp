@@ -35,7 +35,7 @@ m_data ()
 
 //-----------------------------------------------------------------------
 
-void WhoListMessage::setData (const stdvector<Unicode::String>::fwd & data)
+void WhoListMessage::setData (const std::vector<Unicode::String> & data)
 {
 	m_data.set (data);
 }

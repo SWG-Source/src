@@ -36,7 +36,7 @@ public:
 
 	virtual Controller*    createDefaultController(void);
 	void                   addMembersToPackages   ();
-	virtual void           getAttributes          (stdvector<std::pair<std::string, Unicode::String> >::fwd &data) const;
+	virtual void           getAttributes          (std::vector<std::pair<std::string, Unicode::String> > &data) const;
 
 	bool                   startCraftingSession(ManufactureSchematicObject & schematic);	
 	bool                   endCraftingSession();

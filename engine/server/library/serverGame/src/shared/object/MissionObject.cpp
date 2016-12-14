@@ -200,7 +200,7 @@ void MissionObject::setMissionHolderId(const NetworkId & h)
 
 //-----------------------------------------------------------------------
 
-void MissionObject::getAttributes(stdvector<std::pair<std::string, Unicode::String> >::fwd &data) const
+void MissionObject::getAttributes(std::vector<std::pair<std::string, Unicode::String> > &data) const
 {
 	IntangibleObject::getAttributes(data);
 	std::string const & missionType = getMissionTypeString();

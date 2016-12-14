@@ -21,12 +21,12 @@
 
 namespace PlanetMapManagerNamespace
 {
-	typedef stdmap<uint8,       std::string>::fwd     TypeNameMap;
-	typedef stdmap<std::string, uint8>::fwd           NameTypeMap;
-	typedef stdmap<uint8,       StringId>::fwd TypeStringIdMap;
+	typedef std::map<uint8,       std::string>     TypeNameMap;
+	typedef std::map<std::string, uint8>           NameTypeMap;
+	typedef std::map<uint8,       StringId> TypeStringIdMap;
 
 	typedef std::pair<uint32, bool> FactionAndVisibility;
-	typedef stdmap<uint8,       FactionAndVisibility>::fwd          TypeFactionMap;
+	typedef std::map<uint8,       FactionAndVisibility>          TypeFactionMap;
 
 	TypeNameMap    s_typeNameMap;
 	NameTypeMap    s_nameTypeMap;

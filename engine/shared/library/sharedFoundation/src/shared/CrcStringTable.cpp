@@ -169,7 +169,7 @@ ConstCharCrcString const CrcStringTable::lookUp(uint32 crc) const
 
 // ----------------------------------------------------------------------
 
-void CrcStringTable::getAllStrings(stdvector<const char *>::fwd & strings) const
+void CrcStringTable::getAllStrings(std::vector<const char *> & strings) const
 {
 	strings.reserve(strings.size() + m_numberOfEntries);
 

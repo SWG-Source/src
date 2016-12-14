@@ -38,9 +38,9 @@ public:
 		SCT_addDataSource,
 	};
 
-	typedef stdvector<Unicode::String>::fwd UnicodeStringVector;
-	typedef stdvector<std::string>::fwd StringVector;
-	typedef stdvector<SuiWidgetProperty>::fwd WidgetPropertyVector;
+	typedef std::vector<Unicode::String> UnicodeStringVector;
+	typedef std::vector<std::string> StringVector;
+	typedef std::vector<SuiWidgetProperty> WidgetPropertyVector;
 
 public:
 		

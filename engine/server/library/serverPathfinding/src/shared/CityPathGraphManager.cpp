@@ -1072,7 +1072,7 @@ bool CityPathGraphManager::reloadPathNodes ( void )
 
 // ----------------------------------------------------------------------
 
-bool CityPathGraphManager::reloadPathNodes ( stdvector< ServerObject * >::fwd const & objects )
+bool CityPathGraphManager::reloadPathNodes ( std::vector< ServerObject * > const & objects )
 {
 	int objectCount = objects.size();
 

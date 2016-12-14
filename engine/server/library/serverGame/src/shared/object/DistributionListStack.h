@@ -22,7 +22,7 @@ class ConnectionServerConnection;
 class DistributionListStack
 {
 public:
-	static stdmap<ConnectionServerConnection *, stdvector<NetworkId>::fwd>::fwd &alloc();
+	static std::map<ConnectionServerConnection *, std::vector<NetworkId>> &alloc();
 	static void release();
 
 private:

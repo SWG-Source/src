@@ -26,7 +26,7 @@ class MessageToPayloadImpl
 {
 public:
 	MessageToPayloadImpl(const NetworkId &networkId, const MessageToId &messageId, const std::string &method, const	std::string &packedData, unsigned long callTime, bool guaranteed, MessageToPayload::DeliveryType deliveryType, NetworkId const & undeliveredCallbackObject, std::string const & undeliveredCallbackMethod, int recurringTime);
-	MessageToPayloadImpl(const NetworkId &networkId, const MessageToId &messageId, const std::string &method, const	stdvector<int8>::fwd &packedData, unsigned long callTime, bool guaranteed, MessageToPayload::DeliveryType deliveryType, NetworkId const & undeliveredCallbackObject, std::string const & undeliveredCallbackMethod, int recurringTime);
+	MessageToPayloadImpl(const NetworkId &networkId, const MessageToId &messageId, const std::string &method, const	std::vector<int8> &packedData, unsigned long callTime, bool guaranteed, MessageToPayload::DeliveryType deliveryType, NetworkId const & undeliveredCallbackObject, std::string const & undeliveredCallbackMethod, int recurringTime);
 	MessageToPayloadImpl();
 	~MessageToPayloadImpl();
 

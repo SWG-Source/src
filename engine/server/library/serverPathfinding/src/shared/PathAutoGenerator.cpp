@@ -210,7 +210,7 @@ void PathAutoGenerator::pathAutoCleanup(Vector const & pos_w, Unicode::String & 
 	
 	Vector const center((minX + maxX) * 0.5f, 0.0f, (minY + maxY) * 0.5f);
 	
-	typedef stdvector<ServerObject *>::fwd ServerObjectVector;
+	typedef std::vector<ServerObject *> ServerObjectVector;
 	
 	ServerObjectVector sv;
 	

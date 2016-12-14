@@ -19,7 +19,7 @@
 
 namespace StartingLocationManagerNamespace
 {
-	typedef stdmap<std::string, StartingLocationData>::fwd StartingLocationMap;
+	typedef std::map<std::string, StartingLocationData> StartingLocationMap;
 	StartingLocationMap s_startingLocationMap;
 
 	typedef StartingLocationManager::StartingLocationVector StartingLocationVector;

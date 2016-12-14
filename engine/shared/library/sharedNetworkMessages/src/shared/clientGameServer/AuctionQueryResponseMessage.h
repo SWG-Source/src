@@ -40,7 +40,7 @@ class AuctionQueryResponseMessage : public GameNetworkMessage
 {
 public:
 	typedef AuctionQueryResponse_AuctionData AuctionData;
-	typedef stdvector<AuctionData>::fwd AuctionDataVector;
+	typedef std::vector<AuctionData> AuctionDataVector;
 
 	AuctionQueryResponseMessage(int requestId, int typeFlag, AuctionDataVector const &auctionData);
 	explicit AuctionQueryResponseMessage(Archive::ReadIterator &source);

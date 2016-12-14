@@ -84,7 +84,7 @@ class PlanetProxyObject
 	void   updateContentsTracking      (const NetworkId & newContainedBy);
 
   private:
-	typedef stdvector<std::pair<uint32, GameNetworkMessage*> > MessageListType;
+	typedef std::vector<std::pair<uint32, GameNetworkMessage*> > MessageListType;
 
   private:
 	const NetworkId m_objectId;
@@ -98,7 +98,7 @@ class PlanetProxyObject
 	int             m_objectTypeTag;
 	Node *  m_quadtreeNode;
 	unsigned long   m_authTransferTimeMs;
-	stdvector<NetworkId>::fwd * m_contents;
+	std::vector<NetworkId> * m_contents;
 	int             m_level;
 	bool            m_hibernating;
 	uint32          m_templateCrc;

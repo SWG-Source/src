@@ -47,6 +47,7 @@ public:
 
 	NetworkId& operator= (const NetworkId&);
 	bool       operator< (const NetworkId& rhs) const;
+	bool       operator> (const NetworkId& rhs) const;
 	bool       operator== (const NetworkId& rhs) const;
 	bool       operator!= (const NetworkId& rhs) const;
 	size_t     getHashValue() const;
@@ -92,6 +93,11 @@ inline NetworkId& NetworkId::operator= (const NetworkId& rhs)
 inline bool NetworkId::operator< (const NetworkId& rhs) const
 {
 	return m_value < rhs.m_value;
+}
+
+inline bool NetworkId::operator> (const NetworkId& rhs) const
+{
+        return m_value > rhs.m_value;
 }
 
 // -----------------------------------------------------------------------

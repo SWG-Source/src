@@ -65,8 +65,8 @@ public:
 
 	void                 moveTo                  (CellProperty const * cell, Vector const & target_p, float const radius = 0.0f);
 	void                 moveTo                  (Unicode::String const & targetName);
-	void                 patrol                  ( stdvector<Location>::fwd const & locations, bool random, bool flip, bool repeat, int startPoint);
-	void                 patrol                  ( stdvector<Unicode::String>::fwd const & locations, bool random, bool flip, bool repeat, int startPoint);
+	void                 patrol                  ( std::vector<Location> const & locations, bool random, bool flip, bool repeat, int startPoint);
+	void                 patrol                  ( std::vector<Unicode::String> const & locations, bool random, bool flip, bool repeat, int startPoint);
 	bool                 wander                  ( float minLength, float maxLength, float minAngle, float maxAngle, float minDelay, float maxDelay );
 	void                 loiter                  (CellProperty const * homeCell, Vector const & home_p, float const minDistance, float const maxDistance, float const minDelay, float const maxDelay);
 	void                 loiter                  (NetworkId const & target, float const minDistance, float const maxDistance, float const minDelay, float const maxDelay);

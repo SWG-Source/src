@@ -56,7 +56,7 @@ private:
 	Path();
 	virtual ~Path();
 
-	typedef stddeque<Node>::fwd NodeList;
+	typedef std::deque<Node> NodeList;
 	NodeList * const m_nodeList;
 
 private: // Disabled.

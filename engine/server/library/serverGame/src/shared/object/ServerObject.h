@@ -381,12 +381,12 @@ public:
 	int                getTotalMoney                () const;
 
 public:
-	void               scriptTransferCashTo         (const NetworkId &target, int amount, const NetworkId &replyTo, const std::string &successCallback, const std::string &failCallback, const stdvector<int8>::fwd &packedDictionary);
-	void               scriptTransferBankCreditsTo  (const NetworkId &target, int amount, const NetworkId &replyTo, const std::string &successCallback, const std::string &failCallback, const stdvector<int8>::fwd &packedDictionary);
-	void               scriptWithdrawCashFromBank   (int amount, const NetworkId &replyTo, const std::string &successCallback, const std::string &failCallback, const stdvector<int8>::fwd &packedDictionary);
-	void               scriptDepositCashToBank      (int amount, const NetworkId &replyTo, const std::string &successCallback, const std::string &failCallback, const stdvector<int8>::fwd &packedDictionary);
-	void               scriptTransferBankCreditsTo  (const std::string &target, int amount, const NetworkId &replyTo, const std::string &successCallback, const std::string &failCallback, const stdvector<int8>::fwd &packedDictionary);
-	void               scriptTransferBankCreditsFrom(const std::string &source, int amount, const NetworkId &replyTo, const std::string &successCallback, const std::string &failCallback, const stdvector<int8>::fwd &packedDictionary);
+	void               scriptTransferCashTo         (const NetworkId &target, int amount, const NetworkId &replyTo, const std::string &successCallback, const std::string &failCallback, const std::vector<int8> &packedDictionary);
+	void               scriptTransferBankCreditsTo  (const NetworkId &target, int amount, const NetworkId &replyTo, const std::string &successCallback, const std::string &failCallback, const std::vector<int8> &packedDictionary);
+	void               scriptWithdrawCashFromBank   (int amount, const NetworkId &replyTo, const std::string &successCallback, const std::string &failCallback, const std::vector<int8> &packedDictionary);
+	void               scriptDepositCashToBank      (int amount, const NetworkId &replyTo, const std::string &successCallback, const std::string &failCallback, const std::vector<int8> &packedDictionary);
+	void               scriptTransferBankCreditsTo  (const std::string &target, int amount, const NetworkId &replyTo, const std::string &successCallback, const std::string &failCallback, const std::vector<int8> &packedDictionary);
+	void               scriptTransferBankCreditsFrom(const std::string &source, int amount, const NetworkId &replyTo, const std::string &successCallback, const std::string &failCallback, const std::vector<int8> &packedDictionary);
 
 	void        sendControllerMessageToAuthServer(GameControllerMessage cm, MessageQueue::Data *msg, float value = 0.0f);
 	static std::string  getLogDescription(const ServerObject * object);
@@ -478,7 +478,7 @@ public:
 
 public:
 
-	void                          addSynchronizedUi              (const stdvector<NetworkId>::fwd & clients);
+	void                          addSynchronizedUi              (const std::vector<NetworkId> & clients);
 	void                          addSynchronizedUiClient        (ServerObject & client);
 	bool                          areContentsVisibleToClient     (const Client &) const;
 	void                          attachStartupScripts           ();
@@ -489,7 +489,7 @@ public:
 	const int                     getCacheVersion                () const;
 	Client *                      getClient                      () const;
 	int                           getObserversCount              () const;
-	stdset<Client *>::fwd const & getObservers                   () const;
+	std::set<Client *> const & getObservers                   () const;
 	void                          addObserver                    (Client * client);
 	void                          removeObserver                 (Client * client);
 	void                          clearObservers                 ();
@@ -508,22 +508,22 @@ public:
 	void                          eraseObjVarListEntries(std::string const &name);
 	void                          copyObjVars(std::string const &name, ServerObject const &srcObject, std::string const &srcVarName);
 	bool                          setObjVarItem(std::string const &name, int value);
-	bool                          setObjVarItem(std::string const &name, stdvector<int>::fwd const &value);
+	bool                          setObjVarItem(std::string const &name, std::vector<int> const &value);
 	bool                          setObjVarItem(std::string const &name, float value);
-	bool                          setObjVarItem(std::string const &name, stdvector<float>::fwd const &value);
+	bool                          setObjVarItem(std::string const &name, std::vector<float> const &value);
 	bool                          setObjVarItem(std::string const &name, std::string const &value);
 	bool                          setObjVarItem(std::string const &name, Unicode::String const &value);
-	bool                          setObjVarItem(std::string const &name, stdvector<Unicode::String>::fwd const &value);
+	bool                          setObjVarItem(std::string const &name, std::vector<Unicode::String> const &value);
 	bool                          setObjVarItem(std::string const &name, NetworkId const &value);
-	bool                          setObjVarItem(std::string const &name, stdvector<NetworkId>::fwd const &value);
+	bool                          setObjVarItem(std::string const &name, std::vector<NetworkId> const &value);
 	bool                          setObjVarItem(std::string const &name, DynamicVariableLocationData const &value);
-	bool                          setObjVarItem(std::string const &name, stdvector<DynamicVariableLocationData>::fwd const &value);
+	bool                          setObjVarItem(std::string const &name, std::vector<DynamicVariableLocationData> const &value);
 	bool                          setObjVarItem(std::string const &name, StringId const &value);
-	bool                          setObjVarItem(std::string const &name, stdvector<StringId>::fwd const &value);
+	bool                          setObjVarItem(std::string const &name, std::vector<StringId> const &value);
 	bool                          setObjVarItem(std::string const &name, Transform const &value);
-	bool                          setObjVarItem(std::string const &name, stdvector<Transform>::fwd const &value);
+	bool                          setObjVarItem(std::string const &name, std::vector<Transform> const &value);
 	bool                          setObjVarItem(std::string const &name, Vector const &value);
-	bool                          setObjVarItem(std::string const &name, stdvector<Vector>::fwd const &value);
+	bool                          setObjVarItem(std::string const &name, std::vector<Vector> const &value);
 	bool                          setObjVarItem(std::string const &name, DynamicVariable const &value);
 
 	std::string const             getPackedObjVars(std::string const &prefix) const;
@@ -566,7 +566,7 @@ public:
 	void                          sendCreateAndBaselinesToDatabaseServer() const;
 	void                          forwardServerCreateAndBaselines() const;
 	void                          sendToClientsInUpdateRange     (const GameNetworkMessage & message, bool reliable, bool includeSelf=true) const;
-	static void                   sendToSpecifiedClients         (const GameNetworkMessage & message, bool reliable, const stdvector<NetworkId>::fwd & clients);
+	static void                   sendToSpecifiedClients         (const GameNetworkMessage & message, bool reliable, const std::vector<NetworkId> & clients);
 	void                          appendMessage                  (int message, float value, uint32 flags = GameControllerMessageFlags::SEND | GameControllerMessageFlags::RELIABLE | GameControllerMessageFlags::DEST_AUTH_CLIENT);
 	void                          appendMessage                  (int message, float value, MessageQueue::Data *data, uint32 flags = GameControllerMessageFlags::SEND | GameControllerMessageFlags::RELIABLE | GameControllerMessageFlags::DEST_AUTH_CLIENT);
 	virtual void                  setAuthServerProcessId         (uint32 processId);
@@ -592,7 +592,7 @@ public:
 	void                          updatePositionOnPlanetServer   (bool forceUpdate = false);
 	int                           getGameObjectType              () const;
 
-	typedef stdvector<std::pair<std::string, Unicode::String> >::fwd AttributeVector;
+	typedef std::vector<std::pair<std::string, Unicode::String> > AttributeVector;
 	virtual void                  getAttributes                  (AttributeVector &data) const = 0;
 	virtual void                  getAttributes                  (const NetworkId & playerId, AttributeVector &data) const;
 	virtual void                  getAttributesForAuction        (AttributeVector &data) const;
@@ -616,7 +616,7 @@ public:
 
 	void                          setLayer (TerrainGenerator::Layer* layer);
 	TerrainGenerator::Layer*      getLayer () const;
-	virtual void                  getAuthClients(stdset<Client const *>::fwd &authClients) const;
+	virtual void                  getAuthClients(std::set<Client const *> &authClients) const;
 	virtual void                  setCacheVersion (const int cacheVersion);
 
 	void                          setDefaultAlterTime(float time);
@@ -628,7 +628,7 @@ public:
 
 	// ai patrol pathing support
 	void                                 setPatrolPathRoot         (const ServerObject & root);
-	const stdset<CachedNetworkId>::fwd & getPatrolPathRoots        () const;
+	const std::set<CachedNetworkId> & getPatrolPathRoots        () const;
 	void                                 addPatrolPathingObject    (const ServerObject & ai);
 	void                                 removePatrolPathingObject (const ServerObject & ai);
 	void                                 addPatrolPathObserver     ();
@@ -788,7 +788,7 @@ private:
 	Watcher<ServerSynchronizedUi>                 m_synchronizedUi;
 	// list of objects with sync ui that are waiting for this object to have a client
 	// attached, due to an authority transfer
-	stdvector<NetworkId>::fwd *            m_pendingSyncUi;
+	std::vector<NetworkId> *            m_pendingSyncUi;
 
 	/** Flag for whether the object is persisted
 	 */
@@ -1055,7 +1055,7 @@ inline int ServerObject::getObserversCount() const
 
 //-----------------------------------------------------------------------
 
-inline stdset<Client *>::fwd const &ServerObject::getObservers() const
+inline std::set<Client *> const &ServerObject::getObservers() const
 {
 	return m_observers;
 }

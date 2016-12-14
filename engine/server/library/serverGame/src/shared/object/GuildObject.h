@@ -32,22 +32,22 @@ public:
 	virtual Controller* createDefaultController();
 	virtual void setupUniverse();
 	virtual bool isVisibleOnClient(const Client &client) const;
-	virtual void getAttributes(stdvector<std::pair<std::string, Unicode::String> >::fwd &data) const;
+	virtual void getAttributes(std::vector<std::pair<std::string, Unicode::String> > &data) const;
 	virtual void unload();
 
 	GuildInfo const * getGuildInfo(int guildId) const;
 	GuildMemberInfo const * getGuildMemberInfo(int guildId, NetworkId const &memberId) const;
 
-	stdset<std::string>::fwd const &getGuildEnemies() const;
+	std::set<std::string> const &getGuildEnemies() const;
 
-	void getAllGuildIds(stdvector<int>::fwd &results) const;
+	void getAllGuildIds(std::vector<int> &results) const;
 	int findGuild(std::string const &name) const;
 	bool guildExists(int guildId) const;
 	int getGuildId(NetworkId const &memberId) const;
 	int getGuildIdForSponsored(NetworkId const &memberId) const;
 	int getGuildIdForGuildLeader(NetworkId const &leaderId) const;
-	void getGuildMemberIds(int guildId, stdvector<NetworkId>::fwd &results) const;
-	void getMemberIdsWithPermissions(int guildId, int permissions, stdvector<NetworkId>::fwd &results) const;
+	void getGuildMemberIds(int guildId, std::vector<NetworkId> &results) const;
+	void getMemberIdsWithPermissions(int guildId, int permissions, std::vector<NetworkId> &results) const;
 
 	int createGuild(std::string const &guildName, std::string const &guildAbbrev, int guildId = 0);
 	void disbandGuild(int guildId);
@@ -63,7 +63,7 @@ public:
 	void addGuildMemberRank(int guildId, NetworkId const &memberId, std::string const &rankName);
 	void removeGuildMemberRank(int guildId, NetworkId const &memberId, std::string const &rankName);
 	bool hasGuildMemberRank(int guildId, NetworkId const &memberId, std::string const &rankName);
-	void getGuildMemberRank(int guildId, NetworkId const &memberId, stdvector<std::string>::fwd &ranks);
+	void getGuildMemberRank(int guildId, NetworkId const &memberId, std::vector<std::string> &ranks);
 	void setGuildLeader(int guildId, NetworkId const &leaderId);
 	void setGuildElectionEndTime(int guildId, int electionPreviousEndTime, int electionNextEndTime);
 	void setGuildFaction(int guildId, uint32 guildFaction);
@@ -77,7 +77,7 @@ public:
 
 	void calculateGcwImperialScorePercentileForSwg();
 	void depersistGcwImperialScorePercentile();
-	void updateGcwImperialScorePercentile(stdset<std::string>::fwd const & gcwScoreCategories);
+	void updateGcwImperialScorePercentile(std::set<std::string> const & gcwScoreCategories);
 	void updateGcwRegionDefenderBonus(std::string const & gcwScoreCategory);
 	std::map<std::string, int> const & getGcwImperialScorePercentile() const;
 	std::map<std::string, int> const & getGcwGroupImperialScorePercentile() const;

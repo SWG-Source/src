@@ -19,8 +19,8 @@ class Vector;
 class DebugInfoManager
 {
 public:
-	typedef stdmap<std::string, Unicode::String>::fwd PropertySection;
-	typedef stdmap<std::string, PropertySection>::fwd PropertyMap;
+	typedef std::map<std::string, Unicode::String> PropertySection;
+	typedef std::map<std::string, PropertySection> PropertyMap;
 
 public:
 	static void addProperty(PropertyMap & propertyMap, std::string const & section, std::string const & propertyName, int propertyValue);

@@ -26,7 +26,7 @@ class MessageQueueDraftSchematics : public MessageQueue::Data
 public:
 	typedef MessageQueueDraftSchematicsData SchematicData;
 
-	typedef stdvector<SchematicData>::fwd SchematicVector;
+	typedef std::vector<SchematicData> SchematicVector;
 
 public:
 

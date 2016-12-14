@@ -1761,7 +1761,7 @@ ParameterList::const_iterator iter;
 							param.name.c_str());
 						break;
 					case LIST_LIST:
-						fp.print("\t%sstdvector<%s *>::fwd %s%s;", extraTab.c_str(),
+						fp.print("\t%sstd::vector<%s *> %s%s;", extraTab.c_str(),
 							variableNames[param.type], namePrefix,
 							param.name.c_str());
 						break;
@@ -1873,14 +1873,14 @@ ParameterList::const_iterator iter;
 				fp.print(";\n");
 				break;
 			case LIST_LIST:
-				fp.print("\t\tstdvector<");
+				fp.print("\t\tstd::vector<");
 				if (UnpaddedDataStructNames[param.type] != nullptr)
 					fp.print("%s", UnpaddedDataStructNames[param.type]);
 				else if (param.type == TYPE_ENUM)
 					fp.print("enum %s", param.extendedName.c_str());
 				else if (param.type == TYPE_STRUCT)
 					fp.print("%s", param.extendedName.c_str());
-				fp.print(">::fwd %s;\n", param.name.c_str());
+				fp.print("> %s;\n", param.name.c_str());
 				break;
 			default:
 				break;

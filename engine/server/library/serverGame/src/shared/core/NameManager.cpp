@@ -464,7 +464,7 @@ void NameManager::releasePlayerName(const NetworkId &id)
 
 // ----------------------------------------------------------------------
 
-void NameManager::addPlayers(const stdvector<NetworkId>::fwd &ids, const stdvector<int>::fwd &stationIds, const stdvector<std::string>::fwd &names, const stdvector<std::string>::fwd &fullNames, const stdvector<int>::fwd &createTimes, const stdvector<int>::fwd &lastLoginTimes)
+void NameManager::addPlayers(const std::vector<NetworkId> &ids, const std::vector<int> &stationIds, const std::vector<std::string> &names, const std::vector<std::string> &fullNames, const std::vector<int> &createTimes, const std::vector<int> &lastLoginTimes)
 {
 	DEBUG_FATAL(ids.size() != stationIds.size(),("Programmer bug:  Vectors ids and stationIds must be the same size.\n"));
 	DEBUG_FATAL(ids.size() != names.size(),("Programmer bug:  Vectors ids and names must be the same size.\n"));

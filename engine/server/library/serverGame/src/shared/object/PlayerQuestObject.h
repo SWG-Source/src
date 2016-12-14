@@ -31,7 +31,7 @@ public:
 	virtual bool            onContainerAboutToTransfer(ServerObject * destination, ServerObject* transferer);
 	virtual int             onContainerAboutToGainItem(ServerObject& item, ServerObject* transferer);
 
-	virtual void            getAttributes       (stdvector<std::pair<std::string, Unicode::String> >::fwd &data) const;
+	virtual void            getAttributes       (std::vector<std::pair<std::string, Unicode::String> > &data) const;
 
 	virtual void             onAddedToWorld            ();
 

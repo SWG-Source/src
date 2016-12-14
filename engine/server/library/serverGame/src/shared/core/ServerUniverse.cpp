@@ -527,7 +527,7 @@ std::string ServerUniverse::generateRandomResourceName(const std::string &nameTa
 
 // ----------------------------------------------------------------------
 
-void ServerUniverse::resourceClassTreeLoaded(stdmap<int, ResourceClassObject*>::fwd &resourceClasses)
+void ServerUniverse::resourceClassTreeLoaded(std::map<int, ResourceClassObject*> &resourceClasses)
 {
 	ServerResourceClassObject::loadDistributionFromIff(resourceClasses);
 }
@@ -660,7 +660,7 @@ ResourceTypeObject const * ServerUniverse::pickRandomNonDepletedResource(const s
 
 // ----------------------------------------------------------------------
 
-void ServerUniverse::createGroup(GroupMemberParam const & leader, stdvector<GroupMemberParam>::fwd const & members)
+void ServerUniverse::createGroup(GroupMemberParam const & leader, std::vector<GroupMemberParam> const & members)
 {
 	if (m_authoritative)
 		GroupObject::createGroup(leader, members);

@@ -25,7 +25,7 @@ class AggroListProperty : public Property
 {
 public:
 
-	typedef stdset<CachedNetworkId>::fwd TargetList;
+	typedef std::set<CachedNetworkId> TargetList;
 
 	static int getAggroListPropertyResetTime();
 	static AggroListProperty * getAggroListProperty(Object & object);

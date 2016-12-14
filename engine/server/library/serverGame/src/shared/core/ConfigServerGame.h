@@ -580,7 +580,7 @@ class ConfigServerGame
 
 	static Data *data;
 	static Vector startingPosition;
-	static stdmap<std::string, std::string>::fwd m_components;
+	static std::map<std::string, std::string> m_components;
 	
 
   public:

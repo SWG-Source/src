@@ -56,7 +56,7 @@ private:
 
 	struct NameInfo;
 
-	typedef stdvector<std::shared_ptr<NameInfo> >::fwd  NameInfoVector;
+	typedef std::vector<std::shared_ptr<NameInfo> >  NameInfoVector;
 
 private:
 

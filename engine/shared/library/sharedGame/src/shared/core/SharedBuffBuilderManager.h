@@ -58,7 +58,7 @@ public:
 		std::string m_requiredExpertise;
 	};
 
-	typedef stdmap<std::string, BuffBuilderDataTypeRecord>::fwd BuffBuilderDataType;
+	typedef std::map<std::string, BuffBuilderDataTypeRecord> BuffBuilderDataType;
 	static BuffBuilderDataType* ms_buffBuilderData;
 
 public:

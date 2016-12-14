@@ -55,7 +55,7 @@ namespace ShipComponentWeaponManagerNamespace
 		}
 	};
 
-	typedef stdmap<uint32, Data>::fwd CrcIntMap;
+	typedef std::map<uint32, Data> CrcIntMap;
 	CrcIntMap s_dataMap;
 
 	bool s_installed = false;

@@ -29,7 +29,7 @@ class ResourceContainerObject : public TangibleObject
 	// Container transfers
 	bool                   addResource     (const NetworkId &resourceType, int amount, const NetworkId &sourcePlayer);
 	bool                   addResource     (ResourceTypeObject const * const resourceType, int amount, NetworkId const & sourcePlayer);
-	bool                   removeResource  (const NetworkId &resourceType, int amount, stdvector<std::pair<NetworkId, int> >::fwd *sources);
+	bool                   removeResource  (const NetworkId &resourceType, int amount, std::vector<std::pair<NetworkId, int> > *sources);
 	bool                   removeResourceWithoutExperience(const NetworkId &resourceType, int amount); //TODO: rewrite crafting to handle experience, remove this function
 	bool                   transferTo      (ResourceContainerObject &destination, int amount);
 	bool                   splitContainer  (int amount, const CachedNetworkId &destContainer, int arrangementId, const Vector &newLocation, ServerObject *actor);
@@ -44,7 +44,7 @@ class ResourceContainerObject : public TangibleObject
 	void                   setResourceCtsData(int quantity, const std::string & resourceData);
 
 	std::string            debugPrint      () const;
-	virtual void           getAttributes   (stdvector<std::pair<std::string, Unicode::String> >::fwd &data) const;
+	virtual void           getAttributes   (std::vector<std::pair<std::string, Unicode::String> > &data) const;
 	virtual void           endBaselines    ();
 
 	virtual std::string    getItemLog() const;

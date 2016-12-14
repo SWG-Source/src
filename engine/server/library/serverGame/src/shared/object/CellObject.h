@@ -69,7 +69,7 @@ public:
 	bool                   isAllowed(CreatureObject const &who) const;
 	virtual bool           isVisibleOnClient              (const Client & client) const;
 	void addMembersToPackages();
-	virtual void           getAttributes                  (stdvector<std::pair<std::string, Unicode::String> >::fwd &data) const;
+	virtual void           getAttributes                  (std::vector<std::pair<std::string, Unicode::String> > &data) const;
 
 	virtual const NetworkId &     getOwnerId() const;
 	virtual bool                  isOwner(NetworkId const &id, Client const *client) const;

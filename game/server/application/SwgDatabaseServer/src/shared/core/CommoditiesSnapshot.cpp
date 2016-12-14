@@ -397,7 +397,7 @@ void CommoditiesSnapshot::handleDeleteLocationMessage(CMDeleteLocationMessage &m
  * ordinary (non-demand-load) containers.  The live database will be checked
  * for objects inside these objects.
  */
-void CommoditiesSnapshot::getWorldContainers(stdvector<NetworkId>::fwd &containers) const
+void CommoditiesSnapshot::getWorldContainers(std::vector<NetworkId> &containers) const
 {
 }
 // ----------------------------------------------------------------------

@@ -149,7 +149,7 @@ private:
 	CompilerIntegerParam m_rating;		// armor rating
 	CompilerIntegerParam m_integrity;		// integrity
 	CompilerIntegerParam m_effectiveness;		// default effectiveness (0 = only use special protection)
-	stdvector<StructParamOT *>::fwd m_specialProtection;		// damage-type specific protection
+	std::vector<StructParamOT *> m_specialProtection;		// damage-type specific protection
 	bool m_specialProtectionLoaded;
 	bool m_specialProtectionAppend;
 	CompilerIntegerParam m_vulnerability;		// damaga types that this armor doesn't protect against

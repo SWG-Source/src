@@ -137,7 +137,7 @@ class ConfigLoginServer
 
 	// has character creation for this cluster been disabled through config option
 	static bool         isCharacterCreationDisabled(std::string const & cluster);
-	static              stdset<std::string>::fwd const & getCharacterCreationDisabledClusterList();
+	static              std::set<std::string> const & getCharacterCreationDisabledClusterList();
 
 	static const int	getMaxConnectionsPerIP();
 

@@ -22,7 +22,7 @@ public:
 	static bool        getPlanetName (int planetIndex, std::string& planetName);
 	static bool        getPlanetSingleHopCost (const std::string& planetName1, const std::string& planetName2, int& planetCost);
 	static bool        getPlanetAnyHopLeastCost (const std::string& planetName1, const std::string& planetName2, int& planetCost);
-	static bool        getAdjacentPlanets (const std::string& planetName, stdset<std::string>::fwd& planetSet);
+	static bool        getAdjacentPlanets (const std::string& planetName, std::set<std::string>& planetSet);
 };
 
 // ======================================================================

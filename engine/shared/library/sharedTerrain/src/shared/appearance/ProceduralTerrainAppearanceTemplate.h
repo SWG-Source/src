@@ -157,13 +157,13 @@ protected:
 	TerrainGenerator*       m_terrainGenerator;
 	BakedTerrain*           m_bakedTerrain;
 
-	typedef stdvector<WaterTable>::fwd WaterTableList;
+	typedef std::vector<WaterTable> WaterTableList;
 	WaterTableList*         m_waterTableList;
 
-	typedef stdvector<RibbonQuad>::fwd RibbonQuadList;
+	typedef std::vector<RibbonQuad> RibbonQuadList;
 	RibbonQuadList*         m_ribbonQuadList;
 
-	typedef stdvector<RibbonEndCap>::fwd RibbonEndCapList;
+	typedef std::vector<RibbonEndCap> RibbonEndCapList;
 	RibbonEndCapList*         m_ribbonEndCapList;
 
 	float                   m_floraTileWidthInMeters;

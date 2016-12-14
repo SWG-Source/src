@@ -147,7 +147,7 @@ namespace Crafting
 		CraftingType_Last = CT_mission,
 	};
 
-	typedef stdvector<std::string>::fwd StringVector;
+	typedef std::vector<std::string> StringVector;
 	void getCraftingTypeNames (uint32 types, StringVector & sv);
 
 	//------------------------------------------------------------------------------
@@ -229,8 +229,8 @@ namespace Crafting
 
 		IngredientSlot(enum IngredientType _ingredientType,
 		               const StringId & _name,
-					   const stdvector<NetworkId>::fwd &slotIngredients,
-					   const stdvector<int>::fwd &slotIngredientsCount,
+					   const std::vector<NetworkId> &slotIngredients,
+					   const std::vector<int> &slotIngredientsCount,
 		               float _complexity,
 		               int _draftSlotOption,
 		               int _draftSlotIndex);

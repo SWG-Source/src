@@ -161,8 +161,7 @@ void LocalizationManager::install (AbstractFileFactory * fileFactory, Unicode::U
 
 	ms_singletonHashMap = new LocalizationManagerHashMap();
 
-	Unicode::UnicodeNarrowStringVector::const_iterator end = localeNameMap.end();
-	for ( Unicode::UnicodeNarrowStringVector::const_iterator iter = localeNameMap.begin(); iter != end; ++iter )
+	for (auto iter = localeNameMap.begin(); iter != localeNameMap.end(); ++iter )
 	{
 		Unicode::NarrowString localeName = (*iter);
 		LocalizationManager * localizationManager = new LocalizationManager (fileFactory, localeName, debugBadStringsFunc, displayBadStringIds);

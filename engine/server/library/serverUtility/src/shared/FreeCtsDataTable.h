@@ -30,7 +30,7 @@ public:
 	};
 
 	static std::string const & getFreeCtsFileName();
-	static stdmultimap<std::string, FreeCtsDataTable::FreeCtsInfo>::fwd const & getFreeCtsInfo();
+	static std::multimap<std::string, FreeCtsDataTable::FreeCtsInfo> const & getFreeCtsInfo();
 	static FreeCtsDataTable::FreeCtsInfo const * isFreeCtsSourceCluster(std::string const & sourceCluster);
 	static FreeCtsDataTable::FreeCtsInfo const * wouldCharacterTransferBeFree(time_t sourceCharacterCreateTime, uint32 sourceStationId, std::string const & sourceCluster, uint32 targetStationId, std::string const & targetCluster, bool ignoreTimeRestriction);
 	static FreeCtsDataTable::FreeCtsInfo const * getFreeCtsInfoForCharacter(time_t sourceCharacterCreateTime, std::string const & sourceCluster, bool ignoreTimeRestriction);

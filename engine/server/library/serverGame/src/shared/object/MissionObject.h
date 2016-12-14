@@ -44,7 +44,7 @@ public:
 
 	void                    endMission          (const bool succeeded);
 	const NetworkId &       getMissionHolderId  () const;
-	virtual void            getAttributes       (stdvector<std::pair<std::string, Unicode::String> >::fwd &data) const;
+	virtual void            getAttributes       (std::vector<std::pair<std::string, Unicode::String> > &data) const;
 
 
 /*mission data*/

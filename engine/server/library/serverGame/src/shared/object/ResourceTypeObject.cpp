@@ -231,7 +231,7 @@ void ResourceTypeObject::getCrateTemplate(std::string &buffer) const
 /**
  * Get only those attributes specific to the resource
  */
-void ResourceTypeObject::getResourceAttributes (stdvector<std::pair<std::string, Unicode::String> >::fwd &data) const
+void ResourceTypeObject::getResourceAttributes (std::vector<std::pair<std::string, Unicode::String> > &data) const
 {
 	for (AttributesType::const_iterator i=m_attributes.begin(); i!=m_attributes.end(); ++i)
 	{

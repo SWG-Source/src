@@ -21,7 +21,7 @@ class DoorObject;
 class NeighborObject;
 class CollisionProperty;
 
-typedef stdvector<Vector>::fwd VertexList;
+typedef std::vector<Vector> VertexList;
 
 // ----------------------------------------------------------------------
 

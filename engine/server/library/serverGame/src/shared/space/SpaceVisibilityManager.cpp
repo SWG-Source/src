@@ -372,7 +372,7 @@ Node &SpaceVisibilityManager_namespace::getNode(const NodeId &location)
 
 // ----------------------------------------------------------------------
 
-void SpaceVisibilityManager::getObjectsVisibleFromLocation(const Vector & location, stdvector<ServerObject*>::fwd &results)
+void SpaceVisibilityManager::getObjectsVisibleFromLocation(const Vector & location, std::vector<ServerObject*> &results)
 {
 	const Node &theNode = getNode(NodeId(location));
 	theNode.getAllVisibleObjects(results);

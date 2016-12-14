@@ -169,7 +169,7 @@ void PlayerQuestObject::endBaselines()
 
 //-----------------------------------------------------------------------
 
-void PlayerQuestObject::getAttributes(stdvector<std::pair<std::string, Unicode::String> >::fwd &data) const
+void PlayerQuestObject::getAttributes(std::vector<std::pair<std::string, Unicode::String> > &data) const
 {
 	TangibleObject::getAttributes(data);
 

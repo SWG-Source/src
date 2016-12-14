@@ -1444,7 +1444,7 @@ void ShipObject::constructFromTemplate()
 	ShipChassis const * shipChassis = ShipChassis::findShipChassisByName (TemporaryCrcString (shipType.c_str (), true));
 	if (shipChassis == nullptr)
 	{
-		WARNING (true, ("ShipObject::constructFromTemplate failed to find a valid ship chassis for [%s], trying generic", shipType.c_str ()));
+		DEBUG_WARNING (true, ("ShipObject::constructFromTemplate failed to find a valid ship chassis for [%s], trying generic", shipType.c_str ()));
 		shipChassis = ShipChassis::findShipChassisByName (TemporaryCrcString ("generic", true));
 	}
 
@@ -1452,7 +1452,7 @@ void ShipObject::constructFromTemplate()
 		m_chassisType = shipChassis->getCrc ();
 	else
 	{
-		WARNING (true, ("ShipObject::constructFromTemplate failed to find a valid ship chassis for [%s] or generic", shipType.c_str ()));
+		DEBUG_WARNING (true, ("ShipObject::constructFromTemplate failed to find a valid ship chassis for [%s] or generic", shipType.c_str ()));
 	}
 
 	//set initial slot targetability from the chassis setttings.  Code or script can change these at runtime

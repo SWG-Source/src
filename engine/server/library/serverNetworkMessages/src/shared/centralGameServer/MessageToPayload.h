@@ -44,7 +44,7 @@ public:
 	
 public:
 	MessageToPayload(const NetworkId &networkId, const MessageToId &messageId, const std::string &method, const	std::string &packedData, unsigned long callTime, bool guaranteed, DeliveryType deliveryType, NetworkId const & undeliveredCallbackObject, std::string const & undeliveredCallbackMethod, int recurringTime);
-	MessageToPayload(const NetworkId &networkId, const MessageToId &messageId, const std::string &method, const	stdvector<int8>::fwd &packedData, unsigned long callTime, bool guaranteed, DeliveryType deliveryType, NetworkId const & undeliveredCallbackObject, std::string const & undeliveredCallbackMethod, int recurringTime);
+	MessageToPayload(const NetworkId &networkId, const MessageToId &messageId, const std::string &method, const	std::vector<int8> &packedData, unsigned long callTime, bool guaranteed, DeliveryType deliveryType, NetworkId const & undeliveredCallbackObject, std::string const & undeliveredCallbackMethod, int recurringTime);
 	MessageToPayload(MessageToPayload const & rhs);
 	MessageToPayload();
 	~MessageToPayload();
@@ -66,7 +66,7 @@ public:
 	NetworkId const &getNetworkId() const;
 	MessageToId const &getMessageId() const;
 	std::string const &getMethod() const;
-	stdvector<int8>::fwd const &getPackedDataVector() const;
+	std::vector<int8> const &getPackedDataVector() const;
 	std::string getDataAsString() const;
 	unsigned long getCallTime() const;
 	bool getGuaranteed() const;

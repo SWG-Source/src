@@ -166,9 +166,9 @@ public:
 	static char const * getMentalStateString(MentalStates::Enumerator const mentalState);
 	static char const * getBehaviorString(Behaviors::Enumerator const behavior);
 
-	typedef stdmap<std::string, int>::fwd            ExperiencePointMap;
-	typedef stdset<const SkillObject *>::fwd         SkillList;
-	typedef stdvector<std::string>::fwd              StringVector;
+	typedef std::map<std::string, int>            ExperiencePointMap;
+	typedef std::set<const SkillObject *>         SkillList;
+	typedef std::vector<std::string>              StringVector;
 	typedef std::pair<std::pair<NetworkId /*player*/, std::string /*name*/>, NetworkId /*ship*/> PlayerAndShipPair;
 	
 	CreatureObject(const ServerCreatureObjectTemplate* newTemplate);
@@ -229,7 +229,7 @@ public:
 	int                 getShockWounds           () const;
 	void                setShockWounds           (int wound);
 	void                setAttribute             (Attributes::Enumerator attribute, Attributes::Value value);
-	virtual void        getAttributes            (stdvector<std::pair<std::string, Unicode::String> >::fwd &data) const;
+	virtual void        getAttributes            (std::vector<std::pair<std::string, Unicode::String> > &data) const;
 	void                sendTimedModData         (uint32 id, float time, bool updateCache = true);
 	void                sendCancelTimedMod       (uint32 id);
 	
@@ -277,13 +277,13 @@ public:
 	virtual const std::set<TriggerVolume *> * getTriggerVolumeEntered      () const;
 
 	// crafting functions
-	const stdmap<std::pair<uint32, uint32>,int>::fwd &  getDraftSchematics () const;
+	const std::map<std::pair<uint32, uint32>,int> &  getDraftSchematics () const;
 	bool                                isIngredientInInventory(const Object & ingredient) const;
 	void                                disableSchematicFiltering(void);
 	void                                enableSchematicFiltering(void);
 	bool                                isSchematicFilteringEnabled(void);
-	void                                getManufactureSchematics(stdvector<const ManufactureSchematicObject *>::fwd & schematics);
-	void                                getManufactureSchematics(stdvector<const ManufactureSchematicObject *>::fwd & schematics, uint32 craftingTypes);
+	void                                getManufactureSchematics(std::vector<const ManufactureSchematicObject *> & schematics);
+	void                                getManufactureSchematics(std::vector<const ManufactureSchematicObject *> & schematics, uint32 craftingTypes);
 
 	// inventory functions
 	bool isItemEquipped (const Object & item) const;
@@ -292,7 +292,7 @@ public:
 	int                 getExperiencePoints(const std::string & experienceType) const;
 	const std::map<std::string, int> &  getExperiencePoints() const;
 	const SkillList &   getSkillList() const;
-	const stdmap<std::string, std::pair<int, int> >::fwd & getModMap() const;
+	const std::map<std::string, std::pair<int, int> > & getModMap() const;
 	const int           getModValue(const std::string & modName) const;
 	const int           getEnhancedModValue(const std::string & modName) const;	
 	const int           getEnhancedModValueUncapped(const std::string & modName) const;  // This version does not respect getMaxCreatureSkillModBonus
@@ -337,7 +337,7 @@ public:
 	void                                removeAllAttributeModifiers ();
 	void								removeAllAttributeAndSkillmodMods ();
 	const AttribMod::AttribMod *        getAttributeModifier(const std::string & modName) const;
-	const stdmap<uint32, CreatureMod>::fwd & getAttributeModifiers () const;
+	const std::map<uint32, CreatureMod> & getAttributeModifiers () const;
 
 	// Mental state functions	
 	MentalStates::Value  getMentalState(MentalStates::Enumerator attribute) const;
@@ -345,7 +345,7 @@ public:
 	MentalStates::Value  getUnmodifiedMentalState(MentalStates::Enumerator attribute) const;
 	MentalStates::Value  getMaxMentalState(MentalStates::Enumerator attribute) const;
 	float                getMentalStateDecay(MentalStates::Enumerator state) const;
-	void                 getBehaviorTargets(Behaviors::Enumerator behavior, stdvector<NetworkId>::fwd &targets);
+	void                 getBehaviorTargets(Behaviors::Enumerator behavior, std::vector<NetworkId> &targets);
 	Behaviors::Enumerator getBehavior() const;
 	Behaviors::Enumerator getBehaviorToward(const NetworkId &target) const;
 
@@ -489,8 +489,8 @@ public:
 	bool                                   detachAllRiders();
 	CreatureObject                  const *getPrimaryMountingRider() const;
 	CreatureObject                        *getPrimaryMountingRider();
-	void                                   getMountingRiders(stdvector<const CreatureObject *>::fwd & riders) const;
-	void                                   getMountingRiders(stdvector<CreatureObject *>::fwd & riders);
+	void                                   getMountingRiders(std::vector<const CreatureObject *> & riders) const;
+	void                                   getMountingRiders(std::vector<CreatureObject *> & riders);
 
 	// Called on rider.
 	bool                                   mountCreature(CreatureObject &mountObject);
@@ -507,7 +507,7 @@ public:
 	bool                                   pilotShip(ServerObject &pilotSlotObject);
 	bool                                   unpilotShip();
 
-	void                                   getAllShipsInDatapad(stdvector<NetworkId>::fwd & ships) const;
+	void                                   getAllShipsInDatapad(std::vector<NetworkId> & ships) const;
 
 	// ======
 
@@ -519,7 +519,7 @@ public:
 		};
 	};
 
-	typedef stdunordered_set<const CreatureObject *, CreatureObjectPointerHash>::fwd AllCreaturesSet;
+	typedef std::unordered_set<const CreatureObject *, CreatureObjectPointerHash> AllCreaturesSet;
 	static const AllCreaturesSet & getAllCreatures();
 
 	bool monitorCreatureMovement(const CachedNetworkId &ofTarget, float i_skittishness, float i_curve);
@@ -613,7 +613,7 @@ public:
 	void addBuff(uint32 buffNameCrc, float duration = 0.0f, float dynamicValue = 0.0f, NetworkId caster = NetworkId::cms_invalid, uint32 stackCount = 1 );
 	void addBuff(uint32 buffNameCrc, float timeTillRemoval, float dynamicValue, float totalDuration, NetworkId caster, uint32 stackCount = 1);
 	void removeBuff(uint32 buffNameCrc);
-	void getAllBuffs(stdvector<uint32>::fwd  & buffCrcs) const;
+	void getAllBuffs(std::vector<uint32>  & buffCrcs) const;
 	bool getBuff(uint32 buffNameCrc, Buff & buff) const;
 	void decrementBuff(uint32 const buffNameCrc, uint32 const stacksToRemove = 1);
 	void decayBuff(uint32 buffNameCrc, float decayPercentage);
@@ -648,7 +648,7 @@ public:
 	unsigned long getLastWaterDamageTime() const;
 	void setLastWaterDamageTime(unsigned long newTime);
 
-	stdmap<std::string, int>::fwd const & getCommandList() const;
+	std::map<std::string, int> const & getCommandList() const;
 	void clearCommands();
 	bool grantCommand(std::string const & commandName, bool fromSkill);
 	void revokeCommand(std::string const & command, bool fromSkill, bool ignoreCount = false);
@@ -758,7 +758,7 @@ private:
 	void     addAttribBonus(int attrib, int bonus);
 	void     updateSlopeMovement(const std::string & modName);
 
-	int      getCurrentTargetsTotal(const stdmap<Attributes::Enumerator, Attributes::Value>::fwd & targets);
+	int      getCurrentTargetsTotal(const std::map<Attributes::Enumerator, Attributes::Value> & targets);
 	
 	int      changeAttribModCurrentValue(Attributes::Enumerator attrib, int delta, bool checkPoolOverflow);
 	void     recomputeAttribModTotals(bool checkPoolOverflow);
@@ -799,7 +799,7 @@ private:
 	};
 	friend struct StateChangeCallback;
 
-	typedef stdvector<MessageQueueMissionListResponseData>::fwd         MessageQueueMissionListResponseDataVector;
+	typedef std::vector<MessageQueueMissionListResponseData>         MessageQueueMissionListResponseDataVector;
 	MessageQueueMissionListResponseDataVector      m_missionResponseEntries;
 
 	static const SharedObjectTemplate * m_defaultSharedTemplate;	// template to use if no shared template is given

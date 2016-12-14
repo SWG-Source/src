@@ -394,7 +394,7 @@ void CityObject::setupUniverse()
 
 // ----------------------------------------------------------------------
 
-void CityObject::getAttributes(stdvector<std::pair<std::string, Unicode::String> >::fwd &data) const
+void CityObject::getAttributes(std::vector<std::pair<std::string, Unicode::String> > &data) const
 {
 	UniverseObject::getAttributes(data);
 }
@@ -1980,7 +1980,7 @@ CitizenInfo const *CityObject::getCitizenInfo(int cityId, NetworkId const &citiz
 
 // ----------------------------------------------------------------------
 
-void CityObject::getCityStructureIds(int cityId, stdvector<NetworkId>::fwd &results) const
+void CityObject::getCityStructureIds(int cityId, std::vector<NetworkId> &results) const
 {
 	results.clear();
 

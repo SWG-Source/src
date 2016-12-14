@@ -340,7 +340,7 @@ bool AsteroidGenerationManager::hasDataForScene(std::string const & sceneName)
     The same seed data will always generate the same asteroid field.
 		The field will have randomly even distribution of position, orientation, rotation range, scale range, and template selection based on the ratios given in the fields style table
 */
-bool AsteroidGenerationManager::generateField(AsteroidFieldData const & fieldData, stdvector<AsteroidData>::fwd & result)
+bool AsteroidGenerationManager::generateField(AsteroidFieldData const & fieldData, std::vector<AsteroidData> & result)
 {
 	if(!s_installed)
 	{

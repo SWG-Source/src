@@ -89,13 +89,13 @@ public:
 	virtual bool send                  (GameServerConnection *connection) const;
 
 	// Misc game-specific persistence
-	void getMoneyFromOfflineObject     (uint32 replyServer, NetworkId const & sourceObject, int amount, NetworkId const & replyTo, std::string const & successCallback, std::string const & failCallback, stdvector<int8>::fwd const & packedDictionary);
+	void getMoneyFromOfflineObject     (uint32 replyServer, NetworkId const & sourceObject, int amount, NetworkId const & replyTo, std::string const & successCallback, std::string const & failCallback, std::vector<int8> const & packedDictionary);
 
 	// Saving and Loading:
 	virtual bool saveToDB(DB::Session *session);
 	virtual bool load    (DB::Session *session);
 	virtual void saveCompleted         ();
-	virtual void getWorldContainers    (stdvector<NetworkId>::fwd &containers) const;
+	virtual void getWorldContainers    (std::vector<NetworkId> &containers) const;
 	
 	virtual void handleCommoditiesDataMessage(const MessageDispatch::MessageBase & message);
 	virtual void startLoadAfterSaveComplete();
@@ -219,10 +219,10 @@ protected:
 	virtual void decodeClientData(NetworkId const & objectId, Tag typeId, uint16 index, Archive::ReadIterator &bs, bool isBaseline);
 	virtual void decodeParentClientData(NetworkId const & objectId, Tag typeId, uint16 index, Archive::ReadIterator &bs, bool isBaseline);
 	
-	virtual bool encodeParentClientData(NetworkId const & objectId, Tag typeId, stdvector<BatchBaselinesMessageData>::fwd &baselines) const;
-	virtual bool encodeClientData(NetworkId const & objectId, Tag typeId, stdvector<BatchBaselinesMessageData>::fwd &baselines) const;
-	virtual bool encodeServerData(NetworkId const & objectId, Tag typeId, stdvector<BatchBaselinesMessageData>::fwd &baselines) const;
-	virtual bool encodeSharedData(NetworkId const & objectId, Tag typeId, stdvector<BatchBaselinesMessageData>::fwd &baselines) const;
+	virtual bool encodeParentClientData(NetworkId const & objectId, Tag typeId, std::vector<BatchBaselinesMessageData> &baselines) const;
+	virtual bool encodeClientData(NetworkId const & objectId, Tag typeId, std::vector<BatchBaselinesMessageData> &baselines) const;
+	virtual bool encodeServerData(NetworkId const & objectId, Tag typeId, std::vector<BatchBaselinesMessageData> &baselines) const;
+	virtual bool encodeSharedData(NetworkId const & objectId, Tag typeId, std::vector<BatchBaselinesMessageData> &baselines) const;
 
 	void decodeClientBattlefieldMarkerObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline);
 	void decodeClientBuildingObject(NetworkId const & objectId, uint16 index, Archive::ReadIterator &data, bool isBaseline);

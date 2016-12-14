@@ -1294,7 +1294,7 @@ void CommandQueue::executeCommand(Command const &command, NetworkId const &targe
 	status = Command::CEC_Success;
 
 	static bool s_tradeAllowedCommandsInit = false;
-	typedef stdvector<uint32>::fwd Uint32Vector;
+	typedef std::vector<uint32> Uint32Vector;
 	static Uint32Vector s_tradeAllowedCommands;
 
 	if (!s_tradeAllowedCommandsInit)

@@ -32,7 +32,7 @@ public:
 
 	void                      setExperience          (const NetworkId &objectId, const std::string &experienceType, int value);
 	void                      removeExperience       (const NetworkId &objectId, std::string experienceType);
-	bool                      getExperienceForObject (const NetworkId &objectId, stdvector<std::pair<std::string, int> >::fwd &values) const;
+	bool                      getExperienceForObject (const NetworkId &objectId, std::vector<std::pair<std::string, int> > &values) const;
 	
   private:
 	void                      addRowToIndex          (const NetworkId &objectId, const std::string &experienceType, DBSchema::ExperiencePointRow *row);

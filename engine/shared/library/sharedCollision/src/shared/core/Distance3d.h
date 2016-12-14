@@ -26,7 +26,7 @@ class Range;
 class Sphere;
 class MultiShape;
 
-typedef stdvector<Vector>::fwd VertexList;
+typedef std::vector<Vector> VertexList;
 
 #include "sharedCollision/CollisionEnums.h"
 #include "sharedMath/Vector.h"

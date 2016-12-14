@@ -28,9 +28,9 @@ class CollisionProperty;
 class MultiShape;
 class BaseExtent;
 
-typedef stdvector<Vector>::fwd VectorVector;
-typedef stdvector<Vector>::fwd VertexList;
-typedef stdvector<BaseExtent const *>::fwd ExtentVec;
+typedef std::vector<Vector> VectorVector;
+typedef std::vector<Vector> VertexList;
+typedef std::vector<BaseExtent const *> ExtentVec;
 
 // ----------------------------------------------------------------------
 

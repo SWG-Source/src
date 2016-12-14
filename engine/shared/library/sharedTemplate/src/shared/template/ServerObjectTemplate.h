@@ -518,28 +518,28 @@ private:
 	// this enum is also defined in the shared draft_schematic_object_template.tdf file
 	// this enum is also defined in the shared draft_schematic_object_template.tdf file
 	StringParam m_sharedTemplate;		// //template the client should associate with this template
-	stdvector<StringParam *>::fwd m_scripts;		// //scripts attached to the object
+	std::vector<StringParam *> m_scripts;		// //scripts attached to the object
 	bool m_scriptsLoaded;
 	bool m_scriptsAppend;
 	DynamicVariableParam m_objvars;		// //default objvars added to the object
 	CompilerIntegerParam m_volume;		// //how much room does the object take up
-	stdvector<CompilerIntegerParam *>::fwd m_visibleFlags;		// //who can see this object
+	std::vector<CompilerIntegerParam *> m_visibleFlags;		// //who can see this object
 	bool m_visibleFlagsLoaded;
 	bool m_visibleFlagsAppend;
-	stdvector<CompilerIntegerParam *>::fwd m_deleteFlags;		// //who can delete this object
+	std::vector<CompilerIntegerParam *> m_deleteFlags;		// //who can delete this object
 	bool m_deleteFlagsLoaded;
 	bool m_deleteFlagsAppend;
-	stdvector<CompilerIntegerParam *>::fwd m_moveFlags;		// //who can move this object
+	std::vector<CompilerIntegerParam *> m_moveFlags;		// //who can move this object
 	bool m_moveFlagsLoaded;
 	bool m_moveFlagsAppend;
 	BoolParam m_invulnerable;		// //can this object not be destroyed/killed
 	FloatParam m_complexity;		// //how hard this item is to craft (?)
 	CompilerIntegerParam m_tintIndex;		// //index into client tint palette
 	FloatParam m_updateRanges[3];		// //distances for network updates
-	stdvector<StructParamOT *>::fwd m_contents;		// //what's in this object
+	std::vector<StructParamOT *> m_contents;		// //what's in this object
 	bool m_contentsLoaded;
 	bool m_contentsAppend;
-	stdvector<StructParamOT *>::fwd m_xpPoints;		// //experience points for interacting with this object
+	std::vector<StructParamOT *> m_xpPoints;		// //experience points for interacting with this object
 	bool m_xpPointsLoaded;
 	bool m_xpPointsAppend;
 	BoolParam m_persistByDefault;		// //flag to automatically persist this object on creation

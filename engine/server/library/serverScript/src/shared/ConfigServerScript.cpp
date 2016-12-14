@@ -73,6 +73,7 @@ void ConfigServerScript::install(void)
 	KEY_BOOL    (allowDebugSpeakMessages, true);
 	KEY_BOOL    (disableScriptLogs, false);
 	KEY_BOOL    (logBalance, false);
+	KEY_BOOL    (printStacks, false);
 
 	int index = 0;
 	char const * result = 0;

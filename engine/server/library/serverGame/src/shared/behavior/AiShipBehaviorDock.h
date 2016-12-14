@@ -53,7 +53,7 @@ private:
 	static char const * getDockingStateString(DockingState const dockingState);
 #endif // _DEBUG
 
-	typedef stdlist<Transform>::fwd HardPointList;
+	typedef std::list<Transform> HardPointList;
 
 	ShipController & m_shipController;
 	CachedNetworkId m_dockTarget;

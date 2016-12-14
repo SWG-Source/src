@@ -473,8 +473,8 @@ bool GameObjectTypes::isSubType        (int type)
 bool GameObjectTypes::doesPowerupApply (int powerupType, int targetType)
 {
 	//@todo: this should be data driven
-	typedef stdvector<int>::fwd IntVector;
-	typedef stdmap<int, IntVector>::fwd IntVectorMap;
+	typedef std::vector<int> IntVector;
+	typedef std::map<int, IntVector> IntVectorMap;
 	static IntVectorMap s_powerupGotMap;
 	static bool s_powerupGotMapInstalled = false;
 	if (!s_powerupGotMapInstalled)

@@ -69,7 +69,7 @@ protected:
 
 	// ----------
 
-	typedef stdset<Client*>::fwd ClientList;
+	typedef std::set<Client*> ClientList;
 
 	ClientList * m_clientList;
 

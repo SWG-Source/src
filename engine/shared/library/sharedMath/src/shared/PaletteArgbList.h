@@ -38,7 +38,7 @@ public:
 
 private:
 
-	typedef stdmap<const CrcString *, PaletteArgb*, LessPointerComparator>::fwd  ResourceMap;
+	typedef std::map<const CrcString *, PaletteArgb*, LessPointerComparator>  ResourceMap;
 
 private:
 

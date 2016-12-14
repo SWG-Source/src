@@ -65,11 +65,11 @@ struct CellPosition
 };
 
 
-typedef stdvector<CollisionProperty*>::fwd ColliderList;
-typedef stdvector<ObstacleInfo>::fwd ObstacleList;
-typedef stdvector<Contact>::fwd ContactList;
-typedef stdvector<FloorContactShape*>::fwd FloorContactList;
-typedef stdvector<CellPosition>::fwd CellPositionList;
+typedef std::vector<CollisionProperty*> ColliderList;
+typedef std::vector<ObstacleInfo> ObstacleList;
+typedef std::vector<Contact> ContactList;
+typedef std::vector<FloorContactShape*> FloorContactList;
+typedef std::vector<CellPosition> CellPositionList;
 
 struct MoveSegment
 {

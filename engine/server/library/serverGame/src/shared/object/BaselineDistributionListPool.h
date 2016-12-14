@@ -20,7 +20,7 @@ class Client;
 class BaselineDistributionListPool
 {
 public:
-	static stdvector<Watcher<Client> >::fwd *get(ServerObject const &obj, bool allocIfNeeded);
+	static std::vector<Watcher<Client> > *get(ServerObject const &obj, bool allocIfNeeded);
 	static void free(ServerObject const &obj);
 };
 

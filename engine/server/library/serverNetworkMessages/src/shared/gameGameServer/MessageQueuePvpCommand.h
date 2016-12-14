@@ -35,7 +35,7 @@ public:
 		int       m_intParam2;
 	};
 
-	typedef stdvector<PvpCommand>::fwd PvpCommands;
+	typedef std::vector<PvpCommand> PvpCommands;
 
 	void addPvpCommand(uint32 command, NetworkId const &idParam, int intParam1, int intParam2);
 	PvpCommands const & getPvpCommands() const;

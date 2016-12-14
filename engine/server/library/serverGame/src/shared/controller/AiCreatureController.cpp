@@ -842,7 +842,7 @@ bool AICreatureController::wander( float minDistance, float maxDistance, float m
 {
 	if (isRetreating())
 	{
-		WARNING(true, ("AICreatureController::wander() owner(%s) minDistance(%.2f) maxDistance(%.2f) minAngle(%.2f) maxAngle(%.2f) minDelay(%.2f) maxDelay(%.2f) Trying to wander while retreating, failing request.", getDebugInformation().c_str(), minDistance, maxDistance, minAngle, maxAngle, minDelay, maxDelay));
+		DEBUG_WARNING(true, ("AICreatureController::wander() owner(%s) minDistance(%.2f) maxDistance(%.2f) minAngle(%.2f) maxAngle(%.2f) minDelay(%.2f) maxDelay(%.2f) Trying to wander while retreating, failing request.", getDebugInformation().c_str(), minDistance, maxDistance, minAngle, maxAngle, minDelay, maxDelay));
 		return false;
 	}
 
@@ -876,7 +876,7 @@ void AICreatureController::loiter(CellProperty const * homeCell, Vector const & 
 {
 	if (isRetreating())
 	{
-		WARNING(true, ("AICreatureController::loiter() owner(%s) cell(%s) home(%.0f, %.0f, %.0f) distance[%.2f...%.2f] delay[%.0f...%.0f] Trying to loiter while retreating, failing request.", getDebugInformation().c_str(), ((homeCell != nullptr) ? homeCell->getCellName() : "nullptr"), home_p.x, home_p.y, home_p.z, minDistance, maxDistance, minDelay, maxDelay));
+		DEBUG_WARNING(true, ("AICreatureController::loiter() owner(%s) cell(%s) home(%.0f, %.0f, %.0f) distance[%.2f...%.2f] delay[%.0f...%.0f] Trying to loiter while retreating, failing request.", getDebugInformation().c_str(), ((homeCell != nullptr) ? homeCell->getCellName() : "nullptr"), home_p.x, home_p.y, home_p.z, minDistance, maxDistance, minDelay, maxDelay));
 		return;
 	}
 
@@ -892,7 +892,7 @@ void AICreatureController::loiter(NetworkId const & homeId, float const minDista
 {
 	if (isRetreating())
 	{
-		WARNING(true, ("AICreatureController::loiter() owner(%s) home(%s) distance[%.2f...%.2f] delay[%.0f...%.0f] Trying to loiter while retreating, failing request.", getDebugInformation().c_str(), homeId.getValueString().c_str(), minDistance, maxDistance, minDelay, maxDelay));
+		DEBUG_WARNING(true, ("AICreatureController::loiter() owner(%s) home(%s) distance[%.2f...%.2f] delay[%.0f...%.0f] Trying to loiter while retreating, failing request.", getDebugInformation().c_str(), homeId.getValueString().c_str(), minDistance, maxDistance, minDelay, maxDelay));
 		return;
 	}
 
@@ -910,7 +910,7 @@ void AICreatureController::moveTo(CellProperty const * cell, Vector const & targ
 {
 	if (isRetreating())
 	{
-		WARNING(true, ("AICreatureController::moveTo() owner(%s) cell(%s) position(%.0f, %.0f, %.0f) radius(%.2f) Trying to moveTo while retreating, failing request.", getDebugInformation().c_str(), ((cell != nullptr) ? cell->getCellName() : "nullptr"), target_p.x, target_p.y, target_p.z, radius));
+		DEBUG_WARNING(true, ("AICreatureController::moveTo() owner(%s) cell(%s) position(%.0f, %.0f, %.0f) radius(%.2f) Trying to moveTo while retreating, failing request.", getDebugInformation().c_str(), ((cell != nullptr) ? cell->getCellName() : "nullptr"), target_p.x, target_p.y, target_p.z, radius));
 		return;
 	}
 
@@ -949,7 +949,7 @@ void AICreatureController::moveTo(Unicode::String const & targetName)
 {
 	if (isRetreating())
 	{
-		WARNING(true, ("AICreatureController::moveTo() owner(%s) target(%s) Trying to moveTo while retreating, failing request.", getDebugInformation().c_str(), Unicode::wideToNarrow(targetName).c_str()));
+		DEBUG_WARNING(true, ("AICreatureController::moveTo() owner(%s) target(%s) Trying to moveTo while retreating, failing request.", getDebugInformation().c_str(), Unicode::wideToNarrow(targetName).c_str()));
 		return;
 	}
 
@@ -984,7 +984,7 @@ void AICreatureController::patrol( std::vector<Location> const & locations, bool
 {
 	if (isRetreating())
 	{
-		WARNING(true, ("AICreatureController::patrol() owner(%s) Trying to patrol while retreating, failing request.", getDebugInformation().c_str()));
+		DEBUG_WARNING(true, ("AICreatureController::patrol() owner(%s) Trying to patrol while retreating, failing request.", getDebugInformation().c_str()));
 		return;
 	}
 
@@ -1018,7 +1018,7 @@ void AICreatureController::patrol( std::vector<Unicode::String> const & location
 {
 	if (isRetreating())
 	{
-		WARNING(true, ("AICreatureController::patrol() owner(%s) Trying to patrol while retreating, failing request.", getDebugInformation().c_str()));
+		DEBUG_WARNING(true, ("AICreatureController::patrol() owner(%s) Trying to patrol while retreating, failing request.", getDebugInformation().c_str()));
 		return;
 	}
 
@@ -1052,7 +1052,7 @@ void AICreatureController::stop()
 {
 	if (isRetreating())
 	{
-		WARNING(true, ("AICreatureController::stop() owner(%s) Trying to stop while retreating, failing request.", getDebugInformation().c_str()));
+		DEBUG_WARNING(true, ("AICreatureController::stop() owner(%s) Trying to stop while retreating, failing request.", getDebugInformation().c_str()));
 		return;
 	}
 
@@ -1071,7 +1071,7 @@ bool AICreatureController::faceTo(CellProperty const * targetCell, Vector const 
 {
 	if (isRetreating())
 	{
-		WARNING(true, ("AICreatureController::faceTo() owner(%s) cell(%s) position(%.0f, %.0f, %.0f) Trying to faceTo while retreating, failing faceTo request.", getDebugInformation().c_str(), ((targetCell != nullptr) ? targetCell->getCellName() : "nullptr"), target_p.x, target_p.y, target_p.z));
+		DEBUG_WARNING(true, ("AICreatureController::faceTo() owner(%s) cell(%s) position(%.0f, %.0f, %.0f) Trying to faceTo while retreating, failing faceTo request.", getDebugInformation().c_str(), ((targetCell != nullptr) ? targetCell->getCellName() : "nullptr"), target_p.x, target_p.y, target_p.z));
 		return false;
 	}
 
@@ -1110,7 +1110,7 @@ bool AICreatureController::faceTo( NetworkId const & targetId )
 {
 	if (isRetreating())
 	{
-		WARNING(true, ("AICreatureController::faceTo() owner(%s) Trying to faceTo the target(%s) while retreating, failing request.", getDebugInformation().c_str(), targetId.getValueString().c_str()));
+		DEBUG_WARNING(true, ("AICreatureController::faceTo() owner(%s) Trying to faceTo the target(%s) while retreating, failing request.", getDebugInformation().c_str(), targetId.getValueString().c_str()));
 		return false;
 	}
 
@@ -1155,7 +1155,7 @@ bool AICreatureController::follow( NetworkId const & targetId, float minDistance
 {
 	if (isRetreating())
 	{
-		WARNING(true, ("AICreatureController::follow() owner(%s) distance[%.2f...%.2f] Trying to follow the target(%s) while retreating, failing request.", getDebugInformation().c_str(), minDistance, maxDistance, targetId.getValueString().c_str()));
+		DEBUG_WARNING(true, ("AICreatureController::follow() owner(%s) distance[%.2f...%.2f] Trying to follow the target(%s) while retreating, failing request.", getDebugInformation().c_str(), minDistance, maxDistance, targetId.getValueString().c_str()));
 		return false;
 	}
 
@@ -1203,7 +1203,7 @@ bool AICreatureController::follow( NetworkId const & targetId, Vector const & of
 {
 	if (isRetreating())
 	{
-		WARNING(true, ("AICreatureController::follow() owner(%s) offset(%.0f, %.0f, %.0f) Trying to follow the target(%s) while retreating, failing request.", getDebugInformation().c_str(), offset.x, offset.y, offset.z, targetId.getValueString().c_str()));
+		DEBUG_WARNING(true, ("AICreatureController::follow() owner(%s) offset(%.0f, %.0f, %.0f) Trying to follow the target(%s) while retreating, failing request.", getDebugInformation().c_str(), offset.x, offset.y, offset.z, targetId.getValueString().c_str()));
 		return false;
 	}
 
@@ -1254,7 +1254,7 @@ bool AICreatureController::swarm( NetworkId const & targetId )
 {
 	if (isRetreating())
 	{
-		WARNING(true, ("AICreatureController::swarm() owner(%s) Trying to flee the target(%s) while retreating, failing request.", getDebugInformation().c_str(), targetId.getValueString().c_str()));
+		DEBUG_WARNING(true, ("AICreatureController::swarm() owner(%s) Trying to flee the target(%s) while retreating, failing request.", getDebugInformation().c_str(), targetId.getValueString().c_str()));
 		return false;
 	}
 
@@ -1290,7 +1290,7 @@ bool AICreatureController::swarm( NetworkId const & targetId, float offset )
 {
 	if (isRetreating())
 	{
-		WARNING(true, ("AICreatureController::swarm() owner(%s) offset(%.2f) Trying to flee the target(%s) while retreating, failing request.", getDebugInformation().c_str(), offset, targetId.getValueString().c_str()));
+		DEBUG_WARNING(true, ("AICreatureController::swarm() owner(%s) offset(%.2f) Trying to flee the target(%s) while retreating, failing request.", getDebugInformation().c_str(), offset, targetId.getValueString().c_str()));
 		return false;
 	}
 
@@ -1314,7 +1314,7 @@ bool AICreatureController::flee( NetworkId const & targetId, float minDistance, 
 {
 	if (isRetreating())
 	{
-		WARNING(true, ("AICreatureController::flee() owner(%s) distance[%.2f...%.2f] Trying to flee the target(%s) while retreating, failing request.", getDebugInformation().c_str(), minDistance, maxDistance, targetId.getValueString().c_str(), targetId.getValueString().c_str()));
+		DEBUG_WARNING(true, ("AICreatureController::flee() owner(%s) distance[%.2f...%.2f] Trying to flee the target(%s) while retreating, failing request.", getDebugInformation().c_str(), minDistance, maxDistance, targetId.getValueString().c_str(), targetId.getValueString().c_str()));
 		return false;
 	}
 
@@ -2411,7 +2411,7 @@ NetworkId AICreatureController::createWeapon(char const * const functionName, Cr
 		{
 			if (required)
 			{
-				WARNING(required, ("debug_ai: AICreatureController::%s() A required weapon is specified as ""none"" for (%s), defaulting to ""unarmed""", functionName, getDebugInformation().c_str()));
+				DEBUG_WARNING(required, ("debug_ai: AICreatureController::%s() A required weapon is specified as ""none"" for (%s), defaulting to ""unarmed""", functionName, getDebugInformation().c_str()));
 				result = getUnarmedWeapon();
 			}
 			else

@@ -27,9 +27,9 @@ namespace DataLintNamespace
 		M_server
 	};
 
-	typedef stdvector<std::string>::fwd                               StringList;
+	typedef std::vector<std::string>                               StringList;
 	typedef std::pair<std::string, std::pair<DataLint::AssetType, StringList> > WarningPair;
-	typedef stdvector<WarningPair>::fwd                               WarningList;
+	typedef std::vector<WarningPair>                               WarningList;
 	typedef bool(*AssetFunction)(char const *);
 
 	bool                       ms_installed = false;

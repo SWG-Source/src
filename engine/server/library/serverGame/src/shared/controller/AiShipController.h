@@ -45,9 +45,9 @@ public:
 		AO_count
 	};
 
-	typedef stdvector<Transform>::fwd TransformList;
-	typedef stdvector<CachedNetworkId>::fwd CachedNetworkIdList;
-	typedef stdvector<NetworkId>::fwd NetworkIdList;
+	typedef std::vector<Transform> TransformList;
+	typedef std::vector<CachedNetworkId> CachedNetworkIdList;
+	typedef std::vector<NetworkId> NetworkIdList;
 
 	static void install();
 
@@ -168,7 +168,7 @@ protected:
 
 private:
 
-	typedef stdset<CachedNetworkId>::fwd CachedNetworkIdSet;
+	typedef std::set<CachedNetworkId> CachedNetworkIdSet;
 
 	enum CountermeasureState
 	{

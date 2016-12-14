@@ -52,13 +52,13 @@ private:
 	int                             m_id;
 
 	CreatureObject*                   m_initiator;
-	stdvector<Watcher<ServerObject> >::fwd*   m_initiatorContents;
+	std::vector<Watcher<ServerObject> >*   m_initiatorContents;
 	int                               m_initiatorMoney;
 	bool                              m_initiatorOk;
 	bool                              m_initiatorVerify;
 
 	CreatureObject*                    m_recipient;
-	stdvector<Watcher<ServerObject> >::fwd*    m_recipientContents;
+	std::vector<Watcher<ServerObject> >*    m_recipientContents;
 	int                                m_recipientMoney;
 	bool                               m_recipientOk;
 	bool                               m_recipientVerify;

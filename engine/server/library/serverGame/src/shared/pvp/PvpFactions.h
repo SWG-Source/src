@@ -22,7 +22,7 @@ public:
 	static bool isUnattackableFaction(Pvp::FactionId factionId);
 	static bool isBountyTargetFaction(Pvp::FactionId factionId);
 	static bool isBubbleFaction(Pvp::FactionId factionId);
-	static stdvector<Pvp::FactionId>::fwd const &getOpposingFactions(Pvp::FactionId factionId);
+	static std::vector<Pvp::FactionId> const &getOpposingFactions(Pvp::FactionId factionId);
 	static Pvp::FactionId getBattlefieldFactionId();
 	static Pvp::FactionId getDuelFactionId();
 	static Pvp::FactionId getBountyDuelFactionId();

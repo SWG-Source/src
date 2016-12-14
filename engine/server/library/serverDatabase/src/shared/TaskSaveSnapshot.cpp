@@ -21,7 +21,11 @@ TaskSaveSnapshot::TaskSaveSnapshot(Snapshot *snapshot) : m_snapshot(snapshot)
 
 bool TaskSaveSnapshot::process(DB::Session *session)
 {
-	return (m_snapshot->saveToDB(session));
+	if (session != nullptr) {
+		return (m_snapshot->saveToDB(session));
+	}
+
+	return false;
 }
 
 // ----------------------------------------------------------------------
