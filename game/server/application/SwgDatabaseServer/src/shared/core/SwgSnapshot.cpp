@@ -163,6 +163,42 @@ bool SwgSnapshot::saveToDB(DB::Session *session)
 	
 	if (! (m_objectTableBuffer.save(session)))
 		return false;
+
+	m_battlefieldMarkerObjectBuffer.save(session);
+	m_battlefieldParticipantBuffer.save(session);
+	m_buildingObjectBuffer.save(session);
+	m_bountyHunterTargetBuffer.save(session);
+	m_cellObjectBuffer.save(session);
+	m_cityObjectBuffer.save(session);
+	m_creatureObjectBuffer.save(session);
+	m_experienceBuffer.save(session);
+	m_factoryObjectBuffer.save(session);
+	m_guildObjectBuffer.save(session);
+	m_harvesterInstallationObjectBuffer.save(session);
+	m_installationObjectBuffer.save(session);
+	m_intangibleObjectBuffer.save(session);
+	m_locationBuffer.save(session);
+	m_manufactureInstallationObjectBuffer.save(session);
+	m_manufactureSchematicAttributeBuffer.save(session);
+	m_manufactureSchematicObjectBuffer.save(session);
+	m_messageBuffer.save(session);
+	m_missionObjectBuffer.save(session);
+	m_objvarBuffer.save(session);
+	m_planetObjectBuffer.save(session);
+	m_playerObjectBuffer.save(session);
+	m_playerQuestObjectBuffer.save(session);
+	m_propertyListBuffer.save(session);
+	m_resourceContainerObjectBuffer.save(session);
+	m_resourceTypeBuffer.save(session);
+	m_scriptBuffer.save(session);
+	m_shipObjectBuffer.save(session);
+	m_staticObjectBuffer.save(session);
+	m_tangibleObjectBuffer.save(session);
+	m_universeObjectBuffer.save(session);
+	m_vehicleObjectBuffer.save(session);
+	m_waypointBuffer.save(session);
+	m_weaponObjectBuffer.save(session);
+
 	if (! (Snapshot::saveToDB(session)))
 		return false;
 
