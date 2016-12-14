@@ -44,14 +44,7 @@
 // ======================================================================
 
 /**
- * Construct a snapshot.
- *
- * This and the header file should be the only places that the entire
- * list of buffers is hard-coded.  Every other place where you want to refer
- * to all the buffers should use m_bufferList.  This will reduce the number
- * of places the code needs to be changed if new buffers are added.
- * (Referring to a _specific_ buffer when you know you need that buffer
- * is kosher.)
+ * Construct a commodities snapshot.
  */
 CommoditiesSnapshot::CommoditiesSnapshot(DB::ModeQuery::Mode mode) :
 		Snapshot(mode, false),
