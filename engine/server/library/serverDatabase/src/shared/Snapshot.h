@@ -79,7 +79,6 @@ public:
 	virtual void startLoadAfterSaveComplete() =0;
 
   protected:
-	typedef std::vector<AbstractTableBuffer *> BufferListType;
 	typedef std::vector<ObjectLocator *> LocatorListType;
 	typedef std::vector<CustomPersistStep*> CustomStepListType;
 	
@@ -88,7 +87,6 @@ public:
 	 * The base class deals with the buffers using only the interface of
 	 * AbstractTableBuffer.
 	 */
-	BufferListType m_bufferList;
 	LocatorListType m_locatorList;       ///< List of ObjectLocators that find objects in the database
 	CustomStepListType m_customStepList; ///< List of extra things to do while saving this snapshot (e.g. associating characters with accounts)
 
