@@ -53,8 +53,7 @@
  * Construct a snapshot.
  *
  * This and the header file should be the only places that the entire
- * list of buffers is hard-coded.  Every other place where you want to refer
- * to all the buffers should use m_bufferList.  This will reduce the number
+ * list of buffers is hard-coded.  This will reduce the number
  * of places the code needs to be changed if new buffers are added.
  * (Referring to a _specific_ buffer when you know you need that buffer
  * is kosher.)
@@ -72,50 +71,11 @@ SwgSnapshot::SwgSnapshot(DB::ModeQuery::Mode mode, bool useGoldDatabase)
           m_resourceContainerObjectBuffer(mode), m_resourceTypeBuffer(), m_scriptBuffer(), m_shipObjectBuffer(mode),
           m_staticObjectBuffer(mode), m_tangibleObjectBuffer(mode), m_universeObjectBuffer(mode),
           m_vehicleObjectBuffer(mode), m_waypointBuffer(mode), m_weaponObjectBuffer(mode),
-          m_immediateDeleteStep(nullptr), m_offlineMoneyCustomPersistStep(nullptr) {
-    m_bufferList.push_back(&m_battlefieldMarkerObjectBuffer);
-    m_bufferList.push_back(&m_battlefieldParticipantBuffer);
-    m_bufferList.push_back(&m_buildingObjectBuffer);
-    m_bufferList.push_back(&m_bountyHunterTargetBuffer);
-    m_bufferList.push_back(&m_cellObjectBuffer);
-    m_bufferList.push_back(&m_cityObjectBuffer);
-    m_bufferList.push_back(&m_creatureObjectBuffer);
-    m_bufferList.push_back(&m_experienceBuffer);
-    m_bufferList.push_back(&m_factoryObjectBuffer);
-    m_bufferList.push_back(&m_guildObjectBuffer);
-    m_bufferList.push_back(&m_harvesterInstallationObjectBuffer);
-    m_bufferList.push_back(&m_installationObjectBuffer);
-    m_bufferList.push_back(&m_intangibleObjectBuffer);
-    m_bufferList.push_back(&m_locationBuffer);
-    m_bufferList.push_back(&m_manufactureInstallationObjectBuffer);
-    m_bufferList.push_back(&m_manufactureSchematicAttributeBuffer);
-    m_bufferList.push_back(&m_manufactureSchematicObjectBuffer);
-    m_bufferList.push_back(&m_messageBuffer);
-    m_bufferList.push_back(&m_missionObjectBuffer);
-    m_bufferList.push_back(&m_objvarBuffer);
-    m_bufferList.push_back(&m_planetObjectBuffer);
-    m_bufferList.push_back(&m_playerObjectBuffer);
-    m_bufferList.push_back(&m_playerQuestObjectBuffer);
-    m_bufferList.push_back(&m_propertyListBuffer);
-    m_bufferList.push_back(&m_resourceContainerObjectBuffer);
-    m_bufferList.push_back(&m_resourceTypeBuffer);
-    m_bufferList.push_back(&m_scriptBuffer);
-    m_bufferList.push_back(&m_shipObjectBuffer);
-    m_bufferList.push_back(&m_staticObjectBuffer);
-    m_bufferList.push_back(&m_tangibleObjectBuffer);
-    m_bufferList.push_back(&m_universeObjectBuffer);
-    m_bufferList.push_back(&m_vehicleObjectBuffer);
-    m_bufferList.push_back(&m_waypointBuffer);
-    m_bufferList.push_back(&m_weaponObjectBuffer);
-
-    // note:  m_objectTableBuffer is left off bufferList intentionally
-}
+          m_immediateDeleteStep(nullptr), m_offlineMoneyCustomPersistStep(nullptr) {}
 
 // ----------------------------------------------------------------------
 
-SwgSnapshot::~SwgSnapshot() {
-    m_bufferList.clear();
-}
+SwgSnapshot::~SwgSnapshot() {}
 
 // ----------------------------------------------------------------------
 
@@ -212,9 +172,40 @@ void
 SwgSnapshot::handleDeleteMessage(const NetworkId &objectId, int reasonCode, bool immediate, bool demandLoadedContainer, bool cascadeReason) {
     m_objectTableBuffer.handleDeleteMessage(objectId, reasonCode, demandLoadedContainer, cascadeReason);
 
-    for (BufferListType::iterator buffer = m_bufferList.begin(); buffer != m_bufferList.end(); ++buffer) {
-        (*buffer)->removeObject(objectId); // if the object is deleted, no reason to save other data for it
-    }
+    m_battlefieldMarkerObjectBuffer->removeObject(objectId);
+    m_battlefieldParticipantBuffer->removeObject(objectId);
+    m_buildingObjectBuffer->removeObject(objectId);
+    m_bountyHunterTargetBuffer->removeObject(objectId);
+    m_cellObjectBuffer->removeObject(objectId);
+    m_cityObjectBuffer->removeObject(objectId);
+    m_creatureObjectBuffer->removeObject(objectId);
+    m_experienceBuffer->removeObject(objectId);
+    m_factoryObjectBuffer->removeObject(objectId);
+    m_guildObjectBuffer->removeObject(objectId);
+    m_harvesterInstallationObjectBuffer->removeObject(objectId);
+    m_installationObjectBuffer->removeObject(objectId);
+    m_intangibleObjectBuffer->removeObject(objectId);
+    m_locationBuffer->removeObject(objectId);
+    m_manufactureInstallationObjectBuffer->removeObject(objectId);
+    m_manufactureSchematicAttributeBuffer->removeObject(objectId);
+    m_manufactureSchematicObjectBuffer->removeObject(objectId);
+    m_messageBuffer->removeObject(objectId);
+    m_missionObjectBuffer->removeObject(objectId);
+    m_objvarBuffer->removeObject(objectId);
+    m_planetObjectBuffer->removeObject(objectId);
+    m_playerObjectBuffer->removeObject(objectId);
+    m_playerQuestObjectBuffer->removeObject(objectId);
+    m_propertyListBuffer->removeObject(objectId);
+    m_resourceContainerObjectBuffer->removeObject(objectId);
+    m_resourceTypeBuffer->removeObject(objectId);
+    m_scriptBuffer->removeObject(objectId);
+    m_shipObjectBuffer->removeObject(objectId);
+    m_staticObjectBuffer->removeObject(objectId);
+    m_tangibleObjectBuffer->removeObject(objectId);
+    m_universeObjectBuffer->removeObject(objectId);
+    m_vehicleObjectBuffer->removeObject(objectId);
+    m_waypointBuffer->removeObject(objectId);
+    m_weaponObjectBuffer->removeObject(objectId);
 
     if (immediate && (getMode() != DB::ModeQuery::mode_INSERT)) {
         if (!m_immediateDeleteStep) {
@@ -474,11 +465,41 @@ bool SwgSnapshot::load(DB::Session *session) {
         }
         m_objectTableBuffer.getTags(tags);
 
-        for (BufferListType::iterator buffer = m_bufferList.begin(); buffer != m_bufferList.end(); ++buffer) {
-            if (!((*buffer)->load(session, tags, schema, getUseGoldDatabase()))) {
-                return false;
-            }
-        }
+        // the buffer list was fucked so we'll do this the old fashioned way
+        if (!((m_battlefieldMarkerObjectBuffer)->load(session, tags, schema, getUseGoldDatabase()))) { return false; }
+        if (!((m_battlefieldParticipantBuffer)->load(session, tags, schema, getUseGoldDatabase()))) { return false; }
+        if (!((m_buildingObjectBuffer)->load(session, tags, schema, getUseGoldDatabase()))) { return false; }
+        if (!((m_bountyHunterTargetBuffer)->load(session, tags, schema, getUseGoldDatabase()))) { return false; }
+        if (!((m_cellObjectBuffer)->load(session, tags, schema, getUseGoldDatabase()))) { return false; }
+        if (!((m_cityObjectBuffer)->load(session, tags, schema, getUseGoldDatabase()))) { return false; }
+        if (!((m_creatureObjectBuffer)->load(session, tags, schema, getUseGoldDatabase()))) { return false; }
+        if (!((m_experienceBuffer)->load(session, tags, schema, getUseGoldDatabase()))) { return false; }
+        if (!((m_factoryObjectBuffer)->load(session, tags, schema, getUseGoldDatabase()))) { return false; }
+        if (!((m_guildObjectBuffer)->load(session, tags, schema, getUseGoldDatabase()))) { return false; }
+        if (!((m_harvesterInstallationObjectBuffer)->load(session, tags, schema, getUseGoldDatabase()))) { return false; }
+        if (!((m_installationObjectBuffer)->load(session, tags, schema, getUseGoldDatabase()))) { return false; }
+        if (!((m_intangibleObjectBuffer)->load(session, tags, schema, getUseGoldDatabase()))) { return false; }
+        if (!((m_locationBuffer)->load(session, tags, schema, getUseGoldDatabase()))) { return false; }
+        if (!((m_manufactureInstallationObjectBuffer)->load(session, tags, schema, getUseGoldDatabase()))) { return false; }
+        if (!((m_manufactureSchematicAttributeBuffer)->load(session, tags, schema, getUseGoldDatabase()))) { return false; }
+        if (!((m_manufactureSchematicObjectBuffer)->load(session, tags, schema, getUseGoldDatabase()))) { return false; }
+        if (!((m_messageBuffer)->load(session, tags, schema, getUseGoldDatabase()))) { return false; }
+        if (!((m_missionObjectBuffer)->load(session, tags, schema, getUseGoldDatabase()))) { return false; }
+        if (!((m_objvarBuffer)->load(session, tags, schema, getUseGoldDatabase()))) { return false; }
+        if (!((m_planetObjectBuffer)->load(session, tags, schema, getUseGoldDatabase()))) { return false; }
+        if (!((m_playerObjectBuffer)->load(session, tags, schema, getUseGoldDatabase()))) { return false; }
+        if (!((m_playerQuestObjectBuffer)->load(session, tags, schema, getUseGoldDatabase()))) { return false; }
+        if (!((m_propertyListBuffer)->load(session, tags, schema, getUseGoldDatabase()))) { return false; }
+        if (!((m_resourceContainerObjectBuffer)->load(session, tags, schema, getUseGoldDatabase()))) { return false; }
+        if (!((m_resourceTypeBuffer)->load(session, tags, schema, getUseGoldDatabase()))) { return false; }
+        if (!((m_scriptBuffer)->load(session, tags, schema, getUseGoldDatabase()))) { return false; }
+        if (!((m_shipObjectBuffer)->load(session, tags, schema, getUseGoldDatabase()))) { return false; }
+        if (!((m_staticObjectBuffer)->load(session, tags, schema, getUseGoldDatabase()))) { return false; }
+        if (!((m_tangibleObjectBuffer)->load(session, tags, schema, getUseGoldDatabase()))) { return false; }
+        if (!((m_universeObjectBuffer)->load(session, tags, schema, getUseGoldDatabase()))) { return false; }
+        if (!((m_vehicleObjectBuffer)->load(session, tags, schema, getUseGoldDatabase()))) { return false; }
+        if (!((m_waypointBuffer)->load(session, tags, schema, getUseGoldDatabase()))) { return false; }
+        if (!((m_weaponObjectBuffer)->load(session, tags, schema, getUseGoldDatabase()))) { return false; }
 
         DEBUG_REPORT_LOG(ConfigServerDatabase::getLogObjectLoading(), ("Load end.\n"));
     } else {
