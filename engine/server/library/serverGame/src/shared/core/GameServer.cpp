@@ -1343,10 +1343,7 @@ void GameServer::receiveMessage(const MessageDispatch::Emitter & source, const M
 			if (target) {
 				createRemoteProxy(t.getProcess(), target);
 			} else {
-				WARNING(true, ("Told to create object %s on %d we know nothing about. Requesting unload.", t.getId().getValueString().c_str(), t.getProcess()));
-
-				UnloadObjectMessage const t(ri);
-				target->unload();
+				WARNING(true, ("Told to create object %s on %d we know nothing about", t.getId().getValueString().c_str(), t.getProcess()));
 			}
 			break;
 		}
