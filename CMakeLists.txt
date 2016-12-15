@@ -31,56 +31,65 @@ find_package(Threads)
 find_package(ZLIB REQUIRED)
 find_package(CURL REQUIRED)
 
+# c++14 yeah!
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+# shame on you cmake for auto-setting optimization flags!
+set(CMAKE_CXX_FLAGS "")
+set(CMAKE_CXX_FLAGS_DEBUG "")
+set(CMAKE_CXX_FLAGS_RELEASE "")
+set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "")
+set(CMAKE_CXX_FLAGS_MINSIZEREL "")
+
+# I'll be honest, win32 is probably very very broken and won't build - it will need worked on so that MSVC uses
+# the vs2013+ STL instead of stlport, and probably will thus need removal/modification/addition of TONS of the ifdef blocks for WIN32
 if(WIN32)
 	find_package(Iconv REQUIRED)
 	
-	#Dont-Build-PDB RELEASE build use the following (by either commenting---uncommenting the line as needed)
+	# Dont-Build-PDB RELEASE build use the following (by either commenting---uncommenting the line as needed)
 	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} /NODEFAULTLIB:libc.lib /SAFESEH:NO")
 
-	####################################
-	#Do-Build-PDB RELEASE build use the following (by either commenting---uncommenting the line as needed)
-	#set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DWIN32 -Dwin32 -DUDP_LIBRARY -DDEBUG_LEVEL=0 -DPRODUCTION=1 /Oi /Ot /Oy /O2 /GF /Gy /Zi /MT -D_USE_32BIT_TIME_T=1 -D_MBCS -DPLATFORM_BASE_SINGLE_THREAD -D_CRT_SECURE_NO_WARNINGS /MP /wd4244 /wd4996 /wd4018 /wd4351 /Zc:wchar_t- /Ob1 /FC")
-	#Dont-Build-PDB RELEASE build use the following (by either commenting---uncommenting the line as needed)
-	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DWIN32 -Dwin32 -DUDP_LIBRARY -DDEBUG_LEVEL=0 -DPRODUCTION=1 /Oi /Ot /Oy /O2 /GF /Gy /MT -D_USE_32BIT_TIME_T=1 -D_MBCS -DPLATFORM_BASE_SINGLE_THREAD -D_CRT_SECURE_NO_WARNINGS /MP /wd4244 /wd4996 /wd4018 /wd4351 /Zc:wchar_t- /Ob1 /FC")
+	# Do-Build-PDB RELEASE build use the following (by either commenting---uncommenting the line as needed)
+	#set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DWIN32 -Dwin32 -DUDP_LIBRARY -DDEBUG_LEVEL=0 \
+	#	-DPRODUCTION=1 /Oi /Ot /Oy /O2 /GF /Gy /Zi /MT -D_USE_32BIT_TIME_T=1 -D_MBCS \
+	#	-DPLATFORM_BASE_SINGLE_THREAD -D_CRT_SECURE_NO_WARNINGS /MP /wd4244 /wd4996 /wd4018 /wd4351 \
+	#	/Zc:wchar_t- /Ob1 /FC")
+	
+	# Dont-Build-PDB RELEASE build use the following (by either commenting---uncommenting the line as needed)
+	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DWIN32 -Dwin32 -DUDP_LIBRARY -DDEBUG_LEVEL=0 -DPRODUCTION=1 \
+		/Oi /Ot /Oy /O2 /GF /Gy /MT -D_USE_32BIT_TIME_T=1 -D_MBCS -DPLATFORM_BASE_SINGLE_THREAD -D_CRT_SECURE_NO_WARNINGS \
+		/MP /wd4244 /wd4996 /wd4018 /wd4351 /Zc:wchar_t- /Ob1 /FC")
 
-	####################################
-	#Standard DEBUG build use the following	(by either commenting---uncommenting the line as needed)
-	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DWIN32 -Dwin32 -D_DEBUG -DUDP_LIBRARY -DDEBUG_LEVEL=2 -DPRODUCTION=0 /MTd -D_USE_32BIT_TIME_T=1 -D_MBCS -DPLATFORM_BASE_SINGLE_THREAD -D_CRT_SECURE_NO_WARNINGS /MP /wd4244 /wd4996 /wd4018 /wd4351 /Zc:wchar_t- /Ob1 /FC")
+	# Standard DEBUG build use the following	(by either commenting---uncommenting the line as needed)
+	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DWIN32 -Dwin32 -D_DEBUG -DUDP_LIBRARY -DDEBUG_LEVEL=2 -DPRODUCTION=0 /MTd \
+		-D_USE_32BIT_TIME_T=1 -D_MBCS -DPLATFORM_BASE_SINGLE_THREAD -D_CRT_SECURE_NO_WARNINGS /MP /wd4244 /wd4996 /wd4018 /wd4351 \
+		/Zc:wchar_t- /Ob1 /FC")
 elseif(UNIX)
 	find_package(Curses REQUIRED)
 
-	# shame on you cmake for auto-setting optimization flags!
-	set(CMAKE_CXX_FLAGS "")
-	set(CMAKE_CXX_FLAGS_DEBUG "")
-	set(CMAKE_CXX_FLAGS_RELEASE "")
-	set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "")
-	set(CMAKE_CXX_FLAGS_MINSIZEREL "")
-
 	# linker flags
-	set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-O1,--sort-common,--as-needed,-z,relro")	
+	set(CMAKE_SHARED_LINKER_FLAGS "--sort-common,--as-needed,-z,relro")	
 	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS}")
 
 	# don't put anything too crazy in debug...and any common flags go into CMAKE_CXX_FLAGS 
-	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG -DDEBUG_LEVEL=2 -DPRODUCTION=0 -Og -g3")
+	set(CMAKE_CXX_FLAGS_DEBUG "-D_DEBUG -DDEBUG_LEVEL=2 -DPRODUCTION=0 -Og -g3")
 	
 	# Ofast doesn't work with gcc builds
 	if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-		set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Ofast")
+		set(CMAKE_CXX_FLAGS_RELEASE "-Ofast")
 	elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-		set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2")
+		set(CMAKE_CXX_FLAGS_RELEASE "-O2")
 	elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
-		set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Ofast")
+		set(CMAKE_CXX_FLAGS_RELEASE "-Ofast")
 	endif()
 
         # funroll loops and everything else potentially crazy for performance here
         set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DDEBUG_LEVEL=0 -DPRODUCTION=1 -funroll-loops -ftree-vectorize")
 
 	# our "always on" flags
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m32 -pipe -march=native -mtune=native \
+	set(CMAKE_CXX_FLAGS "-m32 -pipe -march=native -mtune=native \
 		-Wformat -Wno-overloaded-virtual -Wno-missing-braces -Wno-format \
 		-Wno-write-strings -Wno-unknown-pragmas \
 		-Wno-uninitialized -Wno-reorder")
