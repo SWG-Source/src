@@ -1340,11 +1340,14 @@ void GameServer::receiveMessage(const MessageDispatch::Emitter & source, const M
 			LoadObjectMessage const t(ri);
 
 			ServerObject *const target = ServerWorld::findObjectByNetworkId(t.getId());
-			if (target)
+			if (target) {
 				createRemoteProxy(t.getProcess(), target);
-			else
-				WARNING(true, ("Told to create object %s on %d we know nothing about (received LoadObjectMessage for an object not on this server, PlanetServer is probably confused)", t
-						.getId().getValueString().c_str(), t.getProcess()));
+			} else {
+				WARNING(true, ("Told to create object %s on %d we know nothing about. Requesting unload.", t.getId().getValueString().c_str(), t.getProcess()));
+
+				UnloadObjectMessage const t(ri);
+				target->unload();
+			}
 			break;
 		}
 		case constcrc("UnloadObjectMessage") : {

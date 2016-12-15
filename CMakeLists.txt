@@ -56,29 +56,25 @@ elseif(UNIX)
 	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS}")
 
 	# don't put anything too crazy in debug...and any common flags go into CMAKE_CXX_FLAGS 
-	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG -DDEBUG_LEVEL=2 -DPRODUCTION=0 -O0 -g3")
+	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG -DDEBUG_LEVEL=2 -DPRODUCTION=0 -Og -g3")
 	
-	# funroll loops and everything else potentially crazy for performance here
-	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DDEBUG_LEVEL=0 -DPRODUCTION=1 -Ofast -funroll-loops")
-	
-	# TODO: The below flags will enhance security but at the cost of performance, arguably... 
-	# currently with them SWG cluster idles at ~17-18% of 24 cpus, and ata round ~14-17% without
-	# there is likely also a latency/speed impact as well
-	# not sure if needed or not - https://wiki.debian.org/Hardening
-	# ============================================================================================
-	# -fstack-protector-all -Wstack-protector --param ssp-buffer-size=4 -fPIE -ftrapv
-	# -D_FORTIFY_SOURCE=2 is generally considered safe but crashes datatabletool when built with gcc
-	
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -D_GLIBCXX_USE_CXX11_ABI=0 \
-		-m32 -pipe -march=native -mtune=native \
+	# Ofast doesn't work with gcc builds
+	if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+		set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Ofast")
+	elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+		set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
+	elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
+		set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Ofast")
+	endif()
+
+        # funroll loops and everything else potentially crazy for performance here
+        set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DDEBUG_LEVEL=0 -DPRODUCTION=1 -funroll-loops")
+
+	# our "always on" flags
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -m32 -pipe -march=native -mtune=native \
 		-Wformat -Wno-overloaded-virtual -Wno-missing-braces -Wno-format \
 		-Wno-write-strings -Wno-unknown-pragmas \
 		-Wno-uninitialized -Wno-reorder")
-
-	# we could use libc++ with gcc too but let's roll with default there
-	#if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang") 
-	#	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
-	#endif()
 	
 	add_definitions(-DLINUX -D_REENTRANT -Dlinux -D_USING_STL -D_GNU_SOURCE -D_XOPEN_SOURCE=500)
 endif()
