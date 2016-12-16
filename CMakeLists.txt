@@ -86,8 +86,6 @@ elseif(UNIX)
                         -fno-threadsafe-statics -fslp-vectorize-aggressive -fslp-vectorize \
 		     	-fno-stack-protector -fstrict-enums -fstrict-vtable-pointers \
 			-fno-coverage-mapping -fno-spell-checking -fshort-enums \
-			-finline-hint-functions -fvectorize -fwhole-program-vtables ")
-		#-fno-common -finline-functions
 
 		set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -ggdb")
 
@@ -96,7 +94,7 @@ elseif(UNIX)
 		endif()
 	elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 		# O3 and Ofast include one or more flags that cause java to crash when using gcc6
-		set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2 -fno-signed-zeros -freciprocal-math")
+		set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2 -fno-signed-zeros -freciprocal-math -fno-unroll-loops -fno-tree-loop-optimize")
 	elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
 		set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
 	endif()
