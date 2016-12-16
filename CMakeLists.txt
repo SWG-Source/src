@@ -70,10 +70,10 @@ elseif(UNIX)
 	find_package(Curses REQUIRED)
 
 	# linker flags
-	set(CMAKE_SHARED_LINKER_FLAGS "-Wl,-O1,--sort-common,--as-needed,-z,relro")
+	set(CMAKE_SHARED_LINKER_FLAGS "-Wl,-O3,--sort-common,--as-needed")
 
 	if ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
-		set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -s")
+		set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS},--relax,-z,combreloc,-z,global,--no-omagic,-x,-s")
 	endif()
 
 	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS}")
@@ -86,7 +86,8 @@ elseif(UNIX)
 
 	# Ofast doesn't work with gcc builds
 	if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-		set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Ofast")
+		set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Ofast -fno-assume-sane-operator-new")
+		set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -ggdb")
 	elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 		# O3 and Ofast include one or more flags that cause java to crash when using gcc6
 		set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2 -fno-signed-zeros \
