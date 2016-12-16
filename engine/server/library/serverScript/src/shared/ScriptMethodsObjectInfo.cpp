@@ -3367,38 +3367,38 @@ void JNICALL ScriptMethodsObjectInfoNamespace::sendScriptVarsToProxies(JNIEnv * 
 {
 	PROFILER_AUTO_BLOCK_DEFINE("JNI::sendScriptVarsToProxies");
 
-	ServerObject * object = 0;
 	if (obj != 0 && buffer != 0)
 	{
-		if (JavaLibrary::getObject(obj, object))
+		ServerObject *object = nullptr;
+		if (JavaLibrary::getObject(obj, object) && object != nullptr)
 		{
-			ProxyList const &proxyList = object->getExposedProxyList();
+			ProxyList proxyList(object->getExposedProxyList());
 			if (!proxyList.empty())
 			{
-			std::vector<int8> data;
-			if (ScriptConversion::convert(buffer, data))
-			{
-				if(data.size() > 0)
+				std::vector<int8> data;
+				if (ScriptConversion::convert(buffer, data))
 				{
-					WARNING(data.size() > 60000, ("JavaLibrary::sendScriptVarsToProxies: "
-						"Packing scriptvars for object %s, packed data size = %d",
+					if(data.size() > 0)
+					{
+						WARNING(data.size() > 60000, ("JavaLibrary::sendScriptVarsToProxies: "
+							"Packing scriptvars for object %s, packed data size = %d",
+					
 						object->getNetworkId().getValueString().c_str(),
 						static_cast<int>(data.size())));
 
 						uint32 const myProcessId = GameServer::getInstance().getProcessId();
 						uint32 const authProcessId = object->getAuthServerProcessId();
-						ProxyList syncServers(proxyList);
+						
 						if (myProcessId != authProcessId)
 						{
-							syncServers.erase(myProcessId);
-							syncServers.insert(authProcessId);
+							proxyList.erase(myProcessId);
+							proxyList.insert(authProcessId);
 						}
-
-						ServerMessageForwarding::begin(std::vector<uint32>(syncServers.begin(), syncServers.end()));
-
+				
+						ServerMessageForwarding::begin(std::vector<uint32>(proxyList.begin(), proxyList.end()));
 						SynchronizeScriptVarDeltasMessage const deltasMessage(object->getNetworkId(), data);
+				
 						ServerMessageForwarding::send(deltasMessage);
-
 						ServerMessageForwarding::end();
 					}
 				}
