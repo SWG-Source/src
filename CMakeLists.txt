@@ -70,12 +70,7 @@ elseif(UNIX)
 	find_package(Curses REQUIRED)
 
 	# linker flags
-	set(CMAKE_SHARED_LINKER_FLAGS "-Wl,-O1,--sort-common,--as-needed,-z,relro")
-
-	if ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
-		set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -s")
-	endif()
-
+	set(CMAKE_SHARED_LINKER_FLAGS "-Wl,-z,norelro,-O3,--sort-common,--as-needed,--relax,-z,combreloc,-z,global,--no-omagic,-x,-s")
 	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS}")
 
 	# don't put anything too crazy in debug...and any common flags go into CMAKE_CXX_FLAGS 
@@ -86,11 +81,17 @@ elseif(UNIX)
 
 	# Ofast doesn't work with gcc builds
 	if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-		set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Ofast")
+		set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Ofast \
+			-fno-signed-zeros -freciprocal-math -ffp-contract=fast \
+                        -fno-threadsafe-statics -fslp-vectorize-aggressive -fslp-vectorize \
+		     	-fno-stack-protector -fstrict-enums -fstrict-vtable-pointers \
+			-fno-coverage-mapping -fno-spell-checking -fshort-enums -finline-functions \
+			-finline-hint-functions -fno-unroll-loops")
+
+		set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -ggdb")
 	elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 		# O3 and Ofast include one or more flags that cause java to crash when using gcc6
-		set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2 -fno-signed-zeros \
-			-freciprocal-math -ffp-contract=fast")
+		set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2 -fno-signed-zeros -freciprocal-math -fno-unroll-loops -fno-tree-loop-optimize")
 	elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
 		set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
 	endif()
@@ -102,9 +103,7 @@ elseif(UNIX)
 		-Wno-write-strings -Wno-unknown-pragmas \
 		-Wno-uninitialized -Wno-reorder")
 
-	# set definitions
-	# note that STELLA_INTERNAL should never be used on the clang-profile or clang-profile-build branch
-	add_definitions(-DLINUX -D_REENTRANT -Dlinux -DSTELLA_INTERNAL -D_GNU_SOURCE -D_XOPEN_SOURCE=500)
+	add_definitions(-DLINUX -D_REENTRANT -Dlinux -D_USING_STL -D_GNU_SOURCE -D_XOPEN_SOURCE=500 -U_FORTIFY_SOURCE)
 endif()
 
 add_subdirectory(external)
