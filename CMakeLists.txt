@@ -70,7 +70,7 @@ elseif(UNIX)
 	find_package(Curses REQUIRED)
 
 	# linker flags
-	set(CMAKE_SHARED_LINKER_FLAGS "-Wl,-O3,--sort-common,--as-needed,--relax,-z,combreloc,-z,global,--no-omagic")
+	set(CMAKE_SHARED_LINKER_FLAGS "-Wl,-z,norelro,-O3,--sort-common,--as-needed,--relax,-z,combreloc,-z,global,--no-omagic")
 	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS}")
 
 	# don't put anything too crazy in debug...and any common flags go into CMAKE_CXX_FLAGS 
@@ -81,7 +81,10 @@ elseif(UNIX)
 
 	# Ofast doesn't work with gcc builds
 	if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-		set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Ofast -fno-assume-sane-operator-new")
+		set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Ofast -fno-assume-sane-operator-new \
+			-fno-signed-zeros -freciprocal-math -ffp-contract=fast \
+                        -fno-threadsafe-statics -fslp-vectorize-aggressive -fslp-vectorize \
+		     	-fno-stack-protector -fstrict-enums -fstrict-vtable-pointers -funroll-loops")
 		set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -ggdb")
 
 		if ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
@@ -89,7 +92,7 @@ elseif(UNIX)
 		endif()
 	elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 		# O3 and Ofast include one or more flags that cause java to crash when using gcc6
-		set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2 -fno-signed-zeros -freciprocal-math -ffp-contract=fast")
+		set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2 -fno-signed-zeros -freciprocal-math")
 	elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
 		set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
 	endif()
