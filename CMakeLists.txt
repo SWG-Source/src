@@ -85,8 +85,8 @@ elseif(UNIX)
 			-fno-signed-zeros -freciprocal-math -ffp-contract=fast \
                         -fno-threadsafe-statics -fslp-vectorize-aggressive -fslp-vectorize \
 		     	-fno-stack-protector -fstrict-enums -fstrict-vtable-pointers \
-			-fno-coverage-mapping -fno-spell-checking -fshort-enums \
-			-finline-hint-functions -fno-unroll-loops -fno-vectorize -fwhole-program-vtables")
+			-fno-coverage-mapping -fno-spell-checking -fshort-enums -finline-functions \
+			-finline-hint-functions -fno-unroll-loops -fwhole-program-vtables")
 
 		set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -ggdb")
 
