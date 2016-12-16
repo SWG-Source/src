@@ -81,10 +81,10 @@ elseif(UNIX)
 
 	# Ofast doesn't work with gcc builds
 	if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-		set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Ofast -fno-assume-sane-operator-new \
-			-fno-signed-zeros -freciprocal-math -ffp-contract=fast \
+		set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Ofast \
+			-fno-signed-zeros -freciprocal-math -ffp-contract=fast -fcommon \
                         -fno-threadsafe-statics -fslp-vectorize-aggressive -fslp-vectorize \
-		     	-fno-stack-protector -fstrict-enums -fstrict-vtable-pointers -funroll-loops")
+		     	-fno-stack-protector -fstrict-enums -fstrict-vtable-pointers")
 		set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -ggdb")
 
 		if ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
