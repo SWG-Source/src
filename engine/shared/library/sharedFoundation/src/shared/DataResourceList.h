@@ -7,6 +7,9 @@
 //
 //========================================================================
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundefined-var-template"
+
 #ifndef _INCLUDED_DataResourceList_H
 #define _INCLUDED_DataResourceList_H
 
@@ -82,10 +85,13 @@ private:
 template <typename T>
 inline void DataResourceList<T>::install()
 {
-        auto static *ms_bindings = new CreateDataResourceMap();
-        auto static *ms_loaded   = new LoadedDataResourceMap();
+	if (ms_bindings == nullptr)
+	{
+		ms_bindings = new CreateDataResourceMap();
+		ms_loaded   = new LoadedDataResourceMap();
 
-	ExitChain::add (remove, "DataResourceList::remove");
+		ExitChain::add (remove, "DataResourceList::remove");
+	}
 }	// DataResourceList<T>::install
 
 //----------------------------------------------------------------------
@@ -97,9 +103,6 @@ inline void DataResourceList<T>::install()
 template <typename T>
 inline void DataResourceList<T>::remove(void)
 {
-        auto static *ms_bindings = new CreateDataResourceMap();
-        auto static *ms_loaded   = new LoadedDataResourceMap();
-
 	if (ms_loaded != nullptr)
 	{
 #ifdef _DEBUG
@@ -122,11 +125,13 @@ inline void DataResourceList<T>::remove(void)
 #endif // _DEBUG
 
 		delete ms_loaded;
+		ms_loaded = nullptr;
 	}
 
 	if (ms_bindings != nullptr)
 	{
 		delete ms_bindings;
+		ms_bindings = nullptr;
 	}
 }	// DataResourceList<T>::remove
 
@@ -142,9 +147,6 @@ template <typename T>
 inline void DataResourceList<T>::registerTemplate(Tag id,
 	CreateDataResourceFunc createFunc)
 {
-        auto static *ms_bindings = new CreateDataResourceMap();
-        auto static *ms_loaded   = new LoadedDataResourceMap();
-
 	if (ms_bindings == nullptr)
 		install();
 
@@ -198,6 +200,8 @@ template <typename T>
 inline typename DataResourceList<T>::CreateDataResourceFunc DataResourceList<T>::removeBinding(
 	Tag id)
 {
+	NOT_NULL(ms_bindings);
+
 	CreateDataResourceFunc oldFunc = (*ms_bindings)[id];
 	ms_bindings->erase(id);
 	return oldFunc;
@@ -232,8 +236,7 @@ inline const T * DataResourceList<T>::fetch(const char * filename)
 template <class T>
 inline T * DataResourceList<T>::fetch(Tag id)
 {
-        auto static *ms_bindings = new CreateDataResourceMap();
-        auto static *ms_loaded   = new LoadedDataResourceMap();
+	NOT_NULL(ms_bindings);
 
 	typename CreateDataResourceMap::iterator iter = ms_bindings->find(id);
 	if (iter == ms_bindings->end())
@@ -254,8 +257,7 @@ inline T * DataResourceList<T>::fetch(Tag id)
 template <typename T>
 inline const T * DataResourceList<T>::fetch(Iff &source)
 {
-        auto static *ms_bindings = new CreateDataResourceMap();
-        auto static *ms_loaded   = new LoadedDataResourceMap();
+	NOT_NULL(ms_bindings);
 
 #ifdef _DEBUG
 	DataLint::pushAsset(source.getFileName());
@@ -298,8 +300,7 @@ inline const T * DataResourceList<T>::fetch(Iff &source)
 template <typename T>
 inline const T * DataResourceList<T>::fetch(const CrcString &filename)
 {
-        auto static *ms_bindings = new CreateDataResourceMap();
-	auto static *ms_loaded   = new LoadedDataResourceMap();
+	NOT_NULL(ms_loaded);
 
 	// see if we already have loaded the template
 	typename LoadedDataResourceMap::iterator iter = ms_loaded->find(&filename);
@@ -337,18 +338,17 @@ inline const T * DataResourceList<T>::fetch(const CrcString &filename)
 template <typename T>
 inline void DataResourceList<T>::release(const T & dataResource)
 {
-        auto static *ms_bindings = new CreateDataResourceMap();
-        auto static *ms_loaded   = new LoadedDataResourceMap();
+	NOT_NULL(ms_loaded);
 
 	if (ms_loaded != nullptr && dataResource.getReferenceCount() == 0)
 	{
 		typename LoadedDataResourceMap::iterator iter = ms_loaded->find(&dataResource.getCrcName());
 		if (iter != ms_loaded->end())
 		{
-			delete (*iter).second;
+			const T * const temp = (*iter).second;
 			(*iter).second = nullptr;
-
-			iter = ms_loaded->erase(iter);
+			ms_loaded->erase(iter);
+			delete temp;
 		}
 	}
 }	// DataResourceList<T>::release
@@ -422,5 +422,5 @@ void DataResourceList<T>::garbageCollect ()
 }
 
 //----------------------------------------------------------------------
-
+#pragma clang diagnostic pop
 #endif	// _INCLUDED_DataResourceList_H
