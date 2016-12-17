@@ -82,13 +82,10 @@ private:
 template <typename T>
 inline void DataResourceList<T>::install()
 {
-	if (ms_bindings == nullptr)
-	{
-		ms_bindings = new CreateDataResourceMap();
-		ms_loaded   = new LoadedDataResourceMap();
+        auto static *ms_bindings = new CreateDataResourceMap();
+        auto static *ms_loaded   = new LoadedDataResourceMap();
 
-		ExitChain::add (remove, "DataResourceList::remove");
-	}
+	ExitChain::add (remove, "DataResourceList::remove");
 }	// DataResourceList<T>::install
 
 //----------------------------------------------------------------------
@@ -100,6 +97,9 @@ inline void DataResourceList<T>::install()
 template <typename T>
 inline void DataResourceList<T>::remove(void)
 {
+        auto static *ms_bindings = new CreateDataResourceMap();
+        auto static *ms_loaded   = new LoadedDataResourceMap();
+
 	if (ms_loaded != nullptr)
 	{
 #ifdef _DEBUG
@@ -122,13 +122,11 @@ inline void DataResourceList<T>::remove(void)
 #endif // _DEBUG
 
 		delete ms_loaded;
-		ms_loaded = nullptr;
 	}
 
 	if (ms_bindings != nullptr)
 	{
 		delete ms_bindings;
-		ms_bindings = nullptr;
 	}
 }	// DataResourceList<T>::remove
 
@@ -144,6 +142,9 @@ template <typename T>
 inline void DataResourceList<T>::registerTemplate(Tag id,
 	CreateDataResourceFunc createFunc)
 {
+        auto static *ms_bindings = new CreateDataResourceMap();
+        auto static *ms_loaded   = new LoadedDataResourceMap();
+
 	if (ms_bindings == nullptr)
 		install();
 
@@ -197,8 +198,6 @@ template <typename T>
 inline typename DataResourceList<T>::CreateDataResourceFunc DataResourceList<T>::removeBinding(
 	Tag id)
 {
-	NOT_NULL(ms_bindings);
-
 	CreateDataResourceFunc oldFunc = (*ms_bindings)[id];
 	ms_bindings->erase(id);
 	return oldFunc;
@@ -233,7 +232,8 @@ inline const T * DataResourceList<T>::fetch(const char * filename)
 template <class T>
 inline T * DataResourceList<T>::fetch(Tag id)
 {
-	NOT_NULL(ms_bindings);
+        auto static *ms_bindings = new CreateDataResourceMap();
+        auto static *ms_loaded   = new LoadedDataResourceMap();
 
 	typename CreateDataResourceMap::iterator iter = ms_bindings->find(id);
 	if (iter == ms_bindings->end())
@@ -254,7 +254,8 @@ inline T * DataResourceList<T>::fetch(Tag id)
 template <typename T>
 inline const T * DataResourceList<T>::fetch(Iff &source)
 {
-	NOT_NULL(ms_bindings);
+        auto static *ms_bindings = new CreateDataResourceMap();
+        auto static *ms_loaded   = new LoadedDataResourceMap();
 
 #ifdef _DEBUG
 	DataLint::pushAsset(source.getFileName());
@@ -297,7 +298,8 @@ inline const T * DataResourceList<T>::fetch(Iff &source)
 template <typename T>
 inline const T * DataResourceList<T>::fetch(const CrcString &filename)
 {
-	NOT_NULL(ms_loaded);
+        auto static *ms_bindings = new CreateDataResourceMap();
+	auto static *ms_loaded   = new LoadedDataResourceMap();
 
 	// see if we already have loaded the template
 	typename LoadedDataResourceMap::iterator iter = ms_loaded->find(&filename);
@@ -335,17 +337,18 @@ inline const T * DataResourceList<T>::fetch(const CrcString &filename)
 template <typename T>
 inline void DataResourceList<T>::release(const T & dataResource)
 {
-	NOT_NULL(ms_loaded);
+        auto static *ms_bindings = new CreateDataResourceMap();
+        auto static *ms_loaded   = new LoadedDataResourceMap();
 
 	if (ms_loaded != nullptr && dataResource.getReferenceCount() == 0)
 	{
 		typename LoadedDataResourceMap::iterator iter = ms_loaded->find(&dataResource.getCrcName());
 		if (iter != ms_loaded->end())
 		{
-			const T * const temp = (*iter).second;
+			delete (*iter).second;
 			(*iter).second = nullptr;
-			ms_loaded->erase(iter);
-			delete temp;
+
+			iter = ms_loaded->erase(iter);
 		}
 	}
 }	// DataResourceList<T>::release

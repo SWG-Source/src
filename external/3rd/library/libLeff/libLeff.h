@@ -59,7 +59,7 @@ template<uint32_t N>
 template<> struct vxCplIndexes<0> { typedef vxCplIndexList<> Result; };
 
 // Compile-time string encryption of a single character
-const char vxCplEncryptCharKey = vxRANDOM(0, 0xFF);
+const int vxCplEncryptCharKey = vxRANDOM(0, 0xFF);
 
 constexpr char vxCplEncryptChar(const char Ch, uint32_t Idx) { return Ch ^ (vxCplEncryptCharKey + Idx); }
 
