@@ -1,6 +1,9 @@
 
 add_compile_options(-fprofile-instr-use=${PROJECT_SOURCE_DIR}/src/linux/SwgGameServer.profdata)
 
+# lto vtables break jni when we're cleaning up one of our vectors
+add_compile_options(-fno-whole-program-vtables)
+
 set(SHARED_SOURCES
     shared/combat/combat.def
     shared/combat/CombatEngine.cpp
