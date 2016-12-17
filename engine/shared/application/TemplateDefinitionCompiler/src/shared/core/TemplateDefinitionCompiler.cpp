@@ -118,10 +118,13 @@ File fp;
 			return;
 
 		File temp_fp;
-		if (!temp_fp.open(tmpnam(nullptr), "wt"))
+		char tmpname[] = "/tmp/templatecompXXXXXX";
+		int tmpfd = mkstemp(tmpname);
+
+		if (tmpfd >= 0 && temp_fp.open(tmpname, "wt"))
 		{
 			fprintf(stderr, "error opening temp file for template header "
-				"replacement [%s]\n", temp_fp.getFilename().getFullFilename().c_str());
+				"replacement [%s]\n", fp.getFilename().getFullFilename().c_str());
 			return;
 		}
 
@@ -172,7 +175,7 @@ File fp;
 			}
 			else if (temp_fp.puts(buffer) < 0)
 			{
-				fprintf(stderr, "error writing to temp header file [%s]\n", temp_fp.getFilename().getFullFilename().c_str());
+				fprintf(stderr, "error writing to temp header file [%s]\n", fp.getFilename().getFullFilename().c_str());
 				return;
 			}
 		}
@@ -243,8 +246,11 @@ int result;
 			return -1;
 		}
 
-		File temp_fp;
-		if (!temp_fp.open(tmpnam(nullptr), "wt"))
+                File temp_fp;
+                char tmpname[] = "/tmp/templatecompXXXXXX";
+                int tmpfd = mkstemp(tmpname);
+
+                if (tmpfd >= 0 && temp_fp.open(tmpname, "wt"))
 		{
 			fprintf(stderr, "error opening temp file for template source "
 				"replacement [%s]\n", temp_fp.getFilename().getFullFilename().c_str());
