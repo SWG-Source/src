@@ -228,27 +228,32 @@ void CentralServerConnection::onReceive(const Archive::ByteStream & message)
 		}
 		case constcrc("TransferReplyNameValidation") :
 		{
-			const GenericValueTypeMessage<std::pair<std::string, TransferCharacterData> > replyNameValidation(ri);
-			if(!replyNameValidation.getValue().second.getIsMoveRequest())
+			const GenericValueTypeMessage<std::map<std::string, TransferCharacterData> > replyNameValidation(ri);
+			auto i = replyNameValidation.getValue().begin();
+
+			if (i == replyNameValidation.getValue().end()) {
+				break;
+			}
+
+			if(!i->second.getIsMoveRequest())
 			{
-				LOG("CustomerService", ("CharacterTransfer: Received replyNameValidation for move validation request. (%s) %s", replyNameValidation.getValue().first.c_str(), replyNameValidation.getValue().second.toString().c_str()));
-				TransferServer::replyValidateMove(replyNameValidation.getValue().second);
+				LOG("CustomerService", ("CharacterTransfer: Received replyNameValidation for move validation request. (%s) %s", i->first.c_str(), i->second.toString().c_str()));
+				TransferServer::replyValidateMove(i->second);
 			}
 			else
 			{
-				if(TransferServer::isRename(replyNameValidation.getValue().second))
+				if(TransferServer::isRename(i->second))
 				{
-					LOG("CustomerService", ("CharacterTransfer: Received replyNameValidation for rename request, starting character rename protocol. (%s) %s", replyNameValidation.getValue().first.c_str(), replyNameValidation.getValue().second.toString().c_str()));
-					const GenericValueTypeMessage<TransferCharacterData> renameCharacter("TransferRenameCharacter", replyNameValidation.getValue().second);
-					CentralServerConnection * centralServerConnection = CentralServerConnection::getCentralServerConnectionForGalaxy(replyNameValidation.getValue().second.getSourceGalaxy());
+					LOG("CustomerService", ("CharacterTransfer: Received replyNameValidation for rename request, starting character rename protocol. (%s) %s", i->first.c_str(), i->second.toString().c_str()));
+					const GenericValueTypeMessage<TransferCharacterData> renameCharacter("TransferRenameCharacter", i->second);
+					CentralServerConnection * centralServerConnection = CentralServerConnection::getCentralServerConnectionForGalaxy(i->second.getSourceGalaxy());
 					if(centralServerConnection)
 					{
 						centralServerConnection->send(renameCharacter, true);
 					}
 					else
 					{
-						TransferServer::transferCreateCharacterFailed(replyNameValidation.getValue().second);
-					}
+						TransferServer::transferCreateCharacterFailed(i->second);					}
 				}
 				else
 				{
