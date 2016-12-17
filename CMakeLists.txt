@@ -62,7 +62,7 @@ if(WIN32)
 		/Oi /Ot /Oy /O2 /GF /Gy /MT -D_USE_32BIT_TIME_T=1 -D_MBCS -DPLATFORM_BASE_SINGLE_THREAD -D_CRT_SECURE_NO_WARNINGS \
 		/MP /wd4244 /wd4996 /wd4018 /wd4351 /Zc:wchar_t- /Ob1 /FC")
 
-	# Standard DEBUG build use the following	(by either commenting---uncommenting the line as needed)
+	# Standard DEBUG build use the following (by either commenting---uncommenting the line as needed)
 	set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DWIN32 -Dwin32 -D_DEBUG -DUDP_LIBRARY -DDEBUG_LEVEL=2 -DPRODUCTION=0 /MTd \
 		-D_USE_32BIT_TIME_T=1 -D_MBCS -DPLATFORM_BASE_SINGLE_THREAD -D_CRT_SECURE_NO_WARNINGS /MP /wd4244 /wd4996 /wd4018 /wd4351 \
 		/Zc:wchar_t- /Ob1 /FC")
@@ -74,7 +74,7 @@ elseif(UNIX)
 	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS}")
 
 	# don't put anything too crazy in debug...and any common flags go into CMAKE_CXX_FLAGS 
-	set(CMAKE_CXX_FLAGS_DEBUG "-D_DEBUG -DDEBUG_LEVEL=2 -DPRODUCTION=0 -Og -g3")
+	set(CMAKE_CXX_FLAGS_DEBUG "-D_DEBUG -DDEBUG_LEVEL=2 -DPRODUCTION=0 -O0 -g3")
 	
 	# release specific cflags - optimizations beyond the default for both types is mostly just -O flags
         set(CMAKE_CXX_FLAGS_RELEASE "-DDEBUG_LEVEL=0 -DPRODUCTION=1")
@@ -89,13 +89,11 @@ elseif(UNIX)
 			-finline-hint-functions -fno-unroll-loops -fwhole-program-vtables")
 
 		set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -ggdb")
-
-		if ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
-			set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -flto")
-		endif()
+		set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -flto")
 	elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 		# O3 and Ofast include one or more flags that cause java to crash when using gcc6
 		set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2 -fno-signed-zeros -freciprocal-math -fno-unroll-loops -fno-tree-loop-optimize")
+		set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Og")
 	elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
 		set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
 	endif()
