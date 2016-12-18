@@ -130,7 +130,7 @@ void ConfigServerGame::install(void)
 	KEY_BOOL    (adminPersistAllCreates, false);
 	KEY_BOOL    (buildCluster, false);
 	KEY_INT     (requestSceneWarpTimeoutSeconds, 60);
-	KEY_BOOL    (moveValidationEnabled, false);
+	KEY_BOOL    (moveValidationEnabled, true);
 	KEY_FLOAT   (moveSpeedTolerance, 1.03f);
 	KEY_INT     (moveSpeedCheckFrequencyMs, 10000);
 	KEY_INT     (moveSpeedCheckFailureLeewaySeconds, 5);
@@ -148,7 +148,7 @@ void ConfigServerGame::install(void)
 	KEY_INT     (moveValidationPastTimestampThresholdMs, 10000);
 	KEY_INT     (moveValidationFutureTimestampThresholdMs, 10000);
 	KEY_INT     (moveValidationTimestampDriftThresholdMs, 10000);
-	KEY_FLOAT   (moveMaxDistanceLeewayPerUpdate, 2.0f);
+	KEY_FLOAT   (moveMaxDistanceLeewayPerUpdate, 2.5f);
 	KEY_BOOL    (nameValidationAcceptAll, false);
 	KEY_FLOAT   (tangiblePvpRegionCheckTime, 20.0f);
 	KEY_FLOAT   (creaturePvpRegionCheckTime, 5.0f);
@@ -239,7 +239,7 @@ void ConfigServerGame::install(void)
 	KEY_BOOL    (enforcePlayerTriggerVolumesOnly, true);
 	KEY_FLOAT   (locationTargetCheckIntervalSec, 5.0f);
 	KEY_STRING  (gameServiceBindInterface, "");
-	KEY_BOOL    (logPvpUpdates, false);
+	KEY_BOOL    (logPvpUpdates, true);
 	KEY_FLOAT   (npcConversationDistance, 6.0f);
 	KEY_INT     (serverSpawnLimit, 1200);
 	KEY_INT     (spawnQueueSize, 1);
@@ -304,11 +304,11 @@ void ConfigServerGame::install(void)
 	KEY_BOOL    (debugPvp, false);
 	KEY_BOOL    (allowMasterObjectCreation, true);
 	KEY_BOOL    (mountsEnabled, true);
-	KEY_BOOL    (mountsSanityCheckerEnabled, false);
+	KEY_BOOL    (mountsSanityCheckerEnabled, false); // need to investigate
 	KEY_BOOL    (mountsSanityCheckerBroadcastEnabled, false);
 	KEY_INT     (mountsSanityCheckerBroadcastLimit, 5);
 	KEY_INT     (universeCheckFrequencySeconds, 60 * 60);
-	KEY_BOOL    (moveSimEnabled, false);
+	KEY_BOOL    (moveSimEnabled, true);
 	KEY_BOOL    (exceptionOnObjVarZeroLengthArray, false);
 	KEY_BOOL    (trackNonAuthoritativeObjvarSets, false);
 	KEY_FLOAT   (triggerVolumeWarpDistance, 128.0f);
@@ -382,11 +382,11 @@ void ConfigServerGame::install(void)
 	KEY_INT     (groundFrameRateLimit, 5);
 	KEY_INT     (spaceFrameRateLimit, 12);
 	KEY_BOOL    (aiLoggingEnabled, false);
-	KEY_BOOL    (shipShotValidationEnabled, false);
+	KEY_BOOL    (shipShotValidationEnabled, true);
 	KEY_INT     (spaceAiEnemySearchesPerFrame, 15);
 	KEY_BOOL    (groundShouldSleep, true);
 	KEY_BOOL    (spaceShouldSleep, true);
-	KEY_BOOL    (shipMoveValidationEnabled, false);
+	KEY_BOOL    (shipMoveValidationEnabled, true);
 	KEY_INT     (shipMoveCheckIntervalMs, 1000);
 	KEY_INT     (shipMoveCheckFudgeTimeMs, 5000);
 	KEY_FLOAT   (shipMoveCheckTolerance, 1.03f);

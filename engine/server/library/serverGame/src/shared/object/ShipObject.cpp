@@ -1582,14 +1582,14 @@ bool ShipObject::validateShot(int const weaponIndex, Transform const & transform
 	//-- Is our angle too far out of sync?
 	if (acos(transform_p.getLocalFrameK_p().dot(testDirection_p)) > testOrientationTolerance)
 	{
-		//-- LOG("cheater", ("firing guns in wrong direction"));
+		LOG("cheater", ("firing guns in wrong direction"));
 		return false;
 	}
 
 	//-- Is our gun position too far from where we are? (max ship speed * ms_shotValidationTolerance)
 	if (transform_p.getPosition_p().magnitudeBetweenSquared(testPosition_p) > sqr(getShipActualSpeedMaximum() * ms_shotValidationTolerance))
 	{
-		//-- LOG("cheater", ("firing guns too far from current position"));
+		LOG("cheater", ("firing guns too far from current position"));
 		return false;
 	}
 
