@@ -4787,7 +4787,7 @@ void GameServer::handleCharacterCreateNameVerification(const VerifyNameResponse 
 				Object* appearanceInventory = itemId.getObject();
 				if(appearanceInventory == nullptr)
 				{
-					WARNING(true, ("Player %s has lost their appearance inventory", newCharacterObject->getNetworkId().getValueString().c_str()));
+					DEBUG_WARNING(true, ("Player %s has lost their appearance inventory", newCharacterObject->getNetworkId().getValueString().c_str()));
 					appearanceInventory = ServerWorld::createNewObject(s_appearanceTemplate, *newCharacterObject, slot, false);
 					if(!appearanceInventory)
 					{

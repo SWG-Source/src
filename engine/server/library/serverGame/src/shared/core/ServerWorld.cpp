@@ -320,7 +320,7 @@ void ServerWorldNamespace::issueCollisionNearWarpWarning(Object const &object, V
 
 	//-- Only issue these for authoritative server objects.  Proxy server objects will hit this condition after an intra-planet teleport.
 	// @todo allow proxies to know about a teleport and inform CollisionWorld so that we can always report these.
-	WARNING(!serverObject || serverObject->isAuthoritative(),
+	DEBUG_WARNING(!serverObject || serverObject->isAuthoritative(),
 		("CollisionWorld::update() had %d segments for object id=[%s], template=[%s], authority=[%s], game sever id=[%d], start position=[%.2f,%.2f,%.2f], end position=[%.2f,%.2f,%.2f], object probably should have warped but collision system is not warping it.",
 			segmentCount,
 			object.getNetworkId().getValueString().c_str(),
@@ -344,7 +344,7 @@ void ServerWorldNamespace::issueCollisionFarWarpWarning(Object const &object, Ve
 
 	//-- Only issue these for authoritative server objects.  Proxy server objects will hit this condition after an intra-planet teleport.
 	// @todo allow proxies to know about a teleport and inform CollisionWorld so that we can always report these.
-	WARNING(!serverObject || serverObject->isAuthoritative(),
+	DEBUG_WARNING(!serverObject || serverObject->isAuthoritative(),
 		("CollisionWorld::update() had %d segments for object id=[%s], template=[%s], authority=[%s], game sever id=[%d], start position=[%.2f,%.2f,%.2f], end position=[%.2f,%.2f,%.2f], collision system will consider this a warp and adjust accordingly.",
 			segmentCount,
 			object.getNetworkId().getValueString().c_str(),

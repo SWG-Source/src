@@ -233,7 +233,7 @@ void terrainChangedCallback(Rectangle2d const & rect)
 
 void CollisionWorldNamespace::defaultNearWarpWarning(Object const &object, Vector const &oldPosition_w, Vector const &newPosition_w, int segmentCount)
 {
-	WARNING(ConfigSharedCollision::getReportWarnings(),
+	DEBUG_WARNING(ConfigSharedCollision::getReportWarnings(),
 		("CollisionWorld::update() had %d segments for object id=[%s], template=[%s], start position=[%.2f,%.2f,%.2f], end position=[%.2f,%.2f,%.2f], object probably should have warped but collision system is not warping it.",
 			segmentCount,
 			object.getNetworkId().getValueString().c_str(),
@@ -251,7 +251,7 @@ void CollisionWorldNamespace::defaultNearWarpWarning(Object const &object, Vecto
 
 void CollisionWorldNamespace::defaultFarWarpWarning(Object const &object, Vector const &oldPosition_w, Vector const &newPosition_w, int segmentCount)
 {
-	WARNING(ConfigSharedCollision::getReportWarnings(),
+	DEBUG_WARNING(ConfigSharedCollision::getReportWarnings(),
 		("CollisionWorld::update() had %d segments for object id=[%s], template=[%s], start position=[%.2f,%.2f,%.2f], end position=[%.2f,%.2f,%.2f], collision system will consider this a warp and adjust accordingly.",
 			segmentCount,
 			object.getNetworkId().getValueString().c_str(),
@@ -327,7 +327,7 @@ bool CollisionWorldNamespace::testFloorCollision(FloorLocator const &startFloorL
 	if (!collisionObject)
 	{
 		// We had a collision on a floor, but the floor had a nullptr owner.  Consider this a non-collision.
-		WARNING(true, ("testFloorCollision(): floor collision occurred, destination collision floor location had a floor but floor reported a nullptr owner.  Calling this a non-collision."));
+		DEBUG_WARNING(true, ("testFloorCollision(): floor collision occurred, destination collision floor location had a floor but floor reported a nullptr owner.  Calling this a non-collision."));
 		return false;
 	}
 
