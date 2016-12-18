@@ -763,12 +763,12 @@ int PlayerObject::getExperienceLimit(const std::string & experienceType) const
 		{
 			// use the default limit
 			limit = SkillManager::getInstance().getDefaultXpLimit(experienceType);
-			WARNING(limit == static_cast<uint32>(-1), ("No default xp limit defined "
+			DEBUG_WARNING(limit == static_cast<uint32>(-1), ("No default xp limit defined "
 				"for xp type %s for player object %s", experienceType.c_str(), getNetworkId().getValueString().c_str()));
 		}
 	}
 
-	WARNING(limit == static_cast<uint32>(-1), ("No xp limit defined "
+	DEBUG_WARNING(limit == static_cast<uint32>(-1), ("No xp limit defined "
 			"for xp type %s for player object %s", experienceType.c_str(), getNetworkId().getValueString().c_str()));
 
 	return limit;
