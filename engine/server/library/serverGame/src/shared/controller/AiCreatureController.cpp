@@ -167,8 +167,7 @@ AICreatureController::~AICreatureController()
 	if (owner != nullptr && owner->isAuthoritative() && !getHibernate() && m_hibernationDelay.get() > 0 && m_hibernationTimer.get() > 0)
 		ObjectTracker::removeDelayedHibernatingAI();
 
-	if (   (owner != nullptr)
-	    && AiLogManager::isLogging(owner->getNetworkId()))
+	if ((owner != nullptr) && AiLogManager::isLogging(owner->getNetworkId()))
 	{
 		AiLogManager::setLogging(owner->getNetworkId(), false);
 	}

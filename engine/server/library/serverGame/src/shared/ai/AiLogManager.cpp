@@ -52,7 +52,13 @@ void AiLogManager::setLogging(NetworkId const & networkId, bool const enabled)
 // ----------------------------------------------------------------------
 bool AiLogManager::isLogging(NetworkId const & networkId)
 {
-	return ConfigServerGame::isAiLoggingEnabled() || (s_aiList.find(networkId) != s_aiList.end());
+	bool result = (ConfigServerGame::isAiLoggingEnabled() && (s_aiList.find(networkId) != s_aiList.end()));
+	
+	if (!result) {
+		s_aiList.erase(networkId);
+	}
+
+	return result;
 }
 
 // ======================================================================
