@@ -3367,7 +3367,7 @@ void JNICALL ScriptMethodsObjectInfoNamespace::sendScriptVarsToProxies(JNIEnv * 
 {
 	PROFILER_AUTO_BLOCK_DEFINE("JNI::sendScriptVarsToProxies");
 
-	if (obj != nullptr && buffer != nullptr)
+	if (obj != 0 && buffer != 0)
 	{
 		ServerObject *object = nullptr;
 		if (JavaLibrary::getObject(obj, object) && object != nullptr)
