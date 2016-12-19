@@ -405,7 +405,7 @@ void IntangibleObject::onPermanentlyDestroyed()
  * Persists this object in the database. Will also persist all the objects it 
  * is keeping track of.
  */
-bool IntangibleObject::persist()
+void IntangibleObject::persist()
 {
 	if (isAuthoritative() && isTheater())
 	{
@@ -413,11 +413,11 @@ bool IntangibleObject::persist()
 		{
 			// we are not finished creating our objects, prevent persistance
 			WARNING(true, ("IntangibleObject::persist called before all objects created"));
-			return false;
+			return;
 		}
 
 		if (isPersisted())
-			return true;
+			return;
 
 		ServerObject::persist();
 
@@ -471,15 +471,9 @@ bool IntangibleObject::persist()
 			}
 		}
 
-		return true;
-
 	}
-	else {
+	else
 		ServerObject::persist();
-		return true;
-	}
-
-	return false;
 }	// IntangibleObject::persist
 
 //------------------------------------------------------------------------------------------
