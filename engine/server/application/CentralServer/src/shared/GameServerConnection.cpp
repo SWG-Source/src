@@ -33,9 +33,8 @@
 #include "serverNetworkMessages/UploadCharacterMessage.h"
 #include "sharedLog/Log.h"
 #include "sharedNetworkMessages/ConsoleChannelMessages.h"
-#include "unicodeArchive/UnicodeArchive.h"
-
 #include "sharedNetworkMessages/GenericValueTypeMessage.h"
+#include "unicodeArchive/UnicodeArchive.h"
 
 #include "sharedFoundation/CrcConstexpr.hpp"
 
@@ -127,16 +126,11 @@ void GameServerConnection::onReceive(Archive::ByteStream const &message)
 		}
 		case constcrc("TransferReplyNameValidation") :
 		{
-			GenericValueTypeMessage<std::map<std::string, TransferCharacterData> > const replyNameValidation(ri);
-			auto i = replyNameValidation.getValue().begin();
+			GenericValueTypeMessage<std::pair<std::string, TransferCharacterData> > const replyNameValidation(ri);
 
-			if (i == replyNameValidation.getValue().end()) {
-				break;
-			}
-
-			if (i->second.getTransferRequestSource() == TransferRequestMoveValidation::TRS_transfer_server)
+			if (replyNameValidation.getValue().second.getTransferRequestSource() == TransferRequestMoveValidation::TRS_transfer_server)
 			{
-				LOG("CustomerService", ("CharacterTransfer: Received TransferReplyNameValidation from GameServer, forwarding to TransferServer : %s", i->second.toString().c_str()));
+				LOG("CustomerService", ("CharacterTransfer: Received TransferReplyNameValidation from GameServer, forwarding to TransferServer : %s", replyNameValidation.getValue().second.toString().c_str()));
 				CentralServer::getInstance().sendToTransferServer(replyNameValidation);
 			}
 			else
@@ -144,14 +138,14 @@ void GameServerConnection::onReceive(Archive::ByteStream const &message)
 				// pass reply back to the source galaxy for handling, which is to
 				// either display an error message to the user if the request failed,
 				// or to start the transfer process if the request succeeds
-				LOG("CustomerService", ("CharacterTransfer: Received TransferReplyNameValidation from GameServer, forwarding to source galaxy CentralServer : %s", i->second.toString().c_str()));
+				LOG("CustomerService", ("CharacterTransfer: Received TransferReplyNameValidation from GameServer, forwarding to source galaxy CentralServer : %s", replyNameValidation.getValue().second.toString().c_str()));
 				CentralServer::getInstance().sendToArbitraryLoginServer(replyNameValidation);
 
 				// if the request succeeded, also disconnect any clients with a connection to SWG services on this (the target) galaxy
-				if (i->second.getIsValidName() && (i->second.getTransferRequestSource() != TransferRequestMoveValidation::TRS_ingame_freects_command_validate) && (i->second.getTransferRequestSource() != TransferRequestMoveValidation::TRS_ingame_cts_command_validate))
+				if (replyNameValidation.getValue().second.getIsValidName() && (replyNameValidation.getValue().second.getTransferRequestSource() != TransferRequestMoveValidation::TRS_ingame_freects_command_validate) && (replyNameValidation.getValue().second.getTransferRequestSource() != TransferRequestMoveValidation::TRS_ingame_cts_command_validate))
 				{
-					GenericValueTypeMessage<unsigned int> kickSource("TransferKickConnectedClients", i->second.getSourceStationId());
-					GenericValueTypeMessage<unsigned int> kickDestination("TransferKickConnectedClients", i->second.getDestinationStationId());
+					GenericValueTypeMessage<unsigned int> kickSource("TransferKickConnectedClients", replyNameValidation.getValue().second.getSourceStationId());
+					GenericValueTypeMessage<unsigned int> kickDestination("TransferKickConnectedClients", replyNameValidation.getValue().second.getDestinationStationId());
 					CentralServer::getInstance().sendToAllLoginServers(kickSource);
 					CentralServer::getInstance().sendToAllLoginServers(kickDestination);
 					CentralServer::getInstance().sendToAllConnectionServers(kickSource, true);

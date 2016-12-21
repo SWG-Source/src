@@ -7,6 +7,9 @@
 //
 //========================================================================
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundefined-var-template"
+
 #ifndef _INCLUDED_DataResourceList_H
 #define _INCLUDED_DataResourceList_H
 
@@ -419,5 +422,5 @@ void DataResourceList<T>::garbageCollect ()
 }
 
 //----------------------------------------------------------------------
-
+#pragma clang diagnostic pop
 #endif	// _INCLUDED_DataResourceList_H

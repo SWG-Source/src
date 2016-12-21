@@ -84,11 +84,14 @@ elseif(UNIX)
 		set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Ofast \
 			-fno-signed-zeros -freciprocal-math -ffp-contract=fast \
                         -fno-threadsafe-statics -fslp-vectorize-aggressive -fslp-vectorize \
-		     	-fno-stack-protector -fstrict-enums -fstrict-vtable-pointers \
-			-fno-coverage-mapping -fno-spell-checking -fshort-enums -finline-functions \
-			-finline-hint-functions -fno-unroll-loops -Wno-undefined-var-template")
+		     	-fno-stack-protector -fstrict-enums -fno-spell-checking \
+			-fno-coverage-mapping -fstrict-vtable-pointers -finline-functions \
+		       	-finline-hint-functions -fshort-enums -fno-unroll-loops")
+		
+		# these only work on 3.9+ -finline-functions -finline-hint-functions
+		# these only work on 3.8+ -fno-coverage-mapping -fstrict-vtable-pointers
 
-		set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -ggdb -Wno-undefined-var-template")
+		set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -ggdb")
 	elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 		# O3 and Ofast include one or more flags that cause java to crash when using gcc6
 		set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2 -fno-signed-zeros -freciprocal-math -fno-unroll-loops -fno-tree-loop-optimize")
