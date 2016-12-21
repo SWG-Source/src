@@ -3389,10 +3389,10 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::sendScriptVarsToProxies(JNIEn
 
 						uint32 const myProcessId = GameServer::getInstance().getProcessId();
 						uint32 const authProcessId = object->getAuthServerProcessId();
-						ProxyList syncServers(proxyList);
+						ProxyList syncServers; //(proxyList);
 						if (myProcessId != authProcessId)
 						{
-							syncServers.erase(myProcessId);
+							//syncServers.erase(myProcessId);
 							syncServers.insert(authProcessId);
 						}
 
