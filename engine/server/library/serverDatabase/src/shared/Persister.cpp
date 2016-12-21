@@ -230,7 +230,7 @@ void Persister::onFrameBarrierReached()
 				for (ObjectSnapshotMap::iterator obj=m_objectSnapshotMap.begin(); obj!=m_objectSnapshotMap.end();)
 				{
 					if (obj->second == i->second)
-						m_objectSnapshotMap.erase(obj++);
+						obj = m_objectSnapshotMap.erase(obj);
 					else
 						++obj;
 				}
