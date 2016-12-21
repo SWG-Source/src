@@ -1149,8 +1149,6 @@ void JavaLibrary::initializeJavaThread()
 	JNIEnv * env = nullptr;
 	jint result = (*JNI_CreateJavaVMProc)(&ms_jvm, reinterpret_cast<void**>(&env), &vm_args);
 
-	Os::sleep(500);
-
 	if (result != 0)
 	{
 		FATAL(true, ("Failed to CreateJavaVMProc: %d", result));
