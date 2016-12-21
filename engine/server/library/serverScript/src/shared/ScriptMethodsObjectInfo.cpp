@@ -160,7 +160,7 @@ namespace ScriptMethodsObjectInfoNamespace
 	jboolean     JNICALL hasCondition(JNIEnv *env, jobject self, jlong target, jint condition);
 	jboolean     JNICALL setCondition(JNIEnv *env, jobject self, jlong target, jint condition);
 	jboolean     JNICALL clearCondition(JNIEnv *env, jobject self, jlong target, jint condition);
-	void         JNICALL sendScriptVarsToProxies(JNIEnv * env, jobject self, jlong obj, jbyteArray buffer);
+	jboolean     JNICALL sendScriptVarsToProxies(JNIEnv * env, jobject self, jlong obj, jbyteArray buffer);
 	jstring      JNICALL getAppearance(JNIEnv * env, jobject self, jlong target);
 	jboolean     JNICALL isInsured(JNIEnv * env, jobject self, jlong target);
 	jboolean     JNICALL isAutoInsured(JNIEnv * env, jobject self, jlong target);
@@ -512,7 +512,7 @@ const JNINativeMethod NATIVES[] = {
 	JF("getCtsDestinationClusters", "()[Ljava/lang/String;", getCtsDestinationClusters),
 	JF("getCurrentSceneName", "()Ljava/lang/String;", getCurrentSceneName),
 	JF("getClusterName", "()Ljava/lang/String;", getClusterName),
-	JF("_sendScriptVarsToProxies", "(J[B)V", sendScriptVarsToProxies),
+	JF("_sendScriptVarsToProxies", "(J[B)Z", sendScriptVarsToProxies),
 	JF("_canEquipWearable", "(JJ)Z", canEquipWearable),
 	JF("_openCustomizationWindow", "(JJLjava/lang/String;IILjava/lang/String;IILjava/lang/String;IILjava/lang/String;II)V", openCustomizationWindow),
 	JF("_getHologramType", "(J)I", getHologramType),
@@ -3363,9 +3363,11 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::canEquipWearable(JNIEnv * env
 
 //-----------------------------------------------------------------------
 
-void JNICALL ScriptMethodsObjectInfoNamespace::sendScriptVarsToProxies(JNIEnv * env, jobject self, jlong obj, jbyteArray buffer)
+jboolean JNICALL ScriptMethodsObjectInfoNamespace::sendScriptVarsToProxies(JNIEnv * env, jobject self, jlong obj, jbyteArray buffer)
 {
 	PROFILER_AUTO_BLOCK_DEFINE("JNI::sendScriptVarsToProxies");
+
+	jboolean res = JNI_FALSE;
 
 	ServerObject * object = 0;
 	if (obj != 0 && buffer != 0)
@@ -3387,10 +3389,10 @@ void JNICALL ScriptMethodsObjectInfoNamespace::sendScriptVarsToProxies(JNIEnv * 
 
 						uint32 const myProcessId = GameServer::getInstance().getProcessId();
 						uint32 const authProcessId = object->getAuthServerProcessId();
-						ProxyList syncServers(proxyList);
+						ProxyList syncServers; //(proxyList);
 						if (myProcessId != authProcessId)
 						{
-							syncServers.erase(myProcessId);
+							//syncServers.erase(myProcessId);
 							syncServers.insert(authProcessId);
 						}
 
@@ -3400,11 +3402,15 @@ void JNICALL ScriptMethodsObjectInfoNamespace::sendScriptVarsToProxies(JNIEnv * 
 						ServerMessageForwarding::send(deltasMessage);
 
 						ServerMessageForwarding::end();
+
+						res = JNI_TRUE;
 					}
 				}
 			}
 		}
 	}
+
+	return res;
 }
 
 //-----------------------------------------------------------------------
