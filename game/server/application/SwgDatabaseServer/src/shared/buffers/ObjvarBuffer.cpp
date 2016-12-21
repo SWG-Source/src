@@ -325,12 +325,8 @@ ObjvarBuffer::updateObjvars(const NetworkId &objectId, const std::vector <Dynami
 
 void ObjvarBuffer::removeObject(const NetworkId &object) {
     DataType::iterator i = m_data.lower_bound(IndexKey(object, 0));
-    while (i != m_data.end()) {
-        if (i->first.m_objectId == object) {
-            i = m_data.erase(i);
-        } else {
-            ++i;
-        }
+    while (i != m_data.end() && i->first.m_objectId==object) {
+    	i = m_data.erase(i);
     }
 }
 

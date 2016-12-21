@@ -643,7 +643,11 @@ void GameServer::connectToDatabaseProcess(std::string const &address, uint16 por
 void GameServer::createRemoteProxy(uint32 remoteProcessId, ServerObject *object)
 {
 
-	WARNING_STRICT_FATAL(!object, ("Told to create an object on %d we know nothing about!\n", remoteProcessId));
+	if (!object) {
+		WARNING(!object, ("Told to create an object on %d we know nothing about!\n", remoteProcessId));
+		return;
+	}
+	
 	NetworkId objectId = object->getNetworkId();
 
 	DEBUG_REPORT_LOG(ConfigServerGame::getLogObjectLoading(),("createRemoteProxy(%lu,%s)\n",remoteProcessId, objectId.getValueString().c_str()));

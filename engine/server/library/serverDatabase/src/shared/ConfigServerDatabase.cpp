@@ -34,14 +34,14 @@ void ConfigServerDatabase::install(void)
 	ConfigServerUtility::install();
 	data = &staticData;
 
-	KEY_INT     (objvarNameCleanupTime, 0);
-	KEY_INT     (orphanedObjectCleanupTime, 0);
-	KEY_INT     (marketAttributesCleanupTime, 0);
-	KEY_INT     (messagesCleanupTime, 0);
-	KEY_INT     (brokenObjectCleanupTime, 0);
-	KEY_INT     (vendorObjectCleanupTime, 0);
+	KEY_INT     (objvarNameCleanupTime, 60);
+	KEY_INT     (orphanedObjectCleanupTime, 60);
+	KEY_INT     (marketAttributesCleanupTime, 60);
+	KEY_INT     (messagesCleanupTime, 60);
+	KEY_INT     (brokenObjectCleanupTime, 60);
+	KEY_INT     (vendorObjectCleanupTime, 60);
 	KEY_STRING  (customSQLFilename,"");
-	KEY_BOOL    (enableFixBadCells, false);
+	KEY_BOOL    (enableFixBadCells, true);
 	KEY_STRING  (objectTemplateListUpdateFilename,"");
 
 	KEY_STRING  (DSN,"gameserver");
@@ -97,7 +97,7 @@ void ConfigServerDatabase::install(void)
 	KEY_BOOL    (enableGoldDatabase, false);
 	KEY_STRING  (maxGoldNetworkId, "10000000");
 	KEY_FLOAT   (defaultQueueUpdateTimeLimit, 0.25f);
-	KEY_BOOL    (enableDataCleanup, false);
+	KEY_BOOL    (enableDataCleanup, true);
 	KEY_INT     (defaultLazyDeleteBulkBindSize, 100);
 	KEY_INT     (defaultLazyDeleteSleepTime, 1000);
 	KEY_INT     (writeDelay, 0);
