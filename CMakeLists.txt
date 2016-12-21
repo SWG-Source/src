@@ -102,7 +102,7 @@ elseif(UNIX)
 		-msse -msse2 -msse3 -mmmx -m3dnow \
 		-Wformat -Wno-overloaded-virtual -Wno-missing-braces -Wno-format \
 		-Wno-write-strings -Wno-unknown-pragmas \
-		-Wno-uninitialized -Wno-reorder -Wno-autological-constant-out-of-range-compare")
+		-Wno-uninitialized -Wno-reorder -Wno-tautological-constant-out-of-range-compare")
 
 	add_definitions(-DLINUX -D_REENTRANT -Dlinux -D_USING_STL -D_GNU_SOURCE -D_XOPEN_SOURCE=500 -U_FORTIFY_SOURCE)
 endif()
