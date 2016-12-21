@@ -89,6 +89,7 @@ elseif(UNIX)
 			-finline-hint-functions -fno-unroll-loops")
 
 		set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -ggdb")
+		set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -flto -fwhole-program-vtables")
 	elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 		# O3 and Ofast include one or more flags that cause java to crash when using gcc6
 		set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2 -fno-signed-zeros -freciprocal-math -fno-unroll-loops -fno-tree-loop-optimize")
