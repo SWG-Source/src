@@ -3365,53 +3365,66 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::canEquipWearable(JNIEnv * env
 
 jboolean JNICALL ScriptMethodsObjectInfoNamespace::sendScriptVarsToProxies(JNIEnv * env, jobject self, jlong obj, jbyteArray buffer)
 {
-	PROFILER_AUTO_BLOCK_DEFINE("JNI::sendScriptVarsToProxies");
+    PROFILER_AUTO_BLOCK_DEFINE("JNI::sendScriptVarsToProxies");
 
-	jboolean res = JNI_FALSE;
+    jboolean res = JNI_FALSE;
 
-	ServerObject * object = 0;
-	if (obj != 0 && buffer != 0)
-	{
-		if (JavaLibrary::getObject(obj, object))
-		{
-			ProxyList const &proxyList = object->getExposedProxyList();
-			if (!proxyList.empty())
-			{
-			std::vector<int8> data;
-			if (ScriptConversion::convert(buffer, data))
-			{
-				if(data.size() > 0)
-				{
-					WARNING(data.size() > 60000, ("JavaLibrary::sendScriptVarsToProxies: "
-						"Packing scriptvars for object %s, packed data size = %d",
-						object->getNetworkId().getValueString().c_str(),
-						static_cast<int>(data.size())));
+    ServerObject * object = 0;
+    if (obj != 0 && buffer != 0)
+    {
+        if (JavaLibrary::getObject(obj, object))
+        {
+            ProxyList const &proxyList = object->getExposedProxyList();
+            if (!proxyList.empty())
+            {
+                std::vector<int8> data;
+                if (ScriptConversion::convert(buffer, data))
+                {
+                    if(data.size() > 0)
+                    {
+                        WARNING(data.size() > 60000, ("JavaLibrary::sendScriptVarsToProxies: "
+                                "Packing scriptvars for object %s, packed data size = %d",
+                                object->getNetworkId().getValueString().c_str(),
+                                static_cast<int>(data.size())
+                            )
+                        );
 
-						uint32 const myProcessId = GameServer::getInstance().getProcessId();
-						uint32 const authProcessId = object->getAuthServerProcessId();
-						ProxyList syncServers; //(proxyList);
-						if (myProcessId != authProcessId)
-						{
-							//syncServers.erase(myProcessId);
-							syncServers.insert(authProcessId);
-						}
+                        uint32 const myProcessId = GameServer::getInstance().getProcessId();
+                        uint32 const authProcessId = object->getAuthServerProcessId();
 
-						ServerMessageForwarding::begin(std::vector<uint32>(syncServers.begin(), syncServers.end()));
-
-						SynchronizeScriptVarDeltasMessage const deltasMessage(object->getNetworkId(), data);
-						ServerMessageForwarding::send(deltasMessage);
-
-						ServerMessageForwarding::end();
-
-						res = JNI_TRUE;
+                        ProxyList syncServers;
+			
+			for (auto i = proxyList.begin(); i!=proxyList.end(); ++i) {
+				if (myProcessId != authProcessId) {
+					if (*i != myProcessId) {
+						syncServers.insert(*i);
 					}
+				} else {
+					syncServers.insert(*i);
 				}
 			}
-		}
-	}
 
-	return res;
+			if (myProcessId != authProcessId && syncServers.find(authProcessId) == syncServers.end())
+				syncServers.insert(authProcessId);
+
+                        ServerMessageForwarding::begin(std::vector<uint32>(syncServers.begin(), syncServers.end()));
+
+                        SynchronizeScriptVarDeltasMessage const deltasMessage(object->getNetworkId(), data);
+                        ServerMessageForwarding::send(deltasMessage);
+
+                        ServerMessageForwarding::end();
+                    }
+                    res = JNI_TRUE;
+                }
+            }
+            else{
+                res = JNI_TRUE;
+            }
+        }
+    }
+    return res;
 }
+
 
 //-----------------------------------------------------------------------
 
