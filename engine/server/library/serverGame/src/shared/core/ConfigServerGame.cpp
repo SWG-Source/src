@@ -339,23 +339,6 @@ void ConfigServerGame::install(void)
 	KEY_FLOAT   (lineOfSightCacheMinHeight, 0.8f);
 	KEY_FLOAT   (lineOfSightLocationRoundValue, 5.0f);
 
-#ifdef _DEBUG
-	// in debug mode, we default this to true so that unless
-	// a controller message is explicitly marked as being allowed
-	// from the client, it will be dropped when the game server
-	// receives it; this will have the effect of forcing the
-	// programmer to make a conscious decision to mark the
-	// controller message as allowable from the client; because
-	// controller message coming from the client is not secured,
-	// the mechanism to prevent a hacked client from sending the
-	// game server any controller message is to explicity "mark"
-	// those controller messages that are allowed from the client
-	KEY_BOOL    (enableClientControllerMessageCheck, true);
-#else
-	// for live, the this option will be set to true in the config file
-	KEY_BOOL    (enableClientControllerMessageCheck, false);
-#endif
-
 	KEY_INT     (maxWaypointsPerCharacter,100); // Keep this in sync with the maxWaypoints value in ConfigClientGame.cpp
 	KEY_FLOAT   (maxSmallCreatureHeight, 0.7f);
 	KEY_FLOAT   (smallCreatureUpdateRadius, 64.0f);

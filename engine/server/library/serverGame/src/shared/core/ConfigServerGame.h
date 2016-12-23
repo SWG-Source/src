@@ -393,7 +393,6 @@ class ConfigServerGame
 
 		bool            fatalOnGoldPobChange;
 
-		bool            enableClientControllerMessageCheck;
 		int             maxWaypointsPerCharacter;
 
 		float           maxSmallCreatureHeight;
@@ -915,8 +914,6 @@ class ConfigServerGame
 	static int              getTheaterCreationLimitMilliseconds();
 
 	static bool             getFatalOnGoldPobChange();
-
-	static bool             getEnableClientControllerMessageCheck();
 
 	static int              getMaxWaypointsPerCharacter();
 
@@ -2828,13 +2825,6 @@ inline bool ConfigServerGame::getFatalOnGoldPobChange()
 }
 
 //------------------------------------------------------------
-
-inline bool ConfigServerGame::getEnableClientControllerMessageCheck()
-{
-	return data->enableClientControllerMessageCheck;
-}
-
-// ----------------------------------------------------------------------
 
 inline float ConfigServerGame::getMaxSmallCreatureHeight()
 {

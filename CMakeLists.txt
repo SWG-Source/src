@@ -87,7 +87,7 @@ elseif(UNIX)
 		     	-fno-stack-protector -fstrict-enums -fno-spell-checking \
 			-fno-coverage-mapping -fstrict-vtable-pointers -finline-functions \
 		       	-finline-hint-functions -fshort-enums -fno-unroll-loops \
-			")
+			-flto -fwhole-program-vtables")
 
 		# these only work on 3.9+ -finline-functions -finline-hint-functions
 		# these only work on 3.8+ -fno-coverage-mapping -fstrict-vtable-pointers
