@@ -3369,9 +3369,9 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::sendScriptVarsToProxies(JNIEn
 
     jboolean res = JNI_FALSE;
 
-    ServerObject * object = 0;
     if (obj != 0 && buffer != 0)
     {
+	ServerObject * object = 0;
         if (JavaLibrary::getObject(obj, object))
         {
             ProxyList const &proxyList = object->getExposedProxyList();
@@ -3414,13 +3414,10 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::sendScriptVarsToProxies(JNIEn
 
                         ServerMessageForwarding::end();
                     }
-                    res = JNI_TRUE;
                 }
             }
-            else{
-                res = JNI_TRUE;
-            }
-        }
+	}
+	res = JNI_TRUE;
     }
     return res;
 }
