@@ -8,13 +8,8 @@
 #include "FirstLoginServer.h"
 #include "ClientConnection.h"
 
-#include "Archive/ByteStream.h"
 #include "ConfigLoginServer.h"
-#include "DatabaseConnection.h"
 #include "SessionApiClient.h"
-#include "TaskMapAccount.h"
-#include "serverKeyShare/KeyShare.h"
-#include "sharedFoundation/ApplicationVersion.h"
 #include "sharedLog/Log.h"
 #include "sharedNetworkMessages/ClientLoginMessages.h"
 #include "sharedNetworkMessages/DeleteCharacterMessage.h"
@@ -24,8 +19,6 @@
 #include "sharedNetworkMessages/LoginEnumCluster.h"
 
 #include "sharedFoundation/CrcConstexpr.hpp"
-
-//#include <algorithm>
 
 #include "webAPI.h"
 
@@ -244,11 +237,27 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 				uname.resize(MAX_ACCOUNT_NAME_LENGTH);
 			}
 
-			suid = std::hash<std::string>(uname.c_str());
+			std::hash<std::string> h;
+            suid = h(uname.c_str());
 		}
 
-		// insert all related accounts, if not already there, into the db
-        //taskmapaccount
+        std::string parentAccount = api.getString("mainAccount");
+        vector<std::string> childAccounts = api.getVector<std::string>("subAccounts");
+
+        if (childAccounts.size() == 0) {
+            for (auto i = childAccounts.begin(); i != childAccounts.end(); ++i) {
+                if (!i.empty()) {
+                    std::hash<std::string> tmphash;
+
+                    if (i.length() > MAX_ACCOUNT_NAME_LENGTH) {
+                        i.resize(MAX_ACCOUNT_NAME_LENGTH);
+                    }
+
+                    // insert all related accounts, if not already there, into the db
+                    DatabaseConnection::getInstance().upsertAccountRelationship(suid, tmphash(i));
+                }
+            }
+        }
 
 		LOG("LoginClientConnection", ("validateClient() for stationId (%lu) at IP (%s), id (%s)", m_stationId, getRemoteAddress().c_str(), uname.c_str()));
 		

@@ -59,6 +59,9 @@ namespace StellaBellum {
         // get a string from a given slot
         std::string getString(const std::string &slot);
 
+        // get a vector of strings from a given slot
+        std::vector<std::string> getStringVector(const std::string &slot);
+
         // set json key and value for request
         template<typename T> bool addJsonData(const std::string &key, const T &value) {
             if (!key.empty() &&
