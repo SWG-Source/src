@@ -183,7 +183,10 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 	StationId suid = atoi(id.c_str());
 	static const std::string authURL(ConfigLoginServer::getExternalAuthUrl());
 	std::string uname;
-		
+
+    std::string parentAccount;
+    std::vector<std::string> childAccounts;
+
 	if (!authURL.empty()) 
 	{
 		// create the object
@@ -202,6 +205,9 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 			if (status && !uname.empty())
 			{
 				authOK = true;
+
+                parentAccount = api.getString("mainAccount");
+                childAccounts = api.getStringVector("subAccounts");
 			}
 			else
 			{
@@ -240,9 +246,6 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 			std::hash<std::string> h;
             suid = h(uname.c_str());
 		}
-
-        std::string parentAccount = api.getString("mainAccount");
-        vector<std::string> childAccounts = api.getVector<std::string>("subAccounts");
 
         if (childAccounts.size() == 0) {
             for (auto i = childAccounts.begin(); i != childAccounts.end(); ++i) {
