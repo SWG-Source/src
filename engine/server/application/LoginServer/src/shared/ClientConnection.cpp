@@ -11,8 +11,8 @@
 #include "Archive/ByteStream.h"
 #include "ConfigLoginServer.h"
 #include "DatabaseConnection.h"
-#include "LoginServer.h"
 #include "SessionApiClient.h"
+#include "TaskMapAccount.h"
 #include "serverKeyShare/KeyShare.h"
 #include "sharedFoundation/ApplicationVersion.h"
 #include "sharedLog/Log.h"
@@ -25,7 +25,7 @@
 
 #include "sharedFoundation/CrcConstexpr.hpp"
 
-#include <algorithm>
+//#include <algorithm>
 
 #include "webAPI.h"
 
@@ -244,9 +244,11 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 				uname.resize(MAX_ACCOUNT_NAME_LENGTH);
 			}
 
-			std::hash<std::string> h;
-			suid = h(uname.c_str());	
+			suid = std::hash<std::string>(uname.c_str());
 		}
+
+		// insert all related accounts, if not already there, into the db
+        //taskmapaccount
 
 		LOG("LoginClientConnection", ("validateClient() for stationId (%lu) at IP (%s), id (%s)", m_stationId, getRemoteAddress().c_str(), uname.c_str()));
 		
