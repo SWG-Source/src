@@ -249,16 +249,17 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 		}
 
         if (childAccounts.size() == 0) {
+            std::hash<std::string> h;
+            StationId parent = h(parentAccount);
+
             for (auto i = childAccounts.begin(); i != childAccounts.end(); ++i) {
                 if (!i->empty()) {
                     if (i->length() > MAX_ACCOUNT_NAME_LENGTH) {
                         i->resize(MAX_ACCOUNT_NAME_LENGTH);
                     }
 
-                    std::hash<std::string> h;
-
                     // insert all related accounts, if not already there, into the db
-                    DatabaseConnection::getInstance().upsertAccountRelationship(suid, h(*i));
+                    DatabaseConnection::getInstance().upsertAccountRelationship(parent, h(*i));
                 }
             }
         }
