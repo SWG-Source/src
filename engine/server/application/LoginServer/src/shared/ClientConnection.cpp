@@ -8,6 +8,7 @@
 #include "FirstLoginServer.h"
 #include "ClientConnection.h"
 
+#include "DatabaseConnection.h"
 #include "ConfigLoginServer.h"
 #include "SessionApiClient.h"
 #include "sharedLog/Log.h"
