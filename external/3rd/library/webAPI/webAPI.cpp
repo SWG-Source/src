@@ -55,7 +55,7 @@ std::string webAPI::getString(const std::string &slot) {
     return std::string("");
 }
 
-std::vector<std::string> getStringVector(const std::string &slot) {
+std::vector<std::string> webAPI::getStringVector(const std::string &slot) {
     if (!this->responseData.empty() && !slot.empty() && responseData.count(slot) && !this->responseData[slot].is_null()) {
         return this->responseData[slot].get<std::vector<std::string>>();
     }
