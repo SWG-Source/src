@@ -26,8 +26,8 @@ TaskMapAccount::TaskMapAccount(StationId parentID, StationId childID) :
 bool TaskMapAccount::process(DB::Session *session)
 {
     MapAccountQuery qry;
-    qry.parentID=m_parentId;
-    qry.childID=m_childId;
+    qry.parentID=m_parentID;
+    qry.childID=m_childID;
 
     bool rval = session->exec(&qry);
 
