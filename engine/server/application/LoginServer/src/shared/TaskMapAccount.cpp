@@ -77,7 +77,7 @@ bool TaskMapAccount::MapAccountQuery::bindColumns()
 
 DB::Query::QueryMode TaskMapAccount::MapAccountQuery::getExecutionMode() const
 {
-    return MODE_PROCEXEC;
+    return MODE_SQL;
 }
 
 // ======================================================================
