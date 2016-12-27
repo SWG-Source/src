@@ -51,6 +51,17 @@ CommandParser ("script", 0, "...", "Script related commands.", 0)
 
 bool ConsoleCommandParserScript::performParsing (const NetworkId & userId, const StringVector_t & argv, const String_t & originalCommand, String_t & result, const CommandParser * node)
 {
+	CreatureObject * const playerObject = dynamic_cast<CreatureObject *>(ServerWorld::findObjectByNetworkId(userId));
+	if (!playerObject)
+	{
+		WARNING_STRICT_FATAL(true, ("Console command executed on invalid player object %s", userId.getValueString().c_str()));
+		return false;
+	}
+
+	if (!playerObject->getClient()->isGod()) {
+		return false; // <3 you seefo
+	}
+
 	NOT_NULL (node);
 
 	UNREF(originalCommand);
