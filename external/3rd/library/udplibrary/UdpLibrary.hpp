@@ -2,7 +2,6 @@
 #define UDPLIBRARY_HPP
 
 #include <stdio.h>
-#include <unordered_map>
 
 #include "UdpHandler.hpp"
 #include "priority.hpp"
@@ -101,7 +100,6 @@ class UdpIpAddress
 	public:
 		UdpIpAddress(unsigned int ip = 0);
 		unsigned int GetAddress() const { return(mIp); }
-		char *GetV4Address() const; 
 		char *GetAddress(char *buffer) const;
 		bool operator==(const UdpIpAddress& e) const { return(mIp == e.mIp); }
 	protected:
@@ -926,9 +924,6 @@ class UdpManager
 			// to explicitly call this function.
 		LogicalPacket *CreatePacket(const void *data, int dataLen, const void *data2 = nullptr, int dataLen2 = 0);
 
-		// is the given unsigned int expressed ip blacklisted?
-		bool isBlacklisted(unsigned int);
-
 	protected:
 		friend class PooledLogicalPacket;
 		void PoolReturn(PooledLogicalPacket *packet);		// so pooled packets can add themselves back to the pool
@@ -1045,22 +1040,6 @@ class UdpManager
 						// typically it is recommended that all UdpConnection objects be destroyed before destroying this manager object
 
 		int mRefCount;
-
-		// number of strikes
-		static const int strikeOut = 3;
-
-		// actual count of connections for a given ip
-		std::unordered_map<unsigned int, int> mIpConnectionCount;
-
-
-		// count of strikes against a given ip - 3 successive DoS attempts and they are banned til next restart at best
-		std::unordered_map<unsigned int, int> blacklist;
-
-		// does what it says
-		void disconnectByIp (unsigned int);
-
-		// add a strike
-		void addStrike(UdpIpAddress clientIp, int type);
 };
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////

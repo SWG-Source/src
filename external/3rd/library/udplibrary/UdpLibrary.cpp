@@ -157,13 +157,6 @@ char *UdpIpAddress::GetAddress(char *buffer) const
 	return(buffer);
 }
 
-char *UdpIpAddress::GetV4Address() const
-{
-	struct sockaddr_in addr_serverUDP;
-	addr_serverUDP.sin_addr.s_addr = mIp;
-	return inet_ntoa(addr_serverUDP.sin_addr);
-}
-
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
 	// UdpManager::Params initializations constructor (ie. default values)
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1082,7 +1075,6 @@ void UdpManager::ProcessRawPacket(const PacketHistoryEntry *e)
 				}
 			}
 
-
 			// got a packet from somebody and we don't know who they are and the packet we got was not a connection request
 			// just in case they are a previous client who thinks they are still connected, we will send them an internal
 			// packet telling them that we don't know who they are
@@ -1108,28 +1100,6 @@ void UdpManager::ProcessRawPacket(const PacketHistoryEntry *e)
 	con->AddRef();
 	con->ProcessRawPacket(e);
 	con->Release();
-}
-
-bool UdpManager::isBlacklisted(unsigned int clientAddr)
-{
-	return false;
-}
-
-void UdpManager::disconnectByIp(unsigned int clientAddr)
-{
-        while (mConnectionList != nullptr)
-        {
-		if (mConnectionList->mIp.GetAddress() == clientAddr)
-		{
-			mConnectionList->SetSilentDisconnect(true);
-        		mConnectionList->InternalDisconnect(0, UdpConnection::cDisconnectReasonDosAttack);
-				
-		}
-        }
-}
-
-void UdpManager::addStrike(UdpIpAddress clientIp, int type)
-{
 }
 
 UdpConnection *UdpManager::AddressGetConnection(UdpIpAddress ip, int port) const
