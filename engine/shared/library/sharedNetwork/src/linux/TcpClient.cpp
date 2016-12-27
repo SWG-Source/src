@@ -373,7 +373,7 @@ void TcpClient::queryConnect ()
 	pfd.fd = m_socket;
 	pfd.events = POLLOUT;
 	pfd.revents = 0;
-	int pollResult = poll(&pfd, 1, 3000);
+	int pollResult = poll(&pfd, 1, 0);
 	if(pollResult > 0)
 	{
 		if (pfd.revents & POLLERR)
@@ -483,7 +483,7 @@ void TcpClient::update()
 		pfd.fd = m_socket;
 		pfd.events = POLLIN|POLLHUP;
 		pfd.revents = 0;
-		int pollResult = poll (&pfd, 1, 3000);
+		int pollResult = poll (&pfd, 1, 0);
 		// POLLERR is mutually exclusive with POLLIN and POLLHUP.
 		// POLLIN and POLLHUP are not consistent cross-platform.  Additionally,
 		// a POLLHUP doesn't mean that there's not data available.  The best,

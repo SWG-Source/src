@@ -1007,12 +1007,18 @@ void Client::receiveClientMessage(const GameNetworkMessage & message)
 				// check to make sure the controller message is allowed from the client
 				bool allowFromClient = ControllerMessageFactory::allowFromClient(o.getMessage());
 
-				// log as a possible hack
-				if (!allowFromClient)
-					LOG("CustomerService", ("UnauthorizedControllerMessage: Player %s sent an unauthorized controller message %d for object %s.", PlayerObject::getAccountDescription(getCharacterObjectId()).c_str(), o.getMessage(), o.getNetworkId().getValueString().c_str()));
-
-				// do we allow the controller message to get executed?
-				if (allowFromClient || isGod() || !ConfigServerGame::getEnableClientControllerMessageCheck())
+				// we default this to true so that unless
+			        // a controller message is explicitly marked as being allowed
+			        // from the client, or the client is a GM, it will be dropped when the game server
+			        // receives it; this will have the effect of forcing the
+			        // programmer to make a conscious decision to mark the
+			        // controller message as allowable from the client; because
+			        // controller message coming from the client is not secured,
+			        // the mechanism to prevent a hacked client from sending the
+			        // game server any controller message is to explicity "mark"
+			        // those controller messages that are allowed from the client
+				
+				if (allowFromClient || isGod())
 				{
 					ServerObject * target = findControlledObject(o.getNetworkId());
 					if(target !=0)
@@ -1045,9 +1051,14 @@ void Client::receiveClientMessage(const GameNetworkMessage & message)
 							}
 						}
 					}
+				} else {
+					// log as a likely hack
+					LOG("CustomerService", ("UnauthorizedControllerMessage: Player %s sent an unauthorized controller message %d for object %s.", PlayerObject::getAccountDescription(getCharacterObjectId()).c_str(), o.getMessage(), o.getNetworkId().getValueString().c_str()));
 				}
-				if (!appended)
+
+				if (!appended) {
 					delete o.getData();
+				}
 				
 				break;
 			}

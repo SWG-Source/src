@@ -20,6 +20,7 @@
 #include "TaskGetCharactersForDelete.h"
 #include "TaskGetClusterList.h"
 #include "TaskGetValidationData.h"
+#include "TaskMapAccount.h"
 #include "TaskRegisterNewCluster.h"
 #include "TaskRenameCharacter.h"
 #include "TaskRestoreCharacter.h"
@@ -159,6 +160,12 @@ void DatabaseConnection::getAccountValidationData(const TransferRequestMoveValid
 {
 	NOT_NULL(m_taskQueue);
 	m_taskQueue->asyncRequest(new TaskGetValidationData(request, ConfigLoginServer::getClusterGroup(), clusterId));
+}
+
+// ----------------------------------------------------------------------
+
+void DatabaseConnection::upsertAccountRelationship(StationId parentID, StationId childID) {
+	m_taskQueue->asyncRequest(new TaskMapAccount(parentID, childID));
 }
 
 // ----------------------------------------------------------------------

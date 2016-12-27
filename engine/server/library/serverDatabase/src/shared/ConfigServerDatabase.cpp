@@ -34,12 +34,12 @@ void ConfigServerDatabase::install(void)
 	ConfigServerUtility::install();
 	data = &staticData;
 
-	KEY_INT     (objvarNameCleanupTime, 0);
-	KEY_INT     (orphanedObjectCleanupTime, 0);
-	KEY_INT     (marketAttributesCleanupTime, 0);
-	KEY_INT     (messagesCleanupTime, 0);
-	KEY_INT     (brokenObjectCleanupTime, 0);
-	KEY_INT     (vendorObjectCleanupTime, 0);
+	KEY_INT     (objvarNameCleanupTime, 60);
+	KEY_INT     (orphanedObjectCleanupTime, 60);
+	KEY_INT     (marketAttributesCleanupTime, 60);
+	KEY_INT     (messagesCleanupTime, 60);
+	KEY_INT     (brokenObjectCleanupTime, 60);
+	KEY_INT     (vendorObjectCleanupTime, 60);
 	KEY_STRING  (customSQLFilename,"");
 	KEY_BOOL    (enableFixBadCells, false);
 	KEY_STRING  (objectTemplateListUpdateFilename,"");

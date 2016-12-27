@@ -759,398 +759,398 @@ bool ChatAPI::isUID(const ChatUnicodeString &uidNode)
 
 void ChatAPI::OnConnect()
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnConnect\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnConnect\n");
 }
 
 void ChatAPI::OnDisconnect()
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnDisconnect\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnDisconnect\n");
 }
 
 void ChatAPI::OnFailoverBegin()
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnFailoverBegin\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnFailoverBegin\n");
 }
 
 void ChatAPI::OnFailoverComplete()
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnFailoverComplete\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnFailoverComplete\n");
 }
 
 void ChatAPI::OnLoginAvatar(unsigned track, unsigned result, const ChatAvatar *newAvatar, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnLoginAvatar\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnLoginAvatar\n");
 }
 void ChatAPI::OnLoginAvatar(unsigned track, unsigned result, const ChatAvatar *newAvatar, int requiredLoginPriority, void *user)
 {
-	// fprintf(stderr, "[ChatAPI.cpp] default OnLoginAvatar(with loginPriority) \n");
+	// //fprintf(stderr, "[ChatAPI.cpp] default OnLoginAvatar(with loginPriority) \n");
 }
 
 void ChatAPI::OnTemporaryAvatar(unsigned track, unsigned result, const ChatAvatar *newAvatar, void *user)
 {
-    fprintf(stderr, "[ChatAPI.cpp] default OnTemporaryAvatar\n");
+    //fprintf(stderr, "[ChatAPI.cpp] default OnTemporaryAvatar\n");
 }
 
 void ChatAPI::OnLogoutAvatar(unsigned track, unsigned result, const ChatAvatar *oldAvatar, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnLogoutAvatar\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnLogoutAvatar\n");
 }
 
 void ChatAPI::OnDestroyAvatar(unsigned track, unsigned result, const ChatAvatar *oldAvatar, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnDestroyAvatar\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnDestroyAvatar\n");
 }
 
 void ChatAPI::OnGetAvatar(unsigned track, unsigned result, const ChatAvatar *foundAvatar, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnGetAvatar\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnGetAvatar\n");
 }
 
 void ChatAPI::OnGetAnyAvatar(unsigned track, unsigned result, const ChatAvatar *foundAvatar, bool loggedIn, void *user)
 {
-    fprintf(stderr, "[ChatAPI.cpp] default OnGetAnyAvatar\n");
+    //fprintf(stderr, "[ChatAPI.cpp] default OnGetAnyAvatar\n");
 }
 
 void ChatAPI::OnAvatarList(unsigned track, unsigned result, unsigned listLength, const AvatarListItem* avatarList, void *user)
 {
-    fprintf(stderr, "[ChatAPI.cpp] default OnAvatarList\n");
+    //fprintf(stderr, "[ChatAPI.cpp] default OnAvatarList\n");
 }
 
 void ChatAPI::OnSetAvatarAttributes(unsigned track, unsigned result, const ChatAvatar *changedAvatar, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnSetAvatarAttributes\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnSetAvatarAttributes\n");
 }
 
 void ChatAPI::OnSetAvatarStatusMessage(unsigned track, unsigned result, const ChatAvatar *changedAvatar, void *user)
 {
-    fprintf(stderr, "[ChatAPI.cpp] default OnSetAvatarStatusMessage\n");
+    //fprintf(stderr, "[ChatAPI.cpp] default OnSetAvatarStatusMessage\n");
 }
 
 void ChatAPI::OnSetAvatarForwardingEmail(unsigned track, unsigned result, const ChatAvatar *changedAvatar, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnSetAvatarForwardingEmail\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnSetAvatarForwardingEmail\n");
 }
 
 void ChatAPI::OnSetAvatarInboxLimit(unsigned track, unsigned result, const ChatAvatar *changedAvatar, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnSetAvatarInboxLimit\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnSetAvatarInboxLimit\n");
 }
 
 void ChatAPI::OnTransferAvatar(unsigned track, unsigned result, unsigned oldUserID, unsigned newUserID, const ChatUnicodeString &oldName, const ChatUnicodeString &newName, const ChatUnicodeString &oldAddress, const ChatUnicodeString &newAddress, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnTransferAvatar\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnTransferAvatar\n");
 }
 
 void ChatAPI::OnFanClubHandle(unsigned track, unsigned result, const ChatUnicodeString &handle, unsigned stationID, unsigned fanClubCode, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnFanClubHandle\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnFanClubHandle\n");
 }
 
 void ChatAPI::OnCreateRoom(unsigned track, unsigned result, const ChatRoom *newRoom, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnCreateRoom\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnCreateRoom\n");
 }
 
 void ChatAPI::OnDestroyRoom(unsigned track, unsigned result, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnDestroyRoom\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnDestroyRoom\n");
 }
 
 void ChatAPI::OnGetRoom(unsigned track, unsigned result, const ChatRoom *room, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnGetRoom\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnGetRoom\n");
 }
 
 void ChatAPI::OnGetRoomSummaries(unsigned track, unsigned result, unsigned numFoundRooms, RoomSummary *foundRooms, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnGetRoomSummaries\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnGetRoomSummaries\n");
 }
 
 void ChatAPI::OnSendInstantMessage(unsigned track, unsigned result, const ChatAvatar *srcAvatar, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnSendInstantMessage\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnSendInstantMessage\n");
 }
 
 void ChatAPI::OnSendRoomMessage(unsigned track, unsigned result, const ChatAvatar *srcAvatar, const ChatRoom *destRoom, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnSendRoomMessage\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnSendRoomMessage\n");
 }
 
 void ChatAPI::OnSendBroadcastMessage(unsigned track, unsigned result, const ChatAvatar *srcAvatar, const ChatUnicodeString &address, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnSendBroadcastMessage\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnSendBroadcastMessage\n");
 }
 
 void ChatAPI::OnFilterMessage(unsigned track, unsigned result, const ChatUnicodeString &filteredMsg, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnFilterMessage\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnFilterMessage\n");
 }
 
 void ChatAPI::OnFilterMessageEx(unsigned track, unsigned result, const ChatUnicodeString &filteredMsg, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnFilterMessageEx\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnFilterMessageEx\n");
 }
 
 void ChatAPI::OnAddFriend(unsigned track, unsigned result, const ChatAvatar *srcAvatar, const ChatUnicodeString &destName, const ChatUnicodeString &destAddress, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnAddFriend\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnAddFriend\n");
 }
 
 void ChatAPI::OnAddFriendReciprocate(unsigned track, unsigned result, const ChatAvatar *srcAvatar, const ChatUnicodeString &destName, const ChatUnicodeString &destAddress, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnAddFriendReciprocate\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnAddFriendReciprocate\n");
 }
 
 
 void ChatAPI::OnSetFriendComment(unsigned track, unsigned result, const ChatAvatar *srcAvatar, const ChatUnicodeString &destName, const ChatUnicodeString &destAddress, const ChatUnicodeString &friendComment, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnSetFriendComment\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnSetFriendComment\n");
 }
 
 void ChatAPI::OnRemoveFriend(unsigned track, unsigned result, const ChatAvatar *srcAvatar, const ChatUnicodeString &destName, const ChatUnicodeString &destAddress, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnRemoveFriend\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnRemoveFriend\n");
 }
 
 void ChatAPI::OnRemoveFriendReciprocate(unsigned track, unsigned result, const ChatAvatar *srcAvatar, const ChatUnicodeString &destName, const ChatUnicodeString &destAddress, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnRemoveFriendReciprocate\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnRemoveFriendReciprocate\n");
 }
 
 void ChatAPI::OnFriendStatus(unsigned track, unsigned result, const ChatAvatar *srcAvatar, unsigned listLength, const ChatFriendStatus *friendList, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnFriendStatus\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnFriendStatus\n");
 }
 
 void ChatAPI::OnAddIgnore(unsigned track, unsigned result, const ChatAvatar *srcAvatar, const ChatUnicodeString &destName, const ChatUnicodeString &destAddress, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnAddIgnore\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnAddIgnore\n");
 }
 
 void ChatAPI::OnRemoveIgnore(unsigned track, unsigned result, const ChatAvatar *srcAvatar, const ChatUnicodeString &destName, const ChatUnicodeString &destAddress, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnRemoveIgnore\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnRemoveIgnore\n");
 }
 
 void ChatAPI::OnIgnoreStatus(unsigned track, unsigned result, const ChatAvatar *srcAvatar, unsigned listLength, const ChatIgnoreStatus *ignoreList, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnIgnoreStatus\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnIgnoreStatus\n");
 }
 
 void ChatAPI::OnEnterRoom(unsigned track, unsigned result, const ChatAvatar *srcAvatar, const ChatRoom *destRoom, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnEnterRoom\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnEnterRoom\n");
 }
 
 void ChatAPI::OnAllowRoomEntry(unsigned track, unsigned result, const ChatAvatar *srcAvatar, const ChatUnicodeString &roomAddress, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnAllowRoomEntry\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnAllowRoomEntry\n");
 }
 
 void ChatAPI::OnLeaveRoom(unsigned track, unsigned result, const ChatAvatar *srcAvatar, const ChatRoom *destRoom, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnLeaveRoom\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnLeaveRoom\n");
 }
 
 void ChatAPI::OnReceiveDestroyRoom(const ChatAvatar *srcAvatar, const ChatRoom *destRoom)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnReceiveDestroyRoom\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnReceiveDestroyRoom\n");
 }
 
 void ChatAPI::OnAddModerator(unsigned track, unsigned result, const ChatAvatar *srcAvatar, const ChatRoom *destRoom, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnAddModerator\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnAddModerator\n");
 }
 
 void ChatAPI::OnRemoveModerator(unsigned track,unsigned result, const ChatAvatar *srcAvatar, const ChatRoom *destRoom, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnRemoveModerator\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnRemoveModerator\n");
 }
 
 void ChatAPI::OnAddTemporaryModerator(unsigned track, unsigned result, const ChatAvatar *srcAvatar, const ChatRoom *destRoom, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnAddTemporaryModerator\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnAddTemporaryModerator\n");
 }
 
 void ChatAPI::OnRemoveTemporaryModerator(unsigned track,unsigned result, const ChatAvatar *srcAvatar, const ChatRoom *destRoom, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnRemoveTemporaryModerator\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnRemoveTemporaryModerator\n");
 }
 
 void ChatAPI::OnAddBan(unsigned track, unsigned result, const ChatAvatar *srcAvatar, const ChatRoom *destRoom, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnAddBan\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnAddBan\n");
 }
 
 void ChatAPI::OnRemoveBan(unsigned track, unsigned result, const ChatAvatar *srcAvatar, const ChatRoom *destRoom, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnRemoveBan\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnRemoveBan\n");
 }
 
 void ChatAPI::OnAddInvite(unsigned track, unsigned result, const ChatAvatar *srcAvatar, const ChatRoom *destRoom, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnAddInvite\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnAddInvite\n");
 }
 
 void ChatAPI::OnRemoveInvite(unsigned track, unsigned result, const ChatAvatar *srcAvatar, const ChatRoom *destRoom, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnRemoveInvite\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnRemoveInvite\n");
 }
 
 void ChatAPI::OnGrantVoice(unsigned track, unsigned result, const ChatAvatar *srcAvatar, const ChatRoom *destRoom, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnGrantVoice\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnGrantVoice\n");
 }
 
 void ChatAPI::OnRevokeVoice(unsigned track, unsigned result, const ChatAvatar *srcAvatar, const ChatRoom *destRoom, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnRevokeVoice\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnRevokeVoice\n");
 }
 
 void ChatAPI::OnKickAvatar(unsigned track, unsigned result, const ChatAvatar *srcAvatar, const ChatRoom *destRoom, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnKickAvatar\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnKickAvatar\n");
 }
 
 void ChatAPI::OnSetRoomParams(unsigned track, unsigned result, const ChatAvatar *srcAvatar, const ChatRoom *destRoom, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnSetRoomParams\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnSetRoomParams\n");
 }
 
 void ChatAPI::OnChangeRoomOwner(unsigned track, unsigned result, const ChatAvatar *srcAvatar, const ChatRoom *destRoom, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnChangeRoomOwner\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnChangeRoomOwner\n");
 }
 
 void ChatAPI::OnSendPersistentMessage(unsigned track, unsigned result, const ChatAvatar *srcAvatar, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnSendPersistentMessage\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnSendPersistentMessage\n");
 }
 
 void ChatAPI::OnSendPersistentMessage(unsigned track, unsigned result, const ChatAvatar *srcAvatar, unsigned messageID, void *user)
 {
-	// fprintf(stderr, "[ChatAPI.cpp] default OnSendPersistentMessage (with message ID) \n");
+	// //fprintf(stderr, "[ChatAPI.cpp] default OnSendPersistentMessage (with message ID) \n");
 }
 
 void ChatAPI::OnSendMultiplePersistentMessages(unsigned track, unsigned result, unsigned numSubResults, const unsigned *subResults, const ChatAvatar *srcAvatar, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnSendMultiplePersistentMessages\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnSendMultiplePersistentMessages\n");
 }
 
 void ChatAPI::OnSendMultiplePersistentMessages(unsigned track, unsigned result, unsigned numSubResults, const unsigned *subResults, const unsigned *messageIDs, const ChatAvatar *srcAvatar, void *user)
 {
-	// fprintf(stderr, "[ChatAPI.cpp] default OnSendMultiplePersistentMessages (with message IDs)\n");
+	// //fprintf(stderr, "[ChatAPI.cpp] default OnSendMultiplePersistentMessages (with message IDs)\n");
 }
 
 void ChatAPI::OnAlterPersistentMessage(unsigned track, unsigned result, const ChatUnicodeString &destAvatarName, const ChatUnicodeString &destAvatarAddress, unsigned messageID)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnAlterPersistentMessage\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnAlterPersistentMessage\n");
 }
 
 void ChatAPI::OnGetPersistentHeaders(unsigned track, unsigned result, ChatAvatar *destAvatar, unsigned listLength, const PersistentHeader *list, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnGetPersistentHeaders\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnGetPersistentHeaders\n");
 }
 
 void ChatAPI::OnGetPartialPersistentHeaders(unsigned track, unsigned result, ChatAvatar *destAvatar, unsigned listLength, const PersistentHeader *list, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnGetPartialPersistentHeaders\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnGetPartialPersistentHeaders\n");
 }
 
 void ChatAPI::OnCountPersistentMessages(unsigned track, unsigned result, const ChatUnicodeString &avatarName, const ChatUnicodeString &avatarAddress, unsigned numberOfMessages, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnCountPersistentMessages\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnCountPersistentMessages\n");
 }
 
 void ChatAPI::OnGetPersistentMessage(unsigned track, unsigned result, ChatAvatar *destAvatar, const PersistentHeader *header, const ChatUnicodeString &msg, const ChatUnicodeString &oob, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnGetPersistentMessage\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnGetPersistentMessage\n");
 }
 
 void ChatAPI::OnGetMultiplePersistentMessages(unsigned track, unsigned result, ChatAvatar *destAvatar, unsigned listLength, PersistentMessage ** const list, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnGetMultiplePersistentMessages\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnGetMultiplePersistentMessages\n");
 }
 
 void ChatAPI::OnUpdatePersistentMessage(unsigned track, unsigned result, const ChatAvatar *srcAvatar, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnUpdatePersistentMessage\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnUpdatePersistentMessage\n");
 }
 
 void ChatAPI::OnUpdatePersistentMessages(unsigned track, unsigned result, const ChatAvatar *srcAvatar, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnUpdatePersistentMessages\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnUpdatePersistentMessages\n");
 }
 
 void ChatAPI::OnClassifyPersistentMessages(unsigned track, unsigned result, const ChatAvatar *srcAvatar, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnClassifyPersistentMessages\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnClassifyPersistentMessages\n");
 }
 
 void ChatAPI::OnDeleteAllPersistentMessages(unsigned track, unsigned result, const ChatUnicodeString &avatarName, const ChatUnicodeString &avatarAddress, unsigned numberDeleted, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnDeleteAllPersistentMessages\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnDeleteAllPersistentMessages\n");
 }
 
 void ChatAPI::OnUnregisterRoom(unsigned track, unsigned result, const ChatRoom *destRoom, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnUnregisterRoom\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnUnregisterRoom\n");
 }
 
 void ChatAPI::OnSetAvatarKeywords(unsigned track, unsigned result, const ChatAvatar *srcAvatar, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnSetAvatarKeywords\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnSetAvatarKeywords\n");
 }
 
 void ChatAPI::OnGetAvatarKeywords(unsigned track, unsigned result, const ChatAvatar *srcAvatar, const ChatUnicodeString *keywordList, unsigned listLength, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnGetAvatarKeywords\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnGetAvatarKeywords\n");
 }
 
 void ChatAPI::OnSearchAvatarKeywords(unsigned track, unsigned result, ChatAvatar **avatarMatches, unsigned numMatches, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnSearchAvatarKeywords\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnSearchAvatarKeywords\n");
 }
 
 void ChatAPI::OnFriendConfirm(unsigned track, unsigned result, const ChatAvatar *srcAvatar, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnFriendConfirm\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnFriendConfirm\n");
 }
 
 void ChatAPI::OnFriendConfirmReciprocate(unsigned track, unsigned result, const ChatAvatar *srcAvatar, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnFriendConfirmReciprocate\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnFriendConfirmReciprocate\n");
 }
 
 
 void ChatAPI::OnFindAvatarByUID(unsigned track, unsigned result, unsigned numFoundAvatarsOnline, ChatAvatar **foundAvatars, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnFindAvatarByUID\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnFindAvatarByUID\n");
 }
 
 void ChatAPI::OnBeginSnoopingAvatar(unsigned track, unsigned result, const ChatAvatar *srcAvatar, const ChatUnicodeString &destName, const ChatUnicodeString &destAddress, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnBeginSnoopingAvatar\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnBeginSnoopingAvatar\n");
 }
 
 void ChatAPI::OnStopSnoopingAvatar(unsigned track, unsigned result, const ChatAvatar *srcAvatar, const ChatUnicodeString &destName, const ChatUnicodeString &destAddress, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnStopSnoopingAvatar\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnStopSnoopingAvatar\n");
 }
 
 void ChatAPI::OnBeginSnoopingRoom(unsigned track, unsigned result, const ChatAvatar *srcAvatar, const ChatUnicodeString &roomAddress, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnBeginSnoopingRoom\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnBeginSnoopingRoom\n");
 }
 
 void ChatAPI::OnStopSnoopingRoom(unsigned track, unsigned result, const ChatAvatar *srcAvatar, const ChatUnicodeString &roomAddress, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnStopSnoopingRoom\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnStopSnoopingRoom\n");
 }
 
 void ChatAPI::OnGetSnoopList(unsigned track, unsigned result, const ChatAvatar *srcAvatar, unsigned avatarSnoopListLength, AvatarSnoopPair **avatarSnoops, unsigned roomSnoopListLength, ChatUnicodeString **roomSnoops, void *user)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnGetSnoopList\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnGetSnoopList\n");
 }
 
 ChatUnicodeString ChatAPI::getErrorString(unsigned resultCode)
@@ -1160,222 +1160,222 @@ ChatUnicodeString ChatAPI::getErrorString(unsigned resultCode)
 
 void ChatAPI::OnReceiveInstantMessage(const ChatAvatar *srcAvatar, const ChatAvatar *destAvatar, const ChatUnicodeString &msg, const ChatUnicodeString &oob)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnReceiveInstantMessage\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnReceiveInstantMessage\n");
 }
 
 void ChatAPI::OnReceiveRoomMessage(const ChatAvatar *srcAvatar, const ChatAvatar *destAvatar, const ChatRoom *destRoom, const ChatUnicodeString &msg, const ChatUnicodeString &oob)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnReceiveRoomMessage\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnReceiveRoomMessage\n");
 }
 
 void ChatAPI::OnReceiveRoomMessage(const ChatAvatar *srcAvatar, const ChatAvatar *destAvatar, const ChatRoom *destRoom, const ChatUnicodeString &msg, const ChatUnicodeString &oob, unsigned messageID)
 {
-	// fprintf(stderr, "[ChatAPI.cpp] default OnReceiveRoomMessage (with message ID)\n");
+	// //fprintf(stderr, "[ChatAPI.cpp] default OnReceiveRoomMessage (with message ID)\n");
 }
 
 void ChatAPI::OnReceiveBroadcastMessage(const ChatAvatar *srcAvatar, const ChatUnicodeString &srcAddress, const ChatAvatar *destAvatar, const ChatUnicodeString &msg, const ChatUnicodeString &oob)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnReceiveBroadcastMessage\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnReceiveBroadcastMessage\n");
 }
 
 void ChatAPI::OnReceiveFilterMessage(const ChatUnicodeString &msg)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnReceiveFilterMessage\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnReceiveFilterMessage\n");
 }
 
 void ChatAPI::OnReceiveFriendLogin(const ChatAvatar *srcAvatar, const ChatUnicodeString &srcAddress, const ChatAvatar *destAvatar)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnReceiveFriendLogin\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnReceiveFriendLogin\n");
 }
 
 void ChatAPI::OnReceiveFriendLogout(const ChatAvatar *srcAvatar, const ChatUnicodeString &srcAddress, const ChatAvatar *destAvatar)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnReceiveFriendLogout\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnReceiveFriendLogout\n");
 }
 
 void ChatAPI::OnReceiveFriendStatusChange(const ChatAvatar *srcAvatar, const ChatUnicodeString &srcAddress, const ChatAvatar *destAvatar)
 {
-    fprintf(stderr, "[ChatAPI.cpp] default OnReceiveFriendStatusChange\n");
+    //fprintf(stderr, "[ChatAPI.cpp] default OnReceiveFriendStatusChange\n");
 }
 
 void ChatAPI::OnReceiveKickRoom(const ChatAvatar *srcAvatar, const ChatAvatar *destAvatar, const ChatRoom *destRoom)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnReceiveKickRoom\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnReceiveKickRoom\n");
 }
 
 void ChatAPI::OnReceiveKickAvatar(const ChatAvatar *srcAvatar, const ChatAvatar *destAvatar, const ChatUnicodeString &roomName, const ChatUnicodeString &roomAddress)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnReceiveKickAvatar\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnReceiveKickAvatar\n");
 }
 
 void ChatAPI::OnReceiveRoomEntryRequest(const ChatAvatar *srcAvatar, const ChatAvatar *destAvatar, const ChatUnicodeString &destRoomAddress)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnReceiveRoomEntryRequest\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnReceiveRoomEntryRequest\n");
 }
 
 void ChatAPI::OnReceiveDelayedRoomEntry(const ChatAvatar *srcAvatar, const ChatRoom *destRoom)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnReceiveDelayedRoomEntry\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnReceiveDelayedRoomEntry\n");
 }
 
 void ChatAPI::OnReceiveDeniedRoomEntry(const ChatAvatar *srcAvatar, const ChatUnicodeString &destRoomAddress)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnReceiveDeniedRoomEntry\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnReceiveDeniedRoomEntry\n");
 }
 
 void ChatAPI::OnReceiveEnterRoom(const ChatAvatar *srcAvatar, const ChatRoom *destRoom)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnReceiveEnterRoom\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnReceiveEnterRoom\n");
 }
 
 void ChatAPI::OnReceiveLeaveRoom(const ChatAvatar *srcAvatar, const ChatRoom *destRoom)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnReceiveLeaveRoom\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnReceiveLeaveRoom\n");
 }
 
 void ChatAPI::OnReceiveAddModeratorRoom(const ChatAvatar *srcAvatar, const ChatAvatar *destAvatar, const ChatRoom *destRoom)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnReceiveAddModeratorRoom\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnReceiveAddModeratorRoom\n");
 }
 
 void ChatAPI::OnReceiveAddModeratorAvatar(const ChatAvatar *srcAvatar, const ChatAvatar *destAvatar, const ChatUnicodeString &roomName, const ChatUnicodeString &roomAddress)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnReceiveAddModeratorAvatar\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnReceiveAddModeratorAvatar\n");
 }
 
 void ChatAPI::OnReceiveRemoveModeratorRoom(const ChatAvatar *srcAvatar, const ChatAvatar *destAvatar, const ChatRoom *destRoom)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnReceiveRemoveModeratorRoom\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnReceiveRemoveModeratorRoom\n");
 }
 
 void ChatAPI::OnReceiveRemoveModeratorAvatar(const ChatAvatar *srcAvatar, const ChatAvatar *destAvatar, const ChatUnicodeString &roomName, const ChatUnicodeString &roomAddress)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnReceiveRemoveModeratorAvatar\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnReceiveRemoveModeratorAvatar\n");
 }
 
 void ChatAPI::OnReceiveAddTemporaryModeratorRoom(const ChatAvatar *srcAvatar, const ChatAvatar *destAvatar, const ChatRoom *destRoom)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnReceiveAddTemporaryModeratorRoom\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnReceiveAddTemporaryModeratorRoom\n");
 }
 
 void ChatAPI::OnReceiveAddTemporaryModeratorAvatar(const ChatAvatar *srcAvatar, const ChatAvatar *destAvatar, const ChatUnicodeString &roomName, const ChatUnicodeString &roomAddress)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnReceiveAddTemporaryModeratorAvatar\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnReceiveAddTemporaryModeratorAvatar\n");
 }
 
 void ChatAPI::OnReceiveRemoveTemporaryModeratorRoom(const ChatAvatar *srcAvatar, const ChatAvatar *destAvatar, const ChatRoom *destRoom)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnReceiveRemoveTemporaryModeratorRoom\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnReceiveRemoveTemporaryModeratorRoom\n");
 }
 
 void ChatAPI::OnReceiveRemoveTemporaryModeratorAvatar(const ChatAvatar *srcAvatar, const ChatAvatar *destAvatar, const ChatUnicodeString &roomName, const ChatUnicodeString &roomAddress)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnReceiveRemoveTemporaryModeratorAvatar\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnReceiveRemoveTemporaryModeratorAvatar\n");
 }
 
 void ChatAPI::OnReceiveAddBanRoom(const ChatAvatar *srcAvatar, const ChatAvatar *destAvatar, const ChatRoom *destRoom)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnReceiveAddBanRoom\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnReceiveAddBanRoom\n");
 }
 
 void ChatAPI::OnReceiveAddBanAvatar(const ChatAvatar *srcAvatar, const ChatAvatar *destAvatar, const ChatUnicodeString &roomName, const ChatUnicodeString &roomAddress)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnReceiveAddBanAvatar\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnReceiveAddBanAvatar\n");
 }
 
 void ChatAPI::OnReceiveRemoveBanRoom(const ChatAvatar *srcAvatar, const ChatAvatar *destAvatar, const ChatRoom *destRoom)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnReceiveRemoveBanRoom\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnReceiveRemoveBanRoom\n");
 }
 
 void ChatAPI::OnReceiveRemoveBanAvatar(const ChatAvatar *srcAvatar, const ChatAvatar *destAvatar, const ChatUnicodeString &roomName, const ChatUnicodeString &roomAddress)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnReceiveRemoveBanAvatar\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnReceiveRemoveBanAvatar\n");
 }
 
 void ChatAPI::OnReceiveAddInviteRoom(const ChatAvatar *srcAvatar, const ChatAvatar *destAvatar, const ChatRoom *destRoom)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnReceiveAddInviteRoom\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnReceiveAddInviteRoom\n");
 }
 
 void ChatAPI::OnReceiveAddInviteAvatar(const ChatAvatar *srcAvatar, const ChatAvatar *destAvatar, const ChatUnicodeString &roomName, const ChatUnicodeString &roomAddress)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnReceiveAddInviteAvatar\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnReceiveAddInviteAvatar\n");
 }
 
 void ChatAPI::OnReceiveRemoveInviteRoom(const ChatAvatar *srcAvatar, const ChatAvatar *destAvatar, const ChatRoom *destRoom)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnReceiveRemoveInviteRoom\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnReceiveRemoveInviteRoom\n");
 }
 
 void ChatAPI::OnReceiveRemoveInviteAvatar(const ChatAvatar *srcAvatar, const ChatAvatar *destAvatar, const ChatUnicodeString &roomName, const ChatUnicodeString &roomAddress)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnReceiveRemoveInviteAvatar\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnReceiveRemoveInviteAvatar\n");
 }
 
 void ChatAPI::OnReceiveGrantVoiceRoom(const ChatAvatar *srcAvatar, const ChatAvatar *destAvatar, const ChatRoom *destRoom)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnReceiveGrantVoiceRoom\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnReceiveGrantVoiceRoom\n");
 }
 
 void ChatAPI::OnReceiveGrantVoiceAvatar(const ChatAvatar *srcAvatar, const ChatAvatar *destAvatar, const ChatUnicodeString &roomName, const ChatUnicodeString &roomAddress)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnReceiveGrantVoiceAvatar\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnReceiveGrantVoiceAvatar\n");
 }
 
 void ChatAPI::OnReceiveRevokeVoiceRoom(const ChatAvatar *srcAvatar, const ChatAvatar *destAvatar, const ChatRoom *destRoom)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnReceiveRevokeVoiceRoom\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnReceiveRevokeVoiceRoom\n");
 }
 
 void ChatAPI::OnReceiveRevokeVoiceAvatar(const ChatAvatar *srcAvatar, const ChatAvatar *destAvatar, const ChatUnicodeString &roomName, const ChatUnicodeString &roomAddress)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnReceiveRevokeVoiceAvatar\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnReceiveRevokeVoiceAvatar\n");
 }
 
 void ChatAPI::OnReceiveRoomParams(const ChatAvatar *srcAvatar, const ChatRoom *destRoom, const RoomParams *params, const RoomParams *oldParams)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnReceiveRoomParams\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnReceiveRoomParams\n");
 }
 
 void ChatAPI::OnReceivePersistentMessage(const ChatAvatar *destAvatar, const PersistentHeader *header)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnReceivePersistentMessage\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnReceivePersistentMessage\n");
 }
 
 void ChatAPI::OnReceiveForcedLogout(const ChatAvatar *oldAvatar)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnReceiveForcedLogout\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnReceiveForcedLogout\n");
 }
 
 void ChatAPI::OnReceiveUnregisterRoomReady(const ChatRoom *destRoom)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnReceiveUnregisterRoomReady\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnReceiveUnregisterRoomReady\n");
 }
 
 void ChatAPI::OnReceiveFriendConfirmRequest(const ChatAvatar *srcAvatar, const ChatAvatar *destAvatar)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnReceiveFriendConfirmRequest\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnReceiveFriendConfirmRequest\n");
 }
 
 void ChatAPI::OnReceiveFriendConfirmResponse(const ChatAvatar *srcAvatar, const ChatAvatar *destAvatar ,bool confirmed)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnReceiveFriendConfirmResponse\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnReceiveFriendConfirmResponse\n");
 }
 
 void ChatAPI::OnReceiveFriendConfirmReciprocateRequest(const ChatAvatar *srcAvatar, const ChatAvatar *destAvatar)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnReceiveFriendConfirmReciprocateRequest\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnReceiveFriendConfirmReciprocateRequest\n");
 }
 
 void ChatAPI::OnReceiveFriendConfirmReciprocateResponse(const ChatAvatar *srcAvatar, const ChatAvatar *destAvatar ,bool confirmed)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnReceiveFriendConfirmReciprocateResponse\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnReceiveFriendConfirmReciprocateResponse\n");
 }
 
 void ChatAPI::OnReceiveRoomOwnerChange(const ChatRoom *destRoom)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnReceiveRoomOwnerChange\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnReceiveRoomOwnerChange\n");
 }
 
 void ChatAPI::OnReceiveSnoopMessage(unsigned snoopType,
@@ -1387,12 +1387,12 @@ void ChatAPI::OnReceiveSnoopMessage(unsigned snoopType,
 									const ChatUnicodeString &destAddress, // dest avatar or room address
 									const ChatUnicodeString &message)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnReceiveSnoopMessage\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnReceiveSnoopMessage\n");
 }
 
 void ChatAPI::OnReceiveNotifyFriendIsRemoved(ChatAvatar * avatar, const ChatUnicodeString &friendName, const ChatUnicodeString &friendAddress)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnReceiveNotifyFriendIsRemoved\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnReceiveNotifyFriendIsRemoved\n");
 }
 
 void ChatAPI::OnReceiveNotifyFriendsListChange(ChatAvatar * avatar,
@@ -1401,7 +1401,7 @@ void ChatAPI::OnReceiveNotifyFriendsListChange(ChatAvatar * avatar,
 												const ChatUnicodeString &newName,  
 												const ChatUnicodeString &newAddress)
 {
-	fprintf(stderr, "[ChatAPI.cpp] default OnReceiveNotifyFriendsListChange\n");
+	//fprintf(stderr, "[ChatAPI.cpp] default OnReceiveNotifyFriendsListChange\n");
 }
 
 

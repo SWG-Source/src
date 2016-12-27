@@ -514,15 +514,16 @@ ServerObject * ScriptMethodsDynamicVariableNamespace::getObjectAndName(JNIEnv *e
 	JavaStringParam localName(name);
 	if (localName.fillBuffer(buffer, bufferSize) > 1)
 	{
-		if (!JavaLibrary::getObject(objId, object) && !ConfigServerGame::getDisableObjvarNullCheck())
+		if (!JavaLibrary::getObject(objId, object))
 		{
-			fprintf(stderr, "WARNING: Could not get object for objvar %s call\n", buffer);
+			WARNING((!ConfigServerGame::getDisableObjvarNullCheck()), ("WARNING: Could not get object for objvar %s call\n", buffer));
 		}
 	}
 	else
 	{
-		fprintf(stderr, "WARNING: Could not get objvar name\n");
+		WARNING(true, ("Could not get objvar name."));
 	}
+
 	if (object == nullptr && !ConfigServerGame::getDisableObjvarNullCheck())
 		JavaLibrary::printJavaStack();
 

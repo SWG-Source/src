@@ -3203,11 +3203,11 @@ void ServerObject::onRemovedFromTriggerVolume(TriggerVolume & triggerVolume)
  * After this function is called, changes to this object will be sent to the database.
  */
 
-bool ServerObject::persist()
+void ServerObject::persist()
 {
 	// Do not persist buildout objects (buildout objects have negative networkIds)
 	if (getNetworkId() < NetworkId::cms_invalid)
-		return false;
+		return;
 
 	if (isAuthoritative())
 	{
@@ -3221,7 +3221,7 @@ bool ServerObject::persist()
 			if (!contained && !isPlayerControlled() && getPosition_p() != Vector::zero)
 			{
 				WARNING_STRICT_FATAL(true, ("Tried to persist non-player object %s in a space scene away from the origin (not persisting).", getDebugInformation().c_str()));
-				return false;
+				return;
 			}
 		}
 		else
@@ -3244,15 +3244,11 @@ bool ServerObject::persist()
 
 			PositionUpdateTracker::sendPositionUpdate(*this);
 		}
-
-		return true;
 	}
 	else
 	{
 		sendControllerMessageToAuthServer(CM_persistObject, 0);
 	}
-
-	return false;
 }
 
 // ----------------------------------------------------------------------
@@ -4128,7 +4124,7 @@ void ServerObject::performCombatSpam (const MessageQueueCombatSpam & spamMsg, bo
 {
 	if (!isAuthoritative ())
 	{
-		WARNING_STRICT_FATAL (true, ("Do not call performCombatSpam on non-authoritative objects"));
+		DEBUG_WARNING (true, ("Do not call performCombatSpam on non-authoritative objects"));
 		return;
 	}
 
@@ -4143,7 +4139,7 @@ void ServerObject::performCombatSpam (const MessageQueueCombatSpam & spamMsg, bo
 				target->seeCombatSpam (spamMsg);
 			}
 		} else {
-			WARNING_STRICT_FATAL (!sendToSelf && !sendToBystanders, ("nullptr target_obj in commandFuncCombatSpam, when sendToTarget was set true"));
+			DEBUG_WARNING (!sendToSelf && !sendToBystanders, ("nullptr target_obj in commandFuncCombatSpam, when sendToTarget was set true"));
 		}
 	}
 
@@ -8104,7 +8100,7 @@ void ServerObject::removePatrolPathObserver()
 			getNetworkId().getValueString().c_str(), pprp->getObserverCount()));
 		if (pprp->getObserverCount() < 0)
 		{
-			WARNING(true, ("ServerObject::removePatrolPathObserver %s has negative patrol path observer count of %d",
+			DEBUG_WARNING(true, ("ServerObject::removePatrolPathObserver %s has negative patrol path observer count of %d",
 				getNetworkId().getValueString().c_str(), pprp->getObserverCount()));
 		}
 	}

@@ -32,7 +32,6 @@ namespace Base
 	bool ByteStream::ms_reuseData = true;
 
 #if defined (PASCAL_STRING)
-#pragma message ("--- Packing pascal style strings ---")
 	unsigned get(Base::ByteStream::ReadIterator& source, std::string& target)
 	{
 		unsigned int size = 0;
@@ -61,7 +60,6 @@ namespace Base
 	}
 
 #else
-#pragma message ("--- Packing c style strings ---")
     unsigned get(ByteStream::ReadIterator & source, std::string & target)
     {
 	    target = reinterpret_cast<const char *>(source.getBuffer());

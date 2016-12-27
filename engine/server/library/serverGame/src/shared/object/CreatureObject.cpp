@@ -1837,7 +1837,7 @@ void CreatureObject::onLoadedFromDatabase()
 					Object* appearanceInventory = itemId.getObject();
 					if(appearanceInventory == nullptr)
 					{
-						WARNING(true, ("Player %s has lost their appearance inventory", getNetworkId().getValueString().c_str()));
+						DEBUG_WARNING(true, ("Player %s has lost their appearance inventory", getNetworkId().getValueString().c_str()));
 						appearanceInventory = ServerWorld::createNewObject(s_appearanceTemplate, *this, slot, false);
 						if(!appearanceInventory)
 						{
@@ -4251,7 +4251,7 @@ static const int internalTagBufLen = strlen(internalTagBuf);
 			// check if we're making a potentially dangerous mod
 			if (!Attributes::isAttribPool(mod.attrib))
 			{
- 				WARNING(true, ("Creature %s is having non-pool attribute %d instantly "
+ 				DEBUG_WARNING(true, ("Creature %s is having non-pool attribute %d instantly "
 					"modified! This change will be permanent!",
 					getNetworkId().getValueString().c_str(), mod.attrib));
 			}
@@ -6688,7 +6688,7 @@ void CreatureObject::setAttribute(Attributes::Enumerator attribute, Attributes::
 		}
 		if (!Attributes::isAttribPool(attribute))
 		{
-			WARNING(true, ("CreatureObject::setAttribute called with non-pool attribute %d on creature %s. If this is a regeneration value, call setRegenRate() instead.",
+			DEBUG_WARNING(true, ("CreatureObject::setAttribute called with non-pool attribute %d on creature %s. If this is a regeneration value, call setRegenRate() instead.",
 				attribute, getNetworkId().getValueString().c_str()));
 			return;
 		}
@@ -6716,7 +6716,7 @@ void CreatureObject::setMaxAttribute(Attributes::Enumerator attribute, Attribute
 		}
 		if (!Attributes::isAttribPool(attribute))
 		{
-			WARNING(true, ("CreatureObject::setMaxAttribute called with non-pool attribute %d on creature %s. If this is a regeneration value, call setRegenRate() instead.",
+			DEBUG_WARNING(true, ("CreatureObject::setMaxAttribute called with non-pool attribute %d on creature %s. If this is a regeneration value, call setRegenRate() instead.",
 				attribute, getNetworkId().getValueString().c_str()));
 			return;
 		}

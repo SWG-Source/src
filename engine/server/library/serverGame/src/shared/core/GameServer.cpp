@@ -643,7 +643,11 @@ void GameServer::connectToDatabaseProcess(std::string const &address, uint16 por
 void GameServer::createRemoteProxy(uint32 remoteProcessId, ServerObject *object)
 {
 
-	WARNING_STRICT_FATAL(!object, ("Told to create an object on %d we know nothing about!\n", remoteProcessId));
+	if (!object) {
+		WARNING(!object, ("Told to create an object on %d we know nothing about!\n", remoteProcessId));
+		return;
+	}
+	
 	NetworkId objectId = object->getNetworkId();
 
 	DEBUG_REPORT_LOG(ConfigServerGame::getLogObjectLoading(),("createRemoteProxy(%lu,%s)\n",remoteProcessId, objectId.getValueString().c_str()));
@@ -1340,11 +1344,11 @@ void GameServer::receiveMessage(const MessageDispatch::Emitter & source, const M
 			LoadObjectMessage const t(ri);
 
 			ServerObject *const target = ServerWorld::findObjectByNetworkId(t.getId());
-			if (target)
+			if (target) {
 				createRemoteProxy(t.getProcess(), target);
-			else
-				WARNING(true, ("Told to create object %s on %d we know nothing about (received LoadObjectMessage for an object not on this server, PlanetServer is probably confused)", t
-						.getId().getValueString().c_str(), t.getProcess()));
+			} else {
+				WARNING(true, ("Told to create object %s on %d we know nothing about", t.getId().getValueString().c_str(), t.getProcess()));
+			}
 			break;
 		}
 		case constcrc("UnloadObjectMessage") : {
@@ -4787,7 +4791,7 @@ void GameServer::handleCharacterCreateNameVerification(const VerifyNameResponse 
 				Object* appearanceInventory = itemId.getObject();
 				if(appearanceInventory == nullptr)
 				{
-					WARNING(true, ("Player %s has lost their appearance inventory", newCharacterObject->getNetworkId().getValueString().c_str()));
+					DEBUG_WARNING(true, ("Player %s has lost their appearance inventory", newCharacterObject->getNetworkId().getValueString().c_str()));
 					appearanceInventory = ServerWorld::createNewObject(s_appearanceTemplate, *newCharacterObject, slot, false);
 					if(!appearanceInventory)
 					{

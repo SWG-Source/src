@@ -81,7 +81,3 @@ target_link_libraries(LogServer
 	${CURL_LIBRARIES}
     ${CMAKE_DL_LIBS}
 )
-
-if(${BUILD_MULODI_LIB})
-    target_link_libraries(LogServer mulodi)
-endif()

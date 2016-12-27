@@ -16,7 +16,7 @@ as
 			select nvl(max(id)+1,1), p_cluster_name,p_address,'N','N','N',1,
 				2500,250,'Y',350
 			from cluster_list;
-			
+
 			select id
 			into p_cluster_id
 			from cluster_list
@@ -30,7 +30,7 @@ as
 	begin
 		select account_limit into maxCharacterPerAccount
 		from default_char_limits;
-		
+
 		open result_cursor for
 			select id, name, address, port, secret, locked, not_recommended, maxCharacterPerAccount,
 			online_player_limit,online_free_trial_limit,free_trial_can_create_char,online_tutorial_limit
@@ -74,7 +74,7 @@ as
 		into over_account_limit, over_cluster_limit
 		from
 			(select count(*) num from swg_characters
-			where station_id = p_station_id and enabled ='Y' and cluster_id not in (select id from cluster_list where name in ('Corbantis', 'Europe-Infinity', 'Intrepid', 'Kauri', 'Kettemoor', 'Lowca', 'Naritus', 'Scylla', 'Tarquinas', 'Tempest', 'Valcyn', 'Wanderhome', 'Japan-Katana', 'Japan-Harla'))) account_counter,
+			where (station_id = p_station_id OR station_id IN (SELECT CASE WHEN child_id = p_station_id THEN parent_id ELSE child_id END as station_id FROM account_map WHERE parent_id = p_station_id OR child_id = p_station_id)) and enabled ='Y') account_counter,
 			default_char_limits,
 			cluster_list
 		where
@@ -90,7 +90,7 @@ as
 		end if;
 
 		-- if not, return the number of each type of character we're allowed to create
-		
+
 		open result_cursor for
 		select limits.character_type_id, limits.limit - nvl(existing.num,0) remaining_slots
 		from
@@ -111,7 +111,7 @@ as
 
 		return result_cursor;
 	end;
-	
+
 	-- unlike get_open_character_slots, this function ignores account and cluster limits
 	function get_only_open_character_slots(p_station_id number, p_cluster_id number) return refcursor
 	as
@@ -139,16 +139,16 @@ as
 
 		return result_cursor;
 	end;
-	
+
 	function is_cluster_at_limit(p_cluster_id number) return number
-	as		
+	as
 		v_cluster_limit number;
 		v_num_characters number;
 	begin
 		select cluster_limit
 		into v_cluster_limit
 		from default_char_limits;
-		
+
 		select num_characters
 		into v_num_characters
 		from cluster_list
@@ -164,9 +164,9 @@ as
 		when others then
 			return 0;
 	end;
-	
+
 	function is_account_at_limit(p_station_id number) return number
-	as		
+	as
 		v_account_limit number;
 		v_num_characters number;
 	begin
@@ -218,7 +218,7 @@ as
 	begin
 		insert into swg_characters (station_id, cluster_id, character_name, object_id, template_id, character_type)
 		values (p_station_id, p_cluster_id, p_character_name, p_character_id, p_template_id, p_character_type);
- 		
+
 		update cluster_list
 		set num_characters = nvl(num_characters,0) + 1
 		where cluster_list.id = p_cluster_id;
@@ -231,7 +231,7 @@ as
 			where cluster_id = p_cluster_id
 			and station_id = p_station_id
 			and character_name = p_character_name;
-	end; 			 
+	end;
 
 	function restore_character(p_cluster_id number, p_station_id number, p_character_name varchar2, p_character_id number, p_template_id number, p_character_type number) return number
 	-- Return codes:
@@ -245,7 +245,7 @@ as
 		begin
 			insert into swg_characters (station_id, cluster_id, character_name, object_id, template_id, character_type)
 			values (p_station_id, p_cluster_id, p_character_name, p_character_id, p_template_id, p_character_type);
- 		
+
 			update cluster_list
 			set num_characters = nvl(num_characters,0) + 1
 			where cluster_list.id = p_cluster_id;
@@ -282,7 +282,7 @@ as
 	exception
 		when others then
 			return 3;
-	end; 			 
+	end;
 
 	procedure set_character_slots(p_cluster_id number, p_station_id number, p_slot_type number, p_num_slots number)
 	as
@@ -308,14 +308,14 @@ as
 		and cluster_id = p_cluster_id
 		and object_id = p_character_id;
 	end;
-	
+
 	function has_extra_character_slot(p_station_id number, p_character_type number) return number
 	as
 		rows number;
 		total number;
 	begin
 		select count(*), sum(num_extra_slots)
-		into rows, total	
+		into rows, total
 		from extra_character_slots
 		where station_id = p_station_id
 		and character_type_id = p_character_type;
@@ -399,7 +399,7 @@ as
 
 		return result_cursor;
 	end;
-	
+
 	function get_claimed_reward_items(p_station_id number) return refcursor
 	as
 		result_cursor refcursor;
@@ -436,7 +436,7 @@ as
 				if ((p_cluster_id=previous_claim_cluster) and (p_character_id=previous_claim_character)) then
 					return 1;
 				end if;
-				
+
 				return 0;
 			end;
 		when others then
@@ -467,7 +467,7 @@ as
 				if ((p_cluster_id=previous_claim_cluster) and (p_character_id=previous_claim_character)) then
 					return 1;
 				end if;
-				
+
 				return 0;
 			exception
 				when others then
@@ -476,7 +476,7 @@ as
 		when others then
 			return 0;
 	end;
-	
+
 	function get_feature_id_transactions(p_station_id in number, p_cluster_id in number, p_character_id in number) return refcursor
 	as
 		result_cursor refcursor;
@@ -488,7 +488,7 @@ as
 
 		return result_cursor;
 	end;
-	
+
 	function update_feature_id_transaction(p_station_id in number, p_cluster_id in number, p_character_id in number, p_item_id in varchar2, p_count_adjustment in number) return number
 	as
 	begin
@@ -503,7 +503,7 @@ as
 			insert into feature_id_transactions (station_id, cluster_id, character_id, item_id, date_updated, count)
 			values (p_station_id, p_cluster_id, p_character_id, p_item_id, sysdate, p_count_adjustment);
 		end if;
-		
+
 		return 1;
 
 	exception
@@ -511,4 +511,3 @@ as
 			return 0;
 	end;
 end;
-/

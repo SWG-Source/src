@@ -160,7 +160,7 @@ namespace ScriptMethodsObjectInfoNamespace
 	jboolean     JNICALL hasCondition(JNIEnv *env, jobject self, jlong target, jint condition);
 	jboolean     JNICALL setCondition(JNIEnv *env, jobject self, jlong target, jint condition);
 	jboolean     JNICALL clearCondition(JNIEnv *env, jobject self, jlong target, jint condition);
-	void         JNICALL sendScriptVarsToProxies(JNIEnv * env, jobject self, jlong obj, jbyteArray buffer);
+	jboolean     JNICALL sendScriptVarsToProxies(JNIEnv * env, jobject self, jlong obj, jbyteArray buffer);
 	jstring      JNICALL getAppearance(JNIEnv * env, jobject self, jlong target);
 	jboolean     JNICALL isInsured(JNIEnv * env, jobject self, jlong target);
 	jboolean     JNICALL isAutoInsured(JNIEnv * env, jobject self, jlong target);
@@ -512,7 +512,7 @@ const JNINativeMethod NATIVES[] = {
 	JF("getCtsDestinationClusters", "()[Ljava/lang/String;", getCtsDestinationClusters),
 	JF("getCurrentSceneName", "()Ljava/lang/String;", getCurrentSceneName),
 	JF("getClusterName", "()Ljava/lang/String;", getClusterName),
-	JF("_sendScriptVarsToProxies", "(J[B)V", sendScriptVarsToProxies),
+	JF("_sendScriptVarsToProxies", "(J[B)Z", sendScriptVarsToProxies),
 	JF("_canEquipWearable", "(JJ)Z", canEquipWearable),
 	JF("_openCustomizationWindow", "(JJLjava/lang/String;IILjava/lang/String;IILjava/lang/String;IILjava/lang/String;II)V", openCustomizationWindow),
 	JF("_getHologramType", "(J)I", getHologramType),
@@ -3363,49 +3363,65 @@ jboolean JNICALL ScriptMethodsObjectInfoNamespace::canEquipWearable(JNIEnv * env
 
 //-----------------------------------------------------------------------
 
-void JNICALL ScriptMethodsObjectInfoNamespace::sendScriptVarsToProxies(JNIEnv * env, jobject self, jlong obj, jbyteArray buffer)
+jboolean JNICALL ScriptMethodsObjectInfoNamespace::sendScriptVarsToProxies(JNIEnv * env, jobject self, jlong obj, jbyteArray buffer)
 {
-	PROFILER_AUTO_BLOCK_DEFINE("JNI::sendScriptVarsToProxies");
+    PROFILER_AUTO_BLOCK_DEFINE("JNI::sendScriptVarsToProxies");
 
+    jboolean res = JNI_FALSE;
+
+    if (obj != 0 && buffer != 0)
+    {
 	ServerObject * object = 0;
-	if (obj != 0 && buffer != 0)
-	{
-		if (JavaLibrary::getObject(obj, object))
-		{
-			ProxyList const &proxyList = object->getExposedProxyList();
-			if (!proxyList.empty())
-			{
-			std::vector<int8> data;
-			if (ScriptConversion::convert(buffer, data))
-			{
-				if(data.size() > 0)
-				{
-					WARNING(data.size() > 60000, ("JavaLibrary::sendScriptVarsToProxies: "
-						"Packing scriptvars for object %s, packed data size = %d",
-						object->getNetworkId().getValueString().c_str(),
-						static_cast<int>(data.size())));
+        if (JavaLibrary::getObject(obj, object))
+        {
+            ProxyList const &proxyList = object->getExposedProxyList();
+            if (!proxyList.empty())
+            {
+                std::vector<int8> data;
+                if (ScriptConversion::convert(buffer, data))
+                {
+                    if(data.size() > 0)
+                    {
+                        WARNING(data.size() > 60000, ("JavaLibrary::sendScriptVarsToProxies: "
+                                "Packing scriptvars for object %s, packed data size = %d",
+                                object->getNetworkId().getValueString().c_str(),
+                                static_cast<int>(data.size())
+                            )
+                        );
 
-						uint32 const myProcessId = GameServer::getInstance().getProcessId();
-						uint32 const authProcessId = object->getAuthServerProcessId();
-						ProxyList syncServers(proxyList);
-						if (myProcessId != authProcessId)
-						{
-							syncServers.erase(myProcessId);
-							syncServers.insert(authProcessId);
-						}
+                        uint32 const myProcessId = GameServer::getInstance().getProcessId();
+                        uint32 const authProcessId = object->getAuthServerProcessId();
 
-						ServerMessageForwarding::begin(std::vector<uint32>(syncServers.begin(), syncServers.end()));
-
-						SynchronizeScriptVarDeltasMessage const deltasMessage(object->getNetworkId(), data);
-						ServerMessageForwarding::send(deltasMessage);
-
-						ServerMessageForwarding::end();
+                        ProxyList syncServers;
+			
+			for (auto i = proxyList.begin(); i!=proxyList.end(); ++i) {
+				if (myProcessId != authProcessId) {
+					if (*i != myProcessId) {
+						syncServers.insert(*i);
 					}
+				} else {
+					syncServers.insert(*i);
 				}
 			}
-		}
+
+			if (myProcessId != authProcessId && syncServers.find(authProcessId) == syncServers.end())
+				syncServers.insert(authProcessId);
+
+                        ServerMessageForwarding::begin(std::vector<uint32>(syncServers.begin(), syncServers.end()));
+
+                        SynchronizeScriptVarDeltasMessage const deltasMessage(object->getNetworkId(), data);
+                        ServerMessageForwarding::send(deltasMessage);
+
+                        ServerMessageForwarding::end();
+                    }
+                }
+            }
 	}
+	res = JNI_TRUE;
+    }
+    return res;
 }
+
 
 //-----------------------------------------------------------------------
 

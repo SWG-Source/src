@@ -157,7 +157,7 @@ void TangibleObject::endNpcConversation()
 			}
 			else
 			{
-				WARNING(true,("TangibleObject::endNpcConversation: creature %s has a non-nullptr m_npcConversation pointer %p but is not a player-controlled object!", 
+				DEBUG_WARNING(true,("TangibleObject::endNpcConversation: creature %s has a non-nullptr m_npcConversation pointer %p but is not a player-controlled object!", 
 					getNetworkId().getValueString().c_str(), m_npcConversation));
 				m_conversations.clear();
 			}
