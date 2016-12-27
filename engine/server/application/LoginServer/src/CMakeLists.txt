@@ -1,5 +1,3 @@
-add_compile_options(-fprofile-instr-use=${PROJECT_SOURCE_DIR}/src/linux/LoginServer.profdata)
-
 set(SHARED_SOURCES
     shared/CentralServerConnection.cpp
     shared/CentralServerConnection.h
