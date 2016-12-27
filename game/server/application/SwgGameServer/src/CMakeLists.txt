@@ -1,6 +1,4 @@
 
-add_compile_options(-fprofile-instr-use=${PROJECT_SOURCE_DIR}/src/linux/SwgGameServer.profdata)
-
 set(SHARED_SOURCES
     shared/combat/combat.def
     shared/combat/CombatEngine.cpp

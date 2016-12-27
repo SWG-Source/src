@@ -1,6 +1,4 @@
 
-add_compile_options(-fprofile-instr-use=${PROJECT_SOURCE_DIR}/src/linux/CommoditiesServer.profdata)
-
 set(SHARED_SOURCES
     shared/AuctionBid.cpp
     shared/AuctionBid.h

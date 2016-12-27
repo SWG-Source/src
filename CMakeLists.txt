@@ -84,21 +84,15 @@ elseif(UNIX)
 		set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Ofast \
 			-fno-signed-zeros -freciprocal-math -ffp-contract=fast \
                         -fno-threadsafe-statics -fslp-vectorize-aggressive -fslp-vectorize \
-		     	-fno-stack-protector -fstrict-enums -fno-spell-checking \
-			-fno-coverage-mapping -fstrict-vtable-pointers -finline-functions \
-		       	-finline-hint-functions -fshort-enums -fno-unroll-loops \
-			-flto -fwhole-program-vtables")
-
-		# these only work on 3.9+ -finline-functions -finline-hint-functions
-		# these only work on 3.8+ -fno-coverage-mapping -fstrict-vtable-pointers
+		     	-fno-stack-protector -fstrict-enums -fstrict-vtable-pointers \
+			-fno-coverage-mapping -fno-spell-checking -fshort-enums -finline-functions \
+			-finline-hint-functions -fno-unroll-loops")
 
 		set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -ggdb")
 	elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 		# O3 and Ofast include one or more flags that cause java to crash when using gcc6
-		set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2 -fno-signed-zeros -freciprocal-math \
-			-fno-unroll-loops -fno-tree-loop-optimize \
-			-fabi-version=9 -fabi-compat-version=9")
-		set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Og -fabi-version=9 -fabi-compat-version=9")
+		set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2 -fno-signed-zeros -freciprocal-math -fno-unroll-loops -fno-tree-loop-optimize")
+		set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Og")
 	elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
 		set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
 	endif()
@@ -108,7 +102,7 @@ elseif(UNIX)
 		-msse -msse2 -msse3 -mmmx -m3dnow \
 		-Wformat -Wno-overloaded-virtual -Wno-missing-braces -Wno-format \
 		-Wno-write-strings -Wno-unknown-pragmas \
-		-Wno-uninitialized -Wno-reorder -Wno-tautological-constant-out-of-range-compare") 
+		-Wno-uninitialized -Wno-reorder -Wno-tautological-constant-out-of-range-compare")
 
 	add_definitions(-DLINUX -D_REENTRANT -Dlinux -D_USING_STL -D_GNU_SOURCE -D_XOPEN_SOURCE=500 -U_FORTIFY_SOURCE)
 endif()
