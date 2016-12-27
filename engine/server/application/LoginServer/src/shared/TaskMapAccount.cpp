@@ -54,7 +54,11 @@ TaskMapAccount::MapAccountQuery::MapAccountQuery() :
 
 void TaskMapAccount::MapAccountQuery::getSQL(std::string &sql)
 {
-    sql = std::string("begin ")+DatabaseConnection::getInstance().getSchemaQualifier()+"login.upsert_account_map(:parentID, :childID); end;";
+    sql = std::string("begin ")+DatabaseConnection::getInstance().getSchemaQualifier()+"merge into account_map st \ 
+    using (select :parentID parent_id, :childID child_id from dual) v \
+    on (st.parent_id = v.parent_id and st.child_id = v.child_id) \
+    when not matched then insert (parent_id, child_id) values (v.parent_id, v.child_id); \
+end;";
 }
 
 // ----------------------------------------------------------------------
@@ -77,7 +81,7 @@ bool TaskMapAccount::MapAccountQuery::bindColumns()
 
 DB::Query::QueryMode TaskMapAccount::MapAccountQuery::getExecutionMode() const
 {
-    return MODE_SQL;
+    return MODE_PROCEXEC;
 }
 
 // ======================================================================
