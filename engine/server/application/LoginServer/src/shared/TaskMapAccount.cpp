@@ -17,17 +17,15 @@
 TaskMapAccount::TaskMapAccount(StationId parentID, StationId childID) :
         TaskRequest(),
         m_parentID(parentID),
-        m_childID(childID)
-{
+        m_childID(childID) {
 }
 
 // ----------------------------------------------------------------------
 
-bool TaskMapAccount::process(DB::Session *session)
-{
+bool TaskMapAccount::process(DB::Session *session) {
     MapAccountQuery qry;
-    qry.parentID=m_parentID;
-    qry.childID=m_childID;
+    qry.parentID = m_parentID;
+    qry.childID = m_childID;
 
     bool rval = session->exec(&qry);
 
@@ -37,8 +35,7 @@ bool TaskMapAccount::process(DB::Session *session)
 
 // ----------------------------------------------------------------------
 
-void TaskMapAccount::onComplete()
-{
+void TaskMapAccount::onComplete() {
 }
 
 // ======================================================================
@@ -46,25 +43,19 @@ void TaskMapAccount::onComplete()
 TaskMapAccount::MapAccountQuery::MapAccountQuery() :
         Query(),
         parentID(),
-        childID()
-{
+        childID() {
 }
 
 // ----------------------------------------------------------------------
 
-void TaskMapAccount::MapAccountQuery::getSQL(std::string &sql)
-{
-    sql = std::string("begin ")+DatabaseConnection::getInstance().getSchemaQualifier()+"merge into account_map st \ 
-    using (select :parentID parent_id, :childID child_id from dual) v \
-    on (st.parent_id = v.parent_id and st.child_id = v.child_id) \
-    when not matched then insert (parent_id, child_id) values (v.parent_id, v.child_id); \
-end;";
+void TaskMapAccount::MapAccountQuery::getSQL(std::string &sql) {
+    sql = std::string("begin ") + DatabaseConnection::getInstance().getSchemaQualifier() +
+          "merge into account_map am using (select :parentID parent_id, :childID child_id from dual) v on (am.parent_id = v.parent_id and am.child_id = v.child_id) when not matched then insert (parent_id, child_id) values (v.parent_id, v.child_id); end;";
 }
 
 // ----------------------------------------------------------------------
 
-bool TaskMapAccount::MapAccountQuery::bindParameters()
-{
+bool TaskMapAccount::MapAccountQuery::bindParameters() {
     if (!bindParameter(parentID)) return false;
     if (!bindParameter(childID)) return false;
     return true;
@@ -72,15 +63,13 @@ bool TaskMapAccount::MapAccountQuery::bindParameters()
 
 // ----------------------------------------------------------------------
 
-bool TaskMapAccount::MapAccountQuery::bindColumns()
-{
+bool TaskMapAccount::MapAccountQuery::bindColumns() {
     return true;
 }
 
 // ----------------------------------------------------------------------
 
-DB::Query::QueryMode TaskMapAccount::MapAccountQuery::getExecutionMode() const
-{
+DB::Query::QueryMode TaskMapAccount::MapAccountQuery::getExecutionMode() const {
     return MODE_PROCEXEC;
 }
 

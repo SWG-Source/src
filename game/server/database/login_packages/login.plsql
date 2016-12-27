@@ -510,14 +510,4 @@ as
 		when others then
 			return 0;
 	end;
-	function upsert_account_map(parent_station_id in number, child_station_id in number) return number
-	as
-	begin
-    insert into account_map (parent_id, child_id) values (parent_station_id, child_station_id);
-
-    exception when DUP_VAL_ON_INDEX then
-      return 1;
-
-    return sql%rowcount;
-	end;
 end;

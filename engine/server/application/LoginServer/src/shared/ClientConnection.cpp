@@ -225,7 +225,8 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
         std::hash<std::string> h;
         StationId parent = h(parentAccount);
 
-        WARNING(true, ("Parent account is %s", parentAccount.c_str()));
+        REPORT_LOG(true,
+                   ("Client connected.  Station Id:  %llu, Username: %s, Parent %s\n", suid, uname.c_str(), parentAccount.c_str()));
 
         for (auto i : childAccounts) {
             if (i.length() > MAX_ACCOUNT_NAME_LENGTH) {
@@ -233,7 +234,7 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
             }
 
             StationId childID = h(i);
-            printf ("\tFound child account %s (%llu)", i.c_str(), childID);
+            REPORT_LOG(true, ("\tA child account for %s is %s (%llu)\n", parentAccount.c_str(), i.c_str(), childID));
 
             // insert all related accounts, if not already there, into the db
             DatabaseConnection::getInstance().upsertAccountRelationship(parent, childID);
