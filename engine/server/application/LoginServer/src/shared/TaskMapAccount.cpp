@@ -54,7 +54,7 @@ TaskMapAccount::MapAccountQuery::MapAccountQuery() :
 
 void TaskMapAccount::MapAccountQuery::getSQL(std::string &sql)
 {
-    sql = std::string("begin ")+DatabaseConnection::getInstance().getSchemaQualifier()+"select login.upsert_account_map(:parentID, :childID) from dual; end;";
+    sql = std::string("begin ")+DatabaseConnection::getInstance().getSchemaQualifier()+"login.upsert_account_map(:parentID, :childID); end;";
 }
 
 // ----------------------------------------------------------------------
