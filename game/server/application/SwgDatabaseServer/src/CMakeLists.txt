@@ -1,4 +1,6 @@
 
+add_compile_options(-fprofile-instr-use=${PROJECT_SOURCE_DIR}/src/linux/SwgDatabaseServer.profdata)
+
 set(SHARED_SOURCES
     shared/buffers/AuctionLocationsBuffer.cpp
     shared/buffers/AuctionLocationsBuffer.h
