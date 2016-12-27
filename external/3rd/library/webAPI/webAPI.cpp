@@ -1,5 +1,5 @@
 /*
- * Version: 1.3
+ * Version: 1.5
  *
  * This code is just a simple wrapper around nlohmann's wonderful json lib
  * (https://github.com/nlohmann/json) and libcurl. While originally included directly,
@@ -56,7 +56,8 @@ std::string webAPI::getString(const std::string &slot) {
 }
 
 std::vector<std::string> webAPI::getStringVector(const std::string &slot) {
-    if (!this->responseData.empty() && !slot.empty() && responseData.count(slot) && !this->responseData[slot].is_null()) {
+    if (!this->responseData.empty() && !slot.empty() && responseData.count(slot) &&
+        !this->responseData[slot].is_null()) {
         return this->responseData[slot].get<std::vector<std::string>>();
     }
 
@@ -107,7 +108,8 @@ bool webAPI::fetch(const int &getPost, const int &mimeType) // 0 for json 1 for 
             slist = curl_slist_append(slist, "charsets: utf-8");
 
             curl_easy_setopt(curl, CURLOPT_USERAGENT, userAgent.c_str());
-            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeCallback); // place the data into readBuffer using writeCallback
+            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION,
+                             writeCallback); // place the data into readBuffer using writeCallback
             curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer); // specify readBuffer as the container for data
             curl_easy_setopt(curl, CURLOPT_HTTPHEADER, slist);
 

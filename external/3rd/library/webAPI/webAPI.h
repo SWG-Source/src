@@ -1,5 +1,5 @@
 /*
- * Version: 1.4
+ * Version: 1.5
  *
  * This code is just a simple wrapper around nlohmann's wonderful json lib
  * (https://github.com/nlohmann/json) and libcurl. While originally included directly,
@@ -23,7 +23,9 @@
 #ifdef WIN32
 #include <curl.h>
 #else
+
 #include <curl/curl.h>
+
 #endif
 
 namespace StellaBellum {
@@ -45,7 +47,8 @@ namespace StellaBellum {
         ~webAPI();
 
         // submits the request
-        bool submit(const int &reqType = DTYPE::JSON, const int &getPost = HTTP::POST, const int &respType = DTYPE::JSON);
+        bool
+        submit(const int &reqType = DTYPE::JSON, const int &getPost = HTTP::POST, const int &respType = DTYPE::JSON);
 
         // set the endpoint after object creation...or change the target if needed
         bool setEndpoint(const std::string endpoint);
@@ -63,7 +66,8 @@ namespace StellaBellum {
         std::vector<std::string> getStringVector(const std::string &slot);
 
         // set json key and value for request
-        template<typename T> bool addJsonData(const std::string &key, const T &value) {
+        template<typename T>
+        bool addJsonData(const std::string &key, const T &value) {
             if (!key.empty() &&
                 responseData.count(key) == 0) // only alow one of a given key for now, unless we support nesting later
             {
@@ -75,7 +79,8 @@ namespace StellaBellum {
         }
 
         // get json response slot
-        template<typename T> T getNullableValue(const std::string &slot) {
+        template<typename T>
+        T getNullableValue(const std::string &slot) {
             if (!this->responseData.empty() && !slot.empty() && responseData.count(slot)) {
                 return this->responseData[slot].get<T>();
             }
