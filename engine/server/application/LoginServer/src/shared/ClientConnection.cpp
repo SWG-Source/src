@@ -207,8 +207,10 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 			{
 				authOK = true;
 
-                parentAccount = api.getString("mainAccount");
-                childAccounts = api.getStringVector("subAccounts");
+                		parentAccount = api.getString("mainAccount");
+		                childAccounts = api.getStringVector("subAccounts");
+
+				WARNING(true, ("Raw: %s", api.getRaw().c_str()));
 			}
 			else
 			{
@@ -245,24 +247,26 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 			}
 
 			std::hash<std::string> h;
-            suid = h(uname.c_str());
+		        suid = h(uname.c_str());
 		}
 
-        if (childAccounts.size() == 0) {
+       // if (childAccounts.size() == 0) {
             std::hash<std::string> h;
             StationId parent = h(parentAccount);
 
-            for (auto i = childAccounts.begin(); i != childAccounts.end(); ++i) {
-                if (!i->empty()) {
-                    if (i->length() > MAX_ACCOUNT_NAME_LENGTH) {
-                        i->resize(MAX_ACCOUNT_NAME_LENGTH);
-                    }
+	    WARNING(true, ("Parent account is %s", parentAccount.c_str()));
 
-                    // insert all related accounts, if not already there, into the db
-                    DatabaseConnection::getInstance().upsertAccountRelationship(parent, h(*i));
+            for (auto i : childAccounts) {
+		WARNING(true, ("Found child account %s", i.c_str()));
+
+                if (i.length() > MAX_ACCOUNT_NAME_LENGTH) {
+                    i.resize(MAX_ACCOUNT_NAME_LENGTH);
                 }
+
+                // insert all related accounts, if not already there, into the db
+                DatabaseConnection::getInstance().upsertAccountRelationship(parent, h(i));
             }
-        }
+        //}
 
 		LOG("LoginClientConnection", ("validateClient() for stationId (%lu) at IP (%s), id (%s)", m_stationId, getRemoteAddress().c_str(), uname.c_str()));
 		

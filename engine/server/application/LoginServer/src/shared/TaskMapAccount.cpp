@@ -55,6 +55,7 @@ TaskMapAccount::MapAccountQuery::MapAccountQuery() :
 void TaskMapAccount::MapAccountQuery::getSQL(std::string &sql)
 {
     sql = std::string("begin ")+DatabaseConnection::getInstance().getSchemaQualifier()+"login.upsert_account_map(:parentID, :childID); end;";
+    WARNING(true, ("TaskRegisterNewCluster SQL: %s\n", sql.c_str()));
 }
 
 // ----------------------------------------------------------------------
