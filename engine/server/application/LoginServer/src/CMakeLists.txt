@@ -1,3 +1,4 @@
+add_compile_options(-fprofile-instr-use=${PROJECT_SOURCE_DIR}/src/linux/LoginServer.profdata)
 
 set(SHARED_SOURCES
     shared/CentralServerConnection.cpp
@@ -49,6 +50,8 @@ set(SHARED_SOURCES
     shared/TaskGetClusterList.h
     shared/TaskGetValidationData.cpp
     shared/TaskGetValidationData.h
+	shared/TaskMapAccount.h
+	shared/TaskMapAccount.cpp
     shared/TaskRegisterNewCluster.cpp
     shared/TaskRegisterNewCluster.h
     shared/TaskRenameCharacter.cpp
@@ -75,7 +78,7 @@ if(WIN32)
 else()
 	set(PLATFORM_SOURCES
 		linux/main.cpp
-	)
+            shared/TaskMapAccount.h shared/TaskMapAccount.cpp)
 endif()
 
 include_directories(
