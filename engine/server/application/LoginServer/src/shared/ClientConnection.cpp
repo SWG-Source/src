@@ -214,10 +214,11 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
 
     if (authOK) {
         if (suid == 0) {
-	    uname.resize(MAX_ACCOUNT_NAME_LENGTH);
+	    if (uname.length() > MAX_ACCOUNT_NAME_LENGTH)
+	        uname.resize(MAX_ACCOUNT_NAME_LENGTH);
 
 	    std::hash<std::string> hasher;
-            suid = hasher(uname);
+            suid = hasher(uname.c_str());
         }
 
 	REPORT_LOG(true, ("Client connected. Username: %s (%lu) \n", uname.c_str(), suid));
@@ -225,10 +226,11 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
 	StationId parent = -1;
 
 	if (!parentAccount.empty()) {
-		parentAccount.resize(MAX_ACCOUNT_NAME_LENGTH);
+		if (parentAccount.length() > MAX_ACCOUNT_NAME_LENGTH)
+		    parentAccount.resize(MAX_ACCOUNT_NAME_LENGTH);
 
 		std::hash<std::string> hasher;
-		parent = hasher(parentAccount);
+		parent = hasher(parentAccount.c_str());
 
         	if (parentAccount != uname) {
 			REPORT_LOG(true, ("\t%s's parent is %s (%lu) \n", uname.c_str(), parentAccount.c_str(), parent)); 
@@ -241,11 +243,13 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
 	    std::string child(i);
 
             if (!child.empty()) {
-   		  std::hash<std::string> hasher;
-		  child.resize(MAX_ACCOUNT_NAME_LENGTH);
+		  if (child.length() > MAX_ACCOUNT_NAME_LENGTH)
+		      child.resize(MAX_ACCOUNT_NAME_LENGTH);
 
-  	          StationId childID = hasher(child);
- 	          REPORT_LOG(true, ("\tchild of %s (%lu) is %s (%lu) \n", parentAccount.c_str(), parent, child.c_str(), childID));
+   		  std::hash<std::string> hasher;
+  	          StationId childID = hasher(child.c_str());
+ 	          
+		  REPORT_LOG(true, ("\tchild of %s (%lu) is %s (%lu) \n", parentAccount.c_str(), parent, child.c_str(), childID));
 
 	          // insert all related accounts, if not already there, into the db
         	  DatabaseConnection::getInstance().upsertAccountRelationship(parent, childID);
