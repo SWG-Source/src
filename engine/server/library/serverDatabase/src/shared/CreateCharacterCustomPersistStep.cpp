@@ -46,10 +46,14 @@ bool CreateCharacterCustomPersistStep::beforePersist(DB::Session *session)
 
 bool CreateCharacterCustomPersistStep::afterPersist(DB::Session *session)
 {
-//	std::string characterName = Unicode::wideToNarrow(DatabaseProcess::getInstance().getNameByStationId(m_stationId));
 	DBQuery::AddCharacter qry(m_stationId,m_characterObject, m_characterName, m_normalizedName);
-	if (! (session->exec(&qry)))
+
+	if (! (session->exec(&qry))) {
+		std::string characterName(Unicode::wideToNarrow(m_characterName));
+		WARNING(true, ("CreateCharacterCustomPersistStep: Failed saving character and character object for %s", characterName.c_str()));
 		return false;
+	}
+
 	qry.done();
 	return true;
 }

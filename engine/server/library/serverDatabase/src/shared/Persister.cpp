@@ -5,8 +5,6 @@
 //
 // ======================================================================
 
-#include <memory>
-
 #include "serverDatabase/FirstServerDatabase.h"
 #include "serverDatabase/Persister.h"
 
@@ -433,7 +431,6 @@ Snapshot *Persister::getSnapshotForServer(uint32 serverId)
 			if (!m_arbitraryGameDataSnapshot) {
 				m_arbitraryGameDataSnapshot = snap;
 			}
-			
 			return snap;
 
 		}
@@ -602,60 +599,56 @@ void Persister::endBaselines(const NetworkId &objectId, uint32 serverId)
 
 void Persister::saveCompleted(Snapshot *completedSnapshot)
 {
-	auto i=std::remove(m_savingSnapshots.begin(),m_savingSnapshots.end(),completedSnapshot);
-	if (i!=m_savingSnapshots.end())
-	{
-		m_savingSnapshots.erase(i, m_savingSnapshots.end());
-
-		if (completedSnapshot != nullptr) {
-			delete completedSnapshot;
-			completedSnapshot = nullptr;
+	bool found = false;
+	for (auto i = m_savingSnapshots.begin(); i != m_savingSnapshots.end();) {
+		if (*i == completedSnapshot) {
+			i = m_savingSnapshots.erase(i);
+			found = true;
+		} else {
+			++i;
 		}
+	}
 
-		if (m_savingSnapshots.empty() && ConfigServerDatabase::getReportSaveTimes())
-		{
+	if (m_savingSnapshots.empty())
+	{
+		if (found && ConfigServerDatabase::getReportSaveTimes()) {
 			int saveTime = Clock::timeMs() - m_saveStartTime;
 			++m_saveCount;
 			m_totalSaveTime += saveTime;
 			if (saveTime > m_maxSaveTime)
 				m_maxSaveTime = saveTime;
 
-			DEBUG_REPORT_LOG(true,("Save completed in %i.  (Average %i, max %i)\n", saveTime, m_totalSaveTime/m_saveCount, m_maxSaveTime));
-			LOG("SaveTimes",("Save completed in %i.  (Average %i, max %i)", saveTime, m_totalSaveTime/m_saveCount, m_maxSaveTime));
-
-			m_lastSaveTime = saveTime;
+				DEBUG_REPORT_LOG(true,("Save completed in %i.  (Average %i, max %i)\n", saveTime, m_totalSaveTime/m_saveCount, m_maxSaveTime));
+				LOG("SaveTimes",("Save completed in %i.  (Average %i, max %i)", saveTime, m_totalSaveTime/m_saveCount, m_maxSaveTime));
+	
+				m_lastSaveTime = saveTime;
 		}
 
-		if (m_savingSnapshots.empty())
-		{
-			// message Central Server that the current save cycle is complete
-			GenericValueTypeMessage<int> const saveCompleteMessage("DatabaseSaveComplete", ++m_saveCounter);
-			DatabaseProcess::getInstance().sendToCentralServer(saveCompleteMessage, true);
-			LOG("Database",("Sending DatabaseSaveComplete network message to Central."));
-		}
+		LOG("Database",("Sending DatabaseSaveComplete network message to Central."));
 
-		{
-			// set the last save completion time (for the monitoring program)
-			time_t theTime = time(0);
-			m_lastSaveCompletionTime = ctime(&theTime);
-		}
+		// TODO: so do we send this for the other snapshot type or not? hrmph
+                // message Central Server that the current save cycle is complete
+                GenericValueTypeMessage<int> const saveCompleteMessage("DatabaseSaveComplete", ++m_saveCounter);
+                DatabaseProcess::getInstance().sendToCentralServer(saveCompleteMessage, true);
+                LOG("Database",("Sending DatabaseSaveComplete network message to Central."));
 	}
-	else
-	{
-		auto j=std::remove(m_savingCharacterSnapshots.begin(),m_savingCharacterSnapshots.end(),completedSnapshot);
-
-		DEBUG_FATAL(i==m_savingCharacterSnapshots.end(),("Programmer bug:  SaveCompleted() called with a snapshot that wasn't in m_savingSnapshots or m_savingCharacterSnapshots."));
-
-		if (j != m_savingCharacterSnapshots.end()) {
-			m_savingCharacterSnapshots.erase(j, m_savingCharacterSnapshots.end());
+		
+	if (!found) {		
+		for (auto i = m_savingCharacterSnapshots.begin(); i != m_savingCharacterSnapshots.end();) {
+			if (*i == completedSnapshot) {
+				i = m_savingCharacterSnapshots.erase(i);
+				found = true;
+			} else {
+				++i;
+			}
 		}
-
-		if (completedSnapshot != nullptr) {
-			delete completedSnapshot;
-			completedSnapshot = nullptr;
-		}
-
+	
 		DEBUG_REPORT_LOG(ConfigServerDatabase::getReportSaveTimes(),("New character save completed\n"));
+	}
+
+	if (found && completedSnapshot != nullptr) {
+		delete completedSnapshot;
+		completedSnapshot = nullptr;
 	}
 }
 
@@ -993,9 +986,10 @@ void Persister::addCharacter(uint32 stationId, const NetworkId &characterObject,
 	m_pendingCharacters[characterObject]=temp;
 
 	//TODO:  remove this hack: match up create and end messages because we can't count on having all the data at a frame bounday
-	auto i=m_newCharacterLock.find(creationGameServer);
-	UNREF(i);	
-	DEBUG_FATAL(i!=m_newCharacterLock.end(),("Programmer bug:  got an addCharacter from server %i before we received EndBaselines from the previous addCharacter.  Indicates we're getting network messages out of order.\n",creationGameServer));
+	if (m_newCharacterLock.find(creationGameServer) != m_newCharacterLock.end()) {
+		WARNING(true,("Programmer bug:  got an addCharacter from server %i before we received EndBaselines from the previous addCharacter.  Indicates we're getting network messages out of order.\n",creationGameServer));
+	}
+
 	m_newCharacterLock.insert(creationGameServer);
 }
 

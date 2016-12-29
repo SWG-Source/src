@@ -4768,7 +4768,6 @@ void GameServer::handleCharacterCreateNameVerification(const VerifyNameResponse 
 
 	// ----------------------------------------------------------------------
 	// Set up the PlayerObject
-
 	ServerObject *playerServerObject = ServerWorld::createNewObject(ConfigServerGame::getPlayerObjectTemplate(), *newCharacterObject, false);
 	PlayerObject *play = dynamic_cast<PlayerObject*>(playerServerObject);
 	if (play)
@@ -4800,6 +4799,8 @@ void GameServer::handleCharacterCreateNameVerification(const VerifyNameResponse 
 				}
 			}
 		}
+
+		play->persist();
 	}
 	else
 	{
