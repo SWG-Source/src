@@ -993,9 +993,10 @@ void Persister::addCharacter(uint32 stationId, const NetworkId &characterObject,
 	m_pendingCharacters[characterObject]=temp;
 
 	//TODO:  remove this hack: match up create and end messages because we can't count on having all the data at a frame bounday
-	auto i=m_newCharacterLock.find(creationGameServer);
-	UNREF(i);	
-	DEBUG_FATAL(i!=m_newCharacterLock.end(),("Programmer bug:  got an addCharacter from server %i before we received EndBaselines from the previous addCharacter.  Indicates we're getting network messages out of order.\n",creationGameServer));
+	if (m_newCharacterLock.find(creationGameServer) != m_newCharacterLock.end()) {
+		WARNING(true,("Programmer bug:  got an addCharacter from server %i before we received EndBaselines from the previous addCharacter.  Indicates we're getting network messages out of order.\n",creationGameServer));
+	}
+
 	m_newCharacterLock.insert(creationGameServer);
 }
 
