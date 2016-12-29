@@ -16,8 +16,6 @@
 #include <vector>
 #include <set> //TODO: remove when we clean up newCharacterLock hack
 
-#include <mutex>
-
 #include "Unicode.h"
 #include "serverNetworkMessages/MessageToPayload.h"
 #include "sharedDatabaseInterface/DbModeQuery.h"
@@ -99,8 +97,6 @@ class Persister : public MessageDispatch::Receiver
 	DB::TaskQueue *m_newCharacterTaskQueue;
 	
   private:
-	std::mutex pad;
-
 	struct PendingCharacter
 	{
 		uint32 stationId;
