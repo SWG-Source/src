@@ -94,6 +94,13 @@ bool SwgSnapshot::saveToDB(DB::Session *session) {
 
     session->setAutoCommitMode(false);
 
+    for (auto step = m_customStepList.begin(); step !=m_customStepList.end(); ++step)
+    {
+            if (!(*step)->beforePersist(session)) {
+                    return false;
+            }
+    }
+
     // save all the buffers
     if (!(m_objectTableBuffer.save(session))) { return false; }
     if (!(m_battlefieldMarkerObjectBuffer.save(session))) { return false; }
@@ -130,6 +137,13 @@ bool SwgSnapshot::saveToDB(DB::Session *session) {
     if (!(m_vehicleObjectBuffer.save(session))) { return false; }
     if (!(m_waypointBuffer.save(session))) { return false; }
     if (!(m_weaponObjectBuffer.save(session))) { return false; }
+
+    for (auto step = m_customStepList.begin(); step !=m_customStepList.end(); ++step)
+    {
+            if (!(*step)->afterPersist(session)){
+                    return false;
+            }
+    }
 
     // save the parent class
     if (!(Snapshot::saveToDB(session))) { return false; }
