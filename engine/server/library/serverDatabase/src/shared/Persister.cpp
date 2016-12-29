@@ -214,8 +214,6 @@ void Persister::update(real updateTime)
 
 void Persister::onFrameBarrierReached()
 {
-	pad.lock();
-
 	if (m_newCharacterTaskQueue->getNumPendingTasks() == 0)
 	{
 		ServerSnapshotMap delayedSaves;
@@ -281,8 +279,6 @@ void Persister::onFrameBarrierReached()
 			taskQueue->report();
 		}
 	}
-
-	pad.unlock();
 }
 
 // ----------------------------------------------------------------------
@@ -396,9 +392,6 @@ Snapshot * Persister::getSnapshotForObject(const NetworkId &networkId, uint32 se
 	if (i!=m_objectSnapshotMap.end())
 	{
 		NOT_NULL(i->second);
-
-		pad.unlock();
-
 		return i->second;
 	}
 	else
@@ -408,9 +401,6 @@ Snapshot * Persister::getSnapshotForObject(const NetworkId &networkId, uint32 se
 		pad.lock();
 
 		m_objectSnapshotMap[networkId]=snap;
-
-		pad.unlock();
-
 		return snap;
 	}
 }
