@@ -392,8 +392,6 @@ void Persister::startSave(void)
  */
 Snapshot * Persister::getSnapshotForObject(const NetworkId &networkId, uint32 serverId)
 {
-	pad.lock();
-
 	auto i = m_objectSnapshotMap.find(networkId);
 	if (i!=m_objectSnapshotMap.end())
 	{
@@ -406,6 +404,9 @@ Snapshot * Persister::getSnapshotForObject(const NetworkId &networkId, uint32 se
 	else
 	{
 		Snapshot *snap = getSnapshotForServer(serverId);
+
+		pad.lock();
+
 		m_objectSnapshotMap[networkId]=snap;
 
 		pad.unlock();
@@ -426,8 +427,6 @@ bool Persister::hasDataForObject(const NetworkId &objectId) const
 
 Snapshot *Persister::getSnapshotForServer(uint32 serverId)
 {
-	pad.lock();
-
 	if (serverId==0)
 	{
 		if (!m_arbitraryGameDataSnapshot)
@@ -435,9 +434,6 @@ Snapshot *Persister::getSnapshotForServer(uint32 serverId)
 			m_arbitraryGameDataSnapshot = makeSnapshot(DB::ModeQuery::mode_UPDATE);
 			m_currentSnapshots[0] = m_arbitraryGameDataSnapshot;
 		}
-
-		pad.unlock();
-
 		return m_arbitraryGameDataSnapshot;
 	}
 	else
@@ -452,18 +448,12 @@ Snapshot *Persister::getSnapshotForServer(uint32 serverId)
 			if (!m_arbitraryGameDataSnapshot) {
 				m_arbitraryGameDataSnapshot = snap;
 			}
-
-			pad.unlock();
-			
 			return snap;
 
 		}
 		else
 		{
 			NOT_NULL (j->second);
-
-			pad.unlock();
-
 			return j->second;
 		}
 	}
