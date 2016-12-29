@@ -69,34 +69,10 @@ bool Snapshot::saveToDB(DB::Session *session)
 {
 	NOT_NULL(session);
 
-	m_isBeingSaved = true;
-
-	CustomStepListType::iterator step;
-	for (step=m_customStepList.begin(); step !=m_customStepList.end(); ++step)
-	{
-		NOT_NULL(*step);
-		if (!(*step)->beforePersist(session)) {
-			m_isBeingSaved = false;
-			return false;
-		}
+	if (m_timestamp != 0 && !saveTimestamp(session)) {
+		return false;
 	}
 
-	if (m_timestamp!=0)
-		if (! saveTimestamp(session)) {
-			m_isBeingSaved = false;
-			return false;
-		}
-
-	for (step=m_customStepList.begin(); step !=m_customStepList.end(); ++step)
-	{
-		NOT_NULL(*step);
-		if (!(*step)->afterPersist(session)){
-			m_isBeingSaved = false;
-			return false;
-		}
-	}
-
-	m_isBeingSaved = false;
 	return true;
 }
 // ----------------------------------------------------------------------

@@ -303,8 +303,6 @@ void Persister::startSave(void)
 	
 	m_newObjectCount=0;
 
-	pad.lock();
-
 	// delete any characters for this save cycle
 	if (m_charactersToDeleteNextSaveCycle && m_charactersToDeleteThisSaveCycle)
 	{
@@ -375,8 +373,6 @@ void Persister::startSave(void)
 
 	if (ConfigServerDatabase::getReportSaveTimes())
 		m_saveStartTime = Clock::timeMs();
-
-	pad.unlock();
 }
 
 // ----------------------------------------------------------------------
@@ -518,12 +514,9 @@ void Persister::newObject(uint32 serverId, const NetworkId &objectId, int templa
 {
 	UNREF(serverId);
 
-	pad.lock();
-
 	if (m_objectSnapshotMap.find(objectId)!=m_objectSnapshotMap.end())
 	{
 		DEBUG_WARNING(true,("Database received multiple new object messages for object %s",objectId.getValueString().c_str()));
-		pad.unlock();
 		return;
 	}
 
@@ -578,8 +571,6 @@ void Persister::newObject(uint32 serverId, const NetworkId &objectId, int templa
 	NOT_NULL(snap);
 	snap->newObject(objectId, templateId, typeId);
 	m_objectSnapshotMap[objectId]=snap;
-
-	pad.unlock();
 }
 
 // ----------------------------------------------------------------------
@@ -592,9 +583,6 @@ void Persister::newObject(uint32 serverId, const NetworkId &objectId, int templa
 
 void Persister::endBaselines(const NetworkId &objectId, uint32 serverId) 
 {
-
-	pad.lock();
-
 	//TODO:  This is a hack until we remove frame boundaries and have "end frame" messages from the game server.  Apparently the game
 	// server can split baselines across frame boundaries, so we can't assume we have all the data for a character when we hit a
 	// frame bounday.
@@ -604,8 +592,6 @@ void Persister::endBaselines(const NetworkId &objectId, uint32 serverId)
 		m_pendingCharacters.erase(chardata);
 		m_newCharacterLock.erase(serverId);
 	}
-
-	pad.unlock();
 }
 
 // ----------------------------------------------------------------------
@@ -616,65 +602,57 @@ void Persister::endBaselines(const NetworkId &objectId, uint32 serverId)
 
 void Persister::saveCompleted(Snapshot *completedSnapshot)
 {
-	pad.lock();
-
-	auto i=std::remove(m_savingSnapshots.begin(),m_savingSnapshots.end(),completedSnapshot);
-	if (i!=m_savingSnapshots.end())
-	{
-		m_savingSnapshots.erase(i, m_savingSnapshots.end());
-
-		if (completedSnapshot != nullptr) {
-			delete completedSnapshot;
-			completedSnapshot = nullptr;
+	bool found = false;
+	for (auto i = m_savingSnapshots.begin(); i != m_savingSnapshots.end();) {
+		if (*i == completedSnapshot) {
+			i = m_savingSnapshots.erase(i);
+			found = true;
+		} else {
+			++i;
 		}
+	}
 
-		if (m_savingSnapshots.empty() && ConfigServerDatabase::getReportSaveTimes())
-		{
+	if (m_savingSnapshots.empty())
+	{
+		if (found && ConfigServerDatabase::getReportSaveTimes()) {
 			int saveTime = Clock::timeMs() - m_saveStartTime;
 			++m_saveCount;
 			m_totalSaveTime += saveTime;
 			if (saveTime > m_maxSaveTime)
 				m_maxSaveTime = saveTime;
 
-			DEBUG_REPORT_LOG(true,("Save completed in %i.  (Average %i, max %i)\n", saveTime, m_totalSaveTime/m_saveCount, m_maxSaveTime));
-			LOG("SaveTimes",("Save completed in %i.  (Average %i, max %i)", saveTime, m_totalSaveTime/m_saveCount, m_maxSaveTime));
-
-			m_lastSaveTime = saveTime;
+				DEBUG_REPORT_LOG(true,("Save completed in %i.  (Average %i, max %i)\n", saveTime, m_totalSaveTime/m_saveCount, m_maxSaveTime));
+				LOG("SaveTimes",("Save completed in %i.  (Average %i, max %i)", saveTime, m_totalSaveTime/m_saveCount, m_maxSaveTime));
+	
+				m_lastSaveTime = saveTime;
 		}
 
-		if (m_savingSnapshots.empty())
-		{
-			// message Central Server that the current save cycle is complete
-			GenericValueTypeMessage<int> const saveCompleteMessage("DatabaseSaveComplete", ++m_saveCounter);
-			DatabaseProcess::getInstance().sendToCentralServer(saveCompleteMessage, true);
-			LOG("Database",("Sending DatabaseSaveComplete network message to Central."));
-		}
+		LOG("Database",("Sending DatabaseSaveComplete network message to Central."));
 
-		{
-			// set the last save completion time (for the monitoring program)
-			time_t theTime = time(0);
-			m_lastSaveCompletionTime = ctime(&theTime);
-		}
+		// TODO: so do we send this for the other snapshot type or not? hrmph
+                // message Central Server that the current save cycle is complete
+                GenericValueTypeMessage<int> const saveCompleteMessage("DatabaseSaveComplete", ++m_saveCounter);
+                DatabaseProcess::getInstance().sendToCentralServer(saveCompleteMessage, true);
+                LOG("Database",("Sending DatabaseSaveComplete network message to Central."));
 	}
-	else
-	{
-		auto j=std::remove(m_savingCharacterSnapshots.begin(),m_savingCharacterSnapshots.end(),completedSnapshot);
-
-		DEBUG_FATAL(i==m_savingCharacterSnapshots.end(),("Programmer bug:  SaveCompleted() called with a snapshot that wasn't in m_savingSnapshots or m_savingCharacterSnapshots."));
-
-		if (j != m_savingCharacterSnapshots.end()) {
-			m_savingCharacterSnapshots.erase(j, m_savingCharacterSnapshots.end());
+		
+	if (!found) {		
+		for (auto i = m_savingCharacterSnapshots.begin(); i != m_savingCharacterSnapshots.end();) {
+			if (*i == completedSnapshot) {
+				i = m_savingCharacterSnapshots.erase(i);
+				found = true;
+			} else {
+				++i;
+			}
 		}
-
-		if (completedSnapshot != nullptr) {
-			delete completedSnapshot;
-			completedSnapshot = nullptr;
-		}
-
+	
 		DEBUG_REPORT_LOG(ConfigServerDatabase::getReportSaveTimes(),("New character save completed\n"));
 	}
 
-	pad.unlock();
+	if (found && completedSnapshot != nullptr) {
+		delete completedSnapshot;
+		completedSnapshot = nullptr;
+	}
 }
 
 
