@@ -4769,10 +4769,14 @@ void GameServer::handleCharacterCreateNameVerification(const VerifyNameResponse 
 	// ----------------------------------------------------------------------
 	// Set up the PlayerObject
 
+	WARNING(true, ("Setting up the PlayerObject for %s", vrn.getName().c_str()));
+
 	ServerObject *playerServerObject = ServerWorld::createNewObject(ConfigServerGame::getPlayerObjectTemplate(), *newCharacterObject, false);
 	PlayerObject *play = dynamic_cast<PlayerObject*>(playerServerObject);
 	if (play)
 	{
+		WARNING(true, ("Player object is good..."));
+
 		play->setStationId(createMessage->getStationId());
 		play->setBornDate();
 		play->setSkillTemplate(createMessage->getSkillTemplate(), true);
@@ -4807,6 +4811,8 @@ void GameServer::handleCharacterCreateNameVerification(const VerifyNameResponse 
 		WARNING_STRICT_FATAL(true,("Unable to create PlayerObject for new character %s.\n",newCharacterObject->getNetworkId().getValueString().c_str()));
 	}
 
+
+	WARNING(true, ("Setting scene and sending to DB for persist."));
 	newCharacterObject->setSceneIdOnThisAndContents(createMessage->getPlanetName());
 
 	// ----------------------------------------------------------------------
