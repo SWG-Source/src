@@ -4799,6 +4799,8 @@ void GameServer::handleCharacterCreateNameVerification(const VerifyNameResponse 
 				}
 			}
 		}
+
+		play->persist();
 	}
 	else
 	{
