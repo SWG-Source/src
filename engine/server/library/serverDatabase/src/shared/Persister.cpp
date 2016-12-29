@@ -5,8 +5,6 @@
 //
 // ======================================================================
 
-#include <memory>
-
 #include "serverDatabase/FirstServerDatabase.h"
 #include "serverDatabase/Persister.h"
 
@@ -216,6 +214,8 @@ void Persister::update(real updateTime)
 
 void Persister::onFrameBarrierReached()
 {
+	pad.lock();
+
 	if (m_newCharacterTaskQueue->getNumPendingTasks() == 0)
 	{
 		ServerSnapshotMap delayedSaves;
@@ -281,6 +281,8 @@ void Persister::onFrameBarrierReached()
 			taskQueue->report();
 		}
 	}
+
+	pad.unlock();
 }
 
 // ----------------------------------------------------------------------
@@ -304,6 +306,8 @@ void Persister::startSave(void)
 	m_lastSaveNewObjectCount=m_newObjectCount;
 	
 	m_newObjectCount=0;
+
+	pad.lock();
 
 	// delete any characters for this save cycle
 	if (m_charactersToDeleteNextSaveCycle && m_charactersToDeleteThisSaveCycle)
@@ -375,6 +379,8 @@ void Persister::startSave(void)
 
 	if (ConfigServerDatabase::getReportSaveTimes())
 		m_saveStartTime = Clock::timeMs();
+
+	pad.unlock();
 }
 
 // ----------------------------------------------------------------------
@@ -386,16 +392,24 @@ void Persister::startSave(void)
  */
 Snapshot * Persister::getSnapshotForObject(const NetworkId &networkId, uint32 serverId)
 {
+	pad.lock();
+
 	auto i = m_objectSnapshotMap.find(networkId);
 	if (i!=m_objectSnapshotMap.end())
 	{
 		NOT_NULL(i->second);
+
+		pad.unlock();
+
 		return i->second;
 	}
 	else
 	{
 		Snapshot *snap = getSnapshotForServer(serverId);
 		m_objectSnapshotMap[networkId]=snap;
+
+		pad.unlock();
+
 		return snap;
 	}
 }
@@ -412,6 +426,8 @@ bool Persister::hasDataForObject(const NetworkId &objectId) const
 
 Snapshot *Persister::getSnapshotForServer(uint32 serverId)
 {
+	pad.lock();
+
 	if (serverId==0)
 	{
 		if (!m_arbitraryGameDataSnapshot)
@@ -419,6 +435,9 @@ Snapshot *Persister::getSnapshotForServer(uint32 serverId)
 			m_arbitraryGameDataSnapshot = makeSnapshot(DB::ModeQuery::mode_UPDATE);
 			m_currentSnapshots[0] = m_arbitraryGameDataSnapshot;
 		}
+
+		pad.unlock();
+
 		return m_arbitraryGameDataSnapshot;
 	}
 	else
@@ -433,6 +452,8 @@ Snapshot *Persister::getSnapshotForServer(uint32 serverId)
 			if (!m_arbitraryGameDataSnapshot) {
 				m_arbitraryGameDataSnapshot = snap;
 			}
+
+			pad.unlock();
 			
 			return snap;
 
@@ -440,6 +461,9 @@ Snapshot *Persister::getSnapshotForServer(uint32 serverId)
 		else
 		{
 			NOT_NULL (j->second);
+
+			pad.unlock();
+
 			return j->second;
 		}
 	}
@@ -514,9 +538,12 @@ void Persister::newObject(uint32 serverId, const NetworkId &objectId, int templa
 {
 	UNREF(serverId);
 
+	pad.lock();
+
 	if (m_objectSnapshotMap.find(objectId)!=m_objectSnapshotMap.end())
 	{
 		DEBUG_WARNING(true,("Database received multiple new object messages for object %s",objectId.getValueString().c_str()));
+		pad.unlock();
 		return;
 	}
 
@@ -571,6 +598,8 @@ void Persister::newObject(uint32 serverId, const NetworkId &objectId, int templa
 	NOT_NULL(snap);
 	snap->newObject(objectId, templateId, typeId);
 	m_objectSnapshotMap[objectId]=snap;
+
+	pad.unlock();
 }
 
 // ----------------------------------------------------------------------
@@ -583,6 +612,9 @@ void Persister::newObject(uint32 serverId, const NetworkId &objectId, int templa
 
 void Persister::endBaselines(const NetworkId &objectId, uint32 serverId) 
 {
+
+	pad.lock();
+
 	//TODO:  This is a hack until we remove frame boundaries and have "end frame" messages from the game server.  Apparently the game
 	// server can split baselines across frame boundaries, so we can't assume we have all the data for a character when we hit a
 	// frame bounday.
@@ -592,6 +624,8 @@ void Persister::endBaselines(const NetworkId &objectId, uint32 serverId)
 		m_pendingCharacters.erase(chardata);
 		m_newCharacterLock.erase(serverId);
 	}
+
+	pad.unlock();
 }
 
 // ----------------------------------------------------------------------
@@ -602,6 +636,8 @@ void Persister::endBaselines(const NetworkId &objectId, uint32 serverId)
 
 void Persister::saveCompleted(Snapshot *completedSnapshot)
 {
+	pad.lock();
+
 	auto i=std::remove(m_savingSnapshots.begin(),m_savingSnapshots.end(),completedSnapshot);
 	if (i!=m_savingSnapshots.end())
 	{
@@ -657,6 +693,8 @@ void Persister::saveCompleted(Snapshot *completedSnapshot)
 
 		DEBUG_REPORT_LOG(ConfigServerDatabase::getReportSaveTimes(),("New character save completed\n"));
 	}
+
+	pad.unlock();
 }
 
 
