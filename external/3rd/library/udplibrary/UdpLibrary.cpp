@@ -402,8 +402,6 @@ UdpManager::~UdpManager()
 	TerminateOperatingSystem();
 
 	delete mAddressHashTable;
-    	mIpConnectionCount.clear();
-	blacklist.clear();
 	delete mConnectCodeHashTable;
 	delete mPriorityQueue;
 
@@ -563,14 +561,6 @@ void UdpManager::RemoveConnection(UdpConnection *con)
 	mAddressHashTable->Remove(con, AddressHashValue(con->mIp, con->mPort));
 
 	unsigned int addy = con->mIp.GetAddress();
-	if (mIpConnectionCount[addy] > 1) 
-	{	
-		mIpConnectionCount[addy]--;
-	}
-	else
-	{
-		mIpConnectionCount.erase(addy);
-	}
 
 	mConnectCodeHashTable->Remove(con, con->mConnectCode);
 }
@@ -587,7 +577,6 @@ void UdpManager::AddConnection(UdpConnection *con)
 	mConnectionListCount++;
 
 	mAddressHashTable->Insert(con, AddressHashValue(con->mIp, con->mPort));
-	mIpConnectionCount[con->mIp.GetAddress()]++;
 	mConnectCodeHashTable->Insert(con, con->mConnectCode);
 }
 

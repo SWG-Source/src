@@ -169,8 +169,8 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
     bool authOK = false;
     StationId suid = atoi(id.c_str());
     static const std::string authURL(ConfigLoginServer::getExternalAuthUrl());
-    std::string uname;
 
+    std::string uname;
     std::string parentAccount;
     std::vector<std::string> childAccounts;
 
@@ -194,7 +194,7 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
                 parentAccount = api.getString("mainAccount");
                 childAccounts = api.getStringVector("subAccounts");
             } else {
-                std::string msg = api.getString("message");
+                std::string msg(api.getString("message"));
                 if (msg.empty()) {
                     msg = "Invalid username or password.";
                 }
@@ -214,30 +214,48 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
 
     if (authOK) {
         if (suid == 0) {
-            if (uname.length() > MAX_ACCOUNT_NAME_LENGTH) {
-                uname.resize(MAX_ACCOUNT_NAME_LENGTH);
-            }
+	    if (uname.length() > MAX_ACCOUNT_NAME_LENGTH)
+	        uname.resize(MAX_ACCOUNT_NAME_LENGTH);
 
-            std::hash<std::string> h;
-            suid = h(uname.c_str());
+	    std::hash<std::string> hasher;
+            suid = hasher(uname.c_str());
         }
 
-        std::hash<std::string> h;
-        StationId parent = h(parentAccount);
+	REPORT_LOG(true, ("Client connected. Username: %s (%lu) \n", uname.c_str(), suid));
 
-        REPORT_LOG(true,
-                   ("Client connected.  Station Id:  %llu, Username: %s, Parent %s\n", suid, uname.c_str(), parentAccount.c_str()));
+	StationId parent = -1;
+
+	if (!parentAccount.empty()) {
+		if (parentAccount.length() > MAX_ACCOUNT_NAME_LENGTH)
+		    parentAccount.resize(MAX_ACCOUNT_NAME_LENGTH);
+
+		std::hash<std::string> hasher;
+		parent = hasher(parentAccount.c_str());
+
+        	if (parentAccount != uname) {
+			REPORT_LOG(true, ("\t%s's parent is %s (%lu) \n", uname.c_str(), parentAccount.c_str(), parent)); 
+		}
+	} else {
+		parentAccount = "(Empty Parent!) "+uname;
+	}
 
         for (auto i : childAccounts) {
-            if (i.length() > MAX_ACCOUNT_NAME_LENGTH) {
-                i.resize(MAX_ACCOUNT_NAME_LENGTH);
-            }
+	    std::string child(i);
 
-            StationId childID = h(i);
-            REPORT_LOG(true, ("\tA child account for %s is %s (%llu)\n", parentAccount.c_str(), i.c_str(), childID));
+            if (!child.empty()) {
+		  if (child.length() > MAX_ACCOUNT_NAME_LENGTH)
+		      child.resize(MAX_ACCOUNT_NAME_LENGTH);
 
-            // insert all related accounts, if not already there, into the db
-            DatabaseConnection::getInstance().upsertAccountRelationship(parent, childID);
+   		  std::hash<std::string> hasher;
+  	          StationId childID = hasher(child.c_str());
+ 	          
+		  REPORT_LOG(true, ("\tchild of %s (%lu) is %s (%lu) \n", parentAccount.c_str(), parent, child.c_str(), childID));
+
+	          // insert all related accounts, if not already there, into the db
+        	  DatabaseConnection::getInstance().upsertAccountRelationship(parent, childID);
+	    } else {
+		  WARNING(true, ("Login API returned empty child account(s)."));
+	    }
         }
 
         LOG("LoginClientConnection",
