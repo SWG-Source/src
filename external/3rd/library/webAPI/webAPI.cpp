@@ -112,6 +112,8 @@ bool webAPI::fetch(const int &getPost, const int &mimeType) // 0 for json 1 for 
                              writeCallback); // place the data into readBuffer using writeCallback
             curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer); // specify readBuffer as the container for data
             curl_easy_setopt(curl, CURLOPT_HTTPHEADER, slist);
+            curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
 
             switch (getPost) {
                 case HTTP::GET:
