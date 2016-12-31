@@ -176,8 +176,7 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
 
     if (!authURL.empty()) {
         // create the object
-        webAPI api(
-                authURL); // TODO: is loginserver single threaded? if so then let's make this static, and clear/reset it each run
+	webAPI api(authURL);
 
         // add our data
         api.addJsonData<std::string>("user_name", id);
@@ -239,24 +238,26 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
 		parentAccount = "(Empty Parent!) "+uname;
 	}
 
-        for (auto i : childAccounts) {
-	    std::string child(i);
-
-            if (!child.empty()) {
-		  if (child.length() > MAX_ACCOUNT_NAME_LENGTH)
-		      child.resize(MAX_ACCOUNT_NAME_LENGTH);
-
-   		  std::hash<std::string> hasher;
-  	          StationId childID = hasher(child.c_str());
- 	          
-		  REPORT_LOG(true, ("\tchild of %s (%lu) is %s (%lu) \n", parentAccount.c_str(), parent, child.c_str(), childID));
-
-	          // insert all related accounts, if not already there, into the db
-        	  DatabaseConnection::getInstance().upsertAccountRelationship(parent, childID);
-	    } else {
-		  WARNING(true, ("Login API returned empty child account(s)."));
-	    }
-        }
+	if (parent != -1) {
+	        for (auto i : childAccounts) {
+		    std::string child(i);
+	
+        	    if (!child.empty()) {
+			  if (child.length() > MAX_ACCOUNT_NAME_LENGTH)
+			      child.resize(MAX_ACCOUNT_NAME_LENGTH);
+	
+	   		  std::hash<std::string> hasher;
+	  	          StationId childID = hasher(child.c_str());
+	 	          
+			  REPORT_LOG(true, ("\tchild of %s (%lu) is %s (%lu) \n", parentAccount.c_str(), parent, child.c_str(), childID));
+	
+		          // insert all related accounts, if not already there, into the db
+        		  DatabaseConnection::getInstance().upsertAccountRelationship(parent, childID);
+		    } else {
+			  WARNING(true, ("Login API returned empty child account(s)."));
+		    }
+        	}
+	}
 
         LOG("LoginClientConnection",
             ("validateClient() for stationId (%lu) at IP (%s), id (%s)", m_stationId, getRemoteAddress().c_str(), uname.c_str()));
