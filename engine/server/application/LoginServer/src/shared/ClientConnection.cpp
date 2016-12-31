@@ -220,7 +220,7 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
             suid = hasher(uname.c_str());
         }
 
-	REPORT_LOG(true, ("Client connected. Username: %s (%lu) \n", uname.c_str(), suid));
+	REPORT_LOG(true, ("Client connected. Username: %s (%zu) \n", uname.c_str(), suid));
 
 	StationId parent = -1;
 
@@ -232,7 +232,7 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
 		parent = hasher(parentAccount.c_str());
 
         	if (parentAccount != uname) {
-			REPORT_LOG(true, ("\t%s's parent is %s (%lu) \n", uname.c_str(), parentAccount.c_str(), parent)); 
+			REPORT_LOG(true, ("\t%s's parent is %s (%zu) \n", uname.c_str(), parentAccount.c_str(), parent)); 
 		}
 	} else {
 		parentAccount = "(Empty Parent!) "+uname;
@@ -249,10 +249,12 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
 	   		  std::hash<std::string> hasher;
 	  	          StationId childID = hasher(child.c_str());
 	 	          
-			  REPORT_LOG(true, ("\tchild of %s (%lu) is %s (%lu) \n", parentAccount.c_str(), parent, child.c_str(), childID));
-	
-		          // insert all related accounts, if not already there, into the db
-        		  DatabaseConnection::getInstance().upsertAccountRelationship(parent, childID);
+			  REPORT_LOG(parent!=childID, ("\tchild of %s (%zu) is %s (%zu) \n", parentAccount.c_str(), parent, child.c_str(), childID));
+			
+			  // insert all related accounts, if not already there, into the db
+        		  if (parent != childID) {
+			  	DatabaseConnection::getInstance().upsertAccountRelationship(parent, childID);
+			  }
 		    } else {
 			  WARNING(true, ("Login API returned empty child account(s)."));
 		    }
@@ -260,7 +262,7 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
 	}
 
         LOG("LoginClientConnection",
-            ("validateClient() for stationId (%lu) at IP (%s), id (%s)", m_stationId, getRemoteAddress().c_str(), uname.c_str()));
+            ("validateClient() for stationId (%zu) at IP (%s), id (%s)", m_stationId, getRemoteAddress().c_str(), uname.c_str()));
 
         LoginServer::getInstance().onValidateClient(suid, uname, this, true, NULL, 0xFFFFFFFF, 0xFFFFFFFF);
     }
