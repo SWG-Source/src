@@ -2229,24 +2229,13 @@ bool Client::setGodMode(bool value)
 {
 	bool wasInGodMode = m_godMode;
 	m_godMode = value;
-
-        // Check god permissions
-        // the check above seems not to work
-        if (ConfigServerGame::getAdminGodToAll() 
-            || ((!ConfigServerGame::getUseSecureLoginForGodAccess() || m_isSecure)
-                && AdminAccountManager::isAdminAccount(Unicode::toLower(m_accountName), m_godLevel)
-                && (!ConfigServerGame::getUseIPForGodAccess() || AdminAccountManager::isInternalIp(m_ipAddress))))
-        {
-                m_godValidated = true;
-                if (ConfigServerGame::getAdminGodToAll())
-                        m_godLevel = ConfigServerGame::getAdminGodToAllGodLevel();
-        }
 	
-	if (value && !m_godValidated)
+	// wtf, the checks above do nothing
+	/*if (value && !m_godValidated)
 	{
 		LOG("CustomerService", ("Avatar:%s denied god mode because it wasn't validated.", PlayerObject::getAccountDescription(getCharacterObjectId()).c_str() ));
 		m_godMode = false;
-	}
+	}*/
 
 	CreatureObject *primaryControlledObject = safe_cast<CreatureObject*>(m_primaryControlledObject.getObject());
 	if (!primaryControlledObject)
