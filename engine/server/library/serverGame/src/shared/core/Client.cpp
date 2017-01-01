@@ -244,8 +244,8 @@ Client::Client(ConnectionServerConnection & connection, const NetworkId & charac
 	connectToEmitter(connection, "ConnectionServerConnectionDestroyed");
 
 	// Check god permissions
-        if (   ConfigServerGame::getAdminGodToAll()
-            || (   (!ConfigServerGame::getUseSecureLoginForGodAccess() || m_isSecure)
+        if (ConfigServerGame::getAdminGodToAll()
+            || ((!ConfigServerGame::getUseSecureLoginForGodAccess() || m_isSecure)
                 && AdminAccountManager::isAdminAccount(Unicode::toLower(accountName), m_godLevel)
                 && (!ConfigServerGame::getUseIPForGodAccess() || AdminAccountManager::isInternalIp(ipAddr))))	
 	{
@@ -2229,6 +2229,18 @@ bool Client::setGodMode(bool value)
 {
 	bool wasInGodMode = m_godMode;
 	m_godMode = value;
+
+        // Check god permissions
+        // the check above seems not to work
+        if (ConfigServerGame::getAdminGodToAll() 
+            || ((!ConfigServerGame::getUseSecureLoginForGodAccess() || m_isSecure)
+                && AdminAccountManager::isAdminAccount(Unicode::toLower(m_accountName), m_godLevel)
+                && (!ConfigServerGame::getUseIPForGodAccess() || AdminAccountManager::isInternalIp(m_ipAddress))))
+        {
+                m_godValidated = true;
+                if (ConfigServerGame::getAdminGodToAll())
+                        m_godLevel = ConfigServerGame::getAdminGodToAllGodLevel();
+        }
 	
 	if (value && !m_godValidated)
 	{
