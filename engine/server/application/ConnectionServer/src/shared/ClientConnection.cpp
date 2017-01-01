@@ -292,20 +292,21 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg &msg) {
             result = ConnectionServer::decryptToken(token, sessionId, m_requestedSuid);
         }
 
-        WARNING(true, ("suid is %lu session is %s", m_suid, sessionId));
+        DEBUG_WARNING(true, ("ConnectionServer::handleClientIdMEssage - suid is %lu session is %s", m_suid, sessionId));
 
         static const std::string sessURL(ConfigConnectionServer::getSessionURL());
 
-        if (result || sessionId != '\0') {
-            if (ConfigConnectionServer::getValidateStationKey() && !sessURL.empty()) {
+        if (result || (*sessionId) != '\0') {
+            if (ConfigConnectionServer::getValidateStationKey()) {
                 bool cont = false;
                 StationId apiSuid = 0;
+                const std::string clientIP = getRemoteAddress();
+		const std::string sess = sessionId;
 
-                webAPI api(sessURL);
-                std::string clientIP = getRemoteAddress();
+		webAPI api(sessURL);
 
                 // add our data
-                api.addJsonData<std::string>("session_key", std::string(sessionId));
+                api.addJsonData<std::string>("session_key", sess);
                 api.addJsonData<std::string>("ip", clientIP);
 
                 if (api.submit()) {
@@ -316,16 +317,13 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg &msg) {
                         int expired = api.getNullableValue<int>("expired");
                         std::string apiUser = api.getString("user_name");
                         std::string apiIP = api.getString("ip");
-
-                        if (apiIP == clientIP && expired == 0) {
-                            if (m_suid == 0) {
-                                m_suid = apiSuid;
-
-                                cont = true;
-                            }
+                        
+			if (apiIP == clientIP && expired == 0) {
+                            m_suid = apiSuid;
+                            cont = true;
                         }
                     }
-                }
+                } 
 
                 if (!cont) {
                     LOG("ClientDisconnect", ("SUID %d (%d) passed a bad token to the connections erver. Disconnecting.", m_suid, apiSuid));
@@ -382,11 +380,11 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg &msg) {
             onValidateClient(m_suid, m_accountName, m_isSecure, nullptr, ConfigConnectionServer::getDefaultGameFeatures(), ConfigConnectionServer::getDefaultSubscriptionFeatures(), 0, 0, 0, 0, ConfigConnectionServer::getFakeBuddyPoints());
         }
     } else {
-        WARNING(true, ("Epic fail"));
+        WARNING(true, ("SUID %d passed a bad token to the connections server (cache issue or hacker?). Disconnecting.", m_suid));
 
         // They sent us a token that was no good -- either a hack attempt, or
         // possibly it was just too old.
-        LOG("ClientDisconnect", ("SUID %d passed a bad token to the connections erver. Disconnecting.", m_suid));
+        LOG("ClientDisconnect", ("SUID %d passed a bad token to the connections server (cache issue or hacker?). Disconnecting.", m_suid));
         disconnect();
     }
 }
