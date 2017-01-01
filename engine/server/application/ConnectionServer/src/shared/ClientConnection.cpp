@@ -250,6 +250,10 @@ void ClientConnection::sendPlayTimeInfoToGameServer() const {
 // ----------------------------------------------------------------------
 
 void ClientConnection::handleSelectCharacterMessage(const SelectCharacter &msg) {
+    if (!m_sessionValidated) {
+
+    }
+
     //Only accept this message from clients who have been validated and
     //haven't already selected.
     if (m_hasSelectedCharacter || m_validatingCharacter || !m_hasBeenValidated || !m_sessionValidated) {
@@ -371,6 +375,8 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg &msg) {
         static const std::string loginTrace("TRACE_LOGIN");
         LOG(loginTrace, ("ClientConnection SUID = %d", m_suid));
 
+    } else {
+        printf("\ttoken is 0\n");
     }
     if (result) {
         //check for duplicate login
