@@ -10,7 +10,7 @@
 
 #include "DatabaseConnection.h"
 #include "ConfigLoginServer.h"
-//#include "SessionApiClient.h"
+#include "SessionApiClient.h"
 #include "sharedLog/Log.h"
 #include "sharedNetworkMessages/ClientLoginMessages.h"
 #include "sharedNetworkMessages/DeleteCharacterMessage.h"
@@ -217,7 +217,7 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
         uname = id;
     }
 
-    if (authOK && user_id && parent_id) {
+    if (authOK) {
         REPORT_LOG(true, ("Client connected. Username: %s (%i) \n", uname.c_str(), user_id));
 
         if (!parentAccount.empty()) {
