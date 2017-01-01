@@ -283,17 +283,20 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg &msg) {
         Archive::ByteStream t(msg.getToken(), msg.getTokenSize());
         Archive::ReadIterator ri(t);
         KeyShare::Token token(ri);
+        char sessionId[apiSessionIdWidth];
 
-        result = ConnectionServer::decryptToken(token, m_suid, m_isSecure, m_accountName);
+        if (!ConfigConnectionServer::getValidateStationKey()) {
+            // get SUID from token
+            result = ConnectionServer::decryptToken(token, m_suid, m_isSecure, m_accountName);
+        } else {
+            result = ConnectionServer::decryptToken(token, sessionId, m_requestedSuid);
+        }
 
-        StationId apiSuid = 0;
         static const std::string sessURL(ConfigConnectionServer::getSessionURL());
-
         if (result) {
             if (ConfigConnectionServer::getValidateStationKey() && !sessURL.empty()) {
                 bool cont = false;
-
-                printf("\nAttempting to test our session...\n");
+                StationId apiSuid = 0;
 
                 webAPI api(sessURL);
                 std::string clientIP = getRemoteAddress();
