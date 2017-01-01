@@ -292,6 +292,8 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg &msg) {
             result = ConnectionServer::decryptToken(token, sessionId, m_requestedSuid);
         }
 
+        WARNING(true, ("suid is %lu session is %s", m_suid, sessionId));
+
         static const std::string sessURL(ConfigConnectionServer::getSessionURL());
         if (result) {
             if (ConfigConnectionServer::getValidateStationKey() && !sessURL.empty()) {
@@ -377,6 +379,8 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg &msg) {
             onValidateClient(m_suid, m_accountName, m_isSecure, nullptr, ConfigConnectionServer::getDefaultGameFeatures(), ConfigConnectionServer::getDefaultSubscriptionFeatures(), 0, 0, 0, 0, ConfigConnectionServer::getFakeBuddyPoints());
         }
     } else {
+        WARNING(true, ("Epic fail"));
+
         // They sent us a token that was no good -- either a hack attempt, or
         // possibly it was just too old.
         LOG("ClientDisconnect", ("SUID %d passed a bad token to the connections erver. Disconnecting.", m_suid));
