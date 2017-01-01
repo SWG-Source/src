@@ -10,7 +10,7 @@
 
 #include "DatabaseConnection.h"
 #include "ConfigLoginServer.h"
-#include "SessionApiClient.h"
+//#include "SessionApiClient.h"
 #include "sharedLog/Log.h"
 #include "sharedNetworkMessages/ClientLoginMessages.h"
 #include "sharedNetworkMessages/DeleteCharacterMessage.h"
@@ -58,12 +58,12 @@ void ClientConnection::onConnectionClosed() {
 
     LoginServer::getInstance().removeClient(m_clientId);
 
-    if ((ConfigLoginServer::getValidateStationKey() || ConfigLoginServer::getDoSessionLogin()) && !m_isValidated) {
+   /* if ((ConfigLoginServer::getValidateStationKey() || ConfigLoginServer::getDoSessionLogin()) && !m_isValidated) {
         SessionApiClient *session = LoginServer::getInstance().getSessionApiClient();
         if (session) {
             session->dropClient(this);
         }
-    }
+    }*/
 
 }
 
@@ -171,13 +171,14 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
 
     std::string uname;
     std::string parentAccount;
+    std::string sessionID;
     StationId user_id;
     StationId parent_id;
     std::unordered_map<int, std::string> childAccounts;
 
     if (!authURL.empty()) {
         // create the object
-	webAPI api(authURL);
+        webAPI api(authURL);
 
         // add our data
         api.addJsonData<std::string>("user_name", id);
@@ -187,15 +188,16 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
         if (api.submit()) {
             bool status = api.getNullableValue<bool>("status");
             uname = api.getString("username");
+            sessionID = api.getString("session_key");
 
-            if (status && !uname.empty()) {
+            if (status && !sessionID.empty() && !uname.empty()) {
                 authOK = true;
 
                 parentAccount = api.getString("mainAccount");
                 childAccounts = api.getStringMap("subAccounts");
 
-		user_id = static_cast<StationId>(api.getNullableValue<int>("user_id"));
-		parent_id = static_cast<StationId>(api.getNullableValue<int>("parent_id"));
+                user_id = static_cast<StationId>(api.getNullableValue<int>("user_id"));
+                parent_id = static_cast<StationId>(api.getNullableValue<int>("parent_id"));
             } else {
                 std::string msg(api.getString("message"));
                 if (msg.empty()) {
@@ -216,38 +218,39 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
     }
 
     if (authOK && user_id && parent_id) {
-	REPORT_LOG(true, ("Client connected. Username: %s (%i) \n", uname.c_str(), user_id));
+        REPORT_LOG(true, ("Client connected. Username: %s (%i) \n", uname.c_str(), user_id));
 
-	if (!parentAccount.empty()) {
-        	if (parentAccount != uname) {
-			REPORT_LOG(true, ("\t%s's parent is %s (%i) \n", uname.c_str(), parentAccount.c_str(), parent_id)); 
-		}
-	} else {
-		parentAccount = "(Empty Parent!) "+uname;
-	}
+        if (!parentAccount.empty()) {
+            if (parentAccount != uname) {
+                REPORT_LOG(true, ("\t%s's parent is %s (%i) \n", uname.c_str(), parentAccount.c_str(), parent_id));
+            }
+        } else {
+            parentAccount = "(Empty Parent!) " + uname;
+        }
 
         for (auto i : childAccounts) {
-	    StationId child_id = static_cast<StationId>(i.first);
-	    std::string child(i.second);
+            StationId child_id = static_cast<StationId>(i.first);
+            std::string child(i.second);
 
-       	    if (!child.empty()) {
-		  REPORT_LOG((parent_id != child_id), ("\tchild of %s (%i) is %s (%i) \n", parentAccount.c_str(), parent_id, child.c_str(), child_id));
-		
-		  // insert all related accounts, if not already there, into the db
-       		  if (parent_id != child_id) {
-		  	DatabaseConnection::getInstance().upsertAccountRelationship(parent_id, child_id);
-		  }
-	    } else {
-		  WARNING(true, ("Login API returned empty child account(s)."));
-	    }
-       	}
+            if (!child.empty()) {
+                REPORT_LOG((parent_id != child_id),
+                           ("\tchild of %s (%i) is %s (%i) \n", parentAccount.c_str(), parent_id, child.c_str(), child_id));
+
+                // insert all related accounts, if not already there, into the db
+                if (parent_id != child_id) {
+                    DatabaseConnection::getInstance().upsertAccountRelationship(parent_id, child_id);
+                }
+            } else {
+                WARNING(true, ("Login API returned empty child account(s)."));
+            }
+        }
 
         LOG("LoginClientConnection",
             ("validateClient() for stationId (%i) at IP (%s), id (%s)", user_id, getRemoteAddress().c_str(), uname.c_str()));
 
-	m_stationId = user_id;
+        m_stationId = user_id;
 
-        LoginServer::getInstance().onValidateClient(m_stationId, uname, this, true, NULL, 0xFFFFFFFF, 0xFFFFFFFF);
+        LoginServer::getInstance().onValidateClient(m_stationId, uname, this, true, sessionID.c_str(), 0xFFFFFFFF, 0xFFFFFFFF);
     }
 }
 

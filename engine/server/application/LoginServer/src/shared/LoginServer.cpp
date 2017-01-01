@@ -22,7 +22,7 @@
 #include "MonAPI2/MonitorAPI.h"
 #include "PingConnection.h"
 #include "PurgeManager.h"
-#include "SessionApiClient.h"
+//#include "SessionApiClient.h"
 #include "UnicodeUtils.h"
 #include "serverKeyShare/KeyServer.h"
 #include "serverNetworkMessages/AccountFeatureIdRequest.h"
@@ -140,7 +140,6 @@ LoginServer::LoginServer() :
 	keyServer(0),
 	m_clientMap(),
 	m_clusterList(),
-	m_sessionApiClient(0),
 	m_validatedClientMap(),
 	m_clusterStatusChanged(false),
 	m_soeMonitor(0)
@@ -203,10 +202,10 @@ LoginServer::LoginServer() :
 	connectToMessage("FeatureIdTransactionSyncUpdate");
 	keyServer = new KeyServer;
 
-	if (ConfigLoginServer::getValidateStationKey() || ConfigLoginServer::getDoSessionLogin())
+	/*if (ConfigLoginServer::getValidateStationKey() || ConfigLoginServer::getDoSessionLogin())
 	{
 		installSessionValidation();
-	}
+	}*/
 }
 
 //-----------------------------------------------------------------------
@@ -269,7 +268,7 @@ void LoginServer::removeClient(int clientId)
 
 void LoginServer::installSessionValidation()
 {
-	int i = 0;
+	/*int i = 0;
 	std::vector<const char* > sessionServers;
 
 	int numberOfSessionServers = ConfigLoginServer::getNumberOfSessionServers();
@@ -286,7 +285,9 @@ void LoginServer::installSessionValidation()
 	// if there were none specified, use defaults
 	FATAL(i == 0, ("No session servers specified for session API"));
 
-	m_sessionApiClient = new SessionApiClient(&sessionServers[0], i);
+	m_sessionApiClient = new SessionApiClient(&sessionServers[0], i);*/
+
+	return;
 }
 
 //-----------------------------------------------------------------------
@@ -334,7 +335,8 @@ const KeyShare::Key & LoginServer::getCurrentKey(void) const
 
 SessionApiClient * LoginServer::getSessionApiClient()
 {
-	return m_sessionApiClient;
+	return true;
+	//return m_sessionApiClient;
 }
 
 //-----------------------------------------------------------------------
@@ -913,7 +915,7 @@ void LoginServer::receiveMessage(const MessageDispatch::Emitter & source, const 
 				{
 					if (m_sessionApiClient)
 					{
-						if (consumeAccountFeatureId)
+						/*if (consumeAccountFeatureId)
 						{
 							// request session/Platform to update the account feature id
 							// SessionApiClient will own (and delete) msg
@@ -931,7 +933,7 @@ void LoginServer::receiveMessage(const MessageDispatch::Emitter & source, const 
 
 							DatabaseConnection::getInstance().claimRewards(conn->getClusterId(), msg->getGameServer(), msg->getStationId(), msg->getPlayer(), msg->getRewardEvent(), msg->getConsumeEvent(), msg->getRewardItem(), msg->getConsumeItem(), requiredAccountFeatureId, false, oldFeature.GetConsumeCount(), newFeature.GetConsumeCount());
 							delete msg;
-						}
+						}*/
 					}
 					else
 					{
@@ -1200,8 +1202,8 @@ void LoginServer::run(void)
 			getInstance().m_clusterStatusChanged = false;
 		}
 
-		if (getInstance().m_sessionApiClient)
-			getInstance().m_sessionApiClient->Process();
+		//if (getInstance().m_sessionApiClient)
+		//	getInstance().m_sessionApiClient->Process();
 
 		totalTime += limit; //TODO: make a better way to do this
 		if (!ConfigLoginServer::getDevelopmentMode() && (totalTime > 10000))
