@@ -323,7 +323,8 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg &msg) {
 
         static const std::string authURL(ConfigConnectionServer::getSessionURL());
 
-        if (!authURL.empty()) {
+        if (ConfigConnectionServer::getValidateStationKey() && !authURL.empty()) {
+            printf("\nAttempting to test our session...\n");
             webAPI api(authURL);
 
             std::string clientIP = getRemoteAddress();
@@ -333,22 +334,30 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg &msg) {
             api.addJsonData<std::string>("ip", clientIP);
 
             if (api.submit()) {
+                printf("\tSubmission ok...\n");
                 bool status = api.getNullableValue<bool>("status");
 
                 if (status) {
+                    printf("\tStatus ok....\n");
                     StationId apiSuid = api.getNullableValue<int>("user_id");
                     int expired = api.getNullableValue<int>("expired");
                     std::string apiUser = api.getString("user_name");
                     std::string apiIP = api.getString("ip");
 
                     if (!expired) {
+                        printf("\tNot expired...\n");
                         if (apiSuid && apiSuid == m_suid && apiIP == clientIP) {
+                            printf("\tTrying the decrypt bit...\n");
                             result = ConnectionServer::decryptToken(token, m_suid, m_isSecure, m_accountName);
                         }
+                    } else {
+                        printf("\tExpired token!\n");
                     }
+                } else {
+                    printf("\tStatus bad!...\n");
                 }
             } else {
-                result = ConnectionServer::decryptToken(token, m_suid, m_isSecure, m_accountName);
+                printf("\tNo api submit :(\n");
             }
         } else { // assume local testing
             result = ConnectionServer::decryptToken(token, m_suid, m_isSecure, m_accountName);
