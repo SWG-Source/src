@@ -396,11 +396,14 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg& msg)
 		}
 		else
 		{
-			m_suid = atoi(m_accountName.c_str());
-			if (m_suid == 0)
-			{
-				std::hash<std::string> h;
-				m_suid = h(m_accountName.c_str());
+			if (!m_suid) {
+				m_suid = atoi(m_accountName.c_str());
+				if (m_suid == 0)
+				{
+				
+					std::hash<std::string> h;
+					m_suid = h(m_accountName.c_str());
+				}
 			}
 			onValidateClient(m_suid, m_accountName, m_isSecure, nullptr, ConfigConnectionServer::getDefaultGameFeatures(), ConfigConnectionServer::getDefaultSubscriptionFeatures(), 0, 0, 0, 0, ConfigConnectionServer::getFakeBuddyPoints());
 		}
@@ -1462,7 +1465,7 @@ void ClientConnection::onCharacterValidated(bool isValid, const NetworkId &chara
 
 //------------------------------------------------------------------------------------------
 
-void ClientConnection::onValidateClient (uint32 suid, const std::string & username, bool secure, const char* id, const uint32 gameFeatures, const uint32 subscriptionFeatures, unsigned int entitlementTotalTime, unsigned int entitlementEntitledTime, unsigned int entitlementTotalTimeSinceLastLogin, unsigned int entitlementEntitledTimeSinceLastLogin, int buddyPoints)
+void ClientConnection::onValidateClient (StationId suid, const std::string & username, bool secure, const char* id, const uint32 gameFeatures, const uint32 subscriptionFeatures, unsigned int entitlementTotalTime, unsigned int entitlementEntitledTime, unsigned int entitlementTotalTimeSinceLastLogin, unsigned int entitlementEntitledTimeSinceLastLogin, int buddyPoints)
 {
 	UNREF(id);
 	m_sessionValidated = true;

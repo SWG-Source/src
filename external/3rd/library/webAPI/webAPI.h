@@ -1,5 +1,5 @@
 /*
- * Version: 1.5
+ * Version: 1.6
  *
  * This code is just a simple wrapper around nlohmann's wonderful json lib
  * (https://github.com/nlohmann/json) and libcurl. While originally included directly,
@@ -24,6 +24,7 @@
 #include <curl.h>
 #else
 
+#include <unordered_map>
 #include <curl/curl.h>
 
 #endif
@@ -63,7 +64,7 @@ namespace StellaBellum {
         std::string getString(const std::string &slot);
 
         // get a vector of strings from a given slot
-        std::vector<std::string> getStringVector(const std::string &slot);
+        std::unordered_map<int, std::string> getStringMap(const std::string &slot);
 
         // set json key and value for request
         template<typename T>
