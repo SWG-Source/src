@@ -306,7 +306,7 @@ class apiSubscription
         unsigned                mParentalLimitSeconds;
 };
 
-static const int apiSessionIdWidth = 17;
+static const int apiSessionIdWidth = 45;
 struct apiSession_v1;
 class apiSession
 {

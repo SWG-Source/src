@@ -98,7 +98,6 @@ ConnectionServer::ConnectionServer() :
 	networkBarrier(0),
 	pingSocket(new UdpSock),
 	m_recoverTime(0),
-	m_sessionApiClient(0),
 	m_pingTrafficNumBytes(0),
 	m_recoveringClientList()
 {
@@ -120,11 +119,6 @@ ConnectionServer::ConnectionServer() :
 
 	Address a("", ConfigConnectionServer::getPingPort());
 	IGNORE_RETURN(pingSocket->bind(a));
-
-	if (ConfigConnectionServer::getValidateStationKey())
-	{
-		installSessionValidation();
-	}
 }
 
 //-----------------------------------------------------------------------
@@ -1106,10 +1100,10 @@ void ConnectionServer::update()
 		}
 	}
 
-	if (m_sessionApiClient)
+	/*if (m_sessionApiClient)
 	{
 		m_sessionApiClient->update();
-	}
+	}*/
 
 	static const int ping_throttle_max = 1024;
 
@@ -1430,7 +1424,7 @@ CentralConnection * ConnectionServer::getCentralConnection()
 
 void ConnectionServer::installSessionValidation()
 {
-	int i = 0;
+	/*int i = 0;
 	std::vector<char const *> sessionServers;
 	int const numberOfSessionServers = ConfigConnectionServer::getNumberOfSessionServers();
 	for (i = 0; i < numberOfSessionServers; ++i)
@@ -1445,7 +1439,8 @@ void ConnectionServer::installSessionValidation()
 
 	// if there were none specified, use defaults
 	FATAL(i == 0, ("No session servers specified for session API"));
-	m_sessionApiClient = new SessionApiClient(&sessionServers[0], i);
+	m_sessionApiClient = new SessionApiClient(&sessionServers[0], i);*/
+	return;
 }
 
 // ----------------------------------------------------------------------
@@ -1575,14 +1570,14 @@ SessionApiClient* ConnectionServer::getSessionApiClient()
 {
 	// this is causing crashes when ConnectionServer is shutdown and something calls this function
 	// because instance() returns 0.
-	if (s_connectionServer)
-	{
-		return instance().m_sessionApiClient;
-	}
-	else
-	{
+	//if (s_connectionServer)
+	//{
+	//	return instance().m_sessionApiClient;
+	//}
+	//else
+	//{
 		return 0;
-	}
+	//}
 }
 
 // ----------------------------------------------------------------------

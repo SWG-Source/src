@@ -140,7 +140,6 @@ LoginServer::LoginServer() :
 	keyServer(0),
 	m_clientMap(),
 	m_clusterList(),
-	m_sessionApiClient(0),
 	m_validatedClientMap(),
 	m_clusterStatusChanged(false),
 	m_soeMonitor(0)
@@ -202,11 +201,6 @@ LoginServer::LoginServer() :
 	connectToMessage("FeatureIdTransactionRequest");
 	connectToMessage("FeatureIdTransactionSyncUpdate");
 	keyServer = new KeyServer;
-
-	if (ConfigLoginServer::getValidateStationKey() || ConfigLoginServer::getDoSessionLogin())
-	{
-		installSessionValidation();
-	}
 }
 
 //-----------------------------------------------------------------------
@@ -269,7 +263,7 @@ void LoginServer::removeClient(int clientId)
 
 void LoginServer::installSessionValidation()
 {
-	int i = 0;
+	/*int i = 0;
 	std::vector<const char* > sessionServers;
 
 	int numberOfSessionServers = ConfigLoginServer::getNumberOfSessionServers();
@@ -286,7 +280,9 @@ void LoginServer::installSessionValidation()
 	// if there were none specified, use defaults
 	FATAL(i == 0, ("No session servers specified for session API"));
 
-	m_sessionApiClient = new SessionApiClient(&sessionServers[0], i);
+	m_sessionApiClient = new SessionApiClient(&sessionServers[0], i);*/
+
+	return;
 }
 
 //-----------------------------------------------------------------------
@@ -913,7 +909,7 @@ void LoginServer::receiveMessage(const MessageDispatch::Emitter & source, const 
 				{
 					if (m_sessionApiClient)
 					{
-						if (consumeAccountFeatureId)
+						/*if (consumeAccountFeatureId)
 						{
 							// request session/Platform to update the account feature id
 							// SessionApiClient will own (and delete) msg
@@ -931,7 +927,7 @@ void LoginServer::receiveMessage(const MessageDispatch::Emitter & source, const 
 
 							DatabaseConnection::getInstance().claimRewards(conn->getClusterId(), msg->getGameServer(), msg->getStationId(), msg->getPlayer(), msg->getRewardEvent(), msg->getConsumeEvent(), msg->getRewardItem(), msg->getConsumeItem(), requiredAccountFeatureId, false, oldFeature.GetConsumeCount(), newFeature.GetConsumeCount());
 							delete msg;
-						}
+						}*/
 					}
 					else
 					{
@@ -1200,8 +1196,8 @@ void LoginServer::run(void)
 			getInstance().m_clusterStatusChanged = false;
 		}
 
-		if (getInstance().m_sessionApiClient)
-			getInstance().m_sessionApiClient->Process();
+		//if (getInstance().m_sessionApiClient)
+		//	getInstance().m_sessionApiClient->Process();
 
 		totalTime += limit; //TODO: make a better way to do this
 		if (!ConfigLoginServer::getDevelopmentMode() && (totalTime > 10000))
@@ -1420,10 +1416,13 @@ void LoginServer::onValidateClient(StationId suid, const std::string & username,
 
 	if (ConfigLoginServer::getDoConsumption() || ConfigLoginServer::getDoSessionLogin())
 	{
+		std::string const strSessionKey(sessionKey);
+		size_t sessSize = sizeof(strSessionKey.c_str());
+
 		// pass the sessionkey
-		len = apiSessionIdWidth + sizeof(StationId);
-		memcpy(keyBufferPointer, sessionKey, apiSessionIdWidth);
-		keyBufferPointer += apiSessionIdWidth;
+		len = sessSize + sizeof(StationId);
+		memcpy(keyBufferPointer, sessionKey, sessSize);
+		keyBufferPointer += len;
 		memcpy(keyBufferPointer, &suid, sizeof(StationId));
 
 		// if LoginServer did session login, send the session key back to the client;
@@ -1431,7 +1430,6 @@ void LoginServer::onValidateClient(StationId suid, const std::string & username,
 		// where the LoginServer does the session login, it will get it from the LoginServer
 		if (ConfigLoginServer::getDoSessionLogin())
 		{
-			std::string const strSessionKey(sessionKey, apiSessionIdWidth);
 			GenericValueTypeMessage<std::string> const msg("SetSessionKey", strSessionKey);
 			conn->send(msg, true);
 		}

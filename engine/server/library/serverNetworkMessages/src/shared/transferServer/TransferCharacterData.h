@@ -103,10 +103,8 @@ public:
 	void                                setWorkingSkill               (const std::string & workingSkill);
 
 	void                                setCSToolId                   (const unsigned int toolId);
-
-private:
 	TransferCharacterData();
-
+private:
 	friend class Archive::AutoVariable<TransferCharacterData>;
 	friend struct std::pair<std::string, TransferCharacterData>;
 	friend void Archive::get(Archive::ReadIterator & source, TransferCharacterData & target);
