@@ -321,11 +321,13 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg &msg) {
         Archive::ReadIterator ri(t);
         KeyShare::Token token(ri);
 
-        static const std::string authURL(ConfigConnectionServer::getSessionURL());
+        static const std::string sessURL(ConfigConnectionServer::getSessionURL());
 
-        if (ConfigConnectionServer::getValidateStationKey() && !authURL.empty()) {
+        printf("url is %s", sessURL.c_str());
+
+        if (ConfigConnectionServer::getValidateStationKey() && !sessURL.empty()) {
             printf("\nAttempting to test our session...\n");
-            webAPI api(authURL);
+            webAPI api(sessURL);
 
             std::string clientIP = getRemoteAddress();
 
@@ -344,10 +346,11 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg &msg) {
                     std::string apiUser = api.getString("user_name");
                     std::string apiIP = api.getString("ip");
 
-                    if (!expired) {
+                    if (expired == 0) {
                         printf("\tNot expired...\n");
-                        if (apiSuid && apiSuid == m_suid && apiIP == clientIP) {
+                        if (apiSuid && apiIP == clientIP) {
                             printf("\tTrying the decrypt bit...\n");
+                            m_suid = apiSuid;
                             result = ConnectionServer::decryptToken(token, m_suid, m_isSecure, m_accountName);
                         }
                     } else {
