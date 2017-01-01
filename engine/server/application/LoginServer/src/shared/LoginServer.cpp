@@ -201,11 +201,6 @@ LoginServer::LoginServer() :
 	connectToMessage("FeatureIdTransactionRequest");
 	connectToMessage("FeatureIdTransactionSyncUpdate");
 	keyServer = new KeyServer;
-
-	/*if (ConfigLoginServer::getValidateStationKey() || ConfigLoginServer::getDoSessionLogin())
-	{
-		installSessionValidation();
-	}*/
 }
 
 //-----------------------------------------------------------------------

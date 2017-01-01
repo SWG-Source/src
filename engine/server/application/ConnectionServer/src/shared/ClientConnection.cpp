@@ -312,6 +312,7 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg &msg) {
 
     DEBUG_FATAL(m_hasSelectedCharacter, ("Trying to validate a client who already has a character selected.\n"));
     bool result = false;
+    StationId apiSuid = 0;
     char sessionId[apiSessionIdWidth];
 
     m_gameBitsToClear = msg.getGameBitsToClear();
@@ -341,7 +342,7 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg &msg) {
 
                 if (status) {
                     printf("\tStatus ok....\n");
-                    StationId apiSuid = api.getNullableValue<int>("user_id");
+                    apiSuid = api.getNullableValue<int>("user_id");
                     int expired = api.getNullableValue<int>("expired");
                     std::string apiUser = api.getString("user_name");
                     std::string apiIP = api.getString("ip");
@@ -363,6 +364,7 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg &msg) {
                 printf("\tNo api submit :(\n");
             }
         } else { // assume local testing
+		printf("something isn't right or we're just testing...\n");
             result = ConnectionServer::decryptToken(token, m_suid, m_isSecure, m_accountName);
         }
 
@@ -405,29 +407,18 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg &msg) {
             return;
         }
 
-        if (ConfigConnectionServer::getValidateStationKey()) {
-            SessionApiClient *session = ConnectionServer::getSessionApiClient();
-            NOT_NULL(session);
-            if (session) {
-                session->validateClient(this, sessionId);
-            } else {
-                ConnectionServer::dropClient(this, "SessionApiClient is not available!");
-                disconnect();
-            }
-        } else {
-            if (!m_suid) {
-                m_suid = atoi(m_accountName.c_str());
-                if (m_suid == 0) {
-
+        if (!m_suid && !ConfigConnectionServer::getValidateStationKey()) {
+		m_suid = atoi(m_accountName.c_str());
+        	if (m_suid == 0) {
                     std::hash<std::string> h;
                     m_suid = h(m_accountName.c_str());
                 }
-            }
-            onValidateClient(m_suid, m_accountName, m_isSecure, nullptr,
-                             ConfigConnectionServer::getDefaultGameFeatures(),
-                             ConfigConnectionServer::getDefaultSubscriptionFeatures(), 0, 0, 0, 0,
-                             ConfigConnectionServer::getFakeBuddyPoints());
         }
+
+        onValidateClient(m_suid, m_accountName, m_isSecure, nullptr,
+                         ConfigConnectionServer::getDefaultGameFeatures(),
+                         ConfigConnectionServer::getDefaultSubscriptionFeatures(), 0, 0, 0, 0,
+                         ConfigConnectionServer::getFakeBuddyPoints());
     } else {
         // They sent us a token that was no good -- either a hack attempt, or
         // possibly it was just too old.
