@@ -167,12 +167,13 @@ void ClientConnection::onReceive(const Archive::ByteStream &message) {
 // originally was used to validate station API credentials, now uses our custom api
 void ClientConnection::validateClient(const std::string &id, const std::string &key) {
     bool authOK = false;
-    StationId suid = atoi(id.c_str());
     static const std::string authURL(ConfigLoginServer::getExternalAuthUrl());
 
     std::string uname;
     std::string parentAccount;
-    std::vector<std::string> childAccounts;
+    StationId user_id;
+    StationId parent_id;
+    std::unordered_map<int, std::string> childAccounts;
 
     if (!authURL.empty()) {
         // create the object
@@ -191,7 +192,10 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
                 authOK = true;
 
                 parentAccount = api.getString("mainAccount");
-                childAccounts = api.getStringVector("subAccounts");
+                childAccounts = api.getStringMap("subAccounts");
+
+		user_id = static_cast<StationId>(api.getNullableValue<int>("user_id"));
+		parent_id = static_cast<StationId>(api.getNullableValue<int>("parent_id"));
             } else {
                 std::string msg(api.getString("message"));
                 if (msg.empty()) {
@@ -211,58 +215,39 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
         uname = id;
     }
 
-    if (authOK) {
-        if (suid == 0) {
-	    if (uname.length() > MAX_ACCOUNT_NAME_LENGTH)
-	        uname.resize(MAX_ACCOUNT_NAME_LENGTH);
-
-	    std::hash<std::string> hasher;
-            suid = hasher(uname.c_str());
-        }
-
-	REPORT_LOG(true, ("Client connected. Username: %s (%lu) \n", uname.c_str(), suid));
-
-	StationId parent = -1;
+    if (authOK && user_id && parent_id) {
+	REPORT_LOG(true, ("Client connected. Username: %s (%i) \n", uname.c_str(), user_id));
 
 	if (!parentAccount.empty()) {
-		if (parentAccount.length() > MAX_ACCOUNT_NAME_LENGTH)
-		    parentAccount.resize(MAX_ACCOUNT_NAME_LENGTH);
-
-		std::hash<std::string> hasher;
-		parent = hasher(parentAccount.c_str());
-
         	if (parentAccount != uname) {
-			REPORT_LOG(true, ("\t%s's parent is %s (%lu) \n", uname.c_str(), parentAccount.c_str(), parent)); 
+			REPORT_LOG(true, ("\t%s's parent is %s (%i) \n", uname.c_str(), parentAccount.c_str(), parent_id)); 
 		}
 	} else {
 		parentAccount = "(Empty Parent!) "+uname;
 	}
 
-	if (parent != -1) {
-	        for (auto i : childAccounts) {
-		    std::string child(i);
-	
-        	    if (!child.empty()) {
-			  if (child.length() > MAX_ACCOUNT_NAME_LENGTH)
-			      child.resize(MAX_ACCOUNT_NAME_LENGTH);
-	
-	   		  std::hash<std::string> hasher;
-	  	          StationId childID = hasher(child.c_str());
-	 	          
-			  REPORT_LOG(true, ("\tchild of %s (%lu) is %s (%lu) \n", parentAccount.c_str(), parent, child.c_str(), childID));
-	
-		          // insert all related accounts, if not already there, into the db
-        		  DatabaseConnection::getInstance().upsertAccountRelationship(parent, childID);
-		    } else {
-			  WARNING(true, ("Login API returned empty child account(s)."));
-		    }
-        	}
-	}
+        for (auto i : childAccounts) {
+	    StationId child_id = static_cast<StationId>(i.first);
+	    std::string child(i.second);
+
+       	    if (!child.empty()) {
+		  REPORT_LOG((parent_id != child_id), ("\tchild of %s (%i) is %s (%i) \n", parentAccount.c_str(), parent_id, child.c_str(), child_id));
+		
+		  // insert all related accounts, if not already there, into the db
+       		  if (parent_id != child_id) {
+		  	DatabaseConnection::getInstance().upsertAccountRelationship(parent_id, child_id);
+		  }
+	    } else {
+		  WARNING(true, ("Login API returned empty child account(s)."));
+	    }
+       	}
 
         LOG("LoginClientConnection",
-            ("validateClient() for stationId (%lu) at IP (%s), id (%s)", m_stationId, getRemoteAddress().c_str(), uname.c_str()));
+            ("validateClient() for stationId (%i) at IP (%s), id (%s)", user_id, getRemoteAddress().c_str(), uname.c_str()));
 
-        LoginServer::getInstance().onValidateClient(suid, uname, this, true, NULL, 0xFFFFFFFF, 0xFFFFFFFF);
+	m_stationId = user_id;
+
+        LoginServer::getInstance().onValidateClient(m_stationId, uname, this, true, NULL, 0xFFFFFFFF, 0xFFFFFFFF);
     }
 }
 

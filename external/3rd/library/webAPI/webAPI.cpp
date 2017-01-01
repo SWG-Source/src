@@ -1,5 +1,5 @@
 /*
- * Version: 1.5
+ * Version: 1.6
  *
  * This code is just a simple wrapper around nlohmann's wonderful json lib
  * (https://github.com/nlohmann/json) and libcurl. While originally included directly,
@@ -55,13 +55,23 @@ std::string webAPI::getString(const std::string &slot) {
     return std::string("");
 }
 
-std::vector<std::string> webAPI::getStringVector(const std::string &slot) {
+std::unordered_map<int, std::string> webAPI::getStringMap(const std::string &slot) {
+    std::unordered_map<int, std::string> ret = std::unordered_map<int, std::string>();
+
     if (!this->responseData.empty() && !slot.empty() && responseData.count(slot) &&
         !this->responseData[slot].is_null()) {
-        return this->responseData[slot].get<std::vector<std::string>>();
-    }
+    	
+	nlohmann::json j = this->responseData[slot];
 
-    return std::vector<std::string>();
+	for (nlohmann::json::iterator it = j.begin(); it != j.end(); ++it) {
+		int k = std::stoi(it.key());
+		std::string val = it.value();
+
+		ret.insert({k, val});
+	}
+    }
+    
+    return ret;
 }
 
 bool webAPI::submit(const int &reqType, const int &getPost, const int &respType) {
