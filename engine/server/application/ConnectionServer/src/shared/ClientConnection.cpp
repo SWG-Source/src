@@ -295,7 +295,8 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg &msg) {
         WARNING(true, ("suid is %lu session is %s", m_suid, sessionId));
 
         static const std::string sessURL(ConfigConnectionServer::getSessionURL());
-        if (result) {
+
+        if (result || sessionId) {
             if (ConfigConnectionServer::getValidateStationKey() && !sessURL.empty()) {
                 bool cont = false;
                 StationId apiSuid = 0;
@@ -316,8 +317,10 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg &msg) {
                         std::string apiUser = api.getString("user_name");
                         std::string apiIP = api.getString("ip");
 
-                        if (expired == 0) {
-                            if (apiSuid == m_suid && apiIP == clientIP) {
+                        if (apiIP == clientIP && expired == 0) {
+                            if (m_suid == 0) {
+                                m_suid = apiSuid;
+
                                 cont = true;
                             }
                         }
