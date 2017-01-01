@@ -22,7 +22,7 @@
 #include "MonAPI2/MonitorAPI.h"
 #include "PingConnection.h"
 #include "PurgeManager.h"
-//#include "SessionApiClient.h"
+#include "SessionApiClient.h"
 #include "UnicodeUtils.h"
 #include "serverKeyShare/KeyServer.h"
 #include "serverNetworkMessages/AccountFeatureIdRequest.h"
@@ -335,8 +335,7 @@ const KeyShare::Key & LoginServer::getCurrentKey(void) const
 
 SessionApiClient * LoginServer::getSessionApiClient()
 {
-	return true;
-	//return m_sessionApiClient;
+	return m_sessionApiClient;
 }
 
 //-----------------------------------------------------------------------
