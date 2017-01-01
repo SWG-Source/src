@@ -1421,9 +1421,12 @@ void LoginServer::onValidateClient(StationId suid, const std::string & username,
 
 	if (ConfigLoginServer::getDoConsumption() || ConfigLoginServer::getDoSessionLogin())
 	{
+		std::string const strSessionKey(sessionKey);
+		size_t sessSize = sizeof(strSessionKey.c_str());
+
 		// pass the sessionkey
-		len = apiSessionIdWidth + sizeof(StationId);
-		memcpy(keyBufferPointer, sessionKey, apiSessionIdWidth);
+		len = sessSize + sizeof(StationId);
+		memcpy(keyBufferPointer, sessionKey, sessSize);
 		keyBufferPointer += len;
 		memcpy(keyBufferPointer, &suid, sizeof(StationId));
 
@@ -1432,7 +1435,6 @@ void LoginServer::onValidateClient(StationId suid, const std::string & username,
 		// where the LoginServer does the session login, it will get it from the LoginServer
 		if (ConfigLoginServer::getDoSessionLogin())
 		{
-			std::string const strSessionKey(sessionKey, apiSessionIdWidth);
 			GenericValueTypeMessage<std::string> const msg("SetSessionKey", strSessionKey);
 			conn->send(msg, true);
 		}
