@@ -91,7 +91,7 @@ public:
 
 	void                          handleGameServerForLoginMessage(uint32 serverId);
 	void                          onIdValidated(bool canLogin, bool canCreateRegularCharacter, bool canCreateJediCharacter, bool canSkipTutorial, std::vector<std::pair<NetworkId, std::string> > const & consumedRewardEvents, std::vector<std::pair<NetworkId, std::string> > const & claimedRewardItems);
-	void                          onValidateClient    (uint32 id, const std::string & username, bool, const char*, uint32 gameFeatures, uint32 subscriptionFeatures, unsigned int entitlementTotalTime, unsigned int entitlementEntitledTime, unsigned int entitlementTotalTimeSinceLastLogin, unsigned int entitlementEntitledTimeSinceLastLogin, int buddyPoints);
+	void                          onValidateClient    (StationId id, const std::string & username, bool, const char*, uint32 gameFeatures, uint32 subscriptionFeatures, unsigned int entitlementTotalTime, unsigned int entitlementEntitledTime, unsigned int entitlementTotalTimeSinceLastLogin, unsigned int entitlementEntitledTimeSinceLastLogin, int buddyPoints);
 	void                          onCharacterValidated(bool isValid, const NetworkId &character, const std::string &characterName, const NetworkId &container, const std::string &scene, const Vector &coordinates);
 	static std::string            describeAccount(const ClientConnection *);
 

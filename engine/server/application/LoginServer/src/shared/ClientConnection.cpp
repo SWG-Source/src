@@ -194,8 +194,8 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
                 parentAccount = api.getString("mainAccount");
                 childAccounts = api.getStringMap("subAccounts");
 
-		user_id = api.getNullableValue<int>("user_id");
-		parent_id = api.getNullableValue<int>("parent_id");
+		user_id = static_cast<StationId>(api.getNullableValue<int>("user_id"));
+		parent_id = static_cast<StationId>(api.getNullableValue<int>("parent_id"));
             } else {
                 std::string msg(api.getString("message"));
                 if (msg.empty()) {
@@ -227,7 +227,7 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
 	}
 
         for (auto i : childAccounts) {
-	    StationId child_id = i.first;
+	    StationId child_id = static_cast<StationId>(i.first);
 	    std::string child(i.second);
 
        	    if (!child.empty()) {
