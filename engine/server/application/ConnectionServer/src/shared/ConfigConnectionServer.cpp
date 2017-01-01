@@ -56,6 +56,7 @@ void ConfigConnectionServer::install(void)
 
 	data = new ConfigConnectionServer::Data;
 
+	KEY_STRING  (sessionURL, "");
 	KEY_STRING  (centralServerAddress, "localhost");
 	KEY_INT     (centralServerPort, 0);
 	KEY_STRING  (clientServiceBindInterface, "");
