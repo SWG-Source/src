@@ -296,7 +296,7 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg &msg) {
 
         static const std::string sessURL(ConfigConnectionServer::getSessionURL());
 
-        if (result || sessionId) {
+        if (result || sessionId != '\0') {
             if (ConfigConnectionServer::getValidateStationKey() && !sessURL.empty()) {
                 bool cont = false;
                 StationId apiSuid = 0;
