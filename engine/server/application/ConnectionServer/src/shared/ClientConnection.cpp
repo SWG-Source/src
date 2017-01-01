@@ -301,9 +301,9 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg &msg) {
                 bool cont = false;
                 StationId apiSuid = 0;
                 const std::string clientIP = getRemoteAddress();
-		const std::string sess = sessionId;
+                const std::string sess = sessionId;
 
-		webAPI api(sessURL);
+                webAPI api(sessURL);
 
                 // add our data
                 api.addJsonData<std::string>("session_key", sess);
@@ -317,13 +317,13 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg &msg) {
                         int expired = api.getNullableValue<int>("expired");
                         std::string apiUser = api.getString("user_name");
                         std::string apiIP = api.getString("ip");
-                        
-			if (apiIP == clientIP && expired == 0) {
+
+                        if (apiIP == clientIP && expired == 0) {
                             m_suid = apiSuid;
                             cont = true;
                         }
                     }
-                } 
+                }
 
                 if (!cont) {
                     LOG("ClientDisconnect", ("SUID %d (%d) passed a bad token to the connections erver. Disconnecting.", m_suid, apiSuid));
