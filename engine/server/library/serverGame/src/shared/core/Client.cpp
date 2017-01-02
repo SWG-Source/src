@@ -2227,14 +2227,23 @@ float Client::computeDeltaTimeInSeconds(uint32 const syncStampLong) const
 
 bool Client::setGodMode(bool value)
 {
+  	// (re?) check god permissions
+	m_godLevel = AdminAccountManager::isAdminAccount(getStationId());
+
+        if (ConfigServerGame::getAdminGodToAll() || (m_godLevel > 0)) 
+        {
+                m_godValidated = true;
+                if (ConfigServerGame::getAdminGodToAll())
+                        m_godLevel = ConfigServerGame::getAdminGodToAllGodLevel();
+        }
+
 	bool wasInGodMode = m_godMode;
 	m_godMode = value;
 
-
 	if (value && !m_godValidated)
 	{
-			LOG("CustomerService", ("Avatar:%s denied god mode because it wasn't validated.", PlayerObject::getAccountDescription(getCharacterObjectId()).c_str() ));
-			m_godMode = false;
+		LOG("CustomerService", ("Avatar:%s denied god mode because it wasn't validated.", PlayerObject::getAccountDescription(getCharacterObjectId()).c_str() ));
+		m_godMode = false;
 	}
 
 	CreatureObject *primaryControlledObject = safe_cast<CreatureObject*>(m_primaryControlledObject.getObject());
