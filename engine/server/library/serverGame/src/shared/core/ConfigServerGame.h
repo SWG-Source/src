@@ -573,6 +573,8 @@ class ConfigServerGame
 		int             gcwGuildMinMembersForGcwRegionDefender;
 		int             gcwRegionDefenderTotalBonusPct;
 		int             gcwDaysRequiredForGcwRegionDefenderBonus;
+
+		bool			useOldSuidGenerator;
 	};
 
   private:
@@ -1057,6 +1059,8 @@ class ConfigServerGame
 	static int              getGcwGuildMinMembersForGcwRegionDefender();
 	static int              getGcwRegionDefenderTotalBonusPct();
 	static int              getGcwDaysRequiredForGcwRegionDefenderBonus();
+
+	static bool				getUseOldSuidGenerator();
 };
 
 //-----------------------------------------------------------------------
@@ -3686,6 +3690,10 @@ inline int ConfigServerGame::getNpeMaxInstancePopulation()
 inline bool ConfigServerGame::getStripNonFreeAssetsFromPlayersInTutorial()
 {
 	return data->stripNonFreeAssetsFromPlayersInTutorial;
+}
+
+inline bool ConfigServerGame::getUseOldSuidGenerator() {
+	return data->useOldSuidGenerator;
 }
 
 // ======================================================================

@@ -209,8 +209,9 @@ Client::Client(ConnectionServerConnection &connection, const NetworkId &characte
     connectToEmitter(connection, "ConnectionServerConnectionDestroyed");
 
     // Check god permissions
+    int adminLevel = AdminAccountManager::isAdminAccount(stationId, ConfigServerGame::getUseOldSuidGenerator());
     if (ConfigServerGame::getAdminGodToAll() || ((!ConfigServerGame::getUseSecureLoginForGodAccess() || m_isSecure) &&
-                                                 AdminAccountManager::isAdminAccount(Unicode::toLower(accountName), m_godLevel) &&
+                                                 (adminLevel > 0) &&
                                                  (!ConfigServerGame::getUseIPForGodAccess() ||
                                                   AdminAccountManager::isInternalIp(ipAddr)))) {
         m_godValidated = true;
@@ -1940,7 +1941,7 @@ float Client::computeDeltaTimeInSeconds(uint32 const syncStampLong) const {
 
 bool Client::setGodMode(bool value) {
     // (re?) check god permissions
-    m_godLevel = AdminAccountManager::isAdminAccount(getStationId());
+    m_godLevel = AdminAccountManager::isAdminAccount(getStationId(), ConfigServerGame::getUseOldSuidGenerator());
 
     if (ConfigServerGame::getAdminGodToAll() || (m_godLevel > 0)) {
         m_godValidated = true;

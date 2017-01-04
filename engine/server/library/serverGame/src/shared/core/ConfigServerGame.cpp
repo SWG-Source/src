@@ -489,6 +489,8 @@ void ConfigServerGame::install(void)
 
 	KEY_FLOAT   (regionFlagUpdateTime, 0.5f);
 
+	KEY_BOOL    (useOldSuidGenerator, false);
+
 	if (data->baseDecayRate <= 1.0f)
 		data->baseDecayRate = 1.0f;
 
