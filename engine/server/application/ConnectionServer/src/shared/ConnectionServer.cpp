@@ -92,7 +92,6 @@ ConnectionServer::ConnectionServer()
     s_clientServiceSetup->maxDataHoldTime = ConfigConnectionServer::getClientMaxDataHoldTime();
     s_clientServiceSetup->hashTableSize = ConfigConnectionServer::getClientHashTableSize();
     s_clientServiceSetup->port = ConfigConnectionServer::getClientServicePortPublic();
-    s_clientServiceSetup->maxConnectionsPerIP = ConfigConnectionServer::getMaxConnectionsPerIP();
     s_clientServiceSetup->compress = ConfigConnectionServer::getCompressClientNetworkTraffic();
     s_clientServiceSetup->useTcp = false;
 
@@ -504,12 +503,10 @@ ConnectionServer::receiveMessage(const MessageDispatch::Emitter &source, const M
 
             if (ConfigConnectionServer::getStartPublicServer()) {
                 s_clientServiceSetup->port = ConfigConnectionServer::getClientServicePortPublic();
-                s_clientServiceSetup->maxConnectionsPerIP = ConfigConnectionServer::getMaxConnectionsPerIP();
                 clientServicePublic = new Service(ConnectionAllocator<ClientConnection>(), *s_clientServiceSetup);
             }
 
             s_clientServiceSetup->port = ConfigConnectionServer::getClientServicePortPrivate();
-            s_clientServiceSetup->maxConnectionsPerIP = 0;
             clientServicePrivate = new Service(ConnectionAllocator<ClientConnection>(), *s_clientServiceSetup);
 
             connectToMessage("ClientConnectionOpened");

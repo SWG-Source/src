@@ -41,7 +41,6 @@ public:
         int clientMaxDataHoldTime;
         int clientHashTableSize;
         int lagReportThreshold;
-        int maxConnectionsPerIP;
 
         bool validateStationKey;
         const char *sessionServers;
@@ -71,6 +70,7 @@ public:
 
 
         const char *altPublicBindAddress;
+        const bool useOldSuidGenerator;
     };
 
 
@@ -186,8 +186,7 @@ public:
 
     static const char *getPublicBindAddress();
 
-    static int getMaxConnectionsPerIP();
-
+    static bool getUseOldSuidGenerator();
 private:
     static Data *data;
 };
@@ -477,8 +476,8 @@ inline int ConfigConnectionServer::getConnectionServerNumber() {
 }
 
 
-inline int ConfigConnectionServer::getMaxConnectionsPerIP() {
-    return data->maxConnectionsPerIP;
+inline bool ConfigConnectionServer::getUseOldSuidGenerator() {
+    return data->useOldSuidGenerator;
 }
 
 #endif	// _ConfigConnectionServer_H

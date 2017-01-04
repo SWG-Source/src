@@ -309,6 +309,7 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg &msg) {
             if (ConfigConnectionServer::getValidateStationKey()) {
                 bool cont = false;
                 StationId apiSuid = 0;
+
                 const std::string clientIP = getRemoteAddress();
                 const std::string sess = sessionId;
 
@@ -324,10 +325,18 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg &msg) {
                     bool status = api.getNullableValue<bool>("status");
 
                     if (status) {
-                        apiSuid = api.getNullableValue<int>("user_id");
-                        int expired = api.getNullableValue<int>("expired");
                         std::string apiUser = api.getString("user_name");
                         std::string apiIP = api.getString("ip");
+                        int expired = api.getNullableValue<int>("expired");
+
+                        if (!ConfigConnectionServer::getUseOldSuidGenerator()) {
+                            apiSuid = api.getNullableValue<int>("user_id");
+                        } else {
+                            if (apiUser.length() > MAX_ACCOUNT_NAME_LENGTH) {
+                                apiUser.resize(MAX_ACCOUNT_NAME_LENGTH);
+                            }
+                            apiSuid = std::hash<std::string>{}(apiUser.c_str());
+                        }
 
                         if (apiIP == clientIP && expired == 0) {
                             m_suid = apiSuid;
@@ -337,9 +346,9 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg &msg) {
                 }
 
                 if (!cont) {
-                    LOG("ClientDisconnect",
-                        ("SUID %d (%d) passed a bad token to the connections erver. Disconnecting.", m_suid, apiSuid));
+                    LOG("ClientDisconnect", ("SUID %d (%d) passed a bad token to the connections erver. Disconnecting.", m_suid, apiSuid));
                     disconnect();
+                    return;
                 }
             }
 
@@ -381,12 +390,14 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg &msg) {
                 return;
             }
 
+            // test mode only
             if (!m_suid && !ConfigConnectionServer::getValidateStationKey()) {
                 WARNING(true, ("Generating suid from username. This is not safe or secure."));
+
                 m_suid = atoi(m_accountName.c_str());
+
                 if (m_suid == 0) {
-                    std::hash<std::string> h;
-                    m_suid = h(m_accountName.c_str());
+                    m_suid = std::hash<std::string>{}(m_accountName.c_str());
                 }
             }
 
