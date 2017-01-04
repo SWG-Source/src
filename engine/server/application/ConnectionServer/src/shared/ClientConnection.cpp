@@ -468,8 +468,10 @@ ClientConnection::onIdValidated(bool canLogin, bool canCreateRegularCharacter, b
     m_consumedRewardEvents = consumedRewardEvents;
     m_claimedRewardItems = claimedRewardItems;
 
-    int level = AdminAccountManager::isAdminAccount(getSUID(), ConfigConnectionServer::getUseOldSuidGenerator());
-    if (level != 0)) // Note:  not checking IP, so that owners of god accounts can create characters to play from home without having to erase the characters they use for work
+
+    int level = 0;
+    if (AdminAccountManager::isAdminAccount(Unicode::toLower(getAccountName()), level) && (level !=
+                                                                                           0)) // Note:  not checking IP, so that owners of god accounts can create characters to play from home without having to erase the characters they use for work
     {
         canLogin = true;
         canCreateRegularCharacter = true;
@@ -1413,8 +1415,8 @@ ClientConnection::onValidateClient(StationId suid, const std::string &username, 
                 LOG("CustomerService",
                     ("AdminLogin:  User %s (account %li) attempted to log into account %li, but was not logging in from an internal IP", username.c_str(), suid, m_requestedSuid));
             } else {
-                int adminLevel = AdminAccountManager::isAdminAccount(getSUID(), ConfigConnectionServer::getUseOldSuidGenerator());
-                if (adminLevel < 10) {
+                int adminLevel = 0;
+                if (!AdminAccountManager::isAdminAccount(Unicode::toLower(username), adminLevel) || adminLevel < 10) {
                     LOG("CustomerService",
                         ("AdminLogin:  User %s (account %li) attempted to log into account %li, but did not have sufficient permissions", username.c_str(), suid, m_requestedSuid));
                 } else {

@@ -209,9 +209,8 @@ Client::Client(ConnectionServerConnection &connection, const NetworkId &characte
     connectToEmitter(connection, "ConnectionServerConnectionDestroyed");
 
     // Check god permissions
-    int adminLevel = AdminAccountManager::isAdminAccount(stationId, ConfigServerGame::getUseOldSuidGenerator());
     if (ConfigServerGame::getAdminGodToAll() || ((!ConfigServerGame::getUseSecureLoginForGodAccess() || m_isSecure) &&
-                                                 (adminLevel > 0) &&
+                                                 AdminAccountManager::isAdminAccount(Unicode::toLower(accountName), m_godLevel) &&
                                                  (!ConfigServerGame::getUseIPForGodAccess() ||
                                                   AdminAccountManager::isInternalIp(ipAddr)))) {
         m_godValidated = true;

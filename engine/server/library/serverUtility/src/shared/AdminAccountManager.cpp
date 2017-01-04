@@ -65,14 +65,16 @@ const std::string & AdminAccountManager::getAdminTagName()
 //-----------------------------------------------------------------------
 
 // if they are in the iff and have a level set, return it
-int AdminAccountManager::isAdminAccount(int suid, bool useOldSuid)
+int AdminAccountManager::isAdminAccount(uint32 suid, bool useOldSuid)
 {
         DEBUG_FATAL(!ms_installed, ("AdminAccountManager not installed"));
 
+	int columnNumber = -1;
+
         if (!useOldSuid) {
-            int columnNumber = ms_adminTable->findColumnNumber("AdminSuid");
+            columnNumber = ms_adminTable->findColumnNumber("AdminSuid");
         } else {
-            int columnNumber = ms_adminTable->findColumnNumber("OldAdminSuid");
+            columnNumber = ms_adminTable->findColumnNumber("OldAdminSuid");
         }
 
         DEBUG_FATAL(columnNumber == -1, ("Error loading admin table...no account column"));

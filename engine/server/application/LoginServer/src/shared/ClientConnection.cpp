@@ -203,8 +203,8 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
                 if (msg.empty()) {
                     msg = "Invalid username or password.";
                 }
-
-                ErrorMessage err("Login Failed", msg);
+                
+		ErrorMessage err("Login Failed", msg);
                 this->send(err, true);
             }
         } else {
@@ -224,9 +224,11 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
         user_id = std::hash<std::string>{}(uname.c_str());
     }
 
-    m_stationId = user_id;
+    if (authOK) {
 
-    if (authOK && !testMode) {
+      m_stationId = user_id;
+
+      if (!testMode) {
         REPORT_LOG(true, ("Client connected. Username: %s (%i) \n", uname.c_str(), user_id));
 
         if (!parentAccount.empty()) {
@@ -260,7 +262,6 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
             	WARNING(true, ("Login API returned empty child account(s)."));
             }
 	}
-    }
 
     LOG("LoginClientConnection", ("validateClient() for stationId (%i) at IP (%s), id (%s)", user_id, getRemoteAddress().c_str(), uname.c_str()));
 

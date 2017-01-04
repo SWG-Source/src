@@ -12,6 +12,7 @@
 #include "ClientConnection.h"
 #include "ConfigLoginServer.h"
 #include "ConsoleManager.h"
+#include "CSToolConnection.h"
 #include "DatabaseConnection.h"
 
 #ifdef _DEBUG
@@ -144,6 +145,12 @@ LoginServer::LoginServer()
     if (ConfigLoginServer::getDevelopmentMode()) {
         setup.port = ConfigLoginServer::getCentralServicePort();
         m_centralService = new Service(ConnectionAllocator<CentralServerConnection>(), setup);
+    }
+
+    // only start the customer tool connection listener if the port is set (defaults to 0)
+    setup.port = ConfigLoginServer::getCSToolPort();
+    if (setup.port) {
+        m_CSService = new Service(ConnectionAllocator<CSToolConnection>(), setup);
     }
 
     // set up message connections
@@ -1221,9 +1228,10 @@ LoginServer::onValidateClient(StationId suid, const std::string &username, Clien
     NOT_NULL(conn);
     WARNING_STRICT_FATAL(getValidatedClient(suid), ("Validating an already valid client in onValidateClient().  StationId: %d UserName: %s", suid, username.c_str()));
 
-    int adminLevel = AdminAccountManager::isAdminAccount(suid, ConfigLoginServer::getUseOldSuidGenerator());
+    int adminLevel = 0;
+    const bool isAdminAccount = AdminAccountManager::isAdminAccount(Unicode::toLower(username), adminLevel);
 
-    if (adminLevel > 0 && conn->getRequestedAdminSuid() != 0) {
+    if (conn->getRequestedAdminSuid() != 0) {
         //verify internal, secure, is on the god list
         bool loginOK = false;
         if (!isSecure) {
@@ -1232,7 +1240,7 @@ LoginServer::onValidateClient(StationId suid, const std::string &username, Clien
             if (!AdminAccountManager::isInternalIp(conn->getRemoteAddress())) {
                 LOG("CustomerService", ("AdminLogin:  User %s (account %li) attempted to log into account %li, but was not logging in from an internal IP", username.c_str(), suid, conn->getRequestedAdminSuid()));
             } else {
-                if (adminLevel < 10) {
+                if (!isAdminAccount || adminLevel < 10) {
                     LOG("CustomerService", ("AdminLogin:  User %s (account %li) attempted to log into account %li, but did not have sufficient permissions", username.c_str(), suid, conn->getRequestedAdminSuid()));
                 } else {
                     suid = conn->getRequestedAdminSuid();
@@ -1323,7 +1331,7 @@ LoginServer::onValidateClient(StationId suid, const std::string &username, Clien
     conn->setIsValidated(true);
     conn->setStationId(suid);
     conn->setIsSecure(isSecure);
-    conn->setAdminLevel((adminLevel > 0) ? adminLevel : -1);
+    conn->setAdminLevel(isAdminAccount ? adminLevel : -1);
     IGNORE_RETURN(m_validatedClientMap.insert(std::pair<StationId, ClientConnection *>(suid, conn)));
 
     //Must be done after setting various information in the connection object above
