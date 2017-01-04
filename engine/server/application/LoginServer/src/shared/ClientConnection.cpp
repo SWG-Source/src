@@ -263,14 +263,11 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
                 }
             }
 
-            LOG("LoginClientConnection", ("validateClient() for stationId (%i) at IP (%s), id (%s)", user_id, getRemoteAddress().c_str(), uname.c_str()));
-
-            if (!testMode) {
-                LoginServer::getInstance().onValidateClient(m_stationId, uname, this, true, sessionID.c_str(), 0xFFFFFFFF, 0xFFFFFFFF);
-            } else {
-                LoginServer::getInstance().onValidateClient(m_stationId, uname, this, true, nullptr, 0xFFFFFFFF, 0xFFFFFFFF);
-            }
+            LoginServer::getInstance().onValidateClient(m_stationId, uname, this, true, sessionID.c_str(), 0xFFFFFFFF, 0xFFFFFFFF);
+        } else {
+            LoginServer::getInstance().onValidateClient(m_stationId, uname, this, true, nullptr, 0xFFFFFFFF, 0xFFFFFFFF);
         }
+        LOG("LoginClientConnection", ("validateClient() for stationId (%i) at IP (%s), id (%s)", user_id, getRemoteAddress().c_str(), uname.c_str()));
     }
 }
 
@@ -281,43 +278,43 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
  * required for character deletion.  If the character has already been deleted
  * from the cluster, send the reply message to the client.
  */
-    void ClientConnection::onCharacterDeletedFromLoginDatabase(const NetworkId &characterId) {
-        m_waitingForCharacterLoginDeletion = false;
-        if (!m_waitingForCharacterClusterDeletion) {
-            std::vector<NetworkId>::iterator f = std::find(m_charactersPendingDeletion.begin(), m_charactersPendingDeletion.end(), characterId);
-            if (f != m_charactersPendingDeletion.end()) {
-                m_charactersPendingDeletion.erase(f);
-            }
-
-            DeleteCharacterReplyMessage reply(DeleteCharacterReplyMessage::rc_OK);
-            send(reply, true);
-            LOG("CustomerService", ("Player:deleted character %s for stationId %u at IP: %s", characterId.getValueString().c_str(), m_stationId, getRemoteAddress().c_str()));
+void ClientConnection::onCharacterDeletedFromLoginDatabase(const NetworkId &characterId) {
+    m_waitingForCharacterLoginDeletion = false;
+    if (!m_waitingForCharacterClusterDeletion) {
+        std::vector<NetworkId>::iterator f = std::find(m_charactersPendingDeletion.begin(), m_charactersPendingDeletion.end(), characterId);
+        if (f != m_charactersPendingDeletion.end()) {
+            m_charactersPendingDeletion.erase(f);
         }
+
+        DeleteCharacterReplyMessage reply(DeleteCharacterReplyMessage::rc_OK);
+        send(reply, true);
+        LOG("CustomerService", ("Player:deleted character %s for stationId %u at IP: %s", characterId.getValueString().c_str(), m_stationId, getRemoteAddress().c_str()));
     }
+}
 
 // ----------------------------------------------------------------------
 
-    void ClientConnection::onCharacterDeletedFromCluster(const NetworkId &characterId) {
-        m_waitingForCharacterClusterDeletion = false;
-        if (!m_waitingForCharacterLoginDeletion) {
-            std::vector<NetworkId>::iterator f = std::find(m_charactersPendingDeletion.begin(), m_charactersPendingDeletion.end(), characterId);
-            if (f != m_charactersPendingDeletion.end()) {
-                m_charactersPendingDeletion.erase(f);
+void ClientConnection::onCharacterDeletedFromCluster(const NetworkId &characterId) {
+    m_waitingForCharacterClusterDeletion = false;
+    if (!m_waitingForCharacterLoginDeletion) {
+        std::vector<NetworkId>::iterator f = std::find(m_charactersPendingDeletion.begin(), m_charactersPendingDeletion.end(), characterId);
+        if (f != m_charactersPendingDeletion.end()) {
+            m_charactersPendingDeletion.erase(f);
 
-                // TODO: send api request and decrement # characters on this account/subaccount
-            }
-
-            DeleteCharacterReplyMessage reply(DeleteCharacterReplyMessage::rc_OK);
-            send(reply, true);
-            LOG("CustomerService", ("Player:deleted character %s for stationId %u at IP: %s", characterId.getValueString().c_str(), m_stationId, getRemoteAddress().c_str()));
+            // TODO: send api request and decrement # characters on this account/subaccount
         }
+
+        DeleteCharacterReplyMessage reply(DeleteCharacterReplyMessage::rc_OK);
+        send(reply, true);
+        LOG("CustomerService", ("Player:deleted character %s for stationId %u at IP: %s", characterId.getValueString().c_str(), m_stationId, getRemoteAddress().c_str()));
     }
+}
 
 // ----------------------------------------------------------------------
 
-    StationId ClientConnection::getRequestedAdminSuid() const {
-        return m_requestedAdminSuid;
-    }
+StationId ClientConnection::getRequestedAdminSuid() const {
+    return m_requestedAdminSuid;
+}
 
 // ======================================================================
 
