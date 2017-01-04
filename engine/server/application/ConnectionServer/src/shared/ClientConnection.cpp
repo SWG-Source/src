@@ -304,13 +304,14 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg &msg) {
                 const std::string clientIP(getRemoteAddress());
                 const std::string sess(sessionId);
 
+                FATAL(clientIP.empty(), ("Remote IP is empty"));
+
                 DEBUG_WARNING(true, ("ConnectionServer::handleClientIdMessage - For ip %s suid is %lu requestedSUID is %lu and session is %s", clientIP.c_str(), m_suid, m_requestedSuid, sess.c_str()));
 
                 webAPI api(sessURL);
 
                 // add our data
                 api.addJsonData<std::string>("session_key", sess);
-                api.addJsonData<std::string>("ip", clientIP);
 
                 if (api.submit()) {
                     bool status = api.getNullableValue<bool>("status");
