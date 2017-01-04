@@ -303,8 +303,6 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg &msg) {
             result = ConnectionServer::decryptToken(token, sessionId, m_requestedSuid);
         }
 
-        
-
         static const std::string sessURL(ConfigConnectionServer::getSessionURL());
 
         if (result || strlen(sessionId) != 0) {

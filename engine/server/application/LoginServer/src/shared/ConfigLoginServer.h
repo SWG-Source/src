@@ -69,7 +69,7 @@ class ConfigLoginServer
 
 		const char *	externalAuthURL;
 
-        int             maxConnectionsPerIP;
+		bool 			useOldSuidGenerator;
 	};
 
 	static const uint16 getCentralServicePort();
@@ -138,8 +138,6 @@ class ConfigLoginServer
 	// has character creation for this cluster been disabled through config option
 	static bool         isCharacterCreationDisabled(std::string const & cluster);
 	static              std::set<std::string> const & getCharacterCreationDisabledClusterList();
-
-	static const int	getMaxConnectionsPerIP();
 
 private:
 	static Data *	data;
@@ -488,9 +486,10 @@ inline const char * ConfigLoginServer::getExternalAuthUrl()
 	return data->externalAuthURL;
 }
 
-inline const int ConfigLoginServer::getMaxConnectionsPerIP()
+
+inline const bool ConfigLoginServer::getUseOldSuidGenerator()
 {
-    return data->maxConnectionsPerIP;
+    return data->useOldSuidGenerator;
 }
 // ======================================================================
 
