@@ -61,14 +61,14 @@ std::unordered_map<int, std::string> webAPI::getStringMap(const std::string &slo
     if (!this->responseData.empty() && !slot.empty() && responseData.count(slot) &&
         !this->responseData[slot].is_null()) {
 
-        nlohmann::json j = this->responseData[slot];
+	nlohmann::json j = this->responseData[slot];
 
-        for (nlohmann::json::iterator it = j.begin(); it != j.end(); ++it) {
-            int k = std::stoi(it.key());
-            std::string val = it.value();
+	for (nlohmann::json::iterator it = j.begin(); it != j.end(); ++it) {
+		int k = std::stoi(it.key());
+		std::string val = it.value();
 
-            ret.insert({k, val});
-        }
+		ret.insert({k, val});
+	}
     }
 
     return ret;
@@ -101,12 +101,10 @@ bool webAPI::fetch(const int &getPost, const int &mimeType) // 0 for json 1 for 
 
     if (!uri.empty()) //data is allowed to be an empty string if we're doing a normal GET
     {
-        printf("User not empty");
         CURL *curl = curl_easy_init(); // start up curl
 
         if (curl) {
-            printf("Starting curl");
-            std::string readBuffer; // container for the remote response
+            std::string readBuffer = ""; // container for the remote response
             struct curl_slist *slist = nullptr;
 
             // set the content type
@@ -137,27 +135,21 @@ bool webAPI::fetch(const int &getPost, const int &mimeType) // 0 for json 1 for 
                     // want to do a put, or whatever other type? feel free to add here
             }
 
-            printf("Making request");
             CURLcode res = curl_easy_perform(curl); // make the request!
             char *contentType;
-            printf("done");
 
             curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &this->statusCode); //get status code
             curl_easy_getinfo(curl, CURLINFO_CONTENT_TYPE, &contentType); // get response mime type
 
             std::string conType(contentType);
-            printf("got content type");
+
             if (res == CURLE_OK && this->statusCode == 200 && !(readBuffer.empty())) // check it all out and parse
             {
-                printf("parsing");
                 this->sResponse = readBuffer;
 
                 if (conType == "application/json") {
-                    printf("json");
                     fetchStatus = this->processJSON();
-                    printf("json done");
                 } else {
-                    printf("error %s received", this->responseData.c_str());
                     this->responseData.clear();
                     fetchStatus = true;
                 }

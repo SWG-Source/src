@@ -72,8 +72,8 @@ using namespace ClientConnectionNamespace;
 //-----------------------------------------------------------------------
 
 
-std::map<std::string, uint32> ClientConnection::sm_outgoingBytesMap_Working;  // working stats that will rotate after 1 minute
-std::map<std::string, uint32> ClientConnection::sm_outgoingBytesMap_Stats;    // computed stats from the last minute
+std::map <std::string, uint32> ClientConnection::sm_outgoingBytesMap_Working;  // working stats that will rotate after 1 minute
+std::map <std::string, uint32> ClientConnection::sm_outgoingBytesMap_Stats;    // computed stats from the last minute
 uint32                          ClientConnection::sm_outgoingBytesMap_Worktime = 0; // time we started filling in the working map
 
 
@@ -117,14 +117,10 @@ ClientConnection::~ClientConnection() {
     // tell Session to stop recording play time for the character
     if (m_hasBeenValidated && m_sessionValidated && ConnectionServer::getSessionApiClient() && (m_lastActiveTime > 0) &&
         ConfigConnectionServer::getSessionRecordPlayTime()) {
-        LOG("CustomerService",
-            ("Login:%s calling SessionStopPlay() for %s/%s/%s (%s). Active play time: %s", ClientConnection::describeAccount(
-                    this).c_str(), this->getSessionId().c_str(), ConfigConnectionServer::getClusterName(), this->getCharacterName().c_str(), this->getCharacterId().getValueString().c_str(), this->getCurrentActivePlayTimeDuration().c_str()));
+        LOG("CustomerService", ("Login:%s calling SessionStopPlay() for %s/%s/%s (%s). Active play time: %s", ClientConnection::describeAccount(this).c_str(), this->getSessionId().c_str(), ConfigConnectionServer::getClusterName(), this->getCharacterName().c_str(), this->getCharacterId().getValueString().c_str(), this->getCurrentActivePlayTimeDuration().c_str()));
 
         // log total active play time for the session to the balance log
-        LOG("GameBalance",
-            ("balancelog:%s calling SessionStopPlay() for %s/%s/%s (%s). Active play time: %s", ClientConnection::describeAccount(
-                    this).c_str(), this->getSessionId().c_str(), ConfigConnectionServer::getClusterName(), this->getCharacterName().c_str(), this->getCharacterId().getValueString().c_str(), this->getActivePlayTimeDuration().c_str()));
+        LOG("GameBalance", ("balancelog:%s calling SessionStopPlay() for %s/%s/%s (%s). Active play time: %s", ClientConnection::describeAccount(this).c_str(), this->getSessionId().c_str(), ConfigConnectionServer::getClusterName(), this->getCharacterName().c_str(), this->getCharacterId().getValueString().c_str(), this->getActivePlayTimeDuration().c_str()));
 
         ConnectionServer::getSessionApiClient()->stopPlay(*this);
     }
@@ -133,9 +129,9 @@ ClientConnection::~ClientConnection() {
         ConnectionServer::getSessionApiClient()->dropClient(this, hasBeenKicked);
     }
 
-    std::map<unsigned
-    long, GameClientMessage *>::const_iterator
-            iter;
+    std::map < unsigned
+    long, GameClientMessage * > ::const_iterator
+    iter;
     for (iter = m_pendingChatEnterRoomRequests.begin(); iter != m_pendingChatEnterRoomRequests.end(); ++iter) {
         delete iter->second;
     }
@@ -204,14 +200,12 @@ std::string ClientConnection::getCurrentActivePlayTimeDuration() const {
 void ClientConnection::sendPlayTimeInfoToGameServer() const {
     if (m_client && m_client->getGameConnection()) {
         // update the game server with play time info
-        GenericValueTypeMessage<std::pair<int32, std::pair<int32, unsigned
-        long> > >
+        GenericValueTypeMessage < std::pair < int32, std::pair < int32, unsigned
+        long > > >
         const msgPlayTimeInfo(
-                "UpdateSessionPlayTimeInfo", std::make_pair(static_cast<int32>(m_startPlayTime),
-                                                            std::make_pair(static_cast<int32>(m_lastActiveTime),
-                                                                           m_activePlayTimeDuration)));
+        "UpdateSessionPlayTimeInfo", std::make_pair(static_cast<int32>(m_startPlayTime), std::make_pair(static_cast<int32>(m_lastActiveTime), m_activePlayTimeDuration)));
 
-        std::vector<NetworkId> v;
+        std::vector <NetworkId> v;
         v.push_back(m_client->getNetworkId());
         GameClientMessage const gcm(v, true, msgPlayTimeInfo);
         m_client->getGameConnection()->send(gcm, true);
@@ -229,20 +223,16 @@ void ClientConnection::handleSelectCharacterMessage(const SelectCharacter &msg) 
     //haven't already selected.
     if (m_hasSelectedCharacter || m_validatingCharacter || !m_hasBeenValidated || !m_sessionValidated) {
         if (m_hasSelectedCharacter) {
-            LOG("TraceCharacterSelection",
-                ("%d cannot select a character because the client has already selected a character", getSUID()));
+            LOG("TraceCharacterSelection", ("%d cannot select a character because the client has already selected a character", getSUID()));
         }
         if (m_validatingCharacter) {
-            LOG("TraceCharacterSelection",
-                ("%d cannot select a character because the client has not yet received validation", getSUID()));
+            LOG("TraceCharacterSelection", ("%d cannot select a character because the client has not yet received validation", getSUID()));
         }
         if (!m_hasBeenValidated) {
-            LOG("TraceCharacterSelection",
-                ("%d cannot select a character because the client has not been validated", getSUID()));
+            LOG("TraceCharacterSelection", ("%d cannot select a character because the client has not been validated", getSUID()));
         }
         if (!m_sessionValidated) {
-            LOG("TraceCharacterSelection",
-                ("%d cannot select a character because the client has not been session validated", getSUID()));
+            LOG("TraceCharacterSelection", ("%d cannot select a character because the client has not been session validated", getSUID()));
         }
 
         return;
@@ -256,8 +246,7 @@ void ClientConnection::handleSelectCharacterMessage(const SelectCharacter &msg) 
 
     ValidateCharacterForLoginMessage vclm(getSUID(), msg.getId());
     ConnectionServer::sendToCentralProcess(vclm);
-    LOG("TraceCharacterSelection",
-        ("%d selected %s for login. Sending a validation request to CentralServer to verify this client can use this character", getSUID(), msg.getId().getValueString().c_str()));
+    LOG("TraceCharacterSelection", ("%d selected %s for login. Sending a validation request to CentralServer to verify this client can use this character", getSUID(), msg.getId().getValueString().c_str()));
 
 }
 
@@ -312,10 +301,10 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg &msg) {
 
                 FATAL(sessURL.empty(), ("Session URL is empty in connection server."));
 
-                const std::string clientIP = getRemoteAddress();
-                const std::string sess = sessionId;
+                const std::string clientIP(getRemoteAddress());
+                const std::string sess(sessionId);
 
-                DEBUG_WARNING(true, ("ConnectionServer::handleClientIdMessage - suid is %lu requestedSUID is %lu and session is %s", m_suid, m_requestedSuid, sess.c_str()));
+                DEBUG_WARNING(true, ("ConnectionServer::handleClientIdMessage - For ip %s suid is %lu requestedSUID is %lu and session is %s", clientIP.c_str(), m_suid, m_requestedSuid, sess.c_str()));
 
                 webAPI api(sessURL);
 
@@ -337,7 +326,7 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg &msg) {
                             if (apiUser.length() > MAX_ACCOUNT_NAME_LENGTH) {
                                 apiUser.resize(MAX_ACCOUNT_NAME_LENGTH);
                             }
-                            apiSuid = std::hash<std::string>{}(apiUser.c_str());
+                            apiSuid = std::hash < std::string > {}(apiUser.c_str());
                         }
 
                         if (apiIP == clientIP && expired == 0) {
@@ -378,10 +367,7 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg &msg) {
                 const int bufferSize = 255 + apiSessionIdWidth;
                 char *buffer = new char[bufferSize];
                 snprintf(buffer, bufferSize -
-                                 1,
-                         "network version mismatch: got (ip=[%s], sessionId=[%s], version=[%s]), required (version=[%s])",
-                         getRemoteAddress().c_str(), strSessionId.c_str(), msg.getVersion().c_str(),
-                         GameNetworkMessage::NetworkVersionId.c_str());
+                                 1, "network version mismatch: got (ip=[%s], sessionId=[%s], version=[%s]), required (version=[%s])", getRemoteAddress().c_str(), strSessionId.c_str(), msg.getVersion().c_str(), GameNetworkMessage::NetworkVersionId.c_str());
                 buffer[bufferSize - 1] = '\0';
 
                 ConnectionServer::dropClient(this, std::string(buffer));
@@ -399,23 +385,18 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg &msg) {
                 m_suid = atoi(m_accountName.c_str());
 
                 if (m_suid == 0) {
-                    m_suid = std::hash<std::string>{}(m_accountName.c_str());
+                    m_suid = std::hash < std::string > {}(m_accountName.c_str());
                 }
             }
 
-            onValidateClient(m_suid, m_accountName, m_isSecure, nullptr,
-                             ConfigConnectionServer::getDefaultGameFeatures(),
-                             ConfigConnectionServer::getDefaultSubscriptionFeatures(), 0, 0, 0, 0,
-                             ConfigConnectionServer::getFakeBuddyPoints());
+            onValidateClient(m_suid, m_accountName, m_isSecure, nullptr, ConfigConnectionServer::getDefaultGameFeatures(), ConfigConnectionServer::getDefaultSubscriptionFeatures(), 0, 0, 0, 0, ConfigConnectionServer::getFakeBuddyPoints());
         }
     } else {
-        WARNING(true,
-                ("SUID %d passed a bad token to the connections server (cache issue or hacker?). Disconnecting.", m_suid));
+        WARNING(true, ("SUID %d passed a bad token to the connections server (cache issue or hacker?). Disconnecting.", m_suid));
 
         // They sent us a token that was no good -- either a hack attempt, or
         // possibly it was just too old.
-        LOG("ClientDisconnect",
-            ("SUID %d passed a bad token to the connections server (cache issue or hacker?). Disconnecting.", m_suid));
+        LOG("ClientDisconnect", ("SUID %d passed a bad token to the connections server (cache issue or hacker?). Disconnecting.", m_suid));
         disconnect();
     }
 }
@@ -423,35 +404,26 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg &msg) {
 //-----------------------------------------------------------------------
 
 void
-ClientConnection::onIdValidated(bool canLogin, bool canCreateRegularCharacter, bool canCreateJediCharacter,
-                                bool canSkipTutorial,
-                                std::vector<std::pair<NetworkId, std::string>> const &consumedRewardEvents,
-                                std::vector<std::pair<NetworkId, std::string>> const &claimedRewardItems) {
+ClientConnection::onIdValidated(bool canLogin, bool canCreateRegularCharacter, bool canCreateJediCharacter, bool canSkipTutorial, std::vector <std::pair<NetworkId, std::string>> const &consumedRewardEvents, std::vector <std::pair<NetworkId, std::string>> const &claimedRewardItems) {
     //@todo start session with station.
     //@todo add more permissions to this message as needed.
 
     // resume character creation
     if (m_pendingCharacterCreate) {
         if (!m_pendingCharacterCreate->getUseNewbieTutorial() && !canSkipTutorial) {
-            LOG("TraceCharacterCreation",
-                ("%d failed character creation. The client is not allowed to skip the tutorial", getSUID()));
+            LOG("TraceCharacterCreation", ("%d failed character creation. The client is not allowed to skip the tutorial", getSUID()));
             // This is probably a hack attempt, because the Client was already told they couldn't skip the tutorial
-            LOG("ClientDisconnect",
-                ("Disconnecting %u because they tried to skip the tutorial without permission.\n", getSUID()));
+            LOG("ClientDisconnect", ("Disconnecting %u because they tried to skip the tutorial without permission.\n", getSUID()));
             disconnect();
         } else if (m_pendingCharacterCreate->getJedi() && !canCreateJediCharacter) {
-            LOG("TraceCharacterCreation",
-                ("%d failed character creation. The request character type was Jedi, but this client cannot create a Jedi character", getSUID()));
+            LOG("TraceCharacterCreation", ("%d failed character creation. The request character type was Jedi, but this client cannot create a Jedi character", getSUID()));
             // This is probably a hack attempt, because the Client was already told they couldn't create a character
-            LOG("ClientDisconnect",
-                ("Disconnecting %u because they tried to create a Jedi character without permission.\n", getSUID()));
+            LOG("ClientDisconnect", ("Disconnecting %u because they tried to create a Jedi character without permission.\n", getSUID()));
             disconnect();
         } else if (!m_pendingCharacterCreate->getJedi() && !canCreateRegularCharacter) {
-            LOG("TraceCharacterCreation",
-                ("%d failed character creation. The client is not allowed to create any characters", getSUID()));
+            LOG("TraceCharacterCreation", ("%d failed character creation. The client is not allowed to create any characters", getSUID()));
             // This is probably a hack attempt, because the Client was already told they couldn't create a character
-            LOG("ClientDisconnect",
-                ("Disconnecting %u because they tried to create a regular character without permission.\n", getSUID()));
+            LOG("ClientDisconnect", ("Disconnecting %u because they tried to create a regular character without permission.\n", getSUID()));
             disconnect();
         } else {
             ConnectionServer::sendToCentralProcess(*m_pendingCharacterCreate);
@@ -514,9 +486,7 @@ void ClientConnection::onConnectionClosed() {
     LOG("TRACE_LOGIN", ("%d closed connection", getSUID()));
     if (m_client) {
         if (!m_client->hasBeenKicked()) {
-            LOG("CustomerService",
-                ("Login:%s Dropped Reason: Client Dropped Connection. Character: %s (%s). Play time: %s. Active play time: %s", describeAccount(
-                        this).c_str(), getCharacterName().c_str(), getCharacterId().getValueString().c_str(), getPlayTimeDuration().c_str(), getActivePlayTimeDuration().c_str()));
+            LOG("CustomerService", ("Login:%s Dropped Reason: Client Dropped Connection. Character: %s (%s). Play time: %s. Active play time: %s", describeAccount(this).c_str(), getCharacterName().c_str(), getCharacterId().getValueString().c_str(), getPlayTimeDuration().c_str(), getActivePlayTimeDuration().c_str()));
         }
         ChatServerConnection *chatConnection = m_client->getChatConnection();
         if (chatConnection) {
@@ -542,12 +512,11 @@ void ClientConnection::onConnectionOpened() {
 
 void ClientConnection::onConnectionOverflowing(const unsigned int bytesPending) {
     char errbuf[1024];
-    snprintf(errbuf, sizeof(errbuf), "Connection overflow from server to client, %d bytes. Disconnected.",
-             bytesPending);
+    snprintf(errbuf, sizeof(errbuf), "Connection overflow from server to client, %d bytes. Disconnected.", bytesPending);
     LOG("Network", ("Disconnect: Client connection overflowing. %d bytes pending", bytesPending));
 
-    std::vector<std::pair<std::string, int> >::const_iterator
-            i;
+    std::vector < std::pair < std::string, int > > ::const_iterator
+    i;
     for (i = m_pendingPackets.begin(); i != m_pendingPackets.end(); ++i) {
         LOG("Network", ("Overflow packets this frame: [%s] %d bytes", i->first.c_str(), i->second));
     }
@@ -555,8 +524,7 @@ void ClientConnection::onConnectionOverflowing(const unsigned int bytesPending) 
 //	ErrorMessage err(name, desc, false);
 //	send(err, true);
     WARNING(true, (errbuf));
-    LOG("ClientDisconnect",
-        ("About to drop client (character) %s because the connection is overflowing\n", m_characterName.c_str()));
+    LOG("ClientDisconnect", ("About to drop client (character) %s because the connection is overflowing\n", m_characterName.c_str()));
 
     snprintf(errbuf, sizeof(errbuf) - 1, "Connection Overflow (bytes pending=%u)", bytesPending);
     errbuf[sizeof(errbuf) - 1] = '\0';
@@ -595,14 +563,12 @@ bool ClientConnection::checkSpamLimit(unsigned int messageSize) {
         if (m_countSpamLimitResetTime) {
             if (m_receiveHistoryBytes >=
                 m_receiveHistoryMs * ConfigConnectionServer::getSpamLimitBytesPerSec() / 1000) {
-                LOG("Network",
-                    ("Client %s disconnected for exceeding bytes/sec limit (bytes=%u, time=%lums)\n", getCharacterId().getValueString().c_str(), m_receiveHistoryBytes, m_receiveHistoryMs));
+                LOG("Network", ("Client %s disconnected for exceeding bytes/sec limit (bytes=%u, time=%lums)\n", getCharacterId().getValueString().c_str(), m_receiveHistoryBytes, m_receiveHistoryMs));
                 return false;
             }
             if (m_receiveHistoryPackets >=
                 m_receiveHistoryMs * ConfigConnectionServer::getSpamLimitPacketsPerSec() / 1000) {
-                LOG("Network",
-                    ("Client %s disconnected for exceeding packets/sec limit (packets=%u, time=%lums)\n", getCharacterId().getValueString().c_str(), m_receiveHistoryPackets, m_receiveHistoryMs));
+                LOG("Network", ("Client %s disconnected for exceeding packets/sec limit (packets=%u, time=%lums)\n", getCharacterId().getValueString().c_str(), m_receiveHistoryPackets, m_receiveHistoryMs));
                 return false;
             }
         }
@@ -661,7 +627,7 @@ void ClientConnection::onReceive(const Archive::ByteStream &message) {
 
                     NOT_NULL(m_client);
                     if (m_client) {
-                        static std::vector<NetworkId> v;
+                        static std::vector <NetworkId> v;
                         v.clear();
                         v.push_back(m_client->getNetworkId());
                         GameClientMessage gcm(v, true, ri);
@@ -704,16 +670,15 @@ void ClientConnection::onReceive(const Archive::ByteStream &message) {
 
                     if (m_client && m_client->getGameConnection()) {
                         if (m_pendingChatEnterRoomRequests.count(sequence) == 0) {
-                            GenericValueTypeMessage<std::pair<std::pair<NetworkId, std::string>, unsigned
-                            int> >
+                            GenericValueTypeMessage < std::pair < std::pair < NetworkId, std::string >, unsigned
+                            int > >
                             const cervr(
-                                    "ChatEnterRoomValidationRequest",
-                                    std::make_pair(std::make_pair(m_client->getNetworkId(), roomName), sequence));
+                            "ChatEnterRoomValidationRequest", std::make_pair(std::make_pair(m_client->getNetworkId(), roomName), sequence));
 
                             m_client->getGameConnection()->send(cervr, true);
 
                             // queue up request until game server responds
-                            static std::vector<NetworkId> v;
+                            static std::vector <NetworkId> v;
                             v.clear();
                             v.push_back(m_client->getNetworkId());
                             m_pendingChatEnterRoomRequests[sequence] = new GameClientMessage(v, true, ri);
@@ -739,17 +704,15 @@ void ClientConnection::onReceive(const Archive::ByteStream &message) {
 
                     if (m_client && m_client->getGameConnection()) {
                         if (m_pendingChatQueryRoomRequests.count(cqr.getSequence()) == 0) {
-                            GenericValueTypeMessage<std::pair<std::pair<NetworkId, std::string>, unsigned
-                            int> >
+                            GenericValueTypeMessage < std::pair < std::pair < NetworkId, std::string >, unsigned
+                            int > >
                             const cqrvr(
-                                    "ChatQueryRoomValidationRequest",
-                                    std::make_pair(std::make_pair(m_client->getNetworkId(), cqr.getRoomName()),
-                                                   cqr.getSequence()));
+                            "ChatQueryRoomValidationRequest", std::make_pair(std::make_pair(m_client->getNetworkId(), cqr.getRoomName()), cqr.getSequence()));
 
                             m_client->getGameConnection()->send(cqrvr, true);
 
                             // queue up request until game server responds
-                            static std::vector<NetworkId> v;
+                            static std::vector <NetworkId> v;
                             v.clear();
                             v.push_back(m_client->getNetworkId());
                             m_pendingChatQueryRoomRequests[cqr.getSequence()] = new GameClientMessage(v, true, ri);
@@ -762,7 +725,7 @@ void ClientConnection::onReceive(const Archive::ByteStream &message) {
                     NOT_NULL(m_client);
                     if (m_client) {
                         if (m_client->getGameConnection()) {
-                            static std::vector<NetworkId> v;
+                            static std::vector <NetworkId> v;
                             v.clear();
                             v.push_back(m_client->getNetworkId());
                             GameClientMessage gcm(v, true, ri);
@@ -783,7 +746,7 @@ void ClientConnection::onReceive(const Archive::ByteStream &message) {
                 case constcrc("ChatPersistentMessageToServer") : {
                     NOT_NULL(m_client);
                     if (m_client) {
-                        static std::vector<NetworkId> v;
+                        static std::vector <NetworkId> v;
                         v.clear();
                         v.push_back(m_client->getNetworkId());
 
@@ -832,7 +795,7 @@ void ClientConnection::onReceive(const Archive::ByteStream &message) {
                         //DEBUG_REPORT_LOG(true, ("CONSRV::CS - suid: %i\n", getSUID()));
 
                         if (customerServiceConnection != nullptr) {
-                            static std::vector<NetworkId> v;
+                            static std::vector <NetworkId> v;
                             v.clear();
                             v.push_back(m_client->getNetworkId());
 
@@ -914,9 +877,7 @@ void ClientConnection::onReceive(const Archive::ByteStream &message) {
                                 // tell Session to stop recording play time for the character
                                 if (ConnectionServer::getSessionApiClient() &&
                                     ConfigConnectionServer::getSessionRecordPlayTime()) {
-                                    LOG("CustomerService",
-                                        ("Login:%s calling SessionStopPlay() for %s/%s/%s (%s). Active play time: %s", ClientConnection::describeAccount(
-                                                this).c_str(), this->getSessionId().c_str(), ConfigConnectionServer::getClusterName(), this->getCharacterName().c_str(), this->getCharacterId().getValueString().c_str(), this->getCurrentActivePlayTimeDuration().c_str()));
+                                    LOG("CustomerService", ("Login:%s calling SessionStopPlay() for %s/%s/%s (%s). Active play time: %s", ClientConnection::describeAccount(this).c_str(), this->getSessionId().c_str(), ConfigConnectionServer::getClusterName(), this->getCharacterName().c_str(), this->getCharacterId().getValueString().c_str(), this->getCurrentActivePlayTimeDuration().c_str()));
                                     ConnectionServer::getSessionApiClient()->stopPlay(*this);
                                 }
 
@@ -929,14 +890,12 @@ void ClientConnection::onReceive(const Archive::ByteStream &message) {
 
                                 // drop inactive character
                                 if (ConfigConnectionServer::getDisconnectOnInactive()) {
-                                    LOG("ClientDisconnect",
-                                        ("Disconnecting %u because the player was inactive for too long.", getSUID()));
+                                    LOG("ClientDisconnect", ("Disconnecting %u because the player was inactive for too long.", getSUID()));
                                     ConnectionServer::dropClient(this, "Client inactivity");
                                     disconnect();
                                 } else if (ConfigConnectionServer::getDisconnectFreeTrialOnInactive() &&
                                            ((m_featureBitsSubscription & ClientSubscriptionFeature::Base) == 0)) {
-                                    LOG("ClientDisconnect",
-                                        ("Disconnecting (free trial) %u because the player was inactive for too long.", getSUID()));
+                                    LOG("ClientDisconnect", ("Disconnecting (free trial) %u because the player was inactive for too long.", getSUID()));
                                     ConnectionServer::dropClient(this, "Client inactivity (free trial)");
                                     disconnect();
                                 }
@@ -951,9 +910,7 @@ void ClientConnection::onReceive(const Archive::ByteStream &message) {
                                 // tell Session to start recording play time for the character
                                 if (ConnectionServer::getSessionApiClient() &&
                                     ConfigConnectionServer::getSessionRecordPlayTime()) {
-                                    LOG("CustomerService",
-                                        ("Login:%s calling SessionStartPlay() for %s/%s/%s (%s)", ClientConnection::describeAccount(
-                                                this).c_str(), this->getSessionId().c_str(), ConfigConnectionServer::getClusterName(), this->getCharacterName().c_str(), this->getCharacterId().getValueString().c_str()));
+                                    LOG("CustomerService", ("Login:%s calling SessionStartPlay() for %s/%s/%s (%s)", ClientConnection::describeAccount(this).c_str(), this->getSessionId().c_str(), ConfigConnectionServer::getClusterName(), this->getCharacterName().c_str(), this->getCharacterId().getValueString().c_str()));
                                     ConnectionServer::getSessionApiClient()->startPlay(*this);
                                 }
 
@@ -967,11 +924,10 @@ void ClientConnection::onReceive(const Archive::ByteStream &message) {
                 default : {
                     //Forward on to Game Server
                     DEBUG_REPORT_LOG((!m_client ||
-                                      !m_client->getGameConnection()),
-                                     ("Warn, received game message with no game connection.  This may happen for a short time after a GameServer crashes.  If it continues to happen, it indicates a bug.\n"));
+                                      !m_client->getGameConnection()), ("Warn, received game message with no game connection.  This may happen for a short time after a GameServer crashes.  If it continues to happen, it indicates a bug.\n"));
 
                     if (m_client && m_client->getGameConnection()) {
-                        static std::vector<NetworkId> v;
+                        static std::vector <NetworkId> v;
                         v.clear();
                         v.push_back(m_client->getNetworkId());
                         GameClientMessage gcm(v, true, ri);
@@ -992,8 +948,7 @@ void ClientConnection::onReceive(const Archive::ByteStream &message) {
                 }
                 case constcrc("SelectCharacter") : {
                     SelectCharacter s(ri);
-                    DEBUG_REPORT_LOG(true,
-                                     ("Recvd SelectCharacter message for %s.\n", s.getId().getValueString().c_str()));
+                    DEBUG_REPORT_LOG(true, ("Recvd SelectCharacter message for %s.\n", s.getId().getValueString().c_str()));
 
                     handleSelectCharacterMessage(s);
                     break;
@@ -1002,51 +957,35 @@ void ClientConnection::onReceive(const Archive::ByteStream &message) {
                     if (m_hasBeenValidated && !m_hasSelectedCharacter) //lint !e774 no this doesn't always eval to true
                     {
                         ClientCreateCharacter clientCreate(ri);
-                        DEBUG_REPORT_LOG(true,
-                                         ("Got ClientCreateCharacter message for %lu with name %s\n", m_suid, Unicode::wideToNarrow(
-                                                 clientCreate.getCharacterName()).c_str()));
-                        LOG("TraceCharacterCreation",
-                            ("%d sent ClientCreateCharacter(charaterName=%s, templateName=%s, scaleFactor=%f, startingLocation=%s, hairTemplateName=%s, profession=%s, jedi=%d, useNewbieTutorial=%d, skillTemplate=%s, workingSkill=%s)", getSUID(), Unicode::wideToNarrow(
-                                    clientCreate.getCharacterName()).c_str(), clientCreate.getTemplateName().c_str(), clientCreate.getScaleFactor(), clientCreate.getStartingLocation().c_str(), clientCreate.getHairTemplateName().c_str(), clientCreate.getProfession().c_str(), static_cast<int>(clientCreate.getJedi()), static_cast<int>(clientCreate.getUseNewbieTutorial()), clientCreate.getSkillTemplate().c_str(), clientCreate.getWorkingSkill().c_str()));
+                        DEBUG_REPORT_LOG(true, ("Got ClientCreateCharacter message for %lu with name %s\n", m_suid, Unicode::wideToNarrow(clientCreate.getCharacterName()).c_str()));
+                        LOG("TraceCharacterCreation", ("%d sent ClientCreateCharacter(charaterName=%s, templateName=%s, scaleFactor=%f, startingLocation=%s, hairTemplateName=%s, profession=%s, jedi=%d, useNewbieTutorial=%d, skillTemplate=%s, workingSkill=%s)", getSUID(), Unicode::wideToNarrow(clientCreate.getCharacterName()).c_str(), clientCreate.getTemplateName().c_str(), clientCreate.getScaleFactor(), clientCreate.getStartingLocation().c_str(), clientCreate.getHairTemplateName().c_str(), clientCreate.getProfession().c_str(), static_cast<int>(clientCreate.getJedi()), static_cast<int>(clientCreate.getUseNewbieTutorial()), clientCreate.getSkillTemplate().c_str(), clientCreate.getWorkingSkill().c_str()));
 
                         if (!clientCreate.getUseNewbieTutorial() && !m_canSkipTutorial) {
-                            LOG("TraceCharacterCreation",
-                                ("%d failed character creation. The client is not allowed to skip the tutorial", getSUID()));
+                            LOG("TraceCharacterCreation", ("%d failed character creation. The client is not allowed to skip the tutorial", getSUID()));
                             // This is probably a hack attempt, because the Client was already told they couldn't skip the tutorial
-                            LOG("ClientDisconnect",
-                                ("Disconnecting %u because they tried to skip the tutorial without permission.\n", getSUID()));
+                            LOG("ClientDisconnect", ("Disconnecting %u because they tried to skip the tutorial without permission.\n", getSUID()));
                             disconnect();
                         } else if (clientCreate.getJedi() && !m_canCreateJediCharacter) {
-                            LOG("TraceCharacterCreation",
-                                ("%d failed character creation. The request character type was Jedi, but this client cannot create a Jedi character", getSUID()));
+                            LOG("TraceCharacterCreation", ("%d failed character creation. The request character type was Jedi, but this client cannot create a Jedi character", getSUID()));
                             // This is probably a hack attempt, because the Client was already told they couldn't create a character
-                            LOG("ClientDisconnect",
-                                ("Disconnecting %u because they tried to create a Jedi character without permission.\n", getSUID()));
+                            LOG("ClientDisconnect", ("Disconnecting %u because they tried to create a Jedi character without permission.\n", getSUID()));
                             disconnect();
                         } else if (!clientCreate.getJedi() && !m_canCreateRegularCharacter) {
-                            LOG("TraceCharacterCreation",
-                                ("%d failed character creation. The client is not allowed to create any characters", getSUID()));
+                            LOG("TraceCharacterCreation", ("%d failed character creation. The client is not allowed to create any characters", getSUID()));
                             // This is probably a hack attempt, because the Client was already told they couldn't create a character
-                            LOG("ClientDisconnect",
-                                ("Disconnecting %u because they tried to create a regular character without permission.\n", getSUID()));
+                            LOG("ClientDisconnect", ("Disconnecting %u because they tried to create a regular character without permission.\n", getSUID()));
                             disconnect();
                         } else if (m_hasRequestedCharacterCreate) {
-                            LOG("TraceCharacterCreation",
-                                ("%d failed character creation. The client has already requested character creation on this connection", getSUID()));
-                            LOG("ClientDisconnect",
-                                ("Disconnecting %u because the client has already requested character creation on this connection.\n", getSUID()));
+                            LOG("TraceCharacterCreation", ("%d failed character creation. The client has already requested character creation on this connection", getSUID()));
+                            LOG("ClientDisconnect", ("Disconnecting %u because the client has already requested character creation on this connection.\n", getSUID()));
                             disconnect();
                         } else if (m_hasCreatedCharacter) {
-                            LOG("TraceCharacterCreation",
-                                ("%d failed character creation. A character has been created on this or another galaxy for this account while this connection was up", getSUID()));
-                            LOG("ClientDisconnect",
-                                ("Disconnecting %u because a character has been created on this or another galaxy for this account while this connection was up.\n", getSUID()));
+                            LOG("TraceCharacterCreation", ("%d failed character creation. A character has been created on this or another galaxy for this account while this connection was up", getSUID()));
+                            LOG("ClientDisconnect", ("Disconnecting %u because a character has been created on this or another galaxy for this account while this connection was up.\n", getSUID()));
                             disconnect();
                         } else if (clientCreate.getCharacterName().length() == 0) {
-                            LOG("TraceCharacterCreation",
-                                ("%d failed character creation. The character's name is empty", getSUID()));
-                            LOG("ClientDisconnect",
-                                ("Disconnecting %u because they tried to create a character with no name.\n", getSUID()));
+                            LOG("TraceCharacterCreation", ("%d failed character creation. The character's name is empty", getSUID()));
+                            LOG("ClientDisconnect", ("Disconnecting %u because they tried to create a character with no name.\n", getSUID()));
                             disconnect();
                         } else {
                             Unicode::String biography(clientCreate.getBiography());
@@ -1056,47 +995,18 @@ void ClientConnection::onReceive(const Archive::ByteStream &message) {
                             }
 
                             if (m_isAdminAccount) {
-                                ConnectionCreateCharacter connectionCreate(m_suid, clientCreate.getCharacterName(),
-                                                                           clientCreate.getTemplateName(),
-                                                                           clientCreate.getScaleFactor(),
-                                                                           clientCreate.getStartingLocation(),
-                                                                           clientCreate.getAppearanceData(),
-                                                                           clientCreate.getHairTemplateName(),
-                                                                           clientCreate.getHairAppearanceData(),
-                                                                           clientCreate.getProfession(),
-                                                                           clientCreate.getJedi(), biography,
-                                                                           clientCreate.getUseNewbieTutorial(),
-                                                                           clientCreate.getSkillTemplate(),
-                                                                           clientCreate.getWorkingSkill(),
-                                                                           m_isAdminAccount, false, m_featureBitsGame);
+                                ConnectionCreateCharacter connectionCreate(m_suid, clientCreate.getCharacterName(), clientCreate.getTemplateName(), clientCreate.getScaleFactor(), clientCreate.getStartingLocation(), clientCreate.getAppearanceData(), clientCreate.getHairTemplateName(), clientCreate.getHairAppearanceData(), clientCreate.getProfession(), clientCreate.getJedi(), biography, clientCreate.getUseNewbieTutorial(), clientCreate.getSkillTemplate(), clientCreate.getWorkingSkill(), m_isAdminAccount, false, m_featureBitsGame);
 
                                 ConnectionServer::sendToCentralProcess(connectionCreate);
-                                LOG("TraceCharacterCreation",
-                                    ("%d character creation request sent to CentralServer", getSUID()));
+                                LOG("TraceCharacterCreation", ("%d character creation request sent to CentralServer", getSUID()));
                             } else {
                                 // for regular players, do one final check with the LoginServer
                                 // to make sure the character can be created (i.e. that character
                                 // limits have not been exceeded)
                                 delete m_pendingCharacterCreate;
-                                m_pendingCharacterCreate = new ConnectionCreateCharacter(m_suid,
-                                                                                         clientCreate.getCharacterName(),
-                                                                                         clientCreate.getTemplateName(),
-                                                                                         clientCreate.getScaleFactor(),
-                                                                                         clientCreate.getStartingLocation(),
-                                                                                         clientCreate.getAppearanceData(),
-                                                                                         clientCreate.getHairTemplateName(),
-                                                                                         clientCreate.getHairAppearanceData(),
-                                                                                         clientCreate.getProfession(),
-                                                                                         clientCreate.getJedi(),
-                                                                                         biography,
-                                                                                         clientCreate.getUseNewbieTutorial(),
-                                                                                         clientCreate.getSkillTemplate(),
-                                                                                         clientCreate.getWorkingSkill(),
-                                                                                         m_isAdminAccount, false,
-                                                                                         m_featureBitsGame);
+                                m_pendingCharacterCreate = new ConnectionCreateCharacter(m_suid, clientCreate.getCharacterName(), clientCreate.getTemplateName(), clientCreate.getScaleFactor(), clientCreate.getStartingLocation(), clientCreate.getAppearanceData(), clientCreate.getHairTemplateName(), clientCreate.getHairAppearanceData(), clientCreate.getProfession(), clientCreate.getJedi(), biography, clientCreate.getUseNewbieTutorial(), clientCreate.getSkillTemplate(), clientCreate.getWorkingSkill(), m_isAdminAccount, false, m_featureBitsGame);
 
-                                LOG("TraceCharacterCreation",
-                                    ("%d character creation request awaiting final verification from LoginServer", getSUID()));
+                                LOG("TraceCharacterCreation", ("%d character creation request awaiting final verification from LoginServer", getSUID()));
 
                                 ValidateAccountMessage vcm(m_suid, 0, m_featureBitsSubscription);
                                 ConnectionServer::sendToCentralProcess(vcm);
@@ -1112,21 +1022,15 @@ void ClientConnection::onReceive(const Archive::ByteStream &message) {
 
                     RandomNameRequest randomNameRequest(m_suid, clientRandomName.getCreatureTemplate());
                     ConnectionServer::sendToCentralProcess(randomNameRequest);
-                    LOG("TraceCharacterCreation",
-                        ("%d requested a random name. Request sent to CentralServer", getSUID()));
+                    LOG("TraceCharacterCreation", ("%d requested a random name. Request sent to CentralServer", getSUID()));
                     break;
                 }
                 case constcrc("ClientVerifyAndLockNameRequest") : {
                     ClientVerifyAndLockNameRequest clientVerifyAndLockNameRequest(ri);
 
-                    VerifyAndLockNameRequest verifyAndLockNameRequest(m_suid, NetworkId::cms_invalid,
-                                                                      clientVerifyAndLockNameRequest.getTemplateName(),
-                                                                      clientVerifyAndLockNameRequest.getCharacterName(),
-                                                                      m_featureBitsGame);
+                    VerifyAndLockNameRequest verifyAndLockNameRequest(m_suid, NetworkId::cms_invalid, clientVerifyAndLockNameRequest.getTemplateName(), clientVerifyAndLockNameRequest.getCharacterName(), m_featureBitsGame);
                     ConnectionServer::sendToCentralProcess(verifyAndLockNameRequest);
-                    LOG("TraceCharacterCreation",
-                        ("%d requested a verify and lock of name: %s. Request sent to CentralServer", getSUID(), Unicode::wideToNarrow(
-                                verifyAndLockNameRequest.getCharacterName()).c_str()));
+                    LOG("TraceCharacterCreation", ("%d requested a verify and lock of name: %s. Request sent to CentralServer", getSUID(), Unicode::wideToNarrow(verifyAndLockNameRequest.getCharacterName()).c_str()));
                     break;
                 }
                 case constcrc("LagRequest") : {
@@ -1153,7 +1057,7 @@ void ClientConnection::handleLagRequest() {
     if (m_hasSelectedCharacter && m_client && m_client->getGameConnection()) {
         // send to game server
         GameNetworkMessage request("LagRequest");
-        std::vector<NetworkId> v;
+        std::vector <NetworkId> v;
         v.push_back(m_characterId);
         GameClientMessage gcm(v, true, request);
         m_client->getGameConnection()->send(gcm, true);
@@ -1173,8 +1077,7 @@ void ClientConnection::handleLagRequest() {
 */
 void ClientConnection::setClient(Client *newClient) {
     //This fatal is here to try to catch the reconnect bug.
-    WARNING_STRICT_FATAL(m_client,
-                         ("Attempting to set the client on a connection that already has one. Client %s\n", getCharacterName().c_str()));
+    WARNING_STRICT_FATAL(m_client, ("Attempting to set the client on a connection that already has one. Client %s\n", getCharacterName().c_str()));
     // jrandall - I've removed the fatal because it is blocking some people from getting some work
     // done. I'm on a high priority fix at the moment. If this warning starts appearing,
     // set a break point or something.
@@ -1209,7 +1112,7 @@ void ClientConnection::send(const GameNetworkMessage &message, const bool reliab
 
 //-----------------------------------------------------------------------
 
-std::map<std::string, uint32> &ClientConnection::getPacketBytesPerMinStats() {
+std::map <std::string, uint32> &ClientConnection::getPacketBytesPerMinStats() {
     uint32 now = Clock::timeMs();
     if (sm_outgoingBytesMap_Worktime == 0) {
         sm_outgoingBytesMap_Worktime = now;
@@ -1229,9 +1132,9 @@ std::map<std::string, uint32> &ClientConnection::getPacketBytesPerMinStats() {
 //-----------------------------------------------------------------------
 
 void ClientConnection::handleChatEnterRoomValidationResponse(unsigned int sequence, unsigned int result) {
-    std::map<unsigned
-    long, GameClientMessage *>::iterator
-            iterFind = m_pendingChatEnterRoomRequests.find(sequence);
+    std::map < unsigned
+    long, GameClientMessage * > ::iterator
+    iterFind = m_pendingChatEnterRoomRequests.find(sequence);
     if (iterFind != m_pendingChatEnterRoomRequests.end()) {
         if (result == CHATRESULT_SUCCESS) {
             if (m_client && m_client->getChatConnection()) {
@@ -1261,9 +1164,9 @@ void ClientConnection::handleChatEnterRoomValidationResponse(unsigned int sequen
 //-----------------------------------------------------------------------
 
 void ClientConnection::handleChatQueryRoomValidationResponse(unsigned int sequence, bool success) {
-    std::map<unsigned
-    long, GameClientMessage *>::iterator
-            iterFind = m_pendingChatQueryRoomRequests.find(sequence);
+    std::map < unsigned
+    long, GameClientMessage * > ::iterator
+    iterFind = m_pendingChatQueryRoomRequests.find(sequence);
     if (iterFind != m_pendingChatQueryRoomRequests.end()) {
         if (success) {
             if (m_client && m_client->getChatConnection()) {
@@ -1330,23 +1233,17 @@ bool ClientConnection::sendToGameServer(GameConnection *c) {
  * is located.
  */
 void
-ClientConnection::onCharacterValidated(bool isValid, const NetworkId &character, const std::string &characterName,
-                                       const NetworkId &container, const std::string &scene,
-                                       const Vector &coordinates) {
+ClientConnection::onCharacterValidated(bool isValid, const NetworkId &character, const std::string &characterName, const NetworkId &container, const std::string &scene, const Vector &coordinates) {
     if (!m_validatingCharacter) {
-        LOG("TraceCharacterSelection",
-            ("%d received a validation response, but is not in the process of validation", getSUID()));
+        LOG("TraceCharacterSelection", ("%d received a validation response, but is not in the process of validation", getSUID()));
         DEBUG_REPORT_LOG(true, ("Got unexpected onCharacterValidated() for account %lu.\n", getSUID()));
         return;
     }
     m_validatingCharacter = false;
 
     if (isValid) {
-        LOG("TraceCharacterSelection",
-            ("%d received a validation response. The character (%s: %s) at (%s,%f,%f,%f,%s) selected is valid", getSUID(), character.getValueString().c_str(), characterName.c_str(), scene.c_str(), coordinates.x, coordinates.y, coordinates.z, container.getValueString().c_str()));
-        LOG("CustomerService",
-            ("Login:%s received a validation response. The character (%s: %s) at (%s,%f,%f,%f,%s) selected is valid", describeAccount(
-                    this).c_str(), character.getValueString().c_str(), characterName.c_str(), scene.c_str(), coordinates.x, coordinates.y, coordinates.z, container.getValueString().c_str()));
+        LOG("TraceCharacterSelection", ("%d received a validation response. The character (%s: %s) at (%s,%f,%f,%f,%s) selected is valid", getSUID(), character.getValueString().c_str(), characterName.c_str(), scene.c_str(), coordinates.x, coordinates.y, coordinates.z, container.getValueString().c_str()));
+        LOG("CustomerService", ("Login:%s received a validation response. The character (%s: %s) at (%s,%f,%f,%f,%s) selected is valid", describeAccount(this).c_str(), character.getValueString().c_str(), characterName.c_str(), scene.c_str(), coordinates.x, coordinates.y, coordinates.z, container.getValueString().c_str()));
         m_targetScene = scene;
         m_targetCoordinates = coordinates;
         m_characterId = character;
@@ -1358,15 +1255,12 @@ ClientConnection::onCharacterValidated(bool isValid, const NetworkId &character,
         // ask CentralServer to suggest a game server for this character
         // (Central will forward the request to a Planet Server)
 
-        RequestGameServerForLoginMessage requestmsg(getSUID(), m_characterId, m_containerId, m_targetScene,
-                                                    m_targetCoordinates, false);
+        RequestGameServerForLoginMessage requestmsg(getSUID(), m_characterId, m_containerId, m_targetScene, m_targetCoordinates, false);
         if (ConnectionServer::getCentralConnection()) {
             ConnectionServer::getCentralConnection()->send(requestmsg, true);
         } else {
-            LOG("ClientDisconnect",
-                ("Can't handle login of character %s because there is no connection to Central.\n", m_characterId.getValueString().c_str()));
-            ErrorMessage err("Validation Failed",
-                             "The connection to the central server is down.  Please try again later.");
+            LOG("ClientDisconnect", ("Can't handle login of character %s because there is no connection to Central.\n", m_characterId.getValueString().c_str()));
+            ErrorMessage err("Validation Failed", "The connection to the central server is down.  Please try again later.");
             send(err, true);
 
             disconnect();
@@ -1384,11 +1278,7 @@ ClientConnection::onCharacterValidated(bool isValid, const NetworkId &character,
 //------------------------------------------------------------------------------------------
 
 void
-ClientConnection::onValidateClient(StationId suid, const std::string &username, bool secure, const char *id,
-                                   const uint32 gameFeatures, const uint32 subscriptionFeatures,
-                                   unsigned int entitlementTotalTime, unsigned int entitlementEntitledTime,
-                                   unsigned int entitlementTotalTimeSinceLastLogin,
-                                   unsigned int entitlementEntitledTimeSinceLastLogin, int buddyPoints) {
+ClientConnection::onValidateClient(StationId suid, const std::string &username, bool secure, const char *id, const uint32 gameFeatures, const uint32 subscriptionFeatures, unsigned int entitlementTotalTime, unsigned int entitlementEntitledTime, unsigned int entitlementTotalTimeSinceLastLogin, unsigned int entitlementEntitledTimeSinceLastLogin, int buddyPoints) {
     UNREF(id);
     m_sessionValidated = true;
     m_suid = suid;
@@ -1410,22 +1300,17 @@ ClientConnection::onValidateClient(StationId suid, const std::string &username, 
         //verify internal, secure, is on the god list
         bool loginOK = false;
         if (!secure) {
-            LOG("CustomerService",
-                ("AdminLogin:  User %s (account %li) attempted to log into account %li, but was not using a SecureID token", username.c_str(), suid, m_requestedSuid));
+            LOG("CustomerService", ("AdminLogin:  User %s (account %li) attempted to log into account %li, but was not using a SecureID token", username.c_str(), suid, m_requestedSuid));
         } else {
             if (!AdminAccountManager::isInternalIp(getRemoteAddress())) {
-                LOG("CustomerService",
-                    ("AdminLogin:  User %s (account %li) attempted to log into account %li, but was not logging in from an internal IP", username.c_str(), suid, m_requestedSuid));
+                LOG("CustomerService", ("AdminLogin:  User %s (account %li) attempted to log into account %li, but was not logging in from an internal IP", username.c_str(), suid, m_requestedSuid));
             } else {
                 int adminLevel = 0;
                 if (!AdminAccountManager::isAdminAccount(Unicode::toLower(username), adminLevel) || adminLevel < 10) {
-                    LOG("CustomerService",
-                        ("AdminLogin:  User %s (account %li) attempted to log into account %li, but did not have sufficient permissions", username.c_str(), suid, m_requestedSuid));
+                    LOG("CustomerService", ("AdminLogin:  User %s (account %li) attempted to log into account %li, but did not have sufficient permissions", username.c_str(), suid, m_requestedSuid));
                 } else {
-                    LOG("CustomerService",
-                        ("AdminLogin:  User %s (account %li) logged into account %li", username.c_str(), m_suid, m_requestedSuid));
-                    DEBUG_REPORT_LOG(true,
-                                     ("AdminLogin:  User %s (account %li) logged into account %li\n", username.c_str(), m_suid, m_requestedSuid));
+                    LOG("CustomerService", ("AdminLogin:  User %s (account %li) logged into account %li", username.c_str(), m_suid, m_requestedSuid));
+                    DEBUG_REPORT_LOG(true, ("AdminLogin:  User %s (account %li) logged into account %li\n", username.c_str(), m_suid, m_requestedSuid));
                     m_suid = m_requestedSuid;
                     m_usingAdminLogin = true;
                     loginOK = true;
@@ -1491,10 +1376,8 @@ ClientConnection::onValidateClient(StationId suid, const std::string &username, 
     uint32 const requiredSubscriptionBits = ConfigConnectionServer::getRequiredSubscriptionBits();
     if (requiredSubscriptionBits != 0) {
         if ((subscriptionFeatures & requiredSubscriptionBits) != requiredSubscriptionBits) {
-            LOG("ClientDisconnect",
-                ("Suid %d (%s) by session denial reason 'Invalid Subscription Bits'.", suid, username.c_str()));
-            LOG("CustomerService",
-                ("Login: %s by session denial reason 'Invalid Subscription Bits'.", describeAccount(this).c_str()));
+            LOG("ClientDisconnect", ("Suid %d (%s) by session denial reason 'Invalid Subscription Bits'.", suid, username.c_str()));
+            LOG("CustomerService", ("Login: %s by session denial reason 'Invalid Subscription Bits'.", describeAccount(this).c_str()));
             disconnect();
             return;
         }
@@ -1503,38 +1386,30 @@ ClientConnection::onValidateClient(StationId suid, const std::string &username, 
     uint32 const requiredGameBits = ConfigConnectionServer::getRequiredGameBits();
     if (requiredGameBits != 0) {
         if ((gameFeatures & requiredGameBits) != requiredGameBits) {
-            LOG("ClientDisconnect",
-                ("Suid %d (%s) by session denial reason 'Invalid Game Bits'.", suid, username.c_str()));
-            LOG("CustomerService",
-                ("Login: %s by session denial reason 'Invalid Game Bits'.", describeAccount(this).c_str()));
+            LOG("ClientDisconnect", ("Suid %d (%s) by session denial reason 'Invalid Game Bits'.", suid, username.c_str()));
+            LOG("CustomerService", ("Login: %s by session denial reason 'Invalid Game Bits'.", describeAccount(this).c_str()));
             disconnect();
             return;
         }
     }
 
     // tell client the server-side game and subscription feature bits and which ConnectionServer we are and the current server Epoch time
-    GenericValueTypeMessage<std::pair<std::pair<unsigned
+    GenericValueTypeMessage < std::pair < std::pair < unsigned
     long, unsigned
-    long>, std::pair<int, int32> > >
+    long > , std::pair < int, int32 > > >
     const msgFeatureBits(
-            "AccountFeatureBits", std::make_pair(std::make_pair(gameFeatures, subscriptionFeatures),
-                                                 std::make_pair(ConfigConnectionServer::getConnectionServerNumber(),
-                                                                static_cast<int32>(::time(nullptr)))));
+    "AccountFeatureBits", std::make_pair(std::make_pair(gameFeatures, subscriptionFeatures), std::make_pair(ConfigConnectionServer::getConnectionServerNumber(), static_cast<int32>(::time(nullptr)))));
     send(msgFeatureBits, true);
 
     std::string const gameFeaturesDescription = ClientGameFeature::getDescription(gameFeatures);
     std::string const subscriptionFeaturesDescription = ClientSubscriptionFeature::getDescription(subscriptionFeatures);
 
-    LOG("CustomerService",
-        ("Login:%s at IP: %s:%hu has connected with game code 0x%x (%s) and sub code 0x%x (%s) (entitlement total: %u/%u, since last login: %u/%u)", describeAccount(
-                this).c_str(), getRemoteAddress().c_str(), getRemotePort(), gameFeatures, gameFeaturesDescription.c_str(), subscriptionFeatures, subscriptionFeaturesDescription.c_str(), m_entitlementEntitledTime, m_entitlementTotalTime, m_entitlementEntitledTimeSinceLastLogin, m_entitlementTotalTimeSinceLastLogin));
+    LOG("CustomerService", ("Login:%s at IP: %s:%hu has connected with game code 0x%x (%s) and sub code 0x%x (%s) (entitlement total: %u/%u, since last login: %u/%u)", describeAccount(this).c_str(), getRemoteAddress().c_str(), getRemotePort(), gameFeatures, gameFeaturesDescription.c_str(), subscriptionFeatures, subscriptionFeaturesDescription.c_str(), m_entitlementEntitledTime, m_entitlementTotalTime, m_entitlementEntitledTimeSinceLastLogin, m_entitlementTotalTimeSinceLastLogin));
 
     // ask CentralServer to tell all other ConnectionServers on this galaxy to drop duplicate connections for this account
     // and ask CentralServer (via LoginServer) to tell all ConnectionServers on other galaxies to drop duplicate connections for this account
     if (!m_usingAdminLogin && !m_isSecure) {
-        GenericValueTypeMessage<std::pair<uint32, std::string>> const dropDuplicateConnections("ConnSrvDropDupeConns",
-                                                                                               std::make_pair(m_suid,
-                                                                                                              m_sessionId));
+        GenericValueTypeMessage <std::pair<uint32, std::string>> const dropDuplicateConnections("ConnSrvDropDupeConns", std::make_pair(m_suid, m_sessionId));
         ConnectionServer::sendToCentralProcess(dropDuplicateConnections);
     }
 }
@@ -1560,13 +1435,13 @@ std::string ClientConnection::describeAccount(const ClientConnection *c) {
 
 // ----------------------------------------------------------------------
 
-std::vector<std::pair<NetworkId, std::string>> const &ClientConnection::getConsumedRewardEvents() const {
+std::vector <std::pair<NetworkId, std::string>> const &ClientConnection::getConsumedRewardEvents() const {
     return m_consumedRewardEvents;
 }
 
 // ----------------------------------------------------------------------
 
-std::vector<std::pair<NetworkId, std::string>> const &ClientConnection::getClaimedRewardItems() const {
+std::vector <std::pair<NetworkId, std::string>> const &ClientConnection::getClaimedRewardItems() const {
     return m_claimedRewardItems;
 }
 
