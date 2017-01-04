@@ -195,16 +195,16 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
                         uname.resize(MAX_ACCOUNT_NAME_LENGTH);
                     }
 
-                    parent_id = std::hash<std::string>{}(parentAccount.c_str());
-                    user_id = std::hash<std::string>{}(uname.c_str());
+                    parent_id = std::hash < std::string > {}(parentAccount.c_str());
+                    user_id = std::hash < std::string > {}(uname.c_str());
                 }
             } else {
                 std::string msg(api.getString("message"));
                 if (msg.empty()) {
                     msg = "Invalid username or password.";
                 }
-                
-		ErrorMessage err("Login Failed", msg);
+
+                ErrorMessage err("Login Failed", msg);
                 this->send(err, true);
             }
         } else {
@@ -221,54 +221,56 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
             uname.resize(MAX_ACCOUNT_NAME_LENGTH);
         }
 
-        user_id = std::hash<std::string>{}(uname.c_str());
+        user_id = std::hash < std::string > {}(uname.c_str());
     }
 
     if (authOK) {
+        m_stationId = user_id;
 
-      m_stationId = user_id;
+        if (!testMode) {
+            REPORT_LOG(true, ("Client connected. Username: %s (%i) \n", uname.c_str(), user_id));
 
-      if (!testMode) {
-        REPORT_LOG(true, ("Client connected. Username: %s (%i) \n", uname.c_str(), user_id));
-
-        if (!parentAccount.empty()) {
-            if (parentAccount != uname) {
-                REPORT_LOG(true, ("\t%s's parent is %s (%i) \n", uname.c_str(), parentAccount.c_str(), parent_id));
-            }
-        } else {
-            parentAccount = "(Empty Parent!) " + uname;
-        }
-
-        for (auto i : childAccounts) {
-            StationId child_id = static_cast<StationId>(i.first);
-            std::string child(i.second);
-
-            if (!child.empty() && i.first > 0) {
-                if (ConfigLoginServer::getUseOldSuidGenerator()) {
-                    if (child.length() > MAX_ACCOUNT_NAME_LENGTH) {
-                        child.resize(MAX_ACCOUNT_NAME_LENGTH);
-                    }
-
-                    child_id = std::hash<std::string>{}(child.c_str());
-                }
-
-                REPORT_LOG((parent_id != child_id), ("\tchild of %s (%i) is %s (%i) \n", parentAccount.c_str(), parent_id, child.c_str(), child_id));
-
-                // insert all related accounts, if not already there, into the db
-                if (parent_id != child_id) {
-                    DatabaseConnection::getInstance().upsertAccountRelationship(parent_id, child_id);
+            if (!parentAccount.empty()) {
+                if (parentAccount != uname) {
+                    REPORT_LOG(true, ("\t%s's parent is %s (%i) \n", uname.c_str(), parentAccount.c_str(), parent_id));
                 }
             } else {
-            	WARNING(true, ("Login API returned empty child account(s)."));
+                parentAccount = "(Empty Parent!) " + uname;
             }
-	}
 
-    LOG("LoginClientConnection", ("validateClient() for stationId (%i) at IP (%s), id (%s)", user_id, getRemoteAddress().c_str(), uname.c_str()));
+            for (auto i : childAccounts) {
+                StationId child_id = static_cast<StationId>(i.first);
+                std::string child(i.second);
 
-    if (!testMode) {
-        LoginServer::getInstance().onValidateClient(m_stationId, uname, this, true, sessionID.c_str(), 0xFFFFFFFF, 0xFFFFFFFF);
-    } else {
-        LoginServer::getInstance().onValidateClient(m_stationId, uname, this, true, nullptr, 0xFFFFFFFF, 0xFFFFFFFF);
+                if (!child.empty() && i.first > 0) {
+                    if (ConfigLoginServer::getUseOldSuidGenerator()) {
+                        if (child.length() > MAX_ACCOUNT_NAME_LENGTH) {
+                            child.resize(MAX_ACCOUNT_NAME_LENGTH);
+                        }
+
+                        child_id = std::hash < std::string > {}(child.c_str());
+                    }
+
+                    REPORT_LOG((parent_id !=
+                                child_id), ("\tchild of %s (%i) is %s (%i) \n", parentAccount.c_str(), parent_id, child.c_str(), child_id));
+
+                    // insert all related accounts, if not already there, into the db
+                    if (parent_id != child_id) {
+                        DatabaseConnection::getInstance().upsertAccountRelationship(parent_id, child_id);
+                    }
+                } else {
+                    WARNING(true, ("Login API returned empty child account(s)."));
+                }
+            }
+
+            LOG("LoginClientConnection", ("validateClient() for stationId (%i) at IP (%s), id (%s)", user_id, getRemoteAddress().c_str(), uname.c_str()));
+
+            if (!testMode) {
+                LoginServer::getInstance().onValidateClient(m_stationId, uname, this, true, sessionID.c_str(), 0xFFFFFFFF, 0xFFFFFFFF);
+            } else {
+                LoginServer::getInstance().onValidateClient(m_stationId, uname, this, true, nullptr, 0xFFFFFFFF, 0xFFFFFFFF);
+            }
+        }
     }
 }
 
@@ -279,43 +281,43 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
  * required for character deletion.  If the character has already been deleted
  * from the cluster, send the reply message to the client.
  */
-void ClientConnection::onCharacterDeletedFromLoginDatabase(const NetworkId &characterId) {
-    m_waitingForCharacterLoginDeletion = false;
-    if (!m_waitingForCharacterClusterDeletion) {
-        std::vector<NetworkId>::iterator f = std::find(m_charactersPendingDeletion.begin(), m_charactersPendingDeletion.end(), characterId);
-        if (f != m_charactersPendingDeletion.end()) {
-            m_charactersPendingDeletion.erase(f);
-        }
+    void ClientConnection::onCharacterDeletedFromLoginDatabase(const NetworkId &characterId) {
+        m_waitingForCharacterLoginDeletion = false;
+        if (!m_waitingForCharacterClusterDeletion) {
+            std::vector<NetworkId>::iterator f = std::find(m_charactersPendingDeletion.begin(), m_charactersPendingDeletion.end(), characterId);
+            if (f != m_charactersPendingDeletion.end()) {
+                m_charactersPendingDeletion.erase(f);
+            }
 
-        DeleteCharacterReplyMessage reply(DeleteCharacterReplyMessage::rc_OK);
-        send(reply, true);
-        LOG("CustomerService", ("Player:deleted character %s for stationId %u at IP: %s", characterId.getValueString().c_str(), m_stationId, getRemoteAddress().c_str()));
+            DeleteCharacterReplyMessage reply(DeleteCharacterReplyMessage::rc_OK);
+            send(reply, true);
+            LOG("CustomerService", ("Player:deleted character %s for stationId %u at IP: %s", characterId.getValueString().c_str(), m_stationId, getRemoteAddress().c_str()));
+        }
     }
-}
 
 // ----------------------------------------------------------------------
 
-void ClientConnection::onCharacterDeletedFromCluster(const NetworkId &characterId) {
-    m_waitingForCharacterClusterDeletion = false;
-    if (!m_waitingForCharacterLoginDeletion) {
-        std::vector<NetworkId>::iterator f = std::find(m_charactersPendingDeletion.begin(), m_charactersPendingDeletion.end(), characterId);
-        if (f != m_charactersPendingDeletion.end()) {
-            m_charactersPendingDeletion.erase(f);
+    void ClientConnection::onCharacterDeletedFromCluster(const NetworkId &characterId) {
+        m_waitingForCharacterClusterDeletion = false;
+        if (!m_waitingForCharacterLoginDeletion) {
+            std::vector<NetworkId>::iterator f = std::find(m_charactersPendingDeletion.begin(), m_charactersPendingDeletion.end(), characterId);
+            if (f != m_charactersPendingDeletion.end()) {
+                m_charactersPendingDeletion.erase(f);
 
-            // TODO: send api request and decrement # characters on this account/subaccount
+                // TODO: send api request and decrement # characters on this account/subaccount
+            }
+
+            DeleteCharacterReplyMessage reply(DeleteCharacterReplyMessage::rc_OK);
+            send(reply, true);
+            LOG("CustomerService", ("Player:deleted character %s for stationId %u at IP: %s", characterId.getValueString().c_str(), m_stationId, getRemoteAddress().c_str()));
         }
-
-        DeleteCharacterReplyMessage reply(DeleteCharacterReplyMessage::rc_OK);
-        send(reply, true);
-        LOG("CustomerService", ("Player:deleted character %s for stationId %u at IP: %s", characterId.getValueString().c_str(), m_stationId, getRemoteAddress().c_str()));
     }
-}
 
 // ----------------------------------------------------------------------
 
-StationId ClientConnection::getRequestedAdminSuid() const {
-    return m_requestedAdminSuid;
-}
+    StationId ClientConnection::getRequestedAdminSuid() const {
+        return m_requestedAdminSuid;
+    }
 
 // ======================================================================
 
