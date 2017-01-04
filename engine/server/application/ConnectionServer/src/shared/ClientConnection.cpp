@@ -310,6 +310,8 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg &msg) {
                 bool cont = false;
                 StationId apiSuid = 0;
 
+                FATAL(sessURL.empty(), ("Session URL is empty in connection server."));
+
                 const std::string clientIP = getRemoteAddress();
                 const std::string sess = sessionId;
 
