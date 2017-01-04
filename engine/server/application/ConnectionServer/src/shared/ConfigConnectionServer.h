@@ -68,9 +68,9 @@ public:
         int connectionServerNumber;
         int fakeBuddyPoints;
 
+	bool useOldSuidGenerator;
 
         const char *altPublicBindAddress;
-        const bool useOldSuidGenerator;
     };
 
 

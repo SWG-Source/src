@@ -256,10 +256,10 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
                 if (parent_id != child_id) {
                     DatabaseConnection::getInstance().upsertAccountRelationship(parent_id, child_id);
                 }
+            } else {
+            	WARNING(true, ("Login API returned empty child account(s)."));
             }
-        } else {
-            WARNING(true, ("Login API returned empty child account(s)."));
-        }
+	}
     }
 
     LOG("LoginClientConnection", ("validateClient() for stationId (%i) at IP (%s), id (%s)", user_id, getRemoteAddress().c_str(), uname.c_str()));

@@ -134,6 +134,7 @@ class ConfigLoginServer
 
 	static bool	        getUseExternalAuth();
 	static const char * getExternalAuthUrl();
+	static bool	    getUseOldSuidGenerator();
 
 	// has character creation for this cluster been disabled through config option
 	static bool         isCharacterCreationDisabled(std::string const & cluster);
@@ -487,7 +488,7 @@ inline const char * ConfigLoginServer::getExternalAuthUrl()
 }
 
 
-inline const bool ConfigLoginServer::getUseOldSuidGenerator()
+inline bool ConfigLoginServer::getUseOldSuidGenerator()
 {
     return data->useOldSuidGenerator;
 }
