@@ -945,6 +945,10 @@ void Client::receiveClientMessage(const GameNetworkMessage &message) {
                             }
                         }
                     }
+
+                    if (!appended) {
+                        delete o.getData();
+                    }
                 } else {
                     // log as a likely hack
                     LOG("HackAttempts", ("Unauthorized Controller Message:  Player %s at %s sent an unauthorized controller message %d for object %s", PlayerObject::getAccountDescription(getCharacterObjectId()).c_str(), getIpAddress().c_str(), o.getMessage(), o.getNetworkId().getValueString().c_str()));
@@ -955,10 +959,6 @@ void Client::receiveClientMessage(const GameNetworkMessage &message) {
 
                     delete o.getData();
                     return;
-                }
-
-                if (!appended) {
-                    delete o.getData();
                 }
 
                 break;
