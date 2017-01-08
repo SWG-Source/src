@@ -57,8 +57,8 @@ const char *AdminAccountManager::getAdminCommandName()
 
 const std::string & AdminAccountManager::getAdminTagName()
 {
-	static const std::string s = "*admin*";
 	DEBUG_FATAL(!ms_installed, ("AdminAccountManager not installed"));
+	static const std::string s("*admin*");
 	return s;
 }
 
