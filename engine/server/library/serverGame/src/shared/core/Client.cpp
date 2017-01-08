@@ -303,7 +303,7 @@ Client::Client(ConnectionServerConnection &connection, const NetworkId &characte
                     Object *buildingObj = ContainerInterface::getTopmostContainer(*containerObject);
                     if (buildingObj && buildingObj->asServerObject() &&
                         buildingObj->asServerObject()->asBuildingObject()) {
-                            buildingObj->asServerObject()->asBuildingObject()->gainedPlayer(*obj);
+                        buildingObj->asServerObject()->asBuildingObject()->gainedPlayer(*obj);
                     }
                 }
             } else {
@@ -357,7 +357,7 @@ Client::Client(ConnectionServerConnection &connection, const NetworkId &characte
         // Only add to the world if it in a location which should be in the world.
         if (!containerObject ||
             (containerObject->isInWorld() && containerObject->getContainerProperty()->isContentItemExposedWith(*obj))) {
-                obj->addToWorld();
+            obj->addToWorld();
         }
 
         // Notify the object that it has a client about to load
@@ -520,9 +520,9 @@ void Client::clearControlledObjects() {
 ServerObject *Client::findControlledObject(NetworkId const &oid) const {
     for (std::vector<ServerObject *>::const_iterator i = m_controlledObjects.begin();
          i != m_controlledObjects.end(); ++i) {
-             if ((*i) && (*i)->getNetworkId() == oid) {
-                 return *i;
-             }
+        if ((*i) && (*i)->getNetworkId() == oid) {
+            return *i;
+        }
     }
     return 0;
 }
@@ -653,14 +653,14 @@ void Client::receiveClientMessage(const GameNetworkMessage &message) {
                                         characterObject->getNetworkId() ||
                                         slottedContainer->getObjectInSlot(ShipSlotIdManager::getShipGunnerSlotId(weaponIndex), err) ==
                                         characterObject->getNetworkId()) {
-                                            shotOk = true;
+                                        shotOk = true;
                                     } // gunner firing his turret
                                 } else {
                                     if (slottedContainer->getObjectInSlot(ShipSlotIdManager::getShipPilotSlotId(), err) ==
                                         characterObject->getNetworkId() ||
                                         slottedContainer->getObjectInSlot(ShipSlotIdManager::getPobShipPilotSlotId(), err) ==
                                         characterObject->getNetworkId()) {
-                                            shotOk = true;
+                                        shotOk = true;
                                     } // pilot firing non-turret
                                 }
                             }
@@ -917,19 +917,11 @@ void Client::receiveClientMessage(const GameNetworkMessage &message) {
 
                 // check to make sure the controller message is allowed from the client
                 bool allowFromClient = ControllerMessageFactory::allowFromClient(o.getMessage());
-
-                // we default this to true so that unless
-                // a controller message is explicitly marked as being allowed
-                // from the client, or the client is a GM, it will be dropped when the game server
-                // receives it; this will have the effect of forcing the
-                // programmer to make a conscious decision to mark the
-                // controller message as allowable from the client; because
-                // controller message coming from the client is not secured,
-                // the mechanism to prevent a hacked client from sending the
-                // game server any controller message is to explicity "mark"
-                // those controller messages that are allowed from the client
-
+#ifdef _DEBUG
                 if (allowFromClient || isGod()) {
+#else
+                if (allowFromClient) {
+#endif
                     ServerObject *target = findControlledObject(o.getNetworkId());
                     if (target != 0) {
                         // apply the controller message
@@ -1736,7 +1728,7 @@ void Client::receiveClientMessage(const GameNetworkMessage &message) {
 
                     if (primaryControlledObject->getScriptObject()->trigAllScripts(Scripting::TRIG_NEWBIE_TUTORIAL_RESPONSE, scriptParameters) !=
                         SCRIPT_CONTINUE) {
-                            DEBUG_REPORT_LOG(true, ("OnNewbieTutorialResponse: did not return SCRIPT_CONTINUE\n"));
+                        DEBUG_REPORT_LOG(true, ("OnNewbieTutorialResponse: did not return SCRIPT_CONTINUE\n"));
                     }
 
                 } else if (message.isType(GetMapLocationsMessage::MessageType)) {
@@ -1985,7 +1977,7 @@ void Client::addObserving(ServerObject *o) {
         if (to &&
             PvpUpdateObserver::satisfyPvpSyncCondition(to->isNonPvpObject(), to->hasCondition(ServerTangibleObjectTemplate::C_invulnerable), (
                     o->asCreatureObject() != nullptr), to->getPvpFaction())) {
-                        addObservingPvpSync(to);
+            addObservingPvpSync(to);
         }
     }
 }
@@ -2220,7 +2212,7 @@ Client::shouldReceiveCombatSpam(NetworkId const &attacker, Vector const &attacke
              (playerPosition.magnitudeBetweenSquared(attackerPosition_w) <= m_combatSpamRangeSquaredFilter)) ||
             (defender.isValid() &&
              (playerPosition.magnitudeBetweenSquared(defenderPosition_w) <= m_combatSpamRangeSquaredFilter))) {
-                 return true;
+            return true;
         }
     }
 
