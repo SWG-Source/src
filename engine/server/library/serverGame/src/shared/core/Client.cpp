@@ -947,7 +947,11 @@ void Client::receiveClientMessage(const GameNetworkMessage &message) {
                     }
                 } else {
                     // log as a likely hack
-                    LOG("CustomerService", ("UnauthorizedControllerMessage: Player %s sent an unauthorized controller message %d for object %s.", PlayerObject::getAccountDescription(getCharacterObjectId()).c_str(), o.getMessage(), o.getNetworkId().getValueString().c_str()));
+                    LOG("HackAttempts", ("Unauthorized Controller Message:  Player %s at %s sent an unauthorized controller message %d for object %s", PlayerObject::getAccountDescription(getCharacterObjectId()).c_str(), getIpAddress().c_str(), o.getMessage(), o.getNetworkId().getValueString().c_str()));
+
+                    KickPlayer const kickMessage(m_characterObjectId, "Hack Attempt");
+                    GameServer::getInstance().sendToConnectionServers(kickMessage);
+                    GameServer::getInstance().dropClient(m_characterObjectId);
                 }
 
                 if (!appended) {
