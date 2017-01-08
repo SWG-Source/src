@@ -15,7 +15,6 @@
 #include "serverGame/Chat.h"
 #include "serverGame/CityInterface.h"
 #include "serverGame/CommoditiesMarket.h"
-#include "serverGame/ConfigServerGame.h"
 #include "serverGame/ConnectionServerConnection.h"
 #include "serverGame/ConsentManager.h"
 #include "serverGame/ConsoleManager.h"
@@ -49,7 +48,6 @@
 #include "serverScript/GameScriptObject.h"
 #include "serverScript/ScriptFunctionTable.h"
 #include "serverScript/ScriptParameters.h"
-#include "serverUtility/AdminAccountManager.h"
 #include "serverUtility/ServerClock.h"
 #include "sharedFoundation/Clock.h"
 #include "sharedFoundation/CrcLowerString.h"
@@ -2079,8 +2077,7 @@ void Client::addSynchronizedUi(ServerSynchronizedUi *syncUI) {
 //-----------------------------------------------------------------------
 
 void Client::removeSynchronizedUi(ServerSynchronizedUi const *const syncUI) {
-    for (std::vector < Watcher < ServerSynchronizedUi > > ::iterator i = m_syncUIs.begin(); i != m_syncUIs.end();
-    ++i)
+    for (std::vector < Watcher < ServerSynchronizedUi > > ::iterator i = m_syncUIs.begin(); i != m_syncUIs.end(); ++i)
     {
         if (i->getPointer() == syncUI) {
             IGNORE_RETURN(m_syncUIs.erase(i));
@@ -2118,20 +2115,7 @@ void Client::observeContainer(ServerObject &obj, int sequence, std::string const
 //-----------------------------------------------------------------------
 
 bool Client::isFreeTrialAccount() const {
-    //Test code
-
-    if (m_primaryControlledObject.getObject()) {
-        if (safe_cast<ServerObject *>(m_primaryControlledObject.getObject())->getObjVars().hasItem("freeTrialAccount")) {
-            return true;
-        }
-    }
-
-    //End test code
-
-    int const allFreeTrials = ClientSubscriptionFeature::FreeTrial | ClientSubscriptionFeature::FreeTrial2;
-
-    return ((m_subscriptionFeatures & allFreeTrials) != 0) &&
-           ((m_subscriptionFeatures & ClientSubscriptionFeature::Base) == 0);
+    return false;
 }
 
 //-----------------------------------------------------------------------
@@ -2167,8 +2151,7 @@ bool Client::isUsingAdminLogin() const {
 
 // ----------------------------------------------------------------------
 
-bool
-Client::shouldReceiveCombatSpam(NetworkId const &attacker, Vector const &attackerPosition_w, NetworkId const &defender, Vector const &defenderPosition_w) const {
+bool  Client::shouldReceiveCombatSpam(NetworkId const &attacker, Vector const &attackerPosition_w, NetworkId const &defender, Vector const &defenderPosition_w) const {
     PROFILER_AUTO_BLOCK_DEFINE("Client::shouldReceiveCombatSpam");
 
     // none means no combat spam, period!!!
