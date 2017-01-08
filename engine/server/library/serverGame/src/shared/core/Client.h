@@ -380,7 +380,7 @@ inline bool Client::isGod() const {
 //-----------------------------------------------------------------------
 
 inline int Client::getGodLevel() const {
-    if (isGod() || ConfigServerGame::getAdminGodToAll()) {
+    if (isGod()) {
         return m_godLevel;
     } else {
         return -1;
