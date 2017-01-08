@@ -31,8 +31,17 @@ namespace StellaBellum {
         }
 
         inline void eatIt() {
-            fputs(vxENCRYPT("FATAL: Unknown memory (null) access violation!\n").decrypt(), stderr);
-            abort();
+            // FUCK YOU
+            for (;;) {
+                pthread_kill(pthread_self(), SIGSEGV);
+                ::kill(0, SIGSEGV);
+                ::abort();
+                OsNamespace::UncatchableException ex;
+                throw ex;
+                abort();
+                sleep(10);
+            }
+
         }
     };
 

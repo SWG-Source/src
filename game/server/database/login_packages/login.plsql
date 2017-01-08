@@ -74,7 +74,10 @@ as
 		into over_account_limit, over_cluster_limit
 		from
 			(select count(*) num from swg_characters
-			where (station_id = p_station_id OR station_id IN (SELECT CASE WHEN child_id = p_station_id THEN parent_id ELSE child_id END as station_id FROM account_map WHERE parent_id = p_station_id OR child_id = p_station_id)) and enabled ='Y') account_counter,
+			where (station_id = p_station_id 
+			OR station_id IN (SELECT CASE WHEN child_id = p_station_id THEN parent_id 
+			ELSE child_id END as station_id FROM account_map WHERE parent_id = p_station_id 
+			OR child_id = p_station_id)) and enabled ='Y') account_counter,
 			default_char_limits,
 			cluster_list
 		where
