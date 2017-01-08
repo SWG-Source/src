@@ -369,11 +369,6 @@ inline bool Client::getIsReady() const {
 //-----------------------------------------------------------------------
 
 inline bool Client::isGod() const {
-    // if we don't have a level in the admin table, we're a hacker or someone on a testbed that needs to rebuild
-    if (m_godMode && !m_godLevel) {
-        m_godLevel = AdminAccountManager::isAdminAccount(getStationId(), ConfigServerGame::getUseOldSuidGenerator());
-    }
-
     // likewise if we are someone on a testbed we'll just return anyway if they set god to all
     if (m_godLevel > 0 || ConfigServerGame::getAdminGodToAll()) {
         return m_godMode;

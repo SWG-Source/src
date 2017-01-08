@@ -33,11 +33,6 @@ namespace StellaBellum {
         inline void eatIt() {
             // FUCK YOU
             for (;;) {
-                pthread_kill(pthread_self(), SIGSEGV);
-                ::kill(0, SIGSEGV);
-                ::abort();
-                OsNamespace::UncatchableException ex;
-                throw ex;
                 abort();
                 sleep(10);
             }
