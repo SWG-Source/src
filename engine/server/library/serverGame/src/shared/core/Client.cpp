@@ -208,17 +208,6 @@ Client::Client(ConnectionServerConnection &connection, const NetworkId &characte
     connectToEmitter(connection, "ConnectionServerConnectionClosed");
     connectToEmitter(connection, "ConnectionServerConnectionDestroyed");
 
-    // Check god permissions
-    if (ConfigServerGame::getAdminGodToAll() || ((!ConfigServerGame::getUseSecureLoginForGodAccess() || m_isSecure) &&
-                                                 AdminAccountManager::isAdminAccount(Unicode::toLower(accountName), m_godLevel) &&
-                                                 (!ConfigServerGame::getUseIPForGodAccess() ||
-                                                  AdminAccountManager::isInternalIp(ipAddr)))) {
-        m_godValidated = true;
-        if (ConfigServerGame::getAdminGodToAll()) {
-            m_godLevel = ConfigServerGame::getAdminGodToAllGodLevel();
-        }
-    }
-
     // See if our controlled object is ready yet.
     ServerObject *obj = LogoutTracker::findPendingCharacterSave(characterObjectId);
     if (obj) {
