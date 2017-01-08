@@ -383,7 +383,7 @@ inline int Client::getGodLevel() const {
     if (isGod()) {
         return m_godLevel;
     } else {
-        return -1;
+        return -1; // because they may be aliased in the admin table, but don't want to be in gm right now
     }
 }
 
