@@ -380,7 +380,6 @@ inline bool Client::isGod() const {
 //-----------------------------------------------------------------------
 
 inline int Client::getGodLevel() const {
-    // isGod will set the god level if it is not already, if the client is a god
     if (isGod() || ConfigServerGame::getAdminGodToAll()) {
         return m_godLevel;
     } else {
