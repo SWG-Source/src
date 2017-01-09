@@ -60,7 +60,7 @@ std::unordered_map<int, std::string> webAPI::getStringMap(const std::string &slo
 
     if (!this->responseData.empty() && !slot.empty() && responseData.count(slot) &&
         !this->responseData[slot].is_null()) {
-    	
+
 	nlohmann::json j = this->responseData[slot];
 
 	for (nlohmann::json::iterator it = j.begin(); it != j.end(); ++it) {
@@ -70,7 +70,7 @@ std::unordered_map<int, std::string> webAPI::getStringMap(const std::string &slo
 		ret.insert({k, val});
 	}
     }
-    
+
     return ret;
 }
 
@@ -104,7 +104,7 @@ bool webAPI::fetch(const int &getPost, const int &mimeType) // 0 for json 1 for 
         CURL *curl = curl_easy_init(); // start up curl
 
         if (curl) {
-            std::string readBuffer; // container for the remote response
+            std::string readBuffer = ""; // container for the remote response
             struct curl_slist *slist = nullptr;
 
             // set the content type
@@ -118,8 +118,7 @@ bool webAPI::fetch(const int &getPost, const int &mimeType) // 0 for json 1 for 
             slist = curl_slist_append(slist, "charsets: utf-8");
 
             curl_easy_setopt(curl, CURLOPT_USERAGENT, userAgent.c_str());
-            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION,
-                             writeCallback); // place the data into readBuffer using writeCallback
+            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeCallback); // place the data into readBuffer using writeCallback
             curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer); // specify readBuffer as the container for data
             curl_easy_setopt(curl, CURLOPT_HTTPHEADER, slist);
             curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0);

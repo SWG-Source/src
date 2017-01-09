@@ -393,6 +393,7 @@ Snapshot * Persister::getSnapshotForObject(const NetworkId &networkId, uint32 se
 	else
 	{
 		Snapshot *snap = getSnapshotForServer(serverId);
+
 		m_objectSnapshotMap[networkId]=snap;
 		return snap;
 	}

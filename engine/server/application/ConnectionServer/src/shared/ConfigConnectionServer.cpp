@@ -56,6 +56,7 @@ void ConfigConnectionServer::install(void)
 
 	data = new ConfigConnectionServer::Data;
 
+	KEY_STRING  (sessionURL, "");
 	KEY_STRING  (centralServerAddress, "localhost");
 	KEY_INT     (centralServerPort, 0);
 	KEY_STRING  (clientServiceBindInterface, "");
@@ -88,7 +89,6 @@ void ConfigConnectionServer::install(void)
 	KEY_INT     (lagReportThreshold, 10000);
 	KEY_INT     (defaultGameFeatures, 0xFFFFFFFF);
 	KEY_INT     (defaultSubscriptionFeatures, 0xFFFFFFFF);
-	KEY_INT     (maxConnectionsPerIP, 6);
 
 	KEY_BOOL     (validateStationKey, false);
 	KEY_STRING   (sessionServers, "");
@@ -115,6 +115,7 @@ void ConfigConnectionServer::install(void)
 	KEY_INT     (fakeBuddyPoints, 0);
 
 	KEY_STRING  (altPublicBindAddress, "");
+	KEY_BOOL    (useOldSuidGenerator, false);
 
 	int index = 0;
 	char const * result = 0;
