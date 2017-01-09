@@ -956,14 +956,14 @@ void Client::receiveClientMessage(const GameNetworkMessage &message) {
                     KickPlayer const kickMessage(m_characterObjectId, "Hack Attempt");
                     GameServer::getInstance().sendToConnectionServers(kickMessage);
                     GameServer::getInstance().dropClient(m_characterObjectId);
-
-                    delete o.getData();
-                    return;
                 }
+
+		if (!appended) {
+		    delete o.getData();
+		}
 
                 break;
             }
-
                 //-----------------------------------------------------------------
                 //Secure Trade Messages
                 //-----------------------------------------------------------------
