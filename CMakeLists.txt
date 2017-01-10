@@ -84,19 +84,26 @@ elseif (UNIX)
     # release specific cflags - optimizations beyond the default for both types is mostly just -O flags
     set(CMAKE_CXX_FLAGS_RELEASE "-DDEBUG_LEVEL=0 -DPRODUCTION=1")
 
+    # we use fewer, if any, crazy optimizations for profile generation, and likewise release flags for the minsizerel
+    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELEASE}")
+    set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_RELEASE}")
+
     # Ofast doesn't work with gcc builds
     if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
         set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Ofast \
-			-fno-signed-zeros -freciprocal-math -ffp-contract=fast \
-            -fno-threadsafe-statics -fslp-vectorize-aggressive -fslp-vectorize \
-		    -fno-stack-protector -fstrict-enums -fstrict-vtable-pointers \
-			-fno-coverage-mapping -fno-spell-checking -fshort-enums -finline-functions \
-			-finline-hint-functions -fno-unroll-loops")
+		-fno-signed-zeros -freciprocal-math -ffp-contract=fast \
+		-fno-threadsafe-statics -fslp-vectorize-aggressive -fslp-vectorize \
+		-fno-stack-protector -fstrict-enums -fstrict-vtable-pointers \
+		-fno-coverage-mapping -fno-spell-checking -fshort-enums -finline-functions \
+		-finline-hint-functions -fno-unroll-loops")
 
         set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -ggdb")
 
         # RELWITHDEBINFO is used for building bins that produce profdata files
-        set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELEASE} -fprofile-instr-generate")
+	# we only need the basics of our heavy optimizations here, i think - that and one of these flags
+	# breaks JNI when we profile
+        set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-Ofast -fno-unroll-loops -finline-functions \
+		-finline-hint-functions -fprofile-instr-generate")
 
         # MINSIZEREL is used for profiled, flto builds
         set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_RELEASE} -flto -fwhole-program-vtables")
