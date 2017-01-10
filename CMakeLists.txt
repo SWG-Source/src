@@ -70,7 +70,12 @@ elseif (UNIX)
     find_package(Curses REQUIRED)
 
     # linker flags
-    set(CMAKE_SHARED_LINKER_FLAGS "-Wl,-z,norelro,-O3,--sort-common,--as-needed,--relax,-z,combreloc,-z,global,--no-omagic,-x,-s")
+    if (${CMAKE_BUILD_TYPE} STREQUAL "RELWITHDEBINFO" OR ${CMAKE_BUILD_TYPE} STREQUAL "MINSIZEREL")
+        set(CMAKE_SHARED_LINKER_FLAGS "-Wl,-z,norelro,-O3,--sort-common,--as-needed,--relax,-z,combreloc,-z,global,--no-omagic")
+    else ()
+        set(CMAKE_SHARED_LINKER_FLAGS "-Wl,-z,norelro,-O3,--sort-common,--as-needed,--relax,-z,combreloc,-z,global,--no-omagic,-x,-s")
+    endif ()
+
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS}")
 
     # don't put anything too crazy in debug...and any common flags go into CMAKE_CXX_FLAGS
@@ -90,13 +95,15 @@ elseif (UNIX)
 
         set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -ggdb")
 
-        # RELWITHDEBINFO is used for building profiled builds
+        # RELWITHDEBINFO is used for building bins that produce profdata files
         set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELEASE} -fprofile-instr-generate")
 
         # MINSIZEREL is used for profiled, flto builds
+        set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_RELEASE} -flto -fwhole-program-vtables")
     elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
         # O3 and Ofast include one or more flags that cause java to crash when using gcc6
-        set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2 -fno-signed-zeros -freciprocal-math -fno-unroll-loops -fno-tree-loop-optimize")
+        set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2 -fno-signed-zeros -freciprocal-math
+            -fno-unroll-loops -fno-tree-loop-optimize")
         set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Og")
     elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
         set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
@@ -114,12 +121,17 @@ elseif (UNIX)
     # release and debug are internal use only
     if (${CMAKE_BUILD_TYPE} STREQUAL "Debug" OR ${CMAKE_BUILD_TYPE} STREQUAL "Release")
         add_definitions(-DSTELLA_INTERNAL)
-    endif()
+    endif ()
 
     # this is so some profile specific stuff is turned on in the code
     if (${CMAKE_BUILD_TYPE} STREQUAL "RELWITHDEBINFO")
         add_definitions(-DENABLE_PROFILING)
-    endif()
+    endif ()
+
+    # this is so some profile specific stuff is turned on in the code
+    if (${CMAKE_BUILD_TYPE} STREQUAL "MINSIZEREL")
+        add_definitions(-DENABLE_PROFILING)
+    endif ()
 endif ()
 
 add_subdirectory(external)
