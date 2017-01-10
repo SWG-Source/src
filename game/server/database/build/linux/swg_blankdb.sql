@@ -14744,5 +14744,3 @@ end;
 /
 
   GRANT EXECUTE ON "SWG"."UTIL" TO PUBLIC;
-
-exit;
