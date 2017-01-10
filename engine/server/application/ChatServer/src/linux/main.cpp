@@ -39,5 +39,9 @@ int main(int argc, char ** argv)
 	ChatServer::run();
 	SetupSharedFoundation::remove();
 
+#ifdef ENABLE_PROFILING
+	exit(0);
+#endif
+
 	return 0;
 }

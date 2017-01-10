@@ -1,5 +1,9 @@
 #include "sharedFoundation/FirstSharedFoundation.h"
 
+#ifdef ENABLE_PROFILING
+#include <signal.h>
+#endif
+
 #include "ConfigLoginServer.h"
 #include "LoginServer.h"
 
@@ -15,35 +19,49 @@
 
 // ======================================================================
 
-int main(int argc, char ** argv)
-{
+#ifdef ENABLE_PROFILING
+inline void signalHandler(int s){
+    printf("LoginServer terminating, signal %d\n",s);
+    exit(0);
+}
+#endif
 
-	SetupSharedThread::install();
-	SetupSharedDebug::install(1024);
- 
-	//-- setup foundation
-	SetupSharedFoundation::Data setupFoundationData(SetupSharedFoundation::Data::D_game);
-	setupFoundationData.lpCmdLine = ConvertCommandLine(argc,argv);
-	setupFoundationData.configFile = "loginServer.cfg";
-	SetupSharedFoundation::install (setupFoundationData);
+int main(int argc, char **argv) {
+#ifdef ENABLE_PROFILING
+    struct sigaction sigIntHandler;
+    sigIntHandler.sa_handler = signalHandler;
+    sigemptyset(&sigIntHandler.sa_mask);
+    sigIntHandler.sa_flags = 0;
+    sigaction(SIGINT, &sigIntHandler, NULL);
+#endif
 
-	if (ConfigFile::isEmpty())
-		FATAL(true, ("No config file specified"));
-	
-	SetupSharedCompression::install();
+    SetupSharedThread::install();
+    SetupSharedDebug::install(1024);
 
-	SetupSharedFile::install(false);
-	SetupSharedNetworkMessages::install();
+    //-- setup foundation
+    SetupSharedFoundation::Data setupFoundationData(SetupSharedFoundation::Data::D_game);
+    setupFoundationData.lpCmdLine = ConvertCommandLine(argc, argv);
+    setupFoundationData.configFile = "loginServer.cfg";
+    SetupSharedFoundation::install(setupFoundationData);
 
-	SetupSharedRandom::install(static_cast<uint32>(time(nullptr))); //lint !e1924 !e64 // nullptr is a C-Style cast?
+    if (ConfigFile::isEmpty()) {
+        FATAL(true, ("No config file specified"));
+    }
 
-	Os::setProgramName("LoginServer");
-	//setup the server
-	ConfigLoginServer::install();
-        
-	//-- run game
-	SetupSharedFoundation::callbackWithExceptionHandling(LoginServer::run);
-	SetupSharedFoundation::remove();
+    SetupSharedCompression::install();
 
-	return 0;
+    SetupSharedFile::install(false);
+    SetupSharedNetworkMessages::install();
+
+    SetupSharedRandom::install(static_cast<uint32>(time(nullptr))); //lint !e1924 !e64 // nullptr is a C-Style cast?
+
+    Os::setProgramName("LoginServer");
+    //setup the server
+    ConfigLoginServer::install();
+
+    //-- run game
+    SetupSharedFoundation::callbackWithExceptionHandling(LoginServer::run);
+    SetupSharedFoundation::remove();
+
+    return 0;
 }
