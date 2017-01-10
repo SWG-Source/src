@@ -1,4 +1,7 @@
-
+if (${CMAKE_BUILD_TYPE} STREQUAL "MINSIZEREL")
+    add_compile_options(-fprofile-instr-use=${PROJECT_SOURCE_DIR}/src/linux/TaskManager.profdata)
+endif()
+    
 set(SHARED_SOURCES
     shared/CentralConnection.cpp
     shared/CentralConnection.h
