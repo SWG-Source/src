@@ -127,11 +127,6 @@ elseif (UNIX)
     if (${CMAKE_BUILD_TYPE} STREQUAL "RELWITHDEBINFO")
         add_definitions(-DENABLE_PROFILING)
     endif ()
-
-    # this is so some profile specific stuff is turned on in the code
-    if (${CMAKE_BUILD_TYPE} STREQUAL "MINSIZEREL")
-        add_definitions(-DENABLE_PROFILING)
-    endif ()
 endif ()
 
 add_subdirectory(external)
