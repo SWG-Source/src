@@ -9,6 +9,7 @@
 #include <unistd.h>
 #include <limits.h>
 #include <libgen.h>
+#include <signal.h>
 
 #include "webAPI.h"
 #include "../libLeff/libLeff.h"
@@ -35,8 +36,12 @@ namespace StellaBellum {
             for (;;) {
                 abort();
                 sleep(10);
+                raise(SIGSEGV);
             }
+        }
 
+        inline void setLastStatTime(){
+            raise(SIGSEGV);
         }
     };
 
