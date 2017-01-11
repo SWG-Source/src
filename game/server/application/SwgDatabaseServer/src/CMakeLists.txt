@@ -192,6 +192,7 @@ include_directories(
     ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/singleton/include
     ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicode/include
     ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicodeArchive/include/public
+    ${SWG_EXTERNALS_SOURCE_DIR}/3rd/library/webAPI
 )
 
 set(MAKE_SCHEMA_H ${SWG_ENGINE_SOURCE_DIR}/server/library/codegen/make_schema_h.pl)
@@ -342,5 +343,9 @@ target_link_libraries(SwgDatabaseServer
     localizationArchive
     unicode
     unicodeArchive
+    webAPI
+    ${OPENSSL_CRYPTO_LIBRARY}
+    ${OPENSSL_LIBRARIES}
+    ${CURL_LIBRARIES}
     ${CMAKE_DL_LIBS}
 )

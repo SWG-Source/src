@@ -154,6 +154,8 @@ target_link_libraries(SwgGameServer
     unicodeArchive
     Base
     webAPI
+    ${OPENSSL_CRYPTO_LIBRARY}
+    ${OPENSSL_LIBRARIES}
     ${CURL_LIBRARIES}
     ${CMAKE_DL_LIBS}
 )

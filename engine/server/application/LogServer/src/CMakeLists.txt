@@ -77,7 +77,9 @@ target_link_libraries(LogServer
     localizationArchive
     unicode
     unicodeArchive
-	webAPI
-	${CURL_LIBRARIES}
+    webAPI
+    ${OPENSSL_CRYPTO_LIBRARY}
+    ${OPENSSL_LIBRARIES}
+    ${CURL_LIBRARIES}
     ${CMAKE_DL_LIBS}
 )

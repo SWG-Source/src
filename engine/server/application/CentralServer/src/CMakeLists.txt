@@ -154,7 +154,7 @@ include_directories(
     ${SWG_EXTERNALS_SOURCE_DIR}/3rd/library/platform/projects
     ${SWG_EXTERNALS_SOURCE_DIR}/3rd/library/platform/utils
     ${SWG_EXTERNALS_SOURCE_DIR}/3rd/library/udplibrary
-	${SWG_EXTERNALS_SOURCE_DIR}/3rd/library/webAPI
+    ${SWG_EXTERNALS_SOURCE_DIR}/3rd/library/webAPI
 )
 
 add_executable(CentralServer
@@ -191,7 +191,9 @@ target_link_libraries(CentralServer
     localizationArchive
     unicode
     unicodeArchive
-	webAPI
+    webAPI
+    ${OPENSSL_CRYPTO_LIBRARY}
+    ${OPENSSL_LIBRARIES}
     ${CURL_LIBRARIES}
     ${CMAKE_DL_LIBS}
 )

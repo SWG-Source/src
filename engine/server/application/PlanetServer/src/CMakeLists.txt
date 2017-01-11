@@ -106,7 +106,9 @@ target_link_libraries(PlanetServer
     localizationArchive
     unicode
     unicodeArchive
-	webAPI
-	${CURL_LIBRARIES}
+    webAPI
+    ${OPENSSL_CRYPTO_LIBRARY}
+    ${OPENSSL_LIBRARIES}
+    ${CURL_LIBRARIES}
     ${CMAKE_DL_LIBS}
 )

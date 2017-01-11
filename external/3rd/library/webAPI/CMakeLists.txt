@@ -8,7 +8,6 @@ add_library(webAPI
 	json.hpp
 	webAPIHeartbeat.h
 	webAPIHeartbeat.cpp
-	${OPENSSL_INCLUDE_DIR}
 )
 
 include_directories(

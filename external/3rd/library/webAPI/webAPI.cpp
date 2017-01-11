@@ -17,6 +17,9 @@
 
 #include "webAPI.h"
 
+#include <openssl/ssl.h>
+#include <openssl/bio.h>
+
 using namespace StellaBellum;
 
 webAPI::webAPI(std::string endpoint, std::string userAgent) : uri(endpoint), userAgent(userAgent), statusCode(0) {}

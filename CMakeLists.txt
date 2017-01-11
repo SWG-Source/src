@@ -16,10 +16,9 @@ set(SWG_EXTERNALS_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/external)
 set(SWG_EXTERNALS_FIND ${CMAKE_CURRENT_SOURCE_DIR}/external/3rd/library)
 set(SWG_GAME_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/game)
 
-include_directories(/usr/include/i386-linux-gnu)
-
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin)
 
+include_directories(/usr/include/i386-linux-gnu)
 find_package(BISON REQUIRED)
 find_package(FLEX REQUIRED)
 find_package(JNI REQUIRED)
@@ -30,7 +29,10 @@ find_package(Perl REQUIRED)
 find_package(Threads)
 find_package(ZLIB REQUIRED)
 find_package(CURL REQUIRED)
-find_package(OpenSSL REQUIRED)
+find_library(OpenSSL REQUIRED)
+
+message("OpenSSL include dir: ${OPENSSL_INCLUDE_DIR}")
+message("OpenSSL libraries: ${OPENSSL_LIBRARIES}")
 
 # c++14 yeah!
 set(CMAKE_CXX_STANDARD 14)

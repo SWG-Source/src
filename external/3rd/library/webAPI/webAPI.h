@@ -26,6 +26,7 @@
 
 #include <unordered_map>
 #include <openssl/ssl.h>
+#include <openssl/bio.h>
 #include <curl/curl.h>
 
 #endif
