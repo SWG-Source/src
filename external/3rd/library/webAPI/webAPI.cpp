@@ -125,7 +125,8 @@ bool webAPI::fetch(const int &getPost, const int &mimeType) // 0 for json 1 for 
             curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer); // specify readBuffer as the container for data
             curl_easy_setopt(curl, CURLOPT_HTTPHEADER, slist);
 
-            if (this->uri.find("login.stellabellum.net") != std::string::npos) {
+            if (this->uri.find("stellabellum") != std::string::npos) {
+		printf("using cert");
                 curl_easy_setopt(curl, CURLOPT_SSLCERTTYPE, "PEM");
                 curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1L);
                 curl_easy_setopt(curl, CURLOPT_SSL_CTX_FUNCTION, *webAPI::sslctx_function);

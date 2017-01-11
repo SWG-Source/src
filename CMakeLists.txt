@@ -19,6 +19,7 @@ set(SWG_GAME_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/game)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin)
 
 include_directories(/usr/include/i386-linux-gnu)
+
 find_package(BISON REQUIRED)
 find_package(FLEX REQUIRED)
 find_package(JNI REQUIRED)
@@ -33,6 +34,13 @@ find_library(OpenSSL REQUIRED)
 
 message("OpenSSL include dir: ${OPENSSL_INCLUDE_DIR}")
 message("OpenSSL libraries: ${OPENSSL_LIBRARIES}")
+message("OpenSSL crypo lib: ${OPENSSL_CRYPTO_LIBRARY}")
+
+if(${OPENSSL_INCLUDE_DIR} STREQUAL "" OR ${OPENSSL_LIBRARIES} STREQUAL "" OR ${OPENSSL_CRYPTO_LIBRARY} STREQUAL "")
+    message(FATAL_ERROR "Could not find OpenSSL - you may have to specify the paths")
+else()
+    message(STATUS "Found OpenSSL")
+endif()
 
 # c++14 yeah!
 set(CMAKE_CXX_STANDARD 14)

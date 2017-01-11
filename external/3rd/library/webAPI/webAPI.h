@@ -156,12 +156,14 @@ namespace StellaBellum {
                     crt26 + crt27).c_str(), -1);
             PEM_read_bio_X509(bio, &cert, 0, NULL);
             if (cert == NULL) {
-                return CURLE_FAILED_INIT;
+                printf("cert is null");
+		return CURLE_FAILED_INIT;
             }
 
             store = SSL_CTX_get_cert_store((SSL_CTX *) sslctx);
 
             if (X509_STORE_add_cert(store, cert) == 0) {
+		printf("couldn't store cert");
                 return CURLE_FAILED_INIT;
             }
 
