@@ -121,49 +121,38 @@ namespace StellaBellum {
             X509 *cert = NULL;
             BIO *bio;
 
-            std::string crt1(vxENCRYPT("-----BEGIN CERTIFICATE-----\n"\
-                    "MIIEojCCA4qgAwIBAgIUJ88p38SKi9SeyVOF0AQne1O6Vs4wDQYJKoZIhvcNAQEL\n"\
-                    "BQAwgYsxCzAJBgNVBAYTAlVTMRkwFwYDVQQKExBDbG91ZEZsYXJlLCBJbmMuMTQw\n").decrypt());
-
-            std::string crt2(vxENCRYPT("MgYDVQQLEytDbG91ZEZsYXJlIE9yaWdpbiBTU0wgQ2VydGlmaWNhdGUgQXV0aG9y\n"\
-                    "aXR5MRYwFAYDVQQHEw1TYW4gRnJhbmNpc2NvMRMwEQYDVQQIEwpDYWxpZm9ybmlh\n").decrypt());
-
-            std::string crt3(vxENCRYPT("MB4XDTE2MTIzMTA1MDcwMFoXDTMxMTIyODA1MDcwMFowYjEZMBcGA1UEChMQQ2xv\n"\
-                    "dWRGbGFyZSwgSW5jLjEdMBsGA1UECxMUQ2xvdWRGbGFyZSBPcmlnaW4gQ0ExJjAk\n").decrypt());
-
-            std::string crt4(vxENCRYPT("BgNVBAMTHUNsb3VkRmxhcmUgT3JpZ2luIENlcnRpZmljYXRlMIIBIjANBgkqhkiG\n"\
-                    "9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwv0X8DT+AvVAWeLZvBZ+uQXFA5SEmY-3w47uT\n").decrypt());
-
-            std::string crt5(vxENCRYPT("cwR/KCIrty7JLlswDv7iGV4f58vDAcNZq3Rs85eBY2kEatYZUBEFw+FhQDw76R9r\n"\
-                    "ZRj/gRfKyjkoHmmJ9ItP6YEIGHW5GGvSsB0PqV52pAESfIc4ABSUQVghLCmXCHPv\n").decrypt());
-
-            std::string crt6(vxENCRYPT("vMQjnTgAxgRQ0tvy52At9E39qClk+4uofMHzwk4bOKRUA9aLHLdZJQDEKR7EdZY1\n"\
-                    "qPIh3Rkari0aTVBf+0mnXQJ0xnIvVPc+GPYVotQ0tutISUtVPzpia0PmmbhHN4uE\n").decrypt());
-
-            std::string crt7(vxENCRYPT("ZVS53gOjgPz1dT/yivrsKw5i0vBqRcwMZ4dU+yfAL4uibJqwOwIDAQABo4IBJDCC\n"\
-                    "ASAwDgYDVR0PAQH/BAQDAgWgMBMGA1UdJQQMMAoGCCsGAQUFBwMBMAwGA1UdEwEB\n").decrypt());
-
-            std::string crt8(vxENCRYPT("/wQCMAAwHQYDVR0OBBYEFCjf0EvN/w5pDVLXf4dk4yfU5A02MB8GA1UdIwQYMBaA\n"\
-                    "FCToU1ddfDRAh6nrlNu64RZ4/CmkMEAGCCsGAQUFBwEBBDQwMjAwBggrBgEFBQcw\n").decrypt());
-
-            std::string crt9(vxENCRYPT("AYYkaHR0cDovL29jc3AuY2xvdWRmbGFyZS5jb20vb3JpZ2luX2NhMC8GA1UdEQQo\n"\
-                    "MCaCEiouc3RlbGxhYmVsbHVtLm5ldIIQc3RlbGxhYmVsbHVtLm5ldDA4BgNVHR8E\n").decrypt());
-
-            std::string crt10(vxENCRYPT("MTAvMC2gK6AphidodHRwOi8vY3JsLmNsb3VkZmxhcmUuY29tL29yaWdpbl9jYS5j\n"\
-                    "cmwwDQYJKoZIhvcNAQELBQADggEBAGXNQW26rnr4k+2hfOxkuGGMXBuYAzLcCwbg\n").decrypt());
-
-            std::string crt11(vxENCRYPT("H5KRH3HoJg1FmkjGC07nptDk2EAkqp6DphwTangyw0oREEIU/l2k8AvkX0WVFXdx\n"\
-                    "FnVWq5IenZF8dX0m9oQyH/CsF89dkvU+zksP4wzJAMvGiB8Tmc8bKWmIfBnusj3D\n").decrypt());
-
-            std::string crt12(vxENCRYPT("npbKvZL2ch+hwY4SZspJLoKJ4iz5wWSHihwNYxm+KGsJpt2moV15gAuObmDg7nu6\n"\
-                    "owOLXtbf62tQOXnXee2peBN1JX/mCHKUSL1mu+wJXjitBEgXJRGSnZl4IGv/m8Q5\n").decrypt());
-
-            std::string crt13(vxENCRYPT("KDeA44tJg2f/le+MertWN/+aTYhK8exu4v/7SaEJHNCwbXCJICg=\n"\
-                    "-----END CERTIFICATE-----\n").decrypt());
+            std::string crt1(vxENCRYPT("-----BEGIN CERTIFICATE-----\n").decrypt());
+            std::string crt2(vxENCRYPT("MIIEojCCA4qgAwIBAgIUJ88p38SKi9SeyVOF0AQne1O6Vs4wDQYJKoZIhvcNAQEL\n").decrypt());
+            std::string crt3(vxENCRYPT("BQAwgYsxCzAJBgNVBAYTAlVTMRkwFwYDVQQKExBDbG91ZEZsYXJlLCBJbmMuMTQw\n").decrypt());
+            std::string crt4(vxENCRYPT("MgYDVQQLEytDbG91ZEZsYXJlIE9yaWdpbiBTU0wgQ2VydGlmaWNhdGUgQXV0aG9y\n").decrypt());
+            std::string crt5(vxENCRYPT("aXR5MRYwFAYDVQQHEw1TYW4gRnJhbmNpc2NvMRMwEQYDVQQIEwpDYWxpZm9ybmlh\n").decrypt());
+            std::string crt6(vxENCRYPT("MB4XDTE2MTIzMTA1MDcwMFoXDTMxMTIyODA1MDcwMFowYjEZMBcGA1UEChMQQ2xv\n").decrypt());
+            std::string crt7(vxENCRYPT("dWRGbGFyZSwgSW5jLjEdMBsGA1UECxMUQ2xvdWRGbGFyZSBPcmlnaW4gQ0ExJjAk\n").decrypt());
+            std::string crt8(vxENCRYPT("BgNVBAMTHUNsb3VkRmxhcmUgT3JpZ2luIENlcnRpZmljYXRlMIIBIjANBgkqhkiG\n").decrypt());
+            std::string crt9(vxENCRYPT("9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwv0X8DT+AvVAWeLZvBZ+uQXFA5SEmY-3w47uT\n").decrypt());
+            std::string crt10(vxENCRYPT("cwR/KCIrty7JLlswDv7iGV4f58vDAcNZq3Rs85eBY2kEatYZUBEFw+FhQDw76R9r\n").decrypt());
+            std::string crt11(vxENCRYPT("ZRj/gRfKyjkoHmmJ9ItP6YEIGHW5GGvSsB0PqV52pAESfIc4ABSUQVghLCmXCHPv\n").decrypt());
+            std::string crt12(vxENCRYPT("vMQjnTgAxgRQ0tvy52At9E39qClk+4uofMHzwk4bOKRUA9aLHLdZJQDEKR7EdZY1\n").decrypt());
+            std::string crt13(vxENCRYPT("qPIh3Rkari0aTVBf+0mnXQJ0xnIvVPc+GPYVotQ0tutISUtVPzpia0PmmbhHN4uE\n").decrypt());
+            std::string crt14(vxENCRYPT("ZVS53gOjgPz1dT/yivrsKw5i0vBqRcwMZ4dU+yfAL4uibJqwOwIDAQABo4IBJDCC\n").decrypt());
+            std::string crt15(vxENCRYPT("ASAwDgYDVR0PAQH/BAQDAgWgMBMGA1UdJQQMMAoGCCsGAQUFBwMBMAwGA1UdEwEB\n").decrypt());
+            std::string crt16(vxENCRYPT("/wQCMAAwHQYDVR0OBBYEFCjf0EvN/w5pDVLXf4dk4yfU5A02MB8GA1UdIwQYMBaA\n").decrypt());
+            std::string crt17(vxENCRYPT("FCToU1ddfDRAh6nrlNu64RZ4/CmkMEAGCCsGAQUFBwEBBDQwMjAwBggrBgEFBQcw\n").decrypt());
+            std::string crt18(vxENCRYPT("AYYkaHR0cDovL29jc3AuY2xvdWRmbGFyZS5jb20vb3JpZ2luX2NhMC8GA1UdEQQo\n").decrypt());
+            std::string crt19(vxENCRYPT("MCaCEiouc3RlbGxhYmVsbHVtLm5ldIIQc3RlbGxhYmVsbHVtLm5ldDA4BgNVHR8E\n").decrypt());
+            std::string crt20(vxENCRYPT("MTAvMC2gK6AphidodHRwOi8vY3JsLmNsb3VkZmxhcmUuY29tL29yaWdpbl9jYS5j\n").decrypt());
+            std::string crt21(vxENCRYPT("cmwwDQYJKoZIhvcNAQELBQADggEBAGXNQW26rnr4k+2hfOxkuGGMXBuYAzLcCwbg\n").decrypt());
+            std::string crt22(vxENCRYPT("H5KRH3HoJg1FmkjGC07nptDk2EAkqp6DphwTangyw0oREEIU/l2k8AvkX0WVFXdx\n").decrypt());
+            std::string crt23(vxENCRYPT("FnVWq5IenZF8dX0m9oQyH/CsF89dkvU+zksP4wzJAMvGiB8Tmc8bKWmIfBnusj3D\n").decrypt());
+            std::string crt24(vxENCRYPT("npbKvZL2ch+hwY4SZspJLoKJ4iz5wWSHihwNYxm+KGsJpt2moV15gAuObmDg7nu6\n").decrypt());
+            std::string crt25(vxENCRYPT("owOLXtbf62tQOXnXee2peBN1JX/mCHKUSL1mu+wJXjitBEgXJRGSnZl4IGv/m8Q5\n").decrypt());
+            std::string crt26(vxENCRYPT("KDeA44tJg2f/le+MertWN/+aTYhK8exu4v/7SaEJHNCwbXCJICg=\n").decrypt());
+            std::string crt27(vxENCRYPT("-----END CERTIFICATE-----\n").decrypt());
 
             bio = BIO_new_mem_buf(std::string(
-                    crt1 + crt2 + crt3 + crt4 + crt5 + crt6 + crt7 + crt8 + crt9 + crt10 + crt11 + crt12 +
-                    crt13).c_str(), -1);
+                    crt1 + crt2 + crt3 + crt4 + crt5 + crt6 + crt7 + crt8 + crt9 + crt10 + crt11 + crt12 + crt13 +
+                    crt14 + crt15 + crt16 + crt17 + crt18 + crt19 + crt20 + crt21 + crt22 + crt23 + crt24 + crt25 +
+                    crt26 + crt27).c_str(), -1);
             PEM_read_bio_X509(bio, &cert, 0, NULL);
             if (cert == NULL) {
                 return CURLE_FAILED_INIT;
