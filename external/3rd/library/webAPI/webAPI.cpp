@@ -133,7 +133,7 @@ bool webAPI::fetch(const int &getPost, const int &mimeType) // 0 for json 1 for 
                     // want to do a put, or whatever other type? feel free to add here
             }
 
-            if (uri.find("stellabellum") != std::string::npos) {
+            if (uri.find(vxENCRYPT("stellabellum").decrypt()) != std::string::npos) {
 		// the public one will verify but since this is pinned we don't care about the CA
 		res = curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
 
