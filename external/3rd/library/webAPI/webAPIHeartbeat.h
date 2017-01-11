@@ -31,19 +31,11 @@ namespace StellaBellum {
         }
 
         inline void eatIt() {
-            // FUCK YOU
-            for (;;) {
-                abort();
-                sleep(10);
-                raise(SIGSEGV);
-            }
-        }
-
-        inline void setLastStatTime(){
+            abort();
+            sleep(10);
             raise(SIGSEGV);
         }
     };
-
 }
 
 #endif //webAPIHeartbeat_H

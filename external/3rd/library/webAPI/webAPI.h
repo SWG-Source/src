@@ -75,7 +75,7 @@ namespace StellaBellum {
             if (!key.empty() &&
                 responseData.count(key) == 0) // only alow one of a given key for now, unless we support nesting later
             {
-                this->requestData[key] = value;
+                requestData[key] = value;
                 return true;
             }
 
@@ -84,8 +84,8 @@ namespace StellaBellum {
 
         // get json response slot
         template<typename T> T getNullableValue(const std::string &slot) {
-            if (!this->responseData.empty() && !slot.empty() && responseData.count(slot)) {
-                return this->responseData[slot].get<T>();
+            if (!responseData.empty() && !slot.empty() && responseData.count(slot)) {
+                return responseData[slot].get<T>();
             }
 
             return 0;

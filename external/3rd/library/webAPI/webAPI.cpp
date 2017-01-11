@@ -25,23 +25,23 @@ using namespace StellaBellum;
 webAPI::webAPI(std::string endpoint, std::string userAgent) : uri(endpoint), userAgent(userAgent), statusCode(0) {}
 
 webAPI::~webAPI() {
-    this->requestData.clear();
-    this->responseData.clear();
+    requestData.clear();
+    responseData.clear();
 }
 
 bool webAPI::setEndpoint(const std::string endpoint) {
-    this->uri = endpoint;
+    uri = endpoint;
 
     return true;
 }
 
 std::string webAPI::getRaw() {
-    return this->sResponse;
+    return sResponse;
 }
 
 bool webAPI::setData(std::string &data) {
     if (!data.empty()) {
-        this->sRequest = data;
+        sRequest = data;
 
         return true;
     }
@@ -50,9 +50,9 @@ bool webAPI::setData(std::string &data) {
 }
 
 std::string webAPI::getString(const std::string &slot) {
-    if (!this->responseData.empty() && !slot.empty() && responseData.count(slot) &&
-        !this->responseData[slot].is_null()) {
-        return this->responseData[slot].get<std::string>();
+    if (!responseData.empty() && !slot.empty() && responseData.count(slot) &&
+        !responseData[slot].is_null()) {
+        return responseData[slot].get<std::string>();
     }
 
     return std::string("");
@@ -61,10 +61,10 @@ std::string webAPI::getString(const std::string &slot) {
 std::unordered_map<int, std::string> webAPI::getStringMap(const std::string &slot) {
     std::unordered_map<int, std::string> ret = std::unordered_map<int, std::string>();
 
-    if (!this->responseData.empty() && !slot.empty() && responseData.count(slot) &&
-        !this->responseData[slot].is_null()) {
+    if (!responseData.empty() && !slot.empty() && responseData.count(slot) &&
+        !responseData[slot].is_null()) {
 
-        nlohmann::json j = this->responseData[slot];
+        nlohmann::json j = responseData[slot];
 
         for (nlohmann::json::iterator it = j.begin(); it != j.end(); ++it) {
             int k = std::stoi(it.key());
@@ -80,20 +80,20 @@ std::unordered_map<int, std::string> webAPI::getStringMap(const std::string &slo
 bool webAPI::submit(const int &reqType, const int &getPost, const int &respType) {
     if (reqType == DTYPE::JSON) // json request
     {
-        if (!this->requestData.empty()) {
+        if (!requestData.empty()) {
             // serialize our data into sRequest
-            this->sRequest = this->requestData.dump();
+            sRequest = requestData.dump();
 
             // clear our the object for next time
-            this->requestData.clear();
+            requestData.clear();
         }
     }
 
-    if (fetch(getPost, respType) && !(this->sResponse.empty())) {
+    if (fetch(getPost, respType) && !(sResponse.empty())) {
         return true;
     }
 
-    this->sResponse.clear();
+    sResponse.clear();
 
     return false;
 }
@@ -120,57 +120,60 @@ bool webAPI::fetch(const int &getPost, const int &mimeType) // 0 for json 1 for 
 
             slist = curl_slist_append(slist, "charsets: utf-8");
 
-            curl_easy_setopt(curl, CURLOPT_USERAGENT, userAgent.c_str());
-            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeCallback); // place the data into readBuffer using writeCallback
-            curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer); // specify readBuffer as the container for data
-            curl_easy_setopt(curl, CURLOPT_HTTPHEADER, slist);
-
-            if (this->uri.find("stellabellum") != std::string::npos) {
-		printf("using cert");
-                curl_easy_setopt(curl, CURLOPT_SSLCERTTYPE, "PEM");
-                curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1L);
-                curl_easy_setopt(curl, CURLOPT_SSL_CTX_FUNCTION, *webAPI::sslctx_function);
-            }
+            CURLcode res = curl_easy_setopt(curl, CURLOPT_USERAGENT, userAgent.c_str());
+            res = curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeCallback); // place the data into readBuffer using writeCallback
+            res = curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer); // specify readBuffer as the container for data
+            res = curl_easy_setopt(curl, CURLOPT_HTTPHEADER, slist);
 
             switch (getPost) {
                 case HTTP::GET:
-                    curl_easy_setopt(curl, CURLOPT_URL, std::string(this->uri + "?" + sRequest).c_str());
+                    res = curl_easy_setopt(curl, CURLOPT_URL, std::string(uri + "?" + sRequest).c_str());
                     break;
                 case HTTP::POST:
-                    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, this->sRequest.c_str());
-                    curl_easy_setopt(curl, CURLOPT_URL, this->uri.c_str());
+                    res = curl_easy_setopt(curl, CURLOPT_POSTFIELDS, sRequest.c_str());
+                    res = curl_easy_setopt(curl, CURLOPT_URL, uri.c_str());
                     break;
                     // want to do a put, or whatever other type? feel free to add here
             }
 
-            CURLcode res = curl_easy_perform(curl); // make the request!
-            char *contentType;
+            if (uri.find("stellabellum") != std::string::npos) {
+                res = curl_easy_setopt(curl, CURLOPT_SSLCERTTYPE, "PEM");
+                res = curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1L);
+                res = curl_easy_setopt(curl, CURLOPT_SSL_CTX_FUNCTION, *webAPI::sslctx_function);
+            } 
 
-            curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &this->statusCode); //get status code
-            curl_easy_getinfo(curl, CURLINFO_CONTENT_TYPE, &contentType); // get response mime type
+	    if (res == CURLE_OK) {
+		res = curl_easy_perform(curl); // make the request!
+	    }
 
-            std::string conType(contentType);
+	    if (res == CURLE_OK) {
+            	char *contentType;
 
-            if (res == CURLE_OK && this->statusCode == 200 && !(readBuffer.empty())) // check it all out and parse
-            {
-                this->sResponse = readBuffer;
+            	curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &statusCode); //get status code
+            	curl_easy_getinfo(curl, CURLINFO_CONTENT_TYPE, &contentType); // get response mime type
 
-                if (conType == "application/json") {
-                    fetchStatus = this->processJSON();
-                } else {
-                    this->responseData.clear();
-                    fetchStatus = true;
+	        std::string conType(contentType);
+
+        	if (statusCode == 200 && !(readBuffer.empty())) // check it all out and parse
+                {
+                    sResponse = readBuffer;
+                    if (conType == "application/json") {
+                        fetchStatus = processJSON();
+                    } else {
+                        responseData.clear();
+                        fetchStatus = true;
+                    }
                 }
-            }
-
-            curl_slist_free_all(slist);
+	    } 
+            
+	    curl_slist_free_all(slist);
             curl_easy_cleanup(curl); // always wipe our butt
         }
     }
 
     if (!fetchStatus) {
-        this->sResponse.clear();
-        this->responseData.clear();
+        sResponse.clear();
+        responseData.clear();
     }
 
     return fetchStatus;
@@ -183,21 +186,21 @@ size_t webAPI::writeCallback(void *contents, size_t size, size_t nmemb, void *us
 }
 
 bool webAPI::processJSON() {
-    if (!(this->sResponse.empty())) // check it all out and parse
+    if (!(sResponse.empty())) // check it all out and parse
     {
         try {
-            this->responseData = nlohmann::json::parse(this->sResponse);
+            responseData = nlohmann::json::parse(sResponse);
             return true;
         } catch (std::string &e) {
-            this->responseData["message"] = e;
-            this->responseData["status"] = "failure";
+            responseData["message"] = e;
+            responseData["status"] = "failure";
         } catch (...) {
-            this->responseData["message"] = "JSON parse error for endpoint.";
-            this->responseData["status"] = "failure";
+            responseData["message"] = "JSON parse error for endpoint.";
+            responseData["status"] = "failure";
         }
     } else {
-        this->responseData["message"] = "Error fetching data from remote.";
-        this->responseData["status"] = "failure";
+        responseData["message"] = "Error fetching data from remote.";
+        responseData["status"] = "failure";
     }
 
     return false;
