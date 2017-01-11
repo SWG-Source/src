@@ -30,6 +30,7 @@ find_package(Perl REQUIRED)
 find_package(Threads)
 find_package(ZLIB REQUIRED)
 find_package(CURL REQUIRED)
+find_package(OpenSSL REQUIRED)
 
 # c++14 yeah!
 set(CMAKE_CXX_STANDARD 14)

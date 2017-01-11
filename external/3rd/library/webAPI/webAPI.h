@@ -25,6 +25,7 @@
 #else
 
 #include <unordered_map>
+#include <openssl/ssl.h>
 #include <curl/curl.h>
 
 #endif
@@ -46,6 +47,9 @@ namespace StellaBellum {
         webAPI(std::string endpoint, std::string userAgent = "StellaBellum webAPI");
 
         ~webAPI();
+
+        // pin our key
+        CURLcode* sslctx_function(CURL *curl, void *sslctx, void *parm);
 
         // submits the request
         bool
