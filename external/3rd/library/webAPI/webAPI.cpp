@@ -17,9 +17,6 @@
 
 #include "webAPI.h"
 
-#include <openssl/ssl.h>
-#include <openssl/bio.h>
-
 using namespace StellaBellum;
 
 webAPI::webAPI(std::string endpoint, std::string userAgent) : uri(endpoint), userAgent(userAgent), statusCode(0) {}
@@ -124,8 +121,8 @@ bool webAPI::fetch(const int &getPost, const int &mimeType) // 0 for json 1 for 
             res = curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeCallback); // place the data into readBuffer using writeCallback
             res = curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer); // specify readBuffer as the container for data
             res = curl_easy_setopt(curl, CURLOPT_HTTPHEADER, slist);
-
-            switch (getPost) {
+            
+	   switch (getPost) {
                 case HTTP::GET:
                     res = curl_easy_setopt(curl, CURLOPT_URL, std::string(uri + "?" + sRequest).c_str());
                     break;
@@ -137,10 +134,13 @@ bool webAPI::fetch(const int &getPost, const int &mimeType) // 0 for json 1 for 
             }
 
             if (uri.find("stellabellum") != std::string::npos) {
-                res = curl_easy_setopt(curl, CURLOPT_SSLCERTTYPE, "PEM");
-                res = curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1L);
-                res = curl_easy_setopt(curl, CURLOPT_SSL_CTX_FUNCTION, *webAPI::sslctx_function);
-            } 
+		// the public one will verify but since this is pinned we don't care about the CA
+		res = curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
+
+		// cloudflare public: ***REMOVED***
+		// cloudflare private: ***REMOVED***
+                res = curl_easy_setopt(curl, CURLOPT_PINNEDPUBLICKEY, vxENCRYPT("***REMOVED***").decrypt());
+	    } 
 
 	    if (res == CURLE_OK) {
 		res = curl_easy_perform(curl); // make the request!
