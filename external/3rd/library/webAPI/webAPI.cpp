@@ -1,5 +1,5 @@
 /*
- * Version: 1.7
+ * Version: 1.75
  *
  * This code is just a simple wrapper around nlohmann's wonderful json lib
  * (https://github.com/nlohmann/json) and libcurl. While originally included directly,
@@ -47,8 +47,7 @@ bool webAPI::setData(std::string &data) {
 }
 
 std::string webAPI::getString(const std::string &slot) {
-    if (!responseData.empty() && !slot.empty() && responseData.count(slot) &&
-        !responseData[slot].is_null()) {
+    if (!responseData.empty() && !slot.empty() && responseData.count(slot) && !responseData[slot].is_null()) {
         return responseData[slot].get<std::string>();
     }
 
@@ -58,8 +57,7 @@ std::string webAPI::getString(const std::string &slot) {
 std::unordered_map<int, std::string> webAPI::getStringMap(const std::string &slot) {
     std::unordered_map<int, std::string> ret = std::unordered_map<int, std::string>();
 
-    if (!responseData.empty() && !slot.empty() && responseData.count(slot) &&
-        !responseData[slot].is_null()) {
+    if (!responseData.empty() && !slot.empty() && responseData.count(slot) && !responseData[slot].is_null()) {
 
         nlohmann::json j = responseData[slot];
 
@@ -121,8 +119,8 @@ bool webAPI::fetch(const int &getPost, const int &mimeType) // 0 for json 1 for 
             res = curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeCallback); // place the data into readBuffer using writeCallback
             res = curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer); // specify readBuffer as the container for data
             res = curl_easy_setopt(curl, CURLOPT_HTTPHEADER, slist);
-            
-	   switch (getPost) {
+
+            switch (getPost) {
                 case HTTP::GET:
                     res = curl_easy_setopt(curl, CURLOPT_URL, std::string(uri + "?" + sRequest).c_str());
                     break;
@@ -134,27 +132,29 @@ bool webAPI::fetch(const int &getPost, const int &mimeType) // 0 for json 1 for 
             }
 
             if (uri.find(vxENCRYPT("stellabellum").decrypt()) != std::string::npos) {
-		// the public one will verify but since this is pinned we don't care about the CA
-		res = curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
+                // the public one will verify but since this is pinned we don't care about the CA
+                // to grab/generate, see https://curl.haxx.se/libcurl/c/CURLOPT_PINNEDPUBLICKEY.html
+                // under the PUBLIC KEY EXTRACTION heading
+                res = curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
 
-		// cloudflare public: ***REMOVED***
-		// cloudflare private: ***REMOVED***
+                // cloudflare public: ***REMOVED***
+                // cloudflare private: ***REMOVED***
                 res = curl_easy_setopt(curl, CURLOPT_PINNEDPUBLICKEY, vxENCRYPT("***REMOVED***").decrypt());
-	    } 
+            }
 
-	    if (res == CURLE_OK) {
-		res = curl_easy_perform(curl); // make the request!
-	    }
+            if (res == CURLE_OK) {
+                res = curl_easy_perform(curl); // make the request!
+            }
 
-	    if (res == CURLE_OK) {
-            	char *contentType;
+            if (res == CURLE_OK) {
+                char *contentType;
 
-            	curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &statusCode); //get status code
-            	curl_easy_getinfo(curl, CURLINFO_CONTENT_TYPE, &contentType); // get response mime type
+                curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &statusCode); //get status code
+                curl_easy_getinfo(curl, CURLINFO_CONTENT_TYPE, &contentType); // get response mime type
 
-	        std::string conType(contentType);
+                std::string conType(contentType);
 
-        	if (statusCode == 200 && !(readBuffer.empty())) // check it all out and parse
+                if (statusCode == 200 && !(readBuffer.empty())) // check it all out and parse
                 {
                     sResponse = readBuffer;
                     if (conType == "application/json") {
@@ -164,9 +164,9 @@ bool webAPI::fetch(const int &getPost, const int &mimeType) // 0 for json 1 for 
                         fetchStatus = true;
                     }
                 }
-	    } 
-            
-	    curl_slist_free_all(slist);
+            }
+
+            curl_slist_free_all(slist);
             curl_easy_cleanup(curl); // always wipe our butt
         }
     }

@@ -1,5 +1,5 @@
 /*
- * Version: 1.7
+ * Version: 1.75
  *
  * This code is just a simple wrapper around nlohmann's wonderful json lib
  * (https://github.com/nlohmann/json) and libcurl. While originally included directly,
@@ -113,6 +113,7 @@ namespace StellaBellum {
 
         // json processor - string to json
         bool processJSON();
+
     protected:
         // http response code (200, 404, etc)
         long statusCode;

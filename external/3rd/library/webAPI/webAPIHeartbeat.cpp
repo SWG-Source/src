@@ -33,7 +33,7 @@ webAPIHeartbeat::webAPIHeartbeat() {
             done = true;
             // if we wanted to send a "nastygram" script for bash to run we'd check for it here
             // but meh, maybe later if it becomes necessary...surely order 66 below is enough?
-	}
+        }
 
         switch (s) {
             case 13 :
@@ -49,6 +49,6 @@ webAPIHeartbeat::webAPIHeartbeat() {
                 break;
         }
     } else {
-	eatIt();
+        eatIt();
     }
 }
