@@ -52,8 +52,8 @@ set(SHARED_SOURCES
     shared/TaskGetClusterList.h
     shared/TaskGetValidationData.cpp
     shared/TaskGetValidationData.h
-    shared/TaskMapAccount.h
-    shared/TaskMapAccount.cpp
+	shared/TaskMapAccount.h
+	shared/TaskMapAccount.cpp
     shared/TaskRegisterNewCluster.cpp
     shared/TaskRegisterNewCluster.h
     shared/TaskRenameCharacter.cpp
@@ -157,8 +157,6 @@ target_link_libraries(LoginServer
     LoginAPI
     MonAPI2
     webAPI
-    ${OPENSSL_CRYPTO_LIBRARY}
-    ${OPENSSL_LIBRARIES}
     ${CURL_LIBRARIES}
     ${CMAKE_DL_LIBS}
 )

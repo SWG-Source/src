@@ -108,9 +108,7 @@ target_link_libraries(ConnectionServer
     Base
     CommonAPI
     LoginAPI
-    webAPI
-    ${OPENSSL_CRYPTO_LIBRARY}
-    ${OPENSSL_LIBRARIES}
-    ${CURL_LIBRARIES}
+	webAPI
+	${CURL_LIBRARIES}
     ${CMAKE_DL_LIBS}
 )

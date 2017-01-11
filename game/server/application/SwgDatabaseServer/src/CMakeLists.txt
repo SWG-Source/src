@@ -344,8 +344,6 @@ target_link_libraries(SwgDatabaseServer
     unicode
     unicodeArchive
     webAPI
-    ${OPENSSL_CRYPTO_LIBRARY}
-    ${OPENSSL_LIBRARIES}
     ${CURL_LIBRARIES}
     ${CMAKE_DL_LIBS}
 )

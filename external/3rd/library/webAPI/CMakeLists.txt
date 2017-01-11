@@ -11,7 +11,5 @@ add_library(webAPI
 )
 
 include_directories(
-	${CMAKE_CURRENT_SOURCE_DIR}
 	${CURL_INCLUDE_DIRS}
-	${OPENSSL_INCLUDE_DIR}
 )

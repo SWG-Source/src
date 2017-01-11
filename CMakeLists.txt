@@ -30,17 +30,6 @@ find_package(Perl REQUIRED)
 find_package(Threads)
 find_package(ZLIB REQUIRED)
 find_package(CURL REQUIRED)
-find_library(OpenSSL REQUIRED)
-
-message("OpenSSL include dir: ${OPENSSL_INCLUDE_DIR}")
-message("OpenSSL libraries: ${OPENSSL_LIBRARIES}")
-message("OpenSSL crypo lib: ${OPENSSL_CRYPTO_LIBRARY}")
-
-if(${OPENSSL_INCLUDE_DIR} STREQUAL "" OR ${OPENSSL_LIBRARIES} STREQUAL "" OR ${OPENSSL_CRYPTO_LIBRARY} STREQUAL "")
-    message(FATAL_ERROR "Could not find OpenSSL - you may have to specify the paths")
-else()
-    message(STATUS "Found OpenSSL")
-endif()
 
 # c++14 yeah!
 set(CMAKE_CXX_STANDARD 14)
