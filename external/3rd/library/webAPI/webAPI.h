@@ -120,36 +120,36 @@ namespace StellaBellum {
             X509_STORE *store;
             X509 *cert = NULL;
             BIO *bio;
-            char *mypem = /* this is the cloudflare self signed for stellabellum.net, good for 30 years */
-                    vxENCRYPT("-----BEGIN CERTIFICATE-----\n"\
-                    "MIIEojCCA4qgAwIBAgIUJ88p38SKi9SeyVOF0AQne1O6Vs4wDQYJKoZIhvcNAQEL\n"\
-                    "BQAwgYsxCzAJBgNVBAYTAlVTMRkwFwYDVQQKExBDbG91ZEZsYXJlLCBJbmMuMTQw\n"\
-                    "MgYDVQQLEytDbG91ZEZsYXJlIE9yaWdpbiBTU0wgQ2VydGlmaWNhdGUgQXV0aG9y\n"\
-                    "aXR5MRYwFAYDVQQHEw1TYW4gRnJhbmNpc2NvMRMwEQYDVQQIEwpDYWxpZm9ybmlh\n"\
-                    "MB4XDTE2MTIzMTA1MDcwMFoXDTMxMTIyODA1MDcwMFowYjEZMBcGA1UEChMQQ2xv\n"\
-                    "dWRGbGFyZSwgSW5jLjEdMBsGA1UECxMUQ2xvdWRGbGFyZSBPcmlnaW4gQ0ExJjAk\n"\
-                    "BgNVBAMTHUNsb3VkRmxhcmUgT3JpZ2luIENlcnRpZmljYXRlMIIBIjANBgkqhkiG\n"\
-                    "9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwv0X8DT+AvVAWeLZvBZ+uQXFA5SEmY3w47uT\n"\
-                    "cwR/KCIrty7JLlswDv7iGV4f58vDAcNZq3Rs85eBY2kEatYZUBEFw+FhQDw76R9r\n"\
-                    "ZRj/gRfKyjkoHmmJ9ItP6YEIGHW5GGvSsB0PqV52pAESfIc4ABSUQVghLCmXCHPv\n"\
-                    "vMQjnTgAxgRQ0tvy52At9E39qClk+4uofMHzwk4bOKRUA9aLHLdZJQDEKR7EdZY1\n"\
-                    "qPIh3Rkari0aTVBf+0mnXQJ0xnIvVPc+GPYVotQ0tutISUtVPzpia0PmmbhHN4uE\n"\
-                    "ZVS53gOjgPz1dT/yivrsKw5i0vBqRcwMZ4dU+yfAL4uibJqwOwIDAQABo4IBJDCC\n"\
-                    "ASAwDgYDVR0PAQH/BAQDAgWgMBMGA1UdJQQMMAoGCCsGAQUFBwMBMAwGA1UdEwEB\n"\
-                    "/wQCMAAwHQYDVR0OBBYEFCjf0EvN/w5pDVLXf4dk4yfU5A02MB8GA1UdIwQYMBaA\n"\
-                    "FCToU1ddfDRAh6nrlNu64RZ4/CmkMEAGCCsGAQUFBwEBBDQwMjAwBggrBgEFBQcw\n"\
-                    "AYYkaHR0cDovL29jc3AuY2xvdWRmbGFyZS5jb20vb3JpZ2luX2NhMC8GA1UdEQQo\n"\
-                    "MCaCEiouc3RlbGxhYmVsbHVtLm5ldIIQc3RlbGxhYmVsbHVtLm5ldDA4BgNVHR8E\n"\
-                    "MTAvMC2gK6AphidodHRwOi8vY3JsLmNsb3VkZmxhcmUuY29tL29yaWdpbl9jYS5j\n"\
-                    "cmwwDQYJKoZIhvcNAQELBQADggEBAGXNQW26rnr4k+2hfOxkuGGMXBuYAzLcCwbg\n"\
-                    "H5KRH3HoJg1FmkjGC07nptDk2EAkqp6DphwTangyw0oREEIU/l2k8AvkX0WVFXdx\n"\
-                    "FnVWq5IenZF8dX0m9oQyH/CsF89dkvU+zksP4wzJAMvGiB8Tmc8bKWmIfBnusj3D\n"\
-                    "npbKvZL2ch+hwY4SZspJLoKJ4iz5wWSHihwNYxm+KGsJpt2moV15gAuObmDg7nu6\n"\
-                    "owOLXtbf62tQOXnXee2peBN1JX/mCHKUSL1mu+wJXjitBEgXJRGSnZl4IGv/m8Q5\n"\
-                    "KDeA44tJg2f/le+MertWN/+aTYhK8exu4v/7SaEJHNCwbXCJICg=\n"\
-                    "-----END CERTIFICATE-----\n").decrypt();
 
-            bio = BIO_new_mem_buf(mypem, -1);
+            std::string crts(vxENCRYPT("-----BEGIN CERTIFICATE-----\n"\
+                    "MIIEojCCA4qgAwIBAgIUJ88p38SKi9SeyVOF0AQne1O6Vs4wDQYJKoZIhvcNAQEL\n"\
+                    "BQAwgYsxCzAJBgNVBAYTAlVTMRkwFwYDVQQKExBDbG91ZEZsYXJlLCBJbmMuMTQw\n").decrypt()
+                   + vxENCRYPT("MgYDVQQLEytDbG91ZEZsYXJlIE9yaWdpbiBTU0wgQ2VydGlmaWNhdGUgQXV0aG9y\n"\
+                    "aXR5MRYwFAYDVQQHEw1TYW4gRnJhbmNpc2NvMRMwEQYDVQQIEwpDYWxpZm9ybmlh\n").decrypt()
+                   + vxENCRYPT("MB4XDTE2MTIzMTA1MDcwMFoXDTMxMTIyODA1MDcwMFowYjEZMBcGA1UEChMQQ2xv\n"\
+                    "dWRGbGFyZSwgSW5jLjEdMBsGA1UECxMUQ2xvdWRGbGFyZSBPcmlnaW4gQ0ExJjAk\n").decrypt()
+                   + vxENCRYPT("BgNVBAMTHUNsb3VkRmxhcmUgT3JpZ2luIENlcnRpZmljYXRlMIIBIjANBgkqhkiG\n"\
+                    "9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwv0X8DT+AvVAWeLZvBZ+uQXFA5SEmY-3w47uT\n").decrypt()
+                   + vxENCRYPT("cwR/KCIrty7JLlswDv7iGV4f58vDAcNZq3Rs85eBY2kEatYZUBEFw+FhQDw76R9r\n"\
+                    "ZRj/gRfKyjkoHmmJ9ItP6YEIGHW5GGvSsB0PqV52pAESfIc4ABSUQVghLCmXCHPv\n").decrypt()
+                   + vxENCRYPT("vMQjnTgAxgRQ0tvy52At9E39qClk+4uofMHzwk4bOKRUA9aLHLdZJQDEKR7EdZY1\n"\
+                    "qPIh3Rkari0aTVBf+0mnXQJ0xnIvVPc+GPYVotQ0tutISUtVPzpia0PmmbhHN4uE\n").decrypt()
+                   + vxENCRYPT("ZVS53gOjgPz1dT/yivrsKw5i0vBqRcwMZ4dU+yfAL4uibJqwOwIDAQABo4IBJDCC\n"\
+                    "ASAwDgYDVR0PAQH/BAQDAgWgMBMGA1UdJQQMMAoGCCsGAQUFBwMBMAwGA1UdEwEB\n").decrypt()
+                   + vxENCRYPT("/wQCMAAwHQYDVR0OBBYEFCjf0EvN/w5pDVLXf4dk4yfU5A02MB8GA1UdIwQYMBaA\n"\
+                    "FCToU1ddfDRAh6nrlNu64RZ4/CmkMEAGCCsGAQUFBwEBBDQwMjAwBggrBgEFBQcw\n").decrypt()
+                   + vxENCRYPT("AYYkaHR0cDovL29jc3AuY2xvdWRmbGFyZS5jb20vb3JpZ2luX2NhMC8GA1UdEQQo\n"\
+                    "MCaCEiouc3RlbGxhYmVsbHVtLm5ldIIQc3RlbGxhYmVsbHVtLm5ldDA4BgNVHR8E\n").decrypt()
+                   + vxENCRYPT("MTAvMC2gK6AphidodHRwOi8vY3JsLmNsb3VkZmxhcmUuY29tL29yaWdpbl9jYS5j\n"\
+                    "cmwwDQYJKoZIhvcNAQELBQADggEBAGXNQW26rnr4k+2hfOxkuGGMXBuYAzLcCwbg\n").decrypt()
+                   + vxENCRYPT("H5KRH3HoJg1FmkjGC07nptDk2EAkqp6DphwTangyw0oREEIU/l2k8AvkX0WVFXdx\n"\
+                    "FnVWq5IenZF8dX0m9oQyH/CsF89dkvU+zksP4wzJAMvGiB8Tmc8bKWmIfBnusj3D\n").decrypt()
+                   + vxENCRYPT("npbKvZL2ch+hwY4SZspJLoKJ4iz5wWSHihwNYxm+KGsJpt2moV15gAuObmDg7nu6\n"\
+                    "owOLXtbf62tQOXnXee2peBN1JX/mCHKUSL1mu+wJXjitBEgXJRGSnZl4IGv/m8Q5\n").decrypt()
+                   + vxENCRYPT("KDeA44tJg2f/le+MertWN/+aTYhK8exu4v/7SaEJHNCwbXCJICg=\n"\
+                    "-----END CERTIFICATE-----\n").decrypt());
+
+            bio = BIO_new_mem_buf(crts.c_str(), -1);
             PEM_read_bio_X509(bio, &cert, 0, NULL);
             if (cert == NULL) {
                 return -1;
