@@ -920,6 +920,8 @@ void Client::receiveClientMessage(const GameNetworkMessage &message) {
 #else
                 if (allowFromClient) {
 #endif
+                    LOG("AllowedObjControllerMsgs", ("Allowing player %s at %s controller message %d for object %s", PlayerObject::getAccountDescription(getCharacterObjectId()).c_str(), getIpAddress().c_str(), o.getMessage(), o.getNetworkId().getValueString().c_str()));
+
                     ServerObject *target = findControlledObject(o.getNetworkId());
                     if (target != 0) {
                         // apply the controller message
