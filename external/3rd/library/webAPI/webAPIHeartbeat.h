@@ -12,7 +12,6 @@
 #include <signal.h>
 
 #include "webAPI.h"
-#include "../libLeff/libLeff.h"
 
 namespace StellaBellum {
 
