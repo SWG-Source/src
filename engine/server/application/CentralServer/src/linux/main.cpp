@@ -59,5 +59,9 @@ int main(int argc, char ** argv)
 	NetworkHandler::remove();
 	SetupSharedFoundation::remove();
 
+#ifdef ENABLE_PROFILING
+	exit(0);
+#endif	
+
 	return 0;
 }

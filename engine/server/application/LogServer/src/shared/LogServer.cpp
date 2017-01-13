@@ -154,6 +154,10 @@ void LogServer::setDone(char const *reasonfmt, ...)
 		va_end(ap);
 		m_done = true;
 	}
+
+#ifdef ENABLE_PROFILING
+	std::exit(0);
+#endif
 }
 
 // ======================================================================

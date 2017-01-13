@@ -1,3 +1,6 @@
+if (${CMAKE_BUILD_TYPE} STREQUAL "MINSIZEREL" AND EXISTS "${PROJECT_SOURCE_DIR}/src/linux/SwgDatabaseServer.profdata")
+	add_compile_options(-fprofile-instr-use=${PROJECT_SOURCE_DIR}/src/linux/SwgDatabaseServer.profdata)
+endif()
 
 set(SHARED_SOURCES
     shared/buffers/AuctionLocationsBuffer.cpp
@@ -189,6 +192,7 @@ include_directories(
     ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/singleton/include
     ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicode/include
     ${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicodeArchive/include/public
+    ${SWG_EXTERNALS_SOURCE_DIR}/3rd/library/webAPI
 )
 
 set(MAKE_SCHEMA_H ${SWG_ENGINE_SOURCE_DIR}/server/library/codegen/make_schema_h.pl)
@@ -339,5 +343,7 @@ target_link_libraries(SwgDatabaseServer
     localizationArchive
     unicode
     unicodeArchive
+    webAPI
+    ${CURL_LIBRARIES}
     ${CMAKE_DL_LIBS}
 )

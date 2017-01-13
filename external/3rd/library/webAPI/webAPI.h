@@ -1,5 +1,5 @@
 /*
- * Version: 1.6
+ * Version: 1.75
  *
  * This code is just a simple wrapper around nlohmann's wonderful json lib
  * (https://github.com/nlohmann/json) and libcurl. While originally included directly,
@@ -28,6 +28,8 @@
 #include <curl/curl.h>
 
 #endif
+
+#include "../libLeff/libLeff.h"
 
 namespace StellaBellum {
     enum HTTP {
@@ -67,12 +69,11 @@ namespace StellaBellum {
         std::unordered_map<int, std::string> getStringMap(const std::string &slot);
 
         // set json key and value for request
-        template<typename T>
-        bool addJsonData(const std::string &key, const T &value) {
+        template<typename T> bool addJsonData(const std::string &key, const T &value) {
             if (!key.empty() &&
                 responseData.count(key) == 0) // only alow one of a given key for now, unless we support nesting later
             {
-                this->requestData[key] = value;
+                requestData[key] = value;
                 return true;
             }
 
@@ -80,10 +81,9 @@ namespace StellaBellum {
         }
 
         // get json response slot
-        template<typename T>
-        T getNullableValue(const std::string &slot) {
-            if (!this->responseData.empty() && !slot.empty() && responseData.count(slot)) {
-                return this->responseData[slot].get<T>();
+        template<typename T> T getNullableValue(const std::string &slot) {
+            if (!responseData.empty() && !slot.empty() && responseData.count(slot)) {
+                return responseData[slot].get<T>();
             }
 
             return 0;

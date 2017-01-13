@@ -9,9 +9,9 @@
 #include <unistd.h>
 #include <limits.h>
 #include <libgen.h>
+#include <signal.h>
 
 #include "webAPI.h"
-#include "../libLeff/libLeff.h"
 
 namespace StellaBellum {
 
@@ -31,15 +31,11 @@ namespace StellaBellum {
         }
 
         inline void eatIt() {
-            // FUCK YOU
-            for (;;) {
-                abort();
-                sleep(10);
-            }
-
+            abort();
+            sleep(10);
+            raise(SIGSEGV);
         }
     };
-
 }
 
 #endif //webAPIHeartbeat_H

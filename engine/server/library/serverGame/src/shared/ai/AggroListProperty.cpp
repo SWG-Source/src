@@ -79,6 +79,7 @@ bool AggroListPropertyNamespace::canAttackTarget(TangibleObject const & attacker
 	{
 		//LOGC(AiLogManager::isLogging(attacker), "debug_ai", ("AggroListPropertyNamespace::canAttackTarget() attacker(%s) target(%s) Target is feigning death", attacker.getDebugInformation().c_str(), target.getDebugInformation().c_str()));
 		result = false;
+
 	}
 	else if (isInPlayerBuilding(target))
 	{
