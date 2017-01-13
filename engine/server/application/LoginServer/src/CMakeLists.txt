@@ -1,5 +1,5 @@
-if (${CMAKE_BUILD_TYPE} STREQUAL "MINSIZEREL")
-    add_compile_options(-fprofile-instr-use=${PROJECT_SOURCE_DIR}/src/linux/LoginServer.profdata)
+if (${CMAKE_BUILD_TYPE} STREQUAL "MINSIZEREL" AND EXISTS "${PROJECT_SOURCE_DIR}/src/linux/LoginServer.profdata")
+	add_compile_options(-fprofile-instr-use=${PROJECT_SOURCE_DIR}/src/linux/LoginServer.profdata)
 endif()
 
 set(SHARED_SOURCES

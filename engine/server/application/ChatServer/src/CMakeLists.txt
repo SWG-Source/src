@@ -1,3 +1,6 @@
+if (${CMAKE_BUILD_TYPE} STREQUAL "MINSIZEREL" AND EXISTS "${PROJECT_SOURCE_DIR}/src/linux/ChatServer.profdata")
+	add_compile_options(-fprofile-instr-use=${PROJECT_SOURCE_DIR}/src/linux/ChatServer.profdata)
+endif()
 
 set(SHARED_SOURCES
     shared/CentralServerConnection.cpp

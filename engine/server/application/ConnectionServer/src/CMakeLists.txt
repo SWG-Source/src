@@ -1,5 +1,5 @@
-if (${CMAKE_BUILD_TYPE} STREQUAL "MINSIZEREL")
-    add_compile_options(-fprofile-instr-use=${PROJECT_SOURCE_DIR}/src/linux/ConnectionServer.profdata)
+if (${CMAKE_BUILD_TYPE} STREQUAL "MINSIZEREL" AND EXISTS "${PROJECT_SOURCE_DIR}/src/linux/ConnectionServer.profdata")
+	add_compile_options(-fprofile-instr-use=${PROJECT_SOURCE_DIR}/src/linux/ConnectionServer.profdata)
 endif()
 
 set(SHARED_SOURCES

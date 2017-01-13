@@ -1,3 +1,6 @@
+if (${CMAKE_BUILD_TYPE} STREQUAL "MINSIZEREL" AND EXISTS "${PROJECT_SOURCE_DIR}/src/linux/LogServer.profdata")
+	add_compile_options(-fprofile-instr-use=${PROJECT_SOURCE_DIR}/src/linux/LogServer.profdata)
+endif()
 
 set(SHARED_SOURCES
     shared/ConfigLogServer.cpp
