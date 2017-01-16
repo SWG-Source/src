@@ -68,18 +68,17 @@ bool DB::OCIServer::checkerr(OCISession const & session, int status)
 
 			WARNING(true,("Database error: %.*s",512,errbuf));
 			LOG("DatabaseError",("Database error: %.*s",512,errbuf));
-			FATAL(DB::Server::getFatalOnError() || session.getFatalOnError(),("Database error: %.*s",512,errbuf));
 	
 			switch ((int) errcode)
 			{
 				case 1013:
-					FATAL(true,("Cancelled by user request (ctrl-c or kill signal).\n"));
+					FATAL(DB::Server::getFatalOnError() || session.getFatalOnError(),("Cancelled by user request (ctrl-c or kill signal).\n"));
 					break;
 				case 12541:
 					REPORT_LOG(true,("Database Error - %.*s\n", 512, errbuf));
 					return false;
 				default:
-					FATAL(true,("Unhandled Database Error - %.*s\n", 512, errbuf));
+					FATAL(DB::Server::getFatalOnError() || session.getFatalOnError(),("Unhandled Database Error - %.*s\n", 512, errbuf));
 					break;
 			}			
 
