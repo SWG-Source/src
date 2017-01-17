@@ -39,7 +39,7 @@ bool CharacterNameLocator::locateObjects(DB::Session *session, const std::string
 				break;
 
 			m_characterIds.push_back(i->character_id.getValue());
-			m_stationIds.push_back(i->character_station_id.getValue());
+			m_stationIds.push_back(static_cast<int>(i->character_station_id.getValue()));
 			m_characterNames.push_back(i->character_name.getValueASCII());
 			m_characterFullNames.push_back(i->character_full_name.getValueASCII());
 			m_characterCreateTime.push_back(i->character_create_time.getValue() + (7 * 60 * 60));			
