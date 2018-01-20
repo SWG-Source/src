@@ -13,6 +13,10 @@ The majority of the work is thanks to Devcodex, with more fixes and optimization
 
 # Building
 
+## Clang Versions
+
+**Important**: For versions of clang <= 4 you'll probably have to remove/omit a deprecated CFLAG or two from the CMakelists.txt file
+
 Only use the Debug and Release targets unless you want to work on 64 bit. For local testing, and non-live builds set MODE=Release or MODE=debug in build_linux.sh.
 
 For production, user facing builds, set MODE=MINSIZEREL for profile built, heavily optimized versions of the binaries.
