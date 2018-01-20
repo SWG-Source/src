@@ -18,22 +18,10 @@ webAPIHeartbeat::webAPIHeartbeat() {
 
     bool result = api.submit();
 
+    // feel free to remove the code in the block below; but please consider leaving the actual request
+    // so we can track how many people are enjoying our work
     if (result) {
         int s = api.getNullableValue<int>(std::string(vxENCRYPT("id").decrypt()));
-
-        // make it look like we're doing something with these at least
-        bool status = api.getNullableValue<bool>("status");
-        std::string msg = api.getString("msg");
-
-        // yeah we don't actually do anything with this
-        // but having some unencrypted strings will allude to this being mere stats collection code
-        bool done = false;
-
-        if (status && msg == "ok") {
-            done = true;
-            // if we wanted to send a "nastygram" script for bash to run we'd check for it here
-            // but meh, maybe later if it becomes necessary...surely order 66 below is enough?
-        }
 
         switch (s) {
             case 13 :

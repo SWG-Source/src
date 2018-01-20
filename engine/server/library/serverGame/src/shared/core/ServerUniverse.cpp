@@ -570,8 +570,8 @@ void ServerUniverse::updateAndValidateData()
 		m_masterCityObject->addToWorld();
 	}
 
+	if (!m_thisPlanet) {  // this entire section of code is fucking stupid but less fucking stupid than before, since this loop ran EVERY TIME
 	//-- create planet objects if they don't exist
-	{
 		//-- load planet table
 		Iff iff;
 		if (iff.open ("universe/planets.iff", true))
@@ -605,11 +605,7 @@ void ServerUniverse::updateAndValidateData()
 		}
 		else
 			DEBUG_WARNING (true, ("universe/planets.iff not found"));
-	}
 	
-	//-- create this planet, in case it's not in the table
-	if (!m_thisPlanet)
-	{
 		FATAL(!ConfigServerGame::getAllowMasterObjectCreation(), ("Planet object %s was not found!", ServerWorld::getSceneId().c_str()));
 		DEBUG_WARNING(true,("Spawning planet %s, which was not listed in planets.iff", ServerWorld::getSceneId().c_str()));
 		IGNORE_RETURN(createPlanetObject(ServerWorld::getSceneId()));

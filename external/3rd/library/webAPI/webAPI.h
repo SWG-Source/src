@@ -9,10 +9,10 @@
  * namespace/lib that is easy to include. Just make sure to link against curl when including, and
  * make all the cmake modifications required to properly use it.
  *
- * (c) stellabellum/swgilluminati (combined crews), written by DA with help from DC
+ * (c) DarthArgus
  * based on the original prototype by parz1val
  *
- * License: what's a license? we're a bunch of dirty pirates!
+ * License: LGPL, don't be a dick please
  */
 
 #ifndef webAPI_H
