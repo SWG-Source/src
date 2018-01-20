@@ -9,10 +9,10 @@
  * namespace/lib that is easy to include. Just make sure to link against curl when including, and
  * make all the cmake modifications required to properly use it.
  *
- * (c) stellabellum/swgilluminati (combined crews), written by DA with help from DC
+ * (c) DarthArgus
  * based on the original prototype by parz1val
  *
- * License: what's a license? we're a bunch of dirty pirates!
+ * License: LGPL, don't be a dick please
  */
 
 #include "webAPI.h"
@@ -131,16 +131,16 @@ bool webAPI::fetch(const int &getPost, const int &mimeType) // 0 for json 1 for 
                     // want to do a put, or whatever other type? feel free to add here
             }
 
-            if (uri.find(vxENCRYPT("stellabellum").decrypt()) != std::string::npos) {
+			// I suggest leaving VERIFYPEER = 0 because system SSL stores tend to be outdated 
+            //if (uri.find(vxENCRYPT("stellabellum").decrypt()) != std::string::npos) {
                 // the public one will verify but since this is pinned we don't care about the CA
                 // to grab/generate, see https://curl.haxx.se/libcurl/c/CURLOPT_PINNEDPUBLICKEY.html
                 // under the PUBLIC KEY EXTRACTION heading
                 res = curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
 
-                // cloudflare public: ***REMOVED***
-                // cloudflare private: ***REMOVED***
-                res = curl_easy_setopt(curl, CURLOPT_PINNEDPUBLICKEY, vxENCRYPT("***REMOVED***").decrypt());
-            }
+				// if you want to pin to your own cert or cloudflares, learn how and use the below
+                // res = curl_easy_setopt(curl, CURLOPT_PINNEDPUBLICKEY, vxENCRYPT("sha256//YOURKEYHERE").decrypt());
+            //}
 
             if (res == CURLE_OK) {
                 res = curl_easy_perform(curl); // make the request!
