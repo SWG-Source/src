@@ -1,12 +1,6 @@
 # Star Wars Galaxies Source Code (C++) Repository
 
-This is the main server code. Please feel free to contribute merge/pull requests, or fork the code to create variations. Please keep the license and credit information intact.
-
-The majority of the work is thanks to Devcodex, with more fixes and optimizations provided by DarthArgus.
-
-# Main Branches
-* master - stable, no debug flags
-* testing - bleeding edge, works in progress, probably stable
+This is the main server code for SWGSource 1.2 as originally forked from the https://bitbucket.org/stellabellumswg/ repository.  Please see that repository for original publication and alteration credit.
 
 # Works in progress
 * testing-64 - fully 64 bit version thatbuilds but doesn't run, some typedefs and things are wrong
@@ -39,6 +33,8 @@ Finally, then replace the profdata files with the updated versions, within the s
 
 See http://clang.llvm.org/docs/UsersManual.html#profiling-with-instrumentation for more information.
 
-# Buy Darth A Caffinated Beverage
+# More Information
 
-bitcoin:16e1QRRmnBmod3RLtdDMa5muKBGRXE3Kmh
+See http://www.swgsource.com/ for more information on the SWG Source project.
+
+Join the SWGSource Discord if you would like to contribute:  https://discord.gg/j53cMj9
