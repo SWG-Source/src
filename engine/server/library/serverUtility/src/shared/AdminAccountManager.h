@@ -19,7 +19,7 @@ public:
 	static const char *getAdminCommandName();
 	static const std::string & getAdminTagName();
 	
-	static int  isAdminAccount(uint32 suid, bool useOldSuid = false);
+	static int  getAdminLevel(const std::string & account);
 	static bool isAdminAccount(const std::string & account, int& level);
 	static bool isInternalIp(const std::string & addr);
 	static void reload();

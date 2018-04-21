@@ -88,14 +88,18 @@ elseif (UNIX)
     set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELEASE}")
     set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_RELEASE}")
 
-    # Ofast doesn't work with gcc builds
+    # New Clang compile method.  Test to -O2 to see if its a cflag that is causing issue.
     if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-        set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Ofast \
-		-fno-signed-zeros -freciprocal-math -ffp-contract=fast \
-		-fno-threadsafe-statics -fslp-vectorize-aggressive -fslp-vectorize \
-		-fno-stack-protector -fstrict-enums -fstrict-vtable-pointers \
-		-fno-coverage-mapping -fno-spell-checking -fshort-enums -finline-functions \
-		-finline-hint-functions -fno-unroll-loops")
+         set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2")
+
+    # Default Clang compile method comment out for now for reference 
+    # Currently use of clang compiler is breaking some bins, miff & templateCompiler. 
+      #  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Ofast \
+	#	-fno-signed-zeros -freciprocal-math -ffp-contract=fast \
+	#	-fno-threadsafe-statics -fslp-vectorize-aggressive -fslp-vectorize \
+	#	-fno-stack-protector -fstrict-enums -fstrict-vtable-pointers \
+	#	-fno-coverage-mapping -fno-spell-checking -fshort-enums -finline-functions \
+	#	-finline-hint-functions -fno-unroll-loops")
 
         set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -ggdb")
 
@@ -108,9 +112,8 @@ elseif (UNIX)
         # MINSIZEREL is used for profiled, flto builds
         set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_RELEASE} -flto -fwhole-program-vtables")
     elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-        # O3 and Ofast include one or more flags that cause java to crash when using gcc6
-        set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2 -fno-signed-zeros -freciprocal-math
-            -fno-unroll-loops -fno-tree-loop-optimize")
+        # making changes for all bins to compile correctly with gcc5.4 or gcc6.4 we will test -O3 later
+        set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2 -fno-signed-zeros -freciprocal-math")
         set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Og")
     elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
         set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")

@@ -126,8 +126,6 @@
 
 #include "webAPI.h"
 
-using namespace StellaBellum;
-
 namespace CentralServerNamespace
 {
 	bool gs_connectionServersPublic=false;
@@ -2941,7 +2939,7 @@ void CentralServer::sendPopulationUpdateToLoginServer()
 
 void CentralServer::sendMetricsToWebAPI()
 {
-	static const std::string metricsURL(ConfigCentralServer::getMetricsDataURL());
+	/*static const std::string metricsURL(ConfigCentralServer::getMetricsDataURL());
 	
 	if (!metricsURL.empty())
 	{
@@ -2979,7 +2977,7 @@ void CentralServer::sendMetricsToWebAPI()
 #else
 		api.submit();
 #endif
-	}
+	}*/
 }
 
 //-----------------------------------------------------------------------

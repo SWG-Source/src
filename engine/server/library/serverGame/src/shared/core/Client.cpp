@@ -1924,7 +1924,7 @@ float Client::computeDeltaTimeInSeconds(uint32 const syncStampLong) const {
 
 bool Client::setGodMode(bool value) {
     // (re?) check god permissions
-    m_godLevel = AdminAccountManager::isAdminAccount(getStationId(), ConfigServerGame::getUseOldSuidGenerator());
+    m_godLevel = AdminAccountManager::getAdminLevel(m_accountName.c_str());
 
     if (ConfigServerGame::getAdminGodToAll() || (m_godLevel > 0)) {
         m_godValidated = true;

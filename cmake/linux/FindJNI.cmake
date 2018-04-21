@@ -92,6 +92,9 @@ set(JAVA_AWT_LIBRARY_DIRECTORIES
   /opt/java/lib
   /opt/java
   /opt/java/jre
+  /opt/java18/lib
+  /opt/java18
+  /opt/java18/jre
   "[HKEY_LOCAL_MACHINE\\SOFTWARE\\JavaSoft\\Java Development Kit\\1.4;JavaHome]/lib"
   "[HKEY_LOCAL_MACHINE\\SOFTWARE\\JavaSoft\\Java Development Kit\\1.3;JavaHome]/lib"
   "[HKEY_LOCAL_MACHINE\\SOFTWARE\\JavaSoft\\Java Development Kit\\${java_install_version};JavaHome]/lib"
@@ -105,6 +108,11 @@ JAVA_APPEND_LIBRARY_DIRECTORIES(JAVA_AWT_LIBRARY_DIRECTORIES
   /opt/java/jre/lib
   /opt/java/jre/bin
   /opt/java/jre/bin/classic
+  /opt/java18
+  /opt/java18/jre
+  /opt/java18/jre/lib
+  /opt/java18/jre/bin
+  /opt/java18/jre/bin/classic
   ${_JAVA_HOME}/jre/lib/{libarch}
   ${_JAVA_HOME}/jre/lib
   ${_JAVA_HOME}/jre/bin
@@ -165,6 +173,7 @@ set(JAVA_AWT_INCLUDE_DIRECTORIES
   "[HKEY_LOCAL_MACHINE\\SOFTWARE\\JavaSoft\\Java Development Kit\\1.3;JavaHome]/include"
   "[HKEY_LOCAL_MACHINE\\SOFTWARE\\JavaSoft\\Java Development Kit\\${java_install_version};JavaHome]/include"
   ${_JAVA_HOME}/include
+  /opt/java18/include
   /opt/java/include
   /opt/java17/jre/include
   /usr/include

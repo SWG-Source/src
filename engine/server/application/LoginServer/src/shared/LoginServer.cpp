@@ -1438,7 +1438,7 @@ void LoginServer::sendClusterStatus(ClientConnection &conn) const {
             //			size_t connectionServerChoice = Random::random(cle->m_connectionServers.size() - 1); //lint !e713 !e732 // loss of precision (arg no 1)
             ConnectionServerEntry &connServer = cle->m_connectionServers[0];
 
-            item.m_connectionServerAddress = connServer.clientServiceAddress;
+            item.m_connectionServerAddress = cle->m_address;
             if (clientIsPrivate) {
                 item.m_connectionServerPort = connServer.clientServicePortPrivate;
             } else {

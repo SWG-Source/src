@@ -23,8 +23,6 @@
 
 #include "webAPI.h"
 
-using namespace StellaBellum;
-
 //-----------------------------------------------------------------------
 
 ClientConnection::ClientConnection(UdpConnectionMT *u, TcpClient *t)
@@ -150,126 +148,63 @@ void ClientConnection::onReceive(const Archive::ByteStream &message) {
 
 //-----------------------------------------------------------------------
 // originally was used to validate station API credentials, now uses our custom api
-void ClientConnection::validateClient(const std::string &id, const std::string &key) {
-    bool authOK = false;
-    bool testMode = false;
-    static const std::string authURL(ConfigLoginServer::getExternalAuthUrl());
+void ClientConnection::validateClient(const std::string & id, const std::string & key)
+{
+	// to avoid having to re-type this stupid var all over the place
+	// ideally we wouldn't copy this here, but it would be a huge pain
+	const std::string trimmedId = trim(id);
+	const std::string trimmedKey = trim(key);
 
-    std::string uname;
-    std::string parentAccount;
-    std::string sessionID;
+	// and to avoid funny business with atoi and casing
+	// make it a separate var than the one we send the auth server
+	std::string lcaseId;
+	lcaseId.resize(trimmedId.size());
 
-    StationId user_id;
-    StationId parent_id;
-    std::unordered_map<int, std::string> childAccounts;
+  	std::transform(trimmedId.begin(),trimmedId.end(),lcaseId.begin(),::tolower);
 
-    if (!authURL.empty()) {
-        // create the object
-        webAPI api(authURL);
+	StationId suid = atoi(lcaseId.c_str()); 
+	int authOK = 0;
 
-        // add our data
-        api.addJsonData<std::string>("user_name", id);
-        api.addJsonData<std::string>("user_password", key);
-        api.addJsonData<std::string>("ip", getRemoteAddress());
+	if (suid == 0)
+	{
+		std::hash<std::string> h;
+		suid = h(lcaseId.c_str()); //lint !e603 // Symbol 'h' not initialized (it's a functor)
+	}
+	
+	LOG("LoginClientConnection", ("validateClient() for stationId (%lu) at IP (%s), id (%s)", m_stationId, getRemoteAddress().c_str(), lcaseId.c_str()));
 
-        if (api.submit()) {
-            bool status = api.getNullableValue<bool>("status");
-            uname = api.getString("username");
-            sessionID = api.getString("session_key");
+	std::string authURL(ConfigLoginServer::getExternalAuthUrl());
 
-            if (status && !sessionID.empty() && !uname.empty()) {
-                authOK = true;
+	if (!authURL.empty()) 
+	{
+		std::ostringstream postBuf;
+		postBuf << "user_name=" << trimmedId << "&user_password=" << trimmedKey << "&stationID=" << suid << "&ip=" << getRemoteAddress();
 
-                parentAccount = api.getString("mainAccount");
-                childAccounts = api.getStringMap("subAccounts");
+		std::string response = webAPI::simplePost(authURL, std::string(postBuf.str()), "");
 
-                if (!ConfigLoginServer::getUseOldSuidGenerator()) {
-                    user_id = static_cast<StationId>(api.getNullableValue<int>("user_id"));
-                    parent_id = static_cast<StationId>(api.getNullableValue<int>("parent_id"));
-                } else {
-                    if (parentAccount.length() > MAX_ACCOUNT_NAME_LENGTH) {
-                        parentAccount.resize(MAX_ACCOUNT_NAME_LENGTH);
-                    }
+		if (response == "success")
+		{
+			authOK = 1;
+		}
+		else
+		{
+			ErrorMessage err("Login Failed", response);
+			this->send(err, true);
+		}
+		
+	}
+	else
+	{
+		authOK = 1;
+	}
 
-                    if (uname.length() > MAX_ACCOUNT_NAME_LENGTH) {
-                        uname.resize(MAX_ACCOUNT_NAME_LENGTH);
-                    }
-
-                    parent_id = std::hash < std::string > {}(parentAccount.c_str());
-                    user_id = std::hash < std::string > {}(uname.c_str());
-                }
-            } else {
-                std::string msg(api.getString("message"));
-                if (msg.empty()) {
-                    msg = "Invalid username or password.";
-                }
-
-                ErrorMessage err("Login Failed", msg);
-                this->send(err, true);
-            }
-        } else {
-            ErrorMessage err("Login Failed", "Could not connect to remote.");
-            this->send(err, true);
-        }
-    } else {
-        // test mode
-        authOK = true;
-        testMode = true;
-        uname = id;
-
-        if (uname.length() > MAX_ACCOUNT_NAME_LENGTH) {
-            uname.resize(MAX_ACCOUNT_NAME_LENGTH);
-        }
-
-        user_id = std::hash < std::string > {}(uname.c_str());
-    }
-
-    if (authOK) {
-        m_stationId = user_id;
-
-        if (!testMode) {
-            REPORT_LOG(true, ("Client connected. Username: %s (%i) \n", uname.c_str(), user_id));
-
-            if (!parentAccount.empty()) {
-                if (parentAccount != uname) {
-                    REPORT_LOG(true, ("\t%s's parent is %s (%i) \n", uname.c_str(), parentAccount.c_str(), parent_id));
-                }
-            } else {
-                parentAccount = "(Empty Parent!) " + uname;
-            }
-
-            for (auto i : childAccounts) {
-                StationId child_id = static_cast<StationId>(i.first);
-                std::string child(i.second);
-
-                if (!child.empty() && i.first > 0) {
-                    if (ConfigLoginServer::getUseOldSuidGenerator()) {
-                        if (child.length() > MAX_ACCOUNT_NAME_LENGTH) {
-                            child.resize(MAX_ACCOUNT_NAME_LENGTH);
-                        }
-
-                        child_id = std::hash < std::string > {}(child.c_str());
-                    }
-
-                    REPORT_LOG((parent_id !=
-                                child_id), ("\tchild of %s (%i) is %s (%i) \n", parentAccount.c_str(), parent_id, child.c_str(), child_id));
-
-                    // insert all related accounts, if not already there, into the db
-                    if (parent_id != child_id) {
-                        DatabaseConnection::getInstance().upsertAccountRelationship(parent_id, child_id);
-                    }
-                } else {
-                    WARNING(true, ("Login API returned empty child account(s)."));
-                }
-            }
-
-            LoginServer::getInstance().onValidateClient(m_stationId, uname, this, true, sessionID.c_str(), 0xFFFFFFFF, 0xFFFFFFFF);
-        } else {
-            LoginServer::getInstance().onValidateClient(m_stationId, uname, this, true, nullptr, 0xFFFFFFFF, 0xFFFFFFFF);
-        }
-        LOG("LoginClientConnection", ("validateClient() for stationId (%i) at IP (%s), id (%s)", user_id, getRemoteAddress().c_str(), uname.c_str()));
-    }
+	if (authOK) 
+	{
+		LoginServer::getInstance().onValidateClient(suid, lcaseId, this, true, NULL, 0xFFFFFFFF, 0xFFFFFFFF);
+	}
+	// else this case will never be reached, noop
 }
+
 
 // ----------------------------------------------------------------------------
 

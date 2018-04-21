@@ -12,10 +12,6 @@
 #include "sharedRandom/SetupSharedRandom.h"
 #include "sharedThread/SetupSharedThread.h"
 
-#ifndef STELLA_INTERNAL
-#include "webAPIHeartbeat.h"
-#endif
-
 // ======================================================================
 
 void dumpPid(const char * argv)
@@ -29,10 +25,6 @@ void dumpPid(const char * argv)
 
 int main(int argc, char ** argv)
 {
-#ifndef STELLA_INTERNAL
-	StellaBellum::webAPIHeartbeat();
-#endif
-
 	SetupSharedThread::install();
 	SetupSharedDebug::install(1024);
 

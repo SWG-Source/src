@@ -9576,7 +9576,7 @@ void CommandCppFuncs::install()
 	CommandTable::addCppFunction("systemMessage", commandFuncSystemMessage);
 	//	CommandTable::addCppFunction("combatSpam",           commandFuncCombatSpam);
 
-		// admin commands
+	// admin commands
 	CommandTable::addCppFunction("admin_setGodMode", commandFuncAdminSetGodMode);
 	CommandTable::addCppFunction("admin_kick", commandFuncAdminKick);
 	CommandTable::addCppFunction("admin_planetwarp", commandFuncAdminPlanetwarp);
