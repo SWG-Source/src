@@ -177,21 +177,26 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 
 	if (!authURL.empty()) 
 	{
-		std::ostringstream postBuf;
-		postBuf << "user_name=" << trimmedId << "&user_password=" << trimmedKey << "&stationID=" << suid << "&ip=" << getRemoteAddress();
-
-		std::string response = webAPI::simplePost(authURL, std::string(postBuf.str()), "");
-
-		if (response == "success")
-		{
-			authOK = 1;
+		StellaBellum::webAPI api(authURL);
+		
+		api.addJsonData<std::string>("user_name", trimmedId);
+        api.addJsonData<std::string>("user_password", trimmedKey);
+		api.addJsonData<std::string>("ip", getRemoteAddress());
+		
+		if (api.submit()) {
+			std::string msg(api.getString("message"));
+			
+			if(msg == "success") {
+				authOK = 1;
+			} else {
+				ErrorMessage err("Login Message", msg);
+				this->send(err, true);
+			}
 		}
-		else
-		{
-			ErrorMessage err("Login Failed", response);
+		else { 
+			ErrorMessage err("Login Failed", "request failed");
 			this->send(err, true);
 		}
-		
 	}
 	else
 	{

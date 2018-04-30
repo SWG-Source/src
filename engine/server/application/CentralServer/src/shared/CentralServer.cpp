@@ -2843,7 +2843,7 @@ void CentralServer::run(void)
 void CentralServer::update()
 {
 	static int loopCount = 0;
-	static int apiLoopCount = 0;
+	static uint32 apiLastTrick = 0;
 	static int shutdownCheckLoopCount = 0;
 
 	m_curTime = static_cast<uint32>(time(0));
@@ -2860,13 +2860,12 @@ void CentralServer::update()
 
 	// update the webAPI if specified
 	int webUpdateIntervalSeconds = ConfigCentralServer::getWebUpdateIntervalSeconds();
-
-	// assuming that every 5th frame is ~1 second, we can multiply and then check
-	if (webUpdateIntervalSeconds && (++apiLoopCount > (webUpdateIntervalSeconds*1000)) )
+	if (webUpdateIntervalSeconds && m_curTime - apiLastTrick >= static_cast<uint32>(webUpdateIntervalSeconds))
 	{
-		apiLoopCount = 0;
-
-		// update the web api
+#ifdef _DEBUG
+		WARNING(true, ("Sending web metrics since last tick was %d seconds ago", (m_curTime - apiLastTrick)));
+#endif
+		apiLastTrick = m_curTime;
 		sendMetricsToWebAPI();
 	}
 
@@ -2939,18 +2938,20 @@ void CentralServer::sendPopulationUpdateToLoginServer()
 
 void CentralServer::sendMetricsToWebAPI()
 {
-	/*static const std::string metricsURL(ConfigCentralServer::getMetricsDataURL());
+	static const std::string metricsURL(ConfigCentralServer::getMetricsDataURL());
 	
 	if (!metricsURL.empty())
 	{
-		// create the object
-		webAPI api(metricsURL);
+		StellaBellum::webAPI api(metricsURL);
 
-		// add our data
+		api.addJsonData<std::string>("clusterName", ConfigCentralServer::getClusterName());
 		api.addJsonData<int>("totalPlayerCount", m_totalPlayerCount);
-		api.addJsonData<int>("totalGameServers", (m_gameServers.size() - 1));
+		api.addJsonData<int>("totalGameServers", m_gameServers.size());
 		api.addJsonData<int>("totalPlanetServers", m_planetServers.size());
 		api.addJsonData<int>("totalTutorialSceneCount", m_totalTutorialSceneCount);
+		api.addJsonData<int>("lastLoadingStateTime", m_lastLoadingStateTime);
+		api.addJsonData<int>("clusterStartupTime", m_clusterStartupTime);
+		api.addJsonData<int>("timeClusterWentIntoLoadingState", m_timeClusterWentIntoLoadingState);
 		
 #ifdef _DEBUG
 		if (api.submit()) {
@@ -2977,7 +2978,7 @@ void CentralServer::sendMetricsToWebAPI()
 #else
 		api.submit();
 #endif
-	}*/
+	}
 }
 
 //-----------------------------------------------------------------------
