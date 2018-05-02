@@ -121,7 +121,12 @@ elseif (UNIX)
 		-Wno-write-strings -Wno-unknown-pragmas \
 		-Wno-uninitialized -Wno-reorder -Wno-tautological-constant-out-of-range-compare")
 
-    add_definitions(-DLINUX -D_REENTRANT -Dlinux -D_USING_STL -D_GNU_SOURCE -D_XOPEN_SOURCE=500 -U_FORTIFY_SOURCE -DSTELLA_INTERNAL)
+    add_definitions(-DLINUX -D_REENTRANT -Dlinux -D_USING_STL -D_GNU_SOURCE -D_XOPEN_SOURCE=500 -U_FORTIFY_SOURCE)
+
+    # release and debug are internal use only
+    if (${CMAKE_BUILD_TYPE} STREQUAL "Debug" OR ${CMAKE_BUILD_TYPE} STREQUAL "Release")
+        add_definitions(-DSTELLA_INTERNAL)
+    endif ()
 
     # this is so some profile specific stuff is turned on in the code
     if (${CMAKE_BUILD_TYPE} STREQUAL "RELWITHDEBINFO")
