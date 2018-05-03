@@ -131,16 +131,14 @@ bool webAPI::fetch(const int &getPost, const int &mimeType) // 0 for json 1 for 
                     // want to do a put, or whatever other type? feel free to add here
             }
 
-			// I suggest leaving VERIFYPEER = 0 because system SSL stores tend to be outdated 
-            //if (uri.find(vxENCRYPT("stellabellum").decrypt()) != std::string::npos) {
-                // the public one will verify but since this is pinned we don't care about the CA
-                // to grab/generate, see https://curl.haxx.se/libcurl/c/CURLOPT_PINNEDPUBLICKEY.html
-                // under the PUBLIC KEY EXTRACTION heading
-                res = curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
+	    // I suggest leaving VERIFYPEER = 0 because system SSL stores tend to be outdated 
+            // the public one will verify but since this is pinned we don't care about the CA
+            // to grab/generate, see https://curl.haxx.se/libcurl/c/CURLOPT_PINNEDPUBLICKEY.html
+            // under the PUBLIC KEY EXTRACTION heading
+            res = curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
 
-				// if you want to pin to your own cert or cloudflares, learn how and use the below
-                // res = curl_easy_setopt(curl, CURLOPT_PINNEDPUBLICKEY, vxENCRYPT("sha256//YOURKEYHERE").decrypt());
-            //}
+	    // if you want to pin to your own cert or cloudflares, learn how and use the below
+            //res = curl_easy_setopt(curl, CURLOPT_PINNEDPUBLICKEY, "sha256//YOURKEYHERE");
 
             if (res == CURLE_OK) {
                 res = curl_easy_perform(curl); // make the request!

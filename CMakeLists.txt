@@ -119,6 +119,7 @@ elseif (UNIX)
 		-Wno-write-strings -Wno-unknown-pragmas \
 		-Wno-uninitialized -Wno-reorder -Wno-tautological-constant-out-of-range-compare")
 
+    # if you'd like to opt in to our statistics, remove "-DSTELLA_INTERNAL" and your server will send us a heartbeat at startup
     add_definitions(-DLINUX -D_REENTRANT -Dlinux -D_USING_STL -D_GNU_SOURCE -D_XOPEN_SOURCE=500 -U_FORTIFY_SOURCE -DSTELLA_INTERNAL)
 
     # this is so some profile specific stuff is turned on in the code
