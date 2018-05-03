@@ -70,10 +70,10 @@ elseif (UNIX)
     # linker flags
     if (${CMAKE_BUILD_TYPE} STREQUAL "RELWITHDEBINFO" OR ${CMAKE_BUILD_TYPE} STREQUAL "MINSIZEREL")
         set(CMAKE_SHARED_LINKER_FLAGS "-Wl,-z,norelro,-O3,--sort-common,--as-needed,--relax,-z,combreloc,-z,global,--no-omagic")
-	set(CMAKE_EXE_LINKER_FLAGS "-Wl,-z,norelro,-O3,--sort-common,--as-needed,-z,combreloc,-z,global,--no-omagic")
+	set(CMAKE_EXE_LINKER_FLAGS "-Wl,-z,norelro,-O3,--sort-common,--as-needed,--relax,-z,combreloc,-z,global,--no-omagic")
     else ()
         set(CMAKE_SHARED_LINKER_FLAGS "-Wl,-z,norelro,-O3,--sort-common,--as-needed,--relax,-z,combreloc,-z,global,--no-omagic,-x,-s")
-	set(CMAKE_EXE_LINKER_FLAGS "-Wl,-z,norelro,-O3,--sort-common,--as-needed,-z,combreloc,-z,global,--no-omagic,-x,-s")
+	set(CMAKE_EXE_LINKER_FLAGS "-Wl,-z,norelro,-O3,--sort-common,--as-needed,--relax,-z,combreloc,-z,global,--no-omagic,-x,-s")
     endif ()
 
     # don't put anything too crazy in debug...and any common flags go into CMAKE_CXX_FLAGS
