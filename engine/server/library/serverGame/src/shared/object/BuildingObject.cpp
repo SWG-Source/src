@@ -613,6 +613,15 @@ bool BuildingObject::isAllowed(CreatureObject const &who) const
 		if (who.hasCondition(static_cast<int>(ServerTangibleObjectTemplate::C_vendor)))
 			return true;
 
+		// allow non-player-controlled creatures in private buildings if the *creature* has no owner
+		if (!who.isPlayerControlled()
+			&& who.getMasterId() == NetworkId::cms_invalid
+			&& who.getLevel() < 0
+			)
+		{
+			return true;
+		}
+
 		return CellPermissions::isOnList(m_allowed.get(), who);
 	}
 }
