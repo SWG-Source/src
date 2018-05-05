@@ -89,21 +89,21 @@ elseif (UNIX)
     # Ofast doesn't work with gcc builds
     if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
         set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Ofast \
-		-fno-signed-zeros -freciprocal-math -ffp-contract=fast \
 		-fno-threadsafe-statics -fslp-vectorize \
-		-fno-stack-protector -fstrict-enums -fstrict-vtable-pointers \
-		-fno-coverage-mapping -fno-spell-checking -fshort-enums -finline-functions \
-		-finline-hint-functions -fno-unroll-loops")
+		-fno-stack-protector -fstrict-enums -finline-hint-functions \
+		-fno-coverage-mapping -fno-spell-checking \
+		-mno-retpoline -fstrict-return -frelaxed-template-template-args \
+		-fsplit-dwarf-inlining -faligned-allocation -fno-unroll-loops -freroll-loops")
 
         set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -ggdb")
 
         # RELWITHDEBINFO is used for building bins that produce profdata files
 	# we only need the basics of our heavy optimizations here, i think - that and one of these flags
 	# breaks JNI when we profile
-        set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-Ofast -fno-unroll-loops -finline-functions -finline-hint-functions -fprofile-instr-generate")
+        set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-Ofast -fno-unroll-loops -finline-hint-functions -fprofile-instr-generate")
 
         # MINSIZEREL is used for profiled, flto builds
-        set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_RELEASE} -flto -fwhole-program-vtables")
+        set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_RELEASE} -flto=full -fwhole-program-vtables")
     elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
         # O3 and Ofast include one or more flags that cause java to crash when using gcc6
         set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2 -fno-signed-zeros -freciprocal-math -fno-unroll-loops -fno-tree-loop-optimize")
@@ -114,7 +114,6 @@ elseif (UNIX)
 
     # our "always on" flags - build by default for the system we're on but include all instruction sets
     set(CMAKE_CXX_FLAGS "-m32 -pipe -march=native -mtune=native \
-		-msse -msse2 -msse3 -mmmx -m3dnow \
 		-Wformat -Wno-overloaded-virtual -Wno-missing-braces -Wno-format \
 		-Wno-write-strings -Wno-unknown-pragmas \
 		-Wno-uninitialized -Wno-reorder -Wno-tautological-constant-out-of-range-compare")
