@@ -1,4 +1,3 @@
-
 if(WIN32)
 	set(PLATFORM_SOURCES
         win32/InputFileHandler.cpp

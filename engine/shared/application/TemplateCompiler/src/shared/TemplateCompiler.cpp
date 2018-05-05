@@ -28,7 +28,6 @@
 #include "sharedTemplate/SetupSharedTemplate.h"
 
 #pragma warning (disable:4100) // unreferenced formal parameters abound in the perforce clientAPI
-//#include "clientapi.h"
 #pragma warning (default:4100)
 
 #include <ctime>
