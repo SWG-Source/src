@@ -518,7 +518,7 @@ float ManufactureInstallationObject::getTimePerObject() const
 		int skill = 0;
 		if (owner != nullptr)
 		{
-			skill = owner->getEnhancedModValue(FACTORY_SKILL_MOD);
+			skill = owner->getEnhancedModValueUncapped(FACTORY_SKILL_MOD);
 
 			// if the owner's skill doesn't match our saved value, change the
 			// saved value
