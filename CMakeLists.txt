@@ -92,18 +92,17 @@ elseif (UNIX)
 		-fno-threadsafe-statics -fslp-vectorize \
 		-fno-stack-protector -fstrict-enums -finline-hint-functions \
 		-fno-coverage-mapping -fno-spell-checking \
-		-mno-retpoline -fstrict-return -frelaxed-template-template-args \
-		-fsplit-dwarf-inlining -faligned-allocation -fno-unroll-loops -freroll-loops")
+		-mno-retpoline")
 
         set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -ggdb")
 
         # RELWITHDEBINFO is used for building bins that produce profdata files
 	# we only need the basics of our heavy optimizations here, i think - that and one of these flags
 	# breaks JNI when we profile
-        set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-Ofast -fno-unroll-loops -finline-hint-functions -fprofile-instr-generate")
+        set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-Ofast -finline-hint-functions -fprofile-instr-generate")
 
         # MINSIZEREL is used for profiled, flto builds
-        set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_RELEASE} -flto=full -fwhole-program-vtables")
+        set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_RELEASE} -flto -fwhole-program-vtables")
     elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
         # O3 and Ofast include one or more flags that cause java to crash when using gcc6
         set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2 -fno-signed-zeros -freciprocal-math -fno-unroll-loops -fno-tree-loop-optimize")
