@@ -34,12 +34,12 @@ if(DEFINED ENV{ORACLE_HOME})
   find_path(ORACLE_INCLUDE_DIR
     NAMES oci.h
     PATHS
-    /usr/include/oracle/12.1/client64
-    /usr/include/oracle/12.1/client
-    /usr/lib/oracle/12.1/client64
-    /usr/share/oracle/12.1/client64
-    /usr/lib/oracle/12.1/client
-    /usr/share/oracle/12.1/client
+    /usr/include/oracle/12.2/client64
+    /usr/include/oracle/12.2/client
+    /usr/lib/oracle/12.2/client64
+    /usr/share/oracle/12.2/client64
+    /usr/lib/oracle/12.2/client
+    /usr/share/oracle/12.2/client
     /usr/include/oracle/10.2.0.4/client64
     /usr/include/oracle/10.2.0.4/client
     /usr/lib/oracle/10.2.0.4/client64
@@ -52,8 +52,9 @@ if(DEFINED ENV{ORACLE_HOME})
     ${ORACLE_HOME}/OCI/include) # Oracle XE on Windows
 
 
-  set(ORACLE_OCI_NAMES clntsh libclntsh oci)
-  set(ORACLE_NNZ_NAMES nnz10 libnnz10 nnz11 libnnz11 nnz12 libnnz12 ociw32)
+  set(ORACLE_OCI_NAMES oci clntsh libclntsh)
+  set(ORACLE_OCI_CORENAMES clntshcore libclntshcore)
+  set(ORACLE_NNZ_NAMES nnz10 libnnz10 nnz11 libnnz11 nnz12 libnnz12 ociw32 libnnz12 nnz12)
   set(ORACLE_OCCI_NAMES libocci occi oraocci10 oraocci11 oraocci12)
 
 
@@ -64,12 +65,12 @@ if(DEFINED ENV{ORACLE_HOME})
     ${ORACLE_HOME}/OCI/lib/msvc) # Oracle XE on Windows
 
 
+  find_library(ORACLE_CORE_LIBRARY NAMES ${ORACLE_OCI_CORENAMES} PATHS ${ORACLE_LIB_DIR})
   find_library(ORACLE_OCI_LIBRARY  NAMES ${ORACLE_OCI_NAMES} PATHS ${ORACLE_LIB_DIR})
   find_library(ORACLE_OCCI_LIBRARY NAMES ${ORACLE_OCCI_NAMES} PATHS ${ORACLE_LIB_DIR})
   find_library(ORACLE_NNZ_LIBRARY NAMES ${ORACLE_NNZ_NAMES} PATHS ${ORACLE_LIB_DIR})
 
-
-  set(ORACLE_LIBRARY ${ORACLE_OCI_LIBRARY} ${ORACLE_OCCI_LIBRARY} ${ORACLE_NNZ_LIBRARY})
+  set(ORACLE_LIBRARY ${ORACLE_OCI_LIBRARY} ${ORACLE_CORE_LIBRARY} ${ORACLE_OCCI_LIBRARY} ${ORACLE_NNZ_LIBRARY})
 
 
   if(APPLE)
