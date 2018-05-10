@@ -18,8 +18,8 @@ create or replace package body loader as
 
 		open result_cursor for
 		select character_object, station_id, uc_character_name, character_full_name,
-                       (create_time - to_date('01/01/1970', 'MM/DD/YYYY')) * 24 * 3600,
-                       (last_login_time - to_date('01/01/1970', 'MM/DD/YYYY')) * 24 * 3600
+			   trunc((create_time - to_date('01/01/1970', 'MM/DD/YYYY')) * 24 * 3600),
+			   trunc((last_login_time - to_date('01/01/1970', 'MM/DD/YYYY')) * 24 * 3600)
 		from players;
 
 		return result_cursor;
