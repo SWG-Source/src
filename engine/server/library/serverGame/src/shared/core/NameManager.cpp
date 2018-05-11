@@ -189,7 +189,7 @@ int NameManager::getTotalPlayerCount() const
 
 // ----------------------------------------------------------------------
 
-void NameManager::addPlayer(const NetworkId &id, uint32 stationId, const std::string &name, const std::string &fullName, time_t createTime, time_t lastLoginTime, bool notifyOtherServers)
+void NameManager::addPlayer(const NetworkId &id, StationId stationId, const std::string &name, const std::string &fullName, time_t createTime, time_t lastLoginTime, bool notifyOtherServers)
 {
 	std::string normalizedName(normalizeName(name));
 	
@@ -221,14 +221,14 @@ void NameManager::addPlayer(const NetworkId &id, uint32 stationId, const std::st
 	if (notifyOtherServers)
 	{
 		std::vector<NetworkId> ids;
-		std::vector<int> stationIds;
+		std::vector<StationId> stationIds;
 		std::vector<std::string> characterNames;
 		std::vector<std::string> characterFullNames;
 		std::vector<int> characterCreateTimes;
 		std::vector<int> characterLastLoginTimes;
 
 		ids.push_back(id);
-		stationIds.push_back(static_cast<int>(stationId));
+		stationIds.push_back(stationId);
 		characterNames.push_back(normalizedName);
 		characterFullNames.push_back(fullName);
 		characterCreateTimes.push_back(static_cast<int>(createTime));
@@ -247,7 +247,7 @@ void NameManager::addPlayer(const NetworkId &id, uint32 stationId, const std::st
 
 void NameManager::renamePlayer(const NetworkId &id, const Unicode::String &name, const Unicode::String &fullName)
 {
-	uint32 stationId = 0;
+	StationId stationId = 0;
 	time_t createTime = 0;
 	time_t lastLoginTime = 0;
 
@@ -279,7 +279,7 @@ const NetworkId & NameManager::getPlayerId(const std::string &name) const
 
 // ----------------------------------------------------------------------
 
-uint32 NameManager::getPlayerStationId(const NetworkId &id) const
+StationId NameManager::getPlayerStationId(const NetworkId &id) const
 {
 	IdToCharacterDataMapType::const_iterator i=m_idToCharacterDataMap->find(id);
 	if (i==m_idToCharacterDataMap->end())
@@ -464,7 +464,7 @@ void NameManager::releasePlayerName(const NetworkId &id)
 
 // ----------------------------------------------------------------------
 
-void NameManager::addPlayers(const std::vector<NetworkId> &ids, const std::vector<int> &stationIds, const std::vector<std::string> &names, const std::vector<std::string> &fullNames, const std::vector<int> &createTimes, const std::vector<int> &lastLoginTimes)
+void NameManager::addPlayers(const std::vector<NetworkId> &ids, const std::vector<StationId> &stationIds, const std::vector<std::string> &names, const std::vector<std::string> &fullNames, const std::vector<int> &createTimes, const std::vector<int> &lastLoginTimes)
 {
 	DEBUG_FATAL(ids.size() != stationIds.size(),("Programmer bug:  Vectors ids and stationIds must be the same size.\n"));
 	DEBUG_FATAL(ids.size() != names.size(),("Programmer bug:  Vectors ids and names must be the same size.\n"));
@@ -483,7 +483,7 @@ void NameManager::addPlayers(const std::vector<NetworkId> &ids, const std::vecto
 void NameManager::sendAllNamesToServer (std::vector<uint32> const & servers) const
 {
 	std::vector<NetworkId> ids;
-	std::vector<int> stationIds;
+	std::vector<StationId> stationIds;
 	std::vector<std::string> characterNames;
 	std::vector<std::string> characterFullNames;
 	std::vector<int> characterCreateTimes;
@@ -492,7 +492,7 @@ void NameManager::sendAllNamesToServer (std::vector<uint32> const & servers) con
 	for (IdToCharacterDataMapType::const_iterator i=m_idToCharacterDataMap->begin(); i!=m_idToCharacterDataMap->end(); ++i)
 	{
 		ids.push_back(i->first);
-		stationIds.push_back(static_cast<int>(i->second.stationId));
+		stationIds.push_back(i->second.stationId);
 		characterNames.push_back(i->second.characterName);
 		characterFullNames.push_back(i->second.characterFullName);
 		characterCreateTimes.push_back(static_cast<int>(i->second.createTime));

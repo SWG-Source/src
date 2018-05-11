@@ -7,6 +7,8 @@
 //
 // ======================================================================
 
+#include <sys/bitypes.h>
+
 #ifndef INCLUDED_FoundationTypesWin32_H
 #define INCLUDED_FoundationTypesWin32_H
 
@@ -27,6 +29,10 @@ typedef signed short           int16;
 typedef signed long            int32;
 typedef signed __int64         int64;
 typedef int                    FILE_HANDLE;
+
+typedef int64_t                 int64;
+typedef u_int64_t               uint64;
+
 
 // ======================================================================
 

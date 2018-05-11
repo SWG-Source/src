@@ -161,7 +161,7 @@ void ConnectionServer::addGameConnection(unsigned long gameServerId, GameConnect
 //-----------------------------------------------------------------------
 
 bool
-ConnectionServer::decryptToken(const KeyShare::Token &token, uint32 &stationUserId, bool &secure, std::string &accountName) {
+ConnectionServer::decryptToken(const KeyShare::Token &token, StationId &stationUserId, bool &secure, std::string &accountName) {
     static ConnectionServer &cs = instance();
 
     //Also the sizeof(int) is likewise magic from the session api
@@ -179,7 +179,7 @@ ConnectionServer::decryptToken(const KeyShare::Token &token, uint32 &stationUser
     char *tmpBuffer = new char[MAX_ACCOUNT_NAME_LENGTH + 1];
     memset(tmpBuffer, 0, MAX_ACCOUNT_NAME_LENGTH + 1);
 
-    memcpy(&stationUserId, keyBufferPointer, sizeof(uint32));
+    memcpy(&stationUserId, keyBufferPointer, sizeof(StationId));
     keyBufferPointer += sizeof(uint32);
     memcpy(&secure, keyBufferPointer, sizeof(bool));
     keyBufferPointer += sizeof(bool);

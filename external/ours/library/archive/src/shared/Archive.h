@@ -9,12 +9,28 @@
 #include <deque>
 #include <set>
 
+// TODO: this is retarded, we have like 30-50 places where we define types...
+// we must do something abou tthis 
+#include <sys/bitypes.h>
+typedef int64_t                 int64;
+typedef u_int64_t               uint64;
+typedef int64			StationId;
+
 //---------------------------------------------------------------------
 
 namespace Archive {
 	
 //---------------------------------------------------------------------
-	
+
+inline void get(ByteStream::ReadIterator & source, uint64 & target)
+{
+	source.get(&target, 8);
+}
+
+inline void get(ByteStream::ReadIterator & source, int64 & target)
+{
+	source.get(&target, 8);
+}	
 
 inline void get(ReadIterator & source, double & target)
 {
@@ -214,6 +230,16 @@ template<typename A> inline void get(ReadIterator & source, A * target, int leng
 }
 
 //---------------------------------------------------------------------
+
+inline void put(ByteStream & target, const uint64 & source)
+{
+	target.put(&source, 8);
+}
+
+inline void put(ByteStream & target, const int64 & source)
+{
+	target.put(&source, 8);
+}
 
 inline void put(ByteStream & target, const double & source)
 {

@@ -14,6 +14,7 @@
 #include "sharedDatabaseInterface/BindableNetworkId.h"
 #include "sharedDatabaseInterface/DbQuery.h"
 #include "serverDatabase/ObjectLocator.h"
+#include "sharedFoundation/StationId.h"
 #include <vector>
 
 // ======================================================================
@@ -63,7 +64,7 @@ class CharacterNameLocator : public ObjectLocator
 	
   private:
 	std::vector<NetworkId>   m_characterIds;
-	std::vector<int>         m_stationIds;
+	std::vector<StationId>   m_stationIds;
 	std::vector<std::string> m_characterNames;
 	std::vector<std::string> m_characterFullNames;
 	std::vector<int>         m_characterCreateTime;
