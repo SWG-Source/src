@@ -32,7 +32,7 @@ public:
 private:
 	static void remove();
 
-	static DataTable *        open(const std::string& table);
+	static DataTable *        open(const std::string& table, bool tryGetTable = true);
 
 	DataTableManager();
 	~DataTableManager();

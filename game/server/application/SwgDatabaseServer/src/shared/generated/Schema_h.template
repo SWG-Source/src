@@ -23,7 +23,7 @@ struct PlayerObjectRow : public DB::Row
 	enum {QUEST_DATA_SIZE=4000};
 
 	DB::BindableNetworkId object_id;
-	DB::BindableLong station_id;
+	DB::BindableInt64 station_id;
 	DB::BindableNetworkId house_id;
 	DB::BindableLong account_num_lots;
 	DB::BindableBool account_is_outcast;
@@ -80,7 +80,7 @@ struct PlayerObjectRow : public DB::Row
 struct PlayerObjectBufferRow : public DB::Row
 {
 	DB::BindableNetworkId object_id;
-	DB::BindableLong station_id;
+	DB::BindableInt64 station_id;
 	DB::BindableNetworkId house_id;
 	DB::BindableLong account_num_lots;
 	DB::BindableBool account_is_outcast;

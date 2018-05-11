@@ -89,6 +89,7 @@ get_filename_component(java_install_version
   "[HKEY_LOCAL_MACHINE\\SOFTWARE\\JavaSoft\\Java Development Kit;CurrentVersion]" NAME)
 
 set(JAVA_AWT_LIBRARY_DIRECTORIES
+  /opt/oraclejava
   /opt/java/lib
   /opt/java
   /opt/java/jre
@@ -100,6 +101,7 @@ set(JAVA_AWT_LIBRARY_DIRECTORIES
 file(TO_CMAKE_PATH "$ENV{JAVA_HOME}" _JAVA_HOME)
 
 JAVA_APPEND_LIBRARY_DIRECTORIES(JAVA_AWT_LIBRARY_DIRECTORIES
+  /opt/oraclejava
   /opt/java
   /opt/java/jre
   /opt/java/jre/lib
@@ -161,6 +163,7 @@ endforeach()
 
 set(JAVA_AWT_INCLUDE_DIRECTORIES
   /opt/java/jre/include
+  /opt/oracle/jdk/include
   "[HKEY_LOCAL_MACHINE\\SOFTWARE\\JavaSoft\\Java Development Kit\\1.4;JavaHome]/include"
   "[HKEY_LOCAL_MACHINE\\SOFTWARE\\JavaSoft\\Java Development Kit\\1.3;JavaHome]/include"
   "[HKEY_LOCAL_MACHINE\\SOFTWARE\\JavaSoft\\Java Development Kit\\${java_install_version};JavaHome]/include"

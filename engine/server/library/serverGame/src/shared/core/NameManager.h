@@ -8,6 +8,8 @@
 #ifndef INCLUDED_NameManager_H
 #define INCLUDED_NameManager_H
 
+#include "sharedFoundation/StationId.h"
+
 // ======================================================================
 
 class NameGenerator;
@@ -32,13 +34,13 @@ class NameManager
 
   public:
 	int                   getTotalPlayerCount  () const;
-	void                  addPlayer            (const NetworkId &id, uint32 stationId, const std::string &name, const std::string &fullName, time_t createTime, time_t lastLoginTime, bool notifyOtherServers);
-	void                  addPlayers           (const std::vector<NetworkId> &ids, const std::vector<int> &stationIds, const std::vector<std::string> &names, const std::vector<std::string> &fullNames, const std::vector<int> &createTimes, const std::vector<int> &lastLoginTimes);
+	void                  addPlayer            (const NetworkId &id, StationId stationId, const std::string &name, const std::string &fullName, time_t createTime, time_t lastLoginTime, bool notifyOtherServers);
+	void                  addPlayers           (const std::vector<NetworkId> &ids, const std::vector<StationId> &stationIds, const std::vector<std::string> &names, const std::vector<std::string> &fullNames, const std::vector<int> &createTimes, const std::vector<int> &lastLoginTimes);
 	void                  renamePlayer         (const NetworkId &id, const Unicode::String &name, const Unicode::String &fullName);
 	std::string           debugGetNameList     () const;
 	bool                  isPlayer             (NetworkId const & possiblePlayer) const;
 	const NetworkId &     getPlayerId          (const std::string &name) const;
-	uint32                getPlayerStationId   (const NetworkId &id) const;
+	StationId             getPlayerStationId   (const NetworkId &id) const;
 	const std::string &   getPlayerName        (const NetworkId &id) const;
 	const std::string &   getPlayerFullName    (const NetworkId &id) const;
 	int                   getPlayerCreateTime  (const NetworkId &id) const;
@@ -78,7 +80,7 @@ class NameManager
 
 	struct CharacterData
 	{
-		uint32 stationId;
+		StationId stationId;
 		std::string characterName;
 		std::string characterFullName;
 		time_t createTime;

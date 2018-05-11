@@ -64,12 +64,17 @@ void DataTableManager::remove()
 
 // ----------------------------------------------------------------------
 
-DataTable* DataTableManager::open(const std::string& table)
+DataTable* DataTableManager::open(const std::string& table, bool tryGetTable)
 {
 	FATAL(!m_installed, ("DataTableManager::open: not installed."));
-	DataTable *retVal = getTable(table, false);
-	if (retVal)
-		return retVal;
+
+	DataTable *retVal = nullptr;
+	
+	if (tryGetTable) {
+		retVal = getTable(table, false);
+		if (retVal)
+			return retVal;
+	}
 
 	if (!TreeFile::exists(table.c_str()))
 	{
@@ -125,7 +130,7 @@ DataTable * DataTableManager::getTable(const std::string& table, bool openIfNotF
 	{
 		if (openIfNotFound)
 		{
-			DataTable * dt = open(table);
+			DataTable * dt = open(table, false);
 			if (!dt)
 			{
 				DEBUG_WARNING(true, ("Could not find table [%s]", table.c_str()));

@@ -1,5 +1,3 @@
-cmake_policy(SET CMP0003 OLD) # or cmake_policy(VERSION 2.4)
-
 cmake_minimum_required(VERSION 2.8)
 
 project(stellabellum C CXX)
@@ -72,11 +70,11 @@ elseif (UNIX)
     # linker flags
     if (${CMAKE_BUILD_TYPE} STREQUAL "RELWITHDEBINFO" OR ${CMAKE_BUILD_TYPE} STREQUAL "MINSIZEREL")
         set(CMAKE_SHARED_LINKER_FLAGS "-Wl,-z,norelro,-O3,--sort-common,--as-needed,--relax,-z,combreloc,-z,global,--no-omagic")
+	set(CMAKE_EXE_LINKER_FLAGS "-Wl,-z,norelro,-O3,--sort-common,--as-needed,--relax,-z,combreloc,-z,global,--no-omagic")
     else ()
         set(CMAKE_SHARED_LINKER_FLAGS "-Wl,-z,norelro,-O3,--sort-common,--as-needed,--relax,-z,combreloc,-z,global,--no-omagic,-x,-s")
+	set(CMAKE_EXE_LINKER_FLAGS "-Wl,-z,norelro,-O3,--sort-common,--as-needed,--relax,-z,combreloc,-z,global,--no-omagic,-x,-s")
     endif ()
-
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS}")
 
     # don't put anything too crazy in debug...and any common flags go into CMAKE_CXX_FLAGS
     set(CMAKE_CXX_FLAGS_DEBUG "-D_DEBUG -DDEBUG_LEVEL=2 -DPRODUCTION=0 -O0 -g3")
@@ -91,26 +89,23 @@ elseif (UNIX)
     # Ofast doesn't work with gcc builds
     if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
         set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Ofast \
-		-fno-signed-zeros -freciprocal-math -ffp-contract=fast \
-		-fno-threadsafe-statics -fslp-vectorize-aggressive -fslp-vectorize \
-		-fno-stack-protector -fstrict-enums -fstrict-vtable-pointers \
-		-fno-coverage-mapping -fno-spell-checking -fshort-enums -finline-functions \
-		-finline-hint-functions -fno-unroll-loops")
+		-fno-threadsafe-statics -fslp-vectorize \
+		-fno-stack-protector -fstrict-enums -finline-hint-functions \
+		-fno-coverage-mapping -fno-spell-checking \
+		-mno-retpoline")
 
         set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -ggdb")
 
         # RELWITHDEBINFO is used for building bins that produce profdata files
 	# we only need the basics of our heavy optimizations here, i think - that and one of these flags
 	# breaks JNI when we profile
-        set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-Ofast -fno-unroll-loops -finline-functions \
-		-finline-hint-functions -fprofile-instr-generate")
+        set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-Ofast -finline-hint-functions -fprofile-instr-generate")
 
         # MINSIZEREL is used for profiled, flto builds
         set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_RELEASE} -flto -fwhole-program-vtables")
     elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
         # O3 and Ofast include one or more flags that cause java to crash when using gcc6
-        set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2 -fno-signed-zeros -freciprocal-math
-            -fno-unroll-loops -fno-tree-loop-optimize")
+        set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2 -fno-signed-zeros -freciprocal-math -fno-unroll-loops -fno-tree-loop-optimize")
         set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Og")
     elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
         set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
@@ -118,17 +113,12 @@ elseif (UNIX)
 
     # our "always on" flags - build by default for the system we're on but include all instruction sets
     set(CMAKE_CXX_FLAGS "-m32 -pipe -march=native -mtune=native \
-		-msse -msse2 -msse3 -mmmx -m3dnow \
 		-Wformat -Wno-overloaded-virtual -Wno-missing-braces -Wno-format \
 		-Wno-write-strings -Wno-unknown-pragmas \
 		-Wno-uninitialized -Wno-reorder -Wno-tautological-constant-out-of-range-compare")
 
-    add_definitions(-DLINUX -D_REENTRANT -Dlinux -D_USING_STL -D_GNU_SOURCE -D_XOPEN_SOURCE=500 -U_FORTIFY_SOURCE)
-
-    # release and debug are internal use only
-    if (${CMAKE_BUILD_TYPE} STREQUAL "Debug" OR ${CMAKE_BUILD_TYPE} STREQUAL "Release")
-        add_definitions(-DSTELLA_INTERNAL)
-    endif ()
+    # if you'd like to opt in to our statistics, remove "-DSTELLA_INTERNAL" and your server will send us a heartbeat at startup
+    add_definitions(-DLINUX -D_REENTRANT -Dlinux -D_USING_STL -D_GNU_SOURCE -D_XOPEN_SOURCE=500 -U_FORTIFY_SOURCE -DSTELLA_INTERNAL)
 
     # this is so some profile specific stuff is turned on in the code
     if (${CMAKE_BUILD_TYPE} STREQUAL "RELWITHDEBINFO")
