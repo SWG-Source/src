@@ -49,7 +49,7 @@ namespace StellaBellum {
 
         // submits the request
         bool
-        submit(const int &reqType = DTYPE::JSON, const int &getPost = HTTP::POST, const int &respType = DTYPE::JSON);
+        submit(const int32_t &reqType = DTYPE::JSON, const int32_t &getPost = HTTP::POST, const int32_t &respType = DTYPE::JSON);
 
         // set the endpoint after object creation...or change the target if needed
         bool setEndpoint(const std::string endpoint);
@@ -65,6 +65,9 @@ namespace StellaBellum {
 
         // get a vector of strings from a given slot
         std::unordered_map<int, std::string> getStringMap(const std::string &slot);
+
+	// get a 64 bit keyed vector of strings from a given slot
+	std::unordered_map<int64_t, std::string> getStringMap64(const std::string &slot);
 
         // set json key and value for request
         template<typename T> bool addJsonData(const std::string &key, const T &value) {
@@ -104,7 +107,7 @@ namespace StellaBellum {
         std::string uri;
 
         // fetcher - returns raw response direct from remote
-        bool fetch(const int &getPost = HTTP::POST, const int &mimeType = DTYPE::JSON);
+        bool fetch(const int32_t &getPost = HTTP::POST, const int32_t &mimeType = DTYPE::JSON);
 
         // cURL writeback callback
         static size_t writeCallback(void *contents, size_t size, size_t nmemb, void *userp);

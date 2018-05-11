@@ -161,7 +161,7 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
 
     StationId user_id;
     StationId parent_id;
-    std::unordered_map<int, std::string> childAccounts;
+    std::unordered_map<StationId, std::string> childAccounts;
 
     if (!authURL.empty()) {
         // create the object
@@ -184,8 +184,8 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
                 childAccounts = api.getStringMap("subAccounts");
 
                 if (!ConfigLoginServer::getUseOldSuidGenerator()) {
-                    user_id = static_cast<StationId>(api.getNullableValue<int>("user_id"));
-                    parent_id = static_cast<StationId>(api.getNullableValue<int>("parent_id"));
+                    user_id = static_cast<StationId>(api.getNullableValue<StationId>("user_id"));
+                    parent_id = static_cast<StationId>(api.getNullableValue<StationId>("parent_id"));
                 } else {
                     if (parentAccount.length() > MAX_ACCOUNT_NAME_LENGTH) {
                         parentAccount.resize(MAX_ACCOUNT_NAME_LENGTH);
