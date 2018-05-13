@@ -29,8 +29,8 @@ find_package(Threads)
 find_package(ZLIB REQUIRED)
 find_package(CURL REQUIRED)
 
-# c++14 yeah!
-set(CMAKE_CXX_STANDARD 14)
+# c++17 yeah!
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
