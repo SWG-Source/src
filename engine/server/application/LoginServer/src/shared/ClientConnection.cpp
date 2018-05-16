@@ -181,7 +181,7 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
                 authOK = true;
 
                 parentAccount = api.getString("mainAccount");
-                childAccounts = api.getStringMap64("subAccounts");
+                childAccounts = api.getStringMapU32("subAccounts");
 
                 if (!ConfigLoginServer::getUseOldSuidGenerator()) {
                     user_id = static_cast<StationId>(api.getNullableValue<StationId>("user_id"));

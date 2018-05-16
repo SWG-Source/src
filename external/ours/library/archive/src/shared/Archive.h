@@ -14,7 +14,8 @@
 #include <sys/bitypes.h>
 typedef int64_t                 int64;
 typedef u_int64_t               uint64;
-typedef int64			StationId;
+
+#include "../../../../../../engine/shared/library/sharedFoundation/src/shared/StationId.h"
 
 //---------------------------------------------------------------------
 
