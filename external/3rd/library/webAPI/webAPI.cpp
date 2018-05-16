@@ -72,24 +72,6 @@ std::unordered_map<int, std::string> webAPI::getStringMap(const std::string &slo
     return ret;
 }
 
-std::unordered_map<uint32_t, std::string> webAPI::getStringMapU32(const std::string &slot) {
-    std::unordered_map<uint32_t, std::string> ret = std::unordered_map<uint32_t, std::string>();
-
-    if (!responseData.empty() && !slot.empty() && responseData.count(slot) && !responseData[slot].is_null()) {
-
-        nlohmann::json j = responseData[slot];
-
-        for (nlohmann::json::iterator it = j.begin(); it != j.end(); ++it) {
-            uint32_t k = std::stoi(it.key());
-            std::string val = it.value();
-
-            ret.insert({k, val});
-        }
-    }
-
-    return ret;
-}
-
 std::unordered_map<int64_t, std::string> webAPI::getStringMap64(const std::string &slot) {
     std::unordered_map<int64_t, std::string> ret = std::unordered_map<int64_t, std::string>();
 

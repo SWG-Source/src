@@ -66,9 +66,6 @@ namespace StellaBellum {
         // get a vector of strings from a given slot
         std::unordered_map<int, std::string> getStringMap(const std::string &slot);
 
-	// return the above as unsigned to make various things happy
-	std::unordered_map<uint32_t, std::string> getStringMapU32(const std::string &slot);
-
 	// get a 64 bit keyed vector of strings from a given slot
 	std::unordered_map<int64_t, std::string> getStringMap64(const std::string &slot);
 
