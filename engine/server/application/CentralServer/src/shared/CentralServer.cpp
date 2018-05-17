@@ -1233,7 +1233,7 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 			DEBUG_REPORT_LOG(true, ("Pending character %lu is logging in or dropping\n", m.getAccountNumber()));
 
 			// Once they're logged in, Central doesn't need to know about them anymore:
-			removeSuidFromAccountConnectionMap(m.getAccountNumber());
+			removeFromAccountConnectionMap(m.getAccountNumber());
 			break;
 		}
 		case constcrc("CharacterListMessage") : {
@@ -3419,7 +3419,7 @@ void CentralServer::addToAccountConnectionMap(StationId suid, ConnectionServerCo
 
 // ----------------------------------------------------------------------
 
-void CentralServer::removeSuidFromAccountConnectionMap(StationId suid)
+void CentralServer::removeFromAccountConnectionMap(StationId suid)
 {
 	ConnectionServerSUIDMap::iterator i=m_accountConnectionMap.find(suid);
 	if (i!=m_accountConnectionMap.end())

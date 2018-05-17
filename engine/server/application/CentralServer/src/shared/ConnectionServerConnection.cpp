@@ -254,7 +254,7 @@ void ConnectionServerConnection::onReceive(const Archive::ByteStream & message)
 			s_pseudoClientConnectionMap[info.getValue().first] = std::make_pair(static_cast<TransferRequestMoveValidation::TransferRequestSource>(info.getValue().second), this);
 
 			// remove corresponding "non pseudo client connection"
-			CentralServer::getInstance().removeSuidFromAccountConnectionMap(static_cast<StationId>(info.getValue().first));
+			CentralServer::getInstance().removeFromAccountConnectionMap(static_cast<StationId>(info.getValue().first));
 			break;
 		}
 		case constcrc("DestroyPseudoClientConnection") :

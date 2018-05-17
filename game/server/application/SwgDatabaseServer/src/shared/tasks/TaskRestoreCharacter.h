@@ -45,7 +45,7 @@ class TaskRestoreCharacter:public DB::TaskRequest
 		//output:
 		DB::BindableLong        result;
 		DB::BindableString<127> character_name;
-		DB::BindableInt64       account;
+		DB::BindableLong        account;
 		DB::BindableLong        template_id;
 		
 	  private:
