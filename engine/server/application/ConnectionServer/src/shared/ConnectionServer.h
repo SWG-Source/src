@@ -42,11 +42,11 @@ class ConnectionServer : public MessageDispatch::Receiver
 		
 	typedef std::unordered_map<uint32, GameConnection *>              GameServerMap;
 	typedef std::unordered_map<NetworkId, Client *,NetworkId::Hash>   ClientMap;
-	typedef std::unordered_map<StationId, ClientConnection *>            SuidMap;
+	typedef std::unordered_map<uint32, ClientConnection *>            SuidMap;
 	typedef std::set<uint32>                                     FreeTrialsSet;
 	
 	static void                   addNewClient(ClientConnection* cconn, const NetworkId &oid, GameConnection* gconn, const std::string &sceneName, bool sendToStarport );
-	static void                   addConnectedClient(StationId suid, ClientConnection* conn);
+	static void                   addConnectedClient(uint32 suid, ClientConnection* conn);
 	static void                   addGameConnection(unsigned long gameServerId, GameConnection* gc);
 	static bool                   decryptToken(const KeyShare::Token & token, uint32 & stationUserId, bool & secure, std::string & accountName);
 	static bool                   decryptToken(const KeyShare::Token & token, char* sessionKey, StationId & stationId);
@@ -59,7 +59,7 @@ class ConnectionServer : public MessageDispatch::Receiver
 	static const ClientMap &      getClientMap();
 	static Service *              getClientServicePrivate  ();
 	static Service *              getClientServicePublic  ();
-	static ClientConnection*      getClientConnection(StationId suid);
+	static ClientConnection*      getClientConnection(uint32 suid);
 	static uint16                 getPingPort         ();
 	static int                    getPingTrafficNumBytes();
 	static int                    getNumberOfClients();
@@ -74,7 +74,7 @@ class ConnectionServer : public MessageDispatch::Receiver
 	static KeyShare::Token        makeToken(const unsigned char * newData, const uint32 dataLen);
 	static void                   pushKey(const KeyShare::Key & newKey);
 	void                          receiveMessage(const MessageDispatch::Emitter & source, const MessageDispatch::MessageBase & message);
-	static void                   removeConnectedCharacter(StationId suid);
+	static void                   removeConnectedCharacter(uint32 suid);
 	static void                   run(void);
 	static void                   sendToCentralProcess(const GameNetworkMessage& msg);
 	static void                   addRecoveringClient(const NetworkId& networkId);		
@@ -94,8 +94,8 @@ private:
 	void                    addToClientMap(const NetworkId &oid, ClientConnection* cconn);
 	void                    removeFromClientMap(const NetworkId &oid);
 
-	void                    addToConnectedMap(StationId suid, ClientConnection* conn);
-	void                    removeFromConnectedMap(StationId suid);
+	void                    addToConnectedMap(uint32 suid, ClientConnection* conn);
+	void                    removeFromConnectedMap(uint32 suid);
 
 	void                    updatePopulationOnCentralServer();
 	

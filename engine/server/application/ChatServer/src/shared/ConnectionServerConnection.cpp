@@ -5,8 +5,6 @@
 //-----------------------------------------------------------------------
 #include "FirstChatServer.h"
 
-#include "sharedFoundation/StationId.h"
-
 #include "ChatInterface.h"
 #include "ChatServer.h"
 #include "ChatServerAvatarOwner.h"

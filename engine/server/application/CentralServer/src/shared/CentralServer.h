@@ -64,7 +64,7 @@ private:
 	typedef std::unordered_multimap<SceneId, GameServerConnection *> SceneGameMap;
 
 	typedef std::pair<SceneGameMap::const_iterator, SceneGameMap::const_iterator> ServersList;
-	typedef std::unordered_map<StationId, ConnectionServerConnection *>                   ConnectionServerSUIDMap;
+	typedef std::unordered_map<uint32, ConnectionServerConnection *>                   ConnectionServerSUIDMap;
 
 	typedef std::map<NetworkId, std::pair<SceneId, time_t> >                      PlayerSceneMapType;
 

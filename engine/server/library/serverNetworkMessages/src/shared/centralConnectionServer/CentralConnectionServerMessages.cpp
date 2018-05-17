@@ -121,7 +121,7 @@ ConnectionKeyPush::~ConnectionKeyPush()
 }
 //-----------------------------------------------------------------------
 
-LoggedInMessage::LoggedInMessage(StationId accountNumber) :
+LoggedInMessage::LoggedInMessage(uint32 accountNumber) :
 	GameNetworkMessage("LoggedInMessage"),
 	m_accountNumber(accountNumber)
 {
@@ -146,7 +146,7 @@ LoggedInMessage::~LoggedInMessage()
 
 //-----------------------------------------------------------------------
 
-ConnEnumerateCharacterId::ConnEnumerateCharacterId(StationId newAccountNumber, const Unicode::String & newName, const std::string & newLocation, const std::string & newObjectTemplate) :
+ConnEnumerateCharacterId::ConnEnumerateCharacterId(uint32 newAccountNumber, const Unicode::String & newName, const std::string & newLocation, const std::string & newObjectTemplate) :
 GameNetworkMessage("ConnEnumerateCharacterId"),
 accountNumber(newAccountNumber),
 location(newLocation),
@@ -182,7 +182,7 @@ ConnEnumerateCharacterId::~ConnEnumerateCharacterId()
 }
 
 //-----------------------------------------------------------------------
-ConnectionCreateCharacter::ConnectionCreateCharacter(const StationId newStationId, const Unicode::String & newCharacterName, const std::string & newTemplateName, float scaleFactor, const std::string & newStartingLocation, const std::string & newAppearanceData, const std::string & newHairTemplateName, const std::string & hairAppearanceData, const std::string & profession, bool jedi, const Unicode::String & biography, bool useNewbieTutorial, const std::string & skillTemplate, const std::string & workingSkill, bool noRateLimit, bool isForCharacterTransfer, StationId gameFeatures) :
+ConnectionCreateCharacter::ConnectionCreateCharacter(const uint32 newStationId, const Unicode::String & newCharacterName, const std::string & newTemplateName, float scaleFactor, const std::string & newStartingLocation, const std::string & newAppearanceData, const std::string & newHairTemplateName, const std::string & hairAppearanceData, const std::string & profession, bool jedi, const Unicode::String & biography, bool useNewbieTutorial, const std::string & skillTemplate, const std::string & workingSkill, bool noRateLimit, bool isForCharacterTransfer, uint32 gameFeatures) :
 		GameNetworkMessage("ConnectionCreateCharacter"),
 		m_appearanceData(newAppearanceData),
 		m_characterName(newCharacterName),
@@ -278,7 +278,7 @@ const float ConnectionCreateCharacter::getScaleFactor        () const
 
 //-----------------------------------------------------------------------
 
-ConnectionCreateCharacterSuccess::ConnectionCreateCharacterSuccess(StationId suid, const NetworkId & networkId) :
+ConnectionCreateCharacterSuccess::ConnectionCreateCharacterSuccess(uint32 suid, const NetworkId & networkId) :
         GameNetworkMessage("ConnectionCreateCharacterSuccess"),
         stationId(suid),
 		m_networkId (networkId)
@@ -307,7 +307,7 @@ ConnectionCreateCharacterSuccess::~ConnectionCreateCharacterSuccess()
 
 //-----------------------------------------------------------------------
 
-ConnectionCreateCharacterFailed::ConnectionCreateCharacterFailed(StationId newStationId, const Unicode::String &name, const StringId &errorMessage, const std::string &optionalDetailedErrorMessage) :
+ConnectionCreateCharacterFailed::ConnectionCreateCharacterFailed(uint32 newStationId, const Unicode::String &name, const StringId &errorMessage, const std::string &optionalDetailedErrorMessage) :
         GameNetworkMessage("ConnectionCreateCharacterFailed"),
 				m_name(name),
 				m_errorMessage(errorMessage),

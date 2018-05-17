@@ -364,15 +364,27 @@ void ConnectionServer::dropClient(ClientConnection *conn, const std::string &des
 }
 
 //-----------------------------------------------------------------------
+// void ConnectionServer::addPendingCharacter(uint32 suid, ClientConnection* conn)
+// {
+//     if (pendingMap.find(suid) == pendingMap.end())
+//         pendingMap[suid] = conn;
+//     else
+//     {
+//         WARNING_STRICT_FATAL(true, ("Attepting to add duplicate pending chatacter"));
+//         pendingMap[suid] = conn;
+//     }
+// }
 
-void ConnectionServer::addConnectedClient(StationId suid, ClientConnection *conn) {
+//-----------------------------------------------------------------------
+
+void ConnectionServer::addConnectedClient(uint32 suid, ClientConnection *conn) {
     static ConnectionServer &cs = instance();
     cs.addToConnectedMap(suid, conn);
 }
 
 //-----------------------------------------------------------------------
 
-ClientConnection *ConnectionServer::getClientConnection(const StationId suid) {
+ClientConnection *ConnectionServer::getClientConnection(const uint32 suid) {
     static ConnectionServer &cs = instance();
     ClientConnection *result = 0;
     SuidMap::const_iterator i = cs.connectedMap.find(suid);
@@ -1058,7 +1070,7 @@ void ConnectionServer::unsetupConnections() {
         SuidMap::iterator i = instance().connectedMap.begin();
         if (i != instance().connectedMap.end()) {
             ClientConnection *c = (*i).second;
-            StationId suid = (*i).first;
+            uint32 suid = (*i).first;
             IGNORE_RETURN(instance().connectedMap.erase(suid));
             if (c) {
                 ConnectionServer::dropClient(c, "ConnectionServer shutting down.");
@@ -1245,7 +1257,7 @@ int ConnectionServer::getNumberOfGameServers() {
 
 //-----------------------------------------------------------------------
 
-void ConnectionServer::removeConnectedCharacter(StationId suid) {
+void ConnectionServer::removeConnectedCharacter(uint32 suid) {
     static ConnectionServer &cs = instance();
     cs.removeFromConnectedMap(suid);
 }
@@ -1311,7 +1323,7 @@ void ConnectionServer::removeFromClientMap(const NetworkId &oid) {
 
 //-----------------------------------------------------------------------
 
-void ConnectionServer::addToConnectedMap(StationId suid, ClientConnection *cconn) {
+void ConnectionServer::addToConnectedMap(uint32 suid, ClientConnection *cconn) {
     SuidMap::iterator i = connectedMap.find(suid);
     if (i == connectedMap.end()) {
         connectedMap[suid] = cconn;
@@ -1332,7 +1344,7 @@ void ConnectionServer::addToConnectedMap(StationId suid, ClientConnection *cconn
 
 // ----------------------------------------------------------------------
 
-void ConnectionServer::removeFromConnectedMap(StationId suid) {
+void ConnectionServer::removeFromConnectedMap(uint32 suid) {
     SuidMap::iterator i = connectedMap.find(suid);
     if (i != connectedMap.end()) {
         connectedMap.erase(i);

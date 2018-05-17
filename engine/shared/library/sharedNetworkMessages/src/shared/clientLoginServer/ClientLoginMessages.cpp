@@ -50,7 +50,7 @@ LoginClientId::~LoginClientId()
 
 //-----------------------------------------------------------------------
 
-LoginClientToken::LoginClientToken(const unsigned char * const newToken, const unsigned char newTokenSize, StationId suid, const std::string & username) :
+LoginClientToken::LoginClientToken(const unsigned char * const newToken, const unsigned char newTokenSize, uint32 suid, const std::string & username) :
 GameNetworkMessage("LoginClientToken"),
 token      (),
 tokenData  (0),
