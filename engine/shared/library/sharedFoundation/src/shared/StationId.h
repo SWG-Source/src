@@ -10,6 +10,7 @@
 
 // ======================================================================
 
+// if this is per the SOE provided types header, this is acutally an unsigned long and not a uint32_t
 typedef uint32 StationId;
 
 // ======================================================================
