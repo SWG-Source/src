@@ -72,26 +72,7 @@ std::unordered_map<int, std::string> webAPI::getStringMap(const std::string &slo
     return ret;
 }
 
-std::unordered_map<int64_t, std::string> webAPI::getStringMap64(const std::string &slot) {
-    std::unordered_map<int64_t, std::string> ret = std::unordered_map<int64_t, std::string>();
-
-    if (!responseData.empty() && !slot.empty() && responseData.count(slot) && !responseData[slot].is_null()) {
-
-        nlohmann::json j = responseData[slot];
-
-        for (nlohmann::json::iterator it = j.begin(); it != j.end(); ++it) {
-            std::string tmp(it.key());
-	    int64_t k = strtoll(tmp.c_str(), nullptr, 10);
-            std::string val = it.value();
-
-            ret.insert({k, val});
-        }
-    }
-
-    return ret;
-}
-
-bool webAPI::submit(const int32_t &reqType, const int32_t &getPost, const int32_t &respType) {
+bool webAPI::submit(const int &reqType, const int &getPost, const int &respType) {
     if (reqType == DTYPE::JSON) // json request
     {
         if (!requestData.empty()) {
@@ -112,7 +93,7 @@ bool webAPI::submit(const int32_t &reqType, const int32_t &getPost, const int32_
     return false;
 }
 
-bool webAPI::fetch(const int32_t &getPost, const int32_t &mimeType) // 0 for json 1 for string
+bool webAPI::fetch(const int &getPost, const int &mimeType) // 0 for json 1 for string
 {
     bool fetchStatus = false;
 
