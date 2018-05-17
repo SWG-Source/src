@@ -48,7 +48,7 @@ class ConnectionServer : public MessageDispatch::Receiver
 	static void                   addNewClient(ClientConnection* cconn, const NetworkId &oid, GameConnection* gconn, const std::string &sceneName, bool sendToStarport );
 	static void                   addConnectedClient(StationId suid, ClientConnection* conn);
 	static void                   addGameConnection(unsigned long gameServerId, GameConnection* gc);
-	static bool                   decryptToken(const KeyShare::Token & token, StationId & stationUserId, bool & secure, std::string & accountName);
+	static bool                   decryptToken(const KeyShare::Token & token, uint32 & stationUserId, bool & secure, std::string & accountName);
 	static bool                   decryptToken(const KeyShare::Token & token, char* sessionKey, StationId & stationId);
 	static CentralConnection *    getCentralConnection();
 	static void                   dropClient(ClientConnection * conn, const std::string &description);

@@ -169,7 +169,7 @@ public:
 
 	void                         getCharacterMatchStatistics(int & numberOfCharacterMatchRequests, int & numberOfCharacterMatchResultsPerRequest, int & timeSpentPerCharacterMatchRequestMs);
 
-	void                         removeSuidFromAccountConnectionMap(StationId suid);
+	void                         removeFromAccountConnectionMap(StationId suid);
 
 private:
 	void     handleRequestGameServerForLoginMessage (const RequestGameServerForLoginMessage & msg);

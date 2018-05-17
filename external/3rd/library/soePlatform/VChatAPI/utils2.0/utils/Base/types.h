@@ -49,6 +49,11 @@ namespace soe
 	typedef u_int32_t               uint32;
 	typedef int64_t                 int64;
 	typedef u_int64_t               uint64;
+//! the previous seem erroneous
+//	typedef signed int              int32;
+//	typedef unsigned int            uint32;
+//	typedef signed long long        int64;
+//	typedef unsigned long long      uint64;
 #endif
 
 }

@@ -8,8 +8,6 @@
 #ifndef INCLUDED_NameManager_H
 #define INCLUDED_NameManager_H
 
-#include "sharedFoundation/StationId.h"
-
 // ======================================================================
 
 class NameGenerator;
@@ -40,7 +38,7 @@ class NameManager
 	std::string           debugGetNameList     () const;
 	bool                  isPlayer             (NetworkId const & possiblePlayer) const;
 	const NetworkId &     getPlayerId          (const std::string &name) const;
-	StationId             getPlayerStationId   (const NetworkId &id) const;
+	uint32                getPlayerStationId   (const NetworkId &id) const;
 	const std::string &   getPlayerName        (const NetworkId &id) const;
 	const std::string &   getPlayerFullName    (const NetworkId &id) const;
 	int64                 getPlayerCreateTime  (const NetworkId &id) const;
@@ -80,7 +78,7 @@ class NameManager
 
 	struct CharacterData
 	{
-		StationId stationId;
+		uint32 stationId;
 		std::string characterName;
 		std::string characterFullName;
 		time_t createTime;
