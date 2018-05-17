@@ -3,6 +3,8 @@
 
 //-----------------------------------------------------------------------
 
+#include <inttypes.h>
+
 #include "FirstConnectionServer.h"
 #include "ClientConnection.h"
 
@@ -306,7 +308,7 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg &msg) {
 
                 FATAL(clientIP.empty(), ("Remote IP is empty"));
 
-                DEBUG_WARNING(true, ("ConnectionServer::handleClientIdMessage - For ip %s suid is %lu requestedSUID is %lu and session is %s", clientIP.c_str(), m_suid, m_requestedSuid, sess.c_str()));
+                DEBUG_WARNING(true, ("ConnectionServer::handleClientIdMessage - For ip %s suid is %" PRId64 " requestedSUID is %lu and session is %s", clientIP.c_str(), m_suid, m_requestedSuid, sess.c_str()));
 
                 webAPI api(sessURL);
 
@@ -322,12 +324,9 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg &msg) {
                         int expired = api.getNullableValue<int>("expired");
 
                         if (!ConfigConnectionServer::getUseOldSuidGenerator()) {
-                            apiSuid = api.getNullableValue<int>("user_id");
+                            apiSuid = api.getNullableValue<StationId>("user_id");
                         } else {
-                            if (apiUser.length() > MAX_ACCOUNT_NAME_LENGTH) {
-                                apiUser.resize(MAX_ACCOUNT_NAME_LENGTH);
-                            }
-                            apiSuid = std::hash < std::string > {}(apiUser.c_str());
+                            apiSuid = hashOldSoeSUID(apiUser);
                         }
 
                         if (apiIP == clientIP && expired == 0) {
@@ -338,20 +337,20 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg &msg) {
                 }
 
                 if (!cont) {
-                    LOG("ClientDisconnect", ("SUID %d (%d) passed a bad token to the connections erver. Disconnecting.", m_suid, apiSuid));
+                    LOG("ClientDisconnect", ("SUID %" PRId64 " (%" PRId64 ") passed a bad token to the connections erver. Disconnecting.", m_suid, apiSuid));
                     disconnect();
                     return;
                 }
             }
 
             static const std::string loginTrace("TRACE_LOGIN");
-            LOG(loginTrace, ("ClientConnection SUID = %d", m_suid));
+            LOG(loginTrace, ("ClientConnection SUID = %" PRId64, m_suid));
 
             //check for duplicate login
             ClientConnection *oldConnection = ConnectionServer::getClientConnection(m_suid);
             if (oldConnection) {
                 //There is already someone connected to this cluster with this suid.
-                LOG("Network", ("SUID %d already logged in, disconnecting client.\n", m_suid));
+                LOG("Network", ("SUID %" PRId64 " already logged in, disconnecting client.\n", m_suid));
 
                 ConnectionServer::dropClient(oldConnection, "Already Connected");
 
@@ -383,11 +382,7 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg &msg) {
             if (!m_suid && !ConfigConnectionServer::getValidateStationKey()) {
                 WARNING(true, ("Generating suid from username. This is not safe or secure."));
 
-                m_suid = atoi(m_accountName.c_str());
-
-                if (m_suid == 0) {
-                    m_suid = std::hash < std::string > {}(m_accountName.c_str());
-                }
+                m_suid = hashOldSoeSUID(m_accountName);
             }
 
             onValidateClient(m_suid, m_accountName, m_isSecure, nullptr, ConfigConnectionServer::getDefaultGameFeatures(), ConfigConnectionServer::getDefaultSubscriptionFeatures(), 0, 0, 0, 0, ConfigConnectionServer::getFakeBuddyPoints());
