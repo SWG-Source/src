@@ -45,8 +45,8 @@ ClientConnection::~ClientConnection() {
 void ClientConnection::onConnectionClosed() {
     // client has disconnected
     if (m_stationId) {
-        DEBUG_REPORT_LOG(true, ("Client %" PRId64 " disconnected\n", m_stationId));
-        LOG("LoginClientConnection", ("onConnectionClosed() for stationId (%" PRId64 ") at IP (%s)", m_stationId, getRemoteAddress().c_str()));
+        DEBUG_REPORT_LOG(true, ("Client %lu disconnected\n", m_stationId));
+        LOG("LoginClientConnection", ("onConnectionClosed() for stationId (%lu) at IP (%s)", m_stationId, getRemoteAddress().c_str()));
     }
 
     LoginServer::getInstance().removeClient(m_clientId);
@@ -66,7 +66,7 @@ void ClientConnection::onConnectionOpened() {
     m_clientId = LoginServer::getInstance().addClient(*this);
     setOverflowLimit(ConfigLoginServer::getClientOverflowLimit());
 
-    LOG("LoginClientConnection", ("onConnectionOpened() for stationId (%" PRId64 ") at IP (%s)", m_stationId, getRemoteAddress().c_str()));
+    LOG("LoginClientConnection", ("onConnectionOpened() for stationId (%lu) at IP (%s)", m_stationId, getRemoteAddress().c_str()));
 }
 
 //-----------------------------------------------------------------------
@@ -105,7 +105,7 @@ void ClientConnection::onReceive(const Archive::ByteStream &message) {
                 }
                 else
                 {
-                    LOG("CustomerService", ("Login:LoginServer dropping client (stationId=[%" PRId64 "], ip=[%s], id=[%s], key=[%s], version=[%s]) because of network version mismatch (required version=[%s])", m_stationId, getRemoteAddress().c_str(), id.getId().c_str(), id.getKey().c_str(), id.getVersion().c_str(), GameNetworkMessage::NetworkVersionId.c_str()));
+                    LOG("CustomerService", ("Login:LoginServer dropping client (stationId=[%lu], ip=[%s], id=[%s], key=[%s], version=[%s]) because of network version mismatch (required version=[%s])", m_stationId, getRemoteAddress().c_str(), id.getId().c_str(), id.getKey().c_str(), id.getVersion().c_str(), GameNetworkMessage::NetworkVersionId.c_str()));
                     // disconnect is handled on the client side, as soon as it recieves this message
 #if _DEBUG
                     LoginIncorrectClientId incorrectId(GameNetworkMessage::NetworkVersionId, ApplicationVersion::getInternalVersion());
@@ -160,7 +160,7 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
     std::string uname;
     std::string parentAccount;
     std::string sessionID;
-    std::string tmp;
+
     StationId user_id;
     StationId parent_id;
     std::unordered_map<StationId, std::string> childAccounts;
@@ -189,8 +189,16 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
                     user_id = static_cast<StationId>(api.getNullableValue<StationId>("user_id"));
                     parent_id = static_cast<StationId>(api.getNullableValue<StationId>("parent_id"));
                 } else {
-                    parent_id = hashOldSoeSUID(parentAccount);
-                    user_id = hashOldSoeSUID(uname);
+                    if (parentAccount.length() > MAX_ACCOUNT_NAME_LENGTH) {
+                        parentAccount.resize(MAX_ACCOUNT_NAME_LENGTH);
+                    }
+
+                    if (uname.length() > MAX_ACCOUNT_NAME_LENGTH) {
+                        uname.resize(MAX_ACCOUNT_NAME_LENGTH);
+                    }
+
+                    parent_id = static_cast<uint32_t>(std::hash < std::string > {}(parentAccount.c_str()));
+                    user_id = static_cast<uint32_t>(std::hash < std::string > {}(uname.c_str()));
                 }
             } else {
                 std::string msg(api.getString("message"));
@@ -210,11 +218,12 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
         authOK = true;
         testMode = true;
         uname = id;
-        user_id = hashOldSoeSUID(uname);
-    }
 
-    if (user_id == 0) {
-	authOK = false;
+        if (uname.length() > MAX_ACCOUNT_NAME_LENGTH) {
+            uname.resize(MAX_ACCOUNT_NAME_LENGTH);
+        }
+
+        user_id = static_cast<uint32_t>(std::hash < std::string > {}(uname.c_str()));
     }
 
     if (authOK) {
@@ -237,7 +246,11 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
 
                 if (!child.empty() && i.first > 0) {
                     if (ConfigLoginServer::getUseOldSuidGenerator()) {
-			child_id = hashOldSoeSUID(child);
+                        if (child.length() > MAX_ACCOUNT_NAME_LENGTH) {
+                            child.resize(MAX_ACCOUNT_NAME_LENGTH);
+                        }
+
+                        child_id = static_cast<uint32_t>(std::hash < std::string > {}(child.c_str()));
                     }
 
                     REPORT_LOG((parent_id !=

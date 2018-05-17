@@ -7,8 +7,6 @@
 #include "serverGame/FirstServerGame.h"
 #include "serverGame/GameServer.h"
 
-#include <inttypes.h>
-
 #include "serverGame/AiMovementBase.h"
 #include "serverGame/AiCreatureController.h"
 #include "serverGame/AiShipController.h"
@@ -4482,7 +4480,7 @@ void GameServer::handleCreateCharacter(const CentralCreateCharacter * createMess
 	if (NameManager::getInstance().getPlayerId(NameManager::normalizeName(Unicode::wideToNarrow(createMessage->getCharacterName()))) != NetworkId::cms_invalid)
 	{
 		LOG("TraceCharacterCreation", ("%d character create name %s is in use, sending GameCreateCharacterFailed", createMessage->getStationId(), Unicode::wideToNarrow(createMessage->getCharacterName()).c_str()));
-		DEBUG_REPORT_LOG(true, ("Character create name %s is in use, declined for stationId %" PRId64 "\n", Unicode::wideToNarrow(createMessage->getCharacterName()).c_str(), createMessage->getStationId()));
+		DEBUG_REPORT_LOG(true, ("Character create name %s is in use, declined for stationId %lu\n", Unicode::wideToNarrow(createMessage->getCharacterName()).c_str(), createMessage->getStationId()));
 		GameCreateCharacterFailed const characterCreateFailed(createMessage->getStationId(), createMessage->getCharacterName(), NameErrors::nameDeclinedInUse, FormattedString<2048>().sprintf("%lu character create name %s is in use, sending GameCreateCharacterFailed", createMessage->getStationId(), Unicode::wideToNarrow(createMessage->getCharacterName()).c_str()));
 		sendToCentralServer(characterCreateFailed);
 		delete createMessage;
@@ -4509,7 +4507,7 @@ void GameServer::handleNameFailure(const RandomNameRequest &request, const Strin
 
 void GameServer::handleNameRequest(const RandomNameRequest &request)
 {
-	DEBUG_REPORT_LOG(true, ("Random name requested for stationId %" PRId64 "\n", request.getStationId()));
+	DEBUG_REPORT_LOG(true, ("Random name requested for stationId %lu\n", request.getStationId()));
 
 	std::map<uint32, const CentralCreateCharacter *>::iterator findPendingCreation=m_charactersPendingCreation->find(request.getStationId());
 	if (findPendingCreation != m_charactersPendingCreation->end())
@@ -4532,7 +4530,7 @@ void GameServer::handleNameRequest(const RandomNameRequest &request)
 
 			LOG("TraceCharacterCreation", ("%d generated name %s", request.getStationId(), Unicode::wideToNarrow(randomName).c_str(), request.getStationId(), request.getCreatureTemplate().c_str(), Unicode::wideToNarrow(randomName).c_str()));
 
-			DEBUG_REPORT_LOG(true, ("VerifyNameResponse: random name %s approved for stationId %" PRId64 "\n", Unicode::wideToNarrow(randomName).c_str(), request.getStationId()));
+			DEBUG_REPORT_LOG(true, ("VerifyNameResponse: random name %s approved for stationId %lu\n", Unicode::wideToNarrow(randomName).c_str(), request.getStationId()));
 			RandomNameResponse const response(request.getStationId(), request.getCreatureTemplate(), randomName, NameErrors::nameApproved);
 			sendToCentralServer(response);
 			
@@ -4560,7 +4558,7 @@ void GameServer::handleNameRequest(const RandomNameRequest &request)
 
 const StringId GameServer::handleVerifyAndLockNameRequest(const VerifyAndLockNameRequest &request, bool sendFailedResponseToCentralServer, bool verifyAgainstDb)
 {
-	REPORT_LOG(true, ("Verify and lock name requested for stationId %" PRId64 "\n", request.getStationId()));
+	REPORT_LOG(true, ("Verify and lock name requested for stationId %lu\n", request.getStationId()));
 	
 	const std::string & templateName = request.getTemplateName();
 	DEBUG_REPORT_LOG(true, ("Received verify and lock name request for account %li (name %s, template %s)\n", request.getStationId(), Unicode::wideToNarrow(request.getCharacterName()).c_str(), templateName.c_str()));
@@ -4661,7 +4659,7 @@ void GameServer::handleCharacterCreateNameVerification(const VerifyNameResponse 
 	if (vrn.getErrorMessage() != NameErrors::nameApproved)
 	{
 		LOG("TraceCharacterCreation", ("%d VeryfyNameResponse character create name %s declined, sending GameCreateCharacterFailed(%d, %s, %s)", vrn.getStationId(), Unicode::wideToNarrow(vrn.getName()).c_str(), vrn.getStationId(), Unicode::wideToNarrow(vrn.getName()).c_str(), vrn.getErrorMessage().getText().c_str()));
-		DEBUG_REPORT_LOG(true, ("VerifyNameResponse: character create name %s declined (%s) for stationId %" PRId64 "\n", Unicode::wideToNarrow(vrn.getName()).c_str(), vrn.getErrorMessage().getText().c_str(), vrn.getStationId()));
+		DEBUG_REPORT_LOG(true, ("VerifyNameResponse: character create name %s declined (%s) for stationId %lu\n", Unicode::wideToNarrow(vrn.getName()).c_str(), vrn.getErrorMessage().getText().c_str(), vrn.getStationId()));
 		GameCreateCharacterFailed const characterCreateFailed(vrn.getStationId(), vrn.getName(), vrn.getErrorMessage(), FormattedString<2048>().sprintf("%lu VeryfyNameResponse character create name %s declined, sending GameCreateCharacterFailed(%lu, %s, %s)", vrn.getStationId(), Unicode::wideToNarrow(vrn.getName()).c_str(), vrn.getStationId(), Unicode::wideToNarrow(vrn.getName()).c_str(), vrn.getErrorMessage().getText().c_str()));
 		sendToCentralServer(characterCreateFailed);
 		m_charactersPendingCreation->erase(vrn.getStationId());
@@ -4670,7 +4668,7 @@ void GameServer::handleCharacterCreateNameVerification(const VerifyNameResponse 
 	}
 	std::string templateName(createMessage->getTemplateName());
 
-	DEBUG_REPORT_LOG(true, ("VerifyNameResponse: character create name %s approved for stationId %" PRId64 "\n", Unicode::wideToNarrow(vrn.getName()).c_str(), vrn.getStationId()));
+	DEBUG_REPORT_LOG(true, ("VerifyNameResponse: character create name %s approved for stationId %lu\n", Unicode::wideToNarrow(vrn.getName()).c_str(), vrn.getStationId()));
 
 	TangibleObject *newCharacterObject = 0;
 
@@ -4690,7 +4688,7 @@ void GameServer::handleCharacterCreateNameVerification(const VerifyNameResponse 
 	if (!newCharacterObject)
 	{
 		LOG("TraceCharacterCreation", ("%d could not create a new character object on the game server, sending GameCreateCharacterFailed(%d, %s, %s) to central server", vrn.getStationId(), vrn.getStationId(), Unicode::wideToNarrow(vrn.getName()).c_str(), vrn.getErrorMessage().getText().c_str()));
-		DEBUG_REPORT_LOG(true, ("handleCharacterCreateNameVerification: failed to create character object (name %s, template %s, stationId %" PRId64 ")\n", Unicode::wideToNarrow(vrn.getName()).c_str(), vrn.getCreatureTemplate().c_str(), vrn.getStationId()));
+		DEBUG_REPORT_LOG(true, ("handleCharacterCreateNameVerification: failed to create character object (name %s, template %s, stationId %lu)\n", Unicode::wideToNarrow(vrn.getName()).c_str(), vrn.getCreatureTemplate().c_str(), vrn.getStationId()));
 		GameCreateCharacterFailed const characterCreateFailed(vrn.getStationId(), vrn.getName(), NameErrors::nameDeclinedInternalError, FormattedString<2048>().sprintf("%lu could not create a new character object on the game server, sending GameCreateCharacterFailed(%lu, %s, %s) to central server", vrn.getStationId(), vrn.getStationId(), Unicode::wideToNarrow(vrn.getName()).c_str(), vrn.getErrorMessage().getText().c_str()));
 		sendToCentralServer(characterCreateFailed);
 		m_charactersPendingCreation->erase(vrn.getStationId());

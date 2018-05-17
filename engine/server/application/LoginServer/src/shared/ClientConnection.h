@@ -55,6 +55,7 @@ private:
 	ClientConnection& operator=( const ClientConnection&);
 
 	void                        validateClient(const std::string & id, const std::string & key);
+
 private:
 	int               m_clientId;
 	bool              m_isValidated;
@@ -72,32 +73,19 @@ private:
 }; //lint !e1712 // default constructor not defined
 
 //-----------------------------------------------------------------------
-
-// thanks for the nasty BS Sony
-inline const StationId hashOldSoeSUID(std::string name) {
-        StationId oldSoeSUID = 0;
-
-        if (name.length()) {
-                char brokenSuid[50];
-                uint32_t hash;
-
-                //if (name.size() > MAX_ACCOUNT_NAME_LENGTH) {
-                //      name.resize(MAX_ACCOUNT_NAME_LENGTH);
-                //}
-
-                // use SOE's shitty method for generating unique id's
-                hash =  static_cast<uint32_t>(std::hash < std::string > {}(name.c_str()));
-
-                // ...running them through sprintf to format, and overflowing or otherwise mangling the value
-                sprintf(brokenSuid, "%i", hash);
-
-                // and then go back to int...lol
-                oldSoeSUID = std::stoi(brokenSuid);
-        }
-
-        return oldSoeSUID;
-}
 	
+// stolen from http://www.codeproject.com/Articles/10880/A-trim-implementation-for-std-string
+// i'm rusty and haven't gotten to lambdas yet
+inline const std::string trim(std::string str)
+{
+	
+	str.erase(str.begin(), std::find_if(str.begin(), str.end(),
+	  [](char& ch)->bool { return !isspace(ch); }));
+	str.erase(std::find_if(str.rbegin(), str.rend(),
+	  [](char& ch)->bool { return !isspace(ch); }).base(), str.end());
+	return str;
+} 
+
 //-----------------------------------------------------------------------
 
 inline const StationId ClientConnection::getStationId() const

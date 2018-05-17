@@ -197,31 +197,6 @@ private:
 
 //-----------------------------------------------------------------------
 
-// thanks for the nasty BS Sony
-inline const StationId hashOldSoeSUID(std::string name) {
-        StationId oldSoeSUID = 0;
-
-        if (name.length()) {
-                char brokenSuid[50];
-                uint32_t hash;
-
-                //if (name.size() > MAX_ACCOUNT_NAME_LENGTH) {
-                //      name.resize(MAX_ACCOUNT_NAME_LENGTH);
-                //}
-
-                // use SOE's shitty method for generating unique id's
-                hash =  static_cast<uint32_t>(std::hash < std::string > {}(name.c_str()));
-
-                // ...running them through sprintf to format, and overflowing or otherwise mangling the value
-                sprintf(brokenSuid, "%i", hash);
-
-                // and then go back to int...lol
-                oldSoeSUID = std::stoi(brokenSuid);
-        }
-
-        return oldSoeSUID;
-}
-
 inline const std::string & ClientConnection::getAccountName() const
 {
 	return m_accountName;

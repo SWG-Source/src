@@ -8,7 +8,6 @@
 #include "serverDatabase/FirstServerDatabase.h"
 #include "TaskChangeStationId.h"
 
-#include <inttypes.h>
 #include <vector>
 #include "sharedLog/Log.h"
 #include "serverNetworkMessages/TransferAccountData.h"
@@ -58,7 +57,7 @@ bool TaskChangeStationId::process(DB::Session *session)
 
 void TaskChangeStationId::onComplete()
 {
-	LOG("CustomerService", ("CharacterTransfer: Completed changing station id from %" PRId64 " to %" PRId64 " in game database", m_sourceStationId, m_destinationStationId));
+	LOG("CustomerService", ("CharacterTransfer: Completed changing station id from %lu to %lu in game database", m_sourceStationId, m_destinationStationId));
 }
 
 // ======================================================================

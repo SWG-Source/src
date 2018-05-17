@@ -5,8 +5,6 @@
 //
 // ======================================================================
 
-#include <inttypes.h>
-
 #include "serverDatabase/FirstServerDatabase.h"
 #include "serverDatabase/DataLookup.h"
 
@@ -180,7 +178,7 @@ void DataLookup::onRetrieveItemComplete(NetworkId const &ownerId, NetworkId cons
 
 void DataLookup::verifyName(uint32 gameServer, VerifyNameRequest * request)
 {
-	DEBUG_REPORT_LOG(true, ("verifyName: stationId %" PRId64 ", process %lu, name %s: ", request->getStationId(), gameServer, Unicode::wideToNarrow(request->getCharacterName()).c_str()));
+	DEBUG_REPORT_LOG(true, ("verifyName: stationId %lu, process %lu, name %s: ", request->getStationId(), gameServer, Unicode::wideToNarrow(request->getCharacterName()).c_str()));
 	Unicode::String name = normalizeName(request->getCharacterName());
 
 	reservationList * rl = getReservationList(request->getStationId());
@@ -252,8 +250,8 @@ void DataLookup::verifyName(uint32 gameServer, VerifyNameRequest * request)
 		{
 			if (i->name == name)
 			{
-				LOG("TraceCharacterCreation", ("Name (%s) requested by station ID %" PRId64 " is already reserved by another station ID %" PRId64 " and/or another character on the same station ID", Unicode::wideToNarrow(request->getCharacterName()).c_str(), request->getStationId(), j->first));
-				DEBUG_REPORT_LOG(true, ("Name (%s) requested by station ID %" PRId64 " is already reserved by another station ID %" PRId64 " and/or another character on the same station ID\n", Unicode::wideToNarrow(request->getCharacterName()).c_str(), request->getStationId(), j->first));
+				LOG("TraceCharacterCreation", ("Name (%s) requested by station ID %lu is already reserved by another station ID %lu and/or another character on the same station ID", Unicode::wideToNarrow(request->getCharacterName()).c_str(), request->getStationId(), j->first));
+				DEBUG_REPORT_LOG(true, ("Name (%s) requested by station ID %lu is already reserved by another station ID %lu and/or another character on the same station ID\n", Unicode::wideToNarrow(request->getCharacterName()).c_str(), request->getStationId(), j->first));
 				GameServerConnection * g = DatabaseProcess::getInstance().getConnectionByProcess(gameServer);
 				VerifyNameResponse vnr(request->getStationId(), request->getCharacterId(), request->getCreatureTemplate(), request->getCharacterName(), NameErrors::nameDeclinedInUse);
 				g->send(vnr, true);
@@ -298,7 +296,7 @@ void DataLookup::onCharacterNameChecked(uint32 stationId, const Unicode::String 
 	reservationList * rl = getReservationList(stationId);
 	if (!rl)
 	{
-		DEBUG_REPORT_LOG(true, ("Received onCharacterNameChecked (%s) for non-pending name stationid %" PRId64 "\n", reason.getText().c_str(), stationId));
+		DEBUG_REPORT_LOG(true, ("Received onCharacterNameChecked (%s) for non-pending name stationid %lu\n", reason.getText().c_str(), stationId));
 		return;
 	}
 
@@ -313,20 +311,20 @@ void DataLookup::onCharacterNameChecked(uint32 stationId, const Unicode::String 
 			if (g)
 				g->send(vnr, true);
 			else
-				DEBUG_REPORT_LOG(true,("VerifyNameResponse for %" PRId64 " dropped because GameServer has dropped connection.\n",stationId));
+				DEBUG_REPORT_LOG(true,("VerifyNameResponse for %lu dropped because GameServer has dropped connection.\n",stationId));
 		}
 	}
 
 	if (reason != NameErrors::nameApproved)
 	{
-		LOG("TraceCharacterCreation", ("%" PRId64 " name released", stationId));
-		DEBUG_REPORT_LOG(true, ("Name %s verified for stationId %" PRId64 ": %s.\n", Unicode::wideToNarrow(name).c_str(), stationId, reason.getText().c_str()));
+		LOG("TraceCharacterCreation", ("%d name released", stationId));
+		DEBUG_REPORT_LOG(true, ("Name %s verified for stationId %lu: %s.\n", Unicode::wideToNarrow(name).c_str(), stationId, reason.getText().c_str()));
 		releaseName(stationId, name);
 	}
 	else
 	{
-		LOG("TraceCharacterCreation", ("%" PRId64 " name %s verified", stationId, Unicode::wideToNarrow(name).c_str()));
-		DEBUG_REPORT_LOG(true, ("Name %s verified for stationId %" PRId64 ": %s, holding reservation.\n", Unicode::wideToNarrow(name).c_str(), stationId, reason.getText().c_str()));
+		LOG("TraceCharacterCreation", ("%d name %s verified", stationId, Unicode::wideToNarrow(name).c_str()));
+		DEBUG_REPORT_LOG(true, ("Name %s verified for stationId %lu: %s, holding reservation.\n", Unicode::wideToNarrow(name).c_str(), stationId, reason.getText().c_str()));
 		approveName(stationId, name);
 	}
 }
@@ -338,7 +336,7 @@ void DataLookup::releaseName(uint32 stationId, const NetworkId & characterId)
 	reservationList * rl = getReservationList(stationId);
 	if (!rl)
 	{
-		WARNING(true, ("Releasing names for stationId %" PRId64 ", characterId %s, but no reservations found.\n", stationId, characterId.getValueString().c_str()));
+		WARNING(true, ("Releasing names for stationId %lu, characterId %s, but no reservations found.\n", stationId, characterId.getValueString().c_str()));
 		return;
 	}
 
@@ -358,7 +356,7 @@ void DataLookup::releaseName(uint32 stationId, const NetworkId & characterId)
 		}
 	}
 
-	DEBUG_REPORT_LOG(true, ("Releasing %d names for stationId % " PRId64 ", characterId %s\n", erased, stationId, characterId.getValueString().c_str()));
+	DEBUG_REPORT_LOG(true, ("Releasing %d names for stationId %lu, characterId %s\n", erased, stationId, characterId.getValueString().c_str()));
 
 	rl->swap(newReservations);
 	if (rl->empty())
@@ -374,7 +372,7 @@ void DataLookup::releaseName(uint32 stationId, const Unicode::String &i_name)
 	reservationList * rl = getReservationList(stationId);
 	if (!rl)
 	{
-		WARNING(true, ("Releasing name [%s] for stationId %" PRId64 ", but no reservations found.\n", Unicode::wideToNarrow(i_name).c_str(), stationId));
+		WARNING(true, ("Releasing name [%s] for stationId %lu, but no reservations found.\n", Unicode::wideToNarrow(i_name).c_str(), stationId));
 		return;
 	}
 
@@ -394,7 +392,7 @@ void DataLookup::releaseName(uint32 stationId, const Unicode::String &i_name)
 		}
 	}
 
-	DEBUG_REPORT_LOG(true, ("Releasing %d names for stationId %" PRId64 ", name (%s)\n", erased, stationId, Unicode::wideToNarrow(i_name).c_str()));
+	DEBUG_REPORT_LOG(true, ("Releasing %d names for stationId %lu, name (%s)\n", erased, stationId, Unicode::wideToNarrow(i_name).c_str()));
 
 	rl->swap(newReservations);
 	if (rl->empty())
@@ -410,7 +408,7 @@ void DataLookup::approveName(uint32 stationId, const Unicode::String &i_name)
 	reservationList * rl = getReservationList(stationId);
 	if (!rl)
 	{
-		WARNING_STRICT_FATAL(true, ("Approving name for stationId %" PRId64 ", but name not found.\n", stationId));
+		WARNING_STRICT_FATAL(true, ("Approving name for stationId %lu, but name not found.\n", stationId));
 		return;
 	}
 
@@ -486,7 +484,7 @@ DataLookup::reservationList * DataLookup::getReservationList(uint32 stationId)
 DataLookup::reservationList * DataLookup::newReservationList(uint32 stationId)
 {
 	reservationList * result = new reservationList;
-	DEBUG_FATAL(m_reservations.find(stationId) != m_reservations.end(), ("DataLookup::newReservationList called, but there is already a reservationList for this stationId %" PRId64 ".", stationId));
+	DEBUG_FATAL(m_reservations.find(stationId) != m_reservations.end(), ("DataLookup::newReservationList called, but there is already a reservationList for this stationId %lu.", stationId));
 	m_reservations[stationId] = result;
 	return result;
 }
@@ -514,7 +512,7 @@ void DataLookup::deleteReservationList(uint32 stationId)
 	reservationList * rl = rlIter->second;
 	if (!rl)
 	{
-		WARNING_STRICT_FATAL(true, ("Reservation list for stationID %" PRId64 " is null", stationId));
+		WARNING_STRICT_FATAL(true, ("Reservation list for stationID %lu is nullptr", stationId));
 		return;
 	}
 	reservationList::iterator i;
