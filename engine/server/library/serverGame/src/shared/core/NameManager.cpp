@@ -224,15 +224,15 @@ void NameManager::addPlayer(const NetworkId &id, StationId stationId, const std:
 		std::vector<StationId> stationIds;
 		std::vector<std::string> characterNames;
 		std::vector<std::string> characterFullNames;
-		std::vector<int64> characterCreateTimes;
-		std::vector<int64> characterLastLoginTimes;
+		std::vector<int> characterCreateTimes;
+		std::vector<int> characterLastLoginTimes;
 
 		ids.push_back(id);
 		stationIds.push_back(stationId);
 		characterNames.push_back(normalizedName);
 		characterFullNames.push_back(fullName);
-		characterCreateTimes.push_back(static_cast<int64>(createTime));
-		characterLastLoginTimes.push_back(static_cast<int64>(lastLoginTime));
+		characterCreateTimes.push_back(static_cast<int>(createTime));
+		characterLastLoginTimes.push_back(static_cast<int>(lastLoginTime));
 
 		ServerMessageForwarding::beginBroadcast();
 
@@ -316,24 +316,24 @@ const std::string & NameManager::getPlayerFullName(const NetworkId &id) const
 
 // ----------------------------------------------------------------------
 
-int64 NameManager::getPlayerCreateTime(const NetworkId &id) const
+int NameManager::getPlayerCreateTime(const NetworkId &id) const
 {
 	IdToCharacterDataMapType::const_iterator i=m_idToCharacterDataMap->find(id);
 	if (i==m_idToCharacterDataMap->end())
 		return -1;
 	else
-		return static_cast<int64>(i->second.createTime);
+		return static_cast<int>(i->second.createTime);
 }
 
 // ----------------------------------------------------------------------
 
-int64 NameManager::getPlayerLastLoginTime(const NetworkId &id) const
+int NameManager::getPlayerLastLoginTime(const NetworkId &id) const
 {
 	IdToCharacterDataMapType::const_iterator i=m_idToCharacterDataMap->find(id);
 	if (i==m_idToCharacterDataMap->end())
 		return -1;
 	else
-		return static_cast<int64>(i->second.lastLoginTime);
+		return static_cast<int>(i->second.lastLoginTime);
 }
 
 // ----------------------------------------------------------------------
@@ -464,7 +464,7 @@ void NameManager::releasePlayerName(const NetworkId &id)
 
 // ----------------------------------------------------------------------
 
-void NameManager::addPlayers(const std::vector<NetworkId> &ids, const std::vector<StationId> &stationIds, const std::vector<std::string> &names, const std::vector<std::string> &fullNames, const std::vector<int64> &createTimes, const std::vector<int64> &lastLoginTimes)
+void NameManager::addPlayers(const std::vector<NetworkId> &ids, const std::vector<StationId> &stationIds, const std::vector<std::string> &names, const std::vector<std::string> &fullNames, const std::vector<int> &createTimes, const std::vector<int> &lastLoginTimes)
 {
 	DEBUG_FATAL(ids.size() != stationIds.size(),("Programmer bug:  Vectors ids and stationIds must be the same size.\n"));
 	DEBUG_FATAL(ids.size() != names.size(),("Programmer bug:  Vectors ids and names must be the same size.\n"));
@@ -486,8 +486,8 @@ void NameManager::sendAllNamesToServer (std::vector<uint32> const & servers) con
 	std::vector<StationId> stationIds;
 	std::vector<std::string> characterNames;
 	std::vector<std::string> characterFullNames;
-	std::vector<int64> characterCreateTimes;
-	std::vector<int64> characterLastLoginTimes;
+	std::vector<int> characterCreateTimes;
+	std::vector<int> characterLastLoginTimes;
 
 	for (IdToCharacterDataMapType::const_iterator i=m_idToCharacterDataMap->begin(); i!=m_idToCharacterDataMap->end(); ++i)
 	{
@@ -495,8 +495,8 @@ void NameManager::sendAllNamesToServer (std::vector<uint32> const & servers) con
 		stationIds.push_back(i->second.stationId);
 		characterNames.push_back(i->second.characterName);
 		characterFullNames.push_back(i->second.characterFullName);
-		characterCreateTimes.push_back(static_cast<int64>(i->second.createTime));
-		characterLastLoginTimes.push_back(static_cast<int64>(i->second.lastLoginTime));
+		characterCreateTimes.push_back(static_cast<int>(i->second.createTime));
+		characterLastLoginTimes.push_back(static_cast<int>(i->second.lastLoginTime));
 	}
 
 	ServerMessageForwarding::begin(servers);

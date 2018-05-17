@@ -35,7 +35,7 @@ class NameManager
   public:
 	int                   getTotalPlayerCount  () const;
 	void                  addPlayer            (const NetworkId &id, StationId stationId, const std::string &name, const std::string &fullName, time_t createTime, time_t lastLoginTime, bool notifyOtherServers);
-	void                  addPlayers           (const std::vector<NetworkId> &ids, const std::vector<StationId> &stationIds, const std::vector<std::string> &names, const std::vector<std::string> &fullNames, const std::vector<int64> &createTimes, const std::vector<int64> &lastLoginTimes);
+	void                  addPlayers           (const std::vector<NetworkId> &ids, const std::vector<StationId> &stationIds, const std::vector<std::string> &names, const std::vector<std::string> &fullNames, const std::vector<int> &createTimes, const std::vector<int> &lastLoginTimes);
 	void                  renamePlayer         (const NetworkId &id, const Unicode::String &name, const Unicode::String &fullName);
 	std::string           debugGetNameList     () const;
 	bool                  isPlayer             (NetworkId const & possiblePlayer) const;
@@ -43,8 +43,8 @@ class NameManager
 	StationId             getPlayerStationId   (const NetworkId &id) const;
 	const std::string &   getPlayerName        (const NetworkId &id) const;
 	const std::string &   getPlayerFullName    (const NetworkId &id) const;
-	int64                 getPlayerCreateTime  (const NetworkId &id) const;
-	int64                 getPlayerLastLoginTime (const NetworkId &id) const;
+	int                   getPlayerCreateTime  (const NetworkId &id) const;
+	int                   getPlayerLastLoginTime (const NetworkId &id) const;
 	void                  getPlayerWithLastLoginTimeAfter (time_t time, std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> > &result) const;
 	void                  getPlayerWithLastLoginTimeBefore (time_t time, std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> > &result) const;
 	void                  getPlayerWithLastLoginTimeBetween (time_t timeLowerRange, time_t timeUpperRange, std::multimap<time_t, std::pair<std::pair<NetworkId, uint32>, std::string> > &result) const;

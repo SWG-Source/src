@@ -22,7 +22,7 @@
 class CharacterNamesMessage : public GameNetworkMessage
 {
   public:
-	CharacterNamesMessage(const std::vector<NetworkId> &ids, const std::vector<StationId> &stationIds, const std::vector<std::string> &characterNames, const std::vector<std::string> &characterFullNames, const std::vector<int64> &createTimes, const std::vector<int64> &loginTimes);
+	CharacterNamesMessage(const std::vector<NetworkId> &ids, const std::vector<StationId> &stationIds, const std::vector<std::string> &characterNames, const std::vector<std::string> &characterFullNames, const std::vector<int> &createTimes, const std::vector<int> &loginTimes);
 	CharacterNamesMessage(Archive::ReadIterator & source);
 	~CharacterNamesMessage();
 
@@ -30,16 +30,16 @@ class CharacterNamesMessage : public GameNetworkMessage
 	const std::vector<StationId>   &getStationIds() const;
 	const std::vector<std::string> &getNames() const;
 	const std::vector<std::string> &getFullNames() const;
-	const std::vector<int64>         &getCreateTimes() const;
-	const std::vector<int64>         &getLoginTimes() const;
+	const std::vector<int>         &getCreateTimes() const;
+	const std::vector<int>         &getLoginTimes() const;
 		
    private:
 	Archive::AutoArray<NetworkId>   m_ids;
 	Archive::AutoArray<StationId>   m_stationIds;
 	Archive::AutoArray<std::string> m_names;
 	Archive::AutoArray<std::string> m_fullNames;
-	Archive::AutoArray<int64>         m_createTimes;
-	Archive::AutoArray<int64>         m_loginTimes;
+	Archive::AutoArray<int>         m_createTimes;
+	Archive::AutoArray<int>         m_loginTimes;
 	
   private:
 	//disabled functions:
@@ -79,14 +79,14 @@ inline const std::vector<std::string> & CharacterNamesMessage::getFullNames() co
 
 // ----------------------------------------------------------------------
 
-inline const std::vector<int64> & CharacterNamesMessage::getCreateTimes() const
+inline const std::vector<int> & CharacterNamesMessage::getCreateTimes() const
 {
 	return m_createTimes.get();
 }
 
 // ----------------------------------------------------------------------
 
-inline const std::vector<int64> & CharacterNamesMessage::getLoginTimes() const
+inline const std::vector<int> & CharacterNamesMessage::getLoginTimes() const
 {
 	return m_loginTimes.get();
 }
