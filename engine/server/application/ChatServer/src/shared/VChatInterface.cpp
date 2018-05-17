@@ -53,7 +53,7 @@ struct GetAccountInfo
 {
 	std::string avatarName;
 	NetworkId id;
-	unsigned suid;
+	StationId suid;
 	unsigned failedAttempts;
 };
 
@@ -394,7 +394,7 @@ unsigned VChatInterface::requestChannelCommand(ReturnAddress const & requester,
 	return track;
 }
 
-unsigned VChatInterface::requestConnectPlayer(unsigned suid, std::string const & characterName, NetworkId const & netId, unsigned previousAttempts)
+unsigned VChatInterface::requestConnectPlayer(StationId suid, std::string const & characterName, NetworkId const & netId, unsigned previousAttempts)
 {
 	GetAccountInfo *info = new GetAccountInfo;
 	info->avatarName = characterName;

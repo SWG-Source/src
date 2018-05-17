@@ -1284,7 +1284,7 @@ LoginServer::onValidateClient(StationId suid, const std::string &username, Clien
         }
     } else {
         // If we aren't validating sessions, pack username, security status, and username to connectionserver
-        memcpy(keyBufferPointer, &suid, sizeof(uint32)); //lint !e64 !e119 !e534 (lint isn't resolving memcpy properly)
+        memcpy(keyBufferPointer, &suid, sizeof(StationId)); //lint !e64 !e119 !e534 (lint isn't resolving memcpy properly)
         keyBufferPointer += sizeof(uint32);
         memcpy(keyBufferPointer, &isSecure, sizeof(bool)); //lint !e64 !e119 !e534
         keyBufferPointer += sizeof(bool);
@@ -1295,7 +1295,7 @@ LoginServer::onValidateClient(StationId suid, const std::string &username, Clien
     Archive::ByteStream a;
     token.pack(a);
 
-    const LoginClientToken k(a.getBuffer(), static_cast<unsigned char>(a.getSize()), static_cast<uint32>(suid), username);
+    const LoginClientToken k(a.getBuffer(), static_cast<unsigned char>(a.getSize()), static_cast<StationId>(suid), username);
     conn->send(k, true);
     delete[] keyBuffer;
 

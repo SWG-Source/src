@@ -3,6 +3,7 @@
 #ifndef	_INCLUDED_VChatInterface_H
 #define	_INCLUDED_VChatInterface_H
 
+#include "sharedFoundation/StationId.h"
 #include "sharedFoundation/NetworkId.h"
 
 #include <set>
@@ -98,7 +99,7 @@ public:
 		unsigned command,
 		unsigned banTimeout);
 
-	unsigned requestConnectPlayer(unsigned suid, std::string const & characterName, NetworkId const & netId, unsigned previousAttempts = 0);
+	unsigned requestConnectPlayer(StationId suid, std::string const & characterName, NetworkId const & netId, unsigned previousAttempts = 0);
 
 	unsigned requestChannelInfo(std::string const & channelName, ReturnAddress const & requester, bool isForGlobalBroadcast = false, std::string const & messageText = "");
 

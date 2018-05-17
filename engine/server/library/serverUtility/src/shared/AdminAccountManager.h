@@ -5,6 +5,8 @@
 #ifndef	_AdminAccountManager_H
 #define	_AdminAccountManager_H
 
+#include "sharedFoundation/StationId.h"
+
 //-----------------------------------------------------------------------
 
 class DataTable;
@@ -19,7 +21,7 @@ public:
 	static const char *getAdminCommandName();
 	static const std::string & getAdminTagName();
 	
-	static int  isAdminAccount(uint32 suid, bool useOldSuid = false);
+	static int  isAdminAccount(StationId suid, bool useOldSuid = false);
 	static bool isAdminAccount(const std::string & account, int& level);
 	static bool isInternalIp(const std::string & addr);
 	static void reload();

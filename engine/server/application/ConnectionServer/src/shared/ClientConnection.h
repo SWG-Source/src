@@ -59,7 +59,7 @@ public:
 	Client *                      getClient                ();
 	void                          setClient                (Client* client);
 
-	uint32                        getSUID                  () const;
+	StationId                     getSUID                  () const;
 
 	const bool                    getHasSelectedCharacter  () const;
 	bool                          getHasBeenSentToGameServer () const;
@@ -205,9 +205,9 @@ inline const StationId hashOldSoeSUID(std::string name) {
                 char brokenSuid[50];
                 uint32_t hash;
 
-                //if (name.size() > MAX_ACCOUNT_NAME_LENGTH) {
-                //      name.resize(MAX_ACCOUNT_NAME_LENGTH);
-                //}
+                if (name.size() > 15) {
+                      name.resize(15);
+                }
 
                 // use SOE's shitty method for generating unique id's
                 hash =  static_cast<uint32_t>(std::hash < std::string > {}(name.c_str()));
@@ -271,7 +271,7 @@ inline const std::string & ClientConnection::getTargetSecene() const
 
 //-----------------------------------------------------------------------
 
-inline uint32 ClientConnection::getSUID() const
+inline StationId ClientConnection::getSUID() const
 {
 	return m_suid;
 }

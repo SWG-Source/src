@@ -65,7 +65,7 @@ const std::string & AdminAccountManager::getAdminTagName()
 //-----------------------------------------------------------------------
 
 // if they are in the iff and have a level set, return it
-int AdminAccountManager::isAdminAccount(uint32 suid, bool useOldSuid)
+int AdminAccountManager::isAdminAccount(StationId suid, bool useOldSuid)
 {
         DEBUG_FATAL(!ms_installed, ("AdminAccountManager not installed"));
 

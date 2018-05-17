@@ -308,7 +308,7 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg &msg) {
 
                 FATAL(clientIP.empty(), ("Remote IP is empty"));
 
-                DEBUG_WARNING(true, ("ConnectionServer::handleClientIdMessage - For ip %s suid is %" PRId64 " requestedSUID is %lu and session is %s", clientIP.c_str(), m_suid, m_requestedSuid, sess.c_str()));
+                DEBUG_WARNING(true, ("ConnectionServer::handleClientIdMessage - For ip %s suid is %" PRId64 " requestedSUID is %" PRId64 " and session is %s", clientIP.c_str(), m_suid, m_requestedSuid, sess.c_str()));
 
                 webAPI api(sessURL);
 
@@ -452,7 +452,7 @@ ClientConnection::onIdValidated(bool canLogin, bool canCreateRegularCharacter, b
     ClientPermissionsMessage c(canLogin, canCreateRegularCharacter, canCreateJediCharacter, canSkipTutorial);
     send(c, true);
 
-    DEBUG_REPORT_LOG(true, ("Permissions for %lu:\n", getSUID()));
+    DEBUG_REPORT_LOG(true, ("Permissions for %" PRId64 ":\n", getSUID()));
     DEBUG_REPORT_LOG(canLogin, ("\tcanLogin\n"));
     DEBUG_REPORT_LOG(canCreateRegularCharacter, ("\tcanCreateRegularCharacter\n"));
     DEBUG_REPORT_LOG(canCreateJediCharacter, ("\tcanCreateJediCharacter\n"));
@@ -953,7 +953,7 @@ void ClientConnection::onReceive(const Archive::ByteStream &message) {
                     if (m_hasBeenValidated && !m_hasSelectedCharacter) //lint !e774 no this doesn't always eval to true
                     {
                         ClientCreateCharacter clientCreate(ri);
-                        DEBUG_REPORT_LOG(true, ("Got ClientCreateCharacter message for %lu with name %s\n", m_suid, Unicode::wideToNarrow(clientCreate.getCharacterName()).c_str()));
+                        DEBUG_REPORT_LOG(true, ("Got ClientCreateCharacter message for %" PRId64 " with name %s\n", m_suid, Unicode::wideToNarrow(clientCreate.getCharacterName()).c_str()));
                         LOG("TraceCharacterCreation", ("%d sent ClientCreateCharacter(charaterName=%s, templateName=%s, scaleFactor=%f, startingLocation=%s, hairTemplateName=%s, profession=%s, jedi=%d, useNewbieTutorial=%d, skillTemplate=%s, workingSkill=%s)", getSUID(), Unicode::wideToNarrow(clientCreate.getCharacterName()).c_str(), clientCreate.getTemplateName().c_str(), clientCreate.getScaleFactor(), clientCreate.getStartingLocation().c_str(), clientCreate.getHairTemplateName().c_str(), clientCreate.getProfession().c_str(), static_cast<int>(clientCreate.getJedi()), static_cast<int>(clientCreate.getUseNewbieTutorial()), clientCreate.getSkillTemplate().c_str(), clientCreate.getWorkingSkill().c_str()));
 
                         if (!clientCreate.getUseNewbieTutorial() && !m_canSkipTutorial) {
@@ -1232,7 +1232,7 @@ void
 ClientConnection::onCharacterValidated(bool isValid, const NetworkId &character, const std::string &characterName, const NetworkId &container, const std::string &scene, const Vector &coordinates) {
     if (!m_validatingCharacter) {
         LOG("TraceCharacterSelection", ("%d received a validation response, but is not in the process of validation", getSUID()));
-        DEBUG_REPORT_LOG(true, ("Got unexpected onCharacterValidated() for account %lu.\n", getSUID()));
+        DEBUG_REPORT_LOG(true, ("Got unexpected onCharacterValidated() for account %" PRId64 ".\n", getSUID()));
         return;
     }
     m_validatingCharacter = false;
@@ -1405,7 +1405,7 @@ ClientConnection::onValidateClient(StationId suid, const std::string &username, 
     // ask CentralServer to tell all other ConnectionServers on this galaxy to drop duplicate connections for this account
     // and ask CentralServer (via LoginServer) to tell all ConnectionServers on other galaxies to drop duplicate connections for this account
     if (!m_usingAdminLogin && !m_isSecure) {
-        GenericValueTypeMessage <std::pair<uint32, std::string>> const dropDuplicateConnections("ConnSrvDropDupeConns", std::make_pair(m_suid, m_sessionId));
+        GenericValueTypeMessage <std::pair<StationId, std::string>> const dropDuplicateConnections("ConnSrvDropDupeConns", std::make_pair(m_suid, m_sessionId));
         ConnectionServer::sendToCentralProcess(dropDuplicateConnections);
     }
 }
@@ -1418,9 +1418,9 @@ std::string ClientConnection::describeAccount(const ClientConnection *c) {
         char idbuf[512] = {"\0"};
         const std::string &sessionId = c->getSessionId();
         if (sessionId.empty()) {
-            snprintf(idbuf, sizeof(idbuf), " (%lu)", c->m_suid);
+            snprintf(idbuf, sizeof(idbuf), " (%" PRId64 ")", c->m_suid);
         } else {
-            snprintf(idbuf, sizeof(idbuf), " (%lu, %s)", c->m_suid, sessionId.c_str());
+            snprintf(idbuf, sizeof(idbuf), " (%" PRId64 ", %s)", c->m_suid, sessionId.c_str());
         }
 
         result = c->m_accountName;

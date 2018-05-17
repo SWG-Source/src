@@ -81,9 +81,9 @@ inline const StationId hashOldSoeSUID(std::string name) {
                 char brokenSuid[50];
                 uint32_t hash;
 
-                //if (name.size() > MAX_ACCOUNT_NAME_LENGTH) {
-                //      name.resize(MAX_ACCOUNT_NAME_LENGTH);
-                //}
+                if (name.size() > 15) {
+                      name.resize(15);
+                }
 
                 // use SOE's shitty method for generating unique id's
                 hash =  static_cast<uint32_t>(std::hash < std::string > {}(name.c_str()));

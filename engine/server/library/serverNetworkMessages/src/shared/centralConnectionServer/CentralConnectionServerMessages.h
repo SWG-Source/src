@@ -186,14 +186,14 @@ inline const KeyShare::Key & ConnectionKeyPush::getKey(void) const
 class LoggedInMessage : public GameNetworkMessage
 {
   public:
-    LoggedInMessage  (uint32 accountNumber);
+    LoggedInMessage  (StationId accountNumber);
     LoggedInMessage  (Archive::ReadIterator & source);
     ~LoggedInMessage ();
 
-    uint32 getAccountNumber(void) const;
+    StationId getAccountNumber(void) const;
 
   private:
-    Archive::AutoVariable<uint32> m_accountNumber;
+    Archive::AutoVariable<StationId> m_accountNumber;
 	
     LoggedInMessage();
     LoggedInMessage(const LoggedInMessage&);
@@ -202,7 +202,7 @@ class LoggedInMessage : public GameNetworkMessage
 
 // ----------------------------------------------------------------------
 
-inline uint32 LoggedInMessage::getAccountNumber(void) const
+inline StationId LoggedInMessage::getAccountNumber(void) const
 {
     return m_accountNumber.get();
 }
@@ -212,18 +212,18 @@ inline uint32 LoggedInMessage::getAccountNumber(void) const
 class ConnEnumerateCharacterId : public GameNetworkMessage
 {
 public:
-	ConnEnumerateCharacterId(uint32 newAccountNumber, const Unicode::String & newName, const std::string & newLocation, const std::string & newObjectTemplate);
+	ConnEnumerateCharacterId(StationId newAccountNumber, const Unicode::String & newName, const std::string & newLocation, const std::string & newObjectTemplate);
 	explicit ConnEnumerateCharacterId(Archive::ReadIterator & source);
 	~ConnEnumerateCharacterId();
         
         
-        const uint32            getAccountNumber  (void) const;
+        const StationId            getAccountNumber  (void) const;
         const std::string &     getLocation       (void) const;
 	const Unicode::String & getName           (void) const;
 	const std::string &     getObjectTemplate (void) const;
 
 private:
-        Archive::AutoVariable<uint32>          accountNumber;
+        Archive::AutoVariable<StationId>          accountNumber;
 	Archive::AutoVariable<std::string>     location;
 	Archive::AutoVariable<Unicode::String> name;
 	Archive::AutoVariable<std::string>     objectTemplate;
@@ -235,7 +235,7 @@ private:
 
 //-----------------------------------------------------------------------
 
-inline const uint32 ConnEnumerateCharacterId::getAccountNumber(void) const
+inline const StationId ConnEnumerateCharacterId::getAccountNumber(void) const
 {
     return accountNumber.get();
 }
@@ -266,7 +266,7 @@ inline const std::string & ConnEnumerateCharacterId::getObjectTemplate(void) con
 class ConnectionCreateCharacter : public GameNetworkMessage
 {
 public:
-	ConnectionCreateCharacter(uint32 stationId, const Unicode::String & characterName, const std::string & templateName, float scaleFactor, const std::string & startingLocation, const std::string & newAppeareanceData, const std::string & hairTemplateName, const std::string & hairAppearanceData, const std::string & profession, bool jedi, const Unicode::String & biography, bool useNewbieTutorial, const std::string & skillTemplate, const std::string & workingSkill, bool noRateLimit, bool isForCharacterTransfer, uint32 gameFeatures);
+	ConnectionCreateCharacter(StationId stationId, const Unicode::String & characterName, const std::string & templateName, float scaleFactor, const std::string & startingLocation, const std::string & newAppeareanceData, const std::string & hairTemplateName, const std::string & hairAppearanceData, const std::string & profession, bool jedi, const Unicode::String & biography, bool useNewbieTutorial, const std::string & skillTemplate, const std::string & workingSkill, bool noRateLimit, bool isForCharacterTransfer, StationId gameFeatures);
 	explicit ConnectionCreateCharacter(Archive::ReadIterator & source);
 	~ConnectionCreateCharacter();
 	
@@ -276,7 +276,7 @@ public:
 	const std::string &     getHairTemplateName() const;
 	const std::string &     getHairAppearanceData () const;
 	const std::string &     getStartingLocation() const;
-	const uint32            getStationId()        const;
+	const StationId            getStationId()        const;
 	const std::string &     getTemplateName()     const;
 	const std::string &     getProfession()       const;
 	const bool              getJedi()             const;
@@ -286,7 +286,7 @@ public:
 	const std::string &     getWorkingSkill()      const;
 	const bool              getNoRateLimit()      const;
 	const bool              getIsForCharacterTransfer() const;
-	const uint32            getGameFeatures() const;
+	const StationId            getGameFeatures() const;
 	
 private:
 	
@@ -296,7 +296,7 @@ private:
 	Archive::AutoVariable<std::string>           m_startingLocation;
 	Archive::AutoVariable<std::string>           m_hairTemplateName;
 	Archive::AutoVariable<std::string>           m_hairAppearanceData;
-	Archive::AutoVariable<uint32>                m_stationId;
+	Archive::AutoVariable<StationId>                m_stationId;
 	Archive::AutoVariable<std::string>           m_profession;
 	Archive::AutoVariable<bool>                  m_jedi;
 	Archive::AutoVariable<float>                 m_scaleFactor;
@@ -306,7 +306,7 @@ private:
 	Archive::AutoVariable<std::string>           m_workingSkill;
 	Archive::AutoVariable<bool>                  m_noRateLimit;
 	Archive::AutoVariable<bool>                  m_isForCharacterTransfer;
-	Archive::AutoVariable<uint32>                m_gameFeatures;
+	Archive::AutoVariable<StationId>                m_gameFeatures;
 
 	ConnectionCreateCharacter();
 	ConnectionCreateCharacter(const ConnectionCreateCharacter&);
@@ -356,7 +356,7 @@ inline const std::string & ConnectionCreateCharacter::getStartingLocation(void) 
 }
 
 //-----------------------------------------------------------------------
-inline const uint32 ConnectionCreateCharacter::getStationId(void) const
+inline const StationId ConnectionCreateCharacter::getStationId(void) const
 {
     return m_stationId.get();
 }
@@ -417,7 +417,7 @@ inline const bool ConnectionCreateCharacter::getNoRateLimit() const
 
 // ----------------------------------------------------------------------
 
-inline const uint32 ConnectionCreateCharacter::getGameFeatures() const
+inline const StationId ConnectionCreateCharacter::getGameFeatures() const
 {
 	return m_gameFeatures.get();
 }
@@ -427,15 +427,15 @@ inline const uint32 ConnectionCreateCharacter::getGameFeatures() const
 class ConnectionCreateCharacterSuccess : public GameNetworkMessage
 {
 public:
-	ConnectionCreateCharacterSuccess (uint32 stationId, const NetworkId & id);
+	ConnectionCreateCharacterSuccess (StationId stationId, const NetworkId & id);
 	explicit ConnectionCreateCharacterSuccess(Archive::ReadIterator & source);
 	~ConnectionCreateCharacterSuccess();
 	
-	uint32                   getStationId () const;
+	StationId                   getStationId () const;
 	const NetworkId &        getNetworkId () const;
 	
 private:
-	Archive::AutoVariable<uint32>                stationId;
+	Archive::AutoVariable<StationId>                stationId;
 	Archive::AutoVariable<NetworkId>             m_networkId;
 	
 	ConnectionCreateCharacterSuccess();
@@ -444,7 +444,7 @@ private:
 };
 //-----------------------------------------------------------------------
 
-inline uint32 ConnectionCreateCharacterSuccess::getStationId() const
+inline StationId ConnectionCreateCharacterSuccess::getStationId() const
 {
     return stationId.get();
 }
@@ -461,21 +461,21 @@ inline const NetworkId & ConnectionCreateCharacterSuccess::getNetworkId () const
 class ConnectionCreateCharacterFailed : public GameNetworkMessage
 {
 public:
-	ConnectionCreateCharacterFailed(uint32 stationId, const Unicode::String &name, const StringId &errorMessage, const std::string &optionalDetailedErrorMessage);
+	ConnectionCreateCharacterFailed(StationId stationId, const Unicode::String &name, const StringId &errorMessage, const std::string &optionalDetailedErrorMessage);
 	explicit ConnectionCreateCharacterFailed(Archive::ReadIterator & source);
 	~ConnectionCreateCharacterFailed();
 	
 	const Unicode::String &getName() const;
 	const StringId &getErrorMessage() const;
 	const std::string &getOptionalDetailedErrorMessage() const;
-	uint32      getStationId() const;
+	StationId      getStationId() const;
 	
 private:
 	
 	Archive::AutoVariable<Unicode::String> m_name;
 	Archive::AutoVariable<StringId> m_errorMessage;
 	Archive::AutoVariable<std::string> m_optionalDetailedErrorMessage;
-	Archive::AutoVariable<uint32>                stationId;
+	Archive::AutoVariable<StationId>                stationId;
 	
 	ConnectionCreateCharacterFailed();
 	ConnectionCreateCharacterFailed(const ConnectionCreateCharacterFailed & source);
@@ -505,7 +505,7 @@ inline const std::string &ConnectionCreateCharacterFailed::getOptionalDetailedEr
 
 //-----------------------------------------------------------------------
 
-inline uint32 ConnectionCreateCharacterFailed::getStationId() const
+inline StationId ConnectionCreateCharacterFailed::getStationId() const
 {
 	return stationId.get();
 }
@@ -515,14 +515,14 @@ inline uint32 ConnectionCreateCharacterFailed::getStationId() const
 class ConnectionRandomNameRequest: public GameNetworkMessage
 {
 public:
-	explicit ConnectionRandomNameRequest(uint32 stationId, const std::string &creatureTemplate);
+	explicit ConnectionRandomNameRequest(StationId stationId, const std::string &creatureTemplate);
 	explicit ConnectionRandomNameRequest(Archive::ReadIterator & source);
 	~ConnectionRandomNameRequest();
 
-	const uint32 getStationId() const;
+	const StationId getStationId() const;
 	const std::string &getCreatureTemplate() const;
 private:
-	Archive::AutoVariable<uint32> m_stationId;
+	Archive::AutoVariable<StationId> m_stationId;
 	Archive::AutoVariable<std::string> m_creatureTemplate;
 
 	ConnectionRandomNameRequest(const ConnectionRandomNameRequest & source);
@@ -531,7 +531,7 @@ private:
 
 //--------------------------------------------------------------------
 
-inline const uint32 ConnectionRandomNameRequest::getStationId() const
+inline const StationId ConnectionRandomNameRequest::getStationId() const
 {
 	return m_stationId.get();
 }
@@ -548,15 +548,15 @@ inline const std::string &ConnectionRandomNameRequest::getCreatureTemplate() con
 class ConnectionRandomNameResponse: public GameNetworkMessage
 {
 public:
-	explicit ConnectionRandomNameResponse(uint32 stationId, const std::string &creatureTemplate, const Unicode::String &name);
+	explicit ConnectionRandomNameResponse(StationId stationId, const std::string &creatureTemplate, const Unicode::String &name);
 	explicit ConnectionRandomNameResponse(Archive::ReadIterator & source);
 	~ConnectionRandomNameResponse();
 
-	const uint32 getStationId() const;
+	const StationId getStationId() const;
 	const std::string &getCreatureTemplate() const;
 	const Unicode::String &getName() const;
 private:
-	Archive::AutoVariable<uint32>          m_stationId;
+	Archive::AutoVariable<StationId>          m_stationId;
 	Archive::AutoVariable<std::string>     m_creatureTemplate;
 	Archive::AutoVariable<Unicode::String> m_name;
 
@@ -566,7 +566,7 @@ private:
 
 //--------------------------------------------------------------------
 
-inline const uint32 ConnectionRandomNameResponse::getStationId() const
+inline const StationId ConnectionRandomNameResponse::getStationId() const
 {
 	return m_stationId.get();
 }

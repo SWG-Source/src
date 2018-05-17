@@ -63,20 +63,20 @@ inline const std::string & LoginClientId::getVersion() const
 class LoginClientToken : public GameNetworkMessage
 {
 public:
-	LoginClientToken(const unsigned char * const newToken, const unsigned char newTokenSize, uint32 suid, const std::string & username);
+	LoginClientToken(const unsigned char * const newToken, const unsigned char newTokenSize, StationId suid, const std::string & username);
 	LoginClientToken(Archive::ReadIterator & source);
 	~LoginClientToken();
 
 	const unsigned char * const getToken     () const;
 	const unsigned char         getTokenSize () const;
-	const uint32                getStationId () const;
+	const StationId             getStationId () const;
 	const std::string &         getUsername  () const;
 
 	
 private:
 	Archive::AutoArray<unsigned char>  token;
 	unsigned char *                    tokenData;
-	Archive::AutoVariable<uint32>      stationId;
+	Archive::AutoVariable<StationId>   stationId;
 	Archive::AutoVariable<std::string> m_username;
 
 	LoginClientToken();
@@ -100,7 +100,7 @@ inline const unsigned char LoginClientToken::getTokenSize() const
 
 //-----------------------------------------------------------------------
 
-inline const uint32 LoginClientToken::getStationId() const
+inline const StationId LoginClientToken::getStationId() const
 {
 	return stationId.get();
 }
