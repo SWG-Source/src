@@ -5,8 +5,6 @@
 
 //-----------------------------------------------------------------------
 
-#include <inttypes.h>
-
 #include "FirstLoginServer.h"
 #include "ClientConnection.h"
 
@@ -197,8 +195,8 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
                         uname.resize(MAX_ACCOUNT_NAME_LENGTH);
                     }
 
-                    parent_id = static_cast<uint32_t>(std::hash < std::string > {}(parentAccount.c_str()));
-                    user_id = static_cast<uint32_t>(std::hash < std::string > {}(uname.c_str()));
+                    parent_id = std::hash < std::string > {}(parentAccount.c_str());
+                    user_id = std::hash < std::string > {}(uname.c_str());
                 }
             } else {
                 std::string msg(api.getString("message"));
@@ -223,25 +221,25 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
             uname.resize(MAX_ACCOUNT_NAME_LENGTH);
         }
 
-        user_id = static_cast<uint32_t>(std::hash < std::string > {}(uname.c_str()));
+        user_id = std::hash < std::string > {}(uname.c_str());
     }
 
     if (authOK) {
         m_stationId = user_id;
 
         if (!testMode) {
-            REPORT_LOG(true, ("Client connected. Username: %s (%" PRId64 ") \n", uname.c_str(), user_id));
+            REPORT_LOG(true, ("Client connected. Username: %s (%i) \n", uname.c_str(), user_id));
 
             if (!parentAccount.empty()) {
                 if (parentAccount != uname) {
-                    REPORT_LOG(true, ("\t%s's parent is %s (%" PRId64 ") \n", uname.c_str(), parentAccount.c_str(), parent_id));
+                    REPORT_LOG(true, ("\t%s's parent is %s (%i) \n", uname.c_str(), parentAccount.c_str(), parent_id));
                 }
             } else {
                 parentAccount = "(Empty Parent!) " + uname;
             }
 
             for (auto i : childAccounts) {
-                StationId child_id = i.first;
+                StationId child_id = static_cast<StationId>(i.first);
                 std::string child(i.second);
 
                 if (!child.empty() && i.first > 0) {
@@ -250,11 +248,11 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
                             child.resize(MAX_ACCOUNT_NAME_LENGTH);
                         }
 
-                        child_id = static_cast<uint32_t>(std::hash < std::string > {}(child.c_str()));
+                        child_id = std::hash < std::string > {}(child.c_str());
                     }
 
                     REPORT_LOG((parent_id !=
-                                child_id), ("\tchild of %s (%" PRId64 ") is %s (%" PRId64 ") \n", parentAccount.c_str(), parent_id, child.c_str(), child_id));
+                                child_id), ("\tchild of %s (%i) is %s (%i) \n", parentAccount.c_str(), parent_id, child.c_str(), child_id));
 
                     // insert all related accounts, if not already there, into the db
                     if (parent_id != child_id) {
@@ -269,7 +267,7 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
         } else {
             LoginServer::getInstance().onValidateClient(m_stationId, uname, this, true, nullptr, 0xFFFFFFFF, 0xFFFFFFFF);
         }
-        LOG("LoginClientConnection", ("validateClient() for stationId (%" PRId64 ") at IP (%s), id (%s)", user_id, getRemoteAddress().c_str(), uname.c_str()));
+        LOG("LoginClientConnection", ("validateClient() for stationId (%i) at IP (%s), id (%s)", user_id, getRemoteAddress().c_str(), uname.c_str()));
     }
 }
 
