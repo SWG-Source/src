@@ -4,11 +4,7 @@
 #include "CustomerServiceServer.h"
 
 #include "sharedCompression/SetupSharedCompression.h"
-
-#ifdef _DEBUG
 #include "sharedDebug/SetupSharedDebug.h"
-#endif
-
 #include "sharedFile/SetupSharedFile.h"
 #include "sharedFoundation/Os.h"
 #include "sharedFoundation/SetupSharedFoundation.h"
@@ -23,10 +19,7 @@
 int main(int argc, char *argv[])
 {
 	SetupSharedThread::install();
-
-#ifdef _DEBUG
 	SetupSharedDebug::install(1024);
-#endif
 
 	SetupSharedFoundation::Data setupFoundationData(SetupSharedFoundation::Data::D_game);
 	setupFoundationData.lpCmdLine = ConvertCommandLine(argc, argv);
