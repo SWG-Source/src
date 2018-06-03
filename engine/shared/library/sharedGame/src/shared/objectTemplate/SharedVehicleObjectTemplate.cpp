@@ -16,6 +16,9 @@
 #include "sharedMath/Vector.h"
 #include "sharedObject/ObjectTemplate.h"
 #include "sharedObject/ObjectTemplateList.h"
+
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 //@BEGIN TFD TEMPLATE REFS
 //@END TFD TEMPLATE REFS
 #include <algorithm>
@@ -1479,32 +1482,42 @@ char paramName[MAX_NAME_SIZE];
 	{
 		file.enterChunk();
 		file.read_string(paramName, MAX_NAME_SIZE);
-		if (strcmp(paramName, "speed") == 0)
-		{
-			int listCount = file.read_int32();
-			DEBUG_WARNING(listCount != 5, ("Template %s: read array size of %d for array \"speed\" of size 5, reading values anyway", file.getFileName(), listCount));
-			int j;
-			for (j = 0; j < 5 && j < listCount; ++j)
-				m_speed[j].loadFromIff(file);
-			// if there are more params for speed read and dump them
-			for (; j < listCount; ++j)
+
+		switch(runtimeCrc(paramName)) {
+			case constcrc("speed"):
 			{
-				FloatParam dummy;
-				dummy.loadFromIff(file);
+				int listCount = file.read_int32();
+				DEBUG_WARNING(listCount != 5, ("Template %s: read array size of %d for array \"speed\" of size 5, reading values anyway", file.getFileName(), listCount));
+				int j;
+				for (j = 0; j < 5 && j < listCount; ++j)
+					m_speed[j].loadFromIff(file);
+				// if there are more params for speed read and dump them
+				for (; j < listCount; ++j)
+				{
+					FloatParam dummy;
+					dummy.loadFromIff(file);
+				}
 			}
+			break;
+			case constcrc("slopeAversion"):
+				m_slopeAversion.loadFromIff(file);
+				break;
+			case constcrc("hoverValue"):
+				m_hoverValue.loadFromIff(file);
+				break;
+			case constcrc("turnRate"):
+				m_turnRate.loadFromIff(file);
+				break;
+			case constcrc("maxVelocity"):
+				m_maxVelocity.loadFromIff(file);
+				break;
+			case constcrc("acceleration"):
+				m_acceleration.loadFromIff(file);
+				break;
+			case constcrc("braking"):
+				m_braking.loadFromIff(file);
+				break;
 		}
-		else if (strcmp(paramName, "slopeAversion") == 0)
-			m_slopeAversion.loadFromIff(file);
-		else if (strcmp(paramName, "hoverValue") == 0)
-			m_hoverValue.loadFromIff(file);
-		else if (strcmp(paramName, "turnRate") == 0)
-			m_turnRate.loadFromIff(file);
-		else if (strcmp(paramName, "maxVelocity") == 0)
-			m_maxVelocity.loadFromIff(file);
-		else if (strcmp(paramName, "acceleration") == 0)
-			m_acceleration.loadFromIff(file);
-		else if (strcmp(paramName, "braking") == 0)
-			m_braking.loadFromIff(file);
 		file.exitChunk(true);
 	}
 

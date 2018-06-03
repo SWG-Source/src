@@ -16,6 +16,9 @@
 #include "sharedMath/Vector.h"
 #include "sharedObject/ObjectTemplate.h"
 #include "sharedObject/ObjectTemplateList.h"
+
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 //@BEGIN TFD TEMPLATE REFS
 #include "ServerObjectTemplate.h"
 //@END TFD TEMPLATE REFS
@@ -1900,150 +1903,168 @@ char paramName[MAX_NAME_SIZE];
 	{
 		file.enterChunk();
 		file.read_string(paramName, MAX_NAME_SIZE);
-		if (strcmp(paramName, "sharedTemplate") == 0)
-			m_sharedTemplate.loadFromIff(file);
-		else if (strcmp(paramName, "scripts") == 0)
-		{
-			std::vector<StringParam *>::iterator iter;
-			for (iter = m_scripts.begin(); iter != m_scripts.end(); ++iter)
+
+		switch(runtimeCrc(paramName)) {
+			case constcrc("sharedTemplate"):
+				m_sharedTemplate.loadFromIff(file);
+				break;
+			case constcrc("scripts"):
 			{
-				delete *iter;
-				*iter = nullptr;
+				std::vector<StringParam *>::iterator iter;
+				for (iter = m_scripts.begin(); iter != m_scripts.end(); ++iter)
+				{
+					delete *iter;
+					*iter = nullptr;
+				}
+				m_scripts.clear();
+				m_scriptsAppend = file.read_bool8();
+				int listCount = file.read_int32();
+				for (int j = 0; j < listCount; ++j)
+				{
+					StringParam * newData = new StringParam;
+					newData->loadFromIff(file);
+					m_scripts.push_back(newData);
+				}
+				m_scriptsLoaded = true;
 			}
-			m_scripts.clear();
-			m_scriptsAppend = file.read_bool8();
-			int listCount = file.read_int32();
-			for (int j = 0; j < listCount; ++j)
+			break;
+			case constcrc("objvars"):
+				m_objvars.loadFromIff(file);
+				break;
+			case constcrc("volume"):
+				m_volume.loadFromIff(file);
+				break;
+			case constcrc("visibleFlags"):
 			{
-				StringParam * newData = new StringParam;
-				newData->loadFromIff(file);
-				m_scripts.push_back(newData);
+				std::vector<IntegerParam *>::iterator iter;
+				for (iter = m_visibleFlags.begin(); iter != m_visibleFlags.end(); ++iter)
+				{
+					delete *iter;
+					*iter = nullptr;
+				}
+				m_visibleFlags.clear();
+				m_visibleFlagsAppend = file.read_bool8();
+				int listCount = file.read_int32();
+				for (int j = 0; j < listCount; ++j)
+				{
+					IntegerParam * newData = new IntegerParam;
+					newData->loadFromIff(file);
+					m_visibleFlags.push_back(newData);
+				}
+				m_visibleFlagsLoaded = true;
 			}
-			m_scriptsLoaded = true;
+			break;
+			case constcrc("deleteFlags"):
+			{
+				std::vector<IntegerParam *>::iterator iter;
+				for (iter = m_deleteFlags.begin(); iter != m_deleteFlags.end(); ++iter)
+				{
+					delete *iter;
+					*iter = nullptr;
+				}
+				m_deleteFlags.clear();
+				m_deleteFlagsAppend = file.read_bool8();
+				int listCount = file.read_int32();
+				for (int j = 0; j < listCount; ++j)
+				{
+					IntegerParam * newData = new IntegerParam;
+					newData->loadFromIff(file);
+					m_deleteFlags.push_back(newData);
+				}
+				m_deleteFlagsLoaded = true;
+			}
+			break;
+			case constcrc("moveFlags"):
+			{
+				std::vector<IntegerParam *>::iterator iter;
+				for (iter = m_moveFlags.begin(); iter != m_moveFlags.end(); ++iter)
+				{
+					delete *iter;
+					*iter = nullptr;
+				}
+				m_moveFlags.clear();
+				m_moveFlagsAppend = file.read_bool8();
+				int listCount = file.read_int32();
+				for (int j = 0; j < listCount; ++j)
+				{
+					IntegerParam * newData = new IntegerParam;
+					newData->loadFromIff(file);
+					m_moveFlags.push_back(newData);
+				}	
+				m_moveFlagsLoaded = true;
+			}
+			break;
+			case constcrc("invulnerable"):
+				m_invulnerable.loadFromIff(file);
+				break;
+			case constcrc("complexity"):
+				m_complexity.loadFromIff(file);
+				break;
+			case constcrc("tintIndex"):
+				m_tintIndex.loadFromIff(file);
+				break;
+			case constcrc("updateRanges"):
+			{
+				int listCount = file.read_int32();
+				DEBUG_WARNING(listCount != 3, ("Template %s: read array size of %d for array \"updateRanges\" of size 3, reading values anyway", file.getFileName(), listCount));
+				int j;
+				for (j = 0; j < 3 && j < listCount; ++j)
+					m_updateRanges[j].loadFromIff(file);
+				// if there are more params for updateRanges read and dump them
+				for (; j < listCount; ++j)
+				{
+					FloatParam dummy;
+					dummy.loadFromIff(file);
+				}
+			}
+			break;
+			case constcrc("contents"):
+			{
+				std::vector<StructParamOT *>::iterator iter;
+				for (iter = m_contents.begin(); iter != m_contents.end(); ++iter)
+				{
+					delete *iter;
+					*iter = nullptr;
+				}
+				m_contents.clear();
+				m_contentsAppend = file.read_bool8();
+				int listCount = file.read_int32();
+				for (int j = 0; j < listCount; ++j)
+				{
+					StructParamOT * newData = new StructParamOT;
+					newData->loadFromIff(file);
+					m_contents.push_back(newData);
+				}
+				m_contentsLoaded = true;
+			}
+			break;
+			case constcrc("xpPoints"):
+			{
+				std::vector<StructParamOT *>::iterator iter;
+				for (iter = m_xpPoints.begin(); iter != m_xpPoints.end(); ++iter)
+				{
+					delete *iter;
+					*iter = nullptr;
+				}
+				m_xpPoints.clear();
+				m_xpPointsAppend = file.read_bool8();
+				int listCount = file.read_int32();
+				for (int j = 0; j < listCount; ++j)
+				{
+					StructParamOT * newData = new StructParamOT;
+					newData->loadFromIff(file);
+					m_xpPoints.push_back(newData);
+				}
+				m_xpPointsLoaded = true;
+			}
+			break;
+			case constcrc("persistByDefault"):
+				m_persistByDefault.loadFromIff(file);
+				break;
+			case constcrc("persistContents"):
+				m_persistContents.loadFromIff(file);
+				break;
 		}
-		else if (strcmp(paramName, "objvars") == 0)
-			m_objvars.loadFromIff(file);
-		else if (strcmp(paramName, "volume") == 0)
-			m_volume.loadFromIff(file);
-		else if (strcmp(paramName, "visibleFlags") == 0)
-		{
-			std::vector<IntegerParam *>::iterator iter;
-			for (iter = m_visibleFlags.begin(); iter != m_visibleFlags.end(); ++iter)
-			{
-				delete *iter;
-				*iter = nullptr;
-			}
-			m_visibleFlags.clear();
-			m_visibleFlagsAppend = file.read_bool8();
-			int listCount = file.read_int32();
-			for (int j = 0; j < listCount; ++j)
-			{
-				IntegerParam * newData = new IntegerParam;
-				newData->loadFromIff(file);
-				m_visibleFlags.push_back(newData);
-			}
-			m_visibleFlagsLoaded = true;
-		}
-		else if (strcmp(paramName, "deleteFlags") == 0)
-		{
-			std::vector<IntegerParam *>::iterator iter;
-			for (iter = m_deleteFlags.begin(); iter != m_deleteFlags.end(); ++iter)
-			{
-				delete *iter;
-				*iter = nullptr;
-			}
-			m_deleteFlags.clear();
-			m_deleteFlagsAppend = file.read_bool8();
-			int listCount = file.read_int32();
-			for (int j = 0; j < listCount; ++j)
-			{
-				IntegerParam * newData = new IntegerParam;
-				newData->loadFromIff(file);
-				m_deleteFlags.push_back(newData);
-			}
-			m_deleteFlagsLoaded = true;
-		}
-		else if (strcmp(paramName, "moveFlags") == 0)
-		{
-			std::vector<IntegerParam *>::iterator iter;
-			for (iter = m_moveFlags.begin(); iter != m_moveFlags.end(); ++iter)
-			{
-				delete *iter;
-				*iter = nullptr;
-			}
-			m_moveFlags.clear();
-			m_moveFlagsAppend = file.read_bool8();
-			int listCount = file.read_int32();
-			for (int j = 0; j < listCount; ++j)
-			{
-				IntegerParam * newData = new IntegerParam;
-				newData->loadFromIff(file);
-				m_moveFlags.push_back(newData);
-			}
-			m_moveFlagsLoaded = true;
-		}
-		else if (strcmp(paramName, "invulnerable") == 0)
-			m_invulnerable.loadFromIff(file);
-		else if (strcmp(paramName, "complexity") == 0)
-			m_complexity.loadFromIff(file);
-		else if (strcmp(paramName, "tintIndex") == 0)
-			m_tintIndex.loadFromIff(file);
-		else if (strcmp(paramName, "updateRanges") == 0)
-		{
-			int listCount = file.read_int32();
-			DEBUG_WARNING(listCount != 3, ("Template %s: read array size of %d for array \"updateRanges\" of size 3, reading values anyway", file.getFileName(), listCount));
-			int j;
-			for (j = 0; j < 3 && j < listCount; ++j)
-				m_updateRanges[j].loadFromIff(file);
-			// if there are more params for updateRanges read and dump them
-			for (; j < listCount; ++j)
-			{
-				FloatParam dummy;
-				dummy.loadFromIff(file);
-			}
-		}
-		else if (strcmp(paramName, "contents") == 0)
-		{
-			std::vector<StructParamOT *>::iterator iter;
-			for (iter = m_contents.begin(); iter != m_contents.end(); ++iter)
-			{
-				delete *iter;
-				*iter = nullptr;
-			}
-			m_contents.clear();
-			m_contentsAppend = file.read_bool8();
-			int listCount = file.read_int32();
-			for (int j = 0; j < listCount; ++j)
-			{
-				StructParamOT * newData = new StructParamOT;
-				newData->loadFromIff(file);
-				m_contents.push_back(newData);
-			}
-			m_contentsLoaded = true;
-		}
-		else if (strcmp(paramName, "xpPoints") == 0)
-		{
-			std::vector<StructParamOT *>::iterator iter;
-			for (iter = m_xpPoints.begin(); iter != m_xpPoints.end(); ++iter)
-			{
-				delete *iter;
-				*iter = nullptr;
-			}
-			m_xpPoints.clear();
-			m_xpPointsAppend = file.read_bool8();
-			int listCount = file.read_int32();
-			for (int j = 0; j < listCount; ++j)
-			{
-				StructParamOT * newData = new StructParamOT;
-				newData->loadFromIff(file);
-				m_xpPoints.push_back(newData);
-			}
-			m_xpPointsLoaded = true;
-		}
-		else if (strcmp(paramName, "persistByDefault") == 0)
-			m_persistByDefault.loadFromIff(file);
-		else if (strcmp(paramName, "persistContents") == 0)
-			m_persistContents.loadFromIff(file);
 		file.exitChunk(true);
 	}
 
@@ -2946,16 +2967,24 @@ char paramName[MAX_NAME_SIZE];
 	{
 		file.enterChunk();
 		file.read_string(paramName, MAX_NAME_SIZE);
-		if (strcmp(paramName, "target") == 0)
-			m_target.loadFromIff(file);
-		else if (strcmp(paramName, "value") == 0)
-			m_value.loadFromIff(file);
-		else if (strcmp(paramName, "time") == 0)
-			m_time.loadFromIff(file);
-		else if (strcmp(paramName, "timeAtValue") == 0)
-			m_timeAtValue.loadFromIff(file);
-		else if (strcmp(paramName, "decay") == 0)
-			m_decay.loadFromIff(file);
+
+		switch(runtimeCrc(paramName)) {
+			case constcrc("target"):
+				m_target.loadFromIff(file);
+				break;
+			case constcrc("value"):
+				m_value.loadFromIff(file);
+				break;
+			case constcrc("time"):
+				m_time.loadFromIff(file);
+				break;
+			case constcrc("timeAtValue"):
+				m_timeAtValue.loadFromIff(file);
+				break;
+			case constcrc("decay"):
+				m_decay.loadFromIff(file);
+				break;
+		}
 		file.exitChunk(true);
 	}
 
@@ -3205,12 +3234,18 @@ char paramName[MAX_NAME_SIZE];
 	{
 		file.enterChunk();
 		file.read_string(paramName, MAX_NAME_SIZE);
-		if (strcmp(paramName, "slotName") == 0)
-			m_slotName.loadFromIff(file);
-		else if (strcmp(paramName, "equipObject") == 0)
-			m_equipObject.loadFromIff(file);
-		else if (strcmp(paramName, "content") == 0)
-			m_content.loadFromIff(file);
+
+		switch(runtimeCrc(paramName)) {
+			case constcrc("slotName"):
+				m_slotName.loadFromIff(file);
+				break;
+			case constcrc("equipObject"):
+				m_equipObject.loadFromIff(file);
+				break;
+			case constcrc("content"):
+				m_content.loadFromIff(file);
+				break;
+		}
 		file.exitChunk(true);
 	}
 
@@ -4113,16 +4148,24 @@ char paramName[MAX_NAME_SIZE];
 	{
 		file.enterChunk();
 		file.read_string(paramName, MAX_NAME_SIZE);
-		if (strcmp(paramName, "target") == 0)
-			m_target.loadFromIff(file);
-		else if (strcmp(paramName, "value") == 0)
-			m_value.loadFromIff(file);
-		else if (strcmp(paramName, "time") == 0)
-			m_time.loadFromIff(file);
-		else if (strcmp(paramName, "timeAtValue") == 0)
-			m_timeAtValue.loadFromIff(file);
-		else if (strcmp(paramName, "decay") == 0)
-			m_decay.loadFromIff(file);
+
+		switch(runtimeCrc(paramName)) {
+			case constcrc("target"):
+				m_target.loadFromIff(file);
+				break;
+			case constcrc("value"):
+				m_value.loadFromIff(file);
+				break;
+			case constcrc("time"):
+				m_time.loadFromIff(file);
+				break;
+			case constcrc("timeAtValue"):
+				m_timeAtValue.loadFromIff(file);
+				break;
+			case constcrc("decay"):
+				m_decay.loadFromIff(file);
+				break;
+		}
 		file.exitChunk(true);
 	}
 
@@ -4637,12 +4680,18 @@ char paramName[MAX_NAME_SIZE];
 	{
 		file.enterChunk();
 		file.read_string(paramName, MAX_NAME_SIZE);
-		if (strcmp(paramName, "type") == 0)
-			m_type.loadFromIff(file);
-		else if (strcmp(paramName, "level") == 0)
-			m_level.loadFromIff(file);
-		else if (strcmp(paramName, "value") == 0)
-			m_value.loadFromIff(file);
+
+		switch(runtimeCrc(paramName)) {
+			case constcrc("type"):
+				m_type.loadFromIff(file);
+				break;
+			case constcrc("level"):
+				m_level.loadFromIff(file);
+				break;
+			case constcrc("value"):
+				m_value.loadFromIff(file);
+				break;
+		}
 		file.exitChunk(true);
 	}
 

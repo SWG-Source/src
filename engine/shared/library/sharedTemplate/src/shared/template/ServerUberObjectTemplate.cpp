@@ -19,7 +19,7 @@
 #include "sharedTemplateDefinition/ObjectTemplate.h"
 #include <stdio.h>
 
-
+#include "sharedFoundation/CrcConstexpr.hpp"
 
 /**
  * Class constructor.
@@ -316,7 +316,8 @@ Tag ServerUberObjectTemplate::getHighestTemplateVersion(void) const
 //@BEGIN TFD
 CompilerIntegerParam * ServerUberObjectTemplate::getCompilerIntegerParam(const char *name, bool deepCheck, int index)
 {
-	if (strcmp(name, "intAtDerived") == 0)
+	switch(runtimeCrc(name)) {
+	case constcrc("intAtDerived"):
 	{
 		if (index == 0)
 		{
@@ -330,7 +331,8 @@ CompilerIntegerParam * ServerUberObjectTemplate::getCompilerIntegerParam(const c
 		}
 		fprintf(stderr, "trying to access single-parameter \"intAtDerived\" as an array\n");
 	}
-	else if (strcmp(name, "intSimple") == 0)
+	break;
+case constcrc("intSimple"):
 	{
 		if (index == 0)
 		{
@@ -344,7 +346,8 @@ CompilerIntegerParam * ServerUberObjectTemplate::getCompilerIntegerParam(const c
 		}
 		fprintf(stderr, "trying to access single-parameter \"intSimple\" as an array\n");
 	}
-	else if (strcmp(name, "intSimpleDeltaPositive") == 0)
+	break;
+case constcrc("intSimpleDeltaPositive"):
 	{
 		if (index == 0)
 		{
@@ -358,7 +361,8 @@ CompilerIntegerParam * ServerUberObjectTemplate::getCompilerIntegerParam(const c
 		}
 		fprintf(stderr, "trying to access single-parameter \"intSimpleDeltaPositive\" as an array\n");
 	}
-	else if (strcmp(name, "intSimpleDeltaNegative") == 0)
+	break;
+case constcrc("intSimpleDeltaNegative"):
 	{
 		if (index == 0)
 		{
@@ -372,7 +376,8 @@ CompilerIntegerParam * ServerUberObjectTemplate::getCompilerIntegerParam(const c
 		}
 		fprintf(stderr, "trying to access single-parameter \"intSimpleDeltaNegative\" as an array\n");
 	}
-	else if (strcmp(name, "intSimpleDeltaPositivePercent") == 0)
+	break;
+case constcrc("intSimpleDeltaPositivePercent"):
 	{
 		if (index == 0)
 		{
@@ -386,7 +391,8 @@ CompilerIntegerParam * ServerUberObjectTemplate::getCompilerIntegerParam(const c
 		}
 		fprintf(stderr, "trying to access single-parameter \"intSimpleDeltaPositivePercent\" as an array\n");
 	}
-	else if (strcmp(name, "intSimpleDeltaNegativePercent") == 0)
+	break;
+case constcrc("intSimpleDeltaNegativePercent"):
 	{
 		if (index == 0)
 		{
@@ -400,7 +406,8 @@ CompilerIntegerParam * ServerUberObjectTemplate::getCompilerIntegerParam(const c
 		}
 		fprintf(stderr, "trying to access single-parameter \"intSimpleDeltaNegativePercent\" as an array\n");
 	}
-	else if (strcmp(name, "intWeightedList") == 0)
+	break;
+case constcrc("intWeightedList"):
 	{
 		if (index == 0)
 		{
@@ -414,7 +421,8 @@ CompilerIntegerParam * ServerUberObjectTemplate::getCompilerIntegerParam(const c
 		}
 		fprintf(stderr, "trying to access single-parameter \"intWeightedList\" as an array\n");
 	}
-	else if (strcmp(name, "intWeightedListDeltaPositive") == 0)
+	break;
+case constcrc("intWeightedListDeltaPositive"):
 	{
 		if (index == 0)
 		{
@@ -428,7 +436,8 @@ CompilerIntegerParam * ServerUberObjectTemplate::getCompilerIntegerParam(const c
 		}
 		fprintf(stderr, "trying to access single-parameter \"intWeightedListDeltaPositive\" as an array\n");
 	}
-	else if (strcmp(name, "intWeightedListDeltaNegative") == 0)
+	break;
+case constcrc("intWeightedListDeltaNegative"):
 	{
 		if (index == 0)
 		{
@@ -442,7 +451,8 @@ CompilerIntegerParam * ServerUberObjectTemplate::getCompilerIntegerParam(const c
 		}
 		fprintf(stderr, "trying to access single-parameter \"intWeightedListDeltaNegative\" as an array\n");
 	}
-	else if (strcmp(name, "intWeightedListDeltaPositivePercent") == 0)
+	break;
+case constcrc("intWeightedListDeltaPositivePercent"):
 	{
 		if (index == 0)
 		{
@@ -456,7 +466,8 @@ CompilerIntegerParam * ServerUberObjectTemplate::getCompilerIntegerParam(const c
 		}
 		fprintf(stderr, "trying to access single-parameter \"intWeightedListDeltaPositivePercent\" as an array\n");
 	}
-	else if (strcmp(name, "intWeightedListDeltaNegativePercent") == 0)
+	break;
+case constcrc("intWeightedListDeltaNegativePercent"):
 	{
 		if (index == 0)
 		{
@@ -470,7 +481,8 @@ CompilerIntegerParam * ServerUberObjectTemplate::getCompilerIntegerParam(const c
 		}
 		fprintf(stderr, "trying to access single-parameter \"intWeightedListDeltaNegativePercent\" as an array\n");
 	}
-	else if (strcmp(name, "intRandomRange1") == 0)
+	break;
+case constcrc("intRandomRange1"):
 	{
 		if (index == 0)
 		{
@@ -484,7 +496,8 @@ CompilerIntegerParam * ServerUberObjectTemplate::getCompilerIntegerParam(const c
 		}
 		fprintf(stderr, "trying to access single-parameter \"intRandomRange1\" as an array\n");
 	}
-	else if (strcmp(name, "intRandomRange2") == 0)
+	break;
+case constcrc("intRandomRange2"):
 	{
 		if (index == 0)
 		{
@@ -498,7 +511,8 @@ CompilerIntegerParam * ServerUberObjectTemplate::getCompilerIntegerParam(const c
 		}
 		fprintf(stderr, "trying to access single-parameter \"intRandomRange2\" as an array\n");
 	}
-	else if (strcmp(name, "intRandomRange3") == 0)
+	break;
+case constcrc("intRandomRange3"):
 	{
 		if (index == 0)
 		{
@@ -512,7 +526,8 @@ CompilerIntegerParam * ServerUberObjectTemplate::getCompilerIntegerParam(const c
 		}
 		fprintf(stderr, "trying to access single-parameter \"intRandomRange3\" as an array\n");
 	}
-	else if (strcmp(name, "intRandomRange4") == 0)
+	break;
+case constcrc("intRandomRange4"):
 	{
 		if (index == 0)
 		{
@@ -526,7 +541,8 @@ CompilerIntegerParam * ServerUberObjectTemplate::getCompilerIntegerParam(const c
 		}
 		fprintf(stderr, "trying to access single-parameter \"intRandomRange4\" as an array\n");
 	}
-	else if (strcmp(name, "intDiceRoll1") == 0)
+	break;
+case constcrc("intDiceRoll1"):
 	{
 		if (index == 0)
 		{
@@ -540,7 +556,8 @@ CompilerIntegerParam * ServerUberObjectTemplate::getCompilerIntegerParam(const c
 		}
 		fprintf(stderr, "trying to access single-parameter \"intDiceRoll1\" as an array\n");
 	}
-	else if (strcmp(name, "intDiceRoll2") == 0)
+	break;
+case constcrc("intDiceRoll2"):
 	{
 		if (index == 0)
 		{
@@ -554,7 +571,8 @@ CompilerIntegerParam * ServerUberObjectTemplate::getCompilerIntegerParam(const c
 		}
 		fprintf(stderr, "trying to access single-parameter \"intDiceRoll2\" as an array\n");
 	}
-	else if (strcmp(name, "intListSimple") == 0)
+	break;
+case constcrc("intListSimple"):
 	{
 		if (index >= 0 && index < static_cast<int>(m_intListSimple.size()))
 			return m_intListSimple[index];
@@ -566,7 +584,8 @@ CompilerIntegerParam * ServerUberObjectTemplate::getCompilerIntegerParam(const c
 		}
 		fprintf(stderr, "index for parameter \"intListSimple\" out of bounds\n");
 	}
-	else if (strcmp(name, "intListWeightedList") == 0)
+	break;
+case constcrc("intListWeightedList"):
 	{
 		if (index >= 0 && index < static_cast<int>(m_intListWeightedList.size()))
 			return m_intListWeightedList[index];
@@ -578,7 +597,8 @@ CompilerIntegerParam * ServerUberObjectTemplate::getCompilerIntegerParam(const c
 		}
 		fprintf(stderr, "index for parameter \"intListWeightedList\" out of bounds\n");
 	}
-	else if (strcmp(name, "intListRandomRange") == 0)
+	break;
+case constcrc("intListRandomRange"):
 	{
 		if (index >= 0 && index < static_cast<int>(m_intListRandomRange.size()))
 			return m_intListRandomRange[index];
@@ -590,7 +610,8 @@ CompilerIntegerParam * ServerUberObjectTemplate::getCompilerIntegerParam(const c
 		}
 		fprintf(stderr, "index for parameter \"intListRandomRange\" out of bounds\n");
 	}
-	else if (strcmp(name, "intListDiceRoll") == 0)
+	break;
+case constcrc("intListDiceRoll"):
 	{
 		if (index >= 0 && index < static_cast<int>(m_intListDiceRoll.size()))
 			return m_intListDiceRoll[index];
@@ -602,7 +623,8 @@ CompilerIntegerParam * ServerUberObjectTemplate::getCompilerIntegerParam(const c
 		}
 		fprintf(stderr, "index for parameter \"intListDiceRoll\" out of bounds\n");
 	}
-	else if (strcmp(name, "enumIndexedByEnumSingle") == 0)
+	break;
+case constcrc("enumIndexedByEnumSingle"):
 	{
 		if (index >= 0 && index < 3)
 		{
@@ -616,7 +638,8 @@ CompilerIntegerParam * ServerUberObjectTemplate::getCompilerIntegerParam(const c
 		}
 		fprintf(stderr, "index for parameter \"enumIndexedByEnumSingle\" out of bounds\n");
 	}
-	else if (strcmp(name, "enumIndexedByEnumWeightedList") == 0)
+	break;
+case constcrc("enumIndexedByEnumWeightedList"):
 	{
 		if (index >= 0 && index < 3)
 		{
@@ -630,7 +653,8 @@ CompilerIntegerParam * ServerUberObjectTemplate::getCompilerIntegerParam(const c
 		}
 		fprintf(stderr, "index for parameter \"enumIndexedByEnumWeightedList\" out of bounds\n");
 	}
-	else if (strcmp(name, "enumListIndexed") == 0)
+	break;
+case constcrc("enumListIndexed"):
 	{
 		if (index >= 0 && index < static_cast<int>(m_enumListIndexed.size()))
 			return m_enumListIndexed[index];
@@ -642,7 +666,8 @@ CompilerIntegerParam * ServerUberObjectTemplate::getCompilerIntegerParam(const c
 		}
 		fprintf(stderr, "index for parameter \"enumListIndexed\" out of bounds\n");
 	}
-	else if (strcmp(name, "enumListWeightedList") == 0)
+	break;
+case constcrc("enumListWeightedList"):
 	{
 		if (index >= 0 && index < static_cast<int>(m_enumListWeightedList.size()))
 			return m_enumListWeightedList[index];
@@ -654,7 +679,8 @@ CompilerIntegerParam * ServerUberObjectTemplate::getCompilerIntegerParam(const c
 		}
 		fprintf(stderr, "index for parameter \"enumListWeightedList\" out of bounds\n");
 	}
-	else if (strcmp(name, "integerArray") == 0)
+	break;
+case constcrc("integerArray"):
 	{
 		if (index >= 0 && index < 2)
 		{
@@ -668,14 +694,18 @@ CompilerIntegerParam * ServerUberObjectTemplate::getCompilerIntegerParam(const c
 		}
 		fprintf(stderr, "index for parameter \"integerArray\" out of bounds\n");
 	}
-	else
+	break;
+	default:
 		return TpfTemplate::getCompilerIntegerParam(name, deepCheck, index);
+		break;
+	}
 	return NULL;
 }	//ServerUberObjectTemplate::getCompilerIntegerParam
 
 FloatParam * ServerUberObjectTemplate::getFloatParam(const char *name, bool deepCheck, int index)
 {
-	if (strcmp(name, "floatAtDerived") == 0)
+	switch(runtimeCrc(name)) {
+	case constcrc("floatAtDerived"):
 	{
 		if (index == 0)
 		{
@@ -689,7 +719,8 @@ FloatParam * ServerUberObjectTemplate::getFloatParam(const char *name, bool deep
 		}
 		fprintf(stderr, "trying to access single-parameter \"floatAtDerived\" as an array\n");
 	}
-	else if (strcmp(name, "floatSimple") == 0)
+	break;
+case constcrc("floatSimple"):
 	{
 		if (index == 0)
 		{
@@ -703,7 +734,8 @@ FloatParam * ServerUberObjectTemplate::getFloatParam(const char *name, bool deep
 		}
 		fprintf(stderr, "trying to access single-parameter \"floatSimple\" as an array\n");
 	}
-	else if (strcmp(name, "floatSimpleDeltaPositive") == 0)
+	break;
+case constcrc("floatSimpleDeltaPositive"):
 	{
 		if (index == 0)
 		{
@@ -717,7 +749,8 @@ FloatParam * ServerUberObjectTemplate::getFloatParam(const char *name, bool deep
 		}
 		fprintf(stderr, "trying to access single-parameter \"floatSimpleDeltaPositive\" as an array\n");
 	}
-	else if (strcmp(name, "floatSimpleDeltaNegative") == 0)
+	break;
+case constcrc("floatSimpleDeltaNegative"):
 	{
 		if (index == 0)
 		{
@@ -731,7 +764,8 @@ FloatParam * ServerUberObjectTemplate::getFloatParam(const char *name, bool deep
 		}
 		fprintf(stderr, "trying to access single-parameter \"floatSimpleDeltaNegative\" as an array\n");
 	}
-	else if (strcmp(name, "floatSimpleDeltaPositivePercent") == 0)
+	break;
+case constcrc("floatSimpleDeltaPositivePercent"):
 	{
 		if (index == 0)
 		{
@@ -745,7 +779,8 @@ FloatParam * ServerUberObjectTemplate::getFloatParam(const char *name, bool deep
 		}
 		fprintf(stderr, "trying to access single-parameter \"floatSimpleDeltaPositivePercent\" as an array\n");
 	}
-	else if (strcmp(name, "floatSimpleDeltaNegativePercent") == 0)
+	break;
+case constcrc("floatSimpleDeltaNegativePercent"):
 	{
 		if (index == 0)
 		{
@@ -759,7 +794,8 @@ FloatParam * ServerUberObjectTemplate::getFloatParam(const char *name, bool deep
 		}
 		fprintf(stderr, "trying to access single-parameter \"floatSimpleDeltaNegativePercent\" as an array\n");
 	}
-	else if (strcmp(name, "floatWeightedList") == 0)
+	break;
+case constcrc("floatWeightedList"):
 	{
 		if (index == 0)
 		{
@@ -773,7 +809,8 @@ FloatParam * ServerUberObjectTemplate::getFloatParam(const char *name, bool deep
 		}
 		fprintf(stderr, "trying to access single-parameter \"floatWeightedList\" as an array\n");
 	}
-	else if (strcmp(name, "floatRandomRange1") == 0)
+	break;
+case constcrc("floatRandomRange1"):
 	{
 		if (index == 0)
 		{
@@ -787,7 +824,8 @@ FloatParam * ServerUberObjectTemplate::getFloatParam(const char *name, bool deep
 		}
 		fprintf(stderr, "trying to access single-parameter \"floatRandomRange1\" as an array\n");
 	}
-	else if (strcmp(name, "floatRandomRange2") == 0)
+	break;
+case constcrc("floatRandomRange2"):
 	{
 		if (index == 0)
 		{
@@ -801,7 +839,8 @@ FloatParam * ServerUberObjectTemplate::getFloatParam(const char *name, bool deep
 		}
 		fprintf(stderr, "trying to access single-parameter \"floatRandomRange2\" as an array\n");
 	}
-	else if (strcmp(name, "floatRandomRange3") == 0)
+	break;
+case constcrc("floatRandomRange3"):
 	{
 		if (index == 0)
 		{
@@ -815,7 +854,8 @@ FloatParam * ServerUberObjectTemplate::getFloatParam(const char *name, bool deep
 		}
 		fprintf(stderr, "trying to access single-parameter \"floatRandomRange3\" as an array\n");
 	}
-	else if (strcmp(name, "floatRandomRange4") == 0)
+	break;
+case constcrc("floatRandomRange4"):
 	{
 		if (index == 0)
 		{
@@ -829,7 +869,8 @@ FloatParam * ServerUberObjectTemplate::getFloatParam(const char *name, bool deep
 		}
 		fprintf(stderr, "trying to access single-parameter \"floatRandomRange4\" as an array\n");
 	}
-	else if (strcmp(name, "floatListSimple") == 0)
+	break;
+case constcrc("floatListSimple"):
 	{
 		if (index >= 0 && index < static_cast<int>(m_floatListSimple.size()))
 			return m_floatListSimple[index];
@@ -841,7 +882,8 @@ FloatParam * ServerUberObjectTemplate::getFloatParam(const char *name, bool deep
 		}
 		fprintf(stderr, "index for parameter \"floatListSimple\" out of bounds\n");
 	}
-	else if (strcmp(name, "floatListWeightedList") == 0)
+	break;
+case constcrc("floatListWeightedList"):
 	{
 		if (index >= 0 && index < static_cast<int>(m_floatListWeightedList.size()))
 			return m_floatListWeightedList[index];
@@ -853,7 +895,8 @@ FloatParam * ServerUberObjectTemplate::getFloatParam(const char *name, bool deep
 		}
 		fprintf(stderr, "index for parameter \"floatListWeightedList\" out of bounds\n");
 	}
-	else if (strcmp(name, "floatListRandomRange") == 0)
+	break;
+case constcrc("floatListRandomRange"):
 	{
 		if (index >= 0 && index < static_cast<int>(m_floatListRandomRange.size()))
 			return m_floatListRandomRange[index];
@@ -865,7 +908,8 @@ FloatParam * ServerUberObjectTemplate::getFloatParam(const char *name, bool deep
 		}
 		fprintf(stderr, "index for parameter \"floatListRandomRange\" out of bounds\n");
 	}
-	else if (strcmp(name, "floatArray") == 0)
+	break;
+case constcrc("floatArray"):
 	{
 		if (index >= 0 && index < 2)
 		{
@@ -879,14 +923,18 @@ FloatParam * ServerUberObjectTemplate::getFloatParam(const char *name, bool deep
 		}
 		fprintf(stderr, "index for parameter \"floatArray\" out of bounds\n");
 	}
-	else
+	break;
+	default:
 		return TpfTemplate::getFloatParam(name, deepCheck, index);
+		break;
+	}
 	return NULL;
 }	//ServerUberObjectTemplate::getFloatParam
 
 BoolParam * ServerUberObjectTemplate::getBoolParam(const char *name, bool deepCheck, int index)
 {
-	if (strcmp(name, "boolDerived") == 0)
+	switch(runtimeCrc(name)) {
+	case constcrc("boolDerived"):
 	{
 		if (index == 0)
 		{
@@ -900,7 +948,8 @@ BoolParam * ServerUberObjectTemplate::getBoolParam(const char *name, bool deepCh
 		}
 		fprintf(stderr, "trying to access single-parameter \"boolDerived\" as an array\n");
 	}
-	else if (strcmp(name, "boolSimple") == 0)
+	break;
+case constcrc("boolSimple"):
 	{
 		if (index == 0)
 		{
@@ -914,7 +963,8 @@ BoolParam * ServerUberObjectTemplate::getBoolParam(const char *name, bool deepCh
 		}
 		fprintf(stderr, "trying to access single-parameter \"boolSimple\" as an array\n");
 	}
-	else if (strcmp(name, "boolWeightedList") == 0)
+	break;
+case constcrc("boolWeightedList"):
 	{
 		if (index == 0)
 		{
@@ -928,7 +978,8 @@ BoolParam * ServerUberObjectTemplate::getBoolParam(const char *name, bool deepCh
 		}
 		fprintf(stderr, "trying to access single-parameter \"boolWeightedList\" as an array\n");
 	}
-	else if (strcmp(name, "boolListDerived") == 0)
+	break;
+case constcrc("boolListDerived"):
 	{
 		if (index >= 0 && index < static_cast<int>(m_boolListDerived.size()))
 			return m_boolListDerived[index];
@@ -940,7 +991,8 @@ BoolParam * ServerUberObjectTemplate::getBoolParam(const char *name, bool deepCh
 		}
 		fprintf(stderr, "index for parameter \"boolListDerived\" out of bounds\n");
 	}
-	else if (strcmp(name, "boolListSimple") == 0)
+	break;
+case constcrc("boolListSimple"):
 	{
 		if (index >= 0 && index < static_cast<int>(m_boolListSimple.size()))
 			return m_boolListSimple[index];
@@ -952,7 +1004,8 @@ BoolParam * ServerUberObjectTemplate::getBoolParam(const char *name, bool deepCh
 		}
 		fprintf(stderr, "index for parameter \"boolListSimple\" out of bounds\n");
 	}
-	else if (strcmp(name, "boolListWeightedList") == 0)
+	break;
+case constcrc("boolListWeightedList"):
 	{
 		if (index >= 0 && index < static_cast<int>(m_boolListWeightedList.size()))
 			return m_boolListWeightedList[index];
@@ -964,7 +1017,8 @@ BoolParam * ServerUberObjectTemplate::getBoolParam(const char *name, bool deepCh
 		}
 		fprintf(stderr, "index for parameter \"boolListWeightedList\" out of bounds\n");
 	}
-	else if (strcmp(name, "boolArray") == 0)
+	break;
+case constcrc("boolArray"):
 	{
 		if (index >= 0 && index < 2)
 		{
@@ -978,14 +1032,18 @@ BoolParam * ServerUberObjectTemplate::getBoolParam(const char *name, bool deepCh
 		}
 		fprintf(stderr, "index for parameter \"boolArray\" out of bounds\n");
 	}
-	else
+	break;
+	default:
 		return TpfTemplate::getBoolParam(name, deepCheck, index);
+		break;
+	}
 	return NULL;
 }	//ServerUberObjectTemplate::getBoolParam
 
 StringParam * ServerUberObjectTemplate::getStringParam(const char *name, bool deepCheck, int index)
 {
-	if (strcmp(name, "stringDerived") == 0)
+	switch(runtimeCrc(name)) {
+	case constcrc("stringDerived"):
 	{
 		if (index == 0)
 		{
@@ -999,7 +1057,8 @@ StringParam * ServerUberObjectTemplate::getStringParam(const char *name, bool de
 		}
 		fprintf(stderr, "trying to access single-parameter \"stringDerived\" as an array\n");
 	}
-	else if (strcmp(name, "stringSimple") == 0)
+	break;
+case constcrc("stringSimple"):
 	{
 		if (index == 0)
 		{
@@ -1013,7 +1072,8 @@ StringParam * ServerUberObjectTemplate::getStringParam(const char *name, bool de
 		}
 		fprintf(stderr, "trying to access single-parameter \"stringSimple\" as an array\n");
 	}
-	else if (strcmp(name, "stringWeightedList") == 0)
+	break;
+case constcrc("stringWeightedList"):
 	{
 		if (index == 0)
 		{
@@ -1027,7 +1087,8 @@ StringParam * ServerUberObjectTemplate::getStringParam(const char *name, bool de
 		}
 		fprintf(stderr, "trying to access single-parameter \"stringWeightedList\" as an array\n");
 	}
-	else if (strcmp(name, "stringListSimple") == 0)
+	break;
+case constcrc("stringListSimple"):
 	{
 		if (index >= 0 && index < static_cast<int>(m_stringListSimple.size()))
 			return m_stringListSimple[index];
@@ -1039,7 +1100,8 @@ StringParam * ServerUberObjectTemplate::getStringParam(const char *name, bool de
 		}
 		fprintf(stderr, "index for parameter \"stringListSimple\" out of bounds\n");
 	}
-	else if (strcmp(name, "stringListWeightedList") == 0)
+	break;
+case constcrc("stringListWeightedList"):
 	{
 		if (index >= 0 && index < static_cast<int>(m_stringListWeightedList.size()))
 			return m_stringListWeightedList[index];
@@ -1051,7 +1113,8 @@ StringParam * ServerUberObjectTemplate::getStringParam(const char *name, bool de
 		}
 		fprintf(stderr, "index for parameter \"stringListWeightedList\" out of bounds\n");
 	}
-	else if (strcmp(name, "filenameAtDerived") == 0)
+	break;
+case constcrc("filenameAtDerived"):
 	{
 		if (index == 0)
 		{
@@ -1065,7 +1128,8 @@ StringParam * ServerUberObjectTemplate::getStringParam(const char *name, bool de
 		}
 		fprintf(stderr, "trying to access single-parameter \"filenameAtDerived\" as an array\n");
 	}
-	else if (strcmp(name, "filenameSimple") == 0)
+	break;
+case constcrc("filenameSimple"):
 	{
 		if (index == 0)
 		{
@@ -1079,7 +1143,8 @@ StringParam * ServerUberObjectTemplate::getStringParam(const char *name, bool de
 		}
 		fprintf(stderr, "trying to access single-parameter \"filenameSimple\" as an array\n");
 	}
-	else if (strcmp(name, "filenameWeightedList") == 0)
+	break;
+case constcrc("filenameWeightedList"):
 	{
 		if (index == 0)
 		{
@@ -1093,7 +1158,8 @@ StringParam * ServerUberObjectTemplate::getStringParam(const char *name, bool de
 		}
 		fprintf(stderr, "trying to access single-parameter \"filenameWeightedList\" as an array\n");
 	}
-	else if (strcmp(name, "filenameListSimple") == 0)
+	break;
+case constcrc("filenameListSimple"):
 	{
 		if (index >= 0 && index < static_cast<int>(m_filenameListSimple.size()))
 			return m_filenameListSimple[index];
@@ -1105,7 +1171,8 @@ StringParam * ServerUberObjectTemplate::getStringParam(const char *name, bool de
 		}
 		fprintf(stderr, "index for parameter \"filenameListSimple\" out of bounds\n");
 	}
-	else if (strcmp(name, "templateDerived") == 0)
+	break;
+case constcrc("templateDerived"):
 	{
 		if (index == 0)
 		{
@@ -1119,7 +1186,8 @@ StringParam * ServerUberObjectTemplate::getStringParam(const char *name, bool de
 		}
 		fprintf(stderr, "trying to access single-parameter \"templateDerived\" as an array\n");
 	}
-	else if (strcmp(name, "templateSimple") == 0)
+	break;
+case constcrc("templateSimple"):
 	{
 		if (index == 0)
 		{
@@ -1133,7 +1201,8 @@ StringParam * ServerUberObjectTemplate::getStringParam(const char *name, bool de
 		}
 		fprintf(stderr, "trying to access single-parameter \"templateSimple\" as an array\n");
 	}
-	else if (strcmp(name, "templateWeightedList") == 0)
+	break;
+case constcrc("templateWeightedList"):
 	{
 		if (index == 0)
 		{
@@ -1147,7 +1216,8 @@ StringParam * ServerUberObjectTemplate::getStringParam(const char *name, bool de
 		}
 		fprintf(stderr, "trying to access single-parameter \"templateWeightedList\" as an array\n");
 	}
-	else if (strcmp(name, "templateListSimple") == 0)
+	break;
+case constcrc("templateListSimple"):
 	{
 		if (index >= 0 && index < static_cast<int>(m_templateListSimple.size()))
 			return m_templateListSimple[index];
@@ -1159,7 +1229,8 @@ StringParam * ServerUberObjectTemplate::getStringParam(const char *name, bool de
 		}
 		fprintf(stderr, "index for parameter \"templateListSimple\" out of bounds\n");
 	}
-	else if (strcmp(name, "stringArray") == 0)
+	break;
+case constcrc("stringArray"):
 	{
 		if (index >= 0 && index < 2)
 		{
@@ -1173,7 +1244,8 @@ StringParam * ServerUberObjectTemplate::getStringParam(const char *name, bool de
 		}
 		fprintf(stderr, "index for parameter \"stringArray\" out of bounds\n");
 	}
-	else if (strcmp(name, "fileNameArray") == 0)
+	break;
+case constcrc("fileNameArray"):
 	{
 		if (index >= 0 && index < 2)
 		{
@@ -1187,14 +1259,18 @@ StringParam * ServerUberObjectTemplate::getStringParam(const char *name, bool de
 		}
 		fprintf(stderr, "index for parameter \"fileNameArray\" out of bounds\n");
 	}
-	else
+	break;
+	default:
 		return TpfTemplate::getStringParam(name, deepCheck, index);
+		break;
+	}
 	return NULL;
 }	//ServerUberObjectTemplate::getStringParam
 
 StringIdParam * ServerUberObjectTemplate::getStringIdParam(const char *name, bool deepCheck, int index)
 {
-	if (strcmp(name, "stringIdDerived") == 0)
+	switch(runtimeCrc(name)) {
+	case constcrc("stringIdDerived"):
 	{
 		if (index == 0)
 		{
@@ -1208,7 +1284,8 @@ StringIdParam * ServerUberObjectTemplate::getStringIdParam(const char *name, boo
 		}
 		fprintf(stderr, "trying to access single-parameter \"stringIdDerived\" as an array\n");
 	}
-	else if (strcmp(name, "stringIdSimple") == 0)
+	break;
+case constcrc("stringIdSimple"):
 	{
 		if (index == 0)
 		{
@@ -1222,7 +1299,8 @@ StringIdParam * ServerUberObjectTemplate::getStringIdParam(const char *name, boo
 		}
 		fprintf(stderr, "trying to access single-parameter \"stringIdSimple\" as an array\n");
 	}
-	else if (strcmp(name, "stringIdWeightedList") == 0)
+	break;
+case constcrc("stringIdWeightedList"):
 	{
 		if (index == 0)
 		{
@@ -1236,7 +1314,8 @@ StringIdParam * ServerUberObjectTemplate::getStringIdParam(const char *name, boo
 		}
 		fprintf(stderr, "trying to access single-parameter \"stringIdWeightedList\" as an array\n");
 	}
-	else if (strcmp(name, "stringIdListSimple") == 0)
+	break;
+case constcrc("stringIdListSimple"):
 	{
 		if (index >= 0 && index < static_cast<int>(m_stringIdListSimple.size()))
 			return m_stringIdListSimple[index];
@@ -1248,7 +1327,8 @@ StringIdParam * ServerUberObjectTemplate::getStringIdParam(const char *name, boo
 		}
 		fprintf(stderr, "index for parameter \"stringIdListSimple\" out of bounds\n");
 	}
-	else if (strcmp(name, "stringIdListWeightedList") == 0)
+	break;
+case constcrc("stringIdListWeightedList"):
 	{
 		if (index >= 0 && index < static_cast<int>(m_stringIdListWeightedList.size()))
 			return m_stringIdListWeightedList[index];
@@ -1260,7 +1340,8 @@ StringIdParam * ServerUberObjectTemplate::getStringIdParam(const char *name, boo
 		}
 		fprintf(stderr, "index for parameter \"stringIdListWeightedList\" out of bounds\n");
 	}
-	else if (strcmp(name, "stringIdArray") == 0)
+	break;
+case constcrc("stringIdArray"):
 	{
 		if (index >= 0 && index < 2)
 		{
@@ -1274,14 +1355,18 @@ StringIdParam * ServerUberObjectTemplate::getStringIdParam(const char *name, boo
 		}
 		fprintf(stderr, "index for parameter \"stringIdArray\" out of bounds\n");
 	}
-	else
+	break;
+	default:
 		return TpfTemplate::getStringIdParam(name, deepCheck, index);
+		break;
+	}
 	return NULL;
 }	//ServerUberObjectTemplate::getStringIdParam
 
 VectorParam * ServerUberObjectTemplate::getVectorParam(const char *name, bool deepCheck, int index)
 {
-	if (strcmp(name, "vectorAtDerived") == 0)
+	switch(runtimeCrc(name)) {
+	case constcrc("vectorAtDerived"):
 	{
 		if (index == 0)
 		{
@@ -1295,7 +1380,8 @@ VectorParam * ServerUberObjectTemplate::getVectorParam(const char *name, bool de
 		}
 		fprintf(stderr, "trying to access single-parameter \"vectorAtDerived\" as an array\n");
 	}
-	else if (strcmp(name, "vectorSimple") == 0)
+	break;
+case constcrc("vectorSimple"):
 	{
 		if (index == 0)
 		{
@@ -1309,7 +1395,8 @@ VectorParam * ServerUberObjectTemplate::getVectorParam(const char *name, bool de
 		}
 		fprintf(stderr, "trying to access single-parameter \"vectorSimple\" as an array\n");
 	}
-	else if (strcmp(name, "vectorListSimple") == 0)
+	break;
+case constcrc("vectorListSimple"):
 	{
 		if (index >= 0 && index < static_cast<int>(m_vectorListSimple.size()))
 			return m_vectorListSimple[index];
@@ -1321,7 +1408,8 @@ VectorParam * ServerUberObjectTemplate::getVectorParam(const char *name, bool de
 		}
 		fprintf(stderr, "index for parameter \"vectorListSimple\" out of bounds\n");
 	}
-	else if (strcmp(name, "vectorArray") == 0)
+	break;
+case constcrc("vectorArray"):
 	{
 		if (index >= 0 && index < 2)
 		{
@@ -1335,14 +1423,18 @@ VectorParam * ServerUberObjectTemplate::getVectorParam(const char *name, bool de
 		}
 		fprintf(stderr, "index for parameter \"vectorArray\" out of bounds\n");
 	}
-	else
+	break;
+	default:
 		return TpfTemplate::getVectorParam(name, deepCheck, index);
+		break;
+	}
 	return NULL;
 }	//ServerUberObjectTemplate::getVectorParam
 
 DynamicVariableParam * ServerUberObjectTemplate::getDynamicVariableParam(const char *name, bool deepCheck, int index)
 {
-	if (strcmp(name, "objvarDerived") == 0)
+	switch(runtimeCrc(name)) {
+	case constcrc("objvarDerived"):
 	{
 		if (index == 0)
 		{
@@ -1356,7 +1448,8 @@ DynamicVariableParam * ServerUberObjectTemplate::getDynamicVariableParam(const c
 		}
 		fprintf(stderr, "trying to access single-parameter \"objvarDerived\" as an array\n");
 	}
-	else if (strcmp(name, "objvarSimple") == 0)
+	break;
+case constcrc("objvarSimple"):
 	{
 		if (index == 0)
 		{
@@ -1370,14 +1463,18 @@ DynamicVariableParam * ServerUberObjectTemplate::getDynamicVariableParam(const c
 		}
 		fprintf(stderr, "trying to access single-parameter \"objvarSimple\" as an array\n");
 	}
-	else
+	break;
+	default:
 		return TpfTemplate::getDynamicVariableParam(name, deepCheck, index);
+		break;
+	}
 	return NULL;
 }	//ServerUberObjectTemplate::getDynamicVariableParam
 
 StructParamOT * ServerUberObjectTemplate::getStructParamOT(const char *name, bool deepCheck, int index)
 {
-	if (strcmp(name, "structAtDerived") == 0)
+	switch(runtimeCrc(name)) {
+	case constcrc("structAtDerived"):
 	{
 		if (index == 0)
 		{
@@ -1391,7 +1488,8 @@ StructParamOT * ServerUberObjectTemplate::getStructParamOT(const char *name, boo
 		}
 		fprintf(stderr, "trying to access single-parameter \"structAtDerived\" as an array\n");
 	}
-	else if (strcmp(name, "structSimple") == 0)
+	break;
+case constcrc("structSimple"):
 	{
 		if (index == 0)
 		{
@@ -1405,7 +1503,8 @@ StructParamOT * ServerUberObjectTemplate::getStructParamOT(const char *name, boo
 		}
 		fprintf(stderr, "trying to access single-parameter \"structSimple\" as an array\n");
 	}
-	else if (strcmp(name, "structListSimple") == 0)
+	break;
+case constcrc("structListSimple"):
 	{
 		if (index >= 0 && index < static_cast<int>(m_structListSimple.size()))
 			return m_structListSimple[index];
@@ -1417,7 +1516,8 @@ StructParamOT * ServerUberObjectTemplate::getStructParamOT(const char *name, boo
 		}
 		fprintf(stderr, "index for parameter \"structListSimple\" out of bounds\n");
 	}
-	else if (strcmp(name, "structArrayEnum") == 0)
+	break;
+case constcrc("structArrayEnum"):
 	{
 		if (index >= 0 && index < 3)
 		{
@@ -1431,7 +1531,8 @@ StructParamOT * ServerUberObjectTemplate::getStructParamOT(const char *name, boo
 		}
 		fprintf(stderr, "index for parameter \"structArrayEnum\" out of bounds\n");
 	}
-	else if (strcmp(name, "structArrayInteger") == 0)
+	break;
+case constcrc("structArrayInteger"):
 	{
 		if (index >= 0 && index < 2)
 		{
@@ -1445,14 +1546,18 @@ StructParamOT * ServerUberObjectTemplate::getStructParamOT(const char *name, boo
 		}
 		fprintf(stderr, "index for parameter \"structArrayInteger\" out of bounds\n");
 	}
-	else
+	break;
+	default:
 		return TpfTemplate::getStructParamOT(name, deepCheck, index);
+		break;
+	}
 	return NULL;
 }	//ServerUberObjectTemplate::getStructParamOT
 
 TriggerVolumeParam * ServerUberObjectTemplate::getTriggerVolumeParam(const char *name, bool deepCheck, int index)
 {
-	if (strcmp(name, "triggerVolumeDerived") == 0)
+switch(runtimeCrc(name)) {
+	case constcrc("triggerVolumeDerived"):
 	{
 		if (index == 0)
 		{
@@ -1466,7 +1571,8 @@ TriggerVolumeParam * ServerUberObjectTemplate::getTriggerVolumeParam(const char 
 		}
 		fprintf(stderr, "trying to access single-parameter \"triggerVolumeDerived\" as an array\n");
 	}
-	else if (strcmp(name, "triggerVolumeSimple") == 0)
+	break;
+case constcrc("triggerVolumeSimple"):
 	{
 		if (index == 0)
 		{
@@ -1480,7 +1586,8 @@ TriggerVolumeParam * ServerUberObjectTemplate::getTriggerVolumeParam(const char 
 		}
 		fprintf(stderr, "trying to access single-parameter \"triggerVolumeSimple\" as an array\n");
 	}
-	else if (strcmp(name, "triggerVolumeWeightedList") == 0)
+	break;
+case constcrc("triggerVolumeWeightedList"):
 	{
 		if (index == 0)
 		{
@@ -1494,7 +1601,8 @@ TriggerVolumeParam * ServerUberObjectTemplate::getTriggerVolumeParam(const char 
 		}
 		fprintf(stderr, "trying to access single-parameter \"triggerVolumeWeightedList\" as an array\n");
 	}
-	else if (strcmp(name, "triggerVolumeList") == 0)
+	break;
+case constcrc("triggerVolumeList"):
 	{
 		if (index >= 0 && index < static_cast<int>(m_triggerVolumeList.size()))
 			return m_triggerVolumeList[index];
@@ -1506,7 +1614,8 @@ TriggerVolumeParam * ServerUberObjectTemplate::getTriggerVolumeParam(const char 
 		}
 		fprintf(stderr, "index for parameter \"triggerVolumeList\" out of bounds\n");
 	}
-	else if (strcmp(name, "triggerVolumesListWeightedList") == 0)
+	break;
+case constcrc("triggerVolumesListWeightedList"):
 	{
 		if (index >= 0 && index < static_cast<int>(m_triggerVolumesListWeightedList.size()))
 			return m_triggerVolumesListWeightedList[index];
@@ -1518,7 +1627,8 @@ TriggerVolumeParam * ServerUberObjectTemplate::getTriggerVolumeParam(const char 
 		}
 		fprintf(stderr, "index for parameter \"triggerVolumesListWeightedList\" out of bounds\n");
 	}
-	else if (strcmp(name, "triggerArray") == 0)
+	break;
+case constcrc("triggerArray"):
 	{
 		if (index >= 0 && index < 2)
 		{
@@ -1532,8 +1642,11 @@ TriggerVolumeParam * ServerUberObjectTemplate::getTriggerVolumeParam(const char 
 		}
 		fprintf(stderr, "index for parameter \"triggerArray\" out of bounds\n");
 	}
-	else
+	break;
+	default:
 		return TpfTemplate::getTriggerVolumeParam(name, deepCheck, index);
+		break;
+	}
 	return NULL;
 }	//ServerUberObjectTemplate::getTriggerVolumeParam
 
@@ -1541,377 +1654,496 @@ void ServerUberObjectTemplate::initStructParamOT(StructParamOT &param, const cha
 {
 	if (param.isInitialized())
 		return;
-	if (strcmp(name, "structAtDerived") == 0)
+switch(runtimeCrc(name)) {
+	case constcrc("structAtDerived"):
 		param.setValue(new _Foo(""));
-	else if (strcmp(name, "structSimple") == 0)
+	break;
+case constcrc("structSimple"):
 		param.setValue(new _Foo(""));
-	else if (strcmp(name, "structListSimple") == 0)
+	break;
+case constcrc("structListSimple"):
 		param.setValue(new _Foo(""));
-	else if (strcmp(name, "structArrayEnum") == 0)
+	break;
+case constcrc("structArrayEnum"):
 		param.setValue(new _Foo(""));
-	else if (strcmp(name, "structArrayInteger") == 0)
+	break;
+case constcrc("structArrayInteger"):
 		param.setValue(new _Foo(""));
-	else
+	break;
+	default:
 		TpfTemplate::initStructParamOT(param, name);
+		break;
+}
 }	// ServerUberObjectTemplate::initStructParamOT
 
 void ServerUberObjectTemplate::setAsEmptyList(const char *name)
 {
-	if (strcmp(name, "intListSimple") == 0)
+	switch(runtimeCrc(name)) {
+	case constcrc("intListSimple"):
 	{
 		m_intListSimple.clear();
 		m_intListSimpleLoaded = true;
 	}
-	else if (strcmp(name, "intListWeightedList") == 0)
+	break;
+case constcrc("intListWeightedList"):
 	{
 		m_intListWeightedList.clear();
 		m_intListWeightedListLoaded = true;
 	}
-	else if (strcmp(name, "intListRandomRange") == 0)
+	break;
+case constcrc("intListRandomRange"):
 	{
 		m_intListRandomRange.clear();
 		m_intListRandomRangeLoaded = true;
 	}
-	else if (strcmp(name, "intListDiceRoll") == 0)
+	break;
+case constcrc("intListDiceRoll"):
 	{
 		m_intListDiceRoll.clear();
 		m_intListDiceRollLoaded = true;
 	}
-	else if (strcmp(name, "floatListSimple") == 0)
+	break;
+case constcrc("floatListSimple"):
 	{
 		m_floatListSimple.clear();
 		m_floatListSimpleLoaded = true;
 	}
-	else if (strcmp(name, "floatListWeightedList") == 0)
+	break;
+case constcrc("floatListWeightedList"):
 	{
 		m_floatListWeightedList.clear();
 		m_floatListWeightedListLoaded = true;
 	}
-	else if (strcmp(name, "floatListRandomRange") == 0)
+	break;
+case constcrc("floatListRandomRange"):
 	{
 		m_floatListRandomRange.clear();
 		m_floatListRandomRangeLoaded = true;
 	}
-	else if (strcmp(name, "enumListIndexed") == 0)
+	break;
+case constcrc("enumListIndexed"):
 	{
 		m_enumListIndexed.clear();
 		m_enumListIndexedLoaded = true;
 	}
-	else if (strcmp(name, "enumListWeightedList") == 0)
+	break;
+case constcrc("enumListWeightedList"):
 	{
 		m_enumListWeightedList.clear();
 		m_enumListWeightedListLoaded = true;
 	}
-	else if (strcmp(name, "stringIdListSimple") == 0)
+	break;
+case constcrc("stringIdListSimple"):
 	{
 		m_stringIdListSimple.clear();
 		m_stringIdListSimpleLoaded = true;
 	}
-	else if (strcmp(name, "stringIdListWeightedList") == 0)
+	break;
+case constcrc("stringIdListWeightedList"):
 	{
 		m_stringIdListWeightedList.clear();
 		m_stringIdListWeightedListLoaded = true;
 	}
-	else if (strcmp(name, "stringListSimple") == 0)
+	break;
+case constcrc("stringListSimple"):
 	{
 		m_stringListSimple.clear();
 		m_stringListSimpleLoaded = true;
 	}
-	else if (strcmp(name, "stringListWeightedList") == 0)
+	break;
+case constcrc("stringListWeightedList"):
 	{
 		m_stringListWeightedList.clear();
 		m_stringListWeightedListLoaded = true;
 	}
-	else if (strcmp(name, "triggerVolumeList") == 0)
+	break;
+case constcrc("triggerVolumeList"):
 	{
 		m_triggerVolumeList.clear();
 		m_triggerVolumeListLoaded = true;
 	}
-	else if (strcmp(name, "triggerVolumesListWeightedList") == 0)
+	break;
+case constcrc("triggerVolumesListWeightedList"):
 	{
 		m_triggerVolumesListWeightedList.clear();
 		m_triggerVolumesListWeightedListLoaded = true;
 	}
-	else if (strcmp(name, "boolListDerived") == 0)
+	break;
+case constcrc("boolListDerived"):
 	{
 		m_boolListDerived.clear();
 		m_boolListDerivedLoaded = true;
 	}
-	else if (strcmp(name, "boolListSimple") == 0)
+	break;
+case constcrc("boolListSimple"):
 	{
 		m_boolListSimple.clear();
 		m_boolListSimpleLoaded = true;
 	}
-	else if (strcmp(name, "boolListWeightedList") == 0)
+	break;
+case constcrc("boolListWeightedList"):
 	{
 		m_boolListWeightedList.clear();
 		m_boolListWeightedListLoaded = true;
 	}
-	else if (strcmp(name, "vectorListSimple") == 0)
+	break;
+case constcrc("vectorListSimple"):
 	{
 		m_vectorListSimple.clear();
 		m_vectorListSimpleLoaded = true;
 	}
-	else if (strcmp(name, "filenameListSimple") == 0)
+	break;
+case constcrc("filenameListSimple"):
 	{
 		m_filenameListSimple.clear();
 		m_filenameListSimpleLoaded = true;
 	}
-	else if (strcmp(name, "templateListSimple") == 0)
+	break;
+case constcrc("templateListSimple"):
 	{
 		m_templateListSimple.clear();
 		m_templateListSimpleLoaded = true;
 	}
-	else if (strcmp(name, "structListSimple") == 0)
+	break;
+case constcrc("structListSimple"):
 	{
 		m_structListSimple.clear();
 		m_structListSimpleLoaded = true;
 	}
-	else
+	break;
+	default:
 		TpfTemplate::setAsEmptyList(name);
+		break;
+	}
 }	// ServerUberObjectTemplate::setAsEmptyList
 
 void ServerUberObjectTemplate::setAppend(const char *name)
 {
-	if (strcmp(name, "intListSimple") == 0)
+switch(runtimeCrc(name)) {
+case constcrc("intListSimple"):
 		m_intListSimpleAppend = true;
-	else if (strcmp(name, "intListWeightedList") == 0)
+	break;
+case constcrc("intListWeightedList"):
 		m_intListWeightedListAppend = true;
-	else if (strcmp(name, "intListRandomRange") == 0)
+	break;
+case constcrc("intListRandomRange"):
 		m_intListRandomRangeAppend = true;
-	else if (strcmp(name, "intListDiceRoll") == 0)
+	break;
+case constcrc("intListDiceRoll"):
 		m_intListDiceRollAppend = true;
-	else if (strcmp(name, "floatListSimple") == 0)
+	break;
+case constcrc("floatListSimple"):
 		m_floatListSimpleAppend = true;
-	else if (strcmp(name, "floatListWeightedList") == 0)
+	break;
+case constcrc("floatListWeightedList"):
 		m_floatListWeightedListAppend = true;
-	else if (strcmp(name, "floatListRandomRange") == 0)
+	break;
+case constcrc("floatListRandomRange"):
 		m_floatListRandomRangeAppend = true;
-	else if (strcmp(name, "enumListIndexed") == 0)
+	break;
+case constcrc("enumListIndexed"):
 		m_enumListIndexedAppend = true;
-	else if (strcmp(name, "enumListWeightedList") == 0)
+	break;
+case constcrc("enumListWeightedList"):
 		m_enumListWeightedListAppend = true;
-	else if (strcmp(name, "stringIdListSimple") == 0)
+	break;
+case constcrc("stringIdListSimple"):
 		m_stringIdListSimpleAppend = true;
-	else if (strcmp(name, "stringIdListWeightedList") == 0)
+	break;
+case constcrc("stringIdListWeightedList"):
 		m_stringIdListWeightedListAppend = true;
-	else if (strcmp(name, "stringListSimple") == 0)
+	break;
+case constcrc("stringListSimple"):
 		m_stringListSimpleAppend = true;
-	else if (strcmp(name, "stringListWeightedList") == 0)
+	break;
+case constcrc("stringListWeightedList"):
 		m_stringListWeightedListAppend = true;
-	else if (strcmp(name, "triggerVolumeList") == 0)
+	break;
+case constcrc("triggerVolumeList"):
 		m_triggerVolumeListAppend = true;
-	else if (strcmp(name, "triggerVolumesListWeightedList") == 0)
+	break;
+case constcrc("triggerVolumesListWeightedList"):
 		m_triggerVolumesListWeightedListAppend = true;
-	else if (strcmp(name, "boolListDerived") == 0)
+	break;
+case constcrc("boolListDerived"):
 		m_boolListDerivedAppend = true;
-	else if (strcmp(name, "boolListSimple") == 0)
+	break;
+case constcrc("boolListSimple"):
 		m_boolListSimpleAppend = true;
-	else if (strcmp(name, "boolListWeightedList") == 0)
+	break;
+case constcrc("boolListWeightedList"):
 		m_boolListWeightedListAppend = true;
-	else if (strcmp(name, "vectorListSimple") == 0)
+	break;
+case constcrc("vectorListSimple"):
 		m_vectorListSimpleAppend = true;
-	else if (strcmp(name, "filenameListSimple") == 0)
+	break;
+case constcrc("filenameListSimple"):
 		m_filenameListSimpleAppend = true;
-	else if (strcmp(name, "templateListSimple") == 0)
+	break;
+case constcrc("templateListSimple"):
 		m_templateListSimpleAppend = true;
-	else if (strcmp(name, "structListSimple") == 0)
+	break;
+case constcrc("structListSimple"):
 		m_structListSimpleAppend = true;
-	else
+break;
+default:
 		TpfTemplate::setAppend(name);
+	break;
+}
 }	// ServerUberObjectTemplate::setAppend
 
 bool ServerUberObjectTemplate::isAppend(const char *name) const
 {
-	if (strcmp(name, "intListSimple") == 0)
+switch(runtimeCrc(name)) {
+case constcrc("intListSimple"):
 		return m_intListSimpleAppend;
-	else if (strcmp(name, "intListWeightedList") == 0)
+	break;
+case constcrc("intListWeightedList"):
 		return m_intListWeightedListAppend;
-	else if (strcmp(name, "intListRandomRange") == 0)
+	break;
+case constcrc("intListRandomRange"):
 		return m_intListRandomRangeAppend;
-	else if (strcmp(name, "intListDiceRoll") == 0)
+	break;
+case constcrc("intListDiceRoll"):
 		return m_intListDiceRollAppend;
-	else if (strcmp(name, "floatListSimple") == 0)
+	break;
+case constcrc("floatListSimple"):
 		return m_floatListSimpleAppend;
-	else if (strcmp(name, "floatListWeightedList") == 0)
+	break;
+case constcrc("floatListWeightedList"):
 		return m_floatListWeightedListAppend;
-	else if (strcmp(name, "floatListRandomRange") == 0)
+	break;
+case constcrc("floatListRandomRange"):
 		return m_floatListRandomRangeAppend;
-	else if (strcmp(name, "enumListIndexed") == 0)
+	break;
+case constcrc("enumListIndexed"):
 		return m_enumListIndexedAppend;
-	else if (strcmp(name, "enumListWeightedList") == 0)
+	break;
+case constcrc("enumListWeightedList"):
 		return m_enumListWeightedListAppend;
-	else if (strcmp(name, "stringIdListSimple") == 0)
+	break;
+case constcrc("stringIdListSimple"):
 		return m_stringIdListSimpleAppend;
-	else if (strcmp(name, "stringIdListWeightedList") == 0)
+	break;
+case constcrc("stringIdListWeightedList"):
 		return m_stringIdListWeightedListAppend;
-	else if (strcmp(name, "stringListSimple") == 0)
+	break;
+case constcrc("stringListSimple"):
 		return m_stringListSimpleAppend;
-	else if (strcmp(name, "stringListWeightedList") == 0)
+	break;
+case constcrc("stringListWeightedList"):
 		return m_stringListWeightedListAppend;
-	else if (strcmp(name, "triggerVolumeList") == 0)
+	break;
+case constcrc("triggerVolumeList"):
 		return m_triggerVolumeListAppend;
-	else if (strcmp(name, "triggerVolumesListWeightedList") == 0)
+	break;
+case constcrc("triggerVolumesListWeightedList"):
 		return m_triggerVolumesListWeightedListAppend;
-	else if (strcmp(name, "boolListDerived") == 0)
+	break;
+case constcrc("boolListDerived"):
 		return m_boolListDerivedAppend;
-	else if (strcmp(name, "boolListSimple") == 0)
+	break;
+case constcrc("boolListSimple"):
 		return m_boolListSimpleAppend;
-	else if (strcmp(name, "boolListWeightedList") == 0)
+	break;
+case constcrc("boolListWeightedList"):
 		return m_boolListWeightedListAppend;
-	else if (strcmp(name, "vectorListSimple") == 0)
+	break;
+case constcrc("vectorListSimple"):
 		return m_vectorListSimpleAppend;
-	else if (strcmp(name, "filenameListSimple") == 0)
+	break;
+case constcrc("filenameListSimple"):
 		return m_filenameListSimpleAppend;
-	else if (strcmp(name, "templateListSimple") == 0)
+	break;
+case constcrc("templateListSimple"):
 		return m_templateListSimpleAppend;
-	else if (strcmp(name, "structListSimple") == 0)
+	break;
+case constcrc("structListSimple"):
 		return m_structListSimpleAppend;
-	else
+	break;
+default:
 		return TpfTemplate::isAppend(name);
+}
 }	// ServerUberObjectTemplate::isAppend
 
 
 int ServerUberObjectTemplate::getListLength(const char *name) const
 {
-	if (strcmp(name, "intListSimple") == 0)
+switch(runtimeCrc(name)) {
+	case constcrc("intListSimple"):
 	{
 		return m_intListSimple.size();
 	}
-	else if (strcmp(name, "intListWeightedList") == 0)
+	break;
+case constcrc("intListWeightedList"):
 	{
 		return m_intListWeightedList.size();
 	}
-	else if (strcmp(name, "intListRandomRange") == 0)
+	break;
+case constcrc("intListRandomRange"):
 	{
 		return m_intListRandomRange.size();
 	}
-	else if (strcmp(name, "intListDiceRoll") == 0)
+	break;
+case constcrc("intListDiceRoll"):
 	{
 		return m_intListDiceRoll.size();
 	}
-	else if (strcmp(name, "floatListSimple") == 0)
+	break;
+case constcrc("floatListSimple"):
 	{
 		return m_floatListSimple.size();
 	}
-	else if (strcmp(name, "floatListWeightedList") == 0)
+	break;
+case constcrc("floatListWeightedList"):
 	{
 		return m_floatListWeightedList.size();
 	}
-	else if (strcmp(name, "floatListRandomRange") == 0)
+	break;
+case constcrc("floatListRandomRange"):
 	{
 		return m_floatListRandomRange.size();
 	}
-	else if (strcmp(name, "enumIndexedByEnumSingle") == 0)
+	break;
+case constcrc("enumIndexedByEnumSingle"):
 	{
 		return sizeof(m_enumIndexedByEnumSingle) / sizeof(CompilerIntegerParam);
 	}
-	else if (strcmp(name, "enumIndexedByEnumWeightedList") == 0)
+	break;
+case constcrc("enumIndexedByEnumWeightedList"):
 	{
 		return sizeof(m_enumIndexedByEnumWeightedList) / sizeof(CompilerIntegerParam);
 	}
-	else if (strcmp(name, "enumListIndexed") == 0)
+	break;
+case constcrc("enumListIndexed"):
 	{
 		return m_enumListIndexed.size();
 	}
-	else if (strcmp(name, "enumListWeightedList") == 0)
+	break;
+case constcrc("enumListWeightedList"):
 	{
 		return m_enumListWeightedList.size();
 	}
-	else if (strcmp(name, "stringIdListSimple") == 0)
+	break;
+case constcrc("stringIdListSimple"):
 	{
 		return m_stringIdListSimple.size();
 	}
-	else if (strcmp(name, "stringIdListWeightedList") == 0)
+	break;
+case constcrc("stringIdListWeightedList"):
 	{
 		return m_stringIdListWeightedList.size();
 	}
-	else if (strcmp(name, "stringListSimple") == 0)
+	break;
+case constcrc("stringListSimple"):
 	{
 		return m_stringListSimple.size();
 	}
-	else if (strcmp(name, "stringListWeightedList") == 0)
+	break;
+case constcrc("stringListWeightedList"):
 	{
 		return m_stringListWeightedList.size();
 	}
-	else if (strcmp(name, "triggerVolumeList") == 0)
+	break;
+case constcrc("triggerVolumeList"):
 	{
 		return m_triggerVolumeList.size();
 	}
-	else if (strcmp(name, "triggerVolumesListWeightedList") == 0)
+	break;
+case constcrc("triggerVolumesListWeightedList"):
 	{
 		return m_triggerVolumesListWeightedList.size();
 	}
-	else if (strcmp(name, "boolListDerived") == 0)
+	break;
+case constcrc("boolListDerived"):
 	{
 		return m_boolListDerived.size();
 	}
-	else if (strcmp(name, "boolListSimple") == 0)
+	break;
+case constcrc("boolListSimple"):
 	{
 		return m_boolListSimple.size();
 	}
-	else if (strcmp(name, "boolListWeightedList") == 0)
+	break;
+case constcrc("boolListWeightedList"):
 	{
 		return m_boolListWeightedList.size();
 	}
-	else if (strcmp(name, "vectorListSimple") == 0)
+	break;
+case constcrc("vectorListSimple"):
 	{
 		return m_vectorListSimple.size();
 	}
-	else if (strcmp(name, "filenameListSimple") == 0)
+	break;
+case constcrc("filenameListSimple"):
 	{
 		return m_filenameListSimple.size();
 	}
-	else if (strcmp(name, "templateListSimple") == 0)
+	break;
+case constcrc("templateListSimple"):
 	{
 		return m_templateListSimple.size();
 	}
-	else if (strcmp(name, "structListSimple") == 0)
+	break;
+case constcrc("structListSimple"):
 	{
 		return m_structListSimple.size();
 	}
-	else if (strcmp(name, "structArrayEnum") == 0)
+	break;
+case constcrc("structArrayEnum"):
 	{
 		return sizeof(m_structArrayEnum) / sizeof(StructParamOT);
 	}
-	else if (strcmp(name, "structArrayInteger") == 0)
+	break;
+case constcrc("structArrayInteger"):
 	{
 		return sizeof(m_structArrayInteger) / sizeof(StructParamOT);
 	}
-	else if (strcmp(name, "integerArray") == 0)
+	break;
+case constcrc("integerArray"):
 	{
 		return sizeof(m_integerArray) / sizeof(CompilerIntegerParam);
 	}
-	else if (strcmp(name, "floatArray") == 0)
+	break;
+case constcrc("floatArray"):
 	{
 		return sizeof(m_floatArray) / sizeof(FloatParam);
 	}
-	else if (strcmp(name, "stringArray") == 0)
+	break;
+case constcrc("stringArray"):
 	{
 		return sizeof(m_stringArray) / sizeof(StringParam);
 	}
-	else if (strcmp(name, "boolArray") == 0)
+	break;
+case constcrc("boolArray"):
 	{
 		return sizeof(m_boolArray) / sizeof(BoolParam);
 	}
-	else if (strcmp(name, "stringIdArray") == 0)
+	break;
+case constcrc("stringIdArray"):
 	{
 		return sizeof(m_stringIdArray) / sizeof(StringIdParam);
 	}
-	else if (strcmp(name, "triggerArray") == 0)
+	break;
+case constcrc("triggerArray"):
 	{
 		return sizeof(m_triggerArray) / sizeof(TriggerVolumeParam);
 	}
-	else if (strcmp(name, "vectorArray") == 0)
+	break;
+case constcrc("vectorArray"):
 	{
 		return sizeof(m_vectorArray) / sizeof(VectorParam);
 	}
-	else if (strcmp(name, "fileNameArray") == 0)
+	break;
+case constcrc("fileNameArray"):
 	{
 		return sizeof(m_fileNameArray) / sizeof(StringParam);
 	}
-	else
+	break;
+	default:
 		return TpfTemplate::getListLength(name);
+		break;
+}
 }	// ServerUberObjectTemplate::getListLength
 
 /**
@@ -1968,41 +2200,60 @@ char paramName[MAX_NAME_SIZE];
 	{
 		file.enterChunk();
 		file.read_string(paramName, MAX_NAME_SIZE);
-		if (strcmp(paramName, "intAtDerived") == 0)
+
+switch(runtimeCrc(paramName)) {
+case constcrc("intAtDerived"):
 			m_intAtDerived.loadFromIff(file);
-		else if (strcmp(paramName, "intSimple") == 0)
+		break;
+case constcrc("intSimple"):
 			m_intSimple.loadFromIff(file);
-		else if (strcmp(paramName, "intSimpleDeltaPositive") == 0)
+		break;
+case constcrc("intSimpleDeltaPositive"):
 			m_intSimpleDeltaPositive.loadFromIff(file);
-		else if (strcmp(paramName, "intSimpleDeltaNegative") == 0)
+		break;
+case constcrc("intSimpleDeltaNegative"):
 			m_intSimpleDeltaNegative.loadFromIff(file);
-		else if (strcmp(paramName, "intSimpleDeltaPositivePercent") == 0)
+		break;
+case constcrc("intSimpleDeltaPositivePercent"):
 			m_intSimpleDeltaPositivePercent.loadFromIff(file);
-		else if (strcmp(paramName, "intSimpleDeltaNegativePercent") == 0)
+		break;
+case constcrc("intSimpleDeltaNegativePercent"):
 			m_intSimpleDeltaNegativePercent.loadFromIff(file);
-		else if (strcmp(paramName, "intWeightedList") == 0)
+		break;
+case constcrc("intWeightedList"):
 			m_intWeightedList.loadFromIff(file);
-		else if (strcmp(paramName, "intWeightedListDeltaPositive") == 0)
+		break;
+case constcrc("intWeightedListDeltaPositive"):
 			m_intWeightedListDeltaPositive.loadFromIff(file);
-		else if (strcmp(paramName, "intWeightedListDeltaNegative") == 0)
+		break;
+case constcrc("intWeightedListDeltaNegative"):
 			m_intWeightedListDeltaNegative.loadFromIff(file);
-		else if (strcmp(paramName, "intWeightedListDeltaPositivePercent") == 0)
+		break;
+case constcrc("intWeightedListDeltaPositivePercent"):
 			m_intWeightedListDeltaPositivePercent.loadFromIff(file);
-		else if (strcmp(paramName, "intWeightedListDeltaNegativePercent") == 0)
+		break;
+case constcrc("intWeightedListDeltaNegativePercent"):
 			m_intWeightedListDeltaNegativePercent.loadFromIff(file);
-		else if (strcmp(paramName, "intRandomRange1") == 0)
+		break;
+case constcrc("intRandomRange1"):
 			m_intRandomRange1.loadFromIff(file);
-		else if (strcmp(paramName, "intRandomRange2") == 0)
+		break;
+case constcrc("intRandomRange2"):
 			m_intRandomRange2.loadFromIff(file);
-		else if (strcmp(paramName, "intRandomRange3") == 0)
+		break;
+case constcrc("intRandomRange3"):
 			m_intRandomRange3.loadFromIff(file);
-		else if (strcmp(paramName, "intRandomRange4") == 0)
+		break;
+case constcrc("intRandomRange4"):
 			m_intRandomRange4.loadFromIff(file);
-		else if (strcmp(paramName, "intDiceRoll1") == 0)
+		break;
+case constcrc("intDiceRoll1"):
 			m_intDiceRoll1.loadFromIff(file);
-		else if (strcmp(paramName, "intDiceRoll2") == 0)
+		break;
+case constcrc("intDiceRoll2"):
 			m_intDiceRoll2.loadFromIff(file);
-		else if (strcmp(paramName, "intListSimple") == 0)
+		break;
+case constcrc("intListSimple"):
 		{
 			std::vector<CompilerIntegerParam *>::iterator iter;
 			for (iter = m_intListSimple.begin(); iter != m_intListSimple.end(); ++iter)
@@ -2020,7 +2271,8 @@ char paramName[MAX_NAME_SIZE];
 			}
 			m_intListSimpleLoaded = true;
 		}
-		else if (strcmp(paramName, "intListWeightedList") == 0)
+		break;
+case constcrc("intListWeightedList"):
 		{
 			std::vector<CompilerIntegerParam *>::iterator iter;
 			for (iter = m_intListWeightedList.begin(); iter != m_intListWeightedList.end(); ++iter)
@@ -2038,7 +2290,8 @@ char paramName[MAX_NAME_SIZE];
 			}
 			m_intListWeightedListLoaded = true;
 		}
-		else if (strcmp(paramName, "intListRandomRange") == 0)
+		break;
+case constcrc("intListRandomRange"):
 		{
 			std::vector<CompilerIntegerParam *>::iterator iter;
 			for (iter = m_intListRandomRange.begin(); iter != m_intListRandomRange.end(); ++iter)
@@ -2056,7 +2309,8 @@ char paramName[MAX_NAME_SIZE];
 			}
 			m_intListRandomRangeLoaded = true;
 		}
-		else if (strcmp(paramName, "intListDiceRoll") == 0)
+		break;
+case constcrc("intListDiceRoll"):
 		{
 			std::vector<CompilerIntegerParam *>::iterator iter;
 			for (iter = m_intListDiceRoll.begin(); iter != m_intListDiceRoll.end(); ++iter)
@@ -2074,29 +2328,41 @@ char paramName[MAX_NAME_SIZE];
 			}
 			m_intListDiceRollLoaded = true;
 		}
-		else if (strcmp(paramName, "floatAtDerived") == 0)
+		break;
+case constcrc("floatAtDerived"):
 			m_floatAtDerived.loadFromIff(file);
-		else if (strcmp(paramName, "floatSimple") == 0)
+		break;
+case constcrc("floatSimple"):
 			m_floatSimple.loadFromIff(file);
-		else if (strcmp(paramName, "floatSimpleDeltaPositive") == 0)
+		break;
+case constcrc("floatSimpleDeltaPositive"):
 			m_floatSimpleDeltaPositive.loadFromIff(file);
-		else if (strcmp(paramName, "floatSimpleDeltaNegative") == 0)
+		break;
+case constcrc("floatSimpleDeltaNegative"):
 			m_floatSimpleDeltaNegative.loadFromIff(file);
-		else if (strcmp(paramName, "floatSimpleDeltaPositivePercent") == 0)
+		break;
+case constcrc("floatSimpleDeltaPositivePercent"):
 			m_floatSimpleDeltaPositivePercent.loadFromIff(file);
-		else if (strcmp(paramName, "floatSimpleDeltaNegativePercent") == 0)
+		break;
+case constcrc("floatSimpleDeltaNegativePercent"):
 			m_floatSimpleDeltaNegativePercent.loadFromIff(file);
-		else if (strcmp(paramName, "floatWeightedList") == 0)
+		break;
+case constcrc("floatWeightedList"):
 			m_floatWeightedList.loadFromIff(file);
-		else if (strcmp(paramName, "floatRandomRange1") == 0)
+		break;
+case constcrc("floatRandomRange1"):
 			m_floatRandomRange1.loadFromIff(file);
-		else if (strcmp(paramName, "floatRandomRange2") == 0)
+		break;
+case constcrc("floatRandomRange2"):
 			m_floatRandomRange2.loadFromIff(file);
-		else if (strcmp(paramName, "floatRandomRange3") == 0)
+		break;
+case constcrc("floatRandomRange3"):
 			m_floatRandomRange3.loadFromIff(file);
-		else if (strcmp(paramName, "floatRandomRange4") == 0)
+		break;
+case constcrc("floatRandomRange4"):
 			m_floatRandomRange4.loadFromIff(file);
-		else if (strcmp(paramName, "floatListSimple") == 0)
+		break;
+case constcrc("floatListSimple"):
 		{
 			std::vector<FloatParam *>::iterator iter;
 			for (iter = m_floatListSimple.begin(); iter != m_floatListSimple.end(); ++iter)
@@ -2114,7 +2380,8 @@ char paramName[MAX_NAME_SIZE];
 			}
 			m_floatListSimpleLoaded = true;
 		}
-		else if (strcmp(paramName, "floatListWeightedList") == 0)
+		break;
+case constcrc("floatListWeightedList"):
 		{
 			std::vector<FloatParam *>::iterator iter;
 			for (iter = m_floatListWeightedList.begin(); iter != m_floatListWeightedList.end(); ++iter)
@@ -2132,7 +2399,8 @@ char paramName[MAX_NAME_SIZE];
 			}
 			m_floatListWeightedListLoaded = true;
 		}
-		else if (strcmp(paramName, "floatListRandomRange") == 0)
+		break;
+case constcrc("floatListRandomRange"):
 		{
 			std::vector<FloatParam *>::iterator iter;
 			for (iter = m_floatListRandomRange.begin(); iter != m_floatListRandomRange.end(); ++iter)
@@ -2150,7 +2418,8 @@ char paramName[MAX_NAME_SIZE];
 			}
 			m_floatListRandomRangeLoaded = true;
 		}
-		else if (strcmp(paramName, "enumIndexedByEnumSingle") == 0)
+		break;
+case constcrc("enumIndexedByEnumSingle"):
 		{
 			int listCount = file.read_int32();
 			DEBUG_WARNING(listCount != 3, ("read array size of %d for an array of size 3, reading values anyway", listCount));
@@ -2164,7 +2433,8 @@ char paramName[MAX_NAME_SIZE];
 				dummy.loadFromIff(file);
 			}
 		}
-		else if (strcmp(paramName, "enumIndexedByEnumWeightedList") == 0)
+		break;
+case constcrc("enumIndexedByEnumWeightedList"):
 		{
 			int listCount = file.read_int32();
 			DEBUG_WARNING(listCount != 3, ("read array size of %d for an array of size 3, reading values anyway", listCount));
@@ -2178,7 +2448,8 @@ char paramName[MAX_NAME_SIZE];
 				dummy.loadFromIff(file);
 			}
 		}
-		else if (strcmp(paramName, "enumListIndexed") == 0)
+		break;
+case constcrc("enumListIndexed"):
 		{
 			std::vector<CompilerIntegerParam *>::iterator iter;
 			for (iter = m_enumListIndexed.begin(); iter != m_enumListIndexed.end(); ++iter)
@@ -2196,7 +2467,8 @@ char paramName[MAX_NAME_SIZE];
 			}
 			m_enumListIndexedLoaded = true;
 		}
-		else if (strcmp(paramName, "enumListWeightedList") == 0)
+		break;
+case constcrc("enumListWeightedList"):
 		{
 			std::vector<CompilerIntegerParam *>::iterator iter;
 			for (iter = m_enumListWeightedList.begin(); iter != m_enumListWeightedList.end(); ++iter)
@@ -2214,13 +2486,17 @@ char paramName[MAX_NAME_SIZE];
 			}
 			m_enumListWeightedListLoaded = true;
 		}
-		else if (strcmp(paramName, "stringIdDerived") == 0)
+		break;
+case constcrc("stringIdDerived"):
 			m_stringIdDerived.loadFromIff(file);
-		else if (strcmp(paramName, "stringIdSimple") == 0)
+		break;
+case constcrc("stringIdSimple"):
 			m_stringIdSimple.loadFromIff(file);
-		else if (strcmp(paramName, "stringIdWeightedList") == 0)
+		break;
+case constcrc("stringIdWeightedList"):
 			m_stringIdWeightedList.loadFromIff(file);
-		else if (strcmp(paramName, "stringIdListSimple") == 0)
+		break;
+case constcrc("stringIdListSimple"):
 		{
 			std::vector<StringIdParam *>::iterator iter;
 			for (iter = m_stringIdListSimple.begin(); iter != m_stringIdListSimple.end(); ++iter)
@@ -2238,7 +2514,8 @@ char paramName[MAX_NAME_SIZE];
 			}
 			m_stringIdListSimpleLoaded = true;
 		}
-		else if (strcmp(paramName, "stringIdListWeightedList") == 0)
+		break;
+case constcrc("stringIdListWeightedList"):
 		{
 			std::vector<StringIdParam *>::iterator iter;
 			for (iter = m_stringIdListWeightedList.begin(); iter != m_stringIdListWeightedList.end(); ++iter)
@@ -2256,13 +2533,17 @@ char paramName[MAX_NAME_SIZE];
 			}
 			m_stringIdListWeightedListLoaded = true;
 		}
-		else if (strcmp(paramName, "stringDerived") == 0)
+		break;
+case constcrc("stringDerived"):
 			m_stringDerived.loadFromIff(file);
-		else if (strcmp(paramName, "stringSimple") == 0)
+		break;
+case constcrc("stringSimple"):
 			m_stringSimple.loadFromIff(file);
-		else if (strcmp(paramName, "stringWeightedList") == 0)
+		break;
+case constcrc("stringWeightedList"):
 			m_stringWeightedList.loadFromIff(file);
-		else if (strcmp(paramName, "stringListSimple") == 0)
+		break;
+case constcrc("stringListSimple"):
 		{
 			std::vector<StringParam *>::iterator iter;
 			for (iter = m_stringListSimple.begin(); iter != m_stringListSimple.end(); ++iter)
@@ -2280,7 +2561,8 @@ char paramName[MAX_NAME_SIZE];
 			}
 			m_stringListSimpleLoaded = true;
 		}
-		else if (strcmp(paramName, "stringListWeightedList") == 0)
+		break;
+case constcrc("stringListWeightedList"):
 		{
 			std::vector<StringParam *>::iterator iter;
 			for (iter = m_stringListWeightedList.begin(); iter != m_stringListWeightedList.end(); ++iter)
@@ -2298,13 +2580,17 @@ char paramName[MAX_NAME_SIZE];
 			}
 			m_stringListWeightedListLoaded = true;
 		}
-		else if (strcmp(paramName, "triggerVolumeDerived") == 0)
+		break;
+case constcrc("triggerVolumeDerived"):
 			m_triggerVolumeDerived.loadFromIff(file);
-		else if (strcmp(paramName, "triggerVolumeSimple") == 0)
+		break;
+case constcrc("triggerVolumeSimple"):
 			m_triggerVolumeSimple.loadFromIff(file);
-		else if (strcmp(paramName, "triggerVolumeWeightedList") == 0)
+		break;
+case constcrc("triggerVolumeWeightedList"):
 			m_triggerVolumeWeightedList.loadFromIff(file);
-		else if (strcmp(paramName, "triggerVolumeList") == 0)
+		break;
+case constcrc("triggerVolumeList"):
 		{
 			std::vector<TriggerVolumeParam *>::iterator iter;
 			for (iter = m_triggerVolumeList.begin(); iter != m_triggerVolumeList.end(); ++iter)
@@ -2322,7 +2608,8 @@ char paramName[MAX_NAME_SIZE];
 			}
 			m_triggerVolumeListLoaded = true;
 		}
-		else if (strcmp(paramName, "triggerVolumesListWeightedList") == 0)
+		break;
+case constcrc("triggerVolumesListWeightedList"):
 		{
 			std::vector<TriggerVolumeParam *>::iterator iter;
 			for (iter = m_triggerVolumesListWeightedList.begin(); iter != m_triggerVolumesListWeightedList.end(); ++iter)
@@ -2340,13 +2627,17 @@ char paramName[MAX_NAME_SIZE];
 			}
 			m_triggerVolumesListWeightedListLoaded = true;
 		}
-		else if (strcmp(paramName, "boolDerived") == 0)
+		break;
+case constcrc("boolDerived"):
 			m_boolDerived.loadFromIff(file);
-		else if (strcmp(paramName, "boolSimple") == 0)
+		break;
+case constcrc("boolSimple"):
 			m_boolSimple.loadFromIff(file);
-		else if (strcmp(paramName, "boolWeightedList") == 0)
+		break;
+case constcrc("boolWeightedList"):
 			m_boolWeightedList.loadFromIff(file);
-		else if (strcmp(paramName, "boolListDerived") == 0)
+		break;
+case constcrc("boolListDerived"):
 		{
 			std::vector<BoolParam *>::iterator iter;
 			for (iter = m_boolListDerived.begin(); iter != m_boolListDerived.end(); ++iter)
@@ -2364,7 +2655,8 @@ char paramName[MAX_NAME_SIZE];
 			}
 			m_boolListDerivedLoaded = true;
 		}
-		else if (strcmp(paramName, "boolListSimple") == 0)
+		break;
+case constcrc("boolListSimple"):
 		{
 			std::vector<BoolParam *>::iterator iter;
 			for (iter = m_boolListSimple.begin(); iter != m_boolListSimple.end(); ++iter)
@@ -2382,7 +2674,8 @@ char paramName[MAX_NAME_SIZE];
 			}
 			m_boolListSimpleLoaded = true;
 		}
-		else if (strcmp(paramName, "boolListWeightedList") == 0)
+		break;
+case constcrc("boolListWeightedList"):
 		{
 			std::vector<BoolParam *>::iterator iter;
 			for (iter = m_boolListWeightedList.begin(); iter != m_boolListWeightedList.end(); ++iter)
@@ -2400,11 +2693,14 @@ char paramName[MAX_NAME_SIZE];
 			}
 			m_boolListWeightedListLoaded = true;
 		}
-		else if (strcmp(paramName, "vectorAtDerived") == 0)
+		break;
+case constcrc("vectorAtDerived"):
 			m_vectorAtDerived.loadFromIff(file);
-		else if (strcmp(paramName, "vectorSimple") == 0)
+		break;
+case constcrc("vectorSimple"):
 			m_vectorSimple.loadFromIff(file);
-		else if (strcmp(paramName, "vectorListSimple") == 0)
+		break;
+case constcrc("vectorListSimple"):
 		{
 			std::vector<VectorParam *>::iterator iter;
 			for (iter = m_vectorListSimple.begin(); iter != m_vectorListSimple.end(); ++iter)
@@ -2422,13 +2718,17 @@ char paramName[MAX_NAME_SIZE];
 			}
 			m_vectorListSimpleLoaded = true;
 		}
-		else if (strcmp(paramName, "filenameAtDerived") == 0)
+		break;
+case constcrc("filenameAtDerived"):
 			m_filenameAtDerived.loadFromIff(file);
-		else if (strcmp(paramName, "filenameSimple") == 0)
+		break;
+case constcrc("filenameSimple"):
 			m_filenameSimple.loadFromIff(file);
-		else if (strcmp(paramName, "filenameWeightedList") == 0)
+		break;
+case constcrc("filenameWeightedList"):
 			m_filenameWeightedList.loadFromIff(file);
-		else if (strcmp(paramName, "filenameListSimple") == 0)
+		break;
+case constcrc("filenameListSimple"):
 		{
 			std::vector<StringParam *>::iterator iter;
 			for (iter = m_filenameListSimple.begin(); iter != m_filenameListSimple.end(); ++iter)
@@ -2446,17 +2746,23 @@ char paramName[MAX_NAME_SIZE];
 			}
 			m_filenameListSimpleLoaded = true;
 		}
-		else if (strcmp(paramName, "objvarDerived") == 0)
+		break;
+case constcrc("objvarDerived"):
 			m_objvarDerived.loadFromIff(file);
-		else if (strcmp(paramName, "objvarSimple") == 0)
+		break;
+case constcrc("objvarSimple"):
 			m_objvarSimple.loadFromIff(file);
-		else if (strcmp(paramName, "templateDerived") == 0)
+		break;
+case constcrc("templateDerived"):
 			m_templateDerived.loadFromIff(file);
-		else if (strcmp(paramName, "templateSimple") == 0)
+		break;
+case constcrc("templateSimple"):
 			m_templateSimple.loadFromIff(file);
-		else if (strcmp(paramName, "templateWeightedList") == 0)
+		break;
+case constcrc("templateWeightedList"):
 			m_templateWeightedList.loadFromIff(file);
-		else if (strcmp(paramName, "templateListSimple") == 0)
+		break;
+case constcrc("templateListSimple"):
 		{
 			std::vector<StringParam *>::iterator iter;
 			for (iter = m_templateListSimple.begin(); iter != m_templateListSimple.end(); ++iter)
@@ -2474,11 +2780,14 @@ char paramName[MAX_NAME_SIZE];
 			}
 			m_templateListSimpleLoaded = true;
 		}
-		else if (strcmp(paramName, "structAtDerived") == 0)
+		break;
+case constcrc("structAtDerived"):
 			m_structAtDerived.loadFromIff(file);
-		else if (strcmp(paramName, "structSimple") == 0)
+		break;
+case constcrc("structSimple"):
 			m_structSimple.loadFromIff(file);
-		else if (strcmp(paramName, "structListSimple") == 0)
+		break;
+case constcrc("structListSimple"):
 		{
 			std::vector<StructParamOT *>::iterator iter;
 			for (iter = m_structListSimple.begin(); iter != m_structListSimple.end(); ++iter)
@@ -2496,7 +2805,8 @@ char paramName[MAX_NAME_SIZE];
 			}
 			m_structListSimpleLoaded = true;
 		}
-		else if (strcmp(paramName, "structArrayEnum") == 0)
+		break;
+case constcrc("structArrayEnum"):
 		{
 			int listCount = file.read_int32();
 			DEBUG_WARNING(listCount != 3, ("read array size of %d for an array of size 3, reading values anyway", listCount));
@@ -2510,7 +2820,8 @@ char paramName[MAX_NAME_SIZE];
 				dummy.loadFromIff(file);
 			}
 		}
-		else if (strcmp(paramName, "structArrayInteger") == 0)
+		break;
+case constcrc("structArrayInteger"):
 		{
 			int listCount = file.read_int32();
 			DEBUG_WARNING(listCount != 2, ("read array size of %d for an array of size 2, reading values anyway", listCount));
@@ -2524,7 +2835,8 @@ char paramName[MAX_NAME_SIZE];
 				dummy.loadFromIff(file);
 			}
 		}
-		else if (strcmp(paramName, "integerArray") == 0)
+		break;
+case constcrc("integerArray"):
 		{
 			int listCount = file.read_int32();
 			DEBUG_WARNING(listCount != 2, ("read array size of %d for an array of size 2, reading values anyway", listCount));
@@ -2538,7 +2850,8 @@ char paramName[MAX_NAME_SIZE];
 				dummy.loadFromIff(file);
 			}
 		}
-		else if (strcmp(paramName, "floatArray") == 0)
+		break;
+case constcrc("floatArray"):
 		{
 			int listCount = file.read_int32();
 			DEBUG_WARNING(listCount != 2, ("read array size of %d for an array of size 2, reading values anyway", listCount));
@@ -2552,7 +2865,8 @@ char paramName[MAX_NAME_SIZE];
 				dummy.loadFromIff(file);
 			}
 		}
-		else if (strcmp(paramName, "stringArray") == 0)
+		break;
+case constcrc("stringArray"):
 		{
 			int listCount = file.read_int32();
 			DEBUG_WARNING(listCount != 2, ("read array size of %d for an array of size 2, reading values anyway", listCount));
@@ -2566,7 +2880,8 @@ char paramName[MAX_NAME_SIZE];
 				dummy.loadFromIff(file);
 			}
 		}
-		else if (strcmp(paramName, "boolArray") == 0)
+		break;
+case constcrc("boolArray"):
 		{
 			int listCount = file.read_int32();
 			DEBUG_WARNING(listCount != 2, ("read array size of %d for an array of size 2, reading values anyway", listCount));
@@ -2580,7 +2895,8 @@ char paramName[MAX_NAME_SIZE];
 				dummy.loadFromIff(file);
 			}
 		}
-		else if (strcmp(paramName, "stringIdArray") == 0)
+		break;
+case constcrc("stringIdArray"):
 		{
 			int listCount = file.read_int32();
 			DEBUG_WARNING(listCount != 2, ("read array size of %d for an array of size 2, reading values anyway", listCount));
@@ -2594,7 +2910,8 @@ char paramName[MAX_NAME_SIZE];
 				dummy.loadFromIff(file);
 			}
 		}
-		else if (strcmp(paramName, "triggerArray") == 0)
+		break;
+case constcrc("triggerArray"):
 		{
 			int listCount = file.read_int32();
 			DEBUG_WARNING(listCount != 2, ("read array size of %d for an array of size 2, reading values anyway", listCount));
@@ -2608,7 +2925,8 @@ char paramName[MAX_NAME_SIZE];
 				dummy.loadFromIff(file);
 			}
 		}
-		else if (strcmp(paramName, "vectorArray") == 0)
+		break;
+case constcrc("vectorArray"):
 		{
 			int listCount = file.read_int32();
 			DEBUG_WARNING(listCount != 2, ("read array size of %d for an array of size 2, reading values anyway", listCount));
@@ -2622,7 +2940,8 @@ char paramName[MAX_NAME_SIZE];
 				dummy.loadFromIff(file);
 			}
 		}
-		else if (strcmp(paramName, "fileNameArray") == 0)
+		break;
+case constcrc("fileNameArray"):
 		{
 			int listCount = file.read_int32();
 			DEBUG_WARNING(listCount != 2, ("read array size of %d for an array of size 2, reading values anyway", listCount));
@@ -2636,6 +2955,8 @@ char paramName[MAX_NAME_SIZE];
 				dummy.loadFromIff(file);
 			}
 		}
+		break;
+	}
 		file.exitChunk(true);
 	}
 
@@ -3480,7 +3801,8 @@ Tag ServerUberObjectTemplate::_Foo::getId(void) const
 
 CompilerIntegerParam * ServerUberObjectTemplate::_Foo::getCompilerIntegerParam(const char *name, bool deepCheck, int index)
 {
-	if (strcmp(name, "item1") == 0)
+	switch(runtimeCrc(name)) {
+	case constcrc("item1"):
 	{
 		if (index == 0)
 		{
@@ -3494,14 +3816,18 @@ CompilerIntegerParam * ServerUberObjectTemplate::_Foo::getCompilerIntegerParam(c
 		}
 		fprintf(stderr, "trying to access single-parameter \"item1\" as an array\n");
 	}
-	else
+	break;
+	default:
 		return TpfTemplate::getCompilerIntegerParam(name, deepCheck, index);
+		break;
+	}
 	return NULL;
 }	//ServerUberObjectTemplate::_Foo::getCompilerIntegerParam
 
 FloatParam * ServerUberObjectTemplate::_Foo::getFloatParam(const char *name, bool deepCheck, int index)
 {
-	if (strcmp(name, "item2") == 0)
+	switch(runtimeCrc(name)) {
+	case constcrc("item2"):
 	{
 		if (index == 0)
 		{
@@ -3515,8 +3841,11 @@ FloatParam * ServerUberObjectTemplate::_Foo::getFloatParam(const char *name, boo
 		}
 		fprintf(stderr, "trying to access single-parameter \"item2\" as an array\n");
 	}
-	else
+	break;
+	default:
 		return TpfTemplate::getFloatParam(name, deepCheck, index);
+		break;
+	}
 	return NULL;
 }	//ServerUberObjectTemplate::_Foo::getFloatParam
 
@@ -3527,7 +3856,8 @@ BoolParam * ServerUberObjectTemplate::_Foo::getBoolParam(const char *name, bool 
 
 StringParam * ServerUberObjectTemplate::_Foo::getStringParam(const char *name, bool deepCheck, int index)
 {
-	if (strcmp(name, "item3") == 0)
+	switch(runtimeCrc(name)) {
+	case constcrc("item3"):
 	{
 		if (index == 0)
 		{
@@ -3541,8 +3871,11 @@ StringParam * ServerUberObjectTemplate::_Foo::getStringParam(const char *name, b
 		}
 		fprintf(stderr, "trying to access single-parameter \"item3\" as an array\n");
 	}
-	else
+	break;
+	default:
 		return TpfTemplate::getStringParam(name, deepCheck, index);
+		break;
+	}
 	return NULL;
 }	//ServerUberObjectTemplate::_Foo::getStringParam
 
@@ -3619,13 +3952,19 @@ char paramName[MAX_NAME_SIZE];
 	{
 		file.enterChunk();
 		file.read_string(paramName, MAX_NAME_SIZE);
-		if (strcmp(paramName, "item1") == 0)
+	
+		switch(runtimeCrc(paramName)) {
+		case constcrc("item1"):
 			m_item1.loadFromIff(file);
-		else if (strcmp(paramName, "item2") == 0)
+		break;
+case constcrc("item2"):
 			m_item2.loadFromIff(file);
-		else if (strcmp(paramName, "item3") == 0)
+		break;
+case constcrc("item3"):
 			m_item3.loadFromIff(file);
 		file.exitChunk(true);
+		break;
+	}
 	}
 
 	file.exitForm();

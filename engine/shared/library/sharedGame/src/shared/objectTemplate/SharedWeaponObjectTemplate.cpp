@@ -16,6 +16,9 @@
 #include "sharedMath/Vector.h"
 #include "sharedObject/ObjectTemplate.h"
 #include "sharedObject/ObjectTemplateList.h"
+
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 //@BEGIN TFD TEMPLATE REFS
 //@END TFD TEMPLATE REFS
 #include <algorithm>
@@ -448,12 +451,18 @@ char paramName[MAX_NAME_SIZE];
 	{
 		file.enterChunk();
 		file.read_string(paramName, MAX_NAME_SIZE);
-		if (strcmp(paramName, "weaponEffect") == 0)
-			m_weaponEffect.loadFromIff(file);
-		else if (strcmp(paramName, "weaponEffectIndex") == 0)
-			m_weaponEffectIndex.loadFromIff(file);
-		else if (strcmp(paramName, "attackType") == 0)
-			m_attackType.loadFromIff(file);
+
+		switch(runtimeCrc(paramName)) {
+			case constcrc("weaponEffect"):
+				m_weaponEffect.loadFromIff(file);
+				break;
+			case constcrc("weaponEffectIndex"):
+				m_weaponEffectIndex.loadFromIff(file);
+				break;
+			case constcrc("attackType"):
+				m_attackType.loadFromIff(file);
+				break;
+		}
 		file.exitChunk(true);
 	}
 

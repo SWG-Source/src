@@ -57,7 +57,6 @@ static const uint32 crctable[256] =
 };
 
 const uint32 CRC_INIT = 0xFFFFFFFF;
-
 const uint32 Crc::crcInit = CRC_INIT;
 
 
@@ -65,11 +64,10 @@ const uint32 Crc::crcInit = CRC_INIT;
 
 uint32 Crc::calculate(const char *string)
 {
-	uint32 crc;
-
 	if (!string)
 		return 0;
 
+	uint32 crc = 0;
 	for (crc = CRC_INIT; *string; ++string)
 		crc = crctable[((crc>>24) ^ static_cast<byte>(*string)) & 0xFF] ^ (crc << 8);
 

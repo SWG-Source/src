@@ -16,6 +16,9 @@
 #include "sharedFile/Iff.h"
 #include "sharedObject/ObjectTemplate.h"
 #include "sharedObject/ObjectTemplateList.h"
+
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 //@BEGIN TFD TEMPLATE REFS
 //@END TFD TEMPLATE REFS
 #include <stdio.h>
@@ -802,14 +805,21 @@ char paramName[MAX_NAME_SIZE];
 	{
 		file.enterChunk();
 		file.read_string(paramName, MAX_NAME_SIZE);
-		if (strcmp(paramName, "maxExtractionRate") == 0)
-			m_maxExtractionRate.loadFromIff(file);
-		else if (strcmp(paramName, "currentExtractionRate") == 0)
-			m_currentExtractionRate.loadFromIff(file);
-		else if (strcmp(paramName, "maxHopperSize") == 0)
-			m_maxHopperSize.loadFromIff(file);
-		else if (strcmp(paramName, "masterClassName") == 0)
-			m_masterClassName.loadFromIff(file);
+
+		switch(runtimeCrc(paramName)) {
+			case constcrc("maxExtractionRate"):
+				m_maxExtractionRate.loadFromIff(file);	
+				break;
+			case constcrc("currentExtractionRate"):
+				m_currentExtractionRate.loadFromIff(file);
+				break;
+			case constcrc("maxHopperSize"):
+				m_maxHopperSize.loadFromIff(file);
+				break;
+			case constcrc("masterClassName"):
+				m_masterClassName.loadFromIff(file);
+				break;
+		}
 		file.exitChunk(true);
 	}
 

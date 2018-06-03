@@ -16,6 +16,9 @@
 #include "sharedFile/Iff.h"
 #include "sharedObject/ObjectTemplate.h"
 #include "sharedObject/ObjectTemplateList.h"
+
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 //@BEGIN TFD TEMPLATE REFS
 //@END TFD TEMPLATE REFS
 #include <stdio.h>
@@ -821,49 +824,57 @@ char paramName[MAX_NAME_SIZE];
 	{
 		file.enterChunk();
 		file.read_string(paramName, MAX_NAME_SIZE);
-		if (strcmp(paramName, "draftSchematic") == 0)
-			m_draftSchematic.loadFromIff(file);
-		else if (strcmp(paramName, "creator") == 0)
-			m_creator.loadFromIff(file);
-		else if (strcmp(paramName, "ingredients") == 0)
-		{
-			std::vector<StructParamOT *>::iterator iter;
-			for (iter = m_ingredients.begin(); iter != m_ingredients.end(); ++iter)
+
+		switch(runtimeCrc(paramName)) {
+			case constcrc("draftSchematic"):
+				m_draftSchematic.loadFromIff(file);
+				break;
+			case constcrc("creator"):
+				m_creator.loadFromIff(file);
+				break;
+			case constcrc("ingredients"):
 			{
-				delete *iter;
-				*iter = nullptr;
+				std::vector<StructParamOT *>::iterator iter;
+				for (iter = m_ingredients.begin(); iter != m_ingredients.end(); ++iter)
+				{
+					delete *iter;
+					*iter = nullptr;
+				}
+				m_ingredients.clear();
+				m_ingredientsAppend = file.read_bool8();
+				int listCount = file.read_int32();
+				for (int j = 0; j < listCount; ++j)
+				{
+					StructParamOT * newData = new StructParamOT;
+					newData->loadFromIff(file);
+					m_ingredients.push_back(newData);
+				}
+				m_ingredientsLoaded = true;
 			}
-			m_ingredients.clear();
-			m_ingredientsAppend = file.read_bool8();
-			int listCount = file.read_int32();
-			for (int j = 0; j < listCount; ++j)
+			break;
+			case constcrc("itemCount"):
+				m_itemCount.loadFromIff(file);
+				break;
+			case constcrc("attributes"):
 			{
-				StructParamOT * newData = new StructParamOT;
-				newData->loadFromIff(file);
-				m_ingredients.push_back(newData);
+				std::vector<StructParamOT *>::iterator iter;
+				for (iter = m_attributes.begin(); iter != m_attributes.end(); ++iter)
+				{
+					delete *iter;
+					*iter = nullptr;
+				}
+				m_attributes.clear();
+				m_attributesAppend = file.read_bool8();
+				int listCount = file.read_int32();
+				for (int j = 0; j < listCount; ++j)
+				{
+					StructParamOT * newData = new StructParamOT;
+					newData->loadFromIff(file);
+					m_attributes.push_back(newData);
+				}
+				m_attributesLoaded = true;
 			}
-			m_ingredientsLoaded = true;
-		}
-		else if (strcmp(paramName, "itemCount") == 0)
-			m_itemCount.loadFromIff(file);
-		else if (strcmp(paramName, "attributes") == 0)
-		{
-			std::vector<StructParamOT *>::iterator iter;
-			for (iter = m_attributes.begin(); iter != m_attributes.end(); ++iter)
-			{
-				delete *iter;
-				*iter = nullptr;
-			}
-			m_attributes.clear();
-			m_attributesAppend = file.read_bool8();
-			int listCount = file.read_int32();
-			for (int j = 0; j < listCount; ++j)
-			{
-				StructParamOT * newData = new StructParamOT;
-				newData->loadFromIff(file);
-				m_attributes.push_back(newData);
-			}
-			m_attributesLoaded = true;
+			break;
 		}
 		file.exitChunk(true);
 	}
@@ -1110,10 +1121,16 @@ char paramName[MAX_NAME_SIZE];
 	{
 		file.enterChunk();
 		file.read_string(paramName, MAX_NAME_SIZE);
-		if (strcmp(paramName, "name") == 0)
-			m_name.loadFromIff(file);
-		else if (strcmp(paramName, "ingredient") == 0)
-			m_ingredient.loadFromIff(file);
+
+		switch(runtimeCrc(paramName)) {
+			case constcrc("name"):
+				m_name.loadFromIff(file);
+				break;
+			case constcrc("ingredient"):
+				m_ingredient.loadFromIff(file);
+				break;
+		}
+
 		file.exitChunk(true);
 	}
 

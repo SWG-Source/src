@@ -16,6 +16,9 @@
 #include "sharedFile/Iff.h"
 #include "sharedObject/ObjectTemplate.h"
 #include "sharedObject/ObjectTemplateList.h"
+
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 //@BEGIN TFD TEMPLATE REFS
 //@END TFD TEMPLATE REFS
 #include <stdio.h>
@@ -371,7 +374,7 @@ char paramName[MAX_NAME_SIZE];
 	{
 		file.enterChunk();
 		file.read_string(paramName, MAX_NAME_SIZE);
-		if (strcmp(paramName, "count") == 0)
+		if (strcmp(paramName, "count"))
 			m_count.loadFromIff(file);
 		file.exitChunk(true);
 	}
@@ -905,31 +908,38 @@ char paramName[MAX_NAME_SIZE];
 	{
 		file.enterChunk();
 		file.read_string(paramName, MAX_NAME_SIZE);
-		if (strcmp(paramName, "ingredientType") == 0)
-			m_ingredientType.loadFromIff(file);
-		else if (strcmp(paramName, "ingredients") == 0)
-		{
-			std::vector<StructParamOT *>::iterator iter;
-			for (iter = m_ingredients.begin(); iter != m_ingredients.end(); ++iter)
+
+		switch(runtimeCrc(paramName)) {
+			case constcrc("ingredientType"):
+				m_ingredientType.loadFromIff(file);
+				break;
+			case constcrc("ingredients"):
 			{
-				delete *iter;
+				std::vector<StructParamOT *>::iterator iter;
+				for (iter = m_ingredients.begin(); iter != m_ingredients.end(); ++iter)
+				{
+					delete *iter;
 				*iter = nullptr;
+				}
+				m_ingredients.clear();
+				m_ingredientsAppend = file.read_bool8();
+				int listCount = file.read_int32();
+				for (int j = 0; j < listCount; ++j)
+				{
+					StructParamOT * newData = new StructParamOT;
+					newData->loadFromIff(file);
+					m_ingredients.push_back(newData);
+				}
+				m_ingredientsLoaded = true;
 			}
-			m_ingredients.clear();
-			m_ingredientsAppend = file.read_bool8();
-			int listCount = file.read_int32();
-			for (int j = 0; j < listCount; ++j)
-			{
-				StructParamOT * newData = new StructParamOT;
-				newData->loadFromIff(file);
-				m_ingredients.push_back(newData);
-			}
-			m_ingredientsLoaded = true;
+			break;
+			case constcrc("complexity"):
+				m_complexity.loadFromIff(file);
+				break;
+			case constcrc("skillCommand"):
+				m_skillCommand.loadFromIff(file);
+				break;
 		}
-		else if (strcmp(paramName, "complexity") == 0)
-			m_complexity.loadFromIff(file);
-		else if (strcmp(paramName, "skillCommand") == 0)
-			m_skillCommand.loadFromIff(file);
 		file.exitChunk(true);
 	}
 
@@ -1250,10 +1260,15 @@ char paramName[MAX_NAME_SIZE];
 	{
 		file.enterChunk();
 		file.read_string(paramName, MAX_NAME_SIZE);
-		if (strcmp(paramName, "name") == 0)
-			m_name.loadFromIff(file);
-		else if (strcmp(paramName, "value") == 0)
-			m_value.loadFromIff(file);
+
+		switch(runtimeCrc(paramName)) {
+			case constcrc("name"):
+				m_name.loadFromIff(file);
+				break;
+			case constcrc("value"):
+				m_value.loadFromIff(file);
+				break;
+		}
 		file.exitChunk(true);
 	}
 
@@ -1617,12 +1632,18 @@ char paramName[MAX_NAME_SIZE];
 	{
 		file.enterChunk();
 		file.read_string(paramName, MAX_NAME_SIZE);
-		if (strcmp(paramName, "name") == 0)
-			m_name.loadFromIff(file);
-		else if (strcmp(paramName, "ingredient") == 0)
-			m_ingredient.loadFromIff(file);
-		else if (strcmp(paramName, "count") == 0)
-			m_count.loadFromIff(file);
+
+		switch(runtimeCrc(paramName)) {
+			case constcrc("name"):
+				m_name.loadFromIff(file);
+				break;
+			case constcrc("ingredient"):
+				m_ingredient.loadFromIff(file);
+				break;
+			case constcrc("count"):
+				m_count.loadFromIff(file);
+				break;
+		}
 		file.exitChunk(true);
 	}
 

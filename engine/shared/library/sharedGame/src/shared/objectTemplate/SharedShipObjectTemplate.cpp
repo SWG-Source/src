@@ -23,6 +23,8 @@
 #include "sharedObject/ObjectTemplate.h"
 #include "sharedObject/ObjectTemplateList.h"
 
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 //@BEGIN TFD TEMPLATE REFS
 //@END TFD TEMPLATE REFS
 #include <algorithm>
@@ -384,14 +386,21 @@ char paramName[MAX_NAME_SIZE];
 	{
 		file.enterChunk();
 		file.read_string(paramName, MAX_NAME_SIZE);
-		if (strcmp(paramName, "cockpitFilename") == 0)
-			m_cockpitFilename.loadFromIff(file);
-		else if (strcmp(paramName, "hasWings") == 0)
-			m_hasWings.loadFromIff(file);
-		else if (strcmp(paramName, "playerControlled") == 0)
-			m_playerControlled.loadFromIff(file);
-		else if (strcmp(paramName, "interiorLayoutFileName") == 0)
-			m_interiorLayoutFileName.loadFromIff(file);
+		
+		switch(runtimeCrc(paramName)) {
+			case constcrc("cockpitFilename"):
+				m_cockpitFilename.loadFromIff(file);
+				break;
+			case constcrc("hasWings"):
+				m_hasWings.loadFromIff(file);
+				break;
+			case constcrc("playerControlled"):
+				m_playerControlled.loadFromIff(file);
+				break;
+			case constcrc("interiorLayoutFileName"):
+				m_interiorLayoutFileName.loadFromIff(file);
+				break;
+		}
 		file.exitChunk(true);
 	}
 

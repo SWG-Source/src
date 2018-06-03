@@ -26,6 +26,9 @@
 #include "sharedObject/PortalPropertyTemplateList.h"
 #include "sharedObject/SlotDescriptor.h"
 #include "sharedObject/SlotDescriptorList.h"
+
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 //@BEGIN TFD TEMPLATE REFS
 //@END TFD TEMPLATE REFS
 #include <algorithm>
@@ -2135,8 +2138,8 @@ void SharedObjectTemplate::testValues(void) const
  */
 void SharedObjectTemplate::load(Iff &file)
 {
-static const int MAX_NAME_SIZE = 256;
-char paramName[MAX_NAME_SIZE];
+	static const int MAX_NAME_SIZE = 256;
+	char paramName[MAX_NAME_SIZE];
 
 	if (file.getCurrentName() != SharedObjectTemplate_tag)
 	{
@@ -2177,54 +2180,81 @@ char paramName[MAX_NAME_SIZE];
 	file.enterChunk();
 	int paramCount = file.read_int32();
 	file.exitChunk();
+
 	for (int i = 0; i < paramCount; ++i)
 	{
 		file.enterChunk();
 		file.read_string(paramName, MAX_NAME_SIZE);
-		if (strcmp(paramName, "objectName") == 0)
+
+		switch (runtimeCrc(paramName)) {
+		case constcrc("objectName"):
 			m_objectName.loadFromIff(file);
-		else if (strcmp(paramName, "detailedDescription") == 0)
+			break;
+		case constcrc("detailedDescription"):
 			m_detailedDescription.loadFromIff(file);
-		else if (strcmp(paramName, "lookAtText") == 0)
+			break;
+		case constcrc("lookAtText"):
 			m_lookAtText.loadFromIff(file);
-		else if (strcmp(paramName, "snapToTerrain") == 0)
+			break;
+		case constcrc("snapToTerrain"):
 			m_snapToTerrain.loadFromIff(file);
-		else if (strcmp(paramName, "containerType") == 0)
+			break;
+		case constcrc("containerType"):
 			m_containerType.loadFromIff(file);
-		else if (strcmp(paramName, "containerVolumeLimit") == 0)
+			break;
+		case constcrc("containerVolumeLimit"):
 			m_containerVolumeLimit.loadFromIff(file);
-		else if (strcmp(paramName, "tintPalette") == 0)
+			break;
+		case constcrc("tintPalette"):
 			m_tintPalette.loadFromIff(file);
-		else if (strcmp(paramName, "slotDescriptorFilename") == 0)
+			break;
+		case constcrc("slotDescriptorFilename"):
 			m_slotDescriptorFilename.loadFromIff(file);
-		else if (strcmp(paramName, "arrangementDescriptorFilename") == 0)
+			break;
+		case constcrc("arrangementDescriptorFilename"):
 			m_arrangementDescriptorFilename.loadFromIff(file);
-		else if (strcmp(paramName, "appearanceFilename") == 0)
+			break;
+		case constcrc("appearanceFilename"):
 			m_appearanceFilename.loadFromIff(file);
-		else if (strcmp(paramName, "portalLayoutFilename") == 0)
+			break;
+		case constcrc("portalLayoutFilename"):
 			m_portalLayoutFilename.loadFromIff(file);
-		else if (strcmp(paramName, "clientDataFile") == 0)
+			break;
+		case constcrc("clientDataFile"):
 			m_clientDataFile.loadFromIff(file);
-		else if (strcmp(paramName, "scale") == 0)
+			break;
+		case constcrc("scale"):
 			m_scale.loadFromIff(file);
-		else if (strcmp(paramName, "gameObjectType") == 0)
+			break;
+		case constcrc("gameObjectType"):
 			m_gameObjectType.loadFromIff(file);
-		else if (strcmp(paramName, "sendToClient") == 0)
+			break;
+		case constcrc("sendToClient"):
 			m_sendToClient.loadFromIff(file);
-		else if (strcmp(paramName, "scaleThresholdBeforeExtentTest") == 0)
+			break;
+		case constcrc("scaleThresholdBeforeExtentTest"):
 			m_scaleThresholdBeforeExtentTest.loadFromIff(file);
-		else if (strcmp(paramName, "clearFloraRadius") == 0)
+			break;
+		case constcrc("clearFloraRadius"):
 			m_clearFloraRadius.loadFromIff(file);
-		else if (strcmp(paramName, "surfaceType") == 0)
+			break;
+		case constcrc("surfaceType"):
 			m_surfaceType.loadFromIff(file);
-		else if (strcmp(paramName, "noBuildRadius") == 0)
+			break;
+		case constcrc("noBuildRadius"):
 			m_noBuildRadius.loadFromIff(file);
-		else if (strcmp(paramName, "onlyVisibleInTools") == 0)
+			break;
+		case constcrc("onlyVisibleInTools"):
 			m_onlyVisibleInTools.loadFromIff(file);
-		else if (strcmp(paramName, "locationReservationRadius") == 0)
+			break;
+		case constcrc("locationReservationRadius"):
 			m_locationReservationRadius.loadFromIff(file);
-		else if (strcmp(paramName, "forceNoCollision") == 0)
+			break;
+		case constcrc("forceNoCollision"):
 			m_forceNoCollision.loadFromIff(file);
+			break;
+		}
+
 		file.exitChunk(true);
 	}
 
