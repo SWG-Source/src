@@ -14,8 +14,17 @@
 #include "sharedRandom/SetupSharedRandom.h"
 #include "sharedThread/SetupSharedThread.h"
 
+#ifdef ENABLE_PROFILING
+extern "C" int __llvm_profile_write_file(void);
+#endif
+
 inline void signalHandler(int s){
     printf("ConnectionServer terminating, signal %d\n",s);
+
+#ifdef ENABLE_PROFILING
+    __llvm_profile_write_file();
+#endif
+
     exit(0);
 }
 
@@ -66,6 +75,10 @@ int main(int argc, char ** argv)
 	NetworkHandler::remove();
 	SetupSharedFoundation::remove();
 	SetupSharedThread::remove();
+
+#ifdef ENABLE_PROFILING
+    __llvm_profile_write_file();
+#endif
 	
 	return 0;
 }

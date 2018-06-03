@@ -15,8 +15,17 @@
 #include "sharedRandom/SetupSharedRandom.h"
 #include "sharedThread/SetupSharedThread.h"
 
+#ifdef ENABLE_PROFILING
+extern "C" int __llvm_profile_write_file(void);
+#endif
+
 inline void signalHandler(int s){
     printf("TaskManager terminating, signal %d\n",s);
+
+#ifdef ENABLE_PROFILING
+    __llvm_profile_write_file();
+#endif
+
     exit(0);
 }
 
@@ -24,7 +33,7 @@ inline void signalHandler(int s){
 
 int main(int argc, char ** argv)
 {
-	struct sigaction sigIntHandler;
+    struct sigaction sigIntHandler;
     sigIntHandler.sa_handler = signalHandler;
     sigemptyset(&sigIntHandler.sa_mask);
     sigIntHandler.sa_flags = 0;
@@ -53,6 +62,10 @@ int main(int argc, char ** argv)
 	TaskManager::run();
 	TaskManager::remove();
 	SetupSharedFoundation::remove();
+
+#ifdef ENABLE_PROFILING
+    __llvm_profile_write_file();
+#endif
 
 	return 0;
 }

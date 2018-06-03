@@ -16,8 +16,17 @@
 #include "sharedThread/SetupSharedThread.h"
 #include "sharedUtility/SetupSharedUtility.h"
 
+#ifdef ENABLE_PROFILING
+extern "C" int __llvm_profile_write_file(void);
+#endif
+
 inline void signalHandler(int s){
     printf("PlanetServer terminating, signal %d\n",s);
+
+#ifdef ENABLE_PROFILING
+    __llvm_profile_write_file();
+#endif
+
     exit(0);
 }
 
@@ -78,6 +87,10 @@ int main(int argc, char ** argv)
 	SetupSharedLog::remove();
 	SetupSharedFoundation::remove();
 	SetupSharedThread::remove();
+
+#ifdef ENABLE_PROFILING
+    __llvm_profile_write_file();
+#endif
 
 	return 0;
 }
