@@ -1,3 +1,5 @@
+#include <signal.h>
+
 #include "sharedFoundation/FirstSharedFoundation.h"
 
 #include "ConfigCentralServer.h"
@@ -30,7 +32,7 @@ inline void signalHandler(int s){
 
 int main(int argc, char ** argv)
 {
-        struct sigaction sigIntHandler;
+    struct sigaction sigIntHandler;
     sigIntHandler.sa_handler = signalHandler;
     sigemptyset(&sigIntHandler.sa_mask);
     sigIntHandler.sa_flags = 0;
