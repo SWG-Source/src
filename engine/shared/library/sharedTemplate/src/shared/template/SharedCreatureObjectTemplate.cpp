@@ -103,7 +103,7 @@ SharedCreatureObjectTemplate::getCompilerIntegerParam(const char *name, bool dee
             }
             fprintf(stderr, "trying to access single-parameter \"gender\" as an array\n");
         }
-            name;
+            break;
         case constcrc("niche"): {
             if (index == 0) {
                 if (deepCheck && !isParamLoaded(name, false, 0)) {
@@ -115,7 +115,7 @@ SharedCreatureObjectTemplate::getCompilerIntegerParam(const char *name, bool dee
             }
             fprintf(stderr, "trying to access single-parameter \"niche\" as an array\n");
         }
-            name;
+            break;
         case constcrc("species"): {
             if (index == 0) {
                 if (deepCheck && !isParamLoaded(name, false, 0)) {
@@ -127,7 +127,7 @@ SharedCreatureObjectTemplate::getCompilerIntegerParam(const char *name, bool dee
             }
             fprintf(stderr, "trying to access single-parameter \"species\" as an array\n");
         }
-            name;
+            break;
         case constcrc("race"): {
             if (index == 0) {
                 if (deepCheck && !isParamLoaded(name, false, 0)) {
@@ -139,7 +139,7 @@ SharedCreatureObjectTemplate::getCompilerIntegerParam(const char *name, bool dee
             }
             fprintf(stderr, "trying to access single-parameter \"race\" as an array\n");
         }
-            name;
+            break;
         default:
             return SharedTangibleObjectTemplate::getCompilerIntegerParam(name, deepCheck, index);
             break;
@@ -160,7 +160,7 @@ FloatParam *SharedCreatureObjectTemplate::getFloatParam(const char *name, bool d
             }
             fprintf(stderr, "index for parameter \"acceleration\" out of bounds\n");
         }
-            name;
+            break;
         case constcrc("speed"): {
             if (index >= 0 && index < 2) {
                 if (deepCheck && !isParamLoaded(name, false, index)) {
@@ -172,7 +172,7 @@ FloatParam *SharedCreatureObjectTemplate::getFloatParam(const char *name, bool d
             }
             fprintf(stderr, "index for parameter \"speed\" out of bounds\n");
         }
-            name;
+            break;
         case constcrc("turnRate"): {
             if (index >= 0 && index < 2) {
                 if (deepCheck && !isParamLoaded(name, false, index)) {
@@ -184,7 +184,7 @@ FloatParam *SharedCreatureObjectTemplate::getFloatParam(const char *name, bool d
             }
             fprintf(stderr, "index for parameter \"turnRate\" out of bounds\n");
         }
-            name;
+            break;
         case constcrc("slopeModAngle"): {
             if (index == 0) {
                 if (deepCheck && !isParamLoaded(name, false, 0)) {
@@ -196,7 +196,7 @@ FloatParam *SharedCreatureObjectTemplate::getFloatParam(const char *name, bool d
             }
             fprintf(stderr, "trying to access single-parameter \"slopeModAngle\" as an array\n");
         }
-            name;
+            break;
         case constcrc("slopeModPercent"): {
             if (index == 0) {
                 if (deepCheck && !isParamLoaded(name, false, 0)) {
@@ -208,7 +208,7 @@ FloatParam *SharedCreatureObjectTemplate::getFloatParam(const char *name, bool d
             }
             fprintf(stderr, "trying to access single-parameter \"slopeModPercent\" as an array\n");
         }
-            name;
+            break;
         case constcrc("waterModPercent"): {
             if (index == 0) {
                 if (deepCheck && !isParamLoaded(name, false, 0)) {
@@ -220,7 +220,7 @@ FloatParam *SharedCreatureObjectTemplate::getFloatParam(const char *name, bool d
             }
             fprintf(stderr, "trying to access single-parameter \"waterModPercent\" as an array\n");
         }
-            name;
+            break;
         case constcrc("stepHeight"): {
             if (index == 0) {
                 if (deepCheck && !isParamLoaded(name, false, 0)) {
@@ -232,7 +232,7 @@ FloatParam *SharedCreatureObjectTemplate::getFloatParam(const char *name, bool d
             }
             fprintf(stderr, "trying to access single-parameter \"stepHeight\" as an array\n");
         }
-            name;
+            break;
         case constcrc("collisionHeight"): {
             if (index == 0) {
                 if (deepCheck && !isParamLoaded(name, false, 0)) {
@@ -244,7 +244,7 @@ FloatParam *SharedCreatureObjectTemplate::getFloatParam(const char *name, bool d
             }
             fprintf(stderr, "trying to access single-parameter \"collisionHeight\" as an array\n");
         }
-            name;
+            break;
         case constcrc("collisionRadius"): {
             if (index == 0) {
                 if (deepCheck && !isParamLoaded(name, false, 0)) {
@@ -256,7 +256,7 @@ FloatParam *SharedCreatureObjectTemplate::getFloatParam(const char *name, bool d
             }
             fprintf(stderr, "trying to access single-parameter \"collisionRadius\" as an array\n");
         }
-            name;
+            break;
         case constcrc("swimHeight"): {
             if (index == 0) {
                 if (deepCheck && !isParamLoaded(name, false, 0)) {
@@ -268,7 +268,7 @@ FloatParam *SharedCreatureObjectTemplate::getFloatParam(const char *name, bool d
             }
             fprintf(stderr, "trying to access single-parameter \"swimHeight\" as an array\n");
         }
-            name;
+            break;
         case constcrc("warpTolerance"): {
             if (index == 0) {
                 if (deepCheck && !isParamLoaded(name, false, 0)) {
@@ -280,7 +280,7 @@ FloatParam *SharedCreatureObjectTemplate::getFloatParam(const char *name, bool d
             }
             fprintf(stderr, "trying to access single-parameter \"warpTolerance\" as an array\n");
         }
-            name;
+            break;
         case constcrc("collisionOffsetX"): {
             if (index == 0) {
                 if (deepCheck && !isParamLoaded(name, false, 0)) {
@@ -292,7 +292,7 @@ FloatParam *SharedCreatureObjectTemplate::getFloatParam(const char *name, bool d
             }
             fprintf(stderr, "trying to access single-parameter \"collisionOffsetX\" as an array\n");
         }
-            name;
+            break;
         case constcrc("collisionOffsetZ"): {
             if (index == 0) {
                 if (deepCheck && !isParamLoaded(name, false, 0)) {
@@ -304,7 +304,7 @@ FloatParam *SharedCreatureObjectTemplate::getFloatParam(const char *name, bool d
             }
             fprintf(stderr, "trying to access single-parameter \"collisionOffsetZ\" as an array\n");
         }
-            name;
+            break;
         case constcrc("collisionLength"): {
             if (index == 0) {
                 if (deepCheck && !isParamLoaded(name, false, 0)) {
@@ -316,7 +316,7 @@ FloatParam *SharedCreatureObjectTemplate::getFloatParam(const char *name, bool d
             }
             fprintf(stderr, "trying to access single-parameter \"collisionLength\" as an array\n");
         }
-            name;
+            break;
         case constcrc("cameraHeight"): {
             if (index == 0) {
                 if (deepCheck && !isParamLoaded(name, false, 0)) {
@@ -328,7 +328,7 @@ FloatParam *SharedCreatureObjectTemplate::getFloatParam(const char *name, bool d
             }
             fprintf(stderr, "trying to access single-parameter \"cameraHeight\" as an array\n");
         }
-            name;
+            break;
         default:
             return SharedTangibleObjectTemplate::getFloatParam(name, deepCheck, index);
             break;

@@ -234,7 +234,7 @@ void SharedDraftSchematicObjectTemplate::setAppend(const char *name) {
 
 bool SharedDraftSchematicObjectTemplate::isAppend(const char *name) const {
     switch (runtimeCrc(name)) {
-        case cosntcrc("slots"):
+        case constcrc("slots"):
             return m_slotsAppend;
             break;
         case constcrc("attributes"):

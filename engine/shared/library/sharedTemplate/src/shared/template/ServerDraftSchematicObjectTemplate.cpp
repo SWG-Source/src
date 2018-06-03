@@ -860,32 +860,41 @@ void ServerDraftSchematicObjectTemplate::_IngredientSlot::load(Iff &file) {
     for (int i = 0; i < paramCount; ++i) {
         file.enterChunk();
         file.read_string(paramName, MAX_NAME_SIZE);
-        if (strcmp(paramName, "optional") == 0)
-            m_optional.loadFromIff(file);
-        case constcrc("name"):
-            m_name.loadFromIff(file);
-        case constcrc("options"): {
-            std::vector<StructParamOT *>::iterator iter;
-            for (iter = m_options.begin(); iter != m_options.end(); ++iter) {
-                delete *iter;
-                *iter = nullptr;
-            }
-            m_options.clear();
-            m_optionsAppend = file.read_bool8();
-            int listCount = file.read_int32();
-            for (int j = 0; j < listCount; ++j) {
-                StructParamOT *newData = new StructParamOT;
-                newData->loadFromIff(file);
-                m_options.push_back(newData);
-            }
-            m_optionsLoaded = true;
-        }
-        case constcrc("optionalSkillCommand"):
-            m_optionalSkillCommand.loadFromIff(file);
-        case constcrc("complexity"):
-            m_complexity.loadFromIff(file);
-        case constcrc("appearance"):
-            m_appearance.loadFromIff(file);
+
+	switch(runtimeCrc(paramName)) {
+	        case constcrc("optional"):
+	            m_optional.loadFromIff(file);
+		    break;
+	        case constcrc("name"):
+	            m_name.loadFromIff(file);
+		    break;
+	        case constcrc("options"): {
+	            std::vector<StructParamOT *>::iterator iter;
+	            for (iter = m_options.begin(); iter != m_options.end(); ++iter) {
+	                delete *iter;
+	                *iter = nullptr;
+	            }
+	            m_options.clear();
+	            m_optionsAppend = file.read_bool8();
+	            int listCount = file.read_int32();
+        	    for (int j = 0; j < listCount; ++j) {
+	                StructParamOT *newData = new StructParamOT;
+	                newData->loadFromIff(file);
+	                m_options.push_back(newData);
+	            }
+	            m_optionsLoaded = true;
+	        }
+		break;
+	        case constcrc("optionalSkillCommand"):
+	            m_optionalSkillCommand.loadFromIff(file);
+		    break;
+	        case constcrc("complexity"):
+	            m_complexity.loadFromIff(file);
+		    break;
+	        case constcrc("appearance"):
+	            m_appearance.loadFromIff(file);
+		    break;
+	}
         file.exitChunk(true);
     }
 

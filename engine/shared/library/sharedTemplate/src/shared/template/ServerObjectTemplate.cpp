@@ -1100,16 +1100,24 @@ void ServerObjectTemplate::_AttribMod::load(Iff &file) {
     for (int i = 0; i < paramCount; ++i) {
         file.enterChunk();
         file.read_string(paramName, MAX_NAME_SIZE);
-        if (strcmp(paramName, "target") == 0)
-            m_target.loadFromIff(file);
-        case constcrc("value"):
-            m_value.loadFromIff(file);
-        case constcrc("time"):
-            m_time.loadFromIff(file);
-        case constcrc("timeAtValue"):
-            m_timeAtValue.loadFromIff(file);
-        case constcrc("decay"):
-            m_decay.loadFromIff(file);
+
+	switch(runtimeCrc(paramName)) {
+	        case constcrc("target"):
+	            m_target.loadFromIff(file);
+			break;
+	        case constcrc("value"):
+	            m_value.loadFromIff(file);
+			break;
+	        case constcrc("time"):
+	            m_time.loadFromIff(file);
+			break;
+	        case constcrc("timeAtValue"):
+	            m_timeAtValue.loadFromIff(file);
+			break;
+	        case constcrc("decay"):
+	            m_decay.loadFromIff(file);
+			break;
+	}
         file.exitChunk(true);
     }
 
@@ -1334,12 +1342,18 @@ void ServerObjectTemplate::_Contents::load(Iff &file) {
     for (int i = 0; i < paramCount; ++i) {
         file.enterChunk();
         file.read_string(paramName, MAX_NAME_SIZE);
-        if (strcmp(paramName, "slotName") == 0)
-            m_slotName.loadFromIff(file);
-        case constcrc("equipObject"):
-            m_equipObject.loadFromIff(file);
-        case constcrc("content"):
-            m_content.loadFromIff(file);
+        
+	switch(runtimeCrc(paramName)) {
+		case constcrc("slotName"):
+        	    m_slotName.loadFromIff(file);
+			break;
+	        case constcrc("equipObject"):
+        	    m_equipObject.loadFromIff(file);
+			break;
+	        case constcrc("content"):
+        	    m_content.loadFromIff(file);
+			break;
+	}
         file.exitChunk(true);
     }
 
@@ -1576,16 +1590,24 @@ void ServerObjectTemplate::_MentalStateMod::load(Iff &file) {
     for (int i = 0; i < paramCount; ++i) {
         file.enterChunk();
         file.read_string(paramName, MAX_NAME_SIZE);
-        if (strcmp(paramName, "target") == 0)
-            m_target.loadFromIff(file);
-        case constcrc("value"):
-            m_value.loadFromIff(file);
-        case constcrc("time"):
-            m_time.loadFromIff(file);
-        case constcrc("timeAtValue"):
-            m_timeAtValue.loadFromIff(file);
-        case constcrc("decay"):
-            m_decay.loadFromIff(file);
+
+	switch(runtimeCrc(paramName)) {
+	        case constcrc("target"):
+        	    m_target.loadFromIff(file);
+			break;
+	        case constcrc("value"):
+        	    m_value.loadFromIff(file);
+			break;
+	        case constcrc("time"):
+        	    m_time.loadFromIff(file);
+			break;
+	        case constcrc("timeAtValue"):	
+        	    m_timeAtValue.loadFromIff(file);
+			break;
+	        case constcrc("decay"):
+        	    m_decay.loadFromIff(file);
+			break;
+	}
         file.exitChunk(true);
     }
 

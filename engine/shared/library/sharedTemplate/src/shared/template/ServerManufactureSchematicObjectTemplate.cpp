@@ -640,10 +640,16 @@ void ServerManufactureSchematicObjectTemplate::_IngredientSlot::load(Iff &file) 
     for (int i = 0; i < paramCount; ++i) {
         file.enterChunk();
         file.read_string(paramName, MAX_NAME_SIZE);
-        if (strcmp(paramName, "name") == 0)
-            m_name.loadFromIff(file);
-        case constcrc("ingredient"):
-            m_ingredient.loadFromIff(file);
+
+	switch(runtimeCrc(paramName)) {
+		case constcrc("name"):
+	            m_name.loadFromIff(file);
+		    break;
+	        case constcrc("ingredient"):
+        	    m_ingredient.loadFromIff(file);
+		    break;
+	}
+
         file.exitChunk(true);
     }
 

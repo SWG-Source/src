@@ -592,10 +592,15 @@ void ServerArmorTemplate::_SpecialProtection::load(Iff &file) {
     for (int i = 0; i < paramCount; ++i) {
         file.enterChunk();
         file.read_string(paramName, MAX_NAME_SIZE);
-        case constcrc("type"):
-            m_type.loadFromIff(file);
-        case constcrc("effectiveness"):
-            m_effectiveness.loadFromIff(file);
+
+	switch(runtimeCrc(paramName)) {
+	        case constcrc("type"):
+        	    m_type.loadFromIff(file);
+		    break;
+	        case constcrc("effectiveness"):
+        	    m_effectiveness.loadFromIff(file);
+		    break;
+	}
         file.exitChunk(true);
     }
 
