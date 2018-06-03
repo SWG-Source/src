@@ -6,8 +6,6 @@ add_library(webAPI
 	webAPI.h
 	webAPI.cpp
 	json.hpp
-	webAPIHeartbeat.h
-	webAPIHeartbeat.cpp
 )
 
 include_directories(
