@@ -8,11 +8,7 @@
 #include "LoginServer.h"
 
 #include "sharedCompression/SetupSharedCompression.h"
-
-#ifdef _DEBUG
 #include "sharedDebug/SetupSharedDebug.h"
-#endif 
-
 #include "sharedFile/SetupSharedFile.h"
 #include "sharedFoundation/ConfigFile.h"
 #include "sharedFoundation/Os.h"
@@ -40,10 +36,7 @@ int main(int argc, char **argv) {
 #endif
 
     SetupSharedThread::install();
-    
-#ifdef _DEBUG
     SetupSharedDebug::install(1024);
-#endif
 
     //-- setup foundation
     SetupSharedFoundation::Data setupFoundationData(SetupSharedFoundation::Data::D_game);
