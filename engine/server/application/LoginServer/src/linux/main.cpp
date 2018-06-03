@@ -66,8 +66,8 @@ int main(int argc, char **argv) {
     SetupSharedFoundation::remove();
 
 #ifdef ENABLE_PROFILING
-    __llvm_profile_write_file();
+	__llvm_profile_write_file();
+	exit(0);
 #endif
-
     return 0;
 }
