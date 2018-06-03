@@ -3,6 +3,7 @@
 // Author: Justin Randall
 
 //-----------------------------------------------------------------------
+#include <signal.h>
 
 #include "FirstCommodityServer.h"
 
@@ -27,10 +28,21 @@
 #include "LocalizationManager.h"
 #include "UnicodeUtils.h"
 
+inline void signalHandler(int s){
+    printf("CommoditiesServer terminating, signal %d\n",s);
+    exit(0);
+}
+
 //-----------------------------------------------------------------------
 
 int main(int argc, char ** argv)
 {
+	struct sigaction sigIntHandler;
+    sigIntHandler.sa_handler = signalHandler;
+    sigemptyset(&sigIntHandler.sa_mask);
+    sigIntHandler.sa_flags = 0;
+    sigaction(SIGINT, &sigIntHandler, NULL);
+
 	SetupSharedThread::install();
 	SetupSharedDebug::install(1024);
 

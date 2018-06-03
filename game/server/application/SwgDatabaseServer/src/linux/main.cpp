@@ -1,3 +1,5 @@
+#include <signal.h>
+
 #include "FirstSwgDatabaseServer.h"
 
 #include "SwgDatabaseServer/SwgDatabaseServer.h"
@@ -19,6 +21,11 @@
 #include "swgSharedNetworkMessages/SetupSwgSharedNetworkMessages.h"
 #include "swgServerNetworkMessages/SetupSwgServerNetworkMessages.h"
 
+inline void signalHandler(int s){
+    printf("SwgDatabaseServer terminating, signal %d\n",s);
+    exit(0);
+}
+
 // ======================================================================
 
 void dumpPid(const char * argv)
@@ -32,6 +39,12 @@ void dumpPid(const char * argv)
 
 int main(int argc, char ** argv)
 {
+	struct sigaction sigIntHandler;
+    sigIntHandler.sa_handler = signalHandler;
+    sigemptyset(&sigIntHandler.sa_mask);
+    sigIntHandler.sa_flags = 0;
+    sigaction(SIGINT, &sigIntHandler, NULL);
+
 //	dumpPid(argv[0]);
 
 	SetupSharedThread::install();
@@ -71,10 +84,6 @@ int main(int argc, char ** argv)
 
 	SetupSharedFoundation::remove();
 	SetupSharedThread::remove();
-
-#ifdef ENABLE_PROFILING
-	exit(0);
-#endif
 
 	return 0;
 }

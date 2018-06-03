@@ -1,3 +1,5 @@
+#include <signal.h>
+
 #include "FirstConnectionServer.h"
 #include "ConfigConnectionServer.h"
 #include "ConnectionServer.h"
@@ -12,6 +14,11 @@
 #include "sharedRandom/SetupSharedRandom.h"
 #include "sharedThread/SetupSharedThread.h"
 
+inline void signalHandler(int s){
+    printf("ConnectionServer terminating, signal %d\n",s);
+    exit(0);
+}
+
 // ======================================================================
 
 void dumpPid(const char * argv)
@@ -25,6 +32,12 @@ void dumpPid(const char * argv)
 
 int main(int argc, char ** argv)
 {
+	struct sigaction sigIntHandler;
+    sigIntHandler.sa_handler = signalHandler;
+    sigemptyset(&sigIntHandler.sa_mask);
+    sigIntHandler.sa_flags = 0;
+    sigaction(SIGINT, &sigIntHandler, NULL);
+
 	SetupSharedThread::install();
 	SetupSharedDebug::install(1024);
 
@@ -53,10 +66,6 @@ int main(int argc, char ** argv)
 	NetworkHandler::remove();
 	SetupSharedFoundation::remove();
 	SetupSharedThread::remove();
-
-#ifdef ENABLE_PROFILING
-	exit(0);
-#endif
 	
 	return 0;
 }

@@ -1,9 +1,6 @@
-#include "sharedFoundation/FirstSharedFoundation.h"
-
-#ifdef ENABLE_PROFILING
 #include <signal.h>
-#endif
 
+#include "sharedFoundation/FirstSharedFoundation.h"
 #include "ConfigLoginServer.h"
 #include "LoginServer.h"
 
@@ -19,21 +16,17 @@
 
 // ======================================================================
 
-#ifdef ENABLE_PROFILING
 inline void signalHandler(int s){
     printf("LoginServer terminating, signal %d\n",s);
     exit(0);
 }
-#endif
 
 int main(int argc, char **argv) {
-#ifdef ENABLE_PROFILING
     struct sigaction sigIntHandler;
     sigIntHandler.sa_handler = signalHandler;
     sigemptyset(&sigIntHandler.sa_mask);
     sigIntHandler.sa_flags = 0;
     sigaction(SIGINT, &sigIntHandler, NULL);
-#endif
 
     SetupSharedThread::install();
     SetupSharedDebug::install(1024);

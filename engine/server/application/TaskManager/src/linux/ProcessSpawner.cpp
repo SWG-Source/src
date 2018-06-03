@@ -152,7 +152,7 @@ bool ProcessSpawner::isProcessActive(uint32 pid)
 
 void ProcessSpawner::kill(uint32 pid)
 {
-    IGNORE_RETURN(::kill(static_cast<int>(pid), SIGKILL));
+    IGNORE_RETURN(::kill(static_cast<int>(pid), SIGTERM));
 	int status;
 	IGNORE_RETURN(waitpid(static_cast<int>(pid), &status, 0));
 }
