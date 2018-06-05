@@ -3193,8 +3193,10 @@ namespace ChatSystem
 		}
 		else
 		{
-			// no avatars to relogin, so directly proceed to failover rooms
 			failoverRecreateRooms();
+			m_inFailoverMode = false;
+			m_api->OnFailoverComplete();
+			resumeProcessing();
 		}
 	}
 
