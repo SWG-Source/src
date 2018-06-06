@@ -3191,13 +3191,12 @@ namespace ChatSystem
 				failoverReloginOneAvatar(avatarIter->second);
 			}
 		}
-		else
-		{
-			failoverRecreateRooms();
-			m_inFailoverMode = false;
-			m_api->OnFailoverComplete();
-			resumeProcessing();
-		}
+		// @TODO: figure out why m_avatarCoreCache isn't emptying after failover relogging all avatars
+		// @TODO: implement failoverRecreateRooms in stationchat
+		failoverRecreateRooms();
+		m_inFailoverMode = false;
+		m_api->OnFailoverComplete();
+		resumeProcessing();
 	}
 
 	void ChatAPICore::failoverReloginOneAvatar(ChatAvatarCore * avatarCore)
