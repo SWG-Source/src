@@ -1448,62 +1448,50 @@ void PlayerCreatureController::handleMessage (const int message, const float val
 				{
 					Object const * const terminalO = NetworkIdManager::getObjectById(msg->getValue());
 					ServerObject const * const terminal = terminalO ? terminalO->asServerObject() : nullptr;
-					if(terminal)
+					if (terminal)
 					{
 						Client const * const client = owner->getClient();
-						if(!client)
+						if (!client)
 						{
 							Chat::sendSystemMessage(*owner, Unicode::narrowToWide("(unlocalized) Could not get the player for finding ship parking data, unexpected behavior may occur."), Unicode::emptyString);
 							return;
 						}
 						typedef std::vector<std::pair<NetworkId, std::string > > Payload;
 						Payload outData;
-						if(!client->isGod())
-						{
-							Object const * const buildingO = ContainerInterface::getTopmostContainer(*terminal);
-							ServerObject const * const building = buildingO ? buildingO->asServerObject() : nullptr;
-							if(building)
-							{
-								DynamicVariableList const & buildingObjVars = building->getObjVars();
-								std::string terminalParkingLocation;
-								bool const result = buildingObjVars.getItem("travel.point_name", terminalParkingLocation);
+						Object const * const buildingO = ContainerInterface::getTopmostContainer(*terminal);
+						ServerObject const * const building = buildingO ? buildingO->asServerObject() : nullptr;
+						if (building) {
+							DynamicVariableList const & buildingObjVars = building->getObjVars();
+							std::string terminalParkingLocation;
+							bool const result = buildingObjVars.getItem("travel.point_name", terminalParkingLocation);
 
-								if(result)
-									outData.push_back(std::make_pair(terminal->getNetworkId(), terminalParkingLocation));
-								else
-									Chat::sendSystemMessage(*owner, Unicode::narrowToWide("(unlocalized) This terminal is not registered with the planet, unexpected behavior may occur."), Unicode::emptyString);
+							if (result)
+								outData.push_back(std::make_pair(terminal->getNetworkId(), terminalParkingLocation));
+							else
+								Chat::sendSystemMessage(*owner, Unicode::narrowToWide("(unlocalized) This terminal is not registered with the planet, unexpected behavior may occur."), Unicode::emptyString);
 
-								std::vector<NetworkId> ships;
-								owner->getAllShipsInDatapad(ships);
-								for(std::vector<NetworkId>::const_iterator i = ships.begin(); i != ships.end(); ++i)
-								{
-									Object const * const shipO = NetworkIdManager::getObjectById(*i);
-									ServerObject const * const shipSO = shipO ? shipO->asServerObject() : nullptr;
-									ShipObject const * const ship = shipSO ? shipSO->asShipObject() : nullptr;
-									if(ship)
-									{
-										ContainedByProperty const * const contained = ship->getContainedByProperty();
-										Object const * const containerO = contained ? contained->getContainedBy() : nullptr;
-										ServerObject const * const container = containerO ? containerO->asServerObject() : nullptr;
-										if(container)
-										{
-											DynamicVariableList const & shipControlDeviceObjVars = container->getObjVars();
-											std::string shipParkingLocation;
-											IGNORE_RETURN(shipControlDeviceObjVars.getItem("strParkingLocation", shipParkingLocation));
-											//push the data in, even if the parking location is empty (empty is acceptable, and used for newly-created ships)
-											outData.push_back(std::make_pair(ship->getNetworkId(), shipParkingLocation));
-										}
+							std::vector<NetworkId> ships;
+							owner->getAllShipsInDatapad(ships);
+							for (std::vector<NetworkId>::const_iterator i = ships.begin(); i != ships.end(); ++i) {
+								Object const * const shipO = NetworkIdManager::getObjectById(*i);
+								ServerObject const * const shipSO = shipO ? shipO->asServerObject() : nullptr;
+								ShipObject const * const ship = shipSO ? shipSO->asShipObject() : nullptr;
+								if (ship) {
+									ContainedByProperty const * const contained = ship->getContainedByProperty();
+									Object const * const containerO = contained ? contained->getContainedBy() : nullptr;
+									ServerObject const * const container = containerO ? containerO->asServerObject() : nullptr;
+									if(container) {
+										DynamicVariableList const & shipControlDeviceObjVars = container->getObjVars();
+										std::string shipParkingLocation;
+										IGNORE_RETURN(shipControlDeviceObjVars.getItem("strParkingLocation", shipParkingLocation));
+										//push the data in, even if the parking location is empty (empty is acceptable, and used for newly-created ships)
+										outData.push_back(std::make_pair(ship->getNetworkId(), shipParkingLocation));
 									}
 								}
 							}
-							else
-							{
-								Chat::sendSystemMessage(*owner, Unicode::narrowToWide("(unlocalized) Could not find building that space terminal is in, cannot resolve parking information."), Unicode::emptyString);
-							}
 						}
-						else
-						{
-							Chat::sendSystemMessage(*owner, Unicode::narrowToWide("(unlocalized) Bypassing ship parking location checks due to GOD mode."), Unicode::emptyString);
+						else {
+							Chat::sendSystemMessage(*owner, Unicode::narrowToWide("(unlocalized) Could not find building that space terminal is in, cannot resolve parking information."), Unicode::emptyString);
 						}
 						MessageQueueGenericValueType<Payload> * const msg = new MessageQueueGenericValueType<Payload>(outData);
 						appendMessage(static_cast<int>(CM_spaceTerminalResponse), 0.0f, msg, GameControllerMessageFlags::SEND | GameControllerMessageFlags::RELIABLE | GameControllerMessageFlags::DEST_AUTH_CLIENT);
