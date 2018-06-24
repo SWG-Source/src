@@ -116,43 +116,43 @@ bool ShipComponentDataEngine::readDataFromComponent (TangibleObject const & comp
 	DynamicVariableList const &  objvars = component.getObjVars ();
 
 	if (!objvars.getItem (Objvars::engineAccelerationRate, m_engineAccelerationRate))
-		WARNING (true, ("ShipComponentDataEngine [%s] has no engineAccelerationRate [%s]", component.getNetworkId ().getValueString ().c_str (), Objvars::engineAccelerationRate.c_str ()));
+		DEBUG_WARNING (true, ("ShipComponentDataEngine [%s] has no engineAccelerationRate [%s]", component.getNetworkId ().getValueString ().c_str (), Objvars::engineAccelerationRate.c_str ()));
 
 	if (!objvars.getItem (Objvars::engineDecelerationRate, m_engineDecelerationRate))
-		WARNING (true, ("ShipComponentDataEngine [%s] has no engineDecelerationRate [%s]", component.getNetworkId ().getValueString ().c_str (), Objvars::engineDecelerationRate.c_str ()));
+		DEBUG_WARNING (true, ("ShipComponentDataEngine [%s] has no engineDecelerationRate [%s]", component.getNetworkId ().getValueString ().c_str (), Objvars::engineDecelerationRate.c_str ()));
 	
 	if (!objvars.getItem (Objvars::enginePitchAccelerationRate, m_enginePitchAccelerationRate))
-		WARNING (true, ("ShipComponentDataEngine [%s] has no enginePitchAccelerationRate [%s]", component.getNetworkId ().getValueString ().c_str (), Objvars::enginePitchAccelerationRate.c_str ()));
+		DEBUG_WARNING (true, ("ShipComponentDataEngine [%s] has no enginePitchAccelerationRate [%s]", component.getNetworkId ().getValueString ().c_str (), Objvars::enginePitchAccelerationRate.c_str ()));
 	else
 		m_enginePitchAccelerationRate = convertDegreesToRadians(m_enginePitchAccelerationRate);
 	
 	if (!objvars.getItem (Objvars::engineYawAccelerationRate, m_engineYawAccelerationRate))
-		WARNING (true, ("ShipComponentDataEngine [%s] has no engineYawAccelerationRate [%s]", component.getNetworkId ().getValueString ().c_str (), Objvars::engineYawAccelerationRate.c_str ()));
+		DEBUG_WARNING (true, ("ShipComponentDataEngine [%s] has no engineYawAccelerationRate [%s]", component.getNetworkId ().getValueString ().c_str (), Objvars::engineYawAccelerationRate.c_str ()));
 	else
 		m_engineYawAccelerationRate = convertDegreesToRadians(m_engineYawAccelerationRate);
 	
 	if (!objvars.getItem (Objvars::engineRollAccelerationRate, m_engineRollAccelerationRate))
-		WARNING (true, ("ShipComponentDataEngine [%s] has no engineRollAccelerationRate [%s]", component.getNetworkId ().getValueString ().c_str (), Objvars::engineRollAccelerationRate.c_str ()));
+		DEBUG_WARNING (true, ("ShipComponentDataEngine [%s] has no engineRollAccelerationRate [%s]", component.getNetworkId ().getValueString ().c_str (), Objvars::engineRollAccelerationRate.c_str ()));
 	else
 		m_engineRollAccelerationRate = convertDegreesToRadians(m_engineRollAccelerationRate);
 	
 	if (!objvars.getItem (Objvars::enginePitchRateMaximum, m_enginePitchRateMaximum))
-		WARNING (true, ("ShipComponentDataEngine [%s] has no enginePitchRateMaximum [%s]", component.getNetworkId ().getValueString ().c_str (), Objvars::enginePitchRateMaximum.c_str ()));
+		DEBUG_WARNING (true, ("ShipComponentDataEngine [%s] has no enginePitchRateMaximum [%s]", component.getNetworkId ().getValueString ().c_str (), Objvars::enginePitchRateMaximum.c_str ()));
 	else
 		m_enginePitchRateMaximum = convertDegreesToRadians(m_enginePitchRateMaximum);
 	
 	if (!objvars.getItem (Objvars::engineYawRateMaximum, m_engineYawRateMaximum))
-		WARNING (true, ("ShipComponentDataEngine [%s] has no engineYawRateMaximum [%s]", component.getNetworkId ().getValueString ().c_str (), Objvars::engineYawRateMaximum.c_str ()));
+		DEBUG_WARNING (true, ("ShipComponentDataEngine [%s] has no engineYawRateMaximum [%s]", component.getNetworkId ().getValueString ().c_str (), Objvars::engineYawRateMaximum.c_str ()));
 	else
 		m_engineYawRateMaximum = convertDegreesToRadians(m_engineYawRateMaximum);
 	
 	if (!objvars.getItem (Objvars::engineRollRateMaximum, m_engineRollRateMaximum))
-		WARNING (true, ("ShipComponentDataEngine [%s] has no engineRollRateMaximum [%s]", component.getNetworkId ().getValueString ().c_str (), Objvars::engineRollRateMaximum.c_str ()));
+		DEBUG_WARNING (true, ("ShipComponentDataEngine [%s] has no engineRollRateMaximum [%s]", component.getNetworkId ().getValueString ().c_str (), Objvars::engineRollRateMaximum.c_str ()));
 	else
 		m_engineRollRateMaximum = convertDegreesToRadians(m_engineRollRateMaximum);
 	
 	if (!objvars.getItem (Objvars::engineSpeedMaximum, m_engineSpeedMaximum))
-		WARNING (true, ("ShipComponentDataEngine [%s] has no engineSpeedMaximum [%s]", component.getNetworkId ().getValueString ().c_str (), Objvars::engineSpeedMaximum.c_str ()));
+		DEBUG_WARNING (true, ("ShipComponentDataEngine [%s] has no engineSpeedMaximum [%s]", component.getNetworkId ().getValueString ().c_str (), Objvars::engineSpeedMaximum.c_str ()));
 
 	if (!objvars.getItem(Objvars::engineSpeedRotationFactorMaximum, m_engineSpeedRotationFactorMaximum))
 	{
