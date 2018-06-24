@@ -600,7 +600,7 @@ AppearanceTemplate *AppearanceTemplateListNamespace::create(const char *const fi
 		{
 			char tagString[5];
 			ConvertTagToString(tag, tagString);
-			WARNING(true, ("AppearanceTemplate binding %s not found for file %s", tagString, actualFileName.getString()));
+			DEBUG_WARNING(true, ("AppearanceTemplate binding %s not found for file %s", tagString, actualFileName.getString()));
 		}
 	}
 
