@@ -104,32 +104,32 @@ bool ShipComponentDataWeapon::readDataFromComponent (TangibleObject const & comp
 	DynamicVariableList const &  objvars = component.getObjVars ();
 	
 	if (!objvars.getItem (Objvars::weaponDamageMaximum, m_weaponDamageMaximum))
-		WARNING (true, ("ShipComponentDataWeapon [%s] has no weaponDamageMaximum [%s]", component.getNetworkId ().getValueString ().c_str (), Objvars::weaponDamageMaximum.c_str ()));
+		DEBUG_WARNING (true, ("ShipComponentDataWeapon [%s] has no weaponDamageMaximum [%s]", component.getNetworkId ().getValueString ().c_str (), Objvars::weaponDamageMaximum.c_str ()));
 	
 	if (!objvars.getItem (Objvars::weaponDamageMinimum, m_weaponDamageMinimum))
-		WARNING (true, ("ShipComponentDataWeapon [%s] has no weaponDamageMinimum [%s]", component.getNetworkId ().getValueString ().c_str (), Objvars::weaponDamageMinimum.c_str ()));
+		DEBUG_WARNING (true, ("ShipComponentDataWeapon [%s] has no weaponDamageMinimum [%s]", component.getNetworkId ().getValueString ().c_str (), Objvars::weaponDamageMinimum.c_str ()));
 	
 	if (!objvars.getItem (Objvars::weaponEffectivenessShields, m_weaponEffectivenessShields))
-		WARNING (true, ("ShipComponentDataWeapon [%s] has no weaponEffectivenessShields [%s]", component.getNetworkId ().getValueString ().c_str (), Objvars::weaponEffectivenessShields.c_str ()));
+		DEBUG_WARNING (true, ("ShipComponentDataWeapon [%s] has no weaponEffectivenessShields [%s]", component.getNetworkId ().getValueString ().c_str (), Objvars::weaponEffectivenessShields.c_str ()));
 	
 	if (!objvars.getItem (Objvars::weaponEffectivenessArmor, m_weaponEffectivenessArmor))
-		WARNING (true, ("ShipComponentDataWeapon [%s] has no weaponEffectivenessArmor [%s]", component.getNetworkId ().getValueString ().c_str (), Objvars::weaponEffectivenessArmor.c_str ()));
+		DEBUG_WARNING (true, ("ShipComponentDataWeapon [%s] has no weaponEffectivenessArmor [%s]", component.getNetworkId ().getValueString ().c_str (), Objvars::weaponEffectivenessArmor.c_str ()));
 	
 	if (!objvars.getItem (Objvars::weaponEnergyPerShot, m_weaponEnergyPerShot))
-		WARNING (true, ("ShipComponentDataWeapon [%s] has no weaponEnergyPerShot [%s]", component.getNetworkId ().getValueString ().c_str (), Objvars::weaponEnergyPerShot.c_str ()));
+		DEBUG_WARNING (true, ("ShipComponentDataWeapon [%s] has no weaponEnergyPerShot [%s]", component.getNetworkId ().getValueString ().c_str (), Objvars::weaponEnergyPerShot.c_str ()));
 	
 	if (!objvars.getItem (Objvars::weaponRefireRate, m_weaponRefireRate))
-		WARNING (true, ("ShipComponentDataWeapon [%s] has no weaponRefireRate [%s]", component.getNetworkId ().getValueString ().c_str (), Objvars::weaponRefireRate.c_str ()));
+		DEBUG_WARNING (true, ("ShipComponentDataWeapon [%s] has no weaponRefireRate [%s]", component.getNetworkId ().getValueString ().c_str (), Objvars::weaponRefireRate.c_str ()));
 
 	if (!objvars.getItem (Objvars::weaponAmmoCurrent, m_weaponAmmoCurrent))
-		WARNING (true, ("ShipComponentDataWeapon [%s] has no m_weaponAmmoCurrent [%s]", component.getNetworkId ().getValueString ().c_str (), Objvars::weaponAmmoCurrent.c_str ()));
+		DEBUG_WARNING (true, ("ShipComponentDataWeapon [%s] has no m_weaponAmmoCurrent [%s]", component.getNetworkId ().getValueString ().c_str (), Objvars::weaponAmmoCurrent.c_str ()));
 
 	if (!objvars.getItem (Objvars::weaponAmmoMaximum, m_weaponAmmoMaximum))
-		WARNING (true, ("ShipComponentDataWeapon [%s] has no m_weaponAmmoMaximum [%s]", component.getNetworkId ().getValueString ().c_str (), Objvars::weaponAmmoMaximum.c_str ()));
+		DEBUG_WARNING (true, ("ShipComponentDataWeapon [%s] has no m_weaponAmmoMaximum [%s]", component.getNetworkId ().getValueString ().c_str (), Objvars::weaponAmmoMaximum.c_str ()));
 
 	int ammoType = 0;
 	if (!objvars.getItem (Objvars::weaponAmmoType, ammoType))
-		WARNING (true, ("ShipComponentDataWeapon [%s] has no m_weaponAmmoType [%s]", component.getNetworkId ().getValueString ().c_str (), Objvars::weaponAmmoType.c_str ()));
+		DEBUG_WARNING (true, ("ShipComponentDataWeapon [%s] has no m_weaponAmmoType [%s]", component.getNetworkId ().getValueString ().c_str (), Objvars::weaponAmmoType.c_str ()));
 	else
 		m_weaponAmmoType = static_cast<uint32>(ammoType);
 	
