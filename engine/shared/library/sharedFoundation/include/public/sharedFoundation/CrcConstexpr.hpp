@@ -3,6 +3,7 @@
 // CrcConstexpr.hpp
 //
 // adapted from Ross Williams' public domain crc code.
+// copied and modified to work as a constexpr by Darth
 //
 // Portions copyright 1998 Bootprint Entertainment
 // Portions copyright 2002 Sony Online Entertainment
