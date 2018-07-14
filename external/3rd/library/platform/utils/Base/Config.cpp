@@ -21,7 +21,7 @@ namespace Base
 bool CConfig::LoadFile(char * file)
 //-----------------------------------
 {
-	char ch;
+    char ch;
     FILE * fp;
 
     UnloadFile();
@@ -31,7 +31,7 @@ bool CConfig::LoadFile(char * file)
 	if (fp == nullptr || fp == (FILE *)-1)
 	{
 		//fprintf(stderr,"Failed to open config file %s!",file);
-		delete fp;
+		fclose(fp);
 		return false;
 	}
 
@@ -63,7 +63,7 @@ bool CConfig::LoadFile(char * file)
 	}
     pConfig[i] = 0; // mark end of file buffer
 
-	fclose(fp);
+    fclose(fp);
     return true;
 }
 
