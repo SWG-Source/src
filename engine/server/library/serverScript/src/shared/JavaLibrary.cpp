@@ -954,13 +954,13 @@ void JavaLibrary::install(void)
 	if (ms_instance == nullptr)
 	{
 		JavaLibrary *lib = new JavaLibrary;
-		if (lib != ms_instance)
+		if (lib)
 		{
-			if (ms_instance == nullptr)
-			{
-				delete lib;
-				if (ms_javaVmType != JV_none)
-					FATAL(true, ("Unable to initialize Java"));
+			ms_instance = lib;
+		} else {
+			delete lib;
+			if (ms_javaVmType != JV_none) {
+				FATAL(true, ("Unable to initialize Java"));
 			}
 		}
 	}
@@ -975,7 +975,7 @@ void JavaLibrary::install(void)
  */
 void JavaLibrary::remove(void)
 {
-	if (ms_instance != nullptr)
+	if (ms_instance)
 	{
 		JavaLibrary * temp = ms_instance;
 		ms_instance = nullptr;
