@@ -363,18 +363,19 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg &msg) {
                 }
             }
         } else {
-            // test mode only
+            // should be used for test mode only, SOE's shitty stationID generation is dangerous and spoofable
+            // meaning people can impersonate elevated users
             if (!m_suid && !ConfigConnectionServer::getValidateStationKey()) {
                 WARNING(true, ("Generating suid from username. This is not safe or secure."));
 
-                m_suid = atoi(m_accountName.c_str());
-
-                if (m_suid == 0) {
-                    m_suid = std::hash < std::string > {}(m_accountName.c_str());
+                if (m_accountName.length() > 15) {
+                    parentAccount.resize(15);
                 }
+
+                parentAccount = trim(parentAccount);
+                m_suid = std::hash < std::string > {}(parentAccount.c_str());
             }
         }
-
 
         static const std::string loginTrace("TRACE_LOGIN");
         LOG(loginTrace, ("ClientConnection SUID = %d", m_suid));

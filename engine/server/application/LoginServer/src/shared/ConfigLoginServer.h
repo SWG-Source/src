@@ -64,12 +64,13 @@ class ConfigLoginServer
 		int             populationLightThresholdPercent;
 		int             csToolPort;
 
-		bool		    requireSecureLoginForCsTool;
-		bool		    useExternalAuth;
+		bool	        requireSecureLoginForCsTool;
+		bool	        useExternalAuth;
+		bool	        useSimpleAuth;
 
 		const char *	externalAuthURL;
 
-		bool 			useOldSuidGenerator;
+		bool 		useOldSuidGenerator;
 	};
 
 	static const uint16 getCentralServicePort();
@@ -132,8 +133,9 @@ class ConfigLoginServer
 	static int          getPopulationMediumThresholdPercent();
 	static int          getPopulationLightThresholdPercent();
 
-	static bool	        getUseExternalAuth();
+	static bool	    getUseExternalAuth();
 	static const char * getExternalAuthUrl();
+	static const bool   getUseSimpleAuth();
 	static bool	    getUseOldSuidGenerator();
 
 	// has character creation for this cluster been disabled through config option
@@ -487,6 +489,10 @@ inline const char * ConfigLoginServer::getExternalAuthUrl()
 	return data->externalAuthURL;
 }
 
+inline const bool ConfigLoginServer::getUseSimpleAuth()
+{
+	return data->useSimpleAuth;
+}
 
 inline bool ConfigLoginServer::getUseOldSuidGenerator()
 {

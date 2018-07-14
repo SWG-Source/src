@@ -154,6 +154,7 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
     bool authOK = false;
     bool testMode = false;
     static const std::string authURL(ConfigLoginServer::getExternalAuthUrl());
+    static const bool useSimpleAuth = ConfigLoginServer::getUseSimpleAuth();
 
     std::string uname;
     std::string parentAccount;
@@ -167,49 +168,74 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
         // create the object
         webAPI api(authURL);
 
-        // add our data
-        api.addJsonData<std::string>("user_name", id);
-        api.addJsonData<std::string>("user_password", key);
-        api.addJsonData<std::string>("ip", getRemoteAddress());
+        if (useSimpleAuth) {
+            if (!user_id) {
+                uname = id;
 
-        if (api.submit()) {
-            bool status = api.getNullableValue<bool>("status");
-            uname = api.getString("username");
-            sessionID = api.getString("session_key");
+                if (uname.length() > MAX_ACCOUNT_NAME_LENGTH) {
+                    uname.resize(MAX_ACCOUNT_NAME_LENGTH);
+                }
 
-            if (status && !sessionID.empty() && !uname.empty()) {
+                uname = trim(uname);
+                user_id = std::hash < std::string > {}(uname.c_str());
+            }
+
+            std::ostringstream postBuf;
+            postBuf << "user_name=" << id << "&user_password=" << key << "&stationID=" << user_id << "&ip=" << getRemoteAddress();
+
+            std::string response = webAPI::simplePost(authURL, std::string(postBuf.str()), "");
+            if (response == "success")
+            {
                 authOK = true;
-
-                parentAccount = api.getString("mainAccount");
-                childAccounts = api.getStringMap("subAccounts");
-
-                if (!ConfigLoginServer::getUseOldSuidGenerator()) {
-                    user_id = static_cast<StationId>(api.getNullableValue<int>("user_id"));
-                    parent_id = static_cast<StationId>(api.getNullableValue<int>("parent_id"));
-                } else {
-                    if (parentAccount.length() > MAX_ACCOUNT_NAME_LENGTH) {
-                        parentAccount.resize(MAX_ACCOUNT_NAME_LENGTH);
-                    }
-
-                    if (uname.length() > MAX_ACCOUNT_NAME_LENGTH) {
-                        uname.resize(MAX_ACCOUNT_NAME_LENGTH);
-                    }
-
-                    parent_id = std::hash < std::string > {}(parentAccount.c_str());
-                    user_id = std::hash < std::string > {}(uname.c_str());
-                }
             } else {
-                std::string msg(api.getString("message"));
-                if (msg.empty()) {
-                    msg = "Invalid username or password.";
-                }
-
-                ErrorMessage err("Login Failed", msg);
+                ErrorMessage err("Login Failed", response);
                 this->send(err, true);
             }
         } else {
-            ErrorMessage err("Login Failed", "Could not connect to remote.");
-            this->send(err, true);
+            // add our data
+            api.addJsonData<std::string>("user_name", id);
+            api.addJsonData<std::string>("user_password", key);
+            api.addJsonData<std::string>("ip", getRemoteAddress());
+
+            if (api.submit()) {
+                bool status = api.getNullableValue<bool>("status");
+                uname = api.getString("username");
+                sessionID = api.getString("session_key");
+
+                if (status && !sessionID.empty() && !uname.empty()) {
+                    authOK = true;
+
+                    parentAccount = api.getString("mainAccount");
+                    childAccounts = api.getStringMap64("subAccounts");
+
+                    if (!ConfigLoginServer::getUseOldSuidGenerator()) {
+                        user_id = static_cast<StationId>(api.getNullableValue<StationId>("user_id"));
+                        parent_id = static_cast<StationId>(api.getNullableValue<StationId>("parent_id"));
+                    } else {
+                        if (parentAccount.length() > MAX_ACCOUNT_NAME_LENGTH) {
+                            parentAccount.resize(MAX_ACCOUNT_NAME_LENGTH);
+                        }
+
+                        if (uname.length() > MAX_ACCOUNT_NAME_LENGTH) {
+                            uname.resize(MAX_ACCOUNT_NAME_LENGTH);
+                        }
+
+                        parent_id = std::hash < std::string > {}(parentAccount.c_str());
+                        user_id = std::hash < std::string > {}(uname.c_str());
+                    }
+                } else {
+                    std::string msg(api.getString("message"));
+                    if (msg.empty()) {
+                        msg = "Invalid username or password.";
+                    }
+
+                    ErrorMessage err("Login Failed", msg);
+                    this->send(err, true);
+                }
+            } else {
+                ErrorMessage err("Login Failed", "Could not connect to remote.");
+                this->send(err, true);
+            }
         }
     } else {
         // test mode
@@ -221,6 +247,7 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
             uname.resize(MAX_ACCOUNT_NAME_LENGTH);
         }
 
+        uname = trim(uname);
         user_id = std::hash < std::string > {}(uname.c_str());
     }
 
@@ -230,36 +257,41 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
         if (!testMode) {
             REPORT_LOG(true, ("Client connected. Username: %s (%i) \n", uname.c_str(), user_id));
 
-            if (!parentAccount.empty()) {
-                if (parentAccount != uname) {
-                    REPORT_LOG(true, ("\t%s's parent is %s (%i) \n", uname.c_str(), parentAccount.c_str(), parent_id));
-                }
-            } else {
-                parentAccount = "(Empty Parent!) " + uname;
-            }
-
-            for (auto i : childAccounts) {
-                StationId child_id = static_cast<StationId>(i.first);
-                std::string child(i.second);
-
-                if (!child.empty() && i.first > 0) {
-                    if (ConfigLoginServer::getUseOldSuidGenerator()) {
-                        if (child.length() > MAX_ACCOUNT_NAME_LENGTH) {
-                            child.resize(MAX_ACCOUNT_NAME_LENGTH);
-                        }
-
-                        child_id = std::hash < std::string > {}(child.c_str());
-                    }
-
-                    REPORT_LOG((parent_id !=
-                                child_id), ("\tchild of %s (%i) is %s (%i) \n", parentAccount.c_str(), parent_id, child.c_str(), child_id));
-
-                    // insert all related accounts, if not already there, into the db
-                    if (parent_id != child_id) {
-                        DatabaseConnection::getInstance().upsertAccountRelationship(parent_id, child_id);
+            if (!useSimpleAuth) {
+                if (!parentAccount.empty()) {
+                    if (parentAccount != uname) {
+                        REPORT_LOG(true,
+                                   ("\t%s's parent is %s (%i) \n", uname.c_str(), parentAccount.c_str(), parent_id));
                     }
                 } else {
-                    WARNING(true, ("Login API returned empty child account(s)."));
+                    parentAccount = "(Empty Parent!) " + uname;
+                }
+
+
+                for (auto i : childAccounts) {
+                    StationId child_id = static_cast<StationId>(i.first);
+                    std::string child(i.second);
+
+                    if (!child.empty() && i.first > 0) {
+                        if (ConfigLoginServer::getUseOldSuidGenerator()) {
+                            if (child.length() > MAX_ACCOUNT_NAME_LENGTH) {
+                                child.resize(MAX_ACCOUNT_NAME_LENGTH);
+                            }
+
+                            child_id = std::hash < std::string > {}(child.c_str());
+                        }
+
+                        REPORT_LOG((parent_id !=
+                                    child_id),
+                                   ("\tchild of %s (%i) is %s (%i) \n", parentAccount.c_str(), parent_id, child.c_str(), child_id));
+
+                        // insert all related accounts, if not already there, into the db
+                        if (parent_id != child_id) {
+                            DatabaseConnection::getInstance().upsertAccountRelationship(parent_id, child_id);
+                        }
+                    } else {
+                        WARNING(true, ("Login API returned empty child account(s)."));
+                    }
                 }
             }
 

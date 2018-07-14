@@ -116,6 +116,7 @@ void ConfigLoginServer::install(void)
 	KEY_BOOL(requireSecureLoginForCsTool, true);
 	KEY_BOOL(useExternalAuth, false);
 	KEY_STRING(externalAuthURL, "");
+	KEY_BOOL(useSimpleAuth, true);
 	KEY_BOOL(useOldSuidGenerator, false);
 
 	int index = 0;
