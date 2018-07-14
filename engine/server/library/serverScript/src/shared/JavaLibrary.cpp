@@ -1065,7 +1065,7 @@ void JavaLibrary::initializeJavaThread()
 	}
 
 	// initial and minimum jvm allocation size
-	tempOption.optionString = "-Xms128m";
+	tempOption.optionString = "-Xms1m";
 	options.push_back(tempOption);
 
 	// maximum jvm allocation - max 512m on 32-bit
