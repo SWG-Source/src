@@ -424,12 +424,12 @@ bool CityPathNode::sanityCheck ( bool doWarnings ) const
 		{
 			DEBUG_WARNING(doWarnings,("CityPathNode::sanityCheck - Node has an edge to a non-existent node\n"));
 			insaneCount++;
-		}
-
-		if(!neighborNode->hasEdge(getIndex()))
-		{
-			DEBUG_WARNING(doWarnings,("CityPathNode::sanityCheck - Node has a one-way edge to another node\n"));
-			insaneCount++;
+		} else {
+			if(!neighborNode->hasEdge(getIndex()))
+			{
+				DEBUG_WARNING(doWarnings,("CityPathNode::sanityCheck - Node has a one-way edge to another node\n"));
+				insaneCount++;
+			}
 		}
 	}
 
