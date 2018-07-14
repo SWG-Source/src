@@ -279,6 +279,8 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg &msg) {
     bool result = false;
     m_gameBitsToClear = msg.getGameBitsToClear();
 
+    char sessionId[apiSessionIdWidth];
+
     if (msg.getTokenSize() > 0) {
         Archive::ByteStream t(msg.getToken(), msg.getTokenSize());
         Archive::ReadIterator ri(t);
@@ -300,7 +302,7 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg &msg) {
 
     if (result || strlen(sessionId) != 0) {
         if (ConfigConnectionServer::getValidateStationKey()) {
-            if (strlen(sessURL) > 0) {  // use SB auth methods
+            if (sessURL != "") {  // use SB auth methods
                 bool cont = false;
                 StationId apiSuid = 0;
 
@@ -371,12 +373,14 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg &msg) {
             if (!m_suid && !ConfigConnectionServer::getValidateStationKey()) {
                 WARNING(true, ("Generating suid from username. This is not safe or secure."));
 
-                if (m_accountName.length() > 15) {
-                    parentAccount.resize(15);
+		std::string account = m_accountName;
+
+                if (account.length() > 15) {
+                    account.resize(15);
                 }
 
-                parentAccount = trim(parentAccount);
-                m_suid = std::hash < std::string > {}(parentAccount.c_str());
+                account = trim(account);
+                m_suid = std::hash < std::string > {}(account.c_str());
             }
         }
 
