@@ -183,12 +183,17 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
             std::ostringstream postBuf;
             postBuf << "user_name=" << id << "&user_password=" << key << "&stationID=" << user_id << "&ip=" << getRemoteAddress();
 
-            std::string response = webAPI::simplePost(authURL, std::string(postBuf.str()), "");
-            if (response == "success")
-            {
-                authOK = true;
+            if (webAPI::setData(std::string(postBuf.str())) && webAPI::submit(1,1,1)) {
+                std::string response = webAPI::getRaw();
+
+                if (response == "success") {
+                    authOK = true;
+                } else {
+                    ErrorMessage err("Login Failed", response);
+                    this->send(err, true);
+                }
             } else {
-                ErrorMessage err("Login Failed", response);
+                ErrorMessage err("Failed to contact auth provider", response);
                 this->send(err, true);
             }
         } else {
