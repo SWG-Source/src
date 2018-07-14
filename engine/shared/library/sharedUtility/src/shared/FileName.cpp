@@ -47,22 +47,30 @@ FileName::FileName (FileName::Path path, const char* filename, const char* ext)
 	DEBUG_FATAL (!filename, ("FileName::FileName - filename is 0"));
 
 	//-- make sure we have an extention
-	if (!ext)
+	if (!ext) {
 		ext = pathTable [path].ext;
+	}
+
+	size_t prePathLength = 0;
 
 	// see if the filename already begins with the path
 	const char *prePath = pathTable [path].path;
 	if (prePath != nullptr && *prePath != '\0')
 	{
-		if (strncmp(filename, prePath, strlen(prePath)) == 0)
+		prePathLength = strlen(prePath);
+		if (strncmp(filename, prePath, prePathLength) == 0)
 			prePath = "";
 	}
+
+	size_t extLen = 0;
+	size_t filenameLen = 0;
 
 	// see if the filename already ends in the extension
 	if (ext != nullptr && *ext != '\0')
 	{
-		int extLen = strlen(ext);
-		int filenameLen = strlen(filename);
+		extLen = strlen(ext);
+		filenameLen = strlen(filename);
+
 		if (filenameLen > extLen + 1)
 		{
 			for (--extLen, --filenameLen; extLen >= 0; --extLen, --filenameLen)
@@ -75,8 +83,8 @@ FileName::FileName (FileName::Path path, const char* filename, const char* ext)
 		}
 	}
 
-	fullName = new char [strlen(prePath) + strlen(filename) + 1 + strlen(ext) + 1];
-	sprintf(fullName, "%s%s%s%s", prePath, filename, strlen(ext) ? "." : "", ext);
+	fullName = new char [prePathLength + filenameLen  + 1 + extLen + 1];
+	sprintf(fullName, "%s%s%s%s", prePath, filename, extLen ? "." : "", ext);
 }
 
 //-------------------------------------------------------------------
