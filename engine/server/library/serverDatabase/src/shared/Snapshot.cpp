@@ -31,7 +31,7 @@ Snapshot::Snapshot(DB::ModeQuery::Mode mode, bool useGoldDatabase) :
 		m_mode(mode),
 		m_timestamp(0)
 {
-	LOG("Snapshot",("Created snapshot"));
+	//LOG("Snapshot",("Created snapshot"));
 	++ms_creationCount;
 }
 
@@ -54,7 +54,7 @@ Snapshot::~Snapshot()
 	m_customStepList.clear();
 
 	++ms_deletionCount;
-	LOG("Snapshot",("Deleted snapshot.  %i outstanding, %i created, %i deleted", ms_creationCount-ms_deletionCount,ms_creationCount,ms_deletionCount));
+	//LOG("Snapshot",("Deleted snapshot.  %i outstanding, %i created, %i deleted", ms_creationCount-ms_deletionCount,ms_creationCount,ms_deletionCount));
 }
 
 // ----------------------------------------------------------------------
