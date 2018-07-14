@@ -182,9 +182,15 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
 
             std::ostringstream postBuf;
             postBuf << "user_name=" << id << "&user_password=" << key << "&stationID=" << user_id << "&ip=" << getRemoteAddress();
+	    std::string postData = postBuf.str();
 
-            if (webAPI::setData(std::string(postBuf.str())) && webAPI::submit(1,1,1)) {
-                std::string response = webAPI::getRaw();
+	    bool done = api.setData(postData);
+	    if (done) {
+		done = api.submit(1,1,1);
+	    }
+
+            if (done) {
+                std::string response = api.getRaw();
 
                 if (response == "success") {
                     authOK = true;
@@ -193,7 +199,7 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
                     this->send(err, true);
                 }
             } else {
-                ErrorMessage err("Failed to contact auth provider", response);
+                ErrorMessage err("Failed to contact auth provider", "Please contact a server admin");
                 this->send(err, true);
             }
         } else {
@@ -211,7 +217,7 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
                     authOK = true;
 
                     parentAccount = api.getString("mainAccount");
-                    childAccounts = api.getStringMap64("subAccounts");
+                    childAccounts = api.getStringMap("subAccounts");
 
                     if (!ConfigLoginServer::getUseOldSuidGenerator()) {
                         user_id = static_cast<StationId>(api.getNullableValue<StationId>("user_id"));
