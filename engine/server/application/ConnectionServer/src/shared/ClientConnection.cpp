@@ -292,10 +292,15 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg &msg) {
             result = ConnectionServer::decryptToken(token, sessionId, m_requestedSuid);
         }
 
-        static const std::string sessURL(ConfigConnectionServer::getSessionURL());
+        static const std::string loginTrace("TRACE_LOGIN");
+        LOG(loginTrace, ("ClientConnection SUID = %d", m_suid));
+    }
 
-        if (result || strlen(sessionId) != 0) {
-            if (ConfigConnectionServer::getValidateStationKey()) {
+    static const std::string sessURL(ConfigConnectionServer::getSessionURL());
+
+    if (result || strlen(sessionId) != 0) {
+        if (ConfigConnectionServer::getValidateStationKey()) {
+            if (strlen(sessURL) > 0) {  // use SB auth methods
                 bool cont = false;
                 StationId apiSuid = 0;
 
@@ -306,7 +311,8 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg &msg) {
 
                 FATAL(clientIP.empty(), ("Remote IP is empty"));
 
-                DEBUG_WARNING(true, ("ConnectionServer::handleClientIdMessage - For ip %s suid is %lu requestedSUID is %lu and session is %s", clientIP.c_str(), m_suid, m_requestedSuid, sess.c_str()));
+                DEBUG_WARNING(true,
+                              ("ConnectionServer::handleClientIdMessage - For ip %s suid is %lu requestedSUID is %lu and session is %s", clientIP.c_str(), m_suid, m_requestedSuid, sess.c_str()));
 
                 webAPI api(sessURL);
 
@@ -338,47 +344,25 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg &msg) {
                 }
 
                 if (!cont) {
-                    LOG("ClientDisconnect", ("SUID %d (%d) passed a bad token to the connections erver. Disconnecting.", m_suid, apiSuid));
+                    LOG("ClientDisconnect",
+                        ("SUID %d (%d) passed a bad token to the connections erver. Disconnecting.", m_suid, apiSuid));
                     disconnect();
                     return;
                 }
+            } else {
+                SessionApiClient * session = ConnectionServer::getSessionApiClient();
+                NOT_NULL(session);
+                if(session)
+                {
+                    session->validateClient(this, sessionId);
+                }
+                else
+                {
+                    ConnectionServer::dropClient(this, "SessionApiClient is not available!");
+                    disconnect();
+                }
             }
-
-            static const std::string loginTrace("TRACE_LOGIN");
-            LOG(loginTrace, ("ClientConnection SUID = %d", m_suid));
-
-            //check for duplicate login
-            ClientConnection *oldConnection = ConnectionServer::getClientConnection(m_suid);
-            if (oldConnection) {
-                //There is already someone connected to this cluster with this suid.
-                LOG("Network", ("SUID %d already logged in, disconnecting client.\n", m_suid));
-
-                ConnectionServer::dropClient(oldConnection, "Already Connected");
-
-                disconnect();
-                return;
-            }
-
-            // verify version
-            if (ConfigConnectionServer::getValidateClientVersion() &&
-                msg.getVersion() != GameNetworkMessage::NetworkVersionId) {
-                std::string strSessionId(sessionId, apiSessionIdWidth);
-                strSessionId += '\0';
-
-                const int bufferSize = 255 + apiSessionIdWidth;
-                char *buffer = new char[bufferSize];
-                snprintf(buffer, bufferSize -
-                                 1, "network version mismatch: got (ip=[%s], sessionId=[%s], version=[%s]), required (version=[%s])", getRemoteAddress().c_str(), strSessionId.c_str(), msg.getVersion().c_str(), GameNetworkMessage::NetworkVersionId.c_str());
-                buffer[bufferSize - 1] = '\0';
-
-                ConnectionServer::dropClient(this, std::string(buffer));
-                disconnect();
-
-                delete[] buffer;
-
-                return;
-            }
-
+        } else {
             // test mode only
             if (!m_suid && !ConfigConnectionServer::getValidateStationKey()) {
                 WARNING(true, ("Generating suid from username. This is not safe or secure."));
@@ -389,9 +373,45 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg &msg) {
                     m_suid = std::hash < std::string > {}(m_accountName.c_str());
                 }
             }
-
-            onValidateClient(m_suid, m_accountName, m_isSecure, nullptr, ConfigConnectionServer::getDefaultGameFeatures(), ConfigConnectionServer::getDefaultSubscriptionFeatures(), 0, 0, 0, 0, ConfigConnectionServer::getFakeBuddyPoints());
         }
+
+
+        static const std::string loginTrace("TRACE_LOGIN");
+        LOG(loginTrace, ("ClientConnection SUID = %d", m_suid));
+
+        //check for duplicate login
+        ClientConnection *oldConnection = ConnectionServer::getClientConnection(m_suid);
+        if (oldConnection) {
+            //There is already someone connected to this cluster with this suid.
+            LOG("Network", ("SUID %d already logged in, disconnecting client.\n", m_suid));
+
+            ConnectionServer::dropClient(oldConnection, "Already Connected");
+
+            disconnect();
+            return;
+        }
+
+        // verify version
+        if (ConfigConnectionServer::getValidateClientVersion() &&
+            msg.getVersion() != GameNetworkMessage::NetworkVersionId) {
+            std::string strSessionId(sessionId, apiSessionIdWidth);
+            strSessionId += '\0';
+
+            const int bufferSize = 255 + apiSessionIdWidth;
+            char *buffer = new char[bufferSize];
+            snprintf(buffer, bufferSize -
+                             1, "network version mismatch: got (ip=[%s], sessionId=[%s], version=[%s]), required (version=[%s])", getRemoteAddress().c_str(), strSessionId.c_str(), msg.getVersion().c_str(), GameNetworkMessage::NetworkVersionId.c_str());
+            buffer[bufferSize - 1] = '\0';
+
+            ConnectionServer::dropClient(this, std::string(buffer));
+            disconnect();
+
+            delete[] buffer;
+
+            return;
+        }
+
+        onValidateClient(m_suid, m_accountName, m_isSecure, nullptr, ConfigConnectionServer::getDefaultGameFeatures(), ConfigConnectionServer::getDefaultSubscriptionFeatures(), 0, 0, 0, 0, ConfigConnectionServer::getFakeBuddyPoints());
     } else {
         WARNING(true, ("SUID %d passed a bad token to the connections server (cache issue or hacker?). Disconnecting.", m_suid));
 
