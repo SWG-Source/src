@@ -3985,6 +3985,7 @@ void JavaLibrary::alterScriptParams(jobjectArray jparams, const std::string& arg
 				else
 				{
 					WARNING_STRICT_FATAL(true, ("Error getting back string id param on script return"));
+					delete value;
 				}
 			}
 			break;
