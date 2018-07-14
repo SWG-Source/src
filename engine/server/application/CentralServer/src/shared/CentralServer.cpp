@@ -1998,7 +1998,7 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 			break;
 		}
 		case constcrc("DatabaseSaveStart") : {
-			LOG("CentralServer", ("Received DatabaseSaveStart network message."));
+			//LOG("CentralServer", ("Received DatabaseSaveStart network message."));
 			if (m_shutdownPhase == 4) {
 				LOG("CentralServerShutdown", ("Shutdown Phase %d: Setting indicator for receipt of DatabaseSaveStart.", m_shutdownPhase));
 				m_shutdownHaveDatabaseSaveStart = true;
@@ -2014,7 +2014,7 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		case constcrc("DatabaseSaveComplete") : {
 			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 			GenericValueTypeMessage<int> msg(ri);
-			LOG("CentralServer", ("Received DatabaseSaveComplete network message."));
+			//LOG("CentralServer", ("Received DatabaseSaveComplete network message."));
 
 			// tell all the Planet Servers that the save finished
 			sendToAllPlanetServers(msg, true);
