@@ -319,6 +319,9 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg &msg) {
                 // add our data
                 api.addJsonData<std::string>("session_key", sess);
 
+                // TODO: if anyone is interested in using session authentication, without using
+                // SB's way of doing it, we could add a config flag for useSimple here for a simple post
+                // and simple string return ~Darth
                 if (api.submit()) {
                     bool status = api.getNullableValue<bool>("status");
 
