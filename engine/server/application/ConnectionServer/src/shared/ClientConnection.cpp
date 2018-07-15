@@ -301,72 +301,58 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg &msg) {
     static const std::string sessURL(ConfigConnectionServer::getSessionURL());
 
     if (result || strlen(sessionId) != 0) {
-        if (ConfigConnectionServer::getValidateStationKey()) {
-            if (sessURL != "") {  // use SB auth methods
-                bool cont = false;
-                StationId apiSuid = 0;
+        if (sessURL != "") {  // use SB auth methods
+            bool cont = false;
+            StationId apiSuid = 0;
 
-                FATAL(sessURL.empty(), ("Session URL is empty in connection server."));
+            FATAL(sessURL.empty(), ("Session URL is empty in connection server."));
 
-                const std::string clientIP(getRemoteAddress());
-                const std::string sess(sessionId);
+            const std::string clientIP(getRemoteAddress());
+            const std::string sess(sessionId);
 
-                FATAL(clientIP.empty(), ("Remote IP is empty"));
+            FATAL(clientIP.empty(), ("Remote IP is empty"));
 
-                DEBUG_WARNING(true,
-                              ("ConnectionServer::handleClientIdMessage - For ip %s suid is %lu requestedSUID is %lu and session is %s", clientIP.c_str(), m_suid, m_requestedSuid, sess.c_str()));
+            DEBUG_WARNING(true,
+                          ("ConnectionServer::handleClientIdMessage - For ip %s suid is %lu requestedSUID is %lu and session is %s", clientIP.c_str(), m_suid, m_requestedSuid, sess.c_str()));
 
-                webAPI api(sessURL);
+            webAPI api(sessURL);
 
-                // add our data
-                api.addJsonData<std::string>("session_key", sess);
+            // add our data
+            api.addJsonData<std::string>("session_key", sess);
 
-                // TODO: if anyone is interested in using session authentication, without using
-                // SB's way of doing it, we could add a config flag for useSimple here for a simple post
-                // and simple string return ~Darth
-                if (api.submit()) {
-                    bool status = api.getNullableValue<bool>("status");
+            // TODO: if anyone is interested in using session authentication, without using
+            // SB's way of doing it, we could add a config flag for useSimple here for a simple post
+            // and simple string return ~Darth
+            if (api.submit()) {
+                bool status = api.getNullableValue<bool>("status");
 
-                    if (status) {
-                        std::string apiUser = api.getString("user_name");
-                        std::string apiIP = api.getString("ip");
-                        int expired = api.getNullableValue<int>("expired");
+                if (status) {
+                    std::string apiUser = api.getString("user_name");
+                    std::string apiIP = api.getString("ip");
+                    int expired = api.getNullableValue<int>("expired");
 
-                        if (!ConfigConnectionServer::getUseOldSuidGenerator()) {
-                            apiSuid = api.getNullableValue<int>("user_id");
-                        } else {
-                            if (apiUser.length() > MAX_ACCOUNT_NAME_LENGTH) {
-                                apiUser.resize(MAX_ACCOUNT_NAME_LENGTH);
-                            }
-
-                            apiSuid = std::hash < std::string > {}(apiUser.c_str());
+                    if (!ConfigConnectionServer::getUseOldSuidGenerator()) {
+                        apiSuid = api.getNullableValue<int>("user_id");
+                    } else {
+                        if (apiUser.length() > MAX_ACCOUNT_NAME_LENGTH) {
+                            apiUser.resize(MAX_ACCOUNT_NAME_LENGTH);
                         }
 
-                        if (apiIP == clientIP && expired == 0) {
-                            m_suid = apiSuid;
-                            cont = true;
-                        }
+                        apiSuid = std::hash < std::string > {}(apiUser.c_str());
+                    }
+
+                    if (apiIP == clientIP && expired == 0) {
+                        m_suid = apiSuid;
+                        cont = true;
                     }
                 }
+            }
 
-                if (!cont) {
-                    LOG("ClientDisconnect",
-                        ("SUID %d (%d) passed a bad token to the connections erver. Disconnecting.", m_suid, apiSuid));
-                    disconnect();
-                    return;
-                }
-            } else {
-                SessionApiClient * session = ConnectionServer::getSessionApiClient();
-                NOT_NULL(session);
-                if(session)
-                {
-                    session->validateClient(this, sessionId);
-                }
-                else
-                {
-                    ConnectionServer::dropClient(this, "SessionApiClient is not available!");
-                    disconnect();
-                }
+            if (!cont) {
+                LOG("ClientDisconnect",
+                    ("SUID %d (%d) passed a bad token to the connections erver. Disconnecting.", m_suid, apiSuid));
+                disconnect();
+                return;
             }
         } else {
             // should be used for test mode only, SOE's shitty stationID generation is dangerous and spoofable
@@ -374,13 +360,23 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg &msg) {
             if (!m_suid && !ConfigConnectionServer::getValidateStationKey()) {
                 WARNING(true, ("Generating suid from username. This is not safe or secure."));
 
-		std::string account = m_accountName;
+                std::string account = m_accountName;
 
                 if (account.length() > 15) {
                     account.resize(15);
                 }
 
                 m_suid = std::hash < std::string > {}(account.c_str());
+            } else {
+
+                SessionApiClient *session = ConnectionServer::getSessionApiClient();
+                NOT_NULL(session);
+                if (session) {
+                    session->validateClient(this, sessionId);
+                } else {
+                    ConnectionServer::dropClient(this, "SessionApiClient is not available!");
+                    disconnect();
+                }
             }
         }
 
