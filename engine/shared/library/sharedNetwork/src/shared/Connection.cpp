@@ -765,16 +765,16 @@ void Connection::receive(const Archive::ByteStream & bs)
 
 						m_recvAverageBytesPerSecond = m_bytesReceived / lifeTime;
 
-						std::string logChan = "Network:ConnectionStatsRecv:" + getRemoteAddress() + ":";
+						//std::string logChan = "Network:ConnectionStatsRecv:" + getRemoteAddress() + ":";
 						char portBuf[7] = {"\0"};
 						snprintf(portBuf, sizeof(portBuf), "%d", getRemotePort());
-						logChan += portBuf;
-						LOG(logChan, ("Current(%d/sec), Average(%d/sec), Peak(%d/sec) Total Bytes(%d) Total Time(%lu)", bytesPerSecond, m_recvAverageBytesPerSecond, m_recvPeakBytesPerSecond, m_bytesReceived, lifeTime));
+						//logChan += portBuf;
+						//LOG(logChan, ("Current(%d/sec), Average(%d/sec), Peak(%d/sec) Total Bytes(%d) Total Time(%lu)", bytesPerSecond, m_recvAverageBytesPerSecond, m_recvPeakBytesPerSecond, m_bytesReceived, lifeTime));
 						m_lastRecvReportTime = m_lastRecvTime;
 						m_recvBytesReportInterval = 0;
 
-						if (m_managerHandler->getRecvCompressedByteCount() > 0)
-							LOG(logChan, ("Compression Ratio: %.2f : 1.0 - Recv(%d / %d)", m_managerHandler->getCompressionRatio(), m_managerHandler->getRecvUncompressedByteCount(), m_managerHandler->getRecvCompressedByteCount()));
+						//if (m_managerHandler->getRecvCompressedByteCount() > 0)
+						//	LOG(logChan, ("Compression Ratio: %.2f : 1.0 - Recv(%d / %d)", m_managerHandler->getCompressionRatio(), m_managerHandler->getRecvUncompressedByteCount(), m_managerHandler->getRecvCompressedByteCount()));
 					}
 				}
 			}
@@ -833,16 +833,16 @@ void Connection::reportSend(const int sendSize)
 
 					m_sendAverageBytesPerSecond = m_bytesSent / lifeTime;
 
-					std::string logChan = "Network:ConnectionStatsSend:" + getRemoteAddress() + ":";
+					//std::string logChan = "Network:ConnectionStatsSend:" + getRemoteAddress() + ":";
 					char portBuf[7] = {"\0"};
 					snprintf(portBuf, sizeof(portBuf), "%d", getRemotePort());
-					logChan += portBuf;
-					LOG(logChan, ("Current(%d/sec), Average(%d/sec), Peak(%d/sec) Total Bytes(%d) Total Time(%lu)", bytesPerSecond, m_sendAverageBytesPerSecond, m_sendPeakBytesPerSecond, m_bytesSent, lifeTime));
+					//logChan += portBuf;
+					//LOG(logChan, ("Current(%d/sec), Average(%d/sec), Peak(%d/sec) Total Bytes(%d) Total Time(%lu)", bytesPerSecond, m_sendAverageBytesPerSecond, m_sendPeakBytesPerSecond, m_bytesSent, lifeTime));
 					m_lastSendReportTime = m_lastSendTime;
 					m_sendBytesReportInterval = 0;
 
-					if (m_managerHandler->getSendCompressedByteCount() > 0)
-						LOG(logChan, ("Compression Ratio: %.2f : 1.0 Send(%d / %d)", m_managerHandler->getCompressionRatio(), m_managerHandler->getSendUncompressedByteCount(), m_managerHandler->getSendCompressedByteCount()));
+				//	if (m_managerHandler->getSendCompressedByteCount() > 0)
+				//		LOG(logChan, ("Compression Ratio: %.2f : 1.0 Send(%d / %d)", m_managerHandler->getCompressionRatio(), m_managerHandler->getSendUncompressedByteCount(), m_managerHandler->getSendCompressedByteCount()));
 				}
 			}
 		}
