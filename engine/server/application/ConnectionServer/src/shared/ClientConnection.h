@@ -13,7 +13,6 @@
 #include "sharedFoundation/StationId.h"
 #include "sharedMath/Vector.h"
 #include <map>
-#include <algorithm>
 
 class ClientIdMsg;
 class SelectCharacter;
