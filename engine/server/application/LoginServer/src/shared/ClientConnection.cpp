@@ -176,7 +176,6 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
                     uname.resize(MAX_ACCOUNT_NAME_LENGTH);
                 }
 
-                uname = trim(uname);
                 user_id = std::hash < std::string > {}(uname.c_str());
             }
 
@@ -258,7 +257,6 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
             uname.resize(MAX_ACCOUNT_NAME_LENGTH);
         }
 
-        uname = trim(uname);
         user_id = std::hash < std::string > {}(uname.c_str());
     }
 

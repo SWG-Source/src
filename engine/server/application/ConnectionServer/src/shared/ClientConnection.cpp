@@ -338,6 +338,7 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg &msg) {
                             if (apiUser.length() > MAX_ACCOUNT_NAME_LENGTH) {
                                 apiUser.resize(MAX_ACCOUNT_NAME_LENGTH);
                             }
+
                             apiSuid = std::hash < std::string > {}(apiUser.c_str());
                         }
 
@@ -379,7 +380,6 @@ void ClientConnection::handleClientIdMessage(const ClientIdMsg &msg) {
                     account.resize(15);
                 }
 
-                account = trim(account);
                 m_suid = std::hash < std::string > {}(account.c_str());
             }
         }
