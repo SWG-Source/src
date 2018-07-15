@@ -258,7 +258,7 @@ void LogManager::registerObserverType(std::string const &name, LogObserverCreate
 
 	// run through SharedLog keys looking for logTarget#=name:
 	{
-		char key[16];
+		char key[25];
 		strcpy(key, "logTarget");
 
 		for (int i = 0; i < 20; ++i)
