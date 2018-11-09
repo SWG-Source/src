@@ -92,7 +92,7 @@ elseif (UNIX)
 		-fno-threadsafe-statics -fslp-vectorize \
 		-fno-stack-protector -fstrict-enums -finline-hint-functions \
 		-fno-coverage-mapping -fno-spell-checking \
-		-mno-retpoline -fno-plt")
+		-mno-retpoline")
 
         set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -ggdb")
 
