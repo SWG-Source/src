@@ -81,7 +81,13 @@ char SymbolCache::ms_memPool[SymbolCache::cms_memPoolMaxBytes];
 char *SymbolCache::ms_memPoolFreeList;
 Mutex SymbolCache::ms_memPoolMutex;
 SymbolCache::SymbolInfo SymbolCache::ms_nullSym;
-typedef std::map<void const *, SymbolCache::SymbolInfo, std::less<void const *>, SymbolCacheAllocator<std::pair<void const *, SymbolCache::SymbolInfo> > > SymbolMap;
+
+typedef std::map<
+	void const *, 
+	SymbolCache::SymbolInfo 
+> SymbolMap;
+
+
 typedef std::vector<char const *, SymbolCacheAllocator<char const *> > UniqueStringVector;
 static SymbolMap ms_cacheMap;
 static UniqueStringVector ms_uniqueStringVector;
@@ -567,7 +573,7 @@ static bool stabsFind(void const *addr, Dl_info const &info, char const *& retSr
 
 SymbolCache::SymbolInfo const &SymbolCache::lookup(void const *addr)
 {
-	SymbolMap::const_iterator i = ms_cacheMap.find(addr);
+	auto i = ms_cacheMap.find(addr);
 	if (i != ms_cacheMap.end())
 		return (*i).second;
 
