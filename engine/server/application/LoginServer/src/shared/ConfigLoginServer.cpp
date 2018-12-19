@@ -87,6 +87,7 @@ void ConfigLoginServer::install(void)
 	KEY_INT (maxCharactersPerAccount, 20);
 	KEY_BOOL (validateClientVersion, true);
 	KEY_BOOL (validateStationKey, false);
+	KEY_BOOL (easyExternalAccess, false);
 	KEY_BOOL (doSessionLogin, false);
 	KEY_BOOL (doConsumption, false);
 	KEY_STRING (sessionServers, "localhost:3004");
@@ -163,7 +164,7 @@ void ConfigLoginServer::install(void)
 	}
 
 	{
-		char keyName[500];		
+		char keyName[500];
 		for (int index=0; index < ms_numPurgePhases; index++)
 		{
 			snprintf(keyName,sizeof(keyName),"purgePhaseAdvanceDays%i",index);
