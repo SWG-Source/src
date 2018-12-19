@@ -20,6 +20,7 @@ class ConfigLoginServer
 		int		        httpServicePort;
 		bool            validateClientVersion;
 		bool            validateStationKey;
+    bool            easyExternalAccess;
 		bool            doSessionLogin;
 		bool            doConsumption;
 		const char *    sessionServers;
@@ -81,6 +82,7 @@ class ConfigLoginServer
 	static const uint16 getHttpServicePort();
 	static const bool   getValidateClientVersion();
 	static const bool   getValidateStationKey();
+  static const bool   getEasyExternalAccess();
 	static const bool   getDoSessionLogin();
 	static const bool   getDoConsumption();
 	static const char * getSessionServers();
@@ -215,6 +217,13 @@ inline const bool ConfigLoginServer::getValidateClientVersion()
 inline const bool ConfigLoginServer::getValidateStationKey()
 {
 	return (data->validateStationKey);
+}
+
+// ----------------------------------------------------------------------
+
+inline const bool ConfigLoginServer::getEasyExternalAccess()
+{
+	return (data->easyExternalAccess);
 }
 
 // ----------------------------------------------------------------------
