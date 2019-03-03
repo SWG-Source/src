@@ -16,6 +16,9 @@
 #include "sharedFile/Iff.h"
 #include "sharedObject/ObjectTemplate.h"
 #include "sharedObject/ObjectTemplateList.h"
+
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 //@BEGIN TFD TEMPLATE REFS
 #include "ServerFactoryObjectTemplate.h"
 #include "ServerObjectTemplate.h"
@@ -1280,77 +1283,90 @@ char paramName[MAX_NAME_SIZE];
 	{
 		file.enterChunk();
 		file.read_string(paramName, MAX_NAME_SIZE);
-		if (strcmp(paramName, "category") == 0)
-			m_category.loadFromIff(file);
-		else if (strcmp(paramName, "craftedObjectTemplate") == 0)
-			m_craftedObjectTemplate.loadFromIff(file);
-		else if (strcmp(paramName, "crateObjectTemplate") == 0)
-			m_crateObjectTemplate.loadFromIff(file);
-		else if (strcmp(paramName, "slots") == 0)
-		{
-			std::vector<StructParamOT *>::iterator iter;
-			for (iter = m_slots.begin(); iter != m_slots.end(); ++iter)
+
+		switch(runtimeCrc(paramName)) {
+			case constcrc("category"):
+				m_category.loadFromIff(file);
+				break;
+			case constcrc("craftedObjectTemplate"):
+				m_craftedObjectTemplate.loadFromIff(file);
+				break;
+			case constcrc("crateObjectTemplate"):
+				m_crateObjectTemplate.loadFromIff(file);
+				break;
+			case constcrc("slots"):
 			{
-				delete *iter;
-				*iter = nullptr;
+				std::vector<StructParamOT *>::iterator iter;
+				for (iter = m_slots.begin(); iter != m_slots.end(); ++iter)
+				{
+					delete *iter;
+					*iter = nullptr;
+				}
+				m_slots.clear();
+				m_slotsAppend = file.read_bool8();
+				int listCount = file.read_int32();
+				for (int j = 0; j < listCount; ++j)
+				{
+					StructParamOT * newData = new StructParamOT;
+					newData->loadFromIff(file);
+					m_slots.push_back(newData);
+				}
+				m_slotsLoaded = true;
 			}
-			m_slots.clear();
-			m_slotsAppend = file.read_bool8();
-			int listCount = file.read_int32();
-			for (int j = 0; j < listCount; ++j)
+			break;
+			case constcrc("skillCommands"):
 			{
-				StructParamOT * newData = new StructParamOT;
-				newData->loadFromIff(file);
-				m_slots.push_back(newData);
+				std::vector<StringParam *>::iterator iter;
+				for (iter = m_skillCommands.begin(); iter != m_skillCommands.end(); ++iter)
+				{
+					delete *iter;
+					*iter = nullptr;
+				}
+				m_skillCommands.clear();
+				m_skillCommandsAppend = file.read_bool8();
+				int listCount = file.read_int32();
+				for (int j = 0; j < listCount; ++j)
+				{
+					StringParam * newData = new StringParam;
+					newData->loadFromIff(file);
+					m_skillCommands.push_back(newData);
+				}
+				m_skillCommandsLoaded = true;
 			}
-			m_slotsLoaded = true;
+			break;
+			case constcrc("destroyIngredients"):
+				m_destroyIngredients.loadFromIff(file);
+				break;
+			case constcrc("manufactureScripts"):
+			{
+				std::vector<StringParam *>::iterator iter;
+				for (iter = m_manufactureScripts.begin(); iter != m_manufactureScripts.end(); ++iter)
+				{
+					delete *iter;
+					*iter = nullptr;
+				}
+				m_manufactureScripts.clear();
+				m_manufactureScriptsAppend = file.read_bool8();
+				int listCount = file.read_int32();
+				for (int j = 0; j < listCount; ++j)
+				{
+					StringParam * newData = new StringParam;
+					newData->loadFromIff(file);
+					m_manufactureScripts.push_back(newData);
+				}
+				m_manufactureScriptsLoaded = true;
+			}
+			break;
+			case constcrc("itemsPerContainer"):
+				m_itemsPerContainer.loadFromIff(file);
+				break;
+			case constcrc("manufactureTime"):
+				m_manufactureTime.loadFromIff(file);
+				break;
+			case constcrc("prototypeTime"):
+				m_prototypeTime.loadFromIff(file);
+				break;
 		}
-		else if (strcmp(paramName, "skillCommands") == 0)
-		{
-			std::vector<StringParam *>::iterator iter;
-			for (iter = m_skillCommands.begin(); iter != m_skillCommands.end(); ++iter)
-			{
-				delete *iter;
-				*iter = nullptr;
-			}
-			m_skillCommands.clear();
-			m_skillCommandsAppend = file.read_bool8();
-			int listCount = file.read_int32();
-			for (int j = 0; j < listCount; ++j)
-			{
-				StringParam * newData = new StringParam;
-				newData->loadFromIff(file);
-				m_skillCommands.push_back(newData);
-			}
-			m_skillCommandsLoaded = true;
-		}
-		else if (strcmp(paramName, "destroyIngredients") == 0)
-			m_destroyIngredients.loadFromIff(file);
-		else if (strcmp(paramName, "manufactureScripts") == 0)
-		{
-			std::vector<StringParam *>::iterator iter;
-			for (iter = m_manufactureScripts.begin(); iter != m_manufactureScripts.end(); ++iter)
-			{
-				delete *iter;
-				*iter = nullptr;
-			}
-			m_manufactureScripts.clear();
-			m_manufactureScriptsAppend = file.read_bool8();
-			int listCount = file.read_int32();
-			for (int j = 0; j < listCount; ++j)
-			{
-				StringParam * newData = new StringParam;
-				newData->loadFromIff(file);
-				m_manufactureScripts.push_back(newData);
-			}
-			m_manufactureScriptsLoaded = true;
-		}
-		else if (strcmp(paramName, "itemsPerContainer") == 0)
-			m_itemsPerContainer.loadFromIff(file);
-		else if (strcmp(paramName, "manufactureTime") == 0)
-			m_manufactureTime.loadFromIff(file);
-		else if (strcmp(paramName, "prototypeTime") == 0)
-			m_prototypeTime.loadFromIff(file);
 		file.exitChunk(true);
 	}
 
@@ -1990,35 +2006,44 @@ char paramName[MAX_NAME_SIZE];
 	{
 		file.enterChunk();
 		file.read_string(paramName, MAX_NAME_SIZE);
-		if (strcmp(paramName, "optional") == 0)
-			m_optional.loadFromIff(file);
-		else if (strcmp(paramName, "name") == 0)
-			m_name.loadFromIff(file);
-		else if (strcmp(paramName, "options") == 0)
-		{
-			std::vector<StructParamOT *>::iterator iter;
-			for (iter = m_options.begin(); iter != m_options.end(); ++iter)
+
+		switch(runtimeCrc(paramName)) {
+			case constcrc("optional"):
+				m_optional.loadFromIff(file);
+				break;
+			case constcrc("name"):
+				m_name.loadFromIff(file);
+				break;
+			case constcrc("options"):
 			{
-				delete *iter;
-				*iter = nullptr;
+				std::vector<StructParamOT *>::iterator iter;
+				for (iter = m_options.begin(); iter != m_options.end(); ++iter)
+				{
+					delete *iter;
+					*iter = nullptr;
+				}
+				m_options.clear();
+				m_optionsAppend = file.read_bool8();
+				int listCount = file.read_int32();
+				for (int j = 0; j < listCount; ++j)
+				{
+					StructParamOT * newData = new StructParamOT;
+					newData->loadFromIff(file);
+					m_options.push_back(newData);
+				}
+				m_optionsLoaded = true;
 			}
-			m_options.clear();
-			m_optionsAppend = file.read_bool8();
-			int listCount = file.read_int32();
-			for (int j = 0; j < listCount; ++j)
-			{
-				StructParamOT * newData = new StructParamOT;
-				newData->loadFromIff(file);
-				m_options.push_back(newData);
-			}
-			m_optionsLoaded = true;
+			break;
+			case constcrc("optionalSkillCommand"):
+				m_optionalSkillCommand.loadFromIff(file);
+				break;
+			case constcrc("complexity"):
+				m_complexity.loadFromIff(file);
+				break;
+			case constcrc("appearance"):
+				m_appearance.loadFromIff(file);
+				break;
 		}
-		else if (strcmp(paramName, "optionalSkillCommand") == 0)
-			m_optionalSkillCommand.loadFromIff(file);
-		else if (strcmp(paramName, "complexity") == 0)
-			m_complexity.loadFromIff(file);
-		else if (strcmp(paramName, "appearance") == 0)
-			m_appearance.loadFromIff(file);
 		file.exitChunk(true);
 	}
 

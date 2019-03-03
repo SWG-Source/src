@@ -72,26 +72,7 @@ std::unordered_map<int, std::string> webAPI::getStringMap(const std::string &slo
     return ret;
 }
 
-std::unordered_map<int64_t, std::string> webAPI::getStringMap64(const std::string &slot) {
-    std::unordered_map<int64_t, std::string> ret = std::unordered_map<int64_t, std::string>();
-
-    if (!responseData.empty() && !slot.empty() && responseData.count(slot) && !responseData[slot].is_null()) {
-
-        nlohmann::json j = responseData[slot];
-
-        for (nlohmann::json::iterator it = j.begin(); it != j.end(); ++it) {
-            std::string tmp(it.key());
-	    int64_t k = strtoll(tmp.c_str(), nullptr, 10);
-            std::string val = it.value();
-
-            ret.insert({k, val});
-        }
-    }
-
-    return ret;
-}
-
-bool webAPI::submit(const int32_t &reqType, const int32_t &getPost, const int32_t &respType) {
+bool webAPI::submit(const int &reqType, const int &getPost, const int &respType) {
     if (reqType == DTYPE::JSON) // json request
     {
         if (!requestData.empty()) {
@@ -112,7 +93,7 @@ bool webAPI::submit(const int32_t &reqType, const int32_t &getPost, const int32_
     return false;
 }
 
-bool webAPI::fetch(const int32_t &getPost, const int32_t &mimeType) // 0 for json 1 for string
+bool webAPI::fetch(const int &getPost, const int &mimeType) // 0 for json 1 for string
 {
     bool fetchStatus = false;
 
@@ -134,18 +115,18 @@ bool webAPI::fetch(const int32_t &getPost, const int32_t &mimeType) // 0 for jso
 
             slist = curl_slist_append(slist, "charsets: utf-8");
 
-            CURLcode res = curl_easy_setopt(curl, CURLOPT_USERAGENT, userAgent.c_str());
-            res = curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeCallback); // place the data into readBuffer using writeCallback
-            res = curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer); // specify readBuffer as the container for data
-            res = curl_easy_setopt(curl, CURLOPT_HTTPHEADER, slist);
+            curl_easy_setopt(curl, CURLOPT_USERAGENT, userAgent.c_str());
+            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeCallback); // place the data into readBuffer using writeCallback
+            curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer); // specify readBuffer as the container for data
+            curl_easy_setopt(curl, CURLOPT_HTTPHEADER, slist);
 
             switch (getPost) {
                 case HTTP::GET:
-                    res = curl_easy_setopt(curl, CURLOPT_URL, std::string(uri + "?" + sRequest).c_str());
+                    curl_easy_setopt(curl, CURLOPT_URL, std::string(uri + "?" + sRequest).c_str());
                     break;
                 case HTTP::POST:
-                    res = curl_easy_setopt(curl, CURLOPT_POSTFIELDS, sRequest.c_str());
-                    res = curl_easy_setopt(curl, CURLOPT_URL, uri.c_str());
+                    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, sRequest.c_str());
+                    curl_easy_setopt(curl, CURLOPT_URL, uri.c_str());
                     break;
                     // want to do a put, or whatever other type? feel free to add here
             }
@@ -154,8 +135,9 @@ bool webAPI::fetch(const int32_t &getPost, const int32_t &mimeType) // 0 for jso
             // the public one will verify but since this is pinned we don't care about the CA
             // to grab/generate, see https://curl.haxx.se/libcurl/c/CURLOPT_PINNEDPUBLICKEY.html
             // under the PUBLIC KEY EXTRACTION heading
-            res = curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
+            curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
 
+            CURLcode res = CURLE_OK;
 	    // if you want to pin to your own cert or cloudflares, learn how and use the below
             //res = curl_easy_setopt(curl, CURLOPT_PINNEDPUBLICKEY, "sha256//YOURKEYHERE");
 

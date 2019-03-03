@@ -16,6 +16,9 @@
 #include "sharedMath/Vector.h"
 #include "sharedObject/ObjectTemplate.h"
 #include "sharedObject/ObjectTemplateList.h"
+
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 //@BEGIN TFD TEMPLATE REFS
 //@END TFD TEMPLATE REFS
 #include <algorithm>
@@ -542,46 +545,52 @@ char paramName[MAX_NAME_SIZE];
 	{
 		file.enterChunk();
 		file.read_string(paramName, MAX_NAME_SIZE);
-		if (strcmp(paramName, "slots") == 0)
-		{
-			std::vector<StructParamOT *>::iterator iter;
-			for (iter = m_slots.begin(); iter != m_slots.end(); ++iter)
+
+		switch(runtimeCrc(paramName)) {
+			case constcrc("slots"):
 			{
-				delete *iter;
-				*iter = nullptr;
+				std::vector<StructParamOT *>::iterator iter;
+				for (iter = m_slots.begin(); iter != m_slots.end(); ++iter)
+				{
+					delete *iter;
+					*iter = nullptr;
+				}
+				m_slots.clear();
+				m_slotsAppend = file.read_bool8();
+				int listCount = file.read_int32();
+				for (int j = 0; j < listCount; ++j)
+				{
+					StructParamOT * newData = new StructParamOT;
+					newData->loadFromIff(file);
+					m_slots.push_back(newData);
+				}
+				m_slotsLoaded = true;
 			}
-			m_slots.clear();
-			m_slotsAppend = file.read_bool8();
-			int listCount = file.read_int32();
-			for (int j = 0; j < listCount; ++j)
+			break;
+			case constcrc("attributes"):
 			{
-				StructParamOT * newData = new StructParamOT;
-				newData->loadFromIff(file);
-				m_slots.push_back(newData);
+				std::vector<StructParamOT *>::iterator iter;
+				for (iter = m_attributes.begin(); iter != m_attributes.end(); ++iter)
+				{	
+					delete *iter;
+					*iter = nullptr;
+				}
+				m_attributes.clear();
+				m_attributesAppend = file.read_bool8();
+				int listCount = file.read_int32();
+				for (int j = 0; j < listCount; ++j)
+				{
+					StructParamOT * newData = new StructParamOT;
+					newData->loadFromIff(file);
+					m_attributes.push_back(newData);
+				}
+				m_attributesLoaded = true;
 			}
-			m_slotsLoaded = true;
+			break;
+			case constcrc("craftedSharedTemplate"):
+				m_craftedSharedTemplate.loadFromIff(file);
+				break;
 		}
-		else if (strcmp(paramName, "attributes") == 0)
-		{
-			std::vector<StructParamOT *>::iterator iter;
-			for (iter = m_attributes.begin(); iter != m_attributes.end(); ++iter)
-			{
-				delete *iter;
-				*iter = nullptr;
-			}
-			m_attributes.clear();
-			m_attributesAppend = file.read_bool8();
-			int listCount = file.read_int32();
-			for (int j = 0; j < listCount; ++j)
-			{
-				StructParamOT * newData = new StructParamOT;
-				newData->loadFromIff(file);
-				m_attributes.push_back(newData);
-			}
-			m_attributesLoaded = true;
-		}
-		else if (strcmp(paramName, "craftedSharedTemplate") == 0)
-			m_craftedSharedTemplate.loadFromIff(file);
 		file.exitChunk(true);
 	}
 
@@ -753,10 +762,14 @@ char paramName[MAX_NAME_SIZE];
 	{
 		file.enterChunk();
 		file.read_string(paramName, MAX_NAME_SIZE);
-		if (strcmp(paramName, "name") == 0)
-			m_name.loadFromIff(file);
-		else if (strcmp(paramName, "hardpoint") == 0)
-			m_hardpoint.loadFromIff(file);
+		
+		switch(runtimeCrc(paramName)) {
+			case constcrc("name"):
+				m_name.loadFromIff(file);
+				break;
+			case constcrc("hardpoint"):
+				m_hardpoint.loadFromIff(file);
+		}
 		file.exitChunk(true);
 	}
 
@@ -1120,12 +1133,18 @@ char paramName[MAX_NAME_SIZE];
 	{
 		file.enterChunk();
 		file.read_string(paramName, MAX_NAME_SIZE);
-		if (strcmp(paramName, "name") == 0)
-			m_name.loadFromIff(file);
-		else if (strcmp(paramName, "experiment") == 0)
-			m_experiment.loadFromIff(file);
-		else if (strcmp(paramName, "value") == 0)
-			m_value.loadFromIff(file);
+		
+		switch(runtimeCrc(paramName)) {
+			case constcrc("name"):
+				m_name.loadFromIff(file);
+				break;
+			case constcrc("experiment"):
+				m_experiment.loadFromIff(file);
+				break;
+			case constcrc("value"):
+				m_value.loadFromIff(file);
+				break;
+		}
 		file.exitChunk(true);
 	}
 

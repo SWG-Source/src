@@ -10,7 +10,7 @@
 
 // ======================================================================
 
-CharacterNamesMessage::CharacterNamesMessage(const std::vector<NetworkId> &ids, const std::vector<StationId> &stationIds, const std::vector<std::string> &characterNames, const std::vector<std::string> &characterFullNames, const std::vector<int64> &createTimes, const std::vector<int64> &loginTimes) :
+CharacterNamesMessage::CharacterNamesMessage(const std::vector<NetworkId> &ids, const std::vector<int> &stationIds, const std::vector<std::string> &characterNames, const std::vector<std::string> &characterFullNames, const std::vector<int> &createTimes, const std::vector<int> &loginTimes) :
 		GameNetworkMessage("CharacterNamesMessage"),
 		m_ids(),
 		m_stationIds(),

@@ -1,3 +1,5 @@
+#include <signal.h>
+
 #include "FirstSwgGameServer.h"
 #include "serverGame/GameServer.h"
 
@@ -32,16 +34,30 @@
 #include "swgSharedNetworkMessages/SetupSwgSharedNetworkMessages.h"
 #include "swgServerNetworkMessages/SetupSwgServerNetworkMessages.h"
 
-#ifndef STELLA_INTERNAL
-#include "webAPIHeartbeat.h"
+#ifdef ENABLE_PROFILING
+extern "C" int __llvm_profile_write_file(void);
 #endif
+
+
+inline void signalHandler(int s){
+    printf("LoginServer terminating, signal %d\n",s);
+
+#ifdef ENABLE_PROFILING
+    __llvm_profile_write_file();
+#endif
+
+    exit(0);
+}
+
 // ======================================================================
 
 int main(int argc, char ** argv)
 {
-#ifndef STELLA_INTERNAL
-	StellaBellum::webAPIHeartbeat();
-#endif
+	struct sigaction sigIntHandler;
+    sigIntHandler.sa_handler = signalHandler;
+    sigemptyset(&sigIntHandler.sa_mask);
+    sigIntHandler.sa_flags = 0;
+    sigaction(SIGINT, &sigIntHandler, NULL);
 
 	SetupSharedThread::install();
 	SetupSharedDebug::install(1024);
@@ -143,9 +159,9 @@ int main(int argc, char ** argv)
 	SetupSharedThread::remove ();
 
 #ifdef ENABLE_PROFILING
+	__llvm_profile_write_file();
 	exit(0);
 #endif
-
 	return 0;
 }
 

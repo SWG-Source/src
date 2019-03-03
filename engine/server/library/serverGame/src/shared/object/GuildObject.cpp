@@ -398,7 +398,7 @@ GuildInfo const * GuildObject::getGuildInfo(int guildId) const
 
 GuildMemberInfo const * GuildObject::getGuildMemberInfo(int guildId, NetworkId const &memberId) const
 {
-	std::map<std::pair<int, NetworkId>, GuildMemberInfo, GuildObject>::const_iterator const iterFind = m_membersInfo.find(std::make_pair(guildId, memberId));
+	const auto iterFind = m_membersInfo.find(std::make_pair(guildId, memberId));
 	if (iterFind != m_membersInfo.end())
 		return &(iterFind->second);
 
@@ -486,7 +486,7 @@ void GuildObject::getGuildMemberIds(int guildId, std::vector<NetworkId> &results
 {
 	results.clear();
 
-	for (std::map<std::pair<int, NetworkId>, GuildMemberInfo, GuildObject>::const_iterator iter = m_membersInfo.lower_bound(std::make_pair(guildId, NetworkId::cms_invalid)); iter != m_membersInfo.end(); ++iter)
+	for (auto iter = m_membersInfo.lower_bound(std::make_pair(guildId, NetworkId::cms_invalid)); iter != m_membersInfo.end(); ++iter)
 	{
 		if (iter->first.first != guildId)
 			break;
@@ -501,7 +501,7 @@ void GuildObject::getMemberIdsWithPermissions(int guildId, int permissions, std:
 {
 	results.clear();
 
-	for (std::map<std::pair<int, NetworkId>, GuildMemberInfo, GuildObject>::const_iterator iter = m_membersInfo.lower_bound(std::make_pair(guildId, NetworkId::cms_invalid)); iter != m_membersInfo.end(); ++iter)
+	for (auto iter = m_membersInfo.lower_bound(std::make_pair(guildId, NetworkId::cms_invalid)); iter != m_membersInfo.end(); ++iter)
 	{
 		if (iter->first.first != guildId)
 			break;
@@ -635,7 +635,7 @@ void GuildObject::disbandGuild(int guildId)
 		// remove all members
 		{
 			std::vector<NetworkId> memberIds;
-			for (std::map<std::pair<int, NetworkId>, GuildMemberInfo, GuildObject>::const_iterator iter = m_membersInfo.lower_bound(std::make_pair(guildId, NetworkId::cms_invalid)); iter != m_membersInfo.end(); ++iter)
+			for (auto iter = m_membersInfo.lower_bound(std::make_pair(guildId, NetworkId::cms_invalid)); iter != m_membersInfo.end(); ++iter)
 			{
 				if (iter->first.first != guildId)
 					break;
@@ -647,7 +647,7 @@ void GuildObject::disbandGuild(int guildId)
 				m_members.erase(memberSpec);
 			}
 
-			for (std::vector<NetworkId>::const_iterator iterMemberId = memberIds.begin(); iterMemberId != memberIds.end(); ++iterMemberId)
+			for (auto iterMemberId = memberIds.begin(); iterMemberId != memberIds.end(); ++iterMemberId)
 			{
 				std::map<NetworkId, int>::const_iterator iterFind = m_fullMembers.find(*iterMemberId);
 				if ((iterFind != m_fullMembers.end()) && (iterFind->second == guildId))

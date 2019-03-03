@@ -954,13 +954,13 @@ void JavaLibrary::install(void)
 	if (ms_instance == nullptr)
 	{
 		JavaLibrary *lib = new JavaLibrary;
-		if (lib != ms_instance)
+		if (lib)
 		{
-			if (ms_instance == nullptr)
-			{
-				delete lib;
-				if (ms_javaVmType != JV_none)
-					FATAL(true, ("Unable to initialize Java"));
+			ms_instance = lib;
+		} else {
+			delete lib;
+			if (ms_javaVmType != JV_none) {
+				FATAL(true, ("Unable to initialize Java"));
 			}
 		}
 	}
@@ -975,7 +975,7 @@ void JavaLibrary::install(void)
  */
 void JavaLibrary::remove(void)
 {
-	if (ms_instance != nullptr)
+	if (ms_instance)
 	{
 		JavaLibrary * temp = ms_instance;
 		ms_instance = nullptr;
@@ -1065,7 +1065,7 @@ void JavaLibrary::initializeJavaThread()
 	}
 
 	// initial and minimum jvm allocation size
-	tempOption.optionString = "-Xms128m";
+	tempOption.optionString = "-Xms1m";
 	options.push_back(tempOption);
 
 	// maximum jvm allocation - max 512m on 32-bit
@@ -3985,6 +3985,7 @@ void JavaLibrary::alterScriptParams(jobjectArray jparams, const std::string& arg
 				else
 				{
 					WARNING_STRICT_FATAL(true, ("Error getting back string id param on script return"));
+					delete value;
 				}
 			}
 			break;

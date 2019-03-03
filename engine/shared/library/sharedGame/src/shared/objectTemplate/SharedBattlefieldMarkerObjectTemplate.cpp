@@ -17,6 +17,9 @@
 #include "sharedMath/Vector.h"
 #include "sharedObject/ObjectTemplate.h"
 #include "sharedObject/ObjectTemplateList.h"
+
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 //@BEGIN TFD TEMPLATE REFS
 //@END TFD TEMPLATE REFS
 #include <algorithm>
@@ -557,10 +560,15 @@ char paramName[MAX_NAME_SIZE];
 	{
 		file.enterChunk();
 		file.read_string(paramName, MAX_NAME_SIZE);
-		if (strcmp(paramName, "numberOfPoles") == 0)
-			m_numberOfPoles.loadFromIff(file);
-		else if (strcmp(paramName, "radius") == 0)
-			m_radius.loadFromIff(file);
+
+		switch(runtimeCrc(paramName)) {
+			case constcrc("numberOfPoles"):
+				m_numberOfPoles.loadFromIff(file);
+				break;
+			case constcrc("radius"):
+				m_radius.loadFromIff(file);
+				break;
+		}
 		file.exitChunk(true);
 	}
 

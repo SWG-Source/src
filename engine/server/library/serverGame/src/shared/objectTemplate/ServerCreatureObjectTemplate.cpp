@@ -19,6 +19,9 @@
 #include "sharedObject/ObjectTemplateList.h"
 #include "sharedUtility/NameGenerator.h"
 #include "sharedNetworkMessages/NameErrors.h"
+
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 //@BEGIN TFD TEMPLATE REFS
 #include "ServerWeaponObjectTemplate.h"
 //@END TFD TEMPLATE REFS
@@ -2372,112 +2375,129 @@ char paramName[MAX_NAME_SIZE];
 	{
 		file.enterChunk();
 		file.read_string(paramName, MAX_NAME_SIZE);
-		if (strcmp(paramName, "defaultWeapon") == 0)
-			m_defaultWeapon.loadFromIff(file);
-		else if (strcmp(paramName, "attributes") == 0)
-		{
-			int listCount = file.read_int32();
-			DEBUG_WARNING(listCount != 6, ("Template %s: read array size of %d for array \"attributes\" of size 6, reading values anyway", file.getFileName(), listCount));
-			int j;
-			for (j = 0; j < 6 && j < listCount; ++j)
-				m_attributes[j].loadFromIff(file);
-			// if there are more params for attributes read and dump them
-			for (; j < listCount; ++j)
+		switch(runtimeCrc(paramName)) {
+			case constcrc("defaultWeapon"):
+				m_defaultWeapon.loadFromIff(file);
+				break;
+			case constcrc("attributes"):
 			{
-				IntegerParam dummy;
-				dummy.loadFromIff(file);
+				int listCount = file.read_int32();
+				DEBUG_WARNING(listCount != 6, ("Template %s: read array size of %d for array \"attributes\" of size 6, reading values anyway", file.getFileName(), listCount));
+				int j;
+				for (j = 0; j < 6 && j < listCount; ++j)
+					m_attributes[j].loadFromIff(file);
+				// if there are more params for attributes read and dump them
+				for (; j < listCount; ++j)
+				{
+					IntegerParam dummy;
+					dummy.loadFromIff(file);
+				}
 			}
-		}
-		else if (strcmp(paramName, "minAttributes") == 0)
-		{
-			int listCount = file.read_int32();
-			DEBUG_WARNING(listCount != 6, ("Template %s: read array size of %d for array \"minAttributes\" of size 6, reading values anyway", file.getFileName(), listCount));
-			int j;
-			for (j = 0; j < 6 && j < listCount; ++j)
-				m_minAttributes[j].loadFromIff(file);
-			// if there are more params for minAttributes read and dump them
-			for (; j < listCount; ++j)
+			break;
+			case constcrc("minAttributes"):
 			{
-				IntegerParam dummy;
-				dummy.loadFromIff(file);
+				int listCount = file.read_int32();
+				DEBUG_WARNING(listCount != 6, ("Template %s: read array size of %d for array \"minAttributes\" of size 6, reading values anyway", file.getFileName(), listCount));
+				int j;
+				for (j = 0; j < 6 && j < listCount; ++j)
+					m_minAttributes[j].loadFromIff(file);
+				// if there are more params for minAttributes read and dump them
+				for (; j < listCount; ++j)
+				{
+					IntegerParam dummy;
+					dummy.loadFromIff(file);
+				}
 			}
-		}
-		else if (strcmp(paramName, "maxAttributes") == 0)
-		{
-			int listCount = file.read_int32();
-			DEBUG_WARNING(listCount != 6, ("Template %s: read array size of %d for array \"maxAttributes\" of size 6, reading values anyway", file.getFileName(), listCount));
-			int j;
-			for (j = 0; j < 6 && j < listCount; ++j)
-				m_maxAttributes[j].loadFromIff(file);
-			// if there are more params for maxAttributes read and dump them
-			for (; j < listCount; ++j)
+			break;
+			case constcrc("maxAttributes"):
 			{
-				IntegerParam dummy;
-				dummy.loadFromIff(file);
+				int listCount = file.read_int32();
+				DEBUG_WARNING(listCount != 6, ("Template %s: read array size of %d for array \"maxAttributes\" of size 6, reading values anyway", file.getFileName(), listCount));
+				int j;
+				for (j = 0; j < 6 && j < listCount; ++j)
+					m_maxAttributes[j].loadFromIff(file);
+				// if there are more params for maxAttributes read and dump them
+				for (; j < listCount; ++j)
+				{
+					IntegerParam dummy;
+					dummy.loadFromIff(file);
+				}
 			}
-		}
-		else if (strcmp(paramName, "minDrainModifier") == 0)
-			m_minDrainModifier.loadFromIff(file);
-		else if (strcmp(paramName, "maxDrainModifier") == 0)
-			m_maxDrainModifier.loadFromIff(file);
-		else if (strcmp(paramName, "minFaucetModifier") == 0)
-			m_minFaucetModifier.loadFromIff(file);
-		else if (strcmp(paramName, "maxFaucetModifier") == 0)
-			m_maxFaucetModifier.loadFromIff(file);
-		else if (strcmp(paramName, "attribMods") == 0)
-		{
-			std::vector<StructParamOT *>::iterator iter;
-			for (iter = m_attribMods.begin(); iter != m_attribMods.end(); ++iter)
+			break;
+			case constcrc("minDrainModifier"):
+				m_minDrainModifier.loadFromIff(file);
+				break;
+			case constcrc("maxDrainModifier"):
+				m_maxDrainModifier.loadFromIff(file);
+				break;
+			case constcrc("minFaucetModifier"):
+				m_minFaucetModifier.loadFromIff(file);
+				break;
+			case constcrc("maxFaucetModifier"):
+				m_maxFaucetModifier.loadFromIff(file);
+				break;
+			case constcrc("attribMods"):
 			{
-				delete *iter;
-				*iter = nullptr;
+				std::vector<StructParamOT *>::iterator iter;
+				for (iter = m_attribMods.begin(); iter != m_attribMods.end(); ++iter)
+				{
+					delete *iter;
+					*iter = nullptr;
+				}
+				m_attribMods.clear();
+				m_attribModsAppend = file.read_bool8();
+					int listCount = file.read_int32();
+				for (int j = 0; j < listCount; ++j)
+				{
+					StructParamOT * newData = new StructParamOT;
+					newData->loadFromIff(file);
+					m_attribMods.push_back(newData);
+				}
+				m_attribModsLoaded = true;
 			}
-			m_attribMods.clear();
-			m_attribModsAppend = file.read_bool8();
-			int listCount = file.read_int32();
-			for (int j = 0; j < listCount; ++j)
+			break;
+			case constcrc("shockWounds"):
+				m_shockWounds.loadFromIff(file);
+				break;
+			case constcrc("canCreateAvatar"):
+				m_canCreateAvatar.loadFromIff(file);
+				break;
+			case constcrc("nameGeneratorType"):
+				m_nameGeneratorType.loadFromIff(file);
+				break;
+			case constcrc("approachTriggerRange"):
+				m_approachTriggerRange.loadFromIff(file);
+				break;
+			case constcrc("maxMentalStates"):
 			{
-				StructParamOT * newData = new StructParamOT;
-				newData->loadFromIff(file);
-				m_attribMods.push_back(newData);
+				int listCount = file.read_int32();
+				DEBUG_WARNING(listCount != 4, ("Template %s: read array size of %d for array \"maxMentalStates\" of size 4, reading values anyway", file.getFileName(), listCount));
+				int j;
+				for (j = 0; j < 4 && j < listCount; ++j)
+					m_maxMentalStates[j].loadFromIff(file);
+				// if there are more params for maxMentalStates read and dump them
+				for (; j < listCount; ++j)
+				{
+					FloatParam dummy;
+					dummy.loadFromIff(file);
+				}
 			}
-			m_attribModsLoaded = true;
-		}
-		else if (strcmp(paramName, "shockWounds") == 0)
-			m_shockWounds.loadFromIff(file);
-		else if (strcmp(paramName, "canCreateAvatar") == 0)
-			m_canCreateAvatar.loadFromIff(file);
-		else if (strcmp(paramName, "nameGeneratorType") == 0)
-			m_nameGeneratorType.loadFromIff(file);
-		else if (strcmp(paramName, "approachTriggerRange") == 0)
-			m_approachTriggerRange.loadFromIff(file);
-		else if (strcmp(paramName, "maxMentalStates") == 0)
-		{
-			int listCount = file.read_int32();
-			DEBUG_WARNING(listCount != 4, ("Template %s: read array size of %d for array \"maxMentalStates\" of size 4, reading values anyway", file.getFileName(), listCount));
-			int j;
-			for (j = 0; j < 4 && j < listCount; ++j)
-				m_maxMentalStates[j].loadFromIff(file);
-			// if there are more params for maxMentalStates read and dump them
-			for (; j < listCount; ++j)
+			break;
+			case constcrc("mentalStatesDecay"):
 			{
-				FloatParam dummy;
-				dummy.loadFromIff(file);
+				int listCount = file.read_int32();
+				DEBUG_WARNING(listCount != 4, ("Template %s: read array size of %d for array \"mentalStatesDecay\" of size 4, reading values anyway", file.getFileName(), listCount));
+				int j;
+				for (j = 0; j < 4 && j < listCount; ++j)
+					m_mentalStatesDecay[j].loadFromIff(file);
+				// if there are more params for mentalStatesDecay read and dump them
+				for (; j < listCount; ++j)
+				{
+					FloatParam dummy;
+					dummy.loadFromIff(file);
+				}
 			}
-		}
-		else if (strcmp(paramName, "mentalStatesDecay") == 0)
-		{
-			int listCount = file.read_int32();
-			DEBUG_WARNING(listCount != 4, ("Template %s: read array size of %d for array \"mentalStatesDecay\" of size 4, reading values anyway", file.getFileName(), listCount));
-			int j;
-			for (j = 0; j < 4 && j < listCount; ++j)
-				m_mentalStatesDecay[j].loadFromIff(file);
-			// if there are more params for mentalStatesDecay read and dump them
-			for (; j < listCount; ++j)
-			{
-				FloatParam dummy;
-				dummy.loadFromIff(file);
-			}
+			break;
 		}
 		file.exitChunk(true);
 	}

@@ -16,6 +16,9 @@
 #include "sharedFile/Iff.h"
 #include "sharedMath/Vector.h"
 #include "sharedObject/ObjectTemplateList.h"
+
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 //@BEGIN TFD TEMPLATE REFS
 //@END TFD TEMPLATE REFS
 #include <algorithm>
@@ -403,10 +406,15 @@ char paramName[MAX_NAME_SIZE];
 	{
 		file.enterChunk();
 		file.read_string(paramName, MAX_NAME_SIZE);
-		if (strcmp(paramName, "cover") == 0)
-			m_cover.loadFromIff(file);
-		else if (strcmp(paramName, "surfaceType") == 0)
-			m_surfaceType.loadFromIff(file);
+
+		switch(runtimeCrc(paramName)) {
+			case constcrc("cover"):
+				m_cover.loadFromIff(file);
+				break;
+			case constcrc("surfaceType"):
+				m_surfaceType.loadFromIff(file);	
+				break;
+		}
 		file.exitChunk(true);
 	}
 

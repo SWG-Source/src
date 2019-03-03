@@ -25,6 +25,9 @@
 #include "sharedObject/PaletteColorCustomizationVariable.h"
 #include "sharedObject/StructureFootprint.h"
 #include "sharedObject/ObjectTemplateList.h"
+
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 //@BEGIN TFD TEMPLATE REFS
 //@END TFD TEMPLATE REFS
 #include <algorithm>
@@ -1328,128 +1331,141 @@ char paramName[MAX_NAME_SIZE];
 	{
 		file.enterChunk();
 		file.read_string(paramName, MAX_NAME_SIZE);
-		if (strcmp(paramName, "paletteColorCustomizationVariables") == 0)
-		{
-			std::vector<StructParamOT *>::iterator iter;
-			for (iter = m_paletteColorCustomizationVariables.begin(); iter != m_paletteColorCustomizationVariables.end(); ++iter)
+
+		switch(runtimeCrc(paramName)) {
+			case constcrc("paletteColorCustomizationVariables"):
 			{
-				delete *iter;
-				*iter = nullptr;
+				std::vector<StructParamOT *>::iterator iter;
+				for (iter = m_paletteColorCustomizationVariables.begin(); iter != m_paletteColorCustomizationVariables.end(); ++iter)
+				{
+					delete *iter;
+					*iter = nullptr;
+				}
+				m_paletteColorCustomizationVariables.clear();
+				m_paletteColorCustomizationVariablesAppend = file.read_bool8();
+				int listCount = file.read_int32();
+				for (int j = 0; j < listCount; ++j)
+				{
+					StructParamOT * newData = new StructParamOT;
+					newData->loadFromIff(file);
+					m_paletteColorCustomizationVariables.push_back(newData);
+				}
+				m_paletteColorCustomizationVariablesLoaded = true;
 			}
-			m_paletteColorCustomizationVariables.clear();
-			m_paletteColorCustomizationVariablesAppend = file.read_bool8();
-			int listCount = file.read_int32();
-			for (int j = 0; j < listCount; ++j)
+			break;
+			case constcrc("rangedIntCustomizationVariables"):
 			{
-				StructParamOT * newData = new StructParamOT;
-				newData->loadFromIff(file);
-				m_paletteColorCustomizationVariables.push_back(newData);
+				std::vector<StructParamOT *>::iterator iter;
+				for (iter = m_rangedIntCustomizationVariables.begin(); iter != m_rangedIntCustomizationVariables.end(); ++iter)
+				{
+					delete *iter;
+					*iter = nullptr;
+				}
+				m_rangedIntCustomizationVariables.clear();
+				m_rangedIntCustomizationVariablesAppend = file.read_bool8();
+				int listCount = file.read_int32();
+				for (int j = 0; j < listCount; ++j)
+				{
+					StructParamOT * newData = new StructParamOT;
+					newData->loadFromIff(file);
+					m_rangedIntCustomizationVariables.push_back(newData);
+				}
+				m_rangedIntCustomizationVariablesLoaded = true;
 			}
-			m_paletteColorCustomizationVariablesLoaded = true;
+			break;
+			case constcrc("constStringCustomizationVariables"):
+			{
+				std::vector<StructParamOT *>::iterator iter;
+				for (iter = m_constStringCustomizationVariables.begin(); iter != m_constStringCustomizationVariables.end(); ++iter)
+				{
+					delete *iter;
+					*iter = nullptr;
+				}
+				m_constStringCustomizationVariables.clear();
+				m_constStringCustomizationVariablesAppend = file.read_bool8();
+				int listCount = file.read_int32();
+				for (int j = 0; j < listCount; ++j)
+				{
+					StructParamOT * newData = new StructParamOT;
+					newData->loadFromIff(file);
+					m_constStringCustomizationVariables.push_back(newData);
+				}
+				m_constStringCustomizationVariablesLoaded = true;
+			}
+			break;
+			case constcrc("socketDestinations"):
+			{
+				std::vector<IntegerParam *>::iterator iter;
+				for (iter = m_socketDestinations.begin(); iter != m_socketDestinations.end(); ++iter)
+				{
+					delete *iter;
+					*iter = nullptr;
+				}
+				m_socketDestinations.clear();
+				m_socketDestinationsAppend = file.read_bool8();
+				int listCount = file.read_int32();
+				for (int j = 0; j < listCount; ++j)
+				{
+					IntegerParam * newData = new IntegerParam;
+					newData->loadFromIff(file);
+					m_socketDestinations.push_back(newData);
+				}
+				m_socketDestinationsLoaded = true;
+			}
+			break;
+			case constcrc("structureFootprintFileName"):
+				m_structureFootprintFileName.loadFromIff(file);
+				break;
+			case constcrc("useStructureFootprintOutline"):
+				m_useStructureFootprintOutline.loadFromIff(file);
+				break;
+			case constcrc("targetable"):
+				m_targetable.loadFromIff(file);
+				break;
+			case constcrc("certificationsRequired"):
+			{
+				std::vector<StringParam *>::iterator iter;
+				for (iter = m_certificationsRequired.begin(); iter != m_certificationsRequired.end(); ++iter)
+				{
+					delete *iter;
+					*iter = nullptr;
+				}
+				m_certificationsRequired.clear();
+				m_certificationsRequiredAppend = file.read_bool8();
+				int listCount = file.read_int32();
+				for (int j = 0; j < listCount; ++j)
+				{
+					StringParam * newData = new StringParam;
+					newData->loadFromIff(file);
+					m_certificationsRequired.push_back(newData);
+				}
+				m_certificationsRequiredLoaded = true;
+			}
+			break;
+			case constcrc("customizationVariableMapping"):
+			{
+				std::vector<StructParamOT *>::iterator iter;
+				for (iter = m_customizationVariableMapping.begin(); iter != m_customizationVariableMapping.end(); ++iter)
+				{
+					delete *iter;
+					*iter = nullptr;
+				}
+				m_customizationVariableMapping.clear();
+				m_customizationVariableMappingAppend = file.read_bool8();
+				int listCount = file.read_int32();
+				for (int j = 0; j < listCount; ++j)
+				{
+					StructParamOT * newData = new StructParamOT;
+					newData->loadFromIff(file);
+					m_customizationVariableMapping.push_back(newData);
+				}
+				m_customizationVariableMappingLoaded = true;
+			}
+			break;
+			case constcrc("clientVisabilityFlag"):
+				m_clientVisabilityFlag.loadFromIff(file);
+				break;
 		}
-		else if (strcmp(paramName, "rangedIntCustomizationVariables") == 0)
-		{
-			std::vector<StructParamOT *>::iterator iter;
-			for (iter = m_rangedIntCustomizationVariables.begin(); iter != m_rangedIntCustomizationVariables.end(); ++iter)
-			{
-				delete *iter;
-				*iter = nullptr;
-			}
-			m_rangedIntCustomizationVariables.clear();
-			m_rangedIntCustomizationVariablesAppend = file.read_bool8();
-			int listCount = file.read_int32();
-			for (int j = 0; j < listCount; ++j)
-			{
-				StructParamOT * newData = new StructParamOT;
-				newData->loadFromIff(file);
-				m_rangedIntCustomizationVariables.push_back(newData);
-			}
-			m_rangedIntCustomizationVariablesLoaded = true;
-		}
-		else if (strcmp(paramName, "constStringCustomizationVariables") == 0)
-		{
-			std::vector<StructParamOT *>::iterator iter;
-			for (iter = m_constStringCustomizationVariables.begin(); iter != m_constStringCustomizationVariables.end(); ++iter)
-			{
-				delete *iter;
-				*iter = nullptr;
-			}
-			m_constStringCustomizationVariables.clear();
-			m_constStringCustomizationVariablesAppend = file.read_bool8();
-			int listCount = file.read_int32();
-			for (int j = 0; j < listCount; ++j)
-			{
-				StructParamOT * newData = new StructParamOT;
-				newData->loadFromIff(file);
-				m_constStringCustomizationVariables.push_back(newData);
-			}
-			m_constStringCustomizationVariablesLoaded = true;
-		}
-		else if (strcmp(paramName, "socketDestinations") == 0)
-		{
-			std::vector<IntegerParam *>::iterator iter;
-			for (iter = m_socketDestinations.begin(); iter != m_socketDestinations.end(); ++iter)
-			{
-				delete *iter;
-				*iter = nullptr;
-			}
-			m_socketDestinations.clear();
-			m_socketDestinationsAppend = file.read_bool8();
-			int listCount = file.read_int32();
-			for (int j = 0; j < listCount; ++j)
-			{
-				IntegerParam * newData = new IntegerParam;
-				newData->loadFromIff(file);
-				m_socketDestinations.push_back(newData);
-			}
-			m_socketDestinationsLoaded = true;
-		}
-		else if (strcmp(paramName, "structureFootprintFileName") == 0)
-			m_structureFootprintFileName.loadFromIff(file);
-		else if (strcmp(paramName, "useStructureFootprintOutline") == 0)
-			m_useStructureFootprintOutline.loadFromIff(file);
-		else if (strcmp(paramName, "targetable") == 0)
-			m_targetable.loadFromIff(file);
-		else if (strcmp(paramName, "certificationsRequired") == 0)
-		{
-			std::vector<StringParam *>::iterator iter;
-			for (iter = m_certificationsRequired.begin(); iter != m_certificationsRequired.end(); ++iter)
-			{
-				delete *iter;
-				*iter = nullptr;
-			}
-			m_certificationsRequired.clear();
-			m_certificationsRequiredAppend = file.read_bool8();
-			int listCount = file.read_int32();
-			for (int j = 0; j < listCount; ++j)
-			{
-				StringParam * newData = new StringParam;
-				newData->loadFromIff(file);
-				m_certificationsRequired.push_back(newData);
-			}
-			m_certificationsRequiredLoaded = true;
-		}
-		else if (strcmp(paramName, "customizationVariableMapping") == 0)
-		{
-			std::vector<StructParamOT *>::iterator iter;
-			for (iter = m_customizationVariableMapping.begin(); iter != m_customizationVariableMapping.end(); ++iter)
-			{
-				delete *iter;
-				*iter = nullptr;
-			}
-			m_customizationVariableMapping.clear();
-			m_customizationVariableMappingAppend = file.read_bool8();
-			int listCount = file.read_int32();
-			for (int j = 0; j < listCount; ++j)
-			{
-				StructParamOT * newData = new StructParamOT;
-				newData->loadFromIff(file);
-				m_customizationVariableMapping.push_back(newData);
-			}
-			m_customizationVariableMappingLoaded = true;
-		}
-		else if (strcmp(paramName, "clientVisabilityFlag") == 0)
-			m_clientVisabilityFlag.loadFromIff(file);
 		file.exitChunk(true);
 	}
 
@@ -1621,10 +1637,15 @@ char paramName[MAX_NAME_SIZE];
 	{
 		file.enterChunk();
 		file.read_string(paramName, MAX_NAME_SIZE);
-		if (strcmp(paramName, "variableName") == 0)
-			m_variableName.loadFromIff(file);
-		else if (strcmp(paramName, "constValue") == 0)
-			m_constValue.loadFromIff(file);
+	
+		switch(runtimeCrc(paramName)){
+			case constcrc("variableName"):
+				m_variableName.loadFromIff(file);
+				break;
+			case constcrc("constValue"):
+				m_constValue.loadFromIff(file);
+				break;
+		}
 		file.exitChunk(true);
 	}
 
@@ -1794,10 +1815,15 @@ char paramName[MAX_NAME_SIZE];
 	{
 		file.enterChunk();
 		file.read_string(paramName, MAX_NAME_SIZE);
-		if (strcmp(paramName, "sourceVariable") == 0)
-			m_sourceVariable.loadFromIff(file);
-		else if (strcmp(paramName, "dependentVariable") == 0)
-			m_dependentVariable.loadFromIff(file);
+
+		switch(runtimeCrc(paramName)) {
+			case constcrc("sourceVariable"):
+				m_sourceVariable.loadFromIff(file);
+				break;
+			case constcrc("dependentVariable"):
+				m_dependentVariable.loadFromIff(file);
+				break;
+		}
 		file.exitChunk(true);
 	}
 
@@ -2161,12 +2187,18 @@ char paramName[MAX_NAME_SIZE];
 	{
 		file.enterChunk();
 		file.read_string(paramName, MAX_NAME_SIZE);
-		if (strcmp(paramName, "variableName") == 0)
-			m_variableName.loadFromIff(file);
-		else if (strcmp(paramName, "palettePathName") == 0)
-			m_palettePathName.loadFromIff(file);
-		else if (strcmp(paramName, "defaultPaletteIndex") == 0)
-			m_defaultPaletteIndex.loadFromIff(file);
+		
+		switch(runtimeCrc(paramName)) {
+			case constcrc("variableName"):
+				m_variableName.loadFromIff(file);
+				break;
+			case constcrc("palettePathName"):
+				m_palettePathName.loadFromIff(file);
+				break;
+			case constcrc("defaultPaletteIndex"):
+				m_defaultPaletteIndex.loadFromIff(file);
+				break;
+		}
 		file.exitChunk(true);
 	}
 
@@ -2875,14 +2907,21 @@ char paramName[MAX_NAME_SIZE];
 	{
 		file.enterChunk();
 		file.read_string(paramName, MAX_NAME_SIZE);
-		if (strcmp(paramName, "variableName") == 0)
-			m_variableName.loadFromIff(file);
-		else if (strcmp(paramName, "minValueInclusive") == 0)
-			m_minValueInclusive.loadFromIff(file);
-		else if (strcmp(paramName, "defaultValue") == 0)
-			m_defaultValue.loadFromIff(file);
-		else if (strcmp(paramName, "maxValueExclusive") == 0)
-			m_maxValueExclusive.loadFromIff(file);
+
+		switch(runtimeCrc(paramName)) {
+			case constcrc("variableName"):
+				m_variableName.loadFromIff(file);
+				break;
+			case constcrc("minValueInclusive"):
+				m_minValueInclusive.loadFromIff(file);
+				break;
+			case constcrc("defaultValue"):
+				m_defaultValue.loadFromIff(file);
+				break;
+			case constcrc("maxValueExclusive"):
+				m_maxValueExclusive.loadFromIff(file);
+				break;
+		}
 		file.exitChunk(true);
 	}
 

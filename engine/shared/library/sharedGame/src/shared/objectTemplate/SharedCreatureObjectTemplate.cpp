@@ -22,6 +22,9 @@
 #include "sharedObject/Object.h"
 #include "sharedObject/ObjectTemplateList.h"
 #include "sharedObject/BasicRangedIntCustomizationVariable.h"
+
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 //@BEGIN TFD TEMPLATE REFS
 //@END TFD TEMPLATE REFS
 #include <algorithm>
@@ -3286,98 +3289,123 @@ char paramName[MAX_NAME_SIZE];
 	{
 		file.enterChunk();
 		file.read_string(paramName, MAX_NAME_SIZE);
-		if (strcmp(paramName, "gender") == 0)
-			m_gender.loadFromIff(file);
-		else if (strcmp(paramName, "niche") == 0)
-			m_niche.loadFromIff(file);
-		else if (strcmp(paramName, "species") == 0)
-			m_species.loadFromIff(file);
-		else if (strcmp(paramName, "race") == 0)
-			m_race.loadFromIff(file);
-		else if (strcmp(paramName, "acceleration") == 0)
-		{
-			int listCount = file.read_int32();
-			DEBUG_WARNING(listCount != 2, ("Template %s: read array size of %d for array \"acceleration\" of size 2, reading values anyway", file.getFileName(), listCount));
-			int j;
-			for (j = 0; j < 2 && j < listCount; ++j)
-				m_acceleration[j].loadFromIff(file);
-			// if there are more params for acceleration read and dump them
-			for (; j < listCount; ++j)
+
+		switch(runtimeCrc(paramName)) {
+			case constcrc("gender"):
+				m_gender.loadFromIff(file);
+				break;
+			case constcrc("niche"):
+				m_niche.loadFromIff(file);
+				break;
+			case constcrc("species"):
+				m_species.loadFromIff(file);
+				break;
+			case constcrc("race"):
+				m_race.loadFromIff(file);
+				break;
+			case constcrc("acceleration"):
 			{
-				FloatParam dummy;
-				dummy.loadFromIff(file);
+				int listCount = file.read_int32();
+				DEBUG_WARNING(listCount != 2, ("Template %s: read array size of %d for array \"acceleration\" of size 2, reading values anyway", file.getFileName(), listCount));
+				int j;
+				for (j = 0; j < 2 && j < listCount; ++j)
+					m_acceleration[j].loadFromIff(file);
+				// if there are more params for acceleration read and dump them
+				for (; j < listCount; ++j)
+				{
+					FloatParam dummy;
+					dummy.loadFromIff(file);
+				}
 			}
-		}
-		else if (strcmp(paramName, "speed") == 0)
-		{
-			int listCount = file.read_int32();
-			DEBUG_WARNING(listCount != 2, ("Template %s: read array size of %d for array \"speed\" of size 2, reading values anyway", file.getFileName(), listCount));
-			int j;
-			for (j = 0; j < 2 && j < listCount; ++j)
-				m_speed[j].loadFromIff(file);
-			// if there are more params for speed read and dump them
-			for (; j < listCount; ++j)
+			break;
+			case constcrc("speed"):
 			{
-				FloatParam dummy;
-				dummy.loadFromIff(file);
+				int listCount = file.read_int32();
+				DEBUG_WARNING(listCount != 2, ("Template %s: read array size of %d for array \"speed\" of size 2, reading values anyway", file.getFileName(), listCount));
+				int j;
+				for (j = 0; j < 2 && j < listCount; ++j)
+					m_speed[j].loadFromIff(file);
+				// if there are more params for speed read and dump them
+				for (; j < listCount; ++j)
+				{
+					FloatParam dummy;
+					dummy.loadFromIff(file);
+				}
 			}
-		}
-		else if (strcmp(paramName, "turnRate") == 0)
-		{
-			int listCount = file.read_int32();
-			DEBUG_WARNING(listCount != 2, ("Template %s: read array size of %d for array \"turnRate\" of size 2, reading values anyway", file.getFileName(), listCount));
-			int j;
-			for (j = 0; j < 2 && j < listCount; ++j)
-				m_turnRate[j].loadFromIff(file);
-			// if there are more params for turnRate read and dump them
-			for (; j < listCount; ++j)
+			break;
+			case constcrc("turnRate"):
 			{
-				FloatParam dummy;
-				dummy.loadFromIff(file);
+				int listCount = file.read_int32();
+				DEBUG_WARNING(listCount != 2, ("Template %s: read array size of %d for array \"turnRate\" of size 2, reading values anyway", file.getFileName(), listCount));
+				int j;
+				for (j = 0; j < 2 && j < listCount; ++j)
+					m_turnRate[j].loadFromIff(file);
+				// if there are more params for turnRate read and dump them
+				for (; j < listCount; ++j)
+				{
+					FloatParam dummy;
+					dummy.loadFromIff(file);
+				}
 			}
-		}
-		else if (strcmp(paramName, "animationMapFilename") == 0)
-			m_animationMapFilename.loadFromIff(file);
-		else if (strcmp(paramName, "slopeModAngle") == 0)
-			m_slopeModAngle.loadFromIff(file);
-		else if (strcmp(paramName, "slopeModPercent") == 0)
-			m_slopeModPercent.loadFromIff(file);
-		else if (strcmp(paramName, "waterModPercent") == 0)
-			m_waterModPercent.loadFromIff(file);
-		else if (strcmp(paramName, "stepHeight") == 0)
-			m_stepHeight.loadFromIff(file);
-		else if (strcmp(paramName, "collisionHeight") == 0)
-			m_collisionHeight.loadFromIff(file);
-		else if (strcmp(paramName, "collisionRadius") == 0)
-			m_collisionRadius.loadFromIff(file);
-		else if (strcmp(paramName, "movementDatatable") == 0)
-			m_movementDatatable.loadFromIff(file);
-		else if (strcmp(paramName, "postureAlignToTerrain") == 0)
-		{
-			int listCount = file.read_int32();
-			DEBUG_WARNING(listCount != 15, ("Template %s: read array size of %d for array \"postureAlignToTerrain\" of size 15, reading values anyway", file.getFileName(), listCount));
-			int j;
-			for (j = 0; j < 15 && j < listCount; ++j)
-				m_postureAlignToTerrain[j].loadFromIff(file);
-			// if there are more params for postureAlignToTerrain read and dump them
-			for (; j < listCount; ++j)
+			break;
+			case constcrc("animationMapFilename"):
+				m_animationMapFilename.loadFromIff(file);
+				break;
+			case constcrc("slopeModAngle"):
+				m_slopeModAngle.loadFromIff(file);
+				break;
+			case constcrc("slopeModPercent"):
+				m_slopeModPercent.loadFromIff(file);
+				break;
+			case constcrc("waterModPercent"):
+				m_waterModPercent.loadFromIff(file);
+				break;
+			case constcrc("stepHeight"):
+				m_stepHeight.loadFromIff(file);
+				break;
+			case constcrc("collisionHeight"):
+				m_collisionHeight.loadFromIff(file);
+				break;
+			case constcrc("collisionRadius"):
+				m_collisionRadius.loadFromIff(file);
+				break;
+			case constcrc("movementDatatable"):
+				m_movementDatatable.loadFromIff(file);
+				break;
+			case constcrc("postureAlignToTerrain"):
 			{
-				BoolParam dummy;
-				dummy.loadFromIff(file);
+				int listCount = file.read_int32();
+				DEBUG_WARNING(listCount != 15, ("Template %s: read array size of %d for array \"postureAlignToTerrain\" of size 15, reading values anyway", file.getFileName(), listCount));
+				int j;
+				for (j = 0; j < 15 && j < listCount; ++j)
+					m_postureAlignToTerrain[j].loadFromIff(file);
+				// if there are more params for postureAlignToTerrain read and dump them
+				for (; j < listCount; ++j)
+				{
+					BoolParam dummy;
+					dummy.loadFromIff(file);
+				}
 			}
+			break;
+			case constcrc("swimHeight"):
+				m_swimHeight.loadFromIff(file);
+				break;
+			case constcrc("warpTolerance"):
+				m_warpTolerance.loadFromIff(file);
+				break;
+			case constcrc("collisionOffsetX"):
+				m_collisionOffsetX.loadFromIff(file);
+				break;
+			case constcrc("collisionOffsetZ"):
+				m_collisionOffsetZ.loadFromIff(file);
+				break;
+			case constcrc("collisionLength"):
+				m_collisionLength.loadFromIff(file);
+				break;
+			case constcrc("cameraHeight"):
+				m_cameraHeight.loadFromIff(file);
+				break;
 		}
-		else if (strcmp(paramName, "swimHeight") == 0)
-			m_swimHeight.loadFromIff(file);
-		else if (strcmp(paramName, "warpTolerance") == 0)
-			m_warpTolerance.loadFromIff(file);
-		else if (strcmp(paramName, "collisionOffsetX") == 0)
-			m_collisionOffsetX.loadFromIff(file);
-		else if (strcmp(paramName, "collisionOffsetZ") == 0)
-			m_collisionOffsetZ.loadFromIff(file);
-		else if (strcmp(paramName, "collisionLength") == 0)
-			m_collisionLength.loadFromIff(file);
-		else if (strcmp(paramName, "cameraHeight") == 0)
-			m_cameraHeight.loadFromIff(file);
 		file.exitChunk(true);
 	}
 

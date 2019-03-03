@@ -206,7 +206,6 @@ bool CMonitorData::processHierarchyRequestBlock(UdpConnection *con, short & sequ
 		send(con, sequence, MON_MSG_REPLY_HIERARCHY_BLOCK, m_buffer, size + 1);
 		memset(m_buffer, 0, 16);
 		count++;
-		size = 0;
 	}
 	memset(m_buffer, 0, 16);
 	send(con, sequence, MON_MSG_REPLY_HIERARCHY_BLOCK_END, m_buffer);

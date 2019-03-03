@@ -14,7 +14,6 @@
 #include "sharedDatabaseInterface/BindableNetworkId.h"
 #include "sharedDatabaseInterface/DbQuery.h"
 #include "serverDatabase/ObjectLocator.h"
-#include "sharedFoundation/StationId.h"
 #include <vector>
 
 // ======================================================================
@@ -33,11 +32,11 @@ class CharacterNameLocator : public ObjectLocator
 	struct CharacterNameRow
 	{
 		DB::BindableNetworkId   character_id;
-		DB::BindableInt64       character_station_id;
+		DB::BindableLong        character_station_id;
 		DB::BindableString<127> character_name;
 		DB::BindableString<127> character_full_name;
-		DB::BindableInt64        character_create_time;
-		DB::BindableInt64        character_last_login_time;
+		DB::BindableLong        character_create_time;
+		DB::BindableLong        character_last_login_time;
 	};
 
 	class CharacterNameQuery : public DB::Query
@@ -64,11 +63,11 @@ class CharacterNameLocator : public ObjectLocator
 	
   private:
 	std::vector<NetworkId>   m_characterIds;
-	std::vector<StationId>   m_stationIds;
+	std::vector<int>         m_stationIds;
 	std::vector<std::string> m_characterNames;
 	std::vector<std::string> m_characterFullNames;
-	std::vector<int64>        m_characterCreateTime;
-	std::vector<int64>        m_characterLastLoginTime;
+	std::vector<int>         m_characterCreateTime;
+	std::vector<int>         m_characterLastLoginTime;
 };
 
 // ======================================================================

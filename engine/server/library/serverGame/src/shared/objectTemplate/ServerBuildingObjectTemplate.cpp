@@ -16,6 +16,9 @@
 #include "sharedFile/Iff.h"
 #include "sharedObject/ObjectTemplate.h"
 #include "sharedObject/ObjectTemplateList.h"
+
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 //@BEGIN TFD TEMPLATE REFS
 //@END TFD TEMPLATE REFS
 #include <stdio.h>
@@ -414,10 +417,15 @@ char paramName[MAX_NAME_SIZE];
 	{
 		file.enterChunk();
 		file.read_string(paramName, MAX_NAME_SIZE);
-		if (strcmp(paramName, "maintenanceCost") == 0)
-			m_maintenanceCost.loadFromIff(file);
-		else if (strcmp(paramName, "isPublic") == 0)
-			m_isPublic.loadFromIff(file);
+		
+		switch(runtimeCrc(paramName)) {
+			case constcrc("maintenanceCost"):
+				m_maintenanceCost.loadFromIff(file);
+				break;
+			case constcrc("isPublic"):
+				m_isPublic.loadFromIff(file);
+				break;
+		}
 		file.exitChunk(true);
 	}
 

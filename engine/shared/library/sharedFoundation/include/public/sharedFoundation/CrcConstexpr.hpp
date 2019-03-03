@@ -3,6 +3,7 @@
 // CrcConstexpr.hpp
 //
 // adapted from Ross Williams' public domain crc code.
+// copied and modified to work as a constexpr by Darth
 //
 // Portions copyright 1998 Bootprint Entertainment
 // Portions copyright 2002 Sony Online Entertainment
@@ -54,15 +55,26 @@ constexpr uint32 CRC_INIT = 0xFFFFFFFF;
 
 constexpr const uint32 constcrc(const char *string)
 {
-	uint32 crc = 0;
-
 	if (!string)
 		return 0;
 
+	uint32 crc = 0;
 	for (crc = CRC_INIT; *string; ++string)
 		crc = crctable[((crc>>24) ^ static_cast<byte>(*string)) & 0xFF] ^ (crc << 8);
 
 	return (crc ^ CRC_INIT);
+}
+
+inline const uint32 runtimeCrc(const char *string)
+{
+        if (!string)
+                return 0;
+
+	uint32 crc = 0;
+        for (crc = CRC_INIT; *string; ++string)
+                crc = crctable[((crc>>24) ^ static_cast<byte>(*string)) & 0xFF] ^ (crc << 8);
+
+        return (crc ^ CRC_INIT);
 }
 
 // ======================================================================

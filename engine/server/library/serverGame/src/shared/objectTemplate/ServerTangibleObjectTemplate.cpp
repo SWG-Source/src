@@ -16,6 +16,9 @@
 #include "sharedFile/Iff.h"
 #include "sharedObject/ObjectTemplate.h"
 #include "sharedObject/ObjectTemplateList.h"
+
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 //@BEGIN TFD TEMPLATE REFS
 #include "ServerArmorTemplate.h"
 //@END TFD TEMPLATE REFS
@@ -1143,39 +1146,50 @@ char paramName[MAX_NAME_SIZE];
 	{
 		file.enterChunk();
 		file.read_string(paramName, MAX_NAME_SIZE);
-		if (strcmp(paramName, "triggerVolumes") == 0)
-		{
-			std::vector<TriggerVolumeParam *>::iterator iter;
-			for (iter = m_triggerVolumes.begin(); iter != m_triggerVolumes.end(); ++iter)
+
+		switch(runtimeCrc(paramName)) {
+			case constcrc("triggerVolumes"):
 			{
-				delete *iter;
-				*iter = nullptr;
+				std::vector<TriggerVolumeParam *>::iterator iter;
+				for (iter = m_triggerVolumes.begin(); iter != m_triggerVolumes.end(); ++iter)
+				{
+					delete *iter;
+					*iter = nullptr;
+				}
+				m_triggerVolumes.clear();
+				m_triggerVolumesAppend = file.read_bool8();
+				int listCount = file.read_int32();
+				for (int j = 0; j < listCount; ++j)
+				{
+					TriggerVolumeParam * newData = new TriggerVolumeParam;
+					newData->loadFromIff(file);
+					m_triggerVolumes.push_back(newData);
+				}
+				m_triggerVolumesLoaded = true;
 			}
-			m_triggerVolumes.clear();
-			m_triggerVolumesAppend = file.read_bool8();
-			int listCount = file.read_int32();
-			for (int j = 0; j < listCount; ++j)
-			{
-				TriggerVolumeParam * newData = new TriggerVolumeParam;
-				newData->loadFromIff(file);
-				m_triggerVolumes.push_back(newData);
-			}
-			m_triggerVolumesLoaded = true;
+			break;
+			case constcrc("combatSkeleton"):
+				m_combatSkeleton.loadFromIff(file);
+				break;
+			case constcrc("maxHitPoints"):
+				m_maxHitPoints.loadFromIff(file);
+				break;
+			case constcrc("armor"):
+				m_armor.loadFromIff(file);
+				break;
+			case constcrc("interestRadius"):
+				m_interestRadius.loadFromIff(file);
+				break;
+			case constcrc("count"):
+				m_count.loadFromIff(file);
+				break;
+			case constcrc("condition"):
+				m_condition.loadFromIff(file);
+				break;
+			case constcrc("wantSawAttackTriggers"):
+				m_wantSawAttackTriggers.loadFromIff(file);
+				break;
 		}
-		else if (strcmp(paramName, "combatSkeleton") == 0)
-			m_combatSkeleton.loadFromIff(file);
-		else if (strcmp(paramName, "maxHitPoints") == 0)
-			m_maxHitPoints.loadFromIff(file);
-		else if (strcmp(paramName, "armor") == 0)
-			m_armor.loadFromIff(file);
-		else if (strcmp(paramName, "interestRadius") == 0)
-			m_interestRadius.loadFromIff(file);
-		else if (strcmp(paramName, "count") == 0)
-			m_count.loadFromIff(file);
-		else if (strcmp(paramName, "condition") == 0)
-			m_condition.loadFromIff(file);
-		else if (strcmp(paramName, "wantSawAttackTriggers") == 0)
-			m_wantSawAttackTriggers.loadFromIff(file);
 		file.exitChunk(true);
 	}
 

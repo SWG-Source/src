@@ -16,6 +16,9 @@
 #include "sharedMath/Vector.h"
 #include "sharedObject/ObjectTemplate.h"
 #include "sharedObject/ObjectTemplateList.h"
+
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 //@BEGIN TFD TEMPLATE REFS
 //@END TFD TEMPLATE REFS
 #include <stdio.h>
@@ -1101,46 +1104,55 @@ char paramName[MAX_NAME_SIZE];
 	{
 		file.enterChunk();
 		file.read_string(paramName, MAX_NAME_SIZE);
-		if (strcmp(paramName, "rating") == 0)
-			m_rating.loadFromIff(file);
-		else if (strcmp(paramName, "integrity") == 0)
-			m_integrity.loadFromIff(file);
-		else if (strcmp(paramName, "effectiveness") == 0)
-			m_effectiveness.loadFromIff(file);
-		else if (strcmp(paramName, "specialProtection") == 0)
-		{
-			std::vector<StructParamOT *>::iterator iter;
-			for (iter = m_specialProtection.begin(); iter != m_specialProtection.end(); ++iter)
+
+		switch(runtimeCrc(paramName)) {
+			case constcrc("rating"):
+				m_rating.loadFromIff(file);
+				break;
+			case constcrc("integrity"):
+				m_integrity.loadFromIff(file);
+				break;
+			case constcrc("effectiveness"):
+				m_effectiveness.loadFromIff(file);
+				break;
+			case constcrc("specialProtection"):
 			{
-				delete *iter;
-				*iter = nullptr;
+				std::vector<StructParamOT *>::iterator iter;
+				for (iter = m_specialProtection.begin(); iter != m_specialProtection.end(); ++iter)
+				{
+					delete *iter;
+					*iter = nullptr;
+				}
+				m_specialProtection.clear();
+				m_specialProtectionAppend = file.read_bool8();
+				int listCount = file.read_int32();
+				for (int j = 0; j < listCount; ++j)
+				{
+					StructParamOT * newData = new StructParamOT;
+					newData->loadFromIff(file);
+					m_specialProtection.push_back(newData);
+				}
+				m_specialProtectionLoaded = true;
 			}
-			m_specialProtection.clear();
-			m_specialProtectionAppend = file.read_bool8();
-			int listCount = file.read_int32();
-			for (int j = 0; j < listCount; ++j)
+			break;
+			case constcrc("vulnerability"):
+				m_vulnerability.loadFromIff(file);	
+				break;
+			case constcrc("encumbrance"):
 			{
-				StructParamOT * newData = new StructParamOT;
-				newData->loadFromIff(file);
-				m_specialProtection.push_back(newData);
+				int listCount = file.read_int32();
+				DEBUG_WARNING(listCount != 3, ("Template %s: read array size of %d for array \"encumbrance\" of size 3, reading values anyway", file.getFileName(), listCount));
+				int j;
+				for (j = 0; j < 3 && j < listCount; ++j)
+					m_encumbrance[j].loadFromIff(file);
+				// if there are more params for encumbrance read and dump them
+				for (; j < listCount; ++j)
+				{
+					IntegerParam dummy;
+					dummy.loadFromIff(file);
+				}
 			}
-			m_specialProtectionLoaded = true;
-		}
-		else if (strcmp(paramName, "vulnerability") == 0)
-			m_vulnerability.loadFromIff(file);
-		else if (strcmp(paramName, "encumbrance") == 0)
-		{
-			int listCount = file.read_int32();
-			DEBUG_WARNING(listCount != 3, ("Template %s: read array size of %d for array \"encumbrance\" of size 3, reading values anyway", file.getFileName(), listCount));
-			int j;
-			for (j = 0; j < 3 && j < listCount; ++j)
-				m_encumbrance[j].loadFromIff(file);
-			// if there are more params for encumbrance read and dump them
-			for (; j < listCount; ++j)
-			{
-				IntegerParam dummy;
-				dummy.loadFromIff(file);
-			}
+			break;
 		}
 		file.exitChunk(true);
 	}
@@ -1462,10 +1474,16 @@ char paramName[MAX_NAME_SIZE];
 	{
 		file.enterChunk();
 		file.read_string(paramName, MAX_NAME_SIZE);
-		if (strcmp(paramName, "type") == 0)
-			m_type.loadFromIff(file);
-		else if (strcmp(paramName, "effectiveness") == 0)
-			m_effectiveness.loadFromIff(file);
+
+		switch (runtimeCrc(paramName)) {		
+			case constcrc("type"):
+				m_type.loadFromIff(file);
+				break;
+			case constcrc("effectiveness"):
+				m_effectiveness.loadFromIff(file);
+				break;
+		}
+
 		file.exitChunk(true);
 	}
 

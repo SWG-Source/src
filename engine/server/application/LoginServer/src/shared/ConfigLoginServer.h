@@ -20,6 +20,7 @@ class ConfigLoginServer
 		int		        httpServicePort;
 		bool            validateClientVersion;
 		bool            validateStationKey;
+    bool            easyExternalAccess;
 		bool            doSessionLogin;
 		bool            doConsumption;
 		const char *    sessionServers;
@@ -64,12 +65,13 @@ class ConfigLoginServer
 		int             populationLightThresholdPercent;
 		int             csToolPort;
 
-		bool		    requireSecureLoginForCsTool;
-		bool		    useExternalAuth;
+		bool	        requireSecureLoginForCsTool;
+		bool	        useExternalAuth;
+		bool	        useSimpleAuth;
 
 		const char *	externalAuthURL;
 
-		bool 			useOldSuidGenerator;
+		bool 		useOldSuidGenerator;
 	};
 
 	static const uint16 getCentralServicePort();
@@ -80,6 +82,7 @@ class ConfigLoginServer
 	static const uint16 getHttpServicePort();
 	static const bool   getValidateClientVersion();
 	static const bool   getValidateStationKey();
+  static const bool   getEasyExternalAccess();
 	static const bool   getDoSessionLogin();
 	static const bool   getDoConsumption();
 	static const char * getSessionServers();
@@ -132,8 +135,9 @@ class ConfigLoginServer
 	static int          getPopulationMediumThresholdPercent();
 	static int          getPopulationLightThresholdPercent();
 
-	static bool	        getUseExternalAuth();
+	static bool	    getUseExternalAuth();
 	static const char * getExternalAuthUrl();
+	static const bool   getUseSimpleAuth();
 	static bool	    getUseOldSuidGenerator();
 
 	// has character creation for this cluster been disabled through config option
@@ -213,6 +217,13 @@ inline const bool ConfigLoginServer::getValidateClientVersion()
 inline const bool ConfigLoginServer::getValidateStationKey()
 {
 	return (data->validateStationKey);
+}
+
+// ----------------------------------------------------------------------
+
+inline const bool ConfigLoginServer::getEasyExternalAccess()
+{
+	return (data->easyExternalAccess);
 }
 
 // ----------------------------------------------------------------------
@@ -487,6 +498,10 @@ inline const char * ConfigLoginServer::getExternalAuthUrl()
 	return data->externalAuthURL;
 }
 
+inline const bool ConfigLoginServer::getUseSimpleAuth()
+{
+	return data->useSimpleAuth;
+}
 
 inline bool ConfigLoginServer::getUseOldSuidGenerator()
 {

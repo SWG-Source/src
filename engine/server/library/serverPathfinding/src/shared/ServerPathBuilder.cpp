@@ -1141,30 +1141,31 @@ void ServerPathBuilder::addPathNode ( CellProperty const * cell, PathNode const 
 
 	float dist2 = REAL_MAX;
 
-	if(m_path && !m_path->empty()) dist2 = m_path->back().getPosition_w().magnitudeBetweenSquared(loc.getPosition_w());
+	if(m_path && !m_path->empty()) {
+		dist2 = m_path->back().getPosition_w().magnitudeBetweenSquared(loc.getPosition_w());
 
-	if(dist2 > 0.01)
-	{
-		// jitter the node if it's a city waypoint
-
-		if(m_enableJitter && (node->getType() == PNT_CityWaypoint))
+		if(dist2 > 0.01)
 		{
-			Vector offset = Vector::zero;
-
-			do
+			// jitter the node if it's a city waypoint
+			if(m_enableJitter && (node->getType() == PNT_CityWaypoint))
 			{
-				offset = Vector( Random::randomReal(-1.0f,1.0f), 0.0f, Random::randomReal(-1.0f,1.0f) );
+				Vector offset = Vector::zero;
+
+				do
+				{
+					offset = Vector( Random::randomReal(-1.0f,1.0f), 0.0f, Random::randomReal(-1.0f,1.0f) );
+				}
+				while(offset.magnitudeSquared() > 1.0f);
+	
+				static float tweakValue = 1.0f;
+
+				offset *= tweakValue;
+
+				loc.setPosition_p( loc.getPosition_p() + offset );
 			}
-			while(offset.magnitudeSquared() > 1.0f);
-
-			static float tweakValue = 1.0f;
-
-			offset *= tweakValue;
-
-			loc.setPosition_p( loc.getPosition_p() + offset );
+	
+			m_path->push_back(loc);
 		}
-
-		m_path->push_back(loc);
 	}
 }
 

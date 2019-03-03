@@ -1942,8 +1942,10 @@ std::string name;
 					{
 						// we need to read the next line to continue parsing
 						line = goToNextLine();
-						if (line == CHAR_ERROR)
+						if (line == CHAR_ERROR) {
+							delete newData;
 							return line;
+						}
 					}
 					line = parseDynamicVariableParameterList(*newData, line);
 				}

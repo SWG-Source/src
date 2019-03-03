@@ -16,6 +16,9 @@
 #include "sharedFile/Iff.h"
 #include "sharedObject/ObjectTemplate.h"
 #include "sharedObject/ObjectTemplateList.h"
+
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 //@BEGIN TFD TEMPLATE REFS
 //@END TFD TEMPLATE REFS
 #include <stdio.h>
@@ -802,14 +805,21 @@ char paramName[MAX_NAME_SIZE];
 	{
 		file.enterChunk();
 		file.read_string(paramName, MAX_NAME_SIZE);
-		if (strcmp(paramName, "fuelType") == 0)
-			m_fuelType.loadFromIff(file);
-		else if (strcmp(paramName, "currentFuel") == 0)
-			m_currentFuel.loadFromIff(file);
-		else if (strcmp(paramName, "maxFuel") == 0)
-			m_maxFuel.loadFromIff(file);
-		else if (strcmp(paramName, "consumpsion") == 0)
-			m_consumpsion.loadFromIff(file);
+
+		switch(runtimeCrc(paramName)) {
+			case constcrc("fuelType"):
+				m_fuelType.loadFromIff(file);
+				break;
+			case constcrc("currentFuel"):
+				m_currentFuel.loadFromIff(file);
+				break;
+			case constcrc("maxFuel"):
+				m_maxFuel.loadFromIff(file);
+				break;
+			case constcrc("consumpsion"):
+				m_consumpsion.loadFromIff(file);
+				break;
+		}
 		file.exitChunk(true);
 	}
 

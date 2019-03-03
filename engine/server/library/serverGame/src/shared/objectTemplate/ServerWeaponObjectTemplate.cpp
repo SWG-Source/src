@@ -16,6 +16,9 @@
 #include "sharedFile/Iff.h"
 #include "sharedObject/ObjectTemplate.h"
 #include "sharedObject/ObjectTemplateList.h"
+
+#include "sharedFoundation/CrcConstexpr.hpp"
+
 //@BEGIN TFD TEMPLATE REFS
 //@END TFD TEMPLATE REFS
 #include <stdio.h>
@@ -2483,36 +2486,54 @@ char paramName[MAX_NAME_SIZE];
 	{
 		file.enterChunk();
 		file.read_string(paramName, MAX_NAME_SIZE);
-		if (strcmp(paramName, "weaponType") == 0)
-			m_weaponType.loadFromIff(file);
-		else if (strcmp(paramName, "attackType") == 0)
-			m_attackType.loadFromIff(file);
-		else if (strcmp(paramName, "damageType") == 0)
-			m_damageType.loadFromIff(file);
-		else if (strcmp(paramName, "elementalType") == 0)
-			m_elementalType.loadFromIff(file);
-		else if (strcmp(paramName, "elementalValue") == 0)
-			m_elementalValue.loadFromIff(file);
-		else if (strcmp(paramName, "minDamageAmount") == 0)
-			m_minDamageAmount.loadFromIff(file);
-		else if (strcmp(paramName, "maxDamageAmount") == 0)
-			m_maxDamageAmount.loadFromIff(file);
-		else if (strcmp(paramName, "attackSpeed") == 0)
-			m_attackSpeed.loadFromIff(file);
-		else if (strcmp(paramName, "audibleRange") == 0)
-			m_audibleRange.loadFromIff(file);
-		else if (strcmp(paramName, "minRange") == 0)
-			m_minRange.loadFromIff(file);
-		else if (strcmp(paramName, "maxRange") == 0)
-			m_maxRange.loadFromIff(file);
-		else if (strcmp(paramName, "damageRadius") == 0)
-			m_damageRadius.loadFromIff(file);
-		else if (strcmp(paramName, "woundChance") == 0)
-			m_woundChance.loadFromIff(file);
-		else if (strcmp(paramName, "attackCost") == 0)
-			m_attackCost.loadFromIff(file);
-		else if (strcmp(paramName, "accuracy") == 0)
-			m_accuracy.loadFromIff(file);
+
+		switch(runtimeCrc(paramName)) {
+			case constcrc("weaponType"):
+				m_weaponType.loadFromIff(file);
+				break;
+			case constcrc("attackType"):
+				m_attackType.loadFromIff(file);
+				break;
+			case constcrc("damageType"):
+				m_damageType.loadFromIff(file);
+				break;
+			case constcrc("elementalType"):
+				m_elementalType.loadFromIff(file);
+				break;
+			case constcrc("elementalValue"):
+				m_elementalValue.loadFromIff(file);
+				break;
+			case constcrc("minDamageAmount"):
+				m_minDamageAmount.loadFromIff(file);
+				break;
+			case constcrc("maxDamageAmount"):
+				m_maxDamageAmount.loadFromIff(file);
+				break;
+			case constcrc("attackSpeed"):
+				m_attackSpeed.loadFromIff(file);
+				break;
+			case constcrc("audibleRange"):
+				m_audibleRange.loadFromIff(file);
+				break;
+			case constcrc("minRange"):
+				m_minRange.loadFromIff(file);
+				break;
+			case constcrc("maxRange"):
+				m_maxRange.loadFromIff(file);	
+				break;
+			case constcrc("damageRadius"):
+				m_damageRadius.loadFromIff(file);
+				break;
+			case constcrc("woundChance"):
+				m_woundChance.loadFromIff(file);
+				break;
+			case constcrc("attackCost"):
+				m_attackCost.loadFromIff(file);
+				break;
+			case constcrc("accuracy"):
+				m_accuracy.loadFromIff(file);
+				break;
+		}
 		file.exitChunk(true);
 	}
 

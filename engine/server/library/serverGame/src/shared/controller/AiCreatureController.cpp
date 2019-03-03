@@ -574,7 +574,7 @@ float AICreatureController::realAlter(float time)
 
 					setRetreating(false);
 
-					WARNING(true, ("AICreatureController::realAlter() owner(%s) inCombat(%s) Retreating has lasted(%d) > %d seconds. Auto-releasing retreat.", getDebugInformation().c_str(), getCreature()->isInCombat() ? "yes" : "no", retreatingTime, maxRetreatTime));
+					DEBUG_WARNING(true, ("AICreatureController::realAlter() owner(%s) inCombat(%s) Retreating has lasted(%d) > %d seconds. Auto-releasing retreat.", getDebugInformation().c_str(), getCreature()->isInCombat() ? "yes" : "no", retreatingTime, maxRetreatTime));
 				}
 			}
 		}
@@ -685,7 +685,7 @@ float AICreatureController::realAlter(float time)
 				std::string warningString;
 				m_movement->getDebugInfo(warningString);
 
-				WARNING(true, (FormattedString<4096>().sprintf("AICreatureController::realAlter() owner(%s) movement(%s) alter took %.0fms. Dumping movement info - %s\n", getDebugInformation().c_str(), AiMovementBase::getMovementString(m_movement->getType()), msec, warningString.c_str())));
+				DEBUG_WARNING(true, (FormattedString<4096>().sprintf("AICreatureController::realAlter() owner(%s) movement(%s) alter took %.0fms. Dumping movement info - %s\n", getDebugInformation().c_str(), AiMovementBase::getMovementString(m_movement->getType()), msec, warningString.c_str())));
 			}
 		}
 	}
@@ -751,7 +751,7 @@ bool AICreatureController::suspendMovement()
 	else if (m_movement != AiMovementBaseNullPtr)
 	{
 		result = false;
-		WARNING(true, ("AICreatureController::suspendMovement called for creature %s when there is already a suspended movement type %d", 
+		DEBUG_WARNING(true, ("AICreatureController::suspendMovement called for creature %s when there is already a suspended movement type %d", 
 			getOwner()->getNetworkId().getValueString().c_str(), static_cast<int>(m_movement->getType())));
 	}
 	return result;
@@ -1117,7 +1117,7 @@ bool AICreatureController::faceTo( NetworkId const & targetId )
 
 	if (!target)
 	{
-		WARNING(true, ("AICreatureController::faceTo() owner(%s) Unable to resolve target(%s) to a ServerObject", getDebugInformation().c_str(), targetId.getValueString().c_str()));
+		DEBUG_WARNING(true, ("AICreatureController::faceTo() owner(%s) Unable to resolve target(%s) to a ServerObject", getDebugInformation().c_str(), targetId.getValueString().c_str()));
 		return false;
 	}
 
@@ -1162,7 +1162,7 @@ bool AICreatureController::follow( NetworkId const & targetId, float minDistance
 
 	if (!target)
 	{
-		WARNING(true, ("AICreatureController::follow() owner(%s) distance[%.2f...%.2f] Unable to resolve target(%s) to a ServerObject", getDebugInformation().c_str(), minDistance, maxDistance, targetId.getValueString().c_str()));
+		DEBUG_WARNING(true, ("AICreatureController::follow() owner(%s) distance[%.2f...%.2f] Unable to resolve target(%s) to a ServerObject", getDebugInformation().c_str(), minDistance, maxDistance, targetId.getValueString().c_str()));
 		return false;
 	}
 
@@ -1210,7 +1210,7 @@ bool AICreatureController::follow( NetworkId const & targetId, Vector const & of
 
 	if (!target)
 	{
-		WARNING(true, ("AICreatureController::follow() owner(%s) offset(%.0f, %.0f, %.0f) Unable to resolve target(%s) to a ServerObject", getDebugInformation().c_str(), offset.x, offset.y, offset.z, targetId.getValueString().c_str()));
+		DEBUG_WARNING(true, ("AICreatureController::follow() owner(%s) offset(%.0f, %.0f, %.0f) Unable to resolve target(%s) to a ServerObject", getDebugInformation().c_str(), offset.x, offset.y, offset.z, targetId.getValueString().c_str()));
 		return false;
 	}
 
@@ -1905,7 +1905,7 @@ float AICreatureController::getRespectRadius(NetworkId const & target) const
 		}
 		else
 		{
-			WARNING(true, ("AICreatureController::getRespectRadius() owner(%s) master(%s) The owner has a master who is not a player. Why does this happen?", getDebugInformation().c_str(), (respectCreatureObject != nullptr) ? respectCreatureObject->getDebugInformation().c_str() : masterId.getValueString().c_str()));
+			DEBUG_WARNING(true, ("AICreatureController::getRespectRadius() owner(%s) master(%s) The owner has a master who is not a player. Why does this happen?", getDebugInformation().c_str(), (respectCreatureObject != nullptr) ? respectCreatureObject->getDebugInformation().c_str() : masterId.getValueString().c_str()));
 		}
 	}
 
@@ -2402,7 +2402,7 @@ NetworkId AICreatureController::createWeapon(char const * const functionName, Cr
 
 	if (inventory == nullptr)
 	{
-		WARNING(true, ("AICreatureController::%s() Unable to find inventory for (%s) to place a weapon(%s)", functionName, getDebugInformation().c_str(), weaponName.getString()));
+		DEBUG_WARNING(true, ("AICreatureController::%s() Unable to find inventory for (%s) to place a weapon(%s)", functionName, getDebugInformation().c_str(), weaponName.getString()));
 	}
 	else
 	{
@@ -2432,7 +2432,7 @@ NetworkId AICreatureController::createWeapon(char const * const functionName, Cr
 
 					if (weaponCrcName.getCrc() == 0)
 					{
-						WARNING(true, ("AICreatureController::%s() Unable to resolve a weapon(%s) crc for (%s)", functionName, weaponTemplateName.c_str(), getDebugInformation().c_str()));
+						DEBUG_WARNING(true, ("AICreatureController::%s() Unable to resolve a weapon(%s) crc for (%s)", functionName, weaponTemplateName.c_str(), getDebugInformation().c_str()));
 					}
 					else
 					{
@@ -2445,7 +2445,7 @@ NetworkId AICreatureController::createWeapon(char const * const functionName, Cr
 						}
 						else
 						{
-							WARNING(true, ("AICreatureController::%s() Unable to create a WeaponObject(%s) for (%s)", functionName, weaponTemplateName.c_str(), getDebugInformation().c_str()));
+							DEBUG_WARNING(true, ("AICreatureController::%s() Unable to create a WeaponObject(%s) for (%s)", functionName, weaponTemplateName.c_str(), getDebugInformation().c_str()));
 						}
 					}
 				}
@@ -2484,7 +2484,7 @@ void AICreatureController::equipPrimaryWeapon()
 	{
 		if (!isCombatAi())
 		{
-			WARNING(true, ("AICreatureController::equipPrimaryWeapon() owner(%s) A non-combat AI is trying to equip a weapon", getDebugInformation().c_str()));
+			DEBUG_WARNING(true, ("AICreatureController::equipPrimaryWeapon() owner(%s) A non-combat AI is trying to equip a weapon", getDebugInformation().c_str()));
 			return;
 		}
 
@@ -2524,13 +2524,13 @@ void AICreatureController::equipPrimaryWeapon()
 					}
 					else
 					{
-						WARNING(true, ("AICreatureController::equipPrimaryWeapon() owner(%s) Transfer of primaryWeapon(%s) to the visible equipped slot failed(%d).", getDebugInformation().c_str(), primaryWeaponServerObject->getDebugInformation().c_str(), errorCode));
+						DEBUG_WARNING(true, ("AICreatureController::equipPrimaryWeapon() owner(%s) Transfer of primaryWeapon(%s) to the visible equipped slot failed(%d).", getDebugInformation().c_str(), primaryWeaponServerObject->getDebugInformation().c_str(), errorCode));
 					}
 				}
 			}
 			else
 			{
-				WARNING(true, ("AICreatureController::equipPrimaryWeapon() owner(%s) Unable to resolve primaryWeapon(%s:%s) to a WeaponObject.", getDebugInformation().c_str(), m_primaryWeapon.get().getValueString().c_str(), m_aiCreatureData->m_primaryWeapon.getString()));
+				DEBUG_WARNING(true, ("AICreatureController::equipPrimaryWeapon() owner(%s) Unable to resolve primaryWeapon(%s:%s) to a WeaponObject.", getDebugInformation().c_str(), m_primaryWeapon.get().getValueString().c_str(), m_aiCreatureData->m_primaryWeapon.getString()));
 			}
 		}
 	}
@@ -2549,7 +2549,7 @@ void AICreatureController::equipSecondaryWeapon()
 	{
 		if (!isCombatAi())
 		{
-			WARNING(true, ("AICreatureController::equipSecondaryWeapon() owner(%s) A non-combat AI is trying to equip a weapon", getDebugInformation().c_str()));
+			DEBUG_WARNING(true, ("AICreatureController::equipSecondaryWeapon() owner(%s) A non-combat AI is trying to equip a weapon", getDebugInformation().c_str()));
 			return;
 		}
 
@@ -2589,13 +2589,13 @@ void AICreatureController::equipSecondaryWeapon()
 					}
 					else
 					{
-						WARNING(true, ("AICreatureController::equipSecondaryWeapon() owner(%s) Transfer of secondaryWeapon(%s) to the visible equipped slot failed(%d).", getDebugInformation().c_str(), secondaryWeaponServerObject->getDebugInformation().c_str(), errorCode));
+						DEBUG_WARNING(true, ("AICreatureController::equipSecondaryWeapon() owner(%s) Transfer of secondaryWeapon(%s) to the visible equipped slot failed(%d).", getDebugInformation().c_str(), secondaryWeaponServerObject->getDebugInformation().c_str(), errorCode));
 					}
 				}
 			}
 			else
 			{
-				WARNING(true, ("AICreatureController::equipSecondaryWeapon() owner(%s) Unable to resolve secondaryWeapon(%s:%s) to a WeaponObject.", getDebugInformation().c_str(), m_secondaryWeapon.get().getValueString().c_str(), m_aiCreatureData->m_secondaryWeapon.getString()));
+				DEBUG_WARNING(true, ("AICreatureController::equipSecondaryWeapon() owner(%s) Unable to resolve secondaryWeapon(%s:%s) to a WeaponObject.", getDebugInformation().c_str(), m_secondaryWeapon.get().getValueString().c_str(), m_aiCreatureData->m_secondaryWeapon.getString()));
 			}
 		}
 	}
@@ -2614,7 +2614,7 @@ void AICreatureController::unEquipWeapons()
 	{
 		if (!isCombatAi())
 		{
-			WARNING(true, ("AICreatureController::unEquipWeapons() owner(%s) A non-combat AI is trying to unequip a weapon", getDebugInformation().c_str()));
+			DEBUG_WARNING(true, ("AICreatureController::unEquipWeapons() owner(%s) A non-combat AI is trying to unequip a weapon", getDebugInformation().c_str()));
 			return;
 		}
 
@@ -2636,12 +2636,12 @@ void AICreatureController::unEquipWeapons()
 
 					if (!ContainerInterface::transferItemToVolumeContainer(*inventory, *currentWeaponObject, creatureOwner, error))
 					{
-						WARNING(true, ("AICreatureController::unEquipWeapons() owner(%s) Transfer of the currentWeapon(%s) to the inventory failed(%d).", getDebugInformation().c_str(), currentWeaponObject->getDebugInformation().c_str(), error));
+						DEBUG_WARNING(true, ("AICreatureController::unEquipWeapons() owner(%s) Transfer of the currentWeapon(%s) to the inventory failed(%d).", getDebugInformation().c_str(), currentWeaponObject->getDebugInformation().c_str(), error));
 					}
 				}
 				else
 				{
-					WARNING(true, ("AICreatureController::unEquipWeapons() owner(%s) Unable to find an inventory.", getDebugInformation().c_str()));
+					DEBUG_WARNING(true, ("AICreatureController::unEquipWeapons() owner(%s) Unable to find an inventory.", getDebugInformation().c_str()));
 				}
 			}
 
@@ -2653,7 +2653,7 @@ void AICreatureController::unEquipWeapons()
 				}
 				else
 				{
-					WARNING(true, ("AICreatureController::unEquipWeapons() owner(%s) nullptr default weapon", getDebugInformation().c_str()));
+					DEBUG_WARNING(true, ("AICreatureController::unEquipWeapons() owner(%s) nullptr default weapon", getDebugInformation().c_str()));
 				}
 			}
 		}
@@ -2822,7 +2822,7 @@ void AICreatureController::setRetreating(bool const retreating)
 				}
 				else
 				{
-					WARNING(true, ("AICreatureController::setRetreating() ai(%s) Unable to resolve the cellId(%s) to a CellObject", creatureOwner->getDebugInformation().c_str(), cellId.getValueString().c_str()));
+					DEBUG_WARNING(true, ("AICreatureController::setRetreating() ai(%s) Unable to resolve the cellId(%s) to a CellObject", creatureOwner->getDebugInformation().c_str(), cellId.getValueString().c_str()));
 				}
 			}
 			else

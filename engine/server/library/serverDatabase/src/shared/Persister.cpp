@@ -290,10 +290,10 @@ void Persister::onFrameBarrierReached()
 
 void Persister::startSave(void)
 {
-	DEBUG_REPORT_LOG(ConfigServerDatabase::getReportSaveTimes(),("Starting save with data for %i objects (%i new)\n",m_objectSnapshotMap.size(), m_newObjectCount));
-	LOG("SaveTimes",("Starting save with data for %i objects (%i new)",m_objectSnapshotMap.size(), m_newObjectCount));
+	//DEBUG_REPORT_LOG(ConfigServerDatabase::getReportSaveTimes(),("Starting save with data for %i objects (%i new)\n",m_objectSnapshotMap.size(), m_newObjectCount));
+	//LOG("SaveTimes",("Starting save with data for %i objects (%i new)",m_objectSnapshotMap.size(), m_newObjectCount));
 	// notify Central that a save is starting.  It needs this to determine when it can perform graceful shutdowns
-	LOG("Database",("Sending DatabaseSaveStart network message to Central."));
+	//LOG("Database",("Sending DatabaseSaveStart network message to Central."));
 	DatabaseSaveStart const startSaveMessage;
 	DatabaseProcess::getInstance().sendToCentralServer(startSaveMessage, true);
 
@@ -347,7 +347,7 @@ void Persister::startSave(void)
 	{
 		GenericValueTypeMessage<int> const saveCompleteMessage("DatabaseSaveComplete", ++m_saveCounter);
 		DatabaseProcess::getInstance().sendToCentralServer(saveCompleteMessage, true);
-		LOG("Database",("Sending DatabaseSaveComplete network message to Central."));
+		//LOG("Database",("Sending DatabaseSaveComplete network message to Central."));
 	}
 
 	// clear the buffers
@@ -619,19 +619,19 @@ void Persister::saveCompleted(Snapshot *completedSnapshot)
 			if (saveTime > m_maxSaveTime)
 				m_maxSaveTime = saveTime;
 
-				DEBUG_REPORT_LOG(true,("Save completed in %i.  (Average %i, max %i)\n", saveTime, m_totalSaveTime/m_saveCount, m_maxSaveTime));
-				LOG("SaveTimes",("Save completed in %i.  (Average %i, max %i)", saveTime, m_totalSaveTime/m_saveCount, m_maxSaveTime));
+				//DEBUG_REPORT_LOG(true,("Save completed in %i.  (Average %i, max %i)\n", saveTime, m_totalSaveTime/m_saveCount, m_maxSaveTime));
+				//LOG("SaveTimes",("Save completed in %i.  (Average %i, max %i)", saveTime, m_totalSaveTime/m_saveCount, m_maxSaveTime));
 	
 				m_lastSaveTime = saveTime;
 		}
 
-		LOG("Database",("Sending DatabaseSaveComplete network message to Central."));
+		//LOG("Database",("Sending DatabaseSaveComplete network message to Central."));
 
 		// TODO: so do we send this for the other snapshot type or not? hrmph
                 // message Central Server that the current save cycle is complete
                 GenericValueTypeMessage<int> const saveCompleteMessage("DatabaseSaveComplete", ++m_saveCounter);
                 DatabaseProcess::getInstance().sendToCentralServer(saveCompleteMessage, true);
-                LOG("Database",("Sending DatabaseSaveComplete network message to Central."));
+                //LOG("Database",("Sending DatabaseSaveComplete network message to Central."));
 	}
 		
 	if (!found) {		
@@ -644,7 +644,7 @@ void Persister::saveCompleted(Snapshot *completedSnapshot)
 			}
 		}
 	
-		DEBUG_REPORT_LOG(ConfigServerDatabase::getReportSaveTimes(),("New character save completed\n"));
+		//DEBUG_REPORT_LOG(ConfigServerDatabase::getReportSaveTimes(),("New character save completed\n"));
 	}
 
 	if (found && completedSnapshot != nullptr) {
@@ -716,7 +716,7 @@ void Persister::receiveMessage(const MessageDispatch::Emitter & source, const Me
 		{
 			auto ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 			AddCharacterMessage ocm(ri);
-			DEBUG_REPORT_LOG(true, ("Got AddCharacterMessage for object %s.\n",ocm.getObjectId().getValueString().c_str()));
+			//DEBUG_REPORT_LOG(true, ("Got AddCharacterMessage for object %s.\n",ocm.getObjectId().getValueString().c_str()));
 
 			addCharacter(ocm.getAccountNumber(), ocm.getObjectId(), ocm.getProcess(), ocm.getName(), ocm.getSpecial());
 			break;
