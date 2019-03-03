@@ -189,7 +189,7 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
 	    }
 
             if (done) {
-                std::string response = api.getRaw();
+                std::string response = api.getString("response");
 
                 if (response == "success") {
                     authOK = true;
