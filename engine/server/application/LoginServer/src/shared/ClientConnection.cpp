@@ -257,13 +257,13 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
         m_stationId = user_id;
 
         if (!testMode) {
-            REPORT_LOG(true, ("Client connected. Username: %s (%i) \n", uname.c_str(), user_id));
+            REPORT_LOG(true, ("Client connected. Username: %s (%i) \n", id.c_str(), user_id));
 
             LoginServer::getInstance().onValidateClient(m_stationId, uname, this, true, sessionID.c_str(), 0xFFFFFFFF, 0xFFFFFFFF);
         } else {
             LoginServer::getInstance().onValidateClient(m_stationId, uname, this, true, nullptr, 0xFFFFFFFF, 0xFFFFFFFF);
         }
-        LOG("LoginClientConnection", ("validateClient() for stationId (%i) at IP (%s), id (%s)", user_id, getRemoteAddress().c_str(), uname.c_str()));
+        LOG("LoginClientConnection", ("validateClient() for stationId (%i) at IP (%s), id (%s)", id.c_str(), getRemoteAddress().c_str(), uname.c_str()));
     }
 }
 

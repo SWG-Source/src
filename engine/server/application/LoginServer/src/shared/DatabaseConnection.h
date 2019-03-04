@@ -47,7 +47,6 @@ class DatabaseConnection : public Singleton<DatabaseConnection>
 	void update                        ();
 	void getAccountValidationData      (StationId stationId, uint32 clusterId, unsigned int track, uint32 subscriptionBits);
 	void getAccountValidationData      (const TransferRequestMoveValidation & request, uint32 clusterId);
-	void upsertAccountRelationship	   (StationId parentID, StationId childID);
 	void deleteCharacter               (uint32 clusterId, const NetworkId &characterId, StationId stationId);
 	void deleteAllCharacters           (StationId stationId);
 	void renameCharacter               (uint32 clusterId, const NetworkId &characterId, const Unicode::String &newName, const TransferCharacterData * requestData);
