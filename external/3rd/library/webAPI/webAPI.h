@@ -104,7 +104,7 @@ namespace StellaBellum {
         std::string uri;
 
         // fetcher - returns raw response direct from remote
-        bool fetch(const int &getPost = HTTP::POST, const int &mimeType = DTYPE::JSON);
+        bool fetch(const int &getPost = HTTP::POST, const int &mimeType = DTYPE::JSON, const int &respMimeType = DTYPE::JSON);
 
         // cURL writeback callback
         static size_t writeCallback(void *contents, size_t size, size_t nmemb, void *userp);

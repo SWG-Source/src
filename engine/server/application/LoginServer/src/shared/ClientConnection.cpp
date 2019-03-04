@@ -186,7 +186,7 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
 
 	    bool done = api.setData(postData);
 	    if (done) {
-		done = api.submit(1,1,1);
+		done = api.submit(1,1);
 	    }
 
             if (done) {

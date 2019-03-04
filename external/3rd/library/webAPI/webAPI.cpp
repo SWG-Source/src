@@ -84,7 +84,7 @@ bool webAPI::submit(const int &reqType, const int &getPost, const int &respType)
         }
     }
 
-    if (fetch(getPost, respType) && !(sResponse.empty())) {
+    if (fetch(getPost, reqType, respType) && !(sResponse.empty())) {
         return true;
     }
 
@@ -93,7 +93,7 @@ bool webAPI::submit(const int &reqType, const int &getPost, const int &respType)
     return false;
 }
 
-bool webAPI::fetch(const int &getPost, const int &mimeType) // 0 for json 1 for string
+bool webAPI::fetch(const int &getPost, const int &mimeType, const int &respMimeType) // 0 for json 1 for string
 {
     bool fetchStatus = false;
 
@@ -107,11 +107,14 @@ bool webAPI::fetch(const int &getPost, const int &mimeType) // 0 for json 1 for 
 
             // set the content type
             if (mimeType == DTYPE::JSON) {
-                slist = curl_slist_append(slist, "Accept: application/json");
                 slist = curl_slist_append(slist, "Content-Type: application/json");
             } else {
                 slist = curl_slist_append(slist, "Content-Type: application/x-www-form-urlencoded");
             }
+
+	    if (respMimeType == DTYPE::JSON) {
+		slist = curl_slist_append(slist, "Accept: application/json");
+	    }
 
             slist = curl_slist_append(slist, "charsets: utf-8");
 
@@ -156,7 +159,7 @@ bool webAPI::fetch(const int &getPost, const int &mimeType) // 0 for json 1 for 
                 if (statusCode == 200 && !(readBuffer.empty())) // check it all out and parse
                 {
                     sResponse = readBuffer;
-                    if (conType == "application/json") {
+                    if (conType == "application/json" || respMimeType == 0) {
                         fetchStatus = processJSON();
                     } else {
                         responseData.clear();
