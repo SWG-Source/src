@@ -157,12 +157,9 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
     static const bool useSimpleAuth = ConfigLoginServer::getUseSimpleAuth();
 
     std::string uname;
-    std::string parentAccount;
     std::string sessionID;
 
     StationId user_id;
-    StationId parent_id;
-    std::unordered_map<int, std::string> childAccounts;
 
     if (!authURL.empty()) {
         // create the object
@@ -175,6 +172,10 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
                 if (uname.length() > MAX_ACCOUNT_NAME_LENGTH) {
                     uname.resize(MAX_ACCOUNT_NAME_LENGTH);
                 }
+
+		// TODO: maybe make this a configurable, whether to be case insensitive or not...
+		// for now we'll assume that simple auth users don't care about case
+		std::transform(uname.begin(), uname.end(), uname.begin(), ::tolower);	        
 
                 user_id = std::hash < std::string > {}(uname.c_str());
             }
@@ -189,7 +190,7 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
 	    }
 
             if (done) {
-                std::string response = api.getString("response");
+                std::string response = api.getString("message");
 
                 if (response == "success") {
                     authOK = true;
@@ -203,6 +204,7 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
             }
         } else {
             // add our data
+	    // it's the burden of the auth system to trim and lowercase the username, unlike simpleAuth
             api.addJsonData<std::string>("user_name", id);
             api.addJsonData<std::string>("user_password", key);
             api.addJsonData<std::string>("ip", getRemoteAddress());
@@ -215,22 +217,13 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
                 if (status && !sessionID.empty() && !uname.empty()) {
                     authOK = true;
 
-                    parentAccount = api.getString("mainAccount");
-                    childAccounts = api.getStringMap("subAccounts");
-
                     if (!ConfigLoginServer::getUseOldSuidGenerator()) {
                         user_id = static_cast<StationId>(api.getNullableValue<StationId>("user_id"));
-                        parent_id = static_cast<StationId>(api.getNullableValue<StationId>("parent_id"));
                     } else {
-                        if (parentAccount.length() > MAX_ACCOUNT_NAME_LENGTH) {
-                            parentAccount.resize(MAX_ACCOUNT_NAME_LENGTH);
-                        }
-
                         if (uname.length() > MAX_ACCOUNT_NAME_LENGTH) {
                             uname.resize(MAX_ACCOUNT_NAME_LENGTH);
                         }
 
-                        parent_id = std::hash < std::string > {}(parentAccount.c_str());
                         user_id = std::hash < std::string > {}(uname.c_str());
                     }
                 } else {
@@ -265,44 +258,6 @@ void ClientConnection::validateClient(const std::string &id, const std::string &
 
         if (!testMode) {
             REPORT_LOG(true, ("Client connected. Username: %s (%i) \n", uname.c_str(), user_id));
-
-            if (!useSimpleAuth) {
-                if (!parentAccount.empty()) {
-                    if (parentAccount != uname) {
-                        REPORT_LOG(true,
-                                   ("\t%s's parent is %s (%i) \n", uname.c_str(), parentAccount.c_str(), parent_id));
-                    }
-                } else {
-                    parentAccount = "(Empty Parent!) " + uname;
-                }
-
-
-                for (auto i : childAccounts) {
-                    StationId child_id = static_cast<StationId>(i.first);
-                    std::string child(i.second);
-
-                    if (!child.empty() && i.first > 0) {
-                        if (ConfigLoginServer::getUseOldSuidGenerator()) {
-                            if (child.length() > MAX_ACCOUNT_NAME_LENGTH) {
-                                child.resize(MAX_ACCOUNT_NAME_LENGTH);
-                            }
-
-                            child_id = std::hash < std::string > {}(child.c_str());
-                        }
-
-                        REPORT_LOG((parent_id !=
-                                    child_id),
-                                   ("\tchild of %s (%i) is %s (%i) \n", parentAccount.c_str(), parent_id, child.c_str(), child_id));
-
-                        // insert all related accounts, if not already there, into the db
-                        if (parent_id != child_id) {
-                            DatabaseConnection::getInstance().upsertAccountRelationship(parent_id, child_id);
-                        }
-                    } else {
-                        WARNING(true, ("Login API returned empty child account(s)."));
-                    }
-                }
-            }
 
             LoginServer::getInstance().onValidateClient(m_stationId, uname, this, true, sessionID.c_str(), 0xFFFFFFFF, 0xFFFFFFFF);
         } else {
