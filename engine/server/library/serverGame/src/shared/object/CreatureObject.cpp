@@ -240,6 +240,9 @@ const std::string OBJVAR_PLAYER_HOUSE_ID("residenceHouseId");
 static const unsigned MAX_ATTEMPTS_TO_REMOVE_PET_FROM_GROUP = 30;
 static const int      TIME_BETWEEN_ATTEMPTS_TO_REMOVE_PET   = 1;
 
+// used to determine if LOS-checks should be skipped during CreatureObject::canManipulateObject
+static const std::string OBJVAR_SKIP_LOS_CHECK("skipLosCheck");
+
 // creature regen constants
 const static std::string CREATURES_TABLE("datatables/mob/creatures.iff");
 
@@ -1458,11 +1461,11 @@ bool CreatureObject::canManipulateObject(ServerObject const &target, bool moving
 			}
 		}
 
-		// skip LOS check if the item is being restored as part of decoration layout restore
+		// skip LOS check if the item is being restored as part of decoration layout restore or if it has the skipLOS objvar
 		PlayerObject const * const playerObject = PlayerCreatureController::getPlayerObject(this);
 		if (!playerObject || (playerObject->getRestoreDecorationObjectBeingRestored() != target.getNetworkId()))
 		{
-			if (!checkLOSTo(*firstParentInWorld))
+			if (!target.getObjVars().hasItem(OBJVAR_SKIP_LOS_CHECK) && !checkLOSTo(*firstParentInWorld))
 			{
 				code = Container::CEC_CantSee;
 //				DEBUG_REPORT_LOG(true, ("LOS check failed in can manipulate\n"));
