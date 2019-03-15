@@ -115,6 +115,7 @@ void ConfigLoginServer::install(void)
 	KEY_INT (populationLightThresholdPercent, 8);
 	KEY_INT (csToolPort, 0); // use 10666 if you want to turn the tool on
 	KEY_BOOL(requireSecureLoginForCsTool, true);
+	KEY_BOOL(useJsonWebApi, false);
 	KEY_BOOL(useExternalAuth, false);
 	KEY_STRING(externalAuthURL, "");
 	KEY_BOOL(useOldSuidGenerator, false);

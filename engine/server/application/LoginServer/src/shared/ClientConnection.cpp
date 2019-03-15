@@ -22,6 +22,7 @@
 #include "sharedFoundation/CrcConstexpr.hpp"
 
 #include "webAPI.h"
+#include "jsonWebAPI.h"
 
 //-----------------------------------------------------------------------
 
@@ -150,64 +151,91 @@ void ClientConnection::onReceive(const Archive::ByteStream &message) {
 // originally was used to validate station API credentials, now uses our custom api
 void ClientConnection::validateClient(const std::string & id, const std::string & key)
 {
-	// to avoid having to re-type this stupid var all over the place
-	// ideally we wouldn't copy this here, but it would be a huge pain
-	const std::string trimmedId = trim(id);
-	const std::string trimmedKey = trim(key);
+    // to avoid having to re-type this stupid var all over the place
+    // ideally we wouldn't copy this here, but it would be a huge pain
+    const std::string trimmedId = trim(id);
+    const std::string trimmedKey = trim(key);
 
-	// and to avoid funny business with atoi and casing
-	// make it a separate var than the one we send the auth server
-	std::string lcaseId;
-	lcaseId.resize(trimmedId.size());
+    // and to avoid funny business with atoi and casing
+    // make it a separate var than the one we send the auth server
+    std::string lcaseId;
+    lcaseId.resize(trimmedId.size());
+    std::transform(trimmedId.begin(),trimmedId.end(),lcaseId.begin(),::tolower);
 
-  	std::transform(trimmedId.begin(),trimmedId.end(),lcaseId.begin(),::tolower);
+    // make sure username isn't too long
+    if (lcaseId.length() > MAX_ACCOUNT_NAME_LENGTH) {
+        ErrorMessage err("Login Failed", "Account name is too long!");
+        this->send(err, true);
+        return;
+    }
 
-	StationId suid = atoi(lcaseId.c_str()); 
-	int authOK = 0;
+    // hash username into station id
+    StationId suid = atoi(lcaseId.c_str()); 
+    if (suid == 0)
+    {
+        std::hash<std::string> h;
+        suid = h(lcaseId.c_str()); //lint !e603 // Symbol 'h' not initialized (it's a functor)
+    }
 
-	if (suid == 0)
-	{
-		std::hash<std::string> h;
-		suid = h(lcaseId.c_str()); //lint !e603 // Symbol 'h' not initialized (it's a functor)
-	}
-	
-	LOG("LoginClientConnection", ("validateClient() for stationId (%lu) at IP (%s), id (%s)", m_stationId, getRemoteAddress().c_str(), lcaseId.c_str()));
+    LOG("LoginClientConnection", ("validateClient() for stationId (%lu) at IP (%s), id (%s)", m_stationId, getRemoteAddress().c_str(), lcaseId.c_str()));
 
-	std::string authURL(ConfigLoginServer::getExternalAuthUrl());
+    int authOK = 0;
+    std::string authURL(ConfigLoginServer::getExternalAuthUrl());
+    if (!authURL.empty()) 
+    {
+        if(ConfigLoginServer::getUseJsonWebApi())
+        {
+            StellaBellum::webAPI api(authURL);
 
-	if (!authURL.empty()) 
-	{
-		StellaBellum::webAPI api(authURL);
-		
-		api.addJsonData<std::string>("user_name", trimmedId);
-        api.addJsonData<std::string>("user_password", trimmedKey);
-		api.addJsonData<std::string>("ip", getRemoteAddress());
-		
-		if (api.submit()) {
-			std::string msg(api.getString("message"));
-			
-			if(msg == "success") {
-				authOK = 1;
-			} else {
-				ErrorMessage err("Login Message", msg);
-				this->send(err, true);
-			}
-		}
-		else { 
-			ErrorMessage err("Login Failed", "request failed");
-			this->send(err, true);
-		}
-	}
-	else
-	{
-		authOK = 1;
-	}
+            api.addJsonData<std::string>("user_name", trimmedId);
+            api.addJsonData<std::string>("user_password", trimmedKey);
+            api.addJsonData<long>("stationID", suid);
+            api.addJsonData<std::string>("ip", getRemoteAddress());
 
-	if (authOK) 
-	{
-		LoginServer::getInstance().onValidateClient(suid, lcaseId, this, true, NULL, 0xFFFFFFFF, 0xFFFFFFFF);
-	}
-	// else this case will never be reached, noop
+            if (api.submit())
+            {
+                std::string msg(api.getString("message"));
+
+                if(msg == "success") {
+                    authOK = 1;
+                }
+                else
+                {
+                    ErrorMessage err("Login Message", msg);
+                    this->send(err, true);
+                }
+            }
+            else
+            { 
+                ErrorMessage err("Login Failed", "request failed");
+                this->send(err, true);
+            }
+        } 
+        else
+        {
+            std::ostringstream postBuf;
+            postBuf << "user_name=" << trimmedId << "&user_password=" << trimmedKey << "&stationID=" << suid << "&ip=" << getRemoteAddress();
+            std::string response = webAPI::simplePost(authURL, std::string(postBuf.str()), "");
+
+            if (response == "success") {
+                authOK = 1;
+            }
+            else
+            {
+                ErrorMessage err("Login Failed", response);
+                this->send(err, true);
+            }
+        }
+    }
+    else
+    {
+        authOK = 1;
+    }
+
+    if (authOK) 
+    {
+        LoginServer::getInstance().onValidateClient(suid, lcaseId, this, true, NULL, 0xFFFFFFFF, 0xFFFFFFFF);
+    }
 }
 
 

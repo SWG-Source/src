@@ -128,7 +128,7 @@ void ConfigCentralServer::install(void)
 	KEY_BOOL   (requestDbSaveOnPlanetServerCrash, true);
 	KEY_INT    (maxTimeToWaitForPlanetServerStartSeconds, 5*60); // seconds
 	KEY_STRING (metricsDataURL, "");
-	KEY_INT	   (webUpdateIntervalSeconds, 0);
+	KEY_INT	   (webUpdateIntervalSeconds, 5);
 
 	int index = 0;
 	char const * result = 0;

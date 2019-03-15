@@ -5,6 +5,8 @@ project(webAPI)
 add_library(webAPI
 	webAPI.h
 	webAPI.cpp
+	jsonWebAPI.h
+	jsonWebAPI.cpp
 	json.hpp
 )
 

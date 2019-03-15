@@ -1,0 +1,19 @@
+
+
+***********************************************************************
+Fatal NI connect error 12537, connecting to:
+ (DESCRIPTION=(CONNECT_DATA=(SERVICE_NAME=XE)(CID=(PROGRAM=sqlplus@swgvm)(HOST=swgvm)(USER=swg)))(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.1.50)(PORT=1521)))
+
+  VERSION INFORMATION:
+	TNS for Linux: Version 10.2.0.4.0 - Production
+	TCP/IP NT Protocol Adapter for Linux: Version 10.2.0.4.0 - Production
+  Time: 13-MAR-2019 03:01:43
+  Tracing not turned on.
+  Tns error struct:
+    ns main err code: 12537
+    TNS-12537: Message 12537 not found; No message file for product=network, facility=TNS
+    ns secondary err code: 12560
+    nt main err code: 507
+    TNS-00507: Message 507 not found; No message file for product=network, facility=TNS
+    nt secondary err code: 0
+    nt OS err code: 0

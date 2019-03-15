@@ -66,11 +66,11 @@ class ConfigLoginServer
 		int             csToolPort;
 
 		bool		    requireSecureLoginForCsTool;
-		bool		    useExternalAuth;
-
+		
+		bool            useOldSuidGenerator;
+		bool            useExternalAuth;
+		bool            useJsonWebApi;
 		const char *	externalAuthURL;
-
-		bool 			useOldSuidGenerator;
 	};
 
 	static const uint16 getCentralServicePort();
@@ -135,8 +135,9 @@ class ConfigLoginServer
 	static int          getPopulationLightThresholdPercent();
 
 	static bool	        getUseExternalAuth();
+	static bool	        getUseJsonWebApi();
 	static const char * getExternalAuthUrl();
-	static bool	    getUseOldSuidGenerator();
+	static bool	        getUseOldSuidGenerator();
 
 	// has character creation for this cluster been disabled through config option
 	static bool         isCharacterCreationDisabled(std::string const & cluster);
@@ -484,6 +485,11 @@ inline bool ConfigLoginServer::getRequireSecureLoginForCsTool()
 inline const int ConfigLoginServer::getCSToolPort()
 {
 	return data->csToolPort;
+}
+
+inline bool ConfigLoginServer::getUseJsonWebApi()
+{
+	return data->useJsonWebApi;
 }
 
 inline bool ConfigLoginServer::getUseExternalAuth()
