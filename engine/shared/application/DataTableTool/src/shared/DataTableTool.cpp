@@ -138,7 +138,7 @@ void DataTableTool::run(void)
 	//bool isXml = false;
 	int testOutput = 0;
 
-	printf ("DataTable creation tool " __DATE__ " " __TIME__ "\n");
+	// printf ("DataTable creation tool " __DATE__ " " __TIME__ "\n");
 		// handle options
 	const CommandLine::MatchCode mc = CommandLine::parseOptions(optionSpecArray, optionSpecCount);
 
