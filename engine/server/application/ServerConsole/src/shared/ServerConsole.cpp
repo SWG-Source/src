@@ -13,7 +13,6 @@
 #include "ServerConsoleConnection.h"
 #include <cstdio>
 #include <string>
-#include <iostream>
 
 //-----------------------------------------------------------------------
 
@@ -54,22 +53,37 @@ void ServerConsole::run()
 	if(!ConfigServerConsole::getServerPort())
 		return;
 
-    std::string input;
-    getline(std::cin, input); 
-    
-    s_serverConnection = new ServerConsoleConnection(ConfigServerConsole::getServerAddress(), ConfigServerConsole::getServerPort());
-    ConGenericMessage msg(input);
-    s_serverConnection->send(msg);
-    
-    while(! s_done)
-    {
-        NetworkHandler::update();
-        NetworkHandler::dispatch();
-        Os::sleep(1);
-    }
+	if(stdin)
+	{
+		std::string input;
+		char inBuf[1024] = {"\0"};
+		while(! feof(stdin))
+		{
+			if (fread(inBuf, 1024, 1, stdin)) {
+				input += inBuf;
+				memset(inBuf, 0, sizeof(inBuf));
+			}
+		}
 
-    fprintf(stdout, "\n");
+		if(input.length() > 0)
+		{
+			// connect to the server
+			s_serverConnection = new ServerConsoleConnection(ConfigServerConsole::getServerAddress(), ConfigServerConsole::getServerPort());
+			ConGenericMessage msg(input);
+			s_serverConnection->send(msg);
+
+			while(! s_done)
+			{
+				NetworkHandler::update();
+				NetworkHandler::dispatch();
+				Os::sleep(1);
+			}
+		}
+		else
+		{
+			fprintf(stderr, "Nothing to send to the server. Aborting");
+		}
+	}
 }
 
 //-----------------------------------------------------------------------
-
