@@ -575,6 +575,8 @@ class ConfigServerGame
 		int             gcwDaysRequiredForGcwRegionDefenderBonus;
 
 		bool			useOldSuidGenerator;
+
+		const char *    serverLoadLevel;
 	};
 
   private:
@@ -1061,6 +1063,8 @@ class ConfigServerGame
 	static int              getGcwDaysRequiredForGcwRegionDefenderBonus();
 
 	static bool				getUseOldSuidGenerator();
+
+	static const char *     getServerLoadLevel();
 };
 
 //-----------------------------------------------------------------------
@@ -3696,6 +3700,11 @@ inline bool ConfigServerGame::getUseOldSuidGenerator() {
 	return data->useOldSuidGenerator;
 }
 
-// ======================================================================
+// ----------------------------------------------------------------------
+
+inline const char *ConfigServerGame::getServerLoadLevel()
+{
+	return data->serverLoadLevel;
+}
 
 #endif

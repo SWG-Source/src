@@ -158,6 +158,13 @@ std::string const & BuildoutArea::getRequiredEventName() const
 	return requiredEventName;
 }
 
+//----------------------------------------------------------------------
+
+std::string const & BuildoutArea::getRequiredLoadLevel() const
+{
+	return requiredLoadLevel;
+}
+
 // ======================================================================
 
 bool SharedBuildoutAreaManager::isBuildoutScene(std::string const & sceneName)
@@ -263,6 +270,8 @@ void SharedBuildoutAreaManager::install()
 				buildoutArea.internalBuildoutArea = areaListTable.getIntValue("internal", areaRow) != 0;
 
 				buildoutArea.requiredEventName = areaListTable.getStringValue("eventRequired", areaRow);
+
+				buildoutArea.requiredLoadLevel = areaListTable.getStringValue("requiredLoadLevel", areaRow);
 			}
 
   			s_buildoutAreas[buildoutScene] = areasForScene;
@@ -346,6 +355,9 @@ Vector SharedBuildoutAreaManager::getRelativePositionInArea(std::string const & 
 					continue;
 
 				if(ignoreNonActiveEvents && !boa.requiredEventName.empty()) // Eventually this needs to query the scheduler system and see if the event is currently active.
+					continue;
+
+				if(ignoreNonActiveEvents && !boa.requiredLoadLevel.empty())
 					continue;
 				
 				if(boa.isLocationInside(location_w.x, location_w.z) && boa.areaName == sceneAndArea.second)
@@ -561,6 +573,9 @@ BuildoutArea const * SharedBuildoutAreaManager::findBuildoutAreaAtPosition(std::
 		if(ignoreNonActiveEvents && !buildoutArea.requiredEventName.empty())
 			continue;
 
+		if(ignoreNonActiveEvents && !buildoutArea.requiredLoadLevel.empty())
+			continue;
+
 		if (buildoutArea.isLocationInside(x, z))
 		{
 			return &buildoutArea;
@@ -583,6 +598,9 @@ BuildoutArea const * SharedBuildoutAreaManager::findBuildoutAreaAtPosition(float
 		}
 
 		if(ignoreNonActiveEvents && !buildoutArea.requiredEventName.empty())
+			return nullptr;
+
+		if(ignoreNonActiveEvents && !buildoutArea.requiredLoadLevel.empty())
 			return nullptr;
 
 		if (buildoutArea.isLocationInside(x, z))

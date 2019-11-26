@@ -52,7 +52,7 @@ namespace ServerBuildoutManagerNamespace
 	struct BuildoutRow
 	{
 		BuildoutRow();
-		BuildoutRow(int64 id, int64 containerId, int cellIndex, Transform const &transform_p, ServerObjectTemplate const *serverTemplate, std::string const &scripts, std::string const &objvars, std::string const & eventRequired);
+		BuildoutRow(int64 id, int64 containerId, int cellIndex, Transform const &transform_p, ServerObjectTemplate const *serverTemplate, std::string const &scripts, std::string const &objvars, std::string const & eventRequired, std::string const & requiredLoadLevel);
 		BuildoutRow(BuildoutRow const &rhs);
 		~BuildoutRow();
 		BuildoutRow &operator=(BuildoutRow const &rhs);
@@ -65,6 +65,7 @@ namespace ServerBuildoutManagerNamespace
 		std::string m_objvars;
 		int m_cellIndex;
 		std::string m_eventRequired;
+		std::string m_requiredLoadLevel;
 	};
 
 	// ----------------------------------------------------------------------
@@ -145,6 +146,7 @@ void ServerBuildoutManager::install()
 
 void ServerBuildoutManager::onChunkComplete(int nodeX, int nodeZ)
 {
+    std::string configuredLoadLevel = ConfigServerGame::getServerLoadLevel();
 	for (std::vector<AreaInfo>::iterator i = s_areas.begin(); i != s_areas.end(); ++i)
 	{
 		AreaInfo &areaInfo = *i;
@@ -155,6 +157,24 @@ void ServerBuildoutManager::onChunkComplete(int nodeX, int nodeZ)
 		{
 			if (!areaInfo.loaded)
 				loadArea(areaInfo);
+
+		    // Before we decide to instantiate the area, make sure we need to actually load it based on the configured server load level.
+			std::string areaRequiredLevel = areaInfo.buildoutArea.requiredLoadLevel;
+			if (configuredLoadLevel != "heavy" && !areaRequiredLevel.empty()) {
+			    if(configuredLoadLevel == "medium"){
+                    // If our configured level is medium, then our area level must be medium or light.
+                    if(areaRequiredLevel != "medium" && areaRequiredLevel != "light") {
+                        DEBUG_REPORT_LOG(true,("Skipping Area %s (index %d) because its load level is %s and the configured load level is %s\n", areaInfo.buildoutArea.areaName.c_str(), areaInfo.buildoutArea.areaIndex, areaRequiredLevel.c_str(), configuredLoadLevel.c_str()));
+                        continue;
+                    }
+			    }
+			    else if(configuredLoadLevel == "light"){
+                    if(areaRequiredLevel != "light") {
+                        DEBUG_REPORT_LOG(true,("Skipping Area %s (index %d) because its load level is %s and the configured load level is %s\n", areaInfo.buildoutArea.areaName.c_str(), areaInfo.buildoutArea.areaIndex, areaRequiredLevel.c_str(), configuredLoadLevel.c_str()));
+                        continue;
+                    }
+			    }
+			}
 			instantiateAreaNode(areaInfo, nodeX, nodeZ);
 		}
 	}
@@ -580,6 +600,7 @@ void ServerBuildoutManagerNamespace::loadArea(AreaInfo &areaInfo)
 	filename[sizeof(filename) - 1] = '\0';
 
 	std::string const & eventRequired = areaInfo.buildoutArea.getRequiredEventName();
+	std::string const & requiredLoadLevel = areaInfo.buildoutArea.getRequiredLoadLevel();
 
 	if (!eventRequired.empty())
 	{
@@ -764,7 +785,8 @@ void ServerBuildoutManagerNamespace::loadArea(AreaInfo &areaInfo)
 							serverTemplate,
 							areaBuildoutTable.getStringValue(scriptsColumn, buildoutRow),
 							areaBuildoutTable.getStringValue(objvarsColumn, buildoutRow),
-							eventRequired));
+							eventRequired,
+							requiredLoadLevel));
 				}
 
 				objects.insert(objId);
@@ -1106,7 +1128,7 @@ ServerBuildoutManagerNamespace::BuildoutRow::BuildoutRow() :
 
 // ----------------------------------------------------------------------
 
-ServerBuildoutManagerNamespace::BuildoutRow::BuildoutRow(int64 id, int64 containerId, int cellIndex, Transform const &transform_p, ServerObjectTemplate const *serverTemplate, std::string const &scripts, std::string const &objvars, std::string const & eventRequired) :
+ServerBuildoutManagerNamespace::BuildoutRow::BuildoutRow(int64 id, int64 containerId, int cellIndex, Transform const &transform_p, ServerObjectTemplate const *serverTemplate, std::string const &scripts, std::string const &objvars, std::string const & eventRequired, std::string const & requiredLoadLevel) :
 	m_id(id),
 	m_containerId(containerId),
 	m_transform_p(transform_p),
@@ -1114,7 +1136,8 @@ ServerBuildoutManagerNamespace::BuildoutRow::BuildoutRow(int64 id, int64 contain
 	m_scripts(scripts),
 	m_objvars(objvars),
 	m_cellIndex(cellIndex),
-	m_eventRequired(eventRequired)
+	m_eventRequired(eventRequired),
+	m_requiredLoadLevel(requiredLoadLevel)
 {
 	if (serverTemplate)
 		serverTemplate->addReference();
@@ -1130,7 +1153,8 @@ ServerBuildoutManagerNamespace::BuildoutRow::BuildoutRow(BuildoutRow const &rhs)
 	m_scripts(rhs.m_scripts),
 	m_objvars(rhs.m_objvars),
 	m_cellIndex(rhs.m_cellIndex),
-	m_eventRequired(rhs.m_eventRequired)
+	m_eventRequired(rhs.m_eventRequired),
+	m_requiredLoadLevel(rhs.m_requiredLoadLevel)
 {
 	if (m_serverTemplate)
 		m_serverTemplate->addReference();
@@ -1157,6 +1181,7 @@ ServerBuildoutManagerNamespace::BuildoutRow &ServerBuildoutManagerNamespace::Bui
 		m_objvars = rhs.m_objvars;
 		m_cellIndex = rhs.m_cellIndex;
 		m_eventRequired = rhs.m_eventRequired;
+		m_requiredLoadLevel = rhs.m_requiredLoadLevel;
 
 		if (m_serverTemplate)
 			m_serverTemplate->releaseReference();
