@@ -38,6 +38,7 @@ public:
 	virtual bool                  getHeight (const Vector& position_o, float& height) const;
 	virtual bool                  getHeight (const Vector& position_o, float& height, Vector& normal) const;
 	virtual bool                  getHeightForceChunkCreation (const Vector& position_o, float& height) const;
+	virtual bool                  getNormalOfPlaneAtPoint (const Vector& position_o, Vector& normal) const;
 	virtual const ObjectTemplate* getSurfaceProperties (const Vector& position_o) const;
 	virtual int                   getTerrainType (const Vector& position_o) const;
 	virtual bool                  getWaterHeight (const Vector& position_o, float& height) const;

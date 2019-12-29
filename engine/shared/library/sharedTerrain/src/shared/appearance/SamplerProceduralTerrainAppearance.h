@@ -71,6 +71,7 @@ public:
 
 		virtual bool     getHeightAt (const Vector& worldPos, float* height) const;
 		virtual bool     getHeightAt (const Vector& worldPos, float* height, Vector* normal) const;
+		virtual bool     getNormalAtPoint (const Vector& worldPos, Vector* normal) const;
 		virtual bool collide(Vector const & start_o, Vector const & end_o, CollideParameters const & collideParameters, CollisionInfo & result) const;
 		virtual int      getChunkMemorySize () const;
 

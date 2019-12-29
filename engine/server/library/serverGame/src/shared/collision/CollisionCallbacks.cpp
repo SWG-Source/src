@@ -72,7 +72,7 @@ void CollisionCallbacks::install()
 	CollisionCallbackManager::registerOnHitFunction(CollisionCallbacksNamespace::onHitDoCollisionWith, miningAsteroidDynamic, asteroid);
 	CollisionCallbackManager::registerOnHitFunction(CollisionCallbacksNamespace::onHitDoCollisionWith, miningAsteroidDynamic, shipStation);
 
-	//CollisionCallbackManager::registerDoCollisionWithTerrainFunction(CollisionCallbacksNamespace::onDoCollisionWithTerrain);
+	CollisionCallbackManager::registerDoCollisionWithTerrainFunction(CollisionCallbacksNamespace::onDoCollisionWithTerrain);
 
 	ExitChain::add(CollisionCallbacksNamespace::remove, "CollisionCallbacks");
 }
@@ -133,7 +133,7 @@ bool CollisionCallbacksNamespace::onDoCollisionWithTerrain(Object * const object
 	{
 		ShipController * const shipController = safe_cast<ShipController *>(shipObject->getController());
 		NOT_NULL(shipController);
-
+REPORT_LOG(true, ("responding to collision"));
 		shipController->respondToCollision(result.m_deltaToMoveBack_p, result.m_newReflection_p, result.m_normalOfSurface_p);
 		return true;
 	}

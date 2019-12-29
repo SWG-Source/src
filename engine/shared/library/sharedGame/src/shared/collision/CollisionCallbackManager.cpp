@@ -131,7 +131,6 @@ void CollisionCallbackManager::registerDoCollisionWithTerrainFunction(DoCollisio
 bool CollisionCallbackManager::intersectAndReflect(Object * const object, Object * const wasHitByThisObject, Result & result)
 {
 	// See if we need to ignore this collision
-
 	if (!s_ignoreIntersectList.empty())
 	{
 		NetworkId first(object->getNetworkId());
@@ -219,6 +218,7 @@ bool CollisionCallbackManager::intersectAndReflect(Object * const object, Object
 bool CollisionCallbackManager::intersectAndReflectWithTerrain(Object * const object, Result & result)
 {
 	CollisionProperty const * collision = object->getCollisionProperty();
+
 	NOT_NULL(collision);
 
 	Capsule queryCapsule_w(collision->getQueryCapsule_w());
@@ -232,17 +232,29 @@ bool CollisionCallbackManager::intersectAndReflectWithTerrain(Object * const obj
 		Vector const begin_w(queryCapsule_w.getPointA());
 		Vector const end_w(queryCapsule_w.getPointB() + direction_w * radius);
 
-		DEBUG_REPORT_LOG(ms_debugReport, ("terrain begin     = %f %f %f\n", begin_w.x, begin_w.y, begin_w.z));
-		DEBUG_REPORT_LOG(ms_debugReport, ("terrain end       = %f %f %f\n", end_w.x, end_w.y, end_w.z));
-		DEBUG_REPORT_LOG(ms_debugReport, ("terrain direction = %f %f %f\n", direction_w.x, direction_w.y, direction_w.z));
-		DEBUG_REPORT_LOG(ms_debugReport, ("terrain length    = %f\n", deltaTraveled_w.magnitude()));
+//		DEBUG_REPORT_LOG(ms_debugReport, ("terrain begin     = %f %f %f\n", begin_w.x, begin_w.y, begin_w.z));
+//		DEBUG_REPORT_LOG(ms_debugReport, ("terrain end       = %f %f %f\n", end_w.x, end_w.y, end_w.z));
+//		DEBUG_REPORT_LOG(ms_debugReport, ("terrain direction = %f %f %f\n", direction_w.x, direction_w.y, direction_w.z));
+//		DEBUG_REPORT_LOG(ms_debugReport, ("terrain length    = %f\n", deltaTraveled_w.magnitude()));
+
+		REPORT_LOG(true, ("ship begin     = %f %f %f\n", begin_w.x, begin_w.y, begin_w.z));
+		REPORT_LOG(true, ("ship end       = %f %f %f\n", end_w.x, end_w.y, end_w.z));
+		REPORT_LOG(true, ("ship direction = %f %f %f\n", direction_w.x, direction_w.y, direction_w.z));
+		REPORT_LOG(true, ("ship length    = %f\n", deltaTraveled_w.magnitude()));
 
 		TerrainObject const * const terrainObject = TerrainObject::getConstInstance();
 		if (terrainObject != 0)
 		{
+    REPORT_LOG(true, ("found possible ground collision - checking collision\n"));
 			CollisionInfo info;
+
+		    float bh = 0.0f;
+		    terrainObject->getHeightForceChunkCreation(Vector(begin_w.x, 0.f, begin_w.z), bh);
+		    REPORT_LOG(true,("Terrain Height: begin: %f\n", bh));
+
 			if (terrainObject->collide (begin_w, end_w, info))
 			{
+    REPORT_LOG(true, ("collided with terrain\n"));
 				#ifdef _DEBUG
 				// calculate the parametric time for logging
 				float const actualDistance = begin_w.magnitudeBetween(info.getPoint());
@@ -261,7 +273,7 @@ bool CollisionCallbackManager::intersectAndReflectWithTerrain(Object * const obj
 				result.m_pointOfCollision_p = pointOfCollision_w;
 				result.m_normalOfSurface_p = info.getNormal();
 				result.m_deltaToMoveBack_p = pointOfCollision_w - end_w;
-				result.m_newReflection_p = result.m_normalOfSurface_p.reflectIncoming(direction_w);
+				result.m_newReflection_p = info.getNormal().reflectIncoming(direction_w);
 
 				#ifdef _DEBUG
 				DEBUG_REPORT_LOG(ms_debugReport, ("\t\tterrain = %f %f %f\n", result.m_deltaToMoveBack_p.x, result.m_deltaToMoveBack_p.y, result.m_deltaToMoveBack_p.z));
@@ -269,6 +281,37 @@ bool CollisionCallbackManager::intersectAndReflectWithTerrain(Object * const obj
 
 				return true;
 			}
+		    // Check our terrain elevation and add 5m to it - this will be our "floor" for allowable flight
+		    // if below that, then we've "collided" and at the very least, we need to be put somewhere ABOVE
+		    // the terrain.
+		    else if(bh >= begin_w.y) {
+                // we are below the allowable elevation
+
+                // Create a theoretical intersection point.  We need to "fake" this point as the main system
+                // that was originally used is not working properly - suggesting more is at play that was originally expected.
+                // implement this to avoid any unwanted bugs - rework when the bugs are found and fixed.
+                Vector const & intersection = Vector(begin_w.x, bh, begin_w.z);
+                Vector normal;
+
+                // Recreate the necessary geometry in light of NOT having the correct geometry.
+                info.setObject(terrainObject);
+                info.setPoint(terrainObject->rotateTranslate_w2o(intersection));
+                if(terrainObject->getNormalOfPlaneAtPoint(intersection, normal)){
+                    info.setNormal(normal);
+                }
+                else {
+                    return false;
+                }
+
+                REPORT_LOG(true, ("Intersection: %f %f %f\n", info.getPoint().x, info.getPoint().y, info.getPoint().z));
+
+				result.m_pointOfCollision_p = info.getPoint();
+				result.m_normalOfSurface_p = info.getNormal();
+				result.m_deltaToMoveBack_p = info.getPoint() - end_w;
+				result.m_newReflection_p = result.m_normalOfSurface_p.reflectIncoming(direction_w);
+
+				return true;
+		    }
 		}
 	}
 

@@ -376,6 +376,13 @@ bool SamplerProceduralTerrainAppearance::SamplerChunk::getHeightAt (const Vector
 
 //-------------------------------------------------------------------
 
+bool SamplerProceduralTerrainAppearance::SamplerChunk::getNormalAtPoint (const Vector& pos, Vector* normal) const
+{
+    return false;
+}
+
+//-------------------------------------------------------------------
+
 #define ALLOW_BACKFACING_COLLISION 0
 
 bool SamplerProceduralTerrainAppearance::SamplerChunk::collide (const Vector& start, const Vector& end, CollideParameters const & /*collideParameters*/, CollisionInfo& result) const

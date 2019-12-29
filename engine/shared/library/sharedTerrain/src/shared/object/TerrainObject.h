@@ -54,6 +54,7 @@ public:
 	bool                  getHeight (const Vector& position_w, float& height) const;
 	bool                  getHeight (const Vector& position_w, float& height, Vector& normal) const;
 	bool                  getHeightForceChunkCreation (const Vector& position_w, float& height) const;
+	bool                  getNormalOfPlaneAtPoint (const Vector& position_w, Vector& normal) const;
 	const ObjectTemplate* getSurfaceProperties (const Vector& position_w) const;
 	int                   getTerrainType (const Vector& position_w) const;
 	bool                  getWaterHeight (const Vector& position_w, float& height) const;
