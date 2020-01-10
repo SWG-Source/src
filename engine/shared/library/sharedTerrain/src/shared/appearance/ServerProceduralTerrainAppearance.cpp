@@ -372,17 +372,14 @@ bool ServerProceduralTerrainAppearance::ServerChunk::getNormalAtPoint (const Vec
 	if (pos.x < vmin.x || pos.x > vmax.x || pos.z < vmin.z || pos.z > vmax.z)
 	{
 		DEBUG_WARNING (true, ("called getNormalAtPoint for position not within chunk"));
-		REPORT_LOG(true, ("position not within chunk\n"));
 		return false;
 	}
 
 	int tileX;
 	int tileZ;
 	_findTileXz(pos, tileX, tileZ);
-	if (isExcluded(tileX, tileZ)) {
-		REPORT_LOG(true, ("tile is excluded\n"));
+	if (isExcluded(tileX, tileZ))
 		return false;
-    }
 
 	//-- find out which tile this intersects
 	const Vector start (pos.x, vmax.y + 0.1f, pos.z);
@@ -395,7 +392,6 @@ bool ServerProceduralTerrainAppearance::ServerChunk::getNormalAtPoint (const Vec
 	int const numberOfTilesPerChunk = m_proceduralTerrainAppearance.getNumberOfTilesPerChunk();
 	int const tileIndex = tileZ * numberOfTilesPerChunk + tileX;
 	const int offset = tileIndex * 8;
-		REPORT_LOG(true, ("Offset: %d\n", offset));
 
 	int k;
 	for (k = offset; k < offset + 8; ++k)
@@ -405,11 +401,8 @@ bool ServerProceduralTerrainAppearance::ServerChunk::getNormalAtPoint (const Vec
 		Vector planeNormal = plane.getNormal ();
 
 		if(!plane.findIntersection(start, end, intersection)) {
-		    REPORT_LOG(true, ("Intersection was not found\n"));
 		    return false;
 		}
-
-		REPORT_LOG(true, ("Checking plane %d, dir.dot: %f, intersection: %f, %f, %f\n", k, dir.dot(planeNormal), intersection.x, intersection.y, intersection.z));
 
 		if ((dir.dot (planeNormal) < 0.f) && (plane.findIntersection (start, end, intersection)))
 		{
@@ -420,7 +413,6 @@ bool ServerProceduralTerrainAppearance::ServerChunk::getNormalAtPoint (const Vec
 			const Vector& v0 = (*m_vertexList) [i0];
 			const Vector& v1 = (*m_vertexList) [i1];
 			const Vector& v2 = (*m_vertexList) [i2];
-		    REPORT_LOG(true, ("Found good plane: %f, %f, %f : checking vertexes.\n", v0, v1, v2));
 
 			DenormalizedLine2d const line01 (Vector2d (v0.x, v0.z), Vector2d (v1.x, v1.z));
 			DenormalizedLine2d const line12 (Vector2d (v1.x, v1.z), Vector2d (v2.x, v2.z));
@@ -431,12 +423,9 @@ bool ServerProceduralTerrainAppearance::ServerChunk::getNormalAtPoint (const Vec
 				line20.computeDistanceTo (Vector2d (start.x, start.z)) <= 0)
 			{
 				*normal = planeNormal;
-			REPORT_LOG(true, ("Found on this plane: %f, %f, %f\n", v0, v1, v2));
 				return true;
 			}
-			REPORT_LOG(true, ("Not on this plane.  Distances: %f, %f, %f\n", line01.computeDistanceTo (Vector2d (start.x, start.z)), line12.computeDistanceTo (Vector2d (start.x, start.z)), line20.computeDistanceTo (Vector2d (start.x, start.z))));
 		}
-			REPORT_LOG(true, ("Not on this intersection.\n"));
 	}
 
 	return false;
@@ -1249,7 +1238,6 @@ bool ServerProceduralTerrainAppearance::getNormalOfPlaneAtPoint(const Vector& po
 
 bool ServerProceduralTerrainAppearance::collide(Vector const & start_o, Vector const & end_o, CollideParameters const & /*collideParameters*/, CollisionInfo & result) const
 {
-    REPORT_LOG(true, ("Checking collision after rotation - Start Y: %f, End Y: %f\n", start_o.y, end_o.y));
 	ChunkList chunkList;
 	m_sphereTree.findOnSegment (start_o, end_o, chunkList);
 	std::stable_sort(chunkList.begin(), chunkList.end(), CollisionChunkSorter(start_o));	

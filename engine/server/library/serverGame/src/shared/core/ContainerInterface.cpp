@@ -164,11 +164,12 @@ namespace ContainerInterfaceNamespace
 				params.addParam(destId);
 				params.addParam(transfererId);
 				params.addParam(item.getNetworkId());
+				GameScriptObject * const scriptObject = source->getScriptObject();
 
 				//-- Handle source container's scripts.
-				if (source->getScriptObject())
+				if (scriptObject)
 				{
-					if (source->getScriptObject()->trigAllScripts(Scripting::TRIG_ABOUT_TO_LOSE_ITEM, params) == SCRIPT_OVERRIDE)
+					if (scriptObject->trigAllScripts(Scripting::TRIG_ABOUT_TO_LOSE_ITEM, params) == SCRIPT_OVERRIDE)
 					{
 						error = Container::CEC_BlockedByScript;
 						LOG("ScriptInvestigation", ("Source tried to prevent container transfer"));

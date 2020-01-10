@@ -48,6 +48,8 @@ void CollisionCallbacks::install()
 	int const asteroid = static_cast<int>(SharedObjectTemplate::GOT_misc_asteroid);
 	int const miningAsteroidStatic = static_cast<int>(SharedObjectTemplate::GOT_ship_mining_asteroid_static);
 	int const miningAsteroidDynamic = static_cast<int>(SharedObjectTemplate::GOT_ship_mining_asteroid_dynamic);
+	int const building = static_cast<int>(SharedObjectTemplate::GOT_building);
+	int const installation = static_cast<int>(SharedObjectTemplate::GOT_installation);
 
 	CollisionCallbackManager::registerOnHitFunction(CollisionCallbacksNamespace::onHitDoCollisionWith, shipFighter, shipCapital);
 	CollisionCallbackManager::registerOnHitFunction(CollisionCallbacksNamespace::onHitDoCollisionWith, shipFighter, shipStation);
@@ -72,7 +74,10 @@ void CollisionCallbacks::install()
 	CollisionCallbackManager::registerOnHitFunction(CollisionCallbacksNamespace::onHitDoCollisionWith, miningAsteroidDynamic, asteroid);
 	CollisionCallbackManager::registerOnHitFunction(CollisionCallbacksNamespace::onHitDoCollisionWith, miningAsteroidDynamic, shipStation);
 
+    // Handle Atmo Flight
 	CollisionCallbackManager::registerDoCollisionWithTerrainFunction(CollisionCallbacksNamespace::onDoCollisionWithTerrain);
+	CollisionCallbackManager::registerOnHitFunction(CollisionCallbacksNamespace::onHitDoCollisionWith, shipFighter, building);
+	CollisionCallbackManager::registerOnHitFunction(CollisionCallbacksNamespace::onHitDoCollisionWith, shipFighter, installation);
 
 	ExitChain::add(CollisionCallbacksNamespace::remove, "CollisionCallbacks");
 }
@@ -133,7 +138,6 @@ bool CollisionCallbacksNamespace::onDoCollisionWithTerrain(Object * const object
 	{
 		ShipController * const shipController = safe_cast<ShipController *>(shipObject->getController());
 		NOT_NULL(shipController);
-REPORT_LOG(true, ("responding to collision"));
 		shipController->respondToCollision(result.m_deltaToMoveBack_p, result.m_newReflection_p, result.m_normalOfSurface_p);
 		return true;
 	}
