@@ -218,97 +218,34 @@ bool CollisionCallbackManager::intersectAndReflect(Object * const object, Object
 bool CollisionCallbackManager::intersectAndReflectWithTerrain(Object * const object, Result & result)
 {
 	CollisionProperty const * collision = object->getCollisionProperty();
-
 	NOT_NULL(collision);
 
 	Capsule queryCapsule_w(collision->getQueryCapsule_w());
-
-	float const radius = queryCapsule_w.getRadius();
-
 	Vector const deltaTraveled_w(queryCapsule_w.getDelta());
 	Vector direction_w(deltaTraveled_w);
 	if (direction_w.normalize())
 	{
-		Vector const begin_w(queryCapsule_w.getPointA());
-		Vector const end_w(queryCapsule_w.getPointB() + direction_w * radius);
+		TerrainObject * terrainObject = TerrainObject::getInstance();
+		if(terrainObject) {
 
-		DEBUG_REPORT_LOG(true, ("ship begin     = %f %f %f\n", begin_w.x, begin_w.y, begin_w.z));
-		DEBUG_REPORT_LOG(true, ("ship end       = %f %f %f\n", end_w.x, end_w.y, end_w.z));
-		DEBUG_REPORT_LOG(true, ("ship direction = %f %f %f\n", direction_w.x, direction_w.y, direction_w.z));
-		DEBUG_REPORT_LOG(true, ("ship length    = %f\n", deltaTraveled_w.magnitude()));
+	        float const radius = queryCapsule_w.getRadius();
+            Vector const begin_w(queryCapsule_w.getPointA());
+            Vector const end_w(queryCapsule_w.getPointB() + direction_w * radius);
+		    CollisionInfo info;
 
-		TerrainObject const * const terrainObject = TerrainObject::getConstInstance();
-		if (terrainObject != 0)
-		{
-			CollisionInfo info;
-
-		    float bh = 0.0f;
-		    terrainObject->getHeightForceChunkCreation(Vector(begin_w.x, 0.f, begin_w.z), bh);
-
-			if (terrainObject->collide (begin_w, end_w, info))
-			{
-				#ifdef _DEBUG
-				// calculate the parametric time for logging
-				float const actualDistance = begin_w.magnitudeBetween(info.getPoint());
-				float const attemptedDistance = begin_w.magnitudeBetween(end_w);
-				float const parametricTime = (attemptedDistance != 0.0f) ? (actualDistance / attemptedDistance) : 0.0f;
-				#endif
-
+		    // Generate missing terrain between point A and point B and check collision.
+		    if(terrainObject->collideForceChunkCreation(begin_w, end_w, info)) {
+		        // We've collided with the terrain so let's handle it.
 				Vector const & pointOfCollision_w = info.getPoint();
 
-				#ifdef _DEBUG
-				DEBUG_REPORT_LOG(ms_debugReport, ("\t\tterrain HIT!\n"));
-				DEBUG_REPORT_LOG(ms_debugReport, ("\t\tterrain time  = %f\n", parametricTime));
-				DEBUG_REPORT_LOG(ms_debugReport, ("\t\tterrain point = %f %f %f\n", pointOfCollision_w.x, pointOfCollision_w.y, pointOfCollision_w.z));
-				#endif
-
-				result.m_pointOfCollision_p = pointOfCollision_w;
-				result.m_normalOfSurface_p = info.getNormal();
-				result.m_deltaToMoveBack_p = pointOfCollision_w - end_w;
-				result.m_newReflection_p = info.getNormal().reflectIncoming(direction_w);
-
-				#ifdef _DEBUG
-				DEBUG_REPORT_LOG(ms_debugReport, ("\t\tterrain = %f %f %f\n", result.m_deltaToMoveBack_p.x, result.m_deltaToMoveBack_p.y, result.m_deltaToMoveBack_p.z));
-				#endif
-
-				return true;
-			}
-		    // Get the elevation at the current point.  This will be our "floor" for allowable flight
-		    // if below that, then we've "collided" and at the very least, we need to be put somewhere ABOVE
-		    // the terrain.
-		    else if(bh >= begin_w.y) {
-                // We are at or below the allowable elevation and there was no identified collision to spheres.
-
-                // Create a theoretical intersection point.  We need to "fake" this point as the main system
-                // that was originally used to detect spheres along the trajectory of the ship is not working properly
-                // suggesting more is at play that was originally expected.  Implement this to avoid any unwanted bugs
-                // and rework when the bugs are found and fixed (i.e. why would terrain have or NOT have spheres?)
-                Vector const & intersection = Vector(begin_w.x, bh, begin_w.z);
-                Vector normal;
-
-                // Make sure we can actually get a Normal Vector from the plane at intersection within this chunk.
-                if(terrainObject->getNormalOfPlaneAtPoint(intersection, normal)){
-                    info.setNormal(normal);
-                }
-                else {
-                    return false;
-                }
-
-                // Recreate the rest of the necessary geometry needed to reflect the ship (i.e. "bounce") in light of
-                // NOT having the correct geometry.
-                info.setObject(terrainObject);
-                info.setPoint(terrainObject->rotateTranslate_w2o(intersection));
-
-				result.m_pointOfCollision_p = info.getPoint();
-				result.m_normalOfSurface_p = info.getNormal();
-				result.m_deltaToMoveBack_p = info.getPoint() - end_w;
-				result.m_newReflection_p = result.m_normalOfSurface_p.reflectIncoming(direction_w);
-
-				return true;
+                result.m_pointOfCollision_p = pointOfCollision_w;
+                result.m_normalOfSurface_p = info.getNormal();
+                result.m_deltaToMoveBack_p = pointOfCollision_w - end_w;
+                result.m_newReflection_p = result.m_normalOfSurface_p.reflectIncoming(direction_w);
+                return true;
 		    }
 		}
 	}
-
 	return false;
 }
 
