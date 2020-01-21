@@ -23,6 +23,7 @@
 #include "sharedMath/Capsule.h"
 #include "sharedObject/Object.h"
 #include "sharedTerrain/TerrainObject.h"
+#include "sharedObject/CellProperty.h"
 #include <map>
 
 // ======================================================================
@@ -227,11 +228,16 @@ bool CollisionCallbackManager::intersectAndReflectWithTerrain(Object * const obj
 	{
 		TerrainObject * terrainObject = TerrainObject::getInstance();
 		if(terrainObject) {
-
 	        float const radius = queryCapsule_w.getRadius();
             Vector const begin_w(queryCapsule_w.getPointA());
             Vector const end_w(queryCapsule_w.getPointB() + direction_w * radius);
 		    CollisionInfo info;
+		    float time = 0.f;
+		    CellProperty const * wcell = CellProperty::getWorldCellProperty();
+		    CellProperty const * dcell = wcell->getDestinationCell(begin_w, end_w, time);
+
+		    REPORT_LOG(true,("Checking collision.\n"));
+		    REPORT_LOG(CollisionUtils::testPortalVis(wcell, begin_w, dcell, end_w),("Possible Cell Collision.\n"));
 
 		    // Generate missing terrain between point A and point B and check collision.
 		    if(terrainObject->collideForceChunkCreation(begin_w, end_w, info)) {
@@ -244,6 +250,18 @@ bool CollisionCallbackManager::intersectAndReflectWithTerrain(Object * const obj
                 result.m_newReflection_p = result.m_normalOfSurface_p.reflectIncoming(direction_w);
                 return true;
 		    }
+//		    else if (dcell->getDestinationCell(begin_w, end_w, time)) {
+//		        // We've collided with a cell between point A and point B so handle it.
+//				Vector const & pointOfCollision_w = end_w;
+//
+//                result.m_pointOfCollision_p = pointOfCollision_w;
+//                // Assume any cells have a vertical entry (no known structure has a horizontal entry point).
+//                // Note: Starports don't have an entry point until you land in the middle - which is NOT a true cell.
+//                result.m_normalOfSurface_p = Vector(0.f,1.f,0.f);
+//                result.m_deltaToMoveBack_p = pointOfCollision_w - end_w;
+//                result.m_newReflection_p = result.m_normalOfSurface_p.reflectIncoming(direction_w);
+//                return true;
+//		    }
 		}
 	}
 	return false;

@@ -387,7 +387,6 @@ void ServerController::setGoal ( Transform const & newGoal, ServerObject * goalC
 bool changeCells(ServerObject &object, ServerObject *newCellObject)
 {
 	bool result = false;
-
 	if (!object.isInWorld())
 	{
 		if (!newCellObject)

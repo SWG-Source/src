@@ -10,6 +10,7 @@
 #include "serverGame/FirstServerGame.h"
 #include "serverGame/CollisionCallbacks.h"
 
+#include "serverGame/ContainerInterface.h"
 #include "serverGame/ShipController.h"
 #include "serverGame/ShipObject.h"
 #include "sharedFoundation/CrcLowerString.h"
@@ -144,5 +145,4 @@ bool CollisionCallbacksNamespace::onDoCollisionWithTerrain(Object * const object
 	return false;
 }
 
-// ======================================================================
 

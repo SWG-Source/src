@@ -35,6 +35,8 @@
 #include "sharedNetworkMessages/ShipUpdateTransformMessage.h"
 #include "sharedObject/AlterResult.h"
 #include "sharedObject/NetworkIdManager.h"
+#include "sharedMath/Capsule.h"
+#include "sharedCollision/CollisionProperty.h"
 
 #include <limits>
 #include <map>
@@ -193,8 +195,9 @@ void PlayerShipController::receiveTransform(ShipUpdateTransformMessage const & s
 		Vector const &velocity = shipUpdateTransformMessage.getVelocity();
 		float const speed = velocity.magnitude();
 
-		if (!checkValidMove(transform, velocity, speed, syncStamp))
+		if (!checkValidMove(transform, velocity, speed, syncStamp)) {
 			teleport(m_lastVerifiedTransform, 0);
+        }
 		else
 		{
 			m_shipDynamicsModel->setTransform(transform);
