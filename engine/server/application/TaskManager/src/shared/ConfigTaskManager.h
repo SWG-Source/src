@@ -39,6 +39,7 @@ class ConfigTaskManager
 		int           maximumClockDriftToleranceSeconds;
 		int           systemTimeCheckIntervalSeconds;
 		int           clockDriftFatalIntervalSeconds;
+		bool          allowPreferredServerOnMasterNode; 
     };
 
 	static const bool    getAutoStart                   ();
@@ -68,7 +69,7 @@ class ConfigTaskManager
 	static int           getMaximumClockDriftToleranceSeconds();
 	static int           getSystemTimeCheckIntervalSeconds();
 	static int           getClockDriftFatalIntervalSeconds();
-
+	static const bool    getAllowPreferredServerOnMasterNode();
 	static void          install                        ();
 	static void          remove                         ();
 
@@ -266,6 +267,13 @@ inline int ConfigTaskManager::getSystemTimeCheckIntervalSeconds()
 inline int ConfigTaskManager::getClockDriftFatalIntervalSeconds()
 {
 	return data->clockDriftFatalIntervalSeconds;
+}
+
+// ----------------------------------------------------------------------
+
+inline const bool ConfigTaskManager::getAllowPreferredServerOnMasterNode()
+{
+	return data->allowPreferredServerOnMasterNode;
 }
 
 // ----------------------------------------------------------------------

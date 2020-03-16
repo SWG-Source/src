@@ -613,7 +613,6 @@ unsigned long TaskManager::startServer(const std::string & processName, const st
 		}
 
 		const ProcessEntry pe = (*f).second;
-
 		// does the process run on this box?
 		if(pe.targetHost == "local" || pe.targetHost == getNodeLabel() || nodeLabel == getNodeLabel() || nodeLabel == "local")
 		{
@@ -646,10 +645,14 @@ unsigned long TaskManager::startServer(const std::string & processName, const st
 					// select a task manager on which to spawn the server
 					// find the best target
 					float cost = getLoadForProcess(pe.processName);
-					ManagerConnection * conn = Locator::getBestServer(pe.processName, options, cost);
-					if(!conn)
+					if(Locator::isMasterNodePreferred(pe.processName, options, cost))
 					{
-
+						pid = startServerLocal(pe, options);	
+					}
+					ManagerConnection * conn = Locator::getBestServer(pe.processName, options, cost);
+					if(!conn && !pid)
+					{
+						
 						if(ManagerConnection::getConnectionCount() < 1)
 							pid = startServerLocal(pe, options);
 						else
@@ -666,7 +669,7 @@ unsigned long TaskManager::startServer(const std::string & processName, const st
 							s_queuedSpawnRequests.push_back(r);
 						}
 					}
-					else
+					else if(!pid)
 					{
 						std::string label = "uninitialized label";
 						if(conn->getNodeLabel())
