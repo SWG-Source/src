@@ -146,19 +146,33 @@ ManagerConnection *LocatorNamespace::getPreferredServer(std::string const &proce
 	{
 		ServerEntry &e = *i;
 		if ((e.m_label != s_masterNodeLabel) && (e.hasAvailableLoad(cost)))
-		{
+		{		
 			for (std::vector<PreferredNode>::const_iterator j = s_preferredNodes.begin(); j != s_preferredNodes.end(); ++j)
 				if ((*j).m_nodeLabel == e.m_label && (*j).match(processName, options))
 					return e.m_connection;
-		}
-	}
+		} 
+	}	
 	return 0;
 }
 
 // ----------------------------------------------------------------------
 
-ManagerConnection *LocatorNamespace::getUnpreferredServer(float cost)
+bool Locator::isMasterNodePreferred(std::string const &processName, std::string const &options, float cost)
 {
+	if(!ConfigTaskManager::getAllowPreferredServerOnMasterNode())
+		return false;
+
+	for (std::vector<PreferredNode>::const_iterator j = s_preferredNodes.begin(); j != s_preferredNodes.end(); ++j)
+		if ((*j).m_nodeLabel == s_masterNodeLabel && (*j).match(processName, options))
+			return true;
+				
+	return false;
+}
+
+// ----------------------------------------------------------------------
+
+ManagerConnection *LocatorNamespace::getUnpreferredServer(float cost)
+{	
 	// Find a node other than the master node that can afford to run the process
 	// and is a not marked as a preferred node for anything; if more than one
 	// node qualifies, return the node with the lowest load
@@ -190,8 +204,8 @@ ManagerConnection *LocatorNamespace::getUnpreferredServer(float cost)
 // ----------------------------------------------------------------------
 
 ManagerConnection *Locator::getBestServer(std::string const &processName, std::string const &options, float cost)
-{
-	if (s_serverList.empty())
+{	
+	if (s_serverList.empty())		
 		return 0;
 
 	// first, look for a preferred node for this process

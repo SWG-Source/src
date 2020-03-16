@@ -24,6 +24,7 @@ public:
 	static void install();
 	static void closed(std::string const &label, ManagerConnection const *oldConnection);
 	static ManagerConnection *getBestServer(std::string const &processName, std::string const &options, float cost);
+	static bool isMasterNodePreferred(std::string const &processName, std::string const &options, float cost);	
 	static float getMyLoad();
 	static float getMyMaximumLoad();
 	static float getServerLoad(std::string const &label);

@@ -84,7 +84,7 @@ void ManagerConnection::onConnectionClosed()
 
 void ManagerConnection::onConnectionOpened()
 {
-	DEBUG_REPORT_LOG(true, ("Manager connection opened\n"));
+	DEBUG_REPORT_LOG(true, ("Manager connection opened for %s \n", getRemoteAddress().c_str()));
 	TaskConnectionIdMessage id(TaskConnectionIdMessage::TaskManager, TaskManager::getNodeLabel(), ConfigTaskManager::getClusterName());
 	send(id);
 	s_managerConnectionCount++;

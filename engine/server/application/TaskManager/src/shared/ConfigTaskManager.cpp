@@ -82,6 +82,7 @@ void ConfigTaskManager::install(void)
 	KEY_INT     (maximumClockDriftToleranceSeconds, 10); // seconds
 	KEY_INT     (systemTimeCheckIntervalSeconds, 60); // seconds
 	KEY_INT     (clockDriftFatalIntervalSeconds, 1*60*60); // seconds
+	KEY_BOOL    (allowPreferredServerOnMasterNode, false);
 
 	int index = 0;
 	char const * result = 0;
