@@ -3923,7 +3923,7 @@ void CentralServer::checkShutdownProcess()
 		if( m_curTime>=m_shutdownTotalTime && !warn30 )
 		{
 			LOG("CentralServerShutdown",("Shutdown Phase %d: Broadcasting 30sec disconnect warning message to players.", m_shutdownPhase));
-			ConGenericMessage const msg("game any systemMessage You will be disconnected in 30sec so the server can perform a final save before shutting down.  Please find a safe place to logout now.", 0);
+			ConGenericMessage const msg("game any systemMessage You will be disconnected in 30 seconds so the server can perform a final save before shutting down.  Please find a safe place to logout now.", 0);
 			IGNORE_RETURN(sendToRandomGameServer(msg));
 			warn30 = true;
 
@@ -3931,7 +3931,7 @@ void CentralServer::checkShutdownProcess()
 		else if( m_curTime >= (m_shutdownTotalTime+20) && !warn10 )
 		{
 			LOG("CentralServerShutdown",("Shutdown Phase %d: Broadcasting 10sec disconnect warning message to players.", m_shutdownPhase));
-			ConGenericMessage const msg("game any systemMessage You will be disconnected in 10sec so the server can perform a final save before shutting down.  Please find a safe place to logout now.", 0);
+			ConGenericMessage const msg("game any systemMessage You will be disconnected in 10 seconds so the server can perform a final save before shutting down.  Please find a safe place to logout now.", 0);
 			IGNORE_RETURN(sendToRandomGameServer(msg));
 			warn10 = true;
 		}
