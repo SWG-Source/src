@@ -17,6 +17,7 @@ namespace ConfigServerUtilityNamespace
 	int serverMaxChatLogLines;
 	int playerMaxChatLogLines;
 	bool chatLogManagerLoggingEnabled;
+	bool externalAdminLevelsEnabled;
 }
 
 using namespace ConfigServerUtilityNamespace;
@@ -75,6 +76,13 @@ bool ConfigServerUtility::isChatLogManagerLoggingEnabled()
 
 //-----------------------------------------------------------------------
 
+bool ConfigServerUtility::isExternalAdminLevelsEnabled()
+{
+	return externalAdminLevelsEnabled;
+}
+
+//-----------------------------------------------------------------------
+
 void ConfigServerUtility::install()
 {
 	KEY_INT(spawnCookie, 0);
@@ -82,6 +90,7 @@ void ConfigServerUtility::install()
 	KEY_INT(serverMaxChatLogLines, 5000);
 	KEY_INT(playerMaxChatLogLines, 200);
 	KEY_BOOL(chatLogManagerLoggingEnabled, false);
+	KEY_BOOL(externalAdminLevelsEnabled, false);
 }
 
 //-----------------------------------------------------------------------
@@ -91,4 +100,3 @@ void ConfigServerUtility::remove()
 }
 
 //-----------------------------------------------------------------------
-
