@@ -12,6 +12,8 @@
 #include "sharedUtility/DataTable.h"
 #include "sharedUtility/DataTableManager.h"
 
+#include "../../../../../../external/3rd/library/webAPI/webAPI.h"
+
 #include <string>
 
 //-----------------------------------------------------------------------
@@ -72,7 +74,10 @@ int AdminAccountManager::getAdminLevel(const std::string & account)
 	DEBUG_FATAL(!ms_installed, ("AdminAccountManager not installed"));
 
 	if(ConfigServerUtility::isExternalAdminLevelsEnabled()){
-		//Do something else here
+		std::ostringstream postBuffer;
+		postBuffer << "user_name=" << account;
+		std::string response = webAPI::simplePost(ConfigServerUtility::getExternalAdminLevelsURL(), std::string(postBuffer.str()), "");
+		level = std::stoi(response);
 		return level;
 	}
 
