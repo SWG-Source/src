@@ -18,6 +18,7 @@ public:
 	static int getPlayerMaxChatLogLines();
 	static bool isChatLogManagerLoggingEnabled();
 	static bool isExternalAdminLevelsEnabled();
+	static const char * getExternalAdminLevelsURL();
 
 	static void install();
 	static void remove();

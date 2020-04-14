@@ -18,6 +18,7 @@ namespace ConfigServerUtilityNamespace
 	int playerMaxChatLogLines;
 	bool chatLogManagerLoggingEnabled;
 	bool externalAdminLevelsEnabled;
+	const char * externalAdminLevelsURL;
 }
 
 using namespace ConfigServerUtilityNamespace;
@@ -83,6 +84,13 @@ bool ConfigServerUtility::isExternalAdminLevelsEnabled()
 
 //-----------------------------------------------------------------------
 
+const char * ConfigServerUtility::getExternalAdminLevelsURL()
+{
+	return externalAdminLevelsURL;
+}
+
+//-----------------------------------------------------------------------
+
 void ConfigServerUtility::install()
 {
 	KEY_INT(spawnCookie, 0);
@@ -91,6 +99,7 @@ void ConfigServerUtility::install()
 	KEY_INT(playerMaxChatLogLines, 200);
 	KEY_BOOL(chatLogManagerLoggingEnabled, false);
 	KEY_BOOL(externalAdminLevelsEnabled, false);
+	KEY_STRING(externalAdminLevelsURL, "http://localhost/");
 }
 
 //-----------------------------------------------------------------------
