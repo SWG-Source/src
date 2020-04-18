@@ -12,7 +12,7 @@
 #include "sharedUtility/DataTable.h"
 #include "sharedUtility/DataTableManager.h"
 
-#include "../../../../../../external/3rd/library/webAPI/webAPI.h"
+#include "webAPI.h"
 
 #include <string>
 

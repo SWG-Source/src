@@ -21,7 +21,7 @@
 
 #include "sharedFoundation/CrcConstexpr.hpp"
 
-#include "../../../../../../external/3rd/library/platform/projects/Session/CommonAPI/CommonAPI.h"
+#include "Session/CommonAPI/CommonAPI.h"
 #include "webAPI.h"
 #include "jsonWebAPI.h"
 
