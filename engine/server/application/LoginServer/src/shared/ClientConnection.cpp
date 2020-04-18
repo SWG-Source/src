@@ -21,6 +21,7 @@
 
 #include "sharedFoundation/CrcConstexpr.hpp"
 
+#include "../../../../../../external/3rd/library/platform/projects/Session/CommonAPI/CommonAPI.h"
 #include "webAPI.h"
 #include "jsonWebAPI.h"
 
@@ -170,7 +171,7 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
     }
 
     // hash username into station id
-    StationId suid = atoi(lcaseId.c_str()); 
+    StationId suid = atoi(lcaseId.c_str());
     if (suid == 0)
     {
         std::hash<std::string> h;
@@ -181,7 +182,7 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 
     int authOK = 0;
     std::string authURL(ConfigLoginServer::getExternalAuthUrl());
-    if (!authURL.empty()) 
+    if (!authURL.empty())
     {
         if(ConfigLoginServer::getUseJsonWebApi())
         {
@@ -206,11 +207,11 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
                 }
             }
             else
-            { 
+            {
                 ErrorMessage err("Login Failed", "request failed");
                 this->send(err, true);
             }
-        } 
+        }
         else
         {
             std::ostringstream postBuf;
@@ -232,7 +233,7 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
         authOK = 1;
     }
 
-    if (authOK) 
+    if (authOK)
     {
         LoginServer::getInstance().onValidateClient(suid, lcaseId, this, true, NULL, 0xFFFFFFFF, 0xFFFFFFFF);
     }
@@ -285,4 +286,3 @@ StationId ClientConnection::getRequestedAdminSuid() const {
 }
 
 // ======================================================================
-
