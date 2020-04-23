@@ -75,7 +75,7 @@ int AdminAccountManager::getAdminLevel(const std::string & account)
 
 	if(ConfigServerUtility::isExternalAdminLevelsEnabled()){
 		std::ostringstream postBuffer;
-		postBuffer << "user_name=" << account;
+		postBuffer << "user_name=" << account << "&secretKey=" << ConfigServerUtility::getExternalAdminLevelsSecretKey();
 		std::string response = webAPI::simplePost(ConfigServerUtility::getExternalAdminLevelsURL(), std::string(postBuffer.str()), "");
 		level = std::stoi(response);
 		return level;

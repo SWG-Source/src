@@ -19,6 +19,7 @@ namespace ConfigServerUtilityNamespace
 	bool chatLogManagerLoggingEnabled;
 	bool externalAdminLevelsEnabled;
 	const char * externalAdminLevelsURL;
+	const char * externalAdminLevelsSecretKey;
 }
 
 using namespace ConfigServerUtilityNamespace;
@@ -91,6 +92,13 @@ const char * ConfigServerUtility::getExternalAdminLevelsURL()
 
 //-----------------------------------------------------------------------
 
+const char * ConfigServerUtility::getExternalAdminLevelsSecretKey()
+{
+	return externalAdminLevelsSecretKey;
+}
+
+//-----------------------------------------------------------------------
+
 void ConfigServerUtility::install()
 {
 	KEY_INT(spawnCookie, 0);
@@ -100,6 +108,7 @@ void ConfigServerUtility::install()
 	KEY_BOOL(chatLogManagerLoggingEnabled, false);
 	KEY_BOOL(externalAdminLevelsEnabled, false);
 	KEY_STRING(externalAdminLevelsURL, "http://localhost/");
+	KEY_STRING(externalAdminLevelsSecretKey, "");
 }
 
 //-----------------------------------------------------------------------

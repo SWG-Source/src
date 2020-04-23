@@ -19,6 +19,7 @@ public:
 	static bool isChatLogManagerLoggingEnabled();
 	static bool isExternalAdminLevelsEnabled();
 	static const char * getExternalAdminLevelsURL();
+	static const char * getExternalAdminLevelsSecretKey();
 
 	static void install();
 	static void remove();

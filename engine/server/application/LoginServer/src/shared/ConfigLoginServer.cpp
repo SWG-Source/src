@@ -118,6 +118,7 @@ void ConfigLoginServer::install(void)
 	KEY_BOOL(useJsonWebApi, false);
 	KEY_BOOL(useExternalAuth, false);
 	KEY_STRING(externalAuthURL, "");
+	KEY_STRING(externalAuthSecretKey, "");
 	KEY_BOOL(useOldSuidGenerator, false);
 
 	int index = 0;

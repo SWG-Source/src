@@ -192,6 +192,7 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
             api.addJsonData<std::string>("user_password", trimmedKey);
             api.addJsonData<long>("stationID", suid);
             api.addJsonData<std::string>("ip", getRemoteAddress());
+            api.addJsonData<std::string>("secretKey", ConfigLoginServer::getExternalAuthSecretKey());
 
             if (api.submit())
             {
@@ -215,7 +216,7 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
         else
         {
             std::ostringstream postBuf;
-            postBuf << "user_name=" << trimmedId << "&user_password=" << trimmedKey << "&stationID=" << suid << "&ip=" << getRemoteAddress();
+            postBuf << "user_name=" << trimmedId << "&user_password=" << trimmedKey << "&stationID=" << suid << "&ip=" << getRemoteAddress() << "&secretKey=" << ConfigLoginServer::getExternalAuthSecretKey();
             std::string response = webAPI::simplePost(authURL, std::string(postBuf.str()), "");
 
             if (response == "success") {
