@@ -275,9 +275,9 @@ m_timeCharacterMatchStatisticsNextRefresh(0)
 	connectToMessage("TaskConnectionOpened");
 	connectToMessage("RandomNameRequest"); // from connection server
 	connectToMessage("RandomNameResponse"); // from game server
-	connectToMessage("VerifyAndLockNameRequest"); // from connection server	
-	connectToMessage("VerifyAndLockNameResponse"); // from game server	
-	
+	connectToMessage("VerifyAndLockNameRequest"); // from connection server
+	connectToMessage("VerifyAndLockNameResponse"); // from game server
+
 	//Object Messages
 	connectToMessage("RequestObjectMessage");
 	connectToMessage("RequestChunkMessage");
@@ -386,7 +386,7 @@ m_timeCharacterMatchStatisticsNextRefresh(0)
 	connectToMessage("RestartServerByRoleMessage");
 	connectToMessage("ExcommunicateGameServerMessage");
 	connectToMessage("RestartPlanetMessage");
-	
+
 	// Cluster state
 	connectToMessage("UpdateClusterLockedAndSecretState");
 
@@ -432,7 +432,7 @@ m_timeCharacterMatchStatisticsNextRefresh(0)
 CentralServer::~CentralServer()
 {
 	ConsoleManager::remove();
-	
+
 	CentralCSHandler::remove();
 
 	ms_sceneToHostMap.clear();
@@ -1315,7 +1315,7 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
 			GenericValueTypeMessage <TransferCharacterData> reply(ri);
 			// If this request has a CS Tool Id associated with it, it is an admin request for the CSTool,
-			// and so we should send it directly to the connection server, and not depend on a 
+			// and so we should send it directly to the connection server, and not depend on a
 			// transfer server existing.
 
 			if (reply.getValue().getCSToolId() > 0) {
@@ -2634,7 +2634,7 @@ void CentralServer::removeGameServer(GameServerConnection const *gameServer)
 		ExcommunicateGameServerMessage const excommunicateMessage(pid, 0, "");
 		sendToAllGameServersExceptDBProcess(excommunicateMessage, true);
 	}
-	else 
+	else
 	{
 		DEBUG_WARNING(true, ("A game server crashed but our process ID ptr is nullptr."));
 	}
@@ -2697,7 +2697,7 @@ void CentralServer::run(void)
 	setup.port = ConfigCentralServer::getCommodityServerServicePort();
 	setup.bindInterface = ConfigCentralServer::getCommodityServerServiceBindInterface();
 	s_commodityServerService = new Service(ConnectionAllocator<ServerConnection>(), setup);
-	
+
 	setup.port = ConfigCentralServer::getLoginServicePort();
 	if (ConfigCentralServer::getDevelopmentMode())
 		cserver.connectToLoginServer();
@@ -2709,7 +2709,7 @@ void CentralServer::run(void)
 
 	// connect to the task manager
 	cserver.m_taskManager = new TaskConnection("127.0.0.1", ConfigCentralServer::getTaskManagerPort());
-	
+
 	unsigned long startTime = Clock::timeMs();
 	unsigned long nextLoadingLogTime=0;
 	unsigned long nextPingTime=0;
@@ -2743,7 +2743,7 @@ void CentralServer::run(void)
 	{
 		unsigned long lastFrameTime = 0;
 		unsigned long frameStartTime = Clock::timeMs();
-		
+
 		PROFILER_AUTO_BLOCK_DEFINE("main loop");
 
 		bool barrierReached = true;
@@ -2847,7 +2847,7 @@ void CentralServer::update()
 	static int shutdownCheckLoopCount = 0;
 
 	m_curTime = static_cast<uint32>(time(0));
-	
+
 	// Tell the LoginServers if necessary
 	if ((++loopCount > ConfigCentralServer::getUpdatePlayerCountFrequency()))
 	{
@@ -2877,7 +2877,7 @@ void CentralServer::update()
                		const short port[1] = { (short)ConfigCentralServer::getAuctionPort() };
 
                		std::string s_id = ConfigCentralServer::getAuctionIDPrefix();
-			s_id += ConfigCentralServer::getClusterName(); 
+			s_id += ConfigCentralServer::getClusterName();
 
        			const char *identifier[1];
                		identifier[ 0 ] = s_id.c_str();
@@ -2914,7 +2914,7 @@ void CentralServer::sendPopulationUpdateToLoginServer()
 	m_totalTutorialSceneCount = 0;
 	m_totalFalconSceneCount   = 0;
 
-	
+
 	ConnectionServerConnectionList::const_iterator i;
 	for (i=m_connectionServerConnections.begin(); i!=m_connectionServerConnections.end(); ++i)
 	{
@@ -2939,7 +2939,7 @@ void CentralServer::sendPopulationUpdateToLoginServer()
 void CentralServer::sendMetricsToWebAPI()
 {
 	static const std::string metricsURL(ConfigCentralServer::getMetricsDataURL());
-	
+
 	if (!metricsURL.empty())
 	{
 		StellaBellum::webAPI api(metricsURL);
@@ -2952,23 +2952,25 @@ void CentralServer::sendMetricsToWebAPI()
 		api.addJsonData<int>("lastLoadingStateTime", m_lastLoadingStateTime);
 		api.addJsonData<int>("clusterStartupTime", m_clusterStartupTime);
 		api.addJsonData<int>("timeClusterWentIntoLoadingState", m_timeClusterWentIntoLoadingState);
-		
+		api.addJsonData<int>("webUpdateIntervalSeconds", ConfigCentralServer::getWebUpdateIntervalSeconds());
+		api.addJsonData<std::string>("secretKey", ConfigCentralServer::getMetricsSecretKey());
+
 #ifdef _DEBUG
 		if (api.submit()) {
 			bool status = api.getNullableValue<bool>("status");
-			
+
 			if (status)
 			{
 				std::string message = api.getString("message");
-				
+
 				if (message.empty())
 				{
 					message = "No message returned.";
 				}
-				
+
 				WARNING(true, ("Error sending stats: %s", message.c_str()));
 			}
-			
+
 			WARNING(true, ("Success sending server stats to API."));
 		}
 		else
@@ -3200,7 +3202,7 @@ void CentralServer::startPlanetServer(const std::string & host, const std::strin
 			portBase += 100;
 			options += " gameServerDebuggingPortBase=";
 			options += buffer;
-			
+
 			TaskSpawnProcess spawn(host.empty() ? std::string("any") : host, "PlanetServer", options, spawnDelay);
 			CentralServer::getInstance().sendTaskMessage(spawn);
 			m_pendingPlanetServers[sceneId] = std::make_pair(std::make_pair(host, options), ::time(nullptr));
@@ -3218,7 +3220,7 @@ void CentralServer::startPlanetServer(const std::string & host, const std::strin
 				getInstance().m_transferServerConnection = 0;
 				s_retryTransferServerConnection = false;
 			}
-			
+
 			if(getInstance().m_stationPlayersCollectorConnection != nullptr && ! isPreloadFinished())
 			{
 				getInstance().m_stationPlayersCollectorConnection->disconnect();
@@ -4133,7 +4135,7 @@ std::pair<std::map<int, std::pair<std::string, int> > const *, std::map<int, std
 	}
 
 	refreshTime = m_timeLastLoginTimeStatisticsRefresh;
-	
+
 	return std::make_pair(&m_lastLoginTimeStatistics, &m_createTimeStatistics);
 }
 

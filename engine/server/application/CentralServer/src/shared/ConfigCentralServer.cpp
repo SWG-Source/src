@@ -16,7 +16,7 @@
 ConfigCentralServer::Data *	ConfigCentralServer::data = 0;
 
 #define KEY_INT(a,b)    (data->a = ConfigFile::getKeyInt("CentralServer", #a, b))
-#define KEY_BOOL(a,b)   (data->a = ConfigFile::getKeyBool("CentralServer", #a, b)) 
+#define KEY_BOOL(a,b)   (data->a = ConfigFile::getKeyBool("CentralServer", #a, b))
 #define KEY_STRING(a,b) (data->a = ConfigFile::getKeyString("CentralServer", #a, b))
 
 //-----------------------------------------------------------------------
@@ -110,7 +110,7 @@ void ConfigCentralServer::install(void)
 	KEY_STRING (transferServerAddress, "127.0.0.1");
 	KEY_INT    (transferServerPort, 0); // TransferServer listens on 50005, default to "off"
 	KEY_STRING (stationPlayersCollectorAddress, "127.0.0.1");
-	KEY_INT    (stationPlayersCollectorPort, 0); // StationPlayersCollector listens on 50010, default to "off"	
+	KEY_INT    (stationPlayersCollectorPort, 0); // StationPlayersCollector listens on 50010, default to "off"
 	KEY_BOOL   (allowZeroConnectionServerPort, true);
 	KEY_INT    (clusterWideDataLockTimeout, 300); // seconds
 	KEY_STRING (commodityServerServiceBindInterface, "");
@@ -129,6 +129,7 @@ void ConfigCentralServer::install(void)
 	KEY_INT    (maxTimeToWaitForPlanetServerStartSeconds, 5*60); // seconds
 	KEY_STRING (metricsDataURL, "");
 	KEY_INT	   (webUpdateIntervalSeconds, 5);
+	KEY_STRING (metricsSecretKey, "");
 
 	int index = 0;
 	char const * result = 0;
