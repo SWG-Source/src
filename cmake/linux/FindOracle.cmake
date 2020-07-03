@@ -52,6 +52,12 @@ if(DEFINED ENV{ORACLE_HOME})
     /usr/share/oracle/12.2/client64
     /usr/lib/oracle/12.2/client
     /usr/share/oracle/12.2/client
+    /usr/include/oracle/19.6/client64
+    /usr/include/oracle/19.6/client
+    /usr/lib/oracle/19.6/client64
+    /usr/share/oracle/19.6/client64
+    /usr/lib/oracle/19.6/client
+    /usr/share/oracle/19.6/client
     ${ORACLE_HOME}/rdbms/public
     ${ORACLE_HOME}/include
     ${ORACLE_HOME}/sdk/include  # Oracle SDK
@@ -59,8 +65,8 @@ if(DEFINED ENV{ORACLE_HOME})
 
 
   set(ORACLE_OCI_NAMES clntsh libclntsh oci)
-  set(ORACLE_NNZ_NAMES nnz10 libnnz10 nnz11 libnnz11 nnz12 libnnz12 ociw32)
-  set(ORACLE_OCCI_NAMES libocci occi oraocci10 oraocci11 oraocci12)
+  set(ORACLE_NNZ_NAMES nnz10 libnnz10 nnz11 libnnz11 nnz12 libnnz12 nnz19 libnnz19 ociw32)
+  set(ORACLE_OCCI_NAMES libocci occi oraocci10 oraocci11 oraocci12 libocci.so.19.1 oraocci19)
 
 
   set(ORACLE_LIB_DIR 
