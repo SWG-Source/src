@@ -52,6 +52,12 @@ if(DEFINED ENV{ORACLE_HOME})
     /usr/share/oracle/12.2/client64
     /usr/lib/oracle/12.2/client
     /usr/share/oracle/12.2/client
+    /usr/include/oracle/18.3/client64
+    /usr/include/oracle/18.3/client
+    /usr/lib/oracle/18.3/client64
+    /usr/share/oracle/18.3/client64
+    /usr/lib/oracle/18.3/client
+    /usr/share/oracle/18.3/client
     /usr/include/oracle/19.6/client64
     /usr/include/oracle/19.6/client
     /usr/lib/oracle/19.6/client64
