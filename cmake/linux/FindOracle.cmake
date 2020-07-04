@@ -71,7 +71,7 @@ if(DEFINED ENV{ORACLE_HOME})
 
 
   set(ORACLE_OCI_NAMES clntsh libclntsh oci)
-  set(ORACLE_NNZ_NAMES nnz10 libnnz10 nnz11 libnnz11 nnz12 libnnz12 nnz19 libnnz19 ociw32)
+  set(ORACLE_NNZ_NAMES nnz10 libnnz10 nnz11 libnnz11 nnz12 libnnz12 nnz18 libnnz18 nnz19 libnnz19 ociw32)
   set(ORACLE_OCCI_NAMES libocci occi oraocci10 oraocci11 oraocci12 libocci.so.19.1 oraocci19)
 
 
