@@ -160,7 +160,7 @@ void AdminAccountManager::reload()
 	DEBUG_FATAL(!ms_installed, ("AdminAccountManager not installed"));
 	NOT_NULL(ms_dataTableName);
 	DataTableManager::reload(*ms_dataTableName);
-	ms_adminTable = DataTableManager::getTable (dataTableName, true);
+	ms_adminTable = DataTableManager::getTable (ms_dataTableName->c_str(), true);
 }
 
 //-----------------------------------------------------------------------
