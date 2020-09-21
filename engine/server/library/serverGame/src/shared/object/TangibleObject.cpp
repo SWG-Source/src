@@ -4919,6 +4919,11 @@ void TangibleObject::getAttributes(AttributeVector & data) const
 		{
 			data.push_back(std::make_pair(SharedObjectAttributes::no_trade, Unicode::emptyString));
 
+			if (markedNoTradeRemovable())
+			{
+				data.push_back(std::make_pair(SharedObjectAttributes::no_trade_removable, Unicode::emptyString));
+			}
+
 			if (markedNoTradeShared(true))
 			{
 				data.push_back(std::make_pair(SharedObjectAttributes::no_trade_shared, Unicode::emptyString));
@@ -4930,6 +4935,11 @@ void TangibleObject::getAttributes(AttributeVector & data) const
 			if (gso && gso->hasScript(NOMOVE_SCRIPT))
 			{
 				data.push_back(std::make_pair(SharedObjectAttributes::no_trade, Unicode::emptyString));
+
+				if (markedNoTradeRemovable())
+				{
+					data.push_back(std::make_pair(SharedObjectAttributes::no_trade_removable, Unicode::emptyString));
+				}
 
 				if (markedNoTradeShared(false))
 				{

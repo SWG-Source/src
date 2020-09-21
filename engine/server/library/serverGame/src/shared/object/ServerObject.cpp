@@ -272,6 +272,10 @@ namespace ServerObjectNamespace
 	std::set<uint32> s_noTradeSharedTemplateItemType;
 	std::set<std::string> s_noTradeSharedStaticItemType;
 
+	// list of object types that supports no trade "removable" behavior
+	std::set<uint32> s_noTradeRemovableTemplateItemType;
+	std::set<std::string> s_noTradeRemovableStaticItemType;
+
 	// ----------------------------------------------------------------------
 
 	void sendDeleteToDatabase(const ServerObject& obj, int reason)
@@ -998,17 +1002,17 @@ void ServerObject::install()
 	// (no trade item of those types can be picked up by another character
 	// on the same account as the character who currently owns the item)
 	char const * const noTradeSharedDataTableName = "datatables/no_trade/no_trade_shared.iff";
-	DataTable * table = DataTableManager::getTable(noTradeSharedDataTableName, true);
-	if (table)
+	DataTable *noTradeSharedTable = DataTableManager::getTable(noTradeSharedDataTableName, true);
+	if (noTradeSharedTable)
 	{
-		int const columnObjectTemplate = table->findColumnNumber("Object Template");
+		int const columnObjectTemplate = noTradeSharedTable->findColumnNumber("Object Template");
 		if (columnObjectTemplate >= 0)
 		{
 			std::string objectTemplate;
 
-			for (int i = 0, numRows = table->getNumRows(); i < numRows; ++i)
+			for (int i = 0, numRows = noTradeSharedTable->getNumRows(); i < numRows; ++i)
 			{
-				objectTemplate = table->getStringValue(columnObjectTemplate, i);
+				objectTemplate = noTradeSharedTable->getStringValue(columnObjectTemplate, i);
 				if (objectTemplate.empty())
 					continue;
 
@@ -1016,6 +1020,31 @@ void ServerObject::install()
 					s_noTradeSharedTemplateItemType.insert(CrcLowerString::calculateCrc(objectTemplate.c_str()));
 				else
 					s_noTradeSharedStaticItemType.insert(objectTemplate);
+			}
+		}
+
+		DataTableManager::close(noTradeSharedDataTableName);
+	}
+
+	char const *const noTradeRemovableDataTableName = "datatables/no_trade/no_trade_removable.iff";
+	DataTable *noTradeRemovableTable = DataTableManager::getTable(noTradeRemovableDataTableName, true);
+	if (noTradeRemovableTable)
+	{
+		int const columnObjectTemplate = noTradeRemovableTable->findColumnNumber("Object Template");
+		if (columnObjectTemplate >= 0)
+		{
+			std::string objectTemplate;
+
+			for (int i = 0, numRows = noTradeRemovableTable->getNumRows(); i < numRows; ++i)
+			{
+				objectTemplate = noTradeRemovableTable->getStringValue(columnObjectTemplate, i);
+				if (objectTemplate.empty())
+					continue;
+
+				if (objectTemplate.find(".iff") != std::string::npos)
+					s_noTradeRemovableTemplateItemType.insert(CrcLowerString::calculateCrc(objectTemplate.c_str()));
+				else
+					s_noTradeRemovableStaticItemType.insert(objectTemplate);
 			}
 		}
 
@@ -1483,6 +1512,19 @@ bool ServerObject::markedNoTradeShared(bool includeCheckForNoTrade) const
 
 //-----------------------------------------------------------------------
 
+bool ServerObject::markedNoTradeRemovable() const
+{
+	if (!markedNoTrade())
+		return false;
+
+	if (m_staticItemName.get().empty())
+		return (s_noTradeRemovableTemplateItemType.count(getTemplateCrc()) > 0);
+
+	return (s_noTradeRemovableStaticItemType.count(m_staticItemName.get()) > 0);
+}
+
+//-----------------------------------------------------------------------
+
 bool ServerObject::isInSecureTrade() const
 {
 	const ServerObject *parent = safe_cast<const ServerObject*>(ContainerInterface::getFirstParentInWorld(*this));
@@ -1921,6 +1963,9 @@ void ServerObject::serverObjectEndBaselines(bool fromDatabase)
 		// If the object was created authoritative, trigger if needed
 		if (isAuthoritative())
 			triggerMadeAuthoritative();
+
+		if (markedNoTradeRemovable())
+			getScriptObject()->attachScript("item.special.no_trade_removable", true);
 	}
 
 	if (isPlayerControlled())
