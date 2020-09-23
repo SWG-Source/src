@@ -27,10 +27,12 @@
 #include "sharedObject/Appearance.h"
 #include "sharedObject/AppearanceTemplate.h"
 #include "sharedObject/AlterScheduler.h"
+#include "sharedCollision/Footprint.h"
 #include "sharedObject/NetworkIdManager.h"
 #include "sharedObject/SlotIdManager.h"
 #include "sharedObject/SlottedContainer.h"
 #include "sharedObject/SlottedContainmentProperty.h"
+#include "sharedTerrain/TerrainObject.h"
 #include "swgSharedUtility/Postures.h"
 #include "UnicodeUtils.h"
 
@@ -253,12 +255,23 @@ bool CreatureObjectNamespace::realDetachRider(CreatureObject * const mount, Slot
 
 					if (detachedRider && !ServerWorld::isSpaceScene() && mount->isInWorldCell())
 					{
-						// force the dismounted rider to the *EXACT* location
-						// of the mount, because any slight little movement
-						// "twitch" because of dismount could put the rider in
-						// an unintended, exploitable location, like behind
-						// the wall of a building
-						rider->teleportObject(mount->getPosition_w(), NetworkId::cms_invalid, "", Vector(), "");
+						/*
+						 * Force the player to the position of the mount. This is intended to prevent
+						 * the player glitching through a wall. We perform some correction on the
+						 * Y/height position to ensure that they can still move when they dismount over water.
+						 */
+						Vector mountPosition = mount->getPosition_w();
+						Footprint * riderFootprint = collisionProperty ? collisionProperty->getFootprint() : nullptr;
+
+						float groundPosition;
+						if (!riderFootprint || riderFootprint->isOnSolidFloor() || !TerrainObject::getConstInstance()->getHeightForceChunkCreation(mountPosition, groundPosition))
+						{
+							// If the vehicle is on a solid floor (i.e. a building) or we fail to get the position
+							// from the terrain instance, we fall back to using the vehicle's Y position.
+							groundPosition = mountPosition.y;
+						}
+
+						rider->teleportObject(Vector(mountPosition.x, groundPosition, mountPosition.z), NetworkId::cms_invalid, "", Vector(), "");
 					}
 				}
 			}
