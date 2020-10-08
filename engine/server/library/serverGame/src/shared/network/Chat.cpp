@@ -224,6 +224,8 @@ void Chat::createSystemRooms(const std::string & galaxyName, const std::string &
 	createRoom(avatarName, true, galaxyRoom + ChatRoomTypes::ROOM_TRADER         , "Trader chat for this galaxy");
 	createRoom(avatarName, true, galaxyRoom + ChatRoomTypes::ROOM_BEAST_MASTERY  , "Beast Mastery chat for this galaxy");
 	createRoom(avatarName, true, galaxyRoom + ChatRoomTypes::ROOM_WARDEN         , "Warden chat for this galaxy");
+    createRoom(avatarName, true, galaxyRoom + ChatRoomTypes::ROOM_GUILD_LEADER   , "Guild Leader chat for this galaxy");
+    createRoom(avatarName, true, galaxyRoom + ChatRoomTypes::ROOM_CITY_MAYOR     , "City Mayor chat for this galaxy");
 
 	std::string planetRoom = gamePrefix + galaxyName + "." + planetName + ".";
 	createRoom(avatarName, true, planetRoom + ChatRoomTypes::ROOM_PLANET, "public chat for this planet, cannot create rooms here");
@@ -672,6 +674,40 @@ unsigned int Chat::isAllowedToEnterRoom(const CreatureObject & who, const std::s
 			return SWG_CHAT_ERR_NOT_WARDEN;
 		}
 	}
+
+	// player must be a guild leader to enter the guild leader room
+    static std::string s_guildLeaderChatRoom = getGameCode() + "." + instance().m_serverAvatar->cluster + "." + ChatRoomTypes::ROOM_GUILD_LEADER;
+    if (_stricmp(room.c_str(), s_guildLeaderChatRoom.c_str()) == 0)
+    {
+        PlayerObject const * const playerObject = PlayerCreatureController::getPlayerObject(&who);
+        int guildId = GuildInterface::getGuildId(who.getNetworkId());
+        NetworkId leader = GuildInterface::getGuildLeaderId(guildId);
+        if(!playerObject || who.getNetworkId() != leader) {
+            return SWG_CHAT_ERR_NOT_GUILD_LEADER;
+        }
+    }
+
+    // player must be a city mayor to enter the city mayor room
+    static std::string s_cityMayorChatRoom = getGameCode() + "." + instance().m_serverAvatar->cluster + "." + ChatRoomTypes::ROOM_CITY_MAYOR;
+    if (_stricmp(room.c_str(), s_cityMayorChatRoom.c_str()) == 0)
+    {
+        PlayerObject const * const playerObject = PlayerCreatureController::getPlayerObject(&who);
+        // note: because the city interface design took into account a bug that allows players to be a citizen of multiple cities,
+        // the getCitizenOfCityId function is, in this application, annoyingly packing all possible citizenship(s) into a vector
+        // thus requiring more work from us here
+        bool isMayor = false;
+        std::vector<int> cityId = CityInterface::getCitizenOfCityId(who.getNetworkId());
+        for(int i = 0; i < cityId.size(); ++i){
+            NetworkId leader = CityInterface::getCityInfo(cityId[i]).getLeaderId();
+            if(playerObject && who.getNetworkId() == leader) {
+                isMayor = true;
+            }
+        }
+        if(!isMayor) {
+            return SWG_CHAT_ERR_NOT_CITY_MAYOR;
+        }
+    }
+
 
 	return CHATRESULT_SUCCESS;
 }
