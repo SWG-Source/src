@@ -21,6 +21,7 @@
 
 #include "sharedFoundation/CrcConstexpr.hpp"
 
+#include "Session/CommonAPI/CommonAPI.h"
 #include "webAPI.h"
 #include "jsonWebAPI.h"
 
@@ -170,7 +171,7 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
     }
 
     // hash username into station id
-    StationId suid = atoi(lcaseId.c_str()); 
+    StationId suid = atoi(lcaseId.c_str());
     if (suid == 0)
     {
         std::hash<std::string> h;
@@ -181,7 +182,7 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
 
     int authOK = 0;
     std::string authURL(ConfigLoginServer::getExternalAuthUrl());
-    if (!authURL.empty()) 
+    if (!authURL.empty())
     {
         if(ConfigLoginServer::getUseJsonWebApi())
         {
@@ -191,6 +192,7 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
             api.addJsonData<std::string>("user_password", trimmedKey);
             api.addJsonData<long>("stationID", suid);
             api.addJsonData<std::string>("ip", getRemoteAddress());
+            api.addJsonData<std::string>("secretKey", ConfigLoginServer::getExternalAuthSecretKey());
 
             if (api.submit())
             {
@@ -206,15 +208,15 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
                 }
             }
             else
-            { 
+            {
                 ErrorMessage err("Login Failed", "request failed");
                 this->send(err, true);
             }
-        } 
+        }
         else
         {
             std::ostringstream postBuf;
-            postBuf << "user_name=" << trimmedId << "&user_password=" << trimmedKey << "&stationID=" << suid << "&ip=" << getRemoteAddress();
+            postBuf << "user_name=" << trimmedId << "&user_password=" << trimmedKey << "&stationID=" << suid << "&ip=" << getRemoteAddress() << "&secretKey=" << ConfigLoginServer::getExternalAuthSecretKey();
             std::string response = webAPI::simplePost(authURL, std::string(postBuf.str()), "");
 
             if (response == "success") {
@@ -232,7 +234,7 @@ void ClientConnection::validateClient(const std::string & id, const std::string 
         authOK = 1;
     }
 
-    if (authOK) 
+    if (authOK)
     {
         LoginServer::getInstance().onValidateClient(suid, lcaseId, this, true, NULL, 0xFFFFFFFF, 0xFFFFFFFF);
     }
@@ -285,4 +287,3 @@ StationId ClientConnection::getRequestedAdminSuid() const {
 }
 
 // ======================================================================
-

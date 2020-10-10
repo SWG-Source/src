@@ -49,7 +49,7 @@ include_directories(
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedLog/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMath/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMathArchive/include/public
-	
+
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedMessageDispatch/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedNetwork/include/public
 	${SWG_ENGINE_SOURCE_DIR}/shared/library/sharedNetworkMessages/include/public
@@ -60,6 +60,7 @@ include_directories(
 	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/localizationArchive/include/public
 	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicode/include
 	${SWG_EXTERNALS_SOURCE_DIR}/ours/library/unicodeArchive/include/public
+	${SWG_EXTERNALS_SOURCE_DIR}/3rd/library/webAPI
 )
 
 add_library(serverUtility STATIC

@@ -66,11 +66,12 @@ class ConfigLoginServer
 		int             csToolPort;
 
 		bool		    requireSecureLoginForCsTool;
-		
+
 		bool            useOldSuidGenerator;
 		bool            useExternalAuth;
 		bool            useJsonWebApi;
 		const char *	externalAuthURL;
+    const char *  externalAuthSecretKey;
 	};
 
 	static const uint16 getCentralServicePort();
@@ -137,6 +138,7 @@ class ConfigLoginServer
 	static bool	        getUseExternalAuth();
 	static bool	        getUseJsonWebApi();
 	static const char * getExternalAuthUrl();
+  static const char * getExternalAuthSecretKey();
 	static bool	        getUseOldSuidGenerator();
 
 	// has character creation for this cluster been disabled through config option
@@ -502,6 +504,10 @@ inline const char * ConfigLoginServer::getExternalAuthUrl()
 	return data->externalAuthURL;
 }
 
+inline const char * ConfigLoginServer::getExternalAuthSecretKey()
+{
+	return data->externalAuthSecretKey;
+}
 
 inline bool ConfigLoginServer::getUseOldSuidGenerator()
 {

@@ -491,6 +491,8 @@ void ConfigServerGame::install(void)
 
 	KEY_BOOL    (useOldSuidGenerator, false);
 
+	KEY_STRING  (serverLoadLevel, "heavy");
+
 	if (data->baseDecayRate <= 1.0f)
 		data->baseDecayRate = 1.0f;
 

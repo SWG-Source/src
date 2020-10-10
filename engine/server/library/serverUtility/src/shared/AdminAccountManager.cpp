@@ -3,12 +3,16 @@
 
 //-----------------------------------------------------------------------
 
+#include "ConfigServerUtility.h"
+
 #include "serverUtility/FirstServerUtility.h"
 #include "serverUtility/AdminAccountManager.h"
 
 #include "sharedFoundation/ExitChain.h"
 #include "sharedUtility/DataTable.h"
 #include "sharedUtility/DataTableManager.h"
+
+#include "webAPI.h"
 
 #include <string>
 
@@ -69,6 +73,14 @@ int AdminAccountManager::getAdminLevel(const std::string & account)
 	int level = 0;
 	DEBUG_FATAL(!ms_installed, ("AdminAccountManager not installed"));
 
+	if(ConfigServerUtility::isExternalAdminLevelsEnabled()){
+		std::ostringstream postBuffer;
+		postBuffer << "user_name=" << account << "&secretKey=" << ConfigServerUtility::getExternalAdminLevelsSecretKey();
+		std::string response = webAPI::simplePost(ConfigServerUtility::getExternalAdminLevelsURL(), std::string(postBuffer.str()), "");
+		level = std::stoi(response);
+		return level;
+	}
+
 	int columnNumber = ms_adminTable->findColumnNumber("AdminAccounts");
 	DEBUG_FATAL(columnNumber == -1, ("Error loading admin table...no account column"));
 	int row = ms_adminTable->searchColumnString( columnNumber, account);
@@ -113,8 +125,8 @@ bool AdminAccountManager::isInternalIp(const std::string & addr)
 		size_t xpos = ipAddr.find ('x');
 
 		//if no X is found, do a straight compare
-		if ( (xpos == 0 || xpos == std::string::npos) 
-		   && ipAddr.compare(addr) == 0 
+		if ( (xpos == 0 || xpos == std::string::npos)
+		   && ipAddr.compare(addr) == 0
 			)
 		{
 			retval = true;
@@ -125,7 +137,7 @@ bool AdminAccountManager::isInternalIp(const std::string & addr)
 		else if (xpos - 1 > addr.size())
 			retval = false;
 
-		//compare substring 
+		//compare substring
 		else if (ipAddr.compare(0, xpos - 1, addr, 0, xpos - 1) == 0)
 		{
 			retval =  true;
@@ -148,6 +160,7 @@ void AdminAccountManager::reload()
 	DEBUG_FATAL(!ms_installed, ("AdminAccountManager not installed"));
 	NOT_NULL(ms_dataTableName);
 	DataTableManager::reload(*ms_dataTableName);
+	ms_adminTable = DataTableManager::getTable (ms_dataTableName->c_str(), true);
 }
 
 //-----------------------------------------------------------------------

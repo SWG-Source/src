@@ -13392,18 +13392,11 @@ void CreatureObject::setGroupMissionCriticalObjects(GroupMissionCriticalObjectSe
 	DEBUG_FATAL(!isAuthoritative(), ("CreatureObject::setGroupMissionCriticalObjects: called on non-authoritative object %s", getDebugInformation(true).c_str()));
 	if (isAuthoritative())
 	{
+	    m_groupMissionCriticalObjectSet.clear();
 		//-- Anything that is not in our set, we need to add
 		{
 			for (GroupMissionCriticalObjectSet::const_iterator iter = groupMissionCriticalObjectSet.begin(); iter != groupMissionCriticalObjectSet.end(); ++iter)
-				if (!m_groupMissionCriticalObjectSet.contains(*iter))
-					m_groupMissionCriticalObjectSet.insert(*iter);
-		}
-
-		//-- Anything that is not in the original set, we need to remove
-		{
-			for (GroupMissionCriticalObjectSet::const_iterator iter(m_groupMissionCriticalObjectSet.begin()); iter != m_groupMissionCriticalObjectSet.end(); ++iter)
-				if (groupMissionCriticalObjectSet.find(*iter) == groupMissionCriticalObjectSet.end())
-					m_groupMissionCriticalObjectSet.erase(*iter);
+				m_groupMissionCriticalObjectSet.insert(*iter);
 		}
 	}
 }

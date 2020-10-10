@@ -9,9 +9,9 @@
 #include "sharedFoundation/NetworkId.h"
 #include "sharedNetworkMessages/CustomerServiceCategory.h"
 #include <vector>
-
-extern "C" {
 #include "libxml/parser.h"
+extern "C" {
+
 }
 
 using namespace CSAssist;

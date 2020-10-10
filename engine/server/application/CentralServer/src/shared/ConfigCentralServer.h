@@ -74,6 +74,7 @@ public:
 
 		const char *  metricsDataURL;
 		int	      webUpdateIntervalSeconds;
+		const char *  metricsSecretKey;
 	};
 
 	static const unsigned short  getChatServicePort     ();
@@ -137,7 +138,7 @@ public:
 	static const char *  getAuctionServer();
 	static int           getAuctionPort();
 	static const char *  getAuctionIDPrefix();
-	
+
 	static bool          getDisconnectDuplicateConnectionsOnOtherGalaxies();
 
 	static bool          getRequestDbSaveOnPlanetServerCrash();
@@ -146,13 +147,14 @@ public:
 
 	static const char *  getMetricsDataURL();
 	static int	     getWebUpdateIntervalSeconds();
+	static const char *  getMetricsSecretKey();
 private:
 	static Data *	data;
 };
 
 //-----------------------------------------------------------------------
 
-inline const unsigned short ConfigCentralServer::getChatServicePort() 
+inline const unsigned short ConfigCentralServer::getChatServicePort()
 {
 	return static_cast<unsigned short>(data->chatServicePort);
 }
@@ -173,7 +175,7 @@ inline const unsigned short ConfigCentralServer::getConnectionServicePort()
 
 //-----------------------------------------------------------------------
 
-inline const unsigned short ConfigCentralServer::getCustomerServicePort() 
+inline const unsigned short ConfigCentralServer::getCustomerServicePort()
 {
 	return static_cast<unsigned short>(data->customerServicePort);
 }
@@ -527,6 +529,13 @@ inline const char * ConfigCentralServer::getMetricsDataURL()
 inline int ConfigCentralServer::getWebUpdateIntervalSeconds()
 {
 	return data->webUpdateIntervalSeconds;
+}
+
+// ----------------------------------------------------------------------
+
+inline const char * ConfigCentralServer::getMetricsSecretKey()
+{
+	return data->metricsSecretKey;
 }
 
 // ======================================================================
