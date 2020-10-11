@@ -1,0 +1,134 @@
+<project name="SWGBuildSRC" default="echoprops" basedir="/home/swg/swg-main" xmlns:if="ant:if" xmlns:unless="ant:unless">
+	<description>
+		This build file will build all aspects of the SWG Source Code.  Created by Cekis (cekisswg@gmail.com).
+	</description>
+	<!-- Get our host info -->
+	<hostinfo/>
+
+	<!-- Property File -->
+	<property file="src/local.properties" />
+	<property file="src/build.properties" />
+
+	<!-- Global Properties -->
+	<property name="build" location="${basedir}/build"/>
+
+	<!-- Setup Source Directories -->
+	<property name="exe" location="${basedir}/exe"/>
+	<property name="src" location="${basedir}/src"/>
+
+	<!-- Define where most of our compiled tools will live -->
+	<property name="tools_home" location="${build}/bin"/>
+	<property name="bin_home" location="${exe}/linux/bin"/>
+	<property environment="env"/>
+
+	<!-- The init target handles the environment setup - not much to do but create directories -->
+	<target name="init">
+		<tstamp/>
+		<mkdir dir="${build}"/>
+	</target>
+
+	<target name="echoprops">
+		<echoproperties/>
+		<echo>IP Address: ${ADDR4}</echo>
+	</target>
+
+	<target name="swg" description="builds the entire SWG SRC codebase" depends="clean,build_src">
+	</target>
+
+	<!-- Clean simply calls the other clean targets -->
+	<target name="clean" depends="clean_src,init">
+	</target>
+
+	<!-- Delete the SRC Build folder -->
+	<target name="clean_src">
+		<echo>Cleaning the SRC build directory.</echo>
+		<delete dir="${build}" verbose="false" failonerror="false"/>
+	</target>
+
+	<!-- Gets the architecture we're on - uses old way of getting it from original build_linux.sh script -->
+	<target name="get_arch">
+		<exec executable="arch" dir="." outputproperty="arch"/>
+		<condition property="compile.x86">
+			<equals arg1="${arch}" arg2="x86_64"/>
+		</condition>
+		<echo>Architecture is ${arch}</echo>
+		<condition property="is_debug_build">
+			<equals arg1="${src_build_type}" arg2="Debug"/>
+		</condition>
+		<echo>Creating a ${src_build_type} build</echo>
+		<condition property="use_gcc">
+			<equals arg1="${compiler}" arg2="gcc"/>
+		</condition>
+	</target>
+
+	<target name="set_compiler" description="sets the compiler to use based on what is set in build.properties" depends="set_gcc,set_clang">
+	</target>
+
+	<target name="set_gcc" if="${use_gcc}">
+		<echo>Using the GCC compiler</echo>
+		<property name="cc_compiler" value="gcc"/>
+		<property name="cxx_compiler" value="g++"/>
+	</target>
+
+	<target name="set_clang" unless="${use_gcc}">
+		<echo>Using the CLang compiler</echo>
+		<property name="cc_compiler" value="clang"/>
+		<property name="cxx_compiler" value="clang++"/>
+	</target>
+
+	<!-- Gets the number of processors at our disposal -->
+	<target name="get_num_procs">
+		<exec executable="nproc" dir="." outputproperty="nproc"/>
+		<echo>We have ${nproc} processors (cores) to use.</echo>
+	</target>
+	
+	<!-- Creates the Make files for our SRC that will be used during compile stage (Intel) -->
+	<target name="prepare_src_x86" depends="init,get_arch,set_compiler" description="prepare server code - Intel" if="compile.x86">
+		<exec executable="cmake" dir="${build}" failonerror="true">
+			<env key="PATH" value="${env.PATH}:${tools_home}"/>
+			<env key="CC" value="${cc_compiler}" unless:true="${use_gcc}"/>
+			<env key="CXX" value="${cxx_compiler}" unless:true="${use_gcc}"/>
+			<env key="LDFLAGS" value="-L/usr/lib32"/>
+			<env key="CMAKE_PREFIX_PATH" value="/usr/lib32:/lib32:/usr/lib/i386-linux-gnu:/usr/include/i386-linux-gnu"/>
+			<arg value="-DCMAKE_C_FLAGS=-m32"/>
+			<arg value="-DCMAKE_CXX_FLAGS=-m32"/>
+			<arg value="-DCMAKE_EXE_LINKER_FLAGS=-m32"/>
+			<arg value="-DCMAKE_MODULE_LINKER_FLAGS=-m32"/>
+			<arg value="-DCMAKE_SHARED_LINKER_FLAGS=-m32"/>
+			<arg value="-DCMAKE_BUILD_TYPE=${src_build_type}"/>
+			<arg value="${src}"/>
+		</exec>
+	</target>
+
+	<!-- Creates the Make files for our SRC that will be used during compile stage (Non-Intel) -->
+	<target name="prepare_src" depends="init,get_arch,set_compiler" description="compile server code - non Intel" unless="compile.x86">
+		<exec executable="cmake" dir="${build}" failonerror="true">
+			<env key="PATH" value="${env.PATH}:${tools_home}"/>
+			<env key="CC" value="${cc_compiler}" unless:true="${use_gcc}"/>
+			<env key="CXX" value="${cxx_compiler}" unless:true="${use_gcc}"/>
+			<arg value="-DCMAKE_BUILD_TYPE=${src_build_type}"/>
+			<arg value="${src}"/>
+		</exec>
+	</target>
+
+	<target name="strip_src" unless="${is_debug_build}" description="removes debugging information from release builds, making them smaller">
+		<exec executable="strip" dir="${build}">
+			<arg value="-d"/>
+			<arg value="bin/*"/>
+		</exec>
+	</target>
+
+	<!-- Compiles the SRC (C++) code -->
+	<target name="build_src" description="compile server code" depends="init,prepare_src,prepare_src_x86,get_num_procs,strip_src">
+		<exec executable="make" dir="${build}" failonerror="true">
+			<env key="CC" value="${cc_compiler}"/>
+			<env key="CXX" value="${cxx_compiler}"/>
+			<arg value="-j${nproc}"/>
+		</exec>
+	</target>
+
+	<target name="create_symlinks">
+		<symlink link="${basedir}/exe/linux/bin" resource="${tools_home}" overwrite="true"/>
+	</target>
+	
+</project>
