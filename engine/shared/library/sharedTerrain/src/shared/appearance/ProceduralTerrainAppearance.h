@@ -171,7 +171,6 @@ public:
 		virtual bool              collide(Vector const & start_o, Vector const & end_o, CollideParameters const & collideParameters, CollisionInfo & result) const = 0;
 		virtual bool              getHeightAt (const Vector& pos, float* height) const = 0;
 		virtual bool              getHeightAt (const Vector& pos, float* height, Vector* normal) const = 0;
-		virtual bool              getNormalAtPoint (const Vector& pos, Vector* normal) const = 0;
 
 		const BoxExtent&          getBoxExtent() const                     { return m_boxExtent; }
 
@@ -272,7 +271,6 @@ public:
 	virtual bool          getHeight (const Vector& position_o, float& height) const;
 	virtual bool          getHeight (const Vector& position_o, float& height, Vector& normal) const;
 	virtual bool          getHeightForceChunkCreation (const Vector& position_o, float& height) const;
-	virtual bool          getNormalOfPlaneAtPoint (const Vector& position_o, Vector& normal) const;
 	virtual const ObjectTemplate* getSurfaceProperties (const Vector& position_o) const;
 	virtual bool          getWaterHeight (const Vector& position_o, float& height) const;
 	virtual bool          getWaterHeight (const Vector& position_o, float& height, TerrainGeneratorWaterType& waterType, bool ignoreNonTransparentWater=false) const;

@@ -365,89 +365,12 @@ bool ServerProceduralTerrainAppearance::ServerChunk::getHeightAt (const Vector& 
 
 //-------------------------------------------------------------------
 
-bool ServerProceduralTerrainAppearance::ServerChunk::getNormalAtPoint (const Vector& pos, Vector* normal) const
-{
-	const Vector vmin = m_boxExtent.getMin ();
-	const Vector vmax = m_boxExtent.getMax ();
-	if (pos.x < vmin.x || pos.x > vmax.x || pos.z < vmin.z || pos.z > vmax.z)
-	{
-		DEBUG_WARNING (true, ("called getNormalAtPoint for position not within chunk"));
-		REPORT_LOG(true, ("position not within chunk\n"));
-		return false;
-	}
-
-	int tileX;
-	int tileZ;
-	_findTileXz(pos, tileX, tileZ);
-	if (isExcluded(tileX, tileZ)) {
-		REPORT_LOG(true, ("tile is excluded\n"));
-		return false;
-    }
-
-	//-- find out which tile this intersects
-	const Vector start (pos.x, vmax.y + 0.1f, pos.z);
-	const Vector end (pos.x, vmin.y - 0.1f, pos.z);
-	const Vector dir = end - start;
-
-	//-- collide with the 8 polygons in the tile
-
-
-	int const numberOfTilesPerChunk = m_proceduralTerrainAppearance.getNumberOfTilesPerChunk();
-	int const tileIndex = tileZ * numberOfTilesPerChunk + tileX;
-	const int offset = tileIndex * 8;
-		REPORT_LOG(true, ("Offset: %d\n", offset));
-
-	int k;
-	for (k = offset; k < offset + 8; ++k)
-	{
-	    Vector intersection;
-		const Plane& plane = (*m_planeList) [k];
-		Vector planeNormal = plane.getNormal ();
-
-		if(!plane.findIntersection(start, end, intersection)) {
-		    REPORT_LOG(true, ("Intersection was not found\n"));
-		    return false;
-		}
-
-		REPORT_LOG(true, ("Checking plane %d, dir.dot: %f, intersection: %f, %f, %f\n", k, dir.dot(planeNormal), intersection.x, intersection.y, intersection.z));
-
-		if ((dir.dot (planeNormal) < 0.f) && (plane.findIntersection (start, end, intersection)))
-		{
-			const int i0 = (*ms_indexList) [k * 3 + 0];
-			const int i1 = (*ms_indexList) [k * 3 + 1];
-			const int i2 = (*ms_indexList) [k * 3 + 2];
-
-			const Vector& v0 = (*m_vertexList) [i0];
-			const Vector& v1 = (*m_vertexList) [i1];
-			const Vector& v2 = (*m_vertexList) [i2];
-		    REPORT_LOG(true, ("Found good plane: %f, %f, %f : checking vertexes.\n", v0, v1, v2));
-
-			DenormalizedLine2d const line01 (Vector2d (v0.x, v0.z), Vector2d (v1.x, v1.z));
-			DenormalizedLine2d const line12 (Vector2d (v1.x, v1.z), Vector2d (v2.x, v2.z));
-			DenormalizedLine2d const line20 (Vector2d (v2.x, v2.z), Vector2d (v0.x, v0.z));
-
-			if (line01.computeDistanceTo (Vector2d (start.x, start.z)) <= 0 &&
-				line12.computeDistanceTo (Vector2d (start.x, start.z)) <= 0 &&
-				line20.computeDistanceTo (Vector2d (start.x, start.z)) <= 0)
-			{
-				*normal = planeNormal;
-			REPORT_LOG(true, ("Found on this plane: %f, %f, %f\n", v0, v1, v2));
-				return true;
-			}
-			REPORT_LOG(true, ("Not on this plane.  Distances: %f, %f, %f\n", line01.computeDistanceTo (Vector2d (start.x, start.z)), line12.computeDistanceTo (Vector2d (start.x, start.z)), line20.computeDistanceTo (Vector2d (start.x, start.z))));
-		}
-			REPORT_LOG(true, ("Not on this intersection.\n"));
-	}
-
-	return false;
-}
-
-//-------------------------------------------------------------------
-
 #define ALLOW_BACKFACING_COLLISION 0
 
 bool ServerProceduralTerrainAppearance::ServerChunk::collide (const Vector& start, const Vector& end, CollideParameters const & /*collideParameters*/, CollisionInfo& result) const
 {
+	bool found = false;
+
 	//-- test the line against the extent
 	if (m_boxExtent.testSphereOnly (start, end))
 	{
@@ -492,9 +415,10 @@ bool ServerProceduralTerrainAppearance::ServerChunk::collide (const Vector& star
 
 						if ((start.magnitudeBetweenSquared (intersection) < start.magnitudeBetweenSquared (result.getPoint ())) && intersection.inPolygon (v0, v1, v2))
 						{
+							found = true;
+
 							result.setPoint (intersection);
 							result.setNormal (normal);
-							return true;
 						}
 					}
 				}
@@ -502,7 +426,7 @@ bool ServerProceduralTerrainAppearance::ServerChunk::collide (const Vector& star
 		}
 	}
 
-	return false;
+	return found;
 }
 
 //-------------------------------------------------------------------
@@ -1222,34 +1146,30 @@ void ServerProceduralTerrainAppearance::addChunk (Chunk* const chunk, const int 
 
 bool ServerProceduralTerrainAppearance::collideChunkList(ChunkList const & chunkList, Vector const & start_o, Vector const & end_o, CollisionInfo& result) const
 {
+	bool collided = false;
+
+	result.setPoint (end_o);
+
 	//-- fire ray through chunks
-	if(std::size(chunkList) > 0) {
-        for (ChunkList::const_iterator iter = chunkList.begin (); iter != chunkList.end (); ++iter)
-        {
-            if ((*iter)->collide (start_o, end_o, CollideParameters::cms_default, result))
-            {
-                return true;
-            }
-        }
+	for (ChunkList::const_iterator iter = chunkList.begin (); iter != chunkList.end (); ++iter)
+	{	
+		Chunk const * const chunk = *iter;
+
+		CollisionInfo info;
+		if (chunk->collide (start_o, result.getPoint (), CollideParameters::cms_default, info))
+		{
+			collided = true;
+			result   = info;
+		}
 	}
 
-	return false;
-}
-
-//-------------------------------------------------------------------
-
-bool ServerProceduralTerrainAppearance::getNormalOfPlaneAtPoint(const Vector& position_o, Vector* normal) const
-{
-	const ServerChunk* const chunk = safe_cast<ServerChunk const *>(ProceduralTerrainAppearance::findChunk (position_o, 1));
-
-	return chunk->getNormalAtPoint(position_o, normal);
+	return collided;
 }
 
 //-------------------------------------------------------------------
 
 bool ServerProceduralTerrainAppearance::collide(Vector const & start_o, Vector const & end_o, CollideParameters const & /*collideParameters*/, CollisionInfo & result) const
 {
-    REPORT_LOG(true, ("Checking collision after rotation - Start Y: %f, End Y: %f\n", start_o.y, end_o.y));
 	ChunkList chunkList;
 	m_sphereTree.findOnSegment (start_o, end_o, chunkList);
 	std::stable_sort(chunkList.begin(), chunkList.end(), CollisionChunkSorter(start_o));	

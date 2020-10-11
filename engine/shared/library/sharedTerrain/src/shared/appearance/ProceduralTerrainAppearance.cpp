@@ -754,6 +754,7 @@ bool ProceduralTerrainAppearance::getHeight (const Vector& position_o, float& he
 bool ProceduralTerrainAppearance::getHeightForceChunkCreation (const Vector& position_o, float& height) const
 {
 	const Chunk* chunk = findChunk (position_o, 1);
+
 	if (!chunk)
 	{
 		DEBUG_REPORT_LOG (ms_logGetHeightFailures, ("getHeightForceChunkCreation: chunk for <%1.2f, %1.2f> does not exist, creating\n", position_o.x, position_o.z));
@@ -766,22 +767,6 @@ bool ProceduralTerrainAppearance::getHeightForceChunkCreation (const Vector& pos
 	return chunk && chunk->getHeightAt (position_o, &height);
 }
 
-//-------------------------------------------------------------------
-
-bool ProceduralTerrainAppearance::getNormalOfPlaneAtPoint (const Vector& position_o, Vector& normal) const
-{
-	const Chunk* chunk = findChunk (position_o, 1);
-	if (!chunk)
-	{
-		DEBUG_REPORT_LOG (ms_logGetHeightFailures, ("getHeightForceChunkCreation: chunk for <%1.2f, %1.2f> does not exist, creating\n", position_o.x, position_o.z));
-		const_cast<ProceduralTerrainAppearance*> (this)->createChunk (position_o, 1);
-
-		chunk = findChunk (position_o, 1);
-		DEBUG_REPORT_LOG (ms_logGetHeightFailures && !chunk, ("getHeightForceChunkCreation: chunk for <%1.2f, %1.2f> STILL does not exist\n", position_o.x, position_o.z));
-	}
-
-	return chunk && chunk->getNormalAtPoint (position_o, &normal);
-}
 //-------------------------------------------------------------------
 
 const ObjectTemplate* ProceduralTerrainAppearance::getSurfaceProperties (const Vector& position_o) const

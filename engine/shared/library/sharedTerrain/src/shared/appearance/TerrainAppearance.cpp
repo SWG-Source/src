@@ -148,13 +148,6 @@ bool TerrainAppearance::getHeightForceChunkCreation (const Vector& /*position_o*
 {
 	return false;
 }
-//-------------------------------------------------------------------
-
-bool TerrainAppearance::getNormalOfPlaneAtPoint (const Vector& /*position_w*/, Vector& /*normal*/) const
-{
-    REPORT_LOG(true, ("Not implemented.\n"));
-	return false;
-}
 
 //-------------------------------------------------------------------
 

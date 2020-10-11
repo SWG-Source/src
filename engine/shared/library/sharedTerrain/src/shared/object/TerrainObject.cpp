@@ -302,13 +302,6 @@ bool TerrainObject::getHeightForceChunkCreation (const Vector& position_w, float
 
 //-------------------------------------------------------------------
 
-bool TerrainObject::getNormalOfPlaneAtPoint (const Vector& position_w, Vector& normal) const
-{
-	return getCastedAppearance (this)->getNormalOfPlaneAtPoint (rotateTranslate_w2o (position_w), normal);
-}
-
-//-------------------------------------------------------------------
-
 const ObjectTemplate* TerrainObject::getSurfaceProperties (const Vector& position_w) const
 {
 	return getCastedAppearance (this)->getSurfaceProperties (rotateTranslate_w2o (position_w));

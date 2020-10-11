@@ -71,7 +71,6 @@ public:
 
 		virtual bool     getHeightAt (const Vector& worldPos, float* height) const;
 		virtual bool     getHeightAt (const Vector& worldPos, float* height, Vector* normal) const;
-		virtual bool     getNormalAtPoint (const Vector& worldPos, Vector* normal) const;
 		virtual bool collide(Vector const & start_o, Vector const & end_o, CollideParameters const & collideParameters, CollisionInfo & result) const;
 		virtual int      getChunkMemorySize () const;
 
@@ -101,7 +100,6 @@ public:
 	virtual int   getNumberOfChunks () const;
 	virtual bool  hasHighLevelOfDetailTerrain (const Vector& position_o) const;
 	virtual void  purgeChunks();
-    virtual bool  getNormalOfPlaneAtPoint (const Vector& position_o, Vector* normal) const;
 
 protected:
 
