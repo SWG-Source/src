@@ -33,6 +33,7 @@ public:
 	static void install();
 
 	static AppearanceTemplate *create(const char *newName, Iff *iff);
+	static AppearanceTemplate *createDtla(const char *newName, Iff *iff);
 
 public:
 
