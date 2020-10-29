@@ -230,6 +230,7 @@ public:
 	virtual bool                 markedNoTrade                  () const;
 	virtual bool                 markedNoTradeRecursive         (bool testPlayers, bool testOnlyContainedItems = false) const;
 	virtual bool                 markedNoTradeShared            (bool includeCheckForNoTrade) const;
+	virtual bool                 markedNoTradeRemovable         () const;
 	virtual bool                 isInBazaarOrVendor             () const;
 	virtual bool                 isInSecureTrade                () const;
 	virtual void				 removeAllAuctions				();

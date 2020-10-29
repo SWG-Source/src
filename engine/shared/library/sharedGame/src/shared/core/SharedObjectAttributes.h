@@ -95,6 +95,7 @@ namespace SharedObjectAttributes
 	MAKE_ATTRIB (bio_link);
 	MAKE_ATTRIB (no_trade);
 	MAKE_ATTRIB (no_trade_shared);
+	MAKE_ATTRIB (no_trade_removable);
 
 	MAKE_ATTRIB (unique);
 
