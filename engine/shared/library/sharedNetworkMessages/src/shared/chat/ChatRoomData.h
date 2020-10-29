@@ -44,6 +44,8 @@ namespace ChatRoomTypes
 	static const std::string ROOM_TRADER          = "Trader";
 	static const std::string ROOM_BEAST_MASTERY   = "BeastMastery";
 	static const std::string ROOM_WARDEN          = "Warden";
+	static const std::string ROOM_GUILD_LEADER    = "GuildLeaders";
+	static const std::string ROOM_CITY_MAYOR      = "CityMayors";
 }//namespace ChatRoomTypes
 
 enum 
