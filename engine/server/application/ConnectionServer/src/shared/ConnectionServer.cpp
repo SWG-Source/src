@@ -1328,7 +1328,7 @@ void ConnectionServer::addToConnectedMap(uint32 suid, ClientConnection *cconn) {
     if (i == connectedMap.end()) {
         connectedMap[suid] = cconn;
     } else {
-        WARNING_STRICT_FATAL(true, ("Attempt made to log in an additional character from the same account"));
+        WARNING(true, ("Attempt made to log in an additional character from the same account"));
         connectedMap[suid] = cconn;
     }
 
