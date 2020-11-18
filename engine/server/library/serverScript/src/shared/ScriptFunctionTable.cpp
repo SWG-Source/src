@@ -431,6 +431,8 @@ static const Scripting::ScriptFuncTable ScriptFuncList[] =
 	{Scripting::TRIG_ON_ABANDON_PLAYER_QUEST, "OnAbandonPlayerQuest", "O"},
 
 	{Scripting::TRIG_ON_GCW_SCORE_CATEGORY_PERCENTILE_CHANGE, "OnGcwScoreCategoryPercentileChange", "sii"},
+	
+	{Scripting::TRIG_WAYPOINT_WARP, "OnWaypointWarpRequested", "O"},
 
 //-- finish it up
 

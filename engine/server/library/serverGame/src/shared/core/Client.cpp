@@ -885,6 +885,21 @@ void Client::receiveClientMessage(const GameNetworkMessage &message) {
 
                 break;
             }
+			
+			case constcrc("handleWaypointWarp") : {
+				Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
+                GenericValueTypeMessage <std::pair<NetworkId, std::string>> const msg(ri);
+				CreatureObject *creatureObject = dynamic_cast<CreatureObject *>(getCharacterObject());
+				if (creatureObject != nullptr) {
+					GameScriptObject *gameScriptObject = creatureObject->getScriptObject();
+                    if (gameScriptObject != nullptr) {
+                        ScriptParams p;
+						p.addParam(msg.getValue().first);
+                        IGNORE_RETURN(gameScriptObject->trigAllScripts(Scripting::TRIG_WAYPOINT_WARP, p));
+					}
+				}
+				break;
+			}
 
                 //----------------------------------------------------------------------
 
