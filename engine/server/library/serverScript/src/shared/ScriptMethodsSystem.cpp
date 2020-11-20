@@ -31,6 +31,7 @@ namespace ScriptMethodsSystemNamespace
 	void         JNICALL saveBytesOnClient(JNIEnv * env, jobject self, jlong jclient, jstring jfilename, jbyteArray bytes);
 	void         JNICALL launchClientWebBrowser(JNIEnv *env, jobject self, jlong player, jstring url);
 	void         JNICALL playCutScene(JNIEnv * env, jobject self, jlong jclient, jstring jfilename);
+	void		 JNICALL triggerServerWarning(JNIEnv * env, jobject self, jstring message);
 }
 
 
@@ -49,6 +50,7 @@ const JNINativeMethod NATIVES[] = {
 	JF("_saveBytesOnClient", "(JLjava/lang/String;[B)V", saveBytesOnClient),
 	JF("_launchClientWebBrowser", "(JLjava/lang/String;)V", launchClientWebBrowser),
 	JF("_playCutScene", "(JLjava/lang/String;)V", playCutScene),
+	JF("_triggerServerWarning", "(Ljava/lang/String;)V", triggerServerWarning),
 };
 
 	return JavaLibrary::registerNatives(NATIVES, sizeof(NATIVES)/sizeof(NATIVES[0]));
@@ -232,6 +234,16 @@ void JNICALL ScriptMethodsSystemNamespace::playCutScene(JNIEnv * env, jobject se
 			}
 		}
 	}
+}
+
+// ----------------------------------------------------------------------
+
+void JNICALL ScriptMethodsSystemNamespace::triggerServerWarning(JNIEnv * env, jobject self, jstring message)
+{
+	JavaStringParam localMessage(message);
+	std::string messageString;
+	JavaLibrary::convert(localMessage, messageString);
+	WARNING(true, (messageString.c_str()));
 }
 
 // ======================================================================

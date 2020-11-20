@@ -43,6 +43,7 @@ namespace ScriptMethodsCollectionNamespace
 	jobjectArray JNICALL getCollectionSlotCategoryInfo(JNIEnv *env, jobject self, jstring slotName);
 	jobjectArray JNICALL getCollectionSlotPrereqInfo(JNIEnv *env, jobject self, jstring slotName);
 	jstring      JNICALL getCollectionSlotName(JNIEnv *env, jobject self, jint collectionSlotId);
+	jlong		 JNICALL getCollectionSlotMaxValue(JNIEnv *env, jobject self, jstring slotName);
 	jobjectArray JNICALL getAllCollectionSlotsInCollection(JNIEnv *env, jobject self, jstring collectionName);
 	jobjectArray JNICALL getAllCollectionSlotsInPage(JNIEnv *env, jobject self, jstring pageName);
 	jobjectArray JNICALL getAllCollectionsInPage(JNIEnv *env, jobject self, jstring pageName);
@@ -89,6 +90,7 @@ bool ScriptMethodsCollectionNamespace::install()
 		JF("getCollectionSlotCategoryInfo", "(Ljava/lang/String;)[Ljava/lang/String;", getCollectionSlotCategoryInfo),
 		JF("getCollectionSlotPrereqInfo", "(Ljava/lang/String;)[Ljava/lang/String;", getCollectionSlotPrereqInfo),
 		JF("getCollectionSlotName", "(I)Ljava/lang/String;", getCollectionSlotName),
+		JF("getCollectionSlotMaxValue", "(Ljava/lang/String;)J", getCollectionSlotMaxValue),
 		JF("getAllCollectionSlotsInCollection", "(Ljava/lang/String;)[Ljava/lang/String;", getAllCollectionSlotsInCollection),
 		JF("getAllCollectionSlotsInPage", "(Ljava/lang/String;)[Ljava/lang/String;", getAllCollectionSlotsInPage),
 		JF("getAllCollectionsInPage", "(Ljava/lang/String;)[Ljava/lang/String;", getAllCollectionsInPage),
@@ -628,6 +630,23 @@ jstring JNICALL ScriptMethodsCollectionNamespace::getCollectionSlotName(JNIEnv *
 		return 0;
 
 	return JavaString(slot->name).getReturnValue();
+}
+
+// ----------------------------------------------------------------------
+
+jlong JNICALL ScriptMethodsCollectionNamespace::getCollectionSlotMaxValue(JNIEnv *env, jobject self, jstring slotName)
+{
+	UNREF(self);
+	
+	JavaStringParam localSlotName(slotName);
+	std::string slotNameString;
+	JavaLibrary::convert(localSlotName, slotNameString);
+	
+	CollectionsDataTable::CollectionInfoSlot const * slot = CollectionsDataTable::getSlotByName(slotNameString);
+	if (!slot)
+		return -1;
+
+	return static_cast<int64>(slot->maxSlotValue);
 }
 
 // ----------------------------------------------------------------------
