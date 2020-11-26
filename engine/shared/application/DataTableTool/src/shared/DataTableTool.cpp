@@ -48,15 +48,16 @@ static const char * const LNAME_HELP                 = "help";
 static const char * const LNAME_INPUT_FILE           = "inputFile";
 static const char * const LNAME_OUTPUT_FILE          = "outputFile";
 static const char * const LNAME_TEST                 = "test";
-static const char * const LNAME_P4EDIT               = "edit";
-static const char * const LNAME_P4ADD                = "add";
+static const char * const LNAME_CLIENT               = "client";
+//static const char * const LNAME_P4EDIT               = "edit"; deprecated
+//static const char * const LNAME_P4ADD                = "add"; deprecated
 static const char         SNAME_HELP                 = 'h';
 static const char         SNAME_INPUT_FILE           = 'i';
 static const char         SNAME_OUTPUT_FILE          = 'o';
 static const char         SNAME_TEST                 = 't';
-static const char         SNAME_P4EDIT               = 'e';
-static const char         SNAME_P4ADD                = 'a';
-
+//static const char       SNAME_P4EDIT               = 'e'; deprecated
+//static const char       SNAME_P4ADD                = 'a'; deprecated
+static const char         SNAME_CLIENT               = 'c';
 
 static CommandLine::OptionSpec optionSpecArray[] =
 {
@@ -75,10 +76,17 @@ static CommandLine::OptionSpec optionSpecArray[] =
 
 				// output file optional
 				OP_SINGLE_LIST_NODE(SNAME_OUTPUT_FILE, LNAME_OUTPUT_FILE, OP_ARG_REQUIRED, OP_MULTIPLE_DENIED, OP_NODE_OPTIONAL),
+				
+				// output to client (optional)
+                // for every sys.shared datatable that is compiled, if this argument is passed, the file will also be
+                // compiled and added to the /client directory in the same path of the output directory (e.g. where /data is located)
+                // This allows you to mount the /client directory inside a VM to your windows client directory so you can easily
+                // and automatically add shared datatables to your client once they have been compiled
+                OP_SINGLE_LIST_NODE(SNAME_CLIENT, LNAME_CLIENT, OP_ARG_NONE, OP_MULTIPLE_DENIED, OP_NODE_OPTIONAL),
 
-				// perforce operations
-				OP_SINGLE_LIST_NODE(SNAME_P4ADD, LNAME_P4ADD, OP_ARG_NONE, OP_MULTIPLE_DENIED, OP_NODE_OPTIONAL),
-				OP_SINGLE_LIST_NODE(SNAME_P4EDIT, LNAME_P4EDIT, OP_ARG_NONE, OP_MULTIPLE_DENIED, OP_NODE_OPTIONAL),
+				// perforce operations (deprecated)
+				//OP_SINGLE_LIST_NODE(SNAME_P4ADD, LNAME_P4ADD, OP_ARG_NONE, OP_MULTIPLE_DENIED, OP_NODE_OPTIONAL),
+				//OP_SINGLE_LIST_NODE(SNAME_P4EDIT, LNAME_P4EDIT, OP_ARG_NONE, OP_MULTIPLE_DENIED, OP_NODE_OPTIONAL),
 
 				// tests
 				OP_SINGLE_LIST_NODE(SNAME_TEST, LNAME_TEST, OP_ARG_NONE, OP_MULTIPLE_DENIED, OP_NODE_OPTIONAL),
@@ -154,6 +162,11 @@ void DataTableTool::run(void)
 		usage();
 		return;
 	}
+	
+	bool doClientOutput = false;
+    if (CommandLine::getOccurrenceCount(SNAME_CLIENT)) {
+		doClientOutput = true;
+	}
 
 	m_inputFile = CommandLine::getOptionString(SNAME_INPUT_FILE);
 
@@ -182,14 +195,11 @@ void DataTableTool::run(void)
 		if (!FileNameUtils::isWritable(m_outputFile))
 		{
 			printf("ERROR: The output file is not available for writing: %s\n\n", m_outputFile.c_str());
-			// todo: perforce edit???
 		}
 
 		bool success = dl.save( m_outputFile.c_str() );
 
 		printf("%s creating data table: %s\n", success ? "SUCCESS" : "FAILURE", m_outputFile.c_str());
-
-		// todo: perforce add
 
 		if (testOutput)
 			runTest(m_outputFile.c_str());
@@ -214,14 +224,24 @@ void DataTableTool::run(void)
 			{
 				printf("ERROR: The output file is not available for writing: %s\n\n", tableFileName.c_str());
 				continue;
-				// todo: perforce edit
 			}
 
 			bool success = dl.saveTable( tableName.c_str(), tableFileName.c_str() );
 
 			printf("%s creating data table: %s\n", success ? "SUCCESS" : "FAILURE", tableFileName.c_str());
-
-			// todo: perforce add
+			
+			if(success && doClientOutput) {
+                if(tableFileName.find("sys.shared") != std::string::npos) {
+                    tableFileName.replace(tableFileName.find("data/sku.0/sys.shared/compiled/game"), 35, "client");
+                    createOutputDirectoryForFile(tableFileName);
+                    if (!FileNameUtils::isWritable(tableFileName)) {
+                        printf("***ERROR*** Could not write datatable to client directory. Did you already make /client and /client/datatables? They must already exist. Path requested was: %s\n\n", tableFileName.c_str());
+                        continue;
+                    }
+                    bool clientSuccess = dl.saveTable(tableName.c_str(), tableFileName.c_str());
+                    printf("%s creating data table for client directory: %s\n", clientSuccess ? "SUCCESS" : "FAILURE", tableFileName.c_str());
+                }
+            }
 
 			if (testOutput)
 				runTest(tableFileName.c_str());
@@ -390,6 +410,7 @@ void DataTableTool::usage(void)
 	printf("     it replaces the dsrc directory with data and the extension with .iff)\n");
 	printf("     For XML files, this option is not valid.\n");
 	printf("  -t run diagnotic test \n");
+	printf("  -c compile sys.shared datatables to /client directory as well as /data directory  \n");
 	getchar();
 }
 
