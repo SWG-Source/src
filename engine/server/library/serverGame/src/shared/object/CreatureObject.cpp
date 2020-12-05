@@ -14535,6 +14535,18 @@ int CreatureObject::getRemainingExpertisePoints() const
 
 bool CreatureObject::processExpertiseRequest(std::vector<std::string> const &addExpertisesNamesList, bool clearAllExpertisesFirst)
 {
+	
+	// if you are in god mode, grant the expertise without permission checks
+	if(getClient()->isGod()) {
+		for(std::vector<std::string>::const_iterator i = addExpertisesNamesList.begin(); i != addExpertisesNamesList.end(); ++i) {
+			std::string const &s = *i;
+			const SkillObject *skill = SkillManager::getInstance().getSkill(s);
+			grantSkill(*skill);
+			Chat::sendSystemMessage(*this, Unicode::narrowToWide(FormattedString<256>().sprintf("GOD MODE: Granting you expertise skill %s without regard for points, requisites, or permissions, because you are in God Mode.", skill->getSkillName().c_str())), Unicode::emptyString);
+		}
+		return true;
+	}
+	
 	for(std::vector<std::string>::const_iterator i = addExpertisesNamesList.begin(); i != addExpertisesNamesList.end(); ++i)
 	{
 		std::string const &s = *i;
