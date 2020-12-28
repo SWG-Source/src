@@ -413,6 +413,11 @@ sub doDeltaUpdates
         $version=$newversion;
     }
     }
+	
+	if($updated == 0)
+	{
+		print "The database is already up to date at version number ".($version)."\n";
+	}
   
     return $updated;
 }
