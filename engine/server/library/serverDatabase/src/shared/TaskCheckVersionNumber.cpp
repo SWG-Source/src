@@ -50,11 +50,11 @@ void TaskCheckVersionNumber::onComplete()
 	{
 		if (m_fatalOnMismatch)
 		{
-			FATAL(true,("This version of the server requires database version %i, but the database is version %i.\n",m_codeVersion,m_databaseVersion));
+			FATAL(true,("***ERROR*** This version of the server requires database version %i, but the database is version %i. \nYou may need to run 'ant update_swg' to acquire the latest database updates.\n",m_codeVersion,m_databaseVersion));
 		}
 		else
 		{
-			WARNING(true,("This version of the server requires database version %i, but the database is version %i.\n",m_codeVersion,m_databaseVersion));
+			WARNING(true,("***ERROR*** This version of the server requires database version %i, but the database is version %i. \nYou may need to run 'ant update_swg' to acquire the latest database updates.\n",m_codeVersion,m_databaseVersion));
 		}
 	}
 }
