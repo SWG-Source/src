@@ -43,9 +43,11 @@ class ConfigCommodityServer
 	int           minutesEmptyToEndangered;
 	int           minutesUnaccessedToEndangered;
 	int           minutesEndangeredToRemoved;
-	int           minutesVendorAuctionTimer;
-	int           minutesVendorItemTimer;
+	int           minutesVendorAuctionTimer;        // max time an item is listed on a vendor
+	int           minutesVendorItemTimer;           // max time a vendor item is held in stockroom after it expires for pickup by the seller (auction time + item time)
 	int           maxAuctionsPerPage;
+	int           minutesBazaarAuctionTimer;        // max time an item is listed on bazaar
+	int           minutesBazaarItemTimer;           // max time a bazaar item is held by system after it expires for pickup by the seller (auction time + item time)
     };
 
 	static uint16        getCMServerServiceBindPort             ();
@@ -78,6 +80,8 @@ class ConfigCommodityServer
 	static int           getMinutesVendorAuctionTimer           ();
 	static int           getMinutesVendorItemTimer              ();
 	static int           getMaxAuctionsPerPage                  ();
+	static int           getMinutesBazaarAuctionTimer           ();
+	static int           getMinutesBazaarItemTimer              ();
 
 	static void          install                                ();
 	static void          remove                                 ();
@@ -294,6 +298,18 @@ inline int ConfigCommodityServer::getMinutesVendorItemTimer()
 inline int ConfigCommodityServer::getMaxAuctionsPerPage()
 {
 	return data->maxAuctionsPerPage;
+}
+
+//-----------------------------------------------------------------------
+
+inline int ConfigCommodityServer::getMinutesBazaarAuctionTimer() {
+    return data->minutesBazaarAuctionTimer;
+}
+
+//-----------------------------------------------------------------------
+
+inline int ConfigCommodityServer::getMinutesBazaarItemTimer() {
+    return data->minutesBazaarItemTimer;
 }
 
 #endif	// _ConfigCommodityServer_H

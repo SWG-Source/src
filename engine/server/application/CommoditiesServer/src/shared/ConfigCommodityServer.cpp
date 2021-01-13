@@ -54,13 +54,15 @@ void ConfigCommodityServer::install(void)
 	KEY_INT     (centralServerPort, 44456);
 	KEY_STRING  (centralServerAddress, "localhost");
 	KEY_INT     (sleepTimePerFrameMs, 1);
-	KEY_INT     (minutesActiveToUnaccessed, 7 * 24 * 60);
-	KEY_INT     (minutesEmptyToEndangered, 7 * 24 * 60);
-	KEY_INT     (minutesUnaccessedToEndangered, 7 * 24 * 60);
-	KEY_INT     (minutesEndangeredToRemoved, 7 * 24 * 60);
-	KEY_INT     (minutesVendorAuctionTimer, 30 * 24 * 60);
-	KEY_INT     (minutesVendorItemTimer, 30 * 24 * 60);
+	KEY_INT     (minutesActiveToUnaccessed, 10080); // 7 days
+	KEY_INT     (minutesEmptyToEndangered, 10080);
+	KEY_INT     (minutesUnaccessedToEndangered, 10080);
+	KEY_INT     (minutesEndangeredToRemoved, 10080);
+	KEY_INT     (minutesVendorAuctionTimer, 43200); // 30 days
+	KEY_INT     (minutesVendorItemTimer, 43200);
 	KEY_INT     (maxAuctionsPerPage, 100);
+	KEY_INT     (minutesBazaarAuctionTimer, 10080);
+	KEY_INT     (minutesBazaarItemTimer, 10080);
 }
 
 //-----------------------------------------------------------------------

@@ -1426,6 +1426,9 @@ void AuctionMarket::AddImmediateAuction(const AddImmediateAuctionMessage &messag
 	// force the expire timer to be 30 days after the auction timer has finished
 	// The expire timer should be large to allow for time to sit in the stockroom before it is deleted.
 	int expireTimer = auctionTimer + (ConfigCommodityServer::getMinutesVendorItemTimer() * 60);
+	// bazaar timers
+    int bazaarAuctionTimer = (ConfigCommodityServer::getMinutesBazaarAuctionTimer() * 60) + time(0);
+    int bazaarItemTimer = bazaarAuctionTimer + (ConfigCommodityServer::getMinutesBazaarItemTimer() * 60);
 
 	if (message.GetFlags() & AUCTION_VENDOR_TRANSFER)
 	{
@@ -1481,11 +1484,11 @@ void AuctionMarket::AddImmediateAuction(const AddImmediateAuctionMessage &messag
 				return;
 			}
 		}
-		// If this is not a player vendor, then use the values sent in from the message
+        // If this is not a player vendor, use bazaar settings for auction and expiration time
 		else
 		{
-			auctionTimer = message.GetAuctionTimer();
-			expireTimer = message.GetExpireTimer();
+		    auctionTimer = bazaarAuctionTimer;
+		    expireTimer = bazaarItemTimer;
 		}
 
 		// cannot use "relist" on an item bought as a vendor offer;
@@ -1638,11 +1641,11 @@ void AuctionMarket::AddImmediateAuction(const AddImmediateAuctionMessage &messag
 		return;
 	}
 
-	// If this is not a player vendor, then use the values sent in from the message
+    // If this is not a player vendor, use bazaar settings for auction and expiration time
 	if( !auctionLocation.IsVendorMarket() )
 	{
-		auctionTimer = message.GetAuctionTimer();
-		expireTimer = message.GetExpireTimer();
+        auctionTimer = bazaarAuctionTimer;
+        expireTimer = bazaarItemTimer;
 	}
 
 	static Unicode::String const emptyUnicodeString;
