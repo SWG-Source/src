@@ -63,6 +63,7 @@ void ConfigCommodityServer::install(void)
 	KEY_INT     (maxAuctionsPerPage, 100);
 	KEY_INT     (minutesBazaarAuctionTimer, 10080);
 	KEY_INT     (minutesBazaarItemTimer, 10080);
+	KEY_INT     (maxAuctionsPerPlayer, 25);
 }
 
 //-----------------------------------------------------------------------

@@ -48,6 +48,7 @@ class ConfigCommodityServer
 	int           maxAuctionsPerPage;
 	int           minutesBazaarAuctionTimer;        // max time an item is listed on bazaar
 	int           minutesBazaarItemTimer;           // max time a bazaar item is held by system after it expires for pickup by the seller (auction time + item time)
+	int           maxAuctionsPerPlayer;             // max number of auctions a player can have active at any given time
     };
 
 	static uint16        getCMServerServiceBindPort             ();
@@ -82,6 +83,7 @@ class ConfigCommodityServer
 	static int           getMaxAuctionsPerPage                  ();
 	static int           getMinutesBazaarAuctionTimer           ();
 	static int           getMinutesBazaarItemTimer              ();
+	static int           getMaxAuctionsPerPlayer                ();
 
 	static void          install                                ();
 	static void          remove                                 ();
@@ -310,6 +312,12 @@ inline int ConfigCommodityServer::getMinutesBazaarAuctionTimer() {
 
 inline int ConfigCommodityServer::getMinutesBazaarItemTimer() {
     return data->minutesBazaarItemTimer;
+}
+
+//-----------------------------------------------------------------------
+
+inline int ConfigCommodityServer::getMaxAuctionsPerPlayer() {
+    return data->maxAuctionsPerPlayer;
 }
 
 #endif	// _ConfigCommodityServer_H

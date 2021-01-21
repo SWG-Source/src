@@ -769,7 +769,7 @@ bool AuctionMarket::HasOpenAuctionSlots(const NetworkId &  playerId)
 	std::map<NetworkId, int>::iterator f = m_auctionCountMap.find(playerId);
 	if (f != m_auctionCountMap.end())
 	{
-		if ((*f).second >= MAX_AUCTIONS_PER_PLAYER)
+		if ((*f).second >= ConfigCommodityServer::getMaxAuctionsPerPlayer())
 		{
 			return false;
 		}

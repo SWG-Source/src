@@ -12,8 +12,6 @@
 #define AUCTION_VENDOR_TRANSFER   (1 << 12)
 #define AUCTION_OFFERED_ITEM      (1 << 14)
 
-#define MAX_AUCTIONS_PER_PLAYER   25
-
 #include "AuctionData.h"
 
 //#ifndef max
