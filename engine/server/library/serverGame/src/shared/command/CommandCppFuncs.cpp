@@ -6739,7 +6739,13 @@ static void commandFuncServerDestroyObject(Command const &, NetworkId const & ac
 			Chat::sendSystemMessage(*player, pp);
 	}
 	else
+	{
+		// don't throw a warning if the only reason destruction failed is because the no destroy script blocked the request
+		if (targetObject->getScriptObject()->hasScript("item.special.nodestroy")) {
+			return;
+		}
 		WARNING(true, ("commandFuncServerDestroyObject: Error encountered while deleting object %s", target.getValueString().c_str()));
+	}
 }
 
 // ----------------------------------------------------------------------
