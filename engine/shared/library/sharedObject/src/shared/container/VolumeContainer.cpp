@@ -292,7 +292,7 @@ int VolumeContainer::recalculateVolume()
 	if (volumeContainer)
 		IGNORE_RETURN (volumeContainer->recalculateVolume ());
 
-	WARNING_STRICT_FATAL(m_totalVolume > 0 && m_currentVolume > m_totalVolume, ("Recalculate Volume ended up being greater than our capacity"));
+	DEBUG_WARNING(m_totalVolume > 0 && m_currentVolume > m_totalVolume, ("Recalculate Volume ended up being greater than our capacity"));
 	return m_currentVolume;
 }
 
