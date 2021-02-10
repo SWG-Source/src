@@ -172,6 +172,41 @@ namespace CommoditiesMarketNamespace
 			errorCode = ar_NOT_ITEM_OWNER;
 			return false;
 		}
+		
+		// ================================================
+		// Exploit Fix
+		// This block fixes an exploit that allows item duplication and excess credits
+		// by selling an item to a junk dealer while simultaneously selling it on bazaar
+		// ================================================
+
+		errorCode = ar_NOT_ITEM_OWNER; //set this, we'll reset back to ar_OK inside the while loop
+		const ServerObject* inventory = owner.getInventory();
+		if (inventory == NULL)
+		{
+			return false; //couldn't find our inventory? bail
+		}
+		const Object* container = ContainerInterface::getContainedByObject(item);
+
+		while (container != NULL)
+		{
+			if (inventory->getNetworkId() == container->getNetworkId())
+			{
+				//success
+				errorCode = ar_OK;
+				break;
+			}
+			// go up a container level
+			container = ContainerInterface::getContainedByObject(*container);
+		}
+		if (errorCode != ar_OK)
+		{
+			LOG("CustomerService", ("ExploitBazaarSales: %s attempted to sell item %s that wasn't in their inventory or an accessible container.", owner.getNetworkId().getValueString().c_str(), item.getNetworkId().getValueString().c_str()));
+			return false; //we weren't OK, return
+		}
+
+		// ================================================
+		// == End Exploit Fix =============================
+		// ================================================
 
 		if (minBid < 0)
 		{
