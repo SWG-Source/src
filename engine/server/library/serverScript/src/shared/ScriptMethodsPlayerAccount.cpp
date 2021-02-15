@@ -76,6 +76,7 @@ namespace ScriptMethodsPlayerAccountNamespace
 	void         JNICALL renameCharacterReleaseNameReservation(JNIEnv *env, jobject self, jlong player);
 	void         JNICALL renameCharacter(JNIEnv *env, jobject self, jlong player, jstring newName);
 	jint         JNICALL getPlayerStationId(JNIEnv *env, jobject self, jlong player);
+	jstring      JNICALL getPlayerUsername(JNIEnv *env, jobject self, jlong player);
 }
 
 //========================================================================
@@ -111,6 +112,7 @@ const JNINativeMethod NATIVES[] = {
 	JF("_renameCharacterReleaseNameReservation", "(J)V", renameCharacterReleaseNameReservation),
 	JF("_renameCharacter", "(JLjava/lang/String;)V", renameCharacter),
 	JF("_getPlayerStationId", "(J)I", getPlayerStationId),
+	JF("_getPlayerUsernameDoNotUse", "(J)Ljava/lang/String;", getPlayerUsername),
 };
 
 	return JavaLibrary::registerNatives(NATIVES, sizeof(NATIVES)/sizeof(NATIVES[0]));
@@ -972,6 +974,42 @@ jint JNICALL ScriptMethodsPlayerAccountNamespace::getPlayerStationId(JNIEnv *env
 	NOT_NULL(env);
 
 	return NameManager::getInstance().getPlayerStationId(NetworkId(static_cast<NetworkId::NetworkIdType>(player)));
+}
+
+// ----------------------------------------------------------------------
+
+/**
+ * Get the account username of a player.
+ * Note: The player must be online to use this.
+ * See base_class.java implementation for more info.
+ *
+ * @param player the object id of the player
+ * @return string of the player's account username
+ */
+jstring JNICALL ScriptMethodsPlayerAccountNamespace::getPlayerUsername(JNIEnv *env, jobject self, jlong player) {
+    UNREF(self);
+    NOT_NULL(env);
+
+    CreatureObject const * creatureObject = nullptr;
+    if (!JavaLibrary::getObject(player, creatureObject) || !creatureObject)
+    {
+        DEBUG_WARNING(true, ("JavaLibrary::getPlayerUsername: bad CreatureObject"));
+        return nullptr;
+    }
+
+    if(creatureObject)
+    {
+        const Client * playerClient = creatureObject->getClient();
+        if(playerClient)
+        {
+            return JavaString(playerClient->getAccountName()).getReturnValue();
+        }
+        else {
+            DEBUG_WARNING(true, ("JavaLibrary::getPlayerUsername: bad playerClient"));
+            return nullptr;
+        }
+    }
+
 }
 
 // ======================================================================
