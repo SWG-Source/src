@@ -77,7 +77,7 @@ void ConfigServerGame::install(void)
 	KEY_BOOL    (disableCombat, false);
 	KEY_STRING  (combatConfigFile, "combat.cfg");
 	KEY_FLOAT   (combatDamageDelaySeconds,  0.0);
-	KEY_INT     (triggerVolumeSystem, 0);
+	KEY_INT     (triggerVolumeSystem, 2);
 	KEY_INT     (defaultAutoExpireTargetDuration, 6);
 	KEY_FLOAT   (interiorTargetDurationFactor, 1.0);
 	KEY_INT     (minPoolValue,  -100);
