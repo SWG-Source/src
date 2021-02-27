@@ -44,6 +44,17 @@ bool ConsoleCommandParserNpc::performParsing (const NetworkId & userId, const St
 
     UNREF(originalCommand);
 
+    CreatureObject * const playerObject = dynamic_cast<CreatureObject *>(ServerWorld::findObjectByNetworkId(userId));
+    if (!playerObject)
+    {
+        WARNING_STRICT_FATAL(true, ("Console command executed on invalid player object %s", userId.getValueString().c_str()));
+        return false;
+    }
+
+    if (!playerObject->getClient()->isGod()) {
+        return false;
+    }
+
 	//-----------------------------------------------------------------
 
     if (isAbbrev( argv [0], "hail"))

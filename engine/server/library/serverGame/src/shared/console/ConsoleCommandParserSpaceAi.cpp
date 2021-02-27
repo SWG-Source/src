@@ -18,6 +18,7 @@
 #include "serverGame/CreatureObject.h"
 #include "serverGame/SpacePath.h"
 #include "serverGame/SpaceAttackSquad.h"
+#include "serverGame/ServerWorld.h"
 #include "sharedFoundation/FormattedString.h"
 #include "sharedFoundation/NetworkId.h"
 #include "sharedGame/AiDebugString.h"
@@ -60,6 +61,17 @@ bool ConsoleCommandParserSpaceAi::performParsing(const NetworkId & userId, const
 	NOT_NULL (node);
 	UNREF (userId);
 	UNREF(originalCommand);
+
+    CreatureObject * const playerObject = dynamic_cast<CreatureObject *>(ServerWorld::findObjectByNetworkId(userId));
+    if (!playerObject)
+    {
+        WARNING_STRICT_FATAL(true, ("Console command executed on invalid player object %s", userId.getValueString().c_str()));
+        return false;
+    }
+
+    if (!playerObject->getClient()->isGod()) {
+        return false;
+    }
 
 	if (isAbbrev(argv[0], "war"))
 	{

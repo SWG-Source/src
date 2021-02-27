@@ -52,7 +52,16 @@ bool ConsoleCommandParserManufacture::performParsing (const NetworkId & userId, 
     NOT_NULL (node);
     UNREF(originalCommand);
 
-	CreatureObject * playerObject = safe_cast<CreatureObject *>(ServerWorld::findObjectByNetworkId(userId));
+    CreatureObject * const playerObject = dynamic_cast<CreatureObject *>(ServerWorld::findObjectByNetworkId(userId));
+    if (!playerObject)
+    {
+        WARNING_STRICT_FATAL(true, ("Console command executed on invalid player object %s", userId.getValueString().c_str()));
+        return false;
+    }
+
+    if (!playerObject->getClient()->isGod()) {
+        return false;
+    }
 
 	//-----------------------------------------------------------------
 

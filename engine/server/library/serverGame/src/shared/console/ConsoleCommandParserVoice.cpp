@@ -11,8 +11,9 @@
 #include "serverGame/Chat.h"
 #include "sharedLog/Log.h"
 //#include "serverGame/PlayerCreatureController.h"
-//#include "serverGame/PlayerObject.h"
-//#include "serverGame/ServerWorld.h"
+#include "serverGame/PlayerObject.h"
+#include "serverGame/CreatureObject.h"
+#include "serverGame/ServerWorld.h"
 #include "sharedNetworkMessages/VoiceChatMiscMessages.h"
 
 
@@ -50,6 +51,17 @@ bool ConsoleCommandParserVoice::performParsing (const NetworkId & userId, const 
     NOT_NULL (node);
     UNREF(originalCommand);
 	UNREF(userId);
+
+    CreatureObject * const playerObject = dynamic_cast<CreatureObject *>(ServerWorld::findObjectByNetworkId(userId));
+    if (!playerObject)
+    {
+        WARNING_STRICT_FATAL(true, ("Console command executed on invalid player object %s", userId.getValueString().c_str()));
+        return false;
+    }
+
+    if (!playerObject->getClient()->isGod()) {
+        return false;
+    }
 
 	//CreatureObject * creatureObject = safe_cast<CreatureObject *>(ServerWorld::findObjectByNetworkId(userId));
 	//PlayerObject * playerObject = const_cast<PlayerObject *>(PlayerCreatureController::getPlayerObject(creatureObject));

@@ -55,6 +55,16 @@ bool ConsoleCommandParserCraft::performParsing (const NetworkId & userId, const 
 	CreatureObject * creatureObject = safe_cast<CreatureObject *>(ServerWorld::findObjectByNetworkId(userId));
 	PlayerObject * playerObject = const_cast<PlayerObject *>(PlayerCreatureController::getPlayerObject(creatureObject));
 
+    if (!playerObject)
+    {
+        WARNING_STRICT_FATAL(true, ("Console command executed on invalid player object %s", userId.getValueString().c_str()));
+        return false;
+    }
+
+    if (!playerObject->getClient()->isGod()) {
+        return false;
+    }
+
 	//-----------------------------------------------------------------
 
     if (isAbbrev( argv [0], "draft"))

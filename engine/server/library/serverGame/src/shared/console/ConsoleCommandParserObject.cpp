@@ -501,6 +501,10 @@ bool ConsoleCommandParserObject::performParsing (const NetworkId & userId, const
 		WARNING_STRICT_FATAL(true, ("Console command executed on invalid player object %s", userId.getValueString().c_str()));
 		return false;
 	}
+
+    if (!playerObject->getClient()->isGod()) {
+        return false;
+    }
 		
 	UNREF(originalCommand);
 
@@ -2229,6 +2233,10 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 		WARNING_STRICT_FATAL(true, ("Console command executed on invalid player object %s", userId.getValueString().c_str()));
 		return false;
 	}
+
+    if (!playerObject->getClient()->isGod()) {
+        return false;
+    }
 
 	UNREF(originalCommand);
 

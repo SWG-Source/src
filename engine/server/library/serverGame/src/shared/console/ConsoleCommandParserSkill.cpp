@@ -92,8 +92,20 @@ CommandParser ("skill", 0, "...", "Skill related commands.", 0)
 
 
 bool ConsoleCommandParserSkill::performParsing (const NetworkId & userId, const StringVector_t & argv, const String_t & , String_t & result, const CommandParser *)
-{			
-	// ----------------------------------------------------------------
+{
+
+    CreatureObject * const playerObject = dynamic_cast<CreatureObject *>(ServerWorld::findObjectByNetworkId(userId));
+    if (!playerObject)
+    {
+        WARNING_STRICT_FATAL(true, ("Console command executed on invalid player object %s", userId.getValueString().c_str()));
+        return false;
+    }
+
+    if (!playerObject->getClient()->isGod()) {
+        return false;
+    }
+
+    // ----------------------------------------------------------------
 	
 	if (isCommand (argv[0], CommandNames::grantSkill))
 	{

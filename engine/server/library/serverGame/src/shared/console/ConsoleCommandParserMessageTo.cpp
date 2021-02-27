@@ -8,6 +8,9 @@
 #include "serverGame/FirstServerGame.h"
 #include "serverGame/ConsoleCommandParserMessageTo.h"
 
+#include "serverGame/CreatureObject.h"
+#include "serverGame/ServerObject.h"
+#include "serverGame/ServerWorld.h"
 #include "UnicodeUtils.h"
 #include "serverGame/MessageToQueue.h"
 #include "serverGame/ServerObject.h"
@@ -34,8 +37,21 @@ ConsoleCommandParserMessageTo::ConsoleCommandParserMessageTo() :
 
 //-----------------------------------------------------------------------
 
-bool ConsoleCommandParserMessageTo::performParsing (const NetworkId & /*userId*/, const StringVector_t & argv, const String_t & /* originalMessage */, String_t & result, const CommandParser *)
+bool ConsoleCommandParserMessageTo::performParsing (const NetworkId & userId, const StringVector_t & argv, const String_t & /* originalMessage */, String_t & result, const CommandParser *)
 {
+
+    CreatureObject * const playerObject = dynamic_cast<CreatureObject *>(ServerWorld::findObjectByNetworkId(userId));
+    if (!playerObject)
+    {
+        WARNING_STRICT_FATAL(true, ("Console command executed on invalid player object %s", userId.getValueString().c_str()));
+        return false;
+    }
+
+    if (!playerObject->getClient()->isGod()) {
+        return false;
+    }
+
+
 	if (isCommand( argv [0], "viewLastKnownLocations"))
 	{
 		result += Unicode::narrowToWide(MessageToQueue::getInstance().debugGetLastKnownLocations());

@@ -10,9 +10,11 @@
 
 #include "UnicodeUtils.h"
 #include "serverGame/ConfigServerGame.h"
+#include "serverGame/CreatureObject.h"
 #include "serverGame/GameServer.h"
 #include "serverGame/ServerMessageForwarding.h"
 #include "serverGame/ServerObject.h"
+#include "serverGame/ServerWorld.h"
 #include "serverGame/VeteranRewardManager.h"
 #include "sharedNetworkMessages/GenericValueTypeMessage.h"
 #include "sharedObject/NetworkIdManager.h"
@@ -38,6 +40,18 @@ ConsoleCommandParserVeteran::ConsoleCommandParserVeteran() :
 
 bool ConsoleCommandParserVeteran::performParsing (const NetworkId & userId, const StringVector_t & argv, const String_t & /* originalMessage */, String_t & result, const CommandParser *)
 {
+
+    CreatureObject * const playerObject = dynamic_cast<CreatureObject *>(ServerWorld::findObjectByNetworkId(userId));
+    if (!playerObject)
+    {
+        WARNING_STRICT_FATAL(true, ("Console command executed on invalid player object %s", userId.getValueString().c_str()));
+        return false;
+    }
+
+    if (!playerObject->getClient()->isGod()) {
+        return false;
+    }
+
 	if (isCommand( argv [0], "getRewardInfo"))
 	{
 		NetworkId targetPlayer(Unicode::wideToNarrow (argv[1]));

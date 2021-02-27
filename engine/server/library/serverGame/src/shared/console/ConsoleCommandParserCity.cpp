@@ -14,6 +14,9 @@
 #include "serverGame/CityInterface.h"
 #include "serverGame/CityStructureInfo.h"
 #include "serverGame/GameServer.h"
+#include "serverGame/CreatureObject.h"
+#include "serverGame/ServerObject.h"
+#include "serverGame/ServerWorld.h"
 #include "sharedFoundation/CalendarTime.h"
 #include "sharedFoundation/FormattedString.h"
 #include "sharedFoundation/NetworkId.h"
@@ -66,6 +69,17 @@ bool ConsoleCommandParserCity::performParsing (const NetworkId & userId, const S
 	UNREF (userId);
 
 	UNREF(originalCommand);
+
+    CreatureObject * const playerObject = dynamic_cast<CreatureObject *>(ServerWorld::findObjectByNetworkId(userId));
+    if (!playerObject)
+    {
+        WARNING_STRICT_FATAL(true, ("Console command executed on invalid player object %s", userId.getValueString().c_str()));
+        return false;
+    }
+
+    if (!playerObject->getClient()->isGod()) {
+        return false;
+    }
 
 	//-----------------------------------------------------------------
 
