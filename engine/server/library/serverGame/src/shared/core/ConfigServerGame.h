@@ -384,9 +384,7 @@ class ConfigServerGame
 		float           buddyPointTimeBonus; // buddy points can add to the player's entitlement time for veteran rewards
 		bool		enableSceneGlobalData;
 
-#ifdef _DEBUG
 		float           manufactureTimeOverride;
-#endif
 
 		// max time we allow for creating theater objects in a frame
 		int             theaterCreationLimitMilliseconds;
@@ -911,9 +909,7 @@ class ConfigServerGame
 	static float            getBuddyPointTimeBonus();
 	static bool             getEnableSceneGlobalData();
 
-#ifdef _DEBUG
 	static float            getManufactureTimeOverride();
-#endif
 
 	static int              getTheaterCreationLimitMilliseconds();
 
@@ -2811,12 +2807,11 @@ inline int ConfigServerGame::getMinEntitledTime()
 }
 
 // ----------------------------------------------------------------------
-#ifdef _DEBUG
+
 inline float ConfigServerGame::getManufactureTimeOverride()
 {
 	return data->manufactureTimeOverride;
 }
-#endif
 
 // ----------------------------------------------------------------------
 
