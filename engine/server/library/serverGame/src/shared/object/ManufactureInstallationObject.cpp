@@ -489,10 +489,8 @@ float ManufactureInstallationObject::getTimePerObject() const
 	if (schematic == nullptr)
 		return 0;
 
-#ifdef _DEBUG
 	if (ConfigServerGame::getManufactureTimeOverride() >= 1.0f)
 		return ConfigServerGame::getManufactureTimeOverride();
-#endif
 
 	float baseTime = schematic->getManufactureTime() * schematic->getComplexity();
 	if (baseTime < 1.0f)
