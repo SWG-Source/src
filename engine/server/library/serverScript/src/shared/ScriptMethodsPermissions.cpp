@@ -13,6 +13,9 @@
 #include "serverGame/CellObject.h"
 #include "serverGame/ContainerInterface.h"
 #include "serverGame/CreatureObject.h"
+#include "serverGame/PlayerObject.h"
+#include "sharedNetworkMessages/MessageQueueGenericValueType.h"
+#include "sharedNetworkMessages/UpdateCellPermissionMessage.h"
 
 using namespace JNIWrappersNamespace;
 
@@ -38,6 +41,7 @@ namespace ScriptMethodsPermissionsNamespace
 	void         JNICALL permissionsMakePublic(JNIEnv *env, jobject self, jlong target);
 	void         JNICALL permissionsMakePrivate(JNIEnv *env, jobject self, jlong target);
 	void         JNICALL expelFromBuilding(JNIEnv *env, jobject self, jlong target);
+	void         JNICALL sendDirtyCellPermissionsUpdateToClient(JNIEnv *env, jobject self, jlong cell, jlong player, jboolean isAllowed);
 }
 
 
@@ -62,6 +66,7 @@ const JNINativeMethod NATIVES[] = {
 	JF("_permissionsMakePublic", "(J)V", permissionsMakePublic),
 	JF("_permissionsMakePrivate", "(J)V", permissionsMakePrivate),
 	JF("_expelFromBuilding", "(J)V", expelFromBuilding),
+	JF("_sendDirtyCellPermissionsUpdateToClient", "(JJZ)V", sendDirtyCellPermissionsUpdateToClient),
 };
 
 	return JavaLibrary::registerNatives(NATIVES, sizeof(NATIVES)/sizeof(NATIVES[0]));
@@ -440,6 +445,39 @@ void JNICALL ScriptMethodsPermissionsNamespace::expelFromBuilding(JNIEnv *env, j
 		if (buildingObj)
 			buildingObj->expelObject(*serverObj);
 	}
+}
+
+// ----------------------------------------------------------------------
+
+/**
+ * Sends a dirty cell permissions update message directly to a player's client to forcibly
+ * update the client's cell permissions cache with regards to the cell in question as a means of
+ * more quickly granting/revoking access to a cell (e.g. in Death Watch Bunker).
+ *
+ * @param cell the obj_id of the cell you are updating permissions for
+ * @param player the obj_id of the player (and thus their client) to send the notification to
+ * @param isAllowed true if they are being added to enter a cell, false if they are being removed/banned
+ */
+void JNICALL ScriptMethodsPermissionsNamespace::sendDirtyCellPermissionsUpdateToClient
+(JNIEnv *env, jobject self, jlong cell, jlong player, jboolean isAllowed)
+{
+
+    PlayerObject *playerObject = nullptr;
+    if (!JavaLibrary::getObject(player, playerObject))
+    {
+        WARNING(true, ("JavaLibrary::sendDirtyCellPermissionsUpdateToClient:  bad player object"));
+        return;
+    }
+
+    ServerObject *serverObj = nullptr;
+    if (!JavaLibrary::getObject(cell, serverObj)) {
+        WARNING(true, ("JavaLibrary::sendDirtyCellPermissionsUpdateToClient:  bad cell object"));
+    }
+
+    auto *cellObj = dynamic_cast<CellObject*>(serverObj);
+    UpdateCellPermissionMessage const message(cellObj->getNetworkId(), isAllowed);
+    playerObject->getClient()->send(message, true);
+
 }
 
 // ======================================================================
