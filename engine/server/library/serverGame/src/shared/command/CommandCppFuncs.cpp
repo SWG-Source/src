@@ -1104,6 +1104,13 @@ static void commandFuncAdminTeleport(Command const &, NetworkId const &actor, Ne
 
 	if (teleportObj)
 	{
+		
+		// prevents teleporting anything but creatures/players so GMs can't teleport buildings accidentally
+		// note: /object commands can still be used to move non-player objects
+		if (!GameObjectTypes::isTypeOf(teleportObj->getGameObjectType(), SharedObjectTemplate::GOT_creature)) {
+			return;	
+		}
+		
 		// if the person teleporting is the owner of the containing ship, move the ship instead
 		ShipObject * const ship = getAttachedShip(teleportObj->asCreatureObject());
 		if (ship)
