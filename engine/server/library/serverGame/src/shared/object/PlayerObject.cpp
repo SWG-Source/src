@@ -286,7 +286,8 @@ namespace PlayerObjectNamespace
 	typedef std::list<QuestDataToSort> SortableQuestList;
 	typedef std::vector< std::pair<int, int> > TaskChanceVector;
 
-	void grantGcwFactionalPresenceScore(std::string const & gcwCategory, PlayerObject const & po, CreatureObject const & co);
+	// deprecated
+	//void grantGcwFactionalPresenceScore(std::string const & gcwCategory, PlayerObject const & po, CreatureObject const & co);
 };
 
 using namespace PlayerObjectNamespace;
@@ -4070,8 +4071,9 @@ void PlayerObject::handleCMessageTo(const MessageToPayload &message)
 					ServerUniverse::setConnectedCharacterLfgData(owner->getNetworkId(), lfgCharacterData);
 
 				// grant GCW factional presence score
-				if (!lfgCharacterData.locationFactionalPresenceGcwRegion.empty())
-					grantGcwFactionalPresenceScore(lfgCharacterData.locationFactionalPresenceGcwRegion, *this, *owner);
+				// DEPRECATED MOVED TO DSRC
+				//if (!lfgCharacterData.locationFactionalPresenceGcwRegion.empty())
+				//	grantGcwFactionalPresenceScore(lfgCharacterData.locationFactionalPresenceGcwRegion, *this, *owner);
 				}
 
 				{
@@ -8989,6 +8991,8 @@ void PlayerObjectNamespace::checkAndSetAccountAgeTitle(PlayerObject & player)
 
 // ----------------------------------------------------------------------
 
+/*
+ * DEPRECATED - MOVED TO DSRC
 void PlayerObjectNamespace::grantGcwFactionalPresenceScore(std::string const & gcwCategory, PlayerObject const & po, CreatureObject const & co)
 {
 	// base_points = level * (level_% / 100)
@@ -9166,5 +9170,6 @@ void PlayerObjectNamespace::grantGcwFactionalPresenceScore(std::string const & g
 	else if (PvpData::isRebelFactionId(co.getPvpFaction()))
 		ServerUniverse::getInstance().adjustGcwRebelScore(std::string("FactionalPresence"), const_cast<CreatureObject *>(&co), gcwCategory, points);
 }
+ */
 
 // ======================================================================
