@@ -41,7 +41,7 @@ namespace ServerUniverseNamespace
 	const Tag TAG_PLTS = TAG (P,L,T,S);
 	const Tag TAG_PLNT = TAG (P,L,N,T);
 
-	std::string s_emptyString;
+	std::string s_emptyString = "";
 }
 
 using namespace ServerUniverseNamespace;
@@ -79,8 +79,7 @@ ServerUniverse::ServerUniverse() :
 		m_populationList         (new PopulationList),
 		m_pendingProxyRequests   (),
 		m_pendingUniverseLoadedAckList(),
-		m_timeUniverseDataSent   (0),
-		m_customUniverseObjects()
+		m_timeUniverseDataSent   (0)
 {
 }
 
@@ -88,13 +87,9 @@ ServerUniverse::ServerUniverse() :
 
 ServerUniverse::~ServerUniverse()
 {
-	for (auto j : *m_universeObjectList) {
-        delete j;
-	}
-	for (auto j : m_customUniverseObjects) {
-	    delete j;
-	}
-
+	for (UniverseObjectList::const_iterator j=m_universeObjectList->begin(); j!=m_universeObjectList->end(); ++j)
+		delete *j;
+	
 	delete m_pendingUniverseObjects;
 	delete m_planetNameMap;
 	delete m_resourceTypeNameMap;
@@ -106,28 +101,28 @@ ServerUniverse::~ServerUniverse()
 	delete m_theaterNameIdMap;
 	delete m_theaterIdNameMap;
 
-	m_pendingUniverseObjects = nullptr;
-	m_planetNameMap = nullptr;
-	m_resourceTreeRoot = nullptr;
-	m_resourceTypeNameMap = nullptr;
-	m_resourceTypeIdMap = nullptr;
-	m_importedResourceTypeIdMap = nullptr;
-	m_resourcesToSend = nullptr;
-	m_universeObjectList = nullptr;
-	m_populationList = nullptr;
-	m_thisPlanet = nullptr;
-	m_tatooinePlanet = nullptr;
-	m_masterGuildObject = nullptr;
-	m_masterCityObject = nullptr;
-	m_theaterNameIdMap = nullptr;
-	m_theaterIdNameMap = nullptr;
+	m_pendingUniverseObjects =0;
+	m_planetNameMap=0;
+	m_resourceTreeRoot=0;
+	m_resourceTypeNameMap=0;
+	m_resourceTypeIdMap=0;
+	m_importedResourceTypeIdMap=0;
+	m_resourcesToSend=0;
+	m_universeObjectList = 0;
+	m_populationList = 0;
+	m_thisPlanet = 0;
+	m_tatooinePlanet = 0;
+	m_masterGuildObject = 0;
+	m_masterCityObject = 0;
+	m_theaterNameIdMap = 0;
+	m_theaterIdNameMap = 0;
 }
 
 // ----------------------------------------------------------------------
 
 PlanetObject *ServerUniverse::getPlanetByName(const std::string &sceneId) const
 {
-	auto i=m_planetNameMap->find(sceneId);
+	PlanetNameMap::iterator i=m_planetNameMap->find(sceneId);
 	if (i!=m_planetNameMap->end())
 	{
 		return (*i).second;
@@ -145,7 +140,7 @@ PlanetObject *ServerUniverse::getPlanetByName(const std::string &sceneId) const
 
 ResourceTypeObject *ServerUniverse::getResourceTypeByName(std::string const & name) const
 {
-	auto i=m_resourceTypeNameMap->find(name);
+	ResourceTypeNameMap::iterator i=m_resourceTypeNameMap->find(name);
 	if (i!=m_resourceTypeNameMap->end())
 		return (*i).second;
 	else
@@ -161,7 +156,7 @@ ResourceTypeObject * ServerUniverse::getResourceTypeById(NetworkId const & id) c
 	
 	if (id.getValue() <= NetworkId::cms_maxNetworkIdWithoutClusterId)
 	{
-	auto i=m_resourceTypeIdMap->find(id);
+	ResourceTypeIdMap::const_iterator i=m_resourceTypeIdMap->find(id);
 	if (i!=m_resourceTypeIdMap->end())
 		return (*i).second;
 	else
@@ -169,7 +164,7 @@ ResourceTypeObject * ServerUniverse::getResourceTypeById(NetworkId const & id) c
 	}
 	else
 	{
-		auto i=m_importedResourceTypeIdMap->find(id);
+		ResourceTypeIdMap::const_iterator i=m_importedResourceTypeIdMap->find(id);
 		if (i!=m_importedResourceTypeIdMap->end())
 			return (*i).second;
 		else
@@ -184,7 +179,7 @@ ResourceTypeObject * ServerUniverse::getImportedResourceTypeById(NetworkId const
 	if (id==NetworkId::cms_invalid)
 		return nullptr;
 
-	auto i=m_importedResourceTypeIdMap->find(id);
+	ResourceTypeIdMap::const_iterator i=m_importedResourceTypeIdMap->find(id);
 	if (i!=m_importedResourceTypeIdMap->end())
 		return (*i).second;
 	else
@@ -268,18 +263,6 @@ void ServerUniverse::addUniverseObject(UniverseObject &newObject)
 // ----------------------------------------------------------------------
 
 /**
- * Adds a ServerObject as a pseudo-Universe Object for proxy-purposes
- * such that it has the effect of being a Universe Object
- */
-void ServerUniverse::addCustomUniverseObject(ServerObject &newObject)
-{
-    m_customUniverseObjects.push_back(&newObject);
-    GameServer::getInstance().createProxyOnAllServers(&newObject);
-}
-
-// ----------------------------------------------------------------------
-
-/**
  * Give a new server proxies of all of the universe objects.
  */
 void ServerUniverse::createProxiesOnServer(std::vector<uint32> const & remoteProcesses)
@@ -292,40 +275,36 @@ void ServerUniverse::createProxiesOnServer(std::vector<uint32> const & remotePro
 		NameManager::getInstance().sendAllNamesToServer(remoteProcesses);
 		// So are attrib mod names
 		AttribModNameManager::getInstance().sendAllNamesToServer(remoteProcesses);
-
-		for (unsigned long remoteProcess : remoteProcesses)
+		
 		{
-            for (auto i : *m_universeObjectList)
-            {
-                if (i->getObject())
-                {
-                    GameServer::getInstance().createRemoteProxy(remoteProcess, safe_cast<ServerObject *>(i->getObject()));
-                }
-                else
-                {
-                    DEBUG_REPORT_LOG(true,("Not proxying Universe Object %s because it has been deleted.\n", i->getValueString().c_str()));
-                }
-                for (auto &m_customUniverseObject : m_customUniverseObjects)
-                {
-                    GameServer::getInstance().createRemoteProxy(remoteProcess, m_customUniverseObject);
-                }
-            }
-        }
-		ServerMessageForwarding::begin(remoteProcesses);
-
-
-		std::vector<AddResourceTypeMessageNamespace::ResourceTypeData> resourceTypeDataVector;
-		AddResourceTypeMessageNamespace::ResourceTypeData resourceTypeData;
-		resourceTypeDataVector.reserve(m_resourceTypeIdMap->size());
-			
-		for (auto i=m_resourceTypeIdMap->begin(); i!=m_resourceTypeIdMap->end(); ++i)
-		{
-		    NON_NULL(i->second)->getDataForMessage(resourceTypeData);
-		    resourceTypeDataVector.push_back(resourceTypeData);
+			for (std::vector<uint32>::const_iterator remoteProcessId=remoteProcesses.begin(); remoteProcessId!=remoteProcesses.end(); ++remoteProcessId)
+			{
+				for (UniverseObjectList::const_iterator i=m_universeObjectList->begin(); i!=m_universeObjectList->end(); ++i)
+				{
+					if ((*i)->getObject())
+						GameServer::getInstance().createRemoteProxy(*remoteProcessId, safe_cast<ServerObject*>((*i)->getObject()));
+					else
+						DEBUG_REPORT_LOG(true,("Not proxying Universe Object %s because it has been deleted.\n",(*i)->getValueString().c_str()));
+				}
+			}
 		}
 
-		AddResourceTypeMessage const addResourceTypeMessage(resourceTypeDataVector);
-		ServerMessageForwarding::send(addResourceTypeMessage);
+		ServerMessageForwarding::begin(remoteProcesses);
+
+		{
+			std::vector<AddResourceTypeMessageNamespace::ResourceTypeData> resourceTypeDataVector;
+			AddResourceTypeMessageNamespace::ResourceTypeData resourceTypeData;
+			resourceTypeDataVector.reserve(m_resourceTypeIdMap->size());
+			
+			for (ResourceTypeIdMap::const_iterator i=m_resourceTypeIdMap->begin(); i!=m_resourceTypeIdMap->end(); ++i)
+			{
+				NON_NULL(i->second)->getDataForMessage(resourceTypeData);
+				resourceTypeDataVector.push_back(resourceTypeData);
+			}
+
+			AddResourceTypeMessage const addResourceTypeMessage(resourceTypeDataVector);
+			ServerMessageForwarding::send(addResourceTypeMessage);
+		}
 		
 		GenericValueTypeMessage<uint32> const universeCompleteMessage("UniverseCompleteMessage", GameServer::getInstance().getProcessId());
 		ServerMessageForwarding::send(universeCompleteMessage);
@@ -336,16 +315,13 @@ void ServerUniverse::createProxiesOnServer(std::vector<uint32> const & remotePro
 		{
 			std::string serverListAsString;
 			char oneServer[10];
-			for (auto i=remoteProcesses.begin(); i!=remoteProcesses.end(); ++i)
+			for (std::vector<uint32>::const_iterator i=remoteProcesses.begin(); i!=remoteProcesses.end(); ++i)
 			{
 				if (ConfigServerGame::getTimeoutToAckUniverseDataReceived() > 0)
-                {
-                    IGNORE_RETURN(m_pendingUniverseLoadedAckList.insert(*i));
-                }
+					IGNORE_RETURN(m_pendingUniverseLoadedAckList.insert(*i));
+
 				if (i!=remoteProcesses.begin())
-				{
-                    serverListAsString+=", ";
-				}
+					serverListAsString+=", ";
 				snprintf(oneServer,sizeof(oneServer)-1,"%lu",*i);
 				oneServer[sizeof(oneServer)-1] = '\0';
 				serverListAsString+=oneServer;
@@ -353,17 +329,13 @@ void ServerUniverse::createProxiesOnServer(std::vector<uint32> const & remotePro
 			LOG("UniverseLoading", ("Game Server %lu sent UniverseComplete to Game Servers %s.", GameServer::getInstance().getProcessId(), serverListAsString.c_str()));
 
 			if (ConfigServerGame::getTimeoutToAckUniverseDataReceived() > 0)
-            {
-                m_timeUniverseDataSent = ::time(nullptr);
-            }
+				m_timeUniverseDataSent = ::time(nullptr);
 		}
 	}
 	else
 	{
 		if (!remoteProcesses.empty())
-        {
-            IGNORE_RETURN(m_pendingProxyRequests.insert(remoteProcesses.begin(),remoteProcesses.end()));
-        }
+			IGNORE_RETURN(m_pendingProxyRequests.insert(remoteProcesses.begin(),remoteProcesses.end()));
 	}
 }
 
@@ -386,13 +358,11 @@ void ServerUniverse::setUniverseProcess(uint32 processId)
 	
 	if (processId==GameServer::getInstance().getProcessId())
 	{
-		for (auto & i : *m_universeObjectList)
+		for (UniverseObjectList::iterator i=m_universeObjectList->begin(); i!=m_universeObjectList->end(); ++i)
 		{
-			auto *obj=safe_cast<ServerObject*>(i->getObject());
+			ServerObject *obj=safe_cast<ServerObject*>((*i)->getObject());
 			if (obj)
-            {
-                obj->setAuthority();
-            }
+				obj->setAuthority();
 		}
 
 		m_authoritative=true;
@@ -400,25 +370,22 @@ void ServerUniverse::setUniverseProcess(uint32 processId)
 		m_nextCheckTimer.reset();
 
 		// let all universe objects know that we have gained authority for universe objects
-		for (auto & j : *m_universeObjectList)
+		for (UniverseObjectList::iterator j=m_universeObjectList->begin(); j!=m_universeObjectList->end(); ++j)
 		{
-			auto *obj=safe_cast<UniverseObject*>(j->getObject());
+			UniverseObject *obj=safe_cast<UniverseObject*>((*j)->getObject());
 			if (obj)
-            {
-                obj->onServerUniverseGainedAuthority();
-            }
+				obj->onServerUniverseGainedAuthority();
 		}
 	}
 	else
 	{
-		for (auto & i : *m_universeObjectList)
+		for (UniverseObjectList::iterator i=m_universeObjectList->begin(); i!=m_universeObjectList->end(); ++i)
 		{
-			auto *obj=safe_cast<ServerObject*>(i->getObject());
+			ServerObject *obj=safe_cast<ServerObject*>((*i)->getObject());
 			if (obj && obj->isAuthoritative())
-            {
-                obj->releaseAuthority(processId);
-            }
+				obj->releaseAuthority(processId);
 		}
+
 		m_authoritative=false;
 	}
 }
@@ -476,19 +443,19 @@ void ServerUniverse::universeComplete(uint32 sourceServer)
 
 	m_loaded=true;
 	{
-		for (auto & m_pendingUniverseObject : *m_pendingUniverseObjects)
+		for (UniverseObjectList::iterator i=m_pendingUniverseObjects->begin(); i!=m_pendingUniverseObjects->end(); ++i)
 		{
-			auto *obj=safe_cast<UniverseObject*>(m_pendingUniverseObject->getObject());
+			UniverseObject *obj=safe_cast<UniverseObject*>((*i)->getObject());
 			if (obj)
 			{
-				m_universeObjectList->push_back(m_pendingUniverseObject);
+				m_universeObjectList->push_back(*i);
 				obj->setupUniverse();
 			}
 			else
 			{
-				DEBUG_REPORT_LOG(true,("Pending Universe Object %s was deleted.\n",m_pendingUniverseObject->getValueString().c_str()));
-				delete m_pendingUniverseObject;
-				m_pendingUniverseObject=0;
+				DEBUG_REPORT_LOG(true,("Pending Universe Object %s was deleted.\n",(*i)->getValueString().c_str()));
+				delete *i;
+				*i=0;
 			}
 		}
 	}
@@ -536,7 +503,7 @@ CityObject *ServerUniverse::getMasterCityObject()
  */
 void ServerUniverse::renameResourceType (const std::string &oldname, const std::string &newname)
 {
-	auto i=m_resourceTypeNameMap->find(oldname);
+	ResourceTypeNameMap::iterator i=m_resourceTypeNameMap->find(oldname);
 	if (i!=m_resourceTypeNameMap->end())
 	{
 		ResourceTypeObject *theObj=(*i).second;
@@ -589,7 +556,7 @@ void ServerUniverse::updateAndValidateData()
 	if (!m_masterGuildObject)
 	{
 		FATAL(!ConfigServerGame::getAllowMasterObjectCreation(), ("Master guild object was not found!"));
-		auto const * const objTemplate = safe_cast<ServerObjectTemplate const *>(ObjectTemplateList::fetch("object/guild/guild.iff"));
+		ServerObjectTemplate const * const objTemplate = safe_cast<ServerObjectTemplate const *>(ObjectTemplateList::fetch("object/guild/guild.iff"));
 		m_masterGuildObject = safe_cast<GuildObject *>(ServerWorld::createNewObject(*objTemplate, Transform::identity, 0, true));
 		m_masterGuildObject->addToWorld();
 	}
@@ -598,7 +565,7 @@ void ServerUniverse::updateAndValidateData()
 	if (!m_masterCityObject)
 	{
 		FATAL(!ConfigServerGame::getAllowMasterObjectCreation(), ("Master city object was not found!"));
-		auto const * const objTemplate = safe_cast<ServerObjectTemplate const *>(ObjectTemplateList::fetch("object/city/city.iff"));
+		ServerObjectTemplate const * const objTemplate = safe_cast<ServerObjectTemplate const *>(ObjectTemplateList::fetch("object/city/city.iff"));
 		m_masterCityObject = safe_cast<CityObject *>(ServerWorld::createNewObject(*objTemplate, Transform::identity, 0, true));
 		m_masterCityObject->addToWorld();
 	}
@@ -649,7 +616,7 @@ void ServerUniverse::updateAndValidateData()
 	}
 	
 	//Spawn resources
-	auto *root=safe_cast<ServerResourceClassObject*>(getResourceTreeRoot());
+	ServerResourceClassObject *root=safe_cast<ServerResourceClassObject*>(getResourceTreeRoot());
 	if (root)
 	{
 		root->checkRanges();
@@ -658,9 +625,9 @@ void ServerUniverse::updateAndValidateData()
 	}
 
 	//trigger scripts
-	for (auto & j : *m_universeObjectList)
+	for (UniverseObjectList::iterator j = m_universeObjectList->begin(); j != m_universeObjectList->end(); ++j)
 	{ 
-		auto *obj=safe_cast<UniverseObject*>(j->getObject());
+		UniverseObject *obj=safe_cast<UniverseObject*>((*j)->getObject());
 		if (obj)
 		{
 			ScriptParams params;
@@ -679,19 +646,14 @@ ResourceTypeObject const * ServerUniverse::pickRandomNonDepletedResource(const s
 {
 	ResourceClassObject *parentClass = getResourceClassByName(parentResourceClassName);
 	if (!parentClass)
-    {
-        return 0;
-    }
+		return 0;
+	
 	std::vector<ResourceTypeObject const *> possibleTypes;
 	if (!getCurrentPlanet())
-    {
-        return 0;
-    }
+		return 0;
 	getCurrentPlanet()->getAvailableResourceList(possibleTypes,*parentClass);
-	if (possibleTypes.empty())
-    {
-        return 0;
-    }
+	if (possibleTypes.size() == 0)
+		return 0;
 	int choice = Random::random(static_cast<int>(possibleTypes.size())-1);
 	return possibleTypes[static_cast<size_t>(choice)];
 }
@@ -720,18 +682,12 @@ void ServerUniverse::onServerConnectionClosed(uint32 processId)
 	if (m_authoritative)
 	{
 		// remove proxies on the crashed server
-		for (auto & i : *m_universeObjectList)
+		for (UniverseObjectList::iterator i=m_universeObjectList->begin(); i!=m_universeObjectList->end(); ++i)
 		{
-			auto *obj=safe_cast<ServerObject*>(i->getObject());
+			ServerObject *obj=safe_cast<ServerObject*>((*i)->getObject());
 			if (obj)
-            {
-                obj->removeServerFromProxyList(processId);
-            }
-		}
-        for (auto &m_customUniverseObject : m_customUniverseObjects)
-        {
-            m_customUniverseObject->removeServerFromProxyList(processId);
-        }
+				obj->removeServerFromProxyList(processId);
+		}		
 	}
 }
 
@@ -778,12 +734,10 @@ void ServerUniverse::update(float frameTime)
 		{
 			std::string serverListAsString;
 			char oneServer[10];
-			for (auto i=m_pendingUniverseLoadedAckList.begin(); i!=m_pendingUniverseLoadedAckList.end(); ++i)
+			for (PendingUniverseLoadedAckList::const_iterator i=m_pendingUniverseLoadedAckList.begin(); i!=m_pendingUniverseLoadedAckList.end(); ++i)
 			{
 				if (i!=m_pendingUniverseLoadedAckList.begin())
-                {
-                    serverListAsString+=", ";
-                }
+					serverListAsString+=", ";
 				snprintf(oneServer,sizeof(oneServer)-1,"%lu",*i);
 				oneServer[sizeof(oneServer)-1] = '\0';
 				serverListAsString+=oneServer;
@@ -801,12 +755,10 @@ void ServerUniverse::update(float frameTime)
 			{
 				std::string serverListAsString;
 				char oneServer[10];
-				for (auto i=m_pendingUniverseLoadedAckList.begin(); i!=m_pendingUniverseLoadedAckList.end(); ++i)
+				for (PendingUniverseLoadedAckList::const_iterator i=m_pendingUniverseLoadedAckList.begin(); i!=m_pendingUniverseLoadedAckList.end(); ++i)
 				{
 					if (i!=m_pendingUniverseLoadedAckList.begin())
-                    {
-                        serverListAsString+=", ";
-                    }
+						serverListAsString+=", ";
 					snprintf(oneServer,sizeof(oneServer)-1,"%lu",*i);
 					oneServer[sizeof(oneServer)-1] = '\0';
 					serverListAsString+=oneServer;
@@ -831,10 +783,9 @@ void ServerUniverse::update(float frameTime)
 			m_pendingProxyRequests.erase(iter);
 			--maxGameServerToSendUniverseData;
 		}
+
 		if (!servers.empty())
-		{
-            createProxiesOnServer(servers);
-        }
+			createProxiesOnServer(servers);
 	}
 
 	if (m_nextCheckTimer.updateZero(frameTime) || m_doImmediateCheck || !m_resourcesToSend->empty())
@@ -852,9 +803,9 @@ void ServerUniverse::update(float frameTime)
 				AddResourceTypeMessageNamespace::ResourceTypeData resourceTypeData;
 				resourceTypeDataVector.reserve(m_resourcesToSend->size());
 				
-				for (auto i : *m_resourcesToSend)
+				for (ResourcesToSendType::const_iterator i=m_resourcesToSend->begin(); i!=m_resourcesToSend->end(); ++i)
 				{
-					NON_NULL(i)->getDataForMessage(resourceTypeData);
+					NON_NULL(*i)->getDataForMessage(resourceTypeData);
 					resourceTypeDataVector.push_back(resourceTypeData);
 				}
 
@@ -888,15 +839,15 @@ void ServerUniverse::handleAddResourceTypeMessage(AddResourceTypeMessage const &
 	typedef std::vector<AddResourceTypeMessageNamespace::ResourceTypeData> DataVectorType;
 	DataVectorType const & data = message.getData();
 
-	for (auto i=data.begin(); i!=data.end(); ++i)
+	for (DataVectorType::const_iterator i=data.begin(); i!=data.end(); ++i)
 	{
-		auto * const parentClass = safe_cast<ServerResourceClassObject *>(getResourceClassByName(i->m_parentClass));
+		ServerResourceClassObject * const parentClass = safe_cast<ServerResourceClassObject *>(getResourceClassByName(i->m_parentClass));
 		if (parentClass)
 		{
 			ResourceTypeObject * const existingType = getResourceTypeById(i->m_networkId);
 			if (!existingType)
 			{
-				auto * const newType = new ResourceTypeObject(*i, *parentClass);
+				ResourceTypeObject * const newType = new ResourceTypeObject(*i, *parentClass);
 				registerResourceTypeObject(*newType, false);
 				parentClass->addType(*newType);
 			} //lint !e429 // didn't delete newType (registerResourceTypeObject keeps a pointer to it)
@@ -918,7 +869,7 @@ const NetworkId & ServerUniverse::findTheaterId(const std::string & name)
 	if (m_theaterNameIdMap == nullptr)
 		return NetworkId::cms_invalid;
 
-	auto result = m_theaterNameIdMap->find(name);
+	TheaterNameIdMap::const_iterator result = m_theaterNameIdMap->find(name);
 	if (result == m_theaterNameIdMap->end())
 		return NetworkId::cms_invalid;
 
@@ -934,7 +885,7 @@ static const std::string emptyString;
 	if (m_theaterIdNameMap == nullptr)
 		return emptyString;
 
-	auto result = m_theaterIdNameMap->find(id);
+	TheaterIdNameMap::const_iterator result = m_theaterIdNameMap->find(id);
 	if (result == m_theaterIdNameMap->end())
 		return emptyString;
 
@@ -1059,11 +1010,9 @@ bool ServerUniverse::manualDepleteResource(NetworkId const & resourceToDeplete)
 		if (isAuthoritative())
 		{
 			resType->deplete();
-			auto *root=safe_cast<ServerResourceClassObject*>(getResourceTreeRoot());
+			ServerResourceClassObject *root=safe_cast<ServerResourceClassObject*>(getResourceTreeRoot());
 			if (root)
-            {
-                root->spawnAsNeeded();
-            }
+				root->spawnAsNeeded();
 			m_doImmediateCheck=true;
 		}
 		else
