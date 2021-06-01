@@ -475,6 +475,7 @@ static const CommandParser::CmdInfo cmds[] =
 	{"reloadSwgTcgAccountFeatureId",    1, "<oid>", "Retrieve the SWG TCG account feature Ids for the specified character"},
 	{"unloadBuildingContents",          1, "<oid>", "Unload the contents of a player-placed authoritative demand-loaded building"},
 	{"isOnSolidFloor",                  1, "<oid>", "Checks to see if the specified object is \"on solid floor\""},
+	{"proxyToAllGameServers", 			1, "<oid>", "Creates a Proxy of the given object on all Game Servers."},
 
 	{"", 0, "", ""} // this must be last
 };
@@ -4201,6 +4202,21 @@ bool ConsoleCommandParserObject::performParsing2(const NetworkId & userId, const
 			result += Unicode::narrowToWide(FormattedString<1024>().sprintf("object (%s) not found.\n", oid.getValueString().c_str()));
 		}
 	}
+
+	// ----------------------------------------------------------------------
+
+    else if (isAbbrev(argv[0], "proxyToAllGameServers"))
+    {
+        NetworkId const oid(Unicode::wideToNarrow(argv[1]));
+        auto * const object = dynamic_cast<ServerObject *>(NetworkIdManager::getObjectById(oid));
+        GameServer &gs = GameServer::getInstance();
+        if(object) {
+            gs.createProxyOnAllServers(object);
+            result += getErrorMessage(argv[0], ERR_SUCCESS);
+        } else {
+            result += getErrorMessage(argv[0], ERR_FAIL);
+        }
+    }
 
 	// ----------------------------------------------------------------------
 
