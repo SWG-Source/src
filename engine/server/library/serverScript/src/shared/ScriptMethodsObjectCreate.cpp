@@ -113,6 +113,7 @@ namespace ScriptMethodsObjectCreateNamespace
 	jlong        JNICALL createNewObjectTransformInternal(JNIEnv *env, jobject self, jstring templateName, jobject transform, jlong cell, bool hyperspace =  false);
 	jlong        JNICALL createNewObjectTransformCrcInternal(JNIEnv *env, jobject self, jint templateCrc, jobject transform, jlong cell, bool hyperspace = false);
 	jboolean     JNICALL updateNetworkTriggerVolume(JNIEnv *env, jobject self, jlong target, jfloat radius);
+	void         JNICALL registerObjectToUniverse(JNIEnv *env, jobject self, jlong target);
 }
 
 
@@ -165,6 +166,7 @@ const JNINativeMethod NATIVES[] = {
 	JF("_createObjectHyperspace", "(Ljava/lang/String;Lscript/transform;J)J", createNewObjectTransformHyperspace),
 	JF("_createObjectHyperspace", "(ILscript/transform;J)J", createNewObjectTransformCrcHyperspace),
 	JF("_updateNetworkTriggerVolume", "(JF)Z", updateNetworkTriggerVolume),
+	JF("_registerObjectToUniverse", "(J)V", registerObjectToUniverse),
 };
 
 	return JavaLibrary::registerNatives(NATIVES, sizeof(NATIVES)/sizeof(NATIVES[0]));
@@ -2269,6 +2271,19 @@ jboolean JNICALL ScriptMethodsObjectCreateNamespace::updateNetworkTriggerVolume(
 	object->createFarNetworkUpdateVolume(radius);
 
 	return JNI_TRUE;
+}
+
+// ----------------------------------------------------------------------
+
+void JNICALL ScriptMethodsObjectCreateNamespace::registerObjectToUniverse(JNIEnv *env, jobject self, jlong target)
+{
+    ServerObject * object = nullptr;
+    if (!JavaLibrary::getObject(target, object))
+    {
+        WARNING(true, ("Invalid Object passed to ::registerObjectToUniverse()."));
+        return;
+    }
+    ServerUniverse::getInstance().addCustomUniverseObject(*object);
 }
 // ======================================================================
 

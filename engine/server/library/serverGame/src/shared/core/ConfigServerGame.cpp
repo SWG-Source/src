@@ -312,7 +312,7 @@ void ConfigServerGame::install(void)
 	KEY_BOOL    (exceptionOnObjVarZeroLengthArray, false);
 	KEY_BOOL    (trackNonAuthoritativeObjvarSets, false);
 	KEY_FLOAT   (triggerVolumeWarpDistance, 128.0f);
-	KEY_NETWORKID(maxGoldNetworkId, "0");
+	KEY_NETWORKID(maxGoldNetworkId, "10000000"); // should match ConfigServerDatabase setting
 	KEY_BOOL    (fatalOnMovingGoldObject, false);
 	KEY_INT     (spatialChatLogMinutes, 5);
 	KEY_FLOAT   (behaviorMaxAvoidanceStuckTime, 10.0f);
