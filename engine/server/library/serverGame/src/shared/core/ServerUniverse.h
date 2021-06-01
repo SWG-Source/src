@@ -124,6 +124,8 @@ public:
 	static void          removeUniverseEvent(std::string const & eventName);
 	static std::string const & getCurrentEvents();
 
+    void addCustomUniverseObject(ServerObject &newObject);
+
 protected:
 	virtual void updateAndValidateData ();
 
@@ -144,6 +146,8 @@ private:
 	uint32 m_universeProcess;
 	Timer m_nextCheckTimer;
 	bool m_doImmediateCheck;
+
+	std::vector<ServerObject*> m_customUniverseObjects;
 	
 	//
 	// Planet Objects
