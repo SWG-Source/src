@@ -662,6 +662,7 @@ void ServerBuildoutManagerNamespace::loadArea(AreaInfo &areaInfo)
 
 			std::set< int64 > objects;
 
+			int64 originalObjId = 0;
 			for (int buildoutRow = 0; buildoutRow < buildoutRowCount; ++buildoutRow)
 			{
 				int64 objId = 0;
@@ -726,7 +727,8 @@ void ServerBuildoutManagerNamespace::loadArea(AreaInfo &areaInfo)
 				}
 				else
 				{
-					objId = areaBuildoutTable.getIntValue(objIdColumn, buildoutRow);
+					originalObjId = areaBuildoutTable.getIntValue(objIdColumn, buildoutRow);
+					objId = originalObjId;
 					containerId = areaBuildoutTable.getIntValue(containerColumn, buildoutRow);
 
 					// with new buildout files, the object id is a random 31-bit negative value
@@ -776,6 +778,10 @@ void ServerBuildoutManagerNamespace::loadArea(AreaInfo &areaInfo)
 
 				if (containerId == 0 || objects.find(containerId) != objects.end())
 				{
+					// store original ObjId from buildout table as ObjVar on item for reference in-game if needed
+					std::string objVars = areaBuildoutTable.getStringValue(objvarsColumn, buildoutRow);
+					objVars.insert(0, "buildoutObjectId|0|" + std::to_string(originalObjId) + "|");
+
 					areaInfo.buildoutRows.push_back(
 						BuildoutRow(
 							objId,
@@ -784,7 +790,7 @@ void ServerBuildoutManagerNamespace::loadArea(AreaInfo &areaInfo)
 							transform_p,
 							serverTemplate,
 							areaBuildoutTable.getStringValue(scriptsColumn, buildoutRow),
-							areaBuildoutTable.getStringValue(objvarsColumn, buildoutRow),
+							objVars,
 							eventRequired,
 							requiredLoadLevel));
 				}
