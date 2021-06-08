@@ -3392,9 +3392,12 @@ static void commandFuncOpenContainer(Command const & cmd, NetworkId const &actor
 		return;
 	}
 
-	//-- don't open factory crates
-	if (container->getGameObjectType() == SharedObjectTemplate::GOT_misc_factory_crate)
+	//-- don't open factory crates or crafting tools
+	const int got = container->getGameObjectType();
+	if (got == SharedObjectTemplate::GOT_misc_factory_crate || got == SharedObjectTemplate::GOT_tool_crafting)
+	{
 		return;
+	}
 
 	//-- if they are opening a crafting station, what they really want is the hopper
 	//-- but only if the object is not a volume container
