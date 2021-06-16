@@ -18,6 +18,10 @@
 #include "sharedFoundation/FormattedString.h"
 #include "sharedGame/ProsePackage.h"
 #include "sharedGame/ProsePackageParticipant.h"
+#include "serverScript/GameScriptObject.h"
+#include "serverScript/ScriptDictionary.h"
+#include "serverScript/ScriptFunctionTable.h"
+#include "serverScript/ScriptParameters.h"
 #include "sharedLog/Log.h"
 #include "sharedNetworkMessages/ChatAvatarId.h"
 #include "sharedNetworkMessages/ChatOnRequestLog.h"
@@ -331,10 +335,18 @@ void ReportManager::handleMessage(ChatOnRequestLog const &chatOnRequestLog)
 			report.append(reportData.m_clientData);
 		}
 
-		if (!reportData.m_reportLogChannel.empty())
-			LOGU("CustomerService", (reportData.m_reportLogChannel.c_str()), report);
-		else
-			LOGU("CustomerService", ("Report:"), report);
+		//if (!reportData.m_reportLogChannel.empty())
+		//	LOGU("CustomerService", (reportData.m_reportLogChannel.c_str()), report);
+		//else
+		//	LOGU("CustomerService", ("Report:"), report);
+	
+		if(reportingCreatureObject->getScriptObject())
+		{
+			ScriptParams p;
+			p.addParam(reportData.m_harassingNetworkId);
+			p.addParam(report);
+			IGNORE_RETURN(reportingCreatureObject->getScriptObject()->trigAllScripts(Scripting::TRIG_ON_PLAYER_REPORTED_CHAT, p));
+		}
 		
 		// System message for success
 		

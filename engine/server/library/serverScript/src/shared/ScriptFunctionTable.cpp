@@ -330,6 +330,7 @@ static const Scripting::ScriptFuncTable ScriptFuncList[] =
 
 	{Scripting::TRIG_ENTER_REGION, "OnEnterRegion", "ss"},
 	{Scripting::TRIG_EXIT_REGION, "OnExitRegion", "ss"},
+	{Scripting::TRIG_ON_PLAYER_REPORTED_CHAT, "OnPlayerReportedChat", "Ou"},
 
 	//----------------------------------------------------------------------
 	{Scripting::TRIG_VENDOR_ITEM_COUNT_REPLY, "OnVendorItemCountReply", "ii"},
