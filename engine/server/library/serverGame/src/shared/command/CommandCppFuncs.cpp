@@ -3398,6 +3398,21 @@ static void commandFuncOpenContainer(Command const & cmd, NetworkId const &actor
 	{
 		return;
 	}
+	
+	//-- if we are requesting to open an inventory, datapad, or bank, make sure it belongs to us or we're a CSR
+	//-- this provides better security for /editDatapad /editInventory and /editBank admin commands.
+	const uint32 crc = container->getTemplateCrc();
+	if((player->isPlayerControlled()) && (crc == 2007924155 || crc == -1783727815 || crc == -172438875))
+	{
+		Client * const clientObj = player->getClient();
+		if(clientObj)
+		{
+			if(container->getOwnerId() != actor && !clientObj->isGod())
+			{
+				return;
+			}
+		}
+	}
 
 	//-- if they are opening a crafting station, what they really want is the hopper
 	//-- but only if the object is not a volume container
