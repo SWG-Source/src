@@ -35,4 +35,4 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Compile C code
-        run: ant -Dbasedir=. build_src
+        run: ant -buildfile src/build.xml -Dbasedir=. build_src
