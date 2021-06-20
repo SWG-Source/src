@@ -24,12 +24,12 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout code
-      - uses: actions/checkout@v2
+        uses: actions/checkout@v2
         with:
           path: 'src/'
       
       - name: Make dependency directories
-      - run: |
+        run: |
           mkdir -p exe/linux/bin
           mkdir -p build/bin          
 
