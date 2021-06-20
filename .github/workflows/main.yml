@@ -27,4 +27,4 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Compile C code
-        run: ant -DbaseDir=. compile_src
+        run: ant -Dbasedir=. compile_src
