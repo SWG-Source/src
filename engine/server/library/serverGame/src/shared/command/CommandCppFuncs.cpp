@@ -7947,6 +7947,10 @@ static void commandFuncSquelch(Command const &, NetworkId const &actor, NetworkI
 		const Client * gmClient = gm->getClient();
 		if (gmClient)
 		{
+            if(!gmClient->isGod())
+            {
+                return;
+            }
 			char buffer[2048];
 			if (!target.isValid())
 			{
@@ -8016,6 +8020,10 @@ static void commandFuncUnsquelch(Command const &, NetworkId const &actor, Networ
 		const Client * gmClient = gm->getClient();
 		if (gmClient)
 		{
+            if(!gmClient->isGod())
+            {
+                return;
+            }
 			char buffer[2048];
 			if (!target.isValid())
 			{
@@ -8085,6 +8093,10 @@ static void commandFuncGrantWarden(Command const &, NetworkId const &actor, Netw
 		const Client * gmClient = gm->getClient();
 		if (gmClient)
 		{
+		    if(!gmClient->isGod())
+            {
+		        return;
+            }
 			char buffer[2048];
 			if (!target.isValid())
 			{
@@ -8156,6 +8168,10 @@ static void commandFuncRevokeWarden(Command const &, NetworkId const &actor, Net
 		const Client * gmClient = gm->getClient();
 		if (gmClient)
 		{
+            if(!gmClient->isGod())
+            {
+                return;
+            }
 			char buffer[2048];
 			if (!target.isValid())
 			{
@@ -8228,16 +8244,16 @@ static void commandFuncSpammer(Command const &, NetworkId const &actor, NetworkI
 		const Client * gmClient = gm->getClient();
 		if (gmClient)
 		{
-			// check warden permission first
+			// check warden permission first or if god
 			const PlayerObject * gmPlayerObject = PlayerCreatureController::getPlayerObject(gm);
-			if (!gmPlayerObject || !gmPlayerObject->isWarden())
+			if (!gmPlayerObject || (!gmPlayerObject->isWarden()) && !gmClient->isGod())
 			{
 				Chat::sendSystemMessage(*gm, StringId("warden", "not_authorized"), Unicode::emptyString);
 				return;
 			}
 
-			// check to see if warden functionality is enabled
-			if (!ConfigServerGame::getEnableWarden())
+			// check to see if warden functionality is enabled but don't restrict if god
+			if (!ConfigServerGame::getEnableWarden() && !gmClient->isGod())
 			{
 				Chat::sendSystemMessage(*gm, StringId("warden", "warden_functionality_disabled"), Unicode::emptyString);
 				return;
@@ -8322,6 +8338,16 @@ static void commandFuncSpammer(Command const &, NetworkId const &actor, NetworkI
 				}
 			}
 
+			// can't spammer someone in god mode or another warden
+			if(so->getClient()->isGod() || p->isWarden())
+            {
+                ProsePackage prosePackage;
+                prosePackage.stringId = StringId("warden", "cannot_spammer_target");
+                prosePackage.target.str = so->getAssignedObjectName();
+                Chat::sendSystemMessage(*gm, prosePackage);
+                return;
+            }
+
 			// cannot /spammer self
 			if (target == actor)
 			{
@@ -8369,9 +8395,9 @@ static void commandFuncUnspammer(Command const &, NetworkId const &actor, Networ
 		const Client * gmClient = gm->getClient();
 		if (gmClient)
 		{
-			// check warden permission first
+			// check warden permission first or if god
 			const PlayerObject * gmPlayerObject = PlayerCreatureController::getPlayerObject(gm);
-			if (!gmPlayerObject || !gmPlayerObject->isWarden())
+			if (!gmPlayerObject || (!gmPlayerObject->isWarden()) && !gmClient->isGod())
 			{
 				Chat::sendSystemMessage(*gm, StringId("warden", "not_authorized"), Unicode::emptyString);
 				return;
@@ -8449,8 +8475,8 @@ static void commandFuncUnspammer(Command const &, NetworkId const &actor, Networ
 				return;
 			}
 
-			// can only /unspammer target that I /spammer(ed)
-			if (p->getSquelchedById() != actor)
+			// can only /unspammer target that I /spammer(ed) unless I'm god
+			if (p->getSquelchedById() != actor && !gmClient->isGod())
 			{
 				ProsePackage prosePackage;
 				prosePackage.stringId = StringId("warden", "cannot_unspammer_target");
@@ -8476,8 +8502,16 @@ static void commandFuncUnspammer(Command const &, NetworkId const &actor, Networ
 
 //-----------------------------------------------------------------------
 
+/**
+ * @deprecated This ungodly idea to empower wardens to grant warden permissions to other players is horrible
+ * and I don't believe this functionality should remotely exist at all absent intentional implementation
+ * by a specific server. GMs can use /grantWarden if they want a Warden or the grant can be scripted.
+ *
+ * Aconite - SWG Source - 2021
+ */
 static void commandFuncDeputizeWarden(Command const &, NetworkId const &actor, NetworkId const & target, Unicode::String const &params)
 {
+    /*
 	const CreatureObject * gm = dynamic_cast<CreatureObject *>(NetworkIdManager::getObjectById(actor));
 	if (gm)
 	{
@@ -8549,12 +8583,18 @@ static void commandFuncDeputizeWarden(Command const &, NetworkId const &actor, N
 				"C++DeputizeWardenRspCannotDeputize");
 		}
 	}
+    */
 }
 
 //-----------------------------------------------------------------------
 
+/**
+ * @deprecated
+ * @see commandFuncDeputizeWarden
+ */
 static void commandFuncUndeputizeWarden(Command const &, NetworkId const &actor, NetworkId const & target, Unicode::String const &params)
 {
+    /*
 	const CreatureObject * gm = dynamic_cast<CreatureObject *>(NetworkIdManager::getObjectById(actor));
 	if (gm)
 	{
@@ -8612,6 +8652,7 @@ static void commandFuncUndeputizeWarden(Command const &, NetworkId const &actor,
 				"C++UndeputizeWardenRspCannotUndeputize");
 		}
 	}
+    */
 }
 
 //-----------------------------------------------------------------------
