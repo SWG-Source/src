@@ -47,6 +47,7 @@ namespace ScriptMethodsPlanetNamespace
 	jstring      JNICALL getBuildoutAreaName( JNIEnv *env, jobject self, jfloat x, jfloat z, jstring scene );
 	jfloatArray  JNICALL getBuildoutAreaSizeAndCenter(JNIEnv *env, jobject self, jfloat x, jfloat z, jstring scene, jboolean ignoreInternal, jboolean allowComposite);
 	void         JNICALL requestSameServer(JNIEnv *env, jobject self, jlong object1, jlong object2);
+	jboolean     JNICALL isPlanetEnabledForCluster(JNIEnv *env, jobject self, jstring planetName);
 }
 
 
@@ -71,6 +72,7 @@ const JNINativeMethod NATIVES[] = {
 	JF("getBuildoutAreaName",                 "(FFLjava/lang/String;)Ljava/lang/String;",                getBuildoutAreaName),
 	JF("getBuildoutAreaSizeAndCenter",        "(FFLjava/lang/String;ZZ)[F",                              getBuildoutAreaSizeAndCenter),
 	JF("_requestSameServer",                  "(JJ)V",                                                   requestSameServer),
+	JF("isPlanetEnabledForCluster",           "(Ljava/lang/String;)Z",                                   isPlanetEnabledForCluster),
 };
 
 	return JavaLibrary::registerNatives(NATIVES, sizeof(NATIVES)/sizeof(NATIVES[0]));
@@ -546,6 +548,30 @@ void JNICALL ScriptMethodsPlanetNamespace::requestSameServer(JNIEnv *env, jobjec
 		std::make_pair(serverObject1->getNetworkId(), serverObject2->getNetworkId()));
 
 	GameServer::getInstance().sendToPlanetServer(rssMessage);
+}
+
+// ----------------------------------------------------------------------
+
+/**
+ * @return true if the provided planet is turned on
+ */
+jboolean JNICALL ScriptMethodsPlanetNamespace::isPlanetEnabledForCluster(JNIEnv *env, jobject self, jstring planetName)
+{
+    JavaStringParam javaStringParam_planetName (planetName);
+    std::string     scene;
+    if (!JavaLibrary::convert (javaStringParam_planetName, scene))
+    {
+        DEBUG_WARNING (true, ("isSceneAvailable: failed to convert parameter 1 (planetName) to string"));
+        return 0;
+    }
+    if(GameServer::getInstance().isPlanetEnabledForCluster(scene))
+    {
+        return JNI_TRUE;
+    }
+    else
+    {
+        return JNI_FALSE;
+    }
 }
 
 // ======================================================================
