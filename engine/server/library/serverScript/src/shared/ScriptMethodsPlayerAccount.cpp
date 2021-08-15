@@ -55,13 +55,10 @@ namespace ScriptMethodsPlayerAccountNamespace
 	jboolean     JNICALL isIgnoring(JNIEnv *env, jobject self, jlong player, jstring who);
 	jboolean     JNICALL adjustLotCount(JNIEnv *env, jobject self, jlong player, jint adjustment);
 	jint         JNICALL getAccountNumLots(JNIEnv *env, jobject self, jlong player);
-	jint         JNICALL getGameFeatureBits(JNIEnv *env, jobject self, jlong player);
-	jint         JNICALL getSubscriptionFeatureBits(JNIEnv *env, jobject self, jlong player);
 	jboolean     JNICALL isUsingAdminLogin(JNIEnv *env, jobject self, jlong player);
 	jboolean     JNICALL isWarden(JNIEnv *env, jobject self, jlong player);
 	jobject      JNICALL getAccountTimeData(JNIEnv * env, jobject self, jlong target);
 	jint         JNICALL getPlayerLastLoginTime(JNIEnv *env, jobject self, jlong player);
-	jboolean     JNICALL isFreeTrialAccount(JNIEnv *env, jobject self, jlong player);
 	jboolean     JNICALL setCompletedTutorial(JNIEnv *env, jobject self, jlong player, jboolean value);
 	void         JNICALL logActivity(JNIEnv *env, jobject self, jlong player, jint activityType);
 	jboolean     JNICALL isAccountQualifiedForHousePackup(JNIEnv *env, jobject self, jlong target);
@@ -91,13 +88,10 @@ const JNINativeMethod NATIVES[] = {
 	JF("_isIgnoring", "(JLjava/lang/String;)Z", isIgnoring),
 	JF("_adjustLotCount", "(JI)Z", adjustLotCount),
 	JF("_getAccountNumLots", "(J)I", getAccountNumLots),
-	JF("_getGameFeatureBits", "(J)I", getGameFeatureBits),
-	JF("_getSubscriptionFeatureBits", "(J)I", getSubscriptionFeatureBits),
 	JF("_isUsingAdminLogin", "(J)Z", isUsingAdminLogin),
 	JF("_isWarden", "(J)Z", isWarden),
 	JF("_getAccountTimeData", "(J)Lscript/dictionary;", getAccountTimeData),
 	JF("_getPlayerLastLoginTime", "(J)I", getPlayerLastLoginTime),
-	JF("_isFreeTrialAccount", "(J)Z", isFreeTrialAccount),
 	JF("_setCompletedTutorial", "(JZ)Z", setCompletedTutorial),
 	JF("__logActivity", "(JI)V", logActivity),
 	JF("_isAccountQualifiedForHousePackup", "(J)Z", isAccountQualifiedForHousePackup),
@@ -195,46 +189,6 @@ jint JNICALL ScriptMethodsPlayerAccountNamespace::getAccountNumLots(JNIEnv *env,
 	}
 
 	return playerObject->getAccountNumLots();
-}
-
-// ----------------------------------------------------------------------
-
-jint JNICALL ScriptMethodsPlayerAccountNamespace::getGameFeatureBits(JNIEnv *env, jobject self, jlong player)
-{
-	CreatureObject *playerObject = 0;
-	if (!JavaLibrary::getObject(player, playerObject))
-	{
-		DEBUG_WARNING(true, ("JavaLibrary::getGameFeatureBits:  bad player object"));
-		return 0;
-	}
-
-	if (!playerObject->getClient())
-	{
-		DEBUG_WARNING(true, ("JavaLibrary::getGameFeatureBits:  player object had no client"));
-		return 0;
-	}
-
-	return playerObject->getClient()->getGameFeatures();
-}
-
-// ----------------------------------------------------------------------
-
-jint JNICALL ScriptMethodsPlayerAccountNamespace::getSubscriptionFeatureBits(JNIEnv *env, jobject self, jlong player)
-{
-	CreatureObject *playerObject = 0;
-	if (!JavaLibrary::getObject(player, playerObject))
-	{
-		DEBUG_WARNING(true, ("JavaLibrary::GetSubscriptionFeatureBits:  bad player object"));
-		return 0;
-	}
-
-	if (!playerObject->getClient())
-	{
-		DEBUG_WARNING(true, ("JavaLibrary::GetSubscriptionFeatureBits:  player object had no client"));
-		return 0;
-	}
-
-	return playerObject->getClient()->getSubscriptionFeatures();
 }
 
 // ----------------------------------------------------------------------
@@ -361,26 +315,6 @@ jboolean JNICALL ScriptMethodsPlayerAccountNamespace::isWarden(JNIEnv *env, jobj
 	}
 
 	return playerObject->isWarden();
-}
-
-// ----------------------------------------------------------------------
-
-jboolean JNICALL ScriptMethodsPlayerAccountNamespace::isFreeTrialAccount(JNIEnv *env, jobject self, jlong player)
-{
-	CreatureObject *playerObject = 0;
-	if (!JavaLibrary::getObject(player, playerObject))
-	{
-		DEBUG_WARNING(true, ("JavaLibrary::isFreeTrialAccount:  bad player object"));
-		return false;
-	}
-
-	if (!playerObject->getClient())
-	{
-		DEBUG_WARNING(true, ("JavaLibrary::isFreeTrialAccount:  player object had no client"));
-		return false;
-	}
-
-	return playerObject->getClient()->isFreeTrialAccount();
 }
 
 // ----------------------------------------------------------------------
