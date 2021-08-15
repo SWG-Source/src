@@ -203,7 +203,7 @@ bool NewbieTutorial::isInFreeTrialBuildoutArea(const std::string &scene, const V
 {
 	if (scene.substr(0, s_freeTrialBuildoutPlanet.length()) == s_freeTrialBuildoutPlanet)
 	{
-		const BuildoutArea *currentBuildout = SharedBuildoutAreaManager::findBuildoutAreaAtPosition(scene.c_str(), location.x, location.z, false);
+		const BuildoutArea *currentBuildout = SharedBuildoutAreaManager::findBuildoutAreaAtPosition(scene.c_str(), location.x, location.z, false, false);
 
 		if (currentBuildout)
 		{
