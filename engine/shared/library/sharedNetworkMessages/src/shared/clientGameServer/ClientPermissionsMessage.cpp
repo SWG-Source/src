@@ -10,17 +10,19 @@
 
 // ======================================================================
 
-ClientPermissionsMessage::ClientPermissionsMessage(bool canLogin, bool canCreateRegularCharacter, bool canCreateJediCharacter, bool canSkipTutorial) :
+ClientPermissionsMessage::ClientPermissionsMessage(bool canLogin, bool canCreateRegularCharacter, bool canCreateJediCharacter, bool canSkipTutorial, bool isAdmin) :
 		GameNetworkMessage("ClientPermissionsMessage"),
 		m_canLogin(canLogin),
 		m_canCreateRegularCharacter(canCreateRegularCharacter),
 		m_canCreateJediCharacter(canCreateJediCharacter),
-		m_canSkipTutorial(canSkipTutorial)
+		m_canSkipTutorial(canSkipTutorial),
+		m_isAdmin(isAdmin)
 {
 	addVariable(m_canLogin);
 	addVariable(m_canCreateRegularCharacter);
 	addVariable(m_canCreateJediCharacter);
 	addVariable(m_canSkipTutorial);
+	addVariable(m_isAdmin);
 }
 
 //-----------------------------------------------------------------------
@@ -30,12 +32,14 @@ ClientPermissionsMessage::ClientPermissionsMessage(Archive::ReadIterator & sourc
 		m_canLogin(),
 		m_canCreateRegularCharacter(),
 		m_canCreateJediCharacter(),
-		m_canSkipTutorial()
+		m_canSkipTutorial(),
+		m_isAdmin()
 {
 	addVariable(m_canLogin);
 	addVariable(m_canCreateRegularCharacter);
 	addVariable(m_canCreateJediCharacter);
 	addVariable(m_canSkipTutorial);
+	addVariable(m_isAdmin);
 
 	unpack(source);
 }

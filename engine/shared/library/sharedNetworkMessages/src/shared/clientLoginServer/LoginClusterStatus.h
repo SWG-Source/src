@@ -31,6 +31,17 @@ struct LoginClusterStatus_ClusterData
 	bool        m_dontRecommend;
 	uint32      m_onlinePlayerLimit;
 	uint32      m_onlineFreeTrialLimit;
+
+	// This flag tells the client that the account which requested the cluster information
+	// is considered an admin by the server (in Admin Account Table). This enables connection
+	// to locked clusters and viewing secret clusters. We don't need to worry about this flag
+	// being manipulated because the Connection Server verifies admin permissions after the fact.
+	// This flag merely unblocks client-side user interface elements for locked/secret clusters.
+	// We also send this flag in the ClientPermissionsMessage header for character creation.
+	bool        m_isAdmin;
+	// Flag so we can append (Secret) in Client (for admins)
+	bool        m_isSecret;
+
 };
 
 /**
@@ -85,6 +96,8 @@ namespace Archive
 		get(source,c.m_dontRecommend);
 		get(source,c.m_onlinePlayerLimit);
 		get(source,c.m_onlineFreeTrialLimit);
+		get(source, c.m_isAdmin);
+		get(source,c.m_isSecret);
 	}
 
 	inline void put(ByteStream & target, const LoginClusterStatus_ClusterData &c)
@@ -101,6 +114,8 @@ namespace Archive
 		put(target,c.m_dontRecommend);
 		put(target,c.m_onlinePlayerLimit);
 		put(target,c.m_onlineFreeTrialLimit);
+		put(target,c.m_isAdmin);
+		put(target,c.m_isSecret);
 	}
 }
 

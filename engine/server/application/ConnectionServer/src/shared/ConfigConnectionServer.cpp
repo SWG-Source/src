@@ -117,6 +117,8 @@ void ConfigConnectionServer::install(void)
 	KEY_STRING  (altPublicBindAddress, "");
 	KEY_BOOL    (useOldSuidGenerator, false);
 
+	KEY_BOOL (useSecureLoginForGodAccess, false);
+
 	int index = 0;
 	char const * result = 0;
 	do

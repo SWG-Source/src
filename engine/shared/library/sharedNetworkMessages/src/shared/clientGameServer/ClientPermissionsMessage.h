@@ -24,7 +24,7 @@
 class ClientPermissionsMessage : public GameNetworkMessage
 {
   public:
-	ClientPermissionsMessage(bool canLogin, bool canCreateRegularCharacter, bool canCreateJediCharacter, bool canSkipTutorial);
+	ClientPermissionsMessage(bool canLogin, bool canCreateRegularCharacter, bool canCreateJediCharacter, bool canSkipTutorial, bool isAdmin);
 	explicit ClientPermissionsMessage(Archive::ReadIterator & source);
 	virtual ~ClientPermissionsMessage();
 
@@ -33,12 +33,14 @@ class ClientPermissionsMessage : public GameNetworkMessage
 	bool getCanCreateRegularCharacter() const;
 	bool getCanCreateJediCharacter() const;
 	bool getCanSkipTutorial() const;
+	bool getIsAdmin() const;
 	
   private:
 	Archive::AutoVariable<bool> m_canLogin;
 	Archive::AutoVariable<bool> m_canCreateRegularCharacter;
 	Archive::AutoVariable<bool> m_canCreateJediCharacter;
 	Archive::AutoVariable<bool> m_canSkipTutorial;
+	Archive::AutoVariable<bool> m_isAdmin;
 
 	ClientPermissionsMessage();
 	ClientPermissionsMessage(const ClientPermissionsMessage&);
@@ -71,6 +73,13 @@ inline bool ClientPermissionsMessage::getCanCreateJediCharacter() const
 inline bool ClientPermissionsMessage::getCanSkipTutorial() const
 {
 	return m_canSkipTutorial.get();
+}
+
+// ----------------------------------------------------------------------
+
+inline bool ClientPermissionsMessage::getIsAdmin() const
+{
+    return m_isAdmin.get();
 }
 
 // ======================================================================

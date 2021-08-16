@@ -501,6 +501,12 @@ void Client::addControlledObject(ServerObject &object) {
             setGodMode(true);
         }
     }
+
+    // validate isUsingAdminLogin each onClientReady() call per SWG Source change - 2021 (Aconite)
+    // isUsingAdminLogin is used to check if an *account* is in the admin table
+    // so we can monitor admin accessed accounts *regardless* of their current god mode/level
+    setUsingAdminLogin(AdminAccountManager::getAdminLevel(getAccountName()) > 0);
+
 }
 
 // ----------------------------------------------------------------------
@@ -1937,53 +1943,131 @@ float Client::computeDeltaTimeInSeconds(uint32 const syncStampLong) const {
 
 //-----------------------------------------------------------------------
 
+/**
+ * setGodMode
+ * Processes the request to turn God Mode in the Client on,
+ * enabling admin commands and admin-treatment of a CreatureObject.
+ *
+ * @param value true = god mode on; false = god mode off
+ * @return true if successful, false if not
+ *
+ * Handling was rewritten by SWG Source - 2021 for applicability
+ * to Source/VM context
+ * Authors: Aconite
+ */
 bool Client::setGodMode(bool value) {
-    // (re?) check god permissions
-    m_godLevel = AdminAccountManager::getAdminLevel(m_accountName.c_str());
 
-    if (ConfigServerGame::getAdminGodToAll() || (m_godLevel > 0)) {
-        m_godValidated = true;
-        if (ConfigServerGame::getAdminGodToAll()) {
-            m_godLevel = ConfigServerGame::getAdminGodToAllGodLevel();
-        }
-    }
+    const bool wasInGodMode = m_godMode;
+    auto * creatureObject = safe_cast<CreatureObject *>(m_primaryControlledObject.getObject());
+    ScriptParams params;
 
-    bool wasInGodMode = m_godMode;
-    m_godMode = value;
-
-    if (value && !m_godValidated) {
-        LOG("CustomerService", ("Avatar:%s denied god mode because it wasn't validated.", PlayerObject::getAccountDescription(getCharacterObjectId()).c_str()));
-        m_godMode = false;
-    }
-
-    CreatureObject *primaryControlledObject = safe_cast<CreatureObject *>(m_primaryControlledObject.getObject());
-    if (!primaryControlledObject) {
-        if (value && !wasInGodMode) {
-            LOG("CustomerService", ("Avatar:%s denied god mode because it has no associated character.", m_accountName.c_str()));
-        }
-        m_godMode = false;
+    if(!creatureObject)
+    {
+        LOG("GodMode", ("[%s : %s : %s : %s] /setGodMode failed because we couldn't get the CreatureObject.",
+                getAccountName().c_str(), getCharacterName().c_str(), getCharacterObjectId().getValueString().c_str(), getIpAddress().c_str()));
         return false;
     }
 
-    if (m_godMode) {
-        IGNORE_RETURN(primaryControlledObject->grantCommand(AdminAccountManager::getAdminCommandName(), false));
-    } else {
-        primaryControlledObject->revokeCommand(AdminAccountManager::getAdminCommandName(), false, true);
-    }
-
-    if (m_godMode != wasInGodMode) {
-        if (m_godMode) {
-            LOG("CustomerService", ("Avatar:%s granted god mode %s level %d.", PlayerObject::getAccountDescription(getCharacterObjectId()).c_str(), AdminAccountManager::getAdminCommandName(), m_godLevel));
-        } else {
-            LOG("CustomerService", ("Avatar:%s dropped god mode.", PlayerObject::getAccountDescription(getCharacterObjectId()).c_str()));
+    // Request to turn God Mode Off, in which case we don't need to validate permissions, because off isn't bad
+    if(!value)
+    {
+        // If we were already in god mode, then we've already made an authenticated request to be in god mode,
+        // so log the event and proceed as an authorized activity, unless a script trigger blocks the switch.
+        if(wasInGodMode)
+        {
+            // allow a SCRIPT_OVERRIDE to block turning god mode off if necessary
+            // see OnTurnedGodModeOff in script.player.base_player.java
+            if(creatureObject->getScriptObject()->trigAllScripts(Scripting::TRIG_ON_SET_GOD_MODE_OFF, params) != SCRIPT_CONTINUE)
+            {
+                LOG("GodMode", ("[%s : %s : %s : %s] /setGodMode off failed because OnSetGodModeOff did not return SCRIPT_CONTINUE.",
+                        getAccountName().c_str(), getCharacterName().c_str(), getCharacterObjectId().getValueString().c_str(), getIpAddress().c_str()));
+                return false;
+            }
+            else
+            {
+                LOG("GodMode", ("[%s : %s : %s : %s] /setGodMode off success.",
+                        getAccountName().c_str(), getCharacterName().c_str(), getCharacterObjectId().getValueString().c_str(), getIpAddress().c_str()));
+            }
         }
-
-        // cell permissions may change for us for all cells, so observe all buildings in range for the change
-        CellPermissions::ViewerChangeObserver o(primaryControlledObject);
-
-        ObserveTracker::onGodModeChanged(*this);
+        m_godLevel = 0;
+        m_godMode = false;
+        m_godValidated = false;
+        // remove the characterAbility "admin" so GM commands aren't sent by the client while not in God Mode
+        IGNORE_RETURN(creatureObject->revokeCommand(AdminAccountManager::getAdminCommandName(), false, true));
+        return true;
     }
-    return (value == m_godMode); // return true if the value was set to what was requested, false otherwise
+
+    // If we're here, it's because the request is to turn God Mode ON
+    // First, determine if we're using Secure Login Mode (IP-restricted)
+    if(ConfigServerGame::getUseSecureLoginForGodAccess())
+    {
+        if(!AdminAccountManager::isInternalIp(getIpAddress()))
+        {
+            LOG("GodMode", ("[%s : %s : %s : %s] /setGodMode on failed because secure login was required and the connection IP was not approved.",
+                    getAccountName().c_str(), getCharacterName().c_str(), getCharacterObjectId().getValueString().c_str(), getIpAddress().c_str()));
+            return false;
+        }
+    }
+
+    // If we aren't required to be secure, or if we are and we are secure, begin permission checks
+    // Start with if everyone can have God Mode, in which case we don't need to bother otherwise
+    int godLevel = 0;
+    if(ConfigServerGame::getAdminGodToAll() && ConfigServerGame::getAdminGodToAllGodLevel() > 0)
+    {
+        // Make sure the account isn't in the admin table, because that should supersede
+        // whatever the adminGodToAll level is.
+        if(AdminAccountManager::getAdminLevel(m_accountName) == 0)
+        {
+            godLevel = ConfigServerGame::getAdminGodToAllGodLevel();
+        }
+        else
+        {
+            godLevel = AdminAccountManager::getAdminLevel(m_accountName);
+        }
+    }
+    // We aren't giving god to everyone, so validate actual god level permissions
+    else
+    {
+        godLevel = AdminAccountManager::getAdminLevel(m_accountName);
+    }
+    // Grant God Mode
+    if(godLevel > 0)
+    {
+        // Allow a SCRIPT_OVERRIDE to block turning God Mode on via OnSetGodModeOn trigger
+        // see script.player.player_base.java
+        if(creatureObject->getScriptObject()->trigAllScripts(Scripting::TRIG_ON_SET_GOD_MODE_ON, params) != SCRIPT_CONTINUE)
+        {
+            LOG("GodMode", ("[%s : %s : %s : %s] /setGodMode on failed because OnSetGodModeOn did not return SCRIPT_CONTINUE.",
+                    getAccountName().c_str(), getCharacterName().c_str(), getCharacterObjectId().getValueString().c_str(), getIpAddress().c_str()));
+            return false;
+        }
+        else
+        {
+            // flags
+            m_godMode = true;
+            m_godValidated = true;
+            m_godLevel = godLevel;
+
+            // grant all commands with the "admin" characterAbility
+            IGNORE_RETURN(creatureObject->grantCommand(AdminAccountManager::getAdminCommandName(), false));
+
+            // reset observers and notify cells of potential change
+            CellPermissions::ViewerChangeObserver o(creatureObject);
+            ObserveTracker::onGodModeChanged(*this);
+
+            LOG("GodMode", ("[%s : %s : %s : %s] /setGodMode on success.",
+                    getAccountName().c_str(), getCharacterName().c_str(), getCharacterObjectId().getValueString().c_str(), getIpAddress().c_str()));
+            return true;
+        }
+    }
+    // If we're here, it's because someone tried to use /setGod who doesn't have permissions
+    else
+    {
+        LOG("GodMode", ("[%s : %s : %s : %s] /setGodMode on failed because the requesting account does not have permissions.",
+                getAccountName().c_str(), getCharacterName().c_str(), getCharacterObjectId().getValueString().c_str(), getIpAddress().c_str()));
+        return false;
+    }
+
 }
 
 //-----------------------------------------------------------------------
@@ -2165,8 +2249,16 @@ void Client::launchWebBrowser(std::string const &url) const {
 
 // ----------------------------------------------------------------------
 
-bool Client::isUsingAdminLogin() const {
+bool Client::isUsingAdminLogin() const
+{
     return m_usingAdminLogin;
+}
+
+// ----------------------------------------------------------------------
+
+void Client::setUsingAdminLogin(bool value)
+{
+    m_usingAdminLogin = value;
 }
 
 // ----------------------------------------------------------------------
