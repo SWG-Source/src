@@ -1992,6 +1992,9 @@ bool Client::setGodMode(bool value) {
         m_godLevel = 0;
         m_godMode = false;
         m_godValidated = false;
+        // reset observers and notify cells of potential change
+        CellPermissions::ViewerChangeObserver o(creatureObject);
+        ObserveTracker::onGodModeChanged(*this);
         // remove the characterAbility "admin" so GM commands aren't sent by the client while not in God Mode
         IGNORE_RETURN(creatureObject->revokeCommand(AdminAccountManager::getAdminCommandName(), false, true));
         return true;
