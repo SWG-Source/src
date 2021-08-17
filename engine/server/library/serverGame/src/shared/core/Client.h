@@ -105,6 +105,8 @@ public:
 
     bool isUsingAdminLogin() const;
 
+    void setUsingAdminLogin(bool value);
+
     CombatDataTable::CombatSpamFilterType getCombatSpamFilter() const;
 
     int getCombatSpamRangeSquaredFilter() const;

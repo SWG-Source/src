@@ -481,7 +481,7 @@ jstring JNICALL ScriptMethodsPlanetNamespace::getBuildoutAreaName( JNIEnv *const
 		return 0;
 	}
 
-	const BuildoutArea * const area = SharedBuildoutAreaManager::findBuildoutAreaAtPosition(sceneId.c_str(), x, z, false );
+	const BuildoutArea * const area = SharedBuildoutAreaManager::findBuildoutAreaAtPosition(sceneId, x, z, false, false);
 
 	return area ? JavaString( area->areaName ).getReturnValue() : 0;
 }

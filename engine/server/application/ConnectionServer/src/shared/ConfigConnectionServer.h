@@ -68,6 +68,8 @@ public:
         int connectionServerNumber;
         int fakeBuddyPoints;
 
+        bool useSecureLoginForGodAccess;
+
 	bool useOldSuidGenerator;
 
         const char *altPublicBindAddress;
@@ -187,6 +189,9 @@ public:
     static const char *getPublicBindAddress();
 
     static bool getUseOldSuidGenerator();
+
+    static bool getUseSecureLoginForGodAccess();
+
 private:
     static Data *data;
 };
@@ -478,6 +483,11 @@ inline int ConfigConnectionServer::getConnectionServerNumber() {
 
 inline bool ConfigConnectionServer::getUseOldSuidGenerator() {
     return data->useOldSuidGenerator;
+}
+
+inline bool ConfigConnectionServer::getUseSecureLoginForGodAccess()
+{
+    return data->useSecureLoginForGodAccess;
 }
 
 #endif	// _ConfigConnectionServer_H

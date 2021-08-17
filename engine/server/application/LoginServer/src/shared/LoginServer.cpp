@@ -943,10 +943,10 @@ LoginServer::validateAccount(const StationId &stationId, uint32 clusterId, uint3
         bool clientIsInternal = false;
         ClientConnection *conn = getValidatedClient(stationId);
         if (conn) {
-            clientIsInternal = AdminAccountManager::isInternalIp(conn->getRemoteAddress());
+            clientIsInternal = conn->getAdminLevel() > 0;
         }
 
-        if (clientIsInternal && ConfigLoginServer::getInternalBypassOnlineLimit()) {
+        if (clientIsInternal) {
             canLogin = true;
         } else if (cle->m_numPlayers <= cle->m_onlinePlayerLimit) {
             canLogin = true;
@@ -966,6 +966,12 @@ LoginServer::validateAccount(const StationId &stationId, uint32 clusterId, uint3
         // check if we want to allow skip tutorial to all
         if (ConfigLoginServer::getAllowSkipTutorialToAll()) {
             canSkipTutorial = true;
+        }
+
+        // double check locked cluster
+        if(cle->m_locked)
+        {
+            canLogin = clientIsInternal;
         }
 
         ValidateAccountReplyMessage msg(stationId, canLogin, canCreateRegular, canCreateJedi, canSkipTutorial, track, consumedRewardEvents, claimedRewardItems);
@@ -1228,32 +1234,8 @@ LoginServer::onValidateClient(StationId suid, const std::string &username, Clien
     NOT_NULL(conn);
     WARNING_STRICT_FATAL(getValidatedClient(suid), ("Validating an already valid client in onValidateClient().  StationId: %d UserName: %s", suid, username.c_str()));
 
-    int adminLevel = 0;
-    const bool isAdminAccount = AdminAccountManager::isAdminAccount(Unicode::toLower(username), adminLevel);
-
-    if (conn->getRequestedAdminSuid() != 0) {
-        //verify internal, secure, is on the god list
-        bool loginOK = false;
-        if (!isSecure) {
-            LOG("CustomerService", ("AdminLogin:  User %s (account %li) attempted to log into account %li, but was not using a SecureID token", username.c_str(), suid, conn->getRequestedAdminSuid()));
-        } else {
-            if (!AdminAccountManager::isInternalIp(conn->getRemoteAddress())) {
-                LOG("CustomerService", ("AdminLogin:  User %s (account %li) attempted to log into account %li, but was not logging in from an internal IP", username.c_str(), suid, conn->getRequestedAdminSuid()));
-            } else {
-                if (!isAdminAccount || adminLevel < 10) {
-                    LOG("CustomerService", ("AdminLogin:  User %s (account %li) attempted to log into account %li, but did not have sufficient permissions", username.c_str(), suid, conn->getRequestedAdminSuid()));
-                } else {
-                    suid = conn->getRequestedAdminSuid();
-                    loginOK = true;
-                }
-            }
-        }
-
-        if (!loginOK) {
-            conn->disconnect();
-            return;
-        }
-    }
+    // determine if this is an admin account
+    const bool isAdminAccount = AdminAccountManager::getAdminLevel(username) > 0;
 
     // encrypt the clients credentials with the key, return
     // the cipher text to the client for use as a connection
@@ -1297,14 +1279,11 @@ LoginServer::onValidateClient(StationId suid, const std::string &username, Clien
     conn->send(k, true);
     delete[] keyBuffer;
 
-    // send cluster enum
-    bool clientInternal = AdminAccountManager::isInternalIp(conn->getRemoteAddress());
-
     std::vector <LoginEnumCluster::ClusterData> data;
 
     for (ClusterListType::const_iterator j = m_clusterList.begin(); j != m_clusterList.end(); ++j) {
         ClusterListEntry *cle = *j;
-        if (cle && cle->m_clusterId != 0 && cle->m_clusterName.size() != 0 && (clientInternal || !cle->m_secret)) {
+        if (cle && cle->m_clusterId != 0 && cle->m_clusterName.size() != 0 && (isAdminAccount || !cle->m_secret)) {
             LoginEnumCluster::ClusterData item;
             item.m_clusterId = cle->m_clusterId;
             item.m_clusterName = cle->m_clusterName;
@@ -1331,7 +1310,7 @@ LoginServer::onValidateClient(StationId suid, const std::string &username, Clien
     conn->setIsValidated(true);
     conn->setStationId(suid);
     conn->setIsSecure(isSecure);
-    conn->setAdminLevel(isAdminAccount ? adminLevel : -1);
+    conn->setAdminLevel(isAdminAccount ? AdminAccountManager::getAdminLevel(username) : -1);
     IGNORE_RETURN(m_validatedClientMap.insert(std::pair<StationId, ClientConnection *>(suid, conn)));
 
     //Must be done after setting various information in the connection object above
@@ -1408,11 +1387,16 @@ void LoginServer::sendExtendedClusterInfo(ClientConnection &client) const {
 /**
  * Send the list of active clusters to a client.
  * Also picks a connection server for the client to use.
- * @todo We'd like to resend this to all clients whenever the status
- * of any servers changes
+ *
+ * Note: *** should send to individual clients - NOT all connected
+ * clients due to admin permissions check ***
  */
 void LoginServer::sendClusterStatus(ClientConnection &conn) const {
-    const bool clientIsPrivate = AdminAccountManager::isInternalIp(conn.getRemoteAddress());
+
+    // Validate admin level here as clientIsPrivate. We don't need to check secure/IP because the
+    // connection server will force disconnect non-secure connections if they are required by configuration.
+    const bool clientIsPrivate = conn.getAdminLevel() > 0;
+
     const unsigned int subscriptionBits = conn.getSubscriptionBits();
     const bool isFreeTrialAccount = (((subscriptionBits & ClientSubscriptionFeature::FreeTrial) != 0) &&
                                      ((subscriptionBits & ClientSubscriptionFeature::Base) == 0));
@@ -1451,10 +1435,7 @@ void LoginServer::sendClusterStatus(ClientConnection &conn) const {
             if (item.m_connectionServerPort) {
                 item.m_connectionServerPingPort = connServer.pingPort;
 
-                // for security/confidential information issue, only report
-                // population count to secured internal connections with
-                // admin privilege >= 10
-                if (clientIsPrivate && conn.getIsSecure() && (conn.getAdminLevel() >= 10)) {
+                if (clientIsPrivate) {
                     item.m_populationOnline = cle->m_numPlayers;
                 } else {
                     item.m_populationOnline = -1;
@@ -1493,9 +1474,13 @@ void LoginServer::sendClusterStatus(ClientConnection &conn) const {
                 } else {
                     item.m_status = LoginClusterStatus::ClusterData::S_loading;
                 }
-                if (cle->m_locked && !clientIsPrivate) {
+                if (cle->m_locked) {
                     item.m_status = LoginClusterStatus::ClusterData::S_locked;
                 } // locked takes precedence over up or loading
+
+                // flag as admin/secret (see LoginClusterStatus.h)
+                item.m_isAdmin = clientIsPrivate;
+                item.m_isSecret = cle->m_secret;
 
                 item.m_dontRecommend = (cle->m_notRecommendedDatabase || cle->m_notRecommendedCentral);
                 item.m_onlinePlayerLimit = cle->m_onlinePlayerLimit;

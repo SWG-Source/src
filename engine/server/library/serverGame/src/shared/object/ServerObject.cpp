@@ -1963,9 +1963,6 @@ void ServerObject::serverObjectEndBaselines(bool fromDatabase)
 		// If the object was created authoritative, trigger if needed
 		if (isAuthoritative())
 			triggerMadeAuthoritative();
-
-		if (markedNoTradeRemovable())
-			getScriptObject()->attachScript("item.special.no_trade_removable", true);
 	}
 
 	if (isPlayerControlled())
@@ -2566,7 +2563,13 @@ bool ServerObject::serverObjectInitializeFirstTimeObject(ServerObject *cell, Tra
 
 	int count = newTemplate->getScriptsCount();
 	for (int i = 0; i < count; ++i)
+	{
 		getScriptObject()->attachScript(newTemplate->getScripts(i), true);
+	}
+	if (markedNoTradeRemovable())
+	{
+		getScriptObject()->attachScript("item.special.no_trade_removable", true);
+	}
 
 	if (cell)
 	{
