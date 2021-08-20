@@ -4,7 +4,11 @@
 //
 // Copyright 2002 Sony Online Entertainment
 //
+// Refactored - SWG Source - 2021 (Aconite)
+//
 // ======================================================================
+
+#include <utility>
 
 #include "serverGame/FirstServerGame.h"
 #include "serverGame/CellPermissions.h"
@@ -16,7 +20,11 @@
 #include "serverGame/ContainerInterface.h"
 #include "serverGame/CreatureObject.h"
 #include "serverGame/GuildInterface.h"
+#include "serverGame/CityInterface.h"
+#include "serverGame/CityInfo.h"
+#include "serverGame/ServerWorld.h"
 #include "serverGame/NameManager.h"
+#include "sharedGame/PvpData.h"
 #include "sharedFoundation/NetworkId.h"
 #include "sharedLog/Log.h"
 #include "sharedObject/Container.h"
@@ -28,101 +36,112 @@ static std::set<BuildingObject const*> s_activeUpdaters;
 
 // ======================================================================
 
+/**
+ * Cell permissions are stored in the PROPERTY_LIST db table. The OBJECT_ID column represents
+ * the Network ID of the cell object, the LIST_ID will either be a 3 for the allow list,
+ * or a 4 for the banned list of a cell, and the VALUE property will be a suffix indicator
+ * of the data type followed by the value (there is a PROPERTY_LIST entry for *each* entry on
+ * the respective allow/ban list)
+ *
+ * Note that allow/banned lists are used in both player structure and NPC-content contexts,
+ * but the public/private flag supersedes, in which case if Public -> anyone but banned list,
+ * if Private -> no one but allow list
+ *
+ * Items are stored in the DB as:
+ *
+ * c:id which is for character networkIds
+ * n:id which is for non-player networkIds
+ * G:id which is for Guild IDs
+ * P:id which is for City IDs
+ * A:id which is for Account Station IDs
+ * F:id which is for crc faction name
+ */
 namespace Archive
 {
-	// The prefixes we use to write permission strings to the database
-	const std::string PERMISSION_STRING_PREFIX_UNKNOWN_OLD    = "u:";
-	const std::string PERMISSION_STRING_PREFIX_UNKNOWN_NEW    = "U:";
-	const std::string PERMISSION_STRING_PREFIX_GUILD_NAME_OLD = "g:";
-	const std::string PERMISSION_STRING_PREFIX_GUILD_NAME_NEW = "G:";
-	const std::string PERMISSION_STRING_PREFIX_CHARACTER_NAME = "c:";
-	const std::string PERMISSION_STRING_PREFIX_NUMERIC_VALUE  = "n:";
 
 	// ----------------------------------------------------------------------
-
+	/**
+	 * Read an Archive Iterator from the Database
+	 */
 	void get(ReadIterator &source, CellPermissions::PermissionObject &target)
 	{
 		std::string permissionString;
 		get(source, permissionString);
+        CellPermissions::PermissionObject::PermissionFormat format;
 
-		// Assume the string in the database has not been converted
-		CellPermissions::PermissionObject::PermissionFormat format = CellPermissions::PermissionObject::PF_UNCONVERTED;
-
-		// Determine whether the string in the database has already been converted
-		const std::string prefix( permissionString, 0, 2 );
-		if ( prefix == PERMISSION_STRING_PREFIX_CHARACTER_NAME )
-		{
-			format = CellPermissions::PermissionObject::PF_CHARACTER_NAME;
-		}
-		else if ( prefix == PERMISSION_STRING_PREFIX_GUILD_NAME_OLD )
-		{
-			// We used to store guilds by name instead of guild ID.
-			// So we will try to reconvert the guild name to a guild ID
-			format = CellPermissions::PermissionObject::PF_UNCONVERTED;
-			permissionString.erase( 0, prefix.length() );
-		}
-		else if ( prefix == PERMISSION_STRING_PREFIX_GUILD_NAME_NEW )
-		{
-			format = CellPermissions::PermissionObject::PF_GUILD_NAME;
-		}
-		else if ( prefix == PERMISSION_STRING_PREFIX_NUMERIC_VALUE )
-		{
-			format = CellPermissions::PermissionObject::PF_NUMERIC_VALUE;
-		}
-		else if ( prefix == PERMISSION_STRING_PREFIX_UNKNOWN_OLD )
-		{
-			// We had an issue where we may have been storing full names in the database
-			// and we did not know they were player names since NameManager only
-			// converts first names to player names.  So we will try to reconvert
-			// the unknown entries again
-			format = CellPermissions::PermissionObject::PF_UNCONVERTED;
-			permissionString.erase( 0, prefix.length() );
-		}
-		else if ( prefix == PERMISSION_STRING_PREFIX_UNKNOWN_NEW )
-		{
-			format = CellPermissions::PermissionObject::PF_UNKNOWN_STRING;
-		}
-
-		// Remove the prefix if necessary
-		if ( format != CellPermissions::PermissionObject::PF_UNCONVERTED )
-		{
-			permissionString.erase( 0, prefix.length() );
-		}
-
-		// When buildings and cells load, it is their responsibility to convert the string if necessary
+		// Make sure there is a prefix attached to the entry and remove it
+        const std::string prefix(permissionString, 0, 2);
+        if(prefix == Prefix::CHARACTER)
+        {
+            format = CellPermissions::PermissionObject::PF_CHARACTER_NAME;
+        }
+        else if (prefix == Prefix::GUILD)
+        {
+            format = CellPermissions::PermissionObject::PF_GUILD_NAME;
+        }
+        else if (prefix == Prefix::NUMERIC)
+        {
+            format = CellPermissions::PermissionObject::PF_NUMERIC_VALUE;
+        }
+        else if (prefix == Prefix::CITY)
+        {
+            format = CellPermissions::PermissionObject::PF_CITY_NAME;
+        }
+        else if (prefix == Prefix::ACCOUNT)
+        {
+            format = CellPermissions::PermissionObject::PF_ACCOUNT_NAME;
+        }
+        else if (prefix == Prefix::FACTION)
+        {
+            format = CellPermissions::PermissionObject::PF_FACTION_NAME;
+        }
+        else
+        {
+            WARNING_STRICT_FATAL(true, ("CellPermissions::Archive::get() got a source value without a prefix or with a prefix we don't know (%s)."
+                "This is VERY game breaking. Please notify Development ASAP.", prefix.c_str()));
+            return;
+        }
+        // remove the prefix
+        permissionString.erase(0, 2);
+        // pass to buildings/cells who do the rest
 		target = CellPermissions::PermissionObject( format, permissionString );
 	}
 
 	// ----------------------------------------------------------------------
 
+    /**
+	 * Put a passed value into an Archive Iterator String for the Database
+	 */
 	void put( ByteStream &target, CellPermissions::PermissionObject const &source )
 	{
 		std::string permissionString = source.m_permissionString;
 
-		// Before writing out the permission string, we need to append a prefix
-		switch ( source.m_originalPermissionFormat )
+		// Append appropriate prefix for data type
+		switch (source.m_originalPermissionFormat)
 		{
 			case CellPermissions::PermissionObject::PF_CHARACTER_NAME:
-				permissionString = PERMISSION_STRING_PREFIX_CHARACTER_NAME + permissionString;
+				permissionString = permissionString.insert(0, Prefix::CHARACTER);
 				break;
-
 			case CellPermissions::PermissionObject::PF_GUILD_NAME:
-				permissionString = PERMISSION_STRING_PREFIX_GUILD_NAME_NEW + permissionString;
+				permissionString = permissionString.insert(0, Prefix::GUILD);
 				break;
-
-			case CellPermissions::PermissionObject::PF_NUMERIC_VALUE:
-				permissionString = PERMISSION_STRING_PREFIX_NUMERIC_VALUE + permissionString;
-				break;
-
-			case CellPermissions::PermissionObject::PF_UNKNOWN_STRING:
-				permissionString = PERMISSION_STRING_PREFIX_UNKNOWN_NEW + permissionString;
-				break;
-
+		    case CellPermissions::PermissionObject::PF_NUMERIC_VALUE:
+		        permissionString = permissionString.insert(0, Prefix::NUMERIC);
+		        break;
+		    case CellPermissions::PermissionObject::PF_FACTION_NAME:
+		        permissionString = permissionString.insert(0, Prefix::FACTION);
+		        break;
+		    case CellPermissions::PermissionObject::PF_ACCOUNT_NAME:
+		        permissionString = permissionString.insert(0, Prefix::ACCOUNT);
+		        break;
+		    case CellPermissions::PermissionObject::PF_CITY_NAME:
+		        permissionString = permissionString.insert(0, Prefix::CITY);
+                break;
 			default:
-				// Do nothing to the string and it will be considered "unconverted" when it is read back in
+                WARNING_STRICT_FATAL(true, ("CellPermissions::Archive::put() got a source value without a prefix or with a prefix we don't know (%s)."
+                                            "This is VERY game breaking. Please notify Development ASAP.", source.m_originalPermissionFormat));
 				break;
 		}
-
 		put(target, permissionString);
 	}
 
@@ -138,64 +157,93 @@ CellPermissions::PermissionObject::PermissionObject() :
 
 // ----------------------------------------------------------------------
 
-CellPermissions::PermissionObject::PermissionObject( const std::string& name ) :
-	m_originalPermissionFormat( PF_UNKNOWN_STRING ),
-	m_permissionString( Unicode::getTrim(name) )
+/**
+ * When we call either CellObject or BuildingObject :: addAllowed()/addBanned(),
+ * we use this constructor for a PermissionObject we can manipulate.
+ *
+ * @param The permission entry for this object as provided by the PLAYER in
+ * the add/remove functionality OR as provided by the SYSTEM (which should also
+ * be in a consistent format) like "Guild:SWG" or "APlayerNameHere". EXCLUDING**
+ * the Account: and Faction: values, which have been advance-handled/validated
+ * in scripting/CommandFuncs due to accessibility of neighbor classes.
+ *
+ * This should strip prefixes from values so we can rely on
+ * m_originalPermissionFormat for the Data Type and
+ * m_permissionString as the raw value absent the prefix (if any)
+ *
+ * Note: This is a programmatic object only, not a type of game object.
+ */
+CellPermissions::PermissionObject::PermissionObject(const std::string& name) :
+	m_originalPermissionFormat(PF_UNKNOWN_STRING),
+	m_permissionString(Unicode::getTrim(name))
 {
-	// See if we have a guild name
-	if (_strnicmp( name.c_str(), "Guild:", 6 ) == 0 )
+	// If the string starts with "Guild:" we're processing a Guild Name
+    if (name.rfind("guild:", 0) == 0)
 	{
-		// Try to convert the name to a guild ID
-		int guildId = GuildInterface::findGuild( Unicode::getTrim((name).substr(6)) );
-		if ( guildId != 0 )
+		// Find Guild ID from Guild Name
+		const int guildId = GuildInterface::findGuild(name.substr(6, name.length()));
+		if (guildId != 0)
 		{
-			// Convert the guild ID to a string
-			char buffer[32];
-			sprintf( buffer, "%d", guildId );
-
 			m_originalPermissionFormat = PF_GUILD_NAME;
-			m_permissionString         = buffer;
-		}
-		else
-		{
-			// We will leave the format as "unknown" and keep the raw string
+			m_permissionString         = std::to_string(guildId);
 		}
 	}
-	else
+	// If the string starts with "City:" we're processing a City Name
+    else if (name.rfind("city:", 0) == 0)
+    {
+	    const int cityId = CityInterface::findCityByName(name.substr(5, name.length()));
+	    if (cityId != 0)
+        {
+	        m_originalPermissionFormat = PF_CITY_NAME;
+	        m_permissionString = std::to_string(cityId);
+        }
+	    return;
+    }
+	// If the string starts with "Account:" we're processing an Account Name
+	// which MUST be a stationId NOT a username
+    else if (name.rfind("account:", 0) == 0)
+    {
+        // There's really no way to verify this from here, so
+        // we're relying on it being handled elsewhere correctly
+        m_originalPermissionFormat = PF_ACCOUNT_NAME;
+        m_permissionString = name.substr(8, name.length());
+    }
+    // If the string starts with "Faction:" it should be the faction hash
+    else if (name.rfind("faction:", 0) == 0)
+    {
+        const int hash = std::stoi(name.substr(8, name.length()));
+        if(PvpData::isImperialFactionId(hash) || PvpData::isRebelFactionId(hash))
+        {
+            m_originalPermissionFormat = PF_FACTION_NAME;
+            m_permissionString = name.substr(8, name.length());
+        }
+    }
+	// Otherwise we're processing a NetworkId
+    else
 	{
-		// The name string might be an actual name or a network ID...
-
-		// See if there are any characters in the string
-		std::string::size_type idx = name.find_first_not_of( "1234567890" );
-		if ( idx == std::string::npos )
-		{
-			// Everything in the string is a number
-			m_originalPermissionFormat = PF_NUMERIC_VALUE;
-			m_permissionString         = name;
-		}
-		else
-		{
-			// Try to convert the name to a network ID
-			const NetworkId playerNetworkId = NameManager::getInstance().getPlayerId( NameManager::normalizeName( name ) );
-			if ( playerNetworkId != NetworkId::cms_invalid )
-			{
-				// We found the network ID for the player
-				m_originalPermissionFormat = PF_CHARACTER_NAME;
-				m_permissionString         = playerNetworkId.getValueString();
-			}
-			else
-			{
-				// We will leave the format as "unknown" and keep the raw string
-			}
-		}
+	    // if we have only digits, this is a raw networkId
+	    if(name.find_first_not_of("0123456789") == std::string::npos)
+        {
+	        m_originalPermissionFormat = PF_NUMERIC_VALUE;
+	        m_permissionString = name;
+        }
+	    else // otherwise it's a character's network ID
+        {
+            const NetworkId playerNetworkId = NameManager::getInstance().getPlayerId( NameManager::normalizeName(name));
+            if (playerNetworkId != NetworkId::cms_invalid)
+            {
+                m_originalPermissionFormat = PF_CHARACTER_NAME;
+                m_permissionString         = playerNetworkId.getValueString();
+            }
+        }
 	}
 }
 
 // ----------------------------------------------------------------------
 
-CellPermissions::PermissionObject::PermissionObject( PermissionFormat format, const std::string& name ) :
+CellPermissions::PermissionObject::PermissionObject( PermissionFormat format, std::string  name ) :
 	m_originalPermissionFormat( format ),
-	m_permissionString( name )
+	m_permissionString(std::move( name ))
 {
 }
 
@@ -208,53 +256,95 @@ bool CellPermissions::PermissionObject::operator<(PermissionObject const &rhs) c
 
 // ----------------------------------------------------------------------
 
+/**
+ * @return the "name" value (m_permissionString) of this Permission Object, which
+ * is what should be rendered to the player as the value on a permission list. This
+ * is only accessible after the constructor has determined the data type and stripped
+ * the property list value prefix.
+ *
+ * **NOTE** getName() has validation handling in Cell Object or Building Object
+ * so if the value is no longer valid (e.g. deleted guild, orphaned creature object,
+ * etc.) then return nullptr so the onLoadedFromDatabase() processes will know
+ * this value is bad and needs to be purged.
+ */
 std::string CellPermissions::PermissionObject::getName() const
 {
 	std::string nameString;
 
-	// Depending on the original format, we may need to convert the permission string
-	switch ( m_originalPermissionFormat )
-	{
-		case PF_CHARACTER_NAME:
-			{
-				const NetworkId playerNetworkId = NetworkId( m_permissionString );
-
-				// Try to convert the network ID to an actual player name
-				// NOTE: We grab the full name so that capitalization is correct
-				const std::string fullName = NameManager::getInstance().getPlayerFullName( playerNetworkId );
-
-				// Parse the first name from the full name
-				size_t curpos = 0;
-				std::string firstName;
-				if ( Unicode::getFirstToken( fullName, curpos, curpos, firstName ) )
-				{
-					nameString = firstName;
-				}
-			}
-			break;
-
-		case PF_GUILD_NAME:
-			{
-				const int guildId = atoi( m_permissionString.c_str() );
-
-				// Try to convert the guildId to an actual guild name
-				if ( guildId != 0 )
-				{
-					// Prefix with "Guild: " for legacy reasons
-					nameString = "Guild:" + GuildInterface::getGuildAbbrev( guildId );
-				}
-			}
-			break;
-
-		case PF_NUMERIC_VALUE:
-		case PF_UNKNOWN_STRING:
-		default:
-			// Just return the stored string for these cases
-			nameString = m_permissionString;
-			break;
-	}
-
-	return nameString;
+	switch (m_originalPermissionFormat)
+    {
+        case PF_CHARACTER_NAME:
+        case PF_NUMERIC_VALUE:
+        {
+            const NetworkId networkId = NetworkId(m_permissionString);
+            if(networkId != NetworkId::cms_invalid)
+            {
+                // player name
+                if(m_originalPermissionFormat == PF_CHARACTER_NAME)
+                {
+                    const std::string fullName = NameManager::getInstance().getPlayerFullName(networkId);
+                    nameString = fullName.substr(0, fullName.find(' '));
+                }
+                // numeric id
+                else
+                {
+                    nameString = m_permissionString;
+                }
+            }
+            break;
+        }
+        case PF_GUILD_NAME:
+        {
+            const int guildId = std::stoi(m_permissionString);
+            if(GuildInterface::guildExists(guildId))
+            {
+                nameString = "guild:" + GuildInterface::getGuildAbbrev(guildId);
+            }
+            break;
+        }
+        case PF_CITY_NAME:
+        {
+            const int cityId = std::stoi(m_permissionString);
+            if(CityInterface::cityExists(cityId))
+            {
+                nameString = "city:" + CityInterface::getCityInfo(cityId).getCityName();
+            }
+            break;
+        }
+        case PF_ACCOUNT_NAME:
+        {
+            // There isn't a good way to verify this here, so we're
+            // returning the Account followed by the StationID. Because
+            // right now, a player can only add their OWN account, we will
+            // just insert their account name from the stationID at the
+            // script level when rendering a permission list SUI window.
+            // And because a deletion scenario for an entire account is
+            // an ultra-rare circumstance (and because we can't really verify
+            // it in an existing way anyways, we'll assume it's valid).
+            nameString = "account:" + m_permissionString;
+            break;
+        }
+        case PF_FACTION_NAME:
+        {
+            const int hash = std::stoi(m_permissionString);
+            if(PvpData::isImperialFactionId(hash))
+            {
+                nameString = "faction:Imperial";
+                break;
+            }
+            if(PvpData::isRebelFactionId(hash))
+            {
+                nameString = "faction:Rebel";
+                break;
+            }
+            break;
+        }
+        default:
+        {
+            break;
+        }
+    }
+    return nameString;
 }
 
 // ----------------------------------------------------------------------
@@ -268,7 +358,7 @@ bool CellPermissions::PermissionObject::hasBeenConverted() const
 
 CellPermissions::UpdateObserver::UpdateObserver(CellObject *cell, Archive::AutoDeltaObserverOp) :
 	m_profilerBlock("CellPermissions::UpdateObserver - cell"),
-	m_building(0),
+	m_building(nullptr),
 	m_permissions()
 {
 	if (cell)
@@ -283,7 +373,7 @@ CellPermissions::UpdateObserver::UpdateObserver(CellObject *cell, Archive::AutoD
 
 CellPermissions::UpdateObserver::UpdateObserver(TangibleObject *tangible, Archive::AutoDeltaObserverOp) :
 	m_profilerBlock("CellPermissions::UpdateObserver - building"),
-	m_building(0),
+	m_building(nullptr),
 	m_permissions()
 {
 	if (tangible)
@@ -307,8 +397,8 @@ CellPermissions::UpdateObserver::~UpdateObserver()
 		std::vector<CreatureObject*> expel;
 		handleCellPermissionsUpdateIfNeeded(*m_building, permPos, expel);
 		// expel any creatures from the building that no longer belong.
-		for (std::vector<CreatureObject*>::const_iterator i = expel.begin(); i != expel.end(); ++i)
-			m_building->expelObject(**i);
+		for (auto i : expel)
+			m_building->expelObject(*i);
 	}
 }
 
@@ -334,16 +424,16 @@ void CellPermissions::UpdateObserver::getCellPermissions(ServerObject &obj)
 	{
 		for (ContainerIterator i = container->begin(); i != container->end(); ++i)
 		{
-			ServerObject * const content = safe_cast<ServerObject*>((*i).getObject());
+			auto * const content = safe_cast<ServerObject*>((*i).getObject());
 			if (content)
 			{
 				CellObject * const cell = content->asCellObject();
 				if (cell)
 				{
 					std::set<Client *> const &observers = m_building->getObservers();
-					for (std::set<Client *>::const_iterator j = observers.begin(); j != observers.end(); ++j)
+					for (auto observer : observers)
 					{
-						ServerObject * const so = (*j)->getCharacterObject();
+						ServerObject * const so = observer->getCharacterObject();
 						if (so)
 						{
 							CreatureObject * const creature = so->asCreatureObject();
@@ -367,16 +457,16 @@ void CellPermissions::UpdateObserver::handleCellPermissionsUpdateIfNeeded(Server
 	{
 		for (ContainerIterator i = container->begin(); i != container->end(); ++i)
 		{
-			ServerObject * const content = safe_cast<ServerObject *>((*i).getObject());
+			auto * const content = safe_cast<ServerObject *>((*i).getObject());
 			if (content)
 			{
 				CellObject * const cell = content->asCellObject();
 				if (cell)
 				{
 					std::set<Client *> const &observers = m_building->getObservers();
-					for (std::set<Client *>::const_iterator j = observers.begin(); j != observers.end(); ++j)
+					for (auto observer : observers)
 					{
-						ServerObject * const so = (*j)->getCharacterObject();
+						ServerObject * const so = observer->getCharacterObject();
 						if (so)
 						{
 							CreatureObject * const creature = so->asCreatureObject();
@@ -387,10 +477,10 @@ void CellPermissions::UpdateObserver::handleCellPermissionsUpdateIfNeeded(Server
 								{
 									LOG("CellPermUpdate", ("sending UpdateCellPermission for %s to client %s (%d)",
 										cell->getNetworkId().getValueString().c_str(),
-										(*j)->getCharacterObjectId().getValueString().c_str(),
+										observer->getCharacterObjectId().getValueString().c_str(),
 										allowed ? 1 : 0));
 									UpdateCellPermissionMessage const message(cell->getNetworkId(), allowed);
-									(*j)->send(message, true);
+									observer->send(message, true);
 								}
 								if (!allowed && creature->getAttachedTo() == cell)
 									expel.push_back(creature);
@@ -419,9 +509,9 @@ CellPermissions::ViewerChangeObserver::ViewerChangeObserver(CreatureObject *crea
 		if (client)
 		{
 			Client::ObservingList const &observing = client->getObserving();
-			for (Client::ObservingList::const_iterator i = observing.begin(); i != observing.end(); ++i)
+			for (auto i : observing)
 			{
-				CellObject * const cell = (*i)->asCellObject();
+				CellObject * const cell = i->asCellObject();
 				if (cell)
 				{
 					m_cells.push_back(cell);
@@ -446,7 +536,7 @@ CellPermissions::ViewerChangeObserver::~ViewerChangeObserver()
 		for (unsigned int i = 0; i < m_cells.size(); ++i)
 		{
 			bool const allowed = m_cells[i]->isAllowed(*m_creature);
-			if (allowed != m_permissions[i])
+			if (allowed != m_permissions[i] || m_creature->getClient()->isGod())
 			{
 				UpdateCellPermissionMessage const message(m_cells[i]->getNetworkId(), allowed);
 				client->send(message, true);
@@ -456,7 +546,7 @@ CellPermissions::ViewerChangeObserver::~ViewerChangeObserver()
 
 	// expel from the current building if they're not allowed in anymore
 	CellObject * const cell = ContainerInterface::getContainingCellObject(*m_creature);
-	if (cell && !cell->isAllowed(*m_creature))
+	if (cell && !cell->isAllowed(*m_creature) && !m_creature->getClient()->isGod())
 	{
 		BuildingObject * const building = cell->getOwnerBuilding();
 		if (building)
@@ -468,8 +558,8 @@ CellPermissions::ViewerChangeObserver::~ViewerChangeObserver()
 
 bool CellPermissions::isOnList(PermissionList const &permList, std::string const &name) // static
 {
-	for (PermissionList::const_iterator i = permList.begin(); i != permList.end(); ++i)
-		if (!_stricmp((*i).getName().c_str(), name.c_str()))
+	for (const auto & i : permList)
+		if (!_stricmp(i.getName().c_str(), name.c_str()))
 			return true;
 
 	return false;
@@ -479,29 +569,72 @@ bool CellPermissions::isOnList(PermissionList const &permList, std::string const
 
 bool CellPermissions::isOnList(PermissionList const &permList, CreatureObject const &who) // static
 {
-	const int guildId = who.getGuildId();
+    // deal with non-players first, in which case we're looking for a raw NetworkId comparison
+    if(!who.isPlayerControlled())
+    {
+        return permList.find(who.getNetworkId().getValueString()) != permList.end();
+    }
 
-	// if either their name or their guild is on the list, consider them on the list
-	for (PermissionList::const_iterator i = permList.begin(); i != permList.end(); ++i)
+    // always consider god mode to be on the list
+    if(who.getClient()->isGod())
+    {
+        return true;
+    }
+
+    const int guildId = who.getGuildId();
+    std::vector<int> const & cityIds = CityInterface::getCitizenOfCityId(who.getNetworkId());
+    const int cityId = cityIds.empty() ? 0 : cityIds.front();
+    const uint32 faction = who.getPvpFaction();
+    const uint32 stationId = NameManager::getInstance().getPlayerStationId(who.getNetworkId());
+
+	for (const auto & i : permList)
 	{
-		const std::string& name = (*i).getName();
+		const std::string& name = i.getName();
 
-		// objectId
-		if (name == who.getNetworkId().getValueString())
-			return true;
+        if(guildId > 0 && name.rfind("guild:", 0) == 0)
+        {
+            if(guildId == GuildInterface::findGuild(name.substr(6, name.length())))
+            {
+                return true;
+            }
+        }
+		if(cityId > 0 && name.rfind("city:", 0) == 0)
+        {
+		    if(cityId == CityInterface::findCityByName(name.substr(5, name.length())))
+            {
+		        return true;
+            }
+        }
+		if(faction != 0 && name.rfind("faction:", 0) == 0)
+        {
+		    if(name.rfind("Imperial", 8) == 8)
+            {
+		        if(faction == PvpData::getImperialFactionId())
+                {
+		            return true;
+                }
+            }
+		    else if (name.rfind("Rebel", 8) == 8)
+            {
+		        if(faction == PvpData::getRebelFactionId())
+                {
+		            return true;
+                }
+            }
+        }
+		if(name.rfind("account:", 0) == 0)
+        {
+		    if(std::stoi(name.substr(8, name.length())) == stationId)
+            {
+		        return true;
+            }
 
-		// first name
-		if (!_stricmp(name.c_str(), Unicode::wideToNarrow(who.getAssignedObjectFirstName()).c_str()))
-			return true;
+        }
+		if(name.rfind(Unicode::wideToNarrow(who.getAssignedObjectFirstName()), 0) == 0)
+        {
+		    return true;
+        }
 
-		// guilds
-		if (guildId && !_strnicmp(name.c_str(), "Guild:", 6))
-		{
-			std::string checkStr(Unicode::getTrim((name).substr(6)));
-			if (   !_stricmp(checkStr.c_str(), GuildInterface::getGuildAbbrev(guildId).c_str())
-			    || !_stricmp(checkStr.c_str(), GuildInterface::getGuildName(guildId).c_str()))
-				return true;
-		}
 	}
 	return false;
 }

@@ -5355,6 +5355,16 @@ bool TangibleObject::isOnAdminList(const CreatureObject& player) const
 	if(player.getClient() && player.getClient()->isGod())
 		return true;
 
+	if(getObjVars().hasItem("player_structure.admin_all_characters"))
+    {
+	    static int suid;
+	    getObjVars().getItem("player_structure.admin_all_characters", suid);
+	    if(NameManager::getInstance().getPlayerStationId(player.getNetworkId()) == suid)
+        {
+	        return true;
+        }
+    }
+
 	// In script, the admin list is stored as a list of strings.
 	// The format of the list is:
 	// 1) All player are stored as network IDs represented as a string
@@ -6165,6 +6175,14 @@ void TangibleObject::forceHateTarget(NetworkId const & target)
 
 bool TangibleObject::isUserOnAccessList(NetworkId const user) const
 {
+    ServerObject * sourceObject = safe_cast<ServerObject *>(NetworkIdManager::getObjectById(user));
+    if(sourceObject)
+    {
+        if(sourceObject->getClient()->isGod())
+        {
+            return true;
+        }
+    }
 	return (std::find(m_accessList.begin(), m_accessList.end(), user) != m_accessList.end());
 }
 
