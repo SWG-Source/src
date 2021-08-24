@@ -569,73 +569,84 @@ bool CellPermissions::isOnList(PermissionList const &permList, std::string const
 
 bool CellPermissions::isOnList(PermissionList const &permList, CreatureObject const &who) // static
 {
-    // deal with non-players first, in which case we're looking for a raw NetworkId comparison
-    if(!who.isPlayerControlled())
+    if(who.getClient() && who.isPlayerControlled())
     {
-        return permList.find(who.getNetworkId().getValueString()) != permList.end();
-    }
-
-    // always consider god mode to be on the list
-    if(who.getClient()->isGod())
-    {
-        return true;
-    }
-
-    const int guildId = who.getGuildId();
-    std::vector<int> const & cityIds = CityInterface::getCitizenOfCityId(who.getNetworkId());
-    const int cityId = cityIds.empty() ? 0 : cityIds.front();
-    const uint32 faction = who.getPvpFaction();
-    const uint32 stationId = NameManager::getInstance().getPlayerStationId(who.getNetworkId());
-
-	for (const auto & i : permList)
-	{
-		const std::string& name = i.getName();
-
-        if(guildId > 0 && name.rfind("guild:", 0) == 0)
+        // always consider god mode to be on the list
+        if (who.getClient()->isGod())
         {
-            if(guildId == GuildInterface::findGuild(name.substr(6, name.length())))
+            return true;
+        }
+
+        const int guildId = who.getGuildId();
+        std::vector<int> const &cityIds = CityInterface::getCitizenOfCityId(who.getNetworkId());
+        const int cityId = cityIds.empty() ? 0 : cityIds.front();
+        const uint32 faction = who.getPvpFaction();
+        const uint32 stationId = NameManager::getInstance().getPlayerStationId(who.getNetworkId());
+
+        for (const auto &i : permList)
+        {
+            const std::string &name = i.getName();
+
+            if (guildId > 0 && name.rfind("guild:", 0) == 0)
+            {
+                if (guildId == GuildInterface::findGuild(name.substr(6, name.length())))
+                {
+                    return true;
+                }
+            }
+            if (cityId > 0 && name.rfind("city:", 0) == 0)
+            {
+                if (cityId == CityInterface::findCityByName(name.substr(5, name.length())))
+                {
+                    return true;
+                }
+            }
+            if (faction != 0 && name.rfind("faction:", 0) == 0)
+            {
+                if (name.rfind("Imperial", 8) == 8)
+                {
+                    if (faction == PvpData::getImperialFactionId())
+                    {
+                        return true;
+                    }
+                }
+                else if (name.rfind("Rebel", 8) == 8)
+                {
+                    if (faction == PvpData::getRebelFactionId())
+                    {
+                        return true;
+                    }
+                }
+            }
+            if (name.rfind("account:", 0) == 0)
+            {
+                if (std::stoi(name.substr(8, name.length())) == stationId)
+                {
+                    return true;
+                }
+
+            }
+            if (name.rfind(Unicode::wideToNarrow(who.getAssignedObjectFirstName()), 0) == 0)
             {
                 return true;
             }
         }
-		if(cityId > 0 && name.rfind("city:", 0) == 0)
+    }
+    else
+    {
+        for (PermissionList::const_iterator i = permList.begin(); i != permList.end(); ++i)
         {
-		    if(cityId == CityInterface::findCityByName(name.substr(5, name.length())))
+            const std::string& name = (*i).getName();
+            if (name == who.getNetworkId().getValueString())
             {
-		        return true;
+                return true;
+            }
+            if (!_stricmp(name.c_str(), Unicode::wideToNarrow(who.getAssignedObjectFirstName()).c_str()))
+            {
+                return true;
             }
         }
-		if(faction != 0 && name.rfind("faction:", 0) == 0)
-        {
-		    if(name.rfind("Imperial", 8) == 8)
-            {
-		        if(faction == PvpData::getImperialFactionId())
-                {
-		            return true;
-                }
-            }
-		    else if (name.rfind("Rebel", 8) == 8)
-            {
-		        if(faction == PvpData::getRebelFactionId())
-                {
-		            return true;
-                }
-            }
-        }
-		if(name.rfind("account:", 0) == 0)
-        {
-		    if(std::stoi(name.substr(8, name.length())) == stationId)
-            {
-		        return true;
-            }
-
-        }
-		if(name.rfind(Unicode::wideToNarrow(who.getAssignedObjectFirstName()), 0) == 0)
-        {
-		    return true;
-        }
-
-	}
+    }
 	return false;
 }
 

@@ -480,13 +480,6 @@ ShipObject *CellObject::getOwnerShip()
 
 bool CellObject::isAllowed(CreatureObject const &who) const
 {
-
-    // always allow god
-    if(who.isPlayerControlled() && who.getClient()->isGod())
-    {
-        return true;
-    }
-
 	if (who.getMasterId() != NetworkId::cms_invalid)
 	{
 		ServerObject const *master = ServerWorld::findObjectByNetworkId(who.getMasterId());
