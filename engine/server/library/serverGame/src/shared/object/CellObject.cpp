@@ -36,11 +36,8 @@
 #include "sharedObject/PortalProperty.h"
 #include "sharedPathfinding/PathGraph.h"
 #include "sharedPathfinding/PathNode.h"
-#include <algorithm>
-
 
 const SharedObjectTemplate * CellObject::m_defaultSharedTemplate = nullptr;
-
 
 // ======================================================================
 
@@ -55,7 +52,7 @@ CellObject::CellObject(const ServerObjectTemplate *newTemplate)
 {
 	setDebugName("PortalProperty cell object");
 
-	CellProperty *cell = new CellProperty(*this);
+	auto *cell = new CellProperty(*this);
 	addProperty(*cell);
 
 	m_isPublic.setSourceObject(this);
@@ -63,21 +60,12 @@ CellObject::CellObject(const ServerObjectTemplate *newTemplate)
 	m_banned.setSourceObject(this);
 
 	addMembersToPackages();
-
-	//@todo -- HACK! this is supposed to be set by the database,
-	// but that code isn't written. Assume all buildings and cells
-	// are in the client cache file. //-- it is now [8/4/2002 4:20:48 PM],
-	// this should be implemented in a few days. If you see this comment
-	// and the code below calls setIsCachedOnClient(true), get with Chris
-	// and Calan to determine the status of this code.
-	//setCacheVersion(1);
 }
 
 //-----------------------------------------------------------------------
 
 CellObject::~CellObject()
-{
-}
+= default;
 
 //-----------------------------------------------------------------------
 
@@ -95,7 +83,7 @@ Controller * CellObject::createDefaultController()
  *
  * @return the shared template
  */
-const SharedObjectTemplate * CellObject::getDefaultSharedTemplate(void) const
+const SharedObjectTemplate * CellObject::getDefaultSharedTemplate() const
 {
 static const ConstCharCrcLowerString templateName("object/cell/base/shared_cell_default.iff");
 
@@ -116,7 +104,7 @@ static const ConstCharCrcLowerString templateName("object/cell/base/shared_cell_
 /**
  * Cleans up the default shared template.
  */
-void CellObject::removeDefaultTemplate(void)
+void CellObject::removeDefaultTemplate()
 {
 	if (m_defaultSharedTemplate != nullptr)
 	{
@@ -134,12 +122,9 @@ void CellObject::sendObjectSpecificBaselinesToClient(Client const &client) const
 	if (so)
 	{
 		CreatureObject const * const creature = so->asCreatureObject();
-		if (creature)
-		{
-			UpdateCellPermissionMessage message(getNetworkId(), creature ? isAllowed(*creature) : false);
-			client.send(message, true);
-		}
-	}
+        UpdateCellPermissionMessage message(getNetworkId(), creature ? isAllowed(*creature) : false);
+        client.send(message, true);
+    }
 }
 
 // ----------------------------------------------------------------------
@@ -217,7 +202,7 @@ void CellObject::endBaselines()
 
 				NOT_NULL(floorMesh);
 
-				PathGraph const * graph = safe_cast<PathGraph const *>(floorMesh->getPathGraph());
+				auto const * graph = safe_cast<PathGraph const *>(floorMesh->getPathGraph());
 
 				if(graph)
 				{
@@ -249,9 +234,9 @@ void CellObject::onLoadedFromDatabase()
 	// - At one time players were stored by name instead of by network ID
 
 	ObservedPermissionObjectSet* permissionSets[] = { &m_allowed, &m_banned };
-	for ( unsigned int i = 0; i < sizeof( permissionSets ) / sizeof( permissionSets[0] ); ++i )
+	for (auto & permissionSet : permissionSets)
 	{
-		const CellPermissions::PermissionList& permList = permissionSets[i]->get();
+		const CellPermissions::PermissionList& permList = permissionSet->get();
 
 		// Temporary list for processing
 		CellPermissions::PermissionList tempList;
@@ -276,11 +261,11 @@ void CellObject::onLoadedFromDatabase()
 			const CellPermissions::PermissionObject& permObject = (*j);
 
 			// Remove from the archive set so that it gets marked dirty
-			permissionSets[i]->erase( permObject );
+			permissionSet->erase( permObject );
 
 			// Add to the archive set so that it gets marked dirty
 			// NOTE: The permission object constructor should try to convert the string for us
-			permissionSets[i]->insert( CellPermissions::PermissionObject( permObject.m_permissionString ) );
+			permissionSet->insert( CellPermissions::PermissionObject( permObject.m_permissionString ) );
 		}
 		tempList.clear();
 
@@ -305,7 +290,7 @@ void CellObject::onLoadedFromDatabase()
 			const CellPermissions::PermissionObject& permObject = (*j);
 
 			// Remove from the archive set so that it gets marked dirty
-			permissionSets[i]->erase( permObject );
+			permissionSet->erase( permObject );
 		}
 		tempList.clear();
 	}
@@ -359,7 +344,7 @@ void CellObject::removeAllAllowed()
 	}
 	else
 	{
-		sendControllerMessageToAuthServer(CM_removeAllAllowed, 0);
+		sendControllerMessageToAuthServer(CM_removeAllAllowed, nullptr);
 	}
 }
 
@@ -411,7 +396,7 @@ void CellObject::removeAllBanned()
 	}
 	else
 	{
-		sendControllerMessageToAuthServer(CM_removeAllBanned, 0);
+		sendControllerMessageToAuthServer(CM_removeAllBanned, nullptr);
 	}
 }
 
@@ -422,7 +407,7 @@ ServerObject const *CellObject::getOwner() const
         Object const * const o = ContainerInterface::getContainedByObject(*this);
         if (o)
                 return o->asServerObject();
-        return 0;
+        return nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -432,7 +417,7 @@ ServerObject *CellObject::getOwner()
         Object * const o = ContainerInterface::getContainedByObject(*this);
         if (o)
                 return o->asServerObject();
-        return 0;
+        return nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -446,7 +431,7 @@ BuildingObject const *CellObject::getOwnerBuilding() const
 		if (so)
 			return so->asBuildingObject();
 	}
-	return 0;
+	return nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -460,7 +445,7 @@ BuildingObject *CellObject::getOwnerBuilding()
 		if (so)
 			return so->asBuildingObject();
 	}
-	return 0;
+	return nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -474,7 +459,7 @@ ShipObject const *CellObject::getOwnerShip() const
 		if (so)
 			return so->asShipObject();
 	}
-	return 0;
+	return nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -488,7 +473,7 @@ ShipObject *CellObject::getOwnerShip()
 		if (so)
 			return so->asShipObject();
 	}
-	return 0;
+	return nullptr;
 }
 
 // ----------------------------------------------------------------------
@@ -544,7 +529,7 @@ bool CellObject::getClosestPathNodePos( const ServerObject & object, Vector & ou
 			const FloorMesh * mesh = floor->getFloorMesh();
 			if (mesh != nullptr)
 			{
-				const PathGraph * path = safe_cast<const PathGraph *>(mesh->getPathGraph());
+				const auto * path = safe_cast<const PathGraph *>(mesh->getPathGraph());
 				if (path != nullptr)
 				{
 					int nodeCount = path->getNodeCount();
@@ -590,7 +575,7 @@ void CellObject::getAttributes (std::vector<std::pair<std::string, Unicode::Stri
 
 bool CellObject::onContainerAboutToLoseItem(ServerObject * destination, ServerObject& item, ServerObject* transferer)
 {
-	//Cells should first check to see if the building will allow the item to be transfered.
+	//Cells should first check to see if the building will allow the item to be transferred.
 	ServerObject *obj = getOwner();
 
 	if (obj)
@@ -620,7 +605,7 @@ int CellObject::onContainerAboutToGainItem(ServerObject& item, ServerObject* tra
 
 	if (obj)
 	{
-		ServerObject const * const source = safe_cast<ServerObject const *>(ContainerInterface::getContainedByObject(item));
+		auto const * const source = safe_cast<ServerObject const *>(ContainerInterface::getContainedByObject(item));
 		NetworkId sourceId = source ? source->getNetworkId() : NetworkId::cms_invalid;
 		ScriptParams params;
 		params.addParam(sourceId);
@@ -728,7 +713,7 @@ void CellObject::setOwnerId(NetworkId const &id)
 		{
 			for (ContainerIterator i = container->begin(); i != container->end(); ++i)
 			{
-				ServerObject * const content = safe_cast<ServerObject *>((*i).getObject());
+				auto * const content = safe_cast<ServerObject *>((*i).getObject());
 				if (content && !content->asCreatureObject())
 					content->setOwnerId(id);
 			}

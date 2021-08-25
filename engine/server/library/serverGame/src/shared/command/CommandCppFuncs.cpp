@@ -2866,21 +2866,52 @@ static void commandFuncFactoryCrateSplit(Command const &, NetworkId const &actor
 static void commandFuncPermissionListModify(Command const &, NetworkId const &actor, NetworkId const &target, Unicode::String const &params)
 {
 	CreatureObject *actorObj = dynamic_cast<CreatureObject *>(NetworkIdManager::getObjectById(actor));
-	if (actorObj && actorObj->getClient())
+
+    if (actorObj && actorObj->getClient())
 	{
-		size_t curpos = 0;
-		const Unicode::String & playerName = Unicode::narrowToWide(nextStringParm(params, curpos));
-		const Unicode::String & listName = Unicode::narrowToWide(nextStringParm(params, curpos));
-		const Unicode::String & action = Unicode::narrowToWide(nextStringParm(params, curpos));
-
-		ScriptParams params;
-		params.addParam(actor);
-		params.addParam(playerName);
-		params.addParam(listName);
-		params.addParam(action);
-
-		//now trigger the script, the actor should have exactly one on himself
-		actorObj->getScriptObject()->trigAllScripts(Scripting::TRIG_PERMISSION_LIST_MODIFY, params);
+	    // unlike the other options we can get passed, a city name will contain spaces (most likely)
+	    // and because of the order of the params here, we have to do some special handling to grab
+	    // the entire city name, like "city:Pits of Karkoon" without the trailing params of listName
+	    if(Unicode::wideToNarrow(params).rfind("city:", 0) == 0)
+        {
+            Unicode::UnicodeStringVector tokens;
+            Unicode::tokenize(params, tokens);
+            Unicode::String temp;
+            for (int i = 0; i < tokens.size(); i++)
+            {
+                if(i < tokens.size() - 2)
+                {
+                    temp += tokens[i];
+                    if(i < tokens.size() -3)
+                    {
+                        temp += Unicode::narrowToWide(" ");
+                    }
+                }
+            }
+            size_t curpos = 0;
+            const Unicode::String & playerName = temp;
+            const Unicode::String & listName = tokens[tokens.size()-2];
+            const Unicode::String & action = tokens[tokens.size()-1];
+            ScriptParams scriptParams;
+            scriptParams.addParam(actor);
+            scriptParams.addParam(playerName);
+            scriptParams.addParam(listName);
+            scriptParams.addParam(action);
+            actorObj->getScriptObject()->trigAllScripts(Scripting::TRIG_PERMISSION_LIST_MODIFY, scriptParams);
+        }
+	    else
+        {
+            size_t curpos = 0;
+            const Unicode::String & playerName = Unicode::narrowToWide(nextStringParm(params, curpos));
+            const Unicode::String & listName = Unicode::narrowToWide(nextStringParm(params, curpos));
+            const Unicode::String & action = Unicode::narrowToWide(nextStringParm(params, curpos));
+            ScriptParams scriptParams;
+            scriptParams.addParam(actor);
+            scriptParams.addParam(playerName);
+            scriptParams.addParam(listName);
+            scriptParams.addParam(action);
+            actorObj->getScriptObject()->trigAllScripts(Scripting::TRIG_PERMISSION_LIST_MODIFY, scriptParams);
+        }
 	}
 }
 

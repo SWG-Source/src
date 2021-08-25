@@ -36,6 +36,16 @@ namespace CellPermissions
 
 namespace Archive
 {
+
+    struct Prefix {
+        inline static const std::string CHARACTER = "c:";
+        inline static const std::string NUMERIC = "n:";
+        inline static const std::string GUILD = "G:";
+        inline static const std::string CITY = "P:";
+        inline static const std::string ACCOUNT = "A:";
+        inline static const std::string FACTION = "F:";
+    };
+
 	void get(ReadIterator & source, CellPermissions::PermissionObject & target);
 	void put(ByteStream & target, const CellPermissions::PermissionObject & source);
 };
@@ -62,7 +72,7 @@ namespace CellPermissions
 		bool operator<( PermissionObject const &rhs ) const;
 
 		// Return the permission string in the same format as it was given
-		std::string        getName() const;
+		[[nodiscard]] std::string        getName() const;
 
 	private:
 
@@ -72,19 +82,22 @@ namespace CellPermissions
 			PF_UNCONVERTED,     // A string read from the database that has not been converted
 			PF_CHARACTER_NAME,  // A string was given that we could convert to a network ID
 			PF_GUILD_NAME,      // A guild name was provided
-			PF_NUMERIC_VALUE,   // A numeric value was given to us (probably a network ID)
-			PF_UNKNOWN_STRING,  // A string was given to us that doesn't fit the other categories
+			PF_CITY_NAME,       // A city name was provided
+			PF_ACCOUNT_NAME,    // An account name was provided
+			PF_FACTION_NAME,    // A faction name was provided
+            PF_NUMERIC_VALUE,   // A numeric value was given to us (probably a network ID)
+            PF_UNKNOWN_STRING,  // A string was given to us that doesn't fit the other categories
 		};
 
 		// Intended to be used for converting entries from the database
-		PermissionObject( PermissionFormat format, const std::string& name );
+		PermissionObject( PermissionFormat format, std::string  name );
 
 	private:
 
 		// Query whether the permission string has ever been "converted"
 		// NOTE: This is intended to let Building and Cell objects know whether
 		//       they need to convert data that has been loaded from the database.
-		bool               hasBeenConverted() const;
+		[[nodiscard]] bool               hasBeenConverted() const;
 
 	private:
 
