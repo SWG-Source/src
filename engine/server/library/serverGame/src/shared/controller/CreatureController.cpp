@@ -2037,8 +2037,15 @@ void CreatureController::calculateWaterState(bool& isSwimming, bool &isBurning, 
 		float terrainHeight;
 		Footprint const * foot = collisionProperty->getFootprint();
 
+		// a vehicle is immune to lava if either its template is identified as always having immunity
+		// see sku.0/sys.shared/compiled/game/datatables/terrain/creature_water_values.tab OR
+		// if it has the "vehicle.lava_resistance" ObjVar, which is added when the Lava Resistance Kit
+		// is used on the specific vehicle in question to create a resistance vehicle out of one that
+		// wouldn't otherwise normally be resistant (handled through scripts).
+		// SWG Source Change - 3.1 (for GU 17 item addition) - Aconite
 		lavaResistance = ownerCreature->getLavaResistance();
-		bool const isImmuneToLava = (lavaResistance == 100.0f);
+		bool const isImmuneToLava = (lavaResistance == 100.0f) ||
+			ownerCreature->getObjVars().hasItem("vehicle.lava_resistance");
 
 		TerrainGeneratorWaterType waterType = terrainObject->getWaterType(position);
 		if (!foot || !foot->getTerrainHeight(terrainHeight))
