@@ -1533,7 +1533,7 @@ void PlayerCreatureController::handleMessage (const int message, const float val
 							ServerObject * const sObj = ServerWorld::findObjectByNetworkId(i);
 							if(!obj ||
 							   !sObj ||
-							   !ContainerInterface::isNestedWithin(*obj, getCreature()->getInventory()->getNetworkId()) ||
+							   !ContainerInterface::isNestedWithin(*obj, getCreature()->getNetworkId()) ||
 							   !sObj->getObjVars().hasItem("strDroidCommand"))
 							{
 								LOG("SuspectedCheaterChannel", ("Player %s tried to delete an object (%s) they aren't allowed to delete using DroidCommandProgrammingMessage.",
