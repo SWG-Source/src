@@ -4032,6 +4032,12 @@ bool TangibleObject::isVisibleOnClient(Client const &client) const
 	// Gods and clients on the buildcluster can see everything.
 	if (client.isGod() || ConfigServerGame::getBuildCluster() || (isVisible() && !isHidden()))
 		return true;
+	
+	// fix for yet another buyback container exploit
+	if(this->getScriptObject()->hasScript("object.buyback"))
+	{
+		return false;
+	}
 
 	// Invisible objects are visible to a non-god client if the client's
 	// creature contains (or indirectly contains) the invisible object.
