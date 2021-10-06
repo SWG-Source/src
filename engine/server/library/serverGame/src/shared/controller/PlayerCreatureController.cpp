@@ -1524,24 +1524,6 @@ void PlayerCreatureController::handleMessage (const int message, const float val
 						std::vector<NetworkId> const & chipsToAdd = inMsg->getChipsToAdd();
 						std::vector<NetworkId> const & chipsToRemove = inMsg->getChipsToRemove();
 						NetworkId const & droidControlDevice = inMsg->getDroidControlDevice();
-						
-						// validate network IDs passed via DroidCommandProgrammingMessage to ensure all
-						// objects are contained by the player & have the droid command objVar
-						for(const auto & i : chipsToRemove)
-						{
-							Object* obj = NetworkIdManager::getObjectById(i);
-							ServerObject * const sObj = ServerWorld::findObjectByNetworkId(i);
-							if(!obj ||
-							   !sObj ||
-							   !ContainerInterface::isNestedWithin(*obj, getCreature()->getNetworkId()) ||
-							   !sObj->getObjVars().hasItem("strDroidCommand"))
-							{
-								LOG("SuspectedCheaterChannel", ("Player %s tried to delete an object (%s) they aren't allowed to delete using DroidCommandProgrammingMessage.",
-												getCreature()->getNetworkId().getValueString().c_str(),
-												i.getValueString().c_str()));
-								return;
-							}
-						}
 
 						ScriptParams params;
 						params.addParam(droidControlDevice);
