@@ -41,7 +41,7 @@ public:
 	virtual void                reportReceive           (const Archive::ByteStream & bs);
 	virtual void                reportSend              (const Archive::ByteStream & bs);
 	virtual void                        send                    (const GameNetworkMessage & message, const bool reliable);
-	virtual void                setProcessId            (const unsigned long newProcessId);
+	virtual void                setProcessId            (const uint32 newProcessId);
 
 public:
 	class MessageConnectionCallback: public MessageDispatch::MessageBase

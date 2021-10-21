@@ -32,7 +32,7 @@ namespace DB {
 		// following alternate getValue's are provided for convenience, particularly in
 		// the auto-generated code:
 		void getValue(unsigned int &buffer) const;
-		void getValue(uint32 &buffer) const; // for some reason, our compiler is convinced that uint32 != unsigned int
+//		void getValue(uint32 &buffer) const; // for some reason, our compiler is convinced that uint32 != unsigned int
 		void getValue(long int &buffer) const;
 		void getValue(int &buffer) const;
 		void getValue(int8 &buffer) const;
@@ -57,10 +57,10 @@ inline void DB::BindableLong::getValue(unsigned int &buffer) const
 
 // ----------------------------------------------------------------------
 
-inline void DB::BindableLong::getValue(uint32 &buffer) const
-{
-	buffer=static_cast<uint32>(getValue());
-}
+//inline void DB::BindableLong::getValue(uint32 &buffer) const
+//{
+//	buffer=static_cast<uint32>(getValue());
+//}
 
 // ----------------------------------------------------------------------
 

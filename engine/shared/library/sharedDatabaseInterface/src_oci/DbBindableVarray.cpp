@@ -154,22 +154,22 @@ bool BindableVarrayNumber::push_back(long int value)
 	return true;
 }
 // ----------------------------------------------------------------------
-
-bool BindableVarrayNumber::push_back(int64 value)
-{
-	OCINumber buffer;
-	
-	OCIInd buffer_indicator (OCI_IND_NOTNULL);
-  	
-	OCISession *localSession = safe_cast<OCISession*>(m_session);
-
-	if (! (localSession->m_server->checkerr(*localSession, OCINumberFromInt(localSession->errhp, &value, sizeof(value), OCI_NUMBER_SIGNED, &buffer))))
-		return false;
-	if (! (localSession->m_server->checkerr(*localSession, OCICollAppend(localSession->envhp, localSession->errhp, &buffer, &buffer_indicator, m_data))))
-		return false;
-
-	return true;
-}
+//
+//bool BindableVarrayNumber::push_back(int64 value)
+//{
+//	OCINumber buffer;
+//
+//	OCIInd buffer_indicator (OCI_IND_NOTNULL);
+//
+//	OCISession *localSession = safe_cast<OCISession*>(m_session);
+//
+//	if (! (localSession->m_server->checkerr(*localSession, OCINumberFromInt(localSession->errhp, &value, sizeof(value), OCI_NUMBER_SIGNED, &buffer))))
+//		return false;
+//	if (! (localSession->m_server->checkerr(*localSession, OCICollAppend(localSession->envhp, localSession->errhp, &buffer, &buffer_indicator, m_data))))
+//		return false;
+//
+//	return true;
+//}
 
 // ----------------------------------------------------------------------
 
@@ -255,31 +255,31 @@ bool BindableVarrayNumber::push_back(bool IsNULL, long int value)
 	return true;
 }
 // ----------------------------------------------------------------------
-
-bool BindableVarrayNumber::push_back(bool IsNULL, int64 value)
-{
-	OCINumber buffer;
-	
- 	OCIInd buffer_indicator;
-
- 	if ( IsNULL )
-	{
-		buffer_indicator = OCI_IND_NULL;
-	}
-	else
-	{
-		buffer_indicator = OCI_IND_NOTNULL;
-	}
-  	
-	OCISession *localSession = safe_cast<OCISession*>(m_session);
-
-	if (! (localSession->m_server->checkerr(*localSession, OCINumberFromInt(localSession->errhp, &value, sizeof(value), OCI_NUMBER_SIGNED, &buffer))))
-		return false;
-	if (! (localSession->m_server->checkerr(*localSession, OCICollAppend(localSession->envhp, localSession->errhp, &buffer, &buffer_indicator, m_data))))
-		return false;
-
-	return true;
-}
+//
+//bool BindableVarrayNumber::push_back(bool IsNULL, int64 value)
+//{
+//	OCINumber buffer;
+//
+// 	OCIInd buffer_indicator;
+//
+// 	if ( IsNULL )
+//	{
+//		buffer_indicator = OCI_IND_NULL;
+//	}
+//	else
+//	{
+//		buffer_indicator = OCI_IND_NOTNULL;
+//	}
+//
+//	OCISession *localSession = safe_cast<OCISession*>(m_session);
+//
+//	if (! (localSession->m_server->checkerr(*localSession, OCINumberFromInt(localSession->errhp, &value, sizeof(value), OCI_NUMBER_SIGNED, &buffer))))
+//		return false;
+//	if (! (localSession->m_server->checkerr(*localSession, OCICollAppend(localSession->envhp, localSession->errhp, &buffer, &buffer_indicator, m_data))))
+//		return false;
+//
+//	return true;
+//}
 
 // ----------------------------------------------------------------------
 

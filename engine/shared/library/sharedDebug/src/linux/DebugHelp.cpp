@@ -174,6 +174,14 @@ inline unsigned int dwarfGet(char const *src, u_int32_t &dest)
 
 // ----------------------------------------------------------------------
 
+inline unsigned int dwarfGet(char const *src, u_int64_t &dest)
+{
+	memcpy(&dest, src, sizeof(u_int64_t));
+	return sizeof(u_int64_t);
+}
+
+// ----------------------------------------------------------------------
+
 class LEB128
 {
 public:
@@ -294,7 +302,7 @@ static bool dwarfSearch(char const *dwarfLines, unsigned int linesLength, void c
 		{
 			int progFile = 0;
 			int progLine = 1;
-			u_int32_t progAddr = 0;
+			u_int64_t progAddr = 0;
 			bool done = false;
 			bool valid = false;
 
@@ -384,9 +392,9 @@ static bool dwarfSearch(char const *dwarfLines, unsigned int linesLength, void c
 
 				if (valid)
 				{
-					unsigned int addrOffset = 0;
-					if (progAddr < reinterpret_cast<unsigned int>(info.dli_fbase))
-						addrOffset = reinterpret_cast<unsigned int>(info.dli_fbase);
+					u_int64_t addrOffset = 0;
+					if (progAddr < reinterpret_cast<u_int64_t>(info.dli_fbase))
+						addrOffset = reinterpret_cast<u_int64_t>(info.dli_fbase);
 					const void *testAddr = reinterpret_cast<const void *>(progAddr+addrOffset);
 					if (testAddr >= addr)
 					{
@@ -509,12 +517,12 @@ static bool stabSearch(Stab const *stab, unsigned int stabSize, char const *stab
 			if (reinterpret_cast<void const *>(stab->n_value) > info.dli_fbase)
 				funcBase = reinterpret_cast<void const *>(stab->n_value);
 			else
-				funcBase = reinterpret_cast<void const *>(reinterpret_cast<unsigned int>(info.dli_fbase)+stab->n_value);
+				funcBase = reinterpret_cast<void const *>(reinterpret_cast<u_int64_t>(info.dli_fbase)+stab->n_value);
 			foundSrcLine = -1;
 		}
 		else if (stab->n_type == N_SLINE && addr >= funcBase) // source line
 		{
-			if (stab->n_value < reinterpret_cast<unsigned int>(addr)-reinterpret_cast<unsigned int>(funcBase))
+			if (stab->n_value < reinterpret_cast<u_int64_t>(addr)-reinterpret_cast<u_int64_t>(funcBase))
 				foundSrcLine = stab->n_desc;
 			else
 			{
@@ -667,7 +675,7 @@ void DebugHelp::remove()
 
 // ----------------------------------------------------------------------
 
-bool DebugHelp::lookupAddress(uint32 address, char *libName, char *fileName, int fileNameLength, int &line)
+bool DebugHelp::lookupAddress(uint64 address, char *libName, char *fileName, int fileNameLength, int &line)
 {
 	return lookupAddressInfo(reinterpret_cast<void const *>(address), libName, fileName, line, fileNameLength);
 }

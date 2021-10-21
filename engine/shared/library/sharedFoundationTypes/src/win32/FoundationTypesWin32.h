@@ -15,17 +15,18 @@
 
 #define PLATFORM_WIN32
 
+#include <stdint.h>
 // ======================================================================
 // basic types that we assume to be around
 
 typedef unsigned char          uint8;
 typedef unsigned short         uint16;
-typedef unsigned long          uint32;
-typedef unsigned __int64       uint64;
+typedef uint32_t               uint32;
+typedef uint64_t               uint64;
 typedef signed char            int8;
 typedef signed short           int16;
-typedef signed long            int32;
-typedef signed __int64         int64;
+typedef int32_t                int32;
+typedef int64_t                int64;
 typedef int                    FILE_HANDLE;
 
 // ======================================================================

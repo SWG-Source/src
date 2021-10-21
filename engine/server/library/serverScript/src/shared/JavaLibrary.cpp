@@ -790,7 +790,7 @@ void JavaLibrary::fatalHandler(int signum)
 		char lib1[BUFLEN], lib2[BUFLEN];
 		char file1[BUFLEN], file2[BUFLEN];
 		int line1, line2;
-		bool result1 = DebugHelp::lookupAddress(reinterpret_cast<uint32>(crashAddress1), lib1, file1, BUFLEN, line1);
+		bool result1 = DebugHelp::lookupAddress(reinterpret_cast<uint64>(crashAddress1), lib1, file1, BUFLEN, line1);
 
 		// do a second test based on the return address
 		// it turns out that in some java crashes we don't even have 2 return
@@ -801,25 +801,25 @@ void JavaLibrary::fatalHandler(int signum)
 		void *crashAddress2c = nullptr;
 		void *frameAddressA = nullptr;
 		void *frameAddressB = nullptr;
-		uint32 frameAddressHigh = (reinterpret_cast<uint32>(frameAddress) >> 16);
+		uint64 frameAddressHigh = (reinterpret_cast<uint64>(frameAddress) >> 16);
 		crashAddress2a = __builtin_return_address(0);
 		if (crashAddress2a != nullptr)
 		{
 			frameAddressA = __builtin_frame_address(1);
 			if (frameAddressA != nullptr &&
-				(reinterpret_cast<uint32>(frameAddressA) >> 16 == frameAddressHigh))
+				(reinterpret_cast<uint64>(frameAddressA) >> 16 == frameAddressHigh))
 			{
 				crashAddress2b = __builtin_return_address(1);
 				if (crashAddress2b != nullptr)
 				{
 					frameAddressB = __builtin_frame_address(2);
 					if (frameAddressB != nullptr &&
-						(reinterpret_cast<uint32>(frameAddressB) >> 16 == frameAddressHigh))
+						(reinterpret_cast<uint64>(frameAddressB) >> 16 == frameAddressHigh))
 					{
 						crashAddress2c = __builtin_return_address(2);
 						if (crashAddress2c != nullptr)
 						{
-							result2 = DebugHelp::lookupAddress(reinterpret_cast<uint32>(
+							result2 = DebugHelp::lookupAddress(reinterpret_cast<uint64>(
 								crashAddress2c), lib2, file2, BUFLEN, line2);
 						}
 					}

@@ -551,7 +551,7 @@ public:
 	virtual bool                  isVisibleOnClient              (const Client & client) const = 0;
 	virtual void                  kill                           ();
 
-	void                          performSocial                  (const NetworkId & target, unsigned long socialType, bool animationOk, bool textOk);
+	void                          performSocial                  (const NetworkId & target, uint32 socialType, bool animationOk, bool textOk);
 	void                          performSocial                  (const MessageQueueSocial & socialMsg);
 
 	void                          performCombatSpam              (const MessageQueueCombatSpam & combatSpam, bool sendToSelf, bool sendToTarget, bool sendToBystanders);
@@ -583,7 +583,7 @@ public:
 	virtual void                  setOwnerId(const NetworkId &id);
 	void                          setSceneIdOnThisAndContents    (const std::string & sceneId);
 	void                          setPlayerControlled            (bool newValue);
-	void                          speakText                      (NetworkId const &target, unsigned long chatType, unsigned long mood, unsigned long flags, Unicode::String const &speech, int language, Unicode::String const &oob);
+	void                          speakText                      (NetworkId const &target, uint32 chatType, uint32 mood, uint32 flags, Unicode::String const &speech, int language, Unicode::String const &oob);
 	virtual void                  speakText                      (MessageQueueSpatialChat const &spatialChat);
 	virtual void                  hearText                       (ServerObject const &source, MessageQueueSpatialChat const &spatialChat, int chatMessageIndex);
 	void                          teleportObject                 (Vector const & position_w, NetworkId const &targetContainer, std::string const &targetCellName, Vector const &position_p, std::string const &scriptCallback, bool forceLoadScreen = false);

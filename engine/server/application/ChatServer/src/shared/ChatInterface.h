@@ -68,7 +68,7 @@ public:
 
 	std::string  getChatName(const NetworkId &id);
 
-	void          queryRoom         (const NetworkId & id, ConnectionServerConnection * connection, const unsigned int sequenceId, const std::string & roomName);
+	void          queryRoom         (const NetworkId & id, ConnectionServerConnection * connection, const uint64_t sequenceId, const std::string & roomName);
 	void          updateRoomForThisChatAPI(const ChatRoom *room, const ChatAvatar *additionalAvatar);
 	void          updateRooms();
 

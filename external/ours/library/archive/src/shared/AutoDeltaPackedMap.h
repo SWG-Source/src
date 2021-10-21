@@ -205,6 +205,18 @@ namespace Archive
 	}
 
 	template<>
+	inline void AutoDeltaPackedMap<int, uint32_t>::pack(ByteStream & target, const std::string & buffer)
+	{
+		internal_pack(target, buffer, "%i %i");
+	}
+
+	template<>
+	inline void AutoDeltaPackedMap<int, uint32_t>::unpack(ReadIterator & source, std::string & buffer)
+	{
+		internal_unpack(source, buffer, "%i %i:");
+	}
+
+	template<>
 	inline void AutoDeltaPackedMap<int, unsigned long>::pack(ByteStream & target, const std::string & buffer)
 	{
 		internal_pack(target, buffer, "%i %u");
@@ -217,6 +229,17 @@ namespace Archive
 	}
 
 #ifdef WIN32
+	template<>
+	inline void AutoDeltaPackedMap<unsigned long, unsigned __int32>::pack(ByteStream & target, const std::string & buffer)
+	{
+		internal_pack(target, buffer, "%lu %I64u");
+	}
+
+	template<>
+	inline void AutoDeltaPackedMap<unsigned long, unsigned __int32>::unpack(ReadIterator & source, std::string & buffer)
+	{
+		internal_unpack(source, buffer, "%lu %I64u:");
+	}
 	template<>
 	inline void AutoDeltaPackedMap<unsigned long, unsigned __int64>::pack(ByteStream & target, const std::string & buffer)
 	{
@@ -231,13 +254,24 @@ namespace Archive
 
 #else
 	template<>
-	inline void AutoDeltaPackedMap<unsigned long, unsigned long long int>::pack(ByteStream & target, const std::string & buffer)
+	inline void AutoDeltaPackedMap<unsigned long, uint32_t>::pack(ByteStream & target, const std::string & buffer)
 	{
 		internal_pack(target, buffer, "%lu %llu");
 	}
 
 	template<>
-	inline void AutoDeltaPackedMap<unsigned long, unsigned long long int>::unpack(ReadIterator & source, std::string & buffer)
+	inline void AutoDeltaPackedMap<unsigned long, uint32_t>::unpack(ReadIterator & source, std::string & buffer)
+	{
+		internal_unpack(source, buffer, "%lu %llu:");
+	}
+	template<>
+	inline void AutoDeltaPackedMap<unsigned long, uint64_t>::pack(ByteStream & target, const std::string & buffer)
+	{
+		internal_pack(target, buffer, "%lu %llu");
+	}
+
+	template<>
+	inline void AutoDeltaPackedMap<unsigned long, uint64_t>::unpack(ReadIterator & source, std::string & buffer)
 	{
 		internal_unpack(source, buffer, "%lu %llu:");
 	}
