@@ -34,36 +34,6 @@ if(DEFINED ENV{ORACLE_HOME})
   find_path(ORACLE_INCLUDE_DIR
     NAMES oci.h
     PATHS
-    /usr/include/oracle/12.1/client64
-    /usr/include/oracle/12.1/client
-    /usr/lib/oracle/12.1/client64
-    /usr/share/oracle/12.1/client64
-    /usr/lib/oracle/12.1/client
-    /usr/share/oracle/12.1/client
-    /usr/include/oracle/10.2.0.4/client64
-    /usr/include/oracle/10.2.0.4/client
-    /usr/lib/oracle/10.2.0.4/client64
-    /usr/share/oracle/10.2.0.4/client64
-    /usr/lib/oracle/10.2.0.4/client
-    /usr/share/oracle/10.2.0.4/client
-    /usr/include/oracle/12.2/client64
-    /usr/include/oracle/12.2/client
-    /usr/lib/oracle/12.2/client64
-    /usr/share/oracle/12.2/client64
-    /usr/lib/oracle/12.2/client
-    /usr/share/oracle/12.2/client
-    /usr/include/oracle/18.3/client64
-    /usr/include/oracle/18.3/client
-    /usr/lib/oracle/18.3/client64
-    /usr/share/oracle/18.3/client64
-    /usr/lib/oracle/18.3/client
-    /usr/share/oracle/18.3/client
-    /usr/include/oracle/19.6/client64
-    /usr/include/oracle/19.6/client
-    /usr/lib/oracle/19.6/client64
-    /usr/share/oracle/19.6/client64
-    /usr/lib/oracle/19.6/client
-    /usr/share/oracle/19.6/client
     /usr/include/oracle/19.12/client64
     /usr/include/oracle/19.12/client
     /usr/lib/oracle/19.12/client64
