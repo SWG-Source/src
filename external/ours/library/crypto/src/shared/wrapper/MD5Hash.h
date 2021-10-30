@@ -11,7 +11,9 @@
 
 namespace CryptoPP
 {
-	class MD5;
+    namespace Weak1 {
+    	class MD5;
+    }
 }
 
 namespace Crypto {
@@ -35,7 +37,7 @@ private:
 	MD5Hash(const MD5Hash & source);
 
 private:
-	CryptoPP::MD5 *	md5;
+	CryptoPP::Weak1::MD5 *	md5;
 };
 
 //-----------------------------------------------------------------------

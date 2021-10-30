@@ -29,7 +29,6 @@ set(SHARED_SOURCES
 	shared/wrapper/Hash.h
 	shared/wrapper/MD5Hash.cpp
 	shared/wrapper/MD5Hash.h
-	shared/wrapper/TwofishCrypt.cpp
 	shared/wrapper/TwofishCrypt.h
 	shared/wrapper/TwofishDecryptor.cpp
 	shared/wrapper/TwofishDecryptor.h
