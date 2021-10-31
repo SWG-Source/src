@@ -3,11 +3,23 @@
 set(SHARED_SOURCES
 	shared/core/FirstCrypto.h
 
+	shared/original/algebra.cpp
+	shared/original/algebra.h
+	shared/original/algparam.cpp
+	shared/original/algparam.h
+	shared/original/allocate.cpp
+	shared/original/allocate.h
+	shared/original/asn.cpp
+	shared/original/asn.h
 	shared/original/config.h
 	shared/original/cryptlib.cpp
 	shared/original/cryptlib.h
 	shared/original/filters.cpp
 	shared/original/filters.h
+	shared/original/fips140.cpp
+	shared/original/fips140.h
+	shared/original/integer.cpp
+	shared/original/integer.h
 	shared/original/iterhash.cpp
 	shared/original/iterhash.h
 	shared/original/md5.cpp
