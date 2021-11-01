@@ -7,6 +7,7 @@ if(WIN32)
 endif()
 
 add_definitions(-DCRYPTOPP_MANUALLY_INSTANTIATE_TEMPLATES)
+add_definitions(-DCRYPTOPP_DISABLE_SHANI)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 

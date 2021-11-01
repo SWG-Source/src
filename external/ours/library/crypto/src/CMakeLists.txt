@@ -12,12 +12,16 @@ set(SHARED_SOURCES
 	shared/original/asn.cpp
 	shared/original/asn.h
 	shared/original/config.h
+	shared/original/cpu.cpp
+	shared/original/cpu.h
 	shared/original/cryptlib.cpp
 	shared/original/cryptlib.h
 	shared/original/filters.cpp
 	shared/original/filters.h
 	shared/original/fips140.cpp
 	shared/original/fips140.h
+	shared/original/hmac.cpp
+	shared/original/hmac.h
 	shared/original/integer.cpp
 	shared/original/integer.h
 	shared/original/iterhash.cpp
@@ -28,9 +32,34 @@ set(SHARED_SOURCES
 	shared/original/misc.h
 	shared/original/mqueue.cpp
 	shared/original/mqueue.h
+	shared/original/nbtheory.cpp
+	shared/original/nbtheory.h
+	shared/original/osrng.cpp
+	shared/original/osrng.h
+	shared/original/pch.cpp
+	shared/original/pch.h
+	shared/original/pubkey.cpp
+	shared/original/pubkey.h
 	shared/original/queue.cpp
 	shared/original/queue.h
+	shared/original/rc2.cpp
+	shared/original/rc2.h
+	shared/original/rdtables.cpp
+	shared/original/rijndael.cpp
+	shared/original/rijndael.h
+	shared/original/rijndael_simd.cpp
+	shared/original/rng.cpp
+	shared/original/rng.h
+	shared/original/seckey.h
+	shared/original/sha.cpp
+	shared/original/sha.h
+	shared/original/sha3.cpp
+	shared/original/sha3.h
+	shared/original/shacal2.cpp
+	shared/original/shacal2.h
+	shared/original/sha_simd.cpp
 	shared/original/smartptr.h
+	shared/original/sse_simd.cpp
 	shared/original/tftables.cpp
 	shared/original/twofish.cpp
 	shared/original/twofish.h

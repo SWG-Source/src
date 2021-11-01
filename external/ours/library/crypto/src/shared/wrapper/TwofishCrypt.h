@@ -29,7 +29,10 @@ public:
     {
     }
 
-    virtual ~TwofishCrypt() = 0;
+    virtual ~TwofishCrypt()
+    {
+        delete cipher;
+    }
 
     enum
     {
