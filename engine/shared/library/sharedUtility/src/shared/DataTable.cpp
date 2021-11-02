@@ -185,7 +185,7 @@ int DataTable::getIntValue(const std::string & column, int row) const
 
 //----------------------------------------------------------------------------
 
-int DataTable::getIntValue(int column, int row) const
+int32 DataTable::getIntValue(int column, int row) const
 {
 	DEBUG_FATAL(row < 0 || row >= getNumRows(), ("DataTable [%s] getIntValue(): Invalid row number [%d].  Rows=[%d]\n", m_name.c_str(), row, getNumRows()));
 	DEBUG_FATAL(column < 0 || column >= getNumColumns(), ("DataTable [%s] getIntValue(): Invalid col number [%d].  Cols=[%d]\n", m_name.c_str(), column, getNumColumns()));
@@ -210,7 +210,7 @@ int DataTable::getIntValue(int column, int row) const
 
 //----------------------------------------------------------------------------
 
-int DataTable::getIntDefaultForColumn(const std::string & column) const
+int32 DataTable::getIntDefaultForColumn(const std::string & column) const
 {
 	int const columnIndex = findColumnNumber(column);
 	DEBUG_FATAL(columnIndex < 0 || columnIndex >= getNumColumns(), ("DataTable [%s] getIntDefaultForColumn(): Invalid col number [%d].  Cols=[%d]\n", m_name.c_str(), columnIndex, getNumColumns()));
@@ -219,7 +219,7 @@ int DataTable::getIntDefaultForColumn(const std::string & column) const
 
 //----------------------------------------------------------------------------
 
-int DataTable::getIntDefaultForColumn(int column) const
+int32 DataTable::getIntDefaultForColumn(int column) const
 {
 	DEBUG_FATAL(column < 0 || column >= getNumColumns(), ("DataTable [%s] getIntDefaultForColumn(): Invalid col number [%d].  Cols=[%d]\n", m_name.c_str(), column, getNumColumns()));
 	DEBUG_FATAL(m_types[static_cast<size_t>(column)]->getBasicType() != DataTableColumnType::DT_Int, ("Wrong data type for column %d.", column));
@@ -405,7 +405,7 @@ void DataTable::_readCell(Iff & iff, int column, int row)
 	{
 	case DataTableColumnType::DT_Int:
 	{
-		int tmp = iff.read_int32();
+		int32 tmp = iff.read_int32();
 		new (cell) DataTableCell(tmp);
 
 		break;
@@ -677,7 +677,7 @@ int DataTable::searchColumnFloat( int column, float searchValue ) const
 
 // ----------
 
-int DataTable::searchColumnInt( int column, int searchValue ) const
+int DataTable::searchColumnInt( int column, int32 searchValue ) const
 {
 	DEBUG_FATAL(column < 0 || column >= getNumColumns(), ("DataTable [%s] searchColumnInt(): Invalid col number [%d].  Cols=[%d]\n", m_name.c_str(), column, getNumColumns()));
 

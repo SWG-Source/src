@@ -14,6 +14,7 @@
 #include "sharedFoundation/ConstCharCrcString.h"
 
 #include <vector>
+#include <iostream>
 
 // ======================================================================
 
@@ -155,6 +156,26 @@ ConstCharCrcString const CrcStringTable::lookUp(uint32 crc) const
 	{
 		int const mid = (low + high) / 2;
 		uint32 const entry = m_crcTable[mid];
+		if (crc == entry)
+			return ConstCharCrcString(m_strings + m_stringsOffsetTable[mid], crc);
+		else
+			if (crc > entry)
+				low = mid + 1;
+			else
+				high = mid - 1;
+	}
+
+	WARNING(true,("\n=========== Could not find entry 0x%08x with %d entries!!\n", crc, m_numberOfEntries));
+
+	low = 0;
+	high = m_numberOfEntries - 1;
+
+	while (low <= high)
+	{
+		int const mid = (low + high) / 2;
+		uint32 const entry = m_crcTable[mid];
+
+		WARNING(true, ("Checking 0x%08x against entry value 0x%08x at index %d", crc, entry, mid));
 		if (crc == entry)
 			return ConstCharCrcString(m_strings + m_stringsOffsetTable[mid], crc);
 		else
