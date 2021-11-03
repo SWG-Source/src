@@ -46,7 +46,7 @@ public:
 	typedef std::map<std::string, LocalizedString::id_type> NameMap_t;
 
 	// TODO: make this typedef platform dependent
-	typedef long                  magic_type;
+	typedef uint32_t              magic_type;
 	static const magic_type       ms_MAGIC;
 
 	explicit                      LocalizedStringTable (const std::string & filename);
