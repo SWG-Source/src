@@ -1955,6 +1955,7 @@ bool JavaLibrary::registerNatives(const JNINativeMethod natives[], int count)
 		{
 			ms_env->ExceptionClear();
 			DEBUG_REPORT_LOG(true, ("RegisterNatives failed: %s: %s\n", natives[i].name, natives[i].signature));
+			WARNING(true, ("RegisterNatives failed: could not register Java method: %s: with signature %s (does it exist in the codebase?)\n", natives[i].name, natives[i].signature));
 			result = lresult;
 		}
 	}

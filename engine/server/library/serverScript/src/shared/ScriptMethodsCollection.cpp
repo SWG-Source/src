@@ -90,7 +90,7 @@ bool ScriptMethodsCollectionNamespace::install()
 		JF("getCollectionSlotCategoryInfo", "(Ljava/lang/String;)[Ljava/lang/String;", getCollectionSlotCategoryInfo),
 		JF("getCollectionSlotPrereqInfo", "(Ljava/lang/String;)[Ljava/lang/String;", getCollectionSlotPrereqInfo),
 		JF("getCollectionSlotName", "(I)Ljava/lang/String;", getCollectionSlotName),
-		JF("getCollectionSlotMaxValue", "(Ljava/lang/String;)J", getCollectionSlotMaxValue),
+		//JF("getCollectionSlotMaxValue", "(Ljava/lang/String;)J", getCollectionSlotMaxValue),
 		JF("getAllCollectionSlotsInCollection", "(Ljava/lang/String;)[Ljava/lang/String;", getAllCollectionSlotsInCollection),
 		JF("getAllCollectionSlotsInPage", "(Ljava/lang/String;)[Ljava/lang/String;", getAllCollectionSlotsInPage),
 		JF("getAllCollectionsInPage", "(Ljava/lang/String;)[Ljava/lang/String;", getAllCollectionsInPage),
