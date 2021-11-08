@@ -43,7 +43,7 @@ public:
 
 private:
 	GameNetworkMessage();
-	Archive::AutoVariable<unsigned long> cmd;
+	Archive::AutoVariable<uint32_t> cmd;
 };
 
 // ======================================================================

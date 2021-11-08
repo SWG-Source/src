@@ -42,7 +42,7 @@ private:
 	Archive::AutoVariable<unsigned char> serverType;
 	Archive::AutoVariable<std::string>   commandLine;
 	Archive::AutoVariable<std::string>   clusterName;
-	Archive::AutoVariable<long>          currentEpochTime;
+	Archive::AutoVariable<uint32_t>          currentEpochTime;
 };
 
 //-----------------------------------------------------------------------

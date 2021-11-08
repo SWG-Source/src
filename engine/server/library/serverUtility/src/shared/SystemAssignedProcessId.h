@@ -24,7 +24,7 @@ private:
 	SystemAssignedProcessId & operator = (const SystemAssignedProcessId & rhs);
 	SystemAssignedProcessId(const SystemAssignedProcessId & source);
 
-	Archive::AutoVariable<unsigned long>  m_id;
+	Archive::AutoVariable<uint32_t>  m_id;
 };
 
 //-----------------------------------------------------------------------

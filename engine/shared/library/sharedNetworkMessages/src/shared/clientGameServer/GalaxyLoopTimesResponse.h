@@ -25,8 +25,8 @@ private:
 	GalaxyLoopTimesResponse & operator = (const GalaxyLoopTimesResponse & rhs);
 	GalaxyLoopTimesResponse(const GalaxyLoopTimesResponse & source);
 
-	Archive::AutoVariable<unsigned long>  currentFrameMilliseconds;
-	Archive::AutoVariable<unsigned long>  lastFrameMilliseconds;
+	Archive::AutoVariable<uint32_t>  currentFrameMilliseconds;
+	Archive::AutoVariable<uint32_t>  lastFrameMilliseconds;
 };
 
 //-----------------------------------------------------------------------
