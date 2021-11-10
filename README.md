@@ -35,6 +35,6 @@ See http://clang.llvm.org/docs/UsersManual.html#profiling-with-instrumentation f
 
 # More Information
 
-See http://www.swgsource.com/ for more information on the SWG Source project.
+See https://swg-source.github.io/ for more information on the SWG Source project.
 
 Join the SWGSource Discord if you would like to contribute:  https://discord.gg/j53cMj9
