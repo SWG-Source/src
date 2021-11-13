@@ -77,13 +77,13 @@ elseif (UNIX)
     endif ()
 
     # don't put anything too crazy in debug...and any common flags go into CMAKE_CXX_FLAGS
-    set(CMAKE_CXX_FLAGS_DEBUG "-D_DEBUG -DDEBUG_LEVEL=2 -DPRODUCTION=0 -O0 -g3")
+    set(CMAKE_CXX_FLAGS_DEBUG "-D_DEBUG -DDEBUG_LEVEL=2 -DPRODUCTION=0 -O0 -ggdb")
 
     # release specific cflags - optimizations beyond the default for both types is mostly just -O flags
     set(CMAKE_CXX_FLAGS_RELEASE "-DDEBUG_LEVEL=0 -DPRODUCTION=1")
 
     # we use fewer, if any, crazy optimizations for profile generation, and likewise release flags for the minsizerel
-    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELEASE}")
+    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELEASE} -ggdb")
     set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_RELEASE}")
 
     # Ofast doesn't work with gcc builds

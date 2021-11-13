@@ -39,7 +39,7 @@ public:
 	std::string const &getCmdName() const;
 	
 	static std::vector<std::pair<std::string, int> > const getMessageCount();
-	static std::string const &getCmdName(unsigned long cmdCrc);
+	static std::string const &getCmdName(uint32_t cmdCrc);
 
 private:
 	GameNetworkMessage();

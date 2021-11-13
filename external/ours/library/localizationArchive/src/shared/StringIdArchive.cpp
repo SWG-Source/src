@@ -23,7 +23,7 @@ namespace Archive
 	*/
 	void get(ReadIterator & source, StringId & target)
 	{
-		unsigned long index = 0;
+		int32_t index = 0;
 		std::string   table;
 		std::string   name;
 

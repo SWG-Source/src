@@ -103,8 +103,8 @@ void ManagerConnection::onReceive(const Archive::ByteStream & message)
 	switch(messageType) {
 		case constcrc("SystemTimeCheck") :
 		{
-			long const currentTime = static_cast<long>(::time(nullptr));
-			GenericValueTypeMessage<std::pair<std::string, long > > msg(r);
+			int32_t const currentTime = static_cast<int32_t>(::time(nullptr));
+			GenericValueTypeMessage<std::pair<std::string, int32_t > > msg(r);
 
 			if (TaskManager::getNodeLabel() == "node0")
 			{
@@ -150,7 +150,7 @@ void ManagerConnection::onReceive(const Archive::ByteStream & message)
 					{
 						LOG("CustomerService", ("system_clock_mismatch:System clock mismatch (%d seconds) by more than %d seconds: master TaskManager epoch (%ld), remote TaskManager %s (%s) epoch (%ld). Telling remote TaskManager to terminate.", (std::max(currentTime, t.getCurrentEpochTime()) - std::min(currentTime, t.getCurrentEpochTime())), ConfigTaskManager::getMaximumClockDriftToleranceSeconds(), currentTime, t.getCommandLine().c_str(), getRemoteAddress().c_str(), t.getCurrentEpochTime()));
 
-						GenericValueTypeMessage<std::pair<std::string, std::pair<long, long> > > systemTimeMismatchMessage("SystemTimeMismatchMessage", std::make_pair(TaskManager::getNodeLabel(), std::make_pair(static_cast<long>(currentTime), t.getCurrentEpochTime())));
+						GenericValueTypeMessage<std::pair<std::string, std::pair<int32_t, int32_t> > > systemTimeMismatchMessage("SystemTimeMismatchMessage", std::make_pair(TaskManager::getNodeLabel(), std::make_pair(static_cast<int32_t>(currentTime), static_cast<int32_t> (t.getCurrentEpochTime()))));
 						send(systemTimeMismatchMessage);
 					}
 				}
@@ -166,7 +166,7 @@ void ManagerConnection::onReceive(const Archive::ByteStream & message)
 		}
 		case constcrc("SystemTimeMismatchMessage") :
 		{
-			GenericValueTypeMessage<std::pair<std::string, std::pair<long, long> > > msg(r);
+			GenericValueTypeMessage<std::pair<std::string, std::pair<int32_t, int32_t> > > msg(r);
 			FATAL((msg.getValue().first == "node0"), ("System clock mismatch (%d seconds) by more than %d seconds: master TaskManager epoch (%ld), self epoch (%ld)", (std::max(msg.getValue().second.first, msg.getValue().second.second) - std::min(msg.getValue().second.first, msg.getValue().second.second)), ConfigTaskManager::getMaximumClockDriftToleranceSeconds(), msg.getValue().second.first, msg.getValue().second.second));
 			break;
 		}
