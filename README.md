@@ -3,7 +3,7 @@
 This is the main server code for SWGSource 1.2 as originally forked from the https://bitbucket.org/stellabellumswg/ repository.  Please see that repository for original publication and alteration credit.
 
 # Works in progress
-* testing-64 - fully 64 bit version thatbuilds but doesn't run, some typedefs and things are wrong
+* 64-bit-types - fully 64 bit version (presently in testing - 11/12/2021) (Special thanks to Apathy for his help in making a 64 bit version happen!)
 
 # Building
 
