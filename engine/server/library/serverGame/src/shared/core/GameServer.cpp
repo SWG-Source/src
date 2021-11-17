@@ -233,6 +233,7 @@
 #include "sharedFoundation/CrcConstexpr.hpp"
 
 #include <limits>
+#include <iostream>
 
 //-----------------------------------------------------------------------
 
@@ -253,11 +254,11 @@ namespace GameServerNamespace
 	const float IDLE_CLIENTS_CHECK_TIME_SEC = 30.0f;
 	ServerCommandPermissionManager * s_permissionManager = 0;
 
-	unsigned long  s_frameTime;
-	uint64  s_totalObjectCreateMessagesReceived;
-	uint64  s_totalObjectCreateMessagesSent;
-	bool    s_metricsManagerInstalled = false;
-	uint32  s_lastTaskKeepaliveTime = 0;
+	uint32_t  s_frameTime;
+	uint64    s_totalObjectCreateMessagesReceived;
+	uint64    s_totalObjectCreateMessagesSent;
+	bool      s_metricsManagerInstalled = false;
+	uint32    s_lastTaskKeepaliveTime = 0;
 
 #ifdef _DEBUG
 	int s_extraDelayPerFrameMs = 0; // to emulate long loop time
@@ -266,11 +267,11 @@ namespace GameServerNamespace
 	std::set<uint32> s_clusterStartupResidenceStructureListResponse;
 	std::map<NetworkId, std::pair<int, NetworkId> > s_clusterStartupResidenceStructureListByStructure;
 
-	unsigned long getFrameRateLimit();
+	uint32_t getFrameRateLimit();
 	void broadCastHyperspaceOnWarp(ServerObject const * owner);
 	ShipObject *getAttachedShip(CreatureObject *creature);
 
-	std::map<NetworkId, unsigned long> s_pendingLoadRequests;
+	std::map<NetworkId, uint32_t> s_pendingLoadRequests;
 
 	struct CtsSourceCharacterInfo
 	{
@@ -745,7 +746,7 @@ void GameServer::dropClient(const NetworkId& oid, const bool immediate)
 
 //-----------------------------------------------------------------------
 
-unsigned long GameServer::getFrameTime() const
+uint32_t GameServer::getFrameTime() const
 {
 	return s_frameTime;
 }
@@ -895,7 +896,7 @@ void GameServer::receiveMessage(const MessageDispatch::Emitter & source, const M
 		if(Clock::timeMs() - s_lastTaskKeepaliveTime > 60000)
 		{
 			DEBUG_WARNING(true, ("Sending keepalive message to taskmanager for process %i", Os::getProcessId()));
-			static const GenericValueTypeMessage<unsigned long> gameServerTaskManagerKeepAlive("GameServerTaskManagerKeepAlive", Os::getProcessId());
+			static const GenericValueTypeMessage<uint32_t> gameServerTaskManagerKeepAlive("GameServerTaskManagerKeepAlive", Os::getProcessId());
 			getInstance().m_taskManagerConnection->send(gameServerTaskManagerKeepAlive, true);
 			s_lastTaskKeepaliveTime = Clock::timeMs();
 		}
@@ -3583,14 +3584,14 @@ void GameServer::receiveMessage2(const MessageDispatch::Emitter & source, const 
 			GenericValueTypeMessage <uint8> const characterMatchStatisticsRequest(ri);
 			UNREF(characterMatchStatisticsRequest);
 
-			unsigned long numberOfCharacterMatchRequests, numberOfCharacterMatchResults, timeSpentOnCharacterMatchRequestsMs;
+			uint32_t numberOfCharacterMatchRequests, numberOfCharacterMatchResults, timeSpentOnCharacterMatchRequestsMs;
 			CharacterMatchManager::getMatchStatistics(numberOfCharacterMatchRequests, numberOfCharacterMatchResults, timeSpentOnCharacterMatchRequestsMs);
 
 			if (numberOfCharacterMatchRequests || numberOfCharacterMatchResults ||
 			    timeSpentOnCharacterMatchRequestsMs) {
 				CharacterMatchManager::clearMatchStatistics();
 
-				const GenericValueTypeMessage <std::pair<unsigned long, std::pair<unsigned long, unsigned long> >> characterMatchStatisticsResponse("LfgStatRsp", std::make_pair(numberOfCharacterMatchRequests, std::make_pair(numberOfCharacterMatchResults, timeSpentOnCharacterMatchRequestsMs)));
+				const GenericValueTypeMessage <std::pair<uint32_t, std::pair<uint32_t, uint32_t> >> characterMatchStatisticsResponse("LfgStatRsp", std::make_pair(numberOfCharacterMatchRequests, std::make_pair(numberOfCharacterMatchResults, timeSpentOnCharacterMatchRequestsMs)));
 				sendToCentralServer(characterMatchStatisticsResponse);
 			}
 
@@ -4048,7 +4049,7 @@ bool GameServer::requestSceneWarpDelayed(const CachedNetworkId &objectId, const 
 
 // ----------------------------------------------------------------------
 
-unsigned long GameServerNamespace::getFrameRateLimit()
+uint32_t GameServerNamespace::getFrameRateLimit()
 {
 	return ServerWorld::isSpaceScene() ? ConfigServerGame::getSpaceFrameRateLimit() : ConfigServerGame::getGroundFrameRateLimit();
 }
@@ -4059,17 +4060,17 @@ void GameServer::run(void)
 {
 	getInstance().initialize();
 
-	unsigned long lastFrameTime = 0;
+	uint32_t lastFrameTime = 0;
 	int oldFilesOpened = TreeFile::getNumberOfFilesOpenedTotal();
 	int oldSizeOpened = TreeFile::getSizeOfFilesOpenedTotal();
 	int newFilesOpened = 0;
 	int newSizeOpened = 0;
-	unsigned long startTime = Clock::timeMs();
-	unsigned long lastFrameProcessStartTime = startTime;
+	uint32_t startTime = Clock::timeMs();
+	uint32_t lastFrameProcessStartTime = startTime;
 
-	const unsigned long targetFrameTime = static_cast<unsigned long>(1000.0f/getFrameRateLimit());
+	const uint32_t targetFrameTime = static_cast<uint32_t>(1000.0f/getFrameRateLimit());
 
-	const GenericValueTypeMessage<unsigned long> gameServerTaskManagerKeepAlive("GameServerTaskManagerKeepAlive", Os::getProcessId());
+	const GenericValueTypeMessage<uint32_t> gameServerTaskManagerKeepAlive("GameServerTaskManagerKeepAlive", Os::getProcessId());
 
 	PROFILER_BLOCK_DEFINE(profileBlockMainLoop, "main loop");
 	PROFILER_BLOCK_ENTER(profileBlockMainLoop);
@@ -4186,7 +4187,7 @@ void GameServer::run(void)
 				alreadyReported=false;
 		}
 		
-		unsigned long curTime = Clock::timeMs();
+		uint32_t curTime = Clock::timeMs();
 		lastFrameTime = curTime-startTime;
 		if (!getInstance().getDone())
 			ServerClock::getInstance().incrementServerFrame();
@@ -5193,11 +5194,11 @@ int GameServer::getNumberOfPendingLoadRequests()
 
 // ----------------------------------------------------------------------
 
-unsigned long GameServer::getOldestPendingLoadRequestTime(NetworkId & id)
+uint32_t GameServer::getOldestPendingLoadRequestTime(NetworkId & id)
 {
-	unsigned long oldestTime = std::numeric_limits<unsigned long>::max();
+	uint32_t oldestTime = std::numeric_limits<uint32_t>::max();
 
-	std::map<NetworkId, unsigned long>::const_iterator i = s_pendingLoadRequests.begin();
+	std::map<NetworkId, uint32_t>::const_iterator i = s_pendingLoadRequests.begin();
 	for (; i != s_pendingLoadRequests.end(); ++i)
 		if (i->second < oldestTime)
 		{

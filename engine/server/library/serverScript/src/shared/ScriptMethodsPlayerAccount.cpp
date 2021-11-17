@@ -112,7 +112,7 @@ const JNINativeMethod NATIVES[] = {
 	JF("_renameCharacterReleaseNameReservation", "(J)V", renameCharacterReleaseNameReservation),
 	JF("_renameCharacter", "(JLjava/lang/String;)V", renameCharacter),
 	JF("_getPlayerStationId", "(J)I", getPlayerStationId),
-	//JF("_getPlayerUsernameDoNotUse", "(J)Ljava/lang/String;", getPlayerUsername),
+	JF("_getPlayerUsernameDoNotUse", "(J)Ljava/lang/String;", getPlayerUsername),
 };
 
 	return JavaLibrary::registerNatives(NATIVES, sizeof(NATIVES)/sizeof(NATIVES[0]));

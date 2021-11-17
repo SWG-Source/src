@@ -87,7 +87,7 @@ public:
 	bool                         isGameServerConnected         (uint32 processId) const;
 	ConnectionServerConnection * getConnectionServerConnection (const std::string & connectionServerIp, const uint16 connectionServerPort);
 	uint32                       getFirstGameServerForPlanet   ();
-	unsigned long                getFrameTime                  () const;
+	uint32_t                     getFrameTime                  () const;
 	int                          getNumClients() const;
 	uint32                       getProcessId                  () const;
 	uint32                       getPreloadAreaId              () const;
@@ -138,7 +138,7 @@ public:
 	static bool                  isAtPendingLoadRequestLimit();
 	static int                   getPendingLoadRequestLimit();
 	static int                   getNumberOfPendingLoadRequests();
-	static unsigned long         getOldestPendingLoadRequestTime(NetworkId & id);
+	static uint32_t              getOldestPendingLoadRequestTime(NetworkId & id);
 
 	static std::string           getRetroactiveCtsHistory(std::string const & clusterName, NetworkId const & characterId);
 	static std::vector<std::vector<std::pair<std::string, DynamicVariable> > const *> const & getRetroactiveCtsHistoryObjvars(NetworkId const & characterId);

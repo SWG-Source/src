@@ -626,7 +626,7 @@ int DataTable::searchColumnString( int column, const std::string & searchValue )
 			int valueCrc = getIntValue(column,i);
 			IGNORE_RETURN ( indexPair->second.insert(std::pair<int, int>(valueCrc, i)) );
 			if (retval == -1 && valueString == searchValue)
-				retval = i;
+				retval = i;  // don't return here because we're adding indexes for everything in this table as we've not indexed it before.
 		}
 	}
 	else
@@ -634,7 +634,7 @@ int DataTable::searchColumnString( int column, const std::string & searchValue )
 		std::pair<std::multimap<const std::string, int>, std::multimap<int, int> > * indexPair = static_cast<std::pair<std::multimap<const std::string, int>, std::multimap<int, int> > *>(voidIndex);
 		std::multimap<const std::string, int>::iterator iter = indexPair->first.find(searchValue);
 		if (iter != indexPair->first.end())
-			retval = iter->second;	
+			return iter->second; // if we find our value, return here instead of iterating through the rest of the table.
 	}
 
 	return retval;
