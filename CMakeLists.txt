@@ -77,14 +77,20 @@ elseif (UNIX)
     endif ()
 
     # don't put anything too crazy in debug...and any common flags go into CMAKE_CXX_FLAGS
-    set(CMAKE_CXX_FLAGS_DEBUG "-D_DEBUG -DDEBUG_LEVEL=2 -DPRODUCTION=0 -O0 -ggdb")
+    set(CMAKE_CXX_FLAGS_DEBUG "-D_DEBUG -DDEBUG_LEVEL=2 -DPRODUCTION=0 -O0 -ggdb -pg -no-pie")
 
     # release specific cflags - optimizations beyond the default for both types is mostly just -O flags
     set(CMAKE_CXX_FLAGS_RELEASE "-DDEBUG_LEVEL=0 -DPRODUCTION=1")
 
     # we use fewer, if any, crazy optimizations for profile generation, and likewise release flags for the minsizerel
-    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELEASE} -ggdb")
+    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELEASE} -ggdb -pg -no-pie")
     set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_RELEASE}")
+
+    # our "always on" flags - build by default for the system we're on but include all instruction sets
+    set(CMAKE_CXX_FLAGS "-pipe -march=native -mtune=native \
+		-Wformat -Wno-overloaded-virtual -Wno-missing-braces -Wno-format \
+		-Wno-write-strings -Wno-unknown-pragmas \
+		-Wno-uninitialized -Wno-reorder -Wno-tautological-constant-out-of-range-compare -Wno-address-of-packed-member")
 
     # Ofast doesn't work with gcc builds
     if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
@@ -94,12 +100,12 @@ elseif (UNIX)
 		-fno-coverage-mapping -fno-spell-checking \
 		-mno-retpoline")
 
-        set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -ggdb")
+        set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -ggdb -fprofile-instr-generate -fcoverage-mapping")
 
         # RELWITHDEBINFO is used for building bins that produce profdata files
-	# we only need the basics of our heavy optimizations here, i think - that and one of these flags
-	# breaks JNI when we profile
-        set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-Ofast -finline-hint-functions -fprofile-instr-generate")
+		# we only need the basics of our heavy optimizations here, i think - that and one of these flags
+		# breaks JNI when we profile
+        set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-Ofast -finline-hint-functions -fprofile-instr-generate -g -fcoverage-mapping")
 
         # MINSIZEREL is used for profiled, flto builds
         set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_RELEASE} -flto -fwhole-program-vtables")
@@ -109,13 +115,9 @@ elseif (UNIX)
         set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Og")
     elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
         set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
+    elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "g++")
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-stringop-overflow")
     endif ()
-
-    # our "always on" flags - build by default for the system we're on but include all instruction sets
-    set(CMAKE_CXX_FLAGS "-pipe -march=native -mtune=native \
-		-Wformat -Wno-overloaded-virtual -Wno-missing-braces -Wno-format \
-		-Wno-write-strings -Wno-unknown-pragmas \
-		-Wno-uninitialized -Wno-reorder -Wno-tautological-constant-out-of-range-compare -Wno-stringop-overflow -Wno-address-of-packed-member")
 
     add_definitions(-DLINUX -D_REENTRANT -Dlinux -D_USING_STL -D_GNU_SOURCE -D_XOPEN_SOURCE=500 -U_FORTIFY_SOURCE)
 

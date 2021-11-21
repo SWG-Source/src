@@ -5,16 +5,6 @@
 #include <cassert>
 #include <cstring>
 
-#include <iostream>
-#include <sstream>
-#include <iomanip>
-#include <execinfo.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/wait.h>
-#include <unistd.h>
-#include <sys/prctl.h>
-
 // ======================================================================
 
 //static volatile int s_dataFreeListLocked;
@@ -234,7 +224,7 @@ ByteStream &ByteStream::operator=(ByteStream const &rhs)
 
 	@author Justin Randall
 */
-void ByteStream::get(void *target, ReadIterator &readIterator, const unsigned long int targetSize) const
+void ByteStream::get(void *target, ReadIterator &readIterator, const uint32_t targetSize) const
 {
 	if (data && readIterator.getReadPosition() + targetSize <= allocatedSize)
 	{
@@ -243,31 +233,6 @@ void ByteStream::get(void *target, ReadIterator &readIterator, const unsigned lo
 	else
 	{
 		static const char * const desc = "Archive::ByteStream - read beyond end of buffer";
-        		std::cout << "read position: " << readIterator.getReadPosition() << " target size: " << targetSize << " allocated size: " << allocatedSize << std::endl;
-        		std::cout << "I'm being called from: " << program_invocation_name;
-        		std::cout << "======> BUFFER: " << std::endl;
-
-        		std::stringstream ss;
-                ss << std::hex << std::setfill('0');
-                for (int i = 0; i < allocatedSize; ++i)
-                {
-                    ss << std::setw(2) << static_cast<unsigned>(data->buffer[i]);
-                }
-                std::cout << ss.str() << std::endl;
-
-                char pid_buf[30];
-                    sprintf(pid_buf, "%d", getpid());
-                    char name_buf[512];
-                    name_buf[readlink("/proc/self/exe", name_buf, 511)]=0;
-                    prctl(PR_SET_PTRACER, PR_SET_PTRACER_ANY, 0, 0, 0);
-                    int child_pid = fork();
-                    if (!child_pid) {
-                        dup2(2,1); // redirect output to stderr - edit: unnecessary?
-                        execl("/usr/bin/gdb", "gdb", "--batch", "-n", "-ex", "thread", "-ex", "bt", name_buf, pid_buf, NULL);
-                        abort(); /* If gdb failed to start */
-                    } else {
-                        waitpid(child_pid,NULL,0);
-                    }
 		ReadException ex(desc);
 		throw (ex);
 	}
@@ -380,7 +345,7 @@ ByteStream::Data *ByteStream::Data::getNewData()
 
 void ByteStream::Data::releaseOldData(ByteStream::Data *oldData)
 {
-	assert((unsigned) reinterpret_cast<long>(oldData) != 0xefefefefu);
+	assert(reinterpret_cast<uint64_t>(oldData) != 0xefefefefefefefefu);
 
 	if (oldData->size > 4096)
 		delete oldData;

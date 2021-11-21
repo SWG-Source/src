@@ -114,7 +114,7 @@ namespace AlterSchedulerNamespace
 	float const  cs_schedulerTicksPerSecond = 1000.0f;  // # schedule ticks per second.  Frame rates will not be able to exceed this.
 	float const  cs_secondsPerSchedulerTick = 1.0f / cs_schedulerTicksPerSecond;
 
-	uint32 const cs_freeFillPattern         = 0xEFEFEFEF; // this should match MemoryManager's free fill pattern.
+	uint64_t const cs_freeFillPattern         = 0xEFEFEFEFEFEFEFEF; // this should match MemoryManager's free fill pattern.
 	
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -291,7 +291,7 @@ void AlterSchedulerNamespace::validateObject(Object const *object)
 
 #ifdef _DEBUG
 	//-- Check if object memory is deleted.
-	if (*reinterpret_cast<uint32 const*>(object) == cs_freeFillPattern) //lint !e740 // unusual pointer cast // Yes.
+	if (*reinterpret_cast<uint64_t const*>(object) == cs_freeFillPattern) //lint !e740 // unusual pointer cast // Yes.
 	{
 		DEBUG_WARNING(true, ("validateObject(): alter scheduler found deleted object (object memory starts with 4 bytes of free-fill pattern).")); //lint !e740 // unusual pointer cast from incompatible indirect types // okay, I'm doing something unusual.
 		isInvalid = true;
@@ -313,7 +313,7 @@ void AlterSchedulerNamespace::validateObject(Object const *object)
 		}
 		catch (...)
 		{ //lint !e1775 // catch block does not declare any exception // that's right: I want to catch it all.
-			WARNING(true, ("validateObject(): Object-derived class with address [%x] failed to return valid C++ type info; likely a deleted Object.", reinterpret_cast<unsigned uint64_t const>(object)));
+			WARNING(true, ("validateObject(): Object-derived class with address [%x] failed to return valid C++ type info; likely a deleted Object.", reinterpret_cast<uint64_t const>(object)));
 			isInvalid = true;
 		}
 	}

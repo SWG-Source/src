@@ -9,6 +9,7 @@
 
 #include <exception>
 #include <vector>
+#include <cstdint>
 
 //---------------------------------------------------------------------
 
@@ -82,7 +83,7 @@ public:
 	bool                        operator ==     (const ReadIterator & other) const;
 	bool                        operator !=     (const ReadIterator & other) const;
 	void                        advance         (const unsigned int distance);
-	void                        get             (void * target, const unsigned long int readSize);
+	void                        get             (void * target, const uint32_t readSize);
 	const unsigned int          getSize         () const;
 	const unsigned char * const getBuffer       () const;
 	const unsigned int          getReadPosition () const;
@@ -136,7 +137,7 @@ public:
 	void                        setAllocatedSizeLimit(unsigned int limit);
 
 private:
-	void                        get(void * target, ReadIterator & readIterator, const unsigned long int readSize) const;
+	void                        get(void * target, ReadIterator & readIterator, const uint32_t readSize) const;
 	void                        growToAtLeast(const unsigned int targetSize);
 	void                        reAllocate(const unsigned int newSize);
 
@@ -155,7 +156,7 @@ private: // inner classes
 		friend class ByteStream;
 		friend class Archive::ReadIterator;
 		unsigned char * buffer;
-		unsigned long   size;
+		uint32_t        size;
 	private:
 		struct DataFreeList
 		{
@@ -252,7 +253,7 @@ inline ReadIterator & ReadIterator::operator = (const ReadIterator & rhs)
 
 //---------------------------------------------------------------------
 
-inline void ReadIterator::get(void * target, const unsigned long int readSize)
+inline void ReadIterator::get(void * target, const uint32_t readSize)
 {
 	if(stream)
 	{

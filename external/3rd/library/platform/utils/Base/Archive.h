@@ -63,7 +63,7 @@ const unsigned MAX_ARRAY_SIZE = 1024;
 
 		            ReadIterator &              operator =      (const ReadIterator & source);
 		            void                        advance         (const unsigned int distance);
-		            void                        get             (void * target, const unsigned long int readSize);
+		            void                        get             (void * target, const uint32_t readSize);
 		            const unsigned int          getSize         () const;
 		            const unsigned char * const getBuffer       () const;
 		            const unsigned int          getReadPosition () const;
@@ -92,7 +92,7 @@ const unsigned MAX_ARRAY_SIZE = 1024;
 		            void      ref    ();
 	            protected:
 		            unsigned char * buffer;
-		            unsigned long   size;
+		            uint32_t        size;
 	            private:
 		            struct DataFreeList
 		            {
@@ -132,7 +132,7 @@ const unsigned MAX_ARRAY_SIZE = 1024;
 	        void                        put(const void * const source, const unsigned int sourceSize);
 
         private:
-	        void                        get(void * target, ReadIterator & readIterator, const unsigned long int readSize) const;
+	        void                        get(void * target, ReadIterator & readIterator, const uint32_t readSize) const;
 	        void                        growToAtLeast(const unsigned int targetSize);
 	        void                        reAllocate(const unsigned int newSize);
 
@@ -255,7 +255,7 @@ const unsigned MAX_ARRAY_SIZE = 1024;
 	    return *this;
     }
 
-    inline void ByteStream::ReadIterator::get(void * target, const unsigned long int readSize)
+    inline void ByteStream::ReadIterator::get(void * target, const uint32_t readSize)
     {
 	    assert(stream);
 	    stream->get(target, *this, readSize);
