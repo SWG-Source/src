@@ -87,7 +87,7 @@ elseif (UNIX)
     set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_RELEASE}")
 
     # our "always on" flags - build by default for the system we're on but include all instruction sets
-    set(CMAKE_CXX_FLAGS "-pipe -march=native -mtune=native \
+    set(CMAKE_CXX_FLAGS "-m32 -pipe -march=native -mtune=native \
 		-Wformat -Wno-overloaded-virtual -Wno-missing-braces -Wno-format \
 		-Wno-write-strings -Wno-unknown-pragmas \
 		-Wno-uninitialized -Wno-reorder -Wno-tautological-constant-out-of-range-compare -Wno-address-of-packed-member")

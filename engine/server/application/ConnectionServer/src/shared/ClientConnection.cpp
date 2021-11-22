@@ -198,8 +198,7 @@ std::string ClientConnection::getCurrentActivePlayTimeDuration() const {
 void ClientConnection::sendPlayTimeInfoToGameServer() const {
     if (m_client && m_client->getGameConnection()) {
         // update the game server with play time info
-        GenericValueTypeMessage < std::pair < int32, std::pair < int32, unsigned
-        long > > >
+        GenericValueTypeMessage < std::pair < int32, std::pair < int32, uint32_t > > >
         const msgPlayTimeInfo(
         "UpdateSessionPlayTimeInfo", std::make_pair(static_cast<int32>(m_startPlayTime), std::make_pair(static_cast<int32>(m_lastActiveTime), m_activePlayTimeDuration)));
 
@@ -1369,9 +1368,7 @@ ClientConnection::onValidateClient(StationId suid, const std::string &username, 
     }
 
     // tell client the server-side game and subscription feature bits and which ConnectionServer we are and the current server Epoch time
-    GenericValueTypeMessage < std::pair < std::pair < unsigned
-    long, unsigned
-    long > , std::pair < int, int32 > > >
+    GenericValueTypeMessage < std::pair < std::pair < uint32_t, uint32_t > , std::pair < int, int32 > > >
     const msgFeatureBits(
     "AccountFeatureBits", std::make_pair(std::make_pair(gameFeatures, subscriptionFeatures), std::make_pair(ConfigConnectionServer::getConnectionServerNumber(), static_cast<int32>(::time(nullptr)))));
     send(msgFeatureBits, true);

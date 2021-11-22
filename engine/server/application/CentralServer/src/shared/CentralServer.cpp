@@ -2324,7 +2324,7 @@ void CentralServer::receiveMessage(const MessageDispatch::Emitter & source, cons
 		}
 		case constcrc("LfgStatRsp") : {
 			Archive::ReadIterator ri = static_cast<const GameNetworkMessage &>(message).getByteStream().begin();
-			GenericValueTypeMessage <std::pair<unsigned long, std::pair<unsigned long, unsigned long> >> const msg(ri);
+			GenericValueTypeMessage <std::pair<uint32_t, std::pair<uint32_t, uint32_t> >> const msg(ri);
 
 			m_numberOfCharacterMatchRequests += msg.getValue().first;
 			m_numberOfCharacterMatchResults += msg.getValue().second.first;

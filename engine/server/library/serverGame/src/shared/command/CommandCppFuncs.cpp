@@ -8277,7 +8277,7 @@ static void commandFuncSpammer(Command const &, NetworkId const &actor, NetworkI
 		{
 			// check warden permission first or if god
 			const PlayerObject * gmPlayerObject = PlayerCreatureController::getPlayerObject(gm);
-			if (!gmPlayerObject || (!gmPlayerObject->isWarden()) && !gmClient->isGod())
+			if (!gmPlayerObject || (!gmPlayerObject->isWarden() && !gmClient->isGod()))
 			{
 				Chat::sendSystemMessage(*gm, StringId("warden", "not_authorized"), Unicode::emptyString);
 				return;
@@ -8428,7 +8428,7 @@ static void commandFuncUnspammer(Command const &, NetworkId const &actor, Networ
 		{
 			// check warden permission first or if god
 			const PlayerObject * gmPlayerObject = PlayerCreatureController::getPlayerObject(gm);
-			if (!gmPlayerObject || (!gmPlayerObject->isWarden()) && !gmClient->isGod())
+			if (!gmPlayerObject || (!gmPlayerObject->isWarden() && !gmClient->isGod()))
 			{
 				Chat::sendSystemMessage(*gm, StringId("warden", "not_authorized"), Unicode::emptyString);
 				return;

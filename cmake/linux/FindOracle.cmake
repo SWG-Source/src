@@ -22,34 +22,23 @@
 #
 ###############################################################################
 
-
 # If ORACLE_HOME not defined, assume Oracle libraries not available
 if(DEFINED ENV{ORACLE_HOME})
 
-
   set(ORACLE_HOME $ENV{ORACLE_HOME})
-  message("ORACLE_HOME=${ORACLE_HOME}")
-
 
   find_path(ORACLE_INCLUDE_DIR
     NAMES oci.h
     PATHS
-    /usr/include/oracle/19.12/client64
-    /usr/include/oracle/19.12/client
-    /usr/lib/oracle/19.12/client64
-    /usr/share/oracle/19.12/client64
-    /usr/lib/oracle/19.12/client
-    /usr/share/oracle/19.12/client
+	/usr/include/oracle/21/client
     ${ORACLE_HOME}/rdbms/public
     ${ORACLE_HOME}/include
     ${ORACLE_HOME}/sdk/include  # Oracle SDK
     ${ORACLE_HOME}/OCI/include) # Oracle XE on Windows
 
-
   set(ORACLE_OCI_NAMES clntsh libclntsh oci)
-  set(ORACLE_NNZ_NAMES nnz10 libnnz10 nnz11 libnnz11 nnz12 libnnz12 nnz18 libnnz18 nnz19 libnnz19 ociw32)
-  set(ORACLE_OCCI_NAMES libocci occi oraocci10 oraocci11 oraocci12 libocci.so.19.1 oraocci19)
-
+  set(ORACLE_NNZ_NAMES libnnz21 nnz21 ociw32)
+  set(ORACLE_OCCI_NAMES libocci occi oraocci10 oraocci11)
 
   set(ORACLE_LIB_DIR 
     ${ORACLE_HOME}/lib
@@ -57,23 +46,18 @@ if(DEFINED ENV{ORACLE_HOME})
     ${ORACLE_HOME}/sdk/lib/msvc
     ${ORACLE_HOME}/OCI/lib/msvc) # Oracle XE on Windows
 
-
   find_library(ORACLE_OCI_LIBRARY  NAMES ${ORACLE_OCI_NAMES} PATHS ${ORACLE_LIB_DIR})
   find_library(ORACLE_OCCI_LIBRARY NAMES ${ORACLE_OCCI_NAMES} PATHS ${ORACLE_LIB_DIR})
   find_library(ORACLE_NNZ_LIBRARY NAMES ${ORACLE_NNZ_NAMES} PATHS ${ORACLE_LIB_DIR})
 
-
   set(ORACLE_LIBRARY ${ORACLE_OCI_LIBRARY} ${ORACLE_OCCI_LIBRARY} ${ORACLE_NNZ_LIBRARY})
-
 
   if(APPLE)
     set(ORACLE_OCIEI_NAMES libociei ociei)
 
-
     find_library(ORACLE_OCIEI_LIBRARY
       NAMES libociei ociei
       PATHS ${ORACLE_LIB_DIR})
-
 
     if(ORACLE_OCIEI_LIBRARY)
       set(ORACLE_LIBRARY ${ORACLE_LIBRARY} ${ORACLE_OCIEI_LIBRARY})
@@ -83,18 +67,13 @@ if(DEFINED ENV{ORACLE_HOME})
     endif()
   endif()
 
-
   set(ORACLE_LIBRARIES ${ORACLE_LIBRARY})
 
-
 endif(DEFINED ENV{ORACLE_HOME})
-
 
 # Handle the QUIETLY and REQUIRED arguments and set ORACLE_FOUND to TRUE
 # if all listed variables are TRUE
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(ORACLE DEFAULT_MSG ORACLE_LIBRARY ORACLE_INCLUDE_DIR)
 
-
 mark_as_advanced(ORACLE_INCLUDE_DIR ORACLE_LIBRARY)
-

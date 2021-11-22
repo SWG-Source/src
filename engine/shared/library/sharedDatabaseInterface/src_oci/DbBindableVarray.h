@@ -57,14 +57,14 @@ namespace DB
 	class BindableVarrayNumber : public BindableVarray
 	{
 	  public:
-		bool push_back(bool IsNULL, int value);
+		bool push_back(bool IsNULL, int16_t value);
 		bool push_back(bool IsNULL, double value);
-		bool push_back(bool IsNULL, long int value);
-//		bool push_back(bool IsNULL, int64 value);
-		bool push_back(int value);
+		bool push_back(bool IsNULL, int32_t value);
+		bool push_back(bool IsNULL, int64 value);
+		bool push_back(int16_t value);
 		bool push_back(double value);
-		bool push_back(long int value);
-//		bool push_back(int64 value);
+		bool push_back(int32_t value);
+		bool push_back(int64 value);
 
 		virtual std::string outputValue() const;
 	};

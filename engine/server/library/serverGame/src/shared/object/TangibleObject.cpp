@@ -2341,8 +2341,8 @@ void TangibleObject::addHateOverTime(NetworkId const & target, float const hate,
 
 	if (isAuthoritative())
 	{
-		unsigned long const currentGameTime =  ServerClock::getInstance().getGameTimeSeconds();
-		unsigned long const endGameTime = currentGameTime + seconds;
+		uint32_t const currentGameTime =  ServerClock::getInstance().getGameTimeSeconds();
+		uint32_t const endGameTime = currentGameTime + seconds;
 
 		IGNORE_RETURN(addHate(target, hate));
 
@@ -5149,9 +5149,9 @@ void TangibleObject::handleCMessageTo(const MessageToPayload &message)
 		if (!m_hateOverTime.empty())
 		{
 			std::list<NetworkId> expired;
-			unsigned long const currentGameTime =  ServerClock::getInstance().getGameTimeSeconds();
+			uint32_t const currentGameTime =  ServerClock::getInstance().getGameTimeSeconds();
 
-			for (std::map<NetworkId, std::pair<float, std::pair<unsigned long, unsigned long> > >::const_iterator iter = m_hateOverTime.begin(); iter != m_hateOverTime.end(); ++iter)
+			for (std::map<NetworkId, std::pair<float, std::pair<uint32_t, uint32_t> > >::const_iterator iter = m_hateOverTime.begin(); iter != m_hateOverTime.end(); ++iter)
 			{
 				if (iter->second.second.first < currentGameTime)
 				{

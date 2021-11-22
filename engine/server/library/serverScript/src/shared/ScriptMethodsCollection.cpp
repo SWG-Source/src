@@ -150,7 +150,7 @@ jlong JNICALL ScriptMethodsCollectionNamespace::getCollectionSlotValue(JNIEnv *e
 	std::string slotNameString;
 	JavaLibrary::convert(localSlotName, slotNameString);
 
-	unsigned long value;
+	uint32_t value;
 	if (!playerObject->getCollectionSlotValue(slotNameString, value))
 		return static_cast<int64>(-1);
 

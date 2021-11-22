@@ -6231,7 +6231,7 @@ void CreatureObject::setMood(uint32 mood)
 	}
 	else
 	{
-		sendControllerMessageToAuthServer(CM_setMood, new MessageQueueGenericValueType<unsigned long>(mood));
+		sendControllerMessageToAuthServer(CM_setMood, new MessageQueueGenericValueType<uint32_t>(mood));
 	}
 }
 
@@ -6656,7 +6656,7 @@ void CreatureObject::setSayMode(uint32 sayMode)
 	}
 	else
 	{
-		sendControllerMessageToAuthServer(CM_setSayMode, new MessageQueueGenericValueType<unsigned long>(sayMode));
+		sendControllerMessageToAuthServer(CM_setSayMode, new MessageQueueGenericValueType<uint32_t>(sayMode));
 	}
 }
 
@@ -8723,7 +8723,7 @@ void CreatureObject::setGuildId(int guildId)
 
 //-----------------------------------------------------------------------
 
-void CreatureObject::setTimeToUpdateGuildWarPvpStatus(unsigned long timeToUpdateGuildWarPvpStatus)
+void CreatureObject::setTimeToUpdateGuildWarPvpStatus(uint32_t timeToUpdateGuildWarPvpStatus)
 {
 	FATAL(!isAuthoritative(), ("setTimeToUpdateGuildWarPvpStatus called on nonauthoritative object"));
 	m_timeToUpdateGuildWarPvpStatus = timeToUpdateGuildWarPvpStatus;
@@ -13511,7 +13511,7 @@ void CreatureObject::pushedMe(const NetworkId & attackerId,
  * @param slopeAngle	the angle of the "hill", in radians
  * @param expireTime	the game time when the effect expires
  */
-void CreatureObject::addSlowDownEffect(const TangibleObject & defender, float coneLength, float coneAngle, float slopeAngle, unsigned long expireTime)
+void CreatureObject::addSlowDownEffect(const TangibleObject & defender, float coneLength, float coneAngle, float slopeAngle, uint32_t expireTime)
 {
 	if (isAuthoritative())
 	{
@@ -13554,7 +13554,7 @@ void CreatureObject::addSlowDownEffect(const TangibleObject & defender, float co
  *
  * @return true if the effect was added, false if the creature already had a slow down effect
  */
-bool CreatureObject::addSlowDownEffectProxy(const TangibleObject & defender, float coneLength, float coneAngle, float slopeAngle, unsigned long expireTime)
+bool CreatureObject::addSlowDownEffectProxy(const TangibleObject & defender, float coneLength, float coneAngle, float slopeAngle, uint32_t expireTime)
 {
 	// if we already are doing a slowdown, don't do another
 	Property * property = getProperty(SlowDownProperty::getClassPropertyId());
@@ -14236,7 +14236,7 @@ void CreatureObject::setRegenRate(Attributes::Enumerator poolAttrib, float value
 
 // ----------------------------------------------------------------------
 
-void CreatureObject::setLastWaterDamageTime(unsigned long newTime)
+void CreatureObject::setLastWaterDamageTime(uint32_t newTime)
 {
 	m_lastWaterDamageTime = newTime;
 }
@@ -15346,7 +15346,7 @@ void CreatureObject::addPackedAppearanceWearable(std::string const &appearanceDa
 void CreatureObject::saveDecorationLayout(ServerObject const & pobSourceObject, int saveSlotNumber, std::string const & description)
 {
 	int debugNumItems = 0;
-	const unsigned long debugStartTimeMs = Clock::timeMs();
+	const uint32_t debugStartTimeMs = Clock::timeMs();
 
 	if (!isAuthoritative())
 		return;
@@ -15540,7 +15540,7 @@ void CreatureObject::saveDecorationLayout(ServerObject const & pobSourceObject, 
 
 	if ((debugNumItems > 0) && getClient()->isGod())
 	{
-		const unsigned long debugEndTimeMs = Clock::timeMs();
+		const uint32_t debugEndTimeMs = Clock::timeMs();
 		Chat::sendSystemMessage(*this, Unicode::narrowToWide(FormattedString<256>().sprintf("!!!GOD MODE STATISTICS!!! %d items saved in %lums", debugNumItems, (debugEndTimeMs - debugStartTimeMs))), Unicode::emptyString);
 	}
 }
@@ -15549,7 +15549,7 @@ void CreatureObject::saveDecorationLayout(ServerObject const & pobSourceObject, 
 
 void CreatureObject::restoreDecorationLayout(ServerObject const & pobTargetObject, int saveSlotNumber)
 {
-	const unsigned long debugStartTimeMs = Clock::timeMs();
+	const uint32_t debugStartTimeMs = Clock::timeMs();
 
 	if (!isAuthoritative())
 		return;
@@ -15885,7 +15885,7 @@ void CreatureObject::restoreDecorationLayout(ServerObject const & pobTargetObjec
 
 	if ((debugNumItems > 0) && getClient()->isGod())
 	{
-		const unsigned long debugEndTimeMs = Clock::timeMs();
+		const uint32_t debugEndTimeMs = Clock::timeMs();
 		Chat::sendSystemMessage(*this, Unicode::narrowToWide(FormattedString<256>().sprintf("!!!GOD MODE STATISTICS!!! %d items read (%d will be moved) in %lums", debugNumItems, numItemsToBeMoved, (debugEndTimeMs - debugStartTimeMs))), Unicode::emptyString);
 	}
 }
