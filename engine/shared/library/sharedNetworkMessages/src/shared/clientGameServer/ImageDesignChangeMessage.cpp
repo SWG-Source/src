@@ -157,7 +157,7 @@ MessageQueue::Data* ImageDesignChangeMessage::unpack(Archive::ReadIterator & sou
 	bool tempBool = false;
 	std::string tempStr;
 	int tempInt = 0;
-	int32_t tempTime = 0;
+	uint32_t tempTime = 0;
 
 	Archive::get(source, tempId);
 	msg->setDesignerId(tempId);

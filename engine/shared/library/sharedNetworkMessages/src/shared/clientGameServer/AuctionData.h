@@ -56,7 +56,7 @@ namespace Auction
 		uint16                        highBidderNameKey;
 		int32                         maxProxyBid;
 		int32                         myBid;
-		uint32_t                      itemType;
+		int32_t                       itemType;
 		int                           resourceContainerClassCrc;
 		int32                         flags;
 		int32                         entranceCharge;

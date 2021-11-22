@@ -47,7 +47,7 @@ public:
 	std::string const & getNewHairAsset() const;
 	std::string const & getHairCustomizationData() const;
 	DesignType getDesignType() const;
-	int32_t getStartingTime() const;
+	uint32_t getStartingTime() const;
 	int getDesignerRequiredCredits() const;
 	int getRecipientPaidCredits() const;
 	bool getAccepted() const;
@@ -95,7 +95,7 @@ private:
 	std::string m_newHairAsset;
 	std::string m_hairCustomizationData;
 	DesignType m_designType;
-	int32_t m_startingTime;
+	uint32_t m_startingTime;
 	int m_designerRequiredCredits;
 	int m_recipientPaidCredits;
 	bool m_accepted;
@@ -160,7 +160,7 @@ inline ImageDesignChangeMessage::DesignType ImageDesignChangeMessage::getDesignT
 
 //-----------------------------------------------------------------------
 
-inline int32_t ImageDesignChangeMessage::getStartingTime() const
+inline uint32_t ImageDesignChangeMessage::getStartingTime() const
 {
 	return m_startingTime;
 }
