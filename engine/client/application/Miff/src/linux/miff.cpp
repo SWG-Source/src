@@ -59,15 +59,15 @@ const int   maxStringSize = 256;
 const char  version[] = "1.3 September 18, 2000";
 
 // vars set by pragmas or via command line
-char        drive[8];                               // should be no more then 2 char "C:"
-char        directory[maxStringSize];
-char        filename[maxStringSize];
-char        extension[8];                           // we'll truncate if the extension is more then 8 chars...
-char        inFileName[512];
+// char        drive[8];                               // should be no more then 2 char "C:"
+// char        directory[maxStringSize];
+// char        filename[maxStringSize];
+// char        extension[8];                           // we'll truncate if the extension is more then 8 chars...
+char        local_inFileName[512];
 
 // switches to be sent to mIFF Compiler
 char        sourceBuffer[bufferSize];
-char        outFileName[512];   // x2 to combine filename, dir, and ext
+char        local_outFileName[512];   // x2 to combine filename, dir, and ext
 bool        usePragma = false;
 bool        useCCCP = false;
 bool        verboseMode = false;										// default to non-verbose mode
@@ -92,8 +92,8 @@ enum errorType {
 
 		ERR_NONE = 0
 	};
-char        err_msg[256];
-errorType   errorFlag = ERR_NONE;            // assume no error (default)
+char        local_err_msg[256];
+errorType   local_errorFlag = ERR_NONE;            // assume no error (default)
 
 
 // long and short name definitions for command line options
@@ -220,7 +220,7 @@ int main(	int argc,				// number of args in commandline
 	SetupSharedFoundation::remove();
 
 	SetupSharedThread::remove();
-	return static_cast<int> (errorFlag);
+	return static_cast<int> (local_errorFlag);
 }
 
 //---------------------------------------------------------------------------
@@ -259,24 +259,24 @@ static void callbackFunction(void)
 
 #endif
 
-	errorFlag = evaluateArgs();
-	if (ERR_NONE == errorFlag)
+	local_errorFlag = evaluateArgs();
+	if (ERR_NONE == local_errorFlag)
 	{
-		outfileHandler = new OutputFileHandler(outFileName);
-		MIFFCompile(sourceBuffer, inFileName);
+		outfileHandler = new OutputFileHandler(local_outFileName);
+		MIFFCompile(sourceBuffer, local_inFileName);
 	}
 	else
-		handleError(errorFlag);
+		handleError(local_errorFlag);
 
 	if (outfileHandler)
 	{
 		// only write output IF there was no error
-		if (ERR_NONE == errorFlag)
+		if (ERR_NONE == local_errorFlag)
 		{
 			if (!outfileHandler->writeBuffer())
 			{
-				fprintf(stderr, "MIFF: failed to write output file \"%s\"\n", outFileName);
-				errorFlag = ERR_WRITEERROR;
+				fprintf(stderr, "MIFF: failed to write output file \"%s\"\n", local_outFileName);
+				local_errorFlag = ERR_WRITEERROR;
 			}
 		}
 		delete outfileHandler;
@@ -323,13 +323,13 @@ static errorType evaluateArgs(void)
 
 
 	// setup input filename
-	strcpy(inFileName, CommandLine::getOptionString(SNAME_INPUT_FILE));
+	strcpy(local_inFileName, CommandLine::getOptionString(SNAME_INPUT_FILE));
 
 
 	// handle output filename spec
 	if (CommandLine::getOccurrenceCount(SNAME_OUTPUT_FILE))
 	{
-		strcpy(outFileName, CommandLine::getOptionString(SNAME_OUTPUT_FILE));
+		strcpy(local_outFileName, CommandLine::getOptionString(SNAME_OUTPUT_FILE));
 	}
 	else if (CommandLine::getOccurrenceCount(SNAME_PRAGMA_TARGET))
 	{
@@ -342,15 +342,15 @@ static errorType evaluateArgs(void)
 		char *terminator;
 
 		// start with input file pathname
-		strcpy(outFileName, inFileName);
+		strcpy(local_outFileName, local_inFileName);
 
 		// try to terminate at rightmost '.'
-		terminator = strrchr(outFileName, '.');
+		terminator = strrchr(local_outFileName, '.');
 		if (terminator)
 			*terminator = 0;
 
 		// append the default iff extension
-		strcat(outFileName, ".iff");
+		strcat(local_outFileName, ".iff");
 	}
 
 
@@ -361,12 +361,12 @@ static errorType evaluateArgs(void)
 
 
 	// preprocess the input file
-	if (0 == preprocessSource(inFileName))
+	if (0 == preprocessSource(local_inFileName))
 	{
 		if (verboseMode)
 		{
-			sprintf(err_msg,"Now compiling %s...\n", inFileName);
-			MIFFMessage(err_msg, 0);
+			sprintf(local_err_msg,"Now compiling %s...\n", local_inFileName);
+			MIFFMessage(local_err_msg, 0);
 		}
 		if (ERR_NONE == retVal)
 			retVal = loadInputToBuffer(sourceBuffer, bufferSize);
@@ -563,7 +563,7 @@ extern "C" void MIFFMessage(char *message,			// nullptr terminated string to be 
 // Only call this via parser!!!
 extern "C" void MIFFSetError(void)
 {
-	errorFlag = ERR_PARSER;
+	local_errorFlag = ERR_PARSER;
 }	
 
 //---------------------------------------------------------------------------
@@ -586,10 +586,10 @@ extern "C" int validateTargetFilename(	char		*targetFileName,	// pointer to wher
 										unsigned 	maxTargetBufSize	// size of the filename string buffer
 									)
 {
-	if (strlen(outFileName) > maxTargetBufSize)
+	if (strlen(local_outFileName) > maxTargetBufSize)
 		MIFFMessage("Internal error, increase string buffer size in parser.yac and recompile!", 1);
 
-	strcpy(targetFileName, outFileName);
+	strcpy(targetFileName, local_outFileName);
 
 	return(usePragma);
 }
@@ -667,7 +667,7 @@ static int preprocessSource(char *sourceName)
 
 extern "C" void MIFFSetIFFName(const char *newFileName)
 {
-	if (ERR_NONE != errorFlag)
+	if (ERR_NONE != local_errorFlag)
 		return;
 		
 	if (outfileHandler)
@@ -676,7 +676,7 @@ extern "C" void MIFFSetIFFName(const char *newFileName)
 
 extern "C" void MIFFinsertForm(const char *formName)
 {
-	if (ERR_NONE != errorFlag)
+	if (ERR_NONE != local_errorFlag)
 		return;
 		
 	if (outfileHandler)
@@ -685,7 +685,7 @@ extern "C" void MIFFinsertForm(const char *formName)
 
 extern "C" void MIFFinsertChunk(const char *chunkName)
 {
-	if (ERR_NONE != errorFlag)
+	if (ERR_NONE != local_errorFlag)
 		return;
 		
 	if (outfileHandler)
@@ -694,7 +694,7 @@ extern "C" void MIFFinsertChunk(const char *chunkName)
 
 extern "C" void MIFFinsertChunkData(void * buffer, unsigned bufferSize)
 {
-	if (ERR_NONE != errorFlag)
+	if (ERR_NONE != local_errorFlag)
 		return;
 		
 	if (outfileHandler)
@@ -705,7 +705,7 @@ extern "C" int MIFFloadRawData(char *fname, void * buffer, unsigned maxBufferSiz
 {
 	int sizeRead = -1;
 
-	if (ERR_NONE != errorFlag)
+	if (ERR_NONE != local_errorFlag)
 		return(sizeRead);		// should be -1
 		
 	InputFileHandler * inFileName = new InputFileHandler(fname);
@@ -725,7 +725,7 @@ extern "C" int MIFFloadRawData(char *fname, void * buffer, unsigned maxBufferSiz
 
 extern "C" void MIFFexitChunk(void)
 {
-	if (ERR_NONE != errorFlag)
+	if (ERR_NONE != local_errorFlag)
 		return;
 		
 	if (outfileHandler)
@@ -733,7 +733,7 @@ extern "C" void MIFFexitChunk(void)
 }	
 extern "C" void MIFFexitForm(void)
 {
-	if (ERR_NONE != errorFlag)
+	if (ERR_NONE != local_errorFlag)
 		return;
 		
 	if (outfileHandler)

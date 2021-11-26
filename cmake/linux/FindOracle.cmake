@@ -30,14 +30,14 @@ if(DEFINED ENV{ORACLE_HOME})
   find_path(ORACLE_INCLUDE_DIR
     NAMES oci.h
     PATHS
-	/usr/include/oracle/21/client
+	/usr/include/oracle/18.3/client
     ${ORACLE_HOME}/rdbms/public
     ${ORACLE_HOME}/include
     ${ORACLE_HOME}/sdk/include  # Oracle SDK
     ${ORACLE_HOME}/OCI/include) # Oracle XE on Windows
 
   set(ORACLE_OCI_NAMES clntsh libclntsh oci)
-  set(ORACLE_NNZ_NAMES libnnz21 nnz21 ociw32)
+  set(ORACLE_NNZ_NAMES libnnz18 nnz18 libnnz21 nnz21 ociw32)
   set(ORACLE_OCCI_NAMES libocci occi oraocci10 oraocci11)
 
   set(ORACLE_LIB_DIR 
