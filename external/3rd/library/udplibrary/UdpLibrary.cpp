@@ -2896,21 +2896,21 @@ const char *UdpConnection::DisconnectReasonText(DisconnectReason reason)
 	{
 		sInitialized = true;
 		memset(sDisconnectReason, 0, sizeof(sDisconnectReason));
-		sDisconnectReason[cDisconnectReasonNone] = "DisconnectReasonNone";
-		sDisconnectReason[cDisconnectReasonIcmpError] = "DisconnectReasonIcmpError";
-		sDisconnectReason[cDisconnectReasonTimeout] = "DisconnectReasonTimeout";
-		sDisconnectReason[cDisconnectReasonOtherSideTerminated] = "DisconnectReasonOtherSideTerminated";
-		sDisconnectReason[cDisconnectReasonManagerDeleted] = "DisconnectReasonManagerDeleted";
-		sDisconnectReason[cDisconnectReasonConnectFail] = "DisconnectReasonConnectFail";
-		sDisconnectReason[cDisconnectReasonApplication] = "DisconnectReasonApplication";
-		sDisconnectReason[cDisconnectReasonUnreachableConnection] = "DisconnectReasonUnreachableConnection";
-		sDisconnectReason[cDisconnectReasonUnacknowledgedTimeout] = "DisconnectReasonUnacknowledgedTimeout";
-		sDisconnectReason[cDisconnectReasonNewConnectionAttempt] = "DisconnectReasonNewConnectionAttempt";
-		sDisconnectReason[cDisconnectReasonConnectionRefused] = "DisconnectReasonConnectionRefused";
-		sDisconnectReason[cDisconnectReasonMutualConnectError] = "DisconnectReasonConnectError";
-		sDisconnectReason[cDisconnectReasonConnectingToSelf] = "DisconnectReasonConnectingToSelf";
-		sDisconnectReason[cDisconnectReasonReliableOverflow] = "DisconnectReasonReliableOverflow";
-		sDisconnectReason[cDisconnectReasonDosAttack] = "DisconnectReasonDoSAttack";
+		sDisconnectReason[cDisconnectReasonNone] = (char *) "DisconnectReasonNone";
+		sDisconnectReason[cDisconnectReasonIcmpError] = (char *) "DisconnectReasonIcmpError";
+		sDisconnectReason[cDisconnectReasonTimeout] = (char *) "DisconnectReasonTimeout";
+		sDisconnectReason[cDisconnectReasonOtherSideTerminated] = (char *) "DisconnectReasonOtherSideTerminated";
+		sDisconnectReason[cDisconnectReasonManagerDeleted] = (char *) "DisconnectReasonManagerDeleted";
+		sDisconnectReason[cDisconnectReasonConnectFail] = (char *) "DisconnectReasonConnectFail";
+		sDisconnectReason[cDisconnectReasonApplication] = (char *) "DisconnectReasonApplication";
+		sDisconnectReason[cDisconnectReasonUnreachableConnection] = (char *) "DisconnectReasonUnreachableConnection";
+		sDisconnectReason[cDisconnectReasonUnacknowledgedTimeout] = (char *) "DisconnectReasonUnacknowledgedTimeout";
+		sDisconnectReason[cDisconnectReasonNewConnectionAttempt] = (char *) "DisconnectReasonNewConnectionAttempt";
+		sDisconnectReason[cDisconnectReasonConnectionRefused] = (char *) "DisconnectReasonConnectionRefused";
+		sDisconnectReason[cDisconnectReasonMutualConnectError] = (char *) "DisconnectReasonConnectError";
+		sDisconnectReason[cDisconnectReasonConnectingToSelf] = (char *) "DisconnectReasonConnectingToSelf";
+		sDisconnectReason[cDisconnectReasonReliableOverflow] = (char *) "DisconnectReasonReliableOverflow";
+		sDisconnectReason[cDisconnectReasonDosAttack] = (char *) "DisconnectReasonDoSAttack";
 	}
 
 	return(sDisconnectReason[reason]);
