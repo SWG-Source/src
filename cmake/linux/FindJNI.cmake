@@ -100,6 +100,7 @@ set(JAVA_AWT_LIBRARY_DIRECTORIES
   "[HKEY_LOCAL_MACHINE\\SOFTWARE\\JavaSoft\\Java Development Kit\\${java_install_version};JavaHome]/lib"
   )
 
+file(TO_CMAKE_PATH "$ENV{JAVA32_HOME}" _JAVA32_HOME)
 file(TO_CMAKE_PATH "$ENV{JAVA_HOME}" _JAVA_HOME)
 
 JAVA_APPEND_LIBRARY_DIRECTORIES(JAVA_AWT_LIBRARY_DIRECTORIES
@@ -113,6 +114,12 @@ JAVA_APPEND_LIBRARY_DIRECTORIES(JAVA_AWT_LIBRARY_DIRECTORIES
   /opt/java18/jre/lib
   /opt/java18/jre/bin
   /opt/java18/jre/bin/classic
+  ${_JAVA32_HOME}/jre/lib/{libarch}
+  ${_JAVA32_HOME}/jre/lib
+  ${_JAVA32_HOME}/jre/bin
+  ${_JAVA32_HOME}/jre/bin/classic
+  ${_JAVA32_HOME}/lib
+  ${_JAVA32_HOME}
   ${_JAVA_HOME}/jre/lib/{libarch}
   ${_JAVA_HOME}/jre/lib
   ${_JAVA_HOME}/jre/bin
@@ -172,6 +179,7 @@ set(JAVA_AWT_INCLUDE_DIRECTORIES
   "[HKEY_LOCAL_MACHINE\\SOFTWARE\\JavaSoft\\Java Development Kit\\1.4;JavaHome]/include"
   "[HKEY_LOCAL_MACHINE\\SOFTWARE\\JavaSoft\\Java Development Kit\\1.3;JavaHome]/include"
   "[HKEY_LOCAL_MACHINE\\SOFTWARE\\JavaSoft\\Java Development Kit\\${java_install_version};JavaHome]/include"
+  ${_JAVA32_HOME}/include
   ${_JAVA_HOME}/include
   /opt/java18/include
   /opt/java/include
