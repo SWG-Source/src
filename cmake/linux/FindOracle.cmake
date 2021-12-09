@@ -30,7 +30,8 @@ if(DEFINED ENV{ORACLE_HOME})
   find_path(ORACLE_INCLUDE_DIR
     NAMES oci.h
     PATHS
-	/usr/include/oracle/18.3/client
+    /usr/include/oracle/18.3/client
+    /usr/include/oracle/21/client64
     ${ORACLE_HOME}/rdbms/public
     ${ORACLE_HOME}/include
     ${ORACLE_HOME}/sdk/include  # Oracle SDK
@@ -74,6 +75,6 @@ endif(DEFINED ENV{ORACLE_HOME})
 # Handle the QUIETLY and REQUIRED arguments and set ORACLE_FOUND to TRUE
 # if all listed variables are TRUE
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(ORACLE DEFAULT_MSG ORACLE_LIBRARY ORACLE_INCLUDE_DIR)
+find_package_handle_standard_args(Oracle DEFAULT_MSG ORACLE_LIBRARY ORACLE_INCLUDE_DIR)
 
 mark_as_advanced(ORACLE_INCLUDE_DIR ORACLE_LIBRARY)
