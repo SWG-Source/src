@@ -25,13 +25,12 @@
 # If ORACLE_HOME not defined, assume Oracle libraries not available
 if(DEFINED ENV{ORACLE_HOME})
 
-  set(ORACLE_HOME $ENV{ORACLE_HOME})
+  set(ORACLE_HOME ${CMAKE_ORACLE_DIR})
 
   find_path(ORACLE_INCLUDE_DIR
     NAMES oci.h
     PATHS
-    /usr/include/oracle/18.3/client
-    /usr/include/oracle/21/client64
+    ${CMAKE_ORACLE_INCLUDE_DIR}
     ${ORACLE_HOME}/rdbms/public
     ${ORACLE_HOME}/include
     ${ORACLE_HOME}/sdk/include  # Oracle SDK

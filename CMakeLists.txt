@@ -35,7 +35,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 # shame on you cmake for auto-setting optimization flags!
-set(CMAKE_CXX_FLAGS "")
 set(CMAKE_CXX_FLAGS_DEBUG "")
 set(CMAKE_CXX_FLAGS_RELEASE "")
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "")
@@ -107,7 +106,7 @@ elseif (UNIX)
         # RELWITHDEBINFO is used for building bins that produce profdata files
 		# we only need the basics of our heavy optimizations here, i think - that and one of these flags
 		# breaks JNI when we profile
-        set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-Ofast -finline-hint-functions -fprofile-instr-generate -g -fcoverage-mapping")
+        set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS} -Ofast -finline-hint-functions -fprofile-instr-generate -g -fcoverage-mapping")
 
         # MINSIZEREL is used for profiled, flto builds
         set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_RELEASE} -flto -fwhole-program-vtables")
