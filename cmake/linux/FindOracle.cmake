@@ -70,6 +70,12 @@ if(DEFINED ENV{ORACLE_HOME})
     /usr/share/oracle/19.12/client64
     /usr/lib/oracle/19.12/client
     /usr/share/oracle/19.12/client
+    /usr/include/oracle/21/client
+    /usr/lib/oracle/21/client
+    /usr/share/oracle/21/client    
+    /usr/include/oracle/21/client64
+    /usr/lib/oracle/21/client64
+    /usr/share/oracle/21/client64
     ${ORACLE_HOME}/rdbms/public
     ${ORACLE_HOME}/include
     ${ORACLE_HOME}/sdk/include  # Oracle SDK
