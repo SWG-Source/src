@@ -25,7 +25,7 @@
 # If ORACLE_HOME not defined, assume Oracle libraries not available
 if(DEFINED ENV{ORACLE_HOME})
 
-  set(ORACLE_HOME ${CMAKE_ORACLE_DIR})
+  set(ORACLE_HOME $ENV{ORACLE_HOME})
 
   find_path(ORACLE_INCLUDE_DIR
     NAMES oci.h

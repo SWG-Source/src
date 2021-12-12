@@ -81,7 +81,7 @@ namespace Base
     {
     }
 
-    ByteStream::ReadIterator::~ReadIterator()
+    Base::ReadIterator::~ReadIterator()
     {
 	    stream = 0;
     }
