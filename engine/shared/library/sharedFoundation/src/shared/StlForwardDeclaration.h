@@ -15,6 +15,7 @@
 #include <set>
 #include <queue>
 #include <list>
+#include <string>
 
 namespace Unicode
 {
