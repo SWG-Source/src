@@ -111,7 +111,7 @@ namespace AlterSchedulerNamespace
 
 	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-	float const  cs_schedulerTicksPerSecond = 1000.0f;  // # schedule ticks per second.  Frame rates will not be able to exceed this.
+	float const  cs_schedulerTicksPerSecond = 2000.0f;  // # schedule ticks per second.  Frame rates will not be able to exceed this.
 	float const  cs_secondsPerSchedulerTick = 1.0f / cs_schedulerTicksPerSecond;
 
 	uint64_t const cs_freeFillPattern         = 0xEFEFEFEFEFEFEFEF; // this should match MemoryManager's free fill pattern.

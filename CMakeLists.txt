@@ -66,24 +66,21 @@ if (WIN32)
 elseif (UNIX)
     find_package(Curses REQUIRED)
 
-    # linker flags
-    if (${CMAKE_BUILD_TYPE} STREQUAL "RELWITHDEBINFO" OR ${CMAKE_BUILD_TYPE} STREQUAL "MINSIZEREL")
-        set(CMAKE_SHARED_LINKER_FLAGS "-Wl,-z,norelro,-O3,--sort-common,--as-needed,--relax,-z,combreloc,-z,global,--no-omagic")
-        set(CMAKE_EXE_LINKER_FLAGS "-Wl,-z,norelro,-O3,--sort-common,--as-needed,--relax,-z,combreloc,-z,global,--no-omagic")
-    else ()
-        set(CMAKE_SHARED_LINKER_FLAGS "-Wl,-z,norelro,-O3,--sort-common,--as-needed,--relax,-z,combreloc,-z,global,--no-omagic,-x,-s")
-        set(CMAKE_EXE_LINKER_FLAGS "-Wl,-z,norelro,-O3,--sort-common,--as-needed,--relax,-z,combreloc,-z,global,--no-omagic,-x,-s")
+	# Global Linker flags
+    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-z,norelro,-O3,--sort-common,--as-needed,--relax,-z,combreloc,-z,global,--no-omagic")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-z,norelro,-O3,--sort-common,--as-needed,--relax,-z,combreloc,-z,global,--no-omagic")
+    
+	# Strip debug symbols if RELEASE or MINSIZEREL
+    if (${CMAKE_BUILD_TYPE} STREQUAL "RELEASE" OR ${CMAKE_BUILD_TYPE} STREQUAL "MINSIZEREL")
+        set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS},-x,-s")
+        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS},-x,-s")
     endif ()
 
     # don't put anything too crazy in debug...and any common flags go into CMAKE_CXX_FLAGS
-    set(CMAKE_CXX_FLAGS_DEBUG "-D_DEBUG -DDEBUG_LEVEL=2 -DPRODUCTION=0 -O0 -ggdb -pg")
-
-    # release specific cflags - optimizations beyond the default for both types is mostly just -O flags
-    set(CMAKE_CXX_FLAGS_RELEASE "-DDEBUG_LEVEL=0 -DPRODUCTION=1")
-
-    # we use fewer, if any, crazy optimizations for profile generation, and likewise release flags for the minsizerel
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG -DDEBUG_LEVEL=2 -DPRODUCTION=0 -pg")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DDEBUG_LEVEL=0 -DPRODUCTION=1")
     set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELEASE} -ggdb -pg")
-    set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_RELEASE}")
+    set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_MINSIZEREL}")
 
     # our "always on" flags - build by default for the system we're on but include all instruction sets
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pipe -march=native -mtune=native \
@@ -101,7 +98,7 @@ elseif (UNIX)
 		-fno-coverage-mapping -fno-spell-checking \
 		-mno-retpoline")
 
-        set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -ggdb -fprofile-instr-generate -fcoverage-mapping")
+        set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0 -g -fprofile-instr-generate -fcoverage-mapping")
 
         # RELWITHDEBINFO is used for building bins that produce profdata files
 		# we only need the basics of our heavy optimizations here, i think - that and one of these flags
@@ -113,7 +110,7 @@ elseif (UNIX)
     elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
         # O3 and Ofast include one or more flags that cause java to crash when using gcc6
         set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2 -fno-signed-zeros -freciprocal-math -fno-unroll-loops -fno-tree-loop-optimize -fno-plt")
-        set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Og -no-pie")
+        set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Og -ggdb -no-pie")
         set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -no-pie")
 		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-stringop-overflow")
     elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
@@ -123,10 +120,16 @@ elseif (UNIX)
     add_definitions(-DLINUX -D_REENTRANT -Dlinux -D_USING_STL -D_GNU_SOURCE -D_XOPEN_SOURCE=500 -U_FORTIFY_SOURCE)
 
     # this is so some profile specific stuff is turned on in the code
-    if (${CMAKE_BUILD_TYPE} STREQUAL "RELWITHDEBINFO")
+    if (${CMAKE_BUILD_TYPE} STREQUAL "RELWITHDEBINFO" OR ${CMAKE_BUILD_TYPE} STREQUAL "DEBUG")
         add_definitions(-DENABLE_PROFILING)
     endif ()
 endif ()
+
+message("Flags CXX: ${CMAKE_CXX_FLAGS}")
+message("Flags DEBUG: ${CMAKE_CXX_FLAGS_DEBUG}")
+message("Flags RELWITHDEBINFO: ${CMAKE_CXX_FLAGS_RELWITHDEBINFO}")
+message("Flags RELEASE: ${CMAKE_CXX_FLAGS_RELEASE}")
+message("Flags MINSIZEREL: ${CMAKE_CXX_FLAGS_MINSIZEREL}")
 
 add_subdirectory(external)
 add_subdirectory(engine)
