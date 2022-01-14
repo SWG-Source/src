@@ -1,7 +1,4 @@
 
-find_path(LIBXML2_ROOT
-    NAMES include/zlib.h
-)
 
 find_path(LIBXML2_INCLUDE_DIR libxml/xpath.h
     HINTS
