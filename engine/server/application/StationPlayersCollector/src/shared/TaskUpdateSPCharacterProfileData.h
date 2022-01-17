@@ -44,11 +44,11 @@ class TaskUpdateSPCharacterProfileData : public DB::TaskRequest
 		DB::BindableDouble              cash_balance;
 		DB::BindableDouble              bank_balance;
 		DB::BindableString<500>         objectTemplateName;
-		DB::BindableLong                stationId;
+		DB::BindableInt32                stationId;
 		DB::BindableNetworkId           containedBy;
-		DB::BindableLong                createTime;
-		DB::BindableLong                playedTime;
-		DB::BindableLong                numLots;
+		DB::BindableInt32                createTime;
+		DB::BindableInt32                playedTime;
+		DB::BindableInt32                numLots;
 
 		virtual void getSQL                (std::string &sql);
 		virtual bool bindParameters        ();

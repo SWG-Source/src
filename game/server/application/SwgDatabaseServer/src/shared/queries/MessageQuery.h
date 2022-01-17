@@ -46,8 +46,8 @@ namespace DBQuery
 		DB::BindableVarrayNumber	m_call_times;
 		DB::BindableVarrayString	m_guaranteeds;
 		DB::BindableVarrayNumber	m_delivery_types;
-		DB::BindableLong			m_numItems;
-		DB::BindableLong			m_enableDatabaseLogging;
+		DB::BindableInt32			m_numItems;
+		DB::BindableInt32			m_enableDatabaseLogging;
 		
 	  private:
 		SaveMessageQuery(const SaveMessageQuery&); // disable
@@ -74,8 +74,8 @@ namespace DBQuery
 
 	  private:
 		DB::BindableVarrayString	m_message_ids;
-		DB::BindableLong			m_numItems;
-		DB::BindableLong			m_enableDatabaseLogging;
+		DB::BindableInt32			m_numItems;
+		DB::BindableInt32			m_enableDatabaseLogging;
 				
 	  private:
 		AckMessageQuery(const AckMessageQuery&); // disable
@@ -94,9 +94,9 @@ namespace DBQuery
 			DB::BindableNetworkId object_id;
 			DB::BindableString<50> method;
 			DB::BindableString<4000> packed_data;
-			DB::BindableLong call_time;
+			DB::BindableInt32 call_time;
 			DB::BindableBool guaranteed;
-			DB::BindableLong delivery_type;
+			DB::BindableInt32 delivery_type;
 		};
 
 	  public:

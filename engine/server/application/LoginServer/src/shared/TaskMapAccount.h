@@ -34,8 +34,8 @@ class TaskMapAccount : public DB::TaskRequest
 	  public:
         MapAccountQuery();
 
-		DB::BindableLong parentID; //lint !e1925 // public data member
-		DB::BindableLong childID; //lint !e1925 // public data member
+		DB::BindableInt32 parentID; //lint !e1925 // public data member
+		DB::BindableInt32 childID; //lint !e1925 // public data member
 
 		virtual void getSQL(std::string &sql);
 		virtual bool bindParameters();

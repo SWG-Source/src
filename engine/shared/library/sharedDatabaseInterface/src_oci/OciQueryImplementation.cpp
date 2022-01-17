@@ -448,7 +448,7 @@ size_t DB::OCIQueryImpl::BindRec::getLengthSkipSize()
 	
 // ======================================================================
 
-bool DB::OCIQueryImpl::bindCol(BindableLong &buffer)
+bool DB::OCIQueryImpl::bindCol(BindableInt32 &buffer)
 {
 	BindRec *br=addBindRec(buffer);
 
@@ -478,7 +478,7 @@ bool DB::OCIQueryImpl::bindCol(BindableLong &buffer)
 
 // ----------------------------------------------------------------------
 
-bool DB::OCIQueryImpl::bindParameter(BindableLong &buffer)
+bool DB::OCIQueryImpl::bindParameter(BindableInt32 &buffer)
 {
 	BindRec *br=addBindRec(buffer);
 

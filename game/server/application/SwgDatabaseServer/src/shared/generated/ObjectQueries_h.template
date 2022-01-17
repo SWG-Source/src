@@ -45,7 +45,7 @@ public:
 private:
 	DB::BindableVarrayString	 m_object_ids;
 	DB::BindableVarrayString	 m_region_names;
-	DB::BindableLong			 m_numItems;
+	DB::BindableInt32			 m_numItems;
 };
 
 class BattlefieldMarkerObjectQuerySelect : public DB::Query
@@ -95,7 +95,7 @@ private:
 	DB::BindableVarrayNumber	 m_time_last_checkeds;
 	DB::BindableVarrayString	 m_is_publics;
 	DB::BindableVarrayNumber	 m_city_ids;
-	DB::BindableLong			 m_numItems;
+	DB::BindableInt32			 m_numItems;
 };
 
 class BuildingObjectQuerySelect : public DB::Query
@@ -143,7 +143,7 @@ private:
 	DB::BindableVarrayString	 m_object_ids;
 	DB::BindableVarrayNumber	 m_cell_numbers;
 	DB::BindableVarrayString	 m_is_publics;
-	DB::BindableLong			 m_numItems;
+	DB::BindableInt32			 m_numItems;
 };
 
 class CellObjectQuerySelect : public DB::Query
@@ -189,7 +189,7 @@ public:
 
 private:
 	DB::BindableVarrayString	 m_object_ids;
-	DB::BindableLong			 m_numItems;
+	DB::BindableInt32			 m_numItems;
 };
 
 class CityObjectQuerySelect : public DB::Query
@@ -274,7 +274,7 @@ private:
 	DB::BindableVarrayNumber	 m_ws_xs;
 	DB::BindableVarrayNumber	 m_ws_ys;
 	DB::BindableVarrayNumber	 m_ws_zs;
-	DB::BindableLong			 m_numItems;
+	DB::BindableInt32			 m_numItems;
 };
 
 class CreatureObjectQuerySelect : public DB::Query
@@ -320,7 +320,7 @@ public:
 
 private:
 	DB::BindableVarrayString	 m_object_ids;
-	DB::BindableLong			 m_numItems;
+	DB::BindableInt32			 m_numItems;
 };
 
 class FactoryObjectQuerySelect : public DB::Query
@@ -366,7 +366,7 @@ public:
 
 private:
 	DB::BindableVarrayString	 m_object_ids;
-	DB::BindableLong			 m_numItems;
+	DB::BindableInt32			 m_numItems;
 };
 
 class GuildObjectQuerySelect : public DB::Query
@@ -419,7 +419,7 @@ private:
 	DB::BindableVarrayString	 m_hopper_resources;
 	DB::BindableVarrayNumber	 m_hopper_amounts;
 	DB::BindableVarrayString	 m_resource_types;
-	DB::BindableLong			 m_numItems;
+	DB::BindableInt32			 m_numItems;
 };
 
 class HarvesterInstallationObjectQuerySelect : public DB::Query
@@ -471,7 +471,7 @@ private:
 	DB::BindableVarrayNumber	 m_activate_start_times;
 	DB::BindableVarrayNumber	 m_powers;
 	DB::BindableVarrayNumber	 m_power_rates;
-	DB::BindableLong			 m_numItems;
+	DB::BindableInt32			 m_numItems;
 };
 
 class InstallationObjectQuerySelect : public DB::Query
@@ -518,7 +518,7 @@ public:
 private:
 	DB::BindableVarrayString	 m_object_ids;
 	DB::BindableVarrayNumber	 m_counts;
-	DB::BindableLong			 m_numItems;
+	DB::BindableInt32			 m_numItems;
 };
 
 class IntangibleObjectQuerySelect : public DB::Query
@@ -569,7 +569,7 @@ private:
 	DB::BindableVarrayNumber	 m_items_per_containers;
 	DB::BindableVarrayNumber	 m_manufacture_times;
 	DB::BindableVarrayNumber	 m_draft_schematics;
-	DB::BindableLong			 m_numItems;
+	DB::BindableInt32			 m_numItems;
 };
 
 class ManufactureSchematicObjectQuerySelect : public DB::Query
@@ -615,7 +615,7 @@ public:
 
 private:
 	DB::BindableVarrayString	 m_object_ids;
-	DB::BindableLong			 m_numItems;
+	DB::BindableInt32			 m_numItems;
 };
 
 class ManufactureInstallationObjectQuerySelect : public DB::Query
@@ -684,7 +684,7 @@ private:
 	DB::BindableVarrayNumber	 m_mission_types;
 	DB::BindableVarrayNumber	 m_target_appearances;
 	DB::BindableVarrayString	 m_target_names;
-	DB::BindableLong			 m_numItems;
+	DB::BindableInt32			 m_numItems;
 };
 
 class MissionObjectQuerySelect : public DB::Query
@@ -731,7 +731,7 @@ public:
 private:
 	DB::BindableVarrayString	 m_object_ids;
 	DB::BindableVarrayString	 m_planet_names;
-	DB::BindableLong			 m_numItems;
+	DB::BindableInt32			 m_numItems;
 };
 
 class PlanetObjectQuerySelect : public DB::Query
@@ -813,7 +813,7 @@ private:
 	DB::BindableVarrayString	 m_show_backpacks;
 	DB::BindableVarrayString	 m_show_helmets;
 	DB::BindableVarrayString	 m_collections2s;
-	DB::BindableLong			 m_numItems;
+	DB::BindableInt32			 m_numItems;
 };
 
 class PlayerObjectQuerySelect : public DB::Query
@@ -888,7 +888,7 @@ private:
 	DB::BindableVarrayString	 m_task_description11s;
 	DB::BindableVarrayString	 m_task_title12s;
 	DB::BindableVarrayString	 m_task_description12s;
-	DB::BindableLong			 m_numItems;
+	DB::BindableInt32			 m_numItems;
 };
 
 class PlayerQuestObjectQuerySelect : public DB::Query
@@ -937,7 +937,7 @@ private:
 	DB::BindableVarrayString	 m_resource_types;
 	DB::BindableVarrayNumber	 m_quantitys;
 	DB::BindableVarrayString	 m_sources;
-	DB::BindableLong			 m_numItems;
+	DB::BindableInt32			 m_numItems;
 };
 
 class ResourceContainerObjectQuerySelect : public DB::Query
@@ -1034,7 +1034,7 @@ private:
 	DB::BindableVarrayNumber	 m_cargo_hold_contents_maximums;
 	DB::BindableVarrayNumber	 m_cargo_hold_contents_currents;
 	DB::BindableVarrayString	 m_cargo_hold_contentss;
-	DB::BindableLong			 m_numItems;
+	DB::BindableInt32			 m_numItems;
 };
 
 class ShipObjectQuerySelect : public DB::Query
@@ -1080,7 +1080,7 @@ public:
 
 private:
 	DB::BindableVarrayString	 m_object_ids;
-	DB::BindableLong			 m_numItems;
+	DB::BindableInt32			 m_numItems;
 };
 
 class StaticObjectQuerySelect : public DB::Query
@@ -1139,7 +1139,7 @@ private:
 	DB::BindableVarrayNumber	 m_conditions;
 	DB::BindableVarrayString	 m_creator_ids;
 	DB::BindableVarrayNumber	 m_source_draft_schematics;
-	DB::BindableLong			 m_numItems;
+	DB::BindableInt32			 m_numItems;
 };
 
 class TangibleObjectQuerySelect : public DB::Query
@@ -1189,7 +1189,7 @@ private:
 	DB::BindableVarrayString	 m_target_server_template_names;
 	DB::BindableVarrayString	 m_target_shared_template_names;
 	DB::BindableVarrayString	 m_waypoints;
-	DB::BindableLong			 m_numItems;
+	DB::BindableInt32			 m_numItems;
 };
 
 class TokenObjectQuerySelect : public DB::Query
@@ -1235,7 +1235,7 @@ public:
 
 private:
 	DB::BindableVarrayString	 m_object_ids;
-	DB::BindableLong			 m_numItems;
+	DB::BindableInt32			 m_numItems;
 };
 
 class UniverseObjectQuerySelect : public DB::Query
@@ -1282,7 +1282,7 @@ public:
 private:
 	DB::BindableVarrayString	 m_object_ids;
 	DB::BindableVarrayNumber	 m_boguss;
-	DB::BindableLong			 m_numItems;
+	DB::BindableInt32			 m_numItems;
 };
 
 class VehicleObjectQuerySelect : public DB::Query
@@ -1340,7 +1340,7 @@ private:
 	DB::BindableVarrayNumber	 m_damage_radiuss;
 	DB::BindableVarrayNumber	 m_min_ranges;
 	DB::BindableVarrayNumber	 m_max_ranges;
-	DB::BindableLong			 m_numItems;
+	DB::BindableInt32			 m_numItems;
 };
 
 class WeaponObjectQuerySelect : public DB::Query

@@ -23,7 +23,7 @@
 #include "sharedDatabaseInterface/DbBindableBool.h"
 #include "sharedDatabaseInterface/DbBindableDouble.h"
 #include "sharedDatabaseInterface/DbBindableInt64.h"
-#include "sharedDatabaseInterface/DbBindableLong.h"
+#include "sharedDatabaseInterface/DbBindableInt32.h"
 #include "sharedDatabaseInterface/DbBindableString.h"
 #include "sharedDatabaseInterface/DbBindableUnicode.h"
 

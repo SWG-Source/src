@@ -1,12 +1,12 @@
 // ======================================================================
 //
-// DBBindableLong.cpp
+// DBBindableInt32.cpp
 // copyright (c) 2001 Sony Online Entertainment
 //
 // ======================================================================
 
 #include "sharedDatabaseInterface/FirstSharedDatabaseInterface.h"
-#include "sharedDatabaseInterface/DbBindableLong.h"
+#include "sharedDatabaseInterface/DbBindableInt32.h"
 
 #include <string>
 
@@ -14,15 +14,15 @@
 
 using namespace DB;
 
-BindableLong::BindableLong() : Bindable(), value(-999)
+BindableInt32::BindableInt32() : Bindable(), value(-999)
 {
 }
 
-BindableLong::BindableLong(int64_t _value) : Bindable(sizeof(value)), value(_value)
+BindableInt32::BindableInt32(int32_t _value) : Bindable(sizeof(value)), value(_value)
 {
 }
 
-void *BindableLong::getBuffer()
+void *BindableInt32::getBuffer()
 {
 	return &value; //lint !e1536 // exposing private member
 }
@@ -30,14 +30,14 @@ void *BindableLong::getBuffer()
 // ----------------------------------------------------------------------
 
 
-int64_t BindableLong::getValue() const
+int32_t BindableInt32::getValue() const
 {
 	return value;
 }
 
 // ----------------------------------------------------------------------
 
-BindableLong &BindableLong::operator=(int64_t rhs)
+BindableInt32 &BindableInt32::operator=(int32_t rhs)
 {
 	indicator=sizeof(value); 
 	value=rhs;
@@ -46,7 +46,7 @@ BindableLong &BindableLong::operator=(int64_t rhs)
 
 // ----------------------------------------------------------------------
 
-void BindableLong::setValue(int64_t rhs)
+void BindableInt32::setValue(int32_t rhs)
 {
 	indicator=sizeof(value); 
 	value=rhs;
@@ -54,7 +54,7 @@ void BindableLong::setValue(int64_t rhs)
 
 // ----------------------------------------------------------------------
 
-std::string BindableLong::outputValue() const
+std::string BindableInt32::outputValue() const
 {
 	char temp[255];
 	snprintf(temp,sizeof(temp),"%li",value);

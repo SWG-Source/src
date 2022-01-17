@@ -43,10 +43,10 @@ class TaskRestoreCharacter:public DB::TaskRequest
 		DB::BindableNetworkId   character_id;
 		
 		//output:
-		DB::BindableLong        result;
+		DB::BindableInt32        result;
 		DB::BindableString<127> character_name;
-		DB::BindableLong        account;
-		DB::BindableLong        template_id;
+		DB::BindableInt32        account;
+		DB::BindableInt32        template_id;
 		
 	  private:
 		RestoreCharacterQuery(const RestoreCharacterQuery&);

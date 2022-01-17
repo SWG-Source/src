@@ -12,7 +12,7 @@
 
 #include "Unicode.h"
 #include "serverDatabase/CustomPersistStep.h"
-#include "sharedDatabaseInterface/DbBindableLong.h"
+#include "sharedDatabaseInterface/DbBindableInt32.h"
 #include "sharedDatabaseInterface/BindableNetworkId.h"
 #include "sharedDatabaseInterface/DbQuery.h"
 #include "sharedFoundation/NetworkId.h"
@@ -50,7 +50,7 @@ class FixLoadWithCustomPersistStep : public CustomPersistStep
 		FixLoadWithQuery &operator=(FixLoadWithQuery const &);
 		DB::BindableNetworkId topmost_object;
 		DB::BindableNetworkId starting_loadwith;
-		DB::BindableLong max_depth;
+		DB::BindableInt32 max_depth;
 	};
 	
   private:

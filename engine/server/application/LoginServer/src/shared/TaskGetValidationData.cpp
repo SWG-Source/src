@@ -26,10 +26,10 @@ namespace TaskGetValidationDataNamespace
 	public:
 		GetValidationDataQuery();
 
-		DB::BindableLong station_id; //lint !e1925 // public data member
-		DB::BindableLong cluster_id; //lint !e1925 // public data member
-		DB::BindableLong character_type_id; //lint !e1925 // public data member
-		DB::BindableLong num_open_slots; //lint !e1925 // public data member
+		DB::BindableInt32 station_id; //lint !e1925 // public data member
+		DB::BindableInt32 cluster_id; //lint !e1925 // public data member
+		DB::BindableInt32 character_type_id; //lint !e1925 // public data member
+		DB::BindableInt32 num_open_slots; //lint !e1925 // public data member
 
 		virtual void getSQL(std::string &sql);
 		virtual bool bindParameters();
@@ -46,7 +46,7 @@ namespace TaskGetValidationDataNamespace
 	public:
 		GetCompletedTutorialQuery(StationId stationId);
 
-		DB::BindableLong station_id;
+		DB::BindableInt32 station_id;
 		DB::BindableBool completed_tutorial;
 
 		virtual void getSQL(std::string &sql);
@@ -74,9 +74,9 @@ namespace TaskGetValidationDataNamespace
 		NetworkId const getCharacterId() const;
 
 	private:
-		DB::BindableLong station_id;
+		DB::BindableInt32 station_id;
 		DB::BindableString<100> event_id;
-		DB::BindableLong cluster_id;
+		DB::BindableInt32 cluster_id;
 		DB::BindableNetworkId character_id;
 
 	private: //disable
@@ -100,9 +100,9 @@ namespace TaskGetValidationDataNamespace
 		NetworkId const getCharacterId() const;
 
 	private:
-		DB::BindableLong station_id;
+		DB::BindableInt32 station_id;
 		DB::BindableString<100> item_id;
-		DB::BindableLong cluster_id;
+		DB::BindableInt32 cluster_id;
 		DB::BindableNetworkId character_id;
 
 	private: //disable
@@ -116,8 +116,8 @@ namespace TaskGetValidationDataNamespace
 	public:
 		IsClusterAtLimitQuery();
 
-		DB::BindableLong         cluster_id; //lint !e1925 // public data member
-		DB::BindableLong         result; //lint !e1925 // public data member
+		DB::BindableInt32         cluster_id; //lint !e1925 // public data member
+		DB::BindableInt32         result; //lint !e1925 // public data member
 
 		virtual void getSQL(std::string &sql);
 		virtual bool bindParameters();

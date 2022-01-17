@@ -32,9 +32,9 @@ namespace DBQuery
 		
 	  public:
 		DB::BindableNetworkId object_id;
-		DB::BindableLong list_id;
-		DB::BindableLong index;
-		DB::BindableLong action;
+		DB::BindableInt32 list_id;
+		DB::BindableInt32 index;
+		DB::BindableInt32 action;
 		DB::BindableUnicode<255> name;
 		DB::BindableString<50> scene;
 		DB::BindableDouble x;
@@ -55,8 +55,8 @@ namespace DBQuery
 		struct LocationRow
 		{
 			DB::BindableNetworkId object_id;
-			DB::BindableLong list_id;
-			DB::BindableLong index;
+			DB::BindableInt32 list_id;
+			DB::BindableInt32 index;
 			DB::BindableUnicode<255> name;
 			DB::BindableString<50> scene;
 			DB::BindableDouble x;

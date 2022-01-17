@@ -419,7 +419,7 @@ protected:
 	void decodeVector           (Archive::ReadIterator &data, DB::BindableDouble &x,DB::BindableDouble &y, DB::BindableDouble &z) const;
 	void decodeMatchMakingId    (Archive::ReadIterator &data, DB::BufferString &column) const;
 	void decodeComponents       (NetworkId const & objectId, Archive::ReadIterator &data, bool isBaseline);
-	void decodeLocation         (Archive::ReadIterator &data, DB::BindableDouble &x,DB::BindableDouble &y, DB::BindableDouble &z, DB::BindableNetworkId &cell, DB::BindableLong &planet) const;
+	void decodeLocation         (Archive::ReadIterator &data, DB::BindableDouble &x,DB::BindableDouble &y, DB::BindableDouble &z, DB::BindableNetworkId &cell, DB::BindableInt32 &planet) const;
 	void decodeWaypoints        (const NetworkId &objectId, Archive::ReadIterator &data, bool isBaseline);
 	void decodeSingleWaypoint   (const NetworkId &objectId, Archive::ReadIterator &data, bool isBaseline);
 	void decodeQuests           (NetworkId const & networkId, Archive::ReadIterator &data, DB::BufferString &part1, DB::BufferString &part2, DB::BufferString &part3, DB::BufferString &part4) const;
@@ -439,7 +439,7 @@ protected:
 	void encodeVector           (Archive::ByteStream &data, const DB::BindableDouble &x, const DB::BindableDouble &y, const DB::BindableDouble &z) const;
 	void encodeMatchMakingId    (Archive::ByteStream &data, const DB::BufferString &column) const;
 	void encodeComponents       (const NetworkId &objectId, Archive::ByteStream &data) const;
-	void encodeLocation         (Archive::ByteStream &data, const DB::BindableDouble &x,const DB::BindableDouble &y, const DB::BindableDouble &z, const DB::BindableNetworkId &cell, const DB::BindableLong &planet) const;
+	void encodeLocation         (Archive::ByteStream &data, const DB::BindableDouble &x,const DB::BindableDouble &y, const DB::BindableDouble &z, const DB::BindableNetworkId &cell, const DB::BindableInt32 &planet) const;
 	void encodeWaypoints        (const NetworkId & objectId, Archive::ByteStream &data) const;
 	void encodeSingleWaypoint   (const NetworkId & objectId, Archive::ByteStream &data) const;
 	void encodeQuests           (Archive::ByteStream &data, DB::BufferString const &part1, DB::BufferString const &part2, DB::BufferString const &part3, DB::BufferString const &part4) const;

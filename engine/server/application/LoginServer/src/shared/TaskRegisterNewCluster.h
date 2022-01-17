@@ -34,7 +34,7 @@ class TaskRegisterNewCluster : public DB::TaskRequest
 	  public:
 		RegisterClusterQuery();
 
-		DB::BindableLong cluster_id; //lint !e1925 // public data member
+		DB::BindableInt32 cluster_id; //lint !e1925 // public data member
 		DB::BindableString<255> cluster_name; //lint !e1925 // public data member
 		DB::BindableString<255> address; //lint !e1925 // public data member
 

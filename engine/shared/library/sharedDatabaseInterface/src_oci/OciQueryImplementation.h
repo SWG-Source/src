@@ -50,8 +50,8 @@ namespace DB
 
 		virtual void setColArrayMode(size_t skipSize, size_t numElements);
 
-		virtual bool bindCol(BindableLong &buffer);
-		virtual bool bindParameter(BindableLong &buffer);
+		virtual bool bindCol(BindableInt32 &buffer);
+		virtual bool bindParameter(BindableInt32 &buffer);
 		virtual bool bindCol(BindableDouble &buffer);
 		virtual bool bindParameter(BindableDouble &buffer);
 		virtual bool bindCol(BindableStringBase &buffer);

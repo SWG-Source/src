@@ -27,8 +27,8 @@ namespace DBSchema
 	{
 		DB::BindableNetworkId       itemId;
 		DB::BindableNetworkId       bidderId;
-		DB::BindableLong            bid;
-		DB::BindableLong            maxProxyBid;
+		DB::BindableInt32            bid;
+		DB::BindableInt32            maxProxyBid;
 
 		virtual void copy(const DB::Row &rhs)
 		{

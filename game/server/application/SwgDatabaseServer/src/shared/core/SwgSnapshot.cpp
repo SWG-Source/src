@@ -1033,7 +1033,7 @@ void SwgSnapshot::encodeComponents(const NetworkId &objectId, Archive::ByteStrea
 // ----------------------------------------------------------------------
 
 void
-SwgSnapshot::decodeLocation(Archive::ReadIterator &data, DB::BindableDouble &x, DB::BindableDouble &y, DB::BindableDouble &z, DB::BindableNetworkId &cell, DB::BindableLong &planet) const {
+SwgSnapshot::decodeLocation(Archive::ReadIterator &data, DB::BindableDouble &x, DB::BindableDouble &y, DB::BindableDouble &z, DB::BindableNetworkId &cell, DB::BindableInt32 &planet) const {
     Location temp;
     Archive::get(data, temp);
     Vector vec = temp.getCoordinates();
@@ -1047,7 +1047,7 @@ SwgSnapshot::decodeLocation(Archive::ReadIterator &data, DB::BindableDouble &x, 
 // ----------------------------------------------------------------------
 
 void
-SwgSnapshot::encodeLocation(Archive::ByteStream &data, const DB::BindableDouble &x, const DB::BindableDouble &y, const DB::BindableDouble &z, const DB::BindableNetworkId &cell, const DB::BindableLong &planet) const {
+SwgSnapshot::encodeLocation(Archive::ByteStream &data, const DB::BindableDouble &x, const DB::BindableDouble &y, const DB::BindableDouble &z, const DB::BindableNetworkId &cell, const DB::BindableInt32 &planet) const {
     Location temp(Vector(static_cast<float>(x.getValue()), static_cast<float>(y.getValue()), static_cast<float>(z.getValue())), cell.getValue(), planet.getValue());
     Archive::put(data, temp);
 }

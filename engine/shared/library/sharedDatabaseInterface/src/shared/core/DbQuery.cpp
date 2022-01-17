@@ -181,13 +181,13 @@ void Query::setColArrayMode(size_t skipSize, size_t numElements)
 	impl->setColArrayMode(skipSize, numElements);
 }
 
-bool Query::bindCol(BindableLong &buffer)
+bool Query::bindCol(BindableInt32 &buffer)
 {
 	NOT_NULL(impl);
 	return impl->bindCol(buffer);
 }
 
-bool Query::bindParameter(BindableLong &buffer)
+bool Query::bindParameter(BindableInt32 &buffer)
 {
 	NOT_NULL(impl);
 	return impl->bindParameter(buffer);
