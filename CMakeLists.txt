@@ -49,11 +49,11 @@ set(CMAKE_CXX_FLAGS "\
 	-Wno-address-of-packed-member \
 ")
 
+string(TOUPPER ${CMAKE_BUILD_TYPE} CMAKE_BUILD_TYPE)
+
 # Global Linker flags
 set(CMAKE_SHARED_LINKER_FLAGS 	"${CMAKE_SHARED_LINKER_FLAGS} -Wl,-z,norelro,-O3,--sort-common,--as-needed,--relax,-z,combreloc,-z,global,--no-omagic")
 set(CMAKE_EXE_LINKER_FLAGS 		"${CMAKE_EXE_LINKER_FLAGS}    -Wl,-z,norelro,-O3,--sort-common,--as-needed,--relax,-z,combreloc,-z,global,--no-omagic")
-
-string(TOUPPER ${CMAKE_BUILD_TYPE} CMAKE_BUILD_TYPE)
 
 # Add on flags to strip debug symbols if RELEASE or MINSIZEREL
 if (${CMAKE_BUILD_TYPE} STREQUAL "RELEASE" OR ${CMAKE_BUILD_TYPE} STREQUAL "MINSIZEREL")
@@ -61,16 +61,19 @@ if (${CMAKE_BUILD_TYPE} STREQUAL "RELEASE" OR ${CMAKE_BUILD_TYPE} STREQUAL "MINS
 	set(CMAKE_EXE_LINKER_FLAGS    "${CMAKE_EXE_LINKER_FLAGS},-x,-s")
 endif ()
 
+# Compiler specific settings.
+# GNU - These are for GCC 7.5 (the version on the 3.0.x VM)
+# Clang - These are for CLang 11 (current version as of Jan-2022), but it is not installed on the 3.0.x VM
 if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
 	set(CMAKE_CXX_FLAGS					"${CMAKE_CXX_FLAGS} -Wno-stringop-overflow")
-	set(CMAKE_CXX_FLAGS_DEBUG 			"${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG -DDEBUG_LEVEL=2 -DPRODUCTION=0 -O0 -pg -ggdb")
-	set(CMAKE_CXX_FLAGS_RELWITHDEBINFO 	"${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -DDEBUG_LEVEL=0 -DPRODUCTION=0 -O3 -pg -ggdb -no-pie")
-	set(CMAKE_CXX_FLAGS_MINSIZEREL 		"${CMAKE_CXX_FLAGS_MINSIZEREL}     -DDEBUG_LEVEL=0 -DPRODUCTION=1 -Og -no-pie -flto -fwhole-program-vtables")
-	set(CMAKE_CXX_FLAGS_RELEASE 		"${CMAKE_CXX_FLAGS_RELEASE}        -DDEBUG_LEVEL=0 -DPRODUCTION=1 -O3")
+	set(CMAKE_CXX_FLAGS_DEBUG 			"${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG -DDEBUG_LEVEL=2 -DPRODUCTION=0 -pg -ggdb")
+	set(CMAKE_CXX_FLAGS_RELWITHDEBINFO 	"${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -DDEBUG_LEVEL=0 -DPRODUCTION=0 -pg -ggdb -no-pie")
+	set(CMAKE_CXX_FLAGS_MINSIZEREL 		"${CMAKE_CXX_FLAGS_MINSIZEREL}     -DDEBUG_LEVEL=0 -DPRODUCTION=1 -no-pie -flto -fwhole-program-vtables")
+	set(CMAKE_CXX_FLAGS_RELEASE 		"${CMAKE_CXX_FLAGS_RELEASE}        -DDEBUG_LEVEL=0 -DPRODUCTION=1")
 elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL "CLang")
-	set(CMAKE_CXX_FLAGS_DEBUG 			"${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG -DDEBUG_LEVEL=2 -DPRODUCTION=0 -O0 -pg -ggdb -g -fprofile-instr-generate -fcoverage-mapping")
+	set(CMAKE_CXX_FLAGS_DEBUG 			"${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG -DDEBUG_LEVEL=2 -DPRODUCTION=0 -pg -ggdb -g -fprofile-instr-generate -fcoverage-mapping")
 	set(CMAKE_CXX_FLAGS_RELWITHDEBINFO 	"${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -DDEBUG_LEVEL=0 -DPRODUCTION=0 -Ofast -pg -ggdb")
-	set(CMAKE_CXX_FLAGS_MINSIZEREL 		"${CMAKE_CXX_FLAGS_MINSIZEREL}     -DDEBUG_LEVEL=0 -DPRODUCTION=1 -Og -no-pie -flto -fwhole-program-vtables")
+	set(CMAKE_CXX_FLAGS_MINSIZEREL 		"${CMAKE_CXX_FLAGS_MINSIZEREL}     -DDEBUG_LEVEL=0 -DPRODUCTION=1 -no-pie -flto -fwhole-program-vtables")
 	set(CMAKE_CXX_FLAGS_RELEASE 		"${CMAKE_CXX_FLAGS_RELEASE}        -DDEBUG_LEVEL=0 -DPRODUCTION=1 -Ofast")
 endif()
 
