@@ -1,0 +1,20 @@
+name: SWG Source - Continuous Integration for src repo
+
+on:
+  pull_request:
+    branches: [ master ]
+    
+  workflow_dispatch:
+
+jobs:
+  compile-src:
+    runs-on: ubuntu-latest
+    container: cekisswg/swg-vm3.01-i386:latest
+    steps:
+      - name: Run ANT Build
+        run: |
+          cd /home/swg/swg-main
+          git clone https://github.com/SWG-Source/src.git
+          cd src
+          ant build_src
+          

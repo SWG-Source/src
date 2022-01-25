@@ -15,7 +15,7 @@ Only use the Debug and Release targets unless you want to work on 64 bit (MODE=R
 
 For production, user facing builds, set MODE=MINSIZEREL for profile built, heavily optimized versions of the binaries.
 
-## Profiling and Using Profiles
+## Profiling and Using Profiles (IN-WORK)
 
 To generate new profiles, build SWG with MODE=RELWITHDEBINFO. 
 
@@ -35,6 +35,6 @@ See http://clang.llvm.org/docs/UsersManual.html#profiling-with-instrumentation f
 
 # More Information
 
-See http://www.swgsource.com/ for more information on the SWG Source project.
+See https://swg-source.github.io/ for more information on the SWG Source project.
 
 Join the SWGSource Discord if you would like to contribute:  https://discord.gg/j53cMj9

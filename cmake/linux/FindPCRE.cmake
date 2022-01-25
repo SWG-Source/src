@@ -1,8 +1,3 @@
-
-find_path(PCRE_ROOT
-    NAMES include/pcre.h
-)
-
 find_path(PCRE_INCLUDE_DIR pcre.h
     HINTS
         $ENV{PCRE_ROOT}

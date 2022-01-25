@@ -8,6 +8,8 @@
 #ifndef REMOTE_DEBUG_H
 #define REMOTE_DEBUG_H
 
+#include <string>
+
 // ======================================================================
 
 /** This class is both a platform and network-protocol independent way of 
