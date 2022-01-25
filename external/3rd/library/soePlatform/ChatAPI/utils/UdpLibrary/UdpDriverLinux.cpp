@@ -1,6 +1,12 @@
 // Copyright 2004 Sony Online Entertainment, all rights reserved.
 // Author: Jeff Petersen
 
+#ifdef NDEBUG
+#define SWG_ASSERT(exp) ((void) (exp))
+#else
+#define SWG_ASSERT assert
+#endif
+
 #include "UdpDriver.h"
 #include "UdpHelper.h"
 
@@ -16,7 +22,6 @@
 #include <unistd.h>
 #include <netinet/ip_icmp.h>        // needed by gcc 3.1 for linux
 #include <pthread.h>
-
 
 namespace UdpLibrary
 {
@@ -80,19 +85,19 @@ bool UdpPlatformDriver::SocketOpen(int port, int incomingBufferSize, int outgoin
             // open socket stuff
         unsigned long nb = 1;
         int err = ioctl(mData->socket, FIONBIO, &nb);
-        assert(err != -1);
+        SWG_ASSERT(err != -1);
         nb = outgoingBufferSize;
         err = setsockopt(mData->socket, SOL_SOCKET, SO_SNDBUF, &nb, sizeof(nb));
-        assert(err == 0);
+        SWG_ASSERT(err == 0);
         nb = incomingBufferSize;
         err = setsockopt(mData->socket, SOL_SOCKET, SO_RCVBUF, &nb, sizeof(nb));
-        assert(err == 0);
+        SWG_ASSERT(err == 0);
         nb = 0;
         err = setsockopt(mData->socket, SOL_SOCKET, SO_BSDCOMPAT, &nb, sizeof(nb));
-        assert(err == 0);
+        SWG_ASSERT(err == 0);
         nb = 1;
         err = setsockopt(mData->socket, SOL_IP, IP_RECVERR, &nb, sizeof(nb));
-        assert(err == 0);
+        SWG_ASSERT(err == 0);
         int optLen = sizeof(mData->startTtl);
         getsockopt(mData->socket, IPPROTO_IP, IP_TTL, &mData->startTtl, (socklen_t *)&optLen);
 

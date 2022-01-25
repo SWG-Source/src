@@ -40,10 +40,13 @@ namespace FileManifestNamespace
 	static TransitionVector s_transitionVector;
 	static bool s_installed                               = false;
 	static bool s_updateManifest                          = false;
+	static std::string s_currentSceneId                   = "none";
+
+#if PRODUCTION == 0
 	static int s_accessThreshold                          = -1;
-	static std::string s_currentSceneId                   = "none"; 
 	static bool s_isValidScene                            = false;
 	static bool s_isTransitionScene                       = true;
+#endif
 
 	const static std::string s_manifestDataTable          = "datatables/manifest/skufree.iff";
 

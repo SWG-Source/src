@@ -726,7 +726,7 @@ public:
 	/** pure virtual */
 	virtual ~AutoDeltaContainer() = 0;
 	/** pure virtual */
-	virtual const int32_t size() const = 0;
+	virtual const uint32_t size() const = 0;
 };
 
 //-----------------------------------------------------------------------

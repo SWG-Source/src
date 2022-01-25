@@ -1800,11 +1800,11 @@ static void commandFuncSpatialChatInternal(Command const &, NetworkId const &act
 				else if (!squelched && (ConfigServerGame::getChatSpamNotifyPlayerWhenLimitedIntervalSeconds() > 0) && obj->getClient())
 				{
 					// send message telling character he can no longer talk
-					const int timeNow = static_cast<int>(::time(nullptr));
-					const int chatSpamTimeEndInterval = playerObject->getChatSpamTimeEndInterval();
+					const int32_t timeNow = static_cast<int32_t>(::time(nullptr));
+					const int32_t chatSpamTimeEndInterval = playerObject->getChatSpamTimeEndInterval();
 					if ((chatSpamTimeEndInterval > timeNow) && (timeNow >= playerObject->getChatSpamNextTimeToNotifyPlayerWhenLimited()))
 					{
-						GenericValueTypeMessage<int> csl("ChatSpamLimited", (chatSpamTimeEndInterval - timeNow));
+						GenericValueTypeMessage<uint32_t> csl("ChatSpamLimited", (chatSpamTimeEndInterval - timeNow));
 						obj->getClient()->send(csl, true);
 
 						playerObject->setChatSpamNextTimeToNotifyPlayerWhenLimited((timeNow + ConfigServerGame::getChatSpamNotifyPlayerWhenLimitedIntervalSeconds()));
@@ -1937,8 +1937,8 @@ static void commandFuncSpatialChat(Command const &, NetworkId const &actor, Netw
 				else if (!squelched && (ConfigServerGame::getChatSpamNotifyPlayerWhenLimitedIntervalSeconds() > 0) && obj->getClient())
 				{
 					// send message telling character he can no longer talk
-					const int timeNow = static_cast<int>(::time(nullptr));
-					const int chatSpamTimeEndInterval = playerObject->getChatSpamTimeEndInterval();
+					const int32_t timeNow = static_cast<int32_t>(::time(nullptr));
+					const int32_t chatSpamTimeEndInterval = playerObject->getChatSpamTimeEndInterval();
 					if ((chatSpamTimeEndInterval > timeNow) && (timeNow >= playerObject->getChatSpamNextTimeToNotifyPlayerWhenLimited()))
 					{
 						GenericValueTypeMessage<int> csl("ChatSpamLimited", (chatSpamTimeEndInterval - timeNow));
@@ -2877,7 +2877,7 @@ static void commandFuncPermissionListModify(Command const &, NetworkId const &ac
             Unicode::UnicodeStringVector tokens;
             Unicode::tokenize(params, tokens);
             Unicode::String temp;
-            for (int i = 0; i < tokens.size(); i++)
+            for (uint32_t i = 0; i < tokens.size(); i++)
             {
                 if(i < tokens.size() - 2)
                 {
@@ -2888,7 +2888,6 @@ static void commandFuncPermissionListModify(Command const &, NetworkId const &ac
                     }
                 }
             }
-            size_t curpos = 0;
             const Unicode::String & playerName = temp;
             const Unicode::String & listName = tokens[tokens.size()-2];
             const Unicode::String & action = tokens[tokens.size()-1];

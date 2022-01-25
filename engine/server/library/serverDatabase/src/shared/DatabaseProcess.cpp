@@ -195,7 +195,8 @@ DatabaseProcess::~DatabaseProcess()
 void DatabaseProcess::run(void)
 {
 	static bool shouldSleep = ConfigServerDatabase::getShouldSleep();
-	bool idle=false;
+	// unused.
+	// bool idle=false;
 	int loopcount=0;
 	float nextQueryCountTime=0;
 
@@ -261,7 +262,7 @@ void DatabaseProcess::run(void)
 		if (Persister::getInstance().isIdle() && Loader::getInstance().isIdle() && DataLookup::getInstance().isIdle())
 		{
 			DEBUG_REPORT_LOG(ConfigServerDatabase::getReportSaveTimes() && !idle,("Database process is idle.\n"));
-			idle=true;
+			// idle=true;
 			if (taskService)
 			{
 				ServerIdleMessage msg(true);
@@ -270,7 +271,7 @@ void DatabaseProcess::run(void)
 		}
 		else
 		{
-			idle=false;
+			// idle=false;
 			if (taskService)
 			{
 				ServerIdleMessage msg(false);

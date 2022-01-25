@@ -32,28 +32,6 @@ using namespace DB::OCISessionNamespace;
 
 // ======================================================================
 
-static dvoid *mallocHook(dvoid *, size_t size)
-{
-	return reinterpret_cast<dvoid *>(new char[size]);
-}
-
-// ----------------------------------------------------------------------
-
-static dvoid *reallocHook(dvoid *, dvoid *memptr, size_t newsize)
-{
-	return reinterpret_cast<dvoid *>(realloc(memptr, newsize));
-}
-
-// ----------------------------------------------------------------------
-
-static void freeHook(dvoid *, dvoid *memptr)
-{
-	if (memptr)
-		delete [] reinterpret_cast<char *>(memptr);
-}
-
-// ======================================================================
-
 DB::OCISession::OCISession(DB::OCIServer *server) :
 		m_server(server),
 		envhp(nullptr),

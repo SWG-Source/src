@@ -122,8 +122,8 @@ void ManagerConnection::onReceive(const Archive::ByteStream & message)
 		}
 		case constcrc("TaskConnectionIdMessage") :
 		{
-			static uint32_t const clockDriftFatalTimePeriod = static_cast<uint32_t>(TaskManager::getStartTime()) + ConfigTaskManager::getClockDriftFatalIntervalSeconds();
-			uint32_t const currentTime = static_cast<uint32_t>(::time(nullptr));
+			static int32_t const clockDriftFatalTimePeriod = static_cast<int32_t>(TaskManager::getStartTime()) + ConfigTaskManager::getClockDriftFatalIntervalSeconds();
+			int32_t const currentTime = static_cast<int32_t>(::time(nullptr));
 			TaskConnectionIdMessage t(r);
 			WARNING_STRICT_FATAL(t.getServerType() != TaskConnectionIdMessage::TaskManager,
 								 ("ManagerConnection received wrong type identifier"));

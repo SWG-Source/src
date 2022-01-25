@@ -34,7 +34,7 @@ public:
 	const unsigned char  getServerType   () const;
 	const std::string &  getCommandLine  () const;
 	const std::string &  getClusterName  () const;
-	const uint32_t       getCurrentEpochTime() const;
+	const int32_t        getCurrentEpochTime() const;
 private:
 	TaskConnectionIdMessage & operator = (const TaskConnectionIdMessage & rhs);
 	TaskConnectionIdMessage(const TaskConnectionIdMessage & source);
@@ -42,7 +42,7 @@ private:
 	Archive::AutoVariable<unsigned char> serverType;
 	Archive::AutoVariable<std::string>   commandLine;
 	Archive::AutoVariable<std::string>   clusterName;
-	Archive::AutoVariable<uint32_t>      currentEpochTime;
+	Archive::AutoVariable<int32_t>       currentEpochTime;
 };
 
 //-----------------------------------------------------------------------
@@ -68,7 +68,7 @@ inline const unsigned char TaskConnectionIdMessage::getServerType() const
 
 //-----------------------------------------------------------------------
 
-inline const uint32_t TaskConnectionIdMessage::getCurrentEpochTime() const
+inline const int32_t TaskConnectionIdMessage::getCurrentEpochTime() const
 {
 	return currentEpochTime.get();
 }

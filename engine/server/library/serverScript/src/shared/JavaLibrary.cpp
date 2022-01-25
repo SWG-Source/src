@@ -803,6 +803,10 @@ void JavaLibrary::fatalHandler(int signum)
 		void *frameAddressB = nullptr;
 		uint64 frameAddressHigh = (reinterpret_cast<uint64>(frameAddress) >> 16);
 		crashAddress2a = __builtin_return_address(0);
+// Suppress Wframe-address for these lines - we could crash the program calling __builtin_return_address and frame_address
+// with non-zero values.  However, we likely don't care as we're crashing at this point anyway due to bad Java.
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wframe-address"
 		if (crashAddress2a != nullptr)
 		{
 			frameAddressA = __builtin_frame_address(1);
@@ -826,6 +830,7 @@ void JavaLibrary::fatalHandler(int signum)
 				}
 			}
 		}
+#pragma GCC diagnostic pop
 
 		bool javaCrash = true;
 		if ((result1 || result2) && strstr(lib1, "libjvm.so") == nullptr && strstr(lib2, "libjvm.so") == nullptr)

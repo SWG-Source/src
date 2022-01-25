@@ -485,7 +485,7 @@ namespace CreatureObjectNamespace
 	{
 		bool creatureIsContainedInPOBShip(CreatureObject const * creatureObject);
 		void findAllTargetsForGroup(CreatureObject * const targetObj, std::vector<CreatureObject *> & targets);
-		bool roomInGroup(GroupObject const * groupObj, int additionalMembers);
+		bool roomInGroup(GroupObject const * groupObj, uint32_t additionalMembers);
 		GroupMemberParam const buildGroupMemberParam(CreatureObject const * creatureObject);
 		void buildGroupMemberParamsFromCreatures(std::vector<CreatureObject *> const & targets, GroupObject::GroupMemberParamVector & targetMemberParams);
 	}
@@ -14996,14 +14996,13 @@ void CreatureObjectNamespace::GroupHelpers::findAllTargetsForGroup(CreatureObjec
 
 // ----------------------------------------------------------------------
 
-bool CreatureObjectNamespace::GroupHelpers::roomInGroup(GroupObject const * groupObj, int additionalMembers)
+bool CreatureObjectNamespace::GroupHelpers::roomInGroup(GroupObject const * groupObj, uint32_t additionalMembers)
 {
 	if (groupObj != 0)
 	{
 		return groupObj->doesGroupHaveRoomFor(additionalMembers);
 	}
 
-	additionalMembers = std::max(0, additionalMembers);
 	return additionalMembers < GroupObject::maximumMembersInGroup();
 }
 

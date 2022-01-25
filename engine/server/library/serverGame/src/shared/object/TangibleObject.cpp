@@ -570,7 +570,8 @@ TangibleObject::~TangibleObject()
 				// look up the caller's file and line
 				if (callStack[callStackOffset])
 				{
-					char lib[4 * 1024] = { '\0' };
+					// unused.
+					// char lib[4 * 1024] = { '\0' };
 					char file[4 * 1024] = { '\0' };
 					int line = 0;
 					REPORT_LOG(true, ("\tCall stack:"));

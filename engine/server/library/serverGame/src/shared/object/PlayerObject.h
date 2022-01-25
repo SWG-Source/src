@@ -395,8 +395,8 @@ public:
 
 	int getChatSpamTimeEndInterval() const;
 
-	uint32_t getChatSpamNextTimeToNotifyPlayerWhenLimited() const;
-	void setChatSpamNextTimeToNotifyPlayerWhenLimited(uint32_t chatSpamNextTimeToNotifyPlayerWhenLimited);
+	int32_t getChatSpamNextTimeToNotifyPlayerWhenLimited() const;
+	void setChatSpamNextTimeToNotifyPlayerWhenLimited(int32_t chatSpamNextTimeToNotifyPlayerWhenLimited);
 
 	// citizenship info
 	void updateCitizenshipInfo();
@@ -585,7 +585,7 @@ private:
 	Archive::AutoDeltaVariable<uint32_t> m_aggroImmuneStartTime;
 
 	ChatLog * const m_chatLog;
-	uint32_t m_chatLogPurgeTime;
+	time_t m_chatLogPurgeTime;
 	bool m_isUnsticking;
 
 	//when asking a player to accept or complete a quest, remember the quest that we asked them about
@@ -641,7 +641,7 @@ private:
 	Archive::AutoDeltaVariable<int>                           m_chatSpamNonSpatialNumCharacters;
 	Archive::AutoDeltaVariable<int>                           m_chatSpamTimeEndInterval;
 	Archive::AutoDeltaVariable<int>                           m_chatSpamNextTimeToSyncWithChatServer;
-	uint32_t                                                  m_chatSpamNextTimeToNotifyPlayerWhenLimited;
+	int32_t                                                  m_chatSpamNextTimeToNotifyPlayerWhenLimited;
 
 	// citizenship info
 	Archive::AutoDeltaVariable<std::string>                   m_citizenshipCity;
@@ -1053,14 +1053,14 @@ inline int PlayerObject::getChatSpamTimeEndInterval() const
 
 // ----------------------------------------------------------------------
 
-inline uint32_t PlayerObject::getChatSpamNextTimeToNotifyPlayerWhenLimited() const
+inline int32_t PlayerObject::getChatSpamNextTimeToNotifyPlayerWhenLimited() const
 {
 	return m_chatSpamNextTimeToNotifyPlayerWhenLimited;
 }
 
 // ----------------------------------------------------------------------
 
-inline void PlayerObject::setChatSpamNextTimeToNotifyPlayerWhenLimited(uint32_t chatSpamNextTimeToNotifyPlayerWhenLimited)
+inline void PlayerObject::setChatSpamNextTimeToNotifyPlayerWhenLimited(int32_t chatSpamNextTimeToNotifyPlayerWhenLimited)
 {
 	m_chatSpamNextTimeToNotifyPlayerWhenLimited = chatSpamNextTimeToNotifyPlayerWhenLimited;
 }

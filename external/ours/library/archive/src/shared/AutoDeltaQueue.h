@@ -46,7 +46,7 @@ public: // methods
 	const bool      isDirty() const;
 	void            pack(ByteStream &target) const;
 	void            packDelta(ByteStream &target) const;
-	const int32_t   size() const;
+	const uint32_t  size() const;
 	void            unpack(ReadIterator &source);
 	void            unpackDelta(ReadIterator &source);
 
@@ -293,7 +293,7 @@ inline void AutoDeltaQueue<ValueType>::packDelta(ByteStream &target) const
 //-----------------------------------------------------------------------
 
 template<typename ValueType>
-inline const int32_t AutoDeltaQueue<ValueType>::size() const
+inline const uint32_t AutoDeltaQueue<ValueType>::size() const
 {
 	return container.size();
 }

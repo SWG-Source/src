@@ -57,7 +57,7 @@ public:
 	void               packDelta(ByteStream &target) const;
 
 	SetType const &    get() const;
-	const int32_t      size() const;
+	const uint32_t     size() const;
 	bool               empty() const;
 	bool               contains(ValueType const &t) const;
 	const_iterator find(ValueType const &t) const;
@@ -402,7 +402,7 @@ inline bool AutoDeltaSet<ValueType, ObjectType>::empty() const
 //-----------------------------------------------------------------------
 
 template<typename ValueType, typename ObjectType>
-inline const int32_t AutoDeltaSet<ValueType, ObjectType>::size() const
+inline const uint32_t AutoDeltaSet<ValueType, ObjectType>::size() const
 {
 	return m_set.size();
 }
@@ -486,7 +486,7 @@ inline void AutoDeltaSet<ValueType, ObjectType>::unpackDelta(ReadIterator &sourc
 {
 	using Archive::get;
 	Command c;
-	int32_t skipCount, commandCount, targetBaselineCommandCount;
+	uint32_t skipCount, commandCount, targetBaselineCommandCount;
 
 	Archive::get(source, commandCount);
 	Archive::get(source, targetBaselineCommandCount);
@@ -503,7 +503,7 @@ inline void AutoDeltaSet<ValueType, ObjectType>::unpackDelta(ReadIterator &sourc
 	if (skipCount > commandCount)
 		skipCount = commandCount;
 
-	int32_t i = 0;
+	uint32_t i = 0;
 	for ( ; i < skipCount; ++i)
 	{
 		Archive::get(source, c.cmd);

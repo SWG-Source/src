@@ -65,7 +65,7 @@ public: // methods
 	void            pack(ByteStream & target) const;
 	void            packDelta(ByteStream & target) const;
 	void            set(const KeyType & key, const ValueType & value);
-	const int32_t   size() const;
+	const uint32_t  size() const;
 	void            unpack(ReadIterator & source);
 	void            unpackDelta(ReadIterator & source);
 	static void     pack(ByteStream & target, const std::vector<Command> & data);
@@ -435,7 +435,7 @@ inline void AutoDeltaMap<KeyType, ValueType, ObjectType>::packDelta(ByteStream &
 	@return the number of elements in the map
 */
 template<class KeyType, typename ValueType, typename ObjectType>
-inline const int32_t AutoDeltaMap<KeyType, ValueType, ObjectType>::size() const
+inline const uint32_t AutoDeltaMap<KeyType, ValueType, ObjectType>::size() const
 {
 	return container.size();
 }
