@@ -120,7 +120,7 @@ void SessionApiClient::OnSessionValidate(const apiTrackingNumber trackingNumber,
 	else
 	{
 		// attempt to validate a CS Tool associated with this request.
-		CSToolConnection::validateCSTool( ( uint64 )userData, result, session );
+		CSToolConnection::validateCSTool( ( uint32 ) userData, result, session );
 	}
 
 }
