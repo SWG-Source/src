@@ -6115,7 +6115,7 @@ void PlayerObject::getByteStreamFromAutoVariable(const std::string & name, Archi
 {
 	if(name == "quests")
 	{
-		Archive::AutoDeltaMap<unsigned int, PlayerQuestData>(m_quests).pack(target);
+		Archive::AutoDeltaMap<uint32_t, PlayerQuestData>(m_quests).pack(target);
 	}
 	else if(name == "completedQuests")
 	{
@@ -6202,11 +6202,11 @@ void PlayerObject::setAutoVariableFromByteStream(const std::string & name, const
 	Archive::ReadIterator ri(source);
 	if(name == "quests")
 	{
-		typedef Archive::AutoDeltaMap<unsigned int, PlayerQuestData>::Command Commands;
+		typedef Archive::AutoDeltaMap<uint32_t, PlayerQuestData>::Command Commands;
 		std::vector<Commands> quests;
 
 		m_quests.clear();
-		Archive::AutoDeltaMap<unsigned int, PlayerQuestData>(m_quests).unpack(ri, quests);
+		Archive::AutoDeltaMap<uint32_t, PlayerQuestData>(m_quests).unpack(ri, quests);
 
 		for (std::vector<Commands>::const_iterator questIter = quests.begin(); questIter != quests.end(); ++questIter)
 		{
@@ -6337,14 +6337,14 @@ void PlayerObject::setPlayedTimeAccumOnly(float playedTimeAccum)
 
 // ----------------------------------------------------------------------
 
-uint32_t PlayerObject::getSessionPlayTimeDuration() const
+int32_t PlayerObject::getSessionPlayTimeDuration() const
 {
-	uint32_t const sessionStartPlayTime = static_cast<uint32_t>(m_sessionStartPlayTime.get());
+	int32_t const sessionStartPlayTime = m_sessionStartPlayTime.get();
 	if (sessionStartPlayTime > 0)
 	{
-		uint32_t const now = ::time(nullptr);
+		int32_t const now = ::time(nullptr);
 		if (now > sessionStartPlayTime)
-			return static_cast<uint32_t>(now - sessionStartPlayTime);
+			return (now - sessionStartPlayTime);
 	}
 
 	return 0;
@@ -6352,16 +6352,16 @@ uint32_t PlayerObject::getSessionPlayTimeDuration() const
 
 // ----------------------------------------------------------------------
 
-uint32_t PlayerObject::getSessionActivePlayTimeDuration() const
+int32_t PlayerObject::getSessionActivePlayTimeDuration() const
 {
-	uint32_t activePlayTimeDuration = m_sessionActivePlayTimeDuration.get();
+	int32_t activePlayTimeDuration = m_sessionActivePlayTimeDuration.get();
 
-	uint32_t const sessionLastActiveTime = static_cast<uint32_t>(m_sessionLastActiveTime.get());
+	int32_t const sessionLastActiveTime = m_sessionLastActiveTime.get();
 	if (sessionLastActiveTime > 0)
 	{
-		uint32_t const now = ::time(nullptr);
+		int32_t const now = ::time(nullptr);
 		if (now > sessionLastActiveTime)
-			activePlayTimeDuration += static_cast<uint32_t>(now - sessionLastActiveTime);
+			activePlayTimeDuration += (now - sessionLastActiveTime);
 	}
 
 	return activePlayTimeDuration;

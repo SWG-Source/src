@@ -230,7 +230,7 @@ inline void *memmove(void *destination, const void *source, int length)
 {
 	DEBUG_FATAL(!destination, ("nullptr destination arg"));
 	DEBUG_FATAL(!source, ("nullptr source arg"));
-	return memmove(destination, source, static_cast<size_t>(length));
+	return memmove(destination, source, length);
 }
 
 // ----------------------------------------------------------------------

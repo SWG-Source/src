@@ -120,7 +120,7 @@ void TextManagerNamespace::getAppropriateWord(Unicode::String &text)
 			// Sub-string search time for words that are listed for sub-string searches
 
 			Unicode::String lowerText(Unicode::toLower(text));
-			size_t findStartPosition = 0;
+			uint32_t findStartPosition = 0;
 
 			for (;;)
 			{
@@ -137,7 +137,7 @@ void TextManagerNamespace::getAppropriateWord(Unicode::String &text)
 						continue;
 					}
 
-					size_t index = lowerText.find(cussWord, findStartPosition);
+					uint32_t index = lowerText.find(cussWord, findStartPosition);
 
 					if (index != Unicode::String::npos)
 					{

@@ -230,7 +230,7 @@ private:
 	bool                            m_gameServerReadyObjectIds;
 	bool                            m_gameServerReadyDatabaseConnected;
 	bool                            m_gameServerReadyPlanetConnected;
-	uint64_t                        m_connectionTimeout;
+	uint32_t                        m_connectionTimeout;
 	
 	ChatServerConnection *          m_chatServerConnection;
 };

@@ -233,7 +233,6 @@
 #include "sharedFoundation/CrcConstexpr.hpp"
 
 #include <limits>
-#include <iostream>
 
 //-----------------------------------------------------------------------
 

@@ -105,8 +105,8 @@ public:
 	float                getPlayedTimeAccumOnly() const;
 	void                 setPlayedTimeAccumOnly(float playedTimeAccum);
 
-	uint32_t             getSessionPlayTimeDuration() const;
-	uint32_t             getSessionActivePlayTimeDuration() const;
+	int32_t              getSessionPlayTimeDuration() const;
+	int32_t              getSessionActivePlayTimeDuration() const;
 	int32                getSessionStartPlayTime() const;
 	int32                getSessionLastActiveTime() const;
 	void                 setSessionPlayTimeInfo(int32 sessionStartPlayTime, int32 sessionLastActiveTime, uint32_t sessionActivePlayTimeDuration);

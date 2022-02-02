@@ -31,8 +31,8 @@ public:
 	static const unsigned long  makeProcessId           ();
 	static bool                 isMessageForwardable    (unsigned long int type);
 
-	const unsigned long         getProcessId            () const;
-	const unsigned long         getOsProcessId          () const;
+	const uint32_t              getProcessId            () const;
+	const uint32_t              getOsProcessId          () const;
 	virtual void                onConnectionClosed      ();
 	virtual void                onConnectionOpened      ();
 	virtual void                onConnectionOverflowing (const unsigned int bytesPending);
@@ -40,8 +40,8 @@ public:
 	virtual void	            onReceive               (const Archive::ByteStream & message);
 	virtual void                reportReceive           (const Archive::ByteStream & bs);
 	virtual void                reportSend              (const Archive::ByteStream & bs);
-	virtual void                        send                    (const GameNetworkMessage & message, const bool reliable);
-	virtual void                setProcessId            (const uint32 newProcessId);
+	virtual void                send                    (const GameNetworkMessage & message, const bool reliable);
+	virtual void                setProcessId            (const uint32_t newProcessId);
 
 public:
 	class MessageConnectionCallback: public MessageDispatch::MessageBase
@@ -67,20 +67,20 @@ private:
 	ServerConnection &operator=(const ServerConnection&); //disable
 
 private:
-	unsigned long  processId;
-	unsigned long  osProcessId; // remote's operating system assigned PID
+	uint32_t  processId;
+	uint32_t  osProcessId; // remote's operating system assigned PID
 };
 
 //-----------------------------------------------------------------------
 
-inline const unsigned long ServerConnection::getProcessId(void) const
+inline const uint32_t ServerConnection::getProcessId(void) const
 {
 	return processId;
 }
 
 //-----------------------------------------------------------------------
 
-inline const unsigned long ServerConnection::getOsProcessId() const
+inline const uint32_t ServerConnection::getOsProcessId() const
 {
 	return osProcessId;
 }

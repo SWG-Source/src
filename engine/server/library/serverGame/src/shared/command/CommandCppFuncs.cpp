@@ -1804,7 +1804,7 @@ static void commandFuncSpatialChatInternal(Command const &, NetworkId const &act
 					const int32_t chatSpamTimeEndInterval = playerObject->getChatSpamTimeEndInterval();
 					if ((chatSpamTimeEndInterval > timeNow) && (timeNow >= playerObject->getChatSpamNextTimeToNotifyPlayerWhenLimited()))
 					{
-						GenericValueTypeMessage<uint32_t> csl("ChatSpamLimited", (chatSpamTimeEndInterval - timeNow));
+						GenericValueTypeMessage<int32_t> csl("ChatSpamLimited", (chatSpamTimeEndInterval - timeNow));
 						obj->getClient()->send(csl, true);
 
 						playerObject->setChatSpamNextTimeToNotifyPlayerWhenLimited((timeNow + ConfigServerGame::getChatSpamNotifyPlayerWhenLimitedIntervalSeconds()));

@@ -744,7 +744,7 @@ void Iff::insertForm(Tag name, bool shouldEnterForm)
 
 void Iff::insertChunk(Tag name, bool shouldEnterChunk)
 {
-	const int32 CHUNK_OVERHEAD = sizeof(Tag) + sizeof(uint32);
+	const int32_t CHUNK_OVERHEAD = sizeof(Tag) + sizeof(uint32);
 
 	Tag    t;
 	int32    offset;
