@@ -195,8 +195,9 @@ DatabaseProcess::~DatabaseProcess()
 void DatabaseProcess::run(void)
 {
 	static bool shouldSleep = ConfigServerDatabase::getShouldSleep();
-	// unused.
-	// bool idle=false;
+#ifdef _DEBUG
+	bool idle = false;
+#endif
 	int loopcount=0;
 	float nextQueryCountTime=0;
 

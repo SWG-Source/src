@@ -120,7 +120,7 @@ void TextManagerNamespace::getAppropriateWord(Unicode::String &text)
 			// Sub-string search time for words that are listed for sub-string searches
 
 			Unicode::String lowerText(Unicode::toLower(text));
-			uint32_t findStartPosition = 0;
+			size_t findStartPosition = 0;
 
 			for (;;)
 			{
@@ -137,7 +137,7 @@ void TextManagerNamespace::getAppropriateWord(Unicode::String &text)
 						continue;
 					}
 
-					uint32_t index = lowerText.find(cussWord, findStartPosition);
+					size_t index = lowerText.find(cussWord, findStartPosition);
 
 					if (index != Unicode::String::npos)
 					{
@@ -145,10 +145,10 @@ void TextManagerNamespace::getAppropriateWord(Unicode::String &text)
 
 						// Found a bad word, replace the word
 
-						unsigned int const letterCount = cussWord.size();
+						size_t const letterCount = cussWord.size();
 						Unicode::String filterLetter;
 
-						for (unsigned int i = 0; i < letterCount; ++i)
+						for (size_t i = 0; i < letterCount; ++i)
 						{
 							getFilterLetter(filterLetter);
 
