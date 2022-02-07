@@ -3325,7 +3325,7 @@ void CentralServer::handleRequestSceneTransfer(const RequestSceneTransfer &msg)
 	}
 	else
 	{
-		DEBUG_REPORT_LOG(true, ("Starting planet server for login"));
+		DEBUG_REPORT_LOG(true, ("Starting planet server for login.  Host '%s', Scene: '%s'", getHostForScene(msg.getSceneName()), msg.getSceneName()));
 		startPlanetServer(getHostForScene(msg.getSceneName()), msg.getSceneName(), 0);
 		m_messagesWaitingForPlanetServer.push_back(Archive::ByteStream());
 		msg.pack(m_messagesWaitingForPlanetServer.back());
