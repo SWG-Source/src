@@ -327,7 +327,8 @@ EXP			(e|E)(\+|-)?
 				if (0 == count_brace())
 				{
 					if (!initialCompile && !globalErrorFlag) {
-		                sprintf(myString, "mIFF (SUCCESS): compiled \"%s\"\n", inFileName);
+	                    char myString[256];
+		                sprintf(myString, "mIFF (SUCCESS): compiled \"%s\"", inFileName);
 						MIFFMessage(myString, 0);
 					}
 				}
