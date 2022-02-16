@@ -28,7 +28,7 @@ namespace DBQuery
 		virtual bool bindColumns();
 
 	  private:
-		DB::BindableInt32 timestamp;
+		DB::BindableLong timestamp;
 
 	  private:
 		SaveTimestampQuery(const SaveTimestampQuery &); // disable

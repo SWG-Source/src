@@ -39,7 +39,7 @@ class TaskSaveObjvarNames : public DB::TaskRequest
 		virtual QueryMode  getExecutionMode () const;
 
 	  public:
-		DB::BindableInt32         name_id;
+		DB::BindableLong         name_id;
 		DB::BindableString<500>  name;
 
 	  private:

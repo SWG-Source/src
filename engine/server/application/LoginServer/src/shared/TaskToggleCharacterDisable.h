@@ -35,9 +35,9 @@ class TaskToggleCharacterDisable : public DB::TaskRequest
 	  public:
 		ToggleCharacterDisableQuery();
 
-		DB::BindableInt32 cluster_id; //lint !e1925 // public data member : suppressed because this is a private inner class
+		DB::BindableLong cluster_id; //lint !e1925 // public data member : suppressed because this is a private inner class
 		DB::BindableNetworkId character_id; //lint !e1925 // public data member : suppressed because this is a private inner class
-		DB::BindableInt32 station_id; //lint !e1925 // public data member : suppressed because this is a private inner class
+		DB::BindableLong station_id; //lint !e1925 // public data member : suppressed because this is a private inner class
 		DB::BindableBool enabled_flag; //lint !e1925 // public data member : suppressed because this is a private inner class 
 
 

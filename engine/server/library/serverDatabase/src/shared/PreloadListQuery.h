@@ -30,11 +30,11 @@ namespace DBQuery
 	  public:
 		DB::BindableString<50> scene_id;
 		DB::BindableNetworkId  object_id;
-		DB::BindableInt32       chunk_x;
-		DB::BindableInt32       chunk_z;
-		DB::BindableInt32       preload_range;
-		DB::BindableInt32       city_server_id;
-		DB::BindableInt32       wilderness_server_id;
+		DB::BindableLong       chunk_x;
+		DB::BindableLong       chunk_z;
+		DB::BindableLong       preload_range;
+		DB::BindableLong       city_server_id;
+		DB::BindableLong       wilderness_server_id;
 		
 	  public:
 		virtual bool bindParameters();

@@ -30,8 +30,8 @@ namespace DBSchema
 		};
 		
 		DB::BindableNetworkId object_id;
-		DB::BindableInt32 list_id;
-		DB::BindableInt32 operation;
+		DB::BindableLong list_id;
+		DB::BindableLong operation;
 		DB::BindableString<500> value; //TODO:  size
 
 		virtual void copy(const DB::Row &rhs)
@@ -67,9 +67,9 @@ namespace DBQuery
 		DB::BindableVarrayString	m_object_ids;
 		DB::BindableVarrayNumber	m_list_ids;
 		DB::BindableVarrayString	m_values;
-		DB::BindableInt32			m_operations;
-		DB::BindableInt32			m_numItems;
-		DB::BindableInt32			m_enableDatabaseLogging;
+		DB::BindableLong			m_operations;
+		DB::BindableLong			m_numItems;
+		DB::BindableLong			m_enableDatabaseLogging;
 
 		PropertyListQuery(const PropertyListQuery&);            // disable
 		PropertyListQuery& operator=(const PropertyListQuery&); // disable

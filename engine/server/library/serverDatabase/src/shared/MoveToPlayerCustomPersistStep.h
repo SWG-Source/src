@@ -12,7 +12,7 @@
 
 #include "Unicode.h"
 #include "serverDatabase/CustomPersistStep.h"
-#include "sharedDatabaseInterface/DbBindableInt32.h"
+#include "sharedDatabaseInterface/DbBindableLong.h"
 #include "sharedDatabaseInterface/BindableNetworkId.h"
 #include "sharedDatabaseInterface/DbQuery.h"
 #include "sharedFoundation/NetworkId.h"
@@ -52,7 +52,7 @@ class MoveToPlayerCustomPersistStep : public CustomPersistStep
 		MoveToPlayerQuery &operator=(MoveToPlayerQuery const &);
 		DB::BindableNetworkId object_id;
 		DB::BindableNetworkId target_player;
-		DB::BindableInt32 max_depth;
+		DB::BindableLong max_depth;
 		bool m_useBank;
 		bool m_useDatapad;
 	};

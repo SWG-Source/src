@@ -9,6 +9,7 @@
 #include "OciQueryImplementation.h"
 
 #include <oci.h>
+#include <iostream>
 
 #include "sharedDatabaseInterface/Bindable.h"
 #include "sharedDatabaseInterface/DbBindableVarray.h"
@@ -448,7 +449,7 @@ size_t DB::OCIQueryImpl::BindRec::getLengthSkipSize()
 	
 // ======================================================================
 
-bool DB::OCIQueryImpl::bindCol(BindableInt32 &buffer)
+bool DB::OCIQueryImpl::bindCol(BindableLong &buffer)
 {
 	BindRec *br=addBindRec(buffer);
 
@@ -478,7 +479,7 @@ bool DB::OCIQueryImpl::bindCol(BindableInt32 &buffer)
 
 // ----------------------------------------------------------------------
 
-bool DB::OCIQueryImpl::bindParameter(BindableInt32 &buffer)
+bool DB::OCIQueryImpl::bindParameter(BindableLong &buffer)
 {
 	BindRec *br=addBindRec(buffer);
 

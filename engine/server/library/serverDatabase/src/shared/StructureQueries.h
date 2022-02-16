@@ -35,7 +35,7 @@ namespace DBQuery {
 			DB::BindableDouble y;
 			DB::BindableDouble z;
 			DB::BindableNetworkId character_id;
-			DB::BindableInt32 deleted;
+			DB::BindableLong deleted;
 		};
 		
 		GetStructures() {}

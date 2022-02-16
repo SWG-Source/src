@@ -47,7 +47,7 @@ class TaskVerifyCharacter:public DB::TaskRequest
 		
 	  public:
 		// input:
-		DB::BindableInt32        station_id; //lint !e1925 public data member Suppresed because it's in a private inner class
+		DB::BindableLong        station_id; //lint !e1925 public data member Suppresed because it's in a private inner class
 		DB::BindableNetworkId   character_id; //lint !e1925 public data member Suppresed because it's in a private inner class
 		DB::BindableString<50>  gold_schema; //lint !e1925 public data member Suppresed because it's in a private inner class
 		
@@ -59,7 +59,7 @@ class TaskVerifyCharacter:public DB::TaskRequest
 		DB::BindableDouble      x; //lint !e1925 public data member Suppresed because it's in a private inner class
 		DB::BindableDouble      y; //lint !e1925 public data member Suppresed because it's in a private inner class
 		DB::BindableDouble      z; //lint !e1925 public data member Suppresed because it's in a private inner class
-		DB::BindableInt32        containment_flag;
+		DB::BindableLong        containment_flag;
 		
 	  private:
 		VerifyCharacterQuery(const VerifyCharacterQuery&);

@@ -28,20 +28,20 @@ namespace DBSchema
 	struct AuctionRow : public DB::Row
 	{
 		DB::BindableNetworkId      creatorId;
-		DB::BindableInt32           minBid;
-		DB::BindableInt32           auctionTimer;
-		DB::BindableInt32           buyNowPrice;
+		DB::BindableLong           minBid;
+		DB::BindableLong           auctionTimer;
+		DB::BindableLong           buyNowPrice;
 		DB::BindableUnicode<1024>  userDescription;
 		DB::BindableString<4000>   oob;
 		DB::BindableNetworkId      locationId;
 		DB::BindableNetworkId      itemId;
-		DB::BindableInt32           category;
-		DB::BindableInt32           itemTimer;
+		DB::BindableLong           category;
+		DB::BindableLong           itemTimer;
 		DB::BindableUnicode<1024>  itemName;
 		DB::BindableNetworkId      ownerId;
-		DB::BindableInt32           active;
-		DB::BindableInt32           itemSize;
-		DB::BindableInt32           itemTemplateId;
+		DB::BindableLong           active;
+		DB::BindableLong           itemSize;
+		DB::BindableLong           itemTemplateId;
 
 		virtual void copy(const DB::Row &rhs)
 		{

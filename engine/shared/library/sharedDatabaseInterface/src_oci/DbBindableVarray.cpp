@@ -13,6 +13,7 @@
 #include "sharedFoundation/NetworkId.h"
 #include "sharedLog/Log.h"
 #include <oci.h>
+#include <iostream>
 
 // ======================================================================
 

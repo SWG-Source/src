@@ -23,38 +23,38 @@ struct PlayerObjectRow : public DB::Row
 	enum {QUEST_DATA_SIZE=4000};
 
 	DB::BindableNetworkId object_id;
-	DB::BindableInt32 station_id;
+	DB::BindableLong station_id;
 	DB::BindableNetworkId house_id;
-	DB::BindableInt32 account_num_lots;
+	DB::BindableLong account_num_lots;
 	DB::BindableBool account_is_outcast;
 	DB::BindableDouble account_cheater_level;
-	DB::BindableInt32 account_max_lots_adjustment;
+	DB::BindableLong account_max_lots_adjustment;
 	DB::BindableString<200> personal_profile_id;
 	DB::BindableString<200> character_profile_id;
 	DB::BindableString<200> skill_title;
-	DB::BindableInt32 born_date;
-	DB::BindableInt32 played_time;
+	DB::BindableLong born_date;
+	DB::BindableLong played_time;
 	DB::BindableDouble force_regen_rate;	
-	DB::BindableInt32 force_power;
-	DB::BindableInt32 max_force_power;
+	DB::BindableLong force_power;
+	DB::BindableLong max_force_power;
 	DB::BindableBitArray<2047> active_quests;
 	DB::BindableBitArray<2047> completed_quests;
-	DB::BindableInt32 current_quest;
+	DB::BindableLong current_quest;
 	DB::BindableString<QUEST_DATA_SIZE> quests;
-	DB::BindableInt32 role_icon_choice;
+	DB::BindableLong role_icon_choice;
 	DB::BindableString<QUEST_DATA_SIZE> quests2;
 	DB::BindableString<QUEST_DATA_SIZE> quests3;
 	DB::BindableString<QUEST_DATA_SIZE> quests4;
 	DB::BindableString<200> skill_template;
 	DB::BindableString<200> working_skill;
-	DB::BindableInt32 current_gcw_points;
-	DB::BindableInt32 current_gcw_rating;
-	DB::BindableInt32 current_pvp_kills;
+	DB::BindableLong current_gcw_points;
+	DB::BindableLong current_gcw_rating;
+	DB::BindableLong current_pvp_kills;
 	DB::BindableInt64 lifetime_gcw_points;
-	DB::BindableInt32 max_gcw_imperial_rating;
-	DB::BindableInt32 max_gcw_rebel_rating;
-	DB::BindableInt32 lifetime_pvp_kills;
-	DB::BindableInt32 next_gcw_rating_calc_time;
+	DB::BindableLong max_gcw_imperial_rating;
+	DB::BindableLong max_gcw_rebel_rating;
+	DB::BindableLong lifetime_pvp_kills;
+	DB::BindableLong next_gcw_rating_calc_time;
 	DB::BindableBitArray<16000> collections;
 	DB::BindableBool show_backpack;
 	DB::BindableBool show_helmet;
@@ -80,38 +80,38 @@ struct PlayerObjectRow : public DB::Row
 struct PlayerObjectBufferRow : public DB::Row
 {
 	DB::BindableNetworkId object_id;
-	DB::BindableInt32 station_id;
+	DB::BindableLong station_id;
 	DB::BindableNetworkId house_id;
-	DB::BindableInt32 account_num_lots;
+	DB::BindableLong account_num_lots;
 	DB::BindableBool account_is_outcast;
 	DB::BindableDouble account_cheater_level;
-	DB::BindableInt32 account_max_lots_adjustment;
+	DB::BindableLong account_max_lots_adjustment;
 	DB::BufferString personal_profile_id;
 	DB::BufferString character_profile_id;
 	DB::BufferString skill_title;
-	DB::BindableInt32 born_date;
-	DB::BindableInt32 played_time;
+	DB::BindableLong born_date;
+	DB::BindableLong played_time;
 	DB::BindableDouble force_regen_rate;	
-	DB::BindableInt32 force_power;
-	DB::BindableInt32 max_force_power;
+	DB::BindableLong force_power;
+	DB::BindableLong max_force_power;
 	DB::BindableBitArray<2047> active_quests;
 	DB::BindableBitArray<2047> completed_quests;
-	DB::BindableInt32 current_quest;
+	DB::BindableLong current_quest;
 	DB::BufferString quests;
-	DB::BindableInt32 role_icon_choice;
+	DB::BindableLong role_icon_choice;
 	DB::BufferString quests2;
 	DB::BufferString quests3;
 	DB::BufferString quests4;
 	DB::BufferString skill_template;
 	DB::BufferString working_skill;
-	DB::BindableInt32 current_gcw_points;
-	DB::BindableInt32 current_gcw_rating;
-	DB::BindableInt32 current_pvp_kills;
+	DB::BindableLong current_gcw_points;
+	DB::BindableLong current_gcw_rating;
+	DB::BindableLong current_pvp_kills;
 	DB::BindableInt64 lifetime_gcw_points;
-	DB::BindableInt32 max_gcw_imperial_rating;
-	DB::BindableInt32 max_gcw_rebel_rating;
-	DB::BindableInt32 lifetime_pvp_kills;
-	DB::BindableInt32 next_gcw_rating_calc_time;
+	DB::BindableLong max_gcw_imperial_rating;
+	DB::BindableLong max_gcw_rebel_rating;
+	DB::BindableLong lifetime_pvp_kills;
+	DB::BindableLong next_gcw_rating_calc_time;
 	DB::BindableBitArray<16000> collections;
 	DB::BindableBool show_backpack;
 	DB::BindableBool show_helmet;
@@ -219,10 +219,10 @@ struct PlayerObjectBufferRow : public DB::Row
 struct ObjectVariableRow : public DB::Row
 {
 	DB::BindableNetworkId object_id;
-	DB::BindableInt32 name_id;
-	DB::BindableInt32 type;
+	DB::BindableLong name_id;
+	DB::BindableLong type;
 	DB::BindableString<1000> value;
-	DB::BindableInt32 detached;
+	DB::BindableLong detached;
 
 	virtual void copy(const DB::Row &rhs)
 	{
@@ -234,14 +234,14 @@ struct WaypointRow : public DB::Row
 {
 	DB::BindableNetworkId object_id;
 	DB::BindableNetworkId waypoint_id;
-	DB::BindableInt32 appearance_name_crc;
+	DB::BindableLong appearance_name_crc;
 	DB::BindableDouble location_x;
 	DB::BindableDouble location_y;
 	DB::BindableDouble location_z;
 	DB::BindableNetworkId location_cell;
-	DB::BindableInt32 location_scene;
+	DB::BindableLong location_scene;
 	DB::BindableUnicode<512> name;
-	DB::BindableInt32 color;
+	DB::BindableLong color;
 	DB::BindableBool active;
 	DB::BindableBool detached;
 
@@ -255,19 +255,19 @@ struct WaypointRow : public DB::Row
 struct ArmorRow : public DB::Row
 {
 	DB::BindableNetworkId object_id;
-	DB::BindableInt32 layer;
-	DB::BindableInt32 effectiveness;
-	DB::BindableInt32 integrity;
+	DB::BindableLong layer;
+	DB::BindableLong effectiveness;
+	DB::BindableLong integrity;
 	DB::BindableString<1000> special_protections;
-	DB::BindableInt32 encumberance_0;
-	DB::BindableInt32 encumberance_1;
-	DB::BindableInt32 encumberance_2;
-	DB::BindableInt32 encumberance_3;
-	DB::BindableInt32 encumberance_4;
-	DB::BindableInt32 encumberance_5;
-	DB::BindableInt32 encumberance_6;
-	DB::BindableInt32 encumberance_7;
-	DB::BindableInt32 encumberance_8;
+	DB::BindableLong encumberance_0;
+	DB::BindableLong encumberance_1;
+	DB::BindableLong encumberance_2;
+	DB::BindableLong encumberance_3;
+	DB::BindableLong encumberance_4;
+	DB::BindableLong encumberance_5;
+	DB::BindableLong encumberance_6;
+	DB::BindableLong encumberance_7;
+	DB::BindableLong encumberance_8;
 	DB::BindableString<255> object_template;
 
 	virtual void copy(const DB::Row &rhs)
@@ -279,19 +279,19 @@ struct ArmorRow : public DB::Row
 struct ArmorBufferRow : public DB::Row
 {
 	DB::BindableNetworkId object_id;
-	DB::BindableInt32 layer;
-	DB::BindableInt32 effectiveness;
-	DB::BindableInt32 integrity;
+	DB::BindableLong layer;
+	DB::BindableLong effectiveness;
+	DB::BindableLong integrity;
 	DB::BufferString special_protections;
-	DB::BindableInt32 encumberance_0;
-	DB::BindableInt32 encumberance_1;
-	DB::BindableInt32 encumberance_2;
-	DB::BindableInt32 encumberance_3;
-	DB::BindableInt32 encumberance_4;
-	DB::BindableInt32 encumberance_5;
-	DB::BindableInt32 encumberance_6;
-	DB::BindableInt32 encumberance_7;
-	DB::BindableInt32 encumberance_8;
+	DB::BindableLong encumberance_0;
+	DB::BindableLong encumberance_1;
+	DB::BindableLong encumberance_2;
+	DB::BindableLong encumberance_3;
+	DB::BindableLong encumberance_4;
+	DB::BindableLong encumberance_5;
+	DB::BindableLong encumberance_6;
+	DB::BindableLong encumberance_7;
+	DB::BindableLong encumberance_8;
 	DB::BufferString object_template;
 
 	ArmorBufferRow() :
@@ -396,7 +396,7 @@ struct BattlefieldParticipantRow : public DB::Row
 {
 	DB::BindableNetworkId region_object_id;
 	DB::BindableNetworkId character_object_id;
-	DB::BindableInt32 faction_id;
+	DB::BindableLong faction_id;
 
 	virtual void copy(const DB::Row &rhs)
 	{
@@ -408,7 +408,7 @@ struct BattlefieldParticipantBufferRow : public DB::Row
 {
 	DB::BindableNetworkId region_object_id;
 	DB::BindableNetworkId character_object_id;
-	DB::BindableInt32 faction_id;
+	DB::BindableLong faction_id;
 
 	BattlefieldParticipantBufferRow() :
 		region_object_id(),
@@ -467,10 +467,10 @@ struct BountyHunterTargetBufferRow : public DB::Row
 struct BuildingObjectRow : public DB::Row
 {
 	DB::BindableNetworkId object_id;
-	DB::BindableInt32 maintenance_cost;
+	DB::BindableLong maintenance_cost;
 	DB::BindableDouble time_last_checked;
 	DB::BindableBool is_public;
-	DB::BindableInt32 city_id;
+	DB::BindableLong city_id;
 
 	virtual void copy(const DB::Row &rhs)
 	{
@@ -491,10 +491,10 @@ struct BuildingObjectRow : public DB::Row
 struct BuildingObjectBufferRow : public DB::Row
 {
 	DB::BindableNetworkId object_id;
-	DB::BindableInt32 maintenance_cost;
+	DB::BindableLong maintenance_cost;
 	DB::BindableDouble time_last_checked;
 	DB::BindableBool is_public;
-	DB::BindableInt32 city_id;
+	DB::BindableLong city_id;
 
 	BuildingObjectBufferRow() :
 		object_id(),
@@ -533,7 +533,7 @@ struct BuildingObjectBufferRow : public DB::Row
 struct CellObjectRow : public DB::Row
 {
 	DB::BindableNetworkId object_id;
-	DB::BindableInt32 cell_number;
+	DB::BindableLong cell_number;
 	DB::BindableBool is_public;
 
 	virtual void copy(const DB::Row &rhs)
@@ -555,7 +555,7 @@ struct CellObjectRow : public DB::Row
 struct CellObjectBufferRow : public DB::Row
 {
 	DB::BindableNetworkId object_id;
-	DB::BindableInt32 cell_number;
+	DB::BindableLong cell_number;
 	DB::BindableBool is_public;
 
 	CellObjectBufferRow() :
@@ -640,7 +640,7 @@ struct CityObjectBufferRow : public DB::Row
 
 struct ClockRow : public DB::Row
 {
-	DB::BindableInt32 last_save_time;
+	DB::BindableLong last_save_time;
 
 	virtual void copy(const DB::Row &rhs)
 	{
@@ -650,7 +650,7 @@ struct ClockRow : public DB::Row
 
 struct ClockBufferRow : public DB::Row
 {
-	DB::BindableInt32 last_save_time;
+	DB::BindableLong last_save_time;
 
 	ClockBufferRow() :
 		last_save_time()
@@ -673,39 +673,39 @@ struct CreatureObjectRow : public DB::Row
 	DB::BindableNetworkId object_id;
 	DB::BindableDouble scale_factor;
 	DB::BindableInt64 states;
-	DB::BindableInt32 posture;
-	DB::BindableInt32 shock_wounds;
+	DB::BindableLong posture;
+	DB::BindableLong shock_wounds;
 	DB::BindableNetworkId master_id;
-	DB::BindableInt32 rank;
+	DB::BindableLong rank;
 	DB::BindableDouble base_walk_speed;
 	DB::BindableDouble base_run_speed;
-	DB::BindableInt32 attribute_0;
-	DB::BindableInt32 attribute_1;
-	DB::BindableInt32 attribute_2;
-	DB::BindableInt32 attribute_3;
-	DB::BindableInt32 attribute_4;
-	DB::BindableInt32 attribute_5;
-	DB::BindableInt32 attribute_6;
-	DB::BindableInt32 attribute_7;
-	DB::BindableInt32 attribute_8;
-	DB::BindableInt32 attribute_9;
-	DB::BindableInt32 attribute_10;
-	DB::BindableInt32 attribute_11;
-	DB::BindableInt32 attribute_12;
-	DB::BindableInt32 attribute_13;
-	DB::BindableInt32 attribute_14;
-	DB::BindableInt32 attribute_15;
-	DB::BindableInt32 attribute_16;
-	DB::BindableInt32 attribute_17;
-	DB::BindableInt32 attribute_18;
-	DB::BindableInt32 attribute_19;
-	DB::BindableInt32 attribute_20;
-	DB::BindableInt32 attribute_21;
-	DB::BindableInt32 attribute_22;
-	DB::BindableInt32 attribute_23;
-	DB::BindableInt32 attribute_24;
-	DB::BindableInt32 attribute_25;
-	DB::BindableInt32 attribute_26;
+	DB::BindableLong attribute_0;
+	DB::BindableLong attribute_1;
+	DB::BindableLong attribute_2;
+	DB::BindableLong attribute_3;
+	DB::BindableLong attribute_4;
+	DB::BindableLong attribute_5;
+	DB::BindableLong attribute_6;
+	DB::BindableLong attribute_7;
+	DB::BindableLong attribute_8;
+	DB::BindableLong attribute_9;
+	DB::BindableLong attribute_10;
+	DB::BindableLong attribute_11;
+	DB::BindableLong attribute_12;
+	DB::BindableLong attribute_13;
+	DB::BindableLong attribute_14;
+	DB::BindableLong attribute_15;
+	DB::BindableLong attribute_16;
+	DB::BindableLong attribute_17;
+	DB::BindableLong attribute_18;
+	DB::BindableLong attribute_19;
+	DB::BindableLong attribute_20;
+	DB::BindableLong attribute_21;
+	DB::BindableLong attribute_22;
+	DB::BindableLong attribute_23;
+	DB::BindableLong attribute_24;
+	DB::BindableLong attribute_25;
+	DB::BindableLong attribute_26;
 	DB::BindableString<1000> persisted_buffs;
 	DB::BindableDouble ws_x;
 	DB::BindableDouble ws_y;
@@ -732,39 +732,39 @@ struct CreatureObjectBufferRow : public DB::Row
 	DB::BindableNetworkId object_id;
 	DB::BindableDouble scale_factor;
 	DB::BindableInt64 states;
-	DB::BindableInt32 posture;
-	DB::BindableInt32 shock_wounds;
+	DB::BindableLong posture;
+	DB::BindableLong shock_wounds;
 	DB::BindableNetworkId master_id;
-	DB::BindableInt32 rank;
+	DB::BindableLong rank;
 	DB::BindableDouble base_walk_speed;
 	DB::BindableDouble base_run_speed;
-	DB::BindableInt32 attribute_0;
-	DB::BindableInt32 attribute_1;
-	DB::BindableInt32 attribute_2;
-	DB::BindableInt32 attribute_3;
-	DB::BindableInt32 attribute_4;
-	DB::BindableInt32 attribute_5;
-	DB::BindableInt32 attribute_6;
-	DB::BindableInt32 attribute_7;
-	DB::BindableInt32 attribute_8;
-	DB::BindableInt32 attribute_9;
-	DB::BindableInt32 attribute_10;
-	DB::BindableInt32 attribute_11;
-	DB::BindableInt32 attribute_12;
-	DB::BindableInt32 attribute_13;
-	DB::BindableInt32 attribute_14;
-	DB::BindableInt32 attribute_15;
-	DB::BindableInt32 attribute_16;
-	DB::BindableInt32 attribute_17;
-	DB::BindableInt32 attribute_18;
-	DB::BindableInt32 attribute_19;
-	DB::BindableInt32 attribute_20;
-	DB::BindableInt32 attribute_21;
-	DB::BindableInt32 attribute_22;
-	DB::BindableInt32 attribute_23;
-	DB::BindableInt32 attribute_24;
-	DB::BindableInt32 attribute_25;
-	DB::BindableInt32 attribute_26;
+	DB::BindableLong attribute_0;
+	DB::BindableLong attribute_1;
+	DB::BindableLong attribute_2;
+	DB::BindableLong attribute_3;
+	DB::BindableLong attribute_4;
+	DB::BindableLong attribute_5;
+	DB::BindableLong attribute_6;
+	DB::BindableLong attribute_7;
+	DB::BindableLong attribute_8;
+	DB::BindableLong attribute_9;
+	DB::BindableLong attribute_10;
+	DB::BindableLong attribute_11;
+	DB::BindableLong attribute_12;
+	DB::BindableLong attribute_13;
+	DB::BindableLong attribute_14;
+	DB::BindableLong attribute_15;
+	DB::BindableLong attribute_16;
+	DB::BindableLong attribute_17;
+	DB::BindableLong attribute_18;
+	DB::BindableLong attribute_19;
+	DB::BindableLong attribute_20;
+	DB::BindableLong attribute_21;
+	DB::BindableLong attribute_22;
+	DB::BindableLong attribute_23;
+	DB::BindableLong attribute_24;
+	DB::BindableLong attribute_25;
+	DB::BindableLong attribute_26;
 	DB::BufferString persisted_buffs;
 	DB::BindableDouble ws_x;
 	DB::BindableDouble ws_y;
@@ -878,7 +878,7 @@ struct ExperiencePointRow : public DB::Row
 {
 	DB::BindableNetworkId object_id;
 	DB::BindableString<500> experience_type;
-	DB::BindableInt32 points;
+	DB::BindableLong points;
 
 	virtual void copy(const DB::Row &rhs)
 	{
@@ -890,7 +890,7 @@ struct ExperiencePointBufferRow : public DB::Row
 {
 	DB::BindableNetworkId object_id;
 	DB::BufferString experience_type;
-	DB::BindableInt32 points;
+	DB::BindableLong points;
 
 	ExperiencePointBufferRow() :
 		object_id(),
@@ -964,8 +964,8 @@ struct FactoryObjectBufferRow : public DB::Row
 
 struct FreeObjectIdRow : public DB::Row
 {
-	DB::BindableInt32 start_id;
-	DB::BindableInt32 end_id;
+	DB::BindableLong start_id;
+	DB::BindableLong end_id;
 
 	virtual void copy(const DB::Row &rhs)
 	{
@@ -975,8 +975,8 @@ struct FreeObjectIdRow : public DB::Row
 
 struct FreeObjectIdBufferRow : public DB::Row
 {
-	DB::BindableInt32 start_id;
-	DB::BindableInt32 end_id;
+	DB::BindableLong start_id;
+	DB::BindableLong end_id;
 
 	FreeObjectIdBufferRow() :
 		start_id(),
@@ -1050,9 +1050,9 @@ struct HarvesterInstallationObjectRow : public DB::Row
 {
 	DB::BindableNetworkId object_id;
 	DB::BindableDouble installed_efficiency;
-	DB::BindableInt32 max_extraction_rate;
+	DB::BindableLong max_extraction_rate;
 	DB::BindableDouble current_extraction_rate;
-	DB::BindableInt32 max_hopper_amount;
+	DB::BindableLong max_hopper_amount;
 	DB::BindableNetworkId hopper_resource;
 	DB::BindableDouble hopper_amount;
 	DB::BindableNetworkId resource_type;
@@ -1077,9 +1077,9 @@ struct HarvesterInstallationObjectBufferRow : public DB::Row
 {
 	DB::BindableNetworkId object_id;
 	DB::BindableDouble installed_efficiency;
-	DB::BindableInt32 max_extraction_rate;
+	DB::BindableLong max_extraction_rate;
 	DB::BindableDouble current_extraction_rate;
-	DB::BindableInt32 max_hopper_amount;
+	DB::BindableLong max_hopper_amount;
 	DB::BindableNetworkId hopper_resource;
 	DB::BindableDouble hopper_amount;
 	DB::BindableNetworkId resource_type;
@@ -1127,7 +1127,7 @@ struct HarvesterInstallationObjectBufferRow : public DB::Row
 struct InstallationObjectRow : public DB::Row
 {
 	DB::BindableNetworkId object_id;
-	DB::BindableInt32 installation_type;
+	DB::BindableLong installation_type;
 	DB::BindableBool activated;
 	DB::BindableDouble tick_count;
 	DB::BindableDouble activate_start_time;
@@ -1153,7 +1153,7 @@ struct InstallationObjectRow : public DB::Row
 struct InstallationObjectBufferRow : public DB::Row
 {
 	DB::BindableNetworkId object_id;
-	DB::BindableInt32 installation_type;
+	DB::BindableLong installation_type;
 	DB::BindableBool activated;
 	DB::BindableDouble tick_count;
 	DB::BindableDouble activate_start_time;
@@ -1201,7 +1201,7 @@ struct InstallationObjectBufferRow : public DB::Row
 struct IntangibleObjectRow : public DB::Row
 {
 	DB::BindableNetworkId object_id;
-	DB::BindableInt32 count;
+	DB::BindableLong count;
 
 	virtual void copy(const DB::Row &rhs)
 	{
@@ -1222,7 +1222,7 @@ struct IntangibleObjectRow : public DB::Row
 struct IntangibleObjectBufferRow : public DB::Row
 {
 	DB::BindableNetworkId object_id;
-	DB::BindableInt32 count;
+	DB::BindableLong count;
 
 	IntangibleObjectBufferRow() :
 		object_id(),
@@ -1255,8 +1255,8 @@ struct IntangibleObjectBufferRow : public DB::Row
 struct LoadbeaconServerMapRow : public DB::Row
 {
 	DB::BindableString<255> object_template;
-	DB::BindableInt32 server_id;
-	DB::BindableInt32 secondary_server_id;
+	DB::BindableLong server_id;
+	DB::BindableLong secondary_server_id;
 
 	virtual void copy(const DB::Row &rhs)
 	{
@@ -1267,8 +1267,8 @@ struct LoadbeaconServerMapRow : public DB::Row
 struct LoadbeaconServerMapBufferRow : public DB::Row
 {
 	DB::BufferString object_template;
-	DB::BindableInt32 server_id;
-	DB::BindableInt32 secondary_server_id;
+	DB::BindableLong server_id;
+	DB::BindableLong secondary_server_id;
 
 	LoadbeaconServerMapBufferRow() :
 		object_template(255),
@@ -1345,9 +1345,9 @@ struct ManufactureSchematicObjectRow : public DB::Row
 	DB::BindableNetworkId object_id;
 	DB::BindableNetworkId creator_id;
 	DB::BindableString<127> creator_name;
-	DB::BindableInt32 items_per_container;
+	DB::BindableLong items_per_container;
 	DB::BindableDouble manufacture_time;
-	DB::BindableInt32 draft_schematic;
+	DB::BindableLong draft_schematic;
 
 	virtual void copy(const DB::Row &rhs)
 	{
@@ -1370,9 +1370,9 @@ struct ManufactureSchematicObjectBufferRow : public DB::Row
 	DB::BindableNetworkId object_id;
 	DB::BindableNetworkId creator_id;
 	DB::BufferString creator_name;
-	DB::BindableInt32 items_per_container;
+	DB::BindableLong items_per_container;
 	DB::BindableDouble manufacture_time;
-	DB::BindableInt32 draft_schematic;
+	DB::BindableLong draft_schematic;
 
 	ManufactureSchematicObjectBufferRow() :
 		object_id(),
@@ -1416,9 +1416,9 @@ struct MessageRow : public DB::Row
 	DB::BindableNetworkId target;
 	DB::BindableString<50> method;
 	DB::BindableString<4000> data;
-	DB::BindableInt32 call_time;
+	DB::BindableLong call_time;
 	DB::BindableBool guaranteed;
-	DB::BindableInt32 delivery_type;
+	DB::BindableLong delivery_type;
 
 	virtual void copy(const DB::Row &rhs)
 	{
@@ -1437,9 +1437,9 @@ struct MessageBufferRow : public DB::Row
 	DB::BindableNetworkId target;
 	DB::BufferString method;
 	DB::BufferString data;
-	DB::BindableInt32 call_time;
+	DB::BindableLong call_time;
 	DB::BindableBool guaranteed;
-	DB::BindableInt32 delivery_type;
+	DB::BindableLong delivery_type;
 
 	MessageBufferRow() :
 		message_id(),
@@ -1477,28 +1477,28 @@ struct MessageBufferRow : public DB::Row
 struct MissionObjectRow : public DB::Row
 {
 	DB::BindableNetworkId object_id;
-	DB::BindableInt32 difficulty;
+	DB::BindableLong difficulty;
 	DB::BindableDouble end_x;
 	DB::BindableDouble end_y;
 	DB::BindableDouble end_z;
 	DB::BindableNetworkId end_cell;
-	DB::BindableInt32 end_scene;
+	DB::BindableLong end_scene;
 	DB::BindableString<127> mission_creator;
-	DB::BindableInt32 reward;
+	DB::BindableLong reward;
 	DB::BindableString<100> root_script_name;
 	DB::BindableDouble start_x;
 	DB::BindableDouble start_y;
 	DB::BindableDouble start_z;
 	DB::BindableNetworkId start_cell;
-	DB::BindableInt32 start_scene;
+	DB::BindableLong start_scene;
 	DB::BindableString<100> description_table;
 	DB::BindableString<100> description_text;
 	DB::BindableString<100> title_table;
 	DB::BindableString<100> title_text;
 	DB::BindableNetworkId mission_holder_id;
-	DB::BindableInt32 status;
-	DB::BindableInt32 mission_type;
-	DB::BindableInt32 target_appearance;
+	DB::BindableLong status;
+	DB::BindableLong mission_type;
+	DB::BindableLong target_appearance;
 	DB::BindableString<127> target_name;
 
 	virtual void copy(const DB::Row &rhs)
@@ -1520,28 +1520,28 @@ struct MissionObjectRow : public DB::Row
 struct MissionObjectBufferRow : public DB::Row
 {
 	DB::BindableNetworkId object_id;
-	DB::BindableInt32 difficulty;
+	DB::BindableLong difficulty;
 	DB::BindableDouble end_x;
 	DB::BindableDouble end_y;
 	DB::BindableDouble end_z;
 	DB::BindableNetworkId end_cell;
-	DB::BindableInt32 end_scene;
+	DB::BindableLong end_scene;
 	DB::BufferString mission_creator;
-	DB::BindableInt32 reward;
+	DB::BindableLong reward;
 	DB::BufferString root_script_name;
 	DB::BindableDouble start_x;
 	DB::BindableDouble start_y;
 	DB::BindableDouble start_z;
 	DB::BindableNetworkId start_cell;
-	DB::BindableInt32 start_scene;
+	DB::BindableLong start_scene;
 	DB::BufferString description_table;
 	DB::BufferString description_text;
 	DB::BufferString title_table;
 	DB::BufferString title_text;
 	DB::BindableNetworkId mission_holder_id;
-	DB::BindableInt32 status;
-	DB::BindableInt32 mission_type;
-	DB::BindableInt32 target_appearance;
+	DB::BindableLong status;
+	DB::BindableLong mission_type;
+	DB::BindableLong target_appearance;
 	DB::BufferString target_name;
 
 	MissionObjectBufferRow() :
@@ -1626,93 +1626,93 @@ struct ObjectRow : public DB::Row
 	DB::BindableDouble quaternion_x;
 	DB::BindableDouble quaternion_y;
 	DB::BindableDouble quaternion_z;
-	DB::BindableInt32 node_x;
-	DB::BindableInt32 node_y;
-	DB::BindableInt32 node_z;
-	DB::BindableInt32 type_id;
+	DB::BindableLong node_x;
+	DB::BindableLong node_y;
+	DB::BindableLong node_z;
+	DB::BindableLong type_id;
 	DB::BindableString<50> scene_id;
-	DB::BindableInt32 controller_type;
-	DB::BindableInt32 deleted;
+	DB::BindableLong controller_type;
+	DB::BindableLong deleted;
 	DB::BindableString<127> object_name;
-	DB::BindableInt32 volume;
+	DB::BindableLong volume;
 	DB::BindableNetworkId contained_by;
-	DB::BindableInt32 slot_arrangement;
+	DB::BindableLong slot_arrangement;
 	DB::BindableBool player_controlled;
-	DB::BindableInt32 cache_version;
+	DB::BindableLong cache_version;
 	DB::BindableBool load_contents;
-	DB::BindableInt32 cash_balance;
-	DB::BindableInt32 bank_balance;
+	DB::BindableLong cash_balance;
+	DB::BindableLong bank_balance;
 	DB::BindableDouble complexity;
 	DB::BindableString<500> name_string_table;
 	DB::BindableString<500> name_string_text;
-	DB::BindableInt32 object_template_id;
+	DB::BindableLong object_template_id;
 	DB::BindableString<128> static_item_name;
-	DB::BindableInt32 static_item_version;
-	DB::BindableInt32 conversion_id;
+	DB::BindableLong static_item_version;
+	DB::BindableLong conversion_id;
 	DB::BindableNetworkId load_with;
 	DB::BindableString<50> objvar_0_name;
-	DB::BindableInt32 objvar_0_type;
+	DB::BindableLong objvar_0_type;
 	DB::BindableString<50> objvar_0_value;
 	DB::BindableString<50> objvar_1_name;
-	DB::BindableInt32 objvar_1_type;
+	DB::BindableLong objvar_1_type;
 	DB::BindableString<50> objvar_1_value;
 	DB::BindableString<50> objvar_2_name;
-	DB::BindableInt32 objvar_2_type;
+	DB::BindableLong objvar_2_type;
 	DB::BindableString<50> objvar_2_value;
 	DB::BindableString<50> objvar_3_name;
-	DB::BindableInt32 objvar_3_type;
+	DB::BindableLong objvar_3_type;
 	DB::BindableString<50> objvar_3_value;
 	DB::BindableString<50> objvar_4_name;
-	DB::BindableInt32 objvar_4_type;
+	DB::BindableLong objvar_4_type;
 	DB::BindableString<50> objvar_4_value;
 	DB::BindableString<50> objvar_5_name;
-	DB::BindableInt32 objvar_5_type;
+	DB::BindableLong objvar_5_type;
 	DB::BindableString<50> objvar_5_value;
 	DB::BindableString<50> objvar_6_name;
-	DB::BindableInt32 objvar_6_type;
+	DB::BindableLong objvar_6_type;
 	DB::BindableString<50> objvar_6_value;
 	DB::BindableString<50> objvar_7_name;
-	DB::BindableInt32 objvar_7_type;
+	DB::BindableLong objvar_7_type;
 	DB::BindableString<50> objvar_7_value;
 	DB::BindableString<50> objvar_8_name;
-	DB::BindableInt32 objvar_8_type;
+	DB::BindableLong objvar_8_type;
 	DB::BindableString<50> objvar_8_value;
 	DB::BindableString<50> objvar_9_name;
-	DB::BindableInt32 objvar_9_type;
+	DB::BindableLong objvar_9_type;
 	DB::BindableString<50> objvar_9_value;
 	DB::BindableString<50> objvar_10_name;
-	DB::BindableInt32 objvar_10_type;
+	DB::BindableLong objvar_10_type;
 	DB::BindableString<50> objvar_10_value;
 	DB::BindableString<50> objvar_11_name;
-	DB::BindableInt32 objvar_11_type;
+	DB::BindableLong objvar_11_type;
 	DB::BindableString<50> objvar_11_value;
 	DB::BindableString<50> objvar_12_name;
-	DB::BindableInt32 objvar_12_type;
+	DB::BindableLong objvar_12_type;
 	DB::BindableString<50> objvar_12_value;
 	DB::BindableString<50> objvar_13_name;
-	DB::BindableInt32 objvar_13_type;
+	DB::BindableLong objvar_13_type;
 	DB::BindableString<50> objvar_13_value;
 	DB::BindableString<50> objvar_14_name;
-	DB::BindableInt32 objvar_14_type;
+	DB::BindableLong objvar_14_type;
 	DB::BindableString<50> objvar_14_value;
 	DB::BindableString<50> objvar_15_name;
-	DB::BindableInt32 objvar_15_type;
+	DB::BindableLong objvar_15_type;
 	DB::BindableString<50> objvar_15_value;
 	DB::BindableString<50> objvar_16_name;
-	DB::BindableInt32 objvar_16_type;
+	DB::BindableLong objvar_16_type;
 	DB::BindableString<50> objvar_16_value;
 	DB::BindableString<50> objvar_17_name;
-	DB::BindableInt32 objvar_17_type;
+	DB::BindableLong objvar_17_type;
 	DB::BindableString<50> objvar_17_value;
 	DB::BindableString<50> objvar_18_name;
-	DB::BindableInt32 objvar_18_type;
+	DB::BindableLong objvar_18_type;
 	DB::BindableString<50> objvar_18_value;
 	DB::BindableString<50> objvar_19_name;
-	DB::BindableInt32 objvar_19_type;
+	DB::BindableLong objvar_19_type;
 	DB::BindableString<50> objvar_19_value;
 	DB::BindableString<2000> script_list;
 
-	DB::BindableInt32 container_level;
+	DB::BindableLong container_level;
 
 	virtual void copy(const DB::Row &rhs)
 	{
@@ -1740,89 +1740,89 @@ struct ObjectBufferRow : public DB::Row
 	DB::BindableDouble quaternion_x;
 	DB::BindableDouble quaternion_y;
 	DB::BindableDouble quaternion_z;
-	DB::BindableInt32 node_x;
-	DB::BindableInt32 node_y;
-	DB::BindableInt32 node_z;
-	DB::BindableInt32 type_id;
+	DB::BindableLong node_x;
+	DB::BindableLong node_y;
+	DB::BindableLong node_z;
+	DB::BindableLong type_id;
 	DB::BufferString scene_id;
-	DB::BindableInt32 controller_type;
-	DB::BindableInt32 deleted;
+	DB::BindableLong controller_type;
+	DB::BindableLong deleted;
 	DB::BufferString object_name;
-	DB::BindableInt32 volume;
+	DB::BindableLong volume;
 	DB::BindableNetworkId contained_by;
-	DB::BindableInt32 slot_arrangement;
+	DB::BindableLong slot_arrangement;
 	DB::BindableBool player_controlled;
-	DB::BindableInt32 cache_version;
+	DB::BindableLong cache_version;
 	DB::BindableBool load_contents;
-	DB::BindableInt32 cash_balance;
-	DB::BindableInt32 bank_balance;
+	DB::BindableLong cash_balance;
+	DB::BindableLong bank_balance;
 	DB::BindableDouble complexity;
 	DB::BufferString name_string_table;
 	DB::BufferString name_string_text;
-	DB::BindableInt32 object_template_id;
+	DB::BindableLong object_template_id;
 	DB::BufferString static_item_name;
-	DB::BindableInt32 static_item_version;
-	DB::BindableInt32 conversion_id;
+	DB::BindableLong static_item_version;
+	DB::BindableLong conversion_id;
 	DB::BindableNetworkId load_with;
 	DB::BufferString objvar_0_name;
-	DB::BindableInt32 objvar_0_type;
+	DB::BindableLong objvar_0_type;
 	DB::BufferString objvar_0_value;
 	DB::BufferString objvar_1_name;
-	DB::BindableInt32 objvar_1_type;
+	DB::BindableLong objvar_1_type;
 	DB::BufferString objvar_1_value;
 	DB::BufferString objvar_2_name;
-	DB::BindableInt32 objvar_2_type;
+	DB::BindableLong objvar_2_type;
 	DB::BufferString objvar_2_value;
 	DB::BufferString objvar_3_name;
-	DB::BindableInt32 objvar_3_type;
+	DB::BindableLong objvar_3_type;
 	DB::BufferString objvar_3_value;
 	DB::BufferString objvar_4_name;
-	DB::BindableInt32 objvar_4_type;
+	DB::BindableLong objvar_4_type;
 	DB::BufferString objvar_4_value;
 	DB::BufferString objvar_5_name;
-	DB::BindableInt32 objvar_5_type;
+	DB::BindableLong objvar_5_type;
 	DB::BufferString objvar_5_value;
 	DB::BufferString objvar_6_name;
-	DB::BindableInt32 objvar_6_type;
+	DB::BindableLong objvar_6_type;
 	DB::BufferString objvar_6_value;
 	DB::BufferString objvar_7_name;
-	DB::BindableInt32 objvar_7_type;
+	DB::BindableLong objvar_7_type;
 	DB::BufferString objvar_7_value;
 	DB::BufferString objvar_8_name;
-	DB::BindableInt32 objvar_8_type;
+	DB::BindableLong objvar_8_type;
 	DB::BufferString objvar_8_value;
 	DB::BufferString objvar_9_name;
-	DB::BindableInt32 objvar_9_type;
+	DB::BindableLong objvar_9_type;
 	DB::BufferString objvar_9_value;
 	DB::BufferString objvar_10_name;
-	DB::BindableInt32 objvar_10_type;
+	DB::BindableLong objvar_10_type;
 	DB::BufferString objvar_10_value;
 	DB::BufferString objvar_11_name;
-	DB::BindableInt32 objvar_11_type;
+	DB::BindableLong objvar_11_type;
 	DB::BufferString objvar_11_value;
 	DB::BufferString objvar_12_name;
-	DB::BindableInt32 objvar_12_type;
+	DB::BindableLong objvar_12_type;
 	DB::BufferString objvar_12_value;
 	DB::BufferString objvar_13_name;
-	DB::BindableInt32 objvar_13_type;
+	DB::BindableLong objvar_13_type;
 	DB::BufferString objvar_13_value;
 	DB::BufferString objvar_14_name;
-	DB::BindableInt32 objvar_14_type;
+	DB::BindableLong objvar_14_type;
 	DB::BufferString objvar_14_value;
 	DB::BufferString objvar_15_name;
-	DB::BindableInt32 objvar_15_type;
+	DB::BindableLong objvar_15_type;
 	DB::BufferString objvar_15_value;
 	DB::BufferString objvar_16_name;
-	DB::BindableInt32 objvar_16_type;
+	DB::BindableLong objvar_16_type;
 	DB::BufferString objvar_16_value;
 	DB::BufferString objvar_17_name;
-	DB::BindableInt32 objvar_17_type;
+	DB::BindableLong objvar_17_type;
 	DB::BufferString objvar_17_value;
 	DB::BufferString objvar_18_name;
-	DB::BindableInt32 objvar_18_type;
+	DB::BindableLong objvar_18_type;
 	DB::BufferString objvar_18_value;
 	DB::BufferString objvar_19_name;
-	DB::BindableInt32 objvar_19_type;
+	DB::BindableLong objvar_19_type;
 	DB::BufferString objvar_19_value;
 	DB::BufferString script_list;
 
@@ -2096,8 +2096,8 @@ struct PlayerQuestObjectRow : public DB::Row
 	DB::BindableString<256> title;
 	DB::BindableString<4000> description;
 	DB::BindableNetworkId creator;
-	DB::BindableInt32 total_tasks;
-	DB::BindableInt32 difficulty;
+	DB::BindableLong total_tasks;
+	DB::BindableLong difficulty;
 	DB::BindableString<128> task_title1;
 	DB::BindableString<4000> task_description1;
 	DB::BindableString<128> task_title2;
@@ -2145,8 +2145,8 @@ struct PlayerQuestObjectBufferRow : public DB::Row
 	DB::BufferString title;
 	DB::BufferString description;
 	DB::BindableNetworkId creator;
-	DB::BindableInt32 total_tasks;
-	DB::BindableInt32 difficulty;
+	DB::BindableLong total_tasks;
+	DB::BindableLong difficulty;
 	DB::BufferString task_title1;
 	DB::BufferString task_description1;
 	DB::BufferString task_title2;
@@ -2259,7 +2259,7 @@ struct PlayerQuestObjectBufferRow : public DB::Row
 struct PropertyListRow : public DB::Row
 {
 	DB::BindableNetworkId object_id;
-	DB::BindableInt32 list_id;
+	DB::BindableLong list_id;
 	DB::BindableString<500> value;
 
 	virtual void copy(const DB::Row &rhs)
@@ -2271,7 +2271,7 @@ struct PropertyListRow : public DB::Row
 struct PropertyListBufferRow : public DB::Row
 {
 	DB::BindableNetworkId object_id;
-	DB::BindableInt32 list_id;
+	DB::BindableLong list_id;
 	DB::BufferString value;
 
 	PropertyListBufferRow() :
@@ -2298,7 +2298,7 @@ struct ResourceContainerObjectRow : public DB::Row
 {
 	DB::BindableNetworkId object_id;
 	DB::BindableNetworkId resource_type;
-	DB::BindableInt32 quantity;
+	DB::BindableLong quantity;
 	DB::BindableNetworkId source;
 
 	virtual void copy(const DB::Row &rhs)
@@ -2321,7 +2321,7 @@ struct ResourceContainerObjectBufferRow : public DB::Row
 {
 	DB::BindableNetworkId object_id;
 	DB::BindableNetworkId resource_type;
-	DB::BindableInt32 quantity;
+	DB::BindableLong quantity;
 	DB::BindableNetworkId source;
 
 	ResourceContainerObjectBufferRow() :
@@ -2363,7 +2363,7 @@ struct ResourceTypeRow : public DB::Row
 	DB::BindableString<100> resource_class;
 	DB::BindableString<1024> attributes;
 	DB::BindableString<1024> fractal_seeds;
-	DB::BindableInt32 depleted_timestamp;
+	DB::BindableLong depleted_timestamp;
 
 	virtual void copy(const DB::Row &rhs)
 	{
@@ -2378,7 +2378,7 @@ struct ResourceTypeBufferRow : public DB::Row
 	DB::BufferString resource_class;
 	DB::BufferString attributes;
 	DB::BufferString fractal_seeds;
-	DB::BindableInt32 depleted_timestamp;
+	DB::BindableLong depleted_timestamp;
 
 	ResourceTypeBufferRow() :
 		resource_id(),
@@ -2409,9 +2409,9 @@ struct ResourceTypeBufferRow : public DB::Row
 struct ScriptRow : public DB::Row
 {
 	DB::BindableNetworkId object_id;
-	DB::BindableInt32 sequence_no;
+	DB::BindableLong sequence_no;
 	DB::BindableString<100> script;
-	DB::BindableInt32 detached;
+	DB::BindableLong detached;
 
 	virtual void copy(const DB::Row &rhs)
 	{
@@ -2422,9 +2422,9 @@ struct ScriptRow : public DB::Row
 struct ScriptBufferRow : public DB::Row
 {
 	DB::BindableNetworkId object_id;
-	DB::BindableInt32 sequence_no;
+	DB::BindableLong sequence_no;
 	DB::BufferString script;
-	DB::BindableInt32 detached;
+	DB::BindableLong detached;
 
 	ScriptBufferRow() :
 		object_id(),
@@ -2454,7 +2454,7 @@ struct ShipObjectRow : public DB::Row
 	DB::BindableDouble slide_dampener;
 	DB::BindableDouble current_chassis_hit_points;
 	DB::BindableDouble maximum_chassis_hit_points;
-	DB::BindableInt32 chassis_type;
+	DB::BindableLong chassis_type;
 	DB::BindableString<400> cmp_armor_hp_maximum;
 	DB::BindableString<400> cmp_armor_hp_current;
 	DB::BindableString<400> cmp_efficiency_general;
@@ -2499,8 +2499,8 @@ struct ShipObjectRow : public DB::Row
 	DB::BindableNetworkId installed_dcd;
 	DB::BindableDouble chassis_cmp_mass_maximum;
 	DB::BindableString<400> cmp_creators;
-	DB::BindableInt32 cargo_hold_contents_maximum;
-	DB::BindableInt32 cargo_hold_contents_current;
+	DB::BindableLong cargo_hold_contents_maximum;
+	DB::BindableLong cargo_hold_contents_current;
 	DB::BindableString<500> cargo_hold_contents;
 
 	virtual void copy(const DB::Row &rhs)
@@ -2525,7 +2525,7 @@ struct ShipObjectBufferRow : public DB::Row
 	DB::BindableDouble slide_dampener;
 	DB::BindableDouble current_chassis_hit_points;
 	DB::BindableDouble maximum_chassis_hit_points;
-	DB::BindableInt32 chassis_type;
+	DB::BindableLong chassis_type;
 	DB::BufferString cmp_armor_hp_maximum;
 	DB::BufferString cmp_armor_hp_current;
 	DB::BufferString cmp_efficiency_general;
@@ -2570,8 +2570,8 @@ struct ShipObjectBufferRow : public DB::Row
 	DB::BindableNetworkId installed_dcd;
 	DB::BindableDouble chassis_cmp_mass_maximum;
 	DB::BufferString cmp_creators;
-	DB::BindableInt32 cargo_hold_contents_maximum;
-	DB::BindableInt32 cargo_hold_contents_current;
+	DB::BindableLong cargo_hold_contents_maximum;
+	DB::BindableLong cargo_hold_contents_current;
 	DB::BufferString cargo_hold_contents;
 
 	ShipObjectBufferRow() :
@@ -2755,19 +2755,19 @@ struct StaticObjectBufferRow : public DB::Row
 struct TangibleObjectRow : public DB::Row
 {
 	DB::BindableNetworkId object_id;
-	DB::BindableInt32 max_hit_points;
+	DB::BindableLong max_hit_points;
 	DB::BindableNetworkId owner_id;
 	DB::BindableBool visible;
 	DB::BindableString<2000> appearance_data;
-	DB::BindableInt32 interest_radius;
-	DB::BindableInt32 pvp_type;
-	DB::BindableInt32 pvp_faction;
-	DB::BindableInt32 damage_taken;
+	DB::BindableLong interest_radius;
+	DB::BindableLong pvp_type;
+	DB::BindableLong pvp_faction;
+	DB::BindableLong damage_taken;
 	DB::BindableString<2000> custom_appearance;
-	DB::BindableInt32 count;
-	DB::BindableInt32 condition;
+	DB::BindableLong count;
+	DB::BindableLong condition;
 	DB::BindableNetworkId creator_id;
-	DB::BindableInt32 source_draft_schematic;
+	DB::BindableLong source_draft_schematic;
 
 	virtual void copy(const DB::Row &rhs)
 	{
@@ -2788,19 +2788,19 @@ struct TangibleObjectRow : public DB::Row
 struct TangibleObjectBufferRow : public DB::Row
 {
 	DB::BindableNetworkId object_id;
-	DB::BindableInt32 max_hit_points;
+	DB::BindableLong max_hit_points;
 	DB::BindableNetworkId owner_id;
 	DB::BindableBool visible;
 	DB::BufferString appearance_data;
-	DB::BindableInt32 interest_radius;
-	DB::BindableInt32 pvp_type;
-	DB::BindableInt32 pvp_faction;
-	DB::BindableInt32 damage_taken;
+	DB::BindableLong interest_radius;
+	DB::BindableLong pvp_type;
+	DB::BindableLong pvp_faction;
+	DB::BindableLong damage_taken;
 	DB::BufferString custom_appearance;
-	DB::BindableInt32 count;
-	DB::BindableInt32 condition;
+	DB::BindableLong count;
+	DB::BindableLong condition;
 	DB::BindableNetworkId creator_id;
-	DB::BindableInt32 source_draft_schematic;
+	DB::BindableLong source_draft_schematic;
 
 	TangibleObjectBufferRow() :
 		object_id(),
@@ -2973,7 +2973,7 @@ struct UniverseObjectBufferRow : public DB::Row
 struct VehicleObjectRow : public DB::Row
 {
 	DB::BindableNetworkId object_id;
-	DB::BindableInt32 bogus;
+	DB::BindableLong bogus;
 
 	virtual void copy(const DB::Row &rhs)
 	{
@@ -2994,7 +2994,7 @@ struct VehicleObjectRow : public DB::Row
 struct VehicleObjectBufferRow : public DB::Row
 {
 	DB::BindableNetworkId object_id;
-	DB::BindableInt32 bogus;
+	DB::BindableLong bogus;
 
 	VehicleObjectBufferRow() :
 		object_id(),
@@ -3027,15 +3027,15 @@ struct VehicleObjectBufferRow : public DB::Row
 struct WeaponObjectRow : public DB::Row
 {
 	DB::BindableNetworkId object_id;
-	DB::BindableInt32 min_damage;
-	DB::BindableInt32 max_damage;
-	DB::BindableInt32 damage_type;
-	DB::BindableInt32 elemental_type;
-	DB::BindableInt32 elemental_value;
+	DB::BindableLong min_damage;
+	DB::BindableLong max_damage;
+	DB::BindableLong damage_type;
+	DB::BindableLong elemental_type;
+	DB::BindableLong elemental_value;
 	DB::BindableDouble attack_speed;
 	DB::BindableDouble wound_chance;
-	DB::BindableInt32 accuracy;
-	DB::BindableInt32 attack_cost;
+	DB::BindableLong accuracy;
+	DB::BindableLong attack_cost;
 	DB::BindableDouble damage_radius;
 	DB::BindableDouble min_range;
 	DB::BindableDouble max_range;
@@ -3059,15 +3059,15 @@ struct WeaponObjectRow : public DB::Row
 struct WeaponObjectBufferRow : public DB::Row
 {
 	DB::BindableNetworkId object_id;
-	DB::BindableInt32 min_damage;
-	DB::BindableInt32 max_damage;
-	DB::BindableInt32 damage_type;
-	DB::BindableInt32 elemental_type;
-	DB::BindableInt32 elemental_value;
+	DB::BindableLong min_damage;
+	DB::BindableLong max_damage;
+	DB::BindableLong damage_type;
+	DB::BindableLong elemental_type;
+	DB::BindableLong elemental_value;
 	DB::BindableDouble attack_speed;
 	DB::BindableDouble wound_chance;
-	DB::BindableInt32 accuracy;
-	DB::BindableInt32 attack_cost;
+	DB::BindableLong accuracy;
+	DB::BindableLong attack_cost;
 	DB::BindableDouble damage_radius;
 	DB::BindableDouble min_range;
 	DB::BindableDouble max_range;

@@ -36,8 +36,8 @@ class TaskChangeStationId : public DB::TaskRequest
 	  public:
 		ChangeStationIdQuery();
 
-		DB::BindableInt32         destination_station_id; //lint !e1925 // public data member
-		DB::BindableInt32         source_station_id; //lint !e1925 // public data member
+		DB::BindableLong         destination_station_id; //lint !e1925 // public data member
+		DB::BindableLong         source_station_id; //lint !e1925 // public data member
 
 		virtual void getSQL                (std::string &sql);
 		virtual bool bindParameters        ();

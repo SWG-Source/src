@@ -128,7 +128,7 @@ sub parseTable
 	    }   
 	    if ($tablename eq "Object")
 	    {
-		$decl{$tablename}.="\n\tDB::BindableInt32 container_level;\n";
+		$decl{$tablename}.="\n\tDB::BindableLong container_level;\n";
 	    }
 
 	    $decl{$tablename}.="\n\tvirtual void copy(const DB::Row &rhs)\n";
@@ -205,8 +205,8 @@ sub translateType
     my($dbtype)=@_;
   SWITCH:
     {
-	if ($dbtype eq "int") { $ctype="DB::BindableInt32"; last SWITCH; }
-	if ($dbtype eq "number") { $ctype="DB::BindableInt32"; last SWITCH; }
+	if ($dbtype eq "int") { $ctype="DB::BindableLong"; last SWITCH; }
+	if ($dbtype eq "number") { $ctype="DB::BindableLong"; last SWITCH; }
 	if ($dbtype eq "float") { $ctype="DB::BindableDouble"; last SWITCH; }
 	if ($dbtype eq "date") { $ctype="DB::BindableTimestamp"; last SWITCH; }
 	if ($dbtype eq "char(1)") { $ctype="DB::BindableBool"; last SWITCH; }
@@ -224,8 +224,8 @@ sub translateBufferType
     my($dbtype)=@_;
   SWITCH:
     {
-	if ($dbtype eq "int") { $ctype="DB::BindableInt32"; last SWITCH; }
-	if ($dbtype eq "number") { $ctype="DB::BindableInt32"; last SWITCH; }
+	if ($dbtype eq "int") { $ctype="DB::BindableLong"; last SWITCH; }
+	if ($dbtype eq "number") { $ctype="DB::BindableLong"; last SWITCH; }
 	if ($dbtype eq "float") { $ctype="DB::BindableDouble"; last SWITCH; }
 	if ($dbtype eq "date") { $ctype="DB::BindableTimestamp"; last SWITCH; }
 	if ($dbtype eq "char(1)") { $ctype="DB::BindableBool"; last SWITCH; }

@@ -36,7 +36,7 @@ namespace DBQuery {
 			DB::BindableDouble x;
 			DB::BindableDouble y;
 			DB::BindableDouble z;
-			DB::BindableInt32 station_id;
+			DB::BindableLong station_id;
 		};
 		
 		GetCharacters() {}
@@ -76,7 +76,7 @@ namespace DBQuery {
 		virtual QueryMode getExecutionMode() const;
 
 	  private:
-		DB::BindableInt32      station_id;
+		DB::BindableLong      station_id;
 		DB::BindableNetworkId object_id;
 		DB::BindableString<127> character_name;
 		DB::BindableString<127> normalized_name;
@@ -105,7 +105,7 @@ namespace DBQuery {
 		DB::BindableNetworkId    object_id;
 		DB::BindableString<127>  character_name;
 		DB::BindableString<127>  normalized_name;
-		DB::BindableInt32         result;
+		DB::BindableLong         result;
 		
 	  private:
 		RenameCharacter                     (const RenameCharacter&); // disable

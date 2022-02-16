@@ -41,10 +41,10 @@ namespace DBQuery {
 		GetChunkQuery& operator=(const GetChunkQuery&); //disable
 
 	  private:
-		DB::BindableInt32 object_count;
+		DB::BindableLong object_count;
 		DB::BindableString<50> scene_id;
-		DB::BindableInt32 node_x;
-		DB::BindableInt32 node_z;
+		DB::BindableLong node_x;
+		DB::BindableLong node_z;
 
 		std::string m_schema;
 	};

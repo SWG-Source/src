@@ -28,8 +28,8 @@ namespace DBSchema
 		};
 		
 		DB::BindableNetworkId object_id;
-		DB::BindableInt32 index;
-		DB::BindableInt32 operation;
+		DB::BindableLong index;
+		DB::BindableLong operation;
 		DB::BindableString<500> skill; //TODO:  size
 
 		virtual void copy(const DB::Row &rhs)

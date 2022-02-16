@@ -19,7 +19,7 @@ namespace DB
 	class BindableBool;
 	class BindableDouble;
 	class BindableInt64;
-	class BindableInt32;
+	class BindableLong;
 	class BindableStringBase;
 	class BindableUnicodeBase;
 	class BindableVarray;
@@ -54,8 +54,8 @@ namespace DB
 
 		virtual void setColArrayMode(size_t skipSize, size_t numElements)=0;
 		
-		virtual bool bindCol(BindableInt32 &buffer) =0;
-		virtual bool bindParameter(BindableInt32 &buffer) =0;
+		virtual bool bindCol(BindableLong &buffer) =0;
+		virtual bool bindParameter(BindableLong &buffer) =0;
 		virtual bool bindCol(BindableDouble &buffer) =0;
 		virtual bool bindParameter(BindableDouble &buffer) =0;
 		virtual bool bindCol(BindableStringBase &buffer) =0;

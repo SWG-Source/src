@@ -18,8 +18,8 @@ set(SHARED_SOURCES
 	shared/core/DbBindableDouble.h
 	shared/core/DbBindableInt64.cpp
 	shared/core/DbBindableInt64.h
-	shared/core/DbBindableInt32.cpp
-	shared/core/DbBindableInt32.h
+	shared/core/DbBindableLong.cpp
+	shared/core/DbBindableLong.h
 	shared/core/DbBindableString.cpp
 	shared/core/DbBindableString.h
 	shared/core/DbBindableUnicode.cpp

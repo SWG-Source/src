@@ -38,7 +38,7 @@ namespace DBQuery
 	  private:
 		DB::BindableVarrayString object_ids;
 		DB::BindableVarrayNumber reasons;
-		DB::BindableInt32         num_items;
+		DB::BindableLong         num_items;
 		
 	  private:
 		DeleteDemandLoadedContainerQuery(const DeleteDemandLoadedContainerQuery&);

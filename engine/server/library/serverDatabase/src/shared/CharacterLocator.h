@@ -50,7 +50,7 @@ class CharacterLocator : public ObjectLocator
 		LocateCharacterQuery& operator=(const LocateCharacterQuery&); //disable
 
 	  public:
-		DB::BindableInt32      object_count;
+		DB::BindableLong      object_count;
 		DB::BindableNetworkId object_id;
 
 	  private:

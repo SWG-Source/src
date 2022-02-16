@@ -41,7 +41,7 @@ namespace DBQuery
 	  private:
 		DB::BindableVarrayString    m_object_ids;
 		DB::BindableVarrayString    m_target_ids;
-		DB::BindableInt32            m_numItems;
+		DB::BindableLong            m_numItems;
 	};
 
 	

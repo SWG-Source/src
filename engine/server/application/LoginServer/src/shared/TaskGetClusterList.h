@@ -31,20 +31,20 @@ class TaskGetClusterList : public DB::TaskRequest
 	class GetClustersQuery : public DB::Query
 	{
 	  public:
-		DB::BindableInt32 group_id; //lint !e1925 // public data member
+		DB::BindableLong group_id; //lint !e1925 // public data member
 				
-		DB::BindableInt32 cluster_id; //lint !e1925 // public data member
+		DB::BindableLong cluster_id; //lint !e1925 // public data member
 		DB::BindableString<255> cluster_name; //lint !e1925 // public data member
 		DB::BindableString<255> address; //lint !e1925 // public data member
-		DB::BindableInt32 port; //lint !e1925 // public data member
+		DB::BindableLong port; //lint !e1925 // public data member
 		DB::BindableBool secret; //lint !e1925 // public data member
 		DB::BindableBool locked; //lint !e1925 // public data member
 		DB::BindableBool not_recommended; //lint !e1925 // public data member
-		DB::BindableInt32 maxCharacterPerAccount; //lint !e1925 // public data member
-		DB::BindableInt32 online_player_limit; //lint !e1925 // public data member
-		DB::BindableInt32 online_free_trial_limit; //lint !e1925 // public data member
+		DB::BindableLong maxCharacterPerAccount; //lint !e1925 // public data member
+		DB::BindableLong online_player_limit; //lint !e1925 // public data member
+		DB::BindableLong online_free_trial_limit; //lint !e1925 // public data member
 		DB::BindableBool free_trial_can_create_char; //lint !e1925 // public data member
-		DB::BindableInt32 online_tutorial_limit; //lint !e1925 // public data member
+		DB::BindableLong online_tutorial_limit; //lint !e1925 // public data member
 
 		GetClustersQuery();
 

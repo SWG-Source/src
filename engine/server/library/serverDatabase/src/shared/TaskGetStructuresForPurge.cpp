@@ -35,7 +35,7 @@ namespace TaskGetStructuresForPurgeNamespace
 		NetworkId getOwnerId() const;
 		
 	private:
-		DB::BindableInt32 m_station_id;
+		DB::BindableLong m_station_id;
 		DB::BindableNetworkId m_structure_id;
 		DB::BindableNetworkId m_owner_id;
 
@@ -59,7 +59,7 @@ namespace TaskGetStructuresForPurgeNamespace
 		Unicode::String getVendorName() const;
 		
 	private:
-		DB::BindableInt32 m_station_id;
+		DB::BindableLong m_station_id;
 		DB::BindableNetworkId m_vendor_id;
 		DB::BindableNetworkId m_owner_id;
 		DB::BindableUnicode<128> m_vendor_name;

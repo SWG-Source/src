@@ -51,7 +51,7 @@ private:
 	DB::BindableVarrayNumber     m_status;
 	DB::BindableVarrayString     m_search_enabled;
 	DB::BindableVarrayNumber     m_entrance_charge;
-	DB::BindableInt32             m_numItems;
+	DB::BindableLong             m_numItems;
 };
 
 class AuctionLocationsQuerySelect : public DB::Query
@@ -114,7 +114,7 @@ private:
 	DB::BindableVarrayNumber    m_actives;
 	DB::BindableVarrayNumber    m_item_sizes;
 	DB::BindableVarrayNumber    m_object_template_ids;
-	DB::BindableInt32            m_numItems;
+	DB::BindableLong            m_numItems;
 };
 
 class MarketAuctionsQuerySelect : public DB::Query
@@ -165,7 +165,7 @@ private:
 	DB::BindableVarrayString    m_bidder_ids;
 	DB::BindableVarrayNumber    m_bids;
 	DB::BindableVarrayNumber    m_max_proxy_bids;
-	DB::BindableInt32            m_numItems;
+	DB::BindableLong            m_numItems;
 };
 
 class MarketAuctionBidsQuerySelect : public DB::Query
@@ -215,7 +215,7 @@ private:
 	DB::BindableVarrayString    m_item_ids;
 	DB::BindableVarrayString    m_attribute_names;
 	DB::BindableVarrayString    m_attribute_values;
-	DB::BindableInt32            m_numItems;
+	DB::BindableLong            m_numItems;
 };
 
 // ======================================================================

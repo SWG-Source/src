@@ -41,7 +41,7 @@ class TaskOrphanedObjectCleanup : public DB::TaskRequest
 		virtual bool bindColumns();
 		virtual QueryMode getExecutionMode() const;
 
-		DB::BindableInt32 result;
+		DB::BindableLong result;
 
 	  private:
 		DataCleanupQuery(const DataCleanupQuery&);

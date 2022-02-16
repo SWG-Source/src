@@ -29,7 +29,7 @@ class TaskLoadObjvarNames : public DB::TaskRequest
   private:
 	struct ObjvarNameRow
 	{
-		DB::BindableInt32 name_id;
+		DB::BindableLong name_id;
 		DB::BindableString<500> name;
 	};
 

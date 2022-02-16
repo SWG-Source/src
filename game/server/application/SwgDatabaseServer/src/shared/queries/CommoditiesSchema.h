@@ -23,14 +23,14 @@ struct AuctionLocationsRow : public DB::Row
 	DB::BindableNetworkId location_id;
 	DB::BindableString<256> location_name;
 	DB::BindableNetworkId owner_id;
-	DB::BindableInt32 sales_tax;
+	DB::BindableLong sales_tax;
 	DB::BindableNetworkId sales_tax_bank_id;
-	DB::BindableInt32 empty_date;
-	DB::BindableInt32 last_access_date;
-	DB::BindableInt32 inactive_date;
-	DB::BindableInt32 status;
+	DB::BindableLong empty_date;
+	DB::BindableLong last_access_date;
+	DB::BindableLong inactive_date;
+	DB::BindableLong status;
 	DB::BindableBool search_enabled;
-	DB::BindableInt32 entrance_charge;
+	DB::BindableLong entrance_charge;
 
 	virtual void copy(const DB::Row &rhs)
 	{
@@ -71,17 +71,17 @@ struct MarketAuctionsRow : public DB::Row
 	DB::BindableNetworkId    owner_id;
 	DB::BindableNetworkId    creator_id;
 	DB::BindableNetworkId    location_id;
-	DB::BindableInt32         min_bid;
-	DB::BindableInt32         buy_now_price;
-	DB::BindableInt32         auction_timer;
+	DB::BindableLong         min_bid;
+	DB::BindableLong         buy_now_price;
+	DB::BindableLong         auction_timer;
 	DB::BindableString<4000> oob;
 	DB::BindableUnicode<1024>user_description;
-	DB::BindableInt32         category;
+	DB::BindableLong         category;
 	DB::BindableUnicode<1024>item_name;
-	DB::BindableInt32         item_timer;
-	DB::BindableInt32         active;
-	DB::BindableInt32         item_size;
-	DB::BindableInt32         object_template_id;
+	DB::BindableLong         item_timer;
+	DB::BindableLong         active;
+	DB::BindableLong         item_size;
+	DB::BindableLong         object_template_id;
 
 	virtual void copy(const DB::Row &rhs)
 	{
@@ -155,7 +155,7 @@ struct MarketAuctionsRowUpdate : public DB::Row
 
 	DB::BindableNetworkId    item_id;
 	DB::BindableNetworkId    owner_id;
-	DB::BindableInt32         active;
+	DB::BindableLong         active;
 
 	virtual void copy(const DB::Row &rhs)
 	{
@@ -193,8 +193,8 @@ struct MarketAuctionBidsRow : public DB::Row
 
 	DB::BindableNetworkId item_id;
 	DB::BindableNetworkId bidder_id;
-	DB::BindableInt32      bid;
-	DB::BindableInt32      max_proxy_bid;
+	DB::BindableLong      bid;
+	DB::BindableLong      max_proxy_bid;
 
 	virtual void copy(const DB::Row &rhs)
 	{

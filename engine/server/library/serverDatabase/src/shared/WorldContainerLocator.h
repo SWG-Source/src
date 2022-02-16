@@ -58,8 +58,8 @@ class WorldContainerLocator : public ObjectLocator
 		
 	  private:
 		DB::BindableVarrayString	 container_ids;
-		DB::BindableInt32             num_containers;
-		DB::BindableInt32             num_objects_found;
+		DB::BindableLong             num_containers;
+		DB::BindableLong             num_objects_found;
 		std::string                  m_schema;
 
 	  private:

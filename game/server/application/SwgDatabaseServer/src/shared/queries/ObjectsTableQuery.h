@@ -135,7 +135,7 @@ namespace DBQuery
 			DB::BindableVarrayString		m_objvar_19_values;
 			DB::BindableVarrayString		m_script_lists;
 
-			DB::BindableInt32				m_numItems;
+			DB::BindableLong				m_numItems;
 	};
 
 	class ObjectsTableQuerySelect : public DB::Query

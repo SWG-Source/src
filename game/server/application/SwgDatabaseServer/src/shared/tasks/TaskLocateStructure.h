@@ -42,10 +42,10 @@ class TaskLocateStructure:public DB::TaskRequest
 		DB::BindableNetworkId   item_id;
 
 		//output:
-		DB::BindableInt32	x;
-		DB::BindableInt32	z;
+		DB::BindableLong	x;
+		DB::BindableLong	z;
 		DB::BindableString<50>	sceneId;
-		DB::BindableInt32	found;
+		DB::BindableLong	found;
 
 	  private:
 		LocateStructureQuery(const LocateStructureQuery&);

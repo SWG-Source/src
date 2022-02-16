@@ -28,14 +28,14 @@ namespace DBSchema
 		DB::BindableNetworkId        locationId;
 		DB::BindableNetworkId        ownerId;
 		DB::BindableString<256>      locationString;
-		DB::BindableInt32             salesTax;
+		DB::BindableLong             salesTax;
 		DB::BindableNetworkId        salesTaxBankId;
-		DB::BindableInt32             emptyDate;
-		DB::BindableInt32             lastAccessDate;
-		DB::BindableInt32             inactiveDate;
-		DB::BindableInt32             status;
+		DB::BindableLong             emptyDate;
+		DB::BindableLong             lastAccessDate;
+		DB::BindableLong             inactiveDate;
+		DB::BindableLong             status;
 		DB::BindableBool             searchEnabled;
-		DB::BindableInt32             entranceCharge;
+		DB::BindableLong             entranceCharge;
 
 		virtual void copy(const DB::Row &rhs)
 		{

@@ -35,7 +35,7 @@ class TaskRenameCharacter : public DB::TaskRequest
 	  public:
 		RenameCharacterQuery();
 
-		DB::BindableInt32         cluster_id; //lint !e1925 // public data member
+		DB::BindableLong         cluster_id; //lint !e1925 // public data member
 		DB::BindableNetworkId    character_id; //lint !e1925 // public data member
 		DB::BindableString<127>  new_name; //lint !e1925 // public data member
 

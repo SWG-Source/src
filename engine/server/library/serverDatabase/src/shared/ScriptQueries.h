@@ -45,7 +45,7 @@ namespace DBQuery
 		struct ScriptRow
 		{
 			DB::BindableNetworkId object_id;
-			DB::BindableInt32 index;
+			DB::BindableLong index;
 			DB::BindableString<128> script_name;
 		};
 

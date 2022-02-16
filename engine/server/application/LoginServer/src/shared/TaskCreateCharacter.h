@@ -33,12 +33,12 @@ class TaskCreateCharacter : public DB::TaskRequest
 	  public:
 		CreateCharacterQuery();
 
-		DB::BindableInt32         cluster_id; //lint !e1925 // public data member
-		DB::BindableInt32         station_id; //lint !e1925 // public data member
+		DB::BindableLong         cluster_id; //lint !e1925 // public data member
+		DB::BindableLong         station_id; //lint !e1925 // public data member
 		DB::BindableString<127>  character_name; //lint !e1925 // public data member
 		DB::BindableNetworkId    character_id; //lint !e1925 // public data member
-		DB::BindableInt32         template_id; //lint !e1925 // public data member
-		DB::BindableInt32         character_type; //lint !e1925 // public data member
+		DB::BindableLong         template_id; //lint !e1925 // public data member
+		DB::BindableLong         character_type; //lint !e1925 // public data member
 
 		virtual void getSQL                (std::string &sql);
 		virtual bool bindParameters        ();

@@ -126,7 +126,7 @@ sub writeHeader
 
 		$i++;
 	}
-	$newText.="\tDB::BindableInt32\t\t\t m_numItems;\n";
+	$newText.="\tDB::BindableLong\t\t\t m_numItems;\n";
 	$newText.="};\n";
 	$newText.="\n";
 

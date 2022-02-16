@@ -32,11 +32,11 @@ class CharacterNameLocator : public ObjectLocator
 	struct CharacterNameRow
 	{
 		DB::BindableNetworkId   character_id;
-		DB::BindableInt32        character_station_id;
+		DB::BindableLong        character_station_id;
 		DB::BindableString<127> character_name;
 		DB::BindableString<127> character_full_name;
-		DB::BindableInt32        character_create_time;
-		DB::BindableInt32        character_last_login_time;
+		DB::BindableLong        character_create_time;
+		DB::BindableLong        character_last_login_time;
 	};
 
 	class CharacterNameQuery : public DB::Query

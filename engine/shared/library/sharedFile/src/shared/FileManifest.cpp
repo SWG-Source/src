@@ -216,8 +216,10 @@ void FileManifest::remove()
 			DEBUG_REPORT_LOG_PRINT((i->second)->accesses <= s_accessThreshold, ("FileManifestAccessReport:\t%s\t%s\t%i\t%i\n", ((i->second)->name).c_str(), ((i->second)->scene).c_str(), (i->second)->size, (i->second)->accesses));
 
 			// delete the actual entry
-			delete i->second;
-			i->second = 0;
+			if(i->second != 0) {
+			    delete i->second;
+			    i->second = 0;
+			}
 		}
 
 		std::sort(manifestEntries.begin(), manifestEntries.end());
@@ -234,8 +236,10 @@ void FileManifest::remove()
 	for (ManifestMap::iterator i = s_manifest.begin(); i != s_manifest.end(); ++i)
 	{
 		// delete the actual entry
-		delete i->second;
-		i->second = 0;
+		if(i->second != 0) {
+            delete i->second;
+            i->second = 0;
+		}
 	}
 
 	s_transitionVector.clear();

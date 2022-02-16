@@ -43,7 +43,7 @@ namespace DBQuery
 		GetOIDsQuery(const GetOIDsQuery&);
 		GetOIDsQuery& operator=(const GetOIDsQuery&);
 
-		DB::BindableInt32        min_count;
+		DB::BindableLong        min_count;
 		DB::BindableNetworkId   start_id;
 		DB::BindableNetworkId   end_id;
 	};

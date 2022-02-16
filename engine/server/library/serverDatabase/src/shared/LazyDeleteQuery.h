@@ -34,8 +34,8 @@ class LazyDeleteQuery : public DB::Query
 
   private:
 	DB::BindableVarrayString	m_object_ids;
-	DB::BindableInt32			m_numItems;
-	DB::BindableInt32			m_enableDatabaseLogging;
+	DB::BindableLong			m_numItems;
+	DB::BindableLong			m_enableDatabaseLogging;
 
   private:
 	LazyDeleteQuery(const LazyDeleteQuery&); //disable

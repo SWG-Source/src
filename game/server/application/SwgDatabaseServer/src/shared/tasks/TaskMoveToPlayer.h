@@ -43,7 +43,7 @@ class TaskMoveToPlayer:public DB::TaskRequest
 		DB::BindableNetworkId   player;
 		
 		//output:
-		DB::BindableInt32        result;
+		DB::BindableLong        result;
 
 	  private:
 		MoveToPlayerQuery(const MoveToPlayerQuery&);

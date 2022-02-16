@@ -30,7 +30,7 @@ namespace DBQuery
 		int getTimestamp();
 		
 	  private:
-		DB::BindableInt32 timestamp;
+		DB::BindableLong timestamp;
 
 	  private:
 		GetTimestampQuery(const GetTimestampQuery &); // disable

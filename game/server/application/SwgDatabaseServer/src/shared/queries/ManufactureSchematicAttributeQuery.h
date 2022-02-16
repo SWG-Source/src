@@ -21,7 +21,7 @@ namespace DBSchema
 	struct ManufactureSchematicAttributeRow : public DB::Row
 	{
 		DB::BindableNetworkId object_id;
-		DB::BindableInt32         action;
+		DB::BindableLong         action;
 		DB::BindableString<500>  attribute_type;
 		DB::BindableDouble       value;
 

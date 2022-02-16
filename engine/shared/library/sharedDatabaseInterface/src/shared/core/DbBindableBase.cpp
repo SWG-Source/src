@@ -8,6 +8,9 @@
 #include "sharedDatabaseInterface/FirstSharedDatabaseInterface.h"
 #include "sharedDatabaseInterface/DbBindableBase.h"
 
+#include <execinfo.h>
+#include <iostream>
+
 // ======================================================================
 
 using namespace DB;
@@ -35,7 +38,7 @@ Bindable::Bindable(int _indicator) :
 
 bool Bindable::isNull() const
 {
-	return (indicator==-1);
+	return (indicator == -1);
 }
 
 // ----------------------------------------------------------------------
