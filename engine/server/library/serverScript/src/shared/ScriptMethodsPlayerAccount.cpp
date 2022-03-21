@@ -55,6 +55,7 @@ namespace ScriptMethodsPlayerAccountNamespace
 	jboolean     JNICALL isIgnoring(JNIEnv *env, jobject self, jlong player, jstring who);
 	jboolean     JNICALL adjustLotCount(JNIEnv *env, jobject self, jlong player, jint adjustment);
 	jint         JNICALL getAccountNumLots(JNIEnv *env, jobject self, jlong player);
+	jint         JNICALL getMaxHousingLots(JNIEnv *env, jobject self);
 	jint         JNICALL getGameFeatureBits(JNIEnv *env, jobject self, jlong player);
 	jint         JNICALL getSubscriptionFeatureBits(JNIEnv *env, jobject self, jlong player);
 	jboolean     JNICALL isUsingAdminLogin(JNIEnv *env, jobject self, jlong player);
@@ -91,6 +92,7 @@ const JNINativeMethod NATIVES[] = {
 	JF("_isIgnoring", "(JLjava/lang/String;)Z", isIgnoring),
 	JF("_adjustLotCount", "(JI)Z", adjustLotCount),
 	JF("_getAccountNumLots", "(J)I", getAccountNumLots),
+	JF("_getMaxHousingLots", "()I", getMaxHousingLots),
 	JF("_getGameFeatureBits", "(J)I", getGameFeatureBits),
 	JF("_getSubscriptionFeatureBits", "(J)I", getSubscriptionFeatureBits),
 	JF("_isUsingAdminLogin", "(J)Z", isUsingAdminLogin),
@@ -195,6 +197,15 @@ jint JNICALL ScriptMethodsPlayerAccountNamespace::getAccountNumLots(JNIEnv *env,
 	}
 
 	return playerObject->getAccountNumLots();
+}
+
+// ----------------------------------------------------------------------
+
+jint JNICALL ScriptMethodsPlayerAccountNamespace::getMaxHousingLots(JNIEnv *env, jobject self)
+{
+	UNREF(env);
+	UNREF(self);
+	return ConfigServerGame::getMaxHousingLots();
 }
 
 // ----------------------------------------------------------------------

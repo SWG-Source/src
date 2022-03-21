@@ -1013,6 +1013,9 @@ private:
 	Archive::AutoDeltaVector<WearableEntry> m_wearableAppearanceData; // Vector for our appearance items.
 
 	Archive::AutoDeltaVariable<NetworkId>   m_decoyOrigin; // The OID of the player whom we copied for this decoy creature.
+
+    // The max number of lots available to a player.  This value is also defined in base_class.java
+	int m_maxHousingLots;
 };
 
 //----------------------------------------------------------------------
