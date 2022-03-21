@@ -1415,6 +1415,36 @@ bool ServerObject::canTrade() const
 	{
 		return false;
 	}
+	
+	// aconite 3/21/22
+	// if an item has the move flag MF_GM but *doesn't* have the MF_Player flag
+	// that object shouldn't be considered tradeable because it isn't intended to
+	// be moved by a player (fixes, e.g., trading your buyback container)
+	bool hasGmFlag = false;
+	bool hasPlayerFlag = false;
+	auto tpf = dynamic_cast<const ServerObjectTemplate*>(getObjectTemplate());
+	if(tpf)
+	{
+		const int flags = tpf->getMoveFlagsCount();
+		if(flags > 0)
+		{
+			for (size_t i = 0; i < tpf->getMoveFlagsCount(); i++)
+			{
+				if(tpf->getMoveFlags(i) == ServerObjectTemplate::MF_gm)
+				{
+					hasGmFlag = true;
+				}
+				if (tpf->getMoveFlags(i) == ServerObjectTemplate::MF_player)
+				{
+					hasPlayerFlag = true;
+				}
+			}
+			if(hasGmFlag && !hasPlayerFlag)
+			{
+				return false;
+			}
+		}
+	}
 
 	return !markedNoTrade();
 }
