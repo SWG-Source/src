@@ -1425,16 +1425,16 @@ bool ServerObject::canTrade() const
 	auto tpf = dynamic_cast<const ServerObjectTemplate*>(getObjectTemplate());
 	if(tpf)
 	{
-		const int flags = tpf->getMoveFlagsCount();
+		const size_t flags = tpf->getMoveFlagsCount();
 		if(flags > 0)
 		{
-			for (size_t i = 0; i < tpf->getMoveFlagsCount(); i++)
+			for (size_t i = 0; i < flags; i++)
 			{
-				if(tpf->getMoveFlags(i) == ServerObjectTemplate::MF_gm)
+				if(!hasGmFlag && tpf->getMoveFlags(i) == ServerObjectTemplate::MF_gm)
 				{
 					hasGmFlag = true;
 				}
-				if (tpf->getMoveFlags(i) == ServerObjectTemplate::MF_player)
+				if (!hasPlayerFlag && tpf->getMoveFlags(i) == ServerObjectTemplate::MF_player)
 				{
 					hasPlayerFlag = true;
 				}
