@@ -5762,8 +5762,7 @@ static void commandFuncCreatePrototype(const Command&, const NetworkId& actor, c
 		GameControllerMessageFlags::RELIABLE |
 		GameControllerMessageFlags::DEST_AUTH_CLIENT);
 
-	if (!result)
-		player->stopCrafting(false);
+	player->stopCrafting(result);
 }
 
 // ----------------------------------------------------------------------
@@ -5794,8 +5793,7 @@ static void commandFuncCreateManfSchematic(const Command&, const NetworkId& acto
 		GameControllerMessageFlags::RELIABLE |
 		GameControllerMessageFlags::DEST_AUTH_CLIENT);
 
-	if (!result)
-		player->stopCrafting(false);
+	player->stopCrafting(result);
 }
 
 // ----------------------------------------------------------------------

@@ -575,6 +575,8 @@ class ConfigServerGame
 		bool			useOldSuidGenerator;
 
 		const char *    serverLoadLevel;
+
+		int             maxHousingLots;
 	};
 
   private:
@@ -1061,6 +1063,8 @@ class ConfigServerGame
 	static bool				getUseOldSuidGenerator();
 
 	static const char *     getServerLoadLevel();
+
+	static int              getMaxHousingLots();
 };
 
 //-----------------------------------------------------------------------
@@ -3700,6 +3704,13 @@ inline bool ConfigServerGame::getUseOldSuidGenerator() {
 inline const char *ConfigServerGame::getServerLoadLevel()
 {
 	return data->serverLoadLevel;
+}
+
+//-----------------------------------------------------------------------
+
+inline int ConfigServerGame::getMaxHousingLots(void)
+{
+	return data->maxHousingLots;
 }
 
 #endif

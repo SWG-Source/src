@@ -193,9 +193,6 @@ const SharedObjectTemplate * CreatureObject::m_defaultSharedTemplate = nullptr;
 
 //----------------------------------------------------------------------
 
-// The max number of lots available to a player.  This value is also defined in base_class.java
-static const int HOUSING_MAX_LOTS = 10;
-
 // Slot names
 static const ConstCharCrcLowerString DATAPAD_SLOT_NAME("datapad");
 
@@ -869,6 +866,8 @@ CreatureObject::CreatureObject(const ServerCreatureObjectTemplate* newTemplate) 
 	IGNORE_RETURN(g_creatureList.insert(this));
 
 	ObjectTracker::addCreature();
+
+	m_maxHousingLots = ConfigServerGame::getMaxHousingLots();
 }
 
 //-----------------------------------------------------------------------
@@ -11915,7 +11914,7 @@ void CreatureObject::runMissionCreationQueue()
 
 int CreatureObject::getMaxNumberOfLots() const
 {
-	return HOUSING_MAX_LOTS;
+	return m_maxHousingLots;
 }
 
 //----------------------------------------------------------------------

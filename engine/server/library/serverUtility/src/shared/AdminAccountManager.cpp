@@ -77,7 +77,20 @@ int AdminAccountManager::getAdminLevel(const std::string & account)
 		std::ostringstream postBuffer;
 		postBuffer << "user_name=" << account << "&secretKey=" << ConfigServerUtility::getExternalAdminLevelsSecretKey();
 		std::string response = webAPI::simplePost(ConfigServerUtility::getExternalAdminLevelsURL(), std::string(postBuffer.str()), "");
-		level = std::stoi(response);
+		// aconite 4/3/22
+		// stoi inconsistently throws an invalid argument exception from this request 
+		// which causes the login and/or game server to crash on an auth or /setGod;
+		// this is a temporary patch to safeguard against that until this can be further evaluated
+		try
+		{
+			int newLevel = std::stoi(response);
+			if(newLevel != 0)
+			{
+				level = newLevel;
+			}
+		}
+		catch(std::invalid_argument const& ex) {}
+		catch(std::out_of_range const& ex) {}
 		return level;
 	}
 
