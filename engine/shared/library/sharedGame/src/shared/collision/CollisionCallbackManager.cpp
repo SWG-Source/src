@@ -236,7 +236,7 @@ bool CollisionCallbackManager::intersectAndReflectWithTerrain(Object * const obj
 		    CellProperty const * wcell = CellProperty::getWorldCellProperty();
 		    CellProperty const * dcell = wcell->getDestinationCell(begin_w, end_w, time);
 
-		    REPORT_LOG(true,("Checking collision.\n"));
+		    // REPORT_LOG(true,("Checking collision.\n"));
 		    REPORT_LOG(CollisionUtils::testPortalVis(wcell, begin_w, dcell, end_w),("Possible Cell Collision.\n"));
 
 		    // Generate missing terrain between point A and point B and check collision.

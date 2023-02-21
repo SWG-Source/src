@@ -21,3 +21,4 @@ add_library(udplibrary
 	UdpLibrary.h
 )
 
+target_include_directories(udplibrary PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
