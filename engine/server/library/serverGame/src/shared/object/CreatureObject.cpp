@@ -14542,7 +14542,7 @@ bool CreatureObject::processExpertiseRequest(std::vector<std::string> const &add
 		const SkillObject *skill = SkillManager::getInstance().getSkill(s);
 		if(skill)
 		{
-			int tier = ExpertiseManager::getExpertiseTier(s);
+			int tier = ExpertiseManager::getExpertiseTier(s); // this should be only dec/inst
 			if(tier != z)
 			{
 				continue; //skip over this skill - we didn't match the tier level. we'll catch it next loop through.
