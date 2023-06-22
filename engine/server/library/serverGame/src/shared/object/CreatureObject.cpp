@@ -14562,7 +14562,6 @@ bool CreatureObject::processExpertiseRequest(std::vector<std::string> const &add
 			//Check if the player has enough points for a skill of this tier
 			int tree = ExpertiseManager::getExpertiseTree(s);
 			int pointsInTree = getExpertisePointsSpentForPlayerInTree(tree);
-			int tier = ExpertiseManager::getExpertiseTier(s);
 			if (pointsInTree < (tier - 1) * POINTS_PER_TIER)
 			{
 				LOG("CustomerService", ("SuspectedCheaterChannel: %s tried to get expertise %s but only has %d points in tree %d, needs %d", PlayerObject::getAccountDescription(this).c_str(), s.c_str(), pointsInTree, tree, (tier - 1) * POINTS_PER_TIER));
