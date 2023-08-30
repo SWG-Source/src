@@ -60,11 +60,11 @@ namespace DB
 		bool push_back(bool IsNULL, int16_t value);
 		bool push_back(bool IsNULL, double value);
 		bool push_back(bool IsNULL, int32_t value);
-		bool push_back(bool IsNULL, int64 value);
+		bool push_back(bool IsNULL, int64_t value);
 		bool push_back(int16_t value);
 		bool push_back(double value);
 		bool push_back(int32_t value);
-		bool push_back(int64 value);
+		bool push_back(int64_t value);
 
 		virtual std::string outputValue() const;
 	};

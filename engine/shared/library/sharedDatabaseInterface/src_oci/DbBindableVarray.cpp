@@ -156,7 +156,7 @@ bool BindableVarrayNumber::push_back(int32_t value)
 }
 // ----------------------------------------------------------------------
 
-bool BindableVarrayNumber::push_back(int64 value)
+bool BindableVarrayNumber::push_back(int64_t value)
 {
 	OCINumber buffer;
 
@@ -257,7 +257,7 @@ bool BindableVarrayNumber::push_back(bool IsNULL, int32_t value)
 }
 // ----------------------------------------------------------------------
 
-bool BindableVarrayNumber::push_back(bool IsNULL, int64 value)
+bool BindableVarrayNumber::push_back(bool IsNULL, int64_t value)
 {
 	OCINumber buffer;
 
