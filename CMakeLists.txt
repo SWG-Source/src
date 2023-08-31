@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
+include(CMakePrintHelpers)
 
 project(stellabellum C CXX)
 
@@ -35,7 +36,6 @@ set(CMAKE_CXX_FLAGS "\
 	${CMAKE_CXX_FLAGS} \
 	-pipe \
 	-march=native \
-	-mtune=native \
 	-maes \
 	-Wformat \
 	-Wno-overloaded-virtual \
@@ -47,6 +47,8 @@ set(CMAKE_CXX_FLAGS "\
 	-Wno-reorder \
 	-Wno-tautological-constant-out-of-range-compare \
 	-Wno-address-of-packed-member \
+	-Wfatal-errors \
+	-ffast-math \
 ")
 
 string(TOUPPER ${CMAKE_BUILD_TYPE} CMAKE_BUILD_TYPE)
@@ -69,13 +71,19 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
 	set(CMAKE_CXX_FLAGS_DEBUG 			"${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG -DDEBUG_LEVEL=2 -DPRODUCTION=0 -pg -ggdb")
 	set(CMAKE_CXX_FLAGS_RELWITHDEBINFO 	"${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -DDEBUG_LEVEL=0 -DPRODUCTION=0 -pg -ggdb -no-pie")
 	set(CMAKE_CXX_FLAGS_MINSIZEREL 		"${CMAKE_CXX_FLAGS_MINSIZEREL}     -DDEBUG_LEVEL=0 -DPRODUCTION=1 -no-pie -flto -fwhole-program-vtables")
-	set(CMAKE_CXX_FLAGS_RELEASE 		"${CMAKE_CXX_FLAGS_RELEASE}        -DDEBUG_LEVEL=0 -DPRODUCTION=1 ")
+	set(CMAKE_CXX_FLAGS_RELEASE 		"${CMAKE_CXX_FLAGS_RELEASE}        -DDEBUG_LEVEL=0 -DPRODUCTION=1")
 elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL "CLang")
 	set(CMAKE_CXX_FLAGS_DEBUG 			"${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG -DDEBUG_LEVEL=2 -DPRODUCTION=0 -pg -ggdb -g -fprofile-instr-generate -fcoverage-mapping")
 	set(CMAKE_CXX_FLAGS_RELWITHDEBINFO 	"${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -DDEBUG_LEVEL=0 -DPRODUCTION=0 -Ofast -pg -ggdb")
 	set(CMAKE_CXX_FLAGS_MINSIZEREL 		"${CMAKE_CXX_FLAGS_MINSIZEREL}     -DDEBUG_LEVEL=0 -DPRODUCTION=1 -no-pie -flto -fwhole-program-vtables")
 	set(CMAKE_CXX_FLAGS_RELEASE 		"${CMAKE_CXX_FLAGS_RELEASE}        -DDEBUG_LEVEL=0 -DPRODUCTION=1 -Ofast")
 endif()
+
+# Remove whitespace from flags
+string(REGEX REPLACE "[ \t\r\n]+" " " CMAKE_CXX_FLAGS_DEBUG ${CMAKE_CXX_FLAGS_DEBUG})
+string(REGEX REPLACE "[ \t\r\n]+" " " CMAKE_CXX_FLAGS_RELWITHDEBINFO ${CMAKE_CXX_FLAGS_RELWITHDEBINFO})
+string(REGEX REPLACE "[ \t\r\n]+" " " CMAKE_CXX_FLAGS_MINSIZEREL ${CMAKE_CXX_FLAGS_MINSIZEREL})
+string(REGEX REPLACE "[ \t\r\n]+" " " CMAKE_CXX_FLAGS_RELEASE ${CMAKE_CXX_FLAGS_RELEASE})
 
 message("Using Compiler: ${CMAKE_CXX_COMPILER_ID}")
 
@@ -86,15 +94,14 @@ if (${CMAKE_BUILD_TYPE} STREQUAL "RELWITHDEBINFO" OR ${CMAKE_BUILD_TYPE} STREQUA
 	add_definitions(-DENABLE_PROFILING)
 endif ()
 
-message("Flags CXX: ${CMAKE_CXX_FLAGS}")
 if (${CMAKE_BUILD_TYPE} STREQUAL "DEBUG")
-	message("Flags DEBUG: ${CMAKE_CXX_FLAGS_DEBUG}")
+	cmake_print_variables(CMAKE_CXX_FLAGS_DEBUG)
 elseif (${CMAKE_BUILD_TYPE} STREQUAL "RELWITHDEBINFO")
-	message("Flags RELWITHDEBINFO: ${CMAKE_CXX_FLAGS_RELWITHDEBINFO}")
+	cmake_print_variables(CMAKE_CXX_FLAGS_RELWITHDEBINFO)
 elseif (${CMAKE_BUILD_TYPE} STREQUAL "MINSIZEREL")
-	message("Flags MINSIZEREL: ${CMAKE_CXX_FLAGS_MINSIZEREL}")
+	cmake_print_variables(CMAKE_CXX_FLAGS_MINSIZEREL)
 elseif (${CMAKE_BUILD_TYPE} STREQUAL "RELEASE")
-	message("Flags RELEASE: ${CMAKE_CXX_FLAGS_RELEASE}")
+	cmake_print_variables(CMAKE_CXX_FLAGS_RELEASE)
 endif ()
 
 add_subdirectory(external)
