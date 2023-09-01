@@ -47,8 +47,6 @@ set(CMAKE_CXX_FLAGS "\
 	-Wno-reorder \
 	-Wno-tautological-constant-out-of-range-compare \
 	-Wno-address-of-packed-member \
-	-Wfatal-errors \
-	-ffast-math \
 ")
 
 string(TOUPPER ${CMAKE_BUILD_TYPE} CMAKE_BUILD_TYPE)
