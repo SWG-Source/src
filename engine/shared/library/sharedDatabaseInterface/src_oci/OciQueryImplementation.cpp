@@ -63,8 +63,10 @@ bool DB::OCIQueryImpl::setup(Session *session)
 	
 	if (!m_server->checkerr(*m_session, OCIHandleAlloc( m_session->envhp,
 															  reinterpret_cast<void**>(&m_stmthp),
-															  OCI_HTYPE_STMT, 0, 0)))
-		return false;
+															  OCI_HTYPE_STMT, 0, 0))) {
+        LOG("DatabaseError", ("Could not setup query"));
+        return false;
+    }
 
 	
 	m_cursorhp=m_stmthp; // later on, we'll separate these two if needed
@@ -88,15 +90,19 @@ bool DB::OCIQueryImpl::prepare()
 										   reinterpret_cast<OraText*>(const_cast<char*>(m_sql.c_str())),
 										   m_sql.length(),
 										   (ub4) OCI_NTV_SYNTAX,
-										   (ub4) OCI_DEFAULT)))
-		return false;
+										   (ub4) OCI_DEFAULT))) {
+        LOG("DatabaseError", ("Could not prepare statement - %s", m_sql.c_str()));
+        return false;
+    }
 	if (m_query->getMode()==Query::MODE_PLSQL_REFCURSOR)
 	{
 		m_cursorhp=0; // may not be necessary -- OCI docs unclear
 		if (!m_server->checkerr(*m_session, OCIHandleAlloc( m_session->envhp, (dvoid **) &m_cursorhp,
-																  OCI_HTYPE_STMT, 0, 0)))
+																  OCI_HTYPE_STMT, 0, 0))) {
+			LOG("DatabaseError", ("Could not prepare statement - could not allocate handle for statement - %s", m_sql.c_str()));
 			return false;
-		
+        }
+
 		if (!m_server->checkerr(*m_session,
 								OCIBindByPos (m_stmthp,
 											  &m_procBind,
@@ -110,8 +116,10 @@ bool DB::OCIQueryImpl::prepare()
 											  0,
 											  0,
 											  0,
-											  OCI_DEFAULT)))
+											  OCI_DEFAULT))) {
+			LOG("DatabaseError", ("Could not prepare statement - could not bind by position on statement - %s", m_sql.c_str()));
 			return false;
+        }
 	}
 	
 	return true;
@@ -189,8 +197,10 @@ bool DB::OCIQueryImpl::exec()
 		{
 			WARNING_STRICT_FATAL(!m_session->isOkToFetch(),("Calling fetch after commit, without an execute in between (may cause Oracle to crash)."));
 			sword status=OCIStmtFetch (m_cursorhp, m_session->errhp, 0, OCI_FETCH_NEXT, OCI_DEFAULT);
-			if (!m_server->checkerr(*m_session,status))
-				return false;
+			if (!m_server->checkerr(*m_session,status)) {
+                LOG("DatabaseError", ("Could not establish session when executing statement (NO Data) - %s", m_sql.c_str()));
+                return false;
+            }
 		}
 		m_endOfData=true;
 	}
@@ -213,8 +223,10 @@ bool DB::OCIQueryImpl::exec()
 				m_dataReady=true;
 			}
 		}
-		else
-			return false;
+		else {
+            LOG("DatabaseError", ("Could not establish session when executing statement (Data) - %s", m_sql.c_str()));
+            return false;
+        }
 	}
 	
 	m_inUse=true;
@@ -247,8 +259,10 @@ int DB::OCIQueryImpl::fetch()
 				   (dvoid *)& rows, (ub4 *) &sizep, OCI_ATTR_ROWS_FETCHED, m_session->errhp);
 
 		sword status=OCIStmtFetch (m_cursorhp, m_session->errhp, 0, OCI_FETCH_NEXT, OCI_DEFAULT); // cancel the cursor
-		if (!m_server->checkerr(*m_session,status))
-			return -1;
+		if (!m_server->checkerr(*m_session,status)) {
+            LOG("DatabaseError", ("Could not fetch from query (NO Data) - %s", m_sql.c_str()));
+            return -1;
+        }
 		m_endOfData=true;
 		if (rows!=0)
 		{
@@ -260,8 +274,10 @@ int DB::OCIQueryImpl::fetch()
 	}
 	else
 	{
-		if (!m_server->checkerr(*m_session,status))
-			return -1;
+		if (!m_server->checkerr(*m_session,status)) {
+            LOG("DatabaseError", ("Could not fetch from query (Data) - %s", m_sql.c_str()));
+            return -1;
+        }
 	}
 	
 	ub4 rows;
@@ -324,8 +340,11 @@ void DB::OCIQueryImpl::done()
 {
 	NOT_NULL(m_stmthp);
 
-	if (m_autocommit)	
-		m_server->checkerr(*m_session, OCITransCommit(m_session->svchp, m_session->errhp, 0));
+	if (m_autocommit) {
+		if(!(m_server->checkerr(*m_session, OCITransCommit(m_session->svchp, m_session->errhp, 0)))) {
+            LOG("DatabaseError", ("Could not complete transaction - %s", m_sql.c_str()));
+		}
+	}
 
 	OCIHandleFree(m_stmthp, OCI_HTYPE_STMT);
 	if (m_cursorhp!=m_stmthp)
@@ -355,7 +374,9 @@ int DB::OCIQueryImpl::rowCount()
 
 	int value;
 
-	m_server->checkerr(*m_session, OCIAttrGet (m_cursorhp, OCI_HTYPE_STMT,&value,0,OCI_ATTR_ROW_COUNT,m_session->errhp));
+	if(!(m_server->checkerr(*m_session, OCIAttrGet (m_cursorhp, OCI_HTYPE_STMT,&value,0,OCI_ATTR_ROW_COUNT,m_session->errhp)))) {
+        LOG("DatabaseError", ("Could not get row count from query - %s", m_sql.c_str()));
+	}
  
 	return value;
 }
@@ -453,7 +474,7 @@ bool DB::OCIQueryImpl::bindCol(BindableLong &buffer)
 {
 	BindRec *br=addBindRec(buffer);
 
-	m_server->checkerr(*m_session, OCIDefineByPos(m_cursorhp,
+	if(!(m_server->checkerr(*m_session, OCIDefineByPos(m_cursorhp,
 														&(br->defnp),
 														m_session->errhp,
 														nextColumn++,
@@ -463,16 +484,20 @@ bool DB::OCIQueryImpl::bindCol(BindableLong &buffer)
 														br->getIndicatorPointer(),
 														br->getLengthPointer(),
 														(ub2 *)0,
-														OCI_DEFAULT));
+														OCI_DEFAULT)))) {
+        LOG("DatabaseError", ("Could not bind column (by position) - %s", m_sql.c_str()));
+    }
 
 	if (m_numElements > 1)
 	{
-		m_server->checkerr(*m_session, OCIDefineArrayOfStruct(br->defnp,
+		if(!(m_server->checkerr(*m_session, OCIDefineArrayOfStruct(br->defnp,
 																	m_session->errhp,
 																	m_skipSize,
 																	br->getIndicatorSkipSize(),
 																	br->getLengthSkipSize(),
-																	0));
+																	0)))) {
+            LOG("DatabaseError", ("Could not bind column (define array) - %s", m_sql.c_str()));
+        }
 	}
 	return true;
 }
@@ -483,7 +508,7 @@ bool DB::OCIQueryImpl::bindParameter(BindableLong &buffer)
 {
 	BindRec *br=addBindRec(buffer);
 
-	return m_server->checkerr(*m_session, OCIBindByPos (m_stmthp,
+	if(!(m_server->checkerr(*m_session, OCIBindByPos (m_stmthp,
 															 &(br->bindp),
 															 m_session->errhp,
 															 nextParameter++,
@@ -495,7 +520,11 @@ bool DB::OCIQueryImpl::bindParameter(BindableLong &buffer)
 															 0,
 															 0,
 															 0,
-															 OCI_DEFAULT));
+															 OCI_DEFAULT)))) {
+        LOG("DatabaseError", ("Could not bind parameter of statement - %s", m_sql.c_str()));
+	    return false;
+	}
+    return true;
 }
 
 // ----------------------------------------------------------------------
@@ -504,7 +533,7 @@ bool DB::OCIQueryImpl::bindCol(BindableStringBase &buffer)
 {
 	BindRec *br=addBindRec(buffer);
 
-	m_server->checkerr(*m_session, OCIDefineByPos(m_cursorhp,
+	if(!(m_server->checkerr(*m_session, OCIDefineByPos(m_cursorhp,
 														&(br->defnp),
 														m_session->errhp,
 														nextColumn++,
@@ -514,16 +543,20 @@ bool DB::OCIQueryImpl::bindCol(BindableStringBase &buffer)
 														br->getIndicatorPointer(),
 														br->getLengthPointer(),
 														(ub2 *)0,
-														OCI_DEFAULT));
+														OCI_DEFAULT)))) {
+        LOG("DatabaseError", ("Could not bind column of statement (by position) - %s", m_sql.c_str()));
+	}
 
 	if (m_numElements > 1)
 	{
-		m_server->checkerr(*m_session, OCIDefineArrayOfStruct(br->defnp,
+		if(!(m_server->checkerr(*m_session, OCIDefineArrayOfStruct(br->defnp,
 																	m_session->errhp,
 																	m_skipSize,
 																	br->getIndicatorSkipSize(),
 																	br->getLengthSkipSize(),
-																	0));
+																	0)))) {
+            LOG("DatabaseError", ("Could not bind column of statement (by array) - %s", m_sql.c_str()));
+		}
 	}
 	return true;
 }
@@ -535,7 +568,7 @@ bool DB::OCIQueryImpl::bindParameter(BindableStringBase &buffer)
 	BindRec *br=addBindRec(buffer);
 
 	br->stringAdjust=true;
-	return m_server->checkerr(*m_session, OCIBindByPos (m_stmthp,
+	if(!(m_server->checkerr(*m_session, OCIBindByPos (m_stmthp,
 															 &(br->bindp),
 															 m_session->errhp,
 															 nextParameter++,
@@ -547,7 +580,11 @@ bool DB::OCIQueryImpl::bindParameter(BindableStringBase &buffer)
 															 0,
 															 0,
 															 0,
-															 OCI_DEFAULT));
+															 OCI_DEFAULT)))) {
+        LOG("DatabaseError", ("Could not bind parameter of statement (by position) - %s", m_sql.c_str()));
+        return false;
+    }
+    return true;
 }
 
 // ----------------------------------------------------------------------
@@ -556,7 +593,7 @@ bool DB::OCIQueryImpl::bindCol(BindableUnicodeBase &buffer)
 {
 	BindRec *br=addBindRec(buffer);
 
-	m_server->checkerr(*m_session, OCIDefineByPos(m_cursorhp,
+	if(!(m_server->checkerr(*m_session, OCIDefineByPos(m_cursorhp,
 														&(br->defnp),
 														m_session->errhp,
 														nextColumn++,
@@ -566,16 +603,20 @@ bool DB::OCIQueryImpl::bindCol(BindableUnicodeBase &buffer)
 														br->getIndicatorPointer(),
 														br->getLengthPointer(),
 														(ub2 *)0,
-														OCI_DEFAULT));
+														OCI_DEFAULT)))) {
+        LOG("DatabaseError", ("Could not bind column of statement (by position) (BindableUnicodeBase) - %s", m_sql.c_str()));
+	}
 
 	if (m_numElements > 1)
 	{
-		m_server->checkerr(*m_session, OCIDefineArrayOfStruct(br->defnp,
+		if(!(m_server->checkerr(*m_session, OCIDefineArrayOfStruct(br->defnp,
 																	m_session->errhp,
 																	m_skipSize,
 																	br->getIndicatorSkipSize(),
 																	br->getLengthSkipSize(),
-																	0));
+																	0)))) {
+            LOG("DatabaseError", ("Could not bind column of statement (by array) (BindableUnicodeBase) - %s", m_sql.c_str()));
+		}
 	}
 	return true;
 }
@@ -588,7 +629,7 @@ bool DB::OCIQueryImpl::bindParameter(BindableUnicodeBase &buffer)
 
 	br->stringAdjust=true;
 	br->length=static_cast<uint16>(*(buffer.getIndicator()));
-	return m_server->checkerr(*m_session, OCIBindByPos (m_stmthp,
+	if(!(m_server->checkerr(*m_session, OCIBindByPos (m_stmthp,
 															 &(br->bindp),
 															 m_session->errhp,
 															 nextParameter++,
@@ -600,7 +641,11 @@ bool DB::OCIQueryImpl::bindParameter(BindableUnicodeBase &buffer)
 															 0,
 															 0,
 															 0,
-															 OCI_DEFAULT));
+															 OCI_DEFAULT)))) {
+        LOG("DatabaseError", ("Could not bind parameter of statement (by position) (BindableUnicodeBase) - %s", m_sql.c_str()));
+        return false;
+    }
+    return true;
 }
 
 // ======================================================================
@@ -609,7 +654,7 @@ bool DB::OCIQueryImpl::bindCol(BindableDouble &buffer)
 {
 	BindRec *br=addBindRec(buffer);
 
-	m_server->checkerr(*m_session, OCIDefineByPos(m_cursorhp,
+	if(!(m_server->checkerr(*m_session, OCIDefineByPos(m_cursorhp,
 														&(br->defnp),
 														m_session->errhp,
 														nextColumn++,
@@ -619,15 +664,19 @@ bool DB::OCIQueryImpl::bindCol(BindableDouble &buffer)
 														br->getIndicatorPointer(),
 														br->getLengthPointer(),
 														(ub2 *)0,
-														OCI_DEFAULT));
+														OCI_DEFAULT)))) {
+        LOG("DatabaseError", ("Could not bind column of statement (by position) (BindableDouble) - %s", m_sql.c_str()));
+    }
 	if (m_numElements > 1)
 	{
-		m_server->checkerr(*m_session, OCIDefineArrayOfStruct(br->defnp,
+		if(!(m_server->checkerr(*m_session, OCIDefineArrayOfStruct(br->defnp,
 																	m_session->errhp,
 																	m_skipSize,
 																	br->getIndicatorSkipSize(),
 																	br->getLengthSkipSize(),
-																	0));
+																	0)))) {
+            LOG("DatabaseError", ("Could not bind column of statement (by array) (BindableDouble) - %s", m_sql.c_str()));
+        }
 	}
 	return true;
 }
@@ -638,7 +687,7 @@ bool DB::OCIQueryImpl::bindParameter(BindableDouble &buffer)
 {
 	BindRec *br=addBindRec(buffer);
 	
-	return m_server->checkerr(*m_session, OCIBindByPos (m_stmthp,
+	if(!(m_server->checkerr(*m_session, OCIBindByPos (m_stmthp,
 															 &(br->bindp),
 															 m_session->errhp,
 															 nextParameter++,
@@ -650,7 +699,11 @@ bool DB::OCIQueryImpl::bindParameter(BindableDouble &buffer)
 															 0,
 															 0,
 															 0,
-															 OCI_DEFAULT));
+															 OCI_DEFAULT)))) {
+        LOG("DatabaseError", ("Could not bind parameter of statement (by position) (BindableDouble) - %s", m_sql.c_str()));
+		return false;
+    }
+    return true;
 }
 
 // ----------------------------------------------------------------------
@@ -659,7 +712,7 @@ bool DB::OCIQueryImpl::bindCol(BindableBool &buffer)
 {
 	BindRec *br=addBindRec(buffer);
 
-	m_server->checkerr(*m_session, OCIDefineByPos(m_cursorhp,
+	if(!(m_server->checkerr(*m_session, OCIDefineByPos(m_cursorhp,
 														&(br->defnp),
 														m_session->errhp,
 														nextColumn++,
@@ -669,16 +722,20 @@ bool DB::OCIQueryImpl::bindCol(BindableBool &buffer)
 														br->getIndicatorPointer(),
 														br->getLengthPointer(),
 														(ub2 *)0,
-														OCI_DEFAULT));
+														OCI_DEFAULT)))) {
+        LOG("DatabaseError", ("Could not bind column of statement (by position) (BindableBool) - %s", m_sql.c_str()));
+    }
 
 	if (m_numElements > 1)
 	{
-		m_server->checkerr(*m_session, OCIDefineArrayOfStruct(br->defnp,
+		if(!(m_server->checkerr(*m_session, OCIDefineArrayOfStruct(br->defnp,
 																	m_session->errhp,
 																	m_skipSize,
 																	br->getIndicatorSkipSize(),
 																	br->getLengthSkipSize(),
-																	0));
+																	0)))) {
+            LOG("DatabaseError", ("Could not bind column of statement (by array) (BindableBool) - %s", m_sql.c_str()));
+		}
 	}
 	return true;
 }
@@ -690,7 +747,7 @@ bool DB::OCIQueryImpl::bindParameter(BindableBool &buffer)
 	BindRec *br=addBindRec(buffer);
 
 	br->stringAdjust=true;
-	return m_server->checkerr(*m_session, OCIBindByPos (m_stmthp,
+	if(!(m_server->checkerr(*m_session, OCIBindByPos (m_stmthp,
 															 &(br->bindp),
 															 m_session->errhp,
 															 nextParameter++,
@@ -702,7 +759,11 @@ bool DB::OCIQueryImpl::bindParameter(BindableBool &buffer)
 															 0,
 															 0,
 															 0,
-															 OCI_DEFAULT));
+															 OCI_DEFAULT)))) {
+        LOG("DatabaseError", ("Could not bind parameter of statement (by array) (BindableBool) - %s", m_sql.c_str()));
+        return false;
+    }
+    return true;
 }
 
 // ----------------------------------------------------------------------
@@ -711,7 +772,7 @@ bool DB::OCIQueryImpl::bindParameter(BindableVarray &buffer)
 {
 	BindRec *br=addBindRec(buffer);
 
-	bool result = m_server->checkerr(*m_session, OCIBindByPos (m_stmthp,
+	if(!(m_server->checkerr(*m_session, OCIBindByPos (m_stmthp,
 																	 &(br->bindp),
 																	 m_session->errhp,
 																	 nextParameter++,
@@ -723,18 +784,22 @@ bool DB::OCIQueryImpl::bindParameter(BindableVarray &buffer)
 																	 0,
 																	 0,
 																	 0,
-																	 OCI_DEFAULT));
+																	 OCI_DEFAULT)))) {
+        LOG("DatabaseError", ("Could not bind parameter of statement (by array) (BindableVarray) - %s", m_sql.c_str()));
+        return false;
+	}
 	
-	if (!result)
-		return false;
-	
-	return m_server->checkerr(*m_session, OCIBindObject (br->bindp,
+	if(!(m_server->checkerr(*m_session, OCIBindObject (br->bindp,
 															   m_session->errhp,
 															   buffer.getTDO(),
 															   reinterpret_cast<void**>(buffer.getBuffer()),
 															   0,
 															   0,
-															   0));
+															   0)))) {
+        LOG("DatabaseError", ("Could not bind parameter of statement (by object) (BindableVarray) - %s", m_sql.c_str()));
+        return false;
+    }
+    return true;
 }
 
 // ----------------------------------------------------------------------

@@ -97,6 +97,7 @@ bool DB::OCISession::connect()
 		if (! connected)
 		{
 			++retryCount;
+			LOG("DatabaseError", ("Could not connect to the database (DSN=%s) after %d attempts.", m_server->getDSN(), retryCount));
 			DEBUG_REPORT_LOG(retryCount<5,("Retrying database connection\n"));
 			Os::sleep(1000);
 		}	
@@ -140,6 +141,7 @@ bool DB::OCISession::connect()
 	}
 	else
 	{
+	    LOG("DatabaseError", ("Invalid password provided when connecting to the database - disconnecting."));
 		disconnect(); // cleanup
 		connected=false;
 	}
@@ -211,12 +213,20 @@ bool DB::OCISession::setAutoCommitMode(bool autocommit)
 bool DB::OCISession::commitTransaction()
 {
 	m_okToFetch = false;
-	return m_server->checkerr(*this, OCITransCommit(svchp, errhp, 0));
+	if(!(m_server->checkerr(*this, OCITransCommit(svchp, errhp, 0)))) {
+	    LOG("DatabaseError", ("Unable to commit transaction."));
+	    return false;
+	}
+	return true;
 }
 
 bool DB::OCISession::rollbackTransaction()
 {
-	return m_server->checkerr(*this, OCITransRollback(svchp, errhp, 0));
+	if(!(m_server->checkerr(*this, OCITransRollback(svchp, errhp, 0)))) {
+	    LOG("DatabaseError", ("Unable to rollback transaction."));
+	    return false;
+	}
+	return true;
 }
 
 bool DB::OCISession::reset()
