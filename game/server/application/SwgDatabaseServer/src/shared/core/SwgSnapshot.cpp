@@ -331,21 +331,21 @@ void SwgSnapshot::encodeScriptObject(const NetworkId &objectId, Archive::ByteStr
 void
 SwgSnapshot::decodeAttributes(const NetworkId &objectId, Archive::ReadIterator &data, bool isBaseline, int offset) {
     if (isBaseline) {
-        size_t size, baselineCommandCount;
+        int32_t size, baselineCommandCount;
         Archive::get(data, size);
         Archive::get(data, baselineCommandCount);
 
         Attributes::Value temp;
-        for (size_t i = 0; i < size; ++i) {
+        for (int32_t i = 0; i < size; ++i) {
             Archive::get(data, temp);
             m_creatureObjectBuffer.setAttribute(objectId, i + offset, temp);
         }
     } else {
         typedef Archive::AutoDeltaVector <Attributes::Value> VectorType;
-        size_t numCommands, baselineCommandCount;
+        int32_t numCommands, baselineCommandCount;
         Archive::get(data, numCommands);
         Archive::get(data, baselineCommandCount);
-        for (size_t count = 0; count < numCommands; ++count) {
+        for (int32_t count = 0; count < numCommands; ++count) {
             unsigned char cmd;// datatype?
             uint16 index;
 
@@ -386,8 +386,8 @@ void SwgSnapshot::encodeAttributes(const NetworkId &objectId, Archive::ByteStrea
     std::vector <Attributes::Value> values;
     m_creatureObjectBuffer.getAttributesForObject(objectId, values, offset, Attributes::NumberOfAttributes);
 
-    Archive::put(data, Attributes::NumberOfAttributes);
-    Archive::put(data, static_cast<size_t>(0)); // baselineCommandCount
+    Archive::put(data, static_cast<int32_t> (Attributes::NumberOfAttributes));
+    Archive::put(data, static_cast<int32_t>(0)); // baselineCommandCount
     if (values.size() < static_cast<size_t>(Attributes::NumberOfAttributes)) {
         DEBUG_REPORT_LOG(true, ("Object %s did not have valid attribute data in the database.  Missing attributes will be set to 100.\n", objectId.getValueString().c_str()));
         values.resize(Attributes::NumberOfAttributes, 100);
@@ -754,21 +754,21 @@ void SwgSnapshot::ignorePersistedFlag(const NetworkId &objectId, Archive::ReadIt
 void
 SwgSnapshot::decodeLocationDataList(const NetworkId &objectId, size_t listId, Archive::ReadIterator &data, bool isBaseline) {
     if (isBaseline) {
-        size_t size, baselineCommandCount;
+        int32_t size, baselineCommandCount;
         Archive::get(data, size);
         Archive::get(data, baselineCommandCount);
 
         LocationData temp;
-        for (size_t i = 0; i < size; ++i) {
+        for (int32_t i = 0; i < size; ++i) {
             Archive::get(data, temp);
             m_locationBuffer.set(objectId, listId, i, temp);
         }
     } else {
         typedef Archive::AutoDeltaVector <LocationData> VectorType;
-        size_t numCommands, baselineCommandCount;
+        int32_t numCommands, baselineCommandCount;
         Archive::get(data, numCommands);
         Archive::get(data, baselineCommandCount);
-        for (size_t count = 0; count < numCommands; ++count) {
+        for (int32_t count = 0; count < numCommands; ++count) {
             unsigned char cmd;
             uint16 index;
 
@@ -813,8 +813,8 @@ void SwgSnapshot::encodeLocationDataList(const NetworkId &objectId, size_t listI
     std::vector <LocationData> values;
     m_locationBuffer.getLocationList(objectId, listId, values);
 
-    Archive::put(data, values.size());
-    Archive::put(data, static_cast<size_t>(0));
+    Archive::put(data, static_cast<int32_t> (values.size()));
+    Archive::put(data, static_cast<int32_t>(0));
     for (std::vector<LocationData>::iterator i = values.begin(); i != values.end(); ++i) {
         Archive::put(data, *i);
     }
@@ -855,8 +855,8 @@ void SwgSnapshot::encodeExperience(const NetworkId &objectId, Archive::ByteStrea
     ValuesType values;
     m_experienceBuffer.getExperienceForObject(objectId, values);
 
-    Archive::put(data, values.size());
-    Archive::put(data, static_cast<size_t>(0)); // baselineCommandCount
+    Archive::put(data, static_cast<int32_t> (values.size()));
+    Archive::put(data, static_cast<int32_t> (0)); // baselineCommandCount
     for (ValuesType::const_iterator i = values.begin(); i != values.end(); ++i) {
         const unsigned char command = 0; //ADD
         Archive::put(data, command);
@@ -901,8 +901,8 @@ void SwgSnapshot::encodeBattlefieldParticipants(const NetworkId &objectId, Archi
     ValuesType values;
     m_battlefieldParticipantBuffer.getParticipantsForRegion(objectId, values);
 
-    Archive::put(data, values.size());
-    Archive::put(data, static_cast<size_t>(0)); // baselineCommandCount
+    Archive::put(data, static_cast<int32_t> (values.size()));
+    Archive::put(data, static_cast<int32_t> (0)); // baselineCommandCount
     for (ValuesType::const_iterator i = values.begin(); i != values.end(); ++i) {
         const unsigned char command = 0; //ADD
         Archive::put(data, command);
@@ -945,8 +945,8 @@ void SwgSnapshot::encodeManufactureSchematicAttributes(const NetworkId &objectId
     ValuesType values;
     m_manufactureSchematicAttributeBuffer.getDataForObject(objectId, values);
 
-    Archive::put(data, values.size());
-    Archive::put(data, static_cast<size_t>(0)); // baselineCommandCount
+    Archive::put(data, static_cast<int32_t> (values.size()));
+    Archive::put(data, static_cast<int32_t> (0)); // baselineCommandCount
     for (ValuesType::const_iterator i = values.begin(); i != values.end(); ++i) {
         const unsigned char command = 0; //ADD
         Archive::put(data, command);
@@ -1087,8 +1087,8 @@ void SwgSnapshot::encodeWaypoints(const NetworkId &objectId, Archive::ByteStream
     ValuesType values;
     m_waypointBuffer.getWaypointsForObject(objectId, values);
 
-    Archive::put(data, values.size());
-    Archive::put(data, static_cast<size_t>(0)); // baselineCommandCount
+    Archive::put(data, static_cast<int32_t> (values.size()));
+    Archive::put(data, static_cast<int32_t> (0)); // baselineCommandCount
     for (ValuesType::const_iterator i = values.begin(); i != values.end(); ++i) {
         const unsigned char command = 0; //ADD
         Archive::put(data, command);

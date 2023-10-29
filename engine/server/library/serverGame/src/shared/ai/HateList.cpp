@@ -535,8 +535,8 @@ void HateList::addServerNpAutoDeltaVariables(Archive::AutoDeltaByteStream & stre
 // ----------------------------------------------------------------------
 int HateList::getTimeSinceLastUpdate() const
 {
-	time_t const currentTime = Os::getRealSystemTime();
-	time_t const timeSinceActivitiy = (currentTime - m_lastUpdateTime.get());
+	uint32_t const currentTime = Os::getRealSystemTime();
+	uint32_t const timeSinceActivitiy = (currentTime - m_lastUpdateTime.get());
 
 	return clamp(0, static_cast<int>(timeSinceActivitiy), 1024);
 }

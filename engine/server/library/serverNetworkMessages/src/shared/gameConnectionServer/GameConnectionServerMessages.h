@@ -118,7 +118,7 @@ class ControlAssumed : public GameNetworkMessage
   public:
     explicit ControlAssumed(NetworkId oid, const std::string & newSceneName, const bool skipLoadScreen,
                             const Vector &startPos, const float startYaw, const std::string & templateName,
-                            const int64 timeSeconds);
+                            const int64_t timeSeconds);
     ControlAssumed(Archive::ReadIterator & source);
     virtual ~ControlAssumed();
 
@@ -128,7 +128,7 @@ class ControlAssumed : public GameNetworkMessage
     const Vector &                   getStartPosition  () const;
     const float                      getStartYaw       () const;
     const std::string &              getTemplateName   () const;
-	const int64                      getTimeSeconds    () const;
+	const int64_t                    getTimeSeconds    () const;
     
   private:
     Archive::AutoVariable<NetworkId>    m_oid;
@@ -137,7 +137,7 @@ class ControlAssumed : public GameNetworkMessage
     Archive::AutoVariable<Vector>       m_startPosition;
 	Archive::AutoVariable<float>        m_startYaw;
     Archive::AutoVariable<std::string>  m_templateName;
-	Archive::AutoVariable<int64>        m_timeSeconds;
+	Archive::AutoVariable<int64_t>      m_timeSeconds;
     
 
     ControlAssumed();
@@ -188,7 +188,7 @@ inline const std::string & ControlAssumed::getTemplateName() const
 
 //-----------------------------------------------------------------------
 
-inline const int64 ControlAssumed::getTimeSeconds() const
+inline const int64_t ControlAssumed::getTimeSeconds() const
 {
 	return m_timeSeconds.get();
 }

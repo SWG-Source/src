@@ -697,7 +697,7 @@ unsigned int Chat::isAllowedToEnterRoom(const CreatureObject & who, const std::s
         // thus requiring more work from us here
         bool isMayor = false;
         std::vector<int> cityId = CityInterface::getCitizenOfCityId(who.getNetworkId());
-        for(int i = 0; i < cityId.size(); ++i){
+        for(uint32_t i = 0; i < cityId.size(); ++i){
             NetworkId leader = CityInterface::getCityInfo(cityId[i]).getLeaderId();
             if(playerObject && who.getNetworkId() == leader) {
                 isMayor = true;

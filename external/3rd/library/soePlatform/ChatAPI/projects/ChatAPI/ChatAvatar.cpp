@@ -148,7 +148,7 @@ const ChatUnicodeString& ChatAvatar::getStatusMessage() const
     return m_cStatusMessage;
 }
 
-void ChatAvatar::setAttributes(unsigned long attributes)
+void ChatAvatar::setAttributes(uint32_t attributes)
 {
 	m_core->setAttributes(attributes);
 }
@@ -158,7 +158,7 @@ void ChatAvatar::setLoginPriority(int loginPriority)
 	m_core->setLoginPriority(loginPriority);
 }
 
-void ChatAvatar::setInboxLimit(unsigned inboxLimit)
+void ChatAvatar::setInboxLimit(uint32_t inboxLimit)
 {
 	m_core->setInboxLimit(inboxLimit);
 }

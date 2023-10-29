@@ -40,7 +40,7 @@ public:
     void onSendAbortTransaction(unsigned int, unsigned int, void *) {};
     void onSendAuditAssetTransfer(unsigned int, unsigned int, void *) {};
 
-    void onGetNewTransactionID(unsigned int, unsigned int, int64, void *) {};
+    void onGetNewTransactionID(unsigned int, unsigned int, int64_t, void *) {};
 
     // Responses to reply requests
     void onReplyReceivePrepareTransaction(unsigned int, unsigned int, void *) {};
@@ -52,10 +52,10 @@ public:
     void onIdentifyHost(unsigned int, unsigned int, void *) {};
 
     // callbacks initiated by auction
-    void onReceivePrepareTransaction(unsigned int, int64, unsigned int, unsigned int, int64, const char *) {};
-    void onReceiveCommitTransaction(unsigned int, int64) {};
-    void onReceiveAbortTransaction(unsigned int, int64) {};
-    void onReceiveGetCharacterList(unsigned int, unsigned int, const char *) {};
+    void onReceivePrepareTransaction(unsigned int, int64_t, unsigned int, unsigned int, int64_t, const char *) {};
+    void onReceiveCommitTransaction(unsigned int, int64_t) {};
+    void onReceiveAbortTransaction(unsigned int, int64_t) {};
+    void onReceiveGetCharacterList(unsigned int, int64_t, const char *) {};
 
 private:
 

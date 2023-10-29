@@ -198,20 +198,20 @@ namespace SetupSwgServerNetworkMessagesNamespace
 		return unpackGenericMessage <std::pair<std::string, std::pair<NetworkId, std::pair<StringId, ProsePackage> > > >(source);
 	}
 
-	void packUnsignedLong(const MessageQueue::Data * data, Archive::ByteStream & target)
+	void packUnsignedInt(const MessageQueue::Data * data, Archive::ByteStream & target)
 	{
-		const MessageQueueGenericValueType<unsigned long> * msg = safe_cast<const MessageQueueGenericValueType<unsigned long> *>(data);
+		const MessageQueueGenericValueType<uint32_t> * msg = safe_cast<const MessageQueueGenericValueType<uint32_t> *>(data);
 		if(msg)
 		{
 			Archive::put(target, msg->getValue());
 		}
 	}
 
-	MessageQueue::Data * unpackUnsignedLong(Archive::ReadIterator & source)
+	MessageQueue::Data * unpackUnsignedInt(Archive::ReadIterator & source)
 	{
-		unsigned long v;
+		uint32_t v;
 		Archive::get(source, v);
-		return new MessageQueueGenericValueType<unsigned long>(v);
+		return new MessageQueueGenericValueType<uint32_t>(v);
 	}
 
 	void packUnicodeString(const MessageQueue::Data * data, Archive::ByteStream & target)
@@ -594,20 +594,20 @@ namespace SetupSwgServerNetworkMessagesNamespace
 		return new MessageQueueGenericValueType<std::pair<NetworkId, uint32> >(v);
 	}
 
-	void packULongBool(const MessageQueue::Data * data, Archive::ByteStream & target)
+	void packUIntBool(const MessageQueue::Data * data, Archive::ByteStream & target)
 	{
-		const MessageQueueGenericValueType<std::pair<unsigned long, bool> > * msg = safe_cast<const MessageQueueGenericValueType<std::pair<unsigned long, bool> > *>(data);
+		const MessageQueueGenericValueType<std::pair<uint32_t, bool> > * msg = safe_cast<const MessageQueueGenericValueType<std::pair<uint32_t, bool> > *>(data);
 		if(msg)
 		{
 			Archive::put(target, msg->getValue());
 		}
 	}
 
-	MessageQueue::Data * unpackULongBool(Archive::ReadIterator & source)
+	MessageQueue::Data * unpackUIntBool(Archive::ReadIterator & source)
 	{
-		std::pair<unsigned long, bool> v;
+		std::pair<uint32_t, bool> v;
 		Archive::get(source, v);
-		return new MessageQueueGenericValueType<std::pair<unsigned long, bool> >(v);
+		return new MessageQueueGenericValueType<std::pair<uint32_t, bool> >(v);
 	}
 
 	void packStringNetworkIdNetworkId(const MessageQueue::Data * data, Archive::ByteStream & target)

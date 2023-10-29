@@ -16,18 +16,18 @@ class FastRandomGenerator
 {
 public:
    FastRandomGenerator()       { m_I=ZERO_ALT; }
-   FastRandomGenerator(long s) { setSeed(s); }
+   FastRandomGenerator(uint32 s) { setSeed(s); }
 
-	void setSeed(long s) 
+	void setSeed(uint32 s)
 	{
-		const long ps = s&0x7fffffff;
+		const uint32 ps = s&0x7fffffff;
 		m_I = (ps==0) ? ZERO_ALT : ps;
 	}
 
    // return a random number r where 0<=r<1
 	float randomFloat()
 	{
-      long f = (_rand()>>8)|IEEE_FLOAT_BITS; 
+      float f = static_cast<float>((_rand()>>8)|IEEE_FLOAT_BITS);
       return (*(float *)(void *)&f)-1.0f; 
 	}
 	float randomFloat(float range)           { return randomFloat()*range; }
@@ -49,9 +49,9 @@ protected:
 		ZERO_ALT = 123459876
 	};
 
-	long _rand()
+	uint32 _rand()
 	{
-		long k;
+		uint32 k;
 		k=m_I/IQ;
 		m_I=IA*(m_I-k*IQ)-IR*k;
 		if (m_I<0) m_I += IM;
@@ -59,9 +59,9 @@ protected:
 		return k;
 	}
 
-	long _randMax() { return IM-1; }
+	uint32 _randMax() { return IM-1; }
 
-	long m_I;
+	uint32 m_I;
 };
 
 // ======================================================================

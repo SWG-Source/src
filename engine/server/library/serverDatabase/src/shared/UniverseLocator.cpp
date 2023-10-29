@@ -37,7 +37,7 @@ bool UniverseLocator::locateObjects(DB::Session *session, const std::string &sch
 void UniverseLocator::sendPostBaselinesCustomData(GameServerConnection &conn) const
 {
 	DEBUG_REPORT_LOG(true,("Sending UniverseComplete.\n"));
-	GenericValueTypeMessage<unsigned long> const universeCompleteMessage("UniverseCompleteMessage", DatabaseProcess::getInstance().getProcessId());
+	GenericValueTypeMessage<uint32_t> const universeCompleteMessage("UniverseCompleteMessage", DatabaseProcess::getInstance().getProcessId());
 	conn.send(universeCompleteMessage, true);
 
 	SetUniverseAuthoritativeMessage const setUniverseAuthoritativeMessage(conn.getProcessId());

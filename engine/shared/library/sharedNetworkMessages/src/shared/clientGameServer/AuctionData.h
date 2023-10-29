@@ -56,7 +56,7 @@ namespace Auction
 		uint16                        highBidderNameKey;
 		int32                         maxProxyBid;
 		int32                         myBid;
-		long                          itemType;
+		int32_t                       itemType;
 		int                           resourceContainerClassCrc;
 		int32                         flags;
 		int32                         entranceCharge;
@@ -97,7 +97,7 @@ namespace Auction
 		std::string                   highBidderName;
 		int32                         maxProxyBid;
 		int32                         myBid;
-		long                          itemType;
+		uint32_t                      itemType;
 		int                           resourceContainerClassCrc;
 		int32                         flags;
 		int32                         entranceCharge;

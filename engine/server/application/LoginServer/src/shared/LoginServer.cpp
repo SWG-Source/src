@@ -480,7 +480,9 @@ void LoginServer::receiveMessage(const MessageDispatch::Emitter &source, const M
                         break;
                     }
                 }
-                DEBUG_REPORT_LOG(!found, ("Tried to remove a connection server that wasn't in our list.\n"));
+                if(!found) {
+                    DEBUG_REPORT_LOG(true, ("Tried to remove a connection server that wasn't in our list.\n"));
+                }
                 m_clusterStatusChanged = true;
             } else {
                 WARNING_STRICT_FATAL(true, ("Programmer bug:  Got ConnectionServerDown from a cluster that wasn't on the list.  Probably indicates we aren't tracking connections properly.\n"));

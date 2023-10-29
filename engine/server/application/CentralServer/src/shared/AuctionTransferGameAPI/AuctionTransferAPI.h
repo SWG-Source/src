@@ -62,7 +62,7 @@ public:
 	virtual void onSendCommitTransaction (unsigned trackingNumber, unsigned responseCode, void *user) = 0;
 	virtual void onSendAbortTransaction (unsigned trackingNumber, unsigned responseCode, void *user) = 0;
 	virtual void onSendAuditAssetTransfer(unsigned trackingNumber, unsigned responseCode, void *user) = 0;
-	virtual void onGetNewTransactionID( unsigned trackingNumber, unsigned responseCode, long long transactionID, void *user) = 0;
+	virtual void onGetNewTransactionID( unsigned trackingNumber, unsigned responseCode, int64_t transactionID, void *user) = 0;
 	
 	// responses to reply requests
 	virtual void onReplyReceivePrepareTransaction (unsigned trackingNumber, unsigned responseCode, void *user) = 0;
@@ -75,10 +75,10 @@ public:
 
 
 	// Callbacks initiated by the Auction System
-	virtual void onReceivePrepareTransaction (unsigned trackingNumber, long long transactionID, unsigned stationID, unsigned characterID, long long assetID, const char *newName) = 0;
-	virtual void onReceiveCommitTransaction (unsigned trackingNumber, long long transactionID) = 0;
-	virtual void onReceiveAbortTransaction (unsigned trackingNumber, long long transactionID) = 0;
-	virtual void onReceiveGetCharacterList(unsigned trackingNumber, unsigned stationID, const char *serverID) = 0;
+	virtual void onReceivePrepareTransaction (unsigned trackingNumber, int64_t transactionID, unsigned stationID, unsigned characterID, int64_t assetID, const char *newName) = 0;
+	virtual void onReceiveCommitTransaction (unsigned trackingNumber, int64_t transactionID) = 0;
+	virtual void onReceiveAbortTransaction (unsigned trackingNumber, int64_t transactionID) = 0;
+	virtual void onReceiveGetCharacterList(unsigned trackingNumber, int64_t stationID, const char *serverID) = 0;
 
 private:
 	AuctionTransferAPICore *m_apiCore;

@@ -40,9 +40,9 @@
 
 // ============================================================================
 
-unsigned long CharacterMatchManager::ms_numberOfCharacterMatchRequests = 0;
-unsigned long CharacterMatchManager::ms_numberOfCharacterMatchResults = 0;
-unsigned long CharacterMatchManager::ms_timeSpentOnCharacterMatchRequestsMs = 0;
+uint32_t CharacterMatchManager::ms_numberOfCharacterMatchRequests = 0;
+uint32_t CharacterMatchManager::ms_numberOfCharacterMatchResults = 0;
+uint32_t CharacterMatchManager::ms_timeSpentOnCharacterMatchRequestsMs = 0;
 
 // ============================================================================
 //
@@ -639,14 +639,14 @@ void CharacterMatchManager::requestMatch(NetworkId const &networkId, MatchMaking
 		requestCreatureObject->onCharacterMatchRetrieved(mmcr);
 	}
 
-	const unsigned long endTimeMs = Clock::timeMs();
+	const uint32_t endTimeMs = Clock::timeMs();
 	if (endTimeMs >= startTimeMs)
 	{
 		ms_timeSpentOnCharacterMatchRequestsMs += (endTimeMs - startTimeMs);
 	}
 	else // time wrapped
 	{
-		static const unsigned long max = std::numeric_limits<unsigned long>::max();
+		static const uint32_t max = std::numeric_limits<uint32_t>::max();
 		ms_timeSpentOnCharacterMatchRequestsMs += (max - startTimeMs + endTimeMs);
 	}
 }

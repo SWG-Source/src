@@ -32,7 +32,7 @@ bool TaskObjectTemplateListUpdater::process(DB::Session *session)
 		int i_lines = 0;
 		while(1)
 		{
-			int i_id;
+			int32 i_id;
 			char s_name[4096];
 			int i_retval = 0;
 

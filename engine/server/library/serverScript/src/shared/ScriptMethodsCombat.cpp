@@ -1680,7 +1680,7 @@ jboolean JNICALL ScriptMethodsCombatNamespace::doCombatResults(JNIEnv *env, jobj
 	
 	if (!ClientCombatManagerSupport::doesCombatActionNameExist(TemporaryCrcString(animationString.c_str(), true)))
 	{
-		WARNING(true, ("doCombatResults(): caller passed in unsupported combat action name [%s]!  Continuing to send combat action.  Call stack follows in stdout.", animationString.c_str()));
+		DEBUG_WARNING(true, ("doCombatResults(): caller passed in unsupported combat action name [%s]!  Continuing to send combat action.  Call stack follows in stdout.", animationString.c_str()));
 		// @todo make this go to the log rather than stdout; otherwise, we're going to have to do a lot more work to see this info.
 		JavaLibrary::printJavaStack();
 	}

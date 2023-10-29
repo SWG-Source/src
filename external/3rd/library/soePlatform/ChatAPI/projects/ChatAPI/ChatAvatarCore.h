@@ -20,9 +20,9 @@ namespace ChatSystem
 	public:
 		ChatAvatarCore();
 		ChatAvatarCore(Base::ByteStream::ReadIterator &iter);
-		ChatAvatarCore(unsigned avatarID, unsigned userID, const unsigned short *name, const unsigned short *address, const unsigned short *gateway, const unsigned short *server, unsigned gatewayID, unsigned serverID, const unsigned short *loginLocation, unsigned attributes);
-		ChatAvatarCore(unsigned avatarID, unsigned userID, const ChatUnicodeString &name, const ChatUnicodeString &address, const ChatUnicodeString &gateway, const ChatUnicodeString &server, unsigned gatewayID, unsigned serverID, const ChatUnicodeString &loginLocation, unsigned attributes);
-		ChatAvatarCore(unsigned avatarID, unsigned userID, const Plat_Unicode::String &name, const Plat_Unicode::String &address, const Plat_Unicode::String &gateway, const Plat_Unicode::String &server, unsigned gatewayID, unsigned serverID, const Plat_Unicode::String &loginLocation, unsigned attributes);
+		ChatAvatarCore(unsigned avatarID, unsigned userID, const unsigned short *name, const unsigned short *address, const unsigned short *gateway, const unsigned short *server, unsigned gatewayID, unsigned serverID, const unsigned short *loginLocation, uint32_t attributes);
+		ChatAvatarCore(unsigned avatarID, unsigned userID, const ChatUnicodeString &name, const ChatUnicodeString &address, const ChatUnicodeString &gateway, const ChatUnicodeString &server, unsigned gatewayID, unsigned serverID, const ChatUnicodeString &loginLocation, uint32_t attributes);
+		ChatAvatarCore(unsigned avatarID, unsigned userID, const Plat_Unicode::String &name, const Plat_Unicode::String &address, const Plat_Unicode::String &gateway, const Plat_Unicode::String &server, unsigned gatewayID, unsigned serverID, const Plat_Unicode::String &loginLocation, uint32_t attributes);
 
 
 		ChatAvatarCore(const ChatAvatarCore &rhs);
@@ -34,9 +34,9 @@ namespace ChatSystem
 		unsigned getAvatarID() const { return m_avatarID; }
 		const Plat_Unicode::String &getLoginLocation() const { return m_loginLocation; }
 		int getLoginPriority() const { return m_loginPriority; }
-		unsigned getAttributes() const { return m_attributes; }
+		uint32_t getAttributes() const { return m_attributes; }
 		const Plat_Unicode::String &getEmail() const { return m_email; }
-		unsigned getInboxLimit() const { return m_inboxLimit; }
+		uint32_t getInboxLimit() const { return m_inboxLimit; }
 		const Plat_Unicode::String &getServer() const { return m_server; }
 		const Plat_Unicode::String &getGateway() const { return m_gateway; }
 		unsigned getServerID() const { return m_serverID; } 
@@ -45,7 +45,7 @@ namespace ChatSystem
 
 		ChatAvatar *getNewChatAvatar() const;
 
-		void setAttributes(unsigned long attributes);
+		void setAttributes(uint32_t attributes);
 		void setLoginPriority(int loginPriority);
 		void setEmail(const Plat_Unicode::String email);
 		void setInboxLimit(unsigned inboxLimit);
@@ -63,8 +63,8 @@ namespace ChatSystem
 		Plat_Unicode::String m_email;
         Plat_Unicode::String m_statusMessage;
 
-		unsigned long m_attributes;
-		unsigned long m_inboxLimit;
+		uint32_t m_attributes;
+		uint32_t m_inboxLimit;
 		int m_loginPriority;
 
 		unsigned m_userID;

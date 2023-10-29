@@ -10,8 +10,8 @@
 struct ServerInfo
 {
 	std::string    ipAddress;
-	unsigned long  serverId;
-	unsigned long  systemPid;
+	uint32_t       serverId;
+	uint32_t       systemPid;
 	std::string    sceneId;
 };
 

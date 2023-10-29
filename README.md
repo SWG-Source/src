@@ -3,11 +3,15 @@
 This is the main server code for SWGSource 1.2 as originally forked from the https://bitbucket.org/stellabellumswg/ repository.  Please see that repository for original publication and alteration credit.
 
 # Works in progress
-* 64-bit-types - fully 64 bit version that builds and runs completely.
+* 64-bit-types - fully 64 bit version (presently in testing - 11/12/2021) (Special thanks to Apathy for his help in making a 64 bit version happen!)
 
 # Building
 
-For local testing, and non-live builds set MODE=Release or MODE=Debug in the build.properties file in swg-main.
+## Clang Versions
+
+**Important**: For versions of clang <= 4 you'll probably have to remove/omit a deprecated CFLAG or two from the CMakelists.txt file
+
+Only use the Debug and Release targets unless you want to work on 64 bit (MODE=RELWITHDEBINFO). For local testing, and non-live builds set MODE=Release or MODE=debug in build_linux.sh.
 
 For production, user facing builds, set MODE=MINSIZEREL for profile built, heavily optimized versions of the binaries.
 

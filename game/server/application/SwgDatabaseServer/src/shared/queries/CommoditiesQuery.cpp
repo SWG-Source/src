@@ -97,28 +97,28 @@ bool AuctionLocationsQuery::addData(const DB::Row *_data)
 			if (!m_location_ids.push_back(myData->location_id.getValueASCII())) return false;
 			if (!m_location_names.push_back(myData->location_name.getValueASCII())) return false;
 			if (!m_owner_ids.push_back(myData->owner_id.isNull(), myData->owner_id.getValueASCII())) return false;
-			if (!m_sales_taxes.push_back(myData->sales_tax.isNull(), myData->sales_tax.getValue())) return false;
+			if (!m_sales_taxes.push_back(myData->sales_tax.isNull(), static_cast<int64_t>(myData->sales_tax.getValue()))) return false;
 			if (!m_sales_tax_bank_ids.push_back(myData->sales_tax_bank_id.isNull(), myData->sales_tax_bank_id.getValue())) return false;
-			if (!m_empty_date.push_back(myData->empty_date.isNull(), myData->empty_date.getValue())) return false;
-			if (!m_last_access_date.push_back(myData->last_access_date.isNull(), myData->last_access_date.getValue())) return false;
-			if (!m_inactive_date.push_back(myData->inactive_date.isNull(), myData->inactive_date.getValue())) return false;
-			if (!m_status.push_back(myData->status.isNull(), myData->status.getValue())) return false;
+			if (!m_empty_date.push_back(myData->empty_date.isNull(), static_cast<int64_t>(myData->empty_date.getValue()))) return false;
+			if (!m_last_access_date.push_back(myData->last_access_date.isNull(), static_cast<int64_t>(myData->last_access_date.getValue()))) return false;
+			if (!m_inactive_date.push_back(myData->inactive_date.isNull(), static_cast<int64_t>(myData->inactive_date.getValue()))) return false;
+			if (!m_status.push_back(myData->status.isNull(), static_cast<int64_t>(myData->status.getValue()))) return false;
 			if (!m_search_enabled.push_back(myData->search_enabled.isNull(), myData->search_enabled.getValue())) return false;
-			if (!m_entrance_charge.push_back(myData->entrance_charge.isNull(), myData->entrance_charge.getValue())) return false;
+			if (!m_entrance_charge.push_back(myData->entrance_charge.isNull(), static_cast<int64_t>(myData->entrance_charge.getValue()))) return false;
 			break;
 
 		case mode_INSERT:
 			if (!m_location_ids.push_back(myData->location_id.getValueASCII())) return false;
 			if (!m_location_names.push_back(myData->location_name.getValueASCII())) return false;
 			if (!m_owner_ids.push_back(myData->owner_id.isNull(), myData->owner_id.getValueASCII())) return false;
-			if (!m_sales_taxes.push_back(myData->sales_tax.isNull(), myData->sales_tax.getValue())) return false;
+			if (!m_sales_taxes.push_back(myData->sales_tax.isNull(), static_cast<int64_t>(myData->sales_tax.getValue()))) return false;
 			if (!m_sales_tax_bank_ids.push_back(myData->sales_tax_bank_id.isNull(), myData->sales_tax_bank_id.getValue())) return false;
-			if (!m_empty_date.push_back(myData->empty_date.isNull(), myData->empty_date.getValue())) return false;
-			if (!m_last_access_date.push_back(myData->last_access_date.isNull(), myData->last_access_date.getValue())) return false;
-			if (!m_inactive_date.push_back(myData->inactive_date.isNull(), myData->inactive_date.getValue())) return false;
-			if (!m_status.push_back(myData->status.isNull(), myData->status.getValue())) return false;
+			if (!m_empty_date.push_back(myData->empty_date.isNull(), static_cast<int64_t>(myData->empty_date.getValue()))) return false;
+			if (!m_last_access_date.push_back(myData->last_access_date.isNull(), static_cast<int64_t>(myData->last_access_date.getValue()))) return false;
+			if (!m_inactive_date.push_back(myData->inactive_date.isNull(), static_cast<int64_t>(myData->inactive_date.getValue()))) return false;
+			if (!m_status.push_back(myData->status.isNull(), static_cast<int64_t>(myData->status.getValue()))) return false;
 			if (!m_search_enabled.push_back(myData->search_enabled.isNull(), myData->search_enabled.getValue())) return false;
-			if (!m_entrance_charge.push_back(myData->entrance_charge.isNull(), myData->entrance_charge.getValue())) return false;
+			if (!m_entrance_charge.push_back(myData->entrance_charge.isNull(), static_cast<int64_t>(myData->entrance_charge.getValue()))) return false;
 			break;
 
 		case mode_SELECT:
@@ -417,7 +417,7 @@ bool MarketAuctionsQuery::addData(const DB::Row *_data)
 
 				if (!m_item_ids.push_back(myData->item_id.getValueASCII())) return false;
 				if (!m_owner_ids.push_back(myData->owner_id.getValueASCII())) return false;
-				if (!m_actives.push_back(myData->active.isNull(), myData->active.getValue())) return false;
+				if (!m_actives.push_back(myData->active.isNull(), static_cast<int64_t>(myData->active.getValue()))) return false;
 				break;
 			}
 
@@ -430,17 +430,17 @@ bool MarketAuctionsQuery::addData(const DB::Row *_data)
 				if (!m_owner_ids.push_back(myData->owner_id.getValueASCII())) return false;
 				if (!m_creator_ids.push_back(myData->creator_id.isNull(), myData->creator_id.getValueASCII())) return false;
 				if (!m_location_ids.push_back(myData->location_id.getValueASCII())) return false;
-				if (!m_min_bids.push_back(myData->min_bid.isNull(), myData->min_bid.getValue())) return false;
-				if (!m_buy_now_prices.push_back(myData->buy_now_price.isNull(), myData->buy_now_price.getValue())) return false;
-				if (!m_auction_timers.push_back(myData->auction_timer.isNull(), myData->auction_timer.getValue())) return false;
+				if (!m_min_bids.push_back(myData->min_bid.isNull(), static_cast<int64_t>(myData->min_bid.getValue()))) return false;
+				if (!m_buy_now_prices.push_back(myData->buy_now_price.isNull(), static_cast<int64_t>(myData->buy_now_price.getValue()))) return false;
+				if (!m_auction_timers.push_back(myData->auction_timer.isNull(), static_cast<int64_t>(myData->auction_timer.getValue()))) return false;
 				if (!m_oobs.push_back(myData->oob.isNull(), myData->oob.getValueASCII())) return false;
 				if (!m_user_descriptions.push_back(myData->user_description.isNull(), myData->user_description.getValue())) return false;
-				if (!m_categories.push_back(myData->category.isNull(), myData->category.getValue())) return false;
+				if (!m_categories.push_back(myData->category.isNull(), static_cast<int64_t>(myData->category.getValue()))) return false;
 				if (!m_item_names.push_back(myData->item_name.isNull(), myData->item_name.getValue())) return false;
-				if (!m_item_timers.push_back(myData->item_timer.isNull(), myData->item_timer.getValue())) return false;
-				if (!m_actives.push_back(myData->active.isNull(), myData->active.getValue())) return false;
-				if (!m_item_sizes.push_back(myData->item_size.isNull(), myData->item_size.getValue())) return false;
-				if (!m_object_template_ids.push_back(myData->object_template_id.isNull(), myData->object_template_id.getValue())) return false;
+				if (!m_item_timers.push_back(myData->item_timer.isNull(), static_cast<int64_t>(myData->item_timer.getValue()))) return false;
+				if (!m_actives.push_back(myData->active.isNull(), static_cast<int64_t>(myData->active.getValue()))) return false;
+				if (!m_item_sizes.push_back(myData->item_size.isNull(), static_cast<int64_t>(myData->item_size.getValue()))) return false;
+				if (!m_object_template_ids.push_back(myData->object_template_id.isNull(), static_cast<int64_t>(myData->object_template_id.getValue()))) return false;
 				break;
 			}
 
@@ -724,8 +724,8 @@ bool MarketAuctionBidsQuery::addData(const DB::Row *_data)
 		case mode_INSERT:
 			if (!m_item_ids.push_back(myData->item_id.getValueASCII())) return false;
 			if (!m_bidder_ids.push_back(myData->bidder_id.getValueASCII())) return false;
-			if (!m_bids.push_back(myData->bid.getValue())) return false;
-			if (!m_max_proxy_bids.push_back(myData->max_proxy_bid.isNull(), myData->max_proxy_bid.getValue())) return false;
+			if (!m_bids.push_back(static_cast<int64_t>(myData->bid.getValue()))) return false;
+			if (!m_max_proxy_bids.push_back(myData->max_proxy_bid.isNull(), static_cast<int64_t>(myData->max_proxy_bid.getValue()))) return false;
 			break;
 
 		case mode_SELECT:

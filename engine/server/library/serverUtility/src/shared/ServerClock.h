@@ -10,36 +10,36 @@ public:
 	static ServerClock &getInstance();
 	
 	~ServerClock();
-	const unsigned long getGameTimeSeconds () const;
-	const unsigned long getServerFrame() const;
-	const unsigned long getSubtractInterval() const;
+	const uint32_t getGameTimeSeconds () const;
+	const uint32_t getServerFrame() const;
+	const uint32_t getSubtractInterval() const;
 	void                incrementServerFrame();
-	void                setSubtractInterval(const unsigned long newSubtractInterval);
-	void                setGameTimeSeconds (unsigned long newGameTime);
+	void                setSubtractInterval(const uint32_t newSubtractInterval);
+	void                setGameTimeSeconds (uint32_t newGameTime);
 	bool                isSet              () const;
-	std::string         getDebugPrintableTimeframe (const unsigned long timeInSeconds);
+	std::string         getDebugPrintableTimeframe (const uint32_t timeInSeconds);
 
-   static const unsigned long cms_endOfTime;
+   static const int32_t cms_endOfTime;
    
 protected:
 	ServerClock();
 
 private:
-	unsigned long serverFrame;
-	unsigned long subtractInterval;
+	uint32_t serverFrame;
+	uint32_t subtractInterval;
 	mutable time_t lastTime;
 };
 
 //-----------------------------------------------------------------------
 
-inline const unsigned long ServerClock::getServerFrame() const
+inline const uint32_t ServerClock::getServerFrame() const
 {
 	return serverFrame;
 }
 
 //-----------------------------------------------------------------------
 
-inline const unsigned long ServerClock::getSubtractInterval() const
+inline const uint32_t ServerClock::getSubtractInterval() const
 {
 	return subtractInterval;
 }

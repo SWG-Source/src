@@ -81,7 +81,7 @@ namespace Base
     {
     }
 
-    ByteStream::ReadIterator::~ReadIterator()
+    Base::ReadIterator::~ReadIterator()
     {
 	    stream = 0;
     }
@@ -152,7 +152,7 @@ namespace Base
 	    return *this;
     }
 
-    void ByteStream::get(void * target, ReadIterator & readIterator, const unsigned long int targetSize) const
+    void ByteStream::get(void * target, ReadIterator & readIterator, const uint32_t targetSize) const
     {
 	    assert(readIterator.getReadPosition() + targetSize <= allocatedSize);
 	    memcpy(target, &data->buffer[readIterator.getReadPosition()], targetSize);

@@ -29,8 +29,8 @@ public:
 	virtual void        onConnectionClosed();
 	void		    sendToClusters( const std::string & sCommand, const std::string &sCommandLine );
 
-	static CSToolConnection * getCSToolConnectionByToolId( uint32 id );
-	static void validateCSTool( uint32 toolId, apiResult result, const apiSession & session );
+	static CSToolConnection * getCSToolConnectionByToolId( uintptr_t id );
+	static void validateCSTool( uintptr_t toolId, apiResult result, const apiSession & session );
 
 	// cluster selection interface
 	std::string selectCluster( const std::string & cluster );
@@ -47,7 +47,7 @@ protected:
 	uint32		m_ui32PrivilegeLevel;
 	std::string	m_sInputBuffer;
 	std::string 	m_sUserName;
-	uint32	        m_toolID;
+	uintptr_t	        m_toolID;
 	static uint32	m_curToolID;
 	std::set< std::string > m_selectedClusters;
 

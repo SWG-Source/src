@@ -16,6 +16,7 @@
 #include "sharedObject/Object.h"
 #include "sharedFoundation/ConstCharCrcString.h"
 #include "sharedFoundation/CrcStringTable.h"
+#include "sharedFoundation/Crc.h"
 #include "sharedFoundation/DataResourceList.h"
 
 #include <vector>
@@ -174,7 +175,7 @@ void ObjectTemplateList::loadCrcStringTable(const char *fileName)
 ConstCharCrcString const ObjectTemplateList::lookUp(const char * string)
 {
 	ConstCharCrcString result = ms_crcStringTable.lookUp(string);
-	WARNING(result.isEmpty(), ("ObjectTemplateList::lookUp objectTemplate %s not found in table", string));
+	WARNING(result.isEmpty(), ("ObjectTemplateList::lookUp objectTemplate %s (CRC 0x%08x) not found in table", string, Crc::calculate(string)));
 	return result;
 }
 

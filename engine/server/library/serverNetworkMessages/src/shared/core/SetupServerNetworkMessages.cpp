@@ -217,20 +217,20 @@ namespace SetupServerNetworkMessagesNamespace
 		return result;
 	}
 
-	void packUnsignedLong(const MessageQueue::Data * data, Archive::ByteStream & target)
+	void packUnsignedInt(const MessageQueue::Data * data, Archive::ByteStream & target)
 	{
-		const MessageQueueGenericValueType<unsigned long> * msg = safe_cast<const MessageQueueGenericValueType<unsigned long> *>(data);
+		const MessageQueueGenericValueType<uint32_t> * msg = safe_cast<const MessageQueueGenericValueType<uint32_t> *>(data);
 		if(msg)
 		{
 			Archive::put(target, msg->getValue());
 		}
 	}
 
-	MessageQueue::Data * unpackUnsignedLong(Archive::ReadIterator & source)
+	MessageQueue::Data * unpackUnsignedInt(Archive::ReadIterator & source)
 	{
-		unsigned long v;
+		uint32_t v;
 		Archive::get(source, v);
-		return new MessageQueueGenericValueType<unsigned long>(v);
+		return new MessageQueueGenericValueType<uint32_t>(v);
 	}
 
 	void packUnicodeString(const MessageQueue::Data * data, Archive::ByteStream & target)
@@ -1391,9 +1391,9 @@ void SetupServerNetworkMessages::internalInstall ()
 	ControllerMessageFactory::registerControllerMessageHandler(CM_setCombatTargets, packNetworkIdArray, unpackNetworkIdArray);
 	ControllerMessageFactory::registerControllerMessageHandler(CM_setCurrentWeapon, packNetworkId, unpackNetworkId);
 	ControllerMessageFactory::registerControllerMessageHandler(CM_setGroup, packBoolNetworkId, unpackBoolNetworkId);
-	ControllerMessageFactory::registerControllerMessageHandler(CM_setMood, packUnsignedLong, unpackUnsignedLong);
+	ControllerMessageFactory::registerControllerMessageHandler(CM_setMood, packUnsignedInt, unpackUnsignedInt);
 	ControllerMessageFactory::registerControllerMessageHandler(CM_setIncapacitated, packBoolNetworkId, unpackBoolNetworkId);
-	ControllerMessageFactory::registerControllerMessageHandler(CM_setSayMode, packUnsignedLong, unpackUnsignedLong);
+	ControllerMessageFactory::registerControllerMessageHandler(CM_setSayMode, packUnsignedInt, unpackUnsignedInt);
 	ControllerMessageFactory::registerControllerMessageHandler(CM_setAnimationMood, packString, unpackString);
 	ControllerMessageFactory::registerControllerMessageHandler(CM_setScaleFactor, packFloat, unpackFloat);
 	ControllerMessageFactory::registerControllerMessageHandler(CM_setShockWounds, packInt, unpackInt);
@@ -1550,7 +1550,7 @@ void SetupServerNetworkMessages::internalInstall ()
 	ControllerMessageFactory::registerControllerMessageHandler(CM_modifyNextGcwRatingCalcTime, packInt, unpackInt);
 	ControllerMessageFactory::registerControllerMessageHandler(CM_cancelMessageTo, packString, unpackString);
 	ControllerMessageFactory::registerControllerMessageHandler(CM_clearSessionActivity, packNothing, unpackNothing);
-	ControllerMessageFactory::registerControllerMessageHandler(CM_addSessionActivity, packUnsignedLong, unpackUnsignedLong);
+	ControllerMessageFactory::registerControllerMessageHandler(CM_addSessionActivity, packUnsignedInt, unpackUnsignedInt);
 	ControllerMessageFactory::registerControllerMessageHandler(CM_incrementKillMeter, packInt, unpackInt);
 	ControllerMessageFactory::registerControllerMessageHandler(CM_addPassiveReveal, packIntIntNetworkId, unpackIntIntNetworkId);
 	ControllerMessageFactory::registerControllerMessageHandler(CM_removePassiveReveal, packNetworkId, unpackNetworkId);

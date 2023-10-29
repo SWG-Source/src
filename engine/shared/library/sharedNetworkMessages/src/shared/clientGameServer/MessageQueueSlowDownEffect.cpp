@@ -68,7 +68,7 @@ MessageQueue::Data * MessageQueueSlowDownEffect::unpack(Archive::ReadIterator & 
 	float coneLength;
 	float coneAngle;
 	float slopeAngle;
-	unsigned long expireTime;
+	uint32_t expireTime;
 
 	Archive::get(source, target);
 	Archive::get(source, coneLength);

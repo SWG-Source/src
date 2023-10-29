@@ -67,8 +67,8 @@ public:
 	int               getUserId     ( void ) const;
 	void              setUserId     ( int newId ) const;
 
-	int               getMark       ( int whichMark ) const;
-	void              setMark       ( int whichMark, int newValue ) const;
+	int64_t           getMark       ( int whichMark ) const;
+	void              setMark       ( int whichMark, int64_t newValue ) const;
 	void              clearMarks    ( void ) const;
 
 	// ----------
@@ -95,8 +95,8 @@ protected:
 	// These are used to speed up some algorithms. They're not persisted.
 	// Code that uses the marks MUST clear them after use.
 
-	mutable int  m_userId;
-	mutable int  m_marks[4];
+	mutable int      m_userId;
+	mutable int64_t  m_marks[4];
 };
 
 // ----------------------------------------------------------------------
@@ -214,12 +214,12 @@ inline void PathNode::setUserId ( int newId ) const
 
 // ----------
 
-inline int PathNode::getMark ( int whichMark ) const
+inline int64_t PathNode::getMark ( int whichMark ) const
 {
 	return m_marks[whichMark];
 }
 
-inline void PathNode::setMark ( int whichMark, int newMark ) const
+inline void PathNode::setMark ( int whichMark, int64_t newMark ) const
 {
 	m_marks[whichMark] = newMark;
 }

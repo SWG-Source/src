@@ -511,11 +511,11 @@ int PlayerObject::getCurrentBornDate()
 	baseTimeData.tm_wday = 0;
 	baseTimeData.tm_yday = 0;
 	baseTimeData.tm_year = 101;
-	time_t baseTime = mktime(&baseTimeData);
+	uint32_t baseTime = mktime(&baseTimeData);
 
 	// get the current time and compute the birth date
-	time_t currentTime = time(nullptr);
-	time_t delta = (currentTime - baseTime) / (60 * 60 * 24);
+	uint32_t currentTime = time(nullptr);
+	uint32_t delta = (currentTime - baseTime) / (60 * 60 * 24);
 	delta += ((currentTime - baseTime) % (60 * 60 * 24) != 0 ? 1 : 0);
 	return int(delta);
 }	// PlayerObject::getCurrentBornDate
@@ -859,7 +859,7 @@ int PlayerObject::grantExperiencePoints(const std::string & experienceType, int 
 		if (ConfigServerScript::getLogBalance() && (total != current))
 		{
 			// log the grant
-			unsigned long time = ServerClock::getInstance().getGameTimeSeconds();
+			uint32_t time = ServerClock::getInstance().getGameTimeSeconds();
 			LOG("GameBalance", ("balancelog:%d:XP;%lu;%s;%s;%d;%d;%d;%d",
 				static_cast<int>(GameServer::getInstance().getProcessId()), time,
 				owner->getNetworkId().getValueString().c_str(), experienceType.c_str(),
@@ -4231,7 +4231,7 @@ void PlayerObject::handleCMessageTo(const MessageToPayload &message)
 			{
 				// see if guild war pvp status has changed, and if yes, start countdown timer to change the status
 				if (GuildInterface::getGuildMemberGuildWarEnabled(owner->getGuildId(), owner->getNetworkId()) != owner->getGuildWarEnabled())
-					owner->setTimeToUpdateGuildWarPvpStatus(ServerClock::getInstance().getGameTimeSeconds() + static_cast<unsigned long>(ConfigServerGame::getPvpGuildWarExemptionExclusiveDelaySeconds()));
+					owner->setTimeToUpdateGuildWarPvpStatus(ServerClock::getInstance().getGameTimeSeconds() + static_cast<uint32_t>(ConfigServerGame::getPvpGuildWarExemptionExclusiveDelaySeconds()));
 			}
 			else if (owner->getGuildWarEnabled())
 			{
@@ -4770,7 +4770,7 @@ void PlayerObject::logChat(int const logIndex)
 {
 	if (m_chatLog != nullptr)
 	{
-		time_t const logTime = Os::getRealSystemTime();
+		uint32_t const logTime = Os::getRealSystemTime();
 
 		ChatLogEntry chatLogEntry;
 
@@ -4834,13 +4834,13 @@ void PlayerObject::cleanChatLog()
 
 		// See if anything needs to be purged from the front of the logs
 
-		time_t const chatLogTime = ConfigServerUtility::getChatLogMinutes() * 60;
+		uint32_t const chatLogTime = ConfigServerUtility::getChatLogMinutes() * 60;
 		int chatLogCount = static_cast<int>(m_chatLog->size());
 
 		ChatLog::iterator iterChatLog = m_chatLog->begin();
 		while (!m_chatLog->empty())
 		{
-			const time_t messageTime = iterChatLog->m_time;
+			const uint32_t messageTime = iterChatLog->m_time;
 
 			if (messageTime < (currentTime - chatLogTime) || (chatLogCount > ConfigServerUtility::getPlayerMaxChatLogLines()))
 			{
@@ -6115,7 +6115,7 @@ void PlayerObject::getByteStreamFromAutoVariable(const std::string & name, Archi
 {
 	if(name == "quests")
 	{
-		Archive::AutoDeltaMap<unsigned long, PlayerQuestData>(m_quests).pack(target);
+		Archive::AutoDeltaMap<uint32_t, PlayerQuestData>(m_quests).pack(target);
 	}
 	else if(name == "completedQuests")
 	{
@@ -6202,11 +6202,11 @@ void PlayerObject::setAutoVariableFromByteStream(const std::string & name, const
 	Archive::ReadIterator ri(source);
 	if(name == "quests")
 	{
-		typedef Archive::AutoDeltaMap<unsigned long, PlayerQuestData>::Command Commands;
+		typedef Archive::AutoDeltaMap<uint32_t, PlayerQuestData>::Command Commands;
 		std::vector<Commands> quests;
 
 		m_quests.clear();
-		Archive::AutoDeltaMap<unsigned long, PlayerQuestData>(m_quests).unpack(ri, quests);
+		Archive::AutoDeltaMap<uint32_t, PlayerQuestData>(m_quests).unpack(ri, quests);
 
 		for (std::vector<Commands>::const_iterator questIter = quests.begin(); questIter != quests.end(); ++questIter)
 		{
@@ -6337,14 +6337,14 @@ void PlayerObject::setPlayedTimeAccumOnly(float playedTimeAccum)
 
 // ----------------------------------------------------------------------
 
-unsigned long PlayerObject::getSessionPlayTimeDuration() const
+int32_t PlayerObject::getSessionPlayTimeDuration() const
 {
-	time_t const sessionStartPlayTime = static_cast<time_t>(m_sessionStartPlayTime.get());
+	int32_t const sessionStartPlayTime = m_sessionStartPlayTime.get();
 	if (sessionStartPlayTime > 0)
 	{
-		time_t const now = ::time(nullptr);
+		int32_t const now = ::time(nullptr);
 		if (now > sessionStartPlayTime)
-			return static_cast<unsigned long>(now - sessionStartPlayTime);
+			return (now - sessionStartPlayTime);
 	}
 
 	return 0;
@@ -6352,16 +6352,16 @@ unsigned long PlayerObject::getSessionPlayTimeDuration() const
 
 // ----------------------------------------------------------------------
 
-unsigned long PlayerObject::getSessionActivePlayTimeDuration() const
+int32_t PlayerObject::getSessionActivePlayTimeDuration() const
 {
-	unsigned long activePlayTimeDuration = m_sessionActivePlayTimeDuration.get();
+	int32_t activePlayTimeDuration = m_sessionActivePlayTimeDuration.get();
 
-	time_t const sessionLastActiveTime = static_cast<time_t>(m_sessionLastActiveTime.get());
+	int32_t const sessionLastActiveTime = m_sessionLastActiveTime.get();
 	if (sessionLastActiveTime > 0)
 	{
-		time_t const now = ::time(nullptr);
+		int32_t const now = ::time(nullptr);
 		if (now > sessionLastActiveTime)
-			activePlayTimeDuration += static_cast<unsigned long>(now - sessionLastActiveTime);
+			activePlayTimeDuration += (now - sessionLastActiveTime);
 	}
 
 	return activePlayTimeDuration;
@@ -6369,7 +6369,7 @@ unsigned long PlayerObject::getSessionActivePlayTimeDuration() const
 
 // ----------------------------------------------------------------------
 
-void PlayerObject::setSessionPlayTimeInfo(int32 sessionStartPlayTime, int32 sessionLastActiveTime, unsigned long sessionActivePlayTimeDuration)
+void PlayerObject::setSessionPlayTimeInfo(int32 sessionStartPlayTime, int32 sessionLastActiveTime, uint32_t sessionActivePlayTimeDuration)
 {
 	// shouldn't be calling this on a non-auth object
 	if (!isAuthoritative())
@@ -6447,7 +6447,7 @@ int PlayerObject::getRoleIconChoice() const
 
 void PlayerObject::setAggroImmuneDuration(int const time)
 {
-	m_aggroImmuneDuration = static_cast<time_t>(time);
+	m_aggroImmuneDuration = static_cast<uint32_t>(time);
 	m_aggroImmuneStartTime = Os::getRealSystemTime();
 }
 
@@ -6455,7 +6455,7 @@ void PlayerObject::setAggroImmuneDuration(int const time)
 
 bool PlayerObject::isAggroImmune() const
 {
-	time_t const elapsedTime = Os::getRealSystemTime() - m_aggroImmuneStartTime.get();
+	uint32_t const elapsedTime = Os::getRealSystemTime() - m_aggroImmuneStartTime.get();
 
 	return (elapsedTime < m_aggroImmuneDuration.get());
 }
@@ -7185,7 +7185,7 @@ void PlayerObject::setNextGcwRatingCalcTime(bool const alwaysSendMessageToForRec
 	{
 		if (m_nextGcwRatingCalcTime.get() <= 0)
 		{
-			time_t const nextCalcTime = CalendarTime::getNextGMTTimeOcurrence(static_cast<time_t>(now), ConfigServerGame::getGcwRecalcTimeDayOfWeek(), ConfigServerGame::getGcwRecalcTimeHour(), ConfigServerGame::getGcwRecalcTimeMinute(), ConfigServerGame::getGcwRecalcTimeSecond());
+			uint32_t const nextCalcTime = CalendarTime::getNextGMTTimeOcurrence(static_cast<uint32_t>(now), ConfigServerGame::getGcwRecalcTimeDayOfWeek(), ConfigServerGame::getGcwRecalcTimeHour(), ConfigServerGame::getGcwRecalcTimeMinute(), ConfigServerGame::getGcwRecalcTimeSecond());
 			if (nextCalcTime > 0)
 			{
 				m_nextGcwRatingCalcTime = static_cast<int32>(nextCalcTime);
@@ -7250,14 +7250,14 @@ void PlayerObject::handleRecalculateGcwRating()
 				totalRatingAdjustment = Pvp::calculateRatingAdjustment(static_cast<int>(points), static_cast<int>(currentRating), totalEarnedRating, totalEarnedRatingAfterDecay, cappedRatingAdjustment);
 
 				// don't apply rating loss if we are in a "rating loss exclusion interval"
-				if ((totalRatingAdjustment < 0) && (Pvp::isInGcwRankDecayExclusionInterval(static_cast<time_t>(nextCalcInterval))))
+				if ((totalRatingAdjustment < 0) && (Pvp::isInGcwRankDecayExclusionInterval(static_cast<uint32_t>(nextCalcInterval))))
 				{
 					// CS log
 					LOG("CustomerService", ("PvP_Ranking:%s|NOT APPLYING RATING LOSS|interval %ld (%s) (%s)|current rating=%ld|points=%ld|total earned rating=%ld|total earned rating after decay=%ld|capped rating adjustment=%ld|final rating adjustment=%ld",
 						getAccountDescription().c_str(),
 						nextCalcInterval,
-						CalendarTime::convertEpochToTimeStringGMT(static_cast<time_t>(nextCalcInterval)).c_str(),
-						CalendarTime::convertEpochToTimeStringLocal(static_cast<time_t>(nextCalcInterval)).c_str(),
+						CalendarTime::convertEpochToTimeStringGMT(static_cast<uint32_t>(nextCalcInterval)).c_str(),
+						CalendarTime::convertEpochToTimeStringLocal(static_cast<uint32_t>(nextCalcInterval)).c_str(),
 						currentRating,
 						points,
 						totalEarnedRating,
@@ -7279,8 +7279,8 @@ void PlayerObject::handleRecalculateGcwRating()
 					LOG("CustomerService", ("PvP_Ranking:%s|interval %ld (%s) (%s)|current rating=%ld|new rating=%ld|points=%ld|total earned rating=%ld|total earned rating after decay=%ld|capped rating adjustment=%ld|final rating adjustment=%ld",
 						getAccountDescription().c_str(),
 						nextCalcInterval,
-						CalendarTime::convertEpochToTimeStringGMT(static_cast<time_t>(nextCalcInterval)).c_str(),
-						CalendarTime::convertEpochToTimeStringLocal(static_cast<time_t>(nextCalcInterval)).c_str(),
+						CalendarTime::convertEpochToTimeStringGMT(static_cast<uint32_t>(nextCalcInterval)).c_str(),
+						CalendarTime::convertEpochToTimeStringLocal(static_cast<uint32_t>(nextCalcInterval)).c_str(),
 						previousRating,
 						currentRating,
 						points,
@@ -7294,7 +7294,7 @@ void PlayerObject::handleRecalculateGcwRating()
 				points = 0;
 
 				// check to see if we need to do another calculation for the next interval
-				nextCalcInterval = static_cast<int32>(CalendarTime::getNextGMTTimeOcurrence(static_cast<time_t>(nextCalcInterval)+1, ConfigServerGame::getGcwRecalcTimeDayOfWeek(), ConfigServerGame::getGcwRecalcTimeHour(), ConfigServerGame::getGcwRecalcTimeMinute(), ConfigServerGame::getGcwRecalcTimeSecond()));
+				nextCalcInterval = static_cast<int32>(CalendarTime::getNextGMTTimeOcurrence(static_cast<uint32_t>(nextCalcInterval)+1, ConfigServerGame::getGcwRecalcTimeDayOfWeek(), ConfigServerGame::getGcwRecalcTimeHour(), ConfigServerGame::getGcwRecalcTimeMinute(), ConfigServerGame::getGcwRecalcTimeSecond()));
 				if (nextCalcInterval <= 0)
 					break;
 
@@ -7406,7 +7406,7 @@ void PlayerObject::addSessionActivity(uint32 activity)
 	{
 		CreatureObject * const owner = getCreatureObject();
 		if (owner)
-			owner->sendControllerMessageToAuthServer(CM_addSessionActivity, new MessageQueueGenericValueType<unsigned long>(static_cast<unsigned long>(activity)));
+			owner->sendControllerMessageToAuthServer(CM_addSessionActivity, new MessageQueueGenericValueType<uint32_t>(static_cast<uint32_t>(activity)));
 	}
 }
 
@@ -7618,7 +7618,7 @@ bool PlayerObject::modifyCollectionSlotValue(std::string const & slotName, int64
 			if (currentSlotValue != newSlotValue)
 			{
 				BitArray b = collections->get();
-				b.setValue(slotInfo->beginSlotId, slotInfo->endSlotId, static_cast<unsigned long>(newSlotValue));
+				b.setValue(slotInfo->beginSlotId, slotInfo->endSlotId, static_cast<uint32_t>(newSlotValue));
 				collections->set(b);
 
 				LOG("CustomerService", ("Collection:%s modified collection %d-%d (%s/%s/%s/%s) from %lu to %lu",
@@ -7629,10 +7629,10 @@ bool PlayerObject::modifyCollectionSlotValue(std::string const & slotName, int64
 					slotInfo->collection.page.name.c_str(),
 					slotInfo->collection.name.c_str(),
 					slotInfo->name.c_str(),
-					static_cast<unsigned long>(currentSlotValue),
-					static_cast<unsigned long>(newSlotValue)));
+					static_cast<uint32_t>(currentSlotValue),
+					static_cast<uint32_t>(newSlotValue)));
 
-				bool const completedCollectionSlot = hasCompletedCollectionSlot(*slotInfo, static_cast<unsigned long>(newSlotValue));
+				bool const completedCollectionSlot = hasCompletedCollectionSlot(*slotInfo, static_cast<uint32_t>(newSlotValue));
 
 				// for "server first" tracking, we need to check if the collection
 				// is completed *BEFORE* triggering script, because script may clear
@@ -7692,7 +7692,7 @@ bool PlayerObject::modifyCollectionSlotValue(std::string const & slotName, int64
 
 // ----------------------------------------------------------------------
 
-bool PlayerObject::getCollectionSlotValue(std::string const & slotName, unsigned long & value) const
+bool PlayerObject::getCollectionSlotValue(std::string const & slotName, uint32_t & value) const
 {
 	value = 0;
 
@@ -7708,7 +7708,7 @@ bool PlayerObject::getCollectionSlotValue(std::string const & slotName, unsigned
 
 // ----------------------------------------------------------------------
 
-bool PlayerObject::getCollectionSlotValue(CollectionsDataTable::CollectionInfoSlot const & slotInfo, unsigned long & value) const
+bool PlayerObject::getCollectionSlotValue(CollectionsDataTable::CollectionInfoSlot const & slotInfo, uint32_t & value) const
 {
 	// bit-type slot
 	if (!slotInfo.counterTypeSlot)
@@ -7795,7 +7795,7 @@ bool PlayerObject::hasCompletedCollectionSlot(CollectionsDataTable::CollectionIn
 
 // ----------------------------------------------------------------------
 
-bool PlayerObject::hasCompletedCollectionSlot(CollectionsDataTable::CollectionInfoSlot const & slotInfo, unsigned long slotValue)
+bool PlayerObject::hasCompletedCollectionSlot(CollectionsDataTable::CollectionInfoSlot const & slotInfo, uint32_t slotValue)
 {
 	// bit-type slot
 	if (!slotInfo.counterTypeSlot)
@@ -8123,7 +8123,7 @@ void PlayerObject::updateChatSpamSpatialNumCharacters(NetworkId const & characte
 	// sync chat character count with chat server
 	if ((syncChatServer) || (timeNow > m_chatSpamNextTimeToSyncWithChatServer.get()))
 	{
-		time_t timeUnsquelch = static_cast<time_t>(getSecondsUntilUnsquelched());
+		uint32_t timeUnsquelch = static_cast<uint32_t>(getSecondsUntilUnsquelched());
 		if (timeUnsquelch > 0)
 			timeUnsquelch += ::time(nullptr);
 
@@ -8166,7 +8166,7 @@ void PlayerObject::handleChatStatisticsFromChatServer(NetworkId const & characte
 	// sync chat character count with chat server
 	if (syncChatServer || ((spatialNumCharacters != m_chatSpamSpatialNumCharacters.get()) && (timeNow > m_chatSpamNextTimeToSyncWithChatServer.get())))
 	{
-		time_t timeUnsquelch = static_cast<time_t>(getSecondsUntilUnsquelched());
+		uint32_t timeUnsquelch = static_cast<uint32_t>(getSecondsUntilUnsquelched());
 		if (timeUnsquelch > 0)
 			timeUnsquelch += ::time(nullptr);
 

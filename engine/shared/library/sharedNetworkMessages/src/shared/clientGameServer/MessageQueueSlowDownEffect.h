@@ -32,7 +32,7 @@ public:
 	float getConeLength() const;
 	float getConeAngle() const;
 	float getSlopeAngle() const;
-	unsigned long getExpireTime() const;
+	uint32_t getExpireTime() const;
 
 private:
 	MessageQueueSlowDownEffect();
@@ -42,7 +42,7 @@ private:
 	float m_coneLength;
 	float m_coneAngle;
 	float m_slopeAngle;
-	unsigned long m_expireTime;
+	uint32_t m_expireTime;
 };
 
 // ----------------------------------------------------------------------
@@ -67,7 +67,7 @@ inline float MessageQueueSlowDownEffect::getSlopeAngle() const
 	return m_slopeAngle;
 }
 
-inline unsigned long MessageQueueSlowDownEffect::getExpireTime() const
+inline uint32_t MessageQueueSlowDownEffect::getExpireTime() const
 {
 	return m_expireTime;
 }

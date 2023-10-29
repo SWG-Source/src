@@ -1128,27 +1128,30 @@ void CollisionWorld::addObject(Object * object)
 				name = appearance->getAppearanceTemplateName();
 			}
 		}
+#if _DEBUG
+        if(ConfigSharedCollision::getReportChanges()) {
+            int index = 0;
+            switch (query)
+            {
+            case SpatialDatabase::Q_Static:
+                index = 1;
+                break;
+            case SpatialDatabase::Q_Dynamic:
+                index = 2;
+                break;
+            case SpatialDatabase::Q_Barriers:
+                index = 3;
+                break;
+            case SpatialDatabase::Q_Doors:
+                index = 4;
+                break;
+            default:
+                break;
+            }
 
-		int index = 0;
-		switch (query)
-		{
-		case SpatialDatabase::Q_Static:
-			index = 1;
-			break;
-		case SpatialDatabase::Q_Dynamic:
-			index = 2;
-			break;
-		case SpatialDatabase::Q_Barriers:
-			index = 3;
-			break;
-		case SpatialDatabase::Q_Doors:
-			index = 4;
-			break;
-		default:
-			break;
+            DEBUG_REPORT_LOG(true, ("Added object %s to collision world [%s] at (%f,%f,%f)\n", name, ms_sptatialDatabaseNames[index], object->getPosition_w().x, object->getPosition_w().y, object->getPosition_w().z));
 		}
-
-		DEBUG_REPORT_LOG(ConfigSharedCollision::getReportChanges(), ("Added object %s to collision world [%s] at (%f,%f,%f)\n", name, ms_sptatialDatabaseNames[index], object->getPosition_w().x, object->getPosition_w().y, object->getPosition_w().z));
+#endif
 	}
 }
 

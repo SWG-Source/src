@@ -149,7 +149,9 @@ Object::NotificationList::NotificationList(const NotificationList &otherList, co
 			m_notificationList.push_back(add);
 		}
 
-		DEBUG_FATAL(!deletedOtherEntry, ("didn't find notification [0x%08x] in source list for deletion", &otherEntry));
+		if(!deletedOtherEntry) {
+		    DEBUG_FATAL(true, ("didn't find notification [0x%08x] in source list for deletion", &otherEntry));
+		}
 		DEBUG_FATAL(m_notificationList.size() != otherList.m_notificationList.size() - 1, ("failed to build new notification list correctly"));
 
 	}

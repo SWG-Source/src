@@ -101,10 +101,7 @@ namespace ConsoleCommandParserObjectNamespace
 	//test handler, this should eventually be removed
 	void testConsentHandler(const NetworkId& player, int id, bool response)
 	{
-		int i = 0;
-		if (response == true)
-			i = 1;
-		DEBUG_REPORT_LOG(true, ("We received a test consent back with values NetworkId:%s Id:%d Response:%d\n", player.getValueString().c_str(), id, i));
+		DEBUG_REPORT_LOG(true, ("We received a test consent back with values NetworkId: %s Id: %d Response: %d\n", player.getValueString().c_str(), id, (response ? 1 : 0)));
 	}
 
 	ServerObjectTemplate const *getObjectTemplateForCreation(std::string const &templateName)

@@ -183,28 +183,28 @@ namespace
 
 //===================================================================
 
-unsigned long CoordinateHash::hashTuple(float x, float z)
+uint32 CoordinateHash::hashTuple(float x, float z)
 {
-	const uint32 ix = (*(uint32 *)&x);
-	const uint32 iz = (*(uint32 *)&z)^0xa5a5a5a5;
+  const uint32 ix = (*reinterpret_cast<uint32 *>(&x));
+  const uint32 iz = (*reinterpret_cast<uint32 *>(&z)) ^ 0xa5a5a5a5;
 
-	const uint32 hx  = inthash(ix);
-	const uint32 hz  = inthash(iz);
+  const uint32 hx = inthash(ix);
+  const uint32 hz = inthash(iz);
 
-	const uint32 h = inthash(hx^hz);
+  const uint32 h = inthash(hx ^ hz);
 
-	return h;
+  return h;
 }
 
-float CoordinateHash::makeFloat(unsigned long hash)
+float CoordinateHash::makeFloat(uint32 hash)
 {
 	enum { IEEE_FLOAT_BITS=0x3f800000 };
 
 	const uint32 mask = ~uint32(0xff800000);
 
 	const uint32 maskedHash = (hash + (hash>>9))&mask;
-	const uint32 iFloat = IEEE_FLOAT_BITS | maskedHash;
-	const float returnValue = (*(float *)&iFloat) - 1.0f;
+    uint32 iFloat = static_cast<uint32>(IEEE_FLOAT_BITS) | maskedHash;
+    const float returnValue = (*reinterpret_cast<float *>(&iFloat)) - 1.0F;
 
 	return returnValue;
 }
