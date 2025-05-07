@@ -46,6 +46,7 @@ namespace ScriptMethodsPlanetNamespace
 	jboolean     JNICALL isAreaTooFullForTravel (JNIEnv* env, jobject self, jstring planetName_j, jint x, jint z);
 	jstring      JNICALL getBuildoutAreaName( JNIEnv *env, jobject self, jfloat x, jfloat z, jstring scene );
 	jfloatArray  JNICALL getBuildoutAreaSizeAndCenter(JNIEnv *env, jobject self, jfloat x, jfloat z, jstring scene, jboolean ignoreInternal, jboolean allowComposite);
+	jfloatArray  JNICALL getBuildoutAreaRect(JNIEnv *env, jobject self, jfloat x, jfloat z, jstring scene, jboolean allowComposite);
 	void         JNICALL requestSameServer(JNIEnv *env, jobject self, jlong object1, jlong object2);
 }
 
@@ -70,6 +71,7 @@ const JNINativeMethod NATIVES[] = {
 	JF("isAreaTooFullForTravel",              "(Ljava/lang/String;II)Z",                                 isAreaTooFullForTravel),
 	JF("getBuildoutAreaName",                 "(FFLjava/lang/String;)Ljava/lang/String;",                getBuildoutAreaName),
 	JF("getBuildoutAreaSizeAndCenter",        "(FFLjava/lang/String;ZZ)[F",                              getBuildoutAreaSizeAndCenter),
+	JF("getBuildoutAreaRect",                 "(FFLjava/lang/String;Z)[F",                               getBuildoutAreaRect),
 	JF("_requestSameServer",                  "(JJ)V",                                                   requestSameServer),
 };
 
@@ -546,6 +548,45 @@ void JNICALL ScriptMethodsPlanetNamespace::requestSameServer(JNIEnv *env, jobjec
 		std::make_pair(serverObject1->getNetworkId(), serverObject2->getNetworkId()));
 
 	GameServer::getInstance().sendToPlanetServer(rssMessage);
+}
+
+jfloatArray JNICALL ScriptMethodsPlanetNamespace::getBuildoutAreaRect(JNIEnv *env, jobject self, jfloat x, jfloat z, jstring scene, jboolean allowComposite) {
+
+    std::string sceneId;
+    JavaStringParam sceneId_jsp (scene);
+    if (!JavaLibrary::convert (sceneId_jsp, sceneId))
+    {
+        WARNING(true,("getBuildoutAreaRect could not convert the scene id to string"));
+        return 0;
+    }
+
+    const BuildoutArea * const area = SharedBuildoutAreaManager::findBuildoutAreaAtPosition(sceneId.c_str(), x, z, false, false);
+    if (!area)
+    {
+        return 0;
+    }
+
+    LocalFloatArrayRefPtr valueArray = createNewFloatArray(static_cast<jsize>(4));
+    if (valueArray == LocalFloatArrayRef::cms_nullPtr)
+    {
+        return 0;
+    }
+
+    Rectangle2d rect = area->getRectangle(allowComposite == JNI_TRUE);
+
+    auto value = static_cast<jfloat>(rect.x0);
+    setFloatArrayRegion(*valueArray, 0, 1, &value);
+
+    value = static_cast<jfloat>(rect.x1);
+    setFloatArrayRegion(*valueArray, 1, 1, &value);
+
+    value = static_cast<jfloat>(rect.y0);
+    setFloatArrayRegion(*valueArray, 2, 1, &value);
+
+    value = static_cast<jfloat>(rect.y1);
+    setFloatArrayRegion(*valueArray, 3, 1, &value);
+
+    return valueArray->getReturnValue();
 }
 
 // ======================================================================
