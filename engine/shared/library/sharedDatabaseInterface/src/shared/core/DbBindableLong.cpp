@@ -18,7 +18,7 @@ BindableLong::BindableLong() : Bindable(), value(-999)
 {
 }
 
-BindableLong::BindableLong(long int _value) : Bindable(sizeof(value)), value(_value)
+BindableLong::BindableLong(long _value) : Bindable(sizeof(value)), value(_value)
 {
 }
 
@@ -29,14 +29,15 @@ void *BindableLong::getBuffer()
 
 // ----------------------------------------------------------------------
 
-long int BindableLong::getValue() const
+
+long BindableLong::getValue() const
 {
 	return value;
 }
 
 // ----------------------------------------------------------------------
 
-BindableLong &BindableLong::operator=(long int rhs)
+BindableLong &BindableLong::operator=(long rhs)
 {
 	indicator=sizeof(value); 
 	value=rhs;
@@ -45,7 +46,7 @@ BindableLong &BindableLong::operator=(long int rhs)
 
 // ----------------------------------------------------------------------
 
-void BindableLong::setValue(long int rhs)
+void BindableLong::setValue(long rhs)
 {
 	indicator=sizeof(value); 
 	value=rhs;

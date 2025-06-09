@@ -620,7 +620,7 @@ bool CellPermissions::isOnList(PermissionList const &permList, CreatureObject co
             }
             if (name.rfind("account:", 0) == 0)
             {
-                if (std::stoi(name.substr(8, name.length())) == stationId)
+                if (static_cast<uint32>(std::stoi(name.substr(8, name.length()))) == stationId)
                 {
                     return true;
                 }

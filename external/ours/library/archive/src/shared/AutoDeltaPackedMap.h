@@ -23,8 +23,8 @@ namespace Archive
 	void get(ReadIterator & source, unsigned __int64 & target);
 	void put(ByteStream & target, const unsigned __int64 & source);
 #else
-	void get(ReadIterator & source, unsigned long long int & target);
-	void put(ByteStream & target, const unsigned long long int & source);
+	void get(ReadIterator & source, uint64_t & target);
+	void put(ByteStream & target, const uint64_t & source);
 #endif
 	/**
 	 * An AutoDeltaPackedMap is an AutoDeltaMap that will be packed into
@@ -100,7 +100,7 @@ namespace Archive
 		typename AutoDeltaMap<KeyType, ValueType, ObjectType>::Command c;
 
 		Archive::put(target, countCharacter(buffer,':'));
-		Archive::put(target, static_cast<size_t>(0)); // baselineCommandCount
+		Archive::put(target, static_cast<uint32_t>(0)); // baselineCommandCount
 		
 		int tempPos = 0;
 		for (std::string::const_iterator i=buffer.begin(); i!=buffer.end(); ++i)
@@ -127,8 +127,8 @@ namespace Archive
 		char temp[200];
 		
 		typename AutoDeltaMap<KeyType, ValueType, ObjectType>::Command c;
-		size_t commandCount;
-		size_t baselineCommandCount;
+		int32_t commandCount;
+		int32_t baselineCommandCount;
 
 		Archive::get(source, commandCount);
 		Archive::get(source, baselineCommandCount);
@@ -139,7 +139,7 @@ namespace Archive
 		}
 		else
 		{
-			for (size_t i = 0; i < commandCount; ++i)
+			for (int32_t i = 0; i < commandCount; ++i)
 			{
 				Archive::get(source, c.cmd);
 				Archive::get(source, c.key);
@@ -193,30 +193,41 @@ namespace Archive
 	}
 
 	template<>
-	inline void AutoDeltaPackedMap<int, int>::pack(ByteStream & target, const std::string & buffer)
+	inline void AutoDeltaPackedMap<int, int32_t>::pack(ByteStream & target, const std::string & buffer)
 	{
 		internal_pack(target, buffer, "%i %i");
 	}
 
 	template<>
-	inline void AutoDeltaPackedMap<int, int>::unpack(ReadIterator & source, std::string & buffer)
+	inline void AutoDeltaPackedMap<int, int32_t>::unpack(ReadIterator & source, std::string & buffer)
 	{
 		internal_unpack(source, buffer, "%i %i:");
 	}
 
 	template<>
-	inline void AutoDeltaPackedMap<int, unsigned long>::pack(ByteStream & target, const std::string & buffer)
+	inline void AutoDeltaPackedMap<int, uint32_t>::pack(ByteStream & target, const std::string & buffer)
 	{
 		internal_pack(target, buffer, "%i %u");
 	}
 
 	template<>
-	inline void AutoDeltaPackedMap<int, unsigned long>::unpack(ReadIterator & source, std::string & buffer)
+	inline void AutoDeltaPackedMap<int, uint32_t>::unpack(ReadIterator & source, std::string & buffer)
 	{
 		internal_unpack(source, buffer, "%i %u:");
 	}
 
 #ifdef WIN32
+	template<>
+	inline void AutoDeltaPackedMap<unsigned long, unsigned __int32>::pack(ByteStream & target, const std::string & buffer)
+	{
+		internal_pack(target, buffer, "%lu %I64u");
+	}
+
+	template<>
+	inline void AutoDeltaPackedMap<unsigned long, unsigned __int32>::unpack(ReadIterator & source, std::string & buffer)
+	{
+		internal_unpack(source, buffer, "%lu %I64u:");
+	}
 	template<>
 	inline void AutoDeltaPackedMap<unsigned long, unsigned __int64>::pack(ByteStream & target, const std::string & buffer)
 	{
@@ -231,13 +242,13 @@ namespace Archive
 
 #else
 	template<>
-	inline void AutoDeltaPackedMap<unsigned long, unsigned long long int>::pack(ByteStream & target, const std::string & buffer)
+	inline void AutoDeltaPackedMap<uint32_t, uint32_t>::pack(ByteStream & target, const std::string & buffer)
 	{
 		internal_pack(target, buffer, "%lu %llu");
 	}
 
 	template<>
-	inline void AutoDeltaPackedMap<unsigned long, unsigned long long int>::unpack(ReadIterator & source, std::string & buffer)
+	inline void AutoDeltaPackedMap<uint32_t, uint32_t>::unpack(ReadIterator & source, std::string & buffer)
 	{
 		internal_unpack(source, buffer, "%lu %llu:");
 	}

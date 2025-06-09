@@ -60,7 +60,7 @@ public:
 		ChatLogEntry();
 
 		int m_index;
-		time_t m_time;
+		uint32_t m_time;
 	};
 
 	typedef std::list<ChatLogEntry>    ChatLog;
@@ -105,11 +105,11 @@ public:
 	float                getPlayedTimeAccumOnly() const;
 	void                 setPlayedTimeAccumOnly(float playedTimeAccum);
 
-	unsigned long        getSessionPlayTimeDuration() const;
-	unsigned long        getSessionActivePlayTimeDuration() const;
+	int32_t              getSessionPlayTimeDuration() const;
+	int32_t              getSessionActivePlayTimeDuration() const;
 	int32                getSessionStartPlayTime() const;
 	int32                getSessionLastActiveTime() const;
-	void                 setSessionPlayTimeInfo(int32 sessionStartPlayTime, int32 sessionLastActiveTime, unsigned long sessionActivePlayTimeDuration);
+	void                 setSessionPlayTimeInfo(int32 sessionStartPlayTime, int32 sessionLastActiveTime, uint32_t sessionActivePlayTimeDuration);
 
 	void                 setStationId(StationId account);
 	void                 setCheaterLevel(float level);
@@ -358,15 +358,15 @@ public:
 
 	bool modifyCollectionSlotValue(std::string const & slotName, int64 delta);
 
-	bool getCollectionSlotValue(std::string const & slotName, unsigned long & value) const;
-	bool getCollectionSlotValue(CollectionsDataTable::CollectionInfoSlot const & slotInfo, unsigned long & value) const;
+	bool getCollectionSlotValue(std::string const & slotName, uint32_t & value) const;
+	bool getCollectionSlotValue(CollectionsDataTable::CollectionInfoSlot const & slotInfo, uint32_t & value) const;
 
 	bool hasCompletedCollectionSlotPrereq(std::string const & slotName, std::vector<CollectionsDataTable::CollectionInfoSlot const *> * collectionInfo = nullptr) const;
 	bool hasCompletedCollectionSlotPrereq(CollectionsDataTable::CollectionInfoSlot const & slotInfo, std::vector<CollectionsDataTable::CollectionInfoSlot const *> * collectionInfo = nullptr) const;
 
 	bool hasCompletedCollectionSlot(std::string const & slotName) const;
 	bool hasCompletedCollectionSlot(CollectionsDataTable::CollectionInfoSlot const & slotInfo) const;
-	static bool hasCompletedCollectionSlot(CollectionsDataTable::CollectionInfoSlot const & slotInfo, unsigned long slotValue);
+	static bool hasCompletedCollectionSlot(CollectionsDataTable::CollectionInfoSlot const & slotInfo, uint32_t slotValue);
 
 	bool hasCompletedCollection(std::string const & collectionName) const;
 
@@ -395,8 +395,8 @@ public:
 
 	int getChatSpamTimeEndInterval() const;
 
-	time_t getChatSpamNextTimeToNotifyPlayerWhenLimited() const;
-	void setChatSpamNextTimeToNotifyPlayerWhenLimited(time_t chatSpamNextTimeToNotifyPlayerWhenLimited);
+	int32_t getChatSpamNextTimeToNotifyPlayerWhenLimited() const;
+	void setChatSpamNextTimeToNotifyPlayerWhenLimited(int32_t chatSpamNextTimeToNotifyPlayerWhenLimited);
 
 	// citizenship info
 	void updateCitizenshipInfo();
@@ -554,7 +554,7 @@ private:
 	// cached here for use by the game server
 	Archive::AutoDeltaVariable<int32>                         m_sessionStartPlayTime;          // time when the player started playing the character
 	Archive::AutoDeltaVariable<int32>                         m_sessionLastActiveTime;         // the client will detect when the player is "active" or "inactive"; this keeps track of the last time that the client said the player was "active"; if 0, it means the client is currently "inactive"
-	Archive::AutoDeltaVariable<unsigned long>                 m_sessionActivePlayTimeDuration; // total amount of play time player was active (i.e. at the mouse/keyboard/joystick)
+	Archive::AutoDeltaVariable<uint32_t>                      m_sessionActivePlayTimeDuration; // total amount of play time player was active (i.e. at the mouse/keyboard/joystick)
 
 	Archive::AutoDeltaVariable<int>                           m_food;
 	Archive::AutoDeltaVariable<int>                           m_maxFood;
@@ -581,8 +581,8 @@ private:
 	Archive::AutoDeltaVariable<NetworkId>                     m_theaterId;
 	Archive::AutoDeltaVariable<int>                           m_theaterLocationType;
 	Archive::AutoDeltaVariable<int>                           m_roleIconChoice;
-	Archive::AutoDeltaVariable<time_t> m_aggroImmuneDuration;
-	Archive::AutoDeltaVariable<time_t> m_aggroImmuneStartTime;
+	Archive::AutoDeltaVariable<uint32_t> m_aggroImmuneDuration;
+	Archive::AutoDeltaVariable<uint32_t> m_aggroImmuneStartTime;
 
 	ChatLog * const m_chatLog;
 	time_t m_chatLogPurgeTime;
@@ -641,7 +641,7 @@ private:
 	Archive::AutoDeltaVariable<int>                           m_chatSpamNonSpatialNumCharacters;
 	Archive::AutoDeltaVariable<int>                           m_chatSpamTimeEndInterval;
 	Archive::AutoDeltaVariable<int>                           m_chatSpamNextTimeToSyncWithChatServer;
-	time_t                                                    m_chatSpamNextTimeToNotifyPlayerWhenLimited;
+	int32_t                                                  m_chatSpamNextTimeToNotifyPlayerWhenLimited;
 
 	// citizenship info
 	Archive::AutoDeltaVariable<std::string>                   m_citizenshipCity;
@@ -1053,14 +1053,14 @@ inline int PlayerObject::getChatSpamTimeEndInterval() const
 
 // ----------------------------------------------------------------------
 
-inline time_t PlayerObject::getChatSpamNextTimeToNotifyPlayerWhenLimited() const
+inline int32_t PlayerObject::getChatSpamNextTimeToNotifyPlayerWhenLimited() const
 {
 	return m_chatSpamNextTimeToNotifyPlayerWhenLimited;
 }
 
 // ----------------------------------------------------------------------
 
-inline void PlayerObject::setChatSpamNextTimeToNotifyPlayerWhenLimited(time_t chatSpamNextTimeToNotifyPlayerWhenLimited)
+inline void PlayerObject::setChatSpamNextTimeToNotifyPlayerWhenLimited(int32_t chatSpamNextTimeToNotifyPlayerWhenLimited)
 {
 	m_chatSpamNextTimeToNotifyPlayerWhenLimited = chatSpamNextTimeToNotifyPlayerWhenLimited;
 }

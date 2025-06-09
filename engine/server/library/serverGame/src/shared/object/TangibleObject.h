@@ -153,7 +153,7 @@ public:
 	void addHateOverTime(NetworkId const & target, float const hate, int const seconds);
 	bool setHate(NetworkId const & target, float const hate);
 	float getHate(NetworkId const & target) const;
-	std::map<NetworkId, std::pair<float, std::pair<unsigned long, unsigned long> > > const & getHateOverTime() const;
+	std::map<NetworkId, std::pair<float, std::pair<uint32_t, uint32_t> > > const & getHateOverTime() const;
 	float getMaxHate() const;
 	CachedNetworkId const & getHateTarget() const;
 	void removeHateTarget(NetworkId const & target);
@@ -576,10 +576,10 @@ private:
 	HateList m_hateList;
 
 	// for applying "hate over time"
-	Archive::AutoDeltaMap<NetworkId, std::pair<float, std::pair<unsigned long, unsigned long> > > m_hateOverTime;
+	Archive::AutoDeltaMap<NetworkId, std::pair<float, std::pair<uint32_t, uint32_t> > > m_hateOverTime;
 
 	Archive::AutoDeltaVariableCallback<bool, CombatStateChangedCallback, TangibleObject> m_inCombat;
-	Archive::AutoDeltaVariable<time_t> m_combatStartTime;
+	Archive::AutoDeltaVariable<uint32_t> m_combatStartTime;
 
 	// allows script to make an object (i.e. like a turret) attackable
 	Archive::AutoDeltaVariableCallback<bool, AttackableOverrideCallback, TangibleObject> m_attackableOverride;
@@ -813,7 +813,7 @@ inline std::set<NetworkId> const & TangibleObject::getPassiveRevealPlayerCharact
 
 //----------------------------------------------------------------------
 
-inline std::map<NetworkId, std::pair<float, std::pair<unsigned long, unsigned long> > > const & TangibleObject::getHateOverTime() const
+inline std::map<NetworkId, std::pair<float, std::pair<uint32_t, uint32_t> > > const & TangibleObject::getHateOverTime() const
 {
 	return m_hateOverTime.getMap();
 }

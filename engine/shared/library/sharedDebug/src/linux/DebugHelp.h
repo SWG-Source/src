@@ -20,7 +20,7 @@ public:
 	static void remove();
 
 	static void getCallStack(uint32 *callStack, int sizeOfCallStack);
-	static bool lookupAddress(uint32 address, char *libName, char *fileName, int fileNameLength, int &line);
+	static bool lookupAddress(uint64 address, char *libName, char *fileName, int fileNameLength, int &line);
 };
 
 // ======================================================================

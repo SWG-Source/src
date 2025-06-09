@@ -24,9 +24,9 @@ namespace MessageDispatch
 
 	Returns an STL hash of the type name.
 */
-const unsigned long int MessageBase::makeMessageTypeFromString(const char * const idString)
+const uint32_t MessageBase::makeMessageTypeFromString(const char * const idString)
 {
-	unsigned long int result = 0;
+	uint32_t result = 0;
 #if PRODUCTION == 0
 	result = LabelHash::hashLabel("MessageDispatch", idString);
 #else
@@ -59,7 +59,7 @@ type(0)
 
 	@author Justin Randall
 */
-MessageBase::MessageBase(const unsigned long int newType) :
+MessageBase::MessageBase(const uint32_t newType) :
 type(newType)
 {
 }

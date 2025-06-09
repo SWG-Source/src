@@ -684,7 +684,7 @@ void CommandQueue::switchState()
 
 	m_eventStartTime = s_currentTime;
 	
-	const unsigned int savedQueueSize = m_queue.size();
+	const uint32_t savedQueueSize = m_queue.size();
 	switch ( m_state.get() )
 	{
 		case State_Waiting:

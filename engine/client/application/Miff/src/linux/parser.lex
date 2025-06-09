@@ -326,8 +326,11 @@ EXP			(e|E)(\+|-)?
 				/* do a count on bracket matching... */
 				if (0 == count_brace())
 				{
-					if (!initialCompile && !globalErrorFlag)
-						MIFFMessage("mIFF successfully compiled!\n", 0);
+					if (!initialCompile && !globalErrorFlag) {
+	                    char myString[256];
+		                sprintf(myString, "mIFF (SUCCESS): compiled \"%s\"", inFileName);
+						MIFFMessage(myString, 0);
+					}
 				}
 
 				yyterminate();				/* tell yyparse() it's time to quit! DO NOT comment or delete this line! */

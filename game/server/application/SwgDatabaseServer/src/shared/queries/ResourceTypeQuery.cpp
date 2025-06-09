@@ -50,7 +50,7 @@ bool ResourceTypeQuery::addData(DBSchema::ResourceTypeRow const & data)
 	if (!m_resource_classes.push_back(data.resource_class.getValueASCII())) return false;
 	if (!m_attributes.push_back(data.attributes.getValueASCII())) return false;
 	if (!m_fractal_seeds.push_back(data.fractal_seeds.getValueASCII())) return false;
-	if (!m_depleted_timestamps.push_back(data.depleted_timestamp.isNull(), data.depleted_timestamp.getValue())) return false;
+	if (!m_depleted_timestamps.push_back(data.depleted_timestamp.isNull(), static_cast<int32_t>(data.depleted_timestamp.getValue()))) return false;
 
 	m_numItems=m_numItems.getValue() + 1;
 	return true;

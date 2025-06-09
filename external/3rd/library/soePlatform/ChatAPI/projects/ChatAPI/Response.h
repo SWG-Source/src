@@ -1186,9 +1186,9 @@ namespace ChatSystem
 
 		virtual void unpack(Base::ByteStream::ReadIterator &iter);
 
-		unsigned long getServerVersion() const { return m_serverVersion; }
+		uint32_t getServerVersion() const { return m_serverVersion; }
 	private:
-		unsigned long m_serverVersion;
+		uint32_t m_serverVersion;
 	};
 
 	class ResAddSnoopAvatar : public GenericAPI::GenericResponse

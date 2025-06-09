@@ -84,7 +84,7 @@ public:
 	static float         getLinkDistance ( void );
 	static void          setLinkDistance ( float dist );
 
-	int                  getNeighborCode ( int whichNode ) const;
+//	int                  getNeighborCode ( int whichNode ) const;
 
 protected:
 

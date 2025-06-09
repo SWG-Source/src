@@ -307,8 +307,9 @@ sub makeEncodeFunction
     }
     print OUTFILE "\tconst DBSchema::${rowtype} *row=m_\l${buffer}.findConstRowByIndex(objectId);\n";
     print OUTFILE "\tWARNING_STRICT_FATAL(row==NULL,(\"Loading object %s, no ${rowtype} in the buffer\\n\",objectId.getValueString().c_str()));\n";
-    print OUTFILE "\tif (!row)\n";
+    print OUTFILE "\tif (!row) {\n";
     print OUTFILE "\t\treturn false;\n";
+    print OUTFILE "\t}\n";
     print OUTFILE "\n";
 
     foreach $member (@{ $packageMembers{"$classname.$package"} })

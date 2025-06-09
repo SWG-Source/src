@@ -728,7 +728,7 @@ DataTableCell *DataTableWriter::_getNewCell(DataTableColumnType const &columnTyp
 	switch (columnType.getBasicType())
 	{
 	case DataTableColumnType::DT_Int:
-		return new DataTableCell(static_cast<int>(strtol(value.c_str(), nullptr, 0)));
+		return new DataTableCell(static_cast<int32>(strtol(value.c_str(), nullptr, 0)));
 		break;
 	case DataTableColumnType::DT_Float:
 		return new DataTableCell(static_cast<float>(atof(value.c_str())));
@@ -859,7 +859,7 @@ void DataTableWriter::_saveRows(NamedDataTable * ndt, Iff& iff) const
 	iff.insertChunk(TAG(R,O,W,S));
 
 	int numRows = static_cast<int>(ndt->m_rows.size());
-	iff.insertChunkData(&numRows, sizeof(int));
+	iff.insertChunkData(&numRows, sizeof(int32));
 	std::vector<NamedDataTable::DataTableRow* >::iterator i = ndt->m_rows.begin();
 	for (; i!= ndt->m_rows.end(); ++i)
 	{
@@ -873,8 +873,8 @@ void DataTableWriter::_saveRows(NamedDataTable * ndt, Iff& iff) const
 				{
 				const DataTableCell * cell = *j;
 				NOT_NULL(cell);
-				int tmp = cell->getIntValue();
-				iff.insertChunkData(&tmp, sizeof(int));
+				int32 tmp = cell->getIntValue();
+				iff.insertChunkData(&tmp, sizeof(int32));
 				break;
 				}
 			case DataTableColumnType::DT_Float:

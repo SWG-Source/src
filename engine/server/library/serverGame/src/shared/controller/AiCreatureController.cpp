@@ -2960,7 +2960,7 @@ PersistentCrcString const & AICreatureController::getCombatAction()
 }
 
 //-----------------------------------------------------------------------
-time_t AICreatureController::getKnockDownRecoveryTime() const
+uint32_t AICreatureController::getKnockDownRecoveryTime() const
 {
 	AiCreatureCombatProfile const * const combatProfile = AiCreatureCombatProfile::getCombatProfile(m_aiCreatureData->m_primarySpecials);
 

@@ -68,7 +68,7 @@ private:
 	MessageToId m_messageId;
 	std::string m_method;
 	std::vector<int8> m_packedData;
-	unsigned long m_callTime;
+	uint32_t m_callTime;
 	bool m_guaranteed;
 	bool m_persisted;
 	MessageToPayload::DeliveryType m_deliveryType;

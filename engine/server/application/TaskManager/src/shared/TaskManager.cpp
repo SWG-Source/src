@@ -970,7 +970,7 @@ void TaskManager::update()
 			ManagerConnection * master = Locator::getServer("node0");
 			if (master)
 			{
-				GenericValueTypeMessage<std::pair<std::string, long > > msg("SystemTimeCheck", std::make_pair(getNodeLabel(), static_cast<long>(timeNow)));
+				GenericValueTypeMessage<std::pair<std::string, int32_t > > msg("SystemTimeCheck", std::make_pair(getNodeLabel(), static_cast<int32_t>(timeNow)));
 				master->send(msg);
 			}
 		}

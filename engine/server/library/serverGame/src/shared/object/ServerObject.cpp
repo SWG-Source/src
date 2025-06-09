@@ -241,7 +241,7 @@ namespace ServerObjectNamespace
 
 	const std::string OBJVAR_OPEN_BANK_TERMINAL_ID("open_bank_location");
 
-	unsigned long gs_objectCount = 0;
+	uint32_t gs_objectCount = 0;
 
 	const char * const portalPropertyCrcObjectVariableName = "portalProperty.crc";
 
@@ -262,7 +262,7 @@ namespace ServerObjectNamespace
 
 	// sentinel to keep the messageTo current being
 	// handled from getting removed from m_messageTos
-	std::pair<std::pair<unsigned long, uint64>, MessageToId> s_currentMessageToBeingHandled = std::make_pair(std::make_pair(0, 0), MessageToId::cms_invalid);
+	std::pair<std::pair<uint32_t, uint64>, MessageToId> s_currentMessageToBeingHandled = std::make_pair(std::make_pair(0, 0), MessageToId::cms_invalid);
 
 	// ----------------------------------------------------------------------
 
@@ -1295,7 +1295,7 @@ static const ConstCharCrcLowerString templateName("object/object/base/shared_obj
 
 //-----------------------------------------------------------------------
 
-const unsigned long ServerObject::getObjectCount()
+const uint32_t ServerObject::getObjectCount()
 {
 	return gs_objectCount;
 }
@@ -2350,9 +2350,9 @@ bool ServerObject::handleContentsSetup()
 
 //-----------------------------------------------------------------------
 
-unsigned long ServerObject::getAndIncrementMoveSequenceNumber()
+uint32_t ServerObject::getAndIncrementMoveSequenceNumber()
 {
-	unsigned long newValue = m_transformSequence.get();
+	uint32_t newValue = m_transformSequence.get();
 	newValue++;
 	m_transformSequence = newValue;
 	return newValue;
@@ -3431,7 +3431,7 @@ void ServerObject::sendToClientsInUpdateRange(const GameNetworkMessage & message
 	Vector combatSpamAttackerPosition_w, combatSpamDefenderPosition_w;
 	if (!clients.empty())
 	{
-		static unsigned long int const controllerMessageCrc = MessageDispatch::MessageBase::makeMessageTypeFromString("ObjControllerMessage");
+		static uint32_t const controllerMessageCrc = MessageDispatch::MessageBase::makeMessageTypeFromString("ObjControllerMessage");
 		if (controllerMessageCrc == message.getType())
 		{
 			ObjControllerMessage const & ocm = static_cast<ObjControllerMessage const &>(message);
@@ -5113,10 +5113,10 @@ bool ServerObject::setPackedObjVars(std::string const &packedVarString)
 
 std::string ServerObject::debugGetMessageToList() const
 {
-	unsigned long const now = ServerClock::getInstance().getGameTimeSeconds();
+	uint32_t const now = ServerClock::getInstance().getGameTimeSeconds();
 	std::string result;
-	time_t const timeNow = ::time(nullptr);
-	for (Archive::AutoDeltaMap<std::pair<std::pair<unsigned long, uint64>, MessageToId>, MessageToPayload>::const_iterator i=m_messageTos.begin(); i!=m_messageTos.end(); ++i)
+	uint32_t const timeNow = ::time(nullptr);
+	for (Archive::AutoDeltaMap<std::pair<std::pair<uint32_t, uint64>, MessageToId>, MessageToPayload>::const_iterator i=m_messageTos.begin(); i!=m_messageTos.end(); ++i)
 	{
 		char temp[256];
 
@@ -5144,14 +5144,14 @@ std::string ServerObject::debugGetMessageToList() const
  * @return The delivery time of the next message, or 0 if there are no more messages
  */
 
-unsigned long ServerObject::processQueuedMessageTos(unsigned long effectiveMessageToTime)
+uint32_t ServerObject::processQueuedMessageTos(uint32_t effectiveMessageToTime)
 {
 	PROFILER_AUTO_BLOCK_DEFINE("ServerObject::processQueuedMessageTos");
 
 	if (isAuthoritative())
 	{
 		int handledMessageCount = 0;
-		unsigned long startTime = Clock::timeMs();
+		uint32_t startTime = Clock::timeMs();
 		while (!m_messageTos.empty() && m_messageTos.begin()->second.getCallTime() <= effectiveMessageToTime)
 		{
 			++handledMessageCount;
@@ -5161,7 +5161,7 @@ unsigned long ServerObject::processQueuedMessageTos(unsigned long effectiveMessa
 				std::string nextTenMessages;
 				{
 					int count = 1;
-					for (Archive::AutoDeltaMap<std::pair<std::pair<unsigned long, uint64>, MessageToId>, MessageToPayload>::const_iterator iter = m_messageTos.begin(); ((iter != m_messageTos.end()) && (count <= 10)); ++iter, ++count)
+					for (Archive::AutoDeltaMap<std::pair<std::pair<uint32_t, uint64>, MessageToId>, MessageToPayload>::const_iterator iter = m_messageTos.begin(); ((iter != m_messageTos.end()) && (count <= 10)); ++iter, ++count)
 					{
 						nextTenMessages += iter->second.getMethod();
 						nextTenMessages += ", ";
@@ -5180,7 +5180,7 @@ unsigned long ServerObject::processQueuedMessageTos(unsigned long effectiveMessa
 				break;
 			}
 
-			Archive::AutoDeltaMap<std::pair<std::pair<unsigned long, uint64>, MessageToId>, MessageToPayload>::const_iterator message = m_messageTos.begin();
+			Archive::AutoDeltaMap<std::pair<std::pair<uint32_t, uint64>, MessageToId>, MessageToPayload>::const_iterator message = m_messageTos.begin();
 
 			// if the message is going to be recurring, create a
 			// new messageTo to reschedule the recurring message
@@ -5192,7 +5192,7 @@ unsigned long ServerObject::processQueuedMessageTos(unsigned long effectiveMessa
 					message->second.getMessageId(), 
 					message->second.getMethod(), 
 					message->second.getPackedDataVector(), 
-					ServerClock::getInstance().getGameTimeSeconds() + static_cast<unsigned long>(message->second.getRecurringTime()), 
+					ServerClock::getInstance().getGameTimeSeconds() + static_cast<uint32_t>(message->second.getRecurringTime()),
 					false, 
 					message->second.getDeliveryType(), 
 					NetworkId::cms_invalid, 
@@ -5408,7 +5408,7 @@ void ServerObject::handleCMessageTo(const MessageToPayload &message)
 	else if (message.getMethod() == "CancelRecurringMessageTo")
 	{
 		std::string const & methodName = message.getDataAsString();
-		for (Archive::AutoDeltaMap<std::pair<std::pair<unsigned long, uint64>, MessageToId>, MessageToPayload>::const_iterator i=m_messageTos.begin(); i!=m_messageTos.end(); ++i)
+		for (Archive::AutoDeltaMap<std::pair<std::pair<uint32_t, uint64>, MessageToId>, MessageToPayload>::const_iterator i=m_messageTos.begin(); i!=m_messageTos.end(); ++i)
 		{
 			if ((i->second.getRecurringTime() != 0) && (i->second.getMethod() == methodName) && (i->first != s_currentMessageToBeingHandled))
 			{
@@ -7748,7 +7748,7 @@ void ServerObject::deliverMessageTo(MessageToPayload & message)
 	{
 		// Recurring messages can have only one instance each.  Ignore
 		// this message if there is already a recurring one with the same method name.
-		for (Archive::AutoDeltaMap<std::pair<std::pair<unsigned long, uint64>, MessageToId>, MessageToPayload>::const_iterator i=m_messageTos.begin(); i!=m_messageTos.end(); ++i)
+		for (Archive::AutoDeltaMap<std::pair<std::pair<uint32_t, uint64>, MessageToId>, MessageToPayload>::const_iterator i=m_messageTos.begin(); i!=m_messageTos.end(); ++i)
 		{
 			if ((i->second.getRecurringTime() != 0) && (i->second.getMethod() == message.getMethod()))
 				return;
@@ -7808,7 +7808,7 @@ int ServerObject::cancelMessageTo(std::string const & messageName)
 	{
 		removeCount = 0;
 
-		for (Archive::AutoDeltaMap<std::pair<std::pair<unsigned long, uint64>, MessageToId>, MessageToPayload>::const_iterator i=m_messageTos.begin(); i!=m_messageTos.end();)
+		for (Archive::AutoDeltaMap<std::pair<std::pair<uint32_t, uint64>, MessageToId>, MessageToPayload>::const_iterator i=m_messageTos.begin(); i!=m_messageTos.end();)
 		{
 			if ((i->second.getMethod() == messageName) && (i->first != s_currentMessageToBeingHandled))
 			{
@@ -7842,7 +7842,7 @@ int ServerObject::cancelMessageToByMessageId(NetworkId const & messageId)
 	{
 		removeCount = 0;
 
-		for (Archive::AutoDeltaMap<std::pair<std::pair<unsigned long, uint64>, MessageToId>, MessageToPayload>::const_iterator i=m_messageTos.begin(); i!=m_messageTos.end();)
+		for (Archive::AutoDeltaMap<std::pair<std::pair<uint32_t, uint64>, MessageToId>, MessageToPayload>::const_iterator i=m_messageTos.begin(); i!=m_messageTos.end();)
 		{
 			if ((i->second.getMessageId() == messageId) && (i->first != s_currentMessageToBeingHandled))
 			{
@@ -7872,14 +7872,14 @@ int ServerObject::cancelMessageToByMessageId(NetworkId const & messageId)
 // returns -1 if object doesn't have the messageTo
 int ServerObject::timeUntilMessageTo(std::string const & messageName) const
 {
-	for (Archive::AutoDeltaMap<std::pair<std::pair<unsigned long, uint64>, MessageToId>, MessageToPayload>::const_iterator i=m_messageTos.begin(); i!=m_messageTos.end(); ++i)
+	for (Archive::AutoDeltaMap<std::pair<std::pair<uint32_t, uint64>, MessageToId>, MessageToPayload>::const_iterator i=m_messageTos.begin(); i!=m_messageTos.end(); ++i)
 	{
 		if (i->second.getMethod() == messageName)
 		{
 			if ((i->first != s_currentMessageToBeingHandled) || (i->second.getRecurringTime() > 0))
 			{
-				unsigned long const now = ServerClock::getInstance().getGameTimeSeconds();
-				unsigned long const callTime = i->second.getCallTime();
+				uint32_t const now = ServerClock::getInstance().getGameTimeSeconds();
+				uint32_t const callTime = i->second.getCallTime();
 				if (callTime > now)
 					return static_cast<int>(callTime - now);
 

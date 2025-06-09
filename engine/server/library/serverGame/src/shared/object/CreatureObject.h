@@ -385,8 +385,8 @@ public:
 	void                            setPerformanceWatchTarget(NetworkId const &who);
 	int                             getGuildId() const;
 	void                            setGuildId(int guildId);
-	unsigned long                   getTimeToUpdateGuildWarPvpStatus() const;
-	void                            setTimeToUpdateGuildWarPvpStatus(unsigned long timeToUpdateGuildWarPvpStatus);
+	uint32_t                        getTimeToUpdateGuildWarPvpStatus() const;
+	void                            setTimeToUpdateGuildWarPvpStatus(uint32_t timeToUpdateGuildWarPvpStatus);
 	bool                            getGuildWarEnabled() const;
 	void                            setGuildWarEnabled(bool guildWarEnabled);
 	int                             getMilitiaOfCityId() const;
@@ -546,8 +546,8 @@ public:
 	int loadPackedHouses();
 
 	void setClientUsesAnimationLocomotion(bool const enabled);
-	void addSlowDownEffect(const TangibleObject & defender, float coneLength, float coneAngle, float slopeAngle, unsigned long expireTime);
-	bool addSlowDownEffectProxy(const TangibleObject & defender, float coneLength, float coneAngle, float slopeAngle, unsigned long expireTime);
+	void addSlowDownEffect(const TangibleObject & defender, float coneLength, float coneAngle, float slopeAngle, uint32_t expireTime);
+	bool addSlowDownEffectProxy(const TangibleObject & defender, float coneLength, float coneAngle, float slopeAngle, uint32_t expireTime);
 	void removeSlowDownEffect();
 	void removeSlowDownEffectProxy();
 	void addTerrainSlopeEffect(const Vector & normal);
@@ -645,8 +645,8 @@ public:
 	void  setRegenRate(Attributes::Enumerator poolAttrib, float value);
 
 	float getLavaResistance() const;
-	unsigned long getLastWaterDamageTime() const;
-	void setLastWaterDamageTime(unsigned long newTime);
+	uint32_t getLastWaterDamageTime() const;
+	void setLastWaterDamageTime(uint32_t newTime);
 
 	std::map<std::string, int> const & getCommandList() const;
 	void clearCommands();
@@ -862,7 +862,7 @@ private:
 	// when switching guild war pvp status using the guild war exemption/exclusive list,
 	// add a delay to when the actually switch takes place, to prevent exploit of quickly
 	// switching in and out guiild war pvp using the guild war exemption/exclusive list
-	Archive::AutoDeltaVariable<unsigned long> m_timeToUpdateGuildWarPvpStatus;
+	Archive::AutoDeltaVariable<uint32_t> m_timeToUpdateGuildWarPvpStatus;
 
 	Archive::AutoDeltaVariableObserver<bool, PvpUpdateObserver, CreatureObject> m_guildWarEnabled;
 	Archive::AutoDeltaVariableObserver<int, PvpUpdateObserver, CreatureObject> m_militiaOfCityId;
@@ -1000,7 +1000,7 @@ private:
 	bool m_fixedupPersistentBuffsAfterLoading;
 	bool m_fixedupLevelXpAfterLoading;
 	float m_lavaResistance;
-	unsigned long m_lastWaterDamageTime; // used for timing last damage taken by lava (and other future harmful water types)
+	uint32_t m_lastWaterDamageTime; // used for timing last damage taken by lava (and other future harmful water types)
 
 	float m_attribRegenMultipliers[AR_count];
 	Archive::AutoDeltaMap<std::string, int> m_commands; // game commands a creature may execute
@@ -1350,7 +1350,7 @@ inline float CreatureObject::getLavaResistance() const
 
 //-----------------------------------------------------------------------
 
-inline unsigned long CreatureObject::getLastWaterDamageTime() const
+inline uint32_t CreatureObject::getLastWaterDamageTime() const
 {
 	return m_lastWaterDamageTime;
 }
@@ -1412,7 +1412,7 @@ inline int CreatureObject::getGuildId() const
 
 //-----------------------------------------------------------------------
 
-inline unsigned long CreatureObject::getTimeToUpdateGuildWarPvpStatus() const
+inline uint32_t CreatureObject::getTimeToUpdateGuildWarPvpStatus() const
 {
 	return m_timeToUpdateGuildWarPvpStatus.get();
 }

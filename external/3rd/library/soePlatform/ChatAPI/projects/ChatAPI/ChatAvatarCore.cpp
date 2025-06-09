@@ -17,7 +17,7 @@ namespace ChatSystem
 	{
 	}
 
-	ChatAvatarCore::ChatAvatarCore(unsigned avatarID, unsigned userID, const unsigned short *name, const unsigned short *address, const unsigned short *gateway, const unsigned short *server, unsigned gatewayID, unsigned serverID, const unsigned short *loginLocation, unsigned attributes)
+	ChatAvatarCore::ChatAvatarCore(unsigned avatarID, unsigned userID, const unsigned short *name, const unsigned short *address, const unsigned short *gateway, const unsigned short *server, unsigned gatewayID, unsigned serverID, const unsigned short *loginLocation, uint32_t attributes)
 		: m_name(name),
 		m_address(address),
 		m_server(server),
@@ -33,7 +33,7 @@ namespace ChatSystem
 	{
 	}
 
-	ChatAvatarCore::ChatAvatarCore(unsigned avatarID, unsigned userID, const ChatUnicodeString &name, const ChatUnicodeString &address, const ChatUnicodeString &gateway, const ChatUnicodeString &server, unsigned gatewayID, unsigned serverID, const ChatUnicodeString &loginLocation, unsigned attributes)
+	ChatAvatarCore::ChatAvatarCore(unsigned avatarID, unsigned userID, const ChatUnicodeString &name, const ChatUnicodeString &address, const ChatUnicodeString &gateway, const ChatUnicodeString &server, unsigned gatewayID, unsigned serverID, const ChatUnicodeString &loginLocation, uint32_t attributes)
 		: m_name(name.string_data, name.string_length),
 		m_address(address.string_data, address.string_length),
 		m_server(server.string_data, server.string_length),
@@ -49,7 +49,7 @@ namespace ChatSystem
 	{
 	}
 
-	ChatAvatarCore::ChatAvatarCore(unsigned avatarID, unsigned userID, const String &name, const String &address, const String &gateway, const String &server, unsigned gatewayID, unsigned serverID, const Plat_Unicode::String &loginLocation, unsigned attributes)
+	ChatAvatarCore::ChatAvatarCore(unsigned avatarID, unsigned userID, const String &name, const String &address, const String &gateway, const String &server, unsigned gatewayID, unsigned serverID, const Plat_Unicode::String &loginLocation, uint32_t attributes)
 		: m_name(name),
 		m_address(address),
 		m_server(server),
@@ -71,7 +71,7 @@ namespace ChatSystem
 		get(iter, m_userID);
 		ASSERT_VALID_STRING_LENGTH(get(iter, m_name));
 		ASSERT_VALID_STRING_LENGTH(get(iter, m_address));
-		get(iter, (uint32 &)m_attributes);
+		get(iter, m_attributes);
 		ASSERT_VALID_STRING_LENGTH(get(iter, m_loginLocation));
 		ASSERT_VALID_STRING_LENGTH(get(iter, m_server));
 		ASSERT_VALID_STRING_LENGTH(get(iter, m_gateway));
@@ -153,11 +153,11 @@ namespace ChatSystem
 		put(msg, m_userID);
 		put(msg, m_name);
 		put(msg, m_address);
-		put(msg, (uint32)m_attributes);
+		put(msg, m_attributes);
 		put(msg, m_loginLocation);
 	}
 
-	void ChatAvatarCore::setAttributes(unsigned long attributes)
+	void ChatAvatarCore::setAttributes(uint32_t attributes)
 	{
 		m_attributes = attributes;
 	}
@@ -172,7 +172,7 @@ namespace ChatSystem
 		m_email = email;
 	}
 
-	void ChatAvatarCore::setInboxLimit(unsigned inboxLimit)
+	void ChatAvatarCore::setInboxLimit(uint32_t inboxLimit)
 	{
 		m_inboxLimit = inboxLimit;
 	}

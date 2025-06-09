@@ -92,7 +92,7 @@ struct PlayerObjectBufferRow : public DB::Row
 	DB::BindableLong born_date;
 	DB::BindableLong played_time;
 	DB::BindableDouble force_regen_rate;	
-	DB::BindableLong force_power;	
+	DB::BindableLong force_power;
 	DB::BindableLong max_force_power;
 	DB::BindableBitArray<2047> active_quests;
 	DB::BindableBitArray<2047> completed_quests;

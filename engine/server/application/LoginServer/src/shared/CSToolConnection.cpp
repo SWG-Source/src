@@ -21,20 +21,20 @@
 
 namespace CSToolConnectionNamespace
 {
-	std::map< uint32, CSToolConnection * > toolsByID;
+	std::map< uintptr_t, CSToolConnection * > toolsByID;
 }
 
 uint32 CSToolConnection::m_curToolID = 0;
 
 // statics
 
-CSToolConnection * CSToolConnection::getCSToolConnectionByToolId(uint32 id)
+CSToolConnection * CSToolConnection::getCSToolConnectionByToolId(uintptr_t id)
 {
-	std::map< uint32, CSToolConnection * >::iterator it = CSToolConnectionNamespace::toolsByID.find(id);
+	std::map< uintptr_t, CSToolConnection * >::iterator it = CSToolConnectionNamespace::toolsByID.find(id);
 	return it == CSToolConnectionNamespace::toolsByID.end() ? 0 : it->second;
 }
 
-void CSToolConnection::validateCSTool(uint32 toolId, apiResult result, const apiSession& session)
+void CSToolConnection::validateCSTool(uintptr_t toolId, apiResult result, const apiSession& session)
 {
 	//find the tool
 	CSToolConnection * p_connection = getCSToolConnectionByToolId(toolId);

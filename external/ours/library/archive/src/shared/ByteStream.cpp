@@ -224,7 +224,7 @@ ByteStream &ByteStream::operator=(ByteStream const &rhs)
 
 	@author Justin Randall
 */
-void ByteStream::get(void *target, ReadIterator &readIterator, const unsigned long int targetSize) const
+void ByteStream::get(void *target, ReadIterator &readIterator, const uint32_t targetSize) const
 {
 	if (data && readIterator.getReadPosition() + targetSize <= allocatedSize)
 	{
@@ -345,7 +345,7 @@ ByteStream::Data *ByteStream::Data::getNewData()
 
 void ByteStream::Data::releaseOldData(ByteStream::Data *oldData)
 {
-	assert((unsigned) reinterpret_cast<long>(oldData) != 0xefefefefu);
+	assert(reinterpret_cast<uint64_t>(oldData) != 0xefefefefefefefefu);
 
 	if (oldData->size > 4096)
 		delete oldData;

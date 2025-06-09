@@ -33,7 +33,7 @@ public:
 	//accessors
 	NetworkId const & getBufferId() const;
 	NetworkId const & getRecipientId() const;
-	time_t getStartingTime() const;
+	uint32_t getStartingTime() const;
 	int getBufferRequiredCredits() const;
 	bool getAccepted() const;
 	Origin getOrigin() const;
@@ -56,7 +56,7 @@ private:
 private:
 	NetworkId m_bufferId;
 	NetworkId m_recipientId;
-	time_t m_startingTime;
+	uint32_t m_startingTime;
 	int m_bufferRequiredCredits;
 	bool m_accepted;
 	Origin m_origin;
@@ -79,7 +79,7 @@ inline NetworkId const & BuffBuilderChangeMessage::getRecipientId() const
 
 //-----------------------------------------------------------------------
 
-inline time_t BuffBuilderChangeMessage::getStartingTime() const
+inline uint32_t BuffBuilderChangeMessage::getStartingTime() const
 {
 	return m_startingTime;
 }

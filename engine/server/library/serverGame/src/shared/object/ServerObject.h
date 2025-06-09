@@ -260,7 +260,7 @@ public:
 	int                          getConversionId                () const;
 	void                         setConversionId                (int newConversionId);
 
-	static const unsigned long   getObjectCount                 ();
+	static const uint32_t        getObjectCount                 ();
 	const bool                   getPositionChanged             () const;
 	const Sphere                 getLocalSphere                 () const;
 	const Sphere &               getSphereExtent                () const;
@@ -485,7 +485,7 @@ public:
 	void                          attachStartupScripts           ();
 	void                          customize                      (const std::string & customName, int value);
 	void                          serverObjectEndBaselines       (bool fromDatabase);
-	unsigned long                 getAndIncrementMoveSequenceNumber ();
+	uint32_t                      getAndIncrementMoveSequenceNumber ();
 	uint32                        getAuthServerProcessId         () const;
 	const int                     getCacheVersion                () const;
 	Client *                      getClient                      () const;
@@ -540,7 +540,7 @@ public:
 	int                           cancelMessageTo                (std::string const & messageName);
 	int                           cancelMessageToByMessageId     (NetworkId const & messageId);
 	int                           timeUntilMessageTo             (std::string const & messageName) const;
-	unsigned long                 processQueuedMessageTos        (unsigned long effectiveMessageToTime);
+	uint32_t                      processQueuedMessageTos        (uint32_t effectiveMessageToTime);
 	std::string                   debugGetMessageToList          () const;
 	bool                          handleTeleportFixup            (bool force);
 	bool                          serverObjectInitializeFirstTimeObject(ServerObject *cell, Transform const &transform);
@@ -551,7 +551,7 @@ public:
 	virtual bool                  isVisibleOnClient              (const Client & client) const = 0;
 	virtual void                  kill                           ();
 
-	void                          performSocial                  (const NetworkId & target, unsigned long socialType, bool animationOk, bool textOk);
+	void                          performSocial                  (const NetworkId & target, uint32 socialType, bool animationOk, bool textOk);
 	void                          performSocial                  (const MessageQueueSocial & socialMsg);
 
 	void                          performCombatSpam              (const MessageQueueCombatSpam & combatSpam, bool sendToSelf, bool sendToTarget, bool sendToBystanders);
@@ -583,7 +583,7 @@ public:
 	virtual void                  setOwnerId(const NetworkId &id);
 	void                          setSceneIdOnThisAndContents    (const std::string & sceneId);
 	void                          setPlayerControlled            (bool newValue);
-	void                          speakText                      (NetworkId const &target, unsigned long chatType, unsigned long mood, unsigned long flags, Unicode::String const &speech, int language, Unicode::String const &oob);
+	void                          speakText                      (NetworkId const &target, uint32 chatType, uint32 mood, uint32 flags, Unicode::String const &speech, int language, Unicode::String const &oob);
 	virtual void                  speakText                      (MessageQueueSpatialChat const &spatialChat);
 	virtual void                  hearText                       (ServerObject const &source, MessageQueueSpatialChat const &spatialChat, int chatMessageIndex);
 	void                          teleportObject                 (Vector const & position_w, NetworkId const &targetContainer, std::string const &targetCellName, Vector const &position_p, std::string const &scriptCallback, bool forceLoadScreen = false);
@@ -798,7 +798,7 @@ private:
 	Archive::AutoDeltaVariableCallback<uint32, AuthProcessIdCallback, ServerObject> m_authServerProcessId;
 	Archive::AutoDeltaSet<uint32> m_proxyServerProcessIds;
 
-	Archive::AutoDeltaVariable<unsigned long> m_transformSequence;
+	Archive::AutoDeltaVariable<uint32_t> m_transformSequence;
 
 	Archive::AutoDeltaVariable<int> m_cacheVersion;
 	Archive::AutoDeltaVariable<bool> m_loadContents;
@@ -844,7 +844,7 @@ protected:
 private:
 	
 	Archive::AutoDeltaVector<TriggerVolumeInfo, ServerObject> m_triggerVolumeInfo;
-	Archive::AutoDeltaMap<std::pair<std::pair<unsigned long, uint64>, MessageToId>, MessageToPayload> m_messageTos;
+	Archive::AutoDeltaMap<std::pair<std::pair<uint32_t, uint64>, MessageToId>, MessageToPayload> m_messageTos;
 
 	Sphere                                 m_worldSphere;
 

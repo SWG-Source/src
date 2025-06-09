@@ -355,7 +355,7 @@ void ChatInterface::OnGetRoom(unsigned track, unsigned result, const ChatRoom *r
 		ChatServer::putSystemAvatarInRoom(roomName);
 	}
 	std::string lowerRoomName = toLower(roomName);
-	unsigned sequence = (unsigned)user;
+	uintptr_t sequence = (uintptr_t)user;
 	std::unordered_map<std::string, ChatServerRoomOwner>::iterator f = roomList.find(lowerRoomName);
 	if (f != roomList.end() && room)
 	{
@@ -416,7 +416,7 @@ void ChatInterface::OnGetRoom(unsigned track, unsigned result, const ChatRoom *r
 
 //-----------------------------------------------------------------------
 
-void ChatInterface::queryRoom(const NetworkId & id, ConnectionServerConnection * connection, const unsigned int sequence, const std::string & roomName)
+void ChatInterface::queryRoom(const NetworkId & id, ConnectionServerConnection * connection, const uintptr_t sequence, const std::string & roomName)
 {
 	UNREF(connection);
 	ChatServer::fileLog(s_enableChatRoomLogs, "ChatInterface", "queryRoom() id(%s) connection(%s) sequence(%u) roomName(%s)", id.getValueString().c_str(), ChatServer::getConnectionAddress(connection).c_str(), sequence, roomName.c_str());
@@ -1579,7 +1579,7 @@ void ChatInterface::OnCreateRoom(unsigned track,unsigned result, const ChatRoom 
 	PROFILER_AUTO_BLOCK_DEFINE("ChatInterface - OnCreateRoom");
 	UNREF(user);
 
-	unsigned sequence = (unsigned)user;
+	uintptr_t sequence = (uintptr_t)user;
 	static Unicode::String wideSWG = Unicode::narrowToWide("SOE+SWG");
 	static Unicode::String wideFilter = Unicode::narrowToWide("");
 	static ChatUnicodeString swgNode(wideSWG.data(), wideSWG.size());
@@ -1882,7 +1882,7 @@ void ChatInterface::OnEnterRoom(unsigned track, unsigned result, const ChatAvata
 		return;
 	}
 
-	unsigned sequence = (unsigned)user;
+	uintptr_t sequence = (uintptr_t)user;
 
 	ChatAvatarId srcId;
 	if (srcAvatar)
@@ -2559,7 +2559,7 @@ void ChatInterface::OnLeaveRoom(unsigned track, unsigned result, const ChatAvata
 		return;
 	}
 
-	unsigned sequence = (unsigned)user;
+	uintptr_t sequence = (uintptr_t)user;
 
 	ChatAvatarId id;
 	if (srcAvatar)
@@ -2913,7 +2913,7 @@ void ChatInterface::OnSendRoomMessage(unsigned track, unsigned result, const Cha
 	}
 	UNREF(srcAvatar);
 	UNREF(destRoom);
-	unsigned sequence = (unsigned)user;
+	uintptr_t sequence = (uintptr_t)user;
     ChatOnSendRoomMessage chat(sequence, result);
     IGNORE_RETURN(ChatServer::sendResponseForTrackId(track, chat));
 }
@@ -2998,7 +2998,7 @@ void ChatInterface::OnSendInstantMessage(unsigned track, unsigned result, const 
 	}
 	UNREF(srcAvatar);
 
-	unsigned sequence = (unsigned)user;
+	uintptr_t sequence = (uintptr_t)user;
 
 	ChatOnSendInstantMessage chat(sequence, result);
 	IGNORE_RETURN(ChatServer::sendResponseForTrackId(track, chat));
@@ -3053,7 +3053,7 @@ void ChatInterface::OnSendPersistentMessage(unsigned track, unsigned result, con
 		DEBUG_WARNING(true, ("We received an OnSendPersistentMessage with a success result code but nullptr data.  This is an error that the API should never give."));
 		return;
 	}
-	unsigned sequence = (unsigned)user;
+	uintptr_t sequence = (uintptr_t)user;
 	UNREF(srcAvatar);
 	ChatOnSendPersistentMessage chat(sequence, result);
 	IGNORE_RETURN(ChatServer::sendResponseForTrackId(track, chat));
