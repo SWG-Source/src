@@ -2,19 +2,26 @@ name: SWG Source - Continuous Integration for src repo
 
 on:
   pull_request:
-    branches: [ master ]
-    
-  workflow_dispatch:
-
+    types:
+      - opened
+      - sychronize
+      
 jobs:
   compile-src:
     runs-on: ubuntu-latest
     container: cekisswg/swg-vm3.01-i386:latest
     steps:
-      - name: Run ANT Build
+      - name: Clone repository
         run: |
           cd /home/swg/swg-main
-          git clone https://github.com/SWG-Source/src.git
-          cd src
+          git clone --depth 1 --branch ${{ github.event.pull_request.base.ref }} ${{ github.repository }} pull-request
+
+      - name: Checkout pull request branch
+        run: git -C pull-request checkout ${{ github.event.pull_request.head.ref }}
+        
+      - name: Run ANT Build
+        run: |
+          cd /home/swg/swg-main/src
           ant build_src
+
           

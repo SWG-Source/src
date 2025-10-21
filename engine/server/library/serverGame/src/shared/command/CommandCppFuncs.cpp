@@ -3423,6 +3423,21 @@ static void commandFuncOpenContainer(Command const & cmd, NetworkId const &actor
 		return;
 	}
 
+	//-- no opening NPCs
+	GameScriptObject * scriptObject = container->getScriptObject();
+	if(scriptObject)
+	{
+		// this is AI
+		if(scriptObject->hasScript("ai.ai"))
+		{
+			// and this is not a pet (droid) that has storage (so we might actually need to open it)
+			if(!scriptObject->hasScript("ai.pet"))
+			{
+				return;
+			}
+		}
+	}
+
 	//-- don't open factory crates or crafting tools
 	const int got = container->getGameObjectType();
 	if (got == SharedObjectTemplate::GOT_misc_factory_crate || got == SharedObjectTemplate::GOT_tool_crafting)
