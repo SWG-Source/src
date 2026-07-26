@@ -27,10 +27,23 @@ char* _itoa(int value, char* stringOut, int radix)
 
 bool QueryPerformanceCounter(__int64* time)
 {
-  struct timeval tv;
-  gettimeofday(&tv, nullptr);
-  *time = static_cast<LARGE_INTEGER>(tv.tv_sec);
-  *time = (*time * 1000000) + static_cast<LARGE_INTEGER>(tv.tv_usec);
+  // Must be monotonic. gettimeofday() reports CLOCK_REALTIME, which NTP can
+  // slew or step backwards; callers subtract successive samples to derive
+  // frame time, so a backwards step produced negative elapsed times (see
+  // AlterScheduler "no forward time movement"). CLOCK_MONOTONIC never goes
+  // backwards. Units stay microseconds to match QueryPerformanceFrequency().
+  struct timespec ts;
+  if (clock_gettime(CLOCK_MONOTONIC, &ts) != 0)
+  {
+    struct timeval tv;
+    gettimeofday(&tv, nullptr);
+    *time = static_cast<LARGE_INTEGER>(tv.tv_sec);
+    *time = (*time * 1000000) + static_cast<LARGE_INTEGER>(tv.tv_usec);
+    return TRUE;
+  }
+
+  *time = static_cast<LARGE_INTEGER>(ts.tv_sec);
+  *time = (*time * 1000000) + static_cast<LARGE_INTEGER>(ts.tv_nsec / 1000);
 
   return TRUE;
 }

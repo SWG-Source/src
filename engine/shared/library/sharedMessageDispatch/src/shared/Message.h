@@ -26,16 +26,16 @@ namespace MessageDispatch
 	{
 	public:
 		explicit MessageBase(const char * const typeName);
-		explicit MessageBase(const unsigned long int type);
+		explicit MessageBase(const uint32_t type);
 		virtual ~MessageBase();
-		static const unsigned long int makeMessageTypeFromString(const char * const id);
-		const unsigned long int        getType() const;
+		static const uint32_t          makeMessageTypeFromString(const char * const id);
+		const uint32_t                 getType() const;
 		const bool                     isType(const char * const typeName) const;
-		void                           setType(const unsigned long int newType);
+		void                           setType(const uint32_t newType);
 		void                           setType(const char * const typeName);
 	private:
 		MessageBase();
-		unsigned long int   type;
+		uint32_t   type;
 	};
 
 	/**
@@ -50,9 +50,9 @@ namespace MessageDispatch
 	{
 	public:
 		explicit           Message(const char * const typeName="");
-		explicit           Message(const unsigned long int type);
+		explicit           Message(const uint32_t type);
 											 Message(const char * const typeName, const ValueType & value);
-											 Message(const unsigned long int type, const ValueType & value);
+											 Message(const uint32_t type, const ValueType & value);
 		explicit           Message(const Message & source);
 		virtual            ~Message();
 		Message &          operator = (const Message & rhs);
@@ -69,7 +69,7 @@ namespace MessageDispatch
 		@return the type of the Message. The type is an STL hash of the
 		type name.
 	*/
-	inline const unsigned long int MessageBase::getType() const
+	inline const uint32_t MessageBase::getType() const
 	{
 		return type;
 	}
@@ -85,7 +85,7 @@ namespace MessageDispatch
 	/**
 		@brief set or reset the type identifier
 	*/
-	inline void MessageBase::setType(const unsigned long newType)
+	inline void MessageBase::setType(const uint32_t newType)
 	{
 		type = newType;
 	}
@@ -116,7 +116,7 @@ namespace MessageDispatch
 	}
 
 	template<class ValueType>
-	inline Message<ValueType>::Message(const unsigned long int type) :
+	inline Message<ValueType>::Message(const uint32_t type) :
 	MessageBase(type),
 	value()
 	{
@@ -142,7 +142,7 @@ namespace MessageDispatch
 	}
 
 	template<class ValueType>
-	inline Message<ValueType>::Message(const unsigned long int type, const ValueType & newValue) :
+	inline Message<ValueType>::Message(const uint32_t type, const ValueType & newValue) :
 	MessageBase(type),
 	value(newValue)
 	{

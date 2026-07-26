@@ -185,7 +185,7 @@ int DataTable::getIntValue(const std::string & column, int row) const
 
 //----------------------------------------------------------------------------
 
-int DataTable::getIntValue(int column, int row) const
+int32 DataTable::getIntValue(int column, int row) const
 {
 	DEBUG_FATAL(row < 0 || row >= getNumRows(), ("DataTable [%s] getIntValue(): Invalid row number [%d].  Rows=[%d]\n", m_name.c_str(), row, getNumRows()));
 	DEBUG_FATAL(column < 0 || column >= getNumColumns(), ("DataTable [%s] getIntValue(): Invalid col number [%d].  Cols=[%d]\n", m_name.c_str(), column, getNumColumns()));
@@ -210,7 +210,7 @@ int DataTable::getIntValue(int column, int row) const
 
 //----------------------------------------------------------------------------
 
-int DataTable::getIntDefaultForColumn(const std::string & column) const
+int32 DataTable::getIntDefaultForColumn(const std::string & column) const
 {
 	int const columnIndex = findColumnNumber(column);
 	DEBUG_FATAL(columnIndex < 0 || columnIndex >= getNumColumns(), ("DataTable [%s] getIntDefaultForColumn(): Invalid col number [%d].  Cols=[%d]\n", m_name.c_str(), columnIndex, getNumColumns()));
@@ -219,7 +219,7 @@ int DataTable::getIntDefaultForColumn(const std::string & column) const
 
 //----------------------------------------------------------------------------
 
-int DataTable::getIntDefaultForColumn(int column) const
+int32 DataTable::getIntDefaultForColumn(int column) const
 {
 	DEBUG_FATAL(column < 0 || column >= getNumColumns(), ("DataTable [%s] getIntDefaultForColumn(): Invalid col number [%d].  Cols=[%d]\n", m_name.c_str(), column, getNumColumns()));
 	DEBUG_FATAL(m_types[static_cast<size_t>(column)]->getBasicType() != DataTableColumnType::DT_Int, ("Wrong data type for column %d.", column));
@@ -405,7 +405,7 @@ void DataTable::_readCell(Iff & iff, int column, int row)
 	{
 	case DataTableColumnType::DT_Int:
 	{
-		int tmp = iff.read_int32();
+		int32 tmp = iff.read_int32();
 		new (cell) DataTableCell(tmp);
 
 		break;
@@ -626,7 +626,7 @@ int DataTable::searchColumnString( int column, const std::string & searchValue )
 			int valueCrc = getIntValue(column,i);
 			IGNORE_RETURN ( indexPair->second.insert(std::pair<int, int>(valueCrc, i)) );
 			if (retval == -1 && valueString == searchValue)
-				retval = i;
+				retval = i;  // don't return here because we're adding indexes for everything in this table as we've not indexed it before.
 		}
 	}
 	else
@@ -634,7 +634,7 @@ int DataTable::searchColumnString( int column, const std::string & searchValue )
 		std::pair<std::multimap<const std::string, int>, std::multimap<int, int> > * indexPair = static_cast<std::pair<std::multimap<const std::string, int>, std::multimap<int, int> > *>(voidIndex);
 		std::multimap<const std::string, int>::iterator iter = indexPair->first.find(searchValue);
 		if (iter != indexPair->first.end())
-			retval = iter->second;	
+			return iter->second; // if we find our value, return here instead of iterating through the rest of the table.
 	}
 
 	return retval;
@@ -677,7 +677,7 @@ int DataTable::searchColumnFloat( int column, float searchValue ) const
 
 // ----------
 
-int DataTable::searchColumnInt( int column, int searchValue ) const
+int DataTable::searchColumnInt( int column, int32 searchValue ) const
 {
 	DEBUG_FATAL(column < 0 || column >= getNumColumns(), ("DataTable [%s] searchColumnInt(): Invalid col number [%d].  Cols=[%d]\n", m_name.c_str(), column, getNumColumns()));
 

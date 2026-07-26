@@ -76,7 +76,7 @@ void ReplyRequest::pack(Base::ByteStream &msg)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////
-CommonRequest::CommonRequest( RequestTypes type, unsigned serverTrack, long long transactionID )
+CommonRequest::CommonRequest( RequestTypes type, unsigned serverTrack, int64_t transactionID )
 	: GenericRequest((short)type, serverTrack), m_transactionID(transactionID)
 {
 }
@@ -101,7 +101,7 @@ void GetIDRequest::pack(Base::ByteStream &msg)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////
-SendPrepareCompressedRequest::SendPrepareCompressedRequest(RequestTypes type, unsigned serverTrack, const char *serverID, long long transactionID, unsigned stationID, unsigned characterID, long long assetID, const unsigned char *xmlAsset, unsigned length)
+SendPrepareCompressedRequest::SendPrepareCompressedRequest(RequestTypes type, unsigned serverTrack, const char *serverID, int64_t transactionID, unsigned stationID, unsigned characterID, int64_t assetID, const unsigned char *xmlAsset, unsigned length)
   : GenericRequest((short)type, serverTrack),  
 	m_transactionID(transactionID), 
 	m_stationID(stationID),
@@ -125,7 +125,7 @@ void SendPrepareCompressedRequest::pack(Base::ByteStream &msg)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////
-SendPrepareRequest::SendPrepareRequest( RequestTypes type, unsigned serverTrack, const char *serverID, long long transactionID, unsigned stationID, unsigned characterID, long long assetID, const char *xml )
+SendPrepareRequest::SendPrepareRequest( RequestTypes type, unsigned serverTrack, const char *serverID, int64_t transactionID, unsigned stationID, unsigned characterID, int64_t assetID, const char *xml )
 	: GenericRequest((short)type, serverTrack),  
 	  m_transactionID(transactionID), 
 	  m_stationID(stationID),
@@ -194,7 +194,7 @@ void IdentifyServerRequest::pack(Base::ByteStream &msg)
 
 //////////////////////////////////////////////////////////////////////////////////////
 SendAuditRequest::SendAuditRequest(	RequestTypes type, unsigned serverTrack, const char *gameCode, const char *serverCode, 
-					long long inGameAssetID, unsigned stationID, const char *event, const char *message)
+					int64_t inGameAssetID, unsigned stationID, const char *event, const char *message)
 : GenericRequest((short)type, serverTrack), m_gameCode(gameCode), m_serverCode(serverCode), m_assetID(inGameAssetID),
 	m_userID(stationID), m_event(event), m_message(message)
 {

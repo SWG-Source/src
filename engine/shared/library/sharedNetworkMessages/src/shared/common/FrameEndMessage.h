@@ -28,7 +28,7 @@ public:
 
 private:
 	Archive::AutoVariable<unsigned int> m_processId;
-	Archive::AutoVariable<unsigned long> m_frameTime;
+	Archive::AutoVariable<uint32_t> m_frameTime;
 	Archive::AutoVariable<std::string> m_profilerData;
 
 	FrameEndMessage();

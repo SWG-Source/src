@@ -67,7 +67,7 @@ public:
 
 	struct Ingredient
 	{
-		enum IngredientType ingredientType;
+		enum IngredientType    ingredientType;
 		std::vector<SimpleIngredient> ingredients;
 		float                  complexity;
 		std::string            skillCommand;

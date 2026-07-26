@@ -19,8 +19,11 @@ public:
 	static void install();
 	static void remove();
 
-	static void getCallStack(uint32 *callStack, int sizeOfCallStack);
-	static bool lookupAddress(uint32 address, char *libName, char *fileName, int fileNameLength, int &line);
+	//-- Entries are instruction addresses, so the buffer must be pointer-width
+	//   capable. uint64 matches lookupAddress() below and is wide enough on
+	//   both ILP32 and LP64.
+	static void getCallStack(uint64 *callStack, int sizeOfCallStack);
+	static bool lookupAddress(uint64 address, char *libName, char *fileName, int fileNameLength, int &line);
 };
 
 // ======================================================================

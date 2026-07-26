@@ -17,14 +17,14 @@ class CharacterMatchManager
 public:
 
 	static void requestMatch(NetworkId const &networkId, MatchMakingCharacterPreferenceId const &matchMakingCharacterPreferenceId);
-	static void getMatchStatistics(unsigned long &numberOfCharacterMatchRequests, unsigned long &numberOfCharacterMatchResults, unsigned long &timeSpentOnCharacterMatchRequestsMs);
+	static void getMatchStatistics(uint32_t &numberOfCharacterMatchRequests, uint32_t &numberOfCharacterMatchResults, uint32_t &timeSpentOnCharacterMatchRequestsMs);
 	static void clearMatchStatistics();
 
 private:
 	
-	static unsigned long ms_numberOfCharacterMatchRequests;
-	static unsigned long ms_numberOfCharacterMatchResults;
-	static unsigned long ms_timeSpentOnCharacterMatchRequestsMs;
+	static uint32_t ms_numberOfCharacterMatchRequests;
+	static uint32_t ms_numberOfCharacterMatchResults;
+	static uint32_t ms_timeSpentOnCharacterMatchRequestsMs;
 
 	// Disable
 
@@ -36,7 +36,7 @@ private:
 
 //-----------------------------------------------------------------------
 
-inline void CharacterMatchManager::getMatchStatistics(unsigned long &numberOfCharacterMatchRequests, unsigned long &numberOfCharacterMatchResults, unsigned long &timeSpentOnCharacterMatchRequestsMs)
+inline void CharacterMatchManager::getMatchStatistics(uint32_t &numberOfCharacterMatchRequests, uint32_t &numberOfCharacterMatchResults, uint32_t &timeSpentOnCharacterMatchRequestsMs)
 {
 	numberOfCharacterMatchRequests = ms_numberOfCharacterMatchRequests;
 	numberOfCharacterMatchResults = ms_numberOfCharacterMatchResults;

@@ -85,7 +85,7 @@ MessageQueue::Data* BuffBuilderChangeMessage::unpack(Archive::ReadIterator & sou
 	NetworkId tempId;
 	bool tempBool = false;
 	int tempInt = 0;
-	time_t tempTime = 0;
+	uint32_t tempTime = 0;
 
 	Archive::get(source, tempId);
 	msg->setBufferId(tempId);

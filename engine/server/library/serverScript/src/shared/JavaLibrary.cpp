@@ -781,16 +781,26 @@ void JavaLibrary::fatalHandler(int signum)
 	{
 		// try to see if our call stack came from C or Java
 		void *frameAddress = __builtin_frame_address(0);
-		// the address that generated the segfault is stored at an offset of 0x44 from
-		// the frame address
-		// @todo: find documentation on the offset to verify it is stable
-		void *crashAddress1 = *((void**)((static_cast<char *>(frameAddress)) + 0x44));
+
 		// pass the crash address to addr2line to get the file name where the crash occurred
+		// These are zero initialized because the strstr() checks below read them
+		// whenever a lookup fails.
 		static const int BUFLEN = 2048;
-		char lib1[BUFLEN], lib2[BUFLEN];
-		char file1[BUFLEN], file2[BUFLEN];
-		int line1, line2;
-		bool result1 = DebugHelp::lookupAddress(reinterpret_cast<uint32>(crashAddress1), lib1, file1, BUFLEN, line1);
+		char lib1[BUFLEN] = { '\0' }, lib2[BUFLEN] = { '\0' };
+		char file1[BUFLEN] = { '\0' }, file2[BUFLEN] = { '\0' };
+		int line1 = 0, line2 = 0;
+		bool result1 = false;
+
+		// The faulting address used to be read from a fixed 0x44 byte offset into
+		// this frame. That constant describes the 32-bit x86 frame layout only; on
+		// x86-64 it is both misaligned and meaningless, and dereferencing it from
+		// inside a SIGSEGV handler risks a recursive fault that loses the crash
+		// report entirely. The __builtin_return_address() probe below is portable
+		// and already covers this case.
+#if defined(__i386__)
+		void *crashAddress1 = *((void**)((static_cast<char *>(frameAddress)) + 0x44));
+		result1 = DebugHelp::lookupAddress(reinterpret_cast<uint64>(crashAddress1), lib1, file1, BUFLEN, line1);
+#endif
 
 		// do a second test based on the return address
 		// it turns out that in some java crashes we don't even have 2 return
@@ -801,31 +811,36 @@ void JavaLibrary::fatalHandler(int signum)
 		void *crashAddress2c = nullptr;
 		void *frameAddressA = nullptr;
 		void *frameAddressB = nullptr;
-		uint32 frameAddressHigh = (reinterpret_cast<uint32>(frameAddress) >> 16);
+		uint64 frameAddressHigh = (reinterpret_cast<uint64>(frameAddress) >> 16);
 		crashAddress2a = __builtin_return_address(0);
+// Suppress Wframe-address for these lines - we could crash the program calling __builtin_return_address and frame_address
+// with non-zero values.  However, we likely don't care as we're crashing at this point anyway due to bad Java.
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wframe-address"
 		if (crashAddress2a != nullptr)
 		{
 			frameAddressA = __builtin_frame_address(1);
 			if (frameAddressA != nullptr &&
-				(reinterpret_cast<uint32>(frameAddressA) >> 16 == frameAddressHigh))
+				(reinterpret_cast<uint64>(frameAddressA) >> 16 == frameAddressHigh))
 			{
 				crashAddress2b = __builtin_return_address(1);
 				if (crashAddress2b != nullptr)
 				{
 					frameAddressB = __builtin_frame_address(2);
 					if (frameAddressB != nullptr &&
-						(reinterpret_cast<uint32>(frameAddressB) >> 16 == frameAddressHigh))
+						(reinterpret_cast<uint64>(frameAddressB) >> 16 == frameAddressHigh))
 					{
 						crashAddress2c = __builtin_return_address(2);
 						if (crashAddress2c != nullptr)
 						{
-							result2 = DebugHelp::lookupAddress(reinterpret_cast<uint32>(
+							result2 = DebugHelp::lookupAddress(reinterpret_cast<uint64>(
 								crashAddress2c), lib2, file2, BUFLEN, line2);
 						}
 					}
 				}
 			}
 		}
+#pragma GCC diagnostic pop
 
 		bool javaCrash = true;
 		if ((result1 || result2) && strstr(lib1, "libjvm.so") == nullptr && strstr(lib2, "libjvm.so") == nullptr)
@@ -1955,6 +1970,7 @@ bool JavaLibrary::registerNatives(const JNINativeMethod natives[], int count)
 		{
 			ms_env->ExceptionClear();
 			DEBUG_REPORT_LOG(true, ("RegisterNatives failed: %s: %s\n", natives[i].name, natives[i].signature));
+			WARNING(true, ("RegisterNatives failed: could not register Java method: %s: with signature %s (does it exist in the codebase?)\n", natives[i].name, natives[i].signature));
 			result = lresult;
 		}
 	}

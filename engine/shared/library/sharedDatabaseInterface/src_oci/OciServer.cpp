@@ -79,7 +79,7 @@ bool DB::OCIServer::checkerr(OCISession const & session, int status)
 					REPORT_LOG(true,("Database Error - %.*s\n", 512, errbuf));
 					return false;
 				default:
-					FATAL(true,("Unhandled Database Error - %.*s\n", 512, errbuf));
+					REPORT_LOG(true,("Unhandled Database Error - %.*s\n", 512, errbuf));
 					break;
 			}			
 

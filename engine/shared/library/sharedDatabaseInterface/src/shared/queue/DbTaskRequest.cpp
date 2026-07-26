@@ -48,7 +48,7 @@ void DB::TaskRequest::workerThreadLoop(DB::Session *ses)
 			{
 				if (qry.fetch() > 0)
 				{
-					int result;
+					long result;
 					qry.value.getValue(result);
 					if (result == 1)
 					{

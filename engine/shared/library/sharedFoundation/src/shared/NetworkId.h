@@ -68,8 +68,8 @@ private:
 
 	friend class DB::BindableNetworkId;
 
-  private:
-	explicit NetworkId(int value); // catch people who incorrectly try to construct one of these from an int
+//  private:
+//	explicit NetworkId(int value); // catch people who incorrectly try to construct one of these from an int
 	// also makes constructing one of these from any other incorrect numeric type ambiguous
 };
 

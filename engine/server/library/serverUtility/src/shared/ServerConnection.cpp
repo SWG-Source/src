@@ -290,7 +290,7 @@ void ServerConnection::onConnectionStalled(const unsigned long stallTimeMs)
 
 // ----------------------------------------------------------------------
 
-void ServerConnection::setProcessId(const uint32 newProcessId)
+void ServerConnection::setProcessId(const uint32_t newProcessId)
 {
 	processId = newProcessId;
 }

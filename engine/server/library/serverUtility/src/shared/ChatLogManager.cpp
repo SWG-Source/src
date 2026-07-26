@@ -33,7 +33,7 @@ namespace ChatLogManagerNamespace
 	{
 	public:
 
-		ChatLogEntry(Unicode::String const &fromPlayer, Unicode::String const &toPlayer, Unicode::String const *text, Unicode::String const &channel, time_t const time)
+		ChatLogEntry(Unicode::String const &fromPlayer, Unicode::String const &toPlayer, Unicode::String const *text, Unicode::String const &channel, uint32_t const time)
 		 : m_fromPlayer(Unicode::toLower(fromPlayer))
 		 , m_toPlayer(Unicode::toLower(toPlayer))
 		 , m_text(text)
@@ -62,7 +62,7 @@ namespace ChatLogManagerNamespace
 			return m_channel;
 		}
 
-		time_t getTime() const
+		uint32_t getTime() const
 		{
 			return m_time;
 		}
@@ -73,14 +73,14 @@ namespace ChatLogManagerNamespace
 		Unicode::String m_toPlayer;
 		Unicode::String const *m_text;
 		Unicode::String m_channel;
-		time_t m_time;
+		uint32_t m_time;
 
 		// Disabled
 
 		ChatLogEntry();
 	};
 
-	typedef std::list<std::pair<time_t, int> > TimeLog;
+	typedef std::list<std::pair<uint32_t, int> > TimeLog;
 	typedef std::map<int, ChatLogEntry> ChatLog;
 	typedef std::map<Unicode::String, int> PlayerLog;
 	typedef std::map<Unicode::String const *, int, LessPointerComparator> MessageList; // Second parameter is the reference count
@@ -89,14 +89,14 @@ namespace ChatLogManagerNamespace
 	ChatLog s_chatLog;
 	PlayerLog s_playerLog;
 	MessageList s_chatMessageList;
-	time_t s_purgeTime = 0;
+	uint32_t s_purgeTime = 0;
 	int s_currentIndex = 0;
-	time_t s_chatLogMemoryTimer = 0;
+	uint32_t s_chatLogMemoryTimer = 0;
 	int s_cacheHits = 0;
 	int s_cacheMisses = 0;
 	
 	void printPlayerLog();
-	void addChatLogEntry(Unicode::String const &fromPlayer, Unicode::String const &toPlayer, Unicode::String const &message, Unicode::String const &channel, int const messageIndex, time_t const time);
+	void addChatLogEntry(Unicode::String const &fromPlayer, Unicode::String const &toPlayer, Unicode::String const &message, Unicode::String const &channel, int const messageIndex, uint32_t const time);
 	bool removeChatLogEntry(int const messageIndex);
 	void purgeChatLog();
 	std::string getTimeString(time_t const time);
@@ -120,7 +120,7 @@ void ChatLogManagerNamespace::printPlayerLog()
 }
 
 //-----------------------------------------------------------------------------
-void ChatLogManagerNamespace::addChatLogEntry(Unicode::String const &fromPlayer, Unicode::String const &toPlayer, Unicode::String const &message, Unicode::String const &channel, int const messageIndex, time_t const time)
+void ChatLogManagerNamespace::addChatLogEntry(Unicode::String const &fromPlayer, Unicode::String const &toPlayer, Unicode::String const &message, Unicode::String const &channel, int const messageIndex, uint32_t const time)
 {
 	ChatLog::const_iterator iterChatLog = s_chatLog.find(messageIndex);
 
@@ -238,20 +238,20 @@ void ChatLogManagerNamespace::purgeChatLog()
 {
 	// This purges the list of old data once a second
 
-	time_t const systemTime = Os::getRealSystemTime();
+	uint32_t const systemTime = Os::getRealSystemTime();
 
 	if (s_purgeTime != systemTime)
 	{
 		s_purgeTime = systemTime;
 
-		time_t const chatLogPurgeTime = static_cast<time_t>(ConfigServerUtility::getChatLogMinutes() * 60);
+		uint32_t const chatLogPurgeTime = static_cast<uint32_t>(ConfigServerUtility::getChatLogMinutes() * 60);
 		TimeLog::iterator iterTimeLog = s_timeLog.begin();
 		int chatLogCount = static_cast<int>(s_timeLog.size());
 		int purgedMessages = 0;
 
 		for (; iterTimeLog != s_timeLog.end(); ++iterTimeLog)
 		{
-			time_t const time = iterTimeLog->first;
+			uint32_t const time = iterTimeLog->first;
 
 			if (   (time < (systemTime - chatLogPurgeTime))
 			    || (static_cast<int>(s_chatMessageList.size()) > ConfigServerUtility::getServerMaxChatLogLines()))
@@ -346,7 +346,7 @@ void ChatLogManager::remove()
 }
 
 //-----------------------------------------------------------------------------
-void ChatLogManager::logChat(Unicode::String const & fromPlayer, Unicode::String const & toPlayer, Unicode::String const & message, Unicode::String const & channel, int const messageIndex, time_t const time)
+void ChatLogManager::logChat(Unicode::String const & fromPlayer, Unicode::String const & toPlayer, Unicode::String const & message, Unicode::String const & channel, int const messageIndex, uint32_t const time)
 {
 	addChatLogEntry(fromPlayer, toPlayer, message, channel, messageIndex, time);
 	purgeChatLog();
@@ -386,7 +386,7 @@ bool ChatLogManager::getChatMessage(int const messageIndex, Unicode::String &cha
 }
 
 //-----------------------------------------------------------------------------
-bool ChatLogManager::getChatMessage(int const messageIndex, Unicode::String &fromPlayer, Unicode::String &toPlayer, Unicode::String &text, Unicode::String &channel, time_t &time)
+bool ChatLogManager::getChatMessage(int const messageIndex, Unicode::String &fromPlayer, Unicode::String &toPlayer, Unicode::String &text, Unicode::String &channel, uint32_t &time)
 {
 	bool result = false;
 
@@ -412,7 +412,7 @@ bool ChatLogManager::getChatMessage(int const messageIndex, Unicode::String &fro
 }
 
 //-----------------------------------------------------------------------------
-void ChatLogManager::buildLogEntry(Unicode::String &result, Unicode::String const &fromPlayer, Unicode::String const &toPlayer, Unicode::String const &message, Unicode::String const &channel, time_t const time)
+void ChatLogManager::buildLogEntry(Unicode::String &result, Unicode::String const &fromPlayer, Unicode::String const &toPlayer, Unicode::String const &message, Unicode::String const &channel, uint32_t const time)
 {
 	result.clear();
 	result.append(Unicode::narrowToWide(getTimeStringShort(time)));

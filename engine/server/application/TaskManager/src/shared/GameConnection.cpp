@@ -79,7 +79,7 @@ void GameConnection::receive(const Archive::ByteStream & message)
 	{
 		if(! m_pid)
 		{
-			GenericValueTypeMessage<unsigned long> msg(r);
+			GenericValueTypeMessage<uint32_t> msg(r);
 			m_pid = msg.getValue();
 
 #ifndef _WIN32

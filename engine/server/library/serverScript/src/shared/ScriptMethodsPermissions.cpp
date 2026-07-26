@@ -66,7 +66,7 @@ const JNINativeMethod NATIVES[] = {
 	JF("_permissionsMakePublic", "(J)V", permissionsMakePublic),
 	JF("_permissionsMakePrivate", "(J)V", permissionsMakePrivate),
 	JF("_expelFromBuilding", "(J)V", expelFromBuilding),
-	JF("_sendDirtyCellPermissionsUpdateToClient", "(JJZ)V", sendDirtyCellPermissionsUpdateToClient),
+	//JF("_sendDirtyCellPermissionsUpdateToClient", "(JJZ)V", sendDirtyCellPermissionsUpdateToClient),
 };
 
 	return JavaLibrary::registerNatives(NATIVES, sizeof(NATIVES)/sizeof(NATIVES[0]));

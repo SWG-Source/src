@@ -1002,25 +1002,18 @@ jstring JNICALL ScriptMethodsPlayerAccountNamespace::getPlayerUsername(JNIEnv *e
     NOT_NULL(env);
 
     CreatureObject const * creatureObject = nullptr;
-    if (!JavaLibrary::getObject(player, creatureObject) || !creatureObject)
-    {
-        DEBUG_WARNING(true, ("JavaLibrary::getPlayerUsername: bad CreatureObject"));
-        return nullptr;
-    }
-
-    if(creatureObject)
+    JavaLibrary::getObject(player, creatureObject);
+    DEBUG_WARNING(!creatureObject, ("JavaLibrary::getPlayerUsername: could not get creatureObject for player %d", player));
+    if (creatureObject)
     {
         const Client * playerClient = creatureObject->getClient();
+        DEBUG_WARNING(!playerClient, ("JavaLibrary::getPlayerUsername: could not get playerClient for player %d", player));
         if(playerClient)
         {
             return JavaString(playerClient->getAccountName()).getReturnValue();
         }
-        else {
-            DEBUG_WARNING(true, ("JavaLibrary::getPlayerUsername: bad playerClient"));
-            return nullptr;
-        }
     }
-
+    return nullptr;
 }
 
 // ======================================================================

@@ -1,128 +1,272 @@
-// specification file for an unlimited queue for storing bytes
+// queue.h - originally written and placed in the public domain by Wei Dai
+
+/// \file
+/// \brief Classes for an unlimited queue to store bytes
 
 #ifndef CRYPTOPP_QUEUE_H
 #define CRYPTOPP_QUEUE_H
 
 #include "cryptlib.h"
-#include <algorithm>
+#include "simple.h"
 
 NAMESPACE_BEGIN(CryptoPP)
 
-/** The queue is implemented as a linked list of arrays, but you don't need to
-    know about that.  So just ignore this next line. :) */
 class ByteQueueNode;
 
-//! Byte Queue
-class ByteQueue : public BufferedTransformation
+/// \brief Data structure used to store byte strings
+/// \details The queue is implemented as a linked list of byte arrays.
+///  Each byte array is stored in a ByteQueueNode.
+/// \sa <A HREF="https://www.cryptopp.com/wiki/ByteQueue">ByteQueue</A>
+///  on the Crypto++ wiki.
+/// \since Crypto++ 2.0
+class CRYPTOPP_DLL ByteQueue : public Bufferless<BufferedTransformation>
 {
 public:
-	ByteQueue(unsigned int m_nodeSize=256);
-	ByteQueue(const ByteQueue &copy);
-	~ByteQueue();
+	virtual ~ByteQueue();
 
-	unsigned long MaxRetrievable() const
+	/// \brief Construct a ByteQueue
+	/// \param nodeSize the initial node size
+	/// \details Internally, ByteQueue uses a ByteQueueNode to store bytes,
+	///  and <tt>nodeSize</tt> determines the size of the ByteQueueNode. A value
+	///  of 0 indicates the ByteQueueNode should be automatically sized,
+	///  which means a value of 256 is used.
+	ByteQueue(size_t nodeSize=0);
+
+	/// \brief Copy construct a ByteQueue
+	/// \param copy the other ByteQueue
+	ByteQueue(const ByteQueue &copy);
+
+	// BufferedTransformation
+	lword MaxRetrievable() const
 		{return CurrentSize();}
 	bool AnyRetrievable() const
 		{return !IsEmpty();}
 
-	void Put(byte inByte);
-	void Put(const byte *inString, unsigned int length);
+	void IsolatedInitialize(const NameValuePairs &parameters);
+	byte * CreatePutSpace(size_t &size);
+	size_t Put2(const byte *inString, size_t length, int messageEnd, bool blocking);
 
-	unsigned int Get(byte &outByte);
-	unsigned int Get(byte *outString, unsigned int getMax);
+	size_t Get(byte &outByte);
+	size_t Get(byte *outString, size_t getMax);
 
-	unsigned int Peek(byte &outByte) const;
-	unsigned int Peek(byte *outString, unsigned int peekMax) const;
+	size_t Peek(byte &outByte) const;
+	size_t Peek(byte *outString, size_t peekMax) const;
 
-	unsigned long Skip(unsigned long skipMax=ULONG_MAX);
-	unsigned long TransferTo(BufferedTransformation &target, unsigned long transferMax=ULONG_MAX);
-	unsigned long CopyTo(BufferedTransformation &target, unsigned long copyMax=ULONG_MAX) const;
+	size_t TransferTo2(BufferedTransformation &target, lword &transferBytes, const std::string &channel=DEFAULT_CHANNEL, bool blocking=true);
+	size_t CopyRangeTo2(BufferedTransformation &target, lword &begin, lword end=LWORD_MAX, const std::string &channel=DEFAULT_CHANNEL, bool blocking=true) const;
 
-	// these member functions are not inherited
-	unsigned long CurrentSize() const;
+	/// \brief Set node size
+	/// \param nodeSize the new node size, in bytes
+	/// \details The default node size is 256.
+	void SetNodeSize(size_t nodeSize);
+
+	/// \brief Determine data size
+	/// \return the data size, in bytes
+	lword CurrentSize() const;
+
+	/// \brief Determine data availability
+	/// \return true if the ByteQueue has data, false otherwise
 	bool IsEmpty() const;
 
+	/// \brief Empty the queue
 	void Clear();
 
+	/// \brief Insert data in the queue
+	/// \param inByte a byte to insert
+	/// \details Unget() inserts a byte at the head of the queue
 	void Unget(byte inByte);
-	void Unget(const byte *inString, unsigned int length);
 
-	const byte * Spy(unsigned int &contiguousSize) const;
+	/// \brief Insert data in the queue
+	/// \param inString a byte array to insert
+	/// \param length the size of the byte array
+	/// \details Unget() inserts a byte array at the head of the queue
+	void Unget(const byte *inString, size_t length);
 
-	byte * MakeNewSpace(unsigned int &contiguousSize);
-	void OccupyNewSpace(unsigned int size);
+	/// \brief Peek data in the queue
+	/// \param contiguousSize the size of the data
+	/// \details Spy() peeks at data at the head of the queue. Spy() does
+	///  not remove data from the queue.
+	/// \details The data's size is returned in <tt>contiguousSize</tt>.
+	///  Spy() returns the size of the first byte array in the list. The
+	///  entire data may be larger since the queue is a linked list of
+	///  byte arrays.
+	const byte * Spy(size_t &contiguousSize) const;
 
-	void LazyPut(const byte *inString, unsigned int size);
+	/// \brief Insert data in the queue
+	/// \param inString a byte array to insert
+	/// \param size the length of the byte array
+	/// \details LazyPut() inserts a byte array at the tail of the queue.
+	///  The data may not be copied at this point. Rather, the pointer
+	///  and size to external data are recorded.
+	/// \details Another call to Put() or LazyPut() will force the data to
+	///  be copied. When lazy puts are used, the data is copied when
+	///  FinalizeLazyPut() is called.
+	/// \sa LazyPutter
+	void LazyPut(const byte *inString, size_t size);
+
+	/// \brief Insert data in the queue
+	/// \param inString a byte array to insert
+	/// \param size the length of the byte array
+	/// \details LazyPut() inserts a byte array at the tail of the queue.
+	///  The data may not be copied at this point. Rather, the pointer
+	///  and size to external data are recorded.
+	/// \details Another call to Put() or LazyPut() will force the data to
+	///  be copied. When lazy puts are used, the data is copied when
+	///  FinalizeLazyPut() is called.
+	/// \sa LazyPutter
+	void LazyPutModifiable(byte *inString, size_t size);
+
+	/// \brief Remove data from the queue
+	/// \param size the length of the data
+	/// \throw InvalidArgument if there is no lazy data in the queue or if
+	///  size is larger than the lazy string
+	/// \details UndoLazyPut() truncates data inserted using LazyPut() by
+	///  modifying size.
+	/// \sa LazyPutter
+	void UndoLazyPut(size_t size);
+
+	/// \brief Insert data in the queue
+	/// \details FinalizeLazyPut() copies external data inserted using
+	///  LazyPut() or LazyPutModifiable() into the tail of the queue.
+	/// \sa LazyPutter
 	void FinalizeLazyPut();
 
+	/// \brief Assign contents from another ByteQueue
+	/// \param rhs the other ByteQueue
+	/// \return reference to this ByteQueue
 	ByteQueue & operator=(const ByteQueue &rhs);
+
+	/// \brief Bitwise compare two ByteQueue
+	/// \param rhs the other ByteQueue
+	/// \return true if the size and bits are equal, false otherwise
+	/// \details operator==() walks each ByteQueue comparing bytes in
+	///  each queue. operator==() is not constant time.
 	bool operator==(const ByteQueue &rhs) const;
-	byte operator[](unsigned long i) const;
+
+	/// \brief Bitwise compare two ByteQueue
+	/// \param rhs the other ByteQueue
+	/// \return true if the size and bits are not equal, false otherwise
+	/// \details operator!=() is implemented in terms of operator==().
+	///  operator==() is not constant time.
+	bool operator!=(const ByteQueue &rhs) const {return !operator==(rhs);}
+
+	/// \brief Retrieve data from the queue
+	/// \param index of byte to retrieve
+	/// \return byte at the specified index
+	/// \details operator[]() does not perform bounds checking.
+	byte operator[](lword index) const;
+
+	/// \brief Swap contents with another ByteQueue
+	/// \param rhs the other ByteQueue
 	void swap(ByteQueue &rhs);
 
-	class Walker : public BufferedTransformation
+	/// \brief A ByteQueue iterator
+	class Walker : public InputRejecting<BufferedTransformation>
 	{
 	public:
+		/// \brief Construct a ByteQueue Walker
+		/// \param queue a ByteQueue
 		Walker(const ByteQueue &queue)
-			: m_queue(queue), m_node(queue.m_head), m_position(0), m_offset(0)
-			, m_lazyString(queue.m_lazyString), m_lazyLength(queue.m_lazyLength) {}
+			: m_queue(queue), m_node(NULLPTR), m_position(0), m_offset(0), m_lazyString(NULLPTR), m_lazyLength(0)
+				{Initialize();}
 
-		unsigned long MaxRetrievable() const
+		lword GetCurrentPosition() {return m_position;}
+
+		lword MaxRetrievable() const
 			{return m_queue.CurrentSize() - m_position;}
 
-		void Put(byte inByte) {}
-		void Put(const byte *inString, unsigned int length) {}
+		void IsolatedInitialize(const NameValuePairs &parameters);
 
-		unsigned int Get(byte &outByte);
-		unsigned int Get(byte *outString, unsigned int getMax);
+		size_t Get(byte &outByte);
+		size_t Get(byte *outString, size_t getMax);
 
-		unsigned int Peek(byte &outByte) const;
-		unsigned int Peek(byte *outString, unsigned int peekMax) const;
+		size_t Peek(byte &outByte) const;
+		size_t Peek(byte *outString, size_t peekMax) const;
 
-		unsigned long Skip(unsigned long skipMax=ULONG_MAX);
-		unsigned long TransferTo(BufferedTransformation &target, unsigned long transferMax=ULONG_MAX);
-		unsigned long CopyTo(BufferedTransformation &target, unsigned long copyMax=ULONG_MAX) const;
+		size_t TransferTo2(BufferedTransformation &target, lword &transferBytes, const std::string &channel=DEFAULT_CHANNEL, bool blocking=true);
+		size_t CopyRangeTo2(BufferedTransformation &target, lword &begin, lword end=LWORD_MAX, const std::string &channel=DEFAULT_CHANNEL, bool blocking=true) const;
 
 	private:
 		const ByteQueue &m_queue;
 		const ByteQueueNode *m_node;
-		unsigned int m_position, m_offset;
+		lword m_position;
+		size_t m_offset;
 		const byte *m_lazyString;
-		unsigned int m_lazyLength;
+		size_t m_lazyLength;
 	};
 
 	friend class Walker;
 
-private:
+protected:
 	void CleanupUsedNodes();
 	void CopyFrom(const ByteQueue &copy);
 	void Destroy();
 
-	unsigned int m_nodeSize;
+private:
 	ByteQueueNode *m_head, *m_tail;
-	const byte *m_lazyString;
-	unsigned int m_lazyLength;
+	byte *m_lazyString;
+	size_t m_lazyLength;
+	size_t m_nodeSize;
+	bool m_lazyStringModifiable;
+	bool m_autoNodeSize;
 };
 
-//! use this to make sure LazyPut is finalized in event of exception
-class LazyPutter
+/// \brief Helper class to finalize Puts on ByteQueue
+/// \details LazyPutter ensures LazyPut is committed to the ByteQueue
+///  in event of exception. During destruction, the LazyPutter class
+///  calls FinalizeLazyPut.
+class CRYPTOPP_DLL LazyPutter
 {
 public:
-	LazyPutter(ByteQueue &bq, const byte *inString, unsigned int size)
+	virtual ~LazyPutter() {
+		try {m_bq.FinalizeLazyPut();}
+		catch(const Exception&) {CRYPTOPP_ASSERT(0);}
+	}
+
+	/// \brief Construct a LazyPutter
+	/// \param bq the ByteQueue
+	/// \param inString a byte array to insert
+	/// \param size the length of the byte array
+	/// \details LazyPutter ensures LazyPut is committed to the ByteQueue
+	///  in event of exception. During destruction, the LazyPutter class
+	///  calls FinalizeLazyPut.
+	LazyPutter(ByteQueue &bq, const byte *inString, size_t size)
 		: m_bq(bq) {bq.LazyPut(inString, size);}
-	~LazyPutter()
-		{try {m_bq.FinalizeLazyPut();} catch(...) {}}
+
+protected:
+	LazyPutter(ByteQueue &bq) : m_bq(bq) {}
+
 private:
 	ByteQueue &m_bq;
 };
 
+/// \brief Helper class to finalize Puts on ByteQueue
+/// \details LazyPutterModifiable ensures LazyPut is committed to the
+///  ByteQueue in event of exception. During destruction, the
+///  LazyPutterModifiable class calls FinalizeLazyPut.
+class LazyPutterModifiable : public LazyPutter
+{
+public:
+	/// \brief Construct a LazyPutterModifiable
+	/// \param bq the ByteQueue
+	/// \param inString a byte array to insert
+	/// \param size the length of the byte array
+	/// \details LazyPutterModifiable ensures LazyPut is committed to the
+	///  ByteQueue in event of exception. During destruction, the
+	///  LazyPutterModifiable class calls FinalizeLazyPut.
+	LazyPutterModifiable(ByteQueue &bq, byte *inString, size_t size)
+		: LazyPutter(bq) {bq.LazyPutModifiable(inString, size);}
+};
+
 NAMESPACE_END
 
+#ifndef __BORLANDC__
 NAMESPACE_BEGIN(std)
 template<> inline void swap(CryptoPP::ByteQueue &a, CryptoPP::ByteQueue &b)
 {
 	a.swap(b);
 }
 NAMESPACE_END
+#endif
 
 #endif

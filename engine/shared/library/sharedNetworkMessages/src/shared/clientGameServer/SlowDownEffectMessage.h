@@ -45,7 +45,7 @@ private:
 	Archive::AutoVariable<float>      m_coneLength; 
 	Archive::AutoVariable<float>      m_coneAngle;
 	Archive::AutoVariable<float>      m_slopeAngle;
-	Archive::AutoVariable<unsigned long>      m_expireTime;
+	Archive::AutoVariable<uint32_t>      m_expireTime;
 };
 
 //-----------------------------------------------------------------------

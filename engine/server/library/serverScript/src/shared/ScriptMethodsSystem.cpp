@@ -50,7 +50,7 @@ const JNINativeMethod NATIVES[] = {
 	JF("_saveBytesOnClient", "(JLjava/lang/String;[B)V", saveBytesOnClient),
 	JF("_launchClientWebBrowser", "(JLjava/lang/String;)V", launchClientWebBrowser),
 	JF("_playCutScene", "(JLjava/lang/String;)V", playCutScene),
-	JF("_triggerServerWarning", "(Ljava/lang/String;)V", triggerServerWarning),
+	// JF("_triggerServerWarning", "(Ljava/lang/String;)V", triggerServerWarning),
 };
 
 	return JavaLibrary::registerNatives(NATIVES, sizeof(NATIVES)/sizeof(NATIVES[0]));

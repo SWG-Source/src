@@ -9,7 +9,7 @@
 
 //-----------------------------------------------------------------------
 
-SystemAssignedProcessId::SystemAssignedProcessId(const unsigned long id) :
+SystemAssignedProcessId::SystemAssignedProcessId(const uint32_t id) :
 GameNetworkMessage("SystemAssignedProcessId"),
 m_id(id)
 {
@@ -34,7 +34,7 @@ SystemAssignedProcessId::~SystemAssignedProcessId()
 
 //-----------------------------------------------------------------------
 
-const unsigned long SystemAssignedProcessId::getId() const
+const uint32_t SystemAssignedProcessId::getId() const
 {
 	return m_id.get();
 }

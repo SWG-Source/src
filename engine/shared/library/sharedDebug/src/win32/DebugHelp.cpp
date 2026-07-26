@@ -481,7 +481,7 @@ bool DebugHelp::loadSymbolsForDll(const char *name)
 
 // ----------------------------------------------------------------------
 #pragma warning (disable: 4740 4748)
-void DebugHelp::getCallStack(uint32 *callStack, int sizeOfCallStack)
+void DebugHelp::getCallStack(uint64 *callStack, int sizeOfCallStack)
 {
 	{
 		for (int i = 0; i < sizeOfCallStack; ++i)
@@ -525,7 +525,7 @@ void DebugHelp::getCallStack(uint32 *callStack, int sizeOfCallStack)
 		if (stackWalk64(IMAGE_FILE_MACHINE_I386, process, process, &stackFrame, &context, NULL, functionTableAccess, getModuleBase, NULL))
 		{
 			const DWORD64 Offset = stackFrame.AddrPC.Offset;
-			*callStack = DWORD(Offset);
+			*callStack = static_cast<uint64>(Offset);
 		}
 	}
 }
@@ -537,7 +537,7 @@ void DebugHelp::reportCallStack(int const maxStackDepth)
 	// look up the call stack information
 	int const callStackOffset = 2;
 	int const callStackSize = callStackOffset + maxStackDepth;
-	uint32 * callStack = static_cast<uint32 *>(_alloca((callStackOffset + maxStackDepth) * sizeof(uint32)));
+	uint64 * callStack = static_cast<uint64 *>(_alloca((callStackOffset + maxStackDepth) * sizeof(uint64)));
 	getCallStack(callStack, callStackOffset + maxStackDepth);
 
 	// look up the caller's file and line
@@ -553,7 +553,7 @@ void DebugHelp::reportCallStack(int const maxStackDepth)
 				if (lookupAddress(callStack[i], lib, file, sizeof(file), line))
 					REPORT_LOG(true, ("\t%s(%d) : caller %d\n", file, line, i-callStackOffset));
 				else
-					REPORT_LOG(true, ("\tunknown(0x%08X) : caller %d\n", static_cast<int>(callStack[i]), i-callStackOffset));
+					REPORT_LOG(true, ("\tunknown(0x%016llX) : caller %d\n", static_cast<unsigned long long>(callStack[i]), i-callStackOffset));
 			}
 		}
 	}
@@ -561,7 +561,7 @@ void DebugHelp::reportCallStack(int const maxStackDepth)
 
 // ----------------------------------------------------------------------
 
-bool DebugHelp::lookupAddress(uint32 address, char *libName, char *fileName, int fileNameLength, int &line)
+bool DebugHelp::lookupAddress(uint64 address, char *libName, char *fileName, int fileNameLength, int &line)
 {
 	UNREF(libName);
 

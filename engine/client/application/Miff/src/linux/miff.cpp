@@ -275,7 +275,7 @@ static void callbackFunction(void)
 		{
 			if (!outfileHandler->writeBuffer())
 			{
-				fprintf(stderr, "MIFF: failed to write output file \"%s\"\n", local_outFileName);
+				fprintf(stderr, "FAILURE: failed to write output file \"%s\"\n", local_outFileName);
 				local_errorFlag = ERR_WRITEERROR;
 			}
 		}

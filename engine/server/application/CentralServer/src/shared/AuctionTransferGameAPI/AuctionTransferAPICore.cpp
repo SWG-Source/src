@@ -135,7 +135,7 @@ void AuctionTransferAPICore::responseCallback(short type, Base::ByteStream::Read
 	ServerTrackObject *stobj = new ServerTrackObject(++m_mappedServerTrack, real_server_track, connection);
 	m_serverTracks.insert(std::pair<unsigned, ServerTrackObject *>(m_mappedServerTrack, stobj));
 
-	long long transactionID;
+	int64_t transactionID;
 	get(iter, transactionID);
 	switch (type)
 	{
@@ -143,7 +143,7 @@ void AuctionTransferAPICore::responseCallback(short type, Base::ByteStream::Read
 		{
 			unsigned stationID;
 			unsigned characterID;
-			long long assetID;
+			int64_t assetID;
 			std::string newName;
 			get(iter, stationID);
 			get(iter, characterID);
@@ -167,7 +167,7 @@ void AuctionTransferAPICore::responseCallback(short type, Base::ByteStream::Read
 			// this had the stationID read in as the transactionID
 			std::string serverID;
 			get(iter, serverID);
-			m_api->onReceiveGetCharacterList(m_mappedServerTrack, (unsigned int)transactionID, serverID.c_str());
+			m_api->onReceiveGetCharacterList(m_mappedServerTrack, transactionID, serverID.c_str());
 		}
 		default:
 			break;

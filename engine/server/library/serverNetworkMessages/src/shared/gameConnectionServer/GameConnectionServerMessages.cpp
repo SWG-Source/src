@@ -86,7 +86,7 @@ TransferControlMessage::~TransferControlMessage()
 //-----------------------------------------------------------------------
 ControlAssumed::ControlAssumed(NetworkId oid, const std::string & newSceneName, const bool skipLoadScreen,
 							   const Vector &startPos, const float startYaw, const std::string & templateName,
-							   const int64 t) : 
+							   const int64_t t) :
 		GameNetworkMessage("ControlAssumed"),
 		m_oid(oid),
 		m_sceneName(newSceneName),
@@ -223,7 +223,7 @@ GameClientMessage::GameClientMessage(const std::vector<NetworkId> & d, bool newR
 	if (reportMessages)
 	{
 		Archive::ReadIterator ri = byteStream.get().begin();
-		unsigned long cmdCrc;
+		uint32_t cmdCrc;
 		Archive::get(ri, cmdCrc);
 		NetworkHandler::reportMessage("send.GameClientMessage." + GameNetworkMessage::getCmdName(cmdCrc), byteStream.get().getSize());
 	}
@@ -246,7 +246,7 @@ GameClientMessage::GameClientMessage(Archive::ReadIterator & source) :
 	if (reportMessages)
 	{
 		Archive::ReadIterator ri = byteStream.get().begin();
-		unsigned long cmdCrc;
+		uint32_t cmdCrc;
 		Archive::get(ri, cmdCrc);
 		NetworkHandler::reportMessage("send.GameClientMessage." + GameNetworkMessage::getCmdName(cmdCrc), byteStream.get().getSize());
 	}

@@ -59,9 +59,9 @@ void CallStack::debugPrint() const
 	for (size_t i = 2; i < CALLSTACK_DEPTH; ++i)
 	{
 		if (DebugHelp::lookupAddress(m_callStack[i], libName, fileName, sizeof(fileName), line))
-			DEBUG_REPORT_PRINT(true, (" (0x%08X) %s(%d) : caller %d\n", static_cast<int>(m_callStack[i]), fileName, line, i - 1));
+			DEBUG_REPORT_PRINT(true, (" (0x%016llX) %s(%d) : caller %d\n", static_cast<unsigned long long>(m_callStack[i]), fileName, line, i - 1));
 		else
-			DEBUG_REPORT_PRINT(true, ("  unknown(0x%08X) : caller %d\n", static_cast<int>(m_callStack[i]), i - 1));
+			DEBUG_REPORT_PRINT(true, ("  unknown(0x%016llX) : caller %d\n", static_cast<unsigned long long>(m_callStack[i]), i - 1));
 	}
 }
 
@@ -76,9 +76,9 @@ void CallStack::debugLog() const
 	for (size_t i = 2; i < CALLSTACK_DEPTH && m_callStack[i]!=0; ++i)
 	{
 		if (DebugHelp::lookupAddress(m_callStack[i], libName, fileName, sizeof(fileName), line))
-			DEBUG_REPORT_LOG(true, ("  (0x%08X) %s(%d) : caller %d\n", static_cast<int>(m_callStack[i]), fileName, line, i - 1));
+			DEBUG_REPORT_LOG(true, ("  (0x%016llX) %s(%d) : caller %d\n", static_cast<unsigned long long>(m_callStack[i]), fileName, line, i - 1));
 		else
-			DEBUG_REPORT_LOG(true, ("  unknown(0x%08X) : caller %d\n", static_cast<int>(m_callStack[i]), i - 1));
+			DEBUG_REPORT_LOG(true, ("  unknown(0x%016llX) : caller %d\n", static_cast<unsigned long long>(m_callStack[i]), i - 1));
 	}
 }
 

@@ -13,6 +13,7 @@
 #include "sharedFoundation/NetworkId.h"
 #include "sharedLog/Log.h"
 #include <oci.h>
+#include <iostream>
 
 // ======================================================================
 
@@ -56,8 +57,10 @@ bool BindableVarray::create(DB::Session *session, const std::string &name, const
 					 0,
 					 OCI_DURATION_SESSION,
 					 OCI_TYPEGET_HEADER,
-					 &m_tdo))))
+					 &m_tdo)))) {
+        LOG("DatabaseError", ("Could not create BindableVarray (OCITypeByName) for name - %s", name.c_str()));
 		return false;
+    }
 
 	if (! (localSession->m_server->checkerr(*localSession,
 						OCIObjectNew (localSession->envhp,
@@ -67,8 +70,10 @@ bool BindableVarray::create(DB::Session *session, const std::string &name, const
 						m_tdo, nullptr,
 						OCI_DURATION_DEFAULT,
 						true,
-						reinterpret_cast<void**>(&m_data)))))
-		return false;
+						reinterpret_cast<void**>(&m_data))))) {
+        LOG("DatabaseError", ("Could not create BindableVarray (OCIObjectNew) for name - %s", name.c_str()));
+        return false;
+    }
 
 	NOT_NULL(m_tdo);
 	NOT_NULL(m_data);
@@ -82,9 +87,11 @@ void BindableVarray::free()
 {
 	OCISession *localSession = safe_cast<OCISession*>(m_session);
 
-	IGNORE_RETURN(localSession->m_server->checkerr(*localSession,
+	if(!(localSession->m_server->checkerr(*localSession,
 						OCIObjectFree (localSession->envhp,
-						localSession->errhp, m_data, 0)));
+						localSession->errhp, m_data, 0)))) {
+        LOG("DatabaseError", ("Could not free up DB object"));
+	};
 	m_initialized = false;
 	m_tdo=nullptr;
 	m_data=nullptr;
@@ -98,10 +105,14 @@ void BindableVarray::clear()
 	OCISession *localSession = safe_cast<OCISession*>(m_session);
 	sb4 size=0;
 
-	if (! (localSession->m_server->checkerr(*localSession, OCICollSize(localSession->envhp, localSession->errhp, m_data, &size))))
-		return;
-	if (! (localSession->m_server->checkerr(*localSession, OCICollTrim(localSession->envhp, localSession->errhp, size, m_data))))
-		return;
+	if (! (localSession->m_server->checkerr(*localSession, OCICollSize(localSession->envhp, localSession->errhp, m_data, &size)))) {
+        LOG("DatabaseError", ("Could not clear bindablevarray - OCICollSize"));
+        return;
+    }
+	if (! (localSession->m_server->checkerr(*localSession, OCICollTrim(localSession->envhp, localSession->errhp, size, m_data)))) {
+        LOG("DatabaseError", ("Could not clear bindablevarray - OCICollTrim"));
+        return;
+    }
 }
 
 // ----------------------------------------------------------------------
@@ -120,7 +131,7 @@ OCIType* BindableVarray::getTDO()
 
 // ----------------------------------------------------------------------
 
-bool BindableVarrayNumber::push_back(int value)
+bool BindableVarrayNumber::push_back(int16_t value)
 {
 	OCINumber buffer;
 
@@ -128,17 +139,21 @@ bool BindableVarrayNumber::push_back(int value)
 
 	OCISession *localSession = safe_cast<OCISession*>(m_session);
 
-	if (! (localSession->m_server->checkerr(*localSession, OCINumberFromInt(localSession->errhp, &value, sizeof(value), OCI_NUMBER_SIGNED, &buffer))))
-		return false;
-	if (! (localSession->m_server->checkerr(*localSession, OCICollAppend(localSession->envhp, localSession->errhp, &buffer, &buffer_indicator, m_data))))
-		return false;
+	if (! (localSession->m_server->checkerr(*localSession, OCINumberFromInt(localSession->errhp, &value, sizeof(value), OCI_NUMBER_SIGNED, &buffer)))) {
+        LOG("DatabaseError", ("Could not push back BindableVArray int16 value OCINumberFromInt - %d", value));
+        return false;
+    }
+	if (! (localSession->m_server->checkerr(*localSession, OCICollAppend(localSession->envhp, localSession->errhp, &buffer, &buffer_indicator, m_data)))) {
+        LOG("DatabaseError", ("Could not push back BindableVArray int16 value OCICollAppend - %d", value));
+        return false;
+    }
 
 	return true;
 }
 
 // ----------------------------------------------------------------------
 
-bool BindableVarrayNumber::push_back(long int value)
+bool BindableVarrayNumber::push_back(int32_t value)
 {
 	OCINumber buffer;
 	
@@ -146,27 +161,35 @@ bool BindableVarrayNumber::push_back(long int value)
   	
 	OCISession *localSession = safe_cast<OCISession*>(m_session);
 
-	if (! (localSession->m_server->checkerr(*localSession, OCINumberFromInt(localSession->errhp, &value, sizeof(value), OCI_NUMBER_SIGNED, &buffer))))
-		return false;
-	if (! (localSession->m_server->checkerr(*localSession, OCICollAppend(localSession->envhp, localSession->errhp, &buffer, &buffer_indicator, m_data))))
-		return false;
+	if (! (localSession->m_server->checkerr(*localSession, OCINumberFromInt(localSession->errhp, &value, sizeof(value), OCI_NUMBER_SIGNED, &buffer)))) {
+        LOG("DatabaseError", ("Could not push back BindableVArray int32 value OCINumberFromInt - %d", value));
+        return false;
+    }
+	if (! (localSession->m_server->checkerr(*localSession, OCICollAppend(localSession->envhp, localSession->errhp, &buffer, &buffer_indicator, m_data)))) {
+        LOG("DatabaseError", ("Could not push back BindableVArray int32 value OCINumberFromInt - %d", value));
+        return false;
+    }
 
 	return true;
 }
 // ----------------------------------------------------------------------
 
-bool BindableVarrayNumber::push_back(int64 value)
+bool BindableVarrayNumber::push_back(int64_t value)
 {
 	OCINumber buffer;
-	
+
 	OCIInd buffer_indicator (OCI_IND_NOTNULL);
-  	
+
 	OCISession *localSession = safe_cast<OCISession*>(m_session);
 
-	if (! (localSession->m_server->checkerr(*localSession, OCINumberFromInt(localSession->errhp, &value, sizeof(value), OCI_NUMBER_SIGNED, &buffer))))
-		return false;
-	if (! (localSession->m_server->checkerr(*localSession, OCICollAppend(localSession->envhp, localSession->errhp, &buffer, &buffer_indicator, m_data))))
-		return false;
+	if (! (localSession->m_server->checkerr(*localSession, OCINumberFromInt(localSession->errhp, &value, sizeof(value), OCI_NUMBER_SIGNED, &buffer)))) {
+        LOG("DatabaseError", ("Could not push back BindableVArray int64 value OCINumberFromInt - %d", value));
+        return false;
+    }
+	if (! (localSession->m_server->checkerr(*localSession, OCICollAppend(localSession->envhp, localSession->errhp, &buffer, &buffer_indicator, m_data)))) {
+        LOG("DatabaseError", ("Could not push back BindableVArray int64 value OCINumberFromInt - %d", value));
+        return false;
+    }
 
 	return true;
 }
@@ -194,17 +217,21 @@ bool BindableVarrayNumber::push_back(double value)
 
 	OCISession *localSession = safe_cast<OCISession*>(m_session);
 
-	if (! (localSession->m_server->checkerr(*localSession, OCINumberFromReal(localSession->errhp, &value, sizeof(value), &buffer))))
-		return false;
-	if (! (localSession->m_server->checkerr(*localSession, OCICollAppend(localSession->envhp, localSession->errhp, &buffer, &buffer_indicator, m_data))))
-		return false;
+	if (! (localSession->m_server->checkerr(*localSession, OCINumberFromReal(localSession->errhp, &value, sizeof(value), &buffer)))) {
+        LOG("DatabaseError", ("Could not push back BindableVArray double value OCINumberFromInt - %d", value));
+        return false;
+    }
+	if (! (localSession->m_server->checkerr(*localSession, OCICollAppend(localSession->envhp, localSession->errhp, &buffer, &buffer_indicator, m_data)))) {
+        LOG("DatabaseError", ("Could not push back BindableVArray double value OCINumberFromInt - %d", value));
+        return false;
+    }
 
 	return true;
 }
 
 // ----------------------------------------------------------------------
 
-bool BindableVarrayNumber::push_back(bool IsNULL, int value)
+bool BindableVarrayNumber::push_back(bool IsNULL, int16_t value)
 {
 	OCINumber buffer;
 
@@ -220,43 +247,21 @@ bool BindableVarrayNumber::push_back(bool IsNULL, int value)
 	}
 	OCISession *localSession = safe_cast<OCISession*>(m_session);
 
-	if (! (localSession->m_server->checkerr(*localSession, OCINumberFromInt(localSession->errhp, &value, sizeof(value), OCI_NUMBER_SIGNED, &buffer))))
-		return false;
-	if (! (localSession->m_server->checkerr(*localSession, OCICollAppend(localSession->envhp, localSession->errhp, &buffer, &buffer_indicator, m_data))))
-		return false;
+	if (! (localSession->m_server->checkerr(*localSession, OCINumberFromInt(localSession->errhp, &value, sizeof(value), OCI_NUMBER_SIGNED, &buffer)))) {
+      LOG("DatabaseError", ("Could not push back BindableVarrayNumber int16 value OCINumberFromInt - %d", value));
+      return false;
+    }
+	if (! (localSession->m_server->checkerr(*localSession, OCICollAppend(localSession->envhp, localSession->errhp, &buffer, &buffer_indicator, m_data)))) {
+        LOG("DatabaseError", ("Could not push back BindableVarrayNumber int16 value OCINumberFromInt - %d", value));
+        return false;
+    }
 
 	return true;
 }
 
 // ----------------------------------------------------------------------
 
-bool BindableVarrayNumber::push_back(bool IsNULL, long int value)
-{
-	OCINumber buffer;
-	
- 	OCIInd buffer_indicator;
-
- 	if ( IsNULL )
-	{
-		buffer_indicator = OCI_IND_NULL;
-	}
-	else
-	{
-		buffer_indicator = OCI_IND_NOTNULL;
-	}
-  	
-	OCISession *localSession = safe_cast<OCISession*>(m_session);
-
-	if (! (localSession->m_server->checkerr(*localSession, OCINumberFromInt(localSession->errhp, &value, sizeof(value), OCI_NUMBER_SIGNED, &buffer))))
-		return false;
-	if (! (localSession->m_server->checkerr(*localSession, OCICollAppend(localSession->envhp, localSession->errhp, &buffer, &buffer_indicator, m_data))))
-		return false;
-
-	return true;
-}
-// ----------------------------------------------------------------------
-
-bool BindableVarrayNumber::push_back(bool IsNULL, int64 value)
+bool BindableVarrayNumber::push_back(bool IsNULL, int32_t value)
 {
 	OCINumber buffer;
 	
@@ -273,10 +278,44 @@ bool BindableVarrayNumber::push_back(bool IsNULL, int64 value)
   	
 	OCISession *localSession = safe_cast<OCISession*>(m_session);
 
-	if (! (localSession->m_server->checkerr(*localSession, OCINumberFromInt(localSession->errhp, &value, sizeof(value), OCI_NUMBER_SIGNED, &buffer))))
-		return false;
-	if (! (localSession->m_server->checkerr(*localSession, OCICollAppend(localSession->envhp, localSession->errhp, &buffer, &buffer_indicator, m_data))))
-		return false;
+	if (! (localSession->m_server->checkerr(*localSession, OCINumberFromInt(localSession->errhp, &value, sizeof(value), OCI_NUMBER_SIGNED, &buffer)))) {
+        LOG("DatabaseError", ("Could not push back BindableVarrayNumber int32 value OCINumberFromInt - %d", value));
+        return false;
+    }
+	if (! (localSession->m_server->checkerr(*localSession, OCICollAppend(localSession->envhp, localSession->errhp, &buffer, &buffer_indicator, m_data)))) {
+        LOG("DatabaseError", ("Could not push back BindableVarrayNumber int32 value OCINumberFromInt - %d", value));
+        return false;
+    }
+
+	return true;
+}
+// ----------------------------------------------------------------------
+
+bool BindableVarrayNumber::push_back(bool IsNULL, int64_t value)
+{
+	OCINumber buffer;
+
+ 	OCIInd buffer_indicator;
+
+ 	if ( IsNULL )
+	{
+		buffer_indicator = OCI_IND_NULL;
+	}
+	else
+	{
+		buffer_indicator = OCI_IND_NOTNULL;
+	}
+
+	OCISession *localSession = safe_cast<OCISession*>(m_session);
+
+	if (! (localSession->m_server->checkerr(*localSession, OCINumberFromInt(localSession->errhp, &value, sizeof(value), OCI_NUMBER_SIGNED, &buffer)))) {
+        LOG("DatabaseError", ("Could not push back BindableVarrayNumber int64 value OCINumberFromInt - %d", value));
+        return false;
+    }
+	if (! (localSession->m_server->checkerr(*localSession, OCICollAppend(localSession->envhp, localSession->errhp, &buffer, &buffer_indicator, m_data)))) {
+        LOG("DatabaseError", ("Could not push back BindableVarrayNumber int64 value OCINumberFromInt - %d", value));
+        return false;
+    }
 
 	return true;
 }
@@ -313,10 +352,14 @@ bool BindableVarrayNumber::push_back(bool IsNULL, double value)
 
 	OCISession *localSession = safe_cast<OCISession*>(m_session);
 
-	if (! (localSession->m_server->checkerr(*localSession, OCINumberFromReal(localSession->errhp, &value, sizeof(value), &buffer))))
-		return false;
-	if (! (localSession->m_server->checkerr(*localSession, OCICollAppend(localSession->envhp, localSession->errhp, &buffer, &buffer_indicator, m_data))))
-		return false;
+	if (! (localSession->m_server->checkerr(*localSession, OCINumberFromReal(localSession->errhp, &value, sizeof(value), &buffer)))) {
+        LOG("DatabaseError", ("Could not push back BindableVarrayNumber double value OCINumberFromInt - %d", value));
+        return false;
+    }
+	if (! (localSession->m_server->checkerr(*localSession, OCICollAppend(localSession->envhp, localSession->errhp, &buffer, &buffer_indicator, m_data)))) {
+        LOG("DatabaseError", ("Could not push back BindableVarrayNumber double value OCINumberFromInt - %d", value));
+        return false;
+    }
 
 	return true;
 }
@@ -337,8 +380,10 @@ std::string BindableVarrayNumber::outputValue() const
 	sb4 size;
 	std::string result("[");
 
-	if (! (localSession->m_server->checkerr(*localSession, OCICollSize(localSession->envhp, localSession->errhp, m_data, &size))))
+	if (! (localSession->m_server->checkerr(*localSession, OCICollSize(localSession->envhp, localSession->errhp, m_data, &size)))) {
+        LOG("DatabaseError", ("Could not get outputValue - OCICollSize - %d", size));
 		return "[*ERROR*]";
+    }
 
 	for (sb4 i=0; i < size; ++i)
 	{
@@ -365,15 +410,19 @@ std::string BindableVarrayNumber::outputValue() const
 						buffer[sizeof(buffer)-1]='\0';
 						result += buffer;
 					}
-					else
+					else {
+                        LOG("DatabaseError", ("Could not get output value from OCINumberToReal - %d", value));
 						result += "*ERROR*";
+                    }
 				}
 			}
 			else
 				result += "*NO ELEMENT*";			
 		}
-		else
-			result += "*ERROR*";
+		else {
+            LOG("DatabaseError", ("Could not get output value from OCICollGetElem"));
+            result += "*ERROR*";
+        }
 	}
 	result+=']';
 	return result;
@@ -419,10 +468,14 @@ bool BindableVarrayString::push_back(const std::string &value)
 		}
 	}
 	
-	if (! (localSession->m_server->checkerr(*localSession, OCIStringAssignText(localSession->envhp, localSession->errhp, reinterpret_cast<OraText*>(const_cast<char*>(value.c_str())), effectiveLength, &buffer))))
-		return false;
-	if (! (localSession->m_server->checkerr(*localSession, OCICollAppend(localSession->envhp, localSession->errhp, buffer, &buffer_indicator, m_data))))
-		return false;
+	if (! (localSession->m_server->checkerr(*localSession, OCIStringAssignText(localSession->envhp, localSession->errhp, reinterpret_cast<OraText*>(const_cast<char*>(value.c_str())), effectiveLength, &buffer)))) {
+        LOG("DatabaseError", ("Could not push back BindableVarrayString string value (OCIStringAssignText) - %s", value.c_str()));
+        return false;
+    }
+	if (! (localSession->m_server->checkerr(*localSession, OCICollAppend(localSession->envhp, localSession->errhp, buffer, &buffer_indicator, m_data)))) {
+        LOG("DatabaseError", ("Could not push back BindableVarrayString string value (OCICollAppend) - %s", value.c_str()));
+        return false;
+    }
 
 	return true;
 }
@@ -441,10 +494,14 @@ bool BindableVarrayString::push_back(bool bvalue)
 	OCIInd buffer_indicator (OCI_IND_NOTNULL);
 	OCISession *localSession = safe_cast<OCISession*>(m_session);
 
-	if (! (localSession->m_server->checkerr(*localSession, OCIStringAssignText(localSession->envhp, localSession->errhp, reinterpret_cast<OraText*>(const_cast<char*>(value.c_str())), value.length(), &buffer))))
-		return false;
-	if (! (localSession->m_server->checkerr(*localSession, OCICollAppend(localSession->envhp, localSession->errhp, buffer, &buffer_indicator, m_data))))
-		return false;
+	if (! (localSession->m_server->checkerr(*localSession, OCIStringAssignText(localSession->envhp, localSession->errhp, reinterpret_cast<OraText*>(const_cast<char*>(value.c_str())), value.length(), &buffer)))) {
+        LOG("DatabaseError", ("Could not push back BindableVarrayString string value (OCIStringAssignText) - %s", value.c_str()));
+        return false;
+    }
+	if (! (localSession->m_server->checkerr(*localSession, OCICollAppend(localSession->envhp, localSession->errhp, buffer, &buffer_indicator, m_data)))) {
+		LOG("DatabaseError", ("Could not push back BindableVarrayString string value (OCICollAppend) - %s", value.c_str()));
+        return false;
+    }
 
 	return true;
 }
@@ -497,10 +554,14 @@ bool BindableVarrayString::push_back(bool IsNULL, const std::string &value)
 
 	OCISession *localSession = safe_cast<OCISession*>(m_session);
 
-	if (! (localSession->m_server->checkerr(*localSession, OCIStringAssignText(localSession->envhp, localSession->errhp, reinterpret_cast<OraText*>(const_cast<char*>(value.c_str())), effectiveLength, &buffer))))
-		return false;
-	if (! (localSession->m_server->checkerr(*localSession, OCICollAppend(localSession->envhp, localSession->errhp, buffer, &buffer_indicator, m_data))))
-		return false;
+	if (! (localSession->m_server->checkerr(*localSession, OCIStringAssignText(localSession->envhp, localSession->errhp, reinterpret_cast<OraText*>(const_cast<char*>(value.c_str())), effectiveLength, &buffer)))) {
+        LOG("DatabaseError", ("Could not push back BindableVarrayString string value (OCIStringAssignText) - %s", value.c_str()));
+        return false;
+    }
+	if (! (localSession->m_server->checkerr(*localSession, OCICollAppend(localSession->envhp, localSession->errhp, buffer, &buffer_indicator, m_data)))) {
+        LOG("DatabaseError", ("Could not push back BindableVarrayString string value (OCICollAppend) - %s", value.c_str()));
+        return false;
+    }
 
 	return true;
 }
@@ -528,11 +589,14 @@ bool BindableVarrayString::push_back(bool IsNULL, bool bvalue)
 
 	OCISession *localSession = safe_cast<OCISession*>(m_session);
 
-	if (! (localSession->m_server->checkerr(*localSession, OCIStringAssignText(localSession->envhp, localSession->errhp, reinterpret_cast<OraText*>(const_cast<char*>(value.c_str())), value.length(), &buffer))))
-		return false;
-	if (! (localSession->m_server->checkerr(*localSession, OCICollAppend(localSession->envhp, localSession->errhp, buffer, &buffer_indicator, m_data))))
-		return false;
-
+	if (! (localSession->m_server->checkerr(*localSession, OCIStringAssignText(localSession->envhp, localSession->errhp, reinterpret_cast<OraText*>(const_cast<char*>(value.c_str())), value.length(), &buffer)))) {
+        LOG("DatabaseError", ("Could not push back BindableVarrayString boolean value (OCIStringAssignText) - %s", value.c_str()));
+        return false;
+    }
+	if (! (localSession->m_server->checkerr(*localSession, OCICollAppend(localSession->envhp, localSession->errhp, buffer, &buffer_indicator, m_data)))) {
+        LOG("DatabaseError", ("Could not push back BindableVarrayString boolean value (OCICollAppend) - %s", value.c_str()));
+        return false;
+    }
 	return true;
 }
 
@@ -551,8 +615,10 @@ std::string BindableVarrayString::outputValue() const
 	sb4 size;
 	std::string result("[");
 
-	if (! (localSession->m_server->checkerr(*localSession, OCICollSize(localSession->envhp, localSession->errhp, m_data, &size))))
+	if (! (localSession->m_server->checkerr(*localSession, OCICollSize(localSession->envhp, localSession->errhp, m_data, &size)))) {
+        LOG("DatabaseError", ("Could not get outputValue BindableVarrayString (OCICollSize)"));
 		return "[*ERROR*]";
+    }
 
 	for (sb4 i=0; i < size; ++i)
 	{
@@ -581,8 +647,10 @@ std::string BindableVarrayString::outputValue() const
 			else
 				result += "*NO ELEMENT*";			
 		}
-		else
-			result += "*ERROR*";
+		else {
+            LOG("DatabaseError", ("Could not get outputValue BindableVarrayString OCICollGetElem"));
+            return "[*ERROR*]";
+        }
 	}
 	result+=']';
 	return result;

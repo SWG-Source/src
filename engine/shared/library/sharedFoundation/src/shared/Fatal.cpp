@@ -62,7 +62,7 @@ static void formatMessage(char *buffer, int bufferLength, int stackDepth, const 
 
 	// look up the call stack information
 	const int callStackSize = callStackOffset + stackDepth;
-	uint32 callStack[callStackOffset + maxStackDepth];
+	uint64 callStack[callStackOffset + maxStackDepth];
 
 	// allow complete disable of the call stack lookup
 	if (stackDepth < 0)
@@ -82,7 +82,7 @@ static void formatMessage(char *buffer, int bufferLength, int stackDepth, const 
 		if (ConfigSharedFoundation::getLookUpCallStackNames() && DebugHelp::lookupAddress(callStack[callStackOffset], lib, file, sizeof(file), line))
 			snprintf(buffer, bufferLength, "%s(%d) : %s %08x: \n", file, line, type, static_cast<int>(Crc::calculate(format)));
 		else
-			snprintf(buffer, bufferLength, "(0x%08X) : %s %08x: \n", static_cast<int>(callStack[callStackOffset]), type, static_cast<int>(Crc::calculate(format)));
+			snprintf(buffer, bufferLength, "(0x%016llX) : %s %08x: \n", static_cast<unsigned long long>(callStack[callStackOffset]), type, static_cast<int>(Crc::calculate(format)));
 	}
 	else
 	{
@@ -126,7 +126,7 @@ static void formatMessage(char *buffer, int bufferLength, int stackDepth, const 
 				if (ConfigSharedFoundation::getLookUpCallStackNames() && DebugHelp::lookupAddress(callStack[i], lib, file, sizeof(file), line))
 					snprintf(buffer, bufferLength, "   %s(%d) : caller %d\n", file, line, i-callStackOffset);
 				else
-					snprintf(buffer, bufferLength, "   (0x%08X) : caller %d\n", static_cast<int>(callStack[i]), i-callStackOffset);
+					snprintf(buffer, bufferLength, "   (0x%016llX) : caller %d\n", static_cast<unsigned long long>(callStack[i]), i-callStackOffset);
 
 				const int length = strlen(buffer);
 				buffer += length;

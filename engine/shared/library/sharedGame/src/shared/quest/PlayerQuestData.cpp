@@ -259,8 +259,8 @@ namespace Archive
 		char temp[200];
 		
 		Command c;
-		size_t commandCount;
-		size_t baselineCommandCount; //lint !e578 hides a symbol elsewhere
+		int32_t commandCount;
+		int32_t baselineCommandCount; //lint !e578 hides a symbol elsewhere
 
 		Archive::get(source, commandCount);
 		Archive::get(source, baselineCommandCount);
@@ -274,7 +274,7 @@ namespace Archive
 			// We need to sort the quests by age
 			SortableQuestList sortedQuests;
 
-			for (size_t i = 0; i < commandCount; ++i)
+			for (int32_t i = 0; i < commandCount; ++i)
 			{
 				Archive::get(source, c.cmd);
 				Archive::get(source, c.key);
@@ -314,8 +314,8 @@ namespace Archive
 		char temp[200];
 		AutoDeltaMap<uint32, PlayerQuestData>::Command c;
 
-		Archive::put(target, countCharacter(buffer,':'));
-		Archive::put(target, static_cast<size_t>(0)); // baselineCommandCount
+		Archive::put(target, static_cast<int32_t> (countCharacter(buffer,':')));
+		Archive::put(target, static_cast<int32_t> (0)); // baselineCommandCount
 		
 		int tempPos = 0;
 		for (std::string::const_iterator i=buffer.begin(); i!=buffer.end(); ++i)

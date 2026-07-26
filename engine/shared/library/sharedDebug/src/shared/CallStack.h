@@ -40,7 +40,8 @@ private:
 
 private:
 
-	uint32 m_callStack[S_callStack];
+	//-- Instruction addresses; must be pointer-width capable (see DebugHelp::getCallStack).
+	uint64 m_callStack[S_callStack];
 };
 
 // ======================================================================

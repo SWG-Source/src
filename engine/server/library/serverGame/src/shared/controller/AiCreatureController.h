@@ -186,7 +186,7 @@ public:
 	AiMovementType getPendingMovementType() const;
 
 	PersistentCrcString const & getCombatAction();
-	time_t getKnockDownRecoveryTime() const;
+	uint32_t getKnockDownRecoveryTime() const;
 
 	std::string const getCombatActionsString();
 
@@ -245,7 +245,7 @@ private:
 	Archive::AutoDeltaVariable<bool> m_frozen;
 	Archive::AutoDeltaVariable<Location> m_combatStartLocation;
 	Archive::AutoDeltaVariable<bool> m_retreating;
-	Archive::AutoDeltaVariable<time_t> m_retreatingStartTime;
+	Archive::AutoDeltaVariable<uint32_t> m_retreatingStartTime;
 	Archive::AutoDeltaVariable<bool> m_logging;
 	Archive::AutoDeltaVariableCallback<std::string, CreatureNameChangedCallback, AICreatureController> m_creatureName;
 	Archive::AutoDeltaVariable<float> m_hibernationDelay;

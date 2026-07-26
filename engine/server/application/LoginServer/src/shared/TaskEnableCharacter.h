@@ -38,7 +38,7 @@ class TaskEnableCharacter : public DB::TaskRequest
 		DB::BindableLong station_id; //lint !e1925 // public data member : suppressed because this is a private inner class
 		DB::BindableNetworkId character_id; //lint !e1925 // public data member : suppressed because this is a private inner class
 		DB::BindableBool enabled; //lint !e1925 // public data member : suppressed because this is a private inner class
-		DB::BindableLong result; //lint !e1925 // public data member : suppressed because this is a private inner class 
+		DB::BindableLong result; //lint !e1925 // public data member : suppressed because this is a private inner class
 
 
 		virtual void getSQL(std::string &sql);

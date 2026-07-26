@@ -1471,7 +1471,7 @@ namespace ChatSystem
 		get(iter, m_type);
 		get(iter, m_track);
 		get(iter, m_result);
-		get(iter, (uint32 &)m_serverVersion);
+		get(iter, m_serverVersion);
 	}
 
 	ResAddSnoopAvatar::ResAddSnoopAvatar(void *user, unsigned srcAvatarID, const ChatUnicodeString &destName, const ChatUnicodeString &destAddress)
